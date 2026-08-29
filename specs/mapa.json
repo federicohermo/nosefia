@@ -1,1 +1,5 @@
-{}
+{
+  "001": {"issue":3,"carpeta":"001-el-turno-reparte-un-tiempo-finito","fecha":"2026-08-28","estado":"Propuesto","titulo":"Spec 001 — El turno reparte un tiempo finito"},
+  "002": {"issue":4,"carpeta":"002-el-cierre-del-turno-tiene-consecuencias","fecha":"2026-08-28","estado":"Propuesto","titulo":"Spec 002 — El cierre del turno tiene consecuencias"},
+  "003": {"issue":5,"carpeta":"003-los-modos-de-falla-del-harness-se-documentan","fecha":"2026-08-28","estado":"Propuesto","titulo":"Spec 003 — Los modos de falla del harness se documentan","origen":[2]}
+}

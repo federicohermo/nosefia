@@ -13,7 +13,8 @@ limitado por noche y lo reparte entre **cinco tareas obligatorias** que le deja 
 —atender la caja, reponer, registrar productos, limpiar, y una quinta sin definir— y
 **averiguar qué está pasando**. Atiende por una **ventanilla**, no más de dos compradores por
 día. Al cierre del turno el juego cuenta cuántas tareas cumplió y aplica consecuencias en tres
-puntos de corte —5, 3 o ninguna—; dos días seguidos sin cumplir y lo echan.
+bandas —las 5, entre 3 y 4, o menos de 3—; **tres jornadas seguidas sin completar las cinco y
+lo echan**.
 
 **La tensión central es aritmética: cada minuto investigando es un minuto que no se dedica a
 las tareas.** Al evaluar una feature, la pregunta es si aprieta esa tensión — no si agrega
