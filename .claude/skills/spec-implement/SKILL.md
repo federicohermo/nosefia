@@ -8,6 +8,10 @@ description: Especialización de /spec-implement para No se fía (Godot). El par
 Este archivo **no reemplaza** al skill global: aporta lo que en este repo es distinto. El
 método, el fake-edge test y la convergencia salen de allá.
 
+**No deja deuda**, y eso está en [`../sin-deuda.md`](../sin-deuda.md). Lo propio de implementar es
+el lazo: **si acá aparece un problema de planteo, el defecto no es de este spec — es del skill que
+lo dejó salir así**, y se corrigen los dos en esta corrida. Ver «Cuando el spec no alcanza», abajo.
+
 ## Antes de arrancar
 
 **La rama la abrís vos, y es el primer movimiento.** `spec-create` deja el spec publicado y su
@@ -88,6 +92,36 @@ lo que en este motor nadie más cuida.
 **Un nodo salteado no es un nodo verde**, y el reporte lo distingue. Si `tests` dice que se
 saltea porque no hay `GODOT_BIN`, eso **es un rojo**: significa que la suite no corrió.
 
+## Cuando el spec no alcanza — el lazo
+
+**Para cuando llegás acá no debería quedar ninguna duda de planteo.** Se resuelven entre
+`spec-create` y `spec-review`, que es donde cuestan un párrafo. Así que **una duda que aparece
+implementando es evidencia de que uno de esos dos skills tiene un agujero**, y tratarla como un
+problema de este spec la deja volver la próxima vez.
+
+La descarga son dos mitades, las dos en esta corrida:
+
+1. **Corregí el spec** para poder seguir —el AC que no se puede ver fallar, la tarea que falta, la
+   regla que estaba en la capa equivocada— y **devolvelo al issue** con
+   `python .claude/scripts/publicar_spec.py publicar`. Sin eso, `specs/` es caché y la próxima
+   hidratación se lleva puesta la corrección.
+2. **Corregí el `SKILL.md` que lo permitió**, con la regla que lo habría atajado:
+
+   | Lo que apareció | Qué skill se corrige |
+   |---|---|
+   | un AC que no se puede ver fallar | `spec-create` |
+   | una tarea que no dice qué archivo toca | `spec-create` |
+   | una regla del juego ubicada en `ui/` o en `escenas/` | `spec-create` |
+   | un `[P]` que resultó falso | `spec-review` |
+   | dos specs que se pisan la misma escena | `spec-review-batch` |
+   | una medición que el spec supuso en vez de correr | `spec-create` |
+
+   **Si no entra en ninguna fila, agregá la fila** —en [`../sin-deuda.md`](../sin-deuda.md)—. La
+   tabla está incompleta a propósito: es el registro de lo que este flujo ya aprendió.
+
+Va al reporte como sección propia. **Es el entregable más caro de la corrida y el más fácil de
+saltear**, porque no lo reclama ningún test ni ningún PR: el spec ya quedó andando sin él.
+
 ## Al cerrar
 
 - **Todas las casillas del `tasks.md` marcadas.** No hay marcador para «esto quedó pendiente».
@@ -95,18 +129,13 @@ saltea porque no hay `GODOT_BIN`, eso **es un rojo**: significa que la suite no 
 - **Devolvé las marcas al issue**: `python .claude/scripts/publicar_spec.py publicar`. El
   archivo del disco es **caché**, y la próxima hidratación baja el `tasks.md` del issue y se
   lleva puesta cada casilla marcada que no se haya subido.
-- **La deuda que aparece implementando se abre como issue**, y **no se anota en el spec**.
-  Adentro de un `tasks.md` el ítem hereda el estado de su spec: un spec `Implementado` puede
-  tener diez casillas abiertas y no deberle nada a nadie. Un issue tiene estado propio. Lleva
-  tres cosas:
-  - **Título que se entienda fuera del contexto del spec** — en la lista de issues no hay más
-    contexto que el título.
-  - **Cuerpo con la evidencia**: `archivo:línea`, el número medido, qué hace falta para verlo.
-  - **`Detectado en #N`**, con el issue del spec. **El `#N` sale de `specs/mapa.json` y no del
-    `NNN`**: son dos numeraciones distintas.
+- **Lo que aparece implementando se hace, no se anota.** Un `tasks.md` incompleto no se cierra
+  abriendo un issue: se completa. Adentro del spec el ítem hereda su estado —un spec
+  `Implementado` con diez casillas abiertas no le debe nada a nadie—, y afuera, en un issue, el
+  trabajo que este spec necesitaba queda huérfano de la razón por la que existía.
 
-  El label es `bug` o `enhancement`. Inventar uno propio para la deuda de los specs vuelve a
-  partir el tracker en dos.
+  **Y lo verifica el gate:** un spec `Implementado` con una casilla abierta pone en rojo el nodo
+  `harness` (`test_convencion_de_specs.py`).
 - **El PR lleva un `Closes` por cada issue saldado**: el del spec más los de su `origen`.
 - **No toques `specs/mapa.json` en el PR.** El estado lo deriva la Action en el push a
   `staging`, y el gate da rojo si el mapa dice `Implementado` mientras el PR está abierto.

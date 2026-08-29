@@ -8,6 +8,12 @@ description: Especialización de /spec-review para No se fía (Godot). Dónde vi
 Este archivo **no reemplaza** al skill global: aporta lo que en este repo es distinto. Los
 ejes, los gates y el formato del reporte salen de allá.
 
+**Y acá el review corrige, no señala.** Todo lo que encuentra sale por una de las cinco descargas
+de [`../sin-deuda.md`](../sin-deuda.md), y ninguna es «lo dejo anotado». Es el momento más barato
+del flujo para hacerlo: **mientras el spec es texto, un hallazgo cuesta un párrafo**; el mismo
+hallazgo detectado implementando cuesta un rebase, y detectado en el PR cuesta además el review
+del PR.
+
 ## Antes de leer un spec: traerlo
 
 `specs/[0-9]*/` está en el `.gitignore`. Un review sobre un directorio vacío **no falla**:
@@ -57,9 +63,19 @@ Al revisar, verificá:
 - **`[P]` no miente.** Dos tareas `[P]` del mismo bloque no pueden tocar el mismo archivo. Es
   el hallazgo más caro de los tres, porque `spec-implement` las abanica en paralelo y el
   conflicto aparece recién al escribir.
-- **Ningún `## Seguimiento`.** La deuda que aparece implementando se abre como issue: adentro
-  del spec hereda su estado, y un spec `Implementado` con diez casillas abiertas no le debe
-  nada a nadie.
+- **Ninguna sección que aplace y ninguna tarea que aplace.** Ni `## Seguimiento` ni sus alias
+  —`## Pendientes`, `## Próximos pasos`, `## Deuda`—, ni una casilla que diga `TODO`, «por ahora»
+  o «más adelante». Adentro del spec el ítem **hereda el estado de su spec**, y un spec
+  `Implementado` con diez casillas abiertas no le debe nada a nadie: así se vuelve invisible.
+  Lo verifica `test_convencion_de_specs.py` sobre los specs **hidratados**.
+- **`## Fuera de alcance` sí se queda, y es lo único de esta lista que tenés que juzgar vos.**
+  Declarar una frontera hace revisable al spec; el gate no puede distinguirla de una deuda con
+  sombrero. La prueba es una: **¿algún AC de este spec depende de lo excluido?** Si sí, entra al
+  spec ahora.
+- **Las tareas están completas.** Que las que hay sean correctas no alcanza: si el spec necesita
+  algo que ninguna tarea cubre, **el hallazgo es la tarea que falta** y se escribe acá. Es el eje
+  que más rinde en este paso, porque una tarea faltante no rompe ningún gate — simplemente nunca
+  se hace.
 
 ## Lo que hay que mirar en un spec de este juego
 
@@ -95,3 +111,23 @@ verifica una herramienta:
 - **Un valor fijo que dos archivos necesitan igual va a un solo lugar**, y el spec tiene que
   decir a cuál.
 - **`print` no sobrevive al commit.**
+
+## Al cerrar — las ediciones se devuelven al issue
+
+```bash
+python .claude/scripts/publicar_spec.py publicar
+```
+
+**No es opcional y no lo hace nadie más.** El árbol de `specs/` es **caché**: un review que editó
+el `spec.md` en disco y no publicó dejó el trabajo en un archivo que git ignora, y la próxima
+hidratación **lo sobreescribe sin avisar**. No falla, no aparece en ningún `git status`, y el spec
+vuelve a decir lo que decía. Es la forma más cara de perder una corrida entera.
+
+**El `estado` del mapa no se toca acá** —lo deriva la Action en el push a `staging`—, y
+`test_convencion_de_specs.py` corre sobre lo hidratado, así que verificá con
+`python .claude/scripts/verificar.py --solo harness` antes de publicar.
+
+**Y si el hallazgo era de planteo, corregí también el skill que lo dejó pasar.** Un AC
+infalsificable o una tarea sin archivo que llegaron hasta el review son una regla que
+`spec-create` no atajó: agregala allá y decilo en el reporte. Ver «el lazo» en
+[`../sin-deuda.md`](../sin-deuda.md).

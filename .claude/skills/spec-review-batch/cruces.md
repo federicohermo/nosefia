@@ -10,22 +10,25 @@ arreglo es un rebase. Acá el spec todavía es **texto**: el hallazgo se corrige
 corresponda y listo.
 
 **Vos no escribís ninguno de esos arreglos.** El contrato del Paso 3 vale entero: devolvés la
-edición propuesta con `path:línea` y el texto exacto, y **no abrís ni cerrás issues**. Lo que sí
-tenés que devolver listo para copiar es lo que el padre necesita para el cruce que **excede al
-lote** y sale como issue, que son tres cosas:
+edición propuesta con `path:línea` y el texto exacto, y **no abrís ni cerrás issues ni corrés
+`publicar_spec.py`**.
 
-- **Un título que se entienda fuera del contexto del spec.** Un cruce abarca dos, así que no hay
-  un spec solo que le sirva de contexto: es justo donde un título que arranque con «el problema
+**Ningún cruce queda anotado para después** —ver [`../sin-deuda.md`](../sin-deuda.md)—, así que el
+que **excede al lote** no sale como issue: sale como **un spec más**, y lo escribe el padre en el
+Paso 5. Lo que tenés que devolver listo para copiar es lo que ese spec necesita y vos sos el único
+que lo tiene a la vista:
+
+- **Un título que se entienda fuera del contexto de los dos specs.** Un cruce abarca dos, así que
+  no hay uno solo que le sirva de contexto: es justo donde un título que arranque con «el problema
   del 002» no le dice nada a nadie dentro de seis meses.
-- **El cuerpo con la evidencia**: los dos `path:línea`, el número medido, y **qué AC queda
-  infalsificable** si nadie lo toca.
-- **`Detectado en #N`**, con el issue del spec en el que iba la edición. **El `#N` sale de
-  `specs/mapa.json` y no del `NNN`**: son dos numeraciones distintas y en este repo ya divergen
-  —el spec 001 es el issue #3—.
+- **La evidencia**: los dos `path:línea`, el número medido, y **qué AC queda infalsificable** si
+  nadie lo toca. Es el `research.md` del spec nuevo, ya medido.
+- **Qué specs quedan involucrados**, para que el `**Origen:**` y las citas cruzadas salgan bien.
+  El `#N` de cada uno sale de `specs/mapa.json` y **no del `NNN`**: son dos numeraciones distintas
+  y en este repo ya divergen —el spec 001 es el issue #3—.
 
-Y el label: **`bug` o `enhancement`**, los dos que el repo ya usa. Inventar uno propio para la
-deuda de los specs vuelve a partir el tracker en dos, que es exactamente lo que este repo cerró
-al sacar el `## Seguimiento`.
+**Y si el cruce se pudo colar porque una regla del método no lo atajaba, decilo.** Eso corrige el
+`SKILL.md`, no el spec, y es lo único que impide que el mismo cruce vuelva en el lote siguiente.
 
 > **Sobre los precedentes que se citan abajo.** Los que dicen *medido acá* se corrieron en este
 > repo y se puede volver a correrlos. Los que dicen *medido en el repo de origen* vienen del

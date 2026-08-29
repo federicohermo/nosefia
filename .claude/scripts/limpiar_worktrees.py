@@ -2,8 +2,12 @@
 
 Uso, desde la raíz del repo:
 
-    python .claude/skills/pr-review-batch/scripts/limpiar_worktrees.py --todos
-    python .claude/skills/pr-review-batch/scripts/limpiar_worktrees.py <ruta> [<ruta> ...]
+    python .claude/scripts/limpiar_worktrees.py --todos
+    python .claude/scripts/limpiar_worktrees.py <ruta> [<ruta> ...]
+
+Vive acá y no adentro de un skill porque lo usan **los dos** batch que abren worktrees
+—`pr-review-batch` y `spec-implement-batch`— y ninguno de los dos es su dueño natural. Una
+copia en cada uno es la clase de deuda que se descubre el día que uno cambia y el otro no.
 
 ## Por qué no alcanza `git worktree remove`
 
@@ -39,8 +43,8 @@ import sys
 import time
 from pathlib import Path
 
-RAIZ_SCRIPT = Path(__file__).resolve().parents[4]
-sys.path.insert(0, str(RAIZ_SCRIPT / ".claude" / "scripts"))
+RAIZ_SCRIPT = Path(__file__).resolve().parents[2]
+sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 from lib.consola import configurar  # noqa: E402
 

@@ -8,6 +8,10 @@ exactamente lo que se quiere.
 
 Lo que separa un review útil de una lista de ruido está acá, no en la cantidad de hallazgos.
 
+**Y ninguno de esos hallazgos sobrevive a la corrida:** las cinco descargas están en
+[`../sin-deuda.md`](../sin-deuda.md), que es de los siete skills. Acá está sólo cómo aterrizan
+sobre un diff.
+
 ## Los ejes
 
 `scripts/diff_pr.py` decide cuáles se abren, midiendo sobre el `.diff`. **Un eje que salió `no` no
@@ -107,10 +111,14 @@ nada leídos de a una línea. **No busques bugs adentro del diff de una escena.*
 
 ## Filtro de confianza
 
+**Lo que se acota es dónde BUSCÁS, no qué arreglás.** El alcance de la búsqueda es el diff y lo que
+el diff toca — un review que sale a recorrer el repo entero no termina nunca. Pero lo que la
+búsqueda encuentre se arregla, aunque sea preexistente: la tabla de arriba decide **dónde
+aterriza**, no si se hace.
+
 Puntuá cada hallazgo de 0 a 100 y **descartá todo lo que quede por debajo de 80**:
 
-- **0** — falso positivo que no aguanta escrutinio liviano, o problema preexistente que el diff no
-  introdujo.
+- **0** — falso positivo que no aguanta escrutinio liviano.
 - **25** — podría ser real pero no lo verificaste. Si es estilístico y no está en `CLAUDE.md` ni en
   `.claude/rules/`, no existe.
 - **50** — verificado como real, pero es nitpick o pasa poco en la práctica.
@@ -120,7 +128,6 @@ Puntuá cada hallazgo de 0 a 100 y **descartá todo lo que quede por debajo de 8
 
 ### Falsos positivos típicos — no van al reporte
 
-- Problemas **preexistentes** en líneas que el PR no tocó.
 - Cualquier cosa de la columna izquierda de la tabla de convenciones.
 - **Un nodo de `verificar.py` que se salteó.** No es un hallazgo del PR: es que faltó `GODOT_BIN`,
   y el protocolo está en el skill que te invocó —Paso 6 de `pr-review`, Paso 4 del batch—. Pero
@@ -142,41 +149,55 @@ una premisa.
 
 ## Política de triage — al aplicar los fixes
 
-«Arreglá todo» es la forma más rápida de romper el PR. Pero el error que de verdad se comete es el
-otro: en una corrida medida del repo de origen, **de ocho hallazgos, tres se declararon sin
-aplicar y sólo uno tenía motivo**. Los otros dos fueron un bloqueo mecánico archivado como si
-fuera una decisión, y una cláusula aplicada al revés. Por eso el default es **arreglar**, y no
-aplicar es lo que necesita justificarse.
+**No hay hallazgo que sobreviva a la corrida.** El método entero está en
+[`../sin-deuda.md`](../sin-deuda.md) y no se repite acá; lo que sigue es cómo aterriza sobre un
+diff.
 
-| Clase | Qué hacer |
-|---|---|
-| 🔴 Bloqueante | **se arregla siempre** |
-| 🟡 con fix acotado que no toca lo que el PR garantiza | se arregla |
-| 🟡 cuyo fix pelea con un AC o con el invariante del propio PR | **no se toca** — se declara y se abre como issue |
-| 🟡 preexistente que el diff sólo agrava | se arregla **si el archivo ya está tocado por el PR** |
-| 🟡 cuyo fix sería un cambio de diseño más grande que el PR | se declara como issue, y el cuerpo dice **qué diseño haría falta** |
-| Fix que una herramienta te bloqueó | **no es un 🟡** — ver «bloqueado» abajo |
+Está medido de los dos lados. En una corrida del repo de origen, **de ocho hallazgos tres se
+declararon sin aplicar y sólo uno tenía motivo**: los otros dos fueron un bloqueo mecánico
+archivado como si fuera una decisión, y una cláusula aplicada al revés. Y del otro lado, la
+detección de defectos de un review cae de **87 % con menos de 100 líneas a 28 % con más de 1000**
+— o sea que meter todos los fixes en el PR que estás revisando **degrada la revisión que estás
+haciendo**.
 
-**Las tres filas de «no se toca» son la lista completa.** Si tu motivo para no aplicar un fix no
-es uno de esos tres —pelea con un AC, pediría rediseñar, o lo cierra una persona—, entonces **no
-hay motivo y el fix se aplica**. «Es preexistente», «es de otro spec», «no lo medí» y «lo intenté
-y no pude» no están en la lista, y los cuatro aparecieron en corridas reales.
+Las dos mediciones juntas dan una sola regla: **todo se arregla, y no todo aterriza acá.**
 
-### «Bloqueado» no es «descartado»
+| Clase | Se arregla | Aterriza en |
+|---|---|---|
+| 🔴 Bloqueante | siempre | **este PR** |
+| 🟡 acotado, del alcance del spec | sí | **este PR** |
+| 🟡 en una línea que tu diff agrega o reescribe | sí | **este PR** — ver abajo |
+| 🟡 preexistente, en un archivo que el PR ya toca | sí | **este PR** si el fix es acotado; si no, PR propio |
+| 🟡 en un archivo que el PR no toca | sí | **su propio PR**, abierto en esta corrida |
+| 🟡 cuyo fix pelea con un AC | sí, **corrigiendo el AC** | el `spec.md`, y de vuelta al issue |
+| 🟡 cuyo fix sería un rediseño más grande que el PR | sí, **corrigiendo el alcance** | el `spec.md`, y de vuelta al issue |
+| Decisión que es del usuario | se **pregunta ahora**, bloqueando | la respuesta, escrita |
+| Fix que una herramienta te bloqueó | ver «bloqueado» | **la corrida falla** |
 
-Si una herramienta te niega el fix, **eso no es una decisión de triage**. Un 🟡 archivado y un fix
-que no te dejaron aplicar se leen igual en el reporte y son cosas opuestas: del primero ya se
-decidió, del segundo no decidió nadie.
+**«Es preexistente», «es de otro spec», «no lo medí» y «lo intenté y no pude» no son motivos** —
+los cuatro aparecieron en corridas reales. Los dos primeros deciden **dónde aterriza**, nunca
+**si se hace**.
+
+Un fix que pelea con un AC no significa «no lo toco»: significa que **el AC está mal**, y
+corregirlo es más barato ahora que después. Igual con el que pediría un rediseño: el que estaba
+mal era el alcance del spec.
+
+### «Bloqueado» hace fallar la corrida
+
+Si una herramienta te niega el fix, **eso no es una decisión de triage y no es un entregable con
+nota al pie**. Un 🟡 archivado y un fix que no te dejaron aplicar se leen igual en el reporte y son
+opuestos: del primero ya se decidió, del segundo no decidió nadie.
 
 1. **Reintentá por otro camino.** Y si el bloqueo vino del hook, **mirá el nombre de tu rama antes
    que nada**: `gate_de_spec.py` exige `feature/<NNN>-` con el `NNN` en `specs/mapa.json` para
    tocar `src/` o `docs/`. Es la causa número uno de un fix bloqueado acá.
-2. Si sigue bloqueado, **paralo y reportalo como `BLOQUEADO: <qué> — <quién lo bloqueó>`**, con el
-   fix exacto que ibas a aplicar, en una línea que se pueda copiar.
-3. **Abrilo igual como issue**, diciendo que quedó bloqueado y no que se descartó.
+2. Si sigue bloqueado, **la corrida no cierra en verde.** El reporte arranca diciéndolo, con
+   `BLOQUEADO: <qué> — <quién lo bloqueó>` y el fix exacto en una línea copiable.
+3. **No lo tapes con un issue.** Eso convierte un rojo en un pendiente, que es la única operación
+   que esta doctrina prohíbe.
 
-El padre corre en el checkout principal y con otros permisos: un fix que a vos te bloquearon, él
-lo aplica. Pero sólo si el reporte lo distingue.
+En el batch el padre corre en el checkout principal y con otros permisos: un fix que a vos te
+bloquearon, él lo aplica. Pero sólo si el reporte lo distingue.
 
 ### «Preexistente» no cubre una línea que tu diff volvió a escribir
 
@@ -189,27 +210,33 @@ Que el número lo haya vuelto falso un spec anterior no cambia nada: lo que impo
 diff lo volvió a escribir**, y una afirmación falsa re-tipeada es una afirmación que este PR
 afirma. Un párrafo re-justificado cuenta como re-tipeado.
 
-### El destino de un 🟡 que no se aplica es un issue
+### El PR propio del hallazgo fuera de alcance
 
-No el chat, y **no el spec**. Adentro de un `tasks.md` el ítem **hereda el estado de su spec**:
-un spec `Implementado` puede quedar con diez casillas abiertas sin deberle nada a nadie, y así es
-como la deuda se vuelve invisible. Un issue tiene estado propio y se cierra con `Closes #N`
-desde un commit — y **sobrevive aunque el PR no se mergee**.
+Es la descarga que reemplaza al issue, y la que sostiene las dos mediciones a la vez: el trabajo
+se hace **ahora**, y el changeset del PR que estás revisando **no engorda**.
 
-Se abre con `gh issue create --repo federicohermo/nosefia`, y lleva tres cosas:
+```bash
+git checkout -B feature/<NNN>-<kebab-del-hallazgo> origin/staging
+# el fix, verificar.py en verde, commit
+gh pr create --repo federicohermo/nosefia --base staging
+```
 
-- **Título que se entienda fuera del contexto del spec.** En la lista de issues no hay más
-  contexto que el título.
-- **Cuerpo con la evidencia** —`archivo:línea`, el número medido, qué hace falta para verlo—. Es
-  lo único que queda cuando el diff ya no está.
-- **`Detectado en #N`**, con el issue del spec del PR. **El `#N` sale de `specs/mapa.json`, no del
-  `NNN`**: son dos numeraciones distintas y en este repo ya divergen — el spec 001 es el issue #3.
+Tres cosas que no son obvias:
 
-**El label es `bug` o `enhancement`.** No inventes uno: un label propio vuelve a partir el tracker
-en dos, que es exactamente el problema que este destino cierra.
+- **Sale de `staging`, no de la rama del PR que revisás.** Si sale de ahí, arrastra los commits de
+  ese PR y no se puede mergear antes que él — que es justo lo que hace falta cuando el fix es de
+  otro archivo.
+- **El nombre lleva un `NNN` que el mapa tenga**, o el hook te bloquea la primera edición de
+  `src/`. Si el hallazgo no tiene spec propio y toca ruta protegida, **eso ya es un hallazgo sobre
+  el proceso**: correspondía un spec, y la descarga es abrirlo con `spec-create`.
+- **Va al reporte con su número de PR.** Quien mergea tiene que saber que hay dos.
 
-Y el precio de que el destino esté fuera del repo: **el reviewer del PR no lo ve en el diff**, así
-que va sí o sí al reporte.
+**Y no se abre un issue «para dejarlo anotado».** Los issues de este repo son **entrada** —lo que
+`deuda.py` lista y `spec-create` drena—, nunca la forma de terminar una corrida. Un hallazgo
+convertido en issue es trabajo que encontraste, entendiste y decidiste no hacer.
+
+La única excepción es la decisión del usuario ya tomada: si te dijo que algo queda para después,
+**el issue lo registra esa decisión, no tu comodidad**, y el cuerpo la cita.
 
 **Propagá cada fix a todo lo que lo describe.** Un cambio de firma toca el código **y** el
 `spec.md`, cada doc que muestre el snippet viejo, y las tareas del spec que lo nombran. Un fix de

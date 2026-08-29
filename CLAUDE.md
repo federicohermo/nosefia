@@ -157,12 +157,19 @@ probar. [docs/guides/tdd.md](./docs/guides/tdd.md).
 `estado` lo deriva `mapa.yml`** en el push a `staging`: el gate prohíbe tocarlo dentro del PR
 que lo justifica.
 
-**La deuda sin spec vive en [GitHub Issues](https://github.com/federicohermo/nosefia/issues)**,
-no en un archivo ni en un `## Seguimiento` adentro del spec que la parió. Adentro de un
-`tasks.md` un ítem **hereda el estado de su spec**: un spec `Implementado` puede quedar con diez
-casillas abiertas sin deberle nada a nadie, y así es como la deuda se vuelve invisible. Un issue
-tiene estado propio y se cierra desde un commit con `Closes #N`. Qué hay para promover:
-`python .claude/scripts/deuda.py`.
+**Los issues son la ENTRADA del repo, nunca la salida.** Un pedido que llega de afuera entra como
+[issue](https://github.com/federicohermo/nosefia/issues), y `spec-create` los drena hacia specs;
+qué hay para promover lo dice `python .claude/scripts/deuda.py`. Lo que **no** existe es abrir un
+issue como forma de terminar una corrida: **ningún skill de este repo deja trabajo escrito para
+después.** Ni en un issue, ni en un `## Seguimiento`, ni en una casilla sin marcar.
+
+Un `tasks.md` no puede registrar deuda aunque quiera, y por eso: adentro, el ítem **hereda el
+estado de su spec**, así que un spec `Implementado` con diez casillas abiertas dice que ya está y
+sigue debiendo. **Eso ahora es un rojo** —`test_convencion_de_specs.py` lo verifica—, junto con las
+secciones que aplazan, las tareas que aplazan y las mediciones declaradas como no hechas.
+
+La doctrina entera, con sus cinco descargas y contra qué evidencia se contrastó, está en
+[.claude/skills/sin-deuda.md](./.claude/skills/sin-deuda.md), que leen los ocho skills.
 
 ---
 

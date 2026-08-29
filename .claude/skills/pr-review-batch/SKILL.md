@@ -20,6 +20,13 @@ consecuencia del de abajo.**
 Y no termina en el reporte. Encuentra, arregla, verifica, commitea y pushea a la rama del PR. El
 reporte es lo que queda, no el producto.
 
+**No deja deuda, y en un lote eso tiene una vuelta más.** Las cinco descargas están en
+[`../sin-deuda.md`](../sin-deuda.md) y valen para cada agente. Lo propio del batch es que acá hay
+un destino que allá no existe —`PERTENECE-A-PR-<N>`, el hallazgo que es de otro PR de la cadena— y
+**ése no es una descarga: es un ruteo.** Queda descargado cuando alguien lo aplica, y el
+responsable de que eso pase es el padre (Paso 7). Un `PERTENECE-A-PR-<N>` que llega al reporte sin
+haberse aplicado es deuda con nombre de tránsito.
+
 ---
 
 ## Lo que este repo cambia respecto del review de PR del que sale éste
@@ -33,7 +40,7 @@ Seis sustituciones. Las tres primeras son de herramienta; las tres últimas camb
 | Cierra con `pnpm verify` | **`python .claude/scripts/verificar.py`**, y un nodo **salteado no es un nodo verde** |
 | La cobertura la garantiza un umbral del 100 % | **Godot no mide cobertura.** El eje de cobertura pasa a ser del reviewer, entero |
 | Un conflicto de merge se resuelve leyendo | **un `.tscn` no se mergea**: da una escena corrupta, no un conflicto. El Paso 6 no puede confiar en git |
-| Eleva todo a comentarios del PR | **El chat y un issue** (`gh issue create`). El issue vive fuera del repo, así que **no viaja en el diff** — y a cambio no hereda el estado de nada. `--comentar` publica además un general por PR |
+| Eleva todo a comentarios del PR, y lo de afuera del alcance a un issue | **Nada queda anotado.** Lo del alcance entra al PR; lo de afuera sale en **su propio PR** en esta corrida; lo del planteo se corrige en el `spec.md`. Los issues acá son **entrada**, no salida — ver [`../sin-deuda.md`](../sin-deuda.md). `--comentar` publica además un general por PR |
 
 ---
 
@@ -112,12 +119,17 @@ Seis cláusulas, que van **literales** en el preámbulo del Paso 1:
    necesita tocar una escena que el padre marcó como compartida, **no lo apliques**: reportalo con
    el cambio exacto y quién más la toca. Es la única clase de fix que se declara por el archivo y
    no por el hallazgo.
-6. **Un 🟡 que no se aplica se abre como issue con `gh issue create`, y su `Detectado en #N` es el
-   issue del spec propio.** El `#N` sale de `specs/mapa.json`, no del `NNN` —el spec 001 es el
-   issue #3—: un `#N` equivocado cuelga el hallazgo del spec que no es **sin que ningún diff lo
-   delate**. Un 🟡 que pertenece a otro PR del lote **no** se abre: se reporta como
-   `PERTENECE-A-PR-<N>`. Y el precio de que el destino esté fuera del repo se paga acá: **el
-   reviewer del PR no ve el issue en el diff**, así que el Paso 8 es el único canal.
+6. **Todo hallazgo se descarga, y ninguna descarga es un issue.** Las cinco están en
+   [`../sin-deuda.md`](../sin-deuda.md). Lo del alcance de tu spec entra a tu PR; lo de afuera
+   **sale en su propio PR desde `staging`**, abierto por vos en esta corrida —no desde tu rama, o
+   arrastra tus commits—; lo que pelea con un AC se descarga **corrigiendo el AC** en el `spec.md`
+   y devolviéndolo al issue. «Es preexistente» y «es de otro spec» deciden **dónde aterriza**, no
+   si se hace.
+
+   **Las dos únicas cosas que devolvés sin aplicar** son las que no podés aplicar desde tu
+   worktree: un `PERTENECE-A-PR-<N>` (cláusula 1) y un fix sobre una escena compartida
+   (cláusula 5). Las dos las aplica el padre, **y las dos son ruteo y no descarga**: no las
+   escribas como si el hallazgo estuviera cerrado.
 
 Nadie rebasea y nadie usa `--force`. Y **ningún agente de PR mergea**: poner la pila al día es del
 padre y es el Paso 6, después de que todos los fixes estén adentro. El push de cada agente es
@@ -206,17 +218,18 @@ Y estas diferencias respecto de `pr-review`, que son las que lo vuelven un carri
    `PERTENECE-A-PR-<N>` en vez de arreglarse, y un fix sobre una escena de la lista caliente **no se
    aplica**. Un agente que no las tenga va a arreglar dos veces lo mismo, o a corromper una escena.
 4. **El reporte es para el padre, no para el usuario**, así que cambia de forma: 30–50 líneas con
-   veredicto en la primera, los bloqueantes con `archivo:línea`, lo no aplicado con motivo, lo
-   `BLOQUEADO` con quién lo bloqueó, los `PERTENECE-A-PR-<N>`, **si algún nodo se salteó y cuál**,
-   y dos cosas que `pr-review` no necesita porque no hay nadie arriba suyo:
+   veredicto en la primera, los bloqueantes con `archivo:línea`, lo `BLOQUEADO` con quién lo
+   bloqueó, los `PERTENECE-A-PR-<N>`, los fixes sobre escena compartida sin aplicar, **si algún
+   nodo se salteó y cuál**, y dos cosas que `pr-review` no necesita porque no hay nadie arriba
+   suyo:
    - **La lista exacta de archivos que tocó** — es lo único con lo que el padre calcula el costo de
      rebase del Paso 6.
    - **El SHA del push.** Sin él el padre no puede verificar que el push llegó, que es el único
      modo de falla silencioso que le queda.
 
-   **Cada 🟡 no aplicado lleva su motivo, y tiene que ser uno de los tres de
-   `pr-review/hallazgos.md`.** El padre lo va a cruzar contra esa lista, así que declararlo mal no
-   lo hace desaparecer: lo devuelve.
+   **Cada hallazgo que vuelve sin aplicar tiene que caer en una de las dos casillas de ruteo** —
+   `PERTENECE-A-PR-<N>` o escena compartida— **o en `BLOQUEADO`.** No hay una cuarta. El padre lo
+   cruza contra esa lista, así que declararlo mal no lo hace desaparecer: lo devuelve.
 
    Y **pedile que no afirme qué otros PR tocan sus archivos.** No lo puede saber: `origin/staging..HEAD`
    sólo ve hacia abajo.
@@ -268,21 +281,27 @@ El padre no re-audita: cruza.
   el árbol —cuántos archivos, cuántos nodos, cuántas capas— **cabeza por cabeza**, y despachá el
   número medido. Y medilo con el pathspec acotado.
 - **Verificá los descartes, no sólo los hallazgos.** El caso caro es el que se lee como un hallazgo
-  bueno: un 🟡 **que no era cierto**. Corregilo antes de que salga, y si el issue ya está abierto,
-  editalo: escrito como estaba, el próximo que pase lo «arregla» a algo peor.
-- **El lote no está cerrado mientras quede un fix conocido sin aplicar** —salvo con `--dry`—. Es el
-  único paso que puede cerrarlos, porque el padre corre en el checkout principal:
+  bueno: un 🟡 **que no era cierto**. Corregilo antes de que salga — escrito como estaba, el próximo
+  que pase lo «arregla» a algo peor. Y si el hallazgo falso ya se convirtió en un PR propio,
+  **cerralo**: un PR abierto por un hallazgo inexistente es peor que un issue.
+- **El lote no está cerrado mientras quede un hallazgo sin descargar** —salvo con `--dry`—. Es el
+  único paso que puede cerrarlos, porque el padre corre en el checkout principal y con los permisos
+  que a un worktree le faltan:
   - Cada `BLOQUEADO` **lo aplicás vos**. Y si el bloqueo fue el hook, mirá el nombre de la rama
-    antes de nada.
-  - Cada 🟡 cuyo motivo no sea uno de los tres **vuelve**: o lo aplicás, o lo despachás con
-    `SendMessage`.
+    antes de nada. Lo que no puedas aplicar tampoco vos **hace fallar la corrida** y lo dice el
+    Paso 8 en su primera línea; no se tapa con un issue.
+  - Cada `PERTENECE-A-PR-<N>` **se aplica en su PR**, y verificás que se haya aplicado. Es ruteo,
+    no descarga: si llega al reporte sin aterrizar, es deuda con nombre de tránsito.
+  - Cada fix sobre una **escena compartida** lo aplicás vos, en el orden del Paso 6. Ningún agente
+    podía.
   - Un fix que el propio review destapó **sobre el skill o sobre el repo** —no sobre un PR—
     también se aplica: el padre es el único que corre el pipeline entero y a la vez lee su propia
-    prescripción.
+    prescripción. Es la descarga 3 de [`../sin-deuda.md`](../sin-deuda.md), y es la más barata de
+    saltear porque no la reclama ningún PR.
 - **Con `--comentar`**, un general por PR encabezado por el SHA, con las cuatro secciones:
-  bloqueantes resueltos, mejoras aplicadas, **no aplicado con motivo**, y lo que sigue abierto. La
-  tercera es la que le da valor. **No abras inline sobre tu propio PR ya arreglado**: es ruido con
-  costo.
+  bloqueantes resueltos, mejoras aplicadas, **lo que salió a su propio PR** con el número, y **lo
+  que obligó a corregir el spec**. **No abras inline sobre tu propio PR ya arreglado**: es ruido
+  con costo.
 
 **El reporte no se escribe acá.** Es el Paso 8, y va último porque tiene que contar cómo quedó la
 pila después del Paso 6.
@@ -363,7 +382,7 @@ el texto final ya redactado**, no con una descripción de qué habría que elegi
 ## Paso 7 — Destruir los worktrees
 
 ```bash
-python .claude/skills/pr-review-batch/scripts/limpiar_worktrees.py --todos
+python .claude/scripts/limpiar_worktrees.py --todos
 ```
 
 **No lo hagas a mano, y no uses `git worktree remove` solo: va a fallar.** Borra lo trackeado y el
@@ -389,20 +408,25 @@ su `origin/<headRefName>`**. Si difieren, algo no se pusheó y la rama es lo ún
 
 En este orden y en ~40 líneas más la tabla:
 
+0. **Si algo quedó `BLOQUEADO` y el padre tampoco pudo aplicarlo, la primera línea dice que la
+   corrida falló.** No «se cerró casi todo». Es la descarga 5 y es un rojo.
 1. **Una tabla, una fila por PR:** número, rama, hallazgos por severidad, el SHA del review, el
    SHA del merge si el Paso 6 lo tocó, y **si `verificar.py` pasó a la primera, a la segunda, o
    con algún nodo salteado**. La tercera columna no se omite: un salteado no es un verde.
 2. **Lo que apareció en más de un PR** — el patrón transversal es el entregable propio del batch.
-3. **Lo no aplicado**, con el número del issue que quedó abierto y el `Detectado en #N` que lleva.
-   **No es redundante con el PR**: el issue no está en el diff, así que quien mergea sólo lo ve
-   acá.
-4. **Cómo quedó la pila después del Paso 6**: qué cadena está al día contra qué, con qué SHA, y
+3. **Los PR nuevos que abrió esta corrida** para lo que caía fuera del alcance de cada spec, con
+   su número y en qué orden entran. Quien mergea tiene que saber que la corrida dejó más PRs de
+   los que revisó.
+4. **Lo que obligó a corregir un `spec.md`**, y que se devolvió al issue con `publicar_spec.py
+   publicar`. Y **si esta corrida corrigió un `SKILL.md`**, cuál y qué regla se le agregó — es el
+   entregable más caro del lazo, y el único que impide que el hallazgo vuelva.
+5. **Cómo quedó la pila después del Paso 6**: qué cadena está al día contra qué, con qué SHA, y
    cada conflicto resuelto **con el criterio que lo resolvió**. La verificación va escrita al lado:
    que cada cadena contenga entera a la de abajo —`git log <abajo>..<arriba>` vacío— y que no haya
    aparecido ninguna ref remota nueva.
-5. **Las escenas compartidas que quedaron sin mergear**, con qué hay que rehacer a mano. Es lo que
+6. **Las escenas compartidas que quedaron sin mergear**, con qué hay que rehacer a mano. Es lo que
    este repo agrega y lo que ningún merge va a resolver después.
-6. **Lo que queda entre cadenas independientes, con la resolución textual.** Y el orden de merge,
+7. **Lo que queda entre cadenas independientes, con la resolución textual.** Y el orden de merge,
    de abajo hacia arriba, más el aviso de que un squash obliga a rebasear el PR de arriba.
 
 La pregunta que el reporte tiene que dejar contestada es **«¿puedo mergear esto ya?»**. Si la

@@ -29,9 +29,14 @@ argument-hint: "<NNN NNN ...> | <NNN-MMM> | --propuestos [--dry]"
 Un review de spec audita **uno** contra el repo. Este audita **N contra el repo y entre sí**.
 
 Lo segundo es el entregable: una contradicción entre dos specs del lote no la ve ningún review
-suelto, porque cada uno mira una carpeta. Y acá sale barata — arreglarla es un párrafo, o un
-issue. La misma contradicción sobrevive intacta hasta que dos ramas del lote se pisan, y ahí ya
-cuesta un rebase. Si las dos tocan la misma escena, no cuesta un rebase: cuesta la escena.
+suelto, porque cada uno mira una carpeta. Y acá sale barata — arreglarla es un párrafo. La misma
+contradicción sobrevive intacta hasta que dos ramas del lote se pisan, y ahí ya cuesta un rebase.
+Si las dos tocan la misma escena, no cuesta un rebase: cuesta la escena.
+
+**Y se arregla, no se anota.** Las cinco descargas de [`../sin-deuda.md`](../sin-deuda.md) valen
+enteras acá, con una ventaja que ningún otro skill tiene: **el trabajo todavía es texto**, así que
+hasta el hallazgo que excede al lote se descarga barato — es un spec más, y este skill está parado
+justo en el momento de escribirlo.
 
 ## Por qué no hay worktrees
 
@@ -209,7 +214,11 @@ Uno por spec, cada uno con el preámbulo del Paso 1 y su base del Paso 2. Los se
   no verifica nada. Más el AC mecánico y el de no-regresión si hubo superficie compartida.
 - **Estructura** — los cuatro archivos, los `T0NN` sin renumerar —renumerar rompe toda referencia
   que otra tarea le hiciera—, `[P]` que no miente, ninguna tarea que se cierre **mirando o
-  escuchando**, y **ningún `## Seguimiento`**.
+  escuchando**, **ninguna sección que aplace** (`## Seguimiento` y sus alias) y **ninguna tarea
+  que aplace** (`TODO`, «por ahora», «más adelante»). Lo verifica `test_convencion_de_specs.py`.
+- **Completitud** — la pregunta que ningún gate contesta: **¿las tareas que hay alcanzan para
+  cumplir los AC?** Una tarea faltante no rompe nada, no aparece en ningún diff y no se hace
+  nunca. Si falta, se escribe acá.
 
 Y este contrato, que es lo propio del batch:
 
@@ -248,22 +257,29 @@ no re-audita: cruza.
   Corregilo antes de que salga, porque el próximo que pase lo «arregla» a algo peor.
 
 La asimetría del review vale igual acá: **endurecer se aplica** —un AC que falta se corrige en el
-spec al que le falta, y si el hallazgo excede al lote se abre como issue—; **aflojar se propone**.
-Si el cruce obliga a elegir entre dos diseños, frená con `AskUserQuestion`: un párrafo ahora
-contra dos ramas rebaseadas después.
+spec al que le falta—; **aflojar se propone**. Si el cruce obliga a elegir entre dos diseños,
+frená con `AskUserQuestion`: un párrafo ahora contra dos ramas rebaseadas después. Es la descarga
+4 de [`../sin-deuda.md`](../sin-deuda.md), y es la única forma legítima de que algo salga de esta
+corrida sin estar hecho.
 
-El issue de un hallazgo que excede al lote lleva las tres cosas que un `## Seguimiento` adentro
-del spec no pedía, porque estar escrito ahí se las daba gratis:
+### Un hallazgo que excede al lote no se anota: se le abre un spec
 
-- **Título que se entienda fuera del contexto del spec.** Un cruce abarca dos, así que no hay un
-  spec solo que le sirva de contexto — es el caso donde más duele.
-- **Cuerpo con la evidencia**: los dos `path:línea`, el número medido y qué AC queda
-  infalsificable si nadie lo toca.
-- **`Detectado en #N`**, con el issue del spec en el que iba la edición. **El `#N` sale de
-  `specs/mapa.json` y no del `NNN`.**
+Es la tentación fuerte de este paso, porque el cruce **es** el entregable y suena razonable
+dejarlo escrito. No lo es: un cruce anotado en un issue es un hallazgo que entendiste, mediste y
+decidiste no arreglar.
 
-**El label es `bug` o `enhancement`.** Inventar uno propio para la deuda de los specs vuelve a
-partir el tracker en dos, que es el problema que este repo ya cerró.
+Lo que sí hay que ver es que **acá el trabajo todavía es texto**, así que la descarga sale mucho
+más barata que en un review de PR: el hallazgo que excede al lote es **un spec más**, y este skill
+está parado justo en el momento de escribirlo. Con `spec-create`, o sumándolo al lote si el
+`numeros.py` del `spec-create-batch` todavía tiene números sin repartir.
+
+Y **el spec nuevo se publica en la misma corrida del Paso 5**, con los del lote: `crear` para
+todos antes de `publicar` para uno, o su cita cruzada queda como enlace muerto.
+
+**Si el hallazgo era del método y no del spec, corregí el `SKILL.md`.** Un `[P]` falso que llegó
+al review es una regla que `spec-create` no atajó; una escena compartida que la matriz no marcó es
+una regla de este archivo. Ver «el lazo» en [`../sin-deuda.md`](../sin-deuda.md), y va al reporte
+como sección propia.
 
 > **Y por eso este skill no corre forkeado.** Sacaría de esta conversación los N+1 reportes y la
 > convergencia entera, que es su gasto de contexto más grande — es tentador. Pero
@@ -275,9 +291,10 @@ partir el tracker en dos, que es el problema que este repo ya cerró.
 
 En este orden, y el segundo es el que se saltea:
 
-1. **Las ediciones fuera-de-carpeta**, una por hallazgo y en serie, para que el diff se lea. Los
-   issues se abren también de a uno, y **antes de abrir uno, buscá**: `gh issue list` con el
-   label. Un issue de más no se borra.
+1. **Las ediciones fuera-de-carpeta**, una por hallazgo y en serie, para que el diff se lea. Y
+   **los specs nuevos** que salieron de los cruces que exceden al lote: se escriben acá, con sus
+   cuatro archivos, y entran a la corrida de `crear` del punto 3. **Ninguno queda como issue
+   suelto** — ver [`../sin-deuda.md`](../sin-deuda.md).
 2. **Devolvé las ediciones a los issues. No es opcional y no lo hace nadie más:**
 
    ```bash
@@ -291,10 +308,16 @@ En este orden, y el segundo es el que se saltea:
 
    Corré la fase con `--dry` primero si el lote fue grande: imprime qué issue va a tocar sin
    tocarlo.
-3. **Commiteá `specs/mapa.json` sólo si cambió** —y no cambia por una edición de texto: cambia si
-   se creó un spec, que no es de este skill—. **El `estado` no se toca acá**: lo deriva la Action
-   en el push a `staging`, y el gate da rojo si alguien lo escribe a mano.
-4. **El reporte**, en este orden:
+3. **Commiteá `specs/mapa.json` si cambió** — cambia si el punto 1 escribió un spec nuevo. Ahí
+   corré `publicar_spec.py crear` **antes** que el `publicar` del punto 2, porque `traducir()`
+   deja verbatim la cita a un spec que todavía no está en el mapa: enlace muerto en el issue, sin
+   error y sin aviso. **El `estado` no se toca acá**: lo deriva la Action en el push a `staging`,
+   y el gate da rojo si alguien lo escribe a mano.
+4. **`python .claude/scripts/verificar.py --solo harness`**, que es donde corre
+   `test_convencion_de_specs.py` sobre lo hidratado: sección que aplaza, tarea que aplaza,
+   medición declarada como no hecha. Un lote que se publica sin esto sube specs que el gate va a
+   rechazar después, cuando ya son N issues.
+5. **El reporte**, en este orden:
    - **Una tabla, una fila por spec:** veredicto (`listo` · `N advertencias` · `no implementar`),
      bloqueantes, y las ediciones comprimidas a conteos.
    - **Los cruces y qué se decidió** — el entregable propio de este skill, y casi todo el
@@ -303,7 +326,12 @@ En este orden, y el segundo es el que se saltea:
      de specs no se pueden paralelizar por escena compartida**. Eso último es lo que va a leer
      `spec-implement-batch` para repartir carriles.
    - **Qué se publicó**: los issues que el paso 2 tocó, para que se pueda verificar.
+   - **Los specs nuevos** que abrieron los cruces que excedían al lote, con su `NNN` y su issue.
+   - **Si esta corrida corrigió un `SKILL.md`**, cuál y qué regla se le agregó. Es el entregable
+     del lazo, y el único que impide que el mismo cruce vuelva en el lote siguiente.
    - Una línea de lo que no tuvo nada.
+
+**El reporte no puede decir «queda pendiente».** Si aparece esa frase, el hallazgo no se descargó.
 
 ~50 líneas más la tabla. Los matices, el porqué y las mediciones **van a los specs y a sus
 issues**: el chat se pierde, el issue queda.

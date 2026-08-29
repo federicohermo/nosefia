@@ -12,6 +12,12 @@ argument-hint: "<NN> | (vacío = el PR de la rama actual) [--comentar] [--dry]"
 Encuentra, arregla, verifica, commitea y pushea a la rama del PR. **El reporte es lo que queda,
 no el producto.**
 
+**No deja deuda.** Todo lo que encuentra sale por una de las cinco descargas de
+[`../sin-deuda.md`](../sin-deuda.md) —arreglado, corregido en el spec, corregido en el skill,
+decidido por el usuario, o la corrida falla— y **ninguna de las cinco es «lo dejo anotado»**. Lo
+que sí decide el review es **dónde aterriza** cada fix: lo del alcance del spec en este PR, lo de
+afuera en su propio PR, abierto en esta misma corrida.
+
 ## Qué es de acá y qué es del batch
 
 `pr-review-batch` **no es este skill corrido N veces**: es este skill más todo lo que sólo se ve
@@ -124,22 +130,32 @@ que algo pasa, y no hay ni un test de gdUnit4 que lo vea fallar.
 
 Al revés también: **un AC que no se puede ver fallar es un hallazgo sobre el spec**, no sobre el
 PR. «El HUD muestra el tiempo» no; «con 3 minutos restantes, `tiempo_restante()` devuelve 180.0»
-sí. Va como issue, no como fix.
+sí.
+
+**Y se corrige acá, en esta corrida**: se reescribe el AC en el `spec.md`, se verifica que el diff
+lo cumpla, y se devuelve al issue con `python .claude/scripts/publicar_spec.py publicar` — el
+árbol de `specs/` es caché, así que un AC arreglado en disco y no publicado se lo lleva puesto la
+próxima hidratación, sin error y sin aviso.
+
+**Es además una corrección de `spec-create`**, no sólo de este spec: un AC infalsificable que
+llegó hasta el PR es una regla que el skill de creación no atajó. Agregá la regla allá y decilo en
+el reporte — ver «el lazo» en [`../sin-deuda.md`](../sin-deuda.md).
 
 ## Paso 5 — Encontrar y arreglar
 
 Con el método de [`hallazgos.md`](./hallazgos.md), que es donde viven los ejes, el filtro de
-confianza y la tabla de triage. Tres cosas que no se negocian y que están allá con su porqué:
+confianza y la tabla de triage. Cuatro cosas que no se negocian y que están allá con su porqué:
 
-- **El default es arreglar.** No aplicar es lo que necesita justificarse, y los motivos válidos
-  son exactamente tres: pelea con un AC, pediría un rediseño más grande que el PR, o lo cierra una
-  persona. «Es preexistente» y «no lo medí» no están en la lista.
-- **«Bloqueado» no es «descartado».** Si una herramienta te niega el fix, eso no es una decisión de
-  triage: se reporta como `BLOQUEADO` con el fix exacto en una línea copiable. Y si el bloqueo vino
-  del hook, **mirá el nombre de tu rama antes que nada** (Paso 1).
-- **Un 🟡 que no se aplica se abre como issue**, con `gh issue create`, con título que se entienda
-  fuera del contexto del spec, el cuerpo con la evidencia, y `Detectado en #N`. **El `#N` sale de
-  `specs/mapa.json` y no del `NNN`** — el spec 001 es el issue #3.
+- **Todo lo que encontrás se arregla.** No hay lista de motivos para no aplicar: hay una tabla de
+  **dónde aterriza**. «Es preexistente» y «es de otro spec» deciden el aterrizaje, nunca el si.
+- **Lo acotado es dónde buscás, no qué arreglás.** El alcance de la búsqueda es el diff y lo que
+  toca; un review que sale a recorrer el repo no termina nunca.
+- **Lo que cae fuera del alcance del spec va a su propio PR**, abierto en esta corrida y sacado de
+  `staging` —no de la rama que estás revisando, o arrastra sus commits—. Que engorde este PR no es
+  gratis: la detección de defectos cae de 87 % con menos de 100 líneas a 28 % con más de 1000.
+- **«Bloqueado» hace fallar la corrida.** No se tapa con un issue: el reporte arranca diciendo que
+  falló, con `BLOQUEADO` y el fix exacto en una línea copiable. Y si el bloqueo vino del hook,
+  **mirá el nombre de tu rama antes que nada** (Paso 1).
 
 ## Paso 6 — `verificar.py` en verde, y el salteado no es verde
 
@@ -179,10 +195,10 @@ diagnosticar que reescribirlo — está medido en esta máquina.
 «pusheado» con un remoto que no se movió es el único modo de falla silencioso que queda.
 
 **Con `--comentar`**, un general en el PR encabezado por el SHA, con las cuatro secciones:
-bloqueantes resueltos, mejoras aplicadas, **no aplicado con motivo**, y lo que sigue abierto. La
-tercera es la que le da valor — un review que sólo cuenta lo que arregló no es confiable cuando
-calla. **No abras inline sobre un PR que ya arreglaste**: es ruido con costo y se paga dos veces
-en eco.
+bloqueantes resueltos, mejoras aplicadas, **lo que salió a su propio PR** —con el número—, y **lo
+que obligó a corregir el spec**. Las dos últimas son las que le dan valor: dicen que el review
+encontró más de lo que este diff podía absorber, que es distinto de haber encontrado poco. **No
+abras inline sobre un PR que ya arreglaste**: es ruido con costo y se paga dos veces en eco.
 
 ## Paso 8 — Devolver el árbol, y el reporte
 
@@ -196,15 +212,22 @@ Y borrá la rama de andamio **recién después de verificar que es idéntica a s
 El reporte, en ~30 líneas:
 
 1. **Veredicto en la primera línea**, y si `verificar.py` pasó a la primera, a la segunda, o **con
-   algún nodo salteado**. Esa tercera opción no se omite.
+   algún nodo salteado**. Esa tercera opción no se omite. Si algo quedó `BLOQUEADO`, **el
+   veredicto es que la corrida falló** — no «se hizo casi todo».
 2. **Los bloqueantes**, con `archivo:línea` y evidencia.
-3. **Lo aplicado**, comprimido a conteos.
-4. **Lo NO aplicado, con su motivo** —uno de los tres— y el número del issue que quedó abierto.
-   **No es redundante con el PR**: el issue no está en el diff, así que quien mergea sólo lo ve
-   acá.
-5. **Lo `BLOQUEADO`**, con quién lo bloqueó y el fix exacto.
-6. **Las escenas que toca**, si toca alguna, y si hay que rehacer algo a mano en el editor.
-7. **El SHA**, y si la base era otro PR abierto.
+3. **Lo aplicado en este PR**, comprimido a conteos.
+4. **Lo que salió a su propio PR**, con el número de cada uno y por qué no entraba acá. **No es
+   redundante con el PR**: quien mergea tiene que saber que hay dos y en qué orden.
+5. **Lo que obligó a corregir el spec** —el AC que estaba mal, el alcance mal medido—, y que se
+   devolvió al issue con `publicar_spec.py publicar`.
+6. **Lo `BLOQUEADO`**, con quién lo bloqueó y el fix exacto en una línea copiable.
+7. **Si esta corrida corrigió un `SKILL.md`**, cuál y qué regla se le agregó. Es el entregable más
+   caro: es lo único que hace que el hallazgo no vuelva.
+8. **Las escenas que toca**, si toca alguna, y si hay que rehacer algo a mano en el editor.
+9. **El SHA**, y si la base era otro PR abierto.
+
+**Lo que el reporte no puede decir es «queda pendiente».** Si te encontrás escribiendo esa frase,
+el hallazgo no se descargó: volvé a la tabla de `hallazgos.md`.
 
 ---
 

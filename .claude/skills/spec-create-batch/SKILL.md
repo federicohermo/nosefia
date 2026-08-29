@@ -159,12 +159,22 @@ le tocan, y el orden del lote. Y este contrato:
    ninguna frontera.
 
    **Dos avisos sobre medir adentro de un lote**, y los dos son propios de esto:
-   - **La medición del cambio mínimo es descartable, y el hook la va a frenar.** Editar `src/`
-     desde `staging` está bloqueado, y acá **no hay rama de feature todavía ni la va a haber**.
-     Medí con lo que no toca rutas protegidas —correr los nodos, leer, `rg`, un script de un solo
-     uso que se corre y se borra— y si algo necesita de verdad tocar `src/`, **decilo en el
-     `research.md` como medición pendiente con el comando exacto**, en vez de saltearlo o
-     inventarlo.
+   - **El hook te va a frenar el cambio mínimo, y la salida no es aplazar la medición.** Editar
+     `src/` desde `staging` está bloqueado, y acá **no hay rama de feature todavía ni la va a
+     haber**. Un `research.md` que dice «queda por medir» pone en rojo el nodo `harness` —lo
+     verifica `test_convencion_de_specs.py`— y con razón: el plan entero se apoyaría en un número
+     que nadie midió, y el spec **igual se publica**.
+
+     **Los gates de este repo son puros, así que se los ejerce con entrada sintética en vez de
+     mutando `src/`.** Es lo que ya hizo el research del 002: `gate_de_capas.py` y
+     `gate_de_tests.py` reciben rutas y contenido, no un árbol de trabajo, así que la pregunta
+     «¿qué se pone en rojo con este cambio?» se contesta contra un archivo del scratchpad. Lo
+     mismo el resto: correr los nodos, leer, `rg`, un script de un solo uso que se corre y se
+     borra.
+
+     Y si de verdad **ninguna de esas vías alcanza**, eso no se anota: **se pregunta ahora**
+     (descarga 4 de [`../sin-deuda.md`](../sin-deuda.md)) o el spec se escribe sin necesitar ese
+     número. Un AC que depende de una medición imposible es un AC mal planteado.
    - **Declará contra qué base medís.** `staging`, o `staging` más los specs del lote que te
      preceden. Una medición sin base declarada es infalsificable en cuanto el lote se reordena —
      y el lote se reordena siempre.
@@ -183,8 +193,15 @@ le tocan, y el orden del lote. Y este contrato:
    hace revisable el reparto del lote antes de lanzarlo, y sin eso el Paso 5 no puede cruzar nada.
    Nada de *a ojo*, *de oído*, *captura* ni *mirar la pantalla*: se vuelve verificable —un test de
    gdUnit4, un número medido, un valor que un gate lea— o no se anota.
-6. **Ningún `## Seguimiento`**, y ningún marcador para «esto lo mira una persona». No existen acá.
-7. **Español**, y las reglas de capa puestas: una regla del juego va en `dominio/`, que es puro.
+6. **Las tareas son la totalidad.** Recorré cada AC y preguntá qué tarea lo cumple: un AC sin
+   tarea no rompe ningún gate, no sale en ningún diff, y **no se hace nunca** — el spec se
+   implementa entero, se mergea, y el AC sigue sin cumplirse con los seis nodos en verde.
+7. **Nada se aplaza.** Ninguna sección que aplace —`## Seguimiento` y sus alias `## Pendientes`,
+   `## Próximos pasos`, `## Deuda`—, ninguna casilla con `TODO` o «por ahora», ningún marcador
+   para «esto lo mira una persona». Las verifica `test_convencion_de_specs.py`. **`## Fuera de
+   alcance` sí va**: es una frontera, no una promesa — salvo que un AC tuyo dependa de lo
+   excluido, y entonces entra al spec.
+8. **Español**, y las reglas de capa puestas: una regla del juego va en `dominio/`, que es puro.
    Si el spec la ubica en `sistemas/`, en `ui/` o en una escena, **nace sin test** y ningún gate
    lo va a decir.
 
@@ -202,8 +219,9 @@ Y las cuatro cosas que **no** hace:
 
 Cada uno devuelve un reporte de **20–30 líneas**: qué mide su `research.md` y contra qué base, en
 qué capa cae cada regla, cuántos AC y cuántas tareas, su `origen` si tiene, **la lista de archivos
-de `src/` y de escenas que sus tareas nombran** —es con lo que el padre cruza en el Paso 5— y lo
-que quedó como medición pendiente.
+de `src/` y de escenas que sus tareas nombran** —es con lo que el padre cruza en el Paso 5— y
+**qué AC cubre cada tarea**, que es como el padre verifica que el `tasks.md` esté completo sin
+releer los cuatro archivos.
 
 ## Paso 5 — Cruzar lo escrito, y publicar una sola vez
 
@@ -268,8 +286,16 @@ En este orden y en ~35 líneas más la tabla:
    van, y cuáles se fundieron con otro.
 4. **El orden del lote**, y **qué pares no se pueden paralelizar por escena compartida**. Eso es
    lo que va a leer quien lo implemente.
-5. **Las mediciones pendientes**, con el comando exacto de cada una: son las que el hook frenó, y
-   nadie más las tiene anotadas.
+5. **La cobertura de los AC**: por spec, que cada criterio tenga una tarea que lo cumpla. Es la
+   única regla de completitud que ningún gate verifica — un AC sin tarea no rompe nada y no se
+   hace nunca.
+6. **Si esta corrida corrigió un `SKILL.md`**, cuál y qué regla se le agregó.
+
+**Lo que el reporte no puede tener es una lista de mediciones pendientes.** Si el hook frenó una
+medición, la salida era entrada sintética contra los gates —que son puros— o replantear el AC que
+la necesitaba; ver el Paso 4. Un `research.md` que declara una medición como no hecha pone en rojo
+el nodo `harness`, así que **corré `python .claude/scripts/verificar.py --solo harness` antes de
+publicar**: es mucho más barato que descubrirlo cuando el lote ya son N issues.
 
 Y lo que queda para después, que **no es de este skill**:
 
