@@ -127,7 +127,10 @@ exactamente lo que `origen` existe para impedir.
   líneas `**Origen:**` de cada `spec.md` —que son la fuente; el mapa es la copia—.
 - **Se edita** dejando el `origen` en **uno** solo: el spec que efectivamente salda el issue. El
   otro lo cita en su prosa si le sirve de contexto, sin la línea del encabezado. Y si los dos lo
-  saldan a medias, el hallazgo es que **falta partir el issue en dos**, y eso sale como issue.
+  saldan a medias, el hallazgo es que **falta partir el issue de entrada en dos**, y ahí sí se
+  abre uno: no es registrar deuda propia, es arreglar la bandeja de entrada para que cada mitad
+  tenga su `origen`. **Se parte ahora** — partirlo después es partir también los dos `Closes` que
+  ya salieron.
 
 ## 6 · Una regla que cae de dos lados de la frontera de capas
 
