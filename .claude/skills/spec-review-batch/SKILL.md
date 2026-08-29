@@ -33,10 +33,10 @@ suelto, porque cada uno mira una carpeta. Y acá sale barata — arreglarla es u
 contradicción sobrevive intacta hasta que dos ramas del lote se pisan, y ahí ya cuesta un rebase.
 Si las dos tocan la misma escena, no cuesta un rebase: cuesta la escena.
 
-**Y se arregla, no se anota.** Las cinco descargas de [`../sin-deuda.md`](../sin-deuda.md) valen
-enteras acá, con una ventaja que ningún otro skill tiene: **el trabajo todavía es texto**, así que
-hasta el hallazgo que excede al lote se descarga barato — es un spec más, y este skill está parado
-justo en el momento de escribirlo.
+**Y se arregla, no se anota.** Las cinco descargas de
+[`../comun/sin-deuda.md`](../comun/sin-deuda.md) valen enteras acá, con una ventaja que ningún otro
+skill tiene: **el trabajo todavía es texto**, así que hasta el hallazgo que excede al lote se
+descarga barato — es un spec más, y este skill está parado justo en el momento de escribirlo.
 
 ## Por qué no hay worktrees
 
@@ -117,7 +117,8 @@ insumos, y los cinco se pasan **destilados**, no como rutas a leer:
   Un spec nunca dice *replico la deuda #7*: eso lo traduce el review, y sólo puede hacerlo con la
   lista adelante.
 - **Lo que ya se probó y no funcionó**, que en este repo vive como **comentarios en el issue de
-  cada spec** y no en ningún archivo: `gh issue view <N> --repo federicohermo/nosefia --json comments`.
+  cada spec** y no en ningún archivo: `gh issue view <N> --repo federicohermo/nosefia --json
+  comments`.
 - **Las convenciones verificables, ≤40 líneas**: `CLAUDE.md`, más los `.claude/rules/` de las
   capas que el lote toca, más **quién verifica cada una** — que es el dato que cambia el
   hallazgo. Una regla que verifica `gate_de_capas.py` no necesita hallazgo de review: la va a
@@ -259,8 +260,8 @@ no re-audita: cruza.
 La asimetría del review vale igual acá: **endurecer se aplica** —un AC que falta se corrige en el
 spec al que le falta—; **aflojar se propone**. Si el cruce obliga a elegir entre dos diseños,
 frená con `AskUserQuestion`: un párrafo ahora contra dos ramas rebaseadas después. Es la descarga
-4 de [`../sin-deuda.md`](../sin-deuda.md), y es la única forma legítima de que algo salga de esta
-corrida sin estar hecho.
+4 de [`../comun/sin-deuda.md`](../comun/sin-deuda.md), y es la única forma legítima de que algo
+salga de esta corrida sin estar hecho.
 
 ### Un hallazgo que excede al lote no se anota: se le abre un spec
 
@@ -278,8 +279,8 @@ todos antes de `publicar` para uno, o su cita cruzada queda como enlace muerto.
 
 **Si el hallazgo era del método y no del spec, corregí el `SKILL.md`.** Un `[P]` falso que llegó
 al review es una regla que `spec-create` no atajó; una escena compartida que la matriz no marcó es
-una regla de este archivo. Ver «el lazo» en [`../sin-deuda.md`](../sin-deuda.md), y va al reporte
-como sección propia.
+una regla de este archivo. Ver «el lazo» en [`../comun/sin-deuda.md`](../comun/sin-deuda.md), y va
+al reporte como sección propia.
 
 > **Y por eso este skill no corre forkeado.** Sacaría de esta conversación los N+1 reportes y la
 > convergencia entera, que es su gasto de contexto más grande — es tentador. Pero
@@ -294,7 +295,7 @@ En este orden, y el segundo es el que se saltea:
 1. **Las ediciones fuera-de-carpeta**, una por hallazgo y en serie, para que el diff se lea. Y
    **los specs nuevos** que salieron de los cruces que exceden al lote: se escriben acá, con sus
    cuatro archivos, y entran a la corrida de `crear` del punto 3. **Ninguno queda como issue
-   suelto** — ver [`../sin-deuda.md`](../sin-deuda.md).
+   suelto** — ver [`../comun/sin-deuda.md`](../comun/sin-deuda.md).
 2. **Devolvé las ediciones a los issues. No es opcional y no lo hace nadie más:**
 
    ```bash

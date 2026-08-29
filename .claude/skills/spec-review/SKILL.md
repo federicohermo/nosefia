@@ -9,10 +9,10 @@ Este archivo **no reemplaza** al skill global: aporta lo que en este repo es dis
 ejes, los gates y el formato del reporte salen de allá.
 
 **Y acá el review corrige, no señala.** Todo lo que encuentra sale por una de las cinco descargas
-de [`../sin-deuda.md`](../sin-deuda.md), y ninguna es «lo dejo anotado». Es el momento más barato
-del flujo para hacerlo: **mientras el spec es texto, un hallazgo cuesta un párrafo**; el mismo
-hallazgo detectado implementando cuesta un rebase, y detectado en el PR cuesta además el review
-del PR.
+de [`../comun/sin-deuda.md`](../comun/sin-deuda.md), y ninguna es «lo dejo anotado». Es el momento
+más barato del flujo para hacerlo: **mientras el spec es texto, un hallazgo cuesta un párrafo**; el
+mismo hallazgo detectado implementando cuesta un rebase, y detectado en el PR cuesta además el
+review del PR.
 
 ## Antes de leer un spec: traerlo
 
@@ -130,4 +130,4 @@ vuelve a decir lo que decía. Es la forma más cara de perder una corrida entera
 **Y si el hallazgo era de planteo, corregí también el skill que lo dejó pasar.** Un AC
 infalsificable o una tarea sin archivo que llegaron hasta el review son una regla que
 `spec-create` no atajó: agregala allá y decilo en el reporte. Ver «el lazo» en
-[`../sin-deuda.md`](../sin-deuda.md).
+[`../comun/sin-deuda.md`](../comun/sin-deuda.md).

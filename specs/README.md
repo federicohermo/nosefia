@@ -162,7 +162,7 @@ es un nodo verde.
 **Y la salida tampoco es abrir un issue.** Los issues de este repo son **entrada**: lo que llega de
 afuera y `spec-create` drena. Si aparece trabajo que el spec necesitaba y no tenía, el defecto es
 del spec —y del skill que lo dejó salir así—, y se corrigen los dos. La doctrina completa está en
-[`.claude/skills/sin-deuda.md`](../.claude/skills/sin-deuda.md).
+[`.claude/skills/comun/sin-deuda.md`](../.claude/skills/comun/sin-deuda.md).
 
 **`## Fuera de alcance` sí existe y no es lo mismo**: declara una frontera —qué NO hace este spec—
 y es lo que lo vuelve revisable. Se convierte en deuda sólo si algún AC del propio spec depende de

@@ -1,7 +1,12 @@
 # La imposibilidad de la deuda
 
-**Lo leen los siete skills y vive una sola vez.** Si esto cambia, cambia para los siete, que es
+**Lo leen los ocho skills y vive una sola vez.** Si esto cambia, cambia para los ocho, que es
 exactamente lo que se quiere. Cada `SKILL.md` lo cita por ruta; ninguno lo copia.
+
+**Vive en `comun/` y no suelto en `.claude/skills/`** porque ahí todo lo demás es un skill, y un
+`.md` suelto entre puros directorios se lee como uno a medio hacer. Tampoco es un `CLAUDE.md`: los
+skills lo leen **por enlace, cuando corren**, y un `CLAUDE.md` anidado se cargaría al editar esta
+carpeta —el meta-trabajo— y no al correr un review sobre `src/`. El disparador quedaría invertido.
 
 ## La regla
 

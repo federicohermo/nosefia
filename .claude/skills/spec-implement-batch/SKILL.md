@@ -29,7 +29,7 @@ al converger. **Entre carriles ese padre no existe**: cada carril tiene su árbo
 converge recién en el merge, que resuelve texto y no semántica.
 
 **El skill global es el piso; este archivo manda.** Y no deja deuda: las cinco descargas están en
-[`../sin-deuda.md`](../sin-deuda.md), con una vuelta propia — ver «el lazo», al final.
+[`../comun/sin-deuda.md`](../comun/sin-deuda.md), con una vuelta propia — ver «el lazo», al final.
 
 ## Lo que este repo cambia respecto del batch genérico
 
@@ -244,8 +244,8 @@ Las dos mitades, las dos en esta corrida:
 
 1. **El carril corrige su spec** para poder seguir, y lo devuelve al issue.
 2. **El padre corrige el `SKILL.md`** que lo permitió, con la regla que lo habría atajado. La tabla
-   de qué skill corregir está en [`../sin-deuda.md`](../sin-deuda.md), y **está incompleta a
-   propósito**: si tu caso no entra, agregá la fila.
+   de qué skill corregir está en [`../comun/sin-deuda.md`](../comun/sin-deuda.md), y **está
+   incompleta a propósito**: si tu caso no entra, agregá la fila.
 
 **Es del padre y no del carril**, y no es una preferencia: `.claude/` es el único árbol que los N
 carriles comparten, y dos worktrees editando el mismo `SKILL.md` se pisan en silencio — el segundo

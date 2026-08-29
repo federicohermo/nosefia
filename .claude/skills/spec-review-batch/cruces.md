@@ -13,10 +13,10 @@ corresponda y listo.
 edición propuesta con `path:línea` y el texto exacto, y **no abrís ni cerrás issues ni corrés
 `publicar_spec.py`**.
 
-**Ningún cruce queda anotado para después** —ver [`../sin-deuda.md`](../sin-deuda.md)—, así que el
-que **excede al lote** no sale como issue: sale como **un spec más**, y lo escribe el padre en el
-Paso 5. Lo que tenés que devolver listo para copiar es lo que ese spec necesita y vos sos el único
-que lo tiene a la vista:
+**Ningún cruce queda anotado para después** —ver [`../comun/sin-deuda.md`](../comun/sin-deuda.md)—,
+así que el que **excede al lote** no sale como issue: sale como **un spec más**, y lo escribe el
+padre en el Paso 5. Lo que tenés que devolver listo para copiar es lo que ese spec necesita y vos
+sos el único que lo tiene a la vista:
 
 - **Un título que se entienda fuera del contexto de los dos specs.** Un cruce abarca dos, así que
   no hay uno solo que le sirva de contexto: es justo donde un título que arranque con «el problema

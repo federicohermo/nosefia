@@ -1,6 +1,6 @@
 ---
 name: spec-create-batch
-description: Convierte N pedidos en prosa —o N issues de deuda— en N specs publicados como issues, en paralelo: un agente escritor por spec, los números repartidos de una vez por el padre, y una sola corrida de crear/publicar/commit al cerrar. Usar al abrir dos o más specs de una. Para uno solo, spec-create.
+description: "Convierte N pedidos en prosa —o N issues de deuda— en N specs publicados como issues, en paralelo: un agente escritor por spec, los números repartidos de una vez por el padre, y una sola corrida de crear/publicar/commit al cerrar. Usar al abrir dos o más specs de una. Para uno solo, spec-create."
 argument-hint: "<los pedidos, o --deuda [N] > [--dry]"
 # Sin `allowed-tools`, igual que el resto de los skills de spec de este repo. Éste abanica N
 # agentes, corre el harness en Python y habla con GitHub por `gh`: declarar una lista parcial
@@ -173,8 +173,8 @@ le tocan, y el orden del lote. Y este contrato:
      borra.
 
      Y si de verdad **ninguna de esas vías alcanza**, eso no se anota: **se pregunta ahora**
-     (descarga 4 de [`../sin-deuda.md`](../sin-deuda.md)) o el spec se escribe sin necesitar ese
-     número. Un AC que depende de una medición imposible es un AC mal planteado.
+     (descarga 4 de [`../comun/sin-deuda.md`](../comun/sin-deuda.md)) o el spec se escribe sin
+     necesitar ese número. Un AC que depende de una medición imposible es un AC mal planteado.
    - **Declará contra qué base medís.** `staging`, o `staging` más los specs del lote que te
      preceden. Una medición sin base declarada es infalsificable en cuanto el lote se reordena —
      y el lote se reordena siempre.

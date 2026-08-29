@@ -21,8 +21,9 @@ Y no termina en el reporte. Encuentra, arregla, verifica, commitea y pushea a la
 reporte es lo que queda, no el producto.
 
 **No deja deuda, y en un lote eso tiene una vuelta más.** Las cinco descargas están en
-[`../sin-deuda.md`](../sin-deuda.md) y valen para cada agente. Lo propio del batch es que acá hay
-un destino que allá no existe —`PERTENECE-A-PR-<N>`, el hallazgo que es de otro PR de la cadena— y
+[`../comun/sin-deuda.md`](../comun/sin-deuda.md) y valen para cada agente. Lo propio del batch es
+que acá hay un destino que allá no existe —`PERTENECE-A-PR-<N>`, el hallazgo que es de otro PR de la
+cadena— y
 **ése no es una descarga: es un ruteo.** Queda descargado cuando alguien lo aplica, y el
 responsable de que eso pase es el padre (Paso 7). Un `PERTENECE-A-PR-<N>` que llega al reporte sin
 haberse aplicado es deuda con nombre de tránsito.
@@ -40,7 +41,7 @@ Seis sustituciones. Las tres primeras son de herramienta; las tres últimas camb
 | Cierra con `pnpm verify` | **`python .claude/scripts/verificar.py`**, y un nodo **salteado no es un nodo verde** |
 | La cobertura la garantiza un umbral del 100 % | **Godot no mide cobertura.** El eje de cobertura pasa a ser del reviewer, entero |
 | Un conflicto de merge se resuelve leyendo | **un `.tscn` no se mergea**: da una escena corrupta, no un conflicto. El Paso 6 no puede confiar en git |
-| Eleva todo a comentarios del PR, y lo de afuera del alcance a un issue | **Nada queda anotado.** Lo del alcance entra al PR; lo de afuera sale en **su propio PR** en esta corrida; lo del planteo se corrige en el `spec.md`. Los issues acá son **entrada**, no salida — ver [`../sin-deuda.md`](../sin-deuda.md). `--comentar` publica además un general por PR |
+| Eleva todo a comentarios del PR, y lo de afuera del alcance a un issue | **Nada queda anotado.** Lo del alcance entra al PR; lo de afuera sale en **su propio PR** en esta corrida; lo del planteo se corrige en el `spec.md`. Los issues acá son **entrada**, no salida — ver [`../comun/sin-deuda.md`](../comun/sin-deuda.md). `--comentar` publica además un general por PR |
 
 ---
 
@@ -120,7 +121,8 @@ Seis cláusulas, que van **literales** en el preámbulo del Paso 1:
    el cambio exacto y quién más la toca. Es la única clase de fix que se declara por el archivo y
    no por el hallazgo.
 6. **Todo hallazgo se descarga, y ninguna descarga es un issue.** Las cinco están en
-   [`../sin-deuda.md`](../sin-deuda.md). Lo del alcance de tu spec entra a tu PR; lo de afuera
+   [`../comun/sin-deuda.md`](../comun/sin-deuda.md). Lo del alcance de tu spec entra a tu PR; lo de
+   afuera
    **sale en su propio PR desde `staging`**, abierto por vos en esta corrida —no desde tu rama, o
    arrastra tus commits—; lo que pelea con un AC se descarga **corrigiendo el AC** en el `spec.md`
    y devolviéndolo al issue. «Es preexistente» y «es de otro spec» deciden **dónde aterriza**, no
@@ -156,9 +158,10 @@ candidatos están servidos: `docs/architecture/directory-structure.md` enumera y
 Es el ahorro propio del batch: sin esto, N agentes lo re-derivan N veces desde frío. Cinco
 insumos, y los cinco van **destilados**, no como rutas a leer:
 
-- **Las convenciones verificables, ≤40 líneas**, con la línea de [`hallazgos.md`](../pr-review/hallazgos.md)
-  marcada: qué verifica ya una herramienta y qué no. `CLAUDE.md` **ya la dibujó** —tiene una lista
-  «verificadas por una herramienta» y otra «prosa»— así que acá se copia, no se deriva.
+- - **Las convenciones verificables, ≤40 líneas**, con la línea de
+  [`hallazgos.md`](../pr-review/hallazgos.md) marcada: qué verifica ya una herramienta y qué no.
+  `CLAUDE.md` **ya la dibujó** —tiene una lista «verificadas por una herramienta» y otra «prosa»—
+  así que acá se copia, no se deriva.
 - **El mapa síntoma → deuda**: `python .claude/scripts/deuda.py`.
 - **Lo que ya se probó y no funcionó** para el área del lote. Vive como comentarios en el issue de
   cada spec: `gh issue view <N> --repo federicohermo/nosefia --json comments`.
@@ -195,9 +198,9 @@ Duplicar acá sus pasos sería el segundo lugar donde vive el método, y el día
 sigue corriendo el viejo.
 
 Cada agente recibe el preámbulo del Paso 1, su número de PR, su `headRefName`, su `baseRefName` y la
-ruta a [`hallazgos.md`](../pr-review/hallazgos.md), que es el método de búsqueda y va **literal**: un
-agente aislado necesita la rúbrica de confianza más que vos, porque no tiene el contexto que te deja
-descartar un hallazgo de un vistazo.
+ruta a [`hallazgos.md`](../pr-review/hallazgos.md), que es el método de búsqueda y va **literal**:
+un agente aislado necesita la rúbrica de confianza más que vos, porque no tiene el contexto que te
+deja descartar un hallazgo de un vistazo.
 
 Y estas diferencias respecto de `pr-review`, que son las que lo vuelven un carril del lote:
 
@@ -231,8 +234,8 @@ Y estas diferencias respecto de `pr-review`, que son las que lo vuelven un carri
    `PERTENECE-A-PR-<N>` o escena compartida— **o en `BLOQUEADO`.** No hay una cuarta. El padre lo
    cruza contra esa lista, así que declararlo mal no lo hace desaparecer: lo devuelve.
 
-   Y **pedile que no afirme qué otros PR tocan sus archivos.** No lo puede saber: `origin/staging..HEAD`
-   sólo ve hacia abajo.
+   Y **pedile que no afirme qué otros PR tocan sus archivos.** No lo puede saber:
+   `origin/staging..HEAD` sólo ve hacia abajo.
 
 **No commitea el árbol rojo.** Si `verificar.py` queda rojo después del Paso 4, revertí lo que lo
 rompió, no pushees, y decilo. Un pipeline que pushea para completarse no sirve.
@@ -296,8 +299,8 @@ El padre no re-audita: cruza.
     podía.
   - Un fix que el propio review destapó **sobre el skill o sobre el repo** —no sobre un PR—
     también se aplica: el padre es el único que corre el pipeline entero y a la vez lee su propia
-    prescripción. Es la descarga 3 de [`../sin-deuda.md`](../sin-deuda.md), y es la más barata de
-    saltear porque no la reclama ningún PR.
+    prescripción. Es la descarga 3 de [`../comun/sin-deuda.md`](../comun/sin-deuda.md), y es la más
+    barata de saltear porque no la reclama ningún PR.
 - **Con `--comentar`**, un general por PR encabezado por el SHA, con las cuatro secciones:
   bloqueantes resueltos, mejoras aplicadas, **lo que salió a su propio PR** con el número, y **lo
   que obligó a corregir el spec**. **No abras inline sobre tu propio PR ya arreglado**: es ruido

@@ -8,9 +8,10 @@ description: Especialización de /spec-implement para No se fía (Godot). El par
 Este archivo **no reemplaza** al skill global: aporta lo que en este repo es distinto. El
 método, el fake-edge test y la convergencia salen de allá.
 
-**No deja deuda**, y eso está en [`../sin-deuda.md`](../sin-deuda.md). Lo propio de implementar es
-el lazo: **si acá aparece un problema de planteo, el defecto no es de este spec — es del skill que
-lo dejó salir así**, y se corrigen los dos en esta corrida. Ver «Cuando el spec no alcanza», abajo.
+**No deja deuda**, y eso está en [`../comun/sin-deuda.md`](../comun/sin-deuda.md). Lo propio de
+implementar es el lazo: **si acá aparece un problema de planteo, el defecto no es de este spec — es
+del skill que lo dejó salir así**, y se corrigen los dos en esta corrida. Ver «Cuando el spec no
+alcanza», abajo.
 
 ## Antes de arrancar
 
@@ -116,8 +117,9 @@ La descarga son dos mitades, las dos en esta corrida:
    | dos specs que se pisan la misma escena | `spec-review-batch` |
    | una medición que el spec supuso en vez de correr | `spec-create` |
 
-   **Si no entra en ninguna fila, agregá la fila** —en [`../sin-deuda.md`](../sin-deuda.md)—. La
-   tabla está incompleta a propósito: es el registro de lo que este flujo ya aprendió.
+   **Si no entra en ninguna fila, agregá la fila** —en
+   [`../comun/sin-deuda.md`](../comun/sin-deuda.md)—. La tabla está incompleta a propósito: es el
+   registro de lo que este flujo ya aprendió.
 
 Va al reporte como sección propia. **Es el entregable más caro de la corrida y el más fácil de
 saltear**, porque no lo reclama ningún test ni ningún PR: el spec ya quedó andando sin él.

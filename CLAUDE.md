@@ -169,7 +169,7 @@ sigue debiendo. **Eso ahora es un rojo** —`test_convencion_de_specs.py` lo ver
 secciones que aplazan, las tareas que aplazan y las mediciones declaradas como no hechas.
 
 La doctrina entera, con sus cinco descargas y contra qué evidencia se contrastó, está en
-[.claude/skills/sin-deuda.md](./.claude/skills/sin-deuda.md), que leen los ocho skills.
+[.claude/skills/comun/sin-deuda.md](./.claude/skills/comun/sin-deuda.md), que leen los ocho skills.
 
 ---
 
