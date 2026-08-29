@@ -1,8 +1,10 @@
 # El método — encontrar sin generar ruido
 
-Lo carga cada agente de PR al empezar a buscar. Está afuera del `SKILL.md` por dos motivos: no le
-cuesta contexto al padre, que no busca hallazgos, y el padre le pasa **la ruta** a los N agentes
-en vez de inlinear cien líneas en cada prompt.
+**Este archivo es de los dos skills de PR y vive una sola vez.** Lo lee `pr-review` en su Paso 5,
+y `pr-review-batch` se lo pasa por ruta a cada uno de sus N agentes — por eso está afuera de los
+dos `SKILL.md`: no le cuesta contexto al padre del batch, que no busca hallazgos, y no hay que
+inlinear cien líneas en cada prompt. Si algo de acá cambia, cambia para los dos, que es
+exactamente lo que se quiere.
 
 Lo que separa un review útil de una lista de ruido está acá, no en la cantidad de hallazgos.
 
@@ -121,8 +123,8 @@ Puntuá cada hallazgo de 0 a 100 y **descartá todo lo que quede por debajo de 8
 - Problemas **preexistentes** en líneas que el PR no tocó.
 - Cualquier cosa de la columna izquierda de la tabla de convenciones.
 - **Un nodo de `verificar.py` que se salteó.** No es un hallazgo del PR: es que faltó `GODOT_BIN`,
-  y el protocolo está en el `SKILL.md`. Pero **tampoco es verde** — no lo declares como si el PR
-  hubiera pasado.
+  y el protocolo está en el skill que te invocó —Paso 6 de `pr-review`, Paso 4 del batch—. Pero
+  **tampoco es verde**: no lo declares como si el PR hubiera pasado.
 - Nitpicks que un senior no marcaría.
 - Cambios de comportamiento que evidentemente **son la intención del PR**. Contra eso está el
   spec: si el spec lo pide, no es bug.
@@ -178,9 +180,10 @@ lo aplica. Pero sólo si el reporte lo distingue.
 
 ### «Preexistente» no cubre una línea que tu diff volvió a escribir
 
-Es el reverso exacto de la cláusula 1 del `SKILL.md`, y el mismo test mecánico decide las dos: **si
-la línea aparece como `+` en tu `pr.diff`, es tuya.** Vale para atribuir un hallazgo y vale para
-tener que arreglarlo.
+El mismo test mecánico decide las dos caras: **si la línea aparece como `+` en tu `pr.diff`, es
+tuya.** Vale para tener que arreglarlo, y en el batch vale además para atribuirlo — allá es el
+reverso exacto de la cláusula 1, que usa el mismo test para mandar hacia abajo lo que no es `+`.
+En un review suelto no hay «abajo», así que acá queda sólo la mitad que obliga.
 
 Que el número lo haya vuelto falso un spec anterior no cambia nada: lo que importa es que **tu
 diff lo volvió a escribir**, y una afirmación falsa re-tipeada es una afirmación que este PR

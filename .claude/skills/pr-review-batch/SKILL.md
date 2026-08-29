@@ -1,6 +1,6 @@
 ---
 name: pr-review-batch
-description: Revisa los PR abiertos de GitHub en paralelo —un agente por PR, cada uno en su worktree—, arregla lo que encuentra, verifica con verificar.py, commitea y pushea a la rama del PR, y si los PR están apilados cierra poniendo la pila al día. Usar al querer cerrar el review de uno o varios PR de este repo. Para revisar un spec que todavía es texto, spec-review-batch.
+description: Revisa los PR abiertos de GitHub en paralelo —un agente por PR, cada uno en su worktree—, arregla lo que encuentra, verifica con verificar.py, commitea y pushea a la rama del PR, y si los PR están apilados cierra poniendo la pila al día. Usar al querer cerrar el review de dos o más PR de este repo. Para uno solo, pr-review. Para revisar un spec que todavía es texto, spec-review-batch.
 argument-hint: "<NN NN ...> | --abiertos [--comentar] [--dry]"
 # Sin `allowed-tools`, o sea sin restricción, y por el mismo motivo que los demás skills de
 # este repo: declarar una lista parcial le sacaría todo lo que no estuviera en ella —`Agent`,
@@ -59,7 +59,7 @@ gh pr list --repo federicohermo/nosefia --state open \
    argumento —la cabeza— justamente para que el padre pueda medir **sin checkout**:
    ```bash
    for n in 6 7 8; do
-     python .claude/skills/pr-review-batch/scripts/diff_pr.py <base> <dir>/$n origin/<head>
+     python .claude/skills/pr-review/scripts/diff_pr.py <base> <dir>/$n origin/<head>
    done
    cat <dir>/*/pr.files | sort | uniq -c | sort -rn | awk '$1>1'
    ```
@@ -144,7 +144,7 @@ candidatos están servidos: `docs/architecture/directory-structure.md` enumera y
 Es el ahorro propio del batch: sin esto, N agentes lo re-derivan N veces desde frío. Cinco
 insumos, y los cinco van **destilados**, no como rutas a leer:
 
-- **Las convenciones verificables, ≤40 líneas**, con la línea de [`hallazgos.md`](./hallazgos.md)
+- **Las convenciones verificables, ≤40 líneas**, con la línea de [`hallazgos.md`](../pr-review/hallazgos.md)
   marcada: qué verifica ya una herramienta y qué no. `CLAUDE.md` **ya la dibujó** —tiene una lista
   «verificadas por una herramienta» y otra «prosa»— así que acá se copia, no se deriva.
 - **El mapa síntoma → deuda**: `python .claude/scripts/deuda.py`.
@@ -176,73 +176,50 @@ primera corrida que la contradiga la mueve.
 
 ## Paso 3 — El contrato de cada agente
 
-Cada uno recibe el preámbulo del Paso 1, su número de PR, su `headRefName`, su `baseRefName` y la
-ruta a [`hallazgos.md`](./hallazgos.md), que es el método y va **literal**: un agente aislado
-necesita la rúbrica de confianza más que vos, porque no tiene el contexto que te deja descartar un
-hallazgo de un vistazo.
+**El método de cada agente es [`pr-review`](../pr-review/SKILL.md), no una copia suya.** Ese skill
+tiene los Pasos 1 a 7 de un review completo —rama de andamio, hidratar, diff, AC, encontrar,
+arreglar, verificar, pushear— y este archivo agrega **lo único que un PR solo no tiene: la cadena**.
+Duplicar acá sus pasos sería el segundo lugar donde vive el método, y el día que uno cambie el otro
+sigue corriendo el viejo.
 
-Y este contrato, en este orden:
+Cada agente recibe el preámbulo del Paso 1, su número de PR, su `headRefName`, su `baseRefName` y la
+ruta a [`hallazgos.md`](../pr-review/hallazgos.md), que es el método de búsqueda y va **literal**: un
+agente aislado necesita la rúbrica de confianza más que vos, porque no tiene el contexto que te deja
+descartar un hallazgo de un vistazo.
 
-1. **Parate en la cabeza del PR sin robarle la rama a nadie.**
-   ```bash
-   git fetch origin
-   git checkout -B feature/<NNN>-rev-pr-<N> origin/<headRefName>
-   ```
-   Una rama de andamio propia: `git checkout <headRefName>` a secas falla si esa rama ya está
-   tomada por otro worktree.
+Y estas diferencias respecto de `pr-review`, que son las que lo vuelven un carril del lote:
 
-   **El nombre no es libre, y el `NNN` del spec del PR va adelante a propósito.**
-   `gate_de_spec.py` corre como hook sobre `Edit|Write|MultiEdit|Bash|PowerShell` y **bloquea toda
-   escritura a `src/` y `docs/` desde una rama que no matchee `^feature/(\d{3})-` con ese número
-   en `specs/mapa.json`**. Un nombre tipo `rev-pr-<N>` no matchea, así que el review de cualquier
-   PR que toque esas dos carpetas se quedaría sin poder arreglar nada. Como el spec del PR ya está
-   en el mapa por construcción, ponerlo adelante alcanza. El nombre de la rama de andamio **no
-   afecta el push**, que sigue siendo a `refs/heads/<headRefName>`.
-
-   **Si el PR no tiene spec** —una rama `fix/` o `chore/`, que este repo permite para lo que no
-   toca rutas protegidas— entonces por construcción **no hay nada que arreglar en `src/` ni en
-   `docs/`**, y la rama de andamio se llama como quieras. Si igual hiciera falta tocarlas, eso
-   **es un hallazgo sobre el PR**: le falta el spec.
-2. **Hidratá el spec. No es opcional y no falla solo.**
-   ```bash
-   python .claude/scripts/hidratar_specs.py <NNN>
-   ```
-   `specs/[0-9]*/` está en el `.gitignore` y `git worktree add` hace checkout de lo **trackeado**,
-   así que al worktree llegan dos archivos de `specs/` y ningún spec. Sin esto el Paso 4 lee un
-   directorio vacío, no encuentra los AC y **revisa sin criterios de aceptación** — que es la peor
-   forma de este bug, porque el review igual termina y reporta.
+1. **Corre adentro de su worktree, no en el checkout principal.** Por eso `pr-review` pide el árbol
+   limpio y acá no hace falta: el worktree nace limpio por construcción. Y por eso mismo la rama de
+   andamio **no puede** llamarse igual que en otro carril — `git checkout <headRefName>` a secas
+   falla si esa rama ya está tomada por otro worktree, así que el `feature/<NNN>-rev-pr-<N>` del
+   Paso 1 de `pr-review` acá además es lo que los mantiene disjuntos.
+2. **Hidratá el spec, y acá el motivo es más fuerte.** `git worktree add` hace checkout de lo
+   **trackeado**, así que al worktree llegan dos archivos de `specs/` y ningún spec — un checkout
+   principal al menos puede tener la caché de una corrida anterior. Sin
+   `python .claude/scripts/hidratar_specs.py <NNN>` el agente revisa sin criterios de aceptación y
+   **igual termina y reporta**.
 
    **No hay `install` que correr**: el proyecto es Godot y `addons/` está vendorizado.
-3. **Materializá el diff una sola vez**, con la base del PR y no con `staging`:
-   ```bash
-   python .claude/skills/pr-review-batch/scripts/diff_pr.py <baseRefName> <dir-temporal>
-   ```
-   Emite el diff, el `--stat`, las listas de código, prosa y **escenas** por separado, el gate de
-   ejes y las afirmaciones numéricas que el diff agrega. **Si `diff_size=grande`, no leas el diff
-   entero**: triageá con el `--stat` y leé por archivo.
-4. **Leé los AC del spec del PR** y contrastá cada uno contra el diff. Un AC sin contraparte
-   verificable en el diff es hallazgo aunque el código esté bien.
-5. **Encontrá con el método de `hallazgos.md`**, y sólo en los ejes que el gate abrió.
-6. **Arreglá con la política de triage de `hallazgos.md`**, y con las seis cláusulas del Paso 0
-   bis encima.
-7. **`verificar.py` en verde**, con el Paso 4 de este archivo adelante.
-8. **Commit y push**, sin `--force`:
-   ```bash
-   git push origin HEAD:refs/heads/<headRefName>
-   ```
-   **El mensaje de commit se escribe con `Write` a un archivo y se pasa con `-F`, nunca con
-   heredoc.**
-9. **Devolvé un reporte de 30–50 líneas**: veredicto en la primera, los bloqueantes con
-   `archivo:línea` y evidencia, lo aplicado a conteos, lo **no** aplicado con motivo, lo
-   `BLOQUEADO` con quién lo bloqueó, los `PERTENECE-A-PR-<N>`, **la lista exacta de archivos
-   tocados** —es lo único con lo que el padre calcula el costo de rebase—, **si algún nodo se
-   salteó y cuál**, y el SHA. Sin el SHA el padre no puede verificar que el push llegó.
+3. **Las seis cláusulas del Paso 0 bis van encima de la política de triage**, y dos de ellas
+   **cambian** lo que `pr-review` haría solo: lo que no sea `+` en el propio diff se reporta como
+   `PERTENECE-A-PR-<N>` en vez de arreglarse, y un fix sobre una escena de la lista caliente **no se
+   aplica**. Un agente que no las tenga va a arreglar dos veces lo mismo, o a corromper una escena.
+4. **El reporte es para el padre, no para el usuario**, así que cambia de forma: 30–50 líneas con
+   veredicto en la primera, los bloqueantes con `archivo:línea`, lo no aplicado con motivo, lo
+   `BLOQUEADO` con quién lo bloqueó, los `PERTENECE-A-PR-<N>`, **si algún nodo se salteó y cuál**,
+   y dos cosas que `pr-review` no necesita porque no hay nadie arriba suyo:
+   - **La lista exacta de archivos que tocó** — es lo único con lo que el padre calcula el costo de
+     rebase del Paso 6.
+   - **El SHA del push.** Sin él el padre no puede verificar que el push llegó, que es el único
+     modo de falla silencioso que le queda.
 
-   **Cada 🟡 no aplicado lleva su motivo, y el motivo tiene que ser uno de los tres de
-   `hallazgos.md`.** Cualquier otra cosa significa que el fix se aplica, o que va como `BLOQUEADO`
-   y **no** como decisión de triage. El padre lo va a cruzar contra esa lista.
+   **Cada 🟡 no aplicado lleva su motivo, y tiene que ser uno de los tres de
+   `pr-review/hallazgos.md`.** El padre lo va a cruzar contra esa lista, así que declararlo mal no
+   lo hace desaparecer: lo devuelve.
 
-   Y **pedile que no afirme qué otros PR tocan sus archivos.** No lo puede saber.
+   Y **pedile que no afirme qué otros PR tocan sus archivos.** No lo puede saber: `origin/staging..HEAD`
+   sólo ve hacia abajo.
 
 **No commitea el árbol rojo.** Si `verificar.py` queda rojo después del Paso 4, revertí lo que lo
 rompió, no pushees, y decilo. Un pipeline que pushea para completarse no sirve.
@@ -441,6 +418,9 @@ reporte, no como una advertencia.
 - **No revisa specs que todavía son texto.** Eso es `spec-review-batch`, corre antes, y sale mucho
   más barato: un cruce detectado como texto cuesta un párrafo y detectado en dos ramas cuesta un
   rebase.
+- **No reimplementa el review de un PR.** Ese método es `pr-review`, y con **un** PR abierto usá
+  ése: todo lo que este skill agrega —la cadena, la lista caliente, las seis cláusulas, el Paso 6—
+  no tiene nada que hacer, y a cambio te cobra un worktree que después hay que limpiar.
 - **No abre PRs ni ramas de feature.** Trabaja sobre lo que ya está abierto.
 - **No abre el juego.** Corre la suite en headless, que es otra cosa. Si un fix toca algo que se
   ve, la verificación en pantalla la pide el spec: acá queda **declarada en el reporte** como

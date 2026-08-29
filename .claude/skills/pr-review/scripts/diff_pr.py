@@ -1,10 +1,11 @@
 """Materializa el diff de UN PR y mide qué ejes se revisan.
 
-Corre adentro del worktree del agente, ya parado en la cabeza del PR.
+Corre parado en la cabeza del PR: en el checkout principal si lo llama `pr-review`, o
+adentro del worktree del agente si lo llama `pr-review-batch`.
 
 Uso, desde la raíz del worktree:
 
-    python .claude/skills/pr-review-batch/scripts/diff_pr.py <rama-base> <dir-salida> [<rama-head>]
+    python .claude/skills/pr-review/scripts/diff_pr.py <rama-base> <dir-salida> [<rama-head>]
 
 El tercer argumento es opcional y por defecto es `HEAD`. Existe para que el **padre** pueda medir
 un PR sin checkout —cuántas líneas, qué ejes, si toca escenas— y decidir con eso el ancho del
