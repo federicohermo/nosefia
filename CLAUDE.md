@@ -102,8 +102,23 @@ Verificadas por una herramienta:
 Prosa — dependen de que la revisión las mire, y que no tengan verificador es deuda:
 
 - **Tipado estático en toda firma**, `-> void` incluido.
-- **Español** en comentarios, nombres, commits y specs. Las excepciones son las del motor
-  (`_ready`, `_process`, `queue_free`).
+- **Español en el contenido, inglés en los nombres de carpeta.** El contenido —comentarios,
+  identificadores, commits, specs, documentación— va en español, y ahí las excepciones son las
+  del motor (`_ready`, `_process`, `queue_free`). **Las carpetas van en inglés**: `docs/`,
+  `architecture/`, `guides/`, `infra/`, `scripts/`, `lib/`, `tests/`, `skills/`, `shared/`,
+  `rules/`, `specs/`, `src/`, `test/`, `assets/`.
+
+  **Dos excepciones, las dos deliberadas.** Las **cuatro capas** (`dominio/`, `sistemas/`, `ui/`,
+  `escenas/`) no son estructura sino el vocabulario del juego: aparecen en el diagrama, en los
+  `class_name` y en `gate_de_capas.py`. Y las **carpetas de spec**
+  (`specs/001-el-turno-reparte-un-tiempo-finito/`), cuyo nombre **es** el título del spec — o sea
+  contenido.
+
+  **Y una que no es deliberada: `reportes/`**, que es nuestra —se la pasamos a gdUnit4 con `-rd`,
+  no la elige el addon— y debería llamarse `reports/`. No se renombró todavía porque
+  `docs/architecture/directory-structure.md` la nombra en dos lugares, y `docs/` sólo se edita
+  desde una rama con spec: va en el [issue #7](https://github.com/federicohermo/nosefia/issues/7),
+  junto con lo demás que ese archivo tiene vencido.
 - **Los comentarios explican el porqué**, no el qué.
 - **Cero `print` que sobreviva al commit.** Lo que tiene que quedar va con `push_warning` o
   `push_error`.
