@@ -34,7 +34,7 @@ contradicción sobrevive intacta hasta que dos ramas del lote se pisan, y ahí y
 Si las dos tocan la misma escena, no cuesta un rebase: cuesta la escena.
 
 **Y se arregla, no se anota.** Las cinco descargas de
-[`../comun/sin-deuda.md`](../comun/sin-deuda.md) valen enteras acá, con una ventaja que ningún otro
+[`../shared/sin-deuda.md`](../shared/sin-deuda.md) valen enteras acá, con una ventaja que ningún otro
 skill tiene: **el trabajo todavía es texto**, así que hasta el hallazgo que excede al lote se
 descarga barato — es un spec más, y este skill está parado justo en el momento de escribirlo.
 
@@ -260,7 +260,7 @@ no re-audita: cruza.
 La asimetría del review vale igual acá: **endurecer se aplica** —un AC que falta se corrige en el
 spec al que le falta—; **aflojar se propone**. Si el cruce obliga a elegir entre dos diseños,
 frená con `AskUserQuestion`: un párrafo ahora contra dos ramas rebaseadas después. Es la descarga
-4 de [`../comun/sin-deuda.md`](../comun/sin-deuda.md), y es la única forma legítima de que algo
+4 de [`../shared/sin-deuda.md`](../shared/sin-deuda.md), y es la única forma legítima de que algo
 salga de esta corrida sin estar hecho.
 
 ### Un hallazgo que excede al lote no se anota: se le abre un spec
@@ -279,7 +279,7 @@ todos antes de `publicar` para uno, o su cita cruzada queda como enlace muerto.
 
 **Si el hallazgo era del método y no del spec, corregí el `SKILL.md`.** Un `[P]` falso que llegó
 al review es una regla que `spec-create` no atajó; una escena compartida que la matriz no marcó es
-una regla de este archivo. Ver «el lazo» en [`../comun/sin-deuda.md`](../comun/sin-deuda.md), y va
+una regla de este archivo. Ver «el lazo» en [`../shared/sin-deuda.md`](../shared/sin-deuda.md), y va
 al reporte como sección propia.
 
 > **Y por eso este skill no corre forkeado.** Sacaría de esta conversación los N+1 reportes y la
@@ -295,7 +295,7 @@ En este orden, y el segundo es el que se saltea:
 1. **Las ediciones fuera-de-carpeta**, una por hallazgo y en serie, para que el diff se lea. Y
    **los specs nuevos** que salieron de los cruces que exceden al lote: se escriben acá, con sus
    cuatro archivos, y entran a la corrida de `crear` del punto 3. **Ninguno queda como issue
-   suelto** — ver [`../comun/sin-deuda.md`](../comun/sin-deuda.md).
+   suelto** — ver [`../shared/sin-deuda.md`](../shared/sin-deuda.md).
 2. **Devolvé las ediciones a los issues. No es opcional y no lo hace nadie más:**
 
    ```bash

@@ -9,7 +9,7 @@ exactamente lo que se quiere.
 Lo que separa un review útil de una lista de ruido está acá, no en la cantidad de hallazgos.
 
 **Y ninguno de esos hallazgos sobrevive a la corrida:** las cinco descargas están en
-[`../comun/sin-deuda.md`](../comun/sin-deuda.md), que es de los siete skills. Acá está sólo cómo
+[`../shared/sin-deuda.md`](../shared/sin-deuda.md), que es de los siete skills. Acá está sólo cómo
 aterrizan sobre un diff.
 
 ## Los ejes
@@ -150,7 +150,7 @@ una premisa.
 ## Política de triage — al aplicar los fixes
 
 **No hay hallazgo que sobreviva a la corrida.** El método entero está en
-[`../comun/sin-deuda.md`](../comun/sin-deuda.md) y no se repite acá; lo que sigue es cómo aterriza
+[`../shared/sin-deuda.md`](../shared/sin-deuda.md) y no se repite acá; lo que sigue es cómo aterriza
 sobre un diff.
 
 Está medido de los dos lados. En una corrida del repo de origen, **de ocho hallazgos tres se

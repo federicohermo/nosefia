@@ -173,7 +173,7 @@ le tocan, y el orden del lote. Y este contrato:
      borra.
 
      Y si de verdad **ninguna de esas vías alcanza**, eso no se anota: **se pregunta ahora**
-     (descarga 4 de [`../comun/sin-deuda.md`](../comun/sin-deuda.md)) o el spec se escribe sin
+     (descarga 4 de [`../shared/sin-deuda.md`](../shared/sin-deuda.md)) o el spec se escribe sin
      necesitar ese número. Un AC que depende de una medición imposible es un AC mal planteado.
    - **Declará contra qué base medís.** `staging`, o `staging` más los specs del lote que te
      preceden. Una medición sin base declarada es infalsificable en cuanto el lote se reordena —

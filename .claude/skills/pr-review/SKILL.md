@@ -13,7 +13,7 @@ Encuentra, arregla, verifica, commitea y pushea a la rama del PR. **El reporte e
 no el producto.**
 
 **No deja deuda.** Todo lo que encuentra sale por una de las cinco descargas de
-[`../comun/sin-deuda.md`](../comun/sin-deuda.md) —arreglado, corregido en el spec, corregido en el
+[`../shared/sin-deuda.md`](../shared/sin-deuda.md) —arreglado, corregido en el spec, corregido en el
 skill, decidido por el usuario, o la corrida falla— y **ninguna de las cinco es «lo dejo anotado»**.
 Lo que sí decide el review es **dónde aterriza** cada fix: lo del alcance del spec en este PR, lo de
 afuera en su propio PR, abierto en esta misma corrida.
@@ -139,7 +139,7 @@ próxima hidratación, sin error y sin aviso.
 
 **Es además una corrección de `spec-create`**, no sólo de este spec: un AC infalsificable que
 llegó hasta el PR es una regla que el skill de creación no atajó. Agregá la regla allá y decilo en
-el reporte — ver «el lazo» en [`../comun/sin-deuda.md`](../comun/sin-deuda.md).
+el reporte — ver «el lazo» en [`../shared/sin-deuda.md`](../shared/sin-deuda.md).
 
 ## Paso 5 — Encontrar y arreglar
 

@@ -21,7 +21,7 @@ Y no termina en el reporte. Encuentra, arregla, verifica, commitea y pushea a la
 reporte es lo que queda, no el producto.
 
 **No deja deuda, y en un lote eso tiene una vuelta más.** Las cinco descargas están en
-[`../comun/sin-deuda.md`](../comun/sin-deuda.md) y valen para cada agente. Lo propio del batch es
+[`../shared/sin-deuda.md`](../shared/sin-deuda.md) y valen para cada agente. Lo propio del batch es
 que acá hay un destino que allá no existe —`PERTENECE-A-PR-<N>`, el hallazgo que es de otro PR de la
 cadena— y
 **ése no es una descarga: es un ruteo.** Queda descargado cuando alguien lo aplica, y el
@@ -41,7 +41,7 @@ Seis sustituciones. Las tres primeras son de herramienta; las tres últimas camb
 | Cierra con `pnpm verify` | **`python .claude/scripts/verificar.py`**, y un nodo **salteado no es un nodo verde** |
 | La cobertura la garantiza un umbral del 100 % | **Godot no mide cobertura.** El eje de cobertura pasa a ser del reviewer, entero |
 | Un conflicto de merge se resuelve leyendo | **un `.tscn` no se mergea**: da una escena corrupta, no un conflicto. El Paso 6 no puede confiar en git |
-| Eleva todo a comentarios del PR, y lo de afuera del alcance a un issue | **Nada queda anotado.** Lo del alcance entra al PR; lo de afuera sale en **su propio PR** en esta corrida; lo del planteo se corrige en el `spec.md`. Los issues acá son **entrada**, no salida — ver [`../comun/sin-deuda.md`](../comun/sin-deuda.md). `--comentar` publica además un general por PR |
+| Eleva todo a comentarios del PR, y lo de afuera del alcance a un issue | **Nada queda anotado.** Lo del alcance entra al PR; lo de afuera sale en **su propio PR** en esta corrida; lo del planteo se corrige en el `spec.md`. Los issues acá son **entrada**, no salida — ver [`../shared/sin-deuda.md`](../shared/sin-deuda.md). `--comentar` publica además un general por PR |
 
 ---
 
@@ -121,7 +121,7 @@ Seis cláusulas, que van **literales** en el preámbulo del Paso 1:
    el cambio exacto y quién más la toca. Es la única clase de fix que se declara por el archivo y
    no por el hallazgo.
 6. **Todo hallazgo se descarga, y ninguna descarga es un issue.** Las cinco están en
-   [`../comun/sin-deuda.md`](../comun/sin-deuda.md). Lo del alcance de tu spec entra a tu PR; lo de
+   [`../shared/sin-deuda.md`](../shared/sin-deuda.md). Lo del alcance de tu spec entra a tu PR; lo de
    afuera
    **sale en su propio PR desde `staging`**, abierto por vos en esta corrida —no desde tu rama, o
    arrastra tus commits—; lo que pelea con un AC se descarga **corrigiendo el AC** en el `spec.md`
@@ -299,7 +299,7 @@ El padre no re-audita: cruza.
     podía.
   - Un fix que el propio review destapó **sobre el skill o sobre el repo** —no sobre un PR—
     también se aplica: el padre es el único que corre el pipeline entero y a la vez lee su propia
-    prescripción. Es la descarga 3 de [`../comun/sin-deuda.md`](../comun/sin-deuda.md), y es la más
+    prescripción. Es la descarga 3 de [`../shared/sin-deuda.md`](../shared/sin-deuda.md), y es la más
     barata de saltear porque no la reclama ningún PR.
 - **Con `--comentar`**, un general por PR encabezado por el SHA, con las cuatro secciones:
   bloqueantes resueltos, mejoras aplicadas, **lo que salió a su propio PR** con el número, y **lo
