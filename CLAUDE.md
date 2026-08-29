@@ -1,0 +1,203 @@
+# CLAUDE.md
+
+Guía para Claude Code en este repositorio. Es un *cheat sheet*: lo que no se puede averiguar
+mirando un archivo. El detalle vive en `docs/`, las reglas por capa en `.claude/rules/` —se
+cargan solas al tocar sus archivos—, y **el trabajo planificado y la deuda en GitHub Issues**:
+`specs/mapa.json` es el mapa spec↔issue, y el porqué de cada decisión, un comentario en su
+issue.
+
+## Qué es
+
+**No se fía** — un juego de turno nocturno en un almacén. El empleado nuevo tiene un tiempo
+limitado por noche y lo reparte entre **cinco tareas obligatorias** que le deja el jefe
+—atender la caja, reponer, registrar productos, limpiar, y una quinta sin definir— y
+**averiguar qué está pasando**. Atiende por una **ventanilla**, no más de dos compradores por
+día. Al cierre del turno el juego cuenta cuántas tareas cumplió y aplica consecuencias en tres
+puntos de corte —5, 3 o ninguna—; dos días seguidos sin cumplir y lo echan.
+
+**La tensión central es aritmética: cada minuto investigando es un minuto que no se dedica a
+las tareas.** Al evaluar una feature, la pregunta es si aprieta esa tensión — no si agrega
+contenido.
+
+El diseño vive en el **GDD de Notion**, que es documento vivo y manda sobre cualquier cosa que
+diga este archivo sobre el juego. Acá está lo técnico.
+
+**Stack:** Godot 4.4.1 · GDScript · gdUnit4 **5.1.1** · gdtoolkit 4.x · Python 3.11+ para el harness
+
+---
+
+## Comandos
+
+```bash
+python .claude/scripts/verificar.py             # EL comando: los seis nodos, en paralelo
+python .claude/scripts/verificar.py --solo tdd  # uno solo
+gdformat src test                               # arregla el formato, no sólo lo señala
+```
+
+Lo que hay que saber antes de abrir
+[docs/guides/verificacion.md](./docs/guides/verificacion.md):
+
+- **`verificar.py` es el nodo de convergencia** y es lo que hay que correr antes de un PR:
+  `lint ‖ formato ‖ capas ‖ tdd ‖ harness ‖ tests`. La CI corre **este script**, no la lista de
+  nodos — enumerarlos allá crearía un segundo lugar donde vive la lista.
+- **Un nodo `salteado` NO es un nodo verde.** El reporte los distingue y cada salteo dice qué no
+  miró. Si `tests` se saltea por falta de `GODOT_BIN`, la suite no corrió.
+- **Hace falta `GODOT_BIN`** con la ruta al ejecutable de Godot. En Windows, el `_console.exe`
+  y **fuera de OneDrive** — ver [troubleshooting](./docs/guides/troubleshooting.md).
+- **`gdformat` decide el formato.** No se discute en una revisión.
+- **El veredicto sale del código de salida, nunca de un grep de la salida.** Un `| grep` que no
+  matchea devuelve 1 y se traga la salida entera.
+
+---
+
+## Arquitectura
+
+`src/` son cuatro capas, con **una sola dirección de dependencia**:
+
+```text
+dominio/  ←  sistemas/  ←  ui/  ←  escenas/
+```
+
+1. **`dominio/`** — puro: `RefCounted`/`Resource`, sin `Node`, sin `get_tree()`, sin `_process`.
+   El turno, las tareas, el inventario, las consecuencias.
+2. **`sistemas/`** — los `Node` y autoloads que hacen correr el dominio adentro del motor.
+   Traducen; **no deciden**.
+3. **`ui/`** — HUD, la computadora, la ventanilla.
+4. **`escenas/`** — los scripts pegados a un `.tscn`. Cáscara.
+
+**La prueba de que algo va en `dominio/` es una sola: se puede ejercer sin levantar una
+escena.** De ahí sale todo el resto del diseño — es lo que hace testeable a un juego de Godot,
+donde el patrón por defecto (un `Node` gordo con la lógica en `_process`) produce código que
+sólo se puede probar jugando.
+
+**La consecuencia, y es la que hay que tener presente al escribir cualquier cosa: si una regla
+del juego termina en `ui/` o en `escenas/`, esa regla nace sin test y ningún gate lo va a
+decir.** El arreglo no es testear la pantalla: es bajar la regla al dominio.
+
+Detalle en [docs/architecture/overview.md](./docs/architecture/overview.md).
+
+---
+
+## Reglas que valen en todo el repo
+
+Las de cada capa se cargan solas al tocar sus archivos (`.claude/rules/`). El porqué de cada una
+está en [docs/guides/conventions.md](./docs/guides/conventions.md) — acá está la regla y **quién
+la verifica**, que es lo que hace falta antes de escribir una línea.
+
+Verificadas por una herramienta:
+
+- **La dirección de dependencia entre capas** (`gate_de_capas.py`), y cuenta también **nombrar
+  un `class_name` de otra capa** — que en Godot es la forma normal de escribir código y no deja
+  rastro en ningún import. Por eso el gate indexa las clases en vez de mirar los `preload`.
+- **Todo `.gd` de `dominio/` y `sistemas/` tiene su test espejo** en `test/<capa>/<nombre>_test.gd`
+  (`gate_de_tests.py`).
+- **Ningún test sin aserción, apagado (`skip(true)`, `assert_not_yet_implemented`) o con un
+  nombre que hace que no corra.** Las cuatro reglas cierran la misma cosa: verde sin ejercer
+  nada.
+- **Formato, largo de línea (100), nombres y orden de declaraciones** (`gdformat`, `gdlint`).
+- **No se edita `src/` ni `docs/` sin un spec detrás de la rama** (el hook de
+  `.claude/settings.json`).
+
+Prosa — dependen de que la revisión las mire, y que no tengan verificador es deuda:
+
+- **Tipado estático en toda firma**, `-> void` incluido.
+- **Español** en comentarios, nombres, commits y specs. Las excepciones son las del motor
+  (`_ready`, `_process`, `queue_free`).
+- **Los comentarios explican el porqué**, no el qué.
+- **Cero `print` que sobreviva al commit.** Lo que tiene que quedar va con `push_warning` o
+  `push_error`.
+- **Un valor fijo vive una sola vez**, en un archivo de `src/dominio/`.
+- **Un conjunto cerrado es un `enum`**, nunca un `String` suelto: `"limpar"` no rompe nada, el
+  `if` simplemente no entra nunca.
+- **Nada de `get_node("../../…")`.** `@export` hacia abajo, señales hacia arriba.
+- **Los borrados van en su propio commit**, para que revertirlos sea trivial.
+
+---
+
+## TDD sin cobertura
+
+Godot **no mide cobertura** y ninguna herramienta del ecosistema lo hace. El harness del que
+sale éste sostenía el TDD con un umbral del 100 %; acá eso no existe, así que lo reemplazan las
+cuatro reglas del gate de tests.
+
+**Hay que decir qué se pierde: el gate no sabe si un test ejerce una rama.** Sabe si el archivo
+existe, si el test afirma algo y si va a correr. Es un piso, no un techo.
+
+El ciclo, y el orden importa:
+
+1. **El test primero**, contra la firma que todavía no existe. Se corre y **falla** — y falla
+   por lo que se espera: un `nonexistent function` no verifica nada, verifica que el archivo no
+   existe.
+2. Lo mínimo para que pase.
+3. Limpiar, con el test en verde de testigo.
+
+Lo que hace testeable a un juego, y es la parte que no es sobre herramientas: **el tiempo y el
+azar entran como parámetro.** Un dominio que lee el reloj del motor o sortea adentro no se puede
+probar. [docs/guides/tdd.md](./docs/guides/tdd.md).
+
+---
+
+## Documentación
+
+| Sección | Archivo | Cuándo consultarlo |
+|---|---|---|
+| Visión general | [docs/architecture/overview.md](./docs/architecture/overview.md) | Las cuatro capas, su dirección y qué el gate no puede ver |
+| Estructura de directorios | [docs/architecture/directory-structure.md](./docs/architecture/directory-structure.md) | Dónde crear cada cosa |
+| Inicio rápido | [docs/guides/quickstart.md](./docs/guides/quickstart.md) | Qué instalar, `GODOT_BIN`, qué correr |
+| Verificación | [docs/guides/verificacion.md](./docs/guides/verificacion.md) | Los seis nodos, qué se saltea y hasta cuándo |
+| TDD sin cobertura | [docs/guides/tdd.md](./docs/guides/tdd.md) | Qué reemplaza al umbral y qué se pierde |
+| Convenciones | [docs/guides/conventions.md](./docs/guides/conventions.md) | El porqué de cada regla, y cuáles son prosa |
+| Troubleshooting | [docs/guides/troubleshooting.md](./docs/guides/troubleshooting.md) | Errores reales ya pisados acá |
+| Ramas | [docs/infra/ramas.md](./docs/infra/ramas.md) | `staging` integra, `main` se entrega, y la carrera entre los dos workflows |
+| Convención de specs | [specs/README.md](./specs/README.md) | El formato, los cuatro estados y el flujo |
+
+**Trabajo planificado:** cada spec **es un issue**, y
+[specs/mapa.json](./specs/mapa.json) es el mapa spec↔issue y el estado de cada uno. **Su
+`estado` lo deriva `mapa.yml`** en el push a `staging`: el gate prohíbe tocarlo dentro del PR
+que lo justifica.
+
+**La deuda sin spec vive en [GitHub Issues](https://github.com/federicohermo/nosefia/issues)**,
+no en un archivo ni en un `## Seguimiento` adentro del spec que la parió. Adentro de un
+`tasks.md` un ítem **hereda el estado de su spec**: un spec `Implementado` puede quedar con diez
+casillas abiertas sin deberle nada a nadie, y así es como la deuda se vuelve invisible. Un issue
+tiene estado propio y se cierra desde un commit con `Closes #N`. Qué hay para promover:
+`python .claude/scripts/deuda.py`.
+
+---
+
+## Antes de un cambio grande
+
+Escribir los cuatro archivos (`spec` · `research` · `plan` · `tasks`), **publicarlo como
+issue** con `python .claude/scripts/publicar_spec.py crear` y `publicar`, y commitear **sólo**
+`specs/mapa.json` a `staging`. **Ahí termina abrir un spec: la rama la abre el implementador**,
+porque escribirlo y decidir implementarlo son dos decisiones distintas y una rama entre las dos
+queda colgada.
+
+**Y lo bloquea un hook**, no la buena voluntad: sin un spec detrás de la rama no se edita `src/`
+ni `docs/`. El flujo entero y **qué NO necesita spec** está en el skill
+[spec-create](./.claude/skills/spec-create/SKILL.md).
+
+`specs/[0-9]*/` está en el `.gitignore`: el directorio es una **caché** que se trae con
+`python .claude/scripts/hidratar_specs.py <NNN>`, y hace falta **en cada worktree**. Leerlos
+anda igual, pero **`Grep` no los ve** —es ripgrep y respeta el `.gitignore`, así que contesta
+cero sin decir que no miró—: ahí va `rg --no-ignore`.
+
+El `research.md` se escribe **midiendo, no suponiendo**: qué corriste y qué contestó. Un
+research que dice «probablemente haya que tocar el HUD» es una intuición con formato de
+documento.
+
+---
+
+## Las trampas de este repo
+
+Las cuatro que ya costaron tiempo acá:
+
+- **La salida en Windows sale en cp1252** cuando va a una tubería, y **cualquier acento tira el
+  script abajo** — incluido el mensaje de bloqueo del hook. Por eso todo script de
+  `.claude/scripts/` llama a `configurar()` de `lib/consola.py` antes de imprimir nada.
+- **`Grep` no ve `specs/`.** Ver arriba.
+- **Godot adentro de OneDrive no se puede ejecutar** si el archivo no está descargado: Windows
+  contesta «el proveedor de archivos de nube no se está ejecutando», que no nombra ni a Godot ni
+  a los tests.
+- **Un `.tscn` no se mergea.** Un merge de tres vías sobre una escena no da un conflicto: da una
+  escena corrupta. Dos specs que tocan la misma escena se ordenan, no se paralelizan.

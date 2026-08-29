@@ -1,0 +1,95 @@
+# El registro se deriva, no se recuerda.
+#
+# El gate del mapa tiene dos tests que se miran en espejo —un PR aterrizado con el mapa en
+# `Propuesto` es mentira, y un `Implementado` sin PR aterrizado es la mentira al revés— y juntos
+# **prohíben actualizar el mapa adentro del PR que lo justifica**: mientras ese PR está abierto
+# el mapa tiene que decir `Propuesto`, y en cuanto se mergea tiene que decir otra cosa. No hay
+# ningún commit de ese PR que deje las dos cosas ciertas.
+#
+# O sea que el paso quedaría para un commit posterior, a mano, en `staging` — el que se olvida.
+# En el repo del que sale este harness eso pasó cinco veces seguidas, y el gate que lo cazaba
+# estuvo en verde todo el tiempo porque no podía correr.
+#
+# La salida no es acordarse mejor: es que el estado deje de ser una afirmación humana. Un PR
+# aterrizó o no, y eso no lo escribe nadie. Este workflow lo calcula y lo commitea; el gate
+# queda como confirmación de un cálculo, no como recordatorio de una tarea.
+#
+# Lo que NO hace, a propósito:
+#
+#   - **No cierra issues**, y por eso no pide `issues: write`. El `Closes #N` del cuerpo del PR
+#     ya los cierra solo, en el segundo siguiente al merge.
+#   - **No corre `verificar.py`.** Eso lo hace `verify.yml` sobre el mismo push. Éste hace una
+#     cosa sola, y por eso tarda segundos: no instala nada ni baja Godot.
+name: mapa
+
+# Corre sobre `staging` y no sobre `main`: si algún día `main` se protege con un ruleset que
+# exija PR, una Action no puede pushear ahí — y abrir un PR desde la Action tampoco sirve, porque
+# un PR creado con `GITHUB_TOKEN` no dispara workflows y el check requerido nunca se satisface.
+# El mapa derivado llega a `main` con el PR de promoción, como todo lo demás.
+on:
+  push:
+    branches: [staging]
+
+# `contents: write` porque commitea. Los otros dos son de lectura y son lo que le hace falta
+# para poder preguntar.
+permissions:
+  contents: write
+  issues: read
+  pull-requests: read
+
+# Dos corridas escribiendo el mismo archivo se pisan. Se encolan en vez de cancelarse: la que ya
+# arrancó está a punto de dejar el registro al día, y cancelarla no ahorra nada que importe.
+concurrency:
+  group: mapa
+  cancel-in-progress: false
+
+jobs:
+  derivar:
+    runs-on: ubuntu-latest
+    steps:
+      # `ref: staging` y no el `github.sha` del evento, que es el default. La diferencia importa
+      # cuando llegan dos pushes seguidos: la corrida B queda encolada por el `concurrency` de
+      # arriba, y con el default arrancaría con el árbol del commit que la disparó — mientras
+      # que `staging` ya avanzó, porque la corrida A le pusheó el commit derivado. El push de B
+      # saldría non-fast-forward y el job quedaría ROJO sin arreglarse solo: los pushes con
+      # `GITHUB_TOKEN` no disparan workflows, así que no hay corrida siguiente.
+      #
+      # Queda una ventana chica —una persona pusheando entre el checkout y el push— y ésa SÍ se
+      # arregla sola: un push humano dispara este mismo workflow otra vez.
+      - uses: actions/checkout@v5
+        with:
+          ref: staging
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+
+      # Si las listas de `gh` vuelven truncadas, el script sale 1 sin escribir y el job falla. Es
+      # lo correcto: en una lista cortada «este spec no tiene PR» y «su PR no entró en la página»
+      # no se distinguen, y derivar sobre eso pondría en `Propuesto` a todo spec que quedó
+      # afuera.
+      - name: Derivar specs/mapa.json desde los PR y los issues
+        run: python .claude/scripts/derivar_mapa.py
+        env:
+          GH_TOKEN: ${{ github.token }}
+
+      # `if` y no `&&`: los pasos corren con `bash -e`, y `git diff --quiet … && exit 0` devuelve
+      # 1 cuando SÍ hay cambios, o sea que el paso fallaría justo en el caso que tiene trabajo.
+      #
+      # Se pushea `HEAD:staging` y no `staging` a secas: es explícito sobre qué rama recibe. Si
+      # `staging` se movió entre el checkout y esta línea, el push falla, y falla fuerte — que es
+      # correcto: fue una persona quien pusheó, y ese push dispara este workflow de nuevo.
+      - name: Commitear si el mapa cambió
+        run: |
+          if git diff --quiet specs/mapa.json; then
+            echo "el mapa ya estaba al día: no hay nada que commitear"
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add specs/mapa.json
+          git commit -m "El mapa se pone al día con lo que los PR ya decidieron
+
+          Derivado por .github/workflows/mapa.yml. El estado de un spec es una
+          consecuencia de si su PR aterrizó, no un dato que alguien escribe."
+          git push origin HEAD:staging

@@ -1,3 +1,27 @@
 # Godot 4+ specific ignores
 .godot/
 /android/
+
+# Exportaciones del juego. La build de cada entrega se publica, no se commitea.
+/export/
+/build/
+
+# Los specs son CACHÉ, no fuente: cada uno vive en su issue de GitHub y se trae con
+# `python .claude/scripts/hidratar_specs.py <NNN>`. Lo único trackeado de `specs/` es
+# `mapa.json`, este `README.md` y los gates de `specs/tests/`. El porqué, en specs/README.md.
+#
+# OJO: `Grep` es ripgrep y respeta el .gitignore, así que una búsqueda dentro de specs/
+# devuelve cero resultados SIN DECIR que no miró. Para buscar ahí: `rg --no-ignore … specs/`.
+specs/[0-9]*/
+
+# Los reportes de gdUnit4 se regeneran en cada corrida.
+/reportes/
+
+# Python: las herramientas del harness viven en .claude/scripts/
+__pycache__/
+*.py[cod]
+.venv/
+
+# La config personal de cada uno en Claude Code. `settings.json` SÍ se commitea —ahí vive el
+# hook del gate, que es del repo y no de una persona—; esto es lo que cada uno agrega encima.
+.claude/settings.local.json

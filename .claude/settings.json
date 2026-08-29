@@ -1,0 +1,16 @@
+{
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Edit|Write|MultiEdit|Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python .claude/scripts/gate_de_spec.py",
+            "timeout": 10
+          }
+        ]
+      }
+    ]
+  }
+}

@@ -1,0 +1,109 @@
+# El nodo de convergencia, corrido por la máquina y no por la memoria de quien commitea.
+#
+# Corre `verificar.py` ENTERO y NO enumera sus nodos como pasos separados. No es pereza:
+# enumerarlos acá crearía un segundo lugar donde vive la lista, y el día que alguien agregue un
+# nodo al script, la CI seguiría corriendo la lista vieja — en verde, que es exactamente el
+# modo de falla que este workflow existe para cerrar.
+#
+# Lo que este workflow NO hace, a propósito:
+#
+#   - No exporta el juego. Las builds de cada entrega se hacen aparte, cuando hay algo que
+#     entregar, y necesitan las export templates — que son 700 MB que no tiene sentido bajar en
+#     cada PR.
+#   - No corre el editor. Los tests corren headless, que es lo que hace que la CI y la máquina
+#     de cualquiera del equipo hagan exactamente lo mismo.
+name: verify
+
+on:
+  pull_request:
+  # Las DOS ramas: `staging` es donde aterriza el trabajo —el push que de verdad hay que
+  # verificar— y `main` es lo que se entrega, así que no puede ser la única sin corrida propia.
+  push:
+    branches: [staging, main]
+
+# Los dos de lectura son lo que necesita el gate del mapa para poder preguntar. El default del
+# repo es `read` a secas, así que todo permiso hay que declararlo.
+permissions:
+  contents: read
+  issues: read
+  pull-requests: read
+
+# La versión vive UNA vez. Si sube, sube acá y en `docs/README.md`, y las dos tienen que decir
+# lo mismo — que la CI corra otra versión que la máquina del equipo es la forma más silenciosa
+# de que un test pase en un lado y falle en el otro.
+env:
+  GODOT_VERSION: 4.4.1-stable
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      # Versión EXACTA y no `3.x`: `3.x` resuelve a la última del día y convierte al runtime de
+      # todas las herramientas en un blanco móvil — el mismo commit puede dar verde hoy y rojo
+      # el mes que viene sin que nadie toque una línea.
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+
+      # El harness no tiene dependencias: esto es el linter del JUEGO, no de las herramientas.
+      - run: pip install "gdtoolkit==4.*"
+
+      # Godot se baja acá y no se cachea entre corridas: es un zip de ~60 MB y bajarlo tarda
+      # menos que el paso de restaurar caché que habría que mantener. El nombre del ejecutable
+      # sale del zip y por eso se resuelve con un glob: pinearlo a mano lo rompería en el
+      # próximo bump de versión, y lo rompería con un "no such file" que no dice nada.
+      - name: Bajar Godot ${{ env.GODOT_VERSION }}
+        run: |
+          set -euo pipefail
+          url="https://github.com/godotengine/godot/releases/download/${GODOT_VERSION}/Godot_v${GODOT_VERSION}_linux.x86_64.zip"
+          curl -fsSL -o godot.zip "$url"
+          unzip -q godot.zip -d "$HOME/godot"
+          bin="$(find "$HOME/godot" -maxdepth 1 -type f -name 'Godot_v*' | head -1)"
+          chmod +x "$bin"
+          echo "GODOT_BIN=$bin" >> "$GITHUB_ENV"
+
+      # La PRIMERA apertura de un proyecto de Godot importa los recursos y genera `.godot/`, que
+      # está en el .gitignore. Sin este paso, la corrida de tests hace las dos cosas a la vez y
+      # un fallo de importación se lee como un fallo de test.
+      #
+      # `|| true` porque `--import` sale distinto de cero en algunas versiones aunque importe
+      # bien; lo que decide si el proyecto está sano es el paso siguiente, que es el que
+      # verifica de verdad.
+      - name: Importar los recursos del proyecto
+        run: "$GODOT_BIN --headless --path . --import || true"
+
+      # El token va SOLO en el PR, y no es una excepción escondida: es donde vive la autoridad
+      # sobre el mapa.
+      #
+      # Cuando el PR de un spec aterriza, ese push a `staging` dispara los DOS workflows a la
+      # vez. En ese commit el mapa todavía dice `Propuesto` —no puede decir otra cosa: el gate
+      # prohíbe cambiarlo adentro del PR— y el PR ya figura MERGED, o sea exactamente la
+      # condición que el gate declara mentira. `mapa.yml` la corrige en segundos, pero `verify`
+      # no lo espera: arranca con el mismo commit y lee el mapa de ANTES.
+      #
+      # Sin esto, cada merge de spec dejaría la rama de integración en rojo con un rojo que ya
+      # está arreglado y que nadie va a volver a correr — la forma más rápida conocida de que
+      # alguien apague el gate.
+      #
+      # En un PR el mapa SÍ tiene que estar consistente y el gate es lo único que lo mira. Fuera
+      # de un PR el mapa no es la afirmación de nadie: es una derivada, y quien la calcula es el
+      # otro workflow.
+      #
+      # El `''` es un token vacío, que `gh` trata como ausente: el bloque de red se saltea
+      # DECLARÁNDOLO en el reporte, que es la diferencia entre saltearse y pasar.
+      - name: verificar
+        run: python .claude/scripts/verificar.py
+        env:
+          GH_TOKEN: ${{ github.event_name == 'pull_request' && github.token || '' }}
+
+      # Los reportes de gdUnit4, para poder mirar QUÉ falló sin reproducir la corrida. `always()`
+      # porque el caso en que sirven es justamente aquel en que el paso anterior falló.
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: reportes-gdunit4
+          path: reportes/
+          if-no-files-found: ignore
+          retention-days: 7

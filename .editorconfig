@@ -2,3 +2,25 @@ root = true
 
 [*]
 charset = utf-8
+insert_final_newline = true
+trim_trailing_whitespace = true
+
+# GDScript va con TABS y no es una preferencia: es lo que el editor de Godot inserta y lo
+# que `gdformat` produce. Con espacios, cada archivo tocado desde el editor vuelve con el
+# diff entero reindentado.
+[*.gd]
+indent_style = tab
+indent_size = 4
+
+# Las herramientas del harness (.claude/scripts/) son Python, y ahí manda PEP 8.
+[*.py]
+indent_style = space
+indent_size = 4
+
+[*.{md,yml,yaml,json}]
+indent_style = space
+indent_size = 2
+
+# Godot escribe estos archivos: no los reindentamos nosotros.
+[*.{tscn,tres,godot,import,cfg}]
+trim_trailing_whitespace = false

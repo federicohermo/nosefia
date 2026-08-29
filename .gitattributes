@@ -1,2 +1,23 @@
 # Normalize EOL for all files that Git considers text files.
 * text=auto eol=lf
+
+# gdUnit4 es una dependencia vendorizada: se commitea entera para que un clone nuevo abra
+# en el editor sin un paso de instalación, pero no es código de este repo. Marcarla acá la
+# saca de las estadísticas de lenguaje y la colapsa por defecto en los diffs de GitHub, que
+# es lo que la vuelve revisable: sin esto, actualizar el addon da un PR de 272 archivos
+# donde no se ve el único que importa.
+addons/gdUnit4/** linguist-vendored
+
+# Los binarios de assets no se diffean ni se mergean: un merge de tres vías sobre un .png
+# produce un archivo corrupto en vez de un conflicto.
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.webp binary
+*.ogg binary
+*.wav binary
+*.mp3 binary
+*.blend binary
+*.glb binary
+*.ttf binary
+*.otf binary
