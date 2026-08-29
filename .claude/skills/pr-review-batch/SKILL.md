@@ -21,7 +21,7 @@ Y no termina en el reporte. Encuentra, arregla, verifica, commitea y pushea a la
 reporte es lo que queda, no el producto.
 
 **No deja deuda, y en un lote eso tiene una vuelta más.** Las cinco descargas están en
-[`../shared/sin-deuda.md`](../shared/sin-deuda.md) y valen para cada agente. Lo propio del batch es
+[`sin-deuda.md`](sin-deuda.md) y valen para cada agente. Lo propio del batch es
 que acá hay un destino que allá no existe —`PERTENECE-A-PR-<N>`, el hallazgo que es de otro PR de la
 cadena— y
 **ése no es una descarga: es un ruteo.** Queda descargado cuando alguien lo aplica, y el
@@ -41,7 +41,7 @@ Seis sustituciones. Las tres primeras son de herramienta; las tres últimas camb
 | Cierra con `pnpm verify` | **`python .claude/scripts/verificar.py`**, y un nodo **salteado no es un nodo verde** |
 | La cobertura la garantiza un umbral del 100 % | **Godot no mide cobertura.** El eje de cobertura pasa a ser del reviewer, entero |
 | Un conflicto de merge se resuelve leyendo | **un `.tscn` no se mergea**: da una escena corrupta, no un conflicto. El Paso 6 no puede confiar en git |
-| Eleva todo a comentarios del PR, y lo de afuera del alcance a un issue | **Nada queda anotado.** Lo del alcance entra al PR; lo de afuera sale en **su propio PR** en esta corrida; lo del planteo se corrige en el `spec.md`. Los issues acá son **entrada**, no salida — ver [`../shared/sin-deuda.md`](../shared/sin-deuda.md). `--comentar` publica además un general por PR |
+| Eleva todo a comentarios del PR, y lo de afuera del alcance a un issue | **Nada queda anotado.** Lo del alcance entra al PR; lo de afuera sale en **su propio PR** en esta corrida; lo del planteo se corrige en el `spec.md`. Los issues acá son **entrada**, no salida — ver [`sin-deuda.md`](sin-deuda.md). `--comentar` publica además un general por PR |
 
 ---
 
@@ -67,7 +67,7 @@ gh pr list --repo federicohermo/nosefia --state open \
    argumento —la cabeza— justamente para que el padre pueda medir **sin checkout**:
    ```bash
    for n in 6 7 8; do
-     python .claude/skills/pr-review/scripts/diff_pr.py <base> <dir>/$n origin/<head>
+     python .claude/skills/pr-review-batch/scripts/diff_pr.py <base> <dir>/$n origin/<head>
    done
    cat <dir>/*/pr.files | sort | uniq -c | sort -rn | awk '$1>1'
    ```
@@ -121,7 +121,7 @@ Seis cláusulas, que van **literales** en el preámbulo del Paso 1:
    el cambio exacto y quién más la toca. Es la única clase de fix que se declara por el archivo y
    no por el hallazgo.
 6. **Todo hallazgo se descarga, y ninguna descarga es un issue.** Las cinco están en
-   [`../shared/sin-deuda.md`](../shared/sin-deuda.md). Lo del alcance de tu spec entra a tu PR; lo de
+   [`sin-deuda.md`](sin-deuda.md). Lo del alcance de tu spec entra a tu PR; lo de
    afuera
    **sale en su propio PR desde `staging`**, abierto por vos en esta corrida —no desde tu rama, o
    arrastra tus commits—; lo que pelea con un AC se descarga **corrigiendo el AC** en el `spec.md`
@@ -159,7 +159,7 @@ Es el ahorro propio del batch: sin esto, N agentes lo re-derivan N veces desde f
 insumos, y los cinco van **destilados**, no como rutas a leer:
 
 - - **Las convenciones verificables, ≤40 líneas**, con la línea de
-  [`hallazgos.md`](../pr-review/hallazgos.md) marcada: qué verifica ya una herramienta y qué no.
+  [`hallazgos.md`](hallazgos.md) marcada: qué verifica ya una herramienta y qué no.
   `CLAUDE.md` **ya la dibujó** —tiene una lista «verificadas por una herramienta» y otra «prosa»—
   así que acá se copia, no se deriva.
 - **El mapa síntoma → deuda**: `python .claude/scripts/deuda.py`.
@@ -191,24 +191,30 @@ primera corrida que la contradiga la mueve.
 
 ## Paso 3 — El contrato de cada agente
 
-**El método de cada agente es [`pr-review`](../pr-review/SKILL.md), no una copia suya.** Ese skill
-tiene los Pasos 1 a 7 de un review completo —rama de andamio, hidratar, diff, AC, encontrar,
-arreglar, verificar, pushear— y este archivo agrega **lo único que un PR solo no tiene: la cadena**.
-Duplicar acá sus pasos sería el segundo lugar donde vive el método, y el día que uno cambie el otro
-sigue corriendo el viejo.
+**El método de búsqueda de cada agente es [`hallazgos.md`](hallazgos.md), que este skill trae
+adentro.** Los ejes, el filtro de confianza y la política de triage son los mismos que usa
+`pr-review` para un PR solo —los Pasos 1 a 7: pararse en la rama del PR, hidratar, diff, AC,
+encontrar, arreglar, verificar, pushear— y este archivo agrega **lo único que un PR solo no tiene:
+la cadena**.
+
+**Y la copia es deliberada, no un descuido.** Un skill es la unidad que se instala y se distribuye,
+así que tiene que traer su implementación completa: uno que salga a buscar el archivo al skill de
+al lado deja de funcionar apenas viaja sin su hermano. Lo que un `../` ahorraba —que no se separen— lo compra más
+barato un gate: `test_copias_de_skills.py` da rojo si dos copias difieren en un byte.
 
 Cada agente recibe el preámbulo del Paso 1, su número de PR, su `headRefName`, su `baseRefName` y la
-ruta a [`hallazgos.md`](../pr-review/hallazgos.md), que es el método de búsqueda y va **literal**:
+ruta a [`hallazgos.md`](hallazgos.md), que va **literal**:
 un agente aislado necesita la rúbrica de confianza más que vos, porque no tiene el contexto que te
 deja descartar un hallazgo de un vistazo.
 
 Y estas diferencias respecto de `pr-review`, que son las que lo vuelven un carril del lote:
 
 1. **Corre adentro de su worktree, no en el checkout principal.** Por eso `pr-review` pide el árbol
-   limpio y acá no hace falta: el worktree nace limpio por construcción. Y por eso mismo la rama de
-   andamio **no puede** llamarse igual que en otro carril — `git checkout <headRefName>` a secas
-   falla si esa rama ya está tomada por otro worktree, así que el `feature/<NNN>-rev-pr-<N>` del
-   Paso 1 de `pr-review` acá además es lo que los mantiene disjuntos.
+   limpio y acá no hace falta: el worktree nace limpio por construcción. **La rama sigue siendo la
+   del PR** —`git worktree add <dir> <headRefName>`—, y no hace falta inventarle otro nombre para
+   que los carriles no se pisen: cada PR tiene su propia `headRefName`, así que ya son disjuntas.
+   El único caso que falla es que **el checkout principal esté parado en una de ellas**; ahí se
+   mueve el principal a otra rama antes de lanzar, no se le cambia el nombre al carril.
 2. **Hidratá el spec, y acá el motivo es más fuerte.** `git worktree add` hace checkout de lo
    **trackeado**, así que al worktree llegan dos archivos de `specs/` y ningún spec — un checkout
    principal al menos puede tener la caché de una corrida anterior. Sin
@@ -299,7 +305,7 @@ El padre no re-audita: cruza.
     podía.
   - Un fix que el propio review destapó **sobre el skill o sobre el repo** —no sobre un PR—
     también se aplica: el padre es el único que corre el pipeline entero y a la vez lee su propia
-    prescripción. Es la descarga 3 de [`../shared/sin-deuda.md`](../shared/sin-deuda.md), y es la más
+    prescripción. Es la descarga 3 de [`sin-deuda.md`](sin-deuda.md), y es la más
     barata de saltear porque no la reclama ningún PR.
 - **Con `--comentar`**, un general por PR encabezado por el SHA, con las cuatro secciones:
   bloqueantes resueltos, mejoras aplicadas, **lo que salió a su propio PR** con el número, y **lo
@@ -358,8 +364,9 @@ orden y de abajo hacia arriba. Cadenas independientes sí van en paralelo.
 Cada agente recibe: su cadena con los SHA, **cada conflicto medido con su resolución textual**, y
 el contrato:
 
-1. **Rama de andamio propia por unión**, con el `NNN` del PR de destino adelante —el hook la exige
-   igual que en el Paso 3—.
+1. **Se merge sobre la rama del PR de destino**, parado en ella y no en una rama inventada: es la
+   que ya matchea el hook, y es la ref a la que va a salir el push del punto 6. Una rama de
+   andamio acá agrega un nombre que después hay que reconciliar a mano con el remoto.
 2. **`git merge`, nunca `git rebase` y nunca `--force`.** Un rebase reescribe los commits del
    review que el usuario acaba de leer, y encima los hace resolver de nuevo uno por uno.
 3. **Resolver con la resolución que bajó el padre**, y parar y reportar si el conflicto no es el
@@ -372,8 +379,7 @@ el contrato:
    **Y con los specs hidratados**: sin eso los gates del registro se saltean declarándolo, y el
    merge se da por verde sin haberlos corrido.
 6. **Push sólo a la ref que ya existe**, confirmada antes con `git ls-remote --heads origin <rama>`.
-   La rama de andamio muere con el worktree y **no se pushea con su nombre**. Este paso no abre
-   ramas remotas ni PR.
+   Este paso no abre ramas remotas ni PR: cada unión vuelve a la rama del PR que ya estaba abierto.
 
 ### Lo que este paso NO puede resolver, y por eso va al reporte
 
@@ -385,7 +391,7 @@ el texto final ya redactado**, no con una descripción de qué habría que elegi
 ## Paso 7 — Destruir los worktrees
 
 ```bash
-python .claude/scripts/limpiar_worktrees.py --todos
+python .claude/skills/pr-review-batch/scripts/limpiar_worktrees.py --todos
 ```
 
 **No lo hagas a mano, y no uses `git worktree remove` solo: va a fallar.** Borra lo trackeado y el
@@ -402,8 +408,10 @@ terminado, así que un proceso vivo adentro de un worktree es **un Godot colgado
 tiene que decir con qué test se colgó. Si dice `SIGUE AHI`, el handle es de afuera —el editor o el
 IDE con la carpeta abierta— y eso lo cierra el usuario, no vos.
 
-Después borrá las ramas de andamio, **pero recién después de verificar que cada una es idéntica a
-su `origin/<headRefName>`**. Si difieren, algo no se pusheó y la rama es lo único que lo tiene.
+**Antes de destruir nada, verificá que cada rama del lote es idéntica a su
+`origin/<headRefName>`.** Si difieren, algo no se pusheó y ese worktree es lo único que lo tiene —
+y `--todos` lo borra sin preguntar. No hay ramas de andamio que limpiar después: los carriles
+trabajaron sobre las ramas de los PR, que siguen existiendo y así tienen que quedar.
 
 ---
 

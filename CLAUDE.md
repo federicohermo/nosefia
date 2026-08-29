@@ -94,6 +94,11 @@ Verificadas por una herramienta:
 - **Formato, largo de línea (100), nombres y orden de declaraciones** (`gdformat`, `gdlint`).
 - **No se edita `src/` ni `docs/` sin un spec detrás de la rama** (el hook de
   `.claude/settings.json`).
+- **Un skill es autocontenido: trae adentro todo lo que corre** (`test_copias_de_skills.py`).
+  Ningún `SKILL.md` alcanza `../otro-skill/`, porque un skill es la unidad que se instala y uno
+  que sale a buscar el archivo al de al lado deja de funcionar apenas viaja solo. El precio es la
+  duplicación, y el gate la cobra: **una copia que difiere de su canónico en un byte es rojo**, y
+  los canónicos están declarados en ese archivo.
 
 Prosa — dependen de que la revisión las mire, y que no tengan verificador es deuda:
 
@@ -102,8 +107,7 @@ Prosa — dependen de que la revisión las mire, y que no tengan verificador es 
   commits, specs y docs en español —las excepciones son las del motor: `_ready`, `_process`—;
   las carpetas, en inglés. **Dos excepciones deliberadas:** las cuatro capas, que no son
   estructura sino vocabulario del juego, y las carpetas de spec, cuyo nombre **es** su título.
-  `reportes/` es la única mal puesta: renombrarla toca `docs/`, así que va en el
-  [issue #7](https://github.com/federicohermo/nosefia/issues/7).
+  `reportes/` es la única mal puesta, y arreglarla pide un spec: renombrarla toca `docs/`.
 - **Los comentarios explican el porqué**, no el qué.
 - **Un valor fijo vive una sola vez**, en un archivo de `src/dominio/`.
 - **Un conjunto cerrado es un `enum`**, nunca un `String` suelto: `"limpar"` no rompe nada, el
@@ -161,8 +165,8 @@ del PR que lo justifica.
 ningún skill deja trabajo escrito para después, y un `tasks.md` tampoco puede registrarlo —el ítem
 hereda el estado de su spec—. **Eso ahora es un rojo**: `test_convencion_de_specs.py` verifica la
 casilla abierta en un spec `Implementado`, las secciones y tareas que aplazan, y las mediciones
-declaradas como no hechas. La doctrina y su evidencia, que leen los ocho skills:
-[.claude/skills/shared/sin-deuda.md](./.claude/skills/shared/sin-deuda.md).
+declaradas como no hechas. La doctrina y su evidencia, que los ocho skills traen adentro:
+[.claude/doctrina/sin-deuda.md](./.claude/doctrina/sin-deuda.md) es la copia canónica.
 
 ---
 

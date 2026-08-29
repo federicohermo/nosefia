@@ -1,12 +1,14 @@
 # La imposibilidad de la deuda
 
-**Lo leen los ocho skills y vive una sola vez.** Si esto cambia, cambia para los ocho, que es
-exactamente lo que se quiere. Cada `SKILL.md` lo cita por ruta; ninguno lo copia.
+**Ésta es la copia canónica, y los ocho skills traen la suya.** Un skill es la unidad que se
+instala y se distribuye, así que trae su implementación completa: ninguno lee este archivo por
+ruta. `test_copias_de_skills.py` da rojo si alguna copia difiere de ésta en un byte, así que
+editarla acá y no propagar **no se puede mergear**.
 
-**Vive en `shared/` y no suelto en `.claude/skills/`** porque ahí todo lo demás es un skill, y un
-`.md` suelto entre puros directorios se lee como uno a medio hacer. Tampoco es un `CLAUDE.md`: los
-skills lo leen **por enlace, cuando corren**, y un `CLAUDE.md` anidado se cargaría al editar esta
-carpeta —el meta-trabajo— y no al correr un review sobre `src/`. El disparador quedaría invertido.
+**Vive en `.claude/doctrina/` y no en `.claude/skills/`** porque ahí adentro todo es un skill —un
+directorio con su `SKILL.md`— y un `.md` suelto entre ellos no lo es: no aparece en la lista de
+skills invocables y se lee como uno a medio hacer. Tampoco es un `CLAUDE.md`, que se cargaría al
+editar esta carpeta —el meta-trabajo— y no al correr un review sobre `src/`.
 
 ## La regla
 

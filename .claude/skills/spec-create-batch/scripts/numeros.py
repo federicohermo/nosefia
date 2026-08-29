@@ -34,7 +34,13 @@ import re
 import sys
 from pathlib import Path
 
-RAIZ = Path(__file__).resolve().parents[4]
+# La raíz sale de buscar `.claude/scripts/lib` hacia arriba, y NO de un `parents[N]` fijo: este
+# archivo vive además copiado adentro de cada skill que lo usa —que es la regla: un skill trae su
+# propia implementación—, y ahí la profundidad es otra. Un índice fijo lo ata a una ubicación y
+# rompe la copia con un `ModuleNotFoundError` que no nombra ni al skill ni a la copia.
+RAIZ = next(
+    p for p in Path(__file__).resolve().parents if (p / ".claude" / "scripts" / "lib").is_dir()
+)
 
 # `configurar()` va antes de imprimir nada: la salida de este script va a una tubería —así la lee
 # un agente— y en esta máquina eso es cp1252, donde no entra ni una tilde.

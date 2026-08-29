@@ -4,7 +4,7 @@
 recorren **todas**, y las que dan que no también se escriben: un choque ausente es información, y
 uno no mirado no.
 
-La diferencia con [`cruces.md`](../spec-review-batch/cruces.md) es cuándo se paga:
+La diferencia con el cruce que mide `spec-review-batch` es cuándo se paga:
 
 | | acá | en `spec-review-batch` |
 |---|---|---|

@@ -14,11 +14,11 @@ argument-hint: "<NNN NNN ...> | <NNN-MMM> | --propuestos [--dry] [--max N]"
 
 <!-- Inyección dinámica: corre ANTES de que el modelo procese este archivo, así que la matriz
      llega con el skill ya cargado en vez de costar un turno de tool. Es el MISMO script que usa
-     `spec-review-batch`, alcanzado por ruta de hermano: la pregunta «qué archivo tocan dos
-     specs del lote» es idéntica en los dos, y duplicar el parser del `tasks.md` es la clase de
-     deuda que se descubre cuando uno cambia y el otro no. -->
+     `spec-review-batch` —la pregunta «qué archivo tocan dos specs del lote» es idéntica en los
+     dos— pero cada skill trae su copia: `${CLAUDE_SKILL_DIR}` apunta adentro, nunca a un
+     hermano. Que no se separen lo verifica `test_copias_de_skills.py`. -->
 
-!`python "${CLAUDE_SKILL_DIR}/../spec-review-batch/scripts/lote.py" $ARGUMENTS`
+!`python "${CLAUDE_SKILL_DIR}/scripts/lote.py" $ARGUMENTS`
 
 ---
 
@@ -29,7 +29,7 @@ al converger. **Entre carriles ese padre no existe**: cada carril tiene su árbo
 converge recién en el merge, que resuelve texto y no semántica.
 
 **El skill global es el piso; este archivo manda.** Y no deja deuda: las cinco descargas están en
-[`../shared/sin-deuda.md`](../shared/sin-deuda.md), con una vuelta propia — ver «el lazo», al final.
+[`sin-deuda.md`](sin-deuda.md), con una vuelta propia — ver «el lazo», al final.
 
 ## Lo que este repo cambia respecto del batch genérico
 
@@ -203,7 +203,7 @@ Esperá a que vuelvan todos antes del reporte.
 ## Paso 5 — Destruir los worktrees
 
 ```bash
-python .claude/scripts/limpiar_worktrees.py --todos
+python .claude/skills/spec-implement-batch/scripts/limpiar_worktrees.py --todos
 ```
 
 **Va antes del reporte, no después, y no se hace a mano.** `git worktree remove` falla con
@@ -244,7 +244,7 @@ Las dos mitades, las dos en esta corrida:
 
 1. **El carril corrige su spec** para poder seguir, y lo devuelve al issue.
 2. **El padre corrige el `SKILL.md`** que lo permitió, con la regla que lo habría atajado. La tabla
-   de qué skill corregir está en [`../shared/sin-deuda.md`](../shared/sin-deuda.md), y **está
+   de qué skill corregir está en [`sin-deuda.md`](sin-deuda.md), y **está
    incompleta a propósito**: si tu caso no entra, agregá la fila.
 
 **Es del padre y no del carril**, y no es una preferencia: `.claude/` es el único árbol que los N

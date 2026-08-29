@@ -133,7 +133,7 @@ spec— y es lo que lo vuelve revisable. La prueba de que se convirtió en deuda
 **¿algún AC de este spec depende de lo excluido?** Si sí, entra al spec. Ningún gate puede
 decidirlo; lo mira `spec-review`.
 
-El porqué está en [`../shared/sin-deuda.md`](../shared/sin-deuda.md).
+El porqué está en [`sin-deuda.md`](sin-deuda.md).
 
 ### 3. Publicarlo como issue
 
@@ -177,7 +177,7 @@ No es parte de abrir un spec, pero es la otra mitad y se saltea igual de fácil:
    **tampoco la salida de abrir un issue**: si aparece trabajo que el spec necesitaba y no tenía,
    eso es un defecto de este skill —el `tasks.md` salió incompleto— y se descarga corrigiendo el
    spec y agregando acá la regla que lo habría atajado. Ver «el lazo» en
-   [`../shared/sin-deuda.md`](../shared/sin-deuda.md).
+   [`sin-deuda.md`](sin-deuda.md).
 
    **Lo verifica el gate:** un spec `Implementado` con una casilla abierta pone en rojo el nodo
    `harness`.

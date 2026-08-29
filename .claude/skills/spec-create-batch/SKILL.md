@@ -69,9 +69,21 @@ agentes, ya hay formato, sale casi gratis por unidad. Y un skill que obliga a cu
 arreglar una tilde se apaga entero.
 
 **La pregunta que decide el carril es una sola: ¿el arreglo toca `src/` o `docs/`?** Son las dos
-rutas que el hook protege. Si no las toca —un typo, un revert, un asset, una casilla de un spec ya
-publicado, el addon de gdUnit4— va por rama `fix/` o `chore/` con su `Closes #N` y **sale del
-lote**. La tabla entera está en [`spec-create`](../spec-create/SKILL.md).
+rutas que el hook protege. Si no las toca va por rama `fix/` o `chore/` con su `Closes #N` y **sale
+del lote**:
+
+| No necesita spec | Ejemplo |
+|---|---|
+| Un typo o una redacción, sin cambio de comportamiento | una tilde en un comentario, un `README` mal escrito |
+| Revertir el commit anterior | `git revert`, cuando lo que se revierte ya tenía su spec |
+| Actualizar el addon de gdUnit4 a una versión nueva | sin cambio de API en los tests |
+| Terminar la tarea abierta de un spec **ya publicado** | marcar un `tasks.md`, cerrar un issue |
+| Un asset nuevo que no toca `src/` | un `.png`, un `.ogg`, una referencia |
+| Lo que el usuario pida explícitamente sin spec | y entonces se dice en voz alta que se está salteando |
+
+**Necesita spec todo lo demás**, y en particular un bug aunque el arreglo sea una línea, cualquier
+cosa que toque `src/dominio/` o `src/sistemas/`, una feature por chica que parezca, y un cambio de
+escena que cambie **qué puede hacer** el jugador. **En la duda, spec.**
 
 **Un pedido que sale del lote se reporta igual.** Si no, quien lo pidió cree que se perdió.
 
@@ -173,7 +185,7 @@ le tocan, y el orden del lote. Y este contrato:
      borra.
 
      Y si de verdad **ninguna de esas vías alcanza**, eso no se anota: **se pregunta ahora**
-     (descarga 4 de [`../shared/sin-deuda.md`](../shared/sin-deuda.md)) o el spec se escribe sin
+     (descarga 4 de [`sin-deuda.md`](sin-deuda.md)) o el spec se escribe sin
      necesitar ese número. Un AC que depende de una medición imposible es un AC mal planteado.
    - **Declará contra qué base medís.** `staging`, o `staging` más los specs del lote que te
      preceden. Una medición sin base declarada es infalsificable en cuanto el lote se reordena —

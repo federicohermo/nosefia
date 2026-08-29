@@ -13,7 +13,7 @@ Encuentra, arregla, verifica, commitea y pushea a la rama del PR. **El reporte e
 no el producto.**
 
 **No deja deuda.** Todo lo que encuentra sale por una de las cinco descargas de
-[`../shared/sin-deuda.md`](../shared/sin-deuda.md) —arreglado, corregido en el spec, corregido en el
+[`sin-deuda.md`](sin-deuda.md) —arreglado, corregido en el spec, corregido en el
 skill, decidido por el usuario, o la corrida falla— y **ninguna de las cinco es «lo dejo anotado»**.
 Lo que sí decide el review es **dónde aterriza** cada fix: lo del alcance del spec en este PR, lo de
 afuera en su propio PR, abierto en esta misma corrida.
@@ -25,7 +25,7 @@ con los N diffs adelante. Saber cuál es cuál evita las dos formas de usarlos m
 
 | | acá (un PR) | `pr-review-batch` |
 |---|---|---|
-| Dónde trabaja | **el checkout principal**, en una rama de andamio | un worktree por PR |
+| Dónde trabaja | **el checkout principal, en la rama del PR** | un worktree por PR |
 | La cadena de bases | la base es un dato: la lee y listo | **la dibuja**, y es su entregable |
 | Un hallazgo que es del PR de abajo | no existe: no hay «abajo» que mirar | `PERTENECE-A-PR-<N>`, y se rutea |
 | Un conteo que el lote mueve | no hay lote | es del padre, y no se delega |
@@ -35,11 +35,15 @@ con los N diffs adelante. Saber cuál es cuál evita las dos formas de usarlos m
 árbol: corren `verificar.py` a la vez y cada uno hace `git add`. Para un PR solo, un worktree es
 gimnasia sin comprador — y encima hay que limpiarlo, que en Windows es el paso que más falla.
 
-**El precio es que te lleva el árbol de trabajo a otra rama**, así que el Paso 1 empieza
-verificando que esté limpio, y el Paso 8 te devuelve donde estabas.
+**Y tampoco hay rama de andamio.** Se trabaja sobre la rama del PR: si te lo pidieron por número,
+es la suya; si no te dijeron nada, es la que ya tenés puesta. Inventar un nombre local no compra
+nada y cuesta dos cosas — el push sale de una ref que no es la del PR, y una rama de review con
+otro nombre deja de matchear el hook que la del spec sí matchea.
 
-**El método es compartido y vive una sola vez**, en [`hallazgos.md`](./hallazgos.md): los ejes, el
-filtro de confianza y la política de triage. El batch lo lee de acá por ruta de hermano.
+**El método —los ejes, el filtro de confianza y la política de triage— está en
+[`hallazgos.md`](hallazgos.md), acá adentro.** El batch tiene el suyo, idéntico y propio: un skill
+trae su implementación completa, no la busca en un hermano. Que no se separen lo verifica
+`test_copias_de_skills.py`, no la buena voluntad.
 
 ---
 
@@ -69,29 +73,40 @@ Tres datos, y el segundo es el que se equivoca solo:
 
 Con `--dry` no se escribe nada: ni fixes, ni issues, ni push.
 
-## Paso 1 — Pararte en la cabeza, sin perder lo que tenías
+## Paso 1 — Pararte en la rama del PR, que es la del spec
 
 ```bash
-git status --short                  # tiene que estar limpio: esto te cambia de rama
+git status --short   # tiene que estar limpio
 git fetch origin
-git checkout -B feature/<NNN>-rev-pr-<N> origin/<headRefName>
 ```
 
-**El nombre de la rama no es decorativo, y el `NNN` va adelante a propósito.**
-`gate_de_spec.py` corre como hook y **bloquea toda escritura a `src/` y `docs/` desde una rama
-que no matchee `^feature/(\d{3})-` con ese número en `specs/mapa.json`**. Una rama tipo
-`rev-pr-<N>` no matchea, así que el review de un PR que toque esas dos carpetas se quedaría sin
-poder arreglar **nada** — y el síntoma es un `Edit` denegado, que se lee como un problema de
+**Sin argumento ya estás parado donde va**: el PR salió de `git branch --show-current`, así que
+la rama actual **es** la del PR. No te muevas — sólo poné el head al día si el remoto avanzó
+(`git status` te lo dice; `git pull --ff-only` si hace falta).
+
+**Con `<N>`**, pasate a la rama de ese PR y a ninguna otra:
+
+```bash
+git checkout <headRefName> || git checkout -b <headRefName> origin/<headRefName>
+```
+
+**No se abre una rama de andamio, y el porqué es el hook.** `gate_de_spec.py` bloquea toda
+escritura a `src/` y `docs/` desde una rama que no matchee `^feature/(\d{3})-` con ese número en
+`specs/mapa.json` — y la rama del PR de un spec **ya es** `feature/<NNN>-<kebab>`, o sea que ya
+matchea. Un nombre inventado tipo `rev-pr-<N>` no matchea, así que el andamio **creaba** el
+bloqueo que decía prevenir, y el síntoma es un `Edit` denegado, que se lee como un problema de
 permisos y no como un problema de nombre.
 
-**Una rama de andamio y no `git checkout <headRefName>` a secas** por dos motivos: la rama real
-puede estar tomada por otro worktree, y el andamio deja explícito que **el push va a la ref real**
-(Paso 7) y no al nombre local.
+Y como el push del Paso 7 sale de esta misma rama, no hay ref local que reconciliar con la del PR:
+son la misma.
 
 **Si el PR no tiene spec** —una rama `fix/` o `chore/`, que este repo permite para lo que no toca
-rutas protegidas— entonces por construcción no hay nada que arreglar en `src/` ni en `docs/`, y la
-rama de andamio se llama como quieras. Si igual hiciera falta tocarlas, **eso ya es un hallazgo
-sobre el PR**: le falta el spec.
+rutas protegidas— nada cambia: se trabaja igual sobre su rama. Por construcción no hay nada que
+arreglar en `src/` ni en `docs/`; si igual hiciera falta tocarlas, **eso ya es un hallazgo sobre
+el PR**: le falta el spec.
+
+**Si la rama está tomada por otro worktree**, `checkout` falla y ahí sí no hay dónde pararse: eso
+es `BLOQUEADO` y se reporta con la ruta del worktree que la tiene, no se esquiva con otro nombre.
 
 ## Paso 2 — Hidratar el spec. No es opcional y no falla solo
 
@@ -139,7 +154,7 @@ próxima hidratación, sin error y sin aviso.
 
 **Es además una corrección de `spec-create`**, no sólo de este spec: un AC infalsificable que
 llegó hasta el PR es una regla que el skill de creación no atajó. Agregá la regla allá y decilo en
-el reporte — ver «el lazo» en [`../shared/sin-deuda.md`](../shared/sin-deuda.md).
+el reporte — ver «el lazo» en [`sin-deuda.md`](sin-deuda.md).
 
 ## Paso 5 — Encontrar y arreglar
 
@@ -185,6 +200,9 @@ pushees, y decilo. Un pipeline que pushea para completarse no sirve.
 git push origin HEAD:refs/heads/<headRefName>
 ```
 
+Estás parado en esa misma rama (Paso 1), así que el `HEAD:` es redundante y a propósito: deja
+escrito a qué ref va el push, y falla ruidoso si alguien se movió de rama en el medio.
+
 Sin `--force` y sin rebase: un rebase reescribe los commits que el autor del PR ya leyó.
 
 **El mensaje de commit se escribe con `Write` a un archivo y se pasa con `-F`, nunca con
@@ -200,14 +218,15 @@ que obligó a corregir el spec**. Las dos últimas son las que le dan valor: dic
 encontró más de lo que este diff podía absorber, que es distinto de haber encontrado poco. **No
 abras inline sobre un PR que ya arreglaste**: es ruido con costo y se paga dos veces en eco.
 
-## Paso 8 — Devolver el árbol, y el reporte
+## Paso 8 — El reporte
 
-```bash
-git checkout <la rama donde estabas>
-```
+No hay árbol que devolver ni rama que borrar: estás en la rama del PR, que es donde corresponde
+quedarse. **Sí queda una verificación**, la misma del Paso 7 y por el mismo motivo: que tu `HEAD`
+sea idéntico a `origin/<headRefName>`. Si difieren, algo no se pusheó y tu rama local es lo único
+que lo tiene.
 
-Y borrá la rama de andamio **recién después de verificar que es idéntica a su
-`origin/<headRefName>`**. Si difieren, algo no se pusheó y la rama es lo único que lo tiene.
+Si te movías desde otra rama porque te pasaron un `<N>`, volvé a la que tenías **después** de esa
+comprobación, nunca antes.
 
 El reporte, en ~30 líneas:
 
