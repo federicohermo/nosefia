@@ -7,5 +7,6 @@
   "006": {"issue":10,"carpeta":"006-agarrar-llevar-y-examinar-los-objetos","fecha":"2026-08-29","estado":"Propuesto","titulo":"Spec 006 — Agarrar, llevar y examinar los objetos del almacén"},
   "007": {"issue":11,"carpeta":"007-el-reloj-corre-en-la-escena-y-el-hud-muestra-lo-que-queda","fecha":"2026-08-29","estado":"Propuesto","titulo":"Spec 007 — El reloj del turno corre en la escena y el HUD muestra lo que queda"},
   "008": {"issue":12,"carpeta":"008-reponer-el-estante-de-a-una-unidad","fecha":"2026-08-29","estado":"Propuesto","titulo":"Spec 008 — Reponer el estante colocando los productos de a uno"},
-  "009": {"issue":13,"carpeta":"009-la-computadora-abre-sus-tres-apps-sin-pausar-el-reloj","fecha":"2026-08-29","estado":"Propuesto","titulo":"Spec 009 — La computadora abre sus tres apps y el reloj no se pausa"}
+  "009": {"issue":13,"carpeta":"009-la-computadora-abre-sus-tres-apps-sin-pausar-el-reloj","fecha":"2026-08-29","estado":"Propuesto","titulo":"Spec 009 — La computadora abre sus tres apps y el reloj no se pausa"},
+  "010": {"issue":14,"carpeta":"010-los-docs-dicen-la-regla-de-los-skills-no-la-lista","fecha":"2026-08-29","estado":"Propuesto","titulo":"Spec 010 — Los docs dicen la regla de los skills, no la lista","origen":[7]}
 }
