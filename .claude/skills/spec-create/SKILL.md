@@ -102,7 +102,7 @@ formato y las desviaciones están en [`specs/README.md`](../../../specs/README.m
 **El número se reserva tarde**: mirá `specs/mapa.json` recién cuando vayas a crear la carpeta.
 Si hay otra sesión trabajando en paralelo, el número que elegiste al empezar ya no es el tuyo.
 
-Tres cosas que este repo pide y que no son obvias:
+Cuatro cosas que este repo pide y que no son obvias:
 
 - **Cada criterio de aceptación tiene que ser falsificable.** «El sistema de consecuencias
   funciona» no lo es; «con cuatro tareas cumplidas, `consecuencia()` devuelve `AVISO` y no
@@ -115,6 +115,25 @@ Tres cosas que este repo pide y que no son obvias:
   leer— o no anotarla. Lo verifica `test_convencion_de_specs.py`.
 - **Cada tarea nombra el archivo que toca**, entre backticks. Es lo que hace revisable el
   reparto de un lote antes de lanzarlo.
+- **Las tareas son la totalidad de lo que hace falta**, y ésta es la que no verifica nadie. Que
+  las que escribiste sean correctas no alcanza: **recorré cada AC y preguntá qué tarea lo cumple.**
+  Un AC sin tarea no rompe ningún gate, no aparece en ningún diff y **simplemente no se hace** —
+  es el agujero más caro del flujo, porque el spec se implementa entero, se mergea, y el AC sigue
+  sin cumplirse con todo en verde.
+
+### Y nada se aplaza — lo verifica el gate
+
+Un spec **no tiene dónde escribir trabajo para después**, y eso es a propósito. No hay
+`## Seguimiento` ni `## Pendientes` ni `## Próximos pasos`, ninguna casilla dice `TODO` ni «por
+ahora», y **ningún `research.md` declara una medición como no hecha**: o se corrió, o el spec no la
+necesitaba. Las cuatro las verifica `test_convencion_de_specs.py`, sobre los specs hidratados.
+
+**`## Fuera de alcance` sí existe y no es lo mismo.** Declara una frontera —qué NO hace este
+spec— y es lo que lo vuelve revisable. La prueba de que se convirtió en deuda con sombrero es una:
+**¿algún AC de este spec depende de lo excluido?** Si sí, entra al spec. Ningún gate puede
+decidirlo; lo mira `spec-review`.
+
+El porqué está en [`sin-deuda.md`](sin-deuda.md).
 
 ### 3. Publicarlo como issue
 
@@ -154,8 +173,14 @@ gate saca el número del spec**, así que una rama con otro nombre bloquea la pr
 
 No es parte de abrir un spec, pero es la otra mitad y se saltea igual de fácil:
 
-1. **Todas las casillas del `tasks.md` cerradas.** No hay marcador para «esto queda pendiente»:
-   lo que quedó pendiente es un issue nuevo, no una casilla abierta.
+1. **Todas las casillas del `tasks.md` cerradas.** No hay marcador para «esto queda pendiente», y
+   **tampoco la salida de abrir un issue**: si aparece trabajo que el spec necesitaba y no tenía,
+   eso es un defecto de este skill —el `tasks.md` salió incompleto— y se descarga corrigiendo el
+   spec y agregando acá la regla que lo habría atajado. Ver «el lazo» en
+   [`sin-deuda.md`](sin-deuda.md).
+
+   **Lo verifica el gate:** un spec `Implementado` con una casilla abierta pone en rojo el nodo
+   `harness`.
 2. **Un `Closes` por cada issue saldado**, y son el del spec **más los del `origen`**. El del
    spec se cierra solo; el de deuda que lo parió no lo cierra nadie, y sin el `Closes` quedan
    dos issues por el mismo trabajo y uno abierto para siempre.

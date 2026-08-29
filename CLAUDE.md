@@ -8,13 +8,11 @@ issue.
 
 ## Qué es
 
-**No se fía** — un juego de turno nocturno en un almacén. El empleado nuevo tiene un tiempo
-limitado por noche y lo reparte entre **cinco tareas obligatorias** que le deja el jefe
-—atender la caja, reponer, registrar productos, limpiar, y una quinta sin definir— y
-**averiguar qué está pasando**. Atiende por una **ventanilla**, no más de dos compradores por
-día. Al cierre del turno el juego cuenta cuántas tareas cumplió y aplica consecuencias en tres
-bandas —las 5, entre 3 y 4, o menos de 3—; **tres jornadas seguidas sin completar las cinco y
-lo echan**.
+**No se fía** — un juego de turno nocturno en un almacén. El empleado nuevo reparte un tiempo
+limitado entre **cinco tareas obligatorias** del jefe —caja, reponer, registrar, limpiar, y una
+quinta sin definir— y **averiguar qué está pasando**. Atiende por una **ventanilla**, no más de
+dos compradores por día. Al cierre se cuentan las tareas cumplidas y las consecuencias caen en
+tres bandas —5, entre 3 y 4, menos de 3—; **tres jornadas seguidas sin las cinco y lo echan**.
 
 **La tensión central es aritmética: cada minuto investigando es un minuto que no se dedica a
 las tareas.** Al evaluar una feature, la pregunta es si aprieta esa tensión — no si agrega
@@ -38,13 +36,12 @@ gdformat src test                               # arregla el formato, no sólo l
 Lo que hay que saber antes de abrir
 [docs/guides/verificacion.md](./docs/guides/verificacion.md):
 
-- **`verificar.py` es el nodo de convergencia** y es lo que hay que correr antes de un PR:
-  `lint ‖ formato ‖ capas ‖ tdd ‖ harness ‖ tests`. La CI corre **este script**, no la lista de
-  nodos — enumerarlos allá crearía un segundo lugar donde vive la lista.
+- **`verificar.py` es el nodo de convergencia**, y es lo que se corre antes de un PR:
+  `lint ‖ formato ‖ capas ‖ tdd ‖ harness ‖ tests`. La CI corre **este script** y no la lista de
+  nodos: enumerarlos allá sería un segundo lugar donde vive la lista.
 - **Un nodo `salteado` NO es un nodo verde.** El reporte los distingue y cada salteo dice qué no
   miró. Si `tests` se saltea por falta de `GODOT_BIN`, la suite no corrió.
-- **Hace falta `GODOT_BIN`** con la ruta al ejecutable de Godot. En Windows, el `_console.exe`
-  y **fuera de OneDrive** — ver [troubleshooting](./docs/guides/troubleshooting.md).
+- **Hace falta `GODOT_BIN`**: en Windows el `_console.exe`, y **fuera de OneDrive**.
 - **`gdformat` decide el formato.** No se discute en una revisión.
 - **El veredicto sale del código de salida, nunca de un grep de la salida.** Un `| grep` que no
   matchea devuelve 1 y se traga la salida entera.
@@ -81,15 +78,14 @@ Detalle en [docs/architecture/overview.md](./docs/architecture/overview.md).
 
 ## Reglas que valen en todo el repo
 
-Las de cada capa se cargan solas al tocar sus archivos (`.claude/rules/`). El porqué de cada una
-está en [docs/guides/conventions.md](./docs/guides/conventions.md) — acá está la regla y **quién
-la verifica**, que es lo que hace falta antes de escribir una línea.
+Las de cada capa se cargan solas (`.claude/rules/`), y el porqué de todas está en
+[docs/guides/conventions.md](./docs/guides/conventions.md). Acá va la regla y **quién la verifica**.
 
 Verificadas por una herramienta:
 
-- **La dirección de dependencia entre capas** (`gate_de_capas.py`), y cuenta también **nombrar
-  un `class_name` de otra capa** — que en Godot es la forma normal de escribir código y no deja
-  rastro en ningún import. Por eso el gate indexa las clases en vez de mirar los `preload`.
+- **La dirección de dependencia entre capas** (`gate_de_capas.py`), y cuenta también **nombrar un
+  `class_name` de otra capa** — la forma normal de escribir Godot, y no deja rastro en ningún
+  import: por eso el gate indexa las clases en vez de mirar los `preload`.
 - **Todo `.gd` de `dominio/` y `sistemas/` tiene su test espejo** en `test/<capa>/<nombre>_test.gd`
   (`gate_de_tests.py`).
 - **Ningún test sin aserción, apagado (`skip(true)`, `assert_not_yet_implemented`) o con un
@@ -98,20 +94,27 @@ Verificadas por una herramienta:
 - **Formato, largo de línea (100), nombres y orden de declaraciones** (`gdformat`, `gdlint`).
 - **No se edita `src/` ni `docs/` sin un spec detrás de la rama** (el hook de
   `.claude/settings.json`).
+- **Un skill es autocontenido: trae adentro todo lo que corre** (`test_copias_de_skills.py`).
+  Ningún `SKILL.md` alcanza `../otro-skill/`, porque un skill es la unidad que se instala y uno
+  que sale a buscar el archivo al de al lado deja de funcionar apenas viaja solo. El precio es la
+  duplicación, y el gate la cobra: **una copia que difiere de su canónico en un byte es rojo**, y
+  los canónicos están declarados en ese archivo.
 
 Prosa — dependen de que la revisión las mire, y que no tengan verificador es deuda:
 
 - **Tipado estático en toda firma**, `-> void` incluido.
-- **Español** en comentarios, nombres, commits y specs. Las excepciones son las del motor
-  (`_ready`, `_process`, `queue_free`).
+- **Español en el contenido, inglés en los nombres de carpeta.** Comentarios, identificadores,
+  commits, specs y docs en español —las excepciones son las del motor: `_ready`, `_process`—;
+  las carpetas, en inglés. **Dos excepciones deliberadas:** las cuatro capas, que no son
+  estructura sino vocabulario del juego, y las carpetas de spec, cuyo nombre **es** su título.
+  `reportes/` es la única mal puesta, y arreglarla pide un spec: renombrarla toca `docs/`.
 - **Los comentarios explican el porqué**, no el qué.
-- **Cero `print` que sobreviva al commit.** Lo que tiene que quedar va con `push_warning` o
-  `push_error`.
 - **Un valor fijo vive una sola vez**, en un archivo de `src/dominio/`.
 - **Un conjunto cerrado es un `enum`**, nunca un `String` suelto: `"limpar"` no rompe nada, el
   `if` simplemente no entra nunca.
-- **Nada de `get_node("../../…")`.** `@export` hacia abajo, señales hacia arriba.
 - **Los borrados van en su propio commit**, para que revertirlos sea trivial.
+- Las de GDScript —cero `print`, nada de `get_node("../../…")`— se cargan solas al tocar un
+  `.gd`: `.claude/rules/`.
 
 ---
 
@@ -149,43 +152,38 @@ probar. [docs/guides/tdd.md](./docs/guides/tdd.md).
 | TDD sin cobertura | [docs/guides/tdd.md](./docs/guides/tdd.md) | Qué reemplaza al umbral y qué se pierde |
 | Convenciones | [docs/guides/conventions.md](./docs/guides/conventions.md) | El porqué de cada regla, y cuáles son prosa |
 | Troubleshooting | [docs/guides/troubleshooting.md](./docs/guides/troubleshooting.md) | Errores reales ya pisados acá |
-| Ramas | [docs/infra/ramas.md](./docs/infra/ramas.md) | `staging` integra, `main` se entrega, y la carrera entre los dos workflows |
+| Ramas | [docs/infra/ramas.md](./docs/infra/ramas.md) | `staging` integra, `main` entrega, y la carrera entre sus workflows |
 | Convención de specs | [specs/README.md](./specs/README.md) | El formato, los cuatro estados y el flujo |
 
-**Trabajo planificado:** cada spec **es un issue**, y
-[specs/mapa.json](./specs/mapa.json) es el mapa spec↔issue y el estado de cada uno. **Su
-`estado` lo deriva `mapa.yml`** en el push a `staging`: el gate prohíbe tocarlo dentro del PR
-que lo justifica.
+**Trabajo planificado:** cada spec **es un issue**, y [specs/mapa.json](./specs/mapa.json) los
+mapea. **Su `estado` lo deriva `mapa.yml`** en el push a `staging`: el gate prohíbe tocarlo dentro
+del PR que lo justifica.
 
-**La deuda sin spec vive en [GitHub Issues](https://github.com/federicohermo/nosefia/issues)**,
-no en un archivo ni en un `## Seguimiento` adentro del spec que la parió. Adentro de un
-`tasks.md` un ítem **hereda el estado de su spec**: un spec `Implementado` puede quedar con diez
-casillas abiertas sin deberle nada a nadie, y así es como la deuda se vuelve invisible. Un issue
-tiene estado propio y se cierra desde un commit con `Closes #N`. Qué hay para promover:
-`python .claude/scripts/deuda.py`.
+**Los issues son la ENTRADA del repo, nunca la salida.** Un pedido de afuera entra como
+[issue](https://github.com/federicohermo/nosefia/issues) y `spec-create` lo drena hacia specs
+(`deuda.py` lista qué hay). Lo que **no** existe es abrir uno para **terminar** una corrida:
+ningún skill deja trabajo escrito para después, y un `tasks.md` tampoco puede registrarlo —el ítem
+hereda el estado de su spec—. **Eso ahora es un rojo**: `test_convencion_de_specs.py` verifica la
+casilla abierta en un spec `Implementado`, las secciones y tareas que aplazan, y las mediciones
+declaradas como no hechas. La doctrina y su evidencia, que los ocho skills traen adentro:
+[.claude/doctrina/sin-deuda.md](./.claude/doctrina/sin-deuda.md) es la copia canónica.
 
 ---
 
 ## Antes de un cambio grande
 
-Escribir los cuatro archivos (`spec` · `research` · `plan` · `tasks`), **publicarlo como
-issue** con `python .claude/scripts/publicar_spec.py crear` y `publicar`, y commitear **sólo**
-`specs/mapa.json` a `staging`. **Ahí termina abrir un spec: la rama la abre el implementador**,
-porque escribirlo y decidir implementarlo son dos decisiones distintas y una rama entre las dos
-queda colgada.
-
-**Y lo bloquea un hook**, no la buena voluntad: sin un spec detrás de la rama no se edita `src/`
-ni `docs/`. El flujo entero y **qué NO necesita spec** está en el skill
+Los cuatro archivos (`spec` · `research` · `plan` · `tasks`), publicados como issue con
+`publicar_spec.py crear` y `publicar`, y **sólo** `specs/mapa.json` commiteado a `staging`. **Ahí
+termina abrir un spec: la rama la abre el implementador**, porque escribirlo y decidir
+implementarlo son dos decisiones distintas y una rama entre las dos queda colgada. **Y lo bloquea
+un hook**, no la buena voluntad. El flujo entero y **qué NO necesita spec**, en el skill
 [spec-create](./.claude/skills/spec-create/SKILL.md).
 
-`specs/[0-9]*/` está en el `.gitignore`: el directorio es una **caché** que se trae con
-`python .claude/scripts/hidratar_specs.py <NNN>`, y hace falta **en cada worktree**. Leerlos
-anda igual, pero **`Grep` no los ve** —es ripgrep y respeta el `.gitignore`, así que contesta
-cero sin decir que no miró—: ahí va `rg --no-ignore`.
+`specs/[0-9]*/` está en el `.gitignore`: es una **caché** que se trae con
+`hidratar_specs.py <NNN>`, y hace falta **en cada worktree**.
 
-El `research.md` se escribe **midiendo, no suponiendo**: qué corriste y qué contestó. Un
-research que dice «probablemente haya que tocar el HUD» es una intuición con formato de
-documento.
+El `research.md` se escribe **midiendo, no suponiendo**: qué corriste y qué contestó. Uno que dice
+«probablemente haya que tocar el HUD» es una intuición con formato de documento.
 
 ---
 
@@ -196,7 +194,8 @@ Las cuatro que ya costaron tiempo acá:
 - **La salida en Windows sale en cp1252** cuando va a una tubería, y **cualquier acento tira el
   script abajo** — incluido el mensaje de bloqueo del hook. Por eso todo script de
   `.claude/scripts/` llama a `configurar()` de `lib/consola.py` antes de imprimir nada.
-- **`Grep` no ve `specs/`.** Ver arriba.
+- **`Grep` no ve `specs/`.** Es ripgrep y respeta el `.gitignore`: contesta cero **sin decir
+  que no miró**. Ahí va `rg --no-ignore`.
 - **Godot adentro de OneDrive no se puede ejecutar** si el archivo no está descargado: Windows
   contesta «el proveedor de archivos de nube no se está ejecutando», que no nombra ni a Godot ni
   a los tests.
