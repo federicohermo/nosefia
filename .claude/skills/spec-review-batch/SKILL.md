@@ -147,6 +147,18 @@ pasáselo a cada agente, o el lote devuelve una avalancha de citas rotas falsas.
 3. **La marca que sí es una conclusión es `<- ESCENA COMPARTIDA`.** Para todo lo demás, compartir
    un archivo dice *dónde mirar*; para un `.tscn` dice *qué hacer*: se ordena, no se paraleliza.
    Un `[P]` entre dos tareas que tocan la misma escena es bloqueante en los dos specs.
+4. **La matriz sale de los `tasks.md` y de ningún otro archivo** —`lote.py` los lee y nada
+   más—, así que **un archivo que un spec edita sin darle tarea propia es invisible acá**. El
+   caso está medido: en el lote 004–010, el 2026-08-30, `src/escenas/almacen.gd` lo escriben el
+   007, el 008 y el 009, y sólo aparece en los `plan.md` de los dos últimos. La matriz no lo
+   listó, y con él se perdía que el AC22 del 007 —que prohíbe ramas en ese archivo— lo verifica
+   una tarea del 007 que corre **antes** de que los otros dos escriban sus líneas.
+
+   No se arregla haciendo que `lote.py` lea los cuatro archivos: los `research.md` citan medio
+   repo y la matriz se volvería ruido. **Se arregla acá**, con un barrido propio: `rg --no-ignore`
+   sobre los `plan.md` del lote buscando rutas de `src/`, y todo lo que aparezca en dos specs y
+   no esté en la matriz es una arista que el Paso 2 no vio.
+
 4. **Los pares `X -> Y`** del tercer bloque son la arista que ningún `preload` ni ningún
    `class_name` delata. Salen de la **línea** de la tarea y no de su prosa, y vienen como texto y
    no como número: hay pares con coma decimal que un `float()` convierte en un error.
@@ -252,6 +264,19 @@ no re-audita: cruza.
   editó, el cruce se re-escribe contra el texto nuevo antes de aplicarlo.
 - **Si los dos contradicen al orden que derivaste en el Paso 2, gana la evidencia y decilo**: un
   orden mal derivado es un hallazgo sobre el spec que lo declara, no un detalle de proceso.
+- **Agrupá las ediciones propuestas por spec DESTINO antes de aplicar ninguna, y contá.** Dos
+  agentes que piden lo mismo al mismo spec es la señal más fuerte que devuelve este skill: son
+  dos lectores independientes que llegaron a la misma conclusión sin verse. **Medido en el lote
+  004–010 el 2026-08-30:** el 006 y el 009 pidieron cada uno, por su cuenta, que el 004 expusiera
+  `suspender()` / `reanudar()` en `src/escenas/jugador.gd`, y el carril de coherencia lo levantó
+  como tercero. Tres pedidos, una edición.
+
+  Y por qué se pierde si no se agrupa: **cada spec escribe ese pedido adentro de su propio**
+  **`research.md`, que es el único lugar donde el agente del spec destino no va a mirar.** El
+  agente del 004 corrió sin enterarse de que se lo pedían dos veces. Aplicar la edición una vez
+  por pedido deja el spec destino con la misma cosa escrita dos veces; aplicarla una sola vez
+  pero sin ver que eran dos pierde la evidencia de que es dura.
+
 - **Verificá los descartes, no sólo los hallazgos.** Un agente que descarta algo como
   «preexistente» con una medición propia puede estar descartando bien por el motivo equivocado —
   o mal. Y el caso caro es el que se lee como un hallazgo bueno: uno **que no era cierto**.
