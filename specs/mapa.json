@@ -10,5 +10,8 @@
   "009": {"issue":13,"carpeta":"009-la-computadora-abre-sus-tres-apps-sin-pausar-el-reloj","fecha":"2026-08-29","estado":"Propuesto","titulo":"Spec 009 — La computadora abre sus tres apps y el reloj no se pausa"},
   "010": {"issue":14,"carpeta":"010-los-docs-dicen-la-regla-de-los-skills-no-la-lista","fecha":"2026-08-29","estado":"Propuesto","titulo":"Spec 010 — Los docs dicen la regla de los skills, no la lista","origen":[7]},
   "011": {"issue":15,"carpeta":"011-el-presupuesto-del-turno-cierra-la-cuenta","fecha":"2026-08-30","estado":"Propuesto","titulo":"Spec 011 — El presupuesto del turno cierra la cuenta"},
-  "012": {"issue":16,"carpeta":"012-la-pureza-del-dominio-la-verifica-un-gate","fecha":"2026-08-30","estado":"Propuesto","titulo":"Spec 012 — La pureza del dominio la verifica un gate, no la prosa"}
+  "012": {"issue":16,"carpeta":"012-la-pureza-del-dominio-la-verifica-un-gate","fecha":"2026-08-30","estado":"Propuesto","titulo":"Spec 012 — La pureza del dominio la verifica un gate, no la prosa"},
+  "013": {"issue":17,"carpeta":"013-atender-a-los-compradores-por-la-ventanilla","fecha":"2026-08-30","estado":"Propuesto","titulo":"Spec 013 — Atender a los compradores por la ventanilla"},
+  "014": {"issue":18,"carpeta":"014-limpiar-el-local","fecha":"2026-08-30","estado":"Propuesto","titulo":"Spec 014 — Limpiar el local pasando el trapeador por las cuatro manchas"},
+  "015": {"issue":19,"carpeta":"015-sacar-la-basura-al-fondo","fecha":"2026-08-30","estado":"Propuesto","titulo":"Spec 015 — Sacar la basura al fondo"}
 }
