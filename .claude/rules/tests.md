@@ -14,13 +14,15 @@ paths:
 ```gdscript
 extends GdUnitTestSuite
 
+const Tarea := preload("res://src/dominio/tarea.gd")
 const Turno := preload("res://src/dominio/turno.gd")
 
 
-func test_cerrar_con_las_cinco_tareas_no_dispara_consecuencia() -> void:
-	var turno := Turno.new(5)
-	turno.completar(5)
-	assert_int(turno.consecuencia()).is_equal(Turno.Consecuencia.NINGUNA)
+func test_completar_la_unica_obligatoria_la_cuenta_como_cumplida() -> void:
+	var limpiar := Tarea.new(Tarea.Tipo.LIMPIAR)
+	var turno := Turno.new(3600.0, [limpiar])
+	turno.completar(limpiar)
+	assert_int(turno.tareas_cumplidas()).is_equal(1)
 ```
 
 - **`extends GdUnitTestSuite`** — es lo que hace que el archivo se descubra como suite.

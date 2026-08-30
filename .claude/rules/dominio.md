@@ -44,8 +44,8 @@ El turno tiene un tiempo limitado que se reparte entre las tareas y la investiga
 tiempo **no lo lee el dominio del reloj del motor**: se lo pasan.
 
 ```gdscript
-# Bien: el turno recibe cuánto se consumió y decide.
-func consumir(minutos: float) -> void:
+# Bien: el turno recibe cuántos segundos se consumieron y decide.
+func consumir(segundos: float) -> void:
 
 # Mal: el dominio va a buscar el tiempo, y ahora el test necesita un frame.
 func consumir() -> void:

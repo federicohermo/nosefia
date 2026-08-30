@@ -229,6 +229,10 @@ Uno por spec, cada uno con el preámbulo del Paso 1 y su base del Paso 2. Los se
   que otra tarea le hiciera—, `[P]` que no miente, ninguna tarea que se cierre **mirando o
   escuchando**, **ninguna sección que aplace** (`## Seguimiento` y sus alias) y **ninguna tarea
   que aplace** (`TODO`, «por ahora», «más adelante»). Lo verifica `test_convencion_de_specs.py`.
+  **Una tarea nueva va con el número libre siguiente y se escribe donde corre**, porque el ID
+  no es el orden. El sufijo de letra —`T001a`— **es rojo**: el gate exige tres dígitos exactos
+  (`TAREA = ^- \[[ x]\] (T\d{3})( \[P\])? \S`). Medido en el lote 001–002 el 2026-08-30, donde
+  los dos agentes lo pisaron el mismo día.
 - **Completitud** — la pregunta que ningún gate contesta: **¿las tareas que hay alcanzan para
   cumplir los AC?** Una tarea faltante no rompe nada, no aparece en ningún diff y no se hace
   nunca. Si falta, se escribe acá.

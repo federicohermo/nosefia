@@ -55,6 +55,10 @@ Al revisar, verificá:
 
 - **Cada tarea lleva su `T0NN`**, sin duplicados, y **los IDs no se renumeraron** respecto de
   la versión anterior. Renumerar rompe toda referencia que otra tarea le hiciera.
+  **Una tarea nueva va con el número libre siguiente y se escribe donde corre**, porque el ID
+  no es el orden. El sufijo de letra —`T001a`— **es rojo**: el gate exige tres dígitos exactos
+  (`TAREA = ^- \[[ x]\] (T\d{3})( \[P\])? \S`). Medido en el lote 001–002 el 2026-08-30, donde
+  los dos agentes lo pisaron el mismo día.
 - **Ninguna tarea se cierra mirando o escuchando.** Una tarea que dice *a ojo*, *de oído*,
   *captura* o *mirar la pantalla* es un hallazgo, y el arreglo es volverla verificable —un test
   de gdUnit4, un número medido, un valor que un gate lea— o sacarla. Marcarla no es una salida.
