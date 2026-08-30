@@ -13,5 +13,11 @@
   "012": {"issue":16,"carpeta":"012-la-pureza-del-dominio-la-verifica-un-gate","fecha":"2026-08-30","estado":"Propuesto","titulo":"Spec 012 — La pureza del dominio la verifica un gate, no la prosa"},
   "013": {"issue":17,"carpeta":"013-atender-a-los-compradores-por-la-ventanilla","fecha":"2026-08-30","estado":"Propuesto","titulo":"Spec 013 — Atender a los compradores por la ventanilla"},
   "014": {"issue":18,"carpeta":"014-limpiar-el-local","fecha":"2026-08-30","estado":"Propuesto","titulo":"Spec 014 — Limpiar el local pasando el trapeador por las cuatro manchas"},
-  "015": {"issue":19,"carpeta":"015-sacar-la-basura-al-fondo","fecha":"2026-08-30","estado":"Propuesto","titulo":"Spec 015 — Sacar la basura al fondo"}
+  "015": {"issue":19,"carpeta":"015-sacar-la-basura-al-fondo","fecha":"2026-08-30","estado":"Propuesto","titulo":"Spec 015 — Sacar la basura al fondo"},
+  "016": {"issue":20,"carpeta":"016-el-ciclo-de-jornadas","fecha":"2026-08-30","estado":"Propuesto","titulo":"Spec 016 — El ciclo de jornadas"},
+  "017": {"issue":21,"carpeta":"017-la-pantalla-de-cierre-del-turno","fecha":"2026-08-30","estado":"Propuesto","titulo":"Spec 017 — La pantalla de cierre del turno"},
+  "018": {"issue":22,"carpeta":"018-el-sistema-de-investigacion","fecha":"2026-08-30","estado":"Propuesto","titulo":"Spec 018 — El sistema de investigación registra, acumula y desemboca"},
+  "019": {"issue":23,"carpeta":"019-el-guardado-entre-jornadas","fecha":"2026-08-30","estado":"Propuesto","titulo":"Spec 019 — El guardado entre jornadas"},
+  "020": {"issue":24,"carpeta":"020-el-menu-de-inicio","fecha":"2026-08-30","estado":"Propuesto","titulo":"Spec 020 — El menú de inicio"},
+  "021": {"issue":25,"carpeta":"021-el-sistema-de-audio","fecha":"2026-08-30","estado":"Propuesto","titulo":"Spec 021 — El sistema de audio suena por tabla, no por escucha"}
 }
