@@ -357,10 +357,37 @@ En este orden, y el segundo es el que se saltea:
      del lazo, y el único que impide que el mismo cruce vuelva en el lote siguiente.
    - Una línea de lo que no tuvo nada.
 
-**El reporte no puede decir «queda pendiente».** Si aparece esa frase, el hallazgo no se descargó.
+## El reporte se escribe para decidir, no para demostrar que trabajaste
 
-~50 líneas más la tabla. Los matices, el porqué y las mediciones **van a los specs y a sus
-issues**: el chat se pierde, el issue queda.
+**Techo duro: 25 líneas más la tabla**, y la tabla no pasa de una fila por spec. Medido acá el
+2026-08-30: la primera versión del reporte de este lote salió en ~60 líneas de prosa densa y el
+usuario la rechazó entera —«esto es una ensalada total de palabras»— y hubo que rehacerla. **El
+reporte largo no es más completo: es ilegible, que es lo mismo que vacío.**
+
+Las tres secciones que van, y ninguna más:
+
+1. **Qué hice** — dos o tres líneas. Cuántos bloqueantes, qué se publicó.
+2. **Qué necesito que definas** — lo que está esperando una decisión del usuario, numerado.
+3. **Qué huecos quedaron** — lo que nadie está cubriendo hoy.
+
+Todo lo demás —los cruces uno por uno, el orden derivado, las aristas, las mediciones, el porqué
+de cada decisión— **va a los specs y a sus issues, que es donde queda**. El chat se pierde. Si
+un cruce sólo existe en el reporte, no se descargó.
+
+Las reglas de escritura, que son las que se rompen primero:
+
+- **Nada de negritas por énfasis.** Sólo para lo que hay que poder saltear leyendo en diagonal.
+- **Ningún término del harness sin traducir.** Quien lee decide sobre el juego, no sobre el
+  skill: «clase 3», «eje anclaje», «carril de coherencia» y «`--solo harness`» no significan nada
+  afuera de este archivo.
+- **Un hallazgo se dice por su consecuencia, no por su mecanismo.** «Jugar perfecto tres días
+  seguidos te hacía echar» se entiende; «la tabla del 002 está en absolutos contra un supuesto de
+  cinco» hay que descifrarlo.
+- **No repitas lo que ya está en la tabla.**
+- **Si no requiere acción del usuario y no es un hueco, no va.**
+
+**Y el reporte no puede decir «queda pendiente».** Si aparece esa frase, el hallazgo no se
+descargó.
 
 ---
 
