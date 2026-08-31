@@ -193,7 +193,7 @@ El `research.md` se escribe **midiendo, no suponiendo**: qué corriste y qué co
 
 ## Las trampas de este repo
 
-Las cuatro que ya costaron tiempo acá:
+Las cinco que ya costaron tiempo acá:
 
 - **La salida en Windows sale en cp1252** cuando va a una tubería, y **cualquier acento tira el
   script abajo** — incluido el mensaje de bloqueo del hook. Por eso todo script de
@@ -205,3 +205,11 @@ Las cuatro que ya costaron tiempo acá:
   a los tests.
 - **Un `.tscn` no se mergea.** Un merge de tres vías sobre una escena no da un conflicto: da una
   escena corrupta. Dos specs que tocan la misma escena se ordenan, no se paralelizan.
+- **Una suite de gdUnit4 que no parsea se descarta en silencio y `tests` sale VERDE.** Medido
+  tres veces en el lote 001/002/004/007: una suite que hace `preload` de un archivo que todavía
+  no existe —o sea, el estado normal del paso 1 del TDD— no corre, y gdUnit4 igual devuelve 0.
+  `verificar.py` hace lo correcto, porque el veredicto es el código de salida, y aun así declara
+  `ok`. **Un error de parseo en `dominio/` puede dejar el dominio entero sin correr con la CI en
+  verde**, y las cuatro reglas del gate de tests no lo ven: el espejo existe, afirma y no está
+  apagado. Mientras se hace TDD, el número que hay que mirar es el `Executed test suites: (N/N)`
+  de la salida cruda contra la cantidad de `*_test.gd`, no el color del nodo.
