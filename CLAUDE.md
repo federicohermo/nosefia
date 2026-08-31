@@ -14,8 +14,9 @@ la basura— y **averiguar qué está pasando**. Atiende por una **ventanilla**,
 compradores por día. Al cierre se cuentan las tareas cumplidas y las consecuencias caen en tres
 bandas: las 5 no pasa nada, 3 o 4 es un aviso, menos de 3 es grave. **Las tres bandas pesan
 distinto sobre el despido**: una jornada grave suma dos apercibimientos, una de aviso suma uno,
-una jornada completa los reinicia a cero, y a los seis lo echan. O sea que tres jornadas graves
-seguidas despiden y tres de cuatro tareas no.
+una jornada completa los reinicia a cero, y a los cuatro lo echan. O sea que **dos jornadas graves
+seguidas despiden, una grave más dos avisos también, y cuatro de cuatro tareas también** — pero
+tres de cuatro tareas no, y una jornada completa borra la deuda entera.
 
 **La tensión central es aritmética: cada minuto investigando es un minuto que no se dedica a
 las tareas.** Al evaluar una feature, la pregunta es si aprieta esa tensión — no si agrega
