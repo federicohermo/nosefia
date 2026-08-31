@@ -163,6 +163,11 @@ Cada agente recibe, literal:
 - **El mensaje de commit se escribe con `Write` a un archivo y se pasa con `-F`, nunca con
   heredoc.** Los backticks y los `$` del contenido lo rompen con un `unexpected EOF` que cuesta más
   diagnosticar que reescribirlo — está medido en esta máquina.
+- **Y ese archivo lleva el número del spec en el nombre: `commit_<NNN>_<algo>.txt`.** El
+  scratchpad de la sesión **es uno solo para los N carriles**, así que dos carriles que elijan
+  el nombre obvio escriben el mismo archivo. Medido en el lote 001/002/004/007: un carril
+  sobrescribió el `commit1.txt` que el otro estaba por pasarle a `-F`. **No da conflicto ni
+  error**: el segundo commitea el mensaje del primero, y eso se descubre leyendo el historial.
 
 ### La condición de terminado del carril — no se negocia
 
