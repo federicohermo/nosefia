@@ -12,8 +12,8 @@ extends RefCounted
 
 enum Banda { NINGUNA, AVISO, GRAVE }
 
-## El corte entre el aviso y lo grave, en **tareas** y no en porcentaje: con 6 obligatorias y 5
-## cumplidas la banda sigue siendo `AVISO`, porque falta una.
+## El corte entre el aviso y lo grave, en **tareas** y no en porcentaje: con 6 obligatorias, 3
+## cumplidas siguen siendo `AVISO` — el corte no se reescala con las obligatorias.
 ##
 ## Vive acá y no en `reglas.gd` por el criterio de `.claude/rules/dominio.md`, que no es de qué
 ## trata el número sino cuántos archivos lo necesitan: éste lo lee `consecuencia_de()` y nadie
