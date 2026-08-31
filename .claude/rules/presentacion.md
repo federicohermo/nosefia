@@ -35,6 +35,12 @@ grande produce una escena rota, no un conflicto. Las dos formas de que eso no pa
 ## La comunicación va por señales y `@export`
 
 - Hacia abajo, `@export`: la escena recibe lo que necesita y se conecta en el editor.
+  **Si el `.tscn` se edita a mano, un `@export` de tipo `Node` va declarado ADEMAS en el tag
+  del nodo** — `node_paths=PackedStringArray("_hud", "_reloj")` —, porque el motor guarda el
+  valor como `NodePath` y sin esa lista no lo resuelve. Queda en `null`, **la escena carga sin
+  un solo error**, los seis nodos dan verde, y el juego muere en el primer cuadro con un
+  `Nonexistent function … in base 'Nil'` que no nombra ni al `.tscn` ni al `@export`. El editor
+  de Godot lo escribe solo; una escena escrita a mano, no. Medido en el spec 007.
 - Hacia arriba, señales.
 - Nunca `get_node("../../…")`, por lo que dice [gdscript.md](./gdscript.md).
 
