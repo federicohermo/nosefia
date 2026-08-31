@@ -23,6 +23,23 @@ const COSTO_DE_LIMPIAR := 3600.0
 ## el fondo, que es una zona que ninguna otra obligatoria visita.
 const COSTO_DE_SACAR_LA_BASURA := 1200.0
 
+## A los cuatro apercibimientos lo echan, y se compara con `>=` y no con `==`: una jornada grave
+## sube de a dos, así que el contador puede saltar de 3 a 5 sin pisar el 4.
+##
+## El 4 es una decisión de balance y no la lectura literal de la fuente: el GDD dice «más de dos
+## días seguidos» y el formulario de la primera entrega dice «tres jornadas consecutivas», o sea
+## que las dos piden **tres** jornadas graves. El prototipo elige **dos**, a propósito, porque
+## con 4 los tres caminos al despido quedan a la misma distancia y la progresión se lee de un
+## vistazo: dos jornadas graves despiden, una grave más dos avisos despiden, y cuatro avisos
+## despiden. Queda escrito acá para que nadie lo «arregle» de vuelta.
+const APERCIBIMIENTOS_HASTA_EL_DESPIDO := 4
+
+const APERCIBIMIENTOS_POR_AVISO := 1
+
+## Vale el doble que un aviso, y eso es lo que hace que las tres bandas pesen distinto también
+## sobre el despido: a la banda grave le alcanza con una jornada menos.
+const APERCIBIMIENTOS_POR_BANDA_GRAVE := 2
+
 
 ## Cuántos segundos de turno consume hacer una tarea de este tipo.
 ##
