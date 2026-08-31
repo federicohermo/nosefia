@@ -1,6 +1,7 @@
-## Los valores fijos del juego, y lo único verificable de un archivo de constantes: que estén
-## **todos**. El día que alguien agregue un sexto tipo de tarea al enum y se olvide de darle
-## costo, es este archivo el que se pone en rojo y no la partida.
+## Los valores fijos del juego, y lo que sí se puede verificar de un archivo de constantes: que
+## estén **todos**, cuántos son, y que el turno alcance para pagarlos. El día que alguien agregue
+## un sexto tipo de tarea al enum y se olvide de darle costo, es este archivo el que se pone en
+## rojo y no la partida.
 extends GdUnitTestSuite
 
 

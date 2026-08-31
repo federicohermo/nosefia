@@ -46,8 +46,9 @@ func completar(tarea: Tarea) -> bool:
 	var costo := tarea.costo()
 	if costo > _tiempo_restante:
 		return false
-	# Se marca antes de cobrar sólo porque `completar()` de la tarea es quien decide si se podía;
-	# el costo ya se verificó arriba, así que no puede fallar después de descontar.
+	# El costo ya se verificó arriba, así que entre marcar y descontar no queda nada que pueda
+	# fallar. El `false` de acá no lo produce ninguno de los dos motivos de rechazo de este
+	# método: se chequea para que un motivo que `Tarea` sume más adelante no se cuele cobrado.
 	if not tarea.completar():
 		return false
 	consumir(costo)
