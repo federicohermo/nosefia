@@ -139,6 +139,9 @@ las dos en la misma corrida:
 | un `[P]` que resultó falso | `spec-review` — el cruce de archivos no lo cazó |
 | dos specs que se pisan la misma escena | `spec-review-batch` — la matriz no marcó el `.tscn` |
 | una medición que el spec supuso en vez de correr | `spec-create` — el research salió sin número |
+| un nodo del harness en verde sin haber ejercido nada | `spec-implement` — la condición de terminado leyó el color del nodo y no el conteo de lo que corrió |
+| dos carriles que se pisan un archivo de scratch | `spec-implement-batch` — el prompt del carril no le dio un nombre propio |
+| un worktree que quedó abierto y el limpiador dijo que no | `spec-implement-batch` — el Paso 5 salía de `git worktree list`, que no ve al que git ya soltó |
 
 **Si el problema no entra en ninguna fila, agregá la fila.** Esa tabla es el registro de lo que
 esta doctrina ya aprendió, y está incompleta a propósito.

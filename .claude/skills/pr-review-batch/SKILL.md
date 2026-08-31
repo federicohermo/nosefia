@@ -221,7 +221,30 @@ Y estas diferencias respecto de `pr-review`, que son las que lo vuelven un carri
    `python .claude/scripts/hidratar_specs.py <NNN>` el agente revisa sin criterios de aceptación y
    **igual termina y reporta**.
 
-   **No hay `install` que correr**: el proyecto es Godot y `addons/` está vendorizado.
+   **No hay `install` que correr, pero sí hay una importación**, y saltearla cuesta una corrida
+   entera. `addons/` está vendorizado, así que no falta ninguna dependencia; lo que falta es
+   `.godot/`, que está en el `.gitignore` y por lo tanto **ningún worktree nuevo lo tiene**. Sin
+   esa caché Godot no tiene el registro de clases globales, `addons/gdUnit4/bin/GdUnitCmdTool.gd`
+   no resuelve sus propios `class_name`, y el nodo `tests` sale **rojo** —no salteado— con:
+
+   ```text
+   Parse Error: Could not find type "GdUnitTestCIRunner" in the current scope.
+   ```
+
+   **El síntoma no nombra la causa**: no dice `.godot`, no dice worktree, no dice importación, y
+   nombra un tipo de gdUnit4, que manda a revisar el addon. Por eso va acá y no en el
+   troubleshooting: para cuando el agente busca, ya gastó una corrida de `verificar.py`. La cura
+   es una línea, una sola vez por worktree y **antes** del primer `verificar.py`:
+
+   ```bash
+   "$GODOT_BIN" --headless --path . --import --quit
+   ```
+
+   **Medido el 2026-08-31** en la corrida sobre el lote 001/002/004/007: **los cuatro carriles lo
+   pisaron, los cuatro en la primera corrida, y los cuatro salieron verdes en la segunda ya
+   importados.** `.github/workflows/verify.yml:75` ya hacía este paso, con un comentario que
+   describe exactamente esto — o sea que **la CI lo sabía y el skill que crea los worktrees decía
+   lo contrario**.
 3. **Las seis cláusulas del Paso 0 bis van encima de la política de triage**, y dos de ellas
    **cambian** lo que `pr-review` haría solo: lo que no sea `+` en el propio diff se reporta como
    `PERTENECE-A-PR-<N>` en vez de arreglarse, y un fix sobre una escena de la lista caliente **no se
