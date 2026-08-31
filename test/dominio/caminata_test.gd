@@ -6,6 +6,7 @@
 extends GdUnitTestSuite
 
 const Caminata := preload("res://src/dominio/caminata.gd")
+const ReglasDelJugador := preload("res://src/dominio/reglas_del_jugador.gd")
 
 const TOLERANCIA := 1e-5
 const APROXIMACION := Vector3(TOLERANCIA, TOLERANCIA, TOLERANCIA)
@@ -44,11 +45,17 @@ func test_girar_la_mirada_un_cuarto_de_vuelta_gira_el_adelante() -> void:
 func test_la_velocidad_de_la_diagonal_tiene_el_largo_de_la_velocidad_maxima() -> void:
 	# La tolerancia es 1e-4 y no 1e-5 porque el error relativo de la normalización se multiplica
 	# por la velocidad máxima.
-	var velocidad := Caminata.velocidad(Vector2(1.0, 1.0), 0.0, 3.5)
-	assert_float(velocidad.length()).is_equal_approx(3.5, 1e-4)
+	#
+	# La velocidad sale de `ReglasDelJugador` y no es un `3.5` escrito acá: la aserción es
+	# relativa al valor que se pasa, así que ajustar el tacto no la pone en rojo, y un número
+	# fijo re-tipeado en un test es la segunda casa que la convención del repo prohíbe.
+	var maxima := ReglasDelJugador.VELOCIDAD_DE_CAMINATA
+	var velocidad := Caminata.velocidad(Vector2(1.0, 1.0), 0.0, maxima)
+	assert_float(velocidad.length()).is_equal_approx(maxima, 1e-4)
 
 
 func test_la_velocidad_no_saca_al_jugador_del_piso() -> void:
 	# La componente vertical la pone la gravedad en `escenas/`, no la caminata: si acá saliera
 	# distinta de cero el jugador flotaría y el síntoma no nombraría a este archivo.
-	assert_float(Caminata.velocidad(Vector2(1.0, 1.0), 0.7, 3.5).y).is_equal(0.0)
+	var maxima := ReglasDelJugador.VELOCIDAD_DE_CAMINATA
+	assert_float(Caminata.velocidad(Vector2(1.0, 1.0), 0.7, maxima).y).is_equal(0.0)
