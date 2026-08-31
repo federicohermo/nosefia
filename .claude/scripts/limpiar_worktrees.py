@@ -20,6 +20,27 @@ escribe su caché de importación en `.godot/` la primera vez que abre el proyec
 
 Git igual saca la metadata, así que el worktree queda desregistrado y basta un borrado común.
 
+## Y por qué `--todos` no puede salir de `git worktree list`
+
+Porque **el peor worktree es justamente el que git ya no registra**. Un carril que muere a
+mitad —o cualquiera que haya pasado por un `git worktree prune`— deja el directorio en disco
+y desaparece de la lista. Un `--todos` que salga sólo de ahí no lo ve, **y no falla**:
+reporta que limpió todo y deja la carpeta. Y si los huérfanos son todos, contesta «no hay
+worktrees para limpiar», que es la versión más convincente de la misma mentira.
+
+Medido en el lote 001/002/004/007: el carril que se colgó dejó su carpeta, el script dijo
+ok, y el que lo vio fue el usuario mirando el árbol de archivos.
+
+Por eso `--todos` es la **unión** de lo que git registra y lo que hay en disco bajo
+`.claude/worktrees/`, y no lo primero.
+
+## Las ramas también quedan
+
+`git worktree remove` borra el árbol y **deja la rama** que el harness le puso. Un lote de N
+carriles deja N ramas que no son de nadie. Se barren con `git branch -d` y **nunca con
+`-D`**: el `-d` se niega a borrar una rama con commits que no estén en ningún otro lado, así
+que quien decide qué es descartable es git y no una heurística de este script. Una rama que
+se niega a morir tiene algo adentro, y se reporta en vez de forzarla.
 ## Y por qué además hay que matar procesos
 
 Acá **el review sí levanta Godot**: `verificar.py` corre la suite en headless. Un Godot colgado
@@ -86,6 +107,13 @@ $todos |
 """
 
 
+#: Dónde nacen los worktrees de un lote. Se mira ADEMÁS de lo que git registra, nunca en vez.
+DIR_DE_WORKTREES = (".claude", "worktrees")
+
+#: El prefijo que el harness le pone a la rama de cada worktree.
+RAMA_DE_WORKTREE = "worktree-agent-"
+
+
 def git(*args: str) -> subprocess.CompletedProcess:
     return subprocess.run(
         ["git", *args], capture_output=True, text=True, encoding="utf-8", errors="replace"
@@ -110,6 +138,32 @@ def borrar_arbol(ruta: Path) -> None:
     shutil.rmtree(ruta, onerror=forzar)
 
 
+def huerfanos(directorio: Path, ya_estan: list[Path], principal: Path) -> list[Path]:
+    """Los worktrees que quedaron en disco y que git ya no registra."""
+    if not directorio.is_dir():
+        return []
+    return [
+        hijo.resolve()
+        for hijo in sorted(directorio.iterdir())
+        if hijo.is_dir() and hijo.resolve() not in ya_estan and hijo.resolve() != principal
+    ]
+
+
+def barrer_ramas() -> tuple[list[str], list[str]]:
+    """Borra las ramas de worktree sin trabajo propio. El `-d` es el que pone el límite."""
+    salida = git(
+        "branch", "--list", f"{RAMA_DE_WORKTREE}*", "--format=%(refname:short)"
+    ).stdout
+    borradas: list[str] = []
+    quedaron: list[str] = []
+    for rama in (r.strip() for r in salida.splitlines() if r.strip()):
+        if git("branch", "-d", rama).returncode == 0:
+            borradas.append(rama)
+        else:
+            quedaron.append(rama)
+    return borradas, quedaron
+
+
 def main() -> None:
     args = sys.argv[1:]
     if not args:
@@ -132,13 +186,15 @@ def main() -> None:
             if l.startswith("worktree ")
         ]
         objetivos = [w for w in registrados if w != principal]
+        objetivos += huerfanos(RAIZ.joinpath(*DIR_DE_WORKTREES), objetivos, principal)
         if not objetivos:
             print("no hay worktrees del lote para limpiar")
-            return
     else:
         objetivos = [Path(a).resolve() for a in args]
 
-    padre = objetivos[0].parent
+    # Sin objetivos igual se sigue: quedan el `prune` y las ramas, que no dependen de que
+    # haya quedado un árbol en disco.
+    padre = objetivos[0].parent if objetivos else RAIZ.joinpath(*DIR_DE_WORKTREES)
     fallo = False
     matados = False
 
@@ -202,6 +258,16 @@ def main() -> None:
     print()
     print(git("worktree", "prune", "-v").stdout, end="")
     print()
+    borradas, quedaron = barrer_ramas()
+    if borradas:
+        print(f"-- ramas de worktree borradas: {', '.join(borradas)}")
+    for rama in quedaron:
+        print(
+            f"   ANOMALIA: la rama {rama} tiene commits que no estan en ningun otro lado, "
+            "asi que NO se borro. Miralos antes de forzarla.",
+            file=sys.stderr,
+        )
+
     print("-- quedan registrados --")
     print(git("worktree", "list").stdout, end="")
 
