@@ -153,6 +153,23 @@ func test_un_tipo_que_no_esta_entre_las_obligatorias_no_devuelve_ninguna_tarea()
 	assert_object(reloj.obligatoria(Tarea.Tipo.CAJA)).is_null()
 
 
+func test_completar_lo_que_obligatoria_no_encontro_contesta_que_no_y_no_revienta() -> void:
+	# Es la llamada de una línea que el 008 va a escribir: `completar(obligatoria(tipo))`. Sin el
+	# guard, el `null` que el caso de arriba declara correcto mata el juego en el frame siguiente.
+	var limpiar := Tarea.new(Tarea.Tipo.LIMPIAR)
+	var obligatorias: Array[Tarea] = [limpiar]
+	var reloj := _reloj_arrancado(Reglas.DURACION_DEL_TURNO, obligatorias)
+	assert_bool(reloj.completar(reloj.obligatoria(Tarea.Tipo.CAJA))).is_false()
+	assert_int(_completadas).is_equal(0)
+
+
+func test_un_reloj_sin_arrancar_no_completa_nada_en_vez_de_romperse() -> void:
+	# Mismo estado nulo que guarda `_process()`: la escena existe antes de que alguien le pase un
+	# turno, y `completar()` es una puerta pública que se puede tocar antes que `arrancar()`.
+	var reloj: RelojDelTurno = auto_free(RelojDelTurno.new())
+	assert_bool(reloj.completar(Tarea.new(Tarea.Tipo.LIMPIAR))).is_false()
+
+
 ## Busca por tipo y no por índice a propósito: que la lista salga ordenada como el `enum` es un
 ## detalle de `Apertura`, y atarlo acá haría fallar este caso el día que se reordene.
 func _de_la_lista(obligatorias: Array[Tarea], tipo: Tarea.Tipo) -> Tarea:

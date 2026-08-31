@@ -42,6 +42,13 @@ func test_el_turno_entero_se_lee_como_ocho_horas() -> void:
 	assert_str(Marcador.reloj(28800.0)).is_equal("8:00:00")
 
 
+func test_con_horas_los_minutos_son_los_de_esta_hora_y_no_los_del_turno() -> void:
+	# Es el único caso donde los tres campos son distintos de cero, y por eso el único que
+	# distingue «minutos de esta hora» de «minutos totales»: con los totales daría `2:121:05`.
+	# Los otros casos con hora caen justo en el minuto 0 y no lo pueden ver.
+	assert_str(Marcador.reloj(7265.0)).is_equal("2:01:05")
+
+
 func test_un_segundo_antes_del_umbral_todavia_no_es_aviso() -> void:
 	assert_bool(Marcador.en_aviso(1801.0)).is_false()
 

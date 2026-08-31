@@ -5,9 +5,9 @@
 ## «cuáles son las obligatorias de una jornada» es una regla del juego, y en `escenas/` una regla
 ## nace sin test y ningún gate lo dice.
 ##
-## La lista se arma **recorriendo `Tarea.Tipo`**, no enumerando tareas a mano: el día que se
-## defina la quinta se agrega al `enum` del 001 con su costo en `reglas.gd`, y acá no se toca
-## nada.
+## La lista se arma **recorriendo `Tarea.Tipo`**, no enumerando tareas a mano. El 001 aterrizó
+## con las cinco declaradas —`SACAR_LA_BASURA` incluida—, así que acá no hay ningún `5` escrito:
+## una sexta se agrega al `enum` del 001 con su costo en `reglas.gd` y este archivo no se toca.
 class_name Apertura
 extends RefCounted
 

@@ -14,7 +14,6 @@ offset_top = 16.0
 offset_right = 424.0
 offset_bottom = 60.0
 theme_override_font_sizes/font_size = 32
-text = "Te quedan 8:00:00"
 
 [node name="Tareas" type="Label" parent="."]
 offset_left = 24.0
@@ -22,7 +21,6 @@ offset_top = 64.0
 offset_right = 424.0
 offset_bottom = 96.0
 theme_override_font_sizes/font_size = 22
-text = "Tareas 0/5"
 
 [node name="Apercibimientos" type="Label" parent="."]
 offset_left = 24.0
@@ -30,4 +28,3 @@ offset_top = 100.0
 offset_right = 424.0
 offset_bottom = 132.0
 theme_override_font_sizes/font_size = 22
-text = "Apercibimientos 0 de 4"

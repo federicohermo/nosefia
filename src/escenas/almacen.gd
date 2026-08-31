@@ -20,13 +20,20 @@ var _legajo := Legajo.new()
 var _obligatorias := Apertura.cantidad_de_obligatorias()
 
 
+## Los tres carteles se pintan acá antes de conectar nada, y no con un `text` escrito en
+## `hud.tscn`: una copia del texto en la escena es una copia de los números que lleva adentro
+## —cuántas obligatorias hay y a cuántos apercibimientos echan—, y el de apercibimientos se
+## quedaría en pantalla la jornada entera, porque hasta el cierre nadie lo vuelve a escribir.
 func _ready() -> void:
 	var obligatorias := Apertura.obligatorias()
+	var turno := Apertura.turno_de_la_jornada(obligatorias)
 	_hud.declarar_obligatorias(_obligatorias)
+	_hud.mostrar_tiempo(turno.tiempo_restante())
+	_hud.mostrar_apercibimientos(_legajo.apercibimientos())
 	_reloj.tiempo_consumido.connect(_hud.mostrar_tiempo)
 	_reloj.tarea_completada.connect(_hud.mostrar_tareas)
 	_reloj.turno_cerrado.connect(_al_cerrar_el_turno)
-	_reloj.arrancar(Apertura.turno_de_la_jornada(obligatorias), obligatorias)
+	_reloj.arrancar(turno, obligatorias)
 
 
 ## La jornada cerrada se anota en el legajo, que es quien traduce las tareas cumplidas a la banda

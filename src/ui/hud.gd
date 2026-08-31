@@ -11,6 +11,10 @@
 class_name Hud
 extends CanvasLayer
 
+## Los tres textos viven acá y **no** además en `hud.tscn`, que es lo que pide
+## `.claude/rules/presentacion.md`: los `Label` de la escena nacen vacíos y el cableado los pinta
+## en su `_ready()`. Un texto en los dos lados se cambia en uno solo el día que haya que
+## cambiarlo, y el de los apercibimientos se llevaba puesto además el tope de `Reglas`.
 const TEXTO_DEL_TIEMPO := "Te quedan %s"
 const TEXTO_DE_LAS_TAREAS := "Tareas %s"
 const TEXTO_DE_LOS_APERCIBIMIENTOS := "Apercibimientos %d de %d"

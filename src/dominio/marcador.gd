@@ -43,7 +43,8 @@ static func en_aviso(restante: float) -> bool:
 
 ## Cuántas obligatorias van sobre cuántas se declararon.
 ##
-## La cantidad declarada entra por argumento y nunca está escrita acá: el 001 dejó la quinta
-## tarea como dato, y este archivo no la vuelve a decidir.
+## La cantidad declarada entra por argumento y nunca está escrita acá: cuántas obligatorias pide
+## una jornada lo decide quien arma la lista, y este archivo no lo vuelve a decidir. Hoy son las
+## cinco de `Tarea.Tipo`; una sexta no toca esta función.
 static func tareas(cumplidas: int, obligatorias: int) -> String:
 	return "%d/%d" % [cumplidas, obligatorias]

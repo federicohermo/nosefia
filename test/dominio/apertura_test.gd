@@ -1,8 +1,8 @@
 ## Cómo se arma el turno de una jornada: qué tareas trae y con cuánto tiempo nace.
 ##
 ## Ningún caso escribe a mano cuántas obligatorias hay. Se comparan contra `Tarea.Tipo`, que es
-## la única fuente: el día que se defina la quinta —o una sexta— se agrega al `enum` del 001 y
-## este archivo no se toca.
+## la única fuente: el 001 ya declaró las cinco, y una sexta se agrega a ese `enum` sin que este
+## archivo se toque.
 extends GdUnitTestSuite
 
 
