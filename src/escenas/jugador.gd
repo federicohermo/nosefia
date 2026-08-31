@@ -42,7 +42,10 @@ func _ready() -> void:
 
 
 func _unhandled_input(evento: InputEvent) -> void:
-	if evento is InputEventMouseMotion:
+	# El giro se descarta con el cursor suelto porque en `MOUSE_MODE_VISIBLE` el motor sigue
+	# entregando el `relative` del mouse: sin este filtro, ir a apretar el botón de cerrar la
+	# ventana gira la cámara todo el camino, y la salida de emergencia deja de servir.
+	if evento is InputEventMouseMotion and _el_cursor_esta_tomado():
 		_control.girar((evento as InputEventMouseMotion).relative)
 		_aplicar_la_rotacion()
 	elif evento is InputEventMouseButton and (evento as InputEventMouseButton).pressed:
@@ -102,9 +105,16 @@ func _aplicar_la_rotacion() -> void:
 	_camara.rotation.x = _control.pitch()
 
 
-## `dominio/` decide SI el cursor tiene que estar tomado; acá se traduce a QUÉ modo es ése.
+## `dominio/` decide SI el cursor tiene que estar tomado, y acá se le suma la salida de
+## emergencia, que no es una regla del juego. Vive en una función propia porque la respuesta la
+## necesitan dos: el modo del cursor y el filtro del giro.
+func _el_cursor_esta_tomado() -> bool:
+	return _control.quiere_el_cursor_tomado() and not _cursor_soltado_a_mano
+
+
+## Acá se traduce ese SI a QUÉ modo de cursor es ése.
 func _aplicar_el_modo_del_cursor() -> void:
-	var tomado := _control.quiere_el_cursor_tomado() and not _cursor_soltado_a_mano
+	var tomado := _el_cursor_esta_tomado()
 	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED if tomado else Input.MOUSE_MODE_VISIBLE
 
 
@@ -112,20 +122,23 @@ func _aplicar_el_modo_del_cursor() -> void:
 ## CAMBIÓ. La señal sale sólo cuando contesta que sí: sin eso serían 60 emisiones por segundo
 ## mirando fijo una estantería.
 func _leer_la_mira() -> void:
-	var golpeado := _mira.get_collider()
+	var enfocado := _mira.get_collider() as Node3D
 	var id := Foco.SIN_OBJETIVO
 	var distancia := 0.0
 	var interactuable := false
-	if golpeado is Node3D:
-		var nodo := golpeado as Node3D
+	if enfocado != null:
 		# El dominio guarda un `int` y no el nodo: guardar el nodo pondría en rojo el gate de
 		# capas por `src/dominio → src/escenas` sin que haya un solo `preload`.
-		id = nodo.get_instance_id()
-		distancia = global_position.distance_to(nodo.global_position)
-		interactuable = nodo.is_in_group(ReglasDelJugador.GRUPO_INTERACTUABLE)
+		id = enfocado.get_instance_id()
+		# Del ojo al punto donde pegó el rayo, y no entre los dos orígenes: el del cuerpo está
+		# apoyado en el piso y el del objeto en su centro, así que medir origen a origen le suma
+		# la altura de la cámara a todo lo que se mira de cerca. Es el número con el que el spec
+		# 006 decide si algo está al alcance de la mano, y ahí ese error importa.
+		distancia = _camara.global_position.distance_to(_mira.get_collision_point())
+		interactuable = enfocado.is_in_group(ReglasDelJugador.GRUPO_INTERACTUABLE)
 	if not _control.observar(id, distancia, interactuable):
 		return
 	if _control.objetivo() == Foco.SIN_OBJETIVO:
 		objetivo_perdido.emit()
 	else:
-		objetivo_enfocado.emit(golpeado, distancia)
+		objetivo_enfocado.emit(enfocado, distancia)

@@ -14,8 +14,10 @@
 │   └── escenas/            Los scripts pegados a un .tscn
 │
 ├── test/                   El ESPEJO de src/: src/dominio/turno.gd → test/dominio/turno_test.gd
-│   ├── dominio/
-│   └── sistemas/
+│   ├── dominio/            Espejo OBLIGATORIO, lo verifica gate_de_tests.py
+│   ├── sistemas/           Espejo OBLIGATORIO, ídem
+│   └── escenas/            OPCIONAL: ningún gate lo exige, y por eso lo que hay acá es lo que
+│                           alguien decidió probar levantando la escena
 │
 ├── assets/                 Arte, audio, fuentes. Lo que no es código
 │
@@ -51,7 +53,7 @@
 | Una regla del juego (cuánto tiempo, qué cuenta como cumplir, qué consecuencia) | `src/dominio/` | su test en `test/dominio/`, **primero** |
 | Algo que necesita `delta`, el árbol de escena o un archivo | `src/sistemas/` | su test en `test/sistemas/`, **primero** |
 | Una pantalla, un panel, un botón | `src/ui/` | sin test obligatorio — y por eso no puede tener reglas adentro |
-| El script de una escena concreta | `src/escenas/` | ídem |
+| El script de una escena concreta | `src/escenas/` | ídem — y si lo probás, va en `test/escenas/`, que **ningún gate exige** |
 | Un número que dos archivos necesitan igual | un solo archivo de `src/dominio/` | nunca dos copias |
 | Un `.png`, un `.ogg`, una fuente | `assets/` | no necesita spec |
 | Una herramienta del proceso | `.claude/scripts/` | lo puro en `lib/`, su test en `tests/` |
