@@ -14,8 +14,13 @@
 # devuelve cero resultados SIN DECIR que no miró. Para buscar ahí: `rg --no-ignore … specs/`.
 specs/[0-9]*/
 
-# Los reportes de gdUnit4 se regeneran en cada corrida.
+# Los reportes de gdUnit4 se regeneran en cada corrida. `verificar.py` los manda a
+# `reportes/` con `-rd`, pero el DEFAULT de gdUnit4 es `reports/`, y ahi caen las corridas
+# a mano del runner crudo --que son las que CLAUDE.md pide para leer el
+# `Executed test suites: (N/N)`. Sin la segunda linea, seguir esa instruccion deja un
+# directorio sin trackear listo para commitear por error.
 /reportes/
+/reports/
 
 # Python: las herramientas del harness viven en .claude/scripts/
 __pycache__/

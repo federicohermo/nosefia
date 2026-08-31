@@ -36,7 +36,7 @@ converge recién en el merge, que resuelve texto y no semántica.
 | El batch genérico | Acá |
 |---|---|
 | `node scripts/matriz.mjs` sobre los `tasks.md` | **`lote.py` de `spec-review-batch`**, inyectado arriba: misma matriz, y además marca la **escena compartida** |
-| Instalar dependencias en cada worktree (`node_modules`) | **No hay install**: `addons/gdUnit4` está vendorizado. Lo que sí falta es `specs/` — ver Paso 3 |
+| Instalar dependencias en cada worktree (`node_modules`) | **No hay install**: `addons/gdUnit4` está vendorizado. Lo que sí falta es `specs/` **y `.godot/`** — ver Paso 3 |
 | El PR nombra una actividad de Jira, y hay un script de claves | **No hay Jira.** El PR lleva `Closes #N` por cada issue saldado: el del spec **más los de su `origen`** |
 | La rama se llama como convenga | **`feature/<NNN>-<kebab>` o el hook bloquea `src/`.** Es la falla número uno acá |
 | Cierra con `pnpm verify` | **`verificar.py`**, y un nodo **salteado no es un nodo verde** |
@@ -150,6 +150,12 @@ Cada agente recibe, literal:
 - **No hay install que correr**, pero **`GODOT_BIN` tiene que estar en el entorno del carril**: sin
   ella `verificar.py` **saltea** el nodo `tests` y lo declara, y un carril que lee «6/6» sin mirar
   los salteados da por corrida una suite que no corrió.
+- **Y antes del primer `verificar.py`, el carril importa.** `.godot/` está en el `.gitignore`, así
+  que **ningún worktree nuevo lo tiene**, y sin esa caché gdUnit4 no resuelve sus propios
+  `class_name`: el nodo `tests` sale **rojo** —no salteado— con `Parse Error: Could not find type
+  "GdUnitTestCIRunner"`, un síntoma que no nombra ni a `.godot` ni al worktree. Una línea, una vez
+  por carril: `"$GODOT_BIN" --headless --path . --import --quit`. Medido el 2026-08-31 en la
+  corrida de `pr-review-batch` sobre 001/002/004/007: lo pisaron los cuatro carriles.
 - **Que delegue cada spec a `spec-implement`**, que deriva el grafo interno y abanica lo que
   corresponda, **y que cierre cada uno antes de arrancar el siguiente**.
 - **La base del primer spec del carril es `staging`**; los que siguen, la rama del spec anterior
