@@ -9,10 +9,13 @@ issue.
 ## Qué es
 
 **No se fía** — un juego de turno nocturno en un almacén. El empleado nuevo reparte un tiempo
-limitado entre **cinco tareas obligatorias** del jefe —caja, reponer, registrar, limpiar, y una
-quinta sin definir— y **averiguar qué está pasando**. Atiende por una **ventanilla**, no más de
-dos compradores por día. Al cierre se cuentan las tareas cumplidas y las consecuencias caen en
-tres bandas —5, entre 3 y 4, menos de 3—; **tres jornadas seguidas sin las cinco y lo echan**.
+limitado entre **cinco tareas obligatorias** del jefe —caja, reponer, registrar, limpiar y sacar
+la basura— y **averiguar qué está pasando**. Atiende por una **ventanilla**, no más de dos
+compradores por día. Al cierre se cuentan las tareas cumplidas y las consecuencias caen en tres
+bandas: las 5 no pasa nada, 3 o 4 es un aviso, menos de 3 es grave. **Las tres bandas pesan
+distinto sobre el despido**: una jornada grave suma dos apercibimientos, una de aviso suma uno,
+una jornada completa los reinicia a cero, y a los seis lo echan. O sea que tres jornadas graves
+seguidas despiden y tres de cuatro tareas no.
 
 **La tensión central es aritmética: cada minuto investigando es un minuto que no se dedica a
 las tareas.** Al evaluar una feature, la pregunta es si aprieta esa tensión — no si agrega

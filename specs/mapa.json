@@ -19,5 +19,6 @@
   "018": {"issue":22,"carpeta":"018-el-sistema-de-investigacion","fecha":"2026-08-30","estado":"Propuesto","titulo":"Spec 018 — El sistema de investigación registra, acumula y desemboca"},
   "019": {"issue":23,"carpeta":"019-el-guardado-entre-jornadas","fecha":"2026-08-30","estado":"Propuesto","titulo":"Spec 019 — El guardado entre jornadas"},
   "020": {"issue":24,"carpeta":"020-el-menu-de-inicio","fecha":"2026-08-30","estado":"Propuesto","titulo":"Spec 020 — El menú de inicio"},
-  "021": {"issue":25,"carpeta":"021-el-sistema-de-audio","fecha":"2026-08-30","estado":"Propuesto","titulo":"Spec 021 — El sistema de audio suena por tabla, no por escucha"}
+  "021": {"issue":25,"carpeta":"021-el-sistema-de-audio","fecha":"2026-08-30","estado":"Propuesto","titulo":"Spec 021 — El sistema de audio suena por tabla, no por escucha"},
+  "022": {"issue":26,"carpeta":"022-los-docs-dicen-la-regla-del-despido-vigente","fecha":"2026-08-31","estado":"Propuesto","titulo":"Spec 022 — Los docs dicen la regla del despido que el juego tiene"}
 }
