@@ -1,6 +1,6 @@
 ## Cuántas tareas se cumplieron, traducido a la banda que el cierre dispara.
 ##
-## Los casos que mueven `obligatorias` no son de adorno: los diez casos escritos con 5
+## Los casos que mueven `obligatorias` no son de adorno: los que están escritos con 5
 ## obligatorias los pasa igual una implementación que compare contra un `5` a mano, que es
 ## justo el error que este diseño quiere impedir.
 extends GdUnitTestSuite
@@ -38,7 +38,14 @@ func test_cumplir_todas_se_mide_contra_las_obligatorias_y_no_contra_un_cinco() -
 	assert_int(Consecuencias.consecuencia_de(4, 4)).is_equal(Consecuencias.Banda.NINGUNA)
 
 
-func test_las_bandas_de_abajo_son_cantidades_absolutas_y_no_fracciones() -> void:
+func test_el_corte_del_aviso_son_tres_tareas_y_no_una_fraccion_de_las_obligatorias() -> void:
+	# Es el único caso que distingue las dos lecturas: con 6 obligatorias, un corte por
+	# fracción estaría en 3,6 y contaría estas 3 como GRAVE. Con 5 obligatorias las dos
+	# lecturas dan lo mismo, así que ningún otro caso de este archivo lo cubre.
+	assert_int(Consecuencias.consecuencia_de(3, 6)).is_equal(Consecuencias.Banda.AVISO)
+
+
+func test_cumplir_casi_todas_no_es_ninguna_consecuencia() -> void:
 	# Con 6 obligatorias y 5 cumplidas falta una, así que es aviso — no «casi todas, ninguna
-	# consecuencia». El corte de las dos bandas de abajo es 3 y 4 en tareas, no en porcentaje.
+	# consecuencia». `NINGUNA` es `cumplidas == obligatorias` y nunca una fracción de ellas.
 	assert_int(Consecuencias.consecuencia_de(5, 6)).is_equal(Consecuencias.Banda.AVISO)

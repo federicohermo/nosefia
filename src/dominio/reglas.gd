@@ -1,4 +1,4 @@
-## Los valores fijos del turno, en un solo lugar.
+## Los valores fijos del juego, en un solo lugar.
 ##
 ## Viven acá y no adentro de `turno.gd` porque son los números que se van a tocar todas las
 ## semanas balanceando, y un valor que vive al lado de la lógica que lo usa termina copiado en

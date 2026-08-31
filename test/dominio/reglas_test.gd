@@ -1,4 +1,4 @@
-## Los valores fijos del turno, y lo único verificable de un archivo de constantes: que estén
+## Los valores fijos del juego, y lo único verificable de un archivo de constantes: que estén
 ## **todos**. El día que alguien agregue un sexto tipo de tarea al enum y se olvide de darle
 ## costo, es este archivo el que se pone en rojo y no la partida.
 extends GdUnitTestSuite
