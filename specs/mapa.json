@@ -1,6 +1,6 @@
 {
-  "001": {"issue":3,"carpeta":"001-el-turno-reparte-un-tiempo-finito","fecha":"2026-08-28","estado":"Propuesto","titulo":"Spec 001 — El turno reparte un tiempo finito"},
-  "002": {"issue":4,"carpeta":"002-el-cierre-del-turno-tiene-consecuencias","fecha":"2026-08-28","estado":"Propuesto","titulo":"Spec 002 — El cierre del turno tiene consecuencias"},
+  "001": {"issue":3,"carpeta":"001-el-turno-reparte-un-tiempo-finito","fecha":"2026-08-28","estado":"Implementado","titulo":"Spec 001 — El turno reparte un tiempo finito"},
+  "002": {"issue":4,"carpeta":"002-el-cierre-del-turno-tiene-consecuencias","fecha":"2026-08-28","estado":"Implementado","titulo":"Spec 002 — El cierre del turno tiene consecuencias"},
   "003": {"issue":5,"carpeta":"003-los-modos-de-falla-del-harness-se-documentan","fecha":"2026-08-28","estado":"Propuesto","titulo":"Spec 003 — Los modos de falla del harness se documentan","origen":[2]},
   "004": {"issue":8,"carpeta":"004-el-jugador-recorre-el-almacen-en-primera-persona","fecha":"2026-08-29","estado":"Implementado","titulo":"Spec 004 — El jugador recorre el almacén en primera persona"},
   "005": {"issue":9,"carpeta":"005-el-inventario-registra-los-productos-del-almacen","fecha":"2026-08-29","estado":"Propuesto","titulo":"Spec 005 — El inventario registra los productos del almacén"},
