@@ -1,8 +1,9 @@
 ## El presupuesto de la noche: cuánto queda, qué lo consume y cuántas obligatorias se cumplieron.
 ##
-## Los turnos de acá se arman con una o dos tareas, nunca con las cinco. Eso no es pereza: es la
-## prueba de que `Turno` no sabe que son cinco, y que la sexta va a ser un dato y no un cambio
-## de código.
+## Ningún turno de acá se arma contra una lista de cinco escrita a mano: los casos que necesitan
+## las cinco las sacan recorriendo el enum, y hay uno que se arma con una sola. Eso no es pereza:
+## es la prueba de que `Turno` no sabe que son cinco, y que la sexta va a ser un dato y no un
+## cambio de código.
 extends GdUnitTestSuite
 
 
@@ -76,6 +77,28 @@ func test_una_tarea_que_no_entra_en_el_tiempo_que_queda_no_se_hace_a_medias() ->
 	assert_bool(turno.completar(reponer)).is_false()
 	assert_float(turno.tiempo_restante()).is_equal(apenas)
 	assert_bool(reponer.completada()).is_false()
+
+
+func test_una_tarea_de_afuera_de_las_obligatorias_consume_pero_no_cuenta() -> void:
+	# El jefe cuenta las que pidió. Algo que no estaba en la lista se paga igual —el tiempo se
+	# fue— pero no acerca al turno completo, que es lo que hace que investigar tenga precio.
+	var declarada := Tarea.new(Tarea.Tipo.CAJA)
+	var obligatorias: Array[Tarea] = [declarada]
+	var turno := Turno.new(Reglas.DURACION_DEL_TURNO, obligatorias)
+	var de_afuera := Tarea.new(Tarea.Tipo.REPONER)
+	assert_bool(turno.completar(de_afuera)).is_true()
+	var esperado := Reglas.DURACION_DEL_TURNO - Reglas.costo_de(Tarea.Tipo.REPONER)
+	assert_float(turno.tiempo_restante()).is_equal(esperado)
+	assert_int(turno.tareas_cumplidas()).is_equal(0)
+	assert_bool(turno.todas_cumplidas()).is_false()
+
+
+func test_un_turno_sin_obligatorias_esta_completo_por_vacuidad() -> void:
+	# No es un caso del juego: es el borde que hace que `todas_cumplidas()` no dependa de que la
+	# lista tenga un tamaño mínimo. Con cero declaradas no quedó nada sin hacer.
+	var turno := _turno_sin_obligatorias(Reglas.DURACION_DEL_TURNO)
+	assert_int(turno.tareas_cumplidas()).is_equal(0)
+	assert_bool(turno.todas_cumplidas()).is_true()
 
 
 func _las_cinco_obligatorias() -> Array[Tarea]:
