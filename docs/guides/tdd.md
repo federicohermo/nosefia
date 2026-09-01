@@ -86,7 +86,8 @@ reciben.
 etiqueta del HUD, la regla está en el HUD. El dominio tiene que poder contestarlo.
 
 Las tres son la misma idea: **lo que el dominio necesita del mundo, se lo dan**. Es lo que
-convierte «jugar dos días para ver si lo echan» en tres líneas que corren en milisegundos.
+convierte «jugar dos jornadas graves para ver si lo echan» en tres líneas que corren en
+milisegundos.
 
 ## Lo que igual hay que probar a mano
 
