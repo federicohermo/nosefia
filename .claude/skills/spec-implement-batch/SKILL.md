@@ -156,6 +156,37 @@ Cada agente recibe, literal:
   "GdUnitTestCIRunner"`, un síntoma que no nombra ni a `.godot` ni al worktree. Una línea, una vez
   por carril: `"$GODOT_BIN" --headless --path . --import --quit`. Medido el 2026-08-31 en la
   corrida de `pr-review-batch` sobre 001/002/004/007: lo pisaron los cuatro carriles.
+- **Y ese `--import` no es una vez: es una por `class_name` nuevo.** Crear el `.gd` no alcanza
+  para que su test lo vea — la clase no entra al registro global hasta que se vuelve a importar,
+  y hasta entonces el error es `Parse Error: Identifier "X" not declared` **con el archivo ya
+  escrito en disco**, idéntico al del archivo ausente. Se lee como un error del código y no de la
+  caché. **Medido el 2026-09-01 en el lote 005/011/022/023: lo pisaron los dos carriles que
+  crearon clases**, cada uno perdiendo una vuelta, y ninguno de los dos tenía cómo saberlo.
+- **Dale al carril el comando del conteo crudo, no sólo la orden de mirarlo.** `verificar.py`
+  **no imprime** el `Executed test suites: (N/N)`, así que un carril al que se le pide honrar la
+  trampa de la suite descartada tiene que reconstruir la invocación de gdUnit4 leyendo
+  `verificar.py`. Medido: dos carriles del lote 005/011/022/023 lo armaron a mano por separado.
+  El comando es:
+
+  ```bash
+  "$GODOT_BIN" --path . --headless -s -d --remote-debug tcp://127.0.0.1:0 \
+    res://addons/gdUnit4/bin/GdUnitCmdTool.gd -a test --continue --ignoreHeadlessMode \
+    -rd reportes 2>&1 | grep "Executed test suites"
+  ```
+
+  y su `(N/N)` tiene que dar igual que `find test -name '*_test.gd' | wc -l`.
+- **Advertile que su spec puede venir ya corregido, y que verifique antes de editar.** Un spec
+  que manda corregir a otros —como el 023 con el 008, el 009 y el 013— suele haber dejado esas
+  correcciones escritas cuando se lo revisó, así que sus AC **ya pasan al llegar**. Sin el aviso
+  el carril sale a buscar texto que ya no existe y pierde una vuelta. Medido en el lote
+  005/011/022/023. La línea es: «corré los `rg` de tus AC **antes** de editar; puede que ya
+  estén hechos, y entonces la tarea es verificarlo y marcarla».
+- **El entorno no sobrevive entre llamadas a la herramienta de shell, y el prefijo se rechaza.**
+  `export GODOT_BIN=…` vale para **esa** invocación y nada más, y `GODOT_BIN=… python …` —el
+  prefijo inline— lo rechaza el aislamiento del worktree por «demasiado complejo». Decíselo así:
+  **la exportación va en la misma línea que el comando, cada vez.** Si no, el carril lee «exportala
+  primero de todo» como una sola vez y después corre `verificar.py` sin ella — que **saltea**
+  `tests` y lo declara verde de 6/6.
 - **Que delegue cada spec a `spec-implement`**, que deriva el grafo interno y abanica lo que
   corresponda, **y que cierre cada uno antes de arrancar el siguiente**.
 - **La base del primer spec del carril es `staging`**; los que siguen, la rama del spec anterior

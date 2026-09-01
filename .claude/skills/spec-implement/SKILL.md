@@ -93,6 +93,35 @@ lo que en este motor nadie más cuida.
 **Un nodo salteado no es un nodo verde**, y el reporte lo distingue. Si `tests` dice que se
 saltea porque no hay `GODOT_BIN`, eso **es un rojo**: significa que la suite no corrió.
 
+**Y `verificar.py` verde no prueba que la suite haya corrido.** Una suite de gdUnit4 que no
+parsea se descarta **en silencio** y el nodo `tests` sale verde igual — es el estado normal del
+paso 1 del TDD, y también el de un `class_name` recién creado que todavía no está en
+`.godot/`. La única señal es el conteo crudo, que `verificar.py` **no imprime**. El comando,
+para no reconstruirlo leyendo `verificar.py`:
+
+```bash
+"$GODOT_BIN" --path . --headless -s -d --remote-debug tcp://127.0.0.1:0 \
+  res://addons/gdUnit4/bin/GdUnitCmdTool.gd -a test --continue --ignoreHeadlessMode \
+  -rd reportes 2>&1 | grep "Executed test suites"
+```
+
+Ese `(N/N)` tiene que dar igual que `find test -name '*_test.gd' | wc -l`. Si da menos, hay una
+suite que no corrió y el nodo verde no lo dice.
+
+**El escalón que cuesta una vuelta:** crear el `.gd` no alcanza para que su test lo vea. Un
+`class_name` nuevo no entra al registro global hasta que se vuelve a correr
+`"$GODOT_BIN" --headless --path . --import --quit`, y hasta entonces el error es
+`Parse Error: Identifier "X" not declared` **con el archivo ya escrito en disco** — idéntico al
+del archivo ausente, así que se lee como un error del código y no de la caché. Re-importá
+después de crear cada archivo con `class_name` nuevo, no sólo una vez al abrir el worktree.
+
+**Y el rojo del paso 1 no se lee en el conteo de fallos.** Cuando el recurso que el caso carga
+todavía no existe, el error de script **aborta la función** y gdUnit4 no cuenta ninguna aserción
+fallida: el caso sale **`PASSED`** por no haber llegado a afirmar nada. Medido el 2026-09-01
+implementando el 023: **4 de 5 casos en verde** con la escena sin escribir. El «falla por lo que
+se espera» se verifica en el `ERROR: Failed loading resource` de la salida cruda, no en el
+`0 failures`.
+
 ## Cuando el spec no alcanza — el lazo
 
 **Para cuando llegás acá no debería quedar ninguna duda de planteo.** Se resuelven entre

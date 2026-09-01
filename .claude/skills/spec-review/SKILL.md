@@ -83,7 +83,7 @@ Al revisar, verificá:
 
 ## Lo que hay que mirar en un spec de este juego
 
-Cinco preguntas que en un repo de Godot deciden si el spec es implementable:
+Siete preguntas que en un repo de Godot deciden si el spec es implementable:
 
 1. **¿En qué capa cae cada cosa?** Si el spec propone una regla —cuántas tareas, qué pasa a los
    dos días, qué cuenta como cumplir— y la ubica en un `Node` de `sistemas/` o en una escena,
@@ -100,6 +100,23 @@ Cinco preguntas que en un repo de Godot deciden si el spec es implementable:
 5. **¿El alcance entra en lo que el GDD llama una entrega?** El GDD vive en Notion y define
    qué significa «terminado» para el núcleo de jugabilidad y para la demo. Un spec que se sale
    de eso no está mal — pero tiene que decir que se sale.
+6. **¿Cada identificador que el spec escribe en `código` existe de verdad?** Un `class_name`,
+   una constante o un método citado de otro spec y nunca grepeado contra el repo. La revisión
+   lo cierra con un comando, no leyendo: `rg -n "NOMBRE" src/` — y si no devuelve nada, el spec
+   nombra algo que no está. **En Godot este error no se cobra caro al implementar sino después:**
+   un identificador inexistente en un `*_test.gd` hace que la suite **no parsee**, gdUnit4 la
+   **descarta en silencio**, y el nodo `tests` sale **verde** sin haberla corrido. O sea que el
+   spec induce un fallo que ningún nodo del harness nombra. Medido el 2026-09-01 en el spec 011,
+   que decía `Ritmo.FACTOR` cuando la constante es `Ritmo.SEGUNDOS_DE_TURNO_POR_SEGUNDO_REAL`.
+7. **¿Los cuatro archivos dicen el mismo número?** El `spec.md`, el `research.md`, el `plan.md`
+   y el `tasks.md` se escriben en momentos distintos, y **el que se implementa es el `tasks.md`**:
+   una contradicción entre ellos no la caza ningún gate y la gana la tarea. Es peor cuando el
+   número **es lo que el spec existe para corregir**, porque entonces el spec escribe el mismo
+   error que vino a cerrar, con la autoridad de venir a cerrarlo. Medido el 2026-09-01 en el
+   spec 022 —«los docs dicen la regla del despido vigente»—: su `spec.md` decía «dos jornadas
+   graves», su `plan.md` y su T001 decían «tres», y el valor real sale de
+   `src/dominio/reglas.gd`. **Se cierra contra la fuente de verdad, no por mayoría entre los
+   cuatro archivos.**
 
 ## Las convenciones que un spec suele violar por escrito
 

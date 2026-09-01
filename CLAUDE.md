@@ -200,6 +200,11 @@ Las cinco que ya costaron tiempo acá:
   `.claude/scripts/` llama a `configurar()` de `lib/consola.py` antes de imprimir nada.
 - **`Grep` no ve `specs/`.** Es ripgrep y respeta el `.gitignore`: contesta cero **sin decir
   que no miró**. Ahí va `rg --no-ignore`.
+- **Y encadenar `rg` con `&&` se traga los que siguen.** Un `rg A && rg B && rg C` corta en el
+  primero sin match —que devuelve 1— y **los otros dos no corren, sin decirlo**: la salida vacía
+  se lee como «ninguno matcheó» cuando en realidad sólo se preguntó por el primero. Es la misma
+  falla que el `| grep`, en la otra dirección. **Un `rg` por línea, separados por `;`, nunca por
+  `&&`.** Medido el 2026-09-01 verificando los AC del 023 sobre tres specs de una.
 - **Godot adentro de OneDrive no se puede ejecutar** si el archivo no está descargado: Windows
   contesta «el proveedor de archivos de nube no se está ejecutando», que no nombra ni a Godot ni
   a los tests.
@@ -213,3 +218,20 @@ Las cinco que ya costaron tiempo acá:
   verde**, y las cuatro reglas del gate de tests no lo ven: el espejo existe, afirma y no está
   apagado. Mientras se hace TDD, el número que hay que mirar es el `Executed test suites: (N/N)`
   de la salida cruda contra la cantidad de `*_test.gd`, no el color del nodo.
+
+  **Y tiene un segundo escalón, medido el 2026-09-01 implementando el 011:** crear el `.gd`
+  no alcanza. Un `class_name` recién escrito **no existe para gdUnit4 hasta que se vuelve a
+  correr `--import`**, porque no está en `global_script_class_cache.cfg`. El síntoma es
+  **idéntico** al del archivo ausente —`Parse Error: Identifier "X" not declared`,
+  `No test cases found`, `Exit code: 0`—, así que se lee como «todavía no lo escribí» cuando
+  en realidad ya está en disco. Hay que re-importar **después de crear cada archivo con
+  `class_name` nuevo**, no sólo una vez al abrir el worktree. Lo pisaron los dos carriles
+  del lote 005/011/022/023 que crearon clases, cada uno perdiendo una vuelta.
+
+  **Y el paso 1 del TDD miente todavía de una tercera forma, que es la peor: sale `PASSED`.**
+  Cuando el recurso que el caso carga no existe, el error de script **aborta la función** y
+  gdUnit4 no cuenta ninguna aserción fallida: el caso se reporta en verde por no haber llegado
+  a afirmar nada. Medido el 2026-09-01 en el 023: con la escena todavía sin escribir, **4 de 5
+  casos dieron `PASSED`** y sólo dio rojo el que afirmaba el tipo. O sea que el «falla por lo
+  que se espera» del paso 1 **no se lee en el conteo de fallos**: se lee en el
+  `ERROR: Failed loading resource` de la salida cruda.

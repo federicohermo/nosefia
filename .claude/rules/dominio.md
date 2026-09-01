@@ -52,7 +52,7 @@ func consumir() -> void:
     var dt := get_process_delta_time()
 ```
 
-Es lo que permite escribir el test de «tres jornadas graves seguidas y lo echan» sin jugar tres
+Es lo que permite escribir el test de «dos jornadas graves seguidas y lo echan» sin jugar dos
 noches.
 
 ## Conjuntos cerrados
