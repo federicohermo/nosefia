@@ -11,7 +11,10 @@
 │   ├── dominio/            Reglas puras. RefCounted/Resource. Test OBLIGATORIO
 │   ├── sistemas/           Nodes y autoloads que orquestan el dominio. Test OBLIGATORIO
 │   ├── ui/                 HUD, computadora, ventanilla
-│   └── escenas/            Los scripts pegados a un .tscn
+│   └── escenas/            Los scripts pegados a un .tscn, y las escenas del juego
+│       ├── almacen.tscn                 La escena raíz. CABLEA: lo suyo cuelga de su raíz
+│       ├── estructura_del_almacen.tscn  El blockout —piso, paredes y anclajes—, instanciado ahí
+│       └── jugador.tscn                 El cuerpo en primera persona, instanciado en el almacén
 │
 ├── test/                   El ESPEJO de src/: src/dominio/turno.gd → test/dominio/turno_test.gd
 │   ├── dominio/            Espejo OBLIGATORIO, lo verifica gate_de_tests.py
@@ -54,6 +57,7 @@
 | Algo que necesita `delta`, el árbol de escena o un archivo | `src/sistemas/` | su test en `test/sistemas/`, **primero** |
 | Una pantalla, un panel, un botón | `src/ui/` | sin test obligatorio — y por eso no puede tener reglas adentro |
 | El script de una escena concreta | `src/escenas/` | ídem — y si lo probás, va en `test/escenas/`, que **ningún gate exige** |
+| Algo que va en el almacén y tiene hijos propios | su propio `.tscn` en `src/escenas/` | se **instancia** en `almacen.tscn`, que sólo cablea: colgarlo ahí adentro lo caza `test/escenas/almacen_test.gd` |
 | Un número que dos archivos necesitan igual | un solo archivo de `src/dominio/` | nunca dos copias |
 | Un `.png`, un `.ogg`, una fuente | `assets/` | no necesita spec |
 | Una herramienta del proceso | `.claude/scripts/` | lo puro en `lib/`, su test en `tests/` |
