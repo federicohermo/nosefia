@@ -80,20 +80,21 @@
 | Una pantalla, un panel, un botón | `src/ui/` | sin test obligatorio — y por eso no puede tener reglas adentro |
 | El script de una escena concreta | `src/escenas/` | ídem — y si lo probás, va en `test/escenas/`, que **ningún gate exige** |
 | Algo que va en el almacén y tiene hijos propios | su propio `.tscn` en `src/escenas/puestos/` si hay uno solo, en `objetos/` si hay N | se **instancia** en `almacen.tscn`, que sólo cablea: colgarlo ahí adentro lo caza `test/escenas/almacen_test.gd` |
+| Un número que dos archivos necesitan igual | un solo archivo de `src/dominio/` | nunca dos copias |
+| Un `.png`, un `.ogg`, una fuente | `assets/` | no necesita spec |
+| Una herramienta del proceso | `.claude/scripts/` | lo puro en `lib/`, su test en `tests/` |
 
-**Y en las cuatro filas falta la mitad de la ruta: la subcarpeta.** Cada capa admite un conjunto
-cerrado de nombres, declarado en `CARPETAS_POR_CAPA` de `.claude/scripts/lib/repo.py` y
-verificado por `gate_de_capas.py`. El criterio de cada una está en su `.claude/rules/`
-—`dominio.md`, `sistemas.md`, `presentacion.md`— y es siempre el mismo: **la carpeta dice qué se
-rompe si tocás lo que hay adentro**, nunca lo que el nombre del archivo ya dice.
+**Y a las cuatro primeras filas les falta la mitad de la ruta: la subcarpeta.** Cada capa admite
+un conjunto cerrado de nombres, declarado en `CARPETAS_POR_CAPA` de `.claude/scripts/lib/repo.py`
+y verificado por `gate_de_capas.py` sobre los `.gd` **y** los `.tscn`. El criterio de cada una
+está en su `.claude/rules/` —`dominio.md`, `sistemas.md`, `presentacion.md`— y es siempre el
+mismo: **la carpeta dice qué se rompe si tocás lo que hay adentro**, nunca lo que el nombre del
+archivo ya dice.
 
 **La raíz de una capa es válida a propósito**, y es donde viven los que cruzan dos carpetas:
 `reglas.gd`, `hud.gd`, `almacen.*`, `jugador.*` e `inicio.*`. Lo que el gate cierra es la puerta
 de atrás —inventar `ui/pantallas/` en vez de usar el criterio—; lo que **no** puede contestar es
 si un archivo está en la carpeta *correcta*, que es semántica y la mira la revisión.
-| Un número que dos archivos necesitan igual | un solo archivo de `src/dominio/` | nunca dos copias |
-| Un `.png`, un `.ogg`, una fuente | `assets/` | no necesita spec |
-| Una herramienta del proceso | `.claude/scripts/` | lo puro en `lib/`, su test en `tests/` |
 
 ## Las dos rutas protegidas
 

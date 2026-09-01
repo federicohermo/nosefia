@@ -13,7 +13,7 @@ corre la CI sobre cada PR y cada push a `staging` y `main`.
 |---|---|---|
 | `lint` | `gdlint src test` | nombres, orden de declaraciones dentro de una clase, líneas de más de 100 |
 | `formato` | `gdformat --check src test` | todo lo que sea formato. Se arregla con `gdformat src test` |
-| `capas` | `gate_de_capas.py` | una referencia que va en contra de la dirección de dependencia |
+| `capas` | `gate_de_capas.py` | una referencia que va en contra de la dirección de dependencia, y un `.gd` o un `.tscn` en una subcarpeta que su capa no declara |
 | `tdd` | `gate_de_tests.py` | un script sin test, un test sin aserción, uno apagado, o uno con un nombre que hace que no corra |
 | `harness` | `unittest` sobre `.claude/scripts/tests/` | las herramientas del proceso, y el registro de specs contra GitHub |
 | `tests` | gdUnit4 en Godot headless | el juego |

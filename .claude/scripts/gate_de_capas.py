@@ -20,7 +20,7 @@ from lib.consola import configurar  # noqa: E402
 
 configurar()
 
-from lib.archivos import scripts_gd  # noqa: E402
+from lib.archivos import escenas_tscn, scripts_gd  # noqa: E402
 from lib.capas import carpetas_no_declaradas, violaciones  # noqa: E402
 from lib.repo import CAPAS, CARPETAS_POR_CAPA, RAIZ  # noqa: E402
 
@@ -53,15 +53,19 @@ def _reportar_carpetas(archivos: dict[str, str]) -> int:
 
 def main() -> None:
     archivos = scripts_gd(RAIZ, "src")
+    # El chequeo de carpetas mira **también** las escenas, y el de dirección no: `escenas/` es
+    # la capa donde casi todo es `.tscn`, así que un gate que sólo caminara `.gd` la dejaría sin
+    # verificar justo donde vive la distinción entre `puestos/` y `objetos/`.
+    clasificables = {**archivos, **escenas_tscn(RAIZ, "src")}
     hallazgos = violaciones(archivos, CAPAS)
-    sueltos = _reportar_carpetas(archivos)
+    sueltos = _reportar_carpetas(clasificables)
 
     if not hallazgos:
         if sueltos:
             sys.exit(1)
         print(
-            f"capas: {len(archivos)} scripts, ninguno referencia hacia arriba "
-            "y ninguno en una subcarpeta sin declarar."
+            f"capas: {len(archivos)} scripts, ninguno referencia hacia arriba; "
+            f"{len(clasificables)} archivos, ninguno en una subcarpeta sin declarar."
         )
         sys.exit(0)
 

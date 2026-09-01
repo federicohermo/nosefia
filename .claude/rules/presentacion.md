@@ -69,6 +69,11 @@ archivo esté en la carpeta correcta: eso es semántica, ninguna herramienta lo 
 lo mira la revisión. La raíz de cada capa la admite a propósito, que es donde se quedan `hud.*`,
 `almacen.*`, `jugador.*` e `inicio.*` porque cruzan o son la raíz del árbol.
 
+**Y acá mira los `.tscn` además de los `.gd`**, que en estas dos capas es la mitad que importa:
+`escenas/` es casi toda escenas, y la distinción entre `puestos/` y `objetos/` se decide sobre
+un `.tscn`. Es lo único que el gate lee de una escena — la **ruta**, nunca el contenido: adentro
+de un `.tscn` de `escenas/` referenciar hacia abajo es correcto por definición.
+
 ## Un `.tscn` es código
 
 Se revisa como código y se mergea con el mismo cuidado: un merge de tres vías sobre una escena
