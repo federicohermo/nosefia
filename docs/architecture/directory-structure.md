@@ -12,10 +12,13 @@
 │   │                         CARPETAS_POR_CAPA en lib/repo.py y las verifica gate_de_capas.py
 │   ├── dominio/            Reglas puras. RefCounted/Resource. Test OBLIGATORIO
 │   │   │                     La carpeta dice CUÁNTO DURA EL EFECTO
-│   │   ├── reglas.gd         El balance. Cruza jornada/ y empleo/: por eso queda en la raíz
+│   │   ├── reglas.gd         El balance. Cruza carpetas: por eso queda en la raíz
 │   │   ├── jugador/          Cómo se siente moverse. NO cambia el resultado de una noche
 │   │   ├── jornada/          La aritmética de una noche: cuánto tiempo queda para investigar
-│   │   └── empleo/           El arco ENTRE noches: apercibimientos, despido
+│   │   ├── empleo/           El arco ENTRE noches: apercibimientos, despido
+│   │   ├── almacen/          Cuánto CUESTA cumplir una obligatoria: el estado del local
+│   │   ├── investigacion/    Cuánto RINDE el minuto que no se paga: pistas, casos, apps
+│   │   └── ambiente/         Cómo se siente la noche, y nada más. No cambia cómo termina
 │   ├── sistemas/           Nodes y autoloads que orquestan el dominio. Test OBLIGATORIO
 │   │   │                     La carpeta dice SI CONSUME TIEMPO DEL TURNO, Y PARA QUÉ
 │   │   ├── marco/            No lo consume: hace correr el juego. Un bug acá lo detiene
