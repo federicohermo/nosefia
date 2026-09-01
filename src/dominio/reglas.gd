@@ -32,8 +32,10 @@ const COSTO_DE_SACAR_LA_BASURA := 1200.0
 ## 3,5 m/s. Lo supuesto son dos cosas: un almacén de unos 20 m de punta a punta, y unos 18
 ## cruces para hacer las cinco obligatorias más atender a los dos compradores de la ventanilla
 ## —dos por tarea y cuatro por comprador, contando que `SACAR_LA_BASURA` va hasta el fondo—.
-## Eso da 360 m, o sea 103 segundos en línea recta; el valor se redondea a 180 porque nadie
-## camina en línea recta por un local a oscuras que no conoce.
+## Eso da 360 m, o sea 103 segundos en línea recta. El valor declarado no los redondea: los
+## sube a 180, un 75 % más, porque nadie camina en línea recta por un local a oscuras que no
+## conoce. Ese margen es la parte más blanda de la estimación y está inflado a propósito:
+## sobrestimar el trayecto aprieta el presupuesto, subestimarlo lo afloja sin que nadie se entere.
 ##
 ## **Es el número de este archivo que va a quedar viejo primero**, y cuando el layout exista hay
 ## que volver a medirlo acá. Que quede viejo no miente en silencio: el AC7 de `reglas_test.gd`

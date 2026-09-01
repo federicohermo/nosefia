@@ -48,9 +48,15 @@ func test_alcanza_solo_con_margen_estrictamente_positivo() -> void:
 func test_la_cuenta_no_depende_de_cuantas_tareas_haya() -> void:
 	# Con cinco costos da lo mismo que restarlos uno por uno, así que definir una sexta tarea no
 	# obliga a tocar `presupuesto.gd`: no hay ningún `5` escrito ahí adentro.
-	var costos: Array[float] = [1800.0, 3600.0, 2700.0, 3600.0, 1200.0]
-	var a_mano := 28800.0
+	#
+	# Los cinco valores son inventados y **todos distintos** a propósito. Distintos porque una
+	# lista con repetidos no caza que la suma sume dos veces el mismo elemento; e inventados
+	# porque copiar acá los costos reales de `Reglas` pondría el balance del juego en un segundo
+	# archivo, que es exactamente el modo de falla que este spec vino a cerrar.
+	var costos: Array[float] = [1.0, 2.0, 4.0, 8.0, 16.0]
+	var trayecto := 2.0
+	var a_mano := 100.0
 	for costo: float in costos:
 		a_mano -= costo
-	a_mano -= 24.0 * 10.0
-	assert_float(Presupuesto.margen(28800.0, costos, 10.0, 24.0)).is_equal(a_mano)
+	a_mano -= 24.0 * trayecto
+	assert_float(Presupuesto.margen(100.0, costos, trayecto, 24.0)).is_equal(a_mano)
