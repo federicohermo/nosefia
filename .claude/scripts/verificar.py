@@ -44,7 +44,7 @@ from lib.consola import configurar  # noqa: E402
 configurar()
 
 from lib.archivos import scripts_gd  # noqa: E402
-from lib.godot import como_declararlo, resolver  # noqa: E402
+from lib.godot import aviso_de_entorno_viejo, como_declararlo, resolver  # noqa: E402
 from lib.repo import RAIZ, REPORTES, TESTS  # noqa: E402
 from lib.tdd import SUFIJO_DE_TEST  # noqa: E402
 
@@ -59,6 +59,9 @@ class Resultado:
     segundos: float
     #: Un nodo salteado no es un nodo verde: se cuenta aparte y se dice por qué.
     salteado: bool = False
+    #: Algo que hay que decir **aunque el nodo salga verde**. Es raro y por eso es opcional: la
+    #: salida de un nodo en verde no se imprime, así que sin este campo un aviso se perdería.
+    aviso: str | None = None
 
 
 def _correr(nodo: str, comando: list[str], cwd: Path = RAIZ) -> Resultado:
@@ -133,11 +136,16 @@ def nodo_tests() -> Resultado:
             "pasa a necesitar Godot y deja de saltearse.",
         )
 
-    godot = resolver(dict(os.environ))
+    godot, origen = resolver(dict(os.environ))
     if godot is None:
         return Resultado("tests", 1, como_declararlo(dict(os.environ)), 0.0)
 
-    return _correr(
+    # El aviso viaja en el resultado y lo imprime `main`, aunque el nodo salga verde: que el
+    # entorno de la terminal esté viejo es un dato que hay que dar igual, porque va a morder en
+    # la próxima herramienta que no tenga este rescate.
+    aviso = aviso_de_entorno_viejo(origen)
+
+    resultado = _correr(
         "tests",
         [
             godot,
@@ -159,6 +167,8 @@ def nodo_tests() -> Resultado:
             "-rd", REPORTES,
         ],
     )
+    resultado.aviso = aviso
+    return resultado
 
 
 NODOS = (nodo_lint, nodo_formato, nodo_capas, nodo_tdd, nodo_harness, nodo_tests)
@@ -191,6 +201,12 @@ def main() -> None:
 
     fallaron = [r for r in resultados if r.codigo != 0]
     salteados = [r for r in resultados if r.salteado]
+
+    # Los avisos van primero y salen igual con la corrida en verde: son cosas ciertas sobre la
+    # máquina que no impidieron correr, pero que van a impedir otra cosa más adelante.
+    for r in resultados:
+        if r.aviso:
+            print(f"\n{r.aviso}")
 
     for r in salteados:
         print(f"\n── {r.nodo}: salteado ──\n{r.salida}")

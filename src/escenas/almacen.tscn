@@ -1,0 +1,42 @@
+[gd_scene load_steps=9 format=3]
+
+[ext_resource type="PackedScene" path="res://src/escenas/jugador.tscn" id="1_jugador"]
+[ext_resource type="PackedScene" path="res://src/ui/hud.tscn" id="2_hud"]
+[ext_resource type="Script" path="res://src/sistemas/reloj_del_turno.gd" id="3_reloj"]
+[ext_resource type="Script" path="res://src/escenas/almacen.gd" id="4_almacen"]
+[ext_resource type="PackedScene" path="res://src/escenas/estructura_del_almacen.tscn" id="5_estructura"]
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_cielo"]
+
+[sub_resource type="Sky" id="Sky_cielo"]
+sky_material = SubResource("ProceduralSkyMaterial_cielo")
+
+[sub_resource type="Environment" id="Environment_almacen"]
+background_mode = 2
+sky = SubResource("Sky_cielo")
+tonemap_mode = 2
+
+[node name="Almacen" type="Node3D" node_paths=PackedStringArray("_hud", "_reloj")]
+script = ExtResource("4_almacen")
+_hud = NodePath("Hud")
+_reloj = NodePath("RelojDelTurno")
+
+[node name="Entorno" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_almacen")
+
+[node name="Sol" type="DirectionalLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0.5, 0.866025, 0, -0.866025, 0.5, 0, 6, 0)
+shadow_enabled = true
+
+[node name="Estructura" parent="." instance=ExtResource("5_estructura")]
+
+[node name="HuecoDeLaVentanilla" type="Marker3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5, 1.2, 0)
+
+[node name="Jugador" parent="." instance=ExtResource("1_jugador")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1.5)
+
+[node name="RelojDelTurno" type="Node" parent="."]
+script = ExtResource("3_reloj")
+
+[node name="Hud" parent="." instance=ExtResource("2_hud")]

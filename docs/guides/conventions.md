@@ -59,7 +59,7 @@ verifica dura hasta el primer apuro.
 
 ## Los valores fijos viven una sola vez
 
-Los minutos de un turno, cuántos compradores por día, cuántos días seguidos fallidos hasta el
+Los segundos de un turno, cuántos compradores por día, cuántos apercibimientos hasta el
 despido: cada uno en **un** archivo de `src/dominio/`, importado por quien lo necesite.
 
 Dos copias de un número no son dos números: son un bug esperando a que alguien cambie una. Y en

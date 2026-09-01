@@ -1,7 +1,7 @@
 """El gate: no se edita el producto sin un spec detrás de la rama.
 
-Corre como hook `PreToolUse` sobre `Edit|Write|MultiEdit|Bash`. Recibe el payload del hook
-por stdin y contesta por stdout con `permissionDecision`.
+Corre como hook `PreToolUse` sobre `Edit|Write|MultiEdit|Bash|PowerShell`. Recibe el payload
+del hook por stdin y contesta por stdout con `permissionDecision`.
 
 ## Por qué existe
 
@@ -26,10 +26,16 @@ arriba: la regla que dice cómo EMPIEZA un cambio también tiene que ser ejecuta
 3. **El mensaje dice cómo salir.** Bloquear sin decir qué hacer produce el reflejo de buscar
    cómo saltear el bloqueo, que es el fracaso completo del gate.
 
-4. **Mira también lo que escribe `Bash`.** Un gate sólo sobre `Edit|Write|MultiEdit` tiene el
-   agujero del tamaño de `sed -i`, y encima es un agujero DIRIGIDO: negarle `Edit` a un
-   agente lo empuja justo hacia la redirección. Lo que se mira es un conjunto declarado de
-   formas de escritura, no un parser de shell — ver `destinos_de_bash`.
+4. **Mira también lo que escriben `Bash` y `PowerShell`.** Un gate sólo sobre
+   `Edit|Write|MultiEdit` tiene el agujero del tamaño de `sed -i`, y encima es un agujero
+   DIRIGIDO: negarle `Edit` a un agente lo empuja justo hacia la redirección. Lo que se mira
+   es un conjunto declarado de formas de escritura, no un parser de shell — ver
+   `destinos_del_comando`.
+
+   **`PowerShell` entró después, y por evidencia.** Montando este harness, un bug de este
+   mismo gate dejó la sesión encerrada, y la salida fue escribir archivos con la herramienta
+   de PowerShell: una herramienta que el matcher no nombraba. O sea que el gate se salteaba
+   solo con cambiar de herramienta, sin proponérselo.
 """
 
 import json
@@ -106,18 +112,76 @@ ESCRITORES = {
     "sed": lambda args, flags: args if any(f.startswith("-i") for f in flags) else [],
 }
 
+#: Los cmdlets de PowerShell que escriben, y de dónde sale su destino.
+#:
+#: **Existen porque `PowerShell` es una herramienta aparte de `Bash` en este entorno**, y el
+#: matcher del hook la ignoraba. El agujero no es hipotético: montando este harness quedé
+#: encerrado por un bug del propio hook y salí escribiendo archivos con la herramienta de
+#: PowerShell — o sea que el gate se saltea solo con cambiar de herramienta.
+#:
+#: Un cmdlet no se parsea como un comando POSIX: el destino puede venir por parámetro nombrado
+#: (`-Path`, `-FilePath`, `-Destination`) o por posición, así que cada entrada declara la
+#: posición de su destino y los parámetros que lo nombran.
+#:
+#: **Los parámetros dependen del cmdlet y ésa es la parte que no es obvia**: en `Copy-Item` el
+#: `-Path` es el ORIGEN, que se lee. Una lista única de nombres hacía que
+#: `Copy-Item -Path a.gd -Destination src/x.gd` reportara `a.gd` — o sea el archivo que no se
+#: toca— y dejara pasar el que sí. Lo encontró su test.
+_CMDLETS_QUE_ESCRIBEN = {
+    # Escriben donde apuntan: el destino es el primer posicional o el `-Path`.
+    "set-content": (0, ("-path", "-filepath", "-literalpath")),
+    "add-content": (0, ("-path", "-filepath", "-literalpath")),
+    "clear-content": (0, ("-path", "-filepath", "-literalpath")),
+    "out-file": (0, ("-path", "-filepath", "-literalpath")),
+    "new-item": (0, ("-path", "-filepath", "-literalpath")),
+    "remove-item": (0, ("-path", "-filepath", "-literalpath")),
+    # Acá el destino es el SEGUNDO posicional o el `-Destination`: el primero es el origen, que
+    # se lee. Es el mismo criterio que `cp` y `mv`.
+    "copy-item": (1, ("-destination",)),
+    "move-item": (1, ("-destination",)),
+    "rename-item": (1, ("-newname",)),
+}
+
 _REDIRECCION = re.compile(r">>?\s*(?!&)(\"[^\"]*\"|'[^']*'|[^\s;&|<>()]+)")
 _TOKENS = re.compile(r"\"[^\"]*\"|'[^']*'|\S+")
 
 
-def destinos_de_bash(comando: str) -> list[str]:
-    """Los archivos que un comando de `Bash` escribe.
+def _destino_de_cmdlet(resto: list[str], posicion: int, parametros: tuple[str, ...]) -> list[str]:
+    """El destino de un cmdlet: el parámetro nombrado si está, y si no, los posicionales.
+
+    **Cuando no hay parámetro nombrado devuelve TODOS los candidatos, no uno.** Intentar
+    quedarse con «el posicional número N» obliga a saber qué parámetros llevan valor y cuáles
+    son interruptores, y equivocarse ahí sale caro **hacia el lado malo**: con
+    `Remove-Item -Force src`, tratar a `-Force` como si consumiera un valor se come el `src` y
+    el gate deja pasar un borrado de verdad.
+
+    Devolver de más no cuesta nada: un candidato que no es una ruta protegida —un `utf8`, un
+    `"hola"`— no resuelve bajo ninguna carpeta vigilada y se descarta solo. Es el mismo criterio
+    con el que `sed` deja su script `s/a/b/` en la lista.
+
+    Lo único que se saca es el ORIGEN de los cmdlets que copian o mueven, que es lectura:
+    contarlo bloquearía un `Copy-Item src/x.gd C:/tmp/` legítimo.
+    """
+    for i, token in enumerate(resto):
+        if token.lower() in parametros and i + 1 < len(resto):
+            return [resto[i + 1]]
+    posicionales = [t for t in resto if not t.startswith("-")]
+    return posicionales[posicion:]
+
+
+def destinos_del_comando(comando: str) -> list[str]:
+    """Los archivos que un comando de `Bash` o de `PowerShell` escribe.
 
     Es DETECCIÓN y no un parser de shell: reconoce las formas que se usan de verdad
-    —redirección, `sed -i`, `tee`, `cp`/`mv`/`rm`/`truncate`— y **no pretende ser
-    exhaustiva**. Un `python -c` que abra el archivo pasa, y está bien que pase: la decisión 2
-    del encabezado vale igual acá, y un gate que intente parsear shell de verdad se equivoca
-    en la dirección cara, que es bloquear lo que no debía.
+    —redirección, `sed -i`, `tee`, `cp`/`mv`/`rm`/`truncate`, y los cmdlets de PowerShell que
+    escriben— y **no pretende ser exhaustiva**. Un `python -c` que abra el archivo pasa, y un
+    `[System.IO.File]::WriteAllText(...)` también. Está bien que pasen: la decisión 2 del
+    encabezado vale igual acá, y un gate que intente parsear shell de verdad se equivoca en la
+    dirección cara, que es bloquear lo que no debía.
+
+    Las dos sintaxis se miran juntas y no según de qué herramienta vino el payload. Distinguir
+    no aportaría nada —ningún comando de bash se llama `Set-Content`— y en cambio agregaría una
+    forma de equivocarse: la de mirar la lista equivocada.
     """
     destinos: list[str] = []
 
@@ -135,13 +199,21 @@ def destinos_de_bash(comando: str) -> list[str]:
             continue
         # `/usr/bin/sed` es `sed`: comparar el token entero dejaría pasar la ruta absoluta.
         nombre = re.split(r"[/\\]", tokens[0])[-1]
-        escritor = ESCRITORES.get(nombre)
-        if escritor is None:
-            continue
         resto = tokens[1:]
-        args = [t for t in resto if not t.startswith("-")]
-        flags = [t for t in resto if t.startswith("-")]
-        destinos.extend(escritor(args, flags))
+
+        escritor = ESCRITORES.get(nombre)
+        if escritor is not None:
+            args = [t for t in resto if not t.startswith("-")]
+            flags = [t for t in resto if t.startswith("-")]
+            destinos.extend(escritor(args, flags))
+            continue
+
+        # Los cmdlets van en minúsculas porque PowerShell no distingue mayúsculas: `Set-Content`
+        # y `set-content` son el mismo cmdlet, y comparar sensible dejaría pasar la segunda.
+        cmdlet = _CMDLETS_QUE_ESCRIBEN.get(nombre.lower())
+        if cmdlet is not None:
+            posicion, parametros = cmdlet
+            destinos.extend(_destino_de_cmdlet(resto, posicion, parametros))
 
     return destinos
 
@@ -156,9 +228,11 @@ def rutas_del_payload(crudo: str) -> list[str] | None:
         payload = json.loads(crudo)
         herramienta = payload.get("tool_name")
         entrada = payload.get("tool_input") or {}
-        if herramienta == "Bash":
+        # Las dos herramientas que traen un comando en vez de una ruta. `PowerShell` entró
+        # después de comprobar en vivo que el gate se saltea solo con cambiar de herramienta.
+        if herramienta in ("Bash", "PowerShell"):
             comando = entrada.get("command")
-            return destinos_de_bash(comando) if isinstance(comando, str) else None
+            return destinos_del_comando(comando) if isinstance(comando, str) else None
         ruta = entrada.get("file_path")
         return [ruta] if isinstance(ruta, str) and ruta else None
     except (json.JSONDecodeError, AttributeError, TypeError):

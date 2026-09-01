@@ -8,12 +8,15 @@ issue.
 
 ## Qué es
 
-**No se fía** — un juego de turno nocturno en un almacén. El empleado nuevo tiene un tiempo
-limitado por noche y lo reparte entre **cinco tareas obligatorias** que le deja el jefe
-—atender la caja, reponer, registrar productos, limpiar, y una quinta sin definir— y
-**averiguar qué está pasando**. Atiende por una **ventanilla**, no más de dos compradores por
-día. Al cierre del turno el juego cuenta cuántas tareas cumplió y aplica consecuencias en tres
-puntos de corte —5, 3 o ninguna—; dos días seguidos sin cumplir y lo echan.
+**No se fía** — un juego de turno nocturno en un almacén. El empleado nuevo reparte un tiempo
+limitado entre **cinco tareas obligatorias** del jefe —caja, reponer, registrar, limpiar y sacar
+la basura— y **averiguar qué está pasando**. Atiende por una **ventanilla**, no más de dos
+compradores por día. Al cierre se cuentan las tareas cumplidas y las consecuencias caen en tres
+bandas: las 5 no pasa nada, 3 o 4 es un aviso, menos de 3 es grave. **Las tres bandas pesan
+distinto sobre el despido**: una jornada grave suma dos apercibimientos, una de aviso suma uno,
+una jornada completa los reinicia a cero, y a los cuatro lo echan. O sea que **dos jornadas graves
+seguidas despiden, una grave más dos avisos también, y cuatro de cuatro tareas también** — pero
+tres de cuatro tareas no, y una jornada completa borra la deuda entera.
 
 **La tensión central es aritmética: cada minuto investigando es un minuto que no se dedica a
 las tareas.** Al evaluar una feature, la pregunta es si aprieta esa tensión — no si agrega
@@ -37,13 +40,12 @@ gdformat src test                               # arregla el formato, no sólo l
 Lo que hay que saber antes de abrir
 [docs/guides/verificacion.md](./docs/guides/verificacion.md):
 
-- **`verificar.py` es el nodo de convergencia** y es lo que hay que correr antes de un PR:
-  `lint ‖ formato ‖ capas ‖ tdd ‖ harness ‖ tests`. La CI corre **este script**, no la lista de
-  nodos — enumerarlos allá crearía un segundo lugar donde vive la lista.
+- **`verificar.py` es el nodo de convergencia**, y es lo que se corre antes de un PR:
+  `lint ‖ formato ‖ capas ‖ tdd ‖ harness ‖ tests`. La CI corre **este script** y no la lista de
+  nodos: enumerarlos allá sería un segundo lugar donde vive la lista.
 - **Un nodo `salteado` NO es un nodo verde.** El reporte los distingue y cada salteo dice qué no
   miró. Si `tests` se saltea por falta de `GODOT_BIN`, la suite no corrió.
-- **Hace falta `GODOT_BIN`** con la ruta al ejecutable de Godot. En Windows, el `_console.exe`
-  y **fuera de OneDrive** — ver [troubleshooting](./docs/guides/troubleshooting.md).
+- **Hace falta `GODOT_BIN`**: en Windows el `_console.exe`, y **fuera de OneDrive**.
 - **`gdformat` decide el formato.** No se discute en una revisión.
 - **El veredicto sale del código de salida, nunca de un grep de la salida.** Un `| grep` que no
   matchea devuelve 1 y se traga la salida entera.
@@ -80,15 +82,14 @@ Detalle en [docs/architecture/overview.md](./docs/architecture/overview.md).
 
 ## Reglas que valen en todo el repo
 
-Las de cada capa se cargan solas al tocar sus archivos (`.claude/rules/`). El porqué de cada una
-está en [docs/guides/conventions.md](./docs/guides/conventions.md) — acá está la regla y **quién
-la verifica**, que es lo que hace falta antes de escribir una línea.
+Las de cada capa se cargan solas (`.claude/rules/`), y el porqué de todas está en
+[docs/guides/conventions.md](./docs/guides/conventions.md). Acá va la regla y **quién la verifica**.
 
 Verificadas por una herramienta:
 
-- **La dirección de dependencia entre capas** (`gate_de_capas.py`), y cuenta también **nombrar
-  un `class_name` de otra capa** — que en Godot es la forma normal de escribir código y no deja
-  rastro en ningún import. Por eso el gate indexa las clases en vez de mirar los `preload`.
+- **La dirección de dependencia entre capas** (`gate_de_capas.py`), y cuenta también **nombrar un
+  `class_name` de otra capa** — la forma normal de escribir Godot, y no deja rastro en ningún
+  import: por eso el gate indexa las clases en vez de mirar los `preload`.
 - **Todo `.gd` de `dominio/` y `sistemas/` tiene su test espejo** en `test/<capa>/<nombre>_test.gd`
   (`gate_de_tests.py`).
 - **Ningún test sin aserción, apagado (`skip(true)`, `assert_not_yet_implemented`) o con un
@@ -97,20 +98,27 @@ Verificadas por una herramienta:
 - **Formato, largo de línea (100), nombres y orden de declaraciones** (`gdformat`, `gdlint`).
 - **No se edita `src/` ni `docs/` sin un spec detrás de la rama** (el hook de
   `.claude/settings.json`).
+- **Un skill es autocontenido: trae adentro todo lo que corre** (`test_copias_de_skills.py`).
+  Ningún `SKILL.md` alcanza `../otro-skill/`, porque un skill es la unidad que se instala y uno
+  que sale a buscar el archivo al de al lado deja de funcionar apenas viaja solo. El precio es la
+  duplicación, y el gate la cobra: **una copia que difiere de su canónico en un byte es rojo**, y
+  los canónicos están declarados en ese archivo.
 
 Prosa — dependen de que la revisión las mire, y que no tengan verificador es deuda:
 
 - **Tipado estático en toda firma**, `-> void` incluido.
-- **Español** en comentarios, nombres, commits y specs. Las excepciones son las del motor
-  (`_ready`, `_process`, `queue_free`).
+- **Español en el contenido, inglés en los nombres de carpeta.** Comentarios, identificadores,
+  commits, specs y docs en español —las excepciones son las del motor: `_ready`, `_process`—;
+  las carpetas, en inglés. **Dos excepciones deliberadas:** las cuatro capas, que no son
+  estructura sino vocabulario del juego, y las carpetas de spec, cuyo nombre **es** su título.
+  `reportes/` es la única mal puesta, y arreglarla pide un spec: renombrarla toca `docs/`.
 - **Los comentarios explican el porqué**, no el qué.
-- **Cero `print` que sobreviva al commit.** Lo que tiene que quedar va con `push_warning` o
-  `push_error`.
 - **Un valor fijo vive una sola vez**, en un archivo de `src/dominio/`.
 - **Un conjunto cerrado es un `enum`**, nunca un `String` suelto: `"limpar"` no rompe nada, el
   `if` simplemente no entra nunca.
-- **Nada de `get_node("../../…")`.** `@export` hacia abajo, señales hacia arriba.
 - **Los borrados van en su propio commit**, para que revertirlos sea trivial.
+- Las de GDScript —cero `print`, nada de `get_node("../../…")`— se cargan solas al tocar un
+  `.gd`: `.claude/rules/`.
 
 ---
 
@@ -148,56 +156,82 @@ probar. [docs/guides/tdd.md](./docs/guides/tdd.md).
 | TDD sin cobertura | [docs/guides/tdd.md](./docs/guides/tdd.md) | Qué reemplaza al umbral y qué se pierde |
 | Convenciones | [docs/guides/conventions.md](./docs/guides/conventions.md) | El porqué de cada regla, y cuáles son prosa |
 | Troubleshooting | [docs/guides/troubleshooting.md](./docs/guides/troubleshooting.md) | Errores reales ya pisados acá |
-| Ramas | [docs/infra/ramas.md](./docs/infra/ramas.md) | `staging` integra, `main` se entrega, y la carrera entre los dos workflows |
+| Ramas | [docs/infra/ramas.md](./docs/infra/ramas.md) | `staging` integra, `main` entrega, y la carrera entre sus workflows |
 | Convención de specs | [specs/README.md](./specs/README.md) | El formato, los cuatro estados y el flujo |
 
-**Trabajo planificado:** cada spec **es un issue**, y
-[specs/mapa.json](./specs/mapa.json) es el mapa spec↔issue y el estado de cada uno. **Su
-`estado` lo deriva `mapa.yml`** en el push a `staging`: el gate prohíbe tocarlo dentro del PR
-que lo justifica.
+**Trabajo planificado:** cada spec **es un issue**, y [specs/mapa.json](./specs/mapa.json) los
+mapea. **Su `estado` lo deriva `mapa.yml`** en el push a `staging`: el gate prohíbe tocarlo dentro
+del PR que lo justifica.
 
-**La deuda sin spec vive en [GitHub Issues](https://github.com/federicohermo/nosefia/issues)**,
-no en un archivo ni en un `## Seguimiento` adentro del spec que la parió. Adentro de un
-`tasks.md` un ítem **hereda el estado de su spec**: un spec `Implementado` puede quedar con diez
-casillas abiertas sin deberle nada a nadie, y así es como la deuda se vuelve invisible. Un issue
-tiene estado propio y se cierra desde un commit con `Closes #N`. Qué hay para promover:
-`python .claude/scripts/deuda.py`.
+**Los issues son la ENTRADA del repo, nunca la salida.** Un pedido de afuera entra como
+[issue](https://github.com/federicohermo/nosefia/issues) y `spec-create` lo drena hacia specs
+(`deuda.py` lista qué hay). Lo que **no** existe es abrir uno para **terminar** una corrida:
+ningún skill deja trabajo escrito para después, y un `tasks.md` tampoco puede registrarlo —el ítem
+hereda el estado de su spec—. **Eso ahora es un rojo**: `test_convencion_de_specs.py` verifica la
+casilla abierta en un spec `Implementado`, las secciones y tareas que aplazan, y las mediciones
+declaradas como no hechas. La doctrina y su evidencia, que los ocho skills traen adentro:
+[.claude/doctrina/sin-deuda.md](./.claude/doctrina/sin-deuda.md) es la copia canónica.
 
 ---
 
 ## Antes de un cambio grande
 
-Escribir los cuatro archivos (`spec` · `research` · `plan` · `tasks`), **publicarlo como
-issue** con `python .claude/scripts/publicar_spec.py crear` y `publicar`, y commitear **sólo**
-`specs/mapa.json` a `staging`. **Ahí termina abrir un spec: la rama la abre el implementador**,
-porque escribirlo y decidir implementarlo son dos decisiones distintas y una rama entre las dos
-queda colgada.
-
-**Y lo bloquea un hook**, no la buena voluntad: sin un spec detrás de la rama no se edita `src/`
-ni `docs/`. El flujo entero y **qué NO necesita spec** está en el skill
+Los cuatro archivos (`spec` · `research` · `plan` · `tasks`), publicados como issue con
+`publicar_spec.py crear` y `publicar`, y **sólo** `specs/mapa.json` commiteado a `staging`. **Ahí
+termina abrir un spec: la rama la abre el implementador**, porque escribirlo y decidir
+implementarlo son dos decisiones distintas y una rama entre las dos queda colgada. **Y lo bloquea
+un hook**, no la buena voluntad. El flujo entero y **qué NO necesita spec**, en el skill
 [spec-create](./.claude/skills/spec-create/SKILL.md).
 
-`specs/[0-9]*/` está en el `.gitignore`: el directorio es una **caché** que se trae con
-`python .claude/scripts/hidratar_specs.py <NNN>`, y hace falta **en cada worktree**. Leerlos
-anda igual, pero **`Grep` no los ve** —es ripgrep y respeta el `.gitignore`, así que contesta
-cero sin decir que no miró—: ahí va `rg --no-ignore`.
+`specs/[0-9]*/` está en el `.gitignore`: es una **caché** que se trae con
+`hidratar_specs.py <NNN>`, y hace falta **en cada worktree**.
 
-El `research.md` se escribe **midiendo, no suponiendo**: qué corriste y qué contestó. Un
-research que dice «probablemente haya que tocar el HUD» es una intuición con formato de
-documento.
+El `research.md` se escribe **midiendo, no suponiendo**: qué corriste y qué contestó. Uno que dice
+«probablemente haya que tocar el HUD» es una intuición con formato de documento.
 
 ---
 
 ## Las trampas de este repo
 
-Las cuatro que ya costaron tiempo acá:
+Las cinco que ya costaron tiempo acá:
 
 - **La salida en Windows sale en cp1252** cuando va a una tubería, y **cualquier acento tira el
   script abajo** — incluido el mensaje de bloqueo del hook. Por eso todo script de
   `.claude/scripts/` llama a `configurar()` de `lib/consola.py` antes de imprimir nada.
-- **`Grep` no ve `specs/`.** Ver arriba.
+- **`Grep` no ve `specs/`.** Es ripgrep y respeta el `.gitignore`: contesta cero **sin decir
+  que no miró**. Ahí va `rg --no-ignore`.
+- **Y encadenar `rg` con `&&` se traga los que siguen.** Un `rg A && rg B && rg C` corta en el
+  primero sin match —que devuelve 1— y **los otros dos no corren, sin decirlo**: la salida vacía
+  se lee como «ninguno matcheó» cuando en realidad sólo se preguntó por el primero. Es la misma
+  falla que el `| grep`, en la otra dirección. **Un `rg` por línea, separados por `;`, nunca por
+  `&&`.** Medido el 2026-09-01 verificando los AC del 023 sobre tres specs de una.
 - **Godot adentro de OneDrive no se puede ejecutar** si el archivo no está descargado: Windows
   contesta «el proveedor de archivos de nube no se está ejecutando», que no nombra ni a Godot ni
   a los tests.
 - **Un `.tscn` no se mergea.** Un merge de tres vías sobre una escena no da un conflicto: da una
   escena corrupta. Dos specs que tocan la misma escena se ordenan, no se paralelizan.
+- **Una suite de gdUnit4 que no parsea se descarta en silencio y `tests` sale VERDE.** Medido
+  tres veces en el lote 001/002/004/007: una suite que hace `preload` de un archivo que todavía
+  no existe —o sea, el estado normal del paso 1 del TDD— no corre, y gdUnit4 igual devuelve 0.
+  `verificar.py` hace lo correcto, porque el veredicto es el código de salida, y aun así declara
+  `ok`. **Un error de parseo en `dominio/` puede dejar el dominio entero sin correr con la CI en
+  verde**, y las cuatro reglas del gate de tests no lo ven: el espejo existe, afirma y no está
+  apagado. Mientras se hace TDD, el número que hay que mirar es el `Executed test suites: (N/N)`
+  de la salida cruda contra la cantidad de `*_test.gd`, no el color del nodo.
+
+  **Y tiene un segundo escalón, medido el 2026-09-01 implementando el 011:** crear el `.gd`
+  no alcanza. Un `class_name` recién escrito **no existe para gdUnit4 hasta que se vuelve a
+  correr `--import`**, porque no está en `global_script_class_cache.cfg`. El síntoma es
+  **idéntico** al del archivo ausente —`Parse Error: Identifier "X" not declared`,
+  `No test cases found`, `Exit code: 0`—, así que se lee como «todavía no lo escribí» cuando
+  en realidad ya está en disco. Hay que re-importar **después de crear cada archivo con
+  `class_name` nuevo**, no sólo una vez al abrir el worktree. Lo pisaron los dos carriles
+  del lote 005/011/022/023 que crearon clases, cada uno perdiendo una vuelta.
+
+  **Y el paso 1 del TDD miente todavía de una tercera forma, que es la peor: sale `PASSED`.**
+  Cuando el recurso que el caso carga no existe, el error de script **aborta la función** y
+  gdUnit4 no cuenta ninguna aserción fallida: el caso se reporta en verde por no haber llegado
+  a afirmar nada. Medido el 2026-09-01 en el 023: con la escena todavía sin escribir, **4 de 5
+  casos dieron `PASSED`** y sólo dio rojo el que afirmaba el tipo. O sea que el «falla por lo
+  que se espera» del paso 1 **no se lee en el conteo de fallos**: se lee en el
+  `ERROR: Failed loading resource` de la salida cruda.

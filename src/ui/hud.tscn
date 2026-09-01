@@ -1,0 +1,30 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://src/ui/hud.gd" id="1_hud"]
+
+[node name="Hud" type="CanvasLayer" node_paths=PackedStringArray("_reloj", "_tareas", "_apercibimientos")]
+script = ExtResource("1_hud")
+_reloj = NodePath("Reloj")
+_tareas = NodePath("Tareas")
+_apercibimientos = NodePath("Apercibimientos")
+
+[node name="Reloj" type="Label" parent="."]
+offset_left = 24.0
+offset_top = 16.0
+offset_right = 424.0
+offset_bottom = 60.0
+theme_override_font_sizes/font_size = 32
+
+[node name="Tareas" type="Label" parent="."]
+offset_left = 24.0
+offset_top = 64.0
+offset_right = 424.0
+offset_bottom = 96.0
+theme_override_font_sizes/font_size = 22
+
+[node name="Apercibimientos" type="Label" parent="."]
+offset_left = 24.0
+offset_top = 100.0
+offset_right = 424.0
+offset_bottom = 132.0
+theme_override_font_sizes/font_size = 22

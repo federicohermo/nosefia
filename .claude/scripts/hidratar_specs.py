@@ -134,7 +134,12 @@ def main() -> None:
 
         carpeta = SPECS / destino
         carpeta.mkdir(parents=True, exist_ok=True)
-        (carpeta / "spec.md").write_text(datos["body"], encoding="utf-8")
+        # `newline=""` y no el default: la API devuelve el body con CRLF, y un `write_text`
+        # en modo texto vuelve a traducir el salto, dejando en disco un CR CR LF. Eso no se
+        # ve al abrir el archivo, pero `publicar_spec.py` lo lee con universal newlines y
+        # cuenta DOS saltos donde hay uno: sube el spec con una linea en blanco entre cada
+        # par de lineas, y cada vuelta de hidratar -> publicar lo vuelve a duplicar.
+        (carpeta / "spec.md").write_text(datos["body"], encoding="utf-8", newline="")
 
         n = 1
         for c in datos["comments"]:
@@ -144,7 +149,7 @@ def main() -> None:
             # encabezado que pone `publicar_spec.py` no es decorativo.
             if archivo is None:
                 continue
-            (carpeta / archivo[0]).write_text(archivo[1], encoding="utf-8")
+            (carpeta / archivo[0]).write_text(archivo[1], encoding="utf-8", newline="")
             n += 1
 
         hechos += 1

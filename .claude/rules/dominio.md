@@ -30,8 +30,8 @@ escena.** Si para probar algo hace falta un frame, ese algo no va acá.
 ## Por qué esta capa existe
 
 Porque es la única que se puede ejercer barato, y por eso es la única donde el TDD es
-posible de verdad. Las consecuencias del turno —cuántas tareas se cumplieron, qué pasa a los
-dos días seguidos sin cumplir, si al jugador lo echan— son **aritmética sobre estado**, y
+posible de verdad. Las consecuencias del turno —cuántas tareas se cumplieron, cuántos
+apercibimientos suma la jornada, si al jugador lo echan— son **aritmética sobre estado**, y
 escribir eso adentro de un `Node` que además pinta la pantalla lo vuelve inejercitable: la
 única forma de probarlo pasa a ser jugar el turno entero a mano.
 
@@ -44,16 +44,16 @@ El turno tiene un tiempo limitado que se reparte entre las tareas y la investiga
 tiempo **no lo lee el dominio del reloj del motor**: se lo pasan.
 
 ```gdscript
-# Bien: el turno recibe cuánto se consumió y decide.
-func consumir(minutos: float) -> void:
+# Bien: el turno recibe cuántos segundos se consumieron y decide.
+func consumir(segundos: float) -> void:
 
 # Mal: el dominio va a buscar el tiempo, y ahora el test necesita un frame.
 func consumir() -> void:
     var dt := get_process_delta_time()
 ```
 
-Es lo que permite escribir el test de «a los dos días seguidos sin cumplir, lo echan» sin
-esperar dos días.
+Es lo que permite escribir el test de «dos jornadas graves seguidas y lo echan» sin jugar dos
+noches.
 
 ## Conjuntos cerrados
 
@@ -64,7 +64,7 @@ día que alguien escriba `"limpar"`, y el motor no dice nada.
 
 ## Los datos fijos no viven en el módulo que los usa
 
-Un número que dos archivos necesitan igual —los minutos de un turno, cuántos compradores por
-día, cuántos días seguidos fallidos hasta el despido— va a un solo lugar de `src/dominio/` y se
+Un número que dos archivos necesitan igual —los segundos de un turno, cuántos compradores por
+día, cuántos apercibimientos hasta el despido— va a un solo lugar de `src/dominio/` y se
 importa. Dos copias de un número no son dos números: son un bug esperando a que alguien
 cambie uno.

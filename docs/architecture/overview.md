@@ -42,8 +42,9 @@ La cáscara. Cablean nodos y conectan señales; no deciden nada.
 
 **Porque es la única que hace testeable a un juego de Godot.** El patrón por defecto del motor
 —un `Node` por cosa, con la lógica adentro de `_process`— produce código que sólo se puede
-ejercer jugando: para saber si «a los dos días seguidos sin cumplir lo echan», hay que jugar
-dos días.
+ejercer jugando: para saber si «dos jornadas graves seguidas lo echan» —cada una suma
+`APERCIBIMIENTOS_POR_BANDA_GRAVE` y dos alcanzan `APERCIBIMIENTOS_HASTA_EL_DESPIDO`—, hay
+que jugar dos noches.
 
 Con las reglas en `dominio/`, ese mismo hecho es tres líneas de test que corren en
 milisegundos y sin abrir una ventana. De ahí sale todo lo demás: por eso

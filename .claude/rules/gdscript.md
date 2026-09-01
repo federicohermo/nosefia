@@ -16,7 +16,7 @@ no tiene verificador se dice igual, pero sabiendo que es prosa — y la prosa no
 
 ```gdscript
 var tareas_hechas: int = 0
-func cerrar_turno(tareas: Array[Tarea]) -> Consecuencia:
+func consecuencia_de(cumplidas: int, obligatorias: int) -> Consecuencias.Banda:
 ```
 
 GDScript tipa opcionalmente, y sin tipos el error de una firma que cambió aparece **en

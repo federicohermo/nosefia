@@ -22,8 +22,9 @@ esa regla está en el lugar equivocado: va a `dominio/`, donde se puede probar s
 ```gdscript
 # Bien: el sistema aporta el tiempo y publica el resultado; la regla la tiene el turno.
 func _process(delta: float) -> void:
-    if _turno.consumir(delta):
-        turno_cerrado.emit(_turno.consecuencia())
+    _turno.consumir(delta)
+    if _turno.cerrado():
+        turno_cerrado.emit(_turno.tareas_cumplidas())
 
 # Mal: la regla de las cinco tareas vive en un Node y ya no se puede probar sin la escena.
 func _process(delta: float) -> void:

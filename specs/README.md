@@ -148,10 +148,25 @@ pendiente sino una lista de intenciones con formato de checklist.
 es una tarea normal que bloquea como cualquier otra, o **no se escribe**. Lo verifica
 `test_convencion_de_specs.py`.
 
-**Tampoco hay `## Seguimiento`.** La deuda que aparece implementando se abre como issue. Adentro
-de un `tasks.md` el ítem **hereda el estado de su spec**: un spec `Implementado` puede quedar
-con diez casillas abiertas sin deberle nada a nadie, y eso es exactamente cómo la deuda se
-vuelve invisible. Un issue tiene estado propio y se cierra desde un commit con `Closes #N`.
+**Tampoco hay dónde aplazar.** Ni `## Seguimiento` ni sus alias —`## Pendientes`,
+`## Próximos pasos`, `## Deuda`—, ni una casilla que diga `TODO` o «por ahora», ni un
+`research.md` que declare una medición como no hecha. Adentro de un `tasks.md` el ítem **hereda el
+estado de su spec**: un spec `Implementado` con diez casillas abiertas dice que ya está y sigue
+debiendo, y eso es exactamente cómo la deuda se vuelve invisible.
+
+**Las cuatro las verifica `test_convencion_de_specs.py`**, y la última incluye el caso que las
+demás no cubren: **un spec `Implementado` no puede tener una casilla abierta**. Corre sobre los
+specs **hidratados**, así que sobre un árbol vacío se saltea declarándolo — y un nodo salteado no
+es un nodo verde.
+
+**Y la salida tampoco es abrir un issue.** Los issues de este repo son **entrada**: lo que llega de
+afuera y `spec-create` drena. Si aparece trabajo que el spec necesitaba y no tenía, el defecto es
+del spec —y del skill que lo dejó salir así—, y se corrigen los dos. La doctrina completa está en
+[`.claude/doctrina/sin-deuda.md`](../.claude/doctrina/sin-deuda.md).
+
+**`## Fuera de alcance` sí existe y no es lo mismo**: declara una frontera —qué NO hace este spec—
+y es lo que lo vuelve revisable. Se convierte en deuda sólo si algún AC del propio spec depende de
+lo excluido, y eso ningún gate lo puede ver: lo mira `spec-review`.
 
 ## De un issue de deuda a un spec
 
