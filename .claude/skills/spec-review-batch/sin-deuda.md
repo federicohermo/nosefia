@@ -144,6 +144,10 @@ las dos en la misma corrida:
 | un worktree que quedó abierto y el limpiador dijo que no | `spec-implement-batch` — el Paso 5 salía de `git worktree list`, que no ve al que git ya soltó |
 | un identificador que el spec escribe en `código` y que no existe en el repo | `spec-review` — la auditoría leyó la prosa y no la grepeó contra `src/` |
 | los cuatro archivos de un spec que no dicen el mismo número | `spec-review` — se cerró sobre el `spec.md` sin cruzar el `plan.md` y el `tasks.md`, que es el que se implementa |
+| un número que el spec midió bien y que **envejeció** entre que se escribió y que se implementó | `spec-implement-batch` — el Paso 0 leyó la base que el spec **declara** en vez de medir el árbol de hoy |
+| una frontera que un spec le pasa a otro (`va al spec NNN`) y que el otro **no recoge** | `spec-review-batch` — el carril de coherencia leyó los «fuera de alcance» y no verificó que el destinatario tuviera un AC o una tarea que los cubriera |
+| un AC que **barre un directorio y enumera sus excepciones** sin haber corrido el barrido | `spec-create` — la lista de excepciones se escribió de memoria, así que sale corta y el AC nace imposible de pasar |
+| el padre declara incompleto un carril que sí cerró | `spec-implement-batch` — la verificación leyó una caché local en vez del issue, porque el hidratador saltea lo que ya existe y sale en verde |
 
 **Si el problema no entra en ninguna fila, agregá la fila.** Esa tabla es el registro de lo que
 esta doctrina ya aprendió, y está incompleta a propósito.

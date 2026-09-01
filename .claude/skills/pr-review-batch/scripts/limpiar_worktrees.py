@@ -208,6 +208,13 @@ def main() -> None:
             fallo = True
             continue
 
+        # `git worktree remove` y `prune` se NIEGAN los dos sobre un worktree bloqueado, y el
+        # harness de agentes los crea bloqueados. Sin este `unlock` el borrado del directorio
+        # igual funciona —lo hace `borrar_arbol`, que es Python— pero el registro de git
+        # sobrevive, y el reporte sale contradiciendose: dice `borrado` y despues lista el mismo
+        # worktree en `quedan registrados`. Medido el 2026-09-01 en el lote 024/025.
+        git("worktree", "unlock", str(wt))
+
         if git("worktree", "remove", "--force", str(wt)).returncode == 0:
             print("   git worktree remove: ok")
         else:

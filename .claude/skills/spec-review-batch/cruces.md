@@ -176,6 +176,29 @@ que su tarea supone.
 - **Se edita** dejándola en uno solo, con la razón anotada. Si las dos tienen que quedar, la de
   abajo declara que la de arriba ya tocó el archivo.
 
+## 9 · Una frontera que un spec le pasa a otro, y que el otro no recoge
+
+Un `## Fuera de alcance` que **nombra al spec destinatario** —«esto va al 025»— se lee como
+cerrado: el lector ve un dueño escrito y sigue. Pero eso es una **intención del que la escribió**,
+igual que la clase 7, y el destinatario no la firmó. Si su alcance se derivó de otra pregunta,
+la frontera cae en el hueco entre los dos y **ningún gate la ve**: los dos specs pasan sus seis
+nodos en verde, cada uno cumpliendo lo suyo.
+
+El que lo delata es el AC del destinatario, y demasiado tarde. Medido el 2026-09-01 en el lote
+024/025: el 024 le pasó al 025 «las rutas de `dominio/` que los specs propuestos tienen escritas»,
+y el 025 tomó **las 49 que todavía no tenían carpeta** — pero no las **12 de los archivos que el
+024 mismo mueve**, que nadie más miraba. Su propio **AC5 las devolvía todas**, así que el spec no
+podía pasar y el motivo estaba en el otro spec.
+
+- **Se detecta** listando cada `## Fuera de alcance` que nombra otro spec del lote y **buscando en
+  el destinatario el AC o la tarea que lo cubre**. No alcanza con que el tema aparezca: tiene que
+  haber una tarea que lo haga. **La pregunta es «¿quién lo hace?», no «¿está mencionado?»**.
+- **Y se mide al revés también**, que es donde apareció: correr los barridos que el destinatario
+  declara en sus AC **contra el árbol de hoy**, y ver si devuelven algo que ninguna de sus tareas
+  toca. Un AC que su propio `tasks.md` no puede satisfacer es el síntoma.
+- **Se corrige en el destinatario**, agregándole la tarea, porque es el que tiene el AC. Si el
+  emisor prefiere quedársela, es él el que cambia y se dice en el reporte.
+
 ---
 
 **Y un caso que no es cruce sino permiso:** un spec puede declarar que tolera llegar antes que

@@ -196,7 +196,7 @@ vive justo en el detalle que ningún reporte comprimido menciona.
   la matriz de arriba y el orden derivado en el Paso 2.
 - **No edita nada, ni siquiera dentro de una carpeta.** Cada hallazgo suyo abarca dos specs o
   más, y esas carpetas las están escribiendo los agentes de spec en este momento.
-- **Su brief son las ocho clases de [`cruces.md`](./cruces.md)**, y las recorre todas: devuelve
+- **Su brief son las nueve clases de [`cruces.md`](./cruces.md)**, y las recorre todas: devuelve
   también las que dieron que no, porque un cruce ausente es información y un cruce no mirado no.
 - **Devuelve, por hallazgo:** la clase, los dos `path:línea`, **qué AC queda infalsificable** si
   nadie lo toca, y **en qué spec va la edición**. Sin ese último dato el padre no puede aplicar

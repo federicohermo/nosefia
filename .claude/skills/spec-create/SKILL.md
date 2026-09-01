@@ -107,6 +107,16 @@ Cuatro cosas que este repo pide y que no son obvias:
 - **Cada criterio de aceptación tiene que ser falsificable.** «El sistema de consecuencias
   funciona» no lo es; «con cuatro tareas cumplidas, `consecuencia()` devuelve `AVISO` y no
   `NINGUNA`» sí. Si un AC no se puede ver fallar, no verifica nada.
+- **Un AC que barre un directorio y enumera excepciones: corré el barrido ANTES de escribir la
+  lista.** Es la forma «`rg <patrón> <ruta>` no devuelve nada, salvo A y B». Escrita de memoria la
+  lista **siempre sale corta** —los fixtures sintéticos de otros specs, los `.md` que narran el
+  cambio, el archivo de demo de un hook—, y entonces el AC **nace imposible de pasar**: quien lo
+  implemente va a encontrarse con un barrido que devuelve cosas que ninguna tarea suya toca, y el
+  motivo va a estar en otro spec. Medido el 2026-09-01 en el lote 024/025: **cuatro de los siete
+  hallazgos de implementación fueron este mismo error**, en dos specs distintos escritos por la
+  misma mano — al AC17 del 024 le faltaban dos listas de excepción y seis fixtures, y al AC5 del
+  025, seis fixtures más un séptimo que sólo existía del lado de `test/`. El barrido tarda cinco
+  segundos y la lista sale sola.
 - **Cada tarea tiene que poder cerrarla un agente.** No escribas tareas que se cierran
   mirando, escuchando o sacando una captura: en el repo del que sale este harness eran 137
   casillas marcadas así en 35 specs y sólo 6 se cerraron alguna vez — o sea que el marcador no

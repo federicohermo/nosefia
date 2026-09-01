@@ -75,7 +75,25 @@ argumentos, preguntá.**
 1. **Sacá los terminales.** `Descartado` y `Superado` no se implementan. Decí cuáles sacaste.
 2. **Sacá los que ya tienen rama.** `git ls-remote --heads origin 'feature/*'`: puede haberla
    abierto otra sesión, y ahí lo que corresponde no es un carril nuevo.
-3. **Mirá si el lote pasó por `spec-review-batch`.** Si sí, el Paso 2 es **verificación** y no
+3. **Re-medí contra el árbol de hoy la base que cada spec declara.** Un spec escribe sus conteos
+   el día que se escribe, y **entre ese día y éste mergearon otros PR**. Los números envejecen
+   solos y **nadie los toca**: `spec-review` corre antes, y `spec-implement` lee el spec, no el
+   disco. El modo de falla es el peor de los baratos — el carril arranca, hace todo bien, y da
+   rojo en un AC que mide una mudanza ajena.
+
+   Es un `find` por cada número que un AC afirma. Los que valen siempre en este repo:
+
+   ```bash
+   find src/dominio -maxdepth 1 -name '*.gd' | wc -l   # los que aterrizaron en la raíz
+   find test -name '*_test.gd' | wc -l                 # el N del (N/N) crudo
+   ```
+
+   **Si un número no coincide, la corrección es del Paso 2 y va antes de abrir el worktree.**
+   Medido el 2026-09-01 en el lote 024/025: el 024 se escribió el 31/8 contra 13 `.gd` de
+   `dominio/` y 18 suites; los specs 005 y 011 mergearon al día siguiente y lo dejaron en 18 y 23.
+   Cuatro AC y cinco tareas medían un árbol que ya no existía.
+
+4. **Mirá si el lote pasó por `spec-review-batch`.** Si sí, el Paso 2 es **verificación** y no
    derivación: los cruces ya están decididos y escritos en los specs. Si no, decilo — vas a estar
    derivando en el momento más caro del flujo, con los worktrees a punto de abrirse.
 
@@ -224,8 +242,22 @@ Cada agente recibe, literal:
 > nada.
 
 **El padre lo verifica, no lo cree.** Cuando vuelva un carril, chequeá con `gh pr list --head
-<rama>` que cada spec suyo tenga PR, y con `hidratar_specs.py` que el `tasks.md` del **issue** no
-tenga casillas abiertas. Un reporte que dice «listo» sin PR es un carril incompleto: terminalo vos
+<rama>` que cada spec suyo tenga PR, y que el `tasks.md` del **issue** no tenga casillas abiertas.
+
+> **Y para eso NO alcanza con correr `hidratar_specs.py`: saltea la carpeta que ya existe.**
+> Contesta `NNN ya está (…)` y `hidratados: 0 de 1`, con **código 0**, así que el `grep` que
+> corras después mide **tu propia caché** —la que hidrataste al abrir el lote, antes de que el
+> carril marcara nada— y **no el issue**. El síntoma es el peor posible: un carril que hizo todo
+> bien se lee como incompleto, y el padre sale a «terminarlo» republicando cosas.
+> **Borrá la carpeta antes**, o leé el issue derecho:
+>
+> ```bash
+> rm -rf specs/<NNN>-* && python .claude/scripts/hidratar_specs.py <NNN>
+> gh issue view <N> --json comments -q '.comments[].body' | grep -c '^- \[ \]'   # tiene que dar 0
+> ```
+>
+> Medido el 2026-09-01 en el lote 024/025: el padre concluyó que las 80 casillas estaban abiertas
+> cuando en el issue estaban las 80 marcadas. Un reporte que dice «listo» sin PR es un carril incompleto: terminalo vos
 o relanzalo con lo que le faltó.
 
 Esperá a que vuelvan todos antes del reporte.
