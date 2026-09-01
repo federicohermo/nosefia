@@ -12,8 +12,9 @@
 │   ├── sistemas/           Nodes y autoloads que orquestan el dominio. Test OBLIGATORIO
 │   ├── ui/                 HUD, computadora, ventanilla
 │   └── escenas/            Los scripts pegados a un .tscn, y las escenas del juego
-│       almacen.tscn        La escena raíz. CABLEA: todo lo que declara cuelga de su raíz
-│       estructura_del_almacen.tscn  El blockout —piso, paredes y anclajes—, instanciado desde ahí
+│       ├── almacen.tscn                 La escena raíz. CABLEA: lo suyo cuelga de su raíz
+│       ├── estructura_del_almacen.tscn  El blockout —piso, paredes y anclajes—, instanciado ahí
+│       └── jugador.tscn                 El cuerpo en primera persona, instanciado en el almacén
 │
 ├── test/                   El ESPEJO de src/: src/dominio/turno.gd → test/dominio/turno_test.gd
 │   ├── dominio/            Espejo OBLIGATORIO, lo verifica gate_de_tests.py

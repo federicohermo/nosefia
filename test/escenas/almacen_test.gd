@@ -1,6 +1,6 @@
 ## El cableado del almacén: qué instancia, qué anclajes ofrece y que nada suyo cuelga de otra cosa.
 ##
-## No dice «se ve bien»: dice que los anclajes que los specs 006, 007, 008 y 009 van a buscar
+## No dice «se ve bien»: dice que los anclajes que los specs 008, 009 y 013 van a buscar
 ## por nombre están, y que la escena raíz sigue siendo una escena de cableado. La geometría del
 ## blockout —los cuerpos y sus formas— la afirma `estructura_del_almacen_test.gd`, que es la
 ## suite de la escena que la declara; acá se afirma que la instancia no vino corrida.

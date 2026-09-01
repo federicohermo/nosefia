@@ -40,10 +40,11 @@ geometría del local, un mueble con sus partes— va a su propio `.tscn` y entra
 de instancia.
 
 **Por qué, y no es estilo:** ocho specs tienen una tarea que edita esa escena, y un `.tscn` no se
-mergea. Mientras el archivo tenga adentro las 133 líneas de blockout que ninguno de los ocho
-escribió, cada uno abre un archivo grande para agregar tres líneas y dos que se crucen chocan
-sobre geometría ajena. La escena grande no es un problema de gusto: es lo que serializa el orden
-de implementación de todo el juego.
+mergea. Con el blockout adentro —133 líneas que ninguno de los ocho escribió— cada uno abría un
+archivo grande para agregar tres, y dos que se cruzaran chocaban sobre geometría ajena. El spec
+023 lo sacó a `estructura_del_almacen.tscn`, y esta regla es lo único que impide que vuelva a
+entrar. La escena grande no es un problema de gusto: es lo que serializa el orden de
+implementación de todo el juego.
 
 **Quién lo verifica: `test/escenas/almacen_test.gd`**, con la recorrida en
 `_violaciones_de_cableado()`. El discriminador es el `owner` y no la profundidad —en una
