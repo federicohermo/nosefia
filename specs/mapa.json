@@ -3,7 +3,7 @@
   "002": {"issue":4,"carpeta":"002-el-cierre-del-turno-tiene-consecuencias","fecha":"2026-08-28","estado":"Implementado","titulo":"Spec 002 — El cierre del turno tiene consecuencias"},
   "003": {"issue":5,"carpeta":"003-los-modos-de-falla-del-harness-se-documentan","fecha":"2026-08-28","estado":"Propuesto","titulo":"Spec 003 — Los modos de falla del harness se documentan","origen":[2]},
   "004": {"issue":8,"carpeta":"004-el-jugador-recorre-el-almacen-en-primera-persona","fecha":"2026-08-29","estado":"Implementado","titulo":"Spec 004 — El jugador recorre el almacén en primera persona"},
-  "005": {"issue":9,"carpeta":"005-el-inventario-registra-los-productos-del-almacen","fecha":"2026-08-29","estado":"Propuesto","titulo":"Spec 005 — El inventario registra los productos del almacén"},
+  "005": {"issue":9,"carpeta":"005-el-inventario-registra-los-productos-del-almacen","fecha":"2026-08-29","estado":"Implementado","titulo":"Spec 005 — El inventario registra los productos del almacén"},
   "006": {"issue":10,"carpeta":"006-agarrar-llevar-y-examinar-los-objetos","fecha":"2026-08-29","estado":"Propuesto","titulo":"Spec 006 — Agarrar, llevar y examinar los objetos del almacén"},
   "007": {"issue":11,"carpeta":"007-el-reloj-corre-en-la-escena-y-el-hud-muestra-lo-que-queda","fecha":"2026-08-29","estado":"Implementado","titulo":"Spec 007 — El reloj del turno corre en la escena y el HUD muestra lo que queda"},
   "008": {"issue":12,"carpeta":"008-reponer-el-estante-de-a-una-unidad","fecha":"2026-08-29","estado":"Propuesto","titulo":"Spec 008 — Reponer el estante colocando los productos de a uno"},
