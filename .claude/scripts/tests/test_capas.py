@@ -22,7 +22,9 @@ CAPAS = (
 #: Es de mentira a propósito, igual que `CAPAS`: el gate real lee `CARPETAS_POR_CAPA` de
 #: `lib/repo.py`, y un test que importe la constante de producción deja de verificar la función y
 #: pasa a verificar el dato — con lo cual el día que alguien agregue una carpeta al repo, el test
-#: la acepta sin que nadie lo haya decidido.
+#: la acepta sin que nadie lo haya decidido. Ese agujero lo cierra aparte
+#: `CarpetasQueElDominioAdmite`, al final del archivo: importa `CARPETAS_POR_CAPA` a propósito
+#: porque lo que ejerce es el dato, y por eso cubre sólo a `src/dominio`.
 CARPETAS = {
     "src/dominio": frozenset({"jugador", "jornada", "empleo"}),
     "src/sistemas": frozenset({"marco", "tareas", "investigacion"}),
@@ -194,8 +196,9 @@ class CarpetasQueElDominioAdmite(unittest.TestCase):
     repo y olvidarse de declararlo pasaría en verde.
 
     El dominio es la única capa con un test así, y por el motivo que le da su spec: es la que se
-    multiplica por 3,4 —49 archivos que los specs propuestos traen— y la única donde la
-    clasificación es una decisión de diseño y no una consecuencia de dónde vive el archivo.
+    multiplica por 3,4 —los 44 archivos nuevos que traen los specs propuestos, sobre los 18 que
+    hay hoy— y la única donde la clasificación es una decisión de diseño y no una consecuencia de
+    dónde vive el archivo.
     """
 
     def test_declara_las_seis_carpetas(self):

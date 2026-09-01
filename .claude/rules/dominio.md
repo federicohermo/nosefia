@@ -109,9 +109,9 @@ operan**: `inventario.gd` no es una tarea, es lo que la tarea de reponer consult
 `tareas/` en las dos capas escondería justo esa diferencia — y además `tarea.gd`, el archivo que
 sí modela una obligatoria, vive en `jornada/` y se queda ahí.
 
-**Por qué `ambiente/` y no `audio/`.** Por el criterio de arriba: cinco archivos que ya dicen
-`sonido`, `sonoro` o `audio` en su nombre, metidos en una carpeta `audio/`, son una línea más de
-árbol y cero información. `ambiente/` dice el **alcance** —cómo se siente la noche, y nada más—
+**Por qué `ambiente/` y no `audio/`.** Por el criterio de arriba: cuatro de los cinco archivos ya
+dicen `sonido`, `sonoro` o `audio` en su nombre, así que meterlos en una carpeta `audio/` es una
+línea más de árbol y cero información. `ambiente/` dice el **alcance** —cómo se siente la noche, y nada más—
 y deja lugar a lo que venga de la misma clase: la luz del local, el clima.
 
 `reglas_del_jugador.gd` en `jugador/` no dice «es del jugador»: dice **«estos números no pueden

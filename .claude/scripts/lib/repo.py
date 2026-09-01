@@ -73,9 +73,10 @@ CAPAS: tuple[tuple[str, tuple[str, ...]], ...] = (
 #: Las claves son las mismas cadenas que las de `CAPAS` —`src/dominio`, no `dominio`— para que
 #: `capa_de()` devuelva una clave de este diccionario sin traducir nada en el medio.
 #:
-#: **Declarar un nombre no crea la carpeta.** Están acá las de `ui/` y las dos de `sistemas/`
-#: que todavía no tienen un solo archivo: es lo que hace que el spec que cree el primero
-#: aterrice bien sin discutirlo, y que `src/ui/pantallas/` dé rojo el mismo día.
+#: **Declarar un nombre no crea la carpeta.** Varios de estos nombres —`investigacion/` y
+#: `ambiente/` del dominio, los dos de `ui/`— todavía no tienen un solo archivo: es lo que hace
+#: que el spec que cree el primero aterrice bien sin discutirlo, y que `src/ui/pantallas/` dé
+#: rojo el mismo día.
 #:
 #: **Y la raíz de una capa es válida a propósito**: `reglas.gd`, `hud.gd`, `almacen.tscn` cruzan
 #: dos carpetas o son la raíz del árbol. Lo que este conjunto cierra es la puerta de atrás
