@@ -68,3 +68,40 @@ Un número que dos archivos necesitan igual —los segundos de un turno, cuánto
 día, cuántos apercibimientos hasta el despido— va a un solo lugar de `src/dominio/` y se
 importa. Dos copias de un número no son dos números: son un bug esperando a que alguien
 cambie uno.
+
+## Las subcarpetas: cuánto dura el efecto
+
+La carpeta **no repite el nombre del archivo**: dice **qué se rompe si tocás lo que hay
+adentro**. Una carpeta `reglas/` con los dos `reglas*.gd` sería una línea más de árbol y cero
+información — es la misma regla que los comentarios de este repo, que explican el porqué y no
+el qué.
+
+Acá el alcance se mide en **cuánto dura el efecto**:
+
+```text
+src/dominio/
+├── reglas.gd     ← el balance: lo citan dos de las tres, por eso no está en ninguna
+├── jugador/      control_del_jugador · mirada · caminata · foco · reglas_del_jugador
+├── jornada/      apertura · turno · tarea · ritmo · marcador
+└── empleo/       legajo · consecuencia
+```
+
+| Si tocás… | puede cambiar |
+|---|---|
+| `jugador/` | cómo se siente moverse. **No puede cambiar el resultado de una noche** |
+| `jornada/` | la aritmética de la tensión central: cuánto tiempo queda para investigar |
+| `empleo/` | el arco entre noches —apercibimientos, despido—. Ninguna noche suelta |
+
+`reglas_del_jugador.gd` en `jugador/` no dice «es del jugador»: dice **«estos números no pueden
+desbalancear el turno»**, que es exactamente la distinción con `reglas.gd` que sin la carpeta
+sólo dice el docstring.
+
+Y `reglas.gd` se queda en la raíz porque **cruza**: lo nombran `jornada/apertura.gd`,
+`jornada/tarea.gd` y `empleo/legajo.gd`, y ningún archivo de `jugador/`. La raíz de una capa es
+válida a propósito, y es donde van los que no caben en una sola carpeta.
+
+**Quién lo verifica: `gate_de_capas.py`**, con `CARPETAS_POR_CAPA` de `lib/repo.py`. Y hay que
+decir hasta dónde llega, que es la mitad honesta: **valida los NOMBRES de carpeta —que exista
+`jugador/` y no `movimiento/`— y NO valida que un archivo esté en la carpeta correcta.** Eso es
+semántica, ninguna herramienta lo puede contestar, y lo mira la revisión. Lo que el gate cierra
+es la puerta de atrás: inventar un nombre en vez de usar el criterio.

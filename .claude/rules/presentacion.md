@@ -23,6 +23,52 @@ pantalla: es mover la regla a `dominio/`, donde el test es barato y obligatorio.
 La pregunta antes de escribir un `if` acá: ¿esto es «cómo se ve» o es «qué pasa»? Lo segundo
 no va en esta capa.
 
+## Las subcarpetas: dos capas, dos formas de medir el mismo alcance
+
+En las dos la carpeta **no repite el nombre del archivo**: dice **qué se rompe si tocás lo que
+hay adentro**. Lo que cambia es contra qué se mide ese alcance — en `ui/`, si el reloj sigue
+corriendo mientras la pantalla está arriba; en `escenas/`, cuántas instancias hay.
+
+### `ui/` — si el reloj sigue corriendo
+
+```text
+src/ui/
+├── hud.gd            ← está siempre en pantalla, por eso no está en ninguna
+├── diegetica/        pantalla_de_computadora · app_caja · app_chats · app_notas
+│                     · panel_de_la_ventanilla
+└── interrupciones/   pantalla_de_cierre · menu_de_inicio
+```
+
+**Mirar la computadora cuesta minutos del turno; la pantalla de cierre no, porque el turno ya
+terminó.** Es la distinción de diseño más cara de esta capa, y sin la carpeta no está escrita en
+ningún lado: `app_caja.gd` no dice que abrirla te sale plata.
+
+### `escenas/` — cuántas instancias hay
+
+```text
+src/escenas/
+├── almacen.gd/.tscn · jugador.gd/.tscn · inicio.gd/.tscn   ← las raíces y el cuerpo
+├── puestos/   estructura_del_almacen · estante · escritorio · ventanilla · zona_de_descarte
+│              · limpieza_del_almacen · audio_del_almacen · manos_del_jugador
+└── objetos/   objeto_agarrable · caja_de_productos · mancha_en_el_piso
+```
+
+`puestos/` se instancia **una vez** y vive cableado en la escena por `@export`; `objetos/` se
+instancia **N veces**, se crea y se destruye en juego. Es la diferencia que decide si algo se
+puede referenciar por `@export` o hay que salir a buscarlo — o sea, exactamente la que la regla
+de cableado de arriba vuelve verificable.
+
+**El criterio es cuántas instancias hay, no si el nombre suena a puesto de trabajo.**
+`audio_del_almacen` y `manos_del_jugador` no son puestos en el sentido del GDD y van igual en
+`puestos/`: hay uno solo de cada uno y llegan cableados. Forzar una tercera carpeta para ellos
+sería una que repite lo que el nombre del archivo ya dice.
+
+**Quién verifica las dos: `gate_de_capas.py`**, con `CARPETAS_POR_CAPA` de `lib/repo.py`. Valida
+los **nombres** de carpeta —que exista `diegetica/` y no `pantallas/`— y **no** valida que un
+archivo esté en la carpeta correcta: eso es semántica, ninguna herramienta lo puede contestar, y
+lo mira la revisión. La raíz de cada capa la admite a propósito, que es donde se quedan `hud.*`,
+`almacen.*`, `jugador.*` e `inicio.*` porque cruzan o son la raíz del árbol.
+
 ## Un `.tscn` es código
 
 Se revisa como código y se mergea con el mismo cuidado: un merge de tres vías sobre una escena

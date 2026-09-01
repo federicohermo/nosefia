@@ -90,6 +90,13 @@ Verificadas por una herramienta:
 - **La dirección de dependencia entre capas** (`gate_de_capas.py`), y cuenta también **nombrar un
   `class_name` de otra capa** — la forma normal de escribir Godot, y no deja rastro en ningún
   import: por eso el gate indexa las clases en vez de mirar los `preload`.
+- **Los nombres de subcarpeta de cada capa**, que son un conjunto cerrado (`gate_de_capas.py`,
+  con `CARPETAS_POR_CAPA` de `lib/repo.py`). El criterio de cada capa vive en su
+  `.claude/rules/` y es siempre el mismo: **la carpeta dice qué se rompe si tocás lo que hay
+  adentro**, nunca lo que el nombre del archivo ya dice. Hay que decir qué **no** verifica, que
+  es la mitad honesta: **no dice si un archivo está en la carpeta correcta** —eso es semántica,
+  ninguna herramienta lo puede contestar y lo mira la revisión—, y admite la raíz de una capa a
+  propósito, que es donde viven los que cruzan dos carpetas.
 - **Todo `.gd` de `dominio/` y `sistemas/` tiene su test espejo** en `test/<capa>/<nombre>_test.gd`
   (`gate_de_tests.py`).
 - **Ningún test sin aserción, apagado (`skip(true)`, `assert_not_yet_implemented`) o con un
@@ -109,8 +116,11 @@ Prosa — dependen de que la revisión las mire, y que no tengan verificador es 
 - **Tipado estático en toda firma**, `-> void` incluido.
 - **Español en el contenido, inglés en los nombres de carpeta.** Comentarios, identificadores,
   commits, specs y docs en español —las excepciones son las del motor: `_ready`, `_process`—;
-  las carpetas, en inglés. **Dos excepciones deliberadas:** las cuatro capas, que no son
-  estructura sino vocabulario del juego, y las carpetas de spec, cuyo nombre **es** su título.
+  las carpetas, en inglés. **Dos excepciones deliberadas:** **el árbol de `src/` entero, capas y
+  subcarpetas**, que no es estructura sino vocabulario del juego —`jornada`, `empleo`, `tareas`
+  e `investigacion` son literalmente las palabras del GDD, y `marco`, `diegetica`,
+  `interrupciones`, `puestos` y `objetos` nombran el efecto sobre el turno, que es la única
+  pregunta que el juego hace—, y las carpetas de spec, cuyo nombre **es** su título.
   `reportes/` es la única mal puesta, y arreglarla pide un spec: renombrarla toca `docs/`.
 - **Los comentarios explican el porqué**, no el qué.
 - **Un valor fijo vive una sola vez**, en un archivo de `src/dominio/`.

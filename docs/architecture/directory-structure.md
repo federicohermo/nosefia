@@ -8,15 +8,34 @@
 ├── .editorconfig           Tabs en .gd, espacios en .py y .md
 │
 ├── src/                    ← PROTEGIDO por el hook: no se edita sin un spec detrás de la rama
+│   │                         Las subcarpetas son un conjunto CERRADO: las declara
+│   │                         CARPETAS_POR_CAPA en lib/repo.py y las verifica gate_de_capas.py
 │   ├── dominio/            Reglas puras. RefCounted/Resource. Test OBLIGATORIO
+│   │   │                     La carpeta dice CUÁNTO DURA EL EFECTO
+│   │   ├── reglas.gd         El balance. Cruza jornada/ y empleo/: por eso queda en la raíz
+│   │   ├── jugador/          Cómo se siente moverse. NO cambia el resultado de una noche
+│   │   ├── jornada/          La aritmética de una noche: cuánto tiempo queda para investigar
+│   │   └── empleo/           El arco ENTRE noches: apercibimientos, despido
 │   ├── sistemas/           Nodes y autoloads que orquestan el dominio. Test OBLIGATORIO
+│   │   │                     La carpeta dice SI CONSUME TIEMPO DEL TURNO, Y PARA QUÉ
+│   │   ├── marco/            No lo consume: hace correr el juego. Un bug acá lo detiene
+│   │   ├── tareas/           Lo consume Y cumple una de las cinco obligatorias
+│   │   └── investigacion/    Lo consume y NO cumple nada. El otro lado de la tensión
 │   ├── ui/                 HUD, computadora, ventanilla
+│   │   │                     La carpeta dice SI EL RELOJ SIGUE CORRIENDO EN PANTALLA
+│   │   ├── hud.gd            Está siempre: por eso queda en la raíz
+│   │   ├── diegetica/        Sí corre: mirar la computadora cuesta minutos del turno
+│   │   └── interrupciones/   No corre: el cierre y el menú, con el turno ya terminado
 │   └── escenas/            Los scripts pegados a un .tscn, y las escenas del juego
-│       ├── almacen.tscn                 La escena raíz. CABLEA: lo suyo cuelga de su raíz
-│       ├── estructura_del_almacen.tscn  El blockout —piso, paredes y anclajes—, instanciado ahí
-│       └── jugador.tscn                 El cuerpo en primera persona, instanciado en el almacén
+│       │                     La carpeta dice CUÁNTAS INSTANCIAS HAY
+│       ├── almacen.tscn      La escena raíz. CABLEA: lo suyo cuelga de su raíz
+│       ├── jugador.tscn      El cuerpo en primera persona, instanciado en el almacén
+│       ├── puestos/          UNA instancia, cableada por @export y viva en la escena
+│       │   └── estructura_del_almacen.tscn  El blockout: piso, paredes y anclajes
+│       └── objetos/          N instancias: se crean y se destruyen en juego
 │
-├── test/                   El ESPEJO de src/: src/dominio/turno.gd → test/dominio/turno_test.gd
+├── test/                   El ESPEJO de src/, SUBCARPETA INCLUIDA:
+│   │                       src/dominio/jornada/turno.gd → test/dominio/jornada/turno_test.gd
 │   ├── dominio/            Espejo OBLIGATORIO, lo verifica gate_de_tests.py
 │   ├── sistemas/           Espejo OBLIGATORIO, ídem
 │   └── escenas/            OPCIONAL: ningún gate lo exige, y por eso lo que hay acá es lo que
@@ -57,7 +76,18 @@
 | Algo que necesita `delta`, el árbol de escena o un archivo | `src/sistemas/` | su test en `test/sistemas/`, **primero** |
 | Una pantalla, un panel, un botón | `src/ui/` | sin test obligatorio — y por eso no puede tener reglas adentro |
 | El script de una escena concreta | `src/escenas/` | ídem — y si lo probás, va en `test/escenas/`, que **ningún gate exige** |
-| Algo que va en el almacén y tiene hijos propios | su propio `.tscn` en `src/escenas/` | se **instancia** en `almacen.tscn`, que sólo cablea: colgarlo ahí adentro lo caza `test/escenas/almacen_test.gd` |
+| Algo que va en el almacén y tiene hijos propios | su propio `.tscn` en `src/escenas/puestos/` si hay uno solo, en `objetos/` si hay N | se **instancia** en `almacen.tscn`, que sólo cablea: colgarlo ahí adentro lo caza `test/escenas/almacen_test.gd` |
+
+**Y en las cuatro filas falta la mitad de la ruta: la subcarpeta.** Cada capa admite un conjunto
+cerrado de nombres, declarado en `CARPETAS_POR_CAPA` de `.claude/scripts/lib/repo.py` y
+verificado por `gate_de_capas.py`. El criterio de cada una está en su `.claude/rules/`
+—`dominio.md`, `sistemas.md`, `presentacion.md`— y es siempre el mismo: **la carpeta dice qué se
+rompe si tocás lo que hay adentro**, nunca lo que el nombre del archivo ya dice.
+
+**La raíz de una capa es válida a propósito**, y es donde viven los que cruzan dos carpetas:
+`reglas.gd`, `hud.gd`, `almacen.*`, `jugador.*` e `inicio.*`. Lo que el gate cierra es la puerta
+de atrás —inventar `ui/pantallas/` en vez de usar el criterio—; lo que **no** puede contestar es
+si un archivo está en la carpeta *correcta*, que es semántica y la mira la revisión.
 | Un número que dos archivos necesitan igual | un solo archivo de `src/dominio/` | nunca dos copias |
 | Un `.png`, un `.ogg`, una fuente | `assets/` | no necesita spec |
 | Una herramienta del proceso | `.claude/scripts/` | lo puro en `lib/`, su test en `tests/` |
