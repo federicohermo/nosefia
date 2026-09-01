@@ -23,6 +23,32 @@ const COSTO_DE_LIMPIAR := 3600.0
 ## el fondo, que es una zona que ninguna otra obligatoria visita.
 const COSTO_DE_SACAR_LA_BASURA := 1200.0
 
+## Segundos **reales** de reloj de pared que el jugador pasa caminando en un turno completo, sin
+## contar lo que camine investigando. Es el único término del presupuesto que no está en
+## segundos de ficción, y por eso es el único que pasa por el `Ritmo`.
+##
+## Derivado el 2026-09-01, y es una estimación declarada, no una medición: el blockout del
+## almacén todavía no existe. Lo único medido acá es `ReglasDelJugador.VELOCIDAD_DE_CAMINATA`,
+## 3,5 m/s. Lo supuesto son dos cosas: un almacén de unos 20 m de punta a punta, y unos 18
+## cruces para hacer las cinco obligatorias más atender a los dos compradores de la ventanilla
+## —dos por tarea y cuatro por comprador, contando que `SACAR_LA_BASURA` va hasta el fondo—.
+## Eso da 360 m, o sea 103 segundos en línea recta; el valor se redondea a 180 porque nadie
+## camina en línea recta por un local a oscuras que no conoce.
+##
+## **Es el número de este archivo que va a quedar viejo primero**, y cuando el layout exista hay
+## que volver a medirlo acá. Que quede viejo no miente en silencio: el AC7 de `reglas_test.gd`
+## se pone en rojo apenas el trayecto se come el piso de investigación.
+const SEGUNDOS_DE_TRAYECTO_ESTIMADOS := 180.0
+
+## El piso de investigación, en segundos de ficción: **3600, o sea 60 minutos de juego**, una de
+## las ocho horas de la noche.
+##
+## Existe para que el AC7 sea una afirmación con contenido y no un `> 0` disfrazado. Un margen
+## de tres segundos es aritméticamente válido y un juego injugable, y sin este piso la salida
+## fácil a un balance roto —agrandar el turno— no le costaría nada a nadie: con el piso, agrandar
+## el turno es una decisión de diseño que hay que escribir acá.
+const MARGEN_MINIMO := 3600.0
+
 ## A los cuatro apercibimientos lo echan, y se compara con `>=` y no con `==`: una jornada grave
 ## sube de a dos, así que el contador puede saltar de 3 a 5 sin pisar el 4.
 ##
