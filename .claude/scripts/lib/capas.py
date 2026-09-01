@@ -24,7 +24,8 @@ string no es una dependencia. Sin la limpieza, el gate reporta violaciones que n
 un gate con falsos positivos se apaga: la única salida que le queda a quien lo sufre es
 sacarlo del `verify`.
 
-Lo que este archivo NO mira, dicho para que no se lea como cobertura:
+Lo que el chequeo de **dirección** NO mira, dicho para que no se lea como cobertura —el de
+nombres de carpeta, más abajo en este archivo, sí ve las escenas, porque le alcanza la ruta—:
 
 - **Las escenas (`.tscn`)**, que también referencian scripts. Un `.tscn` de `escenas/` puede
   apuntar a lo que quiera hacia abajo y eso es correcto por definición; el caso peligroso
