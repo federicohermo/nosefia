@@ -14,7 +14,8 @@ extends RefCounted
 ## Cada `Producto.Id` con su nombre, su precio en pesos enteros y su umbral de reposición.
 ##
 ## Agregar un producto es una línea en el enum de `producto.gd` y una fila acá. Olvidarse de la
-## fila es rojo: `catalogo_test.gd` cuenta las filas contra `Producto.Id.size()`.
+## fila es rojo: `catalogo_test.gd` cuenta las filas de acá contra `Producto.Id.size()`, y las
+## cuenta sobre este diccionario y no sobre `todos()` a propósito —ver `de()`—.
 const FILAS := {
 	Producto.Id.YERBA: ["Yerba", 2500, 4],
 	Producto.Id.FIDEOS: ["Fideos", 1200, 4],
@@ -28,7 +29,17 @@ const FILAS := {
 ## Construye un producto nuevo en cada llamada, y eso es correcto: la identidad es el `id`, así
 ## que dos yerbas distintas indexan al mismo lugar. Es lo que permite que esto sea `static` y
 ## que ningún test tenga que compartir estado.
+##
+## Un `id` sin fila devuelve `null` en vez de indexar el diccionario y reventar, y es la misma
+## forma que `Reglas.costo_de()`, que devuelve `0.0` para un tipo sin costo. El motivo está
+## medido el 2026-09-01: con un séptimo valor en el enum y sin su fila, `FILAS[id]` tira
+## `Out of bounds get index '6' (on base: 'Dictionary')`, gdUnit4 lo cuenta como *error* y no
+## como *failure* —la línea de estadísticas del archivo sigue diciendo `PASSED`— y la aserción
+## que tenía que ponerse en rojo **nunca llega a correr**. Con `null` el rojo lo produce la
+## aserción, que es lo que el AC promete.
 static func de(id: Producto.Id) -> Producto:
+	if not FILAS.has(id):
+		return null
 	var fila: Array = FILAS[id]
 	var nombre: String = fila[0]
 	var precio: int = fila[1]
@@ -37,8 +48,15 @@ static func de(id: Producto.Id) -> Producto:
 
 
 ## En el orden del enum, que es el orden en que el jugador los va a ver listados.
+##
+## Saltea los `id` sin fila para no meter un `null` en la lista que después recorre la pantalla:
+## así la falta de una fila se lee como un producto que no está y la cuenta de `catalogo_test.gd`
+## se pone en rojo afirmando, en vez de romperse al desreferenciar.
 static func todos() -> Array[Producto]:
 	var productos: Array[Producto] = []
 	for id in Producto.Id.values():
-		productos.append(de(id))
+		var producto := de(id)
+		if producto == null:
+			continue
+		productos.append(producto)
 	return productos

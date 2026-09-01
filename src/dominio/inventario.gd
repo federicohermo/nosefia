@@ -25,6 +25,9 @@ var _unidades: Dictionary = {}
 ## que rebalancear los precios y los umbrales no ponga en rojo un solo test de este archivo.
 func _init(productos: Array[Producto]) -> void:
 	for producto in productos:
+		# Un `id` repetido en la lista se ignora: sin este corte, la segunda yerba pisaría con
+		# ceros lo ya contado y `faltantes()` devolvería el mismo producto dos veces, que es una
+		# línea duplicada en la lista de reposición.
 		if _unidades.has(producto.id):
 			continue
 		_productos.append(producto)
@@ -39,11 +42,24 @@ func unidades(producto: Producto, ubicacion: Ubicacion) -> int:
 	return cuantas
 
 
+## Suma unidades a una ubicación. Una cantidad que no es positiva se ignora en silencio, igual
+## que los segundos negativos de `Turno.consumir()`: por acá se **ingresa** mercadería, y el
+## único que la resta es este archivo. Sin el corte, un `ingresar(p, GONDOLA, -5)` de quien
+## reponga mal deja la góndola en `-5`, que `hay_stock()` lee como vacía y `mover()` como que no
+## hay nada: un estado imposible que ningún número delata.
 func ingresar(producto: Producto, ubicacion: Ubicacion, cuantas: int) -> void:
+	if cuantas <= 0:
+		return
+	_sumar(producto, ubicacion, cuantas)
+
+
+## El único que puede restar, y por eso es privado: `mover()` y `cobrar()` lo usan con un delta
+## negativo después de haber verificado que hay con qué, así que las unidades nunca bajan de 0.
+func _sumar(producto: Producto, ubicacion: Ubicacion, delta: int) -> void:
 	if not _unidades.has(producto.id):
 		return
 	var por_ubicacion: Dictionary = _unidades[producto.id]
-	por_ubicacion[ubicacion] += cuantas
+	por_ubicacion[ubicacion] += delta
 
 
 ## Devuelve **cuántas movió de verdad**, no un `bool`: con 2 unidades y un pedido de 5 mueve 2 y
@@ -54,8 +70,8 @@ func mover(producto: Producto, desde: Ubicacion, hacia: Ubicacion, cuantas: int)
 	var a_mover := mini(cuantas, disponibles)
 	if a_mover <= 0:
 		return 0
-	ingresar(producto, desde, -a_mover)
-	ingresar(producto, hacia, a_mover)
+	_sumar(producto, desde, -a_mover)
+	_sumar(producto, hacia, a_mover)
 	return a_mover
 
 
@@ -94,5 +110,5 @@ func cobrar(venta: Venta) -> bool:
 		if venta.unidades_de(producto) > unidades(producto, Ubicacion.GONDOLA):
 			return false
 	for producto in pedido:
-		ingresar(producto, Ubicacion.GONDOLA, -venta.unidades_de(producto))
+		_sumar(producto, Ubicacion.GONDOLA, -venta.unidades_de(producto))
 	return true

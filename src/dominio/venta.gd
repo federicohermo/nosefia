@@ -16,7 +16,16 @@ var _productos: Array[Producto] = []
 
 ## Sobre un producto que ya está en la venta **acumula**. Una línea por llamada haría que el
 ## mismo producto apareciera dos veces en el ticket: un bug de pantalla nacido acá.
+##
+## Una cantidad que no es positiva se ignora en silencio, como los segundos negativos de
+## `Turno.consumir()`: el dominio no tiene con quién hablar. No es prolijidad — sin el corte, un
+## `agregar(p, -3)` pasa el control de stock de `Inventario.cobrar()` (`-3 > 0` es falso) y el
+## cobro termina **sumando** tres unidades a la góndola. Una pantalla que implemente «sacar una
+## unidad del ticket» como un `agregar` negativo fabricaría mercadería. Y un `agregar(p, 0)`
+## dejaría una línea vacía en el ticket.
 func agregar(producto: Producto, cuantas: int) -> void:
+	if cuantas <= 0:
+		return
 	if not _unidades_por_id.has(producto.id):
 		_unidades_por_id[producto.id] = 0
 		_productos.append(producto)

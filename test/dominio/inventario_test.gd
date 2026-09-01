@@ -1,8 +1,11 @@
 ## Cuántas unidades hay de cada producto y **dónde**: el depósito y la góndola son dos lugares
 ## distintos, y esa distinción es la que hace que reponer sea una tarea y no una animación.
 ##
-## Los productos son inventados acá y no salen del catálogo a propósito: el día que el balance
-## mueva un precio o un umbral, ninguno de estos AC cambia de resultado.
+## Los productos son inventados acá con sus valores a propósito, y no leídos del catálogo: el
+## día que el balance mueva un precio o un umbral, ninguno de estos AC cambia de resultado. La
+## única excepción es el AC de la identidad por `id`, que necesita **dos instancias distintas del
+## mismo producto** y por eso sí llama a `Catalogo.de()` — pero sólo compara unidades, así que
+## tampoco se entera de un cambio de balance.
 extends GdUnitTestSuite
 
 
@@ -16,6 +19,19 @@ func test_un_inventario_recien_construido_no_tiene_nada_en_ningun_lado() -> void
 		assert_int(inventario.unidades(producto, Inventario.Ubicacion.GONDOLA)).is_equal(0)
 
 
+func test_el_mismo_producto_repetido_en_la_construccion_entra_una_sola_vez() -> void:
+	# Dos yerbas en la lista de construcción son un producto, no dos: si la segunda pisara a la
+	# primera, `faltantes()` devolvería la yerba duplicada y la lista de reposición mostraría la
+	# misma línea dos veces.
+	var yerba := Producto.new(Producto.Id.YERBA, "Yerba", 2500, 4)
+	var otra_yerba := Producto.new(Producto.Id.YERBA, "Yerba", 2500, 4)
+	var productos: Array[Producto] = [yerba, otra_yerba]
+	var inventario := Inventario.new(productos)
+	inventario.ingresar(yerba, Inventario.Ubicacion.GONDOLA, 1)
+	assert_int(inventario.unidades(yerba, Inventario.Ubicacion.GONDOLA)).is_equal(1)
+	assert_array(inventario.faltantes()).has_size(1)
+
+
 func test_ingresar_al_deposito_no_toca_la_gondola() -> void:
 	# Las dos ubicaciones son dos números separados: si `ingresar` sumara a un total único, el
 	# jugador no tendría nunca una góndola vacía con el depósito lleno, que es el estado que le
@@ -26,6 +42,18 @@ func test_ingresar_al_deposito_no_toca_la_gondola() -> void:
 	inventario.ingresar(yerba, Inventario.Ubicacion.DEPOSITO, 4)
 	assert_int(inventario.unidades(yerba, Inventario.Ubicacion.DEPOSITO)).is_equal(4)
 	assert_int(inventario.unidades(yerba, Inventario.Ubicacion.GONDOLA)).is_equal(0)
+
+
+func test_ingresar_una_cantidad_negativa_no_deja_la_gondola_bajo_cero() -> void:
+	# `ingresar` es la puerta por la que **entra** mercadería; la única que resta es la interna
+	# que usan `mover` y `cobrar`. Sin el corte, un `-5` de quien reponga mal deja la góndola en
+	# un número imposible que `hay_stock()` y `faltantes()` leen como una góndola vacía cualquiera.
+	var yerba := Producto.new(Producto.Id.YERBA, "Yerba", 2500, 4)
+	var productos: Array[Producto] = [yerba]
+	var inventario := Inventario.new(productos)
+	inventario.ingresar(yerba, Inventario.Ubicacion.GONDOLA, 3)
+	inventario.ingresar(yerba, Inventario.Ubicacion.GONDOLA, -5)
+	assert_int(inventario.unidades(yerba, Inventario.Ubicacion.GONDOLA)).is_equal(3)
 
 
 func test_mover_una_unidad_la_saca_del_deposito_y_la_pone_en_la_gondola() -> void:
@@ -177,3 +205,19 @@ func test_un_cobro_que_no_entra_en_el_stock_no_descuenta_una_sola_unidad() -> vo
 	assert_bool(inventario.cobrar(venta)).is_false()
 	assert_int(inventario.unidades(yerba, Inventario.Ubicacion.GONDOLA)).is_equal(5)
 	assert_int(inventario.unidades(arroz, Inventario.Ubicacion.GONDOLA)).is_equal(1)
+
+
+func test_cobrar_un_producto_que_el_inventario_no_conoce_no_vende_ni_toca_nada() -> void:
+	# Es la rama que el comentario de `cobrar()` promete: el desconocido responde 0 unidades y
+	# cae por el mismo camino que «no alcanza el stock». Sin este caso, un `cobrar` que tratara
+	# al desconocido como stock infinito devolvería `true` y nadie se enteraría.
+	var yerba := Producto.new(Producto.Id.YERBA, "Yerba", 2500, 4)
+	var jabon := Producto.new(Producto.Id.JABON, "Jabón", 1500, 2)
+	var productos: Array[Producto] = [yerba]
+	var inventario := Inventario.new(productos)
+	inventario.ingresar(yerba, Inventario.Ubicacion.GONDOLA, 5)
+	var venta := Venta.new()
+	venta.agregar(yerba, 1)
+	venta.agregar(jabon, 1)
+	assert_bool(inventario.cobrar(venta)).is_false()
+	assert_int(inventario.unidades(yerba, Inventario.Ubicacion.GONDOLA)).is_equal(5)
