@@ -13,7 +13,7 @@
 ## es exactamente el número que detecta un rebase.
 extends GdUnitTestSuite
 
-const ESCENA_DE_LA_ESTRUCTURA := "res://src/escenas/estructura_del_almacen.tscn"
+const ESCENA_DE_LA_ESTRUCTURA := "res://src/escenas/puestos/estructura_del_almacen.tscn"
 
 ## Cinco es el piso, no el objetivo: piso, cuatro paredes —una partida en dos por el hueco de la
 ## ventanilla— y los dos anclajes. Menos que eso no es un cuarto cerrado.
