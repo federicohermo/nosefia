@@ -6,10 +6,10 @@
 ## digan «el jugador no controla» sin enterarse de que adentro hay un yaw, un vector y un rayo.
 extends GdUnitTestSuite
 
-const ControlDelJugador := preload("res://src/dominio/control_del_jugador.gd")
-const Foco := preload("res://src/dominio/foco.gd")
-const Mirada := preload("res://src/dominio/mirada.gd")
-const ReglasDelJugador := preload("res://src/dominio/reglas_del_jugador.gd")
+const ControlDelJugador := preload("res://src/dominio/jugador/control_del_jugador.gd")
+const Foco := preload("res://src/dominio/jugador/foco.gd")
+const Mirada := preload("res://src/dominio/jugador/mirada.gd")
+const ReglasDelJugador := preload("res://src/dominio/jugador/reglas_del_jugador.gd")
 
 ## La sensibilidad de prueba es `0.01` y no la del juego, por lo mismo que en `mirada_test.gd`:
 ## da números redondos y ajustar el tacto no pone en rojo un test que no habla del tacto.

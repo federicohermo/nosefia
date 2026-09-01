@@ -3,7 +3,7 @@
 ## tacto del controlador y se pase de un límite que no es de gusto sino de diseño.
 extends GdUnitTestSuite
 
-const ReglasDelJugador := preload("res://src/dominio/reglas_del_jugador.gd")
+const ReglasDelJugador := preload("res://src/dominio/jugador/reglas_del_jugador.gd")
 
 
 func test_el_pitch_encierra_al_cero_y_no_llega_a_los_noventa_grados() -> void:

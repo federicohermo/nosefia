@@ -23,7 +23,7 @@ enabled=PackedStringArray("res://addons/gdUnit4/plugin.cfg")
 [input]
 
 ; Los cuatro nombres tienen que coincidir letra por letra con las constantes ACCION_* de
-; src/dominio/reglas_del_jugador.gd, y `test/escenas/jugador_test.gd` afirma justamente eso:
+; src/dominio/jugador/reglas_del_jugador.gd, y `test/escenas/jugador_test.gd` afirma justamente eso:
 ; sin ese test, el par de String se separa en silencio y una dirección deja de responder.
 ;
 ; Van por `physical_keycode` y no por `keycode`: WASD tiene que caer en las mismas cuatro teclas
