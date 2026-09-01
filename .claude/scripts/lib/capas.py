@@ -102,6 +102,43 @@ def indice_de_class_names(
     return indice
 
 
+def carpetas_no_declaradas(
+    archivos: dict[str, str],
+    capas: tuple[tuple[str, tuple[str, ...]], ...],
+    carpetas_por_capa: dict[str, frozenset[str]],
+) -> list[tuple[str, str, str]]:
+    """Los archivos que están en una subcarpeta que su capa no declara.
+
+    Devuelve `(ruta, capa, carpeta)` ordenado, con la ruta normalizada a barras como hace
+    `capa_de()`. La carpeta viaja en el hallazgo porque sin ella el reporte del gate no la puede
+    nombrar, y quien lo sufre no sabe qué renombrar.
+
+    Dos decisiones que el nombre de la función no dice:
+
+    - **La raíz de una capa es válida.** `reglas.gd` cruza `jornada/` y `empleo/`, `hud.gd` está
+      siempre en pantalla: los que cruzan no caben en ninguna carpeta, y forzarlos a una sería
+      exactamente la carpeta que repite lo que el nombre del archivo ya dice.
+    - **Se mira el camino entero, no el primer segmento.** Un archivo en
+      `ui/diegetica/pantallas/` es un hallazgo aunque `diegetica` esté declarada: si sólo se
+      mirara el primero, la puerta de atrás se reabre un nivel más adentro.
+
+    Lo que esto **no** contesta es si un archivo está en la carpeta *correcta*. Eso es semántica,
+    ninguna herramienta lo puede decidir, y lo mira la revisión.
+    """
+    hallazgos: list[tuple[str, str, str]] = []
+    for ruta in archivos:
+        normalizada = ruta.replace("\\", "/")
+        capa = capa_de(normalizada, capas)
+        if capa is None:
+            continue
+        resto = normalizada[len(capa) + 1 :]
+        carpeta, sep, _ = resto.rpartition("/")
+        if not sep or carpeta in carpetas_por_capa.get(capa, frozenset()):
+            continue
+        hallazgos.append((normalizada, capa, carpeta))
+    return sorted(hallazgos)
+
+
 def violaciones(
     archivos: dict[str, str], capas: tuple[tuple[str, tuple[str, ...]], ...]
 ) -> list[tuple[str, int, str, str, str]]:
