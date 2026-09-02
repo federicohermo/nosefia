@@ -8,13 +8,25 @@ es lo que permite que los casos que importan —una referencia adentro de un com
 import ntpath
 import unittest
 
-from lib.capas import capa_de, indice_de_class_names, violaciones
+from lib.capas import capa_de, carpetas_no_declaradas, indice_de_class_names, violaciones
 
 CAPAS = (
     ("src/dominio", ()),
     ("src/sistemas", ("src/dominio",)),
     ("src/ui", ("src/dominio", "src/sistemas")),
 )
+
+#: Los nombres de subcarpeta que cada capa del fixture admite.
+#:
+#: Es de mentira a propósito, igual que `CAPAS`: el gate real lee `CARPETAS_POR_CAPA` de
+#: `lib/repo.py`, y un test que importe la constante de producción deja de verificar la función y
+#: pasa a verificar el dato — con lo cual el día que alguien agregue una carpeta al repo, el test
+#: la acepta sin que nadie lo haya decidido.
+CARPETAS = {
+    "src/dominio": frozenset({"jugador", "jornada", "empleo"}),
+    "src/sistemas": frozenset({"marco", "tareas", "investigacion"}),
+    "src/ui": frozenset({"diegetica", "interrupciones"}),
+}
 
 
 class CapaDe(unittest.TestCase):
@@ -123,6 +135,53 @@ class PorClassName(unittest.TestCase):
             "src/dominio/turno.gd": '# comentario\nvar s := "texto"\n\nvar h: Hud\n',
         }
         self.assertEqual(violaciones(archivos, CAPAS)[0][1], 4)
+
+
+class CarpetasNoDeclaradas(unittest.TestCase):
+    """Los nombres de subcarpeta que cada capa admite.
+
+    Lo que este chequeo cierra es la puerta de atrás —inventar `ui/pantallas/` en vez de usar el
+    criterio— y el archivo tirado en la raíz que nadie clasificó. Lo que **no** contesta es si un
+    archivo está en la carpeta *correcta*: eso es semántica, ninguna herramienta lo puede decidir,
+    y lo mira la revisión.
+    """
+
+    def test_una_carpeta_inventada_es_un_hallazgo(self):
+        # La tupla entera y no sólo el largo de la lista: si la carpeta no está en el hallazgo, el
+        # reporte del gate no la puede nombrar y quien lo sufre no sabe qué renombrar.
+        self.assertEqual(
+            carpetas_no_declaradas({"src/ui/pantallas/x.gd": ""}, CAPAS, CARPETAS),
+            [("src/ui/pantallas/x.gd", "src/ui", "pantallas")],
+        )
+
+    def test_una_subcarpeta_declarada_no_es_un_hallazgo(self):
+        self.assertEqual(carpetas_no_declaradas({"src/ui/diegetica/x.gd": ""}, CAPAS, CARPETAS), [])
+
+    def test_la_raiz_de_una_capa_es_valida_a_proposito(self):
+        # `hud.gd`, `reglas.gd`, `almacen.tscn`: los que cruzan dos carpetas, o los que son la
+        # raíz. El gate los admite, y por eso NO frena a un archivo que nadie clasificó.
+        self.assertEqual(carpetas_no_declaradas({"src/ui/hud.gd": ""}, CAPAS, CARPETAS), [])
+
+    def test_un_nivel_y_no_mas(self):
+        # El caso que decide la forma de la función: sin él, `carpetas_no_declaradas` puede mirar
+        # sólo el primer segmento y dejar pasar `ui/diegetica/pantallas/`.
+        self.assertEqual(
+            carpetas_no_declaradas({"src/ui/diegetica/sub/x.gd": ""}, CAPAS, CARPETAS),
+            [("src/ui/diegetica/sub/x.gd", "src/ui", "diegetica/sub")],
+        )
+
+    def test_lo_que_no_esta_en_ninguna_capa_no_participa(self):
+        archivos = {"addons/gdUnit4/plugin.gd": ""}
+        self.assertEqual(carpetas_no_declaradas(archivos, CAPAS, CARPETAS), [])
+
+    def test_normaliza_las_barras_de_windows(self):
+        # Mismo motivo que en `capa_de`: en Windows el walk devuelve `src\\ui\\pantallas\\x.gd`, y
+        # sin normalizar el gate no ve ni una sola carpeta inventada — en verde.
+        archivos = {ntpath.join("src", "ui", "pantallas", "x.gd"): ""}
+        self.assertEqual(
+            carpetas_no_declaradas(archivos, CAPAS, CARPETAS),
+            [("src/ui/pantallas/x.gd", "src/ui", "pantallas")],
+        )
 
 
 if __name__ == "__main__":

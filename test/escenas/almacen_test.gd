@@ -20,7 +20,7 @@ const ESCENA_DEL_ALMACEN := "res://src/escenas/almacen.tscn"
 ## La tabla de transformadas del blockout vive una sola vez, en la suite de la escena que declara
 ## la geometría. Acá se la lee para la otra mitad de la medición: la sub-escena puede estar bien
 ## y el nodo que la instancia venir corrido, y eso sólo se ve desde afuera.
-const SUITE_DE_LA_ESTRUCTURA := preload("res://test/escenas/estructura_del_almacen_test.gd")
+const SUITE_DE_LA_ESTRUCTURA := preload("res://test/escenas/puestos/estructura_del_almacen_test.gd")
 
 
 ## Devuelve los nodos que rompen la regla de cableado, ya redactados con su padre.

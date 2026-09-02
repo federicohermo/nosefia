@@ -20,7 +20,7 @@ Las verifica `python .claude/scripts/gate_de_tests.py`, dentro de `verificar.py`
 
 ### 1. Todo script de `dominio/` y `sistemas/` tiene su test espejo
 
-`src/dominio/turno.gd` → `test/dominio/turno_test.gd`.
+`src/dominio/jornada/turno.gd` → `test/dominio/jornada/turno_test.gd`.
 
 Es la que reemplaza al umbral. Sin ella, el código nuevo entra sin nada que lo ejerza y nadie
 se entera hasta que rompe. Y el espejo es lo que permite contestarlo **sin que nadie mantenga

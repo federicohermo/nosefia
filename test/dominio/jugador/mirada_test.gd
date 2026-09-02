@@ -5,7 +5,7 @@
 ## `reglas_del_jugador.gd` no ponga en rojo un test que no habla del tacto sino de la cuenta.
 extends GdUnitTestSuite
 
-const Mirada := preload("res://src/dominio/mirada.gd")
+const Mirada := preload("res://src/dominio/jugador/mirada.gd")
 
 const SENSIBILIDAD := 0.01
 const MINIMO := -1.4

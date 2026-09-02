@@ -5,17 +5,22 @@ paths:
 
 # Tests con gdUnit4
 
-`test/` es el **espejo** de `src/`: `src/dominio/turno.gd` se prueba en
-`test/dominio/turno_test.gd`. El espejo no es orden: es lo que permite que un gate conteste
-«esto no tiene test» sin que nadie mantenga una lista.
+`test/` es el **espejo** de `src/`: `src/dominio/jornada/turno.gd` se prueba en
+`test/dominio/jornada/turno_test.gd`. El espejo no es orden: es lo que permite que un gate
+conteste «esto no tiene test» sin que nadie mantenga una lista.
+
+**El espejo conserva la subcarpeta**, y eso hay que decirlo porque es lo que duplica el trabajo
+de mover un archivo: `ruta_de_test()` replica el anidamiento entero, así que mover un `.gd` sin
+su test pone `gate_de_tests.py` en rojo. Los dos se mueven en el mismo commit — un rojo esperado
+a mitad de camino no se distingue de uno real.
 
 ## La forma de una suite
 
 ```gdscript
 extends GdUnitTestSuite
 
-const Tarea := preload("res://src/dominio/tarea.gd")
-const Turno := preload("res://src/dominio/turno.gd")
+const Tarea := preload("res://src/dominio/jornada/tarea.gd")
+const Turno := preload("res://src/dominio/jornada/turno.gd")
 
 
 func test_completar_la_unica_obligatoria_la_cuenta_como_cumplida() -> void:

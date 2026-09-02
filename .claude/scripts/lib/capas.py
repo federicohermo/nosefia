@@ -24,7 +24,8 @@ string no es una dependencia. Sin la limpieza, el gate reporta violaciones que n
 un gate con falsos positivos se apaga: la única salida que le queda a quien lo sufre es
 sacarlo del `verify`.
 
-Lo que este archivo NO mira, dicho para que no se lea como cobertura:
+Lo que el chequeo de **dirección** NO mira, dicho para que no se lea como cobertura —el de
+nombres de carpeta, más abajo en este archivo, sí ve las escenas, porque le alcanza la ruta—:
 
 - **Las escenas (`.tscn`)**, que también referencian scripts. Un `.tscn` de `escenas/` puede
   apuntar a lo que quiera hacia abajo y eso es correcto por definición; el caso peligroso
@@ -100,6 +101,43 @@ def indice_de_class_names(
         for m in _DECLARA_CLASS_NAME.finditer(texto):
             indice[m.group(1)] = capa
     return indice
+
+
+def carpetas_no_declaradas(
+    archivos: dict[str, str],
+    capas: tuple[tuple[str, tuple[str, ...]], ...],
+    carpetas_por_capa: dict[str, frozenset[str]],
+) -> list[tuple[str, str, str]]:
+    """Los archivos que están en una subcarpeta que su capa no declara.
+
+    Devuelve `(ruta, capa, carpeta)` ordenado, con la ruta normalizada a barras como hace
+    `capa_de()`. La carpeta viaja en el hallazgo porque sin ella el reporte del gate no la puede
+    nombrar, y quien lo sufre no sabe qué renombrar.
+
+    Dos decisiones que el nombre de la función no dice:
+
+    - **La raíz de una capa es válida.** `reglas.gd` cruza `jornada/` y `empleo/`, `hud.gd` está
+      siempre en pantalla: los que cruzan no caben en ninguna carpeta, y forzarlos a una sería
+      exactamente la carpeta que repite lo que el nombre del archivo ya dice.
+    - **Se mira el camino entero, no el primer segmento.** Un archivo en
+      `ui/diegetica/pantallas/` es un hallazgo aunque `diegetica` esté declarada: si sólo se
+      mirara el primero, la puerta de atrás se reabre un nivel más adentro.
+
+    Lo que esto **no** contesta es si un archivo está en la carpeta *correcta*. Eso es semántica,
+    ninguna herramienta lo puede decidir, y lo mira la revisión.
+    """
+    hallazgos: list[tuple[str, str, str]] = []
+    for ruta in archivos:
+        normalizada = ruta.replace("\\", "/")
+        capa = capa_de(normalizada, capas)
+        if capa is None:
+            continue
+        resto = normalizada[len(capa) + 1 :]
+        carpeta, sep, _ = resto.rpartition("/")
+        if not sep or carpeta in carpetas_por_capa.get(capa, frozenset()):
+            continue
+        hallazgos.append((normalizada, capa, carpeta))
+    return sorted(hallazgos)
 
 
 def violaciones(
