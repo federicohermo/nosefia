@@ -69,8 +69,15 @@ gh pr list --repo federicohermo/nosefia --state open \
    for n in 6 7 8; do
      python .claude/skills/pr-review-batch/scripts/diff_pr.py <base> <dir>/$n origin/<head>
    done
-   cat <dir>/*/pr.files | sort | uniq -c | sort -rn | awk '$1>1'
+   cat <dir>/*/pr.files | sort | uniq -cd | sort -rn
    ```
+   **`uniq -cd` y no un `awk` sobre la primera columna**, y no es estilo: un `$1` escrito acá
+   **no le llega al agente**. El harness de slash-command sustituye los posicionales del cuerpo
+   del skill por los argumentos de la invocación, así que `awk '$1>1'` viaja como `awk '025>1'`
+   —una constante no nula, o sea **verdadera para toda línea**— y la lista caliente sale con el
+   lote entero en vez de con los archivos compartidos. **No falla: contesta de más, y en
+   silencio.** Las variables con nombre (`$n`, `$GODOT_BIN`) viajan intactas; los dígitos no.
+   Medido el 2026-09-01 en la corrida sobre el lote 024/025.
 5. **Y medí aparte las escenas.** `cat <dir>/*/pr.escenas | sort | uniq -d` — un `.tscn` que
    aparece en dos PR **no es un conflicto barato**: es el único solapamiento del lote que git no
    sabe resolver. Va al preámbulo y al Paso 6.
