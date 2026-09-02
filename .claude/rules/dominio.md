@@ -80,10 +80,13 @@ Acá el alcance se mide en **cuánto dura el efecto**:
 
 ```text
 src/dominio/
-├── reglas.gd     ← el balance: lo citan dos de las tres, por eso no está en ninguna
-├── jugador/      control_del_jugador · mirada · caminata · foco · reglas_del_jugador
-├── jornada/      apertura · turno · tarea · ritmo · marcador
-└── empleo/       legajo · consecuencia
+├── reglas.gd         ← el balance: cruza todas, por eso no está en ninguna
+├── jugador/          cómo se siente moverse
+├── jornada/          la aritmética de la noche
+├── empleo/           el arco entre noches
+├── almacen/          qué hay en el local y en qué estado está
+├── investigacion/    qué se sabe y qué falta saber
+└── ambiente/         cómo suena y se siente la noche
 ```
 
 | Si tocás… | puede cambiar |
@@ -91,10 +94,30 @@ src/dominio/
 | `jugador/` | cómo se siente moverse. **No puede cambiar el resultado de una noche** |
 | `jornada/` | la aritmética de la tensión central: cuánto tiempo queda para investigar |
 | `empleo/` | el arco entre noches —apercibimientos, despido—. Ninguna noche suelta |
+| `almacen/` | **cuánto cuesta cumplir una obligatoria**: cuántos productos hay que reponer, cuántas manchas hay que limpiar. Es el lado del turno que se paga |
+| `investigacion/` | **cuánto rinde el minuto que no se paga**: qué revela una pista, cuándo un caso desemboca. Es el otro lado de la misma resta |
+| `ambiente/` | **cómo se siente la noche, y nada más.** Un bug acá no cambia el resultado de ninguna jornada. Es el análogo de `jugador/` un escalón más afuera |
+
+`almacen/` e `investigacion/` son **las dos mitades de la tensión central**, y por eso merecen
+nombre propio en vez de entrar en `jornada/`: `jornada/` es la **resta** —cuánto tiempo queda— y
+estas dos son **lo que cada lado de la resta compra**.
+
+**Por qué `almacen/` y no `tareas/`.** `sistemas/` ya tiene `tareas/`, y ahí el nombre es
+correcto: `repositor.gd` y `limpiador.gd` son lo que **ejecuta** una obligatoria. Abajo, en el
+dominio, lo que hay no son las tareas sino **el estado del local sobre el que las tareas
+operan**: `inventario.gd` no es una tarea, es lo que la tarea de reponer consulta. Llamarlo
+`tareas/` en las dos capas escondería justo esa diferencia — y además `tarea.gd`, el archivo que
+sí modela una obligatoria, vive en `jornada/` y se queda ahí.
+
+**Por qué `ambiente/` y no `audio/`.** Por el criterio de arriba: cuatro de los cinco archivos ya
+dicen `sonido`, `sonoro` o `audio` en su nombre, así que meterlos en una carpeta `audio/` es una
+línea más de árbol y cero información. `ambiente/` dice el **alcance** —cómo se siente la noche, y nada más—
+y deja lugar a lo que venga de la misma clase: la luz del local, el clima.
 
 `reglas_del_jugador.gd` en `jugador/` no dice «es del jugador»: dice **«estos números no pueden
 desbalancear el turno»**, que es exactamente la distinción con `reglas.gd` que sin la carpeta
-sólo dice el docstring.
+sólo dice el docstring. Y los cinco `reglas_de_*` de `almacen/` caen ahí y no en `reglas.gd`
+porque fijan **cuánto cuesta una obligatoria**, que es justo lo que esa carpeta mide.
 
 Y `reglas.gd` se queda en la raíz porque **cruza**: lo nombran `jornada/apertura.gd`,
 `jornada/tarea.gd` y `empleo/legajo.gd`, y ningún archivo de `jugador/`. La raíz de una capa es
@@ -102,6 +125,8 @@ válida a propósito, y es donde van los que no caben en una sola carpeta.
 
 **Quién lo verifica: `gate_de_capas.py`**, con `CARPETAS_POR_CAPA` de `lib/repo.py`. Y hay que
 decir hasta dónde llega, que es la mitad honesta: **valida los NOMBRES de carpeta —que exista
-`jugador/` y no `movimiento/`— y NO valida que un archivo esté en la carpeta correcta.** Eso es
-semántica, ninguna herramienta lo puede contestar, y lo mira la revisión. Lo que el gate cierra
-es la puerta de atrás: inventar un nombre en vez de usar el criterio.
+`investigacion/` y no `pistas/`— y NO valida que un archivo esté en la carpeta correcta.** Eso es
+semántica, ninguna herramienta lo puede contestar, y lo mira la revisión, contra la tabla del
+`research.md` del spec 025 —que clasifica los 49 archivos que vienen uno por uno, con su columna
+«por qué», y existe justamente por eso—. Lo que el gate cierra es la puerta de atrás: inventar un
+nombre en vez de usar el criterio.

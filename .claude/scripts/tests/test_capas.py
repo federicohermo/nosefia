@@ -9,6 +9,7 @@ import ntpath
 import unittest
 
 from lib.capas import capa_de, carpetas_no_declaradas, indice_de_class_names, violaciones
+from lib.repo import CARPETAS_POR_CAPA
 
 CAPAS = (
     ("src/dominio", ()),
@@ -21,7 +22,9 @@ CAPAS = (
 #: Es de mentira a propósito, igual que `CAPAS`: el gate real lee `CARPETAS_POR_CAPA` de
 #: `lib/repo.py`, y un test que importe la constante de producción deja de verificar la función y
 #: pasa a verificar el dato — con lo cual el día que alguien agregue una carpeta al repo, el test
-#: la acepta sin que nadie lo haya decidido.
+#: la acepta sin que nadie lo haya decidido. Ese agujero lo cierra aparte
+#: `CarpetasQueElDominioAdmite`, al final del archivo: importa `CARPETAS_POR_CAPA` a propósito
+#: porque lo que ejerce es el dato, y por eso cubre sólo a `src/dominio`.
 CARPETAS = {
     "src/dominio": frozenset({"jugador", "jornada", "empleo"}),
     "src/sistemas": frozenset({"marco", "tareas", "investigacion"}),
@@ -181,6 +184,43 @@ class CarpetasNoDeclaradas(unittest.TestCase):
         self.assertEqual(
             carpetas_no_declaradas(archivos, CAPAS, CARPETAS),
             [("src/ui/pantallas/x.gd", "src/ui", "pantallas")],
+        )
+
+
+class CarpetasQueElDominioAdmite(unittest.TestCase):
+    """Los seis nombres que `src/dominio` declara, contra la constante **de producción**.
+
+    Ésta es la diferencia con `CarpetasNoDeclaradas`, y es deliberada: aquélla ejerce la
+    **función** y por eso usa un fixture propio; ésta ejerce el **dato**, así que tiene que leer
+    `CARPETAS_POR_CAPA` de `lib/repo.py` o no verifica nada. Con el fixture, agregar un nombre al
+    repo y olvidarse de declararlo pasaría en verde.
+
+    El dominio es la única capa con un test así, y por el motivo que le da su spec: es la que se
+    multiplica por 3,4 —los 44 archivos nuevos que traen los specs propuestos, sobre los 18 que
+    hay hoy— y la única donde la clasificación es una decisión de diseño y no una consecuencia de
+    dónde vive el archivo.
+    """
+
+    def test_declara_las_seis_carpetas(self):
+        self.assertEqual(
+            CARPETAS_POR_CAPA["src/dominio"],
+            frozenset({"jugador", "jornada", "empleo", "almacen", "investigacion", "ambiente"}),
+        )
+
+    def test_investigacion_es_una_carpeta_valida_del_dominio(self):
+        # La mitad de la tensión central del juego. `sistemas/` ya tenía `investigacion/`; que el
+        # dominio no la tuviera dejaba a `pista.gd` sin lugar mientras
+        # `registro_de_investigacion.gd` —lo que la guarda— sí tenía el suyo.
+        archivos = {"src/dominio/investigacion/pista.gd": ""}
+        self.assertEqual(carpetas_no_declaradas(archivos, CAPAS, CARPETAS_POR_CAPA), [])
+
+    def test_una_carpeta_inventada_del_dominio_sigue_siendo_un_hallazgo(self):
+        # La otra mitad del AC3, y la que hace falta para que la de arriba signifique algo: sin
+        # ésta, un `CARPETAS_POR_CAPA` que admitiera cualquier nombre pasaría igual.
+        archivos = {"src/dominio/objetos/x.gd": ""}
+        self.assertEqual(
+            carpetas_no_declaradas(archivos, CAPAS, CARPETAS_POR_CAPA),
+            [("src/dominio/objetos/x.gd", "src/dominio", "objetos")],
         )
 
 
