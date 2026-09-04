@@ -58,11 +58,33 @@ SPECS = RAIZ / "specs"
 
 # El `[A-Za-z0-9_-]` antes del punto descarta las menciones a la extensión suelta («los `.gd` de
 # la capa»), que si no entran a la matriz como un archivo llamado «.gd».
-CITA = re.compile(r"`([^`]*[A-Za-z0-9_-]\.(?:gd|tscn|tres|py|md|json|cfg))`")
+#
+# `yml|yaml` está por una ceguera medida el 2026-09-02 sobre el lote 026 + 027: los dos specs
+# escribían `.github/workflows/verify.yml` —uno le fijaba la versión de Godot, el otro le sacaba
+# la variable entera— y la matriz no lo listó. Un workflow es de los archivos que más se comparten
+# entre specs de infraestructura, y era el único que la matriz no podía ver.
+#
+# Y el `(?::\d+(?:-\d+)?)?` del final es la otra mitad de esa misma medición: `tasks.md` cita
+# tanto `` `CLAUDE.md` `` como `` `CLAUDE.md:28` ``, y la segunda forma no matcheaba. El número
+# queda FUERA del grupo a propósito: si entrara, el mismo archivo citado desde dos líneas
+# distintas serían dos filas de la matriz y ninguna saldría marcada como compartida — la
+# ceguera se cambiaría por una más difícil de ver.
+CITA = re.compile(r"`([^`]*[A-Za-z0-9_-]\.(?:gd|tscn|tres|py|md|json|cfg|yml|yaml))(?::\d+(?:-\d+)?)?`")
 
 # Los cuatro archivos que todo spec tiene adentro de su carpeta: citados sin ruta son suyos, y
 # contarlos como compartidos pondría a los N specs del lote pisándose el `tasks.md`.
 PROPIOS = frozenset(("spec.md", "research.md", "plan.md", "tasks.md", "README.md"))
+
+
+def es_propio(cita: str) -> bool:
+    """Si la cita es a un archivo de la carpeta del propio spec, y por lo tanto no es una arista.
+
+    **Sólo cuando viene sin ruta.** El filtro comparaba el basename, y con eso se llevaba puesto
+    `docs/README.md` —medido el 2026-09-02: los dos specs del lote 026 + 027 lo editan, el 026
+    reescribiendo una sección entera y el 027 insertando en otra, y la matriz no lo listó—. Una
+    cita con barra nombra un archivo del repo, nunca el `README.md` de una carpeta de spec.
+    """
+    return "/" not in cita and cita in PROPIOS
 
 LINEA_DE_TAREA = re.compile(r"^\s*-\s*\[[ xX]\]\s")
 ID_DE_TAREA = re.compile(r"\bT\d{3}\b")
@@ -148,9 +170,15 @@ def main() -> None:
     for i, texto in lineas.items():
         for linea in texto:
             for cita in CITA.findall(linea):
+                if es_propio(cita):
+                    continue
                 nombre = cita.rsplit("/", 1)[-1]
-                if nombre not in PROPIOS:
-                    citados.setdefault(nombre, set()).add(i)
+                # Un basename que además es el de un archivo de spec se muestra con su ruta:
+                # `docs/README.md` y `specs/README.md` son dos archivos, y colapsarlos en una
+                # fila llamada `README.md` inventaría una arista donde no la hay.
+                if nombre in PROPIOS:
+                    nombre = cita
+                citados.setdefault(nombre, set()).add(i)
 
     print("== matriz archivo x spec ==")
     for nombre in sorted(citados):
