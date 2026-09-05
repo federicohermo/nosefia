@@ -34,7 +34,7 @@
 │       ├── almacen.tscn      La escena raíz. CABLEA: lo suyo cuelga de su raíz
 │       ├── jugador.tscn      El cuerpo en primera persona, instanciado en el almacén
 │       ├── puestos/          UNA instancia, cableada por @export y viva en la escena
-│       │   └── estructura_del_almacen.tscn  El blockout: piso, paredes y anclajes
+│       │   └── estructura_del_almacen.tscn  Hereda del .blend: la geometría la decide Blender
 │       └── objetos/          N instancias: se crean y se destruyen en juego
 │
 ├── test/                   El ESPEJO de src/, SUBCARPETA INCLUIDA:

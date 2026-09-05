@@ -27,20 +27,33 @@ const COSTO_DE_SACAR_LA_BASURA := 1200.0
 ## contar lo que camine investigando. Es el único término del presupuesto que no está en
 ## segundos de ficción, y por eso es el único que pasa por el `Ritmo`.
 ##
-## Derivado el 2026-09-01, y es una estimación declarada, no una medición: el blockout del
-## almacén todavía no existe. Lo único medido acá es `ReglasDelJugador.VELOCIDAD_DE_CAMINATA`,
-## 3,5 m/s. Lo supuesto son dos cosas: un almacén de unos 20 m de punta a punta, y unos 18
-## cruces para hacer las cinco obligatorias más atender a los dos compradores de la ventanilla
-## —dos por tarea y cuatro por comprador, contando que `SACAR_LA_BASURA` va hasta el fondo—.
-## Eso da 360 m, o sea 103 segundos en línea recta. El valor declarado no los redondea: los
-## sube a 180, un 75 % más, porque nadie camina en línea recta por un local a oscuras que no
-## conoce. Ese margen es la parte más blanda de la estimación y está inflado a propósito:
-## sobrestimar el trayecto aprieta el presupuesto, subestimarlo lo afloja sin que nadie se entere.
+## Re-derivado el 2026-09-04 por el spec 028, que es cuando el layout dejó de ser una suposición:
+## la versión anterior valía 180 y decía por escrito que **«cuando el layout exista hay que volver
+## a medirlo acá»**, suponiendo un almacén de unos 20 m de punta a punta. Ahora el escenario es el
+## modelo de `SEPT_JUEGOS_PROTOTIPO.blend`, y el interior **mide 24,60 m de punta a punta**.
 ##
-## **Es el número de este archivo que va a quedar viejo primero**, y cuando el layout exista hay
-## que volver a medirlo acá. Que quede viejo no miente en silencio: el AC7 de `reglas_test.gd`
-## se pone en rojo apenas el trayecto se come el piso de investigación.
-const SEGUNDOS_DE_TRAYECTO_ESTIMADOS := 180.0
+## Cómo se midió, porque el número solo no lo dice: una grilla de 0,5 m sobre la planta,
+## quedándose con las celdas que tienen piso debajo **y techo arriba** —afuera del edificio no hay
+## techo, así que eso separa adentro de afuera sin depender de la forma en L de la planta—, y la
+## mayor distancia entre dos de esas celdas. Da 289,5 m² caminables y 24,60 m entre las puntas.
+##
+## De los tres términos **dos están medidos y uno sigue supuesto, y hay que saber cuál es cuál**:
+##
+## - medidos: los 24,60 m de punta a punta, y `ReglasDelJugador.VELOCIDAD_DE_CAMINATA`, 3,5 m/s;
+## - **supuesto**: los ~18 cruces para hacer las cinco obligatorias más atender a los dos
+##   compradores —dos por tarea y cuatro por comprador, contando que `SACAR_LA_BASURA` va hasta el
+##   fondo—. No se puede medir todavía: tres de las cinco obligatorias no tienen anclaje en la
+##   escena, y dónde queda el fondo lo define el spec 015.
+##
+## 18 × 24,60 = 442,8 m, o sea 126,5 segundos en línea recta. El valor declarado no los redondea:
+## los sube a 220, el mismo 75 % de margen que tenía, porque nadie camina en línea recta por un
+## local a oscuras que no conoce. Ese margen sigue siendo la parte más blanda de la estimación y
+## está inflado a propósito: sobrestimar el trayecto aprieta el presupuesto, subestimarlo lo
+## afloja sin que nadie se entere.
+##
+## Que quede viejo no miente en silencio: el AC7 de `reglas_test.gd` se pone en rojo apenas el
+## trayecto se come el piso de investigación. Con 220 no lo hace, medido antes de subirlo.
+const SEGUNDOS_DE_TRAYECTO_ESTIMADOS := 220.0
 
 ## El piso de investigación, en segundos de ficción: **3600, o sea 60 minutos de juego**, una de
 ## las ocho horas de la noche.
