@@ -58,9 +58,11 @@ las hace difíciles de ver. Los síntomas literales de cada una están en
 
 Y hay un dato que le va a hacer falta al próximo que mire: **la 6.2.1 declara compatibilidad
 hasta 4.7.1 y no nombra a 4.7.2.** Se eligió 4.7.2 igual, y la evidencia de que la combinación
-funciona en *este* proyecto es una medición y no la tabla: 23/23 suites y 171/171 casos en
-verde, sin tocar un test. El plan B, si algo aparece, es bajar a **4.7.1** —que sí está en la
-matriz— sin tocar el addon.
+funciona en *este* proyecto es una medición y no la tabla: **medido el 2026-09-01**, 23/23
+suites y 171/171 casos en verde, sin tocar un test. **El conteo de casos se mueve con cada
+spec que agrega uno** —el 028 lo deja en 177—, así que lo que sostiene la afirmación es la
+fecha y no el número: quien lo vea distinto no lo corrija, remídalo. El plan B, si algo
+aparece, es bajar a **4.7.1** —que sí está en la matriz— sin tocar el addon.
 
 La versión que baja la CI vive en el `env: GODOT_VERSION` de `.github/workflows/verify.yml`, y
 la de cada máquina en `GODOT_BIN`. La tabla «GdUnit4 Version / Godot minimal required» del
