@@ -1,14 +1,16 @@
 # La imposibilidad de la deuda
 
-**Ésta es la copia canónica, y los ocho skills traen la suya.** Un skill es la unidad que se
-instala y se distribuye, así que trae su implementación completa: ninguno lee este archivo por
-ruta. `test_copias_de_skills.py` da rojo si alguna copia difiere de ésta en un byte, así que
-editarla acá y no propagar **no se puede mergear**.
+**Los ocho skills traen su copia, y la de `spec-create` es la canónica.** Un skill es la unidad
+que se instala y se distribuye, así que trae su implementación completa: ninguno lee este archivo
+por ruta. `test_copias_de_skills.py` da rojo si alguna copia difiere de la canónica en un byte,
+así que editar una suelta **no se puede mergear** — se edita la de `spec-create` y se propaga.
 
-**Vive en `.claude/doctrina/` y no en `.claude/skills/`** porque ahí adentro todo es un skill —un
-directorio con su `SKILL.md`— y un `.md` suelto entre ellos no lo es: no aparece en la lista de
-skills invocables y se lee como uno a medio hacer. Tampoco es un `CLAUDE.md`, que se cargaría al
-editar esta carpeta —el meta-trabajo— y no al correr un review sobre `src/`.
+**Cuál de las ocho es la canónica es arbitrario**, y por eso está declarado en `COPIAS` y no en
+el nombre de una carpeta. Vivió un tiempo en `.claude/doctrina/`, que parecía más neutral y no
+lo era: ese directorio no lo carga nada —Claude Code conoce `skills/`, `rules/`, `commands/` y
+`agents/`—, así que la copia canónica no entraba a ningún contexto por sí sola y su única
+función real era ser la referencia de ese gate. Un directorio entero para eso es una convención
+más que aprender, sin nada que la sostenga.
 
 ## La regla
 

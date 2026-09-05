@@ -55,6 +55,11 @@ incluido el mensaje de bloqueo del hook. El porqué entero está en el encabezad
 Nunca de un grep de la salida. Un `| grep` que no matchea devuelve 1 y se traga la salida
 entera: es la forma más corta conocida de declarar verde una corrida rota.
 
+**Y encadenar `rg` con `&&` es la misma falla en la otra dirección.** Un `rg A && rg B && rg C`
+corta en el primero sin match —que devuelve 1— y **los otros dos no corren, sin decirlo**: la
+salida vacía se lee como «ninguno matcheó» cuando sólo se preguntó por el primero. **Un `rg` por
+línea, separados por `;`, nunca por `&&`.** Medido el 2026-09-01 verificando los AC del 023.
+
 ## El estilo
 
 Líneas de hasta 100, `snake_case`, docstrings que explican **por qué** y no qué. Los

@@ -225,7 +225,7 @@ así que sobre un árbol vacío se saltea declarándolo — y un nodo salteado n
 **Y la salida tampoco es abrir un issue.** Los issues de este repo son **entrada**: lo que llega de
 afuera y `spec-create` drena. Si aparece trabajo que el spec necesitaba y no tenía, el defecto es
 del spec —y del skill que lo dejó salir así—, y se corrigen los dos. La doctrina completa está en
-[`.claude/doctrina/sin-deuda.md`](../.claude/doctrina/sin-deuda.md).
+[`sin-deuda.md`](../.claude/skills/spec-create/sin-deuda.md), que los ocho skills traen adentro.
 
 **`## Fuera de alcance` sí existe y no es lo mismo**: declara una frontera —qué NO hace este spec—
 y es lo que lo vuelve revisable. Se convierte en deuda sólo si algún AC del propio spec depende de

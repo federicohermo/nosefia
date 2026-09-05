@@ -24,17 +24,23 @@ SKILLS = RAIZ / ".claude" / "skills"
 
 #: canónico → las copias que tienen que ser idénticas byte a byte.
 #:
-#: El canónico es el que se edita. Es el que vive donde algo de afuera de un skill lo puede
-#: necesitar: la doctrina en `.claude/doctrina/`, el limpiador en `.claude/scripts/`. Los dos
-#: archivos que sólo usan skills —`hallazgos.md`, `lote.py`— tienen su canónico adentro del skill
-#: que los estrenó, que es tan arbitrario como cualquiera y por eso está escrito acá.
+#: El canónico es el que se edita, y **vive adentro de un skill salvo que algo de afuera lo
+#: necesite**. El único que califica hoy es el limpiador de worktrees, que está en
+#: `.claude/scripts/` porque se corre a mano. El resto —`sin-deuda.md`, `hallazgos.md`,
+#: `lote.py`— tiene su canónico en el skill que lo estrenó.
+#:
+#: **`sin-deuda.md` estaba en `.claude/doctrina/` y se movió acá**: esa carpeta no la cargaba
+#: nada. No es un directorio que Claude Code conozca —lo son `skills/`, `rules/`, `commands/`,
+#: `agents/`—, así que la copia canónica no entraba a ningún contexto por sí sola y su única
+#: función era ser la referencia de este gate. Un directorio entero para eso es una tercera
+#: convención que hay que aprender, y la elección del skill dueño es tan arbitraria como en los
+#: otros dos casos: por eso está escrita acá y no en el nombre de una carpeta.
 COPIAS: dict[Path, tuple[Path, ...]] = {
-    RAIZ / ".claude" / "doctrina" / "sin-deuda.md": tuple(
+    SKILLS / "spec-create" / "sin-deuda.md": tuple(
         SKILLS / s / "sin-deuda.md"
         for s in (
             "pr-review",
             "pr-review-batch",
-            "spec-create",
             "spec-create-batch",
             "spec-implement",
             "spec-implement-batch",
