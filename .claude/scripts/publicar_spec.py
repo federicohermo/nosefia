@@ -68,12 +68,15 @@ CUERPO = "spec.md"
 #: sea perdido, porque `specs/[0-9]*/` está ignorado y la hidratación siguiente se lo lleva
 #: puesto.
 #:
-#: **Están los dos regímenes en una sola lista**, y por eso no hace falta que este script sepa
-#: en cuál cae el spec: el filtro es `if archivo in todos`, así que los que no existen no
-#: aparecen. Un spec ≤ 029 publica `research`, `plan` y `tasks`; uno ≥ 030 publica `research` y
-#: `estrategia`. Preguntarle el número al mapa acá sería un segundo lugar donde vive el corte,
-#: y el día que se muevan por separado este script publicaría con el régimen equivocado.
-CANONICOS = ("research.md", "estrategia.md", "plan.md", "tasks.md")
+#: **`tasks.md` sigue en la lista aunque ningún spec vivo lo tenga**, y no es un olvido: los
+#: specs cerrados que se traen a mano son ADR con cuatro archivos, y publicar uno de ésos sin
+#: su `tasks.md` lo borraría del issue —que es la única copia—. El filtro es `if archivo in
+#: todos`, así que sobre un spec de tres no aparece.
+CANONICOS = ("research.md", "plan.md", "tasks.md")
+
+#: Los tres archivos que tiene un spec entero, `spec.md` incluido. Es la guarda de lo único
+#: destructivo que hace este script: borrar del issue un comentario que ya no tiene archivo.
+COMPLETA = frozenset({CUERPO, "research.md", "plan.md"})
 
 #: El límite de un body y de un comentario de GitHub.
 #:
@@ -292,6 +295,24 @@ def publicar(carpetas, mapa, gh, dry) -> None:
             else:
                 gh(["issue", "comment", str(numero), "--repo", REPO, "--body-file", "-"], cuerpo)
             n += 1
+
+        # Lo que sobra en el issue se BORRA, y sin esto la reconciliación es de ida nomás:
+        # `hidratar_specs.py` escribe al disco todo comentario con encabezado de archivo, así
+        # que un `## tasks.md` que quedó en un issue cuyo spec ya no lo tiene **vuelve a
+        # aparecer** en la próxima hidratación y pone en rojo al gate de la convención. Un
+        # archivo se saca del spec borrándolo del issue, que es la única copia.
+        #
+        # **Sólo sobre una carpeta completa.** Publicar desde un árbol a medias —una carpeta
+        # con el `spec.md` y nada más, que es lo que deja un `hidratar` interrumpido— borraría
+        # el research y el plan del issue creyendo que se sacaron a propósito. Con la guarda,
+        # el peor caso es que sobreviva un comentario de más, que se ve y se arregla.
+        publicados = set(comentarios_de(carpeta))
+        completa = COMPLETA <= publicados | {CUERPO}
+        for archivo, ident in sorted(ya_estan.items()):
+            if archivo in publicados or not completa:
+                continue
+            gh(["api", "--method", "DELETE", f"repos/{REPO}/issues/comments/{ident}", "--silent"])
+            print(f"    borrado del issue: {archivo} (ya no está en la carpeta)")
 
         # Los terminales y los implementados se cierran; `Propuesto` queda abierto.
         #

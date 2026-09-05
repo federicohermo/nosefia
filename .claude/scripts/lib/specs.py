@@ -414,3 +414,84 @@ def deuda_del_censo(
         reclamados.add(entrada["issue"])
         reclamados.update(entrada.get("origen", []))
     return [i for i in issues if i["number"] not in reclamados]
+
+
+# ── El texto de un spec ───────────────────────────────────────────────────────
+#
+# Lo leen DOS gates y por eso vive acá: el de la convención —los techos de palabras, sobre
+# los specs en vuelo que estén en disco— y el de los criterios de la rama —que cada `ACn`
+# esté citado por un test—. Dos copias que se separen dan dos gates que dicen contar lo
+# mismo y cuentan distinto, y el que se equivoca es siempre el que nadie mira.
+
+#: El encabezado del bloque de criterios, que es lo que parte el `spec.md` en sus dos
+#: mitades con techos distintos.
+ENCABEZADO_DE_AC = re.compile(r"^##\s+Criterios de aceptaci[oó]n\s*$", re.MULTILINE)
+
+#: Un criterio, tal como el resto del repo lo nombra: `AC1`, `AC17`.
+AC = re.compile(r"\bAC(\d+)\b")
+
+#: Qué cuenta como palabra: un token con al menos una letra o un dígito.
+#:
+#: La definición importa porque el techo se apoya en ella. Sin esto, un «—», un `**` suelto y
+#: el `-` de cada viñeta cuentan como palabras, y entonces el techo se lo lleva el markdown en
+#: vez de la prosa — o sea que reescribir una lista como párrafo «ahorra» palabras sin haber
+#: sacado ni una idea.
+PALABRA = re.compile(r"[0-9A-Za-zÀ-ÖØ-öø-ÿ]")
+
+
+def palabras(texto: str) -> int:
+    """Las palabras de un texto en markdown: los tokens que tienen letra o dígito."""
+    return sum(1 for token in texto.split() if PALABRA.search(token))
+
+
+def partir_spec(texto: str) -> tuple[str, str]:
+    """El `spec.md` partido en `(prosa, bloque de criterios)`.
+
+    **El encabezado `## Criterios de aceptación` cuenta del lado de los criterios**, y no es
+    un detalle de tres palabras: es lo que hace que mover el encabezado no mueva palabras de
+    un techo al otro.
+
+    Un `spec.md` sin ese encabezado devuelve todo como prosa y el bloque vacío. No se ataja
+    acá: un spec sin criterios lo caza el techo de prosa o el gate de criterios, y duplicar
+    la regla la deja con dos mensajes distintos para el mismo defecto.
+    """
+    corte = ENCABEZADO_DE_AC.search(texto)
+    if corte is None:
+        return texto, ""
+    resto = texto[corte.start() :]
+    # Desde el carácter 3 para no volver a matchear el propio encabezado del bloque.
+    siguiente = re.search(r"^##\s", resto[3:], re.MULTILINE)
+    if siguiente is None:
+        return texto[: corte.start()], resto
+    fin = siguiente.start() + 3
+    return texto[: corte.start()] + resto[fin:], resto[:fin]
+
+
+def acs_de(spec_md: str) -> list[str]:
+    """Los criterios que un `spec.md` declara, en orden y sin repetir.
+
+    Sólo los del bloque de criterios: un `AC3` citado en la prosa del problema es una
+    referencia a otro spec, no una promesa de éste.
+    """
+    _, criterios = partir_spec(spec_md)
+    vistos: list[str] = []
+    for numero in AC.findall(criterios):
+        nombre = f"AC{int(numero)}"
+        if nombre not in vistos:
+            vistos.append(nombre)
+    return vistos
+
+
+def acs_sin_test(numero: str, acs: list[str], textos: list[str]) -> list[str]:
+    """Los criterios que ningún test nombra, con la cita **calificada por el número del spec**.
+
+    La cita es `NNN-ACn` —`030-AC1`— y no `AC1` a secas. No es estilo: `AC1` es el nombre que
+    usa **todo** spec, así que con la cita pelada el primer test que escribiera `AC1` dejaría
+    cubierto el `AC1` de todos los specs que vengan después, para siempre. El gate no podría
+    volver a fallar, que es exactamente el gate apagado que parece encendido que este ancla
+    vino a cerrar.
+
+    **Por nombre**, que es lo que hace accionable el rojo: «falta 030-AC4» se arregla; «hay un
+    criterio sin test» hay que ir a buscarlo.
+    """
+    return [ac for ac in acs if not any(re.search(rf"\b{numero}-{ac}\b", texto) for texto in textos)]

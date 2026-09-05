@@ -25,8 +25,8 @@ Por familia:
 |---|---|
 | **review** (`pr-review`, `pr-review-batch`) | con **todo** lo que encontraron descargado, verificado, commiteado y pusheado. El reporte cuenta lo hecho, no lo que queda |
 | **revisión** (`spec-revise`, `spec-revise-batch`) | con el requisito nuevo ya reflejado en los specs vivos, los que reemplaza en `Superado`, y todo devuelto a los issues. Un requisito leído y no aplicado es deuda |
-| **creación** (`spec-create`, `spec-create-batch`) | con la **totalidad** de las tareas que la especificación necesita, todas cerrables por un agente. Ningún seguimiento, ningún punto a cubrir después, ninguna casilla que espere a una persona |
-| **implementación** (`spec-implement`, `spec-implement-batch`) | con **todo** lo que el spec pide hecho, el PR abierto, y el rastro devuelto al issue: las casillas marcadas en un spec ≤ 029, y en uno ≥ 030 un test que nombra cada criterio |
+| **creación** (`spec-create`, `spec-create-batch`) | con la **totalidad** de los criterios que la especificación necesita, todos cerrables por un agente. Ningún seguimiento, ningún punto a cubrir después, ningún criterio que espere a una persona |
+| **implementación** (`spec-implement`, `spec-implement-batch`) | con **todo** lo que el spec pide hecho, el PR abierto, y el rastro devuelto al issue: un test que nombra cada criterio |
 
 **«Descargado» no es «metido en este PR».** Ver la descarga 1: dónde aterriza el fix es una
 decisión aparte de si se hace, y confundirlas rompe el review. La doctrina obliga a lo primero y
@@ -35,18 +35,20 @@ no dice nada sobre lo segundo.
 ## Dónde se apoya, y por qué cambió de apoyo
 
 Una doctrina que nadie puede verificar dura lo que dura la buena voluntad, así que ésta se
-ancla en algo que una herramienta lee. **El ancla no es la misma en los dos regímenes de
-spec**, y la diferencia importa:
+ancla en algo que una herramienta lee. **El ancla cambió dos veces**, y las dos veces por el
+mismo motivo:
 
-| Régimen | El ancla | Qué la sostiene |
+| Cuándo | El ancla | Por qué se fue |
 |---|---|---|
-| specs **≤ 029** | **un spec `Implementado` no puede tener una casilla abierta** | el `tasks.md`, que existe |
-| specs **≥ 030** | **un spec `Implementado` tiene cada criterio citado como `NNN-ACn` por un test que corre** | la suite, que corre sola |
+| mientras hubo `tasks.md` | un spec `Implementado` no podía tener una casilla abierta | el `tasks.md` desapareció, y la regla se quedó sin objeto |
+| sobre los specs cerrados | un spec `Implementado` tenía cada criterio citado como `NNN-ACn` | llegaba tarde: el PR ya había aterrizado |
+| **hoy, sobre la rama** | **cada criterio del spec de la rama está citado como `NNN-ACn` por un test que corre** | — |
 
-El cambio no es cosmético. Cuando el `tasks.md` desaparece, el ancla vieja se queda **sin
-objeto**: la regla sigue escrita, no encuentra ninguna casilla, y sale verde para siempre. Un
-gate que no puede fallar no es un gate laxo — es un gate apagado que parece encendido, que es
-el modo de falla que este repo persigue en todo lo demás.
+Ninguno de los dos cambios es cosmético. Cuando el `tasks.md` desapareció, la regla vieja siguió
+escrita, no encontró ninguna casilla, y salía verde para siempre: un gate que no puede fallar no
+es un gate laxo — es un gate apagado que parece encendido. Y sobre los `Implementado` el rojo
+aparecía con el trabajo ya en `staging`, cuando la única salida era abrir otra cosa para
+arreglarlo, que es la deuda que esto viene a cerrar. Sobre la rama el PR todavía está abierto.
 
 **Y el ancla nueva es más fuerte que la que reemplaza.** Una casilla la marca a mano el mismo
 que decide si el trabajo está hecho, así que verifica una afirmación contra sí misma. Un test
@@ -221,7 +223,9 @@ todo lo demás. Lo que la sostiene, y lo que la limita:
 **Y una convención mayoritaria que este repo rechaza a propósito:** Google recomienda dejar un
 `TODO` con su bug para lo que queda fuera de alcance. Acá eso ya se falsó con datos locales — **137
 casillas «lo mira una persona» en 35 specs, 6 cerradas alguna vez**. Evidencia propia le gana a una
-convención general, y por eso el marcador no existe.
+convención general, y por eso el marcador no existe. Se fueron las casillas y la regla se quedó
+con otro sujeto: es el **criterio de aceptación** el que no se puede cerrar mirando ni
+escuchando.
 
 ## Qué verifica una herramienta y qué no
 
@@ -231,12 +235,11 @@ cuál es cuál:
 | Regla | Quién la verifica |
 |---|---|
 | Ningún `## Seguimiento` ni sección de aplazamiento en los archivos del spec | `test_convencion_de_specs.py` |
-| Ninguna tarea que se cierre mirando, escuchando o sacando una captura | `test_convencion_de_specs.py` |
-| Ninguna tarea que aplace por texto (`TODO`, `pendiente`, `más adelante`, `por ahora`) | `test_convencion_de_specs.py` |
+| Ningún criterio que se cierre mirando, escuchando o sacando una captura | `test_convencion_de_specs.py` |
+| Ningún criterio que aplace por texto (`TODO`, `pendiente`, `más adelante`, `por ahora`) | `test_convencion_de_specs.py` |
 | Ningún `research.md` con una medición declarada como no hecha | `test_convencion_de_specs.py` |
-| **Un spec ≤ 029 `Implementado` no puede tener una casilla abierta** | `test_convencion_de_specs.py` |
-| **Un spec ≥ 030 `Implementado` tiene cada criterio citado como `NNN-ACn` por un test** | `test_convencion_de_specs.py` |
-| Ningún spec ≥ 030 pasa uno de los cuatro techos de palabras | `test_convencion_de_specs.py` |
+| **Cada criterio del spec de la rama, citado como `NNN-ACn` por un test** | `test_criterios_de_la_rama.py` |
+| Ningún spec pasa uno de los cuatro techos de palabras | `test_convencion_de_specs.py` |
 | Que ese test **ejerza** el criterio y no sólo lo nombre | **prosa** — el gate verifica la cita |
 | Que un `## Fuera de alcance` no esconda un AC propio | **prosa** — lo mira el review |
 | Que el skill se haya corregido cuando el lazo lo pedía | **prosa** — lo mira el reporte |

@@ -191,7 +191,7 @@ le tocan, y el orden del lote. Y este contrato:
      preceden. Una medición sin base declarada es infalsificable en cuanto el lote se reordena —
      y el lote se reordena siempre.
 2. **Los tres archivos** en `specs/<NNN>-<descripcion-kebab>/`: `spec.md`, `research.md`,
-   `estrategia.md`, con sus cuatro techos de palabras. El formato y las desviaciones están en
+   `plan.md`, con sus cuatro techos de palabras. El formato y las desviaciones están en
    [`specs/README.md`](../../../specs/README.md).
 3. **`**Origen:** #N` en el encabezado del `spec.md`** si el spec salda issues de deuda — antes
    del primer `##`, porque un `#12` suelto en la prosa no cuenta. La parsea `crear` y de ahí sale
@@ -209,7 +209,7 @@ le tocan, y el orden del lote. Y este contrato:
    tarea no rompe ningún gate, no sale en ningún diff, y **no se hace nunca** — el spec se
    implementa entero, se mergea, y el AC sigue sin cumplirse con los seis nodos en verde.
 7. **Nada se aplaza.** Ninguna sección que aplace —`## Seguimiento` y sus alias `## Pendientes`,
-   `## Próximos pasos`, `## Deuda`—, ninguna casilla con `TODO` o «por ahora», ningún marcador
+   `## Próximos pasos`, `## Deuda`—, ningún criterio con `TODO` o «por ahora», ningún marcador
    para «esto lo mira una persona». Las verifica `test_convencion_de_specs.py`. **`## Fuera de
    alcance` sí va**: es una frontera, no una promesa — salvo que un AC tuyo dependa de lo
    excluido, y entonces entra al spec.
@@ -253,7 +253,7 @@ El padre no re-audita: cruza, y después publica. En este orden, y el orden impo
    de todo spec de este repo, así que salen compartidos en **todos** los lotes y no son
    aristas.
 
-   Lo que aparezca acá se corrige **ahora**, en el `estrategia.md` del spec que corresponda. Todavía es
+   Lo que aparezca acá se corrige **ahora**, en el `plan.md` del spec que corresponda. Todavía es
    texto.
 2. **Crear los issues, los N de una:**
 

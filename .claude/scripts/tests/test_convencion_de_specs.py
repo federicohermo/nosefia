@@ -4,39 +4,47 @@
 Eso está bien, y por eso **se declara**: un gate que mira cero specs y dice «OK» es
 indistinguible de uno que los miró todos, que es la peor respuesta posible.
 
-Para que mire todo el árbol hace falta traerlo:
+Para que mire todo lo que hay que mirar alcanza con:
 
-    python .claude/scripts/hidratar_specs.py --todos
+    python .claude/scripts/hidratar_specs.py
 
-**Hay dos regímenes y el número decide cuál.** Los specs ≤ 029 se escribieron con cuatro
-archivos y su ancla anti-deuda es la casilla; del 030 en adelante son tres archivos con techo
-de palabras y el ancla es AC↔test. El corte es por número y no por qué archivos hay en disco,
-que es lo único que no se puede evadir escribiendo el archivo que falta.
+**Hay un solo régimen.** Todo spec del que todavía pueda salir trabajo tiene tres archivos
+—`spec.md`, `research.md`, `plan.md`—, cuatro techos de palabras y ninguna casilla. El
+`tasks.md` no existe: era predicción específica y equivocada, y la medición está en
+`specs/README.md`.
+
+**Lo que este gate NO mira son los terminales**, y ésa es la única partición que quedó. Un
+spec `Implementado`, `Descartado` o `Superado` es un **ADR**: registro de qué se decidió y
+con qué evidencia. No se reescribe, no se hidrata por default, y si alguien lo trae a mano
+—`hidratar_specs.py 025`— este gate lo saltea en vez de exigirle un formato que se inventó
+después. Juzgar historia con la regla de hoy no arregla nada y da un rojo que no se puede
+cerrar.
+
+**La partición sale del `estado` del mapa y no del número ni del disco.** El estado no lo
+escribe nadie a mano: lo deriva `.github/workflows/mapa.yml` del PR que aterrizó, y el gate
+del mapa prohíbe tocarlo adentro del PR que lo justifica. O sea que esta regla no se evade
+escribiendo un archivo — que era el argumento del corte por número que esto reemplaza. Una
+carpeta **sin fila en el mapa** se mira igual: es un spec que se está escribiendo y todavía
+no se publicó, que es justo cuando conviene mirarlo.
+
+El ancla anti-deuda —cada `ACn` citado por un test como `NNN-ACn`— **no vive acá**: pedía
+tener en disco specs ya cerrados. Se mudó al PR, que es donde el spec y sus tests están
+juntos: `test_criterios_de_la_rama.py`.
 """
 
 import re
 import unittest
 
 from lib.repo import RAIZ
-from lib.specs import leer_mapa
+from lib.specs import acs_de, en_vuelo, leer_mapa, palabras, partir_spec
 
 SPECS = RAIZ / "specs"
 
-#: El primer spec del régimen nuevo. **Es 030 y no 029**, y está medido: una carpeta de tres
-#: archivos rompe seis tests del gate vigente, así que el 029 —que es el spec que estrena esta
-#: regla— no puede escribirse con ella sin dejar el nodo `harness` en rojo antes de que exista
-#: su rama. Una regla que arranca en el spec que la propone no se puede publicar.
-PRIMER_SPEC_NUEVO = 30
-
-#: Los cuatro archivos del régimen viejo. Son el **piso**, no el techo.
-CANONICOS = ("spec.md", "research.md", "plan.md", "tasks.md")
-
-#: Los tres del régimen nuevo. Acá son piso **y** techo para los dos que se fueron: un
-#: `plan.md` o un `tasks.md` en un spec ≥ 030 no es un archivo de más, es el régimen viejo
-#: entrando por la ventana — y con él vuelve la predicción de rutas que este corte existe para
-#: sacar.
-CANONICOS_NUEVOS = ("spec.md", "research.md", "estrategia.md")
-DESTERRADOS = ("plan.md", "tasks.md")
+#: Los tres archivos de un spec. Son piso **y** techo para el que se fue: un `tasks.md` no es
+#: un archivo de más, es el régimen viejo entrando por la ventana — y con él vuelve la
+#: predicción de rutas que el formato nuevo existe para sacar.
+CANONICOS = ("spec.md", "research.md", "plan.md")
+DESTERRADOS = ("tasks.md",)
 
 #: Los cuatro techos de palabras.
 #:
@@ -46,66 +54,64 @@ DESTERRADOS = ("plan.md", "tasks.md")
 #: muerde la **cantidad**.
 #:
 #: Los números salen de medir el `spec.md` del 029, que es el modelo del formato: prosa 350,
-#: bloque de criterios 254, `research.md` 444, `estrategia.md` 233 —medido con `palabras()` el
+#: bloque de criterios 254, `research.md` 444, `plan.md` 233 —medido con `palabras()` el
 #: 2026-09-05—. O sea que están calibrados contra un documento que existe y entra, no elegidos
-#: de memoria. Lo verifica `test_los_techos_admiten_el_spec_que_los_estrena`.
+#: de memoria. Que sigan siendo cumplibles ya no necesita un test aparte: hay specs reales en
+#: disco y `test_ningun_spec_pasa_un_techo_de_palabras` corre sobre todos ellos, así que bajar
+#: un techo a un número que nadie puede cumplir da rojo ahí mismo.
 TECHO_DE_PROSA = 350
 TECHO_DE_AC = 300
 TECHO_DE_RESEARCH = 500
-TECHO_DE_ESTRATEGIA = 250
-
-#: El encabezado del bloque de criterios de aceptación, que es lo que parte el `spec.md` en
-#: sus dos mitades con techos distintos.
-ENCABEZADO_DE_AC = re.compile(r"^##\s+Criterios de aceptaci[oó]n\s*$", re.MULTILINE)
-
-#: Un criterio, tal como el resto del repo lo nombra: `AC1`, `AC17`.
-AC = re.compile(r"\bAC(\d+)\b")
-
-#: Qué cuenta como palabra: un token con al menos una letra o un dígito.
-#:
-#: La definición importa porque el techo se apoya en ella. Sin esto, un «—», un `**` suelto y
-#: el `-` de cada viñeta cuentan como palabras, y entonces el techo se lo lleva el markdown en
-#: vez de la prosa — o sea que reescribir una lista como párrafo «ahorra» palabras sin haber
-#: sacado ni una idea.
-PALABRA = re.compile(r"[0-9A-Za-zÀ-ÖØ-öø-ÿ]")
-
-#: `- [ ] T012 [P] Descripción`, con `[P]` opcional.
-TAREA = re.compile(r"^- \[[ x]\] (T\d{3})( \[P\])? \S")
-
-#: Una casilla que no respeta el formato: empieza como tarea y no matchea `TAREA`.
-CASILLA = re.compile(r"^- \[[ x]\] ")
-
-#: Una casilla sin marcar.
-ABIERTA = re.compile(r"^- \[ \] ")
+TECHO_DE_PLAN = 250
 
 #: Un encabezado markdown, con su texto.
 ENCABEZADO = re.compile(r"^#{1,6}\s+(.*?)\s*$")
 
 #: Las secciones que aplazan trabajo, y por eso no existen acá.
 #:
-#: **`Fuera de alcance` no está en la lista y es deliberado**: declara una frontera —qué NO hace
-#: este spec— y es lo que lo vuelve revisable. Se convierte en deuda sólo cuando algún AC del
-#: propio spec depende de lo excluido, y eso ningún gate lo puede ver: lo mira el review. Lo
-#: mismo con `Riesgos`, que analiza y no promete.
+#: **`Fuera de alcance` no está en la lista y es deliberado**: declara una frontera —qué NO
+#: hace este spec— y es lo que lo vuelve revisable. Se convierte en deuda sólo cuando algún AC
+#: del propio spec depende de lo excluido, y eso ningún gate lo puede ver: lo mira el review.
+#: Lo mismo con `Riesgos`, que analiza y no promete.
 SECCION_QUE_APLAZA = re.compile(
     r"^(seguimiento|pendientes?|deuda|backlog|to-?do|futuro|a futuro|"
     r"pr[oó]ximos pasos|queda pendiente|para (m[aá]s adelante|despu[eé]s))\b",
     re.IGNORECASE,
 )
 
-#: Aplazar por texto adentro de una tarea. Una casilla que dice «por ahora» no es una tarea:
-#: es una intención con formato de checklist, y se cierra marcándola sin haber hecho nada.
+#: Aplazar por texto adentro de un criterio. Un AC que dice «por ahora» no es un criterio: es
+#: una intención, y se da por cumplido sin haber hecho nada.
 #:
 #: **Son dos y no una porque el repo escribe en español.** Los marcadores de código van SIN
-#: `IGNORECASE`: con él, `\bTODO\b` matchea la palabra «todo», y la primera corrida de este
-#: gate se cazó a sí misma contra `T001 … todo tipo del enum tiene costo declarado`. Un gate
-#: que da rojo sobre una tarea correcta se apaga en una semana, y ahí no queda gate.
+#: `IGNORECASE`: con él, `\bTODO\b` matchea la palabra «todo», y la primera corrida de esta
+#: regla se cazó a sí misma contra `todo tipo del enum tiene costo declarado`. Un gate que da
+#: rojo sobre un criterio correcto se apaga en una semana, y ahí no queda gate.
 MARCADOR_DE_CODIGO = re.compile(r"\bTODO\b|\bFIXME\b|\bXXX\b|\bHACK\b")
 
-TAREA_QUE_APLAZA = re.compile(
+TEXTO_QUE_APLAZA = re.compile(
     r"pendiente|m[aá]s adelante|a futuro|en el futuro|queda para|por ahora|provisori|"
     r"si (hay|sobra) tiempo|eventualmente|idealmente",
     re.IGNORECASE,
+)
+
+#: Un criterio que se cierra mirando o escuchando no lo cierra nadie. En el repo del que sale
+#: este harness eran 137 casillas marcadas `[M]` en 35 specs, y sólo 6 se cerraron alguna vez:
+#: el marcador no significaba «espera a una persona» sino «no se va a hacer, pero queda
+#: escrito».
+#:
+#: **La regla se mudó de la casilla al criterio y por eso sigue viva.** Era la única de las
+#: cuatro del régimen viejo que no dependía del `tasks.md` para tener sentido: lo que
+#: verificaba no era el formato de la casilla, era que la verificación fuera posible. Su
+#: sujeto natural es el AC, que es lo que ahora dice cuándo el spec está hecho.
+#:
+#: Las salidas son dos y anotarlo no es ninguna: o el criterio se vuelve verificable —un test,
+#: una medición, un valor que un gate pueda leer— o no se escribe.
+#: **`captura` va con «de pantalla» y no suelto**, y es medido: la primera corrida de esta regla
+#: dio rojo sobre «un `int` **capturado** por un lambda de GDScript», que es un criterio
+#: perfectamente verificable. Un gate que da rojo sobre un criterio correcto se apaga en una
+#: semana — el mismo motivo por el que `TODO` va sin `IGNORECASE`.
+PIDE_UNA_PERSONA = re.compile(
+    r"\[M\]|a ojo|de o[ií]do|escuchar|mirar la pantalla|captura de pantalla", re.IGNORECASE
 )
 
 #: Una medición declarada como no hecha. El `research.md` sale de correr algo: una medición
@@ -117,73 +123,41 @@ MEDICION_APLAZADA = re.compile(
     re.IGNORECASE,
 )
 
-#: El único estado en el que una casilla abierta —o un criterio sin test— es una
-#: contradicción. `Descartado` y `Superado` son terminales —son historia y no se corrigen—, y
-#: `Propuesto` es la cola.
-CERRADO = "Implementado"
 
-#: Dónde se busca la cita de un criterio. Son dos árboles porque este repo tiene dos suites:
-#: la de gdUnit4 sobre el juego y la de unittest sobre el harness, y un spec puede caer entero
-#: de cualquiera de los dos lados.
-ARBOLES_DE_TEST = (RAIZ / "test", RAIZ / ".claude" / "scripts" / "tests")
+def numero_de(carpeta: str) -> str:
+    """`030-el-spec-nuevo` → `030`."""
+    return carpeta[:3]
 
 
-def numero_de(carpeta: str) -> int:
-    """`030-el-spec-nuevo` → `30`."""
-    return int(carpeta[:3])
+def es_adr(carpeta: str, mapa: dict) -> bool:
+    """Si esta carpeta es historia y no cola de trabajo.
 
-
-def es_nuevo(carpeta: str) -> bool:
-    return numero_de(carpeta) >= PRIMER_SPEC_NUEVO
-
-
-def palabras(texto: str) -> int:
-    """Las palabras de un texto en markdown: los tokens que tienen letra o dígito."""
-    return sum(1 for token in texto.split() if PALABRA.search(token))
-
-
-def partir_spec(texto: str) -> tuple[str, str]:
-    """El `spec.md` partido en `(prosa, bloque de criterios)`.
-
-    **El encabezado `## Criterios de aceptación` cuenta del lado de los criterios**, y no es
-    un detalle de tres palabras: es lo que hace que mover el encabezado no mueva palabras de
-    un techo al otro.
-
-    Un `spec.md` sin ese encabezado devuelve todo como prosa y el bloque vacío. No se ataja
-    acá: un spec sin criterios lo caza el techo de prosa o el gate de AC↔test, y duplicar la
-    regla la deja con dos mensajes distintos para el mismo defecto.
+    Una carpeta que el mapa no conoce **no es un ADR**: es un spec que se está escribiendo y
+    todavía no se publicó. La polaridad importa — el default es mirar, y la excepción hay que
+    ganársela con una fila que diga que el spec terminó.
     """
-    corte = ENCABEZADO_DE_AC.search(texto)
-    if corte is None:
-        return texto, ""
-    resto = texto[corte.start() :]
-    # Desde el carácter 3 para no volver a matchear el propio encabezado del bloque.
-    siguiente = re.search(r"^##\s", resto[3:], re.MULTILINE)
-    if siguiente is None:
-        return texto[: corte.start()], resto
-    fin = siguiente.start() + 3
-    return texto[: corte.start()] + resto[fin:], resto[:fin]
+    fila = mapa.get(numero_de(carpeta))
+    return fila is not None and not en_vuelo(fila.get("estado", ""))
 
 
 def problemas_de_forma(carpeta: str, presentes: set[str]) -> list[str]:
-    """Qué archivos le faltan o le sobran a un spec, según el régimen que le toca.
+    """Qué archivos le faltan o le sobran a un spec.
 
     Puro —recibe el conjunto de nombres, no lee el disco— porque es la única forma de sondear
-    el caso que todavía no existe en el árbol: un spec del régimen nuevo antes de que haya uno.
+    un caso que no está en el árbol.
     """
-    esperados = CANONICOS_NUEVOS if es_nuevo(carpeta) else CANONICOS
-    problemas = [f"{carpeta}: falta {archivo}" for archivo in esperados if archivo not in presentes]
-    if es_nuevo(carpeta):
-        problemas += [
-            f"{carpeta}: {archivo} es del régimen viejo y este spec es ≥ {PRIMER_SPEC_NUEVO:03d}"
-            for archivo in DESTERRADOS
-            if archivo in presentes
-        ]
+    problemas = [f"{carpeta}: falta {archivo}" for archivo in CANONICOS if archivo not in presentes]
+    problemas += [
+        f"{carpeta}: {archivo} es del régimen viejo, y el régimen viejo son los specs que ya "
+        "aterrizaron"
+        for archivo in DESTERRADOS
+        if archivo in presentes
+    ]
     return problemas
 
 
 def problemas_de_techo(carpeta: str, archivos: dict[str, str]) -> list[str]:
-    """Qué techo de palabras pasa un spec del régimen nuevo.
+    """Qué techo de palabras pasa un spec.
 
     Los archivos ausentes no cuentan: de ésos habla `problemas_de_forma`, y contarlos acá
     daría dos rojos por un solo defecto.
@@ -203,43 +177,9 @@ def problemas_de_techo(carpeta: str, archivos: dict[str, str]) -> list[str]:
         medir("spec.md", criterios, TECHO_DE_AC, "el bloque de criterios")
     if "research.md" in archivos:
         medir("research.md", archivos["research.md"], TECHO_DE_RESEARCH, "el research")
-    if "estrategia.md" in archivos:
-        medir("estrategia.md", archivos["estrategia.md"], TECHO_DE_ESTRATEGIA, "la estrategia")
+    if "plan.md" in archivos:
+        medir("plan.md", archivos["plan.md"], TECHO_DE_PLAN, "el plan")
     return problemas
-
-
-def acs_de(spec_md: str) -> list[str]:
-    """Los criterios que un `spec.md` declara, en orden y sin repetir.
-
-    Sólo los del bloque de criterios: un `AC3` citado en la prosa del problema es una
-    referencia a otro spec, no una promesa de éste.
-    """
-    _, criterios = partir_spec(spec_md)
-    vistos: list[str] = []
-    for numero in AC.findall(criterios):
-        nombre = f"AC{int(numero)}"
-        if nombre not in vistos:
-            vistos.append(nombre)
-    return vistos
-
-
-def acs_sin_test(numero: str, acs: list[str], textos: list[str]) -> list[str]:
-    """Los criterios que ningún test nombra, con la cita **calificada por el número del spec**.
-
-    La cita es `NNN-ACn` —`030-AC1`— y no `AC1` a secas. No es estilo: `AC1` es el nombre que
-    usa **todo** spec, así que con la cita pelada el primer test que escribiera `AC1` dejaría
-    cubierto el `AC1` de todos los specs que vengan después, para siempre. El gate no podría
-    volver a fallar, que es exactamente el gate apagado que parece encendido que este ancla
-    vino a cerrar.
-
-    **Por nombre**, que es lo que hace accionable el rojo: «falta 030-AC4» se arregla; «hay un
-    criterio sin test» hay que ir a buscarlo.
-    """
-    return [
-        ac
-        for ac in acs
-        if not any(re.search(rf"\b{numero}-{ac}\b", texto) for texto in textos)
-    ]
 
 
 def hidratados() -> list[str]:
@@ -248,50 +188,33 @@ def hidratados() -> list[str]:
     return sorted(e.name for e in SPECS.iterdir() if e.is_dir() and re.match(r"^\d{3}-", e.name))
 
 
-def textos_de_test() -> list[str]:
-    return [
-        archivo.read_text(encoding="utf-8", errors="replace")
-        for arbol in ARBOLES_DE_TEST
-        if arbol.is_dir()
-        for archivo in arbol.rglob("*")
-        if archivo.is_file() and archivo.suffix in (".gd", ".py")
-    ]
-
-
 class Convencion(unittest.TestCase):
-    """El gate sobre el árbol hidratado."""
+    """El gate sobre los specs en vuelo que estén en disco."""
 
     def setUp(self):
-        self.carpetas = hidratados()
+        mapa = leer_mapa((SPECS / "mapa.json").read_text(encoding="utf-8"))
+        todas = hidratados()
+        self.carpetas = [c for c in todas if not es_adr(c, mapa)]
         if not self.carpetas:
             self.skipTest(
-                "no hay ningún spec hidratado en disco: este gate NO miró nada. "
-                "`python .claude/scripts/hidratar_specs.py --todos` los trae."
+                f"ningún spec en vuelo hidratado en disco ({len(todas)} carpeta(s), todas ADR): "
+                "este gate NO miró nada. `python .claude/scripts/hidratar_specs.py` los trae."
             )
-        # La partición que decide qué regla mira a quién. Las reglas de casillas leen el
-        # `tasks.md`, que en el régimen nuevo no existe: sin partir acá, cada una abriría un
-        # archivo ausente y el gate se caería con un `FileNotFoundError` en vez de decir qué
-        # está mal.
-        self.viejas = [c for c in self.carpetas if not es_nuevo(c)]
-        self.nuevas = [c for c in self.carpetas if es_nuevo(c)]
 
-    def _canonicos(self, carpeta: str) -> tuple[str, ...]:
-        return CANONICOS_NUEVOS if es_nuevo(carpeta) else CANONICOS
+    def _criterios(self, carpeta: str) -> list[tuple[int, str]]:
+        """Las líneas del bloque de criterios, numeradas dentro del `spec.md`.
 
-    def _cerrados_en_disco(self) -> list[tuple[str, str]]:
-        """Los specs `Implementado` que además están hidratados, como `(NNN, carpeta)`.
-
-        Los que no están en disco quedan afuera: este gate no los puede mirar, y el `setUp` ya
-        declaró que el árbol puede estar incompleto.
+        El número es el del archivo y no el del bloque: un rojo que dice `spec.md:41` se abre;
+        uno que dice «línea 6 del bloque» hay que contarlo a mano.
         """
-        mapa = leer_mapa((SPECS / "mapa.json").read_text(encoding="utf-8"))
-        return [
-            (numero, fila["carpeta"])
-            for numero, fila in mapa.items()
-            if fila.get("estado") == CERRADO and fila.get("carpeta") in self.carpetas
-        ]
+        texto = (SPECS / carpeta / "spec.md").read_text(encoding="utf-8")
+        _, criterios = partir_spec(texto)
+        if not criterios:
+            return []
+        offset = texto[: texto.index(criterios)].count("\n")
+        return [(offset + i, linea) for i, linea in enumerate(criterios.splitlines(), 1)]
 
-    def test_cada_spec_tiene_los_archivos_de_su_regimen(self):
+    def test_cada_spec_tiene_sus_tres_archivos(self):
         for carpeta in self.carpetas:
             presentes = {f.name for f in (SPECS / carpeta).iterdir() if f.is_file()}
             self.assertEqual(problemas_de_forma(carpeta, presentes), [], carpeta)
@@ -303,51 +226,42 @@ class Convencion(unittest.TestCase):
             primera = (SPECS / carpeta / "spec.md").read_text(encoding="utf-8").splitlines()[0]
             self.assertTrue(primera.startswith("# "), f"{carpeta}/spec.md: «{primera[:40]}»")
 
-    def test_ningun_spec_nuevo_pasa_un_techo_de_palabras(self):
+    def test_ningun_spec_pasa_un_techo_de_palabras(self):
         # El techo es lo que reemplaza al `tasks.md` como límite de tamaño: sin él, el formato
         # nuevo es el viejo con un archivo menos.
-        for carpeta in self.nuevas:
+        for carpeta in self.carpetas:
             archivos = {
                 nombre: (SPECS / carpeta / nombre).read_text(encoding="utf-8")
-                for nombre in CANONICOS_NUEVOS
+                for nombre in CANONICOS
                 if (SPECS / carpeta / nombre).is_file()
             }
             self.assertEqual(problemas_de_techo(carpeta, archivos), [], carpeta)
 
-    def test_todas_las_casillas_respetan_el_formato_de_tarea(self):
-        for carpeta in self.viejas:
-            texto = (SPECS / carpeta / "tasks.md").read_text(encoding="utf-8")
-            for numero, linea in enumerate(texto.splitlines(), 1):
-                if CASILLA.match(linea):
-                    self.assertRegex(linea, TAREA, f"{carpeta}/tasks.md:{numero}")
+    def test_cada_spec_declara_al_menos_un_criterio(self):
+        # Un spec sin criterios no es revisable —no dice cuándo está hecho— y encima deja sin
+        # sujeto al gate de la rama, que exige un test por criterio: cero criterios es cero
+        # exigencias, en verde.
+        for carpeta in self.carpetas:
+            acs = acs_de((SPECS / carpeta / "spec.md").read_text(encoding="utf-8"))
+            self.assertNotEqual(acs, [], f"{carpeta}/spec.md no declara ningún `ACn`")
 
-    def test_los_ids_de_tarea_no_se_repiten(self):
-        # Los IDs son estables: no se renumeran al insertar una tarea nueva, se sigue contando.
-        # Un ID libre no molesta a nadie; uno reusado rompe la referencia que otra tarea le
-        # hacía, y el `spec_write` que la marca ya no sabe cuál de las dos es.
-        for carpeta in self.viejas:
-            texto = (SPECS / carpeta / "tasks.md").read_text(encoding="utf-8")
-            ids = TAREA.findall(texto)
-            solos = [i[0] for i in ids]
-            self.assertEqual(len(solos), len(set(solos)), f"{carpeta}/tasks.md tiene IDs repetidos")
+    def test_ningun_criterio_aplaza_por_texto(self):
+        # Un criterio que dice «por ahora» o «TODO» se da por cumplido sin haber hecho nada, y
+        # encima cuenta para el conteo del cierre.
+        for carpeta in self.carpetas:
+            for numero, linea in self._criterios(carpeta):
+                self.assertNotRegex(linea, TEXTO_QUE_APLAZA, f"{carpeta}/spec.md:{numero}")
+                self.assertNotRegex(linea, MARCADOR_DE_CODIGO, f"{carpeta}/spec.md:{numero}")
 
-    def test_ninguna_tarea_pide_una_persona(self):
-        # Una tarea que se cierra mirando o escuchando no la puede cerrar un agente, y en la
-        # práctica no la cierra nadie: en el repo del que sale este harness eran 137 casillas
-        # marcadas así en 35 specs, y sólo 6 se cerraron alguna vez. O sea que el marcador no
-        # significaba «espera a una persona» sino «no se va a hacer, pero queda escrito».
-        #
-        # La salida son dos y anotarlo no es ninguna: o la verificación se vuelve verificable
-        # —un test, una medición, un valor que un gate pueda leer— y entonces es una tarea
-        # normal que bloquea como cualquier otra, o no se escribe.
-        pide_persona = re.compile(
-            r"\[M\]|a ojo|de o[ií]do|escuchar|mirar la pantalla|captura", re.IGNORECASE
-        )
-        for carpeta in self.viejas:
-            texto = (SPECS / carpeta / "tasks.md").read_text(encoding="utf-8")
-            for numero, linea in enumerate(texto.splitlines(), 1):
-                if CASILLA.match(linea):
-                    self.assertNotRegex(linea, pide_persona, f"{carpeta}/tasks.md:{numero}")
+    def test_ningun_criterio_pide_una_persona(self):
+        for carpeta in self.carpetas:
+            for numero, linea in self._criterios(carpeta):
+                self.assertNotRegex(
+                    linea,
+                    PIDE_UNA_PERSONA,
+                    f"{carpeta}/spec.md:{numero}: un criterio que se cierra mirando o "
+                    "escuchando no lo cierra nadie. O se vuelve verificable, o no se escribe.",
+                )
 
     def test_ningun_spec_tiene_una_seccion_que_aplaza(self):
         # `## Seguimiento` era la puerta de atrás: un lugar adentro del spec donde escribir
@@ -355,10 +269,14 @@ class Convencion(unittest.TestCase):
         # llamándose `## Pendientes` o `## Próximos pasos` y hace exactamente lo mismo—, así
         # que lo que se prohíbe es la operación, no el título.
         #
-        # Mira todos los archivos del régimen que le toque y no sólo el que lleva las tareas:
-        # un `## Deuda` en el `research.md` aplaza igual, y era donde no miraba nadie.
+        # Mira los tres archivos y no sólo el `spec.md`: un `## Deuda` en el `research.md`
+        # aplaza igual, y era donde no miraba nadie.
+        # Un archivo ausente no se lee: de ése habla `problemas_de_forma`, y caerse acá con
+        # un `FileNotFoundError` taparía el rojo que sí dice qué falta.
         for carpeta in self.carpetas:
-            for archivo in self._canonicos(carpeta):
+            for archivo in CANONICOS:
+                if not (SPECS / carpeta / archivo).is_file():
+                    continue
                 texto = (SPECS / carpeta / archivo).read_text(encoding="utf-8")
                 for numero, linea in enumerate(texto.splitlines(), 1):
                     encabezado = ENCABEZADO.match(linea)
@@ -371,26 +289,14 @@ class Convencion(unittest.TestCase):
                             ".claude/skills/spec-create/sin-deuda.md",
                         )
 
-    def test_ninguna_tarea_aplaza_por_texto(self):
-        # Una casilla que dice «por ahora» o «TODO» se cierra marcándola sin haber hecho nada,
-        # y encima cuenta como tarea cumplida en el conteo del cierre. El `[M]` de
-        # `test_ninguna_tarea_pide_una_persona` era el mismo agujero con otra sintaxis.
-        for carpeta in self.viejas:
-            texto = (SPECS / carpeta / "tasks.md").read_text(encoding="utf-8")
-            for numero, linea in enumerate(texto.splitlines(), 1):
-                if CASILLA.match(linea):
-                    self.assertNotRegex(linea, TAREA_QUE_APLAZA, f"{carpeta}/tasks.md:{numero}")
-                    self.assertNotRegex(linea, MARCADOR_DE_CODIGO, f"{carpeta}/tasks.md:{numero}")
-
     def test_ningun_research_deja_una_medicion_sin_hacer(self):
         # El `research.md` sale de correr algo: es la regla que hace estimable al spec. Una
         # medición declarada como pendiente es la deuda más cara del flujo, porque el plan
         # entero se apoya en un número que nadie midió y el spec **igual se publica** — o sea
         # que el agujero viaja hasta la implementación disfrazado de decisión tomada.
-        #
-        # Es la única regla de contenido que cruza los dos regímenes: el `research.md` no se va
-        # con el `tasks.md`, y medir en vez de suponer nunca dependió del formato.
         for carpeta in self.carpetas:
+            if not (SPECS / carpeta / "research.md").is_file():
+                continue
             texto = (SPECS / carpeta / "research.md").read_text(encoding="utf-8")
             for numero, linea in enumerate(texto.splitlines(), 1):
                 self.assertNotRegex(
@@ -400,85 +306,31 @@ class Convencion(unittest.TestCase):
                     "O se corre, o el spec no la necesitaba.",
                 )
 
-    def test_un_spec_viejo_implementado_no_tiene_casillas_abiertas(self):
-        # El ancla anti-deuda del régimen viejo, y la única de esas reglas que mira el registro
-        # además del archivo: un spec `Implementado` con una casilla abierta ES la deuda
-        # invisible, porque el ítem hereda el estado del spec y el spec dice que ya está.
-        #
-        # Los terminales (`Descartado`, `Superado`) no se miran: son historia. `Propuesto` es
-        # la cola, y una casilla abierta ahí es lo normal.
-        #
-        # Falla también si el disco quedó atrás del issue, y eso es una feature: `specs/` es
-        # caché, así que un `tasks.md` viejo es indistinguible de un spec que mintió. Las dos
-        # salidas están en el mensaje.
-        for numero, carpeta in self._cerrados_en_disco():
-            if es_nuevo(carpeta):
-                continue
-            tareas = (SPECS / carpeta / "tasks.md").read_text(encoding="utf-8")
-            abiertas = [linea for linea in tareas.splitlines() if ABIERTA.match(linea)]
-            self.assertEqual(
-                abiertas,
-                [],
-                f"el spec {numero} está `{CERRADO}` y su tasks.md tiene "
-                f"{len(abiertas)} casilla(s) abierta(s): {abiertas[:3]}. "
-                "O falta implementarlas, o falta devolver las marcas al issue con "
-                "`publicar_spec.py publicar` y rehidratar.",
-            )
 
-    def test_un_spec_nuevo_implementado_tiene_cada_ac_nombrado_por_un_test(self):
-        # El ancla anti-deuda del régimen nuevo, y **es más fuerte que la que reemplaza**: una
-        # casilla se marca a mano, y quien la marca es el mismo que decide si el trabajo está
-        # hecho. Un test que nombra el criterio lo tiene que escribir alguien, corre en cada
-        # push, y se rompe solo cuando el código deja de cumplirlo.
-        #
-        # Lo que verifica es la CITA, no que el test ejerza el criterio: un `030-AC4` en el
-        # nombre o en un comentario alcanza. Es un piso y hay que decirlo — el techo, que el
-        # test realmente falle cuando el criterio no se cumple, no lo ve ninguna herramienta.
-        textos = textos_de_test()
-        for numero, carpeta in self._cerrados_en_disco():
-            if not es_nuevo(carpeta):
-                continue
-            acs = acs_de((SPECS / carpeta / "spec.md").read_text(encoding="utf-8"))
-            self.assertNotEqual(
-                acs, [], f"el spec {numero} está `{CERRADO}` y no declara ningún criterio."
-            )
-            faltan = acs_sin_test(numero, acs, textos)
-            self.assertEqual(
-                faltan,
-                [],
-                f"el spec {numero} está `{CERRADO}` y ningún test cita "
-                f"{', '.join(f'{numero}-{ac}' for ac in faltan)}. "
-                "Cada criterio se cita como `NNN-ACn` desde el test que lo verifica, en test/ "
-                "o en .claude/scripts/tests/.",
-            )
+class Sondas(unittest.TestCase):
+    """Las reglas puras, sobre casos escritos acá.
 
-
-class RegimenNuevo(unittest.TestCase):
-    """Las sondas del régimen nuevo, sin tocar el disco.
-
-    **Existen porque todavía no hay ningún spec ≥ 030**, así que las reglas de arriba corren
-    sobre una lista vacía y pasarían igual si estuvieran rotas. Un gate que estrena una regla
-    sin un caso que la vea fallar es una regla que nadie probó.
+    Existen porque las de arriba corren sobre lo que haya en disco, que puede ser nada: sin
+    estas sondas, un gate roto y un árbol vacío se ven igual.
     """
 
     def test_acepta_los_tres_archivos(self):  # 029-AC1
-        self.assertEqual(
-            problemas_de_forma("030-x", {"spec.md", "research.md", "estrategia.md"}), []
-        )
+        self.assertEqual(problemas_de_forma("030-x", {"spec.md", "research.md", "plan.md"}), [])
 
-    def test_rechaza_si_falta_la_estrategia(self):  # 029-AC1
+    def test_rechaza_si_falta_el_plan(self):  # 029-AC1
         self.assertTrue(problemas_de_forma("030-x", {"spec.md", "research.md"}))
 
     def test_rechaza_un_tasks_de_mas(self):  # 029-AC1
         self.assertTrue(
-            problemas_de_forma("030-x", {"spec.md", "research.md", "estrategia.md", "tasks.md"})
+            problemas_de_forma("030-x", {"spec.md", "research.md", "plan.md", "tasks.md"})
         )
 
-    def test_un_spec_viejo_sigue_pidiendo_los_cuatro(self):  # 029-AC2
-        self.assertTrue(problemas_de_forma("029-x", {"spec.md", "research.md", "estrategia.md"}))
-        self.assertEqual(
-            problemas_de_forma("029-x", {"spec.md", "research.md", "plan.md", "tasks.md"}), []
-        )
+    def test_un_terminal_es_adr_y_uno_sin_fila_no(self):  # 029-AC2
+        mapa = {"025": {"estado": "Implementado"}, "027": {"estado": "Propuesto"}}
+        self.assertTrue(es_adr("025-lo-que-sea", mapa))
+        self.assertFalse(es_adr("027-lo-que-sea", mapa))
+        # El que todavía no se publicó se mira: es cuando más barato sale arreglarlo.
+        self.assertFalse(es_adr("031-recien-escrito", mapa))
 
     def test_cada_techo_muerde(self):  # 029-AC1
         largo = " ".join(["hola"] * 600)
@@ -488,33 +340,12 @@ class RegimenNuevo(unittest.TestCase):
                 "spec.md": f"# T\n\n## Criterios de aceptación\n\n{largo}\n"
             },
             "el research": {"research.md": largo},
-            "la estrategia": {"estrategia.md": largo},
+            "el plan": {"plan.md": largo},
         }
         for que, archivos in casos.items():
             problemas = problemas_de_techo("030-x", archivos)
             self.assertTrue(problemas, que)
             self.assertIn(que, problemas[0])
-
-    def test_los_techos_admiten_el_spec_que_los_estrena(self):  # 029-AC1
-        # El 029 es el modelo del formato y los cuatro números salieron de medirlo. Un techo
-        # que no lo admitiera estaría calibrado contra un documento imaginario, y el primer
-        # spec que lo intentara descubriría que la regla no es cumplible.
-        carpeta = "029-el-spec-se-achica-a-un-prompt"
-        if not (SPECS / carpeta).is_dir():
-            self.skipTest(f"{carpeta} no está hidratado")
-        leer = lambda nombre: (SPECS / carpeta / nombre).read_text(encoding="utf-8")
-        self.assertEqual(
-            problemas_de_techo(
-                "030-sonda",
-                {
-                    "spec.md": leer("spec.md"),
-                    "research.md": leer("research.md"),
-                    # El `plan.md` del 029 está escrito con la forma del `estrategia.md`.
-                    "estrategia.md": leer("plan.md"),
-                },
-            ),
-            [],
-        )
 
     def test_el_encabezado_de_los_criterios_cuenta_de_su_lado(self):  # 029-AC1
         prosa, criterios = partir_spec(
@@ -522,28 +353,3 @@ class RegimenNuevo(unittest.TestCase):
         )
         self.assertEqual(palabras(prosa), 3)
         self.assertEqual(palabras(criterios), 5)
-
-    def test_los_criterios_salen_de_su_bloque_y_no_de_la_prosa(self):  # 029-AC3
-        texto = (
-            "# T\n\nel AC9 de otro spec\n\n"
-            "## Criterios de aceptación\n\n- **AC2** — x\n- **AC1** — y\n"
-        )
-        self.assertEqual(acs_de(texto), ["AC2", "AC1"])
-
-    def test_un_ac_sin_test_se_nombra(self):  # 029-AC3
-        self.assertEqual(acs_sin_test("030", ["AC1", "AC2"], ["mira el 030-AC1"]), ["AC2"])
-
-    def test_un_ac_no_lo_cubre_un_prefijo(self):  # 029-AC3
-        # `AC1` no lo cubre un test que dice `AC12`: sin el `\b`, el criterio 1 quedaría
-        # cubierto por cualquier criterio de dos dígitos que empiece con 1.
-        self.assertEqual(acs_sin_test("030", ["AC1"], ["verifica el 030-AC12"]), ["AC1"])
-
-    def test_un_ac_no_lo_cubre_la_cita_de_otro_spec(self):  # 029-AC3
-        # El caso que vuelve inútil al ancla si la cita va pelada: `AC1` lo declara **todo**
-        # spec, así que un `AC1` suelto en cualquier test cubriría el `AC1` de todos los que
-        # vengan después y el gate no podría volver a fallar nunca.
-        self.assertEqual(acs_sin_test("031", ["AC1"], ["el 030-AC1 y un AC1 suelto"]), ["AC1"])
-
-
-if __name__ == "__main__":
-    unittest.main()

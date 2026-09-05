@@ -36,23 +36,13 @@ cero resultados **sin decir que no miró**. Para buscar en specs: `rg --no-ignor
 
 ## El paralelismo viene declarado — no lo derives de cero
 
-El formato de tarea de este repo es:
+Vive en el `## Orden obligado` del `plan.md`, en prosa: dice **qué no se puede paralelizar** y
+por qué. Todo lo que no nombra es paralelizable, que es la declaración honesta — la lista
+completa de lo que sí se puede hacer junto exigiría conocer los archivos antes de abrirlos, y
+está medido que esa predicción falla.
 
-En un spec **≥ 030** eso vive en el `## Orden obligado` del `estrategia.md`, en prosa: dice
-**qué no se puede paralelizar** y por qué. Todo lo que no nombra es paralelizable, que es la
-declaración honesta — la lista completa de lo que sí se puede hacer junto exigiría conocer
-los archivos antes de abrirlos, y está medido que esa predicción falla.
-
-En un spec **≤ 029** viene como marca en la casilla:
-
-```markdown
-- [ ] T012 [P] Descripción, con la ruta del archivo que toca
-```
-
-- **`[P]`** — no depende de las otras `[P]` de su bloque ni comparte archivo con ellas. Lo
-  escribió quien conocía las dependencias reales, al escribir el spec.
-- **`T0NN`** — ID estable. Usalo para nombrar nodos y aristas en el `--dry`, que es lo que
-  hace revisable el grafo antes de lanzar nada.
+**No hay IDs de tarea ni marcas `[P]`**: se fueron con el `tasks.md`. Los nodos del `--dry` se
+nombran por lo que hacen, y el orden que el `plan.md` declara es el único que bloquea.
 
 **Seguí usando el fake-edge test sobre lo declarado, no en su lugar.** Un paralelo mal
 declarado es un conflicto de escritura que aparece recién al implementar; si el test
@@ -166,7 +156,7 @@ saltear**, porque no lo reclama ningún test ni ningún PR: el spec ya quedó an
   —`030-AC1`, con el número del spec— en el nombre del test o en su comentario, en `test/` o
   en `.claude/scripts/tests/`. No es
   burocracia de cierre: es lo que reemplazó a la casilla como ancla anti-deuda, y hacerlo al
-  final es escribirlo dos veces. En un spec ≤ 029, además, todas las casillas marcadas.
+  final es escribirlo dos veces, y el gate de la rama lo cobra antes de que el PR aterrice.
 - **Devolvé lo que editaste al issue**: `python .claude/scripts/publicar_spec.py publicar`. El
   árbol del disco es **caché**, y la próxima hidratación baja los archivos del issue y se
   lleva puesto todo lo que no se haya subido.
@@ -175,9 +165,8 @@ saltear**, porque no lo reclama ningún test ni ningún PR: el spec ya quedó an
   `Implementado` con trabajo abierto no le debe nada a nadie—, y afuera, en un issue, el
   trabajo que este spec necesitaba queda huérfano de la razón por la que existía.
 
-  **Y lo verifica el gate:** un spec `Implementado` con un criterio que ningún test nombra —o,
-  si es ≤ 029, con una casilla abierta— pone en rojo el nodo `harness`
-  (`test_convencion_de_specs.py`).
+  **Y lo verifica el gate:** una rama de spec con un criterio que ningún test nombra pone en
+  rojo el nodo `harness` (`test_criterios_de_la_rama.py`), mientras el PR todavía está abierto.
 - **El PR lleva un `Closes` por cada issue saldado**: el del spec más los de su `origen`.
 - **No toques `specs/mapa.json` en el PR.** El estado lo deriva la Action en el push a
   `staging`, y el gate da rojo si el mapa dice `Implementado` mientras el PR está abierto.

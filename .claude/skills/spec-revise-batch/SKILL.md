@@ -77,11 +77,11 @@ protegidas, a propósito. Este skill no necesita rama de feature ni la abre.
 
 - **Sacá los terminales.** `Descartado` y `Superado` no se revisan: son historia, y corregir
   historia es inventarla. Decí cuáles sacaste.
-- **Hidratá, y hidratá TODO, no sólo el lote.**
+- **Hidratá TODO lo que está en vuelo, no sólo el lote.**
 
   ```bash
   python .claude/scripts/hidratar_specs.py            # los que están en vuelo y falten
-  python .claude/scripts/hidratar_specs.py --todos    # si el lote cita specs ya cerrados
+  python .claude/scripts/hidratar_specs.py 025        # y por número, si el lote cita un ADR
   ```
 
   `specs/[0-9]*/` está en el `.gitignore`, así que el directorio es una **caché** que puede no
@@ -154,9 +154,8 @@ pasáselo a cada agente, o el lote devuelve una avalancha de citas rotas falsas.
 3. **La marca que sí es una conclusión es `<- ESCENA COMPARTIDA`.** Para todo lo demás, compartir
    un archivo dice *dónde mirar*; para un `.tscn` dice *qué hacer*: se ordena, no se paraleliza.
    Un `[P]` entre dos tareas que tocan la misma escena es bloqueante en los dos specs.
-4. **La matriz sale de un archivo por spec y de ningún otro** —el `tasks.md` en un spec ≤ 029,
-   el `estrategia.md` en uno ≥ 030; `lote.py` elige por lo que hay en disco y nada
-   más—, así que **un archivo que un spec edita sin darle tarea propia es invisible acá**. El
+4. **La matriz sale de un archivo por spec y de ningún otro** —el `plan.md`—, así que **un
+   archivo que un spec edita sin nombrarlo ahí es invisible acá**. El
    caso está medido: en el lote 004–010, el 2026-08-30, `src/escenas/almacen.gd` lo escriben el
    007, el 008 y el 009, y sólo aparece en los `plan.md` de los dos últimos. La matriz no lo
    listó, y con él se perdía que el AC22 del 007 —que prohíbe ramas en ese archivo— lo verifica

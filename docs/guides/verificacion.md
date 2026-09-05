@@ -51,7 +51,8 @@ Hoy se saltean tres cosas, y cada una tiene su condición de vencimiento:
 | `lint` y `formato` | no haya un solo `.gd` propio | se escriba el primero |
 | `tests` | no haya un solo `*_test.gd` | se escriba el primero — y ahí `GODOT_BIN` pasa a ser obligatorio |
 | El gate del mapa contra GitHub | no haya `gh` con sesión, o el mapa esté vacío | se publique el primer spec |
-| El gate de convención de specs | no haya specs hidratados en disco | `hidratar_specs.py --todos` |
+| El gate de convención de specs | no haya specs en vuelo hidratados en disco | `hidratar_specs.py` |
+| El ancla de criterios | la rama no nombre un spec, o no se pueda leer su `spec.md` | se trabaje en una rama de spec |
 
 ## El veredicto sale del código de salida
 

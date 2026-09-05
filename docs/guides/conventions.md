@@ -16,8 +16,9 @@ Esta tabla es lo más útil del documento: dice de qué reglas hay que acordarse
 | Todo script de `dominio/`/`sistemas/` con su test | `gate_de_tests.py` |
 | Ningún test sin aserción, apagado o mal nombrado | `gate_de_tests.py` |
 | El registro de specs contra GitHub | `tests/test_mapa.py` |
-| El formato de las tareas de un spec | `tests/test_convencion_de_specs.py` |
-| No editar `src/` ni `docs/` sin spec | el hook de `.claude/settings.json` |
+| El formato de un spec y sus cuatro techos | `tests/test_convencion_de_specs.py` |
+| Cada criterio del spec de la rama, citado por un test | `tests/test_criterios_de_la_rama.py` |
+| No editar `src/` sin spec | el hook de `.claude/settings.json` |
 | **Tipado estático en toda firma** | **nadie: prosa** |
 | **Comentarios que expliquen el porqué** | **nadie: prosa** |
 | **Español** | **nadie: prosa** |
