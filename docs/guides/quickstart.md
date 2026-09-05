@@ -57,7 +57,7 @@ nodos van en paralelo:
   ok        harness     0.4s
   ok        lint        1.1s
   ok        tdd         0.1s
-  ok        tests      12.3s
+  ok        tests       5.1s
 ```
 
 Para uno solo: `python .claude/scripts/verificar.py --solo tests`.
