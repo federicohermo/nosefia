@@ -24,7 +24,7 @@
   "023": {"issue":34,"carpeta":"023-el-almacen-se-arma-con-sub-escenas","fecha":"2026-08-31","estado":"Implementado","titulo":"Spec 023 — El almacén se arma con sub-escenas y su raíz sólo cablea"},
   "024": {"issue":35,"carpeta":"024-las-capas-se-agrupan-por-alcance","fecha":"2026-08-31","estado":"Implementado","titulo":"Spec 024 — Las cuatro capas se agrupan por alcance, no por nombre"},
   "025": {"issue":36,"carpeta":"025-el-dominio-se-parte-para-el-juego-entero","fecha":"2026-09-01","estado":"Implementado","titulo":"Spec 025 — El dominio se parte para el juego entero, no para los 13 archivos de hoy"},
-  "026": {"issue":46,"carpeta":"026-el-motor-sube-a-godot-4-7-2","fecha":"2026-09-01","estado":"Propuesto","titulo":"Spec 026 — El motor sube a Godot 4.7.2 y el addon de tests con él"},
+  "026": {"issue":46,"carpeta":"026-el-motor-sube-a-godot-4-7-2","fecha":"2026-09-01","estado":"Implementado","titulo":"Spec 026 — El motor sube a Godot 4.7.2 y el addon de tests con él"},
   "027": {"issue":47,"carpeta":"027-cada-push-a-main-deja-una-web-jugable","fecha":"2026-09-01","estado":"Propuesto","titulo":"Spec 027 — Cada push a `main` deja una web jugable"},
   "028": {"issue":50,"carpeta":"028-el-escenario-modelado-reemplaza-al-blockout","fecha":"2026-09-04","estado":"Propuesto","titulo":"Spec 028 — El escenario modelado reemplaza al blockout"}
 }
