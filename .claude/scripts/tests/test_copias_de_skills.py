@@ -27,14 +27,14 @@ SKILLS = RAIZ / ".claude" / "skills"
 #: El canónico es el que se edita, y **vive adentro de un skill salvo que algo de afuera lo
 #: necesite**. El único que califica hoy es el limpiador de worktrees, que está en
 #: `.claude/scripts/` porque se corre a mano. El resto —`sin-deuda.md`, `hallazgos.md`,
-#: `lote.py`— tiene su canónico en el skill que lo estrenó.
+#: `diff_pr.py`, `lote.py`— tiene su canónico en el skill que lo estrenó.
 #:
 #: **`sin-deuda.md` estaba en `.claude/doctrina/` y se movió acá**: esa carpeta no la cargaba
 #: nada. No es un directorio que Claude Code conozca —lo son `skills/`, `rules/`, `commands/`,
 #: `agents/`—, así que la copia canónica no entraba a ningún contexto por sí sola y su única
 #: función era ser la referencia de este gate. Un directorio entero para eso es una tercera
 #: convención que hay que aprender, y la elección del skill dueño es tan arbitraria como en los
-#: otros dos casos: por eso está escrita acá y no en el nombre de una carpeta.
+#: otros tres casos: por eso está escrita acá y no en el nombre de una carpeta.
 COPIAS: dict[Path, tuple[Path, ...]] = {
     SKILLS / "spec-create" / "sin-deuda.md": tuple(
         SKILLS / s / "sin-deuda.md"
