@@ -255,7 +255,7 @@ el hallazgo no se descargó: volvé a la tabla de `hallazgos.md`.
 - **No mergea, y no mueve estados en `specs/mapa.json`.** El estado lo deriva la Action en el push
   a `staging`, y el gate da rojo si alguien lo escribe a mano.
 - **No abre PRs ni ramas de feature.** Trabaja sobre lo que ya está abierto.
-- **No revisa specs que todavía son texto.** Eso es `spec-review`, corre antes, y sale mucho más
+- **No revisa specs que todavía son texto.** Eso es `spec-revise`, corre antes, y sale mucho más
   barato: un problema detectado como texto cuesta un párrafo.
 - **No pone al día una pila de PRs.** Eso es el Paso 6 de `pr-review-batch`, y necesita ver la
   cadena entera.

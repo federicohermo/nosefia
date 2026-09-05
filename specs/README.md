@@ -128,8 +128,10 @@ Un spec `Implementado` con una casilla abierta era **la** contradicción que el 
 verde para siempre. Un gate que no puede fallar no es laxo — está apagado y parece encendido.
 
 La reemplaza **AC↔test**: en un spec ≥ 030 `Implementado`, **cada `ACn` de su `spec.md` está
-nombrado por al menos un archivo bajo `test/` o `.claude/scripts/tests/`**, y el rojo dice cuál
-falta. Es más fuerte que la que reemplaza — una casilla la marca a mano el mismo que decide si el
+citado como `NNN-ACn` —`030-AC1`— por al menos un archivo bajo `test/` o
+`.claude/scripts/tests/`**, y el rojo dice cuál falta. La cita lleva el número del spec porque
+`AC1` es el nombre que usa **todo** spec: pelada, la primera cubriría a todas las demás para
+siempre y el gate no podría volver a fallar. Es más fuerte que la que reemplaza — una casilla la marca a mano el mismo que decide si el
 trabajo está hecho; un test corre en cada push y **se rompe solo**.
 
 **Su techo, dicho:** el gate verifica la **cita**, no que el test ejerza el criterio. Es un piso,
@@ -219,7 +221,7 @@ debiendo, y eso es exactamente cómo la deuda se vuelve invisible.
 
 **Las cuatro las verifica `test_convencion_de_specs.py`**, y la última incluye el caso que las
 demás no cubren: **un spec ≤ 029 `Implementado` no puede tener una casilla abierta**, y uno
-≥ 030 no puede tener un criterio que ningún test nombre. Corre sobre los specs **hidratados**,
+≥ 030 no puede tener un criterio que ningún test cite como `NNN-ACn`. Corre sobre los specs **hidratados**,
 así que sobre un árbol vacío se saltea declarándolo — y un nodo salteado no es un nodo verde.
 
 **Y la salida tampoco es abrir un issue.** Los issues de este repo son **entrada**: lo que llega de

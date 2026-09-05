@@ -16,8 +16,8 @@ más que aprender, sin nada que la sostenga.
 
 **Una corrida no termina dejando trabajo escrito para después.** Ni en un `## Seguimiento`, ni
 en una casilla sin marcar, ni en un criterio de aceptación que ningún test nombra, ni en un
-issue abierto como forma de cerrar, ni en un «esto habría que verlo». Lo que la corrida encuentra, la corrida lo descarga — y descargar tiene una lista
-cerrada de formas.
+issue abierto como forma de cerrar, ni en un «esto habría que verlo». Lo que la corrida
+encuentra, la corrida lo descarga — y descargar tiene una lista cerrada de formas.
 
 Por familia:
 
@@ -41,7 +41,7 @@ spec**, y la diferencia importa:
 | Régimen | El ancla | Qué la sostiene |
 |---|---|---|
 | specs **≤ 029** | **un spec `Implementado` no puede tener una casilla abierta** | el `tasks.md`, que existe |
-| specs **≥ 030** | **un spec `Implementado` tiene cada criterio nombrado por un test que corre** | la suite, que corre sola |
+| specs **≥ 030** | **un spec `Implementado` tiene cada criterio citado como `NNN-ACn` por un test que corre** | la suite, que corre sola |
 
 El cambio no es cosmético. Cuando el `tasks.md` desaparece, el ancla vieja se queda **sin
 objeto**: la regla sigue escrita, no encuentra ninguna casilla, y sale verde para siempre. Un
@@ -54,10 +54,14 @@ que nombra el criterio lo tiene que escribir alguien, corre en cada push, y **se
 cuando el código deja de cumplirlo. La casilla registra una intención; el test registra un
 hecho.
 
-**Su techo, dicho:** el gate verifica la **cita**, no que el test ejerza el criterio. Un `AC4`
-en el nombre de un test que no afirma nada pasa igual. Es un piso —como todo lo que este repo
-verifica sin cobertura— y lo que lo levanta es la misma disciplina de siempre: el test se
-escribe primero y se lo ve fallar.
+**La cita lleva el número del spec** —`030-AC4`, no `AC4` a secas— y eso no es formato: `AC1` es
+el nombre que usa **todo** spec, así que con la cita pelada el primer test que escribiera `AC1`
+dejaría cubierto el `AC1` de todos los que vinieran después, y el gate no podría volver a fallar.
+
+**Su techo, dicho:** el gate verifica la **cita**, no que el test ejerza el criterio. Un
+`030-AC4` en el nombre de un test que no afirma nada pasa igual. Es un piso —como todo lo que
+este repo verifica sin cobertura— y lo que lo levanta es la misma disciplina de siempre: el test
+se escribe primero y se lo ve fallar.
 
 ## Las cinco descargas, y no hay una sexta
 
@@ -231,7 +235,7 @@ cuál es cuál:
 | Ninguna tarea que aplace por texto (`TODO`, `pendiente`, `más adelante`, `por ahora`) | `test_convencion_de_specs.py` |
 | Ningún `research.md` con una medición declarada como no hecha | `test_convencion_de_specs.py` |
 | **Un spec ≤ 029 `Implementado` no puede tener una casilla abierta** | `test_convencion_de_specs.py` |
-| **Un spec ≥ 030 `Implementado` tiene cada criterio nombrado por un test** | `test_convencion_de_specs.py` |
+| **Un spec ≥ 030 `Implementado` tiene cada criterio citado como `NNN-ACn` por un test** | `test_convencion_de_specs.py` |
 | Ningún spec ≥ 030 pasa uno de los cuatro techos de palabras | `test_convencion_de_specs.py` |
 | Que ese test **ejerza** el criterio y no sólo lo nombre | **prosa** — el gate verifica la cita |
 | Que un `## Fuera de alcance` no esconda un AC propio | **prosa** — lo mira el review |
