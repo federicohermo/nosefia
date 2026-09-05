@@ -1,6 +1,6 @@
 ---
 name: pr-review-batch
-description: Revisa los PR abiertos de GitHub en paralelo —un agente por PR, cada uno en su worktree—, arregla lo que encuentra, verifica con verificar.py, commitea y pushea a la rama del PR, y si los PR están apilados cierra poniendo la pila al día. Usar al querer cerrar el review de dos o más PR de este repo. Para uno solo, pr-review. Para revisar un spec que todavía es texto, spec-review-batch.
+description: Revisa los PR abiertos de GitHub en paralelo —un agente por PR, cada uno en su worktree—, arregla lo que encuentra, verifica con verificar.py, commitea y pushea a la rama del PR, y si los PR están apilados cierra poniendo la pila al día. Usar al querer cerrar el review de dos o más PR de este repo. Para uno solo, pr-review. Para revisar un spec que todavía es texto, spec-revise-batch.
 argument-hint: "<NN NN ...> | --abiertos [--comentar] [--dry]"
 # Sin `allowed-tools`, o sea sin restricción, y por el mismo motivo que los demás skills de
 # este repo: declarar una lista parcial le sacaría todo lo que no estuviera en ella —`Agent`,
@@ -480,7 +480,7 @@ reporte, no como una advertencia.
 
 - **No mergea a `staging`, y no mueve estados en `specs/mapa.json`** — los mueve ese merge y la
   Action, que son del usuario. Sí mergea **hacia arriba dentro de la pila**, en el Paso 6.
-- **No revisa specs que todavía son texto.** Eso es `spec-review-batch`, corre antes, y sale mucho
+- **No revisa specs que todavía son texto.** Eso es `spec-revise-batch`, corre antes, y sale mucho
   más barato: un cruce detectado como texto cuesta un párrafo y detectado en dos ramas cuesta un
   rebase.
 - **No reimplementa el review de un PR.** Ese método es `pr-review`, y con **un** PR abierto usá

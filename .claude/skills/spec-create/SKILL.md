@@ -14,13 +14,14 @@ allowed-tools:
 # spec-create — del pedido al spec publicado
 
 Cubre el tramo que va del pedido escrito en prosa al `spec.md` en disco y publicado como
-issue. `spec-review` audita un spec que existe; `spec-implement` implementa uno que existe.
+issue. `spec-revise` pone al día un spec que existe cuando el requisito cambió;
+`spec-implement` implementa uno que existe.
 Acá todavía no hay ninguno.
 
 ## Antes que nada: ¿esto necesita un spec?
 
 **La mayoría de las veces sí, y por eso esta sección va primero y es corta.** Un skill que
-obliga a escribir cuatro archivos para arreglar una tilde se apaga entero, y un gate apagado
+obliga a escribir tres archivos para arreglar una tilde se apaga entero, y un gate apagado
 es peor que no tenerlo.
 
 **No necesita spec** —seguí derecho, sin rama de feature:
@@ -30,7 +31,7 @@ es peor que no tenerlo.
 | Un typo o una redacción, sin cambio de comportamiento | una tilde en un comentario, un `README` mal escrito |
 | Revertir el commit anterior | `git revert`, cuando lo que se revierte ya tenía su spec |
 | Actualizar el addon de gdUnit4 a una versión nueva | sin cambio de API en los tests |
-| Terminar la tarea abierta de un spec **ya publicado** | marcar un `tasks.md`, cerrar un issue |
+| Terminar lo que un spec **ya publicado** dejó abierto | cerrar su issue, marcar su avance |
 | Un asset nuevo que no toca `src/` | un `.png`, un `.ogg`, una referencia |
 | Lo que el usuario pida explícitamente sin spec | y entonces se dice en voz alta que se está salteando |
 
@@ -94,16 +95,34 @@ Lo que la medición tiene que dejar por escrito:
 Para lo que no se puede medir sin escribir código, un script de un solo uso que se corre y se
 borra — no se commitea.
 
-### 2. Los cuatro archivos
+### 2. Los tres archivos
 
-`specs/<NNN>-<descripcion-kebab>/` con `spec.md`, `research.md`, `plan.md` y `tasks.md`. El
-formato y las desviaciones están en [`specs/README.md`](../../../specs/README.md).
+`specs/<NNN>-<descripcion-kebab>/` con `spec.md`, `research.md` y `estrategia.md`. El formato,
+las desviaciones y el corte en 030 están en [`specs/README.md`](../../../specs/README.md).
+
+**No hay `plan.md` ni `tasks.md`**, y no es una simplificación: está medido. De las rutas de
+archivo que esos dos nombraban, el **43 %** nunca se tocaba y el **39 %** de lo que el PR sí
+tocaba no lo había previsto nadie, con el error escalando con el tamaño del spec. Escribir la
+lista de archivos antes de abrir uno es predecir, y salía cara.
+
+El `estrategia.md` declara lo que la predicción no puede inventar: **el orden obligado** —lo
+que NO se puede paralelizar, empezando por los `.tscn`, que no se mergean—, qué **no** se
+toca, y el criterio de terminado. Sin rutas predichas salvo las que el `research.md` midió.
+
+**Y hay cuatro techos de palabras, que los verifica el gate**: 350 de prosa en el `spec.md`,
+300 en el bloque `## Criterios de aceptación` **entero**, 500 en el `research.md`, 250 en el
+`estrategia.md`. El segundo cae sobre el bloque y no sobre cada criterio a propósito: con un
+límite por criterio, un spec cumple escribiendo veinte criterios cortos.
 
 **El número se reserva tarde**: mirá `specs/mapa.json` recién cuando vayas a crear la carpeta.
 Si hay otra sesión trabajando en paralelo, el número que elegiste al empezar ya no es el tuyo.
 
-Cuatro cosas que este repo pide y que no son obvias:
+Cinco cosas que este repo pide y que no son obvias:
 
+- **Cada criterio va a terminar nombrado por un test, así que numeralo `AC1`, `AC2`.** El
+  gate exige que cada `ACn` de un spec `Implementado` esté citado como `NNN-ACn` —`030-AC1`—
+  desde `test/` o desde `.claude/scripts/tests/`, y nombra el que falte. Un criterio sin número
+  no se puede citar, y una cita sin el número del spec cubriría a la de todos los demás.
 - **Cada criterio de aceptación tiene que ser falsificable.** «El sistema de consecuencias
   funciona» no lo es; «con cuatro tareas cumplidas, `consecuencia()` devuelve `AVISO` y no
   `NINGUNA`» sí. Si un AC no se puede ver fallar, no verifica nada.
@@ -123,6 +142,13 @@ Cuatro cosas que este repo pide y que no son obvias:
   decía «espera a una persona» sino «no se va a hacer, pero queda escrito». La salida es
   **volverla verificable** —un test de gdUnit4, un número medido, un valor que un gate pueda
   leer— o no anotarla. Lo verifica `test_convencion_de_specs.py`.
+- **Si el spec estrena una regla, fijate de qué lado del corte cae él.** Una regla nueva casi
+  siempre viene con un «desde acá en adelante», y el número de ese corte es una decisión, no un
+  detalle: si el corte incluye al propio spec, la regla lo pone en rojo **el día que se publica**,
+  antes de que exista su rama y sin que nadie la haya implementado. Y el síntoma en el texto es
+  siempre el mismo — el `## Fuera de alcance` dice «este spec no se escribe así» y los AC dicen
+  «desde este spec». **Cruzalos antes de publicar.** Medido el 2026-09-05 en el 029, que puso el
+  corte en 029 con su propio research diciendo que el primero nuevo era el 030.
 - **Cada tarea nombra el archivo que toca**, entre backticks. Es lo que hace revisable el
   reparto de un lote antes de lanzarlo.
 - **Las tareas son la totalidad de lo que hace falta**, y ésta es la que no verifica nadie. Que
@@ -141,7 +167,7 @@ necesitaba. Las cuatro las verifica `test_convencion_de_specs.py`, sobre los spe
 **`## Fuera de alcance` sí existe y no es lo mismo.** Declara una frontera —qué NO hace este
 spec— y es lo que lo vuelve revisable. La prueba de que se convirtió en deuda con sombrero es una:
 **¿algún AC de este spec depende de lo excluido?** Si sí, entra al spec. Ningún gate puede
-decidirlo; lo mira `spec-review`.
+decidirlo; lo mira quien escribe el spec.
 
 El porqué está en [`sin-deuda.md`](sin-deuda.md).
 
@@ -183,13 +209,14 @@ gate saca el número del spec**, así que una rama con otro nombre bloquea la pr
 
 No es parte de abrir un spec, pero es la otra mitad y se saltea igual de fácil:
 
-1. **Todas las casillas del `tasks.md` cerradas.** No hay marcador para «esto queda pendiente», y
-   **tampoco la salida de abrir un issue**: si aparece trabajo que el spec necesitaba y no tenía,
-   eso es un defecto de este skill —el `tasks.md` salió incompleto— y se descarga corrigiendo el
-   spec y agregando acá la regla que lo habría atajado. Ver «el lazo» en
+1. **Cada criterio del spec nombrado por un test que corre.** No hay marcador para «esto queda
+   pendiente», y **tampoco la salida de abrir un issue**: si aparece trabajo que el spec
+   necesitaba y no tenía, eso es un defecto de este skill —el spec salió incompleto— y se
+   descarga corrigiéndolo y agregando acá la regla que lo habría atajado. Ver «el lazo» en
    [`sin-deuda.md`](sin-deuda.md).
 
-   **Lo verifica el gate:** un spec `Implementado` con una casilla abierta pone en rojo el nodo
+   **Lo verifica el gate:** un spec `Implementado` con un criterio que ningún test nombra —o,
+   si es ≤ 029, con una casilla abierta— pone en rojo el nodo
    `harness`.
 2. **Un `Closes` por cada issue saldado**, y son el del spec **más los del `origen`**. El del
    spec se cierra solo; el de deuda que lo parió no lo cierra nadie, y sin el `Closes` quedan

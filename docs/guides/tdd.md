@@ -94,7 +94,7 @@ corren en milisegundos.
 Los gates no cubren si el juego se siente bien, si una tarea del turno es tediosa o si la
 paranoia funciona. Eso es playtesting y no tiene gate, a propósito.
 
-Lo que **no** vale es anotar eso como una casilla del `tasks.md`: una tarea que se cierra
-mirando no la cierra nadie —está medido: 137 casillas así en 35 specs, 6 cerradas alguna vez—
-y termina siendo una lista de intenciones con formato de checklist. Si hay que playtestear
+Lo que **no** vale es anotar eso como trabajo del spec: una tarea que se cierra mirando no la
+cierra nadie —está medido: 137 casillas así en 35 specs, 6 cerradas alguna vez— y termina
+siendo una lista de intenciones con formato de checklist. Si hay que playtestear
 algo, va al Backlog de Notion, que es donde el equipo mira lo que no es código.

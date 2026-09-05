@@ -14,7 +14,7 @@ argument-hint: "<NNN NNN ...> | <NNN-MMM> | --propuestos [--dry] [--max N]"
 
 <!-- Inyección dinámica: corre ANTES de que el modelo procese este archivo, así que la matriz
      llega con el skill ya cargado en vez de costar un turno de tool. Es el MISMO script que usa
-     `spec-review-batch` —la pregunta «qué archivo tocan dos specs del lote» es idéntica en los
+     `spec-revise-batch` —la pregunta «qué archivo tocan dos specs del lote» es idéntica en los
      dos— pero cada skill trae su copia: `${CLAUDE_SKILL_DIR}` apunta adentro, nunca a un
      hermano. Que no se separen lo verifica `test_copias_de_skills.py`. -->
 
@@ -35,7 +35,7 @@ converge recién en el merge, que resuelve texto y no semántica.
 
 | El batch genérico | Acá |
 |---|---|
-| `node scripts/matriz.mjs` sobre los `tasks.md` | **`lote.py` de `spec-review-batch`**, inyectado arriba: misma matriz, y además marca la **escena compartida** |
+| `node scripts/matriz.mjs` sobre los `tasks.md` | **`lote.py` de `spec-revise-batch`**, inyectado arriba: misma matriz, y además marca la **escena compartida** |
 | Instalar dependencias en cada worktree (`node_modules`) | **No hay install**: `addons/gdUnit4` está vendorizado. Lo que sí falta es `specs/` **y `.godot/`** — ver Paso 3 |
 | El PR nombra una actividad de Jira, y hay un script de claves | **No hay Jira.** El PR lleva `Closes #N` por cada issue saldado: el del spec **más los de su `origen`** |
 | La rama se llama como convenga | **`feature/<NNN>-<kebab>` o el hook bloquea `src/`.** Es la falla número uno acá |
@@ -77,7 +77,7 @@ argumentos, preguntá.**
    abierto otra sesión, y ahí lo que corresponde no es un carril nuevo.
 3. **Re-medí contra el árbol de hoy la base que cada spec declara.** Un spec escribe sus conteos
    el día que se escribe, y **entre ese día y éste mergearon otros PR**. Los números envejecen
-   solos y **nadie los toca**: `spec-review` corre antes, y `spec-implement` lee el spec, no el
+   solos y **nadie los toca**: `spec-revise` corre antes, y `spec-implement` lee el spec, no el
    disco. El modo de falla es el peor de los baratos — el carril arranca, hace todo bien, y da
    rojo en un AC que mide una mudanza ajena.
 
@@ -93,7 +93,7 @@ argumentos, preguntá.**
    `dominio/` y 18 suites; los specs 005 y 011 mergearon al día siguiente y lo dejaron en 18 y 23.
    Cuatro AC y cinco tareas medían un árbol que ya no existía.
 
-4. **Mirá si el lote pasó por `spec-review-batch`.** Si sí, el Paso 2 es **verificación** y no
+4. **Mirá si el lote pasó por `spec-revise-batch`.** Si sí, el Paso 2 es **verificación** y no
    derivación: los cruces ya están decididos y escritos en los specs. Si no, decilo — vas a estar
    derivando en el momento más caro del flujo, con los worktrees a punto de abrirse.
 
@@ -228,21 +228,21 @@ Cada agente recibe, literal:
 
 > **Un carril termina con el PR abierto y sin una sola casilla sin marcar. No antes.**
 >
-> Por cada spec suyo: `verificar.py` en verde **sin nodos salteados**, todas las tareas del
-> `tasks.md` hechas y marcadas, **las marcas devueltas al issue** con
+> Por cada spec suyo: `verificar.py` en verde **sin nodos salteados**, todo lo que el spec
+> pide hecho, **el rastro devuelto al issue** con
 > `python .claude/scripts/publicar_spec.py publicar`, rama pusheada y PR abierto contra la base
 > que le toca.
 >
 > **No existe volver con «quedó listo para commitear», «falta abrir el PR» ni «lo dejo en el
-> working tree».** Y no existe volver con una casilla abierta: si el `tasks.md` tenía trabajo que
-> no se hizo, el carril no terminó — ver el lazo, abajo.
+> working tree».** Y no existe volver con trabajo abierto: si el spec tenía trabajo que no se
+> hizo, el carril no terminó — ver el lazo, abajo.
 >
 > Si algo bloquea de verdad, el carril **igual vuelve con lo que sí cerró**, y el bloqueo escrito
 > con su evidencia y el comando exacto. Lo que no vuelve nunca es un carril entero sin entregar
 > nada.
 
 **El padre lo verifica, no lo cree.** Cuando vuelva un carril, chequeá con `gh pr list --head
-<rama>` que cada spec suyo tenga PR, y que el `tasks.md` del **issue** no tenga casillas abiertas.
+<rama>` que cada spec suyo tenga PR, y que el **issue** no muestre trabajo abierto.
 
 > **Y para eso NO alcanza con correr `hidratar_specs.py`: saltea la carpeta que ya existe.**
 > Contesta `NNN ya está (…)` y `hidratados: 0 de 1`, con **código 0**, así que el `grep` que
@@ -310,7 +310,7 @@ Si imprime `SIGUE AHI`, el handle es de afuera. **Lo cierra el usuario, no vos**
 ## El lazo — si implementar duele, el problema está aguas arriba
 
 **Para cuando este skill corre, las dudas de planteo deberían estar resueltas**: las cierran
-`spec-create` y `spec-review`, donde cuestan un párrafo. Entonces **una duda que aparece acá es
+`spec-create` y `spec-revise`, donde cuestan un párrafo. Entonces **una duda que aparece acá es
 evidencia de que uno de esos dos tiene un agujero**, y en un lote la evidencia es más fuerte que en
 un spec suelto: si tres carriles tropiezan con lo mismo, no fue mala suerte.
 
@@ -327,7 +327,7 @@ carriles comparten, y dos worktrees editando el mismo `SKILL.md` se pisan en sil
 
 ## Lo que no hace
 
-- **No escribe specs ni los audita.** Eso es `spec-create-batch` y `spec-review-batch`, y los dos
+- **No escribe specs ni los pone al día.** Eso es `spec-create-batch` y `spec-revise-batch`, y los dos
   corren antes y salen mucho más baratos: un cruce detectado como texto cuesta un párrafo.
 - **No mergea a `staging`, y no mueve `specs/mapa.json`.** El estado lo deriva la Action en el push
   a `staging`, y el gate da rojo si el mapa se adelanta al PR.
