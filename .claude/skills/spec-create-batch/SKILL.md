@@ -243,7 +243,7 @@ El padre no re-audita: cruza, y después publica. En este orden, y el orden impo
    sabe leer el archivo de orden de cada spec y no hay por qué duplicarlo:
 
    ```bash
-   python .claude/skills/spec-review-batch/scripts/lote.py <NNN NNN ...>
+   python .claude/skills/spec-revise-batch/scripts/lote.py <NNN NNN ...>
    ```
 
    Tres cosas se miran acá y ninguna necesita leer los specs enteros: que ninguna
@@ -311,9 +311,9 @@ publicar**: es mucho más barato que descubrirlo cuando el lote ya son N issues.
 
 Y lo que queda para después, que **no es de este skill**:
 
-- **Auditarlos**: `/spec-review-batch <los NNN>`. Este skill cruza lo grueso antes de escribir;
-  ése cruza lo fino sobre lo escrito —un AC que otro spec del lote vuelve infalsificable— y los
-  dos pases hacen falta. Corre barato: los specs todavía son texto.
+- **Ponerlos al día cuando un requisito cambie**: `/spec-revise-batch <los NNN>`. Este skill
+  cruza lo grueso antes de escribir; ése contrasta un requisito nuevo contra lo escrito y caza
+  las contradicciones entre specs. Corre barato: los specs todavía son texto.
 - **Implementarlos**: `/spec-implement-batch`, que abre las ramas. **La rama la abre el
   implementador**, y por eso este skill termina en `staging`.
 
@@ -322,7 +322,8 @@ Y lo que queda para después, que **no es de este skill**:
 ## Lo que no hace
 
 - **No implementa, no abre ramas y no toca `src/`.**
-- **No audita los specs que escribió.** Eso es `spec-review-batch`, y corre después.
+- **No los pone al día cuando el requisito cambia.** Eso es `spec-revise-batch`, y corre
+  después.
 - **No mueve estados en `specs/mapa.json`.** `crear` los pone en `Propuesto`; de ahí en adelante
   el estado lo deriva la Action en el push a `staging`, y el gate da rojo si alguien lo escribe a
   mano.

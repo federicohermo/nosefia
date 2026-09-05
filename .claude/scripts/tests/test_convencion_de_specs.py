@@ -45,10 +45,10 @@ DESTERRADOS = ("plan.md", "tasks.md")
 #: veinte AC cortos, que es la misma enfermedad con carpeta nueva. Sobre el bloque, el límite
 #: muerde la **cantidad**.
 #:
-#: Los números salen de medir el `spec.md` del 029, que es el modelo del formato: prosa 349,
-#: bloque de criterios 228, `research.md` 444, `estrategia.md` 233. O sea que están calibrados
-#: contra un documento que existe y entra, no elegidos de memoria. Lo verifica
-#: `test_los_techos_admiten_el_spec_que_los_estrena`.
+#: Los números salen de medir el `spec.md` del 029, que es el modelo del formato: prosa 350,
+#: bloque de criterios 244, `research.md` 444, `estrategia.md` 233 —medido con `palabras()` el
+#: 2026-09-05—. O sea que están calibrados contra un documento que existe y entra, no elegidos
+#: de memoria. Lo verifica `test_los_techos_admiten_el_spec_que_los_estrena`.
 TECHO_DE_PROSA = 350
 TECHO_DE_AC = 300
 TECHO_DE_RESEARCH = 500
@@ -223,13 +223,23 @@ def acs_de(spec_md: str) -> list[str]:
     return vistos
 
 
-def acs_sin_test(acs: list[str], textos: list[str]) -> list[str]:
-    """Los criterios que ningún test nombra.
+def acs_sin_test(numero: str, acs: list[str], textos: list[str]) -> list[str]:
+    """Los criterios que ningún test nombra, con la cita **calificada por el número del spec**.
 
-    **Por nombre**, que es lo que hace accionable el rojo: «falta AC4» se arregla; «hay un
+    La cita es `NNN-ACn` —`030-AC1`— y no `AC1` a secas. No es estilo: `AC1` es el nombre que
+    usa **todo** spec, así que con la cita pelada el primer test que escribiera `AC1` dejaría
+    cubierto el `AC1` de todos los specs que vengan después, para siempre. El gate no podría
+    volver a fallar, que es exactamente el gate apagado que parece encendido que este ancla
+    vino a cerrar.
+
+    **Por nombre**, que es lo que hace accionable el rojo: «falta 030-AC4» se arregla; «hay un
     criterio sin test» hay que ir a buscarlo.
     """
-    return [ac for ac in acs if not any(re.search(rf"\b{ac}\b", texto) for texto in textos)]
+    return [
+        ac
+        for ac in acs
+        if not any(re.search(rf"\b{numero}-{ac}\b", texto) for texto in textos)
+    ]
 
 
 def hidratados() -> list[str]:
@@ -420,9 +430,9 @@ class Convencion(unittest.TestCase):
         # hecho. Un test que nombra el criterio lo tiene que escribir alguien, corre en cada
         # push, y se rompe solo cuando el código deja de cumplirlo.
         #
-        # Lo que verifica es la CITA, no que el test ejerza el criterio: un `AC4` en el nombre
-        # o en un comentario alcanza. Es un piso y hay que decirlo — el techo, que el test
-        # realmente falle cuando el criterio no se cumple, no lo puede ver ninguna herramienta.
+        # Lo que verifica es la CITA, no que el test ejerza el criterio: un `030-AC4` en el
+        # nombre o en un comentario alcanza. Es un piso y hay que decirlo — el techo, que el
+        # test realmente falle cuando el criterio no se cumple, no lo ve ninguna herramienta.
         textos = textos_de_test()
         for numero, carpeta in self._cerrados_en_disco():
             if not es_nuevo(carpeta):
@@ -431,13 +441,14 @@ class Convencion(unittest.TestCase):
             self.assertNotEqual(
                 acs, [], f"el spec {numero} está `{CERRADO}` y no declara ningún criterio."
             )
-            faltan = acs_sin_test(acs, textos)
+            faltan = acs_sin_test(numero, acs, textos)
             self.assertEqual(
                 faltan,
                 [],
-                f"el spec {numero} está `{CERRADO}` y ningún test nombra {', '.join(faltan)}. "
-                "Cada criterio se cita desde el test que lo verifica, en test/ o en "
-                ".claude/scripts/tests/.",
+                f"el spec {numero} está `{CERRADO}` y ningún test cita "
+                f"{', '.join(f'{numero}-{ac}' for ac in faltan)}. "
+                "Cada criterio se cita como `NNN-ACn` desde el test que lo verifica, en test/ "
+                "o en .claude/scripts/tests/.",
             )
 
 
@@ -449,26 +460,26 @@ class RegimenNuevo(unittest.TestCase):
     sin un caso que la vea fallar es una regla que nadie probó.
     """
 
-    def test_acepta_los_tres_archivos(self):  # AC1
+    def test_acepta_los_tres_archivos(self):  # 029-AC1
         self.assertEqual(
             problemas_de_forma("030-x", {"spec.md", "research.md", "estrategia.md"}), []
         )
 
-    def test_rechaza_si_falta_la_estrategia(self):  # AC1
+    def test_rechaza_si_falta_la_estrategia(self):  # 029-AC1
         self.assertTrue(problemas_de_forma("030-x", {"spec.md", "research.md"}))
 
-    def test_rechaza_un_tasks_de_mas(self):  # AC1
+    def test_rechaza_un_tasks_de_mas(self):  # 029-AC1
         self.assertTrue(
             problemas_de_forma("030-x", {"spec.md", "research.md", "estrategia.md", "tasks.md"})
         )
 
-    def test_un_spec_viejo_sigue_pidiendo_los_cuatro(self):  # AC2
+    def test_un_spec_viejo_sigue_pidiendo_los_cuatro(self):  # 029-AC2
         self.assertTrue(problemas_de_forma("029-x", {"spec.md", "research.md", "estrategia.md"}))
         self.assertEqual(
             problemas_de_forma("029-x", {"spec.md", "research.md", "plan.md", "tasks.md"}), []
         )
 
-    def test_cada_techo_muerde(self):  # AC1
+    def test_cada_techo_muerde(self):  # 029-AC1
         largo = " ".join(["hola"] * 600)
         casos = {
             "la prosa": {"spec.md": f"# T\n\n{largo}\n"},
@@ -483,7 +494,7 @@ class RegimenNuevo(unittest.TestCase):
             self.assertTrue(problemas, que)
             self.assertIn(que, problemas[0])
 
-    def test_los_techos_admiten_el_spec_que_los_estrena(self):  # AC1
+    def test_los_techos_admiten_el_spec_que_los_estrena(self):  # 029-AC1
         # El 029 es el modelo del formato y los cuatro números salieron de medirlo. Un techo
         # que no lo admitiera estaría calibrado contra un documento imaginario, y el primer
         # spec que lo intentara descubriría que la regla no es cumplible.
@@ -504,27 +515,33 @@ class RegimenNuevo(unittest.TestCase):
             [],
         )
 
-    def test_el_encabezado_de_los_criterios_cuenta_de_su_lado(self):  # AC1
+    def test_el_encabezado_de_los_criterios_cuenta_de_su_lado(self):  # 029-AC1
         prosa, criterios = partir_spec(
             "# T\n\nuno dos\n\n## Criterios de aceptación\n\n- AC1 tres\n"
         )
         self.assertEqual(palabras(prosa), 3)
         self.assertEqual(palabras(criterios), 5)
 
-    def test_los_criterios_salen_de_su_bloque_y_no_de_la_prosa(self):  # AC3
+    def test_los_criterios_salen_de_su_bloque_y_no_de_la_prosa(self):  # 029-AC3
         texto = (
             "# T\n\nel AC9 de otro spec\n\n"
             "## Criterios de aceptación\n\n- **AC2** — x\n- **AC1** — y\n"
         )
         self.assertEqual(acs_de(texto), ["AC2", "AC1"])
 
-    def test_un_ac_sin_test_se_nombra(self):  # AC3
-        self.assertEqual(acs_sin_test(["AC1", "AC2"], ["mira el AC1"]), ["AC2"])
+    def test_un_ac_sin_test_se_nombra(self):  # 029-AC3
+        self.assertEqual(acs_sin_test("030", ["AC1", "AC2"], ["mira el 030-AC1"]), ["AC2"])
 
-    def test_un_ac_no_lo_cubre_un_prefijo(self):  # AC3
+    def test_un_ac_no_lo_cubre_un_prefijo(self):  # 029-AC3
         # `AC1` no lo cubre un test que dice `AC12`: sin el `\b`, el criterio 1 quedaría
         # cubierto por cualquier criterio de dos dígitos que empiece con 1.
-        self.assertEqual(acs_sin_test(["AC1"], ["verifica el AC12"]), ["AC1"])
+        self.assertEqual(acs_sin_test("030", ["AC1"], ["verifica el 030-AC12"]), ["AC1"])
+
+    def test_un_ac_no_lo_cubre_la_cita_de_otro_spec(self):  # 029-AC3
+        # El caso que vuelve inútil al ancla si la cita va pelada: `AC1` lo declara **todo**
+        # spec, así que un `AC1` suelto en cualquier test cubriría el `AC1` de todos los que
+        # vengan después y el gate no podría volver a fallar nunca.
+        self.assertEqual(acs_sin_test("031", ["AC1"], ["el 030-AC1 y un AC1 suelto"]), ["AC1"])
 
 
 if __name__ == "__main__":

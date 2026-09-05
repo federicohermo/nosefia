@@ -14,7 +14,8 @@ allowed-tools:
 # spec-create — del pedido al spec publicado
 
 Cubre el tramo que va del pedido escrito en prosa al `spec.md` en disco y publicado como
-issue. `spec-review` audita un spec que existe; `spec-implement` implementa uno que existe.
+issue. `spec-revise` pone al día un spec que existe cuando el requisito cambió;
+`spec-implement` implementa uno que existe.
 Acá todavía no hay ninguno.
 
 ## Antes que nada: ¿esto necesita un spec?
@@ -119,8 +120,9 @@ Si hay otra sesión trabajando en paralelo, el número que elegiste al empezar y
 Cinco cosas que este repo pide y que no son obvias:
 
 - **Cada criterio va a terminar nombrado por un test, así que numeralo `AC1`, `AC2`.** El
-  gate exige que cada `ACn` de un spec `Implementado` esté citado desde `test/` o desde
-  `.claude/scripts/tests/`, y nombra el que falte. Un criterio sin número no se puede citar.
+  gate exige que cada `ACn` de un spec `Implementado` esté citado como `NNN-ACn` —`030-AC1`—
+  desde `test/` o desde `.claude/scripts/tests/`, y nombra el que falte. Un criterio sin número
+  no se puede citar, y una cita sin el número del spec cubriría a la de todos los demás.
 - **Cada criterio de aceptación tiene que ser falsificable.** «El sistema de consecuencias
   funciona» no lo es; «con cuatro tareas cumplidas, `consecuencia()` devuelve `AVISO` y no
   `NINGUNA`» sí. Si un AC no se puede ver fallar, no verifica nada.
@@ -165,7 +167,7 @@ necesitaba. Las cuatro las verifica `test_convencion_de_specs.py`, sobre los spe
 **`## Fuera de alcance` sí existe y no es lo mismo.** Declara una frontera —qué NO hace este
 spec— y es lo que lo vuelve revisable. La prueba de que se convirtió en deuda con sombrero es una:
 **¿algún AC de este spec depende de lo excluido?** Si sí, entra al spec. Ningún gate puede
-decidirlo; lo mira `spec-review`.
+decidirlo; lo mira quien escribe el spec.
 
 El porqué está en [`sin-deuda.md`](sin-deuda.md).
 

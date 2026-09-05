@@ -1,11 +1,11 @@
-"""Insumo del Paso 2 de spec-review-batch: de qué se agarra un spec del lote y qué le mueve otro.
+"""Insumo del Paso 2 de spec-revise-batch: de qué se agarra un spec del lote y qué le mueve otro.
 
 Uso, desde cualquier lado —la raíz sale de `__file__`, no del CWD—, y son las tres formas del
 `argument-hint` del skill:
 
-    python .claude/skills/spec-review-batch/scripts/lote.py 001 002 003
-    python .claude/skills/spec-review-batch/scripts/lote.py 001-003
-    python .claude/skills/spec-review-batch/scripts/lote.py --propuestos
+    python .claude/skills/spec-revise-batch/scripts/lote.py 001 002 003
+    python .claude/skills/spec-revise-batch/scripts/lote.py 001-003
+    python .claude/skills/spec-revise-batch/scripts/lote.py --propuestos
 
 El SKILL.md lo **inyecta** al cargar, así que su salida llega con el skill ya puesto en vez de
 costar un turno de tool. Por eso entiende las tres formas: recibe crudo lo que el usuario tipeó,

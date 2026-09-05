@@ -160,8 +160,8 @@ eslabones dio **tres carriles** al derivar el grafo de archivos. El error va en 
 —dependencias que no existen y dependencias que no se declararon— y el segundo es el caro.
 
 - **Se detecta** contrastando la matriz del Paso 2 contra lo que los specs declaran.
-- **Se corrige donde se declaró** —el archivo del orden o el `spec.md`, que todavía son texto— y el
-  orden corregido es lo que va al reporte: es el insumo de `spec-implement-batch`, que reparte el
+- **Se corrige donde se declaró** —el archivo del orden o el `spec.md`, que todavía son
+  texto— y el orden corregido es lo que va al reporte: es el insumo de `spec-implement-batch`, que reparte el
   lote en carriles a partir de exactamente esto.
 
 ## 8 · Dos specs declaran la misma tarea de documentación

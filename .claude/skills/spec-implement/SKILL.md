@@ -132,7 +132,7 @@ se espera» se verifica en el `ERROR: Failed loading resource` de la salida crud
 ## Cuando el spec no alcanza — el lazo
 
 **Para cuando llegás acá no debería quedar ninguna duda de planteo.** Se resuelven entre
-`spec-create` y `spec-review`, que es donde cuestan un párrafo. Así que **una duda que aparece
+`spec-create` y `spec-revise`, que es donde cuestan un párrafo. Así que **una duda que aparece
 implementando es evidencia de que uno de esos dos skills tiene un agujero**, y tratarla como un
 problema de este spec la deja volver la próxima vez.
 
@@ -149,8 +149,8 @@ La descarga son dos mitades, las dos en esta corrida:
    | un AC que no se puede ver fallar | `spec-create` |
    | una tarea que no dice qué archivo toca | `spec-create` |
    | una regla del juego ubicada en `ui/` o en `escenas/` | `spec-create` |
-   | un `[P]` que resultó falso | `spec-review` |
-   | dos specs que se pisan la misma escena | `spec-review-batch` |
+   | un paralelo que resultó falso | `spec-create` |
+   | dos specs que se pisan la misma escena | `spec-revise-batch` |
    | una medición que el spec supuso en vez de correr | `spec-create` |
 
    **Si no entra en ninguna fila, agregá la fila** —en
@@ -162,8 +162,9 @@ saltear**, porque no lo reclama ningún test ni ningún PR: el spec ya quedó an
 
 ## Al cerrar
 
-- **Cada criterio del spec nombrado por el test que lo verifica.** Escribí el `ACn` en el
-  nombre del test o en su comentario, en `test/` o en `.claude/scripts/tests/`. No es
+- **Cada criterio del spec nombrado por el test que lo verifica.** Escribí `NNN-ACn`
+  —`030-AC1`, con el número del spec— en el nombre del test o en su comentario, en `test/` o
+  en `.claude/scripts/tests/`. No es
   burocracia de cierre: es lo que reemplazó a la casilla como ancla anti-deuda, y hacerlo al
   final es escribirlo dos veces. En un spec ≤ 029, además, todas las casillas marcadas.
 - **Devolvé lo que editaste al issue**: `python .claude/scripts/publicar_spec.py publicar`. El
