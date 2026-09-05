@@ -239,15 +239,30 @@ def main() -> None:
             # termina culpando al IDE de algo que era timing.
             time.sleep(1)
 
+        # Reintentos con espera creciente, y NO un solo reintento de 2 s. El handle que hay
+        # que esperar no es sólo el del proceso que este script mata: un Godot que ya terminó
+        # por su cuenta deja el suyo colgando un rato más, y por ese camino la espera de
+        # `Stop-Process` de arriba ni siquiera corre —no hubo nada que matar—, así que el
+        # borrado llegaba con 2 s de gracia y declaraba `SIGUE AHI` culpando al IDE. Que es
+        # exactamente lo que el comentario de acá arriba dice que no hay que hacer.
+        #
+        # Medido el 2026-09-05 cerrando el lote 026/028: el worktree de medición se resistió a
+        # los 2 s, y un `rm -rf` a mano pocos segundos después lo borró sin quejarse. Los 10 s
+        # repartidos no cuestan nada cuando el árbol sale a la primera —el caso normal, que ni
+        # entra al bucle— y evitan mandar al usuario a cerrar un editor que no tenía abierto
+        # nada.
         borrar_arbol(wt)
-        if wt.exists():
-            time.sleep(2)
+        for espera in (2, 3, 5):
+            if not wt.exists():
+                break
+            time.sleep(espera)
             borrar_arbol(wt)
 
         if wt.exists():
             print(
-                "   SIGUE AHI. Algo tiene un handle abierto que el filtro no ve - tipicamente el\n"
-                "   editor de Godot o el IDE con la carpeta abierta. Lo cierra el usuario.",
+                "   SIGUE AHI, y ya con 10s de reintentos encima. Algo tiene un handle\n"
+                "   abierto que el filtro no ve - tipicamente el editor de Godot o el IDE\n"
+                "   con la carpeta abierta. Lo cierra el usuario.",
                 file=sys.stderr,
             )
             fallo = True
