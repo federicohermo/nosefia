@@ -13,7 +13,7 @@
 ## que `add_child()` haría correr los `_ready()` de todo lo que cuelgue.
 extends GdUnitTestSuite
 
-const ESCENA_DE_LA_ESTRUCTURA := "res://src/escenas/estructura_del_almacen.tscn"
+const ESCENA_DE_LA_ESTRUCTURA := "res://src/escenas/puestos/estructura_del_almacen.tscn"
 
 ## La malla que trae la cáscara del edificio: paredes, piso y techo en una sola pieza. Sin su
 ## colisión el jugador no se cae al vacío, atraviesa las paredes y sale del almacén, y el

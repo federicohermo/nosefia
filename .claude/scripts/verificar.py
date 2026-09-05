@@ -47,6 +47,7 @@ from lib.archivos import scripts_gd  # noqa: E402
 from lib.godot import aviso_de_entorno_viejo, como_declararlo, resolver  # noqa: E402
 from lib.repo import RAIZ, REPORTES, TESTS  # noqa: E402
 from lib.tdd import SUFIJO_DE_TEST  # noqa: E402
+from lib.verificacion import resumen  # noqa: E402
 
 AQUI = Path(__file__).resolve().parent
 
@@ -214,7 +215,11 @@ def main() -> None:
     for r in fallaron:
         print(f"\n── {r.nodo}: exit {r.codigo} ──\n{r.salida.rstrip()}")
 
-    print(f"\n{len(resultados) - len(fallaron)}/{len(resultados)} nodos en verde, en {total:.1f}s.")
+    # El conteo vive en `lib/verificacion.py` y no acá. Hasta el 2026-09-02 esta línea decía
+    # `len(resultados) - len(fallaron)`, y un salteado —que devuelve 0— no está entre los que
+    # fallaron: sumaba al numerador. Una corrida sin `GODOT_BIN` imprimía `6/6 nodos en verde`
+    # con la suite del juego sin correr, tres líneas debajo del bloque que decía que no corrió.
+    print(f"\n{resumen(resultados, total)}")
     sys.exit(1 if fallaron else 0)
 
 

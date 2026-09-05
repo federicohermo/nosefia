@@ -64,6 +64,52 @@ CAPAS: tuple[tuple[str, tuple[str, ...]], ...] = (
     ("src/escenas", ("src/dominio", "src/sistemas", "src/ui")),
 )
 
+#: Los nombres de subcarpeta que cada capa admite, y **qué alcance mide cada uno**.
+#:
+#: El criterio es uno solo, aplicado cuatro veces: **la carpeta dice qué se rompe si tocás lo
+#: que hay adentro**. Lo que cambia por capa es contra qué se mide ese alcance, y en las cuatro
+#: es la misma pregunta que el juego hace: ¿esto le cuesta tiempo al turno?
+#:
+#: Las claves son las mismas cadenas que las de `CAPAS` —`src/dominio`, no `dominio`— para que
+#: `capa_de()` devuelva una clave de este diccionario sin traducir nada en el medio.
+#:
+#: **Declarar un nombre no crea la carpeta.** Varios de estos nombres —`investigacion/` y
+#: `ambiente/` del dominio, los dos de `ui/`— todavía no tienen un solo archivo: es lo que hace
+#: que el spec que cree el primero aterrice bien sin discutirlo, y que `src/ui/pantallas/` dé
+#: rojo el mismo día.
+#:
+#: **Y la raíz de una capa es válida a propósito**: `reglas.gd`, `hud.gd`, `almacen.tscn` cruzan
+#: dos carpetas o son la raíz del árbol. Lo que este conjunto cierra es la puerta de atrás
+#: —inventar un nombre en vez de usar el criterio—, no la clasificación, que es semántica y la
+#: mira la revisión.
+#:
+#: - `src/dominio` — **cuánto dura el efecto**. `jugador/` cambia cómo se siente moverse y no
+#:   puede cambiar el resultado de una noche; `jornada/` es la aritmética de la tensión central;
+#:   `empleo/` es el arco entre noches —apercibimientos, despido— y ninguna noche suelta.
+#:   `almacen/` es **cuánto cuesta cumplir una obligatoria** —cuántos productos hay que reponer,
+#:   cuántas manchas hay que limpiar—; `investigacion/`, **cuánto rinde el minuto que no se
+#:   paga**; `ambiente/`, cómo se siente la noche y nada más. Las dos del medio son las dos
+#:   mitades de la tensión central, y por eso no entran en `jornada/`: `jornada/` es la **resta**
+#:   —cuánto tiempo queda— y estas dos son lo que cada lado de la resta compra. `almacen/` no se
+#:   llama `tareas/` como su vecina de `sistemas/` porque abajo no están las tareas sino **el
+#:   estado del local sobre el que operan**, y `ambiente/` no se llama `audio/` porque una
+#:   carpeta que repite lo que el nombre del archivo ya dice no informa nada.
+#: - `src/sistemas` — **si consume tiempo del turno, y para qué**. `marco/` no lo consume: hace
+#:   correr el juego, y un bug ahí no cambia el balance, lo detiene. `tareas/` lo consume y
+#:   cumple una obligatoria. `investigacion/` lo consume y no cumple nada: es el otro lado.
+#: - `src/ui` — **si el reloj sigue corriendo mientras está en pantalla**. `diegetica/` sí
+#:   —mirar la computadora cuesta minutos—; `interrupciones/` no, porque el turno ya terminó.
+#: - `src/escenas` — **cuántas instancias hay**. `puestos/` se instancia una vez y vive cableado
+#:   por `@export`; `objetos/` se instancia N veces, se crea y se destruye en juego.
+CARPETAS_POR_CAPA: dict[str, frozenset[str]] = {
+    "src/dominio": frozenset(
+        {"jugador", "jornada", "empleo", "almacen", "investigacion", "ambiente"}
+    ),
+    "src/sistemas": frozenset({"marco", "tareas", "investigacion"}),
+    "src/ui": frozenset({"diegetica", "interrupciones"}),
+    "src/escenas": frozenset({"puestos", "objetos"}),
+}
+
 #: Dónde viven los tests, y de qué son espejo.
 #:
 #: `test/<capa>/<nombre>_test.gd` para `src/<capa>/<nombre>.gd`. Que sea un espejo y no una

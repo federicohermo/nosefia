@@ -2,9 +2,9 @@
 
 [ext_resource type="PackedScene" path="res://src/escenas/jugador.tscn" id="1_jugador"]
 [ext_resource type="PackedScene" path="res://src/ui/hud.tscn" id="2_hud"]
-[ext_resource type="Script" path="res://src/sistemas/reloj_del_turno.gd" id="3_reloj"]
+[ext_resource type="Script" path="res://src/sistemas/marco/reloj_del_turno.gd" id="3_reloj"]
 [ext_resource type="Script" path="res://src/escenas/almacen.gd" id="4_almacen"]
-[ext_resource type="PackedScene" path="res://src/escenas/estructura_del_almacen.tscn" id="5_estructura"]
+[ext_resource type="PackedScene" path="res://src/escenas/puestos/estructura_del_almacen.tscn" id="5_estructura"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_cielo"]
 

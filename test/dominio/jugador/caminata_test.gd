@@ -5,8 +5,8 @@
 ## rojo con el código correcto.
 extends GdUnitTestSuite
 
-const Caminata := preload("res://src/dominio/caminata.gd")
-const ReglasDelJugador := preload("res://src/dominio/reglas_del_jugador.gd")
+const Caminata := preload("res://src/dominio/jugador/caminata.gd")
+const ReglasDelJugador := preload("res://src/dominio/jugador/reglas_del_jugador.gd")
 
 const TOLERANCIA := 1e-5
 const APROXIMACION := Vector3(TOLERANCIA, TOLERANCIA, TOLERANCIA)

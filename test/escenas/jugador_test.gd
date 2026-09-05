@@ -10,7 +10,7 @@
 ## y arranca a leer el `RayCast3D`: cosas que en headless no significan nada.
 extends GdUnitTestSuite
 
-const ReglasDelJugador := preload("res://src/dominio/reglas_del_jugador.gd")
+const ReglasDelJugador := preload("res://src/dominio/jugador/reglas_del_jugador.gd")
 const ESCENA_DEL_JUGADOR := "res://src/escenas/jugador.tscn"
 
 

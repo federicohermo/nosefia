@@ -5,7 +5,7 @@
 ## por segundo mirando fijo una estantería, y por eso `observar()` devuelve si cambió.
 extends GdUnitTestSuite
 
-const Foco := preload("res://src/dominio/foco.gd")
+const Foco := preload("res://src/dominio/jugador/foco.gd")
 
 ## Dos identidades cualesquiera distintas de `SIN_OBJETIVO`. Son `int` porque lo que se guarda
 ## es el `get_instance_id()` del cuerpo con el que chocó el rayo: un `int` no conoce a nadie, y

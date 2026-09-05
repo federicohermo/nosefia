@@ -83,7 +83,7 @@ Al revisar, verificá:
 
 ## Lo que hay que mirar en un spec de este juego
 
-Siete preguntas que en un repo de Godot deciden si el spec es implementable:
+Ocho preguntas que en un repo de Godot deciden si el spec es implementable:
 
 1. **¿En qué capa cae cada cosa?** Si el spec propone una regla —cuántas tareas, qué pasa a los
    dos días, qué cuenta como cumplir— y la ubica en un `Node` de `sistemas/` o en una escena,
@@ -117,6 +117,14 @@ Siete preguntas que en un repo de Godot deciden si el spec es implementable:
    graves», su `plan.md` y su T001 decían «tres», y el valor real sale de
    `src/dominio/reglas.gd`. **Se cierra contra la fuente de verdad, no por mayoría entre los
    cuatro archivos.**
+8. **Si el spec propone un gate, ¿camina el tipo de archivo de lo que dice verificar?** Un gate
+   que declara cubrir las cuatro capas y sólo lee `.gd` deja `escenas/` sin verificar, porque
+   esa capa es casi toda `.tscn` — y el spec **no miente**: el gate corre, sale verde y nadie
+   ve el hueco. La revisión lo cierra con dos comandos, no leyendo: qué extensiones tiene la
+   capa (`find src/<capa> -type f | sed 's/.*\.//' | sort -u`) contra qué extensiones camina el
+   helper que el spec nombra. Y el AC de la sonda tiene que traer **una sonda por extensión**:
+   con una sola, el hueco pasa en verde. Medido el 2026-09-01 revisando el PR del spec 024, que
+   estrenaba `src/escenas/puestos/` con un `.tscn` que su propio gate no podía ver.
 
 ## Las convenciones que un spec suele violar por escrito
 
