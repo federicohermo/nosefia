@@ -34,7 +34,7 @@
 │       ├── almacen.tscn      La escena raíz. CABLEA: lo suyo cuelga de su raíz
 │       ├── jugador.tscn      El cuerpo en primera persona, instanciado en el almacén
 │       ├── puestos/          UNA instancia, cableada por @export y viva en la escena
-│       │   └── estructura_del_almacen.tscn  El blockout: piso, paredes y anclajes
+│       │   └── estructura_del_almacen.tscn  Hereda del .glb: la geometría la decide Blender
 │       └── objetos/          N instancias: se crean y se destruyen en juego
 │
 ├── test/                   El ESPEJO de src/, SUBCARPETA INCLUIDA:
@@ -45,6 +45,9 @@
 │                           alguien decidió probar levantando la escena
 │
 ├── assets/                 Arte, audio, fuentes. Lo que no es código
+│                           El modelo entra por el .glb; el .blend queda como fuente del
+│                           modelador y Godot NO lo importa (project.godot). Importarlo
+│                           obliga a tener Blender instalado en cada máquina, CI incluida
 │
 ├── addons/
 │   └── gdUnit4/            Vendorizado, versión 6.2.1 (la serie para Godot 4.5+). NO se edita ni se lee

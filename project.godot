@@ -24,6 +24,14 @@ config/icon="res://icon.svg"
 
 enabled=PackedStringArray("res://addons/gdUnit4/plugin.cfg")
 
+[filesystem]
+
+; Godot importa un `.blend` invocando a Blender, así que con esto en `true` el proyecto no
+; construye en ninguna máquina que no lo tenga instalado Y declarado en sus Editor Settings —
+; empezando por la CI. El modelo entra por el `.glb` de al lado; el porqué, en
+; docs/architecture/directory-structure.md.
+import/blender/enabled=false
+
 [input]
 
 mover_adelante={
