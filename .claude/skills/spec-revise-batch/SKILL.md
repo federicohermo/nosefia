@@ -1,14 +1,14 @@
 ---
-name: spec-review-batch
-description: Revisa N specs de specs/ en paralelo —un agente por spec— más un carril de coherencia que caza las contradicciones ENTRE specs mientras todavía son texto editable, y cierra devolviendo las ediciones a los issues. Usar al revisar dos o más specs de una. Para uno solo, spec-review.
+name: spec-revise-batch
+description: Contrasta un requisito NUEVO —venga de donde venga— contra N specs vivos en paralelo, un agente por spec, más un carril de coherencia que caza las contradicciones ENTRE specs mientras todavía son texto editable, y cierra devolviendo las ediciones a los issues. Usar cuando una definición cambió y hay dos o más specs escritos que la daban por otra cosa. Para uno solo, spec-revise.
 argument-hint: "<NNN NNN ...> | <NNN-MMM> | --propuestos [--dry]"
-# Sin `allowed-tools`, igual que `spec-implement` y `spec-review`. Este skill abanica N+1
+# Sin `allowed-tools`, igual que `spec-implement` y `spec-revise`. Este skill abanica N+1
 # agentes, corre el harness en Python, habla con GitHub por `gh` y escribe adentro de
 # `specs/`: declarar una lista parcial le sacaría todo lo que no estuviera en ella y lo
 # rompería en silencio a mitad de corrida, que es el modo de falla que este repo persigue.
 ---
 
-# spec-review-batch — No se fía
+# spec-revise-batch — No se fía
 
 ## Matriz del lote
 
@@ -26,10 +26,17 @@ argument-hint: "<NNN NNN ...> | <NNN-MMM> | --propuestos [--dry]"
 
 ---
 
-Un review de spec audita **uno** contra el repo. Este audita **N contra el repo y entre sí**.
+**La entrada es un requisito nuevo, y de dónde viene no cambia nada**: una página de Notion, un
+documento de Drive, o algo que el usuario comenta en el momento son intercambiables. Lo único
+que hace falta es poder escribirlo en una línea —qué pide ahora, qué pedía antes—, y el «antes»
+de un valor sale de `src/dominio/`, no de la memoria. Eso es el método de `/spec-revise`, y
+vale entero acá: lo que sigue es sólo lo que cambia al hacerlo sobre N specs a la vez.
 
-Lo segundo es el entregable: una contradicción entre dos specs del lote no la ve ningún review
-suelto, porque cada uno mira una carpeta. Y acá sale barata — arreglarla es un párrafo. La misma
+`spec-revise` contrasta ese requisito contra **un** spec. Este lo contrasta contra **N, y los N
+entre sí**.
+
+Lo segundo es el entregable: una contradicción entre dos specs del lote no la ve ninguna
+revisión suelta, porque cada una mira una carpeta. Y acá sale barata — arreglarla es un párrafo. La misma
 contradicción sobrevive intacta hasta que dos ramas del lote se pisan, y ahí ya cuesta un rebase.
 Si las dos tocan la misma escena, no cuesta un rebase: cuesta la escena.
 
@@ -50,7 +57,7 @@ Revisar el lote y **implementarlo** se abanican distinto, y confundirlos es el e
 | Convergencia | merge de ramas, resuelve texto | el padre escribe lo compartido, resuelve semántica |
 | Qué arregla un choque | una resolución de merge | **nada**: la última escritura gana en silencio |
 
-Un review no compila, no corre `verificar.py` y no toca `src/`: lee el árbol y escribe adentro de
+Una revisión no compila, no corre `verificar.py` y no toca `src/`: lee el árbol y escribe adentro de
 la carpeta de su spec. Esa disyunción es lo único que hace segura la concurrencia, y por eso la
 regla del Paso 3 no es una precaución sino la condición.
 
@@ -96,7 +103,7 @@ protegidas, a propósito. Este skill no necesita rama de feature ni la abre.
   ```
 - **Loop activo.** `git worktree list` y `git branch --list "feature/*"`: el spec que ya tenga
   rama o worktree abierto está **en implementación**, y cae a `--dry` **él solo**, no el lote.
-  Revisarlo sirve igual; editarle el `tasks.md` por debajo a quien lo está marcando, no. Al resto
+  Revisarlo sirve igual; editarle por debajo el archivo que alguien está siguiendo, no. Al resto
   del lote no se le mueve el piso por un vecino.
 
 Con `--dry` no se escribe nada: ni ediciones, ni issues, ni `publicar`. Se corre hasta el reporte
@@ -104,7 +111,7 @@ y ahí termina.
 
 ## Paso 1 — El preámbulo, destilado una vez
 
-Es el ahorro propio del batch: sin esto, N reviews lo re-derivan N veces desde frío. Cinco
+Es el ahorro propio del batch: sin esto, N revisiones lo re-derivan N veces desde frío. Cinco
 insumos, y los cinco se pasan **destilados**, no como rutas a leer:
 
 - **El registro**: las filas del lote en `specs/mapa.json` —`issue`, `estado`, `origen`—. El
@@ -114,21 +121,21 @@ insumos, y los cinco se pasan **destilados**, no como rutas a leer:
   ```bash
   python .claude/scripts/deuda.py     # los issues abiertos que ningún spec reclama
   ```
-  Un spec nunca dice *replico la deuda #7*: eso lo traduce el review, y sólo puede hacerlo con la
+  Un spec nunca dice *replico la deuda #7*: eso lo traduce la revisión, y sólo puede hacerlo con la
   lista adelante.
 - **Lo que ya se probó y no funcionó**, que en este repo vive como **comentarios en el issue de
   cada spec** y no en ningún archivo: `gh issue view <N> --repo federicohermo/nosefia --json
   comments`.
 - **Las convenciones verificables, ≤40 líneas**: `CLAUDE.md`, más los `.claude/rules/` de las
   capas que el lote toca, más **quién verifica cada una** — que es el dato que cambia el
-  hallazgo. Una regla que verifica `gate_de_capas.py` no necesita hallazgo de review: la va a
+  hallazgo. Una regla que verifica `gate_de_capas.py` no necesita hallazgo de revisión: la va a
   frenar sola. Una que es prosa, sí.
 - **Las trampas del repo**, las cuatro de `CLAUDE.md`, y de ellas la que decide reparto: **un
   `.tscn` no se mergea**.
 
 ## Paso 2 — El orden del lote es la base de anclaje
 
-El eje A del review suelto pregunta *¿el spec describe el repo que existe?*. En un lote encadenado
+El eje A de la revisión suelta pregunta *¿el spec describe el repo que existe?*. En un lote encadenado
 esa pregunta está mal formulada para todos menos el primero: el 002 cita cosas que el 001 crea.
 
 **La base de cada spec es `staging` + los specs del lote que lo preceden.** Derivá el orden y
@@ -139,32 +146,33 @@ pasáselo a cada agente, o el lote devuelve una avalancha de citas rotas falsas.
    en vez de la matriz, el lote está mal escrito y eso se resuelve en el Paso 0.
 2. **Leé la matriz con este descuento, que está medido acá el 2026-08-28** sobre el lote
    001 002 003: `verificar.py` sale compartido por los tres y `specs/mapa.json` por dos, y
-   **ninguno de los dos es una arista**. Los cita el ritual de cierre que todo `tasks.md` de este
-   repo tiene —correr los seis nodos, y no tocar el mapa dentro del PR—, así que van a aparecer en
+   **ninguno de los dos es una arista**. Los cita el ritual de cierre que todo spec de este
+   repo trae —correr los seis nodos, y no tocar el mapa dentro del PR—, así que van a aparecer en
    **todos** los lotes. `lote.py` no los filtra a propósito: filtrar por el verbo de la tarea es
    adivinar, y un script que adivina se equivoca en silencio. El que descuenta sos vos, y lo
    decís.
 3. **La marca que sí es una conclusión es `<- ESCENA COMPARTIDA`.** Para todo lo demás, compartir
    un archivo dice *dónde mirar*; para un `.tscn` dice *qué hacer*: se ordena, no se paraleliza.
    Un `[P]` entre dos tareas que tocan la misma escena es bloqueante en los dos specs.
-4. **La matriz sale de los `tasks.md` y de ningún otro archivo** —`lote.py` los lee y nada
+4. **La matriz sale de un archivo por spec y de ningún otro** —el `tasks.md` en un spec ≤ 029,
+   el `estrategia.md` en uno ≥ 030; `lote.py` elige por lo que hay en disco y nada
    más—, así que **un archivo que un spec edita sin darle tarea propia es invisible acá**. El
    caso está medido: en el lote 004–010, el 2026-08-30, `src/escenas/almacen.gd` lo escriben el
    007, el 008 y el 009, y sólo aparece en los `plan.md` de los dos últimos. La matriz no lo
    listó, y con él se perdía que el AC22 del 007 —que prohíbe ramas en ese archivo— lo verifica
    una tarea del 007 que corre **antes** de que los otros dos escriban sus líneas.
 
-   No se arregla haciendo que `lote.py` lea los cuatro archivos: los `research.md` citan medio
-   repo y la matriz se volvería ruido. **Se arregla acá**, con un barrido propio: `rg --no-ignore`
-   sobre los `plan.md` del lote buscando rutas de `src/`, y todo lo que aparezca en dos specs y
-   no esté en la matriz es una arista que el Paso 2 no vio.
+   No se arregla haciendo que `lote.py` lea todos los archivos del spec: los `research.md` citan
+   medio repo y la matriz se volvería ruido. **Se arregla acá**, con un barrido propio:
+   `rg --no-ignore` sobre las carpetas del lote buscando rutas de `src/`, y todo lo que aparezca
+   en dos specs y no esté en la matriz es una arista que el Paso 2 no vio.
 
 4. **Los pares `X -> Y`** del tercer bloque son la arista que ningún `preload` ni ningún
    `class_name` delata. Salen de la **línea** de la tarea y no de su prosa, y vienen como texto y
    no como número: hay pares con coma decimal que un `float()` convierte en un error.
 5. **Contrastá el grafo contra lo que los specs declaran.** Eso dice qué quiso el autor; la
    matriz dice qué archivos se pisan. **Si difieren, ése es el hallazgo**, y se corrige en el
-   `tasks.md` que lo declara.
+   archivo del spec que lo declara.
 6. Un spec que **declara tolerar** llegar antes que su dependencia sale de la cadena: es permiso
    escrito, no un olvido.
 
@@ -192,7 +200,7 @@ vive justo en el detalle que ningún reporte comprimido menciona.
   escritos. No espera a que los reviews terminen, así que no cuesta reloj.
 - **Es uno solo, y no se reparte por clase de cruce.** Lo único que lo hace funcionar es que hay
   una sola cabeza con los N specs enteros adelante; partirlo re-fragmenta exactamente eso.
-- **Lee los specs crudos**, los N enteros —`spec.md`, `research.md`, `plan.md` y `tasks.md`—, más
+- **Lee los specs crudos**, los N enteros —los tres o cuatro archivos, según el régimen—, más
   la matriz de arriba y el orden derivado en el Paso 2.
 - **No edita nada, ni siquiera dentro de una carpeta.** Cada hallazgo suyo abarca dos specs o
   más, y esas carpetas las están escribiendo los agentes de spec en este momento.
@@ -286,7 +294,7 @@ no re-audita: cruza.
   o mal. Y el caso caro es el que se lee como un hallazgo bueno: uno **que no era cierto**.
   Corregilo antes de que salga, porque el próximo que pase lo «arregla» a algo peor.
 
-La asimetría del review vale igual acá: **endurecer se aplica** —un AC que falta se corrige en el
+La asimetría de la revisión vale igual acá: **endurecer se aplica** —un AC que falta se corrige en el
 spec al que le falta—; **aflojar se propone**. Si el cruce obliga a elegir entre dos diseños,
 frená con `AskUserQuestion`: un párrafo ahora contra dos ramas rebaseadas después. Es la descarga
 4 de [`sin-deuda.md`](sin-deuda.md), y es la única forma legítima de que algo
@@ -307,7 +315,7 @@ Y **el spec nuevo se publica en la misma corrida del Paso 5**, con los del lote:
 todos antes de `publicar` para uno, o su cita cruzada queda como enlace muerto.
 
 **Si el hallazgo era del método y no del spec, corregí el `SKILL.md`.** Un `[P]` falso que llegó
-al review es una regla que `spec-create` no atajó; una escena compartida que la matriz no marcó es
+a la revisión es una regla que `spec-create` no atajó; una escena compartida que la matriz no marcó es
 una regla de este archivo. Ver «el lazo» en [`sin-deuda.md`](sin-deuda.md), y va
 al reporte como sección propia.
 
@@ -331,7 +339,7 @@ En este orden, y el segundo es el que se saltea:
    python .claude/scripts/publicar_spec.py publicar
    ```
 
-   El árbol de `specs/` es **caché**. Un review que edita el `spec.md` en disco y no publica dejó
+   El árbol de `specs/` es **caché**. Una revisión que edita el `spec.md` en disco y no publica dejó
    el trabajo en un archivo ignorado por git, que la próxima hidratación **sobreescribe sin
    avisar**. Es la forma más cara de perder una corrida entera de este skill: no falla, no
    aparece en ningún `git status`, y el spec vuelve a decir lo que decía.
@@ -398,6 +406,9 @@ descargó.
 ## Lo que no hace
 
 - **No revisa código.** Si el lote ya tiene implementación, eso es un review de PR.
+- **No audita un spec porque sí.** Sin un requisito nuevo adelante no hay contra qué contrastar,
+  y eso es lo que este skill dejó de hacer: está medido que auditar el texto por su cuenta no
+  puede saber qué mitad va a envejecer.
 - **No implementa, y no reparte el lote en carriles de trabajo.** Corre antes de eso, y su salida
   —el orden corregido y los cruces resueltos— es el insumo de `spec-implement-batch`.
 - **No crea specs.** Eso es `spec-create-batch`, y corre antes.

@@ -65,7 +65,7 @@ en el reporte del Paso 6, no un hecho.
 ### Antes de repartir nada: cuáles de estos pedidos NO necesitan spec
 
 Va primero y es corto, porque la presión del batch es hacia escribir de más: ya están los N
-agentes, ya hay formato, sale casi gratis por unidad. Y un skill que obliga a cuatro archivos para
+agentes, ya hay formato, sale casi gratis por unidad. Y un skill que obliga a tres archivos para
 arreglar una tilde se apaga entero.
 
 **La pregunta que decide el carril es una sola: ¿el arreglo toca `src/` o `docs/`?** Son las dos
@@ -77,7 +77,7 @@ del lote**:
 | Un typo o una redacción, sin cambio de comportamiento | una tilde en un comentario, un `README` mal escrito |
 | Revertir el commit anterior | `git revert`, cuando lo que se revierte ya tenía su spec |
 | Actualizar el addon de gdUnit4 a una versión nueva | sin cambio de API en los tests |
-| Terminar la tarea abierta de un spec **ya publicado** | marcar un `tasks.md`, cerrar un issue |
+| Terminar lo que un spec **ya publicado** dejó abierto | cerrar su issue, marcar su avance |
 | Un asset nuevo que no toca `src/` | un `.png`, un `.ogg`, una referencia |
 | Lo que el usuario pida explícitamente sin spec | y entonces se dice en voz alta que se está salteando |
 
@@ -190,8 +190,8 @@ le tocan, y el orden del lote. Y este contrato:
    - **Declará contra qué base medís.** `staging`, o `staging` más los specs del lote que te
      preceden. Una medición sin base declarada es infalsificable en cuanto el lote se reordena —
      y el lote se reordena siempre.
-2. **Los cuatro archivos** en `specs/<NNN>-<descripcion-kebab>/`: `spec.md`, `research.md`,
-   `plan.md`, `tasks.md`. El formato y las cuatro desviaciones están en
+2. **Los tres archivos** en `specs/<NNN>-<descripcion-kebab>/`: `spec.md`, `research.md`,
+   `estrategia.md`, con sus cuatro techos de palabras. El formato y las desviaciones están en
    [`specs/README.md`](../../../specs/README.md).
 3. **`**Origen:** #N` en el encabezado del `spec.md`** si el spec salda issues de deuda — antes
    del primer `##`, porque un `#12` suelto en la prosa no cuenta. La parsea `crear` y de ahí sale
@@ -232,15 +232,15 @@ Y las cuatro cosas que **no** hace:
 Cada uno devuelve un reporte de **20–30 líneas**: qué mide su `research.md` y contra qué base, en
 qué capa cae cada regla, cuántos AC y cuántas tareas, su `origen` si tiene, **la lista de archivos
 de `src/` y de escenas que sus tareas nombran** —es con lo que el padre cruza en el Paso 5— y
-**qué AC cubre cada tarea**, que es como el padre verifica que el `tasks.md` esté completo sin
-releer los cuatro archivos.
+**qué tramo del orden cubre cada AC**, que es como el padre verifica que el spec esté completo
+sin releerlo entero.
 
 ## Paso 5 — Cruzar lo escrito, y publicar una sola vez
 
 El padre no re-audita: cruza, y después publica. En este orden, y el orden importa.
 
 1. **Cruzá lo escrito contra lo decidido en el Paso 2**, con la matriz del skill hermano — que ya
-   sabe leer un `tasks.md` y no hay por qué duplicarlo:
+   sabe leer el archivo de orden de cada spec y no hay por qué duplicarlo:
 
    ```bash
    python .claude/skills/spec-review-batch/scripts/lote.py <NNN NNN ...>
@@ -250,10 +250,10 @@ El padre no re-audita: cruza, y después publica. En este orden, y el orden impo
    **`<- ESCENA COMPARTIDA`** haya quedado sin orden declarado, que los archivos de `dominio/`
    compartidos sean los que el Paso 2 asignó a un dueño, y que ningún par de specs mueva el mismo
    número sin citarse. Descontá `verificar.py` y `specs/mapa.json`: los cita el ritual de cierre
-   de todo `tasks.md` de este repo, así que salen compartidos en **todos** los lotes y no son
+   de todo spec de este repo, así que salen compartidos en **todos** los lotes y no son
    aristas.
 
-   Lo que aparezca acá se corrige **ahora**, en el `tasks.md` del spec que corresponda. Todavía es
+   Lo que aparezca acá se corrige **ahora**, en el `estrategia.md` del spec que corresponda. Todavía es
    texto.
 2. **Crear los issues, los N de una:**
 

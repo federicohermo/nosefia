@@ -71,9 +71,15 @@ SPECS = RAIZ / "specs"
 # ceguera se cambiaría por una más difícil de ver.
 CITA = re.compile(r"`([^`]*[A-Za-z0-9_-]\.(?:gd|tscn|tres|py|md|json|cfg|yml|yaml))(?::\d+(?:-\d+)?)?`")
 
-# Los cuatro archivos que todo spec tiene adentro de su carpeta: citados sin ruta son suyos, y
+# Los archivos que un spec tiene adentro de su carpeta: citados sin ruta son suyos, y
 # contarlos como compartidos pondría a los N specs del lote pisándose el `tasks.md`.
-PROPIOS = frozenset(("spec.md", "research.md", "plan.md", "tasks.md", "README.md"))
+#
+# Están los de los dos regímenes juntos —los cuatro de un spec ≤ 029 y los tres de uno
+# ≥ 030— porque un lote los puede mezclar, y un nombre de más acá no cuesta nada: lo único
+# que hace es no inventar una arista.
+PROPIOS = frozenset(
+    ("spec.md", "research.md", "plan.md", "tasks.md", "estrategia.md", "README.md")
+)
 
 
 def es_propio(cita: str) -> bool:
@@ -124,6 +130,22 @@ def expandir(args: list[str]) -> list[str]:
     return sorted(set(ids))
 
 
+def archivo_de_trabajo(carpeta: Path) -> Path | None:
+    """El archivo del spec donde vive lo que se va a hacer: qué archivos toca y en qué orden.
+
+    Son dos según el régimen —`tasks.md` en un spec ≤ 029, `estrategia.md` en uno ≥ 030— y
+    acá se elige **por lo que hay en disco y no por el número**, al revés que en el gate. La
+    razón es la diferencia de trabajo: el gate decide si un spec está bien escrito y ahí el
+    número es lo único que no se puede evadir; esto es una herramienta de reporte, y frenar
+    un lote entero porque un spec tiene el archivo del otro régimen sería cambiar un informe
+    incompleto por ninguno.
+    """
+    for nombre in ("estrategia.md", "tasks.md"):
+        if (carpeta / nombre).is_file():
+            return carpeta / nombre
+    return None
+
+
 def carpeta_de(id_spec: str) -> Path:
     encontradas = sorted(d for d in SPECS.glob(f"{id_spec}-*") if d.is_dir())
     if not encontradas:
@@ -151,20 +173,24 @@ def main() -> None:
     if len(ids) < 2:
         _morir(
             "uso: lote.py <NNN NNN ...> | <NNN-MMM> | --propuestos\n"
-            f"  Con un spec solo no hay lote que cruzar: eso es /spec-review. ({ids[0]})"
+            f"  Con un spec solo no hay lote que cruzar: eso es /spec-revise. ({ids[0]})"
         )
 
     # Los specs se resuelven TODOS antes de emitir nada. Un `NNN` sin hidratar tiene que matar el
     # script acá y no a mitad de la matriz: una matriz cortada se lee como «estos specs no
     # comparten ningún archivo», que es la conclusión contraria y sale en verde.
-    tareas = {i: (carpeta_de(i) / "tasks.md") for i in ids}
-    faltan = [i for i, p in tareas.items() if not p.is_file()]
+    tareas = {i: archivo_de_trabajo(carpeta_de(i)) for i in ids}
+    faltan = [i for i, p in tareas.items() if p is None]
     if faltan:
-        _morir(f"sin tasks.md: {', '.join(faltan)}. ¿La hidratación quedó a medias?", codigo=1)
+        _morir(
+            f"sin tasks.md ni estrategia.md: {', '.join(faltan)}. "
+            "¿La hidratación quedó a medias?",
+            codigo=1,
+        )
 
     lineas = {i: p.read_text(encoding="utf-8").splitlines() for i, p in tareas.items()}
 
-    # Basename a propósito: un `tasks.md` cita el mismo archivo como `src/dominio/turno.gd` y
+    # Basename a propósito: el archivo cita el mismo destino como `src/dominio/turno.gd` y
     # como `turno.gd`, y contarlos aparte parte una colisión en dos.
     citados: dict[str, set[str]] = {}
     for i, texto in lineas.items():
@@ -211,10 +237,16 @@ def main() -> None:
     # diferencia estaba medida: 7 pares reales en la línea contra 25 contando las continuaciones,
     # y los 18 de más eran frecuencias y números de spec que inventan una dependencia dura donde
     # no hay ninguna.
+    #
+    # En un spec ≥ 030 no hay casillas, así que ahí se miran **todas** las líneas. No
+    # reabre la ceguera que motivó la restricción: los 18 pares de más venían de la prosa
+    # colgada debajo de cada tarea, y un `estrategia.md` entero tiene un techo de 250
+    # palabras — menos que la prosa de una sola tarea del régimen viejo.
     hubo = False
     for i in ids:
+        con_casillas = any(LINEA_DE_TAREA.match(linea) for linea in lineas[i])
         for linea in lineas[i]:
-            if not LINEA_DE_TAREA.match(linea):
+            if con_casillas and not LINEA_DE_TAREA.match(linea):
                 continue
             par = PAR.search(linea)
             if not par:
@@ -224,7 +256,7 @@ def main() -> None:
             print(f"  {i} {etiqueta}  {par.group(1)} -> {par.group(2)}")
             hubo = True
     if not hubo:
-        print("  ninguno: ninguna tarea del lote declara mover un valor de X a Y.")
+        print("  ninguno: ningún spec del lote declara mover un valor de X a Y.")
 
 
 if __name__ == "__main__":

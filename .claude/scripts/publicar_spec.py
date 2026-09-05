@@ -62,12 +62,18 @@ CUERPO = "spec.md"
 
 #: Los `.md` de la carpeta que NO son el body, en orden de lectura.
 #:
-#: Los tres canónicos van primero y en su orden; cualquier otro va detrás, alfabético. Que la
+#: Los canónicos van primero y en su orden; cualquier otro va detrás, alfabético. Que la
 #: lista no sea cerrada es el punto: un spec puede agregar un `baseline.md` con una medición
 #: previa o un `reparto.md`, y una lista hardcodeada lo dejaría **afuera sin decir nada** —o
 #: sea perdido, porque `specs/[0-9]*/` está ignorado y la hidratación siguiente se lo lleva
 #: puesto.
-CANONICOS = ("research.md", "plan.md", "tasks.md")
+#:
+#: **Están los dos regímenes en una sola lista**, y por eso no hace falta que este script sepa
+#: en cuál cae el spec: el filtro es `if archivo in todos`, así que los que no existen no
+#: aparecen. Un spec ≤ 029 publica `research`, `plan` y `tasks`; uno ≥ 030 publica `research` y
+#: `estrategia`. Preguntarle el número al mapa acá sería un segundo lugar donde vive el corte,
+#: y el día que se muevan por separado este script publicaría con el régimen equivocado.
+CANONICOS = ("research.md", "estrategia.md", "plan.md", "tasks.md")
 
 #: El límite de un body y de un comentario de GitHub.
 #:

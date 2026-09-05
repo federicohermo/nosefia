@@ -160,7 +160,7 @@ eslabones dio **tres carriles** al derivar el grafo de archivos. El error va en 
 —dependencias que no existen y dependencias que no se declararon— y el segundo es el caro.
 
 - **Se detecta** contrastando la matriz del Paso 2 contra lo que los specs declaran.
-- **Se corrige donde se declaró** —el `tasks.md` o el `spec.md`, que todavía son texto— y el
+- **Se corrige donde se declaró** —el archivo del orden o el `spec.md`, que todavía son texto— y el
   orden corregido es lo que va al reporte: es el insumo de `spec-implement-batch`, que reparte el
   lote en carriles a partir de exactamente esto.
 
@@ -195,7 +195,7 @@ podía pasar y el motivo estaba en el otro spec.
   haber una tarea que lo haga. **La pregunta es «¿quién lo hace?», no «¿está mencionado?»**.
 - **Y se mide al revés también**, que es donde apareció: correr los barridos que el destinatario
   declara en sus AC **contra el árbol de hoy**, y ver si devuelven algo que ninguna de sus tareas
-  toca. Un AC que su propio `tasks.md` no puede satisfacer es el síntoma.
+  toca. Un AC que su propio spec no puede satisfacer es el síntoma.
 - **Se corrige en el destinatario**, agregándole la tarea, porque es el que tiene el AC. Si el
   emisor prefiere quedársela, es él el que cambia y se dice en el reporte.
 

@@ -176,18 +176,23 @@ del PR que lo justifica.
 **Los issues son la ENTRADA del repo, nunca la salida.** Un pedido de afuera entra como
 [issue](https://github.com/federicohermo/nosefia/issues) y `spec-create` lo drena hacia specs
 (`deuda.py` lista qué hay). Lo que **no** existe es abrir uno para **terminar** una corrida:
-ningún skill deja trabajo escrito para después, y un `tasks.md` tampoco puede registrarlo —el ítem
-hereda el estado de su spec—. **Eso ahora es un rojo**: `test_convencion_de_specs.py` verifica la
-casilla abierta en un spec `Implementado`, las secciones y tareas que aplazan, y las mediciones
-declaradas como no hechas. La doctrina y su evidencia, que los ocho skills traen adentro:
+ningún skill deja trabajo escrito para después, y un spec tampoco puede registrarlo —el ítem
+hereda el estado de su spec—. **Eso ahora es un rojo**: `test_convencion_de_specs.py` verifica
+las secciones que aplazan, las mediciones declaradas como no hechas, los cuatro techos de
+palabras, y sobre todo el ancla: en un spec `Implementado`, **cada criterio nombrado por un
+test** si es ≥ 030, y ninguna casilla abierta si es ≤ 029. La doctrina y su evidencia, que los ocho skills traen adentro:
 [.claude/doctrina/sin-deuda.md](./.claude/doctrina/sin-deuda.md) es la copia canónica.
 
 ---
 
 ## Antes de un cambio grande
 
-Los cuatro archivos (`spec` · `research` · `plan` · `tasks`), publicados como issue con
-`publicar_spec.py crear` y `publicar`, y **sólo** `specs/mapa.json` commiteado a `staging`. **Ahí
+Los tres archivos (`spec` · `research` · `estrategia`), publicados como issue con
+`publicar_spec.py crear` y `publicar`, y **sólo** `specs/mapa.json` commiteado a `staging`.
+**El spec es un prompt, no un documento**, y el techo es ejecutable: 350 palabras de prosa en
+el `spec.md`, 300 en su bloque de criterios entero, 500 en el `research.md`, 250 en el
+`estrategia.md`. Del **030** en adelante; los ≤ 029 son ADR en el formato viejo y no se
+reescriben. **Ahí
 termina abrir un spec: la rama la abre el implementador**, porque escribirlo y decidir
 implementarlo son dos decisiones distintas y una rama entre las dos queda colgada. **Y lo bloquea
 un hook**, no la buena voluntad. El flujo entero y **qué NO necesita spec**, en el skill

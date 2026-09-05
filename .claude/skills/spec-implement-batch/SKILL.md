@@ -35,7 +35,7 @@ converge recién en el merge, que resuelve texto y no semántica.
 
 | El batch genérico | Acá |
 |---|---|
-| `node scripts/matriz.mjs` sobre los `tasks.md` | **`lote.py` de `spec-review-batch`**, inyectado arriba: misma matriz, y además marca la **escena compartida** |
+| `node scripts/matriz.mjs` sobre los `tasks.md` | **`lote.py` de `spec-revise-batch`**, inyectado arriba: misma matriz, y además marca la **escena compartida** |
 | Instalar dependencias en cada worktree (`node_modules`) | **No hay install**: `addons/gdUnit4` está vendorizado. Lo que sí falta es `specs/` **y `.godot/`** — ver Paso 3 |
 | El PR nombra una actividad de Jira, y hay un script de claves | **No hay Jira.** El PR lleva `Closes #N` por cada issue saldado: el del spec **más los de su `origen`** |
 | La rama se llama como convenga | **`feature/<NNN>-<kebab>` o el hook bloquea `src/`.** Es la falla número uno acá |
@@ -229,12 +229,12 @@ Cada agente recibe, literal:
 > **Un carril termina con el PR abierto y sin una sola casilla sin marcar. No antes.**
 >
 > Por cada spec suyo: `verificar.py` en verde **sin nodos salteados**, todas las tareas del
-> `tasks.md` hechas y marcadas, **las marcas devueltas al issue** con
+> del spec hechas, **el rastro devuelto al issue** con
 > `python .claude/scripts/publicar_spec.py publicar`, rama pusheada y PR abierto contra la base
 > que le toca.
 >
 > **No existe volver con «quedó listo para commitear», «falta abrir el PR» ni «lo dejo en el
-> working tree».** Y no existe volver con una casilla abierta: si el `tasks.md` tenía trabajo que
+> working tree».** Y no existe volver con trabajo abierto: si el spec tenía trabajo que
 > no se hizo, el carril no terminó — ver el lazo, abajo.
 >
 > Si algo bloquea de verdad, el carril **igual vuelve con lo que sí cerró**, y el bloqueo escrito
@@ -242,7 +242,7 @@ Cada agente recibe, literal:
 > nada.
 
 **El padre lo verifica, no lo cree.** Cuando vuelva un carril, chequeá con `gh pr list --head
-<rama>` que cada spec suyo tenga PR, y que el `tasks.md` del **issue** no tenga casillas abiertas.
+<rama>` que cada spec suyo tenga PR, y que el **issue** no muestre trabajo abierto.
 
 > **Y para eso NO alcanza con correr `hidratar_specs.py`: saltea la carpeta que ya existe.**
 > Contesta `NNN ya está (…)` y `hidratados: 0 de 1`, con **código 0**, así que el `grep` que

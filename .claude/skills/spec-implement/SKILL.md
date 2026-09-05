@@ -38,6 +38,13 @@ cero resultados **sin decir que no miró**. Para buscar en specs: `rg --no-ignor
 
 El formato de tarea de este repo es:
 
+En un spec **≥ 030** eso vive en el `## Orden obligado` del `estrategia.md`, en prosa: dice
+**qué no se puede paralelizar** y por qué. Todo lo que no nombra es paralelizable, que es la
+declaración honesta — la lista completa de lo que sí se puede hacer junto exigiría conocer
+los archivos antes de abrirlos, y está medido que esa predicción falla.
+
+En un spec **≤ 029** viene como marca en la casilla:
+
 ```markdown
 - [ ] T012 [P] Descripción, con la ruta del archivo que toca
 ```
@@ -47,9 +54,9 @@ El formato de tarea de este repo es:
 - **`T0NN`** — ID estable. Usalo para nombrar nodos y aristas en el `--dry`, que es lo que
   hace revisable el grafo antes de lanzar nada.
 
-**Seguí usando el fake-edge test sobre los `[P]` declarados, no en su lugar.** Un `[P]` mal
-puesto es un conflicto de escritura que aparece recién al implementar; si el test contradice a
-la declaración, gana el test y **decilo** — es un hallazgo sobre el spec.
+**Seguí usando el fake-edge test sobre lo declarado, no en su lugar.** Un paralelo mal
+declarado es un conflicto de escritura que aparece recién al implementar; si el test
+contradice a la declaración, gana el test y **decilo** — es un hallazgo sobre el spec.
 
 ## El test va primero, y el gate lo verifica
 
@@ -155,18 +162,21 @@ saltear**, porque no lo reclama ningún test ni ningún PR: el spec ya quedó an
 
 ## Al cerrar
 
-- **Todas las casillas del `tasks.md` marcadas.** No hay marcador para «esto quedó pendiente».
-  Lo que quedó pendiente es un issue.
-- **Devolvé las marcas al issue**: `python .claude/scripts/publicar_spec.py publicar`. El
-  archivo del disco es **caché**, y la próxima hidratación baja el `tasks.md` del issue y se
-  lleva puesta cada casilla marcada que no se haya subido.
-- **Lo que aparece implementando se hace, no se anota.** Un `tasks.md` incompleto no se cierra
+- **Cada criterio del spec nombrado por el test que lo verifica.** Escribí el `ACn` en el
+  nombre del test o en su comentario, en `test/` o en `.claude/scripts/tests/`. No es
+  burocracia de cierre: es lo que reemplazó a la casilla como ancla anti-deuda, y hacerlo al
+  final es escribirlo dos veces. En un spec ≤ 029, además, todas las casillas marcadas.
+- **Devolvé lo que editaste al issue**: `python .claude/scripts/publicar_spec.py publicar`. El
+  árbol del disco es **caché**, y la próxima hidratación baja los archivos del issue y se
+  lleva puesto todo lo que no se haya subido.
+- **Lo que aparece implementando se hace, no se anota.** Un spec incompleto no se cierra
   abriendo un issue: se completa. Adentro del spec el ítem hereda su estado —un spec
-  `Implementado` con diez casillas abiertas no le debe nada a nadie—, y afuera, en un issue, el
+  `Implementado` con trabajo abierto no le debe nada a nadie—, y afuera, en un issue, el
   trabajo que este spec necesitaba queda huérfano de la razón por la que existía.
 
-  **Y lo verifica el gate:** un spec `Implementado` con una casilla abierta pone en rojo el nodo
-  `harness` (`test_convencion_de_specs.py`).
+  **Y lo verifica el gate:** un spec `Implementado` con un criterio que ningún test nombra —o,
+  si es ≤ 029, con una casilla abierta— pone en rojo el nodo `harness`
+  (`test_convencion_de_specs.py`).
 - **El PR lleva un `Closes` por cada issue saldado**: el del spec más los de su `origen`.
 - **No toques `specs/mapa.json` en el PR.** El estado lo deriva la Action en el push a
   `staging`, y el gate da rojo si el mapa dice `Implementado` mientras el PR está abierto.

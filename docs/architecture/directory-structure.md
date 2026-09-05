@@ -64,7 +64,7 @@
 ├── .claude/
 │   ├── settings.json       El hook PreToolUse que corre el gate de spec
 │   ├── rules/              Reglas por capa: se cargan solas al tocar sus archivos
-│   ├── skills/             spec-create, spec-review, spec-implement
+│   ├── skills/             spec-create, spec-revise, spec-implement
 │   └── scripts/            Las herramientas del harness (Python, sin dependencias)
 │       ├── lib/            Lo PURO o inyectable: es lo que tiene tests
 │       └── tests/          Los tests del harness, y los dos gates del registro de specs

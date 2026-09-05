@@ -38,8 +38,8 @@ COPIAS: dict[Path, tuple[Path, ...]] = {
             "spec-create-batch",
             "spec-implement",
             "spec-implement-batch",
-            "spec-review",
-            "spec-review-batch",
+            "spec-revise",
+            "spec-revise-batch",
         )
     ),
     SKILLS / "pr-review" / "hallazgos.md": (SKILLS / "pr-review-batch" / "hallazgos.md",),
@@ -48,7 +48,7 @@ COPIAS: dict[Path, tuple[Path, ...]] = {
     / "scripts"
     / "diff_pr.py": (SKILLS / "pr-review-batch" / "scripts" / "diff_pr.py",),
     SKILLS
-    / "spec-review-batch"
+    / "spec-revise-batch"
     / "scripts"
     / "lote.py": (SKILLS / "spec-implement-batch" / "scripts" / "lote.py",),
     RAIZ / ".claude" / "scripts" / "limpiar_worktrees.py": (

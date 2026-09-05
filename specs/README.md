@@ -64,21 +64,76 @@ Action hace sola.
 
 ```text
 specs/<NNN>-<descripcion-kebab>/
-├── spec.md       ← problema, solución propuesta, criterios de aceptación y límites de alcance
-├── research.md   ← estado del código relevante, archivos afectados y riesgos, MEDIDO
-├── plan.md       ← pasos de implementación y verificación
-└── tasks.md      ← checklist de implementación, verificación y PR
+├── spec.md         ← problema, solución propuesta, criterios de aceptación y límites de alcance
+├── research.md     ← estado del código relevante y archivos afectados, MEDIDO
+└── estrategia.md   ← el orden obligado, qué no se toca, y el criterio de terminado
 ```
 
-Es la convención de [Spec Kit](https://github.com/github/spec-kit) con cuatro desviaciones
-deliberadas, anotadas abajo. Las coincidencias no son casualidad: la carpeta numerada, los
-tres documentos y el `tasks.md` derivado del plan salen de ahí.
-
 - `NNN` — número secuencial de tres dígitos (001, 002, …).
-- **Los cuatro archivos son el piso, no el techo.** Un spec puede agregar los que necesite —un
-  `baseline.md` con la medición previa, un `reparto.md`— y Spec Kit prevé lo mismo. El nombre
-  va en minúsculas, dígitos y guiones: `publicar_spec.py` **grita** ante un nombre que no
-  puede subir, porque un `.md` no publicado se pierde en la hidratación siguiente.
+- **Los tres archivos son el piso.** Un spec puede agregar los que necesite —un `baseline.md`
+  con la medición previa, un `reparto.md`—. El nombre va en minúsculas, dígitos y guiones:
+  `publicar_spec.py` **grita** ante un nombre que no puede subir, porque un `.md` no publicado
+  se pierde en la hidratación siguiente.
+- **`plan.md` y `tasks.md` no**, y ésa es la única parte de la lista que es cerrada. Ver el
+  corte, abajo.
+
+Es la convención de [Spec Kit](https://github.com/github/spec-kit) con cinco desviaciones
+deliberadas, anotadas abajo.
+
+## El corte en 030, y por qué el `tasks.md` se fue
+
+**Los specs ≤ 029 tienen cuatro archivos y los ≥ 030 tienen tres.** El corte es por número y
+está escrito una sola vez, en `PRIMER_SPEC_NUEVO` de
+[`test_convencion_de_specs.py`](../.claude/scripts/tests/test_convencion_de_specs.py).
+
+Es por número y no por qué archivos hay en disco porque es lo único que no se puede evadir
+escribiendo el archivo que falta. Y los viejos no se migran: son **ADR** —Desviación 2—, y
+reescribirlos borraría con qué evidencia se decidió cada cosa.
+
+**Lo que se midió, sobre los 28 specs de entonces:** de las rutas de archivo que nombran
+`plan.md` y `tasks.md`, el **43 %** nunca se tocó, y el **39 %** de lo que el PR sí tocó no lo
+previó nadie. El error escala con el tamaño: el spec 025 acertó el **29 %**. Y no era relleno
+—sólo el **5 %** de las 837 tareas se repetía entre specs—, o sea que el problema no es que
+sobre ceremonia: es que el `tasks.md` es **predicción específica y equivocada**, escrita con
+autoridad de documento antes de abrir un archivo.
+
+El `estrategia.md` declara lo que la predicción no puede inventar: **el orden obligado** —lo que
+no se puede paralelizar, empezando por los `.tscn`, que no se mergean—, qué **no** se toca, y el
+criterio de terminado. Sin rutas predichas salvo las que el `research.md` midió.
+
+### Los cuatro techos de palabras
+
+Un formato más corto que no se mide vuelve a crecer en un mes, así que el límite es ejecutable.
+Sobre un spec ≥ 030, y con «palabra» = token con letra o dígito:
+
+| Qué | Techo |
+|---|---|
+| la prosa del `spec.md` —todo menos el bloque de criterios— | 350 |
+| el bloque `## Criterios de aceptación` **entero** | 300 |
+| el `research.md` | 500 |
+| el `estrategia.md` | 250 |
+
+**El segundo cae sobre el bloque entero y no sobre cada criterio, y ahí está la decisión.** Con
+un límite por criterio, un spec cumple escribiendo veinte criterios cortos — la misma enfermedad
+con carpeta nueva. Sobre el bloque, el límite muerde la **cantidad**.
+
+Los cuatro números salen de medir el `spec.md` del 029, que es el modelo del formato aunque él
+mismo esté escrito en el viejo. Lo verifica un test, para que ningún techo quede calibrado
+contra un documento imaginario.
+
+## El ancla anti-deuda: de la casilla al criterio
+
+Un spec `Implementado` con una casilla abierta era **la** contradicción que el gate perseguía. Sin
+`tasks.md` esa regla se queda sin objeto: sigue escrita, no encuentra ninguna casilla, y sale
+verde para siempre. Un gate que no puede fallar no es laxo — está apagado y parece encendido.
+
+La reemplaza **AC↔test**: en un spec ≥ 030 `Implementado`, **cada `ACn` de su `spec.md` está
+nombrado por al menos un archivo bajo `test/` o `.claude/scripts/tests/`**, y el rojo dice cuál
+falta. Es más fuerte que la que reemplaza — una casilla la marca a mano el mismo que decide si el
+trabajo está hecho; un test corre en cada push y **se rompe solo**.
+
+**Su techo, dicho:** el gate verifica la **cita**, no que el test ejerza el criterio. Es un piso,
+como todo lo que este repo verifica sin cobertura.
 
 > **Desviación 1 — la rama se crea después.** Spec Kit crea la rama primero y le da su nombre a
 > la carpeta. Acá el spec entra a `staging` antes, así que un spec abandonado no se va con su
@@ -95,10 +150,15 @@ tres documentos y el `tasks.md` derivado del plan salen de ahí.
 > ticket, sacado del nombre de la carpeta**. Y por eso la rama lleva el número del spec y no el
 > del issue: `feature/<NNN>-<kebab>` es de donde el hook saca de qué spec se trata.
 
-> **Desviación 4 — el `research.md` se mide, no se supone.** Es la más importante de las cuatro
+> **Desviación 4 — el `research.md` se mide, no se supone.** Es la más importante de las cinco
 > y la que más se saltea. Un `research.md` que dice «probablemente haya que tocar el HUD» no es
 > research: es una intuición con formato de documento. El que sirve dice **qué corriste y qué
 > contestó**.
+
+> **Desviación 5 — no hay `plan.md` ni `tasks.md`.** Spec Kit deriva un plan del spec y una
+> lista de tareas del plan. Acá el `estrategia.md` los reemplaza a los dos y declara mucho
+> menos: **el orden obligado**, no el orden completo. Es la desviación con más evidencia
+> local detrás, y está arriba, en «El corte en 030».
 
 ## Los cuatro estados
 
@@ -123,7 +183,10 @@ esos dos no hay ningún momento en el que alguien vuelva al mapa a anotar que em
 sería un tercer punto de escritura manual, que es justo el mecanismo que falla. Que un spec
 haya empezado se ve en que tiene rama.
 
-## Formato de una tarea
+## Formato de una tarea — sólo en un spec ≤ 029
+
+Los specs del régimen viejo llevan su checklist, y el gate se la sigue verificando. En uno
+≥ 030 no hay casillas: lo que un `estrategia.md` declara es el **orden**, en prosa.
 
 ```markdown
 - [ ] T012 [P] Descripción, con la ruta del archivo que toca
@@ -155,9 +218,9 @@ estado de su spec**: un spec `Implementado` con diez casillas abiertas dice que 
 debiendo, y eso es exactamente cómo la deuda se vuelve invisible.
 
 **Las cuatro las verifica `test_convencion_de_specs.py`**, y la última incluye el caso que las
-demás no cubren: **un spec `Implementado` no puede tener una casilla abierta**. Corre sobre los
-specs **hidratados**, así que sobre un árbol vacío se saltea declarándolo — y un nodo salteado no
-es un nodo verde.
+demás no cubren: **un spec ≤ 029 `Implementado` no puede tener una casilla abierta**, y uno
+≥ 030 no puede tener un criterio que ningún test nombre. Corre sobre los specs **hidratados**,
+así que sobre un árbol vacío se saltea declarándolo — y un nodo salteado no es un nodo verde.
 
 **Y la salida tampoco es abrir un issue.** Los issues de este repo son **entrada**: lo que llega de
 afuera y `spec-create` drena. Si aparece trabajo que el spec necesitaba y no tenía, el defecto es
@@ -166,7 +229,7 @@ del spec —y del skill que lo dejó salir así—, y se corrigen los dos. La do
 
 **`## Fuera de alcance` sí existe y no es lo mismo**: declara una frontera —qué NO hace este spec—
 y es lo que lo vuelve revisable. Se convierte en deuda sólo si algún AC del propio spec depende de
-lo excluido, y eso ningún gate lo puede ver: lo mira `spec-review`.
+lo excluido, y eso ningún gate lo puede ver: lo mira quien escribe el spec.
 
 ## De un issue de deuda a un spec
 
@@ -206,17 +269,18 @@ decisión, y una máquina que la tome inventa prioridades.
 
 ## Flujo
 
-1. **Medir**, y recién después escribir los cuatro archivos.
+1. **Medir**, y recién después escribir los tres archivos.
 2. **Publicarlo como issue** con `python .claude/scripts/publicar_spec.py crear` y después
    `publicar`. La primera fase le escribe su fila en `mapa.json` con estado `Propuesto`. **Esa
    fila es el mapa**, y es lo único del spec que se commitea.
 3. **Crear la rama `feature/<NNN>-<descripcion-kebab>`**, y eso ya es el primer paso de
    implementar: la abre quien toma el spec, no quien lo escribió. El paso 2 termina en
    `staging`.
-4. **Implementar**, con el test primero y marcando el `tasks.md` a medida que se avanza.
-5. **Devolver las marcas al issue** con `python .claude/scripts/publicar_spec.py publicar`,
-   antes de cerrar. El archivo local es caché: la próxima hidratación baja el `tasks.md` del
-   issue y **se lleva puesta cada casilla marcada** que no se haya subido.
+4. **Implementar, con el test primero**, y que cada test nombre el criterio que verifica: es
+   lo que el gate lee al cerrar, y escribirlo después es escribirlo dos veces.
+5. **Devolver al issue lo que se editó** con `python .claude/scripts/publicar_spec.py publicar`,
+   antes de cerrar. El árbol local es caché: la próxima hidratación baja los archivos del
+   issue y **se lleva puesto todo lo que no se haya subido**.
 6. **Al mergear, anotar en el issue —como comentario— qué se aprendió** si el spec salió
    distinto de lo previsto. Es lo único que queda a mano.
 

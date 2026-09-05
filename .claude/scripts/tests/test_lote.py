@@ -1,6 +1,6 @@
 """La matriz de `lote.py`: qué archivo tocan dos specs del mismo lote.
 
-La matriz es el insumo del Paso 2 de `spec-review-batch` y del reparto de carriles de
+La matriz es el insumo del Paso 2 de `spec-revise-batch` y del reparto de carriles de
 `spec-implement-batch`. Ahí es donde importa, y por eso esto tiene test: un archivo que la
 matriz no ve es, en el segundo skill, **dos specs que escriben el mismo archivo mandados a
 worktrees paralelos**. El conflicto no aparece al repartir: aparece al mergear.
@@ -26,7 +26,7 @@ import unittest
 from pathlib import Path
 
 RAIZ = Path(__file__).resolve().parents[3]
-LOTE = RAIZ / ".claude" / "skills" / "spec-review-batch" / "scripts" / "lote.py"
+LOTE = RAIZ / ".claude" / "skills" / "spec-revise-batch" / "scripts" / "lote.py"
 
 
 def _cargar():
@@ -70,8 +70,9 @@ class LaMatrizVeLasCitasConLinea(unittest.TestCase):
 
 
 class ElFiltroDeLoPropioNoSeLlevaLoAjeno(unittest.TestCase):
-    def test_los_cuatro_archivos_del_spec_se_filtran(self):
-        for nombre in ("spec.md", "research.md", "plan.md", "tasks.md"):
+    def test_los_archivos_del_spec_se_filtran(self):
+        # Los de los dos regímenes: los cuatro de un spec ≤ 029 y los tres de uno ≥ 030.
+        for nombre in ("spec.md", "research.md", "plan.md", "tasks.md", "estrategia.md"):
             self.assertEqual([], citados(f"- [ ] T001 ver `{nombre}`"), nombre)
 
     def test_el_readme_pelado_se_filtra(self):

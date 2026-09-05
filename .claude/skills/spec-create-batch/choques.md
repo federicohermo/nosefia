@@ -95,7 +95,7 @@ divergen la primera vez que alguien ajusta la dificultad tocando una sola.
 
 - **Se detecta** listando los números que cada pedido necesita fijar.
 - **Se decide** nombrando **el archivo y el spec dueños**, y el otro spec cita. Eso va escrito en
-  los dos `tasks.md`: el dueño lo crea, el otro declara de dónde lo saca. Es exactamente la forma
+  los dos `estrategia.md`: el dueño lo crea, el otro declara de dónde lo saca. Es exactamente la forma
   que ya tiene el 002 respecto del 001 en este repo.
 
 ## 6 · Dos specs tocan la misma escena
@@ -106,7 +106,7 @@ compartir el archivo ya es la conclusión.
 
 - **Se detecta** preguntando por escena, no por archivo: qué pantalla toca cada pedido.
 - **Se decide ordenando, no editando.** Los dos specs se declaran en cadena —cuál va primero y
-  por qué— y el segundo lo escribe en su `tasks.md`. Ningún `[P]` entre tareas que tocan la misma
+  por qué— y el segundo lo escribe en su `estrategia.md`. Ningún paralelo entre tramos que tocan la misma
   escena, ni adentro de un spec ni entre dos.
 
 ## 7 · El lote mide contra un repo que el lote va a cambiar
