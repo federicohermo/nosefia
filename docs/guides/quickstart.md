@@ -82,7 +82,7 @@ lo bloquea un hook antes de que se escriba la primera línea.
 El camino entero está en el skill `/spec-create`, y en corto es:
 
 ```bash
-# 1. medir, escribir specs/<NNN>-<kebab>/{spec,research,plan,tasks}.md
+# 1. medir, escribir specs/<NNN>-<kebab>/{spec,research,estrategia}.md
 python .claude/scripts/publicar_spec.py crear
 python .claude/scripts/publicar_spec.py publicar
 git add specs/mapa.json && git commit && git push origin staging

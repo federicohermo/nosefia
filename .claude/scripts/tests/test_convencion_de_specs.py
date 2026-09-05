@@ -46,7 +46,7 @@ DESTERRADOS = ("plan.md", "tasks.md")
 #: muerde la **cantidad**.
 #:
 #: Los números salen de medir el `spec.md` del 029, que es el modelo del formato: prosa 350,
-#: bloque de criterios 244, `research.md` 444, `estrategia.md` 233 —medido con `palabras()` el
+#: bloque de criterios 254, `research.md` 444, `estrategia.md` 233 —medido con `palabras()` el
 #: 2026-09-05—. O sea que están calibrados contra un documento que existe y entra, no elegidos
 #: de memoria. Lo verifica `test_los_techos_admiten_el_spec_que_los_estrena`.
 TECHO_DE_PROSA = 350
