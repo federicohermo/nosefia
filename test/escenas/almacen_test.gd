@@ -1,8 +1,8 @@
 ## El cableado del almacén: qué instancia, qué anclajes ofrece y que nada suyo cuelga de otra cosa.
 ##
 ## No dice «se ve bien»: dice que los anclajes que los specs 008, 009 y 013 van a buscar
-## por nombre están, y que la escena raíz sigue siendo una escena de cableado. La geometría del
-## blockout —los cuerpos y sus formas— la afirma `estructura_del_almacen_test.gd`, que es la
+## por nombre están, y que la escena raíz sigue siendo una escena de cableado. La geometría —las
+## mallas del modelo y sus colisiones— la afirma `estructura_del_almacen_test.gd`, que es la
 ## suite de la escena que la declara; acá se afirma que la instancia no vino corrida.
 ##
 ## **ESTA SUITE INSTANCIA LA ESCENA Y NO LA ENTRA AL ÁRBOL, y es deliberado.** `instantiate()`
@@ -16,11 +16,6 @@
 extends GdUnitTestSuite
 
 const ESCENA_DEL_ALMACEN := "res://src/escenas/almacen.tscn"
-
-## La tabla de transformadas del blockout vive una sola vez, en la suite de la escena que declara
-## la geometría. Acá se la lee para la otra mitad de la medición: la sub-escena puede estar bien
-## y el nodo que la instancia venir corrido, y eso sólo se ve desde afuera.
-const SUITE_DE_LA_ESTRUCTURA := preload("res://test/escenas/estructura_del_almacen_test.gd")
 
 
 ## Devuelve los nodos que rompen la regla de cableado, ya redactados con su padre.
@@ -100,21 +95,12 @@ func test_la_estructura_entra_instanciada_y_no_vino_corrida() -> void:
 	# `global_transform` porque esta suite no entra la escena al árbol y ahí el global aborta con
 	# `Condition "!is_inside_tree()" is true` devolviendo la identidad, o sea que no fallaría por
 	# la geometría: fallaría siempre.
+	#
+	# Ya no recorre cuerpo por cuerpo contra una tabla de posiciones: desde que la estructura es
+	# el .blend, dónde va cada mueble lo decide Blender, y una tabla acá sería un rojo por cada
+	# cosa que el modelador mueve. Lo que queda es lo único que se edita de este lado.
 	var estructura: Node3D = _almacen().get_node("Estructura")
 	assert_that(estructura.transform).is_equal(Transform3D.IDENTITY)
-	for nombre in SUITE_DE_LA_ESTRUCTURA.POSICIONES:
-		var cuerpo: Node3D = estructura.get_node(NodePath(nombre))
-		var esperado := Transform3D(Basis.IDENTITY, SUITE_DE_LA_ESTRUCTURA.POSICIONES[nombre])
-		(
-			assert_that(cuerpo.transform)
-			. override_failure_message(
-				(
-					"`Estructura/%s` quedó en %s y el almacén lo tenía en %s"
-					% [nombre, cuerpo.transform, esperado]
-				)
-			)
-			. is_equal(esperado)
-		)
 
 
 func test_todo_nodo_propio_del_almacen_cuelga_de_la_raiz() -> void:
