@@ -88,23 +88,55 @@ tocá lo que no está protegido.
 Si el gate se rompe, **deja pasar y lo dice** en `permissionDecisionReason`. Ese mensaje es la
 señal de que el gate no está protegiendo nada: hay que arreglarlo, no ignorarlo.
 
-## `Could not resolve class "GdUnitCSIMessageWriter"` y la corrida se cuelga
+## El addon de gdUnit4 y el motor no se corresponden
+
+**Los dos números son un solo pin.** La combinación vigente es **Godot 4.7.2 con gdUnit4
+6.2.1**, y el desajuste no falla al instalar: falla al correr. Se llega por las dos direcciones,
+las dos son alcanzables después de este cambio, y **las dos salen con código de salida 0** — o
+sea que quien mire el veredicto por el código de salida las lee como una corrida en verde. El
+porqué del pin único está en [el stack](../README.md).
+
+### addon 5.x bajo motor 4.7
+
+El que ve quien actualiza Godot y **no** hace `pull`. La serie 5.x llama a
+`FileAccess.get_as_text(true)` y declara un `func call(arg0=null, …)`; en 4.7 el primero no
+acepta argumentos y el segundo choca con la firma de `Object.call`:
+
+```
+SCRIPT ERROR: Parse Error: Too many arguments for "get_as_text()" call. Expected at most 0 but received 1.
+   at: GDScript::reload (res://addons/gdUnit4/src/core/GdUnitFileAccess.gd:197)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.   (x7)
+ERROR: Failed to load script "res://addons/gdUnit4/plugin.gd" with error "Compilation failed".
+SCRIPT ERROR: Trying to assign value of type 'Nil' to a variable of type 'bool'.
+   at: _enter_tree (res://addons/gdUnit4/plugin.gd:17)
+```
+
+Siete scripts en cascada y el plugin del editor caído, con `Exit code: 0`. Es la trampa de
+`CLAUDE.md` en su forma más pura: el error está **sólo** en la salida cruda.
+
+### addon 6.x bajo motor 4.4
+
+El que ve quien hace `pull` y sigue en 4.4.x — y es el más probable de los dos, porque el `pull`
+llega solo y el motor hay que bajarlo a mano.
 
 ```
 SCRIPT ERROR: Parse Error: Could not resolve class "GdUnitCSIMessageWriter", …
 ERROR: Failed to load script "res://addons/gdUnit4/bin/GdUnitCmdTool.gd"
 ```
 
-**La versión de gdUnit4 no corresponde a la de Godot.** La serie **6.x pide Godot 4.5+**; para
-4.4.x va la **5.x**. Y no falla al instalar: falla al correr, y el proceso queda colgado hasta
-el timeout, así que el síntoma parece un cuelgue y no un problema de versión.
+**La serie 6.x pide Godot 4.5 o más**, y usa la sintaxis `...varargs`, que 4.4 ni siquiera
+parsea (`Parse Error: Expected parameter name`). Acá el proceso además queda colgado hasta el
+timeout, así que el síntoma parece un cuelgue y no un problema de versión.
 
-Está en la tabla «GdUnit4 Version / Godot minimal required» del README de gdUnit4 — **no** en
-los badges de «Supported Godot Versions», que listan lo que el proyecto soporta en *alguna* de
-sus series. Pasó acá al montar el harness: se eligió la 6.2.1 mirando los badges.
+### De dónde sale la matriz
 
-Este repo tiene la **5.1.1** vendorizada. Si alguien la actualiza, la versión de Godot va en el
-mismo cambio.
+De la tabla «GdUnit4 Version / Godot minimal required» del README de gdUnit4 — **no** de los
+badges de «Supported Godot Versions», que listan lo que el proyecto soporta en *alguna* de sus
+series y hacen creer que la última sirve para todas. Pasó acá al montar el harness: se eligió la
+6.x mirando los badges.
+
+Este repo tiene la **6.2.1** vendorizada. Si alguien la actualiza, la versión de Godot va en el
+mismo cambio — y al revés también.
 
 ## La suite de gdUnit4 queda colgada
 
