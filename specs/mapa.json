@@ -26,6 +26,6 @@
   "025": {"issue":36,"carpeta":"025-el-dominio-se-parte-para-el-juego-entero","fecha":"2026-09-01","estado":"Implementado","titulo":"Spec 025 — El dominio se parte para el juego entero, no para los 13 archivos de hoy"},
   "026": {"issue":46,"carpeta":"026-el-motor-sube-a-godot-4-7-2","fecha":"2026-09-01","estado":"Implementado","titulo":"Spec 026 — El motor sube a Godot 4.7.2 y el addon de tests con él"},
   "027": {"issue":47,"carpeta":"027-cada-push-a-main-deja-una-web-jugable","fecha":"2026-09-01","estado":"Propuesto","titulo":"Spec 027 — Cada push a `main` deja una web jugable"},
-  "028": {"issue":50,"carpeta":"028-el-escenario-modelado-reemplaza-al-blockout","fecha":"2026-09-04","estado":"Propuesto","titulo":"Spec 028 — El escenario modelado reemplaza al blockout"},
+  "028": {"issue":50,"carpeta":"028-el-escenario-modelado-reemplaza-al-blockout","fecha":"2026-09-04","estado":"Implementado","titulo":"Spec 028 — El escenario modelado reemplaza al blockout"},
   "029": {"issue":54,"carpeta":"029-el-spec-se-achica-a-un-prompt","fecha":"2026-09-05","estado":"Propuesto","titulo":"Spec 029 — El spec se achica a un prompt, y revisar es contrastarlo contra un requisito nuevo"}
 }
