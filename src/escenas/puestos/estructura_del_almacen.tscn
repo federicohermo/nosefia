@@ -1,5 +1,5 @@
 [gd_scene load_steps=2 format=3]
 
-[ext_resource type="PackedScene" uid="uid://dv4vt2fwklvmx" path="res://assets/SEPT_JUEGOS_PROTOTIPO.blend" id="1_modelo"]
+[ext_resource type="PackedScene" uid="uid://b41dfoytbg6wa" path="res://assets/SEPT_JUEGOS_PROTOTIPO.glb" id="1_modelo"]
 
 [node name="Estructura" instance=ExtResource("1_modelo")]

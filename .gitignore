@@ -2,6 +2,10 @@
 .godot/
 /android/
 
+# El auto-backup que Blender deja al guardar. Es una copia byte por byte del `.blend`
+# anterior, no la abre nadie desde el repo, y versionarla duplica 1,4 MB por cada guardado.
+*.blend1
+
 # Exportaciones del juego. La build de cada entrega se publica, no se commitea.
 /export/
 /build/
