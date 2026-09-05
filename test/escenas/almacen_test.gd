@@ -169,6 +169,10 @@ func test_la_estructura_entra_instanciada_y_no_vino_corrida() -> void:
 func _espacio_de_la_estructura(almacen: Node3D) -> PhysicsDirectSpaceState3D:
 	var estructura: Node3D = almacen.get_node("Estructura")
 	almacen.remove_child(estructura)
+	# Sin esto Godot avisa `will make owner 'Almacen' inconsistent` en cada corrida: el nodo
+	# sigue apuntando a la raíz de la que lo acabamos de sacar. Es un aviso y no un error, y por
+	# eso es exactamente el tipo de ruido que tapa al próximo aviso, que sí va a importar.
+	estructura.owner = null
 	add_child(auto_free(estructura))
 	_apagar_todo_menos_la_cascara(estructura)
 	await get_tree().physics_frame

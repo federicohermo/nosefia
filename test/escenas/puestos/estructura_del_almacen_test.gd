@@ -1,12 +1,13 @@
 ## El escenario modelado del almacén, afirmado contra la escena que lo declara.
 ##
-## Desde que `estructura_del_almacen.tscn` heredó de `SEPT_JUEGOS_PROTOTIPO.blend`, la geometría
+## Desde que `estructura_del_almacen.tscn` heredó de `SEPT_JUEGOS_PROTOTIPO.glb`, la geometría
 ## y la colisión las decide Blender y no este repo: los nombres y los sufijos `-col` viven en el
-## .blend y re-exportarlo los propaga solo. Por eso esta suite ya no afirma dónde está cada
-## pared —eso cambia cada vez que se edita el modelo, y afirmarlo sería un rojo por cada mueble
-## que alguien mueve—, sino **las tres cosas que un re-export rompe sin avisar**: que una malla
-## se quede sin su `-col`, que el edificio entre con la escala sin aplicar, y que los anclajes
-## que los specs siguientes buscan por nombre desaparezcan al renombrar.
+## `.blend` de al lado y llegan acá con el `.glb` que se exporta de él. Por eso esta suite ya no
+## afirma dónde está cada pared —eso cambia cada vez que se edita el modelo, y afirmarlo sería un
+## rojo por cada mueble que alguien mueve—, sino **las tres cosas que un re-export rompe sin
+## avisar**: que una malla se quede sin su `-col`, que el edificio entre con la escala sin
+## aplicar, y que los anclajes que los specs siguientes buscan por nombre desaparezcan al
+## renombrar.
 ##
 ## **ESTA SUITE INSTANCIA LA ESCENA Y NO LA ENTRA AL ÁRBOL, y es deliberado**, por lo mismo que
 ## `almacen_test.gd`: `instantiate()` alcanza para leer la jerarquía y las propiedades, mientras
@@ -29,7 +30,7 @@ const ANCLAJES := [ANCLAJE_DE_LA_ESTANTERIA, "EscritorioDeLaComputadora"]
 ## 1,82 m en X, así que 2,2 m arrancan afuera de ella y adentro del pasillo.
 const DESDE_EL_COSTADO := 2.2
 
-## El almacén mide 21.7 x 22.7 m de planta. La banda es ancha a propósito: no está para detectar
+## El almacén mide 21,72 × 22,74 m de planta. La banda es ancha a propósito: no está para detectar
 ## que alguien movió una pared, sino que el modelo entró con la escala sin aplicar —el modo de
 ## falla real de un re-export, donde el edificio llega mil veces más chico y todo lo demás sigue
 ## en verde—.
@@ -98,7 +99,7 @@ func test_ninguna_malla_del_modelo_quedo_sin_colision() -> void:
 		assert_array(sin_colision)
 		. override_failure_message(
 			(
-				"estas mallas del .blend no tienen colisión, les falta el sufijo `-col`: %s"
+				"estas mallas del modelo no tienen colisión, les falta el sufijo `-col`: %s"
 				% ", ".join(sin_colision)
 			)
 		)
