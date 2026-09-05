@@ -64,8 +64,10 @@ línea, separados por `;`, nunca por `&&`.** Medido el 2026-09-01 verificando lo
 aunque se le apague el `.gitignore`, así que un `rg --no-ignore` sobre la raíz **no mira
 `.claude/`** —ni el harness, ni las reglas, ni los skills— y contesta cero con la misma cara que
 si hubiera mirado. Hace falta `--hidden`. Medido el 2026-09-05 revisando el PR 56: buscar
-`sin-deuda` dio **6 archivos** sin `--hidden` y **19** con él, y el que faltaba era un puntero
-muerto adentro del mensaje de un gate. Para el árbol entero: `rg --no-ignore --hidden`.
+`sin-deuda` con `--no-ignore` no devolvió **ni uno solo de los 14 archivos de `.claude/` que la
+nombran** —sólo los de `specs/` y la raíz—, y uno de esos 14 era un puntero muerto adentro del
+mensaje de un gate. El total no se cita porque se mueve con los specs hidratados, que son caché;
+lo que no se mueve es que `.claude/` aporta cero. Para el árbol entero: `rg --no-ignore --hidden`.
 
 ## El estilo
 
