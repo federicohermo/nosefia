@@ -22,7 +22,12 @@ const CASCARA_DEL_EDIFICIO := "almacen"
 
 ## Los anclajes que los specs 008 y 009 buscan por nombre. Son nombres de objeto de Blender:
 ## renombrarlos allá es lo único que los pone acá.
-const ANCLAJES := ["Estanteria", "EscritorioDeLaComputadora"]
+const ANCLAJE_DE_LA_ESTANTERIA := "Estanteria"
+const ANCLAJES := [ANCLAJE_DE_LA_ESTANTERIA, "EscritorioDeLaComputadora"]
+
+## Desde qué costado se le tira el rayo al anclaje para ver contra qué choca. La estantería mide
+## 1,82 m en X, así que 2,2 m arrancan afuera de ella y adentro del pasillo.
+const DESDE_EL_COSTADO := 2.2
 
 ## El almacén mide 21.7 x 22.7 m de planta. La banda es ancha a propósito: no está para detectar
 ## que alguien movió una pared, sino que el modelo entró con la escala sin aplicar —el modo de
@@ -160,3 +165,46 @@ func test_los_anclajes_que_buscan_los_specs_siguientes_estan_por_nombre() -> voi
 			)
 			. is_true()
 		)
+
+
+func test_el_colisionador_de_un_anclaje_cuelga_del_nodo_que_lo_nombra() -> void:
+	# Con el blockout el `StaticBody3D` **era** el nodo llamado `Estanteria`. Con el modelo el
+	# import le cuelga uno anónimo debajo, así que `get_collider().name` dejó de servir para saber
+	# qué mueble se está mirando. De esa forma dependen los specs 006, 008 y 009, y hasta acá no la
+	# afirmaba nadie: se iban a enterar de golpe.
+	#
+	# **Éste es el único caso de la suite que entra la escena al árbol**, y es porque sin `World3D`
+	# no hay espacio físico contra el que tirar un rayo. La escena no tiene un solo script
+	# colgando, así que su `_ready()` no corre código que esta suite no escribió.
+	var estructura := _estructura()
+	add_child(estructura)
+	await get_tree().physics_frame
+	await get_tree().physics_frame
+	var anclaje: Node3D = estructura.get_node(NodePath(ANCLAJE_DE_LA_ESTANTERIA))
+	var golpe := estructura.get_world_3d().direct_space_state.intersect_ray(
+		PhysicsRayQueryParameters3D.create(
+			anclaje.global_position + Vector3(DESDE_EL_COSTADO, 0.5, 0), anclaje.global_position
+		)
+	)
+	(
+		assert_dict(golpe)
+		. override_failure_message(
+			(
+				"el rayo contra `%s` no chocó con nada: el anclaje no tiene colisión"
+				% ANCLAJE_DE_LA_ESTANTERIA
+			)
+		)
+		. is_not_empty()
+	)
+	var colisionador: Node = golpe["collider"]
+	assert_object(colisionador).is_instanceof(StaticBody3D)
+	(
+		assert_str(colisionador.get_parent().name)
+		. override_failure_message(
+			(
+				"el rayo contra `%s` devolvió un cuerpo colgado de `%s`"
+				% [ANCLAJE_DE_LA_ESTANTERIA, colisionador.get_parent().name]
+			)
+		)
+		. is_equal(ANCLAJE_DE_LA_ESTANTERIA)
+	)
