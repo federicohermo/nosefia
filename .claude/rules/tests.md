@@ -68,6 +68,48 @@ siguientes:
 var reloj := auto_free(Reloj.new())   # se libera al terminar el test
 ```
 
+## Las tres formas en que un verde de gdUnit4 miente
+
+Es lo más caro de este repo y no lo ve ningún gate: **el nodo `tests` sale `ok` sin haber
+corrido lo que creías.** `verificar.py` hace lo correcto —el veredicto es el código de salida—
+y aun así declara verde, porque gdUnit4 devuelve 0.
+
+**El número que vale es el `Executed test suites: (N/N)` de la salida cruda**, contra la
+cantidad de `*_test.gd`. No el color del nodo.
+
+```bash
+"$GODOT_BIN" --path . --headless -s -d --remote-debug tcp://127.0.0.1:0 \
+  res://addons/gdUnit4/bin/GdUnitCmdTool.gd -a test --continue --ignoreHeadlessMode \
+  -rd reportes 2>&1 | grep "Executed test suites"
+```
+
+**1 — La suite que no parsea se descarta en silencio.** Una que hace `preload` de un archivo que
+todavía no existe —el estado normal del paso 1 del TDD— no corre, y el exit code es 0 igual. Un
+error de parseo en `dominio/` puede dejar el dominio entero sin correr **con la CI en verde**, y
+las cuatro reglas de arriba no lo ven: el espejo existe, afirma y no está apagado. Medido tres
+veces en el lote 001/002/004/007.
+
+**2 — Un `class_name` recién escrito no existe hasta el `--import` siguiente.** No está en
+`global_script_class_cache.cfg`, y el síntoma es **idéntico** al del archivo ausente:
+`Parse Error: Identifier "X" not declared`, `No test cases found`, `Exit code: 0`. Se lee como
+«todavía no lo escribí» cuando ya está en disco. Re-importá **después de crear cada archivo con
+`class_name` nuevo**, no una sola vez al abrir el worktree:
+
+```bash
+"$GODOT_BIN" --headless --path . --import --quit
+```
+
+Lo pisaron los dos carriles del lote 005/011/022/023 que crearon clases, cada uno perdiendo una
+vuelta. Medido el 2026-09-01 implementando el 011.
+
+**3 — Y la peor: el paso 1 sale `PASSED`.** Cuando el recurso que el caso carga no existe, el
+error de script **aborta la función** y gdUnit4 no cuenta ninguna aserción fallida: el caso se
+reporta en verde por no haber llegado a afirmar nada. Medido el 2026-09-01 en el 023, con la
+escena sin escribir: **4 de 5 casos dieron `PASSED`**, y sólo dio rojo el que afirmaba el tipo.
+
+O sea que el «falla por lo que se espera» del paso 1 **no se lee en el conteo de fallos**: se lee
+en el `ERROR: Failed loading resource` de la salida cruda.
+
 ## Correrlos
 
 ```bash
