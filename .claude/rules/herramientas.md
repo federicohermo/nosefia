@@ -60,6 +60,13 @@ corta en el primero sin match —que devuelve 1— y **los otros dos no corren, 
 salida vacía se lee como «ninguno matcheó» cuando sólo se preguntó por el primero. **Un `rg` por
 línea, separados por `;`, nunca por `&&`.** Medido el 2026-09-01 verificando los AC del 023.
 
+**Y `--no-ignore` no alcanza para buscar acá adentro.** Ripgrep saltea los directorios ocultos
+aunque se le apague el `.gitignore`, así que un `rg --no-ignore` sobre la raíz **no mira
+`.claude/`** —ni el harness, ni las reglas, ni los skills— y contesta cero con la misma cara que
+si hubiera mirado. Hace falta `--hidden`. Medido el 2026-09-05 revisando el PR 56: buscar
+`sin-deuda` dio **6 archivos** sin `--hidden` y **19** con él, y el que faltaba era un puntero
+muerto adentro del mensaje de un gate. Para el árbol entero: `rg --no-ignore --hidden`.
+
 ## El estilo
 
 Líneas de hasta 100, `snake_case`, docstrings que explican **por qué** y no qué. Los

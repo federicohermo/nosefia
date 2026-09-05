@@ -357,7 +357,8 @@ class Convencion(unittest.TestCase):
                             encabezado.group(1),
                             SECCION_QUE_APLAZA,
                             f"{carpeta}/{archivo}:{numero} aplaza trabajo en una sección. "
-                            "La descarga no es anotarlo: ver .claude/doctrina/sin-deuda.md",
+                            "La descarga no es anotarlo: ver "
+                            ".claude/skills/spec-create/sin-deuda.md",
                         )
 
     def test_ninguna_tarea_aplaza_por_texto(self):

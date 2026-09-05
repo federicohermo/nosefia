@@ -176,9 +176,9 @@ Las que ya costaron tiempo acá:
 - **La salida en Windows sale en cp1252** en una tubería, y **cualquier acento tira el script
   abajo** — incluido el mensaje de bloqueo del hook. Por eso todo script de `.claude/scripts/`
   llama a `configurar()` de `lib/consola.py` antes de imprimir nada.
-- **`Grep` no ve `specs/`.** Es ripgrep y respeta el `.gitignore`: contesta cero **sin decir que
-  no miró**. Ahí va `rg --no-ignore`, **uno por línea y separados por `;`** — encadenarlos con
-  `&&` corta en el primero sin match y los siguientes no corren, también sin decirlo.
+- **`Grep` no ve `specs/` ni `.claude/`.** Es ripgrep: respeta el `.gitignore` y saltea los
+  ocultos, y contesta cero **sin decir que no miró**. Ahí va `rg --no-ignore --hidden`, **uno
+  por línea y separados por `;`** — con `&&` corta en el primero sin match, también sin decirlo.
 - **Godot adentro de OneDrive no se puede ejecutar** si el archivo no está descargado: Windows
   contesta «el proveedor de archivos de nube no se está ejecutando», que no nombra ni a Godot ni
   a los tests.
