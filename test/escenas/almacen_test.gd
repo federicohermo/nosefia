@@ -153,7 +153,7 @@ func test_la_estructura_entra_instanciada_y_no_vino_corrida() -> void:
 	# la geometría: fallaría siempre.
 	#
 	# Ya no recorre cuerpo por cuerpo contra una tabla de posiciones: desde que la estructura es
-	# el .blend, dónde va cada mueble lo decide Blender, y una tabla acá sería un rojo por cada
+	# el modelo, dónde va cada mueble lo decide Blender, y una tabla acá sería un rojo por cada
 	# cosa que el modelador mueve. Lo que queda es lo único que se edita de este lado.
 	var estructura: Node3D = _almacen().get_node("Estructura")
 	assert_that(estructura.transform).is_equal(Transform3D.IDENTITY)
