@@ -32,7 +32,7 @@ permissions:
 # lo mismo — que la CI corra otra versión que la máquina del equipo es la forma más silenciosa
 # de que un test pase en un lado y falle en el otro.
 env:
-  GODOT_VERSION: 4.4.1-stable
+  GODOT_VERSION: 4.7.2-stable
 
 jobs:
   verify:

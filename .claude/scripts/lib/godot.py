@@ -132,8 +132,8 @@ def como_declararlo(entorno: dict[str, str], del_registro: Callable[[], str | No
     return (
         f"No se encontró Godot. Declaralo una vez en `{VARIABLE}`:\n\n"
         '  PowerShell:  [Environment]::SetEnvironmentVariable("GODOT_BIN", '
-        '"C:\\ruta\\a\\Godot_v4.4.1-stable_win64_console.exe", "User")\n'
-        '  bash:        export GODOT_BIN="/c/ruta/a/Godot_v4.4.1-stable_win64_console.exe"\n\n'
+        '"C:\\ruta\\a\\Godot_v4.7.2-stable_win64_console.exe", "User")\n'
+        '  bash:        export GODOT_BIN="/c/ruta/a/Godot_v4.7.2-stable_win64_console.exe"\n\n'
         "En Windows conviene el `_console.exe`: el otro no escribe en la consola, así que la "
         "salida de los tests se pierde entera.\n"
         "Y **no lo dejes adentro de OneDrive**: si el archivo está descargado sólo en la nube, "

@@ -4,7 +4,7 @@
 
 | Qué | Cómo | Para qué |
 |---|---|---|
-| **Godot 4.4** | del sitio oficial, es un `.exe` suelto | el juego, y correr los tests |
+| **Godot 4.7** | del sitio oficial, es un `.exe` suelto | el juego, y correr los tests |
 | **Python 3.11+** | del sitio oficial o Microsoft Store | las herramientas del harness |
 | **gdtoolkit** | `pip install "gdtoolkit==4.*"` | `gdlint` y `gdformat` |
 | **GitHub CLI** | de [cli.github.com](https://cli.github.com), después `gh auth login` | publicar y traer specs |
@@ -18,7 +18,7 @@ tiene en otro lado.
 
 ```powershell
 # PowerShell, una sola vez. Después hay que abrir una terminal nueva.
-[Environment]::SetEnvironmentVariable("GODOT_BIN", "C:\ruta\a\Godot_v4.4.1-stable_win64_console.exe", "User")
+[Environment]::SetEnvironmentVariable("GODOT_BIN", "C:\ruta\a\Godot_v4.7.2-stable_win64_console.exe", "User")
 ```
 
 ```bash
@@ -57,7 +57,7 @@ nodos van en paralelo:
   ok        harness     0.4s
   ok        lint        1.1s
   ok        tdd         0.1s
-  ok        tests      12.3s
+  ok        tests       5.1s
 ```
 
 Para uno solo: `python .claude/scripts/verificar.py --solo tests`.

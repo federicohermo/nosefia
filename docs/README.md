@@ -1,7 +1,7 @@
 # Documentación técnica — No se fía
 
 Juego de turno nocturno en un almacén: el empleado nuevo reparte un tiempo limitado entre las
-tareas que le dejó el jefe y averiguar qué está pasando. Godot 4.4, GDScript, equipo Manada.
+tareas que le dejó el jefe y averiguar qué está pasando. Godot 4.7, GDScript, equipo Manada.
 
 El diseño —pitch, pilares, core loop, sistemas, alcance por entrega— vive en el **Game Design
 Document de Notion**, que es documento vivo. Acá está lo **técnico**: cómo está armado el
@@ -32,27 +32,43 @@ repo, cómo se verifica y cómo se trabaja.
 
 | Qué | Versión | Para qué |
 |---|---|---|
-| Godot | 4.4.1 | El motor. Renderer **Forward Plus** |
+| Godot | 4.7.2 | El motor. Renderer **Forward Plus** |
 | GDScript | — | Todo el juego. Sin C#, sin GDExtension |
-| gdUnit4 | **5.1.1** | Tests, vendorizado en `addons/gdUnit4/`. La serie 5.x es la de Godot 4.4 — ver abajo |
+| gdUnit4 | **6.2.1** | Tests, vendorizado en `addons/gdUnit4/`. Se mueve junto con Godot — ver abajo |
 | gdtoolkit | 4.x | `gdlint` y `gdformat`. Se instala con pip |
 | Python | 3.11+ | Las herramientas del harness, **sin dependencias** |
 
-### gdUnit4 va en la serie 5.x, y no es «una versión atrás»
+### Los dos números se mueven juntos, y no se pueden mover de a uno
 
-**gdUnit4 6.x pide Godot 4.5 o más.** La serie para Godot 4.3, 4.4 y 4.4.1 es la **5.x**, y eso
-está en la tabla «GdUnit4 Version / Godot minimal required» del README del proyecto — **no** en
-los badges de «Supported Godot Versions» de más arriba, que listan las versiones que el proyecto
-soporta *en alguna* de sus series y hacen creer que la última sirve para todas.
+**El motor y el addon de tests son un solo pin.** gdUnit4 declara una versión mínima de Godot y
+Godot rompe la sintaxis vieja del addon, así que cada serie del addon vive dentro de una ventana
+de versiones del motor y afuera **no compila**. La combinación vigente es **Godot 4.7.2 con
+gdUnit4 6.2.1**, y moverla es un cambio para **todo el equipo** y para la CI a la vez, así que
+va con su spec.
 
-Instalar la 6.2.1 sobre Godot 4.4.1 **no falla al instalar**: falla al correr, con un
-`Could not resolve class "GdUnitCSIMessageWriter"` y el proceso colgado hasta el timeout.
+Las dos direcciones del desajuste están medidas, y **las dos salen con código 0**, que es lo que
+las hace difíciles de ver. Los síntomas literales de cada una están en
+[troubleshooting](./guides/troubleshooting.md):
 
-Las dos formas de salir de esto el día que haga falta:
+- **addon 5.x bajo motor 4.7** — la 5.x llama a `FileAccess.get_as_text(true)`, que en 4.7 no
+  acepta argumentos, y declara un `func call(arg0=null, …)` cuya firma 4.7 valida contra
+  `Object.call`. El plugin del editor no carga.
+- **addon 6.x bajo motor 4.4** — la 6.x pide **Godot 4.5 o más** y usa `...varargs`, que 4.4 ni
+  siquiera parsea. Es el que ve quien hace `pull` y sigue en 4.4.x.
 
-- Quedarse en Godot 4.4.x → gdUnit4 **5.x**. Es lo que hay hoy.
-- Subir Godot a 4.5+ → gdUnit4 6.x. Es un cambio para **todo el equipo** y para la CI a la vez
-  (`GODOT_VERSION` en `verify.yml`), así que va con su spec.
+Y hay un dato que le va a hacer falta al próximo que mire: **la 6.2.1 declara compatibilidad
+hasta 4.7.1 y no nombra a 4.7.2.** Se eligió 4.7.2 igual, y la evidencia de que la combinación
+funciona en *este* proyecto es una medición y no la tabla: **medido el 2026-09-01**, 23/23
+suites y 171/171 casos en verde, sin tocar un test. **El conteo de casos se mueve con cada
+spec que agrega uno** —el 028 lo deja en 177—, así que lo que sostiene la afirmación es la
+fecha y no el número: quien lo vea distinto no lo corrija, remídalo. El plan B, si algo
+aparece, es bajar a **4.7.1** —que sí está en la matriz— sin tocar el addon.
+
+La versión que baja la CI vive en el `env: GODOT_VERSION` de `.github/workflows/verify.yml`, y
+la de cada máquina en `GODOT_BIN`. La tabla «GdUnit4 Version / Godot minimal required» del
+README de gdUnit4 es la fuente — **no** los badges de «Supported Godot Versions», que listan las
+versiones que el proyecto soporta *en alguna* de sus series y hacen creer que la última sirve
+para todas.
 
 ## Los comandos
 

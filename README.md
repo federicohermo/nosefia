@@ -4,7 +4,7 @@ Un empleado nuevo hace su primer turno nocturno en un almacén. Atiende por la v
 cumple las tareas que le dejó el jefe y, con el correr de los días, empieza a notar que algo no
 cierra. Cada minuto que dedica a averiguar qué pasa es un minuto que no dedica a su trabajo.
 
-Proyecto de la cátedra de Videojuegos (FADU) — **equipo Manada**. Godot 4.4, GDScript.
+Proyecto de la cátedra de Videojuegos (FADU) — **equipo Manada**. Godot 4.7, GDScript.
 
 ## Empezar
 
@@ -17,7 +17,7 @@ python .claude/scripts/verificar.py              # correr todo
 El paso a paso —incluidas las dos trampas de Windows que cuestan una tarde cada una— está en
 [docs/guides/quickstart.md](./docs/guides/quickstart.md).
 
-Abrí `project.godot` con Godot 4.4 para trabajar en el juego. gdUnit4 viene con el repo: no hay
+Abrí `project.godot` con Godot 4.7 para trabajar en el juego. gdUnit4 viene con el repo: no hay
 nada que instalar.
 
 ## Cómo se trabaja acá

@@ -47,7 +47,7 @@
 ├── assets/                 Arte, audio, fuentes. Lo que no es código
 │
 ├── addons/
-│   └── gdUnit4/            Vendorizado, versión 5.1.1 (la serie para Godot 4.4). NO se edita ni se lee
+│   └── gdUnit4/            Vendorizado, versión 6.2.1 (la serie para Godot 4.5+). NO se edita ni se lee
 │
 ├── docs/                   ← PROTEGIDO por el hook
 │

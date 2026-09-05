@@ -25,7 +25,7 @@ contenido.
 El diseño vive en el **GDD de Notion**, que es documento vivo y manda sobre cualquier cosa que
 diga este archivo sobre el juego. Acá está lo técnico.
 
-**Stack:** Godot 4.4.1 · GDScript · gdUnit4 **5.1.1** · gdtoolkit 4.x · Python 3.11+ para el harness
+**Stack:** Godot 4.7.2 · GDScript · gdUnit4 **6.2.1** · gdtoolkit 4.x · Python 3.11+ para el harness
 
 ---
 
