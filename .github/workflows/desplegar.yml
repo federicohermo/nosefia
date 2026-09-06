@@ -1,0 +1,168 @@
+# Cada push a `main` deja una web jugable — y lo verifica, que es la mitad que no es obvia.
+#
+# Para una cátedra, lo que se entrega se mira desde el navegador de otra persona. Sin esto,
+# entregar es una tarea manual que nadie escribió.
+#
+# ## Las cuatro decisiones que no se ven en el YAML
+#
+#   - **Exporta acá y no en Vercel.** Sus runners no tienen Godot, y las export templates son
+#     1,2 GB (1.281.349.702 bytes, medidos el 2026-09-06) contra un build cache de 1 GB: no
+#     entran, así que se bajarían enteras en CADA deploy, para siempre. El caché de Actions es
+#     de 10 GB por repositorio. Vercel recibe un directorio ya construido.
+#   - **Sólo `main`.** Es lo que ya dice `docs/infra/ramas.md`: `staging` recibe cada PR de
+#     spec, y desplegar desde ahí publicaría trabajo a medio integrar sobre la URL que mira la
+#     cátedra. El `workflow_dispatch` está para rehacer una entrega sin inventar un commit.
+#   - **El código de salida del export NO es el veredicto.** Medido: `--export-release "Web"`
+#     termina con `Program crashed with signal 11` y devuelve **0**. Por eso el paso corre con
+#     `|| true` y quien decide es `verificar_export.py`, que mira los archivos que quedaron.
+#   - **Publicar no es haber publicado.** Después del deploy hay dos pasos más: uno le pega a
+#     la URL por HTTP y otro la abre en un Chromium. Los dos existen porque el modo de falla de
+#     este spec es exactamente «responde 200 y no arranca».
+name: desplegar
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+# Dos entregas encimadas publican la más vieja última. `cancel-in-progress` porque lo que
+# importa es que la URL termine sirviendo el último commit de `main`, no que corran las dos.
+concurrency:
+  group: desplegar
+  cancel-in-progress: true
+
+jobs:
+  desplegar:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      # PRIMERO los secretos, antes de bajar un giga de templates. Sin este paso, la falta de
+      # uno se ve treinta minutos después como un error de la CLI de Vercel que no lo nombra —
+      # y en el peor caso no se ve: la CLI puede terminar sin desplegar y salir 0.
+      - name: Los tres secretos, o un rojo que los nombra
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+        run: |
+          set -euo pipefail
+          faltan=""
+          for nombre in VERCEL_TOKEN VERCEL_ORG_ID VERCEL_PROJECT_ID; do
+            if [ -z "${!nombre:-}" ]; then faltan="$faltan $nombre"; fi
+          done
+          if [ -n "$faltan" ]; then
+            echo "::error::faltan secretos del despliegue:$faltan. Se declaran en Settings →"\
+                 "Secrets and variables → Actions. Cómo se obtiene cada uno:"\
+                 "docs/infra/despliegue.md."
+            exit 1
+          fi
+
+      # La versión vive UNA vez, y ese lugar es `.godot-version`. Escrita también acá, este
+      # workflow exportaría con un motor y `verify.yml` verificaría con otro — los dos en
+      # verde, porque nada cruza una copia contra la otra.
+      - name: La versión del motor, leída de `.godot-version`
+        run: echo "GODOT_VERSION=$(tr -d '[:space:]' < .godot-version)" >> "$GITHUB_ENV"
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+
+      # El mismo bloque que `verify.yml`, por el mismo motivo: el nombre del ejecutable sale
+      # del zip y se resuelve con un glob, porque pinearlo lo rompería en el próximo bump con
+      # un "no such file" que no dice nada.
+      - name: Bajar Godot ${{ env.GODOT_VERSION }}
+        run: |
+          set -euo pipefail
+          base="https://github.com/godotengine/godot/releases/download"
+          curl -fsSL -o godot.zip "$base/${GODOT_VERSION}/Godot_v${GODOT_VERSION}_linux.x86_64.zip"
+          unzip -q godot.zip -d "$HOME/godot"
+          bin="$(find "$HOME/godot" -maxdepth 1 -type f -name 'Godot_v*' | head -1)"
+          chmod +x "$bin"
+          echo "GODOT_BIN=$bin" >> "$GITHUB_ENV"
+
+      # Las templates SÍ se cachean —al revés que el motor, que son 78 MB— y la clave lleva la
+      # versión adentro: sin eso, un bump de motor restauraría las templates viejas y el export
+      # fallaría con un mensaje sobre plantillas que nadie va a atar al bump.
+      - name: Caché de las export templates
+        id: templates
+        uses: actions/cache@v4
+        with:
+          path: ~/.local/share/godot/export_templates
+          key: export-templates-${{ env.GODOT_VERSION }}
+
+      # Godot busca las templates en un directorio nombrado `4.7.2.stable`, con punto, y la
+      # release se llama `4.7.2-stable`, con guion: de ahí el reemplazo. Puesto en un directorio
+      # con el nombre equivocado, Godot dice que faltan.
+      - name: Bajar las export templates
+        if: steps.templates.outputs.cache-hit != 'true'
+        run: |
+          set -euo pipefail
+          base="https://github.com/godotengine/godot/releases/download"
+          curl -fsSL -o templates.tpz \
+            "$base/${GODOT_VERSION}/Godot_v${GODOT_VERSION}_export_templates.tpz"
+          destino="$HOME/.local/share/godot/export_templates/${GODOT_VERSION/-/.}"
+          mkdir -p "$destino"
+          unzip -q templates.tpz -d templates
+          mv templates/templates/* "$destino/"
+
+      # Igual que en `verify.yml`: sin importar primero, el export hace las dos cosas a la vez y
+      # un fallo de importación se lee como un fallo de export.
+      - name: Importar los recursos del proyecto
+        run: "$GODOT_BIN --headless --path . --import || true"
+
+      # El `|| true` NO es descuido y es la línea más importante de este archivo: está medido
+      # que este comando devuelve 0 después de `Program crashed with signal 11`, así que su
+      # código de salida no significa nada en NINGUNA de las dos direcciones. Quien decide es
+      # el paso siguiente, que mira lo que quedó escrito en el disco.
+      - name: Exportar la web
+        run: |
+          set -euo pipefail
+          mkdir -p export/web
+          "$GODOT_BIN" --headless --path . --export-release "Web" export/web/index.html || true
+
+      - name: El veredicto del export
+        run: python .claude/scripts/verificar_export.py export/web
+
+      # `vercel.json` se copia ADENTRO del directorio que se publica porque es ahí donde la CLI
+      # lo lee: en la raíz del repo lo leería un build de Vercel, y acá no hay build de Vercel.
+      # Y la URL sale del stdout de la CLI en vez de escribirse a mano: escrita, verificaríamos
+      # la publicación anterior cada vez que el proyecto cambie de nombre.
+      - name: Publicar en Vercel
+        id: publicar
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+        run: |
+          set -euo pipefail
+          cp vercel.json export/web/
+          npm install --global vercel@latest
+          url="$(vercel deploy export/web --prod --yes --token "$VERCEL_TOKEN")"
+          echo "url=$url" >> "$GITHUB_OUTPUT"
+          echo "publicado en $url"
+
+      - name: Que la URL sirva un juego
+        run: python .claude/scripts/verificar_despliegue.py "${{ steps.publicar.outputs.url }}"
+
+      # El único paso que mira lo que ve una persona. Los dos de arriba pueden estar en verde
+      # con la pantalla en negro.
+      - name: Que el juego arranque en un navegador de verdad
+        run: |
+          set -euo pipefail
+          npm install --no-save playwright
+          npx playwright install --with-deps chromium
+          node .github/scripts/humo_en_navegador.mjs "${{ steps.publicar.outputs.url }}"
+
+      # El export, para poder mirar QUÉ se publicó sin rehacer la corrida. `always()` porque el
+      # caso en que sirve es aquel en que un paso de verificación falló.
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: web-exportada
+          path: export/web/
+          if-no-files-found: ignore
+          retention-days: 7
