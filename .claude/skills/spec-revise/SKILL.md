@@ -131,8 +131,12 @@ actualizado. Lo que en un repo de Godot decide si el spec es implementable:
    de tres vías sobre una escena produce una escena rota, no un conflicto. Dos specs sobre la
    misma escena se ordenan en el `plan.md`, no se paralelizan.
 6. **¿El spec sigue entrando en los techos?** Son cuatro: 350 palabras de prosa en el `spec.md`,
-   300 en el bloque de criterios entero, 500 en el `research.md`, 250 en el `plan.md`. Agregar
-   sin sacar es la forma en que el formato viejo vuelve, y acá el gate lo cobra.
+   300 en el bloque de criterios entero, 500 en el `research.md`, 250 en el `plan.md` **sin
+   contar sus encabezados**. Agregar sin sacar es la forma en que el formato viejo vuelve, y acá
+   el gate lo cobra.
+7. **¿Lo que agregaste al `plan.md` cayó en el rubro que le toca?** `### Rutas` es sólo lo que el
+   spec **no escribe**; un archivo que ahora se cita como fuente va a `### Invariantes`. Poner
+   una fuente entre las rutas da rojo sobre un PR correcto.
 
 ## Las convenciones que un spec viola por escrito
 

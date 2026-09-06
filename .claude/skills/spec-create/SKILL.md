@@ -97,17 +97,27 @@ borra — no se commitea.
 
 ### 2. Los tres archivos
 
-`specs/<NNN>-<descripcion-kebab>/` con `spec.md`, `research.md` y `plan.md`. El formato y las
-desviaciones están en [`specs/README.md`](../../../specs/README.md).
+`specs/<NNN>-<descripcion-kebab>/` con `spec.md`, `research.md` y `plan.md`. **El esqueleto se
+copia de [`specs/plantilla/`](../../../specs/plantilla/)** — trae los techos, los rótulos y las
+reglas de escritura adentro. El formato y las desviaciones están en
+[`specs/README.md`](../../../specs/README.md).
 
 **No hay `tasks.md`**, y no es una simplificación: está medido. De las rutas de archivo que el
 `tasks.md` y el `plan.md` viejo nombraban, el **43 %** nunca se tocaba y el **39 %** de lo que el
 PR sí tocaba no lo había previsto nadie, con el error escalando con el tamaño del spec. Escribir
 la lista de archivos antes de abrir uno es predecir, y salía cara.
 
-El `plan.md` declara lo que la predicción no puede inventar: **el orden obligado** —lo que NO se
-puede paralelizar, empezando por los `.tscn`, que no se mergean—, qué **no** se toca, y el
-criterio de terminado. Sin rutas predichas salvo las que el `research.md` midió.
+El `plan.md` declara lo que la predicción no puede inventar, en tres secciones que el gate
+exige: **`## Orden obligado`** —lo que NO se puede paralelizar, empezando por los `.tscn`, que no
+se mergean—, **`## Qué NO se toca`** y **`## Criterio de terminado`**. Sin rutas predichas salvo
+las que el `research.md` midió.
+
+**Y `## Qué NO se toca` se parte en dos por lo que se puede verificar**: `### Rutas`, los
+archivos que el spec no escribe —uno por viñeta, entre backticks, o `Ninguna.`—, y
+`### Invariantes`, lo que sigue siendo cierto después y que sólo mira la revisión. La lista de
+rutas es **negativa y cerrada**, que es lo que la separa del `tasks.md`: una prohibición no se
+equivoca por omisión. **Sólo va lo que de verdad es intocable** — un archivo citado como fuente
+de algo no, o el cruce contra el diff daría rojo sobre un PR correcto.
 
 **Y hay cuatro techos de palabras, que los verifica el gate**: 350 de prosa en el `spec.md`,
 300 en el bloque `## Criterios de aceptación` **entero**, 500 en el `research.md`, 250 en el
@@ -126,6 +136,11 @@ Cinco cosas que este repo pide y que no son obvias:
 - **Cada criterio de aceptación tiene que ser falsificable.** «El sistema de consecuencias
   funciona» no lo es; «con cuatro tareas cumplidas, `consecuencia()` devuelve `AVISO` y no
   `NINGUNA`» sí. Si un AC no se puede ver fallar, no verifica nada.
+- **Y nombra el borde, no el caso feliz.** El caso feliz lo cubre cualquier implementación; lo
+  que decide si el código está bien es el límite — cero, uno, el máximo, el valor justo antes
+  del corte, el que llega dos veces. En este juego la aritmética de las consecuencias vive ahí:
+  5 tareas, 3 o 4, menos de 3, el cuarto apercibimiento. Un AC escrito sobre el caso feliz pasa
+  el gate de la cita y deja el borde sin ejercer, que es cobertura sin verificación.
 - **Un AC que barre un directorio y enumera excepciones: corré el barrido ANTES de escribir la
   lista.** Es la forma «`rg <patrón> <ruta>` no devuelve nada, salvo A y B». Escrita de memoria la
   lista **siempre sale corta** —los fixtures sintéticos de otros specs, los `.md` que narran el

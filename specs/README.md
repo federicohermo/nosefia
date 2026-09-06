@@ -79,8 +79,34 @@ specs/<NNN>-<descripcion-kebab>/
 - **`tasks.md` no**, y ésa es la única parte de la lista que es cerrada. Ver abajo por qué
   se fue.
 
+**El esqueleto de los tres está en [`specs/plantilla/`](./plantilla/)**, y se copia: la
+alternativa —prosa que describe el formato y ningún archivo que lo tenga— es cómo cada spec
+termina inventando su propia forma.
+
 Es la convención de [Spec Kit](https://github.com/github/spec-kit) con cinco desviaciones
 deliberadas, anotadas abajo.
+
+## La forma del `plan.md`
+
+Tres secciones que exige `test_convencion_de_specs.py` —`## Orden obligado`, `## Qué NO se toca`
+y `## Criterio de terminado`—, y la segunda se parte en **`### Rutas`**, los archivos que el spec
+no escribe (entre backticks, o `Ninguna.`), y **`### Invariantes`**, lo que sigue siendo cierto
+después. Qué va en cada una está en la plantilla; acá va sólo por qué.
+
+**La convención existía antes que el gate** —23 de 23 specs la cumplían el 2026-09-06— mientras
+`spec-implement` leía la primera **por nombre**. Una sección de la que depende un skill y que se
+cumple por costumbre dura hasta el primer apuro.
+
+**La partición es por lo que se puede verificar.** Las rutas son una lista **negativa y cerrada**,
+y ahí está la diferencia con el `tasks.md`: aquél predecía qué se **va** a tocar, y una
+prohibición no se equivoca por omisión. Las invariantes son prosa declarada como prosa. Sale del
+task-brief de ITBAF y de la Tabla I de Koch, *Agentic Agile-V*
+([arXiv 2605.20456](https://arxiv.org/abs/2605.20456)), que separa *Constraints* de *Acceptance
+criteria*: este formato las colapsaba, y la presión empujaba las restricciones a los criterios
+—el plan del 017 lo dice, «los AC lo atan con `rg`, que es lo único ejecutable que hay»—.
+
+**Los encabezados no cuentan para el techo de 250**, y es medido: con ellos el margen era **cero**
+—el 012 tenía exactamente 250—, así que rotular habría sido un rojo.
 
 ## Por qué se fue el `tasks.md`
 
@@ -122,7 +148,7 @@ Sobre todo spec en vuelo, y con «palabra» = token con letra o dígito:
 | la prosa del `spec.md` —todo menos el bloque de criterios— | 350 |
 | el bloque `## Criterios de aceptación` **entero** | 300 |
 | el `research.md` | 500 |
-| el `plan.md` | 250 |
+| el `plan.md`, **sin contar sus encabezados** | 250 |
 
 **El segundo cae sobre el bloque entero y no sobre cada criterio, y ahí está la decisión.** Con
 un límite por criterio, un spec cumple escribiendo veinte criterios cortos — la misma enfermedad

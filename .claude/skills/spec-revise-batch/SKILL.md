@@ -239,10 +239,10 @@ Uno por spec, cada uno con el preámbulo del Paso 1 y su base del Paso 2. Los se
 - **Criterios de aceptación** — cada uno **falsable**: «el HUD muestra el tiempo» no lo es; «con
   3 minutos restantes, `tiempo_restante()` devuelve 180.0» sí. Si un AC no se puede ver fallar,
   no verifica nada. Más el AC mecánico y el de no-regresión si hubo superficie compartida.
-- **Estructura** — los tres archivos, los cuatro techos de palabras, ningún criterio que se
-  cierre **mirando o escuchando**, **ninguna sección que aplace** (`## Seguimiento` y sus alias)
-  y **ningún criterio que aplace** (`TODO`, «por ahora», «más adelante»). Lo verifica
-  `test_convencion_de_specs.py`. **No hay IDs de tarea ni `[P]`**: se fueron con el `tasks.md`, y
+- **Estructura** — los tres archivos, los cuatro techos, las tres secciones del `plan.md` con su
+  `### Rutas` / `### Invariantes`, ningún criterio que se cierre **mirando o escuchando**,
+  **ninguna sección que aplace** (`## Seguimiento` y sus alias) y **ningún criterio que aplace**
+  (`TODO`, «por ahora», «más adelante»). Lo verifica `test_convencion_de_specs.py`. **No hay IDs de tarea ni `[P]`**: se fueron con el `tasks.md`, y
   lo que el `plan.md` declara es el orden obligado, en prosa. Un `ACn` nuevo va con el número
   libre siguiente y **no se renumera nada**: el número lo cita el test que lo verifica, así que
   reusarlo o correrlo rompe la cita que el gate de la rama lee.

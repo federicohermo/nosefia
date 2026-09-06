@@ -36,7 +36,16 @@ import re
 import unittest
 
 from lib.repo import RAIZ
-from lib.specs import acs_de, en_vuelo, leer_mapa, palabras, partir_spec
+from lib.specs import (
+    ENCABEZADOS_DEL_PLAN,
+    acs_de,
+    en_vuelo,
+    encabezados_del_plan,
+    leer_mapa,
+    palabras,
+    partir_spec,
+    sin_encabezados,
+)
 
 SPECS = RAIZ / "specs"
 
@@ -156,6 +165,21 @@ def problemas_de_forma(carpeta: str, presentes: set[str]) -> list[str]:
     return problemas
 
 
+def problemas_de_estructura(carpeta: str, plan: str) -> list[str]:
+    """Los encabezados que le faltan al `plan.md`, en el orden en que los declara el formato.
+
+    **Falta, no sobra.** El 003 tiene un `## La forma de una entrada` propio y está bien: los
+    tres son el piso, no la lista cerrada. Lo que el formato fija es que estén, porque
+    `spec-implement` lee `## Orden obligado` por nombre y hasta hoy nadie lo exigía.
+    """
+    presentes = encabezados_del_plan(plan)
+    return [
+        f"{carpeta}/plan.md: falta `{encabezado}`"
+        for encabezado in ENCABEZADOS_DEL_PLAN
+        if encabezado not in presentes
+    ]
+
+
 def problemas_de_techo(carpeta: str, archivos: dict[str, str]) -> list[str]:
     """Qué techo de palabras pasa un spec.
 
@@ -178,7 +202,12 @@ def problemas_de_techo(carpeta: str, archivos: dict[str, str]) -> list[str]:
     if "research.md" in archivos:
         medir("research.md", archivos["research.md"], TECHO_DE_RESEARCH, "el research")
     if "plan.md" in archivos:
-        medir("plan.md", archivos["plan.md"], TECHO_DE_PLAN, "el plan")
+        # **Sin las líneas de encabezado**, y es medido: con ellas adentro el margen contra las
+        # 250 palabras era **cero** —el 012 tenía exactamente 250—, así que rotular la
+        # estructura que este formato ahora exige costaba un rojo. El techo limita el
+        # contenido; cobrarle peaje a los rótulos obligatorios lo convertiría en un impuesto a
+        # escribir bien.
+        medir("plan.md", sin_encabezados(archivos["plan.md"]), TECHO_DE_PLAN, "el plan")
     return problemas
 
 
@@ -218,6 +247,18 @@ class Convencion(unittest.TestCase):
         for carpeta in self.carpetas:
             presentes = {f.name for f in (SPECS / carpeta).iterdir() if f.is_file()}
             self.assertEqual(problemas_de_forma(carpeta, presentes), [], carpeta)
+
+    def test_cada_plan_declara_sus_tres_secciones(self):
+        # La convención existía —23 de 23 la cumplían el 2026-09-06— y no la exigía nadie,
+        # mientras `spec-implement/SKILL.md` lee `## Orden obligado` por nombre. Una sección de
+        # la que depende un skill y que se cumple por costumbre dura hasta el primer apuro.
+        for carpeta in self.carpetas:
+            plan = (SPECS / carpeta / "plan.md")
+            if not plan.is_file():
+                continue
+            self.assertEqual(
+                problemas_de_estructura(carpeta, plan.read_text(encoding="utf-8")), [], carpeta
+            )
 
     def test_el_spec_arranca_con_su_encabezado(self):
         # De esa línea sale el título del issue: sin ella, `publicar_spec.py` no tiene qué
@@ -346,6 +387,39 @@ class Sondas(unittest.TestCase):
             problemas = problemas_de_techo("030-x", archivos)
             self.assertTrue(problemas, que)
             self.assertIn(que, problemas[0])
+
+    def test_el_plan_sin_una_de_las_tres_secciones_es_rojo(self):
+        plan = "# Plan\n\n## Orden obligado\n\nx\n\n## Criterio de terminado\n\ny\n"
+        self.assertEqual(
+            problemas_de_estructura("031-x", plan), ["031-x/plan.md: falta `## Qué NO se toca`"]
+        )
+
+    def test_una_seccion_de_mas_no_es_rojo(self):
+        # El 003 tiene un `## La forma de una entrada` propio: los tres son el piso, no la lista.
+        plan = (
+            "# Plan\n\n## Orden obligado\n\nx\n\n## La forma de una entrada\n\nz\n\n"
+            "## Qué NO se toca\n\nw\n\n## Criterio de terminado\n\ny\n"
+        )
+        self.assertEqual(problemas_de_estructura("031-x", plan), [])
+
+    def test_un_encabezado_adentro_de_un_bloque_no_cuenta_como_seccion(self):
+        # Medido en el `plan.md` del 003, que muestra el formato de una entrada con un
+        # encabezado de ejemplo adentro de un bloque cercado.
+        plan = (
+            "# Plan\n\n## Orden obligado\n\n```markdown\n## Qué NO se toca\n```\n\n"
+            "## Criterio de terminado\n\ny\n"
+        )
+        self.assertEqual(
+            problemas_de_estructura("031-x", plan), ["031-x/plan.md: falta `## Qué NO se toca`"]
+        )
+
+    def test_el_techo_del_plan_no_le_cobra_a_los_encabezados(self):
+        # Los rótulos que el formato exige no gastan techo: con ellos adentro el margen del 012
+        # era cero, así que estructurar el plan habría sido un rojo.
+        cuerpo = " ".join(["hola"] * 248)
+        plan = f"# Plan\n\n## Orden obligado\n\n{cuerpo}\n\n## Qué NO se toca\n\n## Criterio de terminado\n"
+        self.assertEqual(problemas_de_techo("031-x", {"plan.md": plan}), [])
+        self.assertTrue(problemas_de_techo("031-x", {"plan.md": plan + " uno dos tres"}))
 
     def test_el_encabezado_de_los_criterios_cuenta_de_su_lado(self):  # 029-AC1
         prosa, criterios = partir_spec(

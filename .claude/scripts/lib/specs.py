@@ -495,3 +495,99 @@ def acs_sin_test(numero: str, acs: list[str], textos: list[str]) -> list[str]:
     criterio sin test» hay que ir a buscarlo.
     """
     return [ac for ac in acs if not any(re.search(rf"\b{numero}-{ac}\b", texto) for texto in textos)]
+
+
+# ── La estructura del `plan.md` ───────────────────────────────────────────────
+
+#: Una línea que abre o cierra un bloque cercado, con backticks o con tildes.
+CERCA = re.compile(r"^\s{0,3}(```+|~~~+)")
+
+#: Un encabezado markdown.
+ENCABEZADO_MD = re.compile(r"^#{1,6}\s")
+
+
+def _con_cerca(texto: str):
+    """Cada línea con si está adentro de un bloque cercado. Las cercas mismas cuentan adentro."""
+    adentro = False
+    for linea in texto.splitlines():
+        if CERCA.match(linea):
+            adentro = not adentro
+            yield linea, True
+            continue
+        yield linea, adentro
+
+
+def sin_cercados(texto: str) -> str:
+    """El texto sin lo que vive adentro de un bloque cercado.
+
+    Existe porque un barrido de encabezados cuenta como sección un ejemplo pegado adentro de un
+    bloque: el `plan.md` del 003 muestra el formato de una entrada de troubleshooting con un
+    encabezado de ejemplo, y la primera versión de este barrido lo reportó como sección rota.
+    Medido el 2026-09-06.
+    """
+    return "\n".join(l for l, dentro in _con_cerca(texto) if not dentro)
+
+
+def sin_encabezados(texto: str) -> str:
+    """El texto sin sus líneas de encabezado, **conservando las de adentro de un bloque**.
+
+    Lo usa el techo del `plan.md`, y el porqué es una medición: el margen contra las 250
+    palabras era **cero** —el 012 tenía exactamente 250— así que rotular la estructura costaba
+    un rojo. El techo limita el **contenido**; no le cobra peaje a los encabezados que el
+    formato ahora exige.
+
+    Un encabezado adentro de un bloque cercado **sí cuenta**: ahí es un ejemplo, o sea texto que
+    el autor escribió, y descontarlo le regalaría palabras a quien lo pegue.
+    """
+    return "\n".join(
+        l for l, dentro in _con_cerca(texto) if dentro or not ENCABEZADO_MD.match(l)
+    )
+
+
+#: Los tres encabezados que un `plan.md` declara, exactos y en este orden.
+#:
+#: Son los que 23 de 23 specs en vuelo ya tenían el 2026-09-06 —la convención existía y no la
+#: exigía nadie— y el primero lo lee `spec-implement/SKILL.md` **por nombre**. Un skill que
+#: depende de una sección que se cumple por costumbre es la forma en que este repo se rompe.
+ENCABEZADOS_DEL_PLAN = ("## Orden obligado", "## Qué NO se toca", "## Criterio de terminado")
+
+#: El rótulo de la mitad cruzable del `## Qué NO se toca`. Opcional: cuatro specs —013, 020,
+#: 021 y 027— sólo declaran invariantes, y exigirles una ruta los pondría en rojo estando bien.
+RUBRO_DE_RUTAS = "### Rutas"
+
+#: Lo que cuenta como ruta adentro de ese rubro: una cita entre backticks con extensión conocida
+#: o terminada en `/`.
+#:
+#: **Va con rótulo y no por inferencia sobre el párrafo entero**, y eso es medido: el `plan.md`
+#: del 012 cita `.claude/rules/dominio.md` como la *fuente* de una lista, no como un archivo
+#: prohibido. Inferir la prohibición de la forma de la cita lo habría declarado intocable, y el
+#: cruce contra el diff daría rojo sobre un PR correcto.
+RUTA = re.compile(r"`([^`]+?\.(?:gd|tscn|tres|py|md|json|cfg|yml|yaml|godot|sh)|[^`]+?/)`")
+
+
+def encabezados_del_plan(texto: str) -> list[str]:
+    """Los `##` de un `plan.md`, ya sin lo cercado y normalizados a una línea."""
+    return [
+        l.strip() for l in sin_cercados(texto).splitlines() if l.startswith("## ")
+    ]
+
+
+def rutas_intocables(texto: str) -> list[str]:
+    """Las rutas que el `### Rutas` del plan declara, en orden y sin repetir.
+
+    Devuelve `[]` cuando el rubro no está, que es un estado normal y no un defecto: un spec
+    puede restringir sólo invariantes.
+    """
+    cuerpo = sin_cercados(texto)
+    inicio = cuerpo.find(f"{RUBRO_DE_RUTAS}\n")
+    if inicio == -1:
+        return []
+    resto = cuerpo[inicio + len(RUBRO_DE_RUTAS) :]
+    corte = re.search(r"^#{2,3}\s", resto, re.MULTILINE)
+    if corte:
+        resto = resto[: corte.start()]
+    vistas: list[str] = []
+    for ruta in RUTA.findall(resto):
+        if ruta not in vistas:
+            vistas.append(ruta)
+    return vistas
