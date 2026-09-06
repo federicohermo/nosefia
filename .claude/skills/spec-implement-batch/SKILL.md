@@ -16,9 +16,14 @@ argument-hint: "<NNN NNN ...> | <NNN-MMM> | --propuestos [--dry] [--max N]"
      llega con el skill ya cargado en vez de costar un turno de tool. Es el MISMO script que usa
      `spec-revise-batch` —la pregunta «qué archivo tocan dos specs del lote» es idéntica en los
      dos— pero cada skill trae su copia: `${CLAUDE_SKILL_DIR}` apunta adentro, nunca a un
-     hermano. Que no se separen lo verifica `test_copias_de_skills.py`. -->
+     hermano. Que no se separen lo verifica `test_copias_de_skills.py`.
 
-!`python "${CLAUDE_SKILL_DIR}/scripts/lote.py" $ARGUMENTS`
+     Las comillas alrededor de `$ARGUMENTS` no son cosmética: sin ellas, un argumento con un
+     salto de línea lo parte bash, que corre la segunda línea como si fuera un comando y tira
+     el skill abajo antes de cargarlo. `lote.py` vuelve a partir por espacios, así que la forma
+     `007 008 009` sigue llegando como tres. -->
+
+!`python "${CLAUDE_SKILL_DIR}/scripts/lote.py" "$ARGUMENTS"`
 
 ---
 

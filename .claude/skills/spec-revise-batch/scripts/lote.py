@@ -104,9 +104,15 @@ def _morir(mensaje: str, codigo: int = 2) -> None:
 
 
 def expandir(args: list[str]) -> list[str]:
-    """Las tres formas del `argument-hint`, a una lista de `NNN`."""
+    """Las tres formas del `argument-hint`, a una lista de `NNN`.
+
+    Los argumentos se juntan y se vuelven a partir por espacios a propósito: el SKILL.md inyecta
+    `$ARGUMENTS` **entre comillas**, así que `001 002 003` llega como un solo token. Sin comillas
+    un requisito en prosa de varias líneas no lo rechaza este script — lo parte bash, que corre
+    la segunda línea como si fuera un comando y tira el skill abajo antes de cargarlo.
+    """
     ids: list[str] = []
-    for a in args:
+    for a in " ".join(args).split():
         if a == "--dry":
             continue
         if a == "--propuestos":
@@ -123,7 +129,13 @@ def expandir(args: list[str]) -> list[str]:
         if re.fullmatch(r"\d{3}", a):
             ids.append(a)
             continue
-        _morir(f"argumento no reconocido: {a}")
+        # Nombra la causa real, que casi siempre es la misma: acá van los specs, no el pedido.
+        # Un «argumento no reconocido» pelado manda a revisar el script en vez de la invocación.
+        _morir(
+            f"argumento no reconocido: {a}\n"
+            "  uso: lote.py <NNN NNN ...> | <NNN-MMM> | --propuestos\n"
+            "  Acá van los NÚMEROS de los specs. El pedido en prosa va en la conversación."
+        )
     return sorted(set(ids))
 
 

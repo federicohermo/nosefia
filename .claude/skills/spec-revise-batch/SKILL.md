@@ -15,14 +15,20 @@ argument-hint: "<NNN NNN ...> | <NNN-MMM> | --propuestos [--dry]"
 <!-- Inyección dinámica: el comando corre ANTES de que el modelo procese este archivo, así que
      la matriz llega con el skill ya cargado en vez de costar un turno de tool (la llamada más
      su resultado). `lote.py` entiende las tres formas del `argument-hint`, que es lo que deja
-     pasarle `$ARGUMENTS` crudo sin un caso especial, e ignora `--dry` porque ése es un flag
+     pasarle `$ARGUMENTS` sin un caso especial, e ignora `--dry` porque ése es un flag
      del skill y no suyo.
+
+     Las comillas alrededor de `$ARGUMENTS` no son cosmética: sin ellas, un argumento con un
+     salto de línea —el pedido en prosa que alguien tipea en vez de los números— lo parte bash,
+     que corre la segunda línea como si fuera un comando. El skill no se carga, y el error que
+     sale («el: command not found») no nombra ni al skill ni al argumento. `lote.py` vuelve a
+     partir por espacios, así que la forma `001 002 003` sigue llegando como tres.
 
      La ruta sale de `${CLAUDE_SKILL_DIR}` y no está escrita a mano: es lo que deja mover,
      renombrar o empaquetar el skill sin editar su propio contenido. Y va con `python`
      adelante porque en Windows un `.py` no es ejecutable por sí solo. -->
 
-!`python "${CLAUDE_SKILL_DIR}/scripts/lote.py" $ARGUMENTS`
+!`python "${CLAUDE_SKILL_DIR}/scripts/lote.py" "$ARGUMENTS"`
 
 ---
 
