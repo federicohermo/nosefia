@@ -64,7 +64,7 @@
 ├── .claude/
 │   ├── settings.json       El hook PreToolUse que corre el gate de spec
 │   ├── rules/              Reglas por capa: se cargan solas al tocar sus archivos
-│   ├── skills/             spec-create, spec-revise, spec-implement
+│   ├── skills/             El flujo de specs de punta a punta, cada uno con su variante en lote
 │   └── scripts/            Las herramientas del harness (Python, sin dependencias)
 │       ├── lib/            Lo PURO o inyectable: es lo que tiene tests
 │       └── tests/          Los tests del harness, y los dos gates del registro de specs
@@ -86,6 +86,7 @@
 | Un número que dos archivos necesitan igual | un solo archivo de `src/dominio/` | nunca dos copias |
 | Un `.png`, un `.ogg`, una fuente | `assets/` | no necesita spec |
 | Una herramienta del proceso | `.claude/scripts/` | lo puro en `lib/`, su test en `tests/` |
+| Un skill, o un archivo que un skill corre | `.claude/skills/` | **autocontenido**: todo lo que corre viaja adentro, y ninguno alcanza al de al lado. Toda copia, declarada en `test_copias_de_skills.py`, que la exige byte a byte |
 
 **Y a las cuatro primeras filas les falta la mitad de la ruta: la subcarpeta.** Cada capa admite
 un conjunto cerrado de nombres, declarado en `CARPETAS_POR_CAPA` de `.claude/scripts/lib/repo.py`
