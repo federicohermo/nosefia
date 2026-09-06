@@ -26,9 +26,11 @@ puntos de corte.
 **La pureza la verifica `gate_de_capas.py`**, en el mismo nodo que la dirección: el `extends` por
 **lista blanca** —`RefCounted`, `Resource`, o un `class_name` del propio dominio, así que
 `extends CharacterBody3D` da rojo sin figurar en ninguna lista— y los usos de motor por patrón:
-los callbacks de `Node`, `get_tree()`, `get_node`/`$`, `await`, `Input`, `print` y el acceso a
-disco. Hasta el spec 012 la regla estaba escrita en tres lugares y no la miraba nadie: un
-`extends Node` acá dejaba los seis nodos de `verificar.py` en verde.
+`_process`, `_physics_process` y `_input` —esos tres, no los demás callbacks de `Node`—,
+`get_tree()`, `get_node`/`$`, `await`, `Input`, `print` y el acceso a disco. La lista entera, con
+lo que deja pasar, está en [`.claude/rules/dominio.md`](../../.claude/rules/dominio.md). Hasta el
+spec 012 la regla estaba escrita en tres lugares y no la miraba nadie: un `extends Node` acá
+dejaba los seis nodos de `verificar.py` en verde.
 
 ### `src/sistemas/` — el motor hablando con el dominio
 

@@ -27,17 +27,22 @@ Prohibido, y no como estilo sino porque rompe la propiedad que hace útil a esta
 **La prueba es una sola: un test de `dominio/` tiene que poder correr sin levantar una
 escena.** Si para probar algo hace falta un frame, ese algo no va acá.
 
-**La pureza la verifica `gate_de_capas.py`**, y esa tabla es su lista. El `extends` va por
-**lista blanca** —`RefCounted`, `Resource`, o un `class_name` del propio dominio—, así que
+**La pureza la verifica `gate_de_capas.py`**, y esa tabla es de dónde sale su lista. El `extends`
+va por **lista blanca** —`RefCounted`, `Resource`, o un `class_name` del propio dominio—, así que
 `extends CharacterBody3D` da rojo sin que nadie haya tenido que anotarlo: una lista negra de
 descendientes de `Node` nace incompleta y falla **dando verde**. El resto va por patrón, sobre el
 código con los comentarios y los strings limpiados —`Input.` nombrado en un comentario no es un
 uso—, más el acceso a disco (`FileAccess`, `ConfigFile`, `ResourceSaver`), que rompe la misma
 propiedad por la otra puerta.
 
-Y hay que decir hasta dónde llega: **mira los patrones de esa tabla y nada más.** No es un linter
-de GDScript, y agregarle el siguiente es una decisión, no un trámite — el criterio para pedirlo
-es el del párrafo de arriba: ¿esto obliga a levantar una escena para probarlo?
+Y hay que decir hasta dónde llega, que es la mitad honesta: **mira los patrones de esa tabla y
+nada más, y dos de sus filas sólo en parte.** De los callbacks busca los tres que la fila nombra
+—`_process`, `_physics_process`, `_input`—, no los demás de `Node`: un `_ready` acá pasa en
+verde. Y los «nodos de UI» los caza cuando se los **extiende** —ahí entra la lista blanca— o
+cuando son un `class_name` de `ui/` —ahí entra la dirección—, pero un `Label` nombrado como tipo
+pasa. No es un linter de GDScript, y agregarle el siguiente es una decisión, no un trámite — el
+criterio para pedirlo es el del párrafo de arriba: ¿esto obliga a levantar una escena para
+probarlo?
 
 ## Por qué esta capa existe
 

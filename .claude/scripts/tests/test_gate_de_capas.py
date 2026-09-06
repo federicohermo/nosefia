@@ -95,6 +95,13 @@ class ElVeredictoSobreUnDominioImpuro(unittest.TestCase):
         self.assertEqual(proceso.returncode, 1, proceso.stdout + proceso.stderr)
         self.assertIn("src/dominio → src/ui", proceso.stdout)
 
+    def test_una_raiz_que_no_existe_no_es_un_arbol_limpio(self):
+        # El seam de la raíz abre una forma nueva de salir verde: `scripts_gd()` contesta `{}` a
+        # un directorio inexistente —para un repo recién arrancado eso es legítimo—, así que sin
+        # el chequeo el gate imprimía «0 scripts» y salía 0 ante una ruta mal tipeada.
+        proceso = correr(Path("no-existe-este-arbol"))
+        self.assertEqual(proceso.returncode, 2, proceso.stdout + proceso.stderr)
+
 
 class LosSeisNodosSiguenSiendoSeis(unittest.TestCase):
     def test_verificar_no_gano_un_septimo_nodo(self):

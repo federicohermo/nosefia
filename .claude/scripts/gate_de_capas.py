@@ -14,6 +14,8 @@ Uso:
 La raíz es opcional y por defecto es la del repo. Existe para que el test pueda fabricar el rojo
 en un árbol temporal: ensuciar `src/` de verdad pondría en rojo a los otros nodos que
 `verificar.py` corre **en paralelo** con éste, por un archivo que el test está por borrar.
+
+Y si esa raíz no existe, el gate sale con **2** en vez de mirar cero archivos y declararse verde.
 """
 
 import os
@@ -124,5 +126,23 @@ def main(raiz: Path = RAIZ) -> None:
     sys.exit(0)
 
 
+def _raiz_del_argv(argv: list[str]) -> Path:
+    """La raíz que se pidió por línea de comandos, o la del repo.
+
+    Una raíz explícita que no existe es un **error del que la pasó**, no un árbol limpio: sin este
+    chequeo, `scripts_gd()` devuelve `{}` —que para un repo recién arrancado es una respuesta
+    legítima— y el gate imprime «0 scripts» y sale 0. Un gate que sale verde por una ruta mal
+    tipeada es exactamente el modo de falla contra el que está escrita la lista blanca de
+    `lib/capas.py`, y por eso el chequeo cuelga del argumento y no de `RAIZ`.
+    """
+    if len(argv) <= 1:
+        return RAIZ
+    raiz = Path(argv[1]).resolve()
+    if not raiz.is_dir():
+        print(f"no existe la raíz «{argv[1]}»", file=sys.stderr)
+        sys.exit(2)
+    return raiz
+
+
 if __name__ == "__main__":
-    main(Path(sys.argv[1]).resolve() if len(sys.argv) > 1 else RAIZ)
+    main(_raiz_del_argv(sys.argv))

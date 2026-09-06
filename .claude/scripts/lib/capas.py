@@ -66,7 +66,14 @@ _EXTENDS_PUROS = frozenset({"RefCounted", "Resource"})
 
 #: `extends Algo` por nombre de clase. El `extends "res://…"` no entra ni tiene que entrar: eso
 #: es una referencia entre archivos y la mira `violaciones()`.
-_EXTENDS_POR_NOMBRE = re.compile(r"^\s*extends\s+([A-Za-z_]\w*)", re.MULTILINE)
+#:
+#: La sangría admite espacio y tabulación, y NO el resto de los blancos, porque esto se busca
+#: sobre el código **limpio**, donde un comentario ya es una fila de espacios: con un `\s*` el
+#: `^` engancha en la primera línea del docstring, se come el bloque entero y el hallazgo sale
+#: con el número de esa línea en vez del de su `extends`. Los 18 `.gd` del dominio lo tapan por
+#: accidente —todos declaran `class_name` arriba, y eso corta la corrida de espacios—, así que
+#: el primero que no lo declare estrenaría el bug mandando a leer la línea equivocada.
+_EXTENDS_POR_NOMBRE = re.compile(r"^[ \t]*extends\s+([A-Za-z_]\w*)", re.MULTILINE)
 
 #: Los usos de motor que la capa pura no puede tener: uno por fila de la tabla de
 #: `.claude/rules/dominio.md`, más el acceso a disco que pidió el spec 019.

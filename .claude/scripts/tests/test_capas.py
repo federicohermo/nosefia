@@ -318,6 +318,18 @@ class Impurezas(unittest.TestCase):
             [("src/dominio/x.gd", 3, "get_tree()")],
         )
 
+    def test_el_extends_conserva_su_linea_debajo_de_un_docstring(self):
+        # 012-AC5, sobre el `extends` y no sobre los patrones: los comentarios se reemplazan por
+        # espacios, así que una sangría de `\s*` deja que el `^` enganche en la primera línea del
+        # bloque y se lo coma entero. El hallazgo salía diciendo «línea 1» y mandaba a leer el
+        # docstring. No lo tapa ningún otro caso: los 18 `.gd` del dominio declaran `class_name`
+        # arriba del `extends`, y eso corta la corrida de espacios por accidente.
+        texto = "## qué es esto\n## y por qué\nextends CharacterBody3D\n"
+        self.assertEqual(
+            impurezas({"src/dominio/x.gd": texto}, CAPAS),
+            [("src/dominio/x.gd", 3, "extends CharacterBody3D")],
+        )
+
     def test_un_descendiente_de_node_que_no_figura_en_ninguna_lista(self):
         # 012-AC6, y es el AC que separa este diseño del de lista negra. `CharacterBody3D` no
         # está escrito en el código del gate —la jerarquía de `Node` tiene cientos de clases y
