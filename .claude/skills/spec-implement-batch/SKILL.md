@@ -148,8 +148,9 @@ párrafo; arreglar dos carriles cuesta un rebase.
 **Y decile al carril en cuál de los tres archivos escribe, porque el techo decide y no la
 preferencia.** Los techos son ejecutables —350 palabras de prosa en el `spec.md`, 300 en su bloque
 de criterios, 500 en el `research.md`, 250 en el `plan.md`— y **un spec publicado llega casi
-siempre al ras**: medido el 2026-09-06, el 027 estaba en 342/350, 299/300 y **500/500**, con el
-`plan.md` en 209/250 como único archivo con aire. Entonces:
+siempre al ras**: medido el 2026-09-06, el 027 **al publicarse** estaba en 342/350, 299/300 y
+**500/500**, con el `plan.md` en 209/250 como único archivo con aire — y el carril se lo comió
+al escribir ahí lo que decidió: hoy está en 249/250. Entonces:
 
 | Lo que apareció | Va en |
 |---|---|
@@ -186,8 +187,10 @@ Cada agente recibe, literal:
 - **`Grep` no ve `specs/`.** Es ripgrep y respeta el `.gitignore`: contesta cero sin decir que no
   miró. Para buscar ahí, `rg --no-ignore … specs/`.
 - **No hay install que correr**, pero **`GODOT_BIN` tiene que estar en el entorno del carril**: sin
-  ella `verificar.py` **saltea** el nodo `tests` y lo declara, y un carril que lee «6/6» sin mirar
-  los salteados da por corrida una suite que no corrió.
+  ella el nodo `tests` sale **rojo**, no salteado. Ese salteo vence: existe sólo mientras no haya
+  un solo `*_test.gd` —hoy hay 23—, y desde el primero Godot es obligatorio
+  (`verificar.py:132-141`). Un carril que sale a buscar un salteado que nunca va a aparecer pierde
+  una vuelta.
 - **Y antes del primer `verificar.py`, el carril importa.** `.godot/` está en el `.gitignore`, así
   que **ningún worktree nuevo lo tiene**, y sin esa caché gdUnit4 no resuelve sus propios
   `class_name`: el nodo `tests` sale **rojo** —no salteado— con `Parse Error: Could not find type
@@ -236,9 +239,10 @@ Cada agente recibe, literal:
   `export GODOT_BIN=…` vale para **esa** invocación y nada más, y `GODOT_BIN=… python …` —el
   prefijo inline— lo rechaza el aislamiento del worktree por «demasiado complejo». Decíselo así:
   **la exportación va en la misma línea que el comando, cada vez.** Si no, el carril lee «exportala
-  primero de todo» como una sola vez y después corre `verificar.py` sin ella — que **saltea**
-  `tests` y lo declara verde de 6/6. Y eso vale **sólo para `verificar.py`**: para lanzar Godot
-  directo es PowerShell y `$env:GODOT_BIN`, como dice la bala de arriba.
+  primero de todo» como una sola vez y después corre `verificar.py` sin ella — que sale **rojo**
+  en `tests`, con un mensaje que habla de la variable y no del código. Y eso vale **sólo para
+  `verificar.py`**: para lanzar Godot directo es PowerShell y `$env:GODOT_BIN`, como dice la bala
+  de arriba.
 - **Que delegue cada spec a `spec-implement`**, que deriva el grafo interno y abanica lo que
   corresponda, **y que cierre cada uno antes de arrancar el siguiente**.
 - **La base del primer spec del carril es `staging`**; los que siguen, la rama del spec anterior

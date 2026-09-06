@@ -106,8 +106,9 @@ Corre los seis nodos en paralelo: `lint`, `formato`, `capas`, `tdd`, `harness` y
 Correr sólo la suite de gdUnit4 deja afuera los dos gates, que son justamente los que cuidan
 lo que en este motor nadie más cuida.
 
-**Un nodo salteado no es un nodo verde**, y el reporte lo distingue. Si `tests` dice que se
-saltea porque no hay `GODOT_BIN`, eso **es un rojo**: significa que la suite no corrió.
+**Un nodo salteado no es un nodo verde**, y el reporte lo distingue. Pero `tests` sin `GODOT_BIN`
+**no se saltea: sale rojo** — ese salteo vale sólo mientras no exista un solo `*_test.gd`, y hoy
+hay 23 (`verificar.py:132-141`). No salgas a buscar un salteado que no va a aparecer.
 
 **Y `verificar.py` verde no prueba que la suite haya corrido.** Una suite de gdUnit4 que no
 parsea se descarta **en silencio** y el nodo `tests` sale verde igual — es el estado normal del
@@ -115,11 +116,17 @@ paso 1 del TDD, y también el de un `class_name` recién creado que todavía no 
 `.godot/`. La única señal es el conteo crudo, que `verificar.py` **no imprime**. El comando,
 para no reconstruirlo leyendo `verificar.py`:
 
-```bash
-"$GODOT_BIN" --path . --headless -s -d --remote-debug tcp://127.0.0.1:0 \
-  res://addons/gdUnit4/bin/GdUnitCmdTool.gd -a test --continue --ignoreHeadlessMode \
-  -rd reportes 2>&1 | grep "Executed test suites"
+```powershell
+& $env:GODOT_BIN --path . --headless -s -d --remote-debug tcp://127.0.0.1:0 `
+  res://addons/gdUnit4/bin/GdUnitCmdTool.gd -a test --continue --ignoreHeadlessMode `
+  -rd reportes | Select-String "Executed test suites"
 ```
+
+**Va en PowerShell y no en Bash**, porque en un worktree aislado —el caso normal bajo
+`spec-implement-batch`— Bash rechaza cualquier forma de invocar Godot como comando: la variable y
+la ruta literal entre comillas por igual. Y `--remote-debug tcp://127.0.0.1:0` contesta dos
+`ERROR:` —«the remote port number must be between 1 and 65535» y «Unable to connect to
+host»— que **no son un fallo**: la corrida sigue y escribe su `(N/N)`.
 
 Ese `(N/N)` tiene que dar igual que `find test -name '*_test.gd' | wc -l`. Si da menos, hay una
 suite que no corrió y el nodo verde no lo dice.
