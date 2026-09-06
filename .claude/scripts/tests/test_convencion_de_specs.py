@@ -21,9 +21,10 @@ después. Juzgar historia con la regla de hoy no arregla nada y da un rojo que n
 cerrar.
 
 **La partición sale del `estado` del mapa y no del número ni del disco.** El estado no lo
-escribe nadie a mano: lo deriva `.github/workflows/mapa.yml` del PR que aterrizó, y el gate
-del mapa prohíbe tocarlo adentro del PR que lo justifica. O sea que esta regla no se evade
-escribiendo un archivo — que era el argumento del corte por número que esto reemplaza. Una
+escribe nadie a mano: lo deriva `.github/workflows/mapa.yml` del PR que aterrizó, y
+`test_estado_del_mapa.py` da rojo si una fila que ya estaba cambia de estado adentro de la
+rama. O sea que esta regla no se evade escribiendo un archivo — que era el argumento del corte
+por número que esto reemplaza, y que estuvo escrito acá antes de tener con qué. Una
 carpeta **sin fila en el mapa** se mira igual: es un spec que se está escribiendo y todavía
 no se publicó, que es justo cuando conviene mirarlo.
 
@@ -39,6 +40,8 @@ from lib.repo import RAIZ
 from lib.specs import (
     ENCABEZADOS_DEL_PLAN,
     acs_de,
+    cercado_sin_cerrar,
+    encabezados_con_linea,
     rutas_intocables,
     en_vuelo,
     encabezados_del_plan,
@@ -73,9 +76,6 @@ TECHO_DE_PROSA = 350
 TECHO_DE_AC = 300
 TECHO_DE_RESEARCH = 500
 TECHO_DE_PLAN = 250
-
-#: Un encabezado markdown, con su texto.
-ENCABEZADO = re.compile(r"^#{1,6}\s+(.*?)\s*$")
 
 #: Las secciones que aplazan trabajo, y por eso no existen acá.
 #:
@@ -279,6 +279,22 @@ class Convencion(unittest.TestCase):
             }
             self.assertEqual(problemas_de_techo(carpeta, archivos), [], carpeta)
 
+    def test_ningun_archivo_deja_un_cercado_abierto(self):
+        # Con una cerca huérfana, `sin_cercados()` se come todo lo que sigue: el
+        # `### Rutas` que venga después devuelve cero rutas y `test_rutas_del_plan.py` se
+        # saltea con cara de haber mirado. El rojo va acá porque es el único lugar que ve los
+        # tres archivos.
+        for carpeta in self.carpetas:
+            for archivo in CANONICOS:
+                ruta = SPECS / carpeta / archivo
+                if not ruta.is_file():
+                    continue
+                self.assertFalse(
+                    cercado_sin_cerrar(ruta.read_text(encoding="utf-8")),
+                    f"{carpeta}/{archivo}: un bloque cercado que no cierra. Todo lo que viene "
+                    "después queda invisible para los gates, sin un solo rojo que lo diga.",
+                )
+
     def test_cada_spec_declara_al_menos_un_criterio(self):
         # Un spec sin criterios no es revisable —no dice cuándo está hecho— y encima deja sin
         # sujeto al gate de la rama, que exige un test por criterio: cero criterios es cero
@@ -320,16 +336,14 @@ class Convencion(unittest.TestCase):
                 if not (SPECS / carpeta / archivo).is_file():
                     continue
                 texto = (SPECS / carpeta / archivo).read_text(encoding="utf-8")
-                for numero, linea in enumerate(texto.splitlines(), 1):
-                    encabezado = ENCABEZADO.match(linea)
-                    if encabezado:
-                        self.assertNotRegex(
-                            encabezado.group(1),
-                            SECCION_QUE_APLAZA,
-                            f"{carpeta}/{archivo}:{numero} aplaza trabajo en una sección. "
-                            "La descarga no es anotarlo: ver "
-                            ".claude/skills/spec-create/sin-deuda.md",
-                        )
+                for numero, encabezado in encabezados_con_linea(texto):
+                    self.assertNotRegex(
+                        encabezado,
+                        SECCION_QUE_APLAZA,
+                        f"{carpeta}/{archivo}:{numero} aplaza trabajo en una sección. "
+                        "La descarga no es anotarlo: ver "
+                        ".claude/skills/spec-create/sin-deuda.md",
+                    )
 
     def test_ningun_research_deja_una_medicion_sin_hacer(self):
         # El `research.md` sale de correr algo: es la regla que hace estimable al spec. Una
@@ -406,14 +420,16 @@ class LaPlantillaPasaSusPropiosGates(unittest.TestCase):
             self.assertNotRegex(linea, MARCADOR_DE_CODIGO, f"plantilla/spec.md:{numero}")
             self.assertNotRegex(linea, PIDE_UNA_PERSONA, f"plantilla/spec.md:{numero}")
 
+    def test_no_deja_un_cercado_abierto(self):
+        for nombre, texto in self.archivos.items():
+            self.assertFalse(cercado_sin_cerrar(texto), f"plantilla/{nombre}")
+
     def test_ninguna_seccion_suya_aplaza_trabajo(self):
         for nombre, texto in self.archivos.items():
-            for numero, linea in enumerate(texto.splitlines(), 1):
-                encabezado = ENCABEZADO.match(linea)
-                if encabezado:
-                    self.assertNotRegex(
-                        encabezado.group(1), SECCION_QUE_APLAZA, f"plantilla/{nombre}:{numero}"
-                    )
+            for numero, encabezado in encabezados_con_linea(texto):
+                self.assertNotRegex(
+                    encabezado, SECCION_QUE_APLAZA, f"plantilla/{nombre}:{numero}"
+                )
 
 
 class Sondas(unittest.TestCase):

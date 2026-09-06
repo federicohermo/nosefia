@@ -27,15 +27,9 @@ trabajo de él y tenerlo en disco no habilita nada. Consultarlo se pide por núm
 Hace falta correrlo **en cada worktree**: `git worktree add` hace checkout de lo trackeado, y
 un archivo ignorado no viaja.
 
-> **Buscar dentro de los specs necesita `--no-ignore`.** Leerlos no: `.gitignore` es cosa de
-> git y no del sistema de archivos, así que `Read`, `cat` y `head` los abren normalmente. Pero
-> **ripgrep respeta el `.gitignore`**, y la herramienta `Grep` está construida sobre ripgrep —
-> o sea que una búsqueda en `specs/` devuelve **cero resultados sin decir que no miró**, que es
-> la peor respuesta posible.
->
-> ```bash
-> rg --no-ignore "lo que sea" specs/
-> ```
+> **Buscar acá adentro necesita `rg --no-ignore`** —leer no, `.gitignore` es cosa de git—: un
+> `Grep` normal contesta **cero sin decir que no miró**. El detalle, con el `--hidden` que hace
+> falta para `.claude/`, en [`.claude/rules/herramientas.md`](../.claude/rules/herramientas.md).
 
 ## El mapa
 
@@ -71,53 +65,36 @@ specs/<NNN>-<descripcion-kebab>/
 └── plan.md         ← el orden obligado, qué no se toca, y el criterio de terminado
 ```
 
-- `NNN` — número secuencial de tres dígitos (001, 002, …).
-- **Los tres archivos son el piso.** Un spec puede agregar los que necesite —un `baseline.md`
-  con la medición previa, un `reparto.md`—. El nombre va en minúsculas, dígitos y guiones:
-  `publicar_spec.py` **grita** ante un nombre que no puede subir, porque un `.md` no publicado
-  se pierde en la hidratación siguiente.
-- **`tasks.md` no**, y ésa es la única parte de la lista que es cerrada. Ver abajo por qué
-  se fue.
+**Los tres son el piso**, y un spec puede agregar los que necesite —un `baseline.md` con la
+medición previa—. El nombre va en minúsculas, dígitos y guiones: `publicar_spec.py` **grita**
+ante uno que no puede subir, porque un `.md` no publicado se pierde en la hidratación siguiente.
+La única parte cerrada de la lista es que **`tasks.md` no** — abajo, por qué se fue.
 
-**El esqueleto de los tres está en [`specs/plantilla/`](./plantilla/)**, y se copia: la
-alternativa —prosa que describe el formato y ningún archivo que lo tenga— es cómo cada spec
-termina inventando su propia forma.
-
-Es la convención de [Spec Kit](https://github.com/github/spec-kit) con cinco desviaciones
-deliberadas, anotadas abajo.
+**El esqueleto se copia de [`specs/plantilla/`](./plantilla/)**: la alternativa —prosa que
+describe el formato y ningún archivo que lo tenga— es cómo cada spec termina inventando su
+propia forma. Es la convención de [Spec Kit](https://github.com/github/spec-kit) con cinco
+desviaciones deliberadas, anotadas abajo.
 
 ## La forma del `plan.md`
 
-Tres secciones que exige `test_convencion_de_specs.py` —`## Orden obligado`, `## Qué NO se toca`
-y `## Criterio de terminado`—, y la segunda se parte en **`### Rutas`**, los archivos que el spec
-no escribe (entre backticks, o `Ninguna.`), y **`### Invariantes`**, lo que sigue siendo cierto
-después. Qué va en cada una está en la plantilla; acá va sólo por qué.
+**Qué va en cada sección está en la plantilla, que es el archivo que se copia. Acá va el
+porqué**, que es lo único que un esqueleto no puede llevar adentro.
 
-**La convención existía antes que el gate** —23 de 23 specs la cumplían el 2026-09-06— mientras
-`spec-implement` leía la primera **por nombre**. Una sección de la que depende un skill y que se
-cumple por costumbre dura hasta el primer apuro.
+`## Qué NO se toca` se parte en dos por **lo que se puede verificar**: las rutas de `### Rutas`
+las cruza `test_rutas_del_plan.py` contra lo que la rama toca, con el PR todavía abierto; las
+`### Invariantes` son prosa declarada como prosa. Sale del task-brief de ITBAF y de la Tabla I de
+Koch, *Agentic Agile-V* ([arXiv 2605.20456](https://arxiv.org/abs/2605.20456)), que separa
+*Constraints* de *Acceptance criteria*: este formato las colapsaba, y la presión empujaba las
+restricciones a los criterios —el plan del 017 lo dice, «los AC lo atan con `rg`, que es lo único
+ejecutable que hay»—.
 
-**La partición es por lo que se puede verificar, y las rutas se verifican**: si la rama del spec
-toca un archivo que su propio plan declaró intocable, `test_rutas_del_plan.py` da rojo con el PR
-todavía abierto. Las rutas son una lista **negativa y cerrada**,
-y ahí está la diferencia con el `tasks.md`: aquél predecía qué se **va** a tocar, y una
-prohibición no se equivoca por omisión. Las invariantes son prosa declarada como prosa. Sale del
-task-brief de ITBAF y de la Tabla I de Koch, *Agentic Agile-V*
-([arXiv 2605.20456](https://arxiv.org/abs/2605.20456)), que separa *Constraints* de *Acceptance
-criteria*: este formato las colapsaba, y la presión empujaba las restricciones a los criterios
-—el plan del 017 lo dice, «los AC lo atan con `rg`, que es lo único ejecutable que hay»—.
+**Las rutas son una lista negativa y cerrada**, y ahí está la diferencia con el `tasks.md`: aquél
+predecía qué se **va** a tocar, y una prohibición no se equivoca por omisión.
 
-**Los encabezados no cuentan para el techo de 250**, y es medido: con ellos el margen era **cero**
-—el 012 tenía exactamente 250—, así que rotular habría sido un rojo.
-
-**Y tampoco cuentan los comentarios de markdown**, que es donde la plantilla explica cada rubro:
-un `<!-- -->` es andamio de quien escribe, se borra, y no se ve en el issue renderizado. Sin esa
-regla la plantilla es inusable, y no es hipótesis — el 2026-09-06 su `plan.md` daba **386
-palabras contra el techo de 250** sin una palabra propia. Por el mismo motivo **una ruta citada
-adentro de un comentario no prohíbe nada**: el párrafo que explica el `### Rutas` cita rutas para
-ilustrarlo, y contarlas dejaba a todo spec copiado prohibiendo `src/`. Que la plantilla siga
-pasando los cuatro techos y no declarando ninguna ruta lo cobra
-`test_convencion_de_specs.py`, sobre `specs/plantilla/` misma.
+Los tres `##` los exige `test_convencion_de_specs.py`. La convención existía antes que el gate
+—23 de 23 specs la cumplían el 2026-09-06— mientras `spec-implement` leía el primero **por
+nombre**: una sección de la que depende un skill y que se cumple por costumbre dura hasta el
+primer apuro.
 
 ## Por qué se fue el `tasks.md`
 
@@ -141,13 +118,13 @@ estaban escritos con cuatro se migraron el 2026-09-05, salvo los que ya habían 
 
 **Ésos no se migran: son ADR** —Desviación 2—, y reescribirlos borraría con qué evidencia se
 decidió cada cosa. Por eso el gate no los mira, y la partición sale del `estado` del mapa: un
-spec `Implementado`, `Descartado` o `Superado` es historia y queda afuera. **El estado no lo
-escribe nadie a mano** —lo deriva `mapa.yml` del PR que aterrizó, y el gate del mapa prohíbe
-tocarlo adentro del PR que lo justifica—, así que esta regla tampoco se evade escribiendo un
-archivo, que era el argumento del corte por número que reemplaza.
+spec `Implementado`, `Descartado` o `Superado` es historia y queda afuera. Una carpeta **sin fila
+en el mapa** se mira igual: es un spec que se está escribiendo, que es cuando conviene mirarlo.
 
-Una carpeta **sin fila en el mapa** se mira igual: es un spec que se está escribiendo y todavía
-no se publicó, que es justo cuando conviene mirarlo.
+**El estado no lo escribe nadie a mano** —lo deriva `mapa.yml` del PR que aterrizó— así que esta
+regla tampoco se evade escribiendo un archivo, que era el argumento del corte por número que
+reemplaza. Y eso lo verifica `test_estado_del_mapa.py`: ninguna fila que ya estaba en la base
+cambia de `estado` adentro de la rama. Las filas nuevas sí, o abrir un spec sería imposible.
 
 ### Los cuatro techos de palabras
 
@@ -161,41 +138,41 @@ Sobre todo spec en vuelo, y con «palabra» = token con letra o dígito:
 | el `research.md` | 500 |
 | el `plan.md`, **sin contar sus encabezados** | 250 |
 
-Los cuatro se miden **sin los comentarios de markdown**: el andamio de la plantilla no gasta
-techo.
+**No cuentan ni los encabezados ni los comentarios de markdown.** Los dos son medidos: con los
+encabezados adentro el margen era cero —el 012 tenía exactamente 250—, y contando los `<!-- -->`
+la plantilla daba **386 palabras** sin una palabra propia. Un comentario es andamio de quien
+escribe, se borra, y no se ve en el issue renderizado. Por lo mismo **una ruta citada adentro de
+un comentario no prohíbe nada**: el párrafo que explica el `### Rutas` cita rutas para
+ilustrarlo, y contarlas dejaba a todo spec copiado prohibiendo `src/`. Que la plantilla siga
+pasando sus propios gates lo cobra `test_convencion_de_specs.py` sobre `specs/plantilla/` misma.
 
-**El segundo cae sobre el bloque entero y no sobre cada criterio, y ahí está la decisión.** Con
-un límite por criterio, un spec cumple escribiendo veinte criterios cortos — la misma enfermedad
-con carpeta nueva. Sobre el bloque, el límite muerde la **cantidad**.
+**El segundo techo cae sobre el bloque entero y no sobre cada criterio, y ahí está la decisión.**
+Con un límite por criterio, un spec cumple escribiendo veinte criterios cortos — la misma
+enfermedad con carpeta nueva. Sobre el bloque, el límite muerde la **cantidad**.
 
-Los cuatro números salen de medir el spec 029, que es el modelo del formato aunque él mismo
-esté escrito en el viejo: prosa 350, criterios 228, research 444, plan 233. Que sigan siendo
-cumplibles no necesita un test aparte — hay specs reales en disco y el techo corre sobre todos
-ellos, así que bajar uno a un número que nadie puede cumplir da rojo ahí mismo.
+Los cuatro números salen de medir el spec 029, que es el modelo del formato aunque él mismo esté
+escrito en el viejo: prosa 350, criterios 228, research 444, plan 233.
 
 ## El ancla anti-deuda: de la casilla al criterio, y del cierre al PR
 
 Un spec `Implementado` con una casilla abierta era **la** contradicción que el gate perseguía.
-Sin `tasks.md` esa regla se queda sin objeto: sigue escrita, no encuentra ninguna casilla, y
-sale verde para siempre. Un gate que no puede fallar no es laxo — está apagado y parece
-encendido.
+Sin `tasks.md` esa regla se queda sin objeto: sale verde para siempre, y un gate que no puede
+fallar no es laxo — está apagado y parece encendido.
 
-La reemplaza **AC↔test**: **cada `ACn` del `spec.md` está citado como `NNN-ACn` por al menos un
-archivo bajo `test/` o `.claude/scripts/tests/`**, y el rojo dice cuál falta. La cita lleva el
-número del spec porque `AC1` es el nombre que usa **todo** spec: pelada, la primera cubriría a
-todas las demás para siempre. Es más fuerte que la que reemplaza — una casilla la marca a mano
-el mismo que decide si el trabajo está hecho; un test corre en cada push y **se rompe solo**.
+La reemplaza **AC↔test**: cada `ACn` del `spec.md` citado como `NNN-ACn` por algún archivo bajo
+`test/` o `.claude/scripts/tests/`, y el rojo dice cuál falta. Lleva el número del spec porque
+`AC1` es el nombre que usa **todo** spec: pelada, la primera cubriría a todas las demás para
+siempre. Es más fuerte que la que reemplaza — una casilla la marca a mano el mismo que decide si
+el trabajo está hecho; un test corre en cada push y **se rompe solo**.
 
-**Y mira la RAMA, no los specs cerrados**, que es la segunda mitad de la decisión. Sobre los
-`Implementado` llegaba tarde por definición: un spec pasa a ese estado cuando su PR ya
-aterrizó, así que el rojo aparecía con el trabajo ya en `staging` y la única salida era abrir
-otra cosa para arreglarlo — la deuda que el ancla existe para cerrar. Sobre la rama
+**Y mira la RAMA, no los specs cerrados.** Sobre los `Implementado` llegaba tarde por definición:
+ese estado empieza cuando el PR ya aterrizó, así que el rojo aparecía con el trabajo en `staging`
+y la única salida era abrir otra cosa — la deuda que el ancla existe para cerrar. Sobre la rama
 —[`test_criterios_de_la_rama.py`](../.claude/scripts/tests/test_criterios_de_la_rama.py)— el PR
-todavía está abierto y el criterio sin verificar se puede escribir en vez de deber. De paso deja
-de depender de tener specs cerrados hidratados, que es lo que ya no pasa.
+sigue abierto y el criterio sin verificar se escribe en vez de deberse.
 
-**Su techo, dicho:** el gate verifica la **cita**, no que el test ejerza el criterio. Es un
-piso, como todo lo que este repo verifica sin cobertura.
+**Su techo, dicho:** verifica la **cita**, no que el test ejerza el criterio. Es un piso, como
+todo lo que este repo verifica sin cobertura.
 
 > **Desviación 1 — la rama se crea después.** Spec Kit crea la rama primero y le da su nombre a
 > la carpeta. Acá el spec entra a `staging` antes, así que un spec abandonado no se va con su
@@ -247,39 +224,26 @@ haya empezado se ve en que tiene rama.
 
 ## Lo que no se escribe adentro de un spec
 
-**No hay marcador para «esto lo tiene que mirar una persona».** En el repo del que sale este
-harness lo hubo —un `[M]` en la casilla— y se midió: de **137** casillas marcadas así en **35**
-specs, sólo **6** se cerraron alguna vez. O sea que el marcador no significaba «espera a una
-persona» sino «no se va a hacer, pero queda escrito».
+**La doctrina está en [`sin-deuda.md`](../.claude/skills/spec-create/sin-deuda.md)**, que los
+ocho skills traen adentro y no se repite acá. Lo de este archivo es qué se prohíbe y quién lo
+cobra:
 
-Se fueron las casillas y la regla se quedó, con otro sujeto: **es el criterio de aceptación el
-que no se puede cerrar mirando ni escuchando.** Lo que la regla verificaba nunca fue el formato
-de la casilla — era que la verificación fuera posible.
+| No existe | Porque |
+|---|---|
+| un criterio que se cierra mirando o escuchando | de **137** casillas `[M]` en **35** specs sólo **6** se cerraron: no significaba «espera a una persona» sino «no se va a hacer, pero queda escrito» |
+| `## Seguimiento` y sus alias —`## Pendientes`, `## Deuda`, `## Próximos pasos`— | un ítem adentro de un spec **hereda el estado de su spec**: uno `Implementado` con promesas aplazadas dice que ya está y sigue debiendo |
+| un criterio que diga `TODO` o «por ahora» | se da por cumplido sin haber hecho nada |
+| un `research.md` con una medición declarada como no hecha | el plan se apoya en un número que nadie midió, y el spec igual se publica |
 
-**En su lugar hay dos salidas, y anotarlo no es ninguna**: o el criterio se vuelve
-**verificable** —un test de gdUnit4, una medición, un valor que un gate pueda leer— y entonces
-bloquea como cualquier otro, o **no se escribe**.
-
-**Tampoco hay dónde aplazar.** Ni `## Seguimiento` ni sus alias —`## Pendientes`,
-`## Próximos pasos`, `## Deuda`—, ni un criterio que diga `TODO` o «por ahora», ni un
-`research.md` que declare una medición como no hecha. Un ítem escrito adentro de un spec
-**hereda el estado de su spec**: uno `Implementado` con tres promesas aplazadas dice que ya está
-y sigue debiendo, y eso es exactamente cómo la deuda se vuelve invisible.
-
-**Las cuatro las verifica [`test_convencion_de_specs.py`](../.claude/scripts/tests/test_convencion_de_specs.py)**,
-que corre sobre los specs **hidratados** y declara el salteo si no hay ninguno — y un nodo
-salteado no es un nodo verde. La quinta, que ningún criterio quede sin test, la verifica el
-gate de la rama.
-
-**Y la salida tampoco es abrir un issue.** Los issues de este repo son **entrada**: lo que llega
-de afuera y `spec-create` drena. Si aparece trabajo que el spec necesitaba y no tenía, el defecto
-es del spec —y del skill que lo dejó salir así—, y se corrigen los dos. La doctrina completa está
-en [`sin-deuda.md`](../.claude/skills/spec-create/sin-deuda.md), que los ocho skills traen
-adentro.
+Las cuatro las cobra
+[`test_convencion_de_specs.py`](../.claude/scripts/tests/test_convencion_de_specs.py) sobre los
+specs hidratados —declarando el salteo si no hay ninguno—, y la quinta, que ningún criterio quede
+sin test, el gate de la rama. Las salidas son dos y anotarlo no es ninguna: o el criterio se
+vuelve verificable, o no se escribe.
 
 **`## Fuera de alcance` sí existe y no es lo mismo**: declara una frontera —qué NO hace este
-spec— y es lo que lo vuelve revisable. Se convierte en deuda sólo si algún AC del propio spec
-depende de lo excluido, y eso ningún gate lo puede ver: lo mira quien escribe el spec.
+spec— y es lo que lo vuelve revisable. Se vuelve deuda sólo si algún AC depende de lo excluido, y
+eso ningún gate lo ve: lo mira quien escribe el spec.
 
 ## De un issue de deuda a un spec
 
@@ -336,13 +300,8 @@ decisión, y una máquina que la tome inventa prioridades.
 
 > **El estado del mapa y el cierre del issue no son tareas.** El issue lo cierra el `Closes #N`
 > del PR, y el `estado` lo deriva [`.github/workflows/mapa.yml`](../.github/workflows/mapa.yml)
-> en el push a `staging`.
->
-> No es disciplina floja: el gate tiene dos tests en espejo —un PR aterrizado con el mapa en
-> `Propuesto` es mentira, y un `Implementado` sin PR aterrizado es la mentira al revés— y
-> juntos **prohíben actualizar el mapa adentro del PR que lo justifica**. El paso sólo podría
-> ocurrir en un commit posterior escrito a mano, que es el que se olvida. El estado de un spec
-> no es un dato que alguien escribe: es una consecuencia de si su PR aterrizó.
+> en el push a `staging`. El estado de un spec no es un dato que alguien escribe: es una
+> consecuencia de si su PR aterrizó, y `test_estado_del_mapa.py` da rojo si se escribe a mano.
 >
 > Se puede correr a mano —`python .claude/scripts/derivar_mapa.py`, o con `--verificar` para
 > que no escriba y salga 1 si escribiría—, pero no hace falta.

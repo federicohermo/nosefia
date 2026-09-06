@@ -123,6 +123,24 @@ def archivos_de_la_rama() -> list[str] | None:
     return [l.strip() for l in salida.stdout.splitlines() if l.strip()]
 
 
+def archivo_en_la_base(ruta: str) -> str | None:
+    """El contenido que un archivo tiene en la base de la rama, o `None` si no se pudo leer.
+
+    El `None` no distingue «no se pudo preguntar» de «no existía allá», y es a propósito: los
+    dos terminan en el mismo salteo declarado, y separarlos daría dos mensajes para un gate que
+    igual no puede mirar.
+    """
+    base = os.environ.get("GITHUB_BASE_REF") or RAMA_DE_INTEGRACION
+    try:
+        salida = subprocess.run(
+            ["git", "show", f"origin/{base}:{ruta}"],
+            cwd=RAIZ, capture_output=True, text=True, encoding="utf-8", timeout=30,
+        )
+    except (OSError, subprocess.SubprocessError):
+        return None
+    return salida.stdout if salida.returncode == 0 else None
+
+
 def viola(declarada: str, tocado: str) -> bool:
     """Si el archivo `tocado` cae adentro de la ruta `declarada`.
 
@@ -133,9 +151,16 @@ def viola(declarada: str, tocado: str) -> bool:
     - **No tiene barra** —`reglas.gd`, `almacen.tscn`— es el nombre del archivo, en cualquier
       carpeta. Es la forma que usan el 006, el 008, el 016, el 017 y el 033, y leerla como
       ruta exacta las volvería inofensivas sin decirlo.
+
+    **Lo que separa un directorio de un nombre es la extensión, no la barra**, y la barra que
+    falta era un apagado silencioso: `src` leído como nombre de archivo no matchea nada —no
+    hay archivo que se llame `src`— así que la restricción quedaba escrita en el plan y no
+    protegía nada. La forma canónica sigue siendo con barra; ésta es la que se escribe sola.
     """
     tocado = tocado.replace("\\", "/")
     declarada = declarada.replace("\\", "/")
+    if not declarada.endswith("/") and "." not in declarada.rsplit("/", 1)[-1]:
+        declarada += "/"
     if declarada.endswith("/"):
         return tocado.startswith(declarada)
     if "/" in declarada:

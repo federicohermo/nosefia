@@ -570,6 +570,56 @@ def _con_cerca(texto: str):
         yield linea, adentro
 
 
+def estados_reescritos(base: dict, rama: dict) -> list[str]:
+    """Los specs cuyo `estado` la rama cambió respecto de la base, ya escritos para el rojo.
+
+    **Una fila nueva no cuenta.** Abrir un spec escribe el mapa —es lo que hace
+    `publicar_spec.py crear`— así que exigir que el mapa no se toque prohibiría el flujo. Lo
+    que no se escribe a mano es el estado de un spec **que ya estaba**: ése lo deriva
+    `.github/workflows/mapa.yml` del PR que aterrizó.
+
+    Sin esto la regla se evade escribiendo el archivo: un spec en vuelo al que le pongan
+    `Implementado` deja de ser mirado por `test_convencion_de_specs.py` —`es_adr()` lo saltea
+    por ADR— y ninguna herramienta lo dice. Tres archivos del repo afirmaban que este gate
+    existía antes de que existiera.
+    """
+    return [
+        f"{numero}: `{base[numero].get('estado')}` → `{fila.get('estado')}`"
+        for numero, fila in sorted(rama.items())
+        if numero in base and base[numero].get("estado") != fila.get("estado")
+    ]
+
+
+#: Un encabezado markdown, con su texto.
+ENCABEZADO_CON_TEXTO = re.compile(r"^#{1,6}\s+(.*?)\s*$")
+
+
+def encabezados_con_linea(texto: str) -> list[tuple[int, str]]:
+    """Los encabezados de un `.md`, como `(número de línea, texto)`, sin los cercados.
+
+    **Un encabezado adentro de un bloque cercado es un ejemplo, no una sección**, y contarlo da
+    rojo sobre un archivo correcto: el `research.md` que muestre un `## Pendientes` para
+    explicar que está prohibido queda acusado de tenerlo. La línea se conserva porque el rojo
+    la nombra —`spec.md:41` se abre; «hay una sección que aplaza» hay que ir a buscarla—.
+    """
+    return [
+        (numero, m.group(1))
+        for numero, (linea, dentro) in enumerate(_con_cerca(texto), 1)
+        if not dentro and (m := ENCABEZADO_CON_TEXTO.match(linea))
+    ]
+
+
+def cercado_sin_cerrar(texto: str) -> bool:
+    """Si el texto deja un bloque cercado abierto.
+
+    Es el modo de falla más silencioso de este parser y por eso tiene su propio rojo: con una
+    cerca huérfana, `sin_cercados()` se come **todo lo que sigue**, así que un `### Rutas`
+    escrito después devuelve cero rutas y `test_rutas_del_plan.py` se saltea con cara de haber
+    mirado. Medido el 2026-09-06 — `sin_cercados("a\\n```\\nb\\nc\\n")` devuelve `"a"`.
+    """
+    return sum(1 for linea in texto.splitlines() if CERCA.match(linea)) % 2 == 1
+
+
 def sin_cercados(texto: str) -> str:
     """El texto sin lo que vive adentro de un bloque cercado.
 
@@ -636,10 +686,14 @@ def rutas_intocables(texto: str) -> list[str]:
     spec prohibiendo `src/` antes de escribir una línea propia.
     """
     cuerpo = sin_cercados(sin_comentarios(texto))
-    inicio = cuerpo.find(f"{RUBRO_DE_RUTAS}\n")
-    if inicio == -1:
+    # **Por línea entera y no por substring**: `#### Rutas` CONTIENE `### Rutas`, así que un
+    # rubro de otro nivel se leía como éste y sus citas pasaban a ser prohibiciones. Y sin el
+    # `$`, un `### Rutas del research` también entraba. La forma vieja además pedía un `\n`
+    # detrás, o sea que el rubro como última línea del archivo no se encontraba — callado.
+    rubro = re.search(rf"^{re.escape(RUBRO_DE_RUTAS)}\s*$", cuerpo, re.MULTILINE)
+    if rubro is None:
         return []
-    resto = cuerpo[inicio + len(RUBRO_DE_RUTAS) :]
+    resto = cuerpo[rubro.end() :]
     corte = re.search(r"^#{2,3}\s", resto, re.MULTILINE)
     if corte:
         resto = resto[: corte.start()]

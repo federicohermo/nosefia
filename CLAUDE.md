@@ -144,8 +144,9 @@ probar. [docs/guides/tdd.md](./docs/guides/tdd.md).
 | Convención de specs | [specs/README.md](./specs/README.md) | El formato, los cuatro estados y el flujo |
 
 **Trabajo planificado:** cada spec **es un issue**, y [specs/mapa.json](./specs/mapa.json) los
-mapea. **Su `estado` lo deriva `mapa.yml`** en el push a `staging`: el gate prohíbe tocarlo dentro
-del PR que lo justifica.
+mapea. **Su `estado` lo deriva `mapa.yml`** en el push a `staging`, y `test_estado_del_mapa.py`
+da rojo si una fila que ya estaba cambia de estado adentro de la rama. Las filas nuevas sí: abrir
+un spec escribe el mapa.
 
 **Los issues son la ENTRADA del repo, nunca la salida.** Un pedido de afuera entra como
 [issue](https://github.com/federicohermo/nosefia/issues) y `spec-create` lo drena hacia specs

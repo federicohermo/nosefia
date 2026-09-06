@@ -5,6 +5,8 @@ import unittest
 
 from lib.specs import (
     aterrizo,
+    cercado_sin_cerrar,
+    encabezados_con_linea,
     encabezados_del_plan,
     palabras,
     partir_spec,
@@ -357,6 +359,58 @@ class ElAndamioDeLaPlantillaNoEsContenido(unittest.TestCase):
     def test_un_encabezado_comentado_no_es_una_seccion_del_plan(self):
         plan = "# Plan\n\n<!-- ## Orden obligado va acá -->\n\n## Criterio de terminado\n"
         self.assertEqual(encabezados_del_plan(plan), ["## Criterio de terminado"])
+
+
+class ElRubroDeRutasSeReconocePorLaLineaEntera(unittest.TestCase):
+    def test_un_encabezado_mas_hondo_no_es_el_rubro(self):
+        # Se buscaba por substring, y `#### Rutas` contiene `### Rutas`: un rubro de otro
+        # nivel se leía como éste y sus citas pasaban a ser prohibiciones.
+        self.assertEqual(rutas_intocables("#### Rutas\n\n- `src/`\n"), [])
+
+    def test_el_rubro_de_verdad_si(self):
+        self.assertEqual(rutas_intocables("### Rutas\n\n- `src/`\n"), ["src/"])
+
+    def test_el_rubro_como_ultima_linea_no_rompe(self):
+        # Sin `\n` detrás —fin de archivo— la búsqueda por substring no lo encontraba y el
+        # gate se salteaba callado.
+        self.assertEqual(rutas_intocables("## Qué NO se toca\n\n### Rutas"), [])
+
+
+class UnCercadoSinCerrarSeVe(unittest.TestCase):
+    """El modo de falla más silencioso de este parser, y por eso tiene su propio rojo.
+
+    Un bloque cercado que nunca cierra deja a `sin_cercados()` borrando **todo lo que sigue**,
+    así que un `### Rutas` escrito después de un ``` huérfano devuelve cero rutas y el gate se
+    saltea con cara de haber mirado. Medido el 2026-09-06: `sin_cercados("a\\n```\\nb\\nc\\n")`
+    devuelve `"a"`.
+    """
+
+    def test_un_bloque_que_cierra_no_es_hallazgo(self):
+        self.assertFalse(cercado_sin_cerrar("texto\n```py\nx = 1\n```\nmás texto\n"))
+
+    def test_un_bloque_que_no_cierra_si(self):
+        self.assertTrue(cercado_sin_cerrar("texto\n```py\nx = 1\n"))
+
+    def test_las_dos_cercas_cuentan(self):
+        self.assertTrue(cercado_sin_cerrar("~~~\nx\n"))
+        self.assertFalse(cercado_sin_cerrar("~~~\nx\n~~~\n"))
+
+    def test_un_texto_sin_cercas_no_es_hallazgo(self):
+        self.assertFalse(cercado_sin_cerrar("# T\n\nprosa y `código` en línea\n"))
+
+
+class LosEncabezadosCercadosSonEjemplos(unittest.TestCase):
+    def test_un_encabezado_cercado_no_es_una_seccion(self):
+        # Un `research.md` que muestra un `## Pendientes` para explicar que está prohibido
+        # quedaba acusado de tenerlo. El barrido del plan ya salteaba los cercados; el de las
+        # secciones que aplazan, no.
+        texto = "# R\n\nasí se ve una prohibida:\n\n```markdown\n## Pendientes\n```\n"
+        self.assertEqual(encabezados_con_linea(texto), [(1, "R")])
+
+    def test_la_linea_es_la_del_archivo(self):
+        # El rojo la nombra: `spec.md:41` se abre, «hay una sección que aplaza» hay que ir a
+        # buscarla.
+        self.assertEqual(encabezados_con_linea("a\n\n## Dos\n"), [(3, "Dos")])
 
 
 class UnEncabezadoCercadoNoParteElSpec(unittest.TestCase):

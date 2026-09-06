@@ -36,6 +36,21 @@ class Viola(unittest.TestCase):
         # el plan del 006 los nombra por separado.
         self.assertFalse(viola("reglas.gd", "src/dominio/reglas_del_jugador.gd"))
 
+    def test_un_directorio_sin_la_barra_igual_protege(self):
+        # Es el caso que se apagaba callado: `src` leído como nombre de archivo no matchea
+        # NADA —ningún archivo se llama `src`— así que la restricción existía en el plan y no
+        # protegía nada, sin decirlo. Lo que separa un directorio de un nombre es la
+        # extensión, no la barra: la barra es la forma canónica, no la única que se escribe.
+        self.assertTrue(viola("src", "src/dominio/reglas.gd"))
+        self.assertFalse(viola("src", "srcnuevo/x.gd"))
+        self.assertTrue(viola("src/dominio", "src/dominio/reglas.gd"))
+
+    def test_un_nombre_con_extension_sigue_siendo_un_nombre(self):
+        # La contracara: `reglas.gd` NO se vuelve directorio, o dejaría de matchear en
+        # cualquier carpeta, que es la forma que usan el 006, el 008, el 016, el 017 y el 033.
+        self.assertTrue(viola("reglas.gd", "src/dominio/reglas.gd"))
+        self.assertFalse(viola("reglas.gd", "reglas.gd/x.py"))
+
     def test_las_barras_de_windows_no_cambian_el_veredicto(self):
         self.assertTrue(viola("src/", "src\\dominio\\reglas.gd"))
 
