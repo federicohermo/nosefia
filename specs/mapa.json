@@ -28,5 +28,11 @@
   "027": {"issue":47,"carpeta":"027-cada-push-a-main-deja-una-web-jugable","fecha":"2026-09-01","estado":"Propuesto","titulo":"Spec 027 — Cada push a `main` deja una web jugable"},
   "028": {"issue":50,"carpeta":"028-el-escenario-modelado-reemplaza-al-blockout","fecha":"2026-09-04","estado":"Implementado","titulo":"Spec 028 — El escenario modelado reemplaza al blockout"},
   "029": {"issue":54,"carpeta":"029-el-spec-se-achica-a-un-prompt","fecha":"2026-09-05","estado":"Implementado","titulo":"Spec 029 — El spec se achica a un prompt, y revisar es contrastarlo contra un requisito nuevo"},
-  "030": {"issue":57,"carpeta":"030-publicar-opera-sobre-los-specs-que-le-pidieron","fecha":"2026-09-05","estado":"Propuesto","titulo":"Spec 030 — Publicar opera sobre los specs que le pidieron"}
+  "030": {"issue":57,"carpeta":"030-publicar-opera-sobre-los-specs-que-le-pidieron","fecha":"2026-09-05","estado":"Propuesto","titulo":"Spec 030 — Publicar opera sobre los specs que le pidieron"},
+  "031": {"issue":60,"carpeta":"031-la-jornada-dura-diez-minutos-reales","fecha":"2026-09-05","estado":"Propuesto","titulo":"Spec 031 — La jornada dura diez minutos reales"},
+  "032": {"issue":61,"carpeta":"032-la-hora-se-lee-en-los-relojes-del-local","fecha":"2026-09-05","estado":"Propuesto","titulo":"Spec 032 — La hora se lee en los relojes del local, no en el HUD"},
+  "033": {"issue":62,"carpeta":"033-la-caja-de-traslado-lleva-ocho-productos","fecha":"2026-09-05","estado":"Propuesto","titulo":"Spec 033 — La caja de traslado lleva ocho productos y se mueve llena"},
+  "034": {"issue":63,"carpeta":"034-el-clic-derecho-usa-lo-que-se-lleva-en-la-mano","fecha":"2026-09-05","estado":"Propuesto","titulo":"Spec 034 — El clic derecho usa lo que se lleva en la mano"},
+  "035": {"issue":64,"carpeta":"035-el-dialogo-avanza-de-a-una-entrada","fecha":"2026-09-05","estado":"Propuesto","titulo":"Spec 035 — El diálogo avanza de a una entrada y no se puede abandonar"},
+  "036": {"issue":65,"carpeta":"036-el-guardado-se-cablea-al-cierre-de-la-jornada","fecha":"2026-09-05","estado":"Propuesto","titulo":"Spec 036 — El guardado se cablea al cierre de la jornada"}
 }
