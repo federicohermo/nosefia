@@ -145,6 +145,21 @@ esté en tu disco no llega a ningún carril.
 No se frena con `AskUserQuestion` salvo que la decisión sea del GDD. Arreglar un spec cuesta un
 párrafo; arreglar dos carriles cuesta un rebase.
 
+**Y decile al carril en cuál de los tres archivos escribe, porque el techo decide y no la
+preferencia.** Los techos son ejecutables —350 palabras de prosa en el `spec.md`, 300 en su bloque
+de criterios, 500 en el `research.md`, 250 en el `plan.md`— y **un spec publicado llega casi
+siempre al ras**: medido el 2026-09-06, el 027 estaba en 342/350, 299/300 y **500/500**, con el
+`plan.md` en 209/250 como único archivo con aire. Entonces:
+
+| Lo que apareció | Va en |
+|---|---|
+| un AC equivocado o un alcance mal medido | **`spec.md`**, y se *reescribe* — no se agrega, o el techo lo rebota |
+| una decisión de implementación que el spec no nombraba (qué CLI, qué secreto, qué valor) | **`plan.md`**, en un `## Decidido al implementar` |
+| una medición que envejeció | **`research.md`**, reemplazando la vieja y no apilándose encima |
+
+Si un carril vuelve diciendo que no pudo escribir la corrección, el motivo va a ser el techo, y
+la respuesta es la tabla — no subir el techo.
+
 **Terminado cuando** las cuatro tienen respuesta escrita, **incluidas las que dieron que no**.
 
 ## Paso 3 — Un worktree por carril
@@ -177,8 +192,16 @@ Cada agente recibe, literal:
   que **ningún worktree nuevo lo tiene**, y sin esa caché gdUnit4 no resuelve sus propios
   `class_name`: el nodo `tests` sale **rojo** —no salteado— con `Parse Error: Could not find type
   "GdUnitTestCIRunner"`, un síntoma que no nombra ni a `.godot` ni al worktree. Una línea, una vez
-  por carril: `"$GODOT_BIN" --headless --path . --import --quit`. Medido el 2026-08-31 en la
-  corrida de `pr-review-batch` sobre 001/002/004/007: lo pisaron los cuatro carriles.
+  por carril, **desde la herramienta PowerShell**: `& $env:GODOT_BIN --headless --path . --import
+  --quit`. Medido el 2026-08-31 en la corrida de `pr-review-batch` sobre 001/002/004/007: lo
+  pisaron los cuatro carriles.
+- **Y va en PowerShell porque desde Bash no corre, y eso hay que decírselo.** En un worktree
+  aislado **cualquier forma de invocar Godot como comando desde Bash se rechaza**: `"$GODOT_BIN"
+  …` con «command whose name is computed at runtime», y la ruta literal entre comillas también.
+  Lo que sí pasa desde Bash es `python .claude/scripts/verificar.py` con `GODOT_BIN` exportada,
+  porque ahí **el comando es `python`** y a Godot lo lanza el script. **Medido el 2026-09-06 en el
+  lote 003/010/012/027/030: lo pisaron TRES de los cuatro carriles**, cada uno perdiendo una
+  vuelta, y los tres con el comando escrito por este mismo skill en la forma que no corre.
 - **Y ese `--import` no es una vez: es una por `class_name` nuevo.** Crear el `.gd` no alcanza
   para que su test lo vea — la clase no entra al registro global hasta que se vuelve a importar,
   y hasta entonces el error es `Parse Error: Identifier "X" not declared` **con el archivo ya
@@ -191,13 +214,18 @@ Cada agente recibe, literal:
   `verificar.py`. Medido: dos carriles del lote 005/011/022/023 lo armaron a mano por separado.
   El comando es:
 
-  ```bash
-  "$GODOT_BIN" --path . --headless -s -d --remote-debug tcp://127.0.0.1:0 \
-    res://addons/gdUnit4/bin/GdUnitCmdTool.gd -a test --continue --ignoreHeadlessMode \
-    -rd reportes 2>&1 | grep "Executed test suites"
+  ```powershell
+  & $env:GODOT_BIN --path . --headless -s -d --remote-debug tcp://127.0.0.1:0 `
+    res://addons/gdUnit4/bin/GdUnitCmdTool.gd -a test --continue --ignoreHeadlessMode `
+    -rd reportes | Select-String "Executed test suites"
   ```
 
   y su `(N/N)` tiene que dar igual que `find test -name '*_test.gd' | wc -l`.
+
+  **Y avisale del ruido**: `--remote-debug tcp://127.0.0.1:0` contesta dos `ERROR:` —«the remote
+  port number must be between 1 and 65535» y «Unable to connect to host»— **y no son un fallo**:
+  la corrida sigue y escribe su `(N/N)`. Sin el aviso se lee como una suite rota y el carril sale
+  a arreglar lo que anda.
 - **Advertile que su spec puede venir ya corregido, y que verifique antes de editar.** Un spec
   que manda corregir a otros —como el 023 con el 008, el 009 y el 013— suele haber dejado esas
   correcciones escritas cuando se lo revisó, así que sus AC **ya pasan al llegar**. Sin el aviso
@@ -209,7 +237,8 @@ Cada agente recibe, literal:
   prefijo inline— lo rechaza el aislamiento del worktree por «demasiado complejo». Decíselo así:
   **la exportación va en la misma línea que el comando, cada vez.** Si no, el carril lee «exportala
   primero de todo» como una sola vez y después corre `verificar.py` sin ella — que **saltea**
-  `tests` y lo declara verde de 6/6.
+  `tests` y lo declara verde de 6/6. Y eso vale **sólo para `verificar.py`**: para lanzar Godot
+  directo es PowerShell y `$env:GODOT_BIN`, como dice la bala de arriba.
 - **Que delegue cada spec a `spec-implement`**, que deriva el grafo interno y abanica lo que
   corresponda, **y que cierre cada uno antes de arrancar el siguiente**.
 - **La base del primer spec del carril es `staging`**; los que siguen, la rama del spec anterior
@@ -222,7 +251,11 @@ Cada agente recibe, literal:
   aplica el padre en serie.
 - **El mensaje de commit se escribe con `Write` a un archivo y se pasa con `-F`, nunca con
   heredoc.** Los backticks y los `$` del contenido lo rompen con un `unexpected EOF` que cuesta más
-  diagnosticar que reescribirlo — está medido en esta máquina.
+  diagnosticar que reescribirlo — está medido en esta máquina. **Y la prohibición no es del mensaje
+  de commit: es del heredoc.** Uno que lleva adentro una barra invertida de escape la pierde en el
+  camino, y lo que llega al archivo es un salto de línea real: un `SyntaxError: unterminated
+  string literal` sobre código que se escribió bien. Contenido con escapes: `Write` y `Edit`,
+  nunca heredoc. Medido el 2026-09-06 en el lote 003/010/012/027/030.
 - **Y ese archivo lleva el número del spec en el nombre: `commit_<NNN>_<algo>.txt`.** El
   scratchpad de la sesión **es uno solo para los N carriles**, así que dos carriles que elijan
   el nombre obvio escriben el mismo archivo. Medido en el lote 001/002/004/007: un carril

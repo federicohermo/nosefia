@@ -68,6 +68,25 @@ en `escenas/`, que son cáscara — y entonces la regla que tenía adentro hay q
 dominio. Ésa es la conversación que el gate fuerza, y es la que hace que el juego se pueda
 probar.
 
+## Cuando lo que escribís es un gate sobre prosa
+
+Una parte grande de lo que este repo verifica no es código: es que un `.md` diga algo. Tres
+cosas se pisaron ahí, las tres medidas el 2026-09-06 en el lote 003/010/012/027/030, y las tres
+cuestan una vuelta entera porque el rojo miente sobre su causa.
+
+- **Aplaná los saltos de línea antes de buscar.** Los docs van cortados a 100 columnas, así que
+  la frase que buscás cae partida y el test da rojo diciendo que el doc no lo dice **cuando sí lo
+  dice**. Va `re.sub(r"\s+", " ", texto)` antes de comparar, y se compara por párrafo, no por
+  línea.
+- **Si el AC pide que N documentos nombren un verificador, la cadena tiene que incluir QUÉ
+  verifica.** Buscar `` `gate_de_capas.py` `` a secas dio verde sobre el archivo que el spec venía
+  a corregir, porque ese archivo ya nombraba al gate **de otra cosa**. La cadena era
+  `` La pureza la verifica `gate_de_capas.py` ``. Un gate de una sola palabra nace mintiendo.
+- **La falsificación se mide con el nodo en verde de base, y el par se toma en la misma corrida.**
+  Desatar el invariante a mitad de camino da un rojo que no es el tuyo —lo tiran otros tests del
+  mismo archivo, por artefactos que todavía no escribiste—, y el «vuelto atrás → verde» no llega
+  nunca. Primero verde, después rojo con el cambio, después verde otra vez, seguido.
+
 ## La dirección de dependencia la verifica otro gate
 
 `dominio/` → `sistemas/` → `ui/` → `escenas/`, sólo hacia abajo. Y **cuenta también nombrar un
