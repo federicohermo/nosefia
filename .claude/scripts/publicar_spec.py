@@ -58,8 +58,8 @@ SPECS = RAIZ / "specs"
 #:
 #: Hasta el spec 030 la fase salía de `sys.argv[1]` y `--dry` de un `in sys.argv`: **todo lo
 #: demás se ignoraba sin avisar**, así que `publicar 029` corría sobre los 29 issues sin
-#: mentir ni fallar. Por eso ahora un argumento que no es ni una fase ni un `NNN` de tres
-#: dígitos muere acá, en vez de no hacer nada.
+#: mentir ni fallar. Por eso ahora un argumento que no es la fase, ni `--dry`, ni un `NNN` de
+#: tres dígitos muere acá **nombrado**, en vez de no hacer nada.
 USO = (
     "uso: python .claude/scripts/publicar_spec.py crear|publicar [NNN ...] [--dry]\n"
     "     sin NNN recorre todas las carpetas hidratadas; con NNN, sólo ésas."
@@ -150,7 +150,14 @@ def main() -> None:
     dry = "--dry" in sys.argv
     ids = [a for a in sys.argv[2:] if a != "--dry"]
 
-    if fase not in ("crear", "publicar") or not all(len(i) == 3 and i.isdigit() for i in ids):
+    # **Lo que no se entiende se nombra**, igual que en `hidratar_specs.py`. El `uso:` solo
+    # deja adivinando cuál de los argumentos tipeados sobra, y el caso que más importa es
+    # `publicar 30`: el número está bien y le falta un cero, que es lo único que el mensaje
+    # puede decir y el `uso:` no.
+    sin_entender = [i for i in ids if not (len(i) == 3 and i.isdigit())]
+    if sin_entender:
+        print(f"no entiendo {' '.join(sin_entender)}: un NNN son tres dígitos.", file=sys.stderr)
+    if fase not in ("crear", "publicar") or sin_entender:
         print(USO, file=sys.stderr)
         sys.exit(1)
 
@@ -265,7 +272,9 @@ def crear(carpetas, mapa, gh, guardar_mapa, dry) -> None:
 
     print(f"\nmapa: {len(mapa)} specs en {MAPA_JSON}")
     print(
-        f"{len(carpetas)} carpetas hidratadas, {reconciliados} con el `origen` puesto al día "
+        # «recorridas» y no «hidratadas»: desde el 030 el conjunto puede venir acotado por los
+        # `NNN`, así que en disco puede haber muchas más que las que esta corrida miró.
+        f"{len(carpetas)} carpetas recorridas, {reconciliados} con el `origen` puesto al día "
         "contra su `spec.md`"
     )
 

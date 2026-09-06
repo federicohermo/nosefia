@@ -342,8 +342,11 @@ En este orden, y el segundo es el que se saltea:
 2. **Devolvé las ediciones a los issues. No es opcional y no lo hace nadie más:**
 
    ```bash
-   python .claude/scripts/publicar_spec.py publicar
+   python .claude/scripts/publicar_spec.py publicar 007 008   # los NNN del lote
    ```
+
+   **Los `NNN` van sí o sí**, y son los del lote más los specs nuevos del punto 1: sin ellos la
+   fase recorre **todas** las carpetas que haya en disco y sube cada una encima de su issue.
 
    El árbol de `specs/` es **caché**. Una revisión que edita el `spec.md` en disco y no publica dejó
    el trabajo en un archivo ignorado por git, que la próxima hidratación **sobreescribe sin
@@ -353,9 +356,10 @@ En este orden, y el segundo es el que se saltea:
    Corré la fase con `--dry` primero si el lote fue grande: imprime qué issue va a tocar sin
    tocarlo.
 3. **Commiteá `specs/mapa.json` si cambió** — cambia si el punto 1 escribió un spec nuevo. Ahí
-   corré `publicar_spec.py crear` **antes** que el `publicar` del punto 2, porque `traducir()`
-   deja verbatim la cita a un spec que todavía no está en el mapa: enlace muerto en el issue, sin
-   error y sin aviso. **El `estado` no se toca acá**: lo deriva la Action en el push a `staging`,
+   corré `publicar_spec.py crear <NNN del spec nuevo>` **antes** que el `publicar` del punto 2,
+   porque `traducir()` deja verbatim la cita a un spec que todavía no está en el mapa: enlace
+   muerto en el issue, sin error y sin aviso. **También acá el `NNN`**: sin él `crear` abre un
+   issue por cada carpeta en disco que el mapa no tenga, y un issue abierto no se deshace. **El `estado` no se toca acá**: lo deriva la Action en el push a `staging`,
    y el gate da rojo si alguien lo escribe a mano.
 4. **`python .claude/scripts/verificar.py --solo harness`**, que es donde corre
    `test_convencion_de_specs.py` sobre lo hidratado: sección que aplaza, tarea que aplaza,

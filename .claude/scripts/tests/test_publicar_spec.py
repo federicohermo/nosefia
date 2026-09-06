@@ -170,3 +170,18 @@ class LaSuperficieDelUso(unittest.TestCase):
         # `publicar 029` corría sobre los 29. El `uso:` es lo único que le dice a quien lo lea
         # que ahora el número se acepta.
         self.assertIn("NNN", publicar_spec.USO)
+
+    def test_un_argumento_que_no_se_entiende_se_nombra(self):  # 030-AC4
+        # `publicar 30` es el caso que importa: un número bien escrito al que le falta el cero.
+        # El `uso:` solo deja adivinando cuál de los argumentos tipeados sobra, así que el
+        # mensaje lo nombra — como ya hace `hidratar_specs.py` con lo que no entiende.
+        err = io.StringIO()
+        with (
+            mock.patch.object(sys, "argv", ["publicar_spec.py", "publicar", "30"]),
+            mock.patch("sys.stderr", new=err),
+            self.assertRaises(SystemExit) as caso,
+        ):
+            publicar_spec.main()
+
+        self.assertEqual(caso.exception.code, 1)
+        self.assertIn("no entiendo 30", err.getvalue())
