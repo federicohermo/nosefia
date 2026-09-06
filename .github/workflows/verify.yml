@@ -8,9 +8,9 @@
 # Lo que este workflow NO hace, a propósito:
 #
 #   - No exporta el juego, y sigue sin hacerlo ahora que hay quien sí: el que exporta y publica
-#     es `desplegar.yml`, y sólo en `main`. Las export templates son **1,2 GB**
-#     —1.281.349.702 bytes, medidos el 2026-09-06 contra 4.7.2 sobre la release de GitHub— que
-#     no tiene sentido bajar en cada PR: allá se cachean por versión, acá no se bajan nunca.
+#     es `desplegar.yml`, y sólo en `main`. Las export templates pesan más de un giga —el
+#     número exacto, medido y con fecha, vive una sola vez en `docs/infra/despliegue.md`— y no
+#     tiene sentido bajarlas en cada PR: allá se cachean por versión, acá no se bajan nunca.
 #   - No corre el editor. Los tests corren headless, que es lo que hace que la CI y la máquina
 #     de cualquiera del equipo hagan exactamente lo mismo.
 name: verify
@@ -41,9 +41,21 @@ jobs:
       # separan hacen que la CI verifique con un motor y el despliegue exporte con otro — y eso
       # no da rojo en ningún lado: las dos corridas salen verdes, cada una con el suyo.
       #
+      # El `set -euo pipefail` y el `-z` no son ceremonia: con un `echo` pelado, si el archivo
+      # falta, `tr` falla, el `echo` escribe igual una versión vacía y ESTE paso sale VERDE. El
+      # rojo aparecería tres pasos después como un 404 de `curl` sobre una URL sin versión
+      # adentro, que no nombra ni al archivo ni a quien lo borró.
+      #
       # `tr -d` porque el archivo termina en salto de línea y el nombre de la release no.
       - name: La versión del motor, leída de `.godot-version`
-        run: echo "GODOT_VERSION=$(tr -d '[:space:]' < .godot-version)" >> "$GITHUB_ENV"
+        run: |
+          set -euo pipefail
+          version="$(tr -d '[:space:]' < .godot-version)"
+          if [ -z "$version" ]; then
+            echo '::error::falta .godot-version o está vacío: es el único lugar donde vive la versión del motor y los dos workflows la leen de ahí.'
+            exit 1
+          fi
+          echo "GODOT_VERSION=$version" >> "$GITHUB_ENV"
 
       # Versión EXACTA y no `3.x`: `3.x` resuelve a la última del día y convierte al runtime de
       # todas las herramientas en un blanco móvil — el mismo commit puede dar verde hoy y rojo
@@ -56,8 +68,8 @@ jobs:
       - run: pip install "gdtoolkit==4.*"
 
       # Godot se baja acá y no se cachea entre corridas: es un zip de ~78 MB —77.860.424 bytes
-      # el de 4.7.2, medido el 2026-09-06— y bajarlo tarda
-      # menos que el paso de restaurar caché que habría que mantener. El nombre del ejecutable
+      # el de 4.7.2, medido el 2026-09-06 contra la release de GitHub— y bajarlo tarda menos
+      # que el paso de restaurar caché que habría que mantener. El nombre del ejecutable
       # sale del zip y por eso se resuelve con un glob: pinearlo a mano lo rompería en el
       # próximo bump de versión, y lo rompería con un "no such file" que no dice nada.
       - name: Bajar Godot ${{ env.GODOT_VERSION }}

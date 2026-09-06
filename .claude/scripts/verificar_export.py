@@ -52,9 +52,11 @@ def main() -> None:
         )
         sys.exit(1)
 
-    problemas = veredicto_del_export(pesos(directorio))
+    # Un solo barrido del disco, y no uno por rama: dos `rglob` son dos fotos distintas del
+    # directorio, y la que se imprime no sería la que se juzgó.
+    archivos = pesos(directorio)
+    problemas = veredicto_del_export(archivos)
     if not problemas:
-        archivos = pesos(directorio)
         total = sum(archivos.values()) / (1024 * 1024)
         print(f"export completo: {len(archivos)} archivos, {total:.1f} MB en `{directorio}`.")
         sys.exit(0)

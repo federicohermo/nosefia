@@ -39,7 +39,7 @@ def pedir(url: str) -> Respuesta:
 
     Un 404 **no es una excepción**: es la respuesta que este script existe para ver, así que el
     `HTTPError` se traduce a un `Respuesta` en vez de subir. Lo que sí sube es no poder
-    preguntar —DNS, TLS, la red—, que es otra cosa y se reporta como tal.
+    preguntar —DNS, TLS, la red, el `timeout`—, que es otra cosa y la reporta `main`.
     """
     peticion = urllib.request.Request(url, method="HEAD")
     try:
@@ -59,6 +59,12 @@ def main() -> None:
         problemas = problemas_de_la_publicacion(url, pedir)
     except urllib.error.URLError as error:
         print(f"no se pudo preguntarle a `{url}`: {error.reason}")
+        sys.exit(1)
+    except TimeoutError:
+        # `TimeoutError` **no** es un `URLError`: un timeout de lectura de `urlopen` sube pelado
+        # y sin esta rama saldría como un traceback. Falla igual —el código sigue siendo 1— pero
+        # lo que se lee en la CI es un stack de `urllib` en vez del segundo que se agotó.
+        print(f"`{url}` no contestó en {ESPERA}s: la publicación no se pudo verificar.")
         sys.exit(1)
 
     if not problemas:

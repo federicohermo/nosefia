@@ -5,10 +5,11 @@
 #
 # ## Las cuatro decisiones que no se ven en el YAML
 #
-#   - **Exporta acá y no en Vercel.** Sus runners no tienen Godot, y las export templates son
-#     1,2 GB (1.281.349.702 bytes, medidos el 2026-09-06) contra un build cache de 1 GB: no
-#     entran, así que se bajarían enteras en CADA deploy, para siempre. El caché de Actions es
-#     de 10 GB por repositorio. Vercel recibe un directorio ya construido.
+#   - **Exporta acá y no en Vercel.** Sus runners no tienen Godot, y las export templates no
+#     entran en el build cache de Vercel: se bajarían enteras en CADA deploy, para siempre. El
+#     de Actions sí las aguanta. Los tres tamaños, medidos y con fecha, viven una sola vez, en
+#     `docs/infra/despliegue.md` — re-tipeados acá envejecerían con el próximo bump de motor
+#     sin que nadie los cruce. Vercel recibe un directorio ya construido.
 #   - **Sólo `main`.** Es lo que ya dice `docs/infra/ramas.md`: `staging` recibe cada PR de
 #     spec, y desplegar desde ahí publicaría trabajo a medio integrar sobre la URL que mira la
 #     cátedra. El `workflow_dispatch` está para rehacer una entrega sin inventar un commit.
@@ -64,8 +65,22 @@ jobs:
       # La versión vive UNA vez, y ese lugar es `.godot-version`. Escrita también acá, este
       # workflow exportaría con un motor y `verify.yml` verificaría con otro — los dos en
       # verde, porque nada cruza una copia contra la otra.
+      #
+      # El `set -euo pipefail` y el `-z` no son ceremonia: con un `echo` pelado, si el archivo
+      # falta, `tr` falla, el `echo` escribe igual una versión vacía y ESTE paso sale VERDE. El
+      # rojo aparecería tres pasos después como un 404 de `curl` sobre una URL sin versión
+      # adentro, que no nombra ni al archivo ni a quien lo borró.
+      #
+      # `tr -d` porque el archivo termina en salto de línea y el nombre de la release no.
       - name: La versión del motor, leída de `.godot-version`
-        run: echo "GODOT_VERSION=$(tr -d '[:space:]' < .godot-version)" >> "$GITHUB_ENV"
+        run: |
+          set -euo pipefail
+          version="$(tr -d '[:space:]' < .godot-version)"
+          if [ -z "$version" ]; then
+            echo '::error::falta .godot-version o está vacío: es el único lugar donde vive la versión del motor y los dos workflows la leen de ahí.'
+            exit 1
+          fi
+          echo "GODOT_VERSION=$version" >> "$GITHUB_ENV"
 
       - uses: actions/setup-python@v5
         with:
@@ -84,9 +99,9 @@ jobs:
           chmod +x "$bin"
           echo "GODOT_BIN=$bin" >> "$GITHUB_ENV"
 
-      # Las templates SÍ se cachean —al revés que el motor, que son 78 MB— y la clave lleva la
-      # versión adentro: sin eso, un bump de motor restauraría las templates viejas y el export
-      # fallaría con un mensaje sobre plantillas que nadie va a atar al bump.
+      # Las templates SÍ se cachean —al revés que el motor, que se baja en cada corrida— y la
+      # clave lleva la versión adentro: sin eso, un bump de motor restauraría las templates
+      # viejas y el export fallaría con un mensaje sobre plantillas que nadie ata al bump.
       - name: Caché de las export templates
         id: templates
         uses: actions/cache@v4
@@ -104,9 +119,14 @@ jobs:
           base="https://github.com/godotengine/godot/releases/download"
           curl -fsSL -o templates.tpz \
             "$base/${GODOT_VERSION}/Godot_v${GODOT_VERSION}_export_templates.tpz"
+          unzip -q templates.tpz -d templates
+          # El directorio se crea DESPUÉS de descomprimir, y no antes. `actions/cache` guarda en
+          # su paso `post` aunque el job haya fallado, así que un `mkdir` adelantado más un
+          # `curl` o un `unzip` que fallan dejan cacheado un directorio vacío bajo la clave de
+          # esta versión: de ahí en adelante todas las corridas dan `cache-hit`, saltean esta
+          # descarga y el export muere diciendo que faltan plantillas, para siempre.
           destino="$HOME/.local/share/godot/export_templates/${GODOT_VERSION/-/.}"
           mkdir -p "$destino"
-          unzip -q templates.tpz -d templates
           mv templates/templates/* "$destino/"
 
       # Igual que en `verify.yml`: sin importar primero, el export hace las dos cosas a la vez y
@@ -142,6 +162,14 @@ jobs:
           cp vercel.json export/web/
           npm install --global vercel@latest
           url="$(vercel deploy export/web --prod --yes --token "$VERCEL_TOKEN")"
+          # El encabezado de este archivo ya lo dice de la CLI: puede terminar sin desplegar y
+          # salir 0. Sin este `-z`, el `url` vacío se propaga al paso siguiente y lo que se lee
+          # es un `ValueError` de `urllib` sobre una ruta sin esquema — que falla, pero por el
+          # motivo equivocado y sin nombrar al deploy.
+          if [ -z "$url" ]; then
+            echo '::error::la CLI de Vercel salió 0 sin imprimir una URL: no hay publicación que verificar.'
+            exit 1
+          fi
           echo "url=$url" >> "$GITHUB_OUTPUT"
           echo "publicado en $url"
 

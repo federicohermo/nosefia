@@ -4,9 +4,9 @@
 //
 // Es el único paso de todo el despliegue que mira lo que ve una persona. Todo lo de más
 // arriba —que el export dejó los archivos, que la URL contesta 200 con los dos headers— puede
-// estar en verde con la pantalla en negro: el `index.js` que genera Godot nombra
-// `SharedArrayBuffer` 15 veces y aborta al arrancar si el aislamiento no está, y eso pasa
-// DESPUÉS de que el HTML cargó. HTTP no lo puede ver.
+// estar en verde con la pantalla en negro: el `index.js` que genera Godot se apoya en
+// `SharedArrayBuffer` y aborta al arrancar si el aislamiento no está, y eso pasa DESPUÉS de
+// que el HTML cargó. HTTP no lo puede ver.
 //
 // ## Los tres testigos, y por qué hacen falta los tres
 //

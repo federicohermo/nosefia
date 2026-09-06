@@ -6,10 +6,11 @@ modo de falla que importa no se puede fabricar así.
 
 ## Los tres modos de falla que cierra, y por qué ninguno da rojo solo
 
-1. **El par preset↔headers.** El `index.js` que genera Godot nombra `SharedArrayBuffer` 15
-   veces y aborta si el servidor no manda los dos headers de aislamiento: el deploy contesta
-   200, el HTML carga, y el juego no arranca. Apagar los hilos sin sacar los headers —o al
-   revés— es un cambio de una línea, y las dos mitades del par viven en archivos distintos.
+1. **El par preset↔headers.** El `index.js` que genera Godot se apoya en `SharedArrayBuffer`
+   —cuántas veces lo nombra está medido en `docs/infra/despliegue.md`— y aborta si el servidor
+   no manda los dos headers de aislamiento: el deploy contesta 200, el HTML carga, y el juego
+   no arranca. Apagar los hilos sin sacar los headers —o al revés— es un cambio de una línea, y
+   las dos mitades del par viven en archivos distintos.
 2. **El código de salida del export miente.** Medido: `--export-release "Web"` termina con
    `Program crashed with signal 11` y devuelve **0**. Un `$?` no distingue «exportó» de «murió
    a mitad», así que el veredicto es la lista de archivos y su tamaño.

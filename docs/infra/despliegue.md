@@ -79,6 +79,11 @@ bytes, medidos el 2026-09-06) contra un build cache de **1 GB**: no entran, así
 enteras en *cada* deploy, para siempre. El caché de Actions es de 10 GB por repositorio. Vercel
 recibe un directorio ya construido.
 
+**Los tres tamaños de este párrafo viven acá y en ningún otro lado**: los encabezados de
+`verify.yml` y de `desplegar.yml` apuntan a este documento en vez de re-tipearlos. El de las
+templates se mueve con cada bump de `.godot-version`, y escrito en tres archivos envejece en dos
+sin que nadie los cruce.
+
 ## Rehacerlo a mano
 
 Cuando hay que publicar sin pasar por Actions —o reproducir un fallo del workflow—, es esto,
