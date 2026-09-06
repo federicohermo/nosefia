@@ -94,12 +94,13 @@ protegidas, a propósito. Este skill no necesita rama de feature ni la abre.
   estar. Sin esto los agentes revisan un directorio vacío y **no falla**: revisan un spec que no
   leyeron, y reportan igual.
 
-  **Y hay un segundo motivo, que es el que muerde al cerrar.** El Paso 5 sube las ediciones con
-  `publicar_spec.py publicar`, y esa fase **recorre todas las carpetas que haya en disco**, no
-  las del lote: sobreescribe el issue de cada una con lo que el disco diga. Una carpeta vieja que
-  quedó de otra corrida se sube encima de un issue que ya era más nuevo, y se lleva puesto lo que
-  el issue tenía. Con el árbol hidratado antes de empezar, esas carpetas son idénticas al issue y
-  subirlas es un no-op.
+  **El segundo motivo dejó de existir, y conviene saber por qué.** `publicar_spec.py publicar`
+  **recorría todas las carpetas que hubiera en disco**, no las del lote, así que una carpeta vieja
+  de otra corrida se subía encima de un issue más nuevo y se llevaba puesto lo que tenía; el
+  seguro era hidratar todo antes, para que esas subidas fueran un no-op. Desde el spec 030 la fase
+  **acepta los `NNN`**: `publicar_spec.py publicar 007 008` opera sobre esos dos y sobre ningún
+  otro. **El Paso 5 los pasa**, y la hidratación de arriba vuelve a tener un solo motivo — el de
+  leer lo que se revisa.
 - **Buscar adentro de los specs necesita `--no-ignore`.** `Grep` es ripgrep y respeta el
   `.gitignore`, así que contesta **cero sin decir que no miró** — que es la peor respuesta
   posible. Va en el preámbulo del Paso 1, literal, porque cada agente lo va a necesitar:
