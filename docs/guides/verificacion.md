@@ -53,6 +53,7 @@ Hoy se saltean tres cosas, y cada una tiene su condición de vencimiento:
 | El gate del mapa contra GitHub | no haya `gh` con sesión, o el mapa esté vacío | se publique el primer spec |
 | El gate de convención de specs | no haya specs en vuelo hidratados en disco | `hidratar_specs.py` |
 | El ancla de criterios | la rama no nombre un spec, o no se pueda leer su `spec.md` | se trabaje en una rama de spec |
+| El cruce de rutas del plan | la rama no nombre un spec, no se pueda leer su `plan.md`, o el plan no declare ninguna ruta | ese plan declare una |
 
 ## El veredicto sale del código de salida
 

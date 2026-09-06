@@ -24,6 +24,10 @@ Los archivos y directorios que este spec **no escribe**, uno por viñeta y entre
 una lista **negativa y cerrada**: no predice qué vas a tocar, prohíbe lo que no. Por eso no
 hereda la medición que mató al `tasks.md`.
 
+**Y se cruza contra la rama**: `test_rutas_del_plan.py` da rojo si tocás uno de éstos, con el PR
+todavía abierto. Tres formas — `src/` es un directorio, `src/dominio/reglas.gd` es esa ruta
+exacta, y `reglas.gd` es ese nombre en cualquier carpeta.
+
 - `src/dominio/reglas.gd` — es del spec NNN.
 - `src/escenas/almacen.tscn` — un `.tscn` no se mergea.
 

@@ -32,95 +32,16 @@ disco ni por `gh`— y si no hay `specs/mapa.json`. Los tres son estados normale
 normal es un gate que no pudo mirar y sale igual que uno que miró.
 """
 
-import functools
-import json
-import os
-import subprocess
 import unittest
 
-from lib.repo import RAIZ, REPO
-from lib.specs import RAMA_DE_SPEC, acs_de, acs_sin_test, leer_mapa
-
-SPECS = RAIZ / "specs"
+from lib.rama import archivo_del_spec, rama_actual, spec_de_la_rama
+from lib.repo import RAIZ
+from lib.specs import acs_de, acs_sin_test
 
 #: Dónde se busca la cita. Son dos árboles porque este repo tiene dos suites: la de gdUnit4
-#: sobre el juego y la de unittest sobre el harness, y un spec puede caer entero de cualquiera
-#: de los dos lados.
+#: sobre el juego y la de unittest sobre el harness, y un spec puede caer entero de
+#: cualquiera de los dos lados.
 ARBOLES_DE_TEST = (RAIZ / "test", RAIZ / ".claude" / "scripts" / "tests")
-
-
-def rama_actual() -> str | None:
-    """El nombre de la rama, con el caso del PR de la Action resuelto primero.
-
-    **En un `pull_request` de GitHub Actions, `HEAD` no es la rama**: es el merge de prueba, y
-    `git rev-parse --abbrev-ref HEAD` contesta `HEAD` pelado. Sin `GITHUB_HEAD_REF`, este gate
-    se saltearía siempre y justo en el único lugar donde tiene que correr.
-    """
-    del_entorno = os.environ.get("GITHUB_HEAD_REF")
-    if del_entorno:
-        return del_entorno
-    try:
-        salida = subprocess.run(
-            ["git", "rev-parse", "--abbrev-ref", "HEAD"],
-            cwd=RAIZ, capture_output=True, text=True, timeout=10, check=True,
-        )
-    except (OSError, subprocess.SubprocessError):
-        return None
-    return salida.stdout.strip()
-
-
-@functools.lru_cache(maxsize=1)
-def spec_de_la_rama() -> str | None:
-    """El `NNN` que nombra la rama, o `None`.
-
-    El patrón deja el prefijo abierto —`feature/`, pero también `fix/` o `chore/`— y vive en
-    `lib/specs.py` porque lo comparten el derivador del mapa y este gate. Dos copias que se
-    separen dan dos herramientas que no coinciden en de qué spec es una rama.
-    """
-    rama = rama_actual()
-    if rama is None:
-        return None
-    m = RAMA_DE_SPEC.match(rama)
-    return m.group(1) if m else None
-
-
-@functools.lru_cache(maxsize=1)
-def spec_md() -> tuple[str, str] | None:
-    """El `spec.md` del spec de la rama y de dónde salió, o `None` si no se pudo leer.
-
-    **El disco primero y la red después**, y no al revés: el `spec.md` local puede tener
-    ediciones que todavía no se publicaron, y son las que el PR está implementando. Preguntarle
-    a GitHub primero haría que este gate juzgara una versión anterior del spec.
-    """
-    numero = spec_de_la_rama()
-    if numero is None:
-        return None
-
-    for carpeta in sorted(SPECS.glob(f"{numero}-*")):
-        archivo = carpeta / "spec.md"
-        if archivo.is_file():
-            return archivo.read_text(encoding="utf-8"), f"{carpeta.name}/spec.md"
-
-    try:
-        mapa = leer_mapa((SPECS / "mapa.json").read_text(encoding="utf-8"))
-    except (OSError, ValueError):
-        return None
-    fila = mapa.get(numero)
-    if fila is None:
-        return None
-
-    # `subprocess` pelado y no el `gh` de `lib/`: ése muere con un mensaje cuando no hay `gh`
-    # ni sesión, y acá eso no es un error sino un salteo que se declara.
-    try:
-        salida = subprocess.run(
-            ["gh", "issue", "view", str(fila["issue"]), "--repo", REPO, "--json", "body"],
-            capture_output=True, text=True, encoding="utf-8", timeout=60,
-        )
-    except (OSError, subprocess.SubprocessError):
-        return None
-    if salida.returncode != 0:
-        return None
-    return json.loads(salida.stdout)["body"], f"el issue #{fila['issue']}"
 
 
 def textos_de_test() -> list[str]:
@@ -141,7 +62,7 @@ class CriteriosDeLaRama(unittest.TestCase):
                 f"la rama `{rama_actual()}` no nombra un spec: este gate NO miró nada. "
                 "Corre sobre una rama `<prefijo>/<NNN>-<kebab>`."
             )
-        leido = spec_md()
+        leido = archivo_del_spec(self.numero, "spec.md")
         if leido is None:
             self.skipTest(
                 f"no se pudo leer el spec.md del {self.numero}: no está hidratado y `gh` no "

@@ -97,7 +97,9 @@ después. Qué va en cada una está en la plantilla; acá va sólo por qué.
 `spec-implement` leía la primera **por nombre**. Una sección de la que depende un skill y que se
 cumple por costumbre dura hasta el primer apuro.
 
-**La partición es por lo que se puede verificar.** Las rutas son una lista **negativa y cerrada**,
+**La partición es por lo que se puede verificar, y las rutas se verifican**: si la rama del spec
+toca un archivo que su propio plan declaró intocable, `test_rutas_del_plan.py` da rojo con el PR
+todavía abierto. Las rutas son una lista **negativa y cerrada**,
 y ahí está la diferencia con el `tasks.md`: aquél predecía qué se **va** a tocar, y una
 prohibición no se equivoca por omisión. Las invariantes son prosa declarada como prosa. Sale del
 task-brief de ITBAF y de la Tabla I de Koch, *Agentic Agile-V*

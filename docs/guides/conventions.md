@@ -18,6 +18,7 @@ Esta tabla es lo más útil del documento: dice de qué reglas hay que acordarse
 | El registro de specs contra GitHub | `tests/test_mapa.py` |
 | El formato de un spec y sus cuatro techos | `tests/test_convencion_de_specs.py` |
 | Cada criterio del spec de la rama, citado por un test | `tests/test_criterios_de_la_rama.py` |
+| Que la rama no toque lo que su plan declaró intocable | `tests/test_rutas_del_plan.py` |
 | No editar `src/` sin spec | el hook de `.claude/settings.json` |
 | **Tipado estático en toda firma** | **nadie: prosa** |
 | **Comentarios que expliquen el porqué** | **nadie: prosa** |
