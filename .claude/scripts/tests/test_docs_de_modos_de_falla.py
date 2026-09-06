@@ -17,6 +17,7 @@ el portapapeles, y «Problemas con el entorno de Windows» no matchea con nada d
 import json
 import re
 import unittest
+from pathlib import Path
 
 from lib.repo import RAIZ
 
@@ -34,8 +35,12 @@ CONSEJO_VIEJO = "Después hay que abrir una terminal nueva."
 #: cinco: el techo no es una preferencia, es no dejarla crecer a prosa.
 LINEAS_POR_TRAMPA = 6
 
+#: Cómo puede decir el doc que la lista del matcher no admite nada más. Acepta «la lista **es**
+#: cerrada» porque es como está escrito, y el `\s+` sale de que `plano()` ya aplanó los saltos.
+CERRADA = r"(?:lista|conjunto)\s+(?:es\s+)?cerrad[ao]"
 
-def _texto(archivo) -> str:
+
+def _texto(archivo: Path) -> str:
     return archivo.read_text(encoding="utf-8")
 
 
@@ -58,10 +63,19 @@ def encabezados(texto: str) -> list[str]:
 
 
 def herramientas_del_matcher() -> list[str]:
-    """Las herramientas que el hook mira, leídas del `settings.json` que las declara."""
+    """Las herramientas que el hook mira, leídas del `settings.json` que las declara.
+
+    Recorre **todas** las entradas de `PreToolUse` y no la primera: quedarse con la `[0]` es
+    justo el agujero que este gate viene a tapar, porque una herramienta agregada en un segundo
+    bloque saldría verde sin estar en el doc, que es indistinguible de estar contada.
+    """
     config = json.loads(_texto(SETTINGS))
-    matcher = config["hooks"]["PreToolUse"][0]["matcher"]
-    return matcher.split("|")
+    herramientas: list[str] = []
+    for entrada in config["hooks"]["PreToolUse"]:
+        for herramienta in entrada["matcher"].split("|"):
+            if herramienta not in herramientas:
+                herramientas.append(herramienta)
+    return herramientas
 
 
 def items_de_la_seccion(texto: str, titulo: str) -> list[list[str]]:
@@ -95,7 +109,9 @@ class ModosDeFallaDocumentados(unittest.TestCase):
         )
         # En minúsculas porque el doc grita el «NO alcanza», que es el punto de la corrección.
         for palabra in ("no alcanza", "host", "cerrar sesión"):
-            self.assertIn(palabra, plano(texto).lower(), f"el consejo correcto no dice «{palabra}»")
+            self.assertIn(
+                palabra, plano(texto).lower(), f"el consejo correcto no dice «{palabra}»"
+            )
 
     def test_el_arbol_nombra_a_powershell_como_herramienta_del_gate(self):  # 003-AC3
         # El otro hallazgo de `PowerShell` en `docs/` es el shell donde se declara una variable,
@@ -116,11 +132,15 @@ class ModosDeFallaDocumentados(unittest.TestCase):
                 f"el hook mira `{herramienta}` y el doc no lo dice: la lista es cerrada, y una "
                 "lista cerrada que no está completa se lee como si lo estuviera.",
             )
-        self.assertRegex(
-            plano(texto),
-            r"lista cerrada|conjunto cerrado",
-            "el doc no dice que la lista sea cerrada, que es la mitad del dato: lo que no está "
-            "declarado no lo mira nadie.",
+        # Y la cerradura se busca **en el párrafo del matcher**, no en el documento entero: el
+        # árbol ya decía «un conjunto cerrado de nombres» de `CARPETAS_POR_CAPA` desde antes de
+        # este spec, así que un `assertRegex` sobre todo el texto pasaba con la sección del
+        # matcher ausente. Un gate que no puede fallar es un gate apagado que parece encendido.
+        cerrada = [p for p in parrafos(texto) if "matcher" in p and re.search(CERRADA, p)]
+        self.assertTrue(
+            cerrada,
+            "el párrafo del matcher no dice que la lista sea cerrada, que es la mitad del dato: "
+            "lo que no está declarado no lo mira nadie.",
         )
 
     def test_cada_trampa_de_claude_md_sigue_siendo_una_sola(self):  # 003-AC5
@@ -180,8 +200,8 @@ class ModosDeFallaDocumentados(unittest.TestCase):
 
 # 003-AC6 — `verificar.py` en verde: ningún nodo mira `docs/`, así que lo único que verifica es
 # que el cambio no rompió otra cosa. Se corre, no se testea desde acá.
-# 003-AC7 — los dos `Closes` del PR —el del issue de este spec y el `#2` del origen— se verifican
-# leyendo el cuerpo del PR abierto: no hay nada en el árbol que los contenga.
+# 003-AC7 — los dos `Closes` del PR —el del issue de este spec y el `#2` del origen— se
+# verifican leyendo el cuerpo del PR abierto: no hay nada en el árbol que los contenga.
 
 if __name__ == "__main__":
     unittest.main()

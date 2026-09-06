@@ -40,9 +40,9 @@ Lo que hay que saber antes de abrir
 - **`verificar.py` es el nodo de convergencia**, y es lo que se corre antes de un PR:
   `lint ‖ formato ‖ capas ‖ tdd ‖ harness ‖ tests`. **La CI corre este script**, no la lista de
   nodos: enumerarlos allá sería un segundo lugar donde vive la lista.
-- **Un nodo `salteado` NO es un nodo verde.** Cada salteo dice qué no miró. Si `tests` se
-  saltea por falta de `GODOT_BIN` —en Windows el `_console.exe`, y **fuera de OneDrive**—, la
-  suite no corrió.
+- **Un nodo `salteado` NO es un nodo verde.** Cada salteo dice qué no miró, y vence: `tests` se
+  saltea mientras no haya un solo `*_test.gd`, y con el primero **la falta de `GODOT_BIN` pasa a
+  ser un rojo, no un salteo** —en Windows, el `_console.exe` y **fuera de OneDrive**—.
 - **`gdformat` decide el formato.** No se discute en una revisión.
 - **El veredicto sale del código de salida, nunca de un grep de la salida.** Un `| grep` que no
   matchea devuelve 1 y se traga la salida entera.
