@@ -123,17 +123,20 @@ actualizado. Lo que en un repo de Godot decide si el spec es implementable:
    spec 011, que decía `Ritmo.FACTOR` cuando la constante es
    `Ritmo.SEGUNDOS_DE_TURNO_POR_SEGUNDO_REAL`.
 4. **¿Los archivos del spec dicen el mismo número?** El `spec.md`, el `research.md` y el
-   `estrategia.md` se escriben en momentos distintos, y una contradicción entre ellos no la caza
+   `plan.md` se escriben en momentos distintos, y una contradicción entre ellos no la caza
    ningún gate. **Se cierra contra la fuente de verdad —`src/dominio/`—, no por mayoría entre los
    archivos.** Medido el 2026-09-01 en el spec 022: su `spec.md` decía «dos jornadas graves», su
-   `plan.md` y su T001 decían «tres».
+   `plan.md` decía «tres».
 5. **¿El spec toca una escena que otro spec vivo también toca?** Un `.tscn` no se mergea: un merge
    de tres vías sobre una escena produce una escena rota, no un conflicto. Dos specs sobre la
-   misma escena se ordenan en el `estrategia.md`, no se paralelizan.
-6. **¿El spec sigue entrando en los techos?** Un spec ≥ 030 tiene cuatro: 350 palabras de prosa en
-   el `spec.md`, 300 en el bloque de criterios entero, 500 en el `research.md`, 250 en el
-   `estrategia.md`. Agregar sin sacar es la forma en que el formato viejo vuelve, y acá el gate lo
-   cobra.
+   misma escena se ordenan en el `plan.md`, no se paralelizan.
+6. **¿El spec sigue entrando en los techos?** Son cuatro: 350 palabras de prosa en el `spec.md`,
+   300 en el bloque de criterios entero, 500 en el `research.md`, 250 en el `plan.md` **sin
+   contar sus encabezados**. Agregar sin sacar es la forma en que el formato viejo vuelve, y acá
+   el gate lo cobra.
+7. **¿Lo que agregaste al `plan.md` cayó en el rubro que le toca?** `### Rutas` es sólo lo que el
+   spec **no escribe**; un archivo que ahora se cita como fuente va a `### Invariantes`. Poner
+   una fuente entre las rutas da rojo sobre un PR correcto.
 
 ## Las convenciones que un spec viola por escrito
 

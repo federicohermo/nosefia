@@ -33,6 +33,17 @@ RAMAS_COMPARTIDAS = ("main", RAMA_DE_INTEGRACION)
 
 #: Lo que el gate de spec protege: nada se edita acá sin un spec detrás de la rama.
 #:
+#: **Es `src/` y nada más**, y `docs/` salió el 2026-09-05. La regla se contradecía sola: el
+#: propio mensaje del gate ofrece una salida para el cambio que no necesita spec —«la rama
+#: igual no puede ser main ni staging»— que el código no tenía, porque toda rama que no
+#: matchea `feature/<NNN>-` bloquea igual. O sea que corregir una línea de documentación
+#: pedía abrir un spec, y lo que eso produce no es más specs: es documentación que nadie
+#: corrige.
+#:
+#: Lo que queda protegido es donde viven las reglas del juego, que es donde un cambio sin
+#: spec nace sin test y sin criterio de aceptación. Un `.md` desactualizado se lee y se
+#: arregla; una regla del dominio que entró de contrabando no se ve.
+#:
 #: `specs/` y `.claude/` quedan afuera **a propósito**: son adonde el flujo te manda a
 #: escribir primero, y `.claude/` es además donde vive el gate. Un gate que se impide
 #: arreglarse a sí mismo se termina borrando en vez de corrigiéndose.
@@ -40,7 +51,7 @@ RAMAS_COMPARTIDAS = ("main", RAMA_DE_INTEGRACION)
 #: `project.godot`, `addons/` y los configs tampoco: el gate no puede impedir habilitar un
 #: plugin o tocar una configuración del editor, y pretenderlo lo volvería molesto sin
 #: volverlo útil.
-PROTEGIDAS = ("src", "docs")
+PROTEGIDAS = ("src",)
 
 #: Las capas de `src/`, de la más pura a la más acoplada al motor, y **qué puede importar
 #: cada una**.

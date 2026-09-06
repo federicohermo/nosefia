@@ -76,13 +76,15 @@ El formato no se discute en una revisión: lo decide la herramienta.
 
 ## Empezar un cambio
 
-**No se edita `src/` ni `docs/` sin un spec detrás de la rama** — y no es una recomendación:
-lo bloquea un hook antes de que se escriba la primera línea.
+**No se edita `src/` sin un spec detrás de la rama** — y no es una recomendación: lo
+bloquea un hook antes de que se escriba la primera línea. `docs/` estuvo protegido hasta el
+2026-09-05 y dejó de estarlo: pedir un spec para corregir una línea de documentación no
+produce más specs, produce documentación que nadie corrige.
 
 El camino entero está en el skill `/spec-create`, y en corto es:
 
 ```bash
-# 1. medir, escribir specs/<NNN>-<kebab>/{spec,research,estrategia}.md
+# 1. medir, escribir specs/<NNN>-<kebab>/{spec,research,plan}.md
 python .claude/scripts/publicar_spec.py crear
 python .claude/scripts/publicar_spec.py publicar
 git add specs/mapa.json && git commit && git push origin staging
@@ -91,17 +93,21 @@ git add specs/mapa.json && git commit && git push origin staging
 git checkout -b feature/<NNN>-<kebab>
 ```
 
-Si el gate te frenó, el mensaje dice cuál de los tres casos es y cómo salir. **No lo saltees**:
-si de verdad el cambio no necesita spec —un typo, un asset, revertir el commit anterior— la
-rama igual no puede ser `main` ni `staging`.
+Si el gate te frenó, el mensaje dice cuál de los tres casos es y cómo salir. **No lo
+saltees**: si de verdad el cambio no necesita spec —un typo, un asset, revertir el commit
+anterior— la rama igual no puede ser `main` ni `staging`.
 
 ## Traer un spec para leerlo
 
 Los specs no viven en el repo: cada uno es un issue.
 
 ```bash
-python .claude/scripts/hidratar_specs.py 007
+python .claude/scripts/hidratar_specs.py       # los que están en vuelo y falten
+python .claude/scripts/hidratar_specs.py 007   # o uno solo, esté como esté
 ```
+
+Los cerrados **no se traen en lote**: son ADR, y se piden por número cuando hace falta
+consultarlos.
 
 Y para buscar adentro de ellos, `rg --no-ignore`: están en el `.gitignore`, así que una
 búsqueda normal contesta cero **sin decir que no miró**.
