@@ -18,9 +18,10 @@ para argumentar —el que estrenó este gate nacería rojo sobre sí mismo— y 
 porque ahí los nombres **son** los directorios.
 
 Y los nombres salen de listar ese directorio, nunca de una constante escrita: un gate contra
-enumeraciones que enumera es el mismo defecto adentro del arreglo. El anteúltimo test es el que
-cobra esa regla — todo nombre que figure escrito en este archivo cae adentro de
-`LINEAS_DE_PRUEBA`, que son fixtures y no una lista de la que el gate dependa.
+enumeraciones que enumera es el mismo defecto adentro del arreglo. Lo cobra
+`test_los_nombres_solo_figuran_en_las_lineas_de_prueba` —nombrado, y no ubicado por posición,
+que es lo que se corre al agregar un caso—: todo nombre que figure escrito en este archivo cae
+adentro de `LINEAS_DE_PRUEBA`, que son fixtures y no una lista de la que el gate dependa.
 """
 
 import re
@@ -91,6 +92,26 @@ def nombres_en(linea: str, nombres: tuple[str, ...]) -> set[str]:
     return {n for n in nombres if re.search(rf"(?<![\w-]){re.escape(n)}(?![\w-])", linea)}
 
 
+def hallazgos_en(doc: str, texto: str, nombres: tuple[str, ...]) -> list[str]:
+    """Las líneas que enumeran, con el mensaje que el gate imprime.
+
+    Está afuera del test que la usa a propósito: si el recorrido viviera adentro del caso que
+    afirma «no hay hallazgos», el único input con el que correría sería el árbol ya arreglado,
+    y un `>` en vez de un `>=` lo dejaría verde para siempre. Acá el caso del AC4 la corre
+    contra la enumeración que estrenó el gate y **ve el hallazgo salir**.
+    """
+    hallazgos: list[str] = []
+    for numero, linea in enumerate(texto.splitlines(), 1):
+        encontrados = nombres_en(linea, nombres)
+        if len(encontrados) >= UMBRAL:
+            hallazgos.append(
+                f"{doc}:{numero} nombra {len(encontrados)} skills "
+                f"({', '.join(sorted(encontrados))}): eso es una lista, y una lista "
+                "caduca la próxima vez que se agregue uno. Decí la regla."
+            )
+    return hallazgos
+
+
 def documentos() -> list[Path]:
     """Lo que el gate camina: `CLAUDE.md` y `docs/`. Nada más."""
     return [RAIZ / "CLAUDE.md", *sorted((RAIZ / "docs").rglob("*.md"))]
@@ -101,7 +122,12 @@ def _relativa(p: Path) -> str:
 
 
 def _lineas_fuera_de_los_fixtures(fuente: str) -> list[tuple[int, str]]:
-    """Las líneas del propio archivo que no son el bloque de fixtures."""
+    """Las líneas del propio archivo que no son el bloque de fixtures.
+
+    El cierre se verifica y no se supone: si el bloque no cerrara, todo lo de abajo quedaría sin
+    mirar y el caso del AC6 pasaría por no haber leído nada, que es exactamente el modo de falla
+    que este módulo persigue en los docs.
+    """
     afuera: list[tuple[int, str]] = []
     adentro = False
     for numero, linea in enumerate(fuente.splitlines(), 1):
@@ -109,29 +135,29 @@ def _lineas_fuera_de_los_fixtures(fuente: str) -> list[tuple[int, str]]:
             adentro = True
             continue
         if adentro:
-            adentro = linea != ")"
+            adentro = not linea.startswith(")")
             continue
         afuera.append((numero, linea))
+    if adentro:
+        raise ValueError("el bloque `LINEAS_DE_PRUEBA` no cierra: el barrido quedaría corto")
     return afuera
 
 
 class DocsNoEnumeranSkills(unittest.TestCase):
     def setUp(self):
         self.nombres = nombres_de_skill()
+        # Sin nombres no hay nada que contar y los ocho casos salen verdes sin haber mirado: el
+        # directorio que los provee tiene que estar, y tener algo adentro.
+        self.assertTrue(self.nombres, f"no hay ningún skill en {SKILLS}: el gate no mide nada")
 
     def test_ninguna_linea_de_los_docs_enumera_skills(self):
-        hallazgos = []
-        for doc in documentos():
-            for numero, linea in enumerate(
-                doc.read_text(encoding="utf-8").splitlines(), 1
-            ):
-                encontrados = nombres_en(linea, self.nombres)
-                if len(encontrados) >= UMBRAL:
-                    hallazgos.append(
-                        f"{_relativa(doc)}:{numero} nombra {len(encontrados)} skills "
-                        f"({', '.join(sorted(encontrados))}): eso es una lista, y una lista "
-                        "caduca la próxima vez que se agregue uno. Decí la regla."
-                    )
+        hallazgos = [
+            hallazgo
+            for doc in documentos()
+            for hallazgo in hallazgos_en(
+                _relativa(doc), doc.read_text(encoding="utf-8"), self.nombres
+            )
+        ]
         self.assertEqual(hallazgos, [], "\n".join(hallazgos))
 
     def test_el_arbol_de_directorios_no_nombra_ningun_skill(self):  # 010-AC1
@@ -152,7 +178,9 @@ class DocsNoEnumeranSkills(unittest.TestCase):
             for linea in ARBOL.read_text(encoding="utf-8").splitlines()
             if "skills/" in linea and "├──" in linea
         ]
-        self.assertEqual(len(lineas), 1, "la entrada `skills/` del árbol no está, o está dos veces")
+        self.assertEqual(
+            len(lineas), 1, "la entrada `skills/` del árbol no está, o está dos veces"
+        )
         entrada = lineas[0]
         self.assertIn("specs", entrada, f"la entrada no dice de qué es el flujo: {entrada}")
         self.assertIn("lote", entrada, f"la entrada no dice que cada uno tiene su lote: {entrada}")
@@ -178,6 +206,11 @@ class DocsNoEnumeranSkills(unittest.TestCase):
         linea, cuantos = LINEAS_DE_PRUEBA[0]
         self.assertEqual(len(nombres_en(linea, self.nombres)), cuantos)
         self.assertGreaterEqual(cuantos, UMBRAL)
+        # Y el recorrido entero, no sólo el conteo: contra un doc que la tiene, el gate tiene
+        # que **emitir** el hallazgo, con el archivo y la línea adentro del mensaje.
+        hallazgos = hallazgos_en("un-doc.md", f"una línea cualquiera\n{linea}\n", self.nombres)
+        self.assertEqual(len(hallazgos), 1, hallazgos)
+        self.assertIn("un-doc.md:2", hallazgos[0])
 
     def test_las_citas_legitimas_no_llegan_al_umbral(self):  # 010-AC5
         for linea, cuantos in LINEAS_DE_PRUEBA[1:]:
