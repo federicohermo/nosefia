@@ -1,6 +1,6 @@
 ---
 name: spec-implement-batch
-description: Implementa N specs de specs/ en paralelo —un carril por cadena de dependencias, cada uno en su worktree— delegando cada spec a spec-implement, y cierra con un PR por spec, verificar.py en verde y ninguna tarea sin marcar. Usar al implementar dos o más specs de una. Para uno solo, spec-implement.
+description: Implementa N specs de specs/ en paralelo —un carril por cadena de dependencias, cada uno en su worktree— delegando cada spec a spec-implement, y cierra con un PR por spec, verificar.py en verde y ningún criterio sin test que lo cite. Usar al implementar dos o más specs de una. Para uno solo, spec-implement.
 argument-hint: "<NNN NNN ...> | <NNN-MMM> | --propuestos [--dry] [--max N]"
 # Sin `allowed-tools`, igual que el resto de los skills de este repo: éste abanica agentes,
 # abre worktrees, corre el harness en Python y habla con GitHub por `gh`. Declarar una lista
@@ -231,7 +231,7 @@ Cada agente recibe, literal:
 
 ### La condición de terminado del carril — no se negocia
 
-> **Un carril termina con el PR abierto y sin una sola casilla sin marcar. No antes.**
+> **Un carril termina con el PR abierto y sin un solo criterio sin test que lo cite. No antes.**
 >
 > Por cada spec suyo: `verificar.py` en verde **sin nodos salteados**, todo lo que el spec
 > pide hecho, **el rastro devuelto al issue** con
@@ -247,23 +247,24 @@ Cada agente recibe, literal:
 > nada.
 
 **El padre lo verifica, no lo cree.** Cuando vuelva un carril, chequeá con `gh pr list --head
-<rama>` que cada spec suyo tenga PR, y que el **issue** no muestre trabajo abierto.
+<rama>` que cada spec suyo tenga PR, y que ningún criterio del spec haya quedado sin test que lo
+cite. Lo segundo **no se cuenta a mano**: es un gate, corre en la rama del carril y el rojo dice
+qué `NNN-ACn` falta.
 
-> **Y para eso NO alcanza con correr `hidratar_specs.py`: saltea la carpeta que ya existe.**
-> Contesta `NNN ya está (…)` y `hidratados: 0 de 1`, con **código 0**, así que el `grep` que
-> corras después mide **tu propia caché** —la que hidrataste al abrir el lote, antes de que el
-> carril marcara nada— y **no el issue**. El síntoma es el peor posible: un carril que hizo todo
-> bien se lee como incompleto, y el padre sale a «terminarlo» republicando cosas.
-> **Borrá la carpeta antes**, o leé el issue derecho:
->
-> ```bash
-> rm -rf specs/<NNN>-* && python .claude/scripts/hidratar_specs.py <NNN>
-> gh issue view <N> --json comments -q '.comments[].body' | grep -c '^- \[ \]'   # tiene que dar 0
-> ```
->
-> Medido el 2026-09-01 en el lote 024/025: el padre concluyó que las 80 casillas estaban abiertas
-> cuando en el issue estaban las 80 marcadas. Un reporte que dice «listo» sin PR es un carril incompleto: terminalo vos
-o relanzalo con lo que le faltó.
+```bash
+gh pr list --repo federicohermo/nosefia --head feature/<NNN>-<kebab> --json number,statusCheckRollup
+```
+
+> **Lo que NO sirve es leer el árbol de `specs/` del padre**, y está medido. `hidratar_specs.py`
+> saltea la carpeta que ya existe: contesta `NNN ya está (…)` y `hidratados: 0 de 1`, con
+> **código 0**, así que cualquier cosa que leas después mide **tu propia caché** —la que
+> hidrataste al abrir el lote, antes de que el carril tocara nada— y **no el issue**. El síntoma
+> es el peor posible: un carril que hizo todo bien se lee como incompleto, y el padre sale a
+> «terminarlo» republicando cosas. Medido el 2026-09-01 en el lote 024/025. Si necesitás el spec
+> al día: `rm -rf specs/<NNN>-* && python .claude/scripts/hidratar_specs.py <NNN>`.
+
+Un reporte que dice «listo» sin PR es un carril incompleto: terminalo vos o relanzalo con lo que
+le faltó.
 
 Esperá a que vuelvan todos antes del reporte.
 

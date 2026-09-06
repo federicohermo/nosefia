@@ -54,7 +54,7 @@ DESTERRADOS = ("tasks.md",)
 #: muerde la **cantidad**.
 #:
 #: Los números salen de medir el `spec.md` del 029, que es el modelo del formato: prosa 350,
-#: bloque de criterios 254, `research.md` 444, `plan.md` 233 —medido con `palabras()` el
+#: bloque de criterios 228, `research.md` 444, `plan.md` 233 —medido con `palabras()` el
 #: 2026-09-05—. O sea que están calibrados contra un documento que existe y entra, no elegidos
 #: de memoria. Que sigan siendo cumplibles ya no necesita un test aparte: hay specs reales en
 #: disco y `test_ningun_spec_pasa_un_techo_de_palabras` corre sobre todos ellos, así que bajar

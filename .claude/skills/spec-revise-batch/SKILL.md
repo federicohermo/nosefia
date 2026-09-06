@@ -159,7 +159,8 @@ pasáselo a cada agente, o el lote devuelve una avalancha de citas rotas falsas.
    decís.
 3. **La marca que sí es una conclusión es `<- ESCENA COMPARTIDA`.** Para todo lo demás, compartir
    un archivo dice *dónde mirar*; para un `.tscn` dice *qué hacer*: se ordena, no se paraleliza.
-   Un `[P]` entre dos tareas que tocan la misma escena es bloqueante en los dos specs.
+   Un paralelo que el `## Orden obligado` no prohíba entre dos specs que tocan la misma escena
+   es bloqueante en los dos.
 4. **La matriz sale de un archivo por spec y de ningún otro** —el `plan.md`—, así que **un
    archivo que un spec edita sin nombrarlo ahí es invisible acá**. El
    caso está medido: en el lote 004–010, el 2026-08-30, `src/escenas/almacen.gd` lo escriben el
@@ -205,8 +206,8 @@ vive justo en el detalle que ningún reporte comprimido menciona.
   escritos. No espera a que los reviews terminen, así que no cuesta reloj.
 - **Es uno solo, y no se reparte por clase de cruce.** Lo único que lo hace funcionar es que hay
   una sola cabeza con los N specs enteros adelante; partirlo re-fragmenta exactamente eso.
-- **Lee los specs crudos**, los N enteros —los tres o cuatro archivos, según el régimen—, más
-  la matriz de arriba y el orden derivado en el Paso 2.
+- **Lee los specs crudos**, los N enteros —los tres archivos—, más la matriz de arriba y el
+  orden derivado en el Paso 2.
 - **No edita nada, ni siquiera dentro de una carpeta.** Cada hallazgo suyo abarca dos specs o
   más, y esas carpetas las están escribiendo los agentes de spec en este momento.
 - **Su brief son las nueve clases de [`cruces.md`](./cruces.md)**, y las recorre todas: devuelve
@@ -238,14 +239,13 @@ Uno por spec, cada uno con el preámbulo del Paso 1 y su base del Paso 2. Los se
 - **Criterios de aceptación** — cada uno **falsable**: «el HUD muestra el tiempo» no lo es; «con
   3 minutos restantes, `tiempo_restante()` devuelve 180.0» sí. Si un AC no se puede ver fallar,
   no verifica nada. Más el AC mecánico y el de no-regresión si hubo superficie compartida.
-- **Estructura** — los cuatro archivos, los `T0NN` sin renumerar —renumerar rompe toda referencia
-  que otra tarea le hiciera—, `[P]` que no miente, ninguna tarea que se cierre **mirando o
-  escuchando**, **ninguna sección que aplace** (`## Seguimiento` y sus alias) y **ninguna tarea
-  que aplace** (`TODO`, «por ahora», «más adelante»). Lo verifica `test_convencion_de_specs.py`.
-  **Una tarea nueva va con el número libre siguiente y se escribe donde corre**, porque el ID
-  no es el orden. El sufijo de letra —`T001a`— **es rojo**: el gate exige tres dígitos exactos
-  (`TAREA = ^- \[[ x]\] (T\d{3})( \[P\])? \S`). Medido en el lote 001–002 el 2026-08-30, donde
-  los dos agentes lo pisaron el mismo día.
+- **Estructura** — los tres archivos, los cuatro techos de palabras, ningún criterio que se
+  cierre **mirando o escuchando**, **ninguna sección que aplace** (`## Seguimiento` y sus alias)
+  y **ningún criterio que aplace** (`TODO`, «por ahora», «más adelante»). Lo verifica
+  `test_convencion_de_specs.py`. **No hay IDs de tarea ni `[P]`**: se fueron con el `tasks.md`, y
+  lo que el `plan.md` declara es el orden obligado, en prosa. Un `ACn` nuevo va con el número
+  libre siguiente y **no se renumera nada**: el número lo cita el test que lo verifica, así que
+  reusarlo o correrlo rompe la cita que el gate de la rama lee.
 - **Completitud** — la pregunta que ningún gate contesta: **¿las tareas que hay alcanzan para
   cumplir los AC?** Una tarea faltante no rompe nada, no aparece en ningún diff y no se hace
   nunca. Si falta, se escribe acá.
@@ -336,7 +336,7 @@ En este orden, y el segundo es el que se saltea:
 
 1. **Las ediciones fuera-de-carpeta**, una por hallazgo y en serie, para que el diff se lea. Y
    **los specs nuevos** que salieron de los cruces que exceden al lote: se escriben acá, con sus
-   cuatro archivos, y entran a la corrida de `crear` del punto 3. **Ninguno queda como issue
+   tres archivos, y entran a la corrida de `crear` del punto 3. **Ninguno queda como issue
    suelto** — ver [`sin-deuda.md`](sin-deuda.md).
 2. **Devolvé las ediciones a los issues. No es opcional y no lo hace nadie más:**
 

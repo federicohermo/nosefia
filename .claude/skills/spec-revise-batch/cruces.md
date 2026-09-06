@@ -65,8 +65,9 @@ Por eso `lote.py` la marca aparte —`<- ESCENA COMPARTIDA`— en vez de dejarla
 
 - **Se detecta** en la matriz del Paso 2, sin leer nada más.
 - **No se edita: se ordena.** Los dos specs se declaran en cadena —cuál va primero y por qué— y
-  el orden va al reporte, que es lo que lee quien reparta el lote. Un `[P]` entre dos tareas que
-  tocan la misma escena es un hallazgo bloqueante en los dos specs.
+  el orden va al reporte, que es lo que lee quien reparta el lote. Un paralelo que el
+  `## Orden obligado` no prohíba entre dos specs que tocan la misma escena es un hallazgo
+  bloqueante en los dos.
 
 ## 3 · Un número del balance que dos specs mueven
 

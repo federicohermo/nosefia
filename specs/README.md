@@ -129,7 +129,7 @@ un límite por criterio, un spec cumple escribiendo veinte criterios cortos — 
 con carpeta nueva. Sobre el bloque, el límite muerde la **cantidad**.
 
 Los cuatro números salen de medir el spec 029, que es el modelo del formato aunque él mismo
-esté escrito en el viejo: prosa 350, criterios 254, research 444, plan 233. Que sigan siendo
+esté escrito en el viejo: prosa 350, criterios 228, research 444, plan 233. Que sigan siendo
 cumplibles no necesita un test aparte — hay specs reales en disco y el techo corre sobre todos
 ellos, así que bajar uno a un número que nadie puede cumplir da rojo ahí mismo.
 

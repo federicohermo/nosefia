@@ -1,6 +1,6 @@
 ---
 name: spec-implement
-description: Especialización de /spec-implement para No se fía (Godot). El paralelismo viene declarado por tarea con [P], el TDD es obligatorio y verificado, y el nodo de convergencia es verificar.py. Se lee junto con el skill global.
+description: Especialización de /spec-implement para No se fía (Godot). El paralelismo lo declara en prosa el `## Orden obligado` del plan.md, el TDD es obligatorio y verificado, y el nodo de convergencia es verificar.py. Se lee junto con el skill global.
 ---
 
 # spec-implement — No se fía
