@@ -53,6 +53,42 @@ _STRINGS = re.compile(r'"""[\s\S]*?"""|\'\'\'[\s\S]*?\'\'\'|"(?:[^"\\\n]|\\.)*"|
 #: Un comentario de GDScript: `#` hasta el fin de línea. `##` (documentación) entra igual.
 _COMENTARIOS = re.compile(r"#[^\n]*")
 
+#: Lo que la capa pura puede extender, y **es una lista BLANCA a propósito**.
+#:
+#: La alternativa —enumerar los descendientes de `Node`— nace incompleta: la jerarquía del motor
+#: tiene cientos de clases y crece con cada versión menor, así que el primer
+#: `extends CharacterBody3D` pasaría en verde. Y un gate que falla dando verde es peor que no
+#: tenerlo: se lo cita como cobertura.
+#:
+#: La tercera entrada no figura acá porque no es fija: un `class_name` que declara la propia capa
+#: pura, y sale del índice que `indice_de_class_names()` ya construye.
+_EXTENDS_PUROS = frozenset({"RefCounted", "Resource"})
+
+#: `extends Algo` por nombre de clase. El `extends "res://…"` no entra ni tiene que entrar: eso
+#: es una referencia entre archivos y la mira `violaciones()`.
+_EXTENDS_POR_NOMBRE = re.compile(r"^\s*extends\s+([A-Za-z_]\w*)", re.MULTILINE)
+
+#: Los usos de motor que la capa pura no puede tener: uno por fila de la tabla de
+#: `.claude/rules/dominio.md`, más el acceso a disco que pidió el spec 019.
+#:
+#: **Esta lista no crece por trámite.** El objetivo no es un linter de GDScript: es la propiedad
+#: de la que cuelga todo lo demás —que el dominio se pueda ejercer sin levantar una escena—, y
+#: cada patrón nuevo hay que poder justificarlo con esa frase. Agregar el siguiente es una
+#: decisión.
+#:
+#: Los callbacks van con `func` adelante y límite de palabra atrás: sin eso `_process` matchea
+#: adentro de `_procesar_venta` y el gate empieza a mentir sobre código correcto.
+_USOS_DE_MOTOR = (
+    re.compile(r"\bfunc\s+(?P<uso>_process|_physics_process|_input)\b"),
+    re.compile(r"(?P<uso>get_tree\s*\(\s*\))"),
+    re.compile(r"(?P<uso>get_node)\s*\("),
+    re.compile(r"(?P<uso>\$\w*)"),
+    re.compile(r"\b(?P<uso>await)\b"),
+    re.compile(r"\b(?P<uso>Input)\s*\."),
+    re.compile(r"\b(?P<uso>print)\s*\("),
+    re.compile(r"\b(?P<uso>FileAccess|ConfigFile|ResourceSaver)\b"),
+)
+
 
 def _sin_comentarios_ni_strings(texto: str) -> str:
     """El código con los strings y los comentarios reemplazados por espacios.
@@ -137,6 +173,50 @@ def carpetas_no_declaradas(
         if not sep or carpeta in carpetas_por_capa.get(capa, frozenset()):
             continue
         hallazgos.append((normalizada, capa, carpeta))
+    return sorted(hallazgos)
+
+
+def impurezas(
+    archivos: dict[str, str], capas: tuple[tuple[str, tuple[str, ...]], ...]
+) -> list[tuple[str, int, str]]:
+    """Los usos de motor de la capa pura. Devuelve `(archivo, línea, patrón)`.
+
+    Es una función aparte de `violaciones()` y no una fila más de su tupla porque una impureza
+    **no tiene capa de destino que nombrar**: `extends Node` no va contra otra capa, va contra lo
+    que la capa dice ser. Y se arreglan distinto —una dirección equivocada se mueve, una impureza
+    se reescribe—, así que el gate las reporta bajo encabezados separados.
+
+    **Cuál es la capa pura sale de `capas`, no de una constante con el nombre escrito.** Es la
+    que no puede referenciar a ninguna otra, y las dos mitades son la misma propiedad dicha dos
+    veces: la que no conoce a nadie es la que no necesita al motor, y por eso es la que se puede
+    ejercer sin levantar una escena.
+
+    Se busca sobre el código con los comentarios y los strings ya reemplazados por espacios. Sin
+    eso el gate nace rojo sobre los dos archivos de `jugador/` que nombran `Input.` adentro de un
+    comentario — y un gate que empieza acusando código correcto no llega a la semana.
+    """
+    puras = {nombre for nombre, puede in capas if not puede}
+    de_la_capa_pura = {
+        nombre for nombre, capa in indice_de_class_names(archivos, capas).items() if capa in puras
+    }
+    permitidos = _EXTENDS_PUROS | de_la_capa_pura
+
+    hallazgos: list[tuple[str, int, str]] = []
+    for ruta in sorted(archivos):
+        if capa_de(ruta, capas) not in puras:
+            continue
+        normalizada = ruta.replace("\\", "/")
+        limpio = _sin_comentarios_ni_strings(archivos[ruta])
+
+        for m in _EXTENDS_POR_NOMBRE.finditer(limpio):
+            if m.group(1) in permitidos:
+                continue
+            hallazgos.append((normalizada, _linea_de(limpio, m.start()), f"extends {m.group(1)}"))
+
+        for patron in _USOS_DE_MOTOR:
+            for m in patron.finditer(limpio):
+                hallazgos.append((normalizada, _linea_de(limpio, m.start("uso")), m.group("uso")))
+
     return sorted(hallazgos)
 
 

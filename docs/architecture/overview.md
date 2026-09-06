@@ -23,6 +23,13 @@ puntos de corte.
 
 **La prueba de que algo pertenece acá es una sola: se puede ejercer sin levantar una escena.**
 
+**La pureza la verifica `gate_de_capas.py`**, en el mismo nodo que la dirección: el `extends` por
+**lista blanca** —`RefCounted`, `Resource`, o un `class_name` del propio dominio, así que
+`extends CharacterBody3D` da rojo sin figurar en ninguna lista— y los usos de motor por patrón:
+los callbacks de `Node`, `get_tree()`, `get_node`/`$`, `await`, `Input`, `print` y el acceso a
+disco. Hasta el spec 012 la regla estaba escrita en tres lugares y no la miraba nadie: un
+`extends Node` acá dejaba los seis nodos de `verificar.py` en verde.
+
 ### `src/sistemas/` — el motor hablando con el dominio
 
 Los `Node` y autoloads que hacen correr al dominio: el reloj del turno, el guardado, el bus de
