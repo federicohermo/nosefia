@@ -190,6 +190,11 @@ Las que ya costaron tiempo acá:
 - **`Grep` no ve `specs/` ni `.claude/`.** Es ripgrep: respeta el `.gitignore` y saltea los
   ocultos, y contesta cero **sin decir que no miró**. Ahí va `rg --no-ignore --hidden`, **uno
   por línea y separados por `;`** — con `&&` corta en el primero sin match, también sin decirlo.
+- **`GODOT_BIN` declarada no es `GODOT_BIN` visible.** En Windows un proceso hereda el entorno de
+  su padre y no lo relee del registro: una terminal abierta antes de declararla no la ve nunca —y
+  abrir una pestaña del mismo host tampoco—, así que se cierra el host de la terminal o la
+  sesión. El registro contesta la ruta correcta mientras el script dice que no la encuentra, que
+  es lo que vuelve caro el diagnóstico.
 - **Godot adentro de OneDrive no se puede ejecutar** si el archivo no está descargado: Windows
   contesta «el proveedor de archivos de nube no se está ejecutando», que no nombra ni a Godot ni
   a los tests.

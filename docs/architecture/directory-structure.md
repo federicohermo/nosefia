@@ -105,6 +105,19 @@ si un archivo está en la carpeta *correcta*, que es semántica y la mira la rev
 `src/`, y nada más. El hook de `.claude/settings.json` no la deja editar desde `main`, desde
 `staging` ni desde una rama que no nombre un spec.
 
+**Qué herramientas mira, y la lista es cerrada:**
+El `matcher` de `.claude/settings.json`: `Edit`, `Write`, `MultiEdit`, `Bash` y `PowerShell`.
+Una herramienta que no esté ahí **no la mira nadie**, y eso no es teórico: `PowerShell` entró
+después y por evidencia. Montando el harness, un bug del propio hook dejó la sesión encerrada, y
+la salida de ese encierro fue escribir archivos con la herramienta de PowerShell — o sea que el
+gate se salteaba solo con cambiar de herramienta, sin proponérselo.
+
+Sobre las dos que corren comandos, lo que se mira es **un conjunto declarado de formas de
+escritura** y no un parser de shell: las redirecciones, `tee`, `cp`, `mv`, `rm`, `truncate`,
+`sed -i`, y los cmdlets que escriben. Está en `destinos_del_comando` de `gate_de_spec.py`. Un
+gate sólo sobre las tres de edición tiene el agujero del tamaño de un `sed -i`, y encima es un
+agujero **dirigido**: negarle `Edit` a un agente lo empuja justo hacia la redirección.
+
 **`docs/` estuvo adentro hasta el 2026-09-05**, y salió porque la regla se contradecía sola: el
 propio mensaje del gate ofrece una salida para el cambio que no necesita spec, y el código no
 la tenía. Corregir una línea de documentación pedía abrir un spec, y eso no produce más specs:
