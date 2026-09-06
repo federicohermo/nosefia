@@ -1,232 +1,134 @@
 # Specs
 
-Trabajo planificado. Un spec por unidad de trabajo, en su propia carpeta numerada.
+Trabajo planificado, un spec por unidad de trabajo. Es un *cheat sheet* como `CLAUDE.md`: lo que
+no se puede averiguar mirando un archivo. **El procedimiento vive en
+[`spec-create`](../.claude/skills/spec-create/SKILL.md)** y **la forma de cada archivo en
+[`plantilla/`](./plantilla/)**, que es lo que se copia; acá va el porqué y quién lo cobra.
 
-> **Cada spec ES un issue de GitHub.** `specs/[0-9]*/` está en el `.gitignore`, y lo único que
-> se commitea de este directorio son tres cosas que no son specs: este `README.md`,
-> [`mapa.json`](./mapa.json) —el mapa spec↔issue— y nada más. Los gates que verifican esta
-> convención viven en `.claude/scripts/tests/`.
+> **Cada spec ES un issue de GitHub.** `specs/[0-9]*/` está en el `.gitignore`: de este
+> directorio se commitean este `README.md`, [`mapa.json`](./mapa.json) y `plantilla/`. Nada más.
 
-## Por qué el spec no vive en el repo
+## El directorio es caché, no la fuente
 
-Porque un spec no es código: es un plan con fecha, que se discute, se corrige y a veces se
-descarta. Un archivo en el repo no tiene estado, no tiene hilo de comentarios y no se puede
-cerrar; un issue tiene las tres cosas. Y la mitad práctica: sin esto, el repo del juego se
-llena de documentos de proceso que ensucian cada `grep` y cada diff.
-
-**El directorio local es una caché, no la fuente.** Si no está, se trae:
+Un spec no es código: es un plan con fecha, que se discute, se corrige y a veces se descarta. Un
+archivo del repo no tiene estado, ni hilo de comentarios, ni forma de cerrarse; un issue tiene
+las tres. Y sin esto el repo del juego se llena de documentos de proceso que ensucian cada
+`grep`.
 
 ```bash
-python .claude/scripts/hidratar_specs.py           # los que están EN VUELO y falten
-python .claude/scripts/hidratar_specs.py 007       # o uno solo, esté como esté
+python .claude/scripts/hidratar_specs.py       # los que están EN VUELO y falten
+python .claude/scripts/hidratar_specs.py 007   # o uno solo, esté como esté
 ```
 
-**No hay forma de traerlos todos, y es a propósito.** Un spec cerrado es un ADR: no sale más
-trabajo de él y tenerlo en disco no habilita nada. Consultarlo se pide por número.
+**No hay forma de traerlos todos, a propósito**: un spec cerrado es un ADR, no sale más trabajo
+de él, y tenerlo en disco no habilita nada. Hace falta correrlo **en cada worktree** — `git
+worktree add` no lleva lo ignorado.
 
-Hace falta correrlo **en cada worktree**: `git worktree add` hace checkout de lo trackeado, y
-un archivo ignorado no viaja.
-
-> **Buscar acá adentro necesita `rg --no-ignore`** —leer no, `.gitignore` es cosa de git—: un
-> `Grep` normal contesta **cero sin decir que no miró**. El detalle, con el `--hidden` que hace
-> falta para `.claude/`, en [`.claude/rules/herramientas.md`](../.claude/rules/herramientas.md).
+> **Buscar acá adentro necesita `rg --no-ignore`** —leer no—: un `Grep` normal contesta **cero
+> sin decir que no miró**. El detalle, con el `--hidden` que hace falta para `.claude/`, en
+> [`.claude/rules/herramientas.md`](../.claude/rules/herramientas.md).
 
 ## El mapa
 
-[`mapa.json`](./mapa.json) es lo único trackeado, y por eso existe: **el vínculo spec↔issue no
-es aritmético**. Los issues y los PR comparten contador en GitHub, así que el spec `007` no es
-el issue `#7` y no hay forma de deducirlo.
+Es lo único trackeado de un spec, y existe porque **el vínculo spec↔issue no es aritmético**:
+issues y PR comparten contador en GitHub, así que el spec `007` no es el issue `#7`.
 
 ```json
 { "007": { "issue": 23, "carpeta": "007-la-ventanilla-atiende-de-a-uno",
            "fecha": "2026-09-04", "estado": "Propuesto", "titulo": "Spec 007 — …" } }
 ```
 
-- **`carpeta` está guardada y no se deriva del título.** El nombre de la carpeta y el título
-  del issue se escriben aparte y se separan enseguida; derivar uno del otro haría que un árbol
-  recién hidratado inventara carpetas que ninguna cita del repo conoce.
-- **`estado` y `titulo` son copias del issue**, y las mira el gate de
-  `.claude/scripts/tests/test_mapa.py`. Se copian para que las herramientas puedan contestar
-  **sin red**.
-- **`origen` es un sexto campo, opcional**: los issues de deuda que el spec **salda**. Ver «De
-  un issue de deuda a un spec».
+- **`carpeta` se guarda y no se deriva del título**: se escriben aparte y se separan enseguida,
+  y derivar uno del otro haría que un árbol hidratado invente carpetas que ninguna cita conoce.
+- **`estado` y `titulo` son copias del issue**, para poder contestar **sin red**. Las mira
+  `test_mapa.py`.
+- **`origen`** es opcional: los issues de deuda que el spec **salda** — ver abajo.
+- **Una entrada por línea**, para que cada cambio sea exactamente la línea que cambió. Con JSON
+  indentado, el commit que la Action hace sola dejaría de ser revisable.
 
-**El formato es una entrada por línea**, y no es estética: con un JSON indentado, agregar un
-spec da un diff de siete líneas y cambiar un estado da uno que hay que leer con lupa. Así cada
-cambio es exactamente la línea que cambió — que es lo que hace revisable el commit que la
-Action hace sola.
+## Los cuatro estados
 
-## Convención de nombres
+Conjunto cerrado, y la lista vive una sola vez: `ESTADOS` en
+[`lib/specs.py`](../.claude/scripts/lib/specs.py).
 
-```text
-specs/<NNN>-<descripcion-kebab>/
-├── spec.md         ← problema, solución propuesta, criterios de aceptación y límites de alcance
-├── research.md     ← estado del código relevante y archivos afectados, MEDIDO
-└── plan.md         ← el orden obligado, qué no se toca, y el criterio de terminado
-```
+| Estado | Qué dice | ¿En vuelo? | Su issue |
+|---|---|---|---|
+| `Propuesto` | escrito y publicado; todavía puede salir trabajo de él | **Sí** | abierto |
+| `Implementado` | su PR aterrizó en `staging` | No | cerrado |
+| `Descartado` | se abandonó sin implementar | No | cerrado |
+| `Superado` | otro spec lo reemplazó | No | cerrado |
 
-**Los tres son el piso**, y un spec puede agregar los que necesite —un `baseline.md` con la
-medición previa—. El nombre va en minúsculas, dígitos y guiones: `publicar_spec.py` **grita**
-ante uno que no puede subir, porque un `.md` no publicado se pierde en la hidratación siguiente.
-La única parte cerrada de la lista es que **`tasks.md` no** — abajo, por qué se fue.
+**«En vuelo» es la partición que importa**, y es una sola función porque de ella dependen tres
+cosas: qué hidrata el default, si `publicar_spec.py` cierra el issue, y a quién mira el gate de
+la convención. Copiada a mano en cada una, sacar un estado deja a las otras mirando uno que ya no
+existe, **en verde**.
 
-**El esqueleto se copia de [`specs/plantilla/`](./plantilla/)**: la alternativa —prosa que
-describe el formato y ningún archivo que lo tenga— es cómo cada spec termina inventando su
-propia forma. Es la convención de [Spec Kit](https://github.com/github/spec-kit) con cinco
-desviaciones deliberadas, anotadas abajo.
+**El estado no lo escribe nadie**: lo deriva [`mapa.yml`](../.github/workflows/mapa.yml) del PR
+que aterrizó, y `test_estado_del_mapa.py` da rojo si una fila que ya estaba cambia adentro de la
+rama —las nuevas pasan, o abrir un spec sería imposible—. Por eso tampoco hay **«En curso»**:
+ningún paso del flujo lo escribiría, y agregarlo sería un tercer punto de escritura manual, que
+es justo el mecanismo que falla. Que un spec haya empezado se ve en que tiene rama.
 
-## La forma del `plan.md`
+## Los tres archivos, y los cuatro techos
 
-**Qué va en cada sección está en la plantilla, que es el archivo que se copia. Acá va el
-porqué**, que es lo único que un esqueleto no puede llevar adentro.
+`spec.md` —problema, solución y criterios—, `research.md` **medido** y `plan.md` —orden obligado,
+qué no se toca, criterio de terminado—. Son el **piso**: un spec puede agregar un `baseline.md`.
+Lo único cerrado es que **`tasks.md` no**.
 
-`## Qué NO se toca` se parte en dos por **lo que se puede verificar**: las rutas de `### Rutas`
-las cruza `test_rutas_del_plan.py` contra lo que la rama toca, con el PR todavía abierto; las
-`### Invariantes` son prosa declarada como prosa. Sale del task-brief de ITBAF y de la Tabla I de
-Koch, *Agentic Agile-V* ([arXiv 2605.20456](https://arxiv.org/abs/2605.20456)), que separa
-*Constraints* de *Acceptance criteria*: este formato las colapsaba, y la presión empujaba las
-restricciones a los criterios —el plan del 017 lo dice, «los AC lo atan con `rg`, que es lo único
-ejecutable que hay»—.
-
-**Las rutas son una lista negativa y cerrada**, y ahí está la diferencia con el `tasks.md`: aquél
-predecía qué se **va** a tocar, y una prohibición no se equivoca por omisión.
-
-Los tres `##` los exige `test_convencion_de_specs.py`. La convención existía antes que el gate
-—23 de 23 specs la cumplían el 2026-09-06— mientras `spec-implement` leía el primero **por
-nombre**: una sección de la que depende un skill y que se cumple por costumbre dura hasta el
-primer apuro.
-
-## Por qué se fue el `tasks.md`
-
-**Lo que se midió, sobre los 28 specs que había el 2026-09-05:** de las rutas de archivo que
-nombran `plan.md` y `tasks.md`, el **43 %** nunca se tocó, y el **39 %** de lo que el PR sí tocó
-no lo previó nadie. El error escala con el tamaño: el spec 025 acertó el **29 %**. Y no era
-relleno —sólo el **5 %** de las 837 tareas se repetía entre specs—, o sea que el problema no es
-que sobre ceremonia: es que el `tasks.md` es **predicción específica y equivocada**, escrita con
-autoridad de documento antes de abrir un archivo.
-
-El `plan.md` declara lo que la predicción no puede inventar: **el orden obligado** —lo que no se
-puede paralelizar, empezando por los `.tscn`, que no se mergean—, qué **no** se toca, y el
-criterio de terminado. Sin rutas predichas salvo las que el `research.md` midió. Es el mismo
-archivo de siempre con mucho menos adentro: el nombre se quedó porque una estrategia es un
-plan, y renombrarlo sólo habría agregado una palabra que aprender.
-
-## El único régimen, y qué pasa con los specs viejos
-
-**Un spec del que todavía pueda salir trabajo tiene tres archivos y ningún `tasks.md`.** Los que
-estaban escritos con cuatro se migraron el 2026-09-05, salvo los que ya habían aterrizado.
-
-**Ésos no se migran: son ADR** —Desviación 2—, y reescribirlos borraría con qué evidencia se
-decidió cada cosa. Por eso el gate no los mira, y la partición sale del `estado` del mapa: un
-spec `Implementado`, `Descartado` o `Superado` es historia y queda afuera. Una carpeta **sin fila
-en el mapa** se mira igual: es un spec que se está escribiendo, que es cuando conviene mirarlo.
-
-**El estado no lo escribe nadie a mano** —lo deriva `mapa.yml` del PR que aterrizó— así que esta
-regla tampoco se evade escribiendo un archivo, que era el argumento del corte por número que
-reemplaza. Y eso lo verifica `test_estado_del_mapa.py`: ninguna fila que ya estaba en la base
-cambia de `estado` adentro de la rama. Las filas nuevas sí, o abrir un spec sería imposible.
-
-### Los cuatro techos de palabras
-
-Un formato más corto que no se mide vuelve a crecer en un mes, así que el límite es ejecutable.
-Sobre todo spec en vuelo, y con «palabra» = token con letra o dígito:
+Un formato corto que no se mide vuelve a crecer en un mes, así que el límite es ejecutable.
+«Palabra» = token con letra o dígito:
 
 | Qué | Techo |
 |---|---|
 | la prosa del `spec.md` —todo menos el bloque de criterios— | 350 |
 | el bloque `## Criterios de aceptación` **entero** | 300 |
 | el `research.md` | 500 |
-| el `plan.md`, **sin contar sus encabezados** | 250 |
+| el `plan.md` | 250 |
 
-**No cuentan ni los encabezados ni los comentarios de markdown.** Los dos son medidos: con los
-encabezados adentro el margen era cero —el 012 tenía exactamente 250—, y contando los `<!-- -->`
-la plantilla daba **386 palabras** sin una palabra propia. Un comentario es andamio de quien
-escribe, se borra, y no se ve en el issue renderizado. Por lo mismo **una ruta citada adentro de
-un comentario no prohíbe nada**: el párrafo que explica el `### Rutas` cita rutas para
-ilustrarlo, y contarlas dejaba a todo spec copiado prohibiendo `src/`. Que la plantilla siga
-pasando sus propios gates lo cobra `test_convencion_de_specs.py` sobre `specs/plantilla/` misma.
+Los números salen de medir el 029: prosa 350, criterios 228, research 444, plan 233.
 
-**El segundo techo cae sobre el bloque entero y no sobre cada criterio, y ahí está la decisión.**
-Con un límite por criterio, un spec cumple escribiendo veinte criterios cortos — la misma
-enfermedad con carpeta nueva. Sobre el bloque, el límite muerde la **cantidad**.
+- **El segundo cae sobre el bloque y no sobre cada criterio.** Con un límite por criterio, un
+  spec cumple escribiendo veinte criterios cortos; sobre el bloque, muerde la **cantidad**.
+- **No cuentan ni los encabezados ni los comentarios de markdown**, y los dos son medidos: con
+  los encabezados el margen era cero —el 012 tenía exactamente 250—, y contando los `<!-- -->` la
+  plantilla daba **386 palabras** sin una palabra propia. Un comentario es andamio, se borra, y
+  no se ve en el issue renderizado. Por lo mismo **una ruta citada adentro de un comentario no
+  prohíbe nada**: el párrafo que explica el `### Rutas` cita rutas para ilustrarlo, y contarlas
+  dejaba a todo spec copiado prohibiendo `src/`. Que la plantilla pase sus propios gates lo cobra
+  `test_convencion_de_specs.py` sobre ella misma.
 
-Los cuatro números salen de medir el spec 029, que es el modelo del formato aunque él mismo esté
-escrito en el viejo: prosa 350, criterios 228, research 444, plan 233.
+## Qué del plan es ejecutable
 
-## El ancla anti-deuda: de la casilla al criterio, y del cierre al PR
+`## Qué NO se toca` se parte en dos **por lo que se puede verificar**: las rutas de `### Rutas`
+las cruza `test_rutas_del_plan.py` contra lo que la rama toca, con el PR todavía abierto; las
+`### Invariantes` son prosa declarada como prosa. Sale del task-brief de ITBAF y de la Tabla I de
+Koch, *Agentic Agile-V* ([arXiv 2605.20456](https://arxiv.org/abs/2605.20456)), que separa
+*Constraints* de *Acceptance criteria*: este formato las colapsaba y la presión empujaba las
+restricciones a los criterios.
+
+**Las rutas son una lista negativa y cerrada**, y ahí está la diferencia con el `tasks.md`: aquél
+predecía qué se **va** a tocar; una prohibición no se equivoca por omisión.
+
+## El ancla anti-deuda
 
 Un spec `Implementado` con una casilla abierta era **la** contradicción que el gate perseguía.
 Sin `tasks.md` esa regla se queda sin objeto: sale verde para siempre, y un gate que no puede
 fallar no es laxo — está apagado y parece encendido.
 
-La reemplaza **AC↔test**: cada `ACn` del `spec.md` citado como `NNN-ACn` por algún archivo bajo
-`test/` o `.claude/scripts/tests/`, y el rojo dice cuál falta. Lleva el número del spec porque
-`AC1` es el nombre que usa **todo** spec: pelada, la primera cubriría a todas las demás para
-siempre. Es más fuerte que la que reemplaza — una casilla la marca a mano el mismo que decide si
-el trabajo está hecho; un test corre en cada push y **se rompe solo**.
+La reemplaza **AC↔test**: cada `ACn` citado como `NNN-ACn` desde algún archivo de `test/` o
+`.claude/scripts/tests/`. Lleva el número del spec porque `AC1` es el nombre que usa **todo**
+spec, y pelada la primera cubriría a las demás para siempre. Es más fuerte que la que reemplaza:
+una casilla la marca el mismo que decide si el trabajo está hecho; un test **se rompe solo**.
 
-**Y mira la RAMA, no los specs cerrados.** Sobre los `Implementado` llegaba tarde por definición:
-ese estado empieza cuando el PR ya aterrizó, así que el rojo aparecía con el trabajo en `staging`
-y la única salida era abrir otra cosa — la deuda que el ancla existe para cerrar. Sobre la rama
-—[`test_criterios_de_la_rama.py`](../.claude/scripts/tests/test_criterios_de_la_rama.py)— el PR
-sigue abierto y el criterio sin verificar se escribe en vez de deberse.
-
-**Su techo, dicho:** verifica la **cita**, no que el test ejerza el criterio. Es un piso, como
-todo lo que este repo verifica sin cobertura.
-
-> **Desviación 1 — la rama se crea después.** Spec Kit crea la rama primero y le da su nombre a
-> la carpeta. Acá el spec entra a `staging` antes, así que un spec abandonado no se va con su
-> rama: queda en el registro como `Descartado`, que es información.
-
-> **Desviación 2 — un spec mergeado no se reescribe.** Spec Kit los trata como documentación
-> viva que se regenera con el código; acá son **ADR**: registro de qué se decidió y con qué
-> evidencia, con fecha. Lo que sí se mantiene al día es `docs/`, `.claude/rules/` y `CLAUDE.md`.
-
-> **Desviación 3 — el ticket no va en el nombre de la carpeta.** La convención original usa
-> `specs/<NNN>-<TICKET>-<descripcion>/`. **No es que no haya ticket**: el spec *es* un issue, y
-> ése es su ticket. Lo que pasa es que su número no se conoce cuando se crea la carpeta —lo
-> asigna `publicar_spec.py`— y no es derivable. Por eso existe `mapa.json`: **es el segmento de
-> ticket, sacado del nombre de la carpeta**. Y por eso la rama lleva el número del spec y no el
-> del issue: `feature/<NNN>-<kebab>` es de donde el hook saca de qué spec se trata.
-
-> **Desviación 4 — el `research.md` se mide, no se supone.** Es la más importante de las cinco
-> y la que más se saltea. Un `research.md` que dice «probablemente haya que tocar el HUD» no es
-> research: es una intuición con formato de documento. El que sirve dice **qué corriste y qué
-> contestó**.
-
-> **Desviación 5 — no hay `tasks.md`.** Spec Kit deriva un plan del spec y una lista de tareas
-> del plan. Acá el `plan.md` reemplaza a los dos y declara mucho menos: **el orden obligado**, no
-> el orden completo. Es la desviación con más evidencia local detrás, y está arriba, en «Por qué
-> se fue el `tasks.md`».
-
-## Los cuatro estados
-
-El campo `estado` es un conjunto cerrado, y la lista vive una sola vez: `ESTADOS` en
-[`.claude/scripts/lib/specs.py`](../.claude/scripts/lib/specs.py).
-
-| Estado | Qué dice | ¿En vuelo? | Su issue |
-|---|---|---|---|
-| `Propuesto` | escrito y publicado; de él todavía puede salir trabajo | **Sí** | abierto |
-| `Implementado` | su PR aterrizó en `staging` | No | cerrado |
-| `Descartado` | se abandonó sin implementar | No | cerrado |
-| `Superado` | otro spec lo reemplazó | No | cerrado |
-
-**«En vuelo» es la partición que importa**, y es una sola función —`en_vuelo`— porque de ella
-dependen tres cosas distintas: qué trae `hidratar_specs.py` por default, si `publicar_spec.py`
-cierra el issue, y qué estado del issue espera el gate. Con una copia escrita a mano en cada
-uno, sacar un estado del conjunto deja a los otros mirando uno que ya no existe, **en verde**.
-
-**No hay un estado «En curso»**, y es deliberado: ningún paso del flujo lo escribiría.
-`publicar_spec.py` pone `Propuesto` al crear el issue y el merge pone `Implementado`; entre
-esos dos no hay ningún momento en el que alguien vuelva al mapa a anotar que empezó. Agregarlo
-sería un tercer punto de escritura manual, que es justo el mecanismo que falla. Que un spec
-haya empezado se ve en que tiene rama.
+**Y mira la RAMA, no los specs cerrados.** Sobre los `Implementado` llegaba tarde por definición
+—ese estado empieza cuando el PR ya aterrizó—, así que el rojo aparecía con el trabajo en
+`staging` y la única salida era abrir otra cosa: la deuda que el ancla existe para cerrar. Su
+techo, dicho: verifica la **cita**, no que el test ejerza el criterio.
 
 ## Lo que no se escribe adentro de un spec
 
 **La doctrina está en [`sin-deuda.md`](../.claude/skills/spec-create/sin-deuda.md)**, que los
-ocho skills traen adentro y no se repite acá. Lo de este archivo es qué se prohíbe y quién lo
-cobra:
+ocho skills traen adentro. Acá, qué se prohíbe y por qué:
 
 | No existe | Porque |
 |---|---|
@@ -235,73 +137,45 @@ cobra:
 | un criterio que diga `TODO` o «por ahora» | se da por cumplido sin haber hecho nada |
 | un `research.md` con una medición declarada como no hecha | el plan se apoya en un número que nadie midió, y el spec igual se publica |
 
-Las cuatro las cobra
-[`test_convencion_de_specs.py`](../.claude/scripts/tests/test_convencion_de_specs.py) sobre los
-specs hidratados —declarando el salteo si no hay ninguno—, y la quinta, que ningún criterio quede
-sin test, el gate de la rama. Las salidas son dos y anotarlo no es ninguna: o el criterio se
-vuelve verificable, o no se escribe.
+Las cuatro las cobra `test_convencion_de_specs.py` sobre los specs hidratados —declarando el
+salteo si no hay ninguno—, y la quinta el gate de la rama. Las salidas son dos y anotarlo no es
+ninguna: o el criterio se vuelve verificable, o no se escribe.
 
-**`## Fuera de alcance` sí existe y no es lo mismo**: declara una frontera —qué NO hace este
-spec— y es lo que lo vuelve revisable. Se vuelve deuda sólo si algún AC depende de lo excluido, y
-eso ningún gate lo ve: lo mira quien escribe el spec.
+**`## Fuera de alcance` no es lo mismo**: declara una frontera y es lo que vuelve revisable al
+spec. Se hace deuda sólo si algún AC depende de lo excluido, y eso ningún gate lo ve.
 
 ## De un issue de deuda a un spec
 
-**Hay dos carriles y los decide una sola pregunta: ¿el arreglo toca `src/` o `docs/`?** Ésas son
-las dos rutas que el hook protege.
+Lo decide una pregunta: **¿el arreglo toca `src/`?** Es la ruta que el hook protege.
 
 | El arreglo… | Carril | Qué cierra el issue |
 |---|---|---|
-| **no** toca ruta protegida | rama `fix/` o `chore/`, sin spec | `Closes #N` en el cuerpo del PR |
-| **sí** la toca | necesita spec, y el `spec.md` lleva `**Origen:** #N` | un `Closes` **por cada** issue saldado |
+| **no** la toca | rama `fix/` o `chore/`, sin spec | `Closes #N` en el cuerpo del PR |
+| **sí** la toca | necesita spec, con `**Origen:** #N` en el `spec.md` | un `Closes` **por cada** issue saldado |
 
-> **`Closes #N` en el cuerpo de un *issue* no cierra nada**: GitHub sólo autocierra desde un PR
-> o un commit. Por eso el vínculo no se puede resolver escribiéndolo en el `spec.md` y nada
-> más — tiene que llegar al PR.
-
-**Y por eso existe `origen`.** La línea `**Origen:** #12` del encabezado del `spec.md` la parsea
-`publicar_spec.py crear` y la escribe en la fila del mapa. De ahí la lee el gate, que pone en
-rojo un spec que ya no está en vuelo y cuyo `origen` sigue abierto. **Sin ese dato nada puede
-exigir el `Closes`.**
-
-**La línea del `spec.md` es la fuente y no una copia**: `crear` reconcilia el campo en **cada**
-corrida, así que agregar o corregir el `**Origen:**` de un spec ya publicado llega al mapa
-igual.
-
-**`origen` significa saldar, no citar.** Un issue mencionado como contexto de una medición que
-el spec no arregla no va: con la lectura ancha el gate daría rojo sobre un spec correcto, y se
-apagaría en una semana.
-
-**Qué hay para promover lo contesta un comando:**
+**Por eso existe `origen`.** `publicar_spec.py crear` parsea esa línea y la escribe en el mapa;
+de ahí la lee el gate, que pone en rojo un spec cerrado cuyo `origen` sigue abierto. Sin ese dato
+nada puede exigir el `Closes` — y un `Closes` escrito en el cuerpo de un *issue* no cierra nada,
+GitHub sólo autocierra desde un PR o un commit. La línea del `spec.md` es la **fuente**: `crear`
+reconcilia el campo en cada corrida. Y **significa saldar, no citar**: con la lectura ancha el
+gate daría rojo sobre un spec correcto y se apagaría en una semana.
 
 ```bash
 python .claude/scripts/deuda.py   # los issues abiertos que ningún spec reclama
 ```
 
-El orden es por antigüedad y **no es una prioridad**: cuál se promueve y en qué orden es una
-decisión, y una máquina que la tome inventa prioridades.
+El orden es por antigüedad y **no es una prioridad**: cuál se promueve es una decisión, y una
+máquina que la tome inventa prioridades.
 
-## Flujo
+## Las cinco desviaciones de Spec Kit
 
-1. **Medir**, y recién después escribir los tres archivos.
-2. **Publicarlo como issue** con `python .claude/scripts/publicar_spec.py crear` y después
-   `publicar`. La primera fase le escribe su fila en `mapa.json` con estado `Propuesto`. **Esa
-   fila es el mapa**, y es lo único del spec que se commitea.
-3. **Crear la rama `feature/<NNN>-<descripcion-kebab>`**, y eso ya es el primer paso de
-   implementar: la abre quien toma el spec, no quien lo escribió. El paso 2 termina en
-   `staging`.
-4. **Implementar, con el test primero**, y que cada test nombre el criterio que verifica: es
-   lo que el gate lee al cerrar, y escribirlo después es escribirlo dos veces.
-5. **Devolver al issue lo que se editó** con `python .claude/scripts/publicar_spec.py publicar`,
-   antes de cerrar. El árbol local es caché: la próxima hidratación baja los archivos del
-   issue y **se lleva puesto todo lo que no se haya subido**.
-6. **Al mergear, anotar en el issue —como comentario— qué se aprendió** si el spec salió
-   distinto de lo previsto. Es lo único que queda a mano.
+Es la convención de [Spec Kit](https://github.com/github/spec-kit), con cinco cambios
+deliberados:
 
-> **El estado del mapa y el cierre del issue no son tareas.** El issue lo cierra el `Closes #N`
-> del PR, y el `estado` lo deriva [`.github/workflows/mapa.yml`](../.github/workflows/mapa.yml)
-> en el push a `staging`. El estado de un spec no es un dato que alguien escribe: es una
-> consecuencia de si su PR aterrizó, y `test_estado_del_mapa.py` da rojo si se escribe a mano.
->
-> Se puede correr a mano —`python .claude/scripts/derivar_mapa.py`, o con `--verificar` para
-> que no escriba y salga 1 si escribiría—, pero no hace falta.
+| # | Qué cambia | Por qué |
+|---|---|---|
+| 1 | **la rama se crea después**, no antes | el spec entra a `staging` primero, así un spec abandonado no se va con su rama: queda como `Descartado`, que es información |
+| 2 | **un spec mergeado no se reescribe** | acá son **ADR** —qué se decidió y con qué evidencia, con fecha—, no documentación viva. Lo que sí se mantiene al día es `docs/`, `.claude/rules/` y `CLAUDE.md` |
+| 3 | **el ticket no va en el nombre de la carpeta** | el spec *es* un issue, pero su número lo asigna `publicar_spec.py` y no se conoce al crear la carpeta. `mapa.json` **es** ese segmento de ticket. Por eso la rama lleva el número del spec: de ahí lo saca el hook |
+| 4 | **el `research.md` se mide, no se supone** | la más importante y la que más se saltea. «Probablemente haya que tocar el HUD» no es research: es una intuición con formato de documento. El que sirve dice qué corriste y qué contestó |
+| 5 | **no hay `tasks.md`** | de las rutas que predecía, el **43 %** nunca se tocó y el **39 %** de lo que el PR sí tocó no lo previó nadie —28 specs, 2026-09-05; el 025 acertó el **29 %**—. No sobraba ceremonia: era **predicción específica y equivocada** con autoridad de documento. El `plan.md` declara el **orden obligado**, no el orden completo |
