@@ -5,6 +5,10 @@ import unittest
 
 from lib.specs import (
     aterrizo,
+    encabezados_del_plan,
+    palabras,
+    partir_spec,
+    rutas_intocables,
     agrupar_prs_por_spec,
     archivo_de_comentario,
     carpeta_existente,
@@ -325,6 +329,51 @@ class CensoDeDeuda(unittest.TestCase):
         # Sin esta mitad, el censo seguiría mostrando lo que un spec acaba de reclamar.
         issues = [{"number": 9}]
         self.assertEqual(deuda_del_censo(issues, {"001": entrada(issue=7, origen=[9])}), [])
+
+
+class ElAndamioDeLaPlantillaNoEsContenido(unittest.TestCase):
+    """Un `<!-- -->` es instrucción para quien escribe el spec, no texto del spec.
+
+    Las tres reglas son la misma: lo que el autor va a borrar no puede gastar techo ni
+    declarar prohibiciones. Sin esto `specs/plantilla/` es inusable — medido el 2026-09-06:
+    su `plan.md` daba 386 palabras contra un techo de 250 sin haber escrito nada propio, y su
+    `### Rutas` declaraba intocables `src/`, `reglas.gd` y `tasks.md` desde la prosa que
+    explica el rubro.
+    """
+
+    def test_un_comentario_no_gasta_techo(self):
+        self.assertEqual(palabras("uno dos <!-- tres cuatro cinco --> seis"), 3)
+
+    def test_un_comentario_de_varias_lineas_tampoco(self):
+        self.assertEqual(palabras("uno\n<!-- dos\n     tres -->\ncuatro"), 2)
+
+    def test_una_ruta_citada_adentro_de_un_comentario_no_se_prohibe(self):
+        # El párrafo que explica el rubro cita rutas para ilustrarlo, y el de la plantilla
+        # cita hasta la que dice que NO va. Contarlas deja al spec prohibiendo `src/` antes
+        # de escribir una línea propia.
+        plan = "## Qué NO se toca\n\n### Rutas\n\n<!-- por ejemplo `src/` -->\n- `reglas.gd`\n"
+        self.assertEqual(rutas_intocables(plan), ["reglas.gd"])
+
+    def test_un_encabezado_comentado_no_es_una_seccion_del_plan(self):
+        plan = "# Plan\n\n<!-- ## Orden obligado va acá -->\n\n## Criterio de terminado\n"
+        self.assertEqual(encabezados_del_plan(plan), ["## Criterio de terminado"])
+
+
+class UnEncabezadoCercadoNoParteElSpec(unittest.TestCase):
+    def test_el_bloque_de_criterios_sale_del_encabezado_real(self):
+        # Un `spec.md` que muestra el formato de un spec adentro de un bloque cercado se
+        # partía por el encabezado del EJEMPLO: la prosa se quedaba con los criterios reales
+        # y el bloque salía vacío, así que su techo dejaba de morder y `acs_de()` devolvía
+        # cero criterios sobre un spec que los tiene. Es el mismo agujero que
+        # `sin_cercados()` ya cierra para el `plan.md`.
+        texto = (
+            "# T\n\nprosa\n\n```markdown\n## Criterios de aceptación\n```\n\n"
+            "## Criterios de aceptación\n\n- **AC1** — x\n"
+        )
+        prosa, criterios = partir_spec(texto)
+        self.assertIn("```", prosa)
+        self.assertNotIn("```", criterios)
+        self.assertIn("AC1", criterios)
 
 
 if __name__ == "__main__":

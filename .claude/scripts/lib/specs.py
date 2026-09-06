@@ -447,10 +447,31 @@ AC = re.compile(r"\bAC(\d+)\b")
 #: sacado ni una idea.
 PALABRA = re.compile(r"[0-9A-Za-zÀ-ÖØ-öø-ÿ]")
 
+#: Un comentario de markdown, que acá es **andamio y no contenido**.
+#:
+#: Es lo que `specs/plantilla/` usa para explicar cada rubro, y lo que quien escribe el spec
+#: borra. Contarlo lo vuelve una plantilla inusable, y no es una hipótesis: medido el
+#: 2026-09-06, su `plan.md` daba **386 palabras contra un techo de 250** sin una sola palabra
+#: propia, y su `### Rutas` declaraba intocables `src/`, `reglas.gd` y `tasks.md` —todas
+#: citadas por la prosa que explica el rubro, incluida la que ese mismo párrafo dice que NO
+#: va—. O sea que copiar la plantilla arrancaba con dos gates en rojo.
+#:
+#: No abre una vía de evasión del techo: un comentario no se ve en el issue renderizado, así
+#: que las palabras que se «ahorran» ahí no le llegan a nadie.
+COMENTARIO_MD = re.compile(r"<!--.*?-->", re.DOTALL)
+
+
+def sin_comentarios(texto: str) -> str:
+    """El texto sin sus comentarios de markdown."""
+    return COMENTARIO_MD.sub("", texto)
+
 
 def palabras(texto: str) -> int:
-    """Las palabras de un texto en markdown: los tokens que tienen letra o dígito."""
-    return sum(1 for token in texto.split() if PALABRA.search(token))
+    """Las palabras de un texto en markdown: los tokens que tienen letra o dígito.
+
+    Sin lo que viva en un comentario, que es andamio de la plantilla y no texto del spec.
+    """
+    return sum(1 for token in sin_comentarios(texto).split() if PALABRA.search(token))
 
 
 def partir_spec(texto: str) -> tuple[str, str]:
@@ -463,17 +484,40 @@ def partir_spec(texto: str) -> tuple[str, str]:
     Un `spec.md` sin ese encabezado devuelve todo como prosa y el bloque vacío. No se ataja
     acá: un spec sin criterios lo caza el techo de prosa o el gate de criterios, y duplicar
     la regla la deja con dos mensajes distintos para el mismo defecto.
+
+    **Los encabezados de adentro de un bloque cercado no cortan**, que es el mismo agujero
+    que `sin_cercados()` cierra para el `plan.md`. Un `spec.md` que muestra el formato de un
+    spec —el 003 lo hace con el suyo— se partía por el encabezado del EJEMPLO: la prosa se
+    quedaba con los criterios reales, el bloque salía vacío, y entonces su techo dejaba de
+    morder y `acs_de()` contestaba cero criterios sobre un spec que los tiene.
     """
-    corte = ENCABEZADO_DE_AC.search(texto)
-    if corte is None:
+    inicio, fin = _corte_del_bloque(texto)
+    if inicio is None:
         return texto, ""
-    resto = texto[corte.start() :]
-    # Desde el carácter 3 para no volver a matchear el propio encabezado del bloque.
-    siguiente = re.search(r"^##\s", resto[3:], re.MULTILINE)
-    if siguiente is None:
-        return texto[: corte.start()], resto
-    fin = siguiente.start() + 3
-    return texto[: corte.start()] + resto[fin:], resto[:fin]
+    if fin is None:
+        return texto[:inicio], texto[inicio:]
+    return texto[:inicio] + texto[fin:], texto[inicio:fin]
+
+
+def _corte_del_bloque(texto: str) -> tuple[int | None, int | None]:
+    """Dónde empieza el bloque de criterios y dónde el `##` que lo cierra, sin contar cercados.
+
+    Los dos son offsets en el texto original —y no en una copia limpia— porque `partir_spec()`
+    devuelve las dos mitades verbatim: `_criterios()` las vuelve a buscar ahí para numerar sus
+    líneas, y un slice de otro texto le daría un número que no existe en el archivo.
+    """
+    inicio: int | None = None
+    offset = 0
+    for linea, dentro in _con_cerca(texto):
+        largo = len(linea) + 1
+        if not dentro:
+            if inicio is None:
+                if ENCABEZADO_DE_AC.match(linea):
+                    inicio = offset
+            elif offset > inicio and linea.startswith("## "):
+                return inicio, offset
+        offset += largo
+    return inicio, None
 
 
 def acs_de(spec_md: str) -> list[str]:
@@ -575,9 +619,9 @@ RUTA = re.compile(r"`([^`]+?\.(?:gd|tscn|tres|py|md|json|cfg|yml|yaml|godot|sh)|
 
 
 def encabezados_del_plan(texto: str) -> list[str]:
-    """Los `##` de un `plan.md`, ya sin lo cercado y normalizados a una línea."""
+    """Los `##` de un `plan.md`, ya sin lo cercado ni lo comentado, normalizados a una línea."""
     return [
-        l.strip() for l in sin_cercados(texto).splitlines() if l.startswith("## ")
+        l.strip() for l in sin_cercados(sin_comentarios(texto)).splitlines() if l.startswith("## ")
     ]
 
 
@@ -586,8 +630,12 @@ def rutas_intocables(texto: str) -> list[str]:
 
     Devuelve `[]` cuando el rubro no está, que es un estado normal y no un defecto: un spec
     puede restringir sólo invariantes.
+
+    **Lo comentado no prohíbe nada**: el párrafo que explica el rubro cita rutas para
+    ilustrarlo —el de la plantilla citaba hasta la que dice que NO va acá— y contarlas deja al
+    spec prohibiendo `src/` antes de escribir una línea propia.
     """
-    cuerpo = sin_cercados(texto)
+    cuerpo = sin_cercados(sin_comentarios(texto))
     inicio = cuerpo.find(f"{RUBRO_DE_RUTAS}\n")
     if inicio == -1:
         return []

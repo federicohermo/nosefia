@@ -39,6 +39,7 @@ from lib.repo import RAIZ
 from lib.specs import (
     ENCABEZADOS_DEL_PLAN,
     acs_de,
+    rutas_intocables,
     en_vuelo,
     encabezados_del_plan,
     leer_mapa,
@@ -348,7 +349,75 @@ class Convencion(unittest.TestCase):
                 )
 
 
+class LaPlantillaPasaSusPropiosGates(unittest.TestCase):
+    """`specs/plantilla/` medida con las reglas que un spec copiado va a tener que cumplir.
+
+    **Es el único de estos tests que corre siempre**, porque la plantilla está commiteada y no
+    es caché: los de arriba miran lo que haya hidratado, que puede ser nada.
+
+    Existe porque no se midió y salió cara. El 2026-09-06, recién escrita, el `plan.md` de la
+    plantilla daba **386 palabras contra un techo de 250** sin una palabra propia, y su
+    `### Rutas` declaraba intocables `src/`, `reglas.gd`, `tasks.md` y hasta la regla que el
+    párrafo de al lado nombra como ejemplo de lo que NO va en ese rubro. O sea que copiarla
+    arrancaba con dos gates en rojo y el segundo acusando al PR de tocar `src/`.
+
+    Una plantilla que no pasa el gate que ella misma enseña a pasar no se descubre leyéndola:
+    se descubre cuando alguien la usa, que es el peor momento y la persona equivocada.
+    """
+
+    def setUp(self):
+        self.plantilla = SPECS / "plantilla"
+        if not self.plantilla.is_dir():
+            self.fail("falta specs/plantilla/: es lo que `spec-create` manda a copiar")
+        self.archivos = {
+            nombre: (self.plantilla / nombre).read_text(encoding="utf-8")
+            for nombre in CANONICOS
+            if (self.plantilla / nombre).is_file()
+        }
+
+    def test_tiene_los_tres_archivos_y_ninguno_de_mas(self):
+        presentes = {f.name for f in self.plantilla.iterdir() if f.is_file()}
+        self.assertEqual(problemas_de_forma("plantilla", presentes), [])
+
+    def test_su_plan_declara_las_tres_secciones(self):
+        self.assertEqual(
+            problemas_de_estructura("plantilla", self.archivos["plan.md"]), []
+        )
+
+    def test_entra_en_los_cuatro_techos_sin_una_palabra_propia(self):
+        # El margen es el punto: lo que sobra del techo es lo que le queda a quien escriba el
+        # spec. Una plantilla que entra raspando es una plantilla que no se puede completar.
+        self.assertEqual(problemas_de_techo("plantilla", self.archivos), [])
+
+    def test_no_prohibe_ninguna_ruta(self):
+        # Las rutas que la plantilla nombra son EJEMPLOS del rubro, no restricciones. Si
+        # alguna se cuela afuera de un comentario, todo spec copiado hereda la prohibición —y
+        # `src/` estaba entre ellas, que es lo que toca cualquier PR de feature de este repo.
+        self.assertEqual(rutas_intocables(self.archivos["plan.md"]), [])
+
+    def test_sus_criterios_de_ejemplo_pasan_las_reglas_de_un_criterio(self):
+        # La plantilla enseña a escribir un AC con cuatro ejemplos. Si uno de ellos no
+        # sobreviviría al gate, lo que enseña está mal.
+        texto = self.archivos["spec.md"]
+        self.assertNotEqual(acs_de(texto), [])
+        _, criterios = partir_spec(texto)
+        for numero, linea in enumerate(criterios.splitlines(), 1):
+            self.assertNotRegex(linea, TEXTO_QUE_APLAZA, f"plantilla/spec.md:{numero}")
+            self.assertNotRegex(linea, MARCADOR_DE_CODIGO, f"plantilla/spec.md:{numero}")
+            self.assertNotRegex(linea, PIDE_UNA_PERSONA, f"plantilla/spec.md:{numero}")
+
+    def test_ninguna_seccion_suya_aplaza_trabajo(self):
+        for nombre, texto in self.archivos.items():
+            for numero, linea in enumerate(texto.splitlines(), 1):
+                encabezado = ENCABEZADO.match(linea)
+                if encabezado:
+                    self.assertNotRegex(
+                        encabezado.group(1), SECCION_QUE_APLAZA, f"plantilla/{nombre}:{numero}"
+                    )
+
+
 class Sondas(unittest.TestCase):
+
     """Las reglas puras, sobre casos escritos acá.
 
     Existen porque las de arriba corren sobre lo que haya en disco, que puede ser nada: sin

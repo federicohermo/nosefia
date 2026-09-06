@@ -76,6 +76,10 @@ CANONICOS = ("research.md", "plan.md", "tasks.md")
 
 #: Los tres archivos que tiene un spec entero, `spec.md` incluido. Es la guarda de lo único
 #: destructivo que hace este script: borrar del issue un comentario que ya no tiene archivo.
+#:
+#: **Del `spec.md` no hace falta preguntar y por eso el chequeo se lo regala**: unas líneas más
+#: arriba se lee para mandarlo al body, así que una carpeta sin él ya se cayó. Está igual en la
+#: lista porque lo que define «entera» es el spec y no las dos mitades que quedan.
 COMPLETA = frozenset({CUERPO, "research.md", "plan.md"})
 
 #: El límite de un body y de un comentario de GitHub.

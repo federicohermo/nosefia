@@ -110,6 +110,15 @@ criteria*: este formato las colapsaba, y la presión empujaba las restricciones 
 **Los encabezados no cuentan para el techo de 250**, y es medido: con ellos el margen era **cero**
 —el 012 tenía exactamente 250—, así que rotular habría sido un rojo.
 
+**Y tampoco cuentan los comentarios de markdown**, que es donde la plantilla explica cada rubro:
+un `<!-- -->` es andamio de quien escribe, se borra, y no se ve en el issue renderizado. Sin esa
+regla la plantilla es inusable, y no es hipótesis — el 2026-09-06 su `plan.md` daba **386
+palabras contra el techo de 250** sin una palabra propia. Por el mismo motivo **una ruta citada
+adentro de un comentario no prohíbe nada**: el párrafo que explica el `### Rutas` cita rutas para
+ilustrarlo, y contarlas dejaba a todo spec copiado prohibiendo `src/`. Que la plantilla siga
+pasando los cuatro techos y no declarando ninguna ruta lo cobra
+`test_convencion_de_specs.py`, sobre `specs/plantilla/` misma.
+
 ## Por qué se fue el `tasks.md`
 
 **Lo que se midió, sobre los 28 specs que había el 2026-09-05:** de las rutas de archivo que
@@ -151,6 +160,9 @@ Sobre todo spec en vuelo, y con «palabra» = token con letra o dígito:
 | el bloque `## Criterios de aceptación` **entero** | 300 |
 | el `research.md` | 500 |
 | el `plan.md`, **sin contar sus encabezados** | 250 |
+
+Los cuatro se miden **sin los comentarios de markdown**: el andamio de la plantilla no gasta
+techo.
 
 **El segundo cae sobre el bloque entero y no sobre cada criterio, y ahí está la decisión.** Con
 un límite por criterio, un spec cumple escribiendo veinte criterios cortos — la misma enfermedad
