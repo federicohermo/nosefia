@@ -147,14 +147,14 @@ class ArchivoDeComentario(unittest.TestCase):
         self.assertEqual(nombre, "tasks.md")
         self.assertEqual(contenido, "- [ ] T001")
 
-    def test_el_archivo_del_regimen_nuevo_vuelve_del_issue(self):
-        # `estrategia.md` reemplaza a `plan.md` y `tasks.md` del 030 en adelante. Entra por el
-        # mismo alfabeto que los demás y no hay ninguna lista de nombres que ampliar: si la
-        # hubiera, este archivo se subiría al issue y no volvería nunca — y `specs/` es caché,
-        # así que «no volver» es perderse.
+    def test_un_archivo_que_no_es_canonico_vuelve_del_issue(self):
+        # El alfabeto no es una lista de nombres conocidos, y ésa es la propiedad: un spec
+        # puede agregar un `baseline.md` con una medición previa. Si hubiera una lista, ese
+        # archivo se subiría al issue y no volvería nunca — y `specs/` es caché, así que «no
+        # volver» es perderse.
         self.assertEqual(
-            archivo_de_comentario("## `estrategia.md`\n\nEl orden obligado."),
-            ("estrategia.md", "El orden obligado."),
+            archivo_de_comentario("## `baseline.md`\n\nLo que medía antes."),
+            ("baseline.md", "Lo que medía antes."),
         )
 
     def test_no_acepta_un_nombre_fuera_del_alfabeto(self):

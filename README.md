@@ -22,8 +22,8 @@ nada que instalar.
 
 ## Cómo se trabaja acá
 
-- **Un cambio empieza por un spec**, y el spec es un issue de GitHub. No se edita `src/` ni
-  `docs/` sin uno: lo bloquea un hook, no la buena voluntad.
+- **Un cambio empieza por un spec**, y el spec es un issue de GitHub. No se edita `src/` sin
+  uno: lo bloquea un hook, no la buena voluntad.
 - **El test va primero.** Todo script de `src/dominio/` y `src/sistemas/` tiene su espejo en
   `test/`, y un gate lo verifica.
 - **`staging` integra, `main` es lo que se entrega.** Cada spec entra por su rama

@@ -87,11 +87,13 @@ Verificadas por una herramienta:
   revisión. El criterio de cada capa, en su `.claude/rules/`.
 - **Todo `.gd` de `dominio/` y `sistemas/` tiene su test espejo** en `test/<capa>/<nombre>_test.gd`
   (`gate_de_tests.py`).
+- **Cada criterio del spec de la rama, citado por un test** como `NNN-ACn`
+  (`test_criterios_de_la_rama.py`). Verifica la cita, no que el test ejerza el criterio.
 - **Ningún test sin aserción, apagado (`skip(true)`, `assert_not_yet_implemented`) o con un
   nombre que hace que no corra.** Las cuatro reglas cierran la misma cosa: verde sin ejercer
   nada.
 - **Formato, largo de línea (100), nombres y orden de declaraciones** (`gdformat`, `gdlint`).
-- **No se edita `src/` ni `docs/` sin un spec detrás de la rama** (el hook de
+- **No se edita `src/` sin un spec detrás de la rama** (el hook de
   `.claude/settings.json`).
 - **Un skill es autocontenido: trae adentro todo lo que corre** (`test_copias_de_skills.py`).
   Ninguno alcanza `../otro-skill/`: uno que sale a buscar el archivo al de al lado deja de
@@ -148,26 +150,30 @@ del PR que lo justifica.
 **Los issues son la ENTRADA del repo, nunca la salida.** Un pedido de afuera entra como
 [issue](https://github.com/federicohermo/nosefia/issues) y `spec-create` lo drena hacia specs
 (`deuda.py` lista qué hay). Lo que **no** existe es abrir uno para **terminar** una corrida.
-**Eso es un rojo**, y lo cobra `test_convencion_de_specs.py`: en un spec `Implementado`, **cada
-criterio nombrado por un test** si es ≥ 030, y ninguna casilla abierta si es ≤ 029. La doctrina
-entera, que los ocho skills traen adentro:
+**Eso es un rojo**, y lo cobra `test_criterios_de_la_rama.py`: **cada criterio del spec de la
+rama, citado como `NNN-ACn` por algún test**, y el rojo dice cuál falta. Mira la rama y no los
+specs cerrados porque sobre un `Implementado` llegaba tarde: el PR ya aterrizó y lo único que
+queda es abrir otra cosa. La doctrina entera, que los ocho skills traen adentro:
 [sin-deuda.md](./.claude/skills/spec-create/sin-deuda.md) es la copia canónica.
 
 ## Antes de un cambio grande
 
-Tres archivos (`spec` · `research` · `estrategia`) publicados como issue con
+Tres archivos (`spec` · `research` · `plan`) publicados como issue con
 `publicar_spec.py crear` y `publicar`, y **sólo** `specs/mapa.json` commiteado a `staging`. **El
 spec es un prompt, no un documento**, y el techo es ejecutable: 350 palabras de prosa, 300 en el
-bloque de criterios, 500 en el research, 250 en la estrategia. Del **030** en adelante; los
-≤ 029 son ADR en el formato viejo y no se reescriben.
+bloque de criterios, 500 en el research, 250 en el plan. **No hay `tasks.md`**: era predicción
+específica y equivocada, y el `plan.md` declara sólo el orden obligado. Los specs que ya
+aterrizaron son ADR en el formato viejo y no se reescriben — el gate los distingue por el
+`estado` del mapa, nunca por el número.
 
 **Ahí termina abrir un spec: la rama la abre el implementador**, porque escribirlo y decidir
 implementarlo son dos decisiones distintas. **Y lo bloquea un hook**, no la buena voluntad. El
 flujo entero y **qué NO necesita spec**, en [spec-create](./.claude/skills/spec-create/SKILL.md).
 
-`specs/[0-9]*/` está en el `.gitignore`: es **caché**, se trae con `hidratar_specs.py <NNN>`, y
-hace falta **en cada worktree**. Y el `research.md` se escribe **midiendo, no suponiendo**: qué
-corriste y qué contestó.
+`specs/[0-9]*/` está en el `.gitignore`: es **caché**, se trae con `hidratar_specs.py` —los que
+están en vuelo— o `hidratar_specs.py <NNN>`, y hace falta **en cada worktree**. **Los cerrados no
+vienen en lote**: son ADR y se piden por número. Y el `research.md` se escribe **midiendo, no
+suponiendo**: qué corriste y qué contestó.
 
 ## Las trampas de este repo
 

@@ -5,7 +5,7 @@ del hook por stdin y contesta por stdout con `permissionDecision`.
 
 ## Por qué existe
 
-`CLAUDE.md` y `specs/README.md` documentan el flujo —cuatro archivos, `publicar_spec.py`, la
+`CLAUDE.md` y `specs/README.md` documentan el flujo —tres archivos, `publicar_spec.py`, la
 rama recién después— pero es prosa, y la prosa no frena a nadie. En el repo del que sale este
 harness, la sesión que abrió un spec reportó un bug y el agente abrió una rama y editó el
 dominio sin spec y sin issue: nada se lo impidió.
@@ -57,7 +57,7 @@ from lib.rutas_protegidas import esta_protegida  # noqa: E402
 RAMA_DE_SPEC = re.compile(r"^feature/(\d{3})-")
 
 COMO_SALIR = (
-    "Si el spec no existe, la salida es el skill `spec-create`: medir, escribir los cuatro "
+    "Si el spec no existe, la salida es el skill `spec-create`: medir, escribir los tres "
     "archivos en `specs/<NNN>-<kebab>/`, publicarlos con "
     "`python .claude/scripts/publicar_spec.py crear` y `publicar`, y commitear SÓLO "
     "`specs/mapa.json` a `staging`. Si el spec YA está publicado, lo que falta es la rama, que "

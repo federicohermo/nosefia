@@ -99,10 +99,17 @@ archivo ya dice.
 de atrás —inventar `ui/pantallas/` en vez de usar el criterio—; lo que **no** puede contestar es
 si un archivo está en la carpeta *correcta*, que es semántica y la mira la revisión.
 
-## Las dos rutas protegidas
+## La ruta protegida
 
-`src/` y `docs/`. El hook de `.claude/settings.json` no deja editarlas desde `main`, desde
+`src/`, y nada más. El hook de `.claude/settings.json` no la deja editar desde `main`, desde
 `staging` ni desde una rama que no nombre un spec.
+
+**`docs/` estuvo adentro hasta el 2026-09-05**, y salió porque la regla se contradecía sola: el
+propio mensaje del gate ofrece una salida para el cambio que no necesita spec, y el código no
+la tenía. Corregir una línea de documentación pedía abrir un spec, y eso no produce más specs:
+produce documentación que nadie corrige. Lo que queda protegido es donde viven las reglas del
+juego — un `.md` desactualizado se lee y se arregla, una regla del dominio que entró de
+contrabando nace sin test y no la ve nadie.
 
 **`.claude/` y `specs/` quedan afuera a propósito**: son adonde el flujo te manda a escribir
 primero, y `.claude/` es además donde vive el gate — uno que se impide arreglarse a sí mismo se

@@ -74,12 +74,9 @@ CITA = re.compile(r"`([^`]*[A-Za-z0-9_-]\.(?:gd|tscn|tres|py|md|json|cfg|yml|yam
 # Los archivos que un spec tiene adentro de su carpeta: citados sin ruta son suyos, y
 # contarlos como compartidos pondría a los N specs del lote pisándose el `tasks.md`.
 #
-# Están los de los dos regímenes juntos —los cuatro de un spec ≤ 029 y los tres de uno
-# ≥ 030— porque un lote los puede mezclar, y un nombre de más acá no cuesta nada: lo único
-# que hace es no inventar una arista.
-PROPIOS = frozenset(
-    ("spec.md", "research.md", "plan.md", "tasks.md", "estrategia.md", "README.md")
-)
+# `tasks.md` sigue en la lista aunque ningún spec vivo lo tenga: un ADR traído a mano lo
+# cita, y un nombre de más acá no cuesta nada — lo único que hace es no inventar una arista.
+PROPIOS = frozenset(("spec.md", "research.md", "plan.md", "tasks.md", "README.md"))
 
 
 def es_propio(cita: str) -> bool:
@@ -133,17 +130,12 @@ def expandir(args: list[str]) -> list[str]:
 def archivo_de_trabajo(carpeta: Path) -> Path | None:
     """El archivo del spec donde vive lo que se va a hacer: qué archivos toca y en qué orden.
 
-    Son dos según el régimen —`tasks.md` en un spec ≤ 029, `estrategia.md` en uno ≥ 030— y
-    acá se elige **por lo que hay en disco y no por el número**, al revés que en el gate. La
-    razón es la diferencia de trabajo: el gate decide si un spec está bien escrito y ahí el
-    número es lo único que no se puede evadir; esto es una herramienta de reporte, y frenar
-    un lote entero porque un spec tiene el archivo del otro régimen sería cambiar un informe
-    incompleto por ninguno.
+    Es el `plan.md` y no hay segundo candidato. Lo hubo mientras convivieron dos regímenes
+    —el `tasks.md` de los specs viejos—, y se fue con ellos: los que quedaron con casillas
+    son ADR, y de un ADR no sale un lote.
     """
-    for nombre in ("estrategia.md", "tasks.md"):
-        if (carpeta / nombre).is_file():
-            return carpeta / nombre
-    return None
+    plan = carpeta / "plan.md"
+    return plan if plan.is_file() else None
 
 
 def carpeta_de(id_spec: str) -> Path:
@@ -183,7 +175,7 @@ def main() -> None:
     faltan = [i for i, p in tareas.items() if p is None]
     if faltan:
         _morir(
-            f"sin tasks.md ni estrategia.md: {', '.join(faltan)}. "
+            f"sin plan.md: {', '.join(faltan)}. "
             "¿La hidratación quedó a medias?",
             codigo=1,
         )
@@ -238,10 +230,10 @@ def main() -> None:
     # y los 18 de más eran frecuencias y números de spec que inventan una dependencia dura donde
     # no hay ninguna.
     #
-    # En un spec ≥ 030 no hay casillas, así que ahí se miran **todas** las líneas. No
+    # En un `plan.md` no hay casillas, así que ahí se miran **todas** las líneas. No
     # reabre la ceguera que motivó la restricción: los 18 pares de más venían de la prosa
-    # colgada debajo de cada tarea, y un `estrategia.md` entero tiene un techo de 250
-    # palabras — menos que la prosa de una sola tarea del régimen viejo.
+    # colgada debajo de cada tarea, y un `plan.md` entero tiene un techo de 250 palabras —
+    # menos que la prosa de una sola tarea del régimen viejo.
     hubo = False
     for i in ids:
         con_casillas = any(LINEA_DE_TAREA.match(linea) for linea in lineas[i])

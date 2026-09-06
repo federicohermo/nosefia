@@ -71,8 +71,8 @@ class LaMatrizVeLasCitasConLinea(unittest.TestCase):
 
 class ElFiltroDeLoPropioNoSeLlevaLoAjeno(unittest.TestCase):
     def test_los_archivos_del_spec_se_filtran(self):
-        # Los de los dos regímenes: los cuatro de un spec ≤ 029 y los tres de uno ≥ 030.
-        for nombre in ("spec.md", "research.md", "plan.md", "tasks.md", "estrategia.md"):
+        # Los tres de un spec, más el `tasks.md` que sólo tienen los ADR.
+        for nombre in ("spec.md", "research.md", "plan.md", "tasks.md"):
             self.assertEqual([], citados(f"- [ ] T001 ver `{nombre}`"), nombre)
 
     def test_el_readme_pelado_se_filtra(self):

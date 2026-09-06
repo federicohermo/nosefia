@@ -45,11 +45,11 @@ es `feature/`; el derivador es más ancho a propósito, para no perder un merge 
 
 ## Cuándo NO hace falta un spec
 
-Cuando el cambio no toca `src/` ni `docs/`: un asset, un typo, actualizar el addon, un
-`chore/`. Ahí la rama se llama `fix/…` o `chore/…` y va directo a PR contra `staging`.
+Cuando el cambio no toca `src/`: un asset, un typo, la documentación, actualizar el addon,
+un `chore/`. Ahí la rama se llama `fix/…` o `chore/…` y va directo a PR contra `staging`.
 
-**Lo que no se puede es trabajar sobre `main` o `staging`.** El hook sólo protege dos
-directorios, pero la razón vale para todo: son ramas que reciben trabajo de otros.
+**Lo que no se puede es trabajar sobre `main` o `staging`.** El hook sólo protege un
+directorio, pero la razón vale para todo: son ramas que reciben trabajo de otros.
 
 ## Los dos workflows
 

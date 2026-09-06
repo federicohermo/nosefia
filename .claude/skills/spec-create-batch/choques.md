@@ -14,7 +14,7 @@ La diferencia con el cruce que mide `spec-revise-batch` es cuándo se paga:
 | Quién lo mira | el padre, antes de lanzar | un carril propio, después |
 
 Los dos pases hacen falta y ninguno reemplaza al otro. Éste existe porque **un agente que ya
-escribió cuatro archivos no los tira**: si dos pedidos eran el mismo spec, para cuando alguien lo
+escribió sus tres archivos no los tira**: si dos pedidos eran el mismo spec, para cuando alguien lo
 note hay dos carpetas, dos issues y dos ramas. Cinco minutos acá.
 
 **Lo que salga de acá es una decisión, no una pregunta.** Se decide, se escribe, y **va en el
@@ -40,7 +40,7 @@ El más común y el más barato. Llegan como frases distintas —«el turno no a
 ## 2 · Un pedido no necesita spec, y el lote lo va a escribir igual
 
 La presión del batch es hacia escribir de más: ya están los N agentes lanzados, ya hay un
-formato, sale casi gratis por unidad. Y un skill que obliga a cuatro archivos para arreglar una
+formato, sale casi gratis por unidad. Y un skill que obliga a tres archivos para arreglar una
 tilde **se apaga entero**.
 
 - **Se detecta** con la tabla de `spec-create` —«¿esto necesita un spec?»—, aplicada **una vez
@@ -95,7 +95,7 @@ divergen la primera vez que alguien ajusta la dificultad tocando una sola.
 
 - **Se detecta** listando los números que cada pedido necesita fijar.
 - **Se decide** nombrando **el archivo y el spec dueños**, y el otro spec cita. Eso va escrito en
-  los dos `estrategia.md`: el dueño lo crea, el otro declara de dónde lo saca. Es exactamente
+  los dos `plan.md`: el dueño lo crea, el otro declara de dónde lo saca. Es exactamente
   la forma que ya tiene el 002 respecto del 001 en este repo.
 
 ## 6 · Dos specs tocan la misma escena
@@ -106,7 +106,7 @@ compartir el archivo ya es la conclusión.
 
 - **Se detecta** preguntando por escena, no por archivo: qué pantalla toca cada pedido.
 - **Se decide ordenando, no editando.** Los dos specs se declaran en cadena —cuál va primero y
-  por qué— y el segundo lo escribe en su `estrategia.md`. Ningún paralelo entre tramos que
+  por qué— y el segundo lo escribe en su `plan.md`. Ningún paralelo entre tramos que
   tocan la misma escena, ni adentro de un spec ni entre dos.
 
 ## 7 · El lote mide contra un repo que el lote va a cambiar
