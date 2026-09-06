@@ -281,6 +281,41 @@ def carpeta_existente(carpetas: list[str], id_spec: str) -> str | None:
     return None
 
 
+def seleccionar_carpetas(carpetas: list[str], ids: list[str]) -> list[str]:
+    """Las carpetas sobre las que opera una corrida de `publicar_spec.py`.
+
+    **Sin `ids` devuelve todas**, que es el default histórico y el que necesitan el alta y
+    cualquier reconciliación: ningún llamador pasa números, así que ninguno se entera de que
+    esto existe.
+
+    Vive acá y no en el script por lo mismo que el resto de este módulo: es lo que decide, y
+    adentro de un ejecutable no se puede cubrir sin levantar la red. Empareja por `NNN` con
+    `carpeta_existente`, o sea que una caché hidratada antes de un cambio de título sigue
+    contando como presente.
+
+    **Un `NNN` sin carpeta grita, y grita por todos juntos.** Devolver el subconjunto que sí
+    está dejaría correr media publicación: los issues del resto quedarían reescritos y el que
+    faltaba, no — con el mapa y GitHub diciendo cosas distintas y ningún error que lo nombre.
+    Por eso también se listan los que faltan **todos**: cortar en el primero obliga a
+    descubrirlos de a uno, una corrida por vez.
+    """
+    if not ids:
+        return list(carpetas)
+
+    elegidas = {i: carpeta_existente(carpetas, i) for i in ids}
+    faltan = sorted(i for i, c in elegidas.items() if c is None)
+    if faltan:
+        raise ValueError(
+            f"no hay carpeta en disco para: {', '.join(faltan)}. "
+            "No se emitió ninguna llamada a `gh`. "
+            f"`hidratar_specs.py {' '.join(faltan)}` las trae."
+        )
+    # En el orden de `carpetas` y sin repetidos: el orden lo fija el disco y no el argumento,
+    # para que la salida de una corrida no dependa de en qué orden se tipearon los números.
+    presentes = {c for c in elegidas.values()}
+    return [c for c in carpetas if c in presentes]
+
+
 _LINEA_DE_ORIGEN = re.compile(r"^\*\*Origen:\*\*(.*)$", re.MULTILINE)
 
 
