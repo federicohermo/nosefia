@@ -19,6 +19,8 @@ Esta tabla es lo más útil del documento: dice de qué reglas hay que acordarse
 | El formato de un spec y sus cuatro techos | `tests/test_convencion_de_specs.py` |
 | Cada criterio del spec de la rama, citado por un test | `tests/test_criterios_de_la_rama.py` |
 | Que la rama no toque lo que su plan declaró intocable | `tests/test_rutas_del_plan.py` |
+| Que un skill traiga adentro todo lo que corre, copia por copia | `tests/test_copias_de_skills.py` |
+| Que un doc diga la regla y no la lista de los skills | `tests/test_docs_no_enumeran_skills.py` |
 | No editar `src/` sin spec | el hook de `.claude/settings.json` |
 | **Tipado estático en toda firma** | **nadie: prosa** |
 | **Comentarios que expliquen el porqué** | **nadie: prosa** |
