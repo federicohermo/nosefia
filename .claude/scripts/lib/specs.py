@@ -235,7 +235,16 @@ def archivo_de_comentario(cuerpo: str) -> tuple[str, str] | None:
 
 #: Las referencias a otro spec por ruta, en las dos formas que existen: la relativa desde
 #: adentro de `specs/` (`./005-…/spec.md`) y la que llega desde afuera (`specs/005-…/spec.md`).
-_CITA_A_SPEC = re.compile(r"(?:\.{1,2}/)*(?:specs/)?(\d{3})-[a-z0-9-]+/[a-z0-9-]+\.md")
+#:
+#: **El `(?!:\d)` del final no es cosmético: sin él esto destruye mediciones.** Una cita con
+#: rango —`specs/016-…/research.md:59-60`, la forma en que este repo apunta a una medición—
+#: matcheaba hasta el `.md` y dejaba el `:59-60` pegado a la URL, produciendo
+#: `…/issues/20:59-60`, que no lleva a ninguna parte. Y como `hidratar_specs.py` escribe al
+#: disco lo que el issue tiene, la URL rota **volvía** y pisaba la ruta original: para cuando
+#: se ve, la referencia ya no se puede reconstruir. Medido el 2026-09-06 — ocho citas así en
+#: el 007 y el 013, todas perdidas. Un issue no tiene número de línea, así que la traducción
+#: no puede preservar lo que la cita quería decir: se deja verbatim.
+_CITA_A_SPEC = re.compile(r"(?:\.{1,2}/)*(?:specs/)?(\d{3})-[a-z0-9-]+/[a-z0-9-]+\.md(?!:\d)")
 
 
 def traducir(texto: str, mapa: dict[str, dict[str, Any]], repo: str) -> str:

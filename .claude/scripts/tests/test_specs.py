@@ -187,6 +187,16 @@ class Traducir(unittest.TestCase):
         # muerto.
         self.assertIn("issues/42", traducir("./005-el-inventario/baseline.md", self.mapa, "u/r"))
 
+    def test_una_cita_con_linea_no_se_traduce(self):
+        # Sin esto la traducción **destruye la medición**: matcheaba hasta el `.md` y dejaba el
+        # rango pegado a la URL —`…/issues/42:59-60`—, que no lleva a ninguna parte. Y como
+        # `hidratar_specs.py` escribe al disco lo que el issue tiene, la URL rota volvía y
+        # pisaba la ruta original. Medido el 2026-09-06: ocho citas perdidas así, en el 007 y
+        # el 013. Un issue no tiene número de línea, así que la cita se deja verbatim.
+        for cita in ("specs/005-el-inventario/research.md:59-60", "./005-el-inventario/spec.md:7"):
+            with self.subTest(cita=cita):
+                self.assertEqual(traducir(f"ver {cita}", self.mapa, "u/r"), f"ver {cita}")
+
 
 class CarpetaExistente(unittest.TestCase):
     def test_empareja_por_numero_y_no_por_nombre(self):
