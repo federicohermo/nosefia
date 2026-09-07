@@ -98,6 +98,26 @@ recibe un directorio ya construido.
 templates se mueve con cada bump de `.godot-version`, y escrito en tres archivos envejece en dos
 sin que nadie los cruce.
 
+### Y por eso `vercel.json` apaga el deploy automático de Git
+
+El proyecto **está vinculado al repo**, así que sin apagarlo la integración de Vercel construye
+**la raíz** en cada push: sin Godot, sin export, sin juego. No falla — publica. Medido el
+2026-09-07 contra el proyecto de este repo: la producción, desplegada desde `staging` por la
+integración, contestaba **404**.
+
+Y con `desplegar.yml` en `main` serían **dos caminos publicando sobre el mismo proyecto en el
+mismo push**, con el alias de producción para el que termine último: o el juego, o el 404, según
+la carrera.
+
+```json
+"git": { "deploymentEnabled": false }
+```
+
+Lo ata `test_despliegue.py`, porque es una línea que se borra sin querer y el síntoma —un 404 en
+producción mientras Actions dice verde— no la nombra. La opción es de
+[Git configuration](https://vercel.com/docs/project-configuration/git-configuration), y sólo
+gobierna los deploys **automáticos**: el `vercel deploy` explícito del workflow sigue andando.
+
 ## Rehacerlo a mano
 
 Cuando hay que publicar sin pasar por Actions —o reproducir un fallo del workflow—, es esto,

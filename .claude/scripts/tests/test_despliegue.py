@@ -83,6 +83,20 @@ class ElParEnDisco(unittest.TestCase):
         self.assertEqual(preset.get("export_path"), "export/web/index.html")
         self.assertTrue(pide_hilos(self.cfg), f"el preset Web no declara `{HILOS}=true`.")
 
+    def test_vercel_apaga_el_deploy_automatico_de_git(self):
+        # `docs/infra/despliegue.md` dedica una sección entera a por qué exporta Actions y no
+        # Vercel, y nada lo hacía cumplir: el proyecto está vinculado al repo, así que la
+        # integración de Git construía la raíz en cada push —sin Godot, sin export— y publicaba.
+        # Medido el 2026-09-07 contra el proyecto de este repo: la producción contestaba **404**.
+        # Y con `desplegar.yml` en `main` serían dos caminos publicando sobre el mismo proyecto,
+        # con el alias de producción para el que termine último.
+        self.assertIs(
+            self.vercel.get("git", {}).get("deploymentEnabled"),
+            False,
+            "`vercel.json` no apaga el deploy automático de Git: la integración va a publicar la "
+            "raíz del repo, que no tiene el juego exportado.",
+        )
+
     def test_vercel_manda_los_dos_headers_para_todas_las_rutas(self):  # 027-AC1
         declarados = headers_universales(self.vercel)
         for header, valor in AISLAMIENTO.items():
