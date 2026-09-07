@@ -140,9 +140,11 @@ func reanudar() -> void:
 
 ## Qué `id` del dominio se está llevando en la mano, o `SIN_ID`.
 ##
-## La única puerta por la que otra escena pregunta qué lleva el jugador — la pide el 014 para
-## saber si lo que se le entrega al comprador es lo que pidió. Devuelve el `id` y nunca el nodo:
-## un nodo cruzaría la dirección de las capas al revés.
+## La única puerta por la que otra escena pregunta qué lleva el jugador — la piden los tres
+## llamadores del 014 para saber si lo que hay en la mano es el trapeador, que es lo que decide
+## si una pasada cuenta: `PisoDelLocal.pasar()` compara este `id` contra el del trapeador y una
+## mano con otra cosa no baja una sola pasada. Devuelve el `id` y nunca el nodo: un nodo
+## cruzaría la dirección de las capas al revés.
 func id_en_la_mano() -> StringName:
 	var datos := agarre.manos().sostenido()
 	if datos == null:
