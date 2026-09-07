@@ -83,7 +83,15 @@ func obligatorias() -> Array[Tarea]:
 ## **Las obligatorias se piden de nuevo en cada jornada, y ésa es la razón de ser de esta
 ## función.** Reusar la lista de ayer arrancaría la noche siguiente con las tareas ya
 ## completadas: la jornada empezaría ganada, sin un solo error y sin un solo rojo.
+##
+## Sobre una partida terminada no abre y devuelve `null`, por el mismo motivo que el guard de
+## `cerrar_la_jornada()`: la puerta es pública y el 017 la va a tocar desde una pantalla. Sin
+## esto, una noche jugada después del despido le pasa una banda al legajo, y una impecable lo
+## reinicia a cero: el contador de jornadas avanza sobre una partida que ya terminó y el final
+## queda contradiciendo al legajo, sin un solo error.
 func abrir_la_jornada() -> Turno:
+	if terminada():
+		return null
 	_obligatorias = Apertura.obligatorias()
 	_jornada_abierta = true
 	return Apertura.turno_de_la_jornada(_obligatorias)

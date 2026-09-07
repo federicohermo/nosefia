@@ -47,8 +47,17 @@ func iniciar(enfocado: ObjetoDelAlmacen = null) -> bool:
 	if _examinando != null or agarre == null:
 		return false
 	var datos := agarre.manos().sostenido()
-	var nodo := agarre.mover_lo_sostenido(punto_de_examen)
-	if datos != null and nodo != null:
+	if datos != null:
+		# Un punto sin cablear es un `.tscn` mal armado y no «no hay nada que examinar», y por eso
+		# corta acá en vez de caer al camino de abajo: sin el corte, la E con una lata en la mano
+		# revelaba la puerta que se estaba mirando —lo contrario del orden que este método
+		# decide— y lo hacía sin un solo error. Es el gemelo del punto de carga en `Agarre`.
+		if punto_de_examen == null:
+			push_error("Examen sin punto de examen cableado: revisar jugador.tscn")
+			return false
+		var nodo := agarre.mover_lo_sostenido(punto_de_examen)
+		if nodo == null:
+			return false
 		_examinando = nodo
 		examen_iniciado.emit(nodo)
 		objeto_revelado.emit(datos, _hallazgos.registrar(datos))

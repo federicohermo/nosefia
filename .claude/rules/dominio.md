@@ -89,7 +89,7 @@ cambie uno.
 ## Las subcarpetas: cuánto dura el efecto
 
 La carpeta **no repite el nombre del archivo**: dice **qué se rompe si tocás lo que hay
-adentro**. Una carpeta `reglas/` con los dos `reglas*.gd` sería una línea más de árbol y cero
+adentro**. Una carpeta `reglas/` con todos los `reglas*.gd` sería una línea más de árbol y cero
 información — es la misma regla que los comentarios de este repo, que explican el porqué y no
 el qué.
 
