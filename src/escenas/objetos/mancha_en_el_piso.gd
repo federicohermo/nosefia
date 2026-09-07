@@ -15,6 +15,13 @@ extends StaticBody3D
 
 @export var _mancha: MeshInstance3D
 
+## La forma con la que la mancha choca y con la que la mira la enfoca.
+##
+## Se apaga junto con la malla porque esconder un nodo **no apaga su cuerpo**: sin esto, una
+## mancha ya limpia sigue frenando el rayo de la mira y sigue siendo un tope invisible en
+## medio del pasillo, con la escena cargando sin un solo error.
+@export var _cuerpo: CollisionShape3D
+
 
 ## De qué zona es. Lo pregunta el puesto de limpieza para saber qué mancha tiene delante, y es un
 ## método y no una lectura del campo para que el contrato sea el mismo que el de `interactuar()`.
@@ -30,10 +37,12 @@ func interactuar() -> ObjetoDelAlmacen:
 	return null
 
 
-## Se aclara según lo que falte, y desaparece al llegar a cero.
+## Se aclara según lo que falte, y al llegar a cero desaparece entera: malla y cuerpo.
 ##
 ## Recibe los dos números en vez de ir a buscarlos: esta mancha no es dueña de ninguno, y la
 ## cuenta vive en `PisoDelLocal`. Es lo que la deja dibujarse sin conocer al piso.
 func mostrar(restantes: int, totales: int) -> void:
-	visible = restantes > 0
+	var sucia := restantes > 0
+	visible = sucia
+	_cuerpo.disabled = not sucia
 	_mancha.transparency = 1.0 - float(restantes) / float(maxi(totales, 1))

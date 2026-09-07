@@ -24,6 +24,10 @@ const CajaDeProductosDelDeposito := preload("res://src/escenas/objetos/caja_de_p
 const CajaDeTrasladoQueSeVe := preload("res://src/escenas/objetos/caja_de_traslado.gd")
 const LimpiezaDelLocal := preload("res://src/escenas/puestos/limpieza_del_almacen.gd")
 
+## El jugador tampoco declara un `class_name` —es cáscara, como este archivo—, así que el
+## `@export` de abajo no lo puede nombrar sin traerlo por `preload`.
+const Jugador := preload("res://src/escenas/jugador.gd")
+
 @export var _hud: Hud
 @export var _reloj: RelojDelTurno
 @export var _ciclo: CicloDeJornadas
@@ -32,8 +36,9 @@ const LimpiezaDelLocal := preload("res://src/escenas/puestos/limpieza_del_almace
 @export var _repositor: Repositor
 @export var _carga: CargaDeLaCaja
 @export var _estante: EstanteDelLocal
-@export var _caja_de_productos: CajaDeProductosDelDeposito
+@export var _cajas_de_productos: Array[Node3D]
 @export var _caja_de_traslado: CajaDeTrasladoQueSeVe
+@export var _jugador: Jugador
 @export var _atenciones: Ventanilla
 @export var _computadora: ComputadoraDeEscritorio
 @export var _limpiador: Limpiador
@@ -59,21 +64,58 @@ func _ready() -> void:
 	_ciclo.jornada_abierta.connect(_reloj_de_pared.declarar_jornada)
 	_reloj.tarea_completada.connect(_hud.mostrar_tareas)
 	_ciclo.jornada_cerrada.connect(_al_cerrar_la_jornada)
+	# El marcador de obligatorias no se reinicia solo: `mostrar_tareas()` se vuelve a llamar
+	# recién cuando el jugador completa una, así que sin esto la noche 2 arranca mostrando las
+	# que se cumplieron en la 1 hasta que se cumpla la primera de la 2. Y la góndola de cada
+	# noche arranca vacía, así que el estante se rehace en la misma apertura: uno compartido
+	# dejaría lo repuesto anoche puesto, y reponer se cumpliría sola a partir de la segunda.
+	# **Una sola conexión**: el 017 y el 008 llegaron por separado al mismo `jornada_abierta`, y
+	# conectarlo dos veces es un error de Godot, no dos llamadas.
+	_ciclo.jornada_abierta.connect(_al_abrir_la_jornada)
 	# La placa es quien abre la noche siguiente, y por eso el ciclo no reabre solo: entre una
-	# jornada y la otra hay algo que leer. Se conecta derecho porque acá no hay nada que decidir.
-	_pantalla.cierre_despachado.connect(_ciclo.abrir_la_jornada)
+	# jornada y la otra hay algo que leer.
+	_pantalla.cierre_despachado.connect(_al_despachar_la_placa)
 	# Reponer, de punta a punta: la caja del depósito despacha una unidad a la de traslado, el
 	# estante la pide, y el repositor la mueve. Los dos gestos entran por el mismo clic del 006
 	# y ninguno de los dos scripts de escena sabe qué pasa del otro lado.
-	_caja_de_productos.producto_pedido.connect(_carga.pedir_guardar)
+	# **Una caja por producto, y las seis conectadas al mismo destino.** Con una sola, despachaba
+	# siempre su `producto` por defecto y los otros cinco del catálogo se quedaban en cero para
+	# siempre: `Estante.completada()` sale de `Inventario.faltantes()`, así que REPONER no se
+	# podía terminar jugando. Medido con una sonda headless: 20 viajes de 8 clics dejaban
+	# `Yerba=4/4` y los otros cinco en 0.
+	for caja: CajaDeProductosDelDeposito in _cajas_de_productos:
+		caja.producto_pedido.connect(_carga.pedir_guardar)
 	_carga.producto_guardado.connect(_al_guardar_en_la_caja)
 	_estante.colocacion_pedida.connect(_repositor.pedir_colocar)
 	_repositor.producto_colocado.connect(_al_colocar_en_el_estante)
-	# La góndola de cada noche arranca vacía, así que el estante se rehace al abrir la jornada y
-	# no una sola vez acá: uno compartido dejaría lo repuesto anoche puesto, y reponer se
-	# cumpliría sola a partir de la segunda.
-	_ciclo.jornada_abierta.connect(_al_abrir_la_jornada)
 	_ciclo.arrancar(_partida, _reloj)
+
+
+## Cada noche arranca con el marcador en cero, la góndola vacía y el depósito lleno.
+##
+## El marcador lo dice la apertura y no el cierre de la anterior: entre las dos hay una placa que
+## el jugador tarda lo que quiera en despachar, y el conteo de ayer no puede quedar colgado ahí.
+##
+## **Varios specs de la pila escribieron esta función por separado, cada uno con la parte que le
+## importaba, y la unión las junta acá**: es la misma apertura y no una por tarea, y se conecta
+## una sola vez —conectar `jornada_abierta` dos veces es un error de Godot—. El inventario se
+## arma en este lado y no en el `Repositor` porque «con cuánta mercadería arranca una jornada»
+## es una regla del juego, y `Apertura` es donde tiene test.
+func _al_abrir_la_jornada(_jornada: int) -> void:
+	_hud.declarar_obligatorias(Apertura.cantidad_de_obligatorias())
+	# **Un solo inventario para las dos obligatorias**: reponer lo llena y la ventanilla lo
+	# vacía. Construir uno por tarea daría dos stocks del mismo producto, y las dos ventanas
+	# dirían números distintos sin que nada se ponga en rojo.
+	var inventario := Apertura.inventario_de_la_jornada()
+	_repositor.arrancar(Estante.new(inventario, Catalogo.todos()))
+	_atenciones.arrancar(TareaDeAtender.new(Compradores.de_la_jornada(), inventario))
+	_computadora.arrancar(CajaRegistradora.new(inventario, CajaRegistradora.productos_del_dia()))
+	# El piso se rehace cada noche: guardar el estado entre jornadas está fuera de alcance, y una
+	# sola instancia dejaría el local limpio de anoche y la obligatoria cumplida sola.
+	_limpiador.arrancar(PisoDelLocal.de_la_jornada())
+	_recolector.arrancar(TareaDeLaBasura.de_la_jornada())
+	_limpieza.repintar()
+	_estante.mostrar(0)
 
 
 ## La jornada cerrada ya quedó anotada en la partida cuando esta señal llega: acá sólo se le
@@ -88,26 +130,19 @@ func _al_cerrar_la_jornada(jornada: int, cumplidas: int) -> void:
 	_pantalla.mostrar(
 		ParteDeCierre.new(jornada, _partida.obligatorias(), _partida.apercibimientos())
 	)
+	# Sin esto la placa es inalcanzable jugando: el jugador clava el puntero en el centro cada
+	# cuadro y el botón «Seguir» cae más abajo, así que no se puede clickear nunca y la jornada 2
+	# no existe en la build. La suspensión suelta el cursor sola, porque el modo se recalcula a
+	# partir del estado del control.
+	_jugador.suspender()
 
 
-## La noche empieza con el depósito lleno, la góndola vacía y el estante sin un hueco puesto.
-##
-## El inventario se arma acá y no en el `Repositor` porque «con cuánta mercadería arranca una
-## jornada» es una regla del juego, y `Apertura` es donde tiene test.
-func _al_abrir_la_jornada(_jornada: int) -> void:
-	# **Un solo inventario para las dos obligatorias**: reponer lo llena y la ventanilla lo
-	# vacía. Construir uno por tarea daría dos stocks del mismo producto, y las dos ventanas
-	# dirían números distintos sin que nada se ponga en rojo.
-	var inventario := Apertura.inventario_de_la_jornada()
-	_repositor.arrancar(Estante.new(inventario, Catalogo.todos()))
-	_atenciones.arrancar(TareaDeAtender.new(Compradores.de_la_jornada(), inventario))
-	_computadora.arrancar(CajaRegistradora.new(inventario, CajaRegistradora.productos_del_dia()))
-	# El piso se rehace cada noche: guardar el estado entre jornadas está fuera de alcance, y una
-	# sola instancia dejaría el local limpio de anoche y la obligatoria cumplida sola.
-	_limpiador.arrancar(PisoDelLocal.de_la_jornada())
-	_recolector.arrancar(TareaDeLaBasura.de_la_jornada())
-	_limpieza.repintar()
-	_estante.mostrar(0)
+## El orden importa y por eso hay un handler en vez de conectar la señal derecho al ciclo: si el
+## jugador se reanudara después de abrir la jornada, el cuadro del medio correría con el control
+## todavía suspendido. Acá no se decide nada — son dos llamadas, siempre las dos.
+func _al_despachar_la_placa() -> void:
+	_jugador.reanudar()
+	_ciclo.abrir_la_jornada()
 
 
 ## Lo guardado en la caja de traslado se repinta contra el contenido que contesta el dominio, y

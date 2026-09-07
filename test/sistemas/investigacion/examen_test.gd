@@ -198,3 +198,21 @@ func test_la_e_alterna_entre_examinar_y_volver() -> void:  # 006-AC9
 	assert_bool(examen.esta_examinando()).is_true()
 	examen.alternar()
 	assert_bool(examen.esta_examinando()).is_false()
+
+
+func test_sin_punto_de_examen_la_e_no_se_pasa_a_revelar_lo_enfocado() -> void:  # 006-AC9
+	# Un punto sin cablear es un `.tscn` mal armado, y el camino de lo enfocado está abajo del
+	# de lo que se lleva: sin este corte, la E con una lata en la mano revelaba la puerta que se
+	# estaba mirando —lo contrario del orden que este sistema decide— y lo hacía sin un solo
+	# error, así que el único síntoma era una revelación que no correspondía.
+	var agarre := _agarre()
+	var examen := _examen(agarre)
+	examen.punto_de_examen = null
+	agarre.pedir_agarrar(_lata(), _cuerpo())
+	var revelados: Array[Resource] = []
+	examen.objeto_revelado.connect(
+		func(datos: Resource, _es_nuevo: bool) -> void: revelados.append(datos)
+	)
+	assert_bool(examen.iniciar(_puerta())).is_false()
+	assert_array(revelados).is_empty()
+	assert_bool(examen.esta_examinando()).is_false()

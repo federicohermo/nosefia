@@ -36,6 +36,22 @@ func test_la_caja_trae_exactamente_los_casilleros_que_declara_el_balance() -> vo
 	)
 
 
+func test_una_caja_recien_instanciada_no_muestra_ningun_casillero_ocupado() -> void:  # 033-AC9
+	# Una caja nueva está vacía y el dominio lo dice, pero los casilleros del `.tscn` nacen
+	# visibles: sin declarar el estado inicial la escena carga sin un solo error y el jugador ve
+	# ocho productos adentro de una caja que `CajaDeTraslado` reporta con `ocupados() == 0`.
+	# Nadie la pinta al nacer —quien pinta es quien la carga—, así que lo declara la escena.
+	var caja := _caja()
+	(
+		assert_object(caja.get("_casilleros"))
+		. override_failure_message(
+			"`_casilleros` llegó nulo: la caja perdió su `node_paths` o su `script`"
+		)
+		. is_not_null()
+	)
+	assert_int(_casilleros_visibles(caja)).is_equal(CajaDeTraslado.new().ocupados())
+
+
 func test_el_script_de_la_caja_no_declara_nada_propio() -> void:  # 033-AC9
 	# Es cáscara: sin `class_name` —nadie la nombra desde abajo— y sin una sola `const`, que es
 	# por donde el cupo se copiaría. Está medido que esa copia pasa los dos gates en verde.

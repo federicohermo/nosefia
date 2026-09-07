@@ -13,6 +13,7 @@ const REPOSITOR := "res://src/sistemas/tareas/repositor.gd"
 const ARCHIVOS_DEL_SPEC := [
 	"res://src/dominio/almacen/estante.gd",
 	"res://src/dominio/almacen/reglas_del_estante.gd",
+	"res://src/dominio/jornada/apertura.gd",
 	"res://src/sistemas/tareas/repositor.gd",
 	"res://src/escenas/puestos/estante.gd",
 	"res://src/escenas/objetos/caja_de_productos.gd",

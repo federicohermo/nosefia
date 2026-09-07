@@ -27,6 +27,10 @@ const JugadorDelLocal := preload("res://src/escenas/jugador.gd")
 @export var atenciones: Ventanilla
 @export var panel: PanelDeLaVentanilla
 
+## Si el vidrio está abierto ahora mismo. Es estado de cáscara —qué ventana hay arriba— y no una
+## regla del juego: a quién hay que atender lo sigue contestando el dominio.
+var _abierta := false
+
 
 func _ready() -> void:
 	reloj.turno_cerrado.connect(_al_cerrar_el_turno)
@@ -49,13 +53,22 @@ func interactuar() -> ObjetoDelAlmacen:
 
 ## Clava al jugador delante del vidrio y pide a quien corresponda.
 func abrir() -> void:
+	_abierta = true
 	jugador.suspender()
 	atenciones.pedir_abrir()
 
 
 ## Devuelve el control y baja el panel. Es idempotente a propósito: lo llaman la tecla de salida
 ## y el cierre del turno, que pueden pasar en cualquier orden.
+##
+## **Con el vidrio cerrado no hace nada**, y ése es el corte que importa: `ui_cancel` llega desde
+## cualquier rincón del local, y examinar un objeto también suspende al jugador. Sin el corte, la
+## tecla le devolvería la caminata en medio de un examen con el objeto pegado a la cara — el 006
+## seguiría creyendo que examina, y no habría un solo error.
 func cerrar() -> void:
+	if not _abierta:
+		return
+	_abierta = false
 	panel.ocultar()
 	jugador.reanudar()
 

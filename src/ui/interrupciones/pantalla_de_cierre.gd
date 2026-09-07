@@ -43,6 +43,11 @@ func mostrar(parte: ParteDeCierre) -> void:
 	_riesgo.visible = parte.en_riesgo()
 	_pintar(parte.lineas())
 	visible = true
+	# El foco va al botón porque el cursor del juego sigue **tomado** cuando la placa aparece:
+	# `jugador.gd` lo recaptura en cada cuadro de física, así que el puntero queda clavado en el
+	# centro de la ventana y «Seguir» no se alcanza con el mouse. Con el foco puesto, `ui_accept`
+	# despacha el cierre y la jornada siguiente es alcanzable jugando.
+	_continuar.grab_focus()
 
 
 ## Reemplaza los renglones de la jornada anterior.

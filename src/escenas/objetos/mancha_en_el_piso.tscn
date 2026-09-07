@@ -15,9 +15,10 @@ height = 0.04
 transparency = 1
 albedo_color = Color(0.16, 0.13, 0.1, 0.85)
 
-[node name="ManchaEnElPiso" type="StaticBody3D" node_paths=PackedStringArray("_mancha") groups=["interactuable"]]
+[node name="ManchaEnElPiso" type="StaticBody3D" node_paths=PackedStringArray("_mancha", "_cuerpo") groups=["interactuable"]]
 script = ExtResource("1_mancha")
 _mancha = NodePath("Malla")
+_cuerpo = NodePath("Cuerpo")
 
 [node name="Cuerpo" type="CollisionShape3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.03, 0)

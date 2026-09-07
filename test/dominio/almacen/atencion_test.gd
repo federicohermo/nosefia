@@ -147,3 +147,37 @@ func test_cobrar_sobre_una_despachada_a_mano_no_vende() -> void:  # 013-AC5
 	assert_int(atencion.cobrar()).is_equal(Atencion.Resultado.YA_DESPACHADA)
 	for producto in _productos():
 		assert_int(inventario.unidades(producto, Inventario.Ubicacion.GONDOLA)).is_equal(EN_GONDOLA)
+
+
+func test_el_ticket_dice_las_lineas_el_total_lo_que_paga_y_la_diferencia() -> void:  # 013-AC2
+	# Los textos viven en `dominio/` justamente para que este caso exista: escritos en el panel
+	# serían una regla en `ui/`, que ni `gate_de_tests.py` ni `gate_de_capas.py` miran.
+	#
+	# Las líneas no llevan cuánto sale cada cosa a propósito: repartir el total por renglón le
+	# daría al jugador la cuenta hecha justo donde el juego puede mentir.
+	var pedido := _pedido()
+	var atencion := _atencion(pedido.total() + 700, EN_GONDOLA, pedido)
+	var renglones := atencion.renglones()
+	assert_int(renglones.size()).is_equal(pedido.productos().size() + 3)
+	var yerba := Catalogo.de(Producto.Id.YERBA)
+	assert_str(renglones[0]).is_equal(Atencion.TEXTO_DE_LA_LINEA % [2, yerba.nombre])
+	assert_str(renglones[-3]).is_equal(Atencion.TEXTO_DEL_TOTAL % pedido.total())
+	assert_str(renglones[-2]).is_equal(Atencion.TEXTO_DE_LO_QUE_PAGA % (pedido.total() + 700))
+	# El signo se lee en el ticket y no sólo en el `int`: es lo único que el jugador ve.
+	assert_str(renglones[-1]).contains("+700")
+
+
+func test_el_ticket_muestra_la_diferencia_negativa_con_su_signo() -> void:  # 013-AC3
+	# Con un `%d` en vez de `%+d`, el que paga de más y el que paga justo se leerían igual y el
+	# único lugar donde el juego miente en vivo dejaría de mentir.
+	var atencion := _atencion(_pedido().total() - 700)
+	assert_str(atencion.renglones()[-1]).contains("-700")
+
+
+func test_el_aviso_nombra_lo_que_no_hay_en_gondola_y_es_vacio_si_esta_todo() -> void:  # 013-AC4
+	# Vacío y no un `null`: quien lo pinta no tiene que distinguir dos formas de la misma
+	# respuesta, que es lo que dejaría un `if` sobre el juego arriba en `ui/`.
+	assert_str(_atencion(0).aviso()).is_empty()
+	var corta := _atencion(0, 1)
+	var yerba := Catalogo.de(Producto.Id.YERBA)
+	assert_str(corta.aviso()).is_equal(Atencion.TEXTO_DE_LOS_FALTANTES % yerba.nombre)
