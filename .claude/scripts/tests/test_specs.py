@@ -10,6 +10,7 @@ from lib.specs import (
     encabezados_del_plan,
     palabras,
     partir_spec,
+    seleccionar_carpetas,
     rutas_intocables,
     agrupar_prs_por_spec,
     archivo_de_comentario,
@@ -212,6 +213,42 @@ class CarpetaExistente(unittest.TestCase):
 
     def test_devuelve_none_si_no_esta(self):
         self.assertIsNone(carpeta_existente(["004-otra"], "005"))
+
+
+class SeleccionarCarpetas(unittest.TestCase):
+    """La selección de `publicar_spec.py`, ejercida sin red ni disco.  # 030-AC6
+
+    Las carpetas entran como una lista de strings y salen como otra: no hay `Path`, no hay
+    `gh` y no hay `iterdir`. Es lo que hace que los cuatro casos de abajo se puedan escribir.
+    """
+
+    CARPETAS = ["028-uno", "029-dos", "030-tres"]
+
+    def test_sin_ids_devuelve_todas(self):  # 030-AC2
+        # El default no cambia: sin `NNN` la lista sale entera y en el mismo orden, que es lo
+        # que necesitan el alta y cualquier reconciliación.
+        self.assertEqual(seleccionar_carpetas(self.CARPETAS, []), self.CARPETAS)
+
+    def test_un_id_deja_solo_su_carpeta(self):  # 030-AC1
+        self.assertEqual(seleccionar_carpetas(self.CARPETAS, ["029"]), ["029-dos"])
+
+    def test_varios_ids_dejan_esas_y_ninguna_mas(self):  # 030-AC3
+        self.assertEqual(
+            seleccionar_carpetas(self.CARPETAS, ["030", "028"]), ["028-uno", "030-tres"]
+        )
+
+    def test_un_id_sin_carpeta_grita_y_lo_nombra(self):  # 030-AC4
+        # Y grita aunque venga acompañado de uno válido: media corrida deja el mapa y los
+        # issues discrepando.
+        with self.assertRaises(ValueError) as caso:
+            seleccionar_carpetas(self.CARPETAS, ["029", "031"])
+        self.assertIn("031", str(caso.exception))
+        self.assertNotIn("029", str(caso.exception))
+
+    def test_empareja_por_numero_y_no_por_nombre(self):  # 030-AC1
+        # Una caché hidratada antes de un cambio de título tiene otro nombre y el mismo `NNN`:
+        # emparejar por nombre completo la trataría como ausente y cortaría una corrida buena.
+        self.assertEqual(seleccionar_carpetas(["005-nombre-viejo"], ["005"]), ["005-nombre-viejo"])
 
 
 class OrigenDe(unittest.TestCase):
