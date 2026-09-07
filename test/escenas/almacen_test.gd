@@ -1,3 +1,11 @@
+# gdlint:ignore=max-public-methods
+#
+# **Esta suite es donde converge la pila entera**: casi todas las ramas apiladas le agregan
+# casos al mismo archivo, y la unión cruzó el techo de 20 al mergear el 032 en el 033 —21
+# públicos, medido—. El techo existe para cazar god-objects en `src/`, y una suite no es uno:
+# los casos no comparten estado y cada uno se lee solo. Partirla es la salida de verdad, pero
+# no desde acá: cinco ramas de la pila todavía le agregan casos, y partirla ahora las hace
+# conflictar a las cinco. La directiva va en la línea 1 porque el chequeo se reporta ahí.
 ## El cableado del almacén: qué instancia, qué anclajes ofrece y que nada suyo cuelga de otra cosa.
 ##
 ## No dice «se ve bien»: dice que los anclajes que los specs 008, 009 y 013 van a buscar
