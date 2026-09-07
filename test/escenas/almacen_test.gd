@@ -365,6 +365,17 @@ func test_la_escena_trae_un_solo_reloj_de_pared_y_cuelga_de_la_raiz() -> void:  
 	var almacen := _almacen()
 	assert_bool(almacen.has_node("RelojDePared")).is_true()
 	assert_array(_violaciones_de_cableado(almacen)).is_empty()
+	# Y el `@export` de la raíz resuelto, que es lo que ninguna de las dos afirmaciones de arriba
+	# ve: si `reloj_de_pared.tscn` perdiera su `script`, el nodo instanciado sería un `Label3D`
+	# pelado, el `@export` llegaría nulo **con el `node_paths` bien escrito**, y el juego moriría
+	# en el primer cuadro con un error que no nombra a ninguno de los dos `.tscn`.
+	(
+		assert_object(almacen.get("_reloj_de_pared"))
+		. override_failure_message(
+			"`_reloj_de_pared` llegó nulo: la sub-escena perdió su `script` o su `node_paths`"
+		)
+		. is_not_null()
+	)
 
 
 func test_el_reloj_de_pared_cae_adentro_del_edificio() -> void:  # 032-AC7
