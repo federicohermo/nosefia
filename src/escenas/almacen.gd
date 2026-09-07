@@ -11,10 +11,15 @@
 ## levantar nada. Acá quedó lo único que necesita la escena delante: conectar y pintar.
 extends Node3D
 
+## El jugador no declara un `class_name` —es cáscara, como este archivo—, así que el `@export`
+## de abajo no lo puede nombrar sin traerlo por `preload`. Es la forma que el repo ya usa.
+const Jugador := preload("res://src/escenas/jugador.gd")
+
 @export var _hud: Hud
 @export var _reloj: RelojDelTurno
 @export var _ciclo: CicloDeJornadas
 @export var _pantalla: PantallaDeCierre
+@export var _jugador: Jugador
 
 ## La partida es de la escena y no del ciclo porque también la mira el HUD: el ciclo publica lo
 ## que pasó, y quien quiera un número lo pide acá.
@@ -37,8 +42,8 @@ func _ready() -> void:
 	# que se cumplieron en la 1 hasta que se cumpla la primera de la 2.
 	_ciclo.jornada_abierta.connect(_al_abrir_la_jornada)
 	# La placa es quien abre la noche siguiente, y por eso el ciclo no reabre solo: entre una
-	# jornada y la otra hay algo que leer. Se conecta derecho porque acá no hay nada que decidir.
-	_pantalla.cierre_despachado.connect(_ciclo.abrir_la_jornada)
+	# jornada y la otra hay algo que leer.
+	_pantalla.cierre_despachado.connect(_al_despachar_la_placa)
 	_ciclo.arrancar(_partida, _reloj)
 
 
@@ -61,3 +66,16 @@ func _al_cerrar_la_jornada(jornada: int, cumplidas: int) -> void:
 	_pantalla.mostrar(
 		ParteDeCierre.new(jornada, _partida.obligatorias(), _partida.apercibimientos())
 	)
+	# Sin esto la placa es inalcanzable jugando: el jugador clava el puntero en el centro cada
+	# cuadro y el botón «Seguir» cae más abajo, así que no se puede clickear nunca y la jornada 2
+	# no existe en la build. La suspensión suelta el cursor sola, porque el modo se recalcula a
+	# partir del estado del control.
+	_jugador.suspender()
+
+
+## El orden importa y por eso hay un handler en vez de conectar la señal derecho al ciclo: si el
+## jugador se reanudara después de abrir la jornada, el cuadro del medio correría con el control
+## todavía suspendido. Acá no se decide nada — son dos llamadas, siempre las dos.
+func _al_despachar_la_placa() -> void:
+	_jugador.reanudar()
+	_ciclo.abrir_la_jornada()
