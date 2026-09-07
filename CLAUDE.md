@@ -145,6 +145,7 @@ probar. [docs/guides/tdd.md](./docs/guides/tdd.md).
 | Convenciones | [docs/guides/conventions.md](./docs/guides/conventions.md) | El porqué de cada regla, y cuáles son prosa |
 | Troubleshooting | [docs/guides/troubleshooting.md](./docs/guides/troubleshooting.md) | Errores reales ya pisados acá |
 | Ramas | [docs/infra/ramas.md](./docs/infra/ramas.md) | `staging` integra, `main` entrega, y la carrera entre sus workflows |
+| Despliegue | [docs/infra/despliegue.md](./docs/infra/despliegue.md) | Cada push a `main` deja una web jugable: los secretos, el par preset↔headers y por qué el `$?` del export no decide |
 | Convención de specs | [specs/README.md](./specs/README.md) | El mapa, los cuatro estados y los techos. El flujo es de `spec-create`; la forma, de `specs/plantilla/` |
 
 **Trabajo planificado:** cada spec **es un issue**, y [specs/mapa.json](./specs/mapa.json) los

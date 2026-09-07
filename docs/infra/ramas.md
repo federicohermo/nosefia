@@ -51,12 +51,13 @@ un `chore/`. Ahí la rama se llama `fix/…` o `chore/…` y va directo a PR con
 **Lo que no se puede es trabajar sobre `main` o `staging`.** El hook sólo protege un
 directorio, pero la razón vale para todo: son ramas que reciben trabajo de otros.
 
-## Los dos workflows
+## Los tres workflows
 
 | Workflow | Cuándo | Qué hace |
 |---|---|---|
 | `verify.yml` | cada PR, y cada push a `staging` y `main` | corre `verificar.py` |
 | `mapa.yml` | cada push a `staging` | deriva `specs/mapa.json` desde los PR y los issues, y lo commitea si cambió |
+| `desplegar.yml` | cada push a `main`, y a mano | exporta a Web, publica en Vercel y verifica que se juegue. Ver [despliegue](./despliegue.md) |
 
 **`mapa.yml` corre sobre `staging` y no sobre `main`**, y eso importa si algún día `main` se
 protege con reglas: una Action que tiene que pushear a una rama con PR obligatorio no puede, y
@@ -64,7 +65,7 @@ abrir un PR desde la Action tampoco sirve —un PR creado con `GITHUB_TOKEN` no 
 workflows, así que el check requerido nunca se satisface y el PR queda abierto para siempre—.
 El mapa derivado llega a `main` con el PR de promoción, como todo lo demás.
 
-## La carrera entre los dos, y por qué el gate del mapa no corre en un push
+## La carrera entre `verify.yml` y `mapa.yml`, y por qué el gate del mapa no corre en un push
 
 Cuando el PR de un spec aterriza, ese push a `staging` dispara **los dos workflows a la vez**.
 En ese commit el mapa todavía dice `Propuesto` —no puede decir otra cosa: el gate prohíbe

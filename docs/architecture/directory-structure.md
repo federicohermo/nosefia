@@ -4,6 +4,9 @@
 .
 ├── project.godot           El proyecto. Godot lo reescribe: no se edita a mano salvo para algo puntual
 ├── icon.svg
+├── .godot-version          La versión del motor, y el ÚNICO lugar donde está escrita
+├── export_presets.cfg      El preset Web. Sus hilos y los headers de vercel.json son un par
+├── vercel.json             Los dos headers de aislamiento y el Cache-Control, para TODAS las rutas
 ├── .gdlintrc               La config de gdlint. Excluye addons/ y .godot/
 ├── .editorconfig           Tabs en .gd, espacios en .py y .md
 │
@@ -52,7 +55,7 @@
 ├── addons/
 │   └── gdUnit4/            Vendorizado, versión 6.2.1 (la serie para Godot 4.5+). NO se edita ni se lee
 │
-├── docs/                   ← PROTEGIDO por el hook
+├── docs/                   La documentación. NO protegida desde el 2026-09-05: ver abajo
 │
 ├── specs/
 │   ├── README.md           La convención y el flujo
@@ -69,9 +72,13 @@
 │       ├── lib/            Lo PURO o inyectable: es lo que tiene tests
 │       └── tests/          Los tests del harness, y los dos gates del registro de specs
 │
-└── .github/workflows/
-    ├── verify.yml          Corre verificar.py en cada PR y en cada push a staging y main
-    └── mapa.yml            Deriva specs/mapa.json en el push a staging
+└── .github/
+    ├── workflows/
+    │   ├── verify.yml      Corre verificar.py en cada PR y en cada push a staging y main
+    │   ├── mapa.yml        Deriva specs/mapa.json en el push a staging
+    │   └── desplegar.yml   Exporta a Web, publica en Vercel y verifica que se juegue. Sólo main
+    └── scripts/
+        └── humo_en_navegador.mjs  Abre la URL publicada en un Chromium y falla si no arrancó
 ```
 
 ## Dónde crear cada cosa
@@ -87,6 +94,8 @@
 | Un `.png`, un `.ogg`, una fuente | `assets/` | no necesita spec |
 | Una herramienta del proceso | `.claude/scripts/` | lo puro en `lib/`, su test en `tests/` |
 | Un skill, o un archivo que un skill corre | `.claude/skills/` | **autocontenido**: todo lo que corre viaja adentro, y ninguno alcanza al de al lado. Toda copia, declarada en `test_copias_de_skills.py`, que la exige byte a byte |
+| Un paso de CI: exportar, publicar, pegarle a una URL | `.github/workflows/` | lo que **decide** va en `.claude/scripts/lib/` con su test: un `run:` no se puede ejercer sin desplegar |
+| Un bump del motor | `.godot-version`, y nada más | los dos workflows lo leen de ahí; el `4.7.2` de `docs/` es prosa que lo cita |
 
 **Y a las cuatro primeras filas les falta la mitad de la ruta: la subcarpeta.** Cada capa admite
 un conjunto cerrado de nombres, declarado en `CARPETAS_POR_CAPA` de `.claude/scripts/lib/repo.py`
@@ -140,4 +149,5 @@ o cambiar una configuración del editor, y pretenderlo lo volvería molesto sin 
 | `specs/[0-9]*/` | Caché: la fuente es el issue. Ver [specs/README.md](../../specs/README.md) |
 | `reportes/` | Salida de gdUnit4, se regenera en cada corrida |
 | `export/`, `build/` | Las builds se publican, no se commitean |
+| `.vercel/` | El vínculo al proyecto que escribe la CLI. Los dos ids que importan son secretos del repo |
 | `__pycache__/` | De las herramientas del harness |

@@ -22,6 +22,7 @@ repo, cómo se verifica y cómo se trabaja.
 
 ### Infraestructura
 - [Ramas](./infra/ramas.md) — `staging` integra, `main` es lo que se entrega, y el gate que lo sostiene
+- [Despliegue](./infra/despliegue.md) — Cada push a `main` deja una web jugable: qué lo dispara, qué secretos hacen falta y cómo se rehace a mano
 
 ### Trabajo planificado
 - [specs/README.md](../specs/README.md) — La convención y el flujo
@@ -64,8 +65,15 @@ spec que agrega uno** —el 028 lo deja en 177—, así que lo que sostiene la a
 fecha y no el número: quien lo vea distinto no lo corrija, remídalo. El plan B, si algo
 aparece, es bajar a **4.7.1** —que sí está en la matriz— sin tocar el addon.
 
-La versión que baja la CI vive en el `env: GODOT_VERSION` de `.github/workflows/verify.yml`, y
-la de cada máquina en `GODOT_BIN`. La tabla «GdUnit4 Version / Godot minimal required» del
+La versión que bajan los workflows vive en **`.godot-version`, en la raíz, y en ningún otro
+lado**: `verify.yml` y `desplegar.yml` la leen de ahí. Hasta el 2026-09-06 estaba escrita en un
+`env:` de `verify.yml` y otra vez en este párrafo, con el encabezado de ese archivo diciendo
+«la versión vive UNA vez» tres líneas más arriba de la segunda copia. Con dos workflows que
+bajan Godot, dos copias que se separan hacen que la CI verifique con un motor y el despliegue
+exporte con otro, **y eso no da rojo en ningún lado**: las dos corridas salen verdes, cada una
+con el suyo. El **4.7.2** de la tabla de acá arriba es prosa que lo cita, no una segunda
+fuente; quien lo vea distinto de `.godot-version`, corrija esto. La de cada máquina va en
+`GODOT_BIN`. La tabla «GdUnit4 Version / Godot minimal required» del
 README de gdUnit4 es la fuente — **no** los badges de «Supported Godot Versions», que listan las
 versiones que el proyecto soporta *en alguna* de sus series y hacen creer que la última sirve
 para todas.
