@@ -48,9 +48,8 @@ ningún lado: `app_caja.gd` no dice que abrirla te sale plata.
 ```text
 src/escenas/
 ├── almacen.gd/.tscn · jugador.gd/.tscn · inicio.gd/.tscn   ← las raíces y el cuerpo
-├── puestos/   estructura_del_almacen · estante · escritorio · ventanilla · zona_de_descarte
-│              · limpieza_del_almacen · audio_del_almacen · manos_del_jugador
-└── objetos/   objeto_agarrable · caja_de_productos · mancha_en_el_piso
+├── puestos/   uno de cada uno, cableados por `@export` desde `almacen.tscn`
+└── objetos/   N instancias, se crean y se destruyen en juego
 ```
 
 `puestos/` se instancia **una vez** y vive cableado en la escena por `@export`; `objetos/` se

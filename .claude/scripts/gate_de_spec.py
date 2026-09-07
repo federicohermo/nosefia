@@ -43,6 +43,7 @@ import os
 import re
 import subprocess
 import sys
+from pathlib import Path
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
@@ -239,8 +240,67 @@ def rutas_del_payload(crudo: str) -> list[str] | None:
         return None
 
 
+def payload_cwd(crudo: str) -> str | None:
+    """El `cwd` que declara el payload del hook, o `None`.
+
+    Es lo único que dice desde qué árbol se escribe una ruta relativa: el hook corre con el cwd
+    del checkout principal, así que sin esto un `src/x.gd` mandado desde un worktree se resuelve
+    contra el árbol equivocado. Que falte no es un error — se cae en `RAIZ`.
+    """
+    try:
+        valor = json.loads(crudo).get("cwd")
+    except (json.JSONDecodeError, AttributeError, TypeError):
+        return None
+    return valor if isinstance(valor, str) and valor else None
+
+
+def raiz_que_manda(ruta: str, cwd: str | None) -> str:
+    """El árbol de git al que pertenece `ruta`, que **no siempre es el checkout principal**.
+
+    `RAIZ` sale de dónde vive este archivo (`lib/repo.py`), así que con un worktree el gate
+    miraba el árbol equivocado, y de las dos formas. **Medido el 2026-09-07** contra
+    `.claude/worktrees/pr-76`, parado en `feature/016-…` con el principal en `staging`:
+
+    - Ruta **absoluta** al worktree: `allow`. Relativa a `RAIZ` es
+      `.claude/worktrees/pr-76/src/…`, que no empieza con `src/`, así que `esta_protegida()`
+      decía que no le tocaba. **El gate estaba apagado adentro de cada worktree**, que es donde
+      `pr-review-batch` y `spec-implement-batch` escriben todo su código.
+    - La **misma** ruta relativa: `deny` nombrando `staging`, la rama del principal, con el
+      worktree parado en una rama que sí tenía spec.
+
+    El `cwd` del payload es lo único que desambigua una ruta relativa: el hook corre con el cwd
+    del checkout principal, y `src/x.gd` no dice a cuál de los dos árboles apunta.
+
+    Falla hacia `RAIZ`, como todo el resto del gate: sin árbol legible se mira el principal en
+    vez de reventar.
+    """
+    base = cwd or str(RAIZ)
+    absoluta = os.path.normpath(os.path.join(base, ruta))
+    carpeta = absoluta if os.path.isdir(absoluta) else os.path.dirname(absoluta)
+    # Sube hasta la primera carpeta que exista: la ruta puede ser de un archivo que se está por
+    # crear, y `git -C` sobre una carpeta inexistente falla.
+    while carpeta and not os.path.isdir(carpeta):
+        padre = os.path.dirname(carpeta)
+        if padre == carpeta:
+            break
+        carpeta = padre
+    try:
+        salida = subprocess.run(
+            ["git", "rev-parse", "--show-toplevel"],
+            cwd=carpeta or str(RAIZ),
+            capture_output=True,
+            text=True,
+            timeout=5,
+            check=True,
+        )
+    except (OSError, subprocess.SubprocessError):
+        return str(RAIZ)
+    return salida.stdout.strip() or str(RAIZ)
+
+
 def main() -> None:
-    rutas = rutas_del_payload(sys.stdin.read())
+    crudo = sys.stdin.read()
+    rutas = rutas_del_payload(crudo)
 
     # Sin ruta legible no hay nada que decidir. Pasa, pero lo DICE: un payload que cambiara de
     # forma dejaría el gate mudo para siempre, y esta línea es la que lo delata.
@@ -251,16 +311,23 @@ def main() -> None:
 
     # La primera protegida es la que nombra el mensaje. Alcanza con una: el comando se bloquea
     # entero, y listar las cinco de un `rm -rf` no cambia lo que hay que hacer.
-    ruta = next(
-        (r for r in rutas if esta_protegida(os.path, str(RAIZ), list(PROTEGIDAS), r)), None
-    )
+    # La raíz se resuelve **por archivo tocado** y no una sola vez: en un worktree, `RAIZ` es el
+    # checkout principal y mirar contra ella apaga el gate. Ver `raiz_que_manda`.
+    cwd = payload_cwd(crudo)
+    raiz = str(RAIZ)
+    ruta = None
+    for r in rutas:
+        de_r = raiz_que_manda(r, cwd)
+        if esta_protegida(os.path, de_r, list(PROTEGIDAS), r):
+            ruta, raiz = r, de_r
+            break
     if ruta is None:
         pasar()
 
     try:
         rama = subprocess.run(
             ["git", "rev-parse", "--abbrev-ref", "HEAD"],
-            cwd=RAIZ,
+            cwd=raiz,
             capture_output=True,
             text=True,
             timeout=5,
@@ -281,7 +348,9 @@ def main() -> None:
 
     id_spec = m.group(1)
     try:
-        mapa = json.loads((RAIZ / "specs" / "mapa.json").read_text(encoding="utf-8"))
+        mapa = json.loads(
+            (Path(raiz) / "specs" / "mapa.json").read_text(encoding="utf-8")
+        )
     except (OSError, json.JSONDecodeError):
         pasar("gate-de-spec: no se pudo leer `specs/mapa.json`, no se verificó el spec de la rama")
 

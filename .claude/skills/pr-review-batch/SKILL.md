@@ -280,7 +280,7 @@ rompió, no pushees, y decilo. Un pipeline que pushea para completarse no sirve.
 
 **Acá el rojo casi nunca es del PR, y la falta de `GODOT_BIN` no se saltea: sale roja.**
 
-Desde que existe el primer `*_test.gd` —hoy hay 23— el nodo `tests` **exige** Godot, y
+Desde que existe el primer `*_test.gd` el nodo `tests` **exige** Godot, y
 `verificar.py` devuelve rojo si no encuentra `GODOT_BIN`, con un mensaje que habla de la variable
 y no del código (`verificar.py:132-141`). Medido en esta máquina: `GODOT_BIN` **no está en el
 entorno de la terminal**, se lee del registro de Windows, y una terminal anterior a la variable le

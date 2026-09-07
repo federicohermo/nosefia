@@ -12,7 +12,9 @@ otro disco.
 """
 
 import json
+import shutil
 import subprocess
+import tempfile
 import sys
 import unittest
 from pathlib import Path
@@ -191,6 +193,43 @@ class ElVeredicto(unittest.TestCase):
             {"tool_name": "Edit", "tool_input": {"file_path": ".claude/scripts/gate_de_spec.py"}}
         )
         self.assertEqual(salida["permissionDecision"], "allow")
+
+
+class LaRaizQueManda(unittest.TestCase):
+    """De qué árbol de git es el archivo que se va a escribir.
+
+    **Medido el 2026-09-07**: los dos batch que abren worktrees escriben el 100 % de su código
+    adentro de uno, y el gate los miraba contra el checkout principal. Con ruta absoluta al
+    worktree contestaba `allow` —relativa a la raíz principal, `.claude/worktrees/pr-76/src/…`
+    no empieza con `src/`— y con ruta relativa contestaba `deny` nombrando la rama del
+    principal. O sea: apagado donde más se escribe, y equivocado donde hablaba.
+    """
+
+    def _repo(self, nombre: str) -> Path:
+        carpeta = Path(tempfile.mkdtemp(prefix=nombre))
+        subprocess.run(["git", "init", "-q"], cwd=carpeta, check=True)
+        (carpeta / "src").mkdir()
+        (carpeta / "src" / "cosa.gd").write_text("", encoding="utf-8")
+        self.addCleanup(shutil.rmtree, carpeta, True)
+        return carpeta
+
+    def test_una_ruta_absoluta_manda_su_propio_arbol_y_no_el_principal(self):
+        otro = self._repo("gate_abs_")
+        raiz = gate_de_spec.raiz_que_manda(str(otro / "src" / "cosa.gd"), None)
+        self.assertEqual(Path(raiz).resolve(), otro.resolve())
+        self.assertNotEqual(Path(raiz).resolve(), Path(RAIZ).resolve())
+
+    def test_una_ruta_relativa_se_resuelve_contra_el_cwd_del_payload(self):
+        # Es lo único que desambigua un `src/x.gd` escrito desde un worktree: el hook corre con
+        # el cwd del checkout principal y la ruta no dice a cuál de los dos árboles apunta.
+        otro = self._repo("gate_rel_")
+        raiz = gate_de_spec.raiz_que_manda("src/cosa.gd", str(otro))
+        self.assertEqual(Path(raiz).resolve(), otro.resolve())
+
+    def test_sin_cwd_ni_arbol_legible_cae_en_la_raiz_y_no_revienta(self):
+        # Falla abierto, como todo el resto del gate.
+        raiz = gate_de_spec.raiz_que_manda("src/dominio/reglas.gd", None)
+        self.assertEqual(Path(raiz).resolve(), Path(RAIZ).resolve())
 
 
 if __name__ == "__main__":
