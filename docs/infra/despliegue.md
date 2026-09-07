@@ -37,6 +37,20 @@ desplegar y salir en verde— es exactamente el modo de falla que este repo pers
 `.vercel/` está en el `.gitignore`: es donde la CLI escribe ese vínculo, y adentro va el `orgId`
 de la cuenta.
 
+## Y apagarle la Deployment Protection al proyecto
+
+**Un proyecto de Vercel nace con la protección encendida**, y con eso los cuatro archivos
+contestan `302` a `vercel.com/sso-api` en vez de servirse. Los dos verificadores de abajo salen
+rojos aunque el export esté perfecto: no llegan a mirar el juego, miran una pantalla de login.
+
+Se apaga en **Project → Settings → Deployment Protection**. Si la producción tiene que quedar
+protegida, hay que darle a la CI un `VERCEL_AUTOMATION_BYPASS_SECRET` y mandarlo en cada
+petición — pero entonces *nadie de afuera puede jugar*, que es lo que este spec existe para
+lograr.
+
+Medido el 2026-09-07 contra el proyecto de este repo, con la protección puesta:
+`verificar_despliegue.py` nombra los cuatro `302` y su destino.
+
 ## Los tres veredictos, y por qué no alcanza con uno
 
 **El código de salida del export no dice nada.** Medido: `--export-release "Web"` termina con
@@ -108,8 +122,18 @@ es como se llama la release: puesto con el nombre equivocado, Godot dice que fal
 
 ## Lo que todavía no se corrió
 
-**El proyecto de Vercel no existe todavía**, así que los dos últimos pasos de la lista de arriba
-nunca se ejercieron contra una URL viva: lo que está probado es la lógica, con la respuesta
-inyectada. Para cerrarlo hace falta crear el proyecto, cargar los tres secretos y mirar la
-primera corrida de `desplegar` sobre `main`. Hasta entonces, **publicar no es haber
-publicado** sigue siendo una afirmación sobre el código y no sobre una página.
+**El proyecto de Vercel ya existe**, y el 2026-09-07 se corrió `verificar_despliegue.py` contra
+una URL viva: contestó rojo nombrando los cuatro `302` de la Deployment Protection. O sea que el
+verificador **sí llega a una publicación real y la juzga** — eso dejó de ser una afirmación sobre
+el código.
+
+Lo que sigue sin correrse es el resto de la cadena, y falta por dos cosas concretas:
+
+- **Los tres secretos no están cargados** (`gh secret list` no devuelve ninguno el 2026-09-07),
+  así que `desplegar.yml` todavía no puede publicar. El workflow falla en su primer paso
+  nombrando cuál falta, que es lo que se diseñó.
+- **La protección del deploy sigue puesta**, así que aunque se publicara, la URL contestaría el
+  `302` de arriba.
+
+Con esas dos, la primera corrida de `desplegar` sobre `main` cierra el humo en navegador, que es
+lo único que nunca se ejerció: `humo_en_navegador.mjs` no corrió nunca, ni acá ni en CI.

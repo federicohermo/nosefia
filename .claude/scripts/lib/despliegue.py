@@ -255,6 +255,20 @@ def problemas_de_la_publicacion(url: str, pedir: Callable[[str], Respuesta]) -> 
     base = url.rstrip("/")
     for archivo in PUBLICADOS:
         respuesta = pedir(f"{base}/{archivo}")
+        # Un 3xx va ANTES del `!= 200` porque es la única respuesta que engaña al veredicto en
+        # vez de romperlo: si el que pregunta sigue el redirect, lo que se juzga es la página de
+        # destino —el muro de autenticación de Vercel, típicamente— y salen los headers de ESA
+        # página como si el deploy los hubiera perdido. Medido el 2026-09-07 contra este mismo
+        # proyecto con la Deployment Protection encendida: nueve mensajes sobre `SharedArrayBuffer`
+        # y ni uno nombrando la causa.
+        if 300 <= respuesta.estado < 400:
+            problemas.append(
+                f"`{archivo}` contestó {respuesta.estado} y redirige a "
+                f"`{respuesta.header('location') or 'ningún lado'}`: no se está sirviendo el "
+                "archivo publicado. Si el destino es un login, la publicación está detrás de "
+                "autenticación y hay que apagarle la protección al deploy."
+            )
+            continue
         if respuesta.estado != 200:
             problemas.append(
                 f"`{archivo}` contestó {respuesta.estado}: la publicación está incompleta y la "

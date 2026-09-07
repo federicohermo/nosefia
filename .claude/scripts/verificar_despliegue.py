@@ -43,10 +43,27 @@ def pedir(url: str) -> Respuesta:
     """
     peticion = urllib.request.Request(url, method="HEAD")
     try:
-        with urllib.request.urlopen(peticion, timeout=ESPERA) as respuesta:
+        with _SIN_SEGUIR.open(peticion, timeout=ESPERA) as respuesta:
             return Respuesta(respuesta.status, dict(respuesta.headers))
     except urllib.error.HTTPError as error:
         return Respuesta(error.code, dict(error.headers or {}))
+
+
+class _NoSigasElRedirect(urllib.request.HTTPRedirectHandler):
+    """Deja que un 3xx llegue al veredicto en vez de seguirlo.
+
+    `urlopen` sigue los redirects **por defecto**, y eso convierte a este script en un mentiroso
+    silencioso: una publicación detrás de autenticación contesta 302 al login, `urlopen` lo
+    sigue, y lo que se juzga son los headers de la pantalla de login. El veredicto sale rojo
+    —bien— pero nombrando la causa equivocada, que es la forma cara de fallar: manda a buscar un
+    header perdido que nunca se perdió.
+    """
+
+    def redirect_request(self, req, fp, code, msg, headers, newurl):  # noqa: D102
+        return None
+
+
+_SIN_SEGUIR = urllib.request.build_opener(_NoSigasElRedirect)
 
 
 def main() -> None:

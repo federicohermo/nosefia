@@ -28,6 +28,7 @@ from lib.despliegue import (
     HILOS,
     OBLIGATORIOS,
     PISO_DEL_WASM,
+    PUBLICADOS,
     REVALIDACION,
     TECHO_DEL_DIRECTORIO,
     TIPO_DEL_WASM,
@@ -209,6 +210,22 @@ class LaPublicacion(unittest.TestCase):
 
     def test_una_url_sana_no_tiene_problemas(self):  # 027-AC7
         self.assertEqual(problemas_de_la_publicacion("https://x.test/", self.servidor()), [])
+
+    def test_un_redirect_se_nombra_como_redirect_y_no_como_headers_que_faltan(self):
+        # Medido en vivo el 2026-09-07 contra el proyecto de Vercel de este repo, con la
+        # Deployment Protection encendida: los cuatro archivos contestaban 302 al SSO y el
+        # veredicto salieron nueve mensajes sobre headers que faltaban. El deploy no había
+        # perdido ningún header: nunca se llegó a mirarlo. Un diagnóstico que nombra la causa
+        # equivocada cuesta la corrida entera de quien lo lee.
+        aviso = Respuesta(302, {"Location": "https://vercel.com/sso-api?url=x"})
+        problemas = problemas_de_la_publicacion(
+            "https://x.test", self.servidor(**{nombre: aviso for nombre in PUBLICADOS})
+        )
+        self.assertEqual(len(problemas), len(PUBLICADOS))
+        for problema in problemas:
+            self.assertIn("302", problema)
+            self.assertIn("https://vercel.com/sso-api?url=x", problema)
+            self.assertNotIn("SharedArrayBuffer", problema)
 
     def test_un_404_es_un_problema(self):  # 027-AC7
         problemas = problemas_de_la_publicacion(
