@@ -44,7 +44,8 @@ Es la regla más importante de todo el harness. Un gate que no puede correr y no
 **exactamente igual** que uno que pasó, y en esa diferencia se esconde el peor bug posible: el
 que hace que todo esté verde mientras nada se verifica.
 
-Hoy se saltean tres cosas, y cada una tiene su condición de vencimiento:
+Cada salteo tiene su condición de vencimiento, y la tabla es la lista — el número no se
+escribe al lado, porque un conteo a mano caduca cada vez que la tabla gana una fila:
 
 | Se saltea | Mientras | Vence cuando |
 |---|---|---|
