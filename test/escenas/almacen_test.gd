@@ -27,6 +27,10 @@ const ESCENA_DEL_ALMACEN := "res://src/escenas/almacen.tscn"
 ## ausencia no se puede instanciar.
 const SCRIPT_DEL_ALMACEN := "res://src/escenas/almacen.gd"
 
+## Los tres `@export` que la raíz declara. Se listan acá y no adentro del caso porque son el
+## contrato del cableado: agregar uno sin asignarlo en la escena tiene que dar rojo.
+const CABLEADOS_DE_LA_RAIZ := ["_hud", "_reloj", "_ciclo"]
+
 ## La malla que trae la cáscara del edificio. Los rayos de acá miran sólo contra ella.
 const CASCARA_DEL_EDIFICIO := "almacen"
 
@@ -314,3 +318,23 @@ func test_la_escena_trae_el_ciclo_de_jornadas_colgando_de_la_raiz() -> void:  # 
 	var almacen := _almacen()
 	assert_bool(almacen.has_node("CicloDeJornadas")).is_true()
 	assert_object(almacen.get_node("CicloDeJornadas")).is_instanceof(CicloDeJornadas)
+
+
+func test_los_tres_cableados_de_la_raiz_llegan_asignados() -> void:
+	# **Un `@export` sin asignar en el `.tscn` deja la escena cargando sin un solo error**, los
+	# seis nodos de `verificar.py` en verde, y el juego muerto en el primer cuadro con un
+	# `Nonexistent function ... in base 'Nil'` que no nombra ni a `almacen.tscn` ni al export que
+	# falta. El caso de arriba mira que el nodo exista; éste, que el cableado lo alcance — que
+	# son dos cosas distintas: el nodo puede estar y el `node_paths` de la raíz no nombrarlo.
+	var almacen := _almacen()
+	for cableado: String in CABLEADOS_DE_LA_RAIZ:
+		(
+			assert_object(almacen.get(cableado))
+			. override_failure_message(
+				(
+					"`almacen.tscn` no le asignó `%s` a la raíz: el juego muere en el primer cuadro"
+					% cableado
+				)
+			)
+			. is_not_null()
+		)
