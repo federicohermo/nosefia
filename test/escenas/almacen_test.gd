@@ -518,9 +518,7 @@ func test_el_cableado_de_reponer_llega_entero_hasta_los_huecos() -> void:  # 008
 	# tres: la raíz, el nodo instanciado que apunta afuera de su sub-escena, y el `@export` que
 	# la sub-escena ya traía y que sobrescribir uno de sus hermanos podría borrar.
 	var almacen := _almacen()
-	for propiedad in [
-		"_repositor", "_carga", "_estante", "_caja_de_productos", "_caja_de_traslado"
-	]:
+	for propiedad in ["_repositor", "_carga", "_estante", "_caja_de_traslado"]:
 		(
 			assert_object(almacen.get(propiedad))
 			. override_failure_message(
@@ -528,6 +526,31 @@ func test_el_cableado_de_reponer_llega_entero_hasta_los_huecos() -> void:  # 008
 			)
 			. is_not_null()
 		)
+	# Las cajas van aparte porque son un `Array`: vacío **no es** null, así que el barrido de
+	# arriba las daría por cableadas sin que haya una sola. Y se afirma que cubren el catálogo
+	# entero sin repetir, que es el bug que este cableado cierra: con una sola caja, despachaba
+	# siempre `YERBA` y los otros cinco productos quedaban en cero para siempre, o sea que
+	# REPONER no se podía terminar jugando.
+	var despachados: Array[int] = []
+	for caja: Node3D in almacen.get("_cajas_de_productos"):
+		(
+			assert_object(caja)
+			. override_failure_message("una entrada de `_cajas_de_productos` quedó en null")
+			. is_not_null()
+		)
+		despachados.append(caja.producto)
+	despachados.sort()
+	var del_catalogo: Array[int] = []
+	for producto in Catalogo.todos():
+		del_catalogo.append(producto.id)
+	del_catalogo.sort()
+	(
+		assert_array(despachados)
+		. override_failure_message(
+			"las cajas despachan %s y el catálogo tiene %s" % [despachados, del_catalogo]
+		)
+		. is_equal(del_catalogo)
+	)
 	var repositor: Repositor = almacen.get_node("Repositor")
 	assert_object(repositor.reloj).is_not_null()
 	assert_object(repositor.carga).is_not_null()

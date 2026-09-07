@@ -35,7 +35,7 @@ const Jugador := preload("res://src/escenas/jugador.gd")
 @export var _repositor: Repositor
 @export var _carga: CargaDeLaCaja
 @export var _estante: EstanteDelLocal
-@export var _caja_de_productos: CajaDeProductosDelDeposito
+@export var _cajas_de_productos: Array[Node3D]
 @export var _caja_de_traslado: CajaDeTrasladoQueSeVe
 @export var _jugador: Jugador
 
@@ -72,7 +72,13 @@ func _ready() -> void:
 	# Reponer, de punta a punta: la caja del depósito despacha una unidad a la de traslado, el
 	# estante la pide, y el repositor la mueve. Los dos gestos entran por el mismo clic del 006
 	# y ninguno de los dos scripts de escena sabe qué pasa del otro lado.
-	_caja_de_productos.producto_pedido.connect(_carga.pedir_guardar)
+	# **Una caja por producto, y las seis conectadas al mismo destino.** Con una sola, despachaba
+	# siempre su `producto` por defecto y los otros cinco del catálogo se quedaban en cero para
+	# siempre: `Estante.completada()` sale de `Inventario.faltantes()`, así que REPONER no se
+	# podía terminar jugando. Medido con una sonda headless: 20 viajes de 8 clics dejaban
+	# `Yerba=4/4` y los otros cinco en 0.
+	for caja: CajaDeProductosDelDeposito in _cajas_de_productos:
+		caja.producto_pedido.connect(_carga.pedir_guardar)
 	_carga.producto_guardado.connect(_al_guardar_en_la_caja)
 	_estante.colocacion_pedida.connect(_repositor.pedir_colocar)
 	_repositor.producto_colocado.connect(_al_colocar_en_el_estante)
