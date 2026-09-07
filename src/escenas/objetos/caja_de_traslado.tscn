@@ -1,0 +1,51 @@
+[gd_scene load_steps=4 format=3]
+
+[ext_resource type="Script" path="res://src/escenas/objetos/caja_de_traslado.gd" id="1_caja"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_cuerpo"]
+size = Vector3(0.9, 0.3, 0.5)
+
+[sub_resource type="BoxMesh" id="BoxMesh_casillero"]
+size = Vector3(0.18, 0.18, 0.18)
+
+[node name="CajaDeTraslado" type="Node3D" node_paths=PackedStringArray("_casilleros")]
+script = ExtResource("1_caja")
+_casilleros = NodePath("Contenido")
+
+[node name="Cuerpo" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.15, 0)
+mesh = SubResource("BoxMesh_cuerpo")
+
+[node name="Contenido" type="Node3D" parent="."]
+
+[node name="Casillero1" type="MeshInstance3D" parent="Contenido"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.33, 0.3, -0.11)
+mesh = SubResource("BoxMesh_casillero")
+
+[node name="Casillero2" type="MeshInstance3D" parent="Contenido"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.11, 0.3, -0.11)
+mesh = SubResource("BoxMesh_casillero")
+
+[node name="Casillero3" type="MeshInstance3D" parent="Contenido"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.11, 0.3, -0.11)
+mesh = SubResource("BoxMesh_casillero")
+
+[node name="Casillero4" type="MeshInstance3D" parent="Contenido"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.33, 0.3, -0.11)
+mesh = SubResource("BoxMesh_casillero")
+
+[node name="Casillero5" type="MeshInstance3D" parent="Contenido"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.33, 0.3, 0.11)
+mesh = SubResource("BoxMesh_casillero")
+
+[node name="Casillero6" type="MeshInstance3D" parent="Contenido"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.11, 0.3, 0.11)
+mesh = SubResource("BoxMesh_casillero")
+
+[node name="Casillero7" type="MeshInstance3D" parent="Contenido"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.11, 0.3, 0.11)
+mesh = SubResource("BoxMesh_casillero")
+
+[node name="Casillero8" type="MeshInstance3D" parent="Contenido"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.33, 0.3, 0.11)
+mesh = SubResource("BoxMesh_casillero")

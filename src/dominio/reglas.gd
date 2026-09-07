@@ -64,6 +64,18 @@ const SEGUNDOS_DE_TRAYECTO_ESTIMADOS := 220.0
 ## el turno es una decisión de diseño que hay que escribir acá.
 const MARGEN_MINIMO := 3600.0
 
+## Cuántos productos entran en la caja con la que se traslada la mercadería.
+##
+## **El nombre es largo a propósito**: a cuatro líneas de acá vive `COSTO_DE_LA_CAJA`, que es la
+## **caja registradora** y no tiene nada que ver. `CASILLEROS_DE_LA_CAJA` las confundiría, y la
+## confusión no daría error: daría un balance cambiado en la tarea equivocada.
+##
+## Ocho es un primer valor y es lo que convierte reponer en una decisión: con uno, reponer sería
+## un viaje por unidad y no habría nada que elegir; con muchos, cargar deja de costar. El día que
+## se rebalancee, la caja de la escena dibuja los casilleros que diga este número y no ocho
+## huecos escritos en un `.tscn`.
+const CASILLEROS_DE_LA_CAJA_DE_TRASLADO := 8
+
 ## A los cuatro apercibimientos lo echan, y se compara con `>=` y no con `==`: una jornada grave
 ## sube de a dos, así que el contador puede saltar de 3 a 5 sin pisar el 4.
 ##
