@@ -41,12 +41,22 @@ static func _posicion_en(raiz: Node, nodo: Node3D) -> Vector3:
 	return compuesta.origin
 
 
+## Todas las manchas del almacén instanciado.
+static func _nodos_de_mancha(almacen: Node) -> Array[ManchaQueSeVe]:
+	var manchas: Array[ManchaQueSeVe] = []
+	for nodo in _descendientes(almacen):
+		var mancha := nodo as ManchaQueSeVe
+		if mancha == null:
+			continue
+		manchas.append(mancha)
+	return manchas
+
+
 ## Todas las manchas del almacén instanciado, con su posición ya compuesta.
 static func _manchas_de(almacen: Node) -> Array[Vector3]:
 	var posiciones: Array[Vector3] = []
-	for nodo in _descendientes(almacen):
-		if nodo.get_script() == ManchaQueSeVe:
-			posiciones.append(_posicion_en(almacen, nodo))
+	for mancha in _nodos_de_mancha(almacen):
+		posiciones.append(_posicion_en(almacen, mancha))
 	return posiciones
 
 
@@ -81,6 +91,26 @@ func test_la_mancha_esta_en_el_grupo_que_la_mira_puede_enfocar() -> void:  # 014
 	assert_bool(mancha.has_method(ReglasDeLosObjetos.METODO_INTERACTUAR)).is_true()
 	# De una mancha no se levanta nada: pasarle el trapeador es otro gesto.
 	assert_object(mancha.call(ReglasDeLosObjetos.METODO_INTERACTUAR)).is_null()
+
+
+func test_la_mancha_limpia_deja_de_estorbar_y_de_enfocarse() -> void:  # 014-AC9
+	# Esconder un nodo **no apaga su cuerpo**: con el cuerpo prendido, una mancha ya limpia sigue
+	# frenando el rayo de la mira y sigue siendo un tope invisible en medio del pasillo, con la
+	# escena cargando sin un solo error.
+	var mancha := _mancha()
+	var cuerpo := mancha.get_node("Cuerpo") as CollisionShape3D
+	var totales := ReglasDeLaLimpieza.PASADAS_POR_MANCHA
+	mancha.mostrar(0, totales)
+	assert_bool(mancha.visible).is_false()
+	(
+		assert_bool(cuerpo.disabled)
+		. override_failure_message("la mancha limpia sigue chocando y sigue enfocándose")
+		. is_true()
+	)
+	# Y vuelve a estorbar cuando el piso vuelve a estar sucio: el cableado repinta cada jornada.
+	mancha.mostrar(totales, totales)
+	assert_bool(mancha.visible).is_true()
+	assert_bool(cuerpo.disabled).is_false()
 
 
 func test_la_pasada_entra_por_el_clic_derecho_y_sin_accion_nueva() -> void:  # 014-AC9
@@ -118,7 +148,21 @@ func test_el_trapeador_carga_y_responde_el_id_de_la_constante() -> void:  # 014-
 
 
 func test_el_almacen_trae_una_mancha_por_zona() -> void:  # 014-AC10
-	assert_int(_manchas_de(_almacen()).size()).is_equal(PisoDelLocal.Zona.size())
+	# **Contarlas no alcanza, hay que mirar qué zona declara cada una.** Con dos manchas
+	# repitiendo la misma `zona` en el `.tscn` el conteo sigue dando cuatro, la zona que falta no
+	# se puede limpiar nunca y la obligatoria queda inalcanzable — que es exactamente el bug que
+	# este spec vino a cerrar, y ningún gate lo ve porque la zona la declara una escena.
+	var manchas := _nodos_de_mancha(_almacen())
+	assert_int(manchas.size()).is_equal(PisoDelLocal.Zona.size())
+	var declaradas := {}
+	for mancha in manchas:
+		declaradas[mancha.zona_de_la_mancha()] = true
+	for zona: PisoDelLocal.Zona in PisoDelLocal.Zona.values():
+		(
+			assert_bool(declaradas.has(zona))
+			. override_failure_message("ninguna mancha del almacén declara la zona %d" % zona)
+			. is_true()
+		)
 
 
 func test_ningun_par_de_manchas_esta_al_alcance_de_la_mira() -> void:  # 014-AC10
