@@ -34,6 +34,7 @@ const CajaDeTrasladoQueSeVe := preload("res://src/escenas/objetos/caja_de_trasla
 @export var _caja_de_productos: CajaDeProductosDelDeposito
 @export var _caja_de_traslado: CajaDeTrasladoQueSeVe
 @export var _atenciones: Ventanilla
+@export var _computadora: ComputadoraDeEscritorio
 
 ## La partida es de la escena y no del ciclo porque también la mira el HUD: el ciclo publica lo
 ## que pasó, y quien quiera un número lo pide acá.
@@ -96,6 +97,7 @@ func _al_abrir_la_jornada(_jornada: int) -> void:
 	var inventario := Apertura.inventario_de_la_jornada()
 	_repositor.arrancar(Estante.new(inventario, Catalogo.todos()))
 	_atenciones.arrancar(TareaDeAtender.new(Compradores.de_la_jornada(), inventario))
+	_computadora.arrancar(CajaRegistradora.new(inventario, CajaRegistradora.productos_del_dia()))
 	_estante.mostrar(0)
 
 
