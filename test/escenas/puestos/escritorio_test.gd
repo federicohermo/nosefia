@@ -7,6 +7,7 @@ const ESCENA := "res://src/escenas/puestos/escritorio.tscn"
 const SCRIPT := "res://src/escenas/puestos/escritorio.gd"
 const ESCENA_DEL_ALMACEN := "res://src/escenas/almacen.tscn"
 const ESCENA_DEL_JUGADOR := "res://src/escenas/jugador.tscn"
+const ESCENA_DE_LA_PANTALLA := "res://src/ui/diegetica/pantalla_de_computadora.tscn"
 
 ## El script del puesto se preloadea para poder tiparlo: los scripts de `escenas/` son cáscara y
 ## no declaran `class_name`.
@@ -74,6 +75,45 @@ func test_del_escritorio_se_sale_con_el_clic_derecho_y_no_con_cancelar() -> void
 		. override_failure_message("`escritorio.gd` comparte la tecla del cursor")
 		. is_false()
 	)
+
+
+func test_el_clic_derecho_llega_aunque_la_pantalla_tape_el_viewport() -> void:  # 009-AC10
+	# **Medido en 4.7.2**: el fondo de la pantalla es un `ColorRect` a pantalla completa y un
+	# `Control` trae `MOUSE_FILTER_STOP` por defecto, así que se come el botón del mouse. Con el
+	# gesto escrito en el callback que corre después de la interfaz, la computadora se abría y no
+	# se cerraba nunca: el jugador quedaba suspendido detrás del panel hasta que cerrara la noche,
+	# con el `MOUSE_BUTTON_RIGHT` escrito y los seis nodos en verde.
+	var pantalla: CanvasLayer = auto_free(load(ESCENA_DE_LA_PANTALLA).instantiate())
+	var fondo := pantalla.get_node("Fondo") as Control
+	(
+		assert_int(fondo.mouse_filter)
+		. override_failure_message("el fondo dejó de tapar el viewport: revisar por qué")
+		. is_equal(Control.MOUSE_FILTER_STOP)
+	)
+	var texto := FileAccess.get_file_as_string(SCRIPT)
+	(
+		assert_bool(texto.contains("func _unhandled_input("))
+		. override_failure_message("el clic derecho no llega: la interfaz se lo come antes")
+		. is_false()
+	)
+
+	var escritorio := _escritorio()
+	var jugador: Node3D = auto_free(load(ESCENA_DEL_JUGADOR).instantiate())
+	var obligatorias := Apertura.obligatorias()
+	var reloj: RelojDelTurno = auto_free(RelojDelTurno.new())
+	reloj.arrancar(Apertura.turno_de_la_jornada(obligatorias), obligatorias)
+	var computadora: ComputadoraDeEscritorio = auto_free(ComputadoraDeEscritorio.new())
+	computadora.reloj = reloj
+	escritorio.jugador = jugador
+	escritorio.reloj = reloj
+	escritorio.computadora = computadora
+	escritorio.abrir()
+
+	var clic := InputEventMouseButton.new()
+	clic.button_index = MOUSE_BUTTON_RIGHT
+	clic.pressed = true
+	escritorio._input(clic)
+	assert_bool(computadora.computadora().abierta()).is_false()
 
 
 func test_este_spec_no_agrega_ninguna_accion_al_input_map() -> void:  # 009-AC10

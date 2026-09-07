@@ -64,7 +64,14 @@ func cerrar() -> void:
 
 
 ## El botón derecho apaga la pantalla. Es el evento crudo y no una acción del `InputMap`.
-func _unhandled_input(evento: InputEvent) -> void:
+##
+## **Va en `_input` y no en el que corre después de la interfaz**, y es una medición: el fondo de
+## la pantalla es un `ColorRect` a pantalla completa, y un `Control` trae `MOUSE_FILTER_STOP` por
+## defecto, así que **se come el botón del mouse antes** — medido en 4.7.2, el botón derecho sobre
+## un fondo así llega por `_input` y no llega por el otro. Con el otro, la computadora se abría y
+## no se podía cerrar: el jugador quedaba suspendido detrás del panel hasta que cerrara la noche,
+## y ningún test de escena lo decía porque el gesto estaba escrito.
+func _input(evento: InputEvent) -> void:
 	var boton := evento as InputEventMouseButton
 	if boton == null or not boton.pressed or boton.button_index != MOUSE_BUTTON_RIGHT:
 		return
