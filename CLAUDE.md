@@ -14,8 +14,10 @@ compradores por día. Al cierre se cuentan las tareas cumplidas y las consecuenc
 bandas: las 5 no pasa nada, 3 o 4 es un aviso, menos de 3 es grave. **Las tres pesan distinto
 sobre el despido** —grave suma dos apercibimientos, aviso suma uno, una jornada completa los
 reinicia a cero, y a los cuatro lo echan—, así que dos jornadas graves seguidas despiden y una
-completa borra la deuda entera. **El número exacto sale de `src/dominio/reglas.gd`, nunca de
-acá**: un spec que discrepe con ese archivo está mal.
+completa borra la deuda entera. **El número exacto sale del dominio y nunca de acá**, y no de un
+solo archivo: los apercibimientos están en `src/dominio/reglas.gd`, el corte entre aviso y grave
+en `src/dominio/empleo/consecuencia.gd`, y las cinco no están escritas en ninguna parte — salen de
+recorrer `Tarea.Tipo`. Un spec que discrepe con esos archivos está mal.
 
 **La tensión central es aritmética: cada minuto investigando es un minuto que no se dedica a
 las tareas.** Al evaluar una feature, la pregunta es si aprieta esa tensión — no si agrega

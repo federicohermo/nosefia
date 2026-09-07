@@ -91,7 +91,7 @@ git checkout <headRefName> || git checkout -b <headRefName> origin/<headRefName>
 ```
 
 **No se abre una rama de andamio, y el porqué es el hook.** `gate_de_spec.py` bloquea toda
-escritura a `src/` y `docs/` desde una rama que no matchee `^feature/(\d{3})-` con ese número en
+escritura a `src/` desde una rama que no matchee `^feature/(\d{3})-` con ese número en
 `specs/mapa.json` — y la rama del PR de un spec **ya es** `feature/<NNN>-<kebab>`, o sea que ya
 matchea. Un nombre inventado tipo `rev-pr-<N>` no matchea, así que el andamio **creaba** el
 bloqueo que decía prevenir, y el síntoma es un `Edit` denegado, que se lee como un problema de

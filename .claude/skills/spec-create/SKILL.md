@@ -242,10 +242,11 @@ No es parte de abrir un spec, pero es la otra mitad y se saltea igual de fácil:
 
 ## Si el gate te frenó
 
-El hook bloquea editar `src/` y `docs/` desde `main`, desde `staging`, o desde una rama que no
+El hook bloquea editar `src/` desde `main`, desde `staging`, o desde una rama que no
 nombra un spec. Si saltó, no lo saltees: o estás en el caso «no necesita spec» —y entonces la
 rama igual no puede ser ninguna de las dos compartidas—, o te falta el paso 3, o el spec ya
 está publicado y lo que falta es **la rama**.
 
 `.claude/` y `specs/` **no** están protegidos, a propósito: son adonde este skill te manda a
-escribir primero.
+escribir primero. **`docs/` tampoco, desde el 2026-09-05**: pedir un spec para corregir una línea
+de documentación no produce más specs, produce documentación que nadie corrige.
