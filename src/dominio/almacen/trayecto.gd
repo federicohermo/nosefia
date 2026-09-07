@@ -6,9 +6,10 @@
 ## recibe la distancia ya medida y contesta. Quien mide es la escena, que es la única con árbol
 ## vivo; el `Area3D` del descarte es un **reflejo** del radio y no su fuente.
 ##
-## Es aritmética pura y no depende de nada del almacén: por eso los tres métodos son `static` y
-## reciben todo lo que usan. Es lo que permite ejercer el trayecto sin una escena y sin una
-## jornada.
+## Los tres métodos son `static` y no leen un solo campo: se ejercen sin una escena y sin una
+## jornada. Lo único que este archivo no recibe es cuántas manos hay —`segundos_minimos()` se lo
+## pide a `ReglasDeLosObjetos`, que es de al lado—, y eso vale la pena decirlo porque es lo que
+## hace que ese método no se pueda ejercer con números del todo inventados.
 class_name Trayecto
 extends RefCounted
 
@@ -31,8 +32,10 @@ static func viajes(bolsas: int, manos: int) -> int:
 ## oscuras que no conoce, y por eso el cruce contra `Reglas.SEGUNDOS_DE_TRAYECTO_ESTIMADOS` es un
 ## `>=` y no una igualdad.
 ##
-## La velocidad entra por parámetro y no se le pide a `ReglasDelJugador`: así este archivo sigue
-## siendo aritmética que se puede ejercer con números inventados.
+## La velocidad entra por parámetro y no se le pide a `ReglasDelJugador`. Las manos no: salen de
+## `ReglasDeLosObjetos.MANOS_DISPONIBLES`, porque cuántas manos tiene el empleado es del empleado
+## y no del viaje. **La consecuencia es que el resultado de este método se mueve si el balance
+## cambia esa constante**, aunque los tres argumentos sean inventados.
 static func segundos_minimos(distancia: float, velocidad: float, bolsas: int) -> float:
 	if velocidad <= 0.0:
 		return 0.0

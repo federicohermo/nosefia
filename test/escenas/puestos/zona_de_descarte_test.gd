@@ -118,7 +118,14 @@ func test_el_fondo_esta_lejos_de_todo_lo_demas() -> void:  # 015-AC7
 	var almacen := _almacen()
 	var descarte := _posicion_en(almacen, almacen.get_node("ZonaDeDescarte"))
 	var puntos := _puntos_a_medir(almacen)
-	assert_int(puntos.size()).is_greater(0)
+	# Un nombre que no está se salteaba en silencio y el caso medía de menos: renombrar un
+	# anclaje dejaba la mitad del local sin comparar contra el fondo, y esto seguía en verde.
+	for nombre: String in ANCLAJES_DE_LAS_OTRAS_TAREAS + NOMBRES_DE_LAS_BOLSAS:
+		(
+			assert_bool(puntos.has(nombre))
+			. override_failure_message("`%s` no está en el almacén: el caso lo salteaba" % nombre)
+			. is_true()
+		)
 	for nombre: String in puntos:
 		var distancia: float = descarte.distance_to(puntos[nombre])
 		(
@@ -131,6 +138,82 @@ func test_el_fondo_esta_lejos_de_todo_lo_demas() -> void:  # 015-AC7
 			)
 			. is_greater_equal(ReglasDeLaBasura.DISTANCIA_MINIMA_AL_DESCARTE)
 		)
+
+
+func test_el_cableado_de_la_basura_llega_entero_hasta_la_zona() -> void:  # 015-AC6
+	# Un `@export` de tipo `Node` en una escena escrita a mano va declarado ADEMÁS en el
+	# `node_paths` del tag del nodo, o queda en `null`: la escena carga sin un solo error, los
+	# seis nodos dan verde, y el juego muere en el primer cuadro con un
+	# `Nonexistent function … in base 'Nil'` que no nombra ni al `.tscn` ni al `@export`.
+	#
+	# Los cuatro niveles van juntos porque la trampa es la misma en los cuatro: la raíz, el nodo
+	# suelto, el `@export` que la sub-escena instanciada apunta afuera de sí misma, y el que ya
+	# traía adentro y que instanciarla podría borrar.
+	var almacen := _almacen()
+	(
+		assert_object(almacen.get("_recolector"))
+		. override_failure_message(
+			"`_recolector` quedó en null: falta en el `node_paths` de la raíz"
+		)
+		. is_not_null()
+	)
+	var recolector: RecolectorDeBasura = almacen.get_node("Recolector")
+	(
+		assert_object(recolector.reloj)
+		. override_failure_message("el recolector nace sin reloj: no puede contar la obligatoria")
+		. is_not_null()
+	)
+	var zona: ZonaQueSeVe = almacen.get_node("ZonaDeDescarte")
+	(
+		assert_object(zona.recolector)
+		. override_failure_message("la zona nace sin recolector: la primera bolsa mata al juego")
+		. is_not_null()
+	)
+	(
+		assert_object(zona.forma)
+		. override_failure_message(
+			"la zona nace sin forma: instanciarla borró su propio `node_paths`"
+		)
+		. is_not_null()
+	)
+
+
+func test_cada_bolsa_de_la_escena_lleva_el_id_que_espera_el_dominio() -> void:  # 015-AC8
+	# **Un `id` que no coincide no rompe nada**: la bolsa entra al descarte, el dominio contesta
+	# `NO_ES_BASURA` y la obligatoria queda imposible de cerrar toda la noche, sin un solo error y
+	# con los seis nodos en verde. Contar los nodos por su nombre no lo ve — el nombre del nodo y
+	# el `id` del `.tres` son dos cosas distintas.
+	var almacen := _almacen()
+	var encontrados: Array[StringName] = []
+	for nombre: String in NOMBRES_DE_LAS_BOLSAS:
+		var bolsa := almacen.get_node_or_null(nombre) as ObjetoAgarrable
+		if bolsa == null:
+			(
+				assert_object(bolsa)
+				. override_failure_message("`%s` no está o no es un agarrable del 006" % nombre)
+				. is_not_null()
+			)
+			continue
+		if bolsa.datos == null:
+			(
+				assert_object(bolsa.datos)
+				. override_failure_message(
+					"`%s` no trae su `.tres`: su `datos` llegó nulo" % nombre
+				)
+				. is_not_null()
+			)
+			continue
+		encontrados.append(bolsa.datos.id)
+	(
+		assert_array(encontrados)
+		. override_failure_message(
+			(
+				"las bolsas de la escena llevan %s y el dominio espera %s"
+				% [encontrados, ReglasDeLaBasura.ids_de_las_bolsas()]
+			)
+		)
+		. contains_exactly_in_any_order(ReglasDeLaBasura.ids_de_las_bolsas())
+	)
 
 
 func test_las_bolsas_son_del_agarre_del_006_y_no_de_un_segundo_sistema() -> void:  # 015-AC8

@@ -1,7 +1,9 @@
 ## La aritmética del trayecto: viajes, segundos y si un punto entra en la zona.
 ##
-## **Todo con números inventados.** Es lo que prueba que este archivo no depende del almacén: si
-## algún caso necesitara la escena o el balance, la regla estaría en el lugar equivocado.
+## **Ningún caso levanta una escena**: si alguno la necesitara, la regla estaría en el lugar
+## equivocado. Los números son inventados salvo por uno que no se ve en la llamada:
+## `segundos_minimos()` le pide las manos a `ReglasDeLosObjetos`, así que el `24.0` de abajo se
+## mueve si el balance sube esa constante. Está dicho acá porque el caso no lo deja ver.
 extends GdUnitTestSuite
 
 
