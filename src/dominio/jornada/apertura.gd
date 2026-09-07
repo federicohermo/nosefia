@@ -38,3 +38,25 @@ static func cantidad_de_obligatorias() -> int:
 ## al 008 la misma instancia de `Tarea` que el turno está contando.
 static func turno_de_la_jornada(obligatorias: Array[Tarea]) -> Turno:
 	return Turno.new(Reglas.DURACION_DEL_TURNO, obligatorias)
+
+
+## La mercadería con la que arranca la noche: todo el depósito y la góndola vacía.
+##
+## **Que la góndola arranque en cero es lo que hace que reponer sea una tarea.** Con algo puesto,
+## la primera noche estaría medio hecha y el jugador no tendría por qué caminar hasta el fondo.
+##
+## Se arma sobre `Catalogo.todos()` y no sobre una lista escrita acá: un producto que no llegue
+## a este inventario es uno que no se puede reponer ni vender, y no hay un solo error que lo
+## diga.
+##
+## **Devuelve un inventario nuevo en cada llamada**, igual que `obligatorias()`: uno compartido
+## entre jornadas dejaría lo repuesto anoche en la góndola de esta noche, o sea que la tarea se
+## cumpliría sola a partir de la segunda.
+static func inventario_de_la_jornada() -> Inventario:
+	var productos := Catalogo.todos()
+	var inventario := Inventario.new(productos)
+	for producto in productos:
+		inventario.ingresar(
+			producto, Inventario.Ubicacion.DEPOSITO, ReglasDelEstante.UNIDADES_INICIALES_EN_DEPOSITO
+		)
+	return inventario

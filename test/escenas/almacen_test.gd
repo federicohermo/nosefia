@@ -413,3 +413,32 @@ func test_el_cableado_le_da_la_hora_al_reloj_de_pared_y_no_al_hud() -> void:  # 
 	assert_str(texto).contains("tiempo_consumido.connect(_reloj_de_pared.mostrar_tiempo)")
 	assert_str(texto).contains("tarea_completada.connect(_hud.mostrar_tareas)")
 	assert_str(texto).contains("_hud.mostrar_apercibimientos")
+
+
+func test_el_cableado_de_reponer_llega_entero_hasta_los_huecos() -> void:  # 008-AC10
+	# Un `@export` de tipo `Node` en una escena escrita a mano va declarado ADEMÁS en el
+	# `node_paths` del tag del nodo, o queda en `null`: la escena carga sin un solo error, los
+	# seis nodos dan verde, y el juego muere en el primer cuadro con un
+	# `Nonexistent function … in base 'Nil'` que no nombra ni al `.tscn` ni al `@export`.
+	#
+	# Los tres niveles se afirman juntos y no en tres casos porque la trampa es la misma en los
+	# tres: la raíz, el nodo instanciado que apunta afuera de su sub-escena, y el `@export` que
+	# la sub-escena ya traía y que sobrescribir uno de sus hermanos podría borrar.
+	var almacen := _almacen()
+	for propiedad in [
+		"_repositor", "_carga", "_estante", "_caja_de_productos", "_caja_de_traslado"
+	]:
+		(
+			assert_object(almacen.get(propiedad))
+			. override_failure_message(
+				"`%s` quedó en null: falta su entrada en el `node_paths` de la raíz" % propiedad
+			)
+			. is_not_null()
+		)
+	var repositor: Repositor = almacen.get_node("Repositor")
+	assert_object(repositor.reloj).is_not_null()
+	assert_object(repositor.carga).is_not_null()
+	var estante: Node3D = almacen.get_node("Estante")
+	assert_bool(estante.has_node("Contenido")).is_true()
+	estante.mostrar(1)
+	assert_bool((estante.get_node("Contenido").get_child(0) as Node3D).visible).is_true()

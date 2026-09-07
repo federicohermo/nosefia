@@ -1,0 +1,20 @@
+[gd_scene load_steps=4 format=3]
+
+[ext_resource type="Script" path="res://src/escenas/objetos/caja_de_productos.gd" id="1_caja"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_cuerpo"]
+size = Vector3(0.5, 0.4, 0.5)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_cuerpo"]
+size = Vector3(0.5, 0.4, 0.5)
+
+[node name="CajaDeProductos" type="StaticBody3D" groups=["interactuable"]]
+script = ExtResource("1_caja")
+
+[node name="Cuerpo" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.2, 0)
+shape = SubResource("BoxShape3D_cuerpo")
+
+[node name="Malla" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.2, 0)
+mesh = SubResource("BoxMesh_cuerpo")
