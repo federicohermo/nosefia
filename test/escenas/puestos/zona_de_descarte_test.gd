@@ -16,11 +16,22 @@ const ESCENA_AGARRABLE := "res://src/escenas/objetos/objeto_agarrable.tscn"
 ## no declaran `class_name` — y éste **no puede** declararlo, ver el caso de abajo.
 const ZonaQueSeVe := preload("res://src/escenas/puestos/zona_de_descarte.gd")
 
+## Una caja por producto del catálogo, desde que reponer se puede terminar jugando. Antes era una
+## sola llamada `CajaDeProductos`: el nombre viejo dejaba este caso midiendo de menos.
+const CAJAS_DEL_DEPOSITO := [
+	"CajaDeYerba",
+	"CajaDeFideos",
+	"CajaDeGaseosa",
+	"CajaDeGalletitas",
+	"CajaDeArroz",
+	"CajaDeJabon",
+]
+
 ## Los anclajes de las otras cuatro obligatorias en `almacen.tscn`. El descarte tiene que estar
 ## lejos de todos: es lo que hace que ninguna otra tarea visite el fondo.
-const ANCLAJES_DE_LAS_OTRAS_TAREAS := [
-	"Estante", "CajaDeProductos", "CajaDeTraslado", "Ventanilla", "Escritorio"
-]
+const ANCLAJES_DE_LAS_OTRAS_TAREAS := (
+	["Estante", "CajaDeTraslado", "Ventanilla", "Escritorio"] + CAJAS_DEL_DEPOSITO
+)
 
 const NOMBRES_DE_LAS_BOLSAS := ["BolsaDeBasura1", "BolsaDeBasura2", "BolsaDeBasura3"]
 
