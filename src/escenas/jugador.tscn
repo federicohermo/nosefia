@@ -1,13 +1,17 @@
-[gd_scene load_steps=3 format=3]
+[gd_scene load_steps=5 format=3]
 
 [ext_resource type="Script" uid="uid://clrretmx7rboi" path="res://src/escenas/jugador.gd" id="1_jugador"]
+[ext_resource type="Script" uid="uid://yepsvg67ynpy" path="res://src/sistemas/marco/agarre.gd" id="2_agarre"]
+[ext_resource type="Script" uid="uid://b0u36rf5cultk" path="res://src/sistemas/investigacion/examen.gd" id="3_examen"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_cuerpo"]
 radius = 0.4
 height = 1.8
 
-[node name="Jugador" type="CharacterBody3D"]
+[node name="Jugador" type="CharacterBody3D" node_paths=PackedStringArray("agarre", "examen")]
 script = ExtResource("1_jugador")
+agarre = NodePath("Agarre")
+examen = NodePath("Examen")
 
 [node name="Cuerpo" type="CollisionShape3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.9, 0)
@@ -18,3 +22,26 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.7, 0)
 
 [node name="Mira" type="RayCast3D" parent="Camara"]
 target_position = Vector3(0, 0, -2.5)
+
+[node name="PuntoDeExamen" type="Node3D" parent="Camara"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.5)
+
+[node name="PuntoDeCarga" type="Node3D" parent="Camara"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.3, -0.3, -0.618)
+
+[node name="PuntoDeSoltado" type="Node3D" parent="Camara"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -1.2)
+
+[node name="PuntoDeRespaldo" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.15, -0.5)
+
+[node name="Agarre" type="Node" parent="." node_paths=PackedStringArray("punto_de_carga", "punto_de_soltado", "punto_de_respaldo")]
+script = ExtResource("2_agarre")
+punto_de_carga = NodePath("../Camara/PuntoDeCarga")
+punto_de_soltado = NodePath("../Camara/PuntoDeSoltado")
+punto_de_respaldo = NodePath("../PuntoDeRespaldo")
+
+[node name="Examen" type="Node" parent="." node_paths=PackedStringArray("agarre", "punto_de_examen")]
+script = ExtResource("3_examen")
+agarre = NodePath("../Agarre")
+punto_de_examen = NodePath("../Camara/PuntoDeExamen")
