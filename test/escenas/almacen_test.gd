@@ -470,6 +470,25 @@ func test_el_reloj_de_pared_cae_adentro_del_edificio() -> void:  # 032-AC7
 	)
 
 
+func test_la_caja_de_traslado_entra_instanciada_y_adentro_del_edificio() -> void:  # 033-AC10
+	# Una caja colocada afuera de la cáscara se vería flotando en el vacío y ningún test de
+	# cableado lo diría: la escena carga igual y el nodo está.
+	var almacen: Node3D = auto_free(load(ESCENA_DEL_ALMACEN).instantiate())
+	add_child(almacen)
+	await get_tree().process_frame
+	assert_bool(almacen.has_node("CajaDeTraslado")).is_true()
+	var cascara: MeshInstance3D = almacen.get_node("Estructura/" + CASCARA_DEL_EDIFICIO)
+	var edificio: AABB = cascara.global_transform * cascara.get_aabb()
+	var caja: Node3D = almacen.get_node("CajaDeTraslado")
+	(
+		assert_bool(edificio.has_point(caja.global_position))
+		. override_failure_message(
+			"la caja quedó en %s, afuera del edificio %s" % [caja.global_position, edificio]
+		)
+		. is_true()
+	)
+
+
 func test_el_cableado_le_da_la_hora_al_reloj_de_pared_y_no_al_hud() -> void:  # 032-AC8
 	# La hora se fue de la pantalla, pero los otros dos carteles del HUD siguen: sin la segunda
 	# mitad de este caso, desconectarlos también pasaría en verde.
