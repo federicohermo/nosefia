@@ -40,9 +40,9 @@ Lo que hay que saber antes de abrir
 - **`verificar.py` es el nodo de convergencia**, y es lo que se corre antes de un PR:
   `lint ‖ formato ‖ capas ‖ tdd ‖ harness ‖ tests`. **La CI corre este script**, no la lista de
   nodos: enumerarlos allá sería un segundo lugar donde vive la lista.
-- **Un nodo `salteado` NO es un nodo verde.** Cada salteo dice qué no miró. Si `tests` se
-  saltea por falta de `GODOT_BIN` —en Windows el `_console.exe`, y **fuera de OneDrive**—, la
-  suite no corrió.
+- **Un nodo `salteado` NO es un nodo verde.** Cada salteo dice qué no miró, y vence: `tests` se
+  saltea mientras no haya un solo `*_test.gd`, y con el primero **la falta de `GODOT_BIN` pasa a
+  ser un rojo, no un salteo** —en Windows, el `_console.exe` y **fuera de OneDrive**—.
 - **`gdformat` decide el formato.** No se discute en una revisión.
 - **El veredicto sale del código de salida, nunca de un grep de la salida.** Un `| grep` que no
   matchea devuelve 1 y se traga la salida entera.
@@ -99,6 +99,10 @@ Verificadas por una herramienta:
   Ninguno alcanza `../otro-skill/`: uno que sale a buscar el archivo al de al lado deja de
   funcionar apenas viaja solo. El precio es la duplicación, y el gate la cobra: **una copia que
   difiere de su canónico en un byte es rojo**, y los canónicos se declaran en ese archivo.
+- **Un doc dice la regla, no la lista** (`test_docs_no_enumeran_skills.py`), y el umbral es
+  **tres nombres de skill en una misma línea**: una entrada del árbol que enumera su contenido
+  caduca sola —ésa caducó cuatro veces—, mientras que la prosa que manda al lector a un skill
+  por su nombre, o que contrasta uno con su variante en lote, es correcta y pasa.
 
 Prosa — dependen de que la revisión las mire, y que no tengan verificador es deuda:
 
@@ -186,6 +190,11 @@ Las que ya costaron tiempo acá:
 - **`Grep` no ve `specs/` ni `.claude/`.** Es ripgrep: respeta el `.gitignore` y saltea los
   ocultos, y contesta cero **sin decir que no miró**. Ahí va `rg --no-ignore --hidden`, **uno
   por línea y separados por `;`** — con `&&` corta en el primero sin match, también sin decirlo.
+- **`GODOT_BIN` declarada no es `GODOT_BIN` visible.** En Windows un proceso hereda el entorno de
+  su padre y no lo relee del registro: una terminal abierta antes de declararla no la ve nunca —y
+  abrir una pestaña del mismo host tampoco—, así que se cierra el host de la terminal o la
+  sesión. El registro contesta la ruta correcta mientras el script dice que no la encuentra, que
+  es lo que vuelve caro el diagnóstico.
 - **Godot adentro de OneDrive no se puede ejecutar** si el archivo no está descargado: Windows
   contesta «el proveedor de archivos de nube no se está ejecutando», que no nombra ni a Godot ni
   a los tests.
