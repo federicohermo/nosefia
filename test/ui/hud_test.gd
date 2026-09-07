@@ -7,6 +7,21 @@ extends GdUnitTestSuite
 
 const HUD := "res://src/ui/hud.gd"
 
+const CARPETA_DE_UI := "res://src/ui"
+
+## Las suites que este spec escribe. Ninguna puede cargar una escena de la computadora: el 009
+## todavía no existe, y una suite que la cargara pasaría por abortar antes de afirmar nada.
+const SUITES_DEL_RELOJ_DE_PARED := [
+	"res://test/dominio/jornada/reloj_de_pared_test.gd",
+	"res://test/escenas/puestos/reloj_de_pared_test.gd",
+	"res://test/ui/hud_test.gd",
+]
+
+## La carpeta que el 009 va a estrenar. Se arma partida a propósito: esta suite es una de las que
+## se mira a sí misma, y con el nombre escrito de una pieza el caso se encontraría acá y daría
+## rojo contra su propio verificador.
+const CARPETA_DE_LA_COMPUTADORA := "ui/" + "diegetica"
+
 ## Lo que el veredicto del 007 traía consigo. El segundo es el que importa: traducir la banda a
 ## palabras es una regla del juego, y acá arriba nace sin test.
 const RASTROS_DEL_VEREDICTO := ["mostrar_veredicto", "consecuencia_de"]
@@ -30,3 +45,53 @@ func test_el_hud_sigue_pintando_lo_que_si_es_suyo() -> void:  # 017-AC11
 	var texto := FileAccess.get_file_as_string(HUD)
 	assert_str(texto).contains("func mostrar_tareas")
 	assert_str(texto).contains("func mostrar_apercibimientos")
+
+
+func test_la_hora_no_vuelve_a_entrar_a_la_pantalla_por_la_ventana() -> void:  # 032-AC9
+	# La computadora del 009 va a mostrar la hora también, y va a vivir en la carpeta diegética.
+	# Mientras no exista, nadie de esta capa puede preguntarle al reloj de pared: la hora se lee
+	# en el local. El caso mira la capa entera y no sólo el HUD, que es lo que lo deja puesto
+	# cuando `ui/` crezca.
+	var culpables: Array[String] = []
+	var mirados := 0
+	for ruta in _scripts_de(CARPETA_DE_UI):
+		mirados += 1
+		if FileAccess.get_file_as_string(ruta).contains("RelojDePared"):
+			culpables.append(ruta)
+	(
+		assert_int(mirados)
+		. override_failure_message("la recorrida no abrió un solo archivo de `src/ui/`")
+		. is_greater(0)
+	)
+	(
+		assert_array(culpables)
+		. override_failure_message(
+			"estos archivos de `ui/` le preguntan al reloj de pared: %s" % ", ".join(culpables)
+		)
+		. is_empty()
+	)
+
+
+func test_ninguna_suite_de_este_spec_carga_la_computadora_del_009() -> void:  # 032-AC9
+	# Una escena que no existe se carga como `null` y el caso **aborta antes de afirmar**, lo que
+	# gdUnit4 reporta como `PASSED`. Es la peor de las tres formas en que un verde miente acá.
+	for suite: String in SUITES_DEL_RELOJ_DE_PARED:
+		var texto := FileAccess.get_file_as_string(suite)
+		(
+			assert_str(texto)
+			. override_failure_message("la suite `%s` no existe o está vacía" % suite)
+			. is_not_empty()
+		)
+		assert_str(texto).not_contains(CARPETA_DE_LA_COMPUTADORA)
+
+
+## Todos los `.gd` de una carpeta, recorriendo las subcarpetas. `DirAccess` y no una lista a
+## mano: una lista se olvida del archivo nuevo justo el día que el archivo nuevo aparece.
+func _scripts_de(carpeta: String) -> Array[String]:
+	var encontrados: Array[String] = []
+	for nombre in DirAccess.get_files_at(carpeta):
+		if nombre.ends_with(".gd"):
+			encontrados.append(carpeta + "/" + nombre)
+	for subcarpeta in DirAccess.get_directories_at(carpeta):
+		encontrados.append_array(_scripts_de(carpeta + "/" + subcarpeta))
+	return encontrados

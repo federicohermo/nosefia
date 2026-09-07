@@ -11,25 +11,34 @@
 ## levantar nada. Acá quedó lo único que necesita la escena delante: conectar y pintar.
 extends Node3D
 
+## El script del reloj de pared se preloadea para poder tiparlo: los scripts de `escenas/` son
+## cáscara y no declaran `class_name`, así que sin esto el tipo estático del `@export` sería
+## `Label3D` y llamarle `declarar_jornada()` no compilaría.
+const RelojDeParedDelLocal := preload("res://src/escenas/puestos/reloj_de_pared.gd")
+
 @export var _hud: Hud
 @export var _reloj: RelojDelTurno
 @export var _ciclo: CicloDeJornadas
 @export var _pantalla: PantallaDeCierre
+@export var _reloj_de_pared: RelojDeParedDelLocal
 
 ## La partida es de la escena y no del ciclo porque también la mira el HUD: el ciclo publica lo
 ## que pasó, y quien quiera un número lo pide acá.
 var _partida := Partida.nueva()
 
 
-## Los tres carteles se pintan acá antes de conectar nada, y no con un `text` escrito en
-## `hud.tscn`: una copia del texto en la escena es una copia de los números que lleva adentro
-## —cuántas obligatorias hay y a cuántos apercibimientos echan—, y el de apercibimientos se
-## quedaría en pantalla la jornada entera, porque hasta el cierre nadie lo vuelve a escribir.
+## Los carteles se pintan acá antes de conectar nada, y no con un `text` escrito en `hud.tscn`:
+## una copia del texto en la escena es una copia de los números que lleva adentro —cuántas
+## obligatorias hay y a cuántos apercibimientos echan—, y el de apercibimientos se quedaría en
+## pantalla la jornada entera, porque hasta el cierre nadie lo vuelve a escribir.
 func _ready() -> void:
 	_hud.declarar_obligatorias(Apertura.cantidad_de_obligatorias())
-	_hud.mostrar_tiempo(Reglas.DURACION_DEL_TURNO)
 	_hud.mostrar_apercibimientos(_partida.apercibimientos())
-	_reloj.tiempo_consumido.connect(_hud.mostrar_tiempo)
+	# La hora se lee en el local y no en la pantalla: enterarse cuesta caminar hasta el reloj, y
+	# desde la noche en que se rompe, ni caminar alcanza. La jornada se declara antes de arrancar
+	# porque el ciclo abre la primera adentro de `arrancar()`.
+	_reloj.tiempo_consumido.connect(_reloj_de_pared.mostrar_tiempo)
+	_ciclo.jornada_abierta.connect(_reloj_de_pared.declarar_jornada)
 	_reloj.tarea_completada.connect(_hud.mostrar_tareas)
 	_ciclo.jornada_cerrada.connect(_al_cerrar_la_jornada)
 	# La placa es quien abre la noche siguiente, y por eso el ciclo no reabre solo: entre una
