@@ -80,6 +80,24 @@ func test_cada_jornada_abre_un_turno_nuevo_y_tareas_nuevas() -> void:  # 016-AC5
 		)
 
 
+func test_una_partida_terminada_no_vuelve_a_abrir_una_jornada() -> void:  # 016-AC5
+	# El ciclo ya guarda esto antes de llamar, pero la puerta es pública y el 017 la toca desde
+	# una pantalla. Sin el guard acá, la noche de regalo **le borra el legajo al despedido**:
+	# cerrarla impecable lo reinicia a cero y la partida avanza de jornada con el final ya
+	# escrito. Nada de eso emite un error, y el reporte del cierre diría dos cosas distintas.
+	var partida := Partida.nueva()
+	_jugar(partida, 0)
+	_jugar(partida, 0)
+	assert_int(partida.final()).is_equal(Partida.Final.DESPEDIDO)
+	var jornada_del_despido := partida.jornada()
+	var apercibimientos_del_despido := partida.apercibimientos()
+	assert_object(partida.abrir_la_jornada()).is_null()
+	partida.cerrar_la_jornada(Apertura.cantidad_de_obligatorias())
+	assert_int(partida.jornada()).is_equal(jornada_del_despido)
+	assert_int(partida.apercibimientos()).is_equal(apercibimientos_del_despido)
+	assert_int(partida.final()).is_equal(Partida.Final.DESPEDIDO)
+
+
 func test_cinco_jornadas_impecables_terminan_la_partida_sin_despido() -> void:  # 016-AC6
 	var partida := Partida.nueva()
 	for _jornada in range(ReglasDeLaPartida.JORNADAS_DE_LA_PARTIDA):
