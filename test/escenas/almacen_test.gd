@@ -23,6 +23,10 @@ extends GdUnitTestSuite
 
 const ESCENA_DEL_ALMACEN := "res://src/escenas/almacen.tscn"
 
+## El cableado se lee como texto en un solo caso, el que afirma lo que **ya no** está: una
+## ausencia no se puede instanciar.
+const SCRIPT_DEL_ALMACEN := "res://src/escenas/almacen.gd"
+
 ## La malla que trae la cáscara del edificio. Los rayos de acá miran sólo contra ella.
 const CASCARA_DEL_EDIFICIO := "almacen"
 
@@ -283,3 +287,30 @@ func test_la_regla_de_cableado_sabe_ver_un_nodo_colgado_de_otro() -> void:
 	assert_array(violaciones).has_size(1)
 	assert_str(violaciones[0]).contains("Mancha1")
 	assert_str(violaciones[0]).contains("Limpieza")
+
+
+func test_el_cableado_dejo_de_armar_el_turno_y_de_llevar_el_puntaje() -> void:  # 016-AC12
+	# Las dos cosas se fueron a `Partida`, y mientras siguieran acá la regla del despido no se
+	# podía alcanzar jugando: el puntaje moría con la escena. El caso mira el texto del archivo
+	# porque es la única forma de afirmar una ausencia.
+	var texto := FileAccess.get_file_as_string(SCRIPT_DEL_ALMACEN)
+	assert_str(texto).not_contains("Legajo")
+	assert_str(texto).not_contains("Turno.new(")
+	(
+		assert_int(texto.count("Partida.nueva()"))
+		. override_failure_message(
+			(
+				"`almacen.gd` arma %d partidas: con dos, el HUD pinta una y el ciclo corre la otra"
+				% texto.count("Partida.nueva()")
+			)
+		)
+		. is_equal(1)
+	)
+
+
+func test_la_escena_trae_el_ciclo_de_jornadas_colgando_de_la_raiz() -> void:  # 016-AC12
+	# Sin el nodo, el `@export` del cableado llega nulo y el juego muere en el primer cuadro con
+	# un error que no nombra a `almacen.tscn`.
+	var almacen := _almacen()
+	assert_bool(almacen.has_node("CicloDeJornadas")).is_true()
+	assert_object(almacen.get_node("CicloDeJornadas")).is_instanceof(CicloDeJornadas)
