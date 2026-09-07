@@ -17,7 +17,7 @@ Es el único paso que no se puede adivinar: Godot no se instala, se baja, y cada
 tiene en otro lado.
 
 ```powershell
-# PowerShell, una sola vez. Después hay que abrir una terminal nueva.
+# PowerShell, una sola vez. Después hay que CERRAR el host de la terminal (ver abajo).
 [Environment]::SetEnvironmentVariable("GODOT_BIN", "C:\ruta\a\Godot_v4.7.2-stable_win64_console.exe", "User")
 ```
 
@@ -26,8 +26,14 @@ tiene en otro lado.
 export GODOT_BIN="/ruta/a/godot"
 ```
 
-Dos advertencias que cuestan una tarde cada una:
+Tres advertencias que cuestan una tarde cada una:
 
+- **Abrir una terminal nueva NO alcanza.** En Windows un proceso hereda el bloque de entorno de
+  su padre y no lo lee del registro, así que una pestaña nueva que abre el mismo host viejo sigue
+  sin ver la variable. Hay que **cerrar el host de la terminal** —la ventana entera— o cerrar
+  sesión de Windows. El síntoma es cruel: el registro contesta la ruta correcta y el script dice
+  que no la encuentra, las dos cosas ciertas a la vez. Está entero en
+  [troubleshooting](./troubleshooting.md).
 - **En Windows conviene el `_console.exe`**, no el otro. El ejecutable normal no escribe en la
   consola, así que la salida de los tests se pierde entera y la corrida parece colgada.
 - **No lo dejes adentro de OneDrive.** Si el archivo está sólo en la nube, Windows lo rechaza
