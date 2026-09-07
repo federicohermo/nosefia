@@ -99,6 +99,10 @@ Verificadas por una herramienta:
   Ninguno alcanza `../otro-skill/`: uno que sale a buscar el archivo al de al lado deja de
   funcionar apenas viaja solo. El precio es la duplicación, y el gate la cobra: **una copia que
   difiere de su canónico en un byte es rojo**, y los canónicos se declaran en ese archivo.
+- **Un doc dice la regla, no la lista** (`test_docs_no_enumeran_skills.py`), y el umbral es
+  **tres nombres de skill en una misma línea**: una entrada del árbol que enumera su contenido
+  caduca sola —ésa caducó cuatro veces—, mientras que la prosa que manda al lector a un skill
+  por su nombre, o que contrasta uno con su variante en lote, es correcta y pasa.
 
 Prosa — dependen de que la revisión las mire, y que no tengan verificador es deuda:
 
