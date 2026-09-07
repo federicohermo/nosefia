@@ -32,10 +32,21 @@ func _ready() -> void:
 	_reloj.tiempo_consumido.connect(_hud.mostrar_tiempo)
 	_reloj.tarea_completada.connect(_hud.mostrar_tareas)
 	_ciclo.jornada_cerrada.connect(_al_cerrar_la_jornada)
+	# El marcador de obligatorias no se reinicia solo: `mostrar_tareas()` se vuelve a llamar
+	# recién cuando el jugador completa una, así que sin esto la noche 2 arranca mostrando las
+	# que se cumplieron en la 1 hasta que se cumpla la primera de la 2.
+	_ciclo.jornada_abierta.connect(_al_abrir_la_jornada)
 	# La placa es quien abre la noche siguiente, y por eso el ciclo no reabre solo: entre una
 	# jornada y la otra hay algo que leer. Se conecta derecho porque acá no hay nada que decidir.
 	_pantalla.cierre_despachado.connect(_ciclo.abrir_la_jornada)
 	_ciclo.arrancar(_partida, _reloj)
+
+
+## Cada noche arranca con el marcador en cero, y quien lo dice es la apertura de la jornada y no
+## el cierre de la anterior: entre las dos hay una placa que el jugador tarda lo que quiera en
+## despachar, y el conteo de ayer no puede quedar colgado ahí.
+func _al_abrir_la_jornada(_jornada: int) -> void:
+	_hud.declarar_obligatorias(Apertura.cantidad_de_obligatorias())
 
 
 ## La jornada cerrada ya quedó anotada en la partida cuando esta señal llega: acá sólo se le
