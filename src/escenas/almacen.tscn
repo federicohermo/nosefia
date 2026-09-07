@@ -39,7 +39,7 @@ background_mode = 2
 sky = SubResource("Sky_cielo")
 tonemap_mode = 2
 
-[node name="Almacen" type="Node3D" node_paths=PackedStringArray("_hud", "_reloj", "_ciclo", "_pantalla", "_reloj_de_pared", "_repositor", "_carga", "_estante", "_cajas_de_productos", "_caja_de_traslado", "_jugador", "_atenciones", "_computadora", "_limpiador", "_limpieza", "_recolector")]
+[node name="Almacen" type="Node3D" node_paths=PackedStringArray("_hud", "_reloj", "_ciclo", "_pantalla", "_reloj_de_pared", "_repositor", "_carga", "_estante", "_cajas_de_productos", "_caja_de_traslado", "_jugador", "_atenciones", "_computadora", "_limpiador", "_limpieza", "_recolector", "_bolsas")]
 script = ExtResource("4_almacen")
 _hud = NodePath("Hud")
 _reloj = NodePath("RelojDelTurno")
@@ -57,6 +57,7 @@ _computadora = NodePath("Computadora")
 _limpiador = NodePath("Limpiador")
 _limpieza = NodePath("LimpiezaDelAlmacen")
 _recolector = NodePath("Recolector")
+_bolsas = [NodePath("BolsaDeBasura1"), NodePath("BolsaDeBasura2"), NodePath("BolsaDeBasura3")]
 
 [node name="Entorno" type="WorldEnvironment" parent="."]
 environment = SubResource("Environment_almacen")
