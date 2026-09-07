@@ -20,8 +20,11 @@ crear nada. Las dos son idempotentes a propósito: una API que se llama muchas v
 la mitad alguna vez.
 
 Uso:
-    python .claude/scripts/publicar_spec.py crear     [--dry]
-    python .claude/scripts/publicar_spec.py publicar  [--dry]
+    python .claude/scripts/publicar_spec.py crear     [NNN ...] [--dry]
+    python .claude/scripts/publicar_spec.py publicar  [NNN ...] [--dry]
+
+Con uno o más `NNN` la corrida opera **sólo** sobre esos specs; sin ninguno recorre todas las
+carpetas hidratadas, que es lo que necesitan el alta y cualquier reconciliación.
 """
 
 import json
@@ -45,10 +48,23 @@ from lib.specs import (  # noqa: E402
     estado_de,
     leer_mapa,
     origen_de,
+    seleccionar_carpetas,
     traducir,
 )
 
 SPECS = RAIZ / "specs"
+
+#: El `uso:`, y es la única superficie del CLI que alguien lee.
+#:
+#: Hasta el spec 030 la fase salía de `sys.argv[1]` y `--dry` de un `in sys.argv`: **todo lo
+#: demás se ignoraba sin avisar**, así que `publicar 029` corría sobre los 29 issues sin
+#: mentir ni fallar. Por eso ahora un argumento que no es la fase, ni `--dry`, ni un `NNN` de
+#: tres dígitos muere acá **nombrado**, en vez de no hacer nada.
+USO = (
+    "uso: python .claude/scripts/publicar_spec.py crear|publicar [NNN ...] [--dry]\n"
+    "     sin NNN recorre todas las carpetas hidratadas; con NNN, sólo ésas."
+)
+
 
 #: **El mapa es uno solo y está trackeado.** Es a la vez la fuente y el buffer entre crear el
 #: issue y anotar su fila: si esas dos cosas vivieran en archivos distintos y el buffer
@@ -132,9 +148,17 @@ def origen_de_carpeta(carpeta: str) -> list[int] | None:
 def main() -> None:
     fase = sys.argv[1] if len(sys.argv) > 1 else ""
     dry = "--dry" in sys.argv
+    ids = [a for a in sys.argv[2:] if a != "--dry"]
 
-    if fase not in ("crear", "publicar"):
-        print("uso: python .claude/scripts/publicar_spec.py crear|publicar [--dry]", file=sys.stderr)
+    # **Lo que no se entiende se nombra**, igual que en `hidratar_specs.py`. El `uso:` solo
+    # deja adivinando cuál de los argumentos tipeados sobra, y el caso que más importa es
+    # `publicar 30`: el número está bien y le falta un cero, que es lo único que el mensaje
+    # puede decir y el `uso:` no.
+    sin_entender = [i for i in ids if not (len(i) == 3 and i.isdigit())]
+    if sin_entender:
+        print(f"no entiendo {' '.join(sin_entender)}: un NNN son tres dígitos.", file=sys.stderr)
+    if fase not in ("crear", "publicar") or sin_entender:
+        print(USO, file=sys.stderr)
         sys.exit(1)
 
     def gh(args: list[str], entrada: str | None = None) -> str:
@@ -155,7 +179,14 @@ def main() -> None:
             return
         MAPA_JSON.write_text(escribir_mapa(mapa), encoding="utf-8")
 
-    carpetas = carpetas_de_specs()
+    # **Antes de leer el mapa y antes del primer `gh`.** Un `NNN` sin carpeta corta la corrida
+    # entera, incluidos los `NNN` válidos que lo acompañaban: publicar la mitad deja el mapa y
+    # los issues discrepando, y nada lo vuelve a nombrar.
+    try:
+        carpetas = seleccionar_carpetas(carpetas_de_specs(), ids)
+    except ValueError as e:
+        raise SystemExit(str(e)) from e
+
     mapa = leer_mapa(MAPA_JSON.read_text(encoding="utf-8"))
 
     if fase == "crear":
@@ -241,7 +272,9 @@ def crear(carpetas, mapa, gh, guardar_mapa, dry) -> None:
 
     print(f"\nmapa: {len(mapa)} specs en {MAPA_JSON}")
     print(
-        f"{len(carpetas)} carpetas hidratadas, {reconciliados} con el `origen` puesto al día "
+        # «recorridas» y no «hidratadas»: desde el 030 el conjunto puede venir acotado por los
+        # `NNN`, así que en disco puede haber muchas más que las que esta corrida miró.
+        f"{len(carpetas)} carpetas recorridas, {reconciliados} con el `origen` puesto al día "
         "contra su `spec.md`"
     )
 

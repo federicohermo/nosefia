@@ -13,7 +13,7 @@ Los seis:
 |-----------|---------------------------------------------------------------------------|
 | `lint`    | `gdlint` sobre `src/` y `test/`: nombres, orden de declaraciones, largo    |
 | `formato` | `gdformat --check`: el formato es el que produce la herramienta, no una opinión |
-| `capas`   | La dirección de dependencia entre las capas de `src/`                     |
+| `capas`   | Qué es cada capa de `src/`: su dirección, sus subcarpetas y la pureza del dominio |
 | `tdd`     | El espejo de tests, que ninguno esté apagado y que ninguno corra sin afirmar |
 | `harness` | Los tests de estas mismas herramientas (`unittest`)                       |
 | `tests`   | La suite de gdUnit4 en Godot headless                                     |

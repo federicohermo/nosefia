@@ -94,12 +94,13 @@ protegidas, a propósito. Este skill no necesita rama de feature ni la abre.
   estar. Sin esto los agentes revisan un directorio vacío y **no falla**: revisan un spec que no
   leyeron, y reportan igual.
 
-  **Y hay un segundo motivo, que es el que muerde al cerrar.** El Paso 5 sube las ediciones con
-  `publicar_spec.py publicar`, y esa fase **recorre todas las carpetas que haya en disco**, no
-  las del lote: sobreescribe el issue de cada una con lo que el disco diga. Una carpeta vieja que
-  quedó de otra corrida se sube encima de un issue que ya era más nuevo, y se lleva puesto lo que
-  el issue tenía. Con el árbol hidratado antes de empezar, esas carpetas son idénticas al issue y
-  subirlas es un no-op.
+  **El segundo motivo dejó de existir, y conviene saber por qué.** `publicar_spec.py publicar`
+  **recorría todas las carpetas que hubiera en disco**, no las del lote, así que una carpeta vieja
+  de otra corrida se subía encima de un issue más nuevo y se llevaba puesto lo que tenía; el
+  seguro era hidratar todo antes, para que esas subidas fueran un no-op. Desde el spec 030 la fase
+  **acepta los `NNN`**: `publicar_spec.py publicar 007 008` opera sobre esos dos y sobre ningún
+  otro. **El Paso 5 los pasa**, y la hidratación de arriba vuelve a tener un solo motivo — el de
+  leer lo que se revisa.
 - **Buscar adentro de los specs necesita `--no-ignore`.** `Grep` es ripgrep y respeta el
   `.gitignore`, así que contesta **cero sin decir que no miró** — que es la peor respuesta
   posible. Va en el preámbulo del Paso 1, literal, porque cada agente lo va a necesitar:
@@ -341,8 +342,11 @@ En este orden, y el segundo es el que se saltea:
 2. **Devolvé las ediciones a los issues. No es opcional y no lo hace nadie más:**
 
    ```bash
-   python .claude/scripts/publicar_spec.py publicar
+   python .claude/scripts/publicar_spec.py publicar 007 008   # los NNN del lote
    ```
+
+   **Los `NNN` van sí o sí**, y son los del lote más los specs nuevos del punto 1: sin ellos la
+   fase recorre **todas** las carpetas que haya en disco y sube cada una encima de su issue.
 
    El árbol de `specs/` es **caché**. Una revisión que edita el `spec.md` en disco y no publica dejó
    el trabajo en un archivo ignorado por git, que la próxima hidratación **sobreescribe sin
@@ -352,9 +356,10 @@ En este orden, y el segundo es el que se saltea:
    Corré la fase con `--dry` primero si el lote fue grande: imprime qué issue va a tocar sin
    tocarlo.
 3. **Commiteá `specs/mapa.json` si cambió** — cambia si el punto 1 escribió un spec nuevo. Ahí
-   corré `publicar_spec.py crear` **antes** que el `publicar` del punto 2, porque `traducir()`
-   deja verbatim la cita a un spec que todavía no está en el mapa: enlace muerto en el issue, sin
-   error y sin aviso. **El `estado` no se toca acá**: lo deriva la Action en el push a `staging`,
+   corré `publicar_spec.py crear <NNN del spec nuevo>` **antes** que el `publicar` del punto 2,
+   porque `traducir()` deja verbatim la cita a un spec que todavía no está en el mapa: enlace
+   muerto en el issue, sin error y sin aviso. **También acá el `NNN`**: sin él `crear` abre un
+   issue por cada carpeta en disco que el mapa no tenga, y un issue abierto no se deshace. **El `estado` no se toca acá**: lo deriva la Action en el push a `staging`,
    y el gate da rojo si alguien lo escribe a mano.
 4. **`python .claude/scripts/verificar.py --solo harness`**, que es donde corre
    `test_convencion_de_specs.py` sobre lo hidratado: sección que aplaza, tarea que aplaza,

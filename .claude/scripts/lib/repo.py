@@ -63,6 +63,9 @@ PROTEGIDAS = ("src",)
 #:   `get_tree()`. Las reglas del turno, las tareas, el inventario, las consecuencias. Es la
 #:   capa que se puede testear headless sin levantar una escena, y por eso es donde tiene
 #:   que vivir todo lo que se pueda decidir con números.
+#:   **La pureza la verifica `gate_de_capas.py`** —`extends` por lista blanca, más los
+#:   patrones que enumera `.claude/rules/dominio.md`—: hasta el spec 012 esta línea era prosa
+#:   adentro de un `.py`, que es la forma más convincente de prosa que hay.
 #: - `sistemas/` — los `Node` y autoloads que orquestan el dominio y hablan con el motor:
 #:   el reloj del turno, el guardado, el bus de señales. Conocen `dominio/`; no conocen la
 #:   pantalla.
