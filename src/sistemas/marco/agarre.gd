@@ -37,11 +37,6 @@ func manos() -> Manos:
 	return _manos
 
 
-## El `Node3D` de lo que se está llevando, que es lo que `Examen` necesita para acercarlo.
-func nodo_sostenido() -> Node3D:
-	return _nodo
-
-
 ## Devuelve `true` **sólo si lo agarró ahora**, y emite el rechazo con su motivo si no.
 func pedir_agarrar(datos: ObjetoDelAlmacen, nodo: Node3D) -> bool:
 	var motivo := _manos.motivo_de_rechazo(datos)
