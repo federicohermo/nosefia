@@ -23,6 +23,7 @@ const EstanteDelLocal := preload("res://src/escenas/puestos/estante.gd")
 const CajaDeProductosDelDeposito := preload("res://src/escenas/objetos/caja_de_productos.gd")
 const CajaDeTrasladoQueSeVe := preload("res://src/escenas/objetos/caja_de_traslado.gd")
 const LimpiezaDelLocal := preload("res://src/escenas/puestos/limpieza_del_almacen.gd")
+const AudioDelLocal := preload("res://src/escenas/puestos/audio_del_almacen.gd")
 
 @export var _hud: Hud
 @export var _reloj: RelojDelTurno
@@ -39,6 +40,12 @@ const LimpiezaDelLocal := preload("res://src/escenas/puestos/limpieza_del_almace
 @export var _limpiador: Limpiador
 @export var _limpieza: LimpiezaDelLocal
 @export var _recolector: RecolectorDeBasura
+@export var _audio: AudioDelLocal
+
+## El agarre vive adentro de `jugador.tscn`, y es la única fuente de sonidos que no cuelga de
+## esta raíz. Se la nombra acá para que sus tres señales no queden sin fuente: el enlazador
+## conecta lo que le pasan, no sale a recorrer el árbol.
+@export var _agarre: Agarre
 
 ## La partida es de la escena y no del ciclo porque también la mira el HUD: el ciclo publica lo
 ## que pasó, y quien quiera un número lo pide acá.
@@ -62,6 +69,25 @@ func _ready() -> void:
 	# La placa es quien abre la noche siguiente, y por eso el ciclo no reabre solo: entre una
 	# jornada y la otra hay algo que leer. Se conecta derecho porque acá no hay nada que decidir.
 	_pantalla.cierre_despachado.connect(_ciclo.abrir_la_jornada)
+	# El audio se ata **por nombre de señal** y no nombrando a nadie: la lista de fuentes se le
+	# pasa entera y el enlazador conecta las que existan. Una señal que todavía no está deja su
+	# fila declarada sin fuente en vez de romper algo.
+	(
+		_audio
+		. enlazar(
+			[
+				_reloj,
+				_ciclo,
+				_repositor,
+				_carga,
+				_atenciones,
+				_computadora,
+				_limpiador,
+				_recolector,
+				_agarre,
+			]
+		)
+	)
 	# Reponer, de punta a punta: la caja del depósito despacha una unidad a la de traslado, el
 	# estante la pide, y el repositor la mueve. Los dos gestos entran por el mismo clic del 006
 	# y ninguno de los dos scripts de escena sabe qué pasa del otro lado.
@@ -106,6 +132,7 @@ func _al_abrir_la_jornada(_jornada: int) -> void:
 	# sola instancia dejaría el local limpio de anoche y la obligatoria cumplida sola.
 	_limpiador.arrancar(PisoDelLocal.de_la_jornada())
 	_recolector.arrancar(TareaDeLaBasura.de_la_jornada())
+	_audio.arrancar_el_ambiente()
 	_limpieza.repintar()
 	_estante.mostrar(0)
 

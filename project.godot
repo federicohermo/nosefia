@@ -20,6 +20,14 @@ run/main_scene="res://src/escenas/almacen.tscn"
 config/features=PackedStringArray("4.7", "Forward Plus")
 config/icon="res://icon.svg"
 
+[audio]
+
+; El layout declara los cuatro buses del local y los manda a `Master`. Sin esta línea el motor
+; cae al layout por defecto y deja **un solo bus**: todo saldría por `Master` y ninguna mezcla
+; sería posible, sin que nada lo diga. Los nombres los declara `entrada_sonora.gd` y acá están
+; escritos otra vez porque un `.tres` no puede leer un `const`; hay un caso que compara los dos.
+buses/default_bus_layout="res://default_bus_layout.tres"
+
 [editor_plugins]
 
 enabled=PackedStringArray("res://addons/gdUnit4/plugin.cfg")

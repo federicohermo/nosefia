@@ -1,4 +1,4 @@
-[gd_scene load_steps=31 format=3]
+[gd_scene load_steps=32 format=3]
 
 [ext_resource type="PackedScene" path="res://src/escenas/jugador.tscn" id="1_jugador"]
 [ext_resource type="PackedScene" path="res://src/ui/hud.tscn" id="2_hud"]
@@ -28,6 +28,7 @@
 [ext_resource type="Resource" path="res://src/dominio/almacen/bolsa_de_basura_1.tres" id="26_bolsa1"]
 [ext_resource type="Resource" path="res://src/dominio/almacen/bolsa_de_basura_2.tres" id="27_bolsa2"]
 [ext_resource type="Resource" path="res://src/dominio/almacen/bolsa_de_basura_3.tres" id="28_bolsa3"]
+[ext_resource type="PackedScene" path="res://src/escenas/puestos/audio_del_almacen.tscn" id="29_audio"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_cielo"]
 
@@ -39,7 +40,7 @@ background_mode = 2
 sky = SubResource("Sky_cielo")
 tonemap_mode = 2
 
-[node name="Almacen" type="Node3D" node_paths=PackedStringArray("_hud", "_reloj", "_ciclo", "_pantalla", "_reloj_de_pared", "_repositor", "_carga", "_estante", "_caja_de_productos", "_caja_de_traslado", "_atenciones", "_computadora", "_limpiador", "_limpieza", "_recolector")]
+[node name="Almacen" type="Node3D" node_paths=PackedStringArray("_hud", "_reloj", "_ciclo", "_pantalla", "_reloj_de_pared", "_repositor", "_carga", "_estante", "_caja_de_productos", "_caja_de_traslado", "_atenciones", "_computadora", "_limpiador", "_limpieza", "_recolector", "_audio", "_agarre")]
 script = ExtResource("4_almacen")
 _hud = NodePath("Hud")
 _reloj = NodePath("RelojDelTurno")
@@ -56,6 +57,8 @@ _computadora = NodePath("Computadora")
 _limpiador = NodePath("Limpiador")
 _limpieza = NodePath("LimpiezaDelAlmacen")
 _recolector = NodePath("Recolector")
+_audio = NodePath("AudioDelAlmacen")
+_agarre = NodePath("Jugador/Agarre")
 
 [node name="Entorno" type="WorldEnvironment" parent="."]
 environment = SubResource("Environment_almacen")
@@ -151,6 +154,8 @@ reloj = NodePath("../RelojDelTurno")
 [node name="Recolector" type="Node" parent="." node_paths=PackedStringArray("reloj")]
 script = ExtResource("24_recolector")
 reloj = NodePath("../RelojDelTurno")
+
+[node name="AudioDelAlmacen" parent="." instance=ExtResource("29_audio")]
 
 [node name="Hud" parent="." instance=ExtResource("2_hud")]
 
