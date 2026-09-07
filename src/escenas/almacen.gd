@@ -33,6 +33,7 @@ const CajaDeTrasladoQueSeVe := preload("res://src/escenas/objetos/caja_de_trasla
 @export var _estante: EstanteDelLocal
 @export var _caja_de_productos: CajaDeProductosDelDeposito
 @export var _caja_de_traslado: CajaDeTrasladoQueSeVe
+@export var _atenciones: Ventanilla
 
 ## La partida es de la escena y no del ciclo porque también la mira el HUD: el ciclo publica lo
 ## que pasó, y quien quiera un número lo pide acá.
@@ -89,7 +90,12 @@ func _al_cerrar_la_jornada(jornada: int, cumplidas: int) -> void:
 ## El inventario se arma acá y no en el `Repositor` porque «con cuánta mercadería arranca una
 ## jornada» es una regla del juego, y `Apertura` es donde tiene test.
 func _al_abrir_la_jornada(_jornada: int) -> void:
-	_repositor.arrancar(Estante.new(Apertura.inventario_de_la_jornada(), Catalogo.todos()))
+	# **Un solo inventario para las dos obligatorias**: reponer lo llena y la ventanilla lo
+	# vacía. Construir uno por tarea daría dos stocks del mismo producto, y las dos ventanas
+	# dirían números distintos sin que nada se ponga en rojo.
+	var inventario := Apertura.inventario_de_la_jornada()
+	_repositor.arrancar(Estante.new(inventario, Catalogo.todos()))
+	_atenciones.arrancar(TareaDeAtender.new(Compradores.de_la_jornada(), inventario))
 	_estante.mostrar(0)
 
 
