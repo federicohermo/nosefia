@@ -278,21 +278,21 @@ rompió, no pushees, y decilo. Un pipeline que pushea para completarse no sirve.
 
 ## Paso 4 — El protocolo de contención
 
-**Acá el rojo casi nunca es del PR, y el modo de falla propio de este repo no es un rojo: es un
-salteado.**
+**Acá el rojo casi nunca es del PR, y la falta de `GODOT_BIN` no se saltea: sale roja.**
 
-`verificar.py` saltea el nodo `tests` si no encuentra `GODOT_BIN`, y **lo declara** — pero un
-reporte que dice «6/6» sin leer los salteados es un review que dio por corrida una suite que no
-corrió. Medido en esta máquina: `GODOT_BIN` **no está en el entorno de la terminal**, se lee del
-registro de Windows, y una terminal anterior a la variable le pasa el entorno viejo a todo lo que
-lance.
+Desde que existe el primer `*_test.gd` —hoy hay 23— el nodo `tests` **exige** Godot, y
+`verificar.py` devuelve rojo si no encuentra `GODOT_BIN`, con un mensaje que habla de la variable
+y no del código (`verificar.py:132-141`). Medido en esta máquina: `GODOT_BIN` **no está en el
+entorno de la terminal**, se lee del registro de Windows, y una terminal anterior a la variable le
+pasa el entorno viejo a todo lo que lance. El salteo que sí hay que leer es el de los **otros**
+nodos —`lint` y `formato` sobre cero archivos—, y un nodo salteado no es un nodo verde.
 
 El protocolo, y no hay que improvisarlo:
 
-1. **Leé los salteados antes que los rojos.** `tests` salteado **es un rojo del review**: la suite
-   no corrió, así que no sabés si el fix rompió algo.
-2. Si el salteo es por `GODOT_BIN`, no lo declares como pasado: exportalo en el worktree y volvé a
-   correr. Si no se puede, **es un bloqueante del lote y no del PR**.
+1. **Leé los salteados antes que los rojos, y no esperes que `tests` esté entre ellos.** Un
+   reporte que dice «6/6» sin mirar qué se salteó da por mirado lo que nadie miró.
+2. Si el rojo de `tests` es por `GODOT_BIN`, no lo declares como pasado: exportalo en el worktree y
+   volvé a correr. Si no se puede, **es un bloqueante del lote y no del PR**.
 3. ¿El test que falló está en un archivo que el PR toca? **Si sí, es tuyo** — arreglalo.
 4. Si no, y huele a contención —N motores a la vez—, **corré `verificar.py --solo tests`** solo.
 5. **Verde ⇒ seguí, y declaralo en el reporte** con las dos corridas. No lo escondas: el usuario

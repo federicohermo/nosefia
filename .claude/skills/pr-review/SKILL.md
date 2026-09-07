@@ -178,14 +178,17 @@ confianza y la tabla de triage. Cuatro cosas que no se negocian y que están all
 python .claude/scripts/verificar.py
 ```
 
-**El modo de falla de este repo no es un rojo: es un salteado.** `verificar.py` saltea `tests` si
-no encuentra `GODOT_BIN` y **lo declara** — pero un reporte que dice «6/6» sin leer los salteados
-dio por corrida una suite que no corrió, y entonces no sabés si tu fix rompió algo.
+**La falta de `GODOT_BIN` no se saltea: sale roja.** Desde que existe el primer `*_test.gd` —hoy
+hay 23— el nodo `tests` **exige** Godot, y `verificar.py` devuelve rojo con un mensaje que habla
+de la variable y no del código (`verificar.py:132-141`). Los que sí se saltean son `lint` y
+`formato` sobre cero archivos, y un nodo salteado no es un nodo verde: un reporte que dice «6/6»
+sin leerlos da por mirado lo que nadie miró.
 
-1. **Leé los salteados antes que los rojos.** `tests` salteado es un rojo del review.
-2. Si el salteo es por `GODOT_BIN`: en esta máquina **no está en el entorno de la terminal**, se
-   lee del registro de Windows, y una terminal anterior a la variable le pasa el entorno viejo a
-   todo lo que lance. Se arregla cerrando el **host** de la terminal, no una pestaña.
+1. **Leé los salteados antes que los rojos, y no esperes que `tests` esté entre ellos.**
+2. Si el rojo de `tests` es por `GODOT_BIN`: en esta máquina **no está en el entorno de la
+   terminal**, se lee del registro de Windows, y una terminal anterior a la variable le pasa el
+   entorno viejo a todo lo que lance. Se arregla cerrando el **host** de la terminal, no una
+   pestaña.
 3. Si Godot está adentro de OneDrive y el archivo no está descargado, Windows contesta «el
    proveedor de archivos de nube no se está ejecutando», que no nombra ni a Godot ni a los tests.
 4. **`gdformat` decide el formato.** Si el nodo `formato` está rojo, corré `gdformat src test` y

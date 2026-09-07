@@ -185,6 +185,8 @@ las dos en la misma corrida:
 | una frontera que un spec le pasa a otro (`va al spec NNN`) y que el otro **no recoge** | `spec-revise-batch` — el carril de coherencia leyó los «fuera de alcance» y no verificó que el destinatario tuviera un criterio que los cubriera |
 | un AC que **barre un directorio y enumera sus excepciones** sin haber corrido el barrido | `spec-create` — la lista de excepciones se escribió de memoria, así que sale corta y el AC nace imposible de pasar |
 | el padre declara incompleto un carril que sí cerró | `spec-implement-batch` — la verificación leyó una caché local en vez del issue, porque el hidratador saltea lo que ya existe y sale en verde |
+| una decisión de implementación que el spec no nombraba, y un `spec.md` sin margen de techo donde escribirla | `spec-implement-batch` — el Paso 2 mandaba al `spec.md` sin decir que los techos se miden antes, y que el único archivo con aire es el `plan.md` |
+| **varios carriles pisando el mismo comando que el skill les dio escrito** | `spec-implement-batch` — un comando que el preámbulo entrega no se copia de la corrida anterior: se vuelve a correr antes de repartirlo, o se reparte roto N veces |
 
 **Si el problema no entra en ninguna fila, agregá la fila.** Esa tabla es el registro de lo que
 esta doctrina ya aprendió, y está incompleta a propósito.
