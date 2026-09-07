@@ -7,6 +7,7 @@ const ESCENA := "res://src/escenas/puestos/ventanilla.tscn"
 const SCRIPT := "res://src/escenas/puestos/ventanilla.gd"
 const ESCENA_DEL_ALMACEN := "res://src/escenas/almacen.tscn"
 const ESCENA_DEL_JUGADOR := "res://src/escenas/jugador.tscn"
+const ESCENA_DEL_PANEL := "res://src/ui/diegetica/panel_de_la_ventanilla.tscn"
 
 ## El script del puesto se preloadea para poder tiparlo: los scripts de `escenas/` son cáscara y
 ## no declaran `class_name`.
@@ -93,3 +94,87 @@ func test_tocar_la_ventanilla_clava_al_jugador_y_no_entrega_nada_para_levantar()
 	assert_object(ventanilla.call(ReglasDeLosObjetos.METODO_INTERACTUAR)).is_null()
 	assert_object(atenciones.atencion()).is_not_null()
 	assert_that(jugador.transform).is_equal(pose)
+
+
+func test_el_cableado_de_atender_llega_entero_desde_el_almacen() -> void:  # 013-AC12
+	# Un `@export` de tipo `Node` en una escena escrita a mano va declarado ADEMÁS en el
+	# `node_paths` del tag del nodo, o queda en `null`: la escena carga sin un solo error, los
+	# seis nodos dan verde, y el juego muere en el primer cuadro con un
+	# `Nonexistent function … in base 'Nil'` que no nombra ni al `.tscn` ni al `@export`.
+	#
+	# Los tres niveles se afirman juntos porque la trampa es la misma en los tres: la raíz, el
+	# puesto instanciado que apunta afuera de su sub-escena, y el nodo de `sistemas/` que cuelga
+	# suelto de la raíz. Contar la instancia no alcanza: una ventanilla instanciada sin su
+	# `node_paths` está en la escena y no atiende a nadie.
+	var almacen: Node3D = auto_free(load(ESCENA_DEL_ALMACEN).instantiate())
+	(
+		assert_object(almacen.get("_atenciones"))
+		. override_failure_message(
+			"`_atenciones` quedó en null: falta en el `node_paths` de la raíz"
+		)
+		. is_not_null()
+	)
+	var puesto: VentanillaQueSeVe = almacen.get_node("Ventanilla")
+	for propiedad in ["jugador", "reloj", "atenciones", "panel"]:
+		(
+			assert_object(puesto.get(propiedad))
+			. override_failure_message(
+				"`Ventanilla.%s` quedó en null: falta en su `node_paths`" % propiedad
+			)
+			. is_not_null()
+		)
+	var atenciones: Ventanilla = almacen.get_node("Atenciones")
+	assert_object(atenciones.reloj).is_not_null()
+
+
+func test_el_panel_de_la_ventanilla_llega_con_sus_seis_nodos() -> void:  # 013-AC12
+	# Una sub-escena instanciada necesita su `script` declarado en su propio `.tscn`: sin él, el
+	# `@export` que la apunta desde afuera queda en `null` **con el `node_paths` de la raíz bien
+	# escrito**, y se diagnostica mal porque se revisa el `node_paths`, que está bien.
+	var panel: PanelDeLaVentanilla = auto_free(load(ESCENA_DEL_PANEL).instantiate())
+	for propiedad in ["_fondo", "_nombre", "_renglones", "_aviso", "_cobrar", "_despachar"]:
+		(
+			assert_object(panel.get(propiedad))
+			. override_failure_message("`PanelDeLaVentanilla.%s` quedó en null" % propiedad)
+			. is_not_null()
+		)
+
+
+func test_cancelar_con_el_vidrio_cerrado_no_le_devuelve_la_caminata_al_jugador() -> void:
+	# 013-AC12
+	# `ui_cancel` llega desde cualquier rincón del local y examinar un objeto también suspende
+	# (006): sin el corte, la salida de la ventanilla le devuelve la caminata al jugador en medio
+	# de un examen, con el objeto pegado a la cara y sin un solo error.
+	var ventanilla := _ventanilla()
+	var jugador: Node3D = auto_free(load(ESCENA_DEL_JUGADOR).instantiate())
+	ventanilla.jugador = jugador
+	jugador.suspender()
+
+	ventanilla.cerrar()
+
+	assert_bool(jugador._control.esta_suspendido()).is_true()
+
+
+func test_abrir_y_cerrar_la_ventanilla_suspende_y_devuelve_el_control() -> void:  # 013-AC12
+	# La otra mitad del corte: con el vidrio abierto, cancelar sí tiene que bajar el panel y
+	# devolver la caminata, o el jugador queda clavado delante del vidrio para siempre.
+	var ventanilla := _ventanilla()
+	var jugador: Node3D = auto_free(load(ESCENA_DEL_JUGADOR).instantiate())
+	var atenciones: Ventanilla = auto_free(Ventanilla.new())
+	var panel: PanelDeLaVentanilla = auto_free(load(ESCENA_DEL_PANEL).instantiate())
+	var obligatorias := Apertura.obligatorias()
+	var reloj: RelojDelTurno = auto_free(RelojDelTurno.new())
+	reloj.arrancar(Apertura.turno_de_la_jornada(obligatorias), obligatorias)
+	atenciones.reloj = reloj
+	atenciones.arrancar(TareaDeAtender.new(Compradores.de_la_jornada(), Inventario.new([])))
+	ventanilla.jugador = jugador
+	ventanilla.reloj = reloj
+	ventanilla.atenciones = atenciones
+	ventanilla.panel = panel
+
+	ventanilla.abrir()
+	assert_bool(jugador._control.esta_suspendido()).is_true()
+
+	ventanilla.cerrar()
+	assert_bool(jugador._control.esta_suspendido()).is_false()
+	assert_bool(panel.visible).is_false()

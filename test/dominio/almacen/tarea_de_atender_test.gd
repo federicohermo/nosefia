@@ -123,3 +123,15 @@ func test_la_tarea_no_nombra_cuantos_compradores_pide_la_jornada() -> void:  # 0
 		. override_failure_message("`tarea_de_atender.gd` nombra la constante del balance")
 		. is_false()
 	)
+
+
+func test_en_la_ventanilla_esta_el_que_llego_y_todavia_no_se_despacho() -> void:  # 013-AC6
+	# Es la pregunta con la que la ventanilla decide si sigue con el que está o llama al
+	# siguiente. Si contestara al despachado, cerrar y reabrir el panel llamaría a uno de más y
+	# el último se iría sin atender: la obligatoria quedaría imposible sin un solo error.
+	var tarea := TareaDeAtender.new(_compradores(2), _inventario())
+	assert_object(tarea.en_ventanilla()).is_null()
+	var primero := tarea.atender()
+	assert_object(tarea.en_ventanilla()).is_same(primero)
+	tarea.atencion().despachar_sin_vender()
+	assert_object(tarea.en_ventanilla()).is_null()
