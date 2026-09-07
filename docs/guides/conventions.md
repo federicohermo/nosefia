@@ -12,11 +12,16 @@ Esta tabla es lo más útil del documento: dice de qué reglas hay que acordarse
 | Formato (indentación, espacios, cortes de línea) | `gdformat --check` |
 | Largo de línea (100), nombres, orden de declaraciones | `gdlint` |
 | Dirección de dependencia entre capas | `gate_de_capas.py` |
+| Los nombres de subcarpeta de cada capa | `gate_de_capas.py` |
 | Todo script de `dominio/`/`sistemas/` con su test | `gate_de_tests.py` |
 | Ningún test sin aserción, apagado o mal nombrado | `gate_de_tests.py` |
 | El registro de specs contra GitHub | `tests/test_mapa.py` |
-| El formato de las tareas de un spec | `tests/test_convencion_de_specs.py` |
-| No editar `src/` ni `docs/` sin spec | el hook de `.claude/settings.json` |
+| El formato de un spec y sus cuatro techos | `tests/test_convencion_de_specs.py` |
+| Cada criterio del spec de la rama, citado por un test | `tests/test_criterios_de_la_rama.py` |
+| Que la rama no toque lo que su plan declaró intocable | `tests/test_rutas_del_plan.py` |
+| Que un skill traiga adentro todo lo que corre, copia por copia | `tests/test_copias_de_skills.py` |
+| Que un doc diga la regla y no la lista de los skills | `tests/test_docs_no_enumeran_skills.py` |
+| No editar `src/` sin spec | el hook de `.claude/settings.json` |
 | **Tipado estático en toda firma** | **nadie: prosa** |
 | **Comentarios que expliquen el porqué** | **nadie: prosa** |
 | **Español** | **nadie: prosa** |
@@ -56,6 +61,23 @@ verifica dura hasta el primer apuro.
 - **Bajar la decisión.** Si el dominio necesita saber algo de la UI, casi siempre es que la
   regla estaba escrita al revés: la UI le pregunta al dominio, no al revés.
 - **Pasar el dato por parámetro** en vez de ir a buscarlo.
+
+## Y los nombres de subcarpeta, por el mismo motivo
+
+El mismo gate verifica que cada `.gd` y cada `.tscn` de `src/` esté en una subcarpeta que su
+capa declara, leyéndolas de `CARPETAS_POR_CAPA` en `.claude/scripts/lib/repo.py`. **El criterio
+de cada capa vive en su `.claude/rules/`** —`dominio.md`, `sistemas.md`, `presentacion.md`— y es
+siempre el mismo: la carpeta dice **qué se rompe si tocás lo que hay adentro**, nunca lo que el
+nombre del archivo ya dice.
+
+Es un gate y no prosa por el mismo motivo que la dirección: una convención de árbol escrita en
+un documento dura hasta el primer archivo que alguien deja en la raíz apurado, y ordenar una
+capa cuando ya está desordenada cuesta un spec entero de renombres.
+
+**Lo que el gate NO contesta es si un archivo está en la carpeta *correcta*.** Eso es semántica
+y ninguna herramienta lo puede decidir: lo mira la revisión. Y la raíz de una capa la admite a
+propósito, que es donde viven los que cruzan dos carpetas —`reglas.gd`, `hud.gd`— o los que son
+la raíz del árbol.
 
 ## Los valores fijos viven una sola vez
 

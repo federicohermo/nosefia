@@ -10,7 +10,7 @@
 ## y arranca a leer el `RayCast3D`: cosas que en headless no significan nada.
 extends GdUnitTestSuite
 
-const ReglasDelJugador := preload("res://src/dominio/reglas_del_jugador.gd")
+const ReglasDelJugador := preload("res://src/dominio/jugador/reglas_del_jugador.gd")
 const ESCENA_DEL_JUGADOR := "res://src/escenas/jugador.tscn"
 
 
@@ -44,7 +44,7 @@ func test_la_mira_cuelga_de_la_camara_y_alcanza_lo_que_declara_el_dominio() -> v
 
 
 func test_el_cuerpo_tiene_una_forma_de_colision() -> void:
-	# Sin forma el jugador atraviesa las paredes del blockout, y el síntoma —«me caigo del
+	# Sin forma el jugador atraviesa las paredes del almacén, y el síntoma —«me caigo del
 	# almacén»— no nombra al `.tscn` que lo causó.
 	var jugador := _jugador()
 	assert_bool(jugador.has_node("Cuerpo")).is_true()

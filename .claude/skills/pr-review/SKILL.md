@@ -91,7 +91,7 @@ git checkout <headRefName> || git checkout -b <headRefName> origin/<headRefName>
 ```
 
 **No se abre una rama de andamio, y el porqué es el hook.** `gate_de_spec.py` bloquea toda
-escritura a `src/` y `docs/` desde una rama que no matchee `^feature/(\d{3})-` con ese número en
+escritura a `src/` desde una rama que no matchee `^feature/(\d{3})-` con ese número en
 `specs/mapa.json` — y la rama del PR de un spec **ya es** `feature/<NNN>-<kebab>`, o sea que ya
 matchea. Un nombre inventado tipo `rev-pr-<N>` no matchea, así que el andamio **creaba** el
 bloqueo que decía prevenir, y el síntoma es un `Edit` denegado, que se lee como un problema de
@@ -178,14 +178,17 @@ confianza y la tabla de triage. Cuatro cosas que no se negocian y que están all
 python .claude/scripts/verificar.py
 ```
 
-**El modo de falla de este repo no es un rojo: es un salteado.** `verificar.py` saltea `tests` si
-no encuentra `GODOT_BIN` y **lo declara** — pero un reporte que dice «6/6» sin leer los salteados
-dio por corrida una suite que no corrió, y entonces no sabés si tu fix rompió algo.
+**La falta de `GODOT_BIN` no se saltea: sale roja.** Desde que existe el primer `*_test.gd` —hoy
+hay 23— el nodo `tests` **exige** Godot, y `verificar.py` devuelve rojo con un mensaje que habla
+de la variable y no del código (`verificar.py:132-141`). Los que sí se saltean son `lint` y
+`formato` sobre cero archivos, y un nodo salteado no es un nodo verde: un reporte que dice «6/6»
+sin leerlos da por mirado lo que nadie miró.
 
-1. **Leé los salteados antes que los rojos.** `tests` salteado es un rojo del review.
-2. Si el salteo es por `GODOT_BIN`: en esta máquina **no está en el entorno de la terminal**, se
-   lee del registro de Windows, y una terminal anterior a la variable le pasa el entorno viejo a
-   todo lo que lance. Se arregla cerrando el **host** de la terminal, no una pestaña.
+1. **Leé los salteados antes que los rojos, y no esperes que `tests` esté entre ellos.**
+2. Si el rojo de `tests` es por `GODOT_BIN`: en esta máquina **no está en el entorno de la
+   terminal**, se lee del registro de Windows, y una terminal anterior a la variable le pasa el
+   entorno viejo a todo lo que lance. Se arregla cerrando el **host** de la terminal, no una
+   pestaña.
 3. Si Godot está adentro de OneDrive y el archivo no está descargado, Windows contesta «el
    proveedor de archivos de nube no se está ejecutando», que no nombra ni a Godot ni a los tests.
 4. **`gdformat` decide el formato.** Si el nodo `formato` está rojo, corré `gdformat src test` y
@@ -255,7 +258,7 @@ el hallazgo no se descargó: volvé a la tabla de `hallazgos.md`.
 - **No mergea, y no mueve estados en `specs/mapa.json`.** El estado lo deriva la Action en el push
   a `staging`, y el gate da rojo si alguien lo escribe a mano.
 - **No abre PRs ni ramas de feature.** Trabaja sobre lo que ya está abierto.
-- **No revisa specs que todavía son texto.** Eso es `spec-review`, corre antes, y sale mucho más
+- **No revisa specs que todavía son texto.** Eso es `spec-revise`, corre antes, y sale mucho más
   barato: un problema detectado como texto cuesta un párrafo.
 - **No pone al día una pila de PRs.** Eso es el Paso 6 de `pr-review-batch`, y necesita ver la
   cadena entera.

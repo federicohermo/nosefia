@@ -4,7 +4,7 @@
 
 | Qué | Cómo | Para qué |
 |---|---|---|
-| **Godot 4.4** | del sitio oficial, es un `.exe` suelto | el juego, y correr los tests |
+| **Godot 4.7** | del sitio oficial, es un `.exe` suelto | el juego, y correr los tests |
 | **Python 3.11+** | del sitio oficial o Microsoft Store | las herramientas del harness |
 | **gdtoolkit** | `pip install "gdtoolkit==4.*"` | `gdlint` y `gdformat` |
 | **GitHub CLI** | de [cli.github.com](https://cli.github.com), después `gh auth login` | publicar y traer specs |
@@ -17,8 +17,8 @@ Es el único paso que no se puede adivinar: Godot no se instala, se baja, y cada
 tiene en otro lado.
 
 ```powershell
-# PowerShell, una sola vez. Después hay que abrir una terminal nueva.
-[Environment]::SetEnvironmentVariable("GODOT_BIN", "C:\ruta\a\Godot_v4.4.1-stable_win64_console.exe", "User")
+# PowerShell, una sola vez. Después hay que CERRAR el host de la terminal (ver abajo).
+[Environment]::SetEnvironmentVariable("GODOT_BIN", "C:\ruta\a\Godot_v4.7.2-stable_win64_console.exe", "User")
 ```
 
 ```bash
@@ -26,8 +26,14 @@ tiene en otro lado.
 export GODOT_BIN="/ruta/a/godot"
 ```
 
-Dos advertencias que cuestan una tarde cada una:
+Tres advertencias que cuestan una tarde cada una:
 
+- **Abrir una terminal nueva NO alcanza.** En Windows un proceso hereda el bloque de entorno de
+  su padre y no lo lee del registro, así que una pestaña nueva que abre el mismo host viejo sigue
+  sin ver la variable. Hay que **cerrar el host de la terminal** —la ventana entera— o cerrar
+  sesión de Windows. El síntoma es cruel: el registro contesta la ruta correcta y el script dice
+  que no la encuentra, las dos cosas ciertas a la vez. Está entero en
+  [troubleshooting](./troubleshooting.md).
 - **En Windows conviene el `_console.exe`**, no el otro. El ejecutable normal no escribe en la
   consola, así que la salida de los tests se pierde entera y la corrida parece colgada.
 - **No lo dejes adentro de OneDrive.** Si el archivo está sólo en la nube, Windows lo rechaza
@@ -57,7 +63,7 @@ nodos van en paralelo:
   ok        harness     0.4s
   ok        lint        1.1s
   ok        tdd         0.1s
-  ok        tests      12.3s
+  ok        tests       5.1s
 ```
 
 Para uno solo: `python .claude/scripts/verificar.py --solo tests`.
@@ -76,13 +82,15 @@ El formato no se discute en una revisión: lo decide la herramienta.
 
 ## Empezar un cambio
 
-**No se edita `src/` ni `docs/` sin un spec detrás de la rama** — y no es una recomendación:
-lo bloquea un hook antes de que se escriba la primera línea.
+**No se edita `src/` sin un spec detrás de la rama** — y no es una recomendación: lo
+bloquea un hook antes de que se escriba la primera línea. `docs/` estuvo protegido hasta el
+2026-09-05 y dejó de estarlo: pedir un spec para corregir una línea de documentación no
+produce más specs, produce documentación que nadie corrige.
 
 El camino entero está en el skill `/spec-create`, y en corto es:
 
 ```bash
-# 1. medir, escribir specs/<NNN>-<kebab>/{spec,research,plan,tasks}.md
+# 1. medir, escribir specs/<NNN>-<kebab>/{spec,research,plan}.md
 python .claude/scripts/publicar_spec.py crear
 python .claude/scripts/publicar_spec.py publicar
 git add specs/mapa.json && git commit && git push origin staging
@@ -91,17 +99,21 @@ git add specs/mapa.json && git commit && git push origin staging
 git checkout -b feature/<NNN>-<kebab>
 ```
 
-Si el gate te frenó, el mensaje dice cuál de los tres casos es y cómo salir. **No lo saltees**:
-si de verdad el cambio no necesita spec —un typo, un asset, revertir el commit anterior— la
-rama igual no puede ser `main` ni `staging`.
+Si el gate te frenó, el mensaje dice cuál de los tres casos es y cómo salir. **No lo
+saltees**: si de verdad el cambio no necesita spec —un typo, un asset, revertir el commit
+anterior— la rama igual no puede ser `main` ni `staging`.
 
 ## Traer un spec para leerlo
 
 Los specs no viven en el repo: cada uno es un issue.
 
 ```bash
-python .claude/scripts/hidratar_specs.py 007
+python .claude/scripts/hidratar_specs.py       # los que están en vuelo y falten
+python .claude/scripts/hidratar_specs.py 007   # o uno solo, esté como esté
 ```
+
+Los cerrados **no se traen en lote**: son ADR, y se piden por número cuando hace falta
+consultarlos.
 
 Y para buscar adentro de ellos, `rg --no-ignore`: están en el `.gitignore`, así que una
 búsqueda normal contesta cero **sin decir que no miró**.

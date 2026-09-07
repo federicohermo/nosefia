@@ -55,6 +55,20 @@ incluido el mensaje de bloqueo del hook. El porqué entero está en el encabezad
 Nunca de un grep de la salida. Un `| grep` que no matchea devuelve 1 y se traga la salida
 entera: es la forma más corta conocida de declarar verde una corrida rota.
 
+**Y encadenar `rg` con `&&` es la misma falla en la otra dirección.** Un `rg A && rg B && rg C`
+corta en el primero sin match —que devuelve 1— y **los otros dos no corren, sin decirlo**: la
+salida vacía se lee como «ninguno matcheó» cuando sólo se preguntó por el primero. **Un `rg` por
+línea, separados por `;`, nunca por `&&`.** Medido el 2026-09-01 verificando los AC del 023.
+
+**Y `--no-ignore` no alcanza para buscar acá adentro.** Ripgrep saltea los directorios ocultos
+aunque se le apague el `.gitignore`, así que un `rg --no-ignore` sobre la raíz **no mira
+`.claude/`** —ni el harness, ni las reglas, ni los skills— y contesta cero con la misma cara que
+si hubiera mirado. Hace falta `--hidden`. Medido el 2026-09-05 revisando el PR 56: buscar
+`sin-deuda` con `--no-ignore` no devolvió **ni uno solo de los 14 archivos de `.claude/` que la
+nombran** —sólo los de `specs/` y la raíz—, y uno de esos 14 era un puntero muerto adentro del
+mensaje de un gate. El total no se cita porque se mueve con los specs hidratados, que son caché;
+lo que no se mueve es que `.claude/` aporta cero. Para el árbol entero: `rg --no-ignore --hidden`.
+
 ## El estilo
 
 Líneas de hasta 100, `snake_case`, docstrings que explican **por qué** y no qué. Los

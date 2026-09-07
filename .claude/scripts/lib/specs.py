@@ -235,7 +235,16 @@ def archivo_de_comentario(cuerpo: str) -> tuple[str, str] | None:
 
 #: Las referencias a otro spec por ruta, en las dos formas que existen: la relativa desde
 #: adentro de `specs/` (`./005-…/spec.md`) y la que llega desde afuera (`specs/005-…/spec.md`).
-_CITA_A_SPEC = re.compile(r"(?:\.{1,2}/)*(?:specs/)?(\d{3})-[a-z0-9-]+/[a-z0-9-]+\.md")
+#:
+#: **El `(?!:\d)` del final no es cosmético: sin él esto destruye mediciones.** Una cita con
+#: rango —`specs/016-…/research.md:59-60`, la forma en que este repo apunta a una medición—
+#: matcheaba hasta el `.md` y dejaba el `:59-60` pegado a la URL, produciendo
+#: `…/issues/20:59-60`, que no lleva a ninguna parte. Y como `hidratar_specs.py` escribe al
+#: disco lo que el issue tiene, la URL rota **volvía** y pisaba la ruta original: para cuando
+#: se ve, la referencia ya no se puede reconstruir. Medido el 2026-09-06 — ocho citas así en
+#: el 007 y el 013, todas perdidas. Un issue no tiene número de línea, así que la traducción
+#: no puede preservar lo que la cita quería decir: se deja verbatim.
+_CITA_A_SPEC = re.compile(r"(?:\.{1,2}/)*(?:specs/)?(\d{3})-[a-z0-9-]+/[a-z0-9-]+\.md(?!:\d)")
 
 
 def traducir(texto: str, mapa: dict[str, dict[str, Any]], repo: str) -> str:
@@ -270,6 +279,41 @@ def carpeta_existente(carpetas: list[str], id_spec: str) -> str | None:
         if carpeta.startswith(f"{id_spec}-"):
             return carpeta
     return None
+
+
+def seleccionar_carpetas(carpetas: list[str], ids: list[str]) -> list[str]:
+    """Las carpetas sobre las que opera una corrida de `publicar_spec.py`.
+
+    **Sin `ids` devuelve todas**, que es el default histórico y el que necesitan el alta y
+    cualquier reconciliación: ningún llamador pasa números, así que ninguno se entera de que
+    esto existe.
+
+    Vive acá y no en el script por lo mismo que el resto de este módulo: es lo que decide, y
+    adentro de un ejecutable no se puede cubrir sin levantar la red. Empareja por `NNN` con
+    `carpeta_existente`, o sea que una caché hidratada antes de un cambio de título sigue
+    contando como presente.
+
+    **Un `NNN` sin carpeta grita, y grita por todos juntos.** Devolver el subconjunto que sí
+    está dejaría correr media publicación: los issues del resto quedarían reescritos y el que
+    faltaba, no — con el mapa y GitHub diciendo cosas distintas y ningún error que lo nombre.
+    Por eso también se listan los que faltan **todos**: cortar en el primero obliga a
+    descubrirlos de a uno, una corrida por vez.
+    """
+    if not ids:
+        return list(carpetas)
+
+    elegidas = {i: carpeta_existente(carpetas, i) for i in ids}
+    faltan = sorted(i for i, c in elegidas.items() if c is None)
+    if faltan:
+        raise ValueError(
+            f"no hay carpeta en disco para: {', '.join(faltan)}. "
+            "No se emitió ninguna llamada a `gh`. "
+            f"`hidratar_specs.py {' '.join(faltan)}` las trae."
+        )
+    # En el orden de `carpetas` y sin repetidos: el orden lo fija el disco y no el argumento,
+    # para que la salida de una corrida no dependa de en qué orden se tipearon los números.
+    presentes = {c for c in elegidas.values()}
+    return [c for c in carpetas if c in presentes]
 
 
 _LINEA_DE_ORIGEN = re.compile(r"^\*\*Origen:\*\*(.*)$", re.MULTILINE)
@@ -414,3 +458,282 @@ def deuda_del_censo(
         reclamados.add(entrada["issue"])
         reclamados.update(entrada.get("origen", []))
     return [i for i in issues if i["number"] not in reclamados]
+
+
+# ── El texto de un spec ───────────────────────────────────────────────────────
+#
+# Lo leen DOS gates y por eso vive acá: el de la convención —los techos de palabras, sobre
+# los specs en vuelo que estén en disco— y el de los criterios de la rama —que cada `ACn`
+# esté citado por un test—. Dos copias que se separen dan dos gates que dicen contar lo
+# mismo y cuentan distinto, y el que se equivoca es siempre el que nadie mira.
+
+#: El encabezado del bloque de criterios, que es lo que parte el `spec.md` en sus dos
+#: mitades con techos distintos.
+ENCABEZADO_DE_AC = re.compile(r"^##\s+Criterios de aceptaci[oó]n\s*$", re.MULTILINE)
+
+#: Un criterio, tal como el resto del repo lo nombra: `AC1`, `AC17`.
+AC = re.compile(r"\bAC(\d+)\b")
+
+#: Qué cuenta como palabra: un token con al menos una letra o un dígito.
+#:
+#: La definición importa porque el techo se apoya en ella. Sin esto, un «—», un `**` suelto y
+#: el `-` de cada viñeta cuentan como palabras, y entonces el techo se lo lleva el markdown en
+#: vez de la prosa — o sea que reescribir una lista como párrafo «ahorra» palabras sin haber
+#: sacado ni una idea.
+PALABRA = re.compile(r"[0-9A-Za-zÀ-ÖØ-öø-ÿ]")
+
+#: Un comentario de markdown, que acá es **andamio y no contenido**.
+#:
+#: Es lo que `specs/plantilla/` usa para explicar cada rubro, y lo que quien escribe el spec
+#: borra. Contarlo lo vuelve una plantilla inusable, y no es una hipótesis: medido el
+#: 2026-09-06, su `plan.md` daba **386 palabras contra un techo de 250** sin una sola palabra
+#: propia, y su `### Rutas` declaraba intocables `src/`, `reglas.gd` y `tasks.md` —todas
+#: citadas por la prosa que explica el rubro, incluida la que ese mismo párrafo dice que NO
+#: va—. O sea que copiar la plantilla arrancaba con dos gates en rojo.
+#:
+#: No abre una vía de evasión del techo: un comentario no se ve en el issue renderizado, así
+#: que las palabras que se «ahorran» ahí no le llegan a nadie.
+COMENTARIO_MD = re.compile(r"<!--.*?-->", re.DOTALL)
+
+
+def sin_comentarios(texto: str) -> str:
+    """El texto sin sus comentarios de markdown."""
+    return COMENTARIO_MD.sub("", texto)
+
+
+def palabras(texto: str) -> int:
+    """Las palabras de un texto en markdown: los tokens que tienen letra o dígito.
+
+    Sin lo que viva en un comentario, que es andamio de la plantilla y no texto del spec.
+    """
+    return sum(1 for token in sin_comentarios(texto).split() if PALABRA.search(token))
+
+
+def partir_spec(texto: str) -> tuple[str, str]:
+    """El `spec.md` partido en `(prosa, bloque de criterios)`.
+
+    **El encabezado `## Criterios de aceptación` cuenta del lado de los criterios**, y no es
+    un detalle de tres palabras: es lo que hace que mover el encabezado no mueva palabras de
+    un techo al otro.
+
+    Un `spec.md` sin ese encabezado devuelve todo como prosa y el bloque vacío. No se ataja
+    acá: un spec sin criterios lo caza el techo de prosa o el gate de criterios, y duplicar
+    la regla la deja con dos mensajes distintos para el mismo defecto.
+
+    **Los encabezados de adentro de un bloque cercado no cortan**, que es el mismo agujero
+    que `sin_cercados()` cierra para el `plan.md`. Un `spec.md` que muestra el formato de un
+    spec —el 003 lo hace con el suyo— se partía por el encabezado del EJEMPLO: la prosa se
+    quedaba con los criterios reales, el bloque salía vacío, y entonces su techo dejaba de
+    morder y `acs_de()` contestaba cero criterios sobre un spec que los tiene.
+    """
+    inicio, fin = _corte_del_bloque(texto)
+    if inicio is None:
+        return texto, ""
+    if fin is None:
+        return texto[:inicio], texto[inicio:]
+    return texto[:inicio] + texto[fin:], texto[inicio:fin]
+
+
+def _corte_del_bloque(texto: str) -> tuple[int | None, int | None]:
+    """Dónde empieza el bloque de criterios y dónde el `##` que lo cierra, sin contar cercados.
+
+    Los dos son offsets en el texto original —y no en una copia limpia— porque `partir_spec()`
+    devuelve las dos mitades verbatim: `_criterios()` las vuelve a buscar ahí para numerar sus
+    líneas, y un slice de otro texto le daría un número que no existe en el archivo.
+    """
+    inicio: int | None = None
+    offset = 0
+    for linea, dentro in _con_cerca(texto):
+        largo = len(linea) + 1
+        if not dentro:
+            if inicio is None:
+                if ENCABEZADO_DE_AC.match(linea):
+                    inicio = offset
+            elif offset > inicio and linea.startswith("## "):
+                return inicio, offset
+        offset += largo
+    return inicio, None
+
+
+def acs_de(spec_md: str) -> list[str]:
+    """Los criterios que un `spec.md` declara, en orden y sin repetir.
+
+    Sólo los del bloque de criterios: un `AC3` citado en la prosa del problema es una
+    referencia a otro spec, no una promesa de éste.
+    """
+    _, criterios = partir_spec(spec_md)
+    vistos: list[str] = []
+    for numero in AC.findall(criterios):
+        nombre = f"AC{int(numero)}"
+        if nombre not in vistos:
+            vistos.append(nombre)
+    return vistos
+
+
+def acs_sin_test(numero: str, acs: list[str], textos: list[str]) -> list[str]:
+    """Los criterios que ningún test nombra, con la cita **calificada por el número del spec**.
+
+    La cita es `NNN-ACn` —`030-AC1`— y no `AC1` a secas. No es estilo: `AC1` es el nombre que
+    usa **todo** spec, así que con la cita pelada el primer test que escribiera `AC1` dejaría
+    cubierto el `AC1` de todos los specs que vengan después, para siempre. El gate no podría
+    volver a fallar, que es exactamente el gate apagado que parece encendido que este ancla
+    vino a cerrar.
+
+    **Por nombre**, que es lo que hace accionable el rojo: «falta 030-AC4» se arregla; «hay un
+    criterio sin test» hay que ir a buscarlo.
+    """
+    return [ac for ac in acs if not any(re.search(rf"\b{numero}-{ac}\b", texto) for texto in textos)]
+
+
+# ── La estructura del `plan.md` ───────────────────────────────────────────────
+
+#: Una línea que abre o cierra un bloque cercado, con backticks o con tildes.
+CERCA = re.compile(r"^\s{0,3}(```+|~~~+)")
+
+#: Un encabezado markdown.
+ENCABEZADO_MD = re.compile(r"^#{1,6}\s")
+
+
+def _con_cerca(texto: str):
+    """Cada línea con si está adentro de un bloque cercado. Las cercas mismas cuentan adentro."""
+    adentro = False
+    for linea in texto.splitlines():
+        if CERCA.match(linea):
+            adentro = not adentro
+            yield linea, True
+            continue
+        yield linea, adentro
+
+
+def estados_reescritos(base: dict, rama: dict) -> list[str]:
+    """Los specs cuyo `estado` la rama cambió respecto de la base, ya escritos para el rojo.
+
+    **Una fila nueva no cuenta.** Abrir un spec escribe el mapa —es lo que hace
+    `publicar_spec.py crear`— así que exigir que el mapa no se toque prohibiría el flujo. Lo
+    que no se escribe a mano es el estado de un spec **que ya estaba**: ése lo deriva
+    `.github/workflows/mapa.yml` del PR que aterrizó.
+
+    Sin esto la regla se evade escribiendo el archivo: un spec en vuelo al que le pongan
+    `Implementado` deja de ser mirado por `test_convencion_de_specs.py` —`es_adr()` lo saltea
+    por ADR— y ninguna herramienta lo dice. Tres archivos del repo afirmaban que este gate
+    existía antes de que existiera.
+    """
+    return [
+        f"{numero}: `{base[numero].get('estado')}` → `{fila.get('estado')}`"
+        for numero, fila in sorted(rama.items())
+        if numero in base and base[numero].get("estado") != fila.get("estado")
+    ]
+
+
+#: Un encabezado markdown, con su texto.
+ENCABEZADO_CON_TEXTO = re.compile(r"^#{1,6}\s+(.*?)\s*$")
+
+
+def encabezados_con_linea(texto: str) -> list[tuple[int, str]]:
+    """Los encabezados de un `.md`, como `(número de línea, texto)`, sin los cercados.
+
+    **Un encabezado adentro de un bloque cercado es un ejemplo, no una sección**, y contarlo da
+    rojo sobre un archivo correcto: el `research.md` que muestre un `## Pendientes` para
+    explicar que está prohibido queda acusado de tenerlo. La línea se conserva porque el rojo
+    la nombra —`spec.md:41` se abre; «hay una sección que aplaza» hay que ir a buscarla—.
+    """
+    return [
+        (numero, m.group(1))
+        for numero, (linea, dentro) in enumerate(_con_cerca(texto), 1)
+        if not dentro and (m := ENCABEZADO_CON_TEXTO.match(linea))
+    ]
+
+
+def cercado_sin_cerrar(texto: str) -> bool:
+    """Si el texto deja un bloque cercado abierto.
+
+    Es el modo de falla más silencioso de este parser y por eso tiene su propio rojo: con una
+    cerca huérfana, `sin_cercados()` se come **todo lo que sigue**, así que un `### Rutas`
+    escrito después devuelve cero rutas y `test_rutas_del_plan.py` se saltea con cara de haber
+    mirado. Medido el 2026-09-06 — `sin_cercados("a\\n```\\nb\\nc\\n")` devuelve `"a"`.
+    """
+    return sum(1 for linea in texto.splitlines() if CERCA.match(linea)) % 2 == 1
+
+
+def sin_cercados(texto: str) -> str:
+    """El texto sin lo que vive adentro de un bloque cercado.
+
+    Existe porque un barrido de encabezados cuenta como sección un ejemplo pegado adentro de un
+    bloque: el `plan.md` del 003 muestra el formato de una entrada de troubleshooting con un
+    encabezado de ejemplo, y la primera versión de este barrido lo reportó como sección rota.
+    Medido el 2026-09-06.
+    """
+    return "\n".join(l for l, dentro in _con_cerca(texto) if not dentro)
+
+
+def sin_encabezados(texto: str) -> str:
+    """El texto sin sus líneas de encabezado, **conservando las de adentro de un bloque**.
+
+    Lo usa el techo del `plan.md`, y el porqué es una medición: el margen contra las 250
+    palabras era **cero** —el 012 tenía exactamente 250— así que rotular la estructura costaba
+    un rojo. El techo limita el **contenido**; no le cobra peaje a los encabezados que el
+    formato ahora exige.
+
+    Un encabezado adentro de un bloque cercado **sí cuenta**: ahí es un ejemplo, o sea texto que
+    el autor escribió, y descontarlo le regalaría palabras a quien lo pegue.
+    """
+    return "\n".join(
+        l for l, dentro in _con_cerca(texto) if dentro or not ENCABEZADO_MD.match(l)
+    )
+
+
+#: Los tres encabezados que un `plan.md` declara, exactos y en este orden.
+#:
+#: Son los que 23 de 23 specs en vuelo ya tenían el 2026-09-06 —la convención existía y no la
+#: exigía nadie— y el primero lo lee `spec-implement/SKILL.md` **por nombre**. Un skill que
+#: depende de una sección que se cumple por costumbre es la forma en que este repo se rompe.
+ENCABEZADOS_DEL_PLAN = ("## Orden obligado", "## Qué NO se toca", "## Criterio de terminado")
+
+#: El rótulo de la mitad cruzable del `## Qué NO se toca`. Opcional: cuatro specs —013, 020,
+#: 021 y 027— sólo declaran invariantes, y exigirles una ruta los pondría en rojo estando bien.
+RUBRO_DE_RUTAS = "### Rutas"
+
+#: Lo que cuenta como ruta adentro de ese rubro: una cita entre backticks con extensión conocida
+#: o terminada en `/`.
+#:
+#: **Va con rótulo y no por inferencia sobre el párrafo entero**, y eso es medido: el `plan.md`
+#: del 012 cita `.claude/rules/dominio.md` como la *fuente* de una lista, no como un archivo
+#: prohibido. Inferir la prohibición de la forma de la cita lo habría declarado intocable, y el
+#: cruce contra el diff daría rojo sobre un PR correcto.
+RUTA = re.compile(r"`([^`]+?\.(?:gd|tscn|tres|py|md|json|cfg|yml|yaml|godot|sh)|[^`]+?/)`")
+
+
+def encabezados_del_plan(texto: str) -> list[str]:
+    """Los `##` de un `plan.md`, ya sin lo cercado ni lo comentado, normalizados a una línea."""
+    return [
+        l.strip() for l in sin_cercados(sin_comentarios(texto)).splitlines() if l.startswith("## ")
+    ]
+
+
+def rutas_intocables(texto: str) -> list[str]:
+    """Las rutas que el `### Rutas` del plan declara, en orden y sin repetir.
+
+    Devuelve `[]` cuando el rubro no está, que es un estado normal y no un defecto: un spec
+    puede restringir sólo invariantes.
+
+    **Lo comentado no prohíbe nada**: el párrafo que explica el rubro cita rutas para
+    ilustrarlo —el de la plantilla citaba hasta la que dice que NO va acá— y contarlas deja al
+    spec prohibiendo `src/` antes de escribir una línea propia.
+    """
+    cuerpo = sin_cercados(sin_comentarios(texto))
+    # **Por línea entera y no por substring**: `#### Rutas` CONTIENE `### Rutas`, así que un
+    # rubro de otro nivel se leía como éste y sus citas pasaban a ser prohibiciones. Y sin el
+    # `$`, un `### Rutas del research` también entraba. La forma vieja además pedía un `\n`
+    # detrás, o sea que el rubro como última línea del archivo no se encontraba — callado.
+    rubro = re.search(rf"^{re.escape(RUBRO_DE_RUTAS)}\s*$", cuerpo, re.MULTILINE)
+    if rubro is None:
+        return []
+    resto = cuerpo[rubro.end() :]
+    corte = re.search(r"^#{2,3}\s", resto, re.MULTILINE)
+    if corte:
+        resto = resto[: corte.start()]
+    vistas: list[str] = []
+    for ruta in RUTA.findall(resto):
+        if ruta not in vistas:
+            vistas.append(ruta)
+    return vistas

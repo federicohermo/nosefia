@@ -33,6 +33,17 @@ RAMAS_COMPARTIDAS = ("main", RAMA_DE_INTEGRACION)
 
 #: Lo que el gate de spec protege: nada se edita acá sin un spec detrás de la rama.
 #:
+#: **Es `src/` y nada más**, y `docs/` salió el 2026-09-05. La regla se contradecía sola: el
+#: propio mensaje del gate ofrece una salida para el cambio que no necesita spec —«la rama
+#: igual no puede ser main ni staging»— que el código no tenía, porque toda rama que no
+#: matchea `feature/<NNN>-` bloquea igual. O sea que corregir una línea de documentación
+#: pedía abrir un spec, y lo que eso produce no es más specs: es documentación que nadie
+#: corrige.
+#:
+#: Lo que queda protegido es donde viven las reglas del juego, que es donde un cambio sin
+#: spec nace sin test y sin criterio de aceptación. Un `.md` desactualizado se lee y se
+#: arregla; una regla del dominio que entró de contrabando no se ve.
+#:
 #: `specs/` y `.claude/` quedan afuera **a propósito**: son adonde el flujo te manda a
 #: escribir primero, y `.claude/` es además donde vive el gate. Un gate que se impide
 #: arreglarse a sí mismo se termina borrando en vez de corrigiéndose.
@@ -40,7 +51,7 @@ RAMAS_COMPARTIDAS = ("main", RAMA_DE_INTEGRACION)
 #: `project.godot`, `addons/` y los configs tampoco: el gate no puede impedir habilitar un
 #: plugin o tocar una configuración del editor, y pretenderlo lo volvería molesto sin
 #: volverlo útil.
-PROTEGIDAS = ("src", "docs")
+PROTEGIDAS = ("src",)
 
 #: Las capas de `src/`, de la más pura a la más acoplada al motor, y **qué puede importar
 #: cada una**.
@@ -52,6 +63,9 @@ PROTEGIDAS = ("src", "docs")
 #:   `get_tree()`. Las reglas del turno, las tareas, el inventario, las consecuencias. Es la
 #:   capa que se puede testear headless sin levantar una escena, y por eso es donde tiene
 #:   que vivir todo lo que se pueda decidir con números.
+#:   **La pureza la verifica `gate_de_capas.py`** —`extends` por lista blanca, más los
+#:   patrones que enumera `.claude/rules/dominio.md`—: hasta el spec 012 esta línea era prosa
+#:   adentro de un `.py`, que es la forma más convincente de prosa que hay.
 #: - `sistemas/` — los `Node` y autoloads que orquestan el dominio y hablan con el motor:
 #:   el reloj del turno, el guardado, el bus de señales. Conocen `dominio/`; no conocen la
 #:   pantalla.
@@ -63,6 +77,52 @@ CAPAS: tuple[tuple[str, tuple[str, ...]], ...] = (
     ("src/ui", ("src/dominio", "src/sistemas")),
     ("src/escenas", ("src/dominio", "src/sistemas", "src/ui")),
 )
+
+#: Los nombres de subcarpeta que cada capa admite, y **qué alcance mide cada uno**.
+#:
+#: El criterio es uno solo, aplicado cuatro veces: **la carpeta dice qué se rompe si tocás lo
+#: que hay adentro**. Lo que cambia por capa es contra qué se mide ese alcance, y en las cuatro
+#: es la misma pregunta que el juego hace: ¿esto le cuesta tiempo al turno?
+#:
+#: Las claves son las mismas cadenas que las de `CAPAS` —`src/dominio`, no `dominio`— para que
+#: `capa_de()` devuelva una clave de este diccionario sin traducir nada en el medio.
+#:
+#: **Declarar un nombre no crea la carpeta.** Varios de estos nombres —`investigacion/` y
+#: `ambiente/` del dominio, los dos de `ui/`— todavía no tienen un solo archivo: es lo que hace
+#: que el spec que cree el primero aterrice bien sin discutirlo, y que `src/ui/pantallas/` dé
+#: rojo el mismo día.
+#:
+#: **Y la raíz de una capa es válida a propósito**: `reglas.gd`, `hud.gd`, `almacen.tscn` cruzan
+#: dos carpetas o son la raíz del árbol. Lo que este conjunto cierra es la puerta de atrás
+#: —inventar un nombre en vez de usar el criterio—, no la clasificación, que es semántica y la
+#: mira la revisión.
+#:
+#: - `src/dominio` — **cuánto dura el efecto**. `jugador/` cambia cómo se siente moverse y no
+#:   puede cambiar el resultado de una noche; `jornada/` es la aritmética de la tensión central;
+#:   `empleo/` es el arco entre noches —apercibimientos, despido— y ninguna noche suelta.
+#:   `almacen/` es **cuánto cuesta cumplir una obligatoria** —cuántos productos hay que reponer,
+#:   cuántas manchas hay que limpiar—; `investigacion/`, **cuánto rinde el minuto que no se
+#:   paga**; `ambiente/`, cómo se siente la noche y nada más. Las dos del medio son las dos
+#:   mitades de la tensión central, y por eso no entran en `jornada/`: `jornada/` es la **resta**
+#:   —cuánto tiempo queda— y estas dos son lo que cada lado de la resta compra. `almacen/` no se
+#:   llama `tareas/` como su vecina de `sistemas/` porque abajo no están las tareas sino **el
+#:   estado del local sobre el que operan**, y `ambiente/` no se llama `audio/` porque una
+#:   carpeta que repite lo que el nombre del archivo ya dice no informa nada.
+#: - `src/sistemas` — **si consume tiempo del turno, y para qué**. `marco/` no lo consume: hace
+#:   correr el juego, y un bug ahí no cambia el balance, lo detiene. `tareas/` lo consume y
+#:   cumple una obligatoria. `investigacion/` lo consume y no cumple nada: es el otro lado.
+#: - `src/ui` — **si el reloj sigue corriendo mientras está en pantalla**. `diegetica/` sí
+#:   —mirar la computadora cuesta minutos—; `interrupciones/` no, porque el turno ya terminó.
+#: - `src/escenas` — **cuántas instancias hay**. `puestos/` se instancia una vez y vive cableado
+#:   por `@export`; `objetos/` se instancia N veces, se crea y se destruye en juego.
+CARPETAS_POR_CAPA: dict[str, frozenset[str]] = {
+    "src/dominio": frozenset(
+        {"jugador", "jornada", "empleo", "almacen", "investigacion", "ambiente"}
+    ),
+    "src/sistemas": frozenset({"marco", "tareas", "investigacion"}),
+    "src/ui": frozenset({"diegetica", "interrupciones"}),
+    "src/escenas": frozenset({"puestos", "objetos"}),
+}
 
 #: Dónde viven los tests, y de qué son espejo.
 #:

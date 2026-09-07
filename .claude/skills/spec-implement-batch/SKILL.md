@@ -1,6 +1,6 @@
 ---
 name: spec-implement-batch
-description: Implementa N specs de specs/ en paralelo —un carril por cadena de dependencias, cada uno en su worktree— delegando cada spec a spec-implement, y cierra con un PR por spec, verificar.py en verde y ninguna tarea sin marcar. Usar al implementar dos o más specs de una. Para uno solo, spec-implement.
+description: Implementa N specs de specs/ en paralelo —un carril por cadena de dependencias, cada uno en su worktree— delegando cada spec a spec-implement, y cierra con un PR por spec, verificar.py en verde y ningún criterio sin test que lo cite. Usar al implementar dos o más specs de una. Para uno solo, spec-implement.
 argument-hint: "<NNN NNN ...> | <NNN-MMM> | --propuestos [--dry] [--max N]"
 # Sin `allowed-tools`, igual que el resto de los skills de este repo: éste abanica agentes,
 # abre worktrees, corre el harness en Python y habla con GitHub por `gh`. Declarar una lista
@@ -14,11 +14,16 @@ argument-hint: "<NNN NNN ...> | <NNN-MMM> | --propuestos [--dry] [--max N]"
 
 <!-- Inyección dinámica: corre ANTES de que el modelo procese este archivo, así que la matriz
      llega con el skill ya cargado en vez de costar un turno de tool. Es el MISMO script que usa
-     `spec-review-batch` —la pregunta «qué archivo tocan dos specs del lote» es idéntica en los
+     `spec-revise-batch` —la pregunta «qué archivo tocan dos specs del lote» es idéntica en los
      dos— pero cada skill trae su copia: `${CLAUDE_SKILL_DIR}` apunta adentro, nunca a un
-     hermano. Que no se separen lo verifica `test_copias_de_skills.py`. -->
+     hermano. Que no se separen lo verifica `test_copias_de_skills.py`.
 
-!`python "${CLAUDE_SKILL_DIR}/scripts/lote.py" $ARGUMENTS`
+     Las comillas alrededor de `$ARGUMENTS` no son cosmética: sin ellas, un argumento con un
+     salto de línea lo parte bash, que corre la segunda línea como si fuera un comando y tira
+     el skill abajo antes de cargarlo. `lote.py` vuelve a partir por espacios, así que la forma
+     `007 008 009` sigue llegando como tres. -->
+
+!`python "${CLAUDE_SKILL_DIR}/scripts/lote.py" "$ARGUMENTS"`
 
 ---
 
@@ -35,7 +40,7 @@ converge recién en el merge, que resuelve texto y no semántica.
 
 | El batch genérico | Acá |
 |---|---|
-| `node scripts/matriz.mjs` sobre los `tasks.md` | **`lote.py` de `spec-review-batch`**, inyectado arriba: misma matriz, y además marca la **escena compartida** |
+| `node scripts/matriz.mjs` sobre los `tasks.md` | **`lote.py` de `spec-revise-batch`**, inyectado arriba: misma matriz, y además marca la **escena compartida** |
 | Instalar dependencias en cada worktree (`node_modules`) | **No hay install**: `addons/gdUnit4` está vendorizado. Lo que sí falta es `specs/` **y `.godot/`** — ver Paso 3 |
 | El PR nombra una actividad de Jira, y hay un script de claves | **No hay Jira.** El PR lleva `Closes #N` por cada issue saldado: el del spec **más los de su `origen`** |
 | La rama se llama como convenga | **`feature/<NNN>-<kebab>` o el hook bloquea `src/`.** Es la falla número uno acá |
@@ -77,7 +82,7 @@ argumentos, preguntá.**
    abierto otra sesión, y ahí lo que corresponde no es un carril nuevo.
 3. **Re-medí contra el árbol de hoy la base que cada spec declara.** Un spec escribe sus conteos
    el día que se escribe, y **entre ese día y éste mergearon otros PR**. Los números envejecen
-   solos y **nadie los toca**: `spec-review` corre antes, y `spec-implement` lee el spec, no el
+   solos y **nadie los toca**: `spec-revise` corre antes, y `spec-implement` lee el spec, no el
    disco. El modo de falla es el peor de los baratos — el carril arranca, hace todo bien, y da
    rojo en un AC que mide una mudanza ajena.
 
@@ -93,7 +98,7 @@ argumentos, preguntá.**
    `dominio/` y 18 suites; los specs 005 y 011 mergearon al día siguiente y lo dejaron en 18 y 23.
    Cuatro AC y cinco tareas medían un árbol que ya no existía.
 
-4. **Mirá si el lote pasó por `spec-review-batch`.** Si sí, el Paso 2 es **verificación** y no
+4. **Mirá si el lote pasó por `spec-revise-batch`.** Si sí, el Paso 2 es **verificación** y no
    derivación: los cruces ya están decididos y escritos en los specs. Si no, decilo — vas a estar
    derivando en el momento más caro del flujo, con los worktrees a punto de abrirse.
 
@@ -140,6 +145,22 @@ esté en tu disco no llega a ningún carril.
 No se frena con `AskUserQuestion` salvo que la decisión sea del GDD. Arreglar un spec cuesta un
 párrafo; arreglar dos carriles cuesta un rebase.
 
+**Y decile al carril en cuál de los tres archivos escribe, porque el techo decide y no la
+preferencia.** Los techos son ejecutables —350 palabras de prosa en el `spec.md`, 300 en su bloque
+de criterios, 500 en el `research.md`, 250 en el `plan.md`— y **un spec publicado llega casi
+siempre al ras**: medido el 2026-09-06, el 027 **al publicarse** estaba en 342/350, 299/300 y
+**500/500**, con el `plan.md` en 209/250 como único archivo con aire — y el carril se lo comió
+al escribir ahí lo que decidió: hoy está en 249/250. Entonces:
+
+| Lo que apareció | Va en |
+|---|---|
+| un AC equivocado o un alcance mal medido | **`spec.md`**, y se *reescribe* — no se agrega, o el techo lo rebota |
+| una decisión de implementación que el spec no nombraba (qué CLI, qué secreto, qué valor) | **`plan.md`**, en un `## Decidido al implementar` |
+| una medición que envejeció | **`research.md`**, reemplazando la vieja y no apilándose encima |
+
+Si un carril vuelve diciendo que no pudo escribir la corrección, el motivo va a ser el techo, y
+la respuesta es la tabla — no subir el techo.
+
 **Terminado cuando** las cuatro tienen respuesta escrita, **incluidas las que dieron que no**.
 
 ## Paso 3 — Un worktree por carril
@@ -155,7 +176,7 @@ Cada agente recibe, literal:
   convenciones verificables con **quién verifica cada una**, y las trampas de este repo. Es el
   ahorro propio del batch — sin esto, N carriles lo re-derivan N veces desde frío.
 - **La rama se llama `feature/<NNN>-<kebab>` y eso no es decorativo.** `gate_de_spec.py` corre como
-  hook y **bloquea toda escritura a `src/` y `docs/` desde una rama que no matchee
+  hook y **bloquea toda escritura a `src/` desde una rama que no matchee
   `^feature/(\d{3})-` con ese `NNN` en `specs/mapa.json`**. El síntoma es un `Edit` denegado, que
   se lee como un problema de permisos y no como uno de nombre. **Es la falla número uno de un
   carril**, y aparece recién en la primera edición, con el worktree ya abierto.
@@ -166,14 +187,24 @@ Cada agente recibe, literal:
 - **`Grep` no ve `specs/`.** Es ripgrep y respeta el `.gitignore`: contesta cero sin decir que no
   miró. Para buscar ahí, `rg --no-ignore … specs/`.
 - **No hay install que correr**, pero **`GODOT_BIN` tiene que estar en el entorno del carril**: sin
-  ella `verificar.py` **saltea** el nodo `tests` y lo declara, y un carril que lee «6/6» sin mirar
-  los salteados da por corrida una suite que no corrió.
+  ella el nodo `tests` sale **rojo**, no salteado. Ese salteo vence: existe sólo mientras no haya
+  un solo `*_test.gd` —hoy hay 23—, y desde el primero Godot es obligatorio
+  (`verificar.py:132-141`). Un carril que sale a buscar un salteado que nunca va a aparecer pierde
+  una vuelta.
 - **Y antes del primer `verificar.py`, el carril importa.** `.godot/` está en el `.gitignore`, así
   que **ningún worktree nuevo lo tiene**, y sin esa caché gdUnit4 no resuelve sus propios
   `class_name`: el nodo `tests` sale **rojo** —no salteado— con `Parse Error: Could not find type
   "GdUnitTestCIRunner"`, un síntoma que no nombra ni a `.godot` ni al worktree. Una línea, una vez
-  por carril: `"$GODOT_BIN" --headless --path . --import --quit`. Medido el 2026-08-31 en la
-  corrida de `pr-review-batch` sobre 001/002/004/007: lo pisaron los cuatro carriles.
+  por carril, **desde la herramienta PowerShell**: `& $env:GODOT_BIN --headless --path . --import
+  --quit`. Medido el 2026-08-31 en la corrida de `pr-review-batch` sobre 001/002/004/007: lo
+  pisaron los cuatro carriles.
+- **Y va en PowerShell porque desde Bash no corre, y eso hay que decírselo.** En un worktree
+  aislado **cualquier forma de invocar Godot como comando desde Bash se rechaza**: `"$GODOT_BIN"
+  …` con «command whose name is computed at runtime», y la ruta literal entre comillas también.
+  Lo que sí pasa desde Bash es `python .claude/scripts/verificar.py` con `GODOT_BIN` exportada,
+  porque ahí **el comando es `python`** y a Godot lo lanza el script. **Medido el 2026-09-06 en el
+  lote 003/010/012/027/030: lo pisaron TRES de los cuatro carriles**, cada uno perdiendo una
+  vuelta, y los tres con el comando escrito por este mismo skill en la forma que no corre.
 - **Y ese `--import` no es una vez: es una por `class_name` nuevo.** Crear el `.gd` no alcanza
   para que su test lo vea — la clase no entra al registro global hasta que se vuelve a importar,
   y hasta entonces el error es `Parse Error: Identifier "X" not declared` **con el archivo ya
@@ -186,13 +217,18 @@ Cada agente recibe, literal:
   `verificar.py`. Medido: dos carriles del lote 005/011/022/023 lo armaron a mano por separado.
   El comando es:
 
-  ```bash
-  "$GODOT_BIN" --path . --headless -s -d --remote-debug tcp://127.0.0.1:0 \
-    res://addons/gdUnit4/bin/GdUnitCmdTool.gd -a test --continue --ignoreHeadlessMode \
-    -rd reportes 2>&1 | grep "Executed test suites"
+  ```powershell
+  & $env:GODOT_BIN --path . --headless -s -d --remote-debug tcp://127.0.0.1:0 `
+    res://addons/gdUnit4/bin/GdUnitCmdTool.gd -a test --continue --ignoreHeadlessMode `
+    -rd reportes | Select-String "Executed test suites"
   ```
 
   y su `(N/N)` tiene que dar igual que `find test -name '*_test.gd' | wc -l`.
+
+  **Y avisale del ruido**: `--remote-debug tcp://127.0.0.1:0` contesta dos `ERROR:` —«the remote
+  port number must be between 1 and 65535» y «Unable to connect to host»— **y no son un fallo**:
+  la corrida sigue y escribe su `(N/N)`. Sin el aviso se lee como una suite rota y el carril sale
+  a arreglar lo que anda.
 - **Advertile que su spec puede venir ya corregido, y que verifique antes de editar.** Un spec
   que manda corregir a otros —como el 023 con el 008, el 009 y el 013— suele haber dejado esas
   correcciones escritas cuando se lo revisó, así que sus AC **ya pasan al llegar**. Sin el aviso
@@ -203,8 +239,10 @@ Cada agente recibe, literal:
   `export GODOT_BIN=…` vale para **esa** invocación y nada más, y `GODOT_BIN=… python …` —el
   prefijo inline— lo rechaza el aislamiento del worktree por «demasiado complejo». Decíselo así:
   **la exportación va en la misma línea que el comando, cada vez.** Si no, el carril lee «exportala
-  primero de todo» como una sola vez y después corre `verificar.py` sin ella — que **saltea**
-  `tests` y lo declara verde de 6/6.
+  primero de todo» como una sola vez y después corre `verificar.py` sin ella — que sale **rojo**
+  en `tests`, con un mensaje que habla de la variable y no del código. Y eso vale **sólo para
+  `verificar.py`**: para lanzar Godot directo es PowerShell y `$env:GODOT_BIN`, como dice la bala
+  de arriba.
 - **Que delegue cada spec a `spec-implement`**, que deriva el grafo interno y abanica lo que
   corresponda, **y que cierre cada uno antes de arrancar el siguiente**.
 - **La base del primer spec del carril es `staging`**; los que siguen, la rama del spec anterior
@@ -217,7 +255,11 @@ Cada agente recibe, literal:
   aplica el padre en serie.
 - **El mensaje de commit se escribe con `Write` a un archivo y se pasa con `-F`, nunca con
   heredoc.** Los backticks y los `$` del contenido lo rompen con un `unexpected EOF` que cuesta más
-  diagnosticar que reescribirlo — está medido en esta máquina.
+  diagnosticar que reescribirlo — está medido en esta máquina. **Y la prohibición no es del mensaje
+  de commit: es del heredoc.** Uno que lleva adentro una barra invertida de escape la pierde en el
+  camino, y lo que llega al archivo es un salto de línea real: un `SyntaxError: unterminated
+  string literal` sobre código que se escribió bien. Contenido con escapes: `Write` y `Edit`,
+  nunca heredoc. Medido el 2026-09-06 en el lote 003/010/012/027/030.
 - **Y ese archivo lleva el número del spec en el nombre: `commit_<NNN>_<algo>.txt`.** El
   scratchpad de la sesión **es uno solo para los N carriles**, así que dos carriles que elijan
   el nombre obvio escriben el mismo archivo. Medido en el lote 001/002/004/007: un carril
@@ -226,39 +268,40 @@ Cada agente recibe, literal:
 
 ### La condición de terminado del carril — no se negocia
 
-> **Un carril termina con el PR abierto y sin una sola casilla sin marcar. No antes.**
+> **Un carril termina con el PR abierto y sin un solo criterio sin test que lo cite. No antes.**
 >
-> Por cada spec suyo: `verificar.py` en verde **sin nodos salteados**, todas las tareas del
-> `tasks.md` hechas y marcadas, **las marcas devueltas al issue** con
+> Por cada spec suyo: `verificar.py` en verde **sin nodos salteados**, todo lo que el spec
+> pide hecho, **el rastro devuelto al issue** con
 > `python .claude/scripts/publicar_spec.py publicar`, rama pusheada y PR abierto contra la base
 > que le toca.
 >
 > **No existe volver con «quedó listo para commitear», «falta abrir el PR» ni «lo dejo en el
-> working tree».** Y no existe volver con una casilla abierta: si el `tasks.md` tenía trabajo que
-> no se hizo, el carril no terminó — ver el lazo, abajo.
+> working tree».** Y no existe volver con trabajo abierto: si el spec tenía trabajo que no se
+> hizo, el carril no terminó — ver el lazo, abajo.
 >
 > Si algo bloquea de verdad, el carril **igual vuelve con lo que sí cerró**, y el bloqueo escrito
 > con su evidencia y el comando exacto. Lo que no vuelve nunca es un carril entero sin entregar
 > nada.
 
 **El padre lo verifica, no lo cree.** Cuando vuelva un carril, chequeá con `gh pr list --head
-<rama>` que cada spec suyo tenga PR, y que el `tasks.md` del **issue** no tenga casillas abiertas.
+<rama>` que cada spec suyo tenga PR, y que ningún criterio del spec haya quedado sin test que lo
+cite. Lo segundo **no se cuenta a mano**: es un gate, corre en la rama del carril y el rojo dice
+qué `NNN-ACn` falta.
 
-> **Y para eso NO alcanza con correr `hidratar_specs.py`: saltea la carpeta que ya existe.**
-> Contesta `NNN ya está (…)` y `hidratados: 0 de 1`, con **código 0**, así que el `grep` que
-> corras después mide **tu propia caché** —la que hidrataste al abrir el lote, antes de que el
-> carril marcara nada— y **no el issue**. El síntoma es el peor posible: un carril que hizo todo
-> bien se lee como incompleto, y el padre sale a «terminarlo» republicando cosas.
-> **Borrá la carpeta antes**, o leé el issue derecho:
->
-> ```bash
-> rm -rf specs/<NNN>-* && python .claude/scripts/hidratar_specs.py <NNN>
-> gh issue view <N> --json comments -q '.comments[].body' | grep -c '^- \[ \]'   # tiene que dar 0
-> ```
->
-> Medido el 2026-09-01 en el lote 024/025: el padre concluyó que las 80 casillas estaban abiertas
-> cuando en el issue estaban las 80 marcadas. Un reporte que dice «listo» sin PR es un carril incompleto: terminalo vos
-o relanzalo con lo que le faltó.
+```bash
+gh pr list --repo federicohermo/nosefia --head feature/<NNN>-<kebab> --json number,statusCheckRollup
+```
+
+> **Lo que NO sirve es leer el árbol de `specs/` del padre**, y está medido. `hidratar_specs.py`
+> saltea la carpeta que ya existe: contesta `NNN ya está (…)` y `hidratados: 0 de 1`, con
+> **código 0**, así que cualquier cosa que leas después mide **tu propia caché** —la que
+> hidrataste al abrir el lote, antes de que el carril tocara nada— y **no el issue**. El síntoma
+> es el peor posible: un carril que hizo todo bien se lee como incompleto, y el padre sale a
+> «terminarlo» republicando cosas. Medido el 2026-09-01 en el lote 024/025. Si necesitás el spec
+> al día: `rm -rf specs/<NNN>-* && python .claude/scripts/hidratar_specs.py <NNN>`.
+
+Un reporte que dice «listo» sin PR es un carril incompleto: terminalo vos o relanzalo con lo que
+le faltó.
 
 Esperá a que vuelvan todos antes del reporte.
 
@@ -310,7 +353,7 @@ Si imprime `SIGUE AHI`, el handle es de afuera. **Lo cierra el usuario, no vos**
 ## El lazo — si implementar duele, el problema está aguas arriba
 
 **Para cuando este skill corre, las dudas de planteo deberían estar resueltas**: las cierran
-`spec-create` y `spec-review`, donde cuestan un párrafo. Entonces **una duda que aparece acá es
+`spec-create` y `spec-revise`, donde cuestan un párrafo. Entonces **una duda que aparece acá es
 evidencia de que uno de esos dos tiene un agujero**, y en un lote la evidencia es más fuerte que en
 un spec suelto: si tres carriles tropiezan con lo mismo, no fue mala suerte.
 
@@ -327,7 +370,7 @@ carriles comparten, y dos worktrees editando el mismo `SKILL.md` se pisan en sil
 
 ## Lo que no hace
 
-- **No escribe specs ni los audita.** Eso es `spec-create-batch` y `spec-review-batch`, y los dos
+- **No escribe specs ni los pone al día.** Eso es `spec-create-batch` y `spec-revise-batch`, y los dos
   corren antes y salen mucho más baratos: un cruce detectado como texto cuesta un párrafo.
 - **No mergea a `staging`, y no mueve `specs/mapa.json`.** El estado lo deriva la Action en el push
   a `staging`, y el gate da rojo si el mapa se adelanta al PR.

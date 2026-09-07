@@ -13,7 +13,7 @@ corre la CI sobre cada PR y cada push a `staging` y `main`.
 |---|---|---|
 | `lint` | `gdlint src test` | nombres, orden de declaraciones dentro de una clase, líneas de más de 100 |
 | `formato` | `gdformat --check src test` | todo lo que sea formato. Se arregla con `gdformat src test` |
-| `capas` | `gate_de_capas.py` | una referencia que va en contra de la dirección de dependencia |
+| `capas` | `gate_de_capas.py` | una referencia que va en contra de la dirección de dependencia, y un `.gd` o un `.tscn` en una subcarpeta que su capa no declara |
 | `tdd` | `gate_de_tests.py` | un script sin test, un test sin aserción, uno apagado, o uno con un nombre que hace que no corra |
 | `harness` | `unittest` sobre `.claude/scripts/tests/` | las herramientas del proceso, y el registro de specs contra GitHub |
 | `tests` | gdUnit4 en Godot headless | el juego |
@@ -44,14 +44,17 @@ Es la regla más importante de todo el harness. Un gate que no puede correr y no
 **exactamente igual** que uno que pasó, y en esa diferencia se esconde el peor bug posible: el
 que hace que todo esté verde mientras nada se verifica.
 
-Hoy se saltean tres cosas, y cada una tiene su condición de vencimiento:
+Cada salteo tiene su condición de vencimiento, y la tabla es la lista — el número no se
+escribe al lado, porque un conteo a mano caduca cada vez que la tabla gana una fila:
 
 | Se saltea | Mientras | Vence cuando |
 |---|---|---|
 | `lint` y `formato` | no haya un solo `.gd` propio | se escriba el primero |
 | `tests` | no haya un solo `*_test.gd` | se escriba el primero — y ahí `GODOT_BIN` pasa a ser obligatorio |
 | El gate del mapa contra GitHub | no haya `gh` con sesión, o el mapa esté vacío | se publique el primer spec |
-| El gate de convención de specs | no haya specs hidratados en disco | `hidratar_specs.py --todos` |
+| El gate de convención de specs | no haya specs en vuelo hidratados en disco | `hidratar_specs.py` |
+| El ancla de criterios | la rama no nombre un spec, o no se pueda leer su `spec.md` | se trabaje en una rama de spec |
+| El cruce de rutas del plan | la rama no nombre un spec, no se pueda leer su `plan.md`, o el plan no declare ninguna ruta | ese plan declare una |
 
 ## El veredicto sale del código de salida
 

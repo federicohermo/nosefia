@@ -2,9 +2,18 @@
 .godot/
 /android/
 
+# El auto-backup que Blender deja al guardar. Es una copia byte por byte del `.blend`
+# anterior, no la abre nadie desde el repo, y versionarla duplica 1,4 MB por cada guardado.
+*.blend1
+
 # Exportaciones del juego. La build de cada entrega se publica, no se commitea.
 /export/
 /build/
+
+# El vínculo al proyecto de Vercel, que escribe su CLI en el directorio desde donde se
+# despliega. Adentro va el `orgId` de la cuenta, y además es una derivada: los dos ids que
+# importan viven como secretos del repositorio. Ver docs/infra/despliegue.md.
+.vercel/
 
 # Los specs son CACHÉ, no fuente: cada uno vive en su issue de GitHub y se trae con
 # `python .claude/scripts/hidratar_specs.py <NNN>`. Lo único trackeado de `specs/` es

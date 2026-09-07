@@ -1,33 +1,69 @@
 # La imposibilidad de la deuda
 
-**Ésta es la copia canónica, y los ocho skills traen la suya.** Un skill es la unidad que se
-instala y se distribuye, así que trae su implementación completa: ninguno lee este archivo por
-ruta. `test_copias_de_skills.py` da rojo si alguna copia difiere de ésta en un byte, así que
-editarla acá y no propagar **no se puede mergear**.
+**Los ocho skills traen su copia, y la de `spec-create` es la canónica.** Un skill es la unidad
+que se instala y se distribuye, así que trae su implementación completa: ninguno lee este archivo
+por ruta. `test_copias_de_skills.py` da rojo si alguna copia difiere de la canónica en un byte,
+así que editar una suelta **no se puede mergear** — se edita la de `spec-create` y se propaga.
 
-**Vive en `.claude/doctrina/` y no en `.claude/skills/`** porque ahí adentro todo es un skill —un
-directorio con su `SKILL.md`— y un `.md` suelto entre ellos no lo es: no aparece en la lista de
-skills invocables y se lee como uno a medio hacer. Tampoco es un `CLAUDE.md`, que se cargaría al
-editar esta carpeta —el meta-trabajo— y no al correr un review sobre `src/`.
+**Cuál de las ocho es la canónica es arbitrario**, y por eso está declarado en `COPIAS` y no en
+el nombre de una carpeta. Vivió un tiempo en `.claude/doctrina/`, que parecía más neutral y no
+lo era: ese directorio no lo carga nada —Claude Code conoce `skills/`, `rules/`, `commands/` y
+`agents/`—, así que la copia canónica no entraba a ningún contexto por sí sola y su única
+función real era ser la referencia de ese gate. Un directorio entero para eso es una convención
+más que aprender, sin nada que la sostenga.
 
 ## La regla
 
 **Una corrida no termina dejando trabajo escrito para después.** Ni en un `## Seguimiento`, ni
-en una casilla sin marcar, ni en un issue abierto como forma de cerrar, ni en un «esto habría
-que verlo». Lo que la corrida encuentra, la corrida lo descarga — y descargar tiene una lista
-cerrada de formas.
+en una casilla sin marcar, ni en un criterio de aceptación que ningún test nombra, ni en un
+issue abierto como forma de cerrar, ni en un «esto habría que verlo». Lo que la corrida
+encuentra, la corrida lo descarga — y descargar tiene una lista cerrada de formas.
 
 Por familia:
 
 | Los skills de… | Terminan… |
 |---|---|
-| **review** (`pr-review`, `pr-review-batch`, `spec-review`, `spec-review-batch`) | con **todo** lo que encontraron descargado, verificado, commiteado y pusheado. El reporte cuenta lo hecho, no lo que queda |
-| **creación** (`spec-create`, `spec-create-batch`) | con la **totalidad** de las tareas que la especificación necesita, todas cerrables por un agente. Ningún seguimiento, ningún punto a cubrir después, ninguna casilla que espere a una persona |
-| **implementación** (`spec-implement`, `spec-implement-batch`) | con **todas** las tareas del spec hechas y marcadas, las marcas devueltas al issue, y el PR abierto |
+| **review** (`pr-review`, `pr-review-batch`) | con **todo** lo que encontraron descargado, verificado, commiteado y pusheado. El reporte cuenta lo hecho, no lo que queda |
+| **revisión** (`spec-revise`, `spec-revise-batch`) | con el requisito nuevo ya reflejado en los specs vivos, los que reemplaza en `Superado`, y todo devuelto a los issues. Un requisito leído y no aplicado es deuda |
+| **creación** (`spec-create`, `spec-create-batch`) | con la **totalidad** de los criterios que la especificación necesita, todos cerrables por un agente. Ningún seguimiento, ningún punto a cubrir después, ningún criterio que espere a una persona |
+| **implementación** (`spec-implement`, `spec-implement-batch`) | con **todo** lo que el spec pide hecho, el PR abierto, y el rastro devuelto al issue: un test que nombra cada criterio |
 
 **«Descargado» no es «metido en este PR».** Ver la descarga 1: dónde aterriza el fix es una
 decisión aparte de si se hace, y confundirlas rompe el review. La doctrina obliga a lo primero y
 no dice nada sobre lo segundo.
+
+## Dónde se apoya, y por qué cambió de apoyo
+
+Una doctrina que nadie puede verificar dura lo que dura la buena voluntad, así que ésta se
+ancla en algo que una herramienta lee. **El ancla cambió dos veces**, y las dos veces por el
+mismo motivo:
+
+| Cuándo | El ancla | Por qué se fue |
+|---|---|---|
+| mientras hubo `tasks.md` | un spec `Implementado` no podía tener una casilla abierta | el `tasks.md` desapareció, y la regla se quedó sin objeto |
+| sobre los specs cerrados | un spec `Implementado` tenía cada criterio citado como `NNN-ACn` | llegaba tarde: el PR ya había aterrizado |
+| **hoy, sobre la rama** | **cada criterio del spec de la rama está citado como `NNN-ACn` por un test que corre** | — |
+
+Ninguno de los dos cambios es cosmético. Cuando el `tasks.md` desapareció, la regla vieja siguió
+escrita, no encontró ninguna casilla, y salía verde para siempre: un gate que no puede fallar no
+es un gate laxo — es un gate apagado que parece encendido. Y sobre los `Implementado` el rojo
+aparecía con el trabajo ya en `staging`, cuando la única salida era abrir otra cosa para
+arreglarlo, que es la deuda que esto viene a cerrar. Sobre la rama el PR todavía está abierto.
+
+**Y el ancla nueva es más fuerte que la que reemplaza.** Una casilla la marca a mano el mismo
+que decide si el trabajo está hecho, así que verifica una afirmación contra sí misma. Un test
+que nombra el criterio lo tiene que escribir alguien, corre en cada push, y **se rompe solo**
+cuando el código deja de cumplirlo. La casilla registra una intención; el test registra un
+hecho.
+
+**La cita lleva el número del spec** —`030-AC4`, no `AC4` a secas— y eso no es formato: `AC1` es
+el nombre que usa **todo** spec, así que con la cita pelada el primer test que escribiera `AC1`
+dejaría cubierto el `AC1` de todos los que vinieran después, y el gate no podría volver a fallar.
+
+**Su techo, dicho:** el gate verifica la **cita**, no que el test ejerza el criterio. Un
+`030-AC4` en el nombre de un test que no afirma nada pasa igual. Es un piso —como todo lo que
+este repo verifica sin cobertura— y lo que lo levanta es la misma disciplina de siempre: el test
+se escribe primero y se lo ve fallar.
 
 ## Las cinco descargas, y no hay una sexta
 
@@ -136,18 +172,21 @@ las dos en la misma corrida:
 | un AC que no se puede ver fallar | `spec-create` — la regla de falsabilidad no alcanzó |
 | una tarea que no dice qué archivo toca | `spec-create` — el reparto de un lote no es revisable sin eso |
 | una regla del juego ubicada en `ui/` o en `escenas/` | `spec-create` — el eje de capas se escribió tarde |
-| un `[P]` que resultó falso | `spec-review` — el cruce de archivos no lo cazó |
-| dos specs que se pisan la misma escena | `spec-review-batch` — la matriz no marcó el `.tscn` |
+| un `[P]` que resultó falso | `spec-create` — el orden obligado declaró paralelo algo que comparte archivo |
+| dos specs que se pisan la misma escena | `spec-revise-batch` — la matriz de cruces no marcó el `.tscn` |
 | una medición que el spec supuso en vez de correr | `spec-create` — el research salió sin número |
 | un nodo del harness en verde sin haber ejercido nada | `spec-implement` — la condición de terminado leyó el color del nodo y no el conteo de lo que corrió |
 | dos carriles que se pisan un archivo de scratch | `spec-implement-batch` — el prompt del carril no le dio un nombre propio |
 | un worktree que quedó abierto y el limpiador dijo que no | `spec-implement-batch` — el Paso 5 salía de `git worktree list`, que no ve al que git ya soltó |
-| un identificador que el spec escribe en `código` y que no existe en el repo | `spec-review` — la auditoría leyó la prosa y no la grepeó contra `src/` |
-| los cuatro archivos de un spec que no dicen el mismo número | `spec-review` — se cerró sobre el `spec.md` sin cruzar el `plan.md` y el `tasks.md`, que es el que se implementa |
+| un identificador que el spec escribe en `código` y que no existe en el repo | `spec-create` — se escribió la prosa sin grepearla contra `src/` |
+| los archivos de un spec que no dicen el mismo número | `spec-create` — se cerró sobre el `spec.md` sin cruzarlo contra los otros, y el que se implementa es el otro |
+| un spec que estrena una regla y pone el corte **en su propio número**, contra lo que su `## Fuera de alcance` declara | `spec-create` — una regla que arranca en el spec que la propone lo pone en rojo el día que se publica, antes de que exista su rama |
 | un número que el spec midió bien y que **envejeció** entre que se escribió y que se implementó | `spec-implement-batch` — el Paso 0 leyó la base que el spec **declara** en vez de medir el árbol de hoy |
-| una frontera que un spec le pasa a otro (`va al spec NNN`) y que el otro **no recoge** | `spec-review-batch` — el carril de coherencia leyó los «fuera de alcance» y no verificó que el destinatario tuviera un AC o una tarea que los cubriera |
+| una frontera que un spec le pasa a otro (`va al spec NNN`) y que el otro **no recoge** | `spec-revise-batch` — el carril de coherencia leyó los «fuera de alcance» y no verificó que el destinatario tuviera un criterio que los cubriera |
 | un AC que **barre un directorio y enumera sus excepciones** sin haber corrido el barrido | `spec-create` — la lista de excepciones se escribió de memoria, así que sale corta y el AC nace imposible de pasar |
 | el padre declara incompleto un carril que sí cerró | `spec-implement-batch` — la verificación leyó una caché local en vez del issue, porque el hidratador saltea lo que ya existe y sale en verde |
+| una decisión de implementación que el spec no nombraba, y un `spec.md` sin margen de techo donde escribirla | `spec-implement-batch` — el Paso 2 mandaba al `spec.md` sin decir que los techos se miden antes, y que el único archivo con aire es el `plan.md` |
+| **varios carriles pisando el mismo comando que el skill les dio escrito** | `spec-implement-batch` — un comando que el preámbulo entrega no se copia de la corrida anterior: se vuelve a correr antes de repartirlo, o se reparte roto N veces |
 
 **Si el problema no entra en ninguna fila, agregá la fila.** Esa tabla es el registro de lo que
 esta doctrina ya aprendió, y está incompleta a propósito.
@@ -186,7 +225,9 @@ todo lo demás. Lo que la sostiene, y lo que la limita:
 **Y una convención mayoritaria que este repo rechaza a propósito:** Google recomienda dejar un
 `TODO` con su bug para lo que queda fuera de alcance. Acá eso ya se falsó con datos locales — **137
 casillas «lo mira una persona» en 35 specs, 6 cerradas alguna vez**. Evidencia propia le gana a una
-convención general, y por eso el marcador no existe.
+convención general, y por eso el marcador no existe. Se fueron las casillas y la regla se quedó
+con otro sujeto: es el **criterio de aceptación** el que no se puede cerrar mirando ni
+escuchando.
 
 ## Qué verifica una herramienta y qué no
 
@@ -195,11 +236,13 @@ cuál es cuál:
 
 | Regla | Quién la verifica |
 |---|---|
-| Ningún `## Seguimiento` ni sección de aplazamiento en los cuatro archivos | `test_convencion_de_specs.py` |
-| Ninguna tarea que se cierre mirando, escuchando o sacando una captura | `test_convencion_de_specs.py` |
-| Ninguna tarea que aplace por texto (`TODO`, `pendiente`, `más adelante`, `por ahora`) | `test_convencion_de_specs.py` |
+| Ningún `## Seguimiento` ni sección de aplazamiento en los archivos del spec | `test_convencion_de_specs.py` |
+| Ningún criterio que se cierre mirando, escuchando o sacando una captura | `test_convencion_de_specs.py` |
+| Ningún criterio que aplace por texto (`TODO`, `pendiente`, `más adelante`, `por ahora`) | `test_convencion_de_specs.py` |
 | Ningún `research.md` con una medición declarada como no hecha | `test_convencion_de_specs.py` |
-| **Un spec `Implementado` no puede tener una casilla abierta** | `test_convencion_de_specs.py` |
+| **Cada criterio del spec de la rama, citado como `NNN-ACn` por un test** | `test_criterios_de_la_rama.py` |
+| Ningún spec pasa uno de los cuatro techos de palabras | `test_convencion_de_specs.py` |
+| Que ese test **ejerza** el criterio y no sólo lo nombre | **prosa** — el gate verifica la cita |
 | Que un `## Fuera de alcance` no esconda un AC propio | **prosa** — lo mira el review |
 | Que el skill se haya corregido cuando el lazo lo pedía | **prosa** — lo mira el reporte |
 | Que un hallazgo no se haya callado para no tener que arreglarlo | **prosa, y no hay forma de verificarlo** |
