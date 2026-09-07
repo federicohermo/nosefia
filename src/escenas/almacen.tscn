@@ -20,13 +20,14 @@ background_mode = 2
 sky = SubResource("Sky_cielo")
 tonemap_mode = 2
 
-[node name="Almacen" type="Node3D" node_paths=PackedStringArray("_hud", "_reloj", "_ciclo", "_pantalla", "_reloj_de_pared")]
+[node name="Almacen" type="Node3D" node_paths=PackedStringArray("_hud", "_reloj", "_ciclo", "_pantalla", "_reloj_de_pared", "_jugador")]
 script = ExtResource("4_almacen")
 _hud = NodePath("Hud")
 _reloj = NodePath("RelojDelTurno")
 _ciclo = NodePath("CicloDeJornadas")
 _pantalla = NodePath("PantallaDeCierre")
 _reloj_de_pared = NodePath("RelojDePared")
+_jugador = NodePath("Jugador")
 
 [node name="Entorno" type="WorldEnvironment" parent="."]
 environment = SubResource("Environment_almacen")

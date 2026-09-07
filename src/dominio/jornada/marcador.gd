@@ -1,11 +1,15 @@
-## Los números del turno, ya formateados, y el umbral con el que la pantalla cambia de tono.
+## Los números del turno, ya formateados, y el umbral con el que quien los pinta cambia de tono.
 ##
-## **La frontera con `ui/` se dice en una línea: acá viven los números, allá las palabras.**
-## `"01:30"` y `"3/4"` son números formateados; «Te quedan», «Apercibimientos» y el color del
-## reloj son de la pantalla.
+## **La frontera con quien dibuja se dice en una línea: acá viven los números, allá las
+## palabras.** `"01:30"` y `"3/4"` son números formateados; «Apercibimientos» y los dos colores
+## del reloj de pared son de arriba.
 ##
-## El umbral está acá y no en el HUD porque es **un número que decide**, y un número que decide
-## en `ui/` nace sin test: es exactamente la trampa que describe `.claude/rules/presentacion.md`.
+## Con la hora fuera del HUD, `reloj()` y `en_aviso()` tienen un solo cliente cada uno y los dos
+## están en el reloj de pared del local: `src/dominio/jornada/reloj_de_pared.gd` para el formato
+## y `src/escenas/puestos/reloj_de_pared.gd` para el tono.
+##
+## El umbral está acá y no arriba porque es **un número que decide**, y un número que decide en
+## `ui/` o en `escenas/` nace sin test: es la trampa que describe `.claude/rules/presentacion.md`.
 class_name Marcador
 extends RefCounted
 
@@ -13,8 +17,8 @@ const SEGUNDOS_POR_MINUTO := 60
 const MINUTOS_POR_HORA := 60
 const SEGUNDOS_POR_HORA := SEGUNDOS_POR_MINUTO * MINUTOS_POR_HORA
 
-## Media hora de ficción. Es un primer valor de balance, no una medición, y moverlo no toca ni
-## el reloj de la escena ni el HUD: los dos preguntan acá.
+## Media hora de ficción. Es un primer valor de balance, no una medición, y moverlo no toca el
+## nodo que pinta el reloj de pared: le pregunta acá en cada cuadro.
 const SEGUNDOS_DE_AVISO := 1800.0
 
 ## Lo que queda del turno, en un texto que se lee de un vistazo.
@@ -36,7 +40,7 @@ static func reloj(restante: float) -> String:
 	return "%02d:%02d" % [minutos, resto]
 
 
-## Si lo que queda ya entra en la franja en la que el HUD pinta el reloj distinto.
+## Si lo que queda ya entra en la franja en la que el reloj de pared se pinta distinto.
 static func en_aviso(restante: float) -> bool:
 	return restante <= SEGUNDOS_DE_AVISO
 
