@@ -75,6 +75,34 @@ func test_mostrar_dos_veces_no_acumula_las_lineas_de_la_jornada_anterior() -> vo
 	assert_int(renglones.get_child_count()).is_equal(Apertura.cantidad_de_obligatorias())
 
 
+func test_el_aviso_de_riesgo_sale_del_parte_y_se_esconde_con_el_legajo_limpio() -> void:  # 017-AC10
+	# Es la única línea de la placa que aparece y desaparece, así que sin los dos estados el
+	# `visible` quedaría escrito y sin ejercer: una placa que avisa siempre no avisa nunca.
+	var pantalla := await _pantalla()
+	var en_riesgo := _parte()
+	pantalla.mostrar(en_riesgo)
+	var riesgo := _etiqueta(pantalla, "Riesgo")
+	assert_str(riesgo.text).is_equal(en_riesgo.aviso_de_riesgo())
+	assert_bool(riesgo.visible).is_true()
+
+	pantalla.mostrar(ParteDeCierre.new(JORNADA_DE_PRUEBA, Apertura.obligatorias(), 0))
+	assert_bool(riesgo.visible).is_false()
+
+
+func test_mostrar_deja_el_boton_con_el_foco_para_alcanzarlo_sin_el_mouse() -> void:  # 017-AC10
+	# El cursor del juego sigue tomado cuando la placa aparece —`jugador.gd` lo recaptura en cada
+	# cuadro de física—, así que el puntero queda clavado en el centro de la ventana y «Seguir»
+	# no se alcanza con el mouse. Sin el foco no hay forma de llegar a la noche 2 jugando.
+	var pantalla := await _pantalla()
+	pantalla.mostrar(_parte())
+	var boton: Button = pantalla.get_node("Fondo/Panel/Continuar")
+	(
+		assert_bool(boton.has_focus())
+		. override_failure_message("el botón de continuar no quedó con el foco")
+		. is_true()
+	)
+
+
 func test_el_boton_de_continuar_despacha_el_cierre() -> void:  # 017-AC10
 	# Es lo que reabre la jornada siguiente. Sin esta señal la partida se queda en la placa y no
 	# hay forma de llegar a la noche 2.

@@ -30,7 +30,7 @@ background_mode = 2
 sky = SubResource("Sky_cielo")
 tonemap_mode = 2
 
-[node name="Almacen" type="Node3D" node_paths=PackedStringArray("_hud", "_reloj", "_ciclo", "_pantalla", "_reloj_de_pared", "_repositor", "_carga", "_estante", "_caja_de_productos", "_caja_de_traslado", "_atenciones", "_computadora")]
+[node name="Almacen" type="Node3D" node_paths=PackedStringArray("_hud", "_reloj", "_ciclo", "_pantalla", "_reloj_de_pared", "_repositor", "_carga", "_estante", "_cajas_de_productos", "_caja_de_traslado", "_jugador", "_atenciones", "_computadora")]
 script = ExtResource("4_almacen")
 _hud = NodePath("Hud")
 _reloj = NodePath("RelojDelTurno")
@@ -40,8 +40,9 @@ _reloj_de_pared = NodePath("RelojDePared")
 _repositor = NodePath("Repositor")
 _carga = NodePath("CargaDeLaCaja")
 _estante = NodePath("Estante")
-_caja_de_productos = NodePath("CajaDeProductos")
+_cajas_de_productos = [NodePath("CajaDeYerba"), NodePath("CajaDeFideos"), NodePath("CajaDeGaseosa"), NodePath("CajaDeGalletitas"), NodePath("CajaDeArroz"), NodePath("CajaDeJabon")]
 _caja_de_traslado = NodePath("CajaDeTraslado")
+_jugador = NodePath("Jugador")
 _atenciones = NodePath("Atenciones")
 _computadora = NodePath("Computadora")
 
@@ -80,8 +81,29 @@ pantalla = NodePath("../PantallaDeComputadora")
 [node name="Estante" parent="." instance=ExtResource("10_estante")]
 transform = Transform3D(0, 0, -1, 0, 1, 0, 1, 0, 0, -6.2, 0, 0)
 
-[node name="CajaDeProductos" parent="." instance=ExtResource("11_caja_de_productos")]
+[node name="CajaDeYerba" parent="." instance=ExtResource("11_caja_de_productos")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.55, 1.1, -12.43)
+producto = 0
+
+[node name="CajaDeFideos" parent="." instance=ExtResource("11_caja_de_productos")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.55, 1.1, -11.73)
+producto = 1
+
+[node name="CajaDeGaseosa" parent="." instance=ExtResource("11_caja_de_productos")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.55, 1.1, -11.03)
+producto = 2
+
+[node name="CajaDeGalletitas" parent="." instance=ExtResource("11_caja_de_productos")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.55, 1.1, -10.33)
+producto = 3
+
+[node name="CajaDeArroz" parent="." instance=ExtResource("11_caja_de_productos")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.55, 1.1, -9.63)
+producto = 4
+
+[node name="CajaDeJabon" parent="." instance=ExtResource("11_caja_de_productos")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.55, 1.1, -8.93)
+producto = 5
 
 [node name="Jugador" parent="." instance=ExtResource("1_jugador")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1.5)

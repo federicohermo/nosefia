@@ -84,17 +84,37 @@ func test_los_tres_espejos_de_este_spec_estan_escritos() -> void:  # 016-AC13
 
 
 ## Los enteros de balance escritos en el código de un archivo, ya redactados con su línea.
+func _cifras_de_balance(ruta: String) -> Array[String]:
+	return _cifras_en_el_codigo(FileAccess.get_file_as_string(ruta), ruta.get_file())
+
+
+## El mismo barrido, sobre texto en vez de sobre un archivo.
+##
+## **Sale a una función porque es lo único que lo vuelve ejercible**: el caso que lo usa corre
+## sobre tres archivos que ya cumplen, así que pasaría igual con un barrido que no mirara nada.
+## El caso de abajo le pasa la cifra que tiene que cazar y las que no.
 ##
 ## Corta cada línea en el primer `#`, así que los números de los comentarios y de los docstrings
 ## —los `002` y los `016` de la prosa— no cuentan. Vale porque ninguno de los tres archivos que
 ## mira lleva un `#` adentro de un string; el día que lleve uno, este helper se queda corto y hay
 ## que decirlo acá.
-func _cifras_de_balance(ruta: String) -> Array[String]:
+func _cifras_en_el_codigo(texto: String, nombre: String) -> Array[String]:
 	var encontradas: Array[String] = []
 	var numero := RegEx.create_from_string("\\b\\d+\\b")
-	for linea in FileAccess.get_file_as_string(ruta).split("\n"):
+	for linea in texto.split("\n"):
 		var codigo: String = linea.split("#")[0]
 		for coincidencia in numero.search_all(codigo):
 			if int(coincidencia.get_string()) >= PRIMERA_CIFRA_DE_BALANCE:
-				encontradas.append("%s → %s" % [ruta.get_file(), linea.strip_edges()])
+				encontradas.append("%s → %s" % [nombre, linea.strip_edges()])
 	return encontradas
+
+
+func test_el_barrido_caza_la_cifra_de_balance_y_deja_pasar_la_prosa() -> void:
+	# Sin este caso el barrido de arriba es cobertura sin verificación: recorre tres archivos que
+	# ya cumplen y saldría verde aunque no mirara nada, que es exactamente el modo de falla que
+	# el archivo existe para evitar.
+	var prosa := "## El spec 016 se apoya en el 002\nvar jornada := 1\nvar cumplidas := 0\n"
+	assert_array(_cifras_en_el_codigo(prosa, "prosa.gd")).is_empty()
+	var cazadas := _cifras_en_el_codigo("const JORNADAS := 5\n" + prosa, "mezcla.gd")
+	assert_array(cazadas).has_size(1)
+	assert_str(cazadas[0]).contains("JORNADAS")

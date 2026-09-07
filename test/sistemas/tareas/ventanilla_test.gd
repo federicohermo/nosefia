@@ -27,6 +27,7 @@ var _turno: Turno = null
 var _llegados: int = 0
 var _despachos_avisados: int = 0
 var _vacia: int = 0
+var _rechazos: int = 0
 var _avisos_de_tarea: int = 0
 var _cumplidas_avisadas: int = 0
 
@@ -36,6 +37,7 @@ func before_test() -> void:
 	_llegados = 0
 	_despachos_avisados = 0
 	_vacia = 0
+	_rechazos = 0
 	_avisos_de_tarea = 0
 	_cumplidas_avisadas = 0
 
@@ -220,3 +222,67 @@ func test_los_seis_archivos_de_dominio_y_sistemas_tienen_su_espejo() -> void:  #
 			. override_failure_message("falta el espejo `%s` de `%s`" % [espejo, ruta])
 			. is_true()
 		)
+
+
+func test_reabrir_el_panel_sigue_con_el_que_estaba_y_no_llama_al_siguiente() -> void:  # 013-AC6
+	# Es la distinción entera de `pedir_abrir()`: sin ella, cerrar y volver a tocar el vidrio
+	# saltea al comprador que estaba esperando —se va sin despachar— y la obligatoria queda
+	# imposible de cumplir, sin un solo error.
+	var ventanilla := _ventanilla(2)
+	ventanilla.pedir_abrir()
+	var primero := ventanilla.atencion().comprador()
+	ventanilla.pedir_abrir()
+	assert_object(ventanilla.atencion().comprador()).is_same(primero)
+	assert_int(_llegados).is_equal(2)
+
+	# Despachado el primero, recién ahí el vidrio llama al segundo.
+	ventanilla.pedir_despachar_sin_vender()
+	ventanilla.pedir_abrir()
+	assert_object(ventanilla.atencion().comprador()).is_not_same(primero)
+	assert_int(ventanilla.tarea().despachados()).is_equal(1)
+
+
+func test_la_ventanilla_sin_cablear_no_hace_nada_y_lo_dice() -> void:  # 013-AC9
+	# Un `.tscn` mal armado no es un rechazo del juego: no puede salir por las señales de
+	# rechazo, o la pantalla mostraría «falta mercadería» por un `@export` en null.
+	var ventanilla: Ventanilla = auto_free(Ventanilla.new())
+	ventanilla.comprador_llegado.connect(_anotar_llegado)
+	ventanilla.cobro_rechazado.connect(_anotar_rechazo)
+	ventanilla.ventanilla_vacia.connect(_anotar_vacia)
+	ventanilla.pedir_abrir()
+	ventanilla.pedir_atender()
+	ventanilla.pedir_cobrar()
+	ventanilla.pedir_despachar_sin_vender()
+	assert_int(_llegados).is_equal(0)
+	assert_int(_rechazos).is_equal(0)
+	assert_int(_vacia).is_equal(0)
+	assert_object(ventanilla.atencion()).is_null()
+
+
+func test_cobrar_sin_stock_avisa_lo_que_falta_y_no_despacha() -> void:  # 013-AC9
+	# Emite **una** de las dos señales y nunca las dos: juntas dejarían a la pantalla despachando
+	# al comprador y avisando que falta mercadería al mismo tiempo.
+	var obligatorias := Apertura.obligatorias()
+	_turno = Turno.new(Reglas.DURACION_DEL_TURNO, obligatorias)
+	var reloj: RelojDelTurno = auto_free(RelojDelTurno.new())
+	reloj.arrancar(_turno, obligatorias)
+	var ventanilla: Ventanilla = auto_free(Ventanilla.new())
+	ventanilla.reloj = reloj
+	ventanilla.cobro_rechazado.connect(_anotar_rechazo)
+	ventanilla.atencion_despachada.connect(_anotar_despacho)
+	# La góndola vacía es el estado de la primera noche, antes de que el 008 reponga nada.
+	ventanilla.arrancar(
+		TareaDeAtender.new(_compradores(1), Inventario.new([Catalogo.de(Producto.Id.YERBA)]))
+	)
+	ventanilla.pedir_atender()
+
+	ventanilla.pedir_cobrar()
+
+	assert_int(_rechazos).is_equal(1)
+	assert_int(_despachos_avisados).is_equal(0)
+	assert_bool(ventanilla.atencion().despachada()).is_false()
+	assert_int(_turno.tareas_cumplidas()).is_equal(0)
+
+
+func _anotar_rechazo(_faltantes: Array[Producto]) -> void:
+	_rechazos += 1

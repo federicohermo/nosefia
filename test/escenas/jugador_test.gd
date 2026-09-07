@@ -120,8 +120,9 @@ func test_los_dos_sistemas_del_006_llegan_armados_al_instanciar_la_escena() -> v
 
 func test_el_jugador_dice_que_lleva_en_la_mano() -> void:  # 006-AC11
 	# La única puerta por la que otra escena pregunta qué se está llevando, y la pide el 014
-	# para saber si lo que se le entrega al comprador es lo que pidió. Devuelve el `id` del
-	# dominio y nunca el nodo: un nodo cruzaría la dirección de las capas al revés.
+	# para saber si lo que hay en la mano es el trapeador: con otra cosa, la pasada no cuenta.
+	# Devuelve el `id` del dominio y nunca el nodo: un nodo cruzaría la dirección de las capas
+	# al revés.
 	var jugador := _jugador()
 	assert_str(String(jugador.id_en_la_mano())).is_empty()
 	var lata := ObjetoDelAlmacen.new()
@@ -161,3 +162,17 @@ func test_el_punto_de_carga_queda_abajo_y_a_la_derecha() -> void:  # 006-AC12
 	assert_float(carga.position.x).is_greater(0.0)
 	assert_float(carga.position.y).is_less(0.0)
 	assert_float(carga.position.z).is_less(0.0)
+
+
+func test_los_dos_sistemas_llegan_con_sus_puntos_cableados() -> void:  # 006-AC12
+	# Que los nodos existan no alcanza: lo que se rompe es la REFERENCIA. Un `node_paths` que
+	# falta deja el `@export` en `null` y la escena carga sin un solo error —medido: borrar las
+	# dos líneas del `.tscn` deja los 36 casos de `test/escenas/` en verde—, mientras el clic
+	# contesta `false` y la E no arranca nada. El síntoma no nombra al `.tscn` que lo causó.
+	var jugador := _jugador()
+	var agarre: Node = jugador.agarre
+	assert_object(agarre.punto_de_carga).is_same(jugador.get_node("Camara/PuntoDeCarga"))
+	assert_object(agarre.punto_de_soltado).is_same(jugador.get_node("Camara/PuntoDeSoltado"))
+	assert_object(agarre.punto_de_respaldo).is_same(jugador.get_node("PuntoDeRespaldo"))
+	var examen: Node = jugador.examen
+	assert_object(examen.punto_de_examen).is_same(jugador.get_node("Camara/PuntoDeExamen"))
