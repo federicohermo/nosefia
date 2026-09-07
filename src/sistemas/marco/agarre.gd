@@ -37,11 +37,6 @@ func manos() -> Manos:
 	return _manos
 
 
-## El `Node3D` de lo que se está llevando, que es lo que `Examen` necesita para acercarlo.
-func nodo_sostenido() -> Node3D:
-	return _nodo
-
-
 ## Devuelve `true` **sólo si lo agarró ahora**, y emite el rechazo con su motivo si no.
 func pedir_agarrar(datos: ObjetoDelAlmacen, nodo: Node3D) -> bool:
 	var motivo := _manos.motivo_de_rechazo(datos)
@@ -50,7 +45,9 @@ func pedir_agarrar(datos: ObjetoDelAlmacen, nodo: Node3D) -> bool:
 		return false
 	# Un punto sin cablear es un `.tscn` mal armado y no un rechazo del juego: emitir
 	# `agarre_rechazado` acá le diría al jugador «no podés agarrar eso», que sería falso. Quien
-	# caza esto es `test/escenas/jugador_test.gd`, que afirma que los cuatro puntos existen.
+	# caza esto es `test/escenas/jugador_test.gd`, que afirma que los `@export` de los puntos
+	# RESUELVEN, no que los nodos existan: está medido que borrar el `node_paths` del `.tscn` deja
+	# los nodos en su lugar, el `@export` en `null` y la escena cargando sin un solo error.
 	if nodo == null or punto_de_carga == null:
 		push_error("Agarre sin punto de carga cableado: revisar jugador.tscn")
 		return false

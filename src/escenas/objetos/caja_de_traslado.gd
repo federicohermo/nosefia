@@ -16,6 +16,9 @@ extends Node3D
 ##
 ## Recibe el contenido en vez de ir a buscarlo: la caja de la escena no es dueña de nada, y quien
 ## la carga es `CargaDeLaCaja`. Es lo que la deja dibujarse sin conocer al nodo que la llena.
+##
+## Por eso el `.tscn` nace con sus casilleros **ocultos**: nadie pinta la caja al nacer, y una
+## caja nueva que se dibujara llena cargaría sin un solo error contradiciendo al dominio.
 func mostrar(contenido: Array[Producto]) -> void:
 	var casilleros := _casilleros.get_children()
 	for indice in range(casilleros.size()):

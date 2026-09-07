@@ -37,7 +37,13 @@ func mostrar(bandeja: Bandeja) -> void:
 
 
 ## Pinta los mensajes de una conversación. Un `null` deja el cartel de que no hay ninguna abierta.
+##
+## El corte no es adorno: sin él, `null` no deja el cartel — revienta al pedirle los mensajes a
+## nada, y con el cartel escrito al lado en un método que nadie llamaba.
 func mostrar_conversacion(conversacion: Conversacion) -> void:
+	if conversacion == null:
+		mostrar_sin_conversacion()
+		return
 	_limpiar(_mensajes)
 	for mensaje in conversacion.mensajes:
 		var etiqueta := Label.new()
