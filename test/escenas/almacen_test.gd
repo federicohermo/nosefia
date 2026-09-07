@@ -314,3 +314,31 @@ func test_la_escena_trae_el_ciclo_de_jornadas_colgando_de_la_raiz() -> void:  # 
 	var almacen := _almacen()
 	assert_bool(almacen.has_node("CicloDeJornadas")).is_true()
 	assert_object(almacen.get_node("CicloDeJornadas")).is_instanceof(CicloDeJornadas)
+
+
+func test_el_cableado_arma_el_parte_una_sola_vez_y_no_decide() -> void:  # 017-AC12
+	# Dos partes por jornada sería la placa pintada dos veces con dos objetos distintos, y la
+	# segunda tapando a la primera. Y una condición acá adentro sería una regla del juego escrita
+	# donde ningún gate la mira.
+	var texto := FileAccess.get_file_as_string(SCRIPT_DEL_ALMACEN)
+	(
+		assert_int(texto.count("ParteDeCierre.new("))
+		. override_failure_message(
+			"`almacen.gd` arma %d partes por jornada" % texto.count("ParteDeCierre.new(")
+		)
+		. is_equal(1)
+	)
+	var condicion := RegEx.create_from_string("\\b(if|elif|match)\\b")
+	for linea in texto.split("\n"):
+		var codigo: String = linea.split("#")[0]
+		(
+			assert_array(condicion.search_all(codigo))
+			. override_failure_message("`almacen.gd` decide en `%s`" % linea.strip_edges())
+			. is_empty()
+		)
+
+
+func test_la_escena_instancia_la_pantalla_de_cierre() -> void:  # 017-AC12
+	var almacen := _almacen()
+	assert_bool(almacen.has_node("PantallaDeCierre")).is_true()
+	assert_object(almacen.get_node("PantallaDeCierre")).is_instanceof(PantallaDeCierre)

@@ -14,6 +14,7 @@ extends Node3D
 @export var _hud: Hud
 @export var _reloj: RelojDelTurno
 @export var _ciclo: CicloDeJornadas
+@export var _pantalla: PantallaDeCierre
 
 ## La partida es de la escena y no del ciclo porque también la mira el HUD: el ciclo publica lo
 ## que pasó, y quien quiera un número lo pide acá.
@@ -31,11 +32,21 @@ func _ready() -> void:
 	_reloj.tiempo_consumido.connect(_hud.mostrar_tiempo)
 	_reloj.tarea_completada.connect(_hud.mostrar_tareas)
 	_ciclo.jornada_cerrada.connect(_al_cerrar_la_jornada)
+	# La placa es quien abre la noche siguiente, y por eso el ciclo no reabre solo: entre una
+	# jornada y la otra hay algo que leer. Se conecta derecho porque acá no hay nada que decidir.
+	_pantalla.cierre_despachado.connect(_ciclo.abrir_la_jornada)
 	_ciclo.arrancar(_partida, _reloj)
 
 
 ## La jornada cerrada ya quedó anotada en la partida cuando esta señal llega: acá sólo se le
 ## pasan a la pantalla los números que la partida contesta.
-func _al_cerrar_la_jornada(_jornada: int, cumplidas: int) -> void:
+##
+## Las obligatorias salen de la partida y no de una lista propia: son **las mismas instancias**
+## que el turno estuvo contando toda la noche, así que el parte lee el estado de verdad y no una
+## copia que nadie completó.
+func _al_cerrar_la_jornada(jornada: int, cumplidas: int) -> void:
 	_hud.mostrar_tareas(cumplidas)
 	_hud.mostrar_apercibimientos(_partida.apercibimientos())
+	_pantalla.mostrar(
+		ParteDeCierre.new(jornada, _partida.obligatorias(), _partida.apercibimientos())
+	)
