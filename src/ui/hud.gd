@@ -1,30 +1,28 @@
-## La pantalla del turno: lo que queda, cuántas obligatorias van y cuántos apercibimientos hay.
+## La pantalla del turno: cuántas obligatorias van y cuántos apercibimientos hay.
 ##
 ## **Recibe números ya decididos y los pinta.** No formatea nada —eso es `Marcador`—, no sabe qué
 ## es un umbral, y no conoce al nodo que le manda los números: se conecta por señal desde la
-## escena, y por eso acá no aparece el reloj ni por su nombre. Lo verifican tres `rg` del spec,
-## que miran el archivo entero y no distinguen código de comentario.
+## escena. Lo verifican los `rg` del spec, que miran el archivo entero y no distinguen código de
+## comentario.
 ##
-## Lo único propio de esta capa son las palabras y los colores. El veredicto del cierre **no** se
-## dibuja acá: es de la pantalla de fin de jornada, y tenerlo en los dos lados sería la misma
-## banda traducida a palabras en dos archivos que no llevan test obligatorio.
+## **La hora no está acá, y ésa es la decisión.** El GDD la pone en los relojes del local, no en
+## la pantalla: un número siempre visible afloja la tensión, porque saber cuánto queda sale
+## gratis. Con la hora afuera, enterarse cuesta caminar. Lo que quedó de eso vive en
+## `src/dominio/jornada/reloj_de_pared.gd` y en el nodo que lo pinta.
+##
+## Lo único propio de esta capa son las palabras. El veredicto del cierre **no** se dibuja acá:
+## es de la pantalla de fin de jornada, y tenerlo en los dos lados sería la misma banda traducida
+## a palabras en dos archivos que no llevan test obligatorio.
 class_name Hud
 extends CanvasLayer
 
-## Los tres textos viven acá y **no** además en `hud.tscn`, que es lo que pide
+## Los dos textos viven acá y **no** además en `hud.tscn`, que es lo que pide
 ## `.claude/rules/presentacion.md`: los `Label` de la escena nacen vacíos y el cableado los pinta
 ## en su `_ready()`. Un texto en los dos lados se cambia en uno solo el día que haya que
 ## cambiarlo, y el de los apercibimientos se llevaba puesto además el tope de `Reglas`.
-const TEXTO_DEL_TIEMPO := "Te quedan %s"
 const TEXTO_DE_LAS_TAREAS := "Tareas %s"
 const TEXTO_DE_LOS_APERCIBIMIENTOS := "Apercibimientos %d de %d"
 
-## El tono de siempre y el de la franja final. Son «cómo se ve» y por eso viven acá; cuándo
-## empieza esa franja es «qué pasa», y eso lo contesta el dominio.
-const COLOR_TRANQUILO := Color.WHITE
-const COLOR_DE_AVISO := Color.RED
-
-@export var _reloj: Label
 @export var _tareas: Label
 @export var _apercibimientos: Label
 
@@ -36,11 +34,6 @@ var _obligatorias: int = 0
 func declarar_obligatorias(cuantas: int) -> void:
 	_obligatorias = cuantas
 	mostrar_tareas(0)
-
-
-func mostrar_tiempo(restante: float) -> void:
-	_reloj.text = TEXTO_DEL_TIEMPO % Marcador.reloj(restante)
-	_reloj.modulate = COLOR_DE_AVISO if Marcador.en_aviso(restante) else COLOR_TRANQUILO
 
 
 func mostrar_tareas(cumplidas: int) -> void:
