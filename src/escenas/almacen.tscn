@@ -1,4 +1,4 @@
-[gd_scene load_steps=26 format=3]
+[gd_scene load_steps=31 format=3]
 
 [ext_resource type="PackedScene" path="res://src/escenas/jugador.tscn" id="1_jugador"]
 [ext_resource type="PackedScene" path="res://src/ui/hud.tscn" id="2_hud"]
@@ -23,6 +23,11 @@
 [ext_resource type="PackedScene" path="res://src/escenas/puestos/limpieza_del_almacen.tscn" id="21_limpieza"]
 [ext_resource type="PackedScene" path="res://src/escenas/objetos/objeto_agarrable.tscn" id="22_agarrable"]
 [ext_resource type="Resource" path="res://src/dominio/almacen/trapeador.tres" id="23_trapeador"]
+[ext_resource type="Script" path="res://src/sistemas/tareas/recolector_de_basura.gd" id="24_recolector"]
+[ext_resource type="PackedScene" path="res://src/escenas/puestos/zona_de_descarte.tscn" id="25_descarte"]
+[ext_resource type="Resource" path="res://src/dominio/almacen/bolsa_de_basura_1.tres" id="26_bolsa1"]
+[ext_resource type="Resource" path="res://src/dominio/almacen/bolsa_de_basura_2.tres" id="27_bolsa2"]
+[ext_resource type="Resource" path="res://src/dominio/almacen/bolsa_de_basura_3.tres" id="28_bolsa3"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_cielo"]
 
@@ -34,7 +39,7 @@ background_mode = 2
 sky = SubResource("Sky_cielo")
 tonemap_mode = 2
 
-[node name="Almacen" type="Node3D" node_paths=PackedStringArray("_hud", "_reloj", "_ciclo", "_pantalla", "_reloj_de_pared", "_repositor", "_carga", "_estante", "_caja_de_productos", "_caja_de_traslado", "_atenciones", "_computadora", "_limpiador", "_limpieza")]
+[node name="Almacen" type="Node3D" node_paths=PackedStringArray("_hud", "_reloj", "_ciclo", "_pantalla", "_reloj_de_pared", "_repositor", "_carga", "_estante", "_caja_de_productos", "_caja_de_traslado", "_atenciones", "_computadora", "_limpiador", "_limpieza", "_recolector")]
 script = ExtResource("4_almacen")
 _hud = NodePath("Hud")
 _reloj = NodePath("RelojDelTurno")
@@ -50,6 +55,7 @@ _atenciones = NodePath("Atenciones")
 _computadora = NodePath("Computadora")
 _limpiador = NodePath("Limpiador")
 _limpieza = NodePath("LimpiezaDelAlmacen")
+_recolector = NodePath("Recolector")
 
 [node name="Entorno" type="WorldEnvironment" parent="."]
 environment = SubResource("Environment_almacen")
@@ -88,14 +94,30 @@ jugador = NodePath("../Jugador")
 limpiador = NodePath("../Limpiador")
 
 [node name="Trapeador" parent="." instance=ExtResource("22_agarrable")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4, 0.5, -4)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.5, 0.5, -4)
 datos = ExtResource("23_trapeador")
+
+[node name="ZonaDeDescarte" parent="." instance=ExtResource("25_descarte") node_paths=PackedStringArray("recolector")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3, 0, -13.5)
+recolector = NodePath("../Recolector")
+
+[node name="BolsaDeBasura1" parent="." instance=ExtResource("22_agarrable")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3, 0.5, 4)
+datos = ExtResource("26_bolsa1")
+
+[node name="BolsaDeBasura2" parent="." instance=ExtResource("22_agarrable")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, 0.5, 5)
+datos = ExtResource("27_bolsa2")
+
+[node name="BolsaDeBasura3" parent="." instance=ExtResource("22_agarrable")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.5, 0.5, 3)
+datos = ExtResource("28_bolsa3")
 
 [node name="Estante" parent="." instance=ExtResource("10_estante")]
 transform = Transform3D(0, 0, -1, 0, 1, 0, 1, 0, 0, -6.2, 0, 0)
 
 [node name="CajaDeProductos" parent="." instance=ExtResource("11_caja_de_productos")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.55, 1.1, -12.43)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 1.1, -6)
 
 [node name="Jugador" parent="." instance=ExtResource("1_jugador")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1.5)
@@ -124,6 +146,10 @@ reloj = NodePath("../RelojDelTurno")
 
 [node name="Limpiador" type="Node" parent="." node_paths=PackedStringArray("reloj")]
 script = ExtResource("20_limpiador")
+reloj = NodePath("../RelojDelTurno")
+
+[node name="Recolector" type="Node" parent="." node_paths=PackedStringArray("reloj")]
+script = ExtResource("24_recolector")
 reloj = NodePath("../RelojDelTurno")
 
 [node name="Hud" parent="." instance=ExtResource("2_hud")]

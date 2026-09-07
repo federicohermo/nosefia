@@ -38,6 +38,7 @@ const LimpiezaDelLocal := preload("res://src/escenas/puestos/limpieza_del_almace
 @export var _computadora: ComputadoraDeEscritorio
 @export var _limpiador: Limpiador
 @export var _limpieza: LimpiezaDelLocal
+@export var _recolector: RecolectorDeBasura
 
 ## La partida es de la escena y no del ciclo porque también la mira el HUD: el ciclo publica lo
 ## que pasó, y quien quiera un número lo pide acá.
@@ -104,6 +105,7 @@ func _al_abrir_la_jornada(_jornada: int) -> void:
 	# El piso se rehace cada noche: guardar el estado entre jornadas está fuera de alcance, y una
 	# sola instancia dejaría el local limpio de anoche y la obligatoria cumplida sola.
 	_limpiador.arrancar(PisoDelLocal.de_la_jornada())
+	_recolector.arrancar(TareaDeLaBasura.de_la_jornada())
 	_limpieza.repintar()
 	_estante.mostrar(0)
 
