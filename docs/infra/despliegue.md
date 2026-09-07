@@ -142,18 +142,17 @@ es como se llama la release: puesto con el nombre equivocado, Godot dice que fal
 
 ## Lo que todavía no se corrió
 
-**El proyecto de Vercel ya existe**, y el 2026-09-07 se corrió `verificar_despliegue.py` contra
-una URL viva: contestó rojo nombrando los cuatro `302` de la Deployment Protection. O sea que el
-verificador **sí llega a una publicación real y la juzga** — eso dejó de ser una afirmación sobre
-el código.
+**El proyecto de Vercel ya existe, y el verificador se ejerció contra una URL viva.** El
+2026-09-07, en dos estados distintos y contestando distinto en cada uno: con la protección puesta
+nombró los cuatro `302` y su destino; apagada, los cuatro `404` del deploy que la integración de
+Git había hecho de la raíz del repo. **Vercel daba ese deploy por exitoso en los dos casos.** O
+sea que «publicar no es haber publicado» dejó de ser una afirmación sobre el código.
 
 Lo que sigue sin correrse es el resto de la cadena, y falta por dos cosas concretas:
 
-- **Los tres secretos no están cargados** (`gh secret list` no devuelve ninguno el 2026-09-07),
-  así que `desplegar.yml` todavía no puede publicar. El workflow falla en su primer paso
-  nombrando cuál falta, que es lo que se diseñó.
-- **La protección del deploy sigue puesta**, así que aunque se publicara, la URL contestaría el
-  `302` de arriba.
+- **Falta `VERCEL_TOKEN`.** Los otros dos están cargados desde el 2026-09-07: no son secretos,
+  son los IDs del proyecto. El workflow falla en su primer paso nombrando el que falte, que es
+  lo que se diseñó.
 
 Con esas dos, la primera corrida de `desplegar` sobre `main` cierra el humo en navegador, que es
 lo único que nunca se ejerció: `humo_en_navegador.mjs` no corrió nunca, ni acá ni en CI.
