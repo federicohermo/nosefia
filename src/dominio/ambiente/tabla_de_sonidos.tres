@@ -70,7 +70,7 @@ bus = "Interfaz"
 [sub_resource type="Resource" id="Resource_ql6t2"]
 script = ExtResource("1_qermt")
 evento = 12
-senal = &"timbre_de_la_ventanilla"
+senal = &"comprador_llegado"
 
 [sub_resource type="Resource" id="Resource_s3myp"]
 script = ExtResource("1_qermt")

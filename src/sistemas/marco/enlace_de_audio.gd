@@ -31,9 +31,12 @@ func enlazados() -> Array:
 	return _enlazados.duplicate()
 
 
-## Los eventos cuya señal no la declara ninguna de las fuentes. **Es un estado normal**: el timbre
-## del comprador no tiene quién lo toque hasta que un spec lo escriba, y el ambiente del local no
-## lo dispara ninguna señal.
+## Los eventos cuya señal no la declara ninguna de las fuentes. **Es un estado normal**: el
+## ambiente del local no lo dispara ninguna señal, así que su fila la deja vacía.
+##
+## Vacía, y no con el nombre de una señal que todavía no existe: un nombre inventado cae acá
+## igual, en silencio y para siempre. Hay un caso que verifica que cada señal de la tabla la
+## declare alguien de verdad.
 func sin_fuente() -> Array:
 	return _sin_fuente.duplicate()
 

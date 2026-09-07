@@ -7,6 +7,7 @@ extends GdUnitTestSuite
 const ESCENA := "res://src/escenas/puestos/audio_del_almacen.tscn"
 const SCRIPT := "res://src/escenas/puestos/audio_del_almacen.gd"
 const ESCENA_DEL_ALMACEN := "res://src/escenas/almacen.tscn"
+const SCRIPT_DEL_ALMACEN := "res://src/escenas/almacen.gd"
 const LAYOUT := "res://default_bus_layout.tres"
 
 ## El archivo que declara los nombres de los buses. Es el único que los puede escribir como
@@ -33,6 +34,8 @@ const ARCHIVOS_QUE_NO_DECLARAN_BUSES := [
 const NOMBRES_DE_REPRODUCCION := ["play" + "ing", "get_playback" + "_position", "finish" + "ed"]
 
 const CARPETA_DE_TESTS := "res://test"
+
+const CARPETA_DE_FUENTES := "res://src"
 
 
 func test_los_cuatro_buses_existen_en_el_motor() -> void:  # 021-AC3
@@ -145,6 +148,79 @@ func test_la_cascara_carga_con_sus_dos_sistemas_cableados() -> void:  # 021-AC10
 	var audio: Node = auto_free(load(ESCENA).instantiate())
 	assert_object(audio.get("reproductor")).is_not_null()
 	assert_object(audio.get("enlace")).is_not_null()
+
+
+func test_cada_senal_de_la_tabla_la_declara_alguien_de_verdad() -> void:  # 021-AC9
+	# **El agujero que deja el desacople.** El enlace es por nombre de señal, así que un nombre
+	# que no existe no rompe nada: la fila cae en `sin_fuente()`, que es un estado normal, y las
+	# suites del enlazador usan fuentes inventadas — con lo cual los seis nodos dan verde y ese
+	# sonido no se pide nunca en el juego. Está medido: la fila del timbre decía
+	# `timbre_de_la_ventanilla`, que no lo declara nadie, y nada lo dijo.
+	#
+	# Se busca sobre el texto de `src/` y no llamando a `has_signal()`: preguntarle a una clase
+	# obligaría a nombrarla, que es justo lo que este spec no hace. Una fila que todavía no
+	# tiene quién la dispare deja la señal **vacía** —`tiene_fuente()` ya cubre ese caso—, en
+	# vez de nombrar una que no existe.
+	var tabla := TablaDeSonidos.desde_disco()
+	assert_object(tabla).is_not_null()
+	var texto := ""
+	for ruta: String in _fuentes():
+		texto += FileAccess.get_file_as_string(ruta)
+	assert_str(texto).is_not_empty()
+	for entrada: EntradaSonora in tabla.entradas:
+		if not entrada.tiene_fuente():
+			continue
+		var declarada := RegEx.create_from_string("(?m)^signal\\s+%s\\b" % entrada.senal)
+		(
+			assert_array(declarada.search_all(texto))
+			. override_failure_message(
+				"nadie declara `signal %s`: esa fila no suena nunca" % entrada.senal
+			)
+			. is_not_empty()
+		)
+
+
+func test_el_almacen_llega_cableado_al_audio_y_al_agarre() -> void:  # 021-AC10
+	# Los dos `@export` que este spec le suma a la raíz. Está medido en este mismo lote que
+	# borrar una entrada del `node_paths` deja 36 casos en verde con el nodo muerto: el caso que
+	# barre los `@export` de la raíz lleva una lista escrita a mano, y estos dos no estaban.
+	# Sin `_audio` el juego muere en el primer cuadro; sin `_agarre`, las tres señales del
+	# agarre quedan mudas para siempre y nada lo dice.
+	var almacen: Node3D = auto_free(load(ESCENA_DEL_ALMACEN).instantiate())
+	for propiedad in ["_audio", "_agarre"]:
+		(
+			assert_object(almacen.get(propiedad))
+			. override_failure_message(
+				"`%s` quedó en null: falta su entrada en el `node_paths` de la raíz" % propiedad
+			)
+			. is_not_null()
+		)
+
+
+func test_el_cableado_enlaza_las_fuentes_y_arranca_el_ambiente() -> void:  # 021-AC10
+	# La cáscara no se llama sola: quien le pasa las fuentes y quien arranca el bucle es la raíz.
+	# Sin la primera línea el audio entero queda sin enlazar; sin la segunda, el ambiente del
+	# local no suena nunca — y las dos fallan en silencio.
+	var texto := FileAccess.get_file_as_string(SCRIPT_DEL_ALMACEN)
+	assert_str(texto).is_not_empty()
+	# La llamada se busca con un `RegEx` que se come los espacios: `gdformat` envuelve el
+	# paréntesis cuando la lista de fuentes crece, y un `contains()` literal se rompería con el
+	# reformateo en vez de con el bug.
+	var enlaza := RegEx.create_from_string("_audio\\s*\\.\\s*enlazar\\(")
+	assert_array(enlaza.search_all(texto)).is_not_empty()
+	var ambiente := RegEx.create_from_string("_audio\\s*\\.\\s*arrancar_el_ambiente\\(\\)")
+	assert_array(ambiente.search_all(texto)).is_not_empty()
+
+
+## Todos los `.gd` de `src/`, para el caso de las señales de la tabla.
+static func _fuentes(carpeta: String = CARPETA_DE_FUENTES) -> Array[String]:
+	var encontradas: Array[String] = []
+	for nombre in DirAccess.get_files_at(carpeta):
+		if nombre.ends_with(".gd"):
+			encontradas.append(carpeta + "/" + nombre)
+	for sub in DirAccess.get_directories_at(carpeta):
+		encontradas.append_array(_fuentes(carpeta + "/" + sub))
+	return encontradas
 
 
 ## Todas las suites del repo, para el caso del AC7.

@@ -124,8 +124,8 @@ func test_enlazar_dos_veces_no_duplica_la_conexion() -> void:  # 021-AC9
 
 
 func test_una_fila_sin_senal_queda_sin_fuente_y_no_rompe_nada() -> void:  # 021-AC9
-	# **Es un estado normal**: el ambiente del local no lo dispara ninguna señal, y el timbre del
-	# comprador no tiene quién lo toque hasta que un spec lo escriba.
+	# **Es un estado normal**: el ambiente del local no lo dispara ninguna señal, y por eso su
+	# fila deja la señal vacía en vez de nombrar una que no existe.
 	var muda := _entrada(EntradaSonora.Evento.AMBIENTE_DEL_LOCAL, &"")
 	var enlace := _enlace([muda] as Array[EntradaSonora])
 	enlace.enlazar_todo([_fuente()])
