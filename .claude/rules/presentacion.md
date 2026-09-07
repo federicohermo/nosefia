@@ -121,6 +121,18 @@ del anclaje**.
   un solo error**, los seis nodos dan verde, y el juego muere en el primer cuadro con un
   `Nonexistent function … in base 'Nil'` que no nombra ni al `.tscn` ni al `@export`. El editor
   de Godot lo escribe solo; una escena escrita a mano, no. Medido en el spec 007.
+- **Un `@export` que apunta a un script de `escenas/` no se puede tipar por su `class_name`**: esos scripts son cáscara y no declaran uno. Va
+  `const RelojDeParedDelLocal := preload("res://…/reloj_de_pared.gd")` y luego
+  `@export var _x: RelojDeParedDelLocal` — la misma forma que documenta [tests.md](./tests.md), y la que `gdlint` acepta como `load-constant-name`. Sin eso el tipo estático es el del nodo (`Label3D`) y llamarle su método no compila. Medido en el spec 032, y lo vuelve a necesitar cada `puestos/` con script.
+- **Y una sub-escena instanciada necesita su `script` declarado en su propio `.tscn`.** Sin
+  él, el `@export` que la apunta desde afuera queda en `null` **con el `node_paths` de la
+  raíz bien escrito**, y la escena vuelve a cargar sin un solo error. Es el mismo síntoma que
+  el de arriba con otra causa, y por eso se diagnostica mal: se revisa el `node_paths`, que
+  está bien. Medido en la ola 2 del lote del 2026-09-06.
+- **El `_ready()` de un hijo corre ANTES que el de su raíz.** Un puesto que se pinta en su
+  propio `_ready()` contra un estado que le da el cableado muere con el mismo
+  `Nonexistent function … in base 'Nil'`, y el mensaje no nombra ni al archivo ni al orden.
+  **Quien pinta es el cableado**, cuando abre la jornada — no la sub-escena al nacer.
 - Hacia arriba, señales.
 - Nunca `get_node("../../…")`, por lo que dice [gdscript.md](./gdscript.md).
 
