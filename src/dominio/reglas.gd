@@ -77,6 +77,18 @@ const APERCIBIMIENTOS_HASTA_EL_DESPIDO := 4
 
 const APERCIBIMIENTOS_POR_AVISO := 1
 
+## En qué noche se rompe el reloj de pared del local, a la mitad del turno y para siempre.
+##
+## El GDD dice que deja de funcionar «a mitad de una de las jornadas» y no cuál: la tercera de
+## cinco es una decisión de balance, y es la que reparte la partida en dos mitades parejas —dos
+## noches sabiendo la hora, dos sin saberla, y la del medio partida al medio—. Cae adentro de la
+## partida a propósito: una jornada posterior a la última dejaría la regla escrita y muerta,
+## y eso lo caza `reglas_test.gd`.
+##
+## Vive acá y no en `reglas_de_la_partida.gd` porque no es cuánto dura la partida sino un número
+## de balance más, del mismo tipo que los apercibimientos: `Reglas` ya cruza jornadas.
+const JORNADA_EN_QUE_SE_ROMPE_EL_RELOJ_DE_PARED := 3
+
 ## Vale el doble que un aviso, y eso es lo que hace que las tres bandas pesen distinto también
 ## sobre el despido: a la banda grave le alcanza con una jornada menos.
 const APERCIBIMIENTOS_POR_BANDA_GRAVE := 2

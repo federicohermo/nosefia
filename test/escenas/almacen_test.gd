@@ -29,6 +29,10 @@ const ESCENA_DEL_ALMACEN := "res://src/escenas/almacen.tscn"
 ## ausencia no se puede instanciar.
 const SCRIPT_DEL_ALMACEN := "res://src/escenas/almacen.gd"
 
+## La sub-escena del reloj de pared. Se cuenta sobre el texto del `.tscn` y no sobre el árbol
+## instanciado porque lo que hay que afirmar es que se referencia **una sola vez**.
+const ESCENA_DEL_RELOJ_DE_PARED := "res://src/escenas/puestos/reloj_de_pared.tscn"
+
 ## Los tres `@export` que la raíz declara. Se listan acá y no adentro del caso porque son el
 ## contrato del cableado: agregar uno sin asignarlo en la escena tiene que dar rojo.
 const CABLEADOS_DE_LA_RAIZ := ["_hud", "_reloj", "_ciclo"]
@@ -416,3 +420,62 @@ func test_despachar_la_placa_abre_la_noche_siguiente_en_cero() -> void:  # 017-A
 			Hud.TEXTO_DE_LAS_TAREAS % Marcador.tareas(0, Apertura.cantidad_de_obligatorias())
 		)
 	)
+
+
+func test_la_escena_trae_un_solo_reloj_de_pared_y_cuelga_de_la_raiz() -> void:  # 032-AC7
+	# Dos relojes serían dos esferas diciendo lo mismo y una sola conectada, que es el modo de
+	# falla silencioso: el jugador camina hasta la que no anda y no hay error en ningún lado.
+	var texto := FileAccess.get_file_as_string(ESCENA_DEL_ALMACEN)
+	(
+		assert_int(texto.count(ESCENA_DEL_RELOJ_DE_PARED))
+		. override_failure_message(
+			(
+				"`almacen.tscn` referencia %d veces al reloj de pared"
+				% texto.count(ESCENA_DEL_RELOJ_DE_PARED)
+			)
+		)
+		. is_equal(1)
+	)
+	var almacen := _almacen()
+	assert_bool(almacen.has_node("RelojDePared")).is_true()
+	assert_array(_violaciones_de_cableado(almacen)).is_empty()
+	# Y el `@export` de la raíz resuelto, que es lo que ninguna de las dos afirmaciones de arriba
+	# ve: si `reloj_de_pared.tscn` perdiera su `script`, el nodo instanciado sería un `Label3D`
+	# pelado, el `@export` llegaría nulo **con el `node_paths` bien escrito**, y el juego moriría
+	# en el primer cuadro con un error que no nombra a ninguno de los dos `.tscn`.
+	(
+		assert_object(almacen.get("_reloj_de_pared"))
+		. override_failure_message(
+			"`_reloj_de_pared` llegó nulo: la sub-escena perdió su `script` o su `node_paths`"
+		)
+		. is_not_null()
+	)
+
+
+func test_el_reloj_de_pared_cae_adentro_del_edificio() -> void:  # 032-AC7
+	# Un reloj colocado afuera de la cáscara se vería flotando en el vacío y ningún test de
+	# cableado lo diría: la escena carga igual y el nodo está.
+	var almacen: Node3D = auto_free(load(ESCENA_DEL_ALMACEN).instantiate())
+	add_child(almacen)
+	await get_tree().process_frame
+	var cascara: MeshInstance3D = almacen.get_node("Estructura/" + CASCARA_DEL_EDIFICIO)
+	var caja: AABB = cascara.global_transform * cascara.get_aabb()
+	var reloj: Node3D = almacen.get_node("RelojDePared")
+	(
+		assert_bool(caja.has_point(reloj.global_position))
+		. override_failure_message(
+			"el reloj quedó en %s, afuera del edificio %s" % [reloj.global_position, caja]
+		)
+		. is_true()
+	)
+
+
+func test_el_cableado_le_da_la_hora_al_reloj_de_pared_y_no_al_hud() -> void:  # 032-AC8
+	# La hora se fue de la pantalla, pero los otros dos carteles del HUD siguen: sin la segunda
+	# mitad de este caso, desconectarlos también pasaría en verde.
+	var texto := FileAccess.get_file_as_string(SCRIPT_DEL_ALMACEN)
+	assert_str(texto).is_not_empty()
+	assert_str(texto).not_contains("_hud.mostrar_tiempo")
+	assert_str(texto).contains("tiempo_consumido.connect(_reloj_de_pared.mostrar_tiempo)")
+	assert_str(texto).contains("tarea_completada.connect(_hud.mostrar_tareas)")
+	assert_str(texto).contains("_hud.mostrar_apercibimientos")

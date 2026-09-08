@@ -89,6 +89,20 @@ func test_al_cuarto_apercibimiento_lo_echan() -> void:
 	assert_int(Reglas.APERCIBIMIENTOS_HASTA_EL_DESPIDO).is_equal(4)
 
 
+func test_el_reloj_de_pared_se_rompe_adentro_de_la_partida() -> void:  # 032-AC1
+	# Una jornada posterior a la última dejaría la regla escrita y muerta: el reloj no se
+	# rompería nunca jugando, y los criterios del 032 seguirían en verde igual. Es la misma
+	# clase de invariante que el AC2 del 016, y por eso se afirma contra las constantes y no
+	# contra el número.
+	var primera := ReglasDeLaPartida.PRIMERA_JORNADA
+	var ultima := primera + ReglasDeLaPartida.JORNADAS_DE_LA_PARTIDA - 1
+	var rompe := Reglas.JORNADA_EN_QUE_SE_ROMPE_EL_RELOJ_DE_PARED
+	var fuera := "el reloj se rompe en la jornada %d y la partida va de la %d a la %d"
+	assert_int(rompe).override_failure_message(fuera % [rompe, primera, ultima]).is_between(
+		primera, ultima
+	)
+
+
 func test_una_jornada_grave_pesa_el_doble_que_un_aviso() -> void:
 	# Es de acá que sale que dos jornadas graves seguidas despidan y tres de aviso todavía no.
 	assert_int(Reglas.APERCIBIMIENTOS_POR_AVISO).is_equal(1)
