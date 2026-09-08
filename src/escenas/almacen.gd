@@ -39,6 +39,7 @@ const Jugador := preload("res://src/escenas/jugador.gd")
 @export var _caja_de_traslado: CajaDeTrasladoQueSeVe
 @export var _jugador: Jugador
 @export var _atenciones: Ventanilla
+@export var _computadora: ComputadoraDeEscritorio
 
 ## La partida es de la escena y no del ciclo porque también la mira el HUD: el ciclo publica lo
 ## que pasó, y quien quiera un número lo pide acá.
@@ -91,10 +92,11 @@ func _ready() -> void:
 ## El marcador lo dice la apertura y no el cierre de la anterior: entre las dos hay una placa que
 ## el jugador tarda lo que quiera en despachar, y el conteo de ayer no puede quedar colgado ahí.
 ##
-## **El 017 y el 008 escribieron esta función por separado, cada uno con la mitad que le
-## importaba, y la unión de la pila las junta acá**: son la misma apertura y no dos. El
-## inventario se arma en este lado y no en el `Repositor` porque «con cuánta mercadería arranca
-## una jornada» es una regla del juego, y `Apertura` es donde tiene test.
+## **Varios specs de la pila escribieron esta función por separado, cada uno con la parte que le
+## importaba, y la unión las junta acá**: es la misma apertura y no una por tarea, y se conecta
+## una sola vez —conectar `jornada_abierta` dos veces es un error de Godot—. El inventario se
+## arma en este lado y no en el `Repositor` porque «con cuánta mercadería arranca una jornada»
+## es una regla del juego, y `Apertura` es donde tiene test.
 func _al_abrir_la_jornada(_jornada: int) -> void:
 	_hud.declarar_obligatorias(Apertura.cantidad_de_obligatorias())
 	# **Un solo inventario para las dos obligatorias**: reponer lo llena y la ventanilla lo
@@ -103,6 +105,7 @@ func _al_abrir_la_jornada(_jornada: int) -> void:
 	var inventario := Apertura.inventario_de_la_jornada()
 	_repositor.arrancar(Estante.new(inventario, Catalogo.todos()))
 	_atenciones.arrancar(TareaDeAtender.new(Compradores.de_la_jornada(), inventario))
+	_computadora.arrancar(CajaRegistradora.new(inventario, CajaRegistradora.productos_del_dia()))
 	_estante.mostrar(0)
 
 
