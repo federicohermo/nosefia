@@ -1,4 +1,4 @@
-[gd_scene load_steps=16 format=3]
+[gd_scene load_steps=19 format=3]
 
 [ext_resource type="PackedScene" path="res://src/escenas/jugador.tscn" id="1_jugador"]
 [ext_resource type="PackedScene" path="res://src/ui/hud.tscn" id="2_hud"]
@@ -13,6 +13,9 @@
 [ext_resource type="PackedScene" path="res://src/escenas/objetos/caja_de_productos.tscn" id="11_caja_de_productos"]
 [ext_resource type="Script" path="res://src/sistemas/tareas/repositor.gd" id="12_repositor"]
 [ext_resource type="Script" path="res://src/sistemas/tareas/carga_de_la_caja.gd" id="13_carga"]
+[ext_resource type="Script" path="res://src/sistemas/tareas/ventanilla.gd" id="14_atenciones"]
+[ext_resource type="PackedScene" path="res://src/escenas/puestos/ventanilla.tscn" id="15_ventanilla"]
+[ext_resource type="PackedScene" path="res://src/ui/diegetica/panel_de_la_ventanilla.tscn" id="16_panel"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_cielo"]
 
@@ -24,7 +27,7 @@ background_mode = 2
 sky = SubResource("Sky_cielo")
 tonemap_mode = 2
 
-[node name="Almacen" type="Node3D" node_paths=PackedStringArray("_hud", "_reloj", "_ciclo", "_pantalla", "_reloj_de_pared", "_repositor", "_carga", "_estante", "_cajas_de_productos", "_caja_de_traslado", "_jugador")]
+[node name="Almacen" type="Node3D" node_paths=PackedStringArray("_hud", "_reloj", "_ciclo", "_pantalla", "_reloj_de_pared", "_repositor", "_carga", "_estante", "_cajas_de_productos", "_caja_de_traslado", "_jugador", "_atenciones")]
 script = ExtResource("4_almacen")
 _hud = NodePath("Hud")
 _reloj = NodePath("RelojDelTurno")
@@ -37,6 +40,7 @@ _estante = NodePath("Estante")
 _cajas_de_productos = [NodePath("CajaDeYerba"), NodePath("CajaDeFideos"), NodePath("CajaDeGaseosa"), NodePath("CajaDeGalletitas"), NodePath("CajaDeArroz"), NodePath("CajaDeJabon")]
 _caja_de_traslado = NodePath("CajaDeTraslado")
 _jugador = NodePath("Jugador")
+_atenciones = NodePath("Atenciones")
 
 [node name="Entorno" type="WorldEnvironment" parent="."]
 environment = SubResource("Environment_almacen")
@@ -55,6 +59,13 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.4, 7.9)
 
 [node name="CajaDeTraslado" parent="." instance=ExtResource("9_caja_de_traslado")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.6, 0.05, 2.4)
+
+[node name="Ventanilla" parent="." instance=ExtResource("15_ventanilla") node_paths=PackedStringArray("jugador", "reloj", "atenciones", "panel")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.35, 1.04, 7.974)
+jugador = NodePath("../Jugador")
+reloj = NodePath("../RelojDelTurno")
+atenciones = NodePath("../Atenciones")
+panel = NodePath("../PanelDeLaVentanilla")
 
 [node name="Estante" parent="." instance=ExtResource("10_estante")]
 transform = Transform3D(0, 0, -1, 0, 1, 0, 1, 0, 0, -6.2, 0, 0)
@@ -100,6 +111,12 @@ script = ExtResource("12_repositor")
 reloj = NodePath("../RelojDelTurno")
 carga = NodePath("../CargaDeLaCaja")
 
+[node name="Atenciones" type="Node" parent="." node_paths=PackedStringArray("reloj")]
+script = ExtResource("14_atenciones")
+reloj = NodePath("../RelojDelTurno")
+
 [node name="Hud" parent="." instance=ExtResource("2_hud")]
+
+[node name="PanelDeLaVentanilla" parent="." instance=ExtResource("16_panel")]
 
 [node name="PantallaDeCierre" parent="." instance=ExtResource("7_cierre")]

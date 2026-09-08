@@ -38,6 +38,7 @@ const Jugador := preload("res://src/escenas/jugador.gd")
 @export var _cajas_de_productos: Array[Node3D]
 @export var _caja_de_traslado: CajaDeTrasladoQueSeVe
 @export var _jugador: Jugador
+@export var _atenciones: Ventanilla
 
 ## La partida es de la escena y no del ciclo porque también la mira el HUD: el ciclo publica lo
 ## que pasó, y quien quiera un número lo pide acá.
@@ -96,7 +97,12 @@ func _ready() -> void:
 ## una jornada» es una regla del juego, y `Apertura` es donde tiene test.
 func _al_abrir_la_jornada(_jornada: int) -> void:
 	_hud.declarar_obligatorias(Apertura.cantidad_de_obligatorias())
-	_repositor.arrancar(Estante.new(Apertura.inventario_de_la_jornada(), Catalogo.todos()))
+	# **Un solo inventario para las dos obligatorias**: reponer lo llena y la ventanilla lo
+	# vacía. Construir uno por tarea daría dos stocks del mismo producto, y las dos ventanas
+	# dirían números distintos sin que nada se ponga en rojo.
+	var inventario := Apertura.inventario_de_la_jornada()
+	_repositor.arrancar(Estante.new(inventario, Catalogo.todos()))
+	_atenciones.arrancar(TareaDeAtender.new(Compradores.de_la_jornada(), inventario))
 	_estante.mostrar(0)
 
 
