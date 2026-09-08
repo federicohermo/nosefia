@@ -14,7 +14,7 @@ from pathlib import Path
 
 #: Lo que nunca se camina. `addons/` es la dependencia vendorizada —no la escribimos y no la
 #: podemos arreglar— y `.godot/` es la caché del editor.
-IGNORADOS = {".git", ".godot", "addons", "reportes", "__pycache__", ".venv"}
+IGNORADOS = {".git", ".godot", "addons", "reports", "__pycache__", ".venv"}
 
 
 def scripts_gd(raiz: Path, subdirectorio: str) -> dict[str, str]:

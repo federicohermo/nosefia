@@ -89,7 +89,7 @@ Corre así, y cada flag está por algo:
 $GODOT_BIN --path <repo> --headless -s -d
     --remote-debug tcp://127.0.0.1:0
     res://addons/gdUnit4/bin/GdUnitCmdTool.gd
-    -a test --continue --ignoreHeadlessMode -rd reportes
+    -a test --continue --ignoreHeadlessMode -rd reports
 ```
 
 - **`--remote-debug tcp://127.0.0.1:0`** — sin esto, un error de parseo en cualquier `.gd` abre
@@ -100,7 +100,7 @@ $GODOT_BIN --path <repo> --headless -s -d
   fallan siete cosas y cuáles vale más que saber cuál fue la primera.
 - **`--ignoreHeadlessMode`** — gdUnit4 se niega a correr headless salvo que se lo declare, y
   correr headless es todo el punto: es lo que hace que la CI y tu máquina hagan lo mismo.
-- **`-rd reportes`** — los reportes van a un directorio ignorado por git.
+- **`-rd reports`** — los reportes van a un directorio ignorado por git.
 
 ## Lo que esta verificación NO cubre
 

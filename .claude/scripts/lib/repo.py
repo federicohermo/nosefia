@@ -140,4 +140,4 @@ TESTS = "test"
 CAPAS_CON_TEST_OBLIGATORIO = ("src/dominio", "src/sistemas")
 
 #: El directorio donde gdUnit4 deja sus reportes. Está en el `.gitignore`.
-REPORTES = "reportes"
+REPORTES = "reports"

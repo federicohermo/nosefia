@@ -425,7 +425,7 @@ python .claude/skills/pr-review-batch/scripts/limpiar_worktrees.py --todos
 ```
 
 **No lo hagas a mano, y no uses `git worktree remove` solo: va a fallar.** Borra lo trackeado y el
-`.git`, pero `.godot/` y `reportes/` están en el `.gitignore`, así que el directorio no queda
+`.git`, pero `.godot/` y `reports/` están en el `.gitignore`, así que el directorio no queda
 vacío y el borrado final tira `Directory not empty`. `--force` no ayuda —no es un problema de
 cambios sin commitear— y le pasa a **todo worktree que haya corrido `verificar.py`**, o sea a
 todos: el nodo `tests` abre el proyecto en Godot y Godot escribe su caché de importación.

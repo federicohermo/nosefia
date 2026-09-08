@@ -62,7 +62,7 @@
 │   ├── mapa.json           El mapa spec↔issue. Lo ÚNICO del directorio que se commitea, con el README
 │   └── NNN-…/              CACHÉ, ignorada por git. Se trae con hidratar_specs.py
 │
-├── reportes/               Los reportes de gdUnit4. Ignorado
+├── reports/                Los reportes de gdUnit4. Ignorado
 │
 ├── .claude/
 │   ├── settings.json       El hook PreToolUse que corre el gate de spec
@@ -147,7 +147,7 @@ o cambiar una configuración del editor, y pretenderlo lo volvería molesto sin 
 |---|---|
 | `.godot/` | Caché del editor. Se regenera sola y cambia en cada apertura |
 | `specs/[0-9]*/` | Caché: la fuente es el issue. Ver [specs/README.md](../../specs/README.md) |
-| `reportes/` | Salida de gdUnit4, se regenera en cada corrida |
+| `reports/` | Salida de gdUnit4, se regenera en cada corrida |
 | `export/`, `build/` | Las builds se publican, no se commitean |
 | `.vercel/` | El vínculo al proyecto que escribe la CLI. Los dos ids que importan son secretos del repo |
 | `__pycache__/` | De las herramientas del harness |

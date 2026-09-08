@@ -12,7 +12,7 @@ copias no se separen lo verifica `test_copias_de_skills.py`, no la disciplina de
 
 ## Por qué no alcanza `git worktree remove`
 
-`.godot/` y `reportes/` están en el `.gitignore`, así que `remove` borra lo trackeado y el
+`.godot/` y `reports/` están en el `.gitignore`, así que `remove` borra lo trackeado y el
 `.git` pero **el directorio no queda vacío** y el borrado final tira `Directory not empty`.
 `--force` no ayuda: no es un problema de cambios sin commitear. Y le pasa a **todo worktree que
 haya corrido `verificar.py`**, o sea a todos — el nodo `tests` levanta Godot headless, y Godot
