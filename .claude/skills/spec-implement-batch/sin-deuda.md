@@ -175,6 +175,8 @@ las dos en la misma corrida:
 | un `[P]` que resultó falso | `spec-create` — el orden obligado declaró paralelo algo que comparte archivo |
 | dos specs que se pisan la misma escena | `spec-revise-batch` — la matriz de cruces no marcó el `.tscn` |
 | una medición que el spec supuso en vez de correr | `spec-create` — el research salió sin número |
+| una ruta de `src/` en una subcarpeta que `CARPETAS_POR_CAPA` no declara | `spec-create` — la ruta se escribió sin cruzarla contra `lib/repo.py`, y el gate de capas no la caza si el archivo es un `.tres` |
+| un spec del lote que **cita por identificador** a otro que no aterrizó | `spec-implement-batch` — el Paso 0 re-midió los conteos y no las dependencias que apuntan **afuera** del lote, que son las que `lote.py` no puede ver |
 | un nodo del harness en verde sin haber ejercido nada | `spec-implement` — la condición de terminado leyó el color del nodo y no el conteo de lo que corrió |
 | dos carriles que se pisan un archivo de scratch | `spec-implement-batch` — el prompt del carril no le dio un nombre propio |
 | un worktree que quedó abierto y el limpiador dijo que no | `spec-implement-batch` — el Paso 5 salía de `git worktree list`, que no ve al que git ya soltó |

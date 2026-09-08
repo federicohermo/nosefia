@@ -64,6 +64,23 @@ entera: es la forma más corta conocida de declarar verde una corrida rota.
 Vale también para gdUnit4: el nodo `tests` mira el exit code del proceso de Godot, no el texto
 del reporte.
 
+## En una pila de ramas, la base se declara
+
+`archivos_de_la_rama()` compara contra `GITHUB_BASE_REF` **y contra `staging` si no está**
+(`lib/rama.py`). En una rama suelta da lo mismo; en una pila de PR apilados **le atribuye a
+cada rama el trabajo de todas las de abajo**, y los gates de rutas y de criterios dan rojos
+que no son suyos — se ve como un spec que toca un archivo que su plan prohibió, cuando el
+que lo tocó fue el de abajo.
+
+Se corre declarando la base real del PR, que es lo que la Action hace sola:
+
+```bash
+GITHUB_BASE_REF=feature/033-la-caja-de-traslado-lleva-ocho-productos \n  python .claude/scripts/verificar.py
+```
+
+Medido en la ola 2 del lote del 2026-09-06: el único rojo del 008 era `reglas.gd`, que había
+tocado el 033 dos ramas más abajo.
+
 ## Sobre el nodo `tests`
 
 Corre así, y cada flag está por algo:
