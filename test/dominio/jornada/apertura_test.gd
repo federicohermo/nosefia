@@ -44,3 +44,40 @@ func test_el_turno_cuenta_contra_la_lista_que_recibe_y_no_contra_una_copia() -> 
 	var turno := Apertura.turno_de_la_jornada(obligatorias)
 	assert_bool(turno.completar(obligatorias[0])).is_true()
 	assert_int(turno.tareas_cumplidas()).is_equal(1)
+
+
+func test_el_inventario_de_la_jornada_trae_todo_el_catalogo() -> void:  # 008-AC9
+	# Se cuenta contra `Catalogo.todos()` y no contra un número escrito acá: agregar un producto
+	# es una fila en el catálogo, y un producto que no llega al inventario es uno que no se puede
+	# reponer ni vender, sin un solo error.
+	var inventario := Apertura.inventario_de_la_jornada()
+	for producto in Catalogo.todos():
+		(
+			assert_int(inventario.unidades(producto, Inventario.Ubicacion.DEPOSITO))
+			. override_failure_message("`%s` no llegó al depósito de la jornada" % producto.nombre)
+			. is_equal(ReglasDelEstante.UNIDADES_INICIALES_EN_DEPOSITO)
+		)
+
+
+func test_la_gondola_arranca_vacia_y_por_eso_reponer_es_una_tarea() -> void:  # 008-AC9
+	# Si la góndola arrancara con algo, la primera noche reponer estaría medio hecha y el jugador
+	# no tendría por qué caminar hasta el depósito.
+	var inventario := Apertura.inventario_de_la_jornada()
+	for producto in Catalogo.todos():
+		(
+			assert_int(inventario.unidades(producto, Inventario.Ubicacion.GONDOLA))
+			. override_failure_message("`%s` arrancó con góndola" % producto.nombre)
+			. is_equal(0)
+		)
+	assert_int(inventario.faltantes().size()).is_equal(Catalogo.todos().size())
+
+
+func test_cada_jornada_recibe_un_inventario_propio() -> void:  # 008-AC9
+	# Instancias distintas y no la misma: con una sola compartida, lo repuesto anoche seguiría
+	# en la góndola esta noche y reponer se cumpliría sola.
+	var una := Apertura.inventario_de_la_jornada()
+	var otra := Apertura.inventario_de_la_jornada()
+	var yerba := Catalogo.de(Producto.Id.YERBA)
+	una.mover(yerba, Inventario.Ubicacion.DEPOSITO, Inventario.Ubicacion.GONDOLA, 1)
+	assert_int(una.unidades(yerba, Inventario.Ubicacion.GONDOLA)).is_equal(1)
+	assert_int(otra.unidades(yerba, Inventario.Ubicacion.GONDOLA)).is_equal(0)
