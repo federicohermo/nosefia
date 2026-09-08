@@ -22,6 +22,7 @@ const RelojDeParedDelLocal := preload("res://src/escenas/puestos/reloj_de_pared.
 const EstanteDelLocal := preload("res://src/escenas/puestos/estante.gd")
 const CajaDeProductosDelDeposito := preload("res://src/escenas/objetos/caja_de_productos.gd")
 const CajaDeTrasladoQueSeVe := preload("res://src/escenas/objetos/caja_de_traslado.gd")
+const LimpiezaDelLocal := preload("res://src/escenas/puestos/limpieza_del_almacen.gd")
 
 ## El jugador tampoco declara un `class_name` —es cáscara, como este archivo—, así que el
 ## `@export` de abajo no lo puede nombrar sin traerlo por `preload`.
@@ -40,6 +41,8 @@ const Jugador := preload("res://src/escenas/jugador.gd")
 @export var _jugador: Jugador
 @export var _atenciones: Ventanilla
 @export var _computadora: ComputadoraDeEscritorio
+@export var _limpiador: Limpiador
+@export var _limpieza: LimpiezaDelLocal
 
 ## La partida es de la escena y no del ciclo porque también la mira el HUD: el ciclo publica lo
 ## que pasó, y quien quiera un número lo pide acá.
@@ -106,6 +109,10 @@ func _al_abrir_la_jornada(_jornada: int) -> void:
 	_repositor.arrancar(Estante.new(inventario, Catalogo.todos()))
 	_atenciones.arrancar(TareaDeAtender.new(Compradores.de_la_jornada(), inventario))
 	_computadora.arrancar(CajaRegistradora.new(inventario, CajaRegistradora.productos_del_dia()))
+	# El piso se rehace cada noche: guardar el estado entre jornadas está fuera de alcance, y una
+	# sola instancia dejaría el local limpio de anoche y la obligatoria cumplida sola.
+	_limpiador.arrancar(PisoDelLocal.de_la_jornada())
+	_limpieza.repintar()
 	_estante.mostrar(0)
 
 
