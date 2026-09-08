@@ -1,7 +1,8 @@
-[gd_scene load_steps=10 format=3]
+[gd_scene load_steps=11 format=3]
 
 [ext_resource type="PackedScene" path="res://src/escenas/jugador.tscn" id="1_jugador"]
 [ext_resource type="PackedScene" path="res://src/ui/hud.tscn" id="2_hud"]
+[ext_resource type="PackedScene" path="res://src/ui/interrupciones/pantalla_de_cierre.tscn" id="7_cierre"]
 [ext_resource type="Script" path="res://src/sistemas/marco/reloj_del_turno.gd" id="3_reloj"]
 [ext_resource type="Script" path="res://src/escenas/almacen.gd" id="4_almacen"]
 [ext_resource type="Script" path="res://src/sistemas/marco/ciclo_de_jornadas.gd" id="6_ciclo"]
@@ -17,11 +18,13 @@ background_mode = 2
 sky = SubResource("Sky_cielo")
 tonemap_mode = 2
 
-[node name="Almacen" type="Node3D" node_paths=PackedStringArray("_hud", "_reloj", "_ciclo")]
+[node name="Almacen" type="Node3D" node_paths=PackedStringArray("_hud", "_reloj", "_ciclo", "_pantalla", "_jugador")]
 script = ExtResource("4_almacen")
 _hud = NodePath("Hud")
 _reloj = NodePath("RelojDelTurno")
 _ciclo = NodePath("CicloDeJornadas")
+_pantalla = NodePath("PantallaDeCierre")
+_jugador = NodePath("Jugador")
 
 [node name="Entorno" type="WorldEnvironment" parent="."]
 environment = SubResource("Environment_almacen")
@@ -45,3 +48,5 @@ script = ExtResource("3_reloj")
 script = ExtResource("6_ciclo")
 
 [node name="Hud" parent="." instance=ExtResource("2_hud")]
+
+[node name="PantallaDeCierre" parent="." instance=ExtResource("7_cierre")]

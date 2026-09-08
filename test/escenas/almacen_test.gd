@@ -14,11 +14,13 @@
 ## queda estable. **Si algún día hace falta entrarla, es una decisión que se toma a propósito y
 ## se escribe acá.**
 ##
-## **Y hizo falta, en dos casos y sólo en ésos** (spec 028). Los dos necesitan un espacio físico
-## contra el que tirar un rayo, y sin árbol no hay `World3D`. El del hueco de la ventanilla entra
-## **sólo el subárbol de la estructura**, que no tiene un script colgando; el del jugador entra la
-## escena entera, porque lo que mide es que la física del `CharacterBody3D` lo deje parado. El
-## resto sigue instanciando y nada más.
+## **Y hizo falta, en tres casos y sólo en ésos** (specs 028 y 017). Los dos del 028 necesitan un
+## espacio físico contra el que tirar un rayo, y sin árbol no hay `World3D`: el del hueco de la
+## ventanilla entra **sólo el subárbol de la estructura**, que no tiene un script colgando, y el
+## del jugador entra la escena entera, porque lo que mide es que la física del `CharacterBody3D`
+## lo deje parado. El del 017 la entra entera también, y por un motivo distinto: el lazo del
+## cierre vive entero en señales conectadas, y leído como texto no dice si funciona. El resto
+## sigue instanciando y nada más.
 extends GdUnitTestSuite
 
 const ESCENA_DEL_ALMACEN := "res://src/escenas/almacen.tscn"
@@ -48,6 +50,14 @@ const DISTANCIA_DE_AFUERA := 20.0
 ## antepecho está. El hueco medido va de 1,04 a 2,84 m, así que los dos caen bien adentro.
 const SOBRE_EL_ANTEPECHO := 0.4
 const BAJO_EL_ANTEPECHO := 0.3
+
+## Segundos **reales** que agotan un turno entero de una sola llamada a `_process()`. Sale de
+## las dos constantes y no de un número escrito: el turno se mide en segundos de ficción y el
+## reloj recibe los del jugador, así que rebalancear cualquiera de los dos no deja este caso
+## cerrando la noche a medias.
+const SEGUNDOS_REALES_DE_UN_TURNO := (
+	Reglas.DURACION_DEL_TURNO / Ritmo.SEGUNDOS_DE_TURNO_POR_SEGUNDO_REAL
+)
 
 ## Cuadros de física antes de mirar al jugador. Arranca en el aire y cae; 30 a 60 Hz son medio
 ## segundo, de sobra para medio metro.
@@ -228,10 +238,10 @@ func test_la_regla_del_hueco_rechaza_la_posicion_que_tenia_en_el_blockout() -> v
 
 
 func test_el_jugador_arranca_adentro_del_almacen_y_apoyado_en_el_piso() -> void:
-	# **Éste es el único caso de la suite que entra `almacen.tscn` entera al árbol, y es a
-	# propósito**: la única forma de saber que el escenario es caminable es correr la física del
+	# **Éste es uno de los dos casos de la suite que entran `almacen.tscn` entera al árbol, y es
+	# a propósito**: la única forma de saber que el escenario es caminable es correr la física del
 	# `CharacterBody3D`, y para eso hace falta un árbol. El precio es que corren los `_ready()` de
-	# la escena —el reloj arranca, el HUD se pinta—, y se paga en un solo caso.
+	# la escena —el reloj arranca, el HUD se pinta—, y se paga sólo donde hace falta.
 	#
 	# Lo que NO afirma es que el arranque sea el bueno para empezar el turno: afirma que es válido.
 	# Elegir dónde empieza la jornada es diseño.
@@ -338,3 +348,71 @@ func test_los_tres_cableados_de_la_raiz_llegan_asignados() -> void:
 			)
 			. is_not_null()
 		)
+
+
+func test_el_cableado_arma_el_parte_una_sola_vez_y_no_decide() -> void:  # 017-AC12
+	# Dos partes por jornada sería la placa pintada dos veces con dos objetos distintos, y la
+	# segunda tapando a la primera. Y una condición acá adentro sería una regla del juego escrita
+	# donde ningún gate la mira.
+	var texto := FileAccess.get_file_as_string(SCRIPT_DEL_ALMACEN)
+	(
+		assert_int(texto.count("ParteDeCierre.new("))
+		. override_failure_message(
+			"`almacen.gd` arma %d partes por jornada" % texto.count("ParteDeCierre.new(")
+		)
+		. is_equal(1)
+	)
+	var condicion := RegEx.create_from_string("\\b(if|elif|match)\\b")
+	for linea in texto.split("\n"):
+		var codigo: String = linea.split("#")[0]
+		(
+			assert_array(condicion.search_all(codigo))
+			. override_failure_message("`almacen.gd` decide en `%s`" % linea.strip_edges())
+			. is_empty()
+		)
+
+
+func test_la_escena_instancia_la_pantalla_de_cierre() -> void:  # 017-AC12
+	var almacen := _almacen()
+	assert_bool(almacen.has_node("PantallaDeCierre")).is_true()
+	assert_object(almacen.get_node("PantallaDeCierre")).is_instanceof(PantallaDeCierre)
+
+
+func test_despachar_la_placa_abre_la_noche_siguiente_en_cero() -> void:  # 017-AC12
+	# **El segundo caso de la suite que entra `almacen.tscn` entera al árbol.** El lazo que este
+	# spec cierra —la noche termina, la placa aparece, el jugador la despacha y la siguiente
+	# abre— vive entero en señales conectadas: leído como texto no dice si funciona, y es lo
+	# único que vuelve alcanzable la jornada 2 jugando.
+	var almacen: Node3D = auto_free(load(ESCENA_DEL_ALMACEN).instantiate())
+	add_child(almacen)
+	await get_tree().process_frame
+	var reloj: RelojDelTurno = almacen.get_node("RelojDelTurno")
+	var ciclo: CicloDeJornadas = almacen.get_node("CicloDeJornadas")
+	var pantalla: PantallaDeCierre = almacen.get_node("PantallaDeCierre")
+	var tareas: Label = almacen.get_node("Hud/Tareas")
+
+	# Una obligatoria hecha antes de cerrar: con cero, el marcador de la noche 2 y el de la 1
+	# dirían lo mismo y el caso pasaría sin distinguir nada.
+	assert_bool(reloj.completar(reloj.obligatoria(Tarea.Tipo.CAJA))).is_true()
+	reloj._process(SEGUNDOS_REALES_DE_UN_TURNO)
+	(
+		assert_bool(pantalla.visible)
+		. override_failure_message("la noche cerró y la placa no apareció")
+		. is_true()
+	)
+
+	var boton: Button = pantalla.get_node("Fondo/Panel/Continuar")
+	boton.pressed.emit()
+	assert_bool(pantalla.visible).is_false()
+	(
+		assert_int(ciclo.partida().jornada())
+		. override_failure_message("despachada la placa, la partida no pasó a la noche siguiente")
+		. is_equal(ReglasDeLaPartida.PRIMERA_JORNADA + 1)
+	)
+	(
+		assert_str(tareas.text)
+		. override_failure_message("el HUD arrastró el marcador de la noche anterior")
+		. is_equal(
+			Hud.TEXTO_DE_LAS_TAREAS % Marcador.tareas(0, Apertura.cantidad_de_obligatorias())
+		)
+	)
