@@ -10,6 +10,8 @@
 ## y arranca a leer el `RayCast3D`: cosas que en headless no significan nada.
 extends GdUnitTestSuite
 
+const ObjetoDelAlmacen := preload("res://src/dominio/almacen/objeto_del_almacen.gd")
+const ReglasDeLosObjetos := preload("res://src/dominio/almacen/reglas_de_los_objetos.gd")
 const ReglasDelJugador := preload("res://src/dominio/jugador/reglas_del_jugador.gd")
 const ESCENA_DEL_JUGADOR := "res://src/escenas/jugador.tscn"
 
@@ -104,3 +106,73 @@ func test_suspender_con_algo_enfocado_avisa_que_se_perdio_el_objetivo() -> void:
 	jugador._control.observar(26558334344, 2.0, true)
 	jugador.suspender()
 	assert_bool(aviso_recibido[0]).is_true()
+
+
+func test_los_dos_sistemas_del_006_llegan_armados_al_instanciar_la_escena() -> void:  # 006-AC11
+	# Entran por `@export` y no por `@onready`: un `@onready` se resuelve recién al entrar la
+	# escena al árbol, y entonces `id_en_la_mano()` se caería sobre un jugador instanciado —que
+	# es exactamente como lo instancia todo test de este archivo, y como lo pide el 014—.
+	var jugador := _jugador()
+	assert_object(jugador.agarre).is_not_null()
+	assert_object(jugador.examen).is_not_null()
+	assert_object(jugador.examen.agarre).is_same(jugador.agarre)
+
+
+func test_el_jugador_dice_que_lleva_en_la_mano() -> void:  # 006-AC11
+	# La única puerta por la que otra escena pregunta qué se está llevando, y la pide el 014
+	# para saber si lo que hay en la mano es el trapeador: con otra cosa, la pasada no cuenta.
+	# Devuelve el `id` del dominio y nunca el nodo: un nodo cruzaría la dirección de las capas
+	# al revés.
+	var jugador := _jugador()
+	assert_str(String(jugador.id_en_la_mano())).is_empty()
+	var lata := ObjetoDelAlmacen.new()
+	lata.id = &"lata_de_tomate"
+	jugador.agarre.manos().agarrar(lata)
+	assert_str(String(jugador.id_en_la_mano())).is_equal("lata_de_tomate")
+
+
+func test_los_cuatro_puntos_estan_donde_el_dominio_los_declara() -> void:  # 006-AC12
+	# Un `.tscn` no puede leer una constante de GDScript, así que las distancias están escritas
+	# a mano en la escena y esto es lo único que impide que se separen del dominio en silencio.
+	# El punto de carga va abajo a la derecha —donde queda una mano que lleva algo— y el de
+	# respaldo a los pies, que es adonde cae lo que se suelta cuando adelante hay una pared.
+	var jugador := _jugador()
+	var puntos := {
+		"Camara/PuntoDeExamen": ReglasDeLosObjetos.DISTANCIA_DE_EXAMEN,
+		"Camara/PuntoDeCarga": ReglasDeLosObjetos.DISTANCIA_DE_CARGA,
+		"Camara/PuntoDeSoltado": ReglasDeLosObjetos.DISTANCIA_DE_SOLTADO,
+	}
+	for ruta in puntos:
+		(
+			assert_bool(jugador.has_node(ruta))
+			. override_failure_message("falta el nodo %s en jugador.tscn" % ruta)
+			. is_true()
+		)
+		var punto: Node3D = jugador.get_node(ruta)
+		assert_float(punto.position.length()).is_equal_approx(puntos[ruta], 0.01)
+	assert_bool(jugador.has_node("PuntoDeRespaldo")).is_true()
+	var respaldo: Node3D = jugador.get_node("PuntoDeRespaldo")
+	assert_float(respaldo.position.y).is_less(ReglasDelJugador.ALTURA_DE_LA_CAMARA)
+
+
+func test_el_punto_de_carga_queda_abajo_y_a_la_derecha() -> void:  # 006-AC12
+	# Centrado taparía la mitad de la pantalla justo cuando el jugador necesita ver dónde
+	# reponer lo que lleva, y arriba flotaría a la altura de la cara.
+	var carga: Node3D = _jugador().get_node("Camara/PuntoDeCarga")
+	assert_float(carga.position.x).is_greater(0.0)
+	assert_float(carga.position.y).is_less(0.0)
+	assert_float(carga.position.z).is_less(0.0)
+
+
+func test_los_dos_sistemas_llegan_con_sus_puntos_cableados() -> void:  # 006-AC12
+	# Que los nodos existan no alcanza: lo que se rompe es la REFERENCIA. Un `node_paths` que
+	# falta deja el `@export` en `null` y la escena carga sin un solo error —medido: borrar las
+	# dos líneas del `.tscn` deja los 36 casos de `test/escenas/` en verde—, mientras el clic
+	# contesta `false` y la E no arranca nada. El síntoma no nombra al `.tscn` que lo causó.
+	var jugador := _jugador()
+	var agarre: Node = jugador.agarre
+	assert_object(agarre.punto_de_carga).is_same(jugador.get_node("Camara/PuntoDeCarga"))
+	assert_object(agarre.punto_de_soltado).is_same(jugador.get_node("Camara/PuntoDeSoltado"))
+	assert_object(agarre.punto_de_respaldo).is_same(jugador.get_node("PuntoDeRespaldo"))
+	var examen: Node = jugador.examen
+	assert_object(examen.punto_de_examen).is_same(jugador.get_node("Camara/PuntoDeExamen"))
