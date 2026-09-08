@@ -23,6 +23,7 @@ const EstanteDelLocal := preload("res://src/escenas/puestos/estante.gd")
 const CajaDeProductosDelDeposito := preload("res://src/escenas/objetos/caja_de_productos.gd")
 const CajaDeTrasladoQueSeVe := preload("res://src/escenas/objetos/caja_de_traslado.gd")
 const LimpiezaDelLocal := preload("res://src/escenas/puestos/limpieza_del_almacen.gd")
+const AudioDelLocal := preload("res://src/escenas/puestos/audio_del_almacen.gd")
 
 ## El jugador tampoco declara un `class_name` —es cáscara, como este archivo—, así que el
 ## `@export` de abajo no lo puede nombrar sin traerlo por `preload`.
@@ -44,6 +45,12 @@ const Jugador := preload("res://src/escenas/jugador.gd")
 @export var _limpiador: Limpiador
 @export var _limpieza: LimpiezaDelLocal
 @export var _recolector: RecolectorDeBasura
+@export var _audio: AudioDelLocal
+
+## El agarre vive adentro de `jugador.tscn`, y es la única fuente de sonidos que no cuelga de
+## esta raíz. Se la nombra acá para que sus tres señales no queden sin fuente: el enlazador
+## conecta lo que le pasan, no sale a recorrer el árbol.
+@export var _agarre: Agarre
 @export var _bolsas: Array[Node3D]
 
 ## La partida es de la escena y no del ciclo porque también la mira el HUD: el ciclo publica lo
@@ -76,6 +83,25 @@ func _ready() -> void:
 	# La placa es quien abre la noche siguiente, y por eso el ciclo no reabre solo: entre una
 	# jornada y la otra hay algo que leer.
 	_pantalla.cierre_despachado.connect(_al_despachar_la_placa)
+	# El audio se ata **por nombre de señal** y no nombrando a nadie: la lista de fuentes se le
+	# pasa entera y el enlazador conecta las que existan. Una señal que todavía no está deja su
+	# fila declarada sin fuente en vez de romper algo.
+	(
+		_audio
+		. enlazar(
+			[
+				_reloj,
+				_ciclo,
+				_repositor,
+				_carga,
+				_atenciones,
+				_computadora,
+				_limpiador,
+				_recolector,
+				_agarre,
+			]
+		)
+	)
 	# Reponer, de punta a punta: la caja del depósito despacha una unidad a la de traslado, el
 	# estante la pide, y el repositor la mueve. Los dos gestos entran por el mismo clic del 006
 	# y ninguno de los dos scripts de escena sabe qué pasa del otro lado.
@@ -121,6 +147,7 @@ func _al_abrir_la_jornada(_jornada: int) -> void:
 	# decidirlo acá sería una regla del juego escrita donde ningún gate la mira.
 	for bolsa: ObjetoAgarrable in _bolsas:
 		bolsa.volver_a_su_lugar()
+	_audio.arrancar_el_ambiente()
 	_limpieza.repintar()
 	_estante.mostrar(0)
 
