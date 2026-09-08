@@ -1,3 +1,11 @@
+# gdlint:ignore=max-public-methods
+#
+# **Esta suite es donde converge la pila entera**: casi todas las ramas apiladas le agregan
+# casos al mismo archivo, y la unión cruzó el techo de 20 al mergear el 032 en el 033 —21
+# públicos, medido—. El techo existe para cazar god-objects en `src/`, y una suite no es uno:
+# los casos no comparten estado y cada uno se lee solo. Partirla es la salida de verdad, pero
+# no desde acá: cinco ramas de la pila todavía le agregan casos, y partirla ahora las hace
+# conflictar a las cinco. La directiva va en la línea 1 porque el chequeo se reporta ahí.
 ## El cableado del almacén: qué instancia, qué anclajes ofrece y que nada suyo cuelga de otra cosa.
 ##
 ## No dice «se ve bien»: dice que los anclajes que los specs 008, 009 y 013 van a buscar
@@ -465,6 +473,25 @@ func test_el_reloj_de_pared_cae_adentro_del_edificio() -> void:  # 032-AC7
 		assert_bool(caja.has_point(reloj.global_position))
 		. override_failure_message(
 			"el reloj quedó en %s, afuera del edificio %s" % [reloj.global_position, caja]
+		)
+		. is_true()
+	)
+
+
+func test_la_caja_de_traslado_entra_instanciada_y_adentro_del_edificio() -> void:  # 033-AC10
+	# Una caja colocada afuera de la cáscara se vería flotando en el vacío y ningún test de
+	# cableado lo diría: la escena carga igual y el nodo está.
+	var almacen: Node3D = auto_free(load(ESCENA_DEL_ALMACEN).instantiate())
+	add_child(almacen)
+	await get_tree().process_frame
+	assert_bool(almacen.has_node("CajaDeTraslado")).is_true()
+	var cascara: MeshInstance3D = almacen.get_node("Estructura/" + CASCARA_DEL_EDIFICIO)
+	var edificio: AABB = cascara.global_transform * cascara.get_aabb()
+	var caja: Node3D = almacen.get_node("CajaDeTraslado")
+	(
+		assert_bool(edificio.has_point(caja.global_position))
+		. override_failure_message(
+			"la caja quedó en %s, afuera del edificio %s" % [caja.global_position, edificio]
 		)
 		. is_true()
 	)

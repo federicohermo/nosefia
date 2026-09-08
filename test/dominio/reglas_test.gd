@@ -89,6 +89,13 @@ func test_al_cuarto_apercibimiento_lo_echan() -> void:
 	assert_int(Reglas.APERCIBIMIENTOS_HASTA_EL_DESPIDO).is_equal(4)
 
 
+func test_la_caja_de_traslado_lleva_mas_de_un_producto() -> void:  # 033-AC1
+	# Con un solo casillero la caja no cambia nada: reponer seguiría siendo un viaje por unidad
+	# y no habría nada que elegir. Todo el spec 033 se apoya en que cargarla sea una decisión, y
+	# sin esta aserción el cupo podría bajar a uno con los diez criterios en verde.
+	assert_int(Reglas.CASILLEROS_DE_LA_CAJA_DE_TRASLADO).is_greater(1)
+
+
 func test_el_reloj_de_pared_se_rompe_adentro_de_la_partida() -> void:  # 032-AC1
 	# Una jornada posterior a la última dejaría la regla escrita y muerta: el reloj no se
 	# rompería nunca jugando, y los criterios del 032 seguirían en verde igual. Es la misma
