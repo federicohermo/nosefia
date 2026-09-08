@@ -23,6 +23,14 @@ extends GdUnitTestSuite
 
 const ESCENA_DEL_ALMACEN := "res://src/escenas/almacen.tscn"
 
+## El cableado se lee como texto en un solo caso, el que afirma lo que **ya no** está: una
+## ausencia no se puede instanciar.
+const SCRIPT_DEL_ALMACEN := "res://src/escenas/almacen.gd"
+
+## Los tres `@export` que la raíz declara. Se listan acá y no adentro del caso porque son el
+## contrato del cableado: agregar uno sin asignarlo en la escena tiene que dar rojo.
+const CABLEADOS_DE_LA_RAIZ := ["_hud", "_reloj", "_ciclo"]
+
 ## La malla que trae la cáscara del edificio. Los rayos de acá miran sólo contra ella.
 const CASCARA_DEL_EDIFICIO := "almacen"
 
@@ -283,3 +291,50 @@ func test_la_regla_de_cableado_sabe_ver_un_nodo_colgado_de_otro() -> void:
 	assert_array(violaciones).has_size(1)
 	assert_str(violaciones[0]).contains("Mancha1")
 	assert_str(violaciones[0]).contains("Limpieza")
+
+
+func test_el_cableado_dejo_de_armar_el_turno_y_de_llevar_el_puntaje() -> void:  # 016-AC12
+	# Las dos cosas se fueron a `Partida`, y mientras siguieran acá la regla del despido no se
+	# podía alcanzar jugando: el puntaje moría con la escena. El caso mira el texto del archivo
+	# porque es la única forma de afirmar una ausencia.
+	var texto := FileAccess.get_file_as_string(SCRIPT_DEL_ALMACEN)
+	assert_str(texto).not_contains("Legajo")
+	assert_str(texto).not_contains("Turno.new(")
+	(
+		assert_int(texto.count("Partida.nueva()"))
+		. override_failure_message(
+			(
+				"`almacen.gd` arma %d partidas: con dos, el HUD pinta una y el ciclo corre la otra"
+				% texto.count("Partida.nueva()")
+			)
+		)
+		. is_equal(1)
+	)
+
+
+func test_la_escena_trae_el_ciclo_de_jornadas_colgando_de_la_raiz() -> void:  # 016-AC12
+	# Sin el nodo, el `@export` del cableado llega nulo y el juego muere en el primer cuadro con
+	# un error que no nombra a `almacen.tscn`.
+	var almacen := _almacen()
+	assert_bool(almacen.has_node("CicloDeJornadas")).is_true()
+	assert_object(almacen.get_node("CicloDeJornadas")).is_instanceof(CicloDeJornadas)
+
+
+func test_los_tres_cableados_de_la_raiz_llegan_asignados() -> void:
+	# **Un `@export` sin asignar en el `.tscn` deja la escena cargando sin un solo error**, los
+	# seis nodos de `verificar.py` en verde, y el juego muerto en el primer cuadro con un
+	# `Nonexistent function ... in base 'Nil'` que no nombra ni a `almacen.tscn` ni al export que
+	# falta. El caso de arriba mira que el nodo exista; éste, que el cableado lo alcance — que
+	# son dos cosas distintas: el nodo puede estar y el `node_paths` de la raíz no nombrarlo.
+	var almacen := _almacen()
+	for cableado: String in CABLEADOS_DE_LA_RAIZ:
+		(
+			assert_object(almacen.get(cableado))
+			. override_failure_message(
+				(
+					"`almacen.tscn` no le asignó `%s` a la raíz: el juego muere en el primer cuadro"
+					% cableado
+				)
+			)
+			. is_not_null()
+		)
