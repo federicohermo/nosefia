@@ -14,6 +14,34 @@ extends RigidBody3D
 ## escena y cambiarle este campo: no se toca código.
 @export var datos: ObjetoDelAlmacen
 
+## Dónde lo dejó la escena. Se guarda en `_ready()` y no en la declaración porque el `transform`
+## que importa es el que le puso el `.tscn`, y ése recién existe cuando el nodo entró al árbol.
+var _lugar_de_origen: Transform3D
+
+
+func _ready() -> void:
+	_lugar_de_origen = transform
+
+
+## Lo devuelve a donde empezó la noche.
+##
+## **El dominio se resetea y los nodos no**: al abrir la jornada el recolector vuelve a
+## `depositadas() == 0`, pero las bolsas siguen físicamente adentro del `Area3D` del fondo, así
+## que desde la jornada 2 sacar la basura no cuesta un paso — está hecha antes de empezar.
+##
+## Las velocidades van a cero además del `transform` porque un `RigidBody3D` teletransportado
+## conserva su impulso y se va solo del lugar al que lo acaban de mandar. El `freeze` alrededor
+## es lo que evita que el servidor de física pise la escritura en el mismo cuadro, y se restaura
+## al valor que tenía en vez de apagarse: el objeto puede estar congelado porque lo están
+## llevando, y despertarlo acá lo dejaría caer.
+func volver_a_su_lugar() -> void:
+	var estaba_congelado := freeze
+	freeze = true
+	transform = _lugar_de_origen
+	linear_velocity = Vector3.ZERO
+	angular_velocity = Vector3.ZERO
+	freeze = estaba_congelado
+
 
 ## El contrato de «con esto se puede interactuar» es este método más el grupo del `.tscn`, y no un
 ## tipo, porque ninguna de las capas que lo necesitan puede nombrar el tipo: `sistemas/` no puede

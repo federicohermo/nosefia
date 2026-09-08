@@ -15,7 +15,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2, 0.02, 1)
 zona = 1
 
 [node name="ManchaDelDeposito" parent="." instance=ExtResource("2_mancha")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.5, 0.02, -9)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.02, -5)
 zona = 2
 
 [node name="ManchaDeLaVentanilla" parent="." instance=ExtResource("2_mancha")]

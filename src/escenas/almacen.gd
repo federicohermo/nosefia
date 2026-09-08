@@ -43,6 +43,8 @@ const Jugador := preload("res://src/escenas/jugador.gd")
 @export var _computadora: ComputadoraDeEscritorio
 @export var _limpiador: Limpiador
 @export var _limpieza: LimpiezaDelLocal
+@export var _recolector: RecolectorDeBasura
+@export var _bolsas: Array[Node3D]
 
 ## La partida es de la escena y no del ciclo porque también la mira el HUD: el ciclo publica lo
 ## que pasó, y quien quiera un número lo pide acá.
@@ -112,6 +114,13 @@ func _al_abrir_la_jornada(_jornada: int) -> void:
 	# El piso se rehace cada noche: guardar el estado entre jornadas está fuera de alcance, y una
 	# sola instancia dejaría el local limpio de anoche y la obligatoria cumplida sola.
 	_limpiador.arrancar(PisoDelLocal.de_la_jornada())
+	_recolector.arrancar(TareaDeLaBasura.de_la_jornada())
+	# El dominio se resetea y los nodos no: sin esto las tres bolsas siguen adentro del `Area3D`
+	# del fondo, y desde la jornada 2 la obligatoria está hecha antes de que el jugador dé un
+	# paso. Van todas, siempre, sin preguntar dónde quedaron: dónde está cada una es del motor y
+	# decidirlo acá sería una regla del juego escrita donde ningún gate la mira.
+	for bolsa: ObjetoAgarrable in _bolsas:
+		bolsa.volver_a_su_lugar()
 	_limpieza.repintar()
 	_estante.mostrar(0)
 
