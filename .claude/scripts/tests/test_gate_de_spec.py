@@ -4,11 +4,10 @@ Se divide en dos: lo puro se importa y se ejerce directo, y el veredicto entero 
 lanzando el script como subproceso —que es como lo lanza Claude Code— con un payload por
 stdin.
 
-**Lo que NO se ejerce acá es la rama.** El veredicto depende de en qué rama está parado el
-repo cuando el test corre, y un test que cambia de rama para probarse rompería la sesión que
-lo corre. Lo que sí se ejerce es todo lo que decide ANTES de mirar la rama, que es donde
-estuvieron los dos bugs conocidos de este gate: el payload que no se entiende y la ruta de
-otro disco.
+**El veredicto ENTERO no se puede ejercer sobre la rama**: depende de en qué rama está parado
+el repo cuando el test corre, y un test que cambia de rama para probarse rompería la sesión
+que lo corre. Por eso la regla de la rama vive en `motivo_del_bloqueo()`, que es pura y recibe
+el nombre como argumento: ahí sí se ejerce entera, sin tocar el repo.
 """
 
 import json
@@ -194,6 +193,73 @@ class ElVeredicto(unittest.TestCase):
         )
         self.assertEqual(salida["permissionDecision"], "allow")
 
+
+class LaReglaDeLaRama(unittest.TestCase):
+    """Qué rama puede editar `src/`, ejercido sobre el NOMBRE y sin tocar el repo.
+
+    Vive en una función pura por eso: el veredicto de punta a punta no puede ejercer esto,
+    porque para probarlo habría que pararse en cada rama de verdad y un test que cambia de
+    rama rompe la sesión que lo corre.
+    """
+
+    def bloquea(self, rama: str) -> str:
+        motivo = gate_de_spec.motivo_del_bloqueo(rama, "src/dominio/turno.gd")
+        self.assertIsNotNone(motivo, f"`{rama}` tendría que bloquear y pasó")
+        return motivo
+
+    def pasa(self, rama: str) -> None:
+        motivo = gate_de_spec.motivo_del_bloqueo(rama, "src/dominio/turno.gd")
+        self.assertIsNone(motivo, f"`{rama}` tendría que pasar y bloqueó con: {motivo}")
+
+    def test_las_ramas_compartidas_hablan_de_donde_estas_parado(self):
+        # Y NO de renombrarlas: «`staging` no nombra un spec» se lee como una invitación a
+        # renombrar la rama de integración, que es lo peor que se puede hacer con ella.
+        for rama in ("main", "staging"):
+            self.assertIn("desde", self.bloquea(rama))
+
+    def test_los_tres_prefijos_que_llegan_al_producto(self):
+        self.pasa("feature/038-el-campo-de-interaccion-es-espacial")
+        self.pasa("bugfix/el-objeto-en-la-mano-empuja-al-jugador")
+        self.pasa("hotfix/la-build-de-la-entrega-no-abre")
+
+    def test_una_rama_que_no_toca_el_producto_no_puede_tocarlo(self):
+        # `harness/`, `docs/` y `ci/` son ramas legítimas del repo: lo que no son es ramas que
+        # editen `src/`. Una que lo intente está mal nombrada, y eso es lo que el gate dice.
+        for rama in ("harness/el-gate-mira-el-prefijo", "docs/una-guia", "ci/el-workflow"):
+            self.bloquea(rama)
+
+    def test_el_mensaje_nombra_los_tres_que_si_pueden(self):
+        # Bloquear sin decir cómo salir produce el reflejo de buscar cómo saltear el bloqueo.
+        motivo = self.bloquea("harness/el-gate-mira-el-prefijo")
+        for prefijo in ("feature/", "bugfix/", "hotfix/"):
+            self.assertIn(prefijo, motivo)
+
+    def test_una_rama_sin_prefijo_conocido_bloquea(self):
+        # `chore/` y `fix/` estan acá a propósito: son los dos nombres que el repo usó antes de
+        # cerrar el conjunto, y un conjunto cerrado que acepta al viejo no cerró nada.
+        for rama in ("arreglos", "mia", "chore/lo-que-sea", "fix/lo-que-sea", "feature-sin-barra"):
+            self.bloquea(rama)
+
+    def test_solo_feature_pide_el_numero_del_spec(self):
+        # De ahí lo sacan este gate y `derivar_mapa.py`. A `bugfix/` y `hotfix/` no se les pide
+        # porque pueden no salir de ningún spec, y exigirlo obligaría a inventar un número.
+        self.assertIn("NNN", self.bloquea("feature/el-campo-de-interaccion"))
+        self.pasa("bugfix/el-objeto-en-la-mano-empuja-al-jugador")
+        self.pasa("hotfix/la-build-de-la-entrega-no-abre")
+
+    def test_el_NNN_son_tres_digitos_y_no_los_que_haya(self):
+        self.assertIn("NNN", self.bloquea("feature/38-dos-digitos"))
+        self.assertIn("NNN", self.bloquea("feature/0038-cuatro-digitos"))
+
+    def test_un_bugfix_puede_nombrar_su_spec_igual(self):
+        # Puede salir de un spec o no. Si sale, el número va y `derivar_mapa.py` lo levanta.
+        self.pasa("bugfix/012-la-pureza-del-dominio")
+
+    def test_un_spec_todavia_no_publicado_no_frena_nada(self):
+        # El mapa dejó de ser condición: exigir la entrada obligaba a abrir el issue ANTES de
+        # escribir la primera línea, y eso frenaba el trabajo sin proteger nada que no proteja
+        # ya el nombre de la rama.
+        self.pasa("feature/999-un-spec-que-no-existe")
 
 class LaRaizQueManda(unittest.TestCase):
     """De qué árbol de git es el archivo que se va a escribir.

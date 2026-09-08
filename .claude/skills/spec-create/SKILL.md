@@ -60,7 +60,7 @@ arreglo toca `src/` o `docs/`?** —que son las dos rutas que el hook protege.
 
 | El arreglo… | Qué hacer | Qué cierra el issue |
 |---|---|---|
-| **no** las toca | rama `fix/` o `chore/` y seguí derecho: **no necesita spec** | `Closes #N` en el cuerpo del PR |
+| **no** las toca | rama `harness/`, `docs/` o `ci/` según qué toque, y seguí derecho: **no necesita spec** | `Closes #N` en el cuerpo del PR |
 | **sí** las toca | necesita spec, y su `spec.md` lleva `**Origen:** #N` en el encabezado | un `Closes` por **cada** issue saldado |
 
 **Esa línea no es decorativa**: `publicar_spec.py crear` la parsea y escribe `origen` en la

@@ -100,8 +100,8 @@ permisos y no como un problema de nombre.
 Y como el push del Paso 7 sale de esta misma rama, no hay ref local que reconciliar con la del PR:
 son la misma.
 
-**Si el PR no tiene spec** —una rama `fix/` o `chore/`, que este repo permite para lo que no toca
-rutas protegidas— nada cambia: se trabaja igual sobre su rama. Por construcción no hay nada que
+**Si el PR no tiene spec** —una rama `harness/`, `docs/` o `ci/`, que este repo usa para lo que no
+toca rutas protegidas— nada cambia: se trabaja igual sobre su rama. Por construcción no hay nada que
 arreglar en `src/` ni en `docs/`; si igual hiciera falta tocarlas, **eso ya es un hallazgo sobre
 el PR**: le falta el spec.
 

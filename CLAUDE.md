@@ -95,8 +95,9 @@ Verificadas por una herramienta:
   nombre que hace que no corra.** Las cuatro reglas cierran la misma cosa: verde sin ejercer
   nada.
 - **Formato, largo de línea (100), nombres y orden de declaraciones** (`gdformat`, `gdlint`).
-- **No se edita `src/` sin un spec detrás de la rama** (el hook de
-  `.claude/settings.json`).
+- **A `src/` lo tocan tres prefijos de rama y ninguno más** —`feature/<NNN>-<kebab>`, `bugfix/`
+  y `hotfix/`—, y a `feature/` el hook le exige el `NNN` del spec (`.claude/settings.json`). Lo
+  que no toca `src/` se nombra por lo que toca: `harness/`, `docs/`, `ci/`.
 - **Un skill es autocontenido: trae adentro todo lo que corre** (`test_copias_de_skills.py`).
   Ninguno alcanza `../otro-skill/`: uno que sale a buscar el archivo al de al lado deja de
   funcionar apenas viaja solo. El precio es la duplicación, y el gate la cobra: **una copia que

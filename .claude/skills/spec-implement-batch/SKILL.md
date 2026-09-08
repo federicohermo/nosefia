@@ -211,8 +211,8 @@ Cada agente recibe, literal:
   convenciones verificables con **quién verifica cada una**, y las trampas de este repo. Es el
   ahorro propio del batch — sin esto, N carriles lo re-derivan N veces desde frío.
 - **La rama se llama `feature/<NNN>-<kebab>` y eso no es decorativo.** `gate_de_spec.py` corre como
-  hook y **bloquea toda escritura a `src/` desde una rama que no matchee
-  `^feature/(\d{3})-` con ese `NNN` en `specs/mapa.json`**. El síntoma es un `Edit` denegado, que
+  hook y **sólo deja escribir en `src/` desde `feature/`, `bugfix/` y `hotfix/`, y a `feature/` le
+  exige el `NNN` en tres dígitos**. El síntoma es un `Edit` denegado, que
   se lee como un problema de permisos y no como uno de nombre. **Es la falla número uno de un
   carril**, y aparece recién en la primera edición, con el worktree ya abierto.
 - **Hidratar antes de leer nada**: `python .claude/scripts/hidratar_specs.py <NNN>`, por cada spec

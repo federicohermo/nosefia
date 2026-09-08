@@ -24,8 +24,10 @@ git checkout -b feature/<NNN>-<descripcion-kebab>     # de acá saca el número 
 python .claude/scripts/hidratar_specs.py <NNN>        # specs/ es caché: hace falta en CADA worktree
 ```
 
-**El nombre de la rama no es decorativo**: `feature/<NNN>-` es de donde el hook saca el número
-del spec, y una rama con otro nombre bloquea la primera edición de `src/`.
+**El nombre de la rama no es decorativo**: `feature/<NNN>-` es de donde el hook y
+`derivar_mapa.py` sacan el número del spec. A `src/` lo pueden tocar `feature/`, `bugfix/` y
+`hotfix/`, pero **a `feature/` el hook le exige el `NNN` en tres dígitos**: sin él, la primera
+edición se bloquea.
 
 Si el spec ya tiene rama, no la vuelvas a crear: puede haberla abierto otra sesión, y ahí lo
 que corresponde es un worktree propio sobre esa rama.
