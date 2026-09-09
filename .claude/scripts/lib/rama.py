@@ -46,14 +46,44 @@ def rama_actual() -> str | None:
 def spec_de_la_rama() -> str | None:
     """El `NNN` que nombra la rama, o `None`.
 
-    El patrón deja el prefijo abierto —`feature/`, pero también `fix/` o `chore/`— y vive en
-    `lib/specs.py` porque lo comparten el derivador del mapa y estos gates.
+    El patrón deja el prefijo abierto —`feature/`, pero también `bugfix/` o `hotfix/`— y vive
+    en `lib/specs.py` porque lo comparten el derivador del mapa y estos gates. Es más ancho
+    que el conjunto cerrado que `gate_de_spec.py` deja tocar `src/`, y a propósito: un spec
+    puede aterrizar por una rama con cualquier nombre, y perder ese merge en silencio sería
+    peor que leer de más.
     """
     rama = rama_actual()
     if rama is None:
         return None
     m = RAMA_DE_SPEC.match(rama)
     return m.group(1) if m else None
+
+
+def spec_publicado(numero: str) -> bool | None:
+    """Si el spec `numero` existe de verdad: hidratado en disco, o con fila en el mapa.
+
+    **Es el cruce que el hook dejó de hacer el 2026-09-08.** Hasta ahí `gate_de_spec.py`
+    exigía la fila del mapa en cada escritura a `src/`, o sea que obligaba a publicar el issue
+    antes de escribir la primera línea. Sacarlo de la edición está bien —cobra demasiado
+    temprano—; sacarlo del todo no, y era lo que quedaba: `archivo_del_spec` devuelve `None`
+    tanto para «no está publicado» como para «no lo pude leer», así que el gate de los
+    criterios se salteaba, y un salteo adentro del nodo `harness` no se imprime. Medido el
+    2026-09-08 con `GITHUB_HEAD_REF=feature/999-un-spec-que-no-existe`: `OK (skipped=2)`.
+
+    Por eso son dos funciones y no una: `None` acá es **«no se pudo leer el mapa»** y `False`
+    es **«el spec no existe»**, que son respuestas opuestas —un salteo declarado y un rojo— y
+    confundirlas apaga el gate en silencio, que es la dirección cara.
+
+    El disco primero, igual que `archivo_del_spec`: un spec recién escrito y todavía sin
+    publicar ya tiene su carpeta, y ahí la respuesta cierta es que existe.
+    """
+    if any(carpeta.is_file() for carpeta in SPECS.glob(f"{numero}-*/spec.md")):
+        return True
+    try:
+        mapa = leer_mapa((SPECS / "mapa.json").read_text(encoding="utf-8"))
+    except (OSError, ValueError):
+        return None
+    return numero in mapa
 
 
 def archivo_del_spec(numero: str, nombre: str) -> tuple[str, str] | None:

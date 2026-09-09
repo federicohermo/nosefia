@@ -256,10 +256,12 @@ class LaReglaDeLaRama(unittest.TestCase):
         self.pasa("bugfix/012-la-pureza-del-dominio")
 
     def test_un_spec_todavia_no_publicado_no_frena_nada(self):
-        # El mapa dejó de ser condición: exigir la entrada obligaba a abrir el issue ANTES de
-        # escribir la primera línea, y eso frenaba el trabajo sin proteger nada que no proteja
-        # ya el nombre de la rama.
+        # El mapa dejó de ser condición ACÁ: exigir la entrada obligaba a abrir el issue ANTES
+        # de escribir la primera línea. El cruce no se perdió, se mudó a
+        # `test_criterios_de_la_rama.py`, que lo cobra con el PR abierto y sin frenar la
+        # primera edición.
         self.pasa("feature/999-un-spec-que-no-existe")
+
 
 class LaRaizQueManda(unittest.TestCase):
     """De qué árbol de git es el archivo que se va a escribir.

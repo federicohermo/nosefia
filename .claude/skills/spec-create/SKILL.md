@@ -56,12 +56,12 @@ python .claude/scripts/deuda.py   # los issues abiertos que ningún spec reclama
 ```
 
 Si el pedido **es** uno de ésos, la pregunta siguiente decide el carril, y es una sola: **¿el
-arreglo toca `src/` o `docs/`?** —que son las dos rutas que el hook protege.
+arreglo toca `src/`?** —que es la ruta que el hook protege.
 
 | El arreglo… | Qué hacer | Qué cierra el issue |
 |---|---|---|
-| **no** las toca | rama `harness/`, `docs/` o `ci/` según qué toque, y seguí derecho: **no necesita spec** | `Closes #N` en el cuerpo del PR |
-| **sí** las toca | necesita spec, y su `spec.md` lleva `**Origen:** #N` en el encabezado | un `Closes` por **cada** issue saldado |
+| **no** la toca | rama `harness/`, `docs/` o `ci/` según qué toque, y seguí derecho: **no necesita spec** | `Closes #N` en el cuerpo del PR |
+| **sí** la toca | necesita spec, y su `spec.md` lleva `**Origen:** #N` en el encabezado | un `Closes` por **cada** issue saldado |
 
 **Esa línea no es decorativa**: `publicar_spec.py crear` la parsea y escribe `origen` en la
 fila de `specs/mapa.json`, y de ahí la lee el gate que pone en rojo un spec cerrado cuyo issue

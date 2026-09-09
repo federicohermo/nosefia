@@ -39,10 +39,15 @@ arriba: la regla que dice cómo EMPIEZA un cambio también tiene que ser ejecuta
 
 5. **Mira el NOMBRE de la rama y no `specs/mapa.json`.** Hasta el 2026-09-08 exigía que el
    `NNN` de la rama ya tuviera entrada en el mapa, o sea que para escribir la primera línea de
-   código había que haber abierto el issue de GitHub y commiteado el mapa a `staging`. Eso
-   frenaba el trabajo sin proteger nada que no proteja ya el nombre de la rama, y que el spec
-   exista de verdad lo cobran después `test_criterios_de_la_rama.py` y `derivar_mapa.py`. Un
-   gate que obliga a pedir permiso antes de empezar es un gate que se apaga.
+   código había que haber abierto el issue de GitHub y commiteado el mapa a `staging`. Un gate
+   que obliga a pedir permiso antes de empezar es un gate que se apaga.
+
+   **El cruce no desapareció: se mudó**, a `ElSpecDeLaRamaExiste` de
+   `tests/test_criterios_de_la_rama.py`, que corre en el nodo `harness` con el PR todavía
+   abierto. Ahí llega igual de a tiempo y no frena la primera edición. **El derivador no lo
+   cobra** —lo dice él mismo: un PR cuya rama nombra un `NNN` ausente del mapa «no agrega
+   nada»— así que sin ese test el cruce se caía del repo sin que nada lo reclamara: medido el
+   2026-09-08, una rama de un spec inexistente dejaba el gate en `OK (skipped=2)`.
 """
 
 import json

@@ -62,9 +62,14 @@ De ese nombre salen dos cosas:
 
 **Lo que el hook ya NO hace es cruzar el `NNN` contra `specs/mapa.json`.** Lo hizo hasta el
 2026-09-08, y el efecto era que para escribir la primera línea de código había que haber abierto
-el issue de GitHub y commiteado el mapa a `staging`. Eso frenaba el trabajo sin proteger nada que
-no proteja ya el nombre de la rama, y que el spec exista de verdad lo cobran después
-`test_criterios_de_la_rama.py` —sobre la rama, antes del merge— y el derivador.
+el issue de GitHub y commiteado el mapa a `staging`.
+
+**El cruce no se perdió: se mudó** a `test_criterios_de_la_rama.py`, que corre en el nodo
+`harness` de `verificar.py` y en la CI, con el PR todavía abierto. Ahí llega igual de a tiempo y
+no frena la primera edición: el spec se puede publicar **después** de empezar a escribir, pero no
+después de mergear. **El derivador no lo cobra** y no está para eso — un PR cuya rama nombra un
+`NNN` que el mapa no tiene no le agrega ninguna fila, a propósito: inventarla sería peor que la
+falta.
 
 Para el derivador el prefijo es abierto —`bugfix/012-…` cuenta igual— porque un spec puede
 aterrizar por una rama que no se llame `feature/`. Es más ancho a propósito, para no perder un
