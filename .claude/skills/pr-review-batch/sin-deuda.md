@@ -131,8 +131,8 @@ Un bloqueo se descarga así:
 
 1. **Reintentá por otro camino.** Si el bloqueo vino del hook, **mirá el nombre de tu rama antes
    que nada**: `gate_de_spec.py` exige `feature/<NNN>-` con ese `NNN` en `specs/mapa.json` para
-   escribir en `src/` o `docs/`. Es la causa número uno acá, y el síntoma —un `Edit` denegado— se
-   lee como un problema de permisos y no como uno de nombre.
+   escribir en `src/`. Es la causa número uno acá, y el síntoma —un `Edit` denegado— se lee como
+   un problema de permisos y no como uno de nombre.
 2. Si sigue bloqueado, **la corrida no cierra en verde**. El reporte arranca diciendo que falló,
    con `BLOQUEADO: <qué> — <quién lo bloqueó>` y el fix exacto en una línea copiable.
 3. **No se abre un issue para taparlo.** Un issue acá convierte un rojo en un pendiente, que es
