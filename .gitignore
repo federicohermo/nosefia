@@ -24,10 +24,10 @@
 specs/[0-9]*/
 
 # Los reportes de gdUnit4 se regeneran en cada corrida. `reports/` es el DEFAULT del runner
-# crudo --el que CLAUDE.md pide correr a mano para leer el `Executed test suites: (N/N)`-- y
-# tambien lo que `verificar.py` pasa por `-rd`: una sola ruta, para que las dos corridas caigan
-# en el mismo lado. Cuando eran dos, la corrida a mano dejaba un directorio sin trackear listo
-# para commitear por error.
+# crudo —el que CLAUDE.md pide correr a mano para leer el `Executed test suites: (N/N)`— y
+# también lo que `verificar.py` pasa por `-rd`: una sola ruta, para que las dos corridas caigan
+# en el mismo lado. Cuando eran dos carpetas había que acordarse de ignorar las dos, y la que
+# se olvidara dejaba un directorio sin trackear listo para commitear por error.
 /reports/
 
 # Python: las herramientas del harness viven en .claude/scripts/
