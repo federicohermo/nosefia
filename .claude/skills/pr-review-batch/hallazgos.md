@@ -189,8 +189,8 @@ nota al pie**. Un 🟡 archivado y un fix que no te dejaron aplicar se leen igua
 opuestos: del primero ya se decidió, del segundo no decidió nadie.
 
 1. **Reintentá por otro camino.** Y si el bloqueo vino del hook, **mirá el nombre de tu rama antes
-   que nada**: `gate_de_spec.py` exige `feature/<NNN>-` con el `NNN` en `specs/mapa.json` para
-   tocar `src/`. Es la causa número uno de un fix bloqueado acá.
+   que nada**: `gate_de_spec.py` sólo deja tocar `src/` desde `feature/<NNN>-<kebab>`, `bugfix/` o
+   `hotfix/`. Es la causa número uno de un fix bloqueado acá.
 2. Si sigue bloqueado, **la corrida no cierra en verde.** El reporte arranca diciéndolo, con
    `BLOQUEADO: <qué> — <quién lo bloqueó>` y el fix exacto en una línea copiable.
 3. **No lo tapes con un issue.** Eso convierte un rojo en un pendiente, que es la única operación

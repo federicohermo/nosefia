@@ -25,16 +25,20 @@ el test ejerza el criterio. Es un piso y hay que decirlo: el techo, que el test 
 cuando el criterio no se cumple, no lo ve ninguna herramienta. Es el mismo piso que todo lo que
 este repo verifica sin cobertura.
 
-## Los tres salteos, y por qué cada uno se declara
+## Los salteos, y por qué cada uno se declara
 
 Se saltea si la rama no nombra un spec, si no se puede leer el `spec.md` de ese spec —ni en
 disco ni por `gh`— y si no hay `specs/mapa.json`. Los tres son estados normales; el que no es
 normal es un gate que no pudo mirar y sale igual que uno que miró.
+
+**Y hay uno que dejó de ser salteo:** que el spec de la rama no exista. Eso no es «no lo pude
+leer», es una respuesta, y desde que `gate_de_spec.py` no cruza el `NNN` contra el mapa
+(2026-09-08) es lo único que lo cobra. Vive en `ElSpecDeLaRamaExiste`, arriba de todo.
 """
 
 import unittest
 
-from lib.rama import archivo_del_spec, rama_actual, spec_de_la_rama
+from lib.rama import archivo_del_spec, rama_actual, spec_de_la_rama, spec_publicado
 from lib.repo import RAIZ
 from lib.specs import acs_de, acs_sin_test
 
@@ -52,6 +56,45 @@ def textos_de_test() -> list[str]:
         for archivo in arbol.rglob("*")
         if archivo.is_file() and archivo.suffix in (".gd", ".py")
     ]
+
+
+class ElSpecDeLaRamaExiste(unittest.TestCase):
+    """La rama nombra un `NNN`, y ese spec tiene que existir.
+
+    **Es el cruce que `gate_de_spec.py` dejó de hacer el 2026-09-08**, corrido acá en vez de
+    en cada escritura. Sacarlo del hook está bien: cobraba antes de la primera línea de
+    código, o sea que obligaba a publicar el issue para poder empezar. Lo que no está bien es
+    que no lo cobre nadie, y era lo que pasaba: `archivo_del_spec` no distingue «no está
+    publicado» de «no lo pude leer», así que `CriteriosDeLaRama` se salteaba entero, y un
+    salteo de `unittest` no se imprime cuando el nodo `harness` sale verde. Medido el
+    2026-09-08 con `GITHUB_HEAD_REF` puesto en una rama de un spec inexistente:
+    `OK (skipped=2)`. El derivador tampoco lo cobra, y lo dice él mismo: un PR cuya rama
+    nombra un `NNN` ausente del mapa «no agrega nada» (`lib/specs.py`, `derivar_mapa`).
+
+    Acá llega a tiempo igual: el PR está abierto y el spec todavía se puede publicar.
+    """
+
+    def test_el_NNN_de_la_rama_tiene_spec(self):
+        numero = spec_de_la_rama()
+        if numero is None:
+            self.skipTest(
+                f"la rama `{rama_actual()}` no nombra un spec: este gate NO miró nada. "
+                "Corre sobre una rama `<prefijo>/<NNN>-<kebab>`."
+            )
+        publicado = spec_publicado(numero)
+        if publicado is None:
+            self.skipTest(
+                "no se pudo leer `specs/mapa.json`: este gate NO miró nada, y no puede decir "
+                f"si el spec {numero} existe."
+            )
+        self.assertTrue(
+            publicado,
+            f"la rama `{rama_actual()}` dice ser del spec {numero}, que no está hidratado ni "
+            f"tiene entrada en `specs/mapa.json`. O el spec no se publicó todavía —lo escribe "
+            f"el skill `spec-create`, y `publicar_spec.py crear`/`publicar` lo suben— o el "
+            f"número de la rama está mal. El hook ya no lo exige para editar `src/`, así que "
+            f"si no lo dijera acá no lo diría nadie, y el PR aterrizaría sin spec.",
+        )
 
 
 class CriteriosDeLaRama(unittest.TestCase):

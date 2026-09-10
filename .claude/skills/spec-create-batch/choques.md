@@ -45,10 +45,10 @@ tilde **se apaga entero**.
 
 - **Se detecta** con la tabla de `spec-create` —«¿esto necesita un spec?»—, aplicada **una vez
   por pedido y antes de repartir números**. La pregunta que decide el carril es una sola: ¿el
-  arreglo toca `src/` o `docs/`?
-- **Se decide** sacándolo del lote y diciéndolo: va por rama `fix/` o `chore/` con su `Closes #N`,
-  o directo si no tiene issue. **Un pedido sacado del lote se reporta igual** — si no, el usuario
-  cree que su pedido se perdió.
+  arreglo toca `src/`?
+- **Se decide** sacándolo del lote y diciéndolo: va por rama `harness/`, `docs/` o `ci/` con su
+  `Closes #N`, o directo si no tiene issue. **Un pedido sacado del lote se reporta igual** — si
+  no, el usuario cree que su pedido se perdió.
 
 ## 3 · Dos specs reclaman el mismo issue en su `origen`
 

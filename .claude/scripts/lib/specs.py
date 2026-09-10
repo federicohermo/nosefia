@@ -58,8 +58,10 @@ NO_LOS_MUEVE_UN_MERGE: frozenset[str] = frozenset({"Descartado", "Superado"})
 #: De qué spec es una rama: `feature/007-la-ventanilla` → `007`.
 #:
 #: El prefijo se deja abierto (`[^/]+`) a propósito: la convención dice `feature/`, pero un
-#: spec puede aterrizar por una rama `fix/` o `chore/`, y un patrón que sólo aceptara
-#: `feature/` los perdería sin decirlo.
+#: spec puede aterrizar por una rama `bugfix/` o `hotfix/` —o por una que ya no esté en la
+#: convención, que es el caso que un patrón cerrado perdería sin decirlo—. Es más ancho que
+#: el conjunto que `gate_de_spec.py` deja tocar `src/`, y por eso: allá el rojo de más cuesta
+#: una rama renombrada; acá el rojo de menos cuesta un merge que nadie ve.
 #:
 #: Vive acá y no en cada script porque lo leen dos: el derivador que **escribe** el estado y
 #: el gate que lo **confirma**. Dos copias que se separen dan un gate que confirma un

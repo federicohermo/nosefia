@@ -109,12 +109,17 @@ El mensaje dice cuál de los tres casos es:
 | Dice | Qué pasa |
 |---|---|
 | «No se edita `X` desde `staging`» | estás parado en una rama compartida. `staging` es la **default del repo**, así que es el lugar más fácil donde quedarse sin haberlo decidido |
-| «La rama `X` no nombra un spec» | falta la rama `feature/<NNN>-<kebab>` |
-| «dice ser del spec NNN, que no tiene entrada en `mapa.json`» | el spec no se publicó, o el número está mal |
+| «La rama `X` no puede editar `Y`» | el prefijo no es del producto. A `src/` lo tocan `feature/`, `bugfix/` y `hotfix/`, y ninguno más |
+| «es de feature y no nombra su spec» | falta el `NNN`, y va en **tres** dígitos: `feature/038-…`, no `feature/38-…` |
 
 **No lo saltees.** Si el cambio de verdad no necesita spec —un typo, un asset, revertir el
-commit anterior— la rama igual no puede ser `main` ni `staging`: abrí una `chore/` o `fix/` y
-tocá lo que no está protegido.
+commit anterior— la rama igual no puede ser `main` ni `staging`: abrí una `harness/`, `docs/` o
+`ci/` según qué toques, y tocá lo que no está protegido.
+
+El hook **ya no cruza el `NNN` contra `specs/mapa.json`**, así que un spec sin publicar no frena
+la primera edición. Ese cruce lo cobra `test_criterios_de_la_rama.py` en el nodo `harness`, con
+el PR todavía abierto: «dice ser del spec NNN, que no está hidratado ni tiene entrada en
+`specs/mapa.json`».
 
 Si el gate se rompe, **deja pasar y lo dice** en `permissionDecisionReason`. Ese mensaje es la
 señal de que el gate no está protegiendo nada: hay que arreglarlo, no ignorarlo.

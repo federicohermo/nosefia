@@ -36,6 +36,18 @@ arriba: la regla que dice cómo EMPIEZA un cambio también tiene que ser ejecuta
    mismo gate dejó la sesión encerrada, y la salida fue escribir archivos con la herramienta
    de PowerShell: una herramienta que el matcher no nombraba. O sea que el gate se salteaba
    solo con cambiar de herramienta, sin proponérselo.
+
+5. **Mira el NOMBRE de la rama y no `specs/mapa.json`.** Hasta el 2026-09-08 exigía que el
+   `NNN` de la rama ya tuviera entrada en el mapa, o sea que para escribir la primera línea de
+   código había que haber abierto el issue de GitHub y commiteado el mapa a `staging`. Un gate
+   que obliga a pedir permiso antes de empezar es un gate que se apaga.
+
+   **El cruce no desapareció: se mudó**, a `ElSpecDeLaRamaExiste` de
+   `tests/test_criterios_de_la_rama.py`, que corre en el nodo `harness` con el PR todavía
+   abierto. Ahí llega igual de a tiempo y no frena la primera edición. **El derivador no lo
+   cobra** —lo dice él mismo: un PR cuya rama nombra un `NNN` ausente del mapa «no agrega
+   nada»— así que sin ese test el cruce se caía del repo sin que nada lo reclamara: medido el
+   2026-09-08, una rama de un spec inexistente dejaba el gate en `OK (skipped=2)`.
 """
 
 import json
@@ -43,7 +55,6 @@ import os
 import re
 import subprocess
 import sys
-from pathlib import Path
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
@@ -54,19 +65,49 @@ configurar()
 from lib.repo import PROTEGIDAS, RAIZ, RAMAS_COMPARTIDAS  # noqa: E402
 from lib.rutas_protegidas import esta_protegida  # noqa: E402
 
-#: Las ramas que pasan: `feature/NNN-…` con `NNN` en el mapa.
-RAMA_DE_SPEC = re.compile(r"^feature/(\d{3})-")
+#: Los tres prefijos que pueden editar el producto.
+#:
+#: Son los de la convención de Atlassian —`feature`, `bugfix`, `hotfix`— y no una invención de
+#: acá: quien llega de afuera ya sabe qué significan. **Sólo `feature/` pide el `NNN`**, porque
+#: es el único que sale de un spec siempre; exigírselo a `bugfix/` y `hotfix/` los obligaría a
+#: inventar un número. El `bugfix/` que sí sale de un spec puede llevarlo igual, y
+#: `derivar_mapa.py` lo levanta.
+PREFIJOS_DEL_PRODUCTO = ("feature/", "bugfix/", "hotfix/")
 
+#: Los prefijos de lo que NO toca `src/`, declarados para que el mensaje pueda ofrecerlos.
+#:
+#: **El gate no los verifica, y no podría**: sólo protege `src/`, así que una rama `docs/` que
+#: edita documentación no le pasa ni cerca. Están acá porque bloquear sin decir cómo salir
+#: produce el reflejo de saltear el bloqueo, y «renombrá la rama» sin decir a qué no es salida.
+#: Cada uno nombra QUÉ toca, en vez de ser el cajón de sastre que era `chore/`.
+PREFIJOS_SIN_PRODUCTO = ("harness/", "docs/", "ci/")
+
+#: `feature/NNN-…`, con el `NNN` de `specs/mapa.json` en TRES dígitos.
+#:
+#: Tres y no «los que haya» porque el mapa los escribe así y `derivar_mapa.py` los lee así:
+#: aceptar `feature/38-…` dejaría pasar una rama cuyo número no va a matchear nunca, y el spec
+#: no aterrizaría sin que nada lo diga.
+RAMA_DE_SPEC = re.compile(r"^feature/\d{3}-.+$")
+
+
+def _lista(prefijos: tuple[str, ...]) -> str:
+    """`a`, `b` y `c` — para que el mensaje se lea como una frase y no como un array."""
+    entrecomillados = [f"`{p}`" for p in prefijos]
+    return "%s y %s" % (", ".join(entrecomillados[:-1]), entrecomillados[-1])
+
+
+#: El único mensaje que dice cómo salir, y **se arma con las dos listas de arriba**.
+#:
+#: Escribir los prefijos otra vez acá sería la segunda copia de un conjunto cerrado, y la que
+#: se pudre: el día que entre un cuarto prefijo, el código lo aceptaría y el mensaje seguiría
+#: nombrando tres.
 COMO_SALIR = (
-    "Si el spec no existe, la salida es el skill `spec-create`: medir, escribir los tres "
-    "archivos en `specs/<NNN>-<kebab>/`, publicarlos con "
-    "`python .claude/scripts/publicar_spec.py crear` y `publicar`, y commitear SÓLO "
-    "`specs/mapa.json` a `staging`. Si el spec YA está publicado, lo que falta es la rama, que "
-    "la abre el implementador: `git checkout -b feature/<NNN>-<kebab>` con el `NNN` que el mapa "
-    "ya tiene. Si el cambio de verdad no necesita spec —un typo, un bump de versión, revertir "
-    "el commit anterior— el skill lo dice por escrito, pero la rama igual no puede ser `main` "
-    "ni `staging`."
-)
+    "Al producto lo tocan %s, y `feature/` es el único que además nombra su spec: "
+    "`feature/<NNN>-<kebab>`, con el `NNN` de `specs/mapa.json` en tres dígitos. Lo que NO toca "
+    "`src/` se nombra por lo que toca: %s. **El spec se puede publicar después**: este gate ya "
+    "no lo exige, sólo pide que la rama diga de qué spec es. Si el spec no existe todavía, el "
+    "skill que lo escribe es `spec-create`."
+) % (_lista(PREFIJOS_DEL_PRODUCTO), _lista(PREFIJOS_SIN_PRODUCTO))
 
 
 def _responder(decision: str, motivo: str | None = None) -> None:
@@ -298,6 +339,39 @@ def raiz_que_manda(ruta: str, cwd: str | None) -> str:
     return salida.stdout.strip() or str(RAIZ)
 
 
+def motivo_del_bloqueo(rama: str, ruta: str) -> str | None:
+    """Por qué `rama` no puede editar `ruta`, o `None` si puede.
+
+    Es pura y recibe el nombre de la rama en vez de leerlo de git **para que se pueda
+    ejercer**: el veredicto de punta a punta no puede probar esto, porque habría que pararse en
+    cada rama de verdad y un test que cambia de rama rompe la sesión que lo corre.
+    """
+    # `staging` es la rama default del repositorio: adonde apunta cada clone fresco y cada
+    # `gh pr create`, o sea el lugar más fácil de todo el repo donde quedarse parado sin
+    # haberlo decidido. Lleva mensaje propio porque el genérico —«esa rama no puede tocar el
+    # producto»— se lee como una invitación a RENOMBRARLA, que es lo peor que se le puede hacer
+    # a la rama de integración. El problema no es cómo se llama, es dónde estás parado.
+    if rama in RAMAS_COMPARTIDAS:
+        return f"No se edita `{ruta}` desde `{rama}`. {COMO_SALIR}"
+
+    if not rama.startswith(PREFIJOS_DEL_PRODUCTO):
+        return (
+            f"La rama `{rama}` no puede editar `{ruta}`. Si el cambio de verdad no es del "
+            f"producto, entonces la rama está bien y el archivo está mal. {COMO_SALIR}"
+        )
+
+    # Sólo `feature/`: es el único de los tres que sale de un spec siempre.
+    if rama.startswith("feature/") and RAMA_DE_SPEC.match(rama) is None:
+        return (
+            f"La rama `{rama}` es de feature y no nombra su spec: se llama "
+            f"`feature/<NNN>-<kebab>`, con el `NNN` en tres dígitos. De ahí lo sacan este gate "
+            f"y `derivar_mapa.py`, así que un número mal escrito no aterriza el spec. "
+            f"{COMO_SALIR}"
+        )
+
+    return None
+
+
 def main() -> None:
     crudo = sys.stdin.read()
     rutas = rutas_del_payload(crudo)
@@ -336,29 +410,9 @@ def main() -> None:
     except (OSError, subprocess.SubprocessError):
         pasar("gate-de-spec: no se pudo leer la rama con git, no se verificó")
 
-    if rama in RAMAS_COMPARTIDAS:
-        bloquear(f"No se edita `{ruta}` desde `{rama}`. {COMO_SALIR}")
-
-    m = RAMA_DE_SPEC.match(rama)
-    if m is None:
-        bloquear(
-            f"La rama `{rama}` no nombra un spec, y `{ruta}` está protegida. La rama que pasa se "
-            f"llama `feature/<NNN>-<kebab>`. {COMO_SALIR}"
-        )
-
-    id_spec = m.group(1)
-    try:
-        mapa = json.loads(
-            (Path(raiz) / "specs" / "mapa.json").read_text(encoding="utf-8")
-        )
-    except (OSError, json.JSONDecodeError):
-        pasar("gate-de-spec: no se pudo leer `specs/mapa.json`, no se verificó el spec de la rama")
-
-    if id_spec not in mapa:
-        bloquear(
-            f"La rama `{rama}` dice ser del spec {id_spec}, que no tiene entrada en "
-            f"`specs/mapa.json`. O el spec no se publicó todavía, o el número está mal. {COMO_SALIR}"
-        )
+    motivo = motivo_del_bloqueo(rama, ruta)
+    if motivo is not None:
+        bloquear(motivo)
 
     pasar()
 
