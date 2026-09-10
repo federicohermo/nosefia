@@ -50,7 +50,7 @@ configurar()
 EXCLUIDOS = [
     ":(exclude)addons/gdUnit4/*",
     ":(exclude).godot/*",
-    ":(exclude)reportes/*",
+    ":(exclude)reports/*",
     ":(exclude)export/*",
     ":(exclude)build/*",
     ":(exclude)*.import",

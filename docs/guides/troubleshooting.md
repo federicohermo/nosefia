@@ -231,7 +231,7 @@ compara contra la cantidad de `*_test.gd`:
 ```bash
 "$GODOT_BIN" --path . --headless -s -d --remote-debug tcp://127.0.0.1:0 \
   res://addons/gdUnit4/bin/GdUnitCmdTool.gd -a test --continue --ignoreHeadlessMode \
-  -rd reportes 2>&1 | grep "Executed test suites"
+  -rd reports 2>&1 | grep "Executed test suites"
 ```
 
 Son tres escalones y los tres salen `ok`: una suite que no parsea **se descarta en silencio**, un

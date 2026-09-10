@@ -255,7 +255,7 @@ Cada agente recibe, literal:
   ```powershell
   & $env:GODOT_BIN --path . --headless -s -d --remote-debug tcp://127.0.0.1:0 `
     res://addons/gdUnit4/bin/GdUnitCmdTool.gd -a test --continue --ignoreHeadlessMode `
-    -rd reportes | Select-String "Executed test suites"
+    -rd reports | Select-String "Executed test suites"
   ```
 
   y su `(N/N)` tiene que dar igual que `find test -name '*_test.gd' | wc -l`.

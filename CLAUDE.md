@@ -111,8 +111,8 @@ Prosa — dependen de que la revisión las mire, y que no tengan verificador es 
 - **Tipado estático en toda firma**, `-> void` incluido.
 - **Español en el contenido, inglés en los nombres de carpeta**, con dos excepciones
   deliberadas: **el árbol de `src/` entero**, que no es estructura sino vocabulario del GDD, y
-  las carpetas de spec, cuyo nombre **es** su título. `reportes/` es la única mal puesta, y
-  arreglarla pide un spec: renombrarla toca `docs/`.
+  las carpetas de spec, cuyo nombre **es** su título. No hay una tercera: `reportes/` lo era
+  hasta que se unificó con el `reports/` que gdUnit4 usa por defecto.
 - **Los comentarios explican el porqué**, no el qué.
 - **Un valor fijo vive una sola vez**, en un archivo de `src/dominio/`.
 - **Un conjunto cerrado es un `enum`**, nunca un `String` suelto: `"limpar"` no rompe nada, el
