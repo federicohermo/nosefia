@@ -24,10 +24,13 @@ const ALTURA_DE_LA_CAMARA := 1.7
 const PITCH_MINIMO := -1.4
 const PITCH_MAXIMO := 1.4
 
-## Metros de alcance del rayo de la mira. Mayor que 1,2 porque el spec 006 suelta lo que se
+## Metros de alcance de la mira. Mayor que 1,2 porque el spec 006 suelta lo que se
 ## lleva a esa distancia y afirma que se lo puede volver a mirar: un alcance menor deja al
 ## jugador soltando cosas que ya no puede agarrar.
 const ALCANCE_DE_LA_MIRA := 2.5
+
+## Radianes desde el centro de la vista.
+const DESVIO_MAXIMO_DE_LA_MIRA := deg_to_rad(15.0)
 
 ## El contrato de «se puede interactuar con esto» ES este grupo de Godot, y vive acá por lo que
 ## permite: `dominio/` declara un `String` y no conoce a nadie, y un nodo de `escenas/` cumple
