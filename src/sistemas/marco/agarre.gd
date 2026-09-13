@@ -55,7 +55,7 @@ func pedir_agarrar(datos: ObjetoDelAlmacen, nodo: Node3D) -> bool:
 		return false
 	_manos.agarrar(datos)
 	_nodo = nodo
-	# Guardar s?lo al agarrar: el examen recibe el cuerpo con las colisiones suspendidas.
+	# Guardar solo al agarrar: el examen recibe el cuerpo con las colisiones suspendidas.
 	if nodo is CollisionObject3D:
 		_capa_original = nodo.collision_layer
 		_mascara_original = nodo.collision_mask
