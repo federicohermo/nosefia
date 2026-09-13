@@ -137,6 +137,22 @@ func depositar(unidad: Node3D, producto: Producto, unidades: int) -> void:
 	unidad.remove_from_group(ReglasDelJugador.GRUPO_INTERACTUABLE)
 
 
+func actualizar_stock(_despachados: int) -> void:
+	var visibles: Dictionary[int, int] = {}
+	for nodo in estante.get_children():
+		if not nodo is ObjetoAgarrable or not nodo.datos is UnidadDeProducto:
+			continue
+		var producto: Producto = nodo.datos.producto
+		var cantidad: int = visibles.get(producto.id, 0)
+		if cantidad < repositor.estante().unidades_en_gondola(producto):
+			visibles[producto.id] = cantidad + 1
+		else:
+			_unidades.erase(nodo)
+			estante.remove_child(nodo)
+			nodo.queue_free()
+	_actualizar_zonas()
+
+
 func limpiar() -> void:
 	for unidad in _unidades:
 		if is_instance_valid(unidad):

@@ -117,6 +117,7 @@ func _ready() -> void:
 	_repositor.agarre = _agarre
 	_repositor.unidad_colocada.connect(_reposicion_manual.depositar)
 	_repositor.producto_colocado.connect(_al_colocar_en_el_estante)
+	_atenciones.atencion_despachada.connect(_reposicion_manual.actualizar_stock)
 	_ciclo.arrancar(_partida, _reloj)
 	_reposicion_manual.preparar()
 

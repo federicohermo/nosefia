@@ -3,6 +3,40 @@ extends GdUnitTestSuite
 const ALMACEN := preload("res://src/escenas/almacen.tscn")
 
 
+func test_vender_retira_las_unidades_visibles_y_permite_reponer_sin_superponer() -> void:
+	var almacen: Node3D = auto_free(ALMACEN.instantiate())
+	add_child(almacen)
+	almacen.get("_jugador").set_physics_process(false)
+	var presentacion: Node3D = almacen.get("_reposicion_manual")
+	var estante: Node3D = almacen.get("_estante")
+	var repositor: Repositor = almacen.get("_repositor")
+	for producto in Catalogo.todos():
+		for indice in producto.umbral:
+			presentacion.retirar(producto.id)
+			presentacion.pedir_colocar(producto.id)
+	var atenciones: Ventanilla = almacen.get("_atenciones")
+	atenciones.pedir_abrir()
+	atenciones.pedir_cobrar()
+	await get_tree().process_frame
+	var visibles := 0
+	for nodo in estante.get_children():
+		if nodo is ObjetoAgarrable:
+			visibles += 1
+	var stock := 0
+	for producto in Catalogo.todos():
+		stock += repositor.estante().unidades_en_gondola(producto)
+	assert_int(visibles).is_equal(stock)
+	for producto in Catalogo.todos():
+		while repositor.estante().disponibles_para_retirar(producto) > 0:
+			presentacion.retirar(producto.id)
+			presentacion.pedir_colocar(producto.id)
+	var posiciones: Array[Vector3] = []
+	for nodo in estante.get_children():
+		if nodo is ObjetoAgarrable:
+			assert_array(posiciones).not_contains(nodo.global_position)
+			posiciones.append(nodo.global_position)
+
+
 func test_el_frente_se_conserva_al_examinar_y_volver_a_agarrar() -> void:
 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
 	add_child(almacen)
