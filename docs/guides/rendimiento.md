@@ -42,7 +42,7 @@ GPU ni exige tiempos iguales en equipos distintos. Las métricas de memoria pued
 disponibles en una exportación release; el informe identifica la compilación usada.
 
 Las métricas del motor se describen en la
-[documentación de Performance](https://docs.godotengine.org/en/4.5/classes/class_performance.html).
+[documentación de Performance](https://docs.godotengine.org/en/stable/classes/class_performance.html).
 
 ## Medición del 13 de septiembre de 2026
 

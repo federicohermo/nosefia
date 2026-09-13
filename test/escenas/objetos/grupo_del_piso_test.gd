@@ -3,7 +3,7 @@ extends GdUnitTestSuite
 const GrupoDelPiso := preload("res://src/escenas/objetos/grupo_del_piso.gd")
 
 
-func test_mover_enfocar_y_recoger_conserva_el_dibujo_de_cada_cuerpo() -> void:  # 042-AC6
+func test_mover_enfocar_y_recoger_conserva_el_dibujo_de_cada_cuerpo() -> void:  # 042-AC7
 	var mundo: Node3D = auto_free(Node3D.new())
 	add_child(mundo)
 	var grupo := GrupoDelPiso.new()

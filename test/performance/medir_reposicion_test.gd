@@ -3,7 +3,7 @@ extends GdUnitTestSuite
 const Medicion := preload("res://test/performance/medir_reposicion.gd")
 
 
-func test_agrupar_el_piso_conserva_los_cuerpos_y_reduce_las_vistas() -> void:  # 042-AC6
+func test_agrupar_el_piso_conserva_los_cuerpos_y_reduce_las_vistas() -> void:  # 042-AC6 042-AC7
 	var medicion: Node3D = auto_free(Medicion.new())
 	var modelo := BoxMesh.new()
 	var forma := ConvexPolygonShape3D.new()

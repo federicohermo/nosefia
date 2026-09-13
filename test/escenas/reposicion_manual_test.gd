@@ -511,6 +511,7 @@ func _transformacion_de_copia(copias: MultiMesh, indice: int) -> Transform3D:
 	)
 
 
+# 042-AC2
 func test_solo_la_zona_del_producto_recibe_el_foco_y_el_resto_del_mueble_no_coloca() -> void:
 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
 	add_child(almacen)
