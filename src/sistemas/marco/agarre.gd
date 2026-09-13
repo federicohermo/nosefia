@@ -30,6 +30,8 @@ signal objeto_soltado(nodo: Node3D)
 
 var _manos := Manos.new()
 var _nodo: Node3D = null
+var _capa_original: int = 0
+var _mascara_original: int = 0
 
 
 ## Las manos, para que quien las necesite pregunte en vez de que este sistema le copie el estado.
@@ -53,6 +55,12 @@ func pedir_agarrar(datos: ObjetoDelAlmacen, nodo: Node3D) -> bool:
 		return false
 	_manos.agarrar(datos)
 	_nodo = nodo
+	# Guardar s?lo al agarrar: el examen recibe el cuerpo con las colisiones suspendidas.
+	if nodo is CollisionObject3D:
+		_capa_original = nodo.collision_layer
+		_mascara_original = nodo.collision_mask
+		nodo.collision_layer = 0
+		nodo.collision_mask = 0
 	_colgar(nodo, punto_de_carga)
 	objeto_agarrado.emit(nodo)
 	return true
@@ -71,6 +79,9 @@ func soltar(al_frente: bool) -> Node3D:
 	var ancla := punto_de_soltado if al_frente else punto_de_respaldo
 	if nodo != null and ancla != null:
 		_colgar(nodo, ancla, false)
+	if nodo is CollisionObject3D:
+		nodo.collision_layer = _capa_original
+		nodo.collision_mask = _mascara_original
 	objeto_soltado.emit(nodo)
 	return nodo
 

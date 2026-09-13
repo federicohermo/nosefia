@@ -150,3 +150,56 @@ func test_el_clic_agarra_y_despues_suelta() -> void:  # 006-AC7
 	agarre.alternar(null, null)
 	assert_object(agarre.manos().sostenido()).is_null()
 	assert_object(cuerpo.get_parent()).is_same(agarre.punto_de_soltado)
+
+
+func test_agarrar_suspende_y_soltar_restaura_colisiones() -> void:  # 040-AC1
+	var agarre := _cableado()
+	var cuerpo := _cuerpo()
+	cuerpo.collision_layer = 13
+	cuerpo.collision_mask = 22
+	agarre.pedir_agarrar(_lata(), cuerpo)
+	assert_int(cuerpo.collision_layer).is_zero()
+	assert_int(cuerpo.collision_mask).is_zero()
+	agarre.soltar(true)
+	assert_int(cuerpo.collision_layer).is_equal(13)
+	assert_int(cuerpo.collision_mask).is_equal(22)
+
+
+func test_dos_agarres_con_examen_restauran_sus_colisiones() -> void:  # 040-AC2
+	var agarre := _cableado()
+	var cuerpo := _cuerpo()
+	var examen: Examen = auto_free(Examen.new())
+	examen.agarre = agarre
+	examen.punto_de_examen = auto_free(Node3D.new())
+	for capa: int in [5, 18]:
+		cuerpo.collision_layer = capa
+		cuerpo.collision_mask = capa + 2
+		assert_bool(agarre.pedir_agarrar(_lata(), cuerpo)).is_true()
+		assert_bool(examen.iniciar()).is_true()
+		assert_int(cuerpo.collision_layer).is_zero()
+		assert_int(cuerpo.collision_mask).is_zero()
+		examen.terminar()
+		assert_int(cuerpo.collision_layer).is_zero()
+		assert_int(cuerpo.collision_mask).is_zero()
+		agarre.soltar(true)
+		assert_int(cuerpo.collision_layer).is_equal(capa)
+		assert_int(cuerpo.collision_mask).is_equal(capa + 2)
+
+
+func test_vaciar_restaura_colisiones() -> void:  # 040-AC3
+	var agarre := _cableado()
+	var cuerpo := _cuerpo()
+	cuerpo.collision_layer = 9
+	cuerpo.collision_mask = 12
+	agarre.pedir_agarrar(_lata(), cuerpo)
+	agarre.vaciar_las_manos()
+	assert_int(cuerpo.collision_layer).is_equal(9)
+	assert_int(cuerpo.collision_mask).is_equal(12)
+
+
+func test_agarrar_y_soltar_un_nodo_sin_colisiones() -> void:  # 040-AC4
+	var agarre := _cableado()
+	var nodo := Node3D.new()
+	assert_bool(agarre.pedir_agarrar(_lata(), nodo)).is_true()
+	assert_object(agarre.soltar(true)).is_same(nodo)
+	assert_object(nodo.get_parent()).is_same(agarre.punto_de_soltado)
