@@ -148,5 +148,8 @@ static func _colgar(nodo: Node3D, ancla: Node3D, quieta: bool = true) -> void:
 	ancla.add_child(nodo)
 	nodo.position = Vector3.ZERO
 	nodo.rotation = Vector3.ZERO
+	if quieta and "orientacion_en_mano" in nodo:
+		var orientacion: Basis = nodo.get("orientacion_en_mano")
+		nodo.rotation = orientacion.get_euler()
 	if nodo is RigidBody3D:
 		(nodo as RigidBody3D).freeze = quieta

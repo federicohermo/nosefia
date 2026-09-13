@@ -11,6 +11,7 @@ const PRODUCTOS_NUEVOS := preload("res://assets/models/productos_marolini_jorgil
 @export var contenido: Node3D
 @export var apoyos: Array[Vector3] = []
 @export var direcciones: Array[Vector3] = []
+@export var giros_del_frente: Array[float] = []
 
 var _unidades: Array[Node3D] = []
 var _zonas: Array[StaticBody3D] = []
@@ -108,6 +109,11 @@ func _preparar_modelos() -> void:
 
 func retirar(id: Producto.Id) -> void:
 	var unidad: ObjetoAgarrable = OBJETO.instantiate()
+	# El frente de cada modelo se alinea antes de darle la inclinación de la mano.
+	unidad.orientacion_en_mano = (
+		Basis.from_euler(Vector3(deg_to_rad(-17), deg_to_rad(-20), 0))
+		* Basis(Vector3.UP, deg_to_rad(giros_del_frente[id]))
+	)
 	add_child(unidad)
 	if not repositor.pedir_retirar(id, unidad):
 		unidad.free()
@@ -121,7 +127,6 @@ func retirar(id: Producto.Id) -> void:
 	var forma := BoxShape3D.new()
 	forma.size = limites.size
 	unidad.get_node("Forma").shape = forma
-	unidad.rotation.x = -0.3
 
 
 func depositar(unidad: Node3D, producto: Producto, unidades: int) -> void:

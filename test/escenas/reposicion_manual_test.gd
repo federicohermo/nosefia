@@ -3,6 +3,38 @@ extends GdUnitTestSuite
 const ALMACEN := preload("res://src/escenas/almacen.tscn")
 
 
+func test_el_frente_se_conserva_al_examinar_y_volver_a_agarrar() -> void:
+	var almacen: Node3D = auto_free(ALMACEN.instantiate())
+	add_child(almacen)
+	almacen.get("_jugador").set_physics_process(false)
+	var agarre: Agarre = almacen.get("_agarre")
+	var frentes := [
+		Vector3.RIGHT,
+		Vector3.BACK,
+		Vector3.RIGHT,
+		Vector3.LEFT,
+		Vector3.FORWARD,
+		Vector3.BACK,
+		Vector3.RIGHT,
+		Vector3.FORWARD
+	]
+	for producto in Catalogo.todos():
+		almacen.get("_cajas_de_productos")[producto.id].interactuar()
+		var unidad: Node3D = agarre.punto_de_producto.get_child(0)
+		var orientacion := unidad.basis
+		assert_float((orientacion * frentes[producto.id]).dot(Vector3.BACK)).is_greater(0.8)
+		assert_bool(orientacion.is_equal_approx(Basis.IDENTITY)).is_false()
+		agarre.mover_lo_sostenido(almacen.get("_jugador").get_node("Camara/PuntoDeExamen"))
+		unidad.rotate_y(0.7)
+		agarre.devolver_a_la_mano()
+		assert_bool(unidad.basis.is_equal_approx(orientacion)).is_true()
+		agarre.soltar(true)
+		assert_bool(agarre.pedir_agarrar(unidad.datos, unidad)).is_true()
+		assert_bool(unidad.basis.is_equal_approx(orientacion)).is_true()
+		almacen.get("_reposicion_manual").get_node("ZonaDe" + producto.nombre).interactuar()
+		assert_bool(unidad.global_basis.is_equal_approx(Basis.IDENTITY)).is_true()
+
+
 func test_actroncito_marolini_y_jorgillo_se_reponen_con_foco_y_clic_reales() -> void:
 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
 	add_child(almacen)

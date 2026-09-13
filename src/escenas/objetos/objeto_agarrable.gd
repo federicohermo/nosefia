@@ -13,6 +13,7 @@ extends RigidBody3D
 ## Los datos entran por el `.tres`, así que agregar un objeto nuevo al almacén es duplicar la
 ## escena y cambiarle este campo: no se toca código.
 @export var datos: ObjetoDelAlmacen
+@export var orientacion_en_mano := Basis.IDENTITY
 
 ## Dónde lo dejó la escena. Se guarda en `_ready()` y no en la declaración porque el `transform`
 ## que importa es el que le puso el `.tscn`, y ése recién existe cuando el nodo entró al árbol.
