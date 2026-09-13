@@ -16,6 +16,7 @@ repo, cómo se verifica y cómo se trabaja.
 ### Guías
 - [Inicio rápido](./guides/quickstart.md) — Qué instalar, qué declarar y qué correr
 - [Verificación](./guides/verificacion.md) — `verificar.py` entero: los seis nodos y por qué cada uno tiene la forma que tiene
+- [Rendimiento](./guides/rendimiento.md) — Medición reproducible de productos en estantes y en el piso
 - [TDD sin cobertura](./guides/tdd.md) — Cómo se sostiene la disciplina de tests en un motor que no mide cobertura
 - [Convenciones](./guides/conventions.md) — GDScript, capas, nombres, comentarios
 - [Troubleshooting](./guides/troubleshooting.md) — Errores reales ya pisados en este repo
