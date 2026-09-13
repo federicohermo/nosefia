@@ -5,17 +5,13 @@
 ## el 013 le cuelgue la venta por la ventanilla.
 extends GdUnitTestSuite
 
-const ESCENA := "res://src/escenas/puestos/estante.tscn"
+const ESCENA := "res://src/escenas/almacen.tscn"
 const SCRIPT := "res://src/escenas/puestos/estante.gd"
 
 ## El script del nodo se preloadea para poder tiparlo: los scripts de `escenas/` son cáscara y no
 ## declaran `class_name`, así que sin esto el tipo estático sería `StaticBody3D` y llamarle
 ## `mostrar()` no compilaría.
 const EstanteQueSeVe := preload("res://src/escenas/puestos/estante.gd")
-
-## Cómo se reconoce un hueco en el árbol. Se busca por prefijo y no por cantidad de hijos para
-## que agregarle al estante un cartel o una luz no rompa el conteo.
-const PREFIJO_DEL_HUECO := "Hueco"
 
 
 func test_el_estante_dibuja_un_hueco_por_producto_del_catalogo() -> void:  # 008-AC10
@@ -86,14 +82,14 @@ func test_el_estante_contesta_el_contrato_de_interaccion() -> void:  # 008-AC10
 
 
 func _estante() -> EstanteQueSeVe:
-	return auto_free(load(ESCENA).instantiate())
+	var almacen: Node3D = auto_free(load(ESCENA).instantiate())
+	return almacen.get("_estante")
 
 
 func _huecos_de(estante: Node) -> Array[Node3D]:
 	var encontrados: Array[Node3D] = []
-	for nodo in _descendientes(estante):
-		if nodo.name.begins_with(PREFIJO_DEL_HUECO):
-			encontrados.append(nodo)
+	for nodo: Node3D in estante.get("_huecos").get_children():
+		encontrados.append(nodo)
 	return encontrados
 
 
@@ -103,14 +99,3 @@ func _huecos_visibles(estante: Node) -> int:
 		if hueco.visible:
 			visibles += 1
 	return visibles
-
-
-static func _descendientes(nodo: Node) -> Array[Node3D]:
-	var todos: Array[Node3D] = []
-	for hijo in nodo.get_children():
-		var tridimensional := hijo as Node3D
-		if tridimensional == null:
-			continue
-		todos.append(tridimensional)
-		todos.append_array(_descendientes(tridimensional))
-	return todos

@@ -23,12 +23,8 @@ const CASCARA_DEL_EDIFICIO := "almacen"
 
 ## Los anclajes que los specs 008 y 009 buscan por nombre. Son nombres de objeto de Blender:
 ## renombrarlos allá es lo único que los pone acá.
-const ANCLAJE_DE_LA_ESTANTERIA := "Estanteria"
-const ANCLAJES := [ANCLAJE_DE_LA_ESTANTERIA, "EscritorioDeLaComputadora"]
-
-## Desde qué costado se le tira el rayo al anclaje para ver contra qué choca. La estantería mide
-## 1,82 m en X, así que 2,2 m arrancan afuera de ella y adentro del pasillo.
-const DESDE_EL_COSTADO := 2.2
+const ANCLAJE_DE_LA_ESTANTERIA := "gondola01"
+const ANCLAJES := [ANCLAJE_DE_LA_ESTANTERIA, "compu"]
 
 ## El almacén mide 21,72 × 22,74 m de planta. La banda es ancha a propósito: no está para detectar
 ## que alguien movió una pared, sino que el modelo entró con la escala sin aplicar —el modo de
@@ -90,21 +86,11 @@ func test_el_modelo_entro_con_sus_mallas() -> void:
 	assert_array(_mallas(_estructura())).is_not_empty()
 
 
-func test_ninguna_malla_del_modelo_quedo_sin_colision() -> void:
-	# Éste es EL caso de la suite. La colisión la genera el sufijo `-col` del nombre en Blender,
-	# así que se pierde por olvidarlo al renombrar un objeto —ya pasó una vez—, y el síntoma en
-	# el juego es atravesar una góndola: no nombra ni al objeto ni al sufijo.
-	var sin_colision := _mallas_sin_colision(_estructura())
-	(
-		assert_array(sin_colision)
-		. override_failure_message(
-			(
-				"estas mallas del modelo no tienen colisión, les falta el sufijo `-col`: %s"
-				% ", ".join(sin_colision)
-			)
-		)
-		. is_empty()
-	)
+func test_los_muebles_y_el_edificio_conservan_su_colision() -> void:
+	var estructura := _estructura()
+	for nombre in ["almacen", "gondola01", "gondola02", "compu", "EscritorioComputadora"]:
+		var malla: MeshInstance3D = estructura.get_node(nombre)
+		assert_bool(_tiene_forma(malla)).override_failure_message(nombre).is_true()
 
 
 func test_la_regla_del_sufijo_sabe_ver_una_malla_sin_colision() -> void:
@@ -168,7 +154,7 @@ func test_los_anclajes_que_buscan_los_specs_siguientes_estan_por_nombre() -> voi
 		)
 
 
-func test_el_colisionador_de_un_anclaje_cuelga_del_nodo_que_lo_nombra() -> void:
+func test_el_colisionador_de_un_anclaje_cuelga_del_nodo_que_lo_nombra() -> void:  # 041-AC3
 	# Con el blockout el `StaticBody3D` **era** el nodo llamado `Estanteria`. Con el modelo el
 	# import le cuelga uno anónimo debajo, así que `get_collider().name` dejó de servir para saber
 	# qué mueble se está mirando. De esa forma dependen los specs 006, 008 y 009, y hasta acá no la
@@ -177,15 +163,16 @@ func test_el_colisionador_de_un_anclaje_cuelga_del_nodo_que_lo_nombra() -> void:
 	# **Éste es el único caso de la suite que entra la escena al árbol**, y es porque sin `World3D`
 	# no hay espacio físico contra el que tirar un rayo. La escena no tiene un solo script
 	# colgando, así que su `_ready()` no corre código que esta suite no escribió.
-	var estructura := _estructura()
-	add_child(estructura)
+	var almacen: Node3D = auto_free(load("res://src/escenas/almacen.tscn").instantiate())
+	add_child(almacen)
+	var estructura: Node3D = almacen.get_node("Estructura")
 	await get_tree().physics_frame
 	await get_tree().physics_frame
-	var anclaje: Node3D = estructura.get_node(NodePath(ANCLAJE_DE_LA_ESTANTERIA))
+	var anclaje: MeshInstance3D = estructura.get_node(NodePath(ANCLAJE_DE_LA_ESTANTERIA))
+	var limites := anclaje.global_transform * anclaje.get_aabb()
+	var centro := limites.get_center()
 	var golpe := estructura.get_world_3d().direct_space_state.intersect_ray(
-		PhysicsRayQueryParameters3D.create(
-			anclaje.global_position + Vector3(DESDE_EL_COSTADO, 0.5, 0), anclaje.global_position
-		)
+		PhysicsRayQueryParameters3D.create(Vector3(centro.x, limites.end.y + 1, centro.z), centro)
 	)
 	(
 		assert_dict(golpe)

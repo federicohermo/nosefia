@@ -7,17 +7,17 @@
 script = ExtResource("1_limpieza")
 
 [node name="ManchaDeLaEntrada" parent="." instance=ExtResource("2_mancha")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, 0.02, 6)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5, 0.112, 2)
 zona = 0
 
 [node name="ManchaDelPasillo" parent="." instance=ExtResource("2_mancha")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2, 0.02, 1)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.5, 0.112, 1)
 zona = 1
 
 [node name="ManchaDelDeposito" parent="." instance=ExtResource("2_mancha")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.02, -5)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.5, 0.112, -5)
 zona = 2
 
 [node name="ManchaDeLaVentanilla" parent="." instance=ExtResource("2_mancha")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5, 0.02, 1)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6, 0.112, 6.5)
 zona = 3

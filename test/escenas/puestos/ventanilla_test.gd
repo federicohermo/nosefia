@@ -68,7 +68,9 @@ func test_el_almacen_instancia_la_ventanilla_exactamente_una_vez() -> void:  # 0
 	# Se cuenta sobre el texto del `.tscn` y no sobre el árbol instanciado porque lo que hay que
 	# afirmar es que se referencia **una sola vez**: dos ventanillas serían dos tareas de atender
 	# corriendo sobre el mismo turno, y el jefe contaría una sola.
-	var texto := FileAccess.get_file_as_string(ESCENA_DEL_ALMACEN)
+	var texto := FileAccess.get_file_as_string(
+		"res://src/escenas/puestos/estructura_del_almacen.tscn"
+	)
 	assert_str(texto).is_not_empty()
 	assert_int(texto.count(ESCENA)).is_equal(1)
 
@@ -114,7 +116,7 @@ func test_el_cableado_de_atender_llega_entero_desde_el_almacen() -> void:  # 013
 		)
 		. is_not_null()
 	)
-	var puesto: VentanillaQueSeVe = almacen.get_node("Ventanilla")
+	var puesto: VentanillaQueSeVe = almacen.get_node("Estructura/Ventanilla")
 	for propiedad in ["jugador", "reloj", "atenciones", "panel"]:
 		(
 			assert_object(puesto.get(propiedad))
@@ -123,7 +125,7 @@ func test_el_cableado_de_atender_llega_entero_desde_el_almacen() -> void:  # 013
 			)
 			. is_not_null()
 		)
-	var atenciones: Ventanilla = almacen.get_node("Atenciones")
+	var atenciones: Ventanilla = almacen.get_node("Servicios/Atenciones")
 	assert_object(atenciones.reloj).is_not_null()
 
 

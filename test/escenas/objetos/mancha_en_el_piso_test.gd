@@ -188,7 +188,7 @@ func test_el_trapeador_tampoco_esta_al_lado_de_ninguna_mancha() -> void:  # 014-
 	# El primer tramo también cuenta: con el trapeador encima de una mancha, la primera zona
 	# saldría gratis.
 	var almacen := _almacen()
-	var trapeador: Node3D = almacen.get_node("Trapeador")
+	var trapeador: Node3D = almacen.get_node("Objetos/Trapeador")
 	var desde := _posicion_en(almacen, trapeador)
 	for posicion in _manchas_de(almacen):
 		var distancia := desde.distance_to(posicion)

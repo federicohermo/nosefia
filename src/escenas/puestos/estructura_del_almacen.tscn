@@ -1,5 +1,145 @@
-[gd_scene load_steps=2 format=3]
+[gd_scene format=3]
 
-[ext_resource type="PackedScene" uid="uid://b41dfoytbg6wa" path="res://assets/SEPT_JUEGOS_PROTOTIPO.glb" id="1_modelo"]
+[ext_resource type="PackedScene" path="res://src/escenas/puestos/reloj_de_pared.tscn" id="8_reloj_de_pared"]
+[ext_resource type="PackedScene" path="res://src/escenas/puestos/ventanilla.tscn" id="15_ventanilla"]
 
-[node name="Estructura" instance=ExtResource("1_modelo")]
+[ext_resource type="PackedScene" path="res://assets/SEPT_JUEGOS_PROTOTIPO.glb" id="modelo"]
+[ext_resource type="Script" path="res://src/escenas/puestos/escritorio.gd" id="escritorio"]
+[ext_resource type="Script" path="res://src/escenas/puestos/estante.gd" id="estante"]
+[ext_resource type="ArrayMesh" path="res://assets/models/gondola_soporte.res" id="soporte"]
+[ext_resource type="Shape3D" path="res://assets/models/gondola_colision.res" id="colision"]
+[ext_resource type="PackedScene" path="res://src/escenas/puestos/contenido_del_estante.tscn" id="contenido"]
+
+[node name="Estructura" instance=ExtResource("modelo")]
+
+[node name="HuecoDeLaVentanilla" type="Marker3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.35, 1.04, 7.974)
+
+[node name="RelojDePared" parent="." instance=ExtResource("8_reloj_de_pared")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.4, 7.9)
+
+[node name="Ventanilla" parent="." instance=ExtResource("15_ventanilla")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.35, 1.04, 7.974)
+
+[node name="StaticBody3D" parent="compu" node_paths=PackedStringArray("mallas") groups=["interactuable"]]
+script = ExtResource("escritorio")
+metadata/apoyo = NodePath("Estructura/EscritorioComputadora")
+mallas = [NodePath(".."), NodePath("../../teclado")]
+
+[node name="gondola01" parent="."]
+mesh = ExtResource("soporte")
+
+[node name="StaticBody3D" parent="gondola01" node_paths=PackedStringArray("_huecos", "mallas") groups=["interactuable"]]
+script = ExtResource("estante")
+_huecos = NodePath("Contenido")
+mallas = [NodePath("..")]
+
+[node name="CollisionShape3D" parent="gondola01/StaticBody3D"]
+shape = ExtResource("colision")
+
+[node name="Contenido" parent="gondola01/StaticBody3D" instance=ExtResource("contenido")]
+
+[node name="malbardocig" parent="gondola01"]
+visible = false
+
+[node name="StaticBody3D" parent="gondola01/malbardocig"]
+collision_layer = 0
+collision_mask = 0
+
+[node name="atún" parent="."]
+visible = false
+
+[node name="StaticBody3D" parent="atún"]
+collision_layer = 0
+collision_mask = 0
+
+[node name="atún_02" parent="."]
+visible = false
+
+[node name="StaticBody3D" parent="atún_02"]
+collision_layer = 0
+collision_mask = 0
+
+[node name="durextra" parent="."]
+visible = false
+
+[node name="StaticBody3D" parent="durextra"]
+collision_layer = 0
+collision_mask = 0
+
+[node name="snackpapas1" parent="."]
+visible = false
+
+[node name="StaticBody3D" parent="snackpapas1"]
+collision_layer = 0
+collision_mask = 0
+
+[node name="snacks2" parent="."]
+visible = false
+
+[node name="StaticBody3D" parent="snacks2"]
+collision_layer = 0
+collision_mask = 0
+
+[node name="snacks2_02" parent="."]
+visible = false
+
+[node name="StaticBody3D" parent="snacks2_02"]
+collision_layer = 0
+collision_mask = 0
+
+[node name="snacks2_03" parent="."]
+visible = false
+
+[node name="StaticBody3D" parent="snacks2_03"]
+collision_layer = 0
+collision_mask = 0
+
+[node name="snacks2_04" parent="."]
+visible = false
+
+[node name="StaticBody3D" parent="snacks2_04"]
+collision_layer = 0
+collision_mask = 0
+
+[node name="burgaloo" parent="."]
+visible = false
+
+[node name="StaticBody3D" parent="burgaloo"]
+collision_layer = 0
+collision_mask = 0
+
+[node name="burgaloo_001" parent="."]
+visible = false
+
+[node name="StaticBody3D" parent="burgaloo_001"]
+collision_layer = 0
+collision_mask = 0
+
+[node name="burgaloo_002" parent="."]
+visible = false
+
+[node name="StaticBody3D" parent="burgaloo_002"]
+collision_layer = 0
+collision_mask = 0
+
+[node name="burgaloo_003" parent="."]
+visible = false
+
+[node name="StaticBody3D" parent="burgaloo_003"]
+collision_layer = 0
+collision_mask = 0
+
+[node name="Zucarachas" parent="."]
+visible = false
+
+[node name="StaticBody3D" parent="Zucarachas"]
+collision_layer = 0
+collision_mask = 0
+
+[node name="Zucarachas2" parent="."]
+visible = false
+
+[node name="StaticBody3D" parent="Zucarachas2"]
+collision_layer = 0
+collision_mask = 0

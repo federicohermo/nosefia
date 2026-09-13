@@ -145,9 +145,9 @@ func test_los_tres_anclajes_que_buscan_los_specs_siguientes_estan_por_nombre() -
 	# `Estanteria` por su `estante.tscn` y el 009 `EscritorioDeLaComputadora` por su
 	# `escritorio.tscn`, y este caso deja de aplicar en cuanto lo hagan.
 	var almacen := _almacen()
-	assert_bool(almacen.has_node("Estructura/Estanteria")).is_true()
-	assert_bool(almacen.has_node("Estructura/EscritorioDeLaComputadora")).is_true()
-	assert_bool(almacen.has_node("HuecoDeLaVentanilla")).is_true()
+	assert_bool(almacen.has_node("Estructura/gondola01")).is_true()
+	assert_bool(almacen.has_node("Estructura/compu")).is_true()
+	assert_bool(almacen.has_node("Estructura/HuecoDeLaVentanilla")).is_true()
 
 
 func test_el_proyecto_abre_el_almacen_al_correr() -> void:
@@ -167,12 +167,12 @@ func test_la_escena_trae_luz_propia() -> void:
 	# causa. Por eso el entorno y el sol se afirman por nombre y por tipo en vez de dejarlos
 	# librados a que alguien mire la escena.
 	var almacen := _almacen()
-	assert_bool(almacen.has_node("Entorno")).is_true()
-	var entorno: Node = almacen.get_node("Entorno")
+	assert_bool(almacen.has_node("Ambiente/Entorno")).is_true()
+	var entorno: Node = almacen.get_node("Ambiente/Entorno")
 	assert_object(entorno).is_instanceof(WorldEnvironment)
 	assert_object(entorno.environment).is_not_null()
-	assert_bool(almacen.has_node("Sol")).is_true()
-	assert_object(almacen.get_node("Sol")).is_instanceof(DirectionalLight3D)
+	assert_bool(almacen.has_node("Ambiente/Sol")).is_true()
+	assert_object(almacen.get_node("Ambiente/Sol")).is_instanceof(DirectionalLight3D)
 
 
 func test_la_estructura_entra_instanciada_y_no_vino_corrida() -> void:
@@ -198,12 +198,8 @@ func test_la_estructura_entra_instanciada_y_no_vino_corrida() -> void:
 ## primer rayo no choca con nada y el caso pasa por vacuidad.
 func _espacio_de_la_estructura(almacen: Node3D) -> PhysicsDirectSpaceState3D:
 	var estructura: Node3D = almacen.get_node("Estructura")
-	almacen.remove_child(estructura)
-	# Sin esto Godot avisa `will make owner 'Almacen' inconsistent` en cada corrida: el nodo
-	# sigue apuntando a la raíz de la que lo acabamos de sacar. Es un aviso y no un error, y por
-	# eso es exactamente el tipo de ruido que tapa al próximo aviso, que sí va a importar.
-	estructura.owner = null
-	add_child(auto_free(estructura))
+	# Los muebles tienen funciones; sus enlaces se resuelven desde la escena completa.
+	add_child(almacen)
 	_apagar_todo_menos_la_cascara(estructura)
 	await get_tree().physics_frame
 	await get_tree().physics_frame
@@ -214,7 +210,7 @@ func test_el_hueco_de_la_ventanilla_cae_en_la_ventanilla_del_modelo() -> void:
 	# El marcador es el contrato con el spec 013, y hasta el 028 lo único que se afirmaba de él era
 	# que existía. Con eso alcanzó para que estuviera cuatro commits adentro de un pasillo.
 	var almacen := _almacen()
-	var punto: Vector3 = (almacen.get_node("HuecoDeLaVentanilla") as Node3D).position
+	var punto: Vector3 = (almacen.get_node("Estructura/HuecoDeLaVentanilla") as Node3D).position
 	var espacio: PhysicsDirectSpaceState3D = await _espacio_de_la_estructura(almacen)
 	(
 		assert_bool(_se_llega_desde_afuera(espacio, punto + Vector3.UP * SOBRE_EL_ANTEPECHO))
@@ -338,8 +334,8 @@ func test_la_escena_trae_el_ciclo_de_jornadas_colgando_de_la_raiz() -> void:  # 
 	# Sin el nodo, el `@export` del cableado llega nulo y el juego muere en el primer cuadro con
 	# un error que no nombra a `almacen.tscn`.
 	var almacen := _almacen()
-	assert_bool(almacen.has_node("CicloDeJornadas")).is_true()
-	assert_object(almacen.get_node("CicloDeJornadas")).is_instanceof(CicloDeJornadas)
+	assert_bool(almacen.has_node("Servicios/CicloDeJornadas")).is_true()
+	assert_object(almacen.get_node("Servicios/CicloDeJornadas")).is_instanceof(CicloDeJornadas)
 
 
 func test_los_tres_cableados_de_la_raiz_llegan_asignados() -> void:
@@ -386,8 +382,8 @@ func test_el_cableado_arma_el_parte_una_sola_vez_y_no_decide() -> void:  # 017-A
 
 func test_la_escena_instancia_la_pantalla_de_cierre() -> void:  # 017-AC12
 	var almacen := _almacen()
-	assert_bool(almacen.has_node("PantallaDeCierre")).is_true()
-	assert_object(almacen.get_node("PantallaDeCierre")).is_instanceof(PantallaDeCierre)
+	assert_bool(almacen.has_node("Interfaz/PantallaDeCierre")).is_true()
+	assert_object(almacen.get_node("Interfaz/PantallaDeCierre")).is_instanceof(PantallaDeCierre)
 
 
 func test_despachar_la_placa_abre_la_noche_siguiente_en_cero() -> void:  # 017-AC12
@@ -398,10 +394,10 @@ func test_despachar_la_placa_abre_la_noche_siguiente_en_cero() -> void:  # 017-A
 	var almacen: Node3D = auto_free(load(ESCENA_DEL_ALMACEN).instantiate())
 	add_child(almacen)
 	await get_tree().process_frame
-	var reloj: RelojDelTurno = almacen.get_node("RelojDelTurno")
-	var ciclo: CicloDeJornadas = almacen.get_node("CicloDeJornadas")
-	var pantalla: PantallaDeCierre = almacen.get_node("PantallaDeCierre")
-	var tareas: Label = almacen.get_node("Hud/Tareas")
+	var reloj: RelojDelTurno = almacen.get_node("Servicios/RelojDelTurno")
+	var ciclo: CicloDeJornadas = almacen.get_node("Servicios/CicloDeJornadas")
+	var pantalla: PantallaDeCierre = almacen.get_node("Interfaz/PantallaDeCierre")
+	var tareas: Label = almacen.get_node("Interfaz/Hud/Tareas")
 
 	# Una obligatoria hecha antes de cerrar: con cero, el marcador de la noche 2 y el de la 1
 	# dirían lo mismo y el caso pasaría sin distinguir nada.
@@ -433,7 +429,9 @@ func test_despachar_la_placa_abre_la_noche_siguiente_en_cero() -> void:  # 017-A
 func test_la_escena_trae_un_solo_reloj_de_pared_y_cuelga_de_la_raiz() -> void:  # 032-AC7
 	# Dos relojes serían dos esferas diciendo lo mismo y una sola conectada, que es el modo de
 	# falla silencioso: el jugador camina hasta la que no anda y no hay error en ningún lado.
-	var texto := FileAccess.get_file_as_string(ESCENA_DEL_ALMACEN)
+	var texto := FileAccess.get_file_as_string(
+		"res://src/escenas/puestos/estructura_del_almacen.tscn"
+	)
 	(
 		assert_int(texto.count(ESCENA_DEL_RELOJ_DE_PARED))
 		. override_failure_message(
@@ -445,7 +443,7 @@ func test_la_escena_trae_un_solo_reloj_de_pared_y_cuelga_de_la_raiz() -> void:  
 		. is_equal(1)
 	)
 	var almacen := _almacen()
-	assert_bool(almacen.has_node("RelojDePared")).is_true()
+	assert_bool(almacen.has_node("Estructura/RelojDePared")).is_true()
 	assert_array(_violaciones_de_cableado(almacen)).is_empty()
 	# Y el `@export` de la raíz resuelto, que es lo que ninguna de las dos afirmaciones de arriba
 	# ve: si `reloj_de_pared.tscn` perdiera su `script`, el nodo instanciado sería un `Label3D`
@@ -468,7 +466,7 @@ func test_el_reloj_de_pared_cae_adentro_del_edificio() -> void:  # 032-AC7
 	await get_tree().process_frame
 	var cascara: MeshInstance3D = almacen.get_node("Estructura/" + CASCARA_DEL_EDIFICIO)
 	var caja: AABB = cascara.global_transform * cascara.get_aabb()
-	var reloj: Node3D = almacen.get_node("RelojDePared")
+	var reloj: Node3D = almacen.get_node("Estructura/RelojDePared")
 	(
 		assert_bool(caja.has_point(reloj.global_position))
 		. override_failure_message(
@@ -484,10 +482,10 @@ func test_la_caja_de_traslado_entra_instanciada_y_adentro_del_edificio() -> void
 	var almacen: Node3D = auto_free(load(ESCENA_DEL_ALMACEN).instantiate())
 	add_child(almacen)
 	await get_tree().process_frame
-	assert_bool(almacen.has_node("CajaDeTraslado")).is_true()
+	assert_bool(almacen.has_node("Objetos/CajaDeTraslado")).is_true()
 	var cascara: MeshInstance3D = almacen.get_node("Estructura/" + CASCARA_DEL_EDIFICIO)
 	var edificio: AABB = cascara.global_transform * cascara.get_aabb()
-	var caja: Node3D = almacen.get_node("CajaDeTraslado")
+	var caja: Node3D = almacen.get_node("Objetos/CajaDeTraslado")
 	(
 		assert_bool(edificio.has_point(caja.global_position))
 		. override_failure_message(
@@ -551,10 +549,10 @@ func test_el_cableado_de_reponer_llega_entero_hasta_los_huecos() -> void:  # 008
 		)
 		. is_equal(del_catalogo)
 	)
-	var repositor: Repositor = almacen.get_node("Repositor")
+	var repositor: Repositor = almacen.get_node("Servicios/Repositor")
 	assert_object(repositor.reloj).is_not_null()
 	assert_object(repositor.carga).is_not_null()
-	var estante: Node3D = almacen.get_node("Estante")
+	var estante: Node3D = almacen.get_node("Estructura/gondola01/StaticBody3D")
 	assert_bool(estante.has_node("Contenido")).is_true()
 	estante.mostrar(1)
 	assert_bool((estante.get_node("Contenido").get_child(0) as Node3D).visible).is_true()
