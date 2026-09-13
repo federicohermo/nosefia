@@ -1,0 +1,23 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://src/escenas/puestos/limpieza_del_almacen.gd" id="1_limpieza"]
+[ext_resource type="PackedScene" path="res://src/escenas/objetos/mancha_en_el_piso.tscn" id="2_mancha"]
+
+[node name="LimpiezaDelAlmacen" type="Node3D"]
+script = ExtResource("1_limpieza")
+
+[node name="ManchaDeLaEntrada" parent="." instance=ExtResource("2_mancha")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, 0.02, 6)
+zona = 0
+
+[node name="ManchaDelPasillo" parent="." instance=ExtResource("2_mancha")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2, 0.02, 1)
+zona = 1
+
+[node name="ManchaDelDeposito" parent="." instance=ExtResource("2_mancha")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.02, -5)
+zona = 2
+
+[node name="ManchaDeLaVentanilla" parent="." instance=ExtResource("2_mancha")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5, 0.02, 1)
+zona = 3

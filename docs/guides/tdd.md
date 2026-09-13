@@ -20,7 +20,7 @@ Las verifica `python .claude/scripts/gate_de_tests.py`, dentro de `verificar.py`
 
 ### 1. Todo script de `dominio/` y `sistemas/` tiene su test espejo
 
-`src/dominio/turno.gd` → `test/dominio/turno_test.gd`.
+`src/dominio/jornada/turno.gd` → `test/dominio/jornada/turno_test.gd`.
 
 Es la que reemplaza al umbral. Sin ella, el código nuevo entra sin nada que lo ejerza y nadie
 se entera hasta que rompe. Y el espejo es lo que permite contestarlo **sin que nadie mantenga
@@ -94,7 +94,7 @@ corren en milisegundos.
 Los gates no cubren si el juego se siente bien, si una tarea del turno es tediosa o si la
 paranoia funciona. Eso es playtesting y no tiene gate, a propósito.
 
-Lo que **no** vale es anotar eso como una casilla del `tasks.md`: una tarea que se cierra
-mirando no la cierra nadie —está medido: 137 casillas así en 35 specs, 6 cerradas alguna vez—
-y termina siendo una lista de intenciones con formato de checklist. Si hay que playtestear
+Lo que **no** vale es anotar eso como trabajo del spec: una tarea que se cierra mirando no la
+cierra nadie —está medido: 137 casillas así en 35 specs, 6 cerradas alguna vez— y termina
+siendo una lista de intenciones con formato de checklist. Si hay que playtestear
 algo, va al Backlog de Notion, que es donde el equipo mira lo que no es código.

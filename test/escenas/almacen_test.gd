@@ -1,8 +1,16 @@
+# gdlint:ignore=max-public-methods
+#
+# **Esta suite es donde converge la pila entera**: casi todas las ramas apiladas le agregan
+# casos al mismo archivo, y la unión cruzó el techo de 20 al mergear el 032 en el 033 —21
+# públicos, medido—. El techo existe para cazar god-objects en `src/`, y una suite no es uno:
+# los casos no comparten estado y cada uno se lee solo. Partirla es la salida de verdad, pero
+# no desde acá: cinco ramas de la pila todavía le agregan casos, y partirla ahora las hace
+# conflictar a las cinco. La directiva va en la línea 1 porque el chequeo se reporta ahí.
 ## El cableado del almacén: qué instancia, qué anclajes ofrece y que nada suyo cuelga de otra cosa.
 ##
 ## No dice «se ve bien»: dice que los anclajes que los specs 008, 009 y 013 van a buscar
-## por nombre están, y que la escena raíz sigue siendo una escena de cableado. La geometría del
-## blockout —los cuerpos y sus formas— la afirma `estructura_del_almacen_test.gd`, que es la
+## por nombre están, y que la escena raíz sigue siendo una escena de cableado. La geometría —las
+## mallas del modelo y sus colisiones— la afirma `estructura_del_almacen_test.gd`, que es la
 ## suite de la escena que la declara; acá se afirma que la instancia no vino corrida.
 ##
 ## **ESTA SUITE INSTANCIA LA ESCENA Y NO LA ENTRA AL ÁRBOL, y es deliberado.** `instantiate()`
@@ -13,14 +21,59 @@
 ## escena al árbol le hereda al 007 un rojo que no es suyo; uno que la instancia y nada más
 ## queda estable. **Si algún día hace falta entrarla, es una decisión que se toma a propósito y
 ## se escribe acá.**
+##
+## **Y hizo falta, en tres casos y sólo en ésos** (specs 028 y 017). Los dos del 028 necesitan un
+## espacio físico contra el que tirar un rayo, y sin árbol no hay `World3D`: el del hueco de la
+## ventanilla entra **sólo el subárbol de la estructura**, que no tiene un script colgando, y el
+## del jugador entra la escena entera, porque lo que mide es que la física del `CharacterBody3D`
+## lo deje parado. El del 017 la entra entera también, y por un motivo distinto: el lazo del
+## cierre vive entero en señales conectadas, y leído como texto no dice si funciona. El resto
+## sigue instanciando y nada más.
 extends GdUnitTestSuite
 
 const ESCENA_DEL_ALMACEN := "res://src/escenas/almacen.tscn"
 
-## La tabla de transformadas del blockout vive una sola vez, en la suite de la escena que declara
-## la geometría. Acá se la lee para la otra mitad de la medición: la sub-escena puede estar bien
-## y el nodo que la instancia venir corrido, y eso sólo se ve desde afuera.
-const SUITE_DE_LA_ESTRUCTURA := preload("res://test/escenas/estructura_del_almacen_test.gd")
+## El cableado se lee como texto en un solo caso, el que afirma lo que **ya no** está: una
+## ausencia no se puede instanciar.
+const SCRIPT_DEL_ALMACEN := "res://src/escenas/almacen.gd"
+
+## La sub-escena del reloj de pared. Se cuenta sobre el texto del `.tscn` y no sobre el árbol
+## instanciado porque lo que hay que afirmar es que se referencia **una sola vez**.
+const ESCENA_DEL_RELOJ_DE_PARED := "res://src/escenas/puestos/reloj_de_pared.tscn"
+
+## Los tres `@export` que la raíz declara. Se listan acá y no adentro del caso porque son el
+## contrato del cableado: agregar uno sin asignarlo en la escena tiene que dar rojo.
+const CABLEADOS_DE_LA_RAIZ := ["_hud", "_reloj", "_ciclo"]
+
+## La malla que trae la cáscara del edificio. Los rayos de acá miran sólo contra ella.
+const CASCARA_DEL_EDIFICIO := "almacen"
+
+## Dónde estaba el hueco de la ventanilla en el blockout que el spec 028 reemplazó. Está acá para
+## que el caso que ejerce la regla tenga un punto que **no** es un hueco, y que sea uno real en vez
+## de inventado: el marcador estuvo cuatro commits en esta posición —aire en un pasillo entre las
+## góndolas y los estantes— con las 23 suites en verde.
+const PUNTO_DEL_HUECO_EN_EL_BLOCKOUT := Vector3(-5, 1.2, 0)
+
+## Alcanza para arrancar afuera del edificio desde cualquier punto de adentro: la planta mide
+## 21,72 × 22,74 m.
+const DISTANCIA_DE_AFUERA := 20.0
+
+## Cuánto por encima del antepecho se mira para ver el hueco, y cuánto por debajo para ver que el
+## antepecho está. El hueco medido va de 1,04 a 2,84 m, así que los dos caen bien adentro.
+const SOBRE_EL_ANTEPECHO := 0.4
+const BAJO_EL_ANTEPECHO := 0.3
+
+## Segundos **reales** que agotan un turno entero de una sola llamada a `_process()`. Sale de
+## las dos constantes y no de un número escrito: el turno se mide en segundos de ficción y el
+## reloj recibe los del jugador, así que rebalancear cualquiera de los dos no deja este caso
+## cerrando la noche a medias.
+const SEGUNDOS_REALES_DE_UN_TURNO := (
+	Reglas.DURACION_DEL_TURNO / Ritmo.SEGUNDOS_DE_TURNO_POR_SEGUNDO_REAL
+)
+
+## Cuadros de física antes de mirar al jugador. Arranca en el aire y cae; 30 a 60 Hz son medio
+## segundo, de sobra para medio metro.
+const CUADROS_DE_FISICA := 30
 
 
 ## Devuelve los nodos que rompen la regla de cableado, ya redactados con su padre.
@@ -48,6 +101,34 @@ static func _descendientes(nodo: Node) -> Array[Node]:
 		todos.append(hijo)
 		todos.append_array(_descendientes(hijo))
 	return todos
+
+
+## Deja colisionando **sólo la cáscara del edificio**. Los muebles taparían los huecos: un rayo
+## que choca contra una góndola diría que la pared está cerrada, y el caso pasaría por el motivo
+## equivocado.
+static func _apagar_todo_menos_la_cascara(nodo: Node) -> void:
+	if nodo is StaticBody3D and nodo.get_parent().name != CASCARA_DEL_EDIFICIO:
+		(nodo as StaticBody3D).collision_layer = 0
+	for hijo in nodo.get_children():
+		_apagar_todo_menos_la_cascara(hijo)
+
+
+## Devuelve si desde afuera del edificio se llega al punto en línea recta por alguno de los cuatro
+## rumbos horizontales, que es exactamente lo que distingue un hueco de un pedazo de pared.
+##
+## Sale a una función porque es lo único que la vuelve ejercible: el caso que la usa corre sobre un
+## marcador que ya está bien, y pasaría igual si no mirara nada. El caso siguiente le pasa el punto
+## que usaba el blockout y afirma que lo rechaza.
+##
+## El criterio es que el rayo **no choque con nada**, sin tolerancia. Con una tolerancia de unos
+## centímetros, el punto que está 30 cm debajo del antepecho daría «se llega»: ahí la pared está a
+## 10 cm, y el caso se pondría verde afirmando lo contrario de lo que quiere decir.
+static func _se_llega_desde_afuera(espacio: PhysicsDirectSpaceState3D, punto: Vector3) -> bool:
+	for rumbo in [Vector3.RIGHT, Vector3.LEFT, Vector3.FORWARD, Vector3.BACK]:
+		var desde: Vector3 = punto + rumbo * DISTANCIA_DE_AFUERA
+		if espacio.intersect_ray(PhysicsRayQueryParameters3D.create(desde, punto)).is_empty():
+			return true
+	return false
 
 
 func _almacen() -> Node3D:
@@ -100,21 +181,103 @@ func test_la_estructura_entra_instanciada_y_no_vino_corrida() -> void:
 	# `global_transform` porque esta suite no entra la escena al árbol y ahí el global aborta con
 	# `Condition "!is_inside_tree()" is true` devolviendo la identidad, o sea que no fallaría por
 	# la geometría: fallaría siempre.
+	#
+	# Ya no recorre cuerpo por cuerpo contra una tabla de posiciones: desde que la estructura es
+	# el modelo, dónde va cada mueble lo decide Blender, y una tabla acá sería un rojo por cada
+	# cosa que el modelador mueve. Lo que queda es lo único que se edita de este lado.
 	var estructura: Node3D = _almacen().get_node("Estructura")
 	assert_that(estructura.transform).is_equal(Transform3D.IDENTITY)
-	for nombre in SUITE_DE_LA_ESTRUCTURA.POSICIONES:
-		var cuerpo: Node3D = estructura.get_node(NodePath(nombre))
-		var esperado := Transform3D(Basis.IDENTITY, SUITE_DE_LA_ESTRUCTURA.POSICIONES[nombre])
-		(
-			assert_that(cuerpo.transform)
-			. override_failure_message(
-				(
-					"`Estructura/%s` quedó en %s y el almacén lo tenía en %s"
-					% [nombre, cuerpo.transform, esperado]
-				)
+
+
+## Entra al árbol **sólo** el subárbol de la estructura, sacándolo del almacén instanciado, y
+## devuelve el espacio físico ya listo para preguntarle.
+##
+## Se entra la estructura sola y no `almacen.tscn` a propósito: la estructura no tiene un solo
+## script colgando, así que su `_ready()` no corre código que esta suite no escribió. Los dos
+## cuadros de física son para que el servidor registre los cuerpos recién entrados; sin ellos el
+## primer rayo no choca con nada y el caso pasa por vacuidad.
+func _espacio_de_la_estructura(almacen: Node3D) -> PhysicsDirectSpaceState3D:
+	var estructura: Node3D = almacen.get_node("Estructura")
+	almacen.remove_child(estructura)
+	# Sin esto Godot avisa `will make owner 'Almacen' inconsistent` en cada corrida: el nodo
+	# sigue apuntando a la raíz de la que lo acabamos de sacar. Es un aviso y no un error, y por
+	# eso es exactamente el tipo de ruido que tapa al próximo aviso, que sí va a importar.
+	estructura.owner = null
+	add_child(auto_free(estructura))
+	_apagar_todo_menos_la_cascara(estructura)
+	await get_tree().physics_frame
+	await get_tree().physics_frame
+	return estructura.get_world_3d().direct_space_state
+
+
+func test_el_hueco_de_la_ventanilla_cae_en_la_ventanilla_del_modelo() -> void:
+	# El marcador es el contrato con el spec 013, y hasta el 028 lo único que se afirmaba de él era
+	# que existía. Con eso alcanzó para que estuviera cuatro commits adentro de un pasillo.
+	var almacen := _almacen()
+	var punto: Vector3 = (almacen.get_node("HuecoDeLaVentanilla") as Node3D).position
+	var espacio: PhysicsDirectSpaceState3D = await _espacio_de_la_estructura(almacen)
+	(
+		assert_bool(_se_llega_desde_afuera(espacio, punto + Vector3.UP * SOBRE_EL_ANTEPECHO))
+		. override_failure_message(
+			(
+				"`HuecoDeLaVentanilla` está en %s y ahí la cáscara es maciza: no es la ventanilla"
+				% punto
 			)
-			. is_equal(esperado)
 		)
+		. is_true()
+	)
+	(
+		assert_bool(_se_llega_desde_afuera(espacio, punto - Vector3.UP * BAJO_EL_ANTEPECHO))
+		. override_failure_message(
+			"debajo de `HuecoDeLaVentanilla` no hay antepecho: el marcador no está a su ras"
+		)
+		. is_false()
+	)
+
+
+func test_la_regla_del_hueco_rechaza_la_posicion_que_tenia_en_el_blockout() -> void:
+	# El caso de arriba corre sobre un marcador que ya está bien, así que pasaría igual con una
+	# regla rota. Éste le pasa el punto que el marcador tuvo de verdad y afirma que lo rechaza.
+	var espacio: PhysicsDirectSpaceState3D = await _espacio_de_la_estructura(_almacen())
+	var punto := PUNTO_DEL_HUECO_EN_EL_BLOCKOUT + Vector3.UP * SOBRE_EL_ANTEPECHO
+	(
+		assert_bool(_se_llega_desde_afuera(espacio, punto))
+		. override_failure_message(
+			"la regla dice que %s cae en un hueco, y ahí la cáscara es maciza" % punto
+		)
+		. is_false()
+	)
+
+
+func test_el_jugador_arranca_adentro_del_almacen_y_apoyado_en_el_piso() -> void:
+	# **Éste es uno de los dos casos de la suite que entran `almacen.tscn` entera al árbol, y es
+	# a propósito**: la única forma de saber que el escenario es caminable es correr la física del
+	# `CharacterBody3D`, y para eso hace falta un árbol. El precio es que corren los `_ready()` de
+	# la escena —el reloj arranca, el HUD se pinta—, y se paga sólo donde hace falta.
+	#
+	# Lo que NO afirma es que el arranque sea el bueno para empezar el turno: afirma que es válido.
+	# Elegir dónde empieza la jornada es diseño.
+	var almacen: Node3D = auto_free(load(ESCENA_DEL_ALMACEN).instantiate())
+	add_child(almacen)
+	for _cuadro in range(CUADROS_DE_FISICA):
+		await get_tree().physics_frame
+	var jugador: CharacterBody3D = almacen.get_node("Jugador")
+	(
+		assert_bool(jugador.is_on_floor())
+		. override_failure_message(
+			"el jugador quedó en %s sin llegar al piso" % jugador.global_position
+		)
+		. is_true()
+	)
+	var cascara: MeshInstance3D = almacen.get_node("Estructura/" + CASCARA_DEL_EDIFICIO)
+	var caja: AABB = cascara.global_transform * cascara.get_aabb()
+	(
+		assert_bool(caja.has_point(jugador.global_position))
+		. override_failure_message(
+			"el jugador quedó en %s, afuera del edificio %s" % [jugador.global_position, caja]
+		)
+		. is_true()
+	)
 
 
 func test_todo_nodo_propio_del_almacen_cuelga_de_la_raiz() -> void:
@@ -150,3 +313,248 @@ func test_la_regla_de_cableado_sabe_ver_un_nodo_colgado_de_otro() -> void:
 	assert_array(violaciones).has_size(1)
 	assert_str(violaciones[0]).contains("Mancha1")
 	assert_str(violaciones[0]).contains("Limpieza")
+
+
+func test_el_cableado_dejo_de_armar_el_turno_y_de_llevar_el_puntaje() -> void:  # 016-AC12
+	# Las dos cosas se fueron a `Partida`, y mientras siguieran acá la regla del despido no se
+	# podía alcanzar jugando: el puntaje moría con la escena. El caso mira el texto del archivo
+	# porque es la única forma de afirmar una ausencia.
+	var texto := FileAccess.get_file_as_string(SCRIPT_DEL_ALMACEN)
+	assert_str(texto).not_contains("Legajo")
+	assert_str(texto).not_contains("Turno.new(")
+	(
+		assert_int(texto.count("Partida.nueva()"))
+		. override_failure_message(
+			(
+				"`almacen.gd` arma %d partidas: con dos, el HUD pinta una y el ciclo corre la otra"
+				% texto.count("Partida.nueva()")
+			)
+		)
+		. is_equal(1)
+	)
+
+
+func test_la_escena_trae_el_ciclo_de_jornadas_colgando_de_la_raiz() -> void:  # 016-AC12
+	# Sin el nodo, el `@export` del cableado llega nulo y el juego muere en el primer cuadro con
+	# un error que no nombra a `almacen.tscn`.
+	var almacen := _almacen()
+	assert_bool(almacen.has_node("CicloDeJornadas")).is_true()
+	assert_object(almacen.get_node("CicloDeJornadas")).is_instanceof(CicloDeJornadas)
+
+
+func test_los_tres_cableados_de_la_raiz_llegan_asignados() -> void:
+	# **Un `@export` sin asignar en el `.tscn` deja la escena cargando sin un solo error**, los
+	# seis nodos de `verificar.py` en verde, y el juego muerto en el primer cuadro con un
+	# `Nonexistent function ... in base 'Nil'` que no nombra ni a `almacen.tscn` ni al export que
+	# falta. El caso de arriba mira que el nodo exista; éste, que el cableado lo alcance — que
+	# son dos cosas distintas: el nodo puede estar y el `node_paths` de la raíz no nombrarlo.
+	var almacen := _almacen()
+	for cableado: String in CABLEADOS_DE_LA_RAIZ:
+		(
+			assert_object(almacen.get(cableado))
+			. override_failure_message(
+				(
+					"`almacen.tscn` no le asignó `%s` a la raíz: el juego muere en el primer cuadro"
+					% cableado
+				)
+			)
+			. is_not_null()
+		)
+
+
+func test_el_cableado_arma_el_parte_una_sola_vez_y_no_decide() -> void:  # 017-AC12
+	# Dos partes por jornada sería la placa pintada dos veces con dos objetos distintos, y la
+	# segunda tapando a la primera. Y una condición acá adentro sería una regla del juego escrita
+	# donde ningún gate la mira.
+	var texto := FileAccess.get_file_as_string(SCRIPT_DEL_ALMACEN)
+	(
+		assert_int(texto.count("ParteDeCierre.new("))
+		. override_failure_message(
+			"`almacen.gd` arma %d partes por jornada" % texto.count("ParteDeCierre.new(")
+		)
+		. is_equal(1)
+	)
+	var condicion := RegEx.create_from_string("\\b(if|elif|match)\\b")
+	for linea in texto.split("\n"):
+		var codigo: String = linea.split("#")[0]
+		(
+			assert_array(condicion.search_all(codigo))
+			. override_failure_message("`almacen.gd` decide en `%s`" % linea.strip_edges())
+			. is_empty()
+		)
+
+
+func test_la_escena_instancia_la_pantalla_de_cierre() -> void:  # 017-AC12
+	var almacen := _almacen()
+	assert_bool(almacen.has_node("PantallaDeCierre")).is_true()
+	assert_object(almacen.get_node("PantallaDeCierre")).is_instanceof(PantallaDeCierre)
+
+
+func test_despachar_la_placa_abre_la_noche_siguiente_en_cero() -> void:  # 017-AC12
+	# **El segundo caso de la suite que entra `almacen.tscn` entera al árbol.** El lazo que este
+	# spec cierra —la noche termina, la placa aparece, el jugador la despacha y la siguiente
+	# abre— vive entero en señales conectadas: leído como texto no dice si funciona, y es lo
+	# único que vuelve alcanzable la jornada 2 jugando.
+	var almacen: Node3D = auto_free(load(ESCENA_DEL_ALMACEN).instantiate())
+	add_child(almacen)
+	await get_tree().process_frame
+	var reloj: RelojDelTurno = almacen.get_node("RelojDelTurno")
+	var ciclo: CicloDeJornadas = almacen.get_node("CicloDeJornadas")
+	var pantalla: PantallaDeCierre = almacen.get_node("PantallaDeCierre")
+	var tareas: Label = almacen.get_node("Hud/Tareas")
+
+	# Una obligatoria hecha antes de cerrar: con cero, el marcador de la noche 2 y el de la 1
+	# dirían lo mismo y el caso pasaría sin distinguir nada.
+	assert_bool(reloj.completar(reloj.obligatoria(Tarea.Tipo.CAJA))).is_true()
+	reloj._process(SEGUNDOS_REALES_DE_UN_TURNO)
+	(
+		assert_bool(pantalla.visible)
+		. override_failure_message("la noche cerró y la placa no apareció")
+		. is_true()
+	)
+
+	var boton: Button = pantalla.get_node("Fondo/Panel/Continuar")
+	boton.pressed.emit()
+	assert_bool(pantalla.visible).is_false()
+	(
+		assert_int(ciclo.partida().jornada())
+		. override_failure_message("despachada la placa, la partida no pasó a la noche siguiente")
+		. is_equal(ReglasDeLaPartida.PRIMERA_JORNADA + 1)
+	)
+	(
+		assert_str(tareas.text)
+		. override_failure_message("el HUD arrastró el marcador de la noche anterior")
+		. is_equal(
+			Hud.TEXTO_DE_LAS_TAREAS % Marcador.tareas(0, Apertura.cantidad_de_obligatorias())
+		)
+	)
+
+
+func test_la_escena_trae_un_solo_reloj_de_pared_y_cuelga_de_la_raiz() -> void:  # 032-AC7
+	# Dos relojes serían dos esferas diciendo lo mismo y una sola conectada, que es el modo de
+	# falla silencioso: el jugador camina hasta la que no anda y no hay error en ningún lado.
+	var texto := FileAccess.get_file_as_string(ESCENA_DEL_ALMACEN)
+	(
+		assert_int(texto.count(ESCENA_DEL_RELOJ_DE_PARED))
+		. override_failure_message(
+			(
+				"`almacen.tscn` referencia %d veces al reloj de pared"
+				% texto.count(ESCENA_DEL_RELOJ_DE_PARED)
+			)
+		)
+		. is_equal(1)
+	)
+	var almacen := _almacen()
+	assert_bool(almacen.has_node("RelojDePared")).is_true()
+	assert_array(_violaciones_de_cableado(almacen)).is_empty()
+	# Y el `@export` de la raíz resuelto, que es lo que ninguna de las dos afirmaciones de arriba
+	# ve: si `reloj_de_pared.tscn` perdiera su `script`, el nodo instanciado sería un `Label3D`
+	# pelado, el `@export` llegaría nulo **con el `node_paths` bien escrito**, y el juego moriría
+	# en el primer cuadro con un error que no nombra a ninguno de los dos `.tscn`.
+	(
+		assert_object(almacen.get("_reloj_de_pared"))
+		. override_failure_message(
+			"`_reloj_de_pared` llegó nulo: la sub-escena perdió su `script` o su `node_paths`"
+		)
+		. is_not_null()
+	)
+
+
+func test_el_reloj_de_pared_cae_adentro_del_edificio() -> void:  # 032-AC7
+	# Un reloj colocado afuera de la cáscara se vería flotando en el vacío y ningún test de
+	# cableado lo diría: la escena carga igual y el nodo está.
+	var almacen: Node3D = auto_free(load(ESCENA_DEL_ALMACEN).instantiate())
+	add_child(almacen)
+	await get_tree().process_frame
+	var cascara: MeshInstance3D = almacen.get_node("Estructura/" + CASCARA_DEL_EDIFICIO)
+	var caja: AABB = cascara.global_transform * cascara.get_aabb()
+	var reloj: Node3D = almacen.get_node("RelojDePared")
+	(
+		assert_bool(caja.has_point(reloj.global_position))
+		. override_failure_message(
+			"el reloj quedó en %s, afuera del edificio %s" % [reloj.global_position, caja]
+		)
+		. is_true()
+	)
+
+
+func test_la_caja_de_traslado_entra_instanciada_y_adentro_del_edificio() -> void:  # 033-AC10
+	# Una caja colocada afuera de la cáscara se vería flotando en el vacío y ningún test de
+	# cableado lo diría: la escena carga igual y el nodo está.
+	var almacen: Node3D = auto_free(load(ESCENA_DEL_ALMACEN).instantiate())
+	add_child(almacen)
+	await get_tree().process_frame
+	assert_bool(almacen.has_node("CajaDeTraslado")).is_true()
+	var cascara: MeshInstance3D = almacen.get_node("Estructura/" + CASCARA_DEL_EDIFICIO)
+	var edificio: AABB = cascara.global_transform * cascara.get_aabb()
+	var caja: Node3D = almacen.get_node("CajaDeTraslado")
+	(
+		assert_bool(edificio.has_point(caja.global_position))
+		. override_failure_message(
+			"la caja quedó en %s, afuera del edificio %s" % [caja.global_position, edificio]
+		)
+		. is_true()
+	)
+
+
+func test_el_cableado_le_da_la_hora_al_reloj_de_pared_y_no_al_hud() -> void:  # 032-AC8
+	# La hora se fue de la pantalla, pero los otros dos carteles del HUD siguen: sin la segunda
+	# mitad de este caso, desconectarlos también pasaría en verde.
+	var texto := FileAccess.get_file_as_string(SCRIPT_DEL_ALMACEN)
+	assert_str(texto).is_not_empty()
+	assert_str(texto).not_contains("_hud.mostrar_tiempo")
+	assert_str(texto).contains("tiempo_consumido.connect(_reloj_de_pared.mostrar_tiempo)")
+	assert_str(texto).contains("tarea_completada.connect(_hud.mostrar_tareas)")
+	assert_str(texto).contains("_hud.mostrar_apercibimientos")
+
+
+func test_el_cableado_de_reponer_llega_entero_hasta_los_huecos() -> void:  # 008-AC10
+	# Un `@export` de tipo `Node` en una escena escrita a mano va declarado ADEMÁS en el
+	# `node_paths` del tag del nodo, o queda en `null`: la escena carga sin un solo error, los
+	# seis nodos dan verde, y el juego muere en el primer cuadro con un
+	# `Nonexistent function … in base 'Nil'` que no nombra ni al `.tscn` ni al `@export`.
+	#
+	# Los tres niveles se afirman juntos y no en tres casos porque la trampa es la misma en los
+	# tres: la raíz, el nodo instanciado que apunta afuera de su sub-escena, y el `@export` que
+	# la sub-escena ya traía y que sobrescribir uno de sus hermanos podría borrar.
+	var almacen := _almacen()
+	for propiedad in ["_repositor", "_carga", "_estante", "_caja_de_traslado"]:
+		(
+			assert_object(almacen.get(propiedad))
+			. override_failure_message(
+				"`%s` quedó en null: falta su entrada en el `node_paths` de la raíz" % propiedad
+			)
+			. is_not_null()
+		)
+	# Las cajas van aparte porque son un `Array`: vacío **no es** null, así que el barrido de
+	# arriba las daría por cableadas sin que haya una sola. Y se afirma que cubren el catálogo
+	# entero sin repetir, que es el bug que este cableado cierra: con una sola caja, despachaba
+	# siempre `YERBA` y los otros cinco productos quedaban en cero para siempre, o sea que
+	# REPONER no se podía terminar jugando.
+	var despachados: Array[int] = []
+	for caja: Node3D in almacen.get("_cajas_de_productos"):
+		(
+			assert_object(caja)
+			. override_failure_message("una entrada de `_cajas_de_productos` quedó en null")
+			. is_not_null()
+		)
+		despachados.append(caja.producto)
+	despachados.sort()
+	var del_catalogo: Array[int] = []
+	for producto in Catalogo.todos():
+		del_catalogo.append(producto.id)
+	del_catalogo.sort()
+	(
+		assert_array(despachados)
+		. override_failure_message(
+			"las cajas despachan %s y el catálogo tiene %s" % [despachados, del_catalogo]
+		)
+		. is_equal(del_catalogo)
+	)
+	var repositor: Repositor = almacen.get_node("Repositor")
+	assert_object(repositor.reloj).is_not_null()
+	assert_object(repositor.carga).is_not_null()
+	var estante: Node3D = almacen.get_node("Estante")
+	assert_bool(estante.has_node("Contenido")).is_true()
+	estante.mostrar(1)
+	assert_bool((estante.get_node("Contenido").get_child(0) as Node3D).visible).is_true()

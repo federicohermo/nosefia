@@ -1,0 +1,35 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://src/ui/diegetica/app_notas.gd" id="1_notas"]
+
+[node name="AppNotas" type="VBoxContainer" node_paths=PackedStringArray("_titulo", "_lista", "_campo_titulo", "_campo_texto", "_anotar")]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 10
+script = ExtResource("1_notas")
+_titulo = NodePath("Titulo")
+_lista = NodePath("Lista")
+_campo_titulo = NodePath("CampoTitulo")
+_campo_texto = NodePath("CampoTexto")
+_anotar = NodePath("Anotar")
+
+[node name="Titulo" type="Label" parent="."]
+layout_mode = 2
+theme_override_font_sizes/font_size = 26
+
+[node name="Lista" type="VBoxContainer" parent="."]
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="CampoTitulo" type="LineEdit" parent="."]
+layout_mode = 2
+
+[node name="CampoTexto" type="TextEdit" parent="."]
+custom_minimum_size = Vector2(0, 90)
+layout_mode = 2
+
+[node name="Anotar" type="Button" parent="."]
+layout_mode = 2

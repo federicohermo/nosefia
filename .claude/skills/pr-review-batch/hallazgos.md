@@ -58,7 +58,7 @@ rompe nada — el `if` simplemente no entra nunca, para siempre, en silencio.
 | que todo `.gd` de `dominio/` y `sistemas/` tenga su test espejo | que el comentario explique el **porqué** y no el qué |
 | el test sin aserción, apagado, o con un nombre que no corre | español en comentarios, nombres, commits y specs |
 | formato, largo de línea, nombres y orden de declaraciones (`gdformat`, `gdlint`) | que un valor fijo no viva en dos lugares |
-| que no se edite `src/` ni `docs/` sin un spec detrás de la rama | que no quede ningún `print` |
+| que no se edite `src/` sin un spec detrás de la rama | que no quede ningún `print` |
 | | `get_node("../../…")` en vez de `@export` y señales |
 | | que los borrados vayan en su propio commit |
 | | que el AC del spec sea falsable y esté cubierto |
@@ -189,8 +189,8 @@ nota al pie**. Un 🟡 archivado y un fix que no te dejaron aplicar se leen igua
 opuestos: del primero ya se decidió, del segundo no decidió nadie.
 
 1. **Reintentá por otro camino.** Y si el bloqueo vino del hook, **mirá el nombre de tu rama antes
-   que nada**: `gate_de_spec.py` exige `feature/<NNN>-` con el `NNN` en `specs/mapa.json` para
-   tocar `src/` o `docs/`. Es la causa número uno de un fix bloqueado acá.
+   que nada**: `gate_de_spec.py` sólo deja tocar `src/` desde `feature/<NNN>-<kebab>`, `bugfix/` o
+   `hotfix/`. Es la causa número uno de un fix bloqueado acá.
 2. Si sigue bloqueado, **la corrida no cierra en verde.** El reporte arranca diciéndolo, con
    `BLOQUEADO: <qué> — <quién lo bloqueó>` y el fix exacto en una línea copiable.
 3. **No lo tapes con un issue.** Eso convierte un rojo en un pendiente, que es la única operación

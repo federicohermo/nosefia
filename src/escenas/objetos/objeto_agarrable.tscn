@@ -1,0 +1,20 @@
+[gd_scene load_steps=5 format=3]
+
+[ext_resource type="Script" uid="uid://cht0lbwcnrdy5" path="res://src/escenas/objetos/objeto_agarrable.gd" id="1_objeto"]
+[ext_resource type="Resource" path="res://src/dominio/almacen/lata_de_tomate.tres" id="2_datos"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_cuerpo"]
+size = Vector3(0.12, 0.16, 0.12)
+
+[sub_resource type="BoxMesh" id="BoxMesh_cuerpo"]
+size = Vector3(0.12, 0.16, 0.12)
+
+[node name="ObjetoAgarrable" type="RigidBody3D" groups=["interactuable"]]
+script = ExtResource("1_objeto")
+datos = ExtResource("2_datos")
+
+[node name="Forma" type="CollisionShape3D" parent="."]
+shape = SubResource("BoxShape3D_cuerpo")
+
+[node name="Malla" type="MeshInstance3D" parent="."]
+mesh = SubResource("BoxMesh_cuerpo")

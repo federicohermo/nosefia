@@ -1,0 +1,30 @@
+[gd_scene load_steps=5 format=3]
+
+[ext_resource type="Script" path="res://src/escenas/objetos/mancha_en_el_piso.gd" id="1_mancha"]
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_mancha"]
+height = 0.06
+radius = 0.6
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_mancha"]
+top_radius = 0.6
+bottom_radius = 0.6
+height = 0.04
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_mancha"]
+transparency = 1
+albedo_color = Color(0.16, 0.13, 0.1, 0.85)
+
+[node name="ManchaEnElPiso" type="StaticBody3D" node_paths=PackedStringArray("_mancha", "_cuerpo") groups=["interactuable"]]
+script = ExtResource("1_mancha")
+_mancha = NodePath("Malla")
+_cuerpo = NodePath("Cuerpo")
+
+[node name="Cuerpo" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.03, 0)
+shape = SubResource("CylinderShape3D_mancha")
+
+[node name="Malla" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.02, 0)
+mesh = SubResource("CylinderMesh_mancha")
+surface_material_override/0 = SubResource("StandardMaterial3D_mancha")

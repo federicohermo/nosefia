@@ -16,6 +16,14 @@ extends CharacterBody3D
 signal objetivo_enfocado(objetivo: Node3D, distancia: float)
 signal objetivo_perdido
 
+## Los dos sistemas del spec 006, por `@export` y no por `@onready`: un `@onready` se resuelve
+## recién al entrar la escena al árbol, y entonces `id_en_la_mano()` se caería sobre un jugador
+## apenas instanciado — que es como lo instancia todo test de esta escena. Tampoco son autoloads:
+## está medido que `gate_de_capas.py` no ve uno nombrado por su nombre global, o sea que esa
+## puerta cruzaría capas sin dejar rastro.
+@export var agarre: Agarre
+@export var examen: Examen
+
 ## Se arma en la declaración y no en `_ready()` a propósito: así un test puede instanciar la
 ## escena sin entrarla al árbol y el control ya existe. Entrar la escena al árbol haría correr
 ## `_ready()`, que toca el cursor y lee el rayo — dos cosas que en headless no significan nada.
@@ -32,6 +40,10 @@ var _control := ControlDelJugador.new(
 ## una regla del juego, es poder llegar al botón de cerrar la ventana sin matar el proceso.
 var _cursor_soltado_a_mano := false
 
+## Lo que la mira tiene adelante ahora mismo. Se guarda el nodo y no el `id` porque agarrar
+## necesita el `Node3D`; el dominio sigue viendo sólo el `int` que le pasa `_leer_la_mira()`.
+var _enfocado: Node3D = null
+
 @onready var _camara: Camera3D = $Camara
 @onready var _mira: RayCast3D = $Camara/Mira
 
@@ -39,19 +51,47 @@ var _cursor_soltado_a_mano := false
 func _ready() -> void:
 	_aplicar_el_modo_del_cursor()
 	_aplicar_la_rotacion()
+	# Examinar clava la cámara y la caminata. Se cablea acá y no adentro de `Examen` porque
+	# `sistemas/` no puede nombrar un nodo de `escenas/`: allá se emite lo que pasó, acá se
+	# traduce a lo que hay que hacer.
+	examen.examen_iniciado.connect(_al_empezar_a_examinar)
+	examen.examen_terminado.connect(reanudar)
+	agarre.objeto_soltado.connect(_devolver_al_mundo)
 
 
 func _unhandled_input(evento: InputEvent) -> void:
 	# El giro se descarta con el cursor suelto porque en `MOUSE_MODE_VISIBLE` el motor sigue
 	# entregando el `relative` del mouse: sin este filtro, ir a apretar el botón de cerrar la
 	# ventana gira la cámara todo el camino, y la salida de emergencia deja de servir.
-	if evento is InputEventMouseMotion and _el_cursor_esta_tomado():
-		_control.girar((evento as InputEventMouseMotion).relative)
-		_aplicar_la_rotacion()
-	elif evento is InputEventMouseButton and (evento as InputEventMouseButton).pressed:
+	#
+	# El mismo `relative` va a `Examen` cuando el cursor NO está tomado, que es lo que pasa
+	# mientras se examina algo —examinar suspende—. No hay un `if` sobre el examen acá: `rotar()`
+	# no hace nada si no hay nada en examen, y esa decisión vive donde está el estado.
+	if evento is InputEventMouseMotion:
+		var relativo := (evento as InputEventMouseMotion).relative
+		if _el_cursor_esta_tomado():
+			_control.girar(relativo)
+			_aplicar_la_rotacion()
+		else:
+			examen.rotar(relativo)
+		return
+	if evento is InputEventMouseButton and (evento as InputEventMouseButton).pressed:
+		# El primer clic después de la salida de emergencia recupera el cursor **y nada más**: sin
+		# el corte, ir a apretar el botón de cerrar la ventana y volver agarraría de paso lo que
+		# hubiera adelante.
+		var venia_suelto := _cursor_soltado_a_mano
 		_cursor_soltado_a_mano = false
-	elif evento.is_action_pressed("ui_cancel"):
+		if venia_suelto:
+			return
+	if evento.is_action_pressed("ui_cancel"):
 		_cursor_soltado_a_mano = true
+	elif evento.is_action_pressed(ReglasDeLosObjetos.ACCION_AGARRAR):
+		# Quién se come el clic lo contesta `Examen`, que es el que sabe si hay algo pegado a la
+		# cara. Acá sólo se lo pasa al que quedó: esto es ruteo, no una regla del juego.
+		if not examen.atajar_el_clic():
+			agarre.alternar(_datos_de_lo_enfocado(), _enfocado)
+	elif evento.is_action_pressed(ReglasDeLosObjetos.ACCION_EXAMINAR):
+		examen.alternar(_datos_de_lo_enfocado())
 
 
 func _physics_process(delta: float) -> void:
@@ -98,6 +138,20 @@ func reanudar() -> void:
 	_control.reanudar()
 
 
+## Qué `id` del dominio se está llevando en la mano, o `SIN_ID`.
+##
+## La única puerta por la que otra escena pregunta qué lleva el jugador — la piden los tres
+## llamadores del 014 para saber si lo que hay en la mano es el trapeador, que es lo que decide
+## si una pasada cuenta: `PisoDelLocal.pasar()` compara este `id` contra el del trapeador y una
+## mano con otra cosa no baja una sola pasada. Devuelve el `id` y nunca el nodo: un nodo
+## cruzaría la dirección de las capas al revés.
+func id_en_la_mano() -> StringName:
+	var datos := agarre.manos().sostenido()
+	if datos == null:
+		return ObjetoDelAlmacen.SIN_ID
+	return datos.id
+
+
 ## El yaw va al cuerpo —así el adelante de la caminata y el de la vista son el mismo— y el pitch
 ## a la cámara. El dominio devuelve dos ángulos y no sabe a qué nodo van.
 func _aplicar_la_rotacion() -> void:
@@ -136,9 +190,34 @@ func _leer_la_mira() -> void:
 		# 006 decide si algo está al alcance de la mano, y ahí ese error importa.
 		distancia = _camara.global_position.distance_to(_mira.get_collision_point())
 		interactuable = enfocado.is_in_group(ReglasDelJugador.GRUPO_INTERACTUABLE)
+	_enfocado = enfocado
 	if not _control.observar(id, distancia, interactuable):
 		return
 	if _control.objetivo() == Foco.SIN_OBJETIVO:
 		objetivo_perdido.emit()
 	else:
 		objetivo_enfocado.emit(enfocado, distancia)
+
+
+## Le pide a lo enfocado que se presente, por el nombre de método que ES el contrato. `null` si
+## no hay nada enfocado o si lo que hay no es un objeto del almacén —una pared, una estantería—.
+func _datos_de_lo_enfocado() -> ObjetoDelAlmacen:
+	if _enfocado == null or not _enfocado.has_method(ReglasDeLosObjetos.METODO_INTERACTUAR):
+		return null
+	return _enfocado.call(ReglasDeLosObjetos.METODO_INTERACTUAR)
+
+
+## Traduce «empezó un examen» a «el jugador no controla». El argumento se descarta: quién es el
+## nodo ya lo sabe `Examen`, que es el que lo está moviendo.
+func _al_empezar_a_examinar(_nodo: Node3D) -> void:
+	suspender()
+
+
+## Lo soltado vuelve a colgar del mundo y no del punto de soltado, que se mueve con la cámara.
+## Es cableado —quién es «el mundo» sólo lo sabe la escena— y por eso `Agarre` deja el objeto en
+## el punto y avisa, en vez de salir a buscar dónde ponerlo.
+func _devolver_al_mundo(nodo: Node3D) -> void:
+	var mundo := get_parent()
+	if nodo == null or mundo == null or not nodo.is_inside_tree():
+		return
+	nodo.reparent(mundo, true)

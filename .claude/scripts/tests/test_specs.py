@@ -5,6 +5,13 @@ import unittest
 
 from lib.specs import (
     aterrizo,
+    cercado_sin_cerrar,
+    encabezados_con_linea,
+    encabezados_del_plan,
+    palabras,
+    partir_spec,
+    seleccionar_carpetas,
+    rutas_intocables,
     agrupar_prs_por_spec,
     archivo_de_comentario,
     carpeta_existente,
@@ -147,6 +154,16 @@ class ArchivoDeComentario(unittest.TestCase):
         self.assertEqual(nombre, "tasks.md")
         self.assertEqual(contenido, "- [ ] T001")
 
+    def test_un_archivo_que_no_es_canonico_vuelve_del_issue(self):
+        # El alfabeto no es una lista de nombres conocidos, y ésa es la propiedad: un spec
+        # puede agregar un `baseline.md` con una medición previa. Si hubiera una lista, ese
+        # archivo se subiría al issue y no volvería nunca — y `specs/` es caché, así que «no
+        # volver» es perderse.
+        self.assertEqual(
+            archivo_de_comentario("## `baseline.md`\n\nLo que medía antes."),
+            ("baseline.md", "Lo que medía antes."),
+        )
+
     def test_no_acepta_un_nombre_fuera_del_alfabeto(self):
         self.assertIsNone(archivo_de_comentario("## `Research.md`\n\ntexto"))
 
@@ -177,6 +194,16 @@ class Traducir(unittest.TestCase):
         # muerto.
         self.assertIn("issues/42", traducir("./005-el-inventario/baseline.md", self.mapa, "u/r"))
 
+    def test_una_cita_con_linea_no_se_traduce(self):
+        # Sin esto la traducción **destruye la medición**: matcheaba hasta el `.md` y dejaba el
+        # rango pegado a la URL —`…/issues/42:59-60`—, que no lleva a ninguna parte. Y como
+        # `hidratar_specs.py` escribe al disco lo que el issue tiene, la URL rota volvía y
+        # pisaba la ruta original. Medido el 2026-09-06: ocho citas perdidas así, en el 007 y
+        # el 013. Un issue no tiene número de línea, así que la cita se deja verbatim.
+        for cita in ("specs/005-el-inventario/research.md:59-60", "./005-el-inventario/spec.md:7"):
+            with self.subTest(cita=cita):
+                self.assertEqual(traducir(f"ver {cita}", self.mapa, "u/r"), f"ver {cita}")
+
 
 class CarpetaExistente(unittest.TestCase):
     def test_empareja_por_numero_y_no_por_nombre(self):
@@ -186,6 +213,42 @@ class CarpetaExistente(unittest.TestCase):
 
     def test_devuelve_none_si_no_esta(self):
         self.assertIsNone(carpeta_existente(["004-otra"], "005"))
+
+
+class SeleccionarCarpetas(unittest.TestCase):
+    """La selección de `publicar_spec.py`, ejercida sin red ni disco.  # 030-AC6
+
+    Las carpetas entran como una lista de strings y salen como otra: no hay `Path`, no hay
+    `gh` y no hay `iterdir`. Es lo que hace que los cuatro casos de abajo se puedan escribir.
+    """
+
+    CARPETAS = ["028-uno", "029-dos", "030-tres"]
+
+    def test_sin_ids_devuelve_todas(self):  # 030-AC2
+        # El default no cambia: sin `NNN` la lista sale entera y en el mismo orden, que es lo
+        # que necesitan el alta y cualquier reconciliación.
+        self.assertEqual(seleccionar_carpetas(self.CARPETAS, []), self.CARPETAS)
+
+    def test_un_id_deja_solo_su_carpeta(self):  # 030-AC1
+        self.assertEqual(seleccionar_carpetas(self.CARPETAS, ["029"]), ["029-dos"])
+
+    def test_varios_ids_dejan_esas_y_ninguna_mas(self):  # 030-AC3
+        self.assertEqual(
+            seleccionar_carpetas(self.CARPETAS, ["030", "028"]), ["028-uno", "030-tres"]
+        )
+
+    def test_un_id_sin_carpeta_grita_y_lo_nombra(self):  # 030-AC4
+        # Y grita aunque venga acompañado de uno válido: media corrida deja el mapa y los
+        # issues discrepando.
+        with self.assertRaises(ValueError) as caso:
+            seleccionar_carpetas(self.CARPETAS, ["029", "031"])
+        self.assertIn("031", str(caso.exception))
+        self.assertNotIn("029", str(caso.exception))
+
+    def test_empareja_por_numero_y_no_por_nombre(self):  # 030-AC1
+        # Una caché hidratada antes de un cambio de título tiene otro nombre y el mismo `NNN`:
+        # emparejar por nombre completo la trataría como ausente y cortaría una corrida buena.
+        self.assertEqual(seleccionar_carpetas(["005-nombre-viejo"], ["005"]), ["005-nombre-viejo"])
 
 
 class OrigenDe(unittest.TestCase):
@@ -277,7 +340,7 @@ class AgruparYAterrizar(unittest.TestCase):
     def test_agrupa_por_el_nnn_de_la_rama(self):
         prs = [
             {"number": 1, "headRefName": "feature/001-a", "state": "MERGED"},
-            {"number": 2, "headRefName": "fix/001-b", "state": "MERGED"},
+            {"number": 2, "headRefName": "bugfix/001-b", "state": "MERGED"},
             {"number": 3, "headRefName": "sin-spec", "state": "MERGED"},
         ]
         agrupados = agrupar_prs_por_spec(prs)
@@ -285,10 +348,10 @@ class AgruparYAterrizar(unittest.TestCase):
         self.assertNotIn("", agrupados)
 
     def test_acepta_prefijos_que_no_son_feature(self):
-        # Un spec puede aterrizar por una rama `fix/`, y un patrón que sólo aceptara
+        # Un spec puede aterrizar por una rama `bugfix/`, y un patrón que sólo aceptara
         # `feature/` lo perdería sin decirlo.
         self.assertTrue(aterrizo(agrupar_prs_por_spec(
-            [{"number": 1, "headRefName": "chore/012-x", "state": "MERGED"}]
+            [{"number": 1, "headRefName": "bugfix/012-x", "state": "MERGED"}]
         )["012"]))
 
     def test_sin_prs_no_aterrizo(self):
@@ -305,6 +368,103 @@ class CensoDeDeuda(unittest.TestCase):
         # Sin esta mitad, el censo seguiría mostrando lo que un spec acaba de reclamar.
         issues = [{"number": 9}]
         self.assertEqual(deuda_del_censo(issues, {"001": entrada(issue=7, origen=[9])}), [])
+
+
+class ElAndamioDeLaPlantillaNoEsContenido(unittest.TestCase):
+    """Un `<!-- -->` es instrucción para quien escribe el spec, no texto del spec.
+
+    Las tres reglas son la misma: lo que el autor va a borrar no puede gastar techo ni
+    declarar prohibiciones. Sin esto `specs/plantilla/` es inusable — medido el 2026-09-06:
+    su `plan.md` daba 386 palabras contra un techo de 250 sin haber escrito nada propio, y su
+    `### Rutas` declaraba intocables `src/`, `reglas.gd` y `tasks.md` desde la prosa que
+    explica el rubro.
+    """
+
+    def test_un_comentario_no_gasta_techo(self):
+        self.assertEqual(palabras("uno dos <!-- tres cuatro cinco --> seis"), 3)
+
+    def test_un_comentario_de_varias_lineas_tampoco(self):
+        self.assertEqual(palabras("uno\n<!-- dos\n     tres -->\ncuatro"), 2)
+
+    def test_una_ruta_citada_adentro_de_un_comentario_no_se_prohibe(self):
+        # El párrafo que explica el rubro cita rutas para ilustrarlo, y el de la plantilla
+        # cita hasta la que dice que NO va. Contarlas deja al spec prohibiendo `src/` antes
+        # de escribir una línea propia.
+        plan = "## Qué NO se toca\n\n### Rutas\n\n<!-- por ejemplo `src/` -->\n- `reglas.gd`\n"
+        self.assertEqual(rutas_intocables(plan), ["reglas.gd"])
+
+    def test_un_encabezado_comentado_no_es_una_seccion_del_plan(self):
+        plan = "# Plan\n\n<!-- ## Orden obligado va acá -->\n\n## Criterio de terminado\n"
+        self.assertEqual(encabezados_del_plan(plan), ["## Criterio de terminado"])
+
+
+class ElRubroDeRutasSeReconocePorLaLineaEntera(unittest.TestCase):
+    def test_un_encabezado_mas_hondo_no_es_el_rubro(self):
+        # Se buscaba por substring, y `#### Rutas` contiene `### Rutas`: un rubro de otro
+        # nivel se leía como éste y sus citas pasaban a ser prohibiciones.
+        self.assertEqual(rutas_intocables("#### Rutas\n\n- `src/`\n"), [])
+
+    def test_el_rubro_de_verdad_si(self):
+        self.assertEqual(rutas_intocables("### Rutas\n\n- `src/`\n"), ["src/"])
+
+    def test_el_rubro_como_ultima_linea_no_rompe(self):
+        # Sin `\n` detrás —fin de archivo— la búsqueda por substring no lo encontraba y el
+        # gate se salteaba callado.
+        self.assertEqual(rutas_intocables("## Qué NO se toca\n\n### Rutas"), [])
+
+
+class UnCercadoSinCerrarSeVe(unittest.TestCase):
+    """El modo de falla más silencioso de este parser, y por eso tiene su propio rojo.
+
+    Un bloque cercado que nunca cierra deja a `sin_cercados()` borrando **todo lo que sigue**,
+    así que un `### Rutas` escrito después de un ``` huérfano devuelve cero rutas y el gate se
+    saltea con cara de haber mirado. Medido el 2026-09-06: `sin_cercados("a\\n```\\nb\\nc\\n")`
+    devuelve `"a"`.
+    """
+
+    def test_un_bloque_que_cierra_no_es_hallazgo(self):
+        self.assertFalse(cercado_sin_cerrar("texto\n```py\nx = 1\n```\nmás texto\n"))
+
+    def test_un_bloque_que_no_cierra_si(self):
+        self.assertTrue(cercado_sin_cerrar("texto\n```py\nx = 1\n"))
+
+    def test_las_dos_cercas_cuentan(self):
+        self.assertTrue(cercado_sin_cerrar("~~~\nx\n"))
+        self.assertFalse(cercado_sin_cerrar("~~~\nx\n~~~\n"))
+
+    def test_un_texto_sin_cercas_no_es_hallazgo(self):
+        self.assertFalse(cercado_sin_cerrar("# T\n\nprosa y `código` en línea\n"))
+
+
+class LosEncabezadosCercadosSonEjemplos(unittest.TestCase):
+    def test_un_encabezado_cercado_no_es_una_seccion(self):
+        # Un `research.md` que muestra un `## Pendientes` para explicar que está prohibido
+        # quedaba acusado de tenerlo. El barrido del plan ya salteaba los cercados; el de las
+        # secciones que aplazan, no.
+        texto = "# R\n\nasí se ve una prohibida:\n\n```markdown\n## Pendientes\n```\n"
+        self.assertEqual(encabezados_con_linea(texto), [(1, "R")])
+
+    def test_la_linea_es_la_del_archivo(self):
+        # El rojo la nombra: `spec.md:41` se abre, «hay una sección que aplaza» hay que ir a
+        # buscarla.
+        self.assertEqual(encabezados_con_linea("a\n\n## Dos\n"), [(3, "Dos")])
+
+
+class UnEncabezadoCercadoNoParteElSpec(unittest.TestCase):
+    def test_el_bloque_de_criterios_sale_del_encabezado_real(self):
+        # Un `spec.md` que muestra el formato de un spec adentro de un bloque cercado se
+        # partía por el encabezado del EJEMPLO: la prosa se quedaba con los criterios reales
+        # y el bloque salía vacío, así que su techo dejaba de morder y `acs_de()` devolvía
+        # cero criterios sobre un spec que los tiene. Es el mismo agujero que
+        # `sin_cercados()` ya cierra para el `plan.md`.
+        texto = (
+            "# T\n\nprosa\n\n```markdown\n## Criterios de aceptación\n```\n\n"
+            "## Criterios de aceptación\n\n- **AC1** — x\n"
+        )
+        prosa, criterios = partir_spec(texto)
+        self.assertIn("```", prosa)
+        self.assertNotIn("```", criterios)
+        self.assertIn("AC1", criterios)
 
 
 if __name__ == "__main__":

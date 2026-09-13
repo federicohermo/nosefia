@@ -1,6 +1,6 @@
 ---
 name: pr-review-batch
-description: Revisa los PR abiertos de GitHub en paralelo —un agente por PR, cada uno en su worktree—, arregla lo que encuentra, verifica con verificar.py, commitea y pushea a la rama del PR, y si los PR están apilados cierra poniendo la pila al día. Usar al querer cerrar el review de dos o más PR de este repo. Para uno solo, pr-review. Para revisar un spec que todavía es texto, spec-review-batch.
+description: Revisa los PR abiertos de GitHub en paralelo —un agente por PR, cada uno en su worktree—, arregla lo que encuentra, verifica con verificar.py, commitea y pushea a la rama del PR, y si los PR están apilados cierra poniendo la pila al día. Usar al querer cerrar el review de dos o más PR de este repo. Para uno solo, pr-review. Para revisar un spec que todavía es texto, spec-revise-batch.
 argument-hint: "<NN NN ...> | --abiertos [--comentar] [--dry]"
 # Sin `allowed-tools`, o sea sin restricción, y por el mismo motivo que los demás skills de
 # este repo: declarar una lista parcial le sacaría todo lo que no estuviera en ella —`Agent`,
@@ -69,8 +69,15 @@ gh pr list --repo federicohermo/nosefia --state open \
    for n in 6 7 8; do
      python .claude/skills/pr-review-batch/scripts/diff_pr.py <base> <dir>/$n origin/<head>
    done
-   cat <dir>/*/pr.files | sort | uniq -c | sort -rn | awk '$1>1'
+   cat <dir>/*/pr.files | sort | uniq -cd | sort -rn
    ```
+   **`uniq -cd` y no un `awk` sobre la primera columna**, y no es estilo: un `$1` escrito acá
+   **no le llega al agente**. El harness de slash-command sustituye los posicionales del cuerpo
+   del skill por los argumentos de la invocación, así que `awk '$1>1'` viaja como `awk '025>1'`
+   —una constante no nula, o sea **verdadera para toda línea**— y la lista caliente sale con el
+   lote entero en vez de con los archivos compartidos. **No falla: contesta de más, y en
+   silencio.** Las variables con nombre (`$n`, `$GODOT_BIN`) viajan intactas; los dígitos no.
+   Medido el 2026-09-01 en la corrida sobre el lote 024/025.
 5. **Y medí aparte las escenas.** `cat <dir>/*/pr.escenas | sort | uniq -d` — un `.tscn` que
    aparece en dos PR **no es un conflicto barato**: es el único solapamiento del lote que git no
    sabe resolver. Va al preámbulo y al Paso 6.
@@ -271,21 +278,21 @@ rompió, no pushees, y decilo. Un pipeline que pushea para completarse no sirve.
 
 ## Paso 4 — El protocolo de contención
 
-**Acá el rojo casi nunca es del PR, y el modo de falla propio de este repo no es un rojo: es un
-salteado.**
+**Acá el rojo casi nunca es del PR, y la falta de `GODOT_BIN` no se saltea: sale roja.**
 
-`verificar.py` saltea el nodo `tests` si no encuentra `GODOT_BIN`, y **lo declara** — pero un
-reporte que dice «6/6» sin leer los salteados es un review que dio por corrida una suite que no
-corrió. Medido en esta máquina: `GODOT_BIN` **no está en el entorno de la terminal**, se lee del
-registro de Windows, y una terminal anterior a la variable le pasa el entorno viejo a todo lo que
-lance.
+Desde que existe el primer `*_test.gd` el nodo `tests` **exige** Godot, y
+`verificar.py` devuelve rojo si no encuentra `GODOT_BIN`, con un mensaje que habla de la variable
+y no del código (`verificar.py:132-141`). Medido en esta máquina: `GODOT_BIN` **no está en el
+entorno de la terminal**, se lee del registro de Windows, y una terminal anterior a la variable le
+pasa el entorno viejo a todo lo que lance. El salteo que sí hay que leer es el de los **otros**
+nodos —`lint` y `formato` sobre cero archivos—, y un nodo salteado no es un nodo verde.
 
 El protocolo, y no hay que improvisarlo:
 
-1. **Leé los salteados antes que los rojos.** `tests` salteado **es un rojo del review**: la suite
-   no corrió, así que no sabés si el fix rompió algo.
-2. Si el salteo es por `GODOT_BIN`, no lo declares como pasado: exportalo en el worktree y volvé a
-   correr. Si no se puede, **es un bloqueante del lote y no del PR**.
+1. **Leé los salteados antes que los rojos, y no esperes que `tests` esté entre ellos.** Un
+   reporte que dice «6/6» sin mirar qué se salteó da por mirado lo que nadie miró.
+2. Si el rojo de `tests` es por `GODOT_BIN`, no lo declares como pasado: exportalo en el worktree y
+   volvé a correr. Si no se puede, **es un bloqueante del lote y no del PR**.
 3. ¿El test que falló está en un archivo que el PR toca? **Si sí, es tuyo** — arreglalo.
 4. Si no, y huele a contención —N motores a la vez—, **corré `verificar.py --solo tests`** solo.
 5. **Verde ⇒ seguí, y declaralo en el reporte** con las dos corridas. No lo escondas: el usuario
@@ -309,6 +316,22 @@ El padre no re-audita: cruza.
 - **Recalculá la lista caliente con lo que el review escribió, no con lo que el diff traía.** El
   propio review crea solapamiento nuevo: es habitual que varios agentes terminen tocando el mismo
   doc, que ningún diff original incluía.
+- **Y cruzá cada PR nuevo que abrió un carril contra los diffs de los otros, no sólo contra el
+  suyo.** Es el modo de falla propio del batch, y **no lo tapa el punto anterior**: la lista
+  caliente es la *intersección de los PR revisados*, y un PR recién abierto no está en ella. Un
+  carril que saca un hallazgo fuera de alcance a su propio PR **no puede saber que otro carril ya
+  lo arregla adentro del suyo** — no ve ese diff, y encima el arreglo del otro puede no existir
+  todavía cuando él abre el PR. El síntoma no es un conflicto cualquiera: es
+  `git merge-tree` marcando **la misma frase** en los dos.
+
+  Medílo con `git merge-tree --write-tree --name-only origin/<pr-nuevo> origin/<cada-cabeza>`, y
+  si el diff del PR nuevo está **contenido** en el de otro, **cerralo con el motivo medido** en vez
+  de mergear los dos. No es lo mismo que el 🟡 falso de abajo: acá el hallazgo era **cierto** y el
+  arreglo entra igual, por el otro PR. Cerrar es la descarga, no un pendiente.
+
+  Medido el 2026-09-08 en la corrida sobre el lote 92/93: el carril del 92 abrió el PR 94 por una
+  frase falsa en los ocho `sin-deuda.md`, y el PR 93 reescribía esa misma frase — ocho conflictos
+  de contenido, cero líneas de ganancia.
 - **Los conteos que el lote mueve son tuyos** (cláusula 2). Barré las afirmaciones numéricas sobre
   el árbol —cuántos archivos, cuántos nodos, cuántas capas— **cabeza por cabeza**, y despachá el
   número medido. Y medilo con el pathspec acotado.
@@ -418,7 +441,7 @@ python .claude/skills/pr-review-batch/scripts/limpiar_worktrees.py --todos
 ```
 
 **No lo hagas a mano, y no uses `git worktree remove` solo: va a fallar.** Borra lo trackeado y el
-`.git`, pero `.godot/` y `reportes/` están en el `.gitignore`, así que el directorio no queda
+`.git`, pero `.godot/` y `reports/` están en el `.gitignore`, así que el directorio no queda
 vacío y el borrado final tira `Directory not empty`. `--force` no ayuda —no es un problema de
 cambios sin commitear— y le pasa a **todo worktree que haya corrido `verificar.py`**, o sea a
 todos: el nodo `tests` abre el proyecto en Godot y Godot escribe su caché de importación.
@@ -473,7 +496,7 @@ reporte, no como una advertencia.
 
 - **No mergea a `staging`, y no mueve estados en `specs/mapa.json`** — los mueve ese merge y la
   Action, que son del usuario. Sí mergea **hacia arriba dentro de la pila**, en el Paso 6.
-- **No revisa specs que todavía son texto.** Eso es `spec-review-batch`, corre antes, y sale mucho
+- **No revisa specs que todavía son texto.** Eso es `spec-revise-batch`, corre antes, y sale mucho
   más barato: un cruce detectado como texto cuesta un párrafo y detectado en dos ramas cuesta un
   rebase.
 - **No reimplementa el review de un PR.** Ese método es `pr-review`, y con **un** PR abierto usá
