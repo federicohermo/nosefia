@@ -7,7 +7,7 @@ func test_la_bolsa_sostenida_no_desplaza_al_jugador() -> void:  # 040-AC5
 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
 	add_child(almacen)
 	var jugador: CharacterBody3D = almacen.get_node("Jugador")
-	var bolsa: RigidBody3D = almacen.get_node("BolsaDeBasura1")
+	var bolsa: RigidBody3D = almacen.get_node("Objetos/BolsaDeBasura1")
 	var agarre: Agarre = jugador.get("agarre")
 	for cuadro in 60:
 		await get_tree().physics_frame
@@ -31,10 +31,10 @@ func test_soltar_en_el_descarte_entrega_el_id_al_recolector() -> void:  # 040-AC
 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
 	add_child(almacen)
 	var jugador: CharacterBody3D = almacen.get_node("Jugador")
-	var bolsa: RigidBody3D = almacen.get_node("BolsaDeBasura1")
+	var bolsa: RigidBody3D = almacen.get_node("Objetos/BolsaDeBasura1")
 	var agarre: Agarre = jugador.get("agarre")
-	var zona: Area3D = almacen.get_node("ZonaDeDescarte")
-	var recolector: RecolectorDeBasura = almacen.get_node("Recolector")
+	var zona: Area3D = almacen.get_node("Objetos/ZonaDeDescarte")
+	var recolector: RecolectorDeBasura = almacen.get_node("Servicios/Recolector")
 	var datos: ObjetoDelAlmacen = bolsa.get("datos")
 	assert_bool(agarre.pedir_agarrar(datos, bolsa)).is_true()
 	agarre.punto_de_soltado.global_position = zona.global_position + Vector3.UP * 0.3

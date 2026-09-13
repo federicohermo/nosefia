@@ -19,21 +19,29 @@ const ZonaQueSeVe := preload("res://src/escenas/puestos/zona_de_descarte.gd")
 ## Una caja por producto del catálogo, desde que reponer se puede terminar jugando. Antes era una
 ## sola llamada `CajaDeProductos`: el nombre viejo dejaba este caso midiendo de menos.
 const CAJAS_DEL_DEPOSITO := [
-	"CajaDeYerba",
-	"CajaDeFideos",
-	"CajaDeGaseosa",
-	"CajaDeGalletitas",
-	"CajaDeArroz",
-	"CajaDeJabon",
+	"Objetos/CajaDeYerba",
+	"Objetos/CajaDeFideos",
+	"Objetos/CajaDeGaseosa",
+	"Objetos/CajaDeGalletitas",
+	"Objetos/CajaDeArroz",
+	"Objetos/CajaDeJabon",
 ]
 
 ## Los anclajes de las otras cuatro obligatorias en `almacen.tscn`. El descarte tiene que estar
 ## lejos de todos: es lo que hace que ninguna otra tarea visite el fondo.
 const ANCLAJES_DE_LAS_OTRAS_TAREAS := (
-	["Estante", "CajaDeTraslado", "Ventanilla", "Escritorio"] + CAJAS_DEL_DEPOSITO
+	[
+		"Estructura/gondola01/StaticBody3D",
+		"Objetos/CajaDeTraslado",
+		"Estructura/Ventanilla",
+		"Estructura/compu/StaticBody3D"
+	]
+	+ CAJAS_DEL_DEPOSITO
 )
 
-const NOMBRES_DE_LAS_BOLSAS := ["BolsaDeBasura1", "BolsaDeBasura2", "BolsaDeBasura3"]
+const NOMBRES_DE_LAS_BOLSAS := [
+	"Objetos/BolsaDeBasura1", "Objetos/BolsaDeBasura2", "Objetos/BolsaDeBasura3"
+]
 
 ## Lo que delataría una regla del juego escrita en la zona. Está medido que ahí los dos gates dan
 ## verde, así que el criterio la ata con una búsqueda sobre el archivo.
@@ -114,7 +122,7 @@ func test_la_esfera_de_la_escena_es_exactamente_la_de_la_constante() -> void:  #
 
 func test_el_almacen_trae_el_descarte_y_una_bolsa_por_cada_una_del_balance() -> void:  # 015-AC7
 	var almacen := _almacen()
-	assert_bool(almacen.has_node("ZonaDeDescarte")).is_true()
+	assert_bool(almacen.has_node("Objetos/ZonaDeDescarte")).is_true()
 	var bolsas := 0
 	for nombre: String in NOMBRES_DE_LAS_BOLSAS:
 		if almacen.has_node(nombre):
@@ -127,7 +135,7 @@ func test_el_fondo_esta_lejos_de_todo_lo_demas() -> void:  # 015-AC7
 	# tarea, la basura se sacaría de paso y el término de trayecto desaparecería sin que nada lo
 	# dijera.
 	var almacen := _almacen()
-	var descarte := _posicion_en(almacen, almacen.get_node("ZonaDeDescarte"))
+	var descarte := _posicion_en(almacen, almacen.get_node("Objetos/ZonaDeDescarte"))
 	var puntos := _puntos_a_medir(almacen)
 	# Un nombre que no está se salteaba en silencio y el caso medía de menos: renombrar un
 	# anclaje dejaba la mitad del local sin comparar contra el fondo, y esto seguía en verde.
@@ -168,13 +176,13 @@ func test_el_cableado_de_la_basura_llega_entero_hasta_la_zona() -> void:  # 015-
 		)
 		. is_not_null()
 	)
-	var recolector: RecolectorDeBasura = almacen.get_node("Recolector")
+	var recolector: RecolectorDeBasura = almacen.get_node("Servicios/Recolector")
 	(
 		assert_object(recolector.reloj)
 		. override_failure_message("el recolector nace sin reloj: no puede contar la obligatoria")
 		. is_not_null()
 	)
-	var zona: ZonaQueSeVe = almacen.get_node("ZonaDeDescarte")
+	var zona: ZonaQueSeVe = almacen.get_node("Objetos/ZonaDeDescarte")
 	(
 		assert_object(zona.recolector)
 		. override_failure_message("la zona nace sin recolector: la primera bolsa mata al juego")
@@ -228,18 +236,10 @@ func test_cada_bolsa_de_la_escena_lleva_el_id_que_espera_el_dominio() -> void:  
 
 
 func test_las_bolsas_son_del_agarre_del_006_y_no_de_un_segundo_sistema() -> void:  # 015-AC8
-	# **No hay un segundo sistema de agarre**: las tres son instancias de la escena que el 006
-	# entrega, con su `.tres` puesto. Un cuerpo propio acá sería un `Agarre` paralelo que el
-	# jugador no puede usar.
-	var texto := FileAccess.get_file_as_string(ESCENA_DEL_ALMACEN)
-	assert_str(texto).is_not_empty()
+	var almacen := _almacen()
 	for nombre: String in NOMBRES_DE_LAS_BOLSAS:
-		(
-			assert_bool(texto.contains('[node name="%s" parent="." instance=' % nombre))
-			. override_failure_message("`%s` no entra instanciada del 006" % nombre)
-			. is_true()
-		)
-	assert_bool(texto.contains(ESCENA_AGARRABLE)).is_true()
+		var bolsa := almacen.get_node(nombre)
+		assert_str(bolsa.scene_file_path).is_equal(ESCENA_AGARRABLE)
 
 
 func test_este_spec_no_agrega_ninguna_accion_al_input_map() -> void:  # 015-AC8

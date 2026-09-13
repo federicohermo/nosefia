@@ -3,7 +3,6 @@
 ## **La escena se instancia y no se entra al árbol**, igual que las otras suites de `escenas/`.
 extends GdUnitTestSuite
 
-const ESCENA := "res://src/escenas/puestos/escritorio.tscn"
 const SCRIPT := "res://src/escenas/puestos/escritorio.gd"
 const ESCENA_DEL_ALMACEN := "res://src/escenas/almacen.tscn"
 const ESCENA_DEL_JUGADOR := "res://src/escenas/jugador.tscn"
@@ -15,7 +14,8 @@ const EscritorioQueSeVe := preload("res://src/escenas/puestos/escritorio.gd")
 
 
 func _escritorio() -> EscritorioQueSeVe:
-	return auto_free(load(ESCENA).instantiate())
+	var almacen: Node3D = auto_free(load(ESCENA_DEL_ALMACEN).instantiate())
+	return almacen.get_node("Estructura/compu/StaticBody3D")
 
 
 func test_el_escritorio_esta_en_el_grupo_que_la_mira_puede_enfocar() -> void:  # 009-AC9
@@ -25,11 +25,12 @@ func test_el_escritorio_esta_en_el_grupo_que_la_mira_puede_enfocar() -> void:  #
 
 
 func test_el_almacen_instancia_el_escritorio_exactamente_una_vez() -> void:  # 009-AC9
-	# Se cuenta sobre el texto del `.tscn`: dos escritorios serían dos computadoras sobre el
-	# mismo turno, cada una con su bandeja, y lo leído en una no aparecería en la otra.
-	var texto := FileAccess.get_file_as_string(ESCENA_DEL_ALMACEN)
-	assert_str(texto).is_not_empty()
-	assert_int(texto.count(ESCENA)).is_equal(1)
+	var almacen: Node3D = auto_free(load(ESCENA_DEL_ALMACEN).instantiate())
+	var cantidad := 0
+	for cuerpo in almacen.find_children("*", "StaticBody3D", true, false):
+		if cuerpo.get_script() == EscritorioQueSeVe:
+			cantidad += 1
+	assert_int(cantidad).is_equal(1)
 
 
 func test_el_escritorio_recibe_al_jugador_y_al_reloj_por_export() -> void:  # 009-AC10

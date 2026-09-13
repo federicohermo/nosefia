@@ -29,6 +29,7 @@ const JugadorDelLocal := preload("res://src/escenas/jugador.gd")
 @export var reloj: RelojDelTurno
 @export var computadora: ComputadoraDeEscritorio
 @export var pantalla: PantallaDeComputadora
+@export var mallas: Array[MeshInstance3D] = []
 
 
 func _ready() -> void:

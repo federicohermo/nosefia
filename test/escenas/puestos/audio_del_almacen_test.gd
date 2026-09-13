@@ -123,7 +123,9 @@ func test_la_cascara_no_tiene_una_sola_regla() -> void:  # 021-AC10
 func test_el_almacen_instancia_el_audio_exactamente_una_vez() -> void:  # 021-AC10
 	# Dos instancias serían dos tablas y dos rondas sobre los mismos eventos: cada sonido se
 	# pediría dos veces y el jugador escucharía todo doble.
-	var texto := FileAccess.get_file_as_string(ESCENA_DEL_ALMACEN)
+	var texto := FileAccess.get_file_as_string(
+		"res://src/escenas/puestos/servicios_del_almacen.tscn"
+	)
 	assert_str(texto).is_not_empty()
 	assert_int(texto.count(ESCENA)).is_equal(1)
 
