@@ -3,6 +3,44 @@ extends GdUnitTestSuite
 const ALMACEN := preload("res://src/escenas/almacen.tscn")
 
 
+func test_laysntt_no_atraviesa_el_suelo_al_caer_plana_y_recibir_otras_cajas() -> void:  # 042-AC4
+	for giro in [0.8, 1.6, 5.6]:
+		var almacen: Node3D = auto_free(ALMACEN.instantiate())
+		add_child(almacen)
+		almacen.get("_jugador").set_physics_process(false)
+		var agarre: Agarre = almacen.get("_agarre")
+		var bolsas: Array[RigidBody3D] = []
+		for turno in 9:
+			var id := Producto.Id.ARROZ if turno < 3 else Producto.Id.GASEOSA
+			almacen.get("_reposicion_manual").retirar(id)
+			var cuerpo: RigidBody3D = agarre.soltar(true)
+			cuerpo.global_position = Vector3(0.6, 1.7, -5.7)
+			cuerpo.rotation = Vector3(PI / 2, giro, 0)
+			if turno < 3:
+				bolsas.append(cuerpo)
+			for cuadro in 120:
+				await get_tree().physics_frame
+				for bolsa in bolsas:
+					assert_float(bolsa.global_position.y).is_greater(0.0)
+					if bolsa.global_position.y <= 0.0:
+						return
+		for bolsa in bolsas:
+			assert_float(bolsa.global_position.y).is_greater(0.1)
+			assert_bool(bolsa.is_visible_in_tree()).is_true()
+			assert_bool(agarre.pedir_agarrar(bolsa.datos, bolsa)).is_true()
+			almacen.get("_reposicion_manual").pedir_colocar(Producto.Id.ARROZ)
+		(
+			assert_int(
+				almacen.get("_repositor").estante().unidades_en_gondola(
+					Catalogo.de(Producto.Id.ARROZ)
+				)
+			)
+			. is_equal(3)
+		)
+		almacen.queue_free()
+		await get_tree().process_frame
+
+
 func test_el_burbaloo_del_piso_no_bloquea_al_jugador() -> void:  # 042-AC4
 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
 	add_child(almacen)

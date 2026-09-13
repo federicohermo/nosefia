@@ -17,6 +17,7 @@ const PRODUCTOS_NUEVOS := preload("res://assets/models/productos_marolini_jorgil
 var _unidades: Array[Node3D] = []
 var _zonas: Array[StaticBody3D] = []
 var _modelos: Array[Mesh] = []
+var _formas: Array[ConvexPolygonShape3D] = []
 var _grupos: Array[MultiMeshInstance3D] = []
 var _disponible: ObjetoAgarrable = null
 
@@ -109,6 +110,14 @@ func _preparar_modelos() -> void:
 	_modelos.append(nuevos.get_node("Marolini").mesh)
 	_modelos.append(nuevos.get_node("Jorgillo").mesh)
 	nuevos.free()
+	for modelo in _modelos:
+		var forma := ConvexPolygonShape3D.new()
+		var puntos := modelo.get_faces()
+		var centro := modelo.get_aabb().get_center()
+		for indice in puntos.size():
+			puntos[indice] -= centro
+		forma.points = puntos
+		_formas.append(forma)
 
 
 func _preparar_grupos() -> void:
@@ -142,6 +151,8 @@ func retirar(id: Producto.Id) -> void:
 		add_child(unidad)
 		_unidades.append(unidad)
 		unidad.add_collision_exception_with(jugador)
+		# Las bolsas delgadas necesitan detectar el impacto entre pasos de física.
+		unidad.continuous_cd = true
 	# El frente de cada modelo se alinea antes de darle la inclinación de la mano.
 	unidad.orientacion_en_mano = (
 		Basis.from_euler(Vector3(deg_to_rad(-17), deg_to_rad(-20), 0))
@@ -158,9 +169,7 @@ func retirar(id: Producto.Id) -> void:
 	var vista: MeshInstance3D = unidad.get_node("Malla")
 	vista.mesh = malla
 	vista.position = -limites.get_center()
-	var forma := BoxShape3D.new()
-	forma.size = limites.size
-	unidad.get_node("Forma").shape = forma
+	unidad.get_node("Forma").shape = _formas[id]
 
 
 func depositar(unidad: Node3D, producto: Producto, unidades: int) -> void:

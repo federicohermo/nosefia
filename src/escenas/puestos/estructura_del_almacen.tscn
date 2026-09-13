@@ -10,7 +10,45 @@
 [ext_resource type="Shape3D" path="res://assets/models/gondola_colision.res" id="colision"]
 [ext_resource type="PackedScene" path="res://src/escenas/puestos/contenido_del_estante.tscn" id="contenido"]
 
+[sub_resource type="BoxShape3D" id="suelo_local"]
+size = Vector3(16.15515, 0.206508, 16.15515)
+
+[sub_resource type="BoxShape3D" id="suelo_deposito"]
+size = Vector3(5.1428, 0.206508, 6.608355)
+
+[sub_resource type="BoxShape3D" id="suelo_fondo"]
+size = Vector3(9.670091, 0.206508, 6.21277)
+
+[sub_resource type="BoxShape3D" id="suelo_paso_deposito"]
+size = Vector3(0.420795, 0.206508, 1.682868)
+
+[sub_resource type="BoxShape3D" id="suelo_paso_fondo"]
+size = Vector3(1.703925, 0.206508, 0.382225)
+
 [node name="Estructura" instance=ExtResource("modelo")]
+
+[node name="SueloSolido" type="StaticBody3D" parent="."]
+position = Vector3(0, -0.001017, 0)
+editor_description = "Volumen del piso modelado. Evita que los productos delgados atraviesen sus triangulos al apilarse."
+
+[node name="Local" type="CollisionShape3D" parent="SueloSolido"]
+shape = SubResource("suelo_local")
+
+[node name="Deposito" type="CollisionShape3D" parent="SueloSolido"]
+position = Vector3(10.86326, 0, -4.5818585)
+shape = SubResource("suelo_deposito")
+
+[node name="Fondo" type="CollisionShape3D" parent="SueloSolido"]
+position = Vector3(3.0904905, 0, -11.359675)
+shape = SubResource("suelo_fondo")
+
+[node name="PasoAlDeposito" type="CollisionShape3D" parent="SueloSolido"]
+position = Vector3(8.0814625, 0, -4.662301)
+shape = SubResource("suelo_paso_deposito")
+
+[node name="PasoAlFondo" type="CollisionShape3D" parent="SueloSolido"]
+position = Vector3(5.4993685, 0, -8.0621775)
+shape = SubResource("suelo_paso_fondo")
 
 [node name="HuecoDeLaVentanilla" type="Marker3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.35, 1.04, 7.974)
