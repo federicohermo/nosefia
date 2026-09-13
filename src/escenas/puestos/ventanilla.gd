@@ -58,13 +58,7 @@ func abrir() -> void:
 	atenciones.pedir_abrir()
 
 
-## Devuelve el control y baja el panel. Es idempotente a propósito: lo llaman la tecla de salida
-## y el cierre del turno, que pueden pasar en cualquier orden.
-##
-## **Con el vidrio cerrado no hace nada**, y ése es el corte que importa: `ui_cancel` llega desde
-## cualquier rincón del local, y examinar un objeto también suspende al jugador. Sin el corte, la
-## tecla le devolvería la caminata en medio de un examen con el objeto pegado a la cara — el 006
-## seguiría creyendo que examina, y no habría un solo error.
+## Cierra una vez y devuelve el control.
 func cerrar() -> void:
 	if not _abierta:
 		return
@@ -73,10 +67,10 @@ func cerrar() -> void:
 	jugador.reanudar()
 
 
-## La salida es la misma tecla que el resto del juego, y es la única que no depende de que el
-## jugador encuentre un botón con la cámara clavada.
-func _unhandled_input(evento: InputEvent) -> void:
-	if evento.is_action_pressed("ui_cancel"):
+## Atiende el cierre antes de que la interfaz reciba el gesto.
+func _input(evento: InputEvent) -> void:
+	if _abierta and evento.is_action_pressed(ReglasDelJugador.ACCION_USAR):
+		get_viewport().set_input_as_handled()
 		cerrar()
 
 

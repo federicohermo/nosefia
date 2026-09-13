@@ -15,6 +15,7 @@ extends CharacterBody3D
 ## spec 006: quien las emite no sabe quién las escucha.
 signal objetivo_enfocado(objetivo: Node3D, distancia: float)
 signal objetivo_perdido
+signal uso_pedido(objetivo: Node3D)
 
 ## Los dos sistemas del spec 006, por `@export` y no por `@onready`: un `@onready` se resuelve
 ## recién al entrar la escena al árbol, y entonces `id_en_la_mano()` se caería sobre un jugador
@@ -90,6 +91,9 @@ func _unhandled_input(evento: InputEvent) -> void:
 		# cara. Acá sólo se lo pasa al que quedó: esto es ruteo, no una regla del juego.
 		if not examen.atajar_el_clic():
 			agarre.alternar(_datos_de_lo_enfocado(), _enfocado)
+	elif evento.is_action_pressed(ReglasDelJugador.ACCION_USAR):
+		if _enfocado != null and not _control.esta_suspendido():
+			uso_pedido.emit(_enfocado)
 	elif evento.is_action_pressed(ReglasDeLosObjetos.ACCION_EXAMINAR):
 		examen.alternar(_datos_de_lo_enfocado())
 

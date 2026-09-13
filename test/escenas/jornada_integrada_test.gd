@@ -112,7 +112,7 @@ func _limpiar(almacen: Node3D) -> void:
 	assert_bool(agarre.pedir_agarrar(trapeador.call("interactuar"), trapeador)).is_true()
 	var limpieza: Node3D = almacen.get("_limpieza")
 	for mancha: Node3D in limpieza.call("manchas"):
-		jugador.emit_signal("objetivo_enfocado", mancha, 1.0)
+		await _enfocar_mancha(jugador, mancha)
 		for pasada in ReglasDeLaLimpieza.PASADAS_POR_MANCHA:
 			var clic := InputEventMouseButton.new()
 			clic.button_index = MOUSE_BUTTON_RIGHT
@@ -165,3 +165,17 @@ func _comprobar_huecos(almacen: Node3D, esperados: int) -> void:
 	var repositor: Repositor = almacen.get("_repositor")
 	assert_int(visibles).is_equal(esperados)
 	assert_int(visibles).is_equal(repositor.estante().productos_completos())
+
+
+func _enfocar_mancha(jugador: Node3D, mancha: Node3D) -> void:
+	jugador.set_physics_process(false)
+	var camara: Camera3D = jugador.get_node("Camara")
+	for direccion in [Vector3.BACK, Vector3.FORWARD, Vector3.LEFT, Vector3.RIGHT]:
+		jugador.global_position = mancha.global_position + direccion
+		camara.look_at(mancha.global_position + Vector3.UP * 0.03)
+		for cuadro in 4:
+			await get_tree().physics_frame
+		jugador.call("_leer_la_mira")
+		if jugador.get("_enfocado") == mancha:
+			break
+	assert_object(jugador.get("_enfocado")).is_same(mancha)
