@@ -28,8 +28,8 @@ var _inventario: Inventario
 var _del_dia: Array[Producto] = []
 
 ## Los `id` ya pasados. Se indexa por `id` y nunca por instancia: `Catalogo.de()` construye un
-## producto nuevo en cada llamada, así que dos Actroncitos son objetos distintos y por instancia el
-## mismo Actroncito contaría dos veces.
+## producto nuevo en cada llamada, así que dos productos con el mismo `id` son objetos distintos
+## y por instancia el mismo producto contaría dos veces.
 var _registrados: Array[Producto.Id] = []
 
 

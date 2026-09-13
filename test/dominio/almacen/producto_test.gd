@@ -2,7 +2,7 @@
 ## umbral a partir del cual la góndola se considera desabastecida.
 ##
 ## Los cuatro valores de este archivo son **del test, no del catálogo**: acá no se importa
-## `Catalogo` a propósito. Si el balance moviera el precio del Actroncito, este archivo no se
+## `Catalogo` a propósito. Si el balance moviera un precio, este archivo no se
 ## entera — leerlo del catálogo pondría al balance a decidir si un test pasa.
 extends GdUnitTestSuite
 

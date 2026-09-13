@@ -44,9 +44,9 @@ func test_registrar_devuelve_true_la_primera_vez_y_false_la_segunda() -> void:  
 
 
 func test_registrar_indexa_por_id_y_no_por_instancia() -> void:  # 009-AC6
-	# `Catalogo.de()` construye un producto nuevo en cada llamada, así que dos Actroncitos son
-	# objetos distintos: por instancia, pasar dos veces el mismo Actroncito contaría dos y la
-	# tarea se cumpliría con un solo producto.
+	# `Catalogo.de()` construye un producto nuevo en cada llamada, así que dos con el mismo `id`
+	# son objetos distintos: por instancia, pasar dos veces el mismo contaría dos y la tarea se
+	# cumpliría con un solo producto.
 	var caja := _caja()
 	var primero := _del_dia()[0]
 	assert_bool(caja.registrar(primero)).is_true()

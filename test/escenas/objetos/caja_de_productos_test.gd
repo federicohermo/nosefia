@@ -18,7 +18,7 @@ func before_test() -> void:
 
 
 func test_la_caja_declara_su_producto_con_un_id_del_catalogo() -> void:  # 008-AC8
-	# Es un `Producto.Id` y no un `String` suelto: el conjunto es cerrado, y un `"actronsito"` no
+	# Es un `Producto.Id` y no un `String` suelto: el conjunto es cerrado, y uno mal escrito no
 	# rompe nada — el producto simplemente no llega nunca y nadie se entera.
 	var caja := _caja()
 	caja.producto = Producto.Id.JABON

@@ -78,7 +78,7 @@ func test_pagar_de_menos_da_una_diferencia_negativa() -> void:  # 013-AC3
 
 
 func test_los_faltantes_nombran_exactamente_los_productos_que_no_alcanzan() -> void:  # 013-AC4
-	# Con una sola unidad en góndola, el Actroncito —que se pide de a dos— falta y el jabón no.
+	# Con una sola unidad en góndola, el renglón que se pide de a dos falta y el de a uno no.
 	var atencion := _atencion(0, 1)
 	var faltantes := atencion.faltantes_del_pedido()
 	assert_int(faltantes.size()).is_equal(1)
@@ -103,8 +103,8 @@ func test_cobrar_con_stock_descuenta_de_la_gondola() -> void:  # 013-AC4
 
 
 func test_cobrar_sin_stock_no_mueve_una_sola_unidad() -> void:  # 013-AC4
-	# `Inventario.cobrar()` es todo o nada, y la atención se apoya en eso: descontar el jabón y
-	# no el Actroncito dejaría un estado que el jugador no puede distinguir de una venta completa.
+	# `Inventario.cobrar()` es todo o nada, y la atención se apoya en eso: descontar un renglón y
+	# no el otro dejaría un estado que el jugador no puede distinguir de una venta completa.
 	var inventario := _inventario(1)
 	var pedido := _pedido()
 	var atencion := Atencion.new(Comprador.new("Marta", pedido, pedido.total()), inventario)

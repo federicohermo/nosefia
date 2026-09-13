@@ -36,7 +36,7 @@ func test_agregar_dos_veces_el_mismo_producto_acumula_en_una_sola_linea() -> voi
 func test_dos_instancias_del_mismo_producto_son_una_sola_linea() -> void:
 	# El gemelo del AC de identidad del inventario, y sin él la acumulación por `id` que promete
 	# el comentario de `venta.gd` no se puede ver fallar: con una sola instancia, una venta
-	# indexada por objeto pasa el AC de arriba igual. `Catalogo.de()` construye un Actroncito nuevo
+	# indexada por objeto pasa el AC de arriba igual. `Catalogo.de()` construye un producto nuevo
 	# en cada llamada, así que acá hay dos objetos distintos del mismo producto.
 	var una := Catalogo.de(Producto.Id.ACTRONCITO)
 	var otra := Catalogo.de(Producto.Id.ACTRONCITO)

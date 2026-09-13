@@ -20,7 +20,7 @@ extends RefCounted
 ##
 ## Lo que paga se declara como **desvío** y no como número absoluto para que rebalancear el
 ## catálogo no deje a medio padrón pagando cualquier cosa: el que paga justo sigue pagando justo
-## el día que el Actroncito cambie de valor.
+## el día que un producto cambie de valor.
 const FILAS := [
 	["Marta", [[Producto.Id.ACTRONCITO, 2], [Producto.Id.GALLETITAS, 1]], 0],
 	["Rubén", [[Producto.Id.GASEOSA, 1], [Producto.Id.FIDEOS, 2]], -500],

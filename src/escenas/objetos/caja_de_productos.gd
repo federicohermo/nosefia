@@ -15,7 +15,7 @@ extends StaticBody3D
 signal producto_pedido(id: Producto.Id)
 
 ## Qué producto despacha esta caja. Es un `Producto.Id` y no un `String` suelto porque el
-## conjunto es cerrado: un `"actronsito"` no rompe nada, y el producto simplemente no llega nunca.
+## conjunto es cerrado: un `String` mal escrito no rompe nada, y el producto no llega nunca.
 @export var producto: Producto.Id = Producto.Id.ACTRONCITO
 @export var mallas: Array[MeshInstance3D] = []
 

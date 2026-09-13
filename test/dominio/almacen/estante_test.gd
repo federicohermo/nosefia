@@ -121,9 +121,9 @@ func test_con_menos_unidades_que_el_cupo_colocarlas_todas_no_completa() -> void:
 
 
 func test_acepta_compara_por_id_y_no_por_instancia() -> void:  # 008-AC8
-	# `Catalogo.de()` construye un producto nuevo en cada llamada, así que dos Actroncitos son
-	# objetos distintos: comparando por instancia, reponer el Actroncito del catálogo sobre un
-	# estante armado con otro Actroncito contestaría «eso no va acá».
+	# `Catalogo.de()` construye un producto nuevo en cada llamada, así que dos con el mismo `id`
+	# son objetos distintos: comparando por instancia, reponer el del catálogo sobre un estante
+	# armado con el otro contestaría «eso no va acá».
 	var estante := _estante([_producto(Producto.Id.ACTRONCITO)])
 	assert_bool(estante.acepta(_producto(Producto.Id.ACTRONCITO))).is_true()
 	assert_bool(estante.acepta(Catalogo.de(Producto.Id.ACTRONCITO))).is_true()

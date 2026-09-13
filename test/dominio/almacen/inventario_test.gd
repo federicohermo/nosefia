@@ -20,9 +20,9 @@ func test_un_inventario_recien_construido_no_tiene_nada_en_ningun_lado() -> void
 
 
 func test_el_mismo_producto_repetido_en_la_construccion_entra_una_sola_vez() -> void:
-	# Dos Actroncitos en la lista de construcción son un producto, no dos: si el segundo pisara
-	# al primero, `faltantes()` devolvería el Actroncito duplicado y la lista de reposición
-	# mostraría la misma línea dos veces.
+	# Dos productos con el mismo `id` en la lista de construcción son uno, no dos: si el segundo
+	# pisara al primero, `faltantes()` devolvería el duplicado y la lista de reposición mostraría
+	# la misma línea dos veces.
 	var actroncito := Producto.new(Producto.Id.ACTRONCITO, "Actroncito", 2500, 4)
 	var otro_actroncito := Producto.new(Producto.Id.ACTRONCITO, "Actroncito", 2500, 4)
 	var productos: Array[Producto] = [actroncito, otro_actroncito]
@@ -98,7 +98,7 @@ func test_mover_desde_un_deposito_vacio_no_mueve_nada_y_no_cambia_nada() -> void
 
 
 func test_consultar_con_otra_instancia_del_mismo_producto_encuentra_lo_guardado() -> void:
-	# `Catalogo.de()` construye un producto nuevo en cada llamada, así que los tres Actroncitos de
+	# `Catalogo.de()` construye un producto nuevo en cada llamada, así que las tres instancias de
 	# este test son objetos distintos. Un inventario indexado por instancia contestaría 0 acá,
 	# sin error y sin que nada avise.
 	var productos: Array[Producto] = [Catalogo.de(Producto.Id.ACTRONCITO)]
