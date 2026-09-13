@@ -5,6 +5,7 @@ enum Escenario { ESTANTE, CAIDA, REPOSO }
 const CANTIDADES: Array[int] = [100, 500, 2000]
 const SEGUNDOS := 3.0
 const ALMACEN := preload("res://src/escenas/almacen.tscn")
+const GrupoDelPiso := preload("res://test/performance/grupo_del_piso.gd")
 const OBJETO := preload("res://src/escenas/objetos/objeto_agarrable.tscn")
 
 var modelos: Array[Mesh] = []
@@ -28,7 +29,7 @@ static func percentil(valores: Array[float], proporcion: float) -> float:
 	return ordenados[maxi(0, ceili(ordenados.size() * proporcion) - 1)]
 
 
-func crear(cantidad: int, escenario: Escenario) -> Node3D:
+func crear(cantidad: int, escenario: Escenario, agrupado: bool = false) -> Node3D:
 	var lote := Node3D.new()
 	for id in modelos.size():
 		var malla := modelos[id]
@@ -49,6 +50,11 @@ func crear(cantidad: int, escenario: Escenario) -> Node3D:
 			grupo.multimesh = copias
 			lote.add_child(grupo)
 		else:
+			var grupo: GrupoDelPiso = null
+			if agrupado:
+				grupo = GrupoDelPiso.new()
+				grupo.preparar(malla, posiciones.size())
+				lote.add_child(grupo)
 			for posicion in posiciones:
 				var cuerpo: RigidBody3D = OBJETO.instantiate()
 				cuerpo.freeze = true
@@ -59,6 +65,8 @@ func crear(cantidad: int, escenario: Escenario) -> Node3D:
 				vista.mesh = malla
 				vista.position = -centro
 				lote.add_child(cuerpo)
+				if grupo != null:
+					grupo.agregar(cuerpo)
 	return lote
 
 
@@ -96,28 +104,32 @@ func _ejecutar() -> void:
 	var resultados: Array[Dictionary] = []
 	for cantidad in CANTIDADES:
 		for escenario: Escenario in Escenario.values():
-			var lote := crear(cantidad, escenario)
-			add_child(lote)
-			# Calentar materiales antes de medir; los cuerpos todavía están congelados.
-			await get_tree().create_timer(1.0).timeout
-			for cuerpo: RigidBody3D in lote.find_children("*", "RigidBody3D", false, false):
-				cuerpo.freeze = false
-			if escenario == Escenario.REPOSO:
-				await get_tree().create_timer(5.0).timeout
-				for cuerpo: RigidBody3D in lote.get_children():
-					cuerpo.sleeping = true
-				await get_tree().create_timer(0.25).timeout
-			var medicion := await _medir()
-			medicion["cantidad"] = cantidad
-			medicion["escenario"] = Escenario.keys()[escenario]
-			resultados.append(medicion)
-			lote.queue_free()
-			await get_tree().process_frame
+			for agrupado: bool in [false] if escenario == Escenario.ESTANTE else [false, true]:
+				var lote := crear(cantidad, escenario, agrupado)
+				add_child(lote)
+				# Calentar materiales antes de medir; los cuerpos todavía están congelados.
+				await get_tree().create_timer(1.0).timeout
+				for cuerpo: RigidBody3D in lote.find_children("*", "RigidBody3D", false, false):
+					cuerpo.freeze = false
+				if escenario == Escenario.REPOSO:
+					await get_tree().create_timer(5.0).timeout
+					for cuerpo: RigidBody3D in lote.find_children("*", "RigidBody3D", false, false):
+						cuerpo.sleeping = true
+					await get_tree().create_timer(0.25).timeout
+				var medicion := await _medir()
+				medicion["cantidad"] = cantidad
+				medicion["piso_multimesh"] = agrupado
+				medicion["escenario"] = Escenario.keys()[escenario]
+				resultados.append(medicion)
+				lote.queue_free()
+				await get_tree().process_frame
+
 	var revision: Array = []
 	OS.execute("git", ["rev-parse", "HEAD"], revision)
 	var estado: Array = []
 	OS.execute("git", ["status", "--porcelain"], estado)
 	var informe := {
+		"grupo_sha256": FileAccess.get_sha256("res://test/performance/grupo_del_piso.gd"),
 		"script_sha256": FileAccess.get_sha256("res://test/performance/medir_reposicion.gd"),
 		"commit": str(revision[0]).strip_edges() if not revision.is_empty() else "desconocido",
 		"cambios_sin_commit": not estado.is_empty() and not str(estado[0]).strip_edges().is_empty(),
@@ -167,6 +179,8 @@ func _medir() -> Dictionary:
 		"muestras": cuadros.size(),
 		"cuadro_ms_p50": percentil(cuadros, 0.5),
 		"cuadro_ms_p95": percentil(cuadros, 0.95),
+		"cuadro_ms_p99": percentil(cuadros, 0.99),
+		"cuadro_ms_max": cuadros.max(),
 		"muestras_fisica": _fisica.size(),
 		"fisica_ms_p95": percentil(_fisica, 0.95),
 		"dibujos_p50": percentil(dibujos, 0.5),
