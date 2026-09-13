@@ -110,7 +110,13 @@ func _ready() -> void:
 			]
 		)
 	)
-	# La unidad viaja en la mano; el inventario cambia cuando el estante la acepta.
+	# Reponer, de punta a punta: la caja del depósito entrega una unidad a la mano y la zona de
+	# reposición la coloca en la góndola. La unidad viaja en la mano, así que el inventario recién
+	# cambia cuando el estante la acepta: soltarla en el piso no repone nada.
+	# **Una caja por producto, y todas conectadas al mismo destino.** Con una sola, despachaba
+	# siempre su `producto` por defecto y el resto del catálogo se quedaba en cero para siempre:
+	# `Estante.completada()` sale de `Inventario.faltantes()`, así que REPONER no se podía
+	# terminar jugando.
 	for caja: CajaDeProductosDelDeposito in _cajas_de_productos:
 		caja.producto_pedido.connect(_reposicion_manual.retirar)
 	_carga.producto_guardado.connect(_al_guardar_en_la_caja)
@@ -190,7 +196,7 @@ func _al_guardar_en_la_caja(_producto: Producto) -> void:
 	_caja_de_traslado.mostrar(_carga.caja().contenido())
 
 
-## Al colocar se repintan las dos: el hueco que se llenó en el estante y el casillero que se
-## vació en la caja.
+## Lo que se coloca ya lo dibuja `ReposicionManual` con el cuerpo que el jugador soltó, así que
+## acá sólo queda repintar el casillero de la caja de traslado.
 func _al_colocar_en_el_estante(_producto: Producto, _completos: int) -> void:
 	_caja_de_traslado.mostrar(_carga.caja().contenido())

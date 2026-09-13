@@ -1,4 +1,19 @@
-## Conecta el dep?sito, las manos y el estante. El dominio valida cada movimiento.
+## El nodo que repone adentro del motor: reserva una unidad del depósito, la pone en la mano y se
+## la ofrece al estante cuando el jugador la deposita.
+##
+## **Traduce, no decide.** No sabe cuánto le entra a la góndola, ni qué productos van ahí, ni
+## cuánto cuesta reponer: las tres son preguntas de `dominio/`, que es donde tienen test. Los
+## `if` de este archivo son el valor que devolvió el estante y el estado nulo del cableado.
+##
+## **La unidad viaja en la mano y no en el inventario.** `pedir_retirar()` la reserva —el
+## estante la anota en tránsito— y el stock recién se mueve cuando `pedir_colocar_de_la_mano()`
+## la coloca. Al revés, soltar la unidad en el piso dejaría la góndola contando mercadería que
+## el jugador nunca apoyó.
+##
+## **No lleva un flag de «ya la conté».** Le pide al reloj que complete la tarea cada vez que el
+## estante queda lleno, y el `Turno` ya sabe que la segunda vez no cuenta —devuelve `false` sin
+## descontar—. Un flag acá sería esa misma regla escrita en la capa que traduce, o sea una regla
+## del juego sin test, y los dos gates darían verde sobre ella.
 class_name Repositor
 extends Node
 
