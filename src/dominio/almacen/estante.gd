@@ -41,8 +41,8 @@ func _init(inventario: Inventario, aceptados: Array[Producto]) -> void:
 
 ## Si este estante es el lugar de ese producto.
 ##
-## Compara por `id` y no por instancia, y no es un detalle: reponer la yerba que salió del
-## catálogo sobre un estante armado con otra yerba contestaría «eso no va acá» —dos objetos
+## Compara por `id` y no por instancia, y no es un detalle: reponer el Actroncito que salió del
+## catálogo sobre un estante armado con otro Actroncito contestaría «eso no va acá» —dos objetos
 ## distintos con el mismo `id`— y el jugador no tendría cómo enterarse de por qué.
 func acepta(producto: Producto) -> bool:
 	return _aceptado_con_el_id_de(producto) != null

@@ -15,10 +15,10 @@ func test_una_venta_sin_lineas_no_suma_nada_y_no_tiene_productos() -> void:
 
 func test_el_total_multiplica_el_precio_por_las_unidades_de_cada_linea() -> void:
 	var gaseosa := Producto.new(Producto.Id.GASEOSA, "Gaseosa", 150, 3)
-	var yerba := Producto.new(Producto.Id.ACTRONCITO, "Yerba", 400, 4)
+	var actroncito := Producto.new(Producto.Id.ACTRONCITO, "Actroncito", 400, 4)
 	var venta := Venta.new()
 	venta.agregar(gaseosa, 2)
-	venta.agregar(yerba, 1)
+	venta.agregar(actroncito, 1)
 	assert_int(venta.total()).is_equal(700)
 
 
@@ -36,7 +36,7 @@ func test_agregar_dos_veces_el_mismo_producto_acumula_en_una_sola_linea() -> voi
 func test_dos_instancias_del_mismo_producto_son_una_sola_linea() -> void:
 	# El gemelo del AC de identidad del inventario, y sin él la acumulación por `id` que promete
 	# el comentario de `venta.gd` no se puede ver fallar: con una sola instancia, una venta
-	# indexada por objeto pasa el AC de arriba igual. `Catalogo.de()` construye una yerba nueva
+	# indexada por objeto pasa el AC de arriba igual. `Catalogo.de()` construye un Actroncito nuevo
 	# en cada llamada, así que acá hay dos objetos distintos del mismo producto.
 	var una := Catalogo.de(Producto.Id.ACTRONCITO)
 	var otra := Catalogo.de(Producto.Id.ACTRONCITO)

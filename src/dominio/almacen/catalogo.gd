@@ -29,7 +29,7 @@ const FILAS := {
 
 
 ## Construye un producto nuevo en cada llamada, y eso es correcto: la identidad es el `id`, así
-## que dos yerbas distintas indexan al mismo lugar. Es lo que permite que esto sea `static` y
+## que dos Actroncitos distintos indexan al mismo lugar. Es lo que permite que esto sea `static` y
 ## que ningún test tenga que compartir estado.
 ##
 ## Un `id` sin fila devuelve `null` en vez de indexar el diccionario y reventar, y es la misma

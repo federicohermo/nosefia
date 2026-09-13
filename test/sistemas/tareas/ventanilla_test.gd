@@ -49,9 +49,9 @@ func _pedido() -> Venta:
 
 
 func _inventario() -> Inventario:
-	var yerba := Catalogo.de(Producto.Id.ACTRONCITO)
-	var inventario := Inventario.new([yerba])
-	inventario.ingresar(yerba, Inventario.Ubicacion.GONDOLA, EN_GONDOLA)
+	var actroncito := Catalogo.de(Producto.Id.ACTRONCITO)
+	var inventario := Inventario.new([actroncito])
+	inventario.ingresar(actroncito, Inventario.Ubicacion.GONDOLA, EN_GONDOLA)
 	return inventario
 
 

@@ -2,14 +2,14 @@
 ## umbral a partir del cual la góndola se considera desabastecida.
 ##
 ## Los cuatro valores de este archivo son **del test, no del catálogo**: acá no se importa
-## `Catalogo` a propósito. Si el balance moviera el precio de la yerba, este archivo no se
+## `Catalogo` a propósito. Si el balance moviera el precio del Actroncito, este archivo no se
 ## entera — leerlo del catálogo pondría al balance a decidir si un test pasa.
 extends GdUnitTestSuite
 
 
 func test_un_producto_recuerda_los_cuatro_valores_con_los_que_se_construyo() -> void:
-	var yerba := Producto.new(Producto.Id.ACTRONCITO, "Yerba", 2500, 4)
-	assert_int(yerba.id).is_equal(Producto.Id.ACTRONCITO)
-	assert_str(yerba.nombre).is_equal("Yerba")
-	assert_int(yerba.precio).is_equal(2500)
-	assert_int(yerba.umbral).is_equal(4)
+	var actroncito := Producto.new(Producto.Id.ACTRONCITO, "Actroncito", 2500, 4)
+	assert_int(actroncito.id).is_equal(Producto.Id.ACTRONCITO)
+	assert_str(actroncito.nombre).is_equal("Actroncito")
+	assert_int(actroncito.precio).is_equal(2500)
+	assert_int(actroncito.umbral).is_equal(4)

@@ -31,7 +31,7 @@ func test_el_catalogo_lista_los_productos_en_el_orden_del_enum() -> void:
 
 func test_cada_producto_del_catalogo_esta_completo() -> void:
 	# Recorre el enum entero y no una muestra: una fila a medio llenar en el sexto producto
-	# pasaría desapercibida si el test mirara sólo la yerba.
+	# pasaría desapercibida si el test mirara sólo el Actroncito.
 	for id in Producto.Id.values():
 		var producto := Catalogo.de(id)
 		# Sin este corte, un `id` sin fila desreferencia `null` y aborta la función: el caso se

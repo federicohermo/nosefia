@@ -3,7 +3,7 @@
 ##
 ## No conoce al `Catalogo`: los productos se los pasan al `_init`. Es lo que permite armar un
 ## inventario de prueba con dos productos inventados en tres líneas, y lo que hace que el día
-## que la yerba pase de umbral 4 a 6 ningún test de acá se entere.
+## que el Actroncito pase de umbral 4 a 6 ningún test de acá se entere.
 ##
 ## Nadie de este archivo abre una pantalla. Acá está la aritmética; mostrarla es de `ui/` y
 ## mover una unidad con la mano es de la escena.
@@ -25,7 +25,7 @@ var _unidades: Dictionary = {}
 ## que rebalancear los precios y los umbrales no ponga en rojo un solo test de este archivo.
 func _init(productos: Array[Producto]) -> void:
 	for producto in productos:
-		# Un `id` repetido en la lista se ignora: sin este corte, la segunda yerba pisaría con
+		# Un `id` repetido en la lista se ignora: sin este corte, el segundo Actroncito pisaría con
 		# ceros lo ya contado y `faltantes()` devolvería el mismo producto dos veces, que es una
 		# línea duplicada en la lista de reposición.
 		if _unidades.has(producto.id):

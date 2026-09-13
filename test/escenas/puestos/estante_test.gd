@@ -39,17 +39,17 @@ func test_los_huecos_visibles_son_los_que_dice_el_dominio() -> void:  # 008-AC10
 	# La escena pregunta y pinta: cuántos huecos se ven sale de `productos_completos()` y no de
 	# una cuenta propia. Con una cuenta propia, el estante y el inventario se contradicen en
 	# silencio.
-	var yerba := Catalogo.de(Producto.Id.ACTRONCITO)
-	var inventario := Inventario.new([yerba])
-	inventario.ingresar(yerba, Inventario.Ubicacion.DEPOSITO, yerba.umbral)
-	var dominio := Estante.new(inventario, [yerba])
+	var actroncito := Catalogo.de(Producto.Id.ACTRONCITO)
+	var inventario := Inventario.new([actroncito])
+	inventario.ingresar(actroncito, Inventario.Ubicacion.DEPOSITO, actroncito.umbral)
+	var dominio := Estante.new(inventario, [actroncito])
 	var estante := _estante()
 
 	estante.mostrar(dominio.productos_completos())
 	assert_int(_huecos_visibles(estante)).is_equal(0)
 
-	for _unidad in range(yerba.umbral):
-		dominio.colocar(yerba)
+	for _unidad in range(actroncito.umbral):
+		dominio.colocar(actroncito)
 	estante.mostrar(dominio.productos_completos())
 	assert_int(_huecos_visibles(estante)).is_equal(1)
 
