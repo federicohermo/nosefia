@@ -39,15 +39,18 @@ func test_el_campo_y_el_clic_usan_los_cuerpos_de_los_muebles() -> void:  # 038-A
 	computadora.call("cerrar")
 	var caja: Node3D = almacen.get("_cajas_de_productos")[0]
 	caja.call("interactuar")
-	var carga: CargaDeLaCaja = almacen.get("_carga")
-	assert_int(carga.caja().ocupados()).is_equal(1)
-	var estante: Node3D = almacen.get("_estante")
-	_mirar(jugador, Vector3(3.6, 1.8, 0), Vector3(1.9, 1.5, 0))
+	var agarre: Agarre = almacen.get("_agarre")
+	assert_object(agarre.manos().sostenido()).is_instanceof(UnidadDeProducto)
+	var estante: Node3D = almacen.get("_reposicion_manual").get_node("ZonaDeYerba")
+	var zona: AABB = almacen.get("_reposicion_manual").zona(Producto.Id.YERBA)
+	_mirar(jugador, zona.get_center() + Vector3(0, 0, 1.5), zona.get_center())
 	await _actualizar(jugador)
 	assert_object(jugador.get("_enfocado")).is_same(estante)
 	assert_array(avisos).contains([estante])
 	_clic()
-	assert_int(carga.caja().ocupados()).is_zero()
+	assert_object(agarre.manos().sostenido()).is_null()
+	var repositor: Repositor = almacen.get("_repositor")
+	assert_int(repositor.estante().unidades_en_gondola(Catalogo.todos()[0])).is_equal(1)
 
 
 func test_la_pared_del_modelo_tapa_un_objeto_dentro_del_alcance() -> void:  # 038-AC13

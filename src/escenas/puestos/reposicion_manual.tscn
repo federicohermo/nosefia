@@ -1,0 +1,7 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://src/escenas/puestos/reposicion_manual.gd" id="script"]
+
+[node name="ReposicionManual" type="Node3D"]
+script = ExtResource("script")
+apoyos = Array[Vector3]([Vector3(0.72, 0.682698, 3.21), Vector3(0.829277, 1.64464, 3.114741), Vector3(1.888862, 1.050504, 1.260556), Vector3(0.606666, 1.603533, -3.540692), Vector3(1.79822, 1.09761, -4.4496), Vector3(0.71579, 1.091532, 3.212995)])

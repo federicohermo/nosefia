@@ -38,6 +38,11 @@ var _avisos_de_tarea: int = 0
 var _turno: Turno = null
 
 
+class UnidadFisica:
+	extends RigidBody3D
+	var datos: ObjetoDelAlmacen
+
+
 func before_test() -> void:
 	_colocados = 0
 	_rechazos = 0
@@ -186,6 +191,36 @@ func test_el_repositor_no_lleva_estado_propio_de_la_tarea() -> void:  # 008-AC7
 
 func _anotar_colocado(_producto: Producto, _completos: int) -> void:
 	_colocados += 1
+
+
+func test_depositar_desde_la_mano_entrega_el_cuerpo_una_sola_vez() -> void:  # 008-AC2
+	var repositor := _repositor(0)
+	var agarre: Agarre = auto_free(Agarre.new())
+	agarre.punto_de_carga = auto_free(Node3D.new())
+	repositor.agarre = agarre
+	var nodo: UnidadFisica = auto_free(UnidadFisica.new())
+	assert_bool(repositor.pedir_retirar(Producto.Id.YERBA, nodo)).is_true()
+	assert_object(agarre.manos().sostenido()).is_same(nodo.datos)
+	assert_int(nodo.collision_layer).is_zero()
+	repositor.pedir_colocar_de_la_mano()
+	assert_object(agarre.manos().sostenido()).is_null()
+	assert_int(_colocados).is_equal(1)
+	repositor.pedir_colocar_de_la_mano()
+	assert_int(_colocados).is_equal(1)
+	assert_int(_rechazos).is_equal(1)
+
+
+func test_con_la_mano_llena_no_reserva_otra_unidad() -> void:  # 006-AC2
+	var repositor := _repositor(0, 1)
+	var agarre: Agarre = auto_free(Agarre.new())
+	agarre.punto_de_carga = auto_free(Node3D.new())
+	repositor.agarre = agarre
+	var objeto := ObjetoDelAlmacen.new()
+	assert_bool(agarre.manos().agarrar(objeto)).is_true()
+	var nodo: UnidadFisica = auto_free(UnidadFisica.new())
+	assert_bool(repositor.pedir_retirar(Producto.Id.YERBA, nodo)).is_false()
+	assert_object(agarre.manos().sostenido()).is_same(objeto)
+	assert_int(repositor.estante().disponibles_para_retirar(Catalogo.todos()[0])).is_equal(1)
 
 
 func _anotar_rechazo(motivo: Estante.Rechazo) -> void:
