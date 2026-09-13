@@ -247,7 +247,7 @@ func test_este_spec_no_agrega_ninguna_accion_al_input_map() -> void:  # 015-AC8
 	# que ya se hace con el clic que el jugador aprendió.
 	var acciones := 0
 	for accion in InputMap.get_actions():
-		if not String(accion).begins_with("ui_"):
+		if not String(accion).begins_with("ui_") and accion != ReglasDelJugador.ACCION_USAR:
 			acciones += 1
 	(
 		assert_int(acciones)

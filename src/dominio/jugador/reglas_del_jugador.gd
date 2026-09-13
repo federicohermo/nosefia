@@ -45,3 +45,5 @@ const ACCION_ADELANTE := "mover_adelante"
 const ACCION_ATRAS := "mover_atras"
 const ACCION_IZQUIERDA := "mover_izquierda"
 const ACCION_DERECHA := "mover_derecha"
+
+const ACCION_USAR: StringName = &"usar"

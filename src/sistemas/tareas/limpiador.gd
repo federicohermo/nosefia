@@ -20,6 +20,7 @@ signal pasada_rechazada(motivo: PisoDelLocal.Resultado)
 @export var reloj: RelojDelTurno
 
 var _piso: PisoDelLocal = null
+var _uso := Uso.para_el_almacen()
 
 
 ## Le entrega al limpiador el piso de la noche.
@@ -44,6 +45,9 @@ func pedir_pasada(zona: PisoDelLocal.Zona, id_en_la_mano: StringName) -> PisoDel
 		# Un cableado incompleto es un `.tscn` mal armado y no un rechazo del juego: sale por el
 		# panel de depuración, que es donde se lee.
 		push_error("Limpiador sin cablear: revisar almacen.tscn y almacen.gd")
+		return PisoDelLocal.Resultado.SIN_TRAPEADOR
+	if _uso.resolver(id_en_la_mano, Uso.MANCHA) != Uso.Efecto.LIMPIAR:
+		pasada_rechazada.emit(PisoDelLocal.Resultado.SIN_TRAPEADOR)
 		return PisoDelLocal.Resultado.SIN_TRAPEADOR
 	var resultado := _piso.pasar(zona, id_en_la_mano)
 	if resultado == PisoDelLocal.Resultado.SIN_TRAPEADOR:

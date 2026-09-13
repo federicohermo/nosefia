@@ -45,11 +45,10 @@ func test_la_ventanilla_recibe_al_jugador_y_al_reloj_por_export() -> void:  # 01
 		)
 
 
-func test_la_ventanilla_sale_con_la_tecla_de_cancelar() -> void:  # 013-AC12
-	# Es la misma salida que el resto del juego, y la única que no depende de que el jugador
-	# encuentre un botón mientras la cámara está clavada.
+func test_la_ventanilla_sale_con_la_accion_compartida() -> void:  # 013-AC12 034-AC12
 	var texto := FileAccess.get_file_as_string(SCRIPT)
-	assert_bool(texto.contains("ui_cancel")).is_true()
+	assert_bool(texto.contains("ReglasDelJugador.ACCION_USAR")).is_true()
+	assert_bool(texto.contains("func _input(")).is_true()
 
 
 func test_la_ventanilla_no_le_escribe_el_transform_al_jugador() -> void:  # 013-AC12
