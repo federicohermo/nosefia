@@ -12,7 +12,7 @@ extends RefCounted
 ## simplemente no entra nunca. Y la instancia tampoco sirve como identidad: `Catalogo.de()`
 ## construye un producto nuevo en cada llamada, así que dos yerbas son objetos distintos y un
 ## diccionario indexado por instancia contesta ausente donde tenía que haber un número.
-enum Id { YERBA, FIDEOS, GASEOSA, GALLETITAS, ARROZ, JABON }
+enum Id { YERBA, FIDEOS, GASEOSA, GALLETITAS, ARROZ, JABON, MAROLINI, JORGILLO }
 
 var id: Id
 var nombre: String

@@ -186,6 +186,7 @@ func _comprobar_huecos(almacen: Node3D, esperados: int) -> void:
 func _enfocar_mancha(jugador: Node3D, mancha: Node3D) -> void:
 	jugador.set_physics_process(false)
 	var camara: Camera3D = jugador.get_node("Camara")
+	camara.position = Vector3.UP * ReglasDelJugador.ALTURA_DE_LA_CAMARA
 	for direccion in [Vector3.BACK, Vector3.FORWARD, Vector3.LEFT, Vector3.RIGHT]:
 		jugador.global_position = mancha.global_position + direccion
 		camara.look_at(mancha.global_position + Vector3.UP * 0.03)

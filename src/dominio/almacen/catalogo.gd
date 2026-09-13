@@ -23,6 +23,8 @@ const FILAS := {
 	Producto.Id.GALLETITAS: ["Galletitas", 900, 5],
 	Producto.Id.ARROZ: ["Arroz", 1100, 3],
 	Producto.Id.JABON: ["Jabón", 1500, 2],
+	Producto.Id.MAROLINI: ["Marolini", 1200, 4],
+	Producto.Id.JORGILLO: ["Jorgillo", 900, 4],
 }
 
 

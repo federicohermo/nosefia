@@ -57,3 +57,10 @@ producto = 4
 position = Vector3(5, 0.406, -6.5)
 producto = 5
 
+[node name="CajaDeMarolini" parent="." instance=ExtResource("11_caja_de_productos")]
+position = Vector3(6, 0.406, -6.5)
+producto = 6
+
+[node name="CajaDeJorgillo" parent="." instance=ExtResource("11_caja_de_productos")]
+position = Vector3(7, 0.406, -6.5)
+producto = 7

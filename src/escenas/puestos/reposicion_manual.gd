@@ -4,17 +4,21 @@ extends Node3D
 const ZonaDeReposicion := preload("res://src/escenas/puestos/zona_de_reposicion.gd")
 const OBJETO := preload("res://src/escenas/objetos/objeto_agarrable.tscn")
 const BORDE := preload("res://src/escenas/puestos/borde_de_reposicion.gdshader")
+const PRODUCTOS_NUEVOS := preload("res://assets/models/productos_marolini_jorgillo.glb")
 
 @export var repositor: Repositor
 @export var estante: Node3D
 @export var contenido: Node3D
 @export var apoyos: Array[Vector3] = []
+@export var direcciones: Array[Vector3] = []
 
 var _unidades: Array[Node3D] = []
 var _zonas: Array[StaticBody3D] = []
+var _modelos: Array[Mesh] = []
 
 
 func preparar() -> void:
+	_preparar_modelos()
 	estante.remove_from_group(ReglasDelJugador.GRUPO_INTERACTUABLE)
 	for producto in Catalogo.todos():
 		var casillero := ZonaDeReposicion.new()
@@ -33,7 +37,8 @@ func preparar() -> void:
 		casillero.add_child(cuerpo)
 		var vista := MeshInstance3D.new()
 		var malla := QuadMesh.new()
-		malla.size = Vector2(0.24, 0.24)
+		var tamano := _modelos[producto.id].get_aabb().size
+		malla.size = Vector2(tamano.x, tamano.z) + Vector2.ONE * 0.02
 		vista.position.y = -0.15 + 0.005
 		vista.rotation.x = -PI / 2
 		var material := StandardMaterial3D.new()
@@ -71,7 +76,9 @@ func _actualizar_zonas(_nodo: Node3D = null) -> void:
 
 ## La tolerancia permite apuntar al entorno del producto, no a un píxel.
 func zona(id: Producto.Id) -> AABB:
-	return AABB(_apoyo(id) - Vector3(0.12, 0, 0.12), Vector3(0.24, 0.3, 0.24)).grow(0.35)
+	var tamano := _modelos[id].get_aabb().size
+	tamano.y = 0.3
+	return AABB(_apoyo(id) - Vector3(tamano.x / 2, 0, tamano.z / 2), tamano).grow(0.25)
 
 
 func _apoyo(id: Producto.Id) -> Vector3:
@@ -81,9 +88,22 @@ func _apoyo(id: Producto.Id) -> Vector3:
 
 func _posicion(id: Producto.Id, indice: int) -> Vector3:
 	var base := to_global(apoyos[id])
-	var hacia_centro := estante.global_position - base
-	var direccion := Vector3.RIGHT if absf(hacia_centro.z) > 3 else Vector3.BACK
-	return base + direccion * signf(hacia_centro.dot(direccion)) * 0.24 * indice
+	var direccion := direcciones[id]
+	var separacion := _modelos[id].get_aabb().size.dot(direccion.abs()) + 0.03
+	return base + direccion * separacion * indice
+
+
+func _preparar_modelos() -> void:
+	for grupo: MeshInstance3D in contenido.get_children():
+		var herramienta := SurfaceTool.new()
+		herramienta.append_from(grupo.mesh, 0, Transform3D(grupo.global_basis, Vector3.ZERO))
+		herramienta.set_material(grupo.mesh.surface_get_material(0))
+		_modelos.append(herramienta.commit())
+	_modelos[Producto.Id.YERBA] = preload("res://assets/models/producto_lata.res")
+	var nuevos := PRODUCTOS_NUEVOS.instantiate()
+	_modelos.append(nuevos.get_node("Marolini").mesh)
+	_modelos.append(nuevos.get_node("Jorgillo").mesh)
+	nuevos.free()
 
 
 func retirar(id: Producto.Id) -> void:
@@ -93,22 +113,13 @@ func retirar(id: Producto.Id) -> void:
 		unidad.free()
 		return
 	_unidades.append(unidad)
-	var grupo: MeshInstance3D = contenido.get_child(id)
-	var herramienta := SurfaceTool.new()
-	herramienta.append_from(grupo.mesh, 0, Transform3D(grupo.global_basis, Vector3.ZERO))
-	herramienta.set_material(grupo.mesh.surface_get_material(0))
-	var malla := herramienta.commit()
-	if id == Producto.Id.YERBA:
-		malla = preload("res://assets/models/producto_lata.res")
+	var malla := _modelos[id]
 	var limites := malla.get_aabb()
-	var tamano := limites.size
-	var escala := tamano / limites.size * (0.22 / tamano[tamano.max_axis_index()])
 	var vista: MeshInstance3D = unidad.get_node("Malla")
 	vista.mesh = malla
-	vista.scale = escala
-	vista.position = -limites.get_center() * escala
+	vista.position = -limites.get_center()
 	var forma := BoxShape3D.new()
-	forma.size = limites.size * escala
+	forma.size = limites.size
 	unidad.get_node("Forma").shape = forma
 	unidad.rotation.x = -0.3
 

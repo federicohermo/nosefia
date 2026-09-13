@@ -3,6 +3,54 @@ extends GdUnitTestSuite
 const ALMACEN := preload("res://src/escenas/almacen.tscn")
 
 
+func test_marolini_y_jorgillo_se_reponen_con_foco_y_clic_reales() -> void:
+	var almacen: Node3D = auto_free(ALMACEN.instantiate())
+	add_child(almacen)
+	var jugador: Node3D = almacen.get("_jugador")
+	jugador.set_physics_process(false)
+	for id in [Producto.Id.MAROLINI, Producto.Id.JORGILLO]:
+		var caja: Node3D = almacen.get("_cajas_de_productos")[id]
+		var vista: MeshInstance3D = caja.get_node("Malla")
+		var centro := vista.global_transform * vista.mesh.get_aabb().get_center()
+		await _mirar_foco(jugador, centro + Vector3(0, 0.7, 1.3), centro)
+		assert_object(jugador.get("_enfocado")).is_same(caja)
+		_clic_real(jugador)
+		var unidad: UnidadDeProducto = almacen.get("_agarre").manos().sostenido()
+		assert_object(unidad).is_not_null()
+		if unidad == null:
+			return
+		assert_int(unidad.producto.id).is_equal(id)
+		var zona: Node3D = almacen.get("_reposicion_manual").get_node(
+			"ZonaDe" + unidad.producto.nombre
+		)
+		var desde := Vector3(1.2, 0.3, 0) if id == Producto.Id.MAROLINI else Vector3(0, 0.3, -1.2)
+		await _mirar_foco(jugador, zona.global_position + desde, zona.global_position)
+		assert_object(jugador.get("_enfocado")).is_same(zona)
+		_clic_real(jugador)
+		assert_object(almacen.get("_agarre").manos().sostenido()).is_null()
+		(
+			assert_int(almacen.get("_repositor").estante().unidades_en_gondola(Catalogo.de(id)))
+			. is_equal(1)
+		)
+
+
+func _mirar_foco(jugador: Node3D, ojo: Vector3, punto: Vector3) -> void:
+	var camara: Camera3D = jugador.get_node("Camara")
+	camara.position = Vector3.UP * ReglasDelJugador.ALTURA_DE_LA_CAMARA
+	jugador.global_position = ojo - camara.position
+	camara.look_at(punto)
+	for cuadro in 4:
+		await get_tree().physics_frame
+	jugador.call("_leer_la_mira")
+
+
+func _clic_real(jugador: Node3D) -> void:
+	var clic := InputEventAction.new()
+	clic.action = ReglasDeLosObjetos.ACCION_AGARRAR
+	clic.pressed = true
+	jugador.call("_unhandled_input", clic)
+
+
 func test_cada_unidad_ocupa_un_lugar_distinto_y_la_marca_indica_su_base() -> void:
 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
 	add_child(almacen)
@@ -20,6 +68,7 @@ func test_cada_unidad_ocupa_un_lugar_distinto_y_la_marca_indica_su_base() -> voi
 			assert_float(absf(marca.global_basis.z.dot(Vector3.UP))).is_equal_approx(1.0, 0.001)
 			_accion(jugador, zona)
 			var vista: MeshInstance3D = unidad.get_node("Malla")
+			assert_bool(vista.scale.is_equal_approx(Vector3.ONE)).is_true()
 			var limites := vista.global_transform * vista.mesh.get_aabb()
 			assert_float(limites.get_center().x).is_equal_approx(apoyo.x, 0.001)
 			assert_float(limites.get_center().z).is_equal_approx(apoyo.z, 0.001)

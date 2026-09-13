@@ -10,7 +10,7 @@ func test_la_raiz_agrupa_por_rol_y_conserva_sus_enlaces() -> void:  # 041-AC4 04
 		if propiedad.usage & PROPERTY_USAGE_SCRIPT_VARIABLE and propiedad.name.begins_with("_"):
 			var valor: Variant = almacen.get(propiedad.name)
 			assert_bool(valor != null).override_failure_message(propiedad.name).is_true()
-	assert_int(almacen.get("_cajas_de_productos").size()).is_equal(6)
+	assert_int(almacen.get("_cajas_de_productos").size()).is_equal(Catalogo.todos().size())
 	assert_int(almacen.get("_bolsas").size()).is_equal(3)
 
 

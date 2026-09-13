@@ -18,8 +18,11 @@ func test_el_estante_dibuja_un_hueco_por_producto_del_catalogo() -> void:  # 008
 	# Se cuenta contra el catálogo y nunca contra un número escrito acá: con un producto más, un
 	# estante de seis huecos dejaría al jugador mirando una góndola que nunca se llena del todo,
 	# sin un solo error.
-	var estante := _estante()
-	var huecos := _huecos_de(estante)
+	var almacen: Node3D = auto_free(load(ESCENA).instantiate())
+	add_child(almacen)
+	var huecos: Array = almacen.get("_reposicion_manual").get_children().filter(
+		func(nodo: Node) -> bool: return nodo is StaticBody3D
+	)
 	(
 		assert_int(huecos.size())
 		. override_failure_message(
