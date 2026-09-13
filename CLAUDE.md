@@ -110,6 +110,9 @@ Verificadas por una herramienta:
 Prosa — dependen de que la revisión las mire, y que no tengan verificador es deuda:
 
 - **Tipado estático en toda firma**, `-> void` incluido.
+- **Textos breves, claros y en español controlado**: frases cortas, una idea por frase y un
+  término por concepto. Aplica a documentación, comentarios, specs y respuestas. Evitar
+  repeticiones y abstracciones que el cambio no necesita.
 - **Español en el contenido, inglés en los nombres de carpeta**, con dos excepciones
   deliberadas: **el árbol de `src/` entero**, que no es estructura sino vocabulario del GDD, y
   las carpetas de spec, cuyo nombre **es** su título. No hay una tercera: `reportes/` lo era

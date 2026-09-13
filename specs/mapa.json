@@ -39,5 +39,5 @@
   "038": {"issue":88,"carpeta":"038-el-campo-de-interaccion-es-espacial","fecha":"2026-09-08","estado":"Propuesto","titulo":"Spec 038 — El campo de interacción es espacial, no un rayo"},
   "039": {"issue":89,"carpeta":"039-lo-que-el-campo-enfoca-se-ve","fecha":"2026-09-08","estado":"Propuesto","titulo":"Spec 039 — Lo que el campo enfoca se ve"},
   "040": {"issue":90,"carpeta":"040-el-objeto-que-se-lleva-no-empuja-al-jugador","fecha":"2026-09-08","estado":"Propuesto","titulo":"Spec 040 — El objeto que se lleva no empuja al jugador"},
-  "041": {"issue":91,"carpeta":"041-el-greybox-se-apoya-en-el-modelo-en-vez-de-duplicarlo","fecha":"2026-09-08","estado":"Propuesto","titulo":"Spec 041 — El greybox se apoya en el modelo en vez de duplicarlo"}
+  "041": {"issue":91,"carpeta":"041-el-greybox-se-apoya-en-el-modelo-en-vez-de-duplicarlo","fecha":"2026-09-08","estado":"Propuesto","titulo":"Spec 041 — Las funciones usan los muebles del modelo actualizado"}
 }
