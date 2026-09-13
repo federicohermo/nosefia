@@ -63,6 +63,12 @@ var _partida := Partida.nueva()
 ## obligatorias hay y a cuántos apercibimientos echan—, y el de apercibimientos se quedaría en
 ## pantalla la jornada entera, porque hasta el cierre nadie lo vuelve a escribir.
 func _ready() -> void:
+	var marco := MarcoDelObjetivo.new()
+	add_child(marco)
+	_jugador.objetivo_enfocado.connect(marco.enfocar)
+	_jugador.objetivo_perdido.connect(marco.apagar)
+	_jugador.objetivo_enfocado.connect(_hud.mostrar_foco)
+	_jugador.objetivo_perdido.connect(_hud.ocultar_foco)
 	_hud.declarar_obligatorias(Apertura.cantidad_de_obligatorias())
 	_hud.mostrar_apercibimientos(_partida.apercibimientos())
 	# La hora se lee en el local y no en la pantalla: enterarse cuesta caminar hasta el reloj, y

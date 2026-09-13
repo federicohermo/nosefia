@@ -26,7 +26,8 @@ func test_resalta_siete_mallas_vinculadas_y_no_las_ajenas() -> void:  # 039-AC1
 		assert_object(malla.material_overlay).is_null()
 
 
-func test_restaura_overlays_distintos_y_conserva_geometria_y_materiales() -> void:  # 039-AC2 039-AC3
+# 039-AC2 039-AC3
+func test_restaura_overlays_distintos_y_conserva_geometria_y_materiales() -> void:
 	var marco: MarcoDelObjetivo = auto_free(MarcoDelObjetivo.new())
 	var mueble: Mueble = auto_free(Mueble.new())
 	var previos: Array[Material] = [null, StandardMaterial3D.new(), ShaderMaterial.new()]
