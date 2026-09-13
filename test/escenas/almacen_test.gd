@@ -13,22 +13,8 @@
 ## mallas del modelo y sus colisiones— la afirma `estructura_del_almacen_test.gd`, que es la
 ## suite de la escena que la declara; acá se afirma que la instancia no vino corrida.
 ##
-## **ESTA SUITE INSTANCIA LA ESCENA Y NO LA ENTRA AL ÁRBOL, y es deliberado.** `instantiate()`
-## alcanza para leer la jerarquía y las propiedades —medido en headless—, mientras que
-## `add_child()` haría correr los `_ready()` de todo lo que cuelgue de la escena. Hoy eso sería
-## el `_ready()` del jugador; en cuanto el spec 007 le cuelgue un script a la raíz y un nodo con
-## el reloj del turno, sería también código que esta suite no escribió. Un test que entra la
-## escena al árbol le hereda al 007 un rojo que no es suyo; uno que la instancia y nada más
-## queda estable. **Si algún día hace falta entrarla, es una decisión que se toma a propósito y
-## se escribe acá.**
-##
-## **Y hizo falta, en tres casos y sólo en ésos** (specs 028 y 017). Los dos del 028 necesitan un
-## espacio físico contra el que tirar un rayo, y sin árbol no hay `World3D`: el del hueco de la
-## ventanilla entra **sólo el subárbol de la estructura**, que no tiene un script colgando, y el
-## del jugador entra la escena entera, porque lo que mide es que la física del `CharacterBody3D`
-## lo deje parado. El del 017 la entra entera también, y por un motivo distinto: el lazo del
-## cierre vive entero en señales conectadas, y leído como texto no dice si funciona. El resto
-## sigue instanciando y nada más.
+## Los casos de jerarquía sólo instancian la escena. Los que necesitan física o señales
+## entran el almacén completo al árbol para resolver los enlaces de sus puestos.
 extends GdUnitTestSuite
 
 const ESCENA_DEL_ALMACEN := "res://src/escenas/almacen.tscn"
@@ -139,11 +125,8 @@ func test_el_almacen_carga_y_su_raiz_es_un_nodo_tridimensional() -> void:
 	assert_object(_almacen()).is_instanceof(Node3D)
 
 
-func test_los_tres_anclajes_que_buscan_los_specs_siguientes_estan_por_nombre() -> void:
-	# Se buscan por nombre y no por posición para que mover una caja no rompa nada de lo que
-	# viene después. Los tres son anclajes de transform, NO muebles definitivos: el 008 reemplaza
-	# `Estanteria` por su `estante.tscn` y el 009 `EscritorioDeLaComputadora` por su
-	# `escritorio.tscn`, y este caso deja de aplicar en cuanto lo hagan.
+func test_los_muebles_y_el_anclaje_de_la_ventanilla_estan_por_nombre() -> void:
+	# El cableado debe conservar estos destinos aunque cambien sus posiciones.
 	var almacen := _almacen()
 	assert_bool(almacen.has_node("Estructura/gondola01")).is_true()
 	assert_bool(almacen.has_node("Estructura/compu")).is_true()
@@ -189,13 +172,7 @@ func test_la_estructura_entra_instanciada_y_no_vino_corrida() -> void:
 	assert_that(estructura.transform).is_equal(Transform3D.IDENTITY)
 
 
-## Entra al árbol **sólo** el subárbol de la estructura, sacándolo del almacén instanciado, y
-## devuelve el espacio físico ya listo para preguntarle.
-##
-## Se entra la estructura sola y no `almacen.tscn` a propósito: la estructura no tiene un solo
-## script colgando, así que su `_ready()` no corre código que esta suite no escribió. Los dos
-## cuadros de física son para que el servidor registre los cuerpos recién entrados; sin ellos el
-## primer rayo no choca con nada y el caso pasa por vacuidad.
+## Espera a que el servidor registre los cuerpos; antes el rayo podría pasar sin colisionar.
 func _espacio_de_la_estructura(almacen: Node3D) -> PhysicsDirectSpaceState3D:
 	var estructura: Node3D = almacen.get_node("Estructura")
 	# Los muebles tienen funciones; sus enlaces se resuelven desde la escena completa.
@@ -330,7 +307,7 @@ func test_el_cableado_dejo_de_armar_el_turno_y_de_llevar_el_puntaje() -> void:  
 	)
 
 
-func test_la_escena_trae_el_ciclo_de_jornadas_colgando_de_la_raiz() -> void:  # 016-AC12
+func test_la_escena_trae_el_ciclo_de_jornadas_en_servicios() -> void:  # 016-AC12
 	# Sin el nodo, el `@export` del cableado llega nulo y el juego muere en el primer cuadro con
 	# un error que no nombra a `almacen.tscn`.
 	var almacen := _almacen()
@@ -426,7 +403,7 @@ func test_despachar_la_placa_abre_la_noche_siguiente_en_cero() -> void:  # 017-A
 	)
 
 
-func test_la_escena_trae_un_solo_reloj_de_pared_y_cuelga_de_la_raiz() -> void:  # 032-AC7
+func test_la_escena_trae_un_solo_reloj_de_pared_en_la_estructura() -> void:  # 032-AC7
 	# Dos relojes serían dos esferas diciendo lo mismo y una sola conectada, que es el modo de
 	# falla silencioso: el jugador camina hasta la que no anda y no hay error en ningún lado.
 	var texto := FileAccess.get_file_as_string(
@@ -436,7 +413,7 @@ func test_la_escena_trae_un_solo_reloj_de_pared_y_cuelga_de_la_raiz() -> void:  
 		assert_int(texto.count(ESCENA_DEL_RELOJ_DE_PARED))
 		. override_failure_message(
 			(
-				"`almacen.tscn` referencia %d veces al reloj de pared"
+				"`estructura_del_almacen.tscn` referencia %d veces al reloj de pared"
 				% texto.count(ESCENA_DEL_RELOJ_DE_PARED)
 			)
 		)
