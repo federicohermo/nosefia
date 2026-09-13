@@ -1,4 +1,4 @@
-[gd_scene load_steps=5 format=3]
+[gd_scene load_steps=6 format=3]
 
 [ext_resource type="Script" uid="uid://clrretmx7rboi" path="res://src/escenas/jugador.gd" id="1_jugador"]
 [ext_resource type="Script" uid="uid://yepsvg67ynpy" path="res://src/sistemas/marco/agarre.gd" id="2_agarre"]
@@ -7,6 +7,9 @@
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_cuerpo"]
 radius = 0.4
 height = 1.8
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_campo"]
+radius = 2.5
 
 [node name="Jugador" type="CharacterBody3D" node_paths=PackedStringArray("agarre", "examen")]
 script = ExtResource("1_jugador")
@@ -20,8 +23,11 @@ shape = SubResource("CapsuleShape3D_cuerpo")
 [node name="Camara" type="Camera3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.7, 0)
 
-[node name="Mira" type="RayCast3D" parent="Camara"]
-target_position = Vector3(0, 0, -2.5)
+[node name="CampoDeInteraccion" type="Area3D" parent="Camara"]
+collision_layer = 0
+
+[node name="Forma" type="CollisionShape3D" parent="Camara/CampoDeInteraccion"]
+shape = SubResource("SphereShape3D_campo")
 
 [node name="PuntoDeExamen" type="Node3D" parent="Camara"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.5)
