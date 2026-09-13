@@ -133,6 +133,10 @@ host»— que **no son un fallo**: la corrida sigue y escribe su `(N/N)`.
 Ese `(N/N)` tiene que dar igual que `find test -name '*_test.gd' | wc -l`. Si da menos, hay una
 suite que no corrió y el nodo verde no lo dice.
 
+Las pruebas auxiliares usan `-rd reports/<spec>-<nodo>`. No comparten reportes con otra
+corrida ni se ejecutan durante una importación: gdUnit4 puede borrar reportes aún en uso.
+El comando `verificar.py` conserva su ruta de reportes.
+
 **El escalón que cuesta una vuelta:** crear el `.gd` no alcanza para que su test lo vea. Un
 `class_name` nuevo no entra al registro global hasta que se vuelve a correr
 `"$GODOT_BIN" --headless --path . --import --quit`, y hasta entonces el error es
