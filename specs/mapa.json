@@ -36,8 +36,8 @@
   "035": {"issue":64,"carpeta":"035-el-dialogo-avanza-de-a-una-entrada","fecha":"2026-09-05","estado":"Propuesto","titulo":"Spec 035 — El diálogo avanza de a una entrada y no se puede abandonar"},
   "036": {"issue":65,"carpeta":"036-el-guardado-se-cablea-al-cierre-de-la-jornada","fecha":"2026-09-05","estado":"Propuesto","titulo":"Spec 036 — El guardado se cablea al cierre de la jornada"},
   "037": {"issue":66,"carpeta":"037-las-restricciones-del-plan-se-declaran-y-se-cruzan","fecha":"2026-09-06","estado":"Descartado","titulo":"Spec 037 — Las restricciones del plan se declaran, y la mitad que se puede cruzar se cruza"},
-  "038": {"issue":88,"carpeta":"038-el-campo-de-interaccion-es-espacial","fecha":"2026-09-08","estado":"Propuesto","titulo":"Spec 038 — El campo de interacción es espacial, no un rayo"},
-  "039": {"issue":89,"carpeta":"039-lo-que-el-campo-enfoca-se-ve","fecha":"2026-09-08","estado":"Propuesto","titulo":"Spec 039 — Lo que el campo enfoca se ve"},
-  "040": {"issue":90,"carpeta":"040-el-objeto-que-se-lleva-no-empuja-al-jugador","fecha":"2026-09-08","estado":"Propuesto","titulo":"Spec 040 — El objeto que se lleva no empuja al jugador"},
-  "041": {"issue":91,"carpeta":"041-el-greybox-se-apoya-en-el-modelo-en-vez-de-duplicarlo","fecha":"2026-09-08","estado":"Propuesto","titulo":"Spec 041 — Las funciones usan los muebles del modelo actualizado"}
+  "038": {"issue":88,"carpeta":"038-el-campo-de-interaccion-es-espacial","fecha":"2026-09-08","estado":"Implementado","titulo":"Spec 038 — El campo de interacción es espacial, no un rayo"},
+  "039": {"issue":89,"carpeta":"039-lo-que-el-campo-enfoca-se-ve","fecha":"2026-09-08","estado":"Implementado","titulo":"Spec 039 — Lo que el campo enfoca se ve"},
+  "040": {"issue":90,"carpeta":"040-el-objeto-que-se-lleva-no-empuja-al-jugador","fecha":"2026-09-08","estado":"Implementado","titulo":"Spec 040 — El objeto que se lleva no empuja al jugador"},
+  "041": {"issue":91,"carpeta":"041-el-greybox-se-apoya-en-el-modelo-en-vez-de-duplicarlo","fecha":"2026-09-08","estado":"Implementado","titulo":"Spec 041 — Las funciones usan los muebles del modelo actualizado"}
 }
