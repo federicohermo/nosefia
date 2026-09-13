@@ -3,7 +3,7 @@
 ## La prueba de que salió bien es que no hay un solo `if` sobre una regla del juego: el clamp
 ## del pitch, la vuelta del yaw, la normalización de la diagonal y «cuándo cambió el objetivo»
 ## viven todos en `src/dominio/` y tienen test. Acá quedan `Input`, `move_and_slide()`, el
-## `RayCast3D` y las señales.
+## campo espacial y las señales.
 ##
 ## Que la aritmética no se haya vuelto a colar acá lo verifica el AC28 del spec 004 con un `rg`
 ## sobre este archivo, que busca las cuatro llamadas del motor con las que se harían esas
@@ -26,7 +26,7 @@ signal objetivo_perdido
 
 ## Se arma en la declaración y no en `_ready()` a propósito: así un test puede instanciar la
 ## escena sin entrarla al árbol y el control ya existe. Entrar la escena al árbol haría correr
-## `_ready()`, que toca el cursor y lee el rayo — dos cosas que en headless no significan nada.
+## `_ready()`, que toca el cursor y conecta sistemas — dos cosas que en headless no significan nada.
 var _control := ControlDelJugador.new(
 	Mirada.new(
 		ReglasDelJugador.SENSIBILIDAD_DEL_MOUSE,
@@ -45,7 +45,7 @@ var _cursor_soltado_a_mano := false
 var _enfocado: Node3D = null
 
 @onready var _camara: Camera3D = $Camara
-@onready var _mira: RayCast3D = $Camara/Mira
+@onready var _campo: Area3D = $Camara/CampoDeInteraccion
 
 
 func _ready() -> void:
@@ -172,31 +172,67 @@ func _aplicar_el_modo_del_cursor() -> void:
 	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED if tomado else Input.MOUSE_MODE_VISIBLE
 
 
-## Arma la terna `(id, distancia, interactuable)` y se la pasa al dominio, que contesta si eso
-## CAMBIÓ. La señal sale sólo cuando contesta que sí: sin eso serían 60 emisiones por segundo
-## mirando fijo una estantería.
+## La identidad sigue siendo la del cuerpo; cambiar el punto visible no reemite el foco.
 func _leer_la_mira() -> void:
-	var enfocado := _mira.get_collider() as Node3D
-	var id := Foco.SIN_OBJETIVO
-	var distancia := 0.0
-	var interactuable := false
-	if enfocado != null:
-		# El dominio guarda un `int` y no el nodo: guardar el nodo pondría en rojo el gate de
-		# capas por `src/dominio → src/escenas` sin que haya un solo `preload`.
-		id = enfocado.get_instance_id()
-		# Del ojo al punto donde pegó el rayo, y no entre los dos orígenes: el del cuerpo está
-		# apoyado en el piso y el del objeto en su centro, así que medir origen a origen le suma
-		# la altura de la cámara a todo lo que se mira de cerca. Es el número con el que el spec
-		# 006 decide si algo está al alcance de la mano, y ahí ese error importa.
-		distancia = _camara.global_position.distance_to(_mira.get_collision_point())
-		interactuable = enfocado.is_in_group(ReglasDelJugador.GRUPO_INTERACTUABLE)
-	_enfocado = enfocado
-	if not _control.observar(id, distancia, interactuable):
+	var candidatos: Array[CampoDeInteraccion.Candidato] = []
+	var cuerpos: Dictionary[int, Node3D] = {}
+	var distancias: Dictionary[int, float] = {}
+	for cuerpo: Node3D in _campo.get_overlapping_bodies():
+		if cuerpo == self or not cuerpo.is_in_group(ReglasDelJugador.GRUPO_INTERACTUABLE):
+			continue
+		var candidato := _medir_candidato(cuerpo)
+		candidatos.append(candidato)
+		cuerpos[candidato.id] = cuerpo
+		distancias[candidato.id] = candidato.distancia
+	var excluido := Foco.SIN_OBJETIVO
+	for nodo in agarre.punto_de_carga.get_children() + examen.punto_de_examen.get_children():
+		excluido = nodo.get_instance_id()
+	var id := CampoDeInteraccion.elegir(candidatos, excluido)
+	_enfocado = cuerpos.get(id)
+	var distancia: float = distancias.get(id, 0.0)
+	if not _control.observar(id, distancia, _enfocado != null):
 		return
 	if _control.objetivo() == Foco.SIN_OBJETIVO:
 		objetivo_perdido.emit()
 	else:
-		objetivo_enfocado.emit(enfocado, distancia)
+		objetivo_enfocado.emit(_enfocado, distancia)
+
+
+## Los bounds orientan los rayos. Sólo un impacto real sobre el cuerpo da un punto visible.
+func _medir_candidato(cuerpo: Node3D) -> CampoDeInteraccion.Candidato:
+	var ojo := _camara.global_position
+	var adelante := -_camara.global_basis.z
+	var puntos: Array[Vector3] = [ojo + adelante * ReglasDelJugador.ALCANCE_DE_LA_MIRA]
+	for forma: CollisionShape3D in cuerpo.find_children("*", "CollisionShape3D", false, false):
+		if forma.disabled or forma.shape == null:
+			continue
+		var limites := forma.global_transform * forma.shape.get_debug_mesh().get_aabb()
+		var centro := limites.get_center()
+		var eje := ojo + adelante * (centro - ojo).dot(adelante)
+		puntos.append(eje.clamp(limites.position, limites.end))
+		puntos.append(centro)
+		for direccion in [
+			Vector3.RIGHT, Vector3.LEFT, Vector3.UP, Vector3.DOWN, Vector3.FORWARD, Vector3.BACK
+		]:
+			puntos.append(centro + direccion * limites.size / 2)
+	var espacio := get_world_3d().direct_space_state
+	for punto in puntos:
+		var consulta := PhysicsRayQueryParameters3D.create(
+			ojo, ojo + ojo.direction_to(punto) * ReglasDelJugador.ALCANCE_DE_LA_MIRA
+		)
+		consulta.exclude = [get_rid()]
+		var golpe := espacio.intersect_ray(consulta)
+		if golpe.get("collider") != cuerpo:
+			continue
+		var impacto: Vector3 = golpe.position
+		return CampoDeInteraccion.Candidato.new(
+			cuerpo.get_instance_id(),
+			ojo.distance_to(impacto),
+			adelante.angle_to(impacto - ojo),
+			true,
+			true
+		)
+	return CampoDeInteraccion.Candidato.new(cuerpo.get_instance_id(), INF, INF, true, false)
 
 
 ## Le pide a lo enfocado que se presente, por el nombre de método que ES el contrato. `null` si
