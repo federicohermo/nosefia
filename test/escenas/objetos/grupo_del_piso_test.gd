@@ -1,6 +1,6 @@
 extends GdUnitTestSuite
 
-const GrupoDelPiso := preload("res://test/performance/grupo_del_piso.gd")
+const GrupoDelPiso := preload("res://src/escenas/objetos/grupo_del_piso.gd")
 
 
 func test_mover_enfocar_y_recoger_conserva_el_dibujo_de_cada_cuerpo() -> void:  # 042-AC6
@@ -32,11 +32,13 @@ func test_mover_enfocar_y_recoger_conserva_el_dibujo_de_cada_cuerpo() -> void:  
 	if DisplayServer.get_name() != "headless":
 		assert_bool(grupo.multimesh.get_instance_transform(1).is_equal_approx(esperado)).is_true()
 	vista.material_overlay = StandardMaterial3D.new()
+	await get_tree().process_frame
 	grupo._physics_process(0.0)
 	assert_bool(vista.visible).is_true()
 	assert_float(grupo.get("_matrices")[1].basis.determinant()).is_zero()
 	assert_bool(cuerpos[0].get_node("Malla").visible).is_false()
 	vista.material_overlay = null
+	await get_tree().process_frame
 	grupo._physics_process(0.0)
 	assert_bool(vista.visible).is_false()
 	assert_bool(grupo.get("_matrices")[1].is_equal_approx(esperado)).is_true()

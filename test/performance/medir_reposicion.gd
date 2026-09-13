@@ -5,7 +5,7 @@ enum Escenario { ESTANTE, CAIDA, REPOSO }
 const CANTIDADES: Array[int] = [100, 500, 2000]
 const SEGUNDOS := 3.0
 const ALMACEN := preload("res://src/escenas/almacen.tscn")
-const GrupoDelPiso := preload("res://test/performance/grupo_del_piso.gd")
+const GrupoDelPiso := preload("res://src/escenas/objetos/grupo_del_piso.gd")
 const OBJETO := preload("res://src/escenas/objetos/objeto_agarrable.tscn")
 
 var modelos: Array[Mesh] = []
@@ -129,7 +129,7 @@ func _ejecutar() -> void:
 	var estado: Array = []
 	OS.execute("git", ["status", "--porcelain"], estado)
 	var informe := {
-		"grupo_sha256": FileAccess.get_sha256("res://test/performance/grupo_del_piso.gd"),
+		"grupo_sha256": FileAccess.get_sha256("res://src/escenas/objetos/grupo_del_piso.gd"),
 		"script_sha256": FileAccess.get_sha256("res://test/performance/medir_reposicion.gd"),
 		"commit": str(revision[0]).strip_edges() if not revision.is_empty() else "desconocido",
 		"cambios_sin_commit": not estado.is_empty() and not str(estado[0]).strip_edges().is_empty(),

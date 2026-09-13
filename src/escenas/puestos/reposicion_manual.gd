@@ -2,6 +2,7 @@
 extends Node3D
 
 const ZonaDeReposicion := preload("res://src/escenas/puestos/zona_de_reposicion.gd")
+const GrupoDelPiso := preload("res://src/escenas/objetos/grupo_del_piso.gd")
 const OBJETO := preload("res://src/escenas/objetos/objeto_agarrable.tscn")
 const BORDE := preload("res://src/escenas/puestos/borde_de_reposicion.gdshader")
 const PRODUCTOS_NUEVOS := preload("res://assets/models/productos_marolini_jorgillo.glb")
@@ -19,6 +20,7 @@ var _zonas: Array[StaticBody3D] = []
 var _modelos: Array[Mesh] = []
 var _formas: Array[ConvexPolygonShape3D] = []
 var _grupos: Array[MultiMeshInstance3D] = []
+var _sueltos: Array[GrupoDelPiso] = []
 var _disponible: ObjetoAgarrable = null
 
 
@@ -63,7 +65,19 @@ func preparar() -> void:
 		_zonas.append(casillero)
 	repositor.agarre.objeto_agarrado.connect(_actualizar_zonas)
 	repositor.agarre.objeto_soltado.connect(_actualizar_zonas)
+	repositor.agarre.objeto_soltado.connect(_agrupar_suelto)
+	repositor.agarre.objeto_agarrado.connect(_retirar_del_grupo)
 	_actualizar_zonas()
+
+
+func _agrupar_suelto(nodo: Node3D) -> void:
+	if nodo is ObjetoAgarrable and nodo.datos is UnidadDeProducto:
+		_sueltos[nodo.datos.producto.id].agregar(nodo)
+
+
+func _retirar_del_grupo(nodo: Node3D) -> void:
+	if nodo is ObjetoAgarrable and nodo.datos is UnidadDeProducto:
+		_sueltos[nodo.datos.producto.id].quitar(nodo)
 
 
 func pedir_colocar(id: Producto.Id) -> void:
@@ -141,6 +155,11 @@ func _preparar_grupos() -> void:
 		grupo.multimesh = copias
 		add_child(grupo)
 		_grupos.append(grupo)
+		var sueltos := GrupoDelPiso.new()
+		sueltos.name = "SueltosDe" + producto.nombre
+		sueltos.preparar(malla, repositor.estante().cupo(producto))
+		add_child(sueltos)
+		_sueltos.append(sueltos)
 
 
 func retirar(id: Producto.Id) -> void:
@@ -194,6 +213,9 @@ func _guardar_cuerpo(unidad: ObjetoAgarrable) -> void:
 
 
 func limpiar() -> void:
+	for grupo in _sueltos:
+		while not grupo.cuerpos.is_empty():
+			grupo.quitar(grupo.cuerpos[-1])
 	for unidad in _unidades:
 		if is_instance_valid(unidad):
 			unidad.queue_free()

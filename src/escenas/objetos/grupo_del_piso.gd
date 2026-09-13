@@ -1,4 +1,4 @@
-## Prototipo: conserva cuerpos físicos y agrupa únicamente su dibujo.
+## Conserva cuerpos físicos y agrupa únicamente su dibujo.
 extends MultiMeshInstance3D
 
 var cuerpos: Array[RigidBody3D] = []

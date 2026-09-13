@@ -3,6 +3,55 @@ extends GdUnitTestSuite
 const ALMACEN := preload("res://src/escenas/almacen.tscn")
 
 
+func test_recoger_del_grupo_del_piso_conserva_foco_identidad_y_reposicion() -> void:  # 042-AC7
+	var almacen: Node3D = auto_free(ALMACEN.instantiate())
+	add_child(almacen)
+	almacen.get("_jugador").set_physics_process(false)
+	var presentacion: Node3D = almacen.get("_reposicion_manual")
+	var agarre: Agarre = almacen.get("_agarre")
+	var producto := Catalogo.de(Producto.Id.ARROZ)
+	var grupo: MultiMeshInstance3D = presentacion.get_node_or_null("SueltosDe" + producto.nombre)
+	assert_object(grupo).is_not_null()
+	if grupo == null:
+		return
+	var cuerpos: Array[RigidBody3D] = []
+	for indice in 3:
+		presentacion.call("retirar", producto.id)
+		var cuerpo: RigidBody3D = agarre.soltar(true)
+		cuerpo.global_position = Vector3(indice * 0.5, 2, -6)
+		cuerpos.append(cuerpo)
+	for cuadro in 120:
+		await get_tree().physics_frame
+	assert_int(grupo.multimesh.visible_instance_count).is_equal(3)
+	for cuerpo in cuerpos:
+		assert_float(cuerpo.global_position.y).is_greater(0.0)
+		assert_bool(cuerpo.get_node("Malla").visible).is_false()
+	var marco: MarcoDelObjetivo = auto_free(MarcoDelObjetivo.new())
+	add_child(marco)
+	marco.enfocar(cuerpos[1])
+	await get_tree().physics_frame
+	await get_tree().physics_frame
+	assert_bool(cuerpos[1].get_node("Malla").visible).is_true()
+	assert_bool(cuerpos[0].get_node("Malla").visible).is_false()
+	var identidad: UnidadDeProducto = cuerpos[1].datos
+	assert_bool(agarre.pedir_agarrar(identidad, cuerpos[1])).is_true()
+	assert_object(agarre.manos().sostenido()).is_same(identidad)
+	assert_int(grupo.multimesh.visible_instance_count).is_equal(2)
+	assert_bool(cuerpos[1].get_node("Malla").visible).is_true()
+	marco.apagar()
+	presentacion.call("pedir_colocar", producto.id)
+	assert_int(almacen.get("_repositor").estante().unidades_en_gondola(producto)).is_equal(1)
+	presentacion.call("retirar", Producto.Id.GASEOSA)
+	assert_object(agarre.punto_de_producto.get_child(0)).is_same(cuerpos[1])
+	agarre.soltar(true)
+	assert_int(grupo.multimesh.visible_instance_count).is_equal(2)
+	almacen.call("_al_abrir_la_jornada", 2)
+	await get_tree().process_frame
+	assert_int(grupo.multimesh.visible_instance_count).is_zero()
+	for cuerpo in cuerpos:
+		assert_bool(is_instance_valid(cuerpo)).is_false()
+
+
 func test_laysntt_no_atraviesa_el_suelo_al_caer_plana_y_recibir_otras_cajas() -> void:  # 042-AC4
 	for giro in [0.8, 1.6, 5.6]:
 		var almacen: Node3D = auto_free(ALMACEN.instantiate())
@@ -108,7 +157,7 @@ func test_los_estantes_agrupan_las_unidades_sin_cuerpos_por_producto() -> void: 
 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
 	add_child(almacen)
 	var presentacion: Node3D = almacen.get("_reposicion_manual")
-	var grupos := presentacion.find_children("*", "MultiMeshInstance3D", true, false)
+	var grupos := presentacion.find_children("ProductosDe*", "MultiMeshInstance3D", true, false)
 	assert_int(grupos.size()).is_equal(Catalogo.todos().size())
 	for grupo: MultiMeshInstance3D in grupos:
 		assert_int(grupo.multimesh.visible_instance_count).is_zero()
