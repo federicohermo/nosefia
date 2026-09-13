@@ -3,6 +3,69 @@ extends GdUnitTestSuite
 const ALMACEN := preload("res://src/escenas/almacen.tscn")
 
 
+func test_el_burbaloo_del_piso_no_bloquea_al_jugador() -> void:  # 042-AC4
+	var almacen: Node3D = auto_free(ALMACEN.instantiate())
+	add_child(almacen)
+	var jugador: CharacterBody3D = almacen.get("_jugador")
+	jugador.set_physics_process(false)
+	jugador.global_position = Vector3(0, 0.5, -5.8)
+	var agarre: Agarre = almacen.get("_agarre")
+	almacen.get("_reposicion_manual").retirar(Producto.Id.GASEOSA)
+	var cuerpo: RigidBody3D = agarre.soltar(true)
+	cuerpo.global_position = jugador.global_position + Vector3(1, 0.2, 0)
+	await get_tree().physics_frame
+	assert_bool(jugador.test_move(jugador.global_transform, Vector3(1.5, 0, 0))).is_false()
+	cuerpo.remove_collision_exception_with(jugador)
+	assert_bool(jugador.test_move(jugador.global_transform, Vector3(1.5, 0, 0))).is_true()
+	cuerpo.add_collision_exception_with(jugador)
+	assert_int(cuerpo.collision_mask).is_equal(1)
+	assert_bool(agarre.pedir_agarrar(cuerpo.datos, cuerpo)).is_true()
+
+
+func test_laysntt_y_jorgillo_quedan_sobre_el_suelo_al_mover_la_camara() -> void:  # 042-AC4
+	var almacen: Node3D = auto_free(ALMACEN.instantiate())
+	add_child(almacen)
+	await get_tree().physics_frame
+	for mancha: Node3D in almacen.get_node("LimpiezaDelAlmacen").get_children():
+		var consulta := PhysicsRayQueryParameters3D.create(
+			mancha.global_position + Vector3.UP, mancha.global_position + Vector3.DOWN, 1
+		)
+		var suelo := almacen.get_world_3d().direct_space_state.intersect_ray(consulta)
+		assert_dict(suelo).is_not_empty()
+		var vista: MeshInstance3D = mancha.get_node("Malla")
+		var limites := vista.global_transform * vista.mesh.get_aabb()
+		assert_float(limites.position.y).is_greater(suelo.position.y)
+		assert_float(limites.end.y).is_less(suelo.position.y + 0.005)
+	var jugador: CharacterBody3D = almacen.get("_jugador")
+	jugador.set_physics_process(false)
+	var camara: Camera3D = jugador.get_node("Camara")
+	var agarre: Agarre = almacen.get("_agarre")
+	var sueltas: Array[RigidBody3D] = []
+	for id in [Producto.Id.ARROZ, Producto.Id.JORGILLO]:
+		for indice in Catalogo.de(id).umbral:
+			almacen.get("_reposicion_manual").retirar(id)
+			var cuerpo: RigidBody3D = agarre.soltar(true)
+			cuerpo.global_position = Vector3(-1.2 + indice * 0.6, 1.5, -5.8 + (id % 2) * 0.5)
+			sueltas.append(cuerpo)
+	for cuadro in 300:
+		camara.rotation = Vector3(sin(cuadro * 0.1), cuadro * 0.03, 0)
+		jugador.position.x = sin(cuadro * 0.1)
+		await get_tree().physics_frame
+		for cuerpo in sueltas:
+			assert_float(cuerpo.global_position.y).is_greater(0.0)
+			assert_float(cuerpo.global_position.y).is_less(1.6)
+	for cuerpo in sueltas:
+		assert_float(cuerpo.linear_velocity.length()).is_less(0.1)
+		assert_bool(cuerpo.is_visible_in_tree()).is_true()
+		var vista: MeshInstance3D = cuerpo.get_node("Malla")
+		var limites := vista.global_transform * vista.mesh.get_aabb()
+		var mancha: MeshInstance3D = almacen.get_node("LimpiezaDelAlmacen/ManchaDelDeposito/Malla")
+		var limites_mancha := mancha.global_transform * mancha.mesh.get_aabb()
+		assert_float(limites.end.y).is_greater(limites_mancha.end.y)
+		assert_bool(agarre.pedir_agarrar(cuerpo.datos, cuerpo)).is_true()
+		almacen.get("_reposicion_manual").pedir_colocar(cuerpo.datos.producto.id)
+
+
 func test_los_estantes_agrupan_las_unidades_sin_cuerpos_por_producto() -> void:  # 042-AC1
 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
 	add_child(almacen)

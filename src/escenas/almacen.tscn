@@ -35,8 +35,9 @@ _audio = NodePath("Servicios/AudioDelAlmacen")
 _agarre = NodePath("Jugador/Agarre")
 _reposicion_manual = NodePath("ReposicionManual")
 
-[node name="ReposicionManual" parent="." instance=ExtResource("reposicion_manual") node_paths=PackedStringArray("repositor", "estante", "contenido")]
+[node name="ReposicionManual" parent="." instance=ExtResource("reposicion_manual") node_paths=PackedStringArray("repositor", "jugador", "estante", "contenido")]
 repositor = NodePath("../Servicios/Repositor")
+jugador = NodePath("../Jugador")
 estante = NodePath("../Estructura/gondola01/StaticBody3D")
 contenido = NodePath("../Estructura/gondola01/StaticBody3D/Contenido")
 

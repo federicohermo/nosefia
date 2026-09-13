@@ -7,6 +7,7 @@ const BORDE := preload("res://src/escenas/puestos/borde_de_reposicion.gdshader")
 const PRODUCTOS_NUEVOS := preload("res://assets/models/productos_marolini_jorgillo.glb")
 
 @export var repositor: Repositor
+@export var jugador: PhysicsBody3D
 @export var estante: Node3D
 @export var contenido: Node3D
 @export var apoyos: Array[Vector3] = []
@@ -140,6 +141,7 @@ func retirar(id: Producto.Id) -> void:
 		unidad = OBJETO.instantiate()
 		add_child(unidad)
 		_unidades.append(unidad)
+		unidad.add_collision_exception_with(jugador)
 	# El frente de cada modelo se alinea antes de darle la inclinación de la mano.
 	unidad.orientacion_en_mano = (
 		Basis.from_euler(Vector3(deg_to_rad(-17), deg_to_rad(-20), 0))
