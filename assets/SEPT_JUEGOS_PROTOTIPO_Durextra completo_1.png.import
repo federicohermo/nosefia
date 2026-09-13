@@ -3,9 +3,10 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://b8eg1xri3lhhm"
-path="res://.godot/imported/SEPT_JUEGOS_PROTOTIPO_Durextra completo_1.png-2785d2947c0544eb1d787f4e75e730f8.ctex"
+path.s3tc="res://.godot/imported/SEPT_JUEGOS_PROTOTIPO_Durextra completo_1.png-2785d2947c0544eb1d787f4e75e730f8.s3tc.ctex"
 metadata={
-"vram_texture": false
+"imported_formats": ["s3tc_bptc"],
+"vram_texture": true
 }
 generator_parameters={
 "md5": "8ac2f8bb1dd0a11b84ec3587d98aa9d6"
@@ -14,11 +15,11 @@ generator_parameters={
 [deps]
 
 source_file="res://assets/SEPT_JUEGOS_PROTOTIPO_Durextra completo_1.png"
-dest_files=["res://.godot/imported/SEPT_JUEGOS_PROTOTIPO_Durextra completo_1.png-2785d2947c0544eb1d787f4e75e730f8.ctex"]
+dest_files=["res://.godot/imported/SEPT_JUEGOS_PROTOTIPO_Durextra completo_1.png-2785d2947c0544eb1d787f4e75e730f8.s3tc.ctex"]
 
 [params]
 
-compress/mode=0
+compress/mode=2
 compress/high_quality=false
 compress/lossy_quality=0.7
 compress/uastc_level=0
@@ -40,4 +41,4 @@ process/normal_map_invert_y=false
 process/hdr_as_srgb=false
 process/hdr_clamp_exposure=false
 process/size_limit=0
-detect_3d/compress_to=1
+detect_3d/compress_to=0

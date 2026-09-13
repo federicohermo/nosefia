@@ -3,9 +3,10 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://bow3se2cqvsb6"
-path="res://.godot/imported/SEPT_JUEGOS_PROTOTIPO_Burbaloo completo_1.png-b2ea0f715fd13ae876efb74b11621886.ctex"
+path.s3tc="res://.godot/imported/SEPT_JUEGOS_PROTOTIPO_Burbaloo completo_1.png-b2ea0f715fd13ae876efb74b11621886.s3tc.ctex"
 metadata={
-"vram_texture": false
+"imported_formats": ["s3tc_bptc"],
+"vram_texture": true
 }
 generator_parameters={
 "md5": "e0fd73e5ed7ba15883895eb01909a6c2"
@@ -14,11 +15,11 @@ generator_parameters={
 [deps]
 
 source_file="res://assets/SEPT_JUEGOS_PROTOTIPO_Burbaloo completo_1.png"
-dest_files=["res://.godot/imported/SEPT_JUEGOS_PROTOTIPO_Burbaloo completo_1.png-b2ea0f715fd13ae876efb74b11621886.ctex"]
+dest_files=["res://.godot/imported/SEPT_JUEGOS_PROTOTIPO_Burbaloo completo_1.png-b2ea0f715fd13ae876efb74b11621886.s3tc.ctex"]
 
 [params]
 
-compress/mode=0
+compress/mode=2
 compress/high_quality=false
 compress/lossy_quality=0.7
 compress/uastc_level=0
@@ -40,4 +41,4 @@ process/normal_map_invert_y=false
 process/hdr_as_srgb=false
 process/hdr_clamp_exposure=false
 process/size_limit=0
-detect_3d/compress_to=1
+detect_3d/compress_to=0

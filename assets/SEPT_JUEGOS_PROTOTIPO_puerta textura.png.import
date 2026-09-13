@@ -3,9 +3,10 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://dcswco78jns2f"
-path="res://.godot/imported/SEPT_JUEGOS_PROTOTIPO_puerta textura.png-6f400140633bbe11f9cda2baa7e1f3f0.ctex"
+path.s3tc="res://.godot/imported/SEPT_JUEGOS_PROTOTIPO_puerta textura.png-6f400140633bbe11f9cda2baa7e1f3f0.s3tc.ctex"
 metadata={
-"vram_texture": false
+"imported_formats": ["s3tc_bptc"],
+"vram_texture": true
 }
 generator_parameters={
 "md5": "175314b88aa72e9cf341b082c3e75846"
@@ -14,11 +15,11 @@ generator_parameters={
 [deps]
 
 source_file="res://assets/SEPT_JUEGOS_PROTOTIPO_puerta textura.png"
-dest_files=["res://.godot/imported/SEPT_JUEGOS_PROTOTIPO_puerta textura.png-6f400140633bbe11f9cda2baa7e1f3f0.ctex"]
+dest_files=["res://.godot/imported/SEPT_JUEGOS_PROTOTIPO_puerta textura.png-6f400140633bbe11f9cda2baa7e1f3f0.s3tc.ctex"]
 
 [params]
 
-compress/mode=0
+compress/mode=2
 compress/high_quality=false
 compress/lossy_quality=0.7
 compress/uastc_level=0
@@ -40,4 +41,4 @@ process/normal_map_invert_y=false
 process/hdr_as_srgb=false
 process/hdr_clamp_exposure=false
 process/size_limit=0
-detect_3d/compress_to=1
+detect_3d/compress_to=0
