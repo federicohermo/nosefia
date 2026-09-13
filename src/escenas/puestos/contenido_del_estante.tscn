@@ -1,0 +1,35 @@
+[gd_scene format=3]
+
+[ext_resource type="ArrayMesh" path="res://assets/models/gondola_surtido_0.res" id="1_0puf1"]
+[ext_resource type="ArrayMesh" path="res://assets/models/gondola_surtido_2.res" id="2_o3cyy"]
+[ext_resource type="ArrayMesh" path="res://assets/models/gondola_surtido_3.res" id="3_6cdpb"]
+[ext_resource type="ArrayMesh" path="res://assets/models/gondola_surtido_4.res" id="4_cpdl5"]
+[ext_resource type="ArrayMesh" path="res://assets/models/gondola_surtido_5.res" id="5_m6amq"]
+[ext_resource type="ArrayMesh" path="res://assets/models/gondola_cigarrillos.res" id="6_j0ft1"]
+
+[node name="Contenido" type="Node3D" unique_id=1232563730]
+
+[node name="Surtido0" type="MeshInstance3D" parent="." unique_id=1819250004]
+visible = false
+mesh = ExtResource("1_0puf1")
+
+[node name="Surtido2" type="MeshInstance3D" parent="." unique_id=421171537]
+visible = false
+mesh = ExtResource("2_o3cyy")
+
+[node name="Surtido3" type="MeshInstance3D" parent="." unique_id=747449626]
+visible = false
+mesh = ExtResource("3_6cdpb")
+
+[node name="Surtido4" type="MeshInstance3D" parent="." unique_id=1097124228]
+visible = false
+mesh = ExtResource("4_cpdl5")
+
+[node name="Surtido5" type="MeshInstance3D" parent="." unique_id=1968816740]
+visible = false
+mesh = ExtResource("5_m6amq")
+
+[node name="Cigarrillos" type="MeshInstance3D" parent="." unique_id=552747165]
+transform = Transform3D(8.770053e-08, 0, 0.046130087, 0, 0.24522844, 0, -0.24522844, 0, 1.6497406e-08, 0.95418066, 0.5088551, 0.6808094)
+visible = false
+mesh = ExtResource("6_j0ft1")
