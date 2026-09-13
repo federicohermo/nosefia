@@ -142,6 +142,8 @@ func _limpiar(almacen: Node3D) -> void:
 func _sacar_la_basura(almacen: Node3D) -> void:
 	var agarre: Agarre = almacen.get("_agarre")
 	var zona: Area3D = almacen.get_node("Objetos/ZonaDeDescarte")
+	var jugador: Node3D = almacen.get("_jugador")
+	jugador.global_position = zona.global_position + Vector3.BACK
 	var recolector: RecolectorDeBasura = almacen.get("_recolector")
 	for bolsa: Node3D in almacen.get("_bolsas"):
 		var datos: ObjetoDelAlmacen = bolsa.call("interactuar")
