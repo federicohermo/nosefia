@@ -7,7 +7,7 @@
 ##
 ## **La escena se instancia y NO se entra al árbol.** `instantiate()` alcanza para leer la
 ## jerarquía y las propiedades —medido—, y entrarla haría correr `_ready()`, que toma el cursor
-## y arranca a leer el `RayCast3D`: cosas que en headless no significan nada.
+## y conecta los sistemas. Estas pruebas sólo revisan el cableado.
 extends GdUnitTestSuite
 
 const ObjetoDelAlmacen := preload("res://src/dominio/almacen/objeto_del_almacen.gd")
