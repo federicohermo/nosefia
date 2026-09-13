@@ -58,7 +58,7 @@ func _producto(id: Producto.Id) -> Producto:
 
 ## Un repositor cableado a mano: reloj con turno arrancado, caja cargada y estante de un producto.
 func _repositor(unidades_en_la_caja: int, en_deposito: int = 10) -> Repositor:
-	var yerba := _producto(Producto.Id.YERBA)
+	var yerba := _producto(Producto.Id.ACTRONCITO)
 	var inventario := Inventario.new([yerba])
 	inventario.ingresar(yerba, Inventario.Ubicacion.DEPOSITO, en_deposito)
 
@@ -134,7 +134,7 @@ func test_ningun_archivo_de_este_spec_nombra_consumir() -> void:  # 008-AC5
 func test_sin_tiempo_para_reponer_la_tarea_no_se_cuenta_ni_descuenta() -> void:  # 008-AC6
 	# El turno arranca vacío, así que el costo excede lo que queda. El estante igual se llena:
 	# el estado del mundo no depende de que el jefe la cuente.
-	var yerba := _producto(Producto.Id.YERBA)
+	var yerba := _producto(Producto.Id.ACTRONCITO)
 	var inventario := Inventario.new([yerba])
 	inventario.ingresar(yerba, Inventario.Ubicacion.DEPOSITO, 10)
 	var obligatorias := Apertura.obligatorias()
@@ -199,7 +199,7 @@ func test_depositar_desde_la_mano_entrega_el_cuerpo_una_sola_vez() -> void:  # 0
 	agarre.punto_de_carga = auto_free(Node3D.new())
 	repositor.agarre = agarre
 	var nodo: UnidadFisica = auto_free(UnidadFisica.new())
-	assert_bool(repositor.pedir_retirar(Producto.Id.YERBA, nodo)).is_true()
+	assert_bool(repositor.pedir_retirar(Producto.Id.ACTRONCITO, nodo)).is_true()
 	assert_object(agarre.manos().sostenido()).is_same(nodo.datos)
 	assert_int(nodo.collision_layer).is_zero()
 	repositor.pedir_colocar_de_la_mano()
@@ -218,7 +218,7 @@ func test_con_la_mano_llena_no_reserva_otra_unidad() -> void:  # 006-AC2
 	var objeto := ObjetoDelAlmacen.new()
 	assert_bool(agarre.manos().agarrar(objeto)).is_true()
 	var nodo: UnidadFisica = auto_free(UnidadFisica.new())
-	assert_bool(repositor.pedir_retirar(Producto.Id.YERBA, nodo)).is_false()
+	assert_bool(repositor.pedir_retirar(Producto.Id.ACTRONCITO, nodo)).is_false()
 	assert_object(agarre.manos().sostenido()).is_same(objeto)
 	assert_int(repositor.estante().disponibles_para_retirar(Catalogo.todos()[0])).is_equal(1)
 

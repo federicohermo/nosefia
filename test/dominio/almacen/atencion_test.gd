@@ -12,12 +12,12 @@ const EN_GONDOLA := 9
 
 
 func _productos() -> Array[Producto]:
-	return [Catalogo.de(Producto.Id.YERBA), Catalogo.de(Producto.Id.JABON)]
+	return [Catalogo.de(Producto.Id.ACTRONCITO), Catalogo.de(Producto.Id.JABON)]
 
 
 func _pedido(unidades_de_yerba: int = 2, unidades_de_jabon: int = 1) -> Venta:
 	var venta := Venta.new()
-	venta.agregar(Catalogo.de(Producto.Id.YERBA), unidades_de_yerba)
+	venta.agregar(Catalogo.de(Producto.Id.ACTRONCITO), unidades_de_yerba)
 	venta.agregar(Catalogo.de(Producto.Id.JABON), unidades_de_jabon)
 	return venta
 
@@ -82,7 +82,7 @@ func test_los_faltantes_nombran_exactamente_los_productos_que_no_alcanzan() -> v
 	var atencion := _atencion(0, 1)
 	var faltantes := atencion.faltantes_del_pedido()
 	assert_int(faltantes.size()).is_equal(1)
-	assert_int(faltantes[0].id).is_equal(Producto.Id.YERBA)
+	assert_int(faltantes[0].id).is_equal(Producto.Id.ACTRONCITO)
 
 
 func test_con_stock_de_sobra_no_falta_nada() -> void:  # 013-AC4
@@ -94,7 +94,7 @@ func test_cobrar_con_stock_descuenta_de_la_gondola() -> void:  # 013-AC4
 	var inventario := _inventario()
 	var atencion := Atencion.new(Comprador.new("Marta", pedido, pedido.total()), inventario)
 	assert_int(atencion.cobrar()).is_equal(Atencion.Resultado.COBRADA)
-	var yerba := Catalogo.de(Producto.Id.YERBA)
+	var yerba := Catalogo.de(Producto.Id.ACTRONCITO)
 	assert_int(inventario.unidades(yerba, Inventario.Ubicacion.GONDOLA)).is_equal(EN_GONDOLA - 2)
 	assert_bool(atencion.despachada()).is_true()
 	assert_bool(atencion.vendida()).is_true()
@@ -118,7 +118,7 @@ func test_cobrar_dos_veces_avisa_que_ya_estaba_despachada() -> void:  # 013-AC4
 	var atencion := Atencion.new(Comprador.new("Marta", pedido, pedido.total()), inventario)
 	assert_int(atencion.cobrar()).is_equal(Atencion.Resultado.COBRADA)
 	assert_int(atencion.cobrar()).is_equal(Atencion.Resultado.YA_DESPACHADA)
-	var yerba := Catalogo.de(Producto.Id.YERBA)
+	var yerba := Catalogo.de(Producto.Id.ACTRONCITO)
 	assert_int(inventario.unidades(yerba, Inventario.Ubicacion.GONDOLA)).is_equal(EN_GONDOLA - 2)
 
 
@@ -159,7 +159,7 @@ func test_el_ticket_dice_las_lineas_el_total_lo_que_paga_y_la_diferencia() -> vo
 	var atencion := _atencion(pedido.total() + 700, EN_GONDOLA, pedido)
 	var renglones := atencion.renglones()
 	assert_int(renglones.size()).is_equal(pedido.productos().size() + 3)
-	var yerba := Catalogo.de(Producto.Id.YERBA)
+	var yerba := Catalogo.de(Producto.Id.ACTRONCITO)
 	assert_str(renglones[0]).is_equal(Atencion.TEXTO_DE_LA_LINEA % [2, yerba.nombre])
 	assert_str(renglones[-3]).is_equal(Atencion.TEXTO_DEL_TOTAL % pedido.total())
 	assert_str(renglones[-2]).is_equal(Atencion.TEXTO_DE_LO_QUE_PAGA % (pedido.total() + 700))
@@ -179,5 +179,5 @@ func test_el_aviso_nombra_lo_que_no_hay_en_gondola_y_es_vacio_si_esta_todo() -> 
 	# respuesta, que es lo que dejaría un `if` sobre el juego arriba en `ui/`.
 	assert_str(_atencion(0).aviso()).is_empty()
 	var corta := _atencion(0, 1)
-	var yerba := Catalogo.de(Producto.Id.YERBA)
+	var yerba := Catalogo.de(Producto.Id.ACTRONCITO)
 	assert_str(corta.aviso()).is_equal(Atencion.TEXTO_DE_LOS_FALTANTES % yerba.nombre)

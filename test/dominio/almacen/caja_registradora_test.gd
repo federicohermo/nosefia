@@ -104,7 +104,7 @@ func test_reponer_cambia_lo_que_la_caja_lista_como_faltante() -> void:  # 009-AC
 	var inventario := _inventario()
 	var caja := CajaRegistradora.new(inventario, _del_dia())
 	var antes := caja.faltantes().size()
-	var yerba := Catalogo.de(Producto.Id.YERBA)
+	var yerba := Catalogo.de(Producto.Id.ACTRONCITO)
 	inventario.mover(
 		yerba, Inventario.Ubicacion.DEPOSITO, Inventario.Ubicacion.GONDOLA, yerba.umbral
 	)

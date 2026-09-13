@@ -19,7 +19,7 @@ const ZonaQueSeVe := preload("res://src/escenas/puestos/zona_de_descarte.gd")
 ## Una caja por producto del catálogo, desde que reponer se puede terminar jugando. Antes era una
 ## sola llamada `CajaDeProductos`: el nombre viejo dejaba este caso midiendo de menos.
 const CAJAS_DEL_DEPOSITO := [
-	"Objetos/CajaDeYerba",
+	"Objetos/CajaDeActroncito",
 	"Objetos/CajaDeFideos",
 	"Objetos/CajaDeGaseosa",
 	"Objetos/CajaDeGalletitas",

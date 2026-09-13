@@ -77,7 +77,7 @@ func test_cada_jornada_recibe_un_inventario_propio() -> void:  # 008-AC9
 	# en la góndola esta noche y reponer se cumpliría sola.
 	var una := Apertura.inventario_de_la_jornada()
 	var otra := Apertura.inventario_de_la_jornada()
-	var yerba := Catalogo.de(Producto.Id.YERBA)
+	var yerba := Catalogo.de(Producto.Id.ACTRONCITO)
 	una.mover(yerba, Inventario.Ubicacion.DEPOSITO, Inventario.Ubicacion.GONDOLA, 1)
 	assert_int(una.unidades(yerba, Inventario.Ubicacion.GONDOLA)).is_equal(1)
 	assert_int(otra.unidades(yerba, Inventario.Ubicacion.GONDOLA)).is_equal(0)

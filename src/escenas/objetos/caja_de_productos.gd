@@ -5,7 +5,7 @@ signal producto_pedido(id: Producto.Id)
 
 ## Qué producto despacha esta caja. Es un `Producto.Id` y no un `String` suelto porque el
 ## conjunto es cerrado: un `"yerva"` no rompe nada, y el producto simplemente no llega nunca.
-@export var producto: Producto.Id = Producto.Id.YERBA
+@export var producto: Producto.Id = Producto.Id.ACTRONCITO
 @export var mallas: Array[MeshInstance3D] = []
 
 

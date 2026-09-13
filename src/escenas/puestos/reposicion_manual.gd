@@ -99,7 +99,7 @@ func _preparar_modelos() -> void:
 		herramienta.append_from(grupo.mesh, 0, Transform3D(grupo.global_basis, Vector3.ZERO))
 		herramienta.set_material(grupo.mesh.surface_get_material(0))
 		_modelos.append(herramienta.commit())
-	_modelos[Producto.Id.YERBA] = preload("res://assets/models/producto_lata.res")
+	_modelos[Producto.Id.ACTRONCITO] = preload("res://assets/models/producto_actroncito.res")
 	var nuevos := PRODUCTOS_NUEVOS.instantiate()
 	_modelos.append(nuevos.get_node("Marolini").mesh)
 	_modelos.append(nuevos.get_node("Jorgillo").mesh)

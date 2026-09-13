@@ -71,7 +71,7 @@ func test_los_casilleros_ocupados_son_los_que_dice_el_dominio() -> void:  # 033-
 	# cuenta propia. Con una cuenta propia, la caja y el dominio se contradicen en silencio.
 	var caja := _caja()
 	var dominio := CajaDeTraslado.new()
-	dominio.guardar(Catalogo.de(Producto.Id.YERBA))
+	dominio.guardar(Catalogo.de(Producto.Id.ACTRONCITO))
 	dominio.guardar(Catalogo.de(Producto.Id.ARROZ))
 	caja.mostrar(dominio.contenido())
 	assert_int(_casilleros_visibles(caja)).is_equal(dominio.ocupados())

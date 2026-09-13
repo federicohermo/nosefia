@@ -10,7 +10,7 @@ extends GdUnitTestSuite
 
 
 func test_un_inventario_recien_construido_no_tiene_nada_en_ningun_lado() -> void:
-	var yerba := Producto.new(Producto.Id.YERBA, "Yerba", 2500, 4)
+	var yerba := Producto.new(Producto.Id.ACTRONCITO, "Yerba", 2500, 4)
 	var arroz := Producto.new(Producto.Id.ARROZ, "Arroz", 1100, 3)
 	var productos: Array[Producto] = [yerba, arroz]
 	var inventario := Inventario.new(productos)
@@ -23,8 +23,8 @@ func test_el_mismo_producto_repetido_en_la_construccion_entra_una_sola_vez() -> 
 	# Dos yerbas en la lista de construcción son un producto, no dos: si la segunda pisara a la
 	# primera, `faltantes()` devolvería la yerba duplicada y la lista de reposición mostraría la
 	# misma línea dos veces.
-	var yerba := Producto.new(Producto.Id.YERBA, "Yerba", 2500, 4)
-	var otra_yerba := Producto.new(Producto.Id.YERBA, "Yerba", 2500, 4)
+	var yerba := Producto.new(Producto.Id.ACTRONCITO, "Yerba", 2500, 4)
+	var otra_yerba := Producto.new(Producto.Id.ACTRONCITO, "Yerba", 2500, 4)
 	var productos: Array[Producto] = [yerba, otra_yerba]
 	var inventario := Inventario.new(productos)
 	inventario.ingresar(yerba, Inventario.Ubicacion.GONDOLA, 1)
@@ -36,7 +36,7 @@ func test_ingresar_al_deposito_no_toca_la_gondola() -> void:
 	# Las dos ubicaciones son dos números separados: si `ingresar` sumara a un total único, el
 	# jugador no tendría nunca una góndola vacía con el depósito lleno, que es el estado que le
 	# da la razón para ir al estante.
-	var yerba := Producto.new(Producto.Id.YERBA, "Yerba", 2500, 4)
+	var yerba := Producto.new(Producto.Id.ACTRONCITO, "Yerba", 2500, 4)
 	var productos: Array[Producto] = [yerba]
 	var inventario := Inventario.new(productos)
 	inventario.ingresar(yerba, Inventario.Ubicacion.DEPOSITO, 4)
@@ -48,7 +48,7 @@ func test_ingresar_una_cantidad_negativa_no_deja_la_gondola_bajo_cero() -> void:
 	# `ingresar` es la puerta por la que **entra** mercadería; la única que resta es la interna
 	# que usan `mover` y `cobrar`. Sin el corte, un `-5` de quien reponga mal deja la góndola en
 	# un número imposible que `hay_stock()` y `faltantes()` leen como una góndola vacía cualquiera.
-	var yerba := Producto.new(Producto.Id.YERBA, "Yerba", 2500, 4)
+	var yerba := Producto.new(Producto.Id.ACTRONCITO, "Yerba", 2500, 4)
 	var productos: Array[Producto] = [yerba]
 	var inventario := Inventario.new(productos)
 	inventario.ingresar(yerba, Inventario.Ubicacion.GONDOLA, 3)
@@ -60,7 +60,7 @@ func test_mover_una_unidad_la_saca_del_deposito_y_la_pone_en_la_gondola() -> voi
 	# Es la operación que la tarea de reponer hace unidad por unidad, y por eso `mover` devuelve
 	# cuántas movió de verdad: sin ese número la escena tendría que preguntar el stock antes de
 	# cada gesto.
-	var yerba := Producto.new(Producto.Id.YERBA, "Yerba", 2500, 4)
+	var yerba := Producto.new(Producto.Id.ACTRONCITO, "Yerba", 2500, 4)
 	var productos: Array[Producto] = [yerba]
 	var inventario := Inventario.new(productos)
 	inventario.ingresar(yerba, Inventario.Ubicacion.DEPOSITO, 4)
@@ -73,7 +73,7 @@ func test_mover_una_unidad_la_saca_del_deposito_y_la_pone_en_la_gondola() -> voi
 
 
 func test_pedir_mas_de_lo_que_hay_mueve_lo_que_hay_y_nunca_deja_un_negativo() -> void:
-	var yerba := Producto.new(Producto.Id.YERBA, "Yerba", 2500, 4)
+	var yerba := Producto.new(Producto.Id.ACTRONCITO, "Yerba", 2500, 4)
 	var productos: Array[Producto] = [yerba]
 	var inventario := Inventario.new(productos)
 	inventario.ingresar(yerba, Inventario.Ubicacion.DEPOSITO, 2)
@@ -86,7 +86,7 @@ func test_pedir_mas_de_lo_que_hay_mueve_lo_que_hay_y_nunca_deja_un_negativo() ->
 
 
 func test_mover_desde_un_deposito_vacio_no_mueve_nada_y_no_cambia_nada() -> void:
-	var yerba := Producto.new(Producto.Id.YERBA, "Yerba", 2500, 4)
+	var yerba := Producto.new(Producto.Id.ACTRONCITO, "Yerba", 2500, 4)
 	var productos: Array[Producto] = [yerba]
 	var inventario := Inventario.new(productos)
 	var movidas := inventario.mover(
@@ -101,17 +101,17 @@ func test_consultar_con_otra_instancia_del_mismo_producto_encuentra_lo_guardado(
 	# `Catalogo.de()` construye un producto nuevo en cada llamada, así que las tres yerbas de
 	# este test son objetos distintos. Un inventario indexado por instancia contestaría 0 acá,
 	# sin error y sin que nada avise.
-	var productos: Array[Producto] = [Catalogo.de(Producto.Id.YERBA)]
+	var productos: Array[Producto] = [Catalogo.de(Producto.Id.ACTRONCITO)]
 	var inventario := Inventario.new(productos)
-	inventario.ingresar(Catalogo.de(Producto.Id.YERBA), Inventario.Ubicacion.GONDOLA, 2)
-	var consultada := Catalogo.de(Producto.Id.YERBA)
+	inventario.ingresar(Catalogo.de(Producto.Id.ACTRONCITO), Inventario.Ubicacion.GONDOLA, 2)
+	var consultada := Catalogo.de(Producto.Id.ACTRONCITO)
 	assert_int(inventario.unidades(consultada, Inventario.Ubicacion.GONDOLA)).is_equal(2)
 
 
 func test_el_inventario_solo_conoce_los_productos_que_recibio() -> void:
 	# Ingresar un producto que el inventario no recibió no lo agrega por la puerta de atrás: si
 	# lo agregara, `faltantes()` empezaría a listar mercadería que el almacén no vende.
-	var yerba := Producto.new(Producto.Id.YERBA, "Yerba", 2500, 4)
+	var yerba := Producto.new(Producto.Id.ACTRONCITO, "Yerba", 2500, 4)
 	var jabon := Producto.new(Producto.Id.JABON, "Jabón", 1500, 2)
 	var productos: Array[Producto] = [yerba]
 	var inventario := Inventario.new(productos)
@@ -121,7 +121,7 @@ func test_el_inventario_solo_conoce_los_productos_que_recibio() -> void:
 
 
 func test_por_debajo_del_umbral_falta_aunque_todavia_quede_algo_para_vender() -> void:
-	var yerba := Producto.new(Producto.Id.YERBA, "Yerba", 2500, 5)
+	var yerba := Producto.new(Producto.Id.ACTRONCITO, "Yerba", 2500, 5)
 	var productos: Array[Producto] = [yerba]
 	var inventario := Inventario.new(productos)
 	inventario.ingresar(yerba, Inventario.Ubicacion.GONDOLA, 3)
@@ -132,7 +132,7 @@ func test_por_debajo_del_umbral_falta_aunque_todavia_quede_algo_para_vender() ->
 func test_justo_en_el_umbral_no_falta() -> void:
 	# El corte es `<`, no `<=`: con el umbral pisado la góndola está abastecida y reponer no
 	# sería una tarea sino un trámite que nunca se termina.
-	var yerba := Producto.new(Producto.Id.YERBA, "Yerba", 2500, 5)
+	var yerba := Producto.new(Producto.Id.ACTRONCITO, "Yerba", 2500, 5)
 	var productos: Array[Producto] = [yerba]
 	var inventario := Inventario.new(productos)
 	inventario.ingresar(yerba, Inventario.Ubicacion.GONDOLA, 5)
@@ -140,7 +140,7 @@ func test_justo_en_el_umbral_no_falta() -> void:
 
 
 func test_una_gondola_vacia_falta_y_no_tiene_con_que_vender() -> void:
-	var yerba := Producto.new(Producto.Id.YERBA, "Yerba", 2500, 5)
+	var yerba := Producto.new(Producto.Id.ACTRONCITO, "Yerba", 2500, 5)
 	var productos: Array[Producto] = [yerba]
 	var inventario := Inventario.new(productos)
 	assert_array(inventario.faltantes()).contains([yerba])
@@ -151,7 +151,7 @@ func test_el_deposito_lleno_no_salva_a_la_gondola_vacia() -> void:
 	# Las dos mitades importan. Un `hay_stock()` que sumara las dos ubicaciones pasa igual los
 	# dos AC de arriba, y la góndola vacía con el depósito lleno —el estado que le da al
 	# jugador la razón para ir al estante— se leería como «hay stock».
-	var yerba := Producto.new(Producto.Id.YERBA, "Yerba", 2500, 5)
+	var yerba := Producto.new(Producto.Id.ACTRONCITO, "Yerba", 2500, 5)
 	var productos: Array[Producto] = [yerba]
 	var inventario := Inventario.new(productos)
 	inventario.ingresar(yerba, Inventario.Ubicacion.DEPOSITO, 100)
@@ -162,7 +162,7 @@ func test_el_deposito_lleno_no_salva_a_la_gondola_vacia() -> void:
 func test_faltantes_devuelve_los_que_faltan_y_solo_esos_en_el_orden_de_construccion() -> void:
 	# Con tres productos y el del medio abastecido, un `faltantes()` que devolviera todos, o que
 	# devolviera otro orden, se pone en rojo. Con dos productos los dos errores pasarían.
-	var yerba := Producto.new(Producto.Id.YERBA, "Yerba", 2500, 5)
+	var yerba := Producto.new(Producto.Id.ACTRONCITO, "Yerba", 2500, 5)
 	var fideos := Producto.new(Producto.Id.FIDEOS, "Fideos", 1200, 2)
 	var arroz := Producto.new(Producto.Id.ARROZ, "Arroz", 1100, 3)
 	var productos: Array[Producto] = [yerba, fideos, arroz]
@@ -174,7 +174,7 @@ func test_faltantes_devuelve_los_que_faltan_y_solo_esos_en_el_orden_de_construcc
 func test_cobrar_descuenta_de_la_gondola_y_deja_el_deposito_intacto() -> void:
 	# El depósito no se toca: lo que se vende por la ventanilla sale del estante, y si el cobro
 	# pudiera tirar del fondo, reponer dejaría de ser necesario para vender.
-	var yerba := Producto.new(Producto.Id.YERBA, "Yerba", 2500, 4)
+	var yerba := Producto.new(Producto.Id.ACTRONCITO, "Yerba", 2500, 4)
 	var arroz := Producto.new(Producto.Id.ARROZ, "Arroz", 1100, 3)
 	var productos: Array[Producto] = [yerba, arroz]
 	var inventario := Inventario.new(productos)
@@ -193,7 +193,7 @@ func test_cobrar_descuenta_de_la_gondola_y_deja_el_deposito_intacto() -> void:
 func test_un_cobro_que_no_entra_en_el_stock_no_descuenta_una_sola_unidad() -> void:
 	# Todo o nada: la línea que sí entraba tampoco se descuenta. Un cobro a medias deja un
 	# estado que el jugador no puede distinguir de una venta completa.
-	var yerba := Producto.new(Producto.Id.YERBA, "Yerba", 2500, 4)
+	var yerba := Producto.new(Producto.Id.ACTRONCITO, "Yerba", 2500, 4)
 	var arroz := Producto.new(Producto.Id.ARROZ, "Arroz", 1100, 3)
 	var productos: Array[Producto] = [yerba, arroz]
 	var inventario := Inventario.new(productos)
@@ -211,7 +211,7 @@ func test_cobrar_un_producto_que_el_inventario_no_conoce_no_vende_ni_toca_nada()
 	# Es la rama que el comentario de `cobrar()` promete: el desconocido responde 0 unidades y
 	# cae por el mismo camino que «no alcanza el stock». Sin este caso, un `cobrar` que tratara
 	# al desconocido como stock infinito devolvería `true` y nadie se enteraría.
-	var yerba := Producto.new(Producto.Id.YERBA, "Yerba", 2500, 4)
+	var yerba := Producto.new(Producto.Id.ACTRONCITO, "Yerba", 2500, 4)
 	var jabon := Producto.new(Producto.Id.JABON, "Jabón", 1500, 2)
 	var productos: Array[Producto] = [yerba]
 	var inventario := Inventario.new(productos)

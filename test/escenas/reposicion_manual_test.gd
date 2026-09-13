@@ -3,12 +3,12 @@ extends GdUnitTestSuite
 const ALMACEN := preload("res://src/escenas/almacen.tscn")
 
 
-func test_marolini_y_jorgillo_se_reponen_con_foco_y_clic_reales() -> void:
+func test_actroncito_marolini_y_jorgillo_se_reponen_con_foco_y_clic_reales() -> void:
 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
 	add_child(almacen)
 	var jugador: Node3D = almacen.get("_jugador")
 	jugador.set_physics_process(false)
-	for id in [Producto.Id.MAROLINI, Producto.Id.JORGILLO]:
+	for id in [Producto.Id.ACTRONCITO, Producto.Id.MAROLINI, Producto.Id.JORGILLO]:
 		var caja: Node3D = almacen.get("_cajas_de_productos")[id]
 		var vista: MeshInstance3D = caja.get_node("Malla")
 		var centro := vista.global_transform * vista.mesh.get_aabb().get_center()
@@ -23,7 +23,7 @@ func test_marolini_y_jorgillo_se_reponen_con_foco_y_clic_reales() -> void:
 		var zona: Node3D = almacen.get("_reposicion_manual").get_node(
 			"ZonaDe" + unidad.producto.nombre
 		)
-		var desde := Vector3(1.2, 0.3, 0) if id == Producto.Id.MAROLINI else Vector3(0, 0.3, -1.2)
+		var desde := Vector3(0, 0.3, -1.2) if id == Producto.Id.JORGILLO else Vector3(1.2, 0.3, 0)
 		await _mirar_foco(jugador, zona.global_position + desde, zona.global_position)
 		assert_object(jugador.get("_enfocado")).is_same(zona)
 		_clic_real(jugador)
@@ -32,6 +32,19 @@ func test_marolini_y_jorgillo_se_reponen_con_foco_y_clic_reales() -> void:
 			assert_int(almacen.get("_repositor").estante().unidades_en_gondola(Catalogo.de(id)))
 			. is_equal(1)
 		)
+
+
+func test_no_hay_productos_3d_iniciales_fuera_del_inventario() -> void:
+	var almacen: Node3D = auto_free(ALMACEN.instantiate())
+	add_child(almacen)
+	for ruta in ["Zucarachas2_001", "alfajorescaja", "Actroncito", "Actroncito4", "Actroncito_001"]:
+		var modelo: Node3D = almacen.get_node("Estructura/" + ruta)
+		assert_bool(modelo.is_visible_in_tree()).is_false()
+		for cuerpo: PhysicsBody3D in modelo.find_children("*", "PhysicsBody3D", true, false):
+			assert_int(cuerpo.collision_layer).is_zero()
+	for producto in Catalogo.todos():
+		assert_int(almacen.get("_repositor").estante().unidades_en_gondola(producto)).is_zero()
+	assert_str(Catalogo.todos()[0].nombre).is_equal("Actroncito")
 
 
 func _mirar_foco(jugador: Node3D, ojo: Vector3, punto: Vector3) -> void:
@@ -108,8 +121,8 @@ func test_el_clic_saca_una_unidad_visible_y_el_estante_la_recibe() -> void:  # 0
 	assert_float(punto.position.y).is_zero()
 	jugador.call("_unhandled_input", clic)
 	assert_int(punto.get_child_count()).is_equal(1)
-	_apuntar(almacen, Producto.Id.YERBA)
-	jugador.set("_enfocado", almacen.get("_reposicion_manual").get_node("ZonaDeYerba"))
+	_apuntar(almacen, Producto.Id.ACTRONCITO)
+	jugador.set("_enfocado", almacen.get("_reposicion_manual").get_node("ZonaDeActroncito"))
 	jugador.call("_unhandled_input", clic)
 	assert_object(agarre.manos().sostenido()).is_null()
 	assert_bool(estante.is_ancestor_of(unidad)).is_true()
@@ -162,8 +175,8 @@ func _accion(
 	jugador: Node3D, objetivo: Node3D, accion: StringName = ReglasDeLosObjetos.ACCION_AGARRAR
 ) -> void:
 	if objetivo == jugador.get_parent().get("_estante"):
-		_apuntar(jugador.get_parent(), Producto.Id.YERBA)
-		objetivo = jugador.get_parent().get("_reposicion_manual").get_node("ZonaDeYerba")
+		_apuntar(jugador.get_parent(), Producto.Id.ACTRONCITO)
+		objetivo = jugador.get_parent().get("_reposicion_manual").get_node("ZonaDeActroncito")
 	jugador.set("_enfocado", objetivo)
 	var evento := InputEventAction.new()
 	evento.action = accion
@@ -191,7 +204,7 @@ func test_solo_la_zona_del_producto_recibe_el_foco_y_el_resto_del_mueble_no_colo
 	var sostenido := agarre.manos().sostenido()
 	assert_bool(estante.is_in_group(ReglasDelJugador.GRUPO_INTERACTUABLE)).is_false()
 	var presentacion: Node3D = almacen.get("_reposicion_manual")
-	var zona := presentacion.get_node("ZonaDeYerba")
+	var zona := presentacion.get_node("ZonaDeActroncito")
 	assert_int(zona.collision_layer).is_equal(2)
 	assert_int(presentacion.get_node("ZonaDeFideos").collision_layer).is_zero()
 	var mueble: MeshInstance3D = estante.get_parent()

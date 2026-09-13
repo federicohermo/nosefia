@@ -19,7 +19,7 @@ extends RefCounted
 ## **Esta clase no los elige**: entran por parámetro al `_init`, y esta lista es la que la jornada
 ## usa. Es lo que permite que un test se arme con uno o con cinco sin que mover el balance rompa
 ## casos que no hablan de él.
-const PRODUCTOS_DEL_DIA := [Producto.Id.YERBA, Producto.Id.FIDEOS, Producto.Id.GASEOSA]
+const PRODUCTOS_DEL_DIA := [Producto.Id.ACTRONCITO, Producto.Id.FIDEOS, Producto.Id.GASEOSA]
 
 var _inventario: Inventario
 

@@ -8,8 +8,8 @@ extends GdUnitTestSuite
 
 
 func test_un_producto_recuerda_los_cuatro_valores_con_los_que_se_construyo() -> void:
-	var yerba := Producto.new(Producto.Id.YERBA, "Yerba", 2500, 4)
-	assert_int(yerba.id).is_equal(Producto.Id.YERBA)
+	var yerba := Producto.new(Producto.Id.ACTRONCITO, "Yerba", 2500, 4)
+	assert_int(yerba.id).is_equal(Producto.Id.ACTRONCITO)
 	assert_str(yerba.nombre).is_equal("Yerba")
 	assert_int(yerba.precio).is_equal(2500)
 	assert_int(yerba.umbral).is_equal(4)

@@ -48,7 +48,7 @@ func test_cada_producto_del_catalogo_esta_completo() -> void:
 func test_dos_llamadas_al_catalogo_dan_objetos_distintos_con_el_mismo_id() -> void:
 	# La decisión escrita como test: la identidad de un producto es su `id`, nunca la
 	# instancia. Quien indexe por instancia va a encontrar ausente lo que guardó la otra.
-	var una := Catalogo.de(Producto.Id.YERBA)
-	var otra := Catalogo.de(Producto.Id.YERBA)
+	var una := Catalogo.de(Producto.Id.ACTRONCITO)
+	var otra := Catalogo.de(Producto.Id.ACTRONCITO)
 	assert_object(una).is_not_same(otra)
 	assert_int(una.id).is_equal(otra.id)

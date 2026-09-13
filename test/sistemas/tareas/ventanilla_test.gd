@@ -44,12 +44,12 @@ func before_test() -> void:
 
 func _pedido() -> Venta:
 	var venta := Venta.new()
-	venta.agregar(Catalogo.de(Producto.Id.YERBA), 1)
+	venta.agregar(Catalogo.de(Producto.Id.ACTRONCITO), 1)
 	return venta
 
 
 func _inventario() -> Inventario:
-	var yerba := Catalogo.de(Producto.Id.YERBA)
+	var yerba := Catalogo.de(Producto.Id.ACTRONCITO)
 	var inventario := Inventario.new([yerba])
 	inventario.ingresar(yerba, Inventario.Ubicacion.GONDOLA, EN_GONDOLA)
 	return inventario
@@ -272,7 +272,7 @@ func test_cobrar_sin_stock_avisa_lo_que_falta_y_no_despacha() -> void:  # 013-AC
 	ventanilla.atencion_despachada.connect(_anotar_despacho)
 	# La góndola vacía es el estado de la primera noche, antes de que el 008 reponga nada.
 	ventanilla.arrancar(
-		TareaDeAtender.new(_compradores(1), Inventario.new([Catalogo.de(Producto.Id.YERBA)]))
+		TareaDeAtender.new(_compradores(1), Inventario.new([Catalogo.de(Producto.Id.ACTRONCITO)]))
 	)
 	ventanilla.pedir_atender()
 
