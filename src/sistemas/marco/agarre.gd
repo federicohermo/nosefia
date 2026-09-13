@@ -79,7 +79,13 @@ func soltar(al_frente: bool) -> Node3D:
 	_nodo = null
 	var ancla := punto_de_soltado if al_frente else punto_de_respaldo
 	if nodo != null and ancla != null:
+		var orientacion := nodo.global_basis if nodo.is_inside_tree() else nodo.basis
 		_colgar(nodo, ancla, false)
+		# Cambiar de padre no debe enderezar el objeto antes de que empiece a caer.
+		if nodo.is_inside_tree():
+			nodo.global_basis = orientacion
+		else:
+			nodo.basis = orientacion
 	if nodo is CollisionObject3D:
 		nodo.collision_layer = _capa_original
 		nodo.collision_mask = _mascara_original

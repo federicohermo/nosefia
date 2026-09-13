@@ -64,6 +64,23 @@ func test_agarrar_congela_la_fisica_de_lo_que_se_lleva() -> void:  # 006-AC7
 	assert_bool(cuerpo.freeze).is_true()
 
 
+func test_soltar_conserva_la_orientacion_mundial_de_la_mano() -> void:  # 042-AC4
+	var agarre := _cableado()
+	add_child(agarre.punto_de_carga)
+	add_child(agarre.punto_de_soltado)
+	add_child(agarre.punto_de_respaldo)
+	agarre.punto_de_carga.rotation = Vector3(-0.4, 1.2, 0)
+	agarre.punto_de_soltado.rotation = Vector3(0, -0.7, 0)
+	var cuerpo := _cuerpo()
+	for al_frente in [true, false]:
+		agarre.pedir_agarrar(_lata(), cuerpo)
+		cuerpo.rotation = Vector3(-0.3, -0.35, 0.1)
+		var orientacion := cuerpo.global_basis
+		agarre.soltar(al_frente)
+		assert_bool(cuerpo.global_basis.is_equal_approx(orientacion)).is_true()
+		assert_bool(cuerpo.freeze).is_false()
+
+
 func test_con_las_manos_llenas_se_rechaza_y_no_se_mueve_nada() -> void:  # 006-AC7
 	var agarre := _cableado()
 	agarre.pedir_agarrar(_lata(), _cuerpo())
