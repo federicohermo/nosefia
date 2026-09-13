@@ -169,15 +169,11 @@ func _comprobar_reloj(almacen: Node3D) -> void:
 
 
 func _comprobar_huecos(almacen: Node3D, esperados: int) -> void:
-	var estante: Node3D = almacen.get("_estante")
-	var cantidades: Dictionary = {}
-	for nodo in estante.get_children():
-		if nodo is ObjetoAgarrable and not nodo.is_queued_for_deletion():
-			var unidad: UnidadDeProducto = nodo.datos
-			cantidades[unidad.producto.id] = cantidades.get(unidad.producto.id, 0) + 1
+	var presentacion: Node3D = almacen.get("_reposicion_manual")
 	var repositor: Repositor = almacen.get("_repositor")
 	for producto in Catalogo.todos():
-		assert_int(cantidades.get(producto.id, 0)).is_equal(
+		var grupo: MultiMeshInstance3D = presentacion.get_node("ProductosDe" + producto.nombre)
+		assert_int(grupo.multimesh.visible_instance_count).is_equal(
 			repositor.estante().unidades_en_gondola(producto)
 		)
 	assert_int(repositor.estante().productos_completos()).is_equal(esperados)
