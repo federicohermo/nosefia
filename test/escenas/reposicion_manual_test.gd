@@ -3,6 +3,48 @@ extends GdUnitTestSuite
 const ALMACEN := preload("res://src/escenas/almacen.tscn")
 
 
+func test_vender_retira_las_unidades_visibles_y_permite_reponer_sin_superponer() -> void:
+	var almacen: Node3D = auto_free(ALMACEN.instantiate())
+	add_child(almacen)
+	almacen.get("_jugador").set_physics_process(false)
+	var presentacion: Node3D = almacen.get("_reposicion_manual")
+	var repositor: Repositor = almacen.get("_repositor")
+	var cupo_total := 0
+	for producto in Catalogo.todos():
+		cupo_total += repositor.estante().cupo(producto)
+		for indice in repositor.estante().cupo(producto):
+			presentacion.retirar(producto.id)
+			presentacion.pedir_colocar(producto.id)
+	var atenciones: Ventanilla = almacen.get("_atenciones")
+	atenciones.pedir_abrir()
+	atenciones.pedir_cobrar()
+	await get_tree().process_frame
+	var stock := 0
+	for producto in Catalogo.todos():
+		var cantidad := repositor.estante().unidades_en_gondola(producto)
+		stock += cantidad
+		var grupo: MultiMeshInstance3D = presentacion.get_node("ProductosDe" + producto.nombre)
+		assert_int(grupo.multimesh.visible_instance_count).is_equal(cantidad)
+	assert_int(stock).is_less(cupo_total)
+	for producto in Catalogo.todos():
+		while repositor.estante().disponibles_para_retirar(producto) > 0:
+			presentacion.retirar(producto.id)
+			presentacion.pedir_colocar(producto.id)
+	var posiciones: Array[Vector3] = []
+	for producto in Catalogo.todos():
+		var grupo: MultiMeshInstance3D = presentacion.get_node("ProductosDe" + producto.nombre)
+		assert_int(grupo.multimesh.visible_instance_count).is_equal(
+			repositor.estante().cupo(producto)
+		)
+		for indice in grupo.multimesh.visible_instance_count:
+			var posicion := (
+				(grupo.global_transform * _transformacion_de_copia(grupo.multimesh, indice)).origin
+			)
+			assert_array(posiciones).not_contains(posicion)
+			posiciones.append(posicion)
+	assert_int(posiciones.size()).is_equal(cupo_total)
+
+
 func test_recoger_del_grupo_del_piso_conserva_foco_identidad_y_reposicion() -> void:  # 042-AC7
 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
 	add_child(almacen)

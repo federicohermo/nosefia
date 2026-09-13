@@ -8,9 +8,10 @@ extends RefCounted
 
 ## La identidad es un `enum` y no un `String` ni la instancia, y las dos mitades importan.
 ##
-## Un `String` es el modo de falla que nombra `CLAUDE.md`: `"yerva"` no rompe nada, el `if`
+## Un `String` es el modo de falla que nombra `CLAUDE.md`: uno mal escrito no rompe nada, el `if`
 ## simplemente no entra nunca. Y la instancia tampoco sirve como identidad: `Catalogo.de()`
-## construye un producto nuevo en cada llamada, así que dos yerbas son objetos distintos y un
+## construye un producto nuevo en cada llamada, así que dos con el mismo `id` son objetos
+## distintos y un
 ## diccionario indexado por instancia contesta ausente donde tenía que haber un número.
 enum Id { ACTRONCITO, FIDEOS, GASEOSA, GALLETITAS, ARROZ, JABON, MAROLINI, JORGILLO }
 

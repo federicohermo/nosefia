@@ -212,6 +212,23 @@ func _guardar_cuerpo(unidad: ObjetoAgarrable) -> void:
 		_disponible = unidad
 
 
+## Deja el dibujo de la góndola en las unidades que el inventario dice que quedan.
+##
+## Vender no pasa por acá: descuenta en `Inventario`, y sin este repintado la góndola seguiría
+## mostrando lo que ya no está. Se redibuja el catálogo entero y no sólo lo vendido porque la
+## atención despacha varios productos de una y el despachado no dice cuáles.
+##
+## **Baja `visible_instance_count` en vez de borrar copias**, y es lo que lo deja de acuerdo con
+## `_apoyo()`: la próxima unidad se coloca en el índice que devuelve `unidades_en_gondola`, o sea
+## justo la primera copia que este método acaba de ocultar. Borrar copias correría los índices y
+## la unidad repuesta caería sobre una que ya se ve.
+func actualizar_stock(_despachados: int) -> void:
+	for producto in Catalogo.todos():
+		var copias := _grupos[producto.id].multimesh
+		copias.visible_instance_count = repositor.estante().unidades_en_gondola(producto)
+	_actualizar_zonas()
+
+
 func limpiar() -> void:
 	for grupo in _sueltos:
 		while not grupo.cuerpos.is_empty():
