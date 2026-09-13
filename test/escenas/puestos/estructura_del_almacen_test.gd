@@ -1,17 +1,8 @@
 ## El escenario modelado del almacén, afirmado contra la escena que lo declara.
 ##
-## Desde que `estructura_del_almacen.tscn` heredó de `SEPT_JUEGOS_PROTOTIPO.glb`, la geometría
-## y la colisión las decide Blender y no este repo: los nombres y los sufijos `-col` viven en el
-## `.blend` de al lado y llegan acá con el `.glb` que se exporta de él. Por eso esta suite ya no
-## afirma dónde está cada pared —eso cambia cada vez que se edita el modelo, y afirmarlo sería un
-## rojo por cada mueble que alguien mueve—, sino **las tres cosas que un re-export rompe sin
-## avisar**: que una malla se quede sin su `-col`, que el edificio entre con la escala sin
-## aplicar, y que los anclajes que los specs siguientes buscan por nombre desaparezcan al
-## renombrar.
-##
-## **ESTA SUITE INSTANCIA LA ESCENA Y NO LA ENTRA AL ÁRBOL, y es deliberado**, por lo mismo que
-## `almacen_test.gd`: `instantiate()` alcanza para leer la jerarquía y las propiedades, mientras
-## que `add_child()` haría correr los `_ready()` de todo lo que cuelgue.
+## Comprueba la escala, los anclajes y las colisiones del modelo importado.
+## La escena adapta la góndola para separar el soporte del surtido.
+## Sólo el caso que lanza un rayo entra al árbol; los demás leen la escena instanciada.
 extends GdUnitTestSuite
 
 const ESCENA_DE_LA_ESTRUCTURA := "res://src/escenas/puestos/estructura_del_almacen.tscn"
@@ -73,8 +64,7 @@ static func _tiene_forma(malla: MeshInstance3D) -> bool:
 
 
 func test_la_estructura_carga_y_su_raiz_se_llama_estructura() -> void:
-	# El nombre no es cosmético: `almacen.tscn` la instancia como `Estructura` y `almacen_test.gd`
-	# navega con `has_node("Estructura/Estanteria")`. Renombrarla acá rompe allá.
+	# El cableado del almacén usa este nombre para llegar a los muebles.
 	var estructura := _estructura()
 	assert_object(estructura).is_instanceof(Node3D)
 	assert_str(estructura.name).is_equal("Estructura")
@@ -138,11 +128,8 @@ func test_el_edificio_no_vino_con_la_escala_rota() -> void:
 		)
 
 
-func test_los_anclajes_que_buscan_los_specs_siguientes_estan_por_nombre() -> void:
-	# Se buscan por nombre y no por posición para que mover un mueble no rompa nada de lo que
-	# viene después. Son anclajes de transform, NO muebles definitivos: el 008 reemplaza
-	# `Estanteria` por su `estante.tscn` y el 009 `EscritorioDeLaComputadora` por su
-	# `escritorio.tscn`, y este caso deja de aplicar en cuanto lo hagan.
+func test_los_muebles_funcionales_conservan_sus_nombres() -> void:
+	# El cableado debe conservar estos destinos aunque cambien sus posiciones.
 	var estructura := _estructura()
 	for anclaje in ANCLAJES:
 		(
@@ -160,9 +147,7 @@ func test_el_colisionador_de_un_anclaje_cuelga_del_nodo_que_lo_nombra() -> void:
 	# qué mueble se está mirando. De esa forma dependen los specs 006, 008 y 009, y hasta acá no la
 	# afirmaba nadie: se iban a enterar de golpe.
 	#
-	# **Éste es el único caso de la suite que entra la escena al árbol**, y es porque sin `World3D`
-	# no hay espacio físico contra el que tirar un rayo. La escena no tiene un solo script
-	# colgando, así que su `_ready()` no corre código que esta suite no escribió.
+	# El almacén completo resuelve los enlaces de los puestos y crea el espacio físico del rayo.
 	var almacen: Node3D = auto_free(load("res://src/escenas/almacen.tscn").instantiate())
 	add_child(almacen)
 	var estructura: Node3D = almacen.get_node("Estructura")
