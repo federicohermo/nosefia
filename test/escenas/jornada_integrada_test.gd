@@ -60,12 +60,26 @@ func test_los_puestos_completan_la_jornada_y_permiten_abrir_la_siguiente(
 
 
 func _reponer(almacen: Node3D) -> void:
-	var estante: Node3D = almacen.get("_estante")
+	var jugador: Node3D = almacen.get("_jugador")
+	jugador.set_physics_process(false)
+	var camara: Camera3D = jugador.get_node("Camara")
 	for caja: Node3D in almacen.get("_cajas_de_productos"):
 		var producto := Catalogo.de(caja.get("producto"))
+		var zona: AABB = almacen.get("_reposicion_manual").zona(producto.id)
+		var direccion := Vector3(0, 0, 1.5)
+		if producto.id == Producto.Id.GASEOSA:
+			direccion = Vector3(1.5, 0, 0)
+		elif producto.id == Producto.Id.GALLETITAS:
+			direccion = Vector3(-1.5, 0, 0)
+		elif producto.id == Producto.Id.ARROZ:
+			direccion = Vector3(0, 0, -1.5)
+		camara.global_position = zona.get_center() + direccion
+		camara.look_at(zona.get_center())
 		for unidad in producto.umbral:
 			caja.call("interactuar")
-			estante.call("interactuar")
+			almacen.get("_reposicion_manual").get_node("ZonaDe" + producto.nombre).call(
+				"interactuar"
+			)
 	await get_tree().process_frame
 	var reloj: RelojDelTurno = almacen.get("_reloj")
 	assert_bool(reloj.obligatoria(Tarea.Tipo.REPONER).completada()).is_true()
@@ -156,12 +170,14 @@ func _comprobar_reloj(almacen: Node3D) -> void:
 
 func _comprobar_huecos(almacen: Node3D, esperados: int) -> void:
 	var estante: Node3D = almacen.get("_estante")
-	var huecos: Node3D = estante.get("_huecos")
-	assert_int(huecos.get_child_count()).is_equal(Catalogo.todos().size())
-	var visibles := 0
-	for hueco: Node3D in huecos.get_children():
-		if hueco.visible:
-			visibles += 1
+	var cantidades: Dictionary = {}
+	for nodo in estante.get_children():
+		if nodo is ObjetoAgarrable and not nodo.is_queued_for_deletion():
+			var unidad: UnidadDeProducto = nodo.datos
+			cantidades[unidad.producto.id] = cantidades.get(unidad.producto.id, 0) + 1
 	var repositor: Repositor = almacen.get("_repositor")
-	assert_int(visibles).is_equal(esperados)
-	assert_int(visibles).is_equal(repositor.estante().productos_completos())
+	for producto in Catalogo.todos():
+		assert_int(cantidades.get(producto.id, 0)).is_equal(
+			repositor.estante().unidades_en_gondola(producto)
+		)
+	assert_int(repositor.estante().productos_completos()).is_equal(esperados)

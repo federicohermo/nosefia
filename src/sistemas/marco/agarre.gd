@@ -27,6 +27,7 @@ signal objeto_soltado(nodo: Node3D)
 @export var punto_de_carga: Node3D
 @export var punto_de_soltado: Node3D
 @export var punto_de_respaldo: Node3D
+@export var punto_de_producto: Node3D
 
 var _manos := Manos.new()
 var _nodo: Node3D = null
@@ -61,7 +62,7 @@ func pedir_agarrar(datos: ObjetoDelAlmacen, nodo: Node3D) -> bool:
 		_mascara_original = nodo.collision_mask
 		nodo.collision_layer = 0
 		nodo.collision_mask = 0
-	_colgar(nodo, punto_de_carga)
+	_colgar(nodo, _punto_de_carga())
 	objeto_agarrado.emit(nodo)
 	return true
 
@@ -100,7 +101,21 @@ func mover_lo_sostenido(ancla: Node3D) -> Node3D:
 
 ## Vuelve a poner en la mano lo que se había acercado a la cara.
 func devolver_a_la_mano() -> Node3D:
-	return mover_lo_sostenido(punto_de_carga)
+	return mover_lo_sostenido(_punto_de_carga())
+
+
+func _punto_de_carga() -> Node3D:
+	if _manos.sostenido() is UnidadDeProducto and punto_de_producto != null:
+		return punto_de_producto
+	return punto_de_carga
+
+
+## Una entrega aceptada deja el cuerpo quieto para que el destino lo ubique.
+func entregar() -> Node3D:
+	_manos.soltar()
+	var nodo := _nodo
+	_nodo = null
+	return nodo
 
 
 ## El clic izquierdo hace las dos cosas, y cuál de las dos toca es un `if` sobre el estado de las

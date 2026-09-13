@@ -8,14 +8,14 @@ class JugadorDoble:
 	extends Jugador
 
 
-func test_el_campo_real_resalta_solo_las_mallas_de_computadora_y_estante() -> void:  # 039-AC9
+func test_el_campo_real_resalta_la_computadora_y_solo_la_zona_de_reposicion() -> void:  # 039-AC9
 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
 	add_child(almacen)
 	var jugador: CharacterBody3D = almacen.get("_jugador")
 	jugador.set_physics_process(false)
 	var hud: Hud = almacen.get("_hud")
 	var computadora: Node3D = almacen.get_node("Estructura/compu/StaticBody3D")
-	var estante: Node3D = almacen.get("_estante")
+	var estante: Node3D = almacen.get("_reposicion_manual").get_node("ZonaDeYerba")
 	var mallas := almacen.find_children("*", "MeshInstance3D", true, false)
 	var previos: Dictionary[MeshInstance3D, Material] = {}
 	var geometria: Dictionary[MeshInstance3D, Mesh] = {}
@@ -34,8 +34,9 @@ func test_el_campo_real_resalta_solo_las_mallas_de_computadora_y_estante() -> vo
 		var ojo := computadora.global_position + Vector3(0, 1, 1)
 		var punto := computadora.global_position
 		if objetivo == estante:
-			ojo = Vector3(3.6, 1.8, 0)
-			punto = Vector3(1.9, 1.5, 0)
+			almacen.get("_cajas_de_productos")[0].call("interactuar")
+			punto = estante.global_position
+			ojo = punto + Vector3(0, 0, 1.5)
 		await _mirar(jugador, ojo, punto)
 		assert_object(jugador.get("_enfocado")).is_same(objetivo)
 		assert_array(avisos).contains([objetivo])
@@ -43,6 +44,8 @@ func test_el_campo_real_resalta_solo_las_mallas_de_computadora_y_estante() -> vo
 		assert_bool(hud.get_node("Mira").color == IndicacionDelFoco.COLOR).is_true()
 		var vinculadas: Array = objetivo.get("mallas")
 		assert_array(vinculadas).is_not_empty()
+		if objetivo == estante:
+			assert_object(vinculadas[0].material_overlay).is_same(estante.material_de_foco)
 		for malla: MeshInstance3D in mallas:
 			if vinculadas.has(malla):
 				assert_object(malla.material_overlay).is_not_null()

@@ -156,3 +156,47 @@ func test_el_estante_no_lleva_el_cupo_ni_el_stock_escritos_adentro() -> void:  #
 			. override_failure_message("`estante.gd` de `dominio/` nombra `%s`" % patron)
 			. is_false()
 		)
+
+
+func test_retirar_reserva_la_unidad_sin_duplicar_el_stock() -> void:  # 008-AC2
+	var producto := Catalogo.todos()[0]
+	var inventario := Inventario.new([producto])
+	inventario.ingresar(producto, Inventario.Ubicacion.DEPOSITO, 1)
+	var estante := Estante.new(inventario, [producto])
+	var unidad := estante.retirar(producto)
+	assert_object(unidad).is_not_null()
+	assert_object(estante.retirar(producto)).is_null()
+	assert_int(estante.unidades_en_gondola(producto)).is_zero()
+	assert_int(estante.unidades_en_deposito(producto)).is_equal(1)
+	assert_int(estante.colocar(producto)).is_equal(Estante.Rechazo.SIN_UNIDADES_EN_DEPOSITO)
+	assert_int(estante.colocar_unidad(unidad)).is_equal(Estante.Rechazo.NINGUNO)
+	assert_int(estante.unidades_en_deposito(producto)).is_zero()
+	assert_int(estante.unidades_en_gondola(producto)).is_equal(1)
+	assert_int(estante.colocar_unidad(unidad)).is_equal(Estante.Rechazo.PRODUCTO_NO_ACEPTADO)
+
+
+func test_el_estante_lleno_conserva_la_unidad_rechazada() -> void:  # 008-AC1
+	var producto := Producto.new(Producto.Id.YERBA, "Yerba", 1, 1)
+	var inventario := Inventario.new([producto])
+	inventario.ingresar(producto, Inventario.Ubicacion.DEPOSITO, 2)
+	var estante := Estante.new(inventario, [producto])
+	var primera := estante.retirar(producto)
+	inventario.mover(producto, Inventario.Ubicacion.DEPOSITO, Inventario.Ubicacion.GONDOLA, 1)
+	assert_int(estante.colocar_unidad(primera)).is_equal(Estante.Rechazo.ESTANTE_LLENO)
+	assert_int(estante.disponibles_para_retirar(producto)).is_zero()
+	assert_int(estante.unidades_en_gondola(producto)).is_equal(1)
+
+
+func test_no_retira_mas_que_los_lugares_libres_incluidas_las_reservas() -> void:
+	var producto := _producto(Producto.Id.YERBA)
+	var estante := _estante([producto])
+	var primera := estante.retirar(producto)
+	var segunda := estante.retirar(producto)
+	assert_object(primera).is_not_null()
+	assert_object(segunda).is_not_null()
+	assert_object(estante.retirar(producto)).is_null()
+	estante.colocar_unidad(primera)
+	assert_object(estante.retirar(producto)).is_null()
+	estante.colocar_unidad(segunda)
+	assert_object(estante.retirar(producto)).is_null()
+	assert_int(estante.unidades_en_deposito(producto)).is_equal(EN_DEPOSITO - CUPO_DE_PRUEBA)
