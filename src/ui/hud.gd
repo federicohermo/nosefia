@@ -26,7 +26,30 @@ const TEXTO_DE_LOS_APERCIBIMIENTOS := "Apercibimientos %d de %d"
 @export var _tareas: Label
 @export var _apercibimientos: Label
 
+var foco_presente: bool = false
+
 var _obligatorias: int = 0
+
+@onready var _mira: ColorRect = $Mira
+
+
+func _ready() -> void:
+	var mitad := IndicacionDelFoco.TAMANO_DE_MIRA / 2.0
+	_mira.offset_left = -mitad
+	_mira.offset_top = -mitad
+	_mira.offset_right = mitad
+	_mira.offset_bottom = mitad
+	ocultar_foco()
+
+
+func mostrar_foco(_objetivo: Node3D, _distancia: float) -> void:
+	foco_presente = true
+	_mira.color = IndicacionDelFoco.COLOR
+
+
+func ocultar_foco() -> void:
+	foco_presente = false
+	_mira.color = IndicacionDelFoco.COLOR_SIN_FOCO
 
 
 ## Cuántas obligatorias pide la jornada. Se declara una vez al abrir el turno y el HUD la guarda
