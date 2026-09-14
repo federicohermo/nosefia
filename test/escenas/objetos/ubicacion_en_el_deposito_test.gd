@@ -11,11 +11,18 @@ const ALMACEN := preload("res://src/escenas/almacen.tscn")
 ## sostiene, y sale del `0.3037077` de escala que el `.tscn` de la caja le pone a un cubo de dos.
 const MEDIA_CAJA := 0.3037
 
-## La caja del piso del baño, de `estructura_del_almacen.tscn`. El nombre de esa forma dice
-## `Deposito` y nombra el baño: los dos cuartos están cambiados en el modelo, y renombrarlos es
-## de otro spec.
-const CENTRO_DEL_BANO := Vector3(10.86326, 0, -4.5818585)
-const TAMANO_DEL_BANO := Vector3(5.1428, 0.206508, 6.608355)
+## Justo adentro de la puerta del baño, del lado del cuarto.
+##
+## **De acá sale el criterio de «está en el baño», y la primera versión lo tenía mal.** Medía si
+## la bolsa caía adentro de la caja del piso que declara `estructura_del_almacen.tscn`, y esa
+## caja **abarca dos cuartos separados por una pared**: las tres bolsas daban verde tiradas en el
+## de arriba, que está tapiado y al que no se entra por ningún lado. Una caja de colisión dice
+## dónde hay piso, no dónde hay cuarto. Lo que sí lo dice es si se llega caminando, y es lo que
+## este caso mide.
+const ENTRADA_DEL_BANO := Vector3(8.8, 1.05, -4.658)
+
+## A cuánto del inodoro tienen que quedar, en metros. Ancla el cuarto sin escribir sus paredes.
+const CERCA_DEL_INODORO := 4.0
 
 
 func test_las_ocho_cajas_de_reposicion_estan_apoyadas_en_el_deposito() -> void:  # 043-AC10
@@ -67,15 +74,25 @@ func test_las_tres_bolsas_arrancan_en_el_bano_y_lejos_del_descarte() -> void:  #
 	add_child(almacen)
 	await get_tree().physics_frame
 	var descarte: Node3D = almacen.get_node("Objetos/ZonaDeDescarte")
+	var inodoro: Node3D = almacen.get_node("Estructura/inodoro")
 	var bolsas: Array = almacen.get("_bolsas")
 	assert_int(bolsas.size()).is_equal(ReglasDeLaBasura.BOLSAS_DE_LA_JORNADA)
-	var piso := AABB(CENTRO_DEL_BANO - TAMANO_DEL_BANO / 2.0, TAMANO_DEL_BANO)
+	var sin_las_bolsas: Array[RID] = []
+	for cuerpo: PhysicsBody3D in bolsas:
+		sin_las_bolsas.append(cuerpo.get_rid())
 	for bolsa: Node3D in bolsas:
 		var lugar := bolsa.global_position
 		(
-			assert_bool(piso.has_point(Vector3(lugar.x, CENTRO_DEL_BANO.y, lugar.z)))
-			. override_failure_message("`%s` arranca en %v, fuera del baño" % [bolsa.name, lugar])
-			. is_true()
+			assert_float(lugar.distance_to(inodoro.global_position))
+			. override_failure_message(
+				"`%s` arranca en %v, lejos del inodoro" % [bolsa.name, lugar]
+			)
+			. is_less(CERCA_DEL_INODORO)
+		)
+		(
+			assert_float(_camino_desde_la_puerta(almacen, lugar, sin_las_bolsas))
+			. override_failure_message("`%s` no se alcanza desde la puerta del baño" % bolsa.name)
+			. is_equal(1.0)
 		)
 		var distancia := lugar.distance_to(descarte.global_position)
 		(
@@ -83,6 +100,23 @@ func test_las_tres_bolsas_arrancan_en_el_bano_y_lejos_del_descarte() -> void:  #
 			. override_failure_message("`%s` está a %.2f m del descarte" % [bolsa.name, distancia])
 			. is_greater(ReglasDeLaBasura.DISTANCIA_MINIMA_AL_DESCARTE)
 		)
+
+
+## Qué fracción del camino recto entre la puerta del baño y un punto recorre el jugador.
+##
+## Las tres bolsas se excluyen para que no se tapen entre sí: se levantan de a una.
+func _camino_desde_la_puerta(almacen: Node3D, hasta: Vector3, excluidas: Array[RID]) -> float:
+	var forma := CapsuleShape3D.new()
+	forma.radius = 0.4
+	forma.height = 1.8
+	var consulta := PhysicsShapeQueryParameters3D.new()
+	consulta.shape = forma
+	consulta.transform = Transform3D(Basis(), ENTRADA_DEL_BANO)
+	consulta.exclude = excluidas
+	var espacio := almacen.get_world_3d().direct_space_state
+	assert_array(espacio.intersect_shape(consulta, 4)).is_empty()
+	consulta.motion = Vector3(hasta.x, ENTRADA_DEL_BANO.y, hasta.z) - ENTRADA_DEL_BANO
+	return espacio.cast_motion(consulta)[1]
 
 
 ## Con qué se superpone un cuerpo, sin contar aquello sobre lo que se apoya.
