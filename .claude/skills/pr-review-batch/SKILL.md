@@ -282,7 +282,7 @@ rompió, no pushees, y decilo. Un pipeline que pushea para completarse no sirve.
 
 Desde que existe el primer `*_test.gd` el nodo `tests` **exige** Godot, y
 `verificar.py` devuelve rojo si no encuentra `GODOT_BIN`, con un mensaje que habla de la variable
-y no del código (`verificar.py:132-141`). Medido en esta máquina: `GODOT_BIN` **no está en el
+y no del código (`verificar.py:132-142`). Medido en esta máquina: `GODOT_BIN` **no está en el
 entorno de la terminal**, se lee del registro de Windows, y una terminal anterior a la variable le
 pasa el entorno viejo a todo lo que lance. El salteo que sí hay que leer es el de los **otros**
 nodos —`lint` y `formato` sobre cero archivos—, y un nodo salteado no es un nodo verde.
