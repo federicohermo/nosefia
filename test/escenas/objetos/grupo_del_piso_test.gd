@@ -1,14 +1,14 @@
 ## El grupo dibuja cada cuerpo del piso una sola vez, y en el lugar donde el motor lo dibuja.
 ##
 ## La referencia es `get_global_transform_interpolated()` y no el `transform` físico. Con la
-## interpolación del spec 044 encendida, el motor dibuja entre el paso anterior y el actual.
-## Medido: los dos difieren hasta 63,65 mm en caída libre. Comparar contra el físico haría
-## insatisfacible el criterio.
+## interpolación del spec 044 encendida, el motor dibuja entre el paso anterior y el actual, así
+## que los dos difieren mientras el cuerpo cae. Comparar contra el físico haría insatisfacible el
+## criterio.
 ##
 ## Los casos de caída llaman `grupo._process(0.0)` a mano después de cada cuadro. La señal
 ## `process_frame` llega antes que el `_process` de los nodos, así que leer justo después del
 ## `await` compara la escritura del cuadro anterior contra la fracción de interpolación de éste.
-## Medido: 30,98 mm de desfasaje aparente con el arreglo ya puesto.
+## Ese desfasaje aparente supera la tolerancia aun con el arreglo ya puesto.
 extends GdUnitTestSuite
 
 const GrupoDelPiso := preload("res://src/escenas/objetos/grupo_del_piso.gd")
@@ -19,7 +19,7 @@ const ALTO := 0.16
 ## Desde dónde cae. Alcanza para pasar de la velocidad cero al impacto en pocos cuadros.
 const CAIDA := 1.1
 
-## El techo del desfasaje, en metros. Un milímetro sobre un objeto de 160 mm.
+## El techo del desfasaje que fija el AC1, en metros.
 const TOLERANCIA := 0.001
 
 
@@ -112,8 +112,7 @@ func test_mover_enfocar_y_recoger_conserva_el_dibujo_de_cada_cuerpo() -> void:  
 
 
 func test_en_caida_libre_la_copia_dibuja_donde_el_motor_dibuja_el_cuerpo() -> void:  # 045-AC1
-	# El atraso viejo era de un paso entero de física. Medido antes del arreglo: 69,32 mm en el
-	# cuadro del impacto, el 43 % del alto del objeto.
+	# El atraso viejo era de un paso entero de física, y crecía con la velocidad del cuerpo.
 	var mundo := _mundo()
 	_piso(mundo)
 	var grupo := _grupo(mundo, 1)
@@ -135,11 +134,11 @@ func test_en_caida_libre_la_copia_dibuja_donde_el_motor_dibuja_el_cuerpo() -> vo
 func test_el_motor_no_vuelve_a_interpolar_lo_que_el_grupo_escribe() -> void:  # 045-AC1
 	# El grupo ya escribe la posición interpolada cada cuadro. Si el motor además interpola el
 	# buffer del MultiMesh, interpola entre dos valores interpolados y la copia se atrasa otra
-	# vez. Medido en el juego el 2026-09-14: 59,92 mm en caída libre.
+	# vez.
 	#
-	# Los otros casos no lo ven: comparan contra `_matrices`, que es lo que el script escribió y
-	# da 0,00 mm. El atraso vive del lado del motor, y `get_instance_transform()` no se puede
-	# leer en headless. Por eso acá se afirma el modo del nodo.
+	# Los otros casos no lo ven: comparan contra `_matrices`, que es lo que el script escribió.
+	# El atraso vive del lado del motor, y `get_instance_transform()` no se puede leer en
+	# headless. Por eso acá se afirma el modo del nodo.
 	var grupo := _grupo(_mundo(), 1)
 	(
 		assert_int(grupo.physics_interpolation_mode)
@@ -150,8 +149,8 @@ func test_el_motor_no_vuelve_a_interpolar_lo_que_el_grupo_escribe() -> void:  # 
 
 
 func test_al_aterrizar_la_copia_no_salta_mas_que_el_dibujo_del_cuerpo() -> void:  # 045-AC2
-	# El borde es el cuadro posterior al impacto. Antes del arreglo el cuerpo avanzaba 9,9 mm y
-	# la copia saltaba los 69,3 que traía de atrás. Ese salto es el parpadeo al tocar el suelo.
+	# El borde es el cuadro posterior al impacto: ahí el cuerpo casi no avanza y la copia salta
+	# todo lo que traía de atrás. Ese salto es el parpadeo al tocar el suelo.
 	var mundo := _mundo()
 	_piso(mundo)
 	var grupo := _grupo(mundo, 1)

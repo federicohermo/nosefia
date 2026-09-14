@@ -10,9 +10,8 @@ var _inversa := Transform3D.IDENTITY
 
 func preparar(malla: Mesh, capacidad: int) -> void:
 	# El grupo escribe en el reloj del dibujo, así que el motor no tiene que volver a interpolar.
-	# Si lo hace, interpola entre dos valores ya interpolados y la copia se atrasa de nuevo.
-	# Medido en el juego con la interpolación heredada: 59,92 mm en caída libre, contra 0,00 mm
-	# de lo que el script escribió. La caché del script no lo ve, sólo el buffer del motor.
+	# Si lo hace, interpola entre dos valores ya interpolados y la copia se atrasa de nuevo. Ese
+	# atraso no lo ve ninguna caché del script: vive en el buffer del motor.
 	physics_interpolation_mode = Node.PHYSICS_INTERPOLATION_MODE_OFF
 	multimesh = MultiMesh.new()
 	multimesh.transform_format = MultiMesh.TRANSFORM_3D
@@ -52,8 +51,8 @@ func quitar(cuerpo: RigidBody3D) -> void:
 
 
 ## Se actualiza en el reloj del dibujo y no en el de la física. Desde `_physics_process` se leía
-## el `transform` de antes de integrar el paso, así que la copia iba un paso atrás del cuerpo.
-## Medido antes del cambio: 69,32 mm en el cuadro del impacto, el 43 % del alto del objeto.
+## el `transform` de antes de integrar el paso, así que la copia iba un paso atrás del cuerpo. El
+## atraso crecía con la velocidad y se pagaba entero en el cuadro del impacto.
 func _process(_delta: float) -> void:
 	var inversa := global_transform.affine_inverse() if is_inside_tree() else Transform3D.IDENTITY
 	var movido := not inversa.is_equal_approx(_inversa)
@@ -76,8 +75,8 @@ func _actualizar(indice: int, forzar: bool = false) -> void:
 	if is_inside_tree() and cuerpo.is_inside_tree():
 		if forzar:
 			_inversa = global_transform.affine_inverse()
-		# Dónde dibuja el motor la malla, no dónde la puso el último paso de física. Las dos
-		# difieren hasta 63,65 mm en caída libre con la interpolación encendida. El motor no
+		# Dónde dibuja el motor la malla, no dónde la puso el último paso de física. Con la
+		# interpolación encendida las dos difieren mientras el cuerpo se mueve. El motor no
 		# vuelve a interpolar lo que se escribe acá: en un `MultiMesh` la interpolación es
 		# opt-in y se activa con `set_buffer_interpolated()`.
 		matriz = _inversa * vista.get_global_transform_interpolated()
