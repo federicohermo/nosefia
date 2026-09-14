@@ -6,6 +6,7 @@
 [ext_resource type="PackedScene" path="res://assets/SEPT_JUEGOS_PROTOTIPO.glb" id="modelo"]
 [ext_resource type="Script" path="res://src/escenas/puestos/escritorio.gd" id="escritorio"]
 [ext_resource type="Script" path="res://src/escenas/puestos/estante.gd" id="estante"]
+[ext_resource type="Script" path="res://src/escenas/puestos/puerta_del_local.gd" id="puerta"]
 [ext_resource type="ArrayMesh" path="res://assets/models/gondola_soporte.res" id="soporte"]
 [ext_resource type="Shape3D" path="res://assets/models/gondola_colision.res" id="colision"]
 [ext_resource type="PackedScene" path="res://src/escenas/puestos/contenido_del_estante.tscn" id="contenido"]
@@ -63,6 +64,20 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.35, 1.04, 7.974)
 script = ExtResource("escritorio")
 metadata/apoyo = NodePath("Estructura/EscritorioComputadora")
 mallas = [NodePath(".."), NodePath("../../teclado")]
+
+[node name="StaticBody3D" parent="puerta" node_paths=PackedStringArray("hoja", "mallas") groups=["interactuable"]]
+script = ExtResource("puerta")
+hoja = NodePath("..")
+lado_de_la_bisagra = -1.0
+sentido_del_giro = -1.0
+mallas = [NodePath("..")]
+
+[node name="StaticBody3D" parent="puerta_001" node_paths=PackedStringArray("hoja", "mallas") groups=["interactuable"]]
+script = ExtResource("puerta")
+hoja = NodePath("..")
+lado_de_la_bisagra = -1.0
+sentido_del_giro = -1.0
+mallas = [NodePath("..")]
 
 [node name="gondola01" parent="."]
 mesh = ExtResource("soporte")
