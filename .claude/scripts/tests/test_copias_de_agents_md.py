@@ -44,7 +44,7 @@ def _copias() -> list[Path]:
     return sorted(
         p
         for p in RAIZ.rglob("AGENTS.md")
-        if p != RAIZ_NO_COPIA and ".claude/worktrees" not in p.as_posix() and "addons" not in p.parts
+        if p != RAIZ_NO_COPIA and ".claude/worktrees" not in _relativa(p) and "addons" not in p.parts
     )
 
 
