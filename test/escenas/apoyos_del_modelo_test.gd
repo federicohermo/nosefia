@@ -49,8 +49,16 @@ func test_los_objetos_y_manchas_quedan_sobre_el_modelo() -> void:  # 041-AC2 041
 			var apoyo := _rayo(objeto, pie + Vector3.UP * 0.1, pie + Vector3.DOWN)
 			assert_bool(apoyo.is_empty()).override_failure_message(str(objeto.name)).is_false()
 			if not apoyo.is_empty():
-				assert_object(apoyo.collider).is_same(
-					almacen.get_node("Estructura/almacen/StaticBody3D")
+				# **No todo se apoya en la malla del edificio, y desde el 043 menos.** Ese spec
+				# abrió el depósito y mandó las cajas de reposición a sus estantes y a su piso,
+				# que es el volumen de `SueloSolido` y no el modelo. Lo que este caso cuida no es
+				# sobre QUÉ se apoya cada cosa sino que no flote ni se hunda, y eso lo mide el
+				# hueco de abajo; que el apoyo sea del escenario lo cuida esta línea.
+				var sostiene := str(almacen.get_path_to(apoyo.collider))
+				(
+					assert_bool(sostiene.begins_with("Estructura/"))
+					. override_failure_message("%s se apoya en `%s`" % [objeto.name, sostiene])
+					. is_true()
 				)
 				(
 					assert_float(pie.y - apoyo.position.y)

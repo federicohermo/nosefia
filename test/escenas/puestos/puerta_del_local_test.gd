@@ -4,12 +4,20 @@ extends GdUnitTestSuite
 
 const ALMACEN := preload("res://src/escenas/almacen.tscn")
 
-## Las dos hojas, con el tramo de 3 m que cruza su vano. La altura evita que la cápsula nazca
-## tocando el piso: ahí `cast_motion` devuelve la fracción segura y el número deja de hablar de
-## la puerta.
+## Las dos hojas, con el tramo de 4,5 m que va desde piso libre del local hasta adentro del
+## cuarto. Dos cosas de la altura y del largo, las dos medidas:
+##
+## **La cápsula no nace tocando el piso.** A 0,9 m `cast_motion` devolvía 0,37 aun con las hojas
+## sin colisión: contaba el contacto con el suelo y el número dejaba de hablar de la puerta.
+##
+## **Y el tramo arranca lejos de la hoja a propósito.** Con 3 m arrancaba a 1,5 m de la puerta,
+## que es justo donde estaba la fila de cajas de reposición — y el caso daba verde igual, porque
+## `cast_motion` **ignora lo que ya está tocando la cápsula al partir**. Por eso `_avance()`
+## afirma aparte que el arranque está libre: sin eso, el obstáculo pegado al punto de partida no
+## lo ve nadie, ni acá ni en el juego hasta que alguien choca contra él.
 const VANOS := {
-	"Estructura/puerta": [Vector3(5.49, 1.05, -6.5), Vector3(5.49, 1.05, -9.5)],
-	"Estructura/puerta_001": [Vector3(6.5, 1.05, -4.66), Vector3(9.5, 1.05, -4.66)],
+	"Estructura/puerta": [Vector3(5.494, 1.05, -5.0), Vector3(5.494, 1.05, -9.5)],
+	"Estructura/puerta_001": [Vector3(5.0, 1.05, -4.658), Vector3(9.5, 1.05, -4.658)],
 }
 
 
@@ -37,7 +45,7 @@ func test_el_vano_se_cruza_solo_con_la_puerta_abierta() -> void:  # 043-AC7
 	add_child(almacen)
 	await get_tree().physics_frame
 	for hoja: String in VANOS:
-		assert_float(await _avance(almacen, hoja)).is_less(0.5)
+		assert_float(await _avance(almacen, hoja)).is_less(0.7)
 	for hoja: String in VANOS:
 		almacen.get_node(hoja + "/StaticBody3D").call("interactuar")
 	await _esperar_el_giro(almacen)
@@ -98,6 +106,9 @@ func _bordes(hoja: MeshInstance3D, altura := 0.0) -> Array[Vector3]:
 
 
 ## Qué fracción del tramo recorre una cápsula del tamaño del jugador antes de chocar.
+##
+## Afirma primero que el punto de partida está libre, y esa mitad no es de adorno: es la que
+## `cast_motion` no mira. Ver el comentario de `VANOS`.
 func _avance(almacen: Node3D, hoja: String) -> float:
 	await get_tree().physics_frame
 	var tramo: Array = VANOS[hoja]
@@ -107,8 +118,17 @@ func _avance(almacen: Node3D, hoja: String) -> float:
 	var consulta := PhysicsShapeQueryParameters3D.new()
 	consulta.shape = forma
 	consulta.transform = Transform3D(Basis(), tramo[0])
+	var espacio := almacen.get_world_3d().direct_space_state
+	var estorbos: Array[String] = []
+	for choque in espacio.intersect_shape(consulta, 8):
+		estorbos.append(str(almacen.get_path_to(choque["collider"])))
+	(
+		assert_array(estorbos)
+		. override_failure_message("%s: el tramo arranca contra %s" % [hoja, estorbos])
+		. is_empty()
+	)
 	consulta.motion = tramo[1] - tramo[0]
-	return almacen.get_world_3d().direct_space_state.cast_motion(consulta)[1]
+	return espacio.cast_motion(consulta)[1]
 
 
 ## Corre cuadros de física hasta que las dos hojas llegaron al tope, o se rinde.

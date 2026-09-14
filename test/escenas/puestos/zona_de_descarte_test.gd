@@ -16,28 +16,22 @@ const ESCENA_AGARRABLE := "res://src/escenas/objetos/objeto_agarrable.tscn"
 ## no declaran `class_name` — y éste **no puede** declararlo, ver el caso de abajo.
 const ZonaQueSeVe := preload("res://src/escenas/puestos/zona_de_descarte.gd")
 
-## Una caja por producto del catálogo, desde que reponer se puede terminar jugando. Antes era una
-## sola llamada `CajaDeProductos`: el nombre viejo dejaba este caso midiendo de menos.
-const CAJAS_DEL_DEPOSITO := [
-	"Objetos/CajaDeActroncito",
-	"Objetos/CajaDeFideos",
-	"Objetos/CajaDeGaseosa",
-	"Objetos/CajaDeGalletitas",
-	"Objetos/CajaDeArroz",
-	"Objetos/CajaDeJabon",
+## Los anclajes de las obligatorias que se hacen en el local. El descarte tiene que estar lejos
+## de todos: es lo que hace que la basura no se saque de paso.
+##
+## **Las cajas de reposición estaban en esta lista y salieron en el 043.** Ese spec abrió la
+## puerta del depósito y mandó el stock a sus estantes, así que reponer pasó a ocurrir en el
+## fondo **a propósito**. Medido con las posiciones nuevas, la caja más lejana queda a 5,20 m del
+## descarte y la más cerca a 2,22: exigirles los 6 m sería exigir que el stock no viva en el
+## depósito. Lo que sigue midiéndose es lo que todavía tiene que ser cierto — que el fondo esté
+## lejos de las cuatro tareas del local y de donde arrancan las bolsas, que desde el 043 es el
+## baño.
+const ANCLAJES_DE_LAS_OTRAS_TAREAS := [
+	"Estructura/gondola01/StaticBody3D",
+	"Objetos/CajaDeTraslado",
+	"Estructura/Ventanilla",
+	"Estructura/compu/StaticBody3D"
 ]
-
-## Los anclajes de las otras cuatro obligatorias en `almacen.tscn`. El descarte tiene que estar
-## lejos de todos: es lo que hace que ninguna otra tarea visite el fondo.
-const ANCLAJES_DE_LAS_OTRAS_TAREAS := (
-	[
-		"Estructura/gondola01/StaticBody3D",
-		"Objetos/CajaDeTraslado",
-		"Estructura/Ventanilla",
-		"Estructura/compu/StaticBody3D"
-	]
-	+ CAJAS_DEL_DEPOSITO
-)
 
 const NOMBRES_DE_LAS_BOLSAS := [
 	"Objetos/BolsaDeBasura1", "Objetos/BolsaDeBasura2", "Objetos/BolsaDeBasura3"
