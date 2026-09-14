@@ -1,4 +1,4 @@
-## Una puerta que se ve: se la toca y la hoja gira. Cablea y nada más.
+## Una puerta que se ve: se la toca y la hoja gira hacia adentro del cuarto. Cablea y nada más.
 ##
 ## **No decide si está abierta ni cuánto giró.** Eso es `Puerta`, que es de `dominio/` y tiene
 ## test; acá viven la bisagra, el sentido y la aritmética de transformadas, que son geometría de
@@ -37,10 +37,11 @@ var _bisagra: Vector3
 
 func _ready() -> void:
 	_cerrada = hoja.transform
-	# La bisagra es el borde de menor X de la hoja y el giro va en negativo. No es configurable
-	# porque hay una sola combinación que sirve: de las cuatro de borde y sentido, las cuatro
-	# dejan el vano libre —o sea que el paso no las distingue— y tres dejan la hoja adentro de
-	# la pared. La que queda es ésta, y es la misma para las dos puertas del local.
+	# La bisagra es el borde de menor X de la hoja. No es configurable porque el sentido no lo
+	# elige la escena: las dos puertas abren hacia adentro de su cuarto, y así la hoja se aleja
+	# del que la abre en vez de barrerlo. El muro no distingue ninguna de las cuatro
+	# combinaciones de borde y sentido — la hoja mide 1,72 m contra un vano de 1,70, así que ya
+	# nace embutida en la jamba y el barrido queda libre con las cuatro.
 	_bisagra = _cerrada * Vector3(hoja.get_aabb().position.x, 0.0, 0.0)
 
 
@@ -61,5 +62,5 @@ func puerta() -> Puerta:
 ## El giro va por cuadro de física y no de dibujo: lo que se mueve es un cuerpo de colisión, y
 ## adelantarlo en el cuadro equivocado lo deja medio paso atrás del jugador que lo está cruzando.
 func _physics_process(delta: float) -> void:
-	var giro := Basis(Vector3.UP, -_puerta.avanzar(delta))
+	var giro := Basis(Vector3.UP, _puerta.avanzar(delta))
 	hoja.transform = Transform3D(giro, _bisagra - giro * _bisagra) * _cerrada

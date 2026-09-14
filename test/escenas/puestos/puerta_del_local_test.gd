@@ -1,5 +1,5 @@
-## Las dos puertas cableadas en el almacén: que se las pueda tocar, que giren sobre su borde y
-## que recién abiertas dejen pasar al jugador.
+## Las dos puertas cableadas en el almacén: que se las pueda tocar, que giren sobre su borde
+## hacia adentro del cuarto, y que recién abiertas dejen pasar al jugador.
 extends GdUnitTestSuite
 
 const ALMACEN := preload("res://src/escenas/almacen.tscn")
@@ -77,30 +77,32 @@ func test_la_hoja_gira_sobre_su_borde_y_no_sobre_su_centro() -> void:  # 043-AC8
 		assert_int(movidos).override_failure_message(hoja).is_equal(1)
 
 
-func test_la_hoja_abierta_no_se_mete_en_la_pared() -> void:  # 043-AC9
-	# Es el caso que elige de qué lado cuelga cada hoja: el vano queda libre con las cuatro
-	# combinaciones de bisagra y sentido, y tres de las cuatro dejan la hoja adentro del muro.
+func test_la_hoja_abierta_entra_al_cuarto_y_no_al_local() -> void:
+	# Es el caso que elige de qué lado gira cada hoja. Un rayo de borde a borde no lo puede
+	# contestar: arranca pegado a la jamba y dice de qué lado nace la hoja, no dónde termina.
+	# Medido, la hoja queda embutida 0,11 m en la jamba con el vano cerrado y las cuatro
+	# combinaciones de bisagra y sentido dejan libre su barrido, así que el muro no elige nada.
 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
 	add_child(almacen)
 	await get_tree().physics_frame
 	for hoja: String in VANOS:
 		almacen.get_node(hoja + "/StaticBody3D").call("interactuar")
 	await _esperar_el_giro(almacen)
-	var muro: StaticBody3D = almacen.get_node("Estructura/almacen/StaticBody3D")
 	for hoja: String in VANOS:
-		var bordes := _bordes(almacen.get_node(hoja), 0.6)
-		var consulta := PhysicsRayQueryParameters3D.create(bordes[0], bordes[1])
-		consulta.exclude = [almacen.get_node(hoja + "/StaticBody3D").get_rid()]
-		var golpe := almacen.get_world_3d().direct_space_state.intersect_ray(consulta)
-		assert_object(golpe.get("collider")).override_failure_message(hoja).is_not_same(muro)
+		# El tramo de `VANOS` va del local hacia adentro del cuarto: su dirección es la que la
+		# hoja abierta tiene que seguir, y la hoja mide 1,72 m.
+		var tramo: Array = VANOS[hoja]
+		var bordes := _bordes(almacen.get_node(hoja))
+		var adentro: float = (bordes[1] - bordes[0]).dot((tramo[1] - tramo[0]).normalized())
+		assert_float(adentro).override_failure_message(hoja).is_greater(1.5)
 
 
 ## Los dos bordes verticales de la hoja, en coordenadas del mundo.
-func _bordes(hoja: MeshInstance3D, altura := 0.0) -> Array[Vector3]:
+func _bordes(hoja: MeshInstance3D) -> Array[Vector3]:
 	var caja := hoja.get_aabb()
 	return [
-		hoja.global_transform * Vector3(caja.position.x, altura, 0.0),
-		hoja.global_transform * Vector3(caja.position.x + caja.size.x, altura, 0.0),
+		hoja.global_transform * Vector3(caja.position.x, 0.0, 0.0),
+		hoja.global_transform * Vector3(caja.position.x + caja.size.x, 0.0, 0.0),
 	]
 
 
