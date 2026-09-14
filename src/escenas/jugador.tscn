@@ -40,7 +40,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.3, -0.3, -0.618)
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -1.2)
 
 [node name="PuntoDeProducto" type="Node3D" parent="Camara"]
-position = Vector3(0, 0, -0.618)
+position = Vector3(0.34, -0.3, -0.75)
 
 [node name="PuntoDeRespaldo" type="Node3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.15, -0.5)

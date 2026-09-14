@@ -459,8 +459,10 @@ func test_el_clic_saca_una_unidad_visible_y_el_estante_la_recibe() -> void:  # 0
 	var unidad: Node3D = punto.get_child(0)
 	assert_bool(unidad.is_visible_in_tree()).is_true()
 	assert_int(unidad.collision_layer).is_zero()
-	assert_float(punto.position.x).is_zero()
-	assert_float(punto.position.y).is_zero()
+	# **Abajo a la derecha, no sobre la mira.** El producto es lo más grande que se lleva. El
+	# gesto siguiente es apuntar al casillero del estante.
+	assert_float(punto.position.x).is_greater(0.0)
+	assert_float(punto.position.y).is_less(0.0)
 	jugador.call("_unhandled_input", clic)
 	assert_int(punto.get_child_count()).is_equal(1)
 	_apuntar(almacen, Producto.Id.ACTRONCITO)
