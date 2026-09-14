@@ -35,6 +35,21 @@ entrega sale de lo que haya en ese momento — incluido lo que alguien mergeó e
 `main` separada, lo que se entrega es una decisión: se promueve `staging` a `main` cuando el
 estado sirve, y esa promoción es un PR que se mira.
 
+## Todo se mergea con merge commit, y el botón del squash ya no existe
+
+`allow_squash_merge` y `allow_rebase_merge` están en `false` en la configuración del repositorio
+—Settings → General → Pull Requests—, así que la única opción del botón es **Create a merge
+commit**.
+
+**No es preferencia de estilo: un squash rompe la promoción siguiente.** `staging` → `main` no es
+un PR común. Un squash deja en `main` un commit que no está en la historia de `staging`, así que
+**la base común de las dos ramas no se mueve**: la promoción siguiente vuelve a proponer los
+mismos commits contra un árbol que ya los tiene, y cada uno llega como conflicto. Medido: el
+squash de #75 le costó a #110 **115 archivos en conflicto**.
+
+Se pidió por escrito en el cuerpo de tres PR de promoción seguidos y se aplastó igual. Un pedido
+en prosa que hay que acordarse de leer no es una regla — **por eso ahora la opción no está**.
+
 ## `staging` es la default, y eso la hace peligrosa
 
 Es adonde apunta cada `gh pr create` y cada clone fresco: **el lugar más fácil de todo el repo
