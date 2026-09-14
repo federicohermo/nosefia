@@ -4,10 +4,8 @@
 ## una obligatoria**: la zona de descarte de la basura está del otro lado de una de las dos, así
 ## que con la hoja trabada esa tarea no se puede cumplir. No es cómo se siente la noche.
 ##
-## **El ángulo vive acá y no en la escena**, aunque parezca cosa de la hoja: el que se pasa del
-## tope da vueltas enteras sin un solo error, y el que salta al tope en un cuadro teletransporta
-## la colisión a través de quien tenga delante. Los dos son bugs de aritmética, y acá se prueban
-## sin levantar una escena.
+## **El ángulo vive acá y no en la escena**, aunque parezca cosa de la hoja: pasarse del tope y
+## saltar a él en un cuadro son bugs de aritmética, y acá se prueban sin levantar una escena.
 class_name Puerta
 extends RefCounted
 

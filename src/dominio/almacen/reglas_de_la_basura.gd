@@ -11,10 +11,9 @@
 ## entra en el alcance de la mira—. Si alguien la resuelve sin caminar, uno de los tres se pone
 ## rojo.
 ##
-## **Decía «lejos de todo» hasta el 043**, que abrió la puerta del depósito y mandó el stock a sus
-## estantes: desde ahí reponer también ocurre en el fondo, y el descarte ya no está lejos de
-## **todas** las otras tareas. Lo que el 043 no tocó es la tarea: siguen siendo tres bolsas, una
-## mano y un viaje por cada una —ahora desde el baño—.
+## **Reponer también pasa en el fondo desde el 043**, que mandó el stock a los estantes del
+## depósito: el descarte ya no está lejos de **todas** las obligatorias, sólo de las del local y
+## del baño, donde ese spec puso las bolsas.
 class_name ReglasDeLaBasura
 extends RefCounted
 

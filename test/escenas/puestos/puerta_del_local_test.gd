@@ -5,16 +5,15 @@ extends GdUnitTestSuite
 const ALMACEN := preload("res://src/escenas/almacen.tscn")
 
 ## Las dos hojas, con el tramo de 4,5 m que va desde piso libre del local hasta adentro del
-## cuarto. Dos cosas de la altura y del largo, las dos medidas:
+## cuarto. La altura y el largo están medidos:
 ##
 ## **La cápsula no nace tocando el piso.** A 0,9 m `cast_motion` devolvía 0,37 aun con las hojas
 ## sin colisión: contaba el contacto con el suelo y el número dejaba de hablar de la puerta.
 ##
-## **Y el tramo arranca lejos de la hoja a propósito.** Con 3 m arrancaba a 1,5 m de la puerta,
-## que es justo donde estaba la fila de cajas de reposición — y el caso daba verde igual, porque
-## `cast_motion` **ignora lo que ya está tocando la cápsula al partir**. Por eso `_avance()`
-## afirma aparte que el arranque está libre: sin eso, el obstáculo pegado al punto de partida no
-## lo ve nadie, ni acá ni en el juego hasta que alguien choca contra él.
+## **El tramo arranca lejos de la hoja a propósito.** Con 3 m arrancaba a 1,5 m de la puerta,
+## justo donde estaba la fila de cajas de reposición, y el caso daba verde igual: `cast_motion`
+## **ignora lo que ya está tocando la cápsula al partir**. Por eso `_avance()` afirma aparte que
+## el arranque está libre.
 const VANOS := {
 	"Estructura/puerta": [Vector3(5.494, 1.05, -5.0), Vector3(5.494, 1.05, -9.5)],
 	"Estructura/puerta_001": [Vector3(5.0, 1.05, -4.658), Vector3(9.5, 1.05, -4.658)],
