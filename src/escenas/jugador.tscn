@@ -37,25 +37,25 @@ shape = SubResource("SphereShape3D_campo")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.5)
 
 [node name="BrazoDeCarga" type="SpringArm3D" parent="Camara"]
-transform = Transform3D(-0.899606, 0.17477, 0.400205, 0, 0.916426, -0.400205, -0.436702, -0.360027, -0.824422, 0, 0, 0)
+transform = Transform3D(-0.98716, -0.012717, 0.159228, 0, 0.996826, 0.079614, -0.159735, 0.078592, -0.984027, 0.2, -0.35, 0)
 shape = SubResource("SphereShape3D_mano")
-spring_length = 0.749616
+spring_length = 0.628032
 margin = 0.01
 
 [node name="PuntoDeCarga" type="Node3D" parent="Camara/BrazoDeCarga"]
-transform = Transform3D(-0.899606, 0, -0.436702, 0.17477, 0.916426, -0.360027, 0.400205, -0.400205, -0.824422, 0, 0, 0)
+transform = Transform3D(-0.98716, 0, -0.159735, -0.012717, 0.996826, 0.078592, 0.159228, 0.079614, -0.984026, 0, 0, 0)
 
 [node name="PuntoDeSoltado" type="Node3D" parent="Camara"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -1.2)
 
 [node name="BrazoDeProducto" type="SpringArm3D" parent="Camara"]
-transform = Transform3D(-0.910782, 0.141333, 0.387945, 0, 0.939589, -0.342304, -0.412888, -0.311765, -0.855761, 0, 0, 0)
+transform = Transform3D(-0.98302, -0.012, 0.183104, 0, 0.997859, 0.065394, -0.183497, 0.064284, -0.980916, 0.2, -0.35, 0)
 shape = SubResource("SphereShape3D_mano")
-spring_length = 0.876413
+spring_length = 0.764591
 margin = 0.01
 
 [node name="PuntoDeProducto" type="Node3D" parent="Camara/BrazoDeProducto"]
-transform = Transform3D(-0.910782, 0, -0.412888, 0.141333, 0.939589, -0.311765, 0.387945, -0.342304, -0.855761, 0, 0, 0)
+transform = Transform3D(-0.98302, 0, -0.183497, -0.012, 0.99786, 0.064284, 0.183104, 0.065394, -0.980916, 0, 0, 0)
 
 [node name="PuntoDeRespaldo" type="Node3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.15, -0.5)
