@@ -5,7 +5,7 @@
 ## valor que vive al lado de la lógica que lo usa termina copiado en el segundo lugar que lo
 ## necesita.
 ##
-## Los seis productos y sus tres columnas son un **primer valor**: el GDD no los fija. Se
+## Los productos y sus tres columnas son un **primer valor**: el GDD no los fija. Se
 ## ajustan jugando, y ajustarlos no rompe ningún test de `inventario.gd`, que recibe los
 ## productos en vez de venir a buscarlos acá.
 class_name Catalogo
