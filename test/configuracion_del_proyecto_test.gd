@@ -4,8 +4,9 @@
 ## declarado. Preguntarle daría verde con `project.godot` vacío, que es el estado que este spec
 ## cierra.
 ##
-## La excepción es el reloj de física, y el caso la explica adentro: su valor elegido coincide
-## con el valor por defecto, así que el editor no lo guarda en el archivo.
+## Las excepciones son los dos ajustes que el motor no guarda en el archivo porque valen su
+## valor por defecto: el reloj de física y el renderizador de la web. Cada caso lo explica
+## adentro.
 extends GdUnitTestSuite
 
 const PROYECTO := "res://project.godot"
@@ -70,18 +71,25 @@ func test_el_editor_y_la_web_dibujan_con_el_mismo_renderizador() -> void:  # 044
 		)
 		. is_false()
 	)
+	# El nombre del renderizador en `config/features` no es el de la clave: es «GL Compatibility».
+	# Sin esta mitad, un `config/features` sin renderizador pasaría el caso.
+	(
+		assert_bool("GL Compatibility" in anunciadas)
+		. override_failure_message('`config/features` no anuncia "GL Compatibility"')
+		. is_true()
+	)
 
 
-func test_ninguna_plataforma_declara_un_renderizador_distinto_del_general() -> void:  # 044-AC2
-	# Antes de este spec, `rendering_method.web` valía otra cosa que `rendering_method`. El editor
-	# y la web mostraban sombras distintas.
-	var general := str(_declarado("rendering/renderer/rendering_method", ""))
-	for plataforma: String in ["web", "mobile"]:
-		var ajuste := "rendering/renderer/rendering_method.%s" % plataforma
-		(
-			assert_str(str(_declarado(ajuste, general)))
-			. override_failure_message(
-				"`rendering_method.%s` difiere del renderizador general" % plataforma
-			)
-			. is_equal(general)
-		)
+func test_la_web_dibuja_con_el_mismo_renderizador_que_el_editor() -> void:  # 044-AC2
+	# Acá se pregunta al motor y no al archivo, al revés que los otros casos de renderizado.
+	# `rendering_method.web` no está escrito en `project.godot`: lo hereda del motor. Leerlo del
+	# archivo daría verde con el editor en `forward_plus`, que es el estado que este spec cierra.
+	#
+	# `mobile` queda afuera a propósito: hereda el renderizador `mobile`, y no es una plataforma
+	# de entrega de este juego.
+	var general := str(ProjectSettings.get_setting("rendering/renderer/rendering_method", ""))
+	(
+		assert_str(str(ProjectSettings.get_setting("rendering/renderer/rendering_method.web", "")))
+		. override_failure_message("la web dibuja con un renderizador distinto del editor")
+		. is_equal(general)
+	)

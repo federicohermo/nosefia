@@ -146,9 +146,9 @@ func test_el_almacen_instancia_al_jugador_en_vez_de_duplicar_el_cuerpo() -> void
 
 
 func test_la_escena_trae_luz_propia() -> void:
-	# El renderer es `forward_plus`: una escena sin luces sale NEGRA, y el síntoma no nombra la
-	# causa. Por eso el entorno y el sol se afirman por nombre y por tipo en vez de dejarlos
-	# librados a que alguien mire la escena.
+	# Una escena sin luces sale NEGRA, y el síntoma no nombra la causa. Por eso el entorno y el
+	# sol se afirman por nombre y por tipo en vez de dejarlos librados a que alguien mire la
+	# escena.
 	var almacen := _almacen()
 	assert_bool(almacen.has_node("Ambiente/Entorno")).is_true()
 	var entorno: Node = almacen.get_node("Ambiente/Entorno")

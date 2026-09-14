@@ -8,6 +8,7 @@
 ##
 ## **La escena se instancia y NO se entra al árbol**, como en `jugador_test.gd`: alcanza para
 ## leer los grupos y los métodos, y está medido que `is_in_group` contesta bien afuera del árbol.
+## La excepción es el caso de la interpolación, que sí la necesita y lo explica adentro.
 extends GdUnitTestSuite
 
 const ReglasDeLosObjetos := preload("res://src/dominio/almacen/reglas_de_los_objetos.gd")
