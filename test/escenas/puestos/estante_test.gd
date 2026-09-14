@@ -18,8 +18,11 @@ func test_el_estante_dibuja_un_hueco_por_producto_del_catalogo() -> void:  # 008
 	# Se cuenta contra el catálogo y nunca contra un número escrito acá: con un producto más, un
 	# estante de seis huecos dejaría al jugador mirando una góndola que nunca se llena del todo,
 	# sin un solo error.
-	var estante := _estante()
-	var huecos := _huecos_de(estante)
+	var almacen: Node3D = auto_free(load(ESCENA).instantiate())
+	add_child(almacen)
+	var huecos: Array = almacen.get("_reposicion_manual").get_children().filter(
+		func(nodo: Node) -> bool: return nodo is StaticBody3D
+	)
 	(
 		assert_int(huecos.size())
 		. override_failure_message(
@@ -36,17 +39,17 @@ func test_los_huecos_visibles_son_los_que_dice_el_dominio() -> void:  # 008-AC10
 	# La escena pregunta y pinta: cuántos huecos se ven sale de `productos_completos()` y no de
 	# una cuenta propia. Con una cuenta propia, el estante y el inventario se contradicen en
 	# silencio.
-	var yerba := Catalogo.de(Producto.Id.YERBA)
-	var inventario := Inventario.new([yerba])
-	inventario.ingresar(yerba, Inventario.Ubicacion.DEPOSITO, yerba.umbral)
-	var dominio := Estante.new(inventario, [yerba])
+	var actroncito := Catalogo.de(Producto.Id.ACTRONCITO)
+	var inventario := Inventario.new([actroncito])
+	inventario.ingresar(actroncito, Inventario.Ubicacion.DEPOSITO, actroncito.umbral)
+	var dominio := Estante.new(inventario, [actroncito])
 	var estante := _estante()
 
 	estante.mostrar(dominio.productos_completos())
 	assert_int(_huecos_visibles(estante)).is_equal(0)
 
-	for _unidad in range(yerba.umbral):
-		dominio.colocar(yerba)
+	for _unidad in range(actroncito.umbral):
+		dominio.colocar(actroncito)
 	estante.mostrar(dominio.productos_completos())
 	assert_int(_huecos_visibles(estante)).is_equal(1)
 

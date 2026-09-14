@@ -11,12 +11,12 @@ const EN_GONDOLA := 9
 
 
 func _productos() -> Array[Producto]:
-	return [Catalogo.de(Producto.Id.YERBA)]
+	return [Catalogo.de(Producto.Id.ACTRONCITO)]
 
 
 func _pedido(unidades: int = 1) -> Venta:
 	var venta := Venta.new()
-	venta.agregar(Catalogo.de(Producto.Id.YERBA), unidades)
+	venta.agregar(Catalogo.de(Producto.Id.ACTRONCITO), unidades)
 	return venta
 
 

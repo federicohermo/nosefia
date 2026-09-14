@@ -44,8 +44,8 @@ func test_registrar_devuelve_true_la_primera_vez_y_false_la_segunda() -> void:  
 
 
 func test_registrar_indexa_por_id_y_no_por_instancia() -> void:  # 009-AC6
-	# `Catalogo.de()` construye un producto nuevo en cada llamada, así que dos yerbas son objetos
-	# distintos: por instancia, pasar dos veces la misma yerba contaría dos y la tarea se
+	# `Catalogo.de()` construye un producto nuevo en cada llamada, así que dos con el mismo `id`
+	# son objetos distintos: por instancia, pasar dos veces el mismo contaría dos y la tarea se
 	# cumpliría con un solo producto.
 	var caja := _caja()
 	var primero := _del_dia()[0]
@@ -104,8 +104,8 @@ func test_reponer_cambia_lo_que_la_caja_lista_como_faltante() -> void:  # 009-AC
 	var inventario := _inventario()
 	var caja := CajaRegistradora.new(inventario, _del_dia())
 	var antes := caja.faltantes().size()
-	var yerba := Catalogo.de(Producto.Id.YERBA)
+	var actroncito := Catalogo.de(Producto.Id.ACTRONCITO)
 	inventario.mover(
-		yerba, Inventario.Ubicacion.DEPOSITO, Inventario.Ubicacion.GONDOLA, yerba.umbral
+		actroncito, Inventario.Ubicacion.DEPOSITO, Inventario.Ubicacion.GONDOLA, actroncito.umbral
 	)
 	assert_int(caja.faltantes().size()).is_equal(antes - 1)

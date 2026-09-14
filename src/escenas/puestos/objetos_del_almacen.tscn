@@ -33,7 +33,7 @@ datos = ExtResource("27_bolsa2")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.5, 0.5, 3)
 datos = ExtResource("28_bolsa3")
 
-[node name="CajaDeYerba" parent="." instance=ExtResource("11_caja_de_productos")]
+[node name="CajaDeActroncito" parent="." instance=ExtResource("11_caja_de_productos")]
 position = Vector3(0, 0.406, -6.5)
 producto = 0
 
@@ -57,3 +57,10 @@ producto = 4
 position = Vector3(5, 0.406, -6.5)
 producto = 5
 
+[node name="CajaDeMarolini" parent="." instance=ExtResource("11_caja_de_productos")]
+position = Vector3(6, 0.406, -6.5)
+producto = 6
+
+[node name="CajaDeJorgillo" parent="." instance=ExtResource("11_caja_de_productos")]
+position = Vector3(7, 0.406, -6.5)
+producto = 7

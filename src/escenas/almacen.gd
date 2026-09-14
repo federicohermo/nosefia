@@ -24,6 +24,7 @@ const CajaDeProductosDelDeposito := preload("res://src/escenas/objetos/caja_de_p
 const CajaDeTrasladoQueSeVe := preload("res://src/escenas/objetos/caja_de_traslado.gd")
 const LimpiezaDelLocal := preload("res://src/escenas/puestos/limpieza_del_almacen.gd")
 const AudioDelLocal := preload("res://src/escenas/puestos/audio_del_almacen.gd")
+const ReposicionManual := preload("res://src/escenas/puestos/reposicion_manual.gd")
 
 ## El jugador tampoco declara un `class_name` —es cáscara, como este archivo—, así que el
 ## `@export` de abajo no lo puede nombrar sin traerlo por `preload`.
@@ -46,6 +47,7 @@ const Jugador := preload("res://src/escenas/jugador.gd")
 @export var _limpieza: LimpiezaDelLocal
 @export var _recolector: RecolectorDeBasura
 @export var _audio: AudioDelLocal
+@export var _reposicion_manual: ReposicionManual
 
 ## El agarre vive adentro de `jugador.tscn`, y es la única fuente de sonidos que no cuelga de
 ## esta raíz. Se la nombra acá para que sus tres señales no queden sin fuente: el enlazador
@@ -108,20 +110,22 @@ func _ready() -> void:
 			]
 		)
 	)
-	# Reponer, de punta a punta: la caja del depósito despacha una unidad a la de traslado, el
-	# estante la pide, y el repositor la mueve. Los dos gestos entran por el mismo clic del 006
-	# y ninguno de los dos scripts de escena sabe qué pasa del otro lado.
-	# **Una caja por producto, y las seis conectadas al mismo destino.** Con una sola, despachaba
-	# siempre su `producto` por defecto y los otros cinco del catálogo se quedaban en cero para
-	# siempre: `Estante.completada()` sale de `Inventario.faltantes()`, así que REPONER no se
-	# podía terminar jugando. Medido con una sonda headless: 20 viajes de 8 clics dejaban
-	# `Yerba=4/4` y los otros cinco en 0.
+	# Reponer, de punta a punta: la caja del depósito entrega una unidad a la mano y la zona de
+	# reposición la coloca en la góndola. La unidad viaja en la mano, así que el inventario recién
+	# cambia cuando el estante la acepta: soltarla en el piso no repone nada.
+	# **Una caja por producto, y todas conectadas al mismo destino.** Con una sola, despachaba
+	# siempre su `producto` por defecto y el resto del catálogo se quedaba en cero para siempre:
+	# `Estante.completada()` sale de `Inventario.faltantes()`, así que REPONER no se podía
+	# terminar jugando.
 	for caja: CajaDeProductosDelDeposito in _cajas_de_productos:
-		caja.producto_pedido.connect(_carga.pedir_guardar)
+		caja.producto_pedido.connect(_reposicion_manual.retirar)
 	_carga.producto_guardado.connect(_al_guardar_en_la_caja)
-	_estante.colocacion_pedida.connect(_repositor.pedir_colocar)
+	_repositor.agarre = _agarre
+	_repositor.unidad_colocada.connect(_reposicion_manual.depositar)
 	_repositor.producto_colocado.connect(_al_colocar_en_el_estante)
+	_atenciones.atencion_despachada.connect(_reposicion_manual.actualizar_stock)
 	_ciclo.arrancar(_partida, _reloj)
+	_reposicion_manual.preparar()
 
 
 ## Cada noche arranca con el marcador en cero, la góndola vacía y el depósito lleno.
@@ -141,6 +145,7 @@ func _al_abrir_la_jornada(_jornada: int) -> void:
 	# dirían números distintos sin que nada se ponga en rojo.
 	var inventario := Apertura.inventario_de_la_jornada()
 	_repositor.arrancar(Estante.new(inventario, Catalogo.todos()))
+	_reposicion_manual.limpiar()
 	_atenciones.arrancar(TareaDeAtender.new(Compradores.de_la_jornada(), inventario))
 	_computadora.arrancar(CajaRegistradora.new(inventario, CajaRegistradora.productos_del_dia()))
 	# El piso se rehace cada noche: guardar el estado entre jornadas está fuera de alcance, y una
@@ -191,8 +196,7 @@ func _al_guardar_en_la_caja(_producto: Producto) -> void:
 	_caja_de_traslado.mostrar(_carga.caja().contenido())
 
 
-## Al colocar se repintan las dos: el hueco que se llenó en el estante y el casillero que se
-## vació en la caja.
-func _al_colocar_en_el_estante(_producto: Producto, completos: int) -> void:
-	_estante.mostrar(completos)
+## Lo que se coloca ya lo dibuja `ReposicionManual` con el cuerpo que el jugador soltó, así que
+## acá sólo queda repintar el casillero de la caja de traslado.
+func _al_colocar_en_el_estante(_producto: Producto, _completos: int) -> void:
 	_caja_de_traslado.mostrar(_carga.caja().contenido())

@@ -60,12 +60,26 @@ func test_los_puestos_completan_la_jornada_y_permiten_abrir_la_siguiente(
 
 
 func _reponer(almacen: Node3D) -> void:
-	var estante: Node3D = almacen.get("_estante")
+	var jugador: Node3D = almacen.get("_jugador")
+	jugador.set_physics_process(false)
+	var camara: Camera3D = jugador.get_node("Camara")
 	for caja: Node3D in almacen.get("_cajas_de_productos"):
 		var producto := Catalogo.de(caja.get("producto"))
+		var zona: AABB = almacen.get("_reposicion_manual").zona(producto.id)
+		var direccion := Vector3(0, 0, 1.5)
+		if producto.id == Producto.Id.GASEOSA:
+			direccion = Vector3(1.5, 0, 0)
+		elif producto.id == Producto.Id.GALLETITAS:
+			direccion = Vector3(-1.5, 0, 0)
+		elif producto.id == Producto.Id.ARROZ:
+			direccion = Vector3(0, 0, -1.5)
+		camara.global_position = zona.get_center() + direccion
+		camara.look_at(zona.get_center())
 		for unidad in producto.umbral:
 			caja.call("interactuar")
-			estante.call("interactuar")
+			almacen.get("_reposicion_manual").get_node("ZonaDe" + producto.nombre).call(
+				"interactuar"
+			)
 	await get_tree().process_frame
 	var reloj: RelojDelTurno = almacen.get("_reloj")
 	assert_bool(reloj.obligatoria(Tarea.Tipo.REPONER).completada()).is_true()
@@ -112,7 +126,7 @@ func _limpiar(almacen: Node3D) -> void:
 	assert_bool(agarre.pedir_agarrar(trapeador.call("interactuar"), trapeador)).is_true()
 	var limpieza: Node3D = almacen.get("_limpieza")
 	for mancha: Node3D in limpieza.call("manchas"):
-		jugador.emit_signal("objetivo_enfocado", mancha, 1.0)
+		await _enfocar_mancha(jugador, mancha)
 		for pasada in ReglasDeLaLimpieza.PASADAS_POR_MANCHA:
 			var clic := InputEventMouseButton.new()
 			clic.button_index = MOUSE_BUTTON_RIGHT
@@ -156,12 +170,29 @@ func _comprobar_reloj(almacen: Node3D) -> void:
 
 func _comprobar_huecos(almacen: Node3D, esperados: int) -> void:
 	var estante: Node3D = almacen.get("_estante")
-	var huecos: Node3D = estante.get("_huecos")
-	assert_int(huecos.get_child_count()).is_equal(Catalogo.todos().size())
-	var visibles := 0
-	for hueco: Node3D in huecos.get_children():
-		if hueco.visible:
-			visibles += 1
+	var cantidades: Dictionary = {}
+	for nodo in estante.get_children():
+		if nodo is ObjetoAgarrable and not nodo.is_queued_for_deletion():
+			var unidad: UnidadDeProducto = nodo.datos
+			cantidades[unidad.producto.id] = cantidades.get(unidad.producto.id, 0) + 1
 	var repositor: Repositor = almacen.get("_repositor")
-	assert_int(visibles).is_equal(esperados)
-	assert_int(visibles).is_equal(repositor.estante().productos_completos())
+	for producto in Catalogo.todos():
+		assert_int(cantidades.get(producto.id, 0)).is_equal(
+			repositor.estante().unidades_en_gondola(producto)
+		)
+	assert_int(repositor.estante().productos_completos()).is_equal(esperados)
+
+
+func _enfocar_mancha(jugador: Node3D, mancha: Node3D) -> void:
+	jugador.set_physics_process(false)
+	var camara: Camera3D = jugador.get_node("Camara")
+	camara.position = Vector3.UP * ReglasDelJugador.ALTURA_DE_LA_CAMARA
+	for direccion in [Vector3.BACK, Vector3.FORWARD, Vector3.LEFT, Vector3.RIGHT]:
+		jugador.global_position = mancha.global_position + direccion
+		camara.look_at(mancha.global_position + Vector3.UP * 0.03)
+		for cuadro in 4:
+			await get_tree().physics_frame
+		jugador.call("_leer_la_mira")
+		if jugador.get("_enfocado") == mancha:
+			break
+	assert_object(jugador.get("_enfocado")).is_same(mancha)

@@ -504,7 +504,7 @@ func test_el_cableado_de_reponer_llega_entero_hasta_los_huecos() -> void:  # 008
 	# Las cajas van aparte porque son un `Array`: vacío **no es** null, así que el barrido de
 	# arriba las daría por cableadas sin que haya una sola. Y se afirma que cubren el catálogo
 	# entero sin repetir, que es el bug que este cableado cierra: con una sola caja, despachaba
-	# siempre `YERBA` y los otros cinco productos quedaban en cero para siempre, o sea que
+	# siempre su `producto` por defecto y los demás quedaban en cero para siempre, o sea que
 	# REPONER no se podía terminar jugando.
 	var despachados: Array[int] = []
 	for caja: Node3D in almacen.get("_cajas_de_productos"):

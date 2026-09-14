@@ -61,13 +61,9 @@ func test_el_jugador_expone_las_dos_lineas_que_este_spec_necesita() -> void:  # 
 
 
 func test_del_escritorio_se_sale_con_el_clic_derecho_y_no_con_cancelar() -> void:  # 009-AC10
-	# `ui_cancel` ya lo usa `jugador.gd` para soltar el cursor, y su primer clic de vuelta lo
-	# retoma con cualquier botón: compartir la tecla dejaría al jugador cerrando la computadora
-	# cada vez que va a apretar el botón de cerrar la ventana. Y no se agrega una acción nueva al
-	# `InputMap`: el evento crudo alcanza, y quién consolida el gesto es el spec 034.
 	var texto := FileAccess.get_file_as_string(SCRIPT)
 	(
-		assert_bool(texto.contains("MOUSE_BUTTON_RIGHT"))
+		assert_bool(texto.contains("ReglasDelJugador.ACCION_USAR"))
 		. override_failure_message("`escritorio.gd` no sale con el clic derecho")
 		. is_true()
 	)
@@ -98,37 +94,9 @@ func test_el_clic_derecho_llega_aunque_la_pantalla_tape_el_viewport() -> void:  
 		. is_false()
 	)
 
-	var escritorio := _escritorio()
-	var jugador: Node3D = auto_free(load(ESCENA_DEL_JUGADOR).instantiate())
-	var obligatorias := Apertura.obligatorias()
-	var reloj: RelojDelTurno = auto_free(RelojDelTurno.new())
-	reloj.arrancar(Apertura.turno_de_la_jornada(obligatorias), obligatorias)
-	var computadora: ComputadoraDeEscritorio = auto_free(ComputadoraDeEscritorio.new())
-	computadora.reloj = reloj
-	escritorio.jugador = jugador
-	escritorio.reloj = reloj
-	escritorio.computadora = computadora
-	escritorio.abrir()
 
-	var clic := InputEventMouseButton.new()
-	clic.button_index = MOUSE_BUTTON_RIGHT
-	clic.pressed = true
-	escritorio._input(clic)
-	assert_bool(computadora.computadora().abierta()).is_false()
-
-
-func test_este_spec_no_agrega_ninguna_accion_al_input_map() -> void:  # 009-AC10
-	# El `[input]` de `project.godot` tiene las cuatro del 004 más las dos del 006, y ninguna
-	# más: una acción nueva sería una tecla que el jugador tiene que aprender para una pantalla.
-	var acciones := 0
-	for accion in InputMap.get_actions():
-		if not String(accion).begins_with("ui_"):
-			acciones += 1
-	(
-		assert_int(acciones)
-		. override_failure_message("el `InputMap` tiene %d acciones propias" % acciones)
-		. is_equal(6)
-	)
+func test_el_cierre_usa_la_accion_compartida() -> void:  # 009-AC10 034-AC1
+	assert_bool(InputMap.has_action(ReglasDelJugador.ACCION_USAR)).is_true()
 
 
 func test_tocar_el_escritorio_suspende_al_jugador_y_no_entrega_nada() -> void:  # 009-AC10

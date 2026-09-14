@@ -12,10 +12,6 @@
 ## computadora cada vez que va a apretar el botón de cerrar la ventana. El nombre de esa acción no
 ## se escribe acá ni en un comentario: el caso que lo verifica no distingue código de prosa.
 ##
-## Se usa el evento crudo y **no se agrega una acción al `InputMap`**: quién consolida los tres
-## usos del clic derecho es el spec 034, y una acción nueva acá sería la que hay que borrar
-## después.
-##
 ## **El reloj está acá para apagar la pantalla cuando la noche termina**, no para pausarlo: una
 ## computadora abierta encima de la placa de cierre dejaría al jugador viendo las dos.
 extends StaticBody3D
@@ -64,19 +60,13 @@ func cerrar() -> void:
 	computadora.pedir_cerrar()
 
 
-## El botón derecho apaga la pantalla. Es el evento crudo y no una acción del `InputMap`.
-##
-## **Va en `_input` y no en el que corre después de la interfaz**, y es una medición: el fondo de
-## la pantalla es un `ColorRect` a pantalla completa, y un `Control` trae `MOUSE_FILTER_STOP` por
-## defecto, así que **se come el botón del mouse antes** — medido en 4.7.2, el botón derecho sobre
-## un fondo así llega por `_input` y no llega por el otro. Con el otro, la computadora se abría y
-## no se podía cerrar: el jugador quedaba suspendido detrás del panel hasta que cerrara la noche,
-## y ningún test de escena lo decía porque el gesto estaba escrito.
+## Atiende el cierre antes de que la interfaz reciba el gesto.
 func _input(evento: InputEvent) -> void:
-	var boton := evento as InputEventMouseButton
-	if boton == null or not boton.pressed or boton.button_index != MOUSE_BUTTON_RIGHT:
+	if not computadora.computadora().abierta():
 		return
-	cerrar()
+	if evento.is_action_pressed(ReglasDelJugador.ACCION_USAR):
+		get_viewport().set_input_as_handled()
+		cerrar()
 
 
 func _al_abrirse(app: Computadora.App) -> void:

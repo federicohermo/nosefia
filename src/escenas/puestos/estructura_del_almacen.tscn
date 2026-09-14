@@ -143,3 +143,42 @@ visible = false
 [node name="StaticBody3D" parent="Zucarachas2"]
 collision_layer = 0
 collision_mask = 0
+
+[node name="Zucarachas2_001" parent="."]
+visible = false
+
+[node name="StaticBody3D" parent="Zucarachas2_001"]
+collision_layer = 0
+collision_mask = 0
+
+[node name="alfajorescaja" parent="."]
+visible = false
+
+[node name="StaticBody3D" parent="alfajorescaja"]
+collision_layer = 0
+collision_mask = 0
+
+[node name="Actroncito" parent="."]
+visible = false
+
+[node name="StaticBody3D" parent="Actroncito"]
+collision_layer = 0
+collision_mask = 0
+
+[node name="StaticBody3D" parent="Actroncito/Actroncito_002"]
+collision_layer = 0
+collision_mask = 0
+
+[node name="Actroncito4" parent="."]
+visible = false
+
+[node name="StaticBody3D" parent="Actroncito4"]
+collision_layer = 0
+collision_mask = 0
+
+[node name="Actroncito_001" parent="."]
+visible = false
+
+[node name="StaticBody3D" parent="Actroncito_001"]
+collision_layer = 0
+collision_mask = 0

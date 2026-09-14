@@ -15,6 +15,7 @@ extends CharacterBody3D
 ## spec 006: quien las emite no sabe quién las escucha.
 signal objetivo_enfocado(objetivo: Node3D, distancia: float)
 signal objetivo_perdido
+signal uso_pedido(objetivo: Node3D)
 
 ## Los dos sistemas del spec 006, por `@export` y no por `@onready`: un `@onready` se resuelve
 ## recién al entrar la escena al árbol, y entonces `id_en_la_mano()` se caería sobre un jugador
@@ -89,9 +90,23 @@ func _unhandled_input(evento: InputEvent) -> void:
 		# Quién se come el clic lo contesta `Examen`, que es el que sabe si hay algo pegado a la
 		# cara. Acá sólo se lo pasa al que quedó: esto es ruteo, no una regla del juego.
 		if not examen.atajar_el_clic():
-			agarre.alternar(_datos_de_lo_enfocado(), _enfocado)
+			_interactuar()
+	elif evento.is_action_pressed(ReglasDelJugador.ACCION_USAR):
+		if _enfocado != null and not _control.esta_suspendido():
+			uso_pedido.emit(_enfocado)
 	elif evento.is_action_pressed(ReglasDeLosObjetos.ACCION_EXAMINAR):
 		examen.alternar(_datos_de_lo_enfocado())
+
+
+func _interactuar() -> void:
+	var datos: ObjetoDelAlmacen = null
+	if _enfocado != null and _enfocado.has_method(ReglasDeLosObjetos.METODO_INTERACTUAR):
+		datos = _enfocado.call(ReglasDeLosObjetos.METODO_INTERACTUAR)
+	# Las cajas y los puestos resuelven su acción mediante señales. El mismo clic
+	# no debe soltar la unidad que acaba de salir ni la que el estante rechazó.
+	if datos == null and _enfocado != null:
+		return
+	agarre.alternar(datos, _enfocado)
 
 
 func _physics_process(delta: float) -> void:
@@ -235,12 +250,11 @@ func _medir_candidato(cuerpo: Node3D) -> CampoDeInteraccion.Candidato:
 	return CampoDeInteraccion.Candidato.new(cuerpo.get_instance_id(), INF, INF, true, false)
 
 
-## Le pide a lo enfocado que se presente, por el nombre de método que ES el contrato. `null` si
-## no hay nada enfocado o si lo que hay no es un objeto del almacén —una pared, una estantería—.
+## Examinar consulta los datos sin activar cajas ni puestos.
 func _datos_de_lo_enfocado() -> ObjetoDelAlmacen:
-	if _enfocado == null or not _enfocado.has_method(ReglasDeLosObjetos.METODO_INTERACTUAR):
-		return null
-	return _enfocado.call(ReglasDeLosObjetos.METODO_INTERACTUAR)
+	if _enfocado is ObjetoAgarrable:
+		return (_enfocado as ObjetoAgarrable).datos
+	return null
 
 
 ## Traduce «empezó un examen» a «el jugador no controla». El argumento se descarta: quién es el

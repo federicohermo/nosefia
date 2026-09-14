@@ -23,6 +23,9 @@ func enfocar(objetivo: Node3D, _distancia: float = 0.0) -> void:
 		return
 	apagar()
 	_objetivo = objetivo
+	var material: Material = _material
+	if "material_de_foco" in objetivo:
+		material = objetivo.get("material_de_foco")
 	var mallas: Array[MeshInstance3D] = []
 	if "mallas" in objetivo:
 		mallas.assign(objetivo.get("mallas"))
@@ -33,7 +36,7 @@ func enfocar(objetivo: Node3D, _distancia: float = 0.0) -> void:
 	for malla in mallas:
 		if is_instance_valid(malla) and not _previos.has(malla):
 			_previos[malla] = malla.material_overlay
-			malla.material_overlay = _material
+			malla.material_overlay = material
 
 
 func apagar() -> void:

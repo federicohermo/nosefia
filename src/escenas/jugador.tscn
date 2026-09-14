@@ -25,6 +25,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.7, 0)
 
 [node name="CampoDeInteraccion" type="Area3D" parent="Camara"]
 collision_layer = 0
+collision_mask = 3
 
 [node name="Forma" type="CollisionShape3D" parent="Camara/CampoDeInteraccion"]
 shape = SubResource("SphereShape3D_campo")
@@ -38,14 +39,18 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.3, -0.3, -0.618)
 [node name="PuntoDeSoltado" type="Node3D" parent="Camara"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -1.2)
 
+[node name="PuntoDeProducto" type="Node3D" parent="Camara"]
+position = Vector3(0, 0, -0.618)
+
 [node name="PuntoDeRespaldo" type="Node3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.15, -0.5)
 
-[node name="Agarre" type="Node" parent="." node_paths=PackedStringArray("punto_de_carga", "punto_de_soltado", "punto_de_respaldo")]
+[node name="Agarre" type="Node" parent="." node_paths=PackedStringArray("punto_de_carga", "punto_de_soltado", "punto_de_respaldo", "punto_de_producto")]
 script = ExtResource("2_agarre")
 punto_de_carga = NodePath("../Camara/PuntoDeCarga")
 punto_de_soltado = NodePath("../Camara/PuntoDeSoltado")
 punto_de_respaldo = NodePath("../PuntoDeRespaldo")
+punto_de_producto = NodePath("../Camara/PuntoDeProducto")
 
 [node name="Examen" type="Node" parent="." node_paths=PackedStringArray("agarre", "punto_de_examen")]
 script = ExtResource("3_examen")

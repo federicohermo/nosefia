@@ -19,7 +19,7 @@ extends RefCounted
 ## **Esta clase no los elige**: entran por parámetro al `_init`, y esta lista es la que la jornada
 ## usa. Es lo que permite que un test se arme con uno o con cinco sin que mover el balance rompa
 ## casos que no hablan de él.
-const PRODUCTOS_DEL_DIA := [Producto.Id.YERBA, Producto.Id.FIDEOS, Producto.Id.GASEOSA]
+const PRODUCTOS_DEL_DIA := [Producto.Id.ACTRONCITO, Producto.Id.FIDEOS, Producto.Id.GASEOSA]
 
 var _inventario: Inventario
 
@@ -28,8 +28,8 @@ var _inventario: Inventario
 var _del_dia: Array[Producto] = []
 
 ## Los `id` ya pasados. Se indexa por `id` y nunca por instancia: `Catalogo.de()` construye un
-## producto nuevo en cada llamada, así que dos yerbas son objetos distintos y por instancia la
-## misma yerba contaría dos veces.
+## producto nuevo en cada llamada, así que dos productos con el mismo `id` son objetos distintos
+## y por instancia el mismo producto contaría dos veces.
 var _registrados: Array[Producto.Id] = []
 
 

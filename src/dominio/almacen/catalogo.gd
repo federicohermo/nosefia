@@ -17,18 +17,20 @@ extends RefCounted
 ## fila es rojo: `catalogo_test.gd` cuenta las filas de acá contra `Producto.Id.size()`, y las
 ## cuenta sobre este diccionario y no sobre `todos()` a propósito —ver `de()`—.
 const FILAS := {
-	Producto.Id.YERBA: ["Yerba", 2500, 4],
+	Producto.Id.ACTRONCITO: ["Actroncito", 2500, 3],
 	Producto.Id.FIDEOS: ["Fideos", 1200, 4],
 	Producto.Id.GASEOSA: ["Gaseosa", 1800, 6],
 	Producto.Id.GALLETITAS: ["Galletitas", 900, 5],
 	Producto.Id.ARROZ: ["Arroz", 1100, 3],
 	Producto.Id.JABON: ["Jabón", 1500, 2],
+	Producto.Id.MAROLINI: ["Marolini", 1200, 4],
+	Producto.Id.JORGILLO: ["Jorgillo", 900, 4],
 }
 
 
 ## Construye un producto nuevo en cada llamada, y eso es correcto: la identidad es el `id`, así
-## que dos yerbas distintas indexan al mismo lugar. Es lo que permite que esto sea `static` y
-## que ningún test tenga que compartir estado.
+## que dos productos con el mismo `id` indexan al mismo lugar. Es lo que permite que esto sea
+## `static` y que ningún test tenga que compartir estado.
 ##
 ## Un `id` sin fila devuelve `null` en vez de indexar el diccionario y reventar, y es la misma
 ## forma que `Reglas.costo_de()`, que devuelve `0.0` para un tipo sin costo. El motivo está

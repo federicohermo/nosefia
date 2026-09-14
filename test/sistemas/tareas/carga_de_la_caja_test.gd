@@ -36,7 +36,7 @@ func before_test() -> void:
 
 func test_pedir_guardar_un_producto_lo_guarda_y_avisa_una_sola_vez() -> void:  # 033-AC7
 	var carga := _carga()
-	carga.pedir_guardar(Producto.Id.YERBA)
+	carga.pedir_guardar(Producto.Id.ACTRONCITO)
 	assert_int(_guardados).is_equal(1)
 	assert_int(_rechazos).is_equal(0)
 	assert_int(carga.caja().ocupados()).is_equal(1)
@@ -49,7 +49,7 @@ func test_con_la_caja_llena_avisa_el_rechazo_y_no_avisa_un_guardado() -> void:  
 	for _casillero in range(Reglas.CASILLEROS_DE_LA_CAJA_DE_TRASLADO):
 		carga.pedir_guardar(Producto.Id.FIDEOS)
 	_guardados = 0
-	carga.pedir_guardar(Producto.Id.YERBA)
+	carga.pedir_guardar(Producto.Id.ACTRONCITO)
 	assert_int(_guardados).is_equal(0)
 	assert_int(_rechazos).is_equal(1)
 	assert_int(_ultimo_motivo).is_equal(CajaDeTraslado.Motivo.CAJA_LLENA)
