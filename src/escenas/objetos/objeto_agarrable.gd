@@ -45,9 +45,9 @@ func _ready() -> void:
 ## moviéndose dos milímetros. Eso se ve como un parpadeo.
 ##
 ## El motor no lo corta solo: su umbral de reposo son 0,14 rad/s y el ciclo corre a 2, o sea
-## catorce veces más rápido. La causa está aguas arriba —el piso del modelo es una malla cóncava
-## y el volumen sólido que lo dobla queda a su misma altura—, pero separarlos mueve los apoyos
-## que dos specs ya miden. Entonces se corta el efecto, que es lo que se ve.
+## catorce veces más rápido. La causa la mide el spec 046, y no es el piso: es la detección
+## continua de colisiones que la reposición enciende en todo lo que suelta. Acá se corta el
+## efecto, que es lo que se ve; el 046 apaga la causa y borra este método.
 func _physics_process(delta: float) -> void:
 	if freeze or sleeping:
 		_quieto = 0.0
