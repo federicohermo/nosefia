@@ -64,8 +64,9 @@ func test_cada_bus_manda_a_master() -> void:  # 021-AC3
 
 
 func test_el_layout_de_buses_apunta_a_un_archivo_que_existe() -> void:  # 021-AC3
-	# **Hoy no existía**: `project.godot` no declaraba ninguno y el motor caía al layout por
-	# defecto. El ajuste y el archivo van juntos: uno sin el otro no cambia nada.
+	# El motor trae esta misma ruta como valor por defecto, así que la igualdad pasa aunque
+	# `project.godot` no declare el ajuste. Lo que este caso protege es el archivo: sin él el
+	# motor deja un solo bus y toda la mezcla sale por `Master`.
 	var declarado: String = ProjectSettings.get_setting("audio/buses/default_bus_layout", "")
 	assert_str(declarado).is_equal(LAYOUT)
 	(
