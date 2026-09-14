@@ -34,7 +34,7 @@ repo, cómo se verifica y cómo se trabaja.
 
 | Qué | Versión | Para qué |
 |---|---|---|
-| Godot | 4.7.2 | El motor. Renderer **Forward Plus** |
+| Godot | 4.7.2 | El motor. Renderer **Compatibility** |
 | GDScript | — | Todo el juego. Sin C#, sin GDExtension |
 | gdUnit4 | **6.2.1** | Tests, vendorizado en `addons/gdUnit4/`. Se mueve junto con Godot — ver abajo |
 | gdtoolkit | 4.x | `gdlint` y `gdformat`. Se instala con pip |
