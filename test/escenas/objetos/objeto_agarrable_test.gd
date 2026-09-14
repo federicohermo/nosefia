@@ -6,8 +6,9 @@
 ## porque lo que se agarra es un `Node3D`. O sea que nadie puede escribir el contrato como tipo,
 ## y entonces lo único que lo sostiene es este test.
 ##
-## **La escena se instancia y NO se entra al árbol**, como en `jugador_test.gd`: alcanza para
-## leer los grupos y los métodos, y está medido que `is_in_group` contesta bien afuera del árbol.
+## **Los casos del contrato instancian la escena y NO la entran al árbol**, como en
+## `jugador_test.gd`: alcanza para leer los grupos y los métodos, y está medido que
+## `is_in_group` contesta bien afuera del árbol. El del reposo sí la entra: pide pasos de física.
 extends GdUnitTestSuite
 
 const ReglasDeLosObjetos := preload("res://src/dominio/almacen/reglas_de_los_objetos.gd")
@@ -25,9 +26,9 @@ func _objeto() -> Node3D:
 
 func test_un_objeto_que_se_agita_sin_moverse_termina_dormido() -> void:
 	# El ciclo del solver, reproducido: se le clava la posición y se le repone el giro en cada
-	# paso, que es lo que hacía el motor. Medido en el juego: ±5,65° por paso, velocidad angular
-	# alternando entre 1,8323 y 2,0537 rad/s, sin decaer, con el centro moviéndose dos
-	# milímetros. Sin el corte, `durmio` no se pone en `true` nunca.
+	# paso, que es lo que hacía el motor. Medido en el juego: la velocidad angular quedaba
+	# clavada cerca de 2 rad/s, sin decaer, con el centro moviéndose dos milímetros. Sin el
+	# corte, `durmio` no se pone en `true` nunca.
 	var objeto: RigidBody3D = _objeto()
 	# Sin gravedad: lo que el caso aísla es girar sin trasladarse. Con ella el cuerpo cae más
 	# que la deriva en cada paso y el contador se reinicia, que es correcto y no es este caso.

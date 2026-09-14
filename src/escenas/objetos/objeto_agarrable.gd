@@ -13,7 +13,7 @@ extends RigidBody3D
 
 ## Cuánto puede derivar el centro sin que cuente como movimiento, en metros.
 ##
-## Tres milímetros. El ciclo medido mueve el centro dos.
+## Queda por encima de los dos milímetros que mueve el centro el ciclo medido.
 const DERIVA_QUIETA := 0.003
 
 ## Cuánto tiene que estar quieto antes de que se le fuerce el reposo, en segundos.
@@ -40,10 +40,9 @@ func _ready() -> void:
 
 ## Corta el ciclo del solver: un objeto que se agita sin ir a ninguna parte se manda a dormir.
 ##
-## **Existe por una medición y no por prolijidad.** Un producto apoyado en el piso cabeceaba
-## ±5,65° en cada paso de física, con la velocidad angular alternando entre 1,8323 y 2,0537 rad/s
-## —valores idénticos, sin decaer, indefinidamente— mientras su centro se movía dos milímetros.
-## Eso se ve como un parpadeo.
+## **Existe por una medición y no por prolijidad.** Un producto apoyado en el piso cabeceaba sin
+## decaer, indefinidamente, con la velocidad angular clavada cerca de 2 rad/s y el centro
+## moviéndose dos milímetros. Eso se ve como un parpadeo.
 ##
 ## El motor no lo corta solo: su umbral de reposo son 0,14 rad/s y el ciclo corre a 2, o sea
 ## catorce veces más rápido. La causa está aguas arriba —el piso del modelo es una malla cóncava
