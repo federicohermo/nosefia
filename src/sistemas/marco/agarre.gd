@@ -79,7 +79,13 @@ func soltar(al_frente: bool) -> Node3D:
 	_nodo = null
 	var ancla := punto_de_soltado if al_frente else punto_de_respaldo
 	if nodo != null and ancla != null:
+		var orientacion := nodo.global_basis if nodo.is_inside_tree() else nodo.basis
 		_colgar(nodo, ancla, false)
+		# Cambiar de padre no debe enderezar el objeto antes de que empiece a caer.
+		if nodo.is_inside_tree():
+			nodo.global_basis = orientacion
+		else:
+			nodo.basis = orientacion
 	if nodo is CollisionObject3D:
 		nodo.collision_layer = _capa_original
 		nodo.collision_mask = _mascara_original
@@ -142,6 +148,7 @@ func vaciar_las_manos() -> void:
 ## La física se congela mientras se lleva algo: sin eso el objeto se cae de la mano en el mismo
 ## cuadro en que se lo levanta, y el síntoma —«no se puede agarrar nada»— no nombra a la física.
 static func _colgar(nodo: Node3D, ancla: Node3D, quieta: bool = true) -> void:
+	nodo.top_level = false
 	var padre := nodo.get_parent()
 	if padre != null:
 		padre.remove_child(nodo)
@@ -151,5 +158,7 @@ static func _colgar(nodo: Node3D, ancla: Node3D, quieta: bool = true) -> void:
 	if quieta and "orientacion_en_mano" in nodo:
 		var orientacion: Basis = nodo.get("orientacion_en_mano")
 		nodo.rotation = orientacion.get_euler()
+	# Los cuerpos sueltos no deben heredar los movimientos de la cámara.
+	nodo.top_level = not quieta
 	if nodo is RigidBody3D:
 		(nodo as RigidBody3D).freeze = quieta

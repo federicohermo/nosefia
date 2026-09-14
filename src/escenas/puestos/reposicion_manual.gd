@@ -1,12 +1,14 @@
-## Presenta la unidad que el repositor entrega y conserva su cuerpo al depositarla.
+## Agrupa los productos colocados y conserva cuerpos independientes al soltarlos.
 extends Node3D
 
 const ZonaDeReposicion := preload("res://src/escenas/puestos/zona_de_reposicion.gd")
+const GrupoDelPiso := preload("res://src/escenas/objetos/grupo_del_piso.gd")
 const OBJETO := preload("res://src/escenas/objetos/objeto_agarrable.tscn")
 const BORDE := preload("res://src/escenas/puestos/borde_de_reposicion.gdshader")
 const PRODUCTOS_NUEVOS := preload("res://assets/models/productos_marolini_jorgillo.glb")
 
 @export var repositor: Repositor
+@export var jugador: PhysicsBody3D
 @export var estante: Node3D
 @export var contenido: Node3D
 @export var apoyos: Array[Vector3] = []
@@ -16,10 +18,15 @@ const PRODUCTOS_NUEVOS := preload("res://assets/models/productos_marolini_jorgil
 var _unidades: Array[Node3D] = []
 var _zonas: Array[StaticBody3D] = []
 var _modelos: Array[Mesh] = []
+var _formas: Array[ConvexPolygonShape3D] = []
+var _grupos: Array[MultiMeshInstance3D] = []
+var _sueltos: Array[GrupoDelPiso] = []
+var _disponible: ObjetoAgarrable = null
 
 
 func preparar() -> void:
 	_preparar_modelos()
+	_preparar_grupos()
 	estante.remove_from_group(ReglasDelJugador.GRUPO_INTERACTUABLE)
 	for producto in Catalogo.todos():
 		var casillero := ZonaDeReposicion.new()
@@ -58,7 +65,19 @@ func preparar() -> void:
 		_zonas.append(casillero)
 	repositor.agarre.objeto_agarrado.connect(_actualizar_zonas)
 	repositor.agarre.objeto_soltado.connect(_actualizar_zonas)
+	repositor.agarre.objeto_soltado.connect(_agrupar_suelto)
+	repositor.agarre.objeto_agarrado.connect(_retirar_del_grupo)
 	_actualizar_zonas()
+
+
+func _agrupar_suelto(nodo: Node3D) -> void:
+	if nodo is ObjetoAgarrable and nodo.datos is UnidadDeProducto:
+		_sueltos[nodo.datos.producto.id].agregar(nodo)
+
+
+func _retirar_del_grupo(nodo: Node3D) -> void:
+	if nodo is ObjetoAgarrable and nodo.datos is UnidadDeProducto:
+		_sueltos[nodo.datos.producto.id].quitar(nodo)
 
 
 func pedir_colocar(id: Producto.Id) -> void:
@@ -105,57 +124,120 @@ func _preparar_modelos() -> void:
 	_modelos.append(nuevos.get_node("Marolini").mesh)
 	_modelos.append(nuevos.get_node("Jorgillo").mesh)
 	nuevos.free()
+	for modelo in _modelos:
+		var forma := ConvexPolygonShape3D.new()
+		var puntos := modelo.get_faces()
+		var centro := modelo.get_aabb().get_center()
+		for indice in puntos.size():
+			puntos[indice] -= centro
+		forma.points = puntos
+		_formas.append(forma)
+
+
+func _preparar_grupos() -> void:
+	for producto in Catalogo.todos():
+		var grupo := MultiMeshInstance3D.new()
+		grupo.name = "ProductosDe" + producto.nombre
+		var malla := _modelos[producto.id]
+		var limites := malla.get_aabb()
+		var copias := MultiMesh.new()
+		copias.transform_format = MultiMesh.TRANSFORM_3D
+		copias.mesh = malla
+		copias.instance_count = repositor.estante().cupo(producto)
+		copias.visible_instance_count = 0
+		var posiciones := PackedFloat32Array()
+		for indice in copias.instance_count:
+			var apoyo := _posicion(producto.id, indice) + Vector3.UP * limites.size.y / 2
+			var posicion := to_local(apoyo) - limites.get_center()
+			# MultiMesh recibe tres filas de cuatro valores por transformación.
+			posiciones.append_array([1, 0, 0, posicion.x, 0, 1, 0, posicion.y, 0, 0, 1, posicion.z])
+		copias.buffer = posiciones
+		grupo.multimesh = copias
+		add_child(grupo)
+		_grupos.append(grupo)
+		var sueltos := GrupoDelPiso.new()
+		sueltos.name = "SueltosDe" + producto.nombre
+		sueltos.preparar(malla, repositor.estante().cupo(producto))
+		add_child(sueltos)
+		_sueltos.append(sueltos)
 
 
 func retirar(id: Producto.Id) -> void:
-	var unidad: ObjetoAgarrable = OBJETO.instantiate()
+	var unidad := _disponible
+	_disponible = null
+	if unidad == null:
+		unidad = OBJETO.instantiate()
+		add_child(unidad)
+		_unidades.append(unidad)
+		unidad.add_collision_exception_with(jugador)
+		# Las bolsas delgadas necesitan detectar el impacto entre pasos de física.
+		unidad.continuous_cd = true
 	# El frente de cada modelo se alinea antes de darle la inclinación de la mano.
 	unidad.orientacion_en_mano = (
 		Basis.from_euler(Vector3(deg_to_rad(-17), deg_to_rad(-20), 0))
 		* Basis(Vector3.UP, deg_to_rad(giros_del_frente[id]))
 	)
-	add_child(unidad)
+	unidad.collision_layer = 1
+	unidad.collision_mask = 1
 	if not repositor.pedir_retirar(id, unidad):
-		unidad.free()
+		_guardar_cuerpo(unidad)
 		return
-	_unidades.append(unidad)
+	unidad.show()
 	var malla := _modelos[id]
 	var limites := malla.get_aabb()
 	var vista: MeshInstance3D = unidad.get_node("Malla")
 	vista.mesh = malla
 	vista.position = -limites.get_center()
-	var forma := BoxShape3D.new()
-	forma.size = limites.size
-	unidad.get_node("Forma").shape = forma
+	unidad.get_node("Forma").shape = _formas[id]
 
 
 func depositar(unidad: Node3D, producto: Producto, unidades: int) -> void:
-	var forma: BoxShape3D = unidad.get_node("Forma").shape
-	var posicion := _posicion(producto.id, unidades - 1) + Vector3.UP * forma.size.y / 2
-	unidad.reparent(estante)
-	unidad.global_transform = Transform3D(Basis.IDENTITY, posicion)
-	unidad.remove_from_group(ReglasDelJugador.GRUPO_INTERACTUABLE)
+	_grupos[producto.id].multimesh.visible_instance_count = unidades
+	_guardar_cuerpo(unidad)
 
 
+func _guardar_cuerpo(unidad: ObjetoAgarrable) -> void:
+	unidad.hide()
+	unidad.reparent(self)
+	unidad.freeze = true
+	unidad.collision_layer = 0
+	unidad.collision_mask = 0
+	unidad.linear_velocity = Vector3.ZERO
+	unidad.angular_velocity = Vector3.ZERO
+	unidad.datos = null
+	if _disponible != null:
+		_unidades.erase(unidad)
+		unidad.queue_free()
+	else:
+		_disponible = unidad
+
+
+## Deja el dibujo de la góndola en las unidades que el inventario dice que quedan.
+##
+## Vender no pasa por acá: descuenta en `Inventario`, y sin este repintado la góndola seguiría
+## mostrando lo que ya no está. Se redibuja el catálogo entero y no sólo lo vendido porque la
+## atención despacha varios productos de una y el despachado no dice cuáles.
+##
+## **Baja `visible_instance_count` en vez de borrar copias**, y es lo que lo deja de acuerdo con
+## `_apoyo()`: la próxima unidad se coloca en el índice que devuelve `unidades_en_gondola`, o sea
+## justo la primera copia que este método acaba de ocultar. Borrar copias correría los índices y
+## la unidad repuesta caería sobre una que ya se ve.
 func actualizar_stock(_despachados: int) -> void:
-	var visibles: Dictionary[int, int] = {}
-	for nodo in estante.get_children():
-		if not nodo is ObjetoAgarrable or not nodo.datos is UnidadDeProducto:
-			continue
-		var producto: Producto = nodo.datos.producto
-		var cantidad: int = visibles.get(producto.id, 0)
-		if cantidad < repositor.estante().unidades_en_gondola(producto):
-			visibles[producto.id] = cantidad + 1
-		else:
-			_unidades.erase(nodo)
-			estante.remove_child(nodo)
-			nodo.queue_free()
+	for producto in Catalogo.todos():
+		var copias := _grupos[producto.id].multimesh
+		copias.visible_instance_count = repositor.estante().unidades_en_gondola(producto)
 	_actualizar_zonas()
 
 
 func limpiar() -> void:
+	for grupo in _sueltos:
+		while not grupo.cuerpos.is_empty():
+			grupo.quitar(grupo.cuerpos[-1])
 	for unidad in _unidades:
 		if is_instance_valid(unidad):
 			unidad.queue_free()
 	_unidades.clear()
+	_disponible = null
+	for grupo in _grupos:
+		grupo.multimesh.visible_instance_count = 0
 	_actualizar_zonas()

@@ -271,3 +271,26 @@ func _devolver_al_mundo(nodo: Node3D) -> void:
 	if nodo == null or mundo == null or not nodo.is_inside_tree():
 		return
 	nodo.reparent(mundo, true)
+	if nodo is RigidBody3D:
+		_ajustar_la_caida(nodo)
+
+
+## El punto fijo puede quedar detrás de la madera. Se barre el volumen desde el jugador.
+func _ajustar_la_caida(cuerpo: RigidBody3D) -> void:
+	var inicio := _camara.global_position
+	var recorrido := cuerpo.global_position - inicio
+	var avance := 1.0
+	var espacio := get_world_3d().direct_space_state
+	for forma: CollisionShape3D in cuerpo.find_children("*", "CollisionShape3D", false, false):
+		if forma.disabled or forma.shape == null:
+			continue
+		var consulta := PhysicsShapeQueryParameters3D.new()
+		consulta.shape = forma.shape
+		consulta.transform = forma.global_transform
+		consulta.transform.origin -= recorrido
+		consulta.motion = recorrido
+		consulta.margin = safe_margin
+		consulta.collision_mask = cuerpo.collision_mask
+		consulta.exclude = [get_rid(), cuerpo.get_rid()]
+		avance = minf(avance, espacio.cast_motion(consulta)[0])
+	cuerpo.global_position = inicio + recorrido * avance
