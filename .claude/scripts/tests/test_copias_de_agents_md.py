@@ -41,10 +41,14 @@ def _relativa(p: Path) -> str:
 def _copias() -> list[Path]:
     # Se descubren en disco y no se enumeran: una copia nueva entra al gate sin tocar este
     # archivo, que es la única forma de que el gate no se afloje solo.
+    #
+    # El filtro de worktrees mira la ruta RELATIVA y no la absoluta: adentro de un worktree
+    # `RAIZ` ya termina en `.claude/worktrees/<x>`, así que sobre la absoluta el filtro se
+    # comía las ocho copias y el gate no miraba ninguna.
     return sorted(
         p
         for p in RAIZ.rglob("AGENTS.md")
-        if p != RAIZ_NO_COPIA and ".claude/worktrees" not in p.as_posix() and "addons" not in p.parts
+        if p != RAIZ_NO_COPIA and ".claude/worktrees" not in _relativa(p) and "addons" not in p.parts
     )
 
 
