@@ -79,13 +79,18 @@ LIMITE_DE_LISTA = 1000
 #: Los PR que aterrizaron **a mano**: figuran `CLOSED` y no `MERGED`, pero su merge está
 #: igual en la rama de integración.
 #:
-#: Está vacía y es una lista y no una regla porque no hay ninguna: la API no distingue un PR
-#: mergeado fuera de GitHub de uno abandonado —los dos dicen `CLOSED`—, así que lo único
-#: honesto es nombrar los casos uno por uno cuando aparezcan. Si algún día se mergea a mano,
-#: el que grita es el gate del mapa: el registro dirá `Propuesto` con el issue cerrado, que
-#: es un rojo con una pregunta real detrás —¿ese PR implementó el spec?— y se contesta
-#: agregando el número acá.
-ATERRIZARON_A_MANO: frozenset[int] = frozenset()
+#: Es una lista y no una regla porque no hay ninguna: la API no distingue un PR mergeado
+#: fuera de GitHub de uno abandonado —los dos dicen `CLOSED`—, así que lo único honesto es
+#: nombrar los casos uno por uno cuando aparecen. El que grita es el gate del mapa: el
+#: registro dirá `Propuesto` con el trabajo adentro de `staging`, que es un rojo con una
+#: pregunta real detrás —¿ese PR implementó el spec?— y se contesta agregando el número acá.
+#:
+#: **117** es el primero, y no se mergeó a mano: lo cerró GitHub. Su base era
+#: `feature/044-…` y no `staging`, así que al mergearse el 044 y borrarse esa rama, el 117
+#: quedó `CLOSED` con `mergedAt` vacío —y con `closingIssuesReferences` vacío, o sea que su
+#: `Closes #115` nunca disparó—. Sus commits están igual en `staging`: los trajo el merge
+#: 251bc83. La prevención está en `spec-implement-batch`.
+ATERRIZARON_A_MANO: frozenset[int] = frozenset({117})
 
 #: El alfabeto de un `.md` publicable de un spec, y **el mismo de los dos lados**.
 #:

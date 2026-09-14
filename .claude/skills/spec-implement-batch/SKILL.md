@@ -282,6 +282,14 @@ Cada agente recibe, literal:
   corresponda, **y que cierre cada uno antes de arrancar el siguiente**.
 - **La base del primer spec del carril es `staging`**; los que siguen, la rama del spec anterior
   **del mismo carril** — PRs apilados, porque cada uno necesita la historia del anterior.
+- **Y antes de mergear el de abajo, el de arriba apunta su base a `staging`**:
+  `gh pr edit <N> --base staging`. Un PR cuya base se borra al mergearse **lo cierra GitHub sin
+  mergearlo**: queda `CLOSED` con `mergedAt` vacío y con `closingIssuesReferences` vacío, o sea
+  que su `Closes #N` no dispara nunca. Los commits aterrizan igual, así que no falta código y
+  nada lo delata. Lo que queda roto es el registro: el issue abierto para siempre y
+  `derivar_mapa.py` diciendo `Propuesto` sobre un spec que ya está adentro. Medido el
+  2026-09-14 con el #117 del lote 044/045, y su reparación es nombrarlo en
+  `ATERRIZARON_A_MANO` y cerrar el issue a mano.
 - **El PR lleva un `Closes` por cada issue saldado**: el del spec **más los de su `origen`**. **El
   `#N` sale de `specs/mapa.json` y no del `NNN`** —el spec 001 es el issue #3—: un `#N` equivocado
   cierra el issue que no es, y nada en ningún diff lo delata.
@@ -379,8 +387,8 @@ Si imprime `SIGUE AHI`, el handle es de afuera. **Lo cierra el usuario, no vos**
 5. **Qué obligó a corregir un `spec.md`**, y que se devolvió al issue.
 6. **Qué `SKILL.md` se corrigió y con qué regla.** Es el lazo, y es lo único que impide que el
    mismo problema vuelva en el lote siguiente.
-7. **El orden de merge, de abajo hacia arriba**, y que un squash obliga a rebasear el carril de
-   arriba.
+7. **El orden de merge, de abajo hacia arriba**, que un squash obliga a rebasear el carril de
+   arriba, y **qué PR hay que repuntar a `staging` antes de que se borre su base**.
 8. **Las escenas que el lote tocó**, y si alguna hay que rehacer a mano en el editor.
 
 **El reporte no puede decir «queda pendiente».** Si aparece esa frase, algo no se descargó.
