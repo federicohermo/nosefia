@@ -35,6 +35,10 @@ func _ready() -> void:
 ## es lo que evita que el servidor de física pise la escritura en el mismo cuadro, y se restaura
 ## al valor que tenía en vez de apagarse: el objeto puede estar congelado porque lo están
 ## llevando, y despertarlo acá lo dejaría caer.
+##
+## El reseteo de la interpolación cierra lo mismo del lado del dibujo. El motor dibuja entre el
+## paso anterior y el actual. Sin el reseteo, el cuerpo se dibuja cruzando el almacén en un
+## cuadro.
 func volver_a_su_lugar() -> void:
 	var estaba_congelado := freeze
 	freeze = true
@@ -42,6 +46,7 @@ func volver_a_su_lugar() -> void:
 	linear_velocity = Vector3.ZERO
 	angular_velocity = Vector3.ZERO
 	freeze = estaba_congelado
+	reset_physics_interpolation()
 
 
 ## El contrato de «con esto se puede interactuar» es este método más el grupo del `.tscn`, y no un

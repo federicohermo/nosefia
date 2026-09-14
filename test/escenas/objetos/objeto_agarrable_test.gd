@@ -51,6 +51,34 @@ func test_el_objeto_simula_fisica_y_tiene_con_que_chocar() -> void:  # 006-AC10
 	assert_bool(con_forma).is_true()
 
 
+func test_volver_a_su_lugar_no_dibuja_el_objeto_cruzando_el_almacen() -> void:  # 044-AC4
+	# Este caso entra al árbol, al revés que el resto de la suite. `_lugar_de_origen` se guarda en
+	# `_ready()` y la posición interpolada no existe fuera del árbol.
+	#
+	# Se mira lo que se dibuja y no el `transform`. El `transform` siempre fue correcto. Con la
+	# interpolación encendida, el motor dibuja entre el paso anterior y el actual. Medido sin el
+	# reseteo: entre 1,8 y 5,8 m de distancia sobre un salto de 10 m, 20 veces de 20.
+	var mundo: Node3D = auto_free(Node3D.new())
+	add_child(mundo)
+	var objeto := _objeto()
+	objeto.set("freeze", true)
+	mundo.add_child(objeto)
+	var origen := objeto.global_transform.origin
+	objeto.transform = Transform3D(Basis.IDENTITY, Vector3(12, 3, -7))
+	for _paso in 4:
+		await get_tree().physics_frame
+		await get_tree().process_frame
+	objeto.call("volver_a_su_lugar")
+	await get_tree().process_frame
+	(
+		assert_vector(objeto.get_global_transform_interpolated().origin)
+		. override_failure_message(
+			"el objeto se dibuja viajando: viene de (12, 3, -7) y vuelve a %s" % origen
+		)
+		. is_equal_approx(origen, Vector3.ONE * 0.001)
+	)
+
+
 func test_las_dos_acciones_del_006_estan_declaradas_en_el_proyecto() -> void:  # 006-AC10
 	# El par de String entre `reglas_de_los_objetos.gd` y la sección `[input]` de
 	# `project.godot` no lo verifica nadie más: renombrar la constante sin tocar el proyecto
