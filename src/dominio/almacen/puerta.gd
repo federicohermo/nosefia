@@ -11,8 +11,9 @@
 class_name Puerta
 extends RefCounted
 
-## Radianes. Un cuarto de vuelta deja el vano libre: la hoja mide 1,72 m de ancho por 0,23 de
-## espesor y el vano 1,72, así que abierta de costado quedan casi 1,5 m de paso.
+## Radianes. Un cuarto de vuelta saca la hoja del vano: mide 1,72 m de ancho por 0,23 de
+## espesor, el vano 1,70, y abierta de costado su canto deja 1,47 m de paso — de sobra para los
+## 0,8 m de la cápsula del jugador.
 const ANGULO_ABIERTA := PI / 2.0
 
 ## Radianes por segundo. Es tacto, no balance: a esta velocidad la hoja tarda poco más de medio

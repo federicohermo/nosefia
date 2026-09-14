@@ -68,15 +68,11 @@ mallas = [NodePath(".."), NodePath("../../teclado")]
 [node name="StaticBody3D" parent="puerta" node_paths=PackedStringArray("hoja", "mallas") groups=["interactuable"]]
 script = ExtResource("puerta")
 hoja = NodePath("..")
-lado_de_la_bisagra = -1.0
-sentido_del_giro = -1.0
 mallas = [NodePath("..")]
 
 [node name="StaticBody3D" parent="puerta_001" node_paths=PackedStringArray("hoja", "mallas") groups=["interactuable"]]
 script = ExtResource("puerta")
 hoja = NodePath("..")
-lado_de_la_bisagra = -1.0
-sentido_del_giro = -1.0
 mallas = [NodePath("..")]
 
 [node name="gondola01" parent="."]

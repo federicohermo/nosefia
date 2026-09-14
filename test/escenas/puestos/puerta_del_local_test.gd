@@ -15,7 +15,7 @@ const VANOS := {
 
 func test_las_dos_puertas_cumplen_el_contrato_de_interaccion() -> void:  # 043-AC5
 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
-	for hoja in VANOS:
+	for hoja: String in VANOS:
 		var cuerpo: StaticBody3D = almacen.get_node(hoja + "/StaticBody3D")
 		assert_bool(cuerpo.is_in_group(ReglasDelJugador.GRUPO_INTERACTUABLE)).is_true()
 		assert_bool(cuerpo.has_method("interactuar")).is_true()
@@ -26,7 +26,7 @@ func test_las_dos_puertas_cumplen_el_contrato_de_interaccion() -> void:  # 043-A
 func test_interactuar_abre_la_puerta_y_no_se_la_lleva_en_la_mano() -> void:  # 043-AC6
 	# Devolver un `ObjetoDelAlmacen` dejaría al clic del 006 cargándose la hoja entera.
 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
-	for hoja in VANOS:
+	for hoja: String in VANOS:
 		var cuerpo: StaticBody3D = almacen.get_node(hoja + "/StaticBody3D")
 		assert_object(cuerpo.call("interactuar")).is_null()
 		assert_bool(cuerpo.call("puerta").abierta()).is_true()

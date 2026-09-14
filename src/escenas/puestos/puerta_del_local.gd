@@ -20,14 +20,6 @@ extends StaticBody3D
 ## `get_parent()` para que el `.tscn` diga qué se mueve en vez de que lo suponga el script.
 @export var hoja: MeshInstance3D
 
-## Qué borde de la hoja queda fijo: `1.0` el de la derecha en coordenadas de la malla, `-1.0` el
-## de la izquierda. Es geometría del vano y por eso la declara cada instancia.
-@export var lado_de_la_bisagra := 1.0
-
-## Hacia qué lado se abre. Es el otro dato del vano: una hoja puede colgar del mismo borde y
-## abrir para cualquiera de los dos lados, y el que da contra la pared la traba.
-@export var sentido_del_giro := 1.0
-
 ## Las mallas que el marco del objetivo pinta al enfocar. Sin esto iría a buscar
 ## `MeshInstance3D` hijos de este cuerpo, que no tiene ninguno: la puerta se vería sin contorno.
 @export var mallas: Array[MeshInstance3D] = []
@@ -45,9 +37,11 @@ var _bisagra: Vector3
 
 func _ready() -> void:
 	_cerrada = hoja.transform
-	var caja := hoja.get_aabb()
-	var borde := caja.position.x + caja.size.x if lado_de_la_bisagra > 0.0 else caja.position.x
-	_bisagra = _cerrada * Vector3(borde, 0.0, 0.0)
+	# La bisagra es el borde de menor X de la hoja y el giro va en negativo. No es configurable
+	# porque hay una sola combinación que sirve: de las cuatro de borde y sentido, las cuatro
+	# dejan el vano libre —o sea que el paso no las distingue— y tres dejan la hoja adentro de
+	# la pared. La que queda es ésta, y es la misma para las dos puertas del local.
+	_bisagra = _cerrada * Vector3(hoja.get_aabb().position.x, 0.0, 0.0)
 
 
 ## El contrato de «con esto se puede interactuar» es este método más el grupo del `.tscn`.
@@ -67,5 +61,5 @@ func puerta() -> Puerta:
 ## El giro va por cuadro de física y no de dibujo: lo que se mueve es un cuerpo de colisión, y
 ## adelantarlo en el cuadro equivocado lo deja medio paso atrás del jugador que lo está cruzando.
 func _physics_process(delta: float) -> void:
-	var giro := Basis(Vector3.UP, sentido_del_giro * _puerta.avanzar(delta))
+	var giro := Basis(Vector3.UP, -_puerta.avanzar(delta))
 	hoja.transform = Transform3D(giro, _bisagra - giro * _bisagra) * _cerrada
