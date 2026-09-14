@@ -350,7 +350,11 @@ func test_actroncito_marolini_y_jorgillo_se_reponen_con_foco_y_clic_reales() -> 
 		var caja: Node3D = almacen.get("_cajas_de_productos")[id]
 		var vista: MeshInstance3D = caja.get_node("Malla")
 		var centro := vista.global_transform * vista.mesh.get_aabb().get_center()
-		await _mirar_foco(jugador, centro + Vector3(0, 0.7, 1.3), centro)
+		# Se mira desde +X y no desde +Z desde el 043: las tres cajas de este caso quedaron
+		# contra la pared izquierda del depósito —dos en el piso y una en el estante de arriba—,
+		# y desde +Z la góndola se interpone. El campo de interacción pide un impacto real sobre
+		# el cuerpo, así que con la vista tapada la caja deja de ser candidata.
+		await _mirar_foco(jugador, centro + Vector3(1.3, 0.7, 0), centro)
 		assert_object(jugador.get("_enfocado")).is_same(caja)
 		_clic_real(jugador)
 		var unidad: UnidadDeProducto = almacen.get("_agarre").manos().sostenido()

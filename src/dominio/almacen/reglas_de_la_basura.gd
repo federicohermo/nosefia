@@ -7,8 +7,13 @@
 ##
 ## **No hay ninguna constante que diga «esta tarea cuesta caminar».** El trayecto no es un número:
 ## es una consecuencia de tres hechos afirmables —una mano y tres bolsas son tres viajes, el
-## descarte está lejos de todo, y esa distancia no entra en el alcance de la mira—. Si alguien la
-## resuelve sin caminar, uno de los tres se pone rojo.
+## descarte está lejos de donde arrancan las bolsas y de las tareas del local, y esa distancia no
+## entra en el alcance de la mira—. Si alguien la resuelve sin caminar, uno de los tres se pone
+## rojo.
+##
+## **Reponer también pasa en el fondo desde el 043**, que mandó el stock a los estantes del
+## depósito: el descarte ya no está lejos de **todas** las obligatorias, sólo de las del local y
+## del baño, donde ese spec puso las bolsas.
 class_name ReglasDeLaBasura
 extends RefCounted
 
@@ -24,7 +29,7 @@ const BOLSAS_DE_LA_JORNADA := 3
 ## **Tiene que ser mayor que `ReglasDelJugador.ALCANCE_DE_LA_MIRA`**: si no lo fuera, el fondo
 ## quedaría a la vista desde la tarea de al lado y el viaje dejaría de existir sin que nada lo
 ## dijera. Es un mínimo, y `almacen.tscn` lo cumple con margen — hay un caso que mide las
-## posiciones de verdad.
+## posiciones de verdad, y desde el 043 mide las del local y las de las bolsas, no las del stock.
 const DISTANCIA_MINIMA_AL_DESCARTE := 6.0
 
 ## El radio de la zona donde vale soltar la bolsa, en metros.

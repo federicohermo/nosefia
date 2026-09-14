@@ -16,28 +16,20 @@ const ESCENA_AGARRABLE := "res://src/escenas/objetos/objeto_agarrable.tscn"
 ## no declaran `class_name` — y éste **no puede** declararlo, ver el caso de abajo.
 const ZonaQueSeVe := preload("res://src/escenas/puestos/zona_de_descarte.gd")
 
-## Una caja por producto del catálogo, desde que reponer se puede terminar jugando. Antes era una
-## sola llamada `CajaDeProductos`: el nombre viejo dejaba este caso midiendo de menos.
-const CAJAS_DEL_DEPOSITO := [
-	"Objetos/CajaDeActroncito",
-	"Objetos/CajaDeFideos",
-	"Objetos/CajaDeGaseosa",
-	"Objetos/CajaDeGalletitas",
-	"Objetos/CajaDeArroz",
-	"Objetos/CajaDeJabon",
+## Los anclajes de las obligatorias que se hacen en el local. El descarte tiene que estar lejos
+## de todos: es lo que hace que la basura no se saque de paso.
+##
+## **Las cajas de reposición estaban en esta lista y salieron en el 043.** Ese spec mandó el
+## stock a los estantes del depósito, así que reponer pasa en el fondo **a propósito**: medidas
+## hoy, las ocho quedan entre 3,19 y 5,48 m del descarte, y exigirles los 6 m sería exigir que el
+## stock no viva ahí. Lo que se sigue midiendo son las cuatro tareas del local y las bolsas, que
+## desde el 043 arrancan en el baño.
+const ANCLAJES_DE_LAS_OTRAS_TAREAS := [
+	"Estructura/gondola01/StaticBody3D",
+	"Objetos/CajaDeTraslado",
+	"Estructura/Ventanilla",
+	"Estructura/compu/StaticBody3D"
 ]
-
-## Los anclajes de las otras cuatro obligatorias en `almacen.tscn`. El descarte tiene que estar
-## lejos de todos: es lo que hace que ninguna otra tarea visite el fondo.
-const ANCLAJES_DE_LAS_OTRAS_TAREAS := (
-	[
-		"Estructura/gondola01/StaticBody3D",
-		"Objetos/CajaDeTraslado",
-		"Estructura/Ventanilla",
-		"Estructura/compu/StaticBody3D"
-	]
-	+ CAJAS_DEL_DEPOSITO
-)
 
 const NOMBRES_DE_LAS_BOLSAS := [
 	"Objetos/BolsaDeBasura1", "Objetos/BolsaDeBasura2", "Objetos/BolsaDeBasura3"
