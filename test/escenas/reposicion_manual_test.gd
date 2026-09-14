@@ -1,8 +1,6 @@
 extends GdUnitTestSuite
 
 const ALMACEN := preload("res://src/escenas/almacen.tscn")
-## El producto cuelga del brazo que lo frena contra los muebles, no de la cámara.
-const EN_LA_MANO := "Camara/BrazoDeProducto/PuntoDeProducto"
 
 
 func test_vender_retira_las_unidades_visibles_y_permite_reponer_sin_superponer() -> void:
@@ -419,7 +417,7 @@ func test_cada_unidad_ocupa_un_lugar_distinto_y_la_marca_indica_su_base() -> voi
 		var zona := presentacion.get_node("ZonaDe" + producto.nombre)
 		for indice in producto.umbral:
 			_accion(jugador, almacen.get("_cajas_de_productos")[producto.id])
-			var unidad: Node3D = jugador.get_node(EN_LA_MANO).get_child(0)
+			var unidad: Node3D = jugador.get_node("Camara/PuntoDeProducto").get_child(0)
 			var marca: MeshInstance3D = zona.mallas[0]
 			var apoyo := marca.global_position
 			assert_float(absf(marca.global_basis.z.dot(Vector3.UP))).is_equal_approx(1.0, 0.001)
@@ -458,7 +456,7 @@ func test_el_clic_saca_una_unidad_visible_y_el_estante_la_recibe() -> void:  # 0
 	clic.pressed = true
 	jugador.call("_unhandled_input", clic)
 	assert_object(agarre.manos().sostenido()).is_not_null()
-	var punto := jugador.get_node_or_null(EN_LA_MANO)
+	var punto := jugador.get_node_or_null("Camara/PuntoDeProducto")
 	assert_object(punto).is_not_null()
 	if punto == null or punto.get_child_count() == 0:
 		return
@@ -467,15 +465,8 @@ func test_el_clic_saca_una_unidad_visible_y_el_estante_la_recibe() -> void:  # 0
 	assert_int(unidad.collision_layer).is_zero()
 	# **Abajo a la derecha, no sobre la mira.** El producto es lo más grande que se lleva. El
 	# gesto siguiente es apuntar al casillero del estante.
-	#
-	# Se mide contra la cámara y no con `punto.position`: el brazo que lo frena contra los
-	# muebles reescribe esa posición en cada cuadro de física, y ahí dice `(0, 0, largo)` sobre
-	# el eje del brazo, que no es el de la cámara.
-	await get_tree().physics_frame
-	var camara: Camera3D = jugador.get_node("Camara")
-	var en_la_mano := camara.to_local(punto.global_position)
-	assert_float(en_la_mano.x).is_greater(0.0)
-	assert_float(en_la_mano.y).is_less(0.0)
+	assert_float(punto.position.x).is_greater(0.0)
+	assert_float(punto.position.y).is_less(0.0)
 	jugador.call("_unhandled_input", clic)
 	assert_int(punto.get_child_count()).is_equal(1)
 	_apuntar(almacen, Producto.Id.ACTRONCITO)
@@ -507,7 +498,7 @@ func test_con_el_estante_lleno_la_caja_no_entrega_otra_unidad() -> void:  # 008-
 	assert_object(agarre.manos().sostenido()).is_null()
 	_accion(jugador, estante)
 	assert_object(agarre.manos().sostenido()).is_null()
-	assert_int(jugador.get_node(EN_LA_MANO).get_child_count()).is_zero()
+	assert_int(jugador.get_node("Camara/PuntoDeProducto").get_child_count()).is_zero()
 
 
 func test_examinar_no_retira_ni_deposita_y_devuelve_la_unidad_a_la_mira() -> void:  # 006-AC9
@@ -528,7 +519,7 @@ func test_examinar_no_retira_ni_deposita_y_devuelve_la_unidad_a_la_mira() -> voi
 	assert_object(agarre.manos().sostenido()).is_same(sostenido)
 	assert_int(jugador.get_node("Camara/PuntoDeExamen").get_child_count()).is_equal(1)
 	_accion(jugador, estante, ReglasDeLosObjetos.ACCION_EXAMINAR)
-	assert_int(jugador.get_node(EN_LA_MANO).get_child_count()).is_equal(1)
+	assert_int(jugador.get_node("Camara/PuntoDeProducto").get_child_count()).is_equal(1)
 
 
 func _accion(
