@@ -224,7 +224,7 @@ Cada agente recibe, literal:
 - **No hay install que correr**, pero **`GODOT_BIN` tiene que estar en el entorno del carril**: sin
   ella el nodo `tests` sale **rojo**, no salteado. Ese salteo vence: existe sólo mientras no haya
   un solo `*_test.gd`, y desde el primero Godot es obligatorio
-  (`verificar.py:132-141`). Un carril que sale a buscar un salteado que nunca va a aparecer pierde
+  (`verificar.py:132-142`). Un carril que sale a buscar un salteado que nunca va a aparecer pierde
   una vuelta.
 - **Y antes del primer `verificar.py`, el carril importa.** `.godot/` está en el `.gitignore`, así
   que **ningún worktree nuevo lo tiene**, y sin esa caché gdUnit4 no resuelve sus propios
