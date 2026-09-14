@@ -472,6 +472,17 @@ func test_la_caja_de_traslado_entra_instanciada_y_adentro_del_edificio() -> void
 	)
 
 
+func test_la_caja_de_traslado_no_se_ve() -> void:
+	# El cuerpo es un blockout —una caja gris de 0.9 × 0.3 × 0.5— parado a metro y medio del
+	# spawn, y la escena ya está modelada. Se oculta en vez de borrarse porque `almacen.gd` le
+	# pide `mostrar()` en dos lugares: sin el nodo, ese `@export` queda en `null` y revienta.
+	var almacen: Node3D = auto_free(load(ESCENA_DEL_ALMACEN).instantiate())
+	add_child(almacen)
+	await get_tree().process_frame
+	var caja: Node3D = almacen.get_node("Objetos/CajaDeTraslado")
+	assert_bool(caja.is_visible_in_tree()).is_false()
+
+
 func test_el_cableado_le_da_la_hora_al_reloj_de_pared_y_no_al_hud() -> void:  # 032-AC8
 	# La hora se fue de la pantalla, pero los otros dos carteles del HUD siguen: sin la segunda
 	# mitad de este caso, desconectarlos también pasaría en verde.
