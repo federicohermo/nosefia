@@ -176,3 +176,50 @@ func test_los_dos_sistemas_llegan_con_sus_puntos_cableados() -> void:  # 006-AC1
 	assert_object(agarre.punto_de_respaldo).is_same(jugador.get_node("PuntoDeRespaldo"))
 	var examen: Node = jugador.examen
 	assert_object(examen.punto_de_examen).is_same(jugador.get_node("Camara/PuntoDeExamen"))
+
+
+func test_cada_brazo_apunta_al_punto_de_mano_que_mueve() -> void:
+	# El brazo no cuelga de nada: `jugador.gd` corre el punto sobre su eje. Si el eje deja de
+	# terminar donde está el punto, la mano salta a otro lado en el primer cuadro de la jornada
+	# y nada más en el repo lo diría.
+	var jugador := _jugador()
+	var manos := {
+		"Camara/BrazoDeCarga": "Camara/PuntoDeCarga",
+		"Camara/BrazoDeProducto": "Camara/PuntoDeProducto",
+	}
+	for ruta_del_brazo in manos:
+		var brazo: SpringArm3D = jugador.get_node(ruta_del_brazo)
+		var punto: Node3D = jugador.get_node(manos[ruta_del_brazo])
+		var punta := brazo.transform * Vector3(0.0, 0.0, brazo.spring_length)
+		assert_vector(punta).is_equal_approx(punto.position, Vector3.ONE * 0.001)
+
+
+func test_los_brazos_barren_un_volumen_y_no_un_rayo() -> void:
+	# Un brazo sin `shape` barre un rayo, y un rayo sólo frena el CENTRO de lo que se lleva: la
+	# mitad que sobra le sigue entrando a la madera.
+	var jugador := _jugador()
+	for ruta in ["Camara/BrazoDeCarga", "Camara/BrazoDeProducto"]:
+		var brazo: SpringArm3D = jugador.get_node(ruta)
+		(
+			assert_object(brazo.shape)
+			. override_failure_message("el brazo %s barre un rayo, no un volumen" % ruta)
+			. is_not_null()
+		)
+
+
+func test_los_brazos_nacen_adentro_de_la_capsula_del_cuerpo() -> void:
+	# Está medido que un barrido que arranca solapado se descarta entero. Si el hombro más el
+	# radio de la esfera sobresalen, apoyarse contra una pared apaga el brazo en silencio y lo
+	# que se lleva vuelve a atravesar los muebles.
+	var jugador := _jugador()
+	var cuerpo: CollisionShape3D = jugador.get_node("Cuerpo")
+	var capsula: CapsuleShape3D = cuerpo.shape
+	for ruta in ["Camara/BrazoDeCarga", "Camara/BrazoDeProducto"]:
+		var brazo: SpringArm3D = jugador.get_node(ruta)
+		var esfera: SphereShape3D = brazo.shape
+		var radial := Vector2(brazo.position.x, brazo.position.z).length()
+		(
+			assert_float(radial + esfera.radius)
+			. override_failure_message("el brazo %s nace fuera de la cápsula" % ruta)
+			. is_less(capsula.radius)
+		)

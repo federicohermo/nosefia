@@ -45,13 +45,32 @@ var _cursor_soltado_a_mano := false
 ## necesita el `Node3D`; el dominio sigue viendo sólo el `int` que le pasa `_leer_la_mira()`.
 var _enfocado: Node3D = null
 
+## Cuánto mide ahora el brazo de cada mano. Es estado del dibujo y no del juego: el brazo del
+## motor contesta el lugar libre de golpe, y cuánto de ese salto se recorre por cuadro lo decide
+## `RetornoDeLaMano`.
+var _largo_de_carga := 0.0
+var _largo_de_producto := 0.0
+
 @onready var _camara: Camera3D = $Camara
 @onready var _campo: Area3D = $Camara/CampoDeInteraccion
+
+## Los dos brazos que miden cuánto lugar hay para lo que se lleva.
+@onready var _brazo_de_carga: SpringArm3D = $Camara/BrazoDeCarga
+@onready var _brazo_de_producto: SpringArm3D = $Camara/BrazoDeProducto
 
 
 func _ready() -> void:
 	_aplicar_el_modo_del_cursor()
 	_aplicar_la_rotacion()
+	# Los brazos barren desde el hombro, que está adentro de la propia cápsula. Está medido que
+	# un barrido que arranca solapado se descarta entero: sin esta exclusión el brazo nunca
+	# acorta y lo que se lleva en la mano vuelve a meterse en la madera.
+	for brazo: SpringArm3D in find_children("*", "SpringArm3D", true, false):
+		brazo.add_excluded_object(get_rid())
+	# Estirados desde el primer cuadro: arrancar en cero haría que las manos salgan del hombro
+	# a la vista del jugador cada vez que empieza una jornada.
+	_largo_de_carga = _brazo_de_carga.spring_length
+	_largo_de_producto = _brazo_de_producto.spring_length
 	# Examinar clava la cámara y la caminata. Se cablea acá y no adentro de `Examen` porque
 	# `sistemas/` no puede nombrar un nodo de `escenas/`: allá se emite lo que pasó, acá se
 	# traduce a lo que hay que hacer.
@@ -132,7 +151,29 @@ func _physics_process(delta: float) -> void:
 	velocity.z = horizontal.z
 	move_and_slide()
 
+	_acomodar_las_manos(delta)
 	_leer_la_mira()
+
+
+## Corre las dos manos sobre el eje de su brazo, hasta donde haya lugar.
+##
+## El brazo no mueve a nadie: los puntos cuelgan de la cámara y no de él, así que la única
+## escritura sobre ellos es ésta. Colgarlos del brazo sería más corto, pero entonces el motor
+## les escribiría la posición entera cada cuadro y el suavizado no tendría dónde entrar.
+func _acomodar_las_manos(delta: float) -> void:
+	_largo_de_carga = _acomodar(_brazo_de_carga, agarre.punto_de_carga, _largo_de_carga, delta)
+	_largo_de_producto = _acomodar(
+		_brazo_de_producto, agarre.punto_de_producto, _largo_de_producto, delta
+	)
+
+
+## Mueve un punto sobre el eje de su brazo y devuelve el largo que quedó.
+func _acomodar(brazo: SpringArm3D, punto: Node3D, largo: float, delta: float) -> float:
+	if brazo == null or punto == null:
+		return largo
+	var siguiente := RetornoDeLaMano.siguiente(largo, brazo.get_hit_length(), delta)
+	punto.position = brazo.transform * Vector3(0.0, 0.0, siguiente)
+	return siguiente
 
 
 ## La única puerta por la que otra escena puede decir «el jugador no controla»: el
