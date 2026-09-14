@@ -14,9 +14,40 @@ const ReglasDeLosObjetos := preload("res://src/dominio/almacen/reglas_de_los_obj
 const ReglasDelJugador := preload("res://src/dominio/jugador/reglas_del_jugador.gd")
 const ESCENA_DEL_OBJETO := "res://src/escenas/objetos/objeto_agarrable.tscn"
 
+## Cuánto gira el cuerpo de prueba, en rad/s. Es lo que se midió en el ciclo real, y son
+## catorce veces el umbral de reposo del motor —0,14 rad/s—, así que el motor no lo duerme.
+const GIRO_DEL_CICLO := 2.0
+
 
 func _objeto() -> Node3D:
 	return auto_free(load(ESCENA_DEL_OBJETO).instantiate())
+
+
+func test_un_objeto_que_se_agita_sin_moverse_termina_dormido() -> void:
+	# El ciclo del solver, reproducido: se le clava la posición y se le repone el giro en cada
+	# paso, que es lo que hacía el motor. Medido en el juego: ±5,65° por paso, velocidad angular
+	# alternando entre 1,8323 y 2,0537 rad/s, sin decaer, con el centro moviéndose dos
+	# milímetros. Sin el corte, `durmio` no se pone en `true` nunca.
+	var objeto: RigidBody3D = _objeto()
+	# Sin gravedad: lo que el caso aísla es girar sin trasladarse. Con ella el cuerpo cae más
+	# que la deriva en cada paso y el contador se reinicia, que es correcto y no es este caso.
+	objeto.gravity_scale = 0.0
+	add_child(objeto)
+	var donde := objeto.global_position
+	var durmio := false
+	for _paso in 120:
+		await get_tree().physics_frame
+		if objeto.sleeping:
+			durmio = true
+		objeto.global_position = donde
+		objeto.angular_velocity = Vector3(0, GIRO_DEL_CICLO, 0)
+	(
+		assert_bool(durmio)
+		. override_failure_message(
+			"el objeto giró %.1f rad/s dos segundos sin moverse y nunca durmió" % GIRO_DEL_CICLO
+		)
+		. is_true()
+	)
 
 
 func test_el_objeto_esta_en_el_grupo_que_la_mira_busca() -> void:  # 006-AC10
