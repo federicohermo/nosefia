@@ -132,6 +132,23 @@ func test_en_caida_libre_la_copia_dibuja_donde_el_motor_dibuja_el_cuerpo() -> vo
 	)
 
 
+func test_el_motor_no_vuelve_a_interpolar_lo_que_el_grupo_escribe() -> void:  # 045-AC1
+	# El grupo ya escribe la posición interpolada cada cuadro. Si el motor además interpola el
+	# buffer del MultiMesh, interpola entre dos valores interpolados y la copia se atrasa otra
+	# vez. Medido en el juego el 2026-09-14: 59,92 mm en caída libre.
+	#
+	# Los otros casos no lo ven: comparan contra `_matrices`, que es lo que el script escribió y
+	# da 0,00 mm. El atraso vive del lado del motor, y `get_instance_transform()` no se puede
+	# leer en headless. Por eso acá se afirma el modo del nodo.
+	var grupo := _grupo(_mundo(), 1)
+	(
+		assert_int(grupo.physics_interpolation_mode)
+		. override_failure_message("el grupo escribe cada cuadro: el motor no debe interpolarlo")
+		. is_equal(Node.PHYSICS_INTERPOLATION_MODE_OFF)
+	)
+	assert_bool(grupo.is_physics_interpolated()).is_false()
+
+
 func test_al_aterrizar_la_copia_no_salta_mas_que_el_dibujo_del_cuerpo() -> void:  # 045-AC2
 	# El borde es el cuadro posterior al impacto. Antes del arreglo el cuerpo avanzaba 9,9 mm y
 	# la copia saltaba los 69,3 que traía de atrás. Ese salto es el parpadeo al tocar el suelo.
