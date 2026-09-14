@@ -117,7 +117,7 @@ lo que en este motor nadie más cuida.
 
 **Un nodo salteado no es un nodo verde**, y el reporte lo distingue. Pero `tests` sin `GODOT_BIN`
 **no se saltea: sale rojo** — ese salteo vale sólo mientras no exista un solo `*_test.gd`, y hay
-muchos (`verificar.py:132-141`). No salgas a buscar un salteado que no va a aparecer.
+muchos (`verificar.py:132-142`). No salgas a buscar un salteado que no va a aparecer.
 
 **Y `verificar.py` verde no prueba que la suite haya corrido.** Una suite de gdUnit4 que no
 parsea se descarta **en silencio** y el nodo `tests` sale verde igual — es el estado normal del
