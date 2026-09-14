@@ -5,7 +5,7 @@ Cada rama tiene una pregunta distinta, y el prefijo la contesta.
 | Rama | Qué es | Quién escribe ahí |
 |---|---|---|
 | `main` | **Lo que se entrega.** Cada entrega de la cátedra sale de acá | sólo un PR de promoción desde `staging` |
-| `staging` | **Integra.** Es la rama default del repositorio | los PR de cada spec, y los commits del mapa |
+| `staging` | **Integra.** Es la rama default del repositorio | cualquiera, **también directo**, y los commits del mapa |
 | `feature/<NNN>-<kebab>` | Un spec, uno | quien lo implementa |
 | `bugfix/<kebab>` | Algo del producto está roto. Puede salir de un spec o no | quien lo arregla |
 | `hotfix/<kebab>` | Urgente, contra lo que ya se entregó | quien lo arregla |
@@ -50,16 +50,24 @@ squash de #75 le costó a #110 **115 archivos en conflicto**.
 Se pidió por escrito en el cuerpo de tres PR de promoción seguidos y se aplastó igual. Un pedido
 en prosa que hay que acordarse de leer no es una regla — **por eso ahora la opción no está**.
 
-## `staging` es la default, y eso la hace peligrosa
+## A `staging` se commitea directo
 
-Es adonde apunta cada `gh pr create` y cada clone fresco: **el lugar más fácil de todo el repo
-donde quedarse parado sin haberlo decidido.**
+Desde el **2026-09-14**. El hook la bloqueaba, y en un repo de una persona abrir una rama para
+mergearla en el minuto siguiente es ceremonia: el costo se paga en cada cambio y el beneficio
+—que otro no pise trabajo ajeno— no existe acá.
 
-Por eso el hook la nombra explícitamente. Sin esa línea el veredicto sería el mismo —`staging`
-no empieza con ninguno de los tres prefijos del producto— pero el mensaje sería el equivocado:
-«esa rama no puede editar el producto» se lee como una invitación a **renombrarla**, que es lo
-peor que se puede hacer con la rama de integración. El mensaje correcto dice que el problema es
-**dónde estás parado**.
+**Lo que se paga, y es real: dos gates quedan ciegos sobre lo que se commitea sin rama.**
+
+| El gate | Qué deja de ver |
+|---|---|
+| `test_criterios_de_la_rama.py` | cruza los AC contra el spec **de la rama**, y en `staging` no hay ninguno |
+| `derivar_mapa.py` | saca el `NNN` del nombre de la rama de un PR: sin PR, el spec se queda en `Propuesto` para siempre |
+
+O sea: **el trabajo de un spec sigue necesitando su `feature/<NNN>-…`**, y no por ceremonia —
+sin esa rama el registro no se entera y ningún criterio se verifica. Lo que se liberó es todo lo
+demás: un arreglo suelto, un asset, el harness, la documentación.
+
+`main` sigue bloqueada. Es lo que se entrega, y llega por el PR de promoción.
 
 ## El nombre de la rama de feature no es decorativo
 
@@ -96,8 +104,8 @@ Cuando el cambio no toca `src/`: un asset, un typo, la documentación, actualiza
 herramienta del harness. Ahí la rama se llama `harness/…`, `docs/…` o `ci/…` según qué toque, y
 va directo a PR contra `staging`.
 
-**Lo que no se puede es trabajar sobre `main` o `staging`.** El hook sólo protege un
-directorio, pero la razón vale para todo: son ramas que reciben trabajo de otros.
+**Lo que no se puede es trabajar sobre `main`**, que es lo que se entrega. A `staging` se
+commitea directo, con la salvedad de arriba: el trabajo de un spec va igual por su rama.
 
 ## Los tres workflows
 
