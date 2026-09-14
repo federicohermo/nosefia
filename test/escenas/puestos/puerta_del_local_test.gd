@@ -80,8 +80,8 @@ func test_la_hoja_gira_sobre_su_borde_y_no_sobre_su_centro() -> void:  # 043-AC8
 func test_la_hoja_abierta_entra_al_cuarto_y_no_al_local() -> void:
 	# Es el caso que elige de qué lado gira cada hoja. Un rayo de borde a borde no lo puede
 	# contestar: arranca pegado a la jamba y dice de qué lado nace la hoja, no dónde termina.
-	# Medido, la hoja queda embutida 0,11 m en la jamba con el vano cerrado y las cuatro
-	# combinaciones de bisagra y sentido dejan libre su barrido, así que el muro no elige nada.
+	# El muro tampoco elige: las cuatro combinaciones de bisagra y sentido dejan libre el
+	# barrido de la hoja, que ya nace embutida en la jamba con el vano cerrado.
 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
 	add_child(almacen)
 	await get_tree().physics_frame

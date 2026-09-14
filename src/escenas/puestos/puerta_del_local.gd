@@ -37,11 +37,10 @@ var _bisagra: Vector3
 
 func _ready() -> void:
 	_cerrada = hoja.transform
-	# La bisagra es el borde de menor X de la hoja. No es configurable porque el sentido no lo
-	# elige la escena: las dos puertas abren hacia adentro de su cuarto, y así la hoja se aleja
-	# del que la abre en vez de barrerlo. El muro no distingue ninguna de las cuatro
-	# combinaciones de borde y sentido — la hoja mide 1,72 m contra un vano de 1,70, así que ya
-	# nace embutida en la jamba y el barrido queda libre con las cuatro.
+	# La bisagra es el borde de menor X de la hoja, y la hoja gira hacia adentro del cuarto. La
+	# escena no elige ninguna de las dos cosas. El sentido está fijo porque así la hoja se aleja
+	# del que la abre en vez de barrerlo. El muro no lo limita: las cuatro combinaciones de
+	# borde y sentido dejan libre el barrido.
 	_bisagra = _cerrada * Vector3(hoja.get_aabb().position.x, 0.0, 0.0)
 
 
