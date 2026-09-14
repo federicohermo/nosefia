@@ -95,8 +95,9 @@ Verificadas por una herramienta:
   nombre que hace que no corra.** Las cuatro reglas cierran la misma cosa: verde sin ejercer
   nada.
 - **Formato, largo de línea (100), nombres y orden de declaraciones** (`gdformat`, `gdlint`).
-- **No se edita `src/` sin un spec detrás de la rama** (el hook de
-  `.claude/settings.json`).
+- **A `src/` lo tocan tres prefijos de rama y ninguno más** —`feature/<NNN>-<kebab>`, `bugfix/`
+  y `hotfix/`—, y a `feature/` el hook le exige el `NNN` del spec (`.claude/settings.json`). Lo
+  que no toca `src/` se nombra por lo que toca: `harness/`, `docs/`, `ci/`.
 - **Un skill es autocontenido: trae adentro todo lo que corre** (`test_copias_de_skills.py`).
   Ninguno alcanza `../otro-skill/`: uno que sale a buscar el archivo al de al lado deja de
   funcionar apenas viaja solo. El precio es la duplicación, y el gate la cobra: **una copia que
@@ -109,10 +110,13 @@ Verificadas por una herramienta:
 Prosa — dependen de que la revisión las mire, y que no tengan verificador es deuda:
 
 - **Tipado estático en toda firma**, `-> void` incluido.
+- **Textos breves, claros y en español controlado**: frases cortas, una idea por frase y un
+  término por concepto. Aplica a documentación, comentarios, specs y respuestas. Evitar
+  repeticiones y abstracciones que el cambio no necesita.
 - **Español en el contenido, inglés en los nombres de carpeta**, con dos excepciones
   deliberadas: **el árbol de `src/` entero**, que no es estructura sino vocabulario del GDD, y
-  las carpetas de spec, cuyo nombre **es** su título. `reportes/` es la única mal puesta, y
-  arreglarla pide un spec: renombrarla toca `docs/`.
+  las carpetas de spec, cuyo nombre **es** su título. No hay una tercera: `reportes/` lo era
+  hasta que se unificó con el `reports/` que gdUnit4 usa por defecto.
 - **Los comentarios explican el porqué**, no el qué.
 - **Un valor fijo vive una sola vez**, en un archivo de `src/dominio/`.
 - **Un conjunto cerrado es un `enum`**, nunca un `String` suelto: `"limpar"` no rompe nada, el

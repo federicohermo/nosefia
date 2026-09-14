@@ -9,7 +9,7 @@ justo lo que el plan prohibía.
 import os
 import unittest
 
-from lib.rama import rama_actual, rutas_violadas, spec_de_la_rama, viola
+from lib.rama import rama_actual, rutas_violadas, spec_de_la_rama, spec_publicado, viola
 
 
 class Viola(unittest.TestCase):
@@ -78,9 +78,9 @@ class QueSpecNombraLaRama(unittest.TestCase):
     """Lo que decide si los dos gates miran o se saltean, sobre el camino que sí se puede fijar.
 
     **Es la mitad que faltaba.** Los dos gates que usan esto se saltean enteros cuando la rama
-    no nombra un spec —una `chore/` o una `fix/`—, así que en un PR de ésos ninguno de los dos
-    llega a ejercer nada y los tres casos salen `skipped`. Medido en el PR 59, que es el que
-    los trajo: sus tres casos se saltearon y el I/O de `lib/rama.py` no lo corrió nadie.
+    no nombra un spec —una `harness/` o una `docs/`—, así que en un PR de ésos ninguno de
+    los dos llega a ejercer nada y los tres casos salen `skipped`. Medido en el PR 59, que es
+    el que los trajo: sus tres casos se saltearon y el I/O de `lib/rama.py` no lo corrió nadie.
 
     `GITHUB_HEAD_REF` es la rendija por la que se puede sondear sin fabricar un repo: es el
     mismo camino que la Action usa, y tiene prioridad sobre `git` a propósito —en un
@@ -106,15 +106,16 @@ class QueSpecNombraLaRama(unittest.TestCase):
         return spec_de_la_rama()
 
     def test_el_prefijo_esta_abierto(self):
-        # `fix/` y `chore/` también nombran un spec: el gate no es sólo de las features.
+        # El derivador es más ancho que el conjunto que `gate_de_spec.py` deja tocar `src/`:
+        # un spec puede aterrizar por una rama que no se llame `feature/`.
         self.assertEqual(self._sobre("feature/031-la-jornada-dura-diez-minutos"), "031")
-        self.assertEqual(self._sobre("fix/007-el-reloj-atrasa"), "007")
-        self.assertEqual(self._sobre("chore/012-la-pureza"), "012")
+        self.assertEqual(self._sobre("bugfix/007-el-reloj-atrasa"), "007")
+        self.assertEqual(self._sobre("hotfix/012-la-pureza"), "012")
 
     def test_una_rama_que_no_nombra_un_spec_saltea_los_dos_gates(self):
         # Devolver `None` es lo que dispara el salteo declarado. Que sea `None` y no `""`
         # importa: un `""` cae en el `if` de `archivo_del_spec` y saldría a buscar el spec 0.
-        self.assertIsNone(self._sobre("chore/el-regimen-de-specs-se-unifica"))
+        self.assertIsNone(self._sobre("harness/el-regimen-de-specs-se-unifica"))
         self.assertIsNone(self._sobre("staging"))
 
     def test_el_entorno_de_la_action_le_gana_a_git(self):
@@ -129,3 +130,25 @@ class QueSpecNombraLaRama(unittest.TestCase):
     def test_el_numero_sale_del_prefijo_y_no_de_cualquier_parte_del_nombre(self):
         # `feature/la-caja-lleva-008-productos` no es el spec 008.
         self.assertIsNone(self._sobre("feature/la-caja-lleva-008-productos"))
+
+
+class QueSpecExiste(unittest.TestCase):
+    """El cruce contra el mapa que `gate_de_spec.py` dejó de hacer el 2026-09-08.
+
+    **Lo que se ejerce acá es que `False` y `None` no se confundan**, que es lo único que hace
+    útil a esta función: `archivo_del_spec` ya devolvía `None` para las dos cosas, y por eso el
+    gate de los criterios se salteaba en vez de ponerse en rojo cuando el spec no existía.
+
+    El número de ejemplo es `999` y eso importa: el mapa llega hasta el `037`, así que es un
+    número que ninguna corrida real puede tener publicado. Es la misma convención con la que
+    `test_criterios_de_la_rama.py` escribe sus sondas.
+    """
+
+    def test_un_spec_del_mapa_existe(self):
+        # El `001` es el más viejo del mapa: si esto se pone en rojo, lo que se rompió es la
+        # lectura del mapa y no el spec.
+        self.assertIs(spec_publicado("001"), True)
+
+    def test_un_numero_que_el_mapa_no_tiene_no_existe(self):
+        # `False`, no `None`: es una respuesta, y de ella sale el rojo del gate.
+        self.assertIs(spec_publicado("999"), False)

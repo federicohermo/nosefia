@@ -1,0 +1,9 @@
+[gd_resource type="Resource" script_class="Reaccion" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://src/dominio/empleo/reaccion.gd" id="1_reaccion"]
+
+[resource]
+script = ExtResource("1_reaccion")
+sobre = 2
+indice = 0
+texto = "Ni una queja. Seguí así."

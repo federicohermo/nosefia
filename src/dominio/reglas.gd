@@ -64,6 +64,18 @@ const SEGUNDOS_DE_TRAYECTO_ESTIMADOS := 220.0
 ## el turno es una decisión de diseño que hay que escribir acá.
 const MARGEN_MINIMO := 3600.0
 
+## Cuántos productos entran en la caja con la que se traslada la mercadería.
+##
+## **El nombre es largo a propósito**: al principio de este mismo archivo vive `COSTO_DE_LA_CAJA`,
+## que es la **caja registradora** y no tiene nada que ver. `CASILLEROS_DE_LA_CAJA` las
+## confundiría, y la confusión no daría error: daría un balance cambiado en la tarea equivocada.
+##
+## Ocho es un primer valor y es lo que convierte reponer en una decisión: con uno, reponer sería
+## un viaje por unidad y no habría nada que elegir; con muchos, cargar deja de costar. La caja de
+## la escena sí dibuja ocho huecos escritos en un `.tscn`, y por eso el día que se rebalancee este
+## número el `033-AC9` se pone en rojo: ese caso los cuenta contra esta constante.
+const CASILLEROS_DE_LA_CAJA_DE_TRASLADO := 8
+
 ## A los cuatro apercibimientos lo echan, y se compara con `>=` y no con `==`: una jornada grave
 ## sube de a dos, así que el contador puede saltar de 3 a 5 sin pisar el 4.
 ##
@@ -76,6 +88,18 @@ const MARGEN_MINIMO := 3600.0
 const APERCIBIMIENTOS_HASTA_EL_DESPIDO := 4
 
 const APERCIBIMIENTOS_POR_AVISO := 1
+
+## En qué noche se rompe el reloj de pared del local, a la mitad del turno y para siempre.
+##
+## El GDD dice que deja de funcionar «a mitad de una de las jornadas» y no cuál: la tercera de
+## cinco es una decisión de balance, y es la que reparte la partida en dos mitades parejas —dos
+## noches sabiendo la hora, dos sin saberla, y la del medio partida al medio—. Cae adentro de la
+## partida a propósito: una jornada posterior a la última dejaría la regla escrita y muerta,
+## y eso lo caza `reglas_test.gd`.
+##
+## Vive acá y no en `reglas_de_la_partida.gd` porque no es cuánto dura la partida sino un número
+## de balance más, del mismo tipo que los apercibimientos: `Reglas` ya cruza jornadas.
+const JORNADA_EN_QUE_SE_ROMPE_EL_RELOJ_DE_PARED := 3
 
 ## Vale el doble que un aviso, y eso es lo que hace que las tres bandas pesen distinto también
 ## sobre el despido: a la banda grave le alcanza con una jornada menos.

@@ -24,8 +24,10 @@ git checkout -b feature/<NNN>-<descripcion-kebab>     # de acá saca el número 
 python .claude/scripts/hidratar_specs.py <NNN>        # specs/ es caché: hace falta en CADA worktree
 ```
 
-**El nombre de la rama no es decorativo**: `feature/<NNN>-` es de donde el hook saca el número
-del spec, y una rama con otro nombre bloquea la primera edición de `src/`.
+**El nombre de la rama no es decorativo**: `feature/<NNN>-` es de donde el hook y
+`derivar_mapa.py` sacan el número del spec. A `src/` lo pueden tocar `feature/`, `bugfix/` y
+`hotfix/`, pero **a `feature/` el hook le exige el `NNN` en tres dígitos**: sin él, la primera
+edición se bloquea.
 
 Si el spec ya tiene rama, no la vuelvas a crear: puede haberla abierto otra sesión, y ahí lo
 que corresponde es un worktree propio sobre esa rama.
@@ -119,7 +121,7 @@ para no reconstruirlo leyendo `verificar.py`:
 ```powershell
 & $env:GODOT_BIN --path . --headless -s -d --remote-debug tcp://127.0.0.1:0 `
   res://addons/gdUnit4/bin/GdUnitCmdTool.gd -a test --continue --ignoreHeadlessMode `
-  -rd reportes | Select-String "Executed test suites"
+  -rd reports | Select-String "Executed test suites"
 ```
 
 **Va en PowerShell y no en Bash**, porque en un worktree aislado —el caso normal bajo
@@ -130,6 +132,10 @@ host»— que **no son un fallo**: la corrida sigue y escribe su `(N/N)`.
 
 Ese `(N/N)` tiene que dar igual que `find test -name '*_test.gd' | wc -l`. Si da menos, hay una
 suite que no corrió y el nodo verde no lo dice.
+
+Las pruebas auxiliares usan `-rd reports/<spec>-<nodo>`. No comparten reportes con otra
+corrida ni se ejecutan durante una importación: gdUnit4 puede borrar reportes aún en uso.
+El comando `verificar.py` conserva su ruta de reportes.
 
 **El escalón que cuesta una vuelta:** crear el `.gd` no alcanza para que su test lo vea. Un
 `class_name` nuevo no entra al registro global hasta que se vuelve a correr

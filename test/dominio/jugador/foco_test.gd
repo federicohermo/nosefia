@@ -1,6 +1,6 @@
 ## Qué está mirando la mira, y —lo que importa— cuándo eso cambió.
 ##
-## El `RayCast3D` se lee en `_physics_process`, o sea 60 veces por segundo: medido,
+## El campo se lee en `_physics_process`, o sea 60 veces por segundo: medido,
 ## `physics_ticks_per_second` vale 60 en este proyecto. Una señal por lectura son 60 emisiones
 ## por segundo mirando fijo una estantería, y por eso `observar()` devuelve si cambió.
 extends GdUnitTestSuite

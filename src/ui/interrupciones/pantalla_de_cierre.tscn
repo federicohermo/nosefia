@@ -1,0 +1,56 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://src/ui/interrupciones/pantalla_de_cierre.gd" id="1_pantalla"]
+
+[node name="PantallaDeCierre" type="CanvasLayer" node_paths=PackedStringArray("_fondo", "_saludo", "_renglones", "_comentario", "_riesgo", "_continuar")]
+layer = 2
+script = ExtResource("1_pantalla")
+_fondo = NodePath("Fondo")
+_saludo = NodePath("Fondo/Panel/Saludo")
+_renglones = NodePath("Fondo/Panel/Lineas")
+_comentario = NodePath("Fondo/Panel/Comentario")
+_riesgo = NodePath("Fondo/Panel/Riesgo")
+_continuar = NodePath("Fondo/Panel/Continuar")
+
+[node name="Fondo" type="ColorRect" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 0.78)
+
+[node name="Panel" type="VBoxContainer" parent="Fondo"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -320.0
+offset_top = -220.0
+offset_right = 320.0
+offset_bottom = 220.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 16
+
+[node name="Saludo" type="Label" parent="Fondo/Panel"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 32
+
+[node name="Lineas" type="VBoxContainer" parent="Fondo/Panel"]
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="Comentario" type="Label" parent="Fondo/Panel"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+autowrap_mode = 3
+
+[node name="Riesgo" type="Label" parent="Fondo/Panel"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+
+[node name="Continuar" type="Button" parent="Fondo/Panel"]
+layout_mode = 2

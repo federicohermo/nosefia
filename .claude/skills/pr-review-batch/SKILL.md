@@ -280,7 +280,7 @@ rompió, no pushees, y decilo. Un pipeline que pushea para completarse no sirve.
 
 **Acá el rojo casi nunca es del PR, y la falta de `GODOT_BIN` no se saltea: sale roja.**
 
-Desde que existe el primer `*_test.gd` —hoy hay 23— el nodo `tests` **exige** Godot, y
+Desde que existe el primer `*_test.gd` el nodo `tests` **exige** Godot, y
 `verificar.py` devuelve rojo si no encuentra `GODOT_BIN`, con un mensaje que habla de la variable
 y no del código (`verificar.py:132-141`). Medido en esta máquina: `GODOT_BIN` **no está en el
 entorno de la terminal**, se lee del registro de Windows, y una terminal anterior a la variable le
@@ -316,6 +316,22 @@ El padre no re-audita: cruza.
 - **Recalculá la lista caliente con lo que el review escribió, no con lo que el diff traía.** El
   propio review crea solapamiento nuevo: es habitual que varios agentes terminen tocando el mismo
   doc, que ningún diff original incluía.
+- **Y cruzá cada PR nuevo que abrió un carril contra los diffs de los otros, no sólo contra el
+  suyo.** Es el modo de falla propio del batch, y **no lo tapa el punto anterior**: la lista
+  caliente es la *intersección de los PR revisados*, y un PR recién abierto no está en ella. Un
+  carril que saca un hallazgo fuera de alcance a su propio PR **no puede saber que otro carril ya
+  lo arregla adentro del suyo** — no ve ese diff, y encima el arreglo del otro puede no existir
+  todavía cuando él abre el PR. El síntoma no es un conflicto cualquiera: es
+  `git merge-tree` marcando **la misma frase** en los dos.
+
+  Medílo con `git merge-tree --write-tree --name-only origin/<pr-nuevo> origin/<cada-cabeza>`, y
+  si el diff del PR nuevo está **contenido** en el de otro, **cerralo con el motivo medido** en vez
+  de mergear los dos. No es lo mismo que el 🟡 falso de abajo: acá el hallazgo era **cierto** y el
+  arreglo entra igual, por el otro PR. Cerrar es la descarga, no un pendiente.
+
+  Medido el 2026-09-08 en la corrida sobre el lote 92/93: el carril del 92 abrió el PR 94 por una
+  frase falsa en los ocho `sin-deuda.md`, y el PR 93 reescribía esa misma frase — ocho conflictos
+  de contenido, cero líneas de ganancia.
 - **Los conteos que el lote mueve son tuyos** (cláusula 2). Barré las afirmaciones numéricas sobre
   el árbol —cuántos archivos, cuántos nodos, cuántas capas— **cabeza por cabeza**, y despachá el
   número medido. Y medilo con el pathspec acotado.
@@ -425,7 +441,7 @@ python .claude/skills/pr-review-batch/scripts/limpiar_worktrees.py --todos
 ```
 
 **No lo hagas a mano, y no uses `git worktree remove` solo: va a fallar.** Borra lo trackeado y el
-`.git`, pero `.godot/` y `reportes/` están en el `.gitignore`, así que el directorio no queda
+`.git`, pero `.godot/` y `reports/` están en el `.gitignore`, así que el directorio no queda
 vacío y el borrado final tira `Directory not empty`. `--force` no ayuda —no es un problema de
 cambios sin commitear— y le pasa a **todo worktree que haya corrido `verificar.py`**, o sea a
 todos: el nodo `tests` abre el proyecto en Godot y Godot escribe su caché de importación.

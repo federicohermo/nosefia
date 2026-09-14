@@ -68,9 +68,9 @@ Va primero y es corto, porque la presión del batch es hacia escribir de más: y
 agentes, ya hay formato, sale casi gratis por unidad. Y un skill que obliga a tres archivos para
 arreglar una tilde se apaga entero.
 
-**La pregunta que decide el carril es una sola: ¿el arreglo toca `src/` o `docs/`?** Son las dos
-rutas que el hook protege. Si no las toca va por rama `fix/` o `chore/` con su `Closes #N` y **sale
-del lote**:
+**La pregunta que decide el carril es una sola: ¿el arreglo toca `src/`?** Es la ruta que el hook
+protege. Si no la toca va por rama `harness/`, `docs/` o `ci/` con su `Closes #N` y **sale del
+lote**:
 
 | No necesita spec | Ejemplo |
 |---|---|

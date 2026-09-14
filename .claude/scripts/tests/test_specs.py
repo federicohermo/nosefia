@@ -340,7 +340,7 @@ class AgruparYAterrizar(unittest.TestCase):
     def test_agrupa_por_el_nnn_de_la_rama(self):
         prs = [
             {"number": 1, "headRefName": "feature/001-a", "state": "MERGED"},
-            {"number": 2, "headRefName": "fix/001-b", "state": "MERGED"},
+            {"number": 2, "headRefName": "bugfix/001-b", "state": "MERGED"},
             {"number": 3, "headRefName": "sin-spec", "state": "MERGED"},
         ]
         agrupados = agrupar_prs_por_spec(prs)
@@ -348,10 +348,10 @@ class AgruparYAterrizar(unittest.TestCase):
         self.assertNotIn("", agrupados)
 
     def test_acepta_prefijos_que_no_son_feature(self):
-        # Un spec puede aterrizar por una rama `fix/`, y un patrón que sólo aceptara
+        # Un spec puede aterrizar por una rama `bugfix/`, y un patrón que sólo aceptara
         # `feature/` lo perdería sin decirlo.
         self.assertTrue(aterrizo(agrupar_prs_por_spec(
-            [{"number": 1, "headRefName": "chore/012-x", "state": "MERGED"}]
+            [{"number": 1, "headRefName": "bugfix/012-x", "state": "MERGED"}]
         )["012"]))
 
     def test_sin_prs_no_aterrizo(self):

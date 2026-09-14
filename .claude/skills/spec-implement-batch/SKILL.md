@@ -98,7 +98,42 @@ argumentos, preguntá.**
    `dominio/` y 18 suites; los specs 005 y 011 mergearon al día siguiente y lo dejaron en 18 y 23.
    Cuatro AC y cinco tareas medían un árbol que ya no existía.
 
-4. **Mirá si el lote pasó por `spec-revise-batch`.** Si sí, el Paso 2 es **verificación** y no
+4. **Y re-medí la mitad que ningún conteo cubre: las dependencias que el spec declara y que
+   **no están en el lote**.** El `Depende de:` de la cabecera nombra números; `specs/mapa.json`
+   dice si aterrizaron. **Pero el mapa no alcanza**, porque un spec puede depender de otro que
+   ya está `Implementado` bajo otro nombre, o citar de él un identificador que nunca llegó a
+   existir. Lo que decide es un `rg` por **los identificadores que sus AC citan de otro spec**:
+
+   ```bash
+   rg -n 'MANOS_DISPONIBLES|ObjetoDelAlmacen|motivo_de_rechazo' src test
+   ```
+
+   **`lote.py` no puede verlo**: cruza los specs del lote entre sí, y ésta es una arista que
+   apunta hacia afuera. Y hay dos modos de falla, no uno. El barato: un AC nombra una constante
+   que no existe y el carril da rojo después de haber hecho todo bien. **El caro es el otro**:
+   el spec cierra en verde —sus AC son de `dominio/` y pasan— y la feature queda **inalcanzable
+   en la build**, porque lo que faltaba era el gesto que la dispara. Eso es exactamente el verde
+   que no ejerce nada, y ningún gate lo dice.
+
+   Medido el 2026-09-06 en el lote 008/009/013/014/015/016/017/021/032/033: **cuatro de los
+   diez dependían del 006**, que estaba `Propuesto`; `MANOS_DISPONIBLES`, `ObjetoDelAlmacen` y
+   `motivo_de_rechazo` daban **cero líneas** en `src/`. El 014 y el 015 citaban dos de esos
+   nombres en un AC —rojo duro— y el 008 habría cerrado verde con `REPONER` sin forma de
+   dispararlo. **La salida es del usuario y no tuya**: sumar el spec que falta al lote, o correr
+   sin los que dependen de él.
+
+   **Y hay una segunda forma, más blanda y más fácil de pasar por alto**: el spec no cita
+   un identificador sino **un gesto que otro spec vivo declara suyo**. Ahí no hay rojo — el
+   carril lo resuelve solo y el juego termina con dos lugares que deciden lo mismo. Medido el
+   mismo día: el 034 declara el clic derecho —«el GDD le da tres trabajos y ningún spec lo
+   declara»— y estaba fuera del lote, mientras el 014 y el 009 lo necesitaban. **Ésa no se
+   pregunta: se decide lo mínimo que el AC pide, se escribe en el `plan.md` y se nombra al
+   dueño en el reporte**, porque frenar el lote por una duplicación que un spec posterior
+   consolida cuesta más que la duplicación. Se pregunta **acá**, con `AskUserQuestion`, antes de abrir un
+   worktree — es la única pregunta de este skill que no se decide sola, porque las dos
+   respuestas cambian el alcance que el usuario pidió.
+
+5. **Mirá si el lote pasó por `spec-revise-batch`.** Si sí, el Paso 2 es **verificación** y no
    derivación: los cruces ya están decididos y escritos en los specs. Si no, decilo — vas a estar
    derivando en el momento más caro del flujo, con los worktrees a punto de abrirse.
 
@@ -176,8 +211,8 @@ Cada agente recibe, literal:
   convenciones verificables con **quién verifica cada una**, y las trampas de este repo. Es el
   ahorro propio del batch — sin esto, N carriles lo re-derivan N veces desde frío.
 - **La rama se llama `feature/<NNN>-<kebab>` y eso no es decorativo.** `gate_de_spec.py` corre como
-  hook y **bloquea toda escritura a `src/` desde una rama que no matchee
-  `^feature/(\d{3})-` con ese `NNN` en `specs/mapa.json`**. El síntoma es un `Edit` denegado, que
+  hook y **sólo deja escribir en `src/` desde `feature/`, `bugfix/` y `hotfix/`, y a `feature/` le
+  exige el `NNN` en tres dígitos**. El síntoma es un `Edit` denegado, que
   se lee como un problema de permisos y no como uno de nombre. **Es la falla número uno de un
   carril**, y aparece recién en la primera edición, con el worktree ya abierto.
 - **Hidratar antes de leer nada**: `python .claude/scripts/hidratar_specs.py <NNN>`, por cada spec
@@ -188,7 +223,7 @@ Cada agente recibe, literal:
   miró. Para buscar ahí, `rg --no-ignore … specs/`.
 - **No hay install que correr**, pero **`GODOT_BIN` tiene que estar en el entorno del carril**: sin
   ella el nodo `tests` sale **rojo**, no salteado. Ese salteo vence: existe sólo mientras no haya
-  un solo `*_test.gd` —hoy hay 23—, y desde el primero Godot es obligatorio
+  un solo `*_test.gd`, y desde el primero Godot es obligatorio
   (`verificar.py:132-141`). Un carril que sale a buscar un salteado que nunca va a aparecer pierde
   una vuelta.
 - **Y antes del primer `verificar.py`, el carril importa.** `.godot/` está en el `.gitignore`, así
@@ -220,7 +255,7 @@ Cada agente recibe, literal:
   ```powershell
   & $env:GODOT_BIN --path . --headless -s -d --remote-debug tcp://127.0.0.1:0 `
     res://addons/gdUnit4/bin/GdUnitCmdTool.gd -a test --continue --ignoreHeadlessMode `
-    -rd reportes | Select-String "Executed test suites"
+    -rd reports | Select-String "Executed test suites"
   ```
 
   y su `(N/N)` tiene que dar igual que `find test -name '*_test.gd' | wc -l`.

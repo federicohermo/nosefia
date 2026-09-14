@@ -121,7 +121,7 @@ jobs:
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: reportes-gdunit4
-          path: reportes/
+          name: reports-gdunit4
+          path: reports/
           if-no-files-found: ignore
           retention-days: 7

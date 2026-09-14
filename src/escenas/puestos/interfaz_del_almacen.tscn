@@ -1,0 +1,16 @@
+[gd_scene format=3]
+
+[ext_resource type="PackedScene" path="res://src/ui/hud.tscn" id="2_hud"]
+[ext_resource type="PackedScene" path="res://src/ui/interrupciones/pantalla_de_cierre.tscn" id="7_cierre"]
+[ext_resource type="PackedScene" path="res://src/ui/diegetica/panel_de_la_ventanilla.tscn" id="16_panel"]
+[ext_resource type="PackedScene" path="res://src/ui/diegetica/pantalla_de_computadora.tscn" id="19_pantalla"]
+
+[node name="Interfaz" type="Node3D"]
+
+[node name="Hud" parent="." instance=ExtResource("2_hud")]
+
+[node name="PanelDeLaVentanilla" parent="." instance=ExtResource("16_panel")]
+
+[node name="PantallaDeComputadora" parent="." instance=ExtResource("19_pantalla")]
+
+[node name="PantallaDeCierre" parent="." instance=ExtResource("7_cierre")]

@@ -1,42 +1,77 @@
-[gd_scene load_steps=9 format=3]
+[gd_scene format=3]
 
 [ext_resource type="PackedScene" path="res://src/escenas/jugador.tscn" id="1_jugador"]
-[ext_resource type="PackedScene" path="res://src/ui/hud.tscn" id="2_hud"]
-[ext_resource type="Script" path="res://src/sistemas/marco/reloj_del_turno.gd" id="3_reloj"]
 [ext_resource type="Script" path="res://src/escenas/almacen.gd" id="4_almacen"]
-[ext_resource type="PackedScene" path="res://src/escenas/puestos/estructura_del_almacen.tscn" id="5_estructura"]
+[ext_resource type="PackedScene" path="res://src/escenas/puestos/limpieza_del_almacen.tscn" id="21_limpieza"]
 
-[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_cielo"]
+[ext_resource type="PackedScene" path="res://src/escenas/puestos/ambiente_del_almacen.tscn" id="grupo_Ambiente"]
+[ext_resource type="PackedScene" path="res://src/escenas/puestos/estructura_del_almacen.tscn" id="grupo_Estructura"]
+[ext_resource type="PackedScene" path="res://src/escenas/puestos/servicios_del_almacen.tscn" id="grupo_Servicios"]
+[ext_resource type="PackedScene" path="res://src/escenas/puestos/interfaz_del_almacen.tscn" id="grupo_Interfaz"]
+[ext_resource type="PackedScene" path="res://src/escenas/puestos/objetos_del_almacen.tscn" id="grupo_Objetos"]
 
-[sub_resource type="Sky" id="Sky_cielo"]
-sky_material = SubResource("ProceduralSkyMaterial_cielo")
+[ext_resource type="PackedScene" path="res://src/escenas/puestos/reposicion_manual.tscn" id="reposicion_manual"]
 
-[sub_resource type="Environment" id="Environment_almacen"]
-background_mode = 2
-sky = SubResource("Sky_cielo")
-tonemap_mode = 2
-
-[node name="Almacen" type="Node3D" node_paths=PackedStringArray("_hud", "_reloj")]
+[node name="Almacen" type="Node3D" node_paths=PackedStringArray("_hud", "_reloj", "_ciclo", "_pantalla", "_reloj_de_pared", "_repositor", "_carga", "_estante", "_cajas_de_productos", "_caja_de_traslado", "_jugador", "_atenciones", "_computadora", "_limpiador", "_limpieza", "_recolector", "_bolsas", "_audio", "_agarre", "_reposicion_manual")]
 script = ExtResource("4_almacen")
-_hud = NodePath("Hud")
-_reloj = NodePath("RelojDelTurno")
+_hud = NodePath("Interfaz/Hud")
+_reloj = NodePath("Servicios/RelojDelTurno")
+_ciclo = NodePath("Servicios/CicloDeJornadas")
+_pantalla = NodePath("Interfaz/PantallaDeCierre")
+_reloj_de_pared = NodePath("Estructura/RelojDePared")
+_repositor = NodePath("Servicios/Repositor")
+_carga = NodePath("Servicios/CargaDeLaCaja")
+_estante = NodePath("Estructura/gondola01/StaticBody3D")
+_cajas_de_productos = [NodePath("Objetos/CajaDeActroncito"), NodePath("Objetos/CajaDeFideos"), NodePath("Objetos/CajaDeGaseosa"), NodePath("Objetos/CajaDeGalletitas"), NodePath("Objetos/CajaDeArroz"), NodePath("Objetos/CajaDeJabon"), NodePath("Objetos/CajaDeMarolini"), NodePath("Objetos/CajaDeJorgillo")]
+_caja_de_traslado = NodePath("Objetos/CajaDeTraslado")
+_jugador = NodePath("Jugador")
+_atenciones = NodePath("Servicios/Atenciones")
+_computadora = NodePath("Servicios/Computadora")
+_limpiador = NodePath("Servicios/Limpiador")
+_limpieza = NodePath("LimpiezaDelAlmacen")
+_recolector = NodePath("Servicios/Recolector")
+_bolsas = [NodePath("Objetos/BolsaDeBasura1"), NodePath("Objetos/BolsaDeBasura2"), NodePath("Objetos/BolsaDeBasura3")]
+_audio = NodePath("Servicios/AudioDelAlmacen")
+_agarre = NodePath("Jugador/Agarre")
+_reposicion_manual = NodePath("ReposicionManual")
 
-[node name="Entorno" type="WorldEnvironment" parent="."]
-environment = SubResource("Environment_almacen")
+[node name="ReposicionManual" parent="." instance=ExtResource("reposicion_manual") node_paths=PackedStringArray("repositor", "jugador", "estante", "contenido")]
+repositor = NodePath("../Servicios/Repositor")
+jugador = NodePath("../Jugador")
+estante = NodePath("../Estructura/gondola01/StaticBody3D")
+contenido = NodePath("../Estructura/gondola01/StaticBody3D/Contenido")
 
-[node name="Sol" type="DirectionalLight3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 0.5, 0.866025, 0, -0.866025, 0.5, 0, 6, 0)
-shadow_enabled = true
+[node name="Ambiente" parent="." instance=ExtResource("grupo_Ambiente")]
 
-[node name="Estructura" parent="." instance=ExtResource("5_estructura")]
+[node name="Estructura" parent="." instance=ExtResource("grupo_Estructura")]
 
-[node name="HuecoDeLaVentanilla" type="Marker3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.35, 1.04, 7.974)
+[node name="Servicios" parent="." instance=ExtResource("grupo_Servicios")]
+
+[node name="Interfaz" parent="." instance=ExtResource("grupo_Interfaz")]
+
+[node name="Objetos" parent="." instance=ExtResource("grupo_Objetos")]
+
+[node name="LimpiezaDelAlmacen" parent="." instance=ExtResource("21_limpieza") node_paths=PackedStringArray("jugador", "limpiador")]
+jugador = NodePath("../Jugador")
+limpiador = NodePath("../Servicios/Limpiador")
 
 [node name="Jugador" parent="." instance=ExtResource("1_jugador")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1.5)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.112, 1.5)
 
-[node name="RelojDelTurno" type="Node" parent="."]
-script = ExtResource("3_reloj")
+[node name="StaticBody3D" parent="Estructura/compu" node_paths=PackedStringArray("jugador", "reloj", "computadora", "pantalla")]
+jugador = NodePath("../../../Jugador")
+reloj = NodePath("../../../Servicios/RelojDelTurno")
+computadora = NodePath("../../../Servicios/Computadora")
+pantalla = NodePath("../../../Interfaz/PantallaDeComputadora")
 
-[node name="Hud" parent="." instance=ExtResource("2_hud")]
+[node name="Ventanilla" parent="Estructura" node_paths=PackedStringArray("jugador", "reloj", "atenciones", "panel")]
+jugador = NodePath("../../Jugador")
+reloj = NodePath("../../Servicios/RelojDelTurno")
+atenciones = NodePath("../../Servicios/Atenciones")
+panel = NodePath("../../Interfaz/PanelDeLaVentanilla")
+
+[node name="ZonaDeDescarte" parent="Objetos" node_paths=PackedStringArray("recolector")]
+recolector = NodePath("../../Servicios/Recolector")
+
+[editable path="Estructura"]
+[editable path="Objetos"]

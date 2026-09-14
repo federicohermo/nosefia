@@ -1,12 +1,32 @@
 # Ramas
 
-Tres roles, y cada uno tiene una pregunta distinta.
+Cada rama tiene una pregunta distinta, y el prefijo la contesta.
 
 | Rama | Qué es | Quién escribe ahí |
 |---|---|---|
 | `main` | **Lo que se entrega.** Cada entrega de la cátedra sale de acá | sólo un PR de promoción desde `staging` |
 | `staging` | **Integra.** Es la rama default del repositorio | los PR de cada spec, y los commits del mapa |
 | `feature/<NNN>-<kebab>` | Un spec, uno | quien lo implementa |
+| `bugfix/<kebab>` | Algo del producto está roto. Puede salir de un spec o no | quien lo arregla |
+| `hotfix/<kebab>` | Urgente, contra lo que ya se entregó | quien lo arregla |
+| `harness/<kebab>` | El harness de `.claude/`: scripts, gates, skills | quien lo toque |
+| `docs/<kebab>` | La documentación | quien la escriba |
+| `ci/<kebab>` | Los workflows de `.github/` | quien los toque |
+
+## Los prefijos son un conjunto cerrado, y sólo la mitad se puede verificar
+
+Los tres primeros —`feature/`, `bugfix/`, `hotfix/`— son los de la [convención de
+Atlassian](https://support.atlassian.com/bitbucket-cloud/kb/how-to-prevent-creating-branches-with-the-prefixes-that-are-not-defined-in-the-branching-model-using-git-hooks-in-bitbucket-cloud/),
+y son **los únicos que pueden editar `src/`**. Eso lo verifica `gate_de_spec.py` en cada
+escritura.
+
+Los otros tres **no los verifica nadie, y no se podría**: el hook sólo protege `src/`, así que
+una rama `docs/` que edita documentación no le pasa ni cerca. Están declarados igual porque el
+mensaje del bloqueo tiene que poder ofrecerlos — «renombrá la rama» sin decir a qué no es una
+salida.
+
+**No hay `chore/`**, que es el que la convención pone para «lo demás». Se define por lo que no
+es, así que termina siendo el cajón donde cae todo; estos tres dicen qué tocás.
 
 ## Por qué dos ramas y no una
 
@@ -20,11 +40,11 @@ estado sirve, y esa promoción es un PR que se mira.
 Es adonde apunta cada `gh pr create` y cada clone fresco: **el lugar más fácil de todo el repo
 donde quedarse parado sin haberlo decidido.**
 
-Por eso el hook la nombra explícitamente. Sin esa línea el veredicto sería el mismo —ninguna
-rama que no matchee `feature/<NNN>-` pasa— pero el mensaje sería el equivocado: «la rama
-`staging` no nombra un spec» se lee como una invitación a **renombrarla**, que es lo peor que se
-puede hacer con la rama de integración. El mensaje correcto dice que el problema es **dónde
-estás parado**.
+Por eso el hook la nombra explícitamente. Sin esa línea el veredicto sería el mismo —`staging`
+no empieza con ninguno de los tres prefijos del producto— pero el mensaje sería el equivocado:
+«esa rama no puede editar el producto» se lee como una invitación a **renombrarla**, que es lo
+peor que se puede hacer con la rama de integración. El mensaje correcto dice que el problema es
+**dónde estás parado**.
 
 ## El nombre de la rama de feature no es decorativo
 
@@ -34,19 +54,32 @@ spec `007` puede ser el issue `#23`.
 
 De ese nombre salen dos cosas:
 
-1. **El hook** saca el número para verificar que el spec exista. Una rama con otro nombre
-   bloquea la primera edición de `src/`.
+1. **El hook** pide el `NNN` en tres dígitos, y **sólo a las ramas `feature/`**: a `bugfix/` y
+   `hotfix/` exigírselo las obligaría a inventar un número. Una `feature/` sin número bloquea la
+   primera edición de `src/`.
 2. **`derivar_mapa.py`** saca el número para decidir si el spec aterrizó. Un PR cuya rama no
    nombra ningún spec no mueve nada.
 
-El prefijo se acepta abierto —`fix/012-…`, `chore/012-…` cuentan igual para el derivador—
-porque un spec puede aterrizar por una rama que no se llame `feature/`. Lo que el **hook** pide
-es `feature/`; el derivador es más ancho a propósito, para no perder un merge sin decirlo.
+**Lo que el hook ya NO hace es cruzar el `NNN` contra `specs/mapa.json`.** Lo hizo hasta el
+2026-09-08, y el efecto era que para escribir la primera línea de código había que haber abierto
+el issue de GitHub y commiteado el mapa a `staging`.
+
+**El cruce no se perdió: se mudó** a `test_criterios_de_la_rama.py`, que corre en el nodo
+`harness` de `verificar.py` y en la CI, con el PR todavía abierto. Ahí llega igual de a tiempo y
+no frena la primera edición: el spec se puede publicar **después** de empezar a escribir, pero no
+después de mergear. **El derivador no lo cobra** y no está para eso — un PR cuya rama nombra un
+`NNN` que el mapa no tiene no le agrega ninguna fila, a propósito: inventarla sería peor que la
+falta.
+
+Para el derivador el prefijo es abierto —`bugfix/012-…` cuenta igual— porque un spec puede
+aterrizar por una rama que no se llame `feature/`. Es más ancho a propósito, para no perder un
+merge sin decirlo.
 
 ## Cuándo NO hace falta un spec
 
-Cuando el cambio no toca `src/`: un asset, un typo, la documentación, actualizar el addon,
-un `chore/`. Ahí la rama se llama `fix/…` o `chore/…` y va directo a PR contra `staging`.
+Cuando el cambio no toca `src/`: un asset, un typo, la documentación, actualizar el addon, una
+herramienta del harness. Ahí la rama se llama `harness/…`, `docs/…` o `ci/…` según qué toque, y
+va directo a PR contra `staging`.
 
 **Lo que no se puede es trabajar sobre `main` o `staging`.** El hook sólo protege un
 directorio, pero la razón vale para todo: son ramas que reciben trabajo de otros.

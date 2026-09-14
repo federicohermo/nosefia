@@ -56,12 +56,12 @@ python .claude/scripts/deuda.py   # los issues abiertos que ningún spec reclama
 ```
 
 Si el pedido **es** uno de ésos, la pregunta siguiente decide el carril, y es una sola: **¿el
-arreglo toca `src/` o `docs/`?** —que son las dos rutas que el hook protege.
+arreglo toca `src/`?** —que es la ruta que el hook protege.
 
 | El arreglo… | Qué hacer | Qué cierra el issue |
 |---|---|---|
-| **no** las toca | rama `fix/` o `chore/` y seguí derecho: **no necesita spec** | `Closes #N` en el cuerpo del PR |
-| **sí** las toca | necesita spec, y su `spec.md` lleva `**Origen:** #N` en el encabezado | un `Closes` por **cada** issue saldado |
+| **no** la toca | rama `harness/`, `docs/` o `ci/` según qué toque, y seguí derecho: **no necesita spec** | `Closes #N` en el cuerpo del PR |
+| **sí** la toca | necesita spec, y su `spec.md` lleva `**Origen:** #N` en el encabezado | un `Closes` por **cada** issue saldado |
 
 **Esa línea no es decorativa**: `publicar_spec.py crear` la parsea y escribe `origen` en la
 fila de `specs/mapa.json`, y de ahí la lee el gate que pone en rojo un spec cerrado cuyo issue
@@ -164,6 +164,12 @@ Cinco cosas que este repo pide y que no son obvias:
   siempre el mismo — el `## Fuera de alcance` dice «este spec no se escribe así» y los AC dicen
   «desde este spec». **Cruzalos antes de publicar.** Medido el 2026-09-05 en el 029, que puso el
   corte en 029 con su propio research diciendo que el primero nuevo era el 030.
+- **Si el `plan.md` manda a medir algo al implementar, el `spec.md` trae el AC que lo decide.**
+  Un plan que dice «esto se mide» sin criterio deja la elección sin gate: quien implementa elige
+  una opción, los AC dan verde igual, y las otras no se pueden ver fallar. Medido el 2026-09-13
+  en el 043, que mandaba a elegir de qué lado abre cada puerta con el `cast_motion` del research:
+  **las cuatro combinaciones lo pasaban**, y tres dejaban la hoja adentro de la pared. El AC que
+  discrimina se escribe con el spec, no con el código.
 - **Cada tarea nombra el archivo que toca**, entre backticks. Es lo que hace revisable el
   reparto de un lote antes de lanzarlo.
 - **Las tareas son la totalidad de lo que hace falta**, y ésta es la que no verifica nadie. Que

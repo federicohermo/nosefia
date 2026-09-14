@@ -130,9 +130,9 @@ sin arreglar — y ésa incluye a la que no miró para no tener que arreglar.
 Un bloqueo se descarga así:
 
 1. **Reintentá por otro camino.** Si el bloqueo vino del hook, **mirá el nombre de tu rama antes
-   que nada**: `gate_de_spec.py` exige `feature/<NNN>-` con ese `NNN` en `specs/mapa.json` para
-   escribir en `src/` o `docs/`. Es la causa número uno acá, y el síntoma —un `Edit` denegado— se
-   lee como un problema de permisos y no como uno de nombre.
+   que nada**: `gate_de_spec.py` sólo deja escribir en `src/` desde `feature/<NNN>-<kebab>`,
+   `bugfix/` o `hotfix/`, y el `NNN` va en tres dígitos. Es la causa número uno acá, y el síntoma
+   —un `Edit` denegado— se lee como un problema de permisos y no como uno de nombre.
 2. Si sigue bloqueado, **la corrida no cierra en verde**. El reporte arranca diciendo que falló,
    con `BLOQUEADO: <qué> — <quién lo bloqueó>` y el fix exacto en una línea copiable.
 3. **No se abre un issue para taparlo.** Un issue acá convierte un rojo en un pendiente, que es
@@ -175,6 +175,8 @@ las dos en la misma corrida:
 | un `[P]` que resultó falso | `spec-create` — el orden obligado declaró paralelo algo que comparte archivo |
 | dos specs que se pisan la misma escena | `spec-revise-batch` — la matriz de cruces no marcó el `.tscn` |
 | una medición que el spec supuso en vez de correr | `spec-create` — el research salió sin número |
+| una ruta de `src/` en una subcarpeta que `CARPETAS_POR_CAPA` no declara | `spec-create` — la ruta se escribió sin cruzarla contra `lib/repo.py`, y el gate de capas no la caza si el archivo es un `.tres` |
+| un spec del lote que **cita por identificador** a otro que no aterrizó | `spec-implement-batch` — el Paso 0 re-midió los conteos y no las dependencias que apuntan **afuera** del lote, que son las que `lote.py` no puede ver |
 | un nodo del harness en verde sin haber ejercido nada | `spec-implement` — la condición de terminado leyó el color del nodo y no el conteo de lo que corrió |
 | dos carriles que se pisan un archivo de scratch | `spec-implement-batch` — el prompt del carril no le dio un nombre propio |
 | un worktree que quedó abierto y el limpiador dijo que no | `spec-implement-batch` — el Paso 5 salía de `git worktree list`, que no ve al que git ya soltó |

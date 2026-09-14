@@ -48,9 +48,8 @@ ningún lado: `app_caja.gd` no dice que abrirla te sale plata.
 ```text
 src/escenas/
 ├── almacen.gd/.tscn · jugador.gd/.tscn · inicio.gd/.tscn   ← las raíces y el cuerpo
-├── puestos/   estructura_del_almacen · estante · escritorio · ventanilla · zona_de_descarte
-│              · limpieza_del_almacen · audio_del_almacen · manos_del_jugador
-└── objetos/   objeto_agarrable · caja_de_productos · mancha_en_el_piso
+├── puestos/   uno de cada uno, cableados por `@export` desde `almacen.tscn`
+└── objetos/   N instancias, se crean y se destruyen en juego
 ```
 
 `puestos/` se instancia **una vez** y vive cableado en la escena por `@export`; `objetos/` se
@@ -121,6 +120,18 @@ del anclaje**.
   un solo error**, los seis nodos dan verde, y el juego muere en el primer cuadro con un
   `Nonexistent function … in base 'Nil'` que no nombra ni al `.tscn` ni al `@export`. El editor
   de Godot lo escribe solo; una escena escrita a mano, no. Medido en el spec 007.
+- **Un `@export` que apunta a un script de `escenas/` no se puede tipar por su `class_name`**: esos scripts son cáscara y no declaran uno. Va
+  `const RelojDeParedDelLocal := preload("res://…/reloj_de_pared.gd")` y luego
+  `@export var _x: RelojDeParedDelLocal` — la misma forma que documenta [tests.md](./tests.md), y la que `gdlint` acepta como `load-constant-name`. Sin eso el tipo estático es el del nodo (`Label3D`) y llamarle su método no compila. Medido en el spec 032, y lo vuelve a necesitar cada `puestos/` con script.
+- **Y una sub-escena instanciada necesita su `script` declarado en su propio `.tscn`.** Sin
+  él, el `@export` que la apunta desde afuera queda en `null` **con el `node_paths` de la
+  raíz bien escrito**, y la escena vuelve a cargar sin un solo error. Es el mismo síntoma que
+  el de arriba con otra causa, y por eso se diagnostica mal: se revisa el `node_paths`, que
+  está bien. Medido en la ola 2 del lote del 2026-09-06.
+- **El `_ready()` de un hijo corre ANTES que el de su raíz.** Un puesto que se pinta en su
+  propio `_ready()` contra un estado que le da el cableado muere con el mismo
+  `Nonexistent function … in base 'Nil'`, y el mensaje no nombra ni al archivo ni al orden.
+  **Quien pinta es el cableado**, cuando abre la jornada — no la sub-escena al nacer.
 - Hacia arriba, señales.
 - Nunca `get_node("../../…")`, por lo que dice [gdscript.md](./gdscript.md).
 

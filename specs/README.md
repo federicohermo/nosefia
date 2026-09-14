@@ -150,7 +150,7 @@ Lo decide una pregunta: **¿el arreglo toca `src/`?** Es la ruta que el hook pro
 
 | El arreglo… | Carril | Qué cierra el issue |
 |---|---|---|
-| **no** la toca | rama `fix/` o `chore/`, sin spec | `Closes #N` en el cuerpo del PR |
+| **no** la toca | rama `harness/`, `docs/` o `ci/` según qué toque, sin spec | `Closes #N` en el cuerpo del PR |
 | **sí** la toca | necesita spec, con `**Origen:** #N` en el `spec.md` | un `Closes` **por cada** issue saldado |
 
 **Por eso existe `origen`.** `publicar_spec.py crear` parsea esa línea y la escribe en el mapa;

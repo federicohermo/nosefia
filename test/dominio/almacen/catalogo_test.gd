@@ -30,8 +30,8 @@ func test_el_catalogo_lista_los_productos_en_el_orden_del_enum() -> void:
 
 
 func test_cada_producto_del_catalogo_esta_completo() -> void:
-	# Recorre el enum entero y no una muestra: una fila a medio llenar en el sexto producto
-	# pasaría desapercibida si el test mirara sólo la yerba.
+	# Recorre el enum entero y no una muestra: una fila a medio llenar en cualquiera de ellos
+	# pasaría desapercibida si el test mirara un solo producto.
 	for id in Producto.Id.values():
 		var producto := Catalogo.de(id)
 		# Sin este corte, un `id` sin fila desreferencia `null` y aborta la función: el caso se
@@ -48,7 +48,7 @@ func test_cada_producto_del_catalogo_esta_completo() -> void:
 func test_dos_llamadas_al_catalogo_dan_objetos_distintos_con_el_mismo_id() -> void:
 	# La decisión escrita como test: la identidad de un producto es su `id`, nunca la
 	# instancia. Quien indexe por instancia va a encontrar ausente lo que guardó la otra.
-	var una := Catalogo.de(Producto.Id.YERBA)
-	var otra := Catalogo.de(Producto.Id.YERBA)
+	var una := Catalogo.de(Producto.Id.ACTRONCITO)
+	var otra := Catalogo.de(Producto.Id.ACTRONCITO)
 	assert_object(una).is_not_same(otra)
 	assert_int(una.id).is_equal(otra.id)
