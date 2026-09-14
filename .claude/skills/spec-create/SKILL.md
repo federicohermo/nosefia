@@ -164,6 +164,12 @@ Cinco cosas que este repo pide y que no son obvias:
   siempre el mismo — el `## Fuera de alcance` dice «este spec no se escribe así» y los AC dicen
   «desde este spec». **Cruzalos antes de publicar.** Medido el 2026-09-05 en el 029, que puso el
   corte en 029 con su propio research diciendo que el primero nuevo era el 030.
+- **Si el `plan.md` manda a medir algo al implementar, el `spec.md` trae el AC que lo decide.**
+  Un plan que dice «esto se mide» sin criterio deja la elección sin gate: quien implementa elige
+  una opción, los AC dan verde igual, y las otras no se pueden ver fallar. Medido el 2026-09-13
+  en el 043, que mandaba a elegir de qué lado abre cada puerta con el `cast_motion` del research:
+  **las cuatro combinaciones lo pasaban**, y tres dejaban la hoja adentro de la pared. El AC que
+  discrimina se escribe con el spec, no con el código.
 - **Cada tarea nombra el archivo que toca**, entre backticks. Es lo que hace revisable el
   reparto de un lote antes de lanzarlo.
 - **Las tareas son la totalidad de lo que hace falta**, y ésta es la que no verifica nadie. Que
