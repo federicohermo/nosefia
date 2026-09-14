@@ -52,6 +52,11 @@ var _enfocado: Node3D = null
 func _ready() -> void:
 	_aplicar_el_modo_del_cursor()
 	_aplicar_la_rotacion()
+	# Los brazos barren desde el ojo, que está adentro de la propia cápsula. Está medido que un
+	# barrido que arranca solapado se descarta entero: sin esta exclusión el brazo nunca acorta
+	# y lo que se lleva en la mano vuelve a meterse en la madera.
+	for brazo: SpringArm3D in find_children("*", "SpringArm3D", true, false):
+		brazo.add_excluded_object(get_rid())
 	# Examinar clava la cámara y la caminata. Se cablea acá y no adentro de `Examen` porque
 	# `sistemas/` no puede nombrar un nodo de `escenas/`: allá se emite lo que pasó, acá se
 	# traduce a lo que hay que hacer.

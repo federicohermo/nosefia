@@ -1,4 +1,4 @@
-[gd_scene load_steps=6 format=3]
+[gd_scene load_steps=7 format=3]
 
 [ext_resource type="Script" uid="uid://clrretmx7rboi" path="res://src/escenas/jugador.gd" id="1_jugador"]
 [ext_resource type="Script" uid="uid://yepsvg67ynpy" path="res://src/sistemas/marco/agarre.gd" id="2_agarre"]
@@ -10,6 +10,9 @@ height = 1.8
 
 [sub_resource type="SphereShape3D" id="SphereShape3D_campo"]
 radius = 2.5
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_mano"]
+radius = 0.15
 
 [node name="Jugador" type="CharacterBody3D" node_paths=PackedStringArray("agarre", "examen")]
 script = ExtResource("1_jugador")
@@ -33,24 +36,36 @@ shape = SubResource("SphereShape3D_campo")
 [node name="PuntoDeExamen" type="Node3D" parent="Camara"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.5)
 
-[node name="PuntoDeCarga" type="Node3D" parent="Camara"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.3, -0.3, -0.618)
+[node name="BrazoDeCarga" type="SpringArm3D" parent="Camara"]
+transform = Transform3D(-0.899606, 0.17477, 0.400205, 0, 0.916426, -0.400205, -0.436702, -0.360027, -0.824422, 0, 0, 0)
+shape = SubResource("SphereShape3D_mano")
+spring_length = 0.749616
+margin = 0.01
+
+[node name="PuntoDeCarga" type="Node3D" parent="Camara/BrazoDeCarga"]
+transform = Transform3D(-0.899606, 0, -0.436702, 0.17477, 0.916426, -0.360027, 0.400205, -0.400205, -0.824422, 0, 0, 0)
 
 [node name="PuntoDeSoltado" type="Node3D" parent="Camara"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -1.2)
 
-[node name="PuntoDeProducto" type="Node3D" parent="Camara"]
-position = Vector3(0.34, -0.3, -0.75)
+[node name="BrazoDeProducto" type="SpringArm3D" parent="Camara"]
+transform = Transform3D(-0.910782, 0.141333, 0.387945, 0, 0.939589, -0.342304, -0.412888, -0.311765, -0.855761, 0, 0, 0)
+shape = SubResource("SphereShape3D_mano")
+spring_length = 0.876413
+margin = 0.01
+
+[node name="PuntoDeProducto" type="Node3D" parent="Camara/BrazoDeProducto"]
+transform = Transform3D(-0.910782, 0, -0.412888, 0.141333, 0.939589, -0.311765, 0.387945, -0.342304, -0.855761, 0, 0, 0)
 
 [node name="PuntoDeRespaldo" type="Node3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.15, -0.5)
 
 [node name="Agarre" type="Node" parent="." node_paths=PackedStringArray("punto_de_carga", "punto_de_soltado", "punto_de_respaldo", "punto_de_producto")]
 script = ExtResource("2_agarre")
-punto_de_carga = NodePath("../Camara/PuntoDeCarga")
+punto_de_carga = NodePath("../Camara/BrazoDeCarga/PuntoDeCarga")
 punto_de_soltado = NodePath("../Camara/PuntoDeSoltado")
 punto_de_respaldo = NodePath("../PuntoDeRespaldo")
-punto_de_producto = NodePath("../Camara/PuntoDeProducto")
+punto_de_producto = NodePath("../Camara/BrazoDeProducto/PuntoDeProducto")
 
 [node name="Examen" type="Node" parent="." node_paths=PackedStringArray("agarre", "punto_de_examen")]
 script = ExtResource("3_examen")

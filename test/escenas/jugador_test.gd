@@ -14,10 +14,22 @@ const ObjetoDelAlmacen := preload("res://src/dominio/almacen/objeto_del_almacen.
 const ReglasDeLosObjetos := preload("res://src/dominio/almacen/reglas_de_los_objetos.gd")
 const ReglasDelJugador := preload("res://src/dominio/jugador/reglas_del_jugador.gd")
 const ESCENA_DEL_JUGADOR := "res://src/escenas/jugador.tscn"
+const APROXIMACION := Vector3.ONE * 0.001
 
 
 func _jugador() -> CharacterBody3D:
 	return auto_free(load(ESCENA_DEL_JUGADOR).instantiate())
+
+
+## Dónde queda el punto que cuelga de un `SpringArm3D` cuando el brazo no choca con nada.
+##
+## El brazo escribe la posición de su hijo en cada cuadro —`(0, 0, spring_length)`, medido— así
+## que el `transform` que el `.tscn` le deja al ancla no dice dónde termina. Sin componer las dos
+## matrices, un test sobre `position` afirmaría cero y pasaría con cualquier brazo.
+func _en_reposo(jugador: CharacterBody3D, ruta_del_brazo: String) -> Transform3D:
+	var brazo: SpringArm3D = jugador.get_node(ruta_del_brazo)
+	var ancla: Node3D = brazo.get_child(0)
+	return brazo.transform * Transform3D(ancla.basis, Vector3(0.0, 0.0, brazo.spring_length))
 
 
 func test_la_raiz_del_jugador_es_un_cuerpo_que_camina() -> void:
@@ -139,7 +151,6 @@ func test_los_cuatro_puntos_estan_donde_el_dominio_los_declara() -> void:  # 006
 	var jugador := _jugador()
 	var puntos := {
 		"Camara/PuntoDeExamen": ReglasDeLosObjetos.DISTANCIA_DE_EXAMEN,
-		"Camara/PuntoDeCarga": ReglasDeLosObjetos.DISTANCIA_DE_CARGA,
 		"Camara/PuntoDeSoltado": ReglasDeLosObjetos.DISTANCIA_DE_SOLTADO,
 	}
 	for ruta in puntos:
@@ -150,6 +161,8 @@ func test_los_cuatro_puntos_estan_donde_el_dominio_los_declara() -> void:  # 006
 		)
 		var punto: Node3D = jugador.get_node(ruta)
 		assert_float(punto.position.length()).is_equal_approx(puntos[ruta], 0.01)
+	var carga := _en_reposo(jugador, "Camara/BrazoDeCarga").origin
+	assert_float(carga.length()).is_equal_approx(ReglasDeLosObjetos.DISTANCIA_DE_CARGA, 0.01)
 	assert_bool(jugador.has_node("PuntoDeRespaldo")).is_true()
 	var respaldo: Node3D = jugador.get_node("PuntoDeRespaldo")
 	assert_float(respaldo.position.y).is_less(ReglasDelJugador.ALTURA_DE_LA_CAMARA)
@@ -158,10 +171,10 @@ func test_los_cuatro_puntos_estan_donde_el_dominio_los_declara() -> void:  # 006
 func test_el_punto_de_carga_queda_abajo_y_a_la_derecha() -> void:  # 006-AC12
 	# Centrado taparía la mitad de la pantalla justo cuando el jugador necesita ver dónde
 	# reponer lo que lleva, y arriba flotaría a la altura de la cara.
-	var carga: Node3D = _jugador().get_node("Camara/PuntoDeCarga")
-	assert_float(carga.position.x).is_greater(0.0)
-	assert_float(carga.position.y).is_less(0.0)
-	assert_float(carga.position.z).is_less(0.0)
+	var carga := _en_reposo(_jugador(), "Camara/BrazoDeCarga").origin
+	assert_float(carga.x).is_greater(0.0)
+	assert_float(carga.y).is_less(0.0)
+	assert_float(carga.z).is_less(0.0)
 
 
 func test_los_dos_sistemas_llegan_con_sus_puntos_cableados() -> void:  # 006-AC12
@@ -171,8 +184,43 @@ func test_los_dos_sistemas_llegan_con_sus_puntos_cableados() -> void:  # 006-AC1
 	# contesta `false` y la E no arranca nada. El síntoma no nombra al `.tscn` que lo causó.
 	var jugador := _jugador()
 	var agarre: Node = jugador.agarre
-	assert_object(agarre.punto_de_carga).is_same(jugador.get_node("Camara/PuntoDeCarga"))
+	var carga := jugador.get_node("Camara/BrazoDeCarga/PuntoDeCarga")
+	var producto := jugador.get_node("Camara/BrazoDeProducto/PuntoDeProducto")
+	assert_object(agarre.punto_de_carga).is_same(carga)
+	assert_object(agarre.punto_de_producto).is_same(producto)
 	assert_object(agarre.punto_de_soltado).is_same(jugador.get_node("Camara/PuntoDeSoltado"))
 	assert_object(agarre.punto_de_respaldo).is_same(jugador.get_node("PuntoDeRespaldo"))
 	var examen: Node = jugador.examen
 	assert_object(examen.punto_de_examen).is_same(jugador.get_node("Camara/PuntoDeExamen"))
+
+
+func test_los_brazos_devuelven_la_mano_a_donde_estaba_y_sin_inclinarla() -> void:
+	# Las dos bases del `.tscn` son nueve decimales cada una y no se leen: la del brazo apunta su
+	# `+Z` —por donde empuja al hijo, medido— hacia la mano, y la del ancla la deshace para que
+	# lo que se lleva siga alineado con la cámara. Escribir una sola mal inclina el producto en
+	# la mano sin romper nada más, y ningún otro gate del repo lo vería.
+	var jugador := _jugador()
+	var esperados := {
+		"Camara/BrazoDeCarga": Vector3(0.3, -0.3, -0.618),
+		"Camara/BrazoDeProducto": Vector3(0.34, -0.3, -0.75),
+	}
+	for ruta in esperados:
+		var reposo := _en_reposo(jugador, ruta)
+		assert_vector(reposo.origin).is_equal_approx(esperados[ruta], APROXIMACION)
+		assert_vector(reposo.basis.x).is_equal_approx(Vector3.RIGHT, APROXIMACION)
+		assert_vector(reposo.basis.y).is_equal_approx(Vector3.UP, APROXIMACION)
+		assert_vector(reposo.basis.z).is_equal_approx(Vector3.BACK, APROXIMACION)
+
+
+func test_los_brazos_barren_un_volumen_y_no_un_rayo() -> void:
+	# Un brazo sin `shape` barre un rayo, y un rayo sólo frena el CENTRO del producto: el medio
+	# producto que sobra le sigue entrando a la madera. Lo que arregla el bug es el volumen.
+	var jugador := _jugador()
+	for ruta in ["Camara/BrazoDeCarga", "Camara/BrazoDeProducto"]:
+		var brazo: SpringArm3D = jugador.get_node(ruta)
+		(
+			assert_object(brazo.shape)
+			. override_failure_message("el brazo %s barre un rayo, no un volumen" % ruta)
+			. is_not_null()
+		)
+		assert_float(brazo.spring_length).is_greater(0.0)
