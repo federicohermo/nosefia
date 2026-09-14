@@ -60,6 +60,13 @@ gh pr list --repo federicohermo/nosefia --state open \
    de arriba contra `staging` mete los commits del de abajo y el review se llena de hallazgos que
    son de otro PR. `diff_pr.py` recibe la base como argumento justamente para que ese error sea
    imposible.
+
+   **Y un `baseRefName` que dice `staging` puede estar mintiendo.** Cruzá el
+   `git log origin/staging..origin/<head>` de cada PR contra el de los otros: si una cabeza
+   contiene los commits de otra, están apilados aunque el PR no lo declare, y su diff de
+   review va contra esa cabeza. Sin eso el agente de arriba revisa como propio el trabajo del
+   de abajo y lo arregla dos veces. Medido el 2026-09-14 en el lote 116/117/118/119: el #119
+   declaraba base `staging` y contenía enteros los dos commits del #118.
 3. **Dibujá la cadena** y pasásela a los agentes. Un agente que sabe que su base es otro PR
    abierto sabe además que un hallazgo suyo puede pertenecer al de abajo, y lo dice en vez de
    arreglarlo dos veces.
