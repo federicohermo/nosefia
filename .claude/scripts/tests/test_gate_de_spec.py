@@ -211,11 +211,16 @@ class LaReglaDeLaRama(unittest.TestCase):
         motivo = gate_de_spec.motivo_del_bloqueo(rama, "src/dominio/turno.gd")
         self.assertIsNone(motivo, f"`{rama}` tendría que pasar y bloqueó con: {motivo}")
 
-    def test_las_ramas_compartidas_hablan_de_donde_estas_parado(self):
-        # Y NO de renombrarlas: «`staging` no nombra un spec» se lee como una invitación a
-        # renombrar la rama de integración, que es lo peor que se puede hacer con ella.
-        for rama in ("main", "staging"):
-            self.assertIn("desde", self.bloquea(rama))
+    def test_main_habla_de_donde_estas_parado(self):
+        # Y NO de renombrarla: «`main` no nombra un spec» se lee como una invitación a
+        # renombrar la rama que se entrega, que es lo peor que se puede hacer con ella.
+        self.assertIn("desde", self.bloquea("main"))
+
+    def test_staging_edita_el_producto_directo(self):
+        # Salió de las compartidas el 2026-09-14. Tiene caso propio porque el veredicto no
+        # cae solo del nombre: `staging` tampoco empieza con ninguno de los tres prefijos del
+        # producto, así que sin la salida explícita volvería a bloquear por la regla de abajo.
+        self.pasa("staging")
 
     def test_los_tres_prefijos_que_llegan_al_producto(self):
         self.pasa("feature/038-el-campo-de-interaccion-es-espacial")

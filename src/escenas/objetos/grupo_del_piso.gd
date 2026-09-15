@@ -9,6 +9,10 @@ var _inversa := Transform3D.IDENTITY
 
 
 func preparar(malla: Mesh, capacidad: int) -> void:
+	# El grupo escribe en el reloj del dibujo, así que el motor no tiene que volver a interpolar.
+	# Si lo hace, interpola entre dos valores ya interpolados y la copia se atrasa de nuevo. Ese
+	# atraso no lo ve ninguna caché del script: vive en el buffer del motor.
+	physics_interpolation_mode = Node.PHYSICS_INTERPOLATION_MODE_OFF
 	multimesh = MultiMesh.new()
 	multimesh.transform_format = MultiMesh.TRANSFORM_3D
 	multimesh.mesh = malla
@@ -46,7 +50,10 @@ func quitar(cuerpo: RigidBody3D) -> void:
 		_actualizar(indice, true)
 
 
-func _physics_process(_delta: float) -> void:
+## Se actualiza en el reloj del dibujo y no en el de la física. Desde `_physics_process` se leía
+## el `transform` de antes de integrar el paso, así que la copia iba un paso atrás del cuerpo. El
+## atraso crecía con la velocidad y se pagaba entero en el cuadro del impacto.
+func _process(_delta: float) -> void:
 	var inversa := global_transform.affine_inverse() if is_inside_tree() else Transform3D.IDENTITY
 	var movido := not inversa.is_equal_approx(_inversa)
 	_inversa = inversa
@@ -68,7 +75,11 @@ func _actualizar(indice: int, forzar: bool = false) -> void:
 	if is_inside_tree() and cuerpo.is_inside_tree():
 		if forzar:
 			_inversa = global_transform.affine_inverse()
-		matriz = _inversa * vista.global_transform
+		# Dónde dibuja el motor la malla, no dónde la puso el último paso de física. Con la
+		# interpolación encendida las dos difieren mientras el cuerpo se mueve. El motor no
+		# vuelve a interpolar lo que se escribe acá: en un `MultiMesh` la interpolación es
+		# opt-in y se activa con `set_buffer_interpolated()`.
+		matriz = _inversa * vista.get_global_transform_interpolated()
 	if enfocado:
 		matriz = matriz.scaled_local(Vector3.ZERO)
 	if forzar or not matriz.is_equal_approx(_matrices[indice]):

@@ -44,8 +44,9 @@
 │   │                       src/dominio/jornada/turno.gd → test/dominio/jornada/turno_test.gd
 │   ├── dominio/            Espejo OBLIGATORIO, lo verifica gate_de_tests.py
 │   ├── sistemas/           Espejo OBLIGATORIO, ídem
-│   └── escenas/            OPCIONAL: ningún gate lo exige, y por eso lo que hay acá es lo que
-│                           alguien decidió probar levantando la escena
+│   └── …                   El resto es OPCIONAL: ningún gate lo exige. Hay una carpeta por
+│                           cada una de src/ que alguien decidió probar levantando la escena,
+│                           más performance/ y los sueltos de la raíz, que no espejan nada
 │
 ├── assets/                 Arte, audio, fuentes. Lo que no es código
 │                           El modelo entra por el .glb; el .blend queda como fuente del
