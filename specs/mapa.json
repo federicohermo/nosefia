@@ -44,5 +44,6 @@
   "043": {"issue":106,"carpeta":"043-las-puertas-se-abren-al-deposito-y-al-bano","fecha":"2026-09-13","estado":"Implementado","titulo":"Spec 043 — Las puertas se abren y dejan pasar al depósito y al baño"},
   "044": {"issue":114,"carpeta":"044-el-proyecto-declara-su-fisica-y-su-renderizador","fecha":"2026-09-14","estado":"Implementado","titulo":"Spec 044 — El proyecto declara su reloj de física y su renderizador"},
   "045": {"issue":115,"carpeta":"045-la-copia-del-piso-deja-de-dibujarse-un-paso-atras","fecha":"2026-09-14","estado":"Implementado","titulo":"Spec 045 — La copia del piso deja de dibujarse un paso de física atrás del cuerpo"},
-  "046": {"issue":127,"carpeta":"046-el-cabeceo-se-corta-por-su-causa","fecha":"2026-09-14","estado":"Propuesto","titulo":"Spec 046 — El cabeceo del piso se corta por su causa y no por su efecto"}
+  "046": {"issue":127,"carpeta":"046-el-cabeceo-se-corta-por-su-causa","fecha":"2026-09-14","estado":"Propuesto","titulo":"Spec 046 — El cabeceo del piso se corta por su causa y no por su efecto"},
+  "047": {"issue":128,"carpeta":"047-las-cajas-de-reposicion-se-trasladan","fecha":"2026-09-14","estado":"Propuesto","titulo":"Spec 047 — Las cajas de reposición se llevan, y sólo entregan apoyadas en el suelo"}
 }
