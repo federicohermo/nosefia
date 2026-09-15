@@ -58,6 +58,10 @@ var _largo_de_producto := 0.0
 @onready var _brazo_de_carga: SpringArm3D = $Camara/BrazoDeCarga
 @onready var _brazo_de_producto: SpringArm3D = $Camara/BrazoDeProducto
 
+## El brazo de la caja cuelga del cuerpo y no de la cámara: pegado al pitch taparía la mira.
+@onready var _brazo_de_la_caja: SpringArm3D = $BrazoDeCaja
+@onready var _punto_de_la_caja: Node3D = $PuntoDeCaja
+
 ## La caja cuelga del cuerpo y no de la cámara, y ocupa lugar: mientras se la lleva, el jugador
 ## no puede acercarse a una pared más de lo que la caja mide.
 @onready var _forma_de_la_caja: CollisionShape3D = $FormaDeLaCaja
@@ -156,6 +160,7 @@ func _physics_process(delta: float) -> void:
 	move_and_slide()
 
 	_acomodar_las_manos(delta)
+	_acomodar_la_caja()
 	_leer_la_mira()
 
 
@@ -183,7 +188,20 @@ func _acomodar(brazo: SpringArm3D, punto: Node3D, largo: float, delta: float) ->
 ## Le da o le saca al cuerpo el volumen de la caja que lleva. Es lo que la vuelve un objeto de
 ## verdad: con ella en la mano el jugador choca donde chocaría la caja.
 func ocupar_el_frente(ocupado: bool) -> void:
+	# Primero se la acomoda y después se enciende: encender el volumen donde no entra —que es lo
+	# que pasa sacando una caja de un estante pegado a él— empuja al jugador.
+	_acomodar_la_caja()
 	_forma_de_la_caja.disabled = not ocupado
+
+
+## Corre la caja sobre el eje de su brazo, hasta donde haya lugar.
+##
+## Sin suavizado, al revés que las manos: el brazo ya contesta un punto libre, y el volumen se
+## enciende justo ahí. Un punto intermedio quedaría adentro de la madera.
+func _acomodar_la_caja() -> void:
+	var lugar := _brazo_de_la_caja.transform * Vector3(0.0, 0.0, _brazo_de_la_caja.get_hit_length())
+	_punto_de_la_caja.position = lugar
+	_forma_de_la_caja.position = lugar
 
 
 ## Desde dónde y hacia dónde mira. La pide `reposicion_manual.gd` para saber dónde quiere el
