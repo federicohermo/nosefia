@@ -171,23 +171,14 @@ func _acomodar_las_manos(delta: float) -> void:
 	_largo_de_producto = _acomodar(
 		_brazo_de_producto, agarre.punto_de_producto, _largo_de_producto, delta
 	)
-	_largo_de_caja = _acomodar(
-		_brazo_de_caja,
-		_punto_de_caja,
-		_largo_de_caja,
-		delta,
-		_brazo_de_caja.spring_length * ReglasDeLosObjetos.REPLIEGUE_MAXIMO_DE_LA_CAJA
-	)
+	_largo_de_caja = _acomodar(_brazo_de_caja, _punto_de_caja, _largo_de_caja, delta)
 
 
-## Mueve un punto sobre el eje de su brazo y devuelve el largo que quedó. El mínimo es lo que
-## impide que un objeto grande se repliegue hasta adentro de la cámara.
-func _acomodar(
-	brazo: SpringArm3D, punto: Node3D, largo: float, delta: float, minimo: float = 0.0
-) -> float:
+## Mueve un punto sobre el eje de su brazo y devuelve el largo que quedó.
+func _acomodar(brazo: SpringArm3D, punto: Node3D, largo: float, delta: float) -> float:
 	if brazo == null or punto == null:
 		return largo
-	var siguiente := RetornoDeLaMano.siguiente(largo, maxf(brazo.get_hit_length(), minimo), delta)
+	var siguiente := RetornoDeLaMano.siguiente(largo, brazo.get_hit_length(), delta)
 	punto.position = brazo.transform * Vector3(0.0, 0.0, siguiente)
 	return siguiente
 

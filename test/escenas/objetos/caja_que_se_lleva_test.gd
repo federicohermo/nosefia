@@ -92,15 +92,8 @@ func test_la_caja_llevada_no_tapa_la_mira_ni_atraviesa_nada() -> void:  # 047-AC
 		. override_failure_message("en el rincón el brazo no acortó: el caso no ejerce nada")
 		. is_less(brazo.spring_length)
 	)
-	# Y no se repliega hasta adentro de la cámara: ahí la caja tapa la pantalla entera.
-	var punto: Node3D = jugador.get_node("PuntoDeCaja")
-	var tope := brazo.spring_length * ReglasDeLosObjetos.REPLIEGUE_MAXIMO_DE_LA_CAJA
-	(
-		assert_float((punto.position - brazo.position).length())
-		. override_failure_message("la caja se replegó más allá del tope")
-		. is_greater_equal(tope - 0.01)
-	)
 	_comprobar_la_mira_libre(jugador, caja, "contra la pared")
+	_comprobar_la_caja_en_la_mano(jugador, caja, "contra la pared")
 
 
 ## Que la caja llevada no se cruce delante de la mira. Vale siempre, también replegada.
@@ -115,8 +108,7 @@ func _comprobar_la_mira_libre(jugador: Node3D, caja: Node3D, donde: String) -> v
 	)
 
 
-## Que la caja llevada no se meta adentro de nada. Contra una pared sí se mete: el repliegue
-## está topeado para que no termine adentro de la cámara, y ése es el canje.
+## Que la caja llevada no se meta adentro de nada.
 func _comprobar_la_caja_en_la_mano(jugador: Node3D, caja: Node3D, donde: String) -> void:
 	var forma: CollisionShape3D = caja.get_node("Cuerpo")
 	var consulta := PhysicsShapeQueryParameters3D.new()

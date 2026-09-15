@@ -46,10 +46,6 @@ const METODO_INTERACTUAR := "interactuar"
 ## entre una caja apoyada en el piso y una en la mano: es lo que le cobra el traslado al jugador.
 const ALTURA_PARA_RETIRAR := 0.75
 
-## Hasta dónde puede replegarse la caja contra un obstáculo, como fracción de su brazo.
-## Replegada del todo termina adentro de la cámara.
-const REPLIEGUE_MAXIMO_DE_LA_CAJA := 0.5
-
 
 static func se_puede_retirar(altura: float) -> bool:
 	return altura <= ALTURA_PARA_RETIRAR
