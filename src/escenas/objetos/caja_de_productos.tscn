@@ -9,6 +9,7 @@
 script = ExtResource("script")
 datos = ExtResource("datos")
 mallas = [NodePath("Malla")]
+orientacion_en_mano = Basis(0, 0, -1, 0, 1, 0, 1, 0, 0)
 
 [node name="Cuerpo" type="CollisionShape3D" parent="."]
 scale = Vector3(0.3037077, 0.3037077, 0.3037077)

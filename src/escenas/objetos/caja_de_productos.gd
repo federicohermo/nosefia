@@ -8,6 +8,9 @@ extends StaticBody3D
 @export var datos: ObjetoDelAlmacen
 @export var mallas: Array[MeshInstance3D] = []
 
+## Cómo queda en la mano: de frente y mostrando su cara rotulada. La lee `Agarre` al colgarla.
+@export var orientacion_en_mano := Basis.IDENTITY
+
 var _lugar_de_origen: Transform3D
 
 

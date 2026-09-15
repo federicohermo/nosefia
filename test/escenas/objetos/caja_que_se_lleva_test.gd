@@ -83,6 +83,13 @@ func test_la_caja_llevada_no_tapa_la_mira_ni_atraviesa_la_pared() -> void:  # 04
 	var jugador: CharacterBody3D = almacen.get("_jugador")
 	var caja: Node3D = almacen.get("_cajas_de_productos")[Producto.Id.ARROZ]
 	_accion(jugador, caja, ReglasDeLosObjetos.ACCION_AGARRAR)
+	# De frente y no de costado: un producto se mira girado en la mano, una caja se lleva con
+	# las dos manos y muestra su cara rotulada.
+	(
+		assert_float(caja.global_basis.x.dot(jugador.global_basis.z))
+		. override_failure_message("la caja va de costado en la mano")
+		. is_equal_approx(1.0, 0.001)
+	)
 	jugador.global_position = Vector3(RINCON_CERRADO.x, jugador.global_position.y, RINCON_CERRADO.y)
 	Input.action_press(ReglasDelJugador.ACCION_ADELANTE)
 	for cuadro in CUADROS_CAMINANDO:
