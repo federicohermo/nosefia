@@ -42,6 +42,15 @@ const ACCION_EXAMINAR := "examinar"
 ## contesta algo.
 const METODO_INTERACTUAR := "interactuar"
 
+## Y «esto se corre de un empujón» es otro nombre de método, por la misma razón: el jugador no
+## puede nombrar la caja sin cruzar la dirección de las capas.
+const METODO_EMPUJAR := "empujar"
+
+## Qué parte del paso que el jugador no pudo dar recibe lo que le estorba. Con 1 la caja se
+## mueve a su velocidad y no pesa nada; con 0 no se mueve y le tapa el paso. El medio es lo que
+## hace que correr una caja cueste caminar más lento, que es el peso que se quiere.
+const ARRASTRE_DE_LA_CAJA := 0.5
+
 ## Hasta qué altura del centro de una caja se le puede sacar una unidad, en metros. El corte cae
 ## entre una caja apoyada en el piso y una en la mano: es lo que le cobra el traslado al jugador.
 const ALTURA_PARA_RETIRAR := 0.75

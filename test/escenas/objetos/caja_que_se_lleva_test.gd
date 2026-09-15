@@ -24,6 +24,12 @@ const CUADROS_ATRAS := 20
 ## Cuánto puede separarse una esquina de su apoyo y seguir apoyada, en metros.
 const HOLGURA_DEL_APOYO := 0.02
 
+## Cuadros de física empujando. Arrastrando una caja se camina a un tercio de la velocidad.
+const CUADROS_EMPUJANDO := 150
+
+## Cuánto se le descuenta a la forma para preguntar si atraviesa algo: tocar no es atravesar.
+const ROCE := 0.004
+
 ## Los dos gestos de soltar, en grados de la vista.
 const MIRANDO_ARRIBA := 10.0
 const MIRANDO_ABAJO := -40.0
@@ -157,12 +163,15 @@ func _comprobar_la_mira_libre(jugador: Node3D, caja: Node3D, donde: String) -> v
 	)
 
 
-## Que la caja llevada no se meta adentro de nada.
+## Que la caja no se meta adentro de nada. Se pregunta con la forma apenas encogida: apoyada en
+## el piso el contacto es exacto, y a tamaño real eso contaría como atravesarlo.
 func _comprobar_que_no_atraviesa_nada(jugador: Node3D, caja: Node3D, donde: String) -> void:
 	var forma: CollisionShape3D = caja.get_node("Cuerpo")
+	var apenas_menor := BoxShape3D.new()
+	apenas_menor.size = (forma.shape as BoxShape3D).size * forma.scale - Vector3.ONE * ROCE
 	var consulta := PhysicsShapeQueryParameters3D.new()
-	consulta.shape = forma.shape
-	consulta.transform = forma.global_transform
+	consulta.shape = apenas_menor
+	consulta.transform = Transform3D(caja.global_basis, caja.global_position)
 	consulta.exclude = [jugador.get_rid(), (caja as CollisionObject3D).get_rid()]
 	var pisados: Array[String] = []
 	for choque in jugador.get_world_3d().direct_space_state.intersect_shape(consulta, 4):
@@ -388,3 +397,51 @@ func test_agarrar_la_caja_del_estante_no_mueve_al_jugador() -> void:  # 047-AC6
 		)
 		. is_less(0.001)
 	)
+
+
+func test_la_caja_del_piso_se_arrastra_en_vez_de_tapar_el_paso() -> void:  # 047-AC13
+	# Una caja olvidada en un pasillo no puede ser una pared. Se corre de un empujón, y sin
+	# tumbarse ni levantarse del piso: se arrastra.
+	var almacen: Node3D = auto_free(ALMACEN.instantiate())
+	add_child(almacen)
+	await get_tree().physics_frame
+	var jugador: CharacterBody3D = almacen.get("_jugador")
+	var caja: Node3D = almacen.get("_cajas_de_productos")[Producto.Id.ARROZ]
+	var adelante := -jugador.global_basis.z
+	caja.global_position = (
+		jugador.global_position
+		+ adelante
+		- Vector3.UP * jugador.global_position.y
+		+ Vector3.UP * caja.global_position.y
+	)
+	var partida := caja.global_position
+	var giro := caja.global_basis
+	Input.action_press(ReglasDelJugador.ACCION_ADELANTE)
+	for cuadro in CUADROS_EMPUJANDO:
+		await get_tree().physics_frame
+	Input.action_release(ReglasDelJugador.ACCION_ADELANTE)
+	await get_tree().physics_frame
+	var corrida := (caja.global_position - partida).dot(adelante)
+	(
+		assert_float(corrida)
+		. override_failure_message(
+			"la caja no se movió: de %v a %v" % [partida, caja.global_position]
+		)
+		. is_greater(0.3)
+	)
+	(
+		assert_float(caja.global_position.y)
+		. override_failure_message("la caja se levantó o se hundió al empujarla")
+		. is_equal_approx(partida.y, 0.001)
+	)
+	(
+		assert_bool(caja.global_basis.is_equal_approx(giro))
+		. override_failure_message("la caja se tumbó al empujarla")
+		. is_true()
+	)
+	(
+		assert_float((jugador.global_position - partida).dot(adelante))
+		. override_failure_message("el jugador no pasó de donde estaba la caja")
+		. is_greater(0.0)
+	)
+	_comprobar_que_no_atraviesa_nada(jugador, caja, "empujada")

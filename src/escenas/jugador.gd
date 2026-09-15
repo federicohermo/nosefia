@@ -158,10 +158,23 @@ func _physics_process(delta: float) -> void:
 	velocity.x = horizontal.x
 	velocity.z = horizontal.z
 	move_and_slide()
+	_empujar_lo_que_estorba()
 
 	_acomodar_las_manos(delta)
 	_acomodar_la_caja()
 	_leer_la_mira()
+
+
+## Le pasa a lo chocado el paso que no se pudo dar, para que se corra en vez de tapar el paso.
+##
+## Quién puede recibirlo lo dice el nombre de un método, igual que interactuar: acá no se nombra
+## ninguna escena. Cuánto se corre lo decide quien recibe, con el número del dominio.
+func _empujar_lo_que_estorba() -> void:
+	for indice in get_slide_collision_count():
+		var choque := get_slide_collision(indice)
+		var estorbo := choque.get_collider() as Node
+		if estorbo != null and estorbo.has_method(ReglasDeLosObjetos.METODO_EMPUJAR):
+			estorbo.call(ReglasDeLosObjetos.METODO_EMPUJAR, choque.get_remainder())
 
 
 ## Corre las dos manos sobre el eje de su brazo, hasta donde haya lugar.

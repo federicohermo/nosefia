@@ -27,3 +27,11 @@ func interactuar() -> ObjetoDelAlmacen:
 func volver_a_su_lugar() -> void:
 	top_level = false
 	transform = _lugar_de_origen
+
+
+## Se arrastra por el piso cuando el jugador la empuja al pasar. Cuánto recibe lo dice el
+## dominio; acá sólo se mueve, en horizontal y sin dar vuelta nada.
+func empujar(desplazamiento: Vector3) -> void:
+	var arrastre := desplazamiento * ReglasDeLosObjetos.ARRASTRE_DE_LA_CAJA
+	arrastre.y = 0.0
+	move_and_collide(arrastre)
