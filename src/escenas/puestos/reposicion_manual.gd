@@ -110,10 +110,10 @@ func _colgar_la_caja(nodo: Node3D) -> void:
 		jugador.ocupar_el_frente(true)
 
 
-## Deja apoyada en el piso la caja recién soltada, derecha y de una.
+## Apoya la caja recién soltada donde el jugador tiene la mira, derecha y de una.
 ##
-## El cuerpo es estático, así que el motor no la baja solo: se la baja con un barrido de su
-## propia forma. El `top_level` vuelve a `false`, que es lo que soltar deja en `true`.
+## El cuerpo es estático, así que el motor no la mueve solo. El `top_level` vuelve a `false`,
+## que es lo que soltar deja en `true`.
 func _apoyar_la_caja(nodo: Node3D) -> void:
 	var caja := nodo as CajaDelDeposito
 	if caja == null:
@@ -121,11 +121,67 @@ func _apoyar_la_caja(nodo: Node3D) -> void:
 	jugador.ocupar_el_frente(false)
 	caja.top_level = false
 	caja.global_basis = Basis.IDENTITY
+	caja.global_position = _llevar_hasta(caja, _lugar_apuntado(caja))
 	var apoyo := _bajar_hasta_el_apoyo(caja)
-	if apoyo == null:
-		return
-	_acomodar_sobre(caja, apoyo)
-	_bajar_hasta_el_apoyo(caja)
+	if apoyo != null:
+		_acomodar_sobre(caja, apoyo)
+		_bajar_hasta_el_apoyo(caja)
+	if _le_queda_encima_al_jugador(caja):
+		repositor.agarre.pedir_agarrar(caja.datos, caja)
+
+
+## Si la caja terminó adentro del cuerpo del jugador es que ahí no hay lugar para apoyarla, y
+## dejarla igual lo sube arriba de ella. Entonces no se suelta: se la vuelve a la mano.
+func _le_queda_encima_al_jugador(caja: CajaDelDeposito) -> bool:
+	var forma: CollisionShape3D = caja.get_node("Cuerpo")
+	var consulta := PhysicsShapeQueryParameters3D.new()
+	consulta.shape = forma.shape
+	consulta.transform = forma.global_transform
+	consulta.exclude = [caja.get_rid()]
+	for choque in get_world_3d().direct_space_state.intersect_shape(consulta, 8):
+		if choque["collider"] == jugador:
+			return true
+	return false
+
+
+## Dónde iría el centro de la caja según lo que el jugador tiene en la mira: encima de una
+## superficie horizontal, y delante de cualquier otra cosa.
+func _lugar_apuntado(caja: CajaDelDeposito) -> Vector3:
+	var ojo := jugador.mira()
+	var lejos := ojo.origin - ojo.basis.z * ReglasDelJugador.ALCANCE_DE_LA_MIRA
+	var consulta := PhysicsRayQueryParameters3D.create(ojo.origin, lejos)
+	consulta.exclude = [caja.get_rid(), jugador.get_rid()]
+	var golpe := get_world_3d().direct_space_state.intersect_ray(consulta)
+	if golpe.is_empty():
+		return lejos
+	var media := _media_caja(caja)
+	var punto: Vector3 = golpe["position"]
+	if ReglasDeLosObjetos.se_puede_apoyar_en((golpe["normal"] as Vector3).y):
+		return punto + Vector3.UP * media.y
+	return punto + (ojo.origin - punto).normalized() * media.length()
+
+
+## Hasta dónde llega la caja yendo de la mano al destino: primero sube, después entra.
+##
+## Derecho no alcanza: el labio de un estante queda justo a la altura a la que se la lleva, así
+## que el camino recto choca contra él y la caja nunca entra. Una persona la sube y la mete.
+func _llevar_hasta(caja: CajaDelDeposito, destino: Vector3) -> Vector3:
+	var mano := punto_de_la_caja.global_position
+	var media := _media_caja(caja)
+	var arriba := _barrer(caja, mano, Vector3(mano.x, destino.y + media.y, mano.z))
+	return _barrer(caja, arriba, Vector3(destino.x, arriba.y, destino.z))
+
+
+## El punto más cercano a `hasta` al que la caja llega sin meterse adentro de nada.
+func _barrer(caja: CajaDelDeposito, desde: Vector3, hasta: Vector3) -> Vector3:
+	var forma: CollisionShape3D = caja.get_node("Cuerpo")
+	var consulta := PhysicsShapeQueryParameters3D.new()
+	consulta.shape = forma.shape
+	consulta.transform = Transform3D(Basis.IDENTITY.scaled(forma.scale), desde)
+	consulta.motion = hasta - desde
+	consulta.exclude = [caja.get_rid(), jugador.get_rid()]
+	var avance: float = get_world_3d().direct_space_state.cast_motion(consulta)[0]
+	return desde + consulta.motion * avance
 
 
 ## Apoya la caja sobre lo que haya debajo de su CENTRO y devuelve qué es, o `null` si no hay nada.
@@ -140,7 +196,9 @@ func _bajar_hasta_el_apoyo(caja: CajaDelDeposito) -> CollisionObject3D:
 	var golpe := get_world_3d().direct_space_state.intersect_ray(consulta)
 	if golpe.is_empty():
 		return null
-	caja.global_position.y = (golpe["position"] as Vector3).y + _media_caja(caja).y
+	var abajo := caja.global_position
+	abajo.y = (golpe["position"] as Vector3).y + _media_caja(caja).y
+	caja.global_position = _barrer(caja, caja.global_position, abajo)
 	return golpe["collider"] as CollisionObject3D
 
 
@@ -155,7 +213,9 @@ func _acomodar_sobre(caja: CajaDelDeposito, apoyo: CollisionObject3D) -> void:
 	var lugar := caja.global_position
 	lugar.x = _adentro(lugar.x, limites.position.x + media.x, limites.end.x - media.x)
 	lugar.z = _adentro(lugar.z, limites.position.z + media.z, limites.end.z - media.z)
-	caja.global_position = lugar
+	# Barrido y no salto: los límites son los del apoyo entero, parantes incluidos, así que
+	# acomodar a ciegas mete la caja adentro de uno.
+	caja.global_position = _barrer(caja, caja.global_position, lugar)
 
 
 ## Lo que ocupa un cuerpo, en coordenadas del mundo.

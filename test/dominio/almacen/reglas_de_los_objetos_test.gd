@@ -60,7 +60,7 @@ func test_las_dos_acciones_nuevas_no_se_pisan_con_las_de_caminar() -> void:  # 0
 
 func test_el_corte_para_retirar_separa_apoyada_de_en_la_mano() -> void:  # 047-AC1
 	# Las tres alturas están medidas sobre `almacen.tscn`: una caja apoyada tiene el centro en
-	# 0,41; en la mano no baja de 1,14 ni mirando al piso; en el estante del depósito está en
+	# 0,41; en la mano no baja de 1,35 ni mirando al piso; en el estante del depósito está en
 	# 1,91. El borde es el corte mismo — en él entrega, un milímetro más arriba no.
 	(
 		assert_bool(ReglasDeLosObjetos.se_puede_retirar(ReglasDeLosObjetos.ALTURA_PARA_RETIRAR))
@@ -73,5 +73,23 @@ func test_el_corte_para_retirar_separa_apoyada_de_en_la_mano() -> void:  # 047-A
 		. is_false()
 	)
 	assert_bool(ReglasDeLosObjetos.se_puede_retirar(0.4059)).is_true()
-	assert_bool(ReglasDeLosObjetos.se_puede_retirar(1.1423)).is_false()
+	assert_bool(ReglasDeLosObjetos.se_puede_retirar(1.3523)).is_false()
 	assert_bool(ReglasDeLosObjetos.se_puede_retirar(1.9077)).is_false()
+
+
+func test_solo_una_superficie_horizontal_recibe_una_caja() -> void:  # 047-AC11
+	# La componente vertical de la normal: 1 es un piso, 0 una pared. Sin el corte, apuntar a
+	# una pared dejaría la caja clavada en el aire contra ella.
+	assert_bool(ReglasDeLosObjetos.se_puede_apoyar_en(1.0)).is_true()
+	assert_bool(ReglasDeLosObjetos.se_puede_apoyar_en(0.0)).is_false()
+	assert_bool(ReglasDeLosObjetos.se_puede_apoyar_en(-1.0)).is_false()
+	(
+		assert_bool(ReglasDeLosObjetos.se_puede_apoyar_en(ReglasDeLosObjetos.APOYO_HORIZONTAL))
+		. is_true()
+	)
+	(
+		assert_bool(
+			ReglasDeLosObjetos.se_puede_apoyar_en(ReglasDeLosObjetos.APOYO_HORIZONTAL - 0.001)
+		)
+		. is_false()
+	)

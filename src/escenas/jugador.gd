@@ -186,6 +186,12 @@ func ocupar_el_frente(ocupado: bool) -> void:
 	_forma_de_la_caja.disabled = not ocupado
 
 
+## Desde dónde y hacia dónde mira. La pide `reposicion_manual.gd` para saber dónde quiere el
+## jugador apoyar la caja; el nodo de la cámara es privado y su ruta no se cruza desde afuera.
+func mira() -> Transform3D:
+	return _camara.global_transform
+
+
 ## La única puerta por la que otra escena puede decir «el jugador no controla»: el
 ## `ControlDelJugador` es de `dominio/` y su instancia vive privada acá. La piden por separado
 ## el spec 006 (examinar un objeto) y el 009 (abrir la computadora), y sin ellas los dos

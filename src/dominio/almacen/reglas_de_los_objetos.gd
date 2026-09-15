@@ -46,6 +46,15 @@ const METODO_INTERACTUAR := "interactuar"
 ## entre una caja apoyada en el piso y una en la mano: es lo que le cobra el traslado al jugador.
 const ALTURA_PARA_RETIRAR := 0.75
 
+## Cuánto tiene que mirar hacia arriba una superficie para que se pueda apoyar una caja encima.
+## Es la componente vertical de su normal: con 1 sólo valdría lo perfectamente plano, con 0
+## valdría una pared.
+const APOYO_HORIZONTAL := 0.7
+
 
 static func se_puede_retirar(altura: float) -> bool:
 	return altura <= ALTURA_PARA_RETIRAR
+
+
+static func se_puede_apoyar_en(inclinacion: float) -> bool:
+	return inclinacion >= APOYO_HORIZONTAL
