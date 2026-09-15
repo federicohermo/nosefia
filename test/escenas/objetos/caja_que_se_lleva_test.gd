@@ -6,9 +6,11 @@ const ALMACEN := preload("res://src/escenas/almacen.tscn")
 ## Media caja, en metros: lo que separa el centro de una caja apoyada de lo que la sostiene.
 const MEDIA_CAJA := 0.3037
 
-## Un rincón del que no se puede seguir avanzando. Ahí el brazo de la caja tiene que acortar, y
-## el caso lo afirma en vez de darlo por hecho.
-const RINCON_CERRADO := Vector2(10.4, -7.4)
+## Desde dónde se camina hacia la pared del depósito.
+const RINCON_CERRADO := Vector2(10.4, -4.0)
+
+## Cuadros de física caminando. A 60 Hz son cuatro segundos, de sobra para cruzar el depósito.
+const CUADROS_CAMINANDO := 240
 
 
 ## Le pone el foco al objetivo y le manda la acción, que es lo que hace el clic de verdad.
@@ -71,58 +73,29 @@ func test_el_clic_izquierdo_levanta_la_caja_y_no_entrega_producto() -> void:  # 
 	assert_object(agarre.manos().sostenido()).is_null()
 
 
-func test_la_caja_llevada_no_tapa_la_mira_ni_atraviesa_nada() -> void:  # 047-AC6
-	# El jugador conserva su `_physics_process`: el brazo que acomoda la caja corre ahí.
+func test_la_caja_llevada_no_tapa_la_mira_ni_atraviesa_la_pared() -> void:  # 047-AC6
+	# **Camina de verdad contra la pared.** Teleportar al jugador contra ella probaría otra cosa:
+	# lo que tiene que impedir que la caja entre en la madera es que el cuerpo no llegue, y eso
+	# sólo se ejerce con `move_and_slide` corriendo.
 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
 	add_child(almacen)
 	await get_tree().physics_frame
-	var jugador: Node3D = almacen.get("_jugador")
+	var jugador: CharacterBody3D = almacen.get("_jugador")
 	var caja: Node3D = almacen.get("_cajas_de_productos")[Producto.Id.ARROZ]
 	_accion(jugador, caja, ReglasDeLosObjetos.ACCION_AGARRAR)
-	for cuadro in 40:
-		await get_tree().physics_frame
-	_comprobar_la_caja_en_la_mano(jugador, caja, "al aire")
-	_comprobar_la_mira_libre(jugador, caja, "al aire")
-	var brazo: SpringArm3D = jugador.get_node("BrazoDeCaja")
 	jugador.global_position = Vector3(RINCON_CERRADO.x, jugador.global_position.y, RINCON_CERRADO.y)
-	for cuadro in 40:
+	Input.action_press(ReglasDelJugador.ACCION_ADELANTE)
+	for cuadro in CUADROS_CAMINANDO:
 		await get_tree().physics_frame
+	Input.action_release(ReglasDelJugador.ACCION_ADELANTE)
+	await get_tree().physics_frame
 	(
-		assert_float(brazo.get_hit_length())
-		. override_failure_message("en el rincón el brazo no acortó: el caso no ejerce nada")
-		. is_less(brazo.spring_length)
+		assert_bool(jugador.test_move(jugador.global_transform, -jugador.global_basis.z))
+		. override_failure_message("el jugador no llegó a chocar: el caso no ejerce nada")
+		. is_true()
 	)
 	_comprobar_la_mira_libre(jugador, caja, "contra la pared")
 	_comprobar_la_caja_en_la_mano(jugador, caja, "contra la pared")
-
-
-## Que la caja llevada no se cruce delante de la mira. Vale siempre, también replegada.
-func _comprobar_la_mira_libre(jugador: Node3D, caja: Node3D, donde: String) -> void:
-	var camara: Camera3D = jugador.get_node("Camara")
-	var forma: CollisionShape3D = caja.get_node("Cuerpo")
-	var limites: AABB = forma.global_transform * forma.shape.get_debug_mesh().get_aabb()
-	(
-		assert_bool(limites.intersects_ray(camara.global_position, -camara.global_basis.z) == null)
-		. override_failure_message("%s, la caja se cruza delante de la mira" % donde)
-		. is_true()
-	)
-
-
-## Que la caja llevada no se meta adentro de nada.
-func _comprobar_la_caja_en_la_mano(jugador: Node3D, caja: Node3D, donde: String) -> void:
-	var forma: CollisionShape3D = caja.get_node("Cuerpo")
-	var consulta := PhysicsShapeQueryParameters3D.new()
-	consulta.shape = forma.shape
-	consulta.transform = forma.global_transform
-	consulta.exclude = [jugador.get_rid(), (caja as CollisionObject3D).get_rid()]
-	var pisados: Array[String] = []
-	for choque in jugador.get_world_3d().direct_space_state.intersect_shape(consulta, 4):
-		pisados.append(str(jugador.get_parent().get_path_to(choque["collider"])))
-	(
-		assert_array(pisados)
-		. override_failure_message("%s, la caja atraviesa %s" % [donde, ", ".join(pisados)])
-		. is_empty()
-	)
 
 
 func test_la_caja_soltada_queda_apoyada_en_el_piso_sin_caer() -> void:  # 047-AC7
@@ -148,3 +121,36 @@ func test_la_caja_soltada_queda_apoyada_en_el_piso_sin_caer() -> void:  # 047-AC
 		)
 		. is_equal_approx(MEDIA_CAJA, 0.001)
 	)
+
+
+## Que la caja llevada no se cruce delante de la mira.
+func _comprobar_la_mira_libre(jugador: Node3D, caja: Node3D, donde: String) -> void:
+	var camara: Camera3D = jugador.get_node("Camara")
+	var limites := _limites(caja)
+	(
+		assert_bool(limites.intersects_ray(camara.global_position, -camara.global_basis.z) == null)
+		. override_failure_message("%s, la caja se cruza delante de la mira" % donde)
+		. is_true()
+	)
+
+
+## Que la caja llevada no se meta adentro de nada.
+func _comprobar_la_caja_en_la_mano(jugador: Node3D, caja: Node3D, donde: String) -> void:
+	var forma: CollisionShape3D = caja.get_node("Cuerpo")
+	var consulta := PhysicsShapeQueryParameters3D.new()
+	consulta.shape = forma.shape
+	consulta.transform = forma.global_transform
+	consulta.exclude = [jugador.get_rid(), (caja as CollisionObject3D).get_rid()]
+	var pisados: Array[String] = []
+	for choque in jugador.get_world_3d().direct_space_state.intersect_shape(consulta, 4):
+		pisados.append(str(jugador.get_parent().get_path_to(choque["collider"])))
+	(
+		assert_array(pisados)
+		. override_failure_message("%s, la caja atraviesa %s" % [donde, ", ".join(pisados)])
+		. is_empty()
+	)
+
+
+func _limites(caja: Node3D) -> AABB:
+	var forma: CollisionShape3D = caja.get_node("Cuerpo")
+	return forma.global_transform * forma.shape.get_debug_mesh().get_aabb()
