@@ -103,11 +103,10 @@ func retirar_de_la_caja(objetivo: Node3D) -> void:
 	retirar(caja.producto)
 
 
-## Baja a la cintura la caja recién levantada y le da su volumen al cuerpo del jugador.
+## Baja a la cintura la caja recién levantada.
 func _colgar_la_caja(nodo: Node3D) -> void:
 	if nodo is CajaDelDeposito and punto_de_la_caja != null:
 		repositor.agarre.mover_lo_sostenido(punto_de_la_caja)
-		jugador.ocupar_el_frente(true)
 
 
 ## Deja apoyada en el piso la caja recién soltada, derecha y de una.
@@ -118,7 +117,6 @@ func _apoyar_la_caja(nodo: Node3D) -> void:
 	var caja := nodo as CajaDelDeposito
 	if caja == null:
 		return
-	jugador.ocupar_el_frente(false)
 	caja.top_level = false
 	caja.global_basis = Basis.IDENTITY
 	var apoyo := _bajar_hasta_el_apoyo(caja)

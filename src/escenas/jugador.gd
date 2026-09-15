@@ -58,10 +58,6 @@ var _largo_de_producto := 0.0
 @onready var _brazo_de_carga: SpringArm3D = $Camara/BrazoDeCarga
 @onready var _brazo_de_producto: SpringArm3D = $Camara/BrazoDeProducto
 
-## La caja cuelga del cuerpo y no de la cámara, y ocupa lugar: mientras se la lleva, el jugador
-## no puede acercarse a una pared más de lo que la caja mide.
-@onready var _forma_de_la_caja: CollisionShape3D = $FormaDeLaCaja
-
 
 func _ready() -> void:
 	_aplicar_el_modo_del_cursor()
@@ -178,12 +174,6 @@ func _acomodar(brazo: SpringArm3D, punto: Node3D, largo: float, delta: float) ->
 	var siguiente := RetornoDeLaMano.siguiente(largo, brazo.get_hit_length(), delta)
 	punto.position = brazo.transform * Vector3(0.0, 0.0, siguiente)
 	return siguiente
-
-
-## Le da o le saca al cuerpo el volumen de la caja que lleva. Es lo que la vuelve un objeto de
-## verdad: con ella en la mano el jugador choca donde chocaría la caja.
-func ocupar_el_frente(ocupado: bool) -> void:
-	_forma_de_la_caja.disabled = not ocupado
 
 
 ## La única puerta por la que otra escena puede decir «el jugador no controla»: el
@@ -322,13 +312,12 @@ func _devolver_al_mundo(nodo: Node3D) -> void:
 	if nodo == null or mundo == null or not nodo.is_inside_tree():
 		return
 	nodo.reparent(mundo, true)
-	# Vale para cualquier cuerpo: lo que no cae solo se queda donde lo dejó el punto de soltado.
-	if nodo is PhysicsBody3D:
+	if nodo is RigidBody3D:
 		_ajustar_la_caida(nodo)
 
 
 ## El punto fijo puede quedar detrás de la madera. Se barre el volumen desde el jugador.
-func _ajustar_la_caida(cuerpo: PhysicsBody3D) -> void:
+func _ajustar_la_caida(cuerpo: RigidBody3D) -> void:
 	var inicio := _camara.global_position
 	var recorrido := cuerpo.global_position - inicio
 	var avance := 1.0
