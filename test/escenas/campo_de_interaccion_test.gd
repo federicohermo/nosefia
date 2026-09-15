@@ -38,7 +38,7 @@ func test_el_campo_y_el_clic_usan_los_cuerpos_de_los_muebles() -> void:  # 038-A
 	assert_bool(computadora.get("pantalla").visible).is_true()
 	computadora.call("cerrar")
 	var caja: Node3D = almacen.get("_cajas_de_productos")[0]
-	caja.call("interactuar")
+	almacen.get("_reposicion_manual").call("retirar", caja.producto)
 	var agarre: Agarre = almacen.get("_agarre")
 	assert_object(agarre.manos().sostenido()).is_instanceof(UnidadDeProducto)
 	var estante: Node3D = almacen.get("_reposicion_manual").get_node("ZonaDeActroncito")

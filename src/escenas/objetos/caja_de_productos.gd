@@ -1,30 +1,44 @@
-## La caja del depósito de la que salen las unidades: se la toca y entrega una para la mano.
+## La caja del depósito: se lleva, se apoya, y declara qué producto guarda.
 ##
-## Es cáscara y se nota en que no hay una sola condición ni un solo número: cuántas se pueden
-## reservar lo sabe `Estante`, y por qué se rechaza lo publica `Repositor`. Acá viven el cuerpo
-## del mueble y qué producto despacha.
-##
-## **Avisa hacia arriba en vez de llamar a nadie**, y por eso no necesita guardarse de un
-## cableado nulo: una señal sin escuchas no hace nada, mientras que una llamada a un nodo sin
-## cablear muere en el primer cuadro con un error que no nombra al `.tscn`.
-##
-## **No toca el stock.** Sacar de acá no descuenta nada del depósito: la unidad se mueve recién
-## cuando el `Repositor` la coloca en la góndola, y ésa es la invariante entera del spec.
+## No decide nada. Qué sale de ella y desde dónde lo resuelve `reposicion_manual.gd`. Su cuerpo
+## es estático y no rígido: una caja se apoya, no rebota ni rueda.
 extends StaticBody3D
 
-signal producto_pedido(id: Producto.Id)
-
-## Qué producto despacha esta caja. Es un `Producto.Id` y no un `String` suelto porque el
-## conjunto es cerrado: un `String` mal escrito no rompe nada, y el producto no llega nunca.
 @export var producto: Producto.Id = Producto.Id.ACTRONCITO
+@export var datos: ObjetoDelAlmacen
 @export var mallas: Array[MeshInstance3D] = []
 
+## Cómo queda en la mano: de frente y mostrando su cara rotulada. La lee `Agarre` al colgarla.
+@export var orientacion_en_mano := Basis.IDENTITY
 
-## El contrato de «con esto se puede interactuar» es este método más el grupo del `.tscn`, y no
-## un tipo: `sistemas/` no puede nombrar un `class_name` de `escenas/` y `dominio/` tampoco.
-##
-## Devuelve `null` porque de la caja no se levanta nada: quien arma el cuerpo de la unidad es
-## `reposicion_manual.gd`, que escucha esta señal.
+var _lugar_de_origen: Transform3D
+var _padre_de_origen: Node = null
+
+
+func _ready() -> void:
+	_lugar_de_origen = transform
+	_padre_de_origen = get_parent()
+
+
 func interactuar() -> ObjetoDelAlmacen:
-	producto_pedido.emit(producto)
-	return null
+	return datos
+
+
+## El dominio se resetea y los nodos no: sin esto la jornada siguiente arranca con la caja donde
+## la dejó la anterior.
+##
+## Vuelve también de padre, y no sólo de lugar: la noche puede terminar con la caja en la mano,
+## y ahí `transform` es relativo al cuerpo del jugador. Escribirlo sin despegarla la deja
+## flotando pegada a él toda la noche siguiente.
+func volver_a_su_lugar() -> void:
+	top_level = false
+	reparent(_padre_de_origen, false)
+	transform = _lugar_de_origen
+
+
+## Se arrastra por el piso cuando el jugador la empuja al pasar. Cuánto recibe lo dice el
+## dominio; acá sólo se mueve, en horizontal y sin dar vuelta nada.
+func empujar(desplazamiento: Vector3) -> void:
+	var arrastre := desplazamiento * ReglasDeLosObjetos.ARRASTRE_DE_LA_CAJA
+	arrastre.y = 0.0
+	move_and_collide(arrastre)

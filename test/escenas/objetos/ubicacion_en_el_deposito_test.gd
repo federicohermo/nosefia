@@ -24,10 +24,14 @@ const ENTRADA_DEL_BANO := Vector3(8.8, 1.05, -4.658)
 ## A cuánto del inodoro tienen que quedar, en metros. Ancla el cuarto sin escribir sus paredes.
 const CERCA_DEL_INODORO := 4.0
 
+## Adonde se corre una caja para probar que la apertura la devuelve. Es el aire en el medio del
+## local, lejos del depósito y de cualquier apoyo.
+const LEJOS_DE_SU_LUGAR := Vector3(0.0, 2.0, 0.0)
+
 
 func test_las_ocho_cajas_de_reposicion_estan_apoyadas_en_el_deposito() -> void:  # 043-AC10
-	# Entran seis en los estantes y dos en el piso: entre estantes hay 0,477 m y la caja mide
-	# 0,607, así que sólo el estante de arriba tiene aire. Lo que el caso afirma no es el reparto
+	# Entran cuatro en los estantes y cuatro en el piso: entre estantes hay 0,477 m y la caja
+	# mide 0,607, así que sólo el estante de arriba tiene aire. Lo que el caso afirma no es el reparto
 	# sino que ninguna quede flotando ni clavada adentro de otra cosa.
 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
 	add_child(almacen)
@@ -133,3 +137,56 @@ func _lo_que_pisa(almacen: Node3D, cuerpo: StaticBody3D, apoyo: String) -> Array
 		if quien != apoyo:
 			pisados.append("%s pisa %s" % [cuerpo.name, quien])
 	return pisados
+
+
+func test_abrir_la_jornada_devuelve_cada_caja_a_su_lugar() -> void:  # 047-AC8
+	# Desde el 047 las cajas se trasladan, así que quedan donde el jugador las dejó. El dominio
+	# se resetea y los nodos no: sin esta vuelta, la noche 2 arranca con la mercadería al lado
+	# de la góndola y el viaje al depósito —que es lo que reponer cuesta— ya está pago.
+	# **Se mide en global y no en `position`.** Una caja que quedó colgada del jugador tiene la
+	# `position` correcta respecto de la mano y está flotando en el medio del local: comparar la
+	# local da verde sobre el caso que más importa.
+	var almacen: Node3D = auto_free(ALMACEN.instantiate())
+	add_child(almacen)
+	await get_tree().physics_frame
+	var cajas: Array = almacen.get("_cajas_de_productos")
+	var lugares: Array[Vector3] = []
+	for caja: Node3D in cajas:
+		lugares.append(caja.global_position)
+	var mundo: Node3D = cajas[0].get_parent()
+	# Una movida a mano y otra en la mano: la noche termina tantas veces cargando una caja como
+	# habiéndola dejado tirada, y las dos tienen que volver al depósito.
+	for caja: Node3D in cajas:
+		caja.global_position = LEJOS_DE_SU_LUGAR
+	var jugador: Node3D = almacen.get("_jugador")
+	var en_brazos: Node3D = cajas[Producto.Id.ARROZ]
+	_agarrar(jugador, en_brazos)
+	assert_object(en_brazos.get_parent()).is_not_same(mundo)
+	almacen.get("_ciclo").abrir_la_jornada()
+	assert_object(almacen.get("_agarre").manos().sostenido()).is_null()
+	for indice in lugares.size():
+		var caja: Node3D = cajas[indice]
+		(
+			assert_object(caja.get_parent())
+			. override_failure_message("`%s` abrió la jornada colgada del jugador" % caja.name)
+			. is_same(mundo)
+		)
+		(
+			assert_vector(caja.global_position)
+			. override_failure_message(
+				(
+					"`%s` abrió la jornada en %v y arrancó en %v"
+					% [caja.name, caja.global_position, lugares[indice]]
+				)
+			)
+			. is_equal_approx(lugares[indice], Vector3.ONE * 0.001)
+		)
+
+
+## El clic izquierdo sobre la caja, que es lo que se la lleva a la mano.
+func _agarrar(jugador: Node3D, caja: Node3D) -> void:
+	jugador.set("_enfocado", caja)
+	var evento := InputEventAction.new()
+	evento.action = ReglasDeLosObjetos.ACCION_AGARRAR
+	evento.pressed = true
+	jugador.call("_unhandled_input", evento)

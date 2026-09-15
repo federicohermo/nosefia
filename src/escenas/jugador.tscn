@@ -1,4 +1,4 @@
-[gd_scene load_steps=7 format=3]
+[gd_scene load_steps=9 format=3]
 
 [ext_resource type="Script" uid="uid://clrretmx7rboi" path="res://src/escenas/jugador.gd" id="1_jugador"]
 [ext_resource type="Script" uid="uid://yepsvg67ynpy" path="res://src/sistemas/marco/agarre.gd" id="2_agarre"]
@@ -10,6 +10,9 @@ height = 1.8
 
 [sub_resource type="SphereShape3D" id="SphereShape3D_campo"]
 radius = 2.5
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_caja"]
+size = Vector3(0.61, 0.61, 0.61)
 
 [sub_resource type="SphereShape3D" id="SphereShape3D_mano"]
 radius = 0.15
@@ -56,6 +59,20 @@ margin = 0.01
 
 [node name="PuntoDeProducto" type="Node3D" parent="Camara"]
 position = Vector3(0.34, -0.3, -0.75)
+
+[node name="BrazoDeCaja" type="SpringArm3D" parent="."]
+transform = Transform3D(-1, 0, 0, 0, 1, 0, 0, 0, -1, 0, 1.141, 0)
+shape = SubResource("BoxShape3D_caja")
+spring_length = 0.799
+margin = 0.01
+
+[node name="PuntoDeCaja" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.141, -0.799)
+
+[node name="FormaDeLaCaja" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.141, -0.799)
+shape = SubResource("BoxShape3D_caja")
+disabled = true
 
 [node name="PuntoDeRespaldo" type="Node3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.15, -0.5)

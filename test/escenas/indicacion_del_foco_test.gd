@@ -34,7 +34,9 @@ func test_el_campo_real_resalta_la_computadora_y_solo_la_zona_de_reposicion() ->
 		var ojo := computadora.global_position + Vector3(0, 1, 1)
 		var punto := computadora.global_position
 		if objetivo == estante:
-			almacen.get("_cajas_de_productos")[0].call("interactuar")
+			almacen.get("_reposicion_manual").call(
+				"retirar", almacen.get("_cajas_de_productos")[0].producto
+			)
 			punto = estante.global_position
 			ojo = punto + Vector3(1.2, 0.3, 0)
 		await _mirar(jugador, ojo, punto)

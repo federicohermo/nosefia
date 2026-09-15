@@ -110,15 +110,10 @@ func _ready() -> void:
 			]
 		)
 	)
-	# Reponer, de punta a punta: la caja del depósito entrega una unidad a la mano y la zona de
-	# reposición la coloca en la góndola. La unidad viaja en la mano, así que el inventario recién
-	# cambia cuando el estante la acepta: soltarla en el piso no repone nada.
-	# **Una caja por producto, y todas conectadas al mismo destino.** Con una sola, despachaba
-	# siempre su `producto` por defecto y el resto del catálogo se quedaba en cero para siempre:
-	# `Estante.completada()` sale de `Inventario.faltantes()`, así que REPONER no se podía
-	# terminar jugando.
-	for caja: CajaDeProductosDelDeposito in _cajas_de_productos:
-		caja.producto_pedido.connect(_reposicion_manual.retirar)
+	# Reponer, de punta a punta: el clic derecho sobre una caja apoyada entrega una unidad a la
+	# mano y la zona de reposición la coloca en la góndola. Quien atiende ese clic es
+	# `ReposicionManual`, que se conecta solo. La unidad viaja en la mano, así que el inventario
+	# recién cambia cuando el estante la acepta: soltarla en el piso no repone nada.
 	_carga.producto_guardado.connect(_al_guardar_en_la_caja)
 	_repositor.agarre = _agarre
 	_repositor.unidad_colocada.connect(_reposicion_manual.depositar)
@@ -139,6 +134,10 @@ func _ready() -> void:
 ## arma en este lado y no en el `Repositor` porque «con cuánta mercadería arranca una jornada»
 ## es una regla del juego, y `Apertura` es donde tiene test.
 func _al_abrir_la_jornada(_jornada: int) -> void:
+	# Primero que nada, y por eso antes de `limpiar()`: lo que quedó en la mano cuelga del
+	# jugador, así que devolverlo a su lugar le escribiría la posición relativa a la mano y la
+	# caja terminaría flotando pegada al cuerpo toda la noche siguiente.
+	_agarre.vaciar_las_manos()
 	_hud.declarar_obligatorias(Apertura.cantidad_de_obligatorias())
 	# **Un solo inventario para las dos obligatorias**: reponer lo llena y la ventanilla lo
 	# vacía. Construir uno por tarea daría dos stocks del mismo producto, y las dos ventanas
@@ -154,10 +153,14 @@ func _al_abrir_la_jornada(_jornada: int) -> void:
 	_recolector.arrancar(TareaDeLaBasura.de_la_jornada())
 	# El dominio se resetea y los nodos no: sin esto las tres bolsas siguen adentro del `Area3D`
 	# del fondo, y desde la jornada 2 la obligatoria está hecha antes de que el jugador dé un
-	# paso. Van todas, siempre, sin preguntar dónde quedaron: dónde está cada una es del motor y
-	# decidirlo acá sería una regla del juego escrita donde ningún gate la mira.
+	# paso. Las cajas van por lo mismo: se trasladan, así que la noche siguiente arrancaría con
+	# la mercadería donde la dejó la anterior. Van todas, siempre, sin preguntar dónde
+	# quedaron: dónde está cada una es del motor y decidirlo acá sería una regla del juego
+	# escrita donde ningún gate la mira.
 	for bolsa: ObjetoAgarrable in _bolsas:
 		bolsa.volver_a_su_lugar()
+	for caja: CajaDeProductosDelDeposito in _cajas_de_productos:
+		caja.volver_a_su_lugar()
 	_audio.arrancar_el_ambiente()
 	_limpieza.repintar()
 	_estante.mostrar(0)

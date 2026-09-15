@@ -41,3 +41,29 @@ const ACCION_EXAMINAR := "examinar"
 ## son las dos mitades de la misma cosa: el grupo dice que se puede mirar, el método que
 ## contesta algo.
 const METODO_INTERACTUAR := "interactuar"
+
+## Y «esto se corre de un empujón» es otro nombre de método, por la misma razón: el jugador no
+## puede nombrar la caja sin cruzar la dirección de las capas.
+const METODO_EMPUJAR := "empujar"
+
+## Qué parte del paso que el jugador no pudo dar recibe lo que le estorba. Con 1 la caja se
+## mueve a su velocidad y no pesa nada; con 0 no se mueve y le tapa el paso. El medio es lo que
+## hace que correr una caja cueste caminar más lento, que es el peso que se quiere.
+const ARRASTRE_DE_LA_CAJA := 0.5
+
+## Hasta qué altura del centro de una caja se le puede sacar una unidad, en metros. El corte cae
+## entre una caja apoyada en el piso y una en la mano: es lo que le cobra el traslado al jugador.
+const ALTURA_PARA_RETIRAR := 0.75
+
+## Cuánto tiene que mirar hacia arriba una superficie para que se pueda apoyar una caja encima.
+## Es la componente vertical de su normal: con 1 sólo valdría lo perfectamente plano, con 0
+## valdría una pared.
+const APOYO_HORIZONTAL := 0.7
+
+
+static func se_puede_retirar(altura: float) -> bool:
+	return altura <= ALTURA_PARA_RETIRAR
+
+
+static func se_puede_apoyar_en(inclinacion: float) -> bool:
+	return inclinacion >= APOYO_HORIZONTAL

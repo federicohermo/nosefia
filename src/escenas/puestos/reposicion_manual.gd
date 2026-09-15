@@ -3,14 +3,29 @@ extends Node3D
 
 const ZonaDeReposicion := preload("res://src/escenas/puestos/zona_de_reposicion.gd")
 const GrupoDelPiso := preload("res://src/escenas/objetos/grupo_del_piso.gd")
+const CajaDelDeposito := preload("res://src/escenas/objetos/caja_de_productos.gd")
+const JugadorDelLocal := preload("res://src/escenas/jugador.gd")
 const OBJETO := preload("res://src/escenas/objetos/objeto_agarrable.tscn")
 const BORDE := preload("res://src/escenas/puestos/borde_de_reposicion.gdshader")
 const PRODUCTOS_NUEVOS := preload("res://assets/models/productos_marolini_jorgillo.glb")
 
+## Hasta dónde se busca piso debajo de una caja recién soltada, en metros.
+const CAIDA_MAXIMA := 3.0
+
+## Cuántas veces se parte al medio la búsqueda del borde de un apoyo.
+const PASOS_DEL_BORDE := 12
+
+## Cuánto puede variar la altura de un apoyo y seguir siendo el mismo, en metros.
+const TOLERANCIA_DEL_APOYO := 0.02
+
 @export var repositor: Repositor
-@export var jugador: PhysicsBody3D
+@export var jugador: JugadorDelLocal
 @export var estante: Node3D
 @export var contenido: Node3D
+
+## De dónde cuelga la caja mientras se la lleva: un punto del CUERPO y no de la cámara, porque
+## pegada al pitch tapa la mira. Lo mueve este puesto y no `Agarre`, que no puede nombrarla.
+@export var punto_de_la_caja: Node3D
 @export var apoyos: Array[Vector3] = []
 @export var direcciones: Array[Vector3] = []
 @export var giros_del_frente: Array[float] = []
@@ -63,10 +78,13 @@ func preparar() -> void:
 		casillero.material_de_foco = borde
 		casillero.colocacion_pedida.connect(pedir_colocar)
 		_zonas.append(casillero)
+	jugador.uso_pedido.connect(retirar_de_la_caja)
 	repositor.agarre.objeto_agarrado.connect(_actualizar_zonas)
 	repositor.agarre.objeto_soltado.connect(_actualizar_zonas)
 	repositor.agarre.objeto_soltado.connect(_agrupar_suelto)
 	repositor.agarre.objeto_agarrado.connect(_retirar_del_grupo)
+	repositor.agarre.objeto_soltado.connect(_apoyar_la_caja)
+	repositor.agarre.objeto_agarrado.connect(_colgar_la_caja)
 	_actualizar_zonas()
 
 
@@ -78,6 +96,189 @@ func _agrupar_suelto(nodo: Node3D) -> void:
 func _retirar_del_grupo(nodo: Node3D) -> void:
 	if nodo is ObjetoAgarrable and nodo.datos is UnidadDeProducto:
 		_sueltos[nodo.datos.producto.id].quitar(nodo)
+
+
+## Saca una unidad de la caja apuntada, y sólo con la caja apoyada en el suelo.
+##
+## El clic derecho llega por `uso_pedido`, que se reparte entre los puestos: acá se descarta lo
+## que no es una caja. Desde qué altura entrega lo decide `ReglasDeLosObjetos`, donde tiene test.
+func retirar_de_la_caja(objetivo: Node3D) -> void:
+	var caja := objetivo as CajaDelDeposito
+	if caja == null or not ReglasDeLosObjetos.se_puede_retirar(caja.global_position.y):
+		return
+	retirar(caja.producto)
+
+
+## Baja a la cintura la caja recién levantada y le da su volumen al cuerpo del jugador.
+func _colgar_la_caja(nodo: Node3D) -> void:
+	if not nodo is CajaDelDeposito:
+		return
+	if punto_de_la_caja == null:
+		push_error("ReposicionManual sin punto de la caja cableado: revisar almacen.tscn")
+		return
+	repositor.agarre.mover_lo_sostenido(punto_de_la_caja)
+	jugador.ocupar_el_frente(true)
+
+
+## Apoya la caja recién soltada donde el jugador tiene la mira, derecha y de una.
+##
+## El cuerpo es estático, así que el motor no la mueve solo. El `top_level` vuelve a `false`,
+## que es lo que soltar deja en `true`. Y si no llega entera hasta el lugar, no se suelta: se la
+## vuelve a la mano en vez de dejarla flotando o colgando de un borde.
+func _apoyar_la_caja(nodo: Node3D) -> void:
+	var caja := nodo as CajaDelDeposito
+	if caja == null or punto_de_la_caja == null:
+		return
+	jugador.ocupar_el_frente(false)
+	caja.top_level = false
+	caja.global_basis = Basis.IDENTITY
+	var destino := _apartado(caja, _lugar_apuntado(caja))
+	caja.global_position = _llevar_hasta(caja, destino)
+	var llego := caja.global_position.distance_to(destino) < TOLERANCIA_DEL_APOYO
+	if not llego or _le_queda_encima_al_jugador(caja):
+		repositor.agarre.pedir_agarrar(caja.datos, caja)
+
+
+## Si la caja terminó adentro del cuerpo del jugador es que ahí no hay lugar para apoyarla, y
+## dejarla igual lo sube arriba de ella. Entonces no se suelta: se la vuelve a la mano.
+func _le_queda_encima_al_jugador(caja: CajaDelDeposito) -> bool:
+	var forma: CollisionShape3D = caja.get_node("Cuerpo")
+	var consulta := PhysicsShapeQueryParameters3D.new()
+	consulta.shape = forma.shape
+	consulta.transform = forma.global_transform
+	consulta.exclude = [caja.get_rid()]
+	for choque in get_world_3d().direct_space_state.intersect_shape(consulta, 8):
+		if choque["collider"] == jugador:
+			return true
+	return false
+
+
+## Dónde va el centro de la caja según lo que el jugador tiene en la mira.
+##
+## Encima de la superficie apuntada y adentro de su huella. Lo que no recibe nada —una pared, el
+## aire— manda la caja al piso que haya debajo de ese punto.
+func _lugar_apuntado(caja: CajaDelDeposito) -> Vector3:
+	var media := _media_caja(caja)
+	var ojo := jugador.mira()
+	var lejos := ojo.origin - ojo.basis.z * ReglasDelJugador.ALCANCE_DE_LA_MIRA
+	var golpe := _rayo(caja, ojo.origin, lejos)
+	var punto := lejos
+	if not golpe.is_empty():
+		punto = golpe["position"]
+	if golpe.is_empty() or not ReglasDeLosObjetos.se_puede_apoyar_en(golpe["normal"].y):
+		punto += (ojo.origin - punto).normalized() * media.length()
+		golpe = _rayo(caja, punto, punto + Vector3.DOWN * CAIDA_MAXIMA)
+		if golpe.is_empty():
+			return punto
+		punto = golpe["position"]
+	var huella := _huella_del_apoyo(caja, punto)
+	var lugar := punto + Vector3.UP * media.y
+	lugar.x = _adentro(lugar.x, huella.position.x + media.x, huella.end.x - media.x)
+	lugar.z = _adentro(lugar.z, huella.position.z + media.z, huella.end.z - media.z)
+	return lugar
+
+
+## Corre el destino hacia afuera de lo que lo estorba, en horizontal.
+##
+## Apuntar al piso al pie de un mueble da un lugar donde la caja no entra: media caja queda
+## adentro de la madera, y entonces el barrido que la baja se frena a mitad de camino.
+func _apartado(caja: CajaDelDeposito, destino: Vector3) -> Vector3:
+	var forma: CollisionShape3D = caja.get_node("Cuerpo")
+	var consulta := PhysicsShapeQueryParameters3D.new()
+	consulta.shape = forma.shape
+	consulta.transform = Transform3D(Basis.IDENTITY.scaled(forma.scale), destino)
+	consulta.exclude = [caja.get_rid(), jugador.get_rid()]
+	# Con margen: correrla hasta el contacto justo la deja rozando, y entonces no baja.
+	consulta.margin = TOLERANCIA_DEL_APOYO
+	var contactos := get_world_3d().direct_space_state.collide_shape(consulta, 1)
+	if contactos.size() < 2:
+		return destino
+	var salida: Vector3 = contactos[0] - contactos[1]
+	salida.y = 0.0
+	return destino + salida
+
+
+## Hasta dónde sigue habiendo superficie a la misma altura alrededor del punto apuntado.
+##
+## Se mide con rayos y no con el volumen del cuerpo: un mostrador es un pedazo del `.tscn` del
+## edificio entero, así que su volumen abarca el local y no dice nada de dónde termina la tapa.
+## Se tantea hasta una caja de distancia hacia cada lado: con eso alcanza para correrla media
+## caja y que entre entera.
+func _huella_del_apoyo(caja: CajaDelDeposito, punto: Vector3) -> AABB:
+	var huella := AABB(punto, Vector3.ZERO)
+	for direccion: Vector3 in [Vector3.LEFT, Vector3.RIGHT, Vector3.FORWARD, Vector3.BACK]:
+		huella = huella.expand(punto + direccion * _borde_del_apoyo(caja, punto, direccion))
+	return huella
+
+
+## Cuánto sigue habiendo apoyo desde el punto hacia un lado, partiendo al medio.
+##
+## A pasos fijos el canto de un apoyo del tamaño de la caja cae entre dos pasos, y entonces la
+## huella sale más chica que la caja y la deja descentrada justo donde tenía que entrar justa.
+func _borde_del_apoyo(caja: CajaDelDeposito, punto: Vector3, direccion: Vector3) -> float:
+	var cerca := 0.0
+	var lejos := 2.0 * _media_caja(caja).x
+	if _hay_apoyo(caja, punto + direccion * lejos, punto.y):
+		return lejos
+	for paso in PASOS_DEL_BORDE:
+		var medio := (cerca + lejos) / 2.0
+		if _hay_apoyo(caja, punto + direccion * medio, punto.y):
+			cerca = medio
+		else:
+			lejos = medio
+	return cerca
+
+
+## Si debajo de ese punto hay superficie a la altura dada.
+func _hay_apoyo(caja: CajaDelDeposito, donde: Vector3, altura: float) -> bool:
+	var golpe := _rayo(
+		caja, donde + Vector3.UP * TOLERANCIA_DEL_APOYO, donde + Vector3.DOWN * TOLERANCIA_DEL_APOYO
+	)
+	return not golpe.is_empty() and absf(golpe["position"].y - altura) < TOLERANCIA_DEL_APOYO
+
+
+func _rayo(caja: CajaDelDeposito, desde: Vector3, hasta: Vector3) -> Dictionary:
+	var consulta := PhysicsRayQueryParameters3D.create(desde, hasta)
+	consulta.exclude = [caja.get_rid(), jugador.get_rid()]
+	return get_world_3d().direct_space_state.intersect_ray(consulta)
+
+
+## Hasta dónde llega la caja yendo de la mano al destino: sube, entra y baja.
+##
+## Derecho no alcanza: el labio de un estante queda justo a la altura a la que se la lleva, así
+## que el camino recto choca contra él y la caja nunca entra. Una persona la sube y la mete. Y
+## nunca por debajo de la mano: bajarla primero la hace chocar contra la tapa de un mostrador.
+func _llevar_hasta(caja: CajaDelDeposito, destino: Vector3) -> Vector3:
+	var mano := punto_de_la_caja.global_position
+	var media := _media_caja(caja)
+	var alto := maxf(mano.y, destino.y + media.y)
+	var arriba := _barrer(caja, mano, Vector3(mano.x, alto, mano.z))
+	var adentro := _barrer(caja, arriba, Vector3(destino.x, arriba.y, destino.z))
+	return _barrer(caja, adentro, destino)
+
+
+## El punto más cercano a `hasta` al que la caja llega sin meterse adentro de nada.
+func _barrer(caja: CajaDelDeposito, desde: Vector3, hasta: Vector3) -> Vector3:
+	var forma: CollisionShape3D = caja.get_node("Cuerpo")
+	var consulta := PhysicsShapeQueryParameters3D.new()
+	consulta.shape = forma.shape
+	consulta.transform = Transform3D(Basis.IDENTITY.scaled(forma.scale), desde)
+	consulta.motion = hasta - desde
+	consulta.exclude = [caja.get_rid(), jugador.get_rid()]
+	var avance: float = get_world_3d().direct_space_state.cast_motion(consulta)[0]
+	return desde + consulta.motion * avance
+
+
+## El valor adentro del rango, o su medio cuando el rango viene dado vuelta.
+static func _adentro(valor: float, desde: float, hasta: float) -> float:
+	if desde > hasta:
+		return (desde + hasta) / 2.0
+	return clampf(valor, desde, hasta)
+
+
+func _media_caja(caja: CajaDelDeposito) -> Vector3:
+	var forma: CollisionShape3D = caja.get_node("Cuerpo")
+	return (forma.shape as BoxShape3D).size * forma.scale / 2.0
 
 
 func pedir_colocar(id: Producto.Id) -> void:
