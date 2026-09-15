@@ -12,10 +12,12 @@ extends StaticBody3D
 @export var orientacion_en_mano := Basis.IDENTITY
 
 var _lugar_de_origen: Transform3D
+var _padre_de_origen: Node = null
 
 
 func _ready() -> void:
 	_lugar_de_origen = transform
+	_padre_de_origen = get_parent()
 
 
 func interactuar() -> ObjetoDelAlmacen:
@@ -24,8 +26,13 @@ func interactuar() -> ObjetoDelAlmacen:
 
 ## El dominio se resetea y los nodos no: sin esto la jornada siguiente arranca con la caja donde
 ## la dejó la anterior.
+##
+## Vuelve también de padre, y no sólo de lugar: la noche puede terminar con la caja en la mano,
+## y ahí `transform` es relativo al cuerpo del jugador. Escribirlo sin despegarla la deja
+## flotando pegada a él toda la noche siguiente.
 func volver_a_su_lugar() -> void:
 	top_level = false
+	reparent(_padre_de_origen, false)
 	transform = _lugar_de_origen
 
 

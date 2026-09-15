@@ -134,6 +134,10 @@ func _ready() -> void:
 ## arma en este lado y no en el `Repositor` porque «con cuánta mercadería arranca una jornada»
 ## es una regla del juego, y `Apertura` es donde tiene test.
 func _al_abrir_la_jornada(_jornada: int) -> void:
+	# Primero que nada, y por eso antes de `limpiar()`: lo que quedó en la mano cuelga del
+	# jugador, así que devolverlo a su lugar le escribiría la posición relativa a la mano y la
+	# caja terminaría flotando pegada al cuerpo toda la noche siguiente.
+	_agarre.vaciar_las_manos()
 	_hud.declarar_obligatorias(Apertura.cantidad_de_obligatorias())
 	# **Un solo inventario para las dos obligatorias**: reponer lo llena y la ventanilla lo
 	# vacía. Construir uno por tarea daría dos stocks del mismo producto, y las dos ventanas

@@ -359,13 +359,12 @@ func _devolver_al_mundo(nodo: Node3D) -> void:
 	if nodo == null or mundo == null or not nodo.is_inside_tree():
 		return
 	nodo.reparent(mundo, true)
-	# Vale para cualquier cuerpo: lo que no cae solo se queda donde lo dejó el punto de soltado.
-	if nodo is PhysicsBody3D:
+	if nodo is RigidBody3D:
 		_ajustar_la_caida(nodo)
 
 
 ## El punto fijo puede quedar detrás de la madera. Se barre el volumen desde el jugador.
-func _ajustar_la_caida(cuerpo: PhysicsBody3D) -> void:
+func _ajustar_la_caida(cuerpo: RigidBody3D) -> void:
 	var inicio := _camara.global_position
 	var recorrido := cuerpo.global_position - inicio
 	var avance := 1.0

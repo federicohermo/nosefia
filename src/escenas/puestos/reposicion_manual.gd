@@ -111,9 +111,13 @@ func retirar_de_la_caja(objetivo: Node3D) -> void:
 
 ## Baja a la cintura la caja recién levantada y le da su volumen al cuerpo del jugador.
 func _colgar_la_caja(nodo: Node3D) -> void:
-	if nodo is CajaDelDeposito and punto_de_la_caja != null:
-		repositor.agarre.mover_lo_sostenido(punto_de_la_caja)
-		jugador.ocupar_el_frente(true)
+	if not nodo is CajaDelDeposito:
+		return
+	if punto_de_la_caja == null:
+		push_error("ReposicionManual sin punto de la caja cableado: revisar almacen.tscn")
+		return
+	repositor.agarre.mover_lo_sostenido(punto_de_la_caja)
+	jugador.ocupar_el_frente(true)
 
 
 ## Apoya la caja recién soltada donde el jugador tiene la mira, derecha y de una.
@@ -123,7 +127,7 @@ func _colgar_la_caja(nodo: Node3D) -> void:
 ## vuelve a la mano en vez de dejarla flotando o colgando de un borde.
 func _apoyar_la_caja(nodo: Node3D) -> void:
 	var caja := nodo as CajaDelDeposito
-	if caja == null:
+	if caja == null or punto_de_la_caja == null:
 		return
 	jugador.ocupar_el_frente(false)
 	caja.top_level = false
