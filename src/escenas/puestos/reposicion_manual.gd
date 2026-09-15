@@ -121,17 +121,61 @@ func _apoyar_la_caja(nodo: Node3D) -> void:
 	jugador.ocupar_el_frente(false)
 	caja.top_level = false
 	caja.global_basis = Basis.IDENTITY
-	var forma: CollisionShape3D = caja.get_node("Cuerpo")
-	var consulta := PhysicsShapeQueryParameters3D.new()
-	consulta.shape = forma.shape
-	consulta.transform = forma.global_transform
-	consulta.motion = Vector3.DOWN * CAIDA_MAXIMA
-	consulta.collision_mask = caja.collision_mask
+	var apoyo := _bajar_hasta_el_apoyo(caja)
+	if apoyo == null:
+		return
+	_acomodar_sobre(caja, apoyo)
+	_bajar_hasta_el_apoyo(caja)
+
+
+## Apoya la caja sobre lo que haya debajo de su CENTRO y devuelve qué es, o `null` si no hay nada.
+##
+## El centro y no la forma entera: un barrido de la caja la deja enganchada del borde de un
+## estante, en el aire y sin caerse.
+func _bajar_hasta_el_apoyo(caja: CajaDelDeposito) -> CollisionObject3D:
+	var consulta := PhysicsRayQueryParameters3D.create(
+		caja.global_position, caja.global_position + Vector3.DOWN * CAIDA_MAXIMA
+	)
 	consulta.exclude = [caja.get_rid(), jugador.get_rid()]
-	# El segundo valor es el contacto y el primero se queda un margen antes: una caja tiene
-	# que quedar tocando el piso, no flotando un centímetro sobre él.
-	var libre: float = get_world_3d().direct_space_state.cast_motion(consulta)[1]
-	caja.global_position += consulta.motion * libre
+	var golpe := get_world_3d().direct_space_state.intersect_ray(consulta)
+	if golpe.is_empty():
+		return null
+	caja.global_position.y = (golpe["position"] as Vector3).y + _media_caja(caja).y
+	return golpe["collider"] as CollisionObject3D
+
+
+## Corre la caja para que quede entera sobre su apoyo — centrada, si el apoyo es de su tamaño.
+##
+## Es lo que la deja puesta como estaba al abrir la noche: derecha y adentro del estante, en vez
+## de colgando de un borde. Sobre otra caja, que mide lo mismo, el margen se invierte y las dos
+## cuentas dan el medio del apoyo, que es justo donde va.
+func _acomodar_sobre(caja: CajaDelDeposito, apoyo: CollisionObject3D) -> void:
+	var limites := _limites_de(apoyo)
+	var media := _media_caja(caja)
+	var lugar := caja.global_position
+	lugar.x = _adentro(lugar.x, limites.position.x + media.x, limites.end.x - media.x)
+	lugar.z = _adentro(lugar.z, limites.position.z + media.z, limites.end.z - media.z)
+	caja.global_position = lugar
+
+
+## Lo que ocupa un cuerpo, en coordenadas del mundo.
+func _limites_de(cuerpo: CollisionObject3D) -> AABB:
+	var limites := AABB(cuerpo.global_position, Vector3.ZERO)
+	for forma: CollisionShape3D in cuerpo.find_children("*", "CollisionShape3D", true, false):
+		limites = limites.merge(forma.global_transform * forma.shape.get_debug_mesh().get_aabb())
+	return limites
+
+
+## El valor adentro del rango, o su medio cuando el rango viene dado vuelta.
+static func _adentro(valor: float, desde: float, hasta: float) -> float:
+	if desde > hasta:
+		return (desde + hasta) / 2.0
+	return clampf(valor, desde, hasta)
+
+
+func _media_caja(caja: CajaDelDeposito) -> Vector3:
+	var forma: CollisionShape3D = caja.get_node("Cuerpo")
+	return (forma.shape as BoxShape3D).size * forma.scale / 2.0
 
 
 func pedir_colocar(id: Producto.Id) -> void:

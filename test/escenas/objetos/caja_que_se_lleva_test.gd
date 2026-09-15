@@ -154,3 +154,61 @@ func _comprobar_la_caja_en_la_mano(jugador: Node3D, caja: Node3D, donde: String)
 func _limites(caja: Node3D) -> AABB:
 	var forma: CollisionShape3D = caja.get_node("Cuerpo")
 	return forma.global_transform * forma.shape.get_debug_mesh().get_aabb()
+
+
+func test_la_caja_soltada_se_acomoda_adentro_de_su_apoyo() -> void:  # 047-AC10
+	# Soltada corrida sobre otra caja queda centrada sobre ella, que es el caso donde el apoyo
+	# mide lo mismo que la caja y las dos cuentas del margen se cruzan.
+	var almacen: Node3D = await _almacen_con_jugador_quieto()
+	var reposicion: Node3D = almacen.get("_reposicion_manual")
+	var caja: Node3D = almacen.get("_cajas_de_productos")[Producto.Id.ARROZ]
+	var debajo: Node3D = almacen.get("_cajas_de_productos")[Producto.Id.ACTRONCITO]
+	caja.reparent(almacen, true)
+	caja.global_position = debajo.global_position + Vector3(0.15, 1.0, 0.12)
+	reposicion.call("_apoyar_la_caja", caja)
+	assert_float(caja.global_position.x).is_equal_approx(debajo.global_position.x, 0.001)
+	assert_float(caja.global_position.z).is_equal_approx(debajo.global_position.z, 0.001)
+	(
+		assert_float(caja.global_position.y)
+		. override_failure_message("la caja no quedó arriba de la otra")
+		. is_greater(debajo.global_position.y)
+	)
+	_comprobar_apoyo_entero(almacen, caja, "sobre otra caja")
+
+
+func test_la_caja_vuelta_a_su_lugar_apoya_entera() -> void:  # 047-AC10
+	# El caso de arriba mide un apoyo del tamaño de la caja; éste mide los ocho apoyos de
+	# verdad, que son el estante del depósito y el suelo.
+	var almacen: Node3D = await _almacen_con_jugador_quieto()
+	var cajas: Array = almacen.get("_cajas_de_productos")
+	assert_int(cajas.size()).is_equal(Catalogo.todos().size())
+	for caja: Node3D in cajas:
+		_comprobar_apoyo_entero(almacen, caja, caja.name)
+
+
+## Que la huella de la caja entre adentro de lo que la sostiene.
+func _comprobar_apoyo_entero(almacen: Node3D, caja: Node3D, donde: String) -> void:
+	var forma: CollisionShape3D = caja.get_node("Cuerpo")
+	var media: Vector3 = (forma.shape as BoxShape3D).size * forma.scale / 2.0
+	var consulta := PhysicsRayQueryParameters3D.create(
+		caja.global_position, caja.global_position + Vector3.DOWN * 3.0
+	)
+	consulta.exclude = [(caja as CollisionObject3D).get_rid()]
+	var golpe := almacen.get_world_3d().direct_space_state.intersect_ray(consulta)
+	assert_bool(golpe.has("collider")).is_true()
+	if not golpe.has("collider"):
+		return
+	var apoyo: CollisionObject3D = golpe["collider"]
+	var limites := AABB(apoyo.global_position, Vector3.ZERO)
+	for suya: CollisionShape3D in apoyo.find_children("*", "CollisionShape3D", true, false):
+		limites = limites.merge(suya.global_transform * suya.shape.get_debug_mesh().get_aabb())
+	var huella := AABB(caja.global_position - media, media * 2.0)
+	huella.position.y = limites.position.y
+	huella.size.y = limites.size.y
+	(
+		assert_bool(limites.grow(0.001).encloses(huella))
+		. override_failure_message(
+			"%s: la caja en %v se sale de su apoyo %v" % [donde, caja.global_position, limites]
+		)
+		. is_true()
+	)
