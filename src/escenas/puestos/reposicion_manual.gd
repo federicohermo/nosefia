@@ -3,14 +3,23 @@ extends Node3D
 
 const ZonaDeReposicion := preload("res://src/escenas/puestos/zona_de_reposicion.gd")
 const GrupoDelPiso := preload("res://src/escenas/objetos/grupo_del_piso.gd")
+const CajaDelDeposito := preload("res://src/escenas/objetos/caja_de_productos.gd")
+const JugadorDelLocal := preload("res://src/escenas/jugador.gd")
 const OBJETO := preload("res://src/escenas/objetos/objeto_agarrable.tscn")
 const BORDE := preload("res://src/escenas/puestos/borde_de_reposicion.gdshader")
 const PRODUCTOS_NUEVOS := preload("res://assets/models/productos_marolini_jorgillo.glb")
 
+## Hasta dónde se busca piso debajo de una caja recién soltada, en metros.
+const CAIDA_MAXIMA := 3.0
+
 @export var repositor: Repositor
-@export var jugador: PhysicsBody3D
+@export var jugador: JugadorDelLocal
 @export var estante: Node3D
 @export var contenido: Node3D
+
+## De dónde cuelga la caja mientras se la lleva: un punto del CUERPO y no de la cámara, porque
+## pegada al pitch tapa la mira. Lo mueve este puesto y no `Agarre`, que no puede nombrarla.
+@export var punto_de_la_caja: Node3D
 @export var apoyos: Array[Vector3] = []
 @export var direcciones: Array[Vector3] = []
 @export var giros_del_frente: Array[float] = []
@@ -63,10 +72,13 @@ func preparar() -> void:
 		casillero.material_de_foco = borde
 		casillero.colocacion_pedida.connect(pedir_colocar)
 		_zonas.append(casillero)
+	jugador.uso_pedido.connect(retirar_de_la_caja)
 	repositor.agarre.objeto_agarrado.connect(_actualizar_zonas)
 	repositor.agarre.objeto_soltado.connect(_actualizar_zonas)
 	repositor.agarre.objeto_soltado.connect(_agrupar_suelto)
 	repositor.agarre.objeto_agarrado.connect(_retirar_del_grupo)
+	repositor.agarre.objeto_soltado.connect(_apoyar_la_caja)
+	repositor.agarre.objeto_agarrado.connect(_colgar_la_caja)
 	_actualizar_zonas()
 
 
@@ -78,6 +90,46 @@ func _agrupar_suelto(nodo: Node3D) -> void:
 func _retirar_del_grupo(nodo: Node3D) -> void:
 	if nodo is ObjetoAgarrable and nodo.datos is UnidadDeProducto:
 		_sueltos[nodo.datos.producto.id].quitar(nodo)
+
+
+## Saca una unidad de la caja apuntada, y sólo con la caja apoyada en el suelo.
+##
+## El clic derecho llega por `uso_pedido`, que se reparte entre los puestos: acá se descarta lo
+## que no es una caja. Desde qué altura entrega lo decide `ReglasDeLosObjetos`, donde tiene test.
+func retirar_de_la_caja(objetivo: Node3D) -> void:
+	var caja := objetivo as CajaDelDeposito
+	if caja == null or not ReglasDeLosObjetos.se_puede_retirar(caja.global_position.y):
+		return
+	retirar(caja.producto)
+
+
+## Baja a la cintura la caja recién levantada.
+func _colgar_la_caja(nodo: Node3D) -> void:
+	if nodo is CajaDelDeposito and punto_de_la_caja != null:
+		repositor.agarre.mover_lo_sostenido(punto_de_la_caja)
+
+
+## Deja apoyada en el piso la caja recién soltada, derecha y de una.
+##
+## El cuerpo es estático, así que el motor no la baja solo: se la baja con un barrido de su
+## propia forma. El `top_level` vuelve a `false`, que es lo que soltar deja en `true`.
+func _apoyar_la_caja(nodo: Node3D) -> void:
+	var caja := nodo as CajaDelDeposito
+	if caja == null:
+		return
+	caja.top_level = false
+	caja.global_basis = Basis.IDENTITY
+	var forma: CollisionShape3D = caja.get_node("Cuerpo")
+	var consulta := PhysicsShapeQueryParameters3D.new()
+	consulta.shape = forma.shape
+	consulta.transform = forma.global_transform
+	consulta.motion = Vector3.DOWN * CAIDA_MAXIMA
+	consulta.collision_mask = caja.collision_mask
+	consulta.exclude = [caja.get_rid(), jugador.get_rid()]
+	# El segundo valor es el contacto y el primero se queda un margen antes: una caja tiene
+	# que quedar tocando el piso, no flotando un centímetro sobre él.
+	var libre: float = get_world_3d().direct_space_state.cast_motion(consulta)[1]
+	caja.global_position += consulta.motion * libre
 
 
 func pedir_colocar(id: Producto.Id) -> void:

@@ -3,9 +3,11 @@
 [ext_resource type="Script" path="res://src/escenas/objetos/caja_de_productos.gd" id="script"]
 [ext_resource type="ArrayMesh" path="res://assets/models/caja_de_productos.res" id="malla"]
 [ext_resource type="Shape3D" path="res://assets/models/caja_colision.tres" id="forma"]
+[ext_resource type="Resource" path="res://src/dominio/almacen/caja_de_reposicion.tres" id="datos"]
 
 [node name="CajaDeProductos" type="StaticBody3D" node_paths=PackedStringArray("mallas") groups=["interactuable"]]
 script = ExtResource("script")
+datos = ExtResource("datos")
 mallas = [NodePath("Malla")]
 
 [node name="Cuerpo" type="CollisionShape3D" parent="."]

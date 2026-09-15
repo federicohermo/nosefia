@@ -24,10 +24,14 @@ const ENTRADA_DEL_BANO := Vector3(8.8, 1.05, -4.658)
 ## A cuánto del inodoro tienen que quedar, en metros. Ancla el cuarto sin escribir sus paredes.
 const CERCA_DEL_INODORO := 4.0
 
+## Adonde se corre una caja para probar que la apertura la devuelve. Es el aire en el medio del
+## local, lejos del depósito y de cualquier apoyo.
+const LEJOS_DE_SU_LUGAR := Vector3(0.0, 2.0, 0.0)
+
 
 func test_las_ocho_cajas_de_reposicion_estan_apoyadas_en_el_deposito() -> void:  # 043-AC10
-	# Entran seis en los estantes y dos en el piso: entre estantes hay 0,477 m y la caja mide
-	# 0,607, así que sólo el estante de arriba tiene aire. Lo que el caso afirma no es el reparto
+	# Entran cuatro en los estantes y cuatro en el piso: entre estantes hay 0,477 m y la caja
+	# mide 0,607, así que sólo el estante de arriba tiene aire. Lo que el caso afirma no es el reparto
 	# sino que ninguna quede flotando ni clavada adentro de otra cosa.
 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
 	add_child(almacen)
@@ -133,3 +137,30 @@ func _lo_que_pisa(almacen: Node3D, cuerpo: StaticBody3D, apoyo: String) -> Array
 		if quien != apoyo:
 			pisados.append("%s pisa %s" % [cuerpo.name, quien])
 	return pisados
+
+
+func test_abrir_la_jornada_devuelve_cada_caja_a_su_lugar() -> void:  # 047-AC8
+	# Desde el 047 las cajas se trasladan, así que quedan donde el jugador las dejó. El dominio
+	# se resetea y los nodos no: sin esta vuelta, la noche 2 arranca con la mercadería al lado
+	# de la góndola y el viaje al depósito —que es lo que reponer cuesta— ya está pago.
+	var almacen: Node3D = auto_free(ALMACEN.instantiate())
+	var lugares: Array[Vector3] = []
+	for caja: Node3D in almacen.get("_cajas_de_productos"):
+		lugares.append(caja.position)
+	add_child(almacen)
+	await get_tree().physics_frame
+	for caja: Node3D in almacen.get("_cajas_de_productos"):
+		caja.global_position = LEJOS_DE_SU_LUGAR
+	almacen.get("_ciclo").abrir_la_jornada()
+	for indice in lugares.size():
+		var caja: Node3D = almacen.get("_cajas_de_productos")[indice]
+		(
+			assert_vector(caja.position)
+			. override_failure_message(
+				(
+					"`%s` abrió la jornada en %v y arrancó en %v"
+					% [caja.name, caja.position, lugares[indice]]
+				)
+			)
+			. is_equal_approx(lugares[indice], Vector3.ONE * 0.001)
+		)

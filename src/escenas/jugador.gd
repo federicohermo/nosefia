@@ -50,6 +50,7 @@ var _enfocado: Node3D = null
 ## `RetornoDeLaMano`.
 var _largo_de_carga := 0.0
 var _largo_de_producto := 0.0
+var _largo_de_caja := 0.0
 
 @onready var _camara: Camera3D = $Camara
 @onready var _campo: Area3D = $Camara/CampoDeInteraccion
@@ -57,6 +58,10 @@ var _largo_de_producto := 0.0
 ## Los dos brazos que miden cuánto lugar hay para lo que se lleva.
 @onready var _brazo_de_carga: SpringArm3D = $Camara/BrazoDeCarga
 @onready var _brazo_de_producto: SpringArm3D = $Camara/BrazoDeProducto
+
+## El de la caja cuelga del cuerpo y no de la cámara: mirar al piso no tiene que meterla ahí.
+@onready var _brazo_de_caja: SpringArm3D = $BrazoDeCaja
+@onready var _punto_de_caja: Node3D = $PuntoDeCaja
 
 
 func _ready() -> void:
@@ -71,6 +76,7 @@ func _ready() -> void:
 	# a la vista del jugador cada vez que empieza una jornada.
 	_largo_de_carga = _brazo_de_carga.spring_length
 	_largo_de_producto = _brazo_de_producto.spring_length
+	_largo_de_caja = _brazo_de_caja.spring_length
 	# Examinar clava la cámara y la caminata. Se cablea acá y no adentro de `Examen` porque
 	# `sistemas/` no puede nombrar un nodo de `escenas/`: allá se emite lo que pasó, acá se
 	# traduce a lo que hay que hacer.
@@ -155,7 +161,7 @@ func _physics_process(delta: float) -> void:
 	_leer_la_mira()
 
 
-## Corre las dos manos sobre el eje de su brazo, hasta donde haya lugar.
+## Corre cada mano sobre el eje de su brazo, hasta donde haya lugar.
 ##
 ## El brazo no mueve a nadie: los puntos cuelgan de la cámara y no de él, así que la única
 ## escritura sobre ellos es ésta. Colgarlos del brazo sería más corto, pero entonces el motor
@@ -165,13 +171,23 @@ func _acomodar_las_manos(delta: float) -> void:
 	_largo_de_producto = _acomodar(
 		_brazo_de_producto, agarre.punto_de_producto, _largo_de_producto, delta
 	)
+	_largo_de_caja = _acomodar(
+		_brazo_de_caja,
+		_punto_de_caja,
+		_largo_de_caja,
+		delta,
+		_brazo_de_caja.spring_length * ReglasDeLosObjetos.REPLIEGUE_MAXIMO_DE_LA_CAJA
+	)
 
 
-## Mueve un punto sobre el eje de su brazo y devuelve el largo que quedó.
-func _acomodar(brazo: SpringArm3D, punto: Node3D, largo: float, delta: float) -> float:
+## Mueve un punto sobre el eje de su brazo y devuelve el largo que quedó. El mínimo es lo que
+## impide que un objeto grande se repliegue hasta adentro de la cámara.
+func _acomodar(
+	brazo: SpringArm3D, punto: Node3D, largo: float, delta: float, minimo: float = 0.0
+) -> float:
 	if brazo == null or punto == null:
 		return largo
-	var siguiente := RetornoDeLaMano.siguiente(largo, brazo.get_hit_length(), delta)
+	var siguiente := RetornoDeLaMano.siguiente(largo, maxf(brazo.get_hit_length(), minimo), delta)
 	punto.position = brazo.transform * Vector3(0.0, 0.0, siguiente)
 	return siguiente
 
@@ -312,12 +328,13 @@ func _devolver_al_mundo(nodo: Node3D) -> void:
 	if nodo == null or mundo == null or not nodo.is_inside_tree():
 		return
 	nodo.reparent(mundo, true)
-	if nodo is RigidBody3D:
+	# Vale para cualquier cuerpo: lo que no cae solo se queda donde lo dejó el punto de soltado.
+	if nodo is PhysicsBody3D:
 		_ajustar_la_caida(nodo)
 
 
 ## El punto fijo puede quedar detrás de la madera. Se barre el volumen desde el jugador.
-func _ajustar_la_caida(cuerpo: RigidBody3D) -> void:
+func _ajustar_la_caida(cuerpo: PhysicsBody3D) -> void:
 	var inicio := _camara.global_position
 	var recorrido := cuerpo.global_position - inicio
 	var avance := 1.0

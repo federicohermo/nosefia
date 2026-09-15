@@ -56,3 +56,22 @@ func test_las_dos_acciones_nuevas_no_se_pisan_con_las_de_caminar() -> void:  # 0
 	for nombre in nombres:
 		distintos[nombre] = true
 	assert_int(distintos.size()).is_equal(nombres.size())
+
+
+func test_el_corte_para_retirar_separa_apoyada_de_en_la_mano() -> void:  # 047-AC1
+	# Las tres alturas están medidas sobre `almacen.tscn`: una caja apoyada tiene el centro en
+	# 0,41; en la mano no baja de 1,14 ni mirando al piso; en el estante del depósito está en
+	# 1,91. El borde es el corte mismo — en él entrega, un milímetro más arriba no.
+	(
+		assert_bool(ReglasDeLosObjetos.se_puede_retirar(ReglasDeLosObjetos.ALTURA_PARA_RETIRAR))
+		. is_true()
+	)
+	(
+		assert_bool(
+			ReglasDeLosObjetos.se_puede_retirar(ReglasDeLosObjetos.ALTURA_PARA_RETIRAR + 0.001)
+		)
+		. is_false()
+	)
+	assert_bool(ReglasDeLosObjetos.se_puede_retirar(0.4059)).is_true()
+	assert_bool(ReglasDeLosObjetos.se_puede_retirar(1.1423)).is_false()
+	assert_bool(ReglasDeLosObjetos.se_puede_retirar(1.9077)).is_false()

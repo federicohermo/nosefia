@@ -304,7 +304,8 @@ func test_otra_jornada_vacia_grupos_mano_y_productos_sueltos() -> void:  # 042-A
 func test_el_frente_se_conserva_al_examinar_y_volver_a_agarrar() -> void:  # 042-AC3
 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
 	add_child(almacen)
-	almacen.get("_jugador").set_physics_process(false)
+	var jugador: Node3D = almacen.get("_jugador")
+	jugador.set_physics_process(false)
 	var agarre: Agarre = almacen.get("_agarre")
 	var frentes := [
 		Vector3.RIGHT,
@@ -317,7 +318,7 @@ func test_el_frente_se_conserva_al_examinar_y_volver_a_agarrar() -> void:  # 042
 		Vector3.FORWARD
 	]
 	for producto in Catalogo.todos():
-		almacen.get("_cajas_de_productos")[producto.id].interactuar()
+		_sacar_de_la_caja(jugador, almacen.get("_cajas_de_productos")[producto.id])
 		var unidad: Node3D = agarre.punto_de_producto.get_child(0)
 		var orientacion := unidad.basis
 		assert_float((orientacion * frentes[producto.id]).dot(Vector3.BACK)).is_greater(0.8)
@@ -356,7 +357,7 @@ func test_actroncito_marolini_y_jorgillo_se_reponen_con_foco_y_clic_reales() -> 
 		# el cuerpo, así que con la vista tapada la caja deja de ser candidata.
 		await _mirar_foco(jugador, centro + Vector3(1.3, 0.7, 0), centro)
 		assert_object(jugador.get("_enfocado")).is_same(caja)
-		_clic_real(jugador)
+		_sacar_de_la_caja(jugador, caja)
 		var unidad: UnidadDeProducto = almacen.get("_agarre").manos().sostenido()
 		assert_object(unidad).is_not_null()
 		if unidad == null:
@@ -416,7 +417,7 @@ func test_cada_unidad_ocupa_un_lugar_distinto_y_la_marca_indica_su_base() -> voi
 	for producto in Catalogo.todos():
 		var zona := presentacion.get_node("ZonaDe" + producto.nombre)
 		for indice in producto.umbral:
-			_accion(jugador, almacen.get("_cajas_de_productos")[producto.id])
+			_sacar_de_la_caja(jugador, almacen.get("_cajas_de_productos")[producto.id])
 			var unidad: Node3D = jugador.get_node("Camara/PuntoDeProducto").get_child(0)
 			var marca: MeshInstance3D = zona.mallas[0]
 			var apoyo := marca.global_position
@@ -435,7 +436,7 @@ func test_cada_unidad_ocupa_un_lugar_distinto_y_la_marca_indica_su_base() -> voi
 			for ocupado in ocupados:
 				assert_bool(limites.intersects(ocupado)).is_false()
 			ocupados.append(limites)
-		_accion(jugador, almacen.get("_cajas_de_productos")[producto.id])
+		_sacar_de_la_caja(jugador, almacen.get("_cajas_de_productos")[producto.id])
 		assert_object(almacen.get("_agarre").manos().sostenido()).is_null()
 
 
@@ -450,11 +451,7 @@ func test_el_clic_saca_una_unidad_visible_y_el_estante_la_recibe() -> void:  # 0
 	var caja: Node3D = almacen.get("_cajas_de_productos")[0]
 	var estante: Node3D = almacen.get("_estante")
 	var repositor: Repositor = almacen.get("_repositor")
-	jugador.set("_enfocado", caja)
-	var clic := InputEventAction.new()
-	clic.action = ReglasDeLosObjetos.ACCION_AGARRAR
-	clic.pressed = true
-	jugador.call("_unhandled_input", clic)
+	_sacar_de_la_caja(jugador, caja)
 	assert_object(agarre.manos().sostenido()).is_not_null()
 	var punto := jugador.get_node_or_null("Camara/PuntoDeProducto")
 	assert_object(punto).is_not_null()
@@ -467,11 +464,10 @@ func test_el_clic_saca_una_unidad_visible_y_el_estante_la_recibe() -> void:  # 0
 	# gesto siguiente es apuntar al casillero del estante.
 	assert_float(punto.position.x).is_greater(0.0)
 	assert_float(punto.position.y).is_less(0.0)
-	jugador.call("_unhandled_input", clic)
+	_sacar_de_la_caja(jugador, caja)
 	assert_int(punto.get_child_count()).is_equal(1)
 	_apuntar(almacen, Producto.Id.ACTRONCITO)
-	jugador.set("_enfocado", almacen.get("_reposicion_manual").get_node("ZonaDeActroncito"))
-	jugador.call("_unhandled_input", clic)
+	_accion(jugador, almacen.get("_reposicion_manual").get_node("ZonaDeActroncito"))
 	assert_object(agarre.manos().sostenido()).is_null()
 	assert_bool(unidad.is_visible_in_tree()).is_false()
 	var grupo: MultiMeshInstance3D = almacen.get("_reposicion_manual").get_node(
@@ -492,9 +488,9 @@ func test_con_el_estante_lleno_la_caja_no_entrega_otra_unidad() -> void:  # 008-
 	var estante: Node3D = almacen.get("_estante")
 	var agarre: Agarre = almacen.get("_agarre")
 	for unidad in Catalogo.todos()[0].umbral:
-		_accion(jugador, caja)
+		_sacar_de_la_caja(jugador, caja)
 		_accion(jugador, estante)
-	_accion(jugador, caja)
+	_sacar_de_la_caja(jugador, caja)
 	assert_object(agarre.manos().sostenido()).is_null()
 	_accion(jugador, estante)
 	assert_object(agarre.manos().sostenido()).is_null()
@@ -513,7 +509,7 @@ func test_examinar_no_retira_ni_deposita_y_devuelve_la_unidad_a_la_mira() -> voi
 	var agarre: Agarre = almacen.get("_agarre")
 	_accion(jugador, caja, ReglasDeLosObjetos.ACCION_EXAMINAR)
 	assert_object(agarre.manos().sostenido()).is_null()
-	_accion(jugador, caja)
+	_sacar_de_la_caja(jugador, caja)
 	var sostenido := agarre.manos().sostenido()
 	_accion(jugador, estante, ReglasDeLosObjetos.ACCION_EXAMINAR)
 	assert_object(agarre.manos().sostenido()).is_same(sostenido)
@@ -533,6 +529,13 @@ func _accion(
 	evento.action = accion
 	evento.pressed = true
 	jugador.call("_unhandled_input", evento)
+
+
+## Baja la caja al suelo y le pide una unidad con el clic derecho. Las del estante no
+## entregan desde ahí, y bajarlas es justamente lo que le cuesta al jugador.
+func _sacar_de_la_caja(jugador: Node3D, caja: Node3D) -> void:
+	caja.global_position.y = minf(caja.global_position.y, ReglasDeLosObjetos.ALTURA_PARA_RETIRAR)
+	_accion(jugador, caja, ReglasDelJugador.ACCION_USAR)
 
 
 func _apuntar(almacen: Node3D, id: Producto.Id) -> void:
@@ -568,7 +571,7 @@ func test_solo_la_zona_del_producto_recibe_el_foco_y_el_resto_del_mueble_no_colo
 	jugador.set_physics_process(false)
 	var agarre: Agarre = almacen.get("_agarre")
 	var estante: Node3D = almacen.get("_estante")
-	_accion(jugador, almacen.get("_cajas_de_productos")[0])
+	_sacar_de_la_caja(jugador, almacen.get("_cajas_de_productos")[0])
 	var sostenido := agarre.manos().sostenido()
 	assert_bool(estante.is_in_group(ReglasDelJugador.GRUPO_INTERACTUABLE)).is_false()
 	var presentacion: Node3D = almacen.get("_reposicion_manual")
