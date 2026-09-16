@@ -6,30 +6,30 @@
 background_mode = 1
 background_color = Color(0.008, 0.012, 0.027, 1)
 ambient_light_source = 2
-ambient_light_color = Color(0.106, 0.184, 0.376, 1)
+ambient_light_color = Color(0.129, 0.192, 0.349, 1)
 ambient_light_sky_contribution = 0.0
-ambient_light_energy = 0.32
+ambient_light_energy = 1.6
 tonemap_mode = 3
-tonemap_white = 4.0
+tonemap_white = 6.5
 ssao_enabled = true
 ssao_radius = 0.7
-ssao_intensity = 1.0
-ssao_power = 1.5
+ssao_intensity = 0.7
+ssao_power = 1.2
 glow_enabled = true
-glow_intensity = 0.9
-glow_strength = 1.1
-glow_bloom = 0.15
+glow_intensity = 0.4
+glow_strength = 0.9
+glow_bloom = 0.0
 glow_blend_mode = 1
-glow_hdr_threshold = 1.0
+glow_hdr_threshold = 1.3
 fog_enabled = true
 fog_mode = 0
 fog_light_color = Color(0.09, 0.161, 0.322, 1)
-fog_light_energy = 0.6
-fog_density = 0.02
-fog_depth_begin = 6.0
-fog_depth_end = 34.0
+fog_light_energy = 0.5
+fog_density = 0.012
+fog_depth_begin = 8.0
+fog_depth_end = 36.0
 adjustment_enabled = true
-adjustment_contrast = 1.15
+adjustment_contrast = 1.0
 adjustment_saturation = 1.12
 
 [node name="Ambiente" type="Node3D"]
@@ -50,154 +50,211 @@ script = ExtResource("luces")
 luminarias = [NodePath("Tira01"), NodePath("Tira02"), NodePath("Tira03")]
 
 [node name="Tira01" type="Node3D" parent="Luminarias"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 6.2604)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.3, 0, 0)
 
 [node name="Foco01" type="SpotLight3D" parent="Luminarias/Tira01"]
-transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, -5.9, 4.33, 0)
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 0, 4.33, -6.2)
 light_color = Color(0.78, 0.898, 1, 1)
-light_energy = 4.5
-light_specular = 0.9
+light_energy = 1.0
+light_specular = 0.55
 shadow_enabled = true
 shadow_bias = 0.03
-spot_range = 13.0
-spot_attenuation = 1.4
-spot_angle = 72.0
-spot_angle_attenuation = 0.35
+spot_range = 14.0
+spot_attenuation = 0.9
+spot_angle = 66.0
+spot_angle_attenuation = 1.0
 
 [node name="Foco02" type="SpotLight3D" parent="Luminarias/Tira01"]
-transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, -1.97, 4.33, 0)
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 0, 4.33, -2.1)
 light_color = Color(0.78, 0.898, 1, 1)
-light_energy = 4.5
-light_specular = 0.9
+light_energy = 1.0
+light_specular = 0.55
 shadow_enabled = true
 shadow_bias = 0.03
-spot_range = 13.0
-spot_attenuation = 1.4
-spot_angle = 72.0
-spot_angle_attenuation = 0.35
+spot_range = 14.0
+spot_attenuation = 0.9
+spot_angle = 66.0
+spot_angle_attenuation = 1.0
 
 [node name="Foco03" type="SpotLight3D" parent="Luminarias/Tira01"]
-transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 1.97, 4.33, 0)
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 0, 4.33, 2.1)
 light_color = Color(0.78, 0.898, 1, 1)
-light_energy = 4.5
-light_specular = 0.9
+light_energy = 1.0
+light_specular = 0.55
 shadow_enabled = true
 shadow_bias = 0.03
-spot_range = 13.0
-spot_attenuation = 1.4
-spot_angle = 72.0
-spot_angle_attenuation = 0.35
+spot_range = 14.0
+spot_attenuation = 0.9
+spot_angle = 66.0
+spot_angle_attenuation = 1.0
 
 [node name="Foco04" type="SpotLight3D" parent="Luminarias/Tira01"]
-transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 5.9, 4.33, 0)
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 0, 4.33, 6.2)
 light_color = Color(0.78, 0.898, 1, 1)
-light_energy = 4.5
-light_specular = 0.9
+light_energy = 1.0
+light_specular = 0.55
 shadow_enabled = true
 shadow_bias = 0.03
-spot_range = 13.0
-spot_attenuation = 1.4
-spot_angle = 72.0
-spot_angle_attenuation = 0.35
+spot_range = 14.0
+spot_attenuation = 0.9
+spot_angle = 66.0
+spot_angle_attenuation = 1.0
 
 [node name="Tira02" type="Node3D" parent="Luminarias"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.46114)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.49, 0, 0)
 
 [node name="Foco01" type="SpotLight3D" parent="Luminarias/Tira02"]
-transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, -5.9, 4.33, 0)
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 0, 4.33, -6.2)
 light_color = Color(0.78, 0.898, 1, 1)
-light_energy = 4.5
-light_specular = 0.9
+light_energy = 1.0
+light_specular = 0.55
 shadow_enabled = true
 shadow_bias = 0.03
-spot_range = 13.0
-spot_attenuation = 1.4
-spot_angle = 72.0
-spot_angle_attenuation = 0.35
+spot_range = 14.0
+spot_attenuation = 0.9
+spot_angle = 66.0
+spot_angle_attenuation = 1.0
 
 [node name="Foco02" type="SpotLight3D" parent="Luminarias/Tira02"]
-transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, -1.97, 4.33, 0)
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 0, 4.33, -2.1)
 light_color = Color(0.78, 0.898, 1, 1)
-light_energy = 4.5
-light_specular = 0.9
+light_energy = 1.0
+light_specular = 0.55
 shadow_enabled = true
 shadow_bias = 0.03
-spot_range = 13.0
-spot_attenuation = 1.4
-spot_angle = 72.0
-spot_angle_attenuation = 0.35
+spot_range = 14.0
+spot_attenuation = 0.9
+spot_angle = 66.0
+spot_angle_attenuation = 1.0
 
 [node name="Foco03" type="SpotLight3D" parent="Luminarias/Tira02"]
-transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 1.97, 4.33, 0)
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 0, 4.33, 2.1)
 light_color = Color(0.78, 0.898, 1, 1)
-light_energy = 4.5
-light_specular = 0.9
+light_energy = 1.0
+light_specular = 0.55
 shadow_enabled = true
 shadow_bias = 0.03
-spot_range = 13.0
-spot_attenuation = 1.4
-spot_angle = 72.0
-spot_angle_attenuation = 0.35
+spot_range = 14.0
+spot_attenuation = 0.9
+spot_angle = 66.0
+spot_angle_attenuation = 1.0
 
 [node name="Foco04" type="SpotLight3D" parent="Luminarias/Tira02"]
-transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 5.9, 4.33, 0)
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 0, 4.33, 6.2)
 light_color = Color(0.78, 0.898, 1, 1)
-light_energy = 4.5
-light_specular = 0.9
+light_energy = 1.0
+light_specular = 0.55
 shadow_enabled = true
 shadow_bias = 0.03
-spot_range = 13.0
-spot_attenuation = 1.4
-spot_angle = 72.0
-spot_angle_attenuation = 0.35
+spot_range = 14.0
+spot_attenuation = 0.9
+spot_angle = 66.0
+spot_angle_attenuation = 1.0
 
 [node name="Tira03" type="Node3D" parent="Luminarias"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -5.3331)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.6, 0, 0)
 
 [node name="Foco01" type="SpotLight3D" parent="Luminarias/Tira03"]
-transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, -5.9, 4.33, 0)
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 0, 4.33, -6.2)
 light_color = Color(0.78, 0.898, 1, 1)
-light_energy = 4.5
-light_specular = 0.9
+light_energy = 1.0
+light_specular = 0.55
 shadow_enabled = true
 shadow_bias = 0.03
-spot_range = 13.0
-spot_attenuation = 1.4
-spot_angle = 72.0
-spot_angle_attenuation = 0.35
+spot_range = 14.0
+spot_attenuation = 0.9
+spot_angle = 66.0
+spot_angle_attenuation = 1.0
 
 [node name="Foco02" type="SpotLight3D" parent="Luminarias/Tira03"]
-transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, -1.97, 4.33, 0)
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 0, 4.33, -2.1)
 light_color = Color(0.78, 0.898, 1, 1)
-light_energy = 4.5
-light_specular = 0.9
+light_energy = 1.0
+light_specular = 0.55
 shadow_enabled = true
 shadow_bias = 0.03
-spot_range = 13.0
-spot_attenuation = 1.4
-spot_angle = 72.0
-spot_angle_attenuation = 0.35
+spot_range = 14.0
+spot_attenuation = 0.9
+spot_angle = 66.0
+spot_angle_attenuation = 1.0
 
 [node name="Foco03" type="SpotLight3D" parent="Luminarias/Tira03"]
-transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 1.97, 4.33, 0)
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 0, 4.33, 2.1)
 light_color = Color(0.78, 0.898, 1, 1)
-light_energy = 4.5
-light_specular = 0.9
+light_energy = 1.0
+light_specular = 0.55
 shadow_enabled = true
 shadow_bias = 0.03
-spot_range = 13.0
-spot_attenuation = 1.4
-spot_angle = 72.0
-spot_angle_attenuation = 0.35
+spot_range = 14.0
+spot_attenuation = 0.9
+spot_angle = 66.0
+spot_angle_attenuation = 1.0
 
 [node name="Foco04" type="SpotLight3D" parent="Luminarias/Tira03"]
-transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 5.9, 4.33, 0)
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 0, 4.33, 6.2)
 light_color = Color(0.78, 0.898, 1, 1)
-light_energy = 4.5
-light_specular = 0.9
+light_energy = 1.0
+light_specular = 0.55
 shadow_enabled = true
 shadow_bias = 0.03
-spot_range = 13.0
-spot_attenuation = 1.4
-spot_angle = 72.0
-spot_angle_attenuation = 0.35
+spot_range = 14.0
+spot_attenuation = 0.9
+spot_angle = 66.0
+spot_angle_attenuation = 1.0
+
+[node name="Servicio" type="Node3D" parent="."]
+editor_description = "Las bombitas de las salas de atras. No son luminarias del salon: el dominio no las cuenta y no se apagan."
+
+[node name="Deposito" type="Node3D" parent="Servicio"]
+
+[node name="Foco01" type="SpotLight3D" parent="Servicio/Deposito"]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 1.8, 4.15, -10.6)
+light_color = Color(0.78, 0.898, 1, 1)
+light_energy = 0.32
+light_specular = 0.4
+shadow_enabled = true
+shadow_bias = 0.03
+spot_range = 9.0
+spot_attenuation = 0.9
+spot_angle = 62.0
+spot_angle_attenuation = 1.0
+
+[node name="Foco02" type="SpotLight3D" parent="Servicio/Deposito"]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 5.2, 4.15, -12.6)
+light_color = Color(0.78, 0.898, 1, 1)
+light_energy = 0.32
+light_specular = 0.4
+shadow_enabled = true
+shadow_bias = 0.03
+spot_range = 9.0
+spot_attenuation = 0.9
+spot_angle = 62.0
+spot_angle_attenuation = 1.0
+
+[node name="Paso" type="Node3D" parent="Servicio"]
+
+[node name="Foco01" type="SpotLight3D" parent="Servicio/Paso"]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 5.5, 4.15, -7.5)
+light_color = Color(0.78, 0.898, 1, 1)
+light_energy = 0.32
+light_specular = 0.4
+shadow_enabled = true
+shadow_bias = 0.03
+spot_range = 9.0
+spot_attenuation = 0.9
+spot_angle = 62.0
+spot_angle_attenuation = 1.0
+
+[node name="Bano" type="Node3D" parent="Servicio"]
+
+[node name="Foco01" type="SpotLight3D" parent="Servicio/Bano"]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 10.9, 3.28, -4.6)
+light_color = Color(0.78, 0.898, 1, 1)
+light_energy = 0.32
+light_specular = 0.4
+shadow_enabled = true
+shadow_bias = 0.03
+spot_range = 9.0
+spot_attenuation = 0.9
+spot_angle = 62.0
+spot_angle_attenuation = 1.0

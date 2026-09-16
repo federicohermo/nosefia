@@ -10,6 +10,12 @@ extends GdUnitTestSuite
 const AMBIENTE := preload("res://src/escenas/puestos/ambiente_del_almacen.tscn")
 const MODELO := preload("res://assets/SEPT_JUEGOS_PROTOTIPO.glb")
 const RUTA_DEL_AMBIENTE := "res://src/escenas/puestos/ambiente_del_almacen.tscn"
+const ESTRUCTURA := preload("res://src/escenas/puestos/estructura_del_almacen.tscn")
+
+## Los dos `Paso*` del suelo son umbrales adentro de una pared —0,71 m² y 0,65 m² medidos—
+## y ningún cuarto lleva una bombita en el marco de su puerta. El resto son salas: el local
+## 261 m², el depósito 60 m² y el baño 34 m².
+const PISO_DE_UNA_SALA := 2.0
 
 ## Los cuatro efectos que el motor rechaza bajo `gl_compatibility`. Medido el 2026-09-15 con un
 ## `SceneTree` que los prende todos: contesta una advertencia por cada uno, «is only available
@@ -44,6 +50,16 @@ func _focos(ambiente: Node3D) -> Array[Light3D]:
 			if hijo is Light3D:
 				encontrados.append(hijo)
 	return encontrados
+
+
+## Todas las luces de la escena, las del salón y las de las salas de atrás. AC7 dice
+## «ninguna luz», y `_focos()` sólo ve las que el dominio cuenta.
+func _todas_las_luces(ambiente: Node3D) -> Array[Light3D]:
+	var encontradas: Array[Light3D] = []
+	for nodo in _descendientes(ambiente):
+		if nodo is Light3D:
+			encontradas.append(nodo)
+	return encontradas
 
 
 ## El punto más alto del almacén, que es contra lo que se mide la altura de las luminarias.
@@ -112,7 +128,7 @@ func test_ningun_foco_alumbra_hacia_arriba() -> void:  # 048-AC7
 	# La dirección se lee del `global_transform` y no del archivo: los nueve flotantes de un
 	# `Transform3D` en un `.tscn` son las **filas** de la base y no sus ejes, así que leerlos al
 	# revés da la luz dada vuelta sin que ningún número se vea raro.
-	for foco in _focos(_ambiente()):
+	for foco in _todas_las_luces(_ambiente()):
 		var direccion := -foco.global_transform.basis.z
 		(
 			assert_float(direccion.y)
@@ -204,3 +220,49 @@ func test_ninguna_escena_ni_script_de_src_declara_una_luz_direccional() -> void:
 		if FileAccess.get_file_as_string(ruta).contains("DirectionalLight3D"):
 			culpables.append(ruta)
 	assert_array(culpables).is_empty()
+
+
+func test_cada_sala_del_edificio_tiene_una_luz_encima() -> void:  # 048-AC9
+	# El defecto que cierra: las tres tiras cubrían el salón y nada más, así que el depósito y el
+	# baño quedaban en negro con todo en verde. El barrido sale del propio suelo —cada
+	# `CollisionShape3D` de `Estructura/SueloSolido` es una sala— y no de una lista escrita acá,
+	# que caduca con la próxima sala que se agregue al modelo.
+	var luces := _todas_las_luces(_ambiente())
+	# Sin `add_child`: montar la estructura dispara el `_ready()` de los puestos que cuelgan de
+	# ella, y ésos mueren sin el cableado que les da `almacen.tscn`. Las cajas del suelo se leen
+	# igual, y su `position` ya es x y z del edificio porque `SueloSolido` sólo está corrido en y.
+	var estructura: Node3D = auto_free(ESTRUCTURA.instantiate())
+	for suelo: CollisionShape3D in estructura.get_node("SueloSolido").get_children():
+		var caja: BoxShape3D = suelo.shape
+		if caja.size.x * caja.size.z <= PISO_DE_UNA_SALA:
+			continue
+		var centro := suelo.position
+		var encima := 0
+		for luz in luces:
+			var d := luz.global_position - centro
+			if absf(d.x) <= caja.size.x / 2.0 and absf(d.z) <= caja.size.z / 2.0:
+				encima += 1
+		(
+			assert_int(encima)
+			. override_failure_message("%s se queda sin luz encima" % suelo.name)
+			. is_greater(0)
+		)
+
+
+func test_el_cascaron_del_edificio_recibe_todas_las_luces_y_no_ocho() -> void:  # 048-AC10
+	# Medido: `max_lights_per_object` viene en 8 y **el edificio entero es una sola malla**, así
+	# que el cascarón recibe ocho luces y nunca más. Con las doce del salón puestas, las cuatro
+	# de atrás no le llegaban nunca: el piso y las paredes del depósito salían planos, con los
+	# objetos iluminados encima. El síntoma no nombra al ajuste y se lee como que las luces
+	# nuevas no andan. Subirlo a 24 costó 3,03 → 3,10 ms por cuadro, o sea 2 %.
+	var limite: int = ProjectSettings.get_setting("rendering/limits/opengl/max_lights_per_object")
+	(
+		assert_int(limite)
+		. override_failure_message(
+			(
+				"el cascarón recibe %d luces de las %d que hay"
+				% [limite, _todas_las_luces(_ambiente()).size()]
+			)
+		)
+		. is_greater_equal(_todas_las_luces(_ambiente()).size())
+	)

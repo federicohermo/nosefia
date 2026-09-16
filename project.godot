@@ -83,3 +83,4 @@ common/physics_interpolation=true
 [rendering]
 
 renderer/rendering_method="gl_compatibility"
+limits/opengl/max_lights_per_object=24

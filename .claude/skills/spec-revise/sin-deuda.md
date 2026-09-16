@@ -191,6 +191,8 @@ las dos en la misma corrida:
 | el padre declara incompleto un carril que sí cerró | `spec-implement-batch` — la verificación leyó una caché local en vez del issue, porque el hidratador saltea lo que ya existe y sale en verde |
 | una decisión de implementación que el spec no nombraba, y un `spec.md` sin margen de techo donde escribirla | `spec-implement-batch` — el Paso 2 mandaba al `spec.md` sin decir que los techos se miden antes, y que el único archivo con aire es el `plan.md` |
 | **varios carriles pisando el mismo comando que el skill les dio escrito** | `spec-implement-batch` — un comando que el preámbulo entrega no se copia de la corrida anterior: se vuelve a correr antes de repartirlo, o se reparte roto N veces |
+| una ruta en `## Qué NO se toca` que el criterio termina **necesitando** | `spec-create` — la prohibición se escribió sobre un archivo que nadie había medido, y el ajuste que destraba el spec vive adentro |
+| un `## Criterio de terminado` que manda a ajustar sin número algo que **sí se puede medir** | `spec-create` — el resultado quedó sin gate, se entregó, y quien lo pidió lo rechazó con palabras que ningún test podía contradecir |
 
 **Si el problema no entra en ninguna fila, agregá la fila.** Esa tabla es el registro de lo que
 esta doctrina ya aprendió, y está incompleta a propósito.
