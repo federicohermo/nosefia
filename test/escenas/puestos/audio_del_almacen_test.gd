@@ -64,8 +64,9 @@ func test_cada_bus_manda_a_master() -> void:  # 021-AC3
 
 
 func test_el_layout_de_buses_apunta_a_un_archivo_que_existe() -> void:  # 021-AC3
-	# **Hoy no existía**: `project.godot` no declaraba ninguno y el motor caía al layout por
-	# defecto. El ajuste y el archivo van juntos: uno sin el otro no cambia nada.
+	# El motor trae esta misma ruta como valor por defecto, así que la igualdad pasa aunque
+	# `project.godot` no declare el ajuste. Lo que este caso protege es el archivo: sin él el
+	# motor deja un solo bus y toda la mezcla sale por `Master`.
 	var declarado: String = ProjectSettings.get_setting("audio/buses/default_bus_layout", "")
 	assert_str(declarado).is_equal(LAYOUT)
 	(
@@ -123,7 +124,9 @@ func test_la_cascara_no_tiene_una_sola_regla() -> void:  # 021-AC10
 func test_el_almacen_instancia_el_audio_exactamente_una_vez() -> void:  # 021-AC10
 	# Dos instancias serían dos tablas y dos rondas sobre los mismos eventos: cada sonido se
 	# pediría dos veces y el jugador escucharía todo doble.
-	var texto := FileAccess.get_file_as_string(ESCENA_DEL_ALMACEN)
+	var texto := FileAccess.get_file_as_string(
+		"res://src/escenas/puestos/servicios_del_almacen.tscn"
+	)
 	assert_str(texto).is_not_empty()
 	assert_int(texto.count(ESCENA)).is_equal(1)
 

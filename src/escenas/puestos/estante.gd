@@ -18,6 +18,7 @@ extends StaticBody3D
 
 signal colocacion_pedida
 
+@export var mallas: Array[MeshInstance3D] = []
 @export var _huecos: Node3D
 
 

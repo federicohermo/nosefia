@@ -6,6 +6,10 @@ extends GdUnitTestSuite
 const ReglasDelJugador := preload("res://src/dominio/jugador/reglas_del_jugador.gd")
 
 
+func test_el_techo_angular_se_expresa_en_radianes() -> void:  # 038-AC9
+	assert_float(ReglasDelJugador.DESVIO_MAXIMO_DE_LA_MIRA).is_equal(deg_to_rad(15.0))
+
+
 func test_el_pitch_encierra_al_cero_y_no_llega_a_los_noventa_grados() -> void:
 	# Es «la cámara no se da vuelta» escrito como aserción en vez de como impresión: si el
 	# límite llegara a PI/2 la vista quedaría vertical, y pasándolo se invierte.

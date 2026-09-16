@@ -113,25 +113,10 @@ func test_la_mancha_limpia_deja_de_estorbar_y_de_enfocarse() -> void:  # 014-AC9
 	assert_bool(cuerpo.disabled).is_false()
 
 
-func test_la_pasada_entra_por_el_clic_derecho_y_sin_accion_nueva() -> void:  # 014-AC9
-	# El evento crudo y no una acción del `InputMap`: el AC8 del 015 prohíbe agregarlas, y quién
-	# consolida los tres usos del gesto es el spec 034.
+func test_la_pasada_entra_por_el_pedido_del_jugador() -> void:  # 014-AC9 034-AC2
 	var texto := FileAccess.get_file_as_string(PUESTO)
-	assert_str(texto).is_not_empty()
-	(
-		assert_bool(texto.contains("MOUSE_BUTTON_RIGHT"))
-		. override_failure_message("la pasada no entra por el clic derecho")
-		. is_true()
-	)
-	var acciones := 0
-	for accion in InputMap.get_actions():
-		if not String(accion).begins_with("ui_"):
-			acciones += 1
-	(
-		assert_int(acciones)
-		. override_failure_message("el `InputMap` tiene %d acciones propias" % acciones)
-		. is_equal(6)
-	)
+	assert_bool(texto.contains("jugador.uso_pedido.connect")).is_true()
+	assert_bool(texto.contains("func _unhandled_input(")).is_false()
 
 
 func test_el_trapeador_carga_y_responde_el_id_de_la_constante() -> void:  # 014-AC9
@@ -188,7 +173,7 @@ func test_el_trapeador_tampoco_esta_al_lado_de_ninguna_mancha() -> void:  # 014-
 	# El primer tramo también cuenta: con el trapeador encima de una mancha, la primera zona
 	# saldría gratis.
 	var almacen := _almacen()
-	var trapeador: Node3D = almacen.get_node("Trapeador")
+	var trapeador: Node3D = almacen.get_node("Objetos/Trapeador")
 	var desde := _posicion_en(almacen, trapeador)
 	for posicion in _manchas_de(almacen):
 		var distancia := desde.distance_to(posicion)

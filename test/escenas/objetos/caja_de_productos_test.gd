@@ -1,24 +1,19 @@
-## La caja del depósito: qué producto despacha y cómo lo declara.
+## La caja del depósito: qué producto declara, con qué cuerpo se lleva y qué dejó de hacer.
 ##
 ## **La escena se instancia y no se entra al árbol**, igual que las otras suites de `escenas/`.
 extends GdUnitTestSuite
 
 const ESCENA := "res://src/escenas/objetos/caja_de_productos.tscn"
 const SCRIPT := "res://src/escenas/objetos/caja_de_productos.gd"
+const CABLEADO := "res://src/escenas/almacen.gd"
 
 ## El script del nodo se preloadea para poder tiparlo: los scripts de `escenas/` son cáscara y no
 ## declaran `class_name`.
-const CajaQueDespacha := preload("res://src/escenas/objetos/caja_de_productos.gd")
-
-var _pedidos: Array[int] = []
-
-
-func before_test() -> void:
-	_pedidos = []
+const CajaQueSeLleva := preload("res://src/escenas/objetos/caja_de_productos.gd")
 
 
 func test_la_caja_declara_su_producto_con_un_id_del_catalogo() -> void:  # 008-AC8
-	# Es un `Producto.Id` y no un `String` suelto: el conjunto es cerrado, y un `"yerva"` no
+	# Es un `Producto.Id` y no un `String` suelto: el conjunto es cerrado, y uno mal escrito no
 	# rompe nada — el producto simplemente no llega nunca y nadie se entera.
 	var caja := _caja()
 	caja.producto = Producto.Id.JABON
@@ -26,20 +21,34 @@ func test_la_caja_declara_su_producto_con_un_id_del_catalogo() -> void:  # 008-A
 	assert_int(Catalogo.de(caja.producto).id).is_equal(Producto.Id.JABON)
 
 
-func test_tocar_la_caja_pide_su_producto_y_no_entrega_nada_para_levantar() -> void:  # 008-AC8
-	# Devuelve `null` a propósito: de la caja no se levanta nada, y si contestara un objeto el
-	# clic del 006 se lo llevaría en la mano en vez de cargar la caja de traslado.
+func test_tocar_la_caja_la_entrega_para_levantarla() -> void:  # 008-AC8 047-AC4
+	# Antes devolvía `null` y el clic sacaba una unidad. Ahora contesta sus propios datos, que es
+	# lo que `Agarre` necesita para llevársela, y no son los de una unidad de producto: quien
+	# mire lo que hay en la mano tiene que poder distinguir la caja de lo que sale de ella.
 	var caja := _caja()
-	caja.producto = Producto.Id.ARROZ
-	caja.producto_pedido.connect(_anotar_pedido)
-	assert_object(caja.call(ReglasDeLosObjetos.METODO_INTERACTUAR)).is_null()
-	assert_array(_pedidos).is_equal([Producto.Id.ARROZ])
+	var datos := caja.call(ReglasDeLosObjetos.METODO_INTERACTUAR) as ObjetoDelAlmacen
+	assert_object(datos).is_not_null()
+	assert_bool(datos is UnidadDeProducto).is_false()
+	assert_bool(datos.es_levantable()).is_true()
 
 
 func test_la_caja_contesta_el_contrato_de_interaccion() -> void:  # 008-AC8
 	var caja := _caja()
 	assert_bool(caja.has_method(ReglasDeLosObjetos.METODO_INTERACTUAR)).is_true()
 	assert_bool(caja.is_in_group(ReglasDelJugador.GRUPO_INTERACTUABLE)).is_true()
+
+
+func test_el_cuerpo_de_la_caja_se_puede_llevar() -> void:  # 047-AC5
+	# Unos `datos` en `null` los rechaza `Manos` como «no es levantable»: la escena carga sin un
+	# solo error y el clic no hace nada.
+	var caja := _caja()
+	assert_object(caja).is_instanceof(StaticBody3D)
+	(
+		assert_object(caja.datos)
+		. override_failure_message("`caja_de_productos.tscn` no le asignó `datos`: no se levanta")
+		. is_not_null()
+	)
+	assert_str(caja.datos.nombre).is_not_empty()
 
 
 func test_la_caja_no_decide_nada_sobre_el_cupo() -> void:  # 008-AC10
@@ -55,9 +64,18 @@ func test_la_caja_no_decide_nada_sobre_el_cupo() -> void:  # 008-AC10
 		)
 
 
-func _caja() -> CajaQueDespacha:
+func test_la_caja_ya_no_despacha_por_su_cuenta() -> void:  # 047-AC9
+	# La señal se fue con el clic izquierdo, y mientras exista el cableado se le puede volver a
+	# colgar: quedarían dos rutas hacia la misma unidad y ninguna daría rojo.
+	for ruta in [SCRIPT, CABLEADO]:
+		var texto := FileAccess.get_file_as_string(ruta)
+		assert_str(texto).is_not_empty()
+		(
+			assert_str(texto)
+			. override_failure_message("`%s` todavía nombra `producto_pedido`" % ruta)
+			. not_contains("producto_pedido")
+		)
+
+
+func _caja() -> CajaQueSeLleva:
 	return auto_free(load(ESCENA).instantiate())
-
-
-func _anotar_pedido(id: Producto.Id) -> void:
-	_pedidos.append(id)

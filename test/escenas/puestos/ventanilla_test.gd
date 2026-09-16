@@ -45,11 +45,10 @@ func test_la_ventanilla_recibe_al_jugador_y_al_reloj_por_export() -> void:  # 01
 		)
 
 
-func test_la_ventanilla_sale_con_la_tecla_de_cancelar() -> void:  # 013-AC12
-	# Es la misma salida que el resto del juego, y la única que no depende de que el jugador
-	# encuentre un botón mientras la cámara está clavada.
+func test_la_ventanilla_sale_con_la_accion_compartida() -> void:  # 013-AC12 034-AC12
 	var texto := FileAccess.get_file_as_string(SCRIPT)
-	assert_bool(texto.contains("ui_cancel")).is_true()
+	assert_bool(texto.contains("ReglasDelJugador.ACCION_USAR")).is_true()
+	assert_bool(texto.contains("func _input(")).is_true()
 
 
 func test_la_ventanilla_no_le_escribe_el_transform_al_jugador() -> void:  # 013-AC12
@@ -68,7 +67,9 @@ func test_el_almacen_instancia_la_ventanilla_exactamente_una_vez() -> void:  # 0
 	# Se cuenta sobre el texto del `.tscn` y no sobre el árbol instanciado porque lo que hay que
 	# afirmar es que se referencia **una sola vez**: dos ventanillas serían dos tareas de atender
 	# corriendo sobre el mismo turno, y el jefe contaría una sola.
-	var texto := FileAccess.get_file_as_string(ESCENA_DEL_ALMACEN)
+	var texto := FileAccess.get_file_as_string(
+		"res://src/escenas/puestos/estructura_del_almacen.tscn"
+	)
 	assert_str(texto).is_not_empty()
 	assert_int(texto.count(ESCENA)).is_equal(1)
 
@@ -114,7 +115,7 @@ func test_el_cableado_de_atender_llega_entero_desde_el_almacen() -> void:  # 013
 		)
 		. is_not_null()
 	)
-	var puesto: VentanillaQueSeVe = almacen.get_node("Ventanilla")
+	var puesto: VentanillaQueSeVe = almacen.get_node("Estructura/Ventanilla")
 	for propiedad in ["jugador", "reloj", "atenciones", "panel"]:
 		(
 			assert_object(puesto.get(propiedad))
@@ -123,7 +124,7 @@ func test_el_cableado_de_atender_llega_entero_desde_el_almacen() -> void:  # 013
 			)
 			. is_not_null()
 		)
-	var atenciones: Ventanilla = almacen.get_node("Atenciones")
+	var atenciones: Ventanilla = almacen.get_node("Servicios/Atenciones")
 	assert_object(atenciones.reloj).is_not_null()
 
 

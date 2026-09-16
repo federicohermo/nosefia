@@ -62,7 +62,7 @@ from lib.consola import configurar  # noqa: E402
 
 configurar()
 
-from lib.repo import PROTEGIDAS, RAIZ, RAMAS_COMPARTIDAS  # noqa: E402
+from lib.repo import PROTEGIDAS, RAIZ, RAMA_DE_INTEGRACION, RAMAS_COMPARTIDAS  # noqa: E402
 from lib.rutas_protegidas import esta_protegida  # noqa: E402
 
 #: Los tres prefijos que pueden editar el producto.
@@ -346,11 +346,21 @@ def motivo_del_bloqueo(rama: str, ruta: str) -> str | None:
     ejercer**: el veredicto de punta a punta no puede probar esto, porque habría que pararse en
     cada rama de verdad y un test que cambia de rama rompe la sesión que lo corre.
     """
-    # `staging` es la rama default del repositorio: adonde apunta cada clone fresco y cada
-    # `gh pr create`, o sea el lugar más fácil de todo el repo donde quedarse parado sin
-    # haberlo decidido. Lleva mensaje propio porque el genérico —«esa rama no puede tocar el
-    # producto»— se lee como una invitación a RENOMBRARLA, que es lo peor que se le puede hacer
-    # a la rama de integración. El problema no es cómo se llama, es dónde estás parado.
+    # `staging` edita el producto directo, desde el 2026-09-14 y por decisión del dueño del
+    # repo. Va antes del prefijo porque si no cae en el genérico de abajo.
+    #
+    # **Lo que se paga, dicho una vez:** dos gates quedan ciegos sobre lo que se commitea acá
+    # sin rama. `test_criterios_de_la_rama.py` cruza los AC contra el spec DE LA RAMA, y en
+    # `staging` no hay ninguno, así que no mira nada; y `derivar_mapa.py` saca el `NNN` del
+    # nombre de la rama de un PR, así que un spec implementado sin PR se queda en `Propuesto`
+    # para siempre. O sea: el trabajo de un spec sigue necesitando su `feature/<NNN>-…`, y lo
+    # que se libera es todo lo demás.
+    if rama == RAMA_DE_INTEGRACION:
+        return None
+
+    # `main` lleva mensaje propio porque el genérico —«esa rama no puede tocar el producto»—
+    # se lee como una invitación a RENOMBRARLA. El problema no es cómo se llama, es dónde
+    # estás parado: lo que se entrega llega por el PR de promoción.
     if rama in RAMAS_COMPARTIDAS:
         return f"No se edita `{ruta}` desde `{rama}`. {COMO_SALIR}"
 

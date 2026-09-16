@@ -7,7 +7,7 @@ extends GdUnitTestSuite
 
 func _pedido() -> Venta:
 	var venta := Venta.new()
-	venta.agregar(Catalogo.de(Producto.Id.YERBA), 2)
+	venta.agregar(Catalogo.de(Producto.Id.ACTRONCITO), 2)
 	return venta
 
 

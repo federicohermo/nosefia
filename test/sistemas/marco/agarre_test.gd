@@ -64,6 +64,39 @@ func test_agarrar_congela_la_fisica_de_lo_que_se_lleva() -> void:  # 006-AC7
 	assert_bool(cuerpo.freeze).is_true()
 
 
+func test_soltar_conserva_la_orientacion_mundial_de_la_mano() -> void:  # 042-AC4
+	var agarre := _cableado()
+	add_child(agarre.punto_de_carga)
+	add_child(agarre.punto_de_soltado)
+	add_child(agarre.punto_de_respaldo)
+	agarre.punto_de_carga.rotation = Vector3(-0.4, 1.2, 0)
+	agarre.punto_de_soltado.rotation = Vector3(0, -0.7, 0)
+	var cuerpo := _cuerpo()
+	for al_frente in [true, false]:
+		agarre.pedir_agarrar(_lata(), cuerpo)
+		cuerpo.rotation = Vector3(-0.3, -0.35, 0.1)
+		var orientacion := cuerpo.global_basis
+		agarre.soltar(al_frente)
+		assert_bool(cuerpo.global_basis.is_equal_approx(orientacion)).is_true()
+		assert_bool(cuerpo.freeze).is_false()
+
+
+func test_lo_suelto_no_se_mueve_con_la_camara_y_vuelve_a_seguir_la_mano() -> void:  # 042-AC4
+	var agarre := _cableado()
+	add_child(agarre.punto_de_carga)
+	add_child(agarre.punto_de_soltado)
+	var cuerpo := _cuerpo()
+	agarre.pedir_agarrar(_lata(), cuerpo)
+	agarre.soltar(true)
+	var lugar := cuerpo.global_transform
+	agarre.punto_de_soltado.position = Vector3(3, -2, 4)
+	agarre.punto_de_soltado.rotation = Vector3(-0.8, 1.2, 0)
+	assert_bool(cuerpo.global_transform.is_equal_approx(lugar)).is_true()
+	agarre.pedir_agarrar(_lata(), cuerpo)
+	agarre.punto_de_carga.position = Vector3(2, 1, -1)
+	assert_vector(cuerpo.global_position).is_equal(agarre.punto_de_carga.global_position)
+
+
 func test_con_las_manos_llenas_se_rechaza_y_no_se_mueve_nada() -> void:  # 006-AC7
 	var agarre := _cableado()
 	agarre.pedir_agarrar(_lata(), _cuerpo())
@@ -150,3 +183,56 @@ func test_el_clic_agarra_y_despues_suelta() -> void:  # 006-AC7
 	agarre.alternar(null, null)
 	assert_object(agarre.manos().sostenido()).is_null()
 	assert_object(cuerpo.get_parent()).is_same(agarre.punto_de_soltado)
+
+
+func test_agarrar_suspende_y_soltar_restaura_colisiones() -> void:  # 040-AC1
+	var agarre := _cableado()
+	var cuerpo := _cuerpo()
+	cuerpo.collision_layer = 13
+	cuerpo.collision_mask = 22
+	agarre.pedir_agarrar(_lata(), cuerpo)
+	assert_int(cuerpo.collision_layer).is_zero()
+	assert_int(cuerpo.collision_mask).is_zero()
+	agarre.soltar(true)
+	assert_int(cuerpo.collision_layer).is_equal(13)
+	assert_int(cuerpo.collision_mask).is_equal(22)
+
+
+func test_dos_agarres_con_examen_restauran_sus_colisiones() -> void:  # 040-AC2
+	var agarre := _cableado()
+	var cuerpo := _cuerpo()
+	var examen: Examen = auto_free(Examen.new())
+	examen.agarre = agarre
+	examen.punto_de_examen = auto_free(Node3D.new())
+	for capa: int in [5, 18]:
+		cuerpo.collision_layer = capa
+		cuerpo.collision_mask = capa + 2
+		assert_bool(agarre.pedir_agarrar(_lata(), cuerpo)).is_true()
+		assert_bool(examen.iniciar()).is_true()
+		assert_int(cuerpo.collision_layer).is_zero()
+		assert_int(cuerpo.collision_mask).is_zero()
+		examen.terminar()
+		assert_int(cuerpo.collision_layer).is_zero()
+		assert_int(cuerpo.collision_mask).is_zero()
+		agarre.soltar(true)
+		assert_int(cuerpo.collision_layer).is_equal(capa)
+		assert_int(cuerpo.collision_mask).is_equal(capa + 2)
+
+
+func test_vaciar_restaura_colisiones() -> void:  # 040-AC3
+	var agarre := _cableado()
+	var cuerpo := _cuerpo()
+	cuerpo.collision_layer = 9
+	cuerpo.collision_mask = 12
+	agarre.pedir_agarrar(_lata(), cuerpo)
+	agarre.vaciar_las_manos()
+	assert_int(cuerpo.collision_layer).is_equal(9)
+	assert_int(cuerpo.collision_mask).is_equal(12)
+
+
+func test_agarrar_y_soltar_un_nodo_sin_colisiones() -> void:  # 040-AC4
+	var agarre := _cableado()
+	var nodo := Node3D.new()
+	assert_bool(agarre.pedir_agarrar(_lata(), nodo)).is_true()
+	assert_object(agarre.soltar(true)).is_same(nodo)
+	assert_object(nodo.get_parent()).is_same(agarre.punto_de_soltado)

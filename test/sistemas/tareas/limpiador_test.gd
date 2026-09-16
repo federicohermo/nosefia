@@ -176,3 +176,17 @@ func _anotar_rechazo(_motivo: PisoDelLocal.Resultado) -> void:
 func _anotar_tarea(cumplidas: int) -> void:
 	_avisos_de_tarea += 1
 	_cumplidas_avisadas = cumplidas
+
+
+func test_la_pasada_necesita_un_efecto_del_despacho() -> void:  # 034-AC7 034-AC11
+	var limpiador := _limpiador()
+	limpiador.set("_uso", Uso.new())
+	var antes := limpiador.piso().pasadas_restantes(PisoDelLocal.Zona.ENTRADA)
+	(
+		assert_int(
+			limpiador.pedir_pasada(PisoDelLocal.Zona.ENTRADA, ReglasDeLaLimpieza.ID_DEL_TRAPEADOR)
+		)
+		. is_equal(PisoDelLocal.Resultado.SIN_TRAPEADOR)
+	)
+	assert_int(limpiador.piso().pasadas_restantes(PisoDelLocal.Zona.ENTRADA)).is_equal(antes)
+	assert_int(_rechazos).is_equal(1)

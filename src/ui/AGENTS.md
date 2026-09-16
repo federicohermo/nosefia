@@ -1,7 +1,7 @@
 # Instrucciones del directorio
 
-Copia ?ntegra de `.claude/rules/presentacion.md`.
-Aplicar al alcance `paths` indicado, relativo a la ra?z del repo.
+Copia íntegra de `.claude/rules/presentacion.md`.
+Aplicar al alcance `paths` indicado, relativo a la raíz del repo.
 Los enlaces relativos del texto copiado se resuelven desde el archivo original.
 
 ---

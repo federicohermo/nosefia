@@ -16,6 +16,7 @@ repo, cómo se verifica y cómo se trabaja.
 ### Guías
 - [Inicio rápido](./guides/quickstart.md) — Qué instalar, qué declarar y qué correr
 - [Verificación](./guides/verificacion.md) — `verificar.py` entero: los seis nodos y por qué cada uno tiene la forma que tiene
+- [Rendimiento](./guides/rendimiento.md) — Medición reproducible de productos en estantes y en el piso
 - [TDD sin cobertura](./guides/tdd.md) — Cómo se sostiene la disciplina de tests en un motor que no mide cobertura
 - [Convenciones](./guides/conventions.md) — GDScript, capas, nombres, comentarios
 - [Troubleshooting](./guides/troubleshooting.md) — Errores reales ya pisados en este repo
@@ -33,7 +34,7 @@ repo, cómo se verifica y cómo se trabaja.
 
 | Qué | Versión | Para qué |
 |---|---|---|
-| Godot | 4.7.2 | El motor. Renderer **Forward Plus** |
+| Godot | 4.7.2 | El motor. Renderer **Compatibility** |
 | GDScript | — | Todo el juego. Sin C#, sin GDExtension |
 | gdUnit4 | **6.2.1** | Tests, vendorizado en `addons/gdUnit4/`. Se mueve junto con Godot — ver abajo |
 | gdtoolkit | 4.x | `gdlint` y `gdformat`. Se instala con pip |

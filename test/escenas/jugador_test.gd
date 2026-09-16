@@ -7,7 +7,7 @@
 ##
 ## **La escena se instancia y NO se entra al árbol.** `instantiate()` alcanza para leer la
 ## jerarquía y las propiedades —medido—, y entrarla haría correr `_ready()`, que toma el cursor
-## y arranca a leer el `RayCast3D`: cosas que en headless no significan nada.
+## y conecta los sistemas. Estas pruebas sólo revisan el cableado.
 extends GdUnitTestSuite
 
 const ObjetoDelAlmacen := preload("res://src/dominio/almacen/objeto_del_almacen.gd")
@@ -32,17 +32,17 @@ func test_la_camara_esta_a_la_altura_que_declara_el_dominio() -> void:
 	assert_float(camara.position.y).is_equal_approx(ReglasDelJugador.ALTURA_DE_LA_CAMARA, 1e-5)
 
 
-func test_la_mira_cuelga_de_la_camara_y_alcanza_lo_que_declara_el_dominio() -> void:
-	# La mira va colgada de la cámara y no del cuerpo: el pitch se aplica a la cámara, así que
-	# un rayo colgado del cuerpo apuntaría siempre al horizonte.
+func test_el_campo_cuelga_del_ojo_y_respeta_el_alcance() -> void:  # 038-AC10
 	var jugador := _jugador()
-	assert_bool(jugador.has_node("Camara/Mira")).is_true()
-	var mira: Node = jugador.get_node("Camara/Mira")
-	assert_object(mira).is_instanceof(RayCast3D)
-	assert_bool(mira.enabled).is_true()
-	assert_vector(mira.target_position).is_equal_approx(
-		Vector3(0.0, 0.0, -ReglasDelJugador.ALCANCE_DE_LA_MIRA), Vector3(1e-5, 1e-5, 1e-5)
-	)
+	var campo := jugador.get_node_or_null("Camara/CampoDeInteraccion")
+	assert_object(campo).is_instanceof(Area3D)
+	assert_bool(campo.monitoring).is_true()
+	var forma: CollisionShape3D = campo.get_node("Forma")
+	assert_object(forma.shape).is_instanceof(SphereShape3D)
+	assert_vector(campo.position + forma.position).is_equal(Vector3.ZERO)
+	assert_float(forma.shape.radius).is_equal(ReglasDelJugador.ALCANCE_DE_LA_MIRA)
+	assert_vector(forma.scale).is_equal(Vector3.ONE)
+	assert_vector(campo.scale).is_equal(Vector3.ONE)
 
 
 func test_el_cuerpo_tiene_una_forma_de_colision() -> void:
@@ -176,3 +176,50 @@ func test_los_dos_sistemas_llegan_con_sus_puntos_cableados() -> void:  # 006-AC1
 	assert_object(agarre.punto_de_respaldo).is_same(jugador.get_node("PuntoDeRespaldo"))
 	var examen: Node = jugador.examen
 	assert_object(examen.punto_de_examen).is_same(jugador.get_node("Camara/PuntoDeExamen"))
+
+
+func test_cada_brazo_apunta_al_punto_de_mano_que_mueve() -> void:
+	# El brazo no cuelga de nada: `jugador.gd` corre el punto sobre su eje. Si el eje deja de
+	# terminar donde está el punto, la mano salta a otro lado en el primer cuadro de la jornada
+	# y nada más en el repo lo diría.
+	var jugador := _jugador()
+	var manos := {
+		"Camara/BrazoDeCarga": "Camara/PuntoDeCarga",
+		"Camara/BrazoDeProducto": "Camara/PuntoDeProducto",
+	}
+	for ruta_del_brazo in manos:
+		var brazo: SpringArm3D = jugador.get_node(ruta_del_brazo)
+		var punto: Node3D = jugador.get_node(manos[ruta_del_brazo])
+		var punta := brazo.transform * Vector3(0.0, 0.0, brazo.spring_length)
+		assert_vector(punta).is_equal_approx(punto.position, Vector3.ONE * 0.001)
+
+
+func test_los_brazos_barren_un_volumen_y_no_un_rayo() -> void:
+	# Un brazo sin `shape` barre un rayo, y un rayo sólo frena el CENTRO de lo que se lleva: la
+	# mitad que sobra le sigue entrando a la madera.
+	var jugador := _jugador()
+	for ruta in ["Camara/BrazoDeCarga", "Camara/BrazoDeProducto"]:
+		var brazo: SpringArm3D = jugador.get_node(ruta)
+		(
+			assert_object(brazo.shape)
+			. override_failure_message("el brazo %s barre un rayo, no un volumen" % ruta)
+			. is_not_null()
+		)
+
+
+func test_los_brazos_nacen_adentro_de_la_capsula_del_cuerpo() -> void:
+	# Está medido que un barrido que arranca solapado se descarta entero. Si el hombro más el
+	# radio de la esfera sobresalen, apoyarse contra una pared apaga el brazo en silencio y lo
+	# que se lleva vuelve a atravesar los muebles.
+	var jugador := _jugador()
+	var cuerpo: CollisionShape3D = jugador.get_node("Cuerpo")
+	var capsula: CapsuleShape3D = cuerpo.shape
+	for ruta in ["Camara/BrazoDeCarga", "Camara/BrazoDeProducto"]:
+		var brazo: SpringArm3D = jugador.get_node(ruta)
+		var esfera: SphereShape3D = brazo.shape
+		var radial := Vector2(brazo.position.x, brazo.position.z).length()
+		(
+			assert_float(radial + esfera.radius)
+			. override_failure_message("el brazo %s nace fuera de la cápsula" % ruta)
+			. is_less(capsula.radius)
+		)

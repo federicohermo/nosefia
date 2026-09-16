@@ -40,7 +40,7 @@ func test_la_novena_no_entra_y_la_caja_dice_por_que() -> void:  # 033-AC3
 	# El motivo importa: la escena tiene que poder decir «no entra más» y no «eso no se guarda»,
 	# que son dos cosas distintas para quien está parado adelante con una lata en la mano.
 	var caja := _caja_llena()
-	assert_bool(caja.guardar(Catalogo.de(Producto.Id.YERBA))).is_false()
+	assert_bool(caja.guardar(Catalogo.de(Producto.Id.ACTRONCITO))).is_false()
 	assert_int(caja.motivo_de_rechazo()).is_equal(CajaDeTraslado.Motivo.CAJA_LLENA)
 	assert_int(caja.ocupados()).is_equal(Reglas.CASILLEROS_DE_LA_CAJA_DE_TRASLADO)
 
@@ -65,7 +65,7 @@ func test_sacar_devuelve_lo_ultimo_que_se_guardo() -> void:  # 033-AC5
 	# La caja se descarga por arriba, como una caja de verdad: lo último que entró es lo primero
 	# que sale, y así el jugador no tiene que acordarse del orden en que la cargó.
 	var caja := CajaDeTraslado.new()
-	caja.guardar(Catalogo.de(Producto.Id.YERBA))
+	caja.guardar(Catalogo.de(Producto.Id.ACTRONCITO))
 	var ultimo := Catalogo.de(Producto.Id.JABON)
 	caja.guardar(ultimo)
 	assert_object(caja.sacar()).is_same(ultimo)
@@ -76,7 +76,7 @@ func test_el_contenido_que_devuelve_es_una_copia() -> void:  # 033-AC5
 	# **Medido en headless**: un `Array` devuelto sin `duplicate()` es el mismo array, y un
 	# `clear()` afuera vacía el original. Sin la copia, quien mira la caja la puede vaciar.
 	var caja := CajaDeTraslado.new()
-	caja.guardar(Catalogo.de(Producto.Id.YERBA))
+	caja.guardar(Catalogo.de(Producto.Id.ACTRONCITO))
 	var afuera := caja.contenido()
 	afuera.clear()
 	assert_int(caja.ocupados()).is_equal(1)

@@ -65,6 +65,13 @@ En la práctica, para cada tarea que toca `src/dominio/` o `src/sistemas/`:
 2. Lo mínimo para que pase.
 3. Limpiar, con el test de testigo.
 
+**Un test que compara dos lecturas del mismo cuadro tiene que forzar la escritura antes de
+leer.** `await get_tree().process_frame` sigue **antes** del `_process` de los nodos. Leer justo
+después del `await` compara la escritura del cuadro anterior contra el instante de éste. Medido
+el 2026-09-14 implementando el 045: 30,98 mm de desfasaje aparente con el arreglo ya puesto, que
+se lee como que el arreglo no alcanza. O se llama al método a mano antes de leer, o se comparan
+dos instantes declarados distintos.
+
 **Si algo no se puede probar sin levantar una escena, no va en esas dos capas.** Va en `ui/` o
 en `escenas/`, que son cáscara — y entonces la regla que tenía adentro hay que bajarla al
 dominio. Ésa es la conversación que el gate fuerza, y es la que hace que el juego se pueda
@@ -109,8 +116,8 @@ Correr sólo la suite de gdUnit4 deja afuera los dos gates, que son justamente l
 lo que en este motor nadie más cuida.
 
 **Un nodo salteado no es un nodo verde**, y el reporte lo distingue. Pero `tests` sin `GODOT_BIN`
-**no se saltea: sale rojo** — ese salteo vale sólo mientras no exista un solo `*_test.gd`, y hoy
-hay 23 (`verificar.py:132-141`). No salgas a buscar un salteado que no va a aparecer.
+**no se saltea: sale rojo** — ese salteo vale sólo mientras no exista un solo `*_test.gd`, y hay
+muchos (`verificar.py:132-142`). No salgas a buscar un salteado que no va a aparecer.
 
 **Y `verificar.py` verde no prueba que la suite haya corrido.** Una suite de gdUnit4 que no
 parsea se descarta **en silencio** y el nodo `tests` sale verde igual — es el estado normal del
@@ -133,9 +140,13 @@ host»— que **no son un fallo**: la corrida sigue y escribe su `(N/N)`.
 Ese `(N/N)` tiene que dar igual que `find test -name '*_test.gd' | wc -l`. Si da menos, hay una
 suite que no corrió y el nodo verde no lo dice.
 
+Las pruebas auxiliares usan `-rd reports/<spec>-<nodo>`. No comparten reportes con otra
+corrida ni se ejecutan durante una importación: gdUnit4 puede borrar reportes aún en uso.
+El comando `verificar.py` conserva su ruta de reportes.
+
 **El escalón que cuesta una vuelta:** crear el `.gd` no alcanza para que su test lo vea. Un
 `class_name` nuevo no entra al registro global hasta que se vuelve a correr
-`"$GODOT_BIN" --headless --path . --import --quit`, y hasta entonces el error es
+`& $env:GODOT_BIN --headless --path . --import --quit`, desde PowerShell, y hasta entonces el error es
 `Parse Error: Identifier "X" not declared` **con el archivo ya escrito en disco** — idéntico al
 del archivo ausente, así que se lee como un error del código y no de la caché. Re-importá
 después de crear cada archivo con `class_name` nuevo, no sólo una vez al abrir el worktree.
@@ -146,6 +157,12 @@ fallida: el caso sale **`PASSED`** por no haber llegado a afirmar nada. Medido e
 implementando el 023: **4 de 5 casos en verde** con la escena sin escribir. El «falla por lo que
 se espera» se verifica en el `ERROR: Failed loading resource` de la salida cruda, no en el
 `0 failures`.
+
+**Y `--import` reescribe `project.godot`.** El editor no guarda un ajuste igual a su valor por
+defecto: lo borra del archivo. Medido el 2026-09-14 implementando el 044, con
+`common/physics_ticks_per_second=60` escrito a mano. La línea desaparece; con `=90` se conserva.
+Un AC que lea el archivo se vuelve insatisfacible sin que nada lo diga. Después de editar
+`project.godot`, corré `--import` y volvé a leer el archivo antes de dar el AC por cerrado.
 
 ## Cuando el spec no alcanza — el lazo
 
