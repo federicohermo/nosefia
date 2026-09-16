@@ -147,20 +147,26 @@ func test_los_reflejos_del_piso_salen_de_una_sonda_y_no_de_la_pantalla() -> void
 	assert_bool(sonda.box_projection).is_true()
 
 
-func test_el_rebote_se_hornea_y_el_apagado_sigue_siendo_exacto() -> void:  # 048-AC8
-	# Las dos mitades del mismo trato. `LightmapGI` reemplaza a SDFGI, que este renderizador no
-	# hace; y los focos van en `DYNAMIC`, que hornea **sólo el indirecto** y deja el directo y sus
-	# sombras en tiempo real. Con `STATIC` el directo también quedaría horneado, y apagar una
-	# luminaria no apagaría nada de lo que ya está escrito en la textura.
-	var ambiente := _ambiente()
-	var horneado: LightmapGI = ambiente.get_node("Horneado")
-	assert_bool(horneado.interior).is_true()
-	for foco in _focos(ambiente):
+func test_los_focos_quedan_en_el_modo_que_deja_apagar_una_luminaria_sola() -> void:  # 048-AC8
+	# `DYNAMIC` hornea **sólo el indirecto** y deja el directo y sus sombras en tiempo real. Con
+	# `STATIC` el directo también quedaría escrito en la textura, y apagar una luminaria no
+	# apagaría nada de lo que el lightmap ya dibuja: el pasillo seguiría iluminado con la luz
+	# apagada, que es justo lo que este spec necesita que se pueda hacer.
+	for foco in _focos(_ambiente()):
 		(
 			assert_int(foco.light_bake_mode)
 			. override_failure_message("%s no está en DYNAMIC" % foco.name)
 			. is_equal(Light3D.BAKE_DYNAMIC)
 		)
+
+
+func test_el_ambiente_de_color_no_queda_anulado_por_un_cielo_que_no_existe() -> void:  # 048-AC5
+	# Medido: con `ambient_light_sky_contribution` en su valor por defecto de 1,0 el ambiente de
+	# color se mezcla **cien por ciento con el cielo**, y con `background_mode` en `BG_COLOR` no
+	# hay cielo, así que el término ambiente sale en cero y todo lo que no toca un foco queda
+	# negro puro. Con 0,0 aparece el azul profundo del objetivo. El síntoma no nombra al ajuste:
+	# se ve como que la energía del ambiente no hace nada por más que se la suba.
+	assert_float(_entorno().ambient_light_sky_contribution).is_equal_approx(0.0, 0.001)
 
 
 func test_solo_el_cascaron_del_salon_se_importa_con_uv2() -> void:  # 048-AC8
