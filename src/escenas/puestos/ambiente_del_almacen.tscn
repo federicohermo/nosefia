@@ -1,21 +1,45 @@
-[gd_scene format=3]
+[gd_scene load_steps=3 format=3]
 
-[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_cielo"]
-
-[sub_resource type="Sky" id="Sky_cielo"]
-sky_material = SubResource("ProceduralSkyMaterial_cielo")
+[ext_resource type="Script" path="res://src/sistemas/marco/luces_del_almacen.gd" id="luces"]
 
 [sub_resource type="Environment" id="Environment_almacen"]
-background_mode = 2
-sky = SubResource("Sky_cielo")
+background_mode = 1
+background_color = Color(0.02, 0.031, 0.06, 1)
+ambient_light_source = 2
+ambient_light_color = Color(0.157, 0.259, 0.451, 1)
+ambient_light_energy = 0.35
 tonemap_mode = 2
+glow_enabled = true
+glow_intensity = 0.6
+glow_bloom = 0.1
+glow_hdr_threshold = 0.9
 
 [node name="Ambiente" type="Node3D"]
 
 [node name="Entorno" type="WorldEnvironment" parent="."]
 environment = SubResource("Environment_almacen")
 
-[node name="Sol" type="DirectionalLight3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 0.5, 0.866025, 0, -0.866025, 0.5, 0, 6, 0)
-shadow_enabled = true
+[node name="Luminarias" type="Node3D" parent="." node_paths=PackedStringArray("luces")]
+script = ExtResource("luces")
+luces = [NodePath("Tira01"), NodePath("Tira02"), NodePath("Tira03")]
 
+[node name="Tira01" type="OmniLight3D" parent="Luminarias"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4.331, 6.26)
+light_color = Color(0.78, 0.882, 1, 1)
+light_energy = 4.0
+shadow_enabled = true
+omni_range = 12.0
+
+[node name="Tira02" type="OmniLight3D" parent="Luminarias"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4.331, 0.464)
+light_color = Color(0.78, 0.882, 1, 1)
+light_energy = 4.0
+shadow_enabled = true
+omni_range = 12.0
+
+[node name="Tira03" type="OmniLight3D" parent="Luminarias"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4.331, -5.332)
+light_color = Color(0.78, 0.882, 1, 1)
+light_energy = 4.0
+shadow_enabled = true
+omni_range = 12.0

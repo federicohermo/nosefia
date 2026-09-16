@@ -145,17 +145,23 @@ func test_el_almacen_instancia_al_jugador_en_vez_de_duplicar_el_cuerpo() -> void
 	assert_bool(_almacen().has_node("Jugador")).is_true()
 
 
-func test_la_escena_trae_luz_propia() -> void:
-	# Una escena sin luces sale NEGRA, y el síntoma no nombra la causa. Por eso el entorno y el
-	# sol se afirman por nombre y por tipo en vez de dejarlos librados a que alguien mire la
-	# escena.
+func test_la_escena_trae_luz_propia() -> void:  # 048-AC2
+	# Una escena sin luces sale NEGRA, y el síntoma no nombra la causa. Por eso el entorno y las
+	# luminarias se afirman por nombre y por tipo en vez de dejarlos librados a que alguien mire
+	# la escena.
+	#
+	# Hasta el spec 048 lo que se afirmaba acá era `Ambiente/Sol`, un `DirectionalLight3D`: el
+	# almacén se iluminaba con un rig de exterior a mediodía adentro de un turno nocturno.
 	var almacen := _almacen()
 	assert_bool(almacen.has_node("Ambiente/Entorno")).is_true()
 	var entorno: Node = almacen.get_node("Ambiente/Entorno")
 	assert_object(entorno).is_instanceof(WorldEnvironment)
 	assert_object(entorno.environment).is_not_null()
-	assert_bool(almacen.has_node("Ambiente/Sol")).is_true()
-	assert_object(almacen.get_node("Ambiente/Sol")).is_instanceof(DirectionalLight3D)
+	assert_bool(almacen.has_node("Ambiente/Luminarias")).is_true()
+	var luminarias: Node = almacen.get_node("Ambiente/Luminarias")
+	assert_int(luminarias.get_child_count()).is_equal(Iluminacion.LUMINARIAS)
+	for luz in luminarias.get_children():
+		assert_object(luz).is_instanceof(Light3D)
 
 
 func test_la_estructura_entra_instanciada_y_no_vino_corrida() -> void:
