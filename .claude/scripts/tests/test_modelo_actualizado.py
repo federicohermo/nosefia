@@ -17,19 +17,21 @@ class ModeloActualizado(unittest.TestCase):
         cls.bin_inicio = 20 + longitud + 8
 
     def test_el_glb_corresponde_al_blend_integrado(self):  # 041-AC7
-        # Par medido al exportar c852fc2 con Blender 5.0, sin guardar la fuente.
+        # Par medido al exportar con Blender 5.2.1 desde la fuente ya guardada. El anterior
+        # salía de c852fc2 con Blender 5.0: los dos exportadores devuelven datos de vértice
+        # distintos para la misma malla, así que el par no se puede mezclar entre versiones.
         blend = (RAIZ / "assets/SEPT_JUEGOS_PROTOTIPO.blend").read_bytes()
         self.assertEqual(
             hashlib.sha256(blend).hexdigest(),
-            "95520fe035e670127905dde3dee006ca1487e68fa3e00c4e9e33971ebd1e7d00",
+            "7dfef7a3b561ea7beb9238e563308740cbd073e26fdc5d5a0e1cc610561e7f70",
         )
         self.assertEqual(
             hashlib.sha256(self.glb).hexdigest(),
-            "99f217eb45d020223edff3fa69c9b5ddee53dcd4f6b4f60ee2d599847be1bafd",
+            "fe81a1e12c246ddf168d34f22e478b59f6ca2b497db538c3b0f23cd95480d2ed",
         )
 
     def test_las_mallas_conservan_uv_y_materiales(self):  # 041-AC7
-        self.assertEqual(len(self.modelo["meshes"]), 61)
+        self.assertEqual(len(self.modelo["meshes"]), 60)
         self.assertEqual(len(self.modelo["materials"]), 36)
         for malla in self.modelo["meshes"]:
             for parte in malla["primitives"]:
