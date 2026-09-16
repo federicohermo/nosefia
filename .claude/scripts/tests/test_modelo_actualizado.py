@@ -20,6 +20,17 @@ class ModeloActualizado(unittest.TestCase):
         # Par medido al exportar con Blender 5.2.1 desde la fuente ya guardada. El anterior
         # salía de c852fc2 con Blender 5.0: los dos exportadores devuelven datos de vértice
         # distintos para la misma malla, así que el par no se puede mezclar entre versiones.
+        #
+        # **Y la exportación va con los modificadores `Array` apagados.** Siete productos
+        # —`durextra`, `Zucarachas`, `Zucarachas2`, `Zucarachas2.001`, `snackpapas1`,
+        # `malbardocig` y `alfajorescaja`— llevan un Geometry Nodes llamado `Array` que llena
+        # el estante con una fila. Blender 5.0 no realizaba esas instancias al exportar y 5.2
+        # sí, así que exportar con el modificador activo multiplica el producto por cuatro o
+        # por seis: medido, `durextra` pasa de 0,268 m a 1,105 m y `Zucarachas` de 0,282 m a
+        # 1,667 m. El juego necesita **una unidad**, porque `reposicion_manual.gd` toma la
+        # superficie 0 de cada grupo como el modelo de una y apila `cupo()` copias separadas
+        # por su AABB; con la fila entera, dos productos vecinos se pisan y el 042-AC2 da
+        # rojo. Apagados, los nueve productos salen byte a byte iguales al `.glb` de c852fc2.
         blend = (RAIZ / "assets/SEPT_JUEGOS_PROTOTIPO.blend").read_bytes()
         self.assertEqual(
             hashlib.sha256(blend).hexdigest(),
@@ -27,7 +38,7 @@ class ModeloActualizado(unittest.TestCase):
         )
         self.assertEqual(
             hashlib.sha256(self.glb).hexdigest(),
-            "fe81a1e12c246ddf168d34f22e478b59f6ca2b497db538c3b0f23cd95480d2ed",
+            "d40fb7b9e8e2a15ea7f9d65309344faa4731090f3e0721a0592b8369fc1d5dee",
         )
 
     def test_las_mallas_conservan_uv_y_materiales(self):  # 041-AC7
