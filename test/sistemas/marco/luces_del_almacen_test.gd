@@ -9,12 +9,13 @@ const LUCES := "res://src/sistemas/marco/luces_del_almacen.gd"
 
 func _montado(iluminacion: Iluminacion = Iluminacion.new()) -> LucesDelAlmacen:
 	var nodo: LucesDelAlmacen = auto_free(LucesDelAlmacen.new())
-	var luces: Array[Light3D] = []
+	var tiras: Array[Node3D] = []
 	for _indice in Iluminacion.LUMINARIAS:
-		var luz: OmniLight3D = auto_free(OmniLight3D.new())
-		nodo.add_child(luz)
-		luces.append(luz)
-	nodo.luces = luces
+		var tira: Node3D = auto_free(Node3D.new())
+		tira.add_child(auto_free(SpotLight3D.new()))
+		nodo.add_child(tira)
+		tiras.append(tira)
+	nodo.luminarias = tiras
 	nodo.iluminacion = iluminacion
 	nodo.aplicar()
 	return nodo
@@ -22,8 +23,8 @@ func _montado(iluminacion: Iluminacion = Iluminacion.new()) -> LucesDelAlmacen:
 
 func _invisibles(nodo: LucesDelAlmacen) -> Array[int]:
 	var apagadas: Array[int] = []
-	for indice in nodo.luces.size():
-		if not nodo.luces[indice].visible:
+	for indice in nodo.luminarias.size():
+		if not nodo.luminarias[indice].visible:
 			apagadas.append(indice)
 	return apagadas
 

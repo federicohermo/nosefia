@@ -18,6 +18,10 @@ const SOLO_DE_FORWARD_PLUS := [
 	"sdfgi_enabled", "ssr_enabled", "ssil_enabled", "volumetric_fog_enabled"
 ]
 
+## Y los que este renderizador sí hace, que son con los que se reemplazan: `LightmapGI` por SDFGI,
+## `ReflectionProbe` por SSR, SSAO por SSIL y niebla de profundidad por la volumétrica.
+const LO_QUE_COMPATIBILITY_SI_HACE := ["glow_enabled", "ssao_enabled", "fog_enabled"]
+
 
 ## Va montado en el árbol a propósito: `global_position` sobre un nodo suelto depende de por dónde
 ## quedó colgado, y lo que se mide acá es una altura.
@@ -30,6 +34,16 @@ func _ambiente() -> Node3D:
 func _entorno() -> Environment:
 	var nodo: WorldEnvironment = _ambiente().get_node("Entorno")
 	return nodo.environment
+
+
+## Todos los focos de todas las luminarias, que es lo que miden varios criterios.
+func _focos(ambiente: Node3D) -> Array[Light3D]:
+	var encontrados: Array[Light3D] = []
+	for tira in ambiente.get_node("Luminarias").get_children():
+		for hijo in tira.get_children():
+			if hijo is Light3D:
+				encontrados.append(hijo)
+	return encontrados
 
 
 ## El punto más alto del almacén, que es contra lo que se mide la altura de las luminarias.
@@ -69,32 +83,110 @@ func test_el_rig_de_exterior_no_esta_mas() -> void:  # 048-AC1
 
 
 func test_las_luminarias_son_tres_y_cuelgan_del_techo() -> void:  # 048-AC2
-	var luminarias: Node3D = _ambiente().get_node("Luminarias")
-	var luces: Array[Node] = []
-	for hijo in luminarias.get_children():
-		if hijo is Light3D:
-			luces.append(hijo)
-	assert_int(luces.size()).is_equal(Iluminacion.LUMINARIAS)
+	var ambiente := _ambiente()
+	var tiras := ambiente.get_node("Luminarias").get_children()
+	assert_int(tiras.size()).is_equal(Iluminacion.LUMINARIAS)
 	var techo := _techo()
-	for luz: Light3D in luces:
-		var caida := techo - luz.global_position.y
+	for foco in _focos(ambiente):
+		var caida := techo - foco.global_position.y
 		(
 			assert_float(caida)
 			. override_failure_message(
-				"%s cuelga a %.3f m del techo (%.3f m)" % [luz.name, caida, techo]
+				"%s cuelga a %.3f m del techo (%.3f m)" % [foco.name, caida, techo]
 			)
 			. is_between(0.15, 0.40)
 		)
 
 
+func test_cada_luminaria_trae_por_lo_menos_un_foco() -> void:  # 048-AC2
+	# Sin esto, tres `Node3D` vacíos pasan el criterio de arriba: no queda un foco que medir y el
+	# bucle de la altura no entra nunca.
+	assert_int(_focos(_ambiente()).size()).is_greater_equal(Iluminacion.LUMINARIAS)
+
+
+func test_ningun_foco_alumbra_hacia_arriba() -> void:  # 048-AC7
+	# El defecto que este criterio cierra: las luminarias del modelo cuelgan 20 cm bajo el techo,
+	# así que una luz puntual ahí le tira al techo cientos de veces más que al piso. En el rig
+	# anterior el techo salía blanco y el objetivo lo quiere casi negro.
+	#
+	# La dirección se lee del `global_transform` y no del archivo: los nueve flotantes de un
+	# `Transform3D` en un `.tscn` son las **filas** de la base y no sus ejes, así que leerlos al
+	# revés da la luz dada vuelta sin que ningún número se vea raro.
+	for foco in _focos(_ambiente()):
+		var direccion := -foco.global_transform.basis.z
+		(
+			assert_float(direccion.y)
+			. override_failure_message("%s alumbra hacia %v" % [foco.name, direccion])
+			. is_less_equal(-0.9)
+		)
+
+
 func test_el_entorno_no_pide_efectos_que_este_renderizador_no_hace() -> void:  # 048-AC5
 	var entorno := _entorno()
-	assert_bool(entorno.glow_enabled).is_true()
+	for ajuste: String in LO_QUE_COMPATIBILITY_SI_HACE:
+		(
+			assert_bool(entorno.get(ajuste))
+			. override_failure_message("%s está apagado y este renderizador sí lo hace" % ajuste)
+			. is_true()
+		)
 	for ajuste: String in SOLO_DE_FORWARD_PLUS:
 		(
 			assert_bool(entorno.get(ajuste))
 			. override_failure_message("%s está prendido y este renderizador lo ignora" % ajuste)
 			. is_false()
+		)
+
+
+func test_los_reflejos_del_piso_salen_de_una_sonda_y_no_de_la_pantalla() -> void:  # 048-AC5
+	# Compatibility no hace reflexiones en espacio de pantalla, así que los reflejos alargados de
+	# las luminarias sobre el damero tienen que venir de una `ReflectionProbe`. `interior` le saca
+	# el cielo, que en un almacén cerrado no existe, y `box_projection` endereza el reflejo en una
+	# sala rectangular.
+	var sonda: ReflectionProbe = _ambiente().get_node("Reflejos")
+	assert_bool(sonda.interior).is_true()
+	assert_bool(sonda.box_projection).is_true()
+
+
+func test_el_rebote_se_hornea_y_el_apagado_sigue_siendo_exacto() -> void:  # 048-AC8
+	# Las dos mitades del mismo trato. `LightmapGI` reemplaza a SDFGI, que este renderizador no
+	# hace; y los focos van en `DYNAMIC`, que hornea **sólo el indirecto** y deja el directo y sus
+	# sombras en tiempo real. Con `STATIC` el directo también quedaría horneado, y apagar una
+	# luminaria no apagaría nada de lo que ya está escrito en la textura.
+	var ambiente := _ambiente()
+	var horneado: LightmapGI = ambiente.get_node("Horneado")
+	assert_bool(horneado.interior).is_true()
+	for foco in _focos(ambiente):
+		(
+			assert_int(foco.light_bake_mode)
+			. override_failure_message("%s no está en DYNAMIC" % foco.name)
+			. is_equal(Light3D.BAKE_DYNAMIC)
+		)
+
+
+func test_solo_el_cascaron_del_salon_se_importa_con_uv2() -> void:  # 048-AC8
+	# Las dos mitades, y la segunda es la cara. Sin UV2 el `LightmapGI` no tiene dónde escribir,
+	# así que el salón las necesita. Pero prender `meshes/light_baking=2` para todo el modelo
+	# **suelda vértices**: medido, `almacen` pasa de 675 a 664 y los `.res` derivados de
+	# `gondola01` dejan de coincidir, con `modelo_exportado_test.gd` en rojo en diez aserciones.
+	# Por eso el desplegado va por malla, en el `_subresources` del `.import`, y sobre el nombre
+	# del **recurso** —`SEPT_JUEGOS_PROTOTIPO_Plane_005`— y no el del nodo: con el del nodo el
+	# importador no protesta y tampoco despliega nada.
+	var modelo: Node3D = auto_free(MODELO.instantiate())
+	var salon: MeshInstance3D = modelo.get_node("almacen")
+	for indice in salon.mesh.get_surface_count():
+		var uv2: Variant = salon.mesh.surface_get_arrays(indice)[Mesh.ARRAY_TEX_UV2]
+		(
+			assert_int(0 if uv2 == null else uv2.size())
+			. override_failure_message("la superficie %d del salón no tiene UV2" % indice)
+			. is_greater(0)
+		)
+	var gondola: MeshInstance3D = modelo.get_node("gondola01")
+	for indice in gondola.mesh.get_surface_count():
+		var uv2: Variant = gondola.mesh.surface_get_arrays(indice)[Mesh.ARRAY_TEX_UV2]
+		(
+			assert_int(0 if uv2 == null else uv2.size())
+			. override_failure_message("la góndola se desplegó y eso mueve los `.res` derivados")
+			. is_equal(0)
 		)
 
 

@@ -160,8 +160,18 @@ func test_la_escena_trae_luz_propia() -> void:  # 048-AC2
 	assert_bool(almacen.has_node("Ambiente/Luminarias")).is_true()
 	var luminarias: Node = almacen.get_node("Ambiente/Luminarias")
 	assert_int(luminarias.get_child_count()).is_equal(Iluminacion.LUMINARIAS)
-	for luz in luminarias.get_children():
-		assert_object(luz).is_instanceof(Light3D)
+	for tira in luminarias.get_children():
+		# Una luminaria es una tira de 15,7 m y ninguna luz de Godot alumbra una línea: cada
+		# una es un grupo de focos, y lo que el dominio apaga es el grupo.
+		var focos := 0
+		for hijo in tira.get_children():
+			if hijo is Light3D:
+				focos += 1
+		(
+			assert_int(focos)
+			. override_failure_message("%s no trae un solo foco" % tira.name)
+			. is_greater(0)
+		)
 
 
 func test_la_estructura_entra_instanciada_y_no_vino_corrida() -> void:
