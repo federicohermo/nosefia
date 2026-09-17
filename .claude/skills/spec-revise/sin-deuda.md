@@ -175,6 +175,8 @@ las dos en la misma corrida:
 | un `[P]` que resultó falso | `spec-create` — el orden obligado declaró paralelo algo que comparte archivo |
 | dos specs que se pisan la misma escena | `spec-revise-batch` — la matriz de cruces no marcó el `.tscn` |
 | una medición que el spec supuso en vez de correr | `spec-create` — el research salió sin número |
+| una medición corrida en el proceso equivocado | `spec-create` — una capacidad del motor se midió donde no la decide nadie: el juego contestó que no y el editor que sí |
+| un `## Orden obligado` que pone una escena antes del script que la escena instancia | `spec-create` — el orden se escribió por capas y lo manda la dependencia de carga |
 | una ruta de `src/` en una subcarpeta que `CARPETAS_POR_CAPA` no declara | `spec-create` — la ruta se escribió sin cruzarla contra `lib/repo.py`, y el gate de capas no la caza si el archivo es un `.tres` |
 | un spec del lote que **cita por identificador** a otro que no aterrizó | `spec-implement-batch` — el Paso 0 re-midió los conteos y no las dependencias que apuntan **afuera** del lote, que son las que `lote.py` no puede ver |
 | un nodo del harness en verde sin haber ejercido nada | `spec-implement` — la condición de terminado leyó el color del nodo y no el conteo de lo que corrió |
@@ -189,6 +191,8 @@ las dos en la misma corrida:
 | el padre declara incompleto un carril que sí cerró | `spec-implement-batch` — la verificación leyó una caché local en vez del issue, porque el hidratador saltea lo que ya existe y sale en verde |
 | una decisión de implementación que el spec no nombraba, y un `spec.md` sin margen de techo donde escribirla | `spec-implement-batch` — el Paso 2 mandaba al `spec.md` sin decir que los techos se miden antes, y que el único archivo con aire es el `plan.md` |
 | **varios carriles pisando el mismo comando que el skill les dio escrito** | `spec-implement-batch` — un comando que el preámbulo entrega no se copia de la corrida anterior: se vuelve a correr antes de repartirlo, o se reparte roto N veces |
+| una ruta en `## Qué NO se toca` que el criterio termina **necesitando** | `spec-create` — la prohibición se escribió sobre un archivo que nadie había medido, y el ajuste que destraba el spec vive adentro |
+| un `## Criterio de terminado` que manda a ajustar sin número algo que **sí se puede medir** | `spec-create` — el resultado quedó sin gate, se entregó, y quien lo pidió lo rechazó con palabras que ningún test podía contradecir |
 
 **Si el problema no entra en ninguna fila, agregá la fila.** Esa tabla es el registro de lo que
 esta doctrina ya aprendió, y está incompleta a propósito.
