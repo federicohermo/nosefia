@@ -46,5 +46,5 @@
   "045": {"issue":115,"carpeta":"045-la-copia-del-piso-deja-de-dibujarse-un-paso-atras","fecha":"2026-09-14","estado":"Implementado","titulo":"Spec 045 — La copia del piso deja de dibujarse un paso de física atrás del cuerpo"},
   "046": {"issue":127,"carpeta":"046-el-cabeceo-se-corta-por-su-causa","fecha":"2026-09-14","estado":"Propuesto","titulo":"Spec 046 — El cabeceo del piso se corta por su causa y no por su efecto"},
   "047": {"issue":128,"carpeta":"047-las-cajas-de-reposicion-se-trasladan","fecha":"2026-09-14","estado":"Implementado","titulo":"Spec 047 — Las cajas de reposición se llevan, y sólo entregan apoyadas en el suelo"},
-  "048": {"issue":130,"carpeta":"048-el-almacen-se-ilumina-de-noche","fecha":"2026-09-15","estado":"Propuesto","titulo":"Spec 048 — El almacén se ilumina de noche y las luminarias se apagan"}
+  "048": {"issue":130,"carpeta":"048-el-almacen-se-ilumina-de-noche","fecha":"2026-09-15","estado":"Descartado","titulo":"Spec 048 — El almacén se ilumina de noche y las luminarias se apagan"}
 }
