@@ -31,9 +31,6 @@ const HOLGURA_DEL_APOYO := 0.02
 ## Cuadros de física empujando. Arrastrando una caja se camina a un tercio de la velocidad.
 const CUADROS_EMPUJANDO := 150
 
-## Cuánto se le descuenta a la forma para preguntar si atraviesa algo: tocar no es atravesar.
-const ROCE := 0.004
-
 ## Los dos gestos de soltar, en grados de la vista.
 const MIRANDO_ARRIBA := 10.0
 const MIRANDO_ABAJO := -40.0
@@ -220,7 +217,9 @@ func _comprobar_la_mira_libre(jugador: Node3D, caja: Node3D, donde: String) -> v
 func _comprobar_que_no_atraviesa_nada(jugador: Node3D, caja: Node3D, donde: String) -> void:
 	var forma: CollisionShape3D = caja.get_node("Cuerpo")
 	var apenas_menor := BoxShape3D.new()
-	apenas_menor.size = (forma.shape as BoxShape3D).size * forma.scale - Vector3.ONE * ROCE
+	apenas_menor.size = (
+		(forma.shape as BoxShape3D).size * forma.scale - Vector3.ONE * ReglasDeLosObjetos.ROCE
+	)
 	var consulta := PhysicsShapeQueryParameters3D.new()
 	consulta.shape = apenas_menor
 	consulta.transform = Transform3D(caja.global_basis, caja.global_position)

@@ -18,9 +18,6 @@ const PASOS_DEL_BORDE := 12
 ## Cuánto puede variar la altura de un apoyo y seguir siendo el mismo, en metros.
 const TOLERANCIA_DEL_APOYO := 0.02
 
-## Cuánto se le descuenta a la caja para preguntar si entra: apoyarse es tocar, no atravesar.
-const ROCE := 0.004
-
 ## Cuántas direcciones alrededor del jugador se prueban para dejarle la caja al lado.
 const LADOS_DEL_JUGADOR := 8
 
@@ -129,8 +126,9 @@ func _colgar_la_caja(nodo: Node3D) -> void:
 
 ## Apoya la caja recién soltada donde el jugador tiene la mira, derecha y de una.
 ##
-## El cuerpo es estático, así que el motor no la mueve solo. El `top_level` vuelve a `false`,
-## que es lo que soltar deja en `true`.
+## Soltar la deja viva: `Agarre` le saca la `freeze` al colgarla del punto de soltado, así que
+## acá se le escribe el lugar y se la vuelve a congelar con `quedarse_quieta()`. El `top_level`
+## vuelve a `false` por lo mismo, que es lo que soltar deja en `true`.
 ##
 ## **Soltar suelta.** Cuando la mira no señala un lugar donde la caja entre, o el camino hasta
 ## ahí está cortado, la caja va al piso al lado del jugador. Antes se le volvía a la mano, y eso
@@ -240,7 +238,9 @@ func _al_lado_del_jugador(caja: CajaDelDeposito) -> bool:
 func _entra_entera(caja: CajaDelDeposito) -> bool:
 	var forma: CollisionShape3D = caja.get_node("Cuerpo")
 	var encogida := BoxShape3D.new()
-	encogida.size = (forma.shape as BoxShape3D).size * forma.scale - Vector3.ONE * ROCE
+	encogida.size = (
+		(forma.shape as BoxShape3D).size * forma.scale - Vector3.ONE * ReglasDeLosObjetos.ROCE
+	)
 	var consulta := PhysicsShapeQueryParameters3D.new()
 	consulta.shape = encogida
 	consulta.transform = Transform3D(Basis.IDENTITY, caja.global_position)
