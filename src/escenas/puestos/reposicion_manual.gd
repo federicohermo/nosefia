@@ -7,7 +7,8 @@ const CajaDelDeposito := preload("res://src/escenas/objetos/caja_de_productos.gd
 const JugadorDelLocal := preload("res://src/escenas/jugador.gd")
 const OBJETO := preload("res://src/escenas/objetos/objeto_agarrable.tscn")
 const BORDE := preload("res://src/escenas/puestos/borde_de_reposicion.gdshader")
-const PRODUCTOS_NUEVOS := preload("res://assets/models/productos_marolini_jorgillo.glb")
+const MAROLINI := preload("res://assets/models/producto_marolini.res")
+const JORGILLO := preload("res://assets/models/producto_jorgillo.res")
 
 ## Hasta dónde se busca piso debajo de una caja recién soltada, en metros.
 const CAIDA_MAXIMA := 3.0
@@ -29,9 +30,22 @@ const LADOS_DEL_JUGADOR := 8
 ## De dónde cuelga la caja mientras se la lleva: un punto del CUERPO y no de la cámara, porque
 ## pegada al pitch tapa la mira. Lo mueve este puesto y no `Agarre`, que no puede nombrarla.
 @export var punto_de_la_caja: Node3D
+## Dónde se apoya la PRIMERA unidad de cada producto, en el orden de `Producto.Id`.
 @export var apoyos: Array[Vector3] = []
-@export var direcciones: Array[Vector3] = []
-@export var giros_del_frente: Array[float] = []
+
+## Hacia dónde crece la fila de un producto sobre el estante.
+##
+## Es uno solo y no uno por producto porque la góndola es una y corre a lo largo de Z: una fila
+## que creciera en otra dirección se metería adentro del mueble o saldría al pasillo.
+@export var direccion_de_la_fila := Vector3.BACK
+
+## Cuánto gira el modelo para mostrarle el frente a la cámara, en grados.
+##
+## También es uno solo, y eso fija el contrato del modelo: **cada producto se hornea mirando a
+## -X**, que es la cara de la góndola que da al pasillo. Un modelo que entre mirando a otro lado
+## se ve de costado en el estante, y ningún número de acá lo puede arreglar —el estante coloca
+## las copias sin rotarlas—.
+@export var giro_del_frente := 90.0
 
 var _unidades: Array[Node3D] = []
 var _zonas: Array[StaticBody3D] = []
@@ -459,9 +473,9 @@ func _apoyo(id: Producto.Id) -> Vector3:
 
 func _posicion(id: Producto.Id, indice: int) -> Vector3:
 	var base := to_global(apoyos[id])
-	var direccion := direcciones[id]
-	var separacion := _modelos[id].get_aabb().size.dot(direccion.abs()) + 0.03
-	return base + direccion * separacion * indice
+	var hacia := direccion_de_la_fila
+	var separacion := _modelos[id].get_aabb().size.dot(hacia.abs()) + 0.03
+	return base + hacia * separacion * indice
 
 
 func _preparar_modelos() -> void:
@@ -471,10 +485,8 @@ func _preparar_modelos() -> void:
 		herramienta.set_material(grupo.mesh.surface_get_material(0))
 		_modelos.append(herramienta.commit())
 	_modelos[Producto.Id.ACTRONCITO] = preload("res://assets/models/producto_actroncito.res")
-	var nuevos := PRODUCTOS_NUEVOS.instantiate()
-	_modelos.append(nuevos.get_node("Marolini").mesh)
-	_modelos.append(nuevos.get_node("Jorgillo").mesh)
-	nuevos.free()
+	_modelos.append(MAROLINI)
+	_modelos.append(JORGILLO)
 	for modelo in _modelos:
 		var forma := ConvexPolygonShape3D.new()
 		var puntos := modelo.get_faces()
@@ -526,7 +538,7 @@ func retirar(id: Producto.Id) -> void:
 	# El frente de cada modelo se alinea antes de darle la inclinación de la mano.
 	unidad.orientacion_en_mano = (
 		Basis.from_euler(Vector3(deg_to_rad(-17), deg_to_rad(-20), 0))
-		* Basis(Vector3.UP, deg_to_rad(giros_del_frente[id]))
+		* Basis(Vector3.UP, deg_to_rad(giro_del_frente))
 	)
 	unidad.collision_layer = 1
 	unidad.collision_mask = 1
