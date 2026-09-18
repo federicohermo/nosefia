@@ -19,7 +19,7 @@ _pantalla = NodePath("Interfaz/PantallaDeCierre")
 _reloj_de_pared = NodePath("Estructura/RelojDePared")
 _repositor = NodePath("Servicios/Repositor")
 _carga = NodePath("Servicios/CargaDeLaCaja")
-_estante = NodePath("Estructura/gondola01/StaticBody3D")
+_estante = NodePath("Estructura/gondolanueva/StaticBody3D")
 _cajas_de_productos = [NodePath("Objetos/CajaDeActroncito"), NodePath("Objetos/CajaDeFideos"), NodePath("Objetos/CajaDeGaseosa"), NodePath("Objetos/CajaDeGalletitas"), NodePath("Objetos/CajaDeArroz"), NodePath("Objetos/CajaDeJabon"), NodePath("Objetos/CajaDeMarolini"), NodePath("Objetos/CajaDeJorgillo")]
 _caja_de_traslado = NodePath("Objetos/CajaDeTraslado")
 _jugador = NodePath("Jugador")
@@ -37,14 +37,14 @@ _bolsas = [NodePath("Objetos/BolsaDeBasura1"), NodePath("Objetos/BolsaDeBasura2"
 repositor = NodePath("../Servicios/Repositor")
 jugador = NodePath("../Jugador")
 punto_de_la_caja = NodePath("../Jugador/PuntoDeCaja")
-estante = NodePath("../Estructura/gondola01/StaticBody3D")
-contenido = NodePath("../Estructura/gondola01/StaticBody3D/Contenido")
+estante = NodePath("../Estructura/gondolanueva/StaticBody3D")
+contenido = NodePath("../Estructura/gondolanueva/StaticBody3D/Contenido")
 
 [node name="Ambiente" parent="." unique_id=1395941829 instance=ExtResource("grupo_Ambiente")]
 
 [node name="Estructura" parent="." unique_id=1019345008 instance=ExtResource("grupo_Estructura")]
 
-[node name="StaticBody3D" parent="Estructura/compu" parent_id_path=PackedInt32Array(1019345008, 1917230149) index="0" unique_id=73481354 node_paths=PackedStringArray("jugador", "reloj", "computadora", "pantalla")]
+[node name="StaticBody3D" parent="Estructura/base compu" parent_id_path=PackedInt32Array(1019345008, 1917230149) index="0" unique_id=73481354 node_paths=PackedStringArray("jugador", "reloj", "computadora", "pantalla")]
 jugador = NodePath("../../../Jugador")
 reloj = NodePath("../../../Servicios/RelojDelTurno")
 computadora = NodePath("../../../Servicios/Computadora")
