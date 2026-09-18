@@ -31,10 +31,10 @@ func _estante(aceptados: Array[Producto], en_deposito: int = EN_DEPOSITO) -> Est
 func test_lo_que_el_estante_no_acepta_se_rechaza_sin_mover_una_unidad() -> void:  # 008-AC1
 	var actroncito := _producto(Producto.Id.ACTRONCITO)
 	var estante := _estante([actroncito])
-	var jabon := _producto(Producto.Id.JABON)
-	assert_int(estante.colocar(jabon)).is_equal(Estante.Rechazo.PRODUCTO_NO_ACEPTADO)
+	var malbardo := _producto(Producto.Id.MALBARDO)
+	assert_int(estante.colocar(malbardo)).is_equal(Estante.Rechazo.PRODUCTO_NO_ACEPTADO)
 	assert_int(estante.unidades_en_gondola(actroncito)).is_equal(0)
-	assert_int(estante.unidades_en_gondola(jabon)).is_equal(0)
+	assert_int(estante.unidades_en_gondola(malbardo)).is_equal(0)
 
 
 func test_con_el_estante_lleno_se_rechaza_sin_mover_una_unidad() -> void:  # 008-AC1
@@ -101,13 +101,13 @@ func test_al_llegar_al_cupo_de_todos_los_aceptados_el_estante_esta_completo() ->
 	# Con dos productos: llenar uno solo no alcanza, y ésa es la mitad que un `completada()`
 	# escrito sobre el último producto colocado daría por buena.
 	var actroncito := _producto(Producto.Id.ACTRONCITO)
-	var jabon := _producto(Producto.Id.JABON)
-	var estante := _estante([actroncito, jabon])
+	var malbardo := _producto(Producto.Id.MALBARDO)
+	var estante := _estante([actroncito, malbardo])
 	for _unidad in range(CUPO_DE_PRUEBA):
 		estante.colocar(actroncito)
 	assert_bool(estante.completada()).is_false()
 	for _unidad in range(CUPO_DE_PRUEBA):
-		estante.colocar(jabon)
+		estante.colocar(malbardo)
 	assert_bool(estante.completada()).is_true()
 
 
@@ -127,7 +127,7 @@ func test_acepta_compara_por_id_y_no_por_instancia() -> void:  # 008-AC8
 	var estante := _estante([_producto(Producto.Id.ACTRONCITO)])
 	assert_bool(estante.acepta(_producto(Producto.Id.ACTRONCITO))).is_true()
 	assert_bool(estante.acepta(Catalogo.de(Producto.Id.ACTRONCITO))).is_true()
-	assert_bool(estante.acepta(_producto(Producto.Id.JABON))).is_false()
+	assert_bool(estante.acepta(_producto(Producto.Id.MALBARDO))).is_false()
 
 
 func test_un_producto_nulo_se_rechaza_en_vez_de_reventar() -> void:  # 008-AC8
@@ -144,10 +144,10 @@ func test_el_cupo_de_cada_producto_es_su_umbral_y_no_un_numero_propio() -> void:
 	# El 005 ya le puso un umbral a cada producto y `faltantes()` lo usa: un `cupo` propio acá
 	# sería el mismo número escrito dos veces, y la copia se desincroniza sin que nadie avise.
 	var actroncito := _producto(Producto.Id.ACTRONCITO, 4)
-	var jabon := _producto(Producto.Id.JABON, 2)
-	var estante := _estante([actroncito, jabon])
+	var malbardo := _producto(Producto.Id.MALBARDO, 2)
+	var estante := _estante([actroncito, malbardo])
 	assert_int(estante.cupo(actroncito)).is_equal(actroncito.umbral)
-	assert_int(estante.cupo(jabon)).is_equal(jabon.umbral)
+	assert_int(estante.cupo(malbardo)).is_equal(malbardo.umbral)
 
 
 func test_el_estante_no_lleva_el_cupo_ni_el_stock_escritos_adentro() -> void:  # 008-AC10

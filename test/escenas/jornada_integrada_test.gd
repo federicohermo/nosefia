@@ -67,11 +67,11 @@ func _reponer(almacen: Node3D) -> void:
 		var producto := Catalogo.de(caja.get("producto"))
 		var zona: AABB = almacen.get("_reposicion_manual").zona(producto.id)
 		var direccion := Vector3(0, 0, 1.5)
-		if producto.id == Producto.Id.GASEOSA:
+		if producto.id == Producto.Id.BURBALOO:
 			direccion = Vector3(1.5, 0, 0)
-		elif producto.id == Producto.Id.GALLETITAS:
+		elif producto.id == Producto.Id.ZUCARACHAS:
 			direccion = Vector3(-1.5, 0, 0)
-		elif producto.id == Producto.Id.ARROZ:
+		elif producto.id == Producto.Id.LAYSNTT:
 			direccion = Vector3(0, 0, -1.5)
 		camara.global_position = zona.get_center() + direccion
 		camara.look_at(zona.get_center())

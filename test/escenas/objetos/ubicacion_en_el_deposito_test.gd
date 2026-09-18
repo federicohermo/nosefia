@@ -29,10 +29,10 @@ const CERCA_DEL_INODORO := 4.0
 const LEJOS_DE_SU_LUGAR := Vector3(0.0, 2.0, 0.0)
 
 
-func test_las_ocho_cajas_de_reposicion_estan_apoyadas_en_el_deposito() -> void:  # 043-AC10
-	# Entran cuatro en los estantes y cuatro en el piso: entre estantes hay 0,477 m y la caja
-	# mide 0,607, así que sólo el estante de arriba tiene aire. Lo que el caso afirma no es el reparto
-	# sino que ninguna quede flotando ni clavada adentro de otra cosa.
+func test_las_cajas_de_reposicion_estan_apoyadas_en_el_deposito() -> void:  # 043-AC10
+	# Se reparten entre el estante de arriba de los tres racks y el piso: entre estantes hay
+	# 0,477 m y la caja mide 0,607, así que sólo el de arriba tiene aire. Lo que el caso afirma
+	# no es el reparto sino que ninguna quede flotando ni clavada adentro de otra cosa.
 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
 	add_child(almacen)
 	await get_tree().physics_frame
@@ -159,7 +159,7 @@ func test_abrir_la_jornada_devuelve_cada_caja_a_su_lugar() -> void:  # 047-AC8
 	for caja: Node3D in cajas:
 		caja.global_position = LEJOS_DE_SU_LUGAR
 	var jugador: Node3D = almacen.get("_jugador")
-	var en_brazos: Node3D = cajas[Producto.Id.ARROZ]
+	var en_brazos: Node3D = cajas[Producto.Id.LAYSNTT]
 	_agarrar(jugador, en_brazos)
 	assert_object(en_brazos.get_parent()).is_not_same(mundo)
 	almacen.get("_ciclo").abrir_la_jornada()

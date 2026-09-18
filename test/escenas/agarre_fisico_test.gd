@@ -24,7 +24,16 @@ func test_soltar_hacia_la_gondola_deja_el_producto_visible_y_recuperable() -> vo
 				await get_tree().physics_frame
 			camara.look_at(cuerpo.global_position)
 			var candidato: CampoDeInteraccion.Candidato = jugador.call("_medir_candidato", cuerpo)
-			assert_float(candidato.distancia).is_less(ReglasDelJugador.ALCANCE_DE_LA_MIRA)
+			(
+				assert_float(candidato.distancia)
+				. override_failure_message(
+					(
+						"%s soltado desde %s quedó en %s, fuera de alcance"
+						% [producto.nombre, ojo, cuerpo.global_position]
+					)
+				)
+				. is_less(ReglasDelJugador.ALCANCE_DE_LA_MIRA)
+			)
 			assert_bool(cuerpo.is_visible_in_tree()).is_true()
 			assert_bool(agarre.pedir_agarrar(cuerpo.datos, cuerpo)).is_true()
 			almacen.get("_reposicion_manual").pedir_colocar(producto.id)

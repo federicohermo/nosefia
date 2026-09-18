@@ -36,8 +36,11 @@ func test_la_computadora_tiene_apoyo_y_no_queda_tapada_por_otro_cuerpo() -> void
 	var apoyo: Node3D = almacen.get_node(cuerpo.get_meta("apoyo"))
 	assert_object(apoyo).is_same(almacen.get_node("Estructura/EscritorioComputadora"))
 	var espacio := almacen.get_world_3d().direct_space_state
+	# **El rayo arranca un poco arriba del cuerpo, no en su origen.** El origen de `base compu`
+	# cae exactamente sobre la tapa del escritorio, y un rayo que empieza en el plano de contacto
+	# lo cruza sin registrarlo: contestaba el piso del local, 0,82 m mas abajo.
 	var consulta := PhysicsRayQueryParameters3D.create(
-		cuerpo.global_position, cuerpo.global_position + Vector3.DOWN
+		cuerpo.global_position + Vector3.UP * 0.05, cuerpo.global_position + Vector3.DOWN * 0.05
 	)
 	consulta.exclude = [cuerpo.get_rid()]
 	var golpe := espacio.intersect_ray(consulta)

@@ -7,8 +7,6 @@ const CajaDelDeposito := preload("res://src/escenas/objetos/caja_de_productos.gd
 const JugadorDelLocal := preload("res://src/escenas/jugador.gd")
 const OBJETO := preload("res://src/escenas/objetos/objeto_agarrable.tscn")
 const BORDE := preload("res://src/escenas/puestos/borde_de_reposicion.gdshader")
-const MAROLINI := preload("res://assets/models/producto_marolini.res")
-const JORGILLO := preload("res://assets/models/producto_jorgillo.res")
 
 ## Hasta dónde se busca piso debajo de una caja recién soltada, en metros.
 const CAIDA_MAXIMA := 3.0
@@ -101,11 +99,41 @@ func preparar() -> void:
 	jugador.uso_pedido.connect(retirar_de_la_caja)
 	repositor.agarre.objeto_agarrado.connect(_actualizar_zonas)
 	repositor.agarre.objeto_soltado.connect(_actualizar_zonas)
+	repositor.agarre.objeto_soltado.connect(_desatascar_lo_soltado)
 	repositor.agarre.objeto_soltado.connect(_agrupar_suelto)
 	repositor.agarre.objeto_agarrado.connect(_retirar_del_grupo)
 	repositor.agarre.objeto_soltado.connect(_apoyar_la_caja)
 	repositor.agarre.objeto_agarrado.connect(_colgar_la_caja)
 	_actualizar_zonas()
+
+
+## Saca del mueble la unidad que se soltó adentro de él.
+##
+## **`Agarre` suelta a 1,2 m de la cámara y no puede mirar el mundo**: eso lo contesta la escena,
+## y para las cajas lo hace `_apoyar_la_caja`. Una unidad de producto no tenía quién, así que
+## parado contra la góndola —el pasillo mide 1,73 m— el punto de soltado caía adentro del
+## estante: el producto quedaba detrás del panel, temblando contra la malla y sin rayo que lo
+## alcance. Medido con el actroncito soltado desde x = 2,6: terminaba en x = 1,25, detrás del
+## fondo, a distancia `inf` de la mira.
+##
+## Se lo trae hacia el jugador hasta el primer lugar libre, que es de donde vino.
+func _desatascar_lo_soltado(nodo: Node3D) -> void:
+	var unidad := nodo as ObjetoAgarrable
+	if unidad == null or not unidad.datos is UnidadDeProducto:
+		return
+	var forma: CollisionShape3D = unidad.get_node("Forma")
+	var consulta := PhysicsShapeQueryParameters3D.new()
+	consulta.shape = forma.shape
+	consulta.collision_mask = unidad.collision_mask
+	consulta.exclude = [unidad.get_rid(), jugador.get_rid()]
+	var espacio := get_world_3d().direct_space_state
+	var atras := jugador.mira().basis.z.normalized()
+	var paso := ReglasDelJugador.ALCANCE_DE_LA_MIRA / PASOS_DEL_BORDE
+	for intento in PASOS_DEL_BORDE:
+		consulta.transform = Transform3D(Basis.IDENTITY, unidad.global_position)
+		if espacio.intersect_shape(consulta, 1).is_empty():
+			return
+		unidad.global_position += atras * paso
 
 
 func _agrupar_suelto(nodo: Node3D) -> void:
@@ -487,12 +515,14 @@ func _preparar_modelos() -> void:
 		herramienta.append_from(grupo.mesh, 0, Transform3D(grupo.global_basis, Vector3.ZERO))
 		herramienta.set_material(grupo.mesh.surface_get_material(0))
 		_modelos.append(herramienta.commit())
-	_modelos[Producto.Id.ACTRONCITO] = preload("res://assets/models/producto_actroncito.res")
-	_modelos.append(MAROLINI)
-	_modelos.append(JORGILLO)
 	for modelo in _modelos:
-		var forma := ConvexPolygonShape3D.new()
-		var puntos := modelo.get_faces()
+		# **El casco sale de `create_convex_shape` y no de `get_faces()`.** Los vértices crudos
+		# vienen repetidos —36 para un cubo, tres por cada esquina, y 1146 para la lata de
+		# arvejas—, y con esa nube el solver arma un manifiesto de contacto sucio: un producto
+		# de caras planas apoyado no termina de asentarse y se lo ve titilar. Limpio, el cubo
+		# son 8 puntos y la lata 129.
+		var forma := modelo.create_convex_shape(true, false)
+		var puntos := forma.points
 		var centro := modelo.get_aabb().get_center()
 		for indice in puntos.size():
 			puntos[indice] -= centro

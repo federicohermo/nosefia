@@ -5,6 +5,24 @@ const CONTENIDO := preload("res://src/escenas/puestos/contenido_del_estante.tscn
 const SOPORTE := preload("res://assets/models/gondola_soporte.res")
 const COLISION := preload("res://assets/models/gondola_colision.res")
 
+## Qué malla del modelo le toca a cada producto, en el orden de `Producto.Id`. Es el mapeo, y
+## está acá escrito a mano a propósito: si el orden del catálogo y el del contenido se separan,
+## `_preparar_modelos` le da a un producto el modelo de otro sin que nada lo diga.
+const DEL_MODELO := [
+	"Actroncito_002",
+	"gondolanueva/durextra",
+	"gondolanueva/burgaloo",
+	"gondolanueva/Zucarachas",
+	"gondolanueva/snackpapas1_001",
+	"gondolanueva/malbardocig",
+	"pringles",
+	"alfajorescaja2",
+	"lataarvejas",
+	"gondolanueva/chisitos2",
+	"oremos",
+	"pepitos"
+]
+
 
 func test_el_mueble_conserva_todas_sus_caras_y_materiales() -> void:  # 041-AC7
 	var modelo: Node3D = auto_free(MODELO.instantiate())
@@ -30,59 +48,46 @@ func test_la_colision_corresponde_al_mueble_completo() -> void:  # 041-AC3
 	assert_array(COLISION.get_faces()).is_equal(original.get_faces())
 
 
-func test_el_contenido_conserva_la_sexta_malla_y_su_transformacion() -> void:  # 041-AC7
+func test_el_contenido_conserva_material_y_textura_de_cada_producto() -> void:  # 041-AC7
 	var modelo: Node3D = auto_free(MODELO.instantiate())
 	var contenido: Node3D = auto_free(CONTENIDO.instantiate())
-	var original: MeshInstance3D = modelo.get_node("gondolanueva/malbardocig")
-	var copia: MeshInstance3D = contenido.get_node("Cigarrillos")
-	assert_int(contenido.get_child_count()).is_equal(6)
-	assert_bool(copia.transform.is_equal_approx(original.transform)).is_true()
-	assert_array(copia.mesh.surface_get_arrays(0)[Mesh.ARRAY_TEX_UV]).is_equal(
-		original.mesh.surface_get_arrays(0)[Mesh.ARRAY_TEX_UV]
-	)
+	for id in DEL_MODELO.size():
+		var copia: MeshInstance3D = contenido.get_child(id)
+		var original: MeshInstance3D = modelo.get_node(DEL_MODELO[id])
+		var material: StandardMaterial3D = copia.mesh.surface_get_material(0)
+		var previo: StandardMaterial3D = original.mesh.surface_get_material(0)
+		assert_object(material).override_failure_message(copia.name).is_not_null()
+		assert_object(material.albedo_texture).is_same(previo.albedo_texture)
+		assert_array(copia.mesh.surface_get_arrays(0)[Mesh.ARRAY_TEX_UV]).is_equal(
+			original.mesh.surface_get_arrays(0)[Mesh.ARRAY_TEX_UV]
+		)
 
 
+## Reponer coloca el producto del modelo, no una copia parecida.
+##
+## La malla viaja **intacta**: la escala y el giro van en el nodo del contenido, que es lo que
+## `_preparar_modelos` hornea. Por eso acá se comparan los vértices tal cual, y aparte el tamaño
+## que el par malla-nodo da en el mundo, que es lo que el jugador ve en el estante.
 func test_reponer_recupera_los_productos_independientes_del_modelo() -> void:  # 041-AC9
 	var modelo: Node3D = auto_free(MODELO.instantiate())
 	var contenido: Node3D = auto_free(CONTENIDO.instantiate())
-	var gondola: MeshInstance3D = modelo.get_node("gondolanueva")
-	var vertices: Array[Vector3] = []
-	var cantidad_original := 0
-	for grupo: MeshInstance3D in contenido.get_children():
-		for superficie in grupo.mesh.get_surface_count():
-			for vertice: Vector3 in grupo.mesh.surface_get_arrays(superficie)[Mesh.ARRAY_VERTEX]:
-				vertices.append(gondola.transform * grupo.transform * vertice)
-	for nombre in [
-		"lataarvejas_001",
-		"limpiador",
-		"gondolanueva/durextra",
-		"gondolanueva/snackpapas1_001",
-		"gondolanueva/snackpapas1_002",
-		"gondolanueva/chisitos2",
-		"pringles",
-		"pringles3",
-		"gondolanueva/burgaloo",
-		"gondolanueva/burgaloo2",
-		"lataarvejas",
-		"gondolanueva/burgaloo3",
-		"gondolanueva/Zucarachas",
-		"gondolanueva/Zucarachas_001"
-	]:
-		var producto: MeshInstance3D = modelo.get_node(nombre)
-		var ausentes := 0
-		for superficie in producto.mesh.get_surface_count():
-			for vertice: Vector3 in producto.mesh.surface_get_arrays(superficie)[Mesh.ARRAY_VERTEX]:
-				cantidad_original += 1
-				var esperado := producto.transform * vertice
-				if not vertices.any(
-					func(copia: Vector3) -> bool: return copia.is_equal_approx(esperado)
-				):
-					ausentes += 1
-		assert_int(ausentes).override_failure_message("%s: %d" % [nombre, ausentes]).is_zero()
-
-	var cigarrillos: MeshInstance3D = modelo.get_node("gondolanueva/malbardocig")
-	for superficie in cigarrillos.mesh.get_surface_count():
-		cantidad_original += (
-			cigarrillos.mesh.surface_get_arrays(superficie)[Mesh.ARRAY_VERTEX].size()
+	assert_int(contenido.get_child_count()).is_equal(DEL_MODELO.size())
+	assert_int(Catalogo.todos().size()).is_equal(DEL_MODELO.size())
+	for id in DEL_MODELO.size():
+		var copia: MeshInstance3D = contenido.get_child(id)
+		var original: MeshInstance3D = modelo.get_node(DEL_MODELO[id])
+		assert_str(copia.name).is_equal(Catalogo.de(id).nombre)
+		assert_int(copia.mesh.get_surface_count()).is_equal(original.mesh.get_surface_count())
+		for superficie in original.mesh.get_surface_count():
+			(
+				assert_array(copia.mesh.surface_get_arrays(superficie)[Mesh.ARRAY_VERTEX])
+				. override_failure_message(copia.name)
+				. is_equal(original.mesh.surface_get_arrays(superficie)[Mesh.ARRAY_VERTEX])
+			)
+		var antes: AABB = original.transform * original.mesh.get_aabb()
+		var despues: AABB = copia.transform * copia.mesh.get_aabb()
+		(
+			assert_bool(despues.size.is_equal_approx(antes.size))
+			. override_failure_message("%s: %s contra %s" % [copia.name, despues.size, antes.size])
+			. is_true()
 		)
-	assert_int(vertices.size()).is_equal(cantidad_original)

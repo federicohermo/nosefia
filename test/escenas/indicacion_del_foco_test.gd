@@ -38,7 +38,7 @@ func test_el_campo_real_resalta_la_computadora_y_solo_la_zona_de_reposicion() ->
 				"retirar", almacen.get("_cajas_de_productos")[0].producto
 			)
 			punto = estante.global_position
-			ojo = punto + Vector3(1.2, 0.3, 0)
+			ojo = punto + Vector3(-1.2, 0.3, 0)
 		await _mirar(jugador, ojo, punto)
 		assert_object(jugador.get("_enfocado")).is_same(objetivo)
 		assert_array(avisos).contains([objetivo])

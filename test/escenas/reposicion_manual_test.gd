@@ -51,7 +51,7 @@ func test_recoger_del_grupo_del_piso_conserva_foco_identidad_y_reposicion() -> v
 	almacen.get("_jugador").set_physics_process(false)
 	var presentacion: Node3D = almacen.get("_reposicion_manual")
 	var agarre: Agarre = almacen.get("_agarre")
-	var producto := Catalogo.de(Producto.Id.ARROZ)
+	var producto := Catalogo.de(Producto.Id.LAYSNTT)
 	var grupo: MultiMeshInstance3D = presentacion.get_node_or_null("SueltosDe" + producto.nombre)
 	assert_object(grupo).is_not_null()
 	if grupo == null:
@@ -83,7 +83,7 @@ func test_recoger_del_grupo_del_piso_conserva_foco_identidad_y_reposicion() -> v
 	marco.apagar()
 	presentacion.call("pedir_colocar", producto.id)
 	assert_int(almacen.get("_repositor").estante().unidades_en_gondola(producto)).is_equal(1)
-	presentacion.call("retirar", Producto.Id.GASEOSA)
+	presentacion.call("retirar", Producto.Id.BURBALOO)
 	assert_object(agarre.punto_de_producto.get_child(0)).is_same(cuerpos[1])
 	agarre.soltar(true)
 	assert_int(grupo.multimesh.visible_instance_count).is_equal(2)
@@ -102,7 +102,7 @@ func test_laysntt_no_atraviesa_el_suelo_al_caer_plana_y_recibir_otras_cajas() ->
 		var agarre: Agarre = almacen.get("_agarre")
 		var bolsas: Array[RigidBody3D] = []
 		for turno in 9:
-			var id := Producto.Id.ARROZ if turno < 3 else Producto.Id.GASEOSA
+			var id := Producto.Id.LAYSNTT if turno < 3 else Producto.Id.BURBALOO
 			almacen.get("_reposicion_manual").retirar(id)
 			var cuerpo: RigidBody3D = agarre.soltar(true)
 			cuerpo.global_position = Vector3(0.6, 1.7, -5.7)
@@ -119,11 +119,11 @@ func test_laysntt_no_atraviesa_el_suelo_al_caer_plana_y_recibir_otras_cajas() ->
 			assert_float(bolsa.global_position.y).is_greater(0.1)
 			assert_bool(bolsa.is_visible_in_tree()).is_true()
 			assert_bool(agarre.pedir_agarrar(bolsa.datos, bolsa)).is_true()
-			almacen.get("_reposicion_manual").pedir_colocar(Producto.Id.ARROZ)
+			almacen.get("_reposicion_manual").pedir_colocar(Producto.Id.LAYSNTT)
 		(
 			assert_int(
 				almacen.get("_repositor").estante().unidades_en_gondola(
-					Catalogo.de(Producto.Id.ARROZ)
+					Catalogo.de(Producto.Id.LAYSNTT)
 				)
 			)
 			. is_equal(3)
@@ -139,7 +139,7 @@ func test_el_burbaloo_del_piso_no_bloquea_al_jugador() -> void:  # 042-AC4
 	jugador.set_physics_process(false)
 	jugador.global_position = Vector3(0, 0.5, -5.8)
 	var agarre: Agarre = almacen.get("_agarre")
-	almacen.get("_reposicion_manual").retirar(Producto.Id.GASEOSA)
+	almacen.get("_reposicion_manual").retirar(Producto.Id.BURBALOO)
 	var cuerpo: RigidBody3D = agarre.soltar(true)
 	cuerpo.global_position = jugador.global_position + Vector3(1, 0.2, 0)
 	await get_tree().physics_frame
@@ -170,7 +170,7 @@ func test_laysntt_y_jorgillo_quedan_sobre_el_suelo_al_mover_la_camara() -> void:
 	var camara: Camera3D = jugador.get_node("Camara")
 	var agarre: Agarre = almacen.get("_agarre")
 	var sueltas: Array[RigidBody3D] = []
-	for id in [Producto.Id.ARROZ, Producto.Id.JORGILLO]:
+	for id in [Producto.Id.LAYSNTT, Producto.Id.JORGILLO]:
 		for indice in Catalogo.de(id).umbral:
 			almacen.get("_reposicion_manual").retirar(id)
 			var cuerpo: RigidBody3D = agarre.soltar(true)
@@ -244,7 +244,7 @@ func test_las_unidades_sueltas_caen_y_se_recuperan_sin_perder_su_reserva() -> vo
 	var presentacion: Node3D = almacen.get("_reposicion_manual")
 	var agarre: Agarre = almacen.get("_agarre")
 	var estante: Estante = almacen.get("_repositor").estante()
-	var producto := Catalogo.de(Producto.Id.JABON)
+	var producto := Catalogo.de(Producto.Id.MALBARDO)
 	var sueltas: Array[RigidBody3D] = []
 	for indice in producto.umbral:
 		presentacion.call("retirar", producto.id)
@@ -269,10 +269,12 @@ func test_las_unidades_sueltas_caen_y_se_recuperan_sin_perder_su_reserva() -> vo
 	presentacion.call("pedir_colocar", producto.id)
 	assert_int(estante.unidades_en_gondola(producto)).is_equal(1)
 	assert_int(estante.disponibles_para_retirar(producto)).is_zero()
-	assert_bool(sueltas[1].is_visible_in_tree()).is_true()
-	assert_bool(sueltas[1].freeze).is_false()
-	assert_bool(agarre.pedir_agarrar(sueltas[1].datos, sueltas[1])).is_true()
-	presentacion.call("pedir_colocar", producto.id)
+	# Se recorren las que quedan y no sólo la segunda: el cupo sale del catálogo y se mueve.
+	for indice in range(1, sueltas.size()):
+		assert_bool(sueltas[indice].is_visible_in_tree()).is_true()
+		assert_bool(sueltas[indice].freeze).is_false()
+		assert_bool(agarre.pedir_agarrar(sueltas[indice].datos, sueltas[indice])).is_true()
+		presentacion.call("pedir_colocar", producto.id)
 	assert_int(estante.unidades_en_gondola(producto)).is_equal(producto.umbral)
 
 
@@ -307,15 +309,19 @@ func test_el_frente_se_conserva_al_examinar_y_volver_a_agarrar() -> void:  # 042
 	var jugador: Node3D = almacen.get("_jugador")
 	jugador.set_physics_process(false)
 	var agarre: Agarre = almacen.get("_agarre")
-	# Hacia dónde está horneado cada modelo, que es lo mismo que su cara de la góndola: los del
-	# pasillo miran a -X y los tres de la cabecera —actroncito, fideos y galletitas— a -Z.
+	# Hacia dónde está horneado cada modelo, que es lo mismo que su cara de la góndola: los seis
+	# del pasillo miran a -X y los seis de la cabecera a -Z.
 	var frentes := [
-		Vector3.FORWARD,
-		Vector3.FORWARD,
 		Vector3.LEFT,
 		Vector3.FORWARD,
 		Vector3.LEFT,
 		Vector3.LEFT,
+		Vector3.FORWARD,
+		Vector3.FORWARD,
+		Vector3.FORWARD,
+		Vector3.LEFT,
+		Vector3.FORWARD,
+		Vector3.FORWARD,
 		Vector3.LEFT,
 		Vector3.LEFT
 	]
@@ -349,7 +355,7 @@ func test_actroncito_marolini_y_jorgillo_se_reponen_con_foco_y_clic_reales() -> 
 	add_child(almacen)
 	var jugador: Node3D = almacen.get("_jugador")
 	jugador.set_physics_process(false)
-	for id in [Producto.Id.ACTRONCITO, Producto.Id.MAROLINI, Producto.Id.JORGILLO]:
+	for id in [Producto.Id.ACTRONCITO, Producto.Id.PRONGLES, Producto.Id.JORGILLO]:
 		var caja: Node3D = almacen.get("_cajas_de_productos")[id]
 		var vista: MeshInstance3D = caja.get_node("Malla")
 		var centro := vista.global_transform * vista.mesh.get_aabb().get_center()
@@ -395,7 +401,12 @@ func test_no_hay_productos_3d_iniciales_fuera_del_inventario() -> void:
 			assert_int(cuerpo.collision_layer).is_zero()
 	for producto in Catalogo.todos():
 		assert_int(almacen.get("_repositor").estante().unidades_en_gondola(producto)).is_zero()
-	assert_str(Catalogo.todos()[0].nombre).is_equal("pepitos")
+	# Cada producto del catálogo tiene su malla en el contenido y en el mismo orden. Sin esto el
+	# inventario habla de un producto y la góndola muestra otro, y los dos dan verde.
+	var contenido: Node3D = almacen.get_node("Estructura/gondolanueva/StaticBody3D/Contenido")
+	assert_int(contenido.get_child_count()).is_equal(Catalogo.todos().size())
+	for producto in Catalogo.todos():
+		assert_str(contenido.get_child(producto.id).name).is_equal(producto.nombre)
 
 
 func _mirar_foco(jugador: Node3D, ojo: Vector3, punto: Vector3) -> void:
@@ -585,10 +596,10 @@ func test_solo_la_zona_del_producto_recibe_el_foco_y_el_resto_del_mueble_no_colo
 	var presentacion: Node3D = almacen.get("_reposicion_manual")
 	var zona := presentacion.get_node("ZonaDeActroncito")
 	assert_int(zona.collision_layer).is_equal(2)
-	assert_int(presentacion.get_node("ZonaDeFideos").collision_layer).is_zero()
+	assert_int(presentacion.get_node("ZonaDeDurextra").collision_layer).is_zero()
 	var mueble: MeshInstance3D = estante.get_parent()
 	assert_object(mueble.material_overlay).is_null()
 	estante.call("interactuar")
 	assert_object(agarre.manos().sostenido()).is_same(sostenido)
-	presentacion.get_node("ZonaDeFideos").call("interactuar")
+	presentacion.get_node("ZonaDeDurextra").call("interactuar")
 	assert_object(agarre.manos().sostenido()).is_same(sostenido)

@@ -47,7 +47,7 @@ func test_con_la_caja_llena_avisa_el_rechazo_y_no_avisa_un_guardado() -> void:  
 	# nuevo y un cartel de «no entra» al mismo tiempo, sin un solo error.
 	var carga := _carga()
 	for _casillero in range(Reglas.CASILLEROS_DE_LA_CAJA_DE_TRASLADO):
-		carga.pedir_guardar(Producto.Id.FIDEOS)
+		carga.pedir_guardar(Producto.Id.DUREXTRA)
 	_guardados = 0
 	carga.pedir_guardar(Producto.Id.ACTRONCITO)
 	assert_int(_guardados).is_equal(0)

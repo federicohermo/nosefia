@@ -11,8 +11,8 @@ extends GdUnitTestSuite
 
 func test_un_inventario_recien_construido_no_tiene_nada_en_ningun_lado() -> void:
 	var actroncito := Producto.new(Producto.Id.ACTRONCITO, "Actroncito", 2500, 4)
-	var arroz := Producto.new(Producto.Id.ARROZ, "Arroz", 1100, 3)
-	var productos: Array[Producto] = [actroncito, arroz]
+	var laysntt := Producto.new(Producto.Id.LAYSNTT, "Laysntt", 1100, 3)
+	var productos: Array[Producto] = [actroncito, laysntt]
 	var inventario := Inventario.new(productos)
 	for producto in productos:
 		assert_int(inventario.unidades(producto, Inventario.Ubicacion.DEPOSITO)).is_equal(0)
@@ -112,12 +112,12 @@ func test_el_inventario_solo_conoce_los_productos_que_recibio() -> void:
 	# Ingresar un producto que el inventario no recibió no lo agrega por la puerta de atrás: si
 	# lo agregara, `faltantes()` empezaría a listar mercadería que el almacén no vende.
 	var actroncito := Producto.new(Producto.Id.ACTRONCITO, "Actroncito", 2500, 4)
-	var jabon := Producto.new(Producto.Id.JABON, "Jabón", 1500, 2)
+	var malbardo := Producto.new(Producto.Id.MALBARDO, "Malbardo", 1500, 2)
 	var productos: Array[Producto] = [actroncito]
 	var inventario := Inventario.new(productos)
-	assert_int(inventario.unidades(jabon, Inventario.Ubicacion.GONDOLA)).is_equal(0)
-	inventario.ingresar(jabon, Inventario.Ubicacion.GONDOLA, 5)
-	assert_int(inventario.unidades(jabon, Inventario.Ubicacion.GONDOLA)).is_equal(0)
+	assert_int(inventario.unidades(malbardo, Inventario.Ubicacion.GONDOLA)).is_equal(0)
+	inventario.ingresar(malbardo, Inventario.Ubicacion.GONDOLA, 5)
+	assert_int(inventario.unidades(malbardo, Inventario.Ubicacion.GONDOLA)).is_equal(0)
 
 
 func test_por_debajo_del_umbral_falta_aunque_todavia_quede_algo_para_vender() -> void:
@@ -163,48 +163,48 @@ func test_faltantes_devuelve_los_que_faltan_y_solo_esos_en_el_orden_de_construcc
 	# Con tres productos y el del medio abastecido, un `faltantes()` que devolviera todos, o que
 	# devolviera otro orden, se pone en rojo. Con dos productos los dos errores pasarían.
 	var actroncito := Producto.new(Producto.Id.ACTRONCITO, "Actroncito", 2500, 5)
-	var fideos := Producto.new(Producto.Id.FIDEOS, "Fideos", 1200, 2)
-	var arroz := Producto.new(Producto.Id.ARROZ, "Arroz", 1100, 3)
-	var productos: Array[Producto] = [actroncito, fideos, arroz]
+	var durextra := Producto.new(Producto.Id.DUREXTRA, "Durextra", 1200, 2)
+	var laysntt := Producto.new(Producto.Id.LAYSNTT, "Laysntt", 1100, 3)
+	var productos: Array[Producto] = [actroncito, durextra, laysntt]
 	var inventario := Inventario.new(productos)
-	inventario.ingresar(fideos, Inventario.Ubicacion.GONDOLA, 2)
-	assert_array(inventario.faltantes()).contains_exactly([actroncito, arroz])
+	inventario.ingresar(durextra, Inventario.Ubicacion.GONDOLA, 2)
+	assert_array(inventario.faltantes()).contains_exactly([actroncito, laysntt])
 
 
 func test_cobrar_descuenta_de_la_gondola_y_deja_el_deposito_intacto() -> void:
 	# El depósito no se toca: lo que se vende por la ventanilla sale del estante, y si el cobro
 	# pudiera tirar del fondo, reponer dejaría de ser necesario para vender.
 	var actroncito := Producto.new(Producto.Id.ACTRONCITO, "Actroncito", 2500, 4)
-	var arroz := Producto.new(Producto.Id.ARROZ, "Arroz", 1100, 3)
-	var productos: Array[Producto] = [actroncito, arroz]
+	var laysntt := Producto.new(Producto.Id.LAYSNTT, "Laysntt", 1100, 3)
+	var productos: Array[Producto] = [actroncito, laysntt]
 	var inventario := Inventario.new(productos)
 	inventario.ingresar(actroncito, Inventario.Ubicacion.GONDOLA, 5)
 	inventario.ingresar(actroncito, Inventario.Ubicacion.DEPOSITO, 7)
-	inventario.ingresar(arroz, Inventario.Ubicacion.GONDOLA, 2)
+	inventario.ingresar(laysntt, Inventario.Ubicacion.GONDOLA, 2)
 	var venta := Venta.new()
 	venta.agregar(actroncito, 2)
-	venta.agregar(arroz, 1)
+	venta.agregar(laysntt, 1)
 	assert_bool(inventario.cobrar(venta)).is_true()
 	assert_int(inventario.unidades(actroncito, Inventario.Ubicacion.GONDOLA)).is_equal(3)
 	assert_int(inventario.unidades(actroncito, Inventario.Ubicacion.DEPOSITO)).is_equal(7)
-	assert_int(inventario.unidades(arroz, Inventario.Ubicacion.GONDOLA)).is_equal(1)
+	assert_int(inventario.unidades(laysntt, Inventario.Ubicacion.GONDOLA)).is_equal(1)
 
 
 func test_un_cobro_que_no_entra_en_el_stock_no_descuenta_una_sola_unidad() -> void:
 	# Todo o nada: la línea que sí entraba tampoco se descuenta. Un cobro a medias deja un
 	# estado que el jugador no puede distinguir de una venta completa.
 	var actroncito := Producto.new(Producto.Id.ACTRONCITO, "Actroncito", 2500, 4)
-	var arroz := Producto.new(Producto.Id.ARROZ, "Arroz", 1100, 3)
-	var productos: Array[Producto] = [actroncito, arroz]
+	var laysntt := Producto.new(Producto.Id.LAYSNTT, "Laysntt", 1100, 3)
+	var productos: Array[Producto] = [actroncito, laysntt]
 	var inventario := Inventario.new(productos)
 	inventario.ingresar(actroncito, Inventario.Ubicacion.GONDOLA, 5)
-	inventario.ingresar(arroz, Inventario.Ubicacion.GONDOLA, 1)
+	inventario.ingresar(laysntt, Inventario.Ubicacion.GONDOLA, 1)
 	var venta := Venta.new()
 	venta.agregar(actroncito, 2)
-	venta.agregar(arroz, 3)
+	venta.agregar(laysntt, 3)
 	assert_bool(inventario.cobrar(venta)).is_false()
 	assert_int(inventario.unidades(actroncito, Inventario.Ubicacion.GONDOLA)).is_equal(5)
-	assert_int(inventario.unidades(arroz, Inventario.Ubicacion.GONDOLA)).is_equal(1)
+	assert_int(inventario.unidades(laysntt, Inventario.Ubicacion.GONDOLA)).is_equal(1)
 
 
 func test_cobrar_un_producto_que_el_inventario_no_conoce_no_vende_ni_toca_nada() -> void:
@@ -212,12 +212,12 @@ func test_cobrar_un_producto_que_el_inventario_no_conoce_no_vende_ni_toca_nada()
 	# cae por el mismo camino que «no alcanza el stock». Sin este caso, un `cobrar` que tratara
 	# al desconocido como stock infinito devolvería `true` y nadie se enteraría.
 	var actroncito := Producto.new(Producto.Id.ACTRONCITO, "Actroncito", 2500, 4)
-	var jabon := Producto.new(Producto.Id.JABON, "Jabón", 1500, 2)
+	var malbardo := Producto.new(Producto.Id.MALBARDO, "Malbardo", 1500, 2)
 	var productos: Array[Producto] = [actroncito]
 	var inventario := Inventario.new(productos)
 	inventario.ingresar(actroncito, Inventario.Ubicacion.GONDOLA, 5)
 	var venta := Venta.new()
 	venta.agregar(actroncito, 1)
-	venta.agregar(jabon, 1)
+	venta.agregar(malbardo, 1)
 	assert_bool(inventario.cobrar(venta)).is_false()
 	assert_int(inventario.unidades(actroncito, Inventario.Ubicacion.GONDOLA)).is_equal(5)

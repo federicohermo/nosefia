@@ -16,9 +16,9 @@ func test_la_caja_declara_su_producto_con_un_id_del_catalogo() -> void:  # 008-A
 	# Es un `Producto.Id` y no un `String` suelto: el conjunto es cerrado, y uno mal escrito no
 	# rompe nada — el producto simplemente no llega nunca y nadie se entera.
 	var caja := _caja()
-	caja.producto = Producto.Id.JABON
+	caja.producto = Producto.Id.MALBARDO
 	assert_object(Catalogo.de(caja.producto)).is_not_null()
-	assert_int(Catalogo.de(caja.producto).id).is_equal(Producto.Id.JABON)
+	assert_int(Catalogo.de(caja.producto).id).is_equal(Producto.Id.MALBARDO)
 
 
 func test_tocar_la_caja_la_entrega_para_levantarla() -> void:  # 008-AC8 047-AC4
