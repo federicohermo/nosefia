@@ -25,10 +25,10 @@ const ZonaQueSeVe := preload("res://src/escenas/puestos/zona_de_descarte.gd")
 ## stock no viva ahí. Lo que se sigue midiendo son las cuatro tareas del local y las bolsas, que
 ## desde el 043 arrancan en el baño.
 const ANCLAJES_DE_LAS_OTRAS_TAREAS := [
-	"Estructura/gondola01/StaticBody3D",
+	"Estructura/gondolanueva/StaticBody3D",
 	"Objetos/CajaDeTraslado",
 	"Estructura/Ventanilla",
-	"Estructura/compu/StaticBody3D"
+	"Estructura/base compu/StaticBody3D"
 ]
 
 const NOMBRES_DE_LAS_BOLSAS := [

@@ -90,7 +90,7 @@ func _reponer(almacen: Node3D) -> void:
 
 
 func _registrar(almacen: Node3D) -> void:
-	var escritorio: Node3D = almacen.get_node("Estructura/compu/StaticBody3D")
+	var escritorio: Node3D = almacen.get_node("Estructura/base compu/StaticBody3D")
 	escritorio.call("interactuar")
 	var pantalla: PantallaDeComputadora = escritorio.get("pantalla")
 	assert_bool(pantalla.visible).is_true()

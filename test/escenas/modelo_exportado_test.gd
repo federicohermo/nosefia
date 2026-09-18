@@ -8,7 +8,7 @@ const COLISION := preload("res://assets/models/gondola_colision.res")
 
 func test_el_mueble_conserva_todas_sus_caras_y_materiales() -> void:  # 041-AC7
 	var modelo: Node3D = auto_free(MODELO.instantiate())
-	var original: ArrayMesh = modelo.get_node("gondola01").mesh
+	var original: ArrayMesh = modelo.get_node("gondolanueva").mesh
 	assert_int(SOPORTE.get_surface_count()).is_equal(original.get_surface_count())
 	for indice in original.get_surface_count():
 		if indice >= SOPORTE.get_surface_count():
@@ -26,14 +26,14 @@ func test_el_mueble_conserva_todas_sus_caras_y_materiales() -> void:  # 041-AC7
 
 func test_la_colision_corresponde_al_mueble_completo() -> void:  # 041-AC3
 	var modelo: Node3D = auto_free(MODELO.instantiate())
-	var original: ArrayMesh = modelo.get_node("gondola01").mesh
+	var original: ArrayMesh = modelo.get_node("gondolanueva").mesh
 	assert_array(COLISION.get_faces()).is_equal(original.get_faces())
 
 
 func test_el_contenido_conserva_la_sexta_malla_y_su_transformacion() -> void:  # 041-AC7
 	var modelo: Node3D = auto_free(MODELO.instantiate())
 	var contenido: Node3D = auto_free(CONTENIDO.instantiate())
-	var original: MeshInstance3D = modelo.get_node("gondola01/malbardocig")
+	var original: MeshInstance3D = modelo.get_node("gondolanueva/malbardocig")
 	var copia: MeshInstance3D = contenido.get_node("Cigarrillos")
 	assert_int(contenido.get_child_count()).is_equal(6)
 	assert_bool(copia.transform.is_equal_approx(original.transform)).is_true()
@@ -45,7 +45,7 @@ func test_el_contenido_conserva_la_sexta_malla_y_su_transformacion() -> void:  #
 func test_reponer_recupera_los_productos_independientes_del_modelo() -> void:  # 041-AC9
 	var modelo: Node3D = auto_free(MODELO.instantiate())
 	var contenido: Node3D = auto_free(CONTENIDO.instantiate())
-	var gondola: MeshInstance3D = modelo.get_node("gondola01")
+	var gondola: MeshInstance3D = modelo.get_node("gondolanueva")
 	var vertices: Array[Vector3] = []
 	var cantidad_original := 0
 	for grupo: MeshInstance3D in contenido.get_children():
@@ -80,7 +80,7 @@ func test_reponer_recupera_los_productos_independientes_del_modelo() -> void:  #
 					ausentes += 1
 		assert_int(ausentes).override_failure_message("%s: %d" % [nombre, ausentes]).is_zero()
 
-	var cigarrillos: MeshInstance3D = modelo.get_node("gondola01/malbardocig")
+	var cigarrillos: MeshInstance3D = modelo.get_node("gondolanueva/malbardocig")
 	for superficie in cigarrillos.mesh.get_surface_count():
 		cantidad_original += (
 			cigarrillos.mesh.surface_get_arrays(superficie)[Mesh.ARRAY_VERTEX].size()

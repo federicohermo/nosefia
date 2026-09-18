@@ -14,7 +14,7 @@ func test_el_campo_real_resalta_la_computadora_y_solo_la_zona_de_reposicion() ->
 	var jugador: CharacterBody3D = almacen.get("_jugador")
 	jugador.set_physics_process(false)
 	var hud: Hud = almacen.get("_hud")
-	var computadora: Node3D = almacen.get_node("Estructura/compu/StaticBody3D")
+	var computadora: Node3D = almacen.get_node("Estructura/base compu/StaticBody3D")
 	var estante: Node3D = almacen.get("_reposicion_manual").get_node("ZonaDeActroncito")
 	var mallas := almacen.find_children("*", "MeshInstance3D", true, false)
 	var previos: Dictionary[MeshInstance3D, Material] = {}
