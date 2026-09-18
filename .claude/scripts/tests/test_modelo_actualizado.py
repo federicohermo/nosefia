@@ -36,11 +36,11 @@ class ModeloActualizado(unittest.TestCase):
         # Nodes llamados `Array`, no modificadores de tipo `ARRAY`: apagar por tipo no apaga
         # ninguno y los productos salen multiplicados igual. Se apagan por nombre. Los productos
         # llevan un Geometry Nodes que llena el estante con una fila, y **Blender 5.0 no
-        # realizaba esas instancias al exportar y 5.2 sí**, asi que con el modificador activo
-        # el producto sale multiplicado donde antes salia solo. El
-        # juego necesita **una unidad**, porque `reposicion_manual.gd` toma la superficie 0 de
-        # cada grupo como el modelo de una y apila `cupo()` copias separadas por su AABB; con
-        # la fila entera, dos productos vecinos se pisan y el 042-AC2 da rojo.
+        # realizaba esas instancias al exportar y 5.2 sí**, así que con el modificador activo
+        # el producto sale multiplicado donde antes salía solo. El juego necesita **una
+        # unidad**, porque `reposicion_manual.gd` toma la superficie 0 de cada grupo como el
+        # modelo de una y apila `cupo()` copias separadas por su AABB; con la fila entera, dos
+        # productos vecinos se pisan y el 042-AC2 da rojo.
         blend = (RAIZ / "assets/SEPT_JUEGOS_PROTOTIPO.blend").read_bytes()
         self.assertEqual(
             hashlib.sha256(blend).hexdigest(),

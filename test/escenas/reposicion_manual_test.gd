@@ -350,7 +350,7 @@ func test_el_frente_se_conserva_al_examinar_y_volver_a_agarrar() -> void:  # 042
 		)
 
 
-func test_actroncito_marolini_y_jorgillo_se_reponen_con_foco_y_clic_reales() -> void:
+func test_actroncito_prongles_y_jorgillo_se_reponen_con_foco_y_clic_reales() -> void:
 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
 	add_child(almacen)
 	var jugador: Node3D = almacen.get("_jugador")

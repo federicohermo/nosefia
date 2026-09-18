@@ -133,7 +133,11 @@ func _desatascar_lo_soltado(nodo: Node3D) -> void:
 	var atras := jugador.mira().basis.z.normalized()
 	var paso := ReglasDelJugador.ALCANCE_DE_LA_MIRA / PASOS_PARA_DESATASCAR
 	for intento in PASOS_PARA_DESATASCAR:
-		consulta.transform = Transform3D(Basis.IDENTITY, unidad.global_position)
+		# **La consulta lleva la vuelta que el producto tiene, no una derecha.** Una unidad se
+		# suelta girada —por su frente y por lo que el cuerpo giró al caer—, y una forma
+		# derecha ocupa otro volumen que el real: contesta libre donde el producto igual se
+		# mete en el panel, que es el caso que esta función existe para sacar.
+		consulta.transform = forma.global_transform
 		if espacio.intersect_shape(consulta, 1).is_empty():
 			return
 		unidad.global_position += atras * paso

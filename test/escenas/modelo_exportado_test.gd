@@ -2,8 +2,10 @@ extends GdUnitTestSuite
 
 const MODELO := preload("res://assets/SEPT_JUEGOS_PROTOTIPO.glb")
 const CONTENIDO := preload("res://src/escenas/puestos/contenido_del_estante.tscn")
-const SOPORTE := preload("res://assets/models/gondola_soporte.res")
-const COLISION := preload("res://assets/models/gondola_colision.res")
+const ESTRUCTURA := preload("res://src/escenas/puestos/estructura_del_almacen.tscn")
+
+## Cuánto puede separarse un vértice de la colisión del mismo vértice de la malla, en metros.
+const SEPARACION_MAXIMA := 0.001
 
 ## Qué malla del modelo le toca a cada producto, en el orden de `Producto.Id`. Es el mapeo, y
 ## está acá escrito a mano a propósito: si el orden del catálogo y el del contenido se separan,
@@ -24,28 +26,43 @@ const DEL_MODELO := [
 ]
 
 
-func test_el_mueble_conserva_todas_sus_caras_y_materiales() -> void:  # 041-AC7
+## El mueble que se juega es el del modelo, sin copia en el medio.
+##
+## **Se mide sobre la escena y no sobre un `.res` horneado.** La escena traía el mueble por un
+## recurso propio, y cuando pasó a usar la malla del `.glb` ese recurso quedó sin cargar: el
+## test seguía verde comparándolo contra el modelo, que es lo mismo que no mirar nada.
+func test_el_mueble_de_la_escena_es_la_malla_del_modelo() -> void:  # 041-AC7
 	var modelo: Node3D = auto_free(MODELO.instantiate())
-	var original: ArrayMesh = modelo.get_node("gondolanueva").mesh
-	assert_int(SOPORTE.get_surface_count()).is_equal(original.get_surface_count())
-	for indice in original.get_surface_count():
-		if indice >= SOPORTE.get_surface_count():
-			continue
-		var antes := original.surface_get_arrays(indice)
-		var despues := SOPORTE.surface_get_arrays(indice)
-		assert_array(despues[Mesh.ARRAY_VERTEX]).is_equal(antes[Mesh.ARRAY_VERTEX])
-		assert_array(despues[Mesh.ARRAY_TEX_UV]).is_equal(antes[Mesh.ARRAY_TEX_UV])
-		var material: StandardMaterial3D = SOPORTE.surface_get_material(indice)
-		var previo: StandardMaterial3D = original.surface_get_material(indice)
-		assert_object(material.albedo_texture).is_same(previo.albedo_texture)
-		assert_float(material.roughness).is_equal(previo.roughness)
-		assert_int(material.cull_mode).is_equal(previo.cull_mode)
+	var escena: Node3D = auto_free(ESTRUCTURA.instantiate())
+	var original: MeshInstance3D = modelo.get_node("gondolanueva")
+	var puesta: MeshInstance3D = escena.get_node("gondolanueva")
+	assert_object(puesta.mesh).is_same(original.mesh)
+	assert_int(puesta.mesh.get_surface_count()).is_equal(original.mesh.get_surface_count())
+	for indice in original.mesh.get_surface_count():
+		var material: StandardMaterial3D = puesta.mesh.surface_get_material(indice)
+		assert_object(material).override_failure_message(str(indice)).is_not_null()
+		assert_object(material.albedo_texture).is_not_null()
 
 
+## La colisión del mueble cubre el mueble entero, y es la que la escena monta.
+##
+## **Se comparan con tolerancia y no por igualdad.** La malla llega comprimida del `.glb` y la
+## forma no, así que el mismo vértice sale con un decimal distinto de cada lado. Medido el
+## 2026-09-18: el que más se separa lo hace 0,12 mm sobre un mueble de 5,8 m, y el milímetro
+## de abajo deja pasar eso y nada más.
 func test_la_colision_corresponde_al_mueble_completo() -> void:  # 041-AC3
-	var modelo: Node3D = auto_free(MODELO.instantiate())
-	var original: ArrayMesh = modelo.get_node("gondolanueva").mesh
-	assert_array(COLISION.get_faces()).is_equal(original.get_faces())
+	var escena: Node3D = auto_free(ESTRUCTURA.instantiate())
+	var malla: MeshInstance3D = escena.get_node("gondolanueva")
+	var forma: CollisionShape3D = escena.get_node("gondolanueva/StaticBody3D/CollisionShape3D")
+	var caras := malla.mesh.get_faces()
+	var choque: PackedVector3Array = forma.shape.get_faces()
+	assert_int(choque.size()).is_equal(caras.size())
+	for indice in caras.size():
+		(
+			assert_float(choque[indice].distance_to(caras[indice]))
+			. override_failure_message("%d: %s contra %s" % [indice, choque[indice], caras[indice]])
+			. is_less(SEPARACION_MAXIMA)
+		)
 
 
 func test_el_contenido_conserva_material_y_textura_de_cada_producto() -> void:  # 041-AC7

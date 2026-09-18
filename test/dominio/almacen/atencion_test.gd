@@ -15,10 +15,10 @@ func _productos() -> Array[Producto]:
 	return [Catalogo.de(Producto.Id.ACTRONCITO), Catalogo.de(Producto.Id.MALBARDO)]
 
 
-func _pedido(unidades_de_actroncito: int = 2, unidades_de_jabon: int = 1) -> Venta:
+func _pedido(unidades_de_actroncito: int = 2, unidades_de_malbardo: int = 1) -> Venta:
 	var venta := Venta.new()
 	venta.agregar(Catalogo.de(Producto.Id.ACTRONCITO), unidades_de_actroncito)
-	venta.agregar(Catalogo.de(Producto.Id.MALBARDO), unidades_de_jabon)
+	venta.agregar(Catalogo.de(Producto.Id.MALBARDO), unidades_de_malbardo)
 	return venta
 
 
