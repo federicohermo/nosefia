@@ -112,6 +112,11 @@ El sistema DEBE poder entregar lo descubierto como una lista de identidades y re
 igual. **Reconstruir sobre un caso que cambió ignora lo que ya no existe** en vez de romper: el
 contenido cambia y los guardados viejos siguen cargando.
 
+### BR-INV-017 — Examinar no clava al jugador
+
+MIENTRAS se muestra lo que un objeto reveló, el sistema DEBE dejar al jugador irse. Sólo una
+conversación con otra persona lo retiene, y esa regla es de la ventanilla.
+
 ## Criterios de aceptación
 
 ### AC-INV-001 — Examinar revela *(verifica BR-INV-001)*
@@ -203,6 +208,11 @@ descubrió las mismas tres.
 
 DADO una lista guardada con una pista que el caso ya no tiene CUANDO se reconstruye ENTONCES la
 que sobra se ignora y las demás quedan descubiertas.
+
+### AC-INV-019 — El subtítulo no retiene *(verifica BR-INV-017)*
+
+DADO un texto de examen de una sola entrada CUANDO todavía no se avanzó ENTONCES ya se puede
+abandonar.
 
 ## No objetivos
 

@@ -92,6 +92,17 @@ hoja queda a **un cuarto de vuelta** y deja pasar.
 CUANDO se usa lo que se lleva sobre algo, el sistema DEBE contestar el efecto declarado para ese
 par, y **ningún efecto** para cualquier otro par o con las manos vacías.
 
+### BR-PLY-013 — Lo que se suelta queda quieto
+
+CUANDO se suelta un objeto sobre una superficie, el sistema DEBE dejarlo llegar al reposo. Un
+objeto que se agita sin decaer se ve como un parpadeo, y el jugador no tiene cómo distinguirlo de
+un objeto que no se apoyó.
+
+### BR-PLY-014 — Lo que cae no atraviesa el piso
+
+CUANDO un objeto cae desde la altura de la mano o más, el sistema DEBE dejarlo apoyado sobre el
+piso. El caso que decide es el producto más delgado.
+
 ## Criterios de aceptación
 
 ### AC-PLY-001 — La diagonal no corre *(verifica BR-PLY-001)*
@@ -162,6 +173,16 @@ no baja.
 
 DADO el trapeador sobre una mancha ENTONCES el efecto es limpiar; con cualquier otro par, o con
 las manos vacías, no hay efecto.
+
+### AC-PLY-015 — Lo soltado se duerme *(verifica BR-PLY-013)*
+
+DADO los productos del estante apoyados en el piso CUANDO pasan 8 segundos de física ENTONCES
+todos están dormidos, y ninguno pasa de 0,02 rad/s después del segundo 2.
+
+### AC-PLY-016 — El delgado no atraviesa *(verifica BR-PLY-014)*
+
+DADO el producto más delgado soltado desde 1,5 metros ENTONCES su altura mínima no baja del plano
+del piso menos 5 centímetros.
 
 ## No objetivos
 
