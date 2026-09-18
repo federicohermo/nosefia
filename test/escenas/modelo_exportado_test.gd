@@ -55,18 +55,18 @@ func test_reponer_recupera_los_productos_independientes_del_modelo() -> void:  #
 	for nombre in [
 		"at\u00fan",
 		"at\u00fan_02",
-		"durextra",
-		"snackpapas1",
-		"snacks2",
-		"snacks2_02",
+		"gondolanueva/durextra",
+		"gondolanueva/snackpapas1_001",
+		"gondolanueva/snackpapas1_002",
+		"gondolanueva/chisitos2",
 		"snacks2_03",
 		"snacks2_04",
-		"burgaloo",
+		"gondolanueva/burgaloo",
 		"burgaloo_001",
-		"burgaloo_002",
+		"lataarvejas",
 		"burgaloo_003",
-		"Zucarachas",
-		"Zucarachas2"
+		"gondolanueva/Zucarachas",
+		"gondolanueva/Zucarachas_001"
 	]:
 		var producto: MeshInstance3D = modelo.get_node(nombre)
 		var ausentes := 0
