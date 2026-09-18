@@ -15,7 +15,7 @@ repo, cómo se verifica y cómo se trabaja.
 
 ### Guías
 - [Inicio rápido](./guides/quickstart.md) — Qué instalar, qué declarar y qué correr
-- [Verificación](./guides/verificacion.md) — `verificar.py` entero: los seis nodos y por qué cada uno tiene la forma que tiene
+- [Verificación](./guides/verificacion.md) — `verificar.py` entero: los siete nodos y por qué cada uno tiene la forma que tiene
 - [Rendimiento](./guides/rendimiento.md) — Medición reproducible de productos en estantes y en el piso
 - [TDD sin cobertura](./guides/tdd.md) — Cómo se sostiene la disciplina de tests en un motor que no mide cobertura
 - [Convenciones](./guides/conventions.md) — GDScript, capas, nombres, comentarios
@@ -25,10 +25,10 @@ repo, cómo se verifica y cómo se trabaja.
 - [Ramas](./infra/ramas.md) — `staging` integra, `main` es lo que se entrega, y el gate que lo sostiene
 - [Despliegue](./infra/despliegue.md) — Cada push a `main` deja una web jugable: qué lo dispara, qué secretos hacen falta y cómo se rehace a mano
 
-### Trabajo planificado
-- [specs/README.md](../specs/README.md) — La convención y el flujo
-- [specs/mapa.json](../specs/mapa.json) — El mapa spec↔issue y el estado de cada uno
-- [GitHub Issues](https://github.com/federicohermo/nosefia/issues) — Cada spec **es** un issue; y lo registrado que todavía no tiene spec, también
+### El contrato y el plan
+- [specs/README.md](../specs/README.md) — Las nueve capacidades, los tres estados y el ancla AC↔test
+- [specs/_template/](../specs/_template/) — La forma del contrato y la del issue
+- [GitHub Issues](https://github.com/federicohermo/nosefia/issues) — **El único plan**: un issue por unidad de entrega, en formato task-brief
 
 ## El stack
 
@@ -86,10 +86,8 @@ python .claude/scripts/verificar.py             # el nodo de convergencia: corre
 python .claude/scripts/verificar.py --solo tests  # sólo la suite de gdUnit4
 gdformat src test                               # arregla el formato en vez de sólo señalarlo
 
-python .claude/scripts/publicar_spec.py crear   # publica los specs nuevos como issues
-python .claude/scripts/hidratar_specs.py <NNN>  # trae un spec desde su issue
-python .claude/scripts/deuda.py                 # qué issues no reclama ningún spec
-python .claude/scripts/derivar_mapa.py          # el estado del mapa, derivado de los PR
+python .claude/scripts/gate_de_specs.py         # la forma de los contratos y qué criterio no tiene test
+gh issue list --state open                      # el plan: los issues abiertos
 ```
 
 ## Variables de entorno

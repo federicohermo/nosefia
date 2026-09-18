@@ -15,13 +15,11 @@ Esta tabla es lo más útil del documento: dice de qué reglas hay que acordarse
 | Los nombres de subcarpeta de cada capa | `gate_de_capas.py` |
 | Todo script de `dominio/`/`sistemas/` con su test | `gate_de_tests.py` |
 | Ningún test sin aserción, apagado o mal nombrado | `gate_de_tests.py` |
-| El registro de specs contra GitHub | `tests/test_mapa.py` |
-| El formato de un spec y sus cuatro techos | `tests/test_convencion_de_specs.py` |
-| Cada criterio del spec de la rama, citado por un test | `tests/test_criterios_de_la_rama.py` |
-| Que la rama no toque lo que su plan declaró intocable | `tests/test_rutas_del_plan.py` |
+| La forma de los contratos de capacidad y sus IDs | `gate_de_specs.py` |
+| Cada criterio de un spec `ratified`, citado por un test | `gate_de_specs.py` |
 | Que un skill traiga adentro todo lo que corre, copia por copia | `tests/test_copias_de_skills.py` |
 | Que un doc diga la regla y no la lista de los skills | `tests/test_docs_no_enumeran_skills.py` |
-| No editar `src/` sin spec | el hook de `.claude/settings.json` |
+| No editar `src/` sin issue detrás de la rama | el hook de `.claude/settings.json` |
 | **Tipado estático en toda firma** | **nadie: prosa** |
 | **Comentarios que expliquen el porqué** | **nadie: prosa** |
 | **Español** | **nadie: prosa** |
@@ -139,7 +137,7 @@ elegir entre perder las dos cosas o ninguna.
 | Función y variable | `snake_case` |
 | Constante | `MAYUSCULA_CON_GUIONES` |
 | Señal | `snake_case`, en pasado |
-| Rama | `feature/<NNN>-<kebab>`, `bugfix/` o `hotfix/` para `src/`; `harness/`, `docs/` o `ci/` cuando no hay spec |
+| Rama | `feature/<issue>-<kebab>`, `bugfix/` o `hotfix/` para `src/`; `harness/`, `docs/` o `ci/` cuando no toca el producto |
 | Test | `test/<capa>/<nombre>_test.gd` |
 
 Los cinco primeros los verifica `gdlint`; el de rama, el hook; el de test, `gate_de_tests.py`.

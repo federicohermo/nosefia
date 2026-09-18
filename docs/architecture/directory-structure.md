@@ -58,10 +58,10 @@
 │
 ├── docs/                   La documentación. NO protegida desde el 2026-09-05: ver abajo
 │
-├── specs/
-│   ├── README.md           La convención y el flujo
-│   ├── mapa.json           El mapa spec↔issue. Lo ÚNICO del directorio que se commitea, con el README
-│   └── NNN-…/              CACHÉ, ignorada por git. Se trae con hidratar_specs.py
+├── specs/                  Los contratos durables. TRACKEADO entero
+│   ├── README.md           Las capacidades, los tres estados y el ancla AC↔test
+│   ├── _template/          La forma del contrato, y la del issue
+│   └── <capability>/       Un contrato por capacidad: <capability>.md
 │
 ├── reports/                Los reportes de gdUnit4. Ignorado
 │
@@ -76,7 +76,6 @@
 └── .github/
     ├── workflows/
     │   ├── verify.yml      Corre verificar.py en cada PR y en cada push a staging y main
-    │   ├── mapa.yml        Deriva specs/mapa.json en el push a staging
     │   └── desplegar.yml   Exporta a Web, publica en Vercel y verifica que se juegue. Sólo main
     └── scripts/
         └── humo_en_navegador.mjs  Abre la URL publicada en un Chromium y falla si no arrancó
@@ -124,7 +123,7 @@ gate se salteaba solo con cambiar de herramienta, sin proponérselo.
 
 Sobre las dos que corren comandos, lo que se mira es **un conjunto declarado de formas de
 escritura** y no un parser de shell: las redirecciones, `tee`, `cp`, `mv`, `rm`, `truncate`,
-`sed -i`, y los cmdlets que escriben. Está en `destinos_del_comando` de `gate_de_spec.py`. Un
+`sed -i`, y los cmdlets que escriben. Está en `destinos_del_comando` de `gate_de_rama.py`. Un
 gate sólo sobre las tres de edición tiene el agujero del tamaño de un `sed -i`, y encima es un
 agujero **dirigido**: negarle `Edit` a un agente lo empuja justo hacia la redirección.
 
@@ -147,7 +146,6 @@ o cambiar una configuración del editor, y pretenderlo lo volvería molesto sin 
 | Ruta | Por qué |
 |---|---|
 | `.godot/` | Caché del editor. Se regenera sola y cambia en cada apertura |
-| `specs/[0-9]*/` | Caché: la fuente es el issue. Ver [specs/README.md](../../specs/README.md) |
 | `reports/` | Salida de gdUnit4, se regenera en cada corrida |
 | `export/`, `build/` | Las builds se publican, no se commitean |
 | `.vercel/` | El vínculo al proyecto que escribe la CLI. Los dos ids que importan son secretos del repo |

@@ -7,7 +7,7 @@ python .claude/scripts/verificar.py
 Es **el nodo de convergencia**: lo único que hay que correr antes de un PR, y lo mismo que
 corre la CI sobre cada PR y cada push a `staging` y `main`.
 
-## Los seis nodos
+## Los siete nodos
 
 | Nodo | Qué corre | Qué caza |
 |---|---|---|
@@ -15,7 +15,8 @@ corre la CI sobre cada PR y cada push a `staging` y `main`.
 | `formato` | `gdformat --check src test` | todo lo que sea formato. Se arregla con `gdformat src test` |
 | `capas` | `gate_de_capas.py` | una referencia que va en contra de la dirección de dependencia, y un `.gd` o un `.tscn` en una subcarpeta que su capa no declara |
 | `tdd` | `gate_de_tests.py` | un script sin test, un test sin aserción, uno apagado, o uno con un nombre que hace que no corra |
-| `harness` | `unittest` sobre `.claude/scripts/tests/` | las herramientas del proceso, y el registro de specs contra GitHub |
+| `specs` | `gate_de_specs.py` | la forma de los contratos de capacidad, un ID repetido, una cita rota, y un criterio `ratified` que ningún test nombra |
+| `harness` | `unittest` sobre `.claude/scripts/tests/` | las herramientas del proceso |
 | `tests` | gdUnit4 en Godot headless | el juego |
 
 Corren **en paralelo**: son procesos independientes y ninguno depende de la salida de otro.
@@ -51,10 +52,12 @@ escribe al lado, porque un conteo a mano caduca cada vez que la tabla gana una f
 |---|---|---|
 | `lint` y `formato` | no haya un solo `.gd` propio | se escriba el primero |
 | `tests` | no haya un solo `*_test.gd` | se escriba el primero — y ahí `GODOT_BIN` pasa a ser obligatorio |
-| El gate del mapa contra GitHub | no haya `gh` con sesión, o el mapa esté vacío | se publique el primer spec |
-| El gate de convención de specs | no haya specs en vuelo hidratados en disco | `hidratar_specs.py` |
-| El ancla de criterios | la rama no nombre un spec, o no se pueda leer su `spec.md` | se trabaje en una rama de spec |
-| El cruce de rutas del plan | la rama no nombre un spec, no se pueda leer su `plan.md`, o el plan no declare ninguna ruta | ese plan declare una |
+| `specs` | no exista `specs/` | se escriba el primer contrato |
+
+**El ancla AC↔test no se saltea: cambia de fuerza con el estado del spec.** Sobre un `ratified`
+un criterio sin test es rojo; sobre un `draft` el gate cuenta cuántos faltan y lo imprime. La
+frontera es deliberada — cobrarle a todo spec escrito convierte escribir el contrato de una
+capacidad que todavía no existe en un rojo inmediato, y ahí nadie lo escribe.
 
 ## El veredicto sale del código de salida
 
@@ -108,7 +111,9 @@ Dicho para que no se lea como cobertura total:
 
 - **No hay cobertura de código.** Godot no instrumenta GDScript. Qué la reemplaza y qué se
   pierde con el cambio está en [TDD sin cobertura](./tdd.md).
-- **No verifica escenas.** Un `.tscn` con un nodo mal conectado pasa los seis nodos. Eso se ve
+- **No verifica que un test ejerza el criterio que cita.** El nodo `specs` verifica la **cita**.
+  Un `# AC-EMP-004` en un test que no afirma nada pasa igual.
+- **No verifica escenas.** Un `.tscn` con un nodo mal conectado pasa los siete nodos. Eso se ve
   abriendo el juego.
 - **No verifica que el juego sea divertido**, ni que una tarea del turno se sienta bien. Eso es
   playtesting, y es de las pocas cosas de este repo que no tiene ningún gate — a propósito.

@@ -71,19 +71,19 @@ Lo peor de este bug no era el reporte: era el **hook**. Su mensaje de bloqueo ll
 que sin esto bloquear se convertía en caerse — y un hook que se cae en vez de contestar es un
 hook que alguien apaga.
 
-## El agente busca en `specs/` y no encuentra nada
+## El agente busca en `.claude/` y no encuentra nada
 
-**`Grep` es ripgrep y respeta el `.gitignore`**, y `specs/[0-9]*/` está ignorado. O sea que una
-búsqueda ahí devuelve **cero resultados sin decir que no miró**, que es la peor respuesta
-posible: no se distingue de «eso no existe».
+**`Grep` es ripgrep y saltea los directorios ocultos**, aunque se le apague el `.gitignore`. O
+sea que una búsqueda que tendría que mirar el harness, las reglas o los skills devuelve **cero
+resultados sin decir que no miró**, que es la peor respuesta posible: no se distingue de «eso no
+existe».
 
 ```bash
-rg --no-ignore "consecuencia" specs/
+rg --no-ignore --hidden "sin-deuda" .
 ```
 
-Leerlos anda normal: `.gitignore` es cosa de git, no del sistema de archivos, así que `Read`,
-`cat` y `head` los abren sin problema. Lo que hay que hacer antes es **traerlos**:
-`python .claude/scripts/hidratar_specs.py <NNN>`.
+`specs/` ya no tiene este problema: dejó de estar ignorado el día que el contrato pasó a ser
+durable.
 
 ## El hook no bloquea nada
 
@@ -96,7 +96,7 @@ Para comprobar que el gate funciona sin depender del hook:
 
 ```bash
 echo '{"tool_name":"Edit","tool_input":{"file_path":"src/dominio/x.gd"}}' \
-  | python .claude/scripts/gate_de_spec.py
+  | python .claude/scripts/gate_de_rama.py
 ```
 
 Desde `main` o `staging` tiene que contestar `"permissionDecision": "deny"`. Si contesta eso y
@@ -110,24 +110,23 @@ El mensaje dice cuál de los tres casos es:
 |---|---|
 | «No se edita `X` desde `staging`» | estás parado en una rama compartida. `staging` es la **default del repo**, así que es el lugar más fácil donde quedarse sin haberlo decidido |
 | «La rama `X` no puede editar `Y`» | el prefijo no es del producto. A `src/` lo tocan `feature/`, `bugfix/` y `hotfix/`, y ninguno más |
-| «es de feature y no nombra su spec» | falta el `NNN`, y va en **tres** dígitos: `feature/038-…`, no `feature/38-…` |
+| «es de feature y no nombra su issue» | falta el número del issue: `feature/128-…` |
 
-**No lo saltees.** Si el cambio de verdad no necesita spec —un typo, un asset, revertir el
-commit anterior— la rama igual no puede ser `main` ni `staging`: abrí una `harness/`, `docs/` o
-`ci/` según qué toques, y tocá lo que no está protegido.
+**No lo saltees.** Si el cambio de verdad no necesita issue —un typo, un asset, revertir el
+commit anterior— la rama igual no puede ser `main`: abrí una `harness/`, `docs/` o `ci/` según
+qué toques, y tocá lo que no está protegido.
 
-El hook **ya no cruza el `NNN` contra `specs/mapa.json`**, así que un spec sin publicar no frena
-la primera edición. Ese cruce lo cobra `test_criterios_de_la_rama.py` en el nodo `harness`, con
-el PR todavía abierto: «dice ser del spec NNN, que no está hidratado ni tiene entrada en
-`specs/mapa.json`».
+**El hook no consulta GitHub**: mira el nombre de la rama y nada más. Un número de issue que no
+existe no frena la primera edición — poner una llamada de red adentro de cada escritura haría un
+gate lento, y un gate lento se apaga.
 
 Si el gate se rompe, **deja pasar y lo dice** en `permissionDecisionReason`. Ese mensaje es la
 señal de que el gate no está protegiendo nada: hay que arreglarlo, no ignorarlo.
 
-## `can't open file '…\.claude\scripts\.claude\scripts\gate_de_spec.py'`
+## `can't open file '…\.claude\scripts\.claude\scripts\gate_de_rama.py'`
 
 ```
-python: can't open file 'D:\…\.claude\scripts\.claude\scripts\gate_de_spec.py':
+python: can't open file 'D:\…\.claude\scripts\.claude\scripts\gate_de_rama.py':
 [Errno 2] No such file or directory
 ```
 
@@ -145,7 +144,7 @@ Por eso el comando de `.claude/settings.json` prueba las dos formas de ubicarse 
 `|| exit 0`:
 
 ```
-python .claude/scripts/gate_de_spec.py || python "$CLAUDE_PROJECT_DIR/.claude/scripts/gate_de_spec.py" || exit 0
+python .claude/scripts/gate_de_rama.py || python "$CLAUDE_PROJECT_DIR/.claude/scripts/gate_de_rama.py" || exit 0
 ```
 
 Si igual quedaste encerrado, el `exit 0` del final es lo que hay que verificar antes que nada: un
@@ -287,7 +286,7 @@ Si el error es de sesión y no de instalación, el mensaje lo distingue: `gh aut
 
 ## `Invalid call. Nonexistent function 'x' in base 'Nil'` en el primer cuadro
 
-La escena carga **sin un solo error**, los seis nodos dan verde, y el juego muere en el primer
+La escena carga **sin un solo error**, los siete nodos dan verde, y el juego muere en el primer
 cuadro con un mensaje que no nombra ni al `.tscn` ni al `@export`.
 
 Casi siempre es **un `@export` de tipo `Node` en un `.tscn` escrito a mano**. El motor guarda ese

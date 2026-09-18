@@ -82,38 +82,31 @@ El formato no se discute en una revisión: lo decide la herramienta.
 
 ## Empezar un cambio
 
-**No se edita `src/` sin un spec detrás de la rama** — y no es una recomendación: lo
-bloquea un hook antes de que se escriba la primera línea. `docs/` estuvo protegido hasta el
-2026-09-05 y dejó de estarlo: pedir un spec para corregir una línea de documentación no
-produce más specs, produce documentación que nadie corrige.
+**No se edita `src/` sin un issue detrás de la rama** — y no es una recomendación: lo bloquea un
+hook antes de que se escriba la primera línea. `docs/` estuvo protegido hasta el 2026-09-05 y
+dejó de estarlo: pedir un spec para corregir una línea de documentación no produce más specs,
+produce documentación que nadie corrige.
 
-El camino entero está en el skill `/spec-create`, y en corto es:
-
-```bash
-# 1. medir, escribir specs/<NNN>-<kebab>/{spec,research,plan}.md
-python .claude/scripts/publicar_spec.py crear
-python .claude/scripts/publicar_spec.py publicar
-git add specs/mapa.json && git commit && git push origin staging
-
-# 2. y recién ahí, la rama
-git checkout -b feature/<NNN>-<kebab>
-```
-
-Si el gate te frenó, el mensaje dice cuál de los tres casos es y cómo salir. **No lo
-saltees**: si de verdad el cambio no necesita spec —un typo, un asset, revertir el commit
-anterior— la rama igual no puede ser `main` ni `staging`.
-
-## Traer un spec para leerlo
-
-Los specs no viven en el repo: cada uno es un issue.
+El camino entero está en el skill `/to-spec`, y en corto es:
 
 ```bash
-python .claude/scripts/hidratar_specs.py       # los que están en vuelo y falten
-python .claude/scripts/hidratar_specs.py 007   # o uno solo, esté como esté
+# 1. el contrato de la capacidad, si el comportamiento todavía no está escrito
+#    specs/<capability>/<capability>.md, por su propio PR
+python .claude/scripts/gate_de_specs.py
+
+# 2. el issue, que es el plan: qué criterios entrega, qué toca y con qué comandos cierra
+gh issue create --title "<qué cambia>" --body-file <archivo>
+
+# 3. y recién ahí, la rama
+git checkout -b feature/<issue>-<kebab>
 ```
 
-Los cerrados **no se traen en lote**: son ADR, y se piden por número cuando hace falta
-consultarlos.
+Si el gate te frenó, el mensaje dice cuál de los casos es y cómo salir. **No lo saltees**: si de
+verdad el cambio no necesita issue —un typo, un asset, revertir el commit anterior— la rama igual
+no puede ser `main`.
 
-Y para buscar adentro de ellos, `rg --no-ignore`: están en el `.gitignore`, así que una
-búsqueda normal contesta cero **sin decir que no miró**.
+## Leer un contrato
+
+Los contratos **están en el repo** y se leen como cualquier archivo: `specs/<capability>/`. Eran
+caché hasta el régimen anterior, donde cada spec era un issue y había que traerlo; ahora el spec
+dura y lo que vive en GitHub es el plan.
