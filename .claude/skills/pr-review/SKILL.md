@@ -90,10 +90,9 @@ la rama actual **es** la del PR. No te muevas — sólo poné el head al día si
 git checkout <headRefName> || git checkout -b <headRefName> origin/<headRefName>
 ```
 
-**No se abre una rama de andamio, y el porqué es el hook.** `gate_de_spec.py` bloquea toda
-escritura a `src/` desde una rama que no matchee `^feature/(\d{3})-` con ese número en
-`specs/mapa.json` — y la rama del PR de un spec **ya es** `feature/<NNN>-<kebab>`, o sea que ya
-matchea. Un nombre inventado tipo `rev-pr-<N>` no matchea, así que el andamio **creaba** el
+**No se abre una rama de andamio, y el porqué es el hook.** `gate_de_rama.py` bloquea toda
+escritura a `src/` desde una rama que no matchee `^feature/\d+-` —o `bugfix/`, o `hotfix/`— y la
+rama del PR **ya es** `feature/<issue>-<kebab>`, o sea que ya matchea. Un nombre inventado tipo `rev-pr-<N>` no matchea, así que el andamio **creaba** el
 bloqueo que decía prevenir, y el síntoma es un `Edit` denegado, que se lee como un problema de
 permisos y no como un problema de nombre.
 
@@ -108,17 +107,18 @@ el PR**: le falta el spec.
 **Si la rama está tomada por otro worktree**, `checkout` falla y ahí sí no hay dónde pararse: eso
 es `BLOQUEADO` y se reporta con la ruta del worktree que la tiene, no se esquiva con otro nombre.
 
-## Paso 2 — Hidratar el spec. No es opcional y no falla solo
+## Paso 2 — Leer el contrato y el issue
 
 ```bash
-python .claude/scripts/hidratar_specs.py <NNN>
+gh issue view <N>                          # el plan: qué criterios entrega y qué límites tiene
+cat specs/<capability>/<capability>.md     # el contrato: qué tiene que ser cierto
 ```
 
-`specs/[0-9]*/` está en el `.gitignore`. Si el spec no está en disco, el Paso 4 lee un directorio
-vacío, no encuentra los AC y **revisa sin criterios de aceptación** — que es la peor forma de este
-bug, porque el review igual termina y reporta.
+**Los dos, no uno.** El issue dice qué se prometió esta vez; el contrato dice contra qué se juzga.
+Un review que mira sólo el diff revisa **sin criterios de aceptación**, que es la peor forma de
+este bug, porque igual termina y reporta.
 
-**Y para buscar ahí dentro, `rg --no-ignore`**: `Grep` es ripgrep y respeta el `.gitignore`, así
+**Y para buscar en `.claude/`, `rg --no-ignore --hidden`**: `Grep` es ripgrep y saltea los ocultos, así
 que contesta cero sin decir que no miró.
 
 ## Paso 3 — Materializar el diff, una sola vez
@@ -147,13 +147,12 @@ Al revés también: **un AC que no se puede ver fallar es un hallazgo sobre el s
 PR. «El HUD muestra el tiempo» no; «con 3 minutos restantes, `tiempo_restante()` devuelve 180.0»
 sí.
 
-**Y se corrige acá, en esta corrida**: se reescribe el AC en el `spec.md`, se verifica que el diff
-lo cumpla, y se devuelve al issue con `python .claude/scripts/publicar_spec.py publicar` — el
-árbol de `specs/` es caché, así que un AC arreglado en disco y no publicado se lo lleva puesto la
-próxima hidratación, sin error y sin aviso.
+**Y se corrige acá, en esta corrida**: se reescribe el criterio en
+`specs/<capability>/<capability>.md`, en el mismo PR, y se verifica que el diff lo cumpla. El
+contrato está trackeado, así que la corrección viaja con el código.
 
-**Es además una corrección de `spec-create`**, no sólo de este spec: un AC infalsificable que
-llegó hasta el PR es una regla que el skill de creación no atajó. Agregá la regla allá y decilo en
+**Es además una corrección de `to-spec`**, no sólo de este contrato: un criterio infalsificable
+que llegó hasta el PR es una regla que el skill de escritura no atajó. Agregá la regla allá y decilo en
 el reporte — ver «el lazo» en [`sin-deuda.md`](sin-deuda.md).
 
 ## Paso 5 — Encontrar y arreglar
@@ -240,8 +239,8 @@ El reporte, en ~30 líneas:
 3. **Lo aplicado en este PR**, comprimido a conteos.
 4. **Lo que salió a su propio PR**, con el número de cada uno y por qué no entraba acá. **No es
    redundante con el PR**: quien mergea tiene que saber que hay dos y en qué orden.
-5. **Lo que obligó a corregir el spec** —el AC que estaba mal, el alcance mal medido—, y que se
-   devolvió al issue con `publicar_spec.py publicar`.
+5. **Lo que obligó a corregir el contrato** —el criterio que estaba mal, el alcance mal medido—,
+   y que viajó en este mismo PR.
 6. **Lo `BLOQUEADO`**, con quién lo bloqueó y el fix exacto en una línea copiable.
 7. **Si esta corrida corrigió un `SKILL.md`**, cuál y qué regla se le agregó. Es el entregable más
    caro: es lo único que hace que el hallazgo no vuelva.
@@ -255,10 +254,10 @@ el hallazgo no se descargó: volvé a la tabla de `hallazgos.md`.
 
 ## Lo que no hace
 
-- **No mergea, y no mueve estados en `specs/mapa.json`.** El estado lo deriva la Action en el push
-  a `staging`, y el gate da rojo si alguien lo escribe a mano.
+- **No mergea, y no ratifica una capacidad.** Pasar un spec a `ratified` es una afirmación sobre
+  la capacidad entera y no sobre este PR: la hace quien cierra el último criterio.
 - **No abre PRs ni ramas de feature.** Trabaja sobre lo que ya está abierto.
-- **No revisa specs que todavía son texto.** Eso es `spec-revise`, corre antes, y sale mucho más
+- **No revisa un contrato que todavía es texto.** Eso es `shape`, corre antes, y sale mucho más
   barato: un problema detectado como texto cuesta un párrafo.
 - **No pone al día una pila de PRs.** Eso es el Paso 6 de `pr-review-batch`, y necesita ver la
   cadena entera.

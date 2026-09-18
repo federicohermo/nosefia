@@ -18,10 +18,10 @@ import sys
 import unittest
 from pathlib import Path
 
-import gate_de_spec
+import gate_de_rama
 from lib.repo import RAIZ
 
-GATE = Path(gate_de_spec.__file__)
+GATE = Path(gate_de_rama.__file__)
 
 
 def correr(payload: dict) -> dict:
@@ -40,45 +40,45 @@ def correr(payload: dict) -> dict:
 class DestinosEnBash(unittest.TestCase):
     def test_la_redireccion(self):
         # El escape más corto de todos: no necesita ningún comando conocido adelante.
-        self.assertIn("src/dominio/turno.gd", gate_de_spec.destinos_del_comando("echo x > src/dominio/turno.gd"))
+        self.assertIn("src/dominio/turno.gd", gate_de_rama.destinos_del_comando("echo x > src/dominio/turno.gd"))
 
     def test_la_redireccion_que_agrega(self):
-        self.assertIn("src/x.gd", gate_de_spec.destinos_del_comando("echo x >> src/x.gd"))
+        self.assertIn("src/x.gd", gate_de_rama.destinos_del_comando("echo x >> src/x.gd"))
 
     def test_no_confunde_un_descriptor_con_un_archivo(self):
         # `2>&1` redirige un descriptor, no un archivo.
-        self.assertEqual(gate_de_spec.destinos_del_comando("gdlint src 2>&1"), [])
+        self.assertEqual(gate_de_rama.destinos_del_comando("gdlint src 2>&1"), [])
 
     def test_sed_con_i(self):
         # El agujero del tamaño de `sed -i`: negarle `Edit` a un agente lo empuja justo acá.
-        self.assertIn("src/x.gd", gate_de_spec.destinos_del_comando("sed -i 's/a/b/' src/x.gd"))
+        self.assertIn("src/x.gd", gate_de_rama.destinos_del_comando("sed -i 's/a/b/' src/x.gd"))
 
     def test_sed_sin_i_no_escribe(self):
-        self.assertEqual(gate_de_spec.destinos_del_comando("sed 's/a/b/' src/x.gd"), [])
+        self.assertEqual(gate_de_rama.destinos_del_comando("sed 's/a/b/' src/x.gd"), [])
 
     def test_la_ruta_absoluta_de_un_escritor_cuenta_igual(self):
         # Comparar el token entero dejaría pasar `/usr/bin/sed`.
-        self.assertIn("src/x.gd", gate_de_spec.destinos_del_comando("/usr/bin/sed -i 's/a/b/' src/x.gd"))
+        self.assertIn("src/x.gd", gate_de_rama.destinos_del_comando("/usr/bin/sed -i 's/a/b/' src/x.gd"))
 
     def test_cp_escribe_solo_el_destino(self):
         # Contar el origen bloquearía un `cp src/x.gd /tmp/` legítimo.
-        self.assertEqual(gate_de_spec.destinos_del_comando("cp src/x.gd /tmp/copia.gd"), ["/tmp/copia.gd"])
+        self.assertEqual(gate_de_rama.destinos_del_comando("cp src/x.gd /tmp/copia.gd"), ["/tmp/copia.gd"])
 
     def test_rm_destruye_todos_sus_argumentos(self):
-        destinos = gate_de_spec.destinos_del_comando("rm -rf src test")
+        destinos = gate_de_rama.destinos_del_comando("rm -rf src test")
         self.assertIn("src", destinos)
         self.assertIn("test", destinos)
 
     def test_el_tee_del_segundo_segmento(self):
         # Mirar el comando entero de una atribuiría el destino al primero.
-        self.assertIn("src/x.gd", gate_de_spec.destinos_del_comando("cat viejo.gd | tee src/x.gd"))
+        self.assertIn("src/x.gd", gate_de_rama.destinos_del_comando("cat viejo.gd | tee src/x.gd"))
 
     def test_saca_las_comillas(self):
         self.assertIn("src/con espacio.gd",
-                      gate_de_spec.destinos_del_comando('echo x > "src/con espacio.gd"'))
+                      gate_de_rama.destinos_del_comando('echo x > "src/con espacio.gd"'))
 
     def test_un_comando_que_no_escribe_no_devuelve_nada(self):
-        self.assertEqual(gate_de_spec.destinos_del_comando("git status"), [])
+        self.assertEqual(gate_de_rama.destinos_del_comando("git status"), [])
 
 
 class DestinosEnPowerShell(unittest.TestCase):
@@ -92,41 +92,41 @@ class DestinosEnPowerShell(unittest.TestCase):
     def test_set_content_con_path_nombrado(self):
         self.assertIn(
             "src/x.gd",
-            gate_de_spec.destinos_del_comando('Set-Content -Path src/x.gd -Value "hola"'),
+            gate_de_rama.destinos_del_comando('Set-Content -Path src/x.gd -Value "hola"'),
         )
 
     def test_set_content_posicional(self):
-        self.assertIn("src/x.gd", gate_de_spec.destinos_del_comando('Set-Content src/x.gd "hola"'))
+        self.assertIn("src/x.gd", gate_de_rama.destinos_del_comando('Set-Content src/x.gd "hola"'))
 
     def test_no_distingue_mayusculas(self):
         # PowerShell no las distingue: comparar sensible dejaría pasar `set-content`.
-        self.assertIn("src/x.gd", gate_de_spec.destinos_del_comando("set-content -path src/x.gd -value x"))
+        self.assertIn("src/x.gd", gate_de_rama.destinos_del_comando("set-content -path src/x.gd -value x"))
 
     def test_out_file_usa_filepath(self):
-        self.assertIn("src/x.gd", gate_de_spec.destinos_del_comando("$t | Out-File -FilePath src/x.gd"))
+        self.assertIn("src/x.gd", gate_de_rama.destinos_del_comando("$t | Out-File -FilePath src/x.gd"))
 
     def test_remove_item(self):
-        self.assertIn("src", gate_de_spec.destinos_del_comando("Remove-Item -Recurse -Force src"))
+        self.assertIn("src", gate_de_rama.destinos_del_comando("Remove-Item -Recurse -Force src"))
 
     def test_copy_item_escribe_solo_el_destino(self):
         # Igual que `cp`: contar el origen bloquearía una copia legítima hacia afuera.
         self.assertEqual(
-            gate_de_spec.destinos_del_comando("Copy-Item src/x.gd C:/tmp/copia.gd"),
+            gate_de_rama.destinos_del_comando("Copy-Item src/x.gd C:/tmp/copia.gd"),
             ["C:/tmp/copia.gd"],
         )
 
     def test_copy_item_con_destination_nombrado(self):
         self.assertEqual(
-            gate_de_spec.destinos_del_comando("Copy-Item -Path a.gd -Destination src/x.gd"),
+            gate_de_rama.destinos_del_comando("Copy-Item -Path a.gd -Destination src/x.gd"),
             ["src/x.gd"],
         )
 
     def test_un_cmdlet_que_lee_no_devuelve_nada(self):
-        self.assertEqual(gate_de_spec.destinos_del_comando("Get-Content src/x.gd"), [])
+        self.assertEqual(gate_de_rama.destinos_del_comando("Get-Content src/x.gd"), [])
 
     def test_la_redireccion_de_powershell_cuenta_igual(self):
         # `>` es la misma sintaxis en los dos shells, y ya la cazaba el regex de redirección.
-        self.assertIn("src/x.gd", gate_de_spec.destinos_del_comando('"hola" > src/x.gd'))
+        self.assertIn("src/x.gd", gate_de_rama.destinos_del_comando('"hola" > src/x.gd'))
 
     def test_el_payload_de_powershell_se_lee_como_comando(self):
         payload = json.dumps(
@@ -137,30 +137,30 @@ class DestinosEnPowerShell(unittest.TestCase):
         # deliberado y no cuesta nada —un candidato que no es una ruta protegida se descarta
         # solo—; el porqué está en `_destino_de_cmdlet`, y lo que se compra es no perder un
         # destino real por creer saber qué parámetro lleva valor.
-        self.assertIn("src/x.gd", gate_de_spec.rutas_del_payload(payload))
+        self.assertIn("src/x.gd", gate_de_rama.rutas_del_payload(payload))
 
     def test_un_interruptor_no_se_come_el_destino(self):
         # `Remove-Item -Force src` es el caso que decidió la forma de `_destino_de_cmdlet`:
         # tratar a `-Force` como si consumiera un valor se come el `src` y el gate deja pasar un
         # borrado de verdad.
-        self.assertIn("src", gate_de_spec.destinos_del_comando("Remove-Item -Force src"))
+        self.assertIn("src", gate_de_rama.destinos_del_comando("Remove-Item -Force src"))
 
 
 class RutasDelPayload(unittest.TestCase):
     def test_una_edicion(self):
         payload = json.dumps({"tool_name": "Edit", "tool_input": {"file_path": "src/x.gd"}})
-        self.assertEqual(gate_de_spec.rutas_del_payload(payload), ["src/x.gd"])
+        self.assertEqual(gate_de_rama.rutas_del_payload(payload), ["src/x.gd"])
 
     def test_un_bash_que_no_escribe_devuelve_lista_vacia(self):
         # `[]` es una respuesta y pasa callado. `None` no.
         payload = json.dumps({"tool_name": "Bash", "tool_input": {"command": "ls"}})
-        self.assertEqual(gate_de_spec.rutas_del_payload(payload), [])
+        self.assertEqual(gate_de_rama.rutas_del_payload(payload), [])
 
     def test_un_payload_que_no_se_entiende_es_none(self):
         # `None` NO es «ninguna»: es «no se pudo decidir», y el gate lo DECLARA. Un payload
         # que cambiara de forma dejaría al gate mudo para siempre, y esto es lo que lo delata.
-        self.assertIsNone(gate_de_spec.rutas_del_payload("{"))
-        self.assertIsNone(gate_de_spec.rutas_del_payload(json.dumps({"tool_name": "Edit"})))
+        self.assertIsNone(gate_de_rama.rutas_del_payload("{"))
+        self.assertIsNone(gate_de_rama.rutas_del_payload(json.dumps({"tool_name": "Edit"})))
 
 
 class ElVeredicto(unittest.TestCase):
@@ -189,7 +189,7 @@ class ElVeredicto(unittest.TestCase):
         # `.claude/` queda afuera a propósito: un gate que se impide arreglarse a sí mismo se
         # termina borrando en vez de corrigiéndose.
         salida = correr(
-            {"tool_name": "Edit", "tool_input": {"file_path": ".claude/scripts/gate_de_spec.py"}}
+            {"tool_name": "Edit", "tool_input": {"file_path": ".claude/scripts/gate_de_rama.py"}}
         )
         self.assertEqual(salida["permissionDecision"], "allow")
 
@@ -203,12 +203,12 @@ class LaReglaDeLaRama(unittest.TestCase):
     """
 
     def bloquea(self, rama: str) -> str:
-        motivo = gate_de_spec.motivo_del_bloqueo(rama, "src/dominio/turno.gd")
+        motivo = gate_de_rama.motivo_del_bloqueo(rama, "src/dominio/turno.gd")
         self.assertIsNotNone(motivo, f"`{rama}` tendría que bloquear y pasó")
         return motivo
 
     def pasa(self, rama: str) -> None:
-        motivo = gate_de_spec.motivo_del_bloqueo(rama, "src/dominio/turno.gd")
+        motivo = gate_de_rama.motivo_del_bloqueo(rama, "src/dominio/turno.gd")
         self.assertIsNone(motivo, f"`{rama}` tendría que pasar y bloqueó con: {motivo}")
 
     def test_main_habla_de_donde_estas_parado(self):
@@ -245,27 +245,26 @@ class LaReglaDeLaRama(unittest.TestCase):
         for rama in ("arreglos", "mia", "chore/lo-que-sea", "fix/lo-que-sea", "feature-sin-barra"):
             self.bloquea(rama)
 
-    def test_solo_feature_pide_el_numero_del_spec(self):
-        # De ahí lo sacan este gate y `derivar_mapa.py`. A `bugfix/` y `hotfix/` no se les pide
-        # porque pueden no salir de ningún spec, y exigirlo obligaría a inventar un número.
-        self.assertIn("NNN", self.bloquea("feature/el-campo-de-interaccion"))
+    def test_solo_feature_pide_el_numero_del_issue(self):
+        # A `bugfix/` y `hotfix/` no se les pide porque pueden no salir de ningún issue, y
+        # exigirlo obligaría a inventar un número.
+        self.assertIn("issue", self.bloquea("feature/el-campo-de-interaccion"))
         self.pasa("bugfix/el-objeto-en-la-mano-empuja-al-jugador")
         self.pasa("hotfix/la-build-de-la-entrega-no-abre")
 
-    def test_el_NNN_son_tres_digitos_y_no_los_que_haya(self):
-        self.assertIn("NNN", self.bloquea("feature/38-dos-digitos"))
-        self.assertIn("NNN", self.bloquea("feature/0038-cuatro-digitos"))
+    def test_el_numero_son_los_digitos_que_haya(self):
+        # GitHub numera los issues desde 1 y no rellena a tres dígitos, así que rellenarlos
+        # separaría la rama del issue que nombra. El 38 y el 1234 valen los dos.
+        self.pasa("feature/38-dos-digitos")
+        self.pasa("feature/1234-cuatro-digitos")
 
-    def test_un_bugfix_puede_nombrar_su_spec_igual(self):
-        # Puede salir de un spec o no. Si sale, el número va y `derivar_mapa.py` lo levanta.
-        self.pasa("bugfix/012-la-pureza-del-dominio")
+    def test_un_bugfix_puede_nombrar_su_issue_igual(self):
+        self.pasa("bugfix/12-la-pureza-del-dominio")
 
-    def test_un_spec_todavia_no_publicado_no_frena_nada(self):
-        # El mapa dejó de ser condición ACÁ: exigir la entrada obligaba a abrir el issue ANTES
-        # de escribir la primera línea. El cruce no se perdió, se mudó a
-        # `test_criterios_de_la_rama.py`, que lo cobra con el PR abierto y sin frenar la
-        # primera edición.
-        self.pasa("feature/999-un-spec-que-no-existe")
+    def test_un_issue_que_no_existe_no_frena_nada(self):
+        # El gate mira el NOMBRE y no consulta GitHub: exigir que el issue exista pondría una
+        # llamada de red adentro de cada edición, y un gate lento se apaga.
+        self.pasa("feature/9999-un-issue-que-no-existe")
 
 
 class LaRaizQueManda(unittest.TestCase):
@@ -288,7 +287,7 @@ class LaRaizQueManda(unittest.TestCase):
 
     def test_una_ruta_absoluta_manda_su_propio_arbol_y_no_el_principal(self):
         otro = self._repo("gate_abs_")
-        raiz = gate_de_spec.raiz_que_manda(str(otro / "src" / "cosa.gd"), None)
+        raiz = gate_de_rama.raiz_que_manda(str(otro / "src" / "cosa.gd"), None)
         self.assertEqual(Path(raiz).resolve(), otro.resolve())
         self.assertNotEqual(Path(raiz).resolve(), Path(RAIZ).resolve())
 
@@ -296,12 +295,12 @@ class LaRaizQueManda(unittest.TestCase):
         # Es lo único que desambigua un `src/x.gd` escrito desde un worktree: el hook corre con
         # el cwd del checkout principal y la ruta no dice a cuál de los dos árboles apunta.
         otro = self._repo("gate_rel_")
-        raiz = gate_de_spec.raiz_que_manda("src/cosa.gd", str(otro))
+        raiz = gate_de_rama.raiz_que_manda("src/cosa.gd", str(otro))
         self.assertEqual(Path(raiz).resolve(), otro.resolve())
 
     def test_sin_cwd_ni_arbol_legible_cae_en_la_raiz_y_no_revienta(self):
         # Falla abierto, como todo el resto del gate.
-        raiz = gate_de_spec.raiz_que_manda("src/dominio/reglas.gd", None)
+        raiz = gate_de_rama.raiz_que_manda("src/dominio/reglas.gd", None)
         self.assertEqual(Path(raiz).resolve(), Path(RAIZ).resolve())
 
 

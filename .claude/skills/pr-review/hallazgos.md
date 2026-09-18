@@ -226,14 +226,14 @@ Tres cosas que no son obvias:
 - **Sale de `staging`, no de la rama del PR que revisás.** Si sale de ahí, arrastra los commits de
   ese PR y no se puede mergear antes que él — que es justo lo que hace falta cuando el fix es de
   otro archivo.
-- **El nombre lleva un `NNN` que el mapa tenga**, o el hook te bloquea la primera edición de
-  `src/`. Si el hallazgo no tiene spec propio y toca ruta protegida, **eso ya es un hallazgo sobre
-  el proceso**: correspondía un spec, y la descarga es abrirlo con `spec-create`.
+- **El nombre lleva el número de su issue**, o el hook te bloquea la primera edición de `src/`.
+  Si el hallazgo no tiene issue propio y toca ruta protegida, **eso ya es un hallazgo sobre el
+  proceso**: correspondía un issue, y la descarga es abrirlo con `spec-to-tickets`.
 - **Va al reporte con su número de PR.** Quien mergea tiene que saber que hay dos.
 
-**Y no se abre un issue «para dejarlo anotado».** Los issues de este repo son **entrada** —lo que
-`deuda.py` lista y `spec-create` drena—, nunca la forma de terminar una corrida. Un hallazgo
-convertido en issue es trabajo que encontraste, entendiste y decidiste no hacer.
+**Y no se abre un issue «para dejarlo anotado».** Un issue de este repo es **el plan de una
+unidad de entrega**, nunca la forma de terminar una corrida. Un hallazgo convertido en issue es
+trabajo que encontraste, entendiste y decidiste no hacer.
 
 La única excepción es la decisión del usuario ya tomada: si te dijo que algo queda para después,
 **el issue lo registra esa decisión, no tu comodidad**, y el cuerpo la cita.

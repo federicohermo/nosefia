@@ -6,7 +6,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "python .claude/scripts/gate_de_spec.py || python \"$CLAUDE_PROJECT_DIR/.claude/scripts/gate_de_spec.py\" || exit 0",
+            "command": "python .claude/scripts/gate_de_rama.py || python \"$CLAUDE_PROJECT_DIR/.claude/scripts/gate_de_rama.py\" || exit 0",
             "timeout": 10
           }
         ]

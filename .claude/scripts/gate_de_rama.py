@@ -37,17 +37,14 @@ arriba: la regla que dice cómo EMPIEZA un cambio también tiene que ser ejecuta
    de PowerShell: una herramienta que el matcher no nombraba. O sea que el gate se salteaba
    solo con cambiar de herramienta, sin proponérselo.
 
-5. **Mira el NOMBRE de la rama y no `specs/mapa.json`.** Hasta el 2026-09-08 exigía que el
-   `NNN` de la rama ya tuviera entrada en el mapa, o sea que para escribir la primera línea de
-   código había que haber abierto el issue de GitHub y commiteado el mapa a `staging`. Un gate
-   que obliga a pedir permiso antes de empezar es un gate que se apaga.
+5. **Mira el NOMBRE de la rama y nada más.** Hasta el 2026-09-08 exigía que el número de
+   la rama ya estuviera publicado, o sea que para escribir la primera línea de código había
+   que haber abierto el issue. Un gate que obliga a pedir permiso antes de empezar es un gate
+   que se apaga.
 
-   **El cruce no desapareció: se mudó**, a `ElSpecDeLaRamaExiste` de
-   `tests/test_criterios_de_la_rama.py`, que corre en el nodo `harness` con el PR todavía
-   abierto. Ahí llega igual de a tiempo y no frena la primera edición. **El derivador no lo
-   cobra** —lo dice él mismo: un PR cuya rama nombra un `NNN` ausente del mapa «no agrega
-   nada»— así que sin ese test el cruce se caía del repo sin que nada lo reclamara: medido el
-   2026-09-08, una rama de un spec inexistente dejaba el gate en `OK (skipped=2)`.
+   Lo que la rama nombra ahora es **su issue**, que es el único plan: `feature/<issue>-<kebab>`.
+   El número lo asigna GitHub al abrir el issue, así que no hay un segundo registro que
+   mantener — el mapa de specs se borró con el régimen viejo.
 """
 
 import json
@@ -68,10 +65,9 @@ from lib.rutas_protegidas import esta_protegida  # noqa: E402
 #: Los tres prefijos que pueden editar el producto.
 #:
 #: Son los de la convención de Atlassian —`feature`, `bugfix`, `hotfix`— y no una invención de
-#: acá: quien llega de afuera ya sabe qué significan. **Sólo `feature/` pide el `NNN`**, porque
-#: es el único que sale de un spec siempre; exigírselo a `bugfix/` y `hotfix/` los obligaría a
-#: inventar un número. El `bugfix/` que sí sale de un spec puede llevarlo igual, y
-#: `derivar_mapa.py` lo levanta.
+#: acá: quien llega de afuera ya sabe qué significan. **Sólo `feature/` pide el número**, porque
+#: es el único que sale de un issue siempre; exigírselo a `bugfix/` y `hotfix/` los obligaría a
+#: inventar uno. El `bugfix/` que sí sale de un issue puede llevarlo igual.
 PREFIJOS_DEL_PRODUCTO = ("feature/", "bugfix/", "hotfix/")
 
 #: Los prefijos de lo que NO toca `src/`, declarados para que el mensaje pueda ofrecerlos.
@@ -82,12 +78,12 @@ PREFIJOS_DEL_PRODUCTO = ("feature/", "bugfix/", "hotfix/")
 #: Cada uno nombra QUÉ toca, en vez de ser el cajón de sastre que era `chore/`.
 PREFIJOS_SIN_PRODUCTO = ("harness/", "docs/", "ci/")
 
-#: `feature/NNN-…`, con el `NNN` de `specs/mapa.json` en TRES dígitos.
+#: `feature/<issue>-…`, con el número del issue de GitHub.
 #:
-#: Tres y no «los que haya» porque el mapa los escribe así y `derivar_mapa.py` los lee así:
-#: aceptar `feature/38-…` dejaría pasar una rama cuyo número no va a matchear nunca, y el spec
-#: no aterrizaría sin que nada lo diga.
-RAMA_DE_SPEC = re.compile(r"^feature/\d{3}-.+$")
+#: Los dígitos son «los que haya» y no tres: el número lo asigna GitHub y no lo rellena nadie.
+#: Rellenarlo a tres lo separaría del issue que nombra, que es justo el vínculo que este
+#: patrón existe para sostener.
+RAMA_DE_ISSUE = re.compile(r"^feature/\d+-.+$")
 
 
 def _lista(prefijos: tuple[str, ...]) -> str:
@@ -102,11 +98,10 @@ def _lista(prefijos: tuple[str, ...]) -> str:
 #: se pudre: el día que entre un cuarto prefijo, el código lo aceptaría y el mensaje seguiría
 #: nombrando tres.
 COMO_SALIR = (
-    "Al producto lo tocan %s, y `feature/` es el único que además nombra su spec: "
-    "`feature/<NNN>-<kebab>`, con el `NNN` de `specs/mapa.json` en tres dígitos. Lo que NO toca "
-    "`src/` se nombra por lo que toca: %s. **El spec se puede publicar después**: este gate ya "
-    "no lo exige, sólo pide que la rama diga de qué spec es. Si el spec no existe todavía, el "
-    "skill que lo escribe es `spec-create`."
+    "Al producto lo tocan %s, y `feature/` es el único que además nombra su issue: "
+    "`feature/<issue>-<kebab>`. Lo que NO toca `src/` se nombra por lo que toca: %s. **El issue "
+    "se abre antes que la rama**, porque es el único plan: su forma está en "
+    "`specs/_template/task-brief.md` y el skill que lo escribe es `spec-to-issues`."
 ) % (_lista(PREFIJOS_DEL_PRODUCTO), _lista(PREFIJOS_SIN_PRODUCTO))
 
 
@@ -349,12 +344,9 @@ def motivo_del_bloqueo(rama: str, ruta: str) -> str | None:
     # `staging` edita el producto directo, desde el 2026-09-14 y por decisión del dueño del
     # repo. Va antes del prefijo porque si no cae en el genérico de abajo.
     #
-    # **Lo que se paga, dicho una vez:** dos gates quedan ciegos sobre lo que se commitea acá
-    # sin rama. `test_criterios_de_la_rama.py` cruza los AC contra el spec DE LA RAMA, y en
-    # `staging` no hay ninguno, así que no mira nada; y `derivar_mapa.py` saca el `NNN` del
-    # nombre de la rama de un PR, así que un spec implementado sin PR se queda en `Propuesto`
-    # para siempre. O sea: el trabajo de un spec sigue necesitando su `feature/<NNN>-…`, y lo
-    # que se libera es todo lo demás.
+    # **Lo que se paga, dicho una vez:** lo que se commitea acá sin rama no pasa por ningún
+    # PR, así que no hay dónde declarar `AC-<COD>-### → test → resultado`. El trabajo de un
+    # issue sigue necesitando su `feature/<issue>-…`; lo que se libera es todo lo demás.
     if rama == RAMA_DE_INTEGRACION:
         return None
 
@@ -371,12 +363,11 @@ def motivo_del_bloqueo(rama: str, ruta: str) -> str | None:
         )
 
     # Sólo `feature/`: es el único de los tres que sale de un spec siempre.
-    if rama.startswith("feature/") and RAMA_DE_SPEC.match(rama) is None:
+    if rama.startswith("feature/") and RAMA_DE_ISSUE.match(rama) is None:
         return (
-            f"La rama `{rama}` es de feature y no nombra su spec: se llama "
-            f"`feature/<NNN>-<kebab>`, con el `NNN` en tres dígitos. De ahí lo sacan este gate "
-            f"y `derivar_mapa.py`, así que un número mal escrito no aterriza el spec. "
-            f"{COMO_SALIR}"
+            f"La rama `{rama}` es de feature y no nombra su issue: se llama "
+            f"`feature/<issue>-<kebab>`, con el número que GitHub le dio al issue. Sin ese "
+            f"número, el PR no tiene con qué cerrar nada. {COMO_SALIR}"
         )
 
     return None
@@ -390,7 +381,7 @@ def main() -> None:
     # forma dejaría el gate mudo para siempre, y esta línea es la que lo delata.
     if rutas is None:
         pasar(
-            "gate-de-spec: el payload no trae `file_path` ni `command`, no se pudo verificar la rama"
+            "gate-de-rama: el payload no trae `file_path` ni `command`, no se pudo verificar la rama"
         )
 
     # La primera protegida es la que nombra el mensaje. Alcanza con una: el comando se bloquea
@@ -418,7 +409,7 @@ def main() -> None:
             check=True,
         ).stdout.strip()
     except (OSError, subprocess.SubprocessError):
-        pasar("gate-de-spec: no se pudo leer la rama con git, no se verificó")
+        pasar("gate-de-rama: no se pudo leer la rama con git, no se verificó")
 
     motivo = motivo_del_bloqueo(rama, ruta)
     if motivo is not None:

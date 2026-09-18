@@ -3,13 +3,12 @@
 El árbol de `docs/architecture/directory-structure.md` describe cada directorio por lo que **no
 se puede averiguar mirándolo** —`dominio/` dice «test OBLIGATORIO», no qué archivos tiene
 adentro—. Una entrada que en vez de eso enumera su contenido caduca sola, y la de los skills
-caducó cuatro veces en tres intentos. Ninguna la atajó: hasta hoy nada del harness leía el
-**contenido** de `docs/`, sólo sus rutas, así que la línea podía decir tres de ocho con
-`verificar.py` en 6/6 verde.
+caducó cuatro veces en tres intentos, y una quinta cuando el harness entero cambió de método.
+Ninguna la atajó: hasta hoy nada del harness leía el **contenido** de `docs/`, sólo sus rutas,
+así que la línea podía decir tres de ocho con `verificar.py` entero en verde.
 
 Este gate lee ese contenido y **es angosto a propósito**. «Ningún doc nombra un skill» marcaría
-seis líneas de hoy y **cinco son correctas**: prosa que manda al lector a un skill por su
-nombre. Un gate con cinco falsos positivos de seis se apaga en una semana. Lo que distingue al
+varias líneas correctas: prosa que manda al lector a un skill por su nombre. Un gate con cinco falsos positivos de seis se apaga en una semana. Lo que distingue al
 defecto es la **enumeración**, así que el umbral son tres nombres distintos en una misma línea:
 la prosa que contrasta dos pasa.
 
@@ -52,29 +51,24 @@ ARBOL = RAIZ / "docs" / "architecture" / "directory-structure.md"
 #: `quickstart.md`—, copiadas **por texto y no por número de línea**, que se corre solo. Las dos
 #: últimas son sintéticas: el contraste de dos, y el nombre largo que cuenta uno.
 LINEAS_DE_PRUEBA: tuple[tuple[str, int], ...] = (
-    ("│   ├── skills/             spec-create, spec-revise, spec-implement", 3),
+    ("│   ├── skills/             to-spec, shape, implement-feature", 3),
     (
-        "| Convención de specs | [specs/README.md](./specs/README.md) | El mapa, los cuatro "
-        "estados y los techos. El flujo es de `spec-create`; la forma, de `specs/plantilla/` |",
+        "| Convención de specs | [specs/README.md](./specs/README.md) | Las capacidades, los "
+        "tres estados y el ancla. El flujo es de `to-spec`; la forma, de `specs/_template/` |",
         1,
     ),
     (
-        "[issue](https://github.com/federicohermo/nosefia/issues) y `spec-create` lo drena "
-        "hacia specs",
-        1,
-    ),
-    (
-        "[sin-deuda.md](./.claude/skills/spec-create/sin-deuda.md) es la copia canónica.",
+        "[sin-deuda.md](./.claude/skills/to-spec/sin-deuda.md) es la copia canónica.",
         1,
     ),
     (
         "flujo entero y **qué NO necesita spec**, en "
-        "[spec-create](./.claude/skills/spec-create/SKILL.md).",
+        "[to-spec](./.claude/skills/to-spec/SKILL.md).",
         1,
     ),
-    ("El camino entero está en el skill `/spec-create`, y en corto es:", 1),
-    ("Para dos o más specs de una, spec-revise-batch. Para uno solo, spec-revise.", 2),
-    ("Para dos o más, spec-create-batch.", 1),
+    ("El camino entero está en el skill `/to-spec`, y en corto es:", 1),
+    ("Para dos o más issues de una, implement-batch. Para uno solo, implement-feature.", 2),
+    ("Para dos o más, pr-review-batch.", 1),
 )
 
 
