@@ -38,7 +38,8 @@ func test_la_computadora_tiene_apoyo_y_no_queda_tapada_por_otro_cuerpo() -> void
 	var espacio := almacen.get_world_3d().direct_space_state
 	# **El rayo arranca un poco arriba del cuerpo, no en su origen.** El origen de `base compu`
 	# cae exactamente sobre la tapa del escritorio, y un rayo que empieza en el plano de contacto
-	# lo cruza sin registrarlo: contestaba el piso del local, 0,82 m mas abajo.
+	# lo cruza sin registrarlo: medido el 2026-09-18, contestaba el piso del local, 0,82 m más
+	# abajo.
 	var consulta := PhysicsRayQueryParameters3D.create(
 		cuerpo.global_position + Vector3.UP * 0.05, cuerpo.global_position + Vector3.DOWN * 0.05
 	)

@@ -209,12 +209,12 @@ Las que ya costaron tiempo acá:
   a los tests.
 - **Un `.tscn` no se mergea.** Un merge de tres vías sobre una escena no da un conflicto: da una
   escena corrupta. Dos specs que tocan la misma escena se ordenan, no se paralelizan.
-- **El `.glb` se exporta con los modificadores `Array` apagados**, y si no, siete productos salen
-  multiplicados por cuatro o por seis: Blender 5.0 no realizaba esas instancias de Geometry Nodes
-  al exportar y 5.2 sí. El juego necesita **una unidad**, porque `reposicion_manual.gd` apila
-  `cupo()` copias del modelo. El síntoma es el 042-AC2 en rojo —dos productos vecinos se pisan—,
-  que no nombra ni a Blender ni al modificador. El procedimiento y las medidas, en
-  [test_modelo_actualizado.py](./.claude/scripts/tests/test_modelo_actualizado.py).
+- **El `.glb` se exporta apagando POR NOMBRE los modificadores `Array`**: son Geometry Nodes
+  llamados así, no modificadores de tipo `ARRAY`, y apagar por tipo no apaga ninguno. Si
+  quedan, los productos salen multiplicados, y el juego necesita una unidad porque
+  `reposicion_manual.gd` apila `cupo()` copias. El síntoma es el 042-AC2 en rojo —dos productos
+  vecinos se pisan—, que no nombra ni a Blender ni al modificador. El procedimiento y las
+  medidas, en [test_modelo_actualizado.py](./.claude/scripts/tests/test_modelo_actualizado.py).
 - **La caché de `.godot/imported/` declara verde un modelo que ya cambió.** Un `.glb` reexportado
   no se reimporta solo en una corrida headless, así que los tests comparan contra la malla
   anterior y pasan. Costó dos diagnósticos equivocados el 2026-09-15. Antes de creerle a un verde

@@ -309,8 +309,8 @@ func test_el_frente_se_conserva_al_examinar_y_volver_a_agarrar() -> void:  # 042
 	var jugador: Node3D = almacen.get("_jugador")
 	jugador.set_physics_process(false)
 	var agarre: Agarre = almacen.get("_agarre")
-	# Hacia dónde está horneado cada modelo, que es lo mismo que su cara de la góndola: los seis
-	# del pasillo miran a -X y los seis de la cabecera a -Z.
+	# Hacia dónde está horneado cada modelo, que es lo mismo que su cara de la góndola: los del
+	# pasillo miran a -X y los de la cabecera a -Z.
 	var frentes := [
 		Vector3.LEFT,
 		Vector3.FORWARD,

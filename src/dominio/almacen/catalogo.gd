@@ -16,7 +16,7 @@ extends RefCounted
 ## **Los nombres son los del modelo 3D**, y no una etiqueta genérica: cada fila tiene detrás
 ## una malla que el jugador ve en la góndola, y un nombre que no coincide con lo que se ve
 ## deja al inventario hablando de otra cosa. Qué malla es cada uno lo dice
-## `contenido_del_estante.tscn`, donde los doce están en este mismo orden.
+## `contenido_del_estante.tscn`, donde están en este mismo orden.
 ##
 ## Agregar un producto es una línea en el enum de `producto.gd` y una fila acá. Olvidarse de la
 ## fila es rojo: `catalogo_test.gd` cuenta las filas de acá contra `Producto.Id.size()`, y las

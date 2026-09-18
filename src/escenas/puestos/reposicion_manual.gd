@@ -17,6 +17,9 @@ const PASOS_DEL_BORDE := 12
 ## Cuánto puede variar la altura de un apoyo y seguir siendo el mismo, en metros.
 const TOLERANCIA_DEL_APOYO := 0.02
 
+## En cuántos pasos se trae hacia el jugador lo que se soltó adentro de un mueble.
+const PASOS_PARA_DESATASCAR := 12
+
 ## Cuántas direcciones alrededor del jugador se prueban para dejarle la caja al lado.
 const LADOS_DEL_JUGADOR := 8
 
@@ -113,8 +116,8 @@ func preparar() -> void:
 ## y para las cajas lo hace `_apoyar_la_caja`. Una unidad de producto no tenía quién, así que
 ## parado contra la góndola —el pasillo mide 1,73 m— el punto de soltado caía adentro del
 ## estante: el producto quedaba detrás del panel, temblando contra la malla y sin rayo que lo
-## alcance. Medido con el actroncito soltado desde x = 2,6: terminaba en x = 1,25, detrás del
-## fondo, a distancia `inf` de la mira.
+## alcance. Medido el 2026-09-18 soltando desde el pasillo de enfrente: terminaba 1,35 m
+## adentro del mueble, detrás del fondo, a distancia `inf` de la mira.
 ##
 ## Se lo trae hacia el jugador hasta el primer lugar libre, que es de donde vino.
 func _desatascar_lo_soltado(nodo: Node3D) -> void:
@@ -128,8 +131,8 @@ func _desatascar_lo_soltado(nodo: Node3D) -> void:
 	consulta.exclude = [unidad.get_rid(), jugador.get_rid()]
 	var espacio := get_world_3d().direct_space_state
 	var atras := jugador.mira().basis.z.normalized()
-	var paso := ReglasDelJugador.ALCANCE_DE_LA_MIRA / PASOS_DEL_BORDE
-	for intento in PASOS_DEL_BORDE:
+	var paso := ReglasDelJugador.ALCANCE_DE_LA_MIRA / PASOS_PARA_DESATASCAR
+	for intento in PASOS_PARA_DESATASCAR:
 		consulta.transform = Transform3D(Basis.IDENTITY, unidad.global_position)
 		if espacio.intersect_shape(consulta, 1).is_empty():
 			return
@@ -517,10 +520,10 @@ func _preparar_modelos() -> void:
 		_modelos.append(herramienta.commit())
 	for modelo in _modelos:
 		# **El casco sale de `create_convex_shape` y no de `get_faces()`.** Los vértices crudos
-		# vienen repetidos —36 para un cubo, tres por cada esquina, y 1146 para la lata de
-		# arvejas—, y con esa nube el solver arma un manifiesto de contacto sucio: un producto
-		# de caras planas apoyado no termina de asentarse y se lo ve titilar. Limpio, el cubo
-		# son 8 puntos y la lata 129.
+		# vienen repetidos —tres por cada esquina de una caja—, y con esa nube el solver arma un
+		# manifiesto de contacto sucio: un producto de caras planas apoyado no termina de
+		# asentarse y se lo ve titilar. Medido el 2026-09-18: una caja baja de 36 puntos a 8, y
+		# el producto de más caras del catálogo, de 1146 a 129.
 		var forma := modelo.create_convex_shape(true, false)
 		var puntos := forma.points
 		var centro := modelo.get_aabb().get_center()
