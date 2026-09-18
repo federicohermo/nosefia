@@ -307,15 +307,23 @@ func test_el_frente_se_conserva_al_examinar_y_volver_a_agarrar() -> void:  # 042
 	var jugador: Node3D = almacen.get("_jugador")
 	jugador.set_physics_process(false)
 	var agarre: Agarre = almacen.get("_agarre")
-	# El frente es el mismo para los ocho: cada modelo se hornea mirando a -X, que es la cara de
-	# la góndola que da al pasillo. Lo dice `giro_del_frente` en `reposicion_manual.gd`, y por eso
-	# ahí hay un solo giro y no uno por producto.
-	var frente := Vector3.LEFT
+	# Hacia dónde está horneado cada modelo, que es lo mismo que su cara de la góndola: los del
+	# pasillo miran a -X y los tres de la cabecera —actroncito, fideos y galletitas— a -Z.
+	var frentes := [
+		Vector3.FORWARD,
+		Vector3.FORWARD,
+		Vector3.LEFT,
+		Vector3.FORWARD,
+		Vector3.LEFT,
+		Vector3.LEFT,
+		Vector3.LEFT,
+		Vector3.LEFT
+	]
 	for producto in Catalogo.todos():
 		_sacar_de_la_caja(jugador, almacen.get("_cajas_de_productos")[producto.id])
 		var unidad: Node3D = agarre.punto_de_producto.get_child(0)
 		var orientacion := unidad.basis
-		assert_float((orientacion * frente).dot(Vector3.BACK)).is_greater(0.8)
+		assert_float((orientacion * frentes[producto.id]).dot(Vector3.BACK)).is_greater(0.8)
 		assert_bool(orientacion.is_equal_approx(Basis.IDENTITY)).is_false()
 		agarre.mover_lo_sostenido(almacen.get("_jugador").get_node("Camara/PuntoDeExamen"))
 		unidad.rotate_y(0.7)
@@ -360,9 +368,13 @@ func test_actroncito_marolini_y_jorgillo_se_reponen_con_foco_y_clic_reales() -> 
 		var zona: Node3D = almacen.get("_reposicion_manual").get_node(
 			"ZonaDe" + unidad.producto.nombre
 		)
-		# Desde -X, que es el pasillo: los ocho casilleros cuelgan de la cara de la góndola que
-		# da a él. Desde +X la vista arranca adentro del mueble y no hay impacto que enfocar.
-		var desde := Vector3(-1.2, 0.3, 0)
+		# Se mira desde la cara que exhibe el producto, y sale del giro del puesto en vez de
+		# escribirse acá: la del pasillo y la de la cabecera son perpendiculares entre sí, y
+		# parado en la equivocada la vista arranca adentro del mueble y no hay qué enfocar.
+		var puesto: Node3D = almacen.get("_reposicion_manual")
+		var giro: float = puesto.giros_del_frente[id]
+		var frente: Vector3 = Basis(Vector3.UP, deg_to_rad(-giro)) * Vector3.BACK
+		var desde := frente * 1.2 + Vector3.UP * 0.3
 		await _mirar_foco(jugador, zona.global_position + desde, zona.global_position)
 		assert_object(jugador.get("_enfocado")).is_same(zona)
 		_clic_real(jugador)

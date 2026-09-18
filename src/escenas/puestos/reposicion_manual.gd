@@ -33,19 +33,22 @@ const LADOS_DEL_JUGADOR := 8
 ## Dónde se apoya la PRIMERA unidad de cada producto, en el orden de `Producto.Id`.
 @export var apoyos: Array[Vector3] = []
 
-## Hacia dónde crece la fila de un producto sobre el estante.
+## Hacia dónde crece la fila de cada producto sobre el estante.
 ##
-## Es uno solo y no uno por producto porque la góndola es una y corre a lo largo de Z: una fila
-## que creciera en otra dirección se metería adentro del mueble o saldría al pasillo.
-@export var direccion_de_la_fila := Vector3.BACK
+## **La góndola exhibe por dos caras y no por una**, y de ahí que esto sea por producto. El panel
+## de fondo va de z = -3,04 a 0,60: ahí el estante tiene respaldo, mira al pasillo y la fila corre
+## a lo largo, en +Z. Desde z = -4,17 hasta -3,04 no hay panel —se ve de lado a lado—, así que esa
+## punta es la **cabecera**: exhibe hacia su extremo y la fila entra hacia adentro del mueble, en
+## +X. Un producto del pasillo puesto en la cabecera queda parado en un marco vacío.
+@export var direcciones: Array[Vector3] = []
 
-## Cuánto gira el modelo para mostrarle el frente a la cámara, en grados.
+## Cuánto gira cada modelo para mostrarle el frente a la cámara, en grados.
 ##
-## También es uno solo, y eso fija el contrato del modelo: **cada producto se hornea mirando a
-## -X**, que es la cara de la góndola que da al pasillo. Un modelo que entre mirando a otro lado
-## se ve de costado en el estante, y ningún número de acá lo puede arreglar —el estante coloca
-## las copias sin rotarlas—.
-@export var giro_del_frente := 90.0
+## Sale de hacia dónde está horneado el modelo, que es lo mismo que decide su cara de la góndola:
+## los del pasillo miran a -X y los de la cabecera a -Z. **El estante coloca las copias sin
+## rotarlas**, así que un modelo horneado hacia el lado equivocado se ve de costado y ningún
+## número de acá lo arregla: se corrige la malla.
+@export var giros_del_frente: Array[float] = []
 
 var _unidades: Array[Node3D] = []
 var _zonas: Array[StaticBody3D] = []
@@ -473,7 +476,7 @@ func _apoyo(id: Producto.Id) -> Vector3:
 
 func _posicion(id: Producto.Id, indice: int) -> Vector3:
 	var base := to_global(apoyos[id])
-	var hacia := direccion_de_la_fila
+	var hacia := direcciones[id]
 	var separacion := _modelos[id].get_aabb().size.dot(hacia.abs()) + 0.03
 	return base + hacia * separacion * indice
 
@@ -538,7 +541,7 @@ func retirar(id: Producto.Id) -> void:
 	# El frente de cada modelo se alinea antes de darle la inclinación de la mano.
 	unidad.orientacion_en_mano = (
 		Basis.from_euler(Vector3(deg_to_rad(-17), deg_to_rad(-20), 0))
-		* Basis(Vector3.UP, deg_to_rad(giro_del_frente))
+		* Basis(Vector3.UP, deg_to_rad(giros_del_frente[id]))
 	)
 	unidad.collision_layer = 1
 	unidad.collision_mask = 1

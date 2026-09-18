@@ -4,4 +4,6 @@
 
 [node name="ReposicionManual" type="Node3D"]
 script = ExtResource("script")
-apoyos = Array[Vector3]([Vector3(0.76, 0.396, -4), Vector3(0.581, 0.96, -4), Vector3(0.668, 0.396, -2.9), Vector3(0.586, 1.523, -4), Vector3(0.565, 0.396, -1), Vector3(0.588, 0.96, -0.3), Vector3(0.591, 1.523, -2.45), Vector3(0.59, 0.96, -2.8)])
+giros_del_frente = Array[float]([180.0, 180.0, 90.0, 180.0, 90.0, 90.0, 90.0, 90.0])
+apoyos = Array[Vector3]([Vector3(0.684, 0.396, -3.906), Vector3(0.668, 0.96, -4.085), Vector3(0.668, 0.396, -2.9), Vector3(0.675, 1.523, -4.079), Vector3(0.565, 0.396, -1.15), Vector3(0.588, 0.96, -0.45), Vector3(0.591, 1.523, -2.9), Vector3(0.59, 0.96, -2.9)])
+direcciones = Array[Vector3]([Vector3(1, 0, 0), Vector3(1, 0, 0), Vector3(0, 0, 1), Vector3(1, 0, 0), Vector3(0, 0, 1), Vector3(0, 0, 1), Vector3(0, 0, 1), Vector3(0, 0, 1)])
