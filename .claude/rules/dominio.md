@@ -143,7 +143,6 @@ válida a propósito, y es donde van los que no caben en una sola carpeta.
 **Quién lo verifica: `gate_de_capas.py`**, con `CARPETAS_POR_CAPA` de `lib/repo.py`. Y hay que
 decir hasta dónde llega, que es la mitad honesta: **valida los NOMBRES de carpeta —que exista
 `investigacion/` y no `pistas/`— y NO valida que un archivo esté en la carpeta correcta.** Eso es
-semántica, ninguna herramienta lo puede contestar, y lo mira la revisión, contra la tabla del
-`research.md` del spec 025 —que clasifica los 49 archivos que vienen uno por uno, con su columna
-«por qué», y existe justamente por eso—. Lo que el gate cierra es la puerta de atrás: inventar un
-nombre en vez de usar el criterio.
+semántica, ninguna herramienta lo puede contestar, y lo mira la revisión, contra el criterio de
+cada carpeta que esta misma regla declara. Lo que el gate cierra es la puerta de atrás: inventar
+un nombre en vez de usar el criterio.

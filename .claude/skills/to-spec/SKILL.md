@@ -40,7 +40,7 @@ el juego no cumple, y un borde que nadie había escrito.
 
 ## Paso 1 — De qué capacidad es
 
-`specs/README.md` tiene las nueve, con qué decide cada una. **Una capacidad es una tajada de lo
+`docs/architecture/capacidades.md` tiene las nueve, con qué decide cada una y qué pasa entre ellas. **Una capacidad es una tajada de lo
 que el juego hace**, no una capa ni una clase.
 
 Si no entra en ninguna, puede ser una capacidad nueva: se abre con su código de tres letras libre

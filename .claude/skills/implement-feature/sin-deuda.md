@@ -132,7 +132,7 @@ Un bloqueo se descarga así:
 ## Los issues son plan, no vertedero
 
 Este repo planifica en GitHub Issues, y un issue es el **único** plan de una unidad de trabajo:
-su forma está en `specs/_template/task-brief.md`. Eso no lo convierte en un lugar donde dejar
+su forma está en `.github/ISSUE_TEMPLATE/task-brief.md`. Eso no lo convierte en un lugar donde dejar
 cosas.
 
 - **Legítimo:** un pedido que llega de afuera entra como issue; `spec-to-tickets` reparte el

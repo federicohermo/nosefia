@@ -5,8 +5,8 @@ del hook por stdin y contesta por stdout con `permissionDecision`.
 
 ## Por qué existe
 
-`CLAUDE.md` y `specs/README.md` documentan el flujo —tres archivos, `publicar_spec.py`, la
-rama recién después— pero es prosa, y la prosa no frena a nadie. En el repo del que sale este
+`CLAUDE.md` y `.claude/rules/specs.md` documentan el flujo —el contrato primero, el issue
+después, la rama al final— pero es prosa, y la prosa no frena a nadie. En el repo del que sale este
 harness, la sesión que abrió un spec reportó un bug y el agente abrió una rama y editó el
 dominio sin spec y sin issue: nada se lo impidió.
 
@@ -101,7 +101,8 @@ COMO_SALIR = (
     "Al producto lo tocan %s, y `feature/` es el único que además nombra su issue: "
     "`feature/<issue>-<kebab>`. Lo que NO toca `src/` se nombra por lo que toca: %s. **El issue "
     "se abre antes que la rama**, porque es el único plan: su forma está en "
-    "`specs/_template/task-brief.md` y el skill que lo escribe es `spec-to-issues`."
+    "`.github/ISSUE_TEMPLATE/task-brief.md` y el skill que lo escribe es "
+    "`spec-to-tickets`."
 ) % (_lista(PREFIJOS_DEL_PRODUCTO), _lista(PREFIJOS_SIN_PRODUCTO))
 
 

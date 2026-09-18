@@ -1,8 +1,14 @@
-# <Qué cambia, no qué área toca>
+---
+name: Task brief
+about: El plan de una unidad de entrega. Es el único plan de este repo.
+title: ""
+labels: ""
+---
 
-<!-- Este archivo es la forma del ISSUE, y el issue es el único plan. No se commitea: se pega
-     en el cuerpo del issue de GitHub. No hay `spec.md`, `research.md`, `plan.md` ni `tasks.md`.
+<!-- El issue es el único plan. No hay `spec.md`, `research.md`, `plan.md` ni `tasks.md`.
      Sale del task-brief de ITBAF, recortado a lo que este repo puede verificar. -->
+
+# <Qué cambia, no qué área toca>
 
 ## Contexto
 

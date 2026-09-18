@@ -78,8 +78,8 @@ tiene, lo primero que se edita es el contrato — con `to-spec`, en esta misma c
 
 ## Paso 2 — Escribir cada issue
 
-La forma la fija [`specs/_template/task-brief.md`](../../../specs/_template/task-brief.md), y las
-seis secciones van todas. Lo que más se rompe:
+La forma la fija el [task-brief](../../../.github/ISSUE_TEMPLATE/task-brief.md), que GitHub
+ofrece al abrir el issue. Las seis secciones van todas. Lo que más se rompe:
 
 - **«Criterios que entrega» son IDs del spec**, y son los que después se citan en los tests. Si
   un issue no entrega ningún criterio, o no es trabajo de producto —y entonces va por
@@ -113,7 +113,7 @@ Después de crear, anotá el número: la rama que lo implemente se va a llamar
 
 **Antes de publicar el lote, mostrá el reparto y esperá.** Tres cosas que sólo el usuario decide:
 
-1. **Qué entra en esta tanda y qué no.** Repartir los 125 criterios de una vez es un backlog, no
+1. **Qué entra en esta tanda y qué no.** Repartir todos los criterios de una vez es un backlog, no
    un plan.
 2. **El orden.** Cuál bloquea a cuál, cuando la dependencia no es evidente del contrato.
 3. **Una `OQ-<COD>-###` que bloquea un criterio.** Si el criterio depende de una pregunta abierta,

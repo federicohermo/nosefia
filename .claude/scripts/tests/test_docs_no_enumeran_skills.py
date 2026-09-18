@@ -53,8 +53,8 @@ ARBOL = RAIZ / "docs" / "architecture" / "directory-structure.md"
 LINEAS_DE_PRUEBA: tuple[tuple[str, int], ...] = (
     ("│   ├── skills/             to-spec, shape, implement-feature", 3),
     (
-        "| Convención de specs | [specs/README.md](./specs/README.md) | Las capacidades, los "
-        "tres estados y el ancla. El flujo es de `to-spec`; la forma, de `specs/_template/` |",
+        "| Capacidades | [docs/architecture/capacidades.md](./docs/architecture/capacidades.md) "
+        "| Qué decide cada una. El flujo es de `to-spec`; la forma, de `specs/_template/` |",
         1,
     ),
     (
@@ -154,7 +154,7 @@ class DocsNoEnumeranSkills(unittest.TestCase):
         ]
         self.assertEqual(hallazgos, [], "\n".join(hallazgos))
 
-    def test_el_arbol_de_directorios_no_nombra_ningun_skill(self):  # 010-AC1
+    def test_el_arbol_de_directorios_no_nombra_ningun_skill(self):
         # El doc que describe directorios se mide más duro que el resto: ahí un nombre no es
         # una cita para el lector, es el contenido del directorio escrito a mano.
         texto = ARBOL.read_text(encoding="utf-8")
@@ -166,7 +166,7 @@ class DocsNoEnumeranSkills(unittest.TestCase):
                 "directorio por lo que no se ve mirándolo, y un nombre ahí es la lista.",
             )
 
-    def test_la_entrada_de_skills_dice_la_regla(self):  # 010-AC2
+    def test_la_entrada_de_skills_dice_la_regla(self):
         lineas = [
             linea
             for linea in ARBOL.read_text(encoding="utf-8").splitlines()
@@ -179,7 +179,7 @@ class DocsNoEnumeranSkills(unittest.TestCase):
         self.assertIn("specs", entrada, f"la entrada no dice de qué es el flujo: {entrada}")
         self.assertIn("lote", entrada, f"la entrada no dice que cada uno tiene su lote: {entrada}")
 
-    def test_la_tabla_dice_donde_va_un_skill_nuevo(self):  # 010-AC3
+    def test_la_tabla_dice_donde_va_un_skill_nuevo(self):
         filas = [
             linea
             for linea in ARBOL.read_text(encoding="utf-8").splitlines()
@@ -192,7 +192,7 @@ class DocsNoEnumeranSkills(unittest.TestCase):
             "test_copias_de_skills.py", fila, f"la fila no dice dónde se declara una copia: {fila}"
         )
 
-    def test_el_gate_ve_la_enumeracion_que_lo_estreno(self):  # 010-AC4
+    def test_el_gate_ve_la_enumeracion_que_lo_estreno(self):
         # Corrido antes de tocar los docs, este módulo falló nombrando
         # `docs/architecture/directory-structure.md:67` y su enumeración de tres — la evidencia
         # de que sabe ver el defecto. Ese archivo ya está arreglado, así que el defecto vive
@@ -206,7 +206,7 @@ class DocsNoEnumeranSkills(unittest.TestCase):
         self.assertEqual(len(hallazgos), 1, hallazgos)
         self.assertIn("un-doc.md:2", hallazgos[0])
 
-    def test_las_citas_legitimas_no_llegan_al_umbral(self):  # 010-AC5
+    def test_las_citas_legitimas_no_llegan_al_umbral(self):
         for linea, cuantos in LINEAS_DE_PRUEBA[1:]:
             with self.subTest(linea=linea):
                 self.assertEqual(
@@ -216,13 +216,13 @@ class DocsNoEnumeranSkills(unittest.TestCase):
                 )
                 self.assertLess(cuantos, UMBRAL, "una cita legítima no puede dar rojo")
 
-    def test_un_nombre_con_sufijo_cuenta_uno(self):  # 010-AC7
+    def test_un_nombre_con_sufijo_cuenta_uno(self):
         # La variante en lote es UN nombre. Contarla como dos —el largo y el corto adentro—
         # bastaría para que dos citas seguidas alcanzaran el umbral sin enumerar nada.
         linea, cuantos = LINEAS_DE_PRUEBA[-1]
         self.assertEqual(len(nombres_en(linea, self.nombres)), cuantos)
 
-    def test_los_nombres_solo_figuran_en_las_lineas_de_prueba(self):  # 010-AC6
+    def test_los_nombres_solo_figuran_en_las_lineas_de_prueba(self):
         # El falsificador de «los nombres salen de `iterdir()`»: si alguno estuviera escrito
         # afuera de los fixtures, sería una constante, y este gate enumeraría lo mismo que
         # prohíbe.
@@ -236,10 +236,10 @@ class DocsNoEnumeranSkills(unittest.TestCase):
             )
 
 
-# 010-AC8 — `verificar.py` en 6/6 sin salteos, con `harness` corriendo estos tests de más que el
+# `verificar.py` en 6/6 sin salteos, con `harness` corriendo estos tests de más que el
 # baseline: se verifica corriéndolo, no desde acá; ningún test puede verificarse a sí mismo
 # contando cuántos hay.
-# 010-AC9 — los dos `Closes` del PR —el del issue de este spec y el `#7` del origen— se
+# Los dos `Closes` del PR —el del issue de este spec y el `#7` del origen— se
 # verifican leyendo el cuerpo del PR abierto: no hay nada en el árbol que los contenga.
 
 if __name__ == "__main__":

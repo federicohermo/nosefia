@@ -58,7 +58,7 @@ def problemas_de_forma() -> list[str]:
         for archivo in SPECS.rglob(prohibido):
             hallazgos.append(
                 f"{_relativa(archivo)}: el régimen viejo. El plan es el issue, y su forma es "
-                "`specs/_template/task-brief.md`"
+                "`.github/ISSUE_TEMPLATE/task-brief.md`"
             )
     for carpeta in sorted(p for p in SPECS.glob("*") if p.is_dir()):
         if carpeta.name.startswith("_"):

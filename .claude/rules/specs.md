@@ -12,8 +12,8 @@ DADO/CUANDO/ENTONCES. Plantilla:
 spec-anchored agentic development.
 
 **El spec no se implementa: se implementa un issue.** Su forma es
-[task-brief.md](../../specs/_template/task-brief.md) y no se commitea. No se crean `spec.md`,
-`research.md`, `plan.md` ni `tasks.md`.
+[task-brief.md](../../.github/ISSUE_TEMPLATE/task-brief.md), que GitHub ofrece al abrirlo. No se
+crean `spec.md`, `research.md`, `plan.md` ni `tasks.md`.
 
 ## Qué declara un spec
 
@@ -49,5 +49,6 @@ repo verifica sin cobertura.
 - Un cambio de comportamiento actualiza el spec y los tests en el mismo PR. Un refactor no lo
   cambia.
 - Si el código no cumple un AC, se corrige el código y su test, no el spec. **Nunca se ajusta el
-  spec para que coincida con el código**: si difieren, eso es el hallazgo.
+  spec para que coincida con el código**: si difieren, eso es el hallazgo. Ver la
+  [constitución](../../docs/architecture/constitution.md).
 - El PR declara, por cada AC tocado, `AC-<COD>-### → test → resultado`.

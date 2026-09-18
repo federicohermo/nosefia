@@ -150,6 +150,8 @@ probar. [docs/guides/tdd.md](./docs/guides/tdd.md).
 | Sección | Archivo | Cuándo consultarlo |
 |---|---|---|
 | Visión general | [docs/architecture/overview.md](./docs/architecture/overview.md) | Las cuatro capas, su dirección y qué el gate no puede ver |
+| Constitución | [docs/architecture/constitution.md](./docs/architecture/constitution.md) | Los principios no negociables. Cambiar uno pide un ADR |
+| Decisiones | [docs/architecture/decisions/](./docs/architecture/decisions/) | Qué se decidió, cuándo y por qué |
 | Estructura de directorios | [docs/architecture/directory-structure.md](./docs/architecture/directory-structure.md) | Dónde crear cada cosa |
 | Inicio rápido | [docs/guides/quickstart.md](./docs/guides/quickstart.md) | Qué instalar, `GODOT_BIN`, qué correr |
 | Verificación | [docs/guides/verificacion.md](./docs/guides/verificacion.md) | Los siete nodos, qué se saltea y hasta cuándo |
@@ -158,7 +160,7 @@ probar. [docs/guides/tdd.md](./docs/guides/tdd.md).
 | Troubleshooting | [docs/guides/troubleshooting.md](./docs/guides/troubleshooting.md) | Errores reales ya pisados acá |
 | Ramas | [docs/infra/ramas.md](./docs/infra/ramas.md) | `staging` integra, `main` entrega, y la carrera entre sus workflows |
 | Despliegue | [docs/infra/despliegue.md](./docs/infra/despliegue.md) | Cada push a `main` deja una web jugable: los secretos, el par preset↔headers y por qué el `$?` del export no decide |
-| Contratos de capacidad | [specs/README.md](./specs/README.md) | Las nueve capacidades, los tres estados y el ancla AC↔test. La forma, en `specs/_template/` |
+| Capacidades | [docs/architecture/capacidades.md](./docs/architecture/capacidades.md) | Qué decide cada una y qué pasa entre ellas. Las reglas de un spec, en `.claude/rules/specs.md` |
 
 **Trabajo planificado:** el contrato de cada capacidad vive en
 `specs/<capability>/<capability>.md`, **trackeado y durable**, y **el plan es el issue**. El spec
@@ -220,8 +222,8 @@ Las que ya costaron tiempo acá:
 - **El `.glb` se exporta apagando POR NOMBRE los modificadores `Array`**: son Geometry Nodes
   llamados así, no modificadores de tipo `ARRAY`, y apagar por tipo no apaga ninguno. Si
   quedan, los productos salen multiplicados, y el juego necesita una unidad porque
-  `reposicion_manual.gd` apila `cupo()` copias. El síntoma es el 042-AC2 en rojo —dos productos
-  vecinos se pisan—, que no nombra ni a Blender ni al modificador. El procedimiento y las
+  `reposicion_manual.gd` apila `cupo()` copias. El síntoma es el test de apoyos del modelo en
+  rojo —dos productos vecinos se pisan—, que no nombra ni a Blender ni al modificador. El procedimiento y las
   medidas, en [test_modelo_actualizado.py](./.claude/scripts/tests/test_modelo_actualizado.py).
 - **La caché de `.godot/imported/` declara verde un modelo que ya cambió.** Un `.glb` reexportado
   no se reimporta solo en una corrida headless, así que los tests comparan contra la malla

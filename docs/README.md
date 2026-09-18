@@ -12,6 +12,9 @@ repo, cómo se verifica y cómo se trabaja.
 ### Arquitectura
 - [Visión general](./architecture/overview.md) — Las cuatro capas, su dirección de dependencia y por qué
 - [Estructura de directorios](./architecture/directory-structure.md) — Dónde va cada cosa
+- [Capacidades](./architecture/capacidades.md) — Las nueve, qué decide cada una y qué pasa entre ellas
+- [Constitución](./architecture/constitution.md) — Los principios no negociables. Cambiar uno pide un ADR
+- [Decisiones](./architecture/decisions/) — Los ADR: qué se decidió, cuándo y por qué
 
 ### Guías
 - [Inicio rápido](./guides/quickstart.md) — Qué instalar, qué declarar y qué correr
@@ -26,7 +29,7 @@ repo, cómo se verifica y cómo se trabaja.
 - [Despliegue](./infra/despliegue.md) — Cada push a `main` deja una web jugable: qué lo dispara, qué secretos hacen falta y cómo se rehace a mano
 
 ### El contrato y el plan
-- [specs/README.md](../specs/README.md) — Las nueve capacidades, los tres estados y el ancla AC↔test
+- [specs/](../specs/) — Un contrato durable por capacidad. Las reglas de edición, en [.claude/rules/specs.md](../.claude/rules/specs.md)
 - [specs/_template/](../specs/_template/) — La forma del contrato y la del issue
 - [GitHub Issues](https://github.com/federicohermo/nosefia/issues) — **El único plan**: un issue por unidad de entrega, en formato task-brief
 
