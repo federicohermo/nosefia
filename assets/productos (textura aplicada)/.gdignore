@@ -1,0 +1,10 @@
+# Godot no baja a este directorio: ni lo importa ni lo empaca.
+#
+# Son las texturas de producto tal como se aplican en Blender. Lo que el juego muestra
+viaja horneado adentro del `.glb`, así que ninguna escena las carga: ningún `.tscn`,
+`.tres` ni `.gd` las nombra, ni por ruta ni por UID.
+#
+# Empacado son 17 MB contra un techo de 90 MB para el directorio exportado, que
+# cobra `verificar_export.py`.
+#
+# Para usar uno: sacarlo de acá, no borrar este archivo.
