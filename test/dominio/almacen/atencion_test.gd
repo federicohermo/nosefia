@@ -85,7 +85,7 @@ func test_los_faltantes_nombran_exactamente_los_productos_que_no_alcanzan() -> v
 	assert_int(faltantes[0].id).is_equal(Producto.Id.ACTRONCITO)
 
 
-func test_con_stock_de_sobra_no_falta_nada() -> void:  # 013-AC4
+func test_con_stock_de_sobra_no_falta_nada() -> void:
 	assert_array(_atencion(0).faltantes_del_pedido()).is_empty()
 
 
@@ -144,7 +144,7 @@ func test_despachar_dos_veces_devuelve_false_la_segunda() -> void:  # AC-CTR-008
 	assert_bool(atencion.despachar_sin_vender()).is_false()
 
 
-func test_cobrar_sobre_una_despachada_a_mano_no_vende() -> void:  # 013-AC5
+func test_cobrar_sobre_una_despachada_a_mano_no_vende() -> void:
 	var inventario := _inventario()
 	var atencion := Atencion.new(Comprador.new("Marta", _pedido(), 0), inventario)
 	atencion.despachar_sin_vender()

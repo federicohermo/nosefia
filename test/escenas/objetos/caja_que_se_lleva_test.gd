@@ -101,7 +101,7 @@ func _almacen_con_jugador_quieto() -> Node3D:
 	return almacen
 
 
-func test_la_caja_entrega_en_el_piso_y_no_en_el_estante() -> void:  # 047-AC2 047-AC3
+func test_la_caja_entrega_en_el_piso_y_no_en_el_estante() -> void:
 	var almacen: Node3D = await _almacen_con_jugador_quieto()
 	var jugador: Node3D = almacen.get("_jugador")
 	var agarre: Agarre = almacen.get("_agarre")
@@ -127,7 +127,7 @@ func test_la_caja_entrega_en_el_piso_y_no_en_el_estante() -> void:  # 047-AC2 04
 	assert_int(repositor.estante().disponibles_para_retirar(producto)).is_equal(antes - 1)
 
 
-func test_el_clic_izquierdo_levanta_la_caja_y_no_entrega_producto() -> void:  # 047-AC4
+func test_el_clic_izquierdo_levanta_la_caja_y_no_entrega_producto() -> void:
 	var almacen: Node3D = await _almacen_con_jugador_quieto()
 	var jugador: Node3D = almacen.get("_jugador")
 	var agarre: Agarre = almacen.get("_agarre")
@@ -144,7 +144,7 @@ func test_el_clic_izquierdo_levanta_la_caja_y_no_entrega_producto() -> void:  # 
 	assert_object(agarre.manos().sostenido()).is_null()
 
 
-func test_la_caja_llevada_no_tapa_la_mira_ni_atraviesa_la_pared() -> void:  # 047-AC6
+func test_la_caja_llevada_no_tapa_la_mira_ni_atraviesa_la_pared() -> void:
 	# **Camina de verdad contra la pared.** Teleportar al jugador contra ella probaría otra cosa:
 	# lo que tiene que impedir que la caja entre en la madera es que el cuerpo no llegue, y eso
 	# sólo se ejerce con `move_and_slide` corriendo.
@@ -176,7 +176,7 @@ func test_la_caja_llevada_no_tapa_la_mira_ni_atraviesa_la_pared() -> void:  # 04
 	_comprobar_que_no_atraviesa_nada(jugador, caja, "contra la pared")
 
 
-func test_la_caja_soltada_queda_apoyada_en_el_piso_sin_caer() -> void:  # 047-AC7
+func test_la_caja_soltada_queda_apoyada_en_el_piso_sin_caer() -> void:
 	var almacen: Node3D = await _almacen_con_jugador_quieto()
 	var jugador: Node3D = almacen.get("_jugador")
 	var caja: Node3D = almacen.get("_cajas_de_productos")[Producto.Id.LAYSNTT]
@@ -292,7 +292,7 @@ func _apoyo_de(almacen: Node3D, caja: Node3D) -> Node3D:
 	return golpe.get("collider")
 
 
-func test_la_caja_soltada_se_acomoda_adentro_de_su_apoyo() -> void:  # 047-AC10
+func test_la_caja_soltada_se_acomoda_adentro_de_su_apoyo() -> void:
 	# Mirando la tapa de otra caja queda centrada sobre ella, que es el caso donde el apoyo mide
 	# lo mismo que la caja y las dos cuentas del margen se cruzan.
 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
@@ -316,7 +316,7 @@ func test_la_caja_soltada_se_acomoda_adentro_de_su_apoyo() -> void:  # 047-AC10
 	_comprobar_apoyo_entero(almacen, caja, "sobre otra caja")
 
 
-func test_la_caja_vuelta_a_su_lugar_apoya_entera() -> void:  # 047-AC10
+func test_la_caja_vuelta_a_su_lugar_apoya_entera() -> void:
 	# El caso de arriba mide un apoyo del tamaño de la caja; éste mide los apoyos de verdad de
 	# todas las cajas del catálogo, que son el estante del depósito y el suelo.
 	var almacen: Node3D = await _almacen_con_jugador_quieto()
@@ -384,7 +384,7 @@ func _comprobar_apoyo_entero(almacen: Node3D, caja: Node3D, donde: String) -> vo
 	)
 
 
-func test_la_caja_va_donde_apunta_la_mira() -> void:  # 047-AC11
+func test_la_caja_va_donde_apunta_la_mira() -> void:
 	# **El lugar lo decide el cursor y no el gesto de la vista.** Antes no: contra la pared del
 	# fondo del depósito, la mira a +20, +10 y 0 grados daba tres puntos distintos y la caja caía
 	# siempre en el mismo estante, porque lo que la ubicaba era un rayo hacia abajo desde lo
@@ -489,7 +489,7 @@ func _lo_apuntado(almacen: Node3D, jugador: Node3D, caja: Node3D) -> Dictionary:
 	return almacen.get_world_3d().direct_space_state.intersect_ray(consulta)
 
 
-func test_la_caja_soltada_nunca_queda_adentro_de_nada() -> void:  # 047-AC12
+func test_la_caja_soltada_nunca_queda_adentro_de_nada() -> void:
 	# El barrido que antes fallaba: parado de costado al estante, la caja terminaba metida en la
 	# madera. Se prueban las dos vueltas y los cuatro ángulos, no sólo el tiro de frente.
 	# Las que no encuentran lugar no se sueltan, y eso también es correcto.
@@ -551,7 +551,7 @@ func _soltar_en_los_doce_gestos(almacen: Node3D, mueble: Node3D) -> int:
 	return soltadas
 
 
-func test_la_caja_se_suelta_con_la_mira_sobre_un_charco() -> void:  # 047-AC12
+func test_la_caja_se_suelta_con_la_mira_sobre_un_charco() -> void:
 	# **Lo enfocado no es la caja, y eso es lo que este caso agrega.** Los demás le escriben
 	# `_enfocado` a mano y le apuntan a la caja, así que ninguno podía ver esto: llevando una
 	# caja y con la mira sobre una mancha, el clic no hacía nada. La mancha está en el grupo
@@ -599,7 +599,7 @@ func test_la_caja_se_suelta_con_la_mira_sobre_un_charco() -> void:  # 047-AC12
 	)
 
 
-func test_sacar_una_caja_de_la_pila_hace_caer_las_de_arriba() -> void:  # 047-AC5
+func test_sacar_una_caja_de_la_pila_hace_caer_las_de_arriba() -> void:
 	# **Las cajas apiladas se sostienen entre sí.** El cuerpo es rígido y arranca congelado, así
 	# que apoyada se porta como algo estático; pierde el apoyo y cae. Se miden las dos mitades,
 	# y la primera importa tanto como la segunda: una pila que se acomoda sola apenas carga la
@@ -677,7 +677,7 @@ func test_sacar_una_caja_de_la_pila_hace_caer_las_de_arriba() -> void:  # 047-AC
 	_comprobar_que_no_flota(almacen, ultima, "después de sacarle la del medio")
 
 
-func test_agarrar_la_caja_del_estante_no_mueve_al_jugador() -> void:  # 047-AC6
+func test_agarrar_la_caja_del_estante_no_mueve_al_jugador() -> void:
 	# La caja llevada entra donde entra el cuerpo, así que darle su volumen no puede empujar a
 	# nadie. Antes nacía 0,8 m adelante: agarrando de cerca el jugador se subía al estante.
 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
@@ -699,7 +699,7 @@ func test_agarrar_la_caja_del_estante_no_mueve_al_jugador() -> void:  # 047-AC6
 	)
 
 
-func test_la_caja_del_piso_se_arrastra_en_vez_de_tapar_el_paso() -> void:  # 047-AC13
+func test_la_caja_del_piso_se_arrastra_en_vez_de_tapar_el_paso() -> void:
 	# Una caja olvidada en un pasillo no puede ser una pared. Se corre de un empujón, y sin
 	# tumbarse ni levantarse del piso: se arrastra.
 	var almacen: Node3D = auto_free(ALMACEN.instantiate())

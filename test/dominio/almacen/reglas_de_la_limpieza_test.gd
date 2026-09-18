@@ -34,6 +34,6 @@ func test_desde_una_mancha_la_mira_no_llega_a_la_siguiente() -> void:  # AC-CLN-
 	)
 
 
-func test_el_trapeador_tiene_un_id_que_no_es_el_centinela_de_mano_vacia() -> void:  # 014-AC1
+func test_el_trapeador_tiene_un_id_que_no_es_el_centinela_de_mano_vacia() -> void:
 	# Con `SIN_ID` como `id` del trapeador, limpiar con las manos vacías funcionaría.
 	assert_str(ReglasDeLaLimpieza.ID_DEL_TRAPEADOR).is_not_equal(ObjetoDelAlmacen.SIN_ID)

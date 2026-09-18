@@ -15,19 +15,19 @@ func _entrada(bus: String = EntradaSonora.BUS_DE_EFECTOS) -> EntradaSonora:
 	return entrada
 
 
-func test_una_fila_sin_stream_no_tiene_sonido() -> void:  # 021-AC1
+func test_una_fila_sin_stream_no_tiene_sonido() -> void:
 	# Es un estado normal mientras el sonido no esté elegido: que la fila exista igual es lo que
 	# permite que agregarlo después no toque código.
 	assert_bool(_entrada().tiene_sonido()).is_false()
 
 
-func test_una_fila_con_stream_tiene_sonido() -> void:  # 021-AC1
+func test_una_fila_con_stream_tiene_sonido() -> void:
 	var entrada := _entrada()
 	entrada.stream = AudioStreamGenerator.new()
 	assert_bool(entrada.tiene_sonido()).is_true()
 
 
-func test_una_fila_con_un_bus_declarado_es_valida() -> void:  # 021-AC1
+func test_una_fila_con_un_bus_declarado_es_valida() -> void:
 	for bus: String in EntradaSonora.BUSES:
 		(
 			assert_bool(_entrada(bus).es_valida())

@@ -29,12 +29,12 @@ const ESPEJOS_DEL_SPEC := [
 const PRIMERA_CIFRA_DE_BALANCE := 2
 
 
-func test_la_partida_dura_las_cinco_jornadas_del_gdd() -> void:  # 016-AC1
+func test_la_partida_dura_las_cinco_jornadas_del_gdd() -> void:
 	assert_int(ReglasDeLaPartida.JORNADAS_DE_LA_PARTIDA).is_equal(5)
 	assert_int(ReglasDeLaPartida.PRIMERA_JORNADA).is_equal(1)
 
 
-func test_ningun_otro_archivo_del_ciclo_escribe_una_cifra_de_balance() -> void:  # 016-AC1
+func test_ningun_otro_archivo_del_ciclo_escribe_una_cifra_de_balance() -> void:
 	# Una copia del `5` en la partida, en el ciclo o en el cableado de la escena no rompe nada
 	# hoy: rompe el día que se rebalancee, y lo hace en silencio, porque el juego seguiría
 	# corriendo con dos números distintos diciendo cuántas noches dura.
@@ -50,7 +50,7 @@ func test_ningun_otro_archivo_del_ciclo_escribe_una_cifra_de_balance() -> void: 
 	)
 
 
-func test_la_demo_alcanza_para_llegar_al_despido() -> void:  # 016-AC2
+func test_la_demo_alcanza_para_llegar_al_despido() -> void:
 	# El camino más rápido al despido encadena bandas graves, que son las que más pesan. Si la
 	# partida terminara antes de esa cuenta, `despedido()` no podría devolver `true` ni una vez
 	# jugando, y los diecisiete criterios del 002 seguirían en verde igual.
@@ -72,7 +72,7 @@ func test_la_demo_alcanza_para_llegar_al_despido() -> void:  # 016-AC2
 	)
 
 
-func test_los_tres_espejos_de_este_spec_estan_escritos() -> void:  # 016-AC13
+func test_los_tres_espejos_de_este_spec_estan_escritos() -> void:
 	# `verificar.py` con los seis nodos en verde no se puede afirmar desde adentro de gdUnit4,
 	# pero sí lo que hace fallar a su nodo `tdd`: que falte uno de los tres espejos.
 	for espejo: String in ESPEJOS_DEL_SPEC:

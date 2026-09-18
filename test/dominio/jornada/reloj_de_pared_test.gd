@@ -67,7 +67,7 @@ func test_la_lectura_es_la_del_marcador_mientras_se_vea_y_vacia_cuando_no() -> v
 	assert_str(RelojDePared.lectura(rompe, mitad - UN_SEGUNDO)).is_empty()
 
 
-func test_un_reloj_al_que_nadie_le_declaro_jornada_muestra_la_hora() -> void:  # 032-AC3
+func test_un_reloj_al_que_nadie_le_declaro_jornada_muestra_la_hora() -> void:
 	# Es el estado del primer cuadro, antes de que el ciclo abra la noche. Sin esta garantía el
 	# reloj arrancaría en blanco y el síntoma —«el reloj no anda»— no nombraría al cableado.
 	(
@@ -79,7 +79,7 @@ func test_un_reloj_al_que_nadie_le_declaro_jornada_muestra_la_hora() -> void:  #
 	assert_str(RelojDePared.lectura(sin_declarar, Reglas.DURACION_DEL_TURNO)).is_not_empty()
 
 
-func test_el_reloj_de_pared_es_puro_y_no_pide_una_escena() -> void:  # 032-AC4
+func test_el_reloj_de_pared_es_puro_y_no_pide_una_escena() -> void:
 	var texto := FileAccess.get_file_as_string(RELOJ)
 	assert_str(texto).is_not_empty()
 	assert_str(texto).not_contains("extends Node")
@@ -93,7 +93,7 @@ func test_el_reloj_de_pared_es_puro_y_no_pide_una_escena() -> void:  # 032-AC4
 		)
 
 
-func test_el_espejo_de_este_spec_esta_escrito() -> void:  # 032-AC10
+func test_el_espejo_de_este_spec_esta_escrito() -> void:
 	# `verificar.py` en verde no se puede afirmar desde adentro de gdUnit4, pero sí lo que hace
 	# fallar a su nodo `tdd`: que falte el espejo del archivo nuevo de `dominio/`.
 	assert_bool(FileAccess.file_exists("res://" + RELOJ.trim_prefix("res://"))).is_true()

@@ -4,7 +4,7 @@ const ALMACEN := preload("res://src/escenas/almacen.tscn")
 const JUGADOR := preload("res://src/escenas/jugador.tscn")
 
 
-func test_la_accion_tiene_nombre_unico_y_clic_derecho() -> void:  # 034-AC1 034-AC2 034-AC10
+func test_la_accion_tiene_nombre_unico_y_clic_derecho() -> void:
 	var reglas := load("res://src/dominio/jugador/reglas_del_jugador.gd") as Script
 	assert_str(reglas.get_script_constant_map().get("ACCION_USAR", "")).is_equal("usar")
 	assert_bool(InputMap.has_action("usar")).is_true()
@@ -23,13 +23,13 @@ func test_la_accion_tiene_nombre_unico_y_clic_derecho() -> void:  # 034-AC1 034-
 	assert_array(RegEx.create_from_string("\\b(Uso|Efecto)\\b").search_all(jugador)).is_empty()
 
 
-func test_el_jugador_declara_un_solo_pedido_tipado() -> void:  # 034-AC8
+func test_el_jugador_declara_un_solo_pedido_tipado() -> void:
 	var texto := FileAccess.get_file_as_string("res://src/escenas/jugador.gd")
 	assert_bool(texto.contains("signal uso_pedido(objetivo: Node3D)")).is_true()
 	assert_int(texto.count("uso_pedido.emit(")).is_equal(1)
 
 
-func test_sin_foco_o_suspendido_no_emite_y_al_reanudar_si() -> void:  # 034-AC9
+func test_sin_foco_o_suspendido_no_emite_y_al_reanudar_si() -> void:
 	var jugador: Node3D = auto_free(JUGADOR.instantiate())
 	var objetivo: Node3D = auto_free(Node3D.new())
 	var avisos: Array[Node3D] = []
@@ -51,7 +51,7 @@ func test_sin_foco_o_suspendido_no_emite_y_al_reanudar_si() -> void:  # 034-AC9
 	assert_array(avisos).contains_exactly([objetivo])
 
 
-func test_el_clic_da_una_pasada_y_solo_con_trapeador() -> void:  # 034-AC11
+func test_el_clic_da_una_pasada_y_solo_con_trapeador() -> void:
 	var almacen := await _abrir()
 	var jugador: Node3D = almacen.get("_jugador")
 	var mancha: Node3D = almacen.get("_limpieza").manchas()[0]
@@ -82,7 +82,7 @@ func test_el_clic_da_una_pasada_y_solo_con_trapeador() -> void:  # 034-AC11
 	assert_int(limpiador.piso().pasadas_restantes(zona)).is_equal(antes - 1)
 
 
-func test_usar_cierra_cada_panel_sin_pasada_ni_pedido_y_el_reloj_avanza() -> void:  # 034-AC12
+func test_usar_cierra_cada_panel_sin_pasada_ni_pedido_y_el_reloj_avanza() -> void:
 	var almacen := await _abrir()
 	var jugador: Node3D = almacen.get("_jugador")
 	var mancha: Node3D = almacen.get("_limpieza").manchas()[0]

@@ -6,7 +6,7 @@ class Mueble:
 	var mallas: Array[MeshInstance3D] = []
 
 
-func test_resalta_siete_mallas_vinculadas_y_no_las_ajenas() -> void:  # 039-AC1
+func test_resalta_siete_mallas_vinculadas_y_no_las_ajenas() -> void:
 	var marco: MarcoDelObjetivo = auto_free(MarcoDelObjetivo.new())
 	var raiz: Node3D = auto_free(Node3D.new())
 	var mueble := Mueble.new()
@@ -26,7 +26,6 @@ func test_resalta_siete_mallas_vinculadas_y_no_las_ajenas() -> void:  # 039-AC1
 		assert_object(malla.material_overlay).is_null()
 
 
-# 039-AC2 039-AC3
 func test_restaura_overlays_distintos_y_conserva_geometria_y_materiales() -> void:
 	var marco: MarcoDelObjetivo = auto_free(MarcoDelObjetivo.new())
 	var mueble: Mueble = auto_free(Mueble.new())
@@ -59,7 +58,7 @@ func test_restaura_overlays_distintos_y_conserva_geometria_y_materiales() -> voi
 	assert_int(mueble.get_child_count()).is_equal(3)
 
 
-func test_cambiar_de_dueno_restaura_el_anterior() -> void:  # 039-AC4
+func test_cambiar_de_dueno_restaura_el_anterior() -> void:
 	var marco: MarcoDelObjetivo = auto_free(MarcoDelObjetivo.new())
 	var primero: Node3D = auto_free(Node3D.new())
 	var segundo: Node3D = auto_free(Node3D.new())
@@ -76,7 +75,7 @@ func test_cambiar_de_dueno_restaura_el_anterior() -> void:  # 039-AC4
 	assert_object(otra.material_overlay).is_null()
 
 
-func test_sin_mallas_y_apagados_repetidos_no_cambian_el_dueno() -> void:  # 039-AC1 039-AC5
+func test_sin_mallas_y_apagados_repetidos_no_cambian_el_dueno() -> void:
 	var marco: MarcoDelObjetivo = auto_free(MarcoDelObjetivo.new())
 	var vacio: Node3D = auto_free(Node3D.new())
 	marco.apagar()
@@ -87,7 +86,7 @@ func test_sin_mallas_y_apagados_repetidos_no_cambian_el_dueno() -> void:  # 039-
 	assert_int(vacio.get_child_count()).is_zero()
 
 
-func test_el_overlay_recibe_los_valores_del_dominio() -> void:  # 039-AC6
+func test_el_overlay_recibe_los_valores_del_dominio() -> void:
 	var marco: MarcoDelObjetivo = auto_free(MarcoDelObjetivo.new())
 	var malla: MeshInstance3D = auto_free(_malla())
 	marco.enfocar(malla)

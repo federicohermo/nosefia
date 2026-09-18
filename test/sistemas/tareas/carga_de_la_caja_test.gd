@@ -34,7 +34,7 @@ func before_test() -> void:
 	_ultimo_motivo = CajaDeTraslado.Motivo.NINGUNO
 
 
-func test_pedir_guardar_un_producto_lo_guarda_y_avisa_una_sola_vez() -> void:  # 033-AC7
+func test_pedir_guardar_un_producto_lo_guarda_y_avisa_una_sola_vez() -> void:
 	var carga := _carga()
 	carga.pedir_guardar(Producto.Id.ACTRONCITO)
 	assert_int(_guardados).is_equal(1)
@@ -42,7 +42,7 @@ func test_pedir_guardar_un_producto_lo_guarda_y_avisa_una_sola_vez() -> void:  #
 	assert_int(carga.caja().ocupados()).is_equal(1)
 
 
-func test_con_la_caja_llena_avisa_el_rechazo_y_no_avisa_un_guardado() -> void:  # 033-AC7
+func test_con_la_caja_llena_avisa_el_rechazo_y_no_avisa_un_guardado() -> void:
 	# Las dos mitades importan: emitir las dos señales dejaría a la escena pintando un casillero
 	# nuevo y un cartel de «no entra» al mismo tiempo, sin un solo error.
 	var carga := _carga()
@@ -55,7 +55,7 @@ func test_con_la_caja_llena_avisa_el_rechazo_y_no_avisa_un_guardado() -> void:  
 	assert_int(_ultimo_motivo).is_equal(CajaDeTraslado.Motivo.CAJA_LLENA)
 
 
-func test_el_nodo_no_lleva_el_cupo_escrito_adentro() -> void:  # 033-AC7
+func test_el_nodo_no_lleva_el_cupo_escrito_adentro() -> void:
 	# Está medido que un `const CASILLEROS := 8` copiado fuera de `reglas.gd` pasa los dos gates
 	# en verde. Ésta es la puerta que ningún gate cierra, y por eso el criterio la ata acá.
 	var texto := FileAccess.get_file_as_string(CARGA)
@@ -68,7 +68,7 @@ func test_el_nodo_no_lleva_el_cupo_escrito_adentro() -> void:  # 033-AC7
 	)
 
 
-func test_ningun_archivo_de_este_spec_toca_el_stock() -> void:  # 033-AC8
+func test_ningun_archivo_de_este_spec_toca_el_stock() -> void:
 	# La caja es el contenedor que viaja; el estante es el destino, y es del 008. Sin esta
 	# frontera los dos specs terminan moviendo unidades y ninguno sabe cuál las movió.
 	for ruta: String in ARCHIVOS_DEL_SPEC:

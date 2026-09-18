@@ -22,7 +22,7 @@ class ModeloActualizado(unittest.TestCase):
         cls.modelo = json.loads(cls.glb[20 : 20 + longitud])
         cls.bin_inicio = 20 + longitud + 8
 
-    def test_el_glb_corresponde_al_blend_integrado(self):  # 041-AC7
+    def test_el_glb_corresponde_al_blend_integrado(self):
         # Par medido al exportar con Blender 5.2.1 desde la fuente ya guardada. El par no se
         # puede mezclar entre versiones del exportador: dos versiones devuelven datos de
         # vértice distintos para la misma malla.
@@ -40,7 +40,7 @@ class ModeloActualizado(unittest.TestCase):
         # el producto sale multiplicado donde antes salía solo. El juego necesita **una
         # unidad**, porque `reposicion_manual.gd` toma la superficie 0 de cada grupo como el
         # modelo de una y apila `cupo()` copias separadas por su AABB; con la fila entera, dos
-        # productos vecinos se pisan y el 042-AC2 da rojo.
+        # productos vecinos se pisan y el test de apoyos del modelo da rojo.
         blend = (RAIZ / "assets/SEPT_JUEGOS_PROTOTIPO.blend").read_bytes()
         self.assertEqual(
             hashlib.sha256(blend).hexdigest(),
@@ -51,7 +51,7 @@ class ModeloActualizado(unittest.TestCase):
             "f6bdb1afb621c2faf9de0cd34ad8e3b36b421a895aa5443e986660a94fb36ee9",
         )
 
-    def test_las_mallas_conservan_uv_y_materiales(self):  # 041-AC7
+    def test_las_mallas_conservan_uv_y_materiales(self):
         self.assertEqual(len(self.modelo["meshes"]), 67)
         self.assertEqual(len(self.modelo["materials"]), 42)
         for malla in self.modelo["meshes"]:
@@ -65,7 +65,7 @@ class ModeloActualizado(unittest.TestCase):
                     if "material" in parte:
                         self.assertLess(parte["material"], len(self.modelo["materials"]))
 
-    def test_las_texturas_resuelven_dentro_del_glb(self):  # 041-AC7
+    def test_las_texturas_resuelven_dentro_del_glb(self):
         imagenes = self.modelo.get("images", [])
         self.assertEqual(len(imagenes), 35)
         for textura in self.modelo["textures"]:

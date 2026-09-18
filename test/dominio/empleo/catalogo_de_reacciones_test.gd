@@ -14,7 +14,7 @@ const CATALOGO := "res://src/dominio/empleo/catalogo_de_reacciones.gd"
 const SOBRE_LA_TAREA := [Reaccion.Sobre.TAREA_SIN_CUMPLIR, Reaccion.Sobre.TAREA_CUMPLIDA]
 
 
-func test_hay_una_reaccion_por_cada_tarea_en_sus_dos_estados() -> void:  # 017-AC2
+func test_hay_una_reaccion_por_cada_tarea_en_sus_dos_estados() -> void:
 	for tipo: Tarea.Tipo in Tarea.Tipo.values():
 		for cumplida in [false, true]:
 			var reaccion := CatalogoDeReacciones.de_la_tarea(tipo, cumplida)
@@ -28,7 +28,7 @@ func test_hay_una_reaccion_por_cada_tarea_en_sus_dos_estados() -> void:  # 017-A
 			assert_str(reaccion.texto).is_not_empty()
 
 
-func test_cada_reaccion_de_tarea_repite_adentro_la_fila_en_la_que_esta() -> void:  # 017-AC2
+func test_cada_reaccion_de_tarea_repite_adentro_la_fila_en_la_que_esta() -> void:
 	# **Éste es el que caza el `.tres` mal enganchado.** El catálogo lo indexa por una clave y el
 	# archivo la vuelve a decir adentro: si las dos no coinciden, alguien movió una fila.
 	for tipo: Tarea.Tipo in Tarea.Tipo.values():
@@ -73,7 +73,7 @@ func test_por_encima_del_tope_contesta_la_del_despido_y_no_un_nulo() -> void:  #
 		)
 
 
-func test_el_catalogo_no_decide_nada_porque_es_una_tabla() -> void:  # 017-AC3
+func test_el_catalogo_no_decide_nada_porque_es_una_tabla() -> void:
 	# Una decisión acá sería una regla del juego escrita en un lugar donde nadie la busca: el
 	# catálogo indexa y nada más. El día que haga falta un `match`, lo que falta es una fila.
 	#

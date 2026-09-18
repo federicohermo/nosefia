@@ -68,7 +68,7 @@ def correr(raiz: Path) -> subprocess.CompletedProcess:
 
 class ElVeredictoSobreUnDominioImpuro(unittest.TestCase):
     def test_un_extends_node_en_el_dominio_lo_pone_en_rojo(self):
-        # 012-AC8. Y se afirma también la salida, no sólo el código: un gate que sale 1 sin decir
+        # Y se afirma también la salida, no sólo el código: un gate que sale 1 sin decir
         # qué archivo, qué línea y qué patrón manda a buscar a mano en toda la capa.
         with tempfile.TemporaryDirectory() as carpeta:
             proceso = correr(arbol(carpeta, {"src/dominio/x.gd": "extends Node\n"}))
@@ -77,7 +77,7 @@ class ElVeredictoSobreUnDominioImpuro(unittest.TestCase):
         self.assertIn("extends Node", proceso.stdout)
 
     def test_el_mismo_arbol_con_el_dominio_puro_sale_en_verde(self):
-        # 012-AC8, la otra dirección, y sin ella la de arriba no significa nada: un gate que
+        # La otra dirección, y sin ella la de arriba no significa nada: un gate que
         # saliera 1 siempre la pasaría igual.
         with tempfile.TemporaryDirectory() as carpeta:
             proceso = correr(arbol(carpeta, {"src/dominio/x.gd": "extends RefCounted\n"}))
@@ -125,7 +125,7 @@ class LaPurezaNoTieneNodoPropio(unittest.TestCase):
 
 class LaReglaNombraASuVerificador(unittest.TestCase):
     def test_los_tres_documentos_lo_nombran(self):
-        # 012-AC10. Hasta hoy la pureza estaba escrita en tres lugares y ninguno era ejecutable;
+        # Hasta hoy la pureza estaba escrita en tres lugares y ninguno era ejecutable;
         # ahora que lo es, los tres tienen que decir quién la mira — si no, se los sigue leyendo
         # como prosa y el próximo apuro la rompe igual.
         for documento in DOCUMENTOS_QUE_DECLARAN_LA_PUREZA:

@@ -25,11 +25,11 @@ func _puerta() -> Resource:
 	return objeto
 
 
-func test_las_manos_vacias_no_sostienen_nada() -> void:  # 006-AC1
+func test_las_manos_vacias_no_sostienen_nada() -> void:
 	assert_object(Manos.new().sostenido()).is_null()
 
 
-func test_agarrar_algo_levantable_lo_deja_en_la_mano() -> void:  # 006-AC1
+func test_agarrar_algo_levantable_lo_deja_en_la_mano() -> void:
 	var manos := Manos.new()
 	var lata := _lata()
 	assert_bool(manos.agarrar(lata)).is_true()
@@ -64,7 +64,7 @@ func test_lo_llenas_no_tapa_a_lo_que_no_se_levanta() -> void:  # AC-PLY-009
 	assert_int(manos.motivo_de_rechazo(_puerta())).is_equal(Manos.Rechazo.NO_ES_LEVANTABLE)
 
 
-func test_nada_no_se_puede_agarrar() -> void:  # 006-AC2
+func test_nada_no_se_puede_agarrar() -> void:
 	# `null` llega cuando la mira enfoca algo que no es un objeto del almacén: una pared, una
 	# estantería. Sin este caso, agarrar una pared sería un `agarrar()` que devuelve `true`.
 	var manos := Manos.new()
@@ -73,7 +73,7 @@ func test_nada_no_se_puede_agarrar() -> void:  # 006-AC2
 	assert_object(manos.sostenido()).is_null()
 
 
-func test_soltar_devuelve_lo_que_habia_y_deja_las_manos_vacias() -> void:  # 006-AC3
+func test_soltar_devuelve_lo_que_habia_y_deja_las_manos_vacias() -> void:
 	var manos := Manos.new()
 	var lata := _lata()
 	manos.agarrar(lata)
@@ -87,7 +87,7 @@ func test_soltar_con_las_manos_vacias_devuelve_nada() -> void:  # AC-PLY-010
 	assert_object(Manos.new().soltar()).is_null()
 
 
-func test_vaciar_se_puede_repetir() -> void:  # 006-AC3
+func test_vaciar_se_puede_repetir() -> void:
 	# Lo llama el cierre de la jornada y la suspensión del jugador, que pueden pasar dos veces
 	# seguidas: la segunda no puede romper nada.
 	var manos := Manos.new()

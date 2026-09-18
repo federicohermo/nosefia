@@ -31,7 +31,7 @@ const DEL_MODELO := [
 ## **Se mide sobre la escena y no sobre un `.res` horneado.** La escena traía el mueble por un
 ## recurso propio, y cuando pasó a usar la malla del `.glb` ese recurso quedó sin cargar: el
 ## test seguía verde comparándolo contra el modelo, que es lo mismo que no mirar nada.
-func test_el_mueble_de_la_escena_es_la_malla_del_modelo() -> void:  # 041-AC7
+func test_el_mueble_de_la_escena_es_la_malla_del_modelo() -> void:
 	var modelo: Node3D = auto_free(MODELO.instantiate())
 	var escena: Node3D = auto_free(ESTRUCTURA.instantiate())
 	var original: MeshInstance3D = modelo.get_node("gondolanueva")
@@ -50,7 +50,7 @@ func test_el_mueble_de_la_escena_es_la_malla_del_modelo() -> void:  # 041-AC7
 ## forma no, así que el mismo vértice sale con un decimal distinto de cada lado. Medido el
 ## 2026-09-18: el que más se separa lo hace 0,12 mm sobre un mueble de 5,8 m, y el milímetro
 ## de abajo deja pasar eso y nada más.
-func test_la_colision_corresponde_al_mueble_completo() -> void:  # 041-AC3
+func test_la_colision_corresponde_al_mueble_completo() -> void:
 	var escena: Node3D = auto_free(ESTRUCTURA.instantiate())
 	var malla: MeshInstance3D = escena.get_node("gondolanueva")
 	var forma: CollisionShape3D = escena.get_node("gondolanueva/StaticBody3D/CollisionShape3D")
@@ -65,7 +65,7 @@ func test_la_colision_corresponde_al_mueble_completo() -> void:  # 041-AC3
 		)
 
 
-func test_el_contenido_conserva_material_y_textura_de_cada_producto() -> void:  # 041-AC7
+func test_el_contenido_conserva_material_y_textura_de_cada_producto() -> void:
 	var modelo: Node3D = auto_free(MODELO.instantiate())
 	var contenido: Node3D = auto_free(CONTENIDO.instantiate())
 	for id in DEL_MODELO.size():
@@ -85,7 +85,7 @@ func test_el_contenido_conserva_material_y_textura_de_cada_producto() -> void:  
 ## La malla viaja **intacta**: la escala y el giro van en el nodo del contenido, que es lo que
 ## `_preparar_modelos` hornea. Por eso acá se comparan los vértices tal cual, y aparte el tamaño
 ## que el par malla-nodo da en el mundo, que es lo que el jugador ve en el estante.
-func test_reponer_recupera_los_productos_independientes_del_modelo() -> void:  # 041-AC9
+func test_reponer_recupera_los_productos_independientes_del_modelo() -> void:
 	var modelo: Node3D = auto_free(MODELO.instantiate())
 	var contenido: Node3D = auto_free(CONTENIDO.instantiate())
 	assert_int(contenido.get_child_count()).is_equal(DEL_MODELO.size())

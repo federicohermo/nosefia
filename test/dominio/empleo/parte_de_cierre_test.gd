@@ -48,7 +48,7 @@ func test_la_misma_tarea_cumplida_y_sin_cumplir_dice_cosas_distintas() -> void: 
 	assert_str(hecha).is_not_equal(sin_hacer)
 
 
-func test_el_saludo_y_el_comentario_salen_del_parte_ya_escritos() -> void:  # 017-AC4
+func test_el_saludo_y_el_comentario_salen_del_parte_ya_escritos() -> void:
 	var parte := ParteDeCierre.new(JORNADA_DE_PRUEBA, Apertura.obligatorias(), 1)
 	assert_str(parte.saludo()).is_not_empty()
 	assert_str(parte.saludo()).contains(str(JORNADA_DE_PRUEBA))
@@ -73,13 +73,13 @@ func test_el_legajo_en_cero_no_esta_en_riesgo_y_de_uno_en_adelante_si() -> void:
 		)
 
 
-func test_el_parte_devuelve_lo_que_recibio_sin_recalcular_nada() -> void:  # 017-AC6
+func test_el_parte_devuelve_lo_que_recibio_sin_recalcular_nada() -> void:
 	var parte := ParteDeCierre.new(JORNADA_DE_PRUEBA, Apertura.obligatorias(), 3)
 	assert_int(parte.jornada()).is_equal(JORNADA_DE_PRUEBA)
 	assert_int(parte.apercibimientos()).is_equal(3)
 
 
-func test_los_tres_archivos_del_dominio_son_puros() -> void:  # 017-AC7
+func test_los_tres_archivos_del_dominio_son_puros() -> void:
 	for ruta: String in ARCHIVOS_DEL_DOMINIO:
 		var texto := FileAccess.get_file_as_string(ruta)
 		(
@@ -96,7 +96,7 @@ func test_los_tres_archivos_del_dominio_son_puros() -> void:  # 017-AC7
 			)
 
 
-func test_los_tres_espejos_de_este_spec_estan_escritos() -> void:  # 017-AC13
+func test_los_tres_espejos_de_este_spec_estan_escritos() -> void:
 	# `verificar.py` en verde no se puede afirmar desde adentro de gdUnit4, pero sí lo que hace
 	# fallar a su nodo `tdd`: que falte uno de los tres espejos.
 	for espejo: String in ESPEJOS_DEL_SPEC:

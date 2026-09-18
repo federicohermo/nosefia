@@ -72,8 +72,8 @@ const MARGEN_MINIMO := 3600.0
 ##
 ## Ocho es un primer valor y es lo que convierte reponer en una decisión: con uno, reponer sería
 ## un viaje por unidad y no habría nada que elegir; con muchos, cargar deja de costar. La caja de
-## la escena sí dibuja ocho huecos escritos en un `.tscn`, y por eso el día que se rebalancee este
-## número el `033-AC9` se pone en rojo: ese caso los cuenta contra esta constante.
+## la escena sí dibuja ocho huecos escritos en un `.tscn`, y el test de la caja de traslado los
+## cuenta contra esta constante: rebalancear el número sin tocar la escena se pone en rojo.
 const CASILLEROS_DE_LA_CAJA_DE_TRASLADO := 8
 
 ## A los cuatro apercibimientos lo echan, y se compara con `>=` y no con `==`: una jornada grave

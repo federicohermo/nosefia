@@ -36,7 +36,7 @@ func _compradores(cuantos: int, de_mas: int = 0) -> Array[Comprador]:
 	return lista
 
 
-func test_atender_devuelve_los_compradores_en_orden_y_despues_nada() -> void:  # 013-AC6
+func test_atender_devuelve_los_compradores_en_orden_y_despues_nada() -> void:
 	var tarea := TareaDeAtender.new(_compradores(3), _inventario())
 	assert_str(tarea.atender().nombre()).is_equal("Comprador 0")
 	assert_str(tarea.atender().nombre()).is_equal("Comprador 1")
@@ -44,7 +44,7 @@ func test_atender_devuelve_los_compradores_en_orden_y_despues_nada() -> void:  #
 	assert_object(tarea.atender()).is_null()
 
 
-func test_la_atencion_en_curso_es_la_del_ultimo_que_llego() -> void:  # 013-AC6
+func test_la_atencion_en_curso_es_la_del_ultimo_que_llego() -> void:
 	var tarea := TareaDeAtender.new(_compradores(2), _inventario())
 	assert_object(tarea.atencion()).is_null()
 	var primero := tarea.atender()
@@ -64,7 +64,7 @@ func test_despachados_cuenta_las_dos_formas_de_despachar() -> void:  # AC-CTR-00
 	assert_int(tarea.despachados()).is_equal(2)
 
 
-func test_un_comprador_que_llego_y_no_se_despacho_no_cuenta() -> void:  # 013-AC6
+func test_un_comprador_que_llego_y_no_se_despacho_no_cuenta() -> void:
 	var tarea := TareaDeAtender.new(_compradores(2), _inventario())
 	tarea.atender()
 	assert_int(tarea.despachados()).is_equal(0)
@@ -73,7 +73,6 @@ func test_un_comprador_que_llego_y_no_se_despacho_no_cuenta() -> void:  # 013-AC
 
 # AC-CTR-009
 func test_la_tarea_se_completa_con_todos_despachados_se_les_haya_vendido_o_no() -> void:
-	# 013-AC7
 	var tarea := TareaDeAtender.new(_compradores(2), _inventario())
 	tarea.atender()
 	tarea.atencion().cobrar()
@@ -106,7 +105,7 @@ func test_la_diferencia_acumulada_conserva_los_signos() -> void:  # AC-CTR-011
 	assert_int(tarea.diferencia_acumulada()).is_equal(0)
 
 
-func test_la_tarea_se_arma_con_uno_solo_y_funciona_igual() -> void:  # 013-AC8
+func test_la_tarea_se_arma_con_uno_solo_y_funciona_igual() -> void:
 	var tarea := TareaDeAtender.new(_compradores(1), _inventario())
 	tarea.atender()
 	tarea.atencion().despachar_sin_vender()
@@ -114,7 +113,7 @@ func test_la_tarea_se_arma_con_uno_solo_y_funciona_igual() -> void:  # 013-AC8
 	assert_int(tarea.despachados()).is_equal(1)
 
 
-func test_la_tarea_no_nombra_cuantos_compradores_pide_la_jornada() -> void:  # 013-AC8
+func test_la_tarea_no_nombra_cuantos_compradores_pide_la_jornada() -> void:
 	# Sin esto, un test no se podría armar con tres, y el balance de la ventanilla quedaría
 	# atado a la aritmética de la tarea: mover el número rompería casos que no hablan de él.
 	var texto := FileAccess.get_file_as_string(TAREA)
@@ -126,7 +125,7 @@ func test_la_tarea_no_nombra_cuantos_compradores_pide_la_jornada() -> void:  # 0
 	)
 
 
-func test_en_la_ventanilla_esta_el_que_llego_y_todavia_no_se_despacho() -> void:  # 013-AC6
+func test_en_la_ventanilla_esta_el_que_llego_y_todavia_no_se_despacho() -> void:
 	# Es la pregunta con la que la ventanilla decide si sigue con el que está o llama al
 	# siguiente. Si contestara al despachado, cerrar y reabrir el panel llamaría a uno de más y
 	# el último se iría sin atender: la obligatoria quedaría imposible sin un solo error.

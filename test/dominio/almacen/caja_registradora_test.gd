@@ -27,7 +27,7 @@ func test_los_productos_del_dia_son_menos_que_el_catalogo_entero() -> void:  # A
 	)
 
 
-func test_los_productos_del_dia_existen_en_el_catalogo() -> void:  # 009-AC6
+func test_los_productos_del_dia_existen_en_el_catalogo() -> void:
 	# Un `id` sin fila resuelve `null`, y un `null` en la lista dejaría una tarea imposible de
 	# terminar: el jugador registraría todo lo que puede tocar y la caja seguiría diciendo que no.
 	assert_int(_del_dia().size()).is_equal(CajaRegistradora.PRODUCTOS_DEL_DIA.size())
@@ -43,7 +43,7 @@ func test_registrar_devuelve_true_la_primera_vez_y_false_la_segunda() -> void:  
 	assert_int(caja.registrados()).is_equal(1)
 
 
-func test_registrar_indexa_por_id_y_no_por_instancia() -> void:  # 009-AC6
+func test_registrar_indexa_por_id_y_no_por_instancia() -> void:
 	# `Catalogo.de()` construye un producto nuevo en cada llamada, así que dos con el mismo `id`
 	# son objetos distintos: por instancia, pasar dos veces el mismo contaría dos y la tarea se
 	# cumpliría con un solo producto.
@@ -66,7 +66,7 @@ func test_un_producto_ajeno_al_dia_no_se_registra() -> void:  # AC-STK-015
 	assert_int(caja.registrados()).is_equal(0)
 
 
-func test_un_producto_nulo_se_rechaza_en_vez_de_reventar() -> void:  # 009-AC6
+func test_un_producto_nulo_se_rechaza_en_vez_de_reventar() -> void:
 	assert_bool(_caja().registrar(null)).is_false()
 
 
@@ -86,7 +86,7 @@ func test_la_caja_se_completa_recien_con_el_ultimo_del_dia() -> void:  # AC-STK-
 	assert_bool(caja.completada()).is_true()
 
 
-func test_los_faltantes_son_los_mismos_que_dice_el_inventario() -> void:  # 009-AC8
+func test_los_faltantes_son_los_mismos_que_dice_el_inventario() -> void:
 	# Se compara contra `Inventario.faltantes()` y no contra una cuenta propia: el umbral de
 	# reposición es del 005, y copiarlo acá daría dos listas que se separan sin que nada avise.
 	var inventario := _inventario()
@@ -98,7 +98,7 @@ func test_los_faltantes_son_los_mismos_que_dice_el_inventario() -> void:  # 009-
 		assert_int(de_la_caja[indice].id).is_equal(del_inventario[indice].id)
 
 
-func test_reponer_cambia_lo_que_la_caja_lista_como_faltante() -> void:  # 009-AC8
+func test_reponer_cambia_lo_que_la_caja_lista_como_faltante() -> void:
 	# La caja pregunta, no guarda: si llevara su propia lista, el jugador repondría la góndola y
 	# la pantalla seguiría pidiéndole lo mismo.
 	var inventario := _inventario()

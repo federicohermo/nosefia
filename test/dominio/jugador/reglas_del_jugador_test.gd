@@ -6,7 +6,7 @@ extends GdUnitTestSuite
 const ReglasDelJugador := preload("res://src/dominio/jugador/reglas_del_jugador.gd")
 
 
-func test_el_techo_angular_se_expresa_en_radianes() -> void:  # 038-AC9
+func test_el_techo_angular_se_expresa_en_radianes() -> void:
 	assert_float(ReglasDelJugador.DESVIO_MAXIMO_DE_LA_MIRA).is_equal(deg_to_rad(15.0))
 
 

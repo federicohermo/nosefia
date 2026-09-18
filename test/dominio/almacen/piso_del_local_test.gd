@@ -36,7 +36,6 @@ func test_la_jornada_arranca_con_una_mancha_por_zona() -> void:  # AC-CLN-001
 
 # AC-CLN-001
 func test_las_pasadas_totales_salen_de_multiplicar_y_no_de_una_cuenta_a_mano() -> void:
-	# 014-AC3
 	# Un `12` escrito quedaría viejo el día que se agregue una zona o se rebalanceen las pasadas,
 	# y el número seguiría pareciendo correcto.
 	assert_int(_piso().pasadas_totales()).is_equal(
@@ -90,7 +89,6 @@ func test_sobre_una_zona_ya_limpia_avisa_que_ya_estaba_limpia() -> void:  # AC-C
 
 # AC-CLN-012
 func test_el_piso_queda_limpio_recien_con_la_ultima_pasada_de_la_ultima_zona() -> void:
-	# 014-AC6
 	# Machacar sobre una mancha limpia no cierra nada: hay que haber estado en las cuatro zonas.
 	var piso := _piso()
 	var zonas := PisoDelLocal.Zona.values()
@@ -120,7 +118,7 @@ func test_una_zona_se_puede_dejar_por_la_mitad_y_retomar() -> void:  # AC-CLN-00
 	assert_bool(piso.esta_limpio()).is_false()
 
 
-func test_cada_jornada_arranca_con_el_piso_sucio() -> void:  # 014-AC6
+func test_cada_jornada_arranca_con_el_piso_sucio() -> void:
 	# Instancias nuevas y no las mismas: con un piso compartido, lo limpiado anoche llegaría
 	# limpio esta noche y la obligatoria se cumpliría sola a partir de la segunda.
 	var una := _piso()

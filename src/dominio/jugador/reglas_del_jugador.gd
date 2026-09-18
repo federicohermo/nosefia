@@ -34,8 +34,9 @@ const DESVIO_MAXIMO_DE_LA_MIRA := deg_to_rad(15.0)
 
 ## El contrato de «se puede interactuar con esto» ES este grupo de Godot, y vive acá por lo que
 ## permite: `dominio/` declara un `String` y no conoce a nadie, y un nodo de `escenas/` cumple
-## el contrato agregándose al grupo en su `.tscn`, sin heredar nada. Las otras dos formas se
-## descartaron midiendo, y está en el `research.md` del spec 004.
+## el contrato agregándose al grupo en su `.tscn`, sin heredar nada. Las otras dos formas —una
+## interfaz heredada y un método declarado— se descartaron midiendo: ninguna sobrevive a que el
+## nodo lo declare desde la escena.
 const GRUPO_INTERACTUABLE := "interactuable"
 
 ## Los nombres de las cuatro acciones del `InputMap`. Tienen que coincidir letra por letra con

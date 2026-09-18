@@ -2,7 +2,7 @@
 extends GdUnitTestSuite
 
 
-func test_una_mancha_nueva_arranca_con_todas_las_pasadas() -> void:  # 014-AC2
+func test_una_mancha_nueva_arranca_con_todas_las_pasadas() -> void:
 	# Se compara contra la constante y nunca contra un número escrito acá: rebalancear las
 	# pasadas no puede poner en rojo un caso que no habla del balance.
 	var mancha := Mancha.new()
@@ -17,7 +17,7 @@ func test_cada_pasada_baja_exactamente_una() -> void:  # AC-CLN-005
 	assert_int(mancha.pasadas_restantes()).is_equal(antes - 1)
 
 
-func test_la_ultima_pasada_la_deja_limpia() -> void:  # 014-AC2
+func test_la_ultima_pasada_la_deja_limpia() -> void:
 	var mancha := Mancha.new()
 	for _pasada in range(ReglasDeLaLimpieza.PASADAS_POR_MANCHA):
 		assert_bool(mancha.pasar()).is_true()
@@ -35,7 +35,7 @@ func test_machacar_sobre_una_mancha_limpia_no_baja_de_cero() -> void:  # AC-CLN-
 	assert_int(mancha.pasadas_restantes()).is_equal(0)
 
 
-func test_dos_manchas_no_comparten_el_contador() -> void:  # 014-AC2
+func test_dos_manchas_no_comparten_el_contador() -> void:
 	# Con el contador declarado como estático o compartido, limpiar una zona limpiaría las
 	# cuatro y la tarea se cumpliría sin recorrer nada.
 	var una := Mancha.new()

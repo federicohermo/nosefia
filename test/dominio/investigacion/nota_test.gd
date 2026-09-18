@@ -2,7 +2,7 @@
 extends GdUnitTestSuite
 
 
-func test_la_nota_conserva_lo_que_se_escribio() -> void:  # 009-AC4
+func test_la_nota_conserva_lo_que_se_escribio() -> void:
 	var nota := Nota.new("Turno del martes", "La puerta del fondo estaba abierta.")
 	assert_str(nota.titulo()).is_equal("Turno del martes")
 	assert_str(nota.texto()).is_equal("La puerta del fondo estaba abierta.")

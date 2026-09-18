@@ -258,7 +258,7 @@ class Impurezas(unittest.TestCase):
     """
 
     def test_extends_node_es_un_hallazgo(self):
-        # 012-AC1. Se afirma la tupla entera y no el largo de la lista: sin la línea y sin el
+        # Se afirma la tupla entera y no el largo de la lista: sin la línea y sin el
         # patrón, el reporte del gate no puede nombrar qué hay que arreglar, y un gate que dice
         # «hay algo mal» sin decir dónde se termina apagando.
         self.assertEqual(
@@ -267,7 +267,7 @@ class Impurezas(unittest.TestCase):
         )
 
     def test_la_lista_blanca_del_extends_tiene_tres_entradas(self):
-        # 012-AC2. Los dos tipos puros del motor y un `class_name` del propio dominio.
+        # Los dos tipos puros del motor y un `class_name` del propio dominio.
         dominio = {"src/dominio/turno.gd": "class_name Turno\nextends RefCounted\n"}
         for texto in ("extends RefCounted\n", "extends Resource\n", "extends Turno\n"):
             with self.subTest(texto=texto):
@@ -283,14 +283,14 @@ class Impurezas(unittest.TestCase):
         )
 
     def test_los_siete_usos_de_motor_son_hallazgos(self):
-        # 012-AC3. Uno por fila de la tabla de `.claude/rules/dominio.md`: hasta hoy esa tabla
+        # Uno por fila de la tabla de `.claude/rules/dominio.md`: hasta hoy esa tabla
         # era prosa, y la prosa dura hasta el primer apuro.
         for texto in USOS_DE_MOTOR:
             with self.subTest(texto=texto):
                 self.assertTrue(impurezas({"src/dominio/x.gd": texto}, CAPAS))
 
     def test_las_otras_tres_capas_no_participan(self):
-        # 012-AC4. En `sistemas/`, `ui/` y `escenas/` un `Node` es correcto por definición.
+        # En `sistemas/`, `ui/` y `escenas/` un `Node` es correcto por definición.
         # Mirarlas convertiría al gate en un linter de GDScript, que es lo que NO es.
         for capa in ("src/sistemas", "src/ui", "src/escenas"):
             for texto in USOS_DE_MOTOR:
@@ -298,18 +298,18 @@ class Impurezas(unittest.TestCase):
                     self.assertEqual(impurezas({f"{capa}/x.gd": texto}, CAPAS), [])
 
     def test_extender_node_fuera_de_la_capa_pura_es_correcto(self):
-        # 012-AC4, el lado del `extends`: `sistemas/` existe justamente para tener los `Node`.
+        # El lado del `extends`: `sistemas/` existe justamente para tener los `Node`.
         archivos = {"src/sistemas/reloj.gd": "extends Node\n", "src/ui/hud.gd": "extends Control\n"}
         self.assertEqual(impurezas(archivos, CAPAS), [])
 
     def test_un_comentario_y_un_string_no_son_impurezas(self):
-        # 012-AC5. Un gate con falsos positivos se apaga: la única salida que le queda a quien lo
+        # Un gate con falsos positivos se apaga: la única salida que le queda a quien lo
         # sufre es sacarlo del `verificar`.
         texto = '# ojo con get_tree() acá\nvar s := "extends Node"\n'
         self.assertEqual(impurezas({"src/dominio/x.gd": texto}, CAPAS), [])
 
     def test_la_limpieza_conserva_el_numero_de_linea(self):
-        # 012-AC5, la mitad que hace útil a la otra: los comentarios y los strings se reemplazan
+        # La mitad que hace útil a la otra: los comentarios y los strings se reemplazan
         # por espacios y no se borran. Si se borraran, el hallazgo de abajo diría «línea 1» y
         # mandaría a leer el comentario en vez del código.
         texto = '# ojo con get_tree() acá\nvar s := "extends Node"\nget_tree()\n'
@@ -319,7 +319,7 @@ class Impurezas(unittest.TestCase):
         )
 
     def test_el_extends_conserva_su_linea_debajo_de_un_docstring(self):
-        # 012-AC5, sobre el `extends` y no sobre los patrones: los comentarios se reemplazan por
+        # Sobre el `extends` y no sobre los patrones: los comentarios se reemplazan por
         # espacios, así que una sangría de `\s*` deja que el `^` enganche en la primera línea del
         # bloque y se lo coma entero. El hallazgo salía diciendo «línea 1» y mandaba a leer el
         # docstring. No lo tapa ningún otro caso: los 18 `.gd` del dominio declaran `class_name`
@@ -331,7 +331,7 @@ class Impurezas(unittest.TestCase):
         )
 
     def test_un_descendiente_de_node_que_no_figura_en_ninguna_lista(self):
-        # 012-AC6, y es el AC que separa este diseño del de lista negra. `CharacterBody3D` no
+        # Y es el AC que separa este diseño del de lista negra. `CharacterBody3D` no
         # está escrito en el código del gate —la jerarquía de `Node` tiene cientos de clases y
         # crece con cada versión menor del motor—, y aun así es un hallazgo, porque lo que se
         # enumera es lo permitido. Una lista negra nace incompleta y falla DANDO VERDE.
@@ -343,7 +343,7 @@ class Impurezas(unittest.TestCase):
         self.assertNotIn("CharacterBody3D", listas)
 
     def test_el_acceso_a_disco_es_un_hallazgo_por_cada_uno(self):
-        # 012-AC7. Lo pidió el spec 019, que midió que hoy pasan. Un dominio que lee o escribe el
+        # Lo pidió el spec 019, que midió que hoy pasan. Un dominio que lee o escribe el
         # disco deja de poder ejercerse sin preparar un archivo, que es la misma pérdida que un
         # dominio que necesita un frame.
         texto = 'FileAccess.open("x")\nConfigFile.new()\nResourceSaver.save(y)\n'
@@ -378,14 +378,13 @@ class LosDosFalsificadoresVivosDeLaLimpieza(unittest.TestCase):
     RUTAS = ("src/dominio/jugador/control_del_jugador.gd", "src/dominio/jugador/caminata.gd")
 
     def test_los_dos_nombran_input_en_un_comentario(self):
-        # 012-AC5. Si algún día dejan de nombrarlo, el test de abajo pasa a no falsificar nada y
+        # Si algún día dejan de nombrarlo, el test de abajo pasa a no falsificar nada y
         # hay que decirlo acá y no descubrirlo cuando el gate empiece a mentir.
         for ruta in self.RUTAS:
             with self.subTest(ruta=ruta):
                 self.assertRegex((RAIZ / ruta).read_text(encoding="utf-8"), r"#[^\n]*Input\.")
 
     def test_y_aun_asi_el_dominio_que_ya_existe_es_puro(self):
-        # 012-AC5.
         archivos = {r: (RAIZ / r).read_text(encoding="utf-8") for r in self.RUTAS}
         self.assertEqual(impurezas(archivos, CAPAS_DEL_REPO), [])
 

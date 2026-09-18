@@ -30,7 +30,7 @@ func before_test() -> void:
 	_final_publicado = Partida.Final.EN_CURSO
 
 
-func test_arrancar_deja_el_reloj_corriendo_con_las_tareas_alcanzables() -> void:  # 016-AC9
+func test_arrancar_deja_el_reloj_corriendo_con_las_tareas_alcanzables() -> void:
 	# Que `obligatoria()` conteste es lo que le deja al 008 una tarea que completar: si el ciclo
 	# le pasara al reloj una lista distinta de la que cuenta el turno, completar devolvería
 	# `true` sin que las cumplidas suban, sin error y sin rojo.
@@ -41,7 +41,7 @@ func test_arrancar_deja_el_reloj_corriendo_con_las_tareas_alcanzables() -> void:
 	assert_int(_aperturas).is_equal(1)
 
 
-func test_la_partida_entera_cierra_cada_jornada_incluida_la_ultima() -> void:  # 016-AC10
+func test_la_partida_entera_cierra_cada_jornada_incluida_la_ultima() -> void:
 	var reloj: RelojDelTurno = auto_free(RelojDelTurno.new())
 	var ciclo := _ciclo_arrancado(Partida.nueva(), reloj)
 	_jugar_la_noche_impecable(reloj)
@@ -63,7 +63,7 @@ func test_la_partida_entera_cierra_cada_jornada_incluida_la_ultima() -> void:  #
 	assert_int(_final_publicado).is_equal(Partida.Final.CONTRATO_CUMPLIDO)
 
 
-func test_sobre_una_partida_terminada_no_se_abre_nada_ni_se_emite_nada() -> void:  # 016-AC10
+func test_sobre_una_partida_terminada_no_se_abre_nada_ni_se_emite_nada() -> void:
 	# El despido corta la partida a la segunda noche grave, y desde ahí el ciclo es una puerta
 	# cerrada: sin esto, la pantalla del 017 reabriría la jornada 3 de una partida terminada.
 	var reloj: RelojDelTurno = auto_free(RelojDelTurno.new())
@@ -79,7 +79,7 @@ func test_sobre_una_partida_terminada_no_se_abre_nada_ni_se_emite_nada() -> void
 	assert_int(_terminadas).is_equal(1)
 
 
-func test_el_ciclo_no_decide_como_pesa_una_jornada() -> void:  # 016-AC11
+func test_el_ciclo_no_decide_como_pesa_una_jornada() -> void:
 	# Traduce y no decide. Un `match` de bandas acá sería la misma regla escrita dos veces, y la
 	# copia de `sistemas/` es la que se desincroniza sin que ningún gate lo note.
 	var texto := FileAccess.get_file_as_string(CICLO)

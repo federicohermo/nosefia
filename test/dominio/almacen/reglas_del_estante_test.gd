@@ -25,5 +25,5 @@ func test_el_deposito_arranca_con_mas_de_lo_que_el_estante_pide() -> void:  # AC
 	)
 
 
-func test_las_unidades_iniciales_son_una_cantidad_y_no_un_centinela() -> void:  # 008-AC9
+func test_las_unidades_iniciales_son_una_cantidad_y_no_un_centinela() -> void:
 	assert_int(ReglasDelEstante.UNIDADES_INICIALES_EN_DEPOSITO).is_greater(0)

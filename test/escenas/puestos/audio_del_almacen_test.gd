@@ -49,7 +49,7 @@ func test_los_cuatro_buses_existen_en_el_motor() -> void:  # AC-AMB-003
 		)
 
 
-func test_cada_bus_manda_a_master() -> void:  # 021-AC3
+func test_cada_bus_manda_a_master() -> void:
 	# Uno que mande a otro lado se saltearía el volumen general, y el jugador bajaría el volumen
 	# del juego con un canal siguiendo igual de fuerte.
 	for nombre: String in EntradaSonora.BUSES:
@@ -63,7 +63,7 @@ func test_cada_bus_manda_a_master() -> void:  # 021-AC3
 		)
 
 
-func test_el_layout_de_buses_apunta_a_un_archivo_que_existe() -> void:  # 021-AC3
+func test_el_layout_de_buses_apunta_a_un_archivo_que_existe() -> void:
 	# El motor trae esta misma ruta como valor por defecto, así que la igualdad pasa aunque
 	# `project.godot` no declare el ajuste. Lo que este caso protege es el archivo: sin él el
 	# motor deja un solo bus y toda la mezcla sale por `Master`.
@@ -76,7 +76,7 @@ func test_el_layout_de_buses_apunta_a_un_archivo_que_existe() -> void:  # 021-AC
 	)
 
 
-func test_ningun_nombre_de_bus_se_escribe_fuera_del_archivo_que_los_declara() -> void:  # 021-AC3
+func test_ningun_nombre_de_bus_se_escribe_fuera_del_archivo_que_los_declara() -> void:
 	# Una copia se desincroniza el día que un bus se renombre, y el canal quedaría saliendo por
 	# `Master` sin que el motor diga una palabra.
 	for ruta: String in ARCHIVOS_QUE_NO_DECLARAN_BUSES:
@@ -97,7 +97,7 @@ func test_ningun_nombre_de_bus_se_escribe_fuera_del_archivo_que_los_declara() ->
 		assert_bool(declara.contains('"%s"' % nombre)).is_true()
 
 
-func test_ningun_test_de_este_spec_afirma_sobre_el_estado_de_reproduccion() -> void:  # 021-AC7
+func test_ningun_test_de_este_spec_afirma_sobre_el_estado_de_reproduccion() -> void:
 	# **Es la decisión que hace existir al spec.** Se busca sobre `test/` entero y no sólo sobre
 	# los de este spec: la tentación de afirmar sobre el estado de reproducción aparece en
 	# cualquier suite que toque audio, y en headless eso es rojo permanente.
@@ -113,7 +113,7 @@ func test_ningun_test_de_este_spec_afirma_sobre_el_estado_de_reproduccion() -> v
 			)
 
 
-func test_la_cascara_no_tiene_una_sola_regla() -> void:  # 021-AC10
+func test_la_cascara_no_tiene_una_sola_regla() -> void:
 	# Está medido que una regla escrita en `escenas/` da cero hallazgos en los dos gates.
 	var texto := FileAccess.get_file_as_string(SCRIPT)
 	assert_str(texto).is_not_empty()
@@ -121,7 +121,7 @@ func test_la_cascara_no_tiene_una_sola_regla() -> void:  # 021-AC10
 	assert_array(decide).override_failure_message("`audio_del_almacen.gd` decide algo").is_empty()
 
 
-func test_el_almacen_instancia_el_audio_exactamente_una_vez() -> void:  # 021-AC10
+func test_el_almacen_instancia_el_audio_exactamente_una_vez() -> void:
 	# Dos instancias serían dos tablas y dos rondas sobre los mismos eventos: cada sonido se
 	# pediría dos veces y el jugador escucharía todo doble.
 	var texto := FileAccess.get_file_as_string(
@@ -131,7 +131,7 @@ func test_el_almacen_instancia_el_audio_exactamente_una_vez() -> void:  # 021-AC
 	assert_int(texto.count(ESCENA)).is_equal(1)
 
 
-func test_el_dominio_no_nombra_un_solo_nodo_de_audio() -> void:  # 021-AC10
+func test_el_dominio_no_nombra_un_solo_nodo_de_audio() -> void:
 	# `AudioStreamPlayer` es un `Node` y `AudioServer` es el motor: los dos romperían la
 	# propiedad de la que cuelga todo lo demás — que el dominio se ejerza sin levantar una escena.
 	for ruta: String in ["entrada_sonora.gd", "tabla_de_sonidos.gd", "ronda_de_voces.gd"]:
@@ -145,7 +145,7 @@ func test_el_dominio_no_nombra_un_solo_nodo_de_audio() -> void:  # 021-AC10
 			)
 
 
-func test_la_cascara_carga_con_sus_dos_sistemas_cableados() -> void:  # 021-AC10
+func test_la_cascara_carga_con_sus_dos_sistemas_cableados() -> void:
 	# El `node_paths` de un `.tscn` escrito a mano es la trampa que deja los dos `@export` en
 	# `null` sin un solo error, y el juego muere en el primer cuadro.
 	var audio: Node = auto_free(load(ESCENA).instantiate())
@@ -153,7 +153,7 @@ func test_la_cascara_carga_con_sus_dos_sistemas_cableados() -> void:  # 021-AC10
 	assert_object(audio.get("enlace")).is_not_null()
 
 
-func test_cada_senal_de_la_tabla_la_declara_alguien_de_verdad() -> void:  # 021-AC9
+func test_cada_senal_de_la_tabla_la_declara_alguien_de_verdad() -> void:
 	# **El agujero que deja el desacople.** El enlace es por nombre de señal, así que un nombre
 	# que no existe no rompe nada: la fila cae en `sin_fuente()`, que es un estado normal, y las
 	# suites del enlazador usan fuentes inventadas — con lo cual los seis nodos dan verde y ese
@@ -183,7 +183,7 @@ func test_cada_senal_de_la_tabla_la_declara_alguien_de_verdad() -> void:  # 021-
 		)
 
 
-func test_el_almacen_llega_cableado_al_audio_y_al_agarre() -> void:  # 021-AC10
+func test_el_almacen_llega_cableado_al_audio_y_al_agarre() -> void:
 	# Los dos `@export` que este spec le suma a la raíz. Está medido en este mismo lote que
 	# borrar una entrada del `node_paths` deja 36 casos en verde con el nodo muerto: el caso que
 	# barre los `@export` de la raíz lleva una lista escrita a mano, y estos dos no estaban.
@@ -200,7 +200,7 @@ func test_el_almacen_llega_cableado_al_audio_y_al_agarre() -> void:  # 021-AC10
 		)
 
 
-func test_el_cableado_enlaza_las_fuentes_y_arranca_el_ambiente() -> void:  # 021-AC10
+func test_el_cableado_enlaza_las_fuentes_y_arranca_el_ambiente() -> void:
 	# La cáscara no se llama sola: quien le pasa las fuentes y quien arranca el bucle es la raíz.
 	# Sin la primera línea el audio entero queda sin enlazar; sin la segunda, el ambiente del
 	# local no suena nunca — y las dos fallan en silencio.

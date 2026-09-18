@@ -12,7 +12,7 @@ const CABLEADO := "res://src/escenas/almacen.gd"
 const CajaQueSeLleva := preload("res://src/escenas/objetos/caja_de_productos.gd")
 
 
-func test_la_caja_declara_su_producto_con_un_id_del_catalogo() -> void:  # 008-AC8
+func test_la_caja_declara_su_producto_con_un_id_del_catalogo() -> void:
 	# Es un `Producto.Id` y no un `String` suelto: el conjunto es cerrado, y uno mal escrito no
 	# rompe nada — el producto simplemente no llega nunca y nadie se entera.
 	var caja := _caja()
@@ -21,7 +21,7 @@ func test_la_caja_declara_su_producto_con_un_id_del_catalogo() -> void:  # 008-A
 	assert_int(Catalogo.de(caja.producto).id).is_equal(Producto.Id.MALBARDO)
 
 
-func test_tocar_la_caja_la_entrega_para_levantarla() -> void:  # 008-AC8 047-AC4
+func test_tocar_la_caja_la_entrega_para_levantarla() -> void:
 	# Antes devolvía `null` y el clic sacaba una unidad. Ahora contesta sus propios datos, que es
 	# lo que `Agarre` necesita para llevársela, y no son los de una unidad de producto: quien
 	# mire lo que hay en la mano tiene que poder distinguir la caja de lo que sale de ella.
@@ -32,13 +32,13 @@ func test_tocar_la_caja_la_entrega_para_levantarla() -> void:  # 008-AC8 047-AC4
 	assert_bool(datos.es_levantable()).is_true()
 
 
-func test_la_caja_contesta_el_contrato_de_interaccion() -> void:  # 008-AC8
+func test_la_caja_contesta_el_contrato_de_interaccion() -> void:
 	var caja := _caja()
 	assert_bool(caja.has_method(ReglasDeLosObjetos.METODO_INTERACTUAR)).is_true()
 	assert_bool(caja.is_in_group(ReglasDelJugador.GRUPO_INTERACTUABLE)).is_true()
 
 
-func test_el_cuerpo_de_la_caja_se_puede_llevar() -> void:  # 047-AC5
+func test_el_cuerpo_de_la_caja_se_puede_llevar() -> void:
 	# Unos `datos` en `null` los rechaza `Manos` como «no es levantable»: la escena carga sin un
 	# solo error y el clic no hace nada.
 	#
@@ -61,7 +61,7 @@ func test_el_cuerpo_de_la_caja_se_puede_llevar() -> void:  # 047-AC5
 	assert_str(caja.datos.nombre).is_not_empty()
 
 
-func test_la_caja_no_decide_nada_sobre_el_cupo() -> void:  # 008-AC10
+func test_la_caja_no_decide_nada_sobre_el_cupo() -> void:
 	# El criterio pide que este archivo no tenga un solo `if`, `match` ni `cupo`: cuántas entran
 	# y por qué se rechaza son preguntas de `CajaDeTraslado`, que es donde tienen test.
 	var texto := FileAccess.get_file_as_string(SCRIPT)
@@ -74,7 +74,7 @@ func test_la_caja_no_decide_nada_sobre_el_cupo() -> void:  # 008-AC10
 		)
 
 
-func test_la_caja_ya_no_despacha_por_su_cuenta() -> void:  # 047-AC9
+func test_la_caja_ya_no_despacha_por_su_cuenta() -> void:
 	# La señal se fue con el clic izquierdo, y mientras exista el cableado se le puede volver a
 	# colgar: quedarían dos rutas hacia la misma unidad y ninguna daría rojo.
 	for ruta in [SCRIPT, CABLEADO]:

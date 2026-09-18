@@ -27,7 +27,7 @@ func test_el_primer_examen_revela_y_el_segundo_no() -> void:  # AC-INV-003
 	assert_int(hallazgos.cantidad()).is_equal(1)
 
 
-func test_dos_objetos_distintos_son_dos_hallazgos() -> void:  # 006-AC5
+func test_dos_objetos_distintos_son_dos_hallazgos() -> void:
 	var hallazgos := Hallazgos.new()
 	assert_bool(hallazgos.registrar(_con_revelacion(&"lata_de_tomate"))).is_true()
 	assert_bool(hallazgos.registrar(_con_revelacion(&"cuaderno"))).is_true()
@@ -52,7 +52,7 @@ func test_un_objeto_sin_revelacion_no_es_un_hallazgo() -> void:  # AC-INV-002
 	assert_int(hallazgos.cantidad()).is_equal(0)
 
 
-func test_nada_no_es_un_hallazgo() -> void:  # 006-AC5
+func test_nada_no_es_un_hallazgo() -> void:
 	var hallazgos := Hallazgos.new()
 	assert_bool(hallazgos.registrar(null)).is_false()
 	assert_int(hallazgos.cantidad()).is_equal(0)

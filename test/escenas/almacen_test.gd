@@ -288,7 +288,7 @@ func test_la_regla_de_cableado_sabe_ver_un_nodo_colgado_de_otro() -> void:
 	assert_str(violaciones[0]).contains("Limpieza")
 
 
-func test_el_cableado_dejo_de_armar_el_turno_y_de_llevar_el_puntaje() -> void:  # 016-AC12
+func test_el_cableado_dejo_de_armar_el_turno_y_de_llevar_el_puntaje() -> void:
 	# Las dos cosas se fueron a `Partida`, y mientras siguieran acá la regla del despido no se
 	# podía alcanzar jugando: el puntaje moría con la escena. El caso mira el texto del archivo
 	# porque es la única forma de afirmar una ausencia.
@@ -307,7 +307,7 @@ func test_el_cableado_dejo_de_armar_el_turno_y_de_llevar_el_puntaje() -> void:  
 	)
 
 
-func test_la_escena_trae_el_ciclo_de_jornadas_en_servicios() -> void:  # 016-AC12
+func test_la_escena_trae_el_ciclo_de_jornadas_en_servicios() -> void:
 	# Sin el nodo, el `@export` del cableado llega nulo y el juego muere en el primer cuadro con
 	# un error que no nombra a `almacen.tscn`.
 	var almacen := _almacen()
@@ -335,7 +335,7 @@ func test_los_tres_cableados_de_la_raiz_llegan_asignados() -> void:
 		)
 
 
-func test_el_cableado_arma_el_parte_una_sola_vez_y_no_decide() -> void:  # 017-AC12
+func test_el_cableado_arma_el_parte_una_sola_vez_y_no_decide() -> void:
 	# Dos partes por jornada sería la placa pintada dos veces con dos objetos distintos, y la
 	# segunda tapando a la primera. Y una condición acá adentro sería una regla del juego escrita
 	# donde ningún gate la mira.
@@ -357,13 +357,13 @@ func test_el_cableado_arma_el_parte_una_sola_vez_y_no_decide() -> void:  # 017-A
 		)
 
 
-func test_la_escena_instancia_la_pantalla_de_cierre() -> void:  # 017-AC12
+func test_la_escena_instancia_la_pantalla_de_cierre() -> void:
 	var almacen := _almacen()
 	assert_bool(almacen.has_node("Interfaz/PantallaDeCierre")).is_true()
 	assert_object(almacen.get_node("Interfaz/PantallaDeCierre")).is_instanceof(PantallaDeCierre)
 
 
-func test_despachar_la_placa_abre_la_noche_siguiente_en_cero() -> void:  # 017-AC12
+func test_despachar_la_placa_abre_la_noche_siguiente_en_cero() -> void:
 	# **El segundo caso de la suite que entra `almacen.tscn` entera al árbol.** El lazo que este
 	# spec cierra —la noche termina, la placa aparece, el jugador la despacha y la siguiente
 	# abre— vive entero en señales conectadas: leído como texto no dice si funciona, y es lo
@@ -403,7 +403,7 @@ func test_despachar_la_placa_abre_la_noche_siguiente_en_cero() -> void:  # 017-A
 	)
 
 
-func test_la_escena_trae_un_solo_reloj_de_pared_en_la_estructura() -> void:  # 032-AC7
+func test_la_escena_trae_un_solo_reloj_de_pared_en_la_estructura() -> void:
 	# Dos relojes serían dos esferas diciendo lo mismo y una sola conectada, que es el modo de
 	# falla silencioso: el jugador camina hasta la que no anda y no hay error en ningún lado.
 	var texto := FileAccess.get_file_as_string(
@@ -435,7 +435,7 @@ func test_la_escena_trae_un_solo_reloj_de_pared_en_la_estructura() -> void:  # 0
 	)
 
 
-func test_el_reloj_de_pared_cae_adentro_del_edificio() -> void:  # 032-AC7
+func test_el_reloj_de_pared_cae_adentro_del_edificio() -> void:
 	# Un reloj colocado afuera de la cáscara se vería flotando en el vacío y ningún test de
 	# cableado lo diría: la escena carga igual y el nodo está.
 	var almacen: Node3D = auto_free(load(ESCENA_DEL_ALMACEN).instantiate())
@@ -453,7 +453,7 @@ func test_el_reloj_de_pared_cae_adentro_del_edificio() -> void:  # 032-AC7
 	)
 
 
-func test_la_caja_de_traslado_entra_instanciada_y_adentro_del_edificio() -> void:  # 033-AC10
+func test_la_caja_de_traslado_entra_instanciada_y_adentro_del_edificio() -> void:
 	# Una caja colocada afuera de la cáscara se vería flotando en el vacío y ningún test de
 	# cableado lo diría: la escena carga igual y el nodo está.
 	var almacen: Node3D = auto_free(load(ESCENA_DEL_ALMACEN).instantiate())
@@ -483,7 +483,7 @@ func test_la_caja_de_traslado_no_se_ve() -> void:
 	assert_bool(caja.is_visible_in_tree()).is_false()
 
 
-func test_el_cableado_le_da_la_hora_al_reloj_de_pared_y_no_al_hud() -> void:  # 032-AC8
+func test_el_cableado_le_da_la_hora_al_reloj_de_pared_y_no_al_hud() -> void:
 	# La hora se fue de la pantalla, pero los otros dos carteles del HUD siguen: sin la segunda
 	# mitad de este caso, desconectarlos también pasaría en verde.
 	var texto := FileAccess.get_file_as_string(SCRIPT_DEL_ALMACEN)
@@ -494,7 +494,7 @@ func test_el_cableado_le_da_la_hora_al_reloj_de_pared_y_no_al_hud() -> void:  # 
 	assert_str(texto).contains("_hud.mostrar_apercibimientos")
 
 
-func test_el_cableado_de_reponer_llega_entero_hasta_los_huecos() -> void:  # 008-AC10
+func test_el_cableado_de_reponer_llega_entero_hasta_los_huecos() -> void:
 	# Un `@export` de tipo `Node` en una escena escrita a mano va declarado ADEMÁS en el
 	# `node_paths` del tag del nodo, o queda en `null`: la escena carga sin un solo error, los
 	# seis nodos dan verde, y el juego muere en el primer cuadro con un

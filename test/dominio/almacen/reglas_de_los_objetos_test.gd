@@ -40,7 +40,7 @@ func test_se_lleva_una_sola_cosa_a_la_vez() -> void:  # AC-PLY-008
 	assert_int(ReglasDeLosObjetos.MANOS_DISPONIBLES).is_equal(1)
 
 
-func test_las_dos_acciones_nuevas_no_se_pisan_con_las_de_caminar() -> void:  # 006-AC6
+func test_las_dos_acciones_nuevas_no_se_pisan_con_las_de_caminar() -> void:
 	# El rojo del día que alguien copie una constante y se olvide de cambiarle el texto: dos
 	# acciones con el mismo nombre hacen que una de las dos no responda nunca, y el motor no
 	# dice una palabra.
@@ -58,7 +58,7 @@ func test_las_dos_acciones_nuevas_no_se_pisan_con_las_de_caminar() -> void:  # 0
 	assert_int(distintos.size()).is_equal(nombres.size())
 
 
-func test_el_corte_para_retirar_separa_apoyada_de_en_la_mano() -> void:  # 047-AC1
+func test_el_corte_para_retirar_separa_apoyada_de_en_la_mano() -> void:
 	# Las tres alturas están medidas sobre `almacen.tscn`: una caja apoyada tiene el centro en
 	# 0,41; en la mano no baja de 1,35 ni mirando al piso; en el estante del depósito está en
 	# 1,91. El borde es el corte mismo — en él entrega, un milímetro más arriba no.
@@ -77,7 +77,7 @@ func test_el_corte_para_retirar_separa_apoyada_de_en_la_mano() -> void:  # 047-A
 	assert_bool(ReglasDeLosObjetos.se_puede_retirar(1.9077)).is_false()
 
 
-func test_solo_una_superficie_horizontal_recibe_una_caja() -> void:  # 047-AC11
+func test_solo_una_superficie_horizontal_recibe_una_caja() -> void:
 	# La componente vertical de la normal: 1 es un piso, 0 una pared. Sin el corte, apuntar a
 	# una pared dejaría la caja clavada en el aire contra ella.
 	assert_bool(ReglasDeLosObjetos.se_puede_apoyar_en(1.0)).is_true()

@@ -28,7 +28,7 @@ func test_el_padron_no_se_sortea() -> void:  # AC-CTR-001
 	assert_array(nombres_de_una).is_equal(nombres_de_otra)
 
 
-func test_el_padron_no_llama_al_azar() -> void:  # 013-AC8
+func test_el_padron_no_llama_al_azar() -> void:
 	var texto := FileAccess.get_file_as_string(COMPRADORES)
 	assert_str(texto).is_not_empty()
 	for patron in ["randi", "randf", "shuffle", "pick_random"]:
@@ -59,7 +59,7 @@ func test_alguien_paga_distinto_de_lo_que_marca_la_caja() -> void:  # AC-CTR-004
 	assert_int(diferentes).is_greater(0)
 
 
-func test_todo_lo_que_se_pide_existe_en_el_catalogo() -> void:  # 013-AC8
+func test_todo_lo_que_se_pide_existe_en_el_catalogo() -> void:
 	# Un pedido con un producto que el inventario no conoce responde 0 unidades y cae por el
 	# camino de «no alcanza el stock»: el comprador quedaría imposible de cobrar toda la noche.
 	for comprador in Compradores.de_la_jornada():

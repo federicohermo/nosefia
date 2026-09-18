@@ -38,7 +38,7 @@ func test_lo_fijo_no_se_levanta_y_lo_demas_si() -> void:
 	assert_bool(puerta.es_levantable()).is_false()
 
 
-func test_los_objetos_del_almacen_cargan_y_todos_tienen_algo_que_revelar() -> void:  # 006-AC4
+func test_los_objetos_del_almacen_cargan_y_todos_tienen_algo_que_revelar() -> void:
 	var objetos := _objetos_del_almacen()
 	(
 		assert_int(objetos.size())

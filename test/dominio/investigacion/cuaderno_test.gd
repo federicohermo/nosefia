@@ -2,7 +2,7 @@
 extends GdUnitTestSuite
 
 
-func test_una_nota_con_titulo_se_escribe_y_se_devuelve() -> void:  # 009-AC4
+func test_una_nota_con_titulo_se_escribe_y_se_devuelve() -> void:
 	var cuaderno := Cuaderno.new()
 	var nota := cuaderno.escribir("Puerta del fondo", "Estaba abierta a las 3.")
 	assert_object(nota).is_not_null()
@@ -30,7 +30,7 @@ func test_una_nota_sobrevive_a_seguir_escribiendo() -> void:  # AC-INV-012
 	assert_object(cuaderno.notas()[0]).is_same(primera)
 
 
-func test_la_lista_devuelta_es_una_copia() -> void:  # 009-AC4
+func test_la_lista_devuelta_es_una_copia() -> void:
 	# Medido en headless para los arrays de este repo: uno devuelto sin `duplicate()` es el mismo
 	# array, y un `clear()` afuera vacía el original. Sin la copia, quien mire el cuaderno para
 	# dibujarlo lo puede vaciar.

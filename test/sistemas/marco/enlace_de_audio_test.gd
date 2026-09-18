@@ -64,7 +64,7 @@ func _fuente() -> FuenteDePrueba:
 	return fuente
 
 
-func test_enlaza_las_tres_aridades_leyendolas_del_motor() -> void:  # 021-AC8
+func test_enlaza_las_tres_aridades_leyendolas_del_motor() -> void:
 	# Sin `unbind()`, conectar una señal de dos parámetros a un método de uno falla **en
 	# runtime** — que es justo cuando ya no hay nadie mirando.
 	var enlace := _enlace(
@@ -87,7 +87,7 @@ func test_enlaza_las_tres_aridades_leyendolas_del_motor() -> void:  # 021-AC8
 	assert_int(_pedidos.size()).is_equal(3)
 
 
-func test_una_fuente_que_no_declara_la_senal_no_se_enlaza_y_se_declara() -> void:  # 021-AC9
+func test_una_fuente_que_no_declara_la_senal_no_se_enlaza_y_se_declara() -> void:
 	var enlace := _enlace(
 		[_entrada(EntradaSonora.Evento.TAREA_CUMPLIDA, CON_UN_ARGUMENTO)] as Array[EntradaSonora]
 	)
@@ -96,7 +96,7 @@ func test_una_fuente_que_no_declara_la_senal_no_se_enlaza_y_se_declara() -> void
 	assert_bool(enlace.sin_fuente().has(EntradaSonora.Evento.TAREA_CUMPLIDA)).is_true()
 
 
-func test_los_dos_rubros_parten_el_enum_sin_solaparse() -> void:  # 021-AC9
+func test_los_dos_rubros_parten_el_enum_sin_solaparse() -> void:
 	# Todo evento cae en uno de los dos y en uno solo: si se solaparan, un sonido podría estar
 	# enlazado y contado como faltante al mismo tiempo, y el rojo no diría nada.
 	var enlace := _enlace(
@@ -109,7 +109,7 @@ func test_los_dos_rubros_parten_el_enum_sin_solaparse() -> void:  # 021-AC9
 		assert_bool(enlace.sin_fuente().has(evento)).is_false()
 
 
-func test_enlazar_dos_veces_no_duplica_la_conexion() -> void:  # 021-AC9
+func test_enlazar_dos_veces_no_duplica_la_conexion() -> void:
 	# De esto se agarra el cableado para poder rehacer el enlace al abrir cada jornada sin que el
 	# mismo sonido se pida dos veces por evento.
 	var enlace := _enlace(
@@ -123,7 +123,7 @@ func test_enlazar_dos_veces_no_duplica_la_conexion() -> void:  # 021-AC9
 	assert_int(_pedidos.size()).is_equal(1)
 
 
-func test_una_fila_sin_senal_queda_sin_fuente_y_no_rompe_nada() -> void:  # 021-AC9
+func test_una_fila_sin_senal_queda_sin_fuente_y_no_rompe_nada() -> void:
 	# **Es un estado normal**: el ambiente del local no lo dispara ninguna señal, y por eso su
 	# fila deja la señal vacía en vez de nombrar una que no existe.
 	var muda := _entrada(EntradaSonora.Evento.AMBIENTE_DEL_LOCAL, &"")
@@ -132,7 +132,7 @@ func test_una_fila_sin_senal_queda_sin_fuente_y_no_rompe_nada() -> void:  # 021-
 	assert_bool(enlace.sin_fuente().has(EntradaSonora.Evento.AMBIENTE_DEL_LOCAL)).is_true()
 
 
-func test_una_fila_con_un_bus_no_declarado_no_se_enlaza() -> void:  # 021-AC9
+func test_una_fila_con_un_bus_no_declarado_no_se_enlaza() -> void:
 	# Enlazarla dejaría una señal pidiendo un sonido que después se rechaza en cada emisión.
 	var mala := _entrada(EntradaSonora.Evento.TAREA_CUMPLIDA, CON_UN_ARGUMENTO)
 	mala.bus = "Efectoss"

@@ -81,7 +81,7 @@ func _repositor(unidades_en_la_caja: int, en_deposito: int = 10) -> Repositor:
 	return repositor
 
 
-func test_al_llenar_el_estante_las_tareas_cumplidas_suben_exactamente_en_uno() -> void:  # 008-AC4
+func test_al_llenar_el_estante_las_tareas_cumplidas_suben_exactamente_en_uno() -> void:
 	var repositor := _repositor(CUPO_DE_PRUEBA)
 	repositor.pedir_colocar()
 	assert_int(_avisos_de_tarea).is_equal(0)
@@ -90,7 +90,7 @@ func test_al_llenar_el_estante_las_tareas_cumplidas_suben_exactamente_en_uno() -
 	assert_int(_cumplidas_avisadas).is_equal(1)
 
 
-func test_colocar_de_mas_no_vuelve_a_contar_la_tarea() -> void:  # 008-AC4
+func test_colocar_de_mas_no_vuelve_a_contar_la_tarea() -> void:
 	# El estante ya está lleno, así que la colocación siguiente se rechaza y `completar()` no
 	# llega a llamarse de nuevo. Y si llegara, el `Turno` contestaría `false`: la regla vive
 	# allá y no acá, que es lo que deja a este nodo sin estado propio.
@@ -103,7 +103,7 @@ func test_colocar_de_mas_no_vuelve_a_contar_la_tarea() -> void:  # 008-AC4
 	assert_int(_ultimo_motivo).is_equal(Estante.Rechazo.ESTANTE_LLENO)
 
 
-func test_llenar_el_estante_descuenta_exactamente_el_costo_de_reponer() -> void:  # 008-AC5
+func test_llenar_el_estante_descuenta_exactamente_el_costo_de_reponer() -> void:
 	# `_process` no corre en ningún caso de esta suite, así que este descuento es el único que
 	# puede haber: si además alguien llamara a `consumir()`, el restante no daría este número.
 	var repositor := _repositor(CUPO_DE_PRUEBA)
@@ -113,7 +113,7 @@ func test_llenar_el_estante_descuenta_exactamente_el_costo_de_reponer() -> void:
 	assert_float(_turno.tiempo_restante()).is_equal(esperado)
 
 
-func test_ningun_archivo_de_este_spec_nombra_consumir() -> void:  # 008-AC5
+func test_ningun_archivo_de_este_spec_nombra_consumir() -> void:
 	# Es la mitad ejecutable de la decisión del doble cobro. El nombre no se escribe ni en un
 	# comentario: este caso no distingue código de prosa, y hacerlo pasar comentando distinto
 	# sería trampa.
@@ -131,7 +131,7 @@ func test_ningun_archivo_de_este_spec_nombra_consumir() -> void:  # 008-AC5
 		)
 
 
-func test_sin_tiempo_para_reponer_la_tarea_no_se_cuenta_ni_descuenta() -> void:  # 008-AC6
+func test_sin_tiempo_para_reponer_la_tarea_no_se_cuenta_ni_descuenta() -> void:
 	# El turno arranca vacío, así que el costo excede lo que queda. El estante igual se llena:
 	# el estado del mundo no depende de que el jefe la cuente.
 	var actroncito := _producto(Producto.Id.ACTRONCITO)
@@ -156,7 +156,7 @@ func test_sin_tiempo_para_reponer_la_tarea_no_se_cuenta_ni_descuenta() -> void: 
 	assert_float(_turno.tiempo_restante()).is_equal(0.0)
 
 
-func test_la_caja_vacia_se_rechaza_como_producto_no_aceptado() -> void:  # 008-AC7
+func test_la_caja_vacia_se_rechaza_como_producto_no_aceptado() -> void:
 	# Sin nada que sacar, el estante recibe `null` y contesta el rechazo en vez de reventar: es
 	# el mismo camino por el que llega un `id` sin fila en el catálogo.
 	var repositor := _repositor(0)
@@ -166,7 +166,7 @@ func test_la_caja_vacia_se_rechaza_como_producto_no_aceptado() -> void:  # 008-A
 	assert_int(_ultimo_motivo).is_equal(Estante.Rechazo.PRODUCTO_NO_ACEPTADO)
 
 
-func test_una_colocacion_exitosa_saca_la_unidad_de_la_caja() -> void:  # 008-AC7
+func test_una_colocacion_exitosa_saca_la_unidad_de_la_caja() -> void:
 	# Y sólo la exitosa: un rechazo que sacara igual dejaría al jugador con la caja vacía y el
 	# estante sin llenar, sin un solo error.
 	var repositor := _repositor(CUPO_DE_PRUEBA + 1)
@@ -176,7 +176,7 @@ func test_una_colocacion_exitosa_saca_la_unidad_de_la_caja() -> void:  # 008-AC7
 	assert_int(repositor.carga.caja().ocupados()).is_equal(1)
 
 
-func test_el_repositor_no_lleva_estado_propio_de_la_tarea() -> void:  # 008-AC7
+func test_el_repositor_no_lleva_estado_propio_de_la_tarea() -> void:
 	# Está medido que un flag acá pasa los dos gates en verde: `sistemas/` puede escribir la
 	# regla y nadie lo dice. Por eso el criterio la ata con una búsqueda sobre el archivo.
 	var texto := FileAccess.get_file_as_string(REPOSITOR)
@@ -193,7 +193,7 @@ func _anotar_colocado(_producto: Producto, _completos: int) -> void:
 	_colocados += 1
 
 
-func test_depositar_desde_la_mano_entrega_el_cuerpo_una_sola_vez() -> void:  # 008-AC2
+func test_depositar_desde_la_mano_entrega_el_cuerpo_una_sola_vez() -> void:
 	var repositor := _repositor(0)
 	var agarre: Agarre = auto_free(Agarre.new())
 	agarre.punto_de_carga = auto_free(Node3D.new())
@@ -210,7 +210,7 @@ func test_depositar_desde_la_mano_entrega_el_cuerpo_una_sola_vez() -> void:  # 0
 	assert_int(_rechazos).is_equal(1)
 
 
-func test_con_la_mano_llena_no_reserva_otra_unidad() -> void:  # 006-AC2
+func test_con_la_mano_llena_no_reserva_otra_unidad() -> void:
 	var repositor := _repositor(0, 1)
 	var agarre: Agarre = auto_free(Agarre.new())
 	agarre.punto_de_carga = auto_free(Node3D.new())

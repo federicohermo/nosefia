@@ -43,7 +43,7 @@ func test_el_fondo_no_se_ve_desde_donde_se_hace_otra_tarea() -> void:  # AC-CLN-
 	)
 
 
-func test_la_zona_de_descarte_es_mas_chica_que_el_viaje_que_hay_que_hacer() -> void:  # 015-AC2
+func test_la_zona_de_descarte_es_mas_chica_que_el_viaje_que_hay_que_hacer() -> void:
 	# Con un radio del tamaño del recorrido, «llegar al fondo» sería «tirarla más o menos para
 	# allá»: exactamente el modo de falla que este spec vino a cerrar.
 	assert_float(ReglasDeLaBasura.RADIO_DEL_DESCARTE).is_less(

@@ -3,7 +3,7 @@ extends GdUnitTestSuite
 const ALMACEN := preload("res://src/escenas/almacen.tscn")
 
 
-func test_la_raiz_agrupa_por_rol_y_conserva_sus_enlaces() -> void:  # 041-AC4 041-AC5
+func test_la_raiz_agrupa_por_rol_y_conserva_sus_enlaces() -> void:
 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
 	assert_int(almacen.get_child_count()).is_less(10)
 	for propiedad in almacen.get_property_list():
@@ -14,7 +14,7 @@ func test_la_raiz_agrupa_por_rol_y_conserva_sus_enlaces() -> void:  # 041-AC4 04
 	assert_int(almacen.get("_bolsas").size()).is_equal(3)
 
 
-func test_los_puestos_reemplazados_usan_mallas_del_modelo() -> void:  # 041-AC8 041-AC9
+func test_los_puestos_reemplazados_usan_mallas_del_modelo() -> void:
 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
 	for ruta in ["Estructura/base compu/StaticBody3D", "Estructura/gondolanueva/StaticBody3D"]:
 		var cuerpo := almacen.get_node_or_null(ruta)
@@ -27,7 +27,7 @@ func test_los_puestos_reemplazados_usan_mallas_del_modelo() -> void:  # 041-AC8 
 	assert_bool(almacen.has_node("Estante")).is_false()
 
 
-func test_la_computadora_tiene_apoyo_y_no_queda_tapada_por_otro_cuerpo() -> void:  # 041-AC3
+func test_la_computadora_tiene_apoyo_y_no_queda_tapada_por_otro_cuerpo() -> void:
 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
 	add_child(almacen)
 	await get_tree().physics_frame
@@ -54,7 +54,7 @@ func test_la_computadora_tiene_apoyo_y_no_queda_tapada_por_otro_cuerpo() -> void
 	assert_object(golpe.get("collider")).is_same(cuerpo)
 
 
-func test_el_surtido_fijo_no_muestra_stock_que_el_dominio_no_tiene() -> void:  # 041-AC9
+func test_el_surtido_fijo_no_muestra_stock_que_el_dominio_no_tiene() -> void:
 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
 	var estructura := almacen.get_node("Estructura")
 	for nombre in [

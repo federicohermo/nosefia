@@ -39,7 +39,7 @@ const CARPETA_DE_LA_COMPUTADORA := "ui/" + "diegetica"
 const RASTROS_DEL_VEREDICTO := ["mostrar_veredicto", "consecuencia_de"]
 
 
-func test_el_hud_no_dibuja_el_veredicto_del_cierre() -> void:  # 017-AC11
+func test_el_hud_no_dibuja_el_veredicto_del_cierre() -> void:
 	var texto := FileAccess.get_file_as_string(HUD)
 	assert_str(texto).is_not_empty()
 	for rastro: String in RASTROS_DEL_VEREDICTO:
@@ -52,14 +52,14 @@ func test_el_hud_no_dibuja_el_veredicto_del_cierre() -> void:  # 017-AC11
 		)
 
 
-func test_el_hud_sigue_pintando_lo_que_si_es_suyo() -> void:  # 017-AC11
+func test_el_hud_sigue_pintando_lo_que_si_es_suyo() -> void:
 	# El par del caso de arriba: sin esto, borrar el archivo entero lo dejaría en verde.
 	var texto := FileAccess.get_file_as_string(HUD)
 	assert_str(texto).contains("func mostrar_tareas")
 	assert_str(texto).contains("func mostrar_apercibimientos")
 
 
-func test_la_hora_se_fue_del_hud_con_todo_lo_que_traia() -> void:  # 032-AC5
+func test_la_hora_se_fue_del_hud_con_todo_lo_que_traia() -> void:
 	# Los dos colores mueren con la hora: no tenían otro cliente, así que dejarlos acá sería
 	# código muerto que la próxima pantalla copiaría sin saber de dónde salió.
 	var texto := FileAccess.get_file_as_string(HUD)
@@ -72,7 +72,7 @@ func test_la_hora_se_fue_del_hud_con_todo_lo_que_traia() -> void:  # 032-AC5
 		)
 
 
-func test_la_escena_del_hud_perdio_el_reloj_y_conserva_los_otros_dos() -> void:  # 032-AC5
+func test_la_escena_del_hud_perdio_el_reloj_y_conserva_los_otros_dos() -> void:
 	# **El `node_paths` de la raíz pierde `"_reloj"` además del `Label`.** Si el nombre quedara
 	# declarado apuntando a un nodo que ya no está, la escena carga sin un solo error y el juego
 	# muere en el primer cuadro con un mensaje que no nombra al `.tscn`.
@@ -87,7 +87,7 @@ func test_la_escena_del_hud_perdio_el_reloj_y_conserva_los_otros_dos() -> void: 
 	assert_str(FileAccess.get_file_as_string(ESCENA_DEL_HUD)).not_contains("_reloj")
 
 
-func test_la_hora_no_vuelve_a_entrar_a_la_pantalla_por_la_ventana() -> void:  # 032-AC9
+func test_la_hora_no_vuelve_a_entrar_a_la_pantalla_por_la_ventana() -> void:
 	# La computadora del 009 va a mostrar la hora también, y va a vivir en la carpeta diegética.
 	# Mientras no exista, nadie de esta capa puede preguntarle al reloj de pared: la hora se lee
 	# en el local. El caso mira la capa entera y no sólo el HUD, que es lo que lo deja puesto
@@ -112,7 +112,7 @@ func test_la_hora_no_vuelve_a_entrar_a_la_pantalla_por_la_ventana() -> void:  # 
 	)
 
 
-func test_ninguna_suite_de_este_spec_carga_la_computadora_del_009() -> void:  # 032-AC9
+func test_ninguna_suite_de_este_spec_carga_la_computadora_del_009() -> void:
 	# Una escena que no existe se carga como `null` y el caso **aborta antes de afirmar**, lo que
 	# gdUnit4 reporta como `PASSED`. Es la peor de las tres formas en que un verde miente acá.
 	for suite: String in SUITES_DEL_RELOJ_DE_PARED:

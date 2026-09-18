@@ -2,7 +2,7 @@
 extends GdUnitTestSuite
 
 
-func test_el_local_tiene_voces_de_sobra_para_cinco_sonidos_seguidos() -> void:  # 021-AC2
+func test_el_local_tiene_voces_de_sobra_para_cinco_sonidos_seguidos() -> void:
 	# El piso importa más que el número: con menos de cinco, cinco pedidos seguidos se pisarían
 	# entre ellos y no habría cómo distinguir un sonido perdido de uno que nunca se pidió — y en
 	# headless tampoco se puede preguntar cuál está libre: el estado de reproducción no
@@ -33,7 +33,7 @@ func test_la_vuelta_siguiente_empieza_de_nuevo() -> void:  # AC-AMB-006
 	assert_int(ronda.siguiente()).is_equal(0)
 
 
-func test_dos_rondas_no_comparten_el_turno() -> void:  # 021-AC2
+func test_dos_rondas_no_comparten_el_turno() -> void:
 	# Con el contador declarado como estático, dos reproductores se robarían las voces entre
 	# ellos y el segundo empezaría por donde terminó el primero.
 	var una := RondaDeVoces.new(3)

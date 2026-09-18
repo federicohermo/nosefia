@@ -3,7 +3,7 @@ extends GdUnitTestSuite
 const Campo := preload("res://src/dominio/jugador/campo_de_interaccion.gd")
 
 
-func test_sin_candidatos_no_hay_objetivo() -> void:  # 038-AC1
+func test_sin_candidatos_no_hay_objetivo() -> void:
 	assert_int(Campo.elegir([])).is_equal(Foco.SIN_OBJETIVO)
 
 
@@ -35,28 +35,28 @@ func test_a_igual_desvio_gana_el_mas_cercano() -> void:  # AC-PLY-005
 	assert_int(Campo.elegir([cercano, lejano])).is_equal(2)
 
 
-func test_el_empate_total_conserva_el_primero() -> void:  # 038-AC4
+func test_el_empate_total_conserva_el_primero() -> void:
 	var primero := Campo.Candidato.new(1, 1.0, 0.1, true, true)
 	var segundo := Campo.Candidato.new(2, 1.0, 0.1, true, true)
 	assert_int(Campo.elegir([primero, segundo])).is_equal(1)
 	assert_int(Campo.elegir([segundo, primero])).is_equal(2)
 
 
-func test_un_cuerpo_sin_grupo_no_gana() -> void:  # 038-AC5
+func test_un_cuerpo_sin_grupo_no_gana() -> void:
 	var ajeno := Campo.Candidato.new(1, 0.5, 0.0, false, true)
 	var valido := Campo.Candidato.new(2, 1.0, 0.1, true, true)
 	assert_int(Campo.elegir([ajeno])).is_equal(Foco.SIN_OBJETIVO)
 	assert_int(Campo.elegir([ajeno, valido])).is_equal(2)
 
 
-func test_un_cuerpo_tapado_no_gana_aunque_este_centrado() -> void:  # 038-AC6
+func test_un_cuerpo_tapado_no_gana_aunque_este_centrado() -> void:
 	var tapado := Campo.Candidato.new(1, 0.5, 0.0, true, false)
 	var visible := Campo.Candidato.new(2, 1.0, 0.1, true, true)
 	assert_int(Campo.elegir([tapado])).is_equal(Foco.SIN_OBJETIVO)
 	assert_int(Campo.elegir([tapado, visible])).is_equal(2)
 
 
-func test_el_objeto_excluido_no_gana() -> void:  # 038-AC7
+func test_el_objeto_excluido_no_gana() -> void:
 	var sostenido := Campo.Candidato.new(1, 0.5, 0.0, true, true)
 	var libre := Campo.Candidato.new(2, 1.0, 0.1, true, true)
 	assert_int(Campo.elegir([sostenido], sostenido.id)).is_equal(Foco.SIN_OBJETIVO)

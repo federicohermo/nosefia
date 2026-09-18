@@ -82,7 +82,7 @@ static func _puntos_a_medir(almacen: Node3D) -> Dictionary:
 	return puntos
 
 
-func test_la_zona_no_lleva_una_sola_regla_ni_un_nombre_global() -> void:  # 015-AC6
+func test_la_zona_no_lleva_una_sola_regla_ni_un_nombre_global() -> void:
 	# Sin `class_name` a propósito: nadie la nombra desde abajo, y no tenerlo cierra la única
 	# puerta que el gate de capas sí caza — que `sistemas/` nombre un tipo de `escenas/`.
 	var texto := FileAccess.get_file_as_string(SCRIPT)
@@ -112,7 +112,7 @@ func test_la_esfera_de_la_escena_es_exactamente_la_de_la_constante() -> void:  #
 	)
 
 
-func test_el_almacen_trae_el_descarte_y_una_bolsa_por_cada_una_del_balance() -> void:  # 015-AC7
+func test_el_almacen_trae_el_descarte_y_una_bolsa_por_cada_una_del_balance() -> void:
 	var almacen := _almacen()
 	assert_bool(almacen.has_node("Objetos/ZonaDeDescarte")).is_true()
 	var bolsas := 0
@@ -151,7 +151,7 @@ func test_el_fondo_esta_lejos_de_todo_lo_demas() -> void:  # AC-CLN-008
 		)
 
 
-func test_el_cableado_de_la_basura_llega_entero_hasta_la_zona() -> void:  # 015-AC6
+func test_el_cableado_de_la_basura_llega_entero_hasta_la_zona() -> void:
 	# Un `@export` de tipo `Node` en una escena escrita a mano va declarado ADEMÁS en el
 	# `node_paths` del tag del nodo, o queda en `null`: la escena carga sin un solo error, los
 	# seis nodos dan verde, y el juego muere en el primer cuadro con un
@@ -189,7 +189,7 @@ func test_el_cableado_de_la_basura_llega_entero_hasta_la_zona() -> void:  # 015-
 	)
 
 
-func test_cada_bolsa_de_la_escena_lleva_el_id_que_espera_el_dominio() -> void:  # 015-AC8
+func test_cada_bolsa_de_la_escena_lleva_el_id_que_espera_el_dominio() -> void:
 	# **Un `id` que no coincide no rompe nada**: la bolsa entra al descarte, el dominio contesta
 	# `NO_ES_BASURA` y la obligatoria queda imposible de cerrar toda la noche, sin un solo error y
 	# con los seis nodos en verde. Contar los nodos por su nombre no lo ve — el nombre del nodo y
@@ -227,14 +227,14 @@ func test_cada_bolsa_de_la_escena_lleva_el_id_que_espera_el_dominio() -> void:  
 	)
 
 
-func test_las_bolsas_son_del_agarre_del_006_y_no_de_un_segundo_sistema() -> void:  # 015-AC8
+func test_las_bolsas_son_del_agarre_del_006_y_no_de_un_segundo_sistema() -> void:
 	var almacen := _almacen()
 	for nombre: String in NOMBRES_DE_LAS_BOLSAS:
 		var bolsa := almacen.get_node(nombre)
 		assert_str(bolsa.scene_file_path).is_equal(ESCENA_AGARRABLE)
 
 
-func test_este_spec_no_agrega_ninguna_accion_al_input_map() -> void:  # 015-AC8
+func test_este_spec_no_agrega_ninguna_accion_al_input_map() -> void:
 	# Se agarra y se suelta con las del 006. Una acción nueva sería una tecla más para una tarea
 	# que ya se hace con el clic que el jugador aprendió.
 	var acciones := 0
@@ -248,7 +248,7 @@ func test_este_spec_no_agrega_ninguna_accion_al_input_map() -> void:  # 015-AC8
 	)
 
 
-func test_los_cuatro_espejos_estan_y_el_almacen_no_decide_nada() -> void:  # 015-AC9
+func test_los_cuatro_espejos_estan_y_el_almacen_no_decide_nada() -> void:
 	# Las dos mitades falsables del criterio de terminado.
 	for ruta: String in [
 		"res://src/dominio/almacen/reglas_de_la_basura.gd",

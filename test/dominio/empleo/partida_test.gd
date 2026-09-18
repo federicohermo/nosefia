@@ -13,7 +13,7 @@ const PATRONES_IMPUROS := ["get_tree(", "get_node(", "_process(", "await", "Inpu
 const PARTIDA := "res://src/dominio/empleo/partida.gd"
 
 
-func test_una_partida_nueva_arranca_en_la_primera_jornada() -> void:  # 016-AC3
+func test_una_partida_nueva_arranca_en_la_primera_jornada() -> void:
 	assert_int(Partida.nueva().jornada()).is_equal(ReglasDeLaPartida.PRIMERA_JORNADA)
 
 
@@ -26,7 +26,7 @@ func test_la_partida_guarda_el_legajo_que_recibio_y_no_una_copia() -> void:  # A
 	assert_int(partida.apercibimientos()).is_equal(Reglas.APERCIBIMIENTOS_POR_AVISO)
 
 
-func test_cerrar_una_jornada_avanza_y_anota_la_banda_en_el_legajo() -> void:  # 016-AC4
+func test_cerrar_una_jornada_avanza_y_anota_la_banda_en_el_legajo() -> void:
 	var partida := Partida.nueva()
 	_jugar(partida, 0)
 	assert_int(partida.jornada()).is_equal(ReglasDeLaPartida.PRIMERA_JORNADA + 1)
@@ -52,7 +52,7 @@ func test_cerrar_sin_haber_abierto_no_hace_nada() -> void:  # AC-EMP-011
 	assert_bool(partida.terminada()).is_false()
 
 
-func test_abrir_la_jornada_entrega_el_turno_del_001_con_sus_obligatorias() -> void:  # 016-AC5
+func test_abrir_la_jornada_entrega_el_turno_del_001_con_sus_obligatorias() -> void:
 	var partida := Partida.nueva()
 	var turno := partida.abrir_la_jornada()
 	assert_float(turno.tiempo_restante()).is_equal(Reglas.DURACION_DEL_TURNO)
@@ -60,7 +60,7 @@ func test_abrir_la_jornada_entrega_el_turno_del_001_con_sus_obligatorias() -> vo
 	assert_bool(turno.todas_cumplidas()).is_false()
 
 
-func test_cada_jornada_abre_un_turno_nuevo_y_tareas_nuevas() -> void:  # 016-AC5
+func test_cada_jornada_abre_un_turno_nuevo_y_tareas_nuevas() -> void:
 	# **El caso que cierra el bug caro de reabrir.** Si la jornada 2 arrancara con las tareas de
 	# la 1, las que ya estaban completadas seguirían completadas: la noche siguiente empezaría
 	# ganada, sin un solo error y sin un solo rojo.
@@ -129,7 +129,7 @@ func test_con_el_despido_en_la_ultima_jornada_gana_el_despido() -> void:  # AC-E
 	assert_int(partida.final()).is_equal(Partida.Final.DESPEDIDO)
 
 
-func test_la_partida_tiene_tres_finales() -> void:  # 016-AC7
+func test_la_partida_tiene_tres_finales() -> void:
 	# En curso, contrato cumplido y despido. Un cuarto sin decidir dónde se alcanza dejaría a
 	# `terminada()` contestando que sí sobre un estado que nadie escribió.
 	assert_int(Partida.Final.size()).is_equal(3)
@@ -143,7 +143,7 @@ func test_solo_la_ultima_jornada_es_la_ultima() -> void:  # AC-EMP-008
 	assert_bool(partida.es_la_ultima_jornada()).is_true()
 
 
-func test_la_partida_es_pura_y_no_pide_una_escena() -> void:  # 016-AC8
+func test_la_partida_es_pura_y_no_pide_una_escena() -> void:
 	# Es lo que hace que los diez casos de arriba corran en milisegundos y sin árbol. El gate de
 	# capas mira lo mismo; acá se afirma para que el rojo diga cuál patrón entró.
 	var texto := FileAccess.get_file_as_string(PARTIDA)

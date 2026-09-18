@@ -8,7 +8,7 @@ extends GdUnitTestSuite
 const CONVERSACION := "res://src/dominio/investigacion/conversacion.gd"
 
 
-func test_hay_una_conversacion_por_cada_interlocutor() -> void:  # 009-AC5
+func test_hay_una_conversacion_por_cada_interlocutor() -> void:
 	# Se cuenta contra el `enum` y nunca contra un número escrito acá: un interlocutor sin su
 	# `.tres` sería una pestaña que el jugador abre y encuentra vacía, sin un solo error.
 	var todas := Conversacion.desde_disco()
@@ -24,7 +24,7 @@ func test_hay_una_conversacion_por_cada_interlocutor() -> void:  # 009-AC5
 	)
 
 
-func test_cada_interlocutor_tiene_la_suya_y_no_la_de_otro() -> void:  # 009-AC5
+func test_cada_interlocutor_tiene_la_suya_y_no_la_de_otro() -> void:
 	for quien: Conversacion.Interlocutor in Conversacion.Interlocutor.values():
 		var conversacion := Conversacion.de(quien)
 		(
@@ -35,7 +35,7 @@ func test_cada_interlocutor_tiene_la_suya_y_no_la_de_otro() -> void:  # 009-AC5
 		assert_int(conversacion.interlocutor).is_equal(quien)
 
 
-func test_ninguna_conversacion_llega_vacia() -> void:  # 009-AC5
+func test_ninguna_conversacion_llega_vacia() -> void:
 	# Al menos un mensaje con texto: una conversación vacía es contenido que el jugador paga en
 	# minutos de turno y no le devuelve nada.
 	for conversacion in Conversacion.desde_disco():
@@ -56,7 +56,7 @@ func test_ninguna_conversacion_llega_vacia() -> void:  # 009-AC5
 		)
 
 
-func test_cada_interlocutor_se_presenta_con_un_nombre() -> void:  # 009-AC5
+func test_cada_interlocutor_se_presenta_con_un_nombre() -> void:
 	for conversacion in Conversacion.desde_disco():
 		assert_object(conversacion).is_not_null()
 		assert_str(conversacion.nombre).is_not_empty()
@@ -77,7 +77,7 @@ func test_lo_leido_no_vuelve_al_disco() -> void:  # AC-INV-009
 		)
 
 
-func test_un_interlocutor_sin_fila_contesta_null_en_vez_de_reventar() -> void:  # 009-AC5
+func test_un_interlocutor_sin_fila_contesta_null_en_vez_de_reventar() -> void:
 	# Es la misma forma que `Catalogo.de()`: con un valor nuevo en el enum y sin su archivo, el
 	# rojo lo produce una aserción y no un error del motor —que gdUnit4 cuenta como *error* y
 	# deja el archivo diciendo `PASSED`—.

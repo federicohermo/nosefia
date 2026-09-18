@@ -21,7 +21,7 @@ const PATRONES_DE_UBICACION := ["position", "transform", "Node", "get_tree", "Ma
 const ID_QUE_NO_EXISTE := 99
 
 
-func test_una_caja_nueva_esta_vacia_y_con_todos_sus_casilleros_libres() -> void:  # 033-AC1
+func test_una_caja_nueva_esta_vacia_y_con_todos_sus_casilleros_libres() -> void:
 	var caja := CajaDeTraslado.new()
 	assert_int(Reglas.CASILLEROS_DE_LA_CAJA_DE_TRASLADO).is_equal(8)
 	assert_int(caja.ocupados()).is_equal(0)
@@ -73,7 +73,7 @@ func test_sacar_devuelve_lo_ultimo_que_se_guardo() -> void:  # AC-STK-011
 	assert_int(caja.ocupados()).is_equal(1)
 
 
-func test_el_contenido_que_devuelve_es_una_copia() -> void:  # 033-AC5
+func test_el_contenido_que_devuelve_es_una_copia() -> void:
 	# **Medido en headless**: un `Array` devuelto sin `duplicate()` es el mismo array, y un
 	# `clear()` afuera vacía el original. Sin la copia, quien mira la caja la puede vaciar.
 	var caja := CajaDeTraslado.new()
@@ -84,7 +84,7 @@ func test_el_contenido_que_devuelve_es_una_copia() -> void:  # 033-AC5
 	assert_int(caja.contenido().size()).is_equal(1)
 
 
-func test_la_caja_no_sabe_donde_esta_ni_quien_la_lleva() -> void:  # 033-AC6
+func test_la_caja_no_sabe_donde_esta_ni_quien_la_lleva() -> void:
 	# Es lo que la deja moverse llena y aterrizar antes que el 006: el contenido no depende de
 	# ninguna ubicación, así que no hay nada que actualizar cuando la caja viaja.
 	var texto := FileAccess.get_file_as_string(CAJA)

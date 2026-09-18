@@ -143,7 +143,7 @@ func test_los_muebles_funcionales_conservan_sus_nombres() -> void:
 		)
 
 
-func test_el_colisionador_de_un_anclaje_cuelga_del_nodo_que_lo_nombra() -> void:  # 041-AC3
+func test_el_colisionador_de_un_anclaje_cuelga_del_nodo_que_lo_nombra() -> void:
 	# Con el blockout el `StaticBody3D` **era** el nodo llamado `Estanteria`. Con el modelo el
 	# import le cuelga uno anónimo debajo, así que `get_collider().name` dejó de servir para saber
 	# qué mueble se está mirando. De esa forma dependen los specs 006, 008 y 009, y hasta acá no la

@@ -3,7 +3,7 @@ extends GdUnitTestSuite
 const HUD := preload("res://src/ui/hud.tscn")
 
 
-func test_la_mira_permanece_en_el_centro_al_cambiar_la_resolucion() -> void:  # 039-AC7
+func test_la_mira_permanece_en_el_centro_al_cambiar_la_resolucion() -> void:
 	var pantalla: SubViewport = auto_free(SubViewport.new())
 	add_child(pantalla)
 	var hud: Hud = HUD.instantiate()
@@ -21,7 +21,7 @@ func test_la_mira_permanece_en_el_centro_al_cambiar_la_resolucion() -> void:  # 
 		assert_bool(mira.visible).is_true()
 
 
-func test_el_hud_expone_el_foco_y_cambia_el_color_sin_ocultar_la_mira() -> void:  # 039-AC8 039-AC6
+func test_el_hud_expone_el_foco_y_cambia_el_color_sin_ocultar_la_mira() -> void:
 	var hud: Hud = auto_free(HUD.instantiate())
 	add_child(hud)
 	assert_bool("foco_presente" in hud).is_true()

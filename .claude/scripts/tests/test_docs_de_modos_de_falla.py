@@ -91,7 +91,7 @@ def items_de_la_seccion(texto: str, titulo: str) -> list[list[str]]:
 
 
 class ModosDeFallaDocumentados(unittest.TestCase):
-    def test_el_hook_encerrado_esta_en_troubleshooting(self):  # 003-AC1
+    def test_el_hook_encerrado_esta_en_troubleshooting(self):
         self.assertIn(
             "can't open file",
             _texto(TROUBLESHOOTING),
@@ -99,7 +99,7 @@ class ModosDeFallaDocumentados(unittest.TestCase):
             "aparece: es lo único que quien lo sufre tiene para buscar.",
         )
 
-    def test_el_quickstart_corrige_el_consejo_que_no_alcanza(self):  # 003-AC2
+    def test_el_quickstart_corrige_el_consejo_que_no_alcanza(self):
         texto = _texto(QUICKSTART)
         self.assertNotIn(
             CONSEJO_VIEJO,
@@ -113,13 +113,13 @@ class ModosDeFallaDocumentados(unittest.TestCase):
                 palabra, plano(texto).lower(), f"el consejo correcto no dice «{palabra}»"
             )
 
-    def test_el_arbol_nombra_a_powershell_como_herramienta_del_gate(self):  # 003-AC3
+    def test_el_arbol_nombra_a_powershell_como_herramienta_del_gate(self):
         # El otro hallazgo de `PowerShell` en `docs/` es el shell donde se declara una variable,
         # que no es lo mismo: acá se nombra la herramienta que el hook mira, y que faltaba.
         juntos = [p for p in parrafos(_texto(ARBOL)) if "PowerShell" in p and "matcher" in p]
         self.assertTrue(juntos, "el árbol no nombra a PowerShell como parte del matcher del hook")
 
-    def test_el_arbol_nombra_todas_las_herramientas_del_matcher(self):  # 003-AC4
+    def test_el_arbol_nombra_todas_las_herramientas_del_matcher(self):
         # Las herramientas salen del `settings.json` que las declara, no de una lista escrita
         # acá: así, agregar una al hook y no contarla en el doc sale rojo. Ése es exactamente el
         # agujero que abrió el modo de falla — `PowerShell` no estaba en el matcher, y el gate se
@@ -143,7 +143,7 @@ class ModosDeFallaDocumentados(unittest.TestCase):
             "lo que no está declarado no lo mira nadie.",
         )
 
-    def test_cada_trampa_de_claude_md_sigue_siendo_una_sola(self):  # 003-AC5
+    def test_cada_trampa_de_claude_md_sigue_siendo_una_sola(self):
         items = items_de_la_seccion(_texto(RAIZ / "CLAUDE.md"), "## Las trampas de este repo")
         self.assertTrue(items, "la sección de trampas no tiene ítems")
         for item in items:
@@ -154,14 +154,14 @@ class ModosDeFallaDocumentados(unittest.TestCase):
                 "El detalle vive en el doc que la explica; acá va la línea que la nombra.",
             )
 
-    def test_la_suite_que_no_parsea_esta_en_troubleshooting(self):  # 003-AC8
+    def test_la_suite_que_no_parsea_esta_en_troubleshooting(self):
         self.assertIn(
             "Executed test suites",
             _texto(TROUBLESHOOTING),
             "falta el número que vale: un verde de gdUnit4 puede ser una suite que no corrió.",
         )
 
-    def test_el_export_en_null_esta_en_troubleshooting(self):  # 003-AC9
+    def test_el_export_en_null_esta_en_troubleshooting(self):
         self.assertIn(
             "node_paths",
             _texto(TROUBLESHOOTING),
@@ -169,7 +169,7 @@ class ModosDeFallaDocumentados(unittest.TestCase):
             "la escena carga sin un solo error y el juego muere en el primer cuadro.",
         )
 
-    def test_el_worktree_sin_cache_esta_en_troubleshooting_con_su_cura(self):  # 003-AC10
+    def test_el_worktree_sin_cache_esta_en_troubleshooting_con_su_cura(self):
         texto = _texto(TROUBLESHOOTING)
         self.assertIn(
             "GdUnitTestCIRunner",
@@ -198,9 +198,9 @@ class ModosDeFallaDocumentados(unittest.TestCase):
         self.assertEqual(len(titulos), len(set(titulos)))
 
 
-# 003-AC6 — `verificar.py` en verde: ningún nodo mira `docs/`, así que lo único que verifica es
+# `verificar.py` en verde: ningún nodo mira `docs/`, así que lo único que verifica es
 # que el cambio no rompió otra cosa. Se corre, no se testea desde acá.
-# 003-AC7 — los dos `Closes` del PR —el del issue de este spec y el `#2` del origen— se
+# Los dos `Closes` del PR —el del issue de este spec y el `#2` del origen— se
 # verifican leyendo el cuerpo del PR abierto: no hay nada en el árbol que los contenga.
 
 if __name__ == "__main__":

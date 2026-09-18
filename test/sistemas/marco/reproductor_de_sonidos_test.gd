@@ -65,7 +65,7 @@ func _voces_ocupadas(reproductor: ReproductorDeSonidos) -> int:
 	return ocupadas
 
 
-func test_pedir_un_evento_con_sonido_deja_una_voz_con_ese_stream_y_ese_bus() -> void:  # 021-AC4
+func test_pedir_un_evento_con_sonido_deja_una_voz_con_ese_stream_y_ese_bus() -> void:
 	var entrada := _entrada(EntradaSonora.Evento.OBJETO_AGARRADO)
 	var reproductor := _reproductor([entrada] as Array[EntradaSonora])
 	assert_bool(reproductor.pedir(EntradaSonora.Evento.OBJETO_AGARRADO)).is_true()
@@ -76,7 +76,7 @@ func test_pedir_un_evento_con_sonido_deja_una_voz_con_ese_stream_y_ese_bus() -> 
 	assert_int(_pedidos.size()).is_equal(1)
 
 
-func test_una_fila_sin_stream_no_ocupa_ninguna_voz() -> void:  # 021-AC4
+func test_una_fila_sin_stream_no_ocupa_ninguna_voz() -> void:
 	var reproductor := _reproductor(
 		[_entrada(EntradaSonora.Evento.OBJETO_AGARRADO, false)] as Array[EntradaSonora]
 	)
@@ -86,14 +86,14 @@ func test_una_fila_sin_stream_no_ocupa_ninguna_voz() -> void:  # 021-AC4
 	assert_int(_rechazos[0]).is_equal(ReproductorDeSonidos.Motivo.SIN_SONIDO)
 
 
-func test_un_evento_sin_fila_se_rechaza_y_se_declara() -> void:  # 021-AC5
+func test_un_evento_sin_fila_se_rechaza_y_se_declara() -> void:
 	var reproductor := _reproductor([] as Array[EntradaSonora])
 	assert_bool(reproductor.pedir(EntradaSonora.Evento.TURNO_CERRADO)).is_false()
 	assert_int(_rechazos.size()).is_equal(1)
 	assert_int(_rechazos[0]).is_equal(ReproductorDeSonidos.Motivo.SIN_FILA)
 
 
-func test_un_bus_no_declarado_se_rechaza_en_vez_de_salir_por_master() -> void:  # 021-AC5
+func test_un_bus_no_declarado_se_rechaza_en_vez_de_salir_por_master() -> void:
 	# **Es el bug que no se ve**: el motor no dice nada y el sonido sale por el canal equivocado.
 	# Se rechaza y se declara, que es lo único que lo vuelve visible.
 	var reproductor := _reproductor(
@@ -109,7 +109,7 @@ func test_un_bus_no_declarado_se_rechaza_en_vez_de_salir_por_master() -> void:  
 	assert_int(_rechazos[0]).is_equal(ReproductorDeSonidos.Motivo.BUS_NO_DECLARADO)
 
 
-func test_cinco_pedidos_seguidos_ocupan_cinco_voces_distintas() -> void:  # 021-AC6
+func test_cinco_pedidos_seguidos_ocupan_cinco_voces_distintas() -> void:
 	# Sin la ronda, el segundo sonido cortaría al primero. Y no se puede preguntar cuál está
 	# libre: en headless el estado de reproducción no cambia nunca.
 	var reproductor := _reproductor(
@@ -120,7 +120,7 @@ func test_cinco_pedidos_seguidos_ocupan_cinco_voces_distintas() -> void:  # 021-
 	assert_int(_voces_ocupadas(reproductor)).is_equal(5)
 
 
-func test_una_fila_en_bucle_ocupa_la_voz_de_ambiente_y_no_la_ronda() -> void:  # 021-AC6
+func test_una_fila_en_bucle_ocupa_la_voz_de_ambiente_y_no_la_ronda() -> void:
 	# Adentro de la ronda, el ambiente se cortaría solo al quinto efecto.
 	var entrada := _entrada(
 		EntradaSonora.Evento.AMBIENTE_DEL_LOCAL, true, EntradaSonora.BUS_DE_AMBIENTE, true
@@ -131,7 +131,7 @@ func test_una_fila_en_bucle_ocupa_la_voz_de_ambiente_y_no_la_ronda() -> void:  #
 	assert_int(_voces_ocupadas(reproductor)).is_equal(0)
 
 
-func test_silenciar_deja_todas_las_voces_sin_stream() -> void:  # 021-AC6
+func test_silenciar_deja_todas_las_voces_sin_stream() -> void:
 	# Se limpia el `stream` y no se llama a `stop()`: `stop()` deja el stream puesto, y lo que un
 	# caso puede leer en headless es justamente el stream.
 	var reproductor := _reproductor(
@@ -155,7 +155,7 @@ func test_silenciar_deja_todas_las_voces_sin_stream() -> void:  # 021-AC6
 	assert_object(reproductor.ambiente().stream).is_null()
 
 
-func test_los_cinco_archivos_de_dominio_y_sistemas_tienen_su_espejo() -> void:  # 021-AC11
+func test_los_cinco_archivos_de_dominio_y_sistemas_tienen_su_espejo() -> void:
 	# La mitad falsable del criterio de terminado: sin los espejos el nodo `tdd` no pasa.
 	assert_int(ARCHIVOS_CON_ESPEJO.size()).is_equal(5)
 	for ruta: String in ARCHIVOS_CON_ESPEJO:

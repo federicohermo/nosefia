@@ -2,7 +2,7 @@
 extends GdUnitTestSuite
 
 
-func test_una_puerta_nueva_arranca_cerrada_y_sin_giro() -> void:  # 043-AC1
+func test_una_puerta_nueva_arranca_cerrada_y_sin_giro() -> void:
 	var puerta := Puerta.new()
 	assert_bool(puerta.abierta()).is_false()
 	assert_float(puerta.angulo()).is_equal(0.0)
@@ -38,7 +38,7 @@ func test_el_giro_tarda_y_no_salta_al_tope() -> void:  # AC-PLY-012
 	assert_float(puerta.angulo()).is_less(Puerta.ANGULO_ABIERTA)
 
 
-func test_dos_puertas_no_comparten_el_estado() -> void:  # 043-AC2
+func test_dos_puertas_no_comparten_el_estado() -> void:
 	var una := Puerta.new()
 	var otra := Puerta.new()
 	una.alternar()

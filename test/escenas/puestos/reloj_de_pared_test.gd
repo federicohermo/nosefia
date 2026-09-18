@@ -17,7 +17,7 @@ const RelojDeParedDelLocal := preload("res://src/escenas/puestos/reloj_de_pared.
 const UN_SEGUNDO := 1.0
 
 
-func test_la_esfera_dice_exactamente_lo_que_contesta_el_dominio() -> void:  # 032-AC6
+func test_la_esfera_dice_exactamente_lo_que_contesta_el_dominio() -> void:
 	var reloj := _reloj()
 	var jornada := RelojDePared.JORNADA_SIN_DECLARAR
 	var restante := Reglas.DURACION_DEL_TURNO
@@ -27,7 +27,7 @@ func test_la_esfera_dice_exactamente_lo_que_contesta_el_dominio() -> void:  # 03
 	assert_str(reloj.text).is_not_empty()
 
 
-func test_pasada_la_mitad_de_la_jornada_que_rompe_la_esfera_queda_en_blanco() -> void:  # 032-AC6
+func test_pasada_la_mitad_de_la_jornada_que_rompe_la_esfera_queda_en_blanco() -> void:
 	# El nodo no sabe que se rompió: le pregunta al dominio y copia. Con un texto de reemplazo
 	# escrito acá, el reloj roto estaría avisando que está roto, y darse cuenta es parte de lo
 	# que la noche cobra.
@@ -40,7 +40,7 @@ func test_pasada_la_mitad_de_la_jornada_que_rompe_la_esfera_queda_en_blanco() ->
 	assert_str(reloj.text).is_empty()
 
 
-func test_el_tono_cambia_cuando_el_dominio_dice_que_hay_que_apurarse() -> void:  # 032-AC6
+func test_el_tono_cambia_cuando_el_dominio_dice_que_hay_que_apurarse() -> void:
 	# El umbral no se reimplementa acá: se le pregunta a `Marcador`, que es el que lo tiene con
 	# test. Los dos lados se prueban para que el caso no pase con un color fijo.
 	var reloj := _reloj()

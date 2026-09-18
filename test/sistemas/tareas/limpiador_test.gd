@@ -68,7 +68,7 @@ func _limpiar_menos(limpiador: Limpiador, que_falten: int) -> int:
 	return dadas
 
 
-func test_el_limpiador_devuelve_exactamente_lo_que_contesto_el_dominio() -> void:  # 014-AC7
+func test_el_limpiador_devuelve_exactamente_lo_que_contesto_el_dominio() -> void:
 	# No lo traduce a un `bool`: los tres rechazos se leen distinto adelante del jugador, y
 	# aplanarlos daría un solo cartel para dos situaciones.
 	var limpiador := _limpiador()
@@ -83,7 +83,7 @@ func test_el_limpiador_devuelve_exactamente_lo_que_contesto_el_dominio() -> void
 	)
 
 
-func test_emite_una_sola_vez_por_pasada_aceptada_y_ninguna_por_rechazada() -> void:  # 014-AC7
+func test_emite_una_sola_vez_por_pasada_aceptada_y_ninguna_por_rechazada() -> void:
 	var limpiador := _limpiador()
 	limpiador.pedir_pasada(PisoDelLocal.Zona.ENTRADA, ReglasDeLaLimpieza.ID_DEL_TRAPEADOR)
 	assert_int(_pasadas).is_equal(1)
@@ -93,7 +93,7 @@ func test_emite_una_sola_vez_por_pasada_aceptada_y_ninguna_por_rechazada() -> vo
 	assert_int(_rechazos).is_equal(1)
 
 
-func test_la_ultima_pasada_de_una_zona_avisa_que_la_mancha_se_fue() -> void:  # 014-AC7
+func test_la_ultima_pasada_de_una_zona_avisa_que_la_mancha_se_fue() -> void:
 	var limpiador := _limpiador()
 	for _pasada in range(ReglasDeLaLimpieza.PASADAS_POR_MANCHA):
 		limpiador.pedir_pasada(PisoDelLocal.Zona.ENTRADA, ReglasDeLaLimpieza.ID_DEL_TRAPEADOR)
@@ -101,7 +101,7 @@ func test_la_ultima_pasada_de_una_zona_avisa_que_la_mancha_se_fue() -> void:  # 
 	assert_int(_pasadas).is_equal(ReglasDeLaLimpieza.PASADAS_POR_MANCHA)
 
 
-func test_el_limpiador_no_lleva_estado_propio_de_la_tarea() -> void:  # 014-AC7
+func test_el_limpiador_no_lleva_estado_propio_de_la_tarea() -> void:
 	# Está medido que un contador acá pasa los dos gates en verde: `sistemas/` puede escribir la
 	# regla y nadie lo dice. Por eso el criterio la ata con una búsqueda sobre el archivo.
 	var texto := FileAccess.get_file_as_string(LIMPIADOR)
@@ -114,7 +114,7 @@ func test_el_limpiador_no_lleva_estado_propio_de_la_tarea() -> void:  # 014-AC7
 	)
 
 
-func test_con_una_pasada_de_menos_la_obligatoria_no_se_cuenta() -> void:  # 014-AC8
+func test_con_una_pasada_de_menos_la_obligatoria_no_se_cuenta() -> void:
 	var limpiador := _limpiador()
 	var dadas := _limpiar_menos(limpiador, 1)
 	assert_int(dadas).is_equal(limpiador.piso().pasadas_totales() - 1)
@@ -122,7 +122,7 @@ func test_con_una_pasada_de_menos_la_obligatoria_no_se_cuenta() -> void:  # 014-
 	assert_int(_turno.tareas_cumplidas()).is_equal(0)
 
 
-func test_la_ultima_pasada_cuenta_la_obligatoria_y_descuenta_una_sola_vez() -> void:  # 014-AC8
+func test_la_ultima_pasada_cuenta_la_obligatoria_y_descuenta_una_sola_vez() -> void:
 	var limpiador := _limpiador()
 	_limpiar_menos(limpiador, 0)
 	assert_int(_avisos_de_tarea).is_equal(1)
@@ -135,7 +135,7 @@ func test_la_ultima_pasada_cuenta_la_obligatoria_y_descuenta_una_sola_vez() -> v
 	assert_int(_avisos_de_tarea).is_equal(1)
 
 
-func test_sin_tiempo_para_limpiar_la_tarea_no_se_cuenta_ni_descuenta() -> void:  # 014-AC8
+func test_sin_tiempo_para_limpiar_la_tarea_no_se_cuenta_ni_descuenta() -> void:
 	# El piso igual queda limpio: el estado del local no depende de que el jefe lo cuente.
 	var limpiador := _limpiador(0.0)
 	_limpiar_menos(limpiador, 0)
@@ -144,7 +144,7 @@ func test_sin_tiempo_para_limpiar_la_tarea_no_se_cuenta_ni_descuenta() -> void: 
 	assert_float(_turno.tiempo_restante()).is_equal(0.0)
 
 
-func test_ningun_archivo_de_este_spec_nombra_consumir() -> void:  # 014-AC8
+func test_ningun_archivo_de_este_spec_nombra_consumir() -> void:
 	# El nombre no se escribe ni en un comentario: este caso no distingue código de prosa, y
 	# hacerlo pasar comentando distinto sería trampa.
 	for ruta: String in ARCHIVOS_DEL_SPEC:
@@ -178,7 +178,7 @@ func _anotar_tarea(cumplidas: int) -> void:
 	_cumplidas_avisadas = cumplidas
 
 
-func test_la_pasada_necesita_un_efecto_del_despacho() -> void:  # 034-AC7 034-AC11
+func test_la_pasada_necesita_un_efecto_del_despacho() -> void:
 	var limpiador := _limpiador()
 	limpiador.set("_uso", Uso.new())
 	var antes := limpiador.piso().pasadas_restantes(PisoDelLocal.Zona.ENTRADA)

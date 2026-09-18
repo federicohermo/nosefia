@@ -5,11 +5,11 @@
 extends GdUnitTestSuite
 
 
-func test_una_computadora_nueva_esta_cerrada() -> void:  # 009-AC1
+func test_una_computadora_nueva_esta_cerrada() -> void:
 	assert_bool(Computadora.new().abierta()).is_false()
 
 
-func test_abrir_una_vez_devuelve_true_y_la_segunda_false() -> void:  # 009-AC1
+func test_abrir_una_vez_devuelve_true_y_la_segunda_false() -> void:
 	# El `false` no es un error: es de lo que se agarra la escena para no volver a suspender al
 	# jugador ni a repintar la pantalla en cada clic.
 	var computadora := Computadora.new()
@@ -18,7 +18,7 @@ func test_abrir_una_vez_devuelve_true_y_la_segunda_false() -> void:  # 009-AC1
 	assert_bool(computadora.abierta()).is_true()
 
 
-func test_cerrar_sin_haber_abierto_devuelve_false() -> void:  # 009-AC1
+func test_cerrar_sin_haber_abierto_devuelve_false() -> void:
 	var computadora := Computadora.new()
 	assert_bool(computadora.cerrar()).is_false()
 	computadora.abrir()
@@ -26,7 +26,7 @@ func test_cerrar_sin_haber_abierto_devuelve_false() -> void:  # 009-AC1
 	assert_bool(computadora.cerrar()).is_false()
 
 
-func test_cambiar_a_la_misma_app_devuelve_false() -> void:  # 009-AC1
+func test_cambiar_a_la_misma_app_devuelve_false() -> void:
 	var computadora := Computadora.new()
 	computadora.abrir()
 	assert_bool(computadora.cambiar_a(computadora.app())).is_false()
