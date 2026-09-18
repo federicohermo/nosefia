@@ -32,7 +32,9 @@ class ModeloActualizado(unittest.TestCase):
         # sin cámaras ni luces. `use_visible` importa: sin él entran los objetos de la
         # colección oculta, que no son parte del juego.
         #
-        # **Y la exportación va con los modificadores `Array` apagados.** Los productos
+        # **Y la exportación va con los modificadores `Array` apagados**, que son Geometry
+        # Nodes llamados `Array`, no modificadores de tipo `ARRAY`: apagar por tipo no apaga
+        # ninguno y los productos salen multiplicados igual. Se apagan por nombre. Los productos
         # llevan un Geometry Nodes que llena el estante con una fila, y el exportador realiza
         # esas instancias, así que con el modificador activo el producto sale multiplicado. El
         # juego necesita **una unidad**, porque `reposicion_manual.gd` toma la superficie 0 de
@@ -41,7 +43,7 @@ class ModeloActualizado(unittest.TestCase):
         blend = (RAIZ / "assets/SEPT_JUEGOS_PROTOTIPO.blend").read_bytes()
         self.assertEqual(
             hashlib.sha256(blend).hexdigest(),
-            "67ab2e0ce8a8925b5a3035ec78fdf7e25f8039804efc52b4fa05716c4086208e",
+            "d07b308d1daf75d151b7f407b7014c27bb8c7a021a27f97d308fd0233f4ffe0a",
         )
         self.assertEqual(
             hashlib.sha256(self.glb).hexdigest(),
