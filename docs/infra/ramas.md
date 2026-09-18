@@ -1,12 +1,32 @@
 # Ramas
 
-Tres roles, y cada uno tiene una pregunta distinta.
+Cada rama tiene una pregunta distinta, y el prefijo la contesta.
 
 | Rama | Qué es | Quién escribe ahí |
 |---|---|---|
 | `main` | **Lo que se entrega.** Cada entrega de la cátedra sale de acá | sólo un PR de promoción desde `staging` |
-| `staging` | **Integra.** Es la rama default del repositorio | los PR de cada spec, y los commits del mapa |
+| `staging` | **Integra.** Es la rama default del repositorio | cualquiera, **también directo**, y los commits del mapa |
 | `feature/<NNN>-<kebab>` | Un spec, uno | quien lo implementa |
+| `bugfix/<kebab>` | Algo del producto está roto. Puede salir de un spec o no | quien lo arregla |
+| `hotfix/<kebab>` | Urgente, contra lo que ya se entregó | quien lo arregla |
+| `harness/<kebab>` | El harness de `.claude/`: scripts, gates, skills | quien lo toque |
+| `docs/<kebab>` | La documentación | quien la escriba |
+| `ci/<kebab>` | Los workflows de `.github/` | quien los toque |
+
+## Los prefijos son un conjunto cerrado, y sólo la mitad se puede verificar
+
+Los tres primeros —`feature/`, `bugfix/`, `hotfix/`— son los de la [convención de
+Atlassian](https://support.atlassian.com/bitbucket-cloud/kb/how-to-prevent-creating-branches-with-the-prefixes-that-are-not-defined-in-the-branching-model-using-git-hooks-in-bitbucket-cloud/),
+y son **los únicos que pueden editar `src/`**. Eso lo verifica `gate_de_spec.py` en cada
+escritura.
+
+Los otros tres **no los verifica nadie, y no se podría**: el hook sólo protege `src/`, así que
+una rama `docs/` que edita documentación no le pasa ni cerca. Están declarados igual porque el
+mensaje del bloqueo tiene que poder ofrecerlos — «renombrá la rama» sin decir a qué no es una
+salida.
+
+**No hay `chore/`**, que es el que la convención pone para «lo demás». Se define por lo que no
+es, así que termina siendo el cajón donde cae todo; estos tres dicen qué tocás.
 
 ## Por qué dos ramas y no una
 
@@ -15,16 +35,39 @@ entrega sale de lo que haya en ese momento — incluido lo que alguien mergeó e
 `main` separada, lo que se entrega es una decisión: se promueve `staging` a `main` cuando el
 estado sirve, y esa promoción es un PR que se mira.
 
-## `staging` es la default, y eso la hace peligrosa
+## Todo se mergea con merge commit, y el botón del squash ya no existe
 
-Es adonde apunta cada `gh pr create` y cada clone fresco: **el lugar más fácil de todo el repo
-donde quedarse parado sin haberlo decidido.**
+`allow_squash_merge` y `allow_rebase_merge` están en `false` en la configuración del repositorio
+—Settings → General → Pull Requests—, así que la única opción del botón es **Create a merge
+commit**.
 
-Por eso el hook la nombra explícitamente. Sin esa línea el veredicto sería el mismo —ninguna
-rama que no matchee `feature/<NNN>-` pasa— pero el mensaje sería el equivocado: «la rama
-`staging` no nombra un spec» se lee como una invitación a **renombrarla**, que es lo peor que se
-puede hacer con la rama de integración. El mensaje correcto dice que el problema es **dónde
-estás parado**.
+**No es preferencia de estilo: un squash rompe la promoción siguiente.** `staging` → `main` no es
+un PR común. Un squash deja en `main` un commit que no está en la historia de `staging`, así que
+**la base común de las dos ramas no se mueve**: la promoción siguiente vuelve a proponer los
+mismos commits contra un árbol que ya los tiene, y cada uno llega como conflicto. Medido: el
+squash de #75 le costó a #110 **115 archivos en conflicto**.
+
+Se pidió por escrito en el cuerpo de tres PR de promoción seguidos y se aplastó igual. Un pedido
+en prosa que hay que acordarse de leer no es una regla — **por eso ahora la opción no está**.
+
+## A `staging` se commitea directo
+
+Desde el **2026-09-14**. El hook la bloqueaba, y en un repo de una persona abrir una rama para
+mergearla en el minuto siguiente es ceremonia: el costo se paga en cada cambio y el beneficio
+—que otro no pise trabajo ajeno— no existe acá.
+
+**Lo que se paga, y es real: dos gates quedan ciegos sobre lo que se commitea sin rama.**
+
+| El gate | Qué deja de ver |
+|---|---|
+| `test_criterios_de_la_rama.py` | cruza los AC contra el spec **de la rama**, y en `staging` no hay ninguno |
+| `derivar_mapa.py` | saca el `NNN` del nombre de la rama de un PR: sin PR, el spec se queda en `Propuesto` para siempre |
+
+O sea: **el trabajo de un spec sigue necesitando su `feature/<NNN>-…`**, y no por ceremonia —
+sin esa rama el registro no se entera y ningún criterio se verifica. Lo que se liberó es todo lo
+demás: un arreglo suelto, un asset, el harness, la documentación.
+
+`main` sigue bloqueada. Es lo que se entrega, y llega por el PR de promoción.
 
 ## El nombre de la rama de feature no es decorativo
 
@@ -34,29 +77,43 @@ spec `007` puede ser el issue `#23`.
 
 De ese nombre salen dos cosas:
 
-1. **El hook** saca el número para verificar que el spec exista. Una rama con otro nombre
-   bloquea la primera edición de `src/`.
+1. **El hook** pide el `NNN` en tres dígitos, y **sólo a las ramas `feature/`**: a `bugfix/` y
+   `hotfix/` exigírselo las obligaría a inventar un número. Una `feature/` sin número bloquea la
+   primera edición de `src/`.
 2. **`derivar_mapa.py`** saca el número para decidir si el spec aterrizó. Un PR cuya rama no
    nombra ningún spec no mueve nada.
 
-El prefijo se acepta abierto —`fix/012-…`, `chore/012-…` cuentan igual para el derivador—
-porque un spec puede aterrizar por una rama que no se llame `feature/`. Lo que el **hook** pide
-es `feature/`; el derivador es más ancho a propósito, para no perder un merge sin decirlo.
+**Lo que el hook ya NO hace es cruzar el `NNN` contra `specs/mapa.json`.** Lo hizo hasta el
+2026-09-08, y el efecto era que para escribir la primera línea de código había que haber abierto
+el issue de GitHub y commiteado el mapa a `staging`.
+
+**El cruce no se perdió: se mudó** a `test_criterios_de_la_rama.py`, que corre en el nodo
+`harness` de `verificar.py` y en la CI, con el PR todavía abierto. Ahí llega igual de a tiempo y
+no frena la primera edición: el spec se puede publicar **después** de empezar a escribir, pero no
+después de mergear. **El derivador no lo cobra** y no está para eso — un PR cuya rama nombra un
+`NNN` que el mapa no tiene no le agrega ninguna fila, a propósito: inventarla sería peor que la
+falta.
+
+Para el derivador el prefijo es abierto —`bugfix/012-…` cuenta igual— porque un spec puede
+aterrizar por una rama que no se llame `feature/`. Es más ancho a propósito, para no perder un
+merge sin decirlo.
 
 ## Cuándo NO hace falta un spec
 
-Cuando el cambio no toca `src/` ni `docs/`: un asset, un typo, actualizar el addon, un
-`chore/`. Ahí la rama se llama `fix/…` o `chore/…` y va directo a PR contra `staging`.
+Cuando el cambio no toca `src/`: un asset, un typo, la documentación, actualizar el addon, una
+herramienta del harness. Ahí la rama se llama `harness/…`, `docs/…` o `ci/…` según qué toque, y
+va directo a PR contra `staging`.
 
-**Lo que no se puede es trabajar sobre `main` o `staging`.** El hook sólo protege dos
-directorios, pero la razón vale para todo: son ramas que reciben trabajo de otros.
+**Lo que no se puede es trabajar sobre `main`**, que es lo que se entrega. A `staging` se
+commitea directo, con la salvedad de arriba: el trabajo de un spec va igual por su rama.
 
-## Los dos workflows
+## Los tres workflows
 
 | Workflow | Cuándo | Qué hace |
 |---|---|---|
 | `verify.yml` | cada PR, y cada push a `staging` y `main` | corre `verificar.py` |
 | `mapa.yml` | cada push a `staging` | deriva `specs/mapa.json` desde los PR y los issues, y lo commitea si cambió |
+| `desplegar.yml` | cada push a `main`, y a mano | exporta a Web, publica en Vercel y verifica que se juegue. Ver [despliegue](./despliegue.md) |
 
 **`mapa.yml` corre sobre `staging` y no sobre `main`**, y eso importa si algún día `main` se
 protege con reglas: una Action que tiene que pushear a una rama con PR obligatorio no puede, y
@@ -64,7 +121,7 @@ abrir un PR desde la Action tampoco sirve —un PR creado con `GITHUB_TOKEN` no 
 workflows, así que el check requerido nunca se satisface y el PR queda abierto para siempre—.
 El mapa derivado llega a `main` con el PR de promoción, como todo lo demás.
 
-## La carrera entre los dos, y por qué el gate del mapa no corre en un push
+## La carrera entre `verify.yml` y `mapa.yml`, y por qué el gate del mapa no corre en un push
 
 Cuando el PR de un spec aterriza, ese push a `staging` dispara **los dos workflows a la vez**.
 En ese commit el mapa todavía dice `Propuesto` —no puede decir otra cosa: el gate prohíbe

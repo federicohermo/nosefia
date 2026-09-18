@@ -8,8 +8,8 @@ costar quince minutos o no se mira**.
 ## Qué se lista y qué no
 
 Se listan los **abiertos** sin reclamar, ordenados del más viejo al más nuevo. Los cerrados
-sin reclamar se cuentan pero no se listan: son los que se arreglaron por el carril
-`fix/`/`chore/` sin spec, y no hay nada que promover en ellos — pero que el número aparezca
+sin reclamar se cuentan pero no se listan: son los que se arreglaron por el carril sin spec
+—`harness/`, `docs/`, `ci/`—, y no hay nada que promover en ellos — pero que el número aparezca
 es lo que distingue «no hay» de «no se pidieron».
 
 Uso:

@@ -1,0 +1,46 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://src/sistemas/marco/reloj_del_turno.gd" id="3_reloj"]
+[ext_resource type="Script" path="res://src/sistemas/marco/ciclo_de_jornadas.gd" id="6_ciclo"]
+[ext_resource type="Script" path="res://src/sistemas/tareas/repositor.gd" id="12_repositor"]
+[ext_resource type="Script" path="res://src/sistemas/tareas/carga_de_la_caja.gd" id="13_carga"]
+[ext_resource type="Script" path="res://src/sistemas/tareas/ventanilla.gd" id="14_atenciones"]
+[ext_resource type="Script" path="res://src/sistemas/investigacion/computadora_de_escritorio.gd" id="17_computadora"]
+[ext_resource type="Script" path="res://src/sistemas/tareas/limpiador.gd" id="20_limpiador"]
+[ext_resource type="Script" path="res://src/sistemas/tareas/recolector_de_basura.gd" id="24_recolector"]
+[ext_resource type="PackedScene" path="res://src/escenas/puestos/audio_del_almacen.tscn" id="29_audio"]
+
+[node name="Servicios" type="Node3D"]
+
+[node name="RelojDelTurno" type="Node" parent="."]
+script = ExtResource("3_reloj")
+
+[node name="CicloDeJornadas" type="Node" parent="."]
+script = ExtResource("6_ciclo")
+
+[node name="CargaDeLaCaja" type="Node" parent="."]
+script = ExtResource("13_carga")
+
+[node name="Repositor" type="Node" parent="." node_paths=PackedStringArray("reloj", "carga")]
+script = ExtResource("12_repositor")
+reloj = NodePath("../RelojDelTurno")
+carga = NodePath("../CargaDeLaCaja")
+
+[node name="Atenciones" type="Node" parent="." node_paths=PackedStringArray("reloj")]
+script = ExtResource("14_atenciones")
+reloj = NodePath("../RelojDelTurno")
+
+[node name="Computadora" type="Node" parent="." node_paths=PackedStringArray("reloj")]
+script = ExtResource("17_computadora")
+reloj = NodePath("../RelojDelTurno")
+
+[node name="Limpiador" type="Node" parent="." node_paths=PackedStringArray("reloj")]
+script = ExtResource("20_limpiador")
+reloj = NodePath("../RelojDelTurno")
+
+[node name="Recolector" type="Node" parent="." node_paths=PackedStringArray("reloj")]
+script = ExtResource("24_recolector")
+reloj = NodePath("../RelojDelTurno")
+
+[node name="AudioDelAlmacen" parent="." instance=ExtResource("29_audio")]
+

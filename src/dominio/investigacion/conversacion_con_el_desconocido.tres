@@ -1,0 +1,25 @@
+[gd_resource type="Resource" script_class="Conversacion" format=3]
+
+[ext_resource type="Script" path="res://src/dominio/investigacion/mensaje.gd" id="1_fg1h8"]
+[ext_resource type="Script" path="res://src/dominio/investigacion/conversacion.gd" id="2_uo5i7"]
+
+[sub_resource type="Resource" id="Resource_g3n7p"]
+script = ExtResource("1_fg1h8")
+de_quien = "Número desconocido"
+texto = "¿Estás en el almacén ahora?"
+
+[sub_resource type="Resource" id="Resource_xknmq"]
+script = ExtResource("1_fg1h8")
+de_quien = "Número desconocido"
+texto = "No abras el depósito hasta que se apague la luz de la vereda."
+
+[sub_resource type="Resource" id="Resource_yrxs3"]
+script = ExtResource("1_fg1h8")
+de_quien = "Número desconocido"
+texto = "No le contestes al jefe sobre esto."
+
+[resource]
+script = ExtResource("2_uo5i7")
+interlocutor = 2
+nombre = "Número desconocido"
+mensajes = Array[ExtResource("1_fg1h8")]([SubResource("Resource_g3n7p"), SubResource("Resource_xknmq"), SubResource("Resource_yrxs3")])

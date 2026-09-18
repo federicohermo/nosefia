@@ -14,18 +14,23 @@ Se corre a mano. Un hook en `worktree add` bajaría N issues cada vez, es lento 
 red — y falla **en medio de otra cosa**, que es donde un error se lee como ruido. Explícito,
 el fallo está a la vista.
 
-## El default trae los que están EN VUELO, no todos
+## Sin argumentos trae los que están EN VUELO, y NO hay forma de traerlos todos
 
-El caso normal es querer **uno**: el que se está implementando. Traer los cerrados también son
-N llamadas a `gh` y un montón de archivos para leer uno.
+Un spec `Implementado`, `Descartado` o `Superado` es un **ADR**: registro de qué se decidió y
+con qué evidencia. No sale más trabajo de él, no se reescribe, y tenerlo en disco no habilita
+nada — sólo ensucia cada listado y cada lectura del directorio. El `--todos` que los traía se
+fue el 2026-09-05, junto con el gate que los necesitaba en disco para mirarlos.
 
-Las tres formas **declaran cuántas saltearon y por qué**: un default que trae menos y no lo
+**Traer uno cerrado sigue siendo posible y hay que pedirlo por número**: `hidratar_specs.py
+025` lo baja, esté como esté. Es la diferencia entre consultar un ADR —que a veces hace
+falta— y arrastrar los treinta en cada worktree.
+
+Las dos formas **declaran cuántas saltearon y por qué**: un default que trae menos y no lo
 dice se lee como «ese spec no existe», que es peor que traer de más.
 
 Uso:
     python .claude/scripts/hidratar_specs.py            # los que estén en vuelo y falten
     python .claude/scripts/hidratar_specs.py 007 012    # sólo ésos, estén como estén
-    python .claude/scripts/hidratar_specs.py --todos    # todos los que falten
     python .claude/scripts/hidratar_specs.py --forzar   # rehace los que ya están
 """
 
@@ -59,8 +64,22 @@ def ya_en_disco() -> list[str]:
 def main() -> None:
     args = sys.argv[1:]
     forzar = "--forzar" in args
-    todos = "--todos" in args
     pedidos = [a for a in args if re.fullmatch(r"\d{3}", a)]
+
+    # Un argumento que no se entiende **corta**, y no es rigor: `--todos` existió hasta el
+    # 2026-09-05, así que ignorarlo callado le daría a quien lo escriba —o a un skill que no se
+    # actualizó— una corrida que trae MENOS de lo que pidió con cara de haber obedecido.
+    sin_entender = [a for a in args if a != "--forzar" and not re.fullmatch(r"\d{3}", a)]
+    if sin_entender:
+        extra = (
+            " `--todos` ya no existe: un spec cerrado es un ADR y se pide por número."
+            if "--todos" in sin_entender
+            else ""
+        )
+        raise SystemExit(
+            f"no entiendo {' '.join(sin_entender)}.{extra} "
+            "Uso: hidratar_specs.py [NNN ...] [--forzar]"
+        )
 
     # `leer_mapa` grita si el archivo está roto, en vez de devolver un mapa sin entradas — que
     # se leería como «no hay nada que hidratar», que es lo contrario de lo que pasa.
@@ -81,8 +100,8 @@ def main() -> None:
         a_hidratar = [i for i in ids if i in pedidos]
         motivo_del_recorte = "no los pediste"
     else:
-        a_hidratar = [i for i in ids if todos or en_vuelo(mapa[i]["estado"])]
-        motivo_del_recorte = "ya están cerrados — `--todos` los trae"
+        a_hidratar = [i for i in ids if en_vuelo(mapa[i]["estado"])]
+        motivo_del_recorte = "son ADR — se piden por número: `hidratar_specs.py 025`"
 
     salteados = len(ids) - len(a_hidratar)
     hechos = 0

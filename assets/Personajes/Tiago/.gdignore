@@ -1,0 +1,7 @@
+# Godot no baja a este directorio: ni lo importa ni lo empaca.
+#
+# Son 240 cuadros de 1080x1350 que todavía no usa ninguna escena. Empacados salían 431 MB de
+# `.pck` y el despliegue moría en `verificar_export.py` contra el techo de 90 MB.
+#
+# Para usarlos: borrar este archivo Y optimizar los cuadros antes. Sin optimizar vuelven a
+# romper el despliegue, y el alfa trae ruido que multiplica por siete lo que pesan.
