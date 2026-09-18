@@ -125,14 +125,21 @@ func _unhandled_input(evento: InputEvent) -> void:
 		examen.alternar(_datos_de_lo_enfocado())
 
 
+## **El clic se lo gasta quien hace algo con él, y sólo ése.** Tener `interactuar()` es la
+## declaración de que el clic izquierdo es suyo: los puestos lo resuelven por señal y contestan
+## `null` —el escritorio abre, el estante coloca—, y soltar además sería un segundo efecto del
+## mismo clic; las cajas contestan sus datos, y eso es lo que se agarra.
+##
+## **Lo que está en el grupo pero no tiene el método no se gasta nada**, y ésa es la diferencia
+## que antes no existía: el corte miraba si había algo enfocado, así que la mancha del piso
+## —que se limpia con el otro botón y no contesta nada acá— se comía el clic. Llevando una caja
+## y con la mira sobre un charco, soltar no hacía absolutamente nada, sin un solo aviso.
 func _interactuar() -> void:
 	var datos: ObjetoDelAlmacen = null
 	if _enfocado != null and _enfocado.has_method(ReglasDeLosObjetos.METODO_INTERACTUAR):
 		datos = _enfocado.call(ReglasDeLosObjetos.METODO_INTERACTUAR)
-	# Las cajas y los puestos resuelven su acción mediante señales. El mismo clic
-	# no debe soltar la unidad que acaba de salir ni la que el estante rechazó.
-	if datos == null and _enfocado != null:
-		return
+		if datos == null:
+			return
 	agarre.alternar(datos, _enfocado)
 
 

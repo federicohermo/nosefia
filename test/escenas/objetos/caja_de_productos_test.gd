@@ -41,8 +41,18 @@ func test_la_caja_contesta_el_contrato_de_interaccion() -> void:  # 008-AC8
 func test_el_cuerpo_de_la_caja_se_puede_llevar() -> void:  # 047-AC5
 	# Unos `datos` en `null` los rechaza `Manos` como «no es levantable»: la escena carga sin un
 	# solo error y el clic no hace nada.
+	#
+	# **El cuerpo es rígido y arranca congelado**, y las dos mitades importan. El spec lo pedía
+	# estático —«una caja se apoya, no rebota ni rueda»—, y eso sigue siendo cierto mientras
+	# descansa: congelada es un cuerpo estático, y el puesto le escribe el lugar derecho. Rígido
+	# es lo que la deja caer cuando le sacan lo que la sostenía, que es lo que desarma una pila.
 	var caja := _caja()
-	assert_object(caja).is_instanceof(StaticBody3D)
+	assert_object(caja).is_instanceof(RigidBody3D)
+	(
+		assert_bool(caja.freeze)
+		. override_failure_message("la caja arranca viva: se acomoda sola antes de que la toquen")
+		. is_true()
+	)
 	(
 		assert_object(caja.datos)
 		. override_failure_message("`caja_de_productos.tscn` no le asignó `datos`: no se levanta")

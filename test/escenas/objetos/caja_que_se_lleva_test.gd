@@ -6,6 +6,10 @@ const ALMACEN := preload("res://src/escenas/almacen.tscn")
 ## El estante vacío del depósito: el único donde una caja entra sin apilarse sobre otra.
 const ESTANTE_DEL_DEPOSITO := "Estructura/gondola_deposito01/StaticBody3D"
 
+## La góndola del pasillo, que tiene paneles a los costados de cada estante. Es la forma difícil:
+## el hueco entre dos paneles es de los pocos lugares donde la caja entra de canto.
+const GONDOLA_DEL_PASILLO := "Estructura/gondola01/StaticBody3D"
+
 ## Media caja, en metros: lo que separa el centro de una caja apoyada de lo que la sostiene.
 const MEDIA_CAJA := 0.3037
 
@@ -27,12 +31,57 @@ const HOLGURA_DEL_APOYO := 0.02
 ## Cuadros de física empujando. Arrastrando una caja se camina a un tercio de la velocidad.
 const CUADROS_EMPUJANDO := 150
 
-## Cuánto se le descuenta a la forma para preguntar si atraviesa algo: tocar no es atravesar.
-const ROCE := 0.004
-
 ## Los dos gestos de soltar, en grados de la vista.
 const MIRANDO_ARRIBA := 10.0
 const MIRANDO_ABAJO := -40.0
+
+## Los ángulos de la vista que se barren al contrastar dónde queda la caja, en grados. Cubren de
+## la pared del fondo al piso a los pies, que es todo lo que el cursor puede señalar de pie.
+const ANGULOS_DE_LA_VISTA: Array[float] = [
+	20.0, 15.0, 10.0, 5.0, 0.0, -5.0, -10.0, -15.0, -20.0, -30.0, -45.0, -60.0
+]
+
+## Hasta qué distancia del eje del jugador cuenta como «al lado», en metros. El puesto la deja a
+## su radio más media caja, que son 0,93; lo de más allá es un lugar que la mira eligió.
+const AL_LADO_DEL_JUGADOR := 1.3
+
+## Desde dónde se mira un charco para soltarle la caja encima, en metros de su centro.
+const PARADO_DEL_CHARCO := 1.8
+
+## Piso libre del depósito, lejos de los estantes: donde se arma una pila sin que estorbe nada.
+const PISO_LIBRE_DEL_DEPOSITO := Vector3(4.49, 0.102, -10.0)
+
+## Cuadros de física sin que nadie toque la pila. Una que se acomoda sola es peor que una que no
+## se cae: el caso mide las dos cosas, y ésta primero.
+const CUADROS_QUIETOS := 20
+
+## Cuadros de física para que una caja sin apoyo caiga, aterrice y se vuelva a dormir. Cayendo
+## una caja y media tarda menos de treinta; el resto es el margen del reposo.
+const CUADROS_CAYENDO := 150
+
+## De cuántos pisos es la pila que se arma. **Cinco y no tres, y ésa es la medición del caso.**
+## Despertar un solo piso alcanza para dos —la de encima cae, y la siguiente se entera de
+## refilón—, así que con tres pisos el caso pasaba en verde sin cascada. Con cinco, la cuarta se
+## quedaba flotando a 0,93 m de cualquier apoyo con la quinta prolijamente encima.
+const PISOS_DE_LA_PILA := 5
+
+## Cuánto puede separarse del apoyo una caja que se cayó, en metros. Es más flojo que
+## `HOLGURA_DEL_APOYO` porque una pila de cinco se acomoda con unos milímetros de deriva: medido,
+## el hueco queda entre 0,294 y 0,303 contra los 0,3037 de media caja.
+const HOLGURA_DE_LA_CAIDA := 0.02
+
+## Hasta dónde se busca el apoyo de una caja, en metros. Alcanza para cruzar el local entero de
+## arriba abajo, así que una que flota igual encuentra el piso y el mensaje dice a cuánto quedó.
+const HASTA_EL_PISO := 4.0
+
+## Cuánto puede quedar la base de la caja por debajo del punto apuntado, en metros.
+##
+## Sale de la caja y no de un ajuste: el puesto busca la tapa hasta **la altura de la caja** por
+## debajo de lo apuntado, y arranca **media caja** más atrás sobre la línea de la vista, que
+## mirando para arriba baja otro tanto. Son 0,607 + 0,526. Medido a 0,9 m del estante del
+## depósito, el peor caso real da 0,78; el frente de la madera, que es lo que no debe pasar, da
+## 1,46.
+const CAIDA_DESDE_LO_APUNTADO := 1.14
 
 
 ## Le pone el foco al objetivo y le manda la acción, que es lo que hace el clic de verdad.
@@ -168,10 +217,16 @@ func _comprobar_la_mira_libre(jugador: Node3D, caja: Node3D, donde: String) -> v
 func _comprobar_que_no_atraviesa_nada(jugador: Node3D, caja: Node3D, donde: String) -> void:
 	var forma: CollisionShape3D = caja.get_node("Cuerpo")
 	var apenas_menor := BoxShape3D.new()
-	apenas_menor.size = (forma.shape as BoxShape3D).size * forma.scale - Vector3.ONE * ROCE
+	apenas_menor.size = (
+		(forma.shape as BoxShape3D).size * forma.scale - Vector3.ONE * ReglasDeLosObjetos.ROCE
+	)
 	var consulta := PhysicsShapeQueryParameters3D.new()
 	consulta.shape = apenas_menor
 	consulta.transform = Transform3D(caja.global_basis, caja.global_position)
+	# Por la máscara de la caja y no por todas las capas: en la 2 están la mancha del piso y el
+	# casillero de la góndola, que existen para la mira y no son cosas que se atraviesen. Una
+	# caja apoyada sobre una mancha queda adentro de su cilindro de 6 cm y no atraviesa nada.
+	consulta.collision_mask = (caja as CollisionObject3D).collision_mask
 	consulta.exclude = [jugador.get_rid(), (caja as CollisionObject3D).get_rid()]
 	var pisados: Array[String] = []
 	for choque in jugador.get_world_3d().direct_space_state.intersect_shape(consulta, 4):
@@ -271,6 +326,37 @@ func test_la_caja_vuelta_a_su_lugar_apoya_entera() -> void:  # 047-AC10
 		_comprobar_apoyo_entero(almacen, caja, caja.name)
 
 
+## Que la caja tenga algo justo debajo, a media caja de su centro.
+##
+## Es lo que se le pide a una que **cayó**, y no las cuatro esquinas calzadas: una pila que se
+## desarma se acomoda con unos milímetros de deriva lateral, así que exigir el calce perfecto
+## sería exigirle al motor lo que no da. Lo que importa acá es que no haya quedado en el aire.
+func _comprobar_que_no_flota(almacen: Node3D, caja: Node3D, donde: String) -> void:
+	var consulta := PhysicsRayQueryParameters3D.create(
+		caja.global_position, caja.global_position + Vector3.DOWN * HASTA_EL_PISO
+	)
+	consulta.exclude = [(caja as CollisionObject3D).get_rid()]
+	var golpe := almacen.get_world_3d().direct_space_state.intersect_ray(consulta)
+	(
+		assert_bool(golpe.has("position"))
+		. override_failure_message("%s: `%s` no tiene nada debajo" % [donde, caja.name])
+		. is_true()
+	)
+	if not golpe.has("position"):
+		return
+	var hueco: float = caja.global_position.y - (golpe["position"] as Vector3).y
+	(
+		assert_float(hueco)
+		. override_failure_message(
+			(
+				"%s: `%s` quedó a %.3f m de lo que tiene debajo, y media caja es %.3f"
+				% [donde, caja.name, hueco, MEDIA_CAJA]
+			)
+		)
+		. is_equal_approx(MEDIA_CAJA, HOLGURA_DE_LA_CAIDA)
+	)
+
+
 ## Que las cuatro esquinas de la caja tengan apoyo: ni flotando ni con media caja afuera.
 func _comprobar_apoyo_entero(almacen: Node3D, caja: Node3D, donde: String) -> void:
 	var forma: CollisionShape3D = caja.get_node("Cuerpo")
@@ -299,8 +385,14 @@ func _comprobar_apoyo_entero(almacen: Node3D, caja: Node3D, donde: String) -> vo
 
 
 func test_la_caja_va_donde_apunta_la_mira() -> void:  # 047-AC11
-	# Los dos gestos que decide el spec: pegado al estante y mirando arriba queda en el estante,
-	# y mirando abajo queda en el piso. Sin esto la caja vuelve siempre al mismo lado.
+	# **El lugar lo decide el cursor y no el gesto de la vista.** Antes no: contra la pared del
+	# fondo del depósito, la mira a +20, +10 y 0 grados daba tres puntos distintos y la caja caía
+	# siempre en el mismo estante, porque lo que la ubicaba era un rayo hacia abajo desde lo
+	# apuntado y no lo apuntado. Mirar más arriba o más abajo movía el resultado; apuntar, no.
+	#
+	# Por eso el caso no fija un ángulo y su resultado: barre diez y contrasta cada uno contra lo
+	# que la mira toca. Desde dos lugares, que es lo que trae las dos clases de apoyo: pegado al
+	# estante la mira llega a la madera, y un paso atrás ya no, así que el apoyo es el piso.
 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
 	add_child(almacen)
 	await get_tree().physics_frame
@@ -309,15 +401,7 @@ func test_la_caja_va_donde_apunta_la_mira() -> void:  # 047-AC11
 	var caja: Node3D = almacen.get("_cajas_de_productos")[Producto.Id.ARROZ]
 	_accion(jugador, caja, ReglasDeLosObjetos.ACCION_AGARRAR)
 	await _caminar_hasta(almacen, _limites_de(estante), Vector3.FORWARD)
-	_mirar(jugador, jugador.rotation.y, deg_to_rad(MIRANDO_ARRIBA))
-	_accion(jugador, caja, ReglasDeLosObjetos.ACCION_AGARRAR)
-	(
-		assert_object(_apoyo_de(almacen, caja))
-		. override_failure_message("mirando arriba la caja no quedó en el estante")
-		. is_same(estante)
-	)
-	_comprobar_apoyo_entero(almacen, caja, "en el estante")
-	_accion(jugador, caja, ReglasDeLosObjetos.ACCION_AGARRAR)
+	var contadas := _contrastar_la_mira(almacen, caja, "pegado al estante")
 	# Pegado al estante no hay piso libre donde dejarla: entre el cuerpo y la madera no entra
 	# una caja. Se retrocede un paso, que es lo que haría cualquiera.
 	Input.action_press(ReglasDelJugador.ACCION_ATRAS)
@@ -325,35 +409,129 @@ func test_la_caja_va_donde_apunta_la_mira() -> void:  # 047-AC11
 		await get_tree().physics_frame
 	Input.action_release(ReglasDelJugador.ACCION_ATRAS)
 	await get_tree().physics_frame
-	_mirar(jugador, jugador.rotation.y, deg_to_rad(MIRANDO_ABAJO))
-	_accion(jugador, caja, ReglasDeLosObjetos.ACCION_AGARRAR)
+	var atras := _contrastar_la_mira(almacen, caja, "un paso atrás")
 	(
-		assert_object(caja.get_parent())
-		. override_failure_message("con lugar de sobra la caja se quedó en la mano")
-		. is_same(almacen)
+		assert_int(contadas[0] + atras[0])
+		. override_failure_message("ningún ángulo apoyó la caja sobre lo apuntado: no ejerce nada")
+		. is_greater(1)
 	)
 	(
-		assert_object(_apoyo_de(almacen, caja))
-		. override_failure_message("mirando abajo la caja no quedó en el piso")
-		. is_not_same(estante)
+		assert_int(contadas[1] + atras[1])
+		. override_failure_message("ningún ángulo cayó al lado del jugador: no ejerce el respaldo")
+		. is_greater(0)
 	)
-	_comprobar_apoyo_entero(almacen, caja, "en el piso")
+
+
+## Suelta la caja en cada ángulo de la vista y la contrasta contra lo que la mira toca.
+##
+## Devuelve los dos conteos —las que fueron a lo apuntado y las que cayeron al lado del jugador—,
+## para que el caso no pueda pasar en verde sin haber ejercido ninguna de las dos mitades de la
+## regla. La mira sobre el aire no entra en la primera: ahí no señala una superficie equivocada,
+## no señala ninguna, y la caja va al piso que haya debajo del cursor.
+func _contrastar_la_mira(almacen: Node3D, caja: Node3D, donde: String) -> Array[int]:
+	var jugador: CharacterBody3D = almacen.get("_jugador")
+	var mano: Node3D = jugador.get_node("PuntoDeCaja")
+	var contrastadas := 0
+	var al_lado := 0
+	for alto: float in ANGULOS_DE_LA_VISTA:
+		if caja.get_parent() != mano:
+			_accion(jugador, caja, ReglasDeLosObjetos.ACCION_AGARRAR)
+		_mirar(jugador, jugador.rotation.y, deg_to_rad(alto))
+		var apuntado := _lo_apuntado(almacen, jugador, caja)
+		_accion(jugador, caja, ReglasDeLosObjetos.ACCION_AGARRAR)
+		# Quedarse en la mano es el último recurso: sólo si tampoco hay lugar al lado.
+		if caja.get_parent() == mano:
+			continue
+		var gesto := "%s, mirando %.0f grados" % [donde, alto]
+		# Apoya en sus cuatro esquinas vaya donde vaya: el respaldo no es una excepción a eso.
+		_comprobar_apoyo_entero(almacen, caja, gesto)
+		var plano := Vector2(
+			caja.global_position.x - jugador.global_position.x,
+			caja.global_position.z - jugador.global_position.z
+		)
+		if plano.length() <= AL_LADO_DEL_JUGADOR:
+			# La mira no señalaba un lugar donde entrara, así que se la dejó al lado. Soltar
+			# suelta: lo que no puede pasar es que el clic no haga nada.
+			al_lado += 1
+			continue
+		if apuntado.is_empty():
+			continue
+		# **No se exige que la caja quede sobre el cuerpo que la mira tocó, y es a propósito.** El
+		# hueco de un estante es aire: el rayo lo cruza y pega en el panel del fondo, así que
+		# apuntar al medio del estante da el panel, y la caja va a la tapa que ese hueco tiene
+		# abajo, que es lo que el jugador estaba mirando. Lo que sí se exige es que esa tapa esté
+		# ahí nomás: lo que no puede pasar es que la caja termine un estante más abajo.
+		contrastadas += 1
+		var base := caja.global_position.y - MEDIA_CAJA
+		var mirado: float = (apuntado["position"] as Vector3).y
+		(
+			assert_float(base)
+			. override_failure_message(
+				(
+					"%s la caja apoya a %.3f y la mira daba a %.3f, %.3f m más arriba"
+					% [gesto, base, mirado, mirado - base]
+				)
+			)
+			. is_between(mirado - CAIDA_DESDE_LO_APUNTADO, mirado + HOLGURA_DEL_APOYO)
+		)
+	return [contrastadas, al_lado]
+
+
+## Qué toca la mira del jugador, con las mismas exclusiones que usa el puesto para ubicarla.
+func _lo_apuntado(almacen: Node3D, jugador: Node3D, caja: Node3D) -> Dictionary:
+	var ojo: Transform3D = jugador.call("mira")
+	var consulta := PhysicsRayQueryParameters3D.create(
+		ojo.origin, ojo.origin - ojo.basis.z * ReglasDelJugador.ALCANCE_DE_LA_MIRA
+	)
+	consulta.exclude = [
+		(caja as CollisionObject3D).get_rid(), (jugador as CollisionObject3D).get_rid()
+	]
+	return almacen.get_world_3d().direct_space_state.intersect_ray(consulta)
 
 
 func test_la_caja_soltada_nunca_queda_adentro_de_nada() -> void:  # 047-AC12
 	# El barrido que antes fallaba: parado de costado al estante, la caja terminaba metida en la
 	# madera. Se prueban las dos vueltas y los cuatro ángulos, no sólo el tiro de frente.
 	# Las que no encuentran lugar no se sueltan, y eso también es correcto.
+	#
+	# **Se mide un paso atrás del estante, y no pegado a él.** Pegado no entra en ningún lado:
+	# los estantes tienen 0,477 m de aire y la caja mide 0,607, y el piso que la mira alcanza cae
+	# debajo de la madera. Ahí las doce se quedan en la mano —correcto, pero no ejerce nada—.
+	#
+	# **Y se mide contra las dos góndolas, no contra una.** La del depósito está vacía y la del
+	# pasillo tiene paneles a los costados de cada estante: ahí la caja entraba de canto entre
+	# dos y el barrido decía que había llegado, porque `cast_motion` contesta que el movimiento
+	# entero es seguro cuando la forma arranca ya tocando algo. De 256 soltadas alrededor de esa
+	# góndola, 20 quedaban adentro de ella.
 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
 	add_child(almacen)
 	await get_tree().physics_frame
+	var soltadas := 0
+	for ruta_del_mueble: String in [ESTANTE_DEL_DEPOSITO, GONDOLA_DEL_PASILLO]:
+		soltadas += await _soltar_en_los_doce_gestos(almacen, almacen.get_node(ruta_del_mueble))
+	(
+		assert_int(soltadas)
+		. override_failure_message("casi ninguna se soltó: el caso no ejerce nada")
+		. is_greater(6)
+	)
+
+
+## Camina hasta el mueble, retrocede un paso y suelta la caja en las doce vueltas y ángulos.
+##
+## Devuelve cuántas se soltaron de verdad, para que el caso no pueda pasar sin ejercer nada.
+func _soltar_en_los_doce_gestos(almacen: Node3D, mueble: Node3D) -> int:
 	var jugador: CharacterBody3D = almacen.get("_jugador")
-	var estante: Node3D = almacen.get_node(ESTANTE_DEL_DEPOSITO)
 	var caja: Node3D = almacen.get("_cajas_de_productos")[Producto.Id.ARROZ]
 	var mano: Node3D = jugador.get_node("PuntoDeCaja")
-	_accion(jugador, caja, ReglasDeLosObjetos.ACCION_AGARRAR)
-	await _caminar_hasta(almacen, _limites_de(estante), Vector3.FORWARD)
+	if caja.get_parent() != mano:
+		_accion(jugador, caja, ReglasDeLosObjetos.ACCION_AGARRAR)
+	await _caminar_hasta(almacen, _limites_de(mueble), Vector3.FORWARD)
 	assert_object(caja.get_parent()).is_same(mano)
+	Input.action_press(ReglasDelJugador.ACCION_ATRAS)
+	for cuadro in CUADROS_ATRAS:
+		await get_tree().physics_frame
+	Input.action_release(ReglasDelJugador.ACCION_ATRAS)
+	await get_tree().physics_frame
 	var derecho := jugador.rotation.y
 	var soltadas := 0
 	for giro: float in [-20.0, 0.0, 20.0]:
@@ -362,19 +540,141 @@ func test_la_caja_soltada_nunca_queda_adentro_de_nada() -> void:  # 047-AC12
 				_accion(jugador, caja, ReglasDeLosObjetos.ACCION_AGARRAR)
 			_mirar(jugador, derecho + deg_to_rad(giro), deg_to_rad(alto))
 			_accion(jugador, caja, ReglasDeLosObjetos.ACCION_AGARRAR)
-			# Donde no entra no se suelta: pegado al estante y mirando al piso no hay hueco
-			# entre el cuerpo y la madera, y de costado el camino pasa por un parante.
+			# Quedarse en la mano es el último recurso: cuando la mira no encuentra lugar la
+			# caja va al piso al lado del jugador, y ahí tampoco puede quedar adentro de nada.
 			if caja.get_parent() == mano:
 				continue
 			soltadas += 1
 			_comprobar_que_no_atraviesa_nada(
-				jugador, caja, "girado %.0f grados y mirando %.0f" % [giro, alto]
+				jugador, caja, "en `%s`, girado %.0f y mirando %.0f" % [mueble.name, giro, alto]
 			)
+	return soltadas
+
+
+func test_la_caja_se_suelta_con_la_mira_sobre_un_charco() -> void:  # 047-AC12
+	# **Lo enfocado no es la caja, y eso es lo que este caso agrega.** Los demás le escriben
+	# `_enfocado` a mano y le apuntan a la caja, así que ninguno podía ver esto: llevando una
+	# caja y con la mira sobre una mancha, el clic no hacía nada. La mancha está en el grupo
+	# `interactuable` y tenía `interactuar()`, y `jugador.gd` le daba el clic entero a cualquier
+	# cosa enfocada que contestara `null` —que para una mancha es siempre—.
+	var almacen: Node3D = auto_free(ALMACEN.instantiate())
+	add_child(almacen)
+	await get_tree().physics_frame
+	almacen.get("_ciclo").abrir_la_jornada()
+	await get_tree().physics_frame
+	var jugador: CharacterBody3D = almacen.get("_jugador")
+	var caja: Node3D = almacen.get("_cajas_de_productos")[Producto.Id.ARROZ]
+	var mano: Node3D = jugador.get_node("PuntoDeCaja")
+	var manchas: Array = almacen.get("_limpieza").call("manchas")
+	assert_array(manchas).is_not_empty()
+	var sueltas := 0
+	for mancha: Node3D in manchas:
+		if not mancha.visible:
+			continue
+		if caja.get_parent() != mano:
+			_accion(jugador, caja, ReglasDeLosObjetos.ACCION_AGARRAR)
+		var desde := jugador.global_position - mancha.global_position
+		desde.y = 0.0
+		jugador.global_position = (
+			mancha.global_position + desde.normalized() * PARADO_DEL_CHARCO + Vector3.UP * 0.112
+		)
+		await get_tree().physics_frame
+		_apuntar_a(jugador, mancha)
+		# El clic con el foco que el juego calcula solo, que acá es la mancha y no la caja.
+		_accion(jugador, mancha, ReglasDeLosObjetos.ACCION_AGARRAR)
+		(
+			assert_object(caja.get_parent())
+			. override_failure_message(
+				"con la mira sobre `%s` el clic no soltó la caja" % mancha.name
+			)
+			. is_not_same(mano)
+		)
+		sueltas += 1
+		_comprobar_apoyo_entero(almacen, caja, "con la mira sobre `%s`" % mancha.name)
+		_comprobar_que_no_atraviesa_nada(jugador, caja, "con la mira sobre `%s`" % mancha.name)
 	(
-		assert_int(soltadas)
-		. override_failure_message("casi ninguna se soltó: el caso no ejerce nada")
-		. is_greater(6)
+		assert_int(sueltas)
+		. override_failure_message("ninguna mancha estaba sucia: el caso no ejerce nada")
+		. is_greater(0)
 	)
+
+
+func test_sacar_una_caja_de_la_pila_hace_caer_las_de_arriba() -> void:  # 047-AC5
+	# **Las cajas apiladas se sostienen entre sí.** El cuerpo es rígido y arranca congelado, así
+	# que apoyada se porta como algo estático; pierde el apoyo y cae. Se miden las dos mitades,
+	# y la primera importa tanto como la segunda: una pila que se acomoda sola apenas carga la
+	# escena sería peor que una que no se desarma nunca.
+	var almacen: Node3D = auto_free(ALMACEN.instantiate())
+	add_child(almacen)
+	await get_tree().physics_frame
+	var jugador: CharacterBody3D = almacen.get("_jugador")
+	var cajas: Array = almacen.get("_cajas_de_productos")
+	assert_int(cajas.size()).is_greater_equal(PISOS_DE_LA_PILA)
+	var pila: Array[Node3D] = []
+	for piso in PISOS_DE_LA_PILA:
+		pila.append(cajas[piso])
+	for piso in pila.size():
+		pila[piso].global_position = (
+			PISO_LIBRE_DEL_DEPOSITO + Vector3.UP * MEDIA_CAJA * (1 + 2 * piso)
+		)
+		pila[piso].call("quedarse_quieta")
+	jugador.global_position = PISO_LIBRE_DEL_DEPOSITO + Vector3(0.0, 0.01, 1.2)
+	await get_tree().physics_frame
+	var armada: Array[float] = []
+	for caja in pila:
+		armada.append(caja.global_position.y)
+	for cuadro in CUADROS_QUIETOS:
+		await get_tree().physics_frame
+	for piso in pila.size():
+		(
+			assert_float(pila[piso].global_position.y)
+			. override_failure_message(
+				(
+					"`%s` se movió sola: arrancó en %.3f y quedó en %.3f"
+					% [pila[piso].name, armada[piso], pila[piso].global_position.y]
+				)
+			)
+			. is_equal_approx(armada[piso], HOLGURA_DEL_APOYO)
+		)
+	# Se lleva la de abajo, que es lo que deja a las otras dos en el aire.
+	_accion(jugador, pila[0], ReglasDeLosObjetos.ACCION_AGARRAR)
+	for cuadro in CUADROS_CAYENDO:
+		await get_tree().physics_frame
+	for piso in range(1, PISOS_DE_LA_PILA):
+		(
+			assert_float(pila[piso].global_position.y)
+			. override_failure_message(
+				(
+					"`%s`, el piso %d, quedó flotando a %.3f, donde la dejó la que ya no está"
+					% [pila[piso].name, piso, pila[piso].global_position.y]
+				)
+			)
+			. is_less(armada[piso] - MEDIA_CAJA)
+		)
+		_comprobar_que_no_flota(almacen, pila[piso], "después de sacarle la de abajo")
+	# Y ahora una del medio de lo que quedó: las de arriba se quedan sin apoyo igual.
+	var antes_de_la_ultima: float = pila[PISOS_DE_LA_PILA - 1].global_position.y
+	# El mismo clic suelta o agarra, así que primero hay que dejar la que se lleva —y mirando
+	# para el otro lado, o cae sobre la pila que este tramo quiere mover—.
+	_mirar(jugador, PI, deg_to_rad(MIRANDO_ABAJO))
+	_accion(jugador, pila[0], ReglasDeLosObjetos.ACCION_AGARRAR)
+	await get_tree().physics_frame
+	_accion(jugador, pila[1], ReglasDeLosObjetos.ACCION_AGARRAR)
+	assert_object(pila[1].get_parent()).is_same(jugador.get_node("PuntoDeCaja"))
+	for cuadro in CUADROS_CAYENDO:
+		await get_tree().physics_frame
+	var ultima: Node3D = pila[PISOS_DE_LA_PILA - 1]
+	(
+		assert_float(ultima.global_position.y)
+		. override_failure_message(
+			(
+				"`%s`, la de más arriba, quedó flotando a %.3f al sacarle una de abajo"
+				% [ultima.name, ultima.global_position.y]
+			)
+		)
+		. is_less(antes_de_la_ultima - MEDIA_CAJA)
+	)
+	_comprobar_que_no_flota(almacen, ultima, "después de sacarle la del medio")
 
 
 func test_agarrar_la_caja_del_estante_no_mueve_al_jugador() -> void:  # 047-AC6
