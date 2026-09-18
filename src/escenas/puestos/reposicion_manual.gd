@@ -7,7 +7,6 @@ const CajaDelDeposito := preload("res://src/escenas/objetos/caja_de_productos.gd
 const JugadorDelLocal := preload("res://src/escenas/jugador.gd")
 const OBJETO := preload("res://src/escenas/objetos/objeto_agarrable.tscn")
 const BORDE := preload("res://src/escenas/puestos/borde_de_reposicion.gdshader")
-const PRODUCTOS_NUEVOS := preload("res://assets/models/productos_marolini_jorgillo.glb")
 
 ## Hasta dónde se busca piso debajo de una caja recién soltada, en metros.
 const CAIDA_MAXIMA := 3.0
@@ -17,6 +16,9 @@ const PASOS_DEL_BORDE := 12
 
 ## Cuánto puede variar la altura de un apoyo y seguir siendo el mismo, en metros.
 const TOLERANCIA_DEL_APOYO := 0.02
+
+## En cuántos pasos se trae hacia el jugador lo que se soltó adentro de un mueble.
+const PASOS_PARA_DESATASCAR := 12
 
 ## Cuántas direcciones alrededor del jugador se prueban para dejarle la caja al lado.
 const LADOS_DEL_JUGADOR := 8
@@ -29,8 +31,24 @@ const LADOS_DEL_JUGADOR := 8
 ## De dónde cuelga la caja mientras se la lleva: un punto del CUERPO y no de la cámara, porque
 ## pegada al pitch tapa la mira. Lo mueve este puesto y no `Agarre`, que no puede nombrarla.
 @export var punto_de_la_caja: Node3D
+## Dónde se apoya la PRIMERA unidad de cada producto, en el orden de `Producto.Id`.
 @export var apoyos: Array[Vector3] = []
+
+## Hacia dónde crece la fila de cada producto sobre el estante.
+##
+## **La góndola exhibe por dos caras y no por una**, y de ahí que esto sea por producto. El panel
+## de fondo va de z = -3,04 a 0,60: ahí el estante tiene respaldo, mira al pasillo y la fila corre
+## a lo largo, en +Z. Desde z = -4,17 hasta -3,04 no hay panel —se ve de lado a lado—, así que esa
+## punta es la **cabecera**: exhibe hacia su extremo y la fila entra hacia adentro del mueble, en
+## +X. Un producto del pasillo puesto en la cabecera queda parado en un marco vacío.
 @export var direcciones: Array[Vector3] = []
+
+## Cuánto gira cada modelo para mostrarle el frente a la cámara, en grados.
+##
+## Sale de hacia dónde está horneado el modelo, que es lo mismo que decide su cara de la góndola:
+## los del pasillo miran a -X y los de la cabecera a -Z. **El estante coloca las copias sin
+## rotarlas**, así que un modelo horneado hacia el lado equivocado se ve de costado y ningún
+## número de acá lo arregla: se corrige la malla.
 @export var giros_del_frente: Array[float] = []
 
 var _unidades: Array[Node3D] = []
@@ -84,11 +102,45 @@ func preparar() -> void:
 	jugador.uso_pedido.connect(retirar_de_la_caja)
 	repositor.agarre.objeto_agarrado.connect(_actualizar_zonas)
 	repositor.agarre.objeto_soltado.connect(_actualizar_zonas)
+	repositor.agarre.objeto_soltado.connect(_desatascar_lo_soltado)
 	repositor.agarre.objeto_soltado.connect(_agrupar_suelto)
 	repositor.agarre.objeto_agarrado.connect(_retirar_del_grupo)
 	repositor.agarre.objeto_soltado.connect(_apoyar_la_caja)
 	repositor.agarre.objeto_agarrado.connect(_colgar_la_caja)
 	_actualizar_zonas()
+
+
+## Saca del mueble la unidad que se soltó adentro de él.
+##
+## **`Agarre` suelta a 1,2 m de la cámara y no puede mirar el mundo**: eso lo contesta la escena,
+## y para las cajas lo hace `_apoyar_la_caja`. Una unidad de producto no tenía quién, así que
+## parado contra la góndola —el pasillo mide 1,73 m— el punto de soltado caía adentro del
+## estante: el producto quedaba detrás del panel, temblando contra la malla y sin rayo que lo
+## alcance. Medido el 2026-09-18 soltando desde el pasillo de enfrente: terminaba 1,35 m
+## adentro del mueble, detrás del fondo, a distancia `inf` de la mira.
+##
+## Se lo trae hacia el jugador hasta el primer lugar libre, que es de donde vino.
+func _desatascar_lo_soltado(nodo: Node3D) -> void:
+	var unidad := nodo as ObjetoAgarrable
+	if unidad == null or not unidad.datos is UnidadDeProducto:
+		return
+	var forma: CollisionShape3D = unidad.get_node("Forma")
+	var consulta := PhysicsShapeQueryParameters3D.new()
+	consulta.shape = forma.shape
+	consulta.collision_mask = unidad.collision_mask
+	consulta.exclude = [unidad.get_rid(), jugador.get_rid()]
+	var espacio := get_world_3d().direct_space_state
+	var atras := jugador.mira().basis.z.normalized()
+	var paso := ReglasDelJugador.ALCANCE_DE_LA_MIRA / PASOS_PARA_DESATASCAR
+	for intento in PASOS_PARA_DESATASCAR:
+		# **La consulta lleva la vuelta que el producto tiene, no una derecha.** Una unidad se
+		# suelta girada —por su frente y por lo que el cuerpo giró al caer—, y una forma
+		# derecha ocupa otro volumen que el real: contesta libre donde el producto igual se
+		# mete en el panel, que es el caso que esta función existe para sacar.
+		consulta.transform = forma.global_transform
+		if espacio.intersect_shape(consulta, 1).is_empty():
+			return
+		unidad.global_position += atras * paso
 
 
 func _agrupar_suelto(nodo: Node3D) -> void:
@@ -459,9 +511,9 @@ func _apoyo(id: Producto.Id) -> Vector3:
 
 func _posicion(id: Producto.Id, indice: int) -> Vector3:
 	var base := to_global(apoyos[id])
-	var direccion := direcciones[id]
-	var separacion := _modelos[id].get_aabb().size.dot(direccion.abs()) + 0.03
-	return base + direccion * separacion * indice
+	var hacia := direcciones[id]
+	var separacion := _modelos[id].get_aabb().size.dot(hacia.abs()) + 0.03
+	return base + hacia * separacion * indice
 
 
 func _preparar_modelos() -> void:
@@ -470,14 +522,14 @@ func _preparar_modelos() -> void:
 		herramienta.append_from(grupo.mesh, 0, Transform3D(grupo.global_basis, Vector3.ZERO))
 		herramienta.set_material(grupo.mesh.surface_get_material(0))
 		_modelos.append(herramienta.commit())
-	_modelos[Producto.Id.ACTRONCITO] = preload("res://assets/models/producto_actroncito.res")
-	var nuevos := PRODUCTOS_NUEVOS.instantiate()
-	_modelos.append(nuevos.get_node("Marolini").mesh)
-	_modelos.append(nuevos.get_node("Jorgillo").mesh)
-	nuevos.free()
 	for modelo in _modelos:
-		var forma := ConvexPolygonShape3D.new()
-		var puntos := modelo.get_faces()
+		# **El casco sale de `create_convex_shape` y no de `get_faces()`.** Los vértices crudos
+		# vienen repetidos —tres por cada esquina de una caja—, y con esa nube el solver arma un
+		# manifiesto de contacto sucio: un producto de caras planas apoyado no termina de
+		# asentarse y se lo ve titilar. Medido el 2026-09-18: una caja baja de 36 puntos a 8, y
+		# el producto de más caras del catálogo, de 1146 a 129.
+		var forma := modelo.create_convex_shape(true, false)
+		var puntos := forma.points
 		var centro := modelo.get_aabb().get_center()
 		for indice in puntos.size():
 			puntos[indice] -= centro

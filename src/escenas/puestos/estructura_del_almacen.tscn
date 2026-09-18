@@ -7,8 +7,6 @@
 [ext_resource type="Script" path="res://src/escenas/puestos/escritorio.gd" id="escritorio"]
 [ext_resource type="Script" path="res://src/escenas/puestos/estante.gd" id="estante"]
 [ext_resource type="Script" path="res://src/escenas/puestos/puerta_del_local.gd" id="puerta"]
-[ext_resource type="ArrayMesh" path="res://assets/models/gondola_soporte.res" id="soporte"]
-[ext_resource type="Shape3D" path="res://assets/models/gondola_colision.res" id="colision"]
 [ext_resource type="PackedScene" path="res://src/escenas/puestos/contenido_del_estante.tscn" id="contenido"]
 
 [sub_resource type="BoxShape3D" id="suelo_local"]
@@ -60,7 +58,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.4, 7.9)
 [node name="Ventanilla" parent="." instance=ExtResource("15_ventanilla")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.35, 1.04, 7.974)
 
-[node name="StaticBody3D" parent="compu" node_paths=PackedStringArray("mallas") groups=["interactuable"]]
+[node name="StaticBody3D" parent="base compu" node_paths=PackedStringArray("mallas") groups=["interactuable"]]
 script = ExtResource("escritorio")
 metadata/apoyo = NodePath("Estructura/EscritorioComputadora")
 mallas = [NodePath(".."), NodePath("../../teclado")]
@@ -70,164 +68,160 @@ script = ExtResource("puerta")
 hoja = NodePath("..")
 mallas = [NodePath("..")]
 
-[node name="StaticBody3D" parent="puerta_001" node_paths=PackedStringArray("hoja", "mallas") groups=["interactuable"]]
+[node name="StaticBody3D" parent="puerta2" node_paths=PackedStringArray("hoja", "mallas") groups=["interactuable"]]
 script = ExtResource("puerta")
 hoja = NodePath("..")
 mallas = [NodePath("..")]
 
-[node name="gondola01" parent="."]
-mesh = ExtResource("soporte")
+[node name="gondolanueva" parent="."]
 
-[node name="StaticBody3D" parent="gondola01" node_paths=PackedStringArray("_huecos", "mallas") groups=["interactuable"]]
+[node name="StaticBody3D" parent="gondolanueva" node_paths=PackedStringArray("_huecos", "mallas") groups=["interactuable"]]
 script = ExtResource("estante")
 _huecos = NodePath("Contenido")
 mallas = [NodePath("..")]
 
-[node name="CollisionShape3D" parent="gondola01/StaticBody3D"]
-shape = ExtResource("colision")
+[node name="Contenido" parent="gondolanueva/StaticBody3D" instance=ExtResource("contenido")]
 
-[node name="Contenido" parent="gondola01/StaticBody3D" instance=ExtResource("contenido")]
-
-[node name="malbardocig" parent="gondola01"]
+[node name="malbardocig" parent="gondolanueva"]
 visible = false
 
-[node name="StaticBody3D" parent="gondola01/malbardocig"]
+[node name="StaticBody3D" parent="gondolanueva/malbardocig"]
 collision_layer = 0
 collision_mask = 0
 
-[node name="atún" parent="."]
+[node name="lataarvejas_001" parent="."]
 visible = false
 
-[node name="StaticBody3D" parent="atún"]
+[node name="StaticBody3D" parent="lataarvejas_001"]
 collision_layer = 0
 collision_mask = 0
 
-[node name="atún_02" parent="."]
+[node name="limpiador" parent="."]
 visible = false
 
-[node name="StaticBody3D" parent="atún_02"]
+[node name="StaticBody3D" parent="limpiador"]
 collision_layer = 0
 collision_mask = 0
 
-[node name="durextra" parent="."]
+[node name="durextra" parent="gondolanueva"]
 visible = false
 
-[node name="StaticBody3D" parent="durextra"]
+[node name="StaticBody3D" parent="gondolanueva/durextra"]
 collision_layer = 0
 collision_mask = 0
 
-[node name="snackpapas1" parent="."]
+[node name="snackpapas1_001" parent="gondolanueva"]
 visible = false
 
-[node name="StaticBody3D" parent="snackpapas1"]
+[node name="StaticBody3D" parent="gondolanueva/snackpapas1_001"]
 collision_layer = 0
 collision_mask = 0
 
-[node name="snacks2" parent="."]
+[node name="snackpapas1_002" parent="gondolanueva"]
 visible = false
 
-[node name="StaticBody3D" parent="snacks2"]
+[node name="StaticBody3D" parent="gondolanueva/snackpapas1_002"]
 collision_layer = 0
 collision_mask = 0
 
-[node name="snacks2_02" parent="."]
+[node name="chisitos2" parent="gondolanueva"]
 visible = false
 
-[node name="StaticBody3D" parent="snacks2_02"]
+[node name="StaticBody3D" parent="gondolanueva/chisitos2"]
 collision_layer = 0
 collision_mask = 0
 
-[node name="snacks2_03" parent="."]
+[node name="pringles" parent="."]
 visible = false
 
-[node name="StaticBody3D" parent="snacks2_03"]
+[node name="StaticBody3D" parent="pringles"]
 collision_layer = 0
 collision_mask = 0
 
-[node name="snacks2_04" parent="."]
+[node name="pringles3" parent="."]
 visible = false
 
-[node name="StaticBody3D" parent="snacks2_04"]
+[node name="StaticBody3D" parent="pringles3"]
 collision_layer = 0
 collision_mask = 0
 
-[node name="burgaloo" parent="."]
+[node name="burgaloo" parent="gondolanueva"]
 visible = false
 
-[node name="StaticBody3D" parent="burgaloo"]
+[node name="StaticBody3D" parent="gondolanueva/burgaloo"]
 collision_layer = 0
 collision_mask = 0
 
-[node name="burgaloo_001" parent="."]
+[node name="burgaloo2" parent="gondolanueva"]
 visible = false
 
-[node name="StaticBody3D" parent="burgaloo_001"]
+[node name="StaticBody3D" parent="gondolanueva/burgaloo2"]
 collision_layer = 0
 collision_mask = 0
 
-[node name="burgaloo_002" parent="."]
+[node name="lataarvejas" parent="."]
 visible = false
 
-[node name="StaticBody3D" parent="burgaloo_002"]
+[node name="StaticBody3D" parent="lataarvejas"]
 collision_layer = 0
 collision_mask = 0
 
-[node name="burgaloo_003" parent="."]
+[node name="burgaloo3" parent="gondolanueva"]
 visible = false
 
-[node name="StaticBody3D" parent="burgaloo_003"]
+[node name="StaticBody3D" parent="gondolanueva/burgaloo3"]
 collision_layer = 0
 collision_mask = 0
 
-[node name="Zucarachas" parent="."]
+[node name="Zucarachas" parent="gondolanueva"]
 visible = false
 
-[node name="StaticBody3D" parent="Zucarachas"]
+[node name="StaticBody3D" parent="gondolanueva/Zucarachas"]
 collision_layer = 0
 collision_mask = 0
 
-[node name="Zucarachas2" parent="."]
+[node name="Zucarachas_001" parent="gondolanueva"]
 visible = false
 
-[node name="StaticBody3D" parent="Zucarachas2"]
+[node name="StaticBody3D" parent="gondolanueva/Zucarachas_001"]
 collision_layer = 0
 collision_mask = 0
 
-[node name="Zucarachas2_001" parent="."]
+[node name="oremos3" parent="."]
 visible = false
 
-[node name="StaticBody3D" parent="Zucarachas2_001"]
+[node name="StaticBody3D" parent="oremos3"]
 collision_layer = 0
 collision_mask = 0
 
-[node name="alfajorescaja" parent="."]
+[node name="alfajorescaja2" parent="."]
 visible = false
 
-[node name="StaticBody3D" parent="alfajorescaja"]
+[node name="StaticBody3D" parent="alfajorescaja2"]
 collision_layer = 0
 collision_mask = 0
 
-[node name="Actroncito" parent="."]
+[node name="pepitos" parent="."]
 visible = false
 
-[node name="StaticBody3D" parent="Actroncito"]
+[node name="StaticBody3D" parent="pepitos"]
 collision_layer = 0
 collision_mask = 0
 
-[node name="StaticBody3D" parent="Actroncito/Actroncito_002"]
+[node name="StaticBody3D" parent="Actroncito_002"]
 collision_layer = 0
 collision_mask = 0
 
-[node name="Actroncito4" parent="."]
+[node name="oremos" parent="."]
 visible = false
 
-[node name="StaticBody3D" parent="Actroncito4"]
+[node name="StaticBody3D" parent="oremos"]
 collision_layer = 0
 collision_mask = 0
 
-[node name="Actroncito_001" parent="."]
+[node name="oremos2" parent="."]
 visible = false
 
-[node name="StaticBody3D" parent="Actroncito_001"]
+[node name="StaticBody3D" parent="oremos2"]
 collision_layer = 0
 collision_mask = 0

@@ -14,8 +14,8 @@ const CASCARA_DEL_EDIFICIO := "almacen"
 
 ## Los anclajes que los specs 008 y 009 buscan por nombre. Son nombres de objeto de Blender:
 ## renombrarlos allá es lo único que los pone acá.
-const ANCLAJE_DE_LA_ESTANTERIA := "gondola01"
-const ANCLAJES := [ANCLAJE_DE_LA_ESTANTERIA, "compu"]
+const ANCLAJE_DE_LA_ESTANTERIA := "gondolanueva"
+const ANCLAJES := [ANCLAJE_DE_LA_ESTANTERIA, "base compu"]
 
 ## El almacén mide 21,72 × 22,74 m de planta. La banda es ancha a propósito: no está para detectar
 ## que alguien movió una pared, sino que el modelo entró con la escala sin aplicar —el modo de
@@ -78,7 +78,9 @@ func test_el_modelo_entro_con_sus_mallas() -> void:
 
 func test_los_muebles_y_el_edificio_conservan_su_colision() -> void:
 	var estructura := _estructura()
-	for nombre in ["almacen", "gondola01", "gondola02", "compu", "EscritorioComputadora"]:
+	for nombre in [
+		"almacen", "gondolanueva", "gondolanueva2", "base compu", "EscritorioComputadora"
+	]:
 		var malla: MeshInstance3D = estructura.get_node(nombre)
 		assert_bool(_tiene_forma(malla)).override_failure_message(nombre).is_true()
 

@@ -16,7 +16,7 @@ const ALMACEN := preload("res://src/escenas/almacen.tscn")
 ## el arranque está libre.
 const VANOS := {
 	"Estructura/puerta": [Vector3(5.494, 1.05, -5.0), Vector3(5.494, 1.05, -9.5)],
-	"Estructura/puerta_001": [Vector3(5.0, 1.05, -4.658), Vector3(9.5, 1.05, -4.658)],
+	"Estructura/puerta2": [Vector3(5.0, 1.05, -4.658), Vector3(9.5, 1.05, -4.658)],
 }
 
 

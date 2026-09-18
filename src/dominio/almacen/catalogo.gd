@@ -13,18 +13,27 @@ extends RefCounted
 
 ## Cada `Producto.Id` con su nombre, su precio en pesos enteros y su umbral de reposición.
 ##
+## **Los nombres son los del modelo 3D**, y no una etiqueta genérica: cada fila tiene detrás
+## una malla que el jugador ve en la góndola, y un nombre que no coincide con lo que se ve
+## deja al inventario hablando de otra cosa. Qué malla es cada uno lo dice
+## `contenido_del_estante.tscn`, donde están en este mismo orden.
+##
 ## Agregar un producto es una línea en el enum de `producto.gd` y una fila acá. Olvidarse de la
 ## fila es rojo: `catalogo_test.gd` cuenta las filas de acá contra `Producto.Id.size()`, y las
 ## cuenta sobre este diccionario y no sobre `todos()` a propósito —ver `de()`—.
 const FILAS := {
 	Producto.Id.ACTRONCITO: ["Actroncito", 2500, 3],
-	Producto.Id.FIDEOS: ["Fideos", 1200, 4],
-	Producto.Id.GASEOSA: ["Gaseosa", 1800, 6],
-	Producto.Id.GALLETITAS: ["Galletitas", 900, 5],
-	Producto.Id.ARROZ: ["Arroz", 1100, 3],
-	Producto.Id.JABON: ["Jabón", 1500, 2],
-	Producto.Id.MAROLINI: ["Marolini", 1200, 4],
-	Producto.Id.JORGILLO: ["Jorgillo", 900, 4],
+	Producto.Id.DUREXTRA: ["Durextra", 1200, 4],
+	Producto.Id.BURBALOO: ["Burbaloo", 1800, 6],
+	Producto.Id.ZUCARACHAS: ["Zucarachas", 900, 4],
+	Producto.Id.LAYSNTT: ["Laysntt", 1100, 3],
+	Producto.Id.MALBARDO: ["Malbardo", 1500, 3],
+	Producto.Id.PRONGLES: ["Prongles", 1200, 3],
+	Producto.Id.JORGILLO: ["Jorgillo", 900, 3],
+	Producto.Id.ARVEJAS: ["Arvejas", 800, 4],
+	Producto.Id.CHISITOS: ["Chisitos", 700, 2],
+	Producto.Id.OREMOS: ["Oremos", 1000, 4],
+	Producto.Id.PEPITOS: ["Pepitos", 950, 3],
 }
 
 

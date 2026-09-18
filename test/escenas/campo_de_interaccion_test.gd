@@ -29,7 +29,7 @@ func test_el_campo_y_el_clic_usan_los_cuerpos_de_los_muebles() -> void:  # 038-A
 	jugador.objetivo_enfocado.connect(
 		func(objetivo: Node3D, _distancia: float) -> void: avisos.append(objetivo)
 	)
-	var computadora: Node3D = almacen.get_node("Estructura/compu/StaticBody3D")
+	var computadora: Node3D = almacen.get_node("Estructura/base compu/StaticBody3D")
 	_mirar(jugador, computadora.global_position + Vector3(0, 1, 1), computadora.global_position)
 	await _actualizar(jugador)
 	assert_object(jugador.get("_enfocado")).is_same(computadora)
@@ -43,7 +43,7 @@ func test_el_campo_y_el_clic_usan_los_cuerpos_de_los_muebles() -> void:  # 038-A
 	assert_object(agarre.manos().sostenido()).is_instanceof(UnidadDeProducto)
 	var estante: Node3D = almacen.get("_reposicion_manual").get_node("ZonaDeActroncito")
 	var zona: AABB = almacen.get("_reposicion_manual").zona(Producto.Id.ACTRONCITO)
-	_mirar(jugador, zona.get_center() + Vector3(1.2, 0.3, 0), zona.get_center())
+	_mirar(jugador, zona.get_center() + Vector3(-1.2, 0.3, 0), zona.get_center())
 	await _actualizar(jugador)
 	assert_object(jugador.get("_enfocado")).is_same(estante)
 	assert_array(avisos).contains([estante])

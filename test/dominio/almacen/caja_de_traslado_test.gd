@@ -66,7 +66,7 @@ func test_sacar_devuelve_lo_ultimo_que_se_guardo() -> void:  # 033-AC5
 	# que sale, y así el jugador no tiene que acordarse del orden en que la cargó.
 	var caja := CajaDeTraslado.new()
 	caja.guardar(Catalogo.de(Producto.Id.ACTRONCITO))
-	var ultimo := Catalogo.de(Producto.Id.JABON)
+	var ultimo := Catalogo.de(Producto.Id.MALBARDO)
 	caja.guardar(ultimo)
 	assert_object(caja.sacar()).is_same(ultimo)
 	assert_int(caja.ocupados()).is_equal(1)
@@ -101,5 +101,5 @@ func test_la_caja_no_sabe_donde_esta_ni_quien_la_lleva() -> void:  # 033-AC6
 func _caja_llena() -> CajaDeTraslado:
 	var caja := CajaDeTraslado.new()
 	for _casillero in range(Reglas.CASILLEROS_DE_LA_CAJA_DE_TRASLADO):
-		caja.guardar(Catalogo.de(Producto.Id.FIDEOS))
+		caja.guardar(Catalogo.de(Producto.Id.DUREXTRA))
 	return caja

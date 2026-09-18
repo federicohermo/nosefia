@@ -15,7 +15,7 @@ const EscritorioQueSeVe := preload("res://src/escenas/puestos/escritorio.gd")
 
 func _escritorio() -> EscritorioQueSeVe:
 	var almacen: Node3D = auto_free(load(ESCENA_DEL_ALMACEN).instantiate())
-	return almacen.get_node("Estructura/compu/StaticBody3D")
+	return almacen.get_node("Estructura/base compu/StaticBody3D")
 
 
 func test_el_escritorio_esta_en_el_grupo_que_la_mira_puede_enfocar() -> void:  # 009-AC9

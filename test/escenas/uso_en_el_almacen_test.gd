@@ -96,7 +96,7 @@ func test_usar_cierra_cada_panel_sin_pasada_ni_pedido_y_el_reloj_avanza() -> voi
 	var limpiador: Limpiador = almacen.get("_limpiador")
 	var zona: PisoDelLocal.Zona = mancha.call("zona_de_la_mancha")
 	var antes := limpiador.piso().pasadas_restantes(zona)
-	for ruta in ["Estructura/compu/StaticBody3D", "Estructura/Ventanilla"]:
+	for ruta in ["Estructura/base compu/StaticBody3D", "Estructura/Ventanilla"]:
 		var puesto: Node3D = almacen.get_node(ruta)
 		var panel: CanvasLayer = puesto.get("pantalla") if "compu" in ruta else puesto.get("panel")
 		puesto.call("abrir")

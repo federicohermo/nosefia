@@ -128,8 +128,8 @@ func test_el_almacen_carga_y_su_raiz_es_un_nodo_tridimensional() -> void:
 func test_los_muebles_y_el_anclaje_de_la_ventanilla_estan_por_nombre() -> void:
 	# El cableado debe conservar estos destinos aunque cambien sus posiciones.
 	var almacen := _almacen()
-	assert_bool(almacen.has_node("Estructura/gondola01")).is_true()
-	assert_bool(almacen.has_node("Estructura/compu")).is_true()
+	assert_bool(almacen.has_node("Estructura/gondolanueva")).is_true()
+	assert_bool(almacen.has_node("Estructura/base compu")).is_true()
 	assert_bool(almacen.has_node("Estructura/HuecoDeLaVentanilla")).is_true()
 
 
@@ -540,7 +540,7 @@ func test_el_cableado_de_reponer_llega_entero_hasta_los_huecos() -> void:  # 008
 	var repositor: Repositor = almacen.get_node("Servicios/Repositor")
 	assert_object(repositor.reloj).is_not_null()
 	assert_object(repositor.carga).is_not_null()
-	var estante: Node3D = almacen.get_node("Estructura/gondola01/StaticBody3D")
+	var estante: Node3D = almacen.get_node("Estructura/gondolanueva/StaticBody3D")
 	assert_bool(estante.has_node("Contenido")).is_true()
 	estante.mostrar(1)
 	assert_bool((estante.get_node("Contenido").get_child(0) as Node3D).visible).is_true()
