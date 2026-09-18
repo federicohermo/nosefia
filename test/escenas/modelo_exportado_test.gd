@@ -53,14 +53,14 @@ func test_reponer_recupera_los_productos_independientes_del_modelo() -> void:  #
 			for vertice: Vector3 in grupo.mesh.surface_get_arrays(superficie)[Mesh.ARRAY_VERTEX]:
 				vertices.append(gondola.transform * grupo.transform * vertice)
 	for nombre in [
-		"at\u00fan",
-		"at\u00fan_02",
+		"lataarvejas_001",
+		"limpiador",
 		"gondolanueva/durextra",
 		"gondolanueva/snackpapas1_001",
 		"gondolanueva/snackpapas1_002",
 		"gondolanueva/chisitos2",
-		"snacks2_03",
-		"snacks2_04",
+		"pringles",
+		"pringles3",
 		"gondolanueva/burgaloo",
 		"gondolanueva/burgaloo2",
 		"lataarvejas",

@@ -89,17 +89,17 @@ visible = false
 collision_layer = 0
 collision_mask = 0
 
-[node name="atún" parent="."]
+[node name="lataarvejas_001" parent="."]
 visible = false
 
-[node name="StaticBody3D" parent="atún"]
+[node name="StaticBody3D" parent="lataarvejas_001"]
 collision_layer = 0
 collision_mask = 0
 
-[node name="atún_02" parent="."]
+[node name="limpiador" parent="."]
 visible = false
 
-[node name="StaticBody3D" parent="atún_02"]
+[node name="StaticBody3D" parent="limpiador"]
 collision_layer = 0
 collision_mask = 0
 
@@ -131,17 +131,17 @@ visible = false
 collision_layer = 0
 collision_mask = 0
 
-[node name="snacks2_03" parent="."]
+[node name="pringles" parent="."]
 visible = false
 
-[node name="StaticBody3D" parent="snacks2_03"]
+[node name="StaticBody3D" parent="pringles"]
 collision_layer = 0
 collision_mask = 0
 
-[node name="snacks2_04" parent="."]
+[node name="pringles3" parent="."]
 visible = false
 
-[node name="StaticBody3D" parent="snacks2_04"]
+[node name="StaticBody3D" parent="pringles3"]
 collision_layer = 0
 collision_mask = 0
 
@@ -201,27 +201,27 @@ visible = false
 collision_layer = 0
 collision_mask = 0
 
-[node name="Actroncito" parent="."]
+[node name="pepitos" parent="."]
 visible = false
 
-[node name="StaticBody3D" parent="Actroncito"]
+[node name="StaticBody3D" parent="pepitos"]
 collision_layer = 0
 collision_mask = 0
 
-[node name="StaticBody3D" parent="Actroncito/Actroncito_002"]
+[node name="StaticBody3D" parent="Actroncito_002"]
 collision_layer = 0
 collision_mask = 0
 
-[node name="Actroncito4" parent="."]
+[node name="oremos" parent="."]
 visible = false
 
-[node name="StaticBody3D" parent="Actroncito4"]
+[node name="StaticBody3D" parent="oremos"]
 collision_layer = 0
 collision_mask = 0
 
-[node name="Actroncito_001" parent="."]
+[node name="oremos2" parent="."]
 visible = false
 
-[node name="StaticBody3D" parent="Actroncito_001"]
+[node name="StaticBody3D" parent="oremos2"]
 collision_layer = 0
 collision_mask = 0

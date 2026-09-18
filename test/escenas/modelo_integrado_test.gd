@@ -54,14 +54,14 @@ func test_el_surtido_fijo_no_muestra_stock_que_el_dominio_no_tiene() -> void:  #
 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
 	var estructura := almacen.get_node("Estructura")
 	for nombre in [
-		"at\u00fan",
-		"at\u00fan_02",
+		"lataarvejas_001",
+		"limpiador",
 		"gondolanueva/durextra",
 		"gondolanueva/snackpapas1_001",
 		"gondolanueva/snackpapas1_002",
 		"gondolanueva/chisitos2",
-		"snacks2_03",
-		"snacks2_04",
+		"pringles",
+		"pringles3",
 		"gondolanueva/burgaloo",
 		"gondolanueva/burgaloo2",
 		"lataarvejas",
