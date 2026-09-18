@@ -47,7 +47,7 @@ func test_cada_reaccion_de_tarea_repite_adentro_la_fila_en_la_que_esta() -> void
 			assert_int(reaccion.sobre).is_equal(SOBRE_LA_TAREA[int(cumplida)])
 
 
-func test_hay_un_comentario_por_cada_apercibimiento_hasta_el_tope() -> void:  # 017-AC2
+func test_hay_un_comentario_por_cada_apercibimiento_hasta_el_tope() -> void:  # AC-EMP-014
 	for cuantos in range(Reglas.APERCIBIMIENTOS_HASTA_EL_DESPIDO + 1):
 		var reaccion := CatalogoDeReacciones.del_comentario(cuantos)
 		(
@@ -59,7 +59,7 @@ func test_hay_un_comentario_por_cada_apercibimiento_hasta_el_tope() -> void:  # 
 		assert_int(reaccion.indice).is_equal(cuantos)
 
 
-func test_por_encima_del_tope_contesta_la_del_despido_y_no_un_nulo() -> void:  # 017-AC2
+func test_por_encima_del_tope_contesta_la_del_despido_y_no_un_nulo() -> void:  # AC-EMP-014
 	# Una jornada grave sube de a dos, así que el contador pasa el tope sin pisarlo: con 3
 	# encima, una noche mala deja 5. Sin saturar, la placa del despido saldría vacía justo el
 	# día que importa.

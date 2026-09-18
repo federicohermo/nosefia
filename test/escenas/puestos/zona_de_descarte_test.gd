@@ -95,7 +95,7 @@ func test_la_zona_no_lleva_una_sola_regla_ni_un_nombre_global() -> void:  # 015-
 	)
 
 
-func test_la_esfera_de_la_escena_es_exactamente_la_de_la_constante() -> void:  # 015-AC6
+func test_la_esfera_de_la_escena_es_exactamente_la_de_la_constante() -> void:  # AC-CLN-010
 	# Un `.tscn` no puede leer un `const`, así que el número está escrito dos veces. Sin este
 	# caso, la esfera y la regla se separan y el jugador suelta la bolsa donde el juego dice que
 	# no cuenta — sin un solo error.
@@ -122,7 +122,7 @@ func test_el_almacen_trae_el_descarte_y_una_bolsa_por_cada_una_del_balance() -> 
 	assert_int(bolsas).is_equal(ReglasDeLaBasura.BOLSAS_DE_LA_JORNADA)
 
 
-func test_el_fondo_esta_lejos_de_todo_lo_demas() -> void:  # 015-AC7
+func test_el_fondo_esta_lejos_de_todo_lo_demas() -> void:  # AC-CLN-008
 	# **No se cierra mirando: se cierra con un número.** Si el descarte estuviera al lado de otra
 	# tarea, la basura se sacaría de paso y el término de trayecto desaparecería sin que nada lo
 	# dijera.

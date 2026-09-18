@@ -16,7 +16,7 @@ func test_el_local_tiene_voces_de_sobra_para_cinco_sonidos_seguidos() -> void:  
 	)
 
 
-func test_cada_voz_sale_una_sola_vez_por_vuelta() -> void:  # 021-AC2
+func test_cada_voz_sale_una_sola_vez_por_vuelta() -> void:  # AC-AMB-006
 	var ronda := RondaDeVoces.new(RondaDeVoces.VOCES_DEL_LOCAL)
 	var vistas: Array[int] = []
 	for _pedido in range(RondaDeVoces.VOCES_DEL_LOCAL):
@@ -26,7 +26,7 @@ func test_cada_voz_sale_una_sola_vez_por_vuelta() -> void:  # 021-AC2
 	assert_int(vistas.size()).is_equal(RondaDeVoces.VOCES_DEL_LOCAL)
 
 
-func test_la_vuelta_siguiente_empieza_de_nuevo() -> void:  # 021-AC2
+func test_la_vuelta_siguiente_empieza_de_nuevo() -> void:  # AC-AMB-006
 	var ronda := RondaDeVoces.new(2)
 	ronda.siguiente()
 	ronda.siguiente()

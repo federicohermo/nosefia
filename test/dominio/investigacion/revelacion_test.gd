@@ -8,11 +8,11 @@ extends GdUnitTestSuite
 const Revelacion := preload("res://src/dominio/investigacion/revelacion.gd")
 
 
-func test_una_revelacion_recien_creada_no_dice_nada() -> void:
+func test_una_revelacion_recien_creada_no_dice_nada() -> void:  # AC-INV-002
 	assert_bool(Revelacion.new().dice_algo()).is_false()
 
 
-func test_un_texto_de_puros_blancos_tampoco_dice_nada() -> void:
+func test_un_texto_de_puros_blancos_tampoco_dice_nada() -> void:  # AC-INV-002
 	# El caso que se cuela al escribir un `.tres` a mano: el campo quedó con un espacio o un
 	# salto de línea, se ve «lleno» en el inspector y no revela nada.
 	var revelacion := Revelacion.new()

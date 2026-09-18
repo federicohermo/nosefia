@@ -160,7 +160,7 @@ func test_el_almacen_trae_una_mancha_por_zona() -> void:  # 014-AC10
 		)
 
 
-func test_ningun_par_de_manchas_esta_al_alcance_de_la_mira() -> void:  # 014-AC10
+func test_ningun_par_de_manchas_esta_al_alcance_de_la_mira() -> void:  # AC-CLN-006
 	# **El recorrido existe en la escena, no sólo en la prosa.** Si dos manchas estuvieran cerca,
 	# desde una se enfocaría la otra y un tramo de caminata desaparecería sin que nada lo dijera.
 	var posiciones := _manchas_de(_almacen())
@@ -179,7 +179,7 @@ func test_ningun_par_de_manchas_esta_al_alcance_de_la_mira() -> void:  # 014-AC1
 			)
 
 
-func test_el_trapeador_tampoco_esta_al_lado_de_ninguna_mancha() -> void:  # 014-AC10
+func test_el_trapeador_tampoco_esta_al_lado_de_ninguna_mancha() -> void:  # AC-CLN-006
 	# El primer tramo también cuenta: con el trapeador encima de una mancha, la primera zona
 	# saldría gratis.
 	var almacen := _almacen()

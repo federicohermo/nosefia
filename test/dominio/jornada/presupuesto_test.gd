@@ -31,7 +31,7 @@ func test_un_turno_que_no_alcanza_devuelve_cuanto_falta_y_no_cero() -> void:
 	assert_float(Presupuesto.margen(100.0, costos, 0.0, 1.0)).is_equal(-20.0)
 
 
-func test_alcanza_solo_con_margen_estrictamente_positivo() -> void:
+func test_alcanza_solo_con_margen_estrictamente_positivo() -> void:  # AC-SHF-011
 	var sobra: Array[float] = [10.0, 10.0]
 	assert_bool(Presupuesto.alcanza(100.0, sobra, 0.0, 1.0)).is_true()
 

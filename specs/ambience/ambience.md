@@ -1,7 +1,7 @@
 ---
 schema_version: 1
 capability_id: CAP-AMB
-status: draft
+status: ratified
 owner: por definir
 provenance: GDD «Ambiente»; migración de los specs 021, 040
 ---

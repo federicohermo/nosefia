@@ -23,7 +23,7 @@ func test_la_tabla_del_disco_carga() -> void:  # 021-AC2
 	assert_object(_tabla()).is_instanceof(TablaDeSonidos)
 
 
-func test_la_tabla_cubre_todos_los_eventos() -> void:  # 021-AC2
+func test_la_tabla_cubre_todos_los_eventos() -> void:  # AC-AMB-001
 	# **Un evento sin fila la pone en rojo, y el rojo dice cuál.** Sin este caso, agregar un valor
 	# al `enum` dejaría un sonido que nunca se pide y nada lo diría.
 	var tabla := _tabla()
@@ -54,7 +54,7 @@ func test_un_evento_sin_fila_contesta_null_en_vez_de_reventar() -> void:  # 021-
 	assert_object(TablaDeSonidos.new().de(EntradaSonora.Evento.TAREA_CUMPLIDA)).is_null()
 
 
-func test_una_tabla_con_una_fila_invalida_la_nombra() -> void:  # 021-AC2
+func test_una_tabla_con_una_fila_invalida_la_nombra() -> void:  # AC-AMB-004
 	# El caso de arriba corre sobre una tabla que ya está bien y pasaría igual si no mirara nada.
 	# Éste le pasa una que sí la viola.
 	var mala := EntradaSonora.new()
@@ -73,7 +73,7 @@ func test_la_ronda_reparte_por_turno_y_vuelve_al_principio() -> void:  # 021-AC2
 	assert_int(ronda.siguiente()).is_equal(0)
 
 
-func test_una_ronda_sin_voces_queda_vacia_y_no_falla() -> void:  # 021-AC2
+func test_una_ronda_sin_voces_queda_vacia_y_no_falla() -> void:  # AC-AMB-007
 	# No es un caso del juego: es el que evita que un balance mal escrito divida por cero y se
 	# lleve puesta la corrida entera.
 	var ronda := RondaDeVoces.new(0)

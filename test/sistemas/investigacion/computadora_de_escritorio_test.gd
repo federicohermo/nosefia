@@ -65,7 +65,7 @@ func _escritorio() -> ComputadoraDeEscritorio:
 	return escritorio
 
 
-func test_la_secuencia_entera_no_descuenta_un_solo_segundo() -> void:  # 009-AC2
+func test_la_secuencia_entera_no_descuenta_un_solo_segundo() -> void:  # AC-INV-007
 	# **Es la decisión entera del spec al revés**: usar la computadora no cuesta por usarla,
 	# cuesta porque el reloj no se detuvo. Un descuento por acción cobraría dos veces lo mismo.
 	var escritorio := _escritorio()
@@ -80,6 +80,7 @@ func test_la_secuencia_entera_no_descuenta_un_solo_segundo() -> void:  # 009-AC2
 	assert_int(_avisos_de_tarea).is_equal(0)
 
 
+# AC-INV-007
 func test_treinta_segundos_con_la_computadora_abierta_cuestan_lo_mismo_que_sin_ella() -> void:
 	# 009-AC3
 	# Se mide contra `Ritmo.escalar()` y nunca contra el número: el factor vive en el 007, y
@@ -120,7 +121,7 @@ func test_ningun_archivo_de_la_cascara_pausa_el_juego() -> void:  # 009-AC3
 			)
 
 
-func test_lo_leido_y_lo_anotado_sobreviven_a_cambiar_de_app_y_a_cerrar() -> void:  # 009-AC4
+func test_lo_leido_y_lo_anotado_sobreviven_a_cambiar_de_app_y_a_cerrar() -> void:  # AC-INV-012
 	var escritorio := _escritorio()
 	escritorio.pedir_abrir()
 	escritorio.pedir_marcar_leida(Conversacion.Interlocutor.JEFE)

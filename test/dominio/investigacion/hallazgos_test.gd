@@ -19,7 +19,7 @@ func _con_revelacion(un_id: StringName) -> Resource:
 	return objeto
 
 
-func test_el_primer_examen_revela_y_el_segundo_no() -> void:  # 006-AC5
+func test_el_primer_examen_revela_y_el_segundo_no() -> void:  # AC-INV-003
 	var hallazgos := Hallazgos.new()
 	var lata := _con_revelacion(&"lata_de_tomate")
 	assert_bool(hallazgos.registrar(lata)).is_true()
@@ -34,7 +34,7 @@ func test_dos_objetos_distintos_son_dos_hallazgos() -> void:  # 006-AC5
 	assert_int(hallazgos.cantidad()).is_equal(2)
 
 
-func test_la_identidad_es_el_id_y_no_la_instancia() -> void:  # 006-AC5
+func test_la_identidad_es_el_id_y_no_la_instancia() -> void:  # AC-INV-004
 	# Dos latas de tomate de la misma góndola son dos `Resource` distintos y el mismo secreto:
 	# si la identidad fuera la instancia, el jugador podría cobrar el mismo hallazgo tantas
 	# veces como latas haya en la estantería, y el minuto que no se paga dejaría de doler.
@@ -44,7 +44,7 @@ func test_la_identidad_es_el_id_y_no_la_instancia() -> void:  # 006-AC5
 	assert_int(hallazgos.cantidad()).is_equal(1)
 
 
-func test_un_objeto_sin_revelacion_no_es_un_hallazgo() -> void:  # 006-AC5
+func test_un_objeto_sin_revelacion_no_es_un_hallazgo() -> void:  # AC-INV-002
 	var hallazgos := Hallazgos.new()
 	var cajon := ObjetoDelAlmacen.new()
 	cajon.id = &"cajon"
@@ -58,7 +58,7 @@ func test_nada_no_es_un_hallazgo() -> void:  # 006-AC5
 	assert_int(hallazgos.cantidad()).is_equal(0)
 
 
-func test_lo_ya_visto_se_puede_preguntar_sin_registrarlo() -> void:
+func test_lo_ya_visto_se_puede_preguntar_sin_registrarlo() -> void:  # AC-INV-005
 	# La pregunta que hace la vista para decidir si lo que muestra es un descubrimiento. Si
 	# preguntarlo lo registrara, mirar el HUD marcaría el hallazgo como visto.
 	var hallazgos := Hallazgos.new()

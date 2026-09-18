@@ -10,7 +10,7 @@ func test_una_nota_con_titulo_se_escribe_y_se_devuelve() -> void:  # 009-AC4
 	assert_object(cuaderno.notas()[0]).is_same(nota)
 
 
-func test_una_nota_sin_titulo_devuelve_null_y_no_se_guarda() -> void:  # 009-AC4
+func test_una_nota_sin_titulo_devuelve_null_y_no_se_guarda() -> void:  # AC-INV-011
 	# Una nota sin título es un renglón que el jugador no va a poder encontrar después, y
 	# guardarla igual llenaría el cuaderno de entradas que no dicen nada.
 	var cuaderno := Cuaderno.new()
@@ -19,7 +19,7 @@ func test_una_nota_sin_titulo_devuelve_null_y_no_se_guarda() -> void:  # 009-AC4
 	assert_int(cuaderno.cuantas()).is_equal(0)
 
 
-func test_una_nota_sobrevive_a_seguir_escribiendo() -> void:  # 009-AC4
+func test_una_nota_sobrevive_a_seguir_escribiendo() -> void:  # AC-INV-012
 	# La forma ejercible de «sobrevive a cambiar de app»: el cuaderno es una sola instancia y
 	# vive en el sistema, no en la pantalla. Si lo construyera la app de notas, esconder el panel
 	# al pasar a los chats tiraría todo lo anotado sin un solo error.

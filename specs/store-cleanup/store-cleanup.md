@@ -1,7 +1,7 @@
 ---
 schema_version: 1
 capability_id: CAP-CLN
-status: draft
+status: ratified
 owner: por definir
 provenance: GDD «Limpiar» y «Sacar la basura»; migración de los specs 010, 015, 043
 ---

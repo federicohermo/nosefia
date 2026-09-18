@@ -62,7 +62,7 @@ func test_cada_interlocutor_se_presenta_con_un_nombre() -> void:  # 009-AC5
 		assert_str(conversacion.nombre).is_not_empty()
 
 
-func test_lo_leido_no_vuelve_al_disco() -> void:  # 009-AC5
+func test_lo_leido_no_vuelve_al_disco() -> void:  # AC-INV-009
 	# El `.tres` es el guión y es inmutable: la marca de leído vive en la `Bandeja`, que nunca se
 	# guarda. Está medido que dos `load()` del mismo `.tres` devuelven **la misma instancia**, así
 	# que un `leido` adentro del recurso dejaría al test siguiente empezando leído — y a la

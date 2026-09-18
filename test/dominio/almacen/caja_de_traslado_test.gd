@@ -29,14 +29,14 @@ func test_una_caja_nueva_esta_vacia_y_con_todos_sus_casilleros_libres() -> void:
 	assert_bool(caja.esta_llena()).is_false()
 
 
-func test_con_los_casilleros_llenos_la_caja_dice_que_esta_llena() -> void:  # 033-AC2
+func test_con_los_casilleros_llenos_la_caja_dice_que_esta_llena() -> void:  # AC-STK-010
 	var caja := _caja_llena()
 	assert_bool(caja.esta_llena()).is_true()
 	assert_int(caja.libres()).is_equal(0)
 	assert_int(caja.ocupados()).is_equal(Reglas.CASILLEROS_DE_LA_CAJA_DE_TRASLADO)
 
 
-func test_la_novena_no_entra_y_la_caja_dice_por_que() -> void:  # 033-AC3
+func test_la_novena_no_entra_y_la_caja_dice_por_que() -> void:  # AC-STK-010
 	# El motivo importa: la escena tiene que poder decir «no entra más» y no «eso no se guarda»,
 	# que son dos cosas distintas para quien está parado adelante con una lata en la mano.
 	var caja := _caja_llena()
@@ -45,7 +45,7 @@ func test_la_novena_no_entra_y_la_caja_dice_por_que() -> void:  # 033-AC3
 	assert_int(caja.ocupados()).is_equal(Reglas.CASILLEROS_DE_LA_CAJA_DE_TRASLADO)
 
 
-func test_lo_que_no_es_un_producto_se_rechaza_en_el_dominio() -> void:  # 033-AC4
+func test_lo_que_no_es_un_producto_se_rechaza_en_el_dominio() -> void:  # AC-STK-012
 	# «Sólo entran productos» es una regla del juego, así que la decide el dominio y no la
 	# escena: escrita arriba nacería sin test, y está medido que ningún gate lo diría.
 	var caja := CajaDeTraslado.new()
@@ -55,13 +55,14 @@ func test_lo_que_no_es_un_producto_se_rechaza_en_el_dominio() -> void:  # 033-AC
 	assert_int(caja.ocupados()).is_equal(0)
 
 
-func test_sacar_de_una_caja_vacia_contesta_que_no_hay_nada_en_vez_de_romperse() -> void:  # 033-AC5
+# AC-STK-011
+func test_sacar_de_una_caja_vacia_contesta_que_no_hay_nada_en_vez_de_romperse() -> void:
 	var caja := CajaDeTraslado.new()
 	assert_object(caja.sacar()).is_null()
 	assert_int(caja.ocupados()).is_equal(0)
 
 
-func test_sacar_devuelve_lo_ultimo_que_se_guardo() -> void:  # 033-AC5
+func test_sacar_devuelve_lo_ultimo_que_se_guardo() -> void:  # AC-STK-011
 	# La caja se descarga por arriba, como una caja de verdad: lo último que entró es lo primero
 	# que sale, y así el jugador no tiene que acordarse del orden en que la cargó.
 	var caja := CajaDeTraslado.new()

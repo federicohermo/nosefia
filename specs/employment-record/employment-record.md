@@ -1,7 +1,7 @@
 ---
 schema_version: 1
 capability_id: CAP-EMP
-status: draft
+status: ratified
 owner: por definir
 provenance: GDD «Consecuencias» y «Finales»; migración de los specs 002, 016, 017
 ---

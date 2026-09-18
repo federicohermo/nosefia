@@ -9,7 +9,7 @@ const ReglasDeLosObjetos := preload("res://src/dominio/almacen/reglas_de_los_obj
 const ReglasDelJugador := preload("res://src/dominio/jugador/reglas_del_jugador.gd")
 
 
-func test_las_distancias_van_de_la_mas_cerca_a_la_mas_lejos() -> void:  # 006-AC6
+func test_las_distancias_van_de_la_mas_cerca_a_la_mas_lejos() -> void:  # AC-PLY-011
 	# Examinar acerca el objeto a la cara, llevarlo lo deja a la altura de la mano y soltarlo lo
 	# aleja. Si el orden se invierte, examinar ALEJA el objeto en vez de acercarlo, y el bug se
 	# siente como «la E no hace nada»: lo que revela queda demasiado chico para leerse.
@@ -21,7 +21,7 @@ func test_las_distancias_van_de_la_mas_cerca_a_la_mas_lejos() -> void:  # 006-AC
 	)
 
 
-func test_las_distancias_son_positivas_y_caben_en_el_alcance_de_la_mira() -> void:  # 006-AC6
+func test_las_distancias_son_positivas_y_caben_en_el_alcance_de_la_mira() -> void:  # AC-PLY-011
 	# Una distancia negativa deja el objeto atrás de la cabeza, y una mayor que el alcance de la
 	# mira lo suelta afuera del rayo: se puede tirar algo y no poder volver a levantarlo.
 	for distancia in [
@@ -33,7 +33,7 @@ func test_las_distancias_son_positivas_y_caben_en_el_alcance_de_la_mira() -> voi
 		assert_float(distancia).is_less(ReglasDelJugador.ALCANCE_DE_LA_MIRA)
 
 
-func test_se_lleva_una_sola_cosa_a_la_vez() -> void:  # 006-AC6
+func test_se_lleva_una_sola_cosa_a_la_vez() -> void:  # AC-PLY-008
 	# El 015 se apoya en este 1: afirma que las bolsas de una jornada son más que las manos, o
 	# sea que sacar la basura cuesta más de un viaje. Subirlo a 2 le afloja el precio en tiempo
 	# a media tarea obligatoria sin que ese spec se entere.

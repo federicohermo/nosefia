@@ -20,7 +20,7 @@ const PATRONES_IMPUROS := ["get_tree(", "get_node(", "_process(", "await", "rand
 const UN_SEGUNDO := 1.0
 
 
-func test_antes_de_la_jornada_que_lo_rompe_la_hora_se_ve_toda_la_noche() -> void:  # 032-AC1
+func test_antes_de_la_jornada_que_lo_rompe_la_hora_se_ve_toda_la_noche() -> void:  # AC-SHF-012
 	# Se recorren todas las jornadas anteriores y no sólo la primera: el corte de la mitad del
 	# turno vale para **una** noche, y aplicarlo antes dejaría al reloj roto desde el día uno.
 	var rompe := Reglas.JORNADA_EN_QUE_SE_ROMPE_EL_RELOJ_DE_PARED
@@ -35,7 +35,7 @@ func test_antes_de_la_jornada_que_lo_rompe_la_hora_se_ve_toda_la_noche() -> void
 			)
 
 
-func test_despues_de_romperse_no_se_arregla_mas() -> void:  # 032-AC1
+func test_despues_de_romperse_no_se_arregla_mas() -> void:  # AC-SHF-012
 	# Un reloj que volviera a andar la noche siguiente sería un reloj que se descompuso, no uno
 	# roto: la tensión que este spec compra es que desde acá enterarse de la hora cuesta más.
 	var rompe := Reglas.JORNADA_EN_QUE_SE_ROMPE_EL_RELOJ_DE_PARED
@@ -47,7 +47,7 @@ func test_despues_de_romperse_no_se_arregla_mas() -> void:  # 032-AC1
 		)
 
 
-func test_la_noche_en_que_se_rompe_el_corte_es_la_mitad_del_turno() -> void:  # 032-AC2
+func test_la_noche_en_que_se_rompe_el_corte_es_la_mitad_del_turno() -> void:  # AC-SHF-012
 	# La mitad se cuenta contra `DURACION_DEL_TURNO` y nunca contra un número escrito: el día que
 	# la noche dure otra cosa, el reloj se sigue rompiendo a la mitad y no a las cuatro horas.
 	var rompe := Reglas.JORNADA_EN_QUE_SE_ROMPE_EL_RELOJ_DE_PARED
@@ -57,7 +57,7 @@ func test_la_noche_en_que_se_rompe_el_corte_es_la_mitad_del_turno() -> void:  # 
 	assert_bool(RelojDePared.hora_visible(rompe, 0.0)).is_false()
 
 
-func test_la_lectura_es_la_del_marcador_mientras_se_vea_y_vacia_cuando_no() -> void:  # 032-AC3
+func test_la_lectura_es_la_del_marcador_mientras_se_vea_y_vacia_cuando_no() -> void:  # AC-SHF-013
 	# El formato no se reimplementa acá: `Marcador.reloj()` ya decide cómo se lee un tiempo, y
 	# una segunda copia se desincroniza el día que alguien cambie el formato en uno solo.
 	var rompe := Reglas.JORNADA_EN_QUE_SE_ROMPE_EL_RELOJ_DE_PARED

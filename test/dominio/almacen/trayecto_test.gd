@@ -7,7 +7,7 @@
 extends GdUnitTestSuite
 
 
-func test_con_una_mano_cada_bolsa_es_un_viaje() -> void:  # 015-AC1
+func test_con_una_mano_cada_bolsa_es_un_viaje() -> void:  # AC-CLN-007
 	assert_int(Trayecto.viajes(3, 1)).is_equal(3)
 
 
@@ -37,7 +37,7 @@ func test_sin_velocidad_no_se_divide_por_cero() -> void:  # 015-AC1
 	assert_float(Trayecto.segundos_minimos(12.0, 0.0, 3)).is_equal(0.0)
 
 
-func test_el_borde_de_la_zona_entra() -> void:  # 015-AC1
+func test_el_borde_de_la_zona_entra() -> void:  # AC-CLN-009
 	# Es un `<=`: con un `<`, la bolsa apoyada justo en el límite no contaría y el jugador no
 	# tendría cómo distinguir eso de haberla dejado mal.
 	assert_bool(Trayecto.dentro_del_descarte(1.5, 1.5)).is_true()

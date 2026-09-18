@@ -1,7 +1,7 @@
 ---
 schema_version: 1
 capability_id: CAP-STK
-status: draft
+status: ratified
 owner: por definir
 provenance: GDD «Reponer» y «Registrar»; migración de los specs 005, 008, 033, 042, 047
 ---

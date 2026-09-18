@@ -18,7 +18,7 @@ func _caja() -> CajaRegistradora:
 	return CajaRegistradora.new(_inventario(), _del_dia())
 
 
-func test_los_productos_del_dia_son_menos_que_el_catalogo_entero() -> void:  # 009-AC6
+func test_los_productos_del_dia_son_menos_que_el_catalogo_entero() -> void:  # AC-STK-014
 	assert_int(CajaRegistradora.PRODUCTOS_DEL_DIA.size()).is_greater(0)
 	(
 		assert_int(CajaRegistradora.PRODUCTOS_DEL_DIA.size())
@@ -35,7 +35,7 @@ func test_los_productos_del_dia_existen_en_el_catalogo() -> void:  # 009-AC6
 		assert_object(producto).is_not_null()
 
 
-func test_registrar_devuelve_true_la_primera_vez_y_false_la_segunda() -> void:  # 009-AC6
+func test_registrar_devuelve_true_la_primera_vez_y_false_la_segunda() -> void:  # AC-STK-015
 	var caja := _caja()
 	var primero := _del_dia()[0]
 	assert_bool(caja.registrar(primero)).is_true()
@@ -54,7 +54,7 @@ func test_registrar_indexa_por_id_y_no_por_instancia() -> void:  # 009-AC6
 	assert_int(caja.registrados()).is_equal(1)
 
 
-func test_un_producto_ajeno_al_dia_no_se_registra() -> void:  # 009-AC6
+func test_un_producto_ajeno_al_dia_no_se_registra() -> void:  # AC-STK-015
 	var caja := _caja()
 	var ajeno: Producto = null
 	for producto in Catalogo.todos():
@@ -70,7 +70,7 @@ func test_un_producto_nulo_se_rechaza_en_vez_de_reventar() -> void:  # 009-AC6
 	assert_bool(_caja().registrar(null)).is_false()
 
 
-func test_la_caja_se_completa_recien_con_el_ultimo_del_dia() -> void:  # 009-AC7
+func test_la_caja_se_completa_recien_con_el_ultimo_del_dia() -> void:  # AC-STK-014
 	var caja := _caja()
 	var del_dia := _del_dia()
 	for indice in range(del_dia.size() - 1):

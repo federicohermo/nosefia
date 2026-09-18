@@ -17,7 +17,7 @@ func test_una_partida_nueva_arranca_en_la_primera_jornada() -> void:  # 016-AC3
 	assert_int(Partida.nueva().jornada()).is_equal(ReglasDeLaPartida.PRIMERA_JORNADA)
 
 
-func test_la_partida_guarda_el_legajo_que_recibio_y_no_una_copia() -> void:  # 016-AC3
+func test_la_partida_guarda_el_legajo_que_recibio_y_no_una_copia() -> void:  # AC-EMP-012
 	# Una copia dejaría al legajo restaurado del 019 sin efecto: la partida acumularía sobre
 	# otro objeto y la historia guardada no despediría a nadie, en verde.
 	var legajo := Legajo.con_apercibimientos(Reglas.APERCIBIMIENTOS_POR_AVISO)
@@ -33,7 +33,7 @@ func test_cerrar_una_jornada_avanza_y_anota_la_banda_en_el_legajo() -> void:  # 
 	assert_int(partida.apercibimientos()).is_equal(Reglas.APERCIBIMIENTOS_POR_BANDA_GRAVE)
 
 
-func test_dos_cierres_sin_abrir_en_el_medio_no_avanzan_dos_veces() -> void:  # 016-AC4
+func test_dos_cierres_sin_abrir_en_el_medio_no_avanzan_dos_veces() -> void:  # AC-EMP-011
 	# El reloj emite `turno_cerrado` una sola vez, pero la puerta es pública y el 017 la va a
 	# tocar desde una pantalla. Sin el guard, un segundo cierre anota una jornada que nadie
 	# jugó — y una banda grave de regalo.
@@ -44,7 +44,7 @@ func test_dos_cierres_sin_abrir_en_el_medio_no_avanzan_dos_veces() -> void:  # 0
 	assert_int(partida.apercibimientos()).is_equal(Reglas.APERCIBIMIENTOS_POR_BANDA_GRAVE)
 
 
-func test_cerrar_sin_haber_abierto_no_hace_nada() -> void:  # 016-AC4
+func test_cerrar_sin_haber_abierto_no_hace_nada() -> void:  # AC-EMP-011
 	var partida := Partida.nueva()
 	partida.cerrar_la_jornada(0)
 	assert_int(partida.jornada()).is_equal(ReglasDeLaPartida.PRIMERA_JORNADA)
@@ -80,7 +80,7 @@ func test_cada_jornada_abre_un_turno_nuevo_y_tareas_nuevas() -> void:  # 016-AC5
 		)
 
 
-func test_una_partida_terminada_no_vuelve_a_abrir_una_jornada() -> void:  # 016-AC5
+func test_una_partida_terminada_no_vuelve_a_abrir_una_jornada() -> void:  # AC-EMP-010
 	# El ciclo ya guarda esto antes de llamar, pero la puerta es pública y el 017 la toca desde
 	# una pantalla. Sin el guard acá, la noche de regalo **le borra el legajo al despedido**:
 	# cerrarla impecable lo reinicia a cero y la partida avanza de jornada con el final ya
@@ -98,7 +98,7 @@ func test_una_partida_terminada_no_vuelve_a_abrir_una_jornada() -> void:  # 016-
 	assert_int(partida.final()).is_equal(Partida.Final.DESPEDIDO)
 
 
-func test_cinco_jornadas_impecables_terminan_la_partida_sin_despido() -> void:  # 016-AC6
+func test_cinco_jornadas_impecables_terminan_la_partida_sin_despido() -> void:  # AC-EMP-008
 	var partida := Partida.nueva()
 	for _jornada in range(ReglasDeLaPartida.JORNADAS_DE_LA_PARTIDA):
 		_jugar(partida, Apertura.cantidad_de_obligatorias())
@@ -107,7 +107,7 @@ func test_cinco_jornadas_impecables_terminan_la_partida_sin_despido() -> void:  
 	assert_bool(partida.legajo().despedido()).is_false()
 
 
-func test_dos_jornadas_graves_seguidas_terminan_la_partida_con_despido() -> void:  # 016-AC6
+func test_dos_jornadas_graves_seguidas_terminan_la_partida_con_despido() -> void:  # AC-EMP-004
 	# **La regla más cara del juego, ejercida de punta a punta por primera vez.** Hasta este
 	# spec el legajo moría con la escena y `despedido()` no podía devolver `true` jugando.
 	var partida := Partida.nueva()
@@ -117,7 +117,7 @@ func test_dos_jornadas_graves_seguidas_terminan_la_partida_con_despido() -> void
 	assert_int(partida.final()).is_equal(Partida.Final.DESPEDIDO)
 
 
-func test_con_el_despido_en_la_ultima_jornada_gana_el_despido() -> void:  # 016-AC6
+func test_con_el_despido_en_la_ultima_jornada_gana_el_despido() -> void:  # AC-EMP-009
 	# Las dos condiciones a la vez: la última noche cerrada grave sobre dos apercibimientos ya
 	# encima. Terminar la partida «cumplida» ahí sería felicitar a alguien recién echado.
 	var partida := Partida.nueva()
@@ -135,7 +135,7 @@ func test_la_partida_tiene_tres_finales() -> void:  # 016-AC7
 	assert_int(Partida.Final.size()).is_equal(3)
 
 
-func test_solo_la_ultima_jornada_es_la_ultima() -> void:  # 016-AC7
+func test_solo_la_ultima_jornada_es_la_ultima() -> void:  # AC-EMP-008
 	var partida := Partida.nueva()
 	assert_bool(partida.es_la_ultima_jornada()).is_false()
 	for _jornada in range(ReglasDeLaPartida.JORNADAS_DE_LA_PARTIDA - 1):

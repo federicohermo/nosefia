@@ -38,7 +38,7 @@ const CARPETA_DE_TESTS := "res://test"
 const CARPETA_DE_FUENTES := "res://src"
 
 
-func test_los_cuatro_buses_existen_en_el_motor() -> void:  # 021-AC3
+func test_los_cuatro_buses_existen_en_el_motor() -> void:  # AC-AMB-003
 	# Sin el layout el motor deja **un solo bus** y todo sale por `Master`: la mezcla entera
 	# dejaría de existir sin que nada lo diga.
 	for nombre: String in EntradaSonora.BUSES:

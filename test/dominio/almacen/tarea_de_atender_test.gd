@@ -53,7 +53,7 @@ func test_la_atencion_en_curso_es_la_del_ultimo_que_llego() -> void:  # 013-AC6
 	assert_object(tarea.atencion().comprador()).is_same(segundo)
 
 
-func test_despachados_cuenta_las_dos_formas_de_despachar() -> void:  # 013-AC6
+func test_despachados_cuenta_las_dos_formas_de_despachar() -> void:  # AC-CTR-009
 	# Vender y despachar sin vender cuentan igual para el jefe: la tarea es atender, no vender.
 	var tarea := TareaDeAtender.new(_compradores(2), _inventario())
 	tarea.atender()
@@ -71,6 +71,7 @@ func test_un_comprador_que_llego_y_no_se_despacho_no_cuenta() -> void:  # 013-AC
 	assert_bool(tarea.completada()).is_false()
 
 
+# AC-CTR-009
 func test_la_tarea_se_completa_con_todos_despachados_se_les_haya_vendido_o_no() -> void:
 	# 013-AC7
 	var tarea := TareaDeAtender.new(_compradores(2), _inventario())
@@ -82,7 +83,7 @@ func test_la_tarea_se_completa_con_todos_despachados_se_les_haya_vendido_o_no() 
 	assert_bool(tarea.completada()).is_true()
 
 
-func test_la_diferencia_acumulada_suma_solo_las_cobradas() -> void:  # 013-AC7
+func test_la_diferencia_acumulada_suma_solo_las_cobradas() -> void:  # AC-CTR-010
 	# Al que se despachó sin vender no se le cobró nada, así que su diferencia no es plata que
 	# falte en la caja: sumarla haría que despachar sin vender pareciera un robo.
 	var tarea := TareaDeAtender.new(_compradores(2, 500), _inventario())
@@ -94,7 +95,7 @@ func test_la_diferencia_acumulada_suma_solo_las_cobradas() -> void:  # 013-AC7
 	assert_int(tarea.diferencia_acumulada()).is_equal(500)
 
 
-func test_la_diferencia_acumulada_conserva_los_signos() -> void:  # 013-AC7
+func test_la_diferencia_acumulada_conserva_los_signos() -> void:  # AC-CTR-011
 	# Uno paga 500 de más y el otro 500 de menos: con un `abs()` en el camino esto daría 1000.
 	var compradores := _compradores(1, 500)
 	compradores.append_array(_compradores(1, -500))

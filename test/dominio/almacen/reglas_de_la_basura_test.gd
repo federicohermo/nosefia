@@ -6,7 +6,7 @@
 extends GdUnitTestSuite
 
 
-func test_la_tarea_no_se_puede_resolver_en_un_solo_viaje() -> void:  # 015-AC2
+func test_la_tarea_no_se_puede_resolver_en_un_solo_viaje() -> void:  # AC-CLN-007
 	(
 		assert_int(ReglasDeLaBasura.BOLSAS_DE_LA_JORNADA)
 		. override_failure_message(
@@ -27,7 +27,7 @@ func test_la_tarea_no_se_puede_resolver_en_un_solo_viaje() -> void:  # 015-AC2
 	)
 
 
-func test_el_fondo_no_se_ve_desde_donde_se_hace_otra_tarea() -> void:  # 015-AC2
+func test_el_fondo_no_se_ve_desde_donde_se_hace_otra_tarea() -> void:  # AC-CLN-008
 	(
 		assert_float(ReglasDeLaBasura.DISTANCIA_MINIMA_AL_DESCARTE)
 		. override_failure_message(
@@ -51,7 +51,7 @@ func test_la_zona_de_descarte_es_mas_chica_que_el_viaje_que_hay_que_hacer() -> v
 	)
 
 
-func test_hay_un_id_distinto_por_bolsa_y_los_gobierna_el_balance() -> void:  # 015-AC2
+func test_hay_un_id_distinto_por_bolsa_y_los_gobierna_el_balance() -> void:  # AC-CLN-007
 	# Sin `id` distintos, depositar la misma bolsa tres veces cumpliría la tarea sin recorrer
 	# nada — y ningún error lo diría.
 	var ids := ReglasDeLaBasura.ids_de_las_bolsas()

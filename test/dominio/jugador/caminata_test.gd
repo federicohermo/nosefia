@@ -12,7 +12,7 @@ const TOLERANCIA := 1e-5
 const APROXIMACION := Vector3(TOLERANCIA, TOLERANCIA, TOLERANCIA)
 
 
-func test_la_diagonal_no_camina_mas_rapido_que_la_recta() -> void:
+func test_la_diagonal_no_camina_mas_rapido_que_la_recta() -> void:  # AC-PLY-001
 	# El bug clásico del controlador de primera persona: adelante más derecha suman raíz de dos
 	# si nadie normaliza, y no se nota jugando hasta que alguien lo aprovecha.
 	assert_float(Caminata.direccion(Vector2(1.0, 1.0), 0.0).length()).is_equal_approx(
@@ -20,7 +20,7 @@ func test_la_diagonal_no_camina_mas_rapido_que_la_recta() -> void:
 	)
 
 
-func test_la_entrada_nula_da_el_vector_nulo_y_ninguna_componente_es_nan() -> void:
+func test_la_entrada_nula_da_el_vector_nulo_y_ninguna_componente_es_nan() -> void:  # AC-PLY-002
 	# Godot ya cubre normalizar el vector nulo —medido: devuelve `(0, 0, 0)`—, así que esto
 	# verifica un contrato del motor en vez de tapar un agujero. Si algún día lo rompe, este
 	# test avisa antes de que el jugador se teletransporte a ninguna parte.
@@ -35,14 +35,14 @@ func test_con_el_yaw_en_cero_el_adelante_apunta_al_menos_z() -> void:
 	)
 
 
-func test_girar_la_mirada_un_cuarto_de_vuelta_gira_el_adelante() -> void:
+func test_girar_la_mirada_un_cuarto_de_vuelta_gira_el_adelante() -> void:  # AC-PLY-002
 	# Es lo que hace que caminar sea en primera persona y no en un sistema de coordenadas fijo.
 	assert_vector(Caminata.direccion(Vector2(0.0, 1.0), PI / 2.0)).is_equal_approx(
 		Vector3(-1.0, 0.0, 0.0), APROXIMACION
 	)
 
 
-func test_la_velocidad_de_la_diagonal_tiene_el_largo_de_la_velocidad_maxima() -> void:
+func test_la_velocidad_de_la_diagonal_tiene_el_largo_de_la_velocidad_maxima() -> void:  # AC-PLY-001
 	# La tolerancia es 1e-4 y no 1e-5 porque el error relativo de la normalización se multiplica
 	# por la velocidad máxima.
 	#

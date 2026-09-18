@@ -20,6 +20,7 @@ func _objetos_del_almacen() -> Array[Resource]:
 	return cargados
 
 
+# AC-INV-001
 func test_un_objeto_sin_revelacion_muestra_lo_mismo_examinado_que_sin_examinar() -> void:
 	# Es el caso del cajón y de la puerta: se pueden mirar y no hay nada abajo. Que las dos
 	# respuestas sean iguales es lo que permite escribir la vista sin un `if` propio.
@@ -53,7 +54,7 @@ func test_los_objetos_del_almacen_cargan_y_todos_tienen_algo_que_revelar() -> vo
 		assert_object(objeto.revelacion).is_instanceof(Revelacion)
 
 
-func test_la_revelacion_solo_se_ve_despues_de_examinar() -> void:  # 006-AC4
+func test_la_revelacion_solo_se_ve_despues_de_examinar() -> void:  # AC-INV-001
 	# Las dos mitades del mismo mordisco: si el texto ya se viera sin examinar, examinar no
 	# costaría tiempo y la tensión aritmética del turno se afloja sin que nadie lo decida.
 	for objeto in _objetos_del_almacen():

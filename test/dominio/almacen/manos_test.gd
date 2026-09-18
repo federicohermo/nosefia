@@ -36,7 +36,7 @@ func test_agarrar_algo_levantable_lo_deja_en_la_mano() -> void:  # 006-AC1
 	assert_object(manos.sostenido()).is_same(lata)
 
 
-func test_con_las_manos_llenas_el_motivo_es_que_estan_llenas() -> void:  # 006-AC2
+func test_con_las_manos_llenas_el_motivo_es_que_estan_llenas() -> void:  # AC-PLY-008
 	# Es el motivo que el 014 cita por nombre para explicar por qué no se puede recibir lo que
 	# el comprador devuelve mientras se lleva otra cosa.
 	var manos := Manos.new()
@@ -48,7 +48,7 @@ func test_con_las_manos_llenas_el_motivo_es_que_estan_llenas() -> void:  # 006-A
 	assert_object(manos.sostenido()).is_same(lata)
 
 
-func test_lo_fijo_se_rechaza_por_no_ser_levantable() -> void:  # 006-AC2
+func test_lo_fijo_se_rechaza_por_no_ser_levantable() -> void:  # AC-PLY-009
 	# Y se rechaza con las manos VACÍAS, que es lo que distingue los dos motivos: si el chequeo
 	# de las manos llenas fuera primero, una puerta con las manos ocupadas diría el motivo que
 	# el jugador puede resolver y seguiría sin poder levantarse al vaciarlas.
@@ -58,7 +58,7 @@ func test_lo_fijo_se_rechaza_por_no_ser_levantable() -> void:  # 006-AC2
 	assert_object(manos.sostenido()).is_null()
 
 
-func test_lo_llenas_no_tapa_a_lo_que_no_se_levanta() -> void:  # 006-AC2
+func test_lo_llenas_no_tapa_a_lo_que_no_se_levanta() -> void:  # AC-PLY-009
 	var manos := Manos.new()
 	manos.agarrar(_lata())
 	assert_int(manos.motivo_de_rechazo(_puerta())).is_equal(Manos.Rechazo.NO_ES_LEVANTABLE)
@@ -81,7 +81,7 @@ func test_soltar_devuelve_lo_que_habia_y_deja_las_manos_vacias() -> void:  # 006
 	assert_object(manos.sostenido()).is_null()
 
 
-func test_soltar_con_las_manos_vacias_devuelve_nada() -> void:  # 006-AC3
+func test_soltar_con_las_manos_vacias_devuelve_nada() -> void:  # AC-PLY-010
 	# Quien llama —`Agarre`— se agarra de este `null` para no emitir «solté algo» cuando no
 	# había nada: sin eso, cada clic al aire avisaría que se soltó un objeto.
 	assert_object(Manos.new().soltar()).is_null()
