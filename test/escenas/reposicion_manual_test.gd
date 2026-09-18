@@ -380,7 +380,7 @@ func test_actroncito_marolini_y_jorgillo_se_reponen_con_foco_y_clic_reales() -> 
 func test_no_hay_productos_3d_iniciales_fuera_del_inventario() -> void:
 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
 	add_child(almacen)
-	for ruta in ["oremos3", "alfajorescaja", "Actroncito", "Actroncito4", "Actroncito_001"]:
+	for ruta in ["oremos3", "alfajorescaja2", "Actroncito", "Actroncito4", "Actroncito_001"]:
 		var modelo: Node3D = almacen.get_node("Estructura/" + ruta)
 		assert_bool(modelo.is_visible_in_tree()).is_false()
 		for cuerpo: PhysicsBody3D in modelo.find_children("*", "PhysicsBody3D", true, false):

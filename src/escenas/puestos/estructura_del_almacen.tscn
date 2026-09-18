@@ -152,10 +152,10 @@ visible = false
 collision_layer = 0
 collision_mask = 0
 
-[node name="burgaloo_001" parent="."]
+[node name="burgaloo2" parent="gondolanueva"]
 visible = false
 
-[node name="StaticBody3D" parent="burgaloo_001"]
+[node name="StaticBody3D" parent="gondolanueva/burgaloo2"]
 collision_layer = 0
 collision_mask = 0
 
@@ -166,10 +166,10 @@ visible = false
 collision_layer = 0
 collision_mask = 0
 
-[node name="burgaloo_003" parent="."]
+[node name="burgaloo3" parent="gondolanueva"]
 visible = false
 
-[node name="StaticBody3D" parent="burgaloo_003"]
+[node name="StaticBody3D" parent="gondolanueva/burgaloo3"]
 collision_layer = 0
 collision_mask = 0
 
@@ -194,10 +194,10 @@ visible = false
 collision_layer = 0
 collision_mask = 0
 
-[node name="alfajorescaja" parent="."]
+[node name="alfajorescaja2" parent="."]
 visible = false
 
-[node name="StaticBody3D" parent="alfajorescaja"]
+[node name="StaticBody3D" parent="alfajorescaja2"]
 collision_layer = 0
 collision_mask = 0
 

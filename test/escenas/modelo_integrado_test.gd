@@ -63,9 +63,9 @@ func test_el_surtido_fijo_no_muestra_stock_que_el_dominio_no_tiene() -> void:  #
 		"snacks2_03",
 		"snacks2_04",
 		"gondolanueva/burgaloo",
-		"burgaloo_001",
+		"gondolanueva/burgaloo2",
 		"lataarvejas",
-		"burgaloo_003",
+		"gondolanueva/burgaloo3",
 		"gondolanueva/Zucarachas",
 		"gondolanueva/Zucarachas_001",
 		"gondolanueva/malbardocig"

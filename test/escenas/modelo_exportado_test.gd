@@ -62,9 +62,9 @@ func test_reponer_recupera_los_productos_independientes_del_modelo() -> void:  #
 		"snacks2_03",
 		"snacks2_04",
 		"gondolanueva/burgaloo",
-		"burgaloo_001",
+		"gondolanueva/burgaloo2",
 		"lataarvejas",
-		"burgaloo_003",
+		"gondolanueva/burgaloo3",
 		"gondolanueva/Zucarachas",
 		"gondolanueva/Zucarachas_001"
 	]:
