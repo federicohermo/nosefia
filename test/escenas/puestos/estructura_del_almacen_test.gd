@@ -78,7 +78,9 @@ func test_el_modelo_entro_con_sus_mallas() -> void:
 
 func test_los_muebles_y_el_edificio_conservan_su_colision() -> void:
 	var estructura := _estructura()
-	for nombre in ["almacen", "gondolanueva", "gondolanueva2", "base compu", "EscritorioComputadora"]:
+	for nombre in [
+		"almacen", "gondolanueva", "gondolanueva2", "base compu", "EscritorioComputadora"
+	]:
 		var malla: MeshInstance3D = estructura.get_node(nombre)
 		assert_bool(_tiene_forma(malla)).override_failure_message(nombre).is_true()
 
