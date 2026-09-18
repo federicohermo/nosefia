@@ -40,7 +40,7 @@ func test_las_ocho_cajas_de_reposicion_estan_apoyadas_en_el_deposito() -> void: 
 	var cajas: Array = almacen.get("_cajas_de_productos")
 	assert_int(cajas.size()).is_equal(Catalogo.todos().size())
 	for caja: Node3D in cajas:
-		var cuerpo := caja as StaticBody3D
+		var cuerpo := caja as PhysicsBody3D
 		var consulta := PhysicsRayQueryParameters3D.create(
 			cuerpo.global_position, cuerpo.global_position + Vector3.DOWN
 		)
@@ -124,7 +124,7 @@ func _camino_desde_la_puerta(almacen: Node3D, hasta: Vector3, excluidas: Array[R
 
 
 ## Con qué se superpone un cuerpo, sin contar aquello sobre lo que se apoya.
-func _lo_que_pisa(almacen: Node3D, cuerpo: StaticBody3D, apoyo: String) -> Array[String]:
+func _lo_que_pisa(almacen: Node3D, cuerpo: PhysicsBody3D, apoyo: String) -> Array[String]:
 	var forma := BoxShape3D.new()
 	forma.size = Vector3.ONE * (MEDIA_CAJA * 2.0 - 0.01)
 	var consulta := PhysicsShapeQueryParameters3D.new()

@@ -86,11 +86,21 @@ func test_la_mancha_no_decide_ni_lleva_contador() -> void:  # 014-AC9
 
 
 func test_la_mancha_esta_en_el_grupo_que_la_mira_puede_enfocar() -> void:  # 014-AC9
+	# Las dos mitades del contrato se separan acá, y no son la misma cosa: **el grupo dice que la
+	# mira la puede enfocar; `interactuar()` dice que el clic izquierdo es suyo.** De una mancha
+	# no se levanta nada —el trapeador entra por el otro botón—, así que le corresponde el grupo
+	# y no el método.
+	#
+	# Tenerlo no era neutral. `jugador.gd` le da el clic entero a cualquier cosa enfocada que
+	# conteste `null`, así que llevando una caja y con la mira sobre un charco el clic no hacía
+	# nada, sin un solo aviso. Lo mide `caja_que_se_lleva_test.gd`.
 	var mancha := _mancha()
 	assert_bool(mancha.is_in_group(ReglasDelJugador.GRUPO_INTERACTUABLE)).is_true()
-	assert_bool(mancha.has_method(ReglasDeLosObjetos.METODO_INTERACTUAR)).is_true()
-	# De una mancha no se levanta nada: pasarle el trapeador es otro gesto.
-	assert_object(mancha.call(ReglasDeLosObjetos.METODO_INTERACTUAR)).is_null()
+	(
+		assert_bool(mancha.has_method(ReglasDeLosObjetos.METODO_INTERACTUAR))
+		. override_failure_message("la mancha declara el clic izquierdo como propio y no lo usa")
+		. is_false()
+	)
 
 
 func test_la_mancha_limpia_deja_de_estorbar_y_de_enfocarse() -> void:  # 014-AC9

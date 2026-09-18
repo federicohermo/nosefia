@@ -29,12 +29,11 @@ func zona_de_la_mancha() -> PisoDelLocal.Zona:
 	return zona
 
 
-## El contrato de «con esto se puede interactuar» es este método más el grupo del `.tscn`.
-##
-## Devuelve `null` porque una mancha no se levanta: pasarle el trapeador entra por el clic
-## derecho, que es otro gesto.
-func interactuar() -> ObjetoDelAlmacen:
-	return null
+## **No tiene `interactuar()`, y es a propósito.** Una mancha no se levanta: el trapeador entra
+## por el clic derecho, que es otro gesto. Tener el método es declarar que el clic izquierdo es
+## propio, y el de `jugador.gd` se lo daba entero: llevando una caja y con la mira sobre un
+## charco, soltar no hacía nada. Al grupo `interactuable` sigue perteneciendo, que es lo que la
+## enfoca y lo que la deja recibir el otro botón.
 
 
 ## Se aclara según lo que falte, y al llegar a cero desaparece entera: malla y cuerpo.
