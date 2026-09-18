@@ -7,8 +7,6 @@
 [ext_resource type="Script" path="res://src/escenas/puestos/escritorio.gd" id="escritorio"]
 [ext_resource type="Script" path="res://src/escenas/puestos/estante.gd" id="estante"]
 [ext_resource type="Script" path="res://src/escenas/puestos/puerta_del_local.gd" id="puerta"]
-[ext_resource type="ArrayMesh" path="res://assets/models/gondola_soporte.res" id="soporte"]
-[ext_resource type="Shape3D" path="res://assets/models/gondola_colision.res" id="colision"]
 [ext_resource type="PackedScene" path="res://src/escenas/puestos/contenido_del_estante.tscn" id="contenido"]
 
 [sub_resource type="BoxShape3D" id="suelo_local"]
@@ -76,15 +74,11 @@ hoja = NodePath("..")
 mallas = [NodePath("..")]
 
 [node name="gondolanueva" parent="."]
-mesh = ExtResource("soporte")
 
 [node name="StaticBody3D" parent="gondolanueva" node_paths=PackedStringArray("_huecos", "mallas") groups=["interactuable"]]
 script = ExtResource("estante")
 _huecos = NodePath("Contenido")
 mallas = [NodePath("..")]
-
-[node name="CollisionShape3D" parent="gondolanueva/StaticBody3D"]
-shape = ExtResource("colision")
 
 [node name="Contenido" parent="gondolanueva/StaticBody3D" instance=ExtResource("contenido")]
 
