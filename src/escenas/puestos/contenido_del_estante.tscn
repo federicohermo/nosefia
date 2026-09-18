@@ -30,6 +30,6 @@ visible = false
 mesh = ExtResource("5_m6amq")
 
 [node name="Cigarrillos" type="MeshInstance3D" parent="." unique_id=552747165]
-transform = Transform3D(8.770053e-08, 0, 0.046130087, 0, 0.24522844, 0, -0.24522844, 0, 1.6497406e-08, 0.95418066, 0.5088551, 0.6808094)
+transform = Transform3D(0.196122, 0, 0, 0, 0.196122, 0, 0, 0, 0.196122, -0.573785, 0.795772, 2.674778)
 visible = false
 mesh = ExtResource("6_j0ft1")
