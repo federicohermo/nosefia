@@ -81,10 +81,10 @@ panel = NodePath("../../Interfaz/PanelDeLaVentanilla")
 recolector = NodePath("../../Servicios/Recolector")
 
 [node name="CajaDeActroncito" parent="Objetos" index="6"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.004, 1.9077, -11.79)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.4, 1.9077, -11.79)
 
 [node name="CajaDeFideos" parent="Objetos" index="7"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.004, 1.9077, -11.09)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.4, 1.9077, -11.09)
 
 [node name="CajaDeGaseosa" parent="Objetos" index="8"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7.577, 1.9077, -11.79)
@@ -93,16 +93,16 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7.577, 1.9077, -11.79)
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7.577, 1.9077, -11.09)
 
 [node name="CajaDeArroz" parent="Objetos" index="10"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.3, 0.4059, -10.6)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.3, 0.4059, -10.6)
 
 [node name="CajaDeJabon" parent="Objetos" index="11"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.3, 0.4059, -11.3)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.3, 0.4059, -11.3)
 
 [node name="CajaDeMarolini" parent="Objetos" index="12"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.3, 0.4059, -12)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.3, 0.4059, -12)
 
 [node name="CajaDeJorgillo" parent="Objetos" index="13"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.3, 0.4059, -12.7)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.3, 0.4059, -12.7)
 
 [node name="LimpiezaDelAlmacen" parent="." unique_id=2007323218 node_paths=PackedStringArray("jugador", "limpiador") instance=ExtResource("21_limpieza")]
 jugador = NodePath("../Jugador")
