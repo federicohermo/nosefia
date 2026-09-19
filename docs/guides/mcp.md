@@ -1,8 +1,8 @@
 # El índice estructural: `nosefia-index`
 
-Un servidor MCP local, registrado en `.mcp.json`. Expone el código del repo como diez
-herramientas. Existe para gastar menos consultas explorando: **una pregunta en vez de cinco
-`Grep` y tres `Read`**.
+Un servidor MCP local, registrado en `.mcp.json`. Expone el repo —código, escenas, tests y
+assets— como herramientas. Existe para gastar menos consultas explorando: **una pregunta en
+vez de cinco `Grep` y tres `Read`**.
 
 Está adaptado del `inventario-index` de los repos de referencia, con lo que aplica a un juego de
 Godot y no a un monorepo de funciones.
@@ -27,7 +27,7 @@ motivo, y las dos se apartan de la referencia:
   milisegundos y **cada respuesta mira el disco de ahora**. Se pierde el paso que hay que
   acordarse de correr, y con él el modo de falla entero.
 
-## Las diez herramientas
+## Las herramientas
 
 **`mapa_del_sistema` es la primera consulta de cualquier tarea.** Las otras contestan una
 pregunta puntual.
@@ -44,6 +44,10 @@ pregunta puntual.
 | `criterio` | un `AC-<COD>-###`: su texto, su regla, y qué test lo cita |
 | `donde_vive_el_numero` | dónde está declarada una constante de balance y quién la lee |
 | `sin_test` | qué script no tiene espejo y qué criterio no tiene cita |
+| `contexto_de_test` | qué prueba una suite: sus casos, qué criterios cita, qué clases ejerce |
+| `tests_de` | qué suites prueban un `.gd`, y si le falta el espejo |
+| `contexto_de_asset` | quién referencia un asset, por las cuatro formas que existen acá |
+| `assets_sin_referencia` | qué asset no alcanza ninguna de las cuatro |
 
 ## Lo que la descripción de cada una no dice
 
@@ -59,6 +63,14 @@ pregunta puntual.
 - **`quien_instancia` es la consulta de paralelizar.** Un `.tscn` no se mergea, así que dos
   issues que tocan la misma escena se ordenan.
 - **`sin_test` lista, no juzga.** El veredicto lo dan `gate_de_tests.py` y `gate_de_specs.py`.
+- **Las dos de assets miran cuatro formas de referencia, y la cuarta es la que importa.** Un
+  `.glb` lleva sus texturas **embebidas**: el nombre vive en su chunk JSON y Godot las
+  extrae a `<stem>_<name>`, con el índice de la imagen pegado atrás cuando dos comparten
+  nombre. No hay `res://`, no hay `uid://`, y el nombre del archivo tampoco está como cadena
+  adentro del binario. Medirlo con las otras tres da treinta huérfanas que no lo son —eso ya
+  se borró una vez, y la reimportación cayó con `Failed loading resource`.
+- **`assets_sin_referencia` sigue siendo una sospecha.** Cubre lo que este repo usa hoy; la
+  quinta forma que aparezca no está. El que decide es el rojo de una corrida de `--import`.
 
 ## Qué no cubre
 

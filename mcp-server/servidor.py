@@ -173,6 +173,61 @@ TOOLS: list[dict] = [
         "inputSchema": {"type": "object", "properties": {}},
         "fn": lambda a: herramientas.sin_test(),
     },
+    {
+        "name": "contexto_de_test",
+        "description": (
+            "Qué prueba una suite de `test/`: sus casos, qué criterios cita, qué clases de `src/` "
+            "ejerce y a qué script espeja. La consulta previa a tocar un test que no escribiste."
+        ),
+        "inputSchema": {
+            "type": "object",
+            "properties": {
+                "ruta": {"type": "string", "description": "ej: test/dominio/reglas_test.gd"}
+            },
+            "required": ["ruta"],
+        },
+        "fn": lambda a: herramientas.contexto_de_test(a["ruta"]),
+    },
+    {
+        "name": "tests_de",
+        "description": (
+            "Qué suites prueban un `.gd`: su espejo obligatorio y las otras que lo nombran. La "
+            "consulta previa a cambiar una firma — dice qué se va a poner en rojo."
+        ),
+        "inputSchema": {
+            "type": "object",
+            "properties": {
+                "ruta": {"type": "string", "description": "ej: src/dominio/reglas.gd"}
+            },
+            "required": ["ruta"],
+        },
+        "fn": lambda a: herramientas.tests_de(a["ruta"]),
+    },
+    {
+        "name": "contexto_de_asset",
+        "description": (
+            "Quién referencia un asset, por las cuatro formas que existen acá: su ruta, su "
+            "`uid://`, su nombre adentro de un binario, y embebido en un `.glb`. Las cuatro, "
+            "porque con tres se borraron treinta texturas que hacían falta."
+        ),
+        "inputSchema": {
+            "type": "object",
+            "properties": {
+                "ruta": {"type": "string", "description": "ej: assets/models/algo.png"}
+            },
+            "required": ["ruta"],
+        },
+        "fn": lambda a: herramientas.contexto_de_asset(a["ruta"]),
+    },
+    {
+        "name": "assets_sin_referencia",
+        "description": (
+            "Los assets que ninguna de las cuatro formas de referencia alcanza. Es una sospecha "
+            "y no un veredicto: el que decide es el rojo de una corrida de `--import`."
+        ),
+        "inputSchema": {"type": "object", "properties": {}},
+        "fn": lambda a: herramientas.assets_sin_referencia(),
+    },
 ]
 
 _POR_NOMBRE = {t["name"]: t for t in TOOLS}

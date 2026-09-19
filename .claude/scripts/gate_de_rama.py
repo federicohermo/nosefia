@@ -327,6 +327,11 @@ def raiz_que_manda(ruta: str, cwd: str | None) -> str:
             cwd=carpeta or str(RAIZ),
             capture_output=True,
             text=True,
+            # Sin declararlo, Python decodifica con el ANSI de la máquina: una rama o una ruta
+            # con acento vuelve mal, y en el peor caso el `decode` tira y el gate se cae — un
+            # gate que se cae es un gate que alguien apaga.
+            encoding="utf-8",
+            errors="replace",
             timeout=5,
             check=True,
         )
@@ -406,6 +411,8 @@ def main() -> None:
             cwd=raiz,
             capture_output=True,
             text=True,
+            encoding="utf-8",
+            errors="replace",
             timeout=5,
             check=True,
         ).stdout.strip()

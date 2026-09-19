@@ -71,6 +71,13 @@ def exportar(destino: str) -> None:
 
 
 def main() -> None:
+    # Su salida la captura `exportar_modelo.py`, y en Windows el default no es UTF-8: el primer
+    # acento de un nombre de objeto tiraría el script adentro de Blender, con un rastro que
+    # nombra a `codecs` y no a la exportación. No importa `lib/consola.py` a propósito — acá
+    # corre el Python de Blender, no el del harness.
+    if hasattr(sys.stdout, "reconfigure"):
+        sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+
     # Blender le pasa al script todo lo que va después de `--`.
     if "--" not in sys.argv:
         raise SystemExit("falta el destino: ... --python exportar.py -- <destino>.glb")

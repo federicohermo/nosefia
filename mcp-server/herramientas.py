@@ -20,6 +20,7 @@ su primera versión dibujaba tres flechas que el gate pone en rojo.
 
 from __future__ import annotations
 
+import json
 import os
 import re
 import sys
@@ -38,6 +39,7 @@ from lib.capas import (  # noqa: E402
 from lib.repo import CAPAS, CAPAS_CON_TEST_OBLIGATORIO, CARPETAS_POR_CAPA, TESTS  # noqa: E402
 from lib.specs import ids_citados, specs_del_repo  # noqa: E402
 from lib.tdd import SUFIJO_DE_TEST, ruta_de_test  # noqa: E402
+from lib.tdd import violaciones as violaciones_de_tdd  # noqa: E402
 
 #: Los símbolos que un `.gd` declara, y con qué los declara.
 DECLARACIONES = (
@@ -409,18 +411,15 @@ def donde_vive_el_numero(nombre: str) -> str:
 def sin_test() -> str:
     """Qué `.gd` no tiene espejo y qué criterio no tiene cita. El trabajo pendiente, derivado."""
     fuentes, tests = _fuentes(), _tests()
-    capas = tuple(c for c, _ in CAPAS)
-    faltan = []
-    for ruta in sorted(fuentes):
-        # **Sólo las dos capas que llevan test obligatorio**, que es lo que `gate_de_tests.py`
-        # exige. Listar `ui/` y `escenas/` empujaría a escribir los tests de humo que la regla
-        # de presentación prohíbe: ahí probar pide el `scene_runner`, y un test que pasa sin
-        # ejercer nada miente sobre la cobertura. Lo destapó el primer demo de esta herramienta.
-        if capa_de(ruta, CAPAS) not in CAPAS_CON_TEST_OBLIGATORIO:
-            continue
-        espejo = ruta_de_test(ruta, capas, TESTS)
-        if espejo and espejo not in tests:
-            faltan.append(f"- {ruta} → falta `{espejo}`")
+    # **Se le pregunta al gate, con sus mismos argumentos.** No es economía: una herramienta que
+    # contesta distinto que el gate se deja de mirar el mismo día. La primera versión recorría
+    # las cuatro capas y listaba `ui/` y `escenas/` como faltas de test, que es justo lo que el
+    # gate NO pide — y habría empujado a los tests de humo que la regla de presentación prohíbe.
+    faltan = [
+        f"- {ruta} → {motivo}"
+        for ruta, motivo in violaciones_de_tdd(fuentes, tests, CAPAS_CON_TEST_OBLIGATORIO, TESTS)
+        if "falta" in motivo
+    ]
 
     citados = ids_citados((RAIZ / TESTS, RAIZ / ".claude" / "scripts" / "tests"))
     lineas = ["# Lo que falta", "", "## Scripts sin test espejo"]
@@ -438,3 +437,247 @@ def sin_test() -> str:
     lineas.append("")
     lineas.append("El veredicto lo dan `gate_de_tests.py` y `gate_de_specs.py`. Esto sólo lista.")
     return "\n".join(lineas)
+
+
+# ------------------------------------------------------------------------------- tests y assets
+
+
+def _casos_de(texto: str) -> list[tuple[str, str]]:
+    """Cada `func test_…` de una suite, con la cita de criterio que lleva al final, si tiene."""
+    casos: list[tuple[str, str]] = []
+    for linea in texto.splitlines():
+        if not linea.startswith("func test"):
+            continue
+        nombre = linea[len("func ") :].split("(")[0]
+        cita = re.search(r"#\s*((?:AC-[A-Z]{3}-\d{3})(?:,\s*AC-[A-Z]{3}-\d{3})*)", linea)
+        casos.append((nombre, cita.group(1) if cita else ""))
+    return casos
+
+
+def contexto_de_test(ruta: str) -> str:
+    """Qué prueba una suite: sus casos, qué criterios cita y a qué script espeja."""
+    tests = _tests()
+    if ruta not in tests:
+        return f"No hay `{ruta}`. Las suites viven en `{TESTS}/` y terminan en `{SUFIJO_DE_TEST}`."
+    texto = tests[ruta]
+    casos = _casos_de(texto)
+    indice = indice_de_class_names(_fuentes(), CAPAS)
+    limpio = _sin_comentarios_ni_strings(texto)
+    ejerce = sorted(c for c in indice if re.search(rf"(?<![\w]){re.escape(c)}(?![\w])", limpio))
+
+    # El espejo al revés: de `test/dominio/x_test.gd` sale `src/dominio/x.gd`.
+    espejado = None
+    if ruta.startswith(f"{TESTS}/") and ruta.endswith(SUFIJO_DE_TEST):
+        resto = ruta[len(TESTS) + 1 : -len(SUFIJO_DE_TEST)]
+        candidato = f"src/{resto}.gd"
+        espejado = candidato if candidato in _fuentes() else f"{candidato} — **no existe**"
+
+    citados = sorted({c for _, cita in casos for c in cita.split(", ") if c})
+    lineas = [f"# {ruta}", ""]
+    if espejado:
+        lineas.append(f"Espeja a: `{espejado}`")
+    lineas.append(f"Casos: {len(casos)}")
+    lineas.append("")
+    lineas.append("## Criterios que cita")
+    lineas += [f"- `{c}`" for c in citados] or [
+        "- (ninguno) — un criterio que ningún test nombra no está aceptado"
+    ]
+    lineas.append("")
+    lineas.append("## Ejerce")
+    lineas += [f"- `{c}` ({indice[c]})" for c in ejerce] or ["- (ninguna clase de `src/`)"]
+    lineas.append("")
+    lineas.append("## Casos")
+    lineas += [f"- `{n}`" + (f"  → {c}" if c else "") for n, c in casos]
+    return "\n".join(lineas)
+
+
+def tests_de(ruta: str) -> str:
+    """Qué suites prueban un script: su espejo, y las que nombran alguna de sus clases."""
+    fuentes = _fuentes()
+    if ruta not in fuentes:
+        return f"No hay `{ruta}` en `src/`."
+    tests = _tests()
+    espejo = ruta_de_test(ruta, CAPAS_CON_TEST_OBLIGATORIO, TESTS)
+    clases = [n for t, n in _simbolos_de(fuentes[ruta]) if t == "class_name"]
+    indirectos = sorted({r for c in clases for r, _ in _menciones(c, tests)} - {espejo})
+
+    lineas = [f"# Qué prueba a `{ruta}`", ""]
+    if espejo is None:
+        lineas.append(
+            "Su capa **no lleva test obligatorio**: ahí probar pide el `scene_runner`, y exigirlo "
+            "empuja a tests de humo que pasan sin ejercer nada."
+        )
+    elif espejo in tests:
+        lineas.append(f"Espejo: `{espejo}`")
+    else:
+        lineas.append(f"Espejo: `{espejo}` — **FALTA**, y el nodo `tdd` lo cobra.")
+    lineas.append("")
+    lineas.append("## Otras suites que lo nombran")
+    lineas += [f"- {r}" for r in indirectos] or ["- (ninguna)"]
+    return "\n".join(lineas)
+
+
+#: Los assets que Godot no importa. Llevan un `.gdignore` arriba, así que nadie los referencia
+#: **por definición**: preguntar si están huérfanos no tiene sentido.
+FUENTE_DE_ARTE = "assets/source/"
+
+
+def _uid_de(ruta: str) -> str:
+    """El `uid://` que el `.import` de un asset declara, o vacío."""
+    importe = RAIZ / (ruta + ".import")
+    if not importe.is_file():
+        return ""
+    texto = importe.read_text(encoding="utf-8", errors="replace")
+    encontrado = re.search(r'uid="(uid://[a-z0-9]+)"', texto)
+    return encontrado.group(1) if encontrado else ""
+
+
+def _binarios_del_repo() -> dict[str, bytes]:
+    """Los archivos donde una referencia puede estar **adentro de un binario**: `.res` y `.glb`."""
+    salida: dict[str, bytes] = {}
+    for base in (RAIZ / "assets", RAIZ / "src"):
+        if not base.is_dir():
+            continue
+        for p in base.rglob("*"):
+            if p.suffix.lower() in (".res", ".glb") and p.is_file():
+                salida[p.relative_to(RAIZ).as_posix()] = p.read_bytes()
+    return salida
+
+
+def _texto_del_repo() -> dict[str, str]:
+    """Todo lo que puede nombrar un asset en texto: scripts, escenas, recursos y `project.godot`."""
+    junto: dict[str, str] = {**_fuentes(), **_tests(), **_escenas()}
+    # El harness cuenta: el `.blend` no lo abre el juego, lo abre `exportar_modelo.py`. Sin este
+    # árbol, el archivo de origen del modelo aparecía como que no lo referencia nadie.
+    for patron in ("*.tres", "project.godot", ".claude/scripts/**/*.py"):
+        for p in RAIZ.glob(patron) if "/" in patron else RAIZ.rglob(patron):
+            partes = p.relative_to(RAIZ).parts
+            if ".godot" in partes or "addons" in partes:
+                continue
+            junto[p.relative_to(RAIZ).as_posix()] = p.read_text(encoding="utf-8", errors="replace")
+    return junto
+
+
+def _imagenes_de_un_glb(datos: bytes) -> set[str]:
+    """Los nombres de las texturas que un `.glb` lleva **embebidas**, sacados de su chunk JSON.
+
+    Es la cuarta forma de referenciar un asset acá, y la única que no deja rastro en texto: la
+    textura no está en disco al lado del modelo, está adentro del binario, y al importar Godot
+    la extrae a `<stem del .glb>_<name>.<ext>`. Por eso un `.png` de `assets/models/` puede no
+    aparecer en ningún `res://`, en ningún `uid://` y tampoco como cadena adentro del `.glb`, y
+    ser aun así parte del modelo.
+
+    **Esto no es teoría: costó treinta texturas borradas.** Se las midió como huérfanas con las
+    otras tres formas, se las borró, y la reimportación cayó con `Failed loading resource`.
+    """
+    if datos[:4] != b"glTF" or len(datos) < 20:
+        return set()
+    largo = int.from_bytes(datos[12:16], "little")
+    if datos[16:20] != b"JSON" or 20 + largo > len(datos):
+        return set()
+    try:
+        cabecera = json.loads(datos[20 : 20 + largo].decode("utf-8"))
+    except (UnicodeDecodeError, json.JSONDecodeError):
+        return set()
+    return {i["name"] for i in cabecera.get("images", []) if i.get("name")}
+
+
+def _nombre_embebido(stem: str, stem_del_glb: str) -> set[str]:
+    """Los nombres de imagen del `.glb` que pueden haber producido este archivo al importar.
+
+    Godot extrae cada imagen embebida a `<stem del .glb>_<name>`, y **cuando dos comparten el
+    `name` le agrega el índice de la imagen**: de un solo `jorgillo` salen `…_jorgillo_17` y
+    `…_jorgillo_22`. Por eso hay dos candidatos y no uno — el nombre pelado y el nombre sin ese
+    sufijo numérico.
+    """
+    sin_prefijo = stem.removeprefix(stem_del_glb + "_")
+    return {sin_prefijo, re.sub(r"_\d+$", "", sin_prefijo)}
+
+
+def _referencias_a(
+    ruta: str, texto: dict[str, str] | None = None, crudos: dict[str, bytes] | None = None
+) -> dict[str, list[str]]:
+    """Quién referencia un asset, **por las tres formas que existen en este repo**.
+
+    Las tres no son teoría: cada una esconde una referencia que una búsqueda por ruta no ve, y
+    mezclarlas ya produjo un borrado equivocado de treinta texturas.
+
+    `texto` y `crudos` se pasan cuando hay que preguntar por muchos assets seguidos: releer
+    el `.glb` de 40 MB una vez por archivo convierte medio segundo de barrido en minutos.
+    """
+    nombre = Path(ruta).name
+    texto = _texto_del_repo() if texto is None else texto
+    uid = _uid_de(ruta)
+    crudos = _binarios_del_repo() if crudos is None else crudos
+    aguja = nombre.encode("utf-8")
+    return {
+        "por su ruta": sorted(r for r, t in texto.items() if ruta in t),
+        "por `uid://`": sorted(r for r, t in texto.items() if uid and uid in t),
+        "adentro de un binario": sorted(r for r, d in crudos.items() if r != ruta and aguja in d),
+        "embebido en un `.glb`": sorted(
+            r
+            for r, d in crudos.items()
+            if r.lower().endswith(".glb")
+            and _nombre_embebido(Path(ruta).stem, Path(r).stem) & _imagenes_de_un_glb(d)
+        ),
+    }
+
+
+def contexto_de_asset(ruta: str) -> str:
+    """Dónde está un asset y quién lo referencia, por cada una de las formas que existen."""
+    archivo = RAIZ / ruta
+    if not archivo.is_file():
+        return f"No hay `{ruta}`."
+    if ruta.startswith(FUENTE_DE_ARTE):
+        return (
+            f"`{ruta}` está bajo `{FUENTE_DE_ARTE}`: es arte de origen y **Godot no lo importa** "
+            "—hay un `.gdignore` arriba—. Que nadie lo referencie es lo correcto."
+        )
+
+    formas = _referencias_a(ruta)
+    total = sum(len(v) for v in formas.values())
+    lineas = [
+        f"# {ruta}",
+        "",
+        f"{archivo.stat().st_size} bytes · uid: `{_uid_de(ruta) or 'sin .import'}`",
+        "",
+    ]
+    for forma, quienes in formas.items():
+        lineas.append(f"## {forma}")
+        lineas += [f"- {r}" for r in quienes] or ["- (nadie)"]
+        lineas.append("")
+    if total == 0:
+        lineas.append(
+            "**Nadie lo referencia por ninguna de las cuatro formas, y eso no prueba que sobre.** "
+            "Antes de borrar va una corrida de `--import`: el rojo que deja un asset que hacía "
+            "falta aparece ahí y en ningún otro lado."
+        )
+    return "\n".join(lineas)
+
+
+def assets_sin_referencia() -> str:
+    """Los assets que ninguna forma de referencia alcanza. Es una sospecha, no un veredicto."""
+    base = RAIZ / "assets"
+    if not base.is_dir():
+        return "No hay `assets/`."
+    texto, crudos = _texto_del_repo(), _binarios_del_repo()
+    sospechosos = []
+    for p in sorted(base.rglob("*")):
+        ruta = p.relative_to(RAIZ).as_posix()
+        if not p.is_file() or ruta.startswith(FUENTE_DE_ARTE):
+            continue
+        if p.suffix in (".import", ".gdignore") or p.name == ".gitkeep":
+            continue
+        if sum(len(v) for v in _referencias_a(ruta, texto, crudos).values()) == 0:
+            sospechosos.append(ruta)
+    return "\n".join(
+        ["# Assets que ninguna referencia alcanza", ""]
+        + ([f"- {r}" for r in sospechosos] or ["- (ninguno)"])
+        + [
+            "",
+            "**Es una sospecha y no un veredicto.** Las cuatro formas cubren lo que este repo "
+            "usa hoy; la quinta que aparezca no está acá. Antes de borrar va "
+            "`contexto_de_asset`, y después una corrida de `--import`, que es donde sale el "
+            "rojo si el asset hacía falta.",
+        ]
+    )
