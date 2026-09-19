@@ -1,7 +1,7 @@
 ## El grupo dibuja cada cuerpo del piso una sola vez, y en el lugar donde el motor lo dibuja.
 ##
 ## La referencia es `get_global_transform_interpolated()` y no el `transform` físico. Con la
-## interpolación del spec 044 encendida, el motor dibuja entre el paso anterior y el actual, así
+## interpolación física encendida, el motor dibuja entre el paso anterior y el actual, así
 ## que los dos difieren mientras el cuerpo cae. Comparar contra el físico haría insatisfacible el
 ## criterio.
 ##
@@ -19,7 +19,7 @@ const ALTO := 0.16
 ## Desde dónde cae. Alcanza para pasar de la velocidad cero al impacto en pocos cuadros.
 const CAIDA := 1.1
 
-## El techo del desfasaje que fija el AC1, en metros.
+## El techo del desfasaje que fija el contrato, en metros.
 const TOLERANCIA := 0.001
 
 
@@ -71,7 +71,7 @@ func _dibujo(grupo: MultiMeshInstance3D, cuerpo: RigidBody3D) -> Transform3D:
 	return grupo.global_transform.affine_inverse() * vista.get_global_transform_interpolated()
 
 
-func test_mover_enfocar_y_recoger_conserva_el_dibujo_de_cada_cuerpo() -> void:  # 042-AC7
+func test_mover_enfocar_y_recoger_conserva_el_dibujo_de_cada_cuerpo() -> void:
 	var mundo := _mundo()
 	var grupo := _grupo(mundo, 3)
 	grupo.position = Vector3(4, 0, 0)
@@ -111,7 +111,7 @@ func test_mover_enfocar_y_recoger_conserva_el_dibujo_de_cada_cuerpo() -> void:  
 	assert_array(grupo.cuerpos).is_empty()
 
 
-func test_en_caida_libre_la_copia_dibuja_donde_el_motor_dibuja_el_cuerpo() -> void:  # 045-AC1
+func test_en_caida_libre_la_copia_dibuja_donde_el_motor_dibuja_el_cuerpo() -> void:
 	# El atraso viejo era de un paso entero de física, y crecía con la velocidad del cuerpo.
 	var mundo := _mundo()
 	_piso(mundo)
@@ -131,7 +131,7 @@ func test_en_caida_libre_la_copia_dibuja_donde_el_motor_dibuja_el_cuerpo() -> vo
 	)
 
 
-func test_el_motor_no_vuelve_a_interpolar_lo_que_el_grupo_escribe() -> void:  # 045-AC1
+func test_el_motor_no_vuelve_a_interpolar_lo_que_el_grupo_escribe() -> void:
 	# El grupo ya escribe la posición interpolada cada cuadro. Si el motor además interpola el
 	# buffer del MultiMesh, interpola entre dos valores interpolados y la copia se atrasa otra
 	# vez.
@@ -148,7 +148,7 @@ func test_el_motor_no_vuelve_a_interpolar_lo_que_el_grupo_escribe() -> void:  # 
 	assert_bool(grupo.is_physics_interpolated()).is_false()
 
 
-func test_al_aterrizar_la_copia_no_salta_mas_que_el_dibujo_del_cuerpo() -> void:  # 045-AC2
+func test_al_aterrizar_la_copia_no_salta_mas_que_el_dibujo_del_cuerpo() -> void:
 	# El borde es el cuadro posterior al impacto: ahí el cuerpo casi no avanza y la copia salta
 	# todo lo que traía de atrás. Ese salto es el parpadeo al tocar el suelo.
 	var mundo := _mundo()
@@ -176,7 +176,7 @@ func test_al_aterrizar_la_copia_no_salta_mas_que_el_dibujo_del_cuerpo() -> void:
 	)
 
 
-func test_cada_cuerpo_agrupado_se_dibuja_exactamente_una_vez() -> void:  # 045-AC3
+func test_cada_cuerpo_agrupado_se_dibuja_exactamente_una_vez() -> void:
 	# Las dos fallas posibles se ven igual de mal y ninguna da error: el producto duplicado y el
 	# producto que desaparece. Los cuadros que importan son aquél en que el foco entra y aquél
 	# en que sale, porque ahí las dos mitades cambian a la vez.
@@ -210,7 +210,7 @@ func test_cada_cuerpo_agrupado_se_dibuja_exactamente_una_vez() -> void:  # 045-A
 			)
 
 
-func test_quitar_del_medio_deja_el_indice_reutilizado_en_su_cuerpo_nuevo() -> void:  # 045-AC4
+func test_quitar_del_medio_deja_el_indice_reutilizado_en_su_cuerpo_nuevo() -> void:
 	# `quitar()` mueve el último cuerpo al índice liberado. Si esa instancia no se reescribe en
 	# el mismo cuadro, se dibuja viajando desde donde estaba el cuerpo anterior.
 	var mundo := _mundo()

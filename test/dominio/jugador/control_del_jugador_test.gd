@@ -25,7 +25,7 @@ func _control() -> ControlDelJugador:
 	return ControlDelJugador.new(mirada, ReglasDelJugador.VELOCIDAD_DE_CAMINATA)
 
 
-func test_suspendido_no_gira_la_camara() -> void:
+func test_suspendido_no_gira_la_camara() -> void:  # AC-PLY-007
 	var control := _control()
 	control.girar(Vector2(100.0, 100.0))
 	var yaw_antes := control.yaw()
@@ -37,7 +37,7 @@ func test_suspendido_no_gira_la_camara() -> void:
 	assert_float(control.pitch()).is_equal(pitch_antes)
 
 
-func test_suspendido_devuelve_velocidad_cero_aunque_la_entrada_no_sea_nula() -> void:
+func test_suspendido_devuelve_velocidad_cero_aunque_la_entrada_no_sea_nula() -> void:  # AC-PLY-007
 	var control := _control()
 	control.suspender()
 	assert_vector(control.velocidad(Vector2(0.0, 1.0))).is_equal(Vector3.ZERO)
@@ -68,14 +68,14 @@ func test_suspender_suelta_el_objetivo_que_estaba_enfocado() -> void:
 	assert_bool(control.hay_interactuable()).is_false()
 
 
-func test_suspendido_la_mira_no_enfoca() -> void:
+func test_suspendido_la_mira_no_enfoca() -> void:  # AC-PLY-007
 	var control := _control()
 	control.suspender()
 	assert_bool(control.observar(UN_OBJETO, 2.0, true)).is_false()
 	assert_int(control.objetivo()).is_equal(Foco.SIN_OBJETIVO)
 
 
-func test_suspendido_no_pide_el_cursor_y_al_reanudar_lo_vuelve_a_pedir() -> void:
+func test_suspendido_no_pide_el_cursor_y_al_reanudar_lo_vuelve_a_pedir() -> void:  # AC-PLY-007
 	# Es un `bool` y no un `Input.MOUSE_MODE_*` porque `dominio/` no nombra `Input`: acá se
 	# decide SI, y en `src/escenas/jugador.gd` se traduce a QUÉ.
 	var control := _control()

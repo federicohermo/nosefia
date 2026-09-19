@@ -8,7 +8,7 @@ class JugadorDoble:
 	extends Jugador
 
 
-func test_el_campo_real_resalta_la_computadora_y_solo_la_zona_de_reposicion() -> void:  # 039-AC9
+func test_el_campo_real_resalta_la_computadora_y_solo_la_zona_de_reposicion() -> void:
 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
 	add_child(almacen)
 	var jugador: CharacterBody3D = almacen.get("_jugador")
@@ -63,7 +63,7 @@ func test_el_campo_real_resalta_la_computadora_y_solo_la_zona_de_reposicion() ->
 			assert_bool(malla.material_overlay == previos[malla]).is_true()
 
 
-func test_las_senales_del_doble_llegan_al_marco_y_al_hud() -> void:  # 039-AC9
+func test_las_senales_del_doble_llegan_al_marco_y_al_hud() -> void:
 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
 	var jugador: JugadorDoble = auto_free(JugadorDoble.new())
 	almacen.get("_jugador").set_physics_process(false)

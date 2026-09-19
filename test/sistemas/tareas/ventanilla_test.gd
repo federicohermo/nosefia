@@ -5,7 +5,7 @@
 ## explícitamente porque el caso del tiempo mide justamente que nadie lo haya pausado.
 extends GdUnitTestSuite
 
-## Los ocho archivos de este spec. El AC11 pide los seis de `dominio/` y `sistemas/`; los dos de
+## Los ocho archivos de este spec. El contrato pide los seis de `dominio/` y `sistemas/`; los dos de
 ## `ui/` y `escenas/` se agregan porque son justamente los que ningún gate mira.
 const ARCHIVOS_DEL_SPEC := [
 	"res://src/dominio/almacen/comprador.gd",
@@ -18,7 +18,7 @@ const ARCHIVOS_DEL_SPEC := [
 	"res://src/escenas/puestos/ventanilla.gd",
 ]
 
-## Segundos **reales** de ventanilla abierta que mide el AC10, en un solo cuadro.
+## Segundos **reales** de ventanilla abierta que mide el caso del tiempo, en un solo cuadro.
 const SEGUNDOS_REALES_ABIERTA := 30.0
 
 const EN_GONDOLA := 9
@@ -80,7 +80,7 @@ func _ventanilla(cuantos: int, presupuesto: float = Reglas.DURACION_DEL_TURNO) -
 	return ventanilla
 
 
-func test_al_despachar_al_ultimo_la_obligatoria_se_cuenta_una_sola_vez() -> void:  # 013-AC9
+func test_al_despachar_al_ultimo_la_obligatoria_se_cuenta_una_sola_vez() -> void:
 	var ventanilla := _ventanilla(2)
 	ventanilla.pedir_atender()
 	ventanilla.pedir_cobrar()
@@ -92,7 +92,7 @@ func test_al_despachar_al_ultimo_la_obligatoria_se_cuenta_una_sola_vez() -> void
 	assert_int(_turno.tareas_cumplidas()).is_equal(1)
 
 
-func test_despachar_al_ultimo_descuenta_el_costo_de_la_caja_y_no_lo_repite() -> void:  # 013-AC9
+func test_despachar_al_ultimo_descuenta_el_costo_de_la_caja_y_no_lo_repite() -> void:
 	# El `_process` del reloj no corre en este caso, así que este descuento es el único que
 	# puede haber: si además alguien descontara por su cuenta, el restante no daría el número.
 	var ventanilla := _ventanilla(1)
@@ -108,7 +108,7 @@ func test_despachar_al_ultimo_descuenta_el_costo_de_la_caja_y_no_lo_repite() -> 
 	assert_int(_avisos_de_tarea).is_equal(1)
 
 
-func test_completar_una_tarea_aparte_no_le_sube_el_contador_al_turno() -> void:  # 013-AC9
+func test_completar_una_tarea_aparte_no_le_sube_el_contador_al_turno() -> void:
 	# `RelojDelTurno.obligatoria()` es la única forma de conseguir la instancia que el turno
 	# está contando: una copia devuelve `true` y deja el contador clavado en 0, sin un error.
 	var obligatorias := Apertura.obligatorias()
@@ -117,7 +117,7 @@ func test_completar_una_tarea_aparte_no_le_sube_el_contador_al_turno() -> void: 
 	assert_int(turno.tareas_cumplidas()).is_equal(0)
 
 
-func test_la_ventanilla_avisa_quien_llego_y_cuando_no_queda_nadie() -> void:  # 013-AC9
+func test_la_ventanilla_avisa_quien_llego_y_cuando_no_queda_nadie() -> void:
 	var ventanilla := _ventanilla(1)
 	ventanilla.pedir_atender()
 	assert_int(_llegados).is_equal(1)
@@ -127,7 +127,7 @@ func test_la_ventanilla_avisa_quien_llego_y_cuando_no_queda_nadie() -> void:  # 
 	assert_int(_vacia).is_equal(1)
 
 
-func test_despachar_sin_vender_avisa_igual_que_cobrar() -> void:  # 013-AC9
+func test_despachar_sin_vender_avisa_igual_que_cobrar() -> void:
 	var ventanilla := _ventanilla(1)
 	ventanilla.pedir_atender()
 	ventanilla.pedir_despachar_sin_vender()
@@ -135,7 +135,7 @@ func test_despachar_sin_vender_avisa_igual_que_cobrar() -> void:  # 013-AC9
 	assert_int(_avisos_de_tarea).is_equal(1)
 
 
-func test_el_turno_sigue_corriendo_con_la_ventanilla_abierta() -> void:  # 013-AC10
+func test_el_turno_sigue_corriendo_con_la_ventanilla_abierta() -> void:
 	# **Es la decisión entera del spec**: atender cuesta minutos, y si el reloj se pausara la
 	# ventanilla sería gratis y la tensión aritmética dejaría de apretar. Se mide contra
 	# `Ritmo.escalar()` y nunca contra el número, que vive en el 007.
@@ -147,7 +147,7 @@ func test_el_turno_sigue_corriendo_con_la_ventanilla_abierta() -> void:  # 013-A
 	assert_float(gastado).is_equal(Ritmo.escalar(SEGUNDOS_REALES_ABIERTA))
 
 
-func test_ningun_archivo_de_este_spec_pausa_el_juego() -> void:  # 013-AC10
+func test_ningun_archivo_de_este_spec_pausa_el_juego() -> void:
 	# Las dos formas de congelar el reloj desde afuera del dominio. El nombre no se escribe ni en
 	# un comentario: este caso no distingue código de prosa.
 	for ruta: String in ARCHIVOS_DEL_SPEC:
@@ -165,8 +165,8 @@ func test_ningun_archivo_de_este_spec_pausa_el_juego() -> void:  # 013-AC10
 			)
 
 
-func test_ningun_archivo_de_este_spec_nombra_consumir() -> void:  # 013-AC11
-	# El único que descuenta tiempo es el reloj del 007, y lo hace por cuadro. Un descuento
+func test_ningun_archivo_de_este_spec_nombra_consumir() -> void:
+	# El único que descuenta tiempo es el reloj, y lo hace por cuadro. Un descuento
 	# propio acá le cobraría a atender un minuto que el trayecto ya paga.
 	for ruta: String in ARCHIVOS_DEL_SPEC:
 		var texto := FileAccess.get_file_as_string(ruta)
@@ -177,8 +177,8 @@ func test_ningun_archivo_de_este_spec_nombra_consumir() -> void:  # 013-AC11
 		)
 
 
-func test_ningun_archivo_de_este_spec_mueve_stock_ni_sortea() -> void:  # 013-AC11
-	# Mover unidades del depósito a la góndola es del 008, y el azar no entra en ningún lado.
+func test_ningun_archivo_de_este_spec_mueve_stock_ni_sortea() -> void:
+	# Mover unidades del depósito a la góndola es de reponer, y el azar no entra en ningún lado.
 	for ruta: String in ARCHIVOS_DEL_SPEC:
 		var texto := FileAccess.get_file_as_string(ruta)
 		for patron in ["randi(", "randf(", "ingresar("]:
@@ -206,7 +206,7 @@ func _anotar_tarea(cumplidas: int) -> void:
 	_cumplidas_avisadas = cumplidas
 
 
-func test_los_seis_archivos_de_dominio_y_sistemas_tienen_su_espejo() -> void:  # 013-AC13
+func test_los_seis_archivos_de_dominio_y_sistemas_tienen_su_espejo() -> void:
 	# Es la mitad falsable del criterio de terminado: sin los espejos el nodo `tdd` no pasa, y
 	# el rojo que da nombra el archivo que falta y no el spec. Acá se lee al revés — se afirma
 	# que cada archivo del spec tiene su suite— así que el rojo dice qué queda sin ejercer.
@@ -224,7 +224,7 @@ func test_los_seis_archivos_de_dominio_y_sistemas_tienen_su_espejo() -> void:  #
 		)
 
 
-func test_reabrir_el_panel_sigue_con_el_que_estaba_y_no_llama_al_siguiente() -> void:  # 013-AC6
+func test_reabrir_el_panel_sigue_con_el_que_estaba_y_no_llama_al_siguiente() -> void:
 	# Es la distinción entera de `pedir_abrir()`: sin ella, cerrar y volver a tocar el vidrio
 	# saltea al comprador que estaba esperando —se va sin despachar— y la obligatoria queda
 	# imposible de cumplir, sin un solo error.
@@ -242,7 +242,7 @@ func test_reabrir_el_panel_sigue_con_el_que_estaba_y_no_llama_al_siguiente() -> 
 	assert_int(ventanilla.tarea().despachados()).is_equal(1)
 
 
-func test_la_ventanilla_sin_cablear_no_hace_nada_y_lo_dice() -> void:  # 013-AC9
+func test_la_ventanilla_sin_cablear_no_hace_nada_y_lo_dice() -> void:
 	# Un `.tscn` mal armado no es un rechazo del juego: no puede salir por las señales de
 	# rechazo, o la pantalla mostraría «falta mercadería» por un `@export` en null.
 	var ventanilla: Ventanilla = auto_free(Ventanilla.new())
@@ -259,7 +259,7 @@ func test_la_ventanilla_sin_cablear_no_hace_nada_y_lo_dice() -> void:  # 013-AC9
 	assert_object(ventanilla.atencion()).is_null()
 
 
-func test_cobrar_sin_stock_avisa_lo_que_falta_y_no_despacha() -> void:  # 013-AC9
+func test_cobrar_sin_stock_avisa_lo_que_falta_y_no_despacha() -> void:
 	# Emite **una** de las dos señales y nunca las dos: juntas dejarían a la pantalla despachando
 	# al comprador y avisando que falta mercadería al mismo tiempo.
 	var obligatorias := Apertura.obligatorias()

@@ -11,20 +11,20 @@ func _pedido() -> Venta:
 	return venta
 
 
-func test_el_comprador_contesta_su_nombre_y_lo_que_paga() -> void:  # 013-AC1
+func test_el_comprador_contesta_su_nombre_y_lo_que_paga() -> void:
 	var comprador := Comprador.new("Marta", _pedido(), 5000)
 	assert_str(comprador.nombre()).is_equal("Marta")
 	assert_int(comprador.paga()).is_equal(5000)
 
 
-func test_lo_que_paga_es_un_entero_y_no_un_flotante() -> void:  # 013-AC1
+func test_lo_que_paga_es_un_entero_y_no_un_flotante() -> void:
 	# El dinero del juego es `int`: un `float` acá dejaría diferencias de un centavo que el
 	# jugador no puede ver y que ninguna aserción de igualdad caza.
 	var comprador := Comprador.new("Marta", _pedido(), 5000)
 	assert_int(typeof(comprador.paga())).is_equal(TYPE_INT)
 
 
-func test_el_pedido_es_la_misma_instancia_que_recibio_y_no_una_copia() -> void:  # 013-AC1
+func test_el_pedido_es_la_misma_instancia_que_recibio_y_no_una_copia() -> void:
 	# Con una copia, `Inventario.cobrar()` descontaría contra un pedido y la pantalla mostraría
 	# otro: los dos con las mismas líneas hasta que alguien agregue una, y ahí se separan sin un
 	# solo error.
@@ -33,7 +33,7 @@ func test_el_pedido_es_la_misma_instancia_que_recibio_y_no_una_copia() -> void: 
 	assert_object(comprador.pedido()).is_same(pedido)
 
 
-func test_dos_compradores_no_comparten_el_pedido() -> void:  # 013-AC1
+func test_dos_compradores_no_comparten_el_pedido() -> void:
 	var uno := Comprador.new("Marta", _pedido(), 5000)
 	var otro := Comprador.new("Rubén", _pedido(), 5000)
 	assert_object(uno.pedido()).is_not_same(otro.pedido())

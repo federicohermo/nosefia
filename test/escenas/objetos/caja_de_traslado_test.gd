@@ -18,7 +18,7 @@ const CajaQueSeVe := preload("res://src/escenas/objetos/caja_de_traslado.gd")
 const PREFIJO_DEL_CASILLERO := "Casillero"
 
 
-func test_la_caja_trae_exactamente_los_casilleros_que_declara_el_balance() -> void:  # 033-AC9
+func test_la_caja_trae_exactamente_los_casilleros_que_declara_el_balance() -> void:
 	# Se cuentan contra la constante y nunca contra un `8` escrito acá: si el cupo del dominio se
 	# moviera, una caja con ocho huecos dibujados dejaría al jugador mirando un casillero que
 	# nunca se llena, sin un solo error.
@@ -36,7 +36,7 @@ func test_la_caja_trae_exactamente_los_casilleros_que_declara_el_balance() -> vo
 	)
 
 
-func test_una_caja_recien_instanciada_no_muestra_ningun_casillero_ocupado() -> void:  # 033-AC9
+func test_una_caja_recien_instanciada_no_muestra_ningun_casillero_ocupado() -> void:
 	# Una caja nueva está vacía y el dominio lo dice, pero los casilleros del `.tscn` nacen
 	# visibles: sin declarar el estado inicial la escena carga sin un solo error y el jugador ve
 	# ocho productos adentro de una caja que `CajaDeTraslado` reporta con `ocupados() == 0`.
@@ -52,7 +52,7 @@ func test_una_caja_recien_instanciada_no_muestra_ningun_casillero_ocupado() -> v
 	assert_int(_casilleros_visibles(caja)).is_equal(CajaDeTraslado.new().ocupados())
 
 
-func test_el_script_de_la_caja_no_declara_nada_propio() -> void:  # 033-AC9
+func test_el_script_de_la_caja_no_declara_nada_propio() -> void:
 	# Es cáscara: sin `class_name` —nadie la nombra desde abajo— y sin una sola `const`, que es
 	# por donde el cupo se copiaría. Está medido que esa copia pasa los dos gates en verde.
 	var texto := FileAccess.get_file_as_string(SCRIPT)
@@ -66,7 +66,7 @@ func test_el_script_de_la_caja_no_declara_nada_propio() -> void:  # 033-AC9
 	)
 
 
-func test_los_casilleros_ocupados_son_los_que_dice_el_dominio() -> void:  # 033-AC9
+func test_los_casilleros_ocupados_son_los_que_dice_el_dominio() -> void:
 	# La escena pregunta y pinta: cuántos casilleros se ven sale de `contenido()` y no de una
 	# cuenta propia. Con una cuenta propia, la caja y el dominio se contradicen en silencio.
 	var caja := _caja()

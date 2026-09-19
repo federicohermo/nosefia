@@ -14,10 +14,10 @@ extends RefCounted
 ## Es también lo que vuelve alcanzable la regla más cara del juego: el camino más corto al
 ## despido encadena bandas graves, que suben de a dos, así que una partida más corta que esa
 ## cuenta dejaría al despido escrito y muerto en la build. La desigualdad se afirma contra las
-## constantes del 002 en `reglas_de_la_partida_test.gd`, nunca contra este número.
+## constantes del despido en `reglas_de_la_partida_test.gd`, nunca contra este número.
 const JORNADAS_DE_LA_PARTIDA := 5
 
 ## La primera noche se numera desde uno y no desde cero porque es el número que el jugador lee:
-## la pantalla del 017 dice «jornada 1 de 5». Un índice desde cero obligaría a sumar uno en cada
+## la pantalla de cierre dice «jornada 1 de 5». Un índice desde cero obligaría a sumar uno en cada
 ## lugar que lo muestre, que es la copia que este archivo existe para evitar.
 const PRIMERA_JORNADA := 1

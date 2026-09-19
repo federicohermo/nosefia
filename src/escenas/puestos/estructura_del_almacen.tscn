@@ -3,7 +3,7 @@
 [ext_resource type="PackedScene" path="res://src/escenas/puestos/reloj_de_pared.tscn" id="8_reloj_de_pared"]
 [ext_resource type="PackedScene" path="res://src/escenas/puestos/ventanilla.tscn" id="15_ventanilla"]
 
-[ext_resource type="PackedScene" path="res://assets/SEPT_JUEGOS_PROTOTIPO.glb" id="modelo"]
+[ext_resource type="PackedScene" path="res://assets/models/SEPT_JUEGOS_PROTOTIPO.glb" id="modelo"]
 [ext_resource type="Script" path="res://src/escenas/puestos/escritorio.gd" id="escritorio"]
 [ext_resource type="Script" path="res://src/escenas/puestos/estante.gd" id="estante"]
 [ext_resource type="Script" path="res://src/escenas/puestos/puerta_del_local.gd" id="puerta"]

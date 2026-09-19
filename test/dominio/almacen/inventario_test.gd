@@ -32,7 +32,7 @@ func test_el_mismo_producto_repetido_en_la_construccion_entra_una_sola_vez() -> 
 	assert_array(inventario.faltantes()).has_size(1)
 
 
-func test_ingresar_al_deposito_no_toca_la_gondola() -> void:
+func test_ingresar_al_deposito_no_toca_la_gondola() -> void:  # AC-STK-003
 	# Las dos ubicaciones son dos números separados: si `ingresar` sumara a un total único, el
 	# jugador no tendría nunca una góndola vacía con el depósito lleno, que es el estado que le
 	# da la razón para ir al estante.
@@ -44,7 +44,7 @@ func test_ingresar_al_deposito_no_toca_la_gondola() -> void:
 	assert_int(inventario.unidades(actroncito, Inventario.Ubicacion.GONDOLA)).is_equal(0)
 
 
-func test_ingresar_una_cantidad_negativa_no_deja_la_gondola_bajo_cero() -> void:
+func test_ingresar_una_cantidad_negativa_no_deja_la_gondola_bajo_cero() -> void:  # AC-STK-005
 	# `ingresar` es la puerta por la que **entra** mercadería; la única que resta es la interna
 	# que usan `mover` y `cobrar`. Sin el corte, un `-5` de quien reponga mal deja la góndola en
 	# un número imposible que `hay_stock()` y `faltantes()` leen como una góndola vacía cualquiera.
@@ -72,7 +72,7 @@ func test_mover_una_unidad_la_saca_del_deposito_y_la_pone_en_la_gondola() -> voi
 	assert_int(inventario.unidades(actroncito, Inventario.Ubicacion.GONDOLA)).is_equal(1)
 
 
-func test_pedir_mas_de_lo_que_hay_mueve_lo_que_hay_y_nunca_deja_un_negativo() -> void:
+func test_pedir_mas_de_lo_que_hay_mueve_lo_que_hay_y_nunca_deja_un_negativo() -> void:  # AC-STK-006
 	var actroncito := Producto.new(Producto.Id.ACTRONCITO, "Actroncito", 2500, 4)
 	var productos: Array[Producto] = [actroncito]
 	var inventario := Inventario.new(productos)
@@ -85,7 +85,7 @@ func test_pedir_mas_de_lo_que_hay_mueve_lo_que_hay_y_nunca_deja_un_negativo() ->
 	assert_int(inventario.unidades(actroncito, Inventario.Ubicacion.GONDOLA)).is_equal(2)
 
 
-func test_mover_desde_un_deposito_vacio_no_mueve_nada_y_no_cambia_nada() -> void:
+func test_mover_desde_un_deposito_vacio_no_mueve_nada_y_no_cambia_nada() -> void:  # AC-STK-006
 	var actroncito := Producto.new(Producto.Id.ACTRONCITO, "Actroncito", 2500, 4)
 	var productos: Array[Producto] = [actroncito]
 	var inventario := Inventario.new(productos)
@@ -97,6 +97,7 @@ func test_mover_desde_un_deposito_vacio_no_mueve_nada_y_no_cambia_nada() -> void
 	assert_int(inventario.unidades(actroncito, Inventario.Ubicacion.GONDOLA)).is_equal(0)
 
 
+# AC-STK-001
 func test_consultar_con_otra_instancia_del_mismo_producto_encuentra_lo_guardado() -> void:
 	# `Catalogo.de()` construye un producto nuevo en cada llamada, así que las tres instancias de
 	# este test son objetos distintos. Un inventario indexado por instancia contestaría 0 acá,
@@ -120,7 +121,7 @@ func test_el_inventario_solo_conoce_los_productos_que_recibio() -> void:
 	assert_int(inventario.unidades(malbardo, Inventario.Ubicacion.GONDOLA)).is_equal(0)
 
 
-func test_por_debajo_del_umbral_falta_aunque_todavia_quede_algo_para_vender() -> void:
+func test_por_debajo_del_umbral_falta_aunque_todavia_quede_algo_para_vender() -> void:  # AC-STK-007
 	var actroncito := Producto.new(Producto.Id.ACTRONCITO, "Actroncito", 2500, 5)
 	var productos: Array[Producto] = [actroncito]
 	var inventario := Inventario.new(productos)
@@ -129,7 +130,7 @@ func test_por_debajo_del_umbral_falta_aunque_todavia_quede_algo_para_vender() ->
 	assert_bool(inventario.hay_stock(actroncito)).is_true()
 
 
-func test_justo_en_el_umbral_no_falta() -> void:
+func test_justo_en_el_umbral_no_falta() -> void:  # AC-STK-007
 	# El corte es `<`, no `<=`: con el umbral pisado la góndola está abastecida y reponer no
 	# sería una tarea sino un trámite que nunca se termina.
 	var actroncito := Producto.new(Producto.Id.ACTRONCITO, "Actroncito", 2500, 5)
@@ -147,7 +148,7 @@ func test_una_gondola_vacia_falta_y_no_tiene_con_que_vender() -> void:
 	assert_bool(inventario.hay_stock(actroncito)).is_false()
 
 
-func test_el_deposito_lleno_no_salva_a_la_gondola_vacia() -> void:
+func test_el_deposito_lleno_no_salva_a_la_gondola_vacia() -> void:  # AC-STK-007
 	# Las dos mitades importan. Un `hay_stock()` que sumara las dos ubicaciones pasa igual los
 	# dos AC de arriba, y la góndola vacía con el depósito lleno —el estado que le da al
 	# jugador la razón para ir al estante— se leería como «hay stock».

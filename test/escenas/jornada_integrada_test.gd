@@ -17,7 +17,7 @@ func after_test() -> void:
 @warning_ignore("unused_parameter")
 func test_los_puestos_completan_la_jornada_y_permiten_abrir_la_siguiente(
 	timeout: int = 6000000  # gdlint:ignore=unused-argument
-) -> void:  # 041-AC9, 041-AC10
+) -> void:
 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
 	add_child(almacen)
 	var reloj: RelojDelTurno = almacen.get("_reloj")

@@ -31,7 +31,7 @@ const ARCHIVOS_CON_ESPEJO = [
 	"res://src/sistemas/investigacion/computadora_de_escritorio.gd",
 ]
 
-## Segundos **reales** de computadora abierta que mide el AC3, en un solo cuadro.
+## Segundos **reales** de computadora abierta que mide el caso del tiempo, en un solo cuadro.
 const SEGUNDOS_REALES_ABIERTA := 30.0
 
 var _turno: Turno = null
@@ -65,7 +65,7 @@ func _escritorio() -> ComputadoraDeEscritorio:
 	return escritorio
 
 
-func test_la_secuencia_entera_no_descuenta_un_solo_segundo() -> void:  # 009-AC2
+func test_la_secuencia_entera_no_descuenta_un_solo_segundo() -> void:  # AC-INV-007
 	# **Es la decisión entera del spec al revés**: usar la computadora no cuesta por usarla,
 	# cuesta porque el reloj no se detuvo. Un descuento por acción cobraría dos veces lo mismo.
 	var escritorio := _escritorio()
@@ -80,8 +80,8 @@ func test_la_secuencia_entera_no_descuenta_un_solo_segundo() -> void:  # 009-AC2
 	assert_int(_avisos_de_tarea).is_equal(0)
 
 
+# AC-INV-007
 func test_treinta_segundos_con_la_computadora_abierta_cuestan_lo_mismo_que_sin_ella() -> void:
-	# 009-AC3
 	# Se mide contra `Ritmo.escalar()` y nunca contra el número: el factor vive en el 007, y
 	# escribir `30` acá lo dejaría mal por un factor de 24 el día que se rebalancee.
 	var abierto := _escritorio()
@@ -101,7 +101,7 @@ func test_treinta_segundos_con_la_computadora_abierta_cuestan_lo_mismo_que_sin_e
 	assert_float(gastado_abierto).is_equal(gastado_cerrado)
 
 
-func test_ningun_archivo_de_la_cascara_pausa_el_juego() -> void:  # 009-AC3
+func test_ningun_archivo_de_la_cascara_pausa_el_juego() -> void:
 	# Las dos formas de congelar el reloj desde afuera del dominio. El nombre no se escribe ni en
 	# un comentario: este caso no distingue código de prosa, y hacerlo pasar comentando distinto
 	# sería trampa.
@@ -120,7 +120,7 @@ func test_ningun_archivo_de_la_cascara_pausa_el_juego() -> void:  # 009-AC3
 			)
 
 
-func test_lo_leido_y_lo_anotado_sobreviven_a_cambiar_de_app_y_a_cerrar() -> void:  # 009-AC4
+func test_lo_leido_y_lo_anotado_sobreviven_a_cambiar_de_app_y_a_cerrar() -> void:  # AC-INV-012
 	var escritorio := _escritorio()
 	escritorio.pedir_abrir()
 	escritorio.pedir_marcar_leida(Conversacion.Interlocutor.JEFE)
@@ -132,7 +132,7 @@ func test_lo_leido_y_lo_anotado_sobreviven_a_cambiar_de_app_y_a_cerrar() -> void
 	assert_int(escritorio.cuaderno().cuantas()).is_equal(1)
 
 
-func test_registrar_el_ultimo_del_dia_cuenta_la_obligatoria_una_sola_vez() -> void:  # 009-AC7
+func test_registrar_el_ultimo_del_dia_cuenta_la_obligatoria_una_sola_vez() -> void:
 	var escritorio := _escritorio()
 	var del_dia := CajaRegistradora.productos_del_dia()
 	for indice in range(del_dia.size() - 1):
@@ -146,7 +146,7 @@ func test_registrar_el_ultimo_del_dia_cuenta_la_obligatoria_una_sola_vez() -> vo
 	assert_int(_turno.tareas_cumplidas()).is_equal(1)
 
 
-func test_registrar_de_nuevo_no_descuenta_ni_emite() -> void:  # 009-AC7
+func test_registrar_de_nuevo_no_descuenta_ni_emite() -> void:
 	var escritorio := _escritorio()
 	var del_dia := CajaRegistradora.productos_del_dia()
 	for producto in del_dia:
@@ -159,7 +159,7 @@ func test_registrar_de_nuevo_no_descuenta_ni_emite() -> void:  # 009-AC7
 	assert_int(_avisos_de_tarea).is_equal(1)
 
 
-func test_completar_una_tarea_aparte_no_le_sube_el_contador_al_turno() -> void:  # 009-AC7
+func test_completar_una_tarea_aparte_no_le_sube_el_contador_al_turno() -> void:
 	# Caza el bug que no da error: `RelojDelTurno.obligatoria()` es la única forma de conseguir
 	# la instancia que el turno está contando, y una copia devuelve `true` sin subir el contador.
 	var obligatorias := Apertura.obligatorias()
@@ -168,7 +168,7 @@ func test_completar_una_tarea_aparte_no_le_sube_el_contador_al_turno() -> void: 
 	assert_int(turno.tareas_cumplidas()).is_equal(0)
 
 
-func test_el_umbral_y_los_interlocutores_no_se_escriben_en_la_cascara() -> void:  # 009-AC8
+func test_el_umbral_y_los_interlocutores_no_se_escriben_en_la_cascara() -> void:
 	# Qué es un faltante lo decide el 005 y quiénes escriben lo decide el `.tres`. Copiados en la
 	# pantalla, los dos pasan los dos gates en verde y se desincronizan sin que nadie avise.
 	for ruta: String in ARCHIVOS_DE_LA_CASCARA:
@@ -181,7 +181,7 @@ func test_el_umbral_y_los_interlocutores_no_se_escriben_en_la_cascara() -> void:
 			)
 
 
-func test_los_ocho_archivos_de_dominio_y_sistemas_tienen_su_espejo() -> void:  # 009-AC11
+func test_los_ocho_archivos_de_dominio_y_sistemas_tienen_su_espejo() -> void:
 	# Es la mitad falsable del criterio de terminado: sin los espejos el nodo `tdd` no pasa. Acá
 	# se lee al revés —cada archivo del spec contra su suite— así que el rojo dice qué queda sin
 	# ejercer y no sólo que falta un archivo.

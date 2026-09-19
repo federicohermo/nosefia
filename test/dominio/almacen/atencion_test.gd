@@ -35,7 +35,7 @@ func _atencion(paga: int, en_gondola: int = EN_GONDOLA, pedido: Venta = null) ->
 	return Atencion.new(Comprador.new("Marta", venta, paga), _inventario(en_gondola))
 
 
-func test_la_caja_marca_el_total_del_pedido_y_no_lo_vuelve_a_sumar() -> void:  # 013-AC2
+func test_la_caja_marca_el_total_del_pedido_y_no_lo_vuelve_a_sumar() -> void:  # AC-CTR-002
 	# Se compara contra `Venta.total()` y nunca contra un número escrito acá: una segunda suma
 	# en la atención daría el mismo resultado hasta el día que el catálogo cambie, y ahí las dos
 	# ventanas dirían distinto sin un solo error.
@@ -44,7 +44,7 @@ func test_la_caja_marca_el_total_del_pedido_y_no_lo_vuelve_a_sumar() -> void:  #
 	assert_int(atencion.total_de_la_caja()).is_equal(pedido.total())
 
 
-func test_la_atencion_no_conoce_lo_que_sale_cada_producto() -> void:  # 013-AC2
+func test_la_atencion_no_conoce_lo_que_sale_cada_producto() -> void:  # AC-CTR-002
 	# El criterio pide que la palabra que nombra ese dato no aparezca en el archivo. Es la forma
 	# ejecutable de «la caja no vuelve a sumar»: sin el dato no hay con qué.
 	var texto := FileAccess.get_file_as_string(ATENCION)
@@ -56,20 +56,20 @@ func test_la_atencion_no_conoce_lo_que_sale_cada_producto() -> void:  # 013-AC2
 	)
 
 
-func test_pagar_justo_da_una_diferencia_de_cero() -> void:  # 013-AC3
+func test_pagar_justo_da_una_diferencia_de_cero() -> void:  # AC-CTR-003
 	var atencion := _atencion(0)
 	assert_int(atencion.diferencia()).is_equal(-atencion.total_de_la_caja())
 	var justo := _atencion(_pedido().total())
 	assert_int(justo.diferencia()).is_equal(0)
 
 
-func test_pagar_de_mas_da_una_diferencia_positiva() -> void:  # 013-AC3
+func test_pagar_de_mas_da_una_diferencia_positiva() -> void:  # AC-CTR-003
 	var total := _pedido().total()
 	var atencion := _atencion(total + 700)
 	assert_int(atencion.diferencia()).is_equal(700)
 
 
-func test_pagar_de_menos_da_una_diferencia_negativa() -> void:  # 013-AC3
+func test_pagar_de_menos_da_una_diferencia_negativa() -> void:  # AC-CTR-003
 	# El signo es lo que el spec vino a comprar: un `abs()` mal puesto pasa los otros dos casos
 	# y deja al comprador que paga de menos indistinguible del que paga de más.
 	var total := _pedido().total()
@@ -77,7 +77,7 @@ func test_pagar_de_menos_da_una_diferencia_negativa() -> void:  # 013-AC3
 	assert_int(atencion.diferencia()).is_equal(-700)
 
 
-func test_los_faltantes_nombran_exactamente_los_productos_que_no_alcanzan() -> void:  # 013-AC4
+func test_los_faltantes_nombran_exactamente_los_productos_que_no_alcanzan() -> void:  # AC-CTR-012
 	# Con una sola unidad en góndola, el renglón que se pide de a dos falta y el de a uno no.
 	var atencion := _atencion(0, 1)
 	var faltantes := atencion.faltantes_del_pedido()
@@ -85,11 +85,11 @@ func test_los_faltantes_nombran_exactamente_los_productos_que_no_alcanzan() -> v
 	assert_int(faltantes[0].id).is_equal(Producto.Id.ACTRONCITO)
 
 
-func test_con_stock_de_sobra_no_falta_nada() -> void:  # 013-AC4
+func test_con_stock_de_sobra_no_falta_nada() -> void:
 	assert_array(_atencion(0).faltantes_del_pedido()).is_empty()
 
 
-func test_cobrar_con_stock_descuenta_de_la_gondola() -> void:  # 013-AC4
+func test_cobrar_con_stock_descuenta_de_la_gondola() -> void:  # AC-CTR-005
 	var pedido := _pedido()
 	var inventario := _inventario()
 	var atencion := Atencion.new(Comprador.new("Marta", pedido, pedido.total()), inventario)
@@ -102,7 +102,7 @@ func test_cobrar_con_stock_descuenta_de_la_gondola() -> void:  # 013-AC4
 	assert_bool(atencion.vendida()).is_true()
 
 
-func test_cobrar_sin_stock_no_mueve_una_sola_unidad() -> void:  # 013-AC4
+func test_cobrar_sin_stock_no_mueve_una_sola_unidad() -> void:  # AC-CTR-006
 	# `Inventario.cobrar()` es todo o nada, y la atención se apoya en eso: descontar un renglón y
 	# no el otro dejaría un estado que el jugador no puede distinguir de una venta completa.
 	var inventario := _inventario(1)
@@ -114,7 +114,7 @@ func test_cobrar_sin_stock_no_mueve_una_sola_unidad() -> void:  # 013-AC4
 	assert_bool(atencion.despachada()).is_false()
 
 
-func test_cobrar_dos_veces_avisa_que_ya_estaba_despachada() -> void:  # 013-AC4
+func test_cobrar_dos_veces_avisa_que_ya_estaba_despachada() -> void:  # AC-CTR-008
 	var inventario := _inventario()
 	var pedido := _pedido()
 	var atencion := Atencion.new(Comprador.new("Marta", pedido, pedido.total()), inventario)
@@ -126,7 +126,7 @@ func test_cobrar_dos_veces_avisa_que_ya_estaba_despachada() -> void:  # 013-AC4
 	)
 
 
-func test_despachar_sin_vender_no_toca_el_inventario() -> void:  # 013-AC5
+func test_despachar_sin_vender_no_toca_el_inventario() -> void:  # AC-CTR-007
 	# Es lo que desencadena `CAJA` de `REPONER`: la góndola arranca vacía, así que exigir la
 	# venta dejaría dos obligatorias encadenadas y la primera noche imposible.
 	var inventario := _inventario()
@@ -138,13 +138,13 @@ func test_despachar_sin_vender_no_toca_el_inventario() -> void:  # 013-AC5
 	assert_bool(atencion.vendida()).is_false()
 
 
-func test_despachar_dos_veces_devuelve_false_la_segunda() -> void:  # 013-AC5
+func test_despachar_dos_veces_devuelve_false_la_segunda() -> void:  # AC-CTR-008
 	var atencion := _atencion(0)
 	assert_bool(atencion.despachar_sin_vender()).is_true()
 	assert_bool(atencion.despachar_sin_vender()).is_false()
 
 
-func test_cobrar_sobre_una_despachada_a_mano_no_vende() -> void:  # 013-AC5
+func test_cobrar_sobre_una_despachada_a_mano_no_vende() -> void:
 	var inventario := _inventario()
 	var atencion := Atencion.new(Comprador.new("Marta", _pedido(), 0), inventario)
 	atencion.despachar_sin_vender()
@@ -153,7 +153,7 @@ func test_cobrar_sobre_una_despachada_a_mano_no_vende() -> void:  # 013-AC5
 		assert_int(inventario.unidades(producto, Inventario.Ubicacion.GONDOLA)).is_equal(EN_GONDOLA)
 
 
-func test_el_ticket_dice_las_lineas_el_total_lo_que_paga_y_la_diferencia() -> void:  # 013-AC2
+func test_el_ticket_dice_las_lineas_el_total_lo_que_paga_y_la_diferencia() -> void:  # AC-CTR-013
 	# Los textos viven en `dominio/` justamente para que este caso exista: escritos en el panel
 	# serían una regla en `ui/`, que ni `gate_de_tests.py` ni `gate_de_capas.py` miran.
 	#
@@ -171,14 +171,14 @@ func test_el_ticket_dice_las_lineas_el_total_lo_que_paga_y_la_diferencia() -> vo
 	assert_str(renglones[-1]).contains("+700")
 
 
-func test_el_ticket_muestra_la_diferencia_negativa_con_su_signo() -> void:  # 013-AC3
+func test_el_ticket_muestra_la_diferencia_negativa_con_su_signo() -> void:  # AC-CTR-013
 	# Con un `%d` en vez de `%+d`, el que paga de más y el que paga justo se leerían igual y el
 	# único lugar donde el juego miente en vivo dejaría de mentir.
 	var atencion := _atencion(_pedido().total() - 700)
 	assert_str(atencion.renglones()[-1]).contains("-700")
 
 
-func test_el_aviso_nombra_lo_que_no_hay_en_gondola_y_es_vacio_si_esta_todo() -> void:  # 013-AC4
+func test_el_aviso_nombra_lo_que_no_hay_en_gondola_y_es_vacio_si_esta_todo() -> void:  # AC-CTR-012
 	# Vacío y no un `null`: quien lo pinta no tiene que distinguir dos formas de la misma
 	# respuesta, que es lo que dejaría un `if` sobre el juego arriba en `ui/`.
 	assert_str(_atencion(0).aviso()).is_empty()

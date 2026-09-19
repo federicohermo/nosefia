@@ -1,9 +1,0 @@
-# Godot no baja a este directorio: ni lo importa ni lo empaca.
-#
-# Es un pack de texturas comprado, entero, del que el juego no usa ninguna: ningún
-`.tscn`, `.tres` ni `.gd` lo nombra, ni por ruta ni por UID.
-#
-# Empacado son 10 MB contra un techo de 90 MB para el directorio exportado, que
-# cobra `verificar_export.py`.
-#
-# Para usar uno: sacarlo de acá, no borrar este archivo.

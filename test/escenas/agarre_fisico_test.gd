@@ -3,7 +3,7 @@ extends GdUnitTestSuite
 const ALMACEN := preload("res://src/escenas/almacen.tscn")
 
 
-func test_soltar_hacia_la_gondola_deja_el_producto_visible_y_recuperable() -> void:  # 042-AC4
+func test_soltar_hacia_la_gondola_deja_el_producto_visible_y_recuperable() -> void:
 	for ojo in [Vector3(2.6, 1.7, 0), Vector3(0, 1.7, 0), Vector3(1.3, 1.7, 3.85)]:
 		var almacen: Node3D = auto_free(ALMACEN.instantiate())
 		add_child(almacen)
@@ -42,7 +42,7 @@ func test_soltar_hacia_la_gondola_deja_el_producto_visible_y_recuperable() -> vo
 		await get_tree().process_frame
 
 
-func test_la_bolsa_sostenida_no_desplaza_al_jugador() -> void:  # 040-AC5
+func test_la_bolsa_sostenida_no_desplaza_al_jugador() -> void:
 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
 	add_child(almacen)
 	var jugador: CharacterBody3D = almacen.get_node("Jugador")
@@ -66,7 +66,7 @@ func test_la_bolsa_sostenida_no_desplaza_al_jugador() -> void:  # 040-AC5
 		)
 
 
-func test_soltar_en_el_descarte_entrega_el_id_al_recolector() -> void:  # 040-AC6
+func test_soltar_en_el_descarte_entrega_el_id_al_recolector() -> void:
 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
 	add_child(almacen)
 	var jugador: CharacterBody3D = almacen.get_node("Jugador")

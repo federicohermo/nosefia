@@ -63,7 +63,7 @@ func corriendo() -> bool:
 ##
 ## El guard no es una regla del juego: es el mismo estado nulo que ya guarda `_process()`. Sin
 ## turno no hay a quién preguntarle, y `obligatoria()` devuelve `null` **por diseño** cuando la
-## jornada no pidió ese tipo, así que devolverlo derecho acá es la llamada natural del 008. Que
+## jornada no pidió ese tipo, así que devolverlo derecho acá es la llamada natural. Que
 ## el turno esté cerrado, en cambio, **no** se guarda: el dominio ya contesta `false` porque
 ## ninguna tarea entra en cero.
 func completar(tarea: Tarea) -> bool:

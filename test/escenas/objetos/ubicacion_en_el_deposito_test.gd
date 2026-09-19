@@ -29,7 +29,7 @@ const CERCA_DEL_INODORO := 4.0
 const LEJOS_DE_SU_LUGAR := Vector3(0.0, 2.0, 0.0)
 
 
-func test_las_cajas_de_reposicion_estan_apoyadas_en_el_deposito() -> void:  # 043-AC10
+func test_las_cajas_de_reposicion_estan_apoyadas_en_el_deposito() -> void:
 	# Se reparten entre el estante de arriba de los tres racks y el piso: entre estantes hay
 	# 0,477 m y la caja mide 0,607, así que sólo el de arriba tiene aire. Lo que el caso afirma
 	# no es el reparto sino que ninguna quede flotando ni clavada adentro de otra cosa.
@@ -71,7 +71,7 @@ func test_las_cajas_de_reposicion_estan_apoyadas_en_el_deposito() -> void:  # 04
 		assert_array(_lo_que_pisa(almacen, cuerpo, apoyo)).is_empty()
 
 
-func test_las_tres_bolsas_arrancan_en_el_bano_y_lejos_del_descarte() -> void:  # 043-AC11
+func test_las_tres_bolsas_arrancan_en_el_bano_y_lejos_del_descarte() -> void:
 	# El baño es el otro cuarto que el 043 abre. Las bolsas estaban desparramadas por el local y
 	# el pedido fue juntarlas ahí; el descarte sigue en el fondo, así que el viaje no se acorta.
 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
@@ -139,7 +139,7 @@ func _lo_que_pisa(almacen: Node3D, cuerpo: PhysicsBody3D, apoyo: String) -> Arra
 	return pisados
 
 
-func test_abrir_la_jornada_devuelve_cada_caja_a_su_lugar() -> void:  # 047-AC8
+func test_abrir_la_jornada_devuelve_cada_caja_a_su_lugar() -> void:
 	# Desde el 047 las cajas se trasladan, así que quedan donde el jugador las dejó. El dominio
 	# se resetea y los nodos no: sin esta vuelta, la noche 2 arranca con la mercadería al lado
 	# de la góndola y el viaje al depósito —que es lo que reponer cuesta— ya está pago.

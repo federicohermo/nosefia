@@ -45,7 +45,7 @@ func test_vender_retira_las_unidades_visibles_y_permite_reponer_sin_superponer()
 	assert_int(posiciones.size()).is_equal(cupo_total)
 
 
-func test_recoger_del_grupo_del_piso_conserva_foco_identidad_y_reposicion() -> void:  # 042-AC7
+func test_recoger_del_grupo_del_piso_conserva_foco_identidad_y_reposicion() -> void:
 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
 	add_child(almacen)
 	almacen.get("_jugador").set_physics_process(false)
@@ -94,7 +94,7 @@ func test_recoger_del_grupo_del_piso_conserva_foco_identidad_y_reposicion() -> v
 		assert_bool(is_instance_valid(cuerpo)).is_false()
 
 
-func test_laysntt_no_atraviesa_el_suelo_al_caer_plana_y_recibir_otras_cajas() -> void:  # 042-AC4
+func test_laysntt_no_atraviesa_el_suelo_al_caer_plana_y_recibir_otras_cajas() -> void:
 	for giro in [0.8, 1.6, 5.6]:
 		var almacen: Node3D = auto_free(ALMACEN.instantiate())
 		add_child(almacen)
@@ -132,7 +132,7 @@ func test_laysntt_no_atraviesa_el_suelo_al_caer_plana_y_recibir_otras_cajas() ->
 		await get_tree().process_frame
 
 
-func test_el_burbaloo_del_piso_no_bloquea_al_jugador() -> void:  # 042-AC4
+func test_el_burbaloo_del_piso_no_bloquea_al_jugador() -> void:
 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
 	add_child(almacen)
 	var jugador: CharacterBody3D = almacen.get("_jugador")
@@ -151,7 +151,7 @@ func test_el_burbaloo_del_piso_no_bloquea_al_jugador() -> void:  # 042-AC4
 	assert_bool(agarre.pedir_agarrar(cuerpo.datos, cuerpo)).is_true()
 
 
-func test_laysntt_y_jorgillo_quedan_sobre_el_suelo_al_mover_la_camara() -> void:  # 042-AC4
+func test_laysntt_y_jorgillo_quedan_sobre_el_suelo_al_mover_la_camara() -> void:
 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
 	add_child(almacen)
 	await get_tree().physics_frame
@@ -195,7 +195,7 @@ func test_laysntt_y_jorgillo_quedan_sobre_el_suelo_al_mover_la_camara() -> void:
 		almacen.get("_reposicion_manual").pedir_colocar(cuerpo.datos.producto.id)
 
 
-func test_los_estantes_agrupan_las_unidades_sin_cuerpos_por_producto() -> void:  # 042-AC1
+func test_los_estantes_agrupan_las_unidades_sin_cuerpos_por_producto() -> void:
 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
 	add_child(almacen)
 	var presentacion: Node3D = almacen.get("_reposicion_manual")
@@ -216,7 +216,7 @@ func test_los_estantes_agrupan_las_unidades_sin_cuerpos_por_producto() -> void: 
 	assert_int(presentacion.find_children("*", "RigidBody3D", true, false).size()).is_equal(1)
 
 
-func test_reutiliza_el_cuerpo_al_depositar_y_cambia_de_producto() -> void:  # 042-AC3
+func test_reutiliza_el_cuerpo_al_depositar_y_cambia_de_producto() -> void:
 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
 	add_child(almacen)
 	var presentacion: Node3D = almacen.get("_reposicion_manual")
@@ -237,7 +237,7 @@ func test_reutiliza_el_cuerpo_al_depositar_y_cambia_de_producto() -> void:  # 04
 	assert_int(suelto.collision_mask).is_equal(1)
 
 
-func test_las_unidades_sueltas_caen_y_se_recuperan_sin_perder_su_reserva() -> void:  # 042-AC4
+func test_las_unidades_sueltas_caen_y_se_recuperan_sin_perder_su_reserva() -> void:
 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
 	add_child(almacen)
 	almacen.get("_jugador").set_physics_process(false)
@@ -278,7 +278,7 @@ func test_las_unidades_sueltas_caen_y_se_recuperan_sin_perder_su_reserva() -> vo
 	assert_int(estante.unidades_en_gondola(producto)).is_equal(producto.umbral)
 
 
-func test_otra_jornada_vacia_grupos_mano_y_productos_sueltos() -> void:  # 042-AC5
+func test_otra_jornada_vacia_grupos_mano_y_productos_sueltos() -> void:
 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
 	add_child(almacen)
 	var presentacion: Node3D = almacen.get("_reposicion_manual")
@@ -303,7 +303,7 @@ func test_otra_jornada_vacia_grupos_mano_y_productos_sueltos() -> void:  # 042-A
 	assert_object(agarre.manos().sostenido()).is_not_null()
 
 
-func test_el_frente_se_conserva_al_examinar_y_volver_a_agarrar() -> void:  # 042-AC3
+func test_el_frente_se_conserva_al_examinar_y_volver_a_agarrar() -> void:
 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
 	add_child(almacen)
 	var jugador: Node3D = almacen.get("_jugador")
@@ -426,7 +426,7 @@ func _clic_real(jugador: Node3D) -> void:
 	jugador.call("_unhandled_input", clic)
 
 
-func test_cada_unidad_ocupa_un_lugar_distinto_y_la_marca_indica_su_base() -> void:  # 042-AC2
+func test_cada_unidad_ocupa_un_lugar_distinto_y_la_marca_indica_su_base() -> void:
 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
 	add_child(almacen)
 	var jugador: Node3D = almacen.get("_jugador")
@@ -459,7 +459,7 @@ func test_cada_unidad_ocupa_un_lugar_distinto_y_la_marca_indica_su_base() -> voi
 		assert_object(almacen.get("_agarre").manos().sostenido()).is_null()
 
 
-func test_el_clic_saca_una_unidad_visible_y_el_estante_la_recibe() -> void:  # 006-AC7 008-AC2
+func test_el_clic_saca_una_unidad_visible_y_el_estante_la_recibe() -> void:
 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
 	add_child(almacen)
 	await get_tree().physics_frame
@@ -496,7 +496,7 @@ func test_el_clic_saca_una_unidad_visible_y_el_estante_la_recibe() -> void:  # 0
 	assert_int(repositor.estante().unidades_en_gondola(Catalogo.todos()[0])).is_equal(1)
 
 
-func test_con_el_estante_lleno_la_caja_no_entrega_otra_unidad() -> void:  # 008-AC1
+func test_con_el_estante_lleno_la_caja_no_entrega_otra_unidad() -> void:
 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
 	add_child(almacen)
 	await get_tree().physics_frame
@@ -516,7 +516,7 @@ func test_con_el_estante_lleno_la_caja_no_entrega_otra_unidad() -> void:  # 008-
 	assert_int(jugador.get_node("Camara/PuntoDeProducto").get_child_count()).is_zero()
 
 
-func test_examinar_no_retira_ni_deposita_y_devuelve_la_unidad_a_la_mira() -> void:  # 006-AC9
+func test_examinar_no_retira_ni_deposita_y_devuelve_la_unidad_a_la_mira() -> void:
 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
 	add_child(almacen)
 	await get_tree().physics_frame
@@ -581,7 +581,6 @@ func _transformacion_de_copia(copias: MultiMesh, indice: int) -> Transform3D:
 	)
 
 
-# 042-AC2
 func test_solo_la_zona_del_producto_recibe_el_foco_y_el_resto_del_mueble_no_coloca() -> void:
 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
 	add_child(almacen)

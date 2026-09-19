@@ -14,7 +14,7 @@ const SCRIPT := "res://src/escenas/puestos/estante.gd"
 const EstanteQueSeVe := preload("res://src/escenas/puestos/estante.gd")
 
 
-func test_el_estante_dibuja_un_hueco_por_producto_del_catalogo() -> void:  # 008-AC10
+func test_el_estante_dibuja_un_hueco_por_producto_del_catalogo() -> void:
 	# Se cuenta contra el catálogo y nunca contra un número escrito acá: con un producto más, un
 	# estante de seis huecos dejaría al jugador mirando una góndola que nunca se llena del todo,
 	# sin un solo error.
@@ -35,7 +35,7 @@ func test_el_estante_dibuja_un_hueco_por_producto_del_catalogo() -> void:  # 008
 	)
 
 
-func test_los_huecos_visibles_son_los_que_dice_el_dominio() -> void:  # 008-AC10
+func test_los_huecos_visibles_son_los_que_dice_el_dominio() -> void:
 	# La escena pregunta y pinta: cuántos huecos se ven sale de `productos_completos()` y no de
 	# una cuenta propia. Con una cuenta propia, el estante y el inventario se contradicen en
 	# silencio.
@@ -54,13 +54,13 @@ func test_los_huecos_visibles_son_los_que_dice_el_dominio() -> void:  # 008-AC10
 	assert_int(_huecos_visibles(estante)).is_equal(1)
 
 
-func test_el_estante_arranca_sin_un_solo_hueco_puesto() -> void:  # 008-AC10
+func test_el_estante_arranca_sin_un_solo_hueco_puesto() -> void:
 	# La góndola de la noche arranca vacía, así que un hueco visible en el `.tscn` sería
 	# mercadería que el jugador ve y el inventario no tiene.
 	assert_int(_huecos_visibles(_estante())).is_equal(0)
 
 
-func test_el_estante_de_la_escena_no_lleva_el_stock_adentro() -> void:  # 008-AC10
+func test_el_estante_de_la_escena_no_lleva_el_stock_adentro() -> void:
 	# Está medido que una regla escrita en esta capa pasa los dos gates en verde. Por eso el
 	# criterio la ata con una búsqueda sobre el archivo, que es lo único ejecutable que hay.
 	var texto := FileAccess.get_file_as_string(SCRIPT)
@@ -73,13 +73,13 @@ func test_el_estante_de_la_escena_no_lleva_el_stock_adentro() -> void:  # 008-AC
 		)
 
 
-func test_el_estante_contesta_el_contrato_de_interaccion() -> void:  # 008-AC10
+func test_el_estante_contesta_el_contrato_de_interaccion() -> void:
 	# El contrato es el nombre de un método más el grupo, y no un tipo: ninguna de las capas que
 	# lo necesitan puede nombrar un `class_name` de `escenas/`.
 	var estante := _estante()
 	assert_bool(estante.has_method(ReglasDeLosObjetos.METODO_INTERACTUAR)).is_true()
 	assert_bool(estante.is_in_group(ReglasDelJugador.GRUPO_INTERACTUABLE)).is_true()
-	# Del estante no se levanta nada: si contestara un objeto, el clic del 006 lo agarraría en
+	# Del estante no se levanta nada: si contestara un objeto, el clic de agarrar lo agarraría en
 	# vez de colocar una unidad.
 	assert_object(estante.call(ReglasDeLosObjetos.METODO_INTERACTUAR)).is_null()
 

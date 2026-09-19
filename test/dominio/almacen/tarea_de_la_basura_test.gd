@@ -22,14 +22,13 @@ func _ids() -> Array[StringName]:
 
 
 func test_la_jornada_arranca_con_las_bolsas_del_balance_y_ninguna_depositada() -> void:
-	# 015-AC4
 	var tarea := _tarea()
 	assert_int(tarea.bolsas()).is_equal(ReglasDeLaBasura.BOLSAS_DE_LA_JORNADA)
 	assert_int(tarea.depositadas()).is_equal(0)
 	assert_bool(tarea.completada()).is_false()
 
 
-func test_lejos_del_descarte_no_cuenta() -> void:  # 015-AC4
+func test_lejos_del_descarte_no_cuenta() -> void:  # AC-CLN-009
 	# **La posición decide**: es la mitad del spec que impide resolver la tarea sin caminar.
 	var tarea := _tarea()
 	assert_int(tarea.depositar(_ids()[0], AFUERA)).is_equal(
@@ -38,7 +37,7 @@ func test_lejos_del_descarte_no_cuenta() -> void:  # 015-AC4
 	assert_int(tarea.depositadas()).is_equal(0)
 
 
-func test_dejarla_a_mitad_de_camino_no_la_quema() -> void:  # 015-AC4
+func test_dejarla_a_mitad_de_camino_no_la_quema() -> void:  # AC-CLN-009
 	# La misma bolsa, adentro, sí deposita. Sin esto un tropiezo en el pasillo dejaría la
 	# obligatoria imposible de cerrar esa noche y el jugador sin saber por qué.
 	var tarea := _tarea()
@@ -48,7 +47,7 @@ func test_dejarla_a_mitad_de_camino_no_la_quema() -> void:  # 015-AC4
 	assert_int(tarea.depositadas()).is_equal(1)
 
 
-func test_la_misma_bolsa_dos_veces_no_cuenta_dos() -> void:  # 015-AC4
+func test_la_misma_bolsa_dos_veces_no_cuenta_dos() -> void:  # AC-CLN-011
 	# Con `id` repetidos contando de a dos, la tarea se cerraría llevando una sola bolsa al
 	# fondo y volviendo a soltarla — o sea, sin los tres viajes.
 	var tarea := _tarea()
@@ -58,7 +57,7 @@ func test_la_misma_bolsa_dos_veces_no_cuenta_dos() -> void:  # 015-AC4
 	assert_int(tarea.depositadas()).is_equal(1)
 
 
-func test_un_objeto_ajeno_no_es_basura() -> void:  # 015-AC4
+func test_un_objeto_ajeno_no_es_basura() -> void:  # AC-CLN-011
 	var tarea := _tarea()
 	assert_int(tarea.depositar(ID_AJENO, ADENTRO)).is_equal(TareaDeLaBasura.Resultado.NO_ES_BASURA)
 	assert_int(tarea.depositar(ObjetoDelAlmacen.SIN_ID, ADENTRO)).is_equal(
@@ -67,7 +66,7 @@ func test_un_objeto_ajeno_no_es_basura() -> void:  # 015-AC4
 	assert_int(tarea.depositadas()).is_equal(0)
 
 
-func test_la_tarea_se_completa_recien_con_la_ultima_bolsa() -> void:  # 015-AC4
+func test_la_tarea_se_completa_recien_con_la_ultima_bolsa() -> void:  # AC-CLN-012
 	var tarea := _tarea()
 	var ids := _ids()
 	for indice in range(ids.size() - 1):
@@ -83,7 +82,7 @@ func test_la_tarea_se_completa_recien_con_la_ultima_bolsa() -> void:  # 015-AC4
 	assert_bool(tarea.completada()).is_true()
 
 
-func test_cada_jornada_arranca_con_la_basura_adentro() -> void:  # 015-AC4
+func test_cada_jornada_arranca_con_la_basura_adentro() -> void:
 	# Instancias nuevas y no las mismas: con una compartida, lo depositado anoche llegaría
 	# depositado esta noche y la obligatoria se cumpliría sola a partir de la segunda.
 	var una := _tarea()
@@ -91,7 +90,7 @@ func test_cada_jornada_arranca_con_la_basura_adentro() -> void:  # 015-AC4
 	assert_int(_tarea().depositadas()).is_equal(0)
 
 
-func test_un_id_repetido_en_la_lista_no_agranda_la_tarea() -> void:  # 015-AC4
+func test_un_id_repetido_en_la_lista_no_agranda_la_tarea() -> void:
 	# Con el mismo `id` dos veces, la tarea pediría dos bolsas y se cerraría con una: el jugador
 	# haría un viaje menos sin que nada lo diga.
 	var repetida := TareaDeLaBasura.new([&"bolsa", &"bolsa"] as Array[StringName])

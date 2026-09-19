@@ -10,8 +10,8 @@
 ## para reponerla y agarrarla para verle el vencimiento son el mismo movimiento. Examinar sí cae
 ## de un lado, y por eso `Examen` vive en `investigacion/`.
 ##
-## **Reparenta y escribe `position` local, nunca `global_position`.** Está medido en el
-## `research.md` del 006: `global_transform` fuera del árbol de escena tira un error del motor y
+## **Reparenta y escribe `position` local, nunca `global_position`.** Está medido:
+## `global_transform` fuera del árbol de escena tira un error del motor y
 ## devuelve la identidad, así que un sistema que colocara con eso no se podría probar sin
 ## levantar una escena — y el «verde» que diera sería el de un valor que coincide por casualidad.
 class_name Agarre

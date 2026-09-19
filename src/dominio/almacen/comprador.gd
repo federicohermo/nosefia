@@ -3,9 +3,10 @@
 ## Un comprador no hace nada, **es** — igual que `Producto`. Cuánto marca la caja, si hay stock y
 ## cómo se despacha son de `Atencion`; acá no hay una sola cuenta.
 ##
-## **El pedido es una `Venta` del 005 y se guarda por referencia**, no copiado: con una copia,
-## `Inventario.cobrar()` descontaría contra un pedido y la pantalla mostraría otro, los dos con
-## las mismas líneas hasta que alguien agregue una — y ahí se separan sin un solo error.
+## **El pedido es una `Venta` del inventario y se guarda por referencia**, no copiado: con
+## una copia, `Inventario.cobrar()` descontaría contra un pedido y la pantalla mostraría otro,
+## los dos con las mismas líneas hasta que alguien agregue una — y ahí se separan sin un solo
+## error.
 ##
 ## **Lo que paga es un `int`**, como todo el dinero del juego: un `float` dejaría diferencias de
 ## un centavo que el jugador no puede ver y que ninguna aserción de igualdad caza. Puede no

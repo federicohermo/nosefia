@@ -1,6 +1,6 @@
 ---
 name: pr-review-batch
-description: Revisa los PR abiertos de GitHub en paralelo —un agente por PR, cada uno en su worktree—, arregla lo que encuentra, verifica con verificar.py, commitea y pushea a la rama del PR, y si los PR están apilados cierra poniendo la pila al día. Usar al querer cerrar el review de dos o más PR de este repo. Para uno solo, pr-review. Para revisar un spec que todavía es texto, spec-revise-batch.
+description: Revisa los PR abiertos de GitHub en paralelo —un agente por PR, cada uno en su worktree—, arregla lo que encuentra, verifica con verificar.py, commitea y pushea a la rama del PR, y si los PR están apilados cierra poniendo la pila al día. Usar al querer cerrar el review de dos o más PR de este repo. Para uno solo, pr-review. Para interrogar un contrato que todavía es texto, shape.
 argument-hint: "<NN NN ...> | --abiertos [--comentar] [--dry]"
 # Sin `allowed-tools`, o sea sin restricción, y por el mismo motivo que los demás skills de
 # este repo: declarar una lista parcial le sacaría todo lo que no estuviera en ella —`Agent`,
@@ -36,8 +36,8 @@ Seis sustituciones. Las tres primeras son de herramienta; las tres últimas camb
 
 | Un review genérico | Acá |
 |---|---|
-| Localiza el PR con las tools de Bitbucket, o con `mcp__github__*` porque `gh` no está | **`gh`, que sí está en el PATH** (medido: `gh 2.98.0`) y es lo que ya usa todo el harness — `lib/gh.py`, `deuda.py`, `publicar_spec.py` |
-| Los AC salen de un ticket de Jira | **`specs/NNN-*/spec.md`**, con el `NNN` del nombre de la rama. **Hay que hidratarlo**: el worktree nace sin él |
+| Localiza el PR con las tools de Bitbucket, o con `mcp__github__*` porque `gh` no está | **`gh`, que sí está en el PATH** (medido: `gh 2.98.0`) |
+| Los AC salen de un ticket de Jira | **del contrato de la capacidad** (`specs/<capability>/`, trackeado) y del issue que la rama nombra |
 | Cierra con `pnpm verify` | **`python .claude/scripts/verificar.py`**, y un nodo **salteado no es un nodo verde** |
 | La cobertura la garantiza un umbral del 100 % | **Godot no mide cobertura.** El eje de cobertura pasa a ser del reviewer, entero |
 | Un conflicto de merge se resuelve leyendo | **un `.tscn` no se mergea**: da una escena corrupta, no un conflicto. El Paso 6 no puede confiar en git |
@@ -164,8 +164,8 @@ lado y la orden de remedirlo.
 
 El corolario operativo: **todo conteo que el lote mueva es del padre.** Es la única clase de
 hallazgo que no se delega, porque requiere ver la cadena entera a la vez. En este repo los
-candidatos están servidos: `docs/architecture/directory-structure.md` enumera y cuenta, y
-`CLAUDE.md` afirma «los seis nodos» y «las cuatro capas».
+candidatos están servidos: `python .claude/scripts/estructura.py` los cuenta, y
+`CLAUDE.md` afirma «los siete nodos» y «las cuatro capas».
 
 ## Paso 1 — El preámbulo, destilado una vez
 
@@ -176,9 +176,8 @@ insumos, y los cinco van **destilados**, no como rutas a leer:
   [`hallazgos.md`](hallazgos.md) marcada: qué verifica ya una herramienta y qué no.
   `CLAUDE.md` **ya la dibujó** —tiene una lista «verificadas por una herramienta» y otra «prosa»—
   así que acá se copia, no se deriva.
-- **El mapa síntoma → deuda**: `python .claude/scripts/deuda.py`.
-- **Lo que ya se probó y no funcionó** para el área del lote. Vive como comentarios en el issue de
-  cada spec: `gh issue view <N> --repo federicohermo/nosefia --json comments`.
+- **Lo que ya se probó y no funcionó** para el área del lote. Vive como comentarios en el issue
+  de cada PR: `gh issue view <N> --repo federicohermo/nosefia --json comments`.
 - **La cadena de bases del Paso 0**, con **las seis cláusulas del Paso 0 bis literales**, **la
   lista caliente medida** y **las escenas compartidas**. Las cuatro cosas son del padre y ninguna
   la puede derivar el agente.
@@ -198,8 +197,8 @@ Lanzá los N en **un solo mensaje**, un `Agent` por PR con `isolation: "worktree
 vez, dos checkouts de la misma rama no pueden coexistir, y cada uno hace `git add`. Compartir
 árbol significa que el primero que commitea se lleva puesto el trabajo de los otros.
 
-**El ancho lo manda `verificar.py`, no el review.** Son seis nodos concurrentes cada uno, y el de
-`tests` levanta Godot headless. N PRs son 6N procesos, N de ellos un motor entero. Hasta cuatro es
+**El ancho lo manda `verificar.py`, no el review.** Son siete nodos concurrentes cada uno, y el de
+`tests` levanta Godot headless. N PRs son 7N procesos, N de ellos un motor entero. Hasta cuatro es
 razonable; más que eso, tandas. **No hay medición propia todavía**: es una cota prudente, y la
 primera corrida que la contradiga la mueve.
 
@@ -207,7 +206,7 @@ primera corrida que la contradiga la mueve.
 
 **El método de búsqueda de cada agente es [`hallazgos.md`](hallazgos.md), que este skill trae
 adentro.** Los ejes, el filtro de confianza y la política de triage son los mismos que usa
-`pr-review` para un PR solo —los Pasos 1 a 7: pararse en la rama del PR, hidratar, diff, AC,
+`pr-review` para un PR solo —pararse en la rama del PR, leer su issue y su contrato, diff,
 encontrar, arreglar, verificar, pushear— y este archivo agrega **lo único que un PR solo no tiene:
 la cadena**.
 
@@ -229,36 +228,24 @@ Y estas diferencias respecto de `pr-review`, que son las que lo vuelven un carri
    que los carriles no se pisen: cada PR tiene su propia `headRefName`, así que ya son disjuntas.
    El único caso que falla es que **el checkout principal esté parado en una de ellas**; ahí se
    mueve el principal a otra rama antes de lanzar, no se le cambia el nombre al carril.
-2. **Hidratá el spec, y acá el motivo es más fuerte.** `git worktree add` hace checkout de lo
-   **trackeado**, así que al worktree llegan dos archivos de `specs/` y ningún spec — un checkout
-   principal al menos puede tener la caché de una corrida anterior. Sin
-   `python .claude/scripts/hidratar_specs.py <NNN>` el agente revisa sin criterios de aceptación y
-   **igual termina y reporta**.
+2. **Pegale el issue al agente.** `git worktree add` trae lo **trackeado**, así que el contrato de
+   la capacidad sí viaja, pero el plan no: vive en GitHub. Un agente que tiene que salir a
+   buscarlo pierde una vuelta, y uno que no lo busca revisa sin criterios de aceptación y **igual
+   termina y reporta**.
 
-   **No hay `install` que correr, pero sí hay una importación**, y saltearla cuesta una corrida
-   entera. `addons/` está vendorizado, así que no falta ninguna dependencia; lo que falta es
-   `.godot/`, que está en el `.gitignore` y por lo tanto **ningún worktree nuevo lo tiene**. Sin
-   esa caché Godot no tiene el registro de clases globales, `addons/gdUnit4/bin/GdUnitCmdTool.gd`
-   no resuelve sus propios `class_name`, y el nodo `tests` sale **rojo** —no salteado— con:
+   **No hay `install` que correr, y la importación tampoco es un paso.** `addons/` está
+   vendorizado, así que no falta ninguna dependencia; lo que falta es `.godot/`, que está en el
+   `.gitignore` y por lo tanto **ningún worktree nuevo lo tiene**. Sin esa caché Godot no tiene
+   el registro de clases globales y el nodo `tests` salía **rojo** —no salteado— con un
+   `Parse Error: Could not find type "GdUnitTestCIRunner"` que no nombra ni a `.godot` ni al
+   worktree.
 
-   ```text
-   Parse Error: Could not find type "GdUnitTestCIRunner" in the current scope.
-   ```
+   **Desde el 2026-09-18 el nodo importa solo, antes de cada corrida de la suite.** Cuesta 6 s
+   sobre ~180 s, y cierra también el segundo rojo de la misma causa: un `class_name` recién
+   escrito no entra al registro hasta el `--import` siguiente. Medido el 2026-08-31 sobre el
+   lote 001/002/004/007: **los cuatro carriles lo pisaron**, y era un paso que la CI ya hacía
+   mientras el skill que crea los worktrees decía lo contrario.
 
-   **El síntoma no nombra la causa**: no dice `.godot`, no dice worktree, no dice importación, y
-   nombra un tipo de gdUnit4, que manda a revisar el addon. Por eso va acá y no en el
-   troubleshooting: para cuando el agente busca, ya gastó una corrida de `verificar.py`. La cura
-   es una línea, una sola vez por worktree y **antes** del primer `verificar.py`:
-
-   ```bash
-   "$GODOT_BIN" --headless --path . --import --quit
-   ```
-
-   **Medido el 2026-08-31** en la corrida sobre el lote 001/002/004/007: **los cuatro carriles lo
-   pisaron, los cuatro en la primera corrida, y los cuatro salieron verdes en la segunda ya
-   importados.** `.github/workflows/verify.yml:75` ya hacía este paso, con un comentario que
-   describe exactamente esto — o sea que **la CI lo sabía y el skill que crea los worktrees decía
-   lo contrario**.
 3. **Las seis cláusulas del Paso 0 bis van encima de la política de triage**, y dos de ellas
    **cambian** lo que `pr-review` haría solo: lo que no sea `+` en el propio diff se reporta como
    `PERTENECE-A-PR-<N>` en vez de arreglarse, y un fix sobre una escena de la lista caliente **no se
@@ -297,7 +284,7 @@ nodos —`lint` y `formato` sobre cero archivos—, y un nodo salteado no es un 
 El protocolo, y no hay que improvisarlo:
 
 1. **Leé los salteados antes que los rojos, y no esperes que `tests` esté entre ellos.** Un
-   reporte que dice «6/6» sin mirar qué se salteó da por mirado lo que nadie miró.
+   reporte que dice «7/7» sin mirar qué se salteó da por mirado lo que nadie miró.
 2. Si el rojo de `tests` es por `GODOT_BIN`, no lo declares como pasado: exportalo en el worktree y
    volvé a correr. Si no se puede, **es un bloqueante del lote y no del PR**.
 3. ¿El test que falló está en un archivo que el PR toca? **Si sí, es tuyo** — arreglalo.
@@ -481,8 +468,8 @@ En este orden y en ~40 líneas más la tabla:
 3. **Los PR nuevos que abrió esta corrida** para lo que caía fuera del alcance de cada spec, con
    su número y en qué orden entran. Quien mergea tiene que saber que la corrida dejó más PRs de
    los que revisó.
-4. **Lo que obligó a corregir un `spec.md`**, y que se devolvió al issue con `publicar_spec.py
-   publicar`. Y **si esta corrida corrigió un `SKILL.md`**, cuál y qué regla se le agregó — es el
+4. **Lo que obligó a corregir un contrato**, y que viajó en el PR que lo corrigió. Y **si esta
+   corrida corrigió un `SKILL.md`**, cuál y qué regla se le agregó — es el
    entregable más caro del lazo, y el único que impide que el hallazgo vuelva.
 5. **Cómo quedó la pila después del Paso 6**: qué cadena está al día contra qué, con qué SHA, y
    cada conflicto resuelto **con el criterio que lo resolvió**. La verificación va escrita al lado:
@@ -501,9 +488,9 @@ reporte, no como una advertencia.
 
 ## Lo que no hace
 
-- **No mergea a `staging`, y no mueve estados en `specs/mapa.json`** — los mueve ese merge y la
-  Action, que son del usuario. Sí mergea **hacia arriba dentro de la pila**, en el Paso 6.
-- **No revisa specs que todavía son texto.** Eso es `spec-revise-batch`, corre antes, y sale mucho
+- **No mergea a `staging`, y no ratifica una capacidad** — las dos son del usuario. Sí mergea
+  **hacia arriba dentro de la pila**, en el Paso 6.
+- **No revisa un contrato que todavía es texto.** Eso es `shape`, corre antes, y sale mucho
   más barato: un cruce detectado como texto cuesta un párrafo y detectado en dos ramas cuesta un
   rebase.
 - **No reimplementa el review de un PR.** Ese método es `pr-review`, y con **un** PR abierto usá

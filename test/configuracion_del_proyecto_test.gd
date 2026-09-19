@@ -26,7 +26,7 @@ func _declarado(ajuste: String, por_defecto: Variant) -> Variant:
 	return archivo.get_value(ajuste.substr(0, corte), ajuste.substr(corte + 1), por_defecto)
 
 
-func test_el_proyecto_declara_la_interpolacion_de_fisica_encendida() -> void:  # 044-AC1
+func test_el_proyecto_declara_la_interpolacion_de_fisica_encendida() -> void:
 	# Apagada, la posición avanza 60 veces por segundo contra una pantalla que dibuja 145. Eso
 	# es el temblor que se reportó como caída de cuadros.
 	(
@@ -38,7 +38,7 @@ func test_el_proyecto_declara_la_interpolacion_de_fisica_encendida() -> void:  #
 	)
 
 
-func test_el_reloj_de_fisica_corre_a_sesenta_pasos() -> void:  # 044-AC3
+func test_el_reloj_de_fisica_corre_a_sesenta_pasos() -> void:
 	# Este caso pregunta al motor, al revés que los otros tres. El editor no guarda un ajuste
 	# igual a su valor por defecto. Medido: con `common/physics_ticks_per_second=60` escrito a
 	# mano, `--import` borra la línea; con 90, la conserva. O sea que 60 no se puede declarar.
@@ -53,7 +53,7 @@ func test_el_reloj_de_fisica_corre_a_sesenta_pasos() -> void:  # 044-AC3
 	)
 
 
-func test_el_editor_y_la_web_dibujan_con_el_mismo_renderizador() -> void:  # 044-AC2
+func test_el_editor_y_la_web_dibujan_con_el_mismo_renderizador() -> void:
 	# Los dos valores se mueven juntos. Con `gl_compatibility` declarado y `"Forward Plus"` en
 	# `config/features`, el proyecto anuncia un renderizador que en web no existe.
 	(
@@ -80,7 +80,7 @@ func test_el_editor_y_la_web_dibujan_con_el_mismo_renderizador() -> void:  # 044
 	)
 
 
-func test_la_web_dibuja_con_el_mismo_renderizador_que_el_editor() -> void:  # 044-AC2
+func test_la_web_dibuja_con_el_mismo_renderizador_que_el_editor() -> void:
 	# Acá se pregunta al motor y no al archivo, al revés que los otros casos de renderizado.
 	# `rendering_method.web` no está escrito en `project.godot`: lo hereda del motor. Leerlo del
 	# archivo daría verde con el editor en `forward_plus`, que es el estado que este spec cierra.

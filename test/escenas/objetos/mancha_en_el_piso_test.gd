@@ -71,7 +71,7 @@ static func _descendientes(nodo: Node) -> Array[Node3D]:
 	return todos
 
 
-func test_la_mancha_no_decide_ni_lleva_contador() -> void:  # 014-AC9
+func test_la_mancha_no_decide_ni_lleva_contador() -> void:
 	# Está medido que un contador de pasadas o un `if` sobre si el piso está limpio, escritos en
 	# `src/escenas/`, dan cero hallazgos en `capas` **y** en `tdd`. Por eso el criterio los ata
 	# con una búsqueda sobre el archivo, que es lo único ejecutable que hay.
@@ -85,7 +85,7 @@ func test_la_mancha_no_decide_ni_lleva_contador() -> void:  # 014-AC9
 	)
 
 
-func test_la_mancha_esta_en_el_grupo_que_la_mira_puede_enfocar() -> void:  # 014-AC9
+func test_la_mancha_esta_en_el_grupo_que_la_mira_puede_enfocar() -> void:
 	# Las dos mitades del contrato se separan acá, y no son la misma cosa: **el grupo dice que la
 	# mira la puede enfocar; `interactuar()` dice que el clic izquierdo es suyo.** De una mancha
 	# no se levanta nada —el trapeador entra por el otro botón—, así que le corresponde el grupo
@@ -103,7 +103,7 @@ func test_la_mancha_esta_en_el_grupo_que_la_mira_puede_enfocar() -> void:  # 014
 	)
 
 
-func test_la_mancha_limpia_deja_de_estorbar_y_de_enfocarse() -> void:  # 014-AC9
+func test_la_mancha_limpia_deja_de_estorbar_y_de_enfocarse() -> void:
 	# Esconder un nodo **no apaga su cuerpo**: con el cuerpo prendido, una mancha ya limpia sigue
 	# frenando el rayo de la mira y sigue siendo un tope invisible en medio del pasillo, con la
 	# escena cargando sin un solo error.
@@ -123,13 +123,13 @@ func test_la_mancha_limpia_deja_de_estorbar_y_de_enfocarse() -> void:  # 014-AC9
 	assert_bool(cuerpo.disabled).is_false()
 
 
-func test_la_pasada_entra_por_el_pedido_del_jugador() -> void:  # 014-AC9 034-AC2
+func test_la_pasada_entra_por_el_pedido_del_jugador() -> void:
 	var texto := FileAccess.get_file_as_string(PUESTO)
 	assert_bool(texto.contains("jugador.uso_pedido.connect")).is_true()
 	assert_bool(texto.contains("func _unhandled_input(")).is_false()
 
 
-func test_el_trapeador_carga_y_responde_el_id_de_la_constante() -> void:  # 014-AC9
+func test_el_trapeador_carga_y_responde_el_id_de_la_constante() -> void:
 	# Un `id` que no coincide no rompe nada: el piso simplemente no se limpia nunca. Es la única
 	# forma de que ese par no se separe en silencio.
 	var trapeador := load(TRAPEADOR) as ObjetoDelAlmacen
@@ -142,7 +142,7 @@ func test_el_trapeador_carga_y_responde_el_id_de_la_constante() -> void:  # 014-
 	assert_bool(trapeador.es_levantable()).is_true()
 
 
-func test_el_almacen_trae_una_mancha_por_zona() -> void:  # 014-AC10
+func test_el_almacen_trae_una_mancha_por_zona() -> void:
 	# **Contarlas no alcanza, hay que mirar qué zona declara cada una.** Con dos manchas
 	# repitiendo la misma `zona` en el `.tscn` el conteo sigue dando cuatro, la zona que falta no
 	# se puede limpiar nunca y la obligatoria queda inalcanzable — que es exactamente el bug que
@@ -160,7 +160,7 @@ func test_el_almacen_trae_una_mancha_por_zona() -> void:  # 014-AC10
 		)
 
 
-func test_ningun_par_de_manchas_esta_al_alcance_de_la_mira() -> void:  # 014-AC10
+func test_ningun_par_de_manchas_esta_al_alcance_de_la_mira() -> void:  # AC-CLN-006
 	# **El recorrido existe en la escena, no sólo en la prosa.** Si dos manchas estuvieran cerca,
 	# desde una se enfocaría la otra y un tramo de caminata desaparecería sin que nada lo dijera.
 	var posiciones := _manchas_de(_almacen())
@@ -179,7 +179,7 @@ func test_ningun_par_de_manchas_esta_al_alcance_de_la_mira() -> void:  # 014-AC1
 			)
 
 
-func test_el_trapeador_tampoco_esta_al_lado_de_ninguna_mancha() -> void:  # 014-AC10
+func test_el_trapeador_tampoco_esta_al_lado_de_ninguna_mancha() -> void:  # AC-CLN-006
 	# El primer tramo también cuenta: con el trapeador encima de una mancha, la primera zona
 	# saldría gratis.
 	var almacen := _almacen()
@@ -194,7 +194,7 @@ func test_el_trapeador_tampoco_esta_al_lado_de_ninguna_mancha() -> void:  # 014-
 		)
 
 
-func test_con_el_trapeador_en_la_mano_no_se_puede_agarrar_nada_mas() -> void:  # 014-AC10
+func test_con_el_trapeador_en_la_mano_no_se_puede_agarrar_nada_mas() -> void:
 	# **Limpiar es la tarea que no se puede intercalar**, y no hay que escribirlo: sale de reusar
 	# el 006, donde `MANOS_DISPONIBLES` vale 1.
 	var manos := Manos.new()
@@ -205,7 +205,7 @@ func test_con_el_trapeador_en_la_mano_no_se_puede_agarrar_nada_mas() -> void:  #
 	assert_int(manos.motivo_de_rechazo(otro)).is_equal(Manos.Rechazo.MANOS_LLENAS)
 
 
-func test_los_cuatro_espejos_estan_y_el_almacen_no_decide_nada() -> void:  # 014-AC11
+func test_los_cuatro_espejos_estan_y_el_almacen_no_decide_nada() -> void:
 	# Las dos mitades falsables del criterio de terminado. La del `almacen.gd` es la que el 007
 	# dejó puesta: la escena raíz cablea y no decide, y eso se verifica sin leerla.
 	for ruta: String in [

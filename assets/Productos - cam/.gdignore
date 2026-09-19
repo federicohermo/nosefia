@@ -1,7 +1,0 @@
-# Godot no baja a este directorio: ni lo importa ni lo empaca.
-#
-# Son las fotos de producto con las que se texturiza en Blender. Ninguna escena las usa: lo que
-# el juego muestra viaja adentro del `.glb`, horneado. Empacadas son 17 MB de material fuente
-# contra un techo de 90 MB para el directorio exportado, que cobra `verificar_export.py`.
-#
-# Para usar una: sacarla de acá, no borrar este archivo.

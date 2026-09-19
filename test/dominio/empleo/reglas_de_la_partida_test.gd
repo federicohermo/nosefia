@@ -1,4 +1,4 @@
-## Los dos números de la partida, y la invariante que los ata a los del 002.
+## Los dos números de la partida, y la invariante que los ata a los del despido.
 ##
 ## El caso que más pesa no es el que afirma el `5`: es el que cruza las jornadas contra las
 ## constantes de apercibimientos. Sin él, bajar la partida a una jornada dejaría la regla del
@@ -29,12 +29,12 @@ const ESPEJOS_DEL_SPEC := [
 const PRIMERA_CIFRA_DE_BALANCE := 2
 
 
-func test_la_partida_dura_las_cinco_jornadas_del_gdd() -> void:  # 016-AC1
+func test_la_partida_dura_las_cinco_jornadas_del_gdd() -> void:
 	assert_int(ReglasDeLaPartida.JORNADAS_DE_LA_PARTIDA).is_equal(5)
 	assert_int(ReglasDeLaPartida.PRIMERA_JORNADA).is_equal(1)
 
 
-func test_ningun_otro_archivo_del_ciclo_escribe_una_cifra_de_balance() -> void:  # 016-AC1
+func test_ningun_otro_archivo_del_ciclo_escribe_una_cifra_de_balance() -> void:
 	# Una copia del `5` en la partida, en el ciclo o en el cableado de la escena no rompe nada
 	# hoy: rompe el día que se rebalancee, y lo hace en silencio, porque el juego seguiría
 	# corriendo con dos números distintos diciendo cuántas noches dura.
@@ -50,10 +50,10 @@ func test_ningun_otro_archivo_del_ciclo_escribe_una_cifra_de_balance() -> void: 
 	)
 
 
-func test_la_demo_alcanza_para_llegar_al_despido() -> void:  # 016-AC2
+func test_la_demo_alcanza_para_llegar_al_despido() -> void:
 	# El camino más rápido al despido encadena bandas graves, que son las que más pesan. Si la
 	# partida terminara antes de esa cuenta, `despedido()` no podría devolver `true` ni una vez
-	# jugando, y los diecisiete criterios del 002 seguirían en verde igual.
+	# jugando, y los criterios del despido seguirían en verde igual.
 	#
 	# Se afirma contra las tres constantes y nunca contra el `5`: mover cualquiera de ellas
 	# tiene que poner esto en rojo, que es lo único que hace que la invariante sea una
@@ -64,7 +64,7 @@ func test_la_demo_alcanza_para_llegar_al_despido() -> void:  # 016-AC2
 		assert_int(ReglasDeLaPartida.JORNADAS_DE_LA_PARTIDA)
 		. override_failure_message(
 			(
-				"la partida dura %d jornadas y el despido pide %d: la regla del 002 es inalcanzable"
+				"la partida dura %d jornadas y el despido pide %d: la regla es inalcanzable"
 				% [ReglasDeLaPartida.JORNADAS_DE_LA_PARTIDA, jornadas_hasta_el_despido]
 			)
 		)
@@ -72,7 +72,7 @@ func test_la_demo_alcanza_para_llegar_al_despido() -> void:  # 016-AC2
 	)
 
 
-func test_los_tres_espejos_de_este_spec_estan_escritos() -> void:  # 016-AC13
+func test_los_tres_espejos_de_este_spec_estan_escritos() -> void:
 	# `verificar.py` con los seis nodos en verde no se puede afirmar desde adentro de gdUnit4,
 	# pero sí lo que hace fallar a su nodo `tdd`: que falte uno de los tres espejos.
 	for espejo: String in ESPEJOS_DEL_SPEC:
@@ -113,7 +113,7 @@ func test_el_barrido_caza_la_cifra_de_balance_y_deja_pasar_la_prosa() -> void:
 	# Sin este caso el barrido de arriba es cobertura sin verificación: recorre tres archivos que
 	# ya cumplen y saldría verde aunque no mirara nada, que es exactamente el modo de falla que
 	# el archivo existe para evitar.
-	var prosa := "## El spec 016 se apoya en el 002\nvar jornada := 1\nvar cumplidas := 0\n"
+	var prosa := "## La partida se apoya en el despido\nvar jornada := 1\nvar cumplidas := 0\n"
 	assert_array(_cifras_en_el_codigo(prosa, "prosa.gd")).is_empty()
 	var cazadas := _cifras_en_el_codigo("const JORNADAS := 5\n" + prosa, "mezcla.gd")
 	assert_array(cazadas).has_size(1)
