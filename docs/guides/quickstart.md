@@ -7,9 +7,48 @@
 | **Godot 4.7** | del sitio oficial, es un `.exe` suelto | el juego, y correr los tests |
 | **Python 3.11+** | del sitio oficial o Microsoft Store | las herramientas del harness |
 | **gdtoolkit** | `pip install "gdtoolkit==4.*"` | `gdlint` y `gdformat` |
-| **GitHub CLI** | de [cli.github.com](https://cli.github.com), después `gh auth login` | publicar y traer specs |
+| **GitHub CLI** | de [cli.github.com](https://cli.github.com), después `gh auth login` | abrir y leer los issues |
 
 **gdUnit4 no se instala**: está vendorizado en `addons/gdUnit4/` y viene con el clone.
+
+## Los dos números se mueven juntos, y no se pueden mover de a uno
+
+**El motor y el addon de tests son un solo pin.** gdUnit4 declara una versión mínima de Godot y
+Godot rompe la sintaxis vieja del addon, así que cada serie del addon vive dentro de una ventana
+de versiones del motor y afuera **no compila**. La combinación vigente es **Godot 4.7.2 con
+gdUnit4 6.2.1**, y moverla es un cambio para **todo el equipo** y para la CI a la vez, así que
+va con su spec.
+
+Las dos direcciones del desajuste están medidas, y **las dos salen con código 0**, que es lo que
+las hace difíciles de ver. Los síntomas literales de cada una están en
+[troubleshooting](./troubleshooting.md):
+
+- **addon 5.x bajo motor 4.7** — la 5.x llama a `FileAccess.get_as_text(true)`, que en 4.7 no
+  acepta argumentos, y declara un `func call(arg0=null, …)` cuya firma 4.7 valida contra
+  `Object.call`. El plugin del editor no carga.
+- **addon 6.x bajo motor 4.4** — la 6.x pide **Godot 4.5 o más** y usa `...varargs`, que 4.4 ni
+  siquiera parsea. Es el que ve quien hace `pull` y sigue en 4.4.x.
+
+Y hay un dato que le va a hacer falta al próximo que mire: **la 6.2.1 declara compatibilidad
+hasta 4.7.1 y no nombra a 4.7.2.** Se eligió 4.7.2 igual, y la evidencia de que la combinación
+funciona en *este* proyecto es una medición y no la tabla: **medido el 2026-09-01**, 23/23
+suites y 171/171 casos en verde, sin tocar un test. **El conteo de casos se mueve con cada
+spec que agrega uno** —el 028 lo deja en 177—, así que lo que sostiene la afirmación es la
+fecha y no el número: quien lo vea distinto no lo corrija, remídalo. El plan B, si algo
+aparece, es bajar a **4.7.1** —que sí está en la matriz— sin tocar el addon.
+
+La versión que bajan los workflows vive en **`.godot-version`, en la raíz, y en ningún otro
+lado**: `verify.yml` y `desplegar.yml` la leen de ahí. Hasta el 2026-09-06 estaba escrita en un
+`env:` de `verify.yml` y otra vez en este párrafo, con el encabezado de ese archivo diciendo
+«la versión vive UNA vez» tres líneas más arriba de la segunda copia. Con dos workflows que
+bajan Godot, dos copias que se separan hacen que la CI verifique con un motor y el despliegue
+exporte con otro, **y eso no da rojo en ningún lado**: las dos corridas salen verdes, cada una
+con el suyo. El **4.7.2** de la tabla de arriba es prosa que lo cita, no una segunda
+fuente; quien lo vea distinto de `.godot-version`, corrija esto. La de cada máquina va en
+`GODOT_BIN`. La tabla «GdUnit4 Version / Godot minimal required» del
+README de gdUnit4 es la fuente — **no** los badges de «Supported Godot Versions», que listan las
+versiones que el proyecto soporta *en alguna* de sus series y hacen creer que la última sirve
+para todas.
 
 ## Declarar dónde está Godot
 
@@ -107,6 +146,6 @@ no puede ser `main`.
 
 ## Leer un contrato
 
-Los contratos **están en el repo** y se leen como cualquier archivo: `specs/<capability>/`. Eran
-caché hasta el régimen anterior, donde cada spec era un issue y había que traerlo; ahora el spec
-dura y lo que vive en GitHub es el plan.
+Los contratos **están en el repo** y se leen como cualquier archivo: `specs/<capability>/`. Qué
+decide cada capacidad y qué pasa entre ellas, en
+[capacidades](../architecture/capacidades.md).

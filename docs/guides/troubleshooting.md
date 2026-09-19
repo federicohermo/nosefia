@@ -156,7 +156,7 @@ gate que no puede correr **deja pasar**, nunca bloquea.
 6.2.1**, y el desajuste no falla al instalar: falla al correr. Se llega por las dos direcciones,
 las dos son alcanzables después de este cambio, y **las dos salen con código de salida 0** — o
 sea que quien mire el veredicto por el código de salida las lee como una corrida en verde. El
-porqué del pin único está en [el stack](../README.md).
+porqué del pin único está en [el inicio rápido](./quickstart.md).
 
 ### addon 5.x bajo motor 4.7
 

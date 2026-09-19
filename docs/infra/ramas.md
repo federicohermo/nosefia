@@ -7,7 +7,7 @@ Cada rama tiene una pregunta distinta, y el prefijo la contesta.
 | `main` | **Lo que se entrega.** Cada entrega de la cátedra sale de acá | sólo un PR de promoción desde `staging` |
 | `staging` | **Integra.** Es la rama default del repositorio | cualquiera, **también directo** |
 | `feature/<issue>-<kebab>` | Un issue, uno | quien lo implementa |
-| `bugfix/<kebab>` | Algo del producto está roto. Puede salir de un spec o no | quien lo arregla |
+| `bugfix/<kebab>` | Algo del producto está roto. Puede salir de un issue o no | quien lo arregla |
 | `hotfix/<kebab>` | Urgente, contra lo que ya se entregó | quien lo arregla |
 | `harness/<kebab>` | El harness de `.claude/`: scripts, gates, skills | quien lo toque |
 | `docs/<kebab>` | La documentación | quien la escriba |

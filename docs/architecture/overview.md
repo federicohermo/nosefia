@@ -30,7 +30,7 @@ puntos de corte.
 `get_tree()`, `get_node`/`$`, `await`, `Input`, `print` y el acceso a disco. La lista entera, con
 lo que deja pasar, está en [`.claude/rules/dominio.md`](../../.claude/rules/dominio.md). Hasta el
 spec 012 la regla estaba escrita en tres lugares y no la miraba nadie: un `extends Node` acá
-dejaba los seis nodos de `verificar.py` en verde.
+dejaba los siete nodos de `verificar.py` en verde.
 
 ### `src/sistemas/` — el motor hablando con el dominio
 

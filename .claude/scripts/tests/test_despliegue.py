@@ -375,9 +375,13 @@ class LaDocumentacion(unittest.TestCase):
             self.assertIn(tema, texto, f"el documento no dice nada de «{tema}».")
 
     def test_esta_indexado_donde_se_indexa_lo_demas(self):
-        # Un documento que no está en los dos índices no lo encuentra nadie, y lo que no se
-        # encuentra se vuelve a escribir distinto.
-        self.assertIn("infra/despliegue.md", _texto(RAIZ / "docs" / "README.md"))
+        # Un documento que no está en el índice no lo encuentra nadie, y lo que no se encuentra
+        # se vuelve a escribir distinto.
+        #
+        # **El índice es uno solo, y antes eran dos.** `docs/README.md` listaba los mismos
+        # documentos que la tabla de `CLAUDE.md`, así que agregar uno pedía acordarse de dos
+        # lugares — y el que se olvidara dejaba el documento invisible desde el otro. Los repos
+        # de referencia no tienen índice de docs: el archivo de raíz apunta y nada más.
         self.assertIn("docs/infra/despliegue.md", _texto(RAIZ / "CLAUDE.md"))
 
     def test_verify_sigue_diciendo_que_el_no_exporta(self):

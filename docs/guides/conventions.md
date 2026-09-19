@@ -70,7 +70,7 @@ nombre del archivo ya dice.
 
 Es un gate y no prosa por el mismo motivo que la dirección: una convención de árbol escrita en
 un documento dura hasta el primer archivo que alguien deja en la raíz apurado, y ordenar una
-capa cuando ya está desordenada cuesta un spec entero de renombres.
+capa cuando ya está desordenada cuesta un issue entero de renombres.
 
 **Lo que el gate NO contesta es si un archivo está en la carpeta *correcta*.** Eso es semántica
 y ninguna herramienta lo puede decidir: lo mira la revisión. Y la raíz de una capa la admite a

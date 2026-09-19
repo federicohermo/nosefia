@@ -10,7 +10,7 @@
 ├── .gdlintrc               La config de gdlint. Excluye addons/ y .godot/
 ├── .editorconfig           Tabs en .gd, espacios en .py y .md
 │
-├── src/                    ← PROTEGIDO por el hook: no se edita sin un spec detrás de la rama
+├── src/                    ← PROTEGIDO por el hook: no se edita sin un issue detrás de la rama
 │   │                         Las subcarpetas son un conjunto CERRADO: las declara
 │   │                         CARPETAS_POR_CAPA en lib/repo.py y las verifica gate_de_capas.py
 │   ├── dominio/            Reglas puras. RefCounted/Resource. Test OBLIGATORIO

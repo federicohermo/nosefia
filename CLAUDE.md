@@ -200,39 +200,30 @@ ninguna regla del juego, el arte, el audio, y todo lo que no toca `src/`.
 
 ## Las trampas de este repo
 
-Las que ya costaron tiempo acá:
+Las que ya costaron tiempo acá. El síntoma literal y el arreglo de cada una están en
+[troubleshooting](./docs/guides/troubleshooting.md); esto es la lista para reconocerlas.
 
-- **La salida en Windows sale en cp1252** en una tubería, y **cualquier acento tira el script
-  abajo** — incluido el mensaje de bloqueo del hook. Por eso todo script de `.claude/scripts/`
-  llama a `configurar()` de `lib/consola.py` antes de imprimir nada.
-- **`Grep` no ve `.claude/`.** Es ripgrep: saltea los ocultos aunque se le apague el
-  `.gitignore`, y contesta cero **sin decir que no miró**. Ahí va `rg --no-ignore --hidden`,
-  **uno por línea y separados por `;`** — con `&&` corta en el primero sin match, también sin
-  decirlo. `specs/` sí se ve: dejó de ser caché el día que el contrato pasó a ser durable.
-- **`GODOT_BIN` declarada no es `GODOT_BIN` visible.** En Windows un proceso hereda el entorno de
-  su padre y no lo relee del registro: una terminal abierta antes de declararla no la ve nunca —y
-  abrir una pestaña del mismo host tampoco—, así que se cierra el host de la terminal o la
-  sesión. El registro contesta la ruta correcta mientras el script dice que no la encuentra, que
-  es lo que vuelve caro el diagnóstico.
-- **Godot adentro de OneDrive no se puede ejecutar** si el archivo no está descargado: Windows
-  contesta «el proveedor de archivos de nube no se está ejecutando», que no nombra ni a Godot ni
-  a los tests.
+- **La salida en Windows sale en cp1252** en una tubería, y cualquier acento tira el script
+  abajo. Por eso todo script llama a `configurar()` de `lib/consola.py` antes de imprimir.
+- **`Grep` no ve `.claude/`**, porque ripgrep saltea los ocultos aunque se le apague el
+  `.gitignore`. Va `rg --no-ignore --hidden`, **un patrón por línea y separados por `;`**: con
+  `&&` corta en el primero sin match, sin decirlo.
+- **`GODOT_BIN` declarada no es `GODOT_BIN` visible.** Una terminal abierta antes de declararla
+  no la ve nunca. Se cierra el host de la terminal.
+- **Godot adentro de OneDrive no se puede ejecutar** si el archivo no está descargado.
 - **Un `.tscn` no se mergea.** Un merge de tres vías sobre una escena no da un conflicto: da una
-  escena corrupta. Dos specs que tocan la misma escena se ordenan, no se paralelizan.
+  escena corrupta. Dos issues que tocan la misma escena se ordenan, no se paralelizan.
+- **Un verde de gdUnit4 puede ser una suite que no corrió**, y tiene tres escalones que salen
+  `ok`. El número que vale es el `Executed test suites: (N/N)` de la salida cruda. Los tres, con
+  su medición, en [.claude/rules/tests.md](./.claude/rules/tests.md).
+
+Y dos que no tienen síntoma legible, las dos del modelo:
+
 - **El `.glb` se exporta apagando POR NOMBRE los modificadores `Array`**: son Geometry Nodes
-  llamados así, no modificadores de tipo `ARRAY`, y apagar por tipo no apaga ninguno. Si
-  quedan, los productos salen multiplicados, y el juego necesita una unidad porque
-  `reposicion_manual.gd` apila `cupo()` copias. El síntoma es el test de apoyos del modelo en
-  rojo —dos productos vecinos se pisan—, que no nombra ni a Blender ni al modificador. El procedimiento y las
-  medidas, en [test_modelo_actualizado.py](./.claude/scripts/tests/test_modelo_actualizado.py).
-- **La caché de `.godot/imported/` declara verde un modelo que ya cambió.** Un `.glb` reexportado
-  no se reimporta solo en una corrida headless, así que los tests comparan contra la malla
-  anterior y pasan. Costó dos diagnósticos equivocados el 2026-09-15. Antes de creerle a un verde
-  que dependa del modelo: borrar `.godot/imported/SEPT_JUEGOS_PROTOTIPO.glb-*` y correr
-  `--import`.
-- **Un verde de gdUnit4 puede ser una suite que no corrió.** Tiene tres escalones y los tres
-  salen `ok`: una suite que no parsea se descarta en silencio, un `class_name` nuevo no existe
-  hasta el `--import` siguiente, y un caso cuyo recurso falta sale `PASSED` por abortar antes de
-  afirmar. El número que vale es el `Executed test suites: (N/N)` de la salida cruda. Los tres,
-  con su medición, en [.claude/rules/tests.md](./.claude/rules/tests.md), que se carga sola al
-  tocar un test.
+  llamados así, y apagar por tipo no apaga ninguno. Si quedan, los productos salen multiplicados.
+- **La caché de `.godot/imported/` declara verde un modelo que ya cambió.** Costó dos
+  diagnósticos equivocados el 2026-09-15. Antes de creerle a un verde que dependa del modelo:
+  borrar la caché del `.glb` y correr `--import`.
+
+El procedimiento y las medidas de las dos, en
+[test_modelo_actualizado.py](./.claude/scripts/tests/test_modelo_actualizado.py).
