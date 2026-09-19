@@ -3,7 +3,7 @@
 ## **Esta suite existe además del gate, no en su lugar.** Está medido que una pantalla con su
 ## `match` de bandas adentro y sin un solo test da `sin hallazgos` en `tdd` y `capas`: el gate de
 ## tests no mira `ui/`, y que `ui/` nombre a `dominio/` es legal. O sea que la versión ingenua de
-## este spec nace con su única regla sin test y con los seis nodos en verde.
+## este spec nace con su única regla sin test y con los siete nodos en verde.
 ##
 ## Los dos casos de texto son lo único ejecutable que ata esa regla, y por eso están acá y no
 ## librados a la revisión.

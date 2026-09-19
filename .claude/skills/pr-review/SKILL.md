@@ -180,7 +180,7 @@ python .claude/scripts/verificar.py
 **La falta de `GODOT_BIN` no se saltea: sale roja.** Desde que existe el primer `*_test.gd` —y hay
 muchos— el nodo `tests` **exige** Godot, y `verificar.py` devuelve rojo con un mensaje que habla
 de la variable y no del código (`verificar.py:132-142`). Los que sí se saltean son `lint` y
-`formato` sobre cero archivos, y un nodo salteado no es un nodo verde: un reporte que dice «6/6»
+`formato` sobre cero archivos, y un nodo salteado no es un nodo verde: un reporte que dice «7/7»
 sin leerlos da por mirado lo que nadie miró.
 
 1. **Leé los salteados antes que los rojos, y no esperes que `tests` esté entre ellos.**

@@ -224,7 +224,7 @@ class CarpetasQueElDominioAdmite(unittest.TestCase):
         self.assertEqual(carpetas_no_declaradas(archivos, CAPAS, CARPETAS_POR_CAPA), [])
 
     def test_una_carpeta_inventada_del_dominio_sigue_siendo_un_hallazgo(self):
-        # La otra mitad del AC3, y la que hace falta para que la de arriba signifique algo: sin
+        # La otra mitad de la regla, y la que hace falta para que la de arriba signifique algo: sin
         # ésta, un `CARPETAS_POR_CAPA` que admitiera cualquier nombre pasaría igual.
         archivos = {"src/dominio/objetos/x.gd": ""}
         self.assertEqual(

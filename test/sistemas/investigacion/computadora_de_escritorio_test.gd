@@ -31,7 +31,7 @@ const ARCHIVOS_CON_ESPEJO = [
 	"res://src/sistemas/investigacion/computadora_de_escritorio.gd",
 ]
 
-## Segundos **reales** de computadora abierta que mide el AC3, en un solo cuadro.
+## Segundos **reales** de computadora abierta que mide el caso del tiempo, en un solo cuadro.
 const SEGUNDOS_REALES_ABIERTA := 30.0
 
 var _turno: Turno = null

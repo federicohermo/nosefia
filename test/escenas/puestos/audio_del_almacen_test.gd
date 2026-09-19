@@ -226,7 +226,7 @@ static func _fuentes(carpeta: String = CARPETA_DE_FUENTES) -> Array[String]:
 	return encontradas
 
 
-## Todas las suites del repo, para el caso del AC7.
+## Todas las suites del repo, para el caso que las recorre.
 static func _suites(carpeta: String = CARPETA_DE_TESTS) -> Array[String]:
 	var encontradas: Array[String] = []
 	for nombre in DirAccess.get_files_at(carpeta):

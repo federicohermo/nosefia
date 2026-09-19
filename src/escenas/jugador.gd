@@ -5,7 +5,7 @@
 ## viven todos en `src/dominio/` y tienen test. Acá quedan `Input`, `move_and_slide()`, el
 ## campo espacial y las señales.
 ##
-## Que la aritmética no se haya vuelto a colar acá lo verifica el AC28 del spec 004 con un `rg`
+## Que la aritmética no se haya vuelto a colar acá lo verifica un gate con un `rg`
 ## sobre este archivo, que busca las cuatro llamadas del motor con las que se harían esas
 ## cuentas y exige cero líneas. Los nombres no se escriben ni en un comentario: el gate no
 ## distingue código de prosa, y hacerlo pasar comentando distinto sería trampa.

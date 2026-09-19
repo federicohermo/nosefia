@@ -1,7 +1,7 @@
 ## El nodo que saca la basura adentro del motor: traduce el depósito y publica.
 ##
 ## **Ningún caso entra el nodo al árbol y ninguno hace correr `_process`.** Es lo que vuelve
-## medible el AC5: sin `_process`, el único descuento que puede aparecer en el turno es el de
+## medible el descuento: sin `_process`, el único que puede aparecer en el turno es el de
 ## `completar()`.
 extends GdUnitTestSuite
 

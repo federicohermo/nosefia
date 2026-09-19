@@ -19,7 +19,7 @@ const ALTO := 0.16
 ## Desde dónde cae. Alcanza para pasar de la velocidad cero al impacto en pocos cuadros.
 const CAIDA := 1.1
 
-## El techo del desfasaje que fija el AC1, en metros.
+## El techo del desfasaje que fija el contrato, en metros.
 const TOLERANCIA := 0.001
 
 

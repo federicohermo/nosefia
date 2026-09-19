@@ -5,7 +5,7 @@
 ## explícitamente porque el caso del tiempo mide justamente que nadie lo haya pausado.
 extends GdUnitTestSuite
 
-## Los ocho archivos de este spec. El AC11 pide los seis de `dominio/` y `sistemas/`; los dos de
+## Los ocho archivos de este spec. El contrato pide los seis de `dominio/` y `sistemas/`; los dos de
 ## `ui/` y `escenas/` se agregan porque son justamente los que ningún gate mira.
 const ARCHIVOS_DEL_SPEC := [
 	"res://src/dominio/almacen/comprador.gd",
@@ -18,7 +18,7 @@ const ARCHIVOS_DEL_SPEC := [
 	"res://src/escenas/puestos/ventanilla.gd",
 ]
 
-## Segundos **reales** de ventanilla abierta que mide el AC10, en un solo cuadro.
+## Segundos **reales** de ventanilla abierta que mide el caso del tiempo, en un solo cuadro.
 const SEGUNDOS_REALES_ABIERTA := 30.0
 
 const EN_GONDOLA := 9

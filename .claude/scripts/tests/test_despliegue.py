@@ -12,8 +12,8 @@ pueden fabricar —un 404, un `.wasm` truncado, un header que se cayó del CDN�
 
 ## Lo que este archivo NO puede correr, y qué haría falta
 
-Tres criterios de este spec sólo se cierran **contra una URL viva**, y la cita de cada uno lo
-declara en su lugar: el AC7 corrido de verdad, el AC8 entero, y la mitad de vivo del AC9. Lo
+Tres criterios sólo se cierran **contra una URL viva**, y la cita de cada uno lo declara en su
+lugar: la publicación corrida de verdad, el humo en navegador entero, y la mitad viva del doc. Lo
 que hace falta para correrlos es un proyecto de Vercel y sus tres secretos; el comando exacto
 está escrito en el comentario de cada uno y en `docs/infra/despliegue.md`.
 """
@@ -165,7 +165,7 @@ class ElParDesatado(unittest.TestCase):
 
 
 class ElVeredictoDelExport(unittest.TestCase):
-    """El AC4: el código de salida del export no decide nada.
+    """El código de salida del export no decide nada.
 
     Está medido que `--export-release "Web"` devuelve **0** después de un
     `Program crashed with signal 11`, así que un paso de CI que mire el `$?` sale verde con un
@@ -201,7 +201,7 @@ class ElVeredictoDelExport(unittest.TestCase):
 
 
 class LaPublicacion(unittest.TestCase):
-    """El AC7, con la respuesta inyectada: un 404 y un header caído sin publicar nada."""
+    """La publicación, con la respuesta inyectada: un 404 y un header caído sin publicar nada."""
 
     def sana(self) -> dict[str, str]:
         headers = {k: v for k, v in AISLAMIENTO.items()}
@@ -286,7 +286,7 @@ class LaPublicacion(unittest.TestCase):
 
 
 class LaVersionDelMotor(unittest.TestCase):
-    """El AC5: escrita dos veces, la CI y el despliegue exportan con motores distintos.
+    """Escrita dos veces, la CI y el despliegue exportan con motores distintos.
 
     Y eso **no da rojo en ningún lado**: las dos corridas salen verdes, cada una con su motor.
     """
@@ -312,7 +312,7 @@ class LaVersionDelMotor(unittest.TestCase):
 
 
 class ElWorkflowDeDespliegue(unittest.TestCase):
-    """El AC6 y el AC8, hasta donde se pueden leer sin desplegar."""
+    """El workflow y el humo en navegador, hasta donde se pueden leer sin desplegar."""
 
     def setUp(self):
         self.assertTrue(DESPLEGAR.is_file(), "falta `.github/workflows/desplegar.yml`.")
@@ -345,14 +345,14 @@ class ElWorkflowDeDespliegue(unittest.TestCase):
         self.assertIn("|| true", self.texto)
 
     def test_le_pega_a_la_url_publicada(self):
-        # La cita del AC7 corrido de verdad. Contra una URL viva se corre con
+        # La cita de la publicación corrida de verdad. Contra una URL viva se corre con
         #   python .claude/scripts/verificar_despliegue.py https://<proyecto>.vercel.app
         # y ACÁ NO SE PUEDE: hace falta el proyecto de Vercel y sus tres secretos. Lo que este
         # test verifica es que el workflow lo llame; que la URL conteste bien lo verifica él.
         self.assertIn("verificar_despliegue.py", self.texto)
 
     def test_abre_la_url_en_un_navegador_de_verdad(self):
-        # El AC8 entero es lo que NO se puede correr sin desplegar: pide un Chromium y una URL
+        # El humo en navegador entero es lo que NO se puede correr sin desplegar: pide un Chromium y una URL
         # viva. Se corre con
         #   npx playwright install --with-deps chromium
         #   node .github/scripts/humo_en_navegador.mjs https://<proyecto>.vercel.app
@@ -366,7 +366,7 @@ class ElWorkflowDeDespliegue(unittest.TestCase):
 
 
 class LaDocumentacion(unittest.TestCase):
-    """El AC9 y el AC10."""
+    """La documentación del despliegue."""
 
     def test_hay_un_documento_de_despliegue(self):
         self.assertTrue(DOC.is_file(), "falta `docs/infra/despliegue.md`.")
@@ -393,7 +393,7 @@ class LaDocumentacion(unittest.TestCase):
         self.assertIn("desplegar.yml", texto)
 
     def test_el_repo_ignora_lo_que_escribe_la_cli_de_vercel(self):
-        # La segunda mitad del AC10 —«`verificar.py` deja los seis nodos en verde»— es la
+        # La otra mitad —«`verificar.py` deja los siete nodos en verde»— es la
         # corrida entera y no cabe adentro de un caso: la afirma el reporte del PR, con el
         #   python .claude/scripts/verificar.py
         # que la produjo. Acá se cierra la mitad que sí es un archivo.

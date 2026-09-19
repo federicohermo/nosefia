@@ -9,7 +9,7 @@ verifica `test_copias_de_skills.py`, que da rojo ante un byte de diferencia.
 Lo que separa un review útil de una lista de ruido está acá, no en la cantidad de hallazgos.
 
 **Y ninguno de esos hallazgos sobrevive a la corrida:** las cinco descargas están en
-[`sin-deuda.md`](sin-deuda.md), que es de los ocho skills. Acá está sólo cómo
+[`sin-deuda.md`](sin-deuda.md), que es de los seis skills que escriben. Acá está sólo cómo
 aterrizan sobre un diff.
 
 ## Los ejes
@@ -39,7 +39,7 @@ esto:
 
 `gate_de_tests.py` sólo exige espejo en `src/dominio/` y `src/sistemas/`. Una regla —cuántas
 tareas cuentan, qué pasa a las tres jornadas, cuánto cuesta atender— escrita adentro de un
-`_process` o de un botón pasa los seis nodos en verde y no la ejerce nadie.
+`_process` o de un botón pasa los siete nodos en verde y no la ejerce nadie.
 
 **La prueba es una sola: ¿se puede ejercer sin levantar una escena?** Si sí y está arriba, es
 hallazgo, y el arreglo no es testear la pantalla: es bajar la regla a `dominio/`.
@@ -143,9 +143,9 @@ Si el hallazgo depende de una premisa sobre el entorno —una config, un flag, u
 un default del motor—, **comprobá la premisa**. Un grep de cinco segundos descarta la mitad de los
 🔴 candidatos, y reportar uno cuesta además un fix innecesario.
 
-**Y para buscar adentro de `specs/`, `rg --no-ignore`.** `Grep` es ripgrep y respeta el
-`.gitignore`: contesta cero sin decir que no miró, que es la peor respuesta posible para verificar
-una premisa.
+**Y para buscar adentro de `.claude/`, `rg --no-ignore --hidden`.** `Grep` es ripgrep y saltea
+los ocultos: contesta cero sin decir que no miró, que es la peor respuesta posible para
+verificar una premisa.
 
 ## Política de triage — al aplicar los fixes
 

@@ -51,14 +51,14 @@ const COSTO_DE_SACAR_LA_BASURA := 1200.0
 ## está inflado a propósito: sobrestimar el trayecto aprieta el presupuesto, subestimarlo lo
 ## afloja sin que nadie se entere.
 ##
-## Que quede viejo no miente en silencio: el AC7 de `reglas_test.gd` se pone en rojo apenas el
+## Que quede viejo no miente en silencio: `reglas_test.gd` se pone en rojo apenas el
 ## trayecto se come el piso de investigación. Con 220 no lo hace, medido antes de subirlo.
 const SEGUNDOS_DE_TRAYECTO_ESTIMADOS := 220.0
 
 ## El piso de investigación, en segundos de ficción: **3600, o sea 60 minutos de juego**, una de
 ## las ocho horas de la noche.
 ##
-## Existe para que el AC7 sea una afirmación con contenido y no un `> 0` disfrazado. Un margen
+## Existe para que ese caso sea una afirmación con contenido y no un `> 0` disfrazado. Un margen
 ## de tres segundos es aritméticamente válido y un juego injugable, y sin este piso la salida
 ## fácil a un balance roto —agrandar el turno— no le costaría nada a nadie: con el piso, agrandar
 ## el turno es una decisión de diseño que hay que escribir acá.

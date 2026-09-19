@@ -165,7 +165,7 @@ lado y la orden de remedirlo.
 El corolario operativo: **todo conteo que el lote mueva es del padre.** Es la única clase de
 hallazgo que no se delega, porque requiere ver la cadena entera a la vez. En este repo los
 candidatos están servidos: `python .claude/scripts/estructura.py` los cuenta, y
-`CLAUDE.md` afirma «los seis nodos» y «las cuatro capas».
+`CLAUDE.md` afirma «los siete nodos» y «las cuatro capas».
 
 ## Paso 1 — El preámbulo, destilado una vez
 
@@ -197,8 +197,8 @@ Lanzá los N en **un solo mensaje**, un `Agent` por PR con `isolation: "worktree
 vez, dos checkouts de la misma rama no pueden coexistir, y cada uno hace `git add`. Compartir
 árbol significa que el primero que commitea se lleva puesto el trabajo de los otros.
 
-**El ancho lo manda `verificar.py`, no el review.** Son seis nodos concurrentes cada uno, y el de
-`tests` levanta Godot headless. N PRs son 6N procesos, N de ellos un motor entero. Hasta cuatro es
+**El ancho lo manda `verificar.py`, no el review.** Son siete nodos concurrentes cada uno, y el de
+`tests` levanta Godot headless. N PRs son 7N procesos, N de ellos un motor entero. Hasta cuatro es
 razonable; más que eso, tandas. **No hay medición propia todavía**: es una cota prudente, y la
 primera corrida que la contradiga la mueve.
 
@@ -284,7 +284,7 @@ nodos —`lint` y `formato` sobre cero archivos—, y un nodo salteado no es un 
 El protocolo, y no hay que improvisarlo:
 
 1. **Leé los salteados antes que los rojos, y no esperes que `tests` esté entre ellos.** Un
-   reporte que dice «6/6» sin mirar qué se salteó da por mirado lo que nadie miró.
+   reporte que dice «7/7» sin mirar qué se salteó da por mirado lo que nadie miró.
 2. Si el rojo de `tests` es por `GODOT_BIN`, no lo declares como pasado: exportalo en el worktree y
    volvé a correr. Si no se puede, **es un bloqueante del lote y no del PR**.
 3. ¿El test que falló está en un archivo que el PR toca? **Si sí, es tuyo** — arreglalo.

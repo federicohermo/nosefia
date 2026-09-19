@@ -90,7 +90,7 @@ def hallazgos_en(doc: str, texto: str, nombres: tuple[str, ...]) -> list[str]:
 
     Está afuera del test que la usa a propósito: si el recorrido viviera adentro del caso que
     afirma «no hay hallazgos», el único input con el que correría sería el árbol ya arreglado,
-    y un `>` en vez de un `>=` lo dejaría verde para siempre. Acá el caso del AC4 la corre
+    y un `>` en vez de un `>=` lo dejaría verde para siempre. Acá el caso de abajo la corre
     contra la enumeración que estrenó el gate y **ve el hallazgo salir**.
     """
     hallazgos: list[str] = []
@@ -118,7 +118,7 @@ def _lineas_fuera_de_los_fixtures(fuente: str) -> list[tuple[int, str]]:
     """Las líneas del propio archivo que no son el bloque de fixtures.
 
     El cierre se verifica y no se supone: si el bloque no cerrara, todo lo de abajo quedaría sin
-    mirar y el caso del AC6 pasaría por no haber leído nada, que es exactamente el modo de falla
+    mirar y el caso pasaría por no haber leído nada, que es exactamente el modo de falla
     que este módulo persigue en los docs.
     """
     afuera: list[tuple[int, str]] = []
@@ -197,7 +197,7 @@ class DocsNoEnumeranSkills(unittest.TestCase):
             )
 
 
-# `verificar.py` en 6/6 sin salteos, con `harness` corriendo estos tests de más que el
+# `verificar.py` en 7/7 sin salteos, con `harness` corriendo estos tests de más que el
 # baseline: se verifica corriéndolo, no desde acá; ningún test puede verificarse a sí mismo
 # contando cuántos hay.
 # Los dos `Closes` del PR —el del issue de este spec y el `#7` del origen— se

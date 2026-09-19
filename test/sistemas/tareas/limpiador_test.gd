@@ -1,7 +1,7 @@
 ## El nodo que limpia adentro del motor: traduce la pasada y publica lo que el dominio contestó.
 ##
 ## **Ningún caso entra el nodo al árbol y ninguno hace correr `_process`.** Se instancia con
-## `auto_free(Limpiador.new())` y se le llama a mano, que es lo que vuelve medible el AC8: sin
+## `auto_free(Limpiador.new())` y se le llama a mano, que es lo que vuelve medible el descuento: sin
 ## `_process`, el único descuento que puede aparecer en el turno es el de `completar()`.
 extends GdUnitTestSuite
 

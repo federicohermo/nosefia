@@ -2,7 +2,7 @@
 ## el estante contestó.
 ##
 ## **Ningún caso entra un nodo al árbol y ninguno hace correr `_process`.** Se instancia con
-## `auto_free(Repositor.new())` y se le llama a mano, que es lo que vuelve medible el AC5: sin
+## `auto_free(Repositor.new())` y se le llama a mano, que es lo que vuelve medible el descuento: sin
 ## `_process`, el único descuento que puede aparecer en el turno es el de `completar()`.
 extends GdUnitTestSuite
 
