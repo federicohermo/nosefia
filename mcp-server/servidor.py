@@ -24,10 +24,12 @@ por worktree, ni un `dist/` compilado que se puede separar de su fuente.
    lleva la sesión; el error vuelve como texto, que es lo que el agente puede leer y corregir.
 """
 
+import io
 import json
 import sys
 import traceback
 from pathlib import Path
+from typing import cast
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
@@ -292,8 +294,10 @@ def main() -> int:
     # respuesta con un acento sale en cp1252 y el cliente la descarta con un error de decodificación
     # que no nombra ni al encoding ni a este archivo: se lee como «el servidor no conecta». Es la
     # misma trampa que `lib/consola.py` cierra para los scripts, acá sobre el canal del protocolo.
-    sys.stdin.reconfigure(encoding="utf-8")
-    sys.stdout.reconfigure(encoding="utf-8", newline="\n")
+    # El `cast` dice lo único que falta: la biblioteca tipa estos dos como `TextIO`,
+    # que no declara `reconfigure`, y el objeto real es un `TextIOWrapper`, que sí.
+    cast(io.TextIOWrapper, sys.stdin).reconfigure(encoding="utf-8")
+    cast(io.TextIOWrapper, sys.stdout).reconfigure(encoding="utf-8", newline="\n")
 
     for linea in sys.stdin:
         linea = linea.strip()

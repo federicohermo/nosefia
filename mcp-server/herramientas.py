@@ -21,7 +21,6 @@ su primera versión dibujaba tres flechas que el gate pone en rojo.
 from __future__ import annotations
 
 import json
-import os
 import re
 import sys
 from collections import defaultdict
