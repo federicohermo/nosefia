@@ -46,7 +46,7 @@ haber decidido.
 ## La dirección de dependencia
 
 `dominio/` → `sistemas/` → `ui/` → `escenas/`, sólo hacia abajo. El porqué de cada capa está en
-[la visión general](../architecture/overview.md); acá va el porqué de que sea un **gate** y no
+[la regla de GDScript](../../.claude/rules/gdscript.md); acá va el porqué de que sea un **gate** y no
 una recomendación.
 
 Porque en Godot la violación no deja rastro. Un script llega a otro nombrando su `class_name`,

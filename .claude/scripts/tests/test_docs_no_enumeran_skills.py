@@ -1,11 +1,14 @@
 """El gate de la enumeración: un doc dice la regla, no la lista.
 
-El árbol de `docs/architecture/directory-structure.md` describe cada directorio por lo que **no
-se puede averiguar mirándolo** —`dominio/` dice «test OBLIGATORIO», no qué archivos tiene
-adentro—. Una entrada que en vez de eso enumera su contenido caduca sola, y la de los skills
-caducó cuatro veces en tres intentos, y una quinta cuando el harness entero cambió de método.
-Ninguna la atajó: hasta hoy nada del harness leía el **contenido** de `docs/`, sólo sus rutas,
-así que la línea podía decir tres de ocho con `verificar.py` entero en verde.
+Una entrada de doc que enumera su contenido caduca sola, y la de los skills caducó cuatro veces
+en tres intentos, y una quinta cuando el harness entero cambió de método. Ninguna la atajó:
+hasta entonces nada del harness leía el **contenido** de `docs/`, sólo sus rutas, así que la
+línea podía decir tres de ocho con `verificar.py` entero en verde.
+
+**El doc que las alojaba ya no existe**: describía directorios a mano y se borró por eso mismo —
+lo que `ls` contesta no se escribe, y lo que no se ve mirando lo imprime
+`.claude/scripts/estructura.py`. El gate se queda porque el defecto no era de ese archivo: es de
+cualquier doc que se ponga a listar.
 
 Este gate lee ese contenido y **es angosto a propósito**. «Ningún doc nombra un skill» marcaría
 varias líneas correctas: prosa que manda al lector a un skill por su nombre. Un gate con cinco falsos positivos de seis se apaga en una semana. Lo que distingue al
@@ -37,10 +40,6 @@ SKILLS = RAIZ / ".claude" / "skills"
 #: Tres y no dos: «para dos o más, el otro» es la forma normal de mandar a la variante en lote, y
 #: nombra dos. Tres nombres ya no contrastan nada — describen un contenido.
 UMBRAL = 3
-
-#: El único doc del repo cuyo trabajo es describir directorios, y donde nombrar un skill nunca
-#: es una cita: es la enumeración que este gate vino a cerrar.
-ARBOL = RAIZ / "docs" / "architecture" / "directory-structure.md"
 
 #: Las líneas con las que se ejerce el conteo, y cuántos nombres nombra cada una.
 #:
@@ -154,49 +153,11 @@ class DocsNoEnumeranSkills(unittest.TestCase):
         ]
         self.assertEqual(hallazgos, [], "\n".join(hallazgos))
 
-    def test_el_arbol_de_directorios_no_nombra_ningun_skill(self):
-        # El doc que describe directorios se mide más duro que el resto: ahí un nombre no es
-        # una cita para el lector, es el contenido del directorio escrito a mano.
-        texto = ARBOL.read_text(encoding="utf-8")
-        for numero, linea in enumerate(texto.splitlines(), 1):
-            self.assertEqual(
-                nombres_en(linea, self.nombres),
-                set(),
-                f"{_relativa(ARBOL)}:{numero} nombra un skill. Este doc dice qué hay en cada "
-                "directorio por lo que no se ve mirándolo, y un nombre ahí es la lista.",
-            )
-
-    def test_la_entrada_de_skills_dice_la_regla(self):
-        lineas = [
-            linea
-            for linea in ARBOL.read_text(encoding="utf-8").splitlines()
-            if "skills/" in linea and "├──" in linea
-        ]
-        self.assertEqual(
-            len(lineas), 1, "la entrada `skills/` del árbol no está, o está dos veces"
-        )
-        entrada = lineas[0]
-        self.assertIn("specs", entrada, f"la entrada no dice de qué es el flujo: {entrada}")
-        self.assertIn("lote", entrada, f"la entrada no dice que cada uno tiene su lote: {entrada}")
-
-    def test_la_tabla_dice_donde_va_un_skill_nuevo(self):
-        filas = [
-            linea
-            for linea in ARBOL.read_text(encoding="utf-8").splitlines()
-            if linea.startswith("|") and "`.claude/skills/`" in linea
-        ]
-        self.assertEqual(len(filas), 1, "la tabla «Dónde crear cada cosa» no tiene su fila")
-        fila = filas[0]
-        self.assertIn("autocontenido", fila, f"la fila no dice la primera condición: {fila}")
-        self.assertIn(
-            "test_copias_de_skills.py", fila, f"la fila no dice dónde se declara una copia: {fila}"
-        )
-
     def test_el_gate_ve_la_enumeracion_que_lo_estreno(self):
-        # Corrido antes de tocar los docs, este módulo falló nombrando
-        # `docs/architecture/directory-structure.md:67` y su enumeración de tres — la evidencia
-        # de que sabe ver el defecto. Ese archivo ya está arreglado, así que el defecto vive
-        # ahora en el primer fixture: sin esto, el gate quedaría demostrando nada.
+        # Corrido antes de tocar los docs, este módulo falló nombrando el árbol de directorios
+        # y su enumeración de tres — la evidencia de que sabe ver el defecto. Ese archivo ya no
+        # existe, así que el defecto vive ahora en el primer fixture: sin esto, el gate quedaría
+        # sin demostrar nada.
         linea, cuantos = LINEAS_DE_PRUEBA[0]
         self.assertEqual(len(nombres_en(linea, self.nombres)), cuantos)
         self.assertGreaterEqual(cuantos, UMBRAL)

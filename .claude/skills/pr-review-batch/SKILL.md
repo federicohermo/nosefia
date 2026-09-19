@@ -164,7 +164,7 @@ lado y la orden de remedirlo.
 
 El corolario operativo: **todo conteo que el lote mueva es del padre.** Es la única clase de
 hallazgo que no se delega, porque requiere ver la cadena entera a la vez. En este repo los
-candidatos están servidos: `docs/architecture/directory-structure.md` enumera y cuenta, y
+candidatos están servidos: `python .claude/scripts/estructura.py` los cuenta, y
 `CLAUDE.md` afirma «los seis nodos» y «las cuatro capas».
 
 ## Paso 1 — El preámbulo, destilado una vez

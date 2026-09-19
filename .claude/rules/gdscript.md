@@ -85,4 +85,33 @@ el editor— o una señal hacia arriba.
 deja rastro en ningún import.
 
 Lo verifica `python .claude/scripts/gate_de_capas.py`. El porqué de cada capa está en
-[docs/architecture/overview.md](../../docs/architecture/overview.md).
+esta misma regla, más abajo.
+
+## Las dos formas de referenciar, y por qué el gate mira las dos
+
+En Godot un script llega a otro de dos maneras:
+
+1. **Por ruta** — `preload("res://src/ui/hud.gd")`, `load(…)`, `extends "res://…"`.
+2. **Por `class_name`** — un script que declara `class_name Ventanilla` queda registrado
+   **globalmente**, y desde cualquier otro archivo se lo nombra sin escribir una sola ruta.
+
+La segunda es la forma **normal** de escribir GDScript, y es la que ningún análisis de imports
+encuentra. Por eso el gate construye el índice `class_name → capa` y después busca esos
+identificadores como palabras, sobre el código con los comentarios y los strings limpiados.
+
+## Lo que el gate no puede ver
+
+Se dice acá para que no se lea como cobertura total:
+
+- **Los autoloads.** Son globales por construcción: viven en `project.godot` y cualquiera los
+  ve, sin escribir una referencia. Es una decisión de arquitectura que se toma al agregarlos,
+  y por eso cada uno se anota abajo.
+- **Las escenas (`.tscn`).** Una escena referencia scripts, pero el caso peligroso —una escena
+  en `dominio/`— no puede existir, porque `dominio/` no tiene escenas.
+
+## Autoloads
+
+*(Ninguno todavía. Cuando se agregue el primero, va acá con para qué está.)*
+
+La pregunta antes de agregar uno: ¿esto lo necesita **todo** el juego, o lo necesitan dos
+escenas que podrían pasárselo? Si son dos, no es un autoload.

@@ -85,6 +85,38 @@ rg --no-ignore --hidden "sin-deuda" .
 `specs/` ya no tiene este problema: dejó de estar ignorado el día que el contrato pasó a ser
 durable.
 
+## Qué protege el hook, y qué herramientas mira
+
+`src/`, y nada más. El hook de `.claude/settings.json` no la deja editar desde `main`, desde
+`staging` ni desde una rama que no nombre su issue.
+
+**Qué herramientas mira, y la lista es cerrada:**
+El `matcher` de `.claude/settings.json`: `Edit`, `Write`, `MultiEdit`, `Bash` y `PowerShell`.
+Una herramienta que no esté ahí **no la mira nadie**, y eso no es teórico: `PowerShell` entró
+después y por evidencia. Montando el harness, un bug del propio hook dejó la sesión encerrada, y
+la salida de ese encierro fue escribir archivos con la herramienta de PowerShell — o sea que el
+gate se salteaba solo con cambiar de herramienta, sin proponérselo.
+
+Sobre las dos que corren comandos, lo que se mira es **un conjunto declarado de formas de
+escritura** y no un parser de shell: las redirecciones, `tee`, `cp`, `mv`, `rm`, `truncate`,
+`sed -i`, y los cmdlets que escriben. Está en `destinos_del_comando` de `gate_de_rama.py`. Un
+gate sólo sobre las tres de edición tiene el agujero del tamaño de un `sed -i`, y encima es un
+agujero **dirigido**: negarle `Edit` a un agente lo empuja justo hacia la redirección.
+
+**`docs/` estuvo adentro hasta el 2026-09-05**, y salió porque la regla se contradecía sola: el
+propio mensaje del gate ofrece una salida para el cambio que no necesita issue, y el código no
+la tenía. Corregir una línea de documentación pedía abrir uno, y eso no produce más planes:
+produce documentación que nadie corrige. Lo que queda protegido es donde viven las reglas del
+juego — un `.md` desactualizado se lee y se arregla, una regla del dominio que entró de
+contrabando nace sin test y no la ve nadie.
+
+**`.claude/` y `specs/` quedan afuera a propósito**: son adonde el flujo te manda a escribir
+primero, y `.claude/` es además donde vive el gate — uno que se impide arreglarse a sí mismo se
+termina borrando en vez de corrigiéndose.
+
+`project.godot`, `addons/` y los configs tampoco: el gate no puede impedir habilitar un plugin
+o cambiar una configuración del editor, y pretenderlo lo volvería molesto sin volverlo útil.
+
 ## El hook no bloquea nada
 
 **Claude Code lee la configuración de hooks al arrancar la sesión**, no en cada llamada. Si

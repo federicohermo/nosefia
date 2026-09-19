@@ -41,7 +41,6 @@ GATE = Path(gate_de_capas.__file__)
 MARCA = "La pureza la verifica `gate_de_capas.py`"
 DOCUMENTOS_QUE_DECLARAN_LA_PUREZA = (
     ".claude/rules/dominio.md",
-    "docs/architecture/overview.md",
     ".claude/scripts/lib/repo.py",
 )
 

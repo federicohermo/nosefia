@@ -81,7 +81,7 @@ revisión. La raíz de la capa la admite a propósito, para lo que cruza.
 Un autoload es una variable global con otro nombre: lo ve todo el proyecto y nadie declara que
 lo usa, así que `gate_de_capas.py` **no puede verlo**. Por eso cada uno se decide al agregarlo
 y no cuando hace falta rápido, y se anota en
-[docs/architecture/overview.md](../../docs/architecture/overview.md) con para qué está.
+la regla de GDScript, con para qué está.
 
 La pregunta antes de agregar uno: ¿esto lo necesita **todo** el juego, o lo necesitan dos
 escenas que podrían pasárselo? Si son dos, no es un autoload.

@@ -24,7 +24,6 @@ from lib.repo import RAIZ
 DOCS = RAIZ / "docs"
 TROUBLESHOOTING = DOCS / "guides" / "troubleshooting.md"
 QUICKSTART = DOCS / "guides" / "quickstart.md"
-ARBOL = DOCS / "architecture" / "directory-structure.md"
 SETTINGS = RAIZ / ".claude" / "settings.json"
 
 #: El consejo que este spec vino a corregir. Abrir una terminal nueva **no alcanza** si el host
@@ -113,18 +112,18 @@ class ModosDeFallaDocumentados(unittest.TestCase):
                 palabra, plano(texto).lower(), f"el consejo correcto no dice «{palabra}»"
             )
 
-    def test_el_arbol_nombra_a_powershell_como_herramienta_del_gate(self):
+    def test_el_doc_nombra_a_powershell_como_herramienta_del_gate(self):
         # El otro hallazgo de `PowerShell` en `docs/` es el shell donde se declara una variable,
         # que no es lo mismo: acá se nombra la herramienta que el hook mira, y que faltaba.
-        juntos = [p for p in parrafos(_texto(ARBOL)) if "PowerShell" in p and "matcher" in p]
-        self.assertTrue(juntos, "el árbol no nombra a PowerShell como parte del matcher del hook")
+        juntos = [p for p in parrafos(_texto(TROUBLESHOOTING)) if "PowerShell" in p and "matcher" in p]
+        self.assertTrue(juntos, "troubleshooting no nombra a PowerShell en el matcher del hook")
 
-    def test_el_arbol_nombra_todas_las_herramientas_del_matcher(self):
+    def test_el_doc_nombra_todas_las_herramientas_del_matcher(self):
         # Las herramientas salen del `settings.json` que las declara, no de una lista escrita
         # acá: así, agregar una al hook y no contarla en el doc sale rojo. Ése es exactamente el
         # agujero que abrió el modo de falla — `PowerShell` no estaba en el matcher, y el gate se
         # salteaba solo con cambiar de herramienta.
-        texto = _texto(ARBOL)
+        texto = _texto(TROUBLESHOOTING)
         for herramienta in herramientas_del_matcher():
             self.assertIn(
                 herramienta,

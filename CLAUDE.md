@@ -34,6 +34,7 @@ diga del juego. Acá está lo técnico.
 ```bash
 python .claude/scripts/verificar.py             # EL comando: los siete nodos, en paralelo
 python .claude/scripts/verificar.py --solo tdd  # uno solo
+python .claude/scripts/estructura.py            # el mapa del sistema, derivado del código
 gdformat src test                               # arregla el formato, no sólo lo señala
 ```
 
@@ -72,7 +73,9 @@ el patrón por defecto (un `Node` gordo con la lógica en `_process`) sólo se p
 o en `escenas/`, nace sin test y ningún gate lo va a decir.** El arreglo no es testear la
 pantalla: es bajar la regla al dominio.
 
-Detalle en [docs/architecture/overview.md](./docs/architecture/overview.md).
+**El árbol no se documenta: se deriva.** `python .claude/scripts/estructura.py` imprime las
+capas, sus carpetas, el grafo de referencias y el estado de cada capacidad. El criterio de cada
+carpeta vive en la regla de su capa, que se carga sola al tocarla.
 
 ## Reglas que valen en todo el repo
 
@@ -149,18 +152,17 @@ probar. [docs/guides/tdd.md](./docs/guides/tdd.md).
 
 | Sección | Archivo | Cuándo consultarlo |
 |---|---|---|
-| Visión general | [docs/architecture/overview.md](./docs/architecture/overview.md) | Las cuatro capas, su dirección y qué el gate no puede ver |
 | Constitución | [docs/architecture/constitution.md](./docs/architecture/constitution.md) | Los principios no negociables. Cambiar uno pide un ADR |
+| Capacidades | [docs/architecture/capacidades.md](./docs/architecture/capacidades.md) | Qué decide cada una y qué pasa entre ellas |
 | Decisiones | [docs/architecture/decisions/](./docs/architecture/decisions/) | Qué se decidió, cuándo y por qué |
-| Estructura de directorios | [docs/architecture/directory-structure.md](./docs/architecture/directory-structure.md) | Dónde crear cada cosa |
 | Inicio rápido | [docs/guides/quickstart.md](./docs/guides/quickstart.md) | Qué instalar, `GODOT_BIN`, qué correr |
 | Verificación | [docs/guides/verificacion.md](./docs/guides/verificacion.md) | Los siete nodos, qué se saltea y hasta cuándo |
 | TDD sin cobertura | [docs/guides/tdd.md](./docs/guides/tdd.md) | Qué reemplaza al umbral y qué se pierde |
-| Convenciones | [docs/guides/conventions.md](./docs/guides/conventions.md) | El porqué de cada regla, y cuáles son prosa |
+| Convenciones | [docs/guides/conventions.md](./docs/guides/conventions.md) | El porqué de cada regla, el lenguaje y el glosario |
+| Rendimiento | [docs/guides/rendimiento.md](./docs/guides/rendimiento.md) | Cómo se mide, y contra qué números |
 | Troubleshooting | [docs/guides/troubleshooting.md](./docs/guides/troubleshooting.md) | Errores reales ya pisados acá |
-| Ramas | [docs/infra/ramas.md](./docs/infra/ramas.md) | `staging` integra, `main` entrega, y la carrera entre sus workflows |
+| Ramas | [docs/infra/ramas.md](./docs/infra/ramas.md) | `staging` integra, `main` entrega, y qué exige el hook |
 | Despliegue | [docs/infra/despliegue.md](./docs/infra/despliegue.md) | Cada push a `main` deja una web jugable: los secretos, el par preset↔headers y por qué el `$?` del export no decide |
-| Capacidades | [docs/architecture/capacidades.md](./docs/architecture/capacidades.md) | Qué decide cada una y qué pasa entre ellas. Las reglas de un spec, en `.claude/rules/specs.md` |
 
 **Trabajo planificado:** el contrato de cada capacidad vive en
 `specs/<capability>/<capability>.md`, **trackeado y durable**, y **el plan es el issue**. El spec
