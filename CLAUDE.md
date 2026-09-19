@@ -165,14 +165,13 @@ Primero el contrato, después el issue, después el código. Son tres decisiones
 | [Convenciones](./docs/guides/conventions.md) | El porqué de cada regla, el lenguaje y el glosario |
 | [Rendimiento](./docs/guides/rendimiento.md) | Cómo se mide, y contra qué números |
 | [El índice MCP](./docs/guides/mcp.md) | Las herramientas de `nosefia-index`, y qué no cubren |
-| [Troubleshooting](./docs/guides/troubleshooting.md) | Errores reales ya pisados acá |
 | [Ramas](./docs/infra/ramas.md) | `staging` integra, `main` entrega, y qué exige el hook |
 | [Despliegue](./docs/infra/despliegue.md) | Cada push a `main` deja una web jugable |
 
 ## Las trampas de este repo
 
-El síntoma literal y el arreglo están en [troubleshooting](./docs/guides/troubleshooting.md).
-Esto es la lista para reconocerlas.
+Las que no tienen gate, porque no se pueden verificar desde acá. Cada una nombra dónde vive
+su arreglo.
 
 - **La salida en Windows sale en cp1252** en una tubería, y cualquier acento tira el script
   abajo. Por eso todo script llama a `configurar()` antes de imprimir.
@@ -192,6 +191,10 @@ Y dos del modelo, que no tienen síntoma legible:
 
 - **El `.glb` se exporta apagando POR NOMBRE los modificadores `Array`**: son Geometry Nodes
   llamados así, y apagar por tipo no apaga ninguno. Si quedan, los productos salen multiplicados.
+- **Mover o renombrar arte rompe los enlaces del `.blend`, y ningún nodo lo ve.** Sus rutas son
+  relativas al archivo, y el `.glb` lleva las texturas embebidas: el juego sigue idéntico, los
+  siete nodos siguen verdes, y la escena se abre en magenta. Reorganizar `assets/` costó 37 de
+  39 imágenes acá.
 - **La caché de `.godot/imported/` declara verde un modelo que ya cambió.** Costó dos
   diagnósticos equivocados el 2026-09-15. Antes de creerle a un verde que dependa del modelo:
   borrar la caché del `.glb` y correr `--import`.

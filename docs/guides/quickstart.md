@@ -19,9 +19,8 @@ de versiones del motor y afuera **no compila**. La combinación vigente es **God
 gdUnit4 6.2.1**, y moverla es un cambio para **todo el equipo** y para la CI a la vez, así que
 va con su spec.
 
-Las dos direcciones del desajuste están medidas, y **las dos salen con código 0**, que es lo que
-las hace difíciles de ver. Los síntomas literales de cada una están en
-[troubleshooting](./troubleshooting.md):
+Las dos direcciones del desajuste están medidas, y **las dos salen con código 0**, que es lo
+que las hace difíciles de ver:
 
 - **addon 5.x bajo motor 4.7** — la 5.x llama a `FileAccess.get_as_text(true)`, que en 4.7 no
   acepta argumentos, y declara un `func call(arg0=null, …)` cuya firma 4.7 valida contra
@@ -71,8 +70,7 @@ Tres advertencias que cuestan una tarde cada una:
   su padre y no lo lee del registro, así que una pestaña nueva que abre el mismo host viejo sigue
   sin ver la variable. Hay que **cerrar el host de la terminal** —la ventana entera— o cerrar
   sesión de Windows. El síntoma es cruel: el registro contesta la ruta correcta y el script dice
-  que no la encuentra, las dos cosas ciertas a la vez. Está entero en
-  [troubleshooting](./troubleshooting.md).
+  que no la encuentra, las dos cosas ciertas a la vez.
 - **En Windows conviene el `_console.exe`**, no el otro. El ejecutable normal no escribe en la
   consola, así que la salida de los tests se pierde entera y la corrida parece colgada.
 - **No lo dejes adentro de OneDrive.** Si el archivo está sólo en la nube, Windows lo rechaza
