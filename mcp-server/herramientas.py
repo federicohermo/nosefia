@@ -35,7 +35,7 @@ from lib.capas import (  # noqa: E402
     capa_de,
     indice_de_class_names,
 )
-from lib.repo import CAPAS, CARPETAS_POR_CAPA, TESTS  # noqa: E402
+from lib.repo import CAPAS, CAPAS_CON_TEST_OBLIGATORIO, CARPETAS_POR_CAPA, TESTS  # noqa: E402
 from lib.specs import ids_citados, specs_del_repo  # noqa: E402
 from lib.tdd import SUFIJO_DE_TEST, ruta_de_test  # noqa: E402
 
@@ -412,6 +412,12 @@ def sin_test() -> str:
     capas = tuple(c for c, _ in CAPAS)
     faltan = []
     for ruta in sorted(fuentes):
+        # **Sólo las dos capas que llevan test obligatorio**, que es lo que `gate_de_tests.py`
+        # exige. Listar `ui/` y `escenas/` empujaría a escribir los tests de humo que la regla
+        # de presentación prohíbe: ahí probar pide el `scene_runner`, y un test que pasa sin
+        # ejercer nada miente sobre la cobertura. Lo destapó el primer demo de esta herramienta.
+        if capa_de(ruta, CAPAS) not in CAPAS_CON_TEST_OBLIGATORIO:
+            continue
         espejo = ruta_de_test(ruta, capas, TESTS)
         if espejo and espejo not in tests:
             faltan.append(f"- {ruta} → falta `{espejo}`")

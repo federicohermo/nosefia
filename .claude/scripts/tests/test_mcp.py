@@ -138,6 +138,17 @@ class LaLecturaDeEscenas(unittest.TestCase):
         self.assertTrue(any(texto.strip() for texto in escenas.values()))
 
 
+class LoQueFalta(unittest.TestCase):
+    def test_no_reclama_test_a_las_capas_que_no_lo_llevan(self):
+        # `ui/` y `escenas/` no tienen test obligatorio: ahí probar pide el `scene_runner`, y
+        # exigirlo empuja a los tests de humo que la regla de presentación prohíbe. La primera
+        # versión de esta herramienta los listaba como faltantes.
+        salida = herramientas.sin_test()
+        seccion = salida.split("## Criterios")[0]
+        self.assertNotIn("src/ui/", seccion)
+        self.assertNotIn("src/escenas/", seccion)
+
+
 class LasRespuestasVacias(unittest.TestCase):
     def test_un_simbolo_inexistente_lo_dice_y_no_miente(self):
         self.assertIn("no existe", herramientas.quien_usa("EsteSimboloNoExiste"))
