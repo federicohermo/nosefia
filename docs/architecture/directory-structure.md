@@ -48,7 +48,10 @@
 │                           cada una de src/ que alguien decidió probar levantando la escena,
 │                           más performance/ y los sueltos de la raíz, que no espejan nada
 │
-├── assets/                 Arte, audio, fuentes. Lo que no es código
+├── assets/                 Arte y audio. Lo que no es código
+│   ├── models/             Las mallas y colisiones que el juego carga, derivadas del .glb
+│   ├── reactions/          Los .tres de lo que dice el jefe. Se editan sin tocar código
+│   └── source/             Arte de ORIGEN y packs de terceros. Un .gdignore: Godot no lo importa
 │                           El modelo entra por el .glb; el .blend queda como fuente del
 │                           modelador y Godot NO lo importa (project.godot). Importarlo
 │                           obliga a tener Blender instalado en cada máquina, CI incluida
@@ -91,7 +94,7 @@
 | El script de una escena concreta | `src/escenas/` | ídem — y si lo probás, va en `test/escenas/`, que **ningún gate exige** |
 | Algo que va en el almacén y tiene hijos propios | su propio `.tscn` en `src/escenas/puestos/` si hay uno solo, en `objetos/` si hay N | se **instancia** en `almacen.tscn`, que sólo cablea: colgarlo ahí adentro lo caza `test/escenas/almacen_test.gd` |
 | Un número que dos archivos necesitan igual | un solo archivo de `src/dominio/` | nunca dos copias |
-| Un `.png`, un `.ogg`, una fuente | `assets/` | no necesita spec |
+| Un `.png`, un `.ogg`, una fuente | `assets/` | no necesita issue de capacidad |
 | Una herramienta del proceso | `.claude/scripts/` | lo puro en `lib/`, su test en `tests/` |
 | Un skill, o un archivo que un skill corre | `.claude/skills/` | **autocontenido**: todo lo que corre viaja adentro, y ninguno alcanza al de al lado. Toda copia, declarada en `test_copias_de_skills.py`, que la exige byte a byte |
 | Un paso de CI: exportar, publicar, pegarle a una URL | `.github/workflows/` | lo que **decide** va en `.claude/scripts/lib/` con su test: un `run:` no se puede ejercer sin desplegar |
@@ -150,3 +153,18 @@ o cambiar una configuración del editor, y pretenderlo lo volvería molesto sin 
 | `export/`, `build/` | Las builds se publican, no se commitean |
 | `.vercel/` | El vínculo al proyecto que escribe la CLI. Los dos ids que importan son secretos del repo |
 | `__pycache__/` | De las herramientas del harness |
+
+## Las tres reglas de `assets/`
+
+1. **`source/` no se importa.** Lleva un solo `.gdignore` arriba, así que Godot saltea el árbol
+   entero: el arte de origen y los packs de terceros no cuestan importación ni entran a la build.
+   Antes eran cuatro `.gdignore` sueltos, y cinco carpetas de textura fuente que **sí** se
+   importaban sin que nada las usara.
+
+2. **Lo que el juego carga tiene su carpeta**, y el nombre va en inglés como el de cualquier
+   carpeta fuera de `src/`: `models/` y `reactions/`.
+
+3. **Las texturas del modelo viven en la raíz y no se mueven.** Godot las extrae al importar
+   `SEPT_JUEGOS_PROTOTIPO.glb` y las deja al lado, con su prefijo. Los `.res` de `models/` las
+   referencian **por ruta y en binario**: moverlas pide reescribir un `RSRC` a mano, y el prefijo
+   ya las agrupa. El día que Blender exporte otra vez, Godot vuelve a dejarlas ahí.
