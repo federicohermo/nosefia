@@ -1,3 +1,10 @@
 {
-    "godotTools.editorPath.godot4": "d:\\Program Files\\Godot\\Godot_v4.7.2-stable_win64.exe"
+    "godotTools.editorPath.godot4": "d:\\Program Files\\Godot\\Godot_v4.7.2-stable_win64.exe",
+    // Todo script del harness importa `lib.*`, y lo resuelve con un `sys.path.insert` en
+    // tiempo de ejecución. El analizador no lo ejecuta: sin esta ruta marca en rojo cada
+    // import hecho desde afuera de `.claude/scripts/` —el servidor MCP, los scripts
+    // de los skills—.
+    "python.analysis.extraPaths": [
+        "${workspaceFolder}/.claude/scripts"
+    ]
 }
