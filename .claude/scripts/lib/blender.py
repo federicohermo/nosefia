@@ -59,3 +59,22 @@ def como_declararlo(entorno: dict[str, str]) -> str:
         f'  setx {VARIABLE} "C:\\Program Files\\Blender Foundation\\Blender {SERIE}\\blender.exe"\n\n'
         "Y abrí una terminal nueva: un proceso hereda el entorno de su padre y no lo relee."
     )
+
+#: El modificador que se apaga al exportar. Es un **nombre**, no un tipo: son Geometry Nodes
+#: llamados así, y apagar por tipo `ARRAY` no apaga ninguno.
+MODIFICADOR = "Array"
+
+
+def es_un_array(nombre: str) -> bool:
+    """Si un modificador es uno de los que llenan el estante, y por lo tanto hay que apagarlo.
+
+    **Cuenta el sufijo de Blender.** Al duplicar un objeto, Blender numera el modificador
+    copiado: `Array.001`, `Array.002`. Comparar el nombre exacto contra `Array` deja pasar todos
+    los duplicados, y el producto sale multiplicado igual — que es justo la falla que apagar por
+    nombre venía a evitar.
+
+    Medido el 2026-09-18 sobre el `.blend` del almacén: **36 `Array` y 34 `Array.001`**. Con la
+    comparación exacta, 34 productos salían al doble o al cuádruple de vértices, y el `.glb`
+    dejaba de corresponder a su fuente sin que el comando de exportar dijera nada.
+    """
+    return nombre == MODIFICADOR or nombre.startswith(MODIFICADOR + ".")

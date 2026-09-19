@@ -304,5 +304,45 @@ class LaRaizQueManda(unittest.TestCase):
         self.assertEqual(Path(raiz).resolve(), Path(RAIZ).resolve())
 
 
+class LaConfiguracionDelHook(unittest.TestCase):
+    """Que el gate esté enchufado. Las dos fallas de acá lo apagaron entero, cada una a su modo.
+
+    Un gate que no está en el `matcher` de una herramienta **no existe para esa herramienta**, y
+    eso no es teórico: `PowerShell` entró tarde, y hasta entonces el gate se salteaba solo con
+    cambiar de herramienta —sin proponérselo, porque negarle `Edit` a un agente lo empuja justo
+    ahí—. Y un comando de hook que sale distinto de cero **bloquea la herramienta**: cuando una
+    ruta relativa se rompió con un `cd`, el gate falló cerrado y dejó la sesión sin forma de
+    editar el archivo que lo arreglaba.
+    """
+
+    #: Toda herramienta que puede escribir un archivo. La lista es el contrato: una nueva se
+    #: agrega acá y al `matcher`, y si se agrega sólo al harness este caso la reclama.
+    ESCRIBEN = ("Edit", "Write", "MultiEdit", "Bash", "PowerShell")
+
+    @staticmethod
+    def _entradas() -> list[dict]:
+        config = json.loads((RAIZ / ".claude" / "settings.json").read_text(encoding="utf-8"))
+        return config["hooks"]["PreToolUse"]
+
+    def test_el_matcher_mira_toda_herramienta_que_escribe(self):
+        # Recorre **todas** las entradas y no la primera: una herramienta agregada en un segundo
+        # bloque saldría verde sin que nadie la mire, que es indistinguible de estar cubierta.
+        mirados = {h for e in self._entradas() for h in e["matcher"].split("|")}
+        for herramienta in self.ESCRIBEN:
+            with self.subTest(herramienta=herramienta):
+                self.assertIn(herramienta, mirados, "puede escribir y el hook no la mira")
+
+    def test_el_comando_falla_abierto(self):
+        # `|| exit 0` al final. Sin eso, cualquier error propio del gate —una ruta relativa que
+        # un `cd` rompió— deja de bloquear una edición y pasa a bloquear la herramienta entera.
+        for entrada in self._entradas():
+            for hook in entrada["hooks"]:
+                with self.subTest(matcher=entrada["matcher"]):
+                    self.assertTrue(
+                        hook["command"].rstrip().endswith("|| exit 0"),
+                        "un gate que no puede correr deja pasar, nunca bloquea",
+                    )
+
+
 if __name__ == "__main__":
     unittest.main()

@@ -86,7 +86,8 @@ Cuatro modos de falla medidos, y **los cuatro cargan la escena sin un solo error
   `node_paths=PackedStringArray("_hud", "_reloj")`** en el tag del nodo. El motor guarda el valor
   como `NodePath` y sin esa lista no lo resuelve: queda en `null` y el juego muere en el primer
   cuadro con un `Nonexistent function … in base 'Nil'` que no nombra ni al `.tscn` ni al
-  `@export`. El editor lo escribe solo; una escena a mano, no. Medido en el spec 007.
+  `@export`. El editor lo escribe solo; una escena a mano, no. Medido en el spec 007, y desde el
+  2026-09-18 **lo cobra un gate**: `lib/escenas.py`, en el nodo `harness`.
 - **Una sub-escena instanciada necesita su `script` declarado en su propio `.tscn`.** Sin él, el
   `@export` que la apunta desde afuera queda en `null` **con el `node_paths` bien escrito**. Es
   el mismo síntoma con otra causa, y por eso se diagnostica mal: se revisa el `node_paths`, que

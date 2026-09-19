@@ -151,6 +151,22 @@ def nodo_tests() -> Resultado:
     # la próxima herramienta que no tenga este rescate.
     aviso = aviso_de_entorno_viejo(origen)
 
+    # **Importar primero, y siempre.** Godot no tiene el registro de clases globales hasta que
+    # corre esto, y sin registro gdUnit4 no resuelve ni sus propios `class_name`: el rojo dice
+    # `Could not find type "GdUnitTestCIRunner"`, que manda a revisar el addon. Pasa en todo
+    # worktree recién creado —`.godot/` está en el `.gitignore`— y otra vez con **cada
+    # `class_name` nuevo**, donde el mensaje es `Identifier "X" not declared` con el archivo ya
+    # en disco, idéntico al del archivo que todavía no existe.
+    #
+    # Es incondicional porque la alternativa es adivinar cuándo hace falta, y equivocarse
+    # devuelve justo esos dos rojos. Incremental cuesta 6 s contra los ~180 s de la suite.
+    importacion = _correr(
+        "tests", [godot, "--headless", "--path", str(RAIZ), "--import", "--quit"]
+    )
+    if importacion.codigo != 0:
+        importacion.aviso = aviso
+        return importacion
+
     resultado = _correr(
         "tests",
         [

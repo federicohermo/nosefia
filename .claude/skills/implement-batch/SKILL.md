@@ -78,13 +78,12 @@ Cada agente recibe, literal:
 - **`GODOT_BIN` tiene que estar en el entorno del carril**: sin ella el nodo `tests` sale **rojo**,
   no salteado. Ese salteo vence — existe sólo mientras no haya un solo `*_test.gd`, y hay muchos.
   Un carril que sale a buscar un salteado que nunca va a aparecer pierde una vuelta.
-- **Y antes del primer `verificar.py`, el carril importa.** `.godot/` está en el `.gitignore`, así
-  que **ningún worktree nuevo lo tiene**, y sin esa caché gdUnit4 no resuelve sus propios
-  `class_name`: el nodo `tests` sale **rojo** con `Parse Error: Could not find type
-  "GdUnitTestCIRunner"`, un síntoma que no nombra ni a `.godot` ni al worktree. Una línea, una vez
-  por carril, **desde la herramienta PowerShell**:
-  `& $env:GODOT_BIN --headless --path . --import --quit`. Medido el 2026-08-31: lo pisaron los
-  cuatro carriles del lote.
+- **La importación ya no es un paso del carril.** `.godot/` está en el `.gitignore` y ningún
+  worktree nuevo lo tiene, pero desde el 2026-09-18 el nodo `tests` importa antes de correr la
+  suite, siempre. Cuesta 6 s sobre los ~180 s del nodo, y evita los dos rojos que costaba
+  olvidarlo: `Could not find type "GdUnitTestCIRunner"` en un worktree nuevo, e
+  `Identifier "X" not declared` con el archivo ya en disco cada vez que se escribe un
+  `class_name`. Medido el 2026-08-31: lo pisaron los cuatro carriles del lote.
 - **Y va en PowerShell porque desde Bash no corre, y eso hay que decírselo.** En un worktree
   aislado **cualquier forma de invocar Godot como comando desde Bash se rechaza**: la variable y
   la ruta literal entre comillas por igual. Lo que sí pasa desde Bash es

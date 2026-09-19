@@ -13,10 +13,12 @@ imágenes AUTO, `export_apply`, `use_visible`, `export_yup`, sin cámaras ni luc
 **`use_visible` importa**: sin él entran los objetos de la colección oculta, que no son parte del
 juego.
 
-## Y los modificadores `Array` se apagan POR NOMBRE
+## Y los modificadores `Array` se apagan POR NOMBRE, **con su sufijo**
 
 Son **Geometry Nodes llamados `Array`**, no modificadores de tipo `ARRAY`: apagar por tipo no
-apaga ninguno y los productos salen multiplicados igual. Blender 5.0 no realizaba esas instancias
+apaga ninguno y los productos salen multiplicados igual. Y el nombre exacto tampoco alcanza:
+Blender numera el duplicado, así que hay `Array.001` — 34 de ellos acá — y cada uno que queda
+prendido duplica su producto. La regla está en `lib/blender.es_un_array()`, con su medición. Blender 5.0 no realizaba esas instancias
 al exportar y 5.2 sí, así que con el modificador activo el producto sale como una fila entera.
 
 El juego necesita **una unidad**: el puesto de reposición toma la superficie 0 de cada grupo como
@@ -26,11 +28,15 @@ modificador, que es lo que lo vuelve caro.
 """
 
 import sys
+from pathlib import Path
 
 import bpy  # type: ignore[import-not-found]  # sólo existe adentro de Blender
 
-#: El nombre del modificador que se apaga. Es un nombre y no un tipo: ver el encabezado.
-MODIFICADOR = "Array"
+# La decisión de qué nombre cuenta vive en `lib/`, donde la suite del harness la puede ejercer:
+# acá adentro corre el Python de Blender y nada de esto se puede importar desde un test.
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+
+from lib.blender import MODIFICADOR, es_un_array  # noqa: E402
 
 
 def apagar_los_array() -> list[tuple[str, str]]:
@@ -38,7 +44,7 @@ def apagar_los_array() -> list[tuple[str, str]]:
     apagados: list[tuple[str, str]] = []
     for objeto in bpy.data.objects:
         for modificador in objeto.modifiers:
-            if modificador.name == MODIFICADOR and modificador.show_viewport:
+            if es_un_array(modificador.name) and modificador.show_viewport:
                 modificador.show_viewport = False
                 modificador.show_render = False
                 apagados.append((objeto.name, modificador.name))

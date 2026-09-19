@@ -7,7 +7,7 @@ escrita produce el reflejo de buscar cómo saltear el paso.
 
 import unittest
 
-from lib.blender import SERIE, VARIABLE, como_declararlo, resolver
+from lib.blender import SERIE, VARIABLE, como_declararlo, es_un_array, resolver
 
 
 class Resolver(unittest.TestCase):
@@ -50,6 +50,30 @@ class ElMensaje(unittest.TestCase):
         mensaje = como_declararlo({VARIABLE: "C:/borrado/blender.exe"})
         self.assertIn("C:/borrado/blender.exe", mensaje)
         self.assertIn("no existe", mensaje)
+
+
+class ElModificadorQueSeApaga(unittest.TestCase):
+    """Qué nombre cuenta como uno de los que llenan el estante.
+
+    La comparación exacta contra `Array` dejaba prendidos los 34 `Array.001` del `.blend`, y el
+    producto salía al doble o al cuádruple de vértices. El síntoma no nombra ni a Blender ni al
+    modificador: aparece como dos productos vecinos que se pisan.
+    """
+
+    def test_el_nombre_pelado_cuenta(self):
+        self.assertTrue(es_un_array("Array"))
+
+    def test_el_sufijo_que_agrega_blender_al_duplicar_tambien(self):
+        for nombre in ("Array.001", "Array.002", "Array.014"):
+            with self.subTest(nombre=nombre):
+                self.assertTrue(es_un_array(nombre))
+
+    def test_otro_modificador_que_empieza_igual_no_cuenta(self):
+        # `Smooth by Angle` está en el mismo `.blend` y tiene que quedar prendido. Y un nombre
+        # que apenas comparte el prefijo no es un duplicado: el sufijo de Blender lleva punto.
+        for nombre in ("Smooth by Angle", "Arrayado", "ArrayDeVerdad"):
+            with self.subTest(nombre=nombre):
+                self.assertFalse(es_un_array(nombre))
 
 
 if __name__ == "__main__":
