@@ -1,0 +1,124 @@
+[gd_scene format=3]
+
+[ext_resource type="ArrayMesh" path="res://assets/models/guia_00.res" id="malla0"]
+[ext_resource type="ArrayMesh" path="res://assets/models/guia_01.res" id="malla1"]
+[ext_resource type="ArrayMesh" path="res://assets/models/guia_02.res" id="malla2"]
+[ext_resource type="ArrayMesh" path="res://assets/models/guia_03.res" id="malla3"]
+[ext_resource type="ArrayMesh" path="res://assets/models/guia_04.res" id="malla4"]
+[ext_resource type="ArrayMesh" path="res://assets/models/guia_05.res" id="malla5"]
+[ext_resource type="ArrayMesh" path="res://assets/models/guia_06.res" id="malla6"]
+[ext_resource type="ArrayMesh" path="res://assets/models/guia_07.res" id="malla7"]
+[ext_resource type="ArrayMesh" path="res://assets/models/guia_08.res" id="malla8"]
+[ext_resource type="ArrayMesh" path="res://assets/models/guia_09.res" id="malla9"]
+[ext_resource type="ArrayMesh" path="res://assets/models/guia_10.res" id="malla10"]
+[ext_resource type="ArrayMesh" path="res://assets/models/guia_11.res" id="malla11"]
+[ext_resource type="ArrayMesh" path="res://assets/models/guia_12.res" id="malla12"]
+[ext_resource type="ArrayMesh" path="res://assets/models/guia_13.res" id="malla13"]
+[ext_resource type="ArrayMesh" path="res://assets/models/guia_14.res" id="malla14"]
+[ext_resource type="ArrayMesh" path="res://assets/models/guia_15.res" id="malla15"]
+[ext_resource type="ArrayMesh" path="res://assets/models/guia_16.res" id="malla16"]
+[ext_resource type="ArrayMesh" path="res://assets/models/guia_17.res" id="malla17"]
+[ext_resource type="ArrayMesh" path="res://assets/models/guia_18.res" id="malla18"]
+[ext_resource type="ArrayMesh" path="res://assets/models/guia_19.res" id="malla19"]
+
+[node name="Guia" type="Node3D"]
+
+[node name="Guia00" type="MeshInstance3D" parent="."]
+transform = Transform3D(0.052131, 0, 0, 0, 0.202839, 0, 0, 0, 0.140833, -0.800238, -0.337615, -1.437142)
+visible = false
+mesh = ExtResource("malla0")
+
+[node name="Guia01" type="MeshInstance3D" parent="."]
+transform = Transform3D(-1.431825, 0, 0.358954, 0, 1.476134, 0, -0.358955, 0, -1.431825, 0.385346, -0.289075, 0.473358)
+visible = false
+mesh = ExtResource("malla1")
+
+[node name="Guia02" type="MeshInstance3D" parent="."]
+transform = Transform3D(0.133501, 0, 0, 0, 0.133501, 0, 0, 0, 0.133501, -0.324672, -0.837698, 1.427513)
+visible = false
+mesh = ExtResource("malla2")
+
+[node name="Guia03" type="MeshInstance3D" parent="."]
+transform = Transform3D(0.133501, 0, 0, 0, 0.133501, 0, 0, 0, 0.133501, -3.018488, -0.359968, 0.048898)
+visible = false
+mesh = ExtResource("malla3")
+
+[node name="Guia04" type="MeshInstance3D" parent="."]
+transform = Transform3D(0.052131, 0, 0, 0, 0.202839, 0, 0, 0, 0.140833, -0.75511, 0.254119, 0.315988)
+visible = false
+mesh = ExtResource("malla4")
+
+[node name="Guia05" type="MeshInstance3D" parent="."]
+transform = Transform3D(0.052131, 0, 0, 0, 0.202839, 0, 0, 0, 0.140833, -0.800238, -0.262844, 0.382287)
+visible = false
+mesh = ExtResource("malla5")
+
+[node name="Guia06" type="MeshInstance3D" parent="."]
+transform = Transform3D(-0.052131, 0, 0, 0, 0.202839, 0, -0, 0, -0.140833, -2.945697, -0.805074, 1.477049)
+visible = false
+mesh = ExtResource("malla6")
+
+[node name="Guia07" type="MeshInstance3D" parent="."]
+transform = Transform3D(-0.057178, 0, 0, 0, 0.222479, 0, -0, 0, -0.154469, 0.747585, 0.913378, -0.14503)
+visible = false
+mesh = ExtResource("malla7")
+
+[node name="Guia08" type="MeshInstance3D" parent="."]
+transform = Transform3D(0.057178, 0, 0, 0, 0.222479, 0, 0, 0, 0.154469, 0.812085, 2.219223, -2.659234)
+visible = false
+mesh = ExtResource("malla8")
+
+[node name="Guia09" type="MeshInstance3D" parent="."]
+transform = Transform3D(-0.057178, 0, 0, 0, 0.222479, 0, -0, 0, -0.154469, 0.740375, 0.306289, 0.094628)
+visible = false
+mesh = ExtResource("malla9")
+
+[node name="Guia10" type="MeshInstance3D" parent="."]
+transform = Transform3D(0.032885, 0, -1.85624, 0, 1.856531, 0, 1.85624, 0, 0.032885, 0.776772, 2.104972, -0.358151)
+visible = false
+mesh = ExtResource("malla10")
+
+[node name="Guia11" type="MeshInstance3D" parent="."]
+transform = Transform3D(-0.166939, 0, 0, 0, 0.078542, 0, -0, 0, -0.152174, 0.854706, 0.37854, -2.674339)
+visible = false
+mesh = ExtResource("malla11")
+
+[node name="Guia12" type="MeshInstance3D" parent="."]
+transform = Transform3D(0.166939, 0, 0, 0, 0.078542, 0, 0, 0, 0.152174, -1.561859, 0.903515, -1.585054)
+visible = false
+mesh = ExtResource("malla12")
+
+[node name="Guia13" type="MeshInstance3D" parent="."]
+transform = Transform3D(0.166939, 0, 0, 0, 0.078542, 0, 0, 0, 0.152174, 2.147095, 1.440707, -2.079679)
+visible = false
+mesh = ExtResource("malla13")
+
+[node name="Guia14" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.216601, 2.225742, -0.599249)
+visible = false
+mesh = ExtResource("malla14")
+
+[node name="Guia15" type="MeshInstance3D" parent="."]
+transform = Transform3D(-0.057178, 0, 0, 0, 0.222479, 0, -0, 0, -0.154469, 0.747585, 0.916602, 1.48781)
+visible = false
+mesh = ExtResource("malla15")
+
+[node name="Guia16" type="MeshInstance3D" parent="."]
+transform = Transform3D(-0.057178, 0, 0, 0, 0.222479, 0, -0, 0, -0.154469, 0.70203, 0.9087, 1.509297)
+visible = false
+mesh = ExtResource("malla16")
+
+[node name="Guia17" type="MeshInstance3D" parent="."]
+transform = Transform3D(0, 0, 0.111841, 0.028248, 0.214942, -0, -0.214942, 0.028248, 0, 0.636303, 0.801415, -2.580669)
+visible = false
+mesh = ExtResource("malla17")
+
+[node name="Guia18" type="MeshInstance3D" parent="."]
+transform = Transform3D(-0.057178, 0, 0, 0, 0.222479, 0, -0, 0, -0.154469, 0.731368, 0.305052, 1.630585)
+visible = false
+mesh = ExtResource("malla18")
+
+[node name="Guia19" type="MeshInstance3D" parent="."]
+transform = Transform3D(-0.057178, 0, 0, 0, 0.222479, 0, -0, 0, -0.154469, 0.708455, 0.907954, -0.119483)
+visible = false
+mesh = ExtResource("malla19")

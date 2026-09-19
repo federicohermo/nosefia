@@ -23,6 +23,16 @@ const PASOS_PARA_DESATASCAR := 12
 ## Cuántas direcciones alrededor del jugador se prueban para dejarle la caja al lado.
 const LADOS_DEL_JUGADOR := 8
 
+## Las exhibiciones que el jugador NO repone: un `MeshInstance3D` por bloque, en el orden de
+## `DisposicionDeLaGondola.guias`.
+##
+## **Entra instanciada adentro de este puesto y no cableada por `@export`.** Apuntada desde
+## `almacen.tscn` con un `NodePath` hacia otra rama llegaba en `null` con el `node_paths` bien
+## escrito, y el puesto moría en `_preparar_la_guia()` con un `Cannot call method 'get_child' on
+## a null value` que no nombra ni al `@export` ni a la escena. Siendo hija no hay nada que
+## resolver. Medido el 2026-09-19.
+const GUIA := "Guia"
+
 @export var repositor: Repositor
 @export var jugador: JugadorDelLocal
 @export var estante: Node3D
@@ -31,17 +41,12 @@ const LADOS_DEL_JUGADOR := 8
 ## De dónde cuelga la caja mientras se la lleva: un punto del CUERPO y no de la cámara, porque
 ## pegada al pitch tapa la mira. Lo mueve este puesto y no `Agarre`, que no puede nombrarla.
 @export var punto_de_la_caja: Node3D
-## Dónde se apoya la PRIMERA unidad de cada producto, en el orden de `Producto.Id`.
-@export var apoyos: Array[Vector3] = []
-
-## Hacia dónde crece la fila de cada producto sobre el estante.
+## Dónde va cada unidad de la góndola, y en qué orden.
 ##
-## **La góndola exhibe por dos caras y no por una**, y de ahí que esto sea por producto. El panel
-## de fondo va de z = -3,04 a 0,60: ahí el estante tiene respaldo, mira al pasillo y la fila corre
-## a lo largo, en +Z. Desde z = -4,17 hasta -3,04 no hay panel —se ve de lado a lado—, así que esa
-## punta es la **cabecera**: exhibe hacia su extremo y la fila entra hacia adentro del mueble, en
-## +X. Un producto del pasillo puesto en la cabecera queda parado en un marco vacío.
-@export var direcciones: Array[Vector3] = []
+## **Ningún apoyo está escrito acá.** Antes eran doce posiciones y doce direcciones a mano, una
+## fila recta por producto; ahora el modelo trae tandas de varias filas de fondo y por dos caras
+## del mueble, y una recta ya no las describe. Las mide el `.blend` y llegan en este recurso.
+@export var disposicion: DisposicionDeLaGondola
 
 ## Cuánto gira cada modelo para mostrarle el frente a la cámara, en grados.
 ##
@@ -63,6 +68,7 @@ var _disponible: ObjetoAgarrable = null
 func preparar() -> void:
 	_preparar_modelos()
 	_preparar_grupos()
+	_preparar_la_guia()
 	estante.remove_from_group(ReglasDelJugador.GRUPO_INTERACTUABLE)
 	for producto in Catalogo.todos():
 		var casillero := ZonaDeReposicion.new()
@@ -504,16 +510,40 @@ func zona(id: Producto.Id) -> AABB:
 	return AABB(_apoyo(id) - Vector3(tamano.x / 2, 0, tamano.z / 2), tamano).grow(0.25)
 
 
+## Dónde se apoya la próxima unidad: el lugar de la primera copia que todavía no está repuesta.
+##
+## Es el **pie** de esa copia y no su centro: la copia trae el origen de su modelo, que según el
+## producto cae en el medio o en la base, y el casillero de la góndola se dibuja desde el
+## estante hacia arriba.
 func _apoyo(id: Producto.Id) -> Vector3:
-	var cantidad := repositor.estante().unidades_en_gondola(Catalogo.de(id))
-	return _posicion(id, cantidad)
+	var producto := Catalogo.de(id)
+	var cantidad := repositor.estante().unidades_en_gondola(producto)
+	# **Con el estante lleno no hay próxima, y se marca la última.** El casillero se reubica en
+	# cada cambio, también cuando ya no entra nada: sin el tope, el índice se va una copia más
+	# allá del bloque y el recurso contesta la identidad, que deja la marca en el origen del
+	# local. Colocar de más lo rechaza `Estante`, que es donde esa regla tiene test.
+	return _posicion(id, mini(cantidad, repositor.estante().cupo(producto) - 1))
 
 
 func _posicion(id: Producto.Id, indice: int) -> Vector3:
-	var base := to_global(apoyos[id])
-	var hacia := direcciones[id]
-	var separacion := _modelos[id].get_aabb().size.dot(hacia.abs()) + 0.03
-	return base + hacia * separacion * indice
+	var bloque := disposicion.principales[id]
+	var copia := DisposicionDeLaGondola.copia(bloque, _primera_reponible(id) + indice)
+	# **El pie sale de la caja ya transformada y no de la local.** Una copia con la inclinación
+	# que el estante le da ocupa otro volumen que el modelo derecho, y restarle media altura
+	# local la deja 2 mm fuera de su marca: justo lo que el casillero dibuja en el piso.
+	var caja := copia * _modelos[id].get_aabb()
+	return caja.get_center() - Vector3.UP * caja.size.y / 2.0
+
+
+## Desde qué copia arranca el tramo que el jugador repone: las de antes son la guía, y están
+## siempre a la vista.
+##
+## **El cupo sale del dominio y no de un número de acá.** El bloque tiene lo que el artista puso
+## y el cupo dice cuántas de esas quedan vacías al abrir; escribir el corte en esta capa sería el
+## mismo valor en dos lugares, que es justo lo que `Estante.cupo()` existe para evitar.
+func _primera_reponible(id: Producto.Id) -> int:
+	var bloque := disposicion.principales[id]
+	return DisposicionDeLaGondola.copias(bloque) - repositor.estante().cupo(Catalogo.de(id))
 
 
 func _preparar_modelos() -> void:
@@ -539,30 +569,47 @@ func _preparar_modelos() -> void:
 
 func _preparar_grupos() -> void:
 	for producto in Catalogo.todos():
-		var grupo := MultiMeshInstance3D.new()
-		grupo.name = "ProductosDe" + producto.nombre
 		var malla := _modelos[producto.id]
-		var limites := malla.get_aabb()
-		var copias := MultiMesh.new()
-		copias.transform_format = MultiMesh.TRANSFORM_3D
-		copias.mesh = malla
-		copias.instance_count = repositor.estante().cupo(producto)
-		copias.visible_instance_count = 0
-		var posiciones := PackedFloat32Array()
-		for indice in copias.instance_count:
-			var apoyo := _posicion(producto.id, indice) + Vector3.UP * limites.size.y / 2
-			var posicion := to_local(apoyo) - limites.get_center()
-			# MultiMesh recibe tres filas de cuatro valores por transformación.
-			posiciones.append_array([1, 0, 0, posicion.x, 0, 1, 0, posicion.y, 0, 0, 1, posicion.z])
-		copias.buffer = posiciones
-		grupo.multimesh = copias
-		add_child(grupo)
+		var grupo := _dibujar(
+			"ProductosDe" + producto.nombre, malla, disposicion.principales[producto.id]
+		)
+		grupo.multimesh.visible_instance_count = _primera_reponible(producto.id)
 		_grupos.append(grupo)
 		var sueltos := GrupoDelPiso.new()
 		sueltos.name = "SueltosDe" + producto.nombre
 		sueltos.preparar(malla, repositor.estante().cupo(producto))
 		add_child(sueltos)
 		_sueltos.append(sueltos)
+
+
+## Las exhibiciones que no cambian. Se dibujan una vez y quedan enteras: nada las vende ni las
+## repone, y por eso no se guarda el nodo.
+func _preparar_la_guia() -> void:
+	for indice in disposicion.guias.size():
+		var modelo := get_node(GUIA).get_child(indice) as MeshInstance3D
+		var herramienta := SurfaceTool.new()
+		herramienta.append_from(modelo.mesh, 0, Transform3D(modelo.global_basis, Vector3.ZERO))
+		herramienta.set_material(modelo.mesh.surface_get_material(0))
+		_dibujar("Guia" + str(indice), herramienta.commit(), disposicion.guias[indice])
+
+
+## Un `MultiMeshInstance3D` con todas las copias de un bloque, prendidas.
+##
+## **El buffer se escribe tal cual viene del recurso**: cada copia ya trae su lugar y su vuelta
+## medidos del modelo, y el nodo cuelga de este puesto, que está sin transformar. Convertirlas
+## acá sería medirlas dos veces.
+func _dibujar(nombre: String, malla: Mesh, bloque: PackedFloat32Array) -> MultiMeshInstance3D:
+	var grupo := MultiMeshInstance3D.new()
+	grupo.name = nombre
+	var copias := MultiMesh.new()
+	copias.transform_format = MultiMesh.TRANSFORM_3D
+	copias.mesh = malla
+	copias.instance_count = DisposicionDeLaGondola.copias(bloque)
+	copias.buffer = bloque
+	copias.visible_instance_count = copias.instance_count
+	grupo.multimesh = copias
+	add_child(grupo)
+	return grupo
 
 
 func retirar(id: Producto.Id) -> void:
@@ -595,7 +642,9 @@ func retirar(id: Producto.Id) -> void:
 
 
 func depositar(unidad: Node3D, producto: Producto, unidades: int) -> void:
-	_grupos[producto.id].multimesh.visible_instance_count = unidades
+	_grupos[producto.id].multimesh.visible_instance_count = (
+		_primera_reponible(producto.id) + unidades
+	)
 	_guardar_cuerpo(unidad)
 
 
@@ -628,7 +677,9 @@ func _guardar_cuerpo(unidad: ObjetoAgarrable) -> void:
 func actualizar_stock(_despachados: int) -> void:
 	for producto in Catalogo.todos():
 		var copias := _grupos[producto.id].multimesh
-		copias.visible_instance_count = repositor.estante().unidades_en_gondola(producto)
+		copias.visible_instance_count = (
+			_primera_reponible(producto.id) + repositor.estante().unidades_en_gondola(producto)
+		)
 	_actualizar_zonas()
 
 
@@ -641,6 +692,10 @@ func limpiar() -> void:
 			unidad.queue_free()
 	_unidades.clear()
 	_disponible = null
-	for grupo in _grupos:
-		grupo.multimesh.visible_instance_count = 0
+	# **Se recorre lo que hay y no el catálogo.** La apertura de la jornada llama acá antes de
+	# que el puesto se haya preparado, y entonces todavía no hay un grupo por producto: indexar
+	# por `id` mata el primer cuadro con un `Out of bounds` que no nombra ni a la jornada ni a
+	# este puesto.
+	for id in _grupos.size():
+		_grupos[id].multimesh.visible_instance_count = _primera_reponible(id)
 	_actualizar_zonas()

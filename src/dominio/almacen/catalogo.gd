@@ -22,18 +22,18 @@ extends RefCounted
 ## fila es rojo: `catalogo_test.gd` cuenta las filas de acá contra `Producto.Id.size()`, y las
 ## cuenta sobre este diccionario y no sobre `todos()` a propósito —ver `de()`—.
 const FILAS := {
-	Producto.Id.ACTRONCITO: ["Actroncito", 2500, 3],
-	Producto.Id.DUREXTRA: ["Durextra", 1200, 4],
-	Producto.Id.BURBALOO: ["Burbaloo", 1800, 6],
-	Producto.Id.ZUCARACHAS: ["Zucarachas", 900, 4],
-	Producto.Id.LAYSNTT: ["Laysntt", 1100, 3],
-	Producto.Id.MALBARDO: ["Malbardo", 1500, 3],
-	Producto.Id.PRONGLES: ["Prongles", 1200, 3],
-	Producto.Id.JORGILLO: ["Jorgillo", 900, 3],
-	Producto.Id.ARVEJAS: ["Arvejas", 800, 4],
-	Producto.Id.CHISITOS: ["Chisitos", 700, 2],
-	Producto.Id.OREMOS: ["Oremos", 1000, 4],
-	Producto.Id.PEPITOS: ["Pepitos", 950, 3],
+	Producto.Id.ACTRONCITO: ["Actroncito", 2500, 8],
+	Producto.Id.DUREXTRA: ["Durextra", 1200, 8],
+	Producto.Id.BURBALOO: ["Burbaloo", 1800, 8],
+	Producto.Id.ZUCARACHAS: ["Zucarachas", 900, 8],
+	Producto.Id.LAYSNTT: ["Laysntt", 1100, 8],
+	Producto.Id.MALBARDO: ["Malbardo", 1500, 8],
+	Producto.Id.PRONGLES: ["Prongles", 1200, 8],
+	Producto.Id.JORGILLO: ["Jorgillo", 900, 8],
+	Producto.Id.ARVEJAS: ["Arvejas", 800, 8],
+	Producto.Id.CHISITOS: ["Chisitos", 700, 8],
+	Producto.Id.OREMOS: ["Oremos", 1000, 8],
+	Producto.Id.PEPITOS: ["Pepitos", 950, 8],
 }
 
 

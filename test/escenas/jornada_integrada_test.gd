@@ -179,8 +179,11 @@ func _comprobar_huecos(almacen: Node3D, esperados: int) -> void:
 	var repositor: Repositor = almacen.get("_repositor")
 	for producto in Catalogo.todos():
 		var grupo: MultiMeshInstance3D = presentacion.get_node("ProductosDe" + producto.nombre)
+		# Las copias visibles son la guía entera más lo repuesto: la guía no cambia nunca y
+		# arranca a la vista, así que el cero del inventario no es un cero de copias.
+		var guia := grupo.multimesh.instance_count - producto.umbral
 		assert_int(grupo.multimesh.visible_instance_count).is_equal(
-			repositor.estante().unidades_en_gondola(producto)
+			guia + repositor.estante().unidades_en_gondola(producto)
 		)
 	assert_int(repositor.estante().productos_completos()).is_equal(esperados)
 

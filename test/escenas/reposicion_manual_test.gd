@@ -24,7 +24,9 @@ func test_vender_retira_las_unidades_visibles_y_permite_reponer_sin_superponer()
 		var cantidad := repositor.estante().unidades_en_gondola(producto)
 		stock += cantidad
 		var grupo: MultiMeshInstance3D = presentacion.get_node("ProductosDe" + producto.nombre)
-		assert_int(grupo.multimesh.visible_instance_count).is_equal(cantidad)
+		assert_int(grupo.multimesh.visible_instance_count).is_equal(
+			_guia(grupo, producto) + cantidad
+		)
 	assert_int(stock).is_less(cupo_total)
 	for producto in Catalogo.todos():
 		while repositor.estante().disponibles_para_retirar(producto) > 0:
@@ -33,12 +35,14 @@ func test_vender_retira_las_unidades_visibles_y_permite_reponer_sin_superponer()
 	var posiciones: Array[Vector3] = []
 	for producto in Catalogo.todos():
 		var grupo: MultiMeshInstance3D = presentacion.get_node("ProductosDe" + producto.nombre)
-		assert_int(grupo.multimesh.visible_instance_count).is_equal(
-			repositor.estante().cupo(producto)
-		)
-		for indice in grupo.multimesh.visible_instance_count:
+		assert_int(grupo.multimesh.visible_instance_count).is_equal(grupo.multimesh.instance_count)
+		for indice in repositor.estante().cupo(producto):
 			var posicion := (
-				(grupo.global_transform * _transformacion_de_copia(grupo.multimesh, indice)).origin
+				(
+					grupo.global_transform
+					* _transformacion_de_copia(grupo.multimesh, _guia(grupo, producto) + indice)
+				)
+				. origin
 			)
 			assert_array(posiciones).not_contains(posicion)
 			posiciones.append(posicion)
@@ -201,17 +205,21 @@ func test_los_estantes_agrupan_las_unidades_sin_cuerpos_por_producto() -> void:
 	var presentacion: Node3D = almacen.get("_reposicion_manual")
 	var grupos := presentacion.find_children("ProductosDe*", "MultiMeshInstance3D", true, false)
 	assert_int(grupos.size()).is_equal(Catalogo.todos().size())
-	for grupo: MultiMeshInstance3D in grupos:
-		assert_int(grupo.multimesh.visible_instance_count).is_zero()
+	for indice in grupos.size():
+		var grupo: MultiMeshInstance3D = grupos[indice]
+		var producto := Catalogo.todos()[indice]
+		assert_int(grupo.multimesh.visible_instance_count).is_equal(_guia(grupo, producto))
 	var agarre: Agarre = almacen.get("_agarre")
 	for producto in Catalogo.todos():
 		var grupo: MultiMeshInstance3D = presentacion.get_node("ProductosDe" + producto.nombre)
-		assert_int(grupo.multimesh.instance_count).is_equal(producto.umbral)
+		assert_int(grupo.multimesh.instance_count).is_greater_equal(producto.umbral)
 		for indice in producto.umbral:
 			presentacion.call("retirar", producto.id)
 			assert_object(agarre.manos().sostenido()).is_not_null()
 			presentacion.call("pedir_colocar", producto.id)
-			assert_int(grupo.multimesh.visible_instance_count).is_equal(indice + 1)
+			assert_int(grupo.multimesh.visible_instance_count).is_equal(
+				_guia(grupo, producto) + indice + 1
+			)
 		assert_int(grupo.get_child_count()).is_zero()
 	assert_int(presentacion.find_children("*", "RigidBody3D", true, false).size()).is_equal(1)
 
@@ -295,8 +303,11 @@ func test_otra_jornada_vacia_grupos_mano_y_productos_sueltos() -> void:
 	assert_bool(is_instance_valid(sostenida)).is_false()
 	assert_object(agarre.manos().sostenido()).is_null()
 	assert_int(agarre.punto_de_producto.get_child_count()).is_zero()
+	for producto in Catalogo.todos():
+		var grupo: MultiMeshInstance3D = presentacion.get_node("ProductosDe" + producto.nombre)
+		assert_int(grupo.multimesh.visible_instance_count).is_equal(_guia(grupo, producto))
 	for grupo: MultiMeshInstance3D in presentacion.find_children(
-		"*", "MultiMeshInstance3D", true, false
+		"SueltosDe*", "MultiMeshInstance3D", true, false
 	):
 		assert_int(grupo.multimesh.visible_instance_count).is_zero()
 	presentacion.call("retirar", Producto.Id.JORGILLO)
@@ -342,12 +353,15 @@ func test_el_frente_se_conserva_al_examinar_y_volver_a_agarrar() -> void:
 		var grupo: MultiMeshInstance3D = almacen.get("_reposicion_manual").get_node(
 			"ProductosDe" + producto.nombre
 		)
-		(
-			assert_bool(
-				_transformacion_de_copia(grupo.multimesh, 0).basis.is_equal_approx(Basis.IDENTITY)
-			)
-			. is_true()
+		# La copia que se acaba de reponer es la ultima visible: el tramo reponible va al final
+		# del bloque. **El estante la coloca sin deformarla**, y eso es lo que se afirma: su
+		# vuelta sale del modelo y puede ser cualquiera, pero el volumen que ocupa es el de una
+		# unidad. Un determinante distinto de uno seria una escala o un corte metidos por el
+		# camino, que es el modo de falla que un `MultiMesh` no avisa.
+		var repuesta := _transformacion_de_copia(
+			grupo.multimesh, grupo.multimesh.visible_instance_count - 1
 		)
+		assert_float(repuesta.basis.determinant()).is_equal_approx(1.0, 0.001)
 
 
 func test_actroncito_prongles_y_jorgillo_se_reponen_con_foco_y_clic_reales() -> void:
@@ -374,15 +388,22 @@ func test_actroncito_prongles_y_jorgillo_se_reponen_con_foco_y_clic_reales() -> 
 		var zona: Node3D = almacen.get("_reposicion_manual").get_node(
 			"ZonaDe" + unidad.producto.nombre
 		)
-		# Se mira desde la cara que exhibe el producto, y sale del giro del puesto en vez de
-		# escribirse acá: la del pasillo y la de la cabecera son perpendiculares entre sí, y
-		# parado en la equivocada la vista arranca adentro del mueble y no hay qué enfocar.
-		var puesto: Node3D = almacen.get("_reposicion_manual")
-		var giro: float = puesto.giros_del_frente[id]
-		var frente: Vector3 = Basis(Vector3.UP, deg_to_rad(-giro)) * Vector3.BACK
-		var desde := frente * 1.2 + Vector3.UP * 0.3
-		await _mirar_foco(jugador, zona.global_position + desde, zona.global_position)
-		assert_object(jugador.get("_enfocado")).is_same(zona)
+		# **Se prueban las cuatro caras y gana la que enfoca.** Cual exhibe cada producto lo
+		# decide el modelo —hay bloques contra el panel del fondo y bloques de cabecera, y son
+		# perpendiculares entre si—, asi que escribirlo aca lo deja caducando con el proximo
+		# `.blend`. Parado en la cara equivocada la vista arranca adentro del mueble y no hay
+		# que enfocar, y el sintoma es un `null` que no nombra ni al producto ni a la cara.
+		for lado in 4:
+			var frente := Basis(Vector3.UP, TAU * lado / 4.0) * Vector3.BACK
+			var desde := frente * 1.2 + Vector3.UP * 0.3
+			await _mirar_foco(jugador, zona.global_position + desde, zona.global_position)
+			if jugador.get("_enfocado") == zona:
+				break
+		(
+			assert_object(jugador.get("_enfocado"))
+			. override_failure_message(unidad.producto.nombre)
+			. is_same(zona)
+		)
 		_clic_real(jugador)
 		assert_object(almacen.get("_agarre").manos().sostenido()).is_null()
 		(
@@ -446,14 +467,20 @@ func test_cada_unidad_ocupa_un_lugar_distinto_y_la_marca_indica_su_base() -> voi
 			assert_bool(vista.scale.is_equal_approx(Vector3.ONE)).is_true()
 			var grupo: MultiMeshInstance3D = presentacion.get_node("ProductosDe" + producto.nombre)
 			var transformacion := (
-				grupo.global_transform * _transformacion_de_copia(grupo.multimesh, indice)
+				grupo.global_transform
+				* _transformacion_de_copia(grupo.multimesh, _guia(grupo, producto) + indice)
 			)
 			var limites := transformacion * grupo.multimesh.mesh.get_aabb()
 			assert_float(limites.get_center().x).is_equal_approx(apoyo.x, 0.001)
 			assert_float(limites.get_center().z).is_equal_approx(apoyo.z, 0.001)
 			assert_float(limites.position.y).is_equal_approx(apoyo.y - 0.005, 0.001)
+			# **Se compara el centro y no el volumen.** Las unidades ya no las separa el juego:
+			# las posiciona el modelo, y ahí están apoyadas una contra otra, así que sus cajas
+			# se tocan. Lo que no puede repetirse es el lugar: dos unidades en el mismo punto
+			# es una que se repuso encima de otra, y eso el jugador lo ve como stock que no
+			# aparece.
 			for ocupado in ocupados:
-				assert_bool(limites.intersects(ocupado)).is_false()
+				assert_bool(limites.get_center().is_equal_approx(ocupado.get_center())).is_false()
 			ocupados.append(limites)
 		_sacar_de_la_caja(jugador, almacen.get("_cajas_de_productos")[producto.id])
 		assert_object(almacen.get("_agarre").manos().sostenido()).is_null()
@@ -492,7 +519,9 @@ func test_el_clic_saca_una_unidad_visible_y_el_estante_la_recibe() -> void:
 	var grupo: MultiMeshInstance3D = almacen.get("_reposicion_manual").get_node(
 		"ProductosDeActroncito"
 	)
-	assert_int(grupo.multimesh.visible_instance_count).is_equal(1)
+	assert_int(grupo.multimesh.visible_instance_count).is_equal(
+		_guia(grupo, Catalogo.todos()[0]) + 1
+	)
 	assert_int(repositor.estante().unidades_en_gondola(Catalogo.todos()[0])).is_equal(1)
 
 
@@ -563,6 +592,14 @@ func _apuntar(almacen: Node3D, id: Producto.Id) -> void:
 	var camara: Camera3D = jugador.get_node("Camara")
 	camara.global_position = zona.get_center() + Vector3(0, 0, 1.5)
 	camara.look_at(zona.get_center())
+
+
+## Cuantas copias de ese producto son guia: las que estan siempre y el jugador no repone.
+##
+## **Sale de restar y no de un numero escrito.** Cuantas se reponen lo dice el `umbral` del
+## `Catalogo`, y cuantas hay en total lo dice el modelo: entre los dos queda el tramo fijo.
+func _guia(grupo: MultiMeshInstance3D, producto: Producto) -> int:
+	return grupo.multimesh.instance_count - producto.umbral
 
 
 func _transformacion_de_copia(copias: MultiMesh, indice: int) -> Transform3D:

@@ -1,4 +1,4 @@
-[gd_scene format=3]
+[gd_scene format=3 uid="uid://davohpa0bua7i"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_cielo"]
 
@@ -6,16 +6,40 @@
 sky_material = SubResource("ProceduralSkyMaterial_cielo")
 
 [sub_resource type="Environment" id="Environment_almacen"]
-background_mode = 2
+background_mode = 1
+background_color = Color(0.0627451, 0.11764706, 0.2509804, 1)
 sky = SubResource("Sky_cielo")
 tonemap_mode = 2
 
-[node name="Ambiente" type="Node3D"]
+[node name="Ambiente" type="Node3D" unique_id=661562974]
 
-[node name="Entorno" type="WorldEnvironment" parent="."]
+[node name="Entorno" type="WorldEnvironment" parent="." unique_id=664424133]
 environment = SubResource("Environment_almacen")
+[node name="AreaLight3D" type="AreaLight3D" parent="." unique_id=1670606995]
+transform = Transform3D(1, 0, 0, 0, 0.023678668, 0.9997196, 0, -0.9997196, 0.023678668, -0.1821338, 4.044125, -0.89042616)
+light_energy = 9.503
+light_indirect_energy = 3.855
+light_size = 0.874
+area_size = Vector2(9.884546, 1)
 
-[node name="Sol" type="DirectionalLight3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 0.5, 0.866025, 0, -0.866025, 0.5, 0, 6, 0)
-shadow_enabled = true
+[node name="AreaLight3D3" type="AreaLight3D" parent="." unique_id=1624985064]
+transform = Transform3D(1, 0, 0, 0, 0.023678668, 0.9997196, 0, -0.9997196, 0.023678668, -0.1821338, 4.044125, -4.9528956)
+light_energy = 9.503
+light_indirect_energy = 3.855
+light_size = 0.874
+area_size = Vector2(9.884546, 1)
+
+[node name="AreaLight3D2" type="AreaLight3D" parent="." unique_id=333680017]
+transform = Transform3D(1, 0, 0, 0, 0.023678668, 0.9997196, 0, -0.9997196, 0.023678668, -0.1821338, 4.044125, 4.567435)
+light_energy = 9.503
+light_indirect_energy = 3.855
+light_size = 0.874
+area_size = Vector2(9.884546, 1)
+
+[node name="AreaLight3D4" type="AreaLight3D" parent="." unique_id=186499365]
+transform = Transform3D(1, 0, 0, 0, 0.023678668, 0.9997196, 0, -0.9997196, 0.023678668, 3.318476, 4.044125, -12.095114)
+light_energy = 3.475
+light_indirect_energy = 3.855
+light_size = 0.874
+area_size = Vector2(2.0353312, 1)
 

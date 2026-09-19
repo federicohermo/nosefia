@@ -25,41 +25,36 @@ class ModeloActualizado(unittest.TestCase):
     def test_el_glb_corresponde_al_blend_integrado(self):
         # Par medido al exportar con Blender 5.2.1 desde la fuente ya guardada. El par no se
         # puede mezclar entre versiones del exportador: dos versiones devuelven datos de
-        # vértice distintos para la misma malla.
+        # vertice distintos para la misma malla.
         #
-        # Las opciones que reproducen el par, medidas reexportando hasta dar con los mismos
-        # bytes: formato GLB, imágenes AUTO, `export_apply`, `use_visible` y `export_yup`,
-        # sin cámaras ni luces. `use_visible` importa: sin él entran los objetos de la
-        # colección oculta, que no son parte del juego.
+        # Las opciones que reproducen el par: formato GLB, imagenes AUTO, `export_apply`,
+        # `use_visible` y `export_yup`, sin camaras ni luces.
         #
-        # **Y la exportación va con los modificadores `Array` apagados**, que son Geometry
-        # Nodes llamados `Array`, no modificadores de tipo `ARRAY`: apagar por tipo no apaga
-        # ninguno y los productos salen multiplicados igual. Se apagan por nombre. Los productos
-        # llevan un Geometry Nodes que llena el estante con una fila, y **Blender 5.0 no
-        # realizaba esas instancias al exportar y 5.2 sí**, así que con el modificador activo
-        # el producto sale multiplicado donde antes salía solo. El juego necesita **una
-        # unidad**, porque `reposicion_manual.gd` toma la superficie 0 de cada grupo como el
-        # modelo de una y apila `cupo()` copias separadas por su AABB; con la fila entera, dos
-        # productos vecinos se pisan y el test de apoyos del modelo da rojo.
+        # **Y la exportacion va con los `Array` apagados y la coleccion `guia` excluida.** Las
+        # dos cosas por el mismo motivo: el juego dibuja la gondola con un `MultiMesh`, asi que
+        # el `.glb` tiene que traer **una unidad** de cada producto y ninguna de sus copias. Si
+        # las copias viajan, cada producto se dibuja dos veces —una horneada y otra por el
+        # grupo— y el estante queda con el doble de mercaderia que el inventario dice.
         #
-        # **El hash del `.blend` cambió el 2026-09-18 y el del `.glb` no, y eso es el dato.** Ese
-        # día se reapuntaron sus 35 texturas, que habían quedado colgando al renombrar las
-        # carpetas de `assets/`, y se arregló `es_un_array()`, que comparaba el nombre exacto y
-        # dejaba prendidos los 34 `Array.001`. Con las dos cosas, el export volvió a dar **los
-        # mismos bytes** que el `.glb` de antes: la fuente se reparó y el producto no se movió.
+        # Los `Array` son Geometry Nodes llamados `Array`, no modificadores de tipo `ARRAY`:
+        # apagar por tipo no apaga ninguno. Se apagan por nombre, con su sufijo.
+        #
+        # **El 2026-09-19 entro el modelo nuevo**, con la gondola llena: 177 copias linkeadas
+        # pasaron a la coleccion `guia`, que no se exporta y que
+        # `src/escenas/puestos/disposicion_de_la_gondola.tres` reproduce copia por copia.
         blend = (RAIZ / "assets/models/SEPT_JUEGOS_PROTOTIPO.blend").read_bytes()
         self.assertEqual(
             hashlib.sha256(blend).hexdigest(),
-            "35b44a6f9bbd22d9c378dd22830920c85be4e4d295488771c1ed825c23dd4f13",
+            "dde843f5c4b0c9666ec78e41eb7aee5a48a5a3fd1b6505ca1757c2a2a8d6d892",
         )
         self.assertEqual(
             hashlib.sha256(self.glb).hexdigest(),
-            "f6bdb1afb621c2faf9de0cd34ad8e3b36b421a895aa5443e986660a94fb36ee9",
+            "8cb81202e4d1610dfacd5585bfc32175c398c034dc62f20e5903710182b127ff",
         )
 
     def test_las_mallas_conservan_uv_y_materiales(self):
-        self.assertEqual(len(self.modelo["meshes"]), 67)
-        self.assertEqual(len(self.modelo["materials"]), 42)
+        self.assertEqual(len(self.modelo["meshes"]), 59)
+        self.assertEqual(len(self.modelo["materials"]), 36)
         for malla in self.modelo["meshes"]:
             for parte in malla["primitives"]:
                 with self.subTest(malla=malla["name"]):
@@ -73,7 +68,7 @@ class ModeloActualizado(unittest.TestCase):
 
     def test_las_texturas_resuelven_dentro_del_glb(self):
         imagenes = self.modelo.get("images", [])
-        self.assertEqual(len(imagenes), 35)
+        self.assertEqual(len(imagenes), 30)
         for textura in self.modelo["textures"]:
             self.assertLess(textura["source"], len(imagenes))
         for imagen in imagenes:

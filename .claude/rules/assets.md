@@ -28,7 +28,13 @@ paths:
    indexando por **(carpeta, archivo)** y no sólo por archivo: `jorgillo.png` está dos veces, y
    sólo la carpeta que la ruta vieja nombraba las desempata.
 
-5. **Y después va `exportar_modelo.py`.** El par `.blend` ↔ `.glb` se verifica por hash, así que
+5. **Dónde va cada unidad de la góndola lo dice `disposicion_de_la_gondola.tres`, no el `.glb`.**
+   El modelo trae **una** unidad de cada producto; las copias que llenan el estante viven en la
+   colección `guia` del `.blend` —visible para el artista, excluida al exportar— y las dibuja un
+   `MultiMesh` por bloque. Mover una caja en Blender no llega al juego hasta regenerar ese
+   recurso: el `.glb` no la lleva.
+
+6. **Y después va `exportar_modelo.py`.** El par `.blend` ↔ `.glb` se verifica por hash, así que
    un `.blend` que cambió sin reexportar es rojo — aunque el cambio no toque una sola malla. No
    es burocracia: reapuntar las texturas dejó la estructura igual —67 mallas, 42 materiales, 35
    imágenes— y el `.glb` salió 279 KB distinto, porque el exportador recodifica las imágenes.

@@ -78,3 +78,9 @@ def es_un_array(nombre: str) -> bool:
     dejaba de corresponder a su fuente sin que el comando de exportar dijera nada.
     """
     return nombre == MODIFICADOR or nombre.startswith(MODIFICADOR + ".")
+
+
+#: La colección donde viven las copias de cada producto. **No se exporta**: el juego las dibuja
+#: con un `MultiMesh`, y horneadas en el `.glb` cada producto se vería dos veces. Queda visible
+#: en Blender —el artista acomoda las copias ahí— y la excluye el exportador.
+COLECCION_DE_GUIA = "guia"

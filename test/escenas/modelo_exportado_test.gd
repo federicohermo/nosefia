@@ -11,18 +11,18 @@ const SEPARACION_MAXIMA := 0.001
 ## está acá escrito a mano a propósito: si el orden del catálogo y el del contenido se separan,
 ## `_preparar_modelos` le da a un producto el modelo de otro sin que nada lo diga.
 const DEL_MODELO := [
-	"Actroncito_002",
+	"Actroncito",
 	"gondolanueva/durextra",
 	"gondolanueva/burgaloo",
 	"gondolanueva/Zucarachas",
-	"gondolanueva/snackpapas1_001",
+	"gondolanueva/snackpapas1_003",
 	"gondolanueva/malbardocig",
-	"pringles",
+	"pringles3_001",
 	"alfajorescaja2",
-	"lataarvejas",
+	"lataarvejas_002",
 	"gondolanueva/chisitos2",
 	"oremos",
-	"pepitos"
+	"pepitos2",
 ]
 
 
@@ -46,16 +46,20 @@ func test_el_mueble_de_la_escena_es_la_malla_del_modelo() -> void:
 
 ## La colisión del mueble cubre el mueble entero, y es la que la escena monta.
 ##
-## **Se comparan con tolerancia y no por igualdad.** La malla llega comprimida del `.glb` y la
-## forma no, así que el mismo vértice sale con un decimal distinto de cada lado. Medido el
-## 2026-09-18: el que más se separa lo hace 0,12 mm sobre un mueble de 5,8 m, y el milímetro
-## de abajo deja pasar eso y nada más.
+## **Se comparan como conjunto y no vertice por vertice.** El importador de Godot no conserva
+## el orden de las caras de la malla al hornear la forma: con el modelo del 2026-09-19 sólo 29
+## de 3252 vertices caen en el mismo indice, y las dos geometrias son la misma. Compararlas en
+## orden estaba verde por casualidad, y se ponia rojo con un reporte de tres mil lineas que no
+## nombra la causa.
+##
+## **Se comparan con tolerancia y no por igualdad**: la malla llega comprimida del `.glb` y la
+## forma no, asi que el mismo vertice sale con un decimal distinto de cada lado.
 func test_la_colision_corresponde_al_mueble_completo() -> void:
 	var escena: Node3D = auto_free(ESTRUCTURA.instantiate())
 	var malla: MeshInstance3D = escena.get_node("gondolanueva")
 	var forma: CollisionShape3D = escena.get_node("gondolanueva/StaticBody3D/CollisionShape3D")
-	var caras := malla.mesh.get_faces()
-	var choque: PackedVector3Array = forma.shape.get_faces()
+	var caras := _ordenados(malla.mesh.get_faces())
+	var choque := _ordenados(forma.shape.get_faces())
 	assert_int(choque.size()).is_equal(caras.size())
 	for indice in caras.size():
 		(
@@ -63,6 +67,21 @@ func test_la_colision_corresponde_al_mueble_completo() -> void:
 			. override_failure_message("%d: %s contra %s" % [indice, choque[indice], caras[indice]])
 			. is_less(SEPARACION_MAXIMA)
 		)
+
+
+## Los mismos vertices en un orden que no depende de como los hornearon.
+func _ordenados(puntos: PackedVector3Array) -> Array[Vector3]:
+	var lista: Array[Vector3] = []
+	lista.assign(puntos)
+	lista.sort_custom(
+		func(a: Vector3, b: Vector3) -> bool:
+			if not is_equal_approx(a.x, b.x):
+				return a.x < b.x
+			if not is_equal_approx(a.y, b.y):
+				return a.y < b.y
+			return a.z < b.z
+	)
+	return lista
 
 
 func test_el_contenido_conserva_material_y_textura_de_cada_producto() -> void:

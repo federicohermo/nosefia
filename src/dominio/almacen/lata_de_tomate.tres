@@ -1,4 +1,4 @@
-[gd_resource type="Resource" script_class="ObjetoDelAlmacen" load_steps=4 format=3]
+[gd_resource type="Resource" script_class="ObjetoDelAlmacen" format=3 uid="uid://bf3fi1f7hxp5q"]
 
 [ext_resource type="Script" uid="uid://bplgmlbbxlaht" path="res://src/dominio/almacen/objeto_del_almacen.gd" id="1_objeto"]
 [ext_resource type="Script" uid="uid://d2us5k7r4bu37" path="res://src/dominio/investigacion/revelacion.gd" id="2_revelacion"]
@@ -11,5 +11,4 @@ texto = "La fecha de vencimiento está tapada con una etiqueta nueva. Abajo se l
 script = ExtResource("1_objeto")
 id = &"lata_de_tomate"
 nombre = "Lata de tomate"
-levantable = true
 revelacion = SubResource("Resource_revelacion")
