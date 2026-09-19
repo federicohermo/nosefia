@@ -27,7 +27,7 @@ const COSTO_DE_SACAR_LA_BASURA := 1200.0
 ## contar lo que camine investigando. Es el único término del presupuesto que no está en
 ## segundos de ficción, y por eso es el único que pasa por el `Ritmo`.
 ##
-## Re-derivado el 2026-09-04 por el spec 028, que es cuando el layout dejó de ser una suposición:
+## Re-derivado el 2026-09-04, que es cuando el layout dejó de ser una suposición:
 ## la versión anterior valía 180 y decía por escrito que **«cuando el layout exista hay que volver
 ## a medirlo acá»**, suponiendo un almacén de unos 20 m de punta a punta. Ahora el escenario es el
 ## modelo de `SEPT_JUEGOS_PROTOTIPO.blend`, y el interior **mide 24,60 m de punta a punta**.
@@ -43,7 +43,7 @@ const COSTO_DE_SACAR_LA_BASURA := 1200.0
 ## - **supuesto**: los ~18 cruces para hacer las cinco obligatorias más atender a los dos
 ##   compradores —dos por tarea y cuatro por comprador, contando que `SACAR_LA_BASURA` va hasta el
 ##   fondo—. No se puede medir todavía: tres de las cinco obligatorias no tienen anclaje en la
-##   escena, y dónde queda el fondo lo define el spec 015.
+##   escena, y dónde queda el fondo lo define sacar la basura.
 ##
 ## 18 × 24,60 = 442,8 m, o sea 126,5 segundos en línea recta. El valor declarado no los redondea:
 ## los sube a 220, el mismo 75 % de margen que tenía, porque nadie camina en línea recta por un

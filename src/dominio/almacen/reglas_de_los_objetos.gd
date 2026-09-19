@@ -9,7 +9,7 @@ class_name ReglasDeLosObjetos
 extends RefCounted
 
 ## Cuántas cosas se pueden llevar a la vez. Vale 1 y no es un detalle de comodidad: es la mitad
-## del precio en tiempo de sacar la basura, que el spec 015 escribe como
+## del precio en tiempo de sacar la basura, que el contrato escribe como
 ## `BOLSAS_DE_LA_JORNADA > MANOS_DISPONIBLES` — o sea, más de un viaje. Subirlo a 2 le afloja el
 ## costo a media tarea obligatoria sin tocar `reglas.gd`.
 const MANOS_DISPONIBLES := 1

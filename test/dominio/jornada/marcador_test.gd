@@ -2,7 +2,7 @@
 ##
 ## El nodo que pinta no formatea nada: si estos casos pasan, el reloj de pared del local dice la
 ## verdad. Y el umbral se prueba acá y no mirando la esfera porque es un número que decide — en
-## `escenas/` habría nacido sin test, que es exactamente el motivo del spec 032.
+## `escenas/` habría nacido sin test, que es exactamente el motivo de bajarlo al dominio.
 extends GdUnitTestSuite
 
 

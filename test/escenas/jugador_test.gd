@@ -75,7 +75,7 @@ func test_las_cuatro_acciones_del_dominio_estan_declaradas_en_el_proyecto() -> v
 
 
 func test_el_jugador_avisa_cuando_enfoca_y_cuando_pierde_el_objetivo() -> void:
-	# Son el punto donde se cuelga el spec 006: sin ellas, agarrar un objeto no tiene de dónde
+	# Son el punto donde se cuelga agarrar: sin ellas, agarrar un objeto no tiene de dónde
 	# enterarse de que hay uno enfocado.
 	var jugador := _jugador()
 	assert_bool(jugador.has_signal("objetivo_enfocado")).is_true()

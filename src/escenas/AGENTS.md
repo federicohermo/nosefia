@@ -66,7 +66,7 @@ hijos propios —un puesto, la geometría del local, un mueble con sus partes—
 **Por qué, y no es estilo:** ocho specs tenían una tarea que editaba esa escena, y un `.tscn` no
 se mergea. Con el blockout adentro —133 líneas que ninguno de los ocho escribió— cada uno abría
 un archivo grande para agregar tres, y dos que se cruzaran chocaban sobre geometría ajena. El
-spec 023 lo sacó a `estructura_del_almacen.tscn`. **La escena grande serializa el orden de
+se lo sacó a `estructura_del_almacen.tscn`. **La escena grande serializa el orden de
 implementación de todo el juego.**
 
 **Quién lo verifica: `test/escenas/almacen_test.gd`**, en `_violaciones_de_cableado()`. El
@@ -92,7 +92,7 @@ Cuatro modos de falla medidos, y **los cuatro cargan la escena sin un solo error
   `node_paths=PackedStringArray("_hud", "_reloj")`** en el tag del nodo. El motor guarda el valor
   como `NodePath` y sin esa lista no lo resuelve: queda en `null` y el juego muere en el primer
   cuadro con un `Nonexistent function … in base 'Nil'` que no nombra ni al `.tscn` ni al
-  `@export`. El editor lo escribe solo; una escena a mano, no. Medido en el spec 007, y desde el
+  `@export`. El editor lo escribe solo; una escena a mano, no. Está medido, y desde el
   2026-09-18 **lo cobra un gate**: `lib/escenas.py`, en el nodo `harness`.
 - **Una sub-escena instanciada necesita su `script` declarado en su propio `.tscn`.** Sin él, el
   `@export` que la apunta desde afuera queda en `null` **con el `node_paths` bien escrito**. Es
@@ -101,7 +101,7 @@ Cuatro modos de falla medidos, y **los cuatro cargan la escena sin un solo error
 - **Un `@export` que apunta a un script de `escenas/` no se puede tipar por su `class_name`**:
   esos scripts son cáscara y no declaran uno. Va `const X := preload("res://…/x.gd")` y después
   `@export var _x: X`. Sin eso el tipo estático es el del nodo —`Label3D`— y llamarle su método
-  no compila. Medido en el spec 032.
+  no compila. Está medido.
 - **El `_ready()` de un hijo corre ANTES que el de su raíz.** Un puesto que se pinta en su propio
   `_ready()` contra un estado que le da el cableado muere con el mismo mensaje. **Quien pinta es
   el cableado**, cuando abre la jornada.

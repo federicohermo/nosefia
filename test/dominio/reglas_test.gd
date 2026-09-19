@@ -91,7 +91,7 @@ func test_al_cuarto_apercibimiento_lo_echan() -> void:
 
 func test_la_caja_de_traslado_lleva_mas_de_un_producto() -> void:
 	# Con un solo casillero la caja no cambia nada: reponer seguiría siendo un viaje por unidad
-	# y no habría nada que elegir. Todo el spec 033 se apoya en que cargarla sea una decisión, y
+	# y no habría nada que elegir. La caja de traslado se apoya en que cargarla sea una decisión, y
 	# sin esta aserción el cupo podría bajar a uno con los diez criterios en verde.
 	assert_int(Reglas.CASILLEROS_DE_LA_CAJA_DE_TRASLADO).is_greater(1)
 

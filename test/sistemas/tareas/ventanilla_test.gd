@@ -166,7 +166,7 @@ func test_ningun_archivo_de_este_spec_pausa_el_juego() -> void:
 
 
 func test_ningun_archivo_de_este_spec_nombra_consumir() -> void:
-	# El único que descuenta tiempo es el reloj del 007, y lo hace por cuadro. Un descuento
+	# El único que descuenta tiempo es el reloj, y lo hace por cuadro. Un descuento
 	# propio acá le cobraría a atender un minuto que el trayecto ya paga.
 	for ruta: String in ARCHIVOS_DEL_SPEC:
 		var texto := FileAccess.get_file_as_string(ruta)
@@ -178,7 +178,7 @@ func test_ningun_archivo_de_este_spec_nombra_consumir() -> void:
 
 
 func test_ningun_archivo_de_este_spec_mueve_stock_ni_sortea() -> void:
-	# Mover unidades del depósito a la góndola es del 008, y el azar no entra en ningún lado.
+	# Mover unidades del depósito a la góndola es de reponer, y el azar no entra en ningún lado.
 	for ruta: String in ARCHIVOS_DEL_SPEC:
 		var texto := FileAccess.get_file_as_string(ruta)
 		for patron in ["randi(", "randf(", "ingresar("]:

@@ -1,6 +1,6 @@
 ## Qué ya se descubrió esta noche, y —lo que importa— si lo que se acaba de ver es nuevo.
 ##
-## Existe por el mordisco del spec 006: examinar dos veces la misma lata no revela nada nuevo y
+## Existe por el mordisco de examinar: ver dos veces la misma lata no revela nada nuevo y
 ## el reloj corre igual, así que repetir es tiempo puro perdido. Ese `bool` es de lo que cuelga
 ## que la revelación se muestre como descubrimiento o como algo ya leído.
 ##

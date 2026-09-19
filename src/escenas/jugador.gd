@@ -11,13 +11,13 @@
 ## distingue código de prosa, y hacerlo pasar comentando distinto sería trampa.
 extends CharacterBody3D
 
-## Se llaman por lo que pasó y no por lo que hay que hacer. Son el punto donde se cuelga el
-## spec 006: quien las emite no sabe quién las escucha.
+## Se llaman por lo que pasó y no por lo que hay que hacer. Son el punto donde se cuelga
+## agarrar y examinar: quien las emite no sabe quién las escucha.
 signal objetivo_enfocado(objetivo: Node3D, distancia: float)
 signal objetivo_perdido
 signal uso_pedido(objetivo: Node3D)
 
-## Los dos sistemas del spec 006, por `@export` y no por `@onready`: un `@onready` se resuelve
+## Los dos sistemas de agarrar, por `@export` y no por `@onready`: un `@onready` se resuelve
 ## recién al entrar la escena al árbol, y entonces `id_en_la_mano()` se caería sobre un jugador
 ## apenas instanciado — que es como lo instancia todo test de esta escena. Tampoco son autoloads:
 ## está medido que `gate_de_capas.py` no ve uno nombrado por su nombre global, o sea que esa
@@ -232,7 +232,7 @@ func mira() -> Transform3D:
 
 ## La única puerta por la que otra escena puede decir «el jugador no controla»: el
 ## `ControlDelJugador` es de `dominio/` y su instancia vive privada acá. La piden por separado
-## el spec 006 (examinar un objeto) y el 009 (abrir la computadora), y sin ellas los dos
+## examinar un objeto y abrir la computadora, y sin ellas los dos
 ## degradan en silencio —el mouse sigue girando la cámara, el jugador sigue caminando—.
 func suspender() -> void:
 	# El aviso sale una sola vez, acá: mientras dura la suspensión `observar()` devuelve `false`,
@@ -251,7 +251,7 @@ func reanudar() -> void:
 ## Qué `id` del dominio se está llevando en la mano, o `SIN_ID`.
 ##
 ## La única puerta por la que otra escena pregunta qué lleva el jugador — la piden los tres
-## llamadores del 014 para saber si lo que hay en la mano es el trapeador, que es lo que decide
+## llamadores de limpiar para saber si lo que hay en la mano es el trapeador, que es lo que decide
 ## si una pasada cuenta: `PisoDelLocal.pasar()` compara este `id` contra el del trapeador y una
 ## mano con otra cosa no baja una sola pasada. Devuelve el `id` y nunca el nodo: un nodo
 ## cruzaría la dirección de las capas al revés.

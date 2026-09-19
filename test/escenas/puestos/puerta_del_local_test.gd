@@ -31,7 +31,7 @@ func test_las_dos_puertas_cumplen_el_contrato_de_interaccion() -> void:
 
 
 func test_interactuar_abre_la_puerta_y_no_se_la_lleva_en_la_mano() -> void:
-	# Devolver un `ObjetoDelAlmacen` dejaría al clic del 006 cargándose la hoja entera.
+	# Devolver un `ObjetoDelAlmacen` dejaría al clic de agarrar cargándose la hoja entera.
 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
 	for hoja: String in VANOS:
 		var cuerpo: StaticBody3D = almacen.get_node(hoja + "/StaticBody3D")

@@ -9,7 +9,7 @@ extends GdUnitTestSuite
 
 func test_el_deposito_arranca_con_mas_de_lo_que_el_estante_pide() -> void:  # AC-STK-004
 	# Estricto y no `>=` a propósito: con exactamente el umbral, vender una sola unidad por la
-	# ventanilla —que es del 013— deja la reposición imposible esa noche.
+	# ventanilla deja la reposición imposible esa noche.
 	var mayor := 0
 	for producto in Catalogo.todos():
 		mayor = maxi(mayor, producto.umbral)

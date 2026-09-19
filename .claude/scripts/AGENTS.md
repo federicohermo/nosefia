@@ -62,7 +62,7 @@ entera: es la forma más corta conocida de declarar verde una corrida rota.
 **Y encadenar `rg` con `&&` es la misma falla en la otra dirección.** Un `rg A && rg B && rg C`
 corta en el primero sin match —que devuelve 1— y **los otros dos no corren, sin decirlo**: la
 salida vacía se lee como «ninguno matcheó» cuando sólo se preguntó por el primero. **Un `rg` por
-línea, separados por `;`, nunca por `&&`.** Medido el 2026-09-01 verificando los AC del 023.
+línea, separados por `;`, nunca por `&&`.** Medido el 2026-09-01.
 
 **Y `--no-ignore` no alcanza para buscar acá adentro.** Ripgrep saltea los directorios ocultos
 aunque se le apague el `.gitignore`, así que un `rg --no-ignore` sobre la raíz **no mira

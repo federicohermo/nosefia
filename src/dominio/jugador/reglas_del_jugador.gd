@@ -24,7 +24,7 @@ const ALTURA_DE_LA_CAMARA := 1.7
 const PITCH_MINIMO := -1.4
 const PITCH_MAXIMO := 1.4
 
-## Metros de alcance de la mira. Mayor que 1,2 porque el spec 006 suelta lo que se
+## Metros de alcance de la mira. Mayor que 1,2 porque se suelta lo que se
 ## lleva a esa distancia y afirma que se lo puede volver a mirar: un alcance menor deja al
 ## jugador soltando cosas que ya no puede agarrar.
 const ALCANCE_DE_LA_MIRA := 2.5

@@ -343,7 +343,7 @@ class Impurezas(unittest.TestCase):
         self.assertNotIn("CharacterBody3D", listas)
 
     def test_el_acceso_a_disco_es_un_hallazgo_por_cada_uno(self):
-        # Lo pidió el spec 019, que midió que hoy pasan. Un dominio que lee o escribe el
+        # Está medido que hoy pasan. Un dominio que lee o escribe el
         # disco deja de poder ejercerse sin preparar un archivo, que es la misma pérdida que un
         # dominio que necesita un frame.
         texto = 'FileAccess.open("x")\nConfigFile.new()\nResourceSaver.save(y)\n'

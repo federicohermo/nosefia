@@ -1,6 +1,6 @@
 ## Qué NO dibuja el HUD.
 ##
-## El 007 le había puesto un veredicto de cierre, y con la placa del 017 serían dos lugares
+## Le habían puesto un veredicto de cierre, y con la placa de cierre serían dos lugares
 ## diciendo cómo cerró la noche: el que quedara desactualizado no daría rojo, porque
 ## `gate_de_tests.py` no mira `ui/`. Esta suite es lo único ejecutable que lo impide.
 extends GdUnitTestSuite
@@ -34,7 +34,7 @@ const SUITES_DEL_RELOJ_DE_PARED := [
 ## rojo contra su propio verificador.
 const CARPETA_DE_LA_COMPUTADORA := "ui/" + "diegetica"
 
-## Lo que el veredicto del 007 traía consigo. El segundo es el que importa: traducir la banda a
+## Lo que ese veredicto traía consigo. El segundo es el que importa: traducir la banda a
 ## palabras es una regla del juego, y acá arriba nace sin test.
 const RASTROS_DEL_VEREDICTO := ["mostrar_veredicto", "consecuencia_de"]
 
@@ -88,7 +88,7 @@ func test_la_escena_del_hud_perdio_el_reloj_y_conserva_los_otros_dos() -> void:
 
 
 func test_la_hora_no_vuelve_a_entrar_a_la_pantalla_por_la_ventana() -> void:
-	# La computadora del 009 va a mostrar la hora también, y va a vivir en la carpeta diegética.
+	# La computadora va a mostrar la hora también, y va a vivir en la carpeta diegética.
 	# Mientras no exista, nadie de esta capa puede preguntarle al reloj de pared: la hora se lee
 	# en el local. El caso mira la capa entera y no sólo el HUD, que es lo que lo deja puesto
 	# cuando `ui/` crezca.

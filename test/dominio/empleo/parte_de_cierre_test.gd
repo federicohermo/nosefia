@@ -56,7 +56,7 @@ func test_el_saludo_y_el_comentario_salen_del_parte_ya_escritos() -> void:
 
 
 func test_el_umbral_del_despido_se_cita_por_su_constante() -> void:  # AC-EMP-015
-	# Escrito como número en la placa, mover el balance del 002 dejaría a la pantalla mintiendo
+	# Escrito como número en la placa, mover el balance del despido dejaría a la pantalla mintiendo
 	# sin que nada avise: el jugador leería «de 4» con el despido en 5.
 	var parte := ParteDeCierre.new(JORNADA_DE_PRUEBA, Apertura.obligatorias(), 0)
 	assert_int(parte.umbral_del_despido()).is_equal(Reglas.APERCIBIMIENTOS_HASTA_EL_DESPIDO)

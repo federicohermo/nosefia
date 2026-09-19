@@ -15,7 +15,7 @@ const MAXIMO := 1.4
 func test_cien_pixeles_a_la_derecha_giran_el_yaw_un_radian_y_no_tocan_el_pitch() -> void:
 	# El signo es negativo y no es un detalle: mover el mouse a la derecha tiene que girar la
 	# vista a la derecha, y en Godot eso es un yaw decreciente —la rotación positiva alrededor
-	# de +Y va al otro lado—. Está medido en los cuatro cuadrantes en el research del spec 004.
+	# de +Y va al otro lado—. Está medido en los cuatro cuadrantes.
 	var mirada := Mirada.new(SENSIBILIDAD, MINIMO, MAXIMO)
 	mirada.girar(Vector2(100.0, 0.0))
 	assert_float(mirada.yaw()).is_equal_approx(-1.0, 1e-5)

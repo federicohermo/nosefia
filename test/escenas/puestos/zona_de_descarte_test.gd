@@ -68,7 +68,7 @@ static func _descendientes(nodo: Node) -> Array[Node3D]:
 
 
 ## Todo lo que el descarte tiene que tener lejos: los anclajes de las otras tareas, las manchas
-## del 014 y las tres bolsas.
+## de limpiar y las tres bolsas.
 static func _puntos_a_medir(almacen: Node3D) -> Dictionary:
 	var puntos := {}
 	for nombre: String in ANCLAJES_DE_LAS_OTRAS_TAREAS + NOMBRES_DE_LAS_BOLSAS:
@@ -201,7 +201,7 @@ func test_cada_bolsa_de_la_escena_lleva_el_id_que_espera_el_dominio() -> void:
 		if bolsa == null:
 			(
 				assert_object(bolsa)
-				. override_failure_message("`%s` no está o no es un agarrable del 006" % nombre)
+				. override_failure_message("`%s` no está o no es un agarrable" % nombre)
 				. is_not_null()
 			)
 			continue
@@ -235,7 +235,8 @@ func test_las_bolsas_son_del_agarre_del_006_y_no_de_un_segundo_sistema() -> void
 
 
 func test_este_spec_no_agrega_ninguna_accion_al_input_map() -> void:
-	# Se agarra y se suelta con las del 006. Una acción nueva sería una tecla más para una tarea
+	# Se agarra y se suelta con las acciones que ya existen. Una acción nueva sería una tecla más
+	# para una tarea
 	# que ya se hace con el clic que el jugador aprendió.
 	var acciones := 0
 	for accion in InputMap.get_actions():

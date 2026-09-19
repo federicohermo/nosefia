@@ -25,7 +25,7 @@ func _ventanilla() -> VentanillaQueSeVe:
 
 
 func test_la_ventanilla_esta_en_el_grupo_que_la_mira_puede_enfocar() -> void:
-	# Sin el grupo, el rayo del 004 la ve y el jugador no: la mira no la marca como algo con lo
+	# Sin el grupo, el rayo la ve y el jugador no: la mira no la marca como algo con lo
 	# que se puede interactuar, y el jugador no tiene cómo enterarse de que ahí se atiende.
 	var ventanilla := _ventanilla()
 	assert_bool(ventanilla.is_in_group(ReglasDelJugador.GRUPO_INTERACTUABLE)).is_true()
@@ -52,7 +52,7 @@ func test_la_ventanilla_sale_con_la_accion_compartida() -> void:
 
 
 func test_la_ventanilla_no_le_escribe_el_transform_al_jugador() -> void:
-	# Suspender **es** clavar la cámara: la puerta del 004 alcanza, y escribir la pose por
+	# Suspender **es** clavar la cámara: la puerta del control alcanza, y escribir la pose por
 	# encima la desincroniza del dominio sin que ningún gate lo diga.
 	var texto := FileAccess.get_file_as_string(SCRIPT)
 	for escritura: String in ESCRITURAS_PROHIBIDAS:
@@ -75,9 +75,9 @@ func test_el_almacen_instancia_la_ventanilla_exactamente_una_vez() -> void:
 
 
 func test_tocar_la_ventanilla_clava_al_jugador_y_no_entrega_nada_para_levantar() -> void:
-	# Devuelve `null` a propósito: si contestara un objeto, el clic del 006 se llevaría la
+	# Devuelve `null` a propósito: si contestara un objeto, el clic de agarrar se llevaría la
 	# ventanilla en la mano en vez de abrir la atención. Y suspender **es** clavar la cámara: el
-	# `ControlDelJugador` del 004 deja de girar y de caminar con eso solo.
+	# `ControlDelJugador` deja de girar y de caminar con eso solo.
 	var ventanilla := _ventanilla()
 	var jugador: Node3D = auto_free(load(ESCENA_DEL_JUGADOR).instantiate())
 	var atenciones: Ventanilla = auto_free(Ventanilla.new())

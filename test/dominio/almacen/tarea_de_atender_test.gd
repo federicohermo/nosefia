@@ -1,8 +1,8 @@
 ## La obligatoria de atender: quién sigue, cuántos van despachados y cuánto se desvió la caja.
 ##
 ## **Ningún caso arma la lista con la constante del balance.** Se arma con uno o con tres, y eso
-## es exactamente lo que el AC8 pide: la tarea recibe la lista y no sabe cuántos compradores pide
-## una jornada.
+## es exactamente lo que el contrato pide: la tarea recibe la lista y no sabe cuántos
+## compradores pide una jornada.
 extends GdUnitTestSuite
 
 const TAREA := "res://src/dominio/almacen/tarea_de_atender.gd"

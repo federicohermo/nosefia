@@ -88,7 +88,7 @@ func test_la_caja_se_completa_recien_con_el_ultimo_del_dia() -> void:  # AC-STK-
 
 func test_los_faltantes_son_los_mismos_que_dice_el_inventario() -> void:
 	# Se compara contra `Inventario.faltantes()` y no contra una cuenta propia: el umbral de
-	# reposición es del 005, y copiarlo acá daría dos listas que se separan sin que nada avise.
+	# reposición es del inventario, y copiarlo acá daría dos listas que se separan sin que nada avise.
 	var inventario := _inventario()
 	var caja := CajaRegistradora.new(inventario, _del_dia())
 	var del_inventario := inventario.faltantes()

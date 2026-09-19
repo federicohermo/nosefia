@@ -14,7 +14,7 @@ const CARGA := "res://src/sistemas/tareas/carga_de_la_caja.gd"
 const PATRONES_DEL_CUPO := "\\b8\\b|cupo"
 
 ## Lo que ninguno de los tres archivos de este spec puede nombrar: la caja es dónde viaja la
-## mercadería, no cuánta hay. Mover del depósito a la góndola es del 008.
+## mercadería, no cuánta hay. Mover del depósito a la góndola es de reponer.
 const PATRONES_DEL_STOCK := ["Inventario", "ingresar", "mover"]
 
 const ARCHIVOS_DEL_SPEC := [
@@ -69,7 +69,7 @@ func test_el_nodo_no_lleva_el_cupo_escrito_adentro() -> void:
 
 
 func test_ningun_archivo_de_este_spec_toca_el_stock() -> void:
-	# La caja es el contenedor que viaja; el estante es el destino, y es del 008. Sin esta
+	# La caja es el contenedor que viaja; el estante es el destino, y es de reponer. Sin esta
 	# frontera los dos specs terminan moviendo unidades y ninguno sabe cuál las movió.
 	for ruta: String in ARCHIVOS_DEL_SPEC:
 		var texto := FileAccess.get_file_as_string(ruta)

@@ -34,7 +34,7 @@ const CABLEADOS_DE_LA_RAIZ := ["_hud", "_reloj", "_ciclo"]
 ## La malla que trae la cáscara del edificio. Los rayos de acá miran sólo contra ella.
 const CASCARA_DEL_EDIFICIO := "almacen"
 
-## Dónde estaba el hueco de la ventanilla en el blockout que el spec 028 reemplazó. Está acá para
+## Dónde estaba el hueco de la ventanilla en el blockout que el modelo reemplazó. Está acá para
 ## que el caso que ejerce la regla tenga un punto que **no** es un hueco, y que sea uno real en vez
 ## de inventado: el marcador estuvo cuatro commits en esta posición —aire en un pasillo entre las
 ## góndolas y los estantes— con las 23 suites en verde.
@@ -71,7 +71,7 @@ const CUADROS_DE_FISICA := 30
 ## **El discriminador es el `owner` y no la profundidad.** Un recorrido que contara niveles diría
 ## que `Jugador/Camara` viola la regla, y no la viola: le llega instanciado de `jugador.tscn`. En
 ## una sub-escena instanciada el `owner` de cada hijo es la raíz de la sub-escena, no la de
-## afuera —medido en el spec 023—, así que `owner == raiz` distingue exactamente los nodos que la
+## afuera —está medido—, así que `owner == raiz` distingue exactamente los nodos que la
 ## escena declara ella misma.
 static func _violaciones_de_cableado(raiz: Node) -> Array[String]:
 	var violaciones: Array[String] = []
@@ -184,8 +184,8 @@ func _espacio_de_la_estructura(almacen: Node3D) -> PhysicsDirectSpaceState3D:
 
 
 func test_el_hueco_de_la_ventanilla_cae_en_la_ventanilla_del_modelo() -> void:
-	# El marcador es el contrato con el spec 013, y hasta el 028 lo único que se afirmaba de él era
-	# que existía. Con eso alcanzó para que estuviera cuatro commits adentro de un pasillo.
+	# El marcador es el contrato con la ventanilla, y durante un tiempo lo único que se afirmaba
+	# de él era que existía. Con eso alcanzó para que estuviera cuatro commits adentro de un pasillo.
 	var almacen := _almacen()
 	var punto: Vector3 = (almacen.get_node("Estructura/HuecoDeLaVentanilla") as Node3D).position
 	var espacio: PhysicsDirectSpaceState3D = await _espacio_de_la_estructura(almacen)
@@ -269,7 +269,7 @@ func test_todo_nodo_propio_del_almacen_cuelga_de_la_raiz() -> void:
 
 func test_la_regla_de_cableado_sabe_ver_un_nodo_colgado_de_otro() -> void:
 	# El caso de arriba recorre un árbol que ya cumple, así que pasaría igual con una recorrida
-	# rota. Éste le arma el defecto que el spec 014 planeaba —un puesto con sus hijos escritos
+	# rota. Éste le arma el defecto —un puesto con sus hijos escritos
 	# dentro de la escena raíz— y afirma que lo nombra. Queda en el archivo a propósito: meter el
 	# nodo a mano en `almacen.tscn`, mirar el rojo y sacarlo no deja rastro y no lo repite nadie.
 	var raiz: Node3D = auto_free(Node3D.new())

@@ -8,7 +8,7 @@ extends GdUnitTestSuite
 const LIMPIADOR := "res://src/sistemas/tareas/limpiador.gd"
 
 ## Los cuatro `.gd` de este spec más los dos de la cáscara. Ninguno puede nombrar `consumir`: el
-## costo de `LIMPIAR` es del 001 y lo descuenta el reloj del 007, una sola vez.
+## costo de `LIMPIAR` es del turno y lo descuenta el reloj, una sola vez.
 const ARCHIVOS_DEL_SPEC := [
 	"res://src/dominio/almacen/reglas_de_la_limpieza.gd",
 	"res://src/dominio/almacen/mancha.gd",

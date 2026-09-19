@@ -1,7 +1,7 @@
 ## El grupo dibuja cada cuerpo del piso una sola vez, y en el lugar donde el motor lo dibuja.
 ##
 ## La referencia es `get_global_transform_interpolated()` y no el `transform` físico. Con la
-## interpolación del spec 044 encendida, el motor dibuja entre el paso anterior y el actual, así
+## interpolación física encendida, el motor dibuja entre el paso anterior y el actual, así
 ## que los dos difieren mientras el cuerpo cae. Comparar contra el físico haría insatisfacible el
 ## criterio.
 ##

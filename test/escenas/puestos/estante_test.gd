@@ -79,7 +79,7 @@ func test_el_estante_contesta_el_contrato_de_interaccion() -> void:
 	var estante := _estante()
 	assert_bool(estante.has_method(ReglasDeLosObjetos.METODO_INTERACTUAR)).is_true()
 	assert_bool(estante.is_in_group(ReglasDelJugador.GRUPO_INTERACTUABLE)).is_true()
-	# Del estante no se levanta nada: si contestara un objeto, el clic del 006 lo agarraría en
+	# Del estante no se levanta nada: si contestara un objeto, el clic de agarrar lo agarraría en
 	# vez de colocar una unidad.
 	assert_object(estante.call(ReglasDeLosObjetos.METODO_INTERACTUAR)).is_null()
 

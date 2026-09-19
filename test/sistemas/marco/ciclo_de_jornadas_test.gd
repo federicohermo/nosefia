@@ -65,7 +65,7 @@ func test_la_partida_entera_cierra_cada_jornada_incluida_la_ultima() -> void:
 
 func test_sobre_una_partida_terminada_no_se_abre_nada_ni_se_emite_nada() -> void:
 	# El despido corta la partida a la segunda noche grave, y desde ahí el ciclo es una puerta
-	# cerrada: sin esto, la pantalla del 017 reabriría la jornada 3 de una partida terminada.
+	# cerrada: sin esto, la pantalla de cierre reabriría la jornada 3 de una partida terminada.
 	var reloj: RelojDelTurno = auto_free(RelojDelTurno.new())
 	var ciclo := _ciclo_arrancado(Partida.nueva(), reloj)
 	_agotar_la_noche(reloj)
