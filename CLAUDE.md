@@ -49,6 +49,15 @@ gdformat src test                               # arregla el formato, no sólo l
 
 Detalle: [verificación](./docs/guides/verificacion.md).
 
+## El índice del código
+
+**`nosefia-index`, registrado en `.mcp.json`.** Consultarlo **antes** de un `Grep` o un `Read`
+para ubicar un símbolo, ver quién lo usa, saber qué se mueve si lo tocás o qué declara una
+escena. `mapa_del_sistema` es la primera consulta de cualquier tarea.
+
+No hay nada que instalar ni que regenerar: no tiene dependencias y lee el árbol en cada
+respuesta. Las diez herramientas y lo que **no** cubren, en [docs/guides/mcp.md](./docs/guides/mcp.md).
+
 ## Arquitectura
 
 ```text
@@ -155,6 +164,7 @@ Primero el contrato, después el issue, después el código. Son tres decisiones
 | [TDD sin cobertura](./docs/guides/tdd.md) | Qué reemplaza al umbral y qué se pierde |
 | [Convenciones](./docs/guides/conventions.md) | El porqué de cada regla, el lenguaje y el glosario |
 | [Rendimiento](./docs/guides/rendimiento.md) | Cómo se mide, y contra qué números |
+| [El índice MCP](./docs/guides/mcp.md) | Las diez herramientas de `nosefia-index`, y qué no cubren |
 | [Troubleshooting](./docs/guides/troubleshooting.md) | Errores reales ya pisados acá |
 | [Ramas](./docs/infra/ramas.md) | `staging` integra, `main` entrega, y qué exige el hook |
 | [Despliegue](./docs/infra/despliegue.md) | Cada push a `main` deja una web jugable |
