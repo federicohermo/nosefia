@@ -1,6 +1,6 @@
 extends GdUnitTestSuite
 
-const MODELO := preload("res://assets/SEPT_JUEGOS_PROTOTIPO.glb")
+const MODELO := preload("res://assets/models/SEPT_JUEGOS_PROTOTIPO.glb")
 const CONTENIDO := preload("res://src/escenas/puestos/contenido_del_estante.tscn")
 const ESTRUCTURA := preload("res://src/escenas/puestos/estructura_del_almacen.tscn")
 

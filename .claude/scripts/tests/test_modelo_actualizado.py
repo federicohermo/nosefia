@@ -17,7 +17,7 @@ JPEG = b"\xff\xd8\xff"
 class ModeloActualizado(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
-        cls.glb = (RAIZ / "assets/SEPT_JUEGOS_PROTOTIPO.glb").read_bytes()
+        cls.glb = (RAIZ / "assets/models/SEPT_JUEGOS_PROTOTIPO.glb").read_bytes()
         longitud = struct.unpack_from("<I", cls.glb, 12)[0]
         cls.modelo = json.loads(cls.glb[20 : 20 + longitud])
         cls.bin_inicio = 20 + longitud + 8
@@ -41,7 +41,7 @@ class ModeloActualizado(unittest.TestCase):
         # unidad**, porque `reposicion_manual.gd` toma la superficie 0 de cada grupo como el
         # modelo de una y apila `cupo()` copias separadas por su AABB; con la fila entera, dos
         # productos vecinos se pisan y el test de apoyos del modelo da rojo.
-        blend = (RAIZ / "assets/SEPT_JUEGOS_PROTOTIPO.blend").read_bytes()
+        blend = (RAIZ / "assets/models/SEPT_JUEGOS_PROTOTIPO.blend").read_bytes()
         self.assertEqual(
             hashlib.sha256(blend).hexdigest(),
             "d07b308d1daf75d151b7f407b7014c27bb8c7a021a27f97d308fd0233f4ffe0a",
