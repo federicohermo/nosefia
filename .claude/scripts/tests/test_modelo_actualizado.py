@@ -70,17 +70,25 @@ class ModeloActualizado(unittest.TestCase):
         #
         # **Coracola se repone una bandeja mas arriba**, a 1,29 y no a 0,79.
         #
+        # **Y despues se junto todo.** Entre dos productos distintos habia diez centimetros y
+        # entre dos unidades del mismo, uno: en el estante eso no se lee como dos marcas sino
+        # como mercaderia faltante. Ahora la separacion es una sola, y las tandas de los
+        # extremos se estiran hasta el borde de la chapa. Quedan 5,65 m de chapa libre en
+        # treinta bandejas, repartidos en las dos puntas de cada una: menos de lo que mide un
+        # producto, que es lo mas lleno que se puede dejar sin inventar una unidad partida.
+        #
+
 
         # Los seis productos armados del troquel entraron chicos —el troquel da la proporcion y
         # no el tamano— y se agrandaron un cuarto, salvo las Macumbas que ya venian agrandadas.
         blend = (RAIZ / "assets/models/SEPT_JUEGOS_PROTOTIPO.blend").read_bytes()
         self.assertEqual(
             hashlib.sha256(blend).hexdigest(),
-            "8de6ce91620854d9fac9015cb808de20aded852168b580b1ab4fb4b8ce28d01c",
+            "70a2f858009dd1d135412e0d498a03eddb6e6eb8492740957a2b556fbd0bc7fd",
         )
         self.assertEqual(
             hashlib.sha256(self.glb).hexdigest(),
-            "8e68d35521099396d606093e38615a4499f39db8c872dfaa25bd4d506e1306ba",
+            "70019ddc20fb9cb2992de7d35b170cbbf001b5b3153f16e8401a960ef42febdc",
         )
 
 
