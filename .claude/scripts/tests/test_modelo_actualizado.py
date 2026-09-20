@@ -41,20 +41,22 @@ class ModeloActualizado(unittest.TestCase):
         #
         # **El 2026-09-19 entro el modelo nuevo**, con la gondola llena: 177 copias linkeadas
         # pasaron a la coleccion `guia`, que no se exporta y que
-        # `src/escenas/puestos/disposicion_de_la_gondola.tres` reproduce copia por copia.
+        # `src/escenas/puestos/disposicion_de_la_gondola.tres` reproduce copia por copia. Ese
+        # mismo dia entraron los seis productos que tenian textura y no tenian modelo, armados
+        # del troquel de su propia textura: tres cajas, dos bolsas y un cilindro.
         blend = (RAIZ / "assets/models/SEPT_JUEGOS_PROTOTIPO.blend").read_bytes()
         self.assertEqual(
             hashlib.sha256(blend).hexdigest(),
-            "dde843f5c4b0c9666ec78e41eb7aee5a48a5a3fd1b6505ca1757c2a2a8d6d892",
+            "3ea268168afc70942f08be0bfbdc47f80bf29c3bfc2c6ea7b615d0a90d14ba72",
         )
         self.assertEqual(
             hashlib.sha256(self.glb).hexdigest(),
-            "8cb81202e4d1610dfacd5585bfc32175c398c034dc62f20e5903710182b127ff",
+            "374bbff8cb9704a5ed66683f18802a7bd4c323607d311f2ff54f3f3320a800e9",
         )
 
     def test_las_mallas_conservan_uv_y_materiales(self):
-        self.assertEqual(len(self.modelo["meshes"]), 59)
-        self.assertEqual(len(self.modelo["materials"]), 36)
+        self.assertEqual(len(self.modelo["meshes"]), 65)
+        self.assertEqual(len(self.modelo["materials"]), 42)
         for malla in self.modelo["meshes"]:
             for parte in malla["primitives"]:
                 with self.subTest(malla=malla["name"]):
@@ -68,7 +70,7 @@ class ModeloActualizado(unittest.TestCase):
 
     def test_las_texturas_resuelven_dentro_del_glb(self):
         imagenes = self.modelo.get("images", [])
-        self.assertEqual(len(imagenes), 30)
+        self.assertEqual(len(imagenes), 36)
         for textura in self.modelo["textures"]:
             self.assertLess(textura["source"], len(imagenes))
         for imagen in imagenes:
