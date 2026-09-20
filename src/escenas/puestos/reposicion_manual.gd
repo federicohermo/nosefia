@@ -92,15 +92,13 @@ func preparar() -> void:
 		var modelo := _modelos[producto.id]
 		vista.mesh = modelo
 		vista.position = _pie_del_fantasma(modelo)
-		vista.material_override = _fantasma(modelo, Color.WHITE, 0.08, 0.30)
+		vista.material_override = _fantasma(modelo, 0.04, 0.18)
 		casillero.add_child(vista)
 		casillero.mallas = [vista]
 		# **El foco va de `material_overlay` y el fantasma de `material_override`**, que es lo
-		# que deja los dos encendidos a la vez: enfocado, el rojo se suma sobre el envase en
-		# vez de reemplazarlo, y el jugador sigue viendo qué producto va ahí.
-		casillero.material_de_foco = _fantasma(
-			modelo, IndicacionDelFoco.COLOR_DE_REPOSICION, 0.30, 0.70
-		)
+		# que deja los dos encendidos a la vez. Enfocado sube la opacidad y nada más: lo que
+		# distingue el hueco señalado del hueco a secas es cuánto se ve, no de qué color es.
+		casillero.material_de_foco = _fantasma(modelo, 0.20, 0.45)
 		casillero.colocacion_pedida.connect(pedir_colocar)
 		_zonas.append(casillero)
 	jugador.uso_pedido.connect(retirar_de_la_caja)
@@ -584,13 +582,12 @@ func _preparar_grupos() -> void:
 ##
 ## Se arma uno por casillero y no uno compartido porque cada uno lleva **su** textura: lo que
 ## indica no es sólo el lugar, es qué producto va en ese lugar.
-func _fantasma(modelo: Mesh, tinte: Color, minima: float, maxima: float) -> ShaderMaterial:
+func _fantasma(modelo: Mesh, minima: float, maxima: float) -> ShaderMaterial:
 	var material := ShaderMaterial.new()
 	material.shader = FANTASMA
 	var base := modelo.surface_get_material(0) as BaseMaterial3D
 	if base != null:
 		material.set_shader_parameter("textura", base.albedo_texture)
-	material.set_shader_parameter("tinte", tinte)
 	material.set_shader_parameter("opacidad_minima", minima)
 	material.set_shader_parameter("opacidad_maxima", maxima)
 	return material

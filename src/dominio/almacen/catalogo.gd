@@ -34,6 +34,17 @@ const FILAS := {
 	Producto.Id.CHISITOS: ["Chisitos", 700, 8],
 	Producto.Id.OREMOS: ["Oremos", 1000, 8],
 	Producto.Id.PEPITOS: ["Pepitos", 950, 8],
+	Producto.Id.SALADIK: ["Saladik", 850, 8],
+	Producto.Id.UAKAS: ["Uakas", 1300, 8],
+	Producto.Id.CORACOLA: ["Coracola", 1400, 8],
+	Producto.Id.FROTLUPS: ["Frotlups", 1600, 8],
+	Producto.Id.MAROLINI: ["Marolini", 1050, 8],
+	Producto.Id.AMARGADITO: ["Amargadito", 3200, 8],
+	Producto.Id.CINDOLOR: ["Cindolor", 1900, 8],
+	Producto.Id.FLINPUF: ["Flinpuf", 600, 8],
+	Producto.Id.DONSATURADOS: ["Donsaturados", 1150, 8],
+	Producto.Id.PETISAS: ["Petisas", 980, 8],
+	Producto.Id.MACUMBAS: ["Macumbas", 1250, 8],
 }
 
 

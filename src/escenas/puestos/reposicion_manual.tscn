@@ -7,6 +7,6 @@
 [node name="ReposicionManual" type="Node3D"]
 script = ExtResource("script")
 disposicion = ExtResource("disposicion")
-giros_del_frente = Array[float]([90.0, 0.0, 270.0, 90.0, 180.0, 0.0, 270.0, 270.0, 270.0, 180.0, 270.0, 270.0])
+giros_del_frente = Array[float]([90.0, 0.0, 270.0, 90.0, 180.0, 0.0, 270.0, 270.0, 270.0, 180.0, 270.0, 270.0, 270.0, 270.0, 270.0, 90.0, 270.0, 270.0, 270.0, 270.0, 270.0, 270.0, 270.0])
 
 [node name="Guia" parent="." instance=ExtResource("guia")]

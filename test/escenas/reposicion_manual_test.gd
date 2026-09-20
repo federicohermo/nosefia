@@ -328,19 +328,31 @@ func test_el_frente_se_conserva_al_examinar_y_volver_a_agarrar() -> void:
 	# o sea 180° girados. Con el giro de la mano también al revés, las dos mitades se cancelaban
 	# y este caso pasaba en verde mientras el jugador agarraba los productos dados vuelta.
 	var frentes := [
-		Vector3.LEFT,
-		Vector3.BACK,
-		Vector3.RIGHT,
-		Vector3.LEFT,
-		Vector3.FORWARD,
-		Vector3.BACK,
-		Vector3.RIGHT,
-		Vector3.RIGHT,
-		Vector3.RIGHT,
-		Vector3.FORWARD,
-		Vector3.RIGHT,
-		Vector3.RIGHT
+		Vector3.LEFT,  # Actroncito
+		Vector3.BACK,  # Durextra
+		Vector3.RIGHT,  # Burbaloo
+		Vector3.LEFT,  # Zucarachas
+		Vector3.FORWARD,  # Laysntt
+		Vector3.BACK,  # Malbardo
+		Vector3.RIGHT,  # Prongles
+		Vector3.RIGHT,  # Jorgillo
+		Vector3.RIGHT,  # Arvejas
+		Vector3.FORWARD,  # Chisitos
+		Vector3.RIGHT,  # Oremos
+		Vector3.RIGHT,  # Pepitos
+		Vector3.RIGHT,  # Saladik
+		Vector3.RIGHT,  # Uakas
+		Vector3.RIGHT,  # Coracola
+		Vector3.LEFT,  # Frotlups
+		Vector3.RIGHT,  # Marolini
+		Vector3.RIGHT,  # Amargadito
+		Vector3.RIGHT,  # Cindolor
+		Vector3.RIGHT,  # Flinpuf
+		Vector3.RIGHT,  # Donsaturados
+		Vector3.RIGHT,  # Petisas
+		Vector3.RIGHT  # Macumbas
 	]
+	assert_int(frentes.size()).is_equal(Catalogo.todos().size())
 	for producto in Catalogo.todos():
 		_sacar_de_la_caja(jugador, almacen.get("_cajas_de_productos")[producto.id])
 		var unidad: Node3D = agarre.punto_de_producto.get_child(0)
@@ -369,19 +381,22 @@ func test_el_frente_se_conserva_al_examinar_y_volver_a_agarrar() -> void:
 		assert_float(repuesta.basis.determinant()).is_equal_approx(1.0, 0.001)
 
 
-func test_actroncito_prongles_y_jorgillo_se_reponen_con_foco_y_clic_reales() -> void:
+func test_actroncito_durextra_y_oremos_se_reponen_con_foco_y_clic_reales() -> void:
 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
 	add_child(almacen)
 	var jugador: Node3D = almacen.get("_jugador")
 	jugador.set_physics_process(false)
-	for id in [Producto.Id.ACTRONCITO, Producto.Id.PRONGLES, Producto.Id.JORGILLO]:
+	# Los tres viven en el mismo rack y en bandejas distintas: uno arriba en caja grande y dos
+	# abajo en caja chica. Es el reparto que el depósito tiene desde que hay dos tamaños, y lo
+	# que el caso ejerce es que ninguna de las dos alturas deje la caja fuera del alcance.
+	for id in [Producto.Id.ACTRONCITO, Producto.Id.DUREXTRA, Producto.Id.OREMOS]:
 		var caja: Node3D = almacen.get("_cajas_de_productos")[id]
 		var vista: MeshInstance3D = caja.get_node("Malla")
 		var centro := vista.global_transform * vista.mesh.get_aabb().get_center()
-		# Se mira desde +X y no desde +Z desde el 043: las tres cajas de este caso quedaron
-		# contra la pared izquierda del depósito —dos en el piso y una en el estante de arriba—,
-		# y desde +Z la góndola se interpone. El campo de interacción pide un impacto real sobre
-		# el cuerpo, así que con la vista tapada la caja deja de ser candidata.
+		# Se mira desde +X y no desde +Z desde el 043: las tres cajas de este caso están contra
+		# la pared izquierda del depósito, y desde +Z la góndola se interpone. El campo de
+		# interacción pide un impacto real sobre el cuerpo, así que con la vista tapada la caja
+		# deja de ser candidata.
 		await _mirar_foco(jugador, centro + Vector3(1.3, 0.7, 0), centro)
 		assert_object(jugador.get("_enfocado")).is_same(caja)
 		_sacar_de_la_caja(jugador, caja)
@@ -420,7 +435,13 @@ func test_actroncito_prongles_y_jorgillo_se_reponen_con_foco_y_clic_reales() -> 
 func test_no_hay_productos_3d_iniciales_fuera_del_inventario() -> void:
 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
 	add_child(almacen)
-	for ruta in ["oremos3", "alfajorescaja2", "pepitos", "oremos", "oremos2"]:
+	for ruta in [
+		"gondolanueva2/oremos3",
+		"gondolanueva/alfajorescaja2",
+		"gondolanueva/pepitos",
+		"gondolanueva/oremos",
+		"gondolanueva/oremos2",
+	]:
 		var modelo: Node3D = almacen.get_node("Estructura/" + ruta)
 		assert_bool(modelo.is_visible_in_tree()).is_false()
 		for cuerpo: PhysicsBody3D in modelo.find_children("*", "PhysicsBody3D", true, false):

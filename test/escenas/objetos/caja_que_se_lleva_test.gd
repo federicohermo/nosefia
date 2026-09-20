@@ -10,7 +10,10 @@ const ESTANTE_DEL_DEPOSITO := "Estructura/gondola_deposito01/StaticBody3D"
 ## el hueco entre dos paneles es de los pocos lugares donde la caja entra de canto.
 const GONDOLA_DEL_PASILLO := "Estructura/gondolanueva/StaticBody3D"
 
-## Media caja, en metros: lo que separa el centro de una caja apoyada de lo que la sostiene.
+## Media caja grande, en metros: lo que separa el centro de una caja apoyada de lo que la
+## sostiene. **Hay dos tamaños**: los productos que entran en poco volumen llevan una chica, que
+## es la única que cabe en las bandejas de abajo del depósito. Los casos de acá apilan y sueltan
+## sólo las grandes, que es donde este número vale.
 const MEDIA_CAJA := 0.3037
 
 ## Desde dónde se camina hacia la pared del depósito.
@@ -82,6 +85,19 @@ const HASTA_EL_PISO := 4.0
 ## depósito, el peor caso real da 0,78; el frente de la madera, que es lo que no debe pasar, da
 ## 1,46.
 const CAIDA_DESDE_LO_APUNTADO := 1.14
+
+
+## Las cajas del tamaño grande.
+##
+## **Se filtra por la escala y no por una lista de productos.** Cuál lleva cuál sale de medir la
+## unidad en el modelo, así que una lista acá quedaría vieja el día que un envase cambie de
+## tamaño, y el síntoma sería una pila de cajas desparejas que se acomoda sola.
+func _las_grandes(cajas: Array) -> Array[Node3D]:
+	var grandes: Array[Node3D] = []
+	for caja: Node3D in cajas:
+		if (caja.get_node("Cuerpo") as Node3D).scale.x >= MEDIA_CAJA:
+			grandes.append(caja)
+	return grandes
 
 
 ## Le pone el foco al objetivo y le manda la acción, que es lo que hace el clic de verdad.
@@ -300,7 +316,10 @@ func test_la_caja_soltada_se_acomoda_adentro_de_su_apoyo() -> void:
 	await get_tree().physics_frame
 	var jugador: CharacterBody3D = almacen.get("_jugador")
 	var caja: Node3D = almacen.get("_cajas_de_productos")[Producto.Id.LAYSNTT]
-	var debajo: Node3D = almacen.get("_cajas_de_productos")[Producto.Id.MALBARDO]
+	# **Las dos son del tamaño grande.** El caso mide que una caja quede centrada en la tapa de
+	# otra, y una grande sobre una chica cuelga de las cuatro esquinas: lo que se pondría en rojo
+	# sería el enunciado, no el puesto.
+	var debajo: Node3D = almacen.get("_cajas_de_productos")[Producto.Id.SALADIK]
 	_accion(jugador, caja, ReglasDeLosObjetos.ACCION_AGARRAR)
 	# Las cajas del piso están contra la pared: se llega a ellas desde el pasillo, o sea -x.
 	await _caminar_hasta(almacen, _limites_de(debajo), Vector3.LEFT)
@@ -608,11 +627,11 @@ func test_sacar_una_caja_de_la_pila_hace_caer_las_de_arriba() -> void:
 	add_child(almacen)
 	await get_tree().physics_frame
 	var jugador: CharacterBody3D = almacen.get("_jugador")
-	var cajas: Array = almacen.get("_cajas_de_productos")
-	assert_int(cajas.size()).is_greater_equal(PISOS_DE_LA_PILA)
+	var grandes := _las_grandes(almacen.get("_cajas_de_productos"))
+	assert_int(grandes.size()).is_greater_equal(PISOS_DE_LA_PILA)
 	var pila: Array[Node3D] = []
 	for piso in PISOS_DE_LA_PILA:
-		pila.append(cajas[piso])
+		pila.append(grandes[piso])
 	for piso in pila.size():
 		pila[piso].global_position = (
 			PISO_LIBRE_DEL_DEPOSITO + Vector3.UP * MEDIA_CAJA * (1 + 2 * piso)
@@ -706,13 +725,16 @@ func test_la_caja_del_piso_se_arrastra_en_vez_de_tapar_el_paso() -> void:
 	add_child(almacen)
 	await get_tree().physics_frame
 	var jugador: CharacterBody3D = almacen.get("_jugador")
-	var caja: Node3D = almacen.get("_cajas_de_productos")[Producto.Id.LAYSNTT]
+	# **Se empuja en el piso libre del depósito y no delante de donde el jugador aparece.** Ahí
+	# arranca pegado a la góndola del pasillo, así que el empujón termina contra el mueble y lo
+	# que se mediría sería el choque y no el arrastre.
+	var caja: Node3D = almacen.get("_cajas_de_productos")[Producto.Id.CHISITOS]
+	jugador.global_position = PISO_LIBRE_DEL_DEPOSITO + Vector3(0.0, 0.01, 1.2)
+	jugador.rotation.y = 0.0
+	await get_tree().physics_frame
 	var adelante := -jugador.global_basis.z
 	caja.global_position = (
-		jugador.global_position
-		+ adelante
-		- Vector3.UP * jugador.global_position.y
-		+ Vector3.UP * caja.global_position.y
+		PISO_LIBRE_DEL_DEPOSITO + Vector3.UP * (caja.global_position.y - PISO_LIBRE_DEL_DEPOSITO.y)
 	)
 	var partida := caja.global_position
 	var giro := caja.global_basis

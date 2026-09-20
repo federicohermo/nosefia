@@ -44,14 +44,19 @@ class ModeloActualizado(unittest.TestCase):
         # `src/escenas/puestos/disposicion_de_la_gondola.tres` reproduce copia por copia. Ese
         # mismo dia entraron los seis productos que tenian textura y no tenian modelo, armados
         # del troquel de su propia textura: tres cajas, dos bolsas y un cilindro.
+        #
+        # **El 2026-09-20 se acomodo el local.** Todo lo que el jugador repone quedo en una
+        # bandeja del medio o en la heladera, las dos gondolas del fondo se llenaron y los seis
+        # productos nuevos entraron al catalogo. El `.glb` gano siete objetos y ninguna malla:
+        # las tandas duplicadas y las de relleno comparten la malla de la que salieron.
         blend = (RAIZ / "assets/models/SEPT_JUEGOS_PROTOTIPO.blend").read_bytes()
         self.assertEqual(
             hashlib.sha256(blend).hexdigest(),
-            "2bca16891043741d0c2897368dd4a6cae59c742f42bb845f18925136f06625d3",
+            "dc265cb12d86a5b9aa75d82833cc9c2719472dd48168b19f05a9de4f33167643",
         )
         self.assertEqual(
             hashlib.sha256(self.glb).hexdigest(),
-            "b005307b875bfec4f72dd3d87fde9ad2c67663804da6439dd51f59c48e30e6f0",
+            "27f075c8b2d0343795a48479cded309078ded8c648460bc80b7bf77605715cf5",
         )
 
     def test_las_mallas_conservan_uv_y_materiales(self):

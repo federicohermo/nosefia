@@ -20,7 +20,7 @@ _reloj_de_pared = NodePath("Estructura/RelojDePared")
 _repositor = NodePath("Servicios/Repositor")
 _carga = NodePath("Servicios/CargaDeLaCaja")
 _estante = NodePath("Estructura/gondolanueva/StaticBody3D")
-_cajas_de_productos = [NodePath("Objetos/CajaDeActroncito"), NodePath("Objetos/CajaDeDurextra"), NodePath("Objetos/CajaDeBurbaloo"), NodePath("Objetos/CajaDeZucarachas"), NodePath("Objetos/CajaDeLaysntt"), NodePath("Objetos/CajaDeMalbardo"), NodePath("Objetos/CajaDeProngles"), NodePath("Objetos/CajaDeJorgillo"), NodePath("Objetos/CajaDeArvejas"), NodePath("Objetos/CajaDeChisitos"), NodePath("Objetos/CajaDeOremos"), NodePath("Objetos/CajaDePepitos")]
+_cajas_de_productos = [NodePath("Objetos/CajaDeActroncito"), NodePath("Objetos/CajaDeDurextra"), NodePath("Objetos/CajaDeBurbaloo"), NodePath("Objetos/CajaDeZucarachas"), NodePath("Objetos/CajaDeLaysntt"), NodePath("Objetos/CajaDeMalbardo"), NodePath("Objetos/CajaDeProngles"), NodePath("Objetos/CajaDeJorgillo"), NodePath("Objetos/CajaDeArvejas"), NodePath("Objetos/CajaDeChisitos"), NodePath("Objetos/CajaDeOremos"), NodePath("Objetos/CajaDePepitos"), NodePath("Objetos/CajaDeSaladik"), NodePath("Objetos/CajaDeUakas"), NodePath("Objetos/CajaDeCoracola"), NodePath("Objetos/CajaDeFrotlups"), NodePath("Objetos/CajaDeMarolini"), NodePath("Objetos/CajaDeAmargadito"), NodePath("Objetos/CajaDeCindolor"), NodePath("Objetos/CajaDeFlinpuf"), NodePath("Objetos/CajaDeDonsaturados"), NodePath("Objetos/CajaDePetisas"), NodePath("Objetos/CajaDeMacumbas")]
 _caja_de_traslado = NodePath("Objetos/CajaDeTraslado")
 _jugador = NodePath("Jugador")
 _atenciones = NodePath("Servicios/Atenciones")
@@ -80,50 +80,12 @@ panel = NodePath("../../Interfaz/PanelDeLaVentanilla")
 [node name="ZonaDeDescarte" parent="Objetos" index="2" node_paths=PackedStringArray("recolector")]
 recolector = NodePath("../../Servicios/Recolector")
 
-[node name="CajaDeActroncito" parent="Objetos" index="6"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.4, 1.9077, -11.79)
-
-[node name="CajaDeDurextra" parent="Objetos" index="7"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.4, 1.9077, -11.09)
-
-[node name="CajaDeBurbaloo" parent="Objetos" index="8"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7.577, 1.9077, -11.79)
-
-[node name="CajaDeZucarachas" parent="Objetos" index="9"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7.577, 1.9077, -11.09)
-
-[node name="CajaDeLaysntt" parent="Objetos" index="10"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.3, 0.4059, -10.6)
-
-[node name="CajaDeMalbardo" parent="Objetos" index="11"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.3, 0.4059, -11.3)
-
-[node name="CajaDeProngles" parent="Objetos" index="12"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.3, 0.4059, -12)
-
-[node name="CajaDeJorgillo" parent="Objetos" index="13"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.3, 0.4059, -12.7)
-
-[node name="CajaDeArvejas" parent="Objetos" index="14"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.1, 1.9077, -14.115)
-
-[node name="CajaDeChisitos" parent="Objetos" index="15"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.75, 1.9077, -14.115)
-
-[node name="CajaDeOremos" parent="Objetos" index="16"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.3, 0.4059, -13.4)
-
-[node name="CajaDePepitos" parent="Objetos" index="17"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.3, 0.4059, -14.1)
-
 [node name="LimpiezaDelAlmacen" parent="." unique_id=2007323218 node_paths=PackedStringArray("jugador", "limpiador") instance=ExtResource("21_limpieza")]
 jugador = NodePath("../Jugador")
 limpiador = NodePath("../Servicios/Limpiador")
 
 [node name="Jugador" parent="." unique_id=2126157413 instance=ExtResource("1_jugador")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.112, 1.5)
-
-
 
 [editable path="Estructura"]
 [editable path="Objetos"]
