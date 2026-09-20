@@ -106,10 +106,21 @@ func _inject_autoloads() -> void:
 
 		var existing := str(ProjectSettings.get_setting(key))
 		if existing == wanted or existing == script:
-			# Left behind by a previous session that crashed or was killed
-			# before _exit_tree ran. Reclaim it, or it stays in project.godot
-			# forever and logs "Can't autoload" once the addon is gone.
-			_session_injected_autoloads.append(key)
+			# **Already ours, so leave it and do NOT register it for removal.** It may
+			# have been left by a session that crashed, or it may be committed in the
+			# project on purpose. Reclaiming it meant `_exit_tree` deleted it, and then
+			# the next play ran a game with no MCP services: `get_game_screenshot` and
+			# every inspector command time out against a game that is running fine, and
+			# the error blames the autoload without saying who removed it. Measured
+			# 2026-09-19 — the editor reported all three while `project.godot` had no
+			# `[autoload]` section at all, because `has_setting()` answers from the
+			# editor's in-memory settings and the played scene is a separate process
+			# that reads the file.
+			#
+			# The cost is the one this used to avoid: uninstall the addon and Godot logs
+			# "Can't autoload" until the entry is deleted by hand. That is a visible,
+			# one-line cleanup; a service that silently does nothing is not.
+			changed = true
 		else:
 			# A different script owns this name. Injecting would clobber the
 			# project's own autoload, and not injecting leaves the matching
