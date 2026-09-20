@@ -464,9 +464,12 @@ func test_cada_unidad_ocupa_un_lugar_distinto_y_la_marca_indica_su_base() -> voi
 		for indice in producto.umbral:
 			_sacar_de_la_caja(jugador, almacen.get("_cajas_de_productos")[producto.id])
 			var unidad: Node3D = jugador.get_node("Camara/PuntoDeProducto").get_child(0)
+			# **La marca es el fantasma del envase, no un rectángulo en el piso.** Lo que tiene
+			# que coincidir con la unidad repuesta es su base: el fantasma se para donde la
+			# unidad se va a parar, y por eso el apoyo sale de su caja y no de su origen.
 			var marca: MeshInstance3D = zona.mallas[0]
-			var apoyo := marca.global_position
-			assert_float(absf(marca.global_basis.z.dot(Vector3.UP))).is_equal_approx(1.0, 0.001)
+			var sombra: AABB = marca.global_transform * marca.mesh.get_aabb()
+			var apoyo := Vector3(sombra.get_center().x, sombra.position.y, sombra.get_center().z)
 			_accion(jugador, zona)
 			var vista: MeshInstance3D = unidad.get_node("Malla")
 			assert_bool(vista.scale.is_equal_approx(Vector3.ONE)).is_true()
@@ -478,7 +481,7 @@ func test_cada_unidad_ocupa_un_lugar_distinto_y_la_marca_indica_su_base() -> voi
 			var limites := transformacion * grupo.multimesh.mesh.get_aabb()
 			assert_float(limites.get_center().x).is_equal_approx(apoyo.x, 0.001)
 			assert_float(limites.get_center().z).is_equal_approx(apoyo.z, 0.001)
-			assert_float(limites.position.y).is_equal_approx(apoyo.y - 0.005, 0.001)
+			assert_float(limites.position.y).is_equal_approx(apoyo.y, 0.001)
 			# **Se compara el centro y no el volumen.** Las unidades ya no las separa el juego:
 			# las posiciona el modelo, y ahí están apoyadas una contra otra, así que sus cajas
 			# se tocan. Lo que no puede repetirse es el lugar: dos unidades en el mismo punto

@@ -6,7 +6,7 @@ const GrupoDelPiso := preload("res://src/escenas/objetos/grupo_del_piso.gd")
 const CajaDelDeposito := preload("res://src/escenas/objetos/caja_de_productos.gd")
 const JugadorDelLocal := preload("res://src/escenas/jugador.gd")
 const OBJETO := preload("res://src/escenas/objetos/objeto_agarrable.tscn")
-const BORDE := preload("res://src/escenas/puestos/borde_de_reposicion.gdshader")
+const FANTASMA := preload("res://src/escenas/puestos/fantasma_de_reposicion.gdshader")
 
 ## Hasta dónde se busca piso debajo de una caja recién soltada, en metros.
 const CAIDA_MAXIMA := 3.0
@@ -89,23 +89,18 @@ func preparar() -> void:
 		cuerpo.shape = forma
 		casillero.add_child(cuerpo)
 		var vista := MeshInstance3D.new()
-		var malla := QuadMesh.new()
-		var tamano := _modelos[producto.id].get_aabb().size
-		malla.size = Vector2(tamano.x, tamano.z) + Vector2.ONE * 0.02
-		vista.position.y = -0.15 + 0.005
-		vista.rotation.x = -PI / 2
-		var material := StandardMaterial3D.new()
-		material.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
-		material.albedo_color = Color(0, 0, 0, 0)
-		malla.material = material
-		vista.mesh = malla
+		var modelo := _modelos[producto.id]
+		vista.mesh = modelo
+		vista.position = _pie_del_fantasma(modelo)
+		vista.material_override = _fantasma(modelo, Color.WHITE, 0.08, 0.30)
 		casillero.add_child(vista)
 		casillero.mallas = [vista]
-		var borde := ShaderMaterial.new()
-		borde.shader = BORDE
-		borde.set_shader_parameter("color", IndicacionDelFoco.COLOR)
-		borde.set_shader_parameter("tamano", malla.size)
-		casillero.material_de_foco = borde
+		# **El foco va de `material_overlay` y el fantasma de `material_override`**, que es lo
+		# que deja los dos encendidos a la vez: enfocado, el rojo se suma sobre el envase en
+		# vez de reemplazarlo, y el jugador sigue viendo qué producto va ahí.
+		casillero.material_de_foco = _fantasma(
+			modelo, IndicacionDelFoco.COLOR_DE_REPOSICION, 0.30, 0.70
+		)
 		casillero.colocacion_pedida.connect(pedir_colocar)
 		_zonas.append(casillero)
 	jugador.uso_pedido.connect(retirar_de_la_caja)
@@ -583,6 +578,34 @@ func _preparar_grupos() -> void:
 		sueltos.preparar(malla, repositor.estante().cupo(producto))
 		add_child(sueltos)
 		_sueltos.append(sueltos)
+
+
+## El fantasma que marca dónde va la próxima unidad: el envase mismo, transparente y titilando.
+##
+## Se arma uno por casillero y no uno compartido porque cada uno lleva **su** textura: lo que
+## indica no es sólo el lugar, es qué producto va en ese lugar.
+func _fantasma(modelo: Mesh, tinte: Color, minima: float, maxima: float) -> ShaderMaterial:
+	var material := ShaderMaterial.new()
+	material.shader = FANTASMA
+	var base := modelo.surface_get_material(0) as BaseMaterial3D
+	if base != null:
+		material.set_shader_parameter("textura", base.albedo_texture)
+	material.set_shader_parameter("tinte", tinte)
+	material.set_shader_parameter("opacidad_minima", minima)
+	material.set_shader_parameter("opacidad_maxima", maxima)
+	return material
+
+
+## Dónde se cuelga el fantasma adentro del casillero para que su base caiga en el apoyo.
+##
+## El casillero está 15 cm por encima del apoyo —lo necesita para que la mira lo alcance—, así
+## que el fantasma baja esos 15 cm y se corre hasta que el centro de su base quede en el origen.
+func _pie_del_fantasma(modelo: Mesh) -> Vector3:
+	var caja := modelo.get_aabb()
+	var centro_de_la_base := Vector3(
+		caja.position.x + caja.size.x / 2.0, caja.position.y, caja.position.z + caja.size.z / 2.0
+	)
+	return Vector3.DOWN * 0.15 - centro_de_la_base
 
 
 ## Las exhibiciones que no cambian. Se dibujan una vez y quedan enteras: nada las vende ni las
