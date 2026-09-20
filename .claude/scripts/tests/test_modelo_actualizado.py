@@ -45,6 +45,11 @@ class ModeloActualizado(unittest.TestCase):
         # mismo dia entraron los seis productos que tenian textura y no tenian modelo, armados
         # del troquel de su propia textura: tres cajas, dos bolsas y un cilindro.
         #
+        # **Y la heladera recupero el mapa de sus caras gemelas.** El modelo trae la chapa dos
+        # veces -la cara de adentro y su gemela unos centimetros detras-, y la gemela tenia el
+        # UV colapsado: sampleaba una linea de la textura y se dibujaba como un degrade de
+        # bandas. Con el material a doble cara, esa gemela es la que se ve.
+        #
         # **El 2026-09-20 se acomodo el local.** Todo lo que el jugador repone quedo en una
         # bandeja del medio o en la heladera, las dos gondolas del fondo se llenaron y los seis
         # productos nuevos entraron al catalogo. El `.glb` gano siete objetos y ninguna malla:
@@ -52,11 +57,11 @@ class ModeloActualizado(unittest.TestCase):
         blend = (RAIZ / "assets/models/SEPT_JUEGOS_PROTOTIPO.blend").read_bytes()
         self.assertEqual(
             hashlib.sha256(blend).hexdigest(),
-            "dc265cb12d86a5b9aa75d82833cc9c2719472dd48168b19f05a9de4f33167643",
+            "4ecf5ff135ed6e06e9d6818e220ec786baf14e5dee96710f435c08ab99a816a7",
         )
         self.assertEqual(
             hashlib.sha256(self.glb).hexdigest(),
-            "27f075c8b2d0343795a48479cded309078ded8c648460bc80b7bf77605715cf5",
+            "7a1be831274b3eaf42639c0e3743709e7ad01cedfe1f16f3876f6722dcb06d70",
         )
 
     def test_las_mallas_conservan_uv_y_materiales(self):
