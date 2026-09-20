@@ -405,10 +405,20 @@ visible = false
 collision_layer = 0
 collision_mask = 0
 
-[node name="pringles3_001" parent="."]
-visible = false
+[node name="LuzInterior" type="OmniLight3D" parent="heladeranueva"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.15, 1.7, 0)
+light_color = Color(0.85, 0.92, 1, 1)
+light_energy = 2.6
+light_specular = 0.35
+omni_range = 3.0
+omni_attenuation = 0.75
+editor_description = "La luminaria que la textura ya dibuja arriba del vidrio. El interior es un volumen cerrado: las luminarias del techo no le llegan y la mercadería queda del color del ambiente en vez del suyo."
 
-[node name="StaticBody3D" parent="pringles3_001"]
-collision_layer = 0
-collision_mask = 0
-
+[node name="LuzInterior" type="OmniLight3D" parent="heladeranueva_001"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.15, 1.7, 0)
+light_color = Color(0.85, 0.92, 1, 1)
+light_energy = 2.6
+light_specular = 0.35
+omni_range = 3.0
+omni_attenuation = 0.75
+editor_description = "La luminaria que la textura ya dibuja arriba del vidrio. El interior es un volumen cerrado: las luminarias del techo no le llegan y la mercadería queda del color del ambiente en vez del suyo."

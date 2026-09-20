@@ -236,3 +236,45 @@ func test_quitar_del_medio_deja_el_indice_reutilizado_en_su_cuerpo_nuevo() -> vo
 	assert_object(grupo.cuerpos[0]).is_same(cuerpos[2])
 	assert_bool(grupo.get("_matrices")[0].is_equal_approx(antes[0])).is_true()
 	assert_int(grupo.multimesh.visible_instance_count).is_equal(1)
+
+
+func test_la_caja_del_grupo_cubre_las_copias_que_escribe() -> void:
+	# **Escribir una instancia no le recalcula la caja al `MultiMesh`.** Queda en la que tenía
+	# recién creado, con todas las copias encimadas en el origen del grupo, y el renderizador
+	# descarta el grupo entero apenas ese origen sale de la pantalla: el producto que cae
+	# aparece y desaparece cuadro por medio. No hay error ni log que lo nombre.
+	var mundo := _mundo()
+	_piso(mundo)
+	var grupo := _grupo(mundo, 2)
+	grupo.position = Vector3(4, 0, 0)
+	var quieto := _cuerpo(mundo, Vector3(-3, 0.5, 2), false)
+	grupo.agregar(quieto)
+	(
+		assert_bool(grupo.custom_aabb.has_point(grupo.get("_matrices")[0].origin))
+		. override_failure_message("la caja no cubre el cuerpo recién agrupado")
+		. is_true()
+	)
+	var cae := _cuerpo(mundo, Vector3(0, CAIDA, 0), true)
+	grupo.agregar(cae)
+	for _cuadro in 60:
+		await get_tree().process_frame
+		grupo._process(0.0)
+		for indice in grupo.cuerpos.size():
+			var copia: Transform3D = grupo.get("_matrices")[indice]
+			(
+				assert_bool(grupo.custom_aabb.has_point(copia.origin))
+				. override_failure_message(
+					(
+						"la copia %d está en %v y la caja va de %v a %v"
+						% [indice, copia.origin, grupo.custom_aabb.position, grupo.custom_aabb.end]
+					)
+				)
+				. is_true()
+			)
+	grupo.quitar(cae)
+	grupo.quitar(quieto)
+	(
+		assert_bool(grupo.custom_aabb.has_volume())
+		. override_failure_message("sin cuerpos la caja tiene que quedar vacía")
+		. is_false()
+	)
