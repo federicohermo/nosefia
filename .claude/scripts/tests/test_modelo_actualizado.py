@@ -54,18 +54,33 @@ class ModeloActualizado(unittest.TestCase):
         # bandeja del medio o en la heladera, las dos gondolas del fondo se llenaron y los seis
         # productos nuevos entraron al catalogo. El `.glb` gano siete objetos y ninguna malla:
         # las tandas duplicadas y las de relleno comparten la malla de la que salieron.
+        #
+        # **Y ese mismo dia se llenaron las caras que quedaban apagadas.** Las dos cabeceras del
+        # fondo, el lado de la gondola del medio que da al pasillo de atras y siete de las ocho
+        # bandejas de las dos heladeras no tenian nada, que no se lee como un estante a medio
+        # reponer sino como un mueble roto. Son diecisiete tandas de guia mas.
+
+        #
+        # Los seis productos armados del troquel entraron chicos —el troquel da la proporcion y
+        # no el tamano— y se agrandaron un cuarto, salvo las Macumbas que ya venian agrandadas.
         blend = (RAIZ / "assets/models/SEPT_JUEGOS_PROTOTIPO.blend").read_bytes()
         self.assertEqual(
             hashlib.sha256(blend).hexdigest(),
-            "4ecf5ff135ed6e06e9d6818e220ec786baf14e5dee96710f435c08ab99a816a7",
+            "f0ed5ed34cb1855804c8364edf775706e7cb94ef03bbe1c511a2945ac41a62cd",
         )
         self.assertEqual(
             hashlib.sha256(self.glb).hexdigest(),
-            "7a1be831274b3eaf42639c0e3743709e7ad01cedfe1f16f3876f6722dcb06d70",
+            "622ccd0238ed366c304dfaa271cdb865a6d6c74f0e0ae84da6fe71d1f2b94fbd",
         )
 
+
     def test_las_mallas_conservan_uv_y_materiales(self):
-        self.assertEqual(len(self.modelo["meshes"]), 65)
+        # Son mas que las mallas de Blender, y no es un error: con `export_apply` el exportador
+        # de glTF evalua los modificadores objeto por objeto, asi que una tanda copiada de un
+        # objeto que tiene modificadores no comparte la malla con su original. Son mallas
+        # repetidas, cien kilobytes sobre treinta y cuatro megas.
+        self.assertEqual(len(self.modelo["meshes"]), 75)
+
         self.assertEqual(len(self.modelo["materials"]), 42)
         for malla in self.modelo["meshes"]:
             for parte in malla["primitives"]:

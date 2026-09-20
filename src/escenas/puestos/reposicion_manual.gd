@@ -92,13 +92,13 @@ func preparar() -> void:
 		var modelo := _modelos[producto.id]
 		vista.mesh = modelo
 		vista.position = _pie_del_fantasma(modelo)
-		vista.material_override = _fantasma(modelo, 0.04, 0.18)
+		vista.material_override = _fantasma(modelo, 0.0, 1.0)
 		casillero.add_child(vista)
 		casillero.mallas = [vista]
 		# **El foco va de `material_overlay` y el fantasma de `material_override`**, que es lo
-		# que deja los dos encendidos a la vez. Enfocado sube la opacidad y nada más: lo que
-		# distingue el hueco señalado del hueco a secas es cuánto se ve, no de qué color es.
-		casillero.material_de_foco = _fantasma(modelo, 0.20, 0.45)
+		# que deja los dos encendidos a la vez. Enfocado sube el piso del titileo y nada más: lo
+		# que distingue el hueco señalado del hueco a secas es que no llega a apagarse.
+		casillero.material_de_foco = _fantasma(modelo, 0.45, 1.0)
 		casillero.colocacion_pedida.connect(pedir_colocar)
 		_zonas.append(casillero)
 	jugador.uso_pedido.connect(retirar_de_la_caja)

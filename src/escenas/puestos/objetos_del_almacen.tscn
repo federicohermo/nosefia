@@ -65,17 +65,17 @@ scale = Vector3(0.3037077, 0.3037077, 0.3037077)
 scale = Vector3(0.3037077, 0.3037077, 0.3037077)
 
 [node name="CajaDeZucarachas" parent="." instance=ExtResource("11_caja_de_productos")]
-position = Vector3(7.5770, 1.9077, -11.7900)
+position = Vector3(-1.4000, 1.3270, -11.4500)
 producto = 3
 
 [node name="Cuerpo" parent="CajaDeZucarachas" index="0"]
-scale = Vector3(0.3037077, 0.3037077, 0.3037077)
+scale = Vector3(0.2000000, 0.2000000, 0.2000000)
 
 [node name="Malla" parent="CajaDeZucarachas" index="1"]
-scale = Vector3(0.3037077, 0.3037077, 0.3037077)
+scale = Vector3(0.2000000, 0.2000000, 0.2000000)
 
 [node name="CajaDeLaysntt" parent="." instance=ExtResource("11_caja_de_productos")]
-position = Vector3(7.5770, 1.9077, -11.0900)
+position = Vector3(7.5770, 1.9077, -11.7900)
 producto = 4
 
 [node name="Cuerpo" parent="CajaDeLaysntt" index="0"]
@@ -85,7 +85,7 @@ scale = Vector3(0.3037077, 0.3037077, 0.3037077)
 scale = Vector3(0.3037077, 0.3037077, 0.3037077)
 
 [node name="CajaDeMalbardo" parent="." instance=ExtResource("11_caja_de_productos")]
-position = Vector3(-1.4000, 1.3270, -11.4500)
+position = Vector3(-1.4000, 1.3270, -12.0000)
 producto = 5
 
 [node name="Cuerpo" parent="CajaDeMalbardo" index="0"]
@@ -95,7 +95,7 @@ scale = Vector3(0.2000000, 0.2000000, 0.2000000)
 scale = Vector3(0.2000000, 0.2000000, 0.2000000)
 
 [node name="CajaDeProngles" parent="." instance=ExtResource("11_caja_de_productos")]
-position = Vector3(4.1000, 1.9077, -14.1150)
+position = Vector3(7.5770, 1.9077, -11.0900)
 producto = 6
 
 [node name="Cuerpo" parent="CajaDeProngles" index="0"]
@@ -105,7 +105,7 @@ scale = Vector3(0.3037077, 0.3037077, 0.3037077)
 scale = Vector3(0.3037077, 0.3037077, 0.3037077)
 
 [node name="CajaDeJorgillo" parent="." instance=ExtResource("11_caja_de_productos")]
-position = Vector3(-1.4000, 1.3270, -12.0000)
+position = Vector3(-1.4000, 0.8510, -10.9000)
 producto = 7
 
 [node name="Cuerpo" parent="CajaDeJorgillo" index="0"]
@@ -115,7 +115,7 @@ scale = Vector3(0.2000000, 0.2000000, 0.2000000)
 scale = Vector3(0.2000000, 0.2000000, 0.2000000)
 
 [node name="CajaDeArvejas" parent="." instance=ExtResource("11_caja_de_productos")]
-position = Vector3(4.7500, 1.9077, -14.1150)
+position = Vector3(4.1000, 1.9077, -14.1150)
 producto = 8
 
 [node name="Cuerpo" parent="CajaDeArvejas" index="0"]
@@ -125,7 +125,7 @@ scale = Vector3(0.3037077, 0.3037077, 0.3037077)
 scale = Vector3(0.3037077, 0.3037077, 0.3037077)
 
 [node name="CajaDeChisitos" parent="." instance=ExtResource("11_caja_de_productos")]
-position = Vector3(0.3000, 0.4059, -10.6000)
+position = Vector3(4.7500, 1.9077, -14.1150)
 producto = 9
 
 [node name="Cuerpo" parent="CajaDeChisitos" index="0"]
@@ -135,7 +135,7 @@ scale = Vector3(0.3037077, 0.3037077, 0.3037077)
 scale = Vector3(0.3037077, 0.3037077, 0.3037077)
 
 [node name="CajaDeOremos" parent="." instance=ExtResource("11_caja_de_productos")]
-position = Vector3(-1.4000, 0.8510, -10.9000)
+position = Vector3(-1.4000, 0.8510, -11.4500)
 producto = 10
 
 [node name="Cuerpo" parent="CajaDeOremos" index="0"]
@@ -145,7 +145,7 @@ scale = Vector3(0.2000000, 0.2000000, 0.2000000)
 scale = Vector3(0.2000000, 0.2000000, 0.2000000)
 
 [node name="CajaDePepitos" parent="." instance=ExtResource("11_caja_de_productos")]
-position = Vector3(-1.4000, 0.8510, -11.4500)
+position = Vector3(-1.4000, 0.8510, -12.0000)
 producto = 11
 
 [node name="Cuerpo" parent="CajaDePepitos" index="0"]
@@ -155,7 +155,7 @@ scale = Vector3(0.2000000, 0.2000000, 0.2000000)
 scale = Vector3(0.2000000, 0.2000000, 0.2000000)
 
 [node name="CajaDeSaladik" parent="." instance=ExtResource("11_caja_de_productos")]
-position = Vector3(0.3000, 0.4059, -11.3000)
+position = Vector3(0.3000, 0.4059, -10.6000)
 producto = 12
 
 [node name="Cuerpo" parent="CajaDeSaladik" index="0"]
@@ -165,7 +165,7 @@ scale = Vector3(0.3037077, 0.3037077, 0.3037077)
 scale = Vector3(0.3037077, 0.3037077, 0.3037077)
 
 [node name="CajaDeUakas" parent="." instance=ExtResource("11_caja_de_productos")]
-position = Vector3(0.3000, 0.4059, -12.0000)
+position = Vector3(0.3000, 0.4059, -11.3000)
 producto = 13
 
 [node name="Cuerpo" parent="CajaDeUakas" index="0"]
@@ -175,7 +175,7 @@ scale = Vector3(0.3037077, 0.3037077, 0.3037077)
 scale = Vector3(0.3037077, 0.3037077, 0.3037077)
 
 [node name="CajaDeCoracola" parent="." instance=ExtResource("11_caja_de_productos")]
-position = Vector3(-1.4000, 0.8510, -12.0000)
+position = Vector3(7.5770, 1.3270, -10.9000)
 producto = 14
 
 [node name="Cuerpo" parent="CajaDeCoracola" index="0"]
@@ -185,17 +185,17 @@ scale = Vector3(0.2000000, 0.2000000, 0.2000000)
 scale = Vector3(0.2000000, 0.2000000, 0.2000000)
 
 [node name="CajaDeFrotlups" parent="." instance=ExtResource("11_caja_de_productos")]
-position = Vector3(0.3000, 0.4059, -12.7000)
+position = Vector3(7.5770, 1.3270, -11.4500)
 producto = 15
 
 [node name="Cuerpo" parent="CajaDeFrotlups" index="0"]
-scale = Vector3(0.3037077, 0.3037077, 0.3037077)
+scale = Vector3(0.2000000, 0.2000000, 0.2000000)
 
 [node name="Malla" parent="CajaDeFrotlups" index="1"]
-scale = Vector3(0.3037077, 0.3037077, 0.3037077)
+scale = Vector3(0.2000000, 0.2000000, 0.2000000)
 
 [node name="CajaDeMarolini" parent="." instance=ExtResource("11_caja_de_productos")]
-position = Vector3(0.3000, 0.4059, -13.4000)
+position = Vector3(0.3000, 0.4059, -12.0000)
 producto = 16
 
 [node name="Cuerpo" parent="CajaDeMarolini" index="0"]
@@ -205,17 +205,17 @@ scale = Vector3(0.3037077, 0.3037077, 0.3037077)
 scale = Vector3(0.3037077, 0.3037077, 0.3037077)
 
 [node name="CajaDeAmargadito" parent="." instance=ExtResource("11_caja_de_productos")]
-position = Vector3(7.5770, 1.3270, -10.9000)
+position = Vector3(0.3000, 0.4059, -12.7000)
 producto = 17
 
 [node name="Cuerpo" parent="CajaDeAmargadito" index="0"]
-scale = Vector3(0.2000000, 0.2000000, 0.2000000)
+scale = Vector3(0.3037077, 0.3037077, 0.3037077)
 
 [node name="Malla" parent="CajaDeAmargadito" index="1"]
-scale = Vector3(0.2000000, 0.2000000, 0.2000000)
+scale = Vector3(0.3037077, 0.3037077, 0.3037077)
 
 [node name="CajaDeCindolor" parent="." instance=ExtResource("11_caja_de_productos")]
-position = Vector3(7.5770, 1.3270, -11.4500)
+position = Vector3(7.5770, 1.3270, -12.0000)
 producto = 18
 
 [node name="Cuerpo" parent="CajaDeCindolor" index="0"]
@@ -225,7 +225,7 @@ scale = Vector3(0.2000000, 0.2000000, 0.2000000)
 scale = Vector3(0.2000000, 0.2000000, 0.2000000)
 
 [node name="CajaDeFlinpuf" parent="." instance=ExtResource("11_caja_de_productos")]
-position = Vector3(0.3000, 0.4059, -14.1000)
+position = Vector3(0.3000, 0.4059, -13.4000)
 producto = 19
 
 [node name="Cuerpo" parent="CajaDeFlinpuf" index="0"]
@@ -235,7 +235,7 @@ scale = Vector3(0.3037077, 0.3037077, 0.3037077)
 scale = Vector3(0.3037077, 0.3037077, 0.3037077)
 
 [node name="CajaDeDonsaturados" parent="." instance=ExtResource("11_caja_de_productos")]
-position = Vector3(7.5770, 1.3270, -12.0000)
+position = Vector3(7.5770, 0.8510, -10.9000)
 producto = 20
 
 [node name="Cuerpo" parent="CajaDeDonsaturados" index="0"]
@@ -245,7 +245,7 @@ scale = Vector3(0.2000000, 0.2000000, 0.2000000)
 scale = Vector3(0.2000000, 0.2000000, 0.2000000)
 
 [node name="CajaDePetisas" parent="." instance=ExtResource("11_caja_de_productos")]
-position = Vector3(7.5770, 0.8510, -10.9000)
+position = Vector3(7.5770, 0.8510, -11.4500)
 producto = 21
 
 [node name="Cuerpo" parent="CajaDePetisas" index="0"]
@@ -255,7 +255,7 @@ scale = Vector3(0.2000000, 0.2000000, 0.2000000)
 scale = Vector3(0.2000000, 0.2000000, 0.2000000)
 
 [node name="CajaDeMacumbas" parent="." instance=ExtResource("11_caja_de_productos")]
-position = Vector3(7.5770, 0.8510, -11.4500)
+position = Vector3(7.5770, 0.8510, -12.0000)
 producto = 22
 
 [node name="Cuerpo" parent="CajaDeMacumbas" index="0"]
