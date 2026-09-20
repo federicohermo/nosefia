@@ -433,13 +433,6 @@ visible = false
 collision_layer = 0
 collision_mask = 0
 
-[node name="flimpof-fondo" parent="."]
-visible = false
-
-[node name="StaticBody3D" parent="flimpof-fondo"]
-collision_layer = 0
-collision_mask = 0
-
 [node name="lataarvejas-2oeste0" parent="gondolanueva2"]
 visible = false
 
@@ -451,13 +444,6 @@ collision_mask = 0
 visible = false
 
 [node name="StaticBody3D" parent="gondolanueva/lataarvejas_001"]
-collision_layer = 0
-collision_mask = 0
-
-[node name="macumbas-fondo" parent="."]
-visible = false
-
-[node name="StaticBody3D" parent="macumbas-fondo"]
 collision_layer = 0
 collision_mask = 0
 
@@ -559,6 +545,13 @@ visible = false
 collision_layer = 0
 collision_mask = 0
 
+[node name="saladix-fondo" parent="gondolanueva2"]
+visible = false
+
+[node name="StaticBody3D" parent="gondolanueva2/saladix-fondo"]
+collision_layer = 0
+collision_mask = 0
+
 [node name="snackpapas1_002" parent="gondolanueva"]
 visible = false
 
@@ -584,6 +577,41 @@ collision_mask = 0
 visible = false
 
 [node name="StaticBody3D" parent="gondolanueva/wakas_001"]
+collision_layer = 0
+collision_mask = 0
+
+[node name="wakas-fondo" parent="gondolanueva2"]
+visible = false
+
+[node name="StaticBody3D" parent="gondolanueva2/wakas-fondo"]
+collision_layer = 0
+collision_mask = 0
+
+[node name="cindolor-fondo_024" parent="."]
+visible = false
+
+[node name="StaticBody3D" parent="cindolor-fondo_024"]
+collision_layer = 0
+collision_mask = 0
+
+[node name="macumbas-fondo" parent="."]
+visible = false
+
+[node name="StaticBody3D" parent="macumbas-fondo"]
+collision_layer = 0
+collision_mask = 0
+
+[node name="petisas-fondo" parent="."]
+visible = false
+
+[node name="StaticBody3D" parent="petisas-fondo"]
+collision_layer = 0
+collision_mask = 0
+
+[node name="flimpof-fondo" parent="."]
+visible = false
+
+[node name="StaticBody3D" parent="flimpof-fondo"]
 collision_layer = 0
 collision_mask = 0
 

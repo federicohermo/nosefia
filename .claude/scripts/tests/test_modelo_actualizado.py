@@ -84,11 +84,14 @@ class ModeloActualizado(unittest.TestCase):
         blend = (RAIZ / "assets/models/SEPT_JUEGOS_PROTOTIPO.blend").read_bytes()
         self.assertEqual(
             hashlib.sha256(blend).hexdigest(),
-            "fced88022501ea177111e6f4bd89c7f7537ad7d7dcd74b6a13048babf85dac09",
+            "370c0506f424d6c1cf415e54b6d20baba5f71155104d5181a2dd5398d2fa3316",
         )
         self.assertEqual(
             hashlib.sha256(self.glb).hexdigest(),
-            "41fe4ecc34b308df64a5665c9f0446dc0a990c4c6e10166ee3d4d0632d09f092"
+            "6df3d8366266c8ee08335f9c652da358d6ba7c1d1fe3cf6a9b45a4927ae3d54e"
+
+
+
 
 
 
