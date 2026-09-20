@@ -47,11 +47,11 @@ class ModeloActualizado(unittest.TestCase):
         blend = (RAIZ / "assets/models/SEPT_JUEGOS_PROTOTIPO.blend").read_bytes()
         self.assertEqual(
             hashlib.sha256(blend).hexdigest(),
-            "3ea268168afc70942f08be0bfbdc47f80bf29c3bfc2c6ea7b615d0a90d14ba72",
+            "628c7eba61fc5628b8919288b936d7e8529b873a2e72aa84a4de17b7e07c752e",
         )
         self.assertEqual(
             hashlib.sha256(self.glb).hexdigest(),
-            "374bbff8cb9704a5ed66683f18802a7bd4c323607d311f2ff54f3f3320a800e9",
+            "7fdf2a6d6b0753bd38c7fddbd8684c04692b5490eeba60feeddfe9a2f78fe357",
         )
 
     def test_las_mallas_conservan_uv_y_materiales(self):

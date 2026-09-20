@@ -320,21 +320,26 @@ func test_el_frente_se_conserva_al_examinar_y_volver_a_agarrar() -> void:
 	var jugador: Node3D = almacen.get("_jugador")
 	jugador.set_physics_process(false)
 	var agarre: Agarre = almacen.get("_agarre")
-	# Hacia dónde está horneado cada modelo, que es lo mismo que su cara de la góndola: los del
-	# pasillo miran a -X y los de la cabecera a -Z.
+	# Hacia dónde está horneado cada modelo: es la cara del mueble hacia la que su tanda
+	# exhibe, medida del `.blend`, y está acá para que la mano tenga contra qué medirse. Lo que
+	# se afirma es que **la mano lo gira hasta la cámara**, sea cual sea esa cara.
+	#
+	# Los doce estuvieron mal hasta el 2026-09-19: los de +X figuraban en -X y los de +Z en -Z,
+	# o sea 180° girados. Con el giro de la mano también al revés, las dos mitades se cancelaban
+	# y este caso pasaba en verde mientras el jugador agarraba los productos dados vuelta.
 	var frentes := [
 		Vector3.LEFT,
-		Vector3.FORWARD,
-		Vector3.LEFT,
-		Vector3.LEFT,
-		Vector3.FORWARD,
-		Vector3.FORWARD,
-		Vector3.FORWARD,
+		Vector3.BACK,
+		Vector3.RIGHT,
 		Vector3.LEFT,
 		Vector3.FORWARD,
+		Vector3.BACK,
+		Vector3.RIGHT,
+		Vector3.RIGHT,
+		Vector3.RIGHT,
 		Vector3.FORWARD,
-		Vector3.LEFT,
-		Vector3.LEFT
+		Vector3.RIGHT,
+		Vector3.RIGHT
 	]
 	for producto in Catalogo.todos():
 		_sacar_de_la_caja(jugador, almacen.get("_cajas_de_productos")[producto.id])

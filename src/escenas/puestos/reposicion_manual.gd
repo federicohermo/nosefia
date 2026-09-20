@@ -50,10 +50,13 @@ const GUIA := "Guia"
 
 ## Cuánto gira cada modelo para mostrarle el frente a la cámara, en grados.
 ##
-## Sale de hacia dónde está horneado el modelo, que es lo mismo que decide su cara de la góndola:
-## los del pasillo miran a -X y los de la cabecera a -Z. **El estante coloca las copias sin
-## rotarlas**, así que un modelo horneado hacia el lado equivocado se ve de costado y ningún
-## número de acá lo arregla: se corrige la malla.
+## **No se elige: se deriva.** El modelo está horneado mirando hacia donde su tanda exhibe en la
+## góndola, y la mano tiene que girarlo hasta que ese frente apunte a +Z, que es de donde mira
+## la cámara. Con el frente en -X el giro es 90, en +X es 270, en +Z es 0 y en -Z es 180, y no
+## hay más casos porque un estante exhibe hacia una de las cuatro caras del mueble.
+##
+## Los doce estuvieron mal hasta el 2026-09-19 y el síntoma es mudo: el producto se agarra de
+## costado o dado vuelta, y no hay error ni test que lo diga. Se mira.
 @export var giros_del_frente: Array[float] = []
 
 var _unidades: Array[Node3D] = []
