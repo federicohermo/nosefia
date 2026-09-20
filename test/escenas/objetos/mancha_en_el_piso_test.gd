@@ -15,6 +15,10 @@ const TRAPEADOR := "res://src/dominio/almacen/trapeador.tres"
 ## El script del nodo se preloadea para poder tiparlo: los scripts de `escenas/` son cáscara y no
 ## declaran `class_name`.
 const ManchaQueSeVe := preload("res://src/escenas/objetos/mancha_en_el_piso.gd")
+const ALMACEN := preload("res://src/escenas/almacen.tscn")
+
+## Lo alto que llega el jugador. Una mancha tapada por encima de esto no le estorba el trapo.
+const ALTO_DEL_JUGADOR := 1.8
 
 ## Lo que delataría una regla escrita en la mancha. Está medido que ahí los dos gates dan verde.
 const PATRONES_DE_DECISION := "(?m)^\\s*(if|elif|match)\\b|var\\s+_pasadas|var\\s+_restantes"
@@ -228,3 +232,43 @@ func test_los_cuatro_espejos_estan_y_el_almacen_no_decide_nada() -> void:
 		. override_failure_message("`almacen.gd` tiene una condición adentro")
 		. is_empty()
 	)
+
+
+## Ninguna mancha arranca debajo de un mueble.
+##
+## **El trapo no atraviesa la góndola**, así que una mancha tapada por un mueble es una tarea
+## que no se puede terminar. Y no se ve venir: el `.tscn` de la limpieza declara cuatro
+## posiciones sueltas, el del local declara dónde están los muebles, y mover un mueble no toca
+## el otro archivo. Pasó el 2026-09-20 con la góndola del pasillo corrida noventa centímetros.
+func test_ninguna_mancha_arranca_debajo_de_un_mueble() -> void:
+	var almacen: Node3D = auto_free(ALMACEN.instantiate())
+	add_child(almacen)
+	await get_tree().physics_frame
+	var manchas: Array = almacen.get_node("LimpiezaDelAlmacen").get_children()
+	assert_int(manchas.size()).is_greater(0)
+	var espacio := almacen.get_world_3d().direct_space_state
+	for mancha: Node3D in manchas:
+		var cuerpo: CollisionShape3D = mancha.get_node("Cuerpo")
+		var cilindro := cuerpo.shape as CylinderShape3D
+		var forma := CylinderShape3D.new()
+		forma.radius = cilindro.radius
+		forma.height = ALTO_DEL_JUGADOR
+		var consulta := PhysicsShapeQueryParameters3D.new()
+		consulta.shape = forma
+		consulta.transform = Transform3D(
+			Basis(), mancha.global_position + Vector3.UP * ALTO_DEL_JUGADOR * 0.5
+		)
+		consulta.exclude = [(mancha as CollisionObject3D).get_rid()]
+		var encima: Array[String] = []
+		for choque in espacio.intersect_shape(consulta, 8):
+			var quien: String = str(almacen.get_path_to(choque["collider"]))
+			if quien.contains("Suelo") or quien.contains("Jugador"):
+				continue
+			encima.append(quien)
+		(
+			assert_array(encima)
+			. override_failure_message(
+				"`%s` arranca en %v, debajo de %s" % [mancha.name, mancha.global_position, encima]
+			)
+			. is_empty()
+		)
