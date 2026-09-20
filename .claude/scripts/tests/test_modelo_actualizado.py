@@ -62,9 +62,11 @@ class ModeloActualizado(unittest.TestCase):
         #
         # **Y despues, ninguna bandeja de un lado quedo con un solo producto.** Diez estantes
         # mostraban una marca sola repetida hasta el borde, alguno con cuarenta unidades: eso no
-        # se lee como un almacen sino como el deposito. Ahora cada uno lleva entre dos y cuatro,
-        # y entraron a la gondola los tres que solo vivian en una cabecera -Malbardo, Durextra y
-        # Laysntt-. Las cabeceras si llevan uno solo, que es como se arma una punta de verdad.
+        # se lee como un almacen sino como el deposito. Ahora cada uno lleva entre dos y cuatro.
+        # Las cabeceras si llevan uno solo, que es como se arma una punta de verdad, y cuatro
+        # productos viven nada mas que ahi: Malbardo, Durextra, Laysntt y Chisitos son la compra
+        # por impulso del que ya va a la caja, y estar en un solo lugar es lo que los distingue.
+
         #
         # **Coracola se repone una bandeja mas arriba**, a 1,29 y no a 0,79.
         #
@@ -74,11 +76,11 @@ class ModeloActualizado(unittest.TestCase):
         blend = (RAIZ / "assets/models/SEPT_JUEGOS_PROTOTIPO.blend").read_bytes()
         self.assertEqual(
             hashlib.sha256(blend).hexdigest(),
-            "50e01439960a085b99073e50b54d22855b30b8615e93024e0527c650e287d516",
+            "8de6ce91620854d9fac9015cb808de20aded852168b580b1ab4fb4b8ce28d01c",
         )
         self.assertEqual(
             hashlib.sha256(self.glb).hexdigest(),
-            "d2d0d51e3d257a2e66d700bd68d80b145f9cd27262036d8e95417b209af724ab",
+            "8e68d35521099396d606093e38615a4499f39db8c872dfaa25bd4d506e1306ba",
         )
 
 
@@ -87,7 +89,7 @@ class ModeloActualizado(unittest.TestCase):
         # de glTF evalua los modificadores objeto por objeto, asi que una tanda copiada de un
         # objeto que tiene modificadores no comparte la malla con su original. Son mallas
         # repetidas, cien kilobytes sobre treinta y cuatro megas.
-        self.assertEqual(len(self.modelo["meshes"]), 80)
+        self.assertEqual(len(self.modelo["meshes"]), 76)
 
 
         self.assertEqual(len(self.modelo["materials"]), 42)

@@ -300,6 +300,13 @@ visible = false
 collision_layer = 0
 collision_mask = 0
 
+[node name="amargadito-2oeste0" parent="gondolanueva2"]
+visible = false
+
+[node name="StaticBody3D" parent="gondolanueva2/amargadito-2oeste0"]
+collision_layer = 0
+collision_mask = 0
+
 [node name="bebida helada02-001este1" parent="heladeranueva_001"]
 visible = false
 
@@ -339,6 +346,13 @@ collision_mask = 0
 visible = false
 
 [node name="StaticBody3D" parent="gondolanueva2/burgaloo-2oeste3"]
+collision_layer = 0
+collision_mask = 0
+
+[node name="burgaloo-fondo" parent="gondolanueva"]
+visible = false
+
+[node name="StaticBody3D" parent="gondolanueva/burgaloo-fondo"]
 collision_layer = 0
 collision_mask = 0
 
@@ -391,31 +405,17 @@ visible = false
 collision_layer = 0
 collision_mask = 0
 
-[node name="chisitos2-2oeste2" parent="gondolanueva2"]
+[node name="cindolor-fondo" parent="."]
 visible = false
 
-[node name="StaticBody3D" parent="gondolanueva2/chisitos2-2oeste2"]
+[node name="StaticBody3D" parent="cindolor-fondo"]
 collision_layer = 0
 collision_mask = 0
 
-[node name="chisitos2-fondo" parent="gondolanueva"]
+[node name="donsaturados-2oeste2" parent="gondolanueva2"]
 visible = false
 
-[node name="StaticBody3D" parent="gondolanueva/chisitos2-fondo"]
-collision_layer = 0
-collision_mask = 0
-
-[node name="durextra-2este1" parent="gondolanueva2"]
-visible = false
-
-[node name="StaticBody3D" parent="gondolanueva2/durextra-2este1"]
-collision_layer = 0
-collision_mask = 0
-
-[node name="durextra-fondo" parent="gondolanueva2"]
-visible = false
-
-[node name="StaticBody3D" parent="gondolanueva2/durextra-fondo"]
+[node name="StaticBody3D" parent="gondolanueva2/donsaturados-2oeste2"]
 collision_layer = 0
 collision_mask = 0
 
@@ -458,20 +458,6 @@ collision_mask = 0
 visible = false
 
 [node name="StaticBody3D" parent="macumbas-fondo"]
-collision_layer = 0
-collision_mask = 0
-
-[node name="malbardocig-2oeste0" parent="gondolanueva2"]
-visible = false
-
-[node name="StaticBody3D" parent="gondolanueva2/malbardocig-2oeste0"]
-collision_layer = 0
-collision_mask = 0
-
-[node name="malbardocig-fondo" parent="gondolanueva"]
-visible = false
-
-[node name="StaticBody3D" parent="gondolanueva/malbardocig-fondo"]
 collision_layer = 0
 collision_mask = 0
 
@@ -531,6 +517,13 @@ visible = false
 collision_layer = 0
 collision_mask = 0
 
+[node name="petisas-2este1" parent="gondolanueva2"]
+visible = false
+
+[node name="StaticBody3D" parent="gondolanueva2/petisas-2este1"]
+collision_layer = 0
+collision_mask = 0
+
 [node name="pringles3-2este0" parent="gondolanueva2"]
 visible = false
 
@@ -573,13 +566,6 @@ visible = false
 collision_layer = 0
 collision_mask = 0
 
-[node name="snackpapas1-fondo" parent="gondolanueva"]
-visible = false
-
-[node name="StaticBody3D" parent="gondolanueva/snackpapas1-fondo"]
-collision_layer = 0
-collision_mask = 0
-
 [node name="wakas-2oeste3" parent="gondolanueva2"]
 visible = false
 
@@ -598,6 +584,55 @@ collision_mask = 0
 visible = false
 
 [node name="StaticBody3D" parent="gondolanueva/wakas_001"]
+collision_layer = 0
+collision_mask = 0
+
+[node name="chisitos2-2oeste2" parent="gondolanueva2"]
+visible = false
+
+[node name="StaticBody3D" parent="gondolanueva2/chisitos2-2oeste2"]
+collision_layer = 0
+collision_mask = 0
+
+[node name="chisitos2-fondo" parent="gondolanueva"]
+visible = false
+
+[node name="StaticBody3D" parent="gondolanueva/chisitos2-fondo"]
+collision_layer = 0
+collision_mask = 0
+
+[node name="durextra-2este1" parent="gondolanueva2"]
+visible = false
+
+[node name="StaticBody3D" parent="gondolanueva2/durextra-2este1"]
+collision_layer = 0
+collision_mask = 0
+
+[node name="durextra-fondo" parent="gondolanueva2"]
+visible = false
+
+[node name="StaticBody3D" parent="gondolanueva2/durextra-fondo"]
+collision_layer = 0
+collision_mask = 0
+
+[node name="malbardocig-2oeste0" parent="gondolanueva2"]
+visible = false
+
+[node name="StaticBody3D" parent="gondolanueva2/malbardocig-2oeste0"]
+collision_layer = 0
+collision_mask = 0
+
+[node name="malbardocig-fondo" parent="gondolanueva"]
+visible = false
+
+[node name="StaticBody3D" parent="gondolanueva/malbardocig-fondo"]
+collision_layer = 0
+collision_mask = 0
+
+[node name="snackpapas1-fondo" parent="gondolanueva"]
+visible = false
+
+[node name="StaticBody3D" parent="gondolanueva/snackpapas1-fondo"]
 collision_layer = 0
 collision_mask = 0
 
