@@ -27,12 +27,12 @@
 [node name="Contenido" type="Node3D"]
 
 [node name="Actroncito" type="MeshInstance3D" parent="."]
-transform = Transform3D(0, 0, -0.233377, 0.133667, 0, 0, 0, -0.155248, 0, -3.629314, 0.942635, -1.188861)
+transform = Transform3D(0, 0, -0.233377, 0.133667, 0, 0, 0, -0.155248, 0, -3.388727, 0.942635, -1.188861)
 visible = false
 mesh = ExtResource("malla0")
 
 [node name="Durextra" type="MeshInstance3D" parent="."]
-transform = Transform3D(0.117388, 0, 0, 0, 0.113776, 0.026476, 0, -0.020058, 0.15018, -3.148789, 1.442975, 1.394817)
+transform = Transform3D(0.117388, 0, 0, 0, 0.113776, 0.026476, 0, -0.020058, 0.15018, -2.905947, 1.442975, 1.394817)
 visible = false
 mesh = ExtResource("malla1")
 
@@ -42,37 +42,37 @@ visible = false
 mesh = ExtResource("malla2")
 
 [node name="Zucarachas" type="MeshInstance3D" parent="."]
-transform = Transform3D(0.052131, 0, 0, 0, 0.202839, 0, 0, 0, 0.140833, -0.007398, 1.566087, -2.735292)
+transform = Transform3D(0.052131, 0, 0, 0, 0.202839, 0, 0, 0, 0.140833, 0.759341, 1.566087, -2.679147)
 visible = false
 mesh = ExtResource("malla3")
 
 [node name="Laysntt" type="MeshInstance3D" parent="."]
-transform = Transform3D(0, 0, 0.111841, 0.054361, 0.209864, 0, -0.209864, 0.054361, 0, 1.191391, 1.507298, -3.852498)
+transform = Transform3D(0, 0, 0.111841, 0.054361, 0.209864, 0, -0.209864, 0.054361, 0, 2.028119, 1.518536, -3.796352)
 visible = false
 mesh = ExtResource("malla4")
 
 [node name="Malbardo" type="MeshInstance3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 0.987837, 0.155495, 0, -0.155495, 0.987837, 0.009221, 1.40575, 1.298102)
+transform = Transform3D(1, 0, 0, 0, 0.987837, 0.155495, 0, -0.155495, 0.987837, 0.845948, 1.40575, 1.354248)
 visible = false
 mesh = ExtResource("malla5")
 
 [node name="Prongles" type="MeshInstance3D" parent="."]
-transform = Transform3D(-1, 0, 0, 0, 1, 0, 0, 0, -1, -6.893348, 1.569818, -3.386824)
+transform = Transform3D(-1, 0, 0, 0, 1, 0, 0, 0, -1, -6.891006, 1.569818, -3.386824)
 visible = false
 mesh = ExtResource("malla6")
 
 [node name="Jorgillo" type="MeshInstance3D" parent="."]
-transform = Transform3D(0, 0.055572, 0, 0.089471, 0, 0, 0, 0, -0.146099, 1.228023, 0.885619, 0.245917)
+transform = Transform3D(0, 0.055572, 0, 0.089471, 0, 0, 0, 0, -0.146099, 2.114762, 1.465619, 0.302062)
 visible = false
 mesh = ExtResource("malla7")
 
 [node name="Arvejas" type="MeshInstance3D" parent="."]
-transform = Transform3D(-0.032885, 0, 1.85624, 0, 1.856531, 0, -1.85624, 0, -0.032885, -6.915071, 1.454116, -1.801805)
+transform = Transform3D(-0.032885, 0, 1.85624, 0, 1.856531, 0, -1.85624, 0, -0.032885, -6.905663, 1.454116, -1.801805)
 visible = false
 mesh = ExtResource("malla8")
 
 [node name="Chisitos" type="MeshInstance3D" parent="."]
-transform = Transform3D(0, 0, 0.108243, 0.039019, 0.206155, 0, -0.206155, 0.039019, 0, 1.202978, 0.759062, -3.827765)
+transform = Transform3D(0, 0, 0.108243, 0.039019, 0.206155, 0, -0.206155, 0.039019, 0, 2.039706, 0.773416, -3.77162)
 visible = false
 mesh = ExtResource("malla9")
 
@@ -82,17 +82,17 @@ visible = false
 mesh = ExtResource("malla10")
 
 [node name="Pepitos" type="MeshInstance3D" parent="."]
-transform = Transform3D(0.166939, 0, 0, 0, 0.078542, 0, 0, 0, 0.152174, 1.108125, 0.879666, -1.33447)
+transform = Transform3D(0.166939, 0, 0, 0, 0.078542, 0, 0, 0, 0.152174, 2.004864, 1.513994, -1.278324)
 visible = false
 mesh = ExtResource("malla11")
 
 [node name="Saladik" type="MeshInstance3D" parent="."]
-transform = Transform3D(-0.057178, 0, 0, 0, 0.222479, 0, 0, 0, -0.154469, 1.217477, 1.591241, 0.237468)
+transform = Transform3D(-0.057178, 0, 0, 0, 0.222479, 0, 0, 0, -0.154469, 2.11092, 1.011241, 0.293613)
 visible = false
 mesh = ExtResource("malla12")
 
 [node name="Uakas" type="MeshInstance3D" parent="."]
-transform = Transform3D(-0.057178, 0, 0, 0, 0.222479, 0, 0, 0, -0.154469, 1.223087, 1.590495, -1.362435)
+transform = Transform3D(-0.057178, 0, 0, 0, 0.222479, 0, 0, 0, -0.154469, 2.117344, 1.010495, -1.30629)
 visible = false
 mesh = ExtResource("malla13")
 
@@ -102,17 +102,17 @@ visible = false
 mesh = ExtResource("malla14")
 
 [node name="Frotlups" type="MeshInstance3D" parent="."]
-transform = Transform3D(0.052131, 0, 0, 0, 0.202839, 0, 0, 0, 0.140833, -0.011117, 1.55666, -0.95584)
+transform = Transform3D(0.052131, 0, 0, 0, 0.202839, 0, 0, 0, 0.140833, 0.755622, 1.55666, -0.899695)
 visible = false
 mesh = ExtResource("malla15")
 
 [node name="Marolini" type="MeshInstance3D" parent="."]
-transform = Transform3D(-0.057178, 0, 0, 0, 0.222479, 0, 0, 0, -0.154469, -2.584329, 1.606983, -1.08552)
+transform = Transform3D(-0.057178, 0, 0, 0, 0.222479, 0, 0, 0, -0.154469, -2.322589, 1.606983, -1.116079)
 visible = false
 mesh = ExtResource("malla16")
 
 [node name="Amargadito" type="MeshInstance3D" parent="."]
-transform = Transform3D(-1, 0, 0, 0, 1, 0, 0, 0, -1, -6.866759, 1.61445, 2.1155)
+transform = Transform3D(-1, 0, 0, 0, 1, 0, 0, 0, -1, -6.864752, 1.61445, 2.1155)
 visible = false
 mesh = ExtResource("malla17")
 
@@ -122,7 +122,7 @@ visible = false
 mesh = ExtResource("malla18")
 
 [node name="Flinpuf" type="MeshInstance3D" parent="."]
-transform = Transform3D(-1, 0, 0, 0, 1, 0, 0, 0, -1, -6.945621, 1.532224, 0.77425)
+transform = Transform3D(-1, 0, 0, 0, 1, 0, 0, 0, -1, -6.948379, 1.532224, 0.77425)
 visible = false
 mesh = ExtResource("malla19")
 
@@ -137,6 +137,6 @@ visible = false
 mesh = ExtResource("malla21")
 
 [node name="Macumbas" type="MeshInstance3D" parent="."]
-transform = Transform3D(-1, 0, 0, 0, 1, 0, 0, 0, -1, -6.8575, 0.973129, -0.404246)
+transform = Transform3D(-1, 0, 0, 0, 1, 0, 0, 0, -1, -6.8625, 0.973129, -0.404246)
 visible = false
 mesh = ExtResource("malla22")

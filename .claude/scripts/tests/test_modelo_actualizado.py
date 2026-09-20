@@ -84,11 +84,16 @@ class ModeloActualizado(unittest.TestCase):
         blend = (RAIZ / "assets/models/SEPT_JUEGOS_PROTOTIPO.blend").read_bytes()
         self.assertEqual(
             hashlib.sha256(blend).hexdigest(),
-            "70a2f858009dd1d135412e0d498a03eddb6e6eb8492740957a2b556fbd0bc7fd",
+            "fced88022501ea177111e6f4bd89c7f7537ad7d7dcd74b6a13048babf85dac09",
         )
         self.assertEqual(
             hashlib.sha256(self.glb).hexdigest(),
-            "70019ddc20fb9cb2992de7d35b170cbbf001b5b3153f16e8401a960ef42febdc",
+            "41fe4ecc34b308df64a5665c9f0446dc0a990c4c6e10166ee3d4d0632d09f092"
+
+
+
+
+,
         )
 
 
@@ -98,6 +103,8 @@ class ModeloActualizado(unittest.TestCase):
         # objeto que tiene modificadores no comparte la malla con su original. Son mallas
         # repetidas, cien kilobytes sobre treinta y cuatro megas.
         self.assertEqual(len(self.modelo["meshes"]), 76)
+
+
 
 
         self.assertEqual(len(self.modelo["materials"]), 42)

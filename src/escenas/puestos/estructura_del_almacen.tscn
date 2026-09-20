@@ -587,6 +587,13 @@ visible = false
 collision_layer = 0
 collision_mask = 0
 
+[node name="macumbas-2este3" parent="gondolanueva2"]
+visible = false
+
+[node name="StaticBody3D" parent="gondolanueva2/macumbas-2este3"]
+collision_layer = 0
+collision_mask = 0
+
 [node name="chisitos2-2oeste2" parent="gondolanueva2"]
 visible = false
 
