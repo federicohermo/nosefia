@@ -251,10 +251,31 @@ visible = false
 collision_layer = 0
 collision_mask = 0
 
+[node name="Zucarachas-2este0" parent="gondolanueva2"]
+visible = false
+
+[node name="StaticBody3D" parent="gondolanueva2/Zucarachas-2este0"]
+collision_layer = 0
+collision_mask = 0
+
 [node name="Zucarachas_001" parent="gondolanueva"]
 visible = false
 
 [node name="StaticBody3D" parent="gondolanueva/Zucarachas_001"]
+collision_layer = 0
+collision_mask = 0
+
+[node name="Zucarachas-fondo" parent="gondolanueva"]
+visible = false
+
+[node name="StaticBody3D" parent="gondolanueva/Zucarachas-fondo"]
+collision_layer = 0
+collision_mask = 0
+
+[node name="alfajorescaja2-2oeste1" parent="gondolanueva2"]
+visible = false
+
+[node name="StaticBody3D" parent="gondolanueva2/alfajorescaja2-2oeste1"]
 collision_layer = 0
 collision_mask = 0
 
@@ -265,17 +286,17 @@ visible = false
 collision_layer = 0
 collision_mask = 0
 
+[node name="alfajorescaja2-fondo" parent="gondolanueva"]
+visible = false
+
+[node name="StaticBody3D" parent="gondolanueva/alfajorescaja2-fondo"]
+collision_layer = 0
+collision_mask = 0
+
 [node name="alfajorescaja2-sur1" parent="gondolanueva"]
 visible = false
 
 [node name="StaticBody3D" parent="gondolanueva/alfajorescaja2-sur1"]
-collision_layer = 0
-collision_mask = 0
-
-[node name="bebida helada02-001este0" parent="heladeranueva_001"]
-visible = false
-
-[node name="StaticBody3D" parent="heladeranueva_001/bebida helada02-001este0"]
 collision_layer = 0
 collision_mask = 0
 
@@ -300,17 +321,10 @@ visible = false
 collision_layer = 0
 collision_mask = 0
 
-[node name="bebida helada02-este0" parent="heladeranueva"]
+[node name="bebida helada02-este1" parent="heladeranueva"]
 visible = false
 
-[node name="StaticBody3D" parent="heladeranueva/bebida helada02-este0"]
-collision_layer = 0
-collision_mask = 0
-
-[node name="bebida helada02-este2" parent="heladeranueva"]
-visible = false
-
-[node name="StaticBody3D" parent="heladeranueva/bebida helada02-este2"]
+[node name="StaticBody3D" parent="heladeranueva/bebida helada02-este1"]
 collision_layer = 0
 collision_mask = 0
 
@@ -384,6 +398,27 @@ visible = false
 collision_layer = 0
 collision_mask = 0
 
+[node name="chisitos2-fondo" parent="gondolanueva"]
+visible = false
+
+[node name="StaticBody3D" parent="gondolanueva/chisitos2-fondo"]
+collision_layer = 0
+collision_mask = 0
+
+[node name="durextra-2este1" parent="gondolanueva2"]
+visible = false
+
+[node name="StaticBody3D" parent="gondolanueva2/durextra-2este1"]
+collision_layer = 0
+collision_mask = 0
+
+[node name="durextra-fondo" parent="gondolanueva2"]
+visible = false
+
+[node name="StaticBody3D" parent="gondolanueva2/durextra-fondo"]
+collision_layer = 0
+collision_mask = 0
+
 [node name="fideos2_001" parent="gondolanueva"]
 visible = false
 
@@ -423,6 +458,20 @@ collision_mask = 0
 visible = false
 
 [node name="StaticBody3D" parent="macumbas-fondo"]
+collision_layer = 0
+collision_mask = 0
+
+[node name="malbardocig-2oeste0" parent="gondolanueva2"]
+visible = false
+
+[node name="StaticBody3D" parent="gondolanueva2/malbardocig-2oeste0"]
+collision_layer = 0
+collision_mask = 0
+
+[node name="malbardocig-fondo" parent="gondolanueva"]
+visible = false
+
+[node name="StaticBody3D" parent="gondolanueva/malbardocig-fondo"]
 collision_layer = 0
 collision_mask = 0
 
@@ -482,10 +531,24 @@ visible = false
 collision_layer = 0
 collision_mask = 0
 
+[node name="pringles3-2este0" parent="gondolanueva2"]
+visible = false
+
+[node name="StaticBody3D" parent="gondolanueva2/pringles3-2este0"]
+collision_layer = 0
+collision_mask = 0
+
 [node name="pringles3" parent="gondolanueva"]
 visible = false
 
 [node name="StaticBody3D" parent="gondolanueva/pringles3"]
+collision_layer = 0
+collision_mask = 0
+
+[node name="saladix-2oeste2" parent="gondolanueva2"]
+visible = false
+
+[node name="StaticBody3D" parent="gondolanueva2/saladix-2oeste2"]
 collision_layer = 0
 collision_mask = 0
 
@@ -510,6 +573,20 @@ visible = false
 collision_layer = 0
 collision_mask = 0
 
+[node name="snackpapas1-fondo" parent="gondolanueva"]
+visible = false
+
+[node name="StaticBody3D" parent="gondolanueva/snackpapas1-fondo"]
+collision_layer = 0
+collision_mask = 0
+
+[node name="wakas-2oeste3" parent="gondolanueva2"]
+visible = false
+
+[node name="StaticBody3D" parent="gondolanueva2/wakas-2oeste3"]
+collision_layer = 0
+collision_mask = 0
+
 [node name="wakas" parent="gondolanueva2"]
 visible = false
 
@@ -521,6 +598,27 @@ collision_mask = 0
 visible = false
 
 [node name="StaticBody3D" parent="gondolanueva/wakas_001"]
+collision_layer = 0
+collision_mask = 0
+
+[node name="bebida helada02-001este0" parent="heladeranueva_001"]
+visible = false
+
+[node name="StaticBody3D" parent="heladeranueva_001/bebida helada02-001este0"]
+collision_layer = 0
+collision_mask = 0
+
+[node name="bebida helada02-este0" parent="heladeranueva"]
+visible = false
+
+[node name="StaticBody3D" parent="heladeranueva/bebida helada02-este0"]
+collision_layer = 0
+collision_mask = 0
+
+[node name="bebida helada02-este2" parent="heladeranueva"]
+visible = false
+
+[node name="StaticBody3D" parent="heladeranueva/bebida helada02-este2"]
 collision_layer = 0
 collision_mask = 0
 

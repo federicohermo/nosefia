@@ -11,11 +11,18 @@
 // marca se distingue de todo lo que ya está en el estante, y el color que aparece al colocar
 // la unidad es el aviso de que quedó puesta.
 //
-// `unshaded` porque es una indicación y no un objeto: tiene que verse igual con luz o sin ella.
-// `depth_draw_never` para que no tape lo que hay atrás, y `cull_disabled` para que se lea
-// también desde adentro del mueble.
+// `unshaded` porque es una indicación y no un objeto: tiene que verse igual con luz o sin ella,
+// y `depth_draw_never` para que no tape lo que hay atrás.
+//
+// **Las caras de atrás no se dibujan.** Con `cull_disabled` el fantasma mostraba su propio
+// reverso a través del frente: en una lata se veía la tapa de abajo como una mancha negra, y en
+// una bolsa la tabla nutricional del dorso encima del logo. Un envase es un cuerpo cerrado, así
+// que la cara que mira para el otro lado no aporta nada, y sumada en transparencia sobre la de
+// adelante ensucia las dos. Lo que se pierde es verlo desde adentro del mueble, que es una
+// posición desde la que el jugador no mira.
 shader_type spatial;
-render_mode unshaded, cull_disabled, depth_draw_never;
+render_mode unshaded, depth_draw_never;
+
 
 uniform sampler2D textura : source_color, filter_nearest;
 

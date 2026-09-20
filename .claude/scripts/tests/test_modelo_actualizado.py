@@ -59,18 +59,26 @@ class ModeloActualizado(unittest.TestCase):
         # fondo, el lado de la gondola del medio que da al pasillo de atras y siete de las ocho
         # bandejas de las dos heladeras no tenian nada, que no se lee como un estante a medio
         # reponer sino como un mueble roto. Son diecisiete tandas de guia mas.
-
         #
+        # **Y despues, ninguna bandeja de un lado quedo con un solo producto.** Diez estantes
+        # mostraban una marca sola repetida hasta el borde, alguno con cuarenta unidades: eso no
+        # se lee como un almacen sino como el deposito. Ahora cada uno lleva entre dos y cuatro,
+        # y entraron a la gondola los tres que solo vivian en una cabecera -Malbardo, Durextra y
+        # Laysntt-. Las cabeceras si llevan uno solo, que es como se arma una punta de verdad.
+        #
+        # **Coracola se repone una bandeja mas arriba**, a 1,29 y no a 0,79.
+        #
+
         # Los seis productos armados del troquel entraron chicos —el troquel da la proporcion y
         # no el tamano— y se agrandaron un cuarto, salvo las Macumbas que ya venian agrandadas.
         blend = (RAIZ / "assets/models/SEPT_JUEGOS_PROTOTIPO.blend").read_bytes()
         self.assertEqual(
             hashlib.sha256(blend).hexdigest(),
-            "f0ed5ed34cb1855804c8364edf775706e7cb94ef03bbe1c511a2945ac41a62cd",
+            "50e01439960a085b99073e50b54d22855b30b8615e93024e0527c650e287d516",
         )
         self.assertEqual(
             hashlib.sha256(self.glb).hexdigest(),
-            "622ccd0238ed366c304dfaa271cdb865a6d6c74f0e0ae84da6fe71d1f2b94fbd",
+            "d2d0d51e3d257a2e66d700bd68d80b145f9cd27262036d8e95417b209af724ab",
         )
 
 
@@ -79,7 +87,8 @@ class ModeloActualizado(unittest.TestCase):
         # de glTF evalua los modificadores objeto por objeto, asi que una tanda copiada de un
         # objeto que tiene modificadores no comparte la malla con su original. Son mallas
         # repetidas, cien kilobytes sobre treinta y cuatro megas.
-        self.assertEqual(len(self.modelo["meshes"]), 75)
+        self.assertEqual(len(self.modelo["meshes"]), 80)
+
 
         self.assertEqual(len(self.modelo["materials"]), 42)
         for malla in self.modelo["meshes"]:

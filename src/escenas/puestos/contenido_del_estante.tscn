@@ -97,7 +97,7 @@ visible = false
 mesh = ExtResource("malla13")
 
 [node name="Coracola" type="MeshInstance3D" parent="."]
-transform = Transform3D(-1.431825, 0, 0.358954, 0, 1.476134, 0, -0.358955, 0, -1.431825, -6.506982, 0.881946, 3.926464)
+transform = Transform3D(-1.431825, 0, 0.358954, 0, 1.476134, 0, -0.358954, 0, -1.431825, -6.506982, 1.381946, 3.926464)
 visible = false
 mesh = ExtResource("malla14")
 
