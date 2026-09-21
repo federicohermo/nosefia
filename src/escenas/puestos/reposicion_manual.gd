@@ -64,6 +64,8 @@ var _zonas: Array[StaticBody3D] = []
 var _modelos: Array[Mesh] = []
 var _formas: Array[ConvexPolygonShape3D] = []
 var _grupos: Array[MultiMeshInstance3D] = []
+## Cuántas copias de otras exhibiciones van al principio del dibujo de cada producto.
+var _guias_sumadas: Array[int] = []
 var _sueltos: Array[GrupoDelPiso] = []
 var _disponible: ObjetoAgarrable = null
 
@@ -569,8 +571,8 @@ func _preparar_grupos() -> void:
 		var grupo := _dibujar(
 			"ProductosDe" + producto.nombre, malla, disposicion.principales[producto.id]
 		)
-		grupo.multimesh.visible_instance_count = _primera_reponible(producto.id)
 		_grupos.append(grupo)
+		_guias_sumadas.append(0)
 		var sueltos := GrupoDelPiso.new()
 		sueltos.name = "SueltosDe" + producto.nombre
 		sueltos.preparar(malla, repositor.estante().cupo(producto))
@@ -607,13 +609,88 @@ func _pie_del_fantasma(modelo: Mesh) -> Vector3:
 
 ## Las exhibiciones que no cambian. Se dibujan una vez y quedan enteras: nada las vende ni las
 ## repone, y por eso no se guarda el nodo.
+##
+## **Se juntan en la menor cantidad de dibujos posible.** Cada nodo que se dibuja le cuesta al
+## motor su preparación, y en la web esa preparación es lo que más pesa del cuadro: medido el
+## 2026-09-21, las guías sueltas eran el 42 % del tiempo de dibujo mirando la góndola. Una guía
+## que muestra un producto del catálogo va al principio del dibujo de ese producto, donde
+## `visible_instance_count` no llega a cortar. Las demás se juntan entre ellas.
+##
+## Van juntas si comparten malla **y material**: la misma caja lleva texturas distintas según el
+## producto que muestra.
 func _preparar_la_guia() -> void:
+	var destino := {}
+	for id in contenido.get_child_count():
+		destino[_clave(contenido.get_child(id).mesh)] = id
+	var sumadas: Array[PackedFloat32Array] = []
+	sumadas.resize(_grupos.size())
+	var sueltas := {}
 	for indice in disposicion.guias.size():
 		var modelo := get_node(GUIA).get_child(indice) as MeshInstance3D
+		var clave := _clave(modelo.mesh)
+		var bloque := disposicion.guias[indice]
+		if destino.has(clave):
+			var id: int = destino[clave]
+			var base := (contenido.get_child(id) as Node3D).global_basis
+			sumadas[id].append_array(_rebasar(bloque, modelo.global_basis, base))
+		elif sueltas.has(clave):
+			var primera: MeshInstance3D = sueltas[clave][0]
+			sueltas[clave][1].append_array(
+				_rebasar(bloque, modelo.global_basis, primera.global_basis)
+			)
+		else:
+			sueltas[clave] = [modelo, bloque.duplicate()]
+	for id in _grupos.size():
+		var copias := _grupos[id].multimesh
+		# Del recurso y no de `copias.buffer`: leerlo del dibujo obliga a bajarlo de la GPU.
+		var bloque := sumadas[id] + disposicion.principales[id]
+		copias.instance_count = DisposicionDeLaGondola.copias(bloque)
+		copias.buffer = bloque
+		_guias_sumadas[id] = DisposicionDeLaGondola.copias(sumadas[id])
+		copias.visible_instance_count = _primera_dibujada(id)
+	var numero := 0
+	for clave in sueltas:
+		var modelo: MeshInstance3D = sueltas[clave][0]
 		var herramienta := SurfaceTool.new()
 		herramienta.append_from(modelo.mesh, 0, Transform3D(modelo.global_basis, Vector3.ZERO))
 		herramienta.set_material(modelo.mesh.surface_get_material(0))
-		_dibujar("Guia" + str(indice), herramienta.commit(), disposicion.guias[indice])
+		_dibujar("Guia" + str(numero), herramienta.commit(), sueltas[clave][1])
+		numero += 1
+
+
+## Qué tienen que compartir dos exhibiciones para dibujarse juntas: la malla y el material.
+func _clave(malla: Mesh) -> int:
+	var material := malla.surface_get_material(0)
+	return hash(
+		[
+			malla.surface_get_arrays(0)[Mesh.ARRAY_VERTEX],
+			material.resource_name if material != null else "",
+		]
+	)
+
+
+## Las copias de un bloque horneado con `desde`, pasadas a una malla horneada con `hacia`.
+##
+## Cada exhibición hornea la vuelta de su modelo en la malla, y sus copias son relativas a esa
+## vuelta. Para dibujarlas con la malla de otra, cada copia se queda con su lugar y cambia la
+## vuelta: `copia · desde · hacia⁻¹`, que puesta sobre la otra malla da la misma unidad.
+func _rebasar(bloque: PackedFloat32Array, desde: Basis, hacia: Basis) -> PackedFloat32Array:
+	var cambio := desde * hacia.inverse()
+	var salida := PackedFloat32Array()
+	for indice in DisposicionDeLaGondola.copias(bloque):
+		var copia := DisposicionDeLaGondola.copia(bloque, indice)
+		var b := copia.basis * cambio
+		var o := copia.origin
+		salida.append_array(
+			[b.x.x, b.y.x, b.z.x, o.x, b.x.y, b.y.y, b.z.y, o.y, b.x.z, b.y.z, b.z.z, o.z]
+		)
+	return salida
+
+
+## Desde qué copia del dibujo arranca el tramo que el jugador repone: las guías del propio
+## bloque más las de otras exhibiciones que se le sumaron adelante.
+func _primera_dibujada(id: Producto.Id) -> int:
+	return _guias_sumadas[id] + _primera_reponible(id)
 
 
 ## Un `MultiMeshInstance3D` con todas las copias de un bloque, prendidas.
@@ -666,7 +743,7 @@ func retirar(id: Producto.Id) -> void:
 
 func depositar(unidad: Node3D, producto: Producto, unidades: int) -> void:
 	_grupos[producto.id].multimesh.visible_instance_count = (
-		_primera_reponible(producto.id) + unidades
+		_primera_dibujada(producto.id) + unidades
 	)
 	_guardar_cuerpo(unidad)
 
@@ -701,7 +778,7 @@ func actualizar_stock(_despachados: int) -> void:
 	for producto in Catalogo.todos():
 		var copias := _grupos[producto.id].multimesh
 		copias.visible_instance_count = (
-			_primera_reponible(producto.id) + repositor.estante().unidades_en_gondola(producto)
+			_primera_dibujada(producto.id) + repositor.estante().unidades_en_gondola(producto)
 		)
 	_actualizar_zonas()
 
@@ -720,5 +797,5 @@ func limpiar() -> void:
 	# por `id` mata el primer cuadro con un `Out of bounds` que no nombra ni a la jornada ni a
 	# este puesto.
 	for id in _grupos.size():
-		_grupos[id].multimesh.visible_instance_count = _primera_reponible(id)
+		_grupos[id].multimesh.visible_instance_count = _primera_dibujada(id)
 	_actualizar_zonas()
