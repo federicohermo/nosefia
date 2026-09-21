@@ -51,10 +51,6 @@ const METODO_EMPUJAR := "empujar"
 ## hace que correr una caja cueste caminar más lento, que es el peso que se quiere.
 const ARRASTRE_DE_LA_CAJA := 0.5
 
-## Hasta qué altura del centro de una caja se le puede sacar una unidad, en metros. El corte cae
-## entre una caja apoyada en el piso y una en la mano: es lo que le cobra el traslado al jugador.
-const ALTURA_PARA_RETIRAR := 0.75
-
 ## Cuánto tiene que mirar hacia arriba una superficie para que se pueda apoyar una caja encima.
 ## Es la componente vertical de su normal: con 1 sólo valdría lo perfectamente plano, con 0
 ## valdría una pared.
@@ -71,8 +67,13 @@ const CAPA_DEL_CONTORNO := 8
 const ROCE := 0.004
 
 
-static func se_puede_retirar(altura: float) -> bool:
-	return altura <= ALTURA_PARA_RETIRAR
+## Si a una caja se le puede sacar una unidad: a toda la que esté apoyada, en cualquier lado.
+##
+## **Lo que cobra el traslado es que la caja llevada no entrega**, no la altura a la que quede.
+## Antes el corte era una altura, y una caja apoyada en un mostrador, en un estante o sobre otra
+## caja no entregaba nada sin que nada dijera por qué.
+static func se_puede_retirar(la_lleva_el_jugador: bool) -> bool:
+	return not la_lleva_el_jugador
 
 
 static func se_puede_apoyar_en(inclinacion: float) -> bool:

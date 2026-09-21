@@ -611,7 +611,6 @@ func _accion(
 ## Baja la caja al suelo y le pide una unidad con el clic derecho. Las del estante no
 ## entregan desde ahí, y bajarlas es justamente lo que le cuesta al jugador.
 func _sacar_de_la_caja(jugador: Node3D, caja: Node3D) -> void:
-	caja.global_position.y = minf(caja.global_position.y, ReglasDeLosObjetos.ALTURA_PARA_RETIRAR)
 	_accion(jugador, caja, ReglasDelJugador.ACCION_USAR)
 
 

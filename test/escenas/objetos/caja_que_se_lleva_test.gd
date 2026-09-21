@@ -117,7 +117,9 @@ func _almacen_con_jugador_quieto() -> Node3D:
 	return almacen
 
 
-func test_la_caja_entrega_en_el_piso_y_no_en_el_estante() -> void:
+func test_la_caja_entrega_apoyada_en_el_estante_y_no_mientras_se_la_lleva() -> void:
+	# Apoyada entrega en cualquier superficie, y el estante del depósito es la más alta que hay.
+	# En la mano no: llevarla es lo que cuesta, y sacarle una unidad pide apoyarla primero.
 	var almacen: Node3D = await _almacen_con_jugador_quieto()
 	var jugador: Node3D = almacen.get("_jugador")
 	var agarre: Agarre = almacen.get("_agarre")
@@ -125,15 +127,6 @@ func test_la_caja_entrega_en_el_piso_y_no_en_el_estante() -> void:
 	var producto := Catalogo.de(Producto.Id.ACTRONCITO)
 	var caja: Node3D = almacen.get("_cajas_de_productos")[producto.id]
 	var antes := repositor.estante().disponibles_para_retirar(producto)
-	(
-		assert_bool(ReglasDeLosObjetos.se_puede_retirar(caja.global_position.y))
-		. override_failure_message("la caja ya arranca apoyada: el caso no distingue nada")
-		. is_false()
-	)
-	_accion(jugador, caja, ReglasDelJugador.ACCION_USAR)
-	assert_object(agarre.manos().sostenido()).is_null()
-	assert_int(repositor.estante().disponibles_para_retirar(producto)).is_equal(antes)
-	caja.global_position.y = ReglasDeLosObjetos.ALTURA_PARA_RETIRAR
 	_accion(jugador, caja, ReglasDelJugador.ACCION_USAR)
 	var unidad := agarre.manos().sostenido() as UnidadDeProducto
 	assert_object(unidad).is_not_null()
@@ -141,6 +134,13 @@ func test_la_caja_entrega_en_el_piso_y_no_en_el_estante() -> void:
 		return
 	assert_int(unidad.producto.id).is_equal(producto.id)
 	assert_int(repositor.estante().disponibles_para_retirar(producto)).is_equal(antes - 1)
+	almacen.get("_reposicion_manual").pedir_colocar(producto.id)
+	assert_object(agarre.manos().sostenido()).is_null()
+	_accion(jugador, caja, ReglasDeLosObjetos.ACCION_AGARRAR)
+	assert_object(caja.get_parent()).is_same(jugador.get_node("PuntoDeCaja"))
+	var con_la_caja := repositor.estante().disponibles_para_retirar(producto)
+	almacen.get("_reposicion_manual").retirar_de_la_caja(caja)
+	assert_int(repositor.estante().disponibles_para_retirar(producto)).is_equal(con_la_caja)
 
 
 func test_el_clic_izquierdo_levanta_la_caja_y_no_entrega_producto() -> void:

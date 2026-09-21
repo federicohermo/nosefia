@@ -160,13 +160,16 @@ func _retirar_del_grupo(nodo: Node3D) -> void:
 		_sueltos[nodo.datos.producto.id].quitar(nodo)
 
 
-## Saca una unidad de la caja apuntada, y sólo con la caja apoyada en el suelo.
+## Saca una unidad de la caja apuntada, y sólo con la caja apoyada.
 ##
 ## El clic derecho llega por `uso_pedido`, que se reparte entre los puestos: acá se descarta lo
-## que no es una caja. Desde qué altura entrega lo decide `ReglasDeLosObjetos`, donde tiene test.
+## que no es una caja. Cuándo entrega lo decide `ReglasDeLosObjetos`, donde tiene test.
 func retirar_de_la_caja(objetivo: Node3D) -> void:
 	var caja := objetivo as CajaDelDeposito
-	if caja == null or not ReglasDeLosObjetos.se_puede_retirar(caja.global_position.y):
+	if caja == null:
+		return
+	var la_lleva := repositor.agarre.manos().sostenido() == caja.datos
+	if not ReglasDeLosObjetos.se_puede_retirar(la_lleva):
 		return
 	retirar(caja.producto)
 

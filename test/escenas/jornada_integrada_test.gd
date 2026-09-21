@@ -75,10 +75,6 @@ func _reponer(almacen: Node3D) -> void:
 			direccion = Vector3(0, 0, -1.5)
 		camara.global_position = zona.get_center() + direccion
 		camara.look_at(zona.get_center())
-		# La caja entrega apoyada en el suelo: las del estante hay que bajarlas primero.
-		caja.global_position.y = minf(
-			caja.global_position.y, ReglasDeLosObjetos.ALTURA_PARA_RETIRAR
-		)
 		for unidad in producto.umbral:
 			almacen.get("_reposicion_manual").call("retirar_de_la_caja", caja)
 			almacen.get("_reposicion_manual").get_node("ZonaDe" + producto.nombre).call(
