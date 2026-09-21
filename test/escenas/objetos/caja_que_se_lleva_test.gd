@@ -335,6 +335,32 @@ func test_la_caja_soltada_se_acomoda_adentro_de_su_apoyo() -> void:
 	_comprobar_apoyo_entero(almacen, caja, "sobre otra caja")
 
 
+func test_soltar_mirando_el_costado_de_una_caja_la_apila_encima() -> void:
+	# Con una caja justo enfrente el cursor cae en su costado, no en su tapa. Antes eso mandaba la
+	# caja al piso de adelante, y apilar pedía subir la mira hasta la tapa.
+	var almacen: Node3D = auto_free(ALMACEN.instantiate())
+	add_child(almacen)
+	await get_tree().physics_frame
+	var jugador: CharacterBody3D = almacen.get("_jugador")
+	var caja: Node3D = almacen.get("_cajas_de_productos")[Producto.Id.LAYSNTT]
+	var debajo: Node3D = almacen.get("_cajas_de_productos")[Producto.Id.SALADIK]
+	_accion(jugador, caja, ReglasDeLosObjetos.ACCION_AGARRAR)
+	await _caminar_hasta(almacen, _limites_de(debajo), Vector3.LEFT)
+	var camara: Camera3D = jugador.get_node("Camara")
+	var costado := debajo.global_position + Vector3.RIGHT * _limites_de(debajo).size.x / 2.0
+	var hacia := costado - camara.global_position
+	_mirar(jugador, atan2(-hacia.x, -hacia.z), atan2(hacia.y, Vector2(hacia.x, hacia.z).length()))
+	_accion(jugador, caja, ReglasDeLosObjetos.ACCION_AGARRAR)
+	assert_float(caja.global_position.x).is_equal_approx(debajo.global_position.x, 0.005)
+	assert_float(caja.global_position.z).is_equal_approx(debajo.global_position.z, 0.005)
+	(
+		assert_float(caja.global_position.y)
+		. override_failure_message("la caja no quedó arriba de la otra")
+		. is_greater(debajo.global_position.y + _limites_de(debajo).size.y * 0.9)
+	)
+	_comprobar_apoyo_entero(almacen, caja, "sobre la caja de enfrente")
+
+
 func test_la_caja_vuelta_a_su_lugar_apoya_entera() -> void:
 	# El caso de arriba mide un apoyo del tamaño de la caja; éste mide los apoyos de verdad de
 	# todas las cajas del catálogo, que son el estante del depósito y el suelo.
@@ -483,6 +509,11 @@ func _contrastar_la_mira(almacen: Node3D, caja: Node3D, donde: String) -> Array[
 		contrastadas += 1
 		var base := caja.global_position.y - MEDIA_CAJA
 		var mirado: float = (apuntado["position"] as Vector3).y
+		# **El costado de otra caja es apilar**, así que lo apuntado es su tapa y no el punto del
+		# costado donde cayó el cursor.
+		var enfrente := apuntado["collider"] as Node3D
+		if enfrente is RigidBody3D and absf((apuntado["normal"] as Vector3).y) < 0.5:
+			mirado = _limites_de(enfrente).end.y
 		(
 			assert_float(base)
 			. override_failure_message(
