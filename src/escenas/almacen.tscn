@@ -54,10 +54,12 @@ pantalla = NodePath("../../../Interfaz/PantallaDeComputadora")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.001017, 0)
 
 [node name="LuzInterior" parent="Estructura/heladeranueva" parent_id_path=PackedInt32Array(1019345008, 978939477) index="5"]
+light_energy = 0.4
 shadow_enabled = true
 
 [node name="LuzInterior" parent="Estructura/heladeranueva_001" parent_id_path=PackedInt32Array(1019345008, 536991128) index="5"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.38939667, 1.1912528, -0.18357801)
+light_energy = 0.4
 shadow_enabled = true
 
 [node name="Deposito" parent="Estructura/SueloSolido" index="1"]
