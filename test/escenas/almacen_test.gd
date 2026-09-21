@@ -146,16 +146,19 @@ func test_el_almacen_instancia_al_jugador_en_vez_de_duplicar_el_cuerpo() -> void
 
 
 func test_la_escena_trae_luz_propia() -> void:
-	# Una escena sin luces sale NEGRA, y el síntoma no nombra la causa. Por eso el entorno y el
-	# sol se afirman por nombre y por tipo en vez de dejarlos librados a que alguien mire la
-	# escena.
+	# Una escena sin luces sale NEGRA, y el síntoma no nombra la causa. Por eso el entorno y las
+	# luces se afirman en vez de dejarlos librados a que alguien mire la escena.
+	#
+	# **Se afirma que hay luz, no cuál.** Antes se exigía un `Sol` direccional por su nombre, y
+	# eso ataba el test a una decisión de arte: cambiar el sol por luminarias de techo lo ponía
+	# en rojo sin que nada estuviera mal. Lo que no puede pasar es que no haya ninguna.
 	var almacen := _almacen()
 	assert_bool(almacen.has_node("Ambiente/Entorno")).is_true()
 	var entorno: Node = almacen.get_node("Ambiente/Entorno")
 	assert_object(entorno).is_instanceof(WorldEnvironment)
 	assert_object(entorno.environment).is_not_null()
-	assert_bool(almacen.has_node("Ambiente/Sol")).is_true()
-	assert_object(almacen.get_node("Ambiente/Sol")).is_instanceof(DirectionalLight3D)
+	var luces := almacen.get_node("Ambiente").find_children("*", "Light3D", true, false)
+	assert_int(luces.size()).is_greater(0)
 
 
 func test_la_estructura_entra_instanciada_y_no_vino_corrida() -> void:

@@ -189,8 +189,12 @@ su arreglo.
 
 Y dos del modelo, que no tienen síntoma legible:
 
-- **El `.glb` se exporta apagando POR NOMBRE los modificadores `Array`**: son Geometry Nodes
-  llamados así, y apagar por tipo no apaga ninguno. Si quedan, los productos salen multiplicados.
+- **El `.glb` tiene que traer UNA unidad de cada producto, y por dos caminos distintos.** Los
+  modificadores `Array` se apagan **por nombre** —son Geometry Nodes llamados así, y apagar por
+  tipo no apaga ninguno—, y la colección **`guia`**, donde viven las copias linkeadas, se
+  excluye del view layer. Si cualquiera de las dos viaja, cada producto se dibuja dos veces: una
+  horneada y otra por su `MultiMesh`, y la góndola muestra el doble de lo que el inventario
+  dice. Las dos las hace `exportar_modelo.py`, y la colección queda visible en Blender.
 - **Mover o renombrar arte rompe los enlaces del `.blend`, y ningún nodo lo ve.** Sus rutas son
   relativas al archivo, y el `.glb` lleva las texturas embebidas: el juego sigue idéntico, los
   siete nodos siguen verdes, y la escena se abre en magenta. Reorganizar `assets/` costó 37 de

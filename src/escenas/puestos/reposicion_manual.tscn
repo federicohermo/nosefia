@@ -1,9 +1,12 @@
 [gd_scene format=3]
 
 [ext_resource type="Script" path="res://src/escenas/puestos/reposicion_manual.gd" id="script"]
+[ext_resource type="Resource" path="res://src/escenas/puestos/disposicion_de_la_gondola.tres" id="disposicion"]
+[ext_resource type="PackedScene" path="res://src/escenas/puestos/guia_del_estante.tscn" id="guia"]
 
 [node name="ReposicionManual" type="Node3D"]
 script = ExtResource("script")
-giros_del_frente = Array[float]([90.0, 180.0, 90.0, 90.0, 180.0, 180.0, 180.0, 90.0, 180.0, 180.0, 90.0, 90.0])
-apoyos = Array[Vector3]([Vector3(0.732, 0.396, -2.86), Vector3(1.363, 1.523, -4.014), Vector3(0.668, 0.396, -1.85), Vector3(0.586, 1.523, -2.86), Vector3(0.684, 0.96, -4.086), Vector3(0.649, 1.523, -4.077), Vector3(0.655, 0.396, -4.036), Vector3(0.59, 0.96, -0.5), Vector3(1.47, 0.396, -4.018), Vector3(1.679, 0.96, -4.088), Vector3(0.578, 0.96, -2.86), Vector3(0.578, 1.523, -0.5)])
-direcciones = Array[Vector3]([Vector3(0, 0, 1), Vector3(1, 0, 0), Vector3(0, 0, 1), Vector3(0, 0, 1), Vector3(1, 0, 0), Vector3(1, 0, 0), Vector3(1, 0, 0), Vector3(0, 0, 1), Vector3(1, 0, 0), Vector3(1, 0, 0), Vector3(0, 0, 1), Vector3(0, 0, 1)])
+disposicion = ExtResource("disposicion")
+giros_del_frente = Array[float]([90.0, 0.0, 270.0, 90.0, 180.0, 0.0, 270.0, 90.0, 270.0, 180.0, 270.0, 270.0, 90.0, 270.0, 270.0, 180.0, 270.0, 270.0, 270.0, 270.0, 270.0, 270.0, 270.0])
+
+[node name="Guia" parent="." instance=ExtResource("guia")]

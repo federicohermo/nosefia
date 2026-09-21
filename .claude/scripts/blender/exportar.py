@@ -36,7 +36,7 @@ import bpy  # type: ignore[import-not-found]  # sólo existe adentro de Blender
 # acá adentro corre el Python de Blender y nada de esto se puede importar desde un test.
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
-from lib.blender import MODIFICADOR, es_un_array  # noqa: E402
+from lib.blender import COLECCION_DE_GUIA, MODIFICADOR, es_un_array  # noqa: E402
 
 
 def apagar_los_array() -> list[tuple[str, str]]:
@@ -49,6 +49,24 @@ def apagar_los_array() -> list[tuple[str, str]]:
                 modificador.show_render = False
                 apagados.append((objeto.name, modificador.name))
     return apagados
+
+
+def apagar_la_guia() -> bool:
+    """Saca del view layer la colección de las copias, y dice si hizo falta.
+
+    **Son copias linkeadas que el juego dibuja con un `MultiMesh`, no geometría del local.** Se
+    quedan en el `.blend` porque son la fuente de dónde va cada unidad, y se ven en el viewport
+    porque el artista las acomoda ahí; lo que no pueden es viajar en el `.glb`, o cada producto
+    se dibujaría dos veces: una horneada y otra por el grupo.
+
+    Se excluye la colección y no se oculta objeto por objeto: `use_visible` mira el view layer,
+    así que excluirla alcanza, y deja el archivo como estaba al restaurarla.
+    """
+    capa = bpy.context.view_layer.layer_collection.children.get(COLECCION_DE_GUIA)
+    if capa is None or capa.exclude:
+        return False
+    capa.exclude = True
+    return True
 
 
 def restaurar(apagados: list[tuple[str, str]]) -> None:
@@ -91,10 +109,14 @@ def main() -> None:
 
     apagados = apagar_los_array()
     print(f"modificadores `{MODIFICADOR}` apagados: {len(apagados)}")
+    guia_apagada = apagar_la_guia()
+    print(f"colección `{COLECCION_DE_GUIA}` excluida: {guia_apagada}")
     try:
         exportar(destino)
     finally:
         restaurar(apagados)
+        if guia_apagada:
+            bpy.context.view_layer.layer_collection.children[COLECCION_DE_GUIA].exclude = False
     print(f"exportado: {destino}")
 
 
