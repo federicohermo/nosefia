@@ -117,7 +117,9 @@ func _almacen_con_jugador_quieto() -> Node3D:
 	return almacen
 
 
-func test_la_caja_entrega_en_el_piso_y_no_en_el_estante() -> void:
+func test_la_caja_entrega_apoyada_en_el_estante_y_no_mientras_se_la_lleva() -> void:
+	# Apoyada entrega en cualquier superficie, y el estante del depósito es la más alta que hay.
+	# En la mano no: llevarla es lo que cuesta, y sacarle una unidad pide apoyarla primero.
 	var almacen: Node3D = await _almacen_con_jugador_quieto()
 	var jugador: Node3D = almacen.get("_jugador")
 	var agarre: Agarre = almacen.get("_agarre")
@@ -125,15 +127,6 @@ func test_la_caja_entrega_en_el_piso_y_no_en_el_estante() -> void:
 	var producto := Catalogo.de(Producto.Id.ACTRONCITO)
 	var caja: Node3D = almacen.get("_cajas_de_productos")[producto.id]
 	var antes := repositor.estante().disponibles_para_retirar(producto)
-	(
-		assert_bool(ReglasDeLosObjetos.se_puede_retirar(caja.global_position.y))
-		. override_failure_message("la caja ya arranca apoyada: el caso no distingue nada")
-		. is_false()
-	)
-	_accion(jugador, caja, ReglasDelJugador.ACCION_USAR)
-	assert_object(agarre.manos().sostenido()).is_null()
-	assert_int(repositor.estante().disponibles_para_retirar(producto)).is_equal(antes)
-	caja.global_position.y = ReglasDeLosObjetos.ALTURA_PARA_RETIRAR
 	_accion(jugador, caja, ReglasDelJugador.ACCION_USAR)
 	var unidad := agarre.manos().sostenido() as UnidadDeProducto
 	assert_object(unidad).is_not_null()
@@ -141,6 +134,13 @@ func test_la_caja_entrega_en_el_piso_y_no_en_el_estante() -> void:
 		return
 	assert_int(unidad.producto.id).is_equal(producto.id)
 	assert_int(repositor.estante().disponibles_para_retirar(producto)).is_equal(antes - 1)
+	almacen.get("_reposicion_manual").pedir_colocar(producto.id)
+	assert_object(agarre.manos().sostenido()).is_null()
+	_accion(jugador, caja, ReglasDeLosObjetos.ACCION_AGARRAR)
+	assert_object(caja.get_parent()).is_same(jugador.get_node("PuntoDeCaja"))
+	var con_la_caja := repositor.estante().disponibles_para_retirar(producto)
+	almacen.get("_reposicion_manual").retirar_de_la_caja(caja)
+	assert_int(repositor.estante().disponibles_para_retirar(producto)).is_equal(con_la_caja)
 
 
 func test_el_clic_izquierdo_levanta_la_caja_y_no_entrega_producto() -> void:
@@ -335,6 +335,32 @@ func test_la_caja_soltada_se_acomoda_adentro_de_su_apoyo() -> void:
 	_comprobar_apoyo_entero(almacen, caja, "sobre otra caja")
 
 
+func test_soltar_mirando_el_costado_de_una_caja_la_apila_encima() -> void:
+	# Con una caja justo enfrente el cursor cae en su costado, no en su tapa. Antes eso mandaba la
+	# caja al piso de adelante, y apilar pedía subir la mira hasta la tapa.
+	var almacen: Node3D = auto_free(ALMACEN.instantiate())
+	add_child(almacen)
+	await get_tree().physics_frame
+	var jugador: CharacterBody3D = almacen.get("_jugador")
+	var caja: Node3D = almacen.get("_cajas_de_productos")[Producto.Id.LAYSNTT]
+	var debajo: Node3D = almacen.get("_cajas_de_productos")[Producto.Id.SALADIK]
+	_accion(jugador, caja, ReglasDeLosObjetos.ACCION_AGARRAR)
+	await _caminar_hasta(almacen, _limites_de(debajo), Vector3.LEFT)
+	var camara: Camera3D = jugador.get_node("Camara")
+	var costado := debajo.global_position + Vector3.RIGHT * _limites_de(debajo).size.x / 2.0
+	var hacia := costado - camara.global_position
+	_mirar(jugador, atan2(-hacia.x, -hacia.z), atan2(hacia.y, Vector2(hacia.x, hacia.z).length()))
+	_accion(jugador, caja, ReglasDeLosObjetos.ACCION_AGARRAR)
+	assert_float(caja.global_position.x).is_equal_approx(debajo.global_position.x, 0.005)
+	assert_float(caja.global_position.z).is_equal_approx(debajo.global_position.z, 0.005)
+	(
+		assert_float(caja.global_position.y)
+		. override_failure_message("la caja no quedó arriba de la otra")
+		. is_greater(debajo.global_position.y + _limites_de(debajo).size.y * 0.9)
+	)
+	_comprobar_apoyo_entero(almacen, caja, "sobre la caja de enfrente")
+
+
 func test_la_caja_vuelta_a_su_lugar_apoya_entera() -> void:
 	# El caso de arriba mide un apoyo del tamaño de la caja; éste mide los apoyos de verdad de
 	# todas las cajas del catálogo, que son el estante del depósito y el suelo.
@@ -483,6 +509,11 @@ func _contrastar_la_mira(almacen: Node3D, caja: Node3D, donde: String) -> Array[
 		contrastadas += 1
 		var base := caja.global_position.y - MEDIA_CAJA
 		var mirado: float = (apuntado["position"] as Vector3).y
+		# **El costado de otra caja es apilar**, así que lo apuntado es su tapa y no el punto del
+		# costado donde cayó el cursor.
+		var enfrente := apuntado["collider"] as Node3D
+		if enfrente is RigidBody3D and absf((apuntado["normal"] as Vector3).y) < 0.5:
+			mirado = _limites_de(enfrente).end.y
 		(
 			assert_float(base)
 			. override_failure_message(
@@ -704,7 +735,9 @@ func test_agarrar_la_caja_del_estante_no_mueve_al_jugador() -> void:
 	await get_tree().physics_frame
 	var jugador: CharacterBody3D = almacen.get("_jugador")
 	var caja: Node3D = almacen.get("_cajas_de_productos")[Producto.Id.ACTRONCITO]
-	await _caminar_hasta(almacen, _limites_de(caja), Vector3.RIGHT)
+	# Desde adentro del depósito: el estante de esta caja está contra la pared del oeste. Llegando
+	# por el otro lado el jugador arranca afuera del edificio, donde no hay piso.
+	await _caminar_hasta(almacen, _limites_de(caja), Vector3.LEFT)
 	var antes := jugador.global_position
 	_accion(jugador, caja, ReglasDeLosObjetos.ACCION_AGARRAR)
 	await get_tree().physics_frame

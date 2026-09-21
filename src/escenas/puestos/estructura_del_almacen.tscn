@@ -12,6 +12,9 @@
 [sub_resource type="BoxShape3D" id="contorno_de_gondola"]
 size = Vector3(1.939379, 2.292614, 5.417235)
 
+[sub_resource type="BoxShape3D" id="contorno_de_gondola_del_fondo"]
+size = Vector3(1.096062, 2.294011, 3.838209)
+
 [sub_resource type="BoxShape3D" id="suelo_local"]
 size = Vector3(16.15515, 0.206508, 16.15515)
 
@@ -103,6 +106,22 @@ editor_description = "El jugador choca con esta caja y no con la malla del muebl
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.056863, 0)
 shape = SubResource("contorno_de_gondola")
 
+
+[node name="Contorno" type="StaticBody3D" parent="gondolanueva_001"]
+collision_layer = 8
+collision_mask = 0
+
+[node name="Forma" type="CollisionShape3D" parent="gondolanueva_001/Contorno"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.421658, -0.057562, 0)
+shape = SubResource("contorno_de_gondola_del_fondo")
+
+[node name="Contorno" type="StaticBody3D" parent="gondolanueva_002"]
+collision_layer = 8
+collision_mask = 0
+
+[node name="Forma" type="CollisionShape3D" parent="gondolanueva_002/Contorno"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.421658, -0.057562, 0)
+shape = SubResource("contorno_de_gondola_del_fondo")
 
 [node name="limpiador" parent="."]
 visible = false

@@ -151,7 +151,7 @@ func test_el_burbaloo_del_piso_no_bloquea_al_jugador() -> void:
 	cuerpo.remove_collision_exception_with(jugador)
 	assert_bool(jugador.test_move(jugador.global_transform, Vector3(1.5, 0, 0))).is_true()
 	cuerpo.add_collision_exception_with(jugador)
-	assert_int(cuerpo.collision_mask).is_equal(1)
+	assert_int(cuerpo.collision_mask).is_equal(1 | ReglasDeLosObjetos.CAPA_DEL_CONTORNO)
 	assert_bool(agarre.pedir_agarrar(cuerpo.datos, cuerpo)).is_true()
 
 
@@ -242,7 +242,7 @@ func test_reutiliza_el_cuerpo_al_depositar_y_cambia_de_producto() -> void:
 	var suelto: RigidBody3D = agarre.soltar(true)
 	assert_bool(suelto.freeze).is_false()
 	assert_int(suelto.collision_layer).is_equal(1)
-	assert_int(suelto.collision_mask).is_equal(1)
+	assert_int(suelto.collision_mask).is_equal(1 | ReglasDeLosObjetos.CAPA_DEL_CONTORNO)
 
 
 func test_las_unidades_sueltas_caen_y_se_recuperan_sin_perder_su_reserva() -> void:
@@ -611,7 +611,6 @@ func _accion(
 ## Baja la caja al suelo y le pide una unidad con el clic derecho. Las del estante no
 ## entregan desde ahí, y bajarlas es justamente lo que le cuesta al jugador.
 func _sacar_de_la_caja(jugador: Node3D, caja: Node3D) -> void:
-	caja.global_position.y = minf(caja.global_position.y, ReglasDeLosObjetos.ALTURA_PARA_RETIRAR)
 	_accion(jugador, caja, ReglasDelJugador.ACCION_USAR)
 
 

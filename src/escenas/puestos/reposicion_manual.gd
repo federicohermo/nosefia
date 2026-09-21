@@ -20,6 +20,10 @@ const TOLERANCIA_DEL_APOYO := 0.02
 ## En cuántos pasos se trae hacia el jugador lo que se soltó adentro de un mueble.
 const PASOS_PARA_DESATASCAR := 12
 
+## Hasta cuántas cajas se sube buscando la tapa de una pila. Es un tope de cordura: el techo del
+## local corta antes.
+const PISOS_DE_UNA_PILA := 8
+
 ## Cuántas direcciones alrededor del jugador se prueban para dejarle la caja al lado.
 const LADOS_DEL_JUGADOR := 8
 
@@ -131,7 +135,10 @@ func _desatascar_lo_soltado(nodo: Node3D) -> void:
 	var forma: CollisionShape3D = unidad.get_node("Forma")
 	var consulta := PhysicsShapeQueryParameters3D.new()
 	consulta.shape = forma.shape
-	consulta.collision_mask = unidad.collision_mask
+	# **Con el contorno del mueble además de lo que el producto choca.** El hueco de un estante es
+	# lugar libre, y ahí la mercadería no tiene cuerpo: el producto quedaba adentro de la góndola,
+	# encimado con ella y fuera de la vista. Medido: 10 de 75 soltadas alrededor de una góndola.
+	consulta.collision_mask = unidad.collision_mask | ReglasDeLosObjetos.CAPA_DEL_CONTORNO
 	consulta.exclude = [unidad.get_rid(), jugador.get_rid()]
 	var espacio := get_world_3d().direct_space_state
 	var atras := jugador.mira().basis.z.normalized()
@@ -157,13 +164,16 @@ func _retirar_del_grupo(nodo: Node3D) -> void:
 		_sueltos[nodo.datos.producto.id].quitar(nodo)
 
 
-## Saca una unidad de la caja apuntada, y sólo con la caja apoyada en el suelo.
+## Saca una unidad de la caja apuntada, y sólo con la caja apoyada.
 ##
 ## El clic derecho llega por `uso_pedido`, que se reparte entre los puestos: acá se descarta lo
-## que no es una caja. Desde qué altura entrega lo decide `ReglasDeLosObjetos`, donde tiene test.
+## que no es una caja. Cuándo entrega lo decide `ReglasDeLosObjetos`, donde tiene test.
 func retirar_de_la_caja(objetivo: Node3D) -> void:
 	var caja := objetivo as CajaDelDeposito
-	if caja == null or not ReglasDeLosObjetos.se_puede_retirar(caja.global_position.y):
+	if caja == null:
+		return
+	var la_lleva := repositor.agarre.manos().sostenido() == caja.datos
+	if not ReglasDeLosObjetos.se_puede_retirar(la_lleva):
 		return
 	retirar(caja.producto)
 
@@ -322,9 +332,10 @@ func _le_queda_encima_al_jugador(caja: CajaDelDeposito) -> bool:
 
 ## Sobre qué superficie quiere el jugador apoyar la caja. Vacío cuando ahí no hay ninguna.
 ##
-## Tres casos, y son distintos entre sí. **Una tapa** es el lugar, derecho. **El aire** no señala
-## una superficie equivocada: no señala ninguna, y entonces el lugar es el piso que haya debajo
-## del cursor. **Una cara vertical** es la que tiene vuelta, y la resuelve `_apoyo_debajo()`.
+## Cuatro casos, y son distintos entre sí. **Una tapa** es el lugar, derecho. **El aire** no
+## señala una superficie equivocada: no señala ninguna, y entonces el lugar es el piso que haya
+## debajo del cursor. **El costado de otra caja** es apilar: con una caja justo enfrente el cursor
+## cae ahí y no en su tapa. **Cualquier otra cara vertical** la resuelve `_apoyo_debajo()`.
 func _apoyo_apuntado(caja: CajaDelDeposito) -> Dictionary:
 	var ojo := jugador.mira()
 	var lejos := ojo.origin - ojo.basis.z * ReglasDelJugador.ALCANCE_DE_LA_MIRA
@@ -335,10 +346,34 @@ func _apoyo_apuntado(caja: CajaDelDeposito) -> Dictionary:
 		var punto := lejos + (ojo.origin - lejos).normalized() * _media_caja(caja).length()
 		golpe = _rayo(caja, punto, punto + Vector3.DOWN * CAIDA_MAXIMA)
 	elif not ReglasDeLosObjetos.se_puede_apoyar_en(golpe["normal"].y):
-		golpe = _apoyo_debajo(caja, ojo.origin, golpe["position"])
+		var enfrente := golpe["collider"] as CajaDelDeposito
+		if enfrente != null:
+			golpe = _tapa_de_la_pila(caja, enfrente)
+		else:
+			golpe = _apoyo_debajo(caja, ojo.origin, golpe["position"])
 	if golpe.is_empty() or not ReglasDeLosObjetos.se_puede_apoyar_en(golpe["normal"].y):
 		return {}
 	return golpe
+
+
+## La tapa de la caja más alta de la pila que arranca en `base`.
+##
+## Se sube de a una: desde el centro de cada caja, un rayo corto hacia arriba encuentra la que
+## tiene apoyada encima. Un rayo desde bien arriba no sirve, porque en el depósito pegaría en el
+## estante de arriba y no en la pila.
+func _tapa_de_la_pila(caja: CajaDelDeposito, base: CajaDelDeposito) -> Dictionary:
+	var tope := base
+	for piso in PISOS_DE_UNA_PILA:
+		var centro := tope.global_position
+		var techo := centro + Vector3.UP * (_media_caja(tope).y + TOLERANCIA_DEL_APOYO)
+		var encima := _rayo(caja, centro, techo).get("collider") as CajaDelDeposito
+		if encima == null or encima == tope:
+			break
+		tope = encima
+	var tapa := tope.global_position + Vector3.UP * _media_caja(tope).y
+	return _rayo(
+		caja, tapa + Vector3.UP * TOLERANCIA_DEL_APOYO, tapa + Vector3.DOWN * TOLERANCIA_DEL_APOYO
+	)
 
 
 ## La tapa que hay debajo del punto apuntado, y sólo si la caja apoyada ahí lo taparía.
@@ -728,7 +763,9 @@ func retirar(id: Producto.Id) -> void:
 		* Basis(Vector3.UP, deg_to_rad(giros_del_frente[id]))
 	)
 	unidad.collision_layer = 1
-	unidad.collision_mask = 1
+	# Choca también con el contorno de los muebles: caída al pie de una góndola, la unidad rodaba
+	# hacia adentro del estante de abajo.
+	unidad.collision_mask = 1 | ReglasDeLosObjetos.CAPA_DEL_CONTORNO
 	if not repositor.pedir_retirar(id, unidad):
 		_guardar_cuerpo(unidad)
 		return
