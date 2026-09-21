@@ -121,3 +121,61 @@ Referencia del 2026-09-21, v5.1.0, Ryzen 7 7435HS y RTX 4050, quieto mirando el 
 | Normal | 244 | 3,9 ms | 5,9 ms |
 | 4 veces más lenta | 82 | 11,6 ms | 30,5 ms |
 | 6 veces más lenta | 33 a 45 | 21 a 31 ms | 38 a 48 ms |
+
+## Medición de las luces
+
+```powershell
+& $env:GODOT_BIN --path . --rendering-method gl_compatibility --resolution 1536x760 test/performance/medir_luces.tscn
+```
+
+La escena termina sola y guarda `reports/rendimiento-luces.json`. Carga el local entero, apaga
+las luces del juego y prueba luces omni, de foco y de área: 1, 2, 4, 8 y 16, con sombra y sin
+sombra. Las cuelga del techo, repartidas, con alcance para alumbrar todo lo que se ve. Mide
+desde donde arranca el jugador. De cada caso guarda el tiempo de GPU, el de CPU de dibujo, el
+tiempo entre cuadros y las llamadas de dibujo.
+
+**El tiempo de GPU crece con los píxeles.** Con el doble de resolución por lado, el costo de
+las luces se multiplica por tres. Comparar siempre con la misma resolución.
+
+### Referencia del 2026-09-21
+
+Ryzen 7 7435HS, RTX 4050 Laptop, Godot 4.7.2 debug, Compatibility, 1536 × 760. El local sin
+ninguna luz cuesta 0,21 ms de GPU y 88 llamadas de dibujo. Las ocho luces del juego —seis de
+área y dos omni con sombra— cuestan 1,10 ms y 104 llamadas.
+
+GPU en milisegundos, sin sombra:
+
+| Luces | Omni | Foco | Área |
+|---:|---:|---:|---:|
+| 1 | 0,25 | 0,26 | 0,34 |
+| 2 | 0,26 | 0,31 | 0,48 |
+| 4 | 0,29 | 0,31 | 0,77 |
+| 8 | 0,42 | 0,48 | 1,45 |
+| 16 | 0,43 | 0,47 | 1,50 |
+
+Con sombra, omni: GPU en milisegundos y llamadas de dibujo.
+
+| Luces | GPU | Llamadas |
+|---:|---:|---:|
+| 1 | 0,25 | 88 |
+| 2 | 0,34 | 133 |
+| 4 | 0,48 | 243 |
+| 8 | 0,85 | 494 |
+| 16 | 0,89 | 548 |
+
+Lo que dicen los números:
+
+- **Una luz de área cuesta cinco veces una omni**: 0,15 ms contra 0,03 ms. Las dos escalan
+  derecho con la cantidad.
+- **Después de 8 no crece porque no se dibujan más.** Compatibility alumbra cada objeto con 8
+  luces como mucho, y 32 en toda la vista. La novena luz sobre el piso no cuesta nada porque no
+  alumbra. Los dos topes son ajustes del proyecto, y subirlos sube el costo.
+- **La sombra se paga en llamadas de dibujo, y eso es CPU.** Cada luz con sombra vuelve a
+  dibujar todo lo que alumbra: acá, unas 50 llamadas por luz. En la web una llamada cuesta
+  0,012 ms, así que ocho luces con sombra son unos 5 ms de CPU por cuadro.
+- **Una luz de área no da sombra en Compatibility**: prenderla no cambia nada. Por eso
+  atraviesa las paredes.
+- **No hay un recurso que agrupe luces como `MultiMesh` agrupa mallas.** El agrupado de luces
+  es de Forward+, que no corre en la web. Lo que saca el costo es hornear la luz en un lightmap.
+
+Los [JSON originales](../performance/luces-2026-09-21.json) conservan todos los casos.
