@@ -3,7 +3,7 @@ extends GdUnitTestSuite
 const Medicion := preload("res://test/performance/medir_reposicion.gd")
 
 
-func test_agrupar_el_piso_conserva_los_cuerpos_y_reduce_las_vistas() -> void:  # 042-AC6 042-AC7
+func test_agrupar_el_piso_conserva_los_cuerpos_y_reduce_las_vistas() -> void:
 	var medicion: Node3D = auto_free(Medicion.new())
 	var modelo := BoxMesh.new()
 	var forma := ConvexPolygonShape3D.new()
@@ -18,14 +18,14 @@ func test_agrupar_el_piso_conserva_los_cuerpos_y_reduce_las_vistas() -> void:  #
 		assert_bool(cuerpo.get_node("Malla").visible).is_false()
 
 
-func test_el_percentil_no_confunde_un_pico_con_la_mediana() -> void:  # 042-AC6
+func test_el_percentil_no_confunde_un_pico_con_la_mediana() -> void:
 	var valores: Array[float] = [90, 2, 3, 1, 4]
 	assert_float(Medicion.percentil(valores, 0.5)).is_equal(3.0)
 	assert_float(Medicion.percentil(valores, 0.95)).is_equal(90.0)
 	assert_float(valores[0]).is_equal(90.0)
 
 
-func test_la_carga_conserva_cantidades_y_colisiones_reales() -> void:  # 042-AC6
+func test_la_carga_conserva_cantidades_y_colisiones_reales() -> void:
 	var medicion: Node3D = auto_free(Medicion.new())
 	var modelo := BoxMesh.new()
 	var forma := ConvexPolygonShape3D.new()

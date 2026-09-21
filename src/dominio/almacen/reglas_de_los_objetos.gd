@@ -9,7 +9,7 @@ class_name ReglasDeLosObjetos
 extends RefCounted
 
 ## Cuántas cosas se pueden llevar a la vez. Vale 1 y no es un detalle de comodidad: es la mitad
-## del precio en tiempo de sacar la basura, que el spec 015 escribe como
+## del precio en tiempo de sacar la basura, que el contrato escribe como
 ## `BOLSAS_DE_LA_JORNADA > MANOS_DISPONIBLES` — o sea, más de un viaje. Subirlo a 2 le afloja el
 ## costo a media tarea obligatoria sin tocar `reglas.gd`.
 const MANOS_DISPONIBLES := 1
@@ -41,3 +41,34 @@ const ACCION_EXAMINAR := "examinar"
 ## son las dos mitades de la misma cosa: el grupo dice que se puede mirar, el método que
 ## contesta algo.
 const METODO_INTERACTUAR := "interactuar"
+
+## Y «esto se corre de un empujón» es otro nombre de método, por la misma razón: el jugador no
+## puede nombrar la caja sin cruzar la dirección de las capas.
+const METODO_EMPUJAR := "empujar"
+
+## Qué parte del paso que el jugador no pudo dar recibe lo que le estorba. Con 1 la caja se
+## mueve a su velocidad y no pesa nada; con 0 no se mueve y le tapa el paso. El medio es lo que
+## hace que correr una caja cueste caminar más lento, que es el peso que se quiere.
+const ARRASTRE_DE_LA_CAJA := 0.5
+
+## Hasta qué altura del centro de una caja se le puede sacar una unidad, en metros. El corte cae
+## entre una caja apoyada en el piso y una en la mano: es lo que le cobra el traslado al jugador.
+const ALTURA_PARA_RETIRAR := 0.75
+
+## Cuánto tiene que mirar hacia arriba una superficie para que se pueda apoyar una caja encima.
+## Es la componente vertical de su normal: con 1 sólo valdría lo perfectamente plano, con 0
+## valdría una pared.
+const APOYO_HORIZONTAL := 0.7
+
+## Cuánto se le descuenta a una forma para preguntar si entra o si atraviesa algo, en metros.
+## Apoyarse sobre algo es tocarlo, así que la medida exacta contesta que choca. Lo preguntan el
+## puesto al ubicar la caja y el test al comprobar que no atraviesa nada: es el mismo número.
+const ROCE := 0.004
+
+
+static func se_puede_retirar(altura: float) -> bool:
+	return altura <= ALTURA_PARA_RETIRAR
+
+
+static func se_puede_apoyar_en(inclinacion: float) -> bool:
+	return inclinacion >= APOYO_HORIZONTAL

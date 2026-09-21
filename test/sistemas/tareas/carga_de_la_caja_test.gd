@@ -14,7 +14,7 @@ const CARGA := "res://src/sistemas/tareas/carga_de_la_caja.gd"
 const PATRONES_DEL_CUPO := "\\b8\\b|cupo"
 
 ## Lo que ninguno de los tres archivos de este spec puede nombrar: la caja es dónde viaja la
-## mercadería, no cuánta hay. Mover del depósito a la góndola es del 008.
+## mercadería, no cuánta hay. Mover del depósito a la góndola es de reponer.
 const PATRONES_DEL_STOCK := ["Inventario", "ingresar", "mover"]
 
 const ARCHIVOS_DEL_SPEC := [
@@ -34,7 +34,7 @@ func before_test() -> void:
 	_ultimo_motivo = CajaDeTraslado.Motivo.NINGUNO
 
 
-func test_pedir_guardar_un_producto_lo_guarda_y_avisa_una_sola_vez() -> void:  # 033-AC7
+func test_pedir_guardar_un_producto_lo_guarda_y_avisa_una_sola_vez() -> void:
 	var carga := _carga()
 	carga.pedir_guardar(Producto.Id.ACTRONCITO)
 	assert_int(_guardados).is_equal(1)
@@ -42,12 +42,12 @@ func test_pedir_guardar_un_producto_lo_guarda_y_avisa_una_sola_vez() -> void:  #
 	assert_int(carga.caja().ocupados()).is_equal(1)
 
 
-func test_con_la_caja_llena_avisa_el_rechazo_y_no_avisa_un_guardado() -> void:  # 033-AC7
+func test_con_la_caja_llena_avisa_el_rechazo_y_no_avisa_un_guardado() -> void:
 	# Las dos mitades importan: emitir las dos señales dejaría a la escena pintando un casillero
 	# nuevo y un cartel de «no entra» al mismo tiempo, sin un solo error.
 	var carga := _carga()
 	for _casillero in range(Reglas.CASILLEROS_DE_LA_CAJA_DE_TRASLADO):
-		carga.pedir_guardar(Producto.Id.FIDEOS)
+		carga.pedir_guardar(Producto.Id.DUREXTRA)
 	_guardados = 0
 	carga.pedir_guardar(Producto.Id.ACTRONCITO)
 	assert_int(_guardados).is_equal(0)
@@ -55,7 +55,7 @@ func test_con_la_caja_llena_avisa_el_rechazo_y_no_avisa_un_guardado() -> void:  
 	assert_int(_ultimo_motivo).is_equal(CajaDeTraslado.Motivo.CAJA_LLENA)
 
 
-func test_el_nodo_no_lleva_el_cupo_escrito_adentro() -> void:  # 033-AC7
+func test_el_nodo_no_lleva_el_cupo_escrito_adentro() -> void:
 	# Está medido que un `const CASILLEROS := 8` copiado fuera de `reglas.gd` pasa los dos gates
 	# en verde. Ésta es la puerta que ningún gate cierra, y por eso el criterio la ata acá.
 	var texto := FileAccess.get_file_as_string(CARGA)
@@ -68,8 +68,8 @@ func test_el_nodo_no_lleva_el_cupo_escrito_adentro() -> void:  # 033-AC7
 	)
 
 
-func test_ningun_archivo_de_este_spec_toca_el_stock() -> void:  # 033-AC8
-	# La caja es el contenedor que viaja; el estante es el destino, y es del 008. Sin esta
+func test_ningun_archivo_de_este_spec_toca_el_stock() -> void:
+	# La caja es el contenedor que viaja; el estante es el destino, y es de reponer. Sin esta
 	# frontera los dos specs terminan moviendo unidades y ninguno sabe cuál las movió.
 	for ruta: String in ARCHIVOS_DEL_SPEC:
 		var texto := FileAccess.get_file_as_string(ruta)

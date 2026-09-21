@@ -27,7 +27,7 @@ const COSTO_DE_SACAR_LA_BASURA := 1200.0
 ## contar lo que camine investigando. Es el único término del presupuesto que no está en
 ## segundos de ficción, y por eso es el único que pasa por el `Ritmo`.
 ##
-## Re-derivado el 2026-09-04 por el spec 028, que es cuando el layout dejó de ser una suposición:
+## Re-derivado el 2026-09-04, que es cuando el layout dejó de ser una suposición:
 ## la versión anterior valía 180 y decía por escrito que **«cuando el layout exista hay que volver
 ## a medirlo acá»**, suponiendo un almacén de unos 20 m de punta a punta. Ahora el escenario es el
 ## modelo de `SEPT_JUEGOS_PROTOTIPO.blend`, y el interior **mide 24,60 m de punta a punta**.
@@ -43,7 +43,7 @@ const COSTO_DE_SACAR_LA_BASURA := 1200.0
 ## - **supuesto**: los ~18 cruces para hacer las cinco obligatorias más atender a los dos
 ##   compradores —dos por tarea y cuatro por comprador, contando que `SACAR_LA_BASURA` va hasta el
 ##   fondo—. No se puede medir todavía: tres de las cinco obligatorias no tienen anclaje en la
-##   escena, y dónde queda el fondo lo define el spec 015.
+##   escena, y dónde queda el fondo lo define sacar la basura.
 ##
 ## 18 × 24,60 = 442,8 m, o sea 126,5 segundos en línea recta. El valor declarado no los redondea:
 ## los sube a 220, el mismo 75 % de margen que tenía, porque nadie camina en línea recta por un
@@ -51,14 +51,14 @@ const COSTO_DE_SACAR_LA_BASURA := 1200.0
 ## está inflado a propósito: sobrestimar el trayecto aprieta el presupuesto, subestimarlo lo
 ## afloja sin que nadie se entere.
 ##
-## Que quede viejo no miente en silencio: el AC7 de `reglas_test.gd` se pone en rojo apenas el
+## Que quede viejo no miente en silencio: `reglas_test.gd` se pone en rojo apenas el
 ## trayecto se come el piso de investigación. Con 220 no lo hace, medido antes de subirlo.
 const SEGUNDOS_DE_TRAYECTO_ESTIMADOS := 220.0
 
 ## El piso de investigación, en segundos de ficción: **3600, o sea 60 minutos de juego**, una de
 ## las ocho horas de la noche.
 ##
-## Existe para que el AC7 sea una afirmación con contenido y no un `> 0` disfrazado. Un margen
+## Existe para que ese caso sea una afirmación con contenido y no un `> 0` disfrazado. Un margen
 ## de tres segundos es aritméticamente válido y un juego injugable, y sin este piso la salida
 ## fácil a un balance roto —agrandar el turno— no le costaría nada a nadie: con el piso, agrandar
 ## el turno es una decisión de diseño que hay que escribir acá.
@@ -72,8 +72,8 @@ const MARGEN_MINIMO := 3600.0
 ##
 ## Ocho es un primer valor y es lo que convierte reponer en una decisión: con uno, reponer sería
 ## un viaje por unidad y no habría nada que elegir; con muchos, cargar deja de costar. La caja de
-## la escena sí dibuja ocho huecos escritos en un `.tscn`, y por eso el día que se rebalancee este
-## número el `033-AC9` se pone en rojo: ese caso los cuenta contra esta constante.
+## la escena sí dibuja ocho huecos escritos en un `.tscn`, y el test de la caja de traslado los
+## cuenta contra esta constante: rebalancear el número sin tocar la escena se pone en rojo.
 const CASILLEROS_DE_LA_CAJA_DE_TRASLADO := 8
 
 ## A los cuatro apercibimientos lo echan, y se compara con `>=` y no con `==`: una jornada grave

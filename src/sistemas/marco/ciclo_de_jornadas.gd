@@ -6,7 +6,7 @@
 ## de este archivo son preguntas al dominio y no decisiones propias.
 ##
 ## **No conoce la pantalla.** Emite hacia arriba y no pregunta nada: quien quiera dibujar el
-## cierre de la noche —la pantalla del 017— se conecta a `jornada_cerrada` y vuelve a llamar a
+## cierre de la noche —la pantalla de cierre— se conecta a `jornada_cerrada` y vuelve a llamar a
 ## `abrir_la_jornada()` cuando el jugador la despacha. Reabrir no pasa solo a propósito: entre
 ## una noche y la siguiente hay una placa que leer.
 class_name CicloDeJornadas
@@ -40,7 +40,7 @@ func partida() -> Partida:
 ##
 ## El guard cubre los dos estados en que no hay nada que abrir: el ciclo que todavía no arrancó
 ## —la escena existe antes de que alguien le pase una partida— y la partida que ya terminó. Sin
-## el segundo, la pantalla del 017 reabriría una jornada después del despido.
+## el segundo, la pantalla de cierre reabriría una jornada después del despido.
 func abrir_la_jornada() -> bool:
 	if _partida == null or _partida.terminada():
 		return false

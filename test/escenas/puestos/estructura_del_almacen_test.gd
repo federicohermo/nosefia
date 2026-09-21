@@ -14,8 +14,8 @@ const CASCARA_DEL_EDIFICIO := "almacen"
 
 ## Los anclajes que los specs 008 y 009 buscan por nombre. Son nombres de objeto de Blender:
 ## renombrarlos allá es lo único que los pone acá.
-const ANCLAJE_DE_LA_ESTANTERIA := "gondola01"
-const ANCLAJES := [ANCLAJE_DE_LA_ESTANTERIA, "compu"]
+const ANCLAJE_DE_LA_ESTANTERIA := "gondolanueva"
+const ANCLAJES := [ANCLAJE_DE_LA_ESTANTERIA, "base compu"]
 
 ## El almacén mide 21,72 × 22,74 m de planta. La banda es ancha a propósito: no está para detectar
 ## que alguien movió una pared, sino que el modelo entró con la escala sin aplicar —el modo de
@@ -78,7 +78,9 @@ func test_el_modelo_entro_con_sus_mallas() -> void:
 
 func test_los_muebles_y_el_edificio_conservan_su_colision() -> void:
 	var estructura := _estructura()
-	for nombre in ["almacen", "gondola01", "gondola02", "compu", "EscritorioComputadora"]:
+	for nombre in [
+		"almacen", "gondolanueva", "gondolanueva2", "base compu", "EscritorioComputadora"
+	]:
 		var malla: MeshInstance3D = estructura.get_node(nombre)
 		assert_bool(_tiene_forma(malla)).override_failure_message(nombre).is_true()
 
@@ -141,7 +143,7 @@ func test_los_muebles_funcionales_conservan_sus_nombres() -> void:
 		)
 
 
-func test_el_colisionador_de_un_anclaje_cuelga_del_nodo_que_lo_nombra() -> void:  # 041-AC3
+func test_el_colisionador_de_un_anclaje_cuelga_del_nodo_que_lo_nombra() -> void:
 	# Con el blockout el `StaticBody3D` **era** el nodo llamado `Estanteria`. Con el modelo el
 	# import le cuelga uno anónimo debajo, así que `get_collider().name` dejó de servir para saber
 	# qué mueble se está mirando. De esa forma dependen los specs 006, 008 y 009, y hasta acá no la

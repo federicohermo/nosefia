@@ -5,7 +5,7 @@
 extends GdUnitTestSuite
 
 
-func test_una_mancha_no_se_limpia_en_el_instante_en_que_el_jugador_llega() -> void:  # 014-AC1
+func test_una_mancha_no_se_limpia_en_el_instante_en_que_el_jugador_llega() -> void:  # AC-CLN-001
 	# El piso es 2: con una sola pasada limpiar volvería a ser un clic, y un clic no compite
 	# contra investigar porque no hay nada que repartir.
 	(
@@ -15,7 +15,7 @@ func test_una_mancha_no_se_limpia_en_el_instante_en_que_el_jugador_llega() -> vo
 	)
 
 
-func test_desde_una_mancha_la_mira_no_llega_a_la_siguiente() -> void:  # 014-AC1
+func test_desde_una_mancha_la_mira_no_llega_a_la_siguiente() -> void:  # AC-CLN-006
 	# **Estrictamente mayor**, y ahí está el término que esta tarea aporta a la resta del turno:
 	# si la distancia fuera menor o igual, desde una mancha se podría enfocar la siguiente y los
 	# tres tramos de caminata dejarían de existir sin que nada lo dijera.
@@ -34,6 +34,6 @@ func test_desde_una_mancha_la_mira_no_llega_a_la_siguiente() -> void:  # 014-AC1
 	)
 
 
-func test_el_trapeador_tiene_un_id_que_no_es_el_centinela_de_mano_vacia() -> void:  # 014-AC1
+func test_el_trapeador_tiene_un_id_que_no_es_el_centinela_de_mano_vacia() -> void:
 	# Con `SIN_ID` como `id` del trapeador, limpiar con las manos vacías funcionaría.
 	assert_str(ReglasDeLaLimpieza.ID_DEL_TRAPEADOR).is_not_equal(ObjetoDelAlmacen.SIN_ID)

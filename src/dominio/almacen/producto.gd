@@ -13,7 +13,31 @@ extends RefCounted
 ## construye un producto nuevo en cada llamada, así que dos con el mismo `id` son objetos
 ## distintos y un
 ## diccionario indexado por instancia contesta ausente donde tenía que haber un número.
-enum Id { ACTRONCITO, FIDEOS, GASEOSA, GALLETITAS, ARROZ, JABON, MAROLINI, JORGILLO }
+enum Id {
+	ACTRONCITO,
+	DUREXTRA,
+	BURBALOO,
+	ZUCARACHAS,
+	LAYSNTT,
+	MALBARDO,
+	PRONGLES,
+	JORGILLO,
+	ARVEJAS,
+	CHISITOS,
+	OREMOS,
+	PEPITOS,
+	SALADIK,
+	UAKAS,
+	CORACOLA,
+	FROTLUPS,
+	MAROLINI,
+	AMARGADITO,
+	CINDOLOR,
+	FLINPUF,
+	DONSATURADOS,
+	PETISAS,
+	MACUMBAS,
+}
 
 var id: Id
 var nombre: String

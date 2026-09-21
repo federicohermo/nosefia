@@ -22,7 +22,7 @@ func test_el_primer_objetivo_avisa_y_queda_guardado() -> void:
 	assert_bool(foco.hay_interactuable()).is_true()
 
 
-func test_caminar_hacia_el_mismo_objeto_no_vuelve_a_avisar() -> void:
+func test_caminar_hacia_el_mismo_objeto_no_vuelve_a_avisar() -> void:  # AC-PLY-006
 	# Es el caso que justifica la pieza entera: la distancia cambia todos los cuadros mientras
 	# el jugador se acerca, y eso no es un cambio de objetivo.
 	var foco := Foco.new()
@@ -38,7 +38,7 @@ func test_mirar_otro_objeto_avisa() -> void:
 	assert_int(foco.objetivo()).is_equal(OTRO_OBJETO)
 
 
-func test_que_el_mismo_objeto_deje_de_ser_interactuable_tambien_avisa() -> void:
+func test_que_el_mismo_objeto_deje_de_ser_interactuable_tambien_avisa() -> void:  # AC-PLY-006
 	# La identidad y la interactuabilidad son los dos motivos de cambio, y el segundo importa
 	# porque es el que decide si el HUD dice algo: el mismo nodo puede dejar de estar en el
 	# grupo sin moverse de lugar.

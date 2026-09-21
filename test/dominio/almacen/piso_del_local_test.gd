@@ -21,7 +21,7 @@ func _limpiar(piso: PisoDelLocal, zona: PisoDelLocal.Zona) -> PisoDelLocal.Resul
 	return ultimo
 
 
-func test_la_jornada_arranca_con_una_mancha_por_zona() -> void:  # 014-AC3
+func test_la_jornada_arranca_con_una_mancha_por_zona() -> void:  # AC-CLN-001
 	# Se cuenta contra el `enum` y nunca contra un `4` escrito acá: una quinta zona es una línea
 	# en el `enum`, y una zona sin mancha sería un rincón que el jugador no tiene que visitar.
 	var piso := _piso()
@@ -34,8 +34,8 @@ func test_la_jornada_arranca_con_una_mancha_por_zona() -> void:  # 014-AC3
 		)
 
 
+# AC-CLN-001
 func test_las_pasadas_totales_salen_de_multiplicar_y_no_de_una_cuenta_a_mano() -> void:
-	# 014-AC3
 	# Un `12` escrito quedaría viejo el día que se agregue una zona o se rebalanceen las pasadas,
 	# y el número seguiría pareciendo correcto.
 	assert_int(_piso().pasadas_totales()).is_equal(
@@ -43,14 +43,14 @@ func test_las_pasadas_totales_salen_de_multiplicar_y_no_de_una_cuenta_a_mano() -
 	)
 
 
-func test_una_pasada_con_el_trapeador_es_una_pasada() -> void:  # 014-AC4
+func test_una_pasada_con_el_trapeador_es_una_pasada() -> void:  # AC-CLN-004
 	var piso := _piso()
 	assert_int(piso.pasar(PisoDelLocal.Zona.ENTRADA, ReglasDeLaLimpieza.ID_DEL_TRAPEADOR)).is_equal(
 		PisoDelLocal.Resultado.PASADA
 	)
 
 
-func test_la_ultima_pasada_de_una_zona_avisa_que_la_mancha_desaparecio() -> void:  # 014-AC4
+func test_la_ultima_pasada_de_una_zona_avisa_que_la_mancha_desaparecio() -> void:  # AC-CLN-004
 	# Son dos cosas distintas adelante del jugador —una mancha que se aclara y una que
 	# desaparece— y aplanarlas daría un solo cartel para las dos.
 	var piso := _piso()
@@ -59,7 +59,7 @@ func test_la_ultima_pasada_de_una_zona_avisa_que_la_mancha_desaparecio() -> void
 	)
 
 
-func test_con_las_manos_vacias_no_se_limpia_nada() -> void:  # 014-AC5
+func test_con_las_manos_vacias_no_se_limpia_nada() -> void:  # AC-CLN-002
 	var piso := _piso()
 	var antes := piso.pasadas_restantes(PisoDelLocal.Zona.ENTRADA)
 	assert_int(piso.pasar(PisoDelLocal.Zona.ENTRADA, ObjetoDelAlmacen.SIN_ID)).is_equal(
@@ -68,7 +68,7 @@ func test_con_las_manos_vacias_no_se_limpia_nada() -> void:  # 014-AC5
 	assert_int(piso.pasadas_restantes(PisoDelLocal.Zona.ENTRADA)).is_equal(antes)
 
 
-func test_con_otro_objeto_en_la_mano_tampoco() -> void:  # 014-AC5
+func test_con_otro_objeto_en_la_mano_tampoco() -> void:  # AC-CLN-002
 	# Limpiar con la lata en la mano sería limpiar gratis: el trapeador ocupa la única mano, y
 	# ésa es la mitad de la tarea que la vuelve imposible de intercalar.
 	var piso := _piso()
@@ -79,7 +79,7 @@ func test_con_otro_objeto_en_la_mano_tampoco() -> void:  # 014-AC5
 	assert_int(piso.pasadas_restantes(PisoDelLocal.Zona.PASILLO)).is_equal(antes)
 
 
-func test_sobre_una_zona_ya_limpia_avisa_que_ya_estaba_limpia() -> void:  # 014-AC5
+func test_sobre_una_zona_ya_limpia_avisa_que_ya_estaba_limpia() -> void:  # AC-CLN-003
 	var piso := _piso()
 	_limpiar(piso, PisoDelLocal.Zona.ENTRADA)
 	assert_int(piso.pasar(PisoDelLocal.Zona.ENTRADA, ReglasDeLaLimpieza.ID_DEL_TRAPEADOR)).is_equal(
@@ -87,8 +87,8 @@ func test_sobre_una_zona_ya_limpia_avisa_que_ya_estaba_limpia() -> void:  # 014-
 	)
 
 
+# AC-CLN-012
 func test_el_piso_queda_limpio_recien_con_la_ultima_pasada_de_la_ultima_zona() -> void:
-	# 014-AC6
 	# Machacar sobre una mancha limpia no cierra nada: hay que haber estado en las cuatro zonas.
 	var piso := _piso()
 	var zonas := PisoDelLocal.Zona.values()
@@ -105,7 +105,7 @@ func test_el_piso_queda_limpio_recien_con_la_ultima_pasada_de_la_ultima_zona() -
 	assert_bool(piso.esta_limpio()).is_true()
 
 
-func test_una_zona_se_puede_dejar_por_la_mitad_y_retomar() -> void:  # 014-AC6
+func test_una_zona_se_puede_dejar_por_la_mitad_y_retomar() -> void:  # AC-CLN-005
 	# **Es la mitad que vuelve a limpiar parte de la tensión**: dos pasadas, irse a otra zona,
 	# volver, y la mancha sigue esperando en una. Con una barra que hay que mantener apretada
 	# esto no se podría escribir.
@@ -118,7 +118,7 @@ func test_una_zona_se_puede_dejar_por_la_mitad_y_retomar() -> void:  # 014-AC6
 	assert_bool(piso.esta_limpio()).is_false()
 
 
-func test_cada_jornada_arranca_con_el_piso_sucio() -> void:  # 014-AC6
+func test_cada_jornada_arranca_con_el_piso_sucio() -> void:
 	# Instancias nuevas y no las mismas: con un piso compartido, lo limpiado anoche llegaría
 	# limpio esta noche y la obligatoria se cumpliría sola a partir de la segunda.
 	var una := _piso()

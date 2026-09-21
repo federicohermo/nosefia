@@ -3,7 +3,7 @@ extends GdUnitTestSuite
 const ALMACEN := preload("res://src/escenas/almacen.tscn")
 
 
-func test_cada_mancha_se_enfoca_desde_un_apoyo_caminable_a_un_metro() -> void:  # 041-AC1
+func test_cada_mancha_se_enfoca_desde_un_apoyo_caminable_a_un_metro() -> void:
 	var almacen := await _abrir()
 	var jugador: CharacterBody3D = almacen.get("_jugador")
 	var camara: Camera3D = jugador.get_node("Camara")
@@ -35,7 +35,7 @@ func test_cada_mancha_se_enfoca_desde_un_apoyo_caminable_a_un_metro() -> void:  
 		assert_bool(encontrada).override_failure_message(str(mancha.name)).is_true()
 
 
-func test_los_objetos_y_manchas_quedan_sobre_el_modelo() -> void:  # 041-AC2 041-AC3
+func test_los_objetos_y_manchas_quedan_sobre_el_modelo() -> void:
 	var almacen := await _abrir()
 	var objetos: Array[Node] = almacen.get_node("Objetos").get_children()
 	objetos.append_array(almacen.get("_limpieza").manchas())
@@ -77,7 +77,7 @@ func test_los_objetos_y_manchas_quedan_sobre_el_modelo() -> void:  # 041-AC2 041
 		assert_float(jugador.global_position.y - piso.position.y).is_between(-0.01, 0.06)
 
 
-func test_las_manchas_superan_el_alcance_entre_si() -> void:  # 041-AC6
+func test_las_manchas_superan_el_alcance_entre_si() -> void:
 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
 	var manchas: Array = almacen.get("_limpieza").manchas()
 	for indice in manchas.size():

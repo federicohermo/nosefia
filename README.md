@@ -22,16 +22,17 @@ nada que instalar.
 
 ## Cómo se trabaja acá
 
-- **Un cambio empieza por un spec**, y el spec es un issue de GitHub. No se edita `src/` sin
-  uno: lo bloquea un hook, no la buena voluntad.
+- **El contrato primero.** Lo que el juego tiene que hacer vive en `specs/`, una capacidad por
+  archivo. El plan de cada entrega es un issue de GitHub, y no se edita `src/` sin uno: lo
+  bloquea un hook, no la buena voluntad.
 - **El test va primero.** Todo script de `src/dominio/` y `src/sistemas/` tiene su espejo en
   `test/`, y un gate lo verifica.
-- **`staging` integra, `main` es lo que se entrega.** Cada spec entra por su rama
-  `feature/<NNN>-<kebab>` y su PR.
+- **`staging` integra, `main` es lo que se entrega.** Cada issue entra por su rama
+  `feature/<issue>-<kebab>` y su PR.
 - **`python .claude/scripts/verificar.py` antes de cada PR.** Es lo mismo que corre la CI.
 
 El detalle está en [CLAUDE.md](./CLAUDE.md) —que es también la guía para los agentes— y en
-[docs/](./docs/README.md).
+[docs/](./docs/).
 
 ## Dónde está cada cosa
 
@@ -41,8 +42,8 @@ El detalle está en [CLAUDE.md](./CLAUDE.md) —que es también la guía para lo
 | Tareas, sprints y backlog | **Notion** |
 | Referencias estéticas | **Figma** · **Miro** |
 | Referencias de audio | **Drive** |
-| Trabajo planificado y deuda técnica | [GitHub Issues](https://github.com/federicohermo/nosefia/issues) |
-| Documentación técnica | [docs/](./docs/README.md) |
+| El plan de cada entrega | [GitHub Issues](https://github.com/federicohermo/nosefia/issues) |
+| Documentación técnica | [docs/](./docs/) |
 
 ## El equipo
 

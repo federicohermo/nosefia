@@ -32,7 +32,7 @@ func test_la_camara_esta_a_la_altura_que_declara_el_dominio() -> void:
 	assert_float(camara.position.y).is_equal_approx(ReglasDelJugador.ALTURA_DE_LA_CAMARA, 1e-5)
 
 
-func test_el_campo_cuelga_del_ojo_y_respeta_el_alcance() -> void:  # 038-AC10
+func test_el_campo_cuelga_del_ojo_y_respeta_el_alcance() -> void:
 	var jugador := _jugador()
 	var campo := jugador.get_node_or_null("Camara/CampoDeInteraccion")
 	assert_object(campo).is_instanceof(Area3D)
@@ -75,7 +75,7 @@ func test_las_cuatro_acciones_del_dominio_estan_declaradas_en_el_proyecto() -> v
 
 
 func test_el_jugador_avisa_cuando_enfoca_y_cuando_pierde_el_objetivo() -> void:
-	# Son el punto donde se cuelga el spec 006: sin ellas, agarrar un objeto no tiene de dónde
+	# Son el punto donde se cuelga agarrar: sin ellas, agarrar un objeto no tiene de dónde
 	# enterarse de que hay uno enfocado.
 	var jugador := _jugador()
 	assert_bool(jugador.has_signal("objetivo_enfocado")).is_true()
@@ -108,7 +108,7 @@ func test_suspender_con_algo_enfocado_avisa_que_se_perdio_el_objetivo() -> void:
 	assert_bool(aviso_recibido[0]).is_true()
 
 
-func test_los_dos_sistemas_del_006_llegan_armados_al_instanciar_la_escena() -> void:  # 006-AC11
+func test_los_dos_sistemas_del_006_llegan_armados_al_instanciar_la_escena() -> void:
 	# Entran por `@export` y no por `@onready`: un `@onready` se resuelve recién al entrar la
 	# escena al árbol, y entonces `id_en_la_mano()` se caería sobre un jugador instanciado —que
 	# es exactamente como lo instancia todo test de este archivo, y como lo pide el 014—.
@@ -118,7 +118,7 @@ func test_los_dos_sistemas_del_006_llegan_armados_al_instanciar_la_escena() -> v
 	assert_object(jugador.examen.agarre).is_same(jugador.agarre)
 
 
-func test_el_jugador_dice_que_lleva_en_la_mano() -> void:  # 006-AC11
+func test_el_jugador_dice_que_lleva_en_la_mano() -> void:
 	# La única puerta por la que otra escena pregunta qué se está llevando, y la pide el 014
 	# para saber si lo que hay en la mano es el trapeador: con otra cosa, la pasada no cuenta.
 	# Devuelve el `id` del dominio y nunca el nodo: un nodo cruzaría la dirección de las capas
@@ -131,7 +131,7 @@ func test_el_jugador_dice_que_lleva_en_la_mano() -> void:  # 006-AC11
 	assert_str(String(jugador.id_en_la_mano())).is_equal("lata_de_tomate")
 
 
-func test_los_cuatro_puntos_estan_donde_el_dominio_los_declara() -> void:  # 006-AC12
+func test_los_cuatro_puntos_estan_donde_el_dominio_los_declara() -> void:
 	# Un `.tscn` no puede leer una constante de GDScript, así que las distancias están escritas
 	# a mano en la escena y esto es lo único que impide que se separen del dominio en silencio.
 	# El punto de carga va abajo a la derecha —donde queda una mano que lleva algo— y el de
@@ -155,7 +155,7 @@ func test_los_cuatro_puntos_estan_donde_el_dominio_los_declara() -> void:  # 006
 	assert_float(respaldo.position.y).is_less(ReglasDelJugador.ALTURA_DE_LA_CAMARA)
 
 
-func test_el_punto_de_carga_queda_abajo_y_a_la_derecha() -> void:  # 006-AC12
+func test_el_punto_de_carga_queda_abajo_y_a_la_derecha() -> void:
 	# Centrado taparía la mitad de la pantalla justo cuando el jugador necesita ver dónde
 	# reponer lo que lleva, y arriba flotaría a la altura de la cara.
 	var carga: Node3D = _jugador().get_node("Camara/PuntoDeCarga")
@@ -164,7 +164,7 @@ func test_el_punto_de_carga_queda_abajo_y_a_la_derecha() -> void:  # 006-AC12
 	assert_float(carga.position.z).is_less(0.0)
 
 
-func test_los_dos_sistemas_llegan_con_sus_puntos_cableados() -> void:  # 006-AC12
+func test_los_dos_sistemas_llegan_con_sus_puntos_cableados() -> void:
 	# Que los nodos existan no alcanza: lo que se rompe es la REFERENCIA. Un `node_paths` que
 	# falta deja el `@export` en `null` y la escena carga sin un solo error —medido: borrar las
 	# dos líneas del `.tscn` deja los 36 casos de `test/escenas/` en verde—, mientras el clic

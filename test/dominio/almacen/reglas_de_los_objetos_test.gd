@@ -9,7 +9,7 @@ const ReglasDeLosObjetos := preload("res://src/dominio/almacen/reglas_de_los_obj
 const ReglasDelJugador := preload("res://src/dominio/jugador/reglas_del_jugador.gd")
 
 
-func test_las_distancias_van_de_la_mas_cerca_a_la_mas_lejos() -> void:  # 006-AC6
+func test_las_distancias_van_de_la_mas_cerca_a_la_mas_lejos() -> void:  # AC-PLY-011
 	# Examinar acerca el objeto a la cara, llevarlo lo deja a la altura de la mano y soltarlo lo
 	# aleja. Si el orden se invierte, examinar ALEJA el objeto en vez de acercarlo, y el bug se
 	# siente como «la E no hace nada»: lo que revela queda demasiado chico para leerse.
@@ -21,7 +21,7 @@ func test_las_distancias_van_de_la_mas_cerca_a_la_mas_lejos() -> void:  # 006-AC
 	)
 
 
-func test_las_distancias_son_positivas_y_caben_en_el_alcance_de_la_mira() -> void:  # 006-AC6
+func test_las_distancias_son_positivas_y_caben_en_el_alcance_de_la_mira() -> void:  # AC-PLY-011
 	# Una distancia negativa deja el objeto atrás de la cabeza, y una mayor que el alcance de la
 	# mira lo suelta afuera del rayo: se puede tirar algo y no poder volver a levantarlo.
 	for distancia in [
@@ -33,14 +33,14 @@ func test_las_distancias_son_positivas_y_caben_en_el_alcance_de_la_mira() -> voi
 		assert_float(distancia).is_less(ReglasDelJugador.ALCANCE_DE_LA_MIRA)
 
 
-func test_se_lleva_una_sola_cosa_a_la_vez() -> void:  # 006-AC6
+func test_se_lleva_una_sola_cosa_a_la_vez() -> void:  # AC-PLY-008
 	# El 015 se apoya en este 1: afirma que las bolsas de una jornada son más que las manos, o
 	# sea que sacar la basura cuesta más de un viaje. Subirlo a 2 le afloja el precio en tiempo
 	# a media tarea obligatoria sin que ese spec se entere.
 	assert_int(ReglasDeLosObjetos.MANOS_DISPONIBLES).is_equal(1)
 
 
-func test_las_dos_acciones_nuevas_no_se_pisan_con_las_de_caminar() -> void:  # 006-AC6
+func test_las_dos_acciones_nuevas_no_se_pisan_con_las_de_caminar() -> void:
 	# El rojo del día que alguien copie una constante y se olvide de cambiarle el texto: dos
 	# acciones con el mismo nombre hacen que una de las dos no responda nunca, y el motor no
 	# dice una palabra.
@@ -56,3 +56,40 @@ func test_las_dos_acciones_nuevas_no_se_pisan_con_las_de_caminar() -> void:  # 0
 	for nombre in nombres:
 		distintos[nombre] = true
 	assert_int(distintos.size()).is_equal(nombres.size())
+
+
+func test_el_corte_para_retirar_separa_apoyada_de_en_la_mano() -> void:
+	# Las tres alturas están medidas sobre `almacen.tscn`: una caja apoyada tiene el centro en
+	# 0,41; en la mano no baja de 1,35 ni mirando al piso; en el estante del depósito está en
+	# 1,91. El borde es el corte mismo — en él entrega, un milímetro más arriba no.
+	(
+		assert_bool(ReglasDeLosObjetos.se_puede_retirar(ReglasDeLosObjetos.ALTURA_PARA_RETIRAR))
+		. is_true()
+	)
+	(
+		assert_bool(
+			ReglasDeLosObjetos.se_puede_retirar(ReglasDeLosObjetos.ALTURA_PARA_RETIRAR + 0.001)
+		)
+		. is_false()
+	)
+	assert_bool(ReglasDeLosObjetos.se_puede_retirar(0.4059)).is_true()
+	assert_bool(ReglasDeLosObjetos.se_puede_retirar(1.3523)).is_false()
+	assert_bool(ReglasDeLosObjetos.se_puede_retirar(1.9077)).is_false()
+
+
+func test_solo_una_superficie_horizontal_recibe_una_caja() -> void:
+	# La componente vertical de la normal: 1 es un piso, 0 una pared. Sin el corte, apuntar a
+	# una pared dejaría la caja clavada en el aire contra ella.
+	assert_bool(ReglasDeLosObjetos.se_puede_apoyar_en(1.0)).is_true()
+	assert_bool(ReglasDeLosObjetos.se_puede_apoyar_en(0.0)).is_false()
+	assert_bool(ReglasDeLosObjetos.se_puede_apoyar_en(-1.0)).is_false()
+	(
+		assert_bool(ReglasDeLosObjetos.se_puede_apoyar_en(ReglasDeLosObjetos.APOYO_HORIZONTAL))
+		. is_true()
+	)
+	(
+		assert_bool(
+			ReglasDeLosObjetos.se_puede_apoyar_en(ReglasDeLosObjetos.APOYO_HORIZONTAL - 0.001)
+		)
+		. is_false()
+	)

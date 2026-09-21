@@ -17,7 +17,7 @@ func after_test() -> void:
 @warning_ignore("unused_parameter")
 func test_los_puestos_completan_la_jornada_y_permiten_abrir_la_siguiente(
 	timeout: int = 6000000  # gdlint:ignore=unused-argument
-) -> void:  # 041-AC9, 041-AC10
+) -> void:
 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
 	add_child(almacen)
 	var reloj: RelojDelTurno = almacen.get("_reloj")
@@ -67,16 +67,20 @@ func _reponer(almacen: Node3D) -> void:
 		var producto := Catalogo.de(caja.get("producto"))
 		var zona: AABB = almacen.get("_reposicion_manual").zona(producto.id)
 		var direccion := Vector3(0, 0, 1.5)
-		if producto.id == Producto.Id.GASEOSA:
+		if producto.id == Producto.Id.BURBALOO:
 			direccion = Vector3(1.5, 0, 0)
-		elif producto.id == Producto.Id.GALLETITAS:
+		elif producto.id == Producto.Id.ZUCARACHAS:
 			direccion = Vector3(-1.5, 0, 0)
-		elif producto.id == Producto.Id.ARROZ:
+		elif producto.id == Producto.Id.LAYSNTT:
 			direccion = Vector3(0, 0, -1.5)
 		camara.global_position = zona.get_center() + direccion
 		camara.look_at(zona.get_center())
+		# La caja entrega apoyada en el suelo: las del estante hay que bajarlas primero.
+		caja.global_position.y = minf(
+			caja.global_position.y, ReglasDeLosObjetos.ALTURA_PARA_RETIRAR
+		)
 		for unidad in producto.umbral:
-			caja.call("interactuar")
+			almacen.get("_reposicion_manual").call("retirar_de_la_caja", caja)
 			almacen.get("_reposicion_manual").get_node("ZonaDe" + producto.nombre).call(
 				"interactuar"
 			)
@@ -86,7 +90,7 @@ func _reponer(almacen: Node3D) -> void:
 
 
 func _registrar(almacen: Node3D) -> void:
-	var escritorio: Node3D = almacen.get_node("Estructura/compu/StaticBody3D")
+	var escritorio: Node3D = almacen.get_node("Estructura/base compu/StaticBody3D")
 	escritorio.call("interactuar")
 	var pantalla: PantallaDeComputadora = escritorio.get("pantalla")
 	assert_bool(pantalla.visible).is_true()
@@ -175,8 +179,11 @@ func _comprobar_huecos(almacen: Node3D, esperados: int) -> void:
 	var repositor: Repositor = almacen.get("_repositor")
 	for producto in Catalogo.todos():
 		var grupo: MultiMeshInstance3D = presentacion.get_node("ProductosDe" + producto.nombre)
+		# Las copias visibles son la guía entera más lo repuesto: la guía no cambia nunca y
+		# arranca a la vista, así que el cero del inventario no es un cero de copias.
+		var guia := grupo.multimesh.instance_count - producto.umbral
 		assert_int(grupo.multimesh.visible_instance_count).is_equal(
-			repositor.estante().unidades_en_gondola(producto)
+			guia + repositor.estante().unidades_en_gondola(producto)
 		)
 	assert_int(repositor.estante().productos_completos()).is_equal(esperados)
 

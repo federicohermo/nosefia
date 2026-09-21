@@ -2,7 +2,7 @@
 ##
 ## El nodo que pinta no formatea nada: si estos casos pasan, el reloj de pared del local dice la
 ## verdad. Y el umbral se prueba acá y no mirando la esfera porque es un número que decide — en
-## `escenas/` habría nacido sin test, que es exactamente el motivo del spec 032.
+## `escenas/` habría nacido sin test, que es exactamente el motivo de bajarlo al dominio.
 extends GdUnitTestSuite
 
 
@@ -14,13 +14,13 @@ func test_un_turno_agotado_se_lee_en_cero() -> void:
 	assert_str(Marcador.reloj(0.0)).is_equal("00:00")
 
 
-func test_un_restante_negativo_no_se_muestra_con_signo() -> void:
+func test_un_restante_negativo_no_se_muestra_con_signo() -> void:  # AC-SHF-014
 	# Un `-00:00` en pantalla es un número imposible justo en el momento en que el jugador más
 	# lo mira, y el dominio es el único lugar donde se puede impedir de una vez.
 	assert_str(Marcador.reloj(-5.0)).is_equal("00:00")
 
 
-func test_los_segundos_se_truncan_y_no_se_redondean() -> void:
+func test_los_segundos_se_truncan_y_no_se_redondean() -> void:  # AC-SHF-014
 	# Mostrar `01:00` cuando ya no queda un minuto entero es mentirle al jugador.
 	assert_str(Marcador.reloj(59.9)).is_equal("00:59")
 
@@ -42,18 +42,18 @@ func test_el_turno_entero_se_lee_como_ocho_horas() -> void:
 	assert_str(Marcador.reloj(28800.0)).is_equal("8:00:00")
 
 
-func test_con_horas_los_minutos_son_los_de_esta_hora_y_no_los_del_turno() -> void:
+func test_con_horas_los_minutos_son_los_de_esta_hora_y_no_los_del_turno() -> void:  # AC-SHF-014
 	# Es el único caso donde los tres campos son distintos de cero, y por eso el único que
 	# distingue «minutos de esta hora» de «minutos totales»: con los totales daría `2:121:05`.
 	# Los otros casos con hora caen justo en el minuto 0 y no lo pueden ver.
 	assert_str(Marcador.reloj(7265.0)).is_equal("2:01:05")
 
 
-func test_un_segundo_antes_del_umbral_todavia_no_es_aviso() -> void:
+func test_un_segundo_antes_del_umbral_todavia_no_es_aviso() -> void:  # AC-SHF-015
 	assert_bool(Marcador.en_aviso(1801.0)).is_false()
 
 
-func test_el_umbral_exacto_ya_es_aviso() -> void:
+func test_el_umbral_exacto_ya_es_aviso() -> void:  # AC-SHF-015
 	assert_bool(Marcador.en_aviso(1800.0)).is_true()
 
 

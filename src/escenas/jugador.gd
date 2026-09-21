@@ -5,19 +5,19 @@
 ## viven todos en `src/dominio/` y tienen test. Acá quedan `Input`, `move_and_slide()`, el
 ## campo espacial y las señales.
 ##
-## Que la aritmética no se haya vuelto a colar acá lo verifica el AC28 del spec 004 con un `rg`
+## Que la aritmética no se haya vuelto a colar acá lo verifica un gate con un `rg`
 ## sobre este archivo, que busca las cuatro llamadas del motor con las que se harían esas
 ## cuentas y exige cero líneas. Los nombres no se escriben ni en un comentario: el gate no
 ## distingue código de prosa, y hacerlo pasar comentando distinto sería trampa.
 extends CharacterBody3D
 
-## Se llaman por lo que pasó y no por lo que hay que hacer. Son el punto donde se cuelga el
-## spec 006: quien las emite no sabe quién las escucha.
+## Se llaman por lo que pasó y no por lo que hay que hacer. Son el punto donde se cuelga
+## agarrar y examinar: quien las emite no sabe quién las escucha.
 signal objetivo_enfocado(objetivo: Node3D, distancia: float)
 signal objetivo_perdido
 signal uso_pedido(objetivo: Node3D)
 
-## Los dos sistemas del spec 006, por `@export` y no por `@onready`: un `@onready` se resuelve
+## Los dos sistemas de agarrar, por `@export` y no por `@onready`: un `@onready` se resuelve
 ## recién al entrar la escena al árbol, y entonces `id_en_la_mano()` se caería sobre un jugador
 ## apenas instanciado — que es como lo instancia todo test de esta escena. Tampoco son autoloads:
 ## está medido que `gate_de_capas.py` no ve uno nombrado por su nombre global, o sea que esa
@@ -57,6 +57,14 @@ var _largo_de_producto := 0.0
 ## Los dos brazos que miden cuánto lugar hay para lo que se lleva.
 @onready var _brazo_de_carga: SpringArm3D = $Camara/BrazoDeCarga
 @onready var _brazo_de_producto: SpringArm3D = $Camara/BrazoDeProducto
+
+## El brazo de la caja cuelga del cuerpo y no de la cámara: pegado al pitch taparía la mira.
+@onready var _brazo_de_la_caja: SpringArm3D = $BrazoDeCaja
+@onready var _punto_de_la_caja: Node3D = $PuntoDeCaja
+
+## La caja cuelga del cuerpo y no de la cámara, y ocupa lugar: mientras se la lleva, el jugador
+## no puede acercarse a una pared más de lo que la caja mide.
+@onready var _forma_de_la_caja: CollisionShape3D = $FormaDeLaCaja
 
 
 func _ready() -> void:
@@ -117,14 +125,21 @@ func _unhandled_input(evento: InputEvent) -> void:
 		examen.alternar(_datos_de_lo_enfocado())
 
 
+## **El clic se lo gasta quien hace algo con él, y sólo ése.** Tener `interactuar()` es la
+## declaración de que el clic izquierdo es suyo: los puestos lo resuelven por señal y contestan
+## `null` —el escritorio abre, el estante coloca—, y soltar además sería un segundo efecto del
+## mismo clic; las cajas contestan sus datos, y eso es lo que se agarra.
+##
+## **Lo que está en el grupo pero no tiene el método no se gasta nada**, y ésa es la diferencia
+## que antes no existía: el corte miraba si había algo enfocado, así que la mancha del piso
+## —que se limpia con el otro botón y no contesta nada acá— se comía el clic. Llevando una caja
+## y con la mira sobre un charco, soltar no hacía absolutamente nada, sin un solo aviso.
 func _interactuar() -> void:
 	var datos: ObjetoDelAlmacen = null
 	if _enfocado != null and _enfocado.has_method(ReglasDeLosObjetos.METODO_INTERACTUAR):
 		datos = _enfocado.call(ReglasDeLosObjetos.METODO_INTERACTUAR)
-	# Las cajas y los puestos resuelven su acción mediante señales. El mismo clic
-	# no debe soltar la unidad que acaba de salir ni la que el estante rechazó.
-	if datos == null and _enfocado != null:
-		return
+		if datos == null:
+			return
 	agarre.alternar(datos, _enfocado)
 
 
@@ -150,9 +165,23 @@ func _physics_process(delta: float) -> void:
 	velocity.x = horizontal.x
 	velocity.z = horizontal.z
 	move_and_slide()
+	_empujar_lo_que_estorba()
 
 	_acomodar_las_manos(delta)
+	_acomodar_la_caja()
 	_leer_la_mira()
+
+
+## Le pasa a lo chocado el paso que no se pudo dar, para que se corra en vez de tapar el paso.
+##
+## Quién puede recibirlo lo dice el nombre de un método, igual que interactuar: acá no se nombra
+## ninguna escena. Cuánto se corre lo decide quien recibe, con el número del dominio.
+func _empujar_lo_que_estorba() -> void:
+	for indice in get_slide_collision_count():
+		var choque := get_slide_collision(indice)
+		var estorbo := choque.get_collider() as Node
+		if estorbo != null and estorbo.has_method(ReglasDeLosObjetos.METODO_EMPUJAR):
+			estorbo.call(ReglasDeLosObjetos.METODO_EMPUJAR, choque.get_remainder())
 
 
 ## Corre las dos manos sobre el eje de su brazo, hasta donde haya lugar.
@@ -176,9 +205,34 @@ func _acomodar(brazo: SpringArm3D, punto: Node3D, largo: float, delta: float) ->
 	return siguiente
 
 
+## Le da o le saca al cuerpo el volumen de la caja que lleva. Es lo que la vuelve un objeto de
+## verdad: con ella en la mano el jugador choca donde chocaría la caja.
+func ocupar_el_frente(ocupado: bool) -> void:
+	# Primero se la acomoda y después se enciende: encender el volumen donde no entra —que es lo
+	# que pasa sacando una caja de un estante pegado a él— empuja al jugador.
+	_acomodar_la_caja()
+	_forma_de_la_caja.disabled = not ocupado
+
+
+## Corre la caja sobre el eje de su brazo, hasta donde haya lugar.
+##
+## Sin suavizado, al revés que las manos: el brazo ya contesta un punto libre, y el volumen se
+## enciende justo ahí. Un punto intermedio quedaría adentro de la madera.
+func _acomodar_la_caja() -> void:
+	var lugar := _brazo_de_la_caja.transform * Vector3(0.0, 0.0, _brazo_de_la_caja.get_hit_length())
+	_punto_de_la_caja.position = lugar
+	_forma_de_la_caja.position = lugar
+
+
+## Desde dónde y hacia dónde mira. La pide `reposicion_manual.gd` para saber dónde quiere el
+## jugador apoyar la caja; el nodo de la cámara es privado y su ruta no se cruza desde afuera.
+func mira() -> Transform3D:
+	return _camara.global_transform
+
+
 ## La única puerta por la que otra escena puede decir «el jugador no controla»: el
 ## `ControlDelJugador` es de `dominio/` y su instancia vive privada acá. La piden por separado
-## el spec 006 (examinar un objeto) y el 009 (abrir la computadora), y sin ellas los dos
+## examinar un objeto y abrir la computadora, y sin ellas los dos
 ## degradan en silencio —el mouse sigue girando la cámara, el jugador sigue caminando—.
 func suspender() -> void:
 	# El aviso sale una sola vez, acá: mientras dura la suspensión `observar()` devuelve `false`,
@@ -197,7 +251,7 @@ func reanudar() -> void:
 ## Qué `id` del dominio se está llevando en la mano, o `SIN_ID`.
 ##
 ## La única puerta por la que otra escena pregunta qué lleva el jugador — la piden los tres
-## llamadores del 014 para saber si lo que hay en la mano es el trapeador, que es lo que decide
+## llamadores de limpiar para saber si lo que hay en la mano es el trapeador, que es lo que decide
 ## si una pasada cuenta: `PisoDelLocal.pasar()` compara este `id` contra el del trapeador y una
 ## mano con otra cosa no baja una sola pasada. Devuelve el `id` y nunca el nodo: un nodo
 ## cruzaría la dirección de las capas al revés.
