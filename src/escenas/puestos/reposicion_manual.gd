@@ -20,6 +20,12 @@ const TOLERANCIA_DEL_APOYO := 0.02
 ## En cuántos pasos se trae hacia el jugador lo que se soltó adentro de un mueble.
 const PASOS_PARA_DESATASCAR := 12
 
+## En cuántos anillos se busca un lugar donde la caja entre, alrededor del punto apuntado.
+const PASOS_PARA_ACERCAR := 6
+
+## Cuánto puede errarle la mira al borde de una caja y seguir apuntándole, en metros.
+const HOLGURA_DE_LA_MIRA := 0.1
+
 ## Hasta cuántas cajas se sube buscando la tapa de una pila. Es un tope de cordura: el techo del
 ## local corta antes.
 const PISOS_DE_UNA_PILA := 8
@@ -207,18 +213,40 @@ func _apoyar_la_caja(nodo: Node3D) -> void:
 	caja.top_level = false
 	caja.global_basis = Basis.IDENTITY
 	var apoyo := _apoyo_apuntado(caja)
-	var llego := false
-	if not apoyo.is_empty():
-		var destino := _apartado(caja, _lugar_sobre(caja, apoyo["position"]))
-		caja.global_position = _llevar_hasta(caja, destino)
-		llego = (
-			caja.global_position.distance_to(destino) < TOLERANCIA_DEL_APOYO and _entra_entera(caja)
-		)
-	if (not llego or _le_queda_encima_al_jugador(caja)) and not _al_lado_del_jugador(caja):
+	var llego := not apoyo.is_empty() and _cerca_de(caja, apoyo["position"])
+	if not llego and not _al_lado_del_jugador(caja):
 		# Ni donde apunta ni al lado: el jugador está metido en un hueco del tamaño de su cuerpo.
 		repositor.agarre.pedir_agarrar(caja.datos, caja)
 		return
 	caja.quedarse_quieta()
+
+
+## Deja la caja en el lugar más cercano al punto apuntado donde entra, sobre el mismo apoyo.
+##
+## **El cursor no tiene que caer en el punto exacto.** Apuntando pegado a una caja vecina, a un
+## parante o a la punta de una tabla, la caja no entra justo ahí y entra diez centímetros al
+## costado. Antes eso la mandaba al piso al lado del jugador, y el estante tenía agujeros: zonas
+## donde soltar no subía la caja sin que nada dijera por qué.
+##
+## Se prueba el punto y después anillos cada vez más abiertos, hasta una caja de distancia. Sólo
+## cuentan los lugares que siguen teniendo el mismo apoyo debajo: correrla no es bajarla.
+func _cerca_de(caja: CajaDelDeposito, punto: Vector3) -> bool:
+	var paso := _media_caja(caja).x / PASOS_PARA_ACERCAR * 2.0
+	for anillo in PASOS_PARA_ACERCAR + 1:
+		for lado in 1 if anillo == 0 else LADOS_DEL_JUGADOR:
+			var corrido := Basis(Vector3.UP, TAU * lado / LADOS_DEL_JUGADOR) * Vector3.RIGHT
+			var candidato := punto + corrido * paso * anillo
+			if anillo > 0 and not _hay_apoyo(caja, candidato, punto.y):
+				continue
+			var destino := _apartado(caja, _lugar_sobre(caja, candidato))
+			caja.global_position = _llevar_hasta(caja, destino)
+			if (
+				caja.global_position.distance_to(destino) < TOLERANCIA_DEL_APOYO
+				and _entra_entera(caja)
+				and not _le_queda_encima_al_jugador(caja)
+			):
+				return true
+	return false
 
 
 ## Despierta las cajas que la que se acaba de levantar estaba sosteniendo, y es lo que desarma
@@ -340,7 +368,10 @@ func _apoyo_apuntado(caja: CajaDelDeposito) -> Dictionary:
 	var ojo := jugador.mira()
 	var lejos := ojo.origin - ojo.basis.z * ReglasDelJugador.ALCANCE_DE_LA_MIRA
 	var golpe := _rayo(caja, ojo.origin, lejos)
-	if golpe.is_empty():
+	var rozada := _caja_rozada(caja, ojo.origin, lejos, golpe)
+	if rozada != null:
+		golpe = _tapa_de_la_pila(caja, rozada)
+	elif golpe.is_empty():
 		# Media caja hacia atrás: el rayo que baja no puede arrancar adentro de lo que la caja
 		# va a ocupar.
 		var punto := lejos + (ojo.origin - lejos).normalized() * _media_caja(caja).length()
@@ -350,10 +381,93 @@ func _apoyo_apuntado(caja: CajaDelDeposito) -> Dictionary:
 		if enfrente != null:
 			golpe = _tapa_de_la_pila(caja, enfrente)
 		else:
-			golpe = _apoyo_debajo(caja, ojo.origin, golpe["position"])
+			var pared := golpe
+			golpe = _apoyo_debajo(caja, ojo.origin, pared["position"])
+			if golpe.is_empty():
+				golpe = _tapa_de_ese_canto(caja, pared)
+			if golpe.is_empty():
+				golpe = _apoyo_al_pie(caja, pared)
 	if golpe.is_empty() or not ReglasDeLosObjetos.se_puede_apoyar_en(golpe["normal"].y):
 		return {}
 	return golpe
+
+
+## La caja que la mira pasó rozando, cuando lo que el rayo tocó queda detrás de ella.
+##
+## **Errarle al borde de una caja no es apuntar detrás de ella.** El rayo fino que pasa a un
+## centímetro del canto pega en el piso del otro lado, y la caja iba a parar ahí: detrás de la
+## pila, fuera de la vista. Se barre una esfera chica por la misma línea, y si lo primero que
+## toca es una caja que está más cerca que lo apuntado, lo apuntado es esa caja.
+##
+## Lo que queda **delante** de la caja no cambia: apuntar al piso al pie de una pila sigue
+## dejando la caja en el piso, porque ese lugar sí se ve.
+func _caja_rozada(
+	caja: CajaDelDeposito, desde: Vector3, hasta: Vector3, golpe: Dictionary
+) -> CajaDelDeposito:
+	if golpe.get("collider") is CajaDelDeposito:
+		return null
+	var esfera := SphereShape3D.new()
+	esfera.radius = HOLGURA_DE_LA_MIRA
+	var consulta := PhysicsShapeQueryParameters3D.new()
+	consulta.shape = esfera
+	consulta.transform = Transform3D(Basis.IDENTITY, desde)
+	consulta.motion = hasta - desde
+	consulta.collision_mask = caja.collision_mask
+	consulta.exclude = [caja.get_rid(), jugador.get_rid()]
+	var espacio := get_world_3d().direct_space_state
+	var avance: float = espacio.cast_motion(consulta)[1]
+	if avance >= 1.0:
+		return null
+	var hasta_lo_apuntado := INF if golpe.is_empty() else desde.distance_to(golpe["position"])
+	if consulta.motion.length() * avance >= hasta_lo_apuntado - HOLGURA_DE_LA_MIRA:
+		return null
+	consulta.transform.origin = desde + consulta.motion * avance
+	consulta.motion = Vector3.ZERO
+	# Con margen: en el punto de contacto la esfera toca la caja, y tocar no es solaparse.
+	consulta.margin = TOLERANCIA_DEL_APOYO
+	for choque in espacio.intersect_shape(consulta, 4):
+		if choque["collider"] is CajaDelDeposito:
+			return choque["collider"]
+	return null
+
+
+## La tapa de lo que se apuntó de canto: el frente de una tabla o de un mostrador.
+##
+## Apuntarle al canto de una tabla es apuntarle a la tabla. Se mira apenas adentro de la cara
+## tocada, desde una caja más arriba: si ahí hay una tapa, es la de ese mismo mueble. Una pared
+## no la tiene —sigue para arriba—, y entonces esto no contesta nada.
+func _tapa_de_ese_canto(caja: CajaDelDeposito, canto: Dictionary) -> Dictionary:
+	var adentro: Vector3 = -canto["normal"]
+	adentro.y = 0.0
+	var punto: Vector3 = canto["position"] + adentro.normalized() * HOLGURA_DE_LA_MIRA
+	var alto := _media_caja(caja).y * 2.0
+	return _rayo(caja, punto + Vector3.UP * alto, punto + Vector3.DOWN * TOLERANCIA_DEL_APOYO)
+
+
+## El apoyo que hay al pie de una pared, debajo del punto apuntado y a cualquier altura.
+##
+## **La pared de atrás de un estante señala el estante.** `_apoyo_debajo()` busca hasta una caja
+## de altura, y más arriba que eso la mira sobre la pared no daba nada: la caja iba al piso al
+## lado del jugador, y la zona donde soltar subía la caja tenía un techo invisible. Se baja
+## derecho desde media caja afuera de la pared, que es donde la caja va a quedar.
+func _apoyo_al_pie(caja: CajaDelDeposito, pared: Dictionary) -> Dictionary:
+	var afuera: Vector3 = pared["normal"]
+	afuera.y = 0.0
+	afuera = afuera.normalized()
+	var media := _media_caja(caja)
+	var desde: Vector3 = pared["position"] + afuera * media.length()
+	# **Media caja de tolerancia a lo largo de la pared, y gana el apoyo más alto.** A diez
+	# centímetros de la punta de un estante lo que hay debajo ya es el piso, y nadie que apunte
+	# ahí con una caja de sesenta quiere el piso.
+	var mejor := {}
+	for corrido: float in [0.0, -media.x, media.x]:
+		var punto := desde + afuera.cross(Vector3.UP) * corrido
+		var golpe := _rayo(caja, punto, punto + Vector3.DOWN * CAIDA_MAXIMA)
+		if golpe.is_empty() or not ReglasDeLosObjetos.se_puede_apoyar_en(golpe["normal"].y):
+			continue
+		if mejor.is_empty() or golpe["position"].y > mejor["position"].y + TOLERANCIA_DEL_APOYO:
+			mejor = golpe
+	return mejor
 
 
 ## La tapa de la caja más alta de la pila que arranca en `base`.
@@ -488,13 +602,22 @@ func _rayo(caja: CajaDelDeposito, desde: Vector3, hasta: Vector3) -> Dictionary:
 ## Derecho no alcanza: el labio de un estante queda justo a la altura a la que se la lleva, así
 ## que el camino recto choca contra él y la caja nunca entra. Una persona la sube y la mete. Y
 ## nunca por debajo de la mano: bajarla primero la hace chocar contra la tapa de un mostrador.
+##
+## **Se prueba desde la mano y, si se traba, desde el cuerpo.** Parado contra un estante, la mano
+## queda debajo del canto de la tabla de arriba, y la subida choca con él por un par de
+## centímetros: la caja no llegaba a un lugar donde entraba de sobra.
 func _llevar_hasta(caja: CajaDelDeposito, destino: Vector3) -> Vector3:
 	var mano := punto_de_la_caja.global_position
-	var media := _media_caja(caja)
-	var alto := maxf(mano.y, destino.y + media.y)
-	var arriba := _barrer(caja, mano, Vector3(mano.x, alto, mano.z))
-	var adentro := _barrer(caja, arriba, Vector3(destino.x, arriba.y, destino.z))
-	return _barrer(caja, adentro, destino)
+	var cuerpo := Vector3(jugador.global_position.x, mano.y, jugador.global_position.z)
+	var llegada := mano
+	for salida: Vector3 in [mano, cuerpo]:
+		var alto := maxf(salida.y, destino.y + _media_caja(caja).y)
+		var arriba := _barrer(caja, salida, Vector3(salida.x, alto, salida.z))
+		var adentro := _barrer(caja, arriba, Vector3(destino.x, arriba.y, destino.z))
+		llegada = _barrer(caja, adentro, destino)
+		if llegada.distance_to(destino) < TOLERANCIA_DEL_APOYO:
+			break
+	return llegada
 
 
 ## El punto más cercano a `hasta` al que la caja llega sin meterse adentro de nada.
