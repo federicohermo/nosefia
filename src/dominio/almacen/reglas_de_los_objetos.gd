@@ -60,6 +60,11 @@ const ALTURA_PARA_RETIRAR := 0.75
 ## valdría una pared.
 const APOYO_HORIZONTAL := 0.7
 
+## La capa de física donde viven los contornos de los muebles: la caja que envuelve a cada uno.
+## Es la número 4, y su nombre está declarado en `project.godot`. Quien la mira no entra al
+## mueble: el jugador, y el lugar donde se deja un producto soltado.
+const CAPA_DEL_CONTORNO := 8
+
 ## Cuánto se le descuenta a una forma para preguntar si entra o si atraviesa algo, en metros.
 ## Apoyarse sobre algo es tocarlo, así que la medida exacta contesta que choca. Lo preguntan el
 ## puesto al ubicar la caja y el test al comprobar que no atraviesa nada: es el mismo número.

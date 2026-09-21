@@ -131,7 +131,10 @@ func _desatascar_lo_soltado(nodo: Node3D) -> void:
 	var forma: CollisionShape3D = unidad.get_node("Forma")
 	var consulta := PhysicsShapeQueryParameters3D.new()
 	consulta.shape = forma.shape
-	consulta.collision_mask = unidad.collision_mask
+	# **Con el contorno del mueble además de lo que el producto choca.** El hueco de un estante es
+	# lugar libre, y ahí la mercadería no tiene cuerpo: el producto quedaba adentro de la góndola,
+	# encimado con ella y fuera de la vista. Medido: 10 de 75 soltadas alrededor de una góndola.
+	consulta.collision_mask = unidad.collision_mask | ReglasDeLosObjetos.CAPA_DEL_CONTORNO
 	consulta.exclude = [unidad.get_rid(), jugador.get_rid()]
 	var espacio := get_world_3d().direct_space_state
 	var atras := jugador.mira().basis.z.normalized()
@@ -728,7 +731,9 @@ func retirar(id: Producto.Id) -> void:
 		* Basis(Vector3.UP, deg_to_rad(giros_del_frente[id]))
 	)
 	unidad.collision_layer = 1
-	unidad.collision_mask = 1
+	# Choca también con el contorno de los muebles: caída al pie de una góndola, la unidad rodaba
+	# hacia adentro del estante de abajo.
+	unidad.collision_mask = 1 | ReglasDeLosObjetos.CAPA_DEL_CONTORNO
 	if not repositor.pedir_retirar(id, unidad):
 		_guardar_cuerpo(unidad)
 		return
