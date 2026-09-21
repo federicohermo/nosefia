@@ -92,3 +92,32 @@ no significa que cualquier cantidad de cuerpos activos sea viable.
 Los [JSON de la comparación](../performance/piso-multimesh-2026-09-13.json) conservan también
 los p99, máximos y cantidades de pasos físicos. La integración mantiene la malla individual
 del producto enfocado para conservar su contorno.
+
+## Medición en la web, con la CPU frenada
+
+El juego se publica en la web, y el escritorio no dice cómo corre ahí. Este comando abre la URL
+publicada en un Chrome de verdad y mide el tiempo entre cuadros con la CPU frenada:
+
+```bash
+npm install --no-save playwright
+node .github/scripts/medir_en_navegador.mjs https://nosefia.vercel.app
+node .github/scripts/medir_en_navegador.mjs https://nosefia.vercel.app 1,4,6 reports/web.json
+```
+
+La ventana tiene que quedar a la vista: un navegador no dibuja una pestaña tapada. Mide desde
+donde arranca el jugador, que muestra el local entero y es la vista más cara.
+
+- **Simula la CPU y no la GPU.** Frenar 4 veces es de guía una notebook de oficina de hace unos
+  años, y 6 veces una máquina floja. Una GPU floja se mide en una máquina que la tenga.
+- **No es un gate.** El número depende del equipo. Sirve para comparar un cambio contra el
+  anterior en la misma máquina.
+- **Con la CPU frenada el ruido es grande**: dos corridas iguales a 6 veces dieron 33 y 45 FPS.
+  Hacer tres corridas y mirar la mediana.
+
+Referencia del 2026-09-21, v5.1.0, Ryzen 7 7435HS y RTX 4050, quieto mirando el local:
+
+| CPU | FPS | p50 | p95 |
+|---|---:|---:|---:|
+| Normal | 244 | 3,9 ms | 5,9 ms |
+| 4 veces más lenta | 82 | 11,6 ms | 30,5 ms |
+| 6 veces más lenta | 33 a 45 | 21 a 31 ms | 38 a 48 ms |

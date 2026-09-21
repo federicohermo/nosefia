@@ -30,3 +30,6 @@ __pycache__/
 # La config personal de cada uno en Claude Code. `settings.json` SÍ se commitea —ahí vive el
 # hook del gate, que es del repo y no de una persona—; esto es lo que cada uno agrega encima.
 .claude/settings.local.json
+
+# Playwright se instala en el momento para los scripts de `.github/scripts/`, sin `package.json`.
+/node_modules/
