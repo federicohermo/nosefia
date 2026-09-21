@@ -704,7 +704,9 @@ func test_agarrar_la_caja_del_estante_no_mueve_al_jugador() -> void:
 	await get_tree().physics_frame
 	var jugador: CharacterBody3D = almacen.get("_jugador")
 	var caja: Node3D = almacen.get("_cajas_de_productos")[Producto.Id.ACTRONCITO]
-	await _caminar_hasta(almacen, _limites_de(caja), Vector3.RIGHT)
+	# Desde adentro del depósito: el estante de esta caja está contra la pared del oeste. Llegando
+	# por el otro lado el jugador arranca afuera del edificio, donde no hay piso.
+	await _caminar_hasta(almacen, _limites_de(caja), Vector3.LEFT)
 	var antes := jugador.global_position
 	_accion(jugador, caja, ReglasDeLosObjetos.ACCION_AGARRAR)
 	await get_tree().physics_frame
