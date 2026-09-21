@@ -87,6 +87,19 @@ func _ready() -> void:
 	agarre.objeto_soltado.connect(_devolver_al_mundo)
 
 
+## Deja de chocar con el detalle de un mueble: el cuerpo y los brazos chocan con su contorno.
+##
+## **El detalle es caro de rozar.** La colisión de una góndola es su malla entera, con cada
+## chapa, labio y agujero del panel. La cápsula que camina pegada al lateral de una cabecera
+## prueba contacto contra cientos de triángulos en cada paso: está medido en 5,4 ms por paso en
+## escritorio contra 0,7 con una caja, y en la web el cuadro llegaba a 80 ms. El detalle sigue
+## ahí para lo que sí lo necesita: los productos que caen y los rayos de la mira.
+func ignorar_el_detalle(cuerpo: PhysicsBody3D) -> void:
+	add_collision_exception_with(cuerpo)
+	for brazo: SpringArm3D in find_children("*", "SpringArm3D", true, false):
+		brazo.add_excluded_object(cuerpo.get_rid())
+
+
 func _unhandled_input(evento: InputEvent) -> void:
 	# El giro se descarta con el cursor suelto porque en `MOUSE_MODE_VISIBLE` el motor sigue
 	# entregando el `relative` del mouse: sin este filtro, ir a apretar el botón de cerrar la
@@ -331,6 +344,9 @@ func _medir_candidato(cuerpo: Node3D) -> CampoDeInteraccion.Candidato:
 			ojo, ojo + ojo.direction_to(punto) * ReglasDelJugador.ALCANCE_DE_LA_MIRA
 		)
 		consulta.exclude = [get_rid()]
+		# Con la máscara del campo y no con todas: el contorno de un mueble lo envuelve, y un
+		# rayo que lo mirara pegaría siempre ahí antes que en el mueble.
+		consulta.collision_mask = _campo.collision_mask
 		var golpe := espacio.intersect_ray(consulta)
 		if golpe.get("collider") != cuerpo:
 			continue

@@ -10,7 +10,7 @@
 [ext_resource type="PackedScene" path="res://src/escenas/puestos/servicios_del_almacen.tscn" id="grupo_Servicios"]
 [ext_resource type="PackedScene" path="res://src/escenas/puestos/reposicion_manual.tscn" id="reposicion_manual"]
 
-[node name="Almacen" type="Node3D" unique_id=999617316 node_paths=PackedStringArray("_hud", "_reloj", "_ciclo", "_pantalla", "_reloj_de_pared", "_repositor", "_carga", "_estante", "_cajas_de_productos", "_caja_de_traslado", "_jugador", "_atenciones", "_computadora", "_limpiador", "_limpieza", "_recolector", "_audio", "_reposicion_manual", "_agarre", "_bolsas")]
+[node name="Almacen" type="Node3D" unique_id=999617316 node_paths=PackedStringArray("_hud", "_reloj", "_ciclo", "_pantalla", "_reloj_de_pared", "_repositor", "_carga", "_estante", "_cajas_de_productos", "_caja_de_traslado", "_jugador", "_atenciones", "_computadora", "_limpiador", "_limpieza", "_recolector", "_audio", "_reposicion_manual", "_agarre", "_bolsas", "_muebles_con_contorno")]
 script = ExtResource("4_almacen")
 _hud = NodePath("Interfaz/Hud")
 _reloj = NodePath("Servicios/RelojDelTurno")
@@ -32,6 +32,7 @@ _audio = NodePath("Servicios/AudioDelAlmacen")
 _reposicion_manual = NodePath("ReposicionManual")
 _agarre = NodePath("Jugador/Agarre")
 _bolsas = [NodePath("Objetos/BolsaDeBasura1"), NodePath("Objetos/BolsaDeBasura2"), NodePath("Objetos/BolsaDeBasura3")]
+_muebles_con_contorno = [NodePath("Estructura/gondolanueva/StaticBody3D"), NodePath("Estructura/gondolanueva2/StaticBody3D")]
 
 [node name="ReposicionManual" parent="." unique_id=916700246 node_paths=PackedStringArray("repositor", "jugador", "estante", "contenido", "punto_de_la_caja") instance=ExtResource("reposicion_manual")]
 repositor = NodePath("../Servicios/Repositor")

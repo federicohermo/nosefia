@@ -9,6 +9,9 @@
 [ext_resource type="Script" path="res://src/escenas/puestos/puerta_del_local.gd" id="puerta"]
 [ext_resource type="PackedScene" path="res://src/escenas/puestos/contenido_del_estante.tscn" id="contenido"]
 
+[sub_resource type="BoxShape3D" id="contorno_de_gondola"]
+size = Vector3(1.939379, 2.292614, 5.417235)
+
 [sub_resource type="BoxShape3D" id="suelo_local"]
 size = Vector3(16.15515, 0.206508, 16.15515)
 
@@ -81,6 +84,24 @@ _huecos = NodePath("Contenido")
 mallas = [NodePath("..")]
 
 [node name="Contenido" parent="gondolanueva/StaticBody3D" instance=ExtResource("contenido")]
+
+[node name="Contorno" type="StaticBody3D" parent="gondolanueva"]
+collision_layer = 8
+collision_mask = 0
+editor_description = "El jugador choca con esta caja y no con la malla del mueble. **Rozar la malla es caro**: cada chapa, labio y agujero es un triángulo, y caminar pegado al lateral de una cabecera llevaba el cuadro de la web a 80 ms. La malla sigue siendo la colisión de los productos que caen y de la mira."
+
+[node name="Forma" type="CollisionShape3D" parent="gondolanueva/Contorno"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.056863, 0)
+shape = SubResource("contorno_de_gondola")
+
+[node name="Contorno" type="StaticBody3D" parent="gondolanueva2"]
+collision_layer = 8
+collision_mask = 0
+editor_description = "El jugador choca con esta caja y no con la malla del mueble. **Rozar la malla es caro**: cada chapa, labio y agujero es un triángulo, y caminar pegado al lateral de una cabecera llevaba el cuadro de la web a 80 ms. La malla sigue siendo la colisión de los productos que caen y de la mira."
+
+[node name="Forma" type="CollisionShape3D" parent="gondolanueva2/Contorno"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.056863, 0)
+shape = SubResource("contorno_de_gondola")
 
 
 [node name="limpiador" parent="."]
