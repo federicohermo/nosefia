@@ -7,6 +7,11 @@ const ESTRUCTURA := preload("res://src/escenas/puestos/estructura_del_almacen.ts
 ## Cuánto puede separarse un vértice de la colisión del mismo vértice de la malla, en metros.
 const SEPARACION_MAXIMA := 0.001
 
+## El lado de la celda con la que se buscan los vertices por cercanía, en metros. Un
+## centímetro es diez veces la separación que se tolera: alcanza para que el par caiga en
+## la celda propia o en una de al lado, y deja pocos vertices por celda.
+const CELDA := 0.01
+
 ## Qué malla del modelo le toca a cada producto, en el orden de `Producto.Id`. Es el mapeo, y
 ## está acá escrito a mano a propósito: si el orden del catálogo y el del contenido se separan,
 ## `_preparar_modelos` le da a un producto el modelo de otro sin que nada lo diga.
@@ -18,15 +23,15 @@ const DEL_MODELO := [
 	"gondolanueva/snackpapas1_003",
 	"gondolanueva/malbardocig",
 	"gondolanueva/pringles3_002",
-	"gondolanueva/alfajorescaja2_025",
+	"gondolanueva2/alfajorescaja2-2oeste1",
 	"gondolanueva/lataarvejas_002",
 	"gondolanueva/chisitos2",
 	"gondolanueva/oremos",
 	"gondolanueva/pepitos2_025",
-	"gondolanueva/saladix_021",
+	"gondolanueva2/saladix-2oeste2",
 	"gondolanueva/wakas_021",
 	"heladeranueva/bebida helada02_001",
-	"gondolanueva/cereal",
+	"gondolanueva2/cereal-2norte2",
 	"gondolanueva2/fideos2",
 	"amargadito",
 	"cindolor",
@@ -52,47 +57,85 @@ func test_el_mueble_de_la_escena_es_la_malla_del_modelo() -> void:
 	for indice in original.mesh.get_surface_count():
 		var material: StandardMaterial3D = puesta.mesh.surface_get_material(indice)
 		assert_object(material).override_failure_message(str(indice)).is_not_null()
-		assert_object(material.albedo_texture).is_not_null()
+		# **O trae textura o trae un color propio.** Una superficie puede ser un color plano a
+		# propósito —el zócalo de la góndola lo es—, y exigirle textura a todas dejaba el test
+		# rojo por una decisión de arte. Lo que sigue cazando es el enlace roto, que es el caso
+		# que importa: una imagen que no resuelve deja la superficie en blanco y sin textura.
+		var pintado: bool = material.albedo_color != Color.WHITE
+		(
+			assert_bool(material.albedo_texture != null or pintado)
+			. override_failure_message("superficie %d sin textura ni color" % indice)
+			. is_true()
+		)
 
 
 ## La colisión del mueble cubre el mueble entero, y es la que la escena monta.
 ##
 ## **Se comparan como conjunto y no vertice por vertice.** El importador de Godot no conserva
 ## el orden de las caras de la malla al hornear la forma: con el modelo del 2026-09-19 sólo 29
-## de 3252 vertices caen en el mismo indice, y las dos geometrias son la misma. Compararlas en
-## orden estaba verde por casualidad, y se ponia rojo con un reporte de tres mil lineas que no
-## nombra la causa.
+## de 3252 vertices caen en el mismo indice, y las dos geometrias son la misma.
 ##
 ## **Se comparan con tolerancia y no por igualdad**: la malla llega comprimida del `.glb` y la
 ## forma no, asi que el mismo vertice sale con un decimal distinto de cada lado.
+##
+## **Y se buscan por cercanía, no ordenando las dos listas.** Ordenarlas con un comparador
+## aproximado no da un orden total: dos vertices que empatan por el eje que se mira quedan en
+## cualquier orden, y basta que el artista parta la malla en mas materiales para que los dos
+## lados empaten distinto. Con eso el test se ponia rojo con dos mil lineas por una geometria
+## que es la misma. Buscar cada vertice en su celda y en las de al lado no depende de ningun
+## orden.
 func test_la_colision_corresponde_al_mueble_completo() -> void:
 	var escena: Node3D = auto_free(ESTRUCTURA.instantiate())
 	var malla: MeshInstance3D = escena.get_node("gondolanueva")
 	var forma: CollisionShape3D = escena.get_node("gondolanueva/StaticBody3D/CollisionShape3D")
-	var caras := _ordenados(malla.mesh.get_faces())
-	var choque := _ordenados(forma.shape.get_faces())
+	var caras: PackedVector3Array = malla.mesh.get_faces()
+	var choque: PackedVector3Array = forma.shape.get_faces()
 	assert_int(choque.size()).is_equal(caras.size())
-	for indice in caras.size():
-		(
-			assert_float(choque[indice].distance_to(caras[indice]))
-			. override_failure_message("%d: %s contra %s" % [indice, choque[indice], caras[indice]])
-			. is_less(SEPARACION_MAXIMA)
+	var casilleros := _por_celda(caras)
+	var sueltos := 0
+	var peor := 0.0
+	for punto in choque:
+		var cerca := _distancia_mas_corta(casilleros, punto)
+		if cerca >= SEPARACION_MAXIMA:
+			sueltos += 1
+			peor = maxf(peor, cerca)
+	(
+		assert_int(sueltos)
+		. override_failure_message(
+			(
+				"%d de %d vertices de la forma no tienen par en la malla (el peor, a %.4f)"
+				% [sueltos, choque.size(), peor]
+			)
 		)
-
-
-## Los mismos vertices en un orden que no depende de como los hornearon.
-func _ordenados(puntos: PackedVector3Array) -> Array[Vector3]:
-	var lista: Array[Vector3] = []
-	lista.assign(puntos)
-	lista.sort_custom(
-		func(a: Vector3, b: Vector3) -> bool:
-			if not is_equal_approx(a.x, b.x):
-				return a.x < b.x
-			if not is_equal_approx(a.y, b.y):
-				return a.y < b.y
-			return a.z < b.z
+		. is_equal(0)
 	)
-	return lista
+
+
+## Los vertices repartidos en celdas de un centimetro, para buscarlos por cercanía.
+func _por_celda(puntos: PackedVector3Array) -> Dictionary:
+	var casilleros := {}
+	for punto in puntos:
+		var celda := Vector3i((punto / CELDA).floor())
+		if not casilleros.has(celda):
+			casilleros[celda] = PackedVector3Array()
+		casilleros[celda].append(punto)
+	return casilleros
+
+
+## Lo que dista el vertice del más cercano de la otra malla. Mira su celda y las 26 de al lado,
+## que es todo lo que puede haber a menos de un centímetro.
+func _distancia_mas_corta(casilleros: Dictionary, punto: Vector3) -> float:
+	var celda := Vector3i((punto / CELDA).floor())
+	var corta := INF
+	for dx in [-1, 0, 1]:
+		for dy in [-1, 0, 1]:
+			for dz in [-1, 0, 1]:
+				var vecina := celda + Vector3i(dx, dy, dz)
+				if not casilleros.has(vecina):
+					continue
+				for otro in casilleros[vecina]:
+					corta = minf(corta, punto.distance_to(otro))
+	return corta
 
 
 func test_el_contenido_conserva_material_y_textura_de_cada_producto() -> void:

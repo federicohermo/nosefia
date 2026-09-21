@@ -335,15 +335,15 @@ func test_el_frente_se_conserva_al_examinar_y_volver_a_agarrar() -> void:
 		Vector3.FORWARD,  # Laysntt
 		Vector3.BACK,  # Malbardo
 		Vector3.RIGHT,  # Prongles
-		Vector3.RIGHT,  # Jorgillo
+		Vector3.LEFT,  # Jorgillo
 		Vector3.RIGHT,  # Arvejas
 		Vector3.FORWARD,  # Chisitos
 		Vector3.RIGHT,  # Oremos
 		Vector3.RIGHT,  # Pepitos
-		Vector3.RIGHT,  # Saladik
+		Vector3.LEFT,  # Saladik
 		Vector3.RIGHT,  # Uakas
 		Vector3.RIGHT,  # Coracola
-		Vector3.LEFT,  # Frotlups
+		Vector3.FORWARD,  # Frotlups
 		Vector3.RIGHT,  # Marolini
 		Vector3.RIGHT,  # Amargadito
 		Vector3.RIGHT,  # Cindolor

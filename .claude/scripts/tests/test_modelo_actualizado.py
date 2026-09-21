@@ -84,11 +84,11 @@ class ModeloActualizado(unittest.TestCase):
         blend = (RAIZ / "assets/models/SEPT_JUEGOS_PROTOTIPO.blend").read_bytes()
         self.assertEqual(
             hashlib.sha256(blend).hexdigest(),
-            "370c0506f424d6c1cf415e54b6d20baba5f71155104d5181a2dd5398d2fa3316",
+            "9e549ddaac47bce65fa9a29332fc05423fce970b002d94dc48810b28a162e923",
         )
         self.assertEqual(
             hashlib.sha256(self.glb).hexdigest(),
-            "6df3d8366266c8ee08335f9c652da358d6ba7c1d1fe3cf6a9b45a4927ae3d54e"
+            "cd2436353637c70738cc864f341da3a5816c337da20bd2f4cda9570c8eb66647"
 
 
 
@@ -105,12 +105,12 @@ class ModeloActualizado(unittest.TestCase):
         # de glTF evalua los modificadores objeto por objeto, asi que una tanda copiada de un
         # objeto que tiene modificadores no comparte la malla con su original. Son mallas
         # repetidas, cien kilobytes sobre treinta y cuatro megas.
-        self.assertEqual(len(self.modelo["meshes"]), 76)
+        self.assertEqual(len(self.modelo["meshes"]), 80)
 
 
 
 
-        self.assertEqual(len(self.modelo["materials"]), 42)
+        self.assertEqual(len(self.modelo["materials"]), 45)
         for malla in self.modelo["meshes"]:
             for parte in malla["primitives"]:
                 with self.subTest(malla=malla["name"]):
@@ -124,7 +124,7 @@ class ModeloActualizado(unittest.TestCase):
 
     def test_las_texturas_resuelven_dentro_del_glb(self):
         imagenes = self.modelo.get("images", [])
-        self.assertEqual(len(imagenes), 36)
+        self.assertEqual(len(imagenes), 40)
         for textura in self.modelo["textures"]:
             self.assertLess(textura["source"], len(imagenes))
         for imagen in imagenes:
