@@ -84,7 +84,7 @@ visible = false
 mesh = ExtResource("malla5")
 
 [node name="Guia06" type="MeshInstance3D" parent="."]
-transform = Transform3D(0, 0, 0.146099, 0.089471, 0, 0, 0, 0.055572, 0, 0.762219, 0.755386, 1.325059)
+transform = Transform3D(0, 0, 0.146099, 0.089471, 0, 0, 0, 0.055572, 0, 0.762219, 0.744624, 1.325059)
 visible = false
 mesh = ExtResource("malla6")
 
@@ -149,12 +149,12 @@ visible = false
 mesh = ExtResource("malla18")
 
 [node name="Guia19" type="MeshInstance3D" parent="."]
-transform = Transform3D(0, 0, -0.140833, 0, 0.202839, 0, 0.052131, 0, 0, -3.634075, 0.830055, -3.894474)
+transform = Transform3D(0, 0, -0.140833, 0, 0.202839, 0, 0.052131, 0, 0, -3.634075, 0.819959, -3.894474)
 visible = false
 mesh = ExtResource("malla19")
 
 [node name="Guia20" type="MeshInstance3D" parent="."]
-transform = Transform3D(0, 0, -0.140833, 0, 0.202839, 0, 0.052131, 0, 0, -3.634075, 2.056854, -3.894474)
+transform = Transform3D(0, 0, -0.140833, 0, 0.202839, 0, 0.052131, 0, 0, -3.634075, 2.046758, -3.894474)
 visible = false
 mesh = ExtResource("malla20")
 
@@ -164,7 +164,7 @@ visible = false
 mesh = ExtResource("malla21")
 
 [node name="Guia22" type="MeshInstance3D" parent="."]
-transform = Transform3D(0.052131, 0, 0, 0, 0.202839, 0, 0, 0, 0.140833, 0.851854, 0.419405, -0.908975)
+transform = Transform3D(0.052131, 0, 0, 0, 0.202839, 0, 0, 0, 0.140833, 0.851854, 0.404969, -0.908975)
 visible = false
 mesh = ExtResource("malla22")
 
@@ -189,7 +189,7 @@ visible = false
 mesh = ExtResource("malla26")
 
 [node name="Guia27" type="MeshInstance3D" parent="."]
-transform = Transform3D(-0.057178, 0, 0, 0, 0.222479, 0, 0, 0, -0.154469, -2.220875, 2.199894, -1.312461)
+transform = Transform3D(-0.057178, 0, 0, 0, 0.222479, 0, 0, 0, -0.154469, -2.273029, 2.199894, -1.312461)
 visible = false
 mesh = ExtResource("malla27")
 
@@ -294,7 +294,7 @@ visible = false
 mesh = ExtResource("malla47")
 
 [node name="Guia48" type="MeshInstance3D" parent="."]
-transform = Transform3D(-0.057178, 0, 0, 0, 0.222479, 0, 0, 0, -0.154469, -2.218539, 1.598657, 0.317039)
+transform = Transform3D(-0.057178, 0, 0, 0, 0.222479, 0, 0, 0, -0.154469, -2.272035, 1.598657, 0.317039)
 visible = false
 mesh = ExtResource("malla48")
 

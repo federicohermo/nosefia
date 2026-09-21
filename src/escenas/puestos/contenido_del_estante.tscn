@@ -27,7 +27,7 @@
 [node name="Contenido" type="Node3D"]
 
 [node name="Actroncito" type="MeshInstance3D" parent="."]
-transform = Transform3D(0, 0, -0.233377, 0.133667, 0, 0, 0, -0.155248, 0, -3.388727, 0.942635, -1.188861)
+transform = Transform3D(0, 0, -0.233377, 0.133667, 0, 0, 0, -0.155248, 0, -3.388727, 0.925808, -1.188861)
 visible = false
 mesh = ExtResource("malla0")
 
@@ -102,12 +102,12 @@ visible = false
 mesh = ExtResource("malla14")
 
 [node name="Frotlups" type="MeshInstance3D" parent="."]
-transform = Transform3D(0, 0, -0.140833, 0, 0.202839, 0, 0.052131, 0, 0, -3.634075, 1.464447, -3.894474)
+transform = Transform3D(0, 0, -0.140833, 0, 0.202839, 0, 0.052131, 0, 0, -3.634075, 1.45435, -3.894474)
 visible = false
 mesh = ExtResource("malla15")
 
 [node name="Marolini" type="MeshInstance3D" parent="."]
-transform = Transform3D(-0.057178, 0, 0, 0, 0.222479, 0, 0, 0, -0.154469, -2.322589, 1.026983, -1.436458)
+transform = Transform3D(-0.057178, 0, 0, 0, 0.222479, 0, 0, 0, -0.154469, -2.322589, 1.014621, -1.436458)
 visible = false
 mesh = ExtResource("malla16")
 
