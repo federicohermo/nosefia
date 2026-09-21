@@ -6,6 +6,7 @@
 [ext_resource type="Resource" path="res://src/dominio/almacen/caja_de_reposicion.tres" id="datos"]
 
 [node name="CajaDeProductos" type="RigidBody3D" node_paths=PackedStringArray("mallas") groups=["interactuable"]]
+collision_mask = 9
 freeze = true
 script = ExtResource("script")
 datos = ExtResource("datos")
