@@ -28,7 +28,6 @@ transform = Transform3D(1, 3.5527137e-15, 0, 0, 0.023678668, 0.9997196, 0, -0.99
 light_energy = 6.378
 light_indirect_energy = 3.855
 light_size = 0.874
-shadow_enabled = true
 area_size = Vector2(9.884546, 1)
 
 [node name="AreaLight3D2" type="AreaLight3D" parent="." unique_id=333680017]
@@ -43,7 +42,6 @@ transform = Transform3D(1, 0, 0, 0, 0.023678668, 0.9997196, 0, -0.9997196, 0.023
 light_energy = 3.475
 light_indirect_energy = 3.855
 light_size = 0.874
-shadow_enabled = true
 area_size = Vector2(2.0353312, 1)
 
 [node name="AreaLight3D5" type="AreaLight3D" parent="." unique_id=1115635436]
@@ -51,7 +49,6 @@ transform = Transform3D(1, 0, 0, 0, 0.023678668, 0.9997196, 0, -0.9997196, 0.023
 light_energy = 0.988
 light_indirect_energy = 3.855
 light_size = 0.874
-shadow_enabled = true
 area_size = Vector2(0.9148388, 1)
 
 [node name="AreaLight3D6" type="AreaLight3D" parent="." unique_id=581634060]
