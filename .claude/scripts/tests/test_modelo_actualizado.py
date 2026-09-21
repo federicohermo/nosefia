@@ -88,11 +88,11 @@ class ModeloActualizado(unittest.TestCase):
         blend = (RAIZ / "assets/models/SEPT_JUEGOS_PROTOTIPO.blend").read_bytes()
         self.assertEqual(
             hashlib.sha256(blend).hexdigest(),
-            "471a128a78e11450c36fc16a6f6cf5d49ed194a35bea04d0f36884c70281affc",
+            "a0e16ecca97230283bfc2ef9e3d6cd5a2ed4d92baeedff7b2c20e0347c205c5b",
         )
         self.assertEqual(
             hashlib.sha256(self.glb).hexdigest(),
-            "0f4eebea94d9d773a5f4a907c3849b76121f9f658c95459b4211e30e53946386",
+            "77e9964697496a8c49461dcaa7d29f3fcaec43b7537ff49cfd8ae7e18ea88481",
         )
 
     def test_las_mallas_conservan_uv_y_materiales(self):
@@ -100,7 +100,7 @@ class ModeloActualizado(unittest.TestCase):
         # de glTF evalua los modificadores objeto por objeto, asi que una tanda copiada de un
         # objeto que tiene modificadores no comparte la malla con su original. Son mallas
         # repetidas, cien kilobytes sobre treinta y cuatro megas.
-        self.assertEqual(len(self.modelo["meshes"]), 80)
+        self.assertEqual(len(self.modelo["meshes"]), 79)
 
 
 
