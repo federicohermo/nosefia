@@ -396,6 +396,43 @@ func test_alrededor_de_un_estante_con_lugar_la_caja_siempre_sube_a_el() -> void:
 	)
 
 
+func test_la_mira_que_pasa_por_encima_de_la_caja_de_enfrente_la_apila() -> void:
+	# Pegado a una caja, la mira puesta en su borde de arriba pasa por encima de la tapa y pega
+	# en el piso de atrás. La caja iba a parar ahí, detrás de la otra y fuera de la vista. El
+	# cursor está donde quedaría la caja apilada, así que se apila.
+	var almacen: Node3D = await _almacen_con_jugador_quieto()
+	var jugador: CharacterBody3D = almacen.get("_jugador")
+	var mano: Node3D = jugador.get_node("PuntoDeCaja")
+	var cajas: Array = almacen.get("_cajas_de_productos")
+	var base: RigidBody3D = cajas[Producto.Id.SALADIK]
+	var nueva: Node3D = cajas[Producto.Id.LAYSNTT]
+	base.global_position = Vector3(PISO_LIBRE_DEL_DEPOSITO.x, base.global_position.y, -11.2)
+	await get_tree().physics_frame
+	_accion(jugador, nueva, ReglasDeLosObjetos.ACCION_AGARRAR)
+	await _parar_al_jugador_en(jugador, base.global_position + Vector3(0.0, 0.0, 0.75))
+	jugador.global_position.y = PISO_LIBRE_DEL_DEPOSITO.y
+	var al_piso: Array[String] = []
+	# Más arriba de -30 grados la mira pasa a más de una caja de altura: ya no es apilar.
+	for alto: float in [-30.0, -35.0, -45.0, -60.0]:
+		if nueva.get_parent() != mano:
+			_accion(jugador, nueva, ReglasDeLosObjetos.ACCION_AGARRAR)
+		_mirar(jugador, 0.0, deg_to_rad(alto))
+		jugador.force_update_transform()
+		_accion(jugador, nueva, ReglasDeLosObjetos.ACCION_AGARRAR)
+		var desvio := nueva.global_position - base.global_position
+		if (
+			nueva.get_parent() == mano
+			or Vector2(desvio.x, desvio.z).length() > 0.1
+			or desvio.y < 0.5
+		):
+			al_piso.append("mira %.0f" % alto)
+	(
+		assert_array(al_piso)
+		. override_failure_message("la caja no quedó apilada con: %s" % ", ".join(al_piso))
+		. is_empty()
+	)
+
+
 ## Deja al jugador parado en un lugar, con la caja que lleva ya acomodada adelante.
 ##
 ## **Los brazos se acomodan en el paso de física.** Con el jugador apagado desde el primer cuadro

@@ -369,6 +369,8 @@ func _apoyo_apuntado(caja: CajaDelDeposito) -> Dictionary:
 	var lejos := ojo.origin - ojo.basis.z * ReglasDelJugador.ALCANCE_DE_LA_MIRA
 	var golpe := _rayo(caja, ojo.origin, lejos)
 	var rozada := _caja_rozada(caja, ojo.origin, lejos, golpe)
+	if rozada == null:
+		rozada = _caja_sobrevolada(caja, ojo.origin, lejos, golpe)
 	if rozada != null:
 		golpe = _tapa_de_la_pila(caja, rozada)
 	elif golpe.is_empty():
@@ -428,6 +430,36 @@ func _caja_rozada(
 	for choque in espacio.intersect_shape(consulta, 4):
 		if choque["collider"] is CajaDelDeposito:
 			return choque["collider"]
+	return null
+
+
+## La caja por encima de la que pasa la mira, a menos de una caja de altura de su tapa.
+##
+## **El cursor está donde quedaría la caja apilada.** Parado pegado a una caja, la mira puesta en
+## su borde de arriba pasa por encima de la tapa y pega en el piso de atrás: la caja iba a parar
+## ahí, detrás de la otra y fuera de la vista. Medido a 70 cm de una caja: entre -10 y -43 grados
+## la mandaba atrás, y recién a -46 la apilaba.
+##
+## Se camina el rayo a pasos cortos, y en cada uno se mira hacia abajo una caja de altura. Se
+## corta en lo que el rayo tocó: lo que queda detrás de una pared no cuenta.
+func _caja_sobrevolada(
+	caja: CajaDelDeposito, desde: Vector3, hasta: Vector3, golpe: Dictionary
+) -> CajaDelDeposito:
+	if golpe.get("collider") is CajaDelDeposito:
+		return null
+	var fin: Vector3 = golpe.get("position", hasta)
+	var largo := desde.distance_to(fin)
+	var alto := _media_caja(caja).y * 2.0
+	var recorrido := HOLGURA_DE_LA_MIRA
+	while recorrido < largo:
+		var punto := desde.lerp(fin, recorrido / largo)
+		var abajo := _rayo(caja, punto, punto + Vector3.DOWN * alto)
+		if (
+			abajo.get("collider") is CajaDelDeposito
+			and ReglasDeLosObjetos.se_puede_apoyar_en(abajo["normal"].y)
+		):
+			return abajo["collider"]
+		recorrido += HOLGURA_DE_LA_MIRA
 	return null
 
 
