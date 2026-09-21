@@ -30,7 +30,7 @@ const DEL_MODELO := [
 	"gondolanueva/pepitos2_025",
 	"gondolanueva2/saladix-2oeste2",
 	"gondolanueva/wakas_021",
-	"heladeranueva/bebida helada02_001",
+	"heladeranueva/bebida helada02-este2",
 	"gondolanueva2/cereal-2norte2",
 	"gondolanueva2/fideos2",
 	"amargadito",

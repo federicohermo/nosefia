@@ -75,7 +75,7 @@ func test_el_surtido_fijo_no_muestra_stock_que_el_dominio_no_tiene() -> void:
 		"gondolanueva/oremos",
 		"gondolanueva/pepitos2_025",
 		"gondolanueva/wakas_021",
-		"heladeranueva/bebida helada02_001",
+		"heladeranueva/bebida helada02-este2",
 		"gondolanueva/cereal",
 		"gondolanueva2/fideos2",
 		"amargadito",

@@ -77,28 +77,23 @@ class ModeloActualizado(unittest.TestCase):
         # treinta bandejas, repartidos en las dos puntas de cada una: menos de lo que mide un
         # producto, que es lo mas lleno que se puede dejar sin inventar una unidad partida.
         #
-
+        # **Y la heladera se achico.** Medía casi un metro mas que la gondola de al lado: no se
+        # leia como otro mueble sino como otra escala. Ahora tiene el mismo fondo que la
+        # gondola, se apoya en el mismo plano de pared y queda apenas mas alta, que es la
+        # proporcion que tienen de verdad. Las latas se reacomodaron solas: la chapa da menos
+        # largo y menos fondo, asi que el mueble lleva una columna menos por bandeja.
 
         # Los seis productos armados del troquel entraron chicos —el troquel da la proporcion y
         # no el tamano— y se agrandaron un cuarto, salvo las Macumbas que ya venian agrandadas.
         blend = (RAIZ / "assets/models/SEPT_JUEGOS_PROTOTIPO.blend").read_bytes()
         self.assertEqual(
             hashlib.sha256(blend).hexdigest(),
-            "9e549ddaac47bce65fa9a29332fc05423fce970b002d94dc48810b28a162e923",
+            "471a128a78e11450c36fc16a6f6cf5d49ed194a35bea04d0f36884c70281affc",
         )
         self.assertEqual(
             hashlib.sha256(self.glb).hexdigest(),
-            "cd2436353637c70738cc864f341da3a5816c337da20bd2f4cda9570c8eb66647"
-
-
-
-
-
-
-
-,
+            "0f4eebea94d9d773a5f4a907c3849b76121f9f658c95459b4211e30e53946386",
         )
-
 
     def test_las_mallas_conservan_uv_y_materiales(self):
         # Son mas que las mallas de Blender, y no es un error: con `export_apply` el exportador
@@ -124,7 +119,7 @@ class ModeloActualizado(unittest.TestCase):
 
     def test_las_texturas_resuelven_dentro_del_glb(self):
         imagenes = self.modelo.get("images", [])
-        self.assertEqual(len(imagenes), 40)
+        self.assertEqual(len(imagenes), 39)
         for textura in self.modelo["textures"]:
             self.assertLess(textura["source"], len(imagenes))
         for imagen in imagenes:
