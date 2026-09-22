@@ -1,7 +1,7 @@
 ---
 schema_version: 1
 capability_id: CAP-SHF
-status: draft
+status: ratified
 owner: por definir
 provenance: GDD «Ciclo de jornadas»; migración de los specs 001, 007, 011, 016, 027, 031
 ---
@@ -31,7 +31,7 @@ investigando es un minuto que no se dedica a las tareas**, y esta capacidad es e
 ### BR-SHF-001 — La noche dura doce horas de ficción
 
 El sistema DEBE dar a cada jornada un turno de **43 200 segundos** de ficción, de las 20:00 a las
-06:00.
+08:00.
 
 ### BR-SHF-002 — La sesión dura doce minutos reales
 
@@ -170,12 +170,12 @@ o menos, lee `""`. En las jornadas 0, 4 y 5 lee la hora con `43200.0`, con `2160
 ### AC-SHF-013 — El reloj roto no dice que está roto *(verifica BR-SHF-011)*
 
 DADO la jornada 3 con `0.0` segundos restantes CUANDO se lee el reloj ENTONCES la lectura es la
-cadena vacía, y no `"06:00"`.
+cadena vacía, y no `"08:00"`.
 
 ### AC-SHF-014 — La lectura trunca *(verifica BR-SHF-012)*
 
 DADO `43141.0` segundos restantes ENTONCES el reloj lee `"20:00"`; con `43140.0`, `"20:01"`; con
-`-10.0`, `"06:00"`.
+`-10.0`, `"08:00"`.
 
 ### AC-SHF-015 — *Retirado* *(verifica BR-SHF-013)*
 
@@ -192,7 +192,7 @@ DADO una jornada que no es la tercera CUANDO se lee el reloj ENTONCES:
 | `28799.0` | `"00:00"` |
 | `21600.0` | `"02:00"` |
 | `14400.0` | `"04:00"` |
-| `0.0` | `"06:00"` |
+| `0.0` | `"08:00"` |
 
 ### AC-SHF-017 — Un solo reloj *(verifica BR-SHF-011)*
 

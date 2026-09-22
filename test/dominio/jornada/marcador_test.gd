@@ -1,64 +1,41 @@
-## Los números del turno formateados, y el umbral con el que quien los pinta cambia de color.
+## Los números del turno formateados: la hora de la noche y el marcador de obligatorias.
 ##
-## El nodo que pinta no formatea nada: si estos casos pasan, el reloj de pared del local dice la
-## verdad. Y el umbral se prueba acá y no mirando la esfera porque es un número que decide — en
-## `escenas/` habría nacido sin test, que es exactamente el motivo de bajarlo al dominio.
+## El nodo que pinta no formatea nada: si estos casos pasan, el reloj de mesa del local dice la
+## verdad. La hora se prueba acá y no mirando el label porque la aritmética de la apertura más lo
+## transcurrido es una regla del juego — en `escenas/` habría nacido sin test.
 extends GdUnitTestSuite
 
 
-func test_un_minuto_y_medio_se_lee_como_minutos_y_segundos() -> void:
-	assert_str(Marcador.reloj(90.0)).is_equal("01:30")
+func test_con_el_turno_entero_se_lee_la_hora_de_apertura() -> void:  # AC-SHF-016
+	assert_str(Marcador.hora(43200.0)).is_equal("20:00")
 
 
-func test_un_turno_agotado_se_lee_en_cero() -> void:
-	assert_str(Marcador.reloj(0.0)).is_equal("00:00")
+func test_la_hora_pasa_por_la_medianoche_sin_llegar_a_veinticuatro() -> void:  # AC-SHF-016
+	# El único cruce del `HH` en la noche, y el que distingue «módulo 24» de «apertura más
+	# horas»: sin el módulo, la medianoche se leería `"24:00"`.
+	assert_str(Marcador.hora(28801.0)).is_equal("23:59")
+	assert_str(Marcador.hora(28799.0)).is_equal("00:00")
 
 
-func test_un_restante_negativo_no_se_muestra_con_signo() -> void:  # AC-SHF-014
-	# Un `-00:00` en pantalla es un número imposible justo en el momento en que el jugador más
-	# lo mira, y el dominio es el único lugar donde se puede impedir de una vez.
-	assert_str(Marcador.reloj(-5.0)).is_equal("00:00")
+func test_la_hora_avanza_a_medida_que_el_turno_se_gasta() -> void:  # AC-SHF-016
+	assert_str(Marcador.hora(21600.0)).is_equal("02:00")
+	assert_str(Marcador.hora(14400.0)).is_equal("04:00")
 
 
-func test_los_segundos_se_truncan_y_no_se_redondean() -> void:  # AC-SHF-014
-	# Mostrar `01:00` cuando ya no queda un minuto entero es mentirle al jugador.
-	assert_str(Marcador.reloj(59.9)).is_equal("00:59")
+func test_un_turno_agotado_se_lee_como_la_hora_de_cierre() -> void:  # AC-SHF-016
+	assert_str(Marcador.hora(0.0)).is_equal("08:00")
 
 
-func test_menos_de_un_segundo_ya_se_lee_como_cero() -> void:
-	assert_str(Marcador.reloj(0.9)).is_equal("00:00")
+func test_los_segundos_se_truncan_al_minuto_y_no_se_redondean() -> void:  # AC-SHF-014
+	# Con 59 segundos de ficción gastados todavía no pasó un minuto entero: mostrar `20:01` es
+	# adelantarle la hora al jugador. Al segundo 60 justo, sí.
+	assert_str(Marcador.hora(43141.0)).is_equal("20:00")
+	assert_str(Marcador.hora(43140.0)).is_equal("20:01")
 
 
-func test_hasta_la_hora_el_reloj_no_muestra_horas() -> void:
-	assert_str(Marcador.reloj(3599.0)).is_equal("59:59")
-
-
-func test_desde_la_hora_el_reloj_cambia_de_forma() -> void:
-	# Sin este corte, un turno entero daría `480:00`, que nadie lee como ocho horas.
-	assert_str(Marcador.reloj(3600.0)).is_equal("1:00:00")
-
-
-func test_el_turno_entero_se_lee_como_ocho_horas() -> void:
-	assert_str(Marcador.reloj(28800.0)).is_equal("8:00:00")
-
-
-func test_con_horas_los_minutos_son_los_de_esta_hora_y_no_los_del_turno() -> void:  # AC-SHF-014
-	# Es el único caso donde los tres campos son distintos de cero, y por eso el único que
-	# distingue «minutos de esta hora» de «minutos totales»: con los totales daría `2:121:05`.
-	# Los otros casos con hora caen justo en el minuto 0 y no lo pueden ver.
-	assert_str(Marcador.reloj(7265.0)).is_equal("2:01:05")
-
-
-func test_un_segundo_antes_del_umbral_todavia_no_es_aviso() -> void:  # AC-SHF-015
-	assert_bool(Marcador.en_aviso(1801.0)).is_false()
-
-
-func test_el_umbral_exacto_ya_es_aviso() -> void:  # AC-SHF-015
-	assert_bool(Marcador.en_aviso(1800.0)).is_true()
-
-
-func test_un_turno_agotado_sigue_estando_en_aviso() -> void:
-	assert_bool(Marcador.en_aviso(0.0)).is_true()
+func test_un_restante_negativo_nunca_pasa_de_la_hora_de_cierre() -> void:  # AC-SHF-014
+	# Un `08:10` en el display es un turno que siguió después de cerrar, y eso no existe.
+	assert_str(Marcador.hora(-10.0)).is_equal("08:00")
 
 
 func test_las_tareas_se_leen_como_cumplidas_sobre_declaradas() -> void:

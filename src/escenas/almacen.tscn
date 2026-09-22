@@ -11,13 +11,13 @@
 [ext_resource type="LightmapGIData" uid="uid://i8kc61len5kv" path="res://src/escenas/almacen.lmbake" id="lightmap"]
 [ext_resource type="PackedScene" path="res://src/escenas/puestos/reposicion_manual.tscn" id="reposicion_manual"]
 
-[node name="Almacen" type="Node3D" unique_id=999617316 node_paths=PackedStringArray("_hud", "_reloj", "_ciclo", "_pantalla", "_reloj_de_pared", "_repositor", "_carga", "_estante", "_cajas_de_productos", "_caja_de_traslado", "_jugador", "_atenciones", "_computadora", "_limpiador", "_limpieza", "_recolector", "_audio", "_reposicion_manual", "_agarre", "_bolsas", "_muebles_con_contorno")]
+[node name="Almacen" type="Node3D" unique_id=999617316 node_paths=PackedStringArray("_hud", "_reloj", "_ciclo", "_pantalla", "_reloj_de_mesa", "_repositor", "_carga", "_estante", "_cajas_de_productos", "_caja_de_traslado", "_jugador", "_atenciones", "_computadora", "_limpiador", "_limpieza", "_recolector", "_audio", "_reposicion_manual", "_agarre", "_bolsas", "_muebles_con_contorno")]
 script = ExtResource("4_almacen")
 _hud = NodePath("Interfaz/Hud")
 _reloj = NodePath("Servicios/RelojDelTurno")
 _ciclo = NodePath("Servicios/CicloDeJornadas")
 _pantalla = NodePath("Interfaz/PantallaDeCierre")
-_reloj_de_pared = NodePath("Estructura/RelojDePared")
+_reloj_de_mesa = NodePath("Estructura/reloj/Hora")
 _repositor = NodePath("Servicios/Repositor")
 _carga = NodePath("Servicios/CargaDeLaCaja")
 _estante = NodePath("Estructura/gondolanueva/StaticBody3D")

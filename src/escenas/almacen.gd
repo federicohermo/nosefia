@@ -11,12 +11,12 @@
 ## levantar nada. Acá quedó lo único que necesita la escena delante: conectar y pintar.
 extends Node3D
 
-## El script del reloj de pared se preloadea para poder tiparlo: los scripts de `escenas/` son
+## El script del reloj de mesa se preloadea para poder tiparlo: los scripts de `escenas/` son
 ## cáscara y no declaran `class_name`, así que sin esto el tipo estático del `@export` sería
 ## `Label3D` y llamarle `declarar_jornada()` no compilaría.
-const RelojDeParedDelLocal := preload("res://src/escenas/puestos/reloj_de_pared.gd")
+const RelojDeMesaDelLocal := preload("res://src/escenas/puestos/reloj_de_mesa.gd")
 
-## Los tres scripts de `escenas/` se preloadean por el mismo motivo que el del reloj de pared:
+## Los tres scripts de `escenas/` se preloadean por el mismo motivo que el del reloj de mesa:
 ## son cáscara y no declaran `class_name`, así que sin esto el tipo estático del `@export` sería
 ## el del nodo y llamarles `mostrar()` no compilaría.
 const EstanteDelLocal := preload("res://src/escenas/puestos/estante.gd")
@@ -34,7 +34,7 @@ const Jugador := preload("res://src/escenas/jugador.gd")
 @export var _reloj: RelojDelTurno
 @export var _ciclo: CicloDeJornadas
 @export var _pantalla: PantallaDeCierre
-@export var _reloj_de_pared: RelojDeParedDelLocal
+@export var _reloj_de_mesa: RelojDeMesaDelLocal
 @export var _repositor: Repositor
 @export var _carga: CargaDeLaCaja
 @export var _estante: EstanteDelLocal
@@ -78,11 +78,11 @@ func _ready() -> void:
 		_jugador.ignorar_el_detalle(mueble)
 	_hud.declarar_obligatorias(Apertura.cantidad_de_obligatorias())
 	_hud.mostrar_apercibimientos(_partida.apercibimientos())
-	# La hora se lee en el local y no en la pantalla: enterarse cuesta caminar hasta el reloj, y
-	# desde la noche en que se rompe, ni caminar alcanza. La jornada se declara antes de arrancar
+	# La hora se lee en el local y no en la pantalla: enterarse cuesta caminar hasta el reloj de
+	# mesa, y la noche en que falla, ni caminar alcanza. La jornada se declara antes de arrancar
 	# porque el ciclo abre la primera adentro de `arrancar()`.
-	_reloj.tiempo_consumido.connect(_reloj_de_pared.mostrar_tiempo)
-	_ciclo.jornada_abierta.connect(_reloj_de_pared.declarar_jornada)
+	_reloj.tiempo_consumido.connect(_reloj_de_mesa.mostrar_tiempo)
+	_ciclo.jornada_abierta.connect(_reloj_de_mesa.declarar_jornada)
 	_reloj.tarea_completada.connect(_hud.mostrar_tareas)
 	_ciclo.jornada_cerrada.connect(_al_cerrar_la_jornada)
 	# El marcador de obligatorias no se reinicia solo: `mostrar_tareas()` se vuelve a llamar

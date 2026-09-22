@@ -90,6 +90,10 @@ Lo que más se rompe:
   menos de 3, el cuarto apercibimiento.
 - **Si un criterio barre un directorio y enumera excepciones, corré el barrido antes de escribir
   la lista.** De memoria sale corta y el criterio nace imposible de pasar.
+- **Una tabla de valores se recalcula fila por fila desde la regla, y las puntas se derivan.** Una
+  hora de cierre se calcula como apertura más duración, nunca se copia de la ficha: «doce horas,
+  de las 20:00 a las 06:00» pasó por el spec y el issue con la suma sin hacer, y el primer test
+  lo encontró.
 - **Un ID no se renumera y no se reutiliza: se retira.** Uno nuevo sigue la numeración, aunque
   queden huecos.
 

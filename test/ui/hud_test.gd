@@ -12,20 +12,20 @@ const ESCENA_DEL_HUD := "res://src/ui/hud.tscn"
 const CARPETA_DE_UI := "res://src/ui"
 
 ## Lo que se fue con la hora. Los dos colores estaban **sólo** acá —medido con un `grep` sobre
-## `src`, `test` y `project.godot`—, así que se mudaron al reloj de pared en vez de copiarse.
+## `src`, `test` y `project.godot`—, y murieron con la franja de aviso.
 const RASTROS_DE_LA_HORA := [
 	"mostrar_tiempo",
 	"TEXTO_DEL_TIEMPO",
 	"COLOR_TRANQUILO",
 	"COLOR_DE_AVISO",
-	"Marcador.reloj",
+	"Marcador.hora",
 ]
 
 ## Las suites que este spec escribe. Ninguna puede cargar una escena de la computadora: el 009
 ## todavía no existe, y una suite que la cargara pasaría por abortar antes de afirmar nada.
-const SUITES_DEL_RELOJ_DE_PARED := [
-	"res://test/dominio/jornada/reloj_de_pared_test.gd",
-	"res://test/escenas/puestos/reloj_de_pared_test.gd",
+const SUITES_DEL_RELOJ_DE_MESA := [
+	"res://test/dominio/jornada/reloj_de_mesa_test.gd",
+	"res://test/escenas/puestos/reloj_de_mesa_test.gd",
 	"res://test/ui/hud_test.gd",
 ]
 
@@ -88,15 +88,14 @@ func test_la_escena_del_hud_perdio_el_reloj_y_conserva_los_otros_dos() -> void:
 
 
 func test_la_hora_no_vuelve_a_entrar_a_la_pantalla_por_la_ventana() -> void:
-	# La computadora va a mostrar la hora también, y va a vivir en la carpeta diegética.
-	# Mientras no exista, nadie de esta capa puede preguntarle al reloj de pared: la hora se lee
-	# en el local. El caso mira la capa entera y no sólo el HUD, que es lo que lo deja puesto
-	# cuando `ui/` crezca.
+	# La hora se lee en un solo lugar, el reloj de mesa del local: ni la computadora ni ninguna
+	# pantalla de esta capa le preguntan al dominio por ella. El caso mira la capa entera y no
+	# sólo el HUD, que es lo que lo deja puesto cuando `ui/` crezca.
 	var culpables: Array[String] = []
 	var mirados := 0
 	for ruta in _scripts_de(CARPETA_DE_UI):
 		mirados += 1
-		if FileAccess.get_file_as_string(ruta).contains("RelojDePared"):
+		if FileAccess.get_file_as_string(ruta).contains("RelojDeMesa"):
 			culpables.append(ruta)
 	(
 		assert_int(mirados)
@@ -106,7 +105,7 @@ func test_la_hora_no_vuelve_a_entrar_a_la_pantalla_por_la_ventana() -> void:
 	(
 		assert_array(culpables)
 		. override_failure_message(
-			"estos archivos de `ui/` le preguntan al reloj de pared: %s" % ", ".join(culpables)
+			"estos archivos de `ui/` le preguntan al reloj de mesa: %s" % ", ".join(culpables)
 		)
 		. is_empty()
 	)
@@ -115,7 +114,7 @@ func test_la_hora_no_vuelve_a_entrar_a_la_pantalla_por_la_ventana() -> void:
 func test_ninguna_suite_de_este_spec_carga_la_computadora_del_009() -> void:
 	# Una escena que no existe se carga como `null` y el caso **aborta antes de afirmar**, lo que
 	# gdUnit4 reporta como `PASSED`. Es la peor de las tres formas en que un verde miente acá.
-	for suite: String in SUITES_DEL_RELOJ_DE_PARED:
+	for suite: String in SUITES_DEL_RELOJ_DE_MESA:
 		var texto := FileAccess.get_file_as_string(suite)
 		(
 			assert_str(texto)
