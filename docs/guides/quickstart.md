@@ -134,6 +134,7 @@ gh issue create --title "<qué cambia>" --body-file <archivo>
 git checkout -b <tipo>/<issue>-<kebab>
 
 # 3. si el cambio crea, modifica o borra una funcionalidad: el spec, primer commit de la rama
+#    se escribe a mano en specs/, y el gate verifica su forma
 python .claude/scripts/gate_de_specs.py
 ```
 

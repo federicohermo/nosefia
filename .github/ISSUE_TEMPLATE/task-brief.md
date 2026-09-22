@@ -16,7 +16,7 @@ labels: ""
 - **Objetivo:** una oración. Qué problema resuelve.
 - **Tipo:** `feature` | `bugfix` | `refactor` | `improvement`
 - **Spec:** ninguno | crea | modifica | borra — `specs/<capability>/<capability>.md`
-- **Rama:** `<tipo>/<issue>-<kebab>`
+- **Rama:** `<tipo>/<issue>-<kebab>`, o `harness/` o `docs/` si no toca `src/`
 
 <!-- `feature` es el único tipo que siempre toca un spec. Un `bugfix` toca uno sólo si el bug
      era una regla que nadie había escrito. La etiqueta sale del tipo: `enhancement`, `bug`,

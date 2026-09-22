@@ -6,8 +6,8 @@ del hook por stdin y contesta por stdout con `permissionDecision`.
 ## Por qué existe
 
 `CLAUDE.md` y `.claude/rules/specs.md` documentan el flujo, pero es prosa, y la prosa no
-frena a nadie. En el repo del que sale este harness, la sesión que abrió un spec reportó un bug y el agente abrió una rama y editó el
-dominio sin spec y sin issue: nada se lo impidió.
+frena a nadie. En el repo del que sale este harness, la sesión que abrió un spec reportó un
+bug y el agente abrió una rama y editó el dominio sin spec y sin issue: nada se lo impidió.
 
 Es el mismo hallazgo que mueve una convención de la documentación al linter, un nivel más
 arriba: la regla que dice cómo EMPIEZA un cambio también tiene que ser ejecutable.
@@ -94,13 +94,12 @@ def _lista(prefijos: tuple[str, ...]) -> str:
 #: El único mensaje que dice cómo salir, y **se arma con las dos listas de arriba**.
 #:
 #: Escribir los prefijos otra vez acá sería la segunda copia de un conjunto cerrado, y la que
-#: se pudre: el día que entre un cuarto prefijo, el código lo aceptaría y el mensaje seguiría
-#: nombrando tres.
+#: se pudre: el día que entre uno nuevo, el código lo aceptaría y el mensaje seguiría nombrando
+#: los viejos. **Por eso el mensaje tampoco explica prefijo por prefijo**: esa glosa es la misma
+#: copia con otra forma. Qué es cada uno vive en `docs/infra/ramas.md`.
 COMO_SALIR = (
-    "Al producto lo tocan %s. `feature/` es para código que parte de un spec, `bugfix/` para "
-    "algo roto, `refactor/` para el mismo comportamiento con otra forma, e `improvement/` para "
-    "un cambio que no toca ningún spec y no es un bug. Lo que NO toca `src/` se nombra por lo "
-    "que toca: %s."
+    "Al producto lo tocan %s. Lo que NO toca `src/` se nombra por lo que toca: %s. Qué es cada "
+    "prefijo está en `docs/infra/ramas.md`."
 ) % (_lista(PREFIJOS_DEL_PRODUCTO), _lista(PREFIJOS_SIN_PRODUCTO))
 
 

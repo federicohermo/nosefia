@@ -23,7 +23,7 @@ nada que instalar.
 ## Cómo se trabaja acá
 
 - **El contrato manda.** Lo que el juego tiene que hacer vive en `specs/`, una capacidad por
-  archivo. El plan de cada cambio es un issue de GitHub, y el prefijo de la rama dice qué clase
+  archivo. El plan de un cambio es un issue de GitHub, y el prefijo de la rama dice qué clase
   de cambio es: lo verifica un hook, no la buena voluntad.
 - **El test va primero.** Todo script de `src/dominio/` y `src/sistemas/` tiene su espejo en
   `test/`, y un gate lo verifica.
