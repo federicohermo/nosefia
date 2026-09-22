@@ -1,6 +1,6 @@
 ---
 name: features-to-issues
-description: Trae de Notion las fichas de «Features y sistemas» con el diseño cerrado —las 🟩— y las convierte en issues de GitHub, o actualiza los issues que ya tienen. Usar con «pasá las features a issues», «qué fichas verdes no tienen issue», «actualizá los issues de Notion», o al arrancar una entrega y querer saber qué hay para construir. Deja cada ficha apuntando a su issue vigente.
+description: "Trae de Notion las fichas de «Features y sistemas» con el diseño cerrado —las 🟩— y las convierte en issues de GitHub, o actualiza los issues que ya tienen. Usar con «pasá las features a issues», «qué fichas verdes no tienen issue», «actualizá los issues de Notion», o al arrancar una entrega y querer saber qué hay para construir. Deja cada ficha apuntando a su issue vigente."
 argument-hint: "[nombre de una ficha | vacío = todas las 🟩]"
 ---
 

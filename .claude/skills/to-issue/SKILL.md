@@ -1,6 +1,6 @@
 ---
 name: to-issue
-description: Escribe y publica UN issue de No se fía con formato task-brief — el plan chico y descartable de un cambio puntual — y decide si ese cambio toca un spec. Usar apenas llega un pedido, un bug o una idea que se va a hacer, antes de abrir la rama; también con «abrí un issue», «armá el ticket» o la salida de shape en modo issue. Si el issue cambia lo que el juego tiene que hacer, después va to-spec. No escribe código ni specs.
+description: "Escribe y publica UN issue de No se fía con formato task-brief — el plan chico y descartable de un cambio puntual — y decide si ese cambio toca un spec. Usar apenas llega un pedido, un bug o una idea que se va a hacer, antes de abrir la rama; también con «abrí un issue», «armá el ticket» o la salida de shape en modo issue. Si el issue cambia lo que el juego tiene que hacer, después va to-spec. No escribe código ni specs."
 argument-hint: "[pedido | bug | idea]"
 ---
 

@@ -1,6 +1,7 @@
 ---
 name: to-spec
-description: Escribe o actualiza el contrato durable de una capacidad de No se fía — `specs/<capability>/<capability>.md`, con sus reglas BR y sus criterios AC. Usar cuando cambia lo que el juego tiene que hacer —una funcionalidad nueva, cambiada o que se quita—, antes de tocar una línea de código. Parte de un issue de tipo feature o directo de un pedido. Para escribir el issue, to-issue.
+description: "Escribe o actualiza el contrato durable de una capacidad de No se fía — `specs/<capability>/<capability>.md`, con sus reglas BR y sus criterios AC. Usar cuando cambia lo que el juego tiene que hacer —una funcionalidad nueva, cambiada o que se quita—, antes de tocar una línea de código. Parte de un issue de tipo feature o directo de un pedido. Para escribir el issue, to-issue."
+argument-hint: "[NN del issue | capability | pedido en prosa]"
 ---
 
 # to-spec — el contrato de una capacidad

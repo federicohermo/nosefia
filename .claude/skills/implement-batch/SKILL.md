@@ -1,6 +1,7 @@
 ---
 name: implement-batch
-description: Implementa N issues de No se fía en paralelo —un carril por cadena de dependencias, cada uno en su worktree— delegando cada issue a implement-feature, y cierra con un PR por issue, verificar.py en verde y ningún criterio sin test que lo cite. Usar al implementar dos o más issues de una. Para uno solo, implement-feature.
+description: "Implementa N issues de No se fía en paralelo —un carril por cadena de dependencias, cada uno en su worktree— delegando cada issue a implement-feature, y cierra con un PR por issue, verificar.py en verde y ningún criterio sin test que lo cite. Usar al implementar dos o más issues de una. Para uno solo, implement-feature."
+argument-hint: "<NN NN ...>"
 ---
 
 # implement-batch — No se fía

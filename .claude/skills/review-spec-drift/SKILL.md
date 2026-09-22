@@ -1,6 +1,6 @@
 ---
 name: review-spec-drift
-description: Audita la deriva entre el contrato de una capacidad de No se fía y el código que lo implementa. Sólo reporta: no arregla nada y no toca el spec. Usar cada tanto, y siempre antes de ratificar una capacidad.
+description: "Audita la deriva entre el contrato de una capacidad de No se fía y el código que lo implementa. Sólo reporta: no arregla nada y no toca el spec. Usar cada tanto, y siempre antes de ratificar una capacidad."
 argument-hint: "[capability | vacío = todas]"
 ---
 
