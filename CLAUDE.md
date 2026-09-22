@@ -22,7 +22,8 @@ tareas.** Al evaluar una feature, la pregunta es si aprieta esa tensión.
 `src/dominio/reglas.gd`, el corte de las bandas de `src/dominio/empleo/consecuencia.gd`, y las
 cinco tareas de recorrer `Tarea.Tipo`.
 
-El diseño vive en el **GDD de Notion**, que manda sobre lo que este archivo diga del juego. Si un
+El diseño vive en Notion: el **GDD** tiene la visión y el alcance, y la base «Features y
+sistemas» el detalle de cada feature. El GDD manda sobre lo que este archivo diga del juego. Si un
 spec discrepa del código, eso es un hallazgo, y lo decide el GDD: si el spec dice lo que el GDD
 pide, el que está mal es el código.
 

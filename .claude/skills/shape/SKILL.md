@@ -80,7 +80,7 @@ llenar una lista. Nunca se escribe código de producción y nunca se edita el sp
 
 | Lo que se resolvió | Aterriza en |
 |---|---|
-| diseño del juego, y el pedido salió de una ficha de Notion | **un comentario en la ficha**, con el arroba a Cami y Tiago, que lo resuelven. El texto de la ficha no se toca |
+| diseño del juego, y el pedido salió de una ficha de Notion | **un comentario en la ficha**, con el arroba a quienes deciden el diseño. El texto de la ficha no se toca |
 | una regla durable del juego | el contrato de la capacidad, con `to-spec` |
 | qué se toca esta vez, con qué límites | el issue, con `to-issue` |
 | algo que no toca el juego —el harness, una optimización, un bug— | el issue, y nada más |

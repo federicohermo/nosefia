@@ -27,7 +27,7 @@ alcanza.
 discusión, y una ficha sin ícono todavía no se miró.
 
 **La propiedad `Estado` no decide nada acá.** Está casi sin mantener —fichas ya implementadas
-siguen en `Sin empezar`— y contradice al ícono. Si la usaras, traerías el lote equivocado.
+siguen en `Sin empezar`— y contradice al ícono.
 
 ## Paso 1 — Leer la base
 
@@ -41,7 +41,7 @@ Notion, y el `fetch` de la base imprime la URL de su data source.
 
 El SQL da las filas y sus URLs, pero **no da el ícono**: eso sale de `notion-fetch` por ficha.
 Con muchas fichas, repartilas entre agentes y pediles sólo el ícono, el cuerpo y la línea del
-issue. Traer 23 páginas enteras al contexto es el gasto más caro de este skill.
+issue. Traer las páginas enteras al contexto es el gasto más caro de este skill.
 
 De cada ficha 🟩 salen cuatro cosas: el título, el `Resumen`, el cuerpo —que es el diseño— y la
 **línea del issue**, que es el primer párrafo del cuerpo.
@@ -103,8 +103,8 @@ la ficha, su `Estado`, su ícono y sus propiedades no se tocan.
 ## Paso 6 — Los problemas del diseño van a los comentarios
 
 **El texto de una ficha no se reescribe nunca.** Lo que le falta, lo que se contradice y lo que
-quedó viejo se plantea como **pregunta en un comentario de esa ficha**, y lo resuelven Cami y
-Tiago.
+quedó viejo se plantea como **pregunta en un comentario de esa ficha**, con el arroba a quienes
+deciden el diseño.
 
 ```
 notion-create-comment       # page_id de la ficha, y el arroba de cada uno
@@ -113,7 +113,7 @@ notion-get-comments         # leer el comentario recién escrito, para ver cómo
 
 El arroba va como `mention` de usuario, con el **ID de usuario**:
 
-| Quién | ID |
+| Quién decide el diseño | ID |
 |---|---|
 | Cami | `5004fd3f-7661-4ee0-bb8c-b9b1c2d77117` |
 | Tiago | `b76e5dab-dfcb-45e5-8543-bc7e80dc9518` |
@@ -128,8 +128,7 @@ contesta 403, y ese ID en un arroba hace fallar el comentario entero con
 
 **Comprobá el primer comentario leyéndolo de vuelta**, con `notion-get-comments`. Si el arroba
 quedó como `<mention-user url="user://…"/>`, notificó; si quedó como texto, no notificó a nadie y
-**el reporte lo dice**. Un arroba que no resuelve se ve igual que uno que sí, y ésa es la forma
-de que nadie se entere.
+**el reporte lo dice**.
 
 Un comentario, un problema. Cada uno dice qué dice la ficha, contra qué choca —otra ficha, un
 spec, el código— y qué hay que decidir. No propone la respuesta como si estuviera decidida.
@@ -137,8 +136,6 @@ spec, el código— y qué hay que decidir. No propone la respuesta como si estu
 ## Al cerrar
 
 El reporte dice, por ficha: qué issue quedó, si es nuevo o editado, y qué fichas 🟩 quedaron sin
-issue con su motivo. Una ficha verde que se cae del lote en silencio es la deuda que este paso
-existe para no crear.
+issue con su motivo.
 
-Y lista los comentarios que dejaste, con su ficha y si el arroba notificó. **El diseño no es
-tuyo: se pregunta, no se corrige.**
+Y lista los comentarios que dejaste, con su ficha y si el arroba notificó.
