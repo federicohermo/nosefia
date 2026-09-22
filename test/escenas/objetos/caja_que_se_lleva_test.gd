@@ -62,13 +62,11 @@ const CUADROS_QUIETOS := 20
 ## una caja y media tarda menos de treinta; el resto es el margen del reposo.
 const CUADROS_CAYENDO := 150
 
-## De cuántos pisos es la pila que se arma. **Cinco y no tres, y ésa es la medición del caso.**
-## Despertar un solo piso alcanza para dos —la de encima cae, y la siguiente se entera de
-## refilón—, así que con tres pisos el caso pasaba en verde sin cascada. Con cinco, la cuarta se
-## quedaba flotando a 0,93 m de cualquier apoyo con la quinta prolijamente encima.
 ## A qué altura está la tabla más alta del estante del depósito, en metros.
 const TABLA_DE_ARRIBA := 1.6
 
+## De cuántos pisos es la pila que se arma. Con tres el caso pasa en verde sin cascada: despertar
+## un solo piso alcanza para dos. Con cinco, sin cascada, la cuarta queda flotando.
 const PISOS_DE_LA_PILA := 5
 
 ## Cuánto puede separarse del apoyo una caja que se cayó, en metros. Es más flojo que
