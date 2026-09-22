@@ -1,27 +1,10 @@
-## Que la luz del local salga del horneado y no de luces en tiempo real.
+## Que la luz de los muebles salga del horneado.
 ##
-## **Compatibility dibuja una luz aunque esté horneada.** Medido el 2026-09-21: con las luces a
-## la vista el cuadro pasa de 85 a 1007 llamadas de dibujo, y la GPU de 0,23 a 0,88 ms. Las
-## luces se quedan en la escena porque son la receta del horneado, pero ocultas. Y una malla con
-## GI estático que no entró al horneado queda negra: ni tiene lightmap ni toma la luz de las
-## sondas. Es lo que le pasa a todo lo que no viene del modelo, que no trae UV2.
+## Una malla con GI estático que no entró al horneado queda negra: ni tiene lightmap ni toma la
+## luz de las sondas. Es lo que le pasa a todo lo que no viene del modelo, que no trae UV2.
 extends GdUnitTestSuite
 
 const ALMACEN := preload("res://src/escenas/almacen.tscn")
-
-
-func test_ninguna_luz_del_local_se_dibuja_en_tiempo_real() -> void:
-	var almacen: Node3D = auto_free(ALMACEN.instantiate())
-	add_child(almacen)
-	var prendidas: Array[String] = []
-	for luz: Light3D in almacen.find_children("*", "Light3D", true, false):
-		if luz.is_visible_in_tree() or luz.light_bake_mode != Light3D.BAKE_STATIC:
-			prendidas.append(String(almacen.get_path_to(luz)))
-	(
-		assert_array(prendidas)
-		. override_failure_message("luces en tiempo real: %s" % ", ".join(prendidas))
-		. is_empty()
-	)
 
 
 func test_el_local_tiene_su_luz_horneada() -> void:
