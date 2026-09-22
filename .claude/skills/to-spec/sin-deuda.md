@@ -132,6 +132,7 @@ entregable más caro y el único que hace que el hallazgo no vuelva.
 |---|---|
 | un criterio que no se puede ver fallar | `to-spec` |
 | una regla del juego ubicada en `ui/` o en `escenas/` | `to-spec` — el eje de capas se escribió tarde |
+| una medición corrida en el proceso equivocado | `to-spec` — una capacidad del motor se midió donde no la decide nadie: el juego contestó que no y el editor que sí |
 | un criterio que **barre un directorio y enumera excepciones** sin haber corrido el barrido | `to-spec` — de memoria sale corta y el criterio nace imposible de pasar |
 | un identificador que el spec escribe en `código` y que no existe en el repo | `to-spec` — se escribió la prosa sin grepearla |
 | un spec que nombra un archivo o una clase | `to-spec` — caduca con el refactor siguiente |
