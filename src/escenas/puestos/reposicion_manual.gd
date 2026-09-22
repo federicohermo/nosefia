@@ -251,8 +251,8 @@ func _cerca_de(caja: CajaDelDeposito, punto: Vector3) -> bool:
 
 
 ## Despierta lo que una caja estaba sosteniendo, y es lo que desarma una pila: sacada la de
-## abajo, las de arriba caen hasta el primer apoyo que encuentren. Llega levantada, desde
-## `objeto_agarrado`, o empujada, desde la señal de la caja: es el mismo hecho, la caja se fue.
+## abajo, las de arriba caen hasta el primer apoyo que encuentren. Vale igual para una caja
+## levantada y para una empujada: en los dos casos la caja se fue.
 ##
 ## Se mira desde **el lugar que dejó** y no desde donde está: para cuando `objeto_agarrado`
 ## avisa, `Agarre` ya la colgó de la mano, así que su `global_position` es el puño del jugador y
@@ -267,10 +267,8 @@ func despertar_lo_de_arriba(nodo: Node3D) -> void:
 ## Despierta lo apoyado sobre un lugar, y sigue hacia arriba desde cada caja que despierta.
 ##
 ## **En cascada, porque una pila es una cadena.** Despertar un solo piso alcanza para dos —la de
-## encima cae, y la siguiente se entera de refilón—, y a partir de la tercera no. Medido con
-## cinco pisos: sacando la base, la cuarta se quedaba flotando a 0,93 m con la quinta encima.
-## Una caja congelada es estática para el motor, y un cuerpo estático que se va de abajo no
-## despierta a nadie: ni a otra caja congelada ni al producto que el motor durmió sobre la tapa.
+## encima cae, y la siguiente se entera de refilón—, y a partir de la tercera no. Una caja
+## congelada es estática para el motor, y un cuerpo estático que se va no despierta a nadie.
 ## Lo que no es una caja sólo se despierta.
 ##
 ## Despertar de más no cuesta nada, y por eso no se comprueba si lo de arriba se iba a caer: si

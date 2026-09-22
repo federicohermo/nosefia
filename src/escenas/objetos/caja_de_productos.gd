@@ -6,12 +6,11 @@
 ## rueda, no tiembla— y el puesto le escribe el lugar derecho, que es lo que deja apoyar una caja
 ## entrando justa en un estante. Se descongela sólo cuando pierde lo que la sostenía, y ahí cae:
 ## es lo que desarma una pila cuando le sacan una de abajo. **Cuándo despertarla no se decide
-## acá**, lo pide el puesto; volver a dormirse lo resuelve el motor. Empujada, esta caja sólo
-## avisa: a quién despertar por haberse corrido lo decide el mismo puesto.
+## acá**, lo pide el puesto; volver a dormirse lo resuelve el motor.
 extends RigidBody3D
 
-## Se va a correr por el piso desde donde está. Lo escucha el puesto, porque lo apoyado encima
-## de una caja congelada no se entera de que se movió: para el motor es un cuerpo estático.
+## La caja se va a correr. Para el motor es un cuerpo estático, y lo apoyado encima no se
+## entera: lo despierta el puesto.
 signal empujada(caja: Node3D)
 
 @export var producto: Producto.Id = Producto.Id.ACTRONCITO
@@ -98,8 +97,7 @@ func volver_a_su_lugar() -> void:
 ## Se arrastra por el piso cuando el jugador la empuja al pasar. Cuánto recibe lo dice el
 ## dominio; acá sólo se mueve, en horizontal y sin dar vuelta nada.
 ##
-## Avisa **antes** de correrse: lo que hay que despertar está apoyado sobre el lugar que todavía
-## ocupa, y ése es el apoyo que anotó la última vez.
+## Avisa **antes** de correrse: lo que hay que despertar está sobre el apoyo que todavía ocupa.
 func empujar(desplazamiento: Vector3) -> void:
 	var arrastre := desplazamiento * ReglasDeLosObjetos.ARRASTRE_DE_LA_CAJA
 	arrastre.y = 0.0

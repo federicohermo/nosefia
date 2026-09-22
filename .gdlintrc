@@ -18,8 +18,7 @@ class-name: ([A-Z][a-z0-9]*)+
 class-variable-name: _?[a-z][a-z0-9]*(_[a-z0-9]+)*
 comparison-with-itself: null
 constant-name: _?[A-Z][A-Z0-9]*(_[A-Z0-9]+)*
-# El tope de líneas por archivo no es una regla de este repo: era el default de gdlint volcado
-# al archivo, y decidía dónde va un test. Dónde va un test lo decide el issue.
+# Sin tope de líneas por archivo: era el default de gdlint, no una regla del repo.
 disable:
 - max-file-lines
 duplicated-load: null
