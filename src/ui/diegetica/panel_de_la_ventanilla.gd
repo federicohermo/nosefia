@@ -20,11 +20,18 @@ signal despacho_pedido
 ## Lo único propio de esta capa son las palabras de los botones y el cartel de la ventanilla
 ## vacía. Viven acá y **no** además en el `.tscn`: un texto en los dos lados se cambia en uno solo
 ## el día que haya que cambiarlo.
-const TEXTO_DE_COBRAR := "Cobrar"
-const TEXTO_DE_DESPACHAR := "Despachar sin cobrar"
+const TAMANO_DEL_DISENO := Vector2(1920, 1080)
+const TEXTO_DE_COBRAR := "COBRAR"
+const TEXTO_DE_DESPACHAR := "DESPACHAR SIN COBRAR"
 const TEXTO_SIN_NADIE := "No hay nadie en la ventanilla."
 
 @export var _fondo: ColorRect
+@export var _marco: Control
+@export var _titulo: Label
+@export var _cliente: Label
+@export var _pedido: Label
+@export var _cobro: Label
+@export var _salida: Label
 @export var _nombre: Label
 @export var _renglones: VBoxContainer
 @export var _aviso: Label
@@ -35,6 +42,13 @@ const TEXTO_SIN_NADIE := "No hay nadie en la ventanilla."
 ## Arranca invisible: la ventanilla se abre cuando el jugador va, no cuando empieza la noche.
 func _ready() -> void:
 	visible = false
+	_titulo.text = "/ ATENDER:"
+	_cliente.text = "/ CLIENTE:"
+	_pedido.text = "/ PEDIDO:"
+	_cobro.text = "/ COBRO:"
+	_salida.text = "CLIC DERECHO / VOLVER AL LOCAL"
+	get_viewport().size_changed.connect(_ajustar_al_viewport)
+	_ajustar_al_viewport()
 	_cobrar.text = TEXTO_DE_COBRAR
 	_despachar.text = TEXTO_DE_DESPACHAR
 	_cobrar.pressed.connect(cobro_pedido.emit)
@@ -78,6 +92,8 @@ func _pintar(lineas: Array[String]) -> void:
 	for linea in lineas:
 		var etiqueta := Label.new()
 		etiqueta.text = linea
+		etiqueta.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		etiqueta.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		_renglones.add_child(etiqueta)
 
 
@@ -85,3 +101,10 @@ func _pintar(lineas: Array[String]) -> void:
 func _botones(hay_alguien: bool) -> void:
 	_cobrar.visible = hay_alguien
 	_despachar.visible = hay_alguien
+
+
+func _ajustar_al_viewport() -> void:
+	var disponible := get_viewport().get_visible_rect().size
+	var factor := minf(disponible.x / TAMANO_DEL_DISENO.x, disponible.y / TAMANO_DEL_DISENO.y)
+	_marco.scale = Vector2.ONE * factor
+	_marco.position = (disponible - TAMANO_DEL_DISENO * factor) / 2.0

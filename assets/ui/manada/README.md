@@ -35,3 +35,8 @@ actual. El código de Chats permanece disponible, sin acceso desde la navegació
 El lienzo escala uniformemente dentro del viewport. No cambia la resolución del juego, la cámara
 ni el avance del turno. El clic derecho conserva la salida al local. Esta entrega no incorpora
 inicio, guardado, opciones ni logros.
+
+La ventanilla adapta la composición de Chats (`40:64`): comprador a la izquierda, pedido en el
+panel central y aviso y acciones de cobro a la derecha. Usa los datos y las señales de atención
+existentes, sin agregar conversaciones, retratos, contactos ni reglas de venta. El pedido y sus
+importes se muestran tal como los entrega `Atencion`; el turno sigue corriendo.
