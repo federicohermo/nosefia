@@ -1,26 +1,18 @@
-## La pantalla de la computadora: las tres apps y las pestañas para cambiar entre ellas.
-##
-## **No decide cuál se ve.** Qué app está abierta lo lleva `Computadora`, que es de `dominio/` y
-## tiene test: acá se recibe cuál y se prende ésa. Es la trampa que este spec vino a esquivar —
-## `src/ui/` no lleva test obligatorio, así que un `if` sobre el juego escrito acá nace sin
-## ninguno y los seis nodos dan verde.
-##
-## **No pausa nada, y es deliberado**: mientras la pantalla está arriba el turno sigue corriendo.
-## Leer cuesta lo mismo que reponer, y el jugador se entera porque el reloj no se detuvo.
-##
-## Va en `diegetica/` y no en `interrupciones/`, que es exactamente ese criterio.
+## Presentación de Manada UI sobre las aplicaciones existentes. El turno sigue corriendo.
 class_name PantallaDeComputadora
 extends CanvasLayer
 
 signal app_pedida(app: Computadora.App)
 
-## Las palabras de las tres pestañas, en el orden del `enum` del dominio. Es la única lista de
-## este archivo, y se recorre contra `Computadora.App.values()`: una pestaña de más o de menos se
-## ve enseguida porque no le toca ninguna app.
-const TEXTOS_DE_LAS_PESTANAS := ["Caja", "Chats", "Notas"]
+## Chats conserva su cableado para una entrega posterior, pero no ofrece acceso en esta UI.
+const PESTANAS := {Computadora.App.CAJA: "/ REGISTRO:", Computadora.App.NOTAS: "/ NOTAS:"}
+const TAMANO_DEL_DISENO := Vector2(1920, 1080)
+const TEXTO_DE_SALIDA := "CLIC DERECHO / VOLVER AL LOCAL"
 
 @export var _fondo: ColorRect
+@export var _marco: Control
 @export var _pestanas: HBoxContainer
+@export var _salida: Label
 @export var _caja: AppCaja
 @export var _chats: AppChats
 @export var _notas: AppNotas
@@ -30,8 +22,11 @@ const TEXTOS_DE_LAS_PESTANAS := ["Caja", "Chats", "Notas"]
 ## empieza la noche.
 func _ready() -> void:
 	visible = false
-	for app: Computadora.App in Computadora.App.values():
+	_salida.text = TEXTO_DE_SALIDA
+	for app: Computadora.App in PESTANAS:
 		_pestanas.add_child(_pestana_de(app))
+	get_viewport().size_changed.connect(_ajustar_al_viewport)
+	_ajustar_al_viewport()
 
 
 func caja() -> AppCaja:
@@ -58,6 +53,9 @@ func cambiar_a(app: Computadora.App) -> void:
 	_caja.visible = app == Computadora.App.CAJA
 	_chats.visible = app == Computadora.App.CHATS
 	_notas.visible = app == Computadora.App.NOTAS
+	for indice in PESTANAS.size():
+		var boton: Button = _pestanas.get_child(indice)
+		boton.set_pressed_no_signal(PESTANAS.keys()[indice] == app)
 
 
 func ocultar() -> void:
@@ -66,6 +64,17 @@ func ocultar() -> void:
 
 func _pestana_de(app: Computadora.App) -> Button:
 	var boton := Button.new()
-	boton.text = TEXTOS_DE_LAS_PESTANAS[app]
+	boton.text = PESTANAS[app]
+	boton.toggle_mode = true
+	boton.custom_minimum_size = Vector2(265, 56)
+	boton.theme_type_variation = &"Pestana"
 	boton.pressed.connect(func() -> void: app_pedida.emit(app))
 	return boton
+
+
+## Escala sólo esta interfaz; no cambia el viewport ni la cámara del juego.
+func _ajustar_al_viewport() -> void:
+	var disponible := get_viewport().get_visible_rect().size
+	var factor := minf(disponible.x / TAMANO_DEL_DISENO.x, disponible.y / TAMANO_DEL_DISENO.y)
+	_marco.scale = Vector2.ONE * factor
+	_marco.position = (disponible - TAMANO_DEL_DISENO * factor) / 2.0

@@ -1,35 +1,132 @@
-[gd_scene load_steps=2 format=3]
+[gd_scene format=3]
 
-[ext_resource type="Script" path="res://src/ui/diegetica/app_notas.gd" id="1_notas"]
+[ext_resource type="Script" path="res://src/ui/diegetica/app_notas.gd" id="1"]
 
-[node name="AppNotas" type="VBoxContainer" node_paths=PackedStringArray("_titulo", "_lista", "_campo_titulo", "_campo_texto", "_anotar")]
+[ext_resource type="Texture2D" path="res://assets/ui/manada/linea_detalle.svg" id="2"]
+
+[ext_resource type="Texture2D" path="res://assets/ui/manada/solapa.svg" id="3"]
+
+[node name="AppNotas" type="Control" node_paths=PackedStringArray("_titulo", "_lista", "_campo_titulo", "_campo_texto", "_anotar", "_detalle_titulo", "_detalle_texto", "_editor_titulo")]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-theme_override_constants/separation = 10
-script = ExtResource("1_notas")
+script = ExtResource("1")
 _titulo = NodePath("Titulo")
-_lista = NodePath("Lista")
-_campo_titulo = NodePath("CampoTitulo")
-_campo_texto = NodePath("CampoTexto")
-_anotar = NodePath("Anotar")
+_lista = NodePath("Desplazamiento/Lista")
+_campo_titulo = NodePath("Editor/CampoTitulo")
+_campo_texto = NodePath("Editor/CampoTexto")
+_anotar = NodePath("Editor/Anotar")
+_detalle_titulo = NodePath("DetalleTitulo")
+_detalle_texto = NodePath("Lectura/DetalleTexto")
+_editor_titulo = NodePath("Editor/Titulo")
 
 [node name="Titulo" type="Label" parent="."]
-layout_mode = 2
-theme_override_font_sizes/font_size = 26
+layout_mode = 0
+offset_left = 71.0
+offset_top = 12.0
+offset_right = 571.0
+offset_bottom = 77.0
+theme_type_variation = &"Titulo"
+mouse_filter = 2
 
-[node name="Lista" type="VBoxContainer" parent="."]
-layout_mode = 2
-theme_override_constants/separation = 6
 
-[node name="CampoTitulo" type="LineEdit" parent="."]
-layout_mode = 2
+[node name="Desplazamiento" type="ScrollContainer" parent="."]
+layout_mode = 0
+offset_left = 71.0
+offset_top = 95.0
+offset_right = 531.0
+offset_bottom = 750.0
+horizontal_scroll_mode = 0
 
-[node name="CampoTexto" type="TextEdit" parent="."]
-custom_minimum_size = Vector2(0, 90)
+[node name="Lista" type="VBoxContainer" parent="Desplazamiento"]
 layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 12
 
-[node name="Anotar" type="Button" parent="."]
+[node name="Linea" type="TextureRect" parent="."]
+layout_mode = 0
+offset_left = 624.0
+offset_top = 29.0
+offset_right = 1743.5
+offset_bottom = 31.0
+texture = ExtResource("2")
+expand_mode = 1
+stretch_mode = 0
+mouse_filter = 2
+
+[node name="Solapa" type="TextureRect" parent="."]
+layout_mode = 0
+offset_left = 629.72
+offset_top = 6.5
+offset_right = 695.499
+offset_bottom = 29.5
+texture = ExtResource("3")
+expand_mode = 1
+stretch_mode = 0
+mouse_filter = 2
+
+[node name="DetalleTitulo" type="Label" parent="."]
+layout_mode = 0
+offset_left = 665.0
+offset_top = 72.0
+offset_right = 1743.0
+offset_bottom = 172.0
+theme_type_variation = &"Titulo"
+mouse_filter = 2
+autowrap_mode = 3
+max_lines_visible = 2
+text_overrun_behavior = 3
+
+[node name="Lectura" type="ScrollContainer" parent="."]
+layout_mode = 0
+offset_left = 665.0
+offset_top = 190.0
+offset_right = 1743.0
+offset_bottom = 490.0
+horizontal_scroll_mode = 0
+
+[node name="DetalleTexto" type="Label" parent="Lectura"]
 layout_mode = 2
+size_flags_horizontal = 3
+autowrap_mode = 3
+theme_override_font_sizes/font_size = 28
+
+[node name="LineaInferior" type="TextureRect" parent="."]
+layout_mode = 0
+offset_left = 624.0
+offset_top = 520.0
+offset_right = 1743.5
+offset_bottom = 522.0
+texture = ExtResource("2")
+expand_mode = 1
+stretch_mode = 0
+mouse_filter = 2
+
+[node name="Editor" type="VBoxContainer" parent="."]
+layout_mode = 0
+offset_left = 665.0
+offset_top = 550.0
+offset_right = 1743.0
+offset_bottom = 890.0
+theme_override_constants/separation = 14
+
+[node name="Titulo" type="Label" parent="Editor"]
+layout_mode = 2
+theme_type_variation = &"TextoSecundario"
+
+[node name="CampoTitulo" type="LineEdit" parent="Editor"]
+layout_mode = 2
+custom_minimum_size = Vector2(0, 52)
+
+[node name="CampoTexto" type="TextEdit" parent="Editor"]
+layout_mode = 2
+custom_minimum_size = Vector2(0, 160)
+size_flags_vertical = 3
+wrap_mode = 1
+
+[node name="Anotar" type="Button" parent="Editor"]
+layout_mode = 2
+custom_minimum_size = Vector2(225, 52)
+size_flags_horizontal = 8
