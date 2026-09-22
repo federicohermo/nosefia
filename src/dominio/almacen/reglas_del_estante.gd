@@ -14,9 +14,9 @@ extends RefCounted
 
 ## Con cuántas unidades de cada producto arranca el depósito.
 ##
-## Tiene que ser **estrictamente mayor** que el umbral más alto del catálogo —hoy 6, la
-## gaseosa—, y eso lo afirma el test: con exactamente el umbral, vender una unidad por la
-## ventanilla dejaría reponer imposible esa noche, y el síntoma no nombraría a esta constante.
+## Tiene que ser **estrictamente mayor** que el umbral más alto del catálogo, y eso lo afirma
+## el test: con exactamente el umbral, vender una unidad por la ventanilla dejaría reponer
+## imposible esa noche, y el síntoma no nombraría a esta constante.
 ##
 ## 10 es un primer valor y el margen es a propósito: lo que sobra después de llenar la góndola
 ## es lo que se vende, así que este número también es cuánto stock hay para atender. Bajarlo

@@ -13,19 +13,19 @@ extends RefCounted
 ## La celda de cada tarea con la obligatoria sin hacer. La clave es el `Tarea.Tipo`, y cada
 ## archivo la vuelve a decir adentro: es lo que deja al test cruzarlas y cazar una fila movida.
 const SIN_CUMPLIR := {
-	Tarea.Tipo.CAJA: preload("res://assets/reacciones/caja_pendiente.tres"),
-	Tarea.Tipo.REPONER: preload("res://assets/reacciones/reponer_pendiente.tres"),
-	Tarea.Tipo.REGISTRAR: preload("res://assets/reacciones/registrar_pendiente.tres"),
-	Tarea.Tipo.LIMPIAR: preload("res://assets/reacciones/limpiar_pendiente.tres"),
-	Tarea.Tipo.SACAR_LA_BASURA: preload("res://assets/reacciones/basura_pendiente.tres"),
+	Tarea.Tipo.CAJA: preload("res://assets/reactions/caja_pendiente.tres"),
+	Tarea.Tipo.REPONER: preload("res://assets/reactions/reponer_pendiente.tres"),
+	Tarea.Tipo.REGISTRAR: preload("res://assets/reactions/registrar_pendiente.tres"),
+	Tarea.Tipo.LIMPIAR: preload("res://assets/reactions/limpiar_pendiente.tres"),
+	Tarea.Tipo.SACAR_LA_BASURA: preload("res://assets/reactions/basura_pendiente.tres"),
 }
 
 const CUMPLIDA := {
-	Tarea.Tipo.CAJA: preload("res://assets/reacciones/caja_cumplida.tres"),
-	Tarea.Tipo.REPONER: preload("res://assets/reacciones/reponer_cumplida.tres"),
-	Tarea.Tipo.REGISTRAR: preload("res://assets/reacciones/registrar_cumplida.tres"),
-	Tarea.Tipo.LIMPIAR: preload("res://assets/reacciones/limpiar_cumplida.tres"),
-	Tarea.Tipo.SACAR_LA_BASURA: preload("res://assets/reacciones/basura_cumplida.tres"),
+	Tarea.Tipo.CAJA: preload("res://assets/reactions/caja_cumplida.tres"),
+	Tarea.Tipo.REPONER: preload("res://assets/reactions/reponer_cumplida.tres"),
+	Tarea.Tipo.REGISTRAR: preload("res://assets/reactions/registrar_cumplida.tres"),
+	Tarea.Tipo.LIMPIAR: preload("res://assets/reactions/limpiar_cumplida.tres"),
+	Tarea.Tipo.SACAR_LA_BASURA: preload("res://assets/reactions/basura_cumplida.tres"),
 }
 
 ## El estado de la tarea, indexado como un entero. `int(false)` es cero, así que el orden de
@@ -35,11 +35,11 @@ const SEGUN_EL_ESTADO := [SIN_CUMPLIR, CUMPLIDA]
 ## El comentario general, indexado por apercibimientos. Va de cero al tope inclusive: «cero
 ## apercibimientos» y «cumplió las cinco» son el mismo estado, no dos filas.
 const POR_APERCIBIMIENTOS := [
-	preload("res://assets/reacciones/apercibimientos_0.tres"),
-	preload("res://assets/reacciones/apercibimientos_1.tres"),
-	preload("res://assets/reacciones/apercibimientos_2.tres"),
-	preload("res://assets/reacciones/apercibimientos_3.tres"),
-	preload("res://assets/reacciones/apercibimientos_4.tres"),
+	preload("res://assets/reactions/apercibimientos_0.tres"),
+	preload("res://assets/reactions/apercibimientos_1.tres"),
+	preload("res://assets/reactions/apercibimientos_2.tres"),
+	preload("res://assets/reactions/apercibimientos_3.tres"),
+	preload("res://assets/reactions/apercibimientos_4.tres"),
 ]
 
 

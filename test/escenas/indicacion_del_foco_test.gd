@@ -8,13 +8,13 @@ class JugadorDoble:
 	extends Jugador
 
 
-func test_el_campo_real_resalta_la_computadora_y_solo_la_zona_de_reposicion() -> void:  # 039-AC9
+func test_el_campo_real_resalta_la_computadora_y_solo_la_zona_de_reposicion() -> void:
 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
 	add_child(almacen)
 	var jugador: CharacterBody3D = almacen.get("_jugador")
 	jugador.set_physics_process(false)
 	var hud: Hud = almacen.get("_hud")
-	var computadora: Node3D = almacen.get_node("Estructura/compu/StaticBody3D")
+	var computadora: Node3D = almacen.get_node("Estructura/base compu/StaticBody3D")
 	var estante: Node3D = almacen.get("_reposicion_manual").get_node("ZonaDeActroncito")
 	var mallas := almacen.find_children("*", "MeshInstance3D", true, false)
 	var previos: Dictionary[MeshInstance3D, Material] = {}
@@ -38,7 +38,7 @@ func test_el_campo_real_resalta_la_computadora_y_solo_la_zona_de_reposicion() ->
 				"retirar", almacen.get("_cajas_de_productos")[0].producto
 			)
 			punto = estante.global_position
-			ojo = punto + Vector3(1.2, 0.3, 0)
+			ojo = punto + Vector3(-1.2, 0.3, 0)
 		await _mirar(jugador, ojo, punto)
 		assert_object(jugador.get("_enfocado")).is_same(objetivo)
 		assert_array(avisos).contains([objetivo])
@@ -63,7 +63,7 @@ func test_el_campo_real_resalta_la_computadora_y_solo_la_zona_de_reposicion() ->
 			assert_bool(malla.material_overlay == previos[malla]).is_true()
 
 
-func test_las_senales_del_doble_llegan_al_marco_y_al_hud() -> void:  # 039-AC9
+func test_las_senales_del_doble_llegan_al_marco_y_al_hud() -> void:
 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
 	var jugador: JugadorDoble = auto_free(JugadorDoble.new())
 	almacen.get("_jugador").set_physics_process(false)

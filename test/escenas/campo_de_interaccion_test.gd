@@ -5,7 +5,7 @@ const ALMACEN := preload("res://src/escenas/almacen.tscn")
 const BOLSA := preload("res://src/escenas/objetos/objeto_agarrable.tscn")
 
 
-func test_la_bolsa_pequena_se_enfoca_fuera_del_centro() -> void:  # 038-AC11
+func test_la_bolsa_pequena_se_enfoca_fuera_del_centro() -> void:
 	var jugador := _jugador()
 	var bolsa: RigidBody3D = auto_free(BOLSA.instantiate())
 	bolsa.freeze = true
@@ -20,7 +20,7 @@ func test_la_bolsa_pequena_se_enfoca_fuera_del_centro() -> void:  # 038-AC11
 	assert_float(ojo.distance_to(bolsa.global_position)).is_equal_approx(1.5, 0.001)
 
 
-func test_el_campo_y_el_clic_usan_los_cuerpos_de_los_muebles() -> void:  # 038-AC12
+func test_el_campo_y_el_clic_usan_los_cuerpos_de_los_muebles() -> void:
 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
 	add_child(almacen)
 	var jugador: CharacterBody3D = almacen.get("_jugador")
@@ -29,7 +29,7 @@ func test_el_campo_y_el_clic_usan_los_cuerpos_de_los_muebles() -> void:  # 038-A
 	jugador.objetivo_enfocado.connect(
 		func(objetivo: Node3D, _distancia: float) -> void: avisos.append(objetivo)
 	)
-	var computadora: Node3D = almacen.get_node("Estructura/compu/StaticBody3D")
+	var computadora: Node3D = almacen.get_node("Estructura/base compu/StaticBody3D")
 	_mirar(jugador, computadora.global_position + Vector3(0, 1, 1), computadora.global_position)
 	await _actualizar(jugador)
 	assert_object(jugador.get("_enfocado")).is_same(computadora)
@@ -43,7 +43,7 @@ func test_el_campo_y_el_clic_usan_los_cuerpos_de_los_muebles() -> void:  # 038-A
 	assert_object(agarre.manos().sostenido()).is_instanceof(UnidadDeProducto)
 	var estante: Node3D = almacen.get("_reposicion_manual").get_node("ZonaDeActroncito")
 	var zona: AABB = almacen.get("_reposicion_manual").zona(Producto.Id.ACTRONCITO)
-	_mirar(jugador, zona.get_center() + Vector3(1.2, 0.3, 0), zona.get_center())
+	_mirar(jugador, zona.get_center() + Vector3(-1.2, 0.3, 0), zona.get_center())
 	await _actualizar(jugador)
 	assert_object(jugador.get("_enfocado")).is_same(estante)
 	assert_array(avisos).contains([estante])
@@ -53,7 +53,7 @@ func test_el_campo_y_el_clic_usan_los_cuerpos_de_los_muebles() -> void:  # 038-A
 	assert_int(repositor.estante().unidades_en_gondola(Catalogo.todos()[0])).is_equal(1)
 
 
-func test_la_pared_del_modelo_tapa_un_objeto_dentro_del_alcance() -> void:  # 038-AC13
+func test_la_pared_del_modelo_tapa_un_objeto_dentro_del_alcance() -> void:
 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
 	add_child(almacen)
 	var jugador: CharacterBody3D = almacen.get("_jugador")
@@ -78,7 +78,7 @@ func test_la_pared_del_modelo_tapa_un_objeto_dentro_del_alcance() -> void:  # 03
 	assert_object(jugador.get("_enfocado")).is_null()
 
 
-func test_importa_la_superficie_y_no_el_origen_ni_la_jerarquia_de_mallas() -> void:  # 038-AC13
+func test_importa_la_superficie_y_no_el_origen_ni_la_jerarquia_de_mallas() -> void:
 	var jugador := _jugador()
 	var cuerpo: StaticBody3D = auto_free(StaticBody3D.new())
 	cuerpo.add_to_group(ReglasDelJugador.GRUPO_INTERACTUABLE)

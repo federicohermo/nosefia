@@ -15,27 +15,27 @@ const MAXIMO := 1.4
 func test_cien_pixeles_a_la_derecha_giran_el_yaw_un_radian_y_no_tocan_el_pitch() -> void:
 	# El signo es negativo y no es un detalle: mover el mouse a la derecha tiene que girar la
 	# vista a la derecha, y en Godot eso es un yaw decreciente —la rotación positiva alrededor
-	# de +Y va al otro lado—. Está medido en los cuatro cuadrantes en el research del spec 004.
+	# de +Y va al otro lado—. Está medido en los cuatro cuadrantes.
 	var mirada := Mirada.new(SENSIBILIDAD, MINIMO, MAXIMO)
 	mirada.girar(Vector2(100.0, 0.0))
 	assert_float(mirada.yaw()).is_equal_approx(-1.0, 1e-5)
 	assert_float(mirada.pitch()).is_equal(0.0)
 
 
-func test_mirar_muy_para_abajo_deja_el_pitch_clavado_en_el_minimo() -> void:
+func test_mirar_muy_para_abajo_deja_el_pitch_clavado_en_el_minimo() -> void:  # AC-PLY-003
 	# `clampf` devuelve el límite exacto —medido—, así que acá no hace falta tolerancia.
 	var mirada := Mirada.new(SENSIBILIDAD, MINIMO, MAXIMO)
 	mirada.girar(Vector2(0.0, 1000.0))
 	assert_float(mirada.pitch()).is_equal(MINIMO)
 
 
-func test_mirar_muy_para_arriba_deja_el_pitch_clavado_en_el_maximo() -> void:
+func test_mirar_muy_para_arriba_deja_el_pitch_clavado_en_el_maximo() -> void:  # AC-PLY-003
 	var mirada := Mirada.new(SENSIBILIDAD, MINIMO, MAXIMO)
 	mirada.girar(Vector2(0.0, -1000.0))
 	assert_float(mirada.pitch()).is_equal(MAXIMO)
 
 
-func test_seis_vueltas_seguidas_dejan_el_yaw_adentro_de_una_vuelta() -> void:
+func test_seis_vueltas_seguidas_dejan_el_yaw_adentro_de_una_vuelta() -> void:  # AC-PLY-003
 	# Girar en redondo es legal; lo que no puede es que el número crezca sin límite. Cuatrocientos
 	# pasos de 0,1 rad son 40 radianes, más de seis vueltas: sin `wrapf` el valor se iría.
 	var mirada := Mirada.new(SENSIBILIDAD, MINIMO, MAXIMO)

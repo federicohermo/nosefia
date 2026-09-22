@@ -19,7 +19,7 @@ extends Resource
 
 ## Los eventos del juego que pueden sonar.
 ##
-## **`tiempo_consumido` del 007 no está, y no es un olvido**: se emite en cada `_process`, así que
+## **`tiempo_consumido` del reloj no está, y no es un olvido**: se emite en cada `_process`, así que
 ## engancharle un sonido sería pedir uno por cuadro. Es la razón por la que esto es un `enum`
 ## revisable y no «cualquier señal que exista».
 enum Evento {

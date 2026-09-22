@@ -6,18 +6,18 @@
 extends GdUnitTestSuite
 
 
-func test_un_mensaje_con_texto_dice_algo() -> void:  # 009-AC5
+func test_un_mensaje_con_texto_dice_algo() -> void:
 	var mensaje := Mensaje.new()
 	mensaje.de_quien = "El jefe"
 	mensaje.texto = "Mañana pasás por el depósito."
 	assert_bool(mensaje.dice_algo()).is_true()
 
 
-func test_un_mensaje_vacio_no_dice_nada() -> void:  # 009-AC5
+func test_un_mensaje_vacio_no_dice_nada() -> void:
 	assert_bool(Mensaje.new().dice_algo()).is_false()
 
 
-func test_un_mensaje_de_puros_espacios_tampoco_dice_nada() -> void:  # 009-AC5
+func test_un_mensaje_de_puros_espacios_tampoco_dice_nada() -> void:
 	# Sin el recorte, un renglón de espacios pasaría por contenido y la conversación parecería
 	# tener algo para leer donde no hay nada.
 	var mensaje := Mensaje.new()

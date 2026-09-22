@@ -7,10 +7,6 @@ extends GdUnitTestSuite
 
 const ALMACEN := preload("res://src/escenas/almacen.tscn")
 
-## Media caja, en metros. Es lo que separa el centro de una caja apoyada de la superficie que la
-## sostiene, y sale del `0.3037077` de escala que el `.tscn` de la caja le pone a un cubo de dos.
-const MEDIA_CAJA := 0.3037
-
 ## Justo adentro de la puerta del baño, del lado del cuarto.
 ##
 ## **De acá sale el criterio de «está en el baño», y la primera versión lo tenía mal.** Medía si
@@ -29,10 +25,21 @@ const CERCA_DEL_INODORO := 4.0
 const LEJOS_DE_SU_LUGAR := Vector3(0.0, 2.0, 0.0)
 
 
-func test_las_ocho_cajas_de_reposicion_estan_apoyadas_en_el_deposito() -> void:  # 043-AC10
-	# Entran cuatro en los estantes y cuatro en el piso: entre estantes hay 0,477 m y la caja
-	# mide 0,607, así que sólo el estante de arriba tiene aire. Lo que el caso afirma no es el reparto
-	# sino que ninguna quede flotando ni clavada adentro de otra cosa.
+## Cuánto separa el centro de una caja apoyada de la superficie que la sostiene: la escala que
+## el `.tscn` le pone a un cubo de dos.
+##
+## **Sale de cada caja y no de una constante, porque hay dos tamaños.** Los productos que entran
+## en poco volumen llevan una caja chica, que es la única que cabe entre dos bandejas del
+## depósito; con un solo número, once cajas darían «flotando» estando apoyadas.
+func _media_caja(caja: Node3D) -> float:
+	return (caja.get_node("Cuerpo") as Node3D).scale.x
+
+
+func test_las_cajas_de_reposicion_estan_apoyadas_en_el_deposito() -> void:
+	# Las grandes se reparten entre el estante de arriba de los tres racks y el piso, y las
+	# chicas ocupan los dos estantes de abajo: entre estantes hay 0,477 m, la caja grande mide
+	# 0,607 y la chica 0,40. Lo que el caso afirma no es el reparto sino que ninguna quede
+	# flotando ni clavada adentro de otra cosa.
 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
 	add_child(almacen)
 	await get_tree().physics_frame
@@ -40,7 +47,7 @@ func test_las_ocho_cajas_de_reposicion_estan_apoyadas_en_el_deposito() -> void: 
 	var cajas: Array = almacen.get("_cajas_de_productos")
 	assert_int(cajas.size()).is_equal(Catalogo.todos().size())
 	for caja: Node3D in cajas:
-		var cuerpo := caja as StaticBody3D
+		var cuerpo := caja as PhysicsBody3D
 		var consulta := PhysicsRayQueryParameters3D.create(
 			cuerpo.global_position, cuerpo.global_position + Vector3.DOWN
 		)
@@ -51,16 +58,14 @@ func test_las_ocho_cajas_de_reposicion_estan_apoyadas_en_el_deposito() -> void: 
 			. override_failure_message("`%s` no se apoya en nada" % caja.name)
 			. is_true()
 		)
+		var media := _media_caja(caja)
 		var hueco: float = cuerpo.global_position.y - (golpe["position"] as Vector3).y
 		(
 			assert_float(hueco)
 			. override_failure_message(
-				(
-					"`%s` está a %.4f m de su apoyo y media caja es %.4f"
-					% [caja.name, hueco, MEDIA_CAJA]
-				)
+				"`%s` está a %.4f m de su apoyo y media caja es %.4f" % [caja.name, hueco, media]
 			)
-			. is_equal_approx(MEDIA_CAJA, 0.001)
+			. is_equal_approx(media, 0.001)
 		)
 		var apoyo: String = str(almacen.get_path_to(golpe["collider"]))
 		(
@@ -68,10 +73,10 @@ func test_las_ocho_cajas_de_reposicion_estan_apoyadas_en_el_deposito() -> void: 
 			. override_failure_message("`%s` se apoya en `%s`" % [caja.name, apoyo])
 			. is_true()
 		)
-		assert_array(_lo_que_pisa(almacen, cuerpo, apoyo)).is_empty()
+		assert_array(_lo_que_pisa(almacen, cuerpo, apoyo, media)).is_empty()
 
 
-func test_las_tres_bolsas_arrancan_en_el_bano_y_lejos_del_descarte() -> void:  # 043-AC11
+func test_las_tres_bolsas_arrancan_en_el_bano_y_lejos_del_descarte() -> void:
 	# El baño es el otro cuarto que el 043 abre. Las bolsas estaban desparramadas por el local y
 	# el pedido fue juntarlas ahí; el descarte sigue en el fondo, así que el viaje no se acorta.
 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
@@ -124,9 +129,11 @@ func _camino_desde_la_puerta(almacen: Node3D, hasta: Vector3, excluidas: Array[R
 
 
 ## Con qué se superpone un cuerpo, sin contar aquello sobre lo que se apoya.
-func _lo_que_pisa(almacen: Node3D, cuerpo: StaticBody3D, apoyo: String) -> Array[String]:
+func _lo_que_pisa(
+	almacen: Node3D, cuerpo: PhysicsBody3D, apoyo: String, media: float
+) -> Array[String]:
 	var forma := BoxShape3D.new()
-	forma.size = Vector3.ONE * (MEDIA_CAJA * 2.0 - 0.01)
+	forma.size = Vector3.ONE * (media * 2.0 - 0.01)
 	var consulta := PhysicsShapeQueryParameters3D.new()
 	consulta.shape = forma
 	consulta.transform = Transform3D(Basis(), cuerpo.global_position)
@@ -139,7 +146,7 @@ func _lo_que_pisa(almacen: Node3D, cuerpo: StaticBody3D, apoyo: String) -> Array
 	return pisados
 
 
-func test_abrir_la_jornada_devuelve_cada_caja_a_su_lugar() -> void:  # 047-AC8
+func test_abrir_la_jornada_devuelve_cada_caja_a_su_lugar() -> void:
 	# Desde el 047 las cajas se trasladan, así que quedan donde el jugador las dejó. El dominio
 	# se resetea y los nodos no: sin esta vuelta, la noche 2 arranca con la mercadería al lado
 	# de la góndola y el viaje al depósito —que es lo que reponer cuesta— ya está pago.
@@ -159,7 +166,7 @@ func test_abrir_la_jornada_devuelve_cada_caja_a_su_lugar() -> void:  # 047-AC8
 	for caja: Node3D in cajas:
 		caja.global_position = LEJOS_DE_SU_LUGAR
 	var jugador: Node3D = almacen.get("_jugador")
-	var en_brazos: Node3D = cajas[Producto.Id.ARROZ]
+	var en_brazos: Node3D = cajas[Producto.Id.LAYSNTT]
 	_agarrar(jugador, en_brazos)
 	assert_object(en_brazos.get_parent()).is_not_same(mundo)
 	almacen.get("_ciclo").abrir_la_jornada()

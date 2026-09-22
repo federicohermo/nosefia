@@ -5,11 +5,11 @@
 extends GdUnitTestSuite
 
 
-func test_una_computadora_nueva_esta_cerrada() -> void:  # 009-AC1
+func test_una_computadora_nueva_esta_cerrada() -> void:
 	assert_bool(Computadora.new().abierta()).is_false()
 
 
-func test_abrir_una_vez_devuelve_true_y_la_segunda_false() -> void:  # 009-AC1
+func test_abrir_una_vez_devuelve_true_y_la_segunda_false() -> void:
 	# El `false` no es un error: es de lo que se agarra la escena para no volver a suspender al
 	# jugador ni a repintar la pantalla en cada clic.
 	var computadora := Computadora.new()
@@ -18,7 +18,7 @@ func test_abrir_una_vez_devuelve_true_y_la_segunda_false() -> void:  # 009-AC1
 	assert_bool(computadora.abierta()).is_true()
 
 
-func test_cerrar_sin_haber_abierto_devuelve_false() -> void:  # 009-AC1
+func test_cerrar_sin_haber_abierto_devuelve_false() -> void:
 	var computadora := Computadora.new()
 	assert_bool(computadora.cerrar()).is_false()
 	computadora.abrir()
@@ -26,7 +26,7 @@ func test_cerrar_sin_haber_abierto_devuelve_false() -> void:  # 009-AC1
 	assert_bool(computadora.cerrar()).is_false()
 
 
-func test_cambiar_a_la_misma_app_devuelve_false() -> void:  # 009-AC1
+func test_cambiar_a_la_misma_app_devuelve_false() -> void:
 	var computadora := Computadora.new()
 	computadora.abrir()
 	assert_bool(computadora.cambiar_a(computadora.app())).is_false()
@@ -34,7 +34,7 @@ func test_cambiar_a_la_misma_app_devuelve_false() -> void:  # 009-AC1
 	assert_int(computadora.app()).is_equal(Computadora.App.CHATS)
 
 
-func test_cambiar_de_app_con_la_computadora_cerrada_devuelve_false() -> void:  # 009-AC1
+func test_cambiar_de_app_con_la_computadora_cerrada_devuelve_false() -> void:  # AC-INV-008
 	# Con la pantalla apagada no hay a qué cambiar, y dejar que cambie igual haría que reabrir
 	# apareciera en una app que el jugador nunca eligió.
 	var computadora := Computadora.new()
@@ -43,7 +43,7 @@ func test_cambiar_de_app_con_la_computadora_cerrada_devuelve_false() -> void:  #
 	assert_int(computadora.app()).is_equal(arranque)
 
 
-func test_reabrir_vuelve_a_la_app_donde_se_habia_dejado() -> void:  # 009-AC1
+func test_reabrir_vuelve_a_la_app_donde_se_habia_dejado() -> void:  # AC-INV-008
 	# Es lo que hace que ir a atender y volver no cueste dos clics de más — o sea, tiempo de
 	# turno por una decisión de pantalla.
 	var computadora := Computadora.new()
@@ -54,7 +54,7 @@ func test_reabrir_vuelve_a_la_app_donde_se_habia_dejado() -> void:  # 009-AC1
 	assert_int(computadora.app()).is_equal(Computadora.App.NOTAS)
 
 
-func test_las_tres_apps_del_gdd_estan_declaradas() -> void:  # 009-AC1
+func test_las_tres_apps_del_gdd_estan_declaradas() -> void:  # AC-INV-006
 	# Tres y no una cantidad cualquiera: la caja es tarea del jefe y los chats y las notas son
 	# investigación. Es lo que pone las dos puntas de la tensión a un clic una de otra.
 	assert_int(Computadora.App.size()).is_equal(3)

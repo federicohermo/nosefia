@@ -5,19 +5,19 @@
 ## viven todos en `src/dominio/` y tienen test. Acá quedan `Input`, `move_and_slide()`, el
 ## campo espacial y las señales.
 ##
-## Que la aritmética no se haya vuelto a colar acá lo verifica el AC28 del spec 004 con un `rg`
+## Que la aritmética no se haya vuelto a colar acá lo verifica un gate con un `rg`
 ## sobre este archivo, que busca las cuatro llamadas del motor con las que se harían esas
 ## cuentas y exige cero líneas. Los nombres no se escriben ni en un comentario: el gate no
 ## distingue código de prosa, y hacerlo pasar comentando distinto sería trampa.
 extends CharacterBody3D
 
-## Se llaman por lo que pasó y no por lo que hay que hacer. Son el punto donde se cuelga el
-## spec 006: quien las emite no sabe quién las escucha.
+## Se llaman por lo que pasó y no por lo que hay que hacer. Son el punto donde se cuelga
+## agarrar y examinar: quien las emite no sabe quién las escucha.
 signal objetivo_enfocado(objetivo: Node3D, distancia: float)
 signal objetivo_perdido
 signal uso_pedido(objetivo: Node3D)
 
-## Los dos sistemas del spec 006, por `@export` y no por `@onready`: un `@onready` se resuelve
+## Los dos sistemas de agarrar, por `@export` y no por `@onready`: un `@onready` se resuelve
 ## recién al entrar la escena al árbol, y entonces `id_en_la_mano()` se caería sobre un jugador
 ## apenas instanciado — que es como lo instancia todo test de esta escena. Tampoco son autoloads:
 ## está medido que `gate_de_capas.py` no ve uno nombrado por su nombre global, o sea que esa
@@ -87,6 +87,19 @@ func _ready() -> void:
 	agarre.objeto_soltado.connect(_devolver_al_mundo)
 
 
+## Deja de chocar con el detalle de un mueble: el cuerpo y los brazos chocan con su contorno.
+##
+## **El detalle es caro de rozar.** La colisión de una góndola es su malla entera, con cada
+## chapa, labio y agujero del panel. La cápsula que camina pegada al lateral de una cabecera
+## prueba contacto contra cientos de triángulos en cada paso: está medido en 5,4 ms por paso en
+## escritorio contra 0,7 con una caja, y en la web el cuadro llegaba a 80 ms. El detalle sigue
+## ahí para lo que sí lo necesita: los productos que caen y los rayos de la mira.
+func ignorar_el_detalle(cuerpo: PhysicsBody3D) -> void:
+	add_collision_exception_with(cuerpo)
+	for brazo: SpringArm3D in find_children("*", "SpringArm3D", true, false):
+		brazo.add_excluded_object(cuerpo.get_rid())
+
+
 func _unhandled_input(evento: InputEvent) -> void:
 	# El giro se descarta con el cursor suelto porque en `MOUSE_MODE_VISIBLE` el motor sigue
 	# entregando el `relative` del mouse: sin este filtro, ir a apretar el botón de cerrar la
@@ -125,14 +138,21 @@ func _unhandled_input(evento: InputEvent) -> void:
 		examen.alternar(_datos_de_lo_enfocado())
 
 
+## **El clic se lo gasta quien hace algo con él, y sólo ése.** Tener `interactuar()` es la
+## declaración de que el clic izquierdo es suyo: los puestos lo resuelven por señal y contestan
+## `null` —el escritorio abre, el estante coloca—, y soltar además sería un segundo efecto del
+## mismo clic; las cajas contestan sus datos, y eso es lo que se agarra.
+##
+## **Lo que está en el grupo pero no tiene el método no se gasta nada**, y ésa es la diferencia
+## que antes no existía: el corte miraba si había algo enfocado, así que la mancha del piso
+## —que se limpia con el otro botón y no contesta nada acá— se comía el clic. Llevando una caja
+## y con la mira sobre un charco, soltar no hacía absolutamente nada, sin un solo aviso.
 func _interactuar() -> void:
 	var datos: ObjetoDelAlmacen = null
 	if _enfocado != null and _enfocado.has_method(ReglasDeLosObjetos.METODO_INTERACTUAR):
 		datos = _enfocado.call(ReglasDeLosObjetos.METODO_INTERACTUAR)
-	# Las cajas y los puestos resuelven su acción mediante señales. El mismo clic
-	# no debe soltar la unidad que acaba de salir ni la que el estante rechazó.
-	if datos == null and _enfocado != null:
-		return
+		if datos == null:
+			return
 	agarre.alternar(datos, _enfocado)
 
 
@@ -225,7 +245,7 @@ func mira() -> Transform3D:
 
 ## La única puerta por la que otra escena puede decir «el jugador no controla»: el
 ## `ControlDelJugador` es de `dominio/` y su instancia vive privada acá. La piden por separado
-## el spec 006 (examinar un objeto) y el 009 (abrir la computadora), y sin ellas los dos
+## examinar un objeto y abrir la computadora, y sin ellas los dos
 ## degradan en silencio —el mouse sigue girando la cámara, el jugador sigue caminando—.
 func suspender() -> void:
 	# El aviso sale una sola vez, acá: mientras dura la suspensión `observar()` devuelve `false`,
@@ -244,7 +264,7 @@ func reanudar() -> void:
 ## Qué `id` del dominio se está llevando en la mano, o `SIN_ID`.
 ##
 ## La única puerta por la que otra escena pregunta qué lleva el jugador — la piden los tres
-## llamadores del 014 para saber si lo que hay en la mano es el trapeador, que es lo que decide
+## llamadores de limpiar para saber si lo que hay en la mano es el trapeador, que es lo que decide
 ## si una pasada cuenta: `PisoDelLocal.pasar()` compara este `id` contra el del trapeador y una
 ## mano con otra cosa no baja una sola pasada. Devuelve el `id` y nunca el nodo: un nodo
 ## cruzaría la dirección de las capas al revés.
@@ -324,6 +344,9 @@ func _medir_candidato(cuerpo: Node3D) -> CampoDeInteraccion.Candidato:
 			ojo, ojo + ojo.direction_to(punto) * ReglasDelJugador.ALCANCE_DE_LA_MIRA
 		)
 		consulta.exclude = [get_rid()]
+		# Con la máscara del campo y no con todas: el contorno de un mueble lo envuelve, y un
+		# rayo que lo mirara pegaría siempre ahí antes que en el mueble.
+		consulta.collision_mask = _campo.collision_mask
 		var golpe := espacio.intersect_ray(consulta)
 		if golpe.get("collider") != cuerpo:
 			continue

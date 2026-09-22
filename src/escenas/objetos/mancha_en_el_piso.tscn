@@ -30,3 +30,4 @@ shape = SubResource("CylinderShape3D_mancha")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.001, 0)
 mesh = SubResource("CylinderMesh_mancha")
 surface_material_override/0 = SubResource("StandardMaterial3D_mancha")
+gi_mode = 2

@@ -18,6 +18,7 @@ size = Vector3(0.61, 0.61, 0.61)
 radius = 0.15
 
 [node name="Jugador" type="CharacterBody3D" node_paths=PackedStringArray("agarre", "examen")]
+collision_mask = 9
 script = ExtResource("1_jugador")
 agarre = NodePath("Agarre")
 examen = NodePath("Examen")
@@ -41,6 +42,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.5)
 
 [node name="BrazoDeCarga" type="SpringArm3D" parent="Camara"]
 transform = Transform3D(-0.98716, -0.012717, 0.159228, 0, 0.996826, 0.079614, -0.159735, 0.078592, -0.984027, 0.2, -0.35, 0)
+collision_mask = 9
 shape = SubResource("SphereShape3D_mano")
 spring_length = 0.628032
 margin = 0.01
@@ -53,6 +55,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -1.2)
 
 [node name="BrazoDeProducto" type="SpringArm3D" parent="Camara"]
 transform = Transform3D(-0.98302, -0.012, 0.183104, 0, 0.997859, 0.065394, -0.183497, 0.064284, -0.980916, 0.2, -0.35, 0)
+collision_mask = 9
 shape = SubResource("SphereShape3D_mano")
 spring_length = 0.764591
 margin = 0.01
@@ -62,6 +65,7 @@ position = Vector3(0.34, -0.3, -0.75)
 
 [node name="BrazoDeCaja" type="SpringArm3D" parent="."]
 transform = Transform3D(-1, 0, 0, 0, 1, 0, 0, 0, -1, 0, 1.141, 0)
+collision_mask = 9
 shape = SubResource("BoxShape3D_caja")
 spring_length = 0.799
 margin = 0.01

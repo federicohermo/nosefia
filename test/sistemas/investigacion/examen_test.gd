@@ -55,13 +55,13 @@ func _cuerpo() -> RigidBody3D:
 	return cuerpo
 
 
-func test_sin_nada_en_la_mano_no_arranca_ningun_examen() -> void:  # 006-AC9
+func test_sin_nada_en_la_mano_no_arranca_ningun_examen() -> void:
 	var examen := _examen(_agarre())
 	assert_bool(examen.iniciar()).is_false()
 	assert_bool(examen.esta_examinando()).is_false()
 
 
-func test_examinar_lo_que_se_lleva_lo_centra_y_avisa() -> void:  # 006-AC9
+func test_examinar_lo_que_se_lleva_lo_centra_y_avisa() -> void:
 	var agarre := _agarre()
 	var examen := _examen(agarre)
 	var cuerpo := _cuerpo()
@@ -75,7 +75,7 @@ func test_examinar_lo_que_se_lleva_lo_centra_y_avisa() -> void:  # 006-AC9
 	assert_bool(examen.esta_examinando()).is_true()
 
 
-func test_el_primer_examen_revela_y_el_segundo_ya_no() -> void:  # 006-AC9
+func test_el_primer_examen_revela_y_el_segundo_ya_no() -> void:
 	# El mordisco del spec: el reloj corre igual las dos veces, así que el segundo examen es
 	# tiempo puro perdido. El `false` es lo que deja mostrarlo como algo ya leído.
 	var agarre := _agarre()
@@ -91,7 +91,7 @@ func test_el_primer_examen_revela_y_el_segundo_ya_no() -> void:  # 006-AC9
 	assert_array(nuevos).contains_exactly([true, false])
 
 
-func test_terminar_devuelve_el_objeto_a_la_mano_y_avisa() -> void:  # 006-AC9
+func test_terminar_devuelve_el_objeto_a_la_mano_y_avisa() -> void:
 	var agarre := _agarre()
 	var examen := _examen(agarre)
 	var cuerpo := _cuerpo()
@@ -105,7 +105,7 @@ func test_terminar_devuelve_el_objeto_a_la_mano_y_avisa() -> void:  # 006-AC9
 	assert_int(terminados[0]).is_equal(1)
 
 
-func test_rotar_gira_lo_que_se_examina() -> void:  # 006-AC9
+func test_rotar_gira_lo_que_se_examina() -> void:
 	# Girar el objeto es lo que permite leer la etiqueta de atrás, así que el `basis` tiene que
 	# cambiar de verdad: una rotación que no se aplica se ve como «el mouse no hace nada».
 	var agarre := _agarre()
@@ -118,7 +118,7 @@ func test_rotar_gira_lo_que_se_examina() -> void:  # 006-AC9
 	assert_bool(cuerpo.basis.is_equal_approx(antes)).is_false()
 
 
-func test_rotar_sin_examinar_nada_no_rompe() -> void:  # 006-AC9
+func test_rotar_sin_examinar_nada_no_rompe() -> void:
 	# El mouse se mueve todo el tiempo, también cuando no hay nada en la mano: si esto fallara,
 	# el juego se caería al caminar mirando alrededor.
 	var examen := _examen(_agarre())
@@ -126,7 +126,7 @@ func test_rotar_sin_examinar_nada_no_rompe() -> void:  # 006-AC9
 	assert_bool(examen.esta_examinando()).is_false()
 
 
-func test_lo_fijo_enfocado_se_piensa_sin_agarrarlo() -> void:  # 006-AC9
+func test_lo_fijo_enfocado_se_piensa_sin_agarrarlo() -> void:
 	# La E sobre una puerta no la levanta: revela lo que se nota mirándola y no suspende a
 	# nadie, porque no hay nada que rotar. Es el pensamiento, no el examen.
 	var agarre := _agarre()
@@ -145,7 +145,7 @@ func test_lo_fijo_enfocado_se_piensa_sin_agarrarlo() -> void:  # 006-AC9
 	assert_bool(examen.esta_examinando()).is_false()
 
 
-func test_lo_que_se_lleva_le_gana_a_lo_enfocado() -> void:  # 006-AC9
+func test_lo_que_se_lleva_le_gana_a_lo_enfocado() -> void:
 	# Con algo en la mano, la E examina lo que se lleva aunque la mira esté sobre otra cosa: si
 	# fuera al revés, no habría forma de mirar lo que se levantó sin soltarlo primero.
 	var agarre := _agarre()
@@ -160,7 +160,7 @@ func test_lo_que_se_lleva_le_gana_a_lo_enfocado() -> void:  # 006-AC9
 	assert_array(revelados).contains_exactly([lata])
 
 
-func test_examinar_dos_veces_seguidas_sin_terminar_no_reabre_nada() -> void:  # 006-AC9
+func test_examinar_dos_veces_seguidas_sin_terminar_no_reabre_nada() -> void:
 	var agarre := _agarre()
 	var examen := _examen(agarre)
 	agarre.pedir_agarrar(_lata(), _cuerpo())
@@ -168,7 +168,7 @@ func test_examinar_dos_veces_seguidas_sin_terminar_no_reabre_nada() -> void:  # 
 	assert_bool(examen.iniciar()).is_false()
 
 
-func test_el_clic_mientras_se_examina_devuelve_el_objeto_a_la_mano() -> void:  # 006-AC9
+func test_el_clic_mientras_se_examina_devuelve_el_objeto_a_la_mano() -> void:
 	# Si el clic llegara a `Agarre`, soltaría contra la cámara algo que está pegado a la cara, y
 	# este sistema seguiría apuntando a un nodo que ya no está en la mano: girando el mouse
 	# rotaría una lata tirada en el piso.
@@ -183,12 +183,12 @@ func test_el_clic_mientras_se_examina_devuelve_el_objeto_a_la_mano() -> void:  #
 	assert_object(cuerpo.get_parent()).is_same(agarre.punto_de_carga)
 
 
-func test_sin_examinar_nada_el_clic_pasa_de_largo() -> void:  # 006-AC9
+func test_sin_examinar_nada_el_clic_pasa_de_largo() -> void:
 	var examen := _examen(_agarre())
 	assert_bool(examen.atajar_el_clic()).is_false()
 
 
-func test_la_e_alterna_entre_examinar_y_volver() -> void:  # 006-AC9
+func test_la_e_alterna_entre_examinar_y_volver() -> void:
 	# Que la misma tecla abra y cierre es un `if` sobre el estado del examen, y ese estado vive
 	# acá: si el `if` estuviera en la escena, sería una regla del juego sin test.
 	var agarre := _agarre()
@@ -200,7 +200,7 @@ func test_la_e_alterna_entre_examinar_y_volver() -> void:  # 006-AC9
 	assert_bool(examen.esta_examinando()).is_false()
 
 
-func test_sin_punto_de_examen_la_e_no_se_pasa_a_revelar_lo_enfocado() -> void:  # 006-AC9
+func test_sin_punto_de_examen_la_e_no_se_pasa_a_revelar_lo_enfocado() -> void:
 	# Un punto sin cablear es un `.tscn` mal armado, y el camino de lo enfocado está abajo del
 	# de lo que se lleva: sin este corte, la E con una lata en la mano revelaba la puerta que se
 	# estaba mirando —lo contrario del orden que este sistema decide— y lo hacía sin un solo

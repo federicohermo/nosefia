@@ -22,6 +22,7 @@ func test_consumir_descuenta_del_restante() -> void:
 	assert_float(turno.tiempo_restante()).is_equal(3000.0)
 
 
+# AC-SHF-004
 func test_consumir_mas_de_lo_que_queda_deja_el_restante_en_cero_y_no_en_negativo() -> void:
 	# Un restante negativo se propaga: el HUD mostraría un tiempo imposible y las consecuencias
 	# se contarían contra un turno que ya no existe.
@@ -30,7 +31,7 @@ func test_consumir_mas_de_lo_que_queda_deja_el_restante_en_cero_y_no_en_negativo
 	assert_float(turno.tiempo_restante()).is_equal(0.0)
 
 
-func test_consumir_un_valor_negativo_no_devuelve_tiempo() -> void:
+func test_consumir_un_valor_negativo_no_devuelve_tiempo() -> void:  # AC-SHF-003
 	# El tiempo del turno sólo avanza. Devolverlo es la única forma de romper la tensión que
 	# sostiene el juego: con tiempo negativo, investigar dejaría de costar.
 	var turno := _turno_sin_obligatorias(100.0)
@@ -42,13 +43,13 @@ func test_un_turno_con_tiempo_todavia_no_esta_cerrado() -> void:
 	assert_bool(_turno_sin_obligatorias(1.0).cerrado()).is_false()
 
 
-func test_un_turno_sin_tiempo_esta_cerrado() -> void:
+func test_un_turno_sin_tiempo_esta_cerrado() -> void:  # AC-SHF-004
 	var turno := _turno_sin_obligatorias(100.0)
 	turno.consumir(100.0)
 	assert_bool(turno.cerrado()).is_true()
 
 
-func test_completar_una_tarea_descuenta_su_costo_exacto() -> void:
+func test_completar_una_tarea_descuenta_su_costo_exacto() -> void:  # AC-SHF-006
 	var limpiar := Tarea.new(Tarea.Tipo.LIMPIAR)
 	var obligatorias: Array[Tarea] = [limpiar]
 	var turno := Turno.new(28800.0, obligatorias)
@@ -56,6 +57,7 @@ func test_completar_una_tarea_descuenta_su_costo_exacto() -> void:
 	assert_float(turno.tiempo_restante()).is_equal(28800.0 - Reglas.costo_de(Tarea.Tipo.LIMPIAR))
 
 
+# AC-SHF-008
 func test_completar_dos_veces_la_misma_tarea_no_la_cobra_ni_la_cuenta_dos_veces() -> void:
 	var caja := Tarea.new(Tarea.Tipo.CAJA)
 	var obligatorias: Array[Tarea] = [caja]
@@ -67,7 +69,7 @@ func test_completar_dos_veces_la_misma_tarea_no_la_cobra_ni_la_cuenta_dos_veces(
 	assert_int(turno.tareas_cumplidas()).is_equal(1)
 
 
-func test_una_tarea_que_no_entra_en_el_tiempo_que_queda_no_se_hace_a_medias() -> void:
+func test_una_tarea_que_no_entra_en_el_tiempo_que_queda_no_se_hace_a_medias() -> void:  # AC-SHF-007
 	# La alternativa —dejar el presupuesto en cero y la tarea sin cumplir— es un estado que el
 	# jugador no puede distinguir de haberla hecho.
 	var reponer := Tarea.new(Tarea.Tipo.REPONER)
@@ -79,7 +81,7 @@ func test_una_tarea_que_no_entra_en_el_tiempo_que_queda_no_se_hace_a_medias() ->
 	assert_bool(reponer.completada()).is_false()
 
 
-func test_una_tarea_de_afuera_de_las_obligatorias_consume_pero_no_cuenta() -> void:
+func test_una_tarea_de_afuera_de_las_obligatorias_consume_pero_no_cuenta() -> void:  # AC-SHF-009
 	# El jefe cuenta las que pidió. Algo que no estaba en la lista se paga igual —el tiempo se
 	# fue— pero no acerca al turno completo, que es lo que hace que investigar tenga precio.
 	var declarada := Tarea.new(Tarea.Tipo.CAJA)
