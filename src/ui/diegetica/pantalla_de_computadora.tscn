@@ -14,14 +14,13 @@
 
 [ext_resource type="Texture2D" path="res://assets/ui/manada/cabecera.svg" id="7"]
 
-[ext_resource type="Texture2D" path="res://assets/ui/manada/computadora.svg" id="8"]
-
-[node name="PantallaDeComputadora" type="CanvasLayer" node_paths=PackedStringArray("_fondo", "_marco", "_pestanas", "_salida", "_caja", "_chats", "_notas")]
+[node name="PantallaDeComputadora" type="CanvasLayer" node_paths=PackedStringArray("_fondo", "_marco", "_titulo", "_opciones", "_salida", "_caja", "_chats", "_notas")]
 layer = 3
 script = ExtResource("1")
 _fondo = NodePath("Fondo")
 _marco = NodePath("Fondo/Marco")
-_pestanas = NodePath("Fondo/Marco/Pestanas")
+_titulo = NodePath("Fondo/Marco/Titulo")
+_opciones = NodePath("Fondo/Marco/Opciones")
 _salida = NodePath("Fondo/Marco/Salida")
 _caja = NodePath("Fondo/Marco/Apps/AppCaja")
 _chats = NodePath("Fondo/Marco/Apps/AppChats")
@@ -52,7 +51,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-color = Color(0.03, 0.045, 0.045, 0.32)
+color = Color(0.005, 0.025, 0.035, 0.82)
 mouse_filter = 2
 
 [node name="Marco" type="Control" parent="Fondo"]
@@ -75,24 +74,23 @@ expand_mode = 1
 stretch_mode = 0
 mouse_filter = 2
 
-[node name="Computadora" type="TextureRect" parent="Fondo/Marco"]
+[node name="Opciones" type="HBoxContainer" parent="Fondo/Marco"]
 layout_mode = 0
-offset_left = 1702.0
-offset_top = 36.0
-offset_right = 1744.353
-offset_bottom = 81.0
-texture = ExtResource("8")
-expand_mode = 1
-stretch_mode = 0
-mouse_filter = 2
+offset_left = 1120.0
+offset_top = 22.0
+offset_right = 1758.0
+offset_bottom = 94.0
+theme_override_constants/separation = 18
+alignment = 2
 
-[node name="Pestanas" type="HBoxContainer" parent="Fondo/Marco"]
+[node name="Titulo" type="Label" parent="Fondo/Marco"]
 layout_mode = 0
-offset_left = 90.0
-offset_top = 48.0
-offset_right = 740.0
-offset_bottom = 108.0
-theme_override_constants/separation = 30
+offset_left = 100.0
+offset_top = 54.0
+offset_right = 344.0
+offset_bottom = 102.0
+theme_override_font_sizes/font_size = 38
+mouse_filter = 2
 
 [node name="Apps" type="Control" parent="Fondo/Marco"]
 layout_mode = 0

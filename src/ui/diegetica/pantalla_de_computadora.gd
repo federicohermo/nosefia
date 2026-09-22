@@ -5,13 +5,16 @@ extends CanvasLayer
 signal app_pedida(app: Computadora.App)
 
 ## Chats conserva su cableado para una entrega posterior, pero no ofrece acceso en esta UI.
-const PESTANAS := {Computadora.App.CAJA: "/ REGISTRO:", Computadora.App.NOTAS: "/ NOTAS:"}
+const TITULOS := {Computadora.App.CAJA: "/ REGISTRO:", Computadora.App.NOTAS: "/ NOTAS:"}
+const ICONO_REGISTRO := preload("res://assets/ui/manada/computadora.svg")
+const ICONO_NOTAS := preload("res://assets/ui/manada/registro.svg")
 const TAMANO_DEL_DISENO := Vector2(1920, 1080)
 const TEXTO_DE_SALIDA := "CLIC DERECHO / VOLVER AL LOCAL"
 
 @export var _fondo: ColorRect
 @export var _marco: Control
-@export var _pestanas: HBoxContainer
+@export var _titulo: Label
+@export var _opciones: HBoxContainer
 @export var _salida: Label
 @export var _caja: AppCaja
 @export var _chats: AppChats
@@ -23,8 +26,8 @@ const TEXTO_DE_SALIDA := "CLIC DERECHO / VOLVER AL LOCAL"
 func _ready() -> void:
 	visible = false
 	_salida.text = TEXTO_DE_SALIDA
-	for app: Computadora.App in PESTANAS:
-		_pestanas.add_child(_pestana_de(app))
+	for app: Computadora.App in TITULOS:
+		_opciones.add_child(_opcion_de(app))
 	get_viewport().size_changed.connect(_ajustar_al_viewport)
 	_ajustar_al_viewport()
 
@@ -53,21 +56,23 @@ func cambiar_a(app: Computadora.App) -> void:
 	_caja.visible = app == Computadora.App.CAJA
 	_chats.visible = app == Computadora.App.CHATS
 	_notas.visible = app == Computadora.App.NOTAS
-	for indice in PESTANAS.size():
-		var boton: Button = _pestanas.get_child(indice)
-		boton.set_pressed_no_signal(PESTANAS.keys()[indice] == app)
+	_titulo.text = TITULOS.get(app, "")
+	for indice in TITULOS.size():
+		var boton: Button = _opciones.get_child(indice)
+		boton.set_pressed_no_signal(TITULOS.keys()[indice] == app)
 
 
 func ocultar() -> void:
 	visible = false
 
 
-func _pestana_de(app: Computadora.App) -> Button:
+func _opcion_de(app: Computadora.App) -> Button:
 	var boton := Button.new()
-	boton.text = PESTANAS[app]
+	boton.text = TITULOS[app].trim_prefix("/ ").trim_suffix(":")
+	boton.icon = ICONO_REGISTRO if app == Computadora.App.CAJA else ICONO_NOTAS
 	boton.toggle_mode = true
-	boton.custom_minimum_size = Vector2(265, 56)
-	boton.theme_type_variation = &"Pestana"
+	boton.custom_minimum_size = Vector2(250, 72)
+	boton.add_theme_font_size_override("font_size", 30)
 	boton.pressed.connect(func() -> void: app_pedida.emit(app))
 	return boton
 

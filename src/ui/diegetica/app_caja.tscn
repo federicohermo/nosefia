@@ -40,7 +40,7 @@ offset_top = 144.0
 offset_right = 400.0
 offset_bottom = 309.0
 mouse_filter = 2
-theme_override_font_sizes/font_size = 26
+theme_override_font_sizes/font_size = 32
 
 [node name="Desplazamiento" type="ScrollContainer" parent="."]
 layout_mode = 0
@@ -141,7 +141,7 @@ offset_top = 584.0
 offset_right = 571.0
 offset_bottom = 644.0
 mouse_filter = 2
-theme_override_font_sizes/font_size = 28
+theme_override_font_sizes/font_size = 32
 
 [node name="Estado" type="Label" parent="Detalle"]
 layout_mode = 0

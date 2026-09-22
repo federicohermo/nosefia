@@ -117,7 +117,7 @@ content_margin_bottom = 16.0
 
 [resource]
 default_font = ExtResource("1")
-default_font_size = 26
+default_font_size = 32
 
 Label/colors/font_color = Color(0.941176, 0.956863, 0.819608, 1)
 
@@ -187,7 +187,7 @@ Pestana/colors/font_color = Color(0.7137, 0.7529, 0.651, 1)
 
 TextoSecundario/base_type = &"Label"
 
-TextoSecundario/font_sizes/font_size = 22
+TextoSecundario/font_sizes/font_size = 30
 
 TextoSecundario/colors/font_color = Color(0.7137, 0.7529, 0.651, 1)
 
@@ -197,7 +197,7 @@ Titulo/font_sizes/font_size = 46
 
 NotaDeLista/base_type = &"Button"
 
-NotaDeLista/font_sizes/font_size = 24
+NotaDeLista/font_sizes/font_size = 30
 
 VScrollBar/styles/scroll = SubResource("scroll")
 VScrollBar/styles/grabber = SubResource("grabber")

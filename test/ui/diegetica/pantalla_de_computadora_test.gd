@@ -3,17 +3,39 @@ extends GdUnitTestSuite
 const ESCENA := preload("res://src/ui/diegetica/pantalla_de_computadora.tscn")
 
 
-func test_la_navegacion_ofrece_registro_y_notas_sin_chats() -> void:
+func test_las_opciones_permanecen_visibles_y_el_titulo_indica_la_pantalla() -> void:
 	var pantalla: PantallaDeComputadora = auto_free(ESCENA.instantiate())
 	add_child(pantalla)
 	pantalla.mostrar(Computadora.App.CAJA)
-	var pestanas: HBoxContainer = pantalla.get("_pestanas")
-	assert_int(pestanas.get_child_count()).is_equal(2)
+	var titulo: Label = pantalla.get("_titulo")
+	var opciones: HBoxContainer = pantalla.get("_opciones")
+	assert_object(opciones).is_not_null()
+	if opciones == null:
+		return
+	assert_int(opciones.get_child_count()).is_equal(2)
+	var registro: Button = opciones.get_child(0)
+	var notas: Button = opciones.get_child(1)
+	assert_str(titulo.text).is_equal("/ REGISTRO:")
+	assert_int(titulo.mouse_filter).is_equal(Control.MOUSE_FILTER_IGNORE)
 	var pedidos: Array[int] = []
 	pantalla.app_pedida.connect(func(app: int) -> void: pedidos.append(app))
-	for boton: Button in pestanas.get_children():
-		boton.pressed.emit()
-	assert_array(pedidos).is_equal([Computadora.App.CAJA, Computadora.App.NOTAS])
+	pantalla.app_pedida.connect(pantalla.cambiar_a)
+	notas.pressed.emit()
+	assert_bool(pantalla.notas().visible).is_true()
+	assert_bool(pantalla.caja().visible).is_false()
+	assert_str(titulo.text).is_equal("/ NOTAS:")
+	assert_bool(registro.is_visible_in_tree()).is_true()
+	assert_bool(notas.is_visible_in_tree()).is_true()
+	assert_bool(notas.button_pressed).is_true()
+	registro.pressed.emit()
+	assert_bool(pantalla.caja().visible).is_true()
+	assert_bool(pantalla.notas().visible).is_false()
+	assert_str(titulo.text).is_equal("/ REGISTRO:")
+	assert_bool(registro.is_visible_in_tree()).is_true()
+	assert_bool(notas.is_visible_in_tree()).is_true()
+	assert_bool(registro.button_pressed).is_true()
+	assert_bool(notas.button_pressed).is_false()
+	assert_array(pedidos).is_equal([Computadora.App.NOTAS, Computadora.App.CAJA])
 
 
 func test_registrar_conserva_el_producto_y_refleja_el_estado_real() -> void:

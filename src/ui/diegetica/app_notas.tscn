@@ -91,7 +91,7 @@ horizontal_scroll_mode = 0
 layout_mode = 2
 size_flags_horizontal = 3
 autowrap_mode = 3
-theme_override_font_sizes/font_size = 28
+theme_override_font_sizes/font_size = 32
 
 [node name="LineaInferior" type="TextureRect" parent="."]
 layout_mode = 0
