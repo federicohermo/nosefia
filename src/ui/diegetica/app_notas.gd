@@ -44,7 +44,7 @@ func mostrar(notas: Array[Nota]) -> void:
 		var boton := Button.new()
 		boton.text = TEXTO_DE_LA_NOTA % [indice + 1, notas[indice].titulo().to_upper()]
 		boton.tooltip_text = notas[indice].titulo()
-		boton.custom_minimum_size = Vector2(0, 64)
+		boton.custom_minimum_size = Vector2(0, 80)
 		boton.alignment = HORIZONTAL_ALIGNMENT_LEFT
 		boton.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
 		boton.clip_text = true

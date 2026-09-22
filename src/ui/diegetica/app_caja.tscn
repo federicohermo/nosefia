@@ -47,7 +47,7 @@ layout_mode = 0
 offset_left = 71.0
 offset_top = 345.0
 offset_right = 400.0
-offset_bottom = 620.0
+offset_bottom = 598.0
 horizontal_scroll_mode = 0
 
 [node name="Faltantes" type="Label" parent="Desplazamiento"]
@@ -59,9 +59,9 @@ theme_type_variation = &"TextoSecundario"
 [node name="Ayuda" type="Label" parent="."]
 layout_mode = 0
 offset_left = 71.0
-offset_top = 650.0
+offset_top = 634.0
 offset_right = 400.0
-offset_bottom = 900.0
+offset_bottom = 886.0
 theme_type_variation = &"TextoSecundario"
 mouse_filter = 2
 autowrap_mode = 3
@@ -103,7 +103,7 @@ layout_mode = 0
 offset_left = 1248.0
 offset_top = 67.0
 offset_right = 1857.0
-offset_bottom = 886.0
+offset_bottom = 814.0
 mouse_filter = 2
 
 [node name="Contorno" type="PanelContainer" parent="Detalle"]
@@ -111,44 +111,44 @@ layout_mode = 0
 offset_left = 0.0
 offset_top = 0.0
 offset_right = 609.0
-offset_bottom = 819.0
+offset_bottom = 747.0
 mouse_filter = 2
 
 [node name="Imagen" type="TextureRect" parent="Detalle"]
 layout_mode = 0
-offset_left = 34.0
-offset_top = 5.0
-offset_right = 569.0
-offset_bottom = 460.0
+offset_left = 42.0
+offset_top = 24.0
+offset_right = 567.0
+offset_bottom = 401.0
 expand_mode = 1
 stretch_mode = 5
 mouse_filter = 2
 
 [node name="Nombre" type="Label" parent="Detalle"]
 layout_mode = 0
-offset_left = 38.0
-offset_top = 465.0
-offset_right = 571.0
-offset_bottom = 565.0
+offset_left = 42.0
+offset_top = 425.0
+offset_right = 567.0
+offset_bottom = 489.0
 theme_type_variation = &"Titulo"
 mouse_filter = 2
 autowrap_mode = 3
 
 [node name="Precio" type="Label" parent="Detalle"]
 layout_mode = 0
-offset_left = 38.0
-offset_top = 584.0
-offset_right = 571.0
-offset_bottom = 644.0
+offset_left = 42.0
+offset_top = 521.0
+offset_right = 567.0
+offset_bottom = 577.0
 mouse_filter = 2
 theme_override_font_sizes/font_size = 40
 
 [node name="Estado" type="Label" parent="Detalle"]
 layout_mode = 0
-offset_left = 38.0
-offset_top = 706.0
-offset_right = 571.0
-offset_bottom = 790.0
+offset_left = 42.0
+offset_top = 627.0
+offset_right = 567.0
+offset_bottom = 699.0
 mouse_filter = 2
 autowrap_mode = 3
 vertical_alignment = 1

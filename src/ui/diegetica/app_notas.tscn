@@ -43,7 +43,7 @@ horizontal_scroll_mode = 0
 [node name="Lista" type="VBoxContainer" parent="Desplazamiento"]
 layout_mode = 2
 size_flags_horizontal = 3
-theme_override_constants/separation = 12
+theme_override_constants/separation = 24
 
 [node name="Linea" type="TextureRect" parent="."]
 layout_mode = 0
@@ -84,7 +84,7 @@ layout_mode = 0
 offset_left = 665.0
 offset_top = 190.0
 offset_right = 1743.0
-offset_bottom = 450.0
+offset_bottom = 386.0
 horizontal_scroll_mode = 0
 
 [node name="DetalleTexto" type="Label" parent="Lectura"]
@@ -96,9 +96,9 @@ theme_override_font_sizes/font_size = 40
 [node name="LineaInferior" type="TextureRect" parent="."]
 layout_mode = 0
 offset_left = 624.0
-offset_top = 480.0
+offset_top = 410.0
 offset_right = 1743.5
-offset_bottom = 482.0
+offset_bottom = 412.0
 texture = ExtResource("2")
 expand_mode = 1
 stretch_mode = 0
@@ -107,9 +107,9 @@ mouse_filter = 2
 [node name="Editor" type="VBoxContainer" parent="."]
 layout_mode = 0
 offset_left = 665.0
-offset_top = 510.0
+offset_top = 446.0
 offset_right = 1743.0
-offset_bottom = 890.0
+offset_bottom = 814.0
 theme_override_constants/separation = 14
 
 [node name="Titulo" type="Label" parent="Editor"]

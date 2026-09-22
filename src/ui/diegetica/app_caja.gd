@@ -66,7 +66,7 @@ func mostrar(caja: CajaRegistradora) -> void:
 
 func _boton_de(producto: Producto, registrado: bool) -> Button:
 	var boton := Button.new()
-	boton.custom_minimum_size = Vector2(246, 310)
+	boton.custom_minimum_size = Vector2(246, 334)
 	boton.disabled = registrado
 	boton.tooltip_text = (
 		producto.nombre + " / " + (TEXTO_YA_REGISTRADO if registrado else TEXTO_DEL_BOTON)
@@ -76,10 +76,10 @@ func _boton_de(producto: Producto, registrado: bool) -> Button:
 	boton.focus_entered.connect(func() -> void: _mostrar_detalle(producto))
 	var contenido := VBoxContainer.new()
 	contenido.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-	contenido.offset_left = 12
-	contenido.offset_top = 12
-	contenido.offset_right = -12
-	contenido.offset_bottom = -12
+	contenido.offset_left = 24
+	contenido.offset_top = 24
+	contenido.offset_right = -24
+	contenido.offset_bottom = -24
 	contenido.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	boton.add_child(contenido)
 	var imagen := TextureRect.new()

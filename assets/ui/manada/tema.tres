@@ -1,4 +1,4 @@
-[gd_resource type="Theme" load_steps=12 format=3]
+[gd_resource type="Theme" load_steps=14 format=3]
 
 [ext_resource type="FontFile" path="res://assets/ui/manada/unscii-16.ttf" id="1"]
 
@@ -9,9 +9,9 @@ border_width_left = 2
 border_width_top = 2
 border_width_right = 2
 border_width_bottom = 2
-content_margin_left = 12.0
+content_margin_left = 24.0
 content_margin_top = 12.0
-content_margin_right = 12.0
+content_margin_right = 24.0
 content_margin_bottom = 12.0
 
 [sub_resource type="StyleBoxFlat" id="hover"]
@@ -21,9 +21,9 @@ border_width_left = 2
 border_width_top = 2
 border_width_right = 2
 border_width_bottom = 2
-content_margin_left = 12.0
+content_margin_left = 24.0
 content_margin_top = 12.0
-content_margin_right = 12.0
+content_margin_right = 24.0
 content_margin_bottom = 12.0
 
 [sub_resource type="StyleBoxFlat" id="pressed"]
@@ -33,9 +33,9 @@ border_width_left = 2
 border_width_top = 2
 border_width_right = 2
 border_width_bottom = 2
-content_margin_left = 12.0
+content_margin_left = 24.0
 content_margin_top = 12.0
-content_margin_right = 12.0
+content_margin_right = 24.0
 content_margin_bottom = 12.0
 
 [sub_resource type="StyleBoxFlat" id="disabled"]
@@ -45,9 +45,9 @@ border_width_left = 2
 border_width_top = 2
 border_width_right = 2
 border_width_bottom = 2
-content_margin_left = 12.0
+content_margin_left = 24.0
 content_margin_top = 12.0
-content_margin_right = 12.0
+content_margin_right = 24.0
 content_margin_bottom = 12.0
 
 [sub_resource type="StyleBoxFlat" id="focus"]
@@ -57,9 +57,9 @@ border_width_left = 3
 border_width_top = 3
 border_width_right = 3
 border_width_bottom = 3
-content_margin_left = 12.0
+content_margin_left = 24.0
 content_margin_top = 12.0
-content_margin_right = 12.0
+content_margin_right = 24.0
 content_margin_bottom = 12.0
 
 [sub_resource type="StyleBoxFlat" id="field"]
@@ -69,9 +69,9 @@ border_width_left = 2
 border_width_top = 2
 border_width_right = 2
 border_width_bottom = 2
-content_margin_left = 12.0
+content_margin_left = 24.0
 content_margin_top = 12.0
-content_margin_right = 12.0
+content_margin_right = 24.0
 content_margin_bottom = 12.0
 
 [sub_resource type="StyleBoxFlat" id="panel"]
@@ -81,9 +81,9 @@ border_width_left = 2
 border_width_top = 2
 border_width_right = 2
 border_width_bottom = 2
-content_margin_left = 12.0
+content_margin_left = 24.0
 content_margin_top = 12.0
-content_margin_right = 12.0
+content_margin_right = 24.0
 content_margin_bottom = 12.0
 
 [sub_resource type="StyleBoxFlat" id="empty"]
@@ -93,9 +93,9 @@ border_width_left = 0
 border_width_top = 0
 border_width_right = 0
 border_width_bottom = 0
-content_margin_left = 12.0
+content_margin_left = 24.0
 content_margin_top = 12.0
-content_margin_right = 12.0
+content_margin_right = 24.0
 content_margin_bottom = 12.0
 
 [sub_resource type="StyleBoxFlat" id="scroll"]
@@ -114,6 +114,38 @@ content_margin_left = 5.0
 content_margin_right = 5.0
 content_margin_top = 16.0
 content_margin_bottom = 16.0
+
+[sub_resource type="StyleBoxFlat" id="nota_normal"]
+bg_color = Color(0.02, 0.08, 0.09, 0.25)
+border_color = Color(0.941176, 0.956863, 0.819608, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+corner_radius_top_left = 2
+corner_radius_top_right = 16
+corner_radius_bottom_left = 16
+corner_radius_bottom_right = 2
+content_margin_left = 24.0
+content_margin_right = 24.0
+content_margin_top = 12.0
+content_margin_bottom = 12.0
+
+[sub_resource type="StyleBoxFlat" id="nota_activa"]
+bg_color = Color(0.043, 0.212, 0.239, 0.95)
+border_color = Color(0.941176, 0.956863, 0.819608, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+corner_radius_top_left = 2
+corner_radius_top_right = 16
+corner_radius_bottom_left = 16
+corner_radius_bottom_right = 2
+content_margin_left = 24.0
+content_margin_right = 24.0
+content_margin_top = 12.0
+content_margin_bottom = 12.0
 
 [resource]
 default_font = ExtResource("1")
@@ -203,3 +235,8 @@ VScrollBar/styles/scroll = SubResource("scroll")
 VScrollBar/styles/grabber = SubResource("grabber")
 VScrollBar/styles/grabber_highlight = SubResource("grabber")
 VScrollBar/styles/grabber_pressed = SubResource("grabber")
+
+NotaDeLista/styles/normal = SubResource("nota_normal")
+NotaDeLista/styles/pressed = SubResource("nota_activa")
+NotaDeLista/styles/hover = SubResource("nota_activa")
+NotaDeLista/styles/hover_pressed = SubResource("nota_activa")
