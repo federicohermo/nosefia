@@ -149,10 +149,12 @@ func test_despues_de_soltar_devolver_no_usa_el_punto_de_lo_anterior() -> void:
 	var cintura: Node3D = auto_free(Node3D.new())
 	agarre.pedir_agarrar(_lata(), _cuerpo())
 	agarre.mover_lo_sostenido(cintura)
+	agarre.mover_lo_sostenido(auto_free(Node3D.new()))
 	agarre.soltar(true)
+	# Devolver sin haberlo movido antes: si el ancla del objeto anterior sobreviviera, éste
+	# terminaría en la cintura de aquél.
 	var cuerpo := _cuerpo()
 	agarre.pedir_agarrar(_lata(), cuerpo)
-	agarre.mover_lo_sostenido(auto_free(Node3D.new()))
 	agarre.devolver_a_la_mano()
 	assert_object(cuerpo.get_parent()).is_same(agarre.punto_de_carga)
 

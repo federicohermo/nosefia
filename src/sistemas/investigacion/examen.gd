@@ -71,8 +71,8 @@ func iniciar(enfocado: ObjetoDelAlmacen = null) -> bool:
 	return false
 
 
-## Devuelve el objeto a la mano y avisa que se terminó. Con nada en examen no hace nada: la
-## tecla se puede apretar dos veces, y la segunda no puede emitir un aviso vacío.
+## Devuelve el objeto a donde se lo llevaba y avisa que se terminó. Con nada en examen no hace
+## nada: la tecla se puede apretar dos veces, y la segunda no puede emitir un aviso vacío.
 func terminar() -> void:
 	if _examinando == null:
 		return
@@ -84,11 +84,11 @@ func terminar() -> void:
 
 ## Devuelve si el examen se comió el clic de agarrar.
 ##
-## Mientras hay algo pegado a la cara, el clic lo devuelve a la mano en vez de soltarlo: soltarlo
-## desde ahí lo dejaría caer contra la cámara, y este sistema se quedaría apuntando a un nodo que
-## ya no está en la mano — o sea, rotando algo que se cayó al piso. Que la escena pregunte esto
-## antes de pasarle el clic a `Agarre` es ruteo; qué hace el clic lo decide acá, que es donde
-## está el estado y donde hay test.
+## Mientras hay algo pegado a la cara, el clic lo devuelve a donde se lo llevaba en vez de
+## soltarlo: soltarlo desde ahí lo dejaría caer contra la cámara, y este sistema se quedaría
+## apuntando a un nodo que ya no está en la mano — o sea, rotando algo que se cayó al piso. Que
+## la escena pregunte esto antes de pasarle el clic a `Agarre` es ruteo; qué hace el clic lo
+## decide acá, que es donde está el estado y donde hay test.
 func atajar_el_clic() -> bool:
 	if _examinando == null:
 		return false
