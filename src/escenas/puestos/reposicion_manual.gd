@@ -194,7 +194,7 @@ func _colgar_la_caja(nodo: Node3D) -> void:
 		return
 	repositor.agarre.mover_lo_sostenido(punto_de_la_caja)
 	jugador.ocupar_el_frente(true)
-	_despertar_lo_de_arriba(nodo)
+	despertar_lo_de_arriba(nodo)
 
 
 ## Apoya la caja recién soltada donde el jugador tiene la mira, derecha y de una.
@@ -250,30 +250,30 @@ func _cerca_de(caja: CajaDelDeposito, punto: Vector3) -> bool:
 	return false
 
 
-## Despierta las cajas que la que se acaba de levantar estaba sosteniendo, y es lo que desarma
-## una pila: sacada la de abajo, las de arriba caen hasta el primer apoyo que encuentren.
+## Despierta lo que una caja estaba sosteniendo, y es lo que desarma una pila: sacada la de
+## abajo, las de arriba caen hasta el primer apoyo que encuentren. Vale igual para una caja
+## levantada y para una empujada: en los dos casos la caja se fue.
 ##
 ## Se mira desde **el lugar que dejó** y no desde donde está: para cuando `objeto_agarrado`
 ## avisa, `Agarre` ya la colgó de la mano, así que su `global_position` es el puño del jugador y
 ## ahí arriba no hay ninguna pila.
-func _despertar_lo_de_arriba(nodo: Node3D) -> void:
+func despertar_lo_de_arriba(nodo: Node3D) -> void:
 	var caja := nodo as CajaDelDeposito
 	if caja == null:
 		return
 	_despertar_sobre(caja, caja.apoyo_que_dejo())
 
 
-## Despierta lo apoyado sobre un lugar, y sigue hacia arriba desde cada una que despierta.
+## Despierta lo apoyado sobre un lugar, y sigue hacia arriba desde cada caja que despierta.
 ##
 ## **En cascada, porque una pila es una cadena.** Despertar un solo piso alcanza para dos —la de
-## encima cae, y la siguiente se entera de refilón porque el volumen que se consulta llega a
-## rozarla—, y a partir de la tercera no. Medido con cinco pisos: sacando la base caían la
-## segunda y la tercera, y la cuarta se quedaba flotando a 0,93 m de cualquier apoyo, con la
-## quinta prolijamente encima. Una caja congelada no se entera de que lo que la sostenía se fue.
+## encima cae, y la siguiente se entera de refilón—, y a partir de la tercera no. Una caja
+## congelada es estática para el motor, y un cuerpo estático que se va no despierta a nadie.
+## Lo que no es una caja sólo se despierta.
 ##
-## Despertar de más no cuesta nada, y por eso no se comprueba si la de arriba se iba a caer: si
-## tiene otro apoyo, el motor la deja donde está y la vuelve a dormir. La `freeze` que se mira no
-## es esa pregunta, es el corte de la recursión: una ya despierta no se vuelve a visitar.
+## Despertar de más no cuesta nada, y por eso no se comprueba si lo de arriba se iba a caer: si
+## tiene otro apoyo, el motor lo deja donde está y lo vuelve a dormir. La `freeze` que se mira
+## es el corte de la recursión: una caja ya despierta no se vuelve a visitar.
 func _despertar_sobre(caja: CajaDelDeposito, lugar: Vector3) -> void:
 	var forma: CollisionShape3D = caja.get_node("Cuerpo")
 	var media := _media_caja(caja)
@@ -285,15 +285,18 @@ func _despertar_sobre(caja: CajaDelDeposito, lugar: Vector3) -> void:
 	# **Ésta es la única consulta del archivo que NO pregunta por la máscara de la caja**, y la
 	# razón es el momento: esto corre desde `objeto_agarrado`, y para entonces `Agarre` ya le
 	# puso la máscara en 0 para que no choque con nada mientras la llevan. Preguntando por ella
-	# no contesta nadie y la pila se queda flotando. Acá filtra el tipo, que es más preciso que
-	# una capa: lo que se despierta son cajas, no cualquier cosa que estuviera ahí arriba.
+	# no contesta nadie y la pila se queda flotando. Acá filtra el tipo: lo rígido.
 	consulta.exclude = [caja.get_rid(), jugador.get_rid()]
 	for choque in get_world_3d().direct_space_state.intersect_shape(consulta, 8):
-		var encima := choque["collider"] as CajaDelDeposito
-		if encima == null or not encima.freeze:
+		var encima := choque["collider"] as RigidBody3D
+		if encima == null:
 			continue
-		encima.soltarse()
-		_despertar_sobre(encima, encima.global_position)
+		var caja_de_arriba := encima as CajaDelDeposito
+		if caja_de_arriba == null:
+			encima.sleeping = false
+		elif caja_de_arriba.freeze:
+			caja_de_arriba.soltarse()
+			_despertar_sobre(caja_de_arriba, caja_de_arriba.global_position)
 
 
 ## Deja la caja en el piso al lado del jugador. Devuelve si encontró dónde.

@@ -11,9 +11,10 @@ DADO/CUANDO/ENTONCES. Plantilla:
 [capability-spec.md](../../specs/_template/capability-spec.md). Formato de referencia:
 spec-anchored agentic development.
 
-**El spec no se implementa: se implementa un issue.** Su forma es
-[task-brief.md](../../.github/ISSUE_TEMPLATE/task-brief.md), que GitHub ofrece al abrirlo. No se
-crean `spec.md`, `research.md`, `plan.md` ni `tasks.md`.
+**Un spec no es un issue.** El spec es el contrato durable de una funcionalidad; el issue es el
+plan descartable de un cambio, con la forma de
+[task-brief.md](../../.github/ISSUE_TEMPLATE/task-brief.md). Un issue toca un spec sólo si cambia
+lo que el juego tiene que hacer. No se crean `spec.md`, `research.md`, `plan.md` ni `tasks.md`.
 
 ## Qué declara un spec
 
@@ -27,7 +28,8 @@ crean `spec.md`, `research.md`, `plan.md` ni `tasks.md`.
 - Un valor de balance se cita, nunca se copia: el número exacto sale del dominio.
 - Un hueco va a `OQ-<COD>-###`. No se inventa un valor por defecto.
 - `status: draft` mientras algún criterio no tenga test. El PR que lo pasa a `ratified` es la
-  aprobación. Un spec reemplazado pasa a `superseded`.
+  aprobación. Un spec reemplazado pasa a `superseded`. Una funcionalidad que se quita borra su
+  spec, en su propio commit.
 
 ## Cada AC nombra su test
 
@@ -46,8 +48,9 @@ repo verifica sin cobertura.
 
 ## Cambios
 
-- Un cambio de comportamiento actualiza el spec y los tests en el mismo PR. Un refactor no lo
-  cambia.
+- Un cambio de comportamiento actualiza el spec y los tests en el mismo PR, desde una rama
+  `feature/`. El spec va primero. Un refactor, un bug que no cambia ninguna regla y una mejora no
+  lo tocan.
 - Si el código no cumple un AC, se corrige el código y su test, no el spec. **Nunca se ajusta el
   spec para que coincida con el código**: si difieren, eso es el hallazgo. Ver la
   [constitución](../../docs/architecture/constitution.md).

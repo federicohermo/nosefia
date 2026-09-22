@@ -9,6 +9,10 @@
 ## acá**, lo pide el puesto; volver a dormirse lo resuelve el motor.
 extends RigidBody3D
 
+## La caja se va a correr. Para el motor es un cuerpo estático, y lo apoyado encima no se
+## entera: lo despierta el puesto.
+signal empujada(caja: Node3D)
+
 @export var producto: Producto.Id = Producto.Id.ACTRONCITO
 @export var datos: ObjetoDelAlmacen
 @export var mallas: Array[MeshInstance3D] = []
@@ -92,8 +96,11 @@ func volver_a_su_lugar() -> void:
 
 ## Se arrastra por el piso cuando el jugador la empuja al pasar. Cuánto recibe lo dice el
 ## dominio; acá sólo se mueve, en horizontal y sin dar vuelta nada.
+##
+## Avisa **antes** de correrse: lo que hay que despertar está sobre el apoyo que todavía ocupa.
 func empujar(desplazamiento: Vector3) -> void:
 	var arrastre := desplazamiento * ReglasDeLosObjetos.ARRASTRE_DE_LA_CAJA
 	arrastre.y = 0.0
+	empujada.emit(self)
 	move_and_collide(arrastre)
 	_apoyo_que_dejo = global_position
