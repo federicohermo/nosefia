@@ -84,21 +84,21 @@ layout_mode = 0
 offset_left = 665.0
 offset_top = 190.0
 offset_right = 1743.0
-offset_bottom = 490.0
+offset_bottom = 450.0
 horizontal_scroll_mode = 0
 
 [node name="DetalleTexto" type="Label" parent="Lectura"]
 layout_mode = 2
 size_flags_horizontal = 3
 autowrap_mode = 3
-theme_override_font_sizes/font_size = 32
+theme_override_font_sizes/font_size = 40
 
 [node name="LineaInferior" type="TextureRect" parent="."]
 layout_mode = 0
 offset_left = 624.0
-offset_top = 520.0
+offset_top = 480.0
 offset_right = 1743.5
-offset_bottom = 522.0
+offset_bottom = 482.0
 texture = ExtResource("2")
 expand_mode = 1
 stretch_mode = 0
@@ -107,7 +107,7 @@ mouse_filter = 2
 [node name="Editor" type="VBoxContainer" parent="."]
 layout_mode = 0
 offset_left = 665.0
-offset_top = 550.0
+offset_top = 510.0
 offset_right = 1743.0
 offset_bottom = 890.0
 theme_override_constants/separation = 14

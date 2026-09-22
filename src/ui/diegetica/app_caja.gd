@@ -66,7 +66,7 @@ func mostrar(caja: CajaRegistradora) -> void:
 
 func _boton_de(producto: Producto, registrado: bool) -> Button:
 	var boton := Button.new()
-	boton.custom_minimum_size = Vector2(246, 280)
+	boton.custom_minimum_size = Vector2(246, 310)
 	boton.disabled = registrado
 	boton.tooltip_text = (
 		producto.nombre + " / " + (TEXTO_YA_REGISTRADO if registrado else TEXTO_DEL_BOTON)

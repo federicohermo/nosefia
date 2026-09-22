@@ -17,8 +17,8 @@ durante la ejecución.
 | `tema.tres` | Adaptación a Godot | Colores, fuente, botones, campos, paneles y estados de foco |
 
 Las tres miniaturas son renders transparentes de 512 × 512 del modelo del juego.
-Conservan la orientación de `contenido_del_estante.tscn`. No usan productos de ejemplo de Figma
-que no existen en el registro actual.
+Usan las mallas de `contenido_del_estante.tscn`, con la cámara orientada hacia el frente de cada
+envase. No usan productos de ejemplo de Figma que no existen en el registro actual.
 
 El fondo se capturó en Godot a 1920 × 1080, sin HUD, desde la posición inicial del jugador,
 con su cámara apuntando a `(0.5, 1.0, -3.0)`. Conserva los muebles, productos y texturas actuales.
@@ -28,7 +28,8 @@ la imagen no contiene modelos ni iluminación tomados del fondo antiguo de Figma
 La adaptación conserva las acciones del juego: registrar con un clic y escribir notas libres.
 Las notas usan lista y detalle; no representan logros ni pistas desbloqueables. Las cantidades,
 los precios y los estados del registro salen del dominio. Las opciones Registro y Notas permanecen
-visibles a la derecha, con la opción actual marcada; el título izquierdo sólo indica la pantalla
+visibles como íconos a la derecha, con la opción actual marcada y el nombre al pasar el cursor;
+el título izquierdo sólo indica la pantalla
 actual. El código de Chats permanece disponible, sin acceso desde la navegación de esta entrega.
 
 El lienzo escala uniformemente dentro del viewport. No cambia la resolución del juego, la cámara

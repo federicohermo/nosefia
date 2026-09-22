@@ -89,7 +89,7 @@ offset_left = 100.0
 offset_top = 54.0
 offset_right = 344.0
 offset_bottom = 102.0
-theme_override_font_sizes/font_size = 38
+theme_override_font_sizes/font_size = 44
 mouse_filter = 2
 
 [node name="Apps" type="Control" parent="Fondo/Marco"]

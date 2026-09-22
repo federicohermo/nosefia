@@ -68,11 +68,11 @@ func ocultar() -> void:
 
 func _opcion_de(app: Computadora.App) -> Button:
 	var boton := Button.new()
-	boton.text = TITULOS[app].trim_prefix("/ ").trim_suffix(":")
+	boton.tooltip_text = TITULOS[app].trim_prefix("/ ").trim_suffix(":")
 	boton.icon = ICONO_REGISTRO if app == Computadora.App.CAJA else ICONO_NOTAS
 	boton.toggle_mode = true
-	boton.custom_minimum_size = Vector2(250, 72)
-	boton.add_theme_font_size_override("font_size", 30)
+	boton.custom_minimum_size = Vector2(90, 72)
+	boton.icon_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	boton.pressed.connect(func() -> void: app_pedida.emit(app))
 	return boton
 
