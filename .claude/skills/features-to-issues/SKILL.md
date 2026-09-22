@@ -23,7 +23,8 @@ alcanza.
 
 ## La señal es el cuadrado verde
 
-**Una ficha 🟩 tiene el diseño cerrado y se puede construir.** 🟨 y 🟥 no: siguen en discusión, y una ficha sin ícono todavía no se miró.
+**Una ficha 🟩 tiene el diseño cerrado y se puede construir.** 🟨 y 🟥 no: siguen en
+discusión, y una ficha sin ícono todavía no se miró.
 
 **La propiedad `Estado` no decide nada acá.** Está casi sin mantener —fichas ya implementadas
 siguen en `Sin empezar`— y contradice al ícono. Si la usaras, traerías el lote equivocado.
@@ -35,6 +36,9 @@ notion-query-data-sources   # SQL sobre collection://602bf1c1-6da7-4f9a-aa16-ef1
 notion-fetch                # una por ficha: el ícono está en `icon`, no en las propiedades
 ```
 
+Si ese identificador ya no resuelve, la base se encuentra buscando «Features y sistemas» en
+Notion, y el `fetch` de la base imprime la URL de su data source.
+
 El SQL da las filas y sus URLs, pero **no da el ícono**: eso sale de `notion-fetch` por ficha.
 Con muchas fichas, repartilas entre agentes y pediles sólo el ícono, el cuerpo y la línea del
 issue. Traer 23 páginas enteras al contexto es el gasto más caro de este skill.
@@ -43,8 +47,8 @@ De cada ficha 🟩 salen cuatro cosas: el título, el `Resumen`, el cuerpo —qu
 **línea del issue**, que es el primer párrafo del cuerpo.
 
 **Una ficha 🟩 puede estar incompleta igual.** Si el cuerpo no alcanza para escribir criterios
-—no dice qué pasa en el borde, o el número que decide no está—, el issue no se inventa: la ficha
-va al reporte como hallazgo, y lo que falte se pregunta. Es el mismo criterio que `shape`.
+—no dice qué pasa en el borde, o el número que decide no está—, el issue no se inventa: el
+problema se plantea en un comentario de la ficha, como dice el paso 6.
 
 ## Paso 2 — Cruzar con GitHub
 
@@ -96,13 +100,30 @@ issue #N
 issues, se separan con comas. **Eso es todo lo que este skill escribe en Notion.** El diseño de
 la ficha, su `Estado`, su ícono y sus propiedades no se tocan.
 
+## Paso 6 — Los problemas del diseño van a los comentarios
+
+**El texto de una ficha no se reescribe nunca.** Lo que le falta, lo que se contradice y lo que
+quedó viejo se plantea como **pregunta en un comentario de esa ficha**, y lo resuelven Cami y
+Tiago.
+
+```
+notion-get-users            # los IDs de Cami y Tiago, por nombre
+notion-create-comment       # page_id de la ficha, y el arroba de cada uno
+```
+
+El arroba va como `mention` con el ID del usuario. **Si `notion-get-users` no los encuentra**
+—hoy el espacio sólo lista a su dueño y al bot del MCP—, el comentario se escribe igual, con los
+nombres en texto, y **el reporte dice que ese comentario no notificó a nadie**. Un arroba que no
+resuelve se ve igual que uno que sí, y ésa es la forma de que nadie se entere.
+
+Un comentario, un problema. Cada uno dice qué dice la ficha, contra qué choca —otra ficha, un
+spec, el código— y qué hay que decidir. No propone la respuesta como si estuviera decidida.
+
 ## Al cerrar
 
 El reporte dice, por ficha: qué issue quedó, si es nuevo o editado, y qué fichas 🟩 quedaron sin
 issue con su motivo. Una ficha verde que se cae del lote en silencio es la deuda que este paso
 existe para no crear.
 
-Y lo que encontraste en Notion y no podés arreglar desde acá —dos fichas con el mismo `Resumen`,
-una ficha 🟩 cuyo diseño está a medias, una ficha que contradice al GDD, un hueco del GDD que
-varias fichas necesitan— va al reporte como **hallazgo para el dueño del diseño**. No lo edites:
-el diseño no es tuyo.
+Y lista los comentarios que dejaste, con su ficha y si el arroba notificó. **El diseño no es
+tuyo: se pregunta, no se corrige.**

@@ -16,7 +16,7 @@ encuentra, la corrida lo descarga — y descargar tiene una lista cerrada de for
 | **review** (`pr-review`, `pr-review-batch`) | con **todo** lo que encontraron descargado, verificado, commiteado y pusheado |
 | **contrato** (`to-spec`) | con el comportamiento de la capacidad entero, en criterios cerrables por un agente. Un hueco es una `OQ-<COD>-###`, nunca un valor inventado |
 | **plan** (`to-issue`) | con el issue publicado, sus límites medidos contra el árbol de hoy, y el tipo y el spec que toca declarados |
-| **GDD** (`gdd-to-issues`) | con cada ficha 🟩 traducida a su issue, o declarada fuera del lote y por qué, y la ficha apuntando a él |
+| **fichas** (`features-to-issues`) | con cada ficha 🟩 traducida a su issue, o declarada fuera del lote y por qué, y la ficha apuntando a él |
 | **implementación** (`implement-feature`, `implement-batch`) | con todo lo que el issue pide hecho, el PR abierto, y un test que nombra cada criterio que entrega |
 
 **«Descargado» no es «metido en este PR».** Dónde aterriza el fix es una decisión aparte de si se
@@ -138,7 +138,7 @@ entregable más caro y el único que hace que el hallazgo no vuelva.
 | un issue sin límites de archivo, o con límites que no se cruzaron contra el árbol de hoy | `to-issue` |
 | dos issues que se pisan la misma escena | `to-issue` — un `.tscn` compartido se ordena, no se paraleliza |
 | un issue que cambia lo que el juego hace y declara «Spec: ninguno» | `to-issue` — el tipo se decidió sin la prueba del spec |
-| una ficha verde del GDD que se cayó del lote sin motivo escrito | `gdd-to-issues` — el reparto no se mostró entero |
+| una ficha verde de Notion que se cayó del lote sin motivo escrito | `features-to-issues` — el reparto no se mostró entero |
 | un nodo del harness en verde sin haber ejercido nada | `implement-feature` — se leyó el color del nodo y no el conteo |
 | dos carriles que se pisan un archivo de scratch | `implement-batch` — el prompt no le dio un nombre propio |
 | un worktree que quedó abierto y el limpiador dijo que no | `implement-batch` — salía de `git worktree list`, que no ve al que git ya soltó |
