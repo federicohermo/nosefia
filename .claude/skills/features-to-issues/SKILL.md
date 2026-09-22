@@ -107,14 +107,29 @@ quedó viejo se plantea como **pregunta en un comentario de esa ficha**, y lo re
 Tiago.
 
 ```
-notion-get-users            # los IDs de Cami y Tiago, por nombre
 notion-create-comment       # page_id de la ficha, y el arroba de cada uno
+notion-get-comments         # leer el comentario recién escrito, para ver cómo quedó
 ```
 
-El arroba va como `mention` con el ID del usuario. **Si `notion-get-users` no los encuentra**
-—hoy el espacio sólo lista a su dueño y al bot del MCP—, el comentario se escribe igual, con los
-nombres en texto, y **el reporte dice que ese comentario no notificó a nadie**. Un arroba que no
-resuelve se ve igual que uno que sí, y ésa es la forma de que nadie se entere.
+El arroba va como `mention` de usuario, con el **ID de usuario**:
+
+| Quién | ID |
+|---|---|
+| Cami | `5004fd3f-7661-4ee0-bb8c-b9b1c2d77117` |
+| Tiago | `b76e5dab-dfcb-45e5-8543-bc7e80dc9518` |
+
+**Si hace falta buscar un usuario, es `notion-search` con `query_type: "user"`.** Devuelve nombre,
+mail e ID. `notion-get-users` no sirve en este espacio: contesta sólo con su dueño y el bot del
+MCP, y buscar por mail ahí devuelve vacío.
+
+**Y el ID de usuario no es el de su página de People.** `notion-fetch` sobre una página de People
+contesta 403, y ese ID en un arroba hace fallar el comentario entero con
+`Could not find user with ID`. Medido el 2026-09-22.
+
+**Comprobá el primer comentario leyéndolo de vuelta**, con `notion-get-comments`. Si el arroba
+quedó como `<mention-user url="user://…"/>`, notificó; si quedó como texto, no notificó a nadie y
+**el reporte lo dice**. Un arroba que no resuelve se ve igual que uno que sí, y ésa es la forma
+de que nadie se entere.
 
 Un comentario, un problema. Cada uno dice qué dice la ficha, contra qué choca —otra ficha, un
 spec, el código— y qué hay que decidir. No propone la respuesta como si estuviera decidida.
