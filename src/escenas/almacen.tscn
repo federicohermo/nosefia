@@ -8,7 +8,7 @@
 [ext_resource type="PackedScene" path="res://src/escenas/puestos/interfaz_del_almacen.tscn" id="grupo_Interfaz"]
 [ext_resource type="PackedScene" path="res://src/escenas/puestos/objetos_del_almacen.tscn" id="grupo_Objetos"]
 [ext_resource type="PackedScene" path="res://src/escenas/puestos/servicios_del_almacen.tscn" id="grupo_Servicios"]
-[ext_resource type="LightmapGIData" uid="uid://pmv6equli8dq" path="res://src/escenas/almacen.lmbake" id="lightmap"]
+[ext_resource type="LightmapGIData" uid="uid://i8kc61len5kv" path="res://src/escenas/almacen.lmbake" id="lightmap"]
 [ext_resource type="PackedScene" path="res://src/escenas/puestos/reposicion_manual.tscn" id="reposicion_manual"]
 
 [node name="Almacen" type="Node3D" unique_id=999617316 node_paths=PackedStringArray("_hud", "_reloj", "_ciclo", "_pantalla", "_reloj_de_pared", "_repositor", "_carga", "_estante", "_cajas_de_productos", "_caja_de_traslado", "_jugador", "_atenciones", "_computadora", "_limpiador", "_limpieza", "_recolector", "_audio", "_reposicion_manual", "_agarre", "_bolsas", "_muebles_con_contorno")]
@@ -47,20 +47,18 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.001781702, 0.011070967, 5.0
 
 [node name="Estructura" parent="." unique_id=1019345008 instance=ExtResource("grupo_Estructura")]
 
-[node name="StaticBody3D" parent="Estructura/base compu" parent_id_path=PackedInt32Array(1019345008, 1800628857) index="0" unique_id=1945969719 node_paths=PackedStringArray("jugador", "reloj", "computadora", "pantalla")]
+[node name="StaticBody3D" parent="Estructura/base compu" parent_id_path=PackedInt32Array(1019345008, 993634228) index="0" unique_id=38375574 node_paths=PackedStringArray("jugador", "reloj", "computadora", "pantalla")]
 jugador = NodePath("../../../Jugador")
 reloj = NodePath("../../../Servicios/RelojDelTurno")
 computadora = NodePath("../../../Servicios/Computadora")
 pantalla = NodePath("../../../Interfaz/PantallaDeComputadora")
 
-[node name="LuzInterior" parent="Estructura/heladeranueva" parent_id_path=PackedInt32Array(1019345008, 1910536099) index="5"]
-visible = false
+[node name="LuzInterior" parent="Estructura/heladeranueva" parent_id_path=PackedInt32Array(1019345008, 716897941) index="5"]
 light_energy = 0.4
 light_bake_mode = 1
 
-[node name="LuzInterior" parent="Estructura/heladeranueva_001" parent_id_path=PackedInt32Array(1019345008, 944026241) index="5"]
+[node name="LuzInterior" parent="Estructura/heladeranueva_001" parent_id_path=PackedInt32Array(1019345008, 655916271) index="5"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.38939667, 1.1912528, -0.18357801)
-visible = false
 light_energy = 0.4
 light_bake_mode = 1
 

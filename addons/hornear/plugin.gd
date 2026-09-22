@@ -9,6 +9,8 @@
 ## a entrar en el medio. Por eso cada paso avanza `_paso` antes de llamar a lo que bloquea.
 extends EditorPlugin
 
+const Sondas := preload("res://addons/hornear/sondas.gd")
+
 const ESCENA := "res://src/escenas/almacen.tscn"
 const NODO := "LightmapGI"
 ## El texto del botón en inglés: el script lanza el editor con `-l en` para que sea este.
@@ -82,7 +84,8 @@ func _hornear() -> void:
 
 
 func _guardar() -> void:
-	if _horno().light_data == null:
+	var datos := _horno().light_data
+	if datos == null:
 		# Después de una reimportación el editor difiere el horneado un rato: se le da tiempo.
 		_intentos += 1
 		if _intentos < INTENTOS:
@@ -91,6 +94,9 @@ func _guardar() -> void:
 		_fallar("el horneado no dejó datos")
 		return
 	_avanzar(4)
+	var cuenta := Sondas.rellenar(datos)
+	print("[hornear] sondas negras rellenadas: %d de %d" % [cuenta.rellenadas, cuenta.total])
+	ResourceSaver.save(datos, datos.resource_path)
 	# La primera vez la escena cambió: ahora apunta a los datos. Las siguientes no.
 	EditorInterface.save_scene()
 
