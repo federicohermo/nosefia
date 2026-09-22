@@ -22,7 +22,8 @@ tareas.** Al evaluar una feature, la pregunta es si aprieta esa tensión.
 `src/dominio/reglas.gd`, el corte de las bandas de `src/dominio/empleo/consecuencia.gd`, y las
 cinco tareas de recorrer `Tarea.Tipo`.
 
-El diseño vive en el **GDD de Notion**, que manda sobre lo que este archivo diga del juego. Si un
+El diseño vive en Notion: el **GDD** tiene la visión y el alcance, y la base «Features y
+sistemas» el detalle de cada feature. El GDD manda sobre lo que este archivo diga del juego. Si un
 spec discrepa del código, eso es un hallazgo, y lo decide el GDD: si el spec dice lo que el GDD
 pide, el que está mal es el código.
 
@@ -134,6 +135,8 @@ adentro no se puede probar. [TDD sin cobertura](./docs/guides/tdd.md).
 puntual, con límites y criterios propios, y se cierra con su PR. El spec es el contrato durable
 de una funcionalidad. Un issue toca un spec sólo si cambia lo que el juego tiene que hacer.
 
+0. **Traer el pedido de Notion**, si sale de ahí: las fichas con el diseño cerrado de «Features
+   y sistemas» las trae el skill `features-to-issues`, que las deja apuntando a su issue.
 1. **Entrevistar** si algo queda supuesto — el skill `shape`, que no escribe nada.
 2. **Escribir el issue** con formato task-brief — el skill `to-issue`. Declara el tipo, si toca
    un spec, sus criterios, qué puede escribir, qué no se toca y qué comandos dan cero. Casi
@@ -150,7 +153,7 @@ spec, el implementador si no. El prefijo lo verifica un hook.
 - **Un spec no nombra archivos, clases ni escenas.** Eso caduca con el refactor siguiente, y ahí
   el contrato deja de ser el contrato.
 - **Un issue no es un vertedero.** Se abre para planificar un cambio, nunca para terminar una
-  corrida. La doctrina, que los seis skills que escriben traen adentro:
+  corrida. La doctrina, que los siete skills que escriben traen adentro:
   [sin-deuda.md](./.claude/skills/to-spec/sin-deuda.md).
 - **Qué NO necesita spec:** un refactor, un bug que no cambia ninguna regla, una mejora de UI,
   arte, audio o rendimiento, y todo lo que no toca `src/`.

@@ -44,6 +44,7 @@ COPIAS: dict[Path, tuple[Path, ...]] = {
             "implement-feature",
             "implement-batch",
             "to-issue",
+            "features-to-issues",
         )
     ),
     SKILLS / "pr-review" / "hallazgos.md": (SKILLS / "pr-review-batch" / "hallazgos.md",),

@@ -9,7 +9,7 @@ verifica `test_copias_de_skills.py`, que da rojo ante un byte de diferencia.
 Lo que separa un review útil de una lista de ruido está acá, no en la cantidad de hallazgos.
 
 **Y ninguno de esos hallazgos sobrevive a la corrida:** las cinco descargas están en
-[`sin-deuda.md`](sin-deuda.md), que es de los seis skills que escriben. Acá está sólo cómo
+[`sin-deuda.md`](sin-deuda.md), que es de los siete skills que escriben. Acá está sólo cómo
 aterrizan sobre un diff.
 
 ## Los ejes

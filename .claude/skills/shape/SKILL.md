@@ -20,7 +20,9 @@ se mueve mientras todavía está contestando.
   **debería** hacer.
 - **Un spec ya escrito** → interrogarlo buscando ambigüedad y agujeros.
 - **Un issue o un pedido puntual** → afilarlo hasta que un agente lo pueda implementar sin
-  adivinar, y decidir si cambia lo que el juego tiene que hacer.
+  adivinar, y decidir si cambia lo que el juego tiene que hacer. El pedido puede ser una ficha
+  de «Features y sistemas» en Notion, una optimización, un cambio del harness o un bug: la
+  entrevista es la misma.
 
 Los cuatro son la misma máquina: **se entrevista hasta que la frontera queda vacía**, no hasta
 llenar una lista. Nunca se escribe código de producción y nunca se edita el spec.
@@ -71,6 +73,19 @@ llenar una lista. Nunca se escribe código de producción y nunca se edita el sp
 - **No objetivos con dientes** — cada uno tiene que ser algo que un agente construiría igual si
   nadie se lo prohíbe.
 - **Contratos y dependencias** — qué consume y qué produce, de qué capacidad y hacia cuál.
+
+## Dónde aterriza lo que se resolvió
+
+**Depende de qué es la respuesta, no de dónde vino el pedido.**
+
+| Lo que se resolvió | Aterriza en |
+|---|---|
+| diseño del juego, y el pedido salió de una ficha de Notion | **un comentario en la ficha**, con el arroba a quienes deciden el diseño. El texto de la ficha no se toca |
+| una regla durable del juego | el contrato de la capacidad, con `to-spec` |
+| qué se toca esta vez, con qué límites | el issue, con `to-issue` |
+| algo que no toca el juego —el harness, una optimización, un bug— | el issue, y nada más |
+
+**La entrevista no escribe ninguno de los cuatro.**
 
 ## El estado corre en la conversación, no en un archivo
 
