@@ -1,7 +1,7 @@
 ## La mitad *registrar* de la caja: qué productos hay que pasar hoy y cuáles ya se pasaron.
 ##
 ## **Es `Tarea.Tipo.REGISTRAR` y no `Tarea.Tipo.CAJA`**, y la frontera va escrita porque las dos
-## se llaman «caja»: cobrarle a un comprador es de la ventanilla del 013, y lo de acá es pasar
+## se llaman «caja»: cobrarle a un comprador es de la ventanilla, y lo de acá es pasar
 ## por el sistema los productos del día.
 ##
 ## **Los del día son tres y no los seis del catálogo**: es lo que hace de esto una tarea y no un
@@ -19,7 +19,7 @@ extends RefCounted
 ## **Esta clase no los elige**: entran por parámetro al `_init`, y esta lista es la que la jornada
 ## usa. Es lo que permite que un test se arme con uno o con cinco sin que mover el balance rompa
 ## casos que no hablan de él.
-const PRODUCTOS_DEL_DIA := [Producto.Id.ACTRONCITO, Producto.Id.FIDEOS, Producto.Id.GASEOSA]
+const PRODUCTOS_DEL_DIA := [Producto.Id.ACTRONCITO, Producto.Id.DUREXTRA, Producto.Id.BURBALOO]
 
 var _inventario: Inventario
 
@@ -90,7 +90,7 @@ func completada() -> bool:
 
 ## Lo que le falta a la góndola, preguntándoselo al inventario.
 ##
-## Es exactamente `Inventario.faltantes()` y no una cuenta propia: el umbral es del 005, y
+## Es exactamente `Inventario.faltantes()` y no una cuenta propia: el umbral es del inventario, y
 ## copiarlo acá daría dos listas que se separan el día que se rebalancee, sin que nada avise.
 func faltantes() -> Array[Producto]:
 	return _inventario.faltantes()

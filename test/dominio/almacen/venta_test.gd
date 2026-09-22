@@ -14,10 +14,10 @@ func test_una_venta_sin_lineas_no_suma_nada_y_no_tiene_productos() -> void:
 
 
 func test_el_total_multiplica_el_precio_por_las_unidades_de_cada_linea() -> void:
-	var gaseosa := Producto.new(Producto.Id.GASEOSA, "Gaseosa", 150, 3)
+	var burbaloo := Producto.new(Producto.Id.BURBALOO, "Burbaloo", 150, 3)
 	var actroncito := Producto.new(Producto.Id.ACTRONCITO, "Actroncito", 400, 4)
 	var venta := Venta.new()
-	venta.agregar(gaseosa, 2)
+	venta.agregar(burbaloo, 2)
 	venta.agregar(actroncito, 1)
 	assert_int(venta.total()).is_equal(700)
 
@@ -25,11 +25,11 @@ func test_el_total_multiplica_el_precio_por_las_unidades_de_cada_linea() -> void
 func test_agregar_dos_veces_el_mismo_producto_acumula_en_una_sola_linea() -> void:
 	# Una línea por llamada haría que el mismo producto apareciera dos veces en el ticket: un
 	# bug de pantalla nacido en el dominio.
-	var arroz := Producto.new(Producto.Id.ARROZ, "Arroz", 900, 2)
+	var laysntt := Producto.new(Producto.Id.LAYSNTT, "Laysntt", 900, 2)
 	var venta := Venta.new()
-	venta.agregar(arroz, 1)
-	venta.agregar(arroz, 2)
-	assert_int(venta.unidades_de(arroz)).is_equal(3)
+	venta.agregar(laysntt, 1)
+	venta.agregar(laysntt, 2)
+	assert_int(venta.unidades_de(laysntt)).is_equal(3)
 	assert_array(venta.productos()).has_size(1)
 
 
@@ -49,19 +49,19 @@ func test_dos_instancias_del_mismo_producto_son_una_sola_linea() -> void:
 
 func test_preguntar_por_un_producto_que_no_esta_en_la_venta_devuelve_cero() -> void:
 	# Es la rama de la que depende `Inventario.cobrar()` para no reventar con un ticket flaco.
-	var arroz := Producto.new(Producto.Id.ARROZ, "Arroz", 900, 2)
+	var laysntt := Producto.new(Producto.Id.LAYSNTT, "Laysntt", 900, 2)
 	var venta := Venta.new()
-	assert_int(venta.unidades_de(arroz)).is_equal(0)
+	assert_int(venta.unidades_de(laysntt)).is_equal(0)
 
 
 func test_agregar_una_cantidad_que_no_es_positiva_no_deja_linea_ni_resta() -> void:
 	# Un `agregar` negativo pasaba el control de stock de `cobrar()` —`-3 > 0` es falso— y el
 	# cobro terminaba **sumando** tres unidades a la góndola: mercadería fabricada por la caja.
 	# Y un `agregar(p, 0)` dejaba una línea vacía en el ticket.
-	var arroz := Producto.new(Producto.Id.ARROZ, "Arroz", 900, 2)
+	var laysntt := Producto.new(Producto.Id.LAYSNTT, "Laysntt", 900, 2)
 	var venta := Venta.new()
-	venta.agregar(arroz, -3)
-	venta.agregar(arroz, 0)
-	assert_int(venta.unidades_de(arroz)).is_equal(0)
+	venta.agregar(laysntt, -3)
+	venta.agregar(laysntt, 0)
+	assert_int(venta.unidades_de(laysntt)).is_equal(0)
 	assert_array(venta.productos()).is_empty()
 	assert_int(venta.total()).is_equal(0)

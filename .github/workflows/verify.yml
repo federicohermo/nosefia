@@ -22,12 +22,10 @@ on:
   push:
     branches: [staging, main]
 
-# Los dos de lectura son lo que necesita el gate del mapa para poder preguntar. El default del
-# repo es `read` a secas, así que todo permiso hay que declararlo.
+# Sólo leer el código: desde que el gate del mapa se fue, ningún nodo consulta la API. El
+# default del repo es `read` a secas, así que todo permiso hay que declararlo igual.
 permissions:
   contents: read
-  issues: read
-  pull-requests: read
 
 jobs:
   verify:
@@ -36,7 +34,7 @@ jobs:
       - uses: actions/checkout@v5
 
       # La versión vive UNA vez, y ese lugar es `.godot-version`. Antes vivía en un `env:` de
-      # acá y otra vez en `docs/README.md`, con el encabezado diciendo «una vez» tres líneas
+      # acá y otra vez en la guía de inicio, con el encabezado diciendo «una vez» tres líneas
       # más arriba de la segunda copia. Con dos workflows que bajan Godot, dos copias que se
       # separan hacen que la CI verifique con un motor y el despliegue exporte con otro — y eso
       # no da rojo en ningún lado: las dos corridas salen verdes, cada una con el suyo.
@@ -92,29 +90,9 @@ jobs:
       - name: Importar los recursos del proyecto
         run: "$GODOT_BIN --headless --path . --import || true"
 
-      # El token va SOLO en el PR, y no es una excepción escondida: es donde vive la autoridad
-      # sobre el mapa.
-      #
-      # Cuando el PR de un spec aterriza, ese push a `staging` dispara los DOS workflows a la
-      # vez. En ese commit el mapa todavía dice `Propuesto` —no puede decir otra cosa: el gate
-      # prohíbe cambiarlo adentro del PR— y el PR ya figura MERGED, o sea exactamente la
-      # condición que el gate declara mentira. `mapa.yml` la corrige en segundos, pero `verify`
-      # no lo espera: arranca con el mismo commit y lee el mapa de ANTES.
-      #
-      # Sin esto, cada merge de spec dejaría la rama de integración en rojo con un rojo que ya
-      # está arreglado y que nadie va a volver a correr — la forma más rápida conocida de que
-      # alguien apague el gate.
-      #
-      # En un PR el mapa SÍ tiene que estar consistente y el gate es lo único que lo mira. Fuera
-      # de un PR el mapa no es la afirmación de nadie: es una derivada, y quien la calcula es el
-      # otro workflow.
-      #
-      # El `''` es un token vacío, que `gh` trata como ausente: el bloque de red se saltea
-      # DECLARÁNDOLO en el reporte, que es la diferencia entre saltearse y pasar.
+      # Ningún nodo sale a la red: el gate que consultaba GitHub se fue con el mapa de specs.
       - name: verificar
         run: python .claude/scripts/verificar.py
-        env:
-          GH_TOKEN: ${{ github.event_name == 'pull_request' && github.token || '' }}
 
       # Los reportes de gdUnit4, para poder mirar QUÉ falló sin reproducir la corrida. `always()`
       # porque el caso en que sirven es justamente aquel en que el paso anterior falló.

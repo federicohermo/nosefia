@@ -40,7 +40,7 @@ var _caja: CajaRegistradora = null
 ## Le entrega a la computadora la caja de la noche.
 ##
 ## La caja se recibe y no se construye acá porque necesita el inventario de la jornada, que es el
-## mismo que reponen el 008 y vacía la ventanilla del 013: un segundo inventario sería un segundo
+## mismo que llena reponer y vacía la ventanilla: un segundo inventario sería un segundo
 ## stock, y las dos pantallas dirían números distintos del mismo producto.
 func arrancar(caja: CajaRegistradora) -> void:
 	_caja = caja

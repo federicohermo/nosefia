@@ -15,7 +15,7 @@ func after_test() -> void:
 	DirAccess.remove_absolute(DESTINO)
 
 
-func test_la_reaccion_vuelve_del_disco_con_su_clave_y_su_texto() -> void:  # 017-AC1
+func test_la_reaccion_vuelve_del_disco_con_su_clave_y_su_texto() -> void:
 	var reaccion := Reaccion.new()
 	reaccion.sobre = Reaccion.Sobre.APERCIBIMIENTOS
 	reaccion.indice = Reglas.APERCIBIMIENTOS_HASTA_EL_DESPIDO
@@ -29,7 +29,7 @@ func test_la_reaccion_vuelve_del_disco_con_su_clave_y_su_texto() -> void:  # 017
 	assert_str(vuelta.texto).is_equal("Estás despedido.")
 
 
-func test_las_tres_claves_posibles_estan_declaradas() -> void:  # 017-AC1
+func test_las_tres_claves_posibles_estan_declaradas() -> void:
 	# Una tarea cumplida, una sin cumplir y el comentario general: son las tres cosas que el
 	# jefe comenta, y son un conjunto cerrado. Un cuarto valor sin fila en el catálogo se caza
 	# en `catalogo_de_reacciones_test.gd`, que recorre el enum en vez de una lista a mano.

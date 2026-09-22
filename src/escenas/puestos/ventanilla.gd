@@ -45,7 +45,7 @@ func _ready() -> void:
 ## El contrato de «con esto se puede interactuar» es este método más el grupo del `.tscn`.
 ##
 ## Devuelve `null` porque de la ventanilla no se levanta nada: si contestara un objeto, el clic
-## del 006 se la llevaría en la mano en vez de abrir la atención.
+## de agarrar se la llevaría en la mano en vez de abrir la atención.
 func interactuar() -> ObjetoDelAlmacen:
 	abrir()
 	return null

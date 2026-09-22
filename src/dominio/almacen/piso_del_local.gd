@@ -6,7 +6,7 @@
 ##
 ## **Limpiar se puede dejar por la mitad**, que es lo que la vuelve parte de la tensión: dos
 ## pasadas, irse a la computadora, volver, y la mancha sigue esperando en una. Es la misma forma
-## del 008 con otro recurso escaso — allá la unidad del depósito, acá la única mano.
+## de reponer con otro recurso escaso — allá la unidad del depósito, acá la única mano.
 ##
 ## Es la mitad de limpiar que se ejerce sin levantar una escena: acá no hay un solo `Node3D`.
 class_name PisoDelLocal

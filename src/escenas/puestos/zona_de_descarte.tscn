@@ -26,3 +26,4 @@ shape = SubResource("SphereShape3D_descarte")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.02, 0)
 mesh = SubResource("CylinderMesh_marca")
 surface_material_override/0 = SubResource("StandardMaterial3D_marca")
+gi_mode = 2

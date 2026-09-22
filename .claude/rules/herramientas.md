@@ -22,15 +22,13 @@ No es prolijidad: es lo único que hace que tenga tests. Mientras la lógica viv
 ejecutable, importarla lo corre, así que la única forma de ejercerla es lanzar un subproceso —
 y los modos de falla que importan no se pueden fabricar así.
 
-Cuando el módulo **necesita** el mundo, el mundo se **inyecta** en vez de importarse. Los tres
-casos que ya existen, y qué habilita cada inyección:
+Cuando el módulo **necesita** el mundo, el mundo se **inyecta** en vez de importarse. Los casos
+que ya existen, y qué habilita cada inyección:
 
 | Módulo | Qué recibe | Qué se puede probar gracias a eso |
 |---|---|---|
 | `rutas_protegidas.py` | el módulo de rutas | dos discos de Windows, en Linux y en la CI |
-| `gh.py` | ejecutar, existe, plataforma | que no haya `gh`, en una máquina que sí lo tiene |
 | `godot.py` | el entorno y el PATH | que no esté declarado `GODOT_BIN` |
-| `derivacion.py` | las consultas y el disco | una lista de `gh` truncada, sin pedir mil issues |
 
 ## Un gate que no puede correr lo dice
 
@@ -40,9 +38,9 @@ tener. Cada salteo declara qué no miró y cómo hacer que mire.
 
 ## Un gate falla abierto, salvo que sea su trabajo fallar cerrado
 
-El del hook (`gate_de_spec.py`) **deja pasar** ante cualquier error propio, y lo dice: un gate
+El del hook (`gate_de_rama.py`) **deja pasar** ante cualquier error propio, y lo dice: un gate
 que rompe la sesión entera se desactiva el mismo día, y ahí no queda gate. Los otros —capas,
-tdd, mapa— fallan cerrado, porque corren en `verificar.py` y ahí el rojo es el producto.
+tdd, specs— fallan cerrado, porque corren en `verificar.py` y ahí el rojo es el producto.
 
 ## La consola va en UTF-8 y eso se configura
 
@@ -58,7 +56,7 @@ entera: es la forma más corta conocida de declarar verde una corrida rota.
 **Y encadenar `rg` con `&&` es la misma falla en la otra dirección.** Un `rg A && rg B && rg C`
 corta en el primero sin match —que devuelve 1— y **los otros dos no corren, sin decirlo**: la
 salida vacía se lee como «ninguno matcheó» cuando sólo se preguntó por el primero. **Un `rg` por
-línea, separados por `;`, nunca por `&&`.** Medido el 2026-09-01 verificando los AC del 023.
+línea, separados por `;`, nunca por `&&`.** Medido el 2026-09-01.
 
 **Y `--no-ignore` no alcanza para buscar acá adentro.** Ripgrep saltea los directorios ocultos
 aunque se le apague el `.gitignore`, así que un `rg --no-ignore` sobre la raíz **no mira

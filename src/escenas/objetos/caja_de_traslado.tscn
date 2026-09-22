@@ -15,6 +15,7 @@ _casilleros = NodePath("Contenido")
 [node name="Cuerpo" type="MeshInstance3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.15, 0)
 mesh = SubResource("BoxMesh_cuerpo")
+gi_mode = 2
 
 [node name="Contenido" type="Node3D" parent="."]
 
@@ -22,38 +23,46 @@ mesh = SubResource("BoxMesh_cuerpo")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.33, 0.3, -0.11)
 visible = false
 mesh = SubResource("BoxMesh_casillero")
+gi_mode = 2
 
 [node name="Casillero2" type="MeshInstance3D" parent="Contenido"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.11, 0.3, -0.11)
 visible = false
 mesh = SubResource("BoxMesh_casillero")
+gi_mode = 2
 
 [node name="Casillero3" type="MeshInstance3D" parent="Contenido"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.11, 0.3, -0.11)
 visible = false
 mesh = SubResource("BoxMesh_casillero")
+gi_mode = 2
 
 [node name="Casillero4" type="MeshInstance3D" parent="Contenido"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.33, 0.3, -0.11)
 visible = false
 mesh = SubResource("BoxMesh_casillero")
+gi_mode = 2
 
 [node name="Casillero5" type="MeshInstance3D" parent="Contenido"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.33, 0.3, 0.11)
 visible = false
 mesh = SubResource("BoxMesh_casillero")
+gi_mode = 2
 
 [node name="Casillero6" type="MeshInstance3D" parent="Contenido"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.11, 0.3, 0.11)
 visible = false
 mesh = SubResource("BoxMesh_casillero")
+gi_mode = 2
 
 [node name="Casillero7" type="MeshInstance3D" parent="Contenido"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.11, 0.3, 0.11)
 visible = false
 mesh = SubResource("BoxMesh_casillero")
+gi_mode = 2
 
 [node name="Casillero8" type="MeshInstance3D" parent="Contenido"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.33, 0.3, 0.11)
 visible = false
 mesh = SubResource("BoxMesh_casillero")
+gi_mode = 2

@@ -15,16 +15,16 @@ const EscritorioQueSeVe := preload("res://src/escenas/puestos/escritorio.gd")
 
 func _escritorio() -> EscritorioQueSeVe:
 	var almacen: Node3D = auto_free(load(ESCENA_DEL_ALMACEN).instantiate())
-	return almacen.get_node("Estructura/compu/StaticBody3D")
+	return almacen.get_node("Estructura/base compu/StaticBody3D")
 
 
-func test_el_escritorio_esta_en_el_grupo_que_la_mira_puede_enfocar() -> void:  # 009-AC9
+func test_el_escritorio_esta_en_el_grupo_que_la_mira_puede_enfocar() -> void:
 	var escritorio := _escritorio()
 	assert_bool(escritorio.is_in_group(ReglasDelJugador.GRUPO_INTERACTUABLE)).is_true()
 	assert_bool(escritorio.has_method(ReglasDeLosObjetos.METODO_INTERACTUAR)).is_true()
 
 
-func test_el_almacen_instancia_el_escritorio_exactamente_una_vez() -> void:  # 009-AC9
+func test_el_almacen_instancia_el_escritorio_exactamente_una_vez() -> void:
 	var almacen: Node3D = auto_free(load(ESCENA_DEL_ALMACEN).instantiate())
 	var cantidad := 0
 	for cuerpo in almacen.find_children("*", "StaticBody3D", true, false):
@@ -33,7 +33,7 @@ func test_el_almacen_instancia_el_escritorio_exactamente_una_vez() -> void:  # 0
 	assert_int(cantidad).is_equal(1)
 
 
-func test_el_escritorio_recibe_al_jugador_y_al_reloj_por_export() -> void:  # 009-AC10
+func test_el_escritorio_recibe_al_jugador_y_al_reloj_por_export() -> void:
 	# Y **ningún `get_node(`**: una escena que se reacomoda rompe la ruta sin que nada avise
 	# hasta que se corre.
 	var texto := FileAccess.get_file_as_string(SCRIPT)
@@ -51,7 +51,7 @@ func test_el_escritorio_recibe_al_jugador_y_al_reloj_por_export() -> void:  # 00
 	)
 
 
-func test_el_jugador_expone_las_dos_lineas_que_este_spec_necesita() -> void:  # 009-AC10
+func test_el_jugador_expone_las_dos_lineas_que_este_spec_necesita() -> void:
 	# **Rojo si el 004 aterriza sin exponerlas**: su `ControlDelJugador` vive privado adentro de
 	# `jugador.gd`, y sin estas dos puertas abrir la computadora degradaría en silencio — el
 	# mouse seguiría girando la cámara y el jugador seguiría caminando detrás del panel.
@@ -60,7 +60,7 @@ func test_el_jugador_expone_las_dos_lineas_que_este_spec_necesita() -> void:  # 
 	assert_bool(jugador.has_method("reanudar")).is_true()
 
 
-func test_del_escritorio_se_sale_con_el_clic_derecho_y_no_con_cancelar() -> void:  # 009-AC10
+func test_del_escritorio_se_sale_con_el_clic_derecho_y_no_con_cancelar() -> void:
 	var texto := FileAccess.get_file_as_string(SCRIPT)
 	(
 		assert_bool(texto.contains("ReglasDelJugador.ACCION_USAR"))
@@ -74,7 +74,7 @@ func test_del_escritorio_se_sale_con_el_clic_derecho_y_no_con_cancelar() -> void
 	)
 
 
-func test_el_clic_derecho_llega_aunque_la_pantalla_tape_el_viewport() -> void:  # 009-AC10
+func test_el_clic_derecho_llega_aunque_la_pantalla_tape_el_viewport() -> void:
 	# **Medido en 4.7.2**: el fondo de la pantalla es un `ColorRect` a pantalla completa y un
 	# `Control` trae `MOUSE_FILTER_STOP` por defecto, así que se come el botón del mouse. Con el
 	# gesto escrito en el callback que corre después de la interfaz, la computadora se abría y no
@@ -95,11 +95,11 @@ func test_el_clic_derecho_llega_aunque_la_pantalla_tape_el_viewport() -> void:  
 	)
 
 
-func test_el_cierre_usa_la_accion_compartida() -> void:  # 009-AC10 034-AC1
+func test_el_cierre_usa_la_accion_compartida() -> void:
 	assert_bool(InputMap.has_action(ReglasDelJugador.ACCION_USAR)).is_true()
 
 
-func test_tocar_el_escritorio_suspende_al_jugador_y_no_entrega_nada() -> void:  # 009-AC10
+func test_tocar_el_escritorio_suspende_al_jugador_y_no_entrega_nada() -> void:
 	var escritorio := _escritorio()
 	var jugador: Node3D = auto_free(load(ESCENA_DEL_JUGADOR).instantiate())
 	var obligatorias := Apertura.obligatorias()

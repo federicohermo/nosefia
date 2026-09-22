@@ -55,6 +55,9 @@ const Jugador := preload("res://src/escenas/jugador.gd")
 @export var _agarre: Agarre
 @export var _bolsas: Array[Node3D]
 
+## Los muebles con los que el jugador choca por su contorno y no por su malla.
+@export var _muebles_con_contorno: Array[PhysicsBody3D]
+
 ## La partida es de la escena y no del ciclo porque también la mira el HUD: el ciclo publica lo
 ## que pasó, y quien quiera un número lo pide acá.
 var _partida := Partida.nueva()
@@ -71,6 +74,8 @@ func _ready() -> void:
 	_jugador.objetivo_perdido.connect(marco.apagar)
 	_jugador.objetivo_enfocado.connect(_hud.mostrar_foco)
 	_jugador.objetivo_perdido.connect(_hud.ocultar_foco)
+	for mueble in _muebles_con_contorno:
+		_jugador.ignorar_el_detalle(mueble)
 	_hud.declarar_obligatorias(Apertura.cantidad_de_obligatorias())
 	_hud.mostrar_apercibimientos(_partida.apercibimientos())
 	# La hora se lee en el local y no en la pantalla: enterarse cuesta caminar hasta el reloj, y

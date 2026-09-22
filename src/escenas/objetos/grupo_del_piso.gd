@@ -6,6 +6,7 @@ var _vistas: Array[MeshInstance3D] = []
 var _matrices: Array[Transform3D] = []
 var _reposos: Array[bool] = []
 var _inversa := Transform3D.IDENTITY
+var _caja_de_una := AABB()
 
 
 func preparar(malla: Mesh, capacidad: int) -> void:
@@ -13,11 +14,13 @@ func preparar(malla: Mesh, capacidad: int) -> void:
 	# Si lo hace, interpola entre dos valores ya interpolados y la copia se atrasa de nuevo. Ese
 	# atraso no lo ve ninguna caché del script: vive en el buffer del motor.
 	physics_interpolation_mode = Node.PHYSICS_INTERPOLATION_MODE_OFF
+	gi_mode = GeometryInstance3D.GI_MODE_DYNAMIC
 	multimesh = MultiMesh.new()
 	multimesh.transform_format = MultiMesh.TRANSFORM_3D
 	multimesh.mesh = malla
 	multimesh.instance_count = capacidad
 	multimesh.visible_instance_count = 0
+	_caja_de_una = malla.get_aabb()
 
 
 func agregar(cuerpo: RigidBody3D) -> void:
@@ -29,6 +32,7 @@ func agregar(cuerpo: RigidBody3D) -> void:
 	vista.hide()
 	multimesh.visible_instance_count = cuerpos.size()
 	_actualizar(cuerpos.size() - 1, true)
+	_encuadrar()
 
 
 func quitar(cuerpo: RigidBody3D) -> void:
@@ -48,6 +52,7 @@ func quitar(cuerpo: RigidBody3D) -> void:
 	multimesh.visible_instance_count = ultimo
 	if indice < ultimo:
 		_actualizar(indice, true)
+	_encuadrar()
 
 
 ## Se actualiza en el reloj del dibujo y no en el de la física. Desde `_physics_process` se leía
@@ -59,6 +64,25 @@ func _process(_delta: float) -> void:
 	_inversa = inversa
 	for indice in cuerpos.size():
 		_actualizar(indice, movido)
+	_encuadrar()
+
+
+## Le dice al motor dónde están las copias, que no es donde el `MultiMesh` cree.
+##
+## **Escribir una instancia no le recalcula la caja al `MultiMesh`.** La caja queda en la que
+## tenía recién creado —todas las copias encimadas en el origen del grupo—, así que el
+## renderizador descarta el grupo entero apenas ese origen sale de la pantalla: el producto que
+## cae aparece y desaparece cuadro por medio, y lo que se ve es un titileo. No hay error, ni log,
+## ni nada que lo nombre; por eso la caja se escribe a mano cada vez que una copia se mueve.
+func _encuadrar() -> void:
+	if cuerpos.is_empty():
+		custom_aabb = AABB()
+		return
+	var caja := _matrices[0] * _caja_de_una
+	for indice in range(1, cuerpos.size()):
+		caja = caja.merge(_matrices[indice] * _caja_de_una)
+	if not caja.is_equal_approx(custom_aabb):
+		custom_aabb = caja
 
 
 func _actualizar(indice: int, forzar: bool = false) -> void:

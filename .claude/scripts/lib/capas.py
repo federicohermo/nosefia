@@ -76,7 +76,7 @@ _EXTENDS_PUROS = frozenset({"RefCounted", "Resource"})
 _EXTENDS_POR_NOMBRE = re.compile(r"^[ \t]*extends\s+([A-Za-z_]\w*)", re.MULTILINE)
 
 #: Los usos de motor que la capa pura no puede tener: uno por fila de la tabla de
-#: `.claude/rules/dominio.md`, más el acceso a disco que pidió el spec 019.
+#: `.claude/rules/dominio.md`, más el acceso a disco.
 #:
 #: **Esta lista no crece por trámite.** El objetivo no es un linter de GDScript: es la propiedad
 #: de la que cuelga todo lo demás —que el dominio se pueda ejercer sin levantar una escena—, y

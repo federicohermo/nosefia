@@ -16,11 +16,11 @@ const ALMACEN := preload("res://src/escenas/almacen.tscn")
 ## el arranque está libre.
 const VANOS := {
 	"Estructura/puerta": [Vector3(5.494, 1.05, -5.0), Vector3(5.494, 1.05, -9.5)],
-	"Estructura/puerta_001": [Vector3(5.0, 1.05, -4.658), Vector3(9.5, 1.05, -4.658)],
+	"Estructura/puerta2": [Vector3(5.0, 1.05, -4.658), Vector3(9.5, 1.05, -4.658)],
 }
 
 
-func test_las_dos_puertas_cumplen_el_contrato_de_interaccion() -> void:  # 043-AC5
+func test_las_dos_puertas_cumplen_el_contrato_de_interaccion() -> void:
 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
 	for hoja: String in VANOS:
 		var cuerpo: StaticBody3D = almacen.get_node(hoja + "/StaticBody3D")
@@ -30,8 +30,8 @@ func test_las_dos_puertas_cumplen_el_contrato_de_interaccion() -> void:  # 043-A
 		assert_bool(mallas is Array and not mallas.is_empty()).is_true()
 
 
-func test_interactuar_abre_la_puerta_y_no_se_la_lleva_en_la_mano() -> void:  # 043-AC6
-	# Devolver un `ObjetoDelAlmacen` dejaría al clic del 006 cargándose la hoja entera.
+func test_interactuar_abre_la_puerta_y_no_se_la_lleva_en_la_mano() -> void:
+	# Devolver un `ObjetoDelAlmacen` dejaría al clic de agarrar cargándose la hoja entera.
 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
 	for hoja: String in VANOS:
 		var cuerpo: StaticBody3D = almacen.get_node(hoja + "/StaticBody3D")
@@ -39,7 +39,7 @@ func test_interactuar_abre_la_puerta_y_no_se_la_lleva_en_la_mano() -> void:  # 0
 		assert_bool(cuerpo.call("puerta").abierta()).is_true()
 
 
-func test_el_vano_se_cruza_solo_con_la_puerta_abierta() -> void:  # 043-AC7
+func test_el_vano_se_cruza_solo_con_la_puerta_abierta() -> void:
 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
 	add_child(almacen)
 	await get_tree().physics_frame
@@ -52,7 +52,7 @@ func test_el_vano_se_cruza_solo_con_la_puerta_abierta() -> void:  # 043-AC7
 		assert_float(await _avance(almacen, hoja)).is_equal(1.0)
 
 
-func test_la_hoja_gira_sobre_su_borde_y_no_sobre_su_centro() -> void:  # 043-AC8
+func test_la_hoja_gira_sobre_su_borde_y_no_sobre_su_centro() -> void:
 	# Girando sobre el centro la hoja se mete media hoja en cada pared, y el vano queda tapado
 	# por el canto en vez de libre.
 	var almacen: Node3D = auto_free(ALMACEN.instantiate())

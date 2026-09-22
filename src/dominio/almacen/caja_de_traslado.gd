@@ -10,7 +10,7 @@
 ## mismo que la deja ejercerse sin que nadie la levante.
 ##
 ## **No toca el stock.** Cuántas unidades hay lo lleva otra pieza de esta misma carpeta, y
-## llevarlas del depósito a la góndola es del 008: la caja es dónde viaja la mercadería, no
+## llevarlas del depósito a la góndola es de reponer: la caja es dónde viaja la mercadería, no
 ## cuánta hay.
 ##
 ## Lo que no es un producto llega como `null` —`Catalogo.de()` contesta `null` a un `id` sin

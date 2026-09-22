@@ -2,12 +2,12 @@
 
     python .claude/scripts/verificar.py
 
-Corre los seis nodos **en paralelo** y sale 1 si alguno falla. La CI llama a este script y
+Corre los siete nodos **en paralelo** y sale 1 si alguno falla. La CI llama a este script y
 **no enumera los nodos**, a propósito: enumerarlos allá crearía un segundo lugar donde vive la
 lista, y el día que alguien agregue un nodo acá, la CI seguiría corriendo la lista vieja — en
 verde, que es el modo de falla que este archivo existe para no tener.
 
-Los seis:
+Los siete:
 
 | Nodo      | Qué verifica                                                              |
 |-----------|---------------------------------------------------------------------------|
@@ -15,6 +15,7 @@ Los seis:
 | `formato` | `gdformat --check`: el formato es el que produce la herramienta, no una opinión |
 | `capas`   | Qué es cada capa de `src/`: su dirección, sus subcarpetas y la pureza del dominio |
 | `tdd`     | El espejo de tests, que ninguno esté apagado y que ninguno corra sin afirmar |
+| `specs`   | La forma de los contratos de capacidad, y que cada criterio ratificado tenga test |
 | `harness` | Los tests de estas mismas herramientas (`unittest`)                       |
 | `tests`   | La suite de gdUnit4 en Godot headless                                     |
 
@@ -114,6 +115,10 @@ def nodo_tdd() -> Resultado:
     return _correr("tdd", [sys.executable, str(AQUI / "gate_de_tests.py")])
 
 
+def nodo_specs() -> Resultado:
+    return _correr("specs", [sys.executable, str(AQUI / "gate_de_specs.py")])
+
+
 def nodo_harness() -> Resultado:
     return _correr(
         "harness",
@@ -146,6 +151,22 @@ def nodo_tests() -> Resultado:
     # la próxima herramienta que no tenga este rescate.
     aviso = aviso_de_entorno_viejo(origen)
 
+    # **Importar primero, y siempre.** Godot no tiene el registro de clases globales hasta que
+    # corre esto, y sin registro gdUnit4 no resuelve ni sus propios `class_name`: el rojo dice
+    # `Could not find type "GdUnitTestCIRunner"`, que manda a revisar el addon. Pasa en todo
+    # worktree recién creado —`.godot/` está en el `.gitignore`— y otra vez con **cada
+    # `class_name` nuevo**, donde el mensaje es `Identifier "X" not declared` con el archivo ya
+    # en disco, idéntico al del archivo que todavía no existe.
+    #
+    # Es incondicional porque la alternativa es adivinar cuándo hace falta, y equivocarse
+    # devuelve justo esos dos rojos. Incremental cuesta 6 s contra los ~180 s de la suite.
+    importacion = _correr(
+        "tests", [godot, "--headless", "--path", str(RAIZ), "--import", "--quit"]
+    )
+    if importacion.codigo != 0:
+        importacion.aviso = aviso
+        return importacion
+
     resultado = _correr(
         "tests",
         [
@@ -172,7 +193,7 @@ def nodo_tests() -> Resultado:
     return resultado
 
 
-NODOS = (nodo_lint, nodo_formato, nodo_capas, nodo_tdd, nodo_harness, nodo_tests)
+NODOS = (nodo_lint, nodo_formato, nodo_capas, nodo_tdd, nodo_specs, nodo_harness, nodo_tests)
 
 
 def main() -> None:

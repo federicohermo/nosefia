@@ -21,7 +21,7 @@ const PATRONES_DE_UBICACION := ["position", "transform", "Node", "get_tree", "Ma
 const ID_QUE_NO_EXISTE := 99
 
 
-func test_una_caja_nueva_esta_vacia_y_con_todos_sus_casilleros_libres() -> void:  # 033-AC1
+func test_una_caja_nueva_esta_vacia_y_con_todos_sus_casilleros_libres() -> void:
 	var caja := CajaDeTraslado.new()
 	assert_int(Reglas.CASILLEROS_DE_LA_CAJA_DE_TRASLADO).is_equal(8)
 	assert_int(caja.ocupados()).is_equal(0)
@@ -29,14 +29,14 @@ func test_una_caja_nueva_esta_vacia_y_con_todos_sus_casilleros_libres() -> void:
 	assert_bool(caja.esta_llena()).is_false()
 
 
-func test_con_los_casilleros_llenos_la_caja_dice_que_esta_llena() -> void:  # 033-AC2
+func test_con_los_casilleros_llenos_la_caja_dice_que_esta_llena() -> void:  # AC-STK-010
 	var caja := _caja_llena()
 	assert_bool(caja.esta_llena()).is_true()
 	assert_int(caja.libres()).is_equal(0)
 	assert_int(caja.ocupados()).is_equal(Reglas.CASILLEROS_DE_LA_CAJA_DE_TRASLADO)
 
 
-func test_la_novena_no_entra_y_la_caja_dice_por_que() -> void:  # 033-AC3
+func test_la_novena_no_entra_y_la_caja_dice_por_que() -> void:  # AC-STK-010
 	# El motivo importa: la escena tiene que poder decir «no entra más» y no «eso no se guarda»,
 	# que son dos cosas distintas para quien está parado adelante con una lata en la mano.
 	var caja := _caja_llena()
@@ -45,7 +45,7 @@ func test_la_novena_no_entra_y_la_caja_dice_por_que() -> void:  # 033-AC3
 	assert_int(caja.ocupados()).is_equal(Reglas.CASILLEROS_DE_LA_CAJA_DE_TRASLADO)
 
 
-func test_lo_que_no_es_un_producto_se_rechaza_en_el_dominio() -> void:  # 033-AC4
+func test_lo_que_no_es_un_producto_se_rechaza_en_el_dominio() -> void:  # AC-STK-012
 	# «Sólo entran productos» es una regla del juego, así que la decide el dominio y no la
 	# escena: escrita arriba nacería sin test, y está medido que ningún gate lo diría.
 	var caja := CajaDeTraslado.new()
@@ -55,24 +55,25 @@ func test_lo_que_no_es_un_producto_se_rechaza_en_el_dominio() -> void:  # 033-AC
 	assert_int(caja.ocupados()).is_equal(0)
 
 
-func test_sacar_de_una_caja_vacia_contesta_que_no_hay_nada_en_vez_de_romperse() -> void:  # 033-AC5
+# AC-STK-011
+func test_sacar_de_una_caja_vacia_contesta_que_no_hay_nada_en_vez_de_romperse() -> void:
 	var caja := CajaDeTraslado.new()
 	assert_object(caja.sacar()).is_null()
 	assert_int(caja.ocupados()).is_equal(0)
 
 
-func test_sacar_devuelve_lo_ultimo_que_se_guardo() -> void:  # 033-AC5
+func test_sacar_devuelve_lo_ultimo_que_se_guardo() -> void:  # AC-STK-011
 	# La caja se descarga por arriba, como una caja de verdad: lo último que entró es lo primero
 	# que sale, y así el jugador no tiene que acordarse del orden en que la cargó.
 	var caja := CajaDeTraslado.new()
 	caja.guardar(Catalogo.de(Producto.Id.ACTRONCITO))
-	var ultimo := Catalogo.de(Producto.Id.JABON)
+	var ultimo := Catalogo.de(Producto.Id.MALBARDO)
 	caja.guardar(ultimo)
 	assert_object(caja.sacar()).is_same(ultimo)
 	assert_int(caja.ocupados()).is_equal(1)
 
 
-func test_el_contenido_que_devuelve_es_una_copia() -> void:  # 033-AC5
+func test_el_contenido_que_devuelve_es_una_copia() -> void:
 	# **Medido en headless**: un `Array` devuelto sin `duplicate()` es el mismo array, y un
 	# `clear()` afuera vacía el original. Sin la copia, quien mira la caja la puede vaciar.
 	var caja := CajaDeTraslado.new()
@@ -83,7 +84,7 @@ func test_el_contenido_que_devuelve_es_una_copia() -> void:  # 033-AC5
 	assert_int(caja.contenido().size()).is_equal(1)
 
 
-func test_la_caja_no_sabe_donde_esta_ni_quien_la_lleva() -> void:  # 033-AC6
+func test_la_caja_no_sabe_donde_esta_ni_quien_la_lleva() -> void:
 	# Es lo que la deja moverse llena y aterrizar antes que el 006: el contenido no depende de
 	# ninguna ubicación, así que no hay nada que actualizar cuando la caja viaja.
 	var texto := FileAccess.get_file_as_string(CAJA)
@@ -101,5 +102,5 @@ func test_la_caja_no_sabe_donde_esta_ni_quien_la_lleva() -> void:  # 033-AC6
 func _caja_llena() -> CajaDeTraslado:
 	var caja := CajaDeTraslado.new()
 	for _casillero in range(Reglas.CASILLEROS_DE_LA_CAJA_DE_TRASLADO):
-		caja.guardar(Catalogo.de(Producto.Id.FIDEOS))
+		caja.guardar(Catalogo.de(Producto.Id.DUREXTRA))
 	return caja

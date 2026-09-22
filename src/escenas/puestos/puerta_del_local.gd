@@ -46,7 +46,7 @@ func _ready() -> void:
 
 ## El contrato de «con esto se puede interactuar» es este método más el grupo del `.tscn`.
 ##
-## Devuelve `null` porque una puerta no se levanta: si contestara un objeto, el clic del 006 se
+## Devuelve `null` porque una puerta no se levanta: si contestara un objeto, el clic de agarrar se
 ## llevaría la hoja en la mano en vez de abrirla.
 func interactuar() -> ObjetoDelAlmacen:
 	_puerta.alternar()

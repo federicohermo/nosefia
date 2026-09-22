@@ -5,7 +5,9 @@
 [ext_resource type="Shape3D" path="res://assets/models/caja_colision.tres" id="forma"]
 [ext_resource type="Resource" path="res://src/dominio/almacen/caja_de_reposicion.tres" id="datos"]
 
-[node name="CajaDeProductos" type="StaticBody3D" node_paths=PackedStringArray("mallas") groups=["interactuable"]]
+[node name="CajaDeProductos" type="RigidBody3D" node_paths=PackedStringArray("mallas") groups=["interactuable"]]
+collision_mask = 9
+freeze = true
 script = ExtResource("script")
 datos = ExtResource("datos")
 mallas = [NodePath("Malla")]
@@ -18,3 +20,4 @@ shape = ExtResource("forma")
 [node name="Malla" type="MeshInstance3D" parent="."]
 scale = Vector3(0.3037077, 0.3037077, 0.3037077)
 mesh = ExtResource("malla")
+gi_mode = 2

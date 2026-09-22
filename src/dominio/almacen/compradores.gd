@@ -22,10 +22,10 @@ extends RefCounted
 ## catálogo no deje a medio padrón pagando cualquier cosa: el que paga justo sigue pagando justo
 ## el día que un producto cambie de valor.
 const FILAS := [
-	["Marta", [[Producto.Id.ACTRONCITO, 2], [Producto.Id.GALLETITAS, 1]], 0],
-	["Rubén", [[Producto.Id.GASEOSA, 1], [Producto.Id.FIDEOS, 2]], -500],
-	["Nélida", [[Producto.Id.JABON, 1], [Producto.Id.ARROZ, 1]], 300],
-	["El pibe del kiosco", [[Producto.Id.GASEOSA, 3]], 0],
+	["Marta", [[Producto.Id.ACTRONCITO, 2], [Producto.Id.ZUCARACHAS, 1]], 0],
+	["Rubén", [[Producto.Id.BURBALOO, 1], [Producto.Id.DUREXTRA, 2]], -500],
+	["Nélida", [[Producto.Id.MALBARDO, 1], [Producto.Id.LAYSNTT, 1]], 300],
+	["El pibe del kiosco", [[Producto.Id.BURBALOO, 3]], 0],
 ]
 
 
