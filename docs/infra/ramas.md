@@ -6,27 +6,36 @@ Cada rama tiene una pregunta distinta, y el prefijo la contesta.
 |---|---|---|
 | `main` | **Lo que se entrega.** Cada entrega de la cátedra sale de acá | sólo un PR de promoción desde `staging` |
 | `staging` | **Integra.** Es la rama default del repositorio | cualquiera, **también directo** |
-| `feature/<issue>-<kebab>` | Un issue, uno | quien lo implementa |
-| `bugfix/<kebab>` | Algo del producto está roto. Puede salir de un issue o no | quien lo arregla |
-| `hotfix/<kebab>` | Urgente, contra lo que ya se entregó | quien lo arregla |
-| `harness/<kebab>` | El harness de `.claude/`: scripts, gates, skills | quien lo toque |
+| `feature/<kebab>` | Código que parte de un spec: crea, modifica o borra una funcionalidad | quien lo implementa |
+| `bugfix/<kebab>` | Algo del producto está roto | quien lo arregla |
+| `refactor/<kebab>` | El mismo comportamiento con otra forma | quien lo toque |
+| `improvement/<kebab>` | Un cambio o un agregado que no toca ningún spec y no es un bug: UI, arte, sonido, rendimiento | quien lo toque |
+| `harness/<kebab>` | El harness: scripts, gates, skills y los workflows de `.github/` | quien lo toque |
 | `docs/<kebab>` | La documentación | quien la escriba |
-| `ci/<kebab>` | Los workflows de `.github/` | quien los toque |
 
-## Los prefijos son un conjunto cerrado, y sólo la mitad se puede verificar
+## Los prefijos son un conjunto cerrado, y sólo una parte se puede verificar
 
-Los tres primeros —`feature/`, `bugfix/`, `hotfix/`— son los de la [convención de
+Los cuatro del producto —`feature/`, `bugfix/`, `refactor/` e `improvement/`— son los únicos
+que pueden editar `src/`. Los dos primeros son los de la [convención de
 Atlassian](https://support.atlassian.com/bitbucket-cloud/kb/how-to-prevent-creating-branches-with-the-prefixes-that-are-not-defined-in-the-branching-model-using-git-hooks-in-bitbucket-cloud/),
-y son **los únicos que pueden editar `src/`**. Eso lo verifica `gate_de_rama.py` en cada
-escritura.
+y los otros dos cubren lo que no es spec ni bug. Que la rama tenga uno de los cuatro lo
+verifica `gate_de_rama.py` en cada escritura.
 
-Los otros tres **no los verifica nadie, y no se podría**: el hook sólo protege `src/`, así que
+**No hay `hotfix/`.** Un hotfix no es una rama: es un commit directo sobre `staging`, con el
+mensaje empezando por `hotfix:`.
+
+Los otros dos **no los verifica nadie, y no se podría**: el hook sólo protege `src/`, así que
 una rama `docs/` que edita documentación no le pasa ni cerca. Están declarados igual porque el
 mensaje del bloqueo tiene que poder ofrecerlos — «renombrá la rama» sin decir a qué no es una
 salida.
 
-**No hay `chore/`**, que es el que la convención pone para «lo demás». Se define por lo que no
-es, así que termina siendo el cajón donde cae todo; estos tres dicen qué tocás.
+**No hay `ci/`.** Los workflows de `.github/` son harness igual que los scripts y los gates, y
+dos prefijos para lo mismo no se recuerdan. **Un refactor del harness sigue siendo `harness/`:**
+lo que el prefijo contesta es qué toca, no de qué clase es el cambio. `refactor/` es para el
+producto, que es lo que el hook necesita saber.
+
+**Tampoco hay `chore/`**, que es el que la convención pone para «lo demás». Se define por lo que
+no es, así que termina siendo el cajón donde cae todo; estos seis dicen qué tocás.
 
 ## Por qué dos ramas y no una
 
@@ -59,27 +68,19 @@ mergearla en el minuto siguiente es ceremonia: el costo se paga en cada cambio y
 **Lo que se paga, y es real:** lo que se commitea acá no pasa por ningún PR, así que no hay
 dónde declarar `AC-<COD>-### → test → resultado` ni nada que cierre un issue.
 
-O sea: **el trabajo de un issue sigue necesitando su `feature/<issue>-…`**. Lo que se liberó es
-todo lo demás: un arreglo suelto, un asset, el harness, la documentación.
+O sea: **un cambio que se quiere revisar o que cierra un issue va por su rama y su PR**. Lo
+que se liberó es todo lo demás: un arreglo suelto, un asset, el harness, la documentación.
 
 `main` sigue bloqueada. Es lo que se entrega, y llega por el PR de promoción.
 
-## El nombre de la rama de feature no es decorativo
+## El número del issue va si hay issue
 
-`feature/<issue>-<descripcion-kebab>`, y el número es **el del issue de GitHub** — el issue es el
-único plan, y lo numera GitHub al abrirlo.
+`<tipo>/<issue>-<kebab>` cuando el cambio sale de un issue; `<tipo>/<kebab>` cuando no. El
+número es el que GitHub le dio, sin rellenar.
 
-De ese nombre sale una cosa, y alcanza: **el hook** pide el número, y **sólo a las ramas
-`feature/`**. A `bugfix/` y `hotfix/` exigírselo las obligaría a inventar uno. Una `feature/` sin
-número bloquea la primera edición de `src/`.
-
-**Los dígitos son los que haya.** GitHub numera desde 1 y no rellena, así que rellenar a tres
-separaría la rama del issue que nombra. `feature/38-…` y `feature/1234-…` valen los dos.
-
-**El hook no consulta GitHub.** Mira el nombre y nada más: un número que no existe no frena la
-primera edición. Poner una llamada de red adentro de cada escritura haría un gate lento, y un
-gate lento se apaga. Lo que cobra que el trabajo esté completo es el PR, con el nodo `specs` de
-`verificar.py` corriendo encima.
+**El hook no lo pide.** Hasta el 2026-09-22 lo exigía a `feature/`, y eso obligaba a abrir un
+issue antes de escribir la primera línea. Un issue no es un spec: una `feature/` puede partir de
+un spec escrito sin issue. Que una `feature/` parta de un spec lo mira el review del PR.
 
 ## Los dos workflows
 

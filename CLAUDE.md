@@ -2,7 +2,7 @@
 
 Lo que no se puede averiguar mirando un archivo. El detalle vive en `docs/`, las reglas por capa
 en `.claude/rules/` —se cargan solas al tocar sus archivos—, el contrato de cada capacidad en
-`specs/`, y el plan de cada entrega en GitHub Issues.
+`specs/`, y el plan de cada cambio en GitHub Issues.
 
 ## Qué es
 
@@ -95,7 +95,7 @@ quién la verifica.
 | Ningún test sin aserción, apagado, o con un nombre que hace que no corra | `gate_de_tests.py` |
 | La forma de los contratos, y **cada criterio de un spec `ratified` citado por un test** como `AC-<COD>-###` | `gate_de_specs.py` |
 | Formato, largo de línea (100), nombres y orden de declaraciones | `gdformat`, `gdlint` |
-| Que a `src/` sólo lo toquen `feature/<issue>-<kebab>`, `bugfix/` y `hotfix/`, más `staging` | el hook, `gate_de_rama.py` |
+| Que a `src/` sólo lo toquen `feature/`, `bugfix/`, `refactor/` e `improvement/`, más `staging` | el hook, `gate_de_rama.py` |
 | Que un skill traiga adentro todo lo que corre, copia por copia | `test_copias_de_skills.py` |
 | Que un doc diga la regla y no la lista de los skills | `test_docs_no_enumeran_skills.py` |
 
@@ -128,29 +128,32 @@ después lo mínimo para que pase; después limpiar, con el test de testigo.
 **El tiempo y el azar entran por parámetro.** Un dominio que lee el reloj del motor o sortea
 adentro no se puede probar. [TDD sin cobertura](./docs/guides/tdd.md).
 
-## Antes de un cambio grande
+## Antes de un cambio
 
-Primero el contrato, después el issue, después el código. Son tres decisiones distintas:
+**Un issue no es un spec.** El issue es un plan chico y descartable: resuelve un problema
+puntual, con límites y criterios propios, y se cierra con su PR. El spec es el contrato durable
+de una funcionalidad. Un issue toca un spec sólo si cambia lo que el juego tiene que hacer.
 
-1. **Entrevistar** hasta que no quede nada supuesto en silencio — el skill `shape`, que no
-   escribe nada.
-2. **Escribir el contrato** de la capacidad, con sus reglas `BR-<COD>-###` y sus criterios
-   `AC-<COD>-###` — el skill `to-spec`. Entra por su PR, y el merge es la aprobación.
-3. **Repartirlo en issues** con formato task-brief — el skill `spec-to-tickets`. Cada issue
-   declara qué criterios entrega, qué puede escribir, qué no se toca y qué comandos dan cero.
+1. **Entrevistar** si algo queda supuesto — el skill `shape`, que no escribe nada.
+2. **Escribir el issue** con formato task-brief — el skill `to-issue`. Declara el tipo, si toca
+   un spec, sus criterios, qué puede escribir, qué no se toca y qué comandos dan cero. Casi
+   siempre vale; nunca se fuerza.
+3. **Escribir el spec** sólo si el cambio crea, modifica o borra una funcionalidad — el skill
+   `to-spec`, desde el issue o directo. Es el primer commit de la rama `feature/`.
 
-**Ahí termina planificar: la rama la abre el implementador**, y lo bloquea un hook.
+**Ahí termina planificar.** La rama la abre quien escribe su primer commit: `to-spec` si hay
+spec, el implementador si no. El prefijo lo verifica un hook.
 
 - **El código contesta al spec, nunca al revés.** Si el código no cumple un criterio, se corrige
   el código. Si el criterio ya no describe el juego, eso es una decisión de diseño y la toma una
   persona.
 - **Un spec no nombra archivos, clases ni escenas.** Eso caduca con el refactor siguiente, y ahí
   el contrato deja de ser el contrato.
-- **Un issue no es un vertedero.** Se abre para planificar una entrega, nunca para terminar una
+- **Un issue no es un vertedero.** Se abre para planificar un cambio, nunca para terminar una
   corrida. La doctrina, que los seis skills que escriben traen adentro:
   [sin-deuda.md](./.claude/skills/to-spec/sin-deuda.md).
-- **Qué NO necesita spec:** un refactor, un bug de motor o de configuración que no cambia ninguna
-  regla, el arte, el audio, y todo lo que no toca `src/`.
+- **Qué NO necesita spec:** un refactor, un bug que no cambia ninguna regla, una mejora de UI,
+  arte, audio o rendimiento, y todo lo que no toca `src/`.
 
 ## Documentación
 

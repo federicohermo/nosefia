@@ -1,13 +1,13 @@
 ---
 name: implement-feature
-description: Implementa UN issue de No se fía — el issue es el único plan, el TDD es obligatorio y verificado, y el nodo de convergencia es verificar.py. Cierra con el PR abierto y cada criterio del contrato citado por un test. Para dos o más issues de una, implement-batch.
+description: Implementa UN cambio de No se fía — un issue, o un spec recién escrito sin issue — con TDD obligatorio y verificado, y verificar.py como nodo de convergencia. Cierra con el PR abierto, los criterios del issue cumplidos y cada criterio del spec citado por un test. Para dos o más issues de una, implement-batch.
 ---
 
 # implement-feature — No se fía
 
-**Lo que se implementa es un issue**, y el issue dice qué criterios del contrato entrega. El
-contrato —`specs/<capability>/<capability>.md`— dice qué tiene que ser cierto; el issue, qué se
-toca esta vez.
+**Lo que se implementa es un issue**, o un spec que se escribió sin issue. El issue es el plan
+de esta vez: qué se toca y cómo se sabe que está. El spec —`specs/<capability>/<capability>.md`—
+es el contrato que queda. Muchos issues no tocan ningún spec.
 
 **No deja deuda**, y eso está en [`sin-deuda.md`](sin-deuda.md). Lo propio de implementar es el
 lazo: **si acá aparece un problema de planteo, el defecto no es de este issue — es del skill que
@@ -18,18 +18,19 @@ lo dejó salir así**, y se corrigen los dos en esta corrida.
 ```bash
 gh issue view <N>                                  # el plan entero
 git checkout staging && git pull
-git checkout -b feature/<N>-<descripcion-kebab>    # de acá saca el número el hook
+git checkout -b <tipo>/<N>-<descripcion-kebab>
 ```
 
-**El nombre de la rama no es decorativo**: `feature/<issue>-` es lo que el hook exige para dejar
-escribir en `src/`. A `src/` lo pueden tocar `feature/`, `bugfix/` y `hotfix/`; lo que no toca
-`src/` se nombra por lo que toca — `harness/`, `docs/` o `ci/`.
+**El prefijo de la rama es el tipo del issue**, y el hook sólo deja escribir en `src/` desde
+`feature/`, `bugfix/`, `refactor/` e `improvement/`. `feature/` es para código que parte de
+un spec: si el spec todavía no está escrito, primero `to-spec`, en esta misma rama. Lo
+que no toca `src/` se nombra por lo que toca — `harness/` o `docs/`.
 
 Si el issue ya tiene rama, no la vuelvas a crear: puede haberla abierto otra sesión, y ahí lo que
 corresponde es un worktree propio sobre esa rama.
 
-**Leé el contrato entero, no sólo los criterios del issue.** Las reglas de la capacidad son el
-marco: un criterio que se cumple rompiendo otra regla no está cumplido.
+**Si el cambio toca un spec, leelo entero, no sólo sus criterios nuevos.** Las reglas de la
+capacidad son el marco: un criterio que se cumple rompiendo otra regla no está cumplido.
 
 ## Los límites del issue son límites
 
@@ -148,8 +149,8 @@ criterio por cerrado.
 
 ## Cuando el issue o el contrato no alcanzan — el lazo
 
-**Para cuando llegás acá no debería quedar ninguna duda de planteo.** Se resuelven en `to-spec`
-y en `spec-to-tickets`, que es donde cuestan un párrafo. Una duda que aparece implementando es
+**Para cuando llegás acá no debería quedar ninguna duda de planteo.** Se resuelven en `to-issue`
+y en `to-spec`, que es donde cuestan un párrafo. Una duda que aparece implementando es
 evidencia de que uno de esos dos tiene un agujero.
 
 La descarga son dos mitades, las dos en esta corrida:
@@ -170,13 +171,16 @@ se corrige el código.
 
 ## Al cerrar
 
-- **Cada criterio del issue nombrado por el test que lo verifica** —`# AC-EMP-004`, con el código
-  de la capacidad—, en `test/` o en `.claude/scripts/tests/`. No es burocracia de cierre: es lo
-  que reemplazó a la casilla como ancla anti-deuda.
+- **Cada criterio del spec que el cambio agrega o cambia, nombrado por el test que lo verifica**
+  —`# AC-EMP-004`, con el código de la capacidad—, en `test/` o en `.claude/scripts/tests/`. Es
+  el ancla anti-deuda que cobra el gate.
+- **Cada criterio propio del issue, cumplido y marcado en el issue.** Esos no llevan ID ni se
+  citan: mueren con el issue.
 - **Si la capacidad quedó con todos sus criterios citados, pasala a `ratified`** en el frontmatter
   del spec, en este PR. Desde ahí el gate la cobra.
 - `python .claude/scripts/verificar.py` en verde, sin nodos salteados.
-- **El PR declara, por cada criterio, `AC-<COD>-### → test → resultado`**, y lleva `Closes #N`.
+- **El PR declara, por cada `AC-<COD>-###`, `AC → test → resultado`**, y lleva `Closes #N` si hay
+  issue.
 - **Lo que aparece implementando se hace, no se anota.** Un issue incompleto no se cierra abriendo
   otro issue: se completa.
 - Si el trabajo falsificó algo que la documentación afirma en presente, actualizá `docs/`,

@@ -119,28 +119,27 @@ El formato no se discute en una revisión: lo decide la herramienta.
 
 ## Empezar un cambio
 
-**No se edita `src/` sin un issue detrás de la rama** — y no es una recomendación: lo bloquea un
-hook antes de que se escriba la primera línea. `docs/` estuvo protegido hasta el 2026-09-05 y
-dejó de estarlo: pedir un spec para corregir una línea de documentación no produce más specs,
-produce documentación que nadie corrige.
+**El prefijo de la rama dice qué clase de cambio es**, y un hook bloquea la edición de `src/`
+desde una rama sin uno de estos: `feature/`, `bugfix/`, `refactor/` o `improvement/`.
+`feature/` es para código que parte de un spec. Un hotfix no lleva rama: es un commit directo
+sobre `staging`, con el mensaje empezando por `hotfix:`.
 
-El camino entero está en el skill `/to-spec`, y en corto es:
+En corto:
 
 ```bash
-# 1. el contrato de la capacidad, si el comportamiento todavía no está escrito
-#    specs/<capability>/<capability>.md, por su propio PR
-python .claude/scripts/gate_de_specs.py
-
-# 2. el issue, que es el plan: qué criterios entrega, qué toca y con qué comandos cierra
+# 1. el issue, que es el plan: tipo, criterios, qué toca y con qué comandos cierra
 gh issue create --title "<qué cambia>" --body-file <archivo>
 
-# 3. y recién ahí, la rama
-git checkout -b feature/<issue>-<kebab>
+# 2. la rama, con el tipo del issue
+git checkout -b <tipo>/<issue>-<kebab>
+
+# 3. si el cambio crea, modifica o borra una funcionalidad: el spec, primer commit de la rama
+#    se escribe a mano en specs/, y el gate verifica su forma
+python .claude/scripts/gate_de_specs.py
 ```
 
-Si el gate te frenó, el mensaje dice cuál de los casos es y cómo salir. **No lo saltees**: si de
-verdad el cambio no necesita issue —un typo, un asset, revertir el commit anterior— la rama igual
-no puede ser `main`.
+El issue casi siempre vale, pero no se fuerza: un arreglo chico sale sin issue, con
+`bugfix/<kebab>` o `improvement/<kebab>`. Si el hook te frenó, el mensaje dice cómo salir.
 
 ## Leer un contrato
 

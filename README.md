@@ -22,13 +22,12 @@ nada que instalar.
 
 ## Cómo se trabaja acá
 
-- **El contrato primero.** Lo que el juego tiene que hacer vive en `specs/`, una capacidad por
-  archivo. El plan de cada entrega es un issue de GitHub, y no se edita `src/` sin uno: lo
-  bloquea un hook, no la buena voluntad.
+- **El contrato manda.** Lo que el juego tiene que hacer vive en `specs/`, una capacidad por
+  archivo. El plan de un cambio es un issue de GitHub, y el prefijo de la rama dice qué clase
+  de cambio es: lo verifica un hook, no la buena voluntad.
 - **El test va primero.** Todo script de `src/dominio/` y `src/sistemas/` tiene su espejo en
   `test/`, y un gate lo verifica.
-- **`staging` integra, `main` es lo que se entrega.** Cada issue entra por su rama
-  `feature/<issue>-<kebab>` y su PR.
+- **`staging` integra, `main` es lo que se entrega.** Cada cambio entra por su rama y su PR.
 - **`python .claude/scripts/verificar.py` antes de cada PR.** Es lo mismo que corre la CI.
 
 El detalle está en [CLAUDE.md](./CLAUDE.md) —que es también la guía para los agentes— y en
