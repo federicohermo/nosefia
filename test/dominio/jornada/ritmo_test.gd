@@ -1,7 +1,7 @@
 ## El factor que convierte un segundo real en segundos de turno.
 ##
-## Los casos no eligen números redondos por comodidad: `720.0` es la sesión de doce minutos
-## reales y el turno son doce horas de ficción, así que el test falla el día que alguien
+## Los casos no eligen números redondos por comodidad: `720.0` es la sesión real que cubre
+## el turno entero, así que el test falla el día que alguien
 ## rebalancee el factor sin recalcular cuánto dura jugar una noche.
 extends GdUnitTestSuite
 

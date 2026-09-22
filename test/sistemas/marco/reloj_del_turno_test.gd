@@ -9,8 +9,8 @@
 ## reloj: el reloj es el único dueño del turno mientras la escena corre, y abrirle una puerta
 ## para mirarlo desde afuera sería exactamente lo que este spec cierra.
 ##
-## Los turnos son chicos —`100.0`, `12.0`— y no de ocho horas: el factor de `Ritmo` los agota en
-## uno o dos `_process`, así que el cierre se prueba en dos líneas.
+## Los turnos son chicos —`100.0`, `12.0`— y no de una noche entera: el factor de `Ritmo` los
+## agota en uno o dos `_process`, así que el cierre se prueba en dos líneas.
 extends GdUnitTestSuite
 
 var _turno: Turno = null

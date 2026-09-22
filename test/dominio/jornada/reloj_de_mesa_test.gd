@@ -22,7 +22,7 @@ const UN_SEGUNDO := 1.0
 
 func test_la_noche_en_que_falla_se_lee_hasta_la_mitad_y_despues_no() -> void:  # AC-SHF-012
 	# Con un segundo más que la mitad todavía se lee, y lo que se lee es la hora de la noche:
-	# `"01:59"` con doce horas desde las 20:00. Con la mitad justa, nada.
+	# el último minuto antes de la mitad. Con la mitad justa, nada.
 	var falla := Reglas.JORNADA_EN_QUE_FALLA_EL_RELOJ
 	var mitad := Reglas.DURACION_DEL_TURNO / 2.0
 	assert_str(RelojDeMesa.lectura(falla, mitad + UN_SEGUNDO)).is_equal("01:59")

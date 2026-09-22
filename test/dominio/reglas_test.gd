@@ -34,9 +34,9 @@ func test_el_turno_dura_mas_que_hacer_las_cinco_tareas() -> void:
 func test_el_turno_deja_lugar_para_investigar_con_los_numeros_reales() -> void:  # AC-SHF-010
 	# **El test que firma la tensión central del juego.** El de arriba es el piso viejo, escrito
 	# antes de que existiera el `Ritmo`: le falta el trayecto, que no es el término más grande
-	# —los cinco costos siguen pesando más— pero sí el único que el ritmo multiplica por 60, y
-	# eso alcanza para que un minuto de reloj real se coma más segundos de ficción que
-	# el piso de investigación entero. Éste hace la cuenta entera y se pone en rojo si alguien
+	# —los cinco costos siguen pesando más— pero sí el único que el ritmo multiplica, y eso
+	# alcanza para que el trayecto de una noche se coma más segundos de ficción que el piso de
+	# investigación entero. Éste hace la cuenta entera y se pone en rojo si alguien
 	# toca la duración, un costo, el trayecto o el ritmo sin mirar los otros tres.
 	#
 	# Vive acá y no en `presupuesto_test.gd` a propósito: aquél verifica la resta, que seguiría
@@ -68,6 +68,9 @@ func test_el_turno_deja_lugar_para_investigar_con_los_numeros_reales() -> void: 
 	assert_float(margen).override_failure_message(no_llega_al_piso % falta_para_el_piso).is_greater(
 		Reglas.MARGEN_MINIMO
 	)
+	# El número que el criterio fija. Rebalancear lo mueve, y moverlo es una decisión que se
+	# escribe también en el spec.
+	assert_float(margen).is_equal(17100.0)
 
 
 func test_el_piso_de_investigacion_es_mayor_que_cero() -> void:

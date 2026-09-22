@@ -10,8 +10,8 @@
 class_name Reglas
 extends RefCounted
 
-## Doce horas de ficción. El reloj de la escena escala esto a los minutos reales de sesión, así
-## que cambiarlo cambia también cuánto dura jugar una noche.
+## La noche entera, en segundos de ficción. El reloj de la escena escala esto a los minutos
+## reales de sesión, así que cambiarlo cambia también cuánto dura jugar una noche.
 const DURACION_DEL_TURNO := 43200.0
 
 ## A qué hora del día abre el turno. El reloj de mesa le suma lo transcurrido para leer la hora,
@@ -59,8 +59,7 @@ const COSTO_DE_SACAR_LA_BASURA := 1200.0
 ## trayecto se come el piso de investigación. Con 220 no lo hace, medido antes de subirlo.
 const SEGUNDOS_DE_TRAYECTO_ESTIMADOS := 220.0
 
-## El piso de investigación, en segundos de ficción: **3600, o sea 60 minutos de juego**, una de
-## las doce horas de la noche.
+## El piso de investigación, en segundos de ficción: **3600, o sea 60 minutos de juego**.
 ##
 ## Existe para que ese caso sea una afirmación con contenido y no un `> 0` disfrazado. Un margen
 ## de tres segundos es aritméticamente válido y un juego injugable, y sin este piso la salida

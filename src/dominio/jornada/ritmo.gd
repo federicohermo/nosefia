@@ -13,11 +13,10 @@
 class_name Ritmo
 extends RefCounted
 
-## De dónde sale: un minuto real por cada hora de ficción. La sesión dura doce minutos y cubre
-## el turno de doce horas que declara `Reglas.DURACION_DEL_TURNO`: `12 · 60 · 60 = 43 200`
-## segundos de turno en `12 · 60 = 720` reales. Cambiar uno de los dos sin recalcular el otro
-## deja la noche terminando antes o después de que se acabe la sesión, y eso lo caza
-## `ritmo_test.gd`.
+## De dónde sale: un minuto real por cada hora de ficción, o sea `60 · 60` segundos de turno en
+## `60` reales. La sesión dura entonces tantos minutos reales como horas tiene
+## `Reglas.DURACION_DEL_TURNO`. Cambiar uno de los dos sin recalcular el otro deja la noche
+## terminando antes o después de que se acabe la sesión, y eso lo caza `ritmo_test.gd`.
 const SEGUNDOS_DE_TURNO_POR_SEGUNDO_REAL := 60.0
 
 
