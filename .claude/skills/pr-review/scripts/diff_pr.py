@@ -44,13 +44,13 @@ from lib.consola import configurar  # noqa: E402
 
 configurar()
 
-# Lo generado y lo vendorizado se saca y sale gratis. `addons/gdUnit4/` son 459 archivos que
-# `.gitattributes` ya marca `linguist-vendored`: un PR que actualiza el addon no se revisa
-# archivo por archivo, se revisa mirando la versión.
+# Lo generado y lo vendorizado se saca y sale gratis. `addons/gdUnit4/` son los cientos de
+# archivos que `.gitattributes` ya marca `linguist-vendored`: un PR que actualiza el addon no
+# se revisa archivo por archivo, se revisa mirando la versión.
 EXCLUIDOS = [
     ":(exclude)addons/gdUnit4/*",
     ":(exclude).godot/*",
-    ":(exclude)reportes/*",
+    ":(exclude)reports/*",
     ":(exclude)export/*",
     ":(exclude)build/*",
     ":(exclude)*.import",

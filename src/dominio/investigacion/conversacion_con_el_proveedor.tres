@@ -1,0 +1,25 @@
+[gd_resource type="Resource" script_class="Conversacion" format=3]
+
+[ext_resource type="Script" path="res://src/dominio/investigacion/mensaje.gd" id="1_ja6qb"]
+[ext_resource type="Script" path="res://src/dominio/investigacion/conversacion.gd" id="2_weqwe"]
+
+[sub_resource type="Resource" id="Resource_6rgsp"]
+script = ExtResource("1_ja6qb")
+de_quien = "Distribuidora Álvarez"
+texto = "Buenas. La entrega de esta semana la dejamos por atrás como siempre."
+
+[sub_resource type="Resource" id="Resource_3gjos"]
+script = ExtResource("1_ja6qb")
+de_quien = "Distribuidora Álvarez"
+texto = "Ojo que el remito viene con dos cajas de más. No las pedimos nosotros."
+
+[sub_resource type="Resource" id="Resource_07a17"]
+script = ExtResource("1_ja6qb")
+de_quien = "Distribuidora Álvarez"
+texto = "Si preguntan, avisame antes de firmar nada."
+
+[resource]
+script = ExtResource("2_weqwe")
+interlocutor = 1
+nombre = "Distribuidora Álvarez"
+mensajes = Array[ExtResource("1_ja6qb")]([SubResource("Resource_6rgsp"), SubResource("Resource_3gjos"), SubResource("Resource_07a17")])

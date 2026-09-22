@@ -1,0 +1,19 @@
+[gd_scene load_steps=4 format=3]
+
+[ext_resource type="Script" path="res://src/escenas/puestos/ventanilla.gd" id="1_ventanilla"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_vidrio"]
+size = Vector3(1.2, 1.4, 0.12)
+
+[sub_resource type="BoxMesh" id="BoxMesh_antepecho"]
+size = Vector3(1.4, 0.08, 0.4)
+
+[node name="Ventanilla" type="StaticBody3D" groups=["interactuable"]]
+script = ExtResource("1_ventanilla")
+
+[node name="Vidrio" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.7, 0)
+shape = SubResource("BoxShape3D_vidrio")
+
+[node name="Antepecho" type="MeshInstance3D" parent="."]
+mesh = SubResource("BoxMesh_antepecho")

@@ -1,0 +1,169 @@
+"""El ancla anti-deuda: cada criterio del spec de la rama, citado por un test.
+
+**Un spec `Implementado` cuyos criterios no verifica nadie es la deuda invisible.** El spec
+dice que está hecho, el PR aterrizó, y lo que quedó sin hacer no figura en ninguna parte: no
+hay casilla abierta que mirar, porque en este régimen no hay casillas.
+
+## Por qué mira la RAMA y no los specs cerrados
+
+La versión anterior de esta regla corría sobre los specs `Implementado` **hidratados en
+disco**, y ahí tenía dos agujeros. El primero: `specs/[0-9]*/` es caché, así que dependía de
+que alguien se acordara de traer treinta specs cerrados a cada worktree — y desde que los
+cerrados no se hidratan más (`hidratar_specs.py`, 2026-09-05), de que se acordara de traerlos
+uno por uno. El segundo es peor: llegaba **tarde**. Un spec pasa a `Implementado` cuando su
+PR ya aterrizó, o sea que el rojo aparecía cuando el trabajo ya estaba en `staging` y lo único
+que quedaba era abrir otra cosa para arreglarlo — que es exactamente la deuda que esto viene a
+cerrar.
+
+Sobre la rama llega a tiempo: el PR está abierto, el spec y sus tests están juntos, y el
+criterio sin verificar todavía se puede escribir en vez de deber.
+
+## Qué verifica y qué no
+
+Verifica la **cita** —un `NNN-AC4` en el nombre de un test o en un comentario alcanza—, no que
+el test ejerza el criterio. Es un piso y hay que decirlo: el techo, que el test falle de verdad
+cuando el criterio no se cumple, no lo ve ninguna herramienta. Es el mismo piso que todo lo que
+este repo verifica sin cobertura.
+
+## Los salteos, y por qué cada uno se declara
+
+Se saltea si la rama no nombra un spec, si no se puede leer el `spec.md` de ese spec —ni en
+disco ni por `gh`— y si no hay `specs/mapa.json`. Los tres son estados normales; el que no es
+normal es un gate que no pudo mirar y sale igual que uno que miró.
+
+**Y hay uno que dejó de ser salteo:** que el spec de la rama no exista. Eso no es «no lo pude
+leer», es una respuesta, y desde que `gate_de_spec.py` no cruza el `NNN` contra el mapa
+(2026-09-08) es lo único que lo cobra. Vive en `ElSpecDeLaRamaExiste`, arriba de todo.
+"""
+
+import unittest
+
+from lib.rama import archivo_del_spec, rama_actual, spec_de_la_rama, spec_publicado
+from lib.repo import RAIZ
+from lib.specs import acs_de, acs_sin_test
+
+#: Dónde se busca la cita. Son dos árboles porque este repo tiene dos suites: la de gdUnit4
+#: sobre el juego y la de unittest sobre el harness, y un spec puede caer entero de
+#: cualquiera de los dos lados.
+ARBOLES_DE_TEST = (RAIZ / "test", RAIZ / ".claude" / "scripts" / "tests")
+
+
+def textos_de_test() -> list[str]:
+    return [
+        archivo.read_text(encoding="utf-8", errors="replace")
+        for arbol in ARBOLES_DE_TEST
+        if arbol.is_dir()
+        for archivo in arbol.rglob("*")
+        if archivo.is_file() and archivo.suffix in (".gd", ".py")
+    ]
+
+
+class ElSpecDeLaRamaExiste(unittest.TestCase):
+    """La rama nombra un `NNN`, y ese spec tiene que existir.
+
+    **Es el cruce que `gate_de_spec.py` dejó de hacer el 2026-09-08**, corrido acá en vez de
+    en cada escritura. Sacarlo del hook está bien: cobraba antes de la primera línea de
+    código, o sea que obligaba a publicar el issue para poder empezar. Lo que no está bien es
+    que no lo cobre nadie, y era lo que pasaba: `archivo_del_spec` no distingue «no está
+    publicado» de «no lo pude leer», así que `CriteriosDeLaRama` se salteaba entero, y un
+    salteo de `unittest` no se imprime cuando el nodo `harness` sale verde. Medido el
+    2026-09-08 con `GITHUB_HEAD_REF` puesto en una rama de un spec inexistente:
+    `OK (skipped=2)`. El derivador tampoco lo cobra, y lo dice él mismo: un PR cuya rama
+    nombra un `NNN` ausente del mapa «no agrega nada» (`lib/specs.py`, `derivar_mapa`).
+
+    Acá llega a tiempo igual: el PR está abierto y el spec todavía se puede publicar.
+    """
+
+    def test_el_NNN_de_la_rama_tiene_spec(self):
+        numero = spec_de_la_rama()
+        if numero is None:
+            self.skipTest(
+                f"la rama `{rama_actual()}` no nombra un spec: este gate NO miró nada. "
+                "Corre sobre una rama `<prefijo>/<NNN>-<kebab>`."
+            )
+        publicado = spec_publicado(numero)
+        if publicado is None:
+            self.skipTest(
+                "no se pudo leer `specs/mapa.json`: este gate NO miró nada, y no puede decir "
+                f"si el spec {numero} existe."
+            )
+        self.assertTrue(
+            publicado,
+            f"la rama `{rama_actual()}` dice ser del spec {numero}, que no está hidratado ni "
+            f"tiene entrada en `specs/mapa.json`. O el spec no se publicó todavía —lo escribe "
+            f"el skill `spec-create`, y `publicar_spec.py crear`/`publicar` lo suben— o el "
+            f"número de la rama está mal. El hook ya no lo exige para editar `src/`, así que "
+            f"si no lo dijera acá no lo diría nadie, y el PR aterrizaría sin spec.",
+        )
+
+
+class CriteriosDeLaRama(unittest.TestCase):
+    def setUp(self):
+        self.numero = spec_de_la_rama()
+        if self.numero is None:
+            self.skipTest(
+                f"la rama `{rama_actual()}` no nombra un spec: este gate NO miró nada. "
+                "Corre sobre una rama `<prefijo>/<NNN>-<kebab>`."
+            )
+        leido = archivo_del_spec(self.numero, "spec.md")
+        if leido is None:
+            self.skipTest(
+                f"no se pudo leer el spec.md del {self.numero}: no está hidratado y `gh` no "
+                f"contestó. Este gate NO miró nada. `hidratar_specs.py {self.numero}` lo trae."
+            )
+        self.texto, self.origen = leido
+
+    def test_el_spec_de_la_rama_declara_criterios(self):
+        # Cero criterios no es «este spec no necesita tests»: es un spec que no dice cuándo
+        # está hecho, y de paso deja al gate de abajo sin nada que exigir — en verde.
+        self.assertNotEqual(
+            acs_de(self.texto),
+            [],
+            f"el spec {self.numero} ({self.origen}) no declara ningún `ACn`.",
+        )
+
+    def test_cada_criterio_esta_citado_por_un_test(self):
+        acs = acs_de(self.texto)
+        faltan = acs_sin_test(self.numero, acs, textos_de_test())
+        self.assertEqual(
+            faltan,
+            [],
+            f"el spec {self.numero} ({self.origen}) tiene {len(faltan)} de {len(acs)} "
+            "criterios que ningún test cita: "
+            f"{', '.join(f'{self.numero}-{ac}' for ac in faltan)}. "
+            "Cada criterio se cita como `NNN-ACn` desde el test que lo verifica, en `test/` o "
+            "en `.claude/scripts/tests/`. Si el criterio no se puede verificar con un test, el "
+            "que está mal escrito es el criterio.",
+        )
+
+
+class Sondas(unittest.TestCase):
+    """Las reglas puras, que no dependen de en qué rama corra esto.
+
+    **El número de los ejemplos es `999` y eso importa**: este archivo es uno de los que el
+    gate lee para buscar citas, así que un ejemplo escrito con el número de un spec real
+    dejaría ese criterio cubierto sin que ningún test lo verifique. Un gate que se cumple a sí
+    mismo con sus propios ejemplos es la falla exacta que la cita calificada vino a cerrar, y
+    vale también para la prosa: la primera versión de este encabezado se autocubrió dos AC del
+    spec 030 con dos ejemplos de un docstring.
+    """
+
+    def test_un_ac_sin_test_se_nombra(self):  # 029-AC3
+        self.assertEqual(acs_sin_test("999", ["AC1", "AC2"], ["mira el 999-AC1"]), ["AC2"])
+
+    def test_un_ac_no_lo_cubre_un_prefijo(self):  # 029-AC3
+        # `AC1` no lo cubre un test que dice `AC12`: sin el límite de palabra, el criterio 1
+        # quedaría cubierto por cualquier criterio de dos dígitos que empiece con 1.
+        self.assertEqual(acs_sin_test("999", ["AC1"], ["verifica el 999-AC12"]), ["AC1"])
+
+    def test_la_cita_lleva_el_numero_del_spec(self):  # 029-AC3
+        # Sin el número, el primer test que escribiera `AC1` cubriría el `AC1` de todos los
+        # specs que vengan después, para siempre.
+        self.assertEqual(acs_sin_test("999", ["AC1"], ["verifica el AC1"]), ["AC1"])
+
+    def test_los_criterios_salen_de_su_bloque_y_no_de_la_prosa(self):  # 029-AC3
+        texto = (
+            "# T\n\nel AC9 de otro spec\n\n"
+            "## Criterios de aceptación\n\n- **AC2** — x\n- **AC1** — y\n"
+        )
+        self.assertEqual(acs_de(texto), ["AC2", "AC1"])

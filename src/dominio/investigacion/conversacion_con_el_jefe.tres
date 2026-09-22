@@ -1,0 +1,24 @@
+[gd_resource type="Resource" script_class="Conversacion" format=3]
+
+[ext_resource type="Script" path="res://src/dominio/investigacion/mensaje.gd" id="1_tx6ja"]
+[ext_resource type="Script" path="res://src/dominio/investigacion/conversacion.gd" id="2_pvy1q"]
+
+[sub_resource type="Resource" id="Resource_f6kpv"]
+script = ExtResource("1_tx6ja")
+de_quien = "El jefe"
+texto = "Che, hoy te toca solo. Dejá todo hecho: caja, reponer, registrar, limpiar y la basura."
+
+[sub_resource type="Resource" id="Resource_jcixh"]
+script = ExtResource("1_tx6ja")
+de_quien = "El jefe"
+texto = "Y no toques la puerta del fondo. Está trabada de antes, no es cosa tuya."
+
+[sub_resource type="Resource" id="Resource_3m8wd"]
+script = ExtResource("1_tx6ja")
+de_quien = "El jefe"
+texto = "Cualquier cosa me escribís mañana. Hoy no tengo señal."
+
+[resource]
+script = ExtResource("2_pvy1q")
+nombre = "El jefe"
+mensajes = Array[ExtResource("1_tx6ja")]([SubResource("Resource_f6kpv"), SubResource("Resource_jcixh"), SubResource("Resource_3m8wd")])

@@ -12,7 +12,7 @@ copias no se separen lo verifica `test_copias_de_skills.py`, no la disciplina de
 
 ## Por qué no alcanza `git worktree remove`
 
-`.godot/` y `reportes/` están en el `.gitignore`, así que `remove` borra lo trackeado y el
+`.godot/` y `reports/` están en el `.gitignore`, así que `remove` borra lo trackeado y el
 `.git` pero **el directorio no queda vacío** y el borrado final tira `Directory not empty`.
 `--force` no ayuda: no es un problema de cambios sin commitear. Y le pasa a **todo worktree que
 haya corrido `verificar.py`**, o sea a todos — el nodo `tests` levanta Godot headless, y Godot
@@ -244,10 +244,21 @@ def main() -> None:
             time.sleep(2)
             borrar_arbol(wt)
 
+        # El orden de las dos causas no es decorativo: es el de cuál pasa. Medido el
+        # 2026-09-05 cerrando el lote 026/028, donde este mensaje mandó dos veces a cerrar
+        # un editor que no tenía nada abierto. `shutil.rmtree` sobre el mismo worktree
+        # borraba a la primera desde la raíz del repo y fallaba siempre con el CWD del
+        # proceso adentro —probado con `os.chdir` a los dos lados—, y ni Godot ni el editor
+        # tenían nada que ver. El handle externo existe y por eso sigue nombrado, pero es
+        # el segundo sospechoso y no el primero.
         if wt.exists():
             print(
-                "   SIGUE AHI. Algo tiene un handle abierto que el filtro no ve - tipicamente el\n"
-                "   editor de Godot o el IDE con la carpeta abierta. Lo cierra el usuario.",
+                "   SIGUE AHI. Windows no borra un directorio que sea el CWD de algun\n"
+                "   proceso vivo, y el sospechoso numero uno es una shell que hizo `cd`\n"
+                "   adentro del worktree - la del que llamo a este script, sin ir mas\n"
+                "   lejos. Se sale de ahi y se vuelve a correr. Si no era eso, algo tiene\n"
+                "   un handle abierto que el filtro no ve: tipicamente el editor de Godot\n"
+                "   o el IDE con la carpeta abierta, y eso lo cierra el usuario.",
                 file=sys.stderr,
             )
             fallo = True

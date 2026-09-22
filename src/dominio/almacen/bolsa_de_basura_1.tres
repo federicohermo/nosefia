@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="ObjetoDelAlmacen" load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://src/dominio/almacen/objeto_del_almacen.gd" id="1_objeto"]
+[ext_resource type="Script" path="res://src/dominio/investigacion/revelacion.gd" id="2_revelacion"]
+
+[sub_resource type="Resource" id="Resource_revelacion"]
+script = ExtResource("2_revelacion")
+texto = "Pesa más de lo que debería para ser cartón."
+
+[resource]
+script = ExtResource("1_objeto")
+id = &"bolsa_de_basura_1"
+nombre = "Bolsa de basura"
+levantable = true
+revelacion = SubResource("Resource_revelacion")

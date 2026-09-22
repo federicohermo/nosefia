@@ -1,0 +1,28 @@
+[gd_scene load_steps=5 format=3]
+
+[ext_resource type="Script" path="res://src/escenas/puestos/zona_de_descarte.gd" id="1_descarte"]
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_descarte"]
+radius = 1.5
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_marca"]
+top_radius = 1.5
+bottom_radius = 1.5
+height = 0.03
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_marca"]
+transparency = 1
+albedo_color = Color(0.35, 0.45, 0.3, 0.5)
+
+[node name="ZonaDeDescarte" type="Area3D" node_paths=PackedStringArray("forma")]
+script = ExtResource("1_descarte")
+forma = NodePath("Forma")
+
+[node name="Forma" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.4, 0)
+shape = SubResource("SphereShape3D_descarte")
+
+[node name="Marca" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.02, 0)
+mesh = SubResource("CylinderMesh_marca")
+surface_material_override/0 = SubResource("StandardMaterial3D_marca")

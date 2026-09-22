@@ -39,6 +39,43 @@ se puede probar sin escena, instanciando el `Node` con `auto_free(Sistema.new())
 los métodos. Si un sistema no se puede probar así, es porque tiene adentro una regla o un
 pedazo de presentación — y el arreglo es sacarlos, no eximirlo del test.
 
+## Las subcarpetas: si consume tiempo del turno, y para qué
+
+La carpeta **no repite el nombre del archivo**: dice **qué se rompe si tocás lo que hay
+adentro**. Acá ese alcance se mide en **si consume tiempo del turno, y para qué**.
+
+Esta capa tiene **un** archivo hoy y por eso parece no necesitar orden. Los specs propuestos le
+traen **trece más**: es la que más se multiplica de las cuatro. Ordenarla cuando ya esté
+desordenada cuesta un spec entero de renombres.
+
+```text
+src/sistemas/
+├── marco/          reloj_del_turno · ciclo_de_jornadas · guardado · arranque_del_juego
+│                   · agarre · enlace_de_audio · reproductor_de_sonidos
+├── tareas/         repositor · limpiador · recolector_de_basura · ventanilla
+└── investigacion/  computadora_de_escritorio · registro_de_investigacion · examen
+```
+
+| Carpeta | Qué hace con el tiempo |
+|---|---|
+| `marco/` | **no lo consume**: hace correr el juego. Un bug acá no cambia el balance, lo detiene |
+| `tareas/` | lo consume **y cumple una obligatoria** |
+| `investigacion/` | lo consume **y no cumple nada**. Es el otro lado de la tensión central |
+
+Es la distinción menos deducible de las cuatro capas: `limpiador.gd` y `examen.gd` son dos
+`Node` que se parecen en todo salvo en lo único que importa —uno paga el minuto y el otro no—,
+y el nombre del archivo no lo dice.
+
+**`agarre.gd` va en `marco/` y no en `tareas/`, y el motivo vale como ejemplo del criterio:**
+agarrar es el mecanismo, no la tarea. Quien paga el minuto es el `repositor` o el
+`recolector_de_basura` que lo usa. Lo mismo el audio: un bug ahí detiene el juego sin cambiar
+el balance.
+
+**Quién lo verifica: `gate_de_capas.py`**, con `CARPETAS_POR_CAPA` de `lib/repo.py`. Valida los
+**nombres** de carpeta —que exista `marco/` y no `nucleo/`— y **no** valida que un archivo esté
+en la carpeta correcta: eso es semántica, ninguna herramienta lo puede contestar, y lo mira la
+revisión. La raíz de la capa la admite a propósito, para lo que cruza.
+
 ## Autoloads: pocos, y declarados
 
 Un autoload es una variable global con otro nombre: lo ve todo el proyecto y nadie declara que
