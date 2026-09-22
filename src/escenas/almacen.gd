@@ -124,6 +124,10 @@ func _ready() -> void:
 	_repositor.unidad_colocada.connect(_reposicion_manual.depositar)
 	_repositor.producto_colocado.connect(_al_colocar_en_el_estante)
 	_atenciones.atencion_despachada.connect(_reposicion_manual.actualizar_stock)
+	# Una caja empujada se corre por debajo de lo que lleva encima sin avisarle al motor, y a
+	# quién despertar lo decide el puesto, igual que al levantarla.
+	for caja: CajaDeProductosDelDeposito in _cajas_de_productos:
+		caja.empujada.connect(_reposicion_manual.despertar_lo_de_arriba)
 	_ciclo.arrancar(_partida, _reloj)
 	_reposicion_manual.preparar()
 
