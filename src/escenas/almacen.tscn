@@ -47,17 +47,17 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.001781702, 0.011070967, 5.0
 
 [node name="Estructura" parent="." unique_id=1019345008 instance=ExtResource("grupo_Estructura")]
 
-[node name="StaticBody3D" parent="Estructura/base compu" parent_id_path=PackedInt32Array(1019345008, 1520999817) index="0" unique_id=278334177 node_paths=PackedStringArray("jugador", "reloj", "computadora", "pantalla")]
+[node name="StaticBody3D" parent="Estructura/base compu" parent_id_path=PackedInt32Array(1019345008, 468936537) index="0" unique_id=516772766 node_paths=PackedStringArray("jugador", "reloj", "computadora", "pantalla")]
 jugador = NodePath("../../../Jugador")
 reloj = NodePath("../../../Servicios/RelojDelTurno")
 computadora = NodePath("../../../Servicios/Computadora")
 pantalla = NodePath("../../../Interfaz/PantallaDeComputadora")
 
-[node name="LuzInterior" parent="Estructura/heladeranueva" parent_id_path=PackedInt32Array(1019345008, 953674351) index="5"]
+[node name="LuzInterior" parent="Estructura/heladeranueva" parent_id_path=PackedInt32Array(1019345008, 5685410) index="5"]
 light_energy = 0.4
 light_bake_mode = 1
 
-[node name="LuzInterior" parent="Estructura/heladeranueva_001" parent_id_path=PackedInt32Array(1019345008, 2146981697) index="5"]
+[node name="LuzInterior" parent="Estructura/heladeranueva_001" parent_id_path=PackedInt32Array(1019345008, 820318222) index="5"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.38939667, 1.1912528, -0.18357801)
 light_energy = 0.4
 light_bake_mode = 1

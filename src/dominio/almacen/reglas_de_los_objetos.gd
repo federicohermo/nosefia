@@ -23,6 +23,16 @@ const DISTANCIA_DE_EXAMEN := 0.5
 const DISTANCIA_DE_CARGA := 0.75
 const DISTANCIA_DE_SOLTADO := 1.2
 
+## A cuántos radios de lo examinado queda su centro del ojo, cuando no entra a
+## `DISTANCIA_DE_EXAMEN`.
+##
+## Sale de la cámara y de lo que se lleva, y el margen entre los dos es chico a propósito. Con
+## menos de 1 alguna rotación lo mete adentro de la cámara. Con menos de la inversa del seno de
+## medio campo de visión, las esquinas salen del cuadro. Con más, la caja grande queda más lejos
+## que donde se la lleva, y examinarla la aleja en vez de acercarla. Cuánto margen dejar con el
+## borde del cuadro no lo fija el GDD: es pregunta abierta.
+const RADIOS_DE_EXAMEN := 1.7
+
 ## Los nombres de las dos acciones que este spec agrega al `InputMap`. Tienen que coincidir letra
 ## por letra con la sección `[input]` de `project.godot`, y el test del objeto agarrable afirma
 ## justamente eso: es la única forma de que ese par de `String` no se separe en silencio.
@@ -78,3 +88,12 @@ static func se_puede_retirar(la_lleva_el_jugador: bool) -> bool:
 
 static func se_puede_apoyar_en(inclinacion: float) -> bool:
 	return inclinacion >= APOYO_HORIZONTAL
+
+
+## Metros desde el ojo hasta el centro de lo examinado, según el radio de la esfera que lo
+## envuelve alrededor de donde gira.
+##
+## Lo que entra a `DISTANCIA_DE_EXAMEN` se examina ahí: una lata no tiene por qué alejarse
+## porque exista una caja grande.
+static func distancia_de_examen(radio: float) -> float:
+	return maxf(DISTANCIA_DE_EXAMEN, radio * RADIOS_DE_EXAMEN)
