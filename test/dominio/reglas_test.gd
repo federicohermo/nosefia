@@ -31,12 +31,12 @@ func test_el_turno_dura_mas_que_hacer_las_cinco_tareas() -> void:
 	assert_float(Reglas.DURACION_DEL_TURNO).is_greater(suma_de_costos)
 
 
-func test_el_turno_deja_lugar_para_investigar_con_los_numeros_reales() -> void:
+func test_el_turno_deja_lugar_para_investigar_con_los_numeros_reales() -> void:  # AC-SHF-010
 	# **El test que firma la tensión central del juego.** El de arriba es el piso viejo, escrito
 	# antes de que existiera el `Ritmo`: le falta el trayecto, que no es el término más grande
-	# —los cinco costos siguen pesando más— pero sí el único que el ritmo multiplica por 24, y
-	# eso alcanza para que tres minutos de reloj de pared se coman más segundos de ficción que
-	# el piso de investigación entero. Éste hace la cuenta entera y se pone en rojo si alguien
+	# —los cinco costos siguen pesando más— pero sí el único que el ritmo multiplica, y eso
+	# alcanza para que el trayecto de una noche se coma más segundos de ficción que el piso de
+	# investigación entero. Éste hace la cuenta entera y se pone en rojo si alguien
 	# toca la duración, un costo, el trayecto o el ritmo sin mirar los otros tres.
 	#
 	# Vive acá y no en `presupuesto_test.gd` a propósito: aquél verifica la resta, que seguiría
@@ -68,6 +68,9 @@ func test_el_turno_deja_lugar_para_investigar_con_los_numeros_reales() -> void:
 	assert_float(margen).override_failure_message(no_llega_al_piso % falta_para_el_piso).is_greater(
 		Reglas.MARGEN_MINIMO
 	)
+	# El número que el criterio fija. Rebalancear lo mueve, y moverlo es una decisión que se
+	# escribe también en el spec.
+	assert_float(margen).is_equal(17100.0)
 
 
 func test_el_piso_de_investigacion_es_mayor_que_cero() -> void:
@@ -96,17 +99,23 @@ func test_la_caja_de_traslado_lleva_mas_de_un_producto() -> void:
 	assert_int(Reglas.CASILLEROS_DE_LA_CAJA_DE_TRASLADO).is_greater(1)
 
 
-func test_el_reloj_de_pared_se_rompe_adentro_de_la_partida() -> void:
-	# Una jornada posterior a la última dejaría la regla escrita y muerta: el reloj no se
-	# rompería nunca jugando, y los criterios seguirían en verde igual. Es una invariante
-	# entre constantes, y por eso se afirma contra ellas y no contra el número.
+func test_el_reloj_de_mesa_falla_adentro_de_la_partida() -> void:
+	# Una jornada posterior a la última dejaría la regla escrita y muerta: el reloj no fallaría
+	# nunca jugando, y los criterios seguirían en verde igual. Es una invariante entre
+	# constantes, y por eso se afirma contra ellas y no contra el número.
 	var primera := ReglasDeLaPartida.PRIMERA_JORNADA
 	var ultima := primera + ReglasDeLaPartida.JORNADAS_DE_LA_PARTIDA - 1
-	var rompe := Reglas.JORNADA_EN_QUE_SE_ROMPE_EL_RELOJ_DE_PARED
-	var fuera := "el reloj se rompe en la jornada %d y la partida va de la %d a la %d"
-	assert_int(rompe).override_failure_message(fuera % [rompe, primera, ultima]).is_between(
+	var falla := Reglas.JORNADA_EN_QUE_FALLA_EL_RELOJ
+	var fuera := "el reloj falla en la jornada %d y la partida va de la %d a la %d"
+	assert_int(falla).override_failure_message(fuera % [falla, primera, ultima]).is_between(
 		primera, ultima
 	)
+
+
+func test_la_noche_arranca_a_una_hora_del_dia() -> void:
+	# La hora de apertura es la que el reloj de mesa suma a lo transcurrido: fuera de las
+	# veinticuatro, la lectura nacería con un `HH` que ningún reloj muestra.
+	assert_int(Reglas.HORA_DE_APERTURA).is_between(0, 23)
 
 
 func test_una_jornada_grave_pesa_el_doble_que_un_aviso() -> void:

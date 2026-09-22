@@ -75,6 +75,11 @@ rompe:
   dominio. Si ninguno lo fija, el criterio lo nombra como pregunta abierta y `to-spec` lo
   registra. Un número propuesto por el agente se lee como decidido.
 - **Los bordes van escritos.** El caso feliz lo cubre cualquier implementación.
+- **Una tabla de ejemplos cierra consigo misma.** Cada fila se recalcula desde la regla antes de
+  escribirla, y una hora de cierre es apertura más duración, no un número copiado de la ficha.
+- **Si el issue deja renombrar algo, el `rg` de los límites se corre también sobre los
+  comentarios.** Un archivo en «Sólo lectura» que nombra por ruta lo que se renombra queda
+  mintiendo, y el implementador no lo puede tocar.
 
 ## Paso 4 — Mostrar y publicar
 

@@ -1,7 +1,7 @@
 ---
 schema_version: 1
 capability_id: CAP-SHF
-status: draft
+status: ratified
 owner: por definir
 provenance: GDD «Ciclo de jornadas»; migración de los specs 001, 007, 011, 016, 027, 031
 ---
@@ -23,18 +23,21 @@ investigando es un minuto que no se dedica a las tareas**, y esta capacidad es e
 | **Obligatoria** | una de las tareas que el jefe pide esta noche | misión, objetivo |
 | **Margen** | lo que sobra del turno después de cumplir y de caminar | tiempo libre, ocio |
 | **Ritmo** | cuántos segundos de turno consume un segundo real | escala, velocidad |
+| **Hora** | la hora de ficción de la noche, de la apertura al cierre | tiempo restante, cuenta regresiva |
+| **Reloj** | el reloj de mesa del local, el único lugar donde se lee la hora | reloj de pared, HUD |
 
 ## Comportamiento normativo
 
-### BR-SHF-001 — La noche dura ocho horas de ficción
+### BR-SHF-001 — La noche dura doce horas de ficción
 
-El sistema DEBE dar a cada jornada un turno de **28 800 segundos** de ficción, de las 22:00 a las
-06:00.
+El sistema DEBE dar a cada jornada un turno de **43 200 segundos** de ficción, de las 20:00 a las
+08:00.
 
-### BR-SHF-002 — La sesión dura diez minutos reales
+### BR-SHF-002 — La sesión dura doce minutos reales
 
-El sistema DEBE convertir el tiempo real a tiempo de turno con un factor tal que **600 segundos
-reales cubran el turno entero**. El factor vale `28 800 ÷ 600`.
+El sistema DEBE convertir el tiempo real a tiempo de turno con un factor tal que **720 segundos
+reales cubran el turno entero**: un minuto real por hora de ficción. El factor vale
+`43 200 ÷ 720`.
 
 ### BR-SHF-003 — El tiempo entra, no se busca
 
@@ -71,7 +74,7 @@ cumplida fuera de esa lista consume turno y no cuenta.
 ### BR-SHF-009 — El turno alcanza, con margen
 
 El sistema DEBE dejar, después de cumplir las cinco y de caminar, un margen **mayor a 3600
-segundos** de ficción — una de las ocho horas. El trayecto estimado de una noche completa es de
+segundos** de ficción — una de las doce horas. El trayecto estimado de una noche completa es de
 **220 segundos reales**, y es el único término que pasa por el ritmo.
 
 ### BR-SHF-010 — Un turno consumido exacto no alcanza
@@ -79,34 +82,40 @@ segundos** de ficción — una de las ocho horas. El trayecto estimado de una no
 SI el margen es cero, ENTONCES el sistema DEBE contestar que el turno **no** alcanza. Investigar
 no es opcional: es la mitad del bucle.
 
-### BR-SHF-011 — La hora no está siempre a la vista
+### BR-SHF-011 — La hora se lee en un solo lugar, y una noche falta
 
-El sistema DEBE mostrar lo que queda del turno sólo donde el jugador va a buscarlo. El reloj de
-pared del local se rompe **a la mitad del turno de la tercera jornada** y no se arregla: desde
-ese instante, y todas las noches siguientes, no dice la hora ni dice que está roto.
+El sistema DEBE mostrar la hora sólo en el reloj de mesa del local, cerca del escritorio: ni en
+el HUD, ni en la computadora, ni en otro objeto del local. SI es la tercera jornada y queda la
+mitad del turno o menos, ENTONCES el reloj DEBE leer vacío hasta el cierre, sin decir que está
+roto. Las otras jornadas, incluida la que todavía no se declaró, el reloj DEBE leer la hora el
+turno entero.
 
 ### BR-SHF-012 — La lectura trunca y no miente
 
-CUANDO se muestra lo que queda, el sistema DEBE truncar y nunca redondear hacia arriba, y DEBE
-mostrar cero por debajo de cero. Con una hora o más, la lectura lleva horas; por debajo, minutos
-y segundos.
+CUANDO se lee la hora, el sistema DEBE truncar al minuto y nunca redondear hacia arriba. Con cero
+o menos de turno, DEBE leer la hora de cierre: nunca una hora pasada del cierre.
 
-### BR-SHF-013 — La última media hora avisa
+### BR-SHF-013 — *Retirada*
 
-MIENTRAS quedan **1800 segundos** de ficción o menos, el sistema DEBE declarar que el turno está
-en aviso.
+La última media hora ya no avisa. El reloj no cambia de tono.
+
+### BR-SHF-014 — La lectura es la hora de la noche
+
+CUANDO se lee el reloj, el sistema DEBE contestar la hora de apertura más lo que ya pasó del
+turno, en `HH:MM` de 24 horas. La hora de apertura y la duración viven una sola vez en las
+reglas del juego.
 
 ## Criterios de aceptación
 
 ### AC-SHF-001 — El turno de la noche *(verifica BR-SHF-001)*
 
-DADO una jornada que se abre CUANDO se mira su turno ENTONCES el presupuesto es `28800.0`
+DADO una jornada que se abre CUANDO se mira su turno ENTONCES el presupuesto es `43200.0`
 segundos.
 
-### AC-SHF-002 — Diez minutos reales *(verifica BR-SHF-002)*
+### AC-SHF-002 — Doce minutos reales *(verifica BR-SHF-002)*
 
-DADO el factor del ritmo CUANDO se escalan `600.0` segundos reales ENTONCES el resultado es
-exactamente la duración del turno, y un segundo real escala a `48.0`.
+DADO el factor del ritmo CUANDO se escalan `720.0` segundos reales ENTONCES el resultado es
+exactamente la duración del turno, y un segundo real escala a `60.0`.
 
 ### AC-SHF-003 — El tiempo negativo no mueve nada *(verifica BR-SHF-003)*
 
@@ -145,30 +154,50 @@ estaba declarada ENTONCES el turno bajó su costo y las cumplidas siguen siendo 
 ### AC-SHF-010 — El balance cierra *(verifica BR-SHF-009, BR-SHF-002)*
 
 DADO los cinco costos, los `220.0` segundos de trayecto y el factor del ritmo CUANDO se calcula
-el margen ENTONCES da `5340.0` segundos y es mayor al margen mínimo.
+el margen ENTONCES da `17100.0` segundos y es mayor al margen mínimo.
 
 ### AC-SHF-011 — El cero no alcanza *(verifica BR-SHF-010)*
 
 DADO un margen de exactamente `0.0` CUANDO se pregunta si el turno alcanza ENTONCES la respuesta
 es `false`.
 
-### AC-SHF-012 — El reloj se rompe y no vuelve *(verifica BR-SHF-011)*
+### AC-SHF-012 — El reloj falta la mitad de una noche *(verifica BR-SHF-011)*
 
-DADO la jornada 3 CUANDO queda más de la mitad del turno ENTONCES la hora se lee; con la mitad
-justa o menos, no; y en la jornada 4 no se lee ni con el turno entero.
+DADO la jornada 3 CUANDO quedan `21601.0` segundos ENTONCES el reloj lee `"01:59"`; con `21600.0`
+o menos, lee `""`. En las jornadas 0, 4 y 5 lee la hora con `43200.0`, con `21600.0` y con
+`1.0`.
 
 ### AC-SHF-013 — El reloj roto no dice que está roto *(verifica BR-SHF-011)*
 
-DADO un reloj roto CUANDO se lo mira ENTONCES la lectura es la cadena vacía.
+DADO la jornada 3 con `0.0` segundos restantes CUANDO se lee el reloj ENTONCES la lectura es la
+cadena vacía, y no `"08:00"`.
 
 ### AC-SHF-014 — La lectura trunca *(verifica BR-SHF-012)*
 
-DADO `3661.0` segundos ENTONCES la lectura es `"1:01:01"`; DADO `59.9`, es `"00:59"`; DADO
-`-10.0`, es `"00:00"`.
+DADO `43141.0` segundos restantes ENTONCES el reloj lee `"20:00"`; con `43140.0`, `"20:01"`; con
+`-10.0`, `"08:00"`.
 
-### AC-SHF-015 — El borde del aviso *(verifica BR-SHF-013)*
+### AC-SHF-015 — *Retirado* *(verifica BR-SHF-013)*
 
-DADO `1800.0` segundos restantes ENTONCES el turno está en aviso; con `1800.1`, no.
+El aviso de la última media hora no existe más.
+
+### AC-SHF-016 — La hora de la noche *(verifica BR-SHF-014)*
+
+DADO una jornada que no es la tercera CUANDO se lee el reloj ENTONCES:
+
+| Quedan | Se lee |
+|---|---|
+| `43200.0` | `"20:00"` |
+| `28801.0` | `"23:59"` |
+| `28799.0` | `"00:00"` |
+| `21600.0` | `"02:00"` |
+| `14400.0` | `"04:00"` |
+| `0.0` | `"08:00"` |
+
+### AC-SHF-017 — Un solo reloj *(verifica BR-SHF-011)*
+
+DADO el local armado CUANDO se recorren sus nodos ENTONCES hay exactamente una lectura de la
+hora, cuelga del reloj de mesa y no gira hacia la cámara.
 
 ## No objetivos
 
@@ -184,7 +213,7 @@ DADO `1800.0` segundos restantes ENTONCES el turno está en aviso; con `1800.1`,
 - **Entrada:** los segundos reales que pasaron, la lista de obligatorias de la noche, y qué
   jornada es.
 - **Salida:** cuánto queda, si el turno cerró, cuántas obligatorias van cumplidas, y la lectura
-  del reloj de pared.
+  del reloj de mesa: la hora, o vacío.
 - **Falla:** cumplir una obligatoria imposible se rechaza sin consumir. Un tiempo negativo se
   ignora en silencio.
 

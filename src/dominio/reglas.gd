@@ -10,9 +10,13 @@
 class_name Reglas
 extends RefCounted
 
-## Ocho horas de ficción. El reloj de la escena escala esto a los minutos reales de sesión, así
-## que cambiarlo cambia también cuánto dura jugar una noche.
-const DURACION_DEL_TURNO := 28800.0
+## La noche entera, en segundos de ficción. El reloj de la escena escala esto a los minutos
+## reales de sesión, así que cambiarlo cambia también cuánto dura jugar una noche.
+const DURACION_DEL_TURNO := 43200.0
+
+## A qué hora del día abre el turno. El reloj de mesa le suma lo transcurrido para leer la hora,
+## así que la de cierre no se escribe: sale de la apertura más la duración.
+const HORA_DE_APERTURA := 20
 
 const COSTO_DE_LA_CAJA := 1800.0
 const COSTO_DE_REPONER := 3600.0
@@ -23,7 +27,7 @@ const COSTO_DE_LIMPIAR := 3600.0
 ## el fondo, que es una zona que ninguna otra obligatoria visita.
 const COSTO_DE_SACAR_LA_BASURA := 1200.0
 
-## Segundos **reales** de reloj de pared que el jugador pasa caminando en un turno completo, sin
+## Segundos **reales** de reloj que el jugador pasa caminando en un turno completo, sin
 ## contar lo que camine investigando. Es el único término del presupuesto que no está en
 ## segundos de ficción, y por eso es el único que pasa por el `Ritmo`.
 ##
@@ -55,8 +59,7 @@ const COSTO_DE_SACAR_LA_BASURA := 1200.0
 ## trayecto se come el piso de investigación. Con 220 no lo hace, medido antes de subirlo.
 const SEGUNDOS_DE_TRAYECTO_ESTIMADOS := 220.0
 
-## El piso de investigación, en segundos de ficción: **3600, o sea 60 minutos de juego**, una de
-## las ocho horas de la noche.
+## El piso de investigación, en segundos de ficción: **3600, o sea 60 minutos de juego**.
 ##
 ## Existe para que ese caso sea una afirmación con contenido y no un `> 0` disfrazado. Un margen
 ## de tres segundos es aritméticamente válido y un juego injugable, y sin este piso la salida
@@ -89,17 +92,17 @@ const APERCIBIMIENTOS_HASTA_EL_DESPIDO := 4
 
 const APERCIBIMIENTOS_POR_AVISO := 1
 
-## En qué noche se rompe el reloj de pared del local, a la mitad del turno y para siempre.
+## En qué noche falla el reloj de mesa del local: desde la mitad de ese turno hasta su cierre, y
+## la noche siguiente vuelve a andar.
 ##
 ## El GDD dice que deja de funcionar «a mitad de una de las jornadas» y no cuál: la tercera de
-## cinco es una decisión de balance, y es la que reparte la partida en dos mitades parejas —dos
-## noches sabiendo la hora, dos sin saberla, y la del medio partida al medio—. Cae adentro de la
-## partida a propósito: una jornada posterior a la última dejaría la regla escrita y muerta,
-## y eso lo caza `reglas_test.gd`.
+## cinco es una decisión de balance, la del medio de la partida. Cae adentro a propósito: una
+## jornada posterior a la última dejaría la regla escrita y muerta, y eso lo caza
+## `reglas_test.gd`.
 ##
 ## Vive acá y no en `reglas_de_la_partida.gd` porque no es cuánto dura la partida sino un número
 ## de balance más, del mismo tipo que los apercibimientos: `Reglas` ya cruza jornadas.
-const JORNADA_EN_QUE_SE_ROMPE_EL_RELOJ_DE_PARED := 3
+const JORNADA_EN_QUE_FALLA_EL_RELOJ := 3
 
 ## Vale el doble que un aviso, y eso es lo que hace que las tres bandas pesen distinto también
 ## sobre el despido: a la banda grave le alcanza con una jornada menos.
