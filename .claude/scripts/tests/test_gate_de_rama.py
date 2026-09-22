@@ -225,7 +225,6 @@ class LaReglaDeLaRama(unittest.TestCase):
     def test_los_prefijos_que_llegan_al_producto(self):
         self.pasa("feature/el-campo-de-interaccion-es-espacial")
         self.pasa("bugfix/el-objeto-en-la-mano-empuja-al-jugador")
-        self.pasa("hotfix/la-build-de-la-entrega-no-abre")
         self.pasa("refactor/el-turno-sin-reloj-propio")
         self.pasa("improvement/la-computadora-con-el-estilo-de-manada")
 
@@ -238,13 +237,20 @@ class LaReglaDeLaRama(unittest.TestCase):
     def test_el_mensaje_nombra_los_que_si_pueden(self):
         # Bloquear sin decir cómo salir produce el reflejo de buscar cómo saltear el bloqueo.
         motivo = self.bloquea("harness/el-gate-mira-el-prefijo")
-        for prefijo in ("feature/", "bugfix/", "hotfix/", "refactor/", "improvement/"):
+        for prefijo in ("feature/", "bugfix/", "refactor/", "improvement/"):
             self.assertIn(prefijo, motivo)
 
     def test_una_rama_sin_prefijo_conocido_bloquea(self):
         # `chore/` y `fix/` estan acá a propósito: son los dos nombres que el repo usó antes de
         # cerrar el conjunto, y un conjunto cerrado que acepta al viejo no cerró nada.
-        for rama in ("arreglos", "mia", "chore/lo-que-sea", "fix/lo-que-sea", "feature-sin-barra"):
+        for rama in (
+            "arreglos",
+            "mia",
+            "chore/lo-que-sea",
+            "fix/lo-que-sea",
+            "hotfix/lo-que-sea",
+            "feature-sin-barra",
+        ):
             self.bloquea(rama)
 
     def test_ninguna_rama_pide_el_numero_del_issue(self):

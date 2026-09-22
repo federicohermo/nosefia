@@ -8,7 +8,6 @@ Cada rama tiene una pregunta distinta, y el prefijo la contesta.
 | `staging` | **Integra.** Es la rama default del repositorio | cualquiera, **también directo** |
 | `feature/<kebab>` | Código que parte de un spec: crea, modifica o borra una funcionalidad | quien lo implementa |
 | `bugfix/<kebab>` | Algo del producto está roto | quien lo arregla |
-| `hotfix/<kebab>` | Urgente, contra lo que ya se entregó | quien lo arregla |
 | `refactor/<kebab>` | El mismo comportamiento con otra forma | quien lo toque |
 | `improvement/<kebab>` | Un cambio o un agregado que no toca ningún spec y no es un bug: UI, arte, sonido, rendimiento | quien lo toque |
 | `harness/<kebab>` | El harness de `.claude/`: scripts, gates, skills | quien lo toque |
@@ -17,10 +16,13 @@ Cada rama tiene una pregunta distinta, y el prefijo la contesta.
 
 ## Los prefijos son un conjunto cerrado, y sólo la mitad se puede verificar
 
-Los cinco primeros pueden editar `src/`. `feature/`, `bugfix/` y `hotfix/` son los de la [convención de
+Los cuatro primeros pueden editar `src/`. `feature/` y `bugfix/` son los de la [convención de
 Atlassian](https://support.atlassian.com/bitbucket-cloud/kb/how-to-prevent-creating-branches-with-the-prefixes-that-are-not-defined-in-the-branching-model-using-git-hooks-in-bitbucket-cloud/),
 y `refactor/` e `improvement/` cubren lo que no es spec ni bug. Que la rama tenga uno de los
-cinco lo verifica `gate_de_rama.py` en cada escritura.
+cuatro lo verifica `gate_de_rama.py` en cada escritura.
+
+**No hay `hotfix/`.** Un hotfix no es una rama: es un commit directo sobre `staging`, con el
+mensaje empezando por `hotfix:`.
 
 Los otros tres **no los verifica nadie, y no se podría**: el hook sólo protege `src/`, así que
 una rama `docs/` que edita documentación no le pasa ni cerca. Están declarados igual porque el

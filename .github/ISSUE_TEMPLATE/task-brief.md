@@ -14,7 +14,7 @@ labels: ""
 ## Contexto
 
 - **Objetivo:** una oración. Qué problema resuelve.
-- **Tipo:** `feature` | `bugfix` | `hotfix` | `refactor` | `improvement`
+- **Tipo:** `feature` | `bugfix` | `refactor` | `improvement`
 - **Spec:** ninguno | crea | modifica | borra — `specs/<capability>/<capability>.md`
 - **Rama:** `<tipo>/<issue>-<kebab>`
 

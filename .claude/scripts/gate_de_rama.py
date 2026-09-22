@@ -62,13 +62,16 @@ from lib.rutas_protegidas import esta_protegida  # noqa: E402
 
 #: Los prefijos que pueden editar el producto.
 #:
-#: Los tres primeros son los de la convención de Atlassian: quien llega de afuera ya sabe qué
+#: `feature/` y `bugfix/` son los de la convención de Atlassian: quien llega de afuera ya sabe qué
 #: significan. `refactor/` e `improvement/` cubren lo que no cambia ningún spec y tampoco arregla
 #: un bug: sin ellos, ese trabajo caía en `bugfix/` con un nombre que mentía.
 #:
+#: **No hay `hotfix/`.** Un hotfix no es una rama: es un commit directo sobre `staging`, con el
+#: mensaje empezando por `hotfix:`.
+#:
 #: **Ninguno pide número de issue.** Exigirlo obliga a abrir un issue antes de empezar, o a
 #: inventar un número. La rama que sí sale de un issue puede llevarlo igual.
-PREFIJOS_DEL_PRODUCTO = ("feature/", "bugfix/", "hotfix/", "refactor/", "improvement/")
+PREFIJOS_DEL_PRODUCTO = ("feature/", "bugfix/", "refactor/", "improvement/")
 
 #: Los prefijos de lo que NO toca `src/`, declarados para que el mensaje pueda ofrecerlos.
 #:

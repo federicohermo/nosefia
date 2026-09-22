@@ -25,13 +25,15 @@ Si el usuario pide un arreglo para ahora y no quiere issue, se hace sin issue: u
 |---|---|---|
 | `feature` | una funcionalidad nueva, cambiada o que se quita | **siempre**: crea, modifica o borra |
 | `bugfix` | el juego no hace lo que ya tiene que hacer | casi nunca |
-| `hotfix` | un `bugfix` urgente contra lo entregado | casi nunca |
 | `refactor` | el mismo comportamiento con otra forma | nunca |
 | `improvement` | un cambio o un agregado que no cambia ninguna regla: UI, arte, sonido, rendimiento | nunca |
 
 **La prueba para el spec es una sola: ¿cambia lo que el juego tiene que hacer?** Una regla
 nueva, un valor de balance, un comportamiento que el GDD fija, una funcionalidad que se quita.
 Si la respuesta es sí, el tipo es `feature`.
+
+**Un hotfix no es un tipo de issue.** Es un commit directo sobre `staging`, con el mensaje
+empezando por `hotfix:`. No lleva issue, rama ni PR.
 
 Un `bugfix` toca un spec en un solo caso: el bug era una regla que nadie había escrito. Ahí la
 regla se escribe con el arreglo.
@@ -65,6 +67,9 @@ rompe:
   `Depende de #N`.
 - **El primer comando de verificación es siempre `python .claude/scripts/verificar.py`.** El
   veredicto sale del código de salida, nunca de un grep.
+- **Un valor de balance no se inventa.** Un costo, un tiempo o un umbral sale del GDD o del
+  dominio. Si ninguno lo fija, el criterio lo nombra como pregunta abierta y `to-spec` lo
+  registra. Un número propuesto por el agente se lee como decidido.
 - **Los bordes van escritos.** El caso feliz lo cubre cualquier implementación.
 
 ## Paso 4 — Mostrar y publicar

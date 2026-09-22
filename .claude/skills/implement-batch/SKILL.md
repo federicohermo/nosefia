@@ -67,7 +67,7 @@ Cada agente recibe, literal:
   propio del batch — sin esto, N carriles lo re-derivan N veces desde frío.
 - **La rama se llama `<tipo>/<issue>-<kebab>`, con el tipo del issue, y eso no es decorativo.**
   `gate_de_rama.py` corre como hook y **sólo deja escribir en `src/` desde `feature/`, `bugfix/`,
-  `hotfix/`, `refactor/` e `improvement/`**. El síntoma es un `Edit` denegado, que se lee como un
+  `refactor/` e `improvement/`**. El síntoma es un `Edit` denegado, que se lee como un
   problema de permisos y no como uno de nombre. **Es la falla número uno de un carril**, y aparece
   recién en la primera edición, con el worktree ya abierto.
 - **El issue entero, pegado.** El worktree no trae el plan: el plan está en GitHub. Un carril que

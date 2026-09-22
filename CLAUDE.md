@@ -95,7 +95,7 @@ quién la verifica.
 | Ningún test sin aserción, apagado, o con un nombre que hace que no corra | `gate_de_tests.py` |
 | La forma de los contratos, y **cada criterio de un spec `ratified` citado por un test** como `AC-<COD>-###` | `gate_de_specs.py` |
 | Formato, largo de línea (100), nombres y orden de declaraciones | `gdformat`, `gdlint` |
-| Que a `src/` sólo lo toquen `feature/`, `bugfix/`, `hotfix/`, `refactor/` e `improvement/`, más `staging` | el hook, `gate_de_rama.py` |
+| Que a `src/` sólo lo toquen `feature/`, `bugfix/`, `refactor/` e `improvement/`, más `staging` | el hook, `gate_de_rama.py` |
 | Que un skill traiga adentro todo lo que corre, copia por copia | `test_copias_de_skills.py` |
 | Que un doc diga la regla y no la lista de los skills | `test_docs_no_enumeran_skills.py` |
 
@@ -141,7 +141,8 @@ de una funcionalidad. Un issue toca un spec sólo si cambia lo que el juego tien
 3. **Escribir el spec** sólo si el cambio crea, modifica o borra una funcionalidad — el skill
    `to-spec`, desde el issue o directo. Es el primer commit de la rama `feature/`.
 
-**Ahí termina planificar: la rama la abre el implementador**, y lo bloquea un hook.
+**Ahí termina planificar.** La rama la abre quien escribe su primer commit: `to-spec` si hay
+spec, el implementador si no. El prefijo lo verifica un hook.
 
 - **El código contesta al spec, nunca al revés.** Si el código no cumple un criterio, se corrige
   el código. Si el criterio ya no describe el juego, eso es una decisión de diseño y la toma una

@@ -120,8 +120,9 @@ El formato no se discute en una revisión: lo decide la herramienta.
 ## Empezar un cambio
 
 **El prefijo de la rama dice qué clase de cambio es**, y un hook bloquea la edición de `src/`
-desde una rama sin uno de estos: `feature/`, `bugfix/`, `hotfix/`, `refactor/` o
-`improvement/`. `feature/` es para código que parte de un spec.
+desde una rama sin uno de estos: `feature/`, `bugfix/`, `refactor/` o `improvement/`.
+`feature/` es para código que parte de un spec. Un hotfix no lleva rama: es un commit directo
+sobre `staging`, con el mensaje empezando por `hotfix:`.
 
 En corto:
 
