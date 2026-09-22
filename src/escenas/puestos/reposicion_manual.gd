@@ -103,6 +103,7 @@ func preparar() -> void:
 		var vista := MeshInstance3D.new()
 		var modelo := _modelos[producto.id]
 		vista.mesh = modelo
+		vista.gi_mode = GeometryInstance3D.GI_MODE_DYNAMIC
 		vista.position = _pie_del_fantasma(modelo)
 		vista.material_override = _fantasma(modelo, 0.0, 1.0)
 		casillero.add_child(vista)
@@ -891,6 +892,7 @@ func _primera_dibujada(id: Producto.Id) -> int:
 func _dibujar(nombre: String, malla: Mesh, bloque: PackedFloat32Array) -> MultiMeshInstance3D:
 	var grupo := MultiMeshInstance3D.new()
 	grupo.name = nombre
+	grupo.gi_mode = GeometryInstance3D.GI_MODE_DYNAMIC
 	var copias := MultiMesh.new()
 	copias.transform_format = MultiMesh.TRANSFORM_3D
 	copias.mesh = malla

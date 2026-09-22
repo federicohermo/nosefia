@@ -20,3 +20,4 @@ shape = ExtResource("forma")
 [node name="Malla" type="MeshInstance3D" parent="."]
 scale = Vector3(0.3037077, 0.3037077, 0.3037077)
 mesh = ExtResource("malla")
+gi_mode = 2

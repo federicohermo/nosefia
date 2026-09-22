@@ -148,16 +148,25 @@ func test_el_contenido_conserva_material_y_textura_de_cada_producto() -> void:
 		var previo: StandardMaterial3D = original.mesh.surface_get_material(0)
 		assert_object(material).override_failure_message(copia.name).is_not_null()
 		assert_object(material.albedo_texture).is_same(previo.albedo_texture)
-		assert_array(copia.mesh.surface_get_arrays(0)[Mesh.ARRAY_TEX_UV]).is_equal(
-			original.mesh.surface_get_arrays(0)[Mesh.ARRAY_TEX_UV]
+		var sueltos := _sin_par_con_su_uv(copia.mesh, original.mesh)
+		(
+			assert_int(sueltos)
+			. override_failure_message(
+				"%s: %d vértices sin su UV en el modelo" % [copia.name, sueltos]
+			)
+			. is_equal(0)
 		)
 
 
 ## Reponer coloca el producto del modelo, no una copia parecida.
 ##
 ## La malla viaja **intacta**: la escala y el giro van en el nodo del contenido, que es lo que
-## `_preparar_modelos` hornea. Por eso acá se comparan los vértices tal cual, y aparte el tamaño
-## que el par malla-nodo da en el mundo, que es lo que el jugador ve en el estante.
+## `_preparar_modelos` hornea. Por eso acá se comparan los vértices, y aparte el tamaño que el
+## par malla-nodo da en el mundo, que es lo que el jugador ve en el estante.
+##
+## **Con tolerancia y por cercanía, no decimal por decimal.** El modelo se importa con el
+## segundo juego de UV para el horneado de la luz, y ese paso vuelve a empaquetar cada malla:
+## el mismo vértice sale con un decimal distinto del que guardó el contenido.
 func test_reponer_recupera_los_productos_independientes_del_modelo() -> void:
 	var modelo: Node3D = auto_free(MODELO.instantiate())
 	var contenido: Node3D = auto_free(CONTENIDO.instantiate())
@@ -169,10 +178,19 @@ func test_reponer_recupera_los_productos_independientes_del_modelo() -> void:
 		assert_str(copia.name).is_equal(Catalogo.de(id).nombre)
 		assert_int(copia.mesh.get_surface_count()).is_equal(original.mesh.get_surface_count())
 		for superficie in original.mesh.get_surface_count():
+			var casilleros := _por_celda(
+				original.mesh.surface_get_arrays(superficie)[Mesh.ARRAY_VERTEX]
+			)
+			var sueltos := 0
+			for punto in copia.mesh.surface_get_arrays(superficie)[Mesh.ARRAY_VERTEX]:
+				if _distancia_mas_corta(casilleros, punto) >= SEPARACION_MAXIMA:
+					sueltos += 1
 			(
-				assert_array(copia.mesh.surface_get_arrays(superficie)[Mesh.ARRAY_VERTEX])
-				. override_failure_message(copia.name)
-				. is_equal(original.mesh.surface_get_arrays(superficie)[Mesh.ARRAY_VERTEX])
+				assert_int(sueltos)
+				. override_failure_message(
+					"%s: %d vértices sin par en el modelo" % [copia.name, sueltos]
+				)
+				. is_equal(0)
 			)
 		var antes: AABB = original.transform * original.mesh.get_aabb()
 		var despues: AABB = copia.transform * copia.mesh.get_aabb()
@@ -181,3 +199,46 @@ func test_reponer_recupera_los_productos_independientes_del_modelo() -> void:
 			. override_failure_message("%s: %s contra %s" % [copia.name, despues.size, antes.size])
 			. is_true()
 		)
+
+
+## Cuántos vértices de la copia no tienen en el modelo un vértice en el mismo lugar y con la
+## misma UV. Se busca por cercanía: el segundo juego de UV del horneado parte y reordena los
+## vértices al importar, así que ni el orden ni la cantidad se conservan.
+func _sin_par_con_su_uv(copia: Mesh, original: Mesh) -> int:
+	var del_modelo: Array = original.surface_get_arrays(0)
+	var vertices: PackedVector3Array = del_modelo[Mesh.ARRAY_VERTEX]
+	var uvs: PackedVector2Array = del_modelo[Mesh.ARRAY_TEX_UV]
+	var casilleros := {}
+	for indice in vertices.size():
+		var celda := Vector3i((vertices[indice] / CELDA).floor())
+		if not casilleros.has(celda):
+			casilleros[celda] = PackedInt32Array()
+		casilleros[celda].append(indice)
+	var de_la_copia: Array = copia.surface_get_arrays(0)
+	var sueltos := 0
+	for indice in (de_la_copia[Mesh.ARRAY_VERTEX] as PackedVector3Array).size():
+		var punto: Vector3 = de_la_copia[Mesh.ARRAY_VERTEX][indice]
+		var uv: Vector2 = de_la_copia[Mesh.ARRAY_TEX_UV][indice]
+		if not _hay_par(casilleros, vertices, uvs, punto, uv):
+			sueltos += 1
+	return sueltos
+
+
+func _hay_par(
+	casilleros: Dictionary,
+	vertices: PackedVector3Array,
+	uvs: PackedVector2Array,
+	punto: Vector3,
+	uv: Vector2
+) -> bool:
+	var celda := Vector3i((punto / CELDA).floor())
+	for dx in [-1, 0, 1]:
+		for dy in [-1, 0, 1]:
+			for dz in [-1, 0, 1]:
+				for otro in casilleros.get(celda + Vector3i(dx, dy, dz), PackedInt32Array()):
+					if (
+						punto.distance_to(vertices[otro]) < SEPARACION_MAXIMA
+						and uv.distance_to(uvs[otro]) < SEPARACION_MAXIMA
+					):
+						return true
+	return false

@@ -8,6 +8,7 @@
 [ext_resource type="PackedScene" path="res://src/escenas/puestos/interfaz_del_almacen.tscn" id="grupo_Interfaz"]
 [ext_resource type="PackedScene" path="res://src/escenas/puestos/objetos_del_almacen.tscn" id="grupo_Objetos"]
 [ext_resource type="PackedScene" path="res://src/escenas/puestos/servicios_del_almacen.tscn" id="grupo_Servicios"]
+[ext_resource type="LightmapGIData" uid="uid://pmv6equli8dq" path="res://src/escenas/almacen.lmbake" id="lightmap"]
 [ext_resource type="PackedScene" path="res://src/escenas/puestos/reposicion_manual.tscn" id="reposicion_manual"]
 
 [node name="Almacen" type="Node3D" unique_id=999617316 node_paths=PackedStringArray("_hud", "_reloj", "_ciclo", "_pantalla", "_reloj_de_pared", "_repositor", "_carga", "_estante", "_cajas_de_productos", "_caja_de_traslado", "_jugador", "_atenciones", "_computadora", "_limpiador", "_limpieza", "_recolector", "_audio", "_reposicion_manual", "_agarre", "_bolsas", "_muebles_con_contorno")]
@@ -42,26 +43,29 @@ contenido = NodePath("../Estructura/gondolanueva/StaticBody3D/Contenido")
 punto_de_la_caja = NodePath("../Jugador/PuntoDeCaja")
 
 [node name="Ambiente" parent="." unique_id=1395941829 instance=ExtResource("grupo_Ambiente")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.001781702, 0.011070967, 5.054474e-05)
 
 [node name="Estructura" parent="." unique_id=1019345008 instance=ExtResource("grupo_Estructura")]
 
-[node name="StaticBody3D" parent="Estructura/base compu" parent_id_path=PackedInt32Array(1019345008, 1251467035) index="0" unique_id=873624168 node_paths=PackedStringArray("jugador", "reloj", "computadora", "pantalla")]
+[node name="StaticBody3D" parent="Estructura/base compu" parent_id_path=PackedInt32Array(1019345008, 1800628857) index="0" unique_id=1945969719 node_paths=PackedStringArray("jugador", "reloj", "computadora", "pantalla")]
 jugador = NodePath("../../../Jugador")
 reloj = NodePath("../../../Servicios/RelojDelTurno")
 computadora = NodePath("../../../Servicios/Computadora")
 pantalla = NodePath("../../../Interfaz/PantallaDeComputadora")
 
+[node name="LuzInterior" parent="Estructura/heladeranueva" parent_id_path=PackedInt32Array(1019345008, 1910536099) index="5"]
+visible = false
+light_energy = 0.4
+light_bake_mode = 1
+
+[node name="LuzInterior" parent="Estructura/heladeranueva_001" parent_id_path=PackedInt32Array(1019345008, 944026241) index="5"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.38939667, 1.1912528, -0.18357801)
+visible = false
+light_energy = 0.4
+light_bake_mode = 1
+
 [node name="SueloSolido" parent="Estructura" index="32"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.001017, 0)
-
-[node name="LuzInterior" parent="Estructura/heladeranueva" parent_id_path=PackedInt32Array(1019345008, 978939477) index="5"]
-light_energy = 0.4
-shadow_enabled = true
-
-[node name="LuzInterior" parent="Estructura/heladeranueva_001" parent_id_path=PackedInt32Array(1019345008, 536991128) index="5"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.38939667, 1.1912528, -0.18357801)
-light_energy = 0.4
-shadow_enabled = true
 
 [node name="Deposito" parent="Estructura/SueloSolido" index="1"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10.86326, 0, -4.5818586)
@@ -93,71 +97,209 @@ recolector = NodePath("../../Servicios/Recolector")
 [node name="CajaDeActroncito" parent="Objetos" index="6"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.4, 1.9077, -11.79)
 
+[node name="Cuerpo" parent="Objetos/CajaDeActroncito" index="0"]
+transform = Transform3D(0.3037077, 0, 0, 0, 0.3037077, 0, 0, 0, 0.3037077, 0, 0, 0)
+
+[node name="Malla" parent="Objetos/CajaDeActroncito" index="1"]
+transform = Transform3D(0.3037077, 0, 0, 0, 0.3037077, 0, 0, 0, 0.3037077, 0, 0, 0)
+
 [node name="CajaDeDurextra" parent="Objetos" index="7"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.4, 1.327, -10.9)
+
+[node name="Cuerpo" parent="Objetos/CajaDeDurextra" index="0"]
+transform = Transform3D(0.2, 0, 0, 0, 0.2, 0, 0, 0, 0.2, 0, 0, 0)
+
+[node name="Malla" parent="Objetos/CajaDeDurextra" index="1"]
+transform = Transform3D(0.2, 0, 0, 0, 0.2, 0, 0, 0, 0.2, 0, 0, 0)
 
 [node name="CajaDeBurbaloo" parent="Objetos" index="8"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.4, 1.9077, -11.09)
 
+[node name="Cuerpo" parent="Objetos/CajaDeBurbaloo" index="0"]
+transform = Transform3D(0.3037077, 0, 0, 0, 0.3037077, 0, 0, 0, 0.3037077, 0, 0, 0)
+
+[node name="Malla" parent="Objetos/CajaDeBurbaloo" index="1"]
+transform = Transform3D(0.3037077, 0, 0, 0, 0.3037077, 0, 0, 0, 0.3037077, 0, 0, 0)
+
 [node name="CajaDeZucarachas" parent="Objetos" index="9"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.4, 1.327, -11.45)
+
+[node name="Cuerpo" parent="Objetos/CajaDeZucarachas" index="0"]
+transform = Transform3D(0.2, 0, 0, 0, 0.2, 0, 0, 0, 0.2, 0, 0, 0)
+
+[node name="Malla" parent="Objetos/CajaDeZucarachas" index="1"]
+transform = Transform3D(0.2, 0, 0, 0, 0.2, 0, 0, 0, 0.2, 0, 0, 0)
 
 [node name="CajaDeLaysntt" parent="Objetos" index="10"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7.577, 1.9077, -11.79)
 
+[node name="Cuerpo" parent="Objetos/CajaDeLaysntt" index="0"]
+transform = Transform3D(0.3037077, 0, 0, 0, 0.3037077, 0, 0, 0, 0.3037077, 0, 0, 0)
+
+[node name="Malla" parent="Objetos/CajaDeLaysntt" index="1"]
+transform = Transform3D(0.3037077, 0, 0, 0, 0.3037077, 0, 0, 0, 0.3037077, 0, 0, 0)
+
 [node name="CajaDeMalbardo" parent="Objetos" index="11"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.4, 1.327, -12)
+
+[node name="Cuerpo" parent="Objetos/CajaDeMalbardo" index="0"]
+transform = Transform3D(0.2, 0, 0, 0, 0.2, 0, 0, 0, 0.2, 0, 0, 0)
+
+[node name="Malla" parent="Objetos/CajaDeMalbardo" index="1"]
+transform = Transform3D(0.2, 0, 0, 0, 0.2, 0, 0, 0, 0.2, 0, 0, 0)
 
 [node name="CajaDeProngles" parent="Objetos" index="12"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7.577, 1.9077, -11.09)
 
+[node name="Cuerpo" parent="Objetos/CajaDeProngles" index="0"]
+transform = Transform3D(0.3037077, 0, 0, 0, 0.3037077, 0, 0, 0, 0.3037077, 0, 0, 0)
+
+[node name="Malla" parent="Objetos/CajaDeProngles" index="1"]
+transform = Transform3D(0.3037077, 0, 0, 0, 0.3037077, 0, 0, 0, 0.3037077, 0, 0, 0)
+
 [node name="CajaDeJorgillo" parent="Objetos" index="13"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.4, 0.851, -10.9)
+
+[node name="Cuerpo" parent="Objetos/CajaDeJorgillo" index="0"]
+transform = Transform3D(0.2, 0, 0, 0, 0.2, 0, 0, 0, 0.2, 0, 0, 0)
+
+[node name="Malla" parent="Objetos/CajaDeJorgillo" index="1"]
+transform = Transform3D(0.2, 0, 0, 0, 0.2, 0, 0, 0, 0.2, 0, 0, 0)
 
 [node name="CajaDeArvejas" parent="Objetos" index="14"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.1, 1.9077, -14.115)
 
+[node name="Cuerpo" parent="Objetos/CajaDeArvejas" index="0"]
+transform = Transform3D(0.3037077, 0, 0, 0, 0.3037077, 0, 0, 0, 0.3037077, 0, 0, 0)
+
+[node name="Malla" parent="Objetos/CajaDeArvejas" index="1"]
+transform = Transform3D(0.3037077, 0, 0, 0, 0.3037077, 0, 0, 0, 0.3037077, 0, 0, 0)
+
 [node name="CajaDeChisitos" parent="Objetos" index="15"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.75, 1.9077, -14.115)
+
+[node name="Cuerpo" parent="Objetos/CajaDeChisitos" index="0"]
+transform = Transform3D(0.3037077, 0, 0, 0, 0.3037077, 0, 0, 0, 0.3037077, 0, 0, 0)
+
+[node name="Malla" parent="Objetos/CajaDeChisitos" index="1"]
+transform = Transform3D(0.3037077, 0, 0, 0, 0.3037077, 0, 0, 0, 0.3037077, 0, 0, 0)
 
 [node name="CajaDeOremos" parent="Objetos" index="16"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.4, 0.851, -11.45)
 
+[node name="Cuerpo" parent="Objetos/CajaDeOremos" index="0"]
+transform = Transform3D(0.2, 0, 0, 0, 0.2, 0, 0, 0, 0.2, 0, 0, 0)
+
+[node name="Malla" parent="Objetos/CajaDeOremos" index="1"]
+transform = Transform3D(0.2, 0, 0, 0, 0.2, 0, 0, 0, 0.2, 0, 0, 0)
+
 [node name="CajaDePepitos" parent="Objetos" index="17"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.4, 0.851, -12)
+
+[node name="Cuerpo" parent="Objetos/CajaDePepitos" index="0"]
+transform = Transform3D(0.2, 0, 0, 0, 0.2, 0, 0, 0, 0.2, 0, 0, 0)
+
+[node name="Malla" parent="Objetos/CajaDePepitos" index="1"]
+transform = Transform3D(0.2, 0, 0, 0, 0.2, 0, 0, 0, 0.2, 0, 0, 0)
 
 [node name="CajaDeSaladik" parent="Objetos" index="18"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.3, 0.4059, -10.6)
 
+[node name="Cuerpo" parent="Objetos/CajaDeSaladik" index="0"]
+transform = Transform3D(0.3037077, 0, 0, 0, 0.3037077, 0, 0, 0, 0.3037077, 0, 0, 0)
+
+[node name="Malla" parent="Objetos/CajaDeSaladik" index="1"]
+transform = Transform3D(0.3037077, 0, 0, 0, 0.3037077, 0, 0, 0, 0.3037077, 0, 0, 0)
+
 [node name="CajaDeUakas" parent="Objetos" index="19"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.3, 0.4059, -11.3)
+
+[node name="Cuerpo" parent="Objetos/CajaDeUakas" index="0"]
+transform = Transform3D(0.3037077, 0, 0, 0, 0.3037077, 0, 0, 0, 0.3037077, 0, 0, 0)
+
+[node name="Malla" parent="Objetos/CajaDeUakas" index="1"]
+transform = Transform3D(0.3037077, 0, 0, 0, 0.3037077, 0, 0, 0, 0.3037077, 0, 0, 0)
 
 [node name="CajaDeCoracola" parent="Objetos" index="20"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7.577, 1.327, -10.9)
 
+[node name="Cuerpo" parent="Objetos/CajaDeCoracola" index="0"]
+transform = Transform3D(0.2, 0, 0, 0, 0.2, 0, 0, 0, 0.2, 0, 0, 0)
+
+[node name="Malla" parent="Objetos/CajaDeCoracola" index="1"]
+transform = Transform3D(0.2, 0, 0, 0, 0.2, 0, 0, 0, 0.2, 0, 0, 0)
+
 [node name="CajaDeFrotlups" parent="Objetos" index="21"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7.577, 1.327, -11.45)
+
+[node name="Cuerpo" parent="Objetos/CajaDeFrotlups" index="0"]
+transform = Transform3D(0.2, 0, 0, 0, 0.2, 0, 0, 0, 0.2, 0, 0, 0)
+
+[node name="Malla" parent="Objetos/CajaDeFrotlups" index="1"]
+transform = Transform3D(0.2, 0, 0, 0, 0.2, 0, 0, 0, 0.2, 0, 0, 0)
 
 [node name="CajaDeMarolini" parent="Objetos" index="22"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.3, 0.4059, -12)
 
+[node name="Cuerpo" parent="Objetos/CajaDeMarolini" index="0"]
+transform = Transform3D(0.3037077, 0, 0, 0, 0.3037077, 0, 0, 0, 0.3037077, 0, 0, 0)
+
+[node name="Malla" parent="Objetos/CajaDeMarolini" index="1"]
+transform = Transform3D(0.3037077, 0, 0, 0, 0.3037077, 0, 0, 0, 0.3037077, 0, 0, 0)
+
 [node name="CajaDeAmargadito" parent="Objetos" index="23"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.3, 0.4059, -12.7)
+
+[node name="Cuerpo" parent="Objetos/CajaDeAmargadito" index="0"]
+transform = Transform3D(0.3037077, 0, 0, 0, 0.3037077, 0, 0, 0, 0.3037077, 0, 0, 0)
+
+[node name="Malla" parent="Objetos/CajaDeAmargadito" index="1"]
+transform = Transform3D(0.3037077, 0, 0, 0, 0.3037077, 0, 0, 0, 0.3037077, 0, 0, 0)
 
 [node name="CajaDeCindolor" parent="Objetos" index="24"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7.577, 1.327, -12)
 
+[node name="Cuerpo" parent="Objetos/CajaDeCindolor" index="0"]
+transform = Transform3D(0.2, 0, 0, 0, 0.2, 0, 0, 0, 0.2, 0, 0, 0)
+
+[node name="Malla" parent="Objetos/CajaDeCindolor" index="1"]
+transform = Transform3D(0.2, 0, 0, 0, 0.2, 0, 0, 0, 0.2, 0, 0, 0)
+
 [node name="CajaDeFlinpuf" parent="Objetos" index="25"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.3, 0.4059, -13.4)
+
+[node name="Cuerpo" parent="Objetos/CajaDeFlinpuf" index="0"]
+transform = Transform3D(0.3037077, 0, 0, 0, 0.3037077, 0, 0, 0, 0.3037077, 0, 0, 0)
+
+[node name="Malla" parent="Objetos/CajaDeFlinpuf" index="1"]
+transform = Transform3D(0.3037077, 0, 0, 0, 0.3037077, 0, 0, 0, 0.3037077, 0, 0, 0)
 
 [node name="CajaDeDonsaturados" parent="Objetos" index="26"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7.577, 0.851, -10.9)
 
+[node name="Cuerpo" parent="Objetos/CajaDeDonsaturados" index="0"]
+transform = Transform3D(0.2, 0, 0, 0, 0.2, 0, 0, 0, 0.2, 0, 0, 0)
+
+[node name="Malla" parent="Objetos/CajaDeDonsaturados" index="1"]
+transform = Transform3D(0.2, 0, 0, 0, 0.2, 0, 0, 0, 0.2, 0, 0, 0)
+
 [node name="CajaDePetisas" parent="Objetos" index="27"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7.577, 0.851, -11.45)
 
+[node name="Cuerpo" parent="Objetos/CajaDePetisas" index="0"]
+transform = Transform3D(0.2, 0, 0, 0, 0.2, 0, 0, 0, 0.2, 0, 0, 0)
+
+[node name="Malla" parent="Objetos/CajaDePetisas" index="1"]
+transform = Transform3D(0.2, 0, 0, 0, 0.2, 0, 0, 0, 0.2, 0, 0, 0)
+
 [node name="CajaDeMacumbas" parent="Objetos" index="28"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7.577, 0.851, -12)
+
+[node name="Cuerpo" parent="Objetos/CajaDeMacumbas" index="0"]
+transform = Transform3D(0.2, 0, 0, 0, 0.2, 0, 0, 0, 0.2, 0, 0, 0)
+
+[node name="Malla" parent="Objetos/CajaDeMacumbas" index="1"]
+transform = Transform3D(0.2, 0, 0, 0, 0.2, 0, 0, 0, 0.2, 0, 0, 0)
 
 [node name="LimpiezaDelAlmacen" parent="." unique_id=2007323218 node_paths=PackedStringArray("jugador", "limpiador") instance=ExtResource("21_limpieza")]
 jugador = NodePath("../Jugador")
@@ -166,5 +308,32 @@ limpiador = NodePath("../Servicios/Limpiador")
 [node name="Jugador" parent="." unique_id=2126157413 instance=ExtResource("1_jugador")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.5791006, 0.112, 6.933177)
 
+[node name="LightmapGI" type="LightmapGI" parent="." unique_id=2127617826]
+generate_probes_subdiv = 3
+light_data = ExtResource("lightmap")
+
 [editable path="Estructura"]
 [editable path="Objetos"]
+[editable path="Objetos/CajaDeActroncito"]
+[editable path="Objetos/CajaDeDurextra"]
+[editable path="Objetos/CajaDeBurbaloo"]
+[editable path="Objetos/CajaDeZucarachas"]
+[editable path="Objetos/CajaDeLaysntt"]
+[editable path="Objetos/CajaDeMalbardo"]
+[editable path="Objetos/CajaDeProngles"]
+[editable path="Objetos/CajaDeJorgillo"]
+[editable path="Objetos/CajaDeArvejas"]
+[editable path="Objetos/CajaDeChisitos"]
+[editable path="Objetos/CajaDeOremos"]
+[editable path="Objetos/CajaDePepitos"]
+[editable path="Objetos/CajaDeSaladik"]
+[editable path="Objetos/CajaDeUakas"]
+[editable path="Objetos/CajaDeCoracola"]
+[editable path="Objetos/CajaDeFrotlups"]
+[editable path="Objetos/CajaDeMarolini"]
+[editable path="Objetos/CajaDeAmargadito"]
+[editable path="Objetos/CajaDeCindolor"]
+[editable path="Objetos/CajaDeFlinpuf"]
+[editable path="Objetos/CajaDeDonsaturados"]
+[editable path="Objetos/CajaDePetisas"]
+[editable path="Objetos/CajaDeMacumbas"]
