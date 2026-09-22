@@ -34,6 +34,11 @@ ok, y el que lo vio fue el usuario mirando el árbol de archivos.
 Por eso `--todos` es la **unión** de lo que git registra y lo que hay en disco bajo
 `.claude/worktrees/`, y no lo primero.
 
+**Y de lo que git registra, sólo lo que vive bajo `.claude/worktrees/`.** El worktree de una
+implementación vive al lado del repo y no es del lote. Un `--todos` que toma todo lo registrado
+lo borra con `--force`, junto con lo que tenga sin commitear. Medido el 2026-09-22 en el lote
+156/157: se llevó un worktree hermano que ninguno de los dos PR había abierto.
+
 ## Las ramas también quedan
 
 `git worktree remove` borra el árbol y **deja la rama** que el harness le puso. Un lote de N
@@ -107,7 +112,7 @@ $todos |
 """
 
 
-#: Dónde nacen los worktrees de un lote. Se mira ADEMÁS de lo que git registra, nunca en vez.
+#: Dónde nacen los worktrees de un lote. Acota lo que git registra, y además se barre en disco.
 DIR_DE_WORKTREES = (".claude", "worktrees")
 
 #: El prefijo que el harness le pone a la rama de cada worktree.
@@ -180,13 +185,14 @@ def main() -> None:
     principal = Path(hecho.stdout.strip()).resolve()
 
     if args == ["--todos"]:
+        del_lote = RAIZ.joinpath(*DIR_DE_WORKTREES).resolve()
         registrados = [
             Path(l[len("worktree ") :]).resolve()
             for l in git("worktree", "list", "--porcelain").stdout.splitlines()
             if l.startswith("worktree ")
         ]
-        objetivos = [w for w in registrados if w != principal]
-        objetivos += huerfanos(RAIZ.joinpath(*DIR_DE_WORKTREES), objetivos, principal)
+        objetivos = [w for w in registrados if w != principal and w.is_relative_to(del_lote)]
+        objetivos += huerfanos(del_lote, objetivos, principal)
         if not objetivos:
             print("no hay worktrees del lote para limpiar")
     else:
