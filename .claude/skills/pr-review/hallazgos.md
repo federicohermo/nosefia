@@ -226,9 +226,9 @@ Tres cosas que no son obvias:
 - **Sale de `staging`, no de la rama del PR que revisás.** Si sale de ahí, arrastra los commits de
   ese PR y no se puede mergear antes que él — que es justo lo que hace falta cuando el fix es de
   otro archivo.
-- **El nombre lleva el número de su issue**, o el hook te bloquea la primera edición de `src/`.
-  Si el hallazgo no tiene issue propio y toca ruta protegida, **eso ya es un hallazgo sobre el
-  proceso**: correspondía un issue, y la descarga es abrirlo con `spec-to-tickets`.
+- **El prefijo dice qué clase de cambio es** —`bugfix/`, `refactor/`, `improvement/`—, o el hook
+  te bloquea la primera edición de `src/`. Si el fix cambia lo que el juego tiene que hacer, es
+  una `feature/` y parte del spec: `to-spec`.
 - **Va al reporte con su número de PR.** Quien mergea tiene que saber que hay dos.
 
 **Y no se abre un issue «para dejarlo anotado».** Un issue de este repo es **el plan de una

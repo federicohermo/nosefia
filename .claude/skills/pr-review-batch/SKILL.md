@@ -37,11 +37,11 @@ Seis sustituciones. Las tres primeras son de herramienta; las tres últimas camb
 | Un review genérico | Acá |
 |---|---|
 | Localiza el PR con las tools de Bitbucket, o con `mcp__github__*` porque `gh` no está | **`gh`, que sí está en el PATH** (medido: `gh 2.98.0`) |
-| Los AC salen de un ticket de Jira | **del contrato de la capacidad** (`specs/<capability>/`, trackeado) y del issue que la rama nombra |
+| Los AC salen de un ticket de Jira | **del issue**, si el PR tiene uno, y **del spec que toca**, si toca uno (`specs/<capability>/`, trackeado) |
 | Cierra con `pnpm verify` | **`python .claude/scripts/verificar.py`**, y un nodo **salteado no es un nodo verde** |
 | La cobertura la garantiza un umbral del 100 % | **Godot no mide cobertura.** El eje de cobertura pasa a ser del reviewer, entero |
 | Un conflicto de merge se resuelve leyendo | **un `.tscn` no se mergea**: da una escena corrupta, no un conflicto. El Paso 6 no puede confiar en git |
-| Eleva todo a comentarios del PR, y lo de afuera del alcance a un issue | **Nada queda anotado.** Lo del alcance entra al PR; lo de afuera sale en **su propio PR** en esta corrida; lo del planteo se corrige en el `spec.md`. Los issues acá son **entrada**, no salida — ver [`sin-deuda.md`](sin-deuda.md). `--comentar` publica además un general por PR |
+| Eleva todo a comentarios del PR, y lo de afuera del alcance a un issue | **Nada queda anotado.** Lo del alcance entra al PR; lo de afuera sale en **su propio PR** en esta corrida; lo del planteo se corrige en el spec. Los issues acá son **entrada**, no salida — ver [`sin-deuda.md`](sin-deuda.md). `--comentar` publica además un general por PR |
 
 ---
 
@@ -135,11 +135,10 @@ Seis cláusulas, que van **literales** en el preámbulo del Paso 1:
    el cambio exacto y quién más la toca. Es la única clase de fix que se declara por el archivo y
    no por el hallazgo.
 6. **Todo hallazgo se descarga, y ninguna descarga es un issue.** Las cinco están en
-   [`sin-deuda.md`](sin-deuda.md). Lo del alcance de tu spec entra a tu PR; lo de
+   [`sin-deuda.md`](sin-deuda.md). Lo del alcance de tu PR entra a tu PR; lo de
    afuera
    **sale en su propio PR desde `staging`**, abierto por vos en esta corrida —no desde tu rama, o
-   arrastra tus commits—; lo que pelea con un AC se descarga **corrigiendo el AC** en el `spec.md`
-   y devolviéndolo al issue. «Es preexistente» y «es de otro spec» deciden **dónde aterriza**, no
+   arrastra tus commits—; lo que pelea con un AC se descarga **corrigiendo el AC** en el spec. «Es preexistente» y «es de otro spec» deciden **dónde aterriza**, no
    si se hace.
 
    **Las dos únicas cosas que devolvés sin aplicar** son las que no podés aplicar desde tu
@@ -465,7 +464,7 @@ En este orden y en ~40 líneas más la tabla:
    SHA del merge si el Paso 6 lo tocó, y **si `verificar.py` pasó a la primera, a la segunda, o
    con algún nodo salteado**. La tercera columna no se omite: un salteado no es un verde.
 2. **Lo que apareció en más de un PR** — el patrón transversal es el entregable propio del batch.
-3. **Los PR nuevos que abrió esta corrida** para lo que caía fuera del alcance de cada spec, con
+3. **Los PR nuevos que abrió esta corrida** para lo que caía fuera del alcance de cada PR, con
    su número y en qué orden entran. Quien mergea tiene que saber que la corrida dejó más PRs de
    los que revisó.
 4. **Lo que obligó a corregir un contrato**, y que viajó en el PR que lo corrigió. Y **si esta

@@ -1,6 +1,6 @@
 ---
 name: shape
-description: La entrevista que le da forma al trabajo de No se fía — interroga una idea, un pedido, código sin spec o un spec ya escrito hasta que no quede nada supuesto en silencio. Sólo la entrevista: el archivo lo escribe to-spec. Usar apenas llega un pedido, antes de escribir el contrato.
+description: La entrevista que le da forma al trabajo de No se fía — interroga una idea, un pedido, código sin spec o un spec ya escrito hasta que no quede nada supuesto en silencio. Sólo la entrevista: el issue lo escribe to-issue y el spec to-spec. Usar apenas llega un pedido, antes de escribir el issue o el contrato.
 argument-hint: "[idea | pedido | capacidad | área de código]"
 ---
 
@@ -9,7 +9,7 @@ argument-hint: "[idea | pedido | capacidad | área de código]"
 Adaptado del skill `shape` de *spec-anchored agentic development*. Lo propio de acá es contra qué
 se contrasta: el GDD, las cuatro capas y la tensión aritmética del juego.
 
-**Esto NO escribe el spec.** Lo escribe `to-spec`, y la separación es
+**Esto NO escribe el issue ni el spec.** Los escriben `to-issue` y `to-spec`, y la separación es
 deliberada: entrevistar y editar el archivo a la vez obliga al usuario a revisar un documento que
 se mueve mientras todavía está contestando.
 
@@ -19,7 +19,8 @@ se mueve mientras todavía está contestando.
 - **Código sin spec** → arqueología: leer el código, establecer qué **hace**, interrogar qué
   **debería** hacer.
 - **Un spec ya escrito** → interrogarlo buscando ambigüedad y agujeros.
-- **Un issue** → afilarlo hasta que un agente lo pueda implementar sin adivinar.
+- **Un issue o un pedido puntual** → afilarlo hasta que un agente lo pueda implementar sin
+  adivinar, y decidir si cambia lo que el juego tiene que hacer.
 
 Los cuatro son la misma máquina: **se entrevista hasta que la frontera queda vacía**, no hasta
 llenar una lista. Nunca se escribe código de producción y nunca se edita el spec.
@@ -100,5 +101,5 @@ Antes de pasarle el material a `to-spec`:
 - **Modos de spec:** el resumen corrido, organizado por sección de la plantilla, más las preguntas
   que siguen abiertas. Después, invocar `to-spec`. **La ambigüedad que
   quedó va a las preguntas abiertas, nunca rellenada con un valor por defecto.**
-- **Modo issue:** el texto afilado del issue —título, contexto, criterios que entrega, bordes,
-  fuera de alcance—, listo para pegar.
+- **Modo issue:** el material del issue —tipo, si toca un spec, criterios, bordes, fuera de
+  alcance—. Después, invocar `to-issue`. Si toca un spec, después de `to-issue` va `to-spec`.

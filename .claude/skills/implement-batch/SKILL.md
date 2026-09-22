@@ -65,9 +65,9 @@ Cada agente recibe, literal:
 - **El preámbulo destilado una vez para todo el lote**: las cuatro capas y su dirección, las
   convenciones verificables con quién verifica cada una, y las trampas de este repo. Es el ahorro
   propio del batch — sin esto, N carriles lo re-derivan N veces desde frío.
-- **La rama se llama `feature/<issue>-<kebab>` y eso no es decorativo.** `gate_de_rama.py` corre
-  como hook y **sólo deja escribir en `src/` desde `feature/`, `bugfix/` y `hotfix/`, y a
-  `feature/` le exige el número del issue**. El síntoma es un `Edit` denegado, que se lee como un
+- **La rama se llama `<tipo>/<issue>-<kebab>`, con el tipo del issue, y eso no es decorativo.**
+  `gate_de_rama.py` corre como hook y **sólo deja escribir en `src/` desde `feature/`, `bugfix/`,
+  `hotfix/`, `refactor/` e `improvement/`**. El síntoma es un `Edit` denegado, que se lee como un
   problema de permisos y no como uno de nombre. **Es la falla número uno de un carril**, y aparece
   recién en la primera edición, con el worktree ya abierto.
 - **El issue entero, pegado.** El worktree no trae el plan: el plan está en GitHub. Un carril que
@@ -126,7 +126,7 @@ Cada agente recibe, literal:
 **El padre lo verifica, no lo cree.** Cuando vuelva un carril:
 
 ```bash
-gh pr list --repo federicohermo/nosefia --head feature/<N>-<kebab> --json number,statusCheckRollup
+gh pr list --repo federicohermo/nosefia --head <tipo>/<N>-<kebab> --json number,statusCheckRollup
 rg -n "AC-<COD>-###" test/ .claude/scripts/tests/
 ```
 

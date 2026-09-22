@@ -1,13 +1,12 @@
-"""El gate: no se edita el producto sin un spec detrás de la rama.
+"""El gate: no se edita el producto desde una rama que no dice qué clase de cambio es.
 
 Corre como hook `PreToolUse` sobre `Edit|Write|MultiEdit|Bash|PowerShell`. Recibe el payload
 del hook por stdin y contesta por stdout con `permissionDecision`.
 
 ## Por qué existe
 
-`CLAUDE.md` y `.claude/rules/specs.md` documentan el flujo —el contrato primero, el issue
-después, la rama al final— pero es prosa, y la prosa no frena a nadie. En el repo del que sale este
-harness, la sesión que abrió un spec reportó un bug y el agente abrió una rama y editó el
+`CLAUDE.md` y `.claude/rules/specs.md` documentan el flujo, pero es prosa, y la prosa no
+frena a nadie. En el repo del que sale este harness, la sesión que abrió un spec reportó un bug y el agente abrió una rama y editó el
 dominio sin spec y sin issue: nada se lo impidió.
 
 Es el mismo hallazgo que mueve una convención de la documentación al linter, un nivel más
@@ -38,13 +37,12 @@ arriba: la regla que dice cómo EMPIEZA un cambio también tiene que ser ejecuta
    solo con cambiar de herramienta, sin proponérselo.
 
 5. **Mira el NOMBRE de la rama y nada más.** Hasta el 2026-09-08 exigía que el número de
-   la rama ya estuviera publicado, o sea que para escribir la primera línea de código había
-   que haber abierto el issue. Un gate que obliga a pedir permiso antes de empezar es un gate
-   que se apaga.
+   la rama ya estuviera publicado. Hasta el 2026-09-22 exigía que `feature/` nombrara su issue.
+   Las dos cosas obligaban a abrir un issue antes de escribir la primera línea, y un gate que
+   obliga a pedir permiso antes de empezar es un gate que se apaga.
 
-   Lo que la rama nombra ahora es **su issue**, que es el único plan: `feature/<issue>-<kebab>`.
-   El número lo asigna GitHub al abrir el issue, así que no hay un segundo registro que
-   mantener — el mapa de specs se borró con el régimen viejo.
+   El prefijo dice qué clase de cambio es. Que una `feature/` parta de un spec lo mira el PR,
+   no este gate: el spec se puede escribir en la misma rama.
 """
 
 import json
@@ -62,13 +60,15 @@ configurar()
 from lib.repo import PROTEGIDAS, RAIZ, RAMA_DE_INTEGRACION, RAMAS_COMPARTIDAS  # noqa: E402
 from lib.rutas_protegidas import esta_protegida  # noqa: E402
 
-#: Los tres prefijos que pueden editar el producto.
+#: Los prefijos que pueden editar el producto.
 #:
-#: Son los de la convención de Atlassian —`feature`, `bugfix`, `hotfix`— y no una invención de
-#: acá: quien llega de afuera ya sabe qué significan. **Sólo `feature/` pide el número**, porque
-#: es el único que sale de un issue siempre; exigírselo a `bugfix/` y `hotfix/` los obligaría a
-#: inventar uno. El `bugfix/` que sí sale de un issue puede llevarlo igual.
-PREFIJOS_DEL_PRODUCTO = ("feature/", "bugfix/", "hotfix/")
+#: Los tres primeros son los de la convención de Atlassian: quien llega de afuera ya sabe qué
+#: significan. `refactor/` e `improvement/` cubren lo que no cambia ningún spec y tampoco arregla
+#: un bug: sin ellos, ese trabajo caía en `bugfix/` con un nombre que mentía.
+#:
+#: **Ninguno pide número de issue.** Exigirlo obliga a abrir un issue antes de empezar, o a
+#: inventar un número. La rama que sí sale de un issue puede llevarlo igual.
+PREFIJOS_DEL_PRODUCTO = ("feature/", "bugfix/", "hotfix/", "refactor/", "improvement/")
 
 #: Los prefijos de lo que NO toca `src/`, declarados para que el mensaje pueda ofrecerlos.
 #:
@@ -77,13 +77,6 @@ PREFIJOS_DEL_PRODUCTO = ("feature/", "bugfix/", "hotfix/")
 #: produce el reflejo de saltear el bloqueo, y «renombrá la rama» sin decir a qué no es salida.
 #: Cada uno nombra QUÉ toca, en vez de ser el cajón de sastre que era `chore/`.
 PREFIJOS_SIN_PRODUCTO = ("harness/", "docs/", "ci/")
-
-#: `feature/<issue>-…`, con el número del issue de GitHub.
-#:
-#: Los dígitos son «los que haya» y no tres: el número lo asigna GitHub y no lo rellena nadie.
-#: Rellenarlo a tres lo separaría del issue que nombra, que es justo el vínculo que este
-#: patrón existe para sostener.
-RAMA_DE_ISSUE = re.compile(r"^feature/\d+-.+$")
 
 
 def _lista(prefijos: tuple[str, ...]) -> str:
@@ -98,11 +91,10 @@ def _lista(prefijos: tuple[str, ...]) -> str:
 #: se pudre: el día que entre un cuarto prefijo, el código lo aceptaría y el mensaje seguiría
 #: nombrando tres.
 COMO_SALIR = (
-    "Al producto lo tocan %s, y `feature/` es el único que además nombra su issue: "
-    "`feature/<issue>-<kebab>`. Lo que NO toca `src/` se nombra por lo que toca: %s. **El issue "
-    "se abre antes que la rama**, porque es el único plan: su forma está en "
-    "`.github/ISSUE_TEMPLATE/task-brief.md` y el skill que lo escribe es "
-    "`spec-to-tickets`."
+    "Al producto lo tocan %s. `feature/` es para código que parte de un spec, `bugfix/` para "
+    "algo roto, `refactor/` para el mismo comportamiento con otra forma, e `improvement/` para "
+    "un cambio que no toca ningún spec y no es un bug. Lo que NO toca `src/` se nombra por lo "
+    "que toca: %s."
 ) % (_lista(PREFIJOS_DEL_PRODUCTO), _lista(PREFIJOS_SIN_PRODUCTO))
 
 
@@ -351,8 +343,7 @@ def motivo_del_bloqueo(rama: str, ruta: str) -> str | None:
     # repo. Va antes del prefijo porque si no cae en el genérico de abajo.
     #
     # **Lo que se paga, dicho una vez:** lo que se commitea acá sin rama no pasa por ningún
-    # PR, así que no hay dónde declarar `AC-<COD>-### → test → resultado`. El trabajo de un
-    # issue sigue necesitando su `feature/<issue>-…`; lo que se libera es todo lo demás.
+    # PR, así que no hay dónde declarar `AC-<COD>-### → test → resultado`.
     if rama == RAMA_DE_INTEGRACION:
         return None
 
@@ -366,14 +357,6 @@ def motivo_del_bloqueo(rama: str, ruta: str) -> str | None:
         return (
             f"La rama `{rama}` no puede editar `{ruta}`. Si el cambio de verdad no es del "
             f"producto, entonces la rama está bien y el archivo está mal. {COMO_SALIR}"
-        )
-
-    # Sólo `feature/`: es el único de los tres que sale de un spec siempre.
-    if rama.startswith("feature/") and RAMA_DE_ISSUE.match(rama) is None:
-        return (
-            f"La rama `{rama}` es de feature y no nombra su issue: se llama "
-            f"`feature/<issue>-<kebab>`, con el número que GitHub le dio al issue. Sin ese "
-            f"número, el PR no tiene con qué cerrar nada. {COMO_SALIR}"
         )
 
     return None

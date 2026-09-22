@@ -179,7 +179,7 @@ elegir entre perder las dos cosas o ninguna.
 | Función y variable | `snake_case` |
 | Constante | `MAYUSCULA_CON_GUIONES` |
 | Señal | `snake_case`, en pasado |
-| Rama | `feature/<issue>-<kebab>`, `bugfix/` o `hotfix/` para `src/`; `harness/`, `docs/` o `ci/` cuando no toca el producto |
+| Rama | `feature/`, `bugfix/`, `hotfix/`, `refactor/` o `improvement/` para `src/`; `harness/`, `docs/` o `ci/` cuando no toca el producto |
 | Test | `test/<capa>/<nombre>_test.gd` |
 
 Los cinco primeros los verifica `gdlint`; el de rama, el hook; el de test, `gate_de_tests.py`.

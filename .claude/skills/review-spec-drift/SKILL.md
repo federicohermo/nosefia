@@ -55,4 +55,4 @@ citados y ninguna deriva crítica quedó abierta.
 
 **Cuál de los dos está mal.** Un valor que no coincide puede ser un bug del código o un contrato
 que envejeció, y la diferencia es una decisión de diseño. El reporte la nombra y la deja abierta:
-la contesta el usuario, y después el trabajo sale por `spec-to-tickets` o por `to-spec`.
+la contesta el usuario, y después el trabajo sale por `to-issue` o por `to-spec`.
