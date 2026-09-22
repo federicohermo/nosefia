@@ -591,8 +591,72 @@ func test_examinar_no_retira_ni_deposita_y_devuelve_la_unidad_a_la_mira() -> voi
 	_accion(jugador, estante, ReglasDeLosObjetos.ACCION_EXAMINAR)
 	assert_object(agarre.manos().sostenido()).is_same(sostenido)
 	assert_int(jugador.get_node("Camara/PuntoDeExamen").get_child_count()).is_equal(1)
+	# La unidad recién sacada de la caja se examina a la distancia de siempre.
+	assert_float(jugador.get_node("Camara/PuntoDeExamen").position.length()).is_equal_approx(
+		ReglasDeLosObjetos.DISTANCIA_DE_EXAMEN, 0.001
+	)
 	_accion(jugador, estante, ReglasDeLosObjetos.ACCION_EXAMINAR)
 	assert_int(jugador.get_node("Camara/PuntoDeProducto").get_child_count()).is_equal(1)
+
+
+func test_las_dos_cajas_se_examinan_enteras_y_vuelven_a_la_cintura() -> void:
+	var almacen: Node3D = auto_free(ALMACEN.instantiate())
+	add_child(almacen)
+	await get_tree().physics_frame
+	await get_tree().physics_frame
+	var jugador: Node3D = almacen.get("_jugador")
+	jugador.set_physics_process(false)
+	var agarre: Agarre = almacen.get("_agarre")
+	var camara: Camera3D = jugador.get_node("Camara")
+	var cara: Node3D = jugador.get_node("Camara/PuntoDeExamen")
+	var cintura: Node3D = jugador.get_node("PuntoDeCaja")
+	var volumen: CollisionShape3D = jugador.get_node("FormaDeLaCaja")
+	# La chica primero y la grande después: el almacén usa dos tamaños y nada más.
+	var cajas: Array = almacen.get("_cajas_de_productos").duplicate()
+	cajas.sort_custom(func(a: Node3D, b: Node3D) -> bool: return _radio(a) < _radio(b))
+	var chica: Node3D = cajas.front()
+	var grande: Node3D = cajas.back()
+	assert_float(_radio(grande)).is_greater(_radio(chica))
+	var distancias: Array[float] = []
+	for caja: Node3D in [chica, grande]:
+		_accion(jugador, caja)
+		assert_object(caja.get_parent()).is_same(cintura)
+		var antes := caja.transform
+		_accion(jugador, caja, ReglasDeLosObjetos.ACCION_EXAMINAR)
+		assert_object(caja.get_parent()).is_same(cara)
+		assert_bool(volumen.disabled).is_false()
+		var distancia := cara.position.length()
+		var radio := _radio(caja)
+		# Ninguna rotación la hace cruzar el plano cercano, y la esfera cabe en el cuadro.
+		assert_float(distancia - radio).is_greater(camara.near)
+		assert_float(radio / distancia).is_less(sin(deg_to_rad(camara.fov / 2.0)))
+		assert_float(distancia).is_less(camara.position.distance_to(cintura.position))
+		assert_float(distancia).is_less(ReglasDelJugador.ALCANCE_DE_LA_MIRA)
+		distancias.append(distancia)
+		jugador.examen.rotar(Vector2(300.0, 200.0))
+		# La chica cierra con la E y la grande con el clic: los dos caminos vuelven igual.
+		if caja == chica:
+			_accion(jugador, caja, ReglasDeLosObjetos.ACCION_EXAMINAR)
+		else:
+			_accion(jugador, caja)
+		assert_object(caja.get_parent()).is_same(cintura)
+		assert_bool(caja.transform.is_equal_approx(antes)).is_true()
+		agarre.soltar(true)
+		assert_object(agarre.manos().sostenido()).is_null()
+		assert_object(caja.get_parent()).is_not_same(cintura)
+		assert_bool(volumen.disabled).is_true()
+	assert_float(distancias[1]).is_greater(distancias[0])
+
+
+## El radio de la esfera que envuelve lo que se ve de la caja, medido desde su origen: el punto
+## alrededor del cual se la gira.
+func _radio(caja: Node3D) -> float:
+	var radio := 0.0
+	for malla: MeshInstance3D in caja.find_children("*", "MeshInstance3D", true, false):
+		var limites := malla.get_aabb()
+		for indice in 8:
+			radio = maxf(radio, (malla.transform * limites.get_endpoint(indice)).length())
+	return radio
 
 
 func _accion(

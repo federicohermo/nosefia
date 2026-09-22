@@ -81,3 +81,28 @@ func test_solo_una_superficie_horizontal_recibe_una_caja() -> void:
 		)
 		. is_false()
 	)
+
+
+func test_lo_que_entra_a_la_distancia_de_examen_se_examina_ahi() -> void:
+	# Una lata y una unidad de producto ya se veían enteras a esa distancia: agrandar lo
+	# examinado no puede alejar lo que ya estaba bien.
+	for radio in [0.0, 0.1, ReglasDeLosObjetos.DISTANCIA_DE_EXAMEN / 2.0]:
+		assert_float(ReglasDeLosObjetos.distancia_de_examen(radio)).is_equal(
+			ReglasDeLosObjetos.DISTANCIA_DE_EXAMEN
+		)
+
+
+func test_lo_mas_grande_se_examina_mas_lejos() -> void:
+	# Una distancia fija deja la caja grande con las esquinas afuera del cuadro, y al girarla
+	# le mete una esquina adentro de la cámara.
+	var chica := ReglasDeLosObjetos.distancia_de_examen(0.35)
+	var grande := ReglasDeLosObjetos.distancia_de_examen(0.53)
+	assert_float(chica).is_greater(ReglasDeLosObjetos.DISTANCIA_DE_EXAMEN)
+	assert_float(grande).is_greater(chica)
+
+
+func test_lo_examinado_queda_entero_delante_del_ojo() -> void:
+	# El centro está a la distancia y la esfera se extiende un radio hacia el ojo: si la
+	# distancia no le gana al radio, alguna rotación lo mete adentro de la cámara.
+	for radio in [0.1, 0.35, 0.53, 1.0]:
+		assert_float(ReglasDeLosObjetos.distancia_de_examen(radio)).is_greater(radio)

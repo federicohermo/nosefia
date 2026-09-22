@@ -9,6 +9,7 @@ extends GdUnitTestSuite
 const Agarre := preload("res://src/sistemas/marco/agarre.gd")
 const Examen := preload("res://src/sistemas/investigacion/examen.gd")
 const ObjetoDelAlmacen := preload("res://src/dominio/almacen/objeto_del_almacen.gd")
+const ReglasDeLosObjetos := preload("res://src/dominio/almacen/reglas_de_los_objetos.gd")
 const Revelacion := preload("res://src/dominio/investigacion/revelacion.gd")
 
 
@@ -53,6 +54,87 @@ func _cuerpo() -> RigidBody3D:
 	var cuerpo := RigidBody3D.new()
 	padre.add_child(cuerpo)
 	return cuerpo
+
+
+## Una caja del depósito con su malla, centrada en el origen como las del almacén. Los dos lados
+## son los de las dos cajas que el almacén usa, medidos sobre su malla.
+func _caja(lado: float) -> RigidBody3D:
+	var cuerpo := _cuerpo()
+	var malla := MeshInstance3D.new()
+	var caja := BoxMesh.new()
+	caja.size = Vector3.ONE * lado
+	malla.mesh = caja
+	cuerpo.add_child(malla)
+	return cuerpo
+
+
+func _caja_grande() -> RigidBody3D:
+	return _caja(0.607)
+
+
+func _caja_chica() -> RigidBody3D:
+	return _caja(0.4)
+
+
+## Examina lo que se lleva y devuelve a qué distancia del ojo quedó.
+func _distancia_examinando(examen: Node) -> float:
+	examen.iniciar()
+	return examen.punto_de_examen.position.length()
+
+
+func test_la_caja_grande_se_examina_mas_lejos_que_la_chica() -> void:
+	var distancias: Array[float] = []
+	for caja: RigidBody3D in [_caja_chica(), _caja_grande()]:
+		var agarre := _agarre()
+		var examen := _examen(agarre)
+		agarre.pedir_agarrar(_lata(), caja)
+		var distancia := _distancia_examinando(examen)
+		var radio := Vector3.ONE.length() * (caja.get_child(0).mesh as BoxMesh).size.x / 2.0
+		assert_float(distancia).is_equal_approx(
+			ReglasDeLosObjetos.distancia_de_examen(radio), 0.001
+		)
+		distancias.append(distancia)
+	assert_float(distancias[0]).is_greater(ReglasDeLosObjetos.DISTANCIA_DE_EXAMEN)
+	assert_float(distancias[1]).is_greater(distancias[0])
+
+
+func test_lo_chico_se_examina_a_la_distancia_de_siempre() -> void:
+	var agarre := _agarre()
+	var examen := _examen(agarre)
+	agarre.pedir_agarrar(_lata(), _caja(0.12))
+	assert_float(_distancia_examinando(examen)).is_equal_approx(
+		ReglasDeLosObjetos.DISTANCIA_DE_EXAMEN, 0.001
+	)
+
+
+func test_examinar_de_nuevo_la_misma_caja_da_la_misma_distancia() -> void:
+	var agarre := _agarre()
+	var examen := _examen(agarre)
+	agarre.pedir_agarrar(_lata(), _caja_grande())
+	var primera := _distancia_examinando(examen)
+	examen.terminar()
+	assert_float(_distancia_examinando(examen)).is_equal(primera)
+
+
+func test_las_dos_cajas_vuelven_del_examen_a_la_cintura() -> void:
+	# El clic y la E cierran el examen por dos caminos, y los dos tienen que volver al mismo
+	# lugar: el punto de donde salió la caja, que no es la mano derecha.
+	for caja: RigidBody3D in [_caja_chica(), _caja_grande()]:
+		for cerrar_con_el_clic in [false, true]:
+			var agarre := _agarre()
+			var examen := _examen(agarre)
+			var cintura: Node3D = auto_free(Node3D.new())
+			agarre.pedir_agarrar(_lata(), caja)
+			agarre.mover_lo_sostenido(cintura)
+			examen.iniciar()
+			examen.rotar(Vector2(120.0, 60.0))
+			if cerrar_con_el_clic:
+				examen.atajar_el_clic()
+			else:
+				examen.terminar()
+			assert_object(caja.get_parent()).is_same(cintura)
+			assert_bool(caja.basis.is_equal_approx(Basis.IDENTITY)).is_true()
+			agarre.soltar(true)
 
 
 func test_sin_nada_en_la_mano_no_arranca_ningun_examen() -> void:

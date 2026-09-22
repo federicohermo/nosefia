@@ -124,6 +124,39 @@ func test_lo_sostenido_se_puede_mover_a_otro_punto_sin_soltarlo() -> void:
 	assert_object(cuerpo.get_parent()).is_same(agarre.punto_de_carga)
 
 
+func test_devolver_a_la_mano_vuelve_al_punto_de_donde_salio() -> void:
+	# Una caja se lleva en la cintura y no en la mano derecha. Si volver del examen la colgara
+	# del punto de carga, la caja terminaría pegada a la cámara y fuera de su volumen.
+	var agarre := _cableado()
+	var cuerpo := _cuerpo()
+	var cintura: Node3D = auto_free(Node3D.new())
+	var cara: Node3D = auto_free(Node3D.new())
+	agarre.pedir_agarrar(_lata(), cuerpo)
+	agarre.mover_lo_sostenido(cintura)
+	agarre.mover_lo_sostenido(cara)
+	cuerpo.rotate_y(0.7)
+	assert_object(agarre.devolver_a_la_mano()).is_same(cuerpo)
+	assert_object(cuerpo.get_parent()).is_same(cintura)
+	assert_bool(cuerpo.basis.is_equal_approx(Basis.IDENTITY)).is_true()
+	# La segunda vuelta no rebota a la cara: devolver dos veces deja el objeto donde estaba.
+	agarre.devolver_a_la_mano()
+	assert_object(cuerpo.get_parent()).is_same(cintura)
+
+
+func test_despues_de_soltar_devolver_no_usa_el_punto_de_lo_anterior() -> void:
+	# Lo que se agarra de nuevo empieza en su punto de carga, aunque lo anterior viniera de otro.
+	var agarre := _cableado()
+	var cintura: Node3D = auto_free(Node3D.new())
+	agarre.pedir_agarrar(_lata(), _cuerpo())
+	agarre.mover_lo_sostenido(cintura)
+	agarre.soltar(true)
+	var cuerpo := _cuerpo()
+	agarre.pedir_agarrar(_lata(), cuerpo)
+	agarre.mover_lo_sostenido(auto_free(Node3D.new()))
+	agarre.devolver_a_la_mano()
+	assert_object(cuerpo.get_parent()).is_same(agarre.punto_de_carga)
+
+
 func test_con_las_manos_vacias_no_hay_nada_que_mover() -> void:
 	var agarre := _cableado()
 	assert_object(agarre.mover_lo_sostenido(auto_free(Node3D.new()))).is_null()
