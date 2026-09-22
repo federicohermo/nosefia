@@ -100,8 +100,8 @@ permisos y no como un problema de nombre.
 Y como el push del Paso 7 sale de esta misma rama, no hay ref local que reconciliar con la del PR:
 son la misma.
 
-**Un PR sin spec es lo normal** en `bugfix/`, `refactor/`, `improvement/`, `harness/`, `docs/` y
-`ci/`. Dos casos sí son hallazgo: una `feature/` que no parte de ningún spec, y un PR que cambia
+**Un PR sin spec es lo normal** en `bugfix/`, `refactor/`, `improvement/`, `harness/` y `docs/`.
+Dos casos sí son hallazgo: una `feature/` que no parte de ningún spec, y un PR que cambia
 lo que el juego tiene que hacer sin tocar el spec. En los dos falta el spec: `to-spec`, en esta
 corrida.
 

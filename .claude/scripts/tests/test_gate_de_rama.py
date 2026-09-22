@@ -229,8 +229,9 @@ class LaReglaDeLaRama(unittest.TestCase):
         self.pasa("improvement/la-computadora-con-el-estilo-de-manada")
 
     def test_una_rama_que_no_toca_el_producto_no_puede_tocarlo(self):
-        # `harness/`, `docs/` y `ci/` son ramas legítimas del repo: lo que no son es ramas que
-        # editen `src/`. Una que lo intente está mal nombrada, y eso es lo que el gate dice.
+        # `harness/` y `docs/` son ramas legítimas del repo: lo que no son es ramas que editen
+        # `src/`. Una que lo intente está mal nombrada, y eso es lo que el gate dice. `ci/`
+        # salió del conjunto: los workflows son harness.
         for rama in ("harness/el-gate-mira-el-prefijo", "docs/una-guia", "ci/el-workflow"):
             self.bloquea(rama)
 

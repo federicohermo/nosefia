@@ -21,12 +21,16 @@ Si el usuario pide un arreglo para ahora y no quiere issue, se hace sin issue: u
 
 ## Paso 1 — Qué clase de cambio es
 
-| Tipo | Qué es | ¿Toca un spec? |
-|---|---|---|
-| `feature` | una funcionalidad nueva, cambiada o que se quita | **siempre**: crea, modifica o borra |
-| `bugfix` | el juego no hace lo que ya tiene que hacer | casi nunca |
-| `refactor` | el mismo comportamiento con otra forma | nunca |
-| `improvement` | un cambio o un agregado que no cambia ninguna regla: UI, arte, sonido, rendimiento | nunca |
+| Tipo | Qué es | Etiqueta | ¿Toca un spec? |
+|---|---|---|---|
+| `feature` | una funcionalidad nueva, cambiada o que se quita | `enhancement` | **siempre**: crea, modifica o borra |
+| `bugfix` | el juego no hace lo que ya tiene que hacer | `bug` | casi nunca |
+| `refactor` | el mismo comportamiento con otra forma | `refactor` | nunca |
+| `improvement` | todo lo demás que no cambia ninguna regla: UI, arte, sonido, rendimiento, documentación, accesibilidad | `improvement`, más `documentation` o `accessibility` cuando aplica | nunca |
+
+La etiqueta la pone `gh issue create --label`. Las de gestión —`duplicate`, `invalid`,
+`wontfix`, `question`, `good first issue`, `help wanted`— no dicen de qué tipo es el cambio:
+dicen en qué estado está el issue, y van sobre cualquier tipo.
 
 **La prueba para el spec es una sola: ¿cambia lo que el juego tiene que hacer?** Una regla
 nueva, un valor de balance, un comportamiento que el GDD fija, una funcionalidad que se quita.
@@ -77,7 +81,7 @@ rompe:
 Mostrá el issue y esperá la confirmación. Después:
 
 ```bash
-gh issue create --title "<qué cambia>" --body-file <archivo del scratchpad>
+gh issue create --title "<qué cambia>" --label <etiqueta> --body-file <archivo del scratchpad>
 ```
 
 El cuerpo no se commitea: el issue es la fuente.
@@ -88,4 +92,5 @@ Reportá el número del issue, el tipo, y el paso siguiente:
 
 - **Spec: crea, modifica o borra** → `to-spec`, con el issue como entrada, en la rama
   `feature/<N>-<kebab>`.
-- **Spec: ninguno** → `implement-feature`, en la rama `<tipo>/<N>-<kebab>`.
+- **Spec: ninguno** → `implement-feature`, en la rama `<tipo>/<N>-<kebab>`. Un issue que no toca
+  `src/` se nombra por lo que toca: `harness/<N>-<kebab>` o `docs/<N>-<kebab>`.

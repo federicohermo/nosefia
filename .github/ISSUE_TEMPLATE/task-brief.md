@@ -19,7 +19,8 @@ labels: ""
 - **Rama:** `<tipo>/<issue>-<kebab>`
 
 <!-- `feature` es el único tipo que siempre toca un spec. Un `bugfix` toca uno sólo si el bug
-     era una regla que nadie había escrito. -->
+     era una regla que nadie había escrito. La etiqueta sale del tipo: `enhancement`, `bug`,
+     `refactor` o `improvement`, y `documentation` o `accessibility` cuando aplica. -->
 
 ## Criterios de aceptación
 

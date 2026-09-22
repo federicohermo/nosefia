@@ -78,8 +78,11 @@ PREFIJOS_DEL_PRODUCTO = ("feature/", "bugfix/", "refactor/", "improvement/")
 #: **El gate no los verifica, y no podría**: sólo protege `src/`, así que una rama `docs/` que
 #: edita documentación no le pasa ni cerca. Están acá porque bloquear sin decir cómo salir
 #: produce el reflejo de saltear el bloqueo, y «renombrá la rama» sin decir a qué no es salida.
-#: Cada uno nombra QUÉ toca, en vez de ser el cajón de sastre que era `chore/`.
-PREFIJOS_SIN_PRODUCTO = ("harness/", "docs/", "ci/")
+#:
+#: **`ci/` salió del conjunto**: los workflows de `.github/` son harness igual que los scripts y
+#: los gates, y dos prefijos para lo mismo no se recuerdan. Un refactor del harness sigue siendo
+#: `harness/`: lo que el prefijo contesta es qué toca, no de qué clase es el cambio.
+PREFIJOS_SIN_PRODUCTO = ("harness/", "docs/")
 
 
 def _lista(prefijos: tuple[str, ...]) -> str:

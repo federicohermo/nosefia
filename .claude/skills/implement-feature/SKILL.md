@@ -24,7 +24,7 @@ git checkout -b <tipo>/<N>-<descripcion-kebab>
 **El prefijo de la rama es el tipo del issue**, y el hook sólo deja escribir en `src/` desde
 `feature/`, `bugfix/`, `refactor/` e `improvement/`. `feature/` es para código que parte de
 un spec: si el spec todavía no está escrito, primero `to-spec`, en esta misma rama. Lo
-que no toca `src/` se nombra por lo que toca — `harness/`, `docs/` o `ci/`.
+que no toca `src/` se nombra por lo que toca — `harness/` o `docs/`.
 
 Si el issue ya tiene rama, no la vuelvas a crear: puede haberla abierto otra sesión, y ahí lo que
 corresponde es un worktree propio sobre esa rama.

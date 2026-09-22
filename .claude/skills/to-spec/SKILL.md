@@ -39,7 +39,7 @@ No todo cambio cambia el contrato. Estos no:
 - **Un bug** que no cambia ninguna regla del juego. Va por `bugfix/`.
 - **Una mejora que no cambia ninguna regla**: UI, arte, audio, rendimiento. Va por
   `improvement/`.
-- **El harness, los docs y la CI.** Rama `harness/`, `docs/` o `ci/`.
+- **El harness y los docs.** Rama `harness/` o `docs/`.
 
 Sí lo tocan: una regla nueva, un valor de balance que cambia, un comportamiento que el GDD fija y
 el juego no cumple, y un borde que nadie había escrito.
