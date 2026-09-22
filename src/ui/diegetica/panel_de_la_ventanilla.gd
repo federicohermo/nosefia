@@ -20,7 +20,6 @@ signal despacho_pedido
 ## Lo único propio de esta capa son las palabras de los botones y el cartel de la ventanilla
 ## vacía. Viven acá y **no** además en el `.tscn`: un texto en los dos lados se cambia en uno solo
 ## el día que haya que cambiarlo.
-const TAMANO_DEL_DISENO := Vector2(1920, 1080)
 const TEXTO_DE_COBRAR := "COBRAR"
 const TEXTO_DE_DESPACHAR := "DESPACHAR SIN COBRAR"
 const TEXTO_SIN_NADIE := "No hay nadie en la ventanilla."
@@ -46,7 +45,7 @@ func _ready() -> void:
 	_cliente.text = "/ CLIENTE:"
 	_pedido.text = "/ PEDIDO:"
 	_cobro.text = "/ COBRO:"
-	_salida.text = "CLIC DERECHO / VOLVER AL LOCAL"
+	_salida.text = LienzoDeManada.TEXTO_DE_SALIDA
 	get_viewport().size_changed.connect(_ajustar_al_viewport)
 	_ajustar_al_viewport()
 	_cobrar.text = TEXTO_DE_COBRAR
@@ -104,7 +103,4 @@ func _botones(hay_alguien: bool) -> void:
 
 
 func _ajustar_al_viewport() -> void:
-	var disponible := get_viewport().get_visible_rect().size
-	var factor := minf(disponible.x / TAMANO_DEL_DISENO.x, disponible.y / TAMANO_DEL_DISENO.y)
-	_marco.scale = Vector2.ONE * factor
-	_marco.position = (disponible - TAMANO_DEL_DISENO * factor) / 2.0
+	LienzoDeManada.ajustar(_marco, get_viewport().get_visible_rect().size)

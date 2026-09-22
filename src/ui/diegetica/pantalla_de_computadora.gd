@@ -1,4 +1,7 @@
-## Presentación de Manada UI sobre las aplicaciones existentes. El turno sigue corriendo.
+## La pantalla de la computadora, con la gráfica de Manada.
+##
+## No decide cuál app se ve: eso lo lleva `Computadora`, que tiene test. Acá se recibe cuál y se
+## prende ésa. No pausa el turno: leer cuesta minutos, igual que reponer.
 class_name PantallaDeComputadora
 extends CanvasLayer
 
@@ -9,8 +12,6 @@ const TITULOS := {Computadora.App.CAJA: "/ REGISTRO:", Computadora.App.NOTAS: "/
 const BORDE_DERECHO := {Computadora.App.CAJA: 1857.0, Computadora.App.NOTAS: 1743.5}
 const ICONO_REGISTRO := preload("res://assets/ui/manada/computadora.svg")
 const ICONO_NOTAS := preload("res://assets/ui/manada/registro.svg")
-const TAMANO_DEL_DISENO := Vector2(1920, 1080)
-const TEXTO_DE_SALIDA := "CLIC DERECHO / VOLVER AL LOCAL"
 
 @export var _fondo: ColorRect
 @export var _marco: Control
@@ -26,7 +27,7 @@ const TEXTO_DE_SALIDA := "CLIC DERECHO / VOLVER AL LOCAL"
 ## empieza la noche.
 func _ready() -> void:
 	visible = false
-	_salida.text = TEXTO_DE_SALIDA
+	_salida.text = LienzoDeManada.TEXTO_DE_SALIDA
 	for app: Computadora.App in TITULOS:
 		_opciones.add_child(_opcion_de(app))
 	get_viewport().size_changed.connect(_ajustar_al_viewport)
@@ -80,9 +81,5 @@ func _opcion_de(app: Computadora.App) -> Button:
 	return boton
 
 
-## Escala sólo esta interfaz; no cambia el viewport ni la cámara del juego.
 func _ajustar_al_viewport() -> void:
-	var disponible := get_viewport().get_visible_rect().size
-	var factor := minf(disponible.x / TAMANO_DEL_DISENO.x, disponible.y / TAMANO_DEL_DISENO.y)
-	_marco.scale = Vector2.ONE * factor
-	_marco.position = (disponible - TAMANO_DEL_DISENO * factor) / 2.0
+	LienzoDeManada.ajustar(_marco, get_viewport().get_visible_rect().size)

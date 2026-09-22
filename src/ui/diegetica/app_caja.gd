@@ -1,4 +1,7 @@
-## El registro mantiene su acción de un clic. El detalle se muestra al enfocar cada tarjeta.
+## La app de la caja: las tarjetas del día y el detalle de la que tiene el cursor.
+##
+## No decide nada: qué es del día, qué ya se registró y qué falta lo contesta `CajaRegistradora`,
+## que tiene test. Acá sólo se dibuja lo que ella responde.
 class_name AppCaja
 extends Control
 

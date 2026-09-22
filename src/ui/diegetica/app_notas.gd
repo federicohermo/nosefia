@@ -1,4 +1,7 @@
-## Lista y detalle sobre el cuaderno existente. El borrador sobrevive al cambiar de aplicación.
+## La app de notas: la lista, el detalle de la elegida y el renglón para anotar otra.
+##
+## No decide qué llega a ser una nota: esa regla vive en `Cuaderno`, que tiene test. El borrador
+## sobrevive al cambiar de app porque sólo se limpia cuando el cuaderno acepta.
 class_name AppNotas
 extends Control
 
