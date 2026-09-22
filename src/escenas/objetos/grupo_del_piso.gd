@@ -14,6 +14,7 @@ func preparar(malla: Mesh, capacidad: int) -> void:
 	# Si lo hace, interpola entre dos valores ya interpolados y la copia se atrasa de nuevo. Ese
 	# atraso no lo ve ninguna caché del script: vive en el buffer del motor.
 	physics_interpolation_mode = Node.PHYSICS_INTERPOLATION_MODE_OFF
+	gi_mode = GeometryInstance3D.GI_MODE_DYNAMIC
 	multimesh = MultiMesh.new()
 	multimesh.transform_format = MultiMesh.TRANSFORM_3D
 	multimesh.mesh = malla

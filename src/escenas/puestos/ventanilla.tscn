@@ -17,3 +17,4 @@ shape = SubResource("BoxShape3D_vidrio")
 
 [node name="Antepecho" type="MeshInstance3D" parent="."]
 mesh = SubResource("BoxMesh_antepecho")
+gi_mode = 2

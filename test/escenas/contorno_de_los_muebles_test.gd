@@ -87,6 +87,49 @@ func test_un_producto_soltado_hacia_la_gondola_no_queda_adentro_de_ella() -> voi
 		)
 
 
+func test_una_caja_chica_soltada_hacia_una_bandeja_no_queda_adentro_de_la_gondola() -> void:
+	# Los casos están medidos: una caja chica entra en el hueco de una bandeja, y ahí se encima
+	# con la mercadería, que no tiene cuerpo.
+	var almacen: Node3D = auto_free(ALMACEN.instantiate())
+	add_child(almacen)
+	await get_tree().physics_frame
+	var jugador: CharacterBody3D = almacen.get("_jugador")
+	var gondola := almacen.get_node("Estructura/gondolanueva") as MeshInstance3D
+	var mueble := gondola.global_transform * gondola.get_aabb()
+	var caja: Node3D = almacen.get("_cajas_de_productos")[Producto.Id.MALBARDO]
+	var mano: Node3D = jugador.get_node("PuntoDeCaja")
+	var adentro: Array[String] = []
+	for caso: Array in [
+		[Vector3(-0.43, 0.11, -2.49), Vector3(0.77, 1.0, -2.49)],
+		[Vector3(-0.43, 0.11, -2.49), Vector3(0.77, 1.7, -2.49)],
+		[Vector3(-0.43, 0.11, -1.89), Vector3(0.77, 1.0, -1.89)],
+		# Frente a una cabecera, mirando su base, que es hueca: así se perdió la caja de Malbardo.
+		[Vector3(0.97, 0.11, 2.11), Vector3(0.97, 0.15, 1.13)],
+	]:
+		if caja.get_parent() != mano:
+			_accion(jugador, caja)
+		jugador.global_position = caso[0]
+		_mirar(jugador, caso[1])
+		for cuadro in 6:
+			await get_tree().physics_frame
+		_accion(jugador, caja)
+		if caja.get_parent() != mano and mueble.grow(-0.05).has_point(caja.global_position):
+			adentro.append("mirando %v queda en %v" % [caso[1], caja.global_position])
+	(
+		assert_array(adentro)
+		. override_failure_message("la caja quedó adentro de la góndola: %s" % ", ".join(adentro))
+		. is_empty()
+	)
+
+
+func _accion(jugador: Node, objetivo: Node) -> void:
+	jugador.set("_enfocado", objetivo)
+	var evento := InputEventAction.new()
+	evento.action = ReglasDeLosObjetos.ACCION_AGARRAR
+	evento.pressed = true
+	jugador.call("_unhandled_input", evento)
+
+
 func _mirar(jugador: CharacterBody3D, punto: Vector3) -> void:
 	var control: ControlDelJugador = jugador.get("_control")
 	var hacia := (

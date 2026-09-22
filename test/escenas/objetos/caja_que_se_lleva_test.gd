@@ -66,6 +66,9 @@ const CUADROS_CAYENDO := 150
 ## Despertar un solo piso alcanza para dos —la de encima cae, y la siguiente se entera de
 ## refilón—, así que con tres pisos el caso pasaba en verde sin cascada. Con cinco, la cuarta se
 ## quedaba flotando a 0,93 m de cualquier apoyo con la quinta prolijamente encima.
+## A qué altura está la tabla más alta del estante del depósito, en metros.
+const TABLA_DE_ARRIBA := 1.6
+
 const PISOS_DE_LA_PILA := 5
 
 ## Cuánto puede separarse del apoyo una caja que se cayó, en metros. Es más flojo que
@@ -359,6 +362,121 @@ func test_soltar_mirando_el_costado_de_una_caja_la_apila_encima() -> void:
 		. is_greater(debajo.global_position.y + _limites_de(debajo).size.y * 0.9)
 	)
 	_comprobar_apoyo_entero(almacen, caja, "sobre la caja de enfrente")
+
+
+func test_alrededor_de_un_estante_con_lugar_la_caja_siempre_sube_a_el() -> void:
+	# **El cursor no tiene que caer en el punto exacto.** Frente al estante del depósito con media
+	# tabla libre, la caja tiene que subir apuntando a la tabla, a la pared de atrás a cualquier
+	# altura, o pegado a la caja vecina. Antes había tres agujeros que la mandaban al piso: la
+	# franja junto a la vecina, la pared a más de una caja de altura, y la punta de la tabla.
+	var almacen: Node3D = await _almacen_con_jugador_quieto()
+	var jugador: CharacterBody3D = almacen.get("_jugador")
+	var mano: Node3D = jugador.get_node("PuntoDeCaja")
+	var caja: Node3D = almacen.get("_cajas_de_productos")[Producto.Id.PRONGLES]
+	var estante := _limites_de(almacen.get_node("Estructura/gondola_deposito03/StaticBody3D"))
+	_accion(jugador, caja, ReglasDeLosObjetos.ACCION_AGARRAR)
+	await _parar_al_jugador_en(jugador, Vector3(estante.position.x - 1.0, 0.11, -11.3))
+	var al_piso: Array[String] = []
+	for alto: float in [33.0, 25.0, 17.0, 5.0, -7.0]:
+		for giro: float in [14.0, 6.0, 2.0, -4.0, -20.0, -28.0]:
+			if caja.get_parent() != mano:
+				_accion(jugador, caja, ReglasDeLosObjetos.ACCION_AGARRAR)
+			_mirar(jugador, -PI / 2.0 + deg_to_rad(giro), deg_to_rad(alto))
+			jugador.force_update_transform()
+			_accion(jugador, caja, ReglasDeLosObjetos.ACCION_AGARRAR)
+			# La tabla de arriba está a 1,6 m: de ahí para abajo es otro estante o el piso.
+			if caja.get_parent() == mano or caja.global_position.y < TABLA_DE_ARRIBA:
+				al_piso.append("mira %.0f, giro %.0f" % [alto, giro])
+			else:
+				_comprobar_apoyo_entero(almacen, caja, "mira %.0f, giro %.0f" % [alto, giro])
+	(
+		assert_array(al_piso)
+		. override_failure_message("la caja no subió al estante con: %s" % ", ".join(al_piso))
+		. is_empty()
+	)
+
+
+func test_la_mira_que_pasa_por_encima_de_la_caja_de_enfrente_la_apila() -> void:
+	# Pegado a una caja, la mira puesta en su borde de arriba pasa por encima de la tapa y pega
+	# en el piso de atrás. La caja iba a parar ahí, detrás de la otra y fuera de la vista. El
+	# cursor está donde quedaría la caja apilada, así que se apila.
+	var almacen: Node3D = await _almacen_con_jugador_quieto()
+	var jugador: CharacterBody3D = almacen.get("_jugador")
+	var mano: Node3D = jugador.get_node("PuntoDeCaja")
+	var cajas: Array = almacen.get("_cajas_de_productos")
+	var base: RigidBody3D = cajas[Producto.Id.SALADIK]
+	var nueva: Node3D = cajas[Producto.Id.LAYSNTT]
+	base.global_position = Vector3(PISO_LIBRE_DEL_DEPOSITO.x, base.global_position.y, -11.2)
+	await get_tree().physics_frame
+	_accion(jugador, nueva, ReglasDeLosObjetos.ACCION_AGARRAR)
+	await _parar_al_jugador_en(jugador, base.global_position + Vector3(0.0, 0.0, 0.75))
+	jugador.global_position.y = PISO_LIBRE_DEL_DEPOSITO.y
+	var al_piso: Array[String] = []
+	# Más arriba de -30 grados la mira pasa a más de una caja de altura: ya no es apilar.
+	for alto: float in [-30.0, -35.0, -45.0, -60.0]:
+		if nueva.get_parent() != mano:
+			_accion(jugador, nueva, ReglasDeLosObjetos.ACCION_AGARRAR)
+		_mirar(jugador, 0.0, deg_to_rad(alto))
+		jugador.force_update_transform()
+		_accion(jugador, nueva, ReglasDeLosObjetos.ACCION_AGARRAR)
+		var desvio := nueva.global_position - base.global_position
+		if (
+			nueva.get_parent() == mano
+			or Vector2(desvio.x, desvio.z).length() > 0.1
+			or desvio.y < 0.5
+		):
+			al_piso.append("mira %.0f" % alto)
+	(
+		assert_array(al_piso)
+		. override_failure_message("la caja no quedó apilada con: %s" % ", ".join(al_piso))
+		. is_empty()
+	)
+
+
+## Deja al jugador parado en un lugar, con la caja que lleva ya acomodada adelante.
+##
+## **Los brazos se acomodan en el paso de física.** Con el jugador apagado desde el primer cuadro
+## la caja cuelga del centro del cuerpo, que no es de donde la suelta nadie.
+func _parar_al_jugador_en(jugador: CharacterBody3D, lugar: Vector3) -> void:
+	jugador.set_physics_process(true)
+	jugador.global_position = lugar
+	for cuadro in CUADROS_QUIETOS:
+		await get_tree().physics_frame
+	jugador.set_physics_process(false)
+
+
+func test_una_pila_de_cajas_de_distinto_tamano_se_sigue_apilando() -> void:
+	# Con una caja chica arriba de una grande, el centro de la de abajo no queda debajo de la de
+	# arriba. Buscar la siguiente con un rayo desde el centro no la encontraba, la pila parecía
+	# terminar ahí, y la caja nueva iba a parar al piso del otro lado.
+	var almacen: Node3D = await _almacen_con_jugador_quieto()
+	var jugador: CharacterBody3D = almacen.get("_jugador")
+	var cajas: Array = almacen.get("_cajas_de_productos")
+	var base: Node3D = cajas[Producto.Id.SALADIK]
+	var chica: Node3D = cajas[Producto.Id.MALBARDO]
+	var nueva: Node3D = cajas[Producto.Id.LAYSNTT]
+	var tapa := _limites_de(base)
+	var media_chica := _limites_de(chica).size / 2.0
+	# La chica, corrida a una esquina de la tapa de la grande.
+	chica.global_position = Vector3(
+		tapa.position.x + media_chica.x, tapa.end.y + media_chica.y, tapa.position.z + media_chica.z
+	)
+	await get_tree().physics_frame
+	_accion(jugador, nueva, ReglasDeLosObjetos.ACCION_AGARRAR)
+	await _parar_al_jugador_en(jugador, Vector3(tapa.end.x + 1.1, 0.11, base.global_position.z))
+	var camara: Camera3D = jugador.get_node("Camara")
+	var costado := Vector3(tapa.end.x, base.global_position.y, base.global_position.z)
+	var hacia := costado - camara.global_position
+	_mirar(jugador, atan2(-hacia.x, -hacia.z), atan2(hacia.y, Vector2(hacia.x, hacia.z).length()))
+	jugador.force_update_transform()
+	_accion(jugador, nueva, ReglasDeLosObjetos.ACCION_AGARRAR)
+	(
+		assert_float(nueva.global_position.y)
+		. override_failure_message(
+			"la caja quedó en %v y no arriba de la pila" % nueva.global_position
+		)
+		. is_greater(_limites_de(chica).end.y)
+	)
 
 
 func test_la_caja_vuelta_a_su_lugar_apoya_entera() -> void:

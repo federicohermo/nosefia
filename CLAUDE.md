@@ -164,6 +164,7 @@ Primero el contrato, después el issue, después el código. Son tres decisiones
 | [TDD sin cobertura](./docs/guides/tdd.md) | Qué reemplaza al umbral y qué se pierde |
 | [Convenciones](./docs/guides/conventions.md) | El porqué de cada regla, el lenguaje y el glosario |
 | [Rendimiento](./docs/guides/rendimiento.md) | Cómo se mide, y contra qué números |
+| [Iluminación](./docs/guides/iluminacion.md) | Toda la luz está horneada: por qué, cómo se hornea y qué se commitea |
 | [El índice MCP](./docs/guides/mcp.md) | Las herramientas de `nosefia-index`, y qué no cubren |
 | [Ramas](./docs/infra/ramas.md) | `staging` integra, `main` entrega, y qué exige el hook |
 | [Despliegue](./docs/infra/despliegue.md) | Cada push a `main` deja una web jugable |

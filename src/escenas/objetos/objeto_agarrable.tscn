@@ -18,3 +18,4 @@ shape = SubResource("BoxShape3D_cuerpo")
 
 [node name="Malla" type="MeshInstance3D" parent="."]
 mesh = SubResource("BoxMesh_cuerpo")
+gi_mode = 2
