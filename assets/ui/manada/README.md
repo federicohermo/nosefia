@@ -7,6 +7,7 @@ durante la ejecución.
 | Recurso | Origen | Uso |
 |---|---|---|
 | `fondo.png` | Captura de `almacen.tscn` con los modelos actuales | Fondo compartido, conservando proporciones |
+| `fondo_ventanilla.png` | Captura de la ventanilla desde el interior del local | Fondo exclusivo de atención al cliente |
 | `cabecera.svg` | Figma, `3:911` / `3:814` | Cabecera de 1712 × 70,3 sobre el lienzo de 1920 × 1080 |
 | `linea_detalle.svg` | Figma, `3:912` / `3:446` | Separadores del detalle |
 | `solapa.svg` | Figma, `3:913` / `3:448` | Solapa sobre el separador |
@@ -40,3 +41,6 @@ La ventanilla adapta la composición de Chats (`40:64`): comprador a la izquierd
 panel central y aviso y acciones de cobro a la derecha. Usa los datos y las señales de atención
 existentes, sin agregar conversaciones, retratos, contactos ni reglas de venta. El pedido y sus
 importes se muestran tal como los entrega `Atencion`; el turno sigue corriendo.
+
+Su fondo se capturó a 1920 × 1080, sin HUD, desde `(5.35, 1.74, 6.174)`, mirando hacia
+`(5.35, 1.74, 7.974)`. Muestra el hueco y el antepecho de la ventanilla desde el lugar del empleado.
