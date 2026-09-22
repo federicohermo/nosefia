@@ -44,6 +44,10 @@ en `project.godot`, abre el editor, aprieta «Bake Lightmaps», rellena las sond
 cierra y devuelve `project.godot` como estaba. Se corre cada vez que cambia el modelo, una luz
 o el `LightmapGI`, y se commitea lo que deja.
 
+El editor de horneado usa **Mobile con Vulkan** para evitar el error de textura nula de
+OpenGL al hornear el entorno ([reporte de Godot](https://github.com/godotengine/godot/issues/94407)).
+Hace falta una GPU con Vulkan. Es una opción de esa corrida: el juego conserva Compatibility.
+
 Los mandos: la energía de cada luz en su escena, `generate_probes_subdiv` en el `LightmapGI`,
 el tamaño del texel en la importación del modelo, y el umbral de sonda negra en `sondas.gd`.
 

@@ -20,6 +20,8 @@ Dejar el plugin en `project.godot` haría que cada apertura del editor horneara 
 - `GODOT_BIN`, la misma que usa `verificar.py`.
 - **El editor del repo cerrado.** Dos editores sobre el mismo proyecto se pisan la caché.
 - Una sesión con pantalla: el editor abre una ventana. El horneado no anda headless.
+- Una GPU con Vulkan: el editor de horneado usa Mobile para evitar la textura nula del
+  horneador OpenGL. El juego conserva el renderer definido en `project.godot`.
 """
 
 import os
@@ -55,7 +57,10 @@ def main() -> int:
     try:
         # `-l en` porque el plugin busca el botón por su texto, y ese texto es el inglés.
         corrida = subprocess.run(
-            [godot, "--editor", "--path", RAIZ, "-l", "en"],
+            [
+                godot, "--editor", "--path", RAIZ, "-l", "en",
+                "--rendering-method", "mobile", "--rendering-driver", "vulkan",
+            ],
             capture_output=True,
             text=True,
             encoding="utf-8",

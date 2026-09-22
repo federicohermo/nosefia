@@ -6,7 +6,8 @@
 ## Lo prende el script y sólo mientras corre, así que abrir el editor a mano nunca lo ejecuta.
 ##
 ## **El horneado y el guardado bombean el bucle principal** mientras trabajan, y `_process` vuelve
-## a entrar en el medio. Por eso cada paso avanza `_paso` antes de llamar a lo que bloquea.
+## a entrar en el medio. El siguiente paso debe esperar a que termine la llamada anterior:
+## guardar durante el horneado puede usar datos viejos, y cerrar interrumpe el trabajo del editor.
 extends EditorPlugin
 
 const Sondas := preload("res://addons/hornear/sondas.gd")
@@ -21,12 +22,16 @@ const INTENTOS := 30
 var _paso := 0
 var _espera := 0.0
 var _intentos := 0
+var _operacion_en_curso: bool = false
 
 
 func _process(delta: float) -> void:
+	if _operacion_en_curso:
+		return
 	_espera -= delta
 	if _espera > 0.0:
 		return
+	_operacion_en_curso = true
 	match _paso:
 		0:
 			_abrir()
@@ -39,6 +44,7 @@ func _process(delta: float) -> void:
 		4:
 			print("[hornear] listo")
 			get_tree().quit(0)
+	_operacion_en_curso = false
 
 
 func _abrir() -> void:
