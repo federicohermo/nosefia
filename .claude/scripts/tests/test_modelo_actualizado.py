@@ -30,6 +30,9 @@ class ModeloActualizado(unittest.TestCase):
             for parte in malla["primitives"]:
                 with self.subTest(malla=malla["name"]):
                     atributos = parte["attributes"]
+                    # Una malla de color plano, sin textura, no trae UV, y no le hace falta.
+                    if "TEXCOORD_0" not in atributos:
+                        continue
                     uv = self.modelo["accessors"][atributos["TEXCOORD_0"]]
                     vertices = self.modelo["accessors"][atributos["POSITION"]]
                     self.assertEqual(uv["count"], vertices["count"])
