@@ -109,12 +109,6 @@ func vendibles(producto: Producto) -> int:
 	return 0
 
 
-## Si hay al menos una unidad **en la góndola**. Lo que está en el depósito no se puede vender
-## por la ventanilla: hay que reponerlo primero.
-func hay_stock(producto: Producto) -> bool:
-	return unidades(producto, Ubicacion.GONDOLA) > 0
-
-
 ## Descuenta del depósito lo que la venta pide, y devuelve si pudo. La góndola no se toca.
 ##
 ## Es **todo o nada**: recorre las líneas enteras antes de tocar una sola unidad. Descontar lo
