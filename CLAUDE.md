@@ -97,6 +97,7 @@ quién la verifica.
 | La forma de los contratos, y **cada criterio de un spec `ratified` citado por un test** como `AC-<COD>-###` | `gate_de_specs.py` |
 | Formato, largo de línea (100), nombres y orden de declaraciones | `gdformat`, `gdlint` |
 | Que a `src/` sólo lo toquen `feature/`, `bugfix/`, `refactor/` e `improvement/`, más `staging` | el hook, `gate_de_rama.py` |
+| Que un worktree de este repo se abra sólo en `.claude/worktrees/` del checkout principal | el hook, `gate_de_worktrees.py` |
 | Que un skill traiga adentro todo lo que corre, copia por copia | `test_copias_de_skills.py` |
 | Que un doc diga la regla y no la lista de los skills | `test_docs_no_enumeran_skills.py` |
 
