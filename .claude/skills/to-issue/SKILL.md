@@ -105,7 +105,8 @@ python .claude/skills/to-issue/scripts/borrador.py numerar <archivo del scratchp
 gh issue edit <N> --body-file <archivo del scratchpad>
 ```
 
-`numerar` escribe el número en la rama y revisa sin dejar pasar nada. El cuerpo no se commitea: el issue es la fuente.
+`numerar` escribe el número en la rama y revisa sin dejar pasar nada. El cuerpo no se commitea:
+el issue es la fuente.
 
 ## Al cerrar
 
