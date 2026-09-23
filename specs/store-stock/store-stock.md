@@ -20,11 +20,12 @@ depósito son dos lugares distintos, y mover mercadería del fondo al estante cu
 |---|---|---|
 | **Producto** | qué se vende: identidad, nombre, precio y umbral | ítem, SKU |
 | **Unidad** | una pieza de un producto, la que se agarra con la mano | stock, cantidad |
-| **Depósito** | el fondo, donde arranca la mercadería de la noche | almacén, bodega |
+| **Depósito** | el fondo, donde arranca la mercadería de la noche y de donde sale la venta | almacén, bodega |
 | **Caja del depósito** | la caja de un solo producto de la que se saca de a una unidad | cajón, contenedor |
-| **Góndola** | el estante del local, y lo único desde donde se vende | vitrina, exhibidor |
+| **Góndola** | el estante del local, el que el jugador repone | vitrina, exhibidor |
 | **Umbral** | cuántas unidades pide la góndola de ese producto. Es también su cupo | mínimo, tope |
 | **Faltante** | un producto con la góndola por debajo de su umbral | agotado, sin stock |
+| **Vendibles** | el depósito menos lo que a la góndola le falta para su umbral | stock, disponible |
 
 ## Comportamiento normativo
 
@@ -48,8 +49,8 @@ una tarea.
 
 CUANDO se abre una jornada, el sistema DEBE poner **10 unidades de cada producto en el depósito**
 y **cero en la góndola**. La mercadería ya expuesta no se cuenta. El número del depósito tiene
-que ser estrictamente mayor que el umbral más alto del catálogo: con el umbral exacto, una
-venta dejaría reponer imposible esa noche.
+que ser estrictamente mayor que el umbral más alto del catálogo: lo que sobra del umbral es lo
+único que se vende.
 
 ### BR-STK-005 — Ingresar no resta
 
@@ -77,8 +78,8 @@ cupo no se escribe aparte: sería el mismo valor en dos lugares.
 
 CUANDO se coloca una unidad, el sistema DEBE rechazar por **producto no aceptado** primero, por
 **estante lleno** después, y por **sin unidades en depósito** al final. El primero es una
-propiedad del producto y vale siempre; el segundo se resuelve vendiendo; el tercero depende de
-cuánta mercadería trajo la noche.
+propiedad del producto y vale siempre; el segundo es el estado del estante; el tercero depende
+de cuánta mercadería trajo la noche.
 
 ### BR-STK-013 — Reponer está cumplido cuando no falta nada
 
@@ -107,6 +108,13 @@ darle nada.
 SI la góndola de ese producto ya no tiene lugar, contando las unidades que ya salieron de la caja
 y todavía no se colocaron, ENTONCES el sistema DEBE negar la unidad aunque la caja tenga. Una
 unidad que sale de la caja no vuelve a ella: sin este corte, queda en la mano sin lugar.
+
+### BR-STK-018 — Se vende lo que el estante no necesita
+
+El sistema DEBE contestar los vendibles de un producto como su depósito menos lo que a su
+góndola le falta para el umbral, y nunca menos de cero. Una unidad en la mano sigue contada en
+el depósito, y también en lo que a la góndola le falta. Un producto que el inventario no conoce
+tiene cero vendibles.
 
 ## Criterios de aceptación
 
@@ -178,6 +186,20 @@ puede sacar; DADO la misma caja en la mano del jugador, ENTONCES no.
 DADO un producto de umbral 2, con la góndola vacía y más de 2 en su caja CUANDO se sacan 2
 unidades sin colocarlas ENTONCES la tercera se niega; y colocar esas 2 no habilita una tercera.
 
+### AC-STK-018 — Los vendibles *(verifica BR-STK-018)*
+
+DADO un producto de umbral 8 CUANDO se piden sus vendibles ENTONCES:
+
+| Góndola | Depósito | Vendibles |
+|---|---|---|
+| 8 | 2 | 2 |
+| 0 | 10 | 2 |
+| 7 | 3 | 2 |
+| 8 | 0 | 0 |
+| 0 | 5 | 0 |
+
+Y un producto que el inventario no conoce contesta 0.
+
 ## No objetivos
 
 - Esta capacidad NO cobra ni atiende: eso es de
@@ -190,8 +212,8 @@ unidades sin colocarlas ENTONCES la tercera se niega; y colocar esas 2 no habili
 - **Entrada:** los productos que existen, y los pedidos de ingresar, mover, cobrar y registrar.
 - **Salida:** cuántas unidades hay por ubicación, qué falta, si cada obligatoria está cumplida, y
   el motivo de cada rechazo.
-- **Falla:** las cantidades no positivas se ignoran; el cobro sin stock no mueve nada; el producto
-  inexistente contesta «no existe» en vez de romper.
+- **Falla:** las cantidades no positivas se ignoran; el cobro que supera los vendibles no mueve
+  nada; el producto inexistente contesta «no existe» en vez de romper.
 
 ## Señales
 
@@ -199,8 +221,8 @@ unidades sin colocarlas ENTONCES la tercera se niega; y colocar esas 2 no habili
 
 ## Dependencias
 
-- [`counter-service`](../counter-service/counter-service.md) (alimenta): el cobro descuenta de
-  la góndola.
+- [`counter-service`](../counter-service/counter-service.md) (alimenta): el cobro descuenta del
+  depósito, hasta los vendibles.
 - [`player-actions`](../player-actions/player-actions.md) (consume): la unidad viaja en la mano.
 - [`shift-cycle`](../shift-cycle/shift-cycle.md) (alimenta): avisa cuándo reponer y registrar
   quedaron cumplidas.
