@@ -72,6 +72,8 @@ rg --no-ignore -n "AC-XXX" specs/ test/         # si ese ID ya se usó
   lo que dice el GDD y el código está en falta. Eso es el hallazgo.
 - **Un hueco es una `OQ-<COD>-###`**, con por qué sigue abierta, quién la decide y qué bloquea.
   Nunca un valor inventado.
+- **Lo que el motor soporta se mide en el juego, no en el editor.** Son dos procesos de Godot y
+  pueden contestar distinto. Una medición en el editor no dice qué hace el juego.
 
 ## Paso 3 — Escribir las reglas y los criterios
 
