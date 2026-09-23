@@ -1,8 +1,9 @@
 ## El panel de la ventanilla: copia lo que la atención dice y lo pone en pantalla.
 ##
 ## **No tiene una sola condición sobre el juego, y eso es lo que este spec vino a comprar.** Qué
-## va en cada renglón, cuánto marca la caja y qué falta en góndola son reglas, y una regla escrita
-## acá arriba nace sin test: está medido que ni `gate_de_tests.py` ni `gate_de_capas.py` la ven.
+## va en cada renglón, cuánto marca la caja y qué no se puede vender son reglas, y una regla
+## escrita acá arriba nace sin test: está medido que ni `gate_de_tests.py` ni `gate_de_capas.py`
+## la ven.
 ## Todo lo que se lee sale ya decidido de `Atencion`.
 ##
 ## **No pausa nada, y es deliberado**: mientras el panel está arriba el turno sigue corriendo.

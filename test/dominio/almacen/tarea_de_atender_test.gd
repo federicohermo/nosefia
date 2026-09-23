@@ -7,7 +7,7 @@ extends GdUnitTestSuite
 
 const TAREA := "res://src/dominio/almacen/tarea_de_atender.gd"
 
-const EN_GONDOLA := 9
+const VENDIBLES := 9
 
 
 func _productos() -> Array[Producto]:
@@ -20,11 +20,13 @@ func _pedido(unidades: int = 1) -> Venta:
 	return venta
 
 
-func _inventario(en_gondola: int = EN_GONDOLA) -> Inventario:
+## La góndola llena, así que todo el depósito es vendible.
+func _inventario(vendibles: int = VENDIBLES) -> Inventario:
 	var productos := _productos()
 	var inventario := Inventario.new(productos)
 	for producto in productos:
-		inventario.ingresar(producto, Inventario.Ubicacion.GONDOLA, en_gondola)
+		inventario.ingresar(producto, Inventario.Ubicacion.GONDOLA, producto.umbral)
+		inventario.ingresar(producto, Inventario.Ubicacion.DEPOSITO, vendibles)
 	return inventario
 
 
@@ -135,3 +137,24 @@ func test_en_la_ventanilla_esta_el_que_llego_y_todavia_no_se_despacho() -> void:
 	assert_object(tarea.en_ventanilla()).is_same(primero)
 	tarea.atencion().despachar_sin_vender()
 	assert_object(tarea.en_ventanilla()).is_null()
+
+
+func test_el_segundo_comprador_ve_los_vendibles_que_dejo_el_primero() -> void:  # AC-CTR-017
+	# Los dos compradores comparten el inventario. Si cada atención mirara una copia, el segundo
+	# vería los vendibles del principio de la noche y se llevaría lo que el estante necesita.
+	var producto := Producto.new(Producto.Id.ACTRONCITO, "Actroncito", 2500, 8)
+	var productos: Array[Producto] = [producto]
+	var inventario := Inventario.new(productos)
+	inventario.ingresar(producto, Inventario.Ubicacion.GONDOLA, 8)
+	inventario.ingresar(producto, Inventario.Ubicacion.DEPOSITO, 2)
+	var compradores: Array[Comprador] = []
+	for unidades: int in [1, 2]:
+		var pedido := Venta.new()
+		pedido.agregar(producto, unidades)
+		compradores.append(Comprador.new("Pide %d" % unidades, pedido, pedido.total()))
+	var tarea := TareaDeAtender.new(compradores, inventario)
+	tarea.atender()
+	assert_int(tarea.atencion().cobrar()).is_equal(Atencion.Resultado.COBRADA)
+	tarea.atender()
+	assert_int(tarea.atencion().cobrar()).is_equal(Atencion.Resultado.SIN_STOCK)
+	assert_int(inventario.unidades(producto, Inventario.Ubicacion.GONDOLA)).is_equal(8)

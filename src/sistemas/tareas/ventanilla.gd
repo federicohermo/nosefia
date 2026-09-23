@@ -94,7 +94,8 @@ func pedir_cobrar() -> void:
 	_al_despachar()
 
 
-## Lo despacha sin cobrarle. Es lo que deja cumplir la obligatoria con la góndola vacía.
+## Lo despacha sin cobrarle. Es lo que deja cumplir la obligatoria cuando el pedido supera
+## los vendibles.
 func pedir_despachar_sin_vender() -> void:
 	if _sin_cablear():
 		return

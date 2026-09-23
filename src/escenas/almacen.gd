@@ -117,7 +117,6 @@ func _ready() -> void:
 	# recién cambia cuando el estante la acepta: soltarla en el piso no repone nada.
 	_repositor.agarre = _agarre
 	_repositor.unidad_colocada.connect(_reposicion_manual.depositar)
-	_atenciones.atencion_despachada.connect(_reposicion_manual.actualizar_stock)
 	# El motor no despierta lo que está sobre una caja empujada. Lo hace el puesto.
 	for caja: CajaDeProductosDelDeposito in _cajas_de_productos:
 		caja.empujada.connect(_reposicion_manual.despertar_lo_de_arriba)

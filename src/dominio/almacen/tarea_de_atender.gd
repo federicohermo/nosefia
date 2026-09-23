@@ -5,9 +5,8 @@
 ## adentro, un test se tendría que armar siempre con los que el balance pide, y mover ese número
 ## rompería casos que no hablan de él. Es la misma decisión que tomó `Turno` con las obligatorias.
 ##
-## **Se completa con todos despachados, se les haya vendido o no.** Vender exige stock en góndola
-## y la góndola arranca sin nada repuesto, así que exigirlo encadenaría esta obligatoria con
-## reponer y dejaría la primera noche imposible de cerrar en cinco.
+## **Se completa con todos despachados, se les haya vendido o no.** Un pedido puede superar
+## los vendibles de la noche, y exigir la venta dejaría a ese comprador sin forma de irse.
 class_name TareaDeAtender
 extends RefCounted
 

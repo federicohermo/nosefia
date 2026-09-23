@@ -3,7 +3,9 @@ extends GdUnitTestSuite
 const ALMACEN := preload("res://src/escenas/almacen.tscn")
 
 
-func test_vender_retira_las_unidades_visibles_y_permite_reponer_sin_superponer() -> void:
+func test_vender_no_cambia_lo_que_la_gondola_dibuja() -> void:  # AC-CTR-015
+	# La venta sale del depósito. Un dibujo que bajara al vender mostraría un estante que el
+	# inventario da por lleno, y el jugador repondría lo que no falta.
 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
 	add_child(almacen)
 	almacen.get("_jugador").set_physics_process(false)
@@ -19,19 +21,7 @@ func test_vender_retira_las_unidades_visibles_y_permite_reponer_sin_superponer()
 	atenciones.pedir_abrir()
 	atenciones.pedir_cobrar()
 	await get_tree().process_frame
-	var stock := 0
-	for producto in Catalogo.todos():
-		var cantidad := repositor.estante().unidades_en_gondola(producto)
-		stock += cantidad
-		var grupo: MultiMeshInstance3D = presentacion.get_node("ProductosDe" + producto.nombre)
-		assert_int(grupo.multimesh.visible_instance_count).is_equal(
-			_guia(grupo, producto) + cantidad
-		)
-	assert_int(stock).is_less(cupo_total)
-	for producto in Catalogo.todos():
-		while repositor.estante().disponibles_para_retirar(producto) > 0:
-			presentacion.retirar(producto.id)
-			presentacion.pedir_colocar(producto.id)
+	assert_bool(atenciones.atencion().vendida()).is_true()
 	var posiciones: Array[Vector3] = []
 	for producto in Catalogo.todos():
 		var grupo: MultiMeshInstance3D = presentacion.get_node("ProductosDe" + producto.nombre)

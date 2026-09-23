@@ -88,6 +88,10 @@ Lo que más se rompe:
 - **Si el issue deja renombrar algo, el `rg` de los límites se corre también sobre los
   comentarios.** Un archivo en «Sólo lectura» que nombra por ruta lo que se renombra queda
   mintiendo, y el implementador no lo puede tocar.
+- **Si el issue cambia una regla, el `rg` de los límites busca también la regla vieja en
+  palabras.** Un símbolo no encuentra el comentario que explica la regla con otras palabras, ni
+  el test que arma el estado que la regla lee. En el #166 quedaron fuera de «Se escribe» cinco
+  archivos con comentarios y un test.
 
 ## Paso 4 — Mostrar y publicar
 
