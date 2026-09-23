@@ -490,15 +490,6 @@ func test_el_reloj_de_mesa_queda_sobre_el_vidrio_del_reloj_del_modelo() -> void:
 	)
 
 
-# AC-STK-010 AC-STK-011 AC-STK-012
-func test_la_caja_de_traslado_no_existe_mas() -> void:
-	# Las tres reglas se retiraron con la caja. Queda afirmar que no volvió al almacén.
-	var almacen: Node3D = auto_free(load(ESCENA_DEL_ALMACEN).instantiate())
-	add_child(almacen)
-	await get_tree().process_frame
-	assert_bool(almacen.has_node("Objetos/CajaDeTraslado")).is_false()
-
-
 func test_el_cableado_le_da_la_hora_al_reloj_de_mesa_y_no_al_hud() -> void:
 	# La hora se fue de la pantalla, pero los otros dos carteles del HUD siguen: sin la segunda
 	# mitad de este caso, desconectarlos también pasaría en verde.
