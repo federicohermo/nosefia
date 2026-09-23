@@ -11,7 +11,7 @@
 ## que este spec vino a poner delante del jugador.
 ##
 ## **Se puede despachar sin vender**, y eso desencadena `CAJA` de `REPONER`: la góndola arranca
-## vacía la primera noche, así que exigir la venta dejaría dos obligatorias encadenadas y la
+## sin nada repuesto, así que exigir la venta dejaría dos obligatorias encadenadas y la
 ## primera imposible.
 ##
 ## Es la mitad de atender que se ejerce sin levantar una escena: acá no hay un solo `Node`.

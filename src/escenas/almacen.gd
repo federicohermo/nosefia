@@ -85,8 +85,8 @@ func _ready() -> void:
 	# El marcador de obligatorias no se reinicia solo: `mostrar_tareas()` se vuelve a llamar
 	# recién cuando el jugador completa una, así que sin esto la noche 2 arranca mostrando las
 	# que se cumplieron en la 1 hasta que se cumpla la primera de la 2. Y la góndola de cada
-	# noche arranca vacía, así que el estante se rehace en la misma apertura: uno compartido
-	# dejaría lo repuesto anoche puesto, y reponer se cumpliría sola a partir de la segunda.
+	# noche arranca sin nada repuesto, así que el estante se rehace en la misma apertura: uno
+	# compartido dejaría lo repuesto anoche puesto, y reponer se cumpliría sola a partir de la segunda.
 	# **Una sola conexión**: el 017 y el 008 llegaron por separado al mismo `jornada_abierta`, y
 	# conectarlo dos veces es un error de Godot, no dos llamadas.
 	_ciclo.jornada_abierta.connect(_al_abrir_la_jornada)
@@ -125,7 +125,7 @@ func _ready() -> void:
 	_reposicion_manual.preparar()
 
 
-## Cada noche arranca con el marcador en cero, la góndola vacía y el depósito lleno.
+## Cada noche arranca con el marcador en cero, nada repuesto y el depósito lleno.
 ##
 ## El marcador lo dice la apertura y no el cierre de la anterior: entre las dos hay una placa que
 ## el jugador tarda lo que quiera en despachar, y el conteo de ayer no puede quedar colgado ahí.
