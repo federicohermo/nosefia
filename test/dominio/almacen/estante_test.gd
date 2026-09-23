@@ -191,7 +191,7 @@ func test_el_estante_lleno_conserva_la_unidad_rechazada() -> void:
 	assert_int(estante.unidades_en_gondola(producto)).is_equal(1)
 
 
-func test_no_retira_mas_que_los_lugares_libres_incluidas_las_reservas() -> void:
+func test_no_retira_mas_que_los_lugares_libres_incluidas_las_reservas() -> void:  # AC-STK-017
 	var producto := _producto(Producto.Id.ACTRONCITO)
 	var estante := _estante([producto])
 	var primera := estante.retirar(producto)

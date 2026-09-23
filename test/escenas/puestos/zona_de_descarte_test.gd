@@ -22,11 +22,10 @@ const ZonaQueSeVe := preload("res://src/escenas/puestos/zona_de_descarte.gd")
 ## **Las cajas de reposición estaban en esta lista y salieron en el 043.** Ese spec mandó el
 ## stock a los estantes del depósito, así que reponer pasa en el fondo **a propósito**: medidas
 ## hoy, las ocho quedan entre 3,19 y 5,48 m del descarte, y exigirles los 6 m sería exigir que el
-## stock no viva ahí. Lo que se sigue midiendo son las cuatro tareas del local y las bolsas, que
+## stock no viva ahí. Lo que se sigue midiendo son las tareas del local y las bolsas, que
 ## desde el 043 arrancan en el baño.
 const ANCLAJES_DE_LAS_OTRAS_TAREAS := [
 	"Estructura/gondolanueva/StaticBody3D",
-	"Objetos/CajaDeTraslado",
 	"Estructura/Ventanilla",
 	"Estructura/base compu/StaticBody3D"
 ]

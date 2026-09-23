@@ -22,7 +22,8 @@ lo que el juego tiene que hacer. No se crean `spec.md`, `research.md`, `plan.md`
   sin nombres de escena**: eso vive en el issue y en `docs/`. Un spec que nombra un archivo
   caduca con el refactor siguiente, y entonces el contrato deja de ser el contrato.
 - Reglas `BR-<COD>-###` y criterios `AC-<COD>-###`. El código de tres letras es único en el
-  repo. Un ID no se renumera y no se reutiliza: se retira. Uno nuevo sigue la numeración.
+  repo. Un ID no se renumera y no se reutiliza. **Retirar es borrar**: lo que sale del juego
+  se borra entero, con su test, y el número queda como hueco. Nunca un «*Retirada*».
 - Cada AC es DADO/CUANDO/ENTONCES **con los valores que deciden**, y nombra las reglas que
   verifica. Lo cierra un agente, no una persona mirando o escuchando.
 - Un valor de balance se cita, nunca se copia: el número exacto sale del dominio.

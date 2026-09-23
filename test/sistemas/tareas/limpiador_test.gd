@@ -1,14 +1,14 @@
 ## El nodo que limpia adentro del motor: traduce la pasada y publica lo que el dominio contestó.
 ##
 ## **Ningún caso entra el nodo al árbol y ninguno hace correr `_process`.** Se instancia con
-## `auto_free(Limpiador.new())` y se le llama a mano, que es lo que vuelve medible el descuento: sin
-## `_process`, el único descuento que puede aparecer en el turno es el de `completar()`.
+## `auto_free(Limpiador.new())` y se le llama a mano: sin `_process`, el turno no se mueve, y un
+## descuento que apareciera sería un segundo cobro.
 extends GdUnitTestSuite
 
 const LIMPIADOR := "res://src/sistemas/tareas/limpiador.gd"
 
 ## Los cuatro `.gd` de este spec más los dos de la cáscara. Ninguno puede nombrar `consumir`: el
-## costo de `LIMPIAR` es del turno y lo descuenta el reloj, una sola vez.
+## tiempo de limpiar lo descuenta el reloj mientras el jugador limpia, y nadie más.
 const ARCHIVOS_DEL_SPEC := [
 	"res://src/dominio/almacen/reglas_de_la_limpieza.gd",
 	"res://src/dominio/almacen/mancha.gd",
@@ -122,20 +122,19 @@ func test_con_una_pasada_de_menos_la_obligatoria_no_se_cuenta() -> void:
 	assert_int(_turno.tareas_cumplidas()).is_equal(0)
 
 
-func test_la_ultima_pasada_cuenta_la_obligatoria_y_descuenta_una_sola_vez() -> void:
+func test_la_ultima_pasada_cuenta_la_obligatoria_una_sola_vez_sin_mover_el_turno() -> void:
 	var limpiador := _limpiador()
 	_limpiar_menos(limpiador, 0)
 	assert_int(_avisos_de_tarea).is_equal(1)
 	assert_int(_cumplidas_avisadas).is_equal(1)
-	var esperado := Reglas.DURACION_DEL_TURNO - Reglas.costo_de(Tarea.Tipo.LIMPIAR)
-	assert_float(_turno.tiempo_restante()).is_equal(esperado)
-	# Machacar de más no vuelve a cobrar: las cuatro zonas están limpias y el dominio rechaza.
+	assert_float(_turno.tiempo_restante()).is_equal(Reglas.DURACION_DEL_TURNO)
+	# Machacar de más no la vuelve a contar: las cuatro zonas están limpias y el dominio rechaza.
 	limpiador.pedir_pasada(PisoDelLocal.Zona.ENTRADA, ReglasDeLaLimpieza.ID_DEL_TRAPEADOR)
-	assert_float(_turno.tiempo_restante()).is_equal(esperado)
+	assert_float(_turno.tiempo_restante()).is_equal(Reglas.DURACION_DEL_TURNO)
 	assert_int(_avisos_de_tarea).is_equal(1)
 
 
-func test_sin_tiempo_para_limpiar_la_tarea_no_se_cuenta_ni_descuenta() -> void:
+func test_con_el_turno_cerrado_limpiar_no_cuenta() -> void:
 	# El piso igual queda limpio: el estado del local no depende de que el jefe lo cuente.
 	var limpiador := _limpiador(0.0)
 	_limpiar_menos(limpiador, 0)

@@ -40,16 +40,6 @@ func test_pasada_la_mitad_de_la_noche_que_falla_el_display_queda_en_blanco() -> 
 	assert_str(reloj.text).is_empty()
 
 
-func test_el_display_no_cambia_de_tono_en_la_ultima_media_hora() -> void:  # AC-SHF-015
-	# La franja de aviso no existe más: el tono es uno solo, de la primera lectura a la última.
-	var reloj := _reloj()
-	reloj.declarar_jornada(RelojDeMesa.JORNADA_SIN_DECLARAR)
-	var tono := reloj.modulate
-	for restante: float in [Reglas.DURACION_DEL_TURNO, 1800.0, UN_SEGUNDO, 0.0]:
-		reloj.mostrar_tiempo(restante)
-		assert_that(reloj.modulate).is_equal(tono)
-
-
 func test_el_display_no_gira_hacia_la_camara() -> void:  # AC-SHF-017
 	# Sin `billboard` el label se lee de frente al escritorio y no desde la góndola.
 	assert_int(_reloj().billboard).is_equal(BaseMaterial3D.BILLBOARD_DISABLED)

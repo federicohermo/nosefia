@@ -93,8 +93,8 @@ func productos_aceptados() -> int:
 ## Mueve **una** unidad del depósito a la góndola, y devuelve por qué no pudo.
 ##
 ## Los tres rechazos no mueven nada, y el orden importa: «eso no va acá» es una propiedad del
-## producto y vale siempre, «no entra más» se resuelve vendiendo, y «no queda en el depósito» es
-## el único que depende de cuánta mercadería trajo la noche.
+## producto y vale siempre, «no entra más» es el estado del estante, y «no queda en el depósito»
+## es el único que depende de cuánta mercadería trajo la noche.
 func colocar(producto: Producto) -> Rechazo:
 	if (
 		acepta(producto)

@@ -23,6 +23,7 @@ jugador**: es el único lugar donde el juego puede mentir en vivo.
 | **Diferencia** | lo que paga menos lo que marca la caja, **con signo** | vuelto, error |
 | **Despachar** | dar por terminada la atención, se le haya vendido o no | atender, cerrar |
 | **Ventanilla** | la única ventana por la que se atiende. Nadie entra al local | mostrador, caja |
+| **Vendibles** | las unidades de un producto que se pueden vender: lo que el estante no necesita | stock, disponible |
 
 ## Comportamiento normativo
 
@@ -46,22 +47,16 @@ de más y negativa que pagó de menos: el valor absoluto haría indistinguibles 
 El padrón DEBE incluir al menos un comprador que paga de más y uno que paga de menos. Un padrón
 donde todos pagan justo deja la ventanilla sin nada que mirar.
 
-### BR-CTR-005 — Sólo se vende lo que está en góndola
-
-CUANDO se cobra un pedido, el sistema DEBE descontar **sólo de la góndola**. Lo que está en el
-depósito no se vende: hay que reponerlo primero.
-
 ### BR-CTR-006 — El cobro es todo o nada
 
-SI alguna línea del pedido no tiene stock en góndola, ENTONCES el sistema DEBE rechazar el cobro
-entero y **no mover una sola unidad**. Descontar lo que se pueda deja un estado que el jugador no
-distingue de una venta completa.
+SI alguna línea del pedido supera los vendibles de su producto, ENTONCES el sistema DEBE
+rechazar el cobro entero y **no mover una sola unidad**. Descontar lo que se pueda deja un
+estado que el jugador no distingue de una venta completa.
 
 ### BR-CTR-007 — Se puede despachar sin vender
 
-El sistema DEBE permitir despachar a un comprador sin cobrarle nada. La góndola arranca vacía la
-primera noche, así que exigir la venta encadenaría atender con reponer y dejaría la primera noche
-imposible de cerrar.
+El sistema DEBE permitir despachar a un comprador sin cobrarle nada. Un pedido puede superar los
+vendibles de la noche, y exigir la venta dejaría a ese comprador sin forma de irse.
 
 ### BR-CTR-008 — Un comprador se despacha una vez
 
@@ -81,8 +76,8 @@ diferencia no es plata que falte.
 
 ### BR-CTR-011 — La ventanilla dice qué falta
 
-SI el pedido tiene productos que la góndola no cubre, ENTONCES el sistema DEBE nombrarlos, en el
-orden del ticket. Es la explicación de por qué el cobro va a fallar.
+SI el pedido tiene productos que superan sus vendibles, ENTONCES el sistema DEBE nombrarlos, en
+el orden del ticket. Es la explicación de por qué el cobro va a fallar.
 
 ### BR-CTR-012 — El ticket no da la cuenta hecha
 
@@ -95,6 +90,12 @@ hecha justo donde el juego puede mentir.
 MIENTRAS el comprador habla, el sistema DEBE avanzar **una entrada por clic izquierdo** y DEBE
 impedir abandonar la ventanilla. Una conversación sin líneas no encierra a nadie: se puede
 abandonar desde el principio.
+
+### BR-CTR-014 — La venta sale del depósito, y deja el estante como está
+
+CUANDO se cobra un pedido, el sistema DEBE descontar cada línea **del depósito**, y sólo hasta
+los vendibles de su producto. La góndola no se toca: una venta que vacía el estante deshace lo
+repuesto, y nada se lo avisa al jugador.
 
 ## Criterios de aceptación
 
@@ -117,20 +118,15 @@ DADO un pedido de 5900 CUANDO paga 5900 la diferencia es `0`; con 6200 es `+300`
 DADO el padrón entero ENTONCES hay al menos un comprador con diferencia positiva y al menos uno
 con diferencia negativa.
 
-### AC-CTR-005 — El depósito no se vende *(verifica BR-CTR-005)*
-
-DADO 10 unidades en depósito y 0 en góndola CUANDO se cobra una unidad ENTONCES el cobro se
-rechaza y el depósito sigue en 10.
-
 ### AC-CTR-006 — Todo o nada *(verifica BR-CTR-006)*
 
-DADO un pedido de dos productos, uno con stock y otro sin CUANDO se cobra ENTONCES se rechaza y
-la góndola del que sí tenía no bajó una unidad.
+DADO un pedido de dos productos, uno con vendibles y otro sin CUANDO se cobra ENTONCES se
+rechaza, y ni el depósito ni la góndola de ninguno de los dos cambió una unidad.
 
 ### AC-CTR-007 — Despachar sin vender *(verifica BR-CTR-007)*
 
-DADO una góndola vacía CUANDO se despacha sin vender ENTONCES la atención queda despachada, no
-vendida, y el inventario no cambió.
+DADO un pedido que supera los vendibles CUANDO se despacha sin vender ENTONCES la atención queda
+despachada, no vendida, y el inventario no cambió.
 
 ### AC-CTR-008 — El segundo despacho no hace nada *(verifica BR-CTR-008)*
 
@@ -154,8 +150,9 @@ DADO dos ventas cobradas, una con `+500` y otra con `-500` CUANDO se suma el des
 
 ### AC-CTR-012 — El aviso nombra lo que falta *(verifica BR-CTR-011)*
 
-DADO un pedido de dos productos con uno sin stock CUANDO se mira el aviso ENTONCES nombra sólo al
-que falta; con todo en góndola, el aviso es la cadena vacía.
+DADO un pedido de dos productos, uno que supera sus vendibles y otro que no, CUANDO se mira el
+aviso ENTONCES nombra sólo al primero; con los dos dentro de sus vendibles, el aviso es la cadena
+vacía.
 
 ### AC-CTR-013 — El ticket no lleva precios por línea *(verifica BR-CTR-012)*
 
@@ -167,6 +164,28 @@ precio unitario, y al final están el total, lo que paga y la diferencia.
 DADO una conversación de tres entradas CUANDO se avanzó dos veces ENTONCES no se puede abandonar;
 al tercer avance sí. Con cero entradas se puede desde el principio.
 
+### AC-CTR-015 — La venta no toca el estante *(verifica BR-CTR-014)*
+
+DADO un producto de umbral 8 CUANDO se cobra la venta ENTONCES:
+
+| Góndola | Depósito | Venta | Resultado | Góndola después | Depósito después |
+|---|---|---|---|---|---|
+| 8 | 2 | 2 | se cobra | 8 | 0 |
+| 0 | 10 | 2 | se cobra | 0 | 8 |
+| 0 | 10 | 3 | se rechaza | 0 | 10 |
+| 8 | 0 | 1 | se rechaza | 8 | 0 |
+
+### AC-CTR-016 — Lo repuesto sigue repuesto *(verifica BR-CTR-014)*
+
+DADO un producto de umbral 8, con la góndola en 7, el depósito en 3 y 1 unidad en la mano CUANDO
+se cobra una venta de 2 ENTONCES se cobra, y colocar la unidad de la mano deja la góndola en 8 y
+reponer cumplido.
+
+### AC-CTR-017 — El segundo comprador ve lo que dejó el primero *(verifica BR-CTR-014)*
+
+DADO un producto de umbral 8, con la góndola en 8 y el depósito en 2 CUANDO un comprador compra 1
+y otro pide 2 ENTONCES el primero se cobra y el segundo se rechaza.
+
 ## No objetivos
 
 - Esta capacidad NO decide cuántas unidades hay ni dónde están: se lo pregunta a
@@ -176,10 +195,11 @@ al tercer avance sí. Con cero entradas se puede desde el principio.
 
 ## Contratos
 
-- **Entrada:** el padrón de la noche y el estado de la góndola.
+- **Entrada:** el padrón de la noche y los vendibles de cada producto.
 - **Salida:** quién está en la ventanilla, el ticket, el total, la diferencia, el aviso de
   faltantes, cuántos van despachados y el desvío de la noche.
-- **Falla:** sin stock el cobro se rechaza entero; una atención despachada rechaza todo lo demás.
+- **Falla:** un pedido que supera sus vendibles se rechaza entero; una atención despachada
+  rechaza todo lo demás.
 
 ## Señales
 
@@ -188,7 +208,7 @@ al tercer avance sí. Con cero entradas se puede desde el principio.
 
 ## Dependencias
 
-- [`store-stock`](../store-stock/store-stock.md) (consume): las unidades en góndola y el cobro.
+- [`store-stock`](../store-stock/store-stock.md) (consume): los vendibles y el cobro.
 - [`shift-cycle`](../shift-cycle/shift-cycle.md) (alimenta): avisa cuándo la obligatoria quedó
   cumplida.
 
@@ -200,3 +220,9 @@ al tercer avance sí. Con cero entradas se puede desde el principio.
   - Decide: el dueño del repo.
   - Bloquea: nada de lo escrito acá. Abriría una regla en
     [`employment-record`](../employment-record/employment-record.md).
+- **OQ-CTR-002 — ¿Cuántos compradores vienen por noche, y cuánto compra cada uno?**
+  - Por qué sigue abierta: game design dio un margen de 1 a 3 compradores, con 1 a 3 productos
+    cada uno, y no eligió un valor. Con pocos vendibles por producto, un padrón que pide de más
+    deja ventas que se rechazan.
+  - Decide: game design.
+  - Bloquea: nada. Cambiaría `BR-CTR-001` y el padrón.

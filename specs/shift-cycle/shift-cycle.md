@@ -11,8 +11,8 @@ provenance: GDD «Ciclo de jornadas»; migración de los specs 001, 007, 011, 01
 ## Propósito
 
 Repartir una noche de tiempo finito entre las cinco tareas del jefe y la investigación. Lo único
-que tiene que hacer bien es que el tiempo alcance para cumplir y sobre algo: **cada minuto
-investigando es un minuto que no se dedica a las tareas**, y esta capacidad es esa resta.
+que tiene que hacer bien es la resta: el tiempo pasa igual, se haga lo que se haga, y **cada
+minuto investigando es un minuto que no se dedica a las tareas**.
 
 ## Lenguaje de la capacidad
 
@@ -21,7 +21,6 @@ investigando es un minuto que no se dedica a las tareas**, y esta capacidad es e
 | **Turno** | el presupuesto de tiempo de una noche, en segundos de ficción | nivel, ronda |
 | **Jornada** | una noche de la partida, numerada desde 1 | día, nivel |
 | **Obligatoria** | una de las tareas que el jefe pide esta noche | misión, objetivo |
-| **Margen** | lo que sobra del turno después de cumplir y de caminar | tiempo libre, ocio |
 | **Ritmo** | cuántos segundos de turno consume un segundo real | escala, velocidad |
 | **Hora** | la hora de ficción de la noche, de la apertura al cierre | tiempo restante, cuenta regresiva |
 | **Reloj** | el reloj de mesa del local, el único lugar donde se lee la hora | reloj de pared, HUD |
@@ -42,7 +41,8 @@ reales cubran el turno entero**: un minuto real por hora de ficción. El factor 
 ### BR-SHF-003 — El tiempo entra, no se busca
 
 CUANDO pasa tiempo real, el sistema DEBE recibir cuántos segundos pasaron y descontarlos del
-turno. El turno nunca lee un reloj propio. Un valor que no es positivo no descuenta nada.
+turno. El turno nunca lee un reloj propio. Un valor que no es positivo no descuenta nada. El
+tiempo real es lo único que descuenta del turno: cumplir una obligatoria no lo mueve.
 
 ### BR-SHF-004 — El turno no baja de cero
 
@@ -55,32 +55,16 @@ CUANDO se abre una jornada, el sistema DEBE pedir **una tarea de cada tipo decla
 la caja, reponer, registrar, limpiar y sacar la basura. La cantidad sale de recorrer los tipos y
 nunca de un número escrito.
 
-### BR-SHF-006 — Cada obligatoria cuesta turno
+### BR-SHF-007 — Una obligatoria se cumple una vez, y antes del cierre
 
-CUANDO se cumple una obligatoria, el sistema DEBE descontar su costo del turno. Los costos, en
-segundos de ficción: caja 1800, reponer 3600, registrar 2700, limpiar 3600, sacar la basura 1200.
-
-### BR-SHF-007 — Una obligatoria se cumple una vez
-
-SI la tarea ya está cumplida, o SI su costo no entra en lo que queda del turno, ENTONCES el
-sistema DEBE rechazar y **no descontar nada**. Una tarea a medias deja un estado que el jugador
-no distingue de haberla hecho.
+MIENTRAS queda turno, el sistema DEBE contar la obligatoria que se cumple, sin importar cuánto
+turno quede. SI la tarea ya está cumplida, o SI el turno está cerrado, ENTONCES el sistema DEBE
+rechazarla y no contarla.
 
 ### BR-SHF-008 — Sólo cuentan las declaradas
 
 El sistema DEBE contar como cumplidas sólo las obligatorias que la jornada declaró. Una tarea
-cumplida fuera de esa lista consume turno y no cuenta.
-
-### BR-SHF-009 — El turno alcanza, con margen
-
-El sistema DEBE dejar, después de cumplir las cinco y de caminar, un margen **mayor a 3600
-segundos** de ficción — una de las doce horas. El trayecto estimado de una noche completa es de
-**220 segundos reales**, y es el único término que pasa por el ritmo.
-
-### BR-SHF-010 — Un turno consumido exacto no alcanza
-
-SI el margen es cero, ENTONCES el sistema DEBE contestar que el turno **no** alcanza. Investigar
-no es opcional: es la mitad del bucle.
+cumplida fuera de esa lista no cuenta.
 
 ### BR-SHF-011 — La hora se lee en un solo lugar, y una noche falta
 
@@ -94,10 +78,6 @@ turno entero.
 
 CUANDO se lee la hora, el sistema DEBE truncar al minuto y nunca redondear hacia arriba. Con cero
 o menos de turno, DEBE leer la hora de cierre: nunca una hora pasada del cierre.
-
-### BR-SHF-013 — *Retirada*
-
-La última media hora ya no avisa. El reloj no cambia de tono.
 
 ### BR-SHF-014 — La lectura es la hora de la noche
 
@@ -131,15 +111,11 @@ está cerrado.
 DADO dos jornadas seguidas CUANDO cada una pide sus obligatorias ENTONCES recibe una por cada
 tipo declarado, y las de la segunda están todas sin cumplir.
 
-### AC-SHF-006 — Cumplir cuesta *(verifica BR-SHF-006)*
+### AC-SHF-007 — El borde del cierre *(verifica BR-SHF-007)*
 
-DADO un turno entero CUANDO se cumplen las cinco ENTONCES el turno bajó exactamente la suma de
-los cinco costos.
-
-### AC-SHF-007 — El borde del costo *(verifica BR-SHF-007)*
-
-DADO un turno con un segundo menos que el costo de la tarea CUANDO se intenta cumplirla ENTONCES
-se rechaza y el turno no bajó un solo segundo; con el costo exacto, se cumple.
+DADO un turno con `1.0` segundo restante CUANDO se cumple cualquiera de las cinco obligatorias
+ENTONCES cuenta, y quedan `1.0`. DADO un turno con `0.0` restantes, cerrado, CUANDO se cumple una
+ENTONCES se rechaza y las cumplidas no suben.
 
 ### AC-SHF-008 — Cumplir dos veces *(verifica BR-SHF-007)*
 
@@ -149,17 +125,8 @@ baja y la cuenta de cumplidas no sube.
 ### AC-SHF-009 — La tarea de afuera no cuenta *(verifica BR-SHF-008)*
 
 DADO una jornada con dos obligatorias declaradas CUANDO se cumple una tercera tarea que no
-estaba declarada ENTONCES el turno bajó su costo y las cumplidas siguen siendo las de la lista.
-
-### AC-SHF-010 — El balance cierra *(verifica BR-SHF-009, BR-SHF-002)*
-
-DADO los cinco costos, los `220.0` segundos de trayecto y el factor del ritmo CUANDO se calcula
-el margen ENTONCES da `17100.0` segundos y es mayor al margen mínimo.
-
-### AC-SHF-011 — El cero no alcanza *(verifica BR-SHF-010)*
-
-DADO un margen de exactamente `0.0` CUANDO se pregunta si el turno alcanza ENTONCES la respuesta
-es `false`.
+estaba declarada ENTONCES no cuenta, las cumplidas siguen siendo las de la lista y el turno
+restante no cambió.
 
 ### AC-SHF-012 — El reloj falta la mitad de una noche *(verifica BR-SHF-011)*
 
@@ -176,10 +143,6 @@ cadena vacía, y no `"08:00"`.
 
 DADO `43141.0` segundos restantes ENTONCES el reloj lee `"20:00"`; con `43140.0`, `"20:01"`; con
 `-10.0`, `"08:00"`.
-
-### AC-SHF-015 — *Retirado* *(verifica BR-SHF-013)*
-
-El aviso de la última media hora no existe más.
 
 ### AC-SHF-016 — La hora de la noche *(verifica BR-SHF-014)*
 
@@ -199,14 +162,19 @@ DADO una jornada que no es la tercera CUANDO se lee el reloj ENTONCES:
 DADO el local armado CUANDO se recorren sus nodos ENTONCES hay exactamente una lectura de la
 hora, cuelga del reloj de mesa y no gira hacia la cámara.
 
+### AC-SHF-018 — Cumplir no mueve el turno *(verifica BR-SHF-003)*
+
+DADO un turno de `43200.0` CUANDO se cumplen las cinco obligatorias en el mismo cuadro ENTONCES
+cuentan las cinco y quedan `43200.0`.
+
 ## No objetivos
 
 - Esta capacidad NO decide **cómo** se cumple cada obligatoria: eso es de la capacidad de cada
   tarea.
 - Esta capacidad NO anota la noche en el legajo ni decide el final: eso es de
   [`employment-record`](../employment-record/employment-record.md).
-- Esta capacidad NO cobra tiempo por investigar. Investigar cuesta porque el reloj no se
-  detiene, no porque alguien descuente.
+- Esta capacidad NO cobra tiempo por ninguna acción: ni por cumplir ni por investigar. Todo
+  cuesta porque el reloj no se detiene, no porque alguien descuente.
 
 ## Contratos
 
@@ -214,8 +182,8 @@ hora, cuelga del reloj de mesa y no gira hacia la cámara.
   jornada es.
 - **Salida:** cuánto queda, si el turno cerró, cuántas obligatorias van cumplidas, y la lectura
   del reloj de mesa: la hora, o vacío.
-- **Falla:** cumplir una obligatoria imposible se rechaza sin consumir. Un tiempo negativo se
-  ignora en silencio.
+- **Falla:** cumplir una obligatoria ya cumplida, o con el turno cerrado, se rechaza. Un tiempo
+  negativo se ignora en silencio.
 
 ## Señales
 
@@ -230,8 +198,4 @@ hora, cuelga del reloj de mesa y no gira hacia la cámara.
 
 ## Preguntas abiertas
 
-- **OQ-SHF-001 — ¿Los cinco costos y el trayecto se miden o se siguen suponiendo?**
-  - Por qué sigue abierta: el trayecto es una estimación con 75 % de margen, y tres de las cinco
-    obligatorias todavía no tienen anclaje medido en la escena.
-  - Decide: el dueño del repo, jugando.
-  - Bloquea: nada del comportamiento. Mueve el margen de `AC-SHF-010`.
+Ninguna.

@@ -22,9 +22,9 @@ const Tarea := preload("res://src/dominio/jornada/tarea.gd")
 const Turno := preload("res://src/dominio/jornada/turno.gd")
 
 
-func test_completar_la_unica_obligatoria_la_cuenta_como_cumplida() -> void:  # AC-SHF-006
+func test_con_un_segundo_restante_la_obligatoria_cuenta() -> void:  # AC-SHF-007
 	var limpiar := Tarea.new(Tarea.Tipo.LIMPIAR)
-	var turno := Turno.new(3600.0, [limpiar])
+	var turno := Turno.new(1.0, [limpiar])
 	turno.completar(limpiar)
 	assert_int(turno.tareas_cumplidas()).is_equal(1)
 ```
