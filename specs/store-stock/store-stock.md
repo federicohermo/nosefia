@@ -82,15 +82,15 @@ cuánta mercadería trajo la noche.
 
 ### BR-STK-010 — *Retirada*
 
-La caja de traslado ya no existe. No hay una caja mixta de ocho.
+La caja de traslado salió del juego.
 
 ### BR-STK-011 — *Retirada*
 
-La caja de traslado ya no existe. Nada se descarga por arriba.
+La caja de traslado salió del juego.
 
 ### BR-STK-012 — *Retirada*
 
-La caja de traslado ya no existe. No hay una caja que rechace lo que no es un producto.
+La caja de traslado salió del juego.
 
 ### BR-STK-013 — Reponer está cumplido cuando no falta nada
 
@@ -112,14 +112,13 @@ rechazarlo. Registrar cualquier cosa dejaría la tarea cumplible con tres latas 
 CUANDO el jugador le pide una unidad a una caja del depósito que **no lleva en la mano**, el
 sistema DEBE darle una unidad del producto de la caja, sin importar dónde esté apoyada: el piso,
 un estante, un mostrador u otra caja. SI el jugador lleva esa caja, ENTONCES el sistema NO DEBE
-darle nada. Lo que cobra el traslado es que la caja llevada no entrega, no la altura.
+darle nada.
 
 ### BR-STK-017 — La caja no entrega lo que la góndola no puede recibir
 
 SI la góndola de ese producto ya no tiene lugar, contando las unidades que ya salieron de la caja
-y todavía no se colocaron, ENTONCES el sistema DEBE negar la unidad aunque la caja tenga. Hoy
-una unidad que sale de la caja no vuelve a ella, y sin este corte quedaría en la mano sin un
-lugar donde ir.
+y todavía no se colocaron, ENTONCES el sistema DEBE negar la unidad aunque la caja tenga. Una
+unidad que sale de la caja no vuelve a ella: sin este corte, queda en la mano sin lugar.
 
 ## Criterios de aceptación
 
@@ -241,5 +240,6 @@ unidades sin colocarlas ENTONCES la tercera se niega; y colocar esas 2 no habili
     hace con las cajas de un producto.
   - Efecto: `BR-STK-010` a `BR-STK-012` quedan retiradas.
 - **OQ-STK-003 — ¿La mercadería expuesta entra en el inventario?**
+  - Por qué sigue abierta: hoy la góndola arranca en cero y lo expuesto no se cuenta.
   - Decide: el dueño del repo.
   - Bloquea: nada.

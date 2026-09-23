@@ -28,7 +28,6 @@ const CUPO_DE_PRUEBA := 2
 
 var _colocados: int = 0
 var _rechazos: int = 0
-var _ultimo_motivo: int = Estante.Rechazo.NINGUNO
 var _cumplidas_avisadas: int = 0
 var _avisos_de_tarea: int = 0
 
@@ -46,7 +45,6 @@ class UnidadFisica:
 func before_test() -> void:
 	_colocados = 0
 	_rechazos = 0
-	_ultimo_motivo = Estante.Rechazo.NINGUNO
 	_cumplidas_avisadas = 0
 	_avisos_de_tarea = 0
 	_turno = null
@@ -205,9 +203,8 @@ func test_con_la_mano_llena_no_reserva_otra_unidad() -> void:
 	assert_int(repositor.estante().disponibles_para_retirar(Catalogo.todos()[0])).is_equal(1)
 
 
-func _anotar_rechazo(motivo: Estante.Rechazo) -> void:
+func _anotar_rechazo(_motivo: Estante.Rechazo) -> void:
 	_rechazos += 1
-	_ultimo_motivo = motivo
 
 
 func _anotar_tarea(cumplidas: int) -> void:

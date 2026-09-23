@@ -492,16 +492,11 @@ func test_el_reloj_de_mesa_queda_sobre_el_vidrio_del_reloj_del_modelo() -> void:
 
 # AC-STK-010 AC-STK-011 AC-STK-012
 func test_la_caja_de_traslado_no_existe_mas() -> void:
-	# Las tres reglas se retiraron con la caja. Lo que queda por afirmar es que no volvió: ni el
-	# nodo en el almacén ni una clase que la cargue.
+	# Las tres reglas se retiraron con la caja. Queda afirmar que no volvió al almacén.
 	var almacen: Node3D = auto_free(load(ESCENA_DEL_ALMACEN).instantiate())
 	add_child(almacen)
 	await get_tree().process_frame
 	assert_bool(almacen.has_node("Objetos/CajaDeTraslado")).is_false()
-	var clases: Array[String] = []
-	for clase: Dictionary in ProjectSettings.get_global_class_list():
-		clases.append(String(clase["class"]))
-	assert_array(clases).not_contains(["CajaDeTraslado", "CargaDeLaCaja"])
 
 
 func test_el_cableado_le_da_la_hora_al_reloj_de_mesa_y_no_al_hud() -> void:

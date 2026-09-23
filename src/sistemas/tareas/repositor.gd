@@ -33,8 +33,8 @@ var _estante: Estante = null
 ## Le entrega al repositor el estante de la noche.
 ##
 ## La instancia se recibe y no se construye acá porque el estante necesita el inventario de la
-## jornada, y quién abre una jornada es la escena. Es lo que permite que cada noche empiece con
-## la góndola vacía sin que este nodo sepa qué es una jornada.
+## jornada, y quién abre una jornada es la escena. Es lo que permite que cada noche empiece sin
+## nada repuesto sin que este nodo sepa qué es una jornada.
 func arrancar(un_estante: Estante) -> void:
 	if agarre != null and agarre.manos().sostenido() is UnidadDeProducto:
 		agarre.entregar()
