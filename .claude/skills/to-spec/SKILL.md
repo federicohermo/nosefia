@@ -96,8 +96,10 @@ Lo que más se rompe:
   hora de cierre se calcula como apertura más duración, nunca se copia de la ficha: «doce horas,
   de las 20:00 a las 06:00» pasó por el spec y el issue con la suma sin hacer, y el primer test
   lo encontró.
-- **Un ID no se renumera y no se reutiliza: se retira.** Uno nuevo sigue la numeración, aunque
-  queden huecos.
+- **Retirar es borrar.** Una regla o un criterio que sale del juego se borra entero: el
+  encabezado, el texto, la pregunta abierta que lo cerró y el test que sólo lo citaba. No queda
+  un «*Retirada*», ni una nota, ni un test que afirme que no está. El número queda como hueco:
+  no se renumera y no se reutiliza. El gate de specs rechaza un encabezado «Retirada».
 
 ## Paso 4 — El pase de completitud
 

@@ -105,6 +105,11 @@ def leer_spec(ruta: Path, texto: str) -> Spec:
 
     for encabezado in _ENCABEZADO.finditer(texto):
         identificador = encabezado.group(1)
+        if "retirad" in encabezado.group(2).lower():
+            problemas.append(
+                f"{_relativa(ruta)}: `{identificador}` está retirado. Retirar es borrar: sale "
+                "entero, con su test, y el número queda como hueco"
+            )
         if spec.codigo and not identificador.startswith(("BR-" + spec.codigo, "AC-" + spec.codigo)):
             problemas.append(
                 f"{_relativa(ruta)}: `{identificador}` no lleva el código de la capacidad "
