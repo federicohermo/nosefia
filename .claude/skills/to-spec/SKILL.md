@@ -1,6 +1,7 @@
 ---
 name: to-spec
-description: Escribe o actualiza el contrato durable de una capacidad de No se fía — `specs/<capability>/<capability>.md`, con sus reglas BR y sus criterios AC. Usar cuando cambia lo que el juego tiene que hacer —una funcionalidad nueva, cambiada o que se quita—, antes de tocar una línea de código. Parte de un issue de tipo feature o directo de un pedido. Para escribir el issue, to-issue.
+description: "Escribe o actualiza el contrato durable de una capacidad de No se fía — `specs/<capability>/<capability>.md`, con sus reglas BR y sus criterios AC. Usar cuando cambia lo que el juego tiene que hacer —una funcionalidad nueva, cambiada o que se quita—, antes de tocar una línea de código. Parte de un issue de tipo feature o directo de un pedido. Para escribir el issue, to-issue."
+argument-hint: "[NN del issue | capability | pedido en prosa]"
 ---
 
 # to-spec — el contrato de una capacidad
@@ -67,10 +68,12 @@ rg --no-ignore -n "AC-XXX" specs/ test/         # si ese ID ya se usó
 - **Un valor de balance se cita, no se copia.** El número exacto sale del dominio: los
   apercibimientos de `src/dominio/reglas.gd`, el corte de las bandas de
   `src/dominio/empleo/consecuencia.gd`, y las cinco tareas de recorrer `Tarea.Tipo`.
-- **El GDD manda sobre el código.** Si el GDD dice diez minutos y el código da veinte, la regla
-  dice diez y el código está en falta. Eso es el hallazgo.
+- **El GDD manda sobre el código.** Si el GDD y el código difieren en un valor, la regla dice
+  lo que dice el GDD y el código está en falta. Eso es el hallazgo.
 - **Un hueco es una `OQ-<COD>-###`**, con por qué sigue abierta, quién la decide y qué bloquea.
   Nunca un valor inventado.
+- **Lo que el motor soporta se mide en el juego, no en el editor.** Son dos procesos de Godot y
+  pueden contestar distinto. Una medición en el editor no dice qué hace el juego.
 
 ## Paso 3 — Escribir las reglas y los criterios
 
@@ -89,6 +92,10 @@ Lo que más se rompe:
   menos de 3, el cuarto apercibimiento.
 - **Si un criterio barre un directorio y enumera excepciones, corré el barrido antes de escribir
   la lista.** De memoria sale corta y el criterio nace imposible de pasar.
+- **Una tabla de valores se recalcula fila por fila desde la regla, y las puntas se derivan.** Una
+  hora de cierre se calcula como apertura más duración, nunca se copia de la ficha: «doce horas,
+  de las 20:00 a las 06:00» pasó por el spec y el issue con la suma sin hacer, y el primer test
+  lo encontró.
 - **Un ID no se renumera y no se reutiliza: se retira.** Uno nuevo sigue la numeración, aunque
   queden huecos.
 

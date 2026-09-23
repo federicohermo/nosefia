@@ -1,6 +1,6 @@
 [gd_scene format=3]
 
-[ext_resource type="PackedScene" path="res://src/escenas/puestos/reloj_de_pared.tscn" id="8_reloj_de_pared"]
+[ext_resource type="PackedScene" path="res://src/escenas/puestos/reloj_de_mesa.tscn" id="8_reloj_de_mesa"]
 [ext_resource type="PackedScene" path="res://src/escenas/puestos/ventanilla.tscn" id="15_ventanilla"]
 
 [ext_resource type="PackedScene" path="res://assets/models/SEPT_JUEGOS_PROTOTIPO.glb" id="modelo"]
@@ -58,11 +58,12 @@ shape = SubResource("suelo_paso_fondo")
 [node name="HuecoDeLaVentanilla" type="Marker3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.35, 1.04, 7.974)
 
-[node name="RelojDePared" parent="." instance=ExtResource("8_reloj_de_pared")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.4, 7.9)
-
 [node name="Ventanilla" parent="." instance=ExtResource("15_ventanilla")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.35, 1.04, 7.974)
+
+[node name="Hora" parent="reloj" instance=ExtResource("8_reloj_de_mesa")]
+transform = Transform3D(0, 0, 3.24931, 0, 14.32601, 0, -3.95604, 0, 0, 1.0065, 0, 0.45)
+editor_description = "Sobre el vidrio del reloj de mesa, mirando al +X de la malla. La base deshace la escala no uniforme del padre (1/0.3078, 1/0.0698, 1/0.2528) y gira el label 90 grados en Y para que su frente sea el del display."
 
 [node name="StaticBody3D" parent="base compu" node_paths=PackedStringArray("mallas") groups=["interactuable"]]
 script = ExtResource("escritorio")

@@ -23,9 +23,13 @@ const ESCENA_DEL_ALMACEN := "res://src/escenas/almacen.tscn"
 ## ausencia no se puede instanciar.
 const SCRIPT_DEL_ALMACEN := "res://src/escenas/almacen.gd"
 
-## La sub-escena del reloj de pared. Se cuenta sobre el texto del `.tscn` y no sobre el árbol
+## El label del reloj de mesa. Se cuenta sobre el texto del `.tscn` y no sobre el árbol
 ## instanciado porque lo que hay que afirmar es que se referencia **una sola vez**.
-const ESCENA_DEL_RELOJ_DE_PARED := "res://src/escenas/puestos/reloj_de_pared.tscn"
+const ESCENA_DEL_RELOJ_DE_MESA := "res://src/escenas/puestos/reloj_de_mesa.tscn"
+const SCRIPT_DEL_RELOJ_DE_MESA := preload("res://src/escenas/puestos/reloj_de_mesa.gd")
+
+## Dónde cuelga: del reloj de mesa del modelo, al lado de la computadora.
+const RUTA_DEL_RELOJ_DE_MESA := "Estructura/reloj/Hora"
 
 ## Los tres `@export` que la raíz declara. Se listan acá y no adentro del caso porque son el
 ## contrato del cableado: agregar uno sin asignarlo en la escena tiene que dar rojo.
@@ -60,6 +64,18 @@ const SEGUNDOS_REALES_DE_UN_TURNO := (
 ## Cuadros de física antes de mirar al jugador. Arranca en el aire y cae; 30 a 60 Hz son medio
 ## segundo, de sobra para medio metro.
 const CUADROS_DE_FISICA := 30
+
+
+## Los labels de la escena que pintan la hora: los que llevan el script del reloj de mesa.
+## Se recorre el árbol entero, y no un nombre: una segunda copia del label en otro puesto es
+## exactamente lo que este recorrido tiene que encontrar.
+static func _lecturas_de_la_hora(nodo: Node) -> Array[Label3D]:
+	var encontradas: Array[Label3D] = []
+	for hijo in nodo.get_children():
+		if hijo is Label3D and hijo.get_script() == SCRIPT_DEL_RELOJ_DE_MESA:
+			encontradas.append(hijo)
+		encontradas.append_array(_lecturas_de_la_hora(hijo))
+	return encontradas
 
 
 ## Devuelve los nodos que rompen la regla de cableado, ya redactados con su padre.
@@ -406,51 +422,69 @@ func test_despachar_la_placa_abre_la_noche_siguiente_en_cero() -> void:
 	)
 
 
-func test_la_escena_trae_un_solo_reloj_de_pared_en_la_estructura() -> void:
-	# Dos relojes serían dos esferas diciendo lo mismo y una sola conectada, que es el modo de
-	# falla silencioso: el jugador camina hasta la que no anda y no hay error en ningún lado.
+func test_la_hora_se_lee_en_un_solo_lugar_y_es_el_reloj_de_mesa() -> void:  # AC-SHF-017
+	# Dos lecturas serían dos displays diciendo lo mismo y uno solo conectado, que es el modo de
+	# falla silencioso: el jugador camina hasta el que no anda y no hay error en ningún lado.
 	var texto := FileAccess.get_file_as_string(
 		"res://src/escenas/puestos/estructura_del_almacen.tscn"
 	)
 	(
-		assert_int(texto.count(ESCENA_DEL_RELOJ_DE_PARED))
+		assert_int(texto.count(ESCENA_DEL_RELOJ_DE_MESA))
 		. override_failure_message(
 			(
-				"`estructura_del_almacen.tscn` referencia %d veces al reloj de pared"
-				% texto.count(ESCENA_DEL_RELOJ_DE_PARED)
+				"`estructura_del_almacen.tscn` referencia %d veces al reloj de mesa"
+				% texto.count(ESCENA_DEL_RELOJ_DE_MESA)
 			)
 		)
 		. is_equal(1)
 	)
 	var almacen := _almacen()
-	assert_bool(almacen.has_node("Estructura/RelojDePared")).is_true()
+	var lecturas := _lecturas_de_la_hora(almacen)
+	assert_array(lecturas).override_failure_message("lecturas: %s" % [lecturas]).has_size(1)
+	# Cuelga de la malla del reloj de mesa del modelo, y no gira hacia la cámara: se lee cerca
+	# del escritorio y no desde la góndola.
+	var hora: Label3D = lecturas[0]
+	assert_str(str(almacen.get_path_to(hora))).is_equal(RUTA_DEL_RELOJ_DE_MESA)
+	assert_object(hora.get_parent()).is_instanceof(MeshInstance3D)
+	assert_int(hora.billboard).is_equal(BaseMaterial3D.BILLBOARD_DISABLED)
 	assert_array(_violaciones_de_cableado(almacen)).is_empty()
-	# Y el `@export` de la raíz resuelto, que es lo que ninguna de las dos afirmaciones de arriba
-	# ve: si `reloj_de_pared.tscn` perdiera su `script`, el nodo instanciado sería un `Label3D`
+	# Y el `@export` de la raíz resuelto, que es lo que ninguna de las afirmaciones de arriba ve:
+	# si `reloj_de_mesa.tscn` perdiera su `script`, el nodo instanciado sería un `Label3D`
 	# pelado, el `@export` llegaría nulo **con el `node_paths` bien escrito**, y el juego moriría
 	# en el primer cuadro con un error que no nombra a ninguno de los dos `.tscn`.
 	(
-		assert_object(almacen.get("_reloj_de_pared"))
+		assert_object(almacen.get("_reloj_de_mesa"))
 		. override_failure_message(
-			"`_reloj_de_pared` llegó nulo: la sub-escena perdió su `script` o su `node_paths`"
+			"`_reloj_de_mesa` llegó nulo: la sub-escena perdió su `script` o su `node_paths`"
 		)
 		. is_not_null()
 	)
 
 
-func test_el_reloj_de_pared_cae_adentro_del_edificio() -> void:
-	# Un reloj colocado afuera de la cáscara se vería flotando en el vacío y ningún test de
-	# cableado lo diría: la escena carga igual y el nodo está.
+func test_el_reloj_de_mesa_queda_sobre_el_vidrio_del_reloj_del_modelo() -> void:
+	# Un label colgado de una malla con escala no uniforme hereda esa escala: si la base del
+	# `.tscn` no la deshace, el texto sale aplastado. Se afirma sobre la transformación global,
+	# que es lo que el jugador ve, y contra la caja de la malla, que es donde tiene que estar.
 	var almacen: Node3D = auto_free(load(ESCENA_DEL_ALMACEN).instantiate())
 	add_child(almacen)
 	await get_tree().process_frame
-	var cascara: MeshInstance3D = almacen.get_node("Estructura/" + CASCARA_DEL_EDIFICIO)
-	var caja: AABB = cascara.global_transform * cascara.get_aabb()
-	var reloj: Node3D = almacen.get_node("Estructura/RelojDePared")
+	var hora: Label3D = almacen.get_node(RUTA_DEL_RELOJ_DE_MESA)
+	var reloj: MeshInstance3D = hora.get_parent()
+	var global := hora.global_transform.basis
+	assert_bool(global.is_conformal()).is_true()
+	assert_float(global.get_scale().x).is_equal_approx(1.0, 0.001)
+	assert_float(global.get_scale().y).is_equal_approx(1.0, 0.001)
+	# El frente del label —su `+Z`— mira al `+X` de la malla, que es la cara del display.
+	var frente := global.z.normalized()
+	var cara := reloj.global_transform.basis.x.normalized()
+	assert_float(frente.dot(cara)).is_equal_approx(1.0, 0.001)
+	# Y está pegado al vidrio: adentro de la caja de la malla estirada dos centímetros, que es
+	# lo que separa «sobre el display» de «flotando en el pasillo».
+	var caja: AABB = (reloj.global_transform * reloj.get_aabb()).grow(0.02)
 	(
-		assert_bool(caja.has_point(reloj.global_position))
+		assert_bool(caja.has_point(hora.global_position))
 		. override_failure_message(
-			"el reloj quedó en %s, afuera del edificio %s" % [reloj.global_position, caja]
+			"el label quedó en %s, lejos del reloj %s" % [hora.global_position, caja]
 		)
 		. is_true()
 	)
@@ -486,13 +520,13 @@ func test_la_caja_de_traslado_no_se_ve() -> void:
 	assert_bool(caja.is_visible_in_tree()).is_false()
 
 
-func test_el_cableado_le_da_la_hora_al_reloj_de_pared_y_no_al_hud() -> void:
+func test_el_cableado_le_da_la_hora_al_reloj_de_mesa_y_no_al_hud() -> void:
 	# La hora se fue de la pantalla, pero los otros dos carteles del HUD siguen: sin la segunda
 	# mitad de este caso, desconectarlos también pasaría en verde.
 	var texto := FileAccess.get_file_as_string(SCRIPT_DEL_ALMACEN)
 	assert_str(texto).is_not_empty()
 	assert_str(texto).not_contains("_hud.mostrar_tiempo")
-	assert_str(texto).contains("tiempo_consumido.connect(_reloj_de_pared.mostrar_tiempo)")
+	assert_str(texto).contains("tiempo_consumido.connect(_reloj_de_mesa.mostrar_tiempo)")
 	assert_str(texto).contains("tarea_completada.connect(_hud.mostrar_tareas)")
 	assert_str(texto).contains("_hud.mostrar_apercibimientos")
 

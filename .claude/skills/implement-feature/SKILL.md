@@ -1,6 +1,7 @@
 ---
 name: implement-feature
-description: Implementa UN cambio de No se fía — un issue, o un spec recién escrito sin issue — con TDD obligatorio y verificado, y verificar.py como nodo de convergencia. Cierra con el PR abierto, los criterios del issue cumplidos y cada criterio del spec citado por un test. Para dos o más issues de una, implement-batch.
+description: "Implementa UN cambio de No se fía — un issue, o un spec recién escrito sin issue — con TDD obligatorio y verificado, y verificar.py como nodo de convergencia. Cierra con el PR abierto, los criterios del issue cumplidos y cada criterio del spec citado por un test. Para dos o más issues de una, implement-batch."
+argument-hint: "[NN del issue | capability con spec sin issue]"
 ---
 
 # implement-feature — No se fía
@@ -27,7 +28,9 @@ un spec: si el spec todavía no está escrito, primero `to-spec`, en esta misma 
 que no toca `src/` se nombra por lo que toca — `harness/` o `docs/`.
 
 Si el issue ya tiene rama, no la vuelvas a crear: puede haberla abierto otra sesión, y ahí lo que
-corresponde es un worktree propio sobre esa rama.
+corresponde es un worktree propio sobre esa rama. **Un worktree se abre sólo en
+`.claude/worktrees/<nombre>` del checkout principal**, y lo bloquea un hook si va a otro lado:
+es el único lugar que limpia `limpiar_worktrees.py`.
 
 **Si el cambio toca un spec, leelo entero, no sólo sus criterios nuevos.** Las reglas de la
 capacidad son el marco: un criterio que se cumple rompiendo otra regla no está cumplido.

@@ -1,6 +1,6 @@
 ---
 name: pr-review
-description: Revisa UN PR abierto de GitHub contra los criterios de su issue, los AC del spec que toca —si toca uno— y las convenciones del repo, arregla lo que encuentra, verifica con verificar.py, commitea y pushea a la rama del PR. Usar al querer cerrar el review de un PR de este repo. Para dos o más de una, pr-review-batch.
+description: "Revisa UN PR abierto de GitHub contra los criterios de su issue, los AC del spec que toca —si toca uno— y las convenciones del repo, arregla lo que encuentra, verifica con verificar.py, commitea y pushea a la rama del PR. Usar al querer cerrar el review de un PR de este repo. Para dos o más de una, pr-review-batch."
 argument-hint: "<NN> | (vacío = el PR de la rama actual) [--comentar] [--dry]"
 # Sin `allowed-tools`, igual que el resto de los skills de este repo: declarar una lista
 # parcial le sacaría todo lo que no estuviera en ella —`gh`, `verificar.py`, los git— y lo

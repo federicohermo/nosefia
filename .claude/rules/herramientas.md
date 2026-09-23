@@ -38,9 +38,9 @@ tener. Cada salteo declara qué no miró y cómo hacer que mire.
 
 ## Un gate falla abierto, salvo que sea su trabajo fallar cerrado
 
-El del hook (`gate_de_rama.py`) **deja pasar** ante cualquier error propio, y lo dice: un gate
-que rompe la sesión entera se desactiva el mismo día, y ahí no queda gate. Los otros —capas,
-tdd, specs— fallan cerrado, porque corren en `verificar.py` y ahí el rojo es el producto.
+Los del hook (`gate_de_rama.py`, `gate_de_worktrees.py`) **dejan pasar** ante cualquier error
+propio, y lo dicen: un gate que rompe la sesión entera se desactiva el mismo día, y ahí no queda
+gate. Los otros —capas, tdd, specs— fallan cerrado, porque corren en `verificar.py` y ahí el rojo es el producto.
 
 ## La consola va en UTF-8 y eso se configura
 

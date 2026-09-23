@@ -132,10 +132,13 @@ entregable más caro y el único que hace que el hallazgo no vuelva.
 |---|---|
 | un criterio que no se puede ver fallar | `to-spec` |
 | una regla del juego ubicada en `ui/` o en `escenas/` | `to-spec` — el eje de capas se escribió tarde |
+| una medición corrida en el proceso equivocado | `to-spec` — lo que el motor soporta se midió en el editor y no en el juego: el editor contestó que sí y el juego que no |
 | un criterio que **barre un directorio y enumera excepciones** sin haber corrido el barrido | `to-spec` — de memoria sale corta y el criterio nace imposible de pasar |
 | un identificador que el spec escribe en `código` y que no existe en el repo | `to-spec` — se escribió la prosa sin grepearla |
 | un spec que nombra un archivo o una clase | `to-spec` — caduca con el refactor siguiente |
+| una tabla de valores que **no cierra consigo misma** —dos filas que implican duraciones distintas, o una hora de cierre que no es la apertura más la duración— | `to-spec` y `to-issue` — cada fila se recalcula desde la regla antes de escribirla, y las dos puntas se derivan, no se copian de la ficha |
 | un issue sin límites de archivo, o con límites que no se cruzaron contra el árbol de hoy | `to-issue` |
+| un archivo en «Sólo lectura» que **nombra por ruta** algo que el issue deja renombrar | `to-issue` — el `rg` de los límites se corre también sobre los comentarios |
 | dos issues que se pisan la misma escena | `to-issue` — un `.tscn` compartido se ordena, no se paraleliza |
 | un issue que cambia lo que el juego hace y declara «Spec: ninguno» | `to-issue` — el tipo se decidió sin la prueba del spec |
 | una ficha verde de Notion que se cayó del lote sin motivo escrito | `features-to-issues` — el reparto no se mostró entero |

@@ -1,6 +1,6 @@
 ---
 name: shape
-description: La entrevista que le da forma al trabajo de No se fía — interroga una idea, un pedido, código sin spec o un spec ya escrito hasta que no quede nada supuesto en silencio. Sólo la entrevista: el issue lo escribe to-issue y el spec to-spec. Usar apenas llega un pedido, antes de escribir el issue o el contrato.
+description: "La entrevista que le da forma al trabajo de No se fía — interroga una idea, un pedido, código sin spec o un spec ya escrito hasta que no quede nada supuesto en silencio. Sólo la entrevista: el issue lo escribe to-issue y el spec to-spec. Usar apenas llega un pedido, antes de escribir el issue o el contrato."
 argument-hint: "[idea | pedido | capacidad | área de código]"
 ---
 

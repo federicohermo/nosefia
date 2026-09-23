@@ -9,8 +9,8 @@
 ## reloj: el reloj es el único dueño del turno mientras la escena corre, y abrirle una puerta
 ## para mirarlo desde afuera sería exactamente lo que este spec cierra.
 ##
-## Los turnos son chicos —`100.0`, `12.0`— y no de ocho horas: el factor de `Ritmo` los agota en
-## uno o dos `_process`, así que el cierre se prueba en dos líneas.
+## Los turnos son chicos —`100.0`, `12.0`— y no de una noche entera: el factor de `Ritmo` los
+## agota en uno o dos `_process`, así que el cierre se prueba en dos líneas.
 extends GdUnitTestSuite
 
 var _turno: Turno = null
@@ -63,18 +63,18 @@ func _anotar_cierre(cumplidas: int) -> void:
 
 
 func test_un_cuadro_consume_el_delta_ya_escalado_por_el_ritmo() -> void:
-	# Medio segundo real son doce de turno. Que dé 88 y no 99.5 es lo que verifica que el reloj
-	# escala; que no dé 76 es lo que verifica que llama a `consumir()` una vez y no dos.
+	# Medio segundo real son treinta de turno. Que dé 70 y no 99.5 es lo que verifica que el reloj
+	# escala; que no dé 40 es lo que verifica que llama a `consumir()` una vez y no dos.
 	var reloj := _reloj_arrancado(100.0, _sin_obligatorias())
 	reloj._process(0.5)
-	assert_float(_turno.tiempo_restante()).is_equal(88.0)
+	assert_float(_turno.tiempo_restante()).is_equal(70.0)
 
 
 func test_dos_cuadros_consumen_el_doble() -> void:
 	var reloj := _reloj_arrancado(100.0, _sin_obligatorias())
 	reloj._process(0.5)
 	reloj._process(0.5)
-	assert_float(_turno.tiempo_restante()).is_equal(76.0)
+	assert_float(_turno.tiempo_restante()).is_equal(40.0)
 
 
 func test_un_reloj_sin_arrancar_no_esta_corriendo() -> void:

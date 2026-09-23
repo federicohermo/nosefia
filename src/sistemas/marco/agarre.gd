@@ -31,6 +31,9 @@ signal objeto_soltado(nodo: Node3D)
 
 var _manos := Manos.new()
 var _nodo: Node3D = null
+## De dónde colgaba lo sostenido antes de su último movimiento. Una caja se lleva en la cintura y
+## una unidad en su punto propio: volver del examen al punto de carga las dejaba en otra mano.
+var _ancla_de_vuelta: Node3D = null
 var _capa_original: int = 0
 var _mascara_original: int = 0
 
@@ -56,6 +59,7 @@ func pedir_agarrar(datos: ObjetoDelAlmacen, nodo: Node3D) -> bool:
 		return false
 	_manos.agarrar(datos)
 	_nodo = nodo
+	_ancla_de_vuelta = null
 	# Guardar solo al agarrar: el examen recibe el cuerpo con las colisiones suspendidas.
 	if nodo is CollisionObject3D:
 		_capa_original = nodo.collision_layer
@@ -77,6 +81,7 @@ func soltar(al_frente: bool) -> Node3D:
 		return null
 	var nodo := _nodo
 	_nodo = null
+	_ancla_de_vuelta = null
 	var ancla := punto_de_soltado if al_frente else punto_de_respaldo
 	if nodo != null and ancla != null:
 		var orientacion := nodo.global_basis if nodo.is_inside_tree() else nodo.basis
@@ -101,13 +106,25 @@ func soltar(al_frente: bool) -> Node3D:
 func mover_lo_sostenido(ancla: Node3D) -> Node3D:
 	if _nodo == null or ancla == null:
 		return null
+	_ancla_de_vuelta = _nodo.get_parent() as Node3D
 	_colgar(_nodo, ancla)
 	return _nodo
 
 
-## Vuelve a poner en la mano lo que se había acercado a la cara.
+## Vuelve a poner lo que se había acercado a la cara en el punto de donde salió.
+##
+## No anota una vuelta nueva: devolver dos veces deja el objeto donde estaba, y no lo rebota a
+## la cara.
 func devolver_a_la_mano() -> Node3D:
-	return mover_lo_sostenido(_punto_de_carga())
+	if _nodo == null:
+		return null
+	var ancla := _ancla_de_vuelta
+	if ancla == null:
+		ancla = _punto_de_carga()
+	if ancla == null:
+		return null
+	_colgar(_nodo, ancla)
+	return _nodo
 
 
 func _punto_de_carga() -> Node3D:
@@ -121,6 +138,7 @@ func entregar() -> Node3D:
 	_manos.soltar()
 	var nodo := _nodo
 	_nodo = null
+	_ancla_de_vuelta = null
 	return nodo
 
 

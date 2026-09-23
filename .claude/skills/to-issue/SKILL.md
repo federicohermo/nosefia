@@ -1,6 +1,6 @@
 ---
 name: to-issue
-description: Escribe y publica UN issue de No se fía con formato task-brief — el plan chico y descartable de un cambio puntual — y decide si ese cambio toca un spec. Usar apenas llega un pedido, un bug o una idea que se va a hacer, antes de abrir la rama; también con «abrí un issue», «armá el ticket» o la salida de shape en modo issue. Si el issue cambia lo que el juego tiene que hacer, después va to-spec. No escribe código ni specs.
+description: "Escribe y publica UN issue de No se fía con formato task-brief — el plan chico y descartable de un cambio puntual — y decide si ese cambio toca un spec. Usar apenas llega un pedido, un bug o una idea que se va a hacer, antes de abrir la rama; también con «abrí un issue», «armá el ticket» o la salida de shape en modo issue. Si el issue cambia lo que el juego tiene que hacer, después va to-spec. No escribe código ni specs."
 argument-hint: "[pedido | bug | idea]"
 ---
 
@@ -58,8 +58,16 @@ Consultá `nosefia-index` para saber quién usa lo que vas a tocar. Lo que apare
 
 ## Paso 3 — Escribir el issue
 
-La forma es la del [task-brief](../../../.github/ISSUE_TEMPLATE/task-brief.md). Lo que más se
-rompe:
+**El borrador sale del template, nunca de memoria.** Arrancalo con el script y llená el archivo
+que deja:
+
+```bash
+python .claude/skills/to-issue/scripts/borrador.py nuevo <archivo del scratchpad>
+```
+
+Copia el [task-brief](../../../.github/ISSUE_TEMPLATE/task-brief.md) sin su encabezado. Se llenan
+los huecos y no se agregan ni se sacan secciones. Los comentarios quedan: GitHub no los muestra.
+Lo que más se rompe:
 
 - **Un issue, un problema.** Completá esta frase: «después de este issue, <algo observable>». Si
   no se completa, el corte está mal. Si se completa con dos cosas sin relación, son dos issues.
@@ -75,16 +83,35 @@ rompe:
   dominio. Si ninguno lo fija, el criterio lo nombra como pregunta abierta y `to-spec` lo
   registra. Un número propuesto por el agente se lee como decidido.
 - **Los bordes van escritos.** El caso feliz lo cubre cualquier implementación.
+- **Una tabla de ejemplos cierra consigo misma.** Cada fila se recalcula desde la regla antes de
+  escribirla, y una hora de cierre es apertura más duración, no un número copiado de la ficha.
+- **Si el issue deja renombrar algo, el `rg` de los límites se corre también sobre los
+  comentarios.** Un archivo en «Sólo lectura» que nombra por ruta lo que se renombra queda
+  mintiendo, y el implementador no lo puede tocar.
 
 ## Paso 4 — Mostrar y publicar
 
-Mostrá el issue y esperá la confirmación. Después:
+Primero, el script revisa el borrador contra el template:
+
+```bash
+python .claude/skills/to-issue/scripts/borrador.py revisar <archivo del scratchpad>
+```
+
+Si sale con 1, nombra lo que falta: una sección que no está o sobra, un hueco sin llenar, un
+campo copiado tal cual. Se arregla y se vuelve a correr. **Con un 1 no se muestra ni se publica.**
+El único hueco que deja pasar es `<issue>` en la rama: el número no existe hasta publicar.
+
+Mostrá el issue **entero, como va a quedar publicado**, y no un resumen. Esperá la
+confirmación. Después:
 
 ```bash
 gh issue create --title "<qué cambia>" --label <etiqueta> --body-file <archivo del scratchpad>
+python .claude/skills/to-issue/scripts/borrador.py numerar <archivo del scratchpad> <N>
+gh issue edit <N> --body-file <archivo del scratchpad>
 ```
 
-El cuerpo no se commitea: el issue es la fuente.
+`numerar` escribe el número en la rama y revisa sin dejar pasar nada. El cuerpo no se commitea:
+el issue es la fuente.
 
 ## Al cerrar
 
