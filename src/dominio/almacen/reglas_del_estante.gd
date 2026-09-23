@@ -12,13 +12,13 @@
 class_name ReglasDelEstante
 extends RefCounted
 
-## Con cuántas unidades de cada producto arranca el depósito.
+## Cuántas unidades trae una caja del depósito. La fija la ficha de diseño de las cajas.
 ##
-## Tiene que ser **estrictamente mayor** que el umbral más alto del catálogo, y eso lo afirma
-## el test: con exactamente el umbral, vender una unidad por la ventanilla dejaría reponer
-## imposible esa noche, y el síntoma no nombraría a esta constante.
+## Es también todo lo que el depósito tiene de ese producto: hay una caja por producto, y no hay
+## mercadería del depósito fuera de las cajas. Por eso la caja se vacía después de entregar
+## éstas, aunque la góndola tenga lugar.
 ##
-## 10 es un primer valor y el margen es a propósito: lo que sobra después de llenar la góndola
-## es lo que se vende, así que este número también es cuánto stock hay para atender. Bajarlo
-## aprieta las dos cosas a la vez.
-const UNIDADES_INICIALES_EN_DEPOSITO := 10
+## **Igualar el umbral del catálogo no deja margen.** Una venta antes de llenar la góndola de un
+## producto deja la noche sin cómo reponerlo. De dónde sale el margen es una pregunta abierta del
+## spec de la mercadería.
+const UNIDADES_POR_CAJA_DEL_DEPOSITO := 8

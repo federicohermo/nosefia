@@ -10,9 +10,11 @@ func test_vender_retira_las_unidades_visibles_y_permite_reponer_sin_superponer()
 	var presentacion: Node3D = almacen.get("_reposicion_manual")
 	var repositor: Repositor = almacen.get("_repositor")
 	var cupo_total := 0
+	# Una menos que el cupo: la caja trae lo mismo que pide la góndola, y la unidad que queda en
+	# la caja es la única con la que se puede reponer lo vendido.
 	for producto in Catalogo.todos():
 		cupo_total += repositor.estante().cupo(producto)
-		for indice in repositor.estante().cupo(producto):
+		for indice in repositor.estante().cupo(producto) - 1:
 			presentacion.retirar(producto.id)
 			presentacion.pedir_colocar(producto.id)
 	var atenciones: Ventanilla = almacen.get("_atenciones")
@@ -27,15 +29,20 @@ func test_vender_retira_las_unidades_visibles_y_permite_reponer_sin_superponer()
 		assert_int(grupo.multimesh.visible_instance_count).is_equal(
 			_guia(grupo, producto) + cantidad
 		)
-	assert_int(stock).is_less(cupo_total)
+	assert_int(stock).is_less(cupo_total - Catalogo.todos().size())
 	for producto in Catalogo.todos():
 		while repositor.estante().disponibles_para_retirar(producto) > 0:
 			presentacion.retirar(producto.id)
 			presentacion.pedir_colocar(producto.id)
+	var repuesto := 0
 	var posiciones: Array[Vector3] = []
 	for producto in Catalogo.todos():
+		var cantidad := repositor.estante().unidades_en_gondola(producto)
+		repuesto += cantidad
 		var grupo: MultiMeshInstance3D = presentacion.get_node("ProductosDe" + producto.nombre)
-		assert_int(grupo.multimesh.visible_instance_count).is_equal(grupo.multimesh.instance_count)
+		assert_int(grupo.multimesh.visible_instance_count).is_equal(
+			_guia(grupo, producto) + cantidad
+		)
 		for indice in repositor.estante().cupo(producto):
 			var posicion := (
 				(
@@ -47,6 +54,7 @@ func test_vender_retira_las_unidades_visibles_y_permite_reponer_sin_superponer()
 			assert_array(posiciones).not_contains(posicion)
 			posiciones.append(posicion)
 	assert_int(posiciones.size()).is_equal(cupo_total)
+	assert_int(repuesto).is_greater(stock)
 
 
 func test_recoger_del_grupo_del_piso_conserva_foco_identidad_y_reposicion() -> void:

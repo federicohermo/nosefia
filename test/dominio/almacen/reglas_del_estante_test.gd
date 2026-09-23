@@ -1,29 +1,9 @@
-## Los valores fijos de reponer, y la relación que los vuelve jugables.
+## Los valores fijos de reponer.
 ##
-## No afirma el número: afirma **contra qué tiene que ser** ese número. Un
-## `UNIDADES_INICIALES_EN_DEPOSITO` por debajo del umbral más alto del catálogo deja una noche en
-## la que reponer no se puede terminar, y el síntoma no nombra a esta constante: el jugador
-## coloca todo lo que hay y la tarea sigue sin contar.
+## El número de la caja lo fija la ficha de diseño, y por eso se afirma: la prueba de que la caja
+## se vacía mide el comportamiento con cualquier valor, y sólo acá un cambio de número da rojo.
 extends GdUnitTestSuite
 
 
-func test_el_deposito_arranca_con_mas_de_lo_que_el_estante_pide() -> void:  # AC-STK-004
-	# Estricto y no `>=` a propósito: con exactamente el umbral, vender una sola unidad por la
-	# ventanilla deja la reposición imposible esa noche.
-	var mayor := 0
-	for producto in Catalogo.todos():
-		mayor = maxi(mayor, producto.umbral)
-	(
-		assert_int(ReglasDelEstante.UNIDADES_INICIALES_EN_DEPOSITO)
-		. override_failure_message(
-			(
-				"el depósito arranca con %d y el umbral más alto del catálogo es %d"
-				% [ReglasDelEstante.UNIDADES_INICIALES_EN_DEPOSITO, mayor]
-			)
-		)
-		. is_greater(mayor)
-	)
-
-
-func test_las_unidades_iniciales_son_una_cantidad_y_no_un_centinela() -> void:
-	assert_int(ReglasDelEstante.UNIDADES_INICIALES_EN_DEPOSITO).is_greater(0)
+func test_una_caja_del_deposito_trae_ocho() -> void:  # AC-STK-016
+	assert_int(ReglasDelEstante.UNIDADES_POR_CAJA_DEL_DEPOSITO).is_equal(8)
