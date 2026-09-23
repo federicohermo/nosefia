@@ -2,8 +2,8 @@
 ## publica lo que el estante contestó.
 ##
 ## **Ningún caso entra un nodo al árbol y ninguno hace correr `_process`.** Se instancia con
-## `auto_free(Repositor.new())` y se le llama a mano, que es lo que vuelve medible el descuento: sin
-## `_process`, el único descuento que puede aparecer en el turno es el de `completar()`.
+## `auto_free(Repositor.new())` y se le llama a mano: sin `_process`, el turno no se mueve, y un
+## descuento que apareciera sería un segundo cobro.
 extends GdUnitTestSuite
 
 const REPOSITOR := "res://src/sistemas/tareas/repositor.gd"
@@ -55,13 +55,13 @@ func _producto(id: Producto.Id) -> Producto:
 
 
 ## Un repositor cableado a mano: reloj con turno arrancado, agarre y estante de un producto.
-func _repositor(en_deposito: int = 10) -> Repositor:
+func _repositor(en_deposito: int = 10, restante: float = Reglas.DURACION_DEL_TURNO) -> Repositor:
 	var actroncito := _producto(Producto.Id.ACTRONCITO)
 	var inventario := Inventario.new([actroncito])
 	inventario.ingresar(actroncito, Inventario.Ubicacion.DEPOSITO, en_deposito)
 
 	var obligatorias := Apertura.obligatorias()
-	_turno = Apertura.turno_de_la_jornada(obligatorias)
+	_turno = Turno.new(restante, obligatorias)
 	var reloj: RelojDelTurno = auto_free(RelojDelTurno.new())
 	reloj.arrancar(_turno, obligatorias)
 	reloj.tarea_completada.connect(_anotar_tarea)
@@ -110,14 +110,25 @@ func test_colocar_de_mas_no_vuelve_a_contar_la_tarea() -> void:
 	assert_int(_rechazos).is_equal(1)
 
 
-func test_llenar_el_estante_descuenta_exactamente_el_costo_de_reponer() -> void:
-	# `_process` no corre en ningún caso de esta suite, así que este descuento es el único que
-	# puede haber: si además alguien llamara a `consumir()`, el restante no daría este número.
+func test_llenar_el_estante_no_mueve_el_turno() -> void:
+	# `_process` no corre en ningún caso de esta suite: si alguien llamara a `consumir()`, el
+	# restante ya no sería el turno entero.
 	var repositor := _repositor()
 	for _unidad in range(CUPO_DE_PRUEBA):
 		_reponer_una(repositor)
-	var esperado := Reglas.DURACION_DEL_TURNO - Reglas.COSTO_DE_REPONER
-	assert_float(_turno.tiempo_restante()).is_equal(esperado)
+	assert_int(_avisos_de_tarea).is_equal(1)
+	assert_float(_turno.tiempo_restante()).is_equal(Reglas.DURACION_DEL_TURNO)
+
+
+func test_llenar_el_estante_con_un_segundo_restante_cumple_reponer() -> void:
+	# Es el caso que motivó quitar los costos: el estante lleno en el último minuto de la noche
+	# no vuelve a preguntar, así que si el turno la rechaza acá, se pierde sin aviso.
+	var repositor := _repositor(10, 1.0)
+	for _unidad in range(CUPO_DE_PRUEBA):
+		_reponer_una(repositor)
+	assert_int(_avisos_de_tarea).is_equal(1)
+	assert_int(_turno.tareas_cumplidas()).is_equal(1)
+	assert_float(_turno.tiempo_restante()).is_equal(1.0)
 
 
 func test_ningun_archivo_de_este_spec_nombra_consumir() -> void:
@@ -139,7 +150,7 @@ func test_ningun_archivo_de_este_spec_nombra_consumir() -> void:
 
 
 func test_sin_tiempo_para_reponer_la_tarea_no_se_cuenta_ni_descuenta() -> void:
-	# El turno arranca vacío, así que el costo excede lo que queda. El estante igual se llena:
+	# El turno arranca cerrado, así que no cuenta nada. El estante igual se llena:
 	# el estado del mundo no depende de que el jefe la cuente.
 	var actroncito := _producto(Producto.Id.ACTRONCITO)
 	var inventario := Inventario.new([actroncito])

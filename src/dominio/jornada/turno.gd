@@ -1,4 +1,4 @@
-## El presupuesto de una noche: un tiempo finito que las tareas y la investigación se disputan.
+## El tiempo de una noche: un tiempo finito que las tareas y la investigación se disputan.
 ##
 ## **El tiempo entra como parámetro.** `consumir()` recibe cuántos segundos pasaron; no los va a
 ## buscar al reloj del motor. Es lo que permite escribir «al agotarse el tiempo el turno cierra»
@@ -35,28 +35,19 @@ func cerrado() -> bool:
 	return _tiempo_restante <= 0.0
 
 
-## Hace la tarea si el turno puede pagarla, y devuelve si pudo.
+## Marca la tarea si el turno sigue abierto, y devuelve si la marcó ahora.
 ##
-## Los dos motivos de fallo —ya estaba hecha, o no entra en lo que queda— devuelven lo mismo, y
-## en los dos casos **no se consume nada**: una tarea a medias deja un estado que el jugador no
-## puede distinguir de haberla hecho.
+## **No descuenta nada.** El tiempo que el jugador tardó en cumplirla ya salió del turno por
+## `consumir()`. Cobrarla otra vez rechazaría la tarea hecha en el último minuto, y nada se lo
+## diría al jugador.
 func completar(tarea: Tarea) -> bool:
-	if tarea.completada():
+	if cerrado():
 		return false
-	var costo := tarea.costo()
-	if costo > _tiempo_restante:
-		return false
-	# El costo ya se verificó arriba, así que entre marcar y descontar no queda nada que pueda
-	# fallar. El `false` de acá no lo produce ninguno de los dos motivos de rechazo de este
-	# método: se chequea para que un motivo que `Tarea` sume más adelante no se cuele cobrado.
-	if not tarea.completar():
-		return false
-	consumir(costo)
-	return true
+	return tarea.completar()
 
 
 ## Cuántas de las **obligatorias declaradas** están hechas. Una tarea completada que no estaba
-## declarada consumió tiempo pero no cuenta: el jefe pide las que pidió.
+## declarada no cuenta: el jefe pide las que pidió.
 func tareas_cumplidas() -> int:
 	var cumplidas := 0
 	for tarea in _obligatorias:

@@ -58,14 +58,13 @@ func corriendo() -> bool:
 
 ## Hace una tarea, y devuelve lo mismo que contestó el dominio.
 ##
-## Emite **sólo** cuando el dominio dijo que sí. Los dos motivos de fallo —ya estaba hecha, o no
-## entra en lo que queda— son del `Turno` y no se distinguen acá.
+## Emite **sólo** cuando el dominio dijo que sí. Los dos motivos de fallo —ya estaba hecha, o el
+## turno cerró— son del `Turno` y no se distinguen acá.
 ##
 ## El guard no es una regla del juego: es el mismo estado nulo que ya guarda `_process()`. Sin
 ## turno no hay a quién preguntarle, y `obligatoria()` devuelve `null` **por diseño** cuando la
 ## jornada no pidió ese tipo, así que devolverlo derecho acá es la llamada natural. Que
-## el turno esté cerrado, en cambio, **no** se guarda: el dominio ya contesta `false` porque
-## ninguna tarea entra en cero.
+## el turno esté cerrado, en cambio, **no** se guarda: el dominio ya contesta `false`.
 func completar(tarea: Tarea) -> bool:
 	if _turno == null or tarea == null:
 		return false

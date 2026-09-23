@@ -147,8 +147,6 @@ en el descarte ENTONCES la basura está cumplida; con una sola pendiente en cada
 
 ## No objetivos
 
-- Esta capacidad NO decide cuánto tiempo cuestan las dos tareas: los costos son de
-  [`shift-cycle`](../shift-cycle/shift-cycle.md).
 - Esta capacidad NO mide distancias: las recibe ya medidas. El dominio no sabe de física.
 - Esta capacidad NO dibuja la mancha ni la bolsa.
 
@@ -175,7 +173,6 @@ en el descarte ENTONCES la basura está cumplida; con una sola pendiente en cada
 ## Preguntas abiertas
 
 - **OQ-CLN-001 — ¿Las manchas aparecen durante la noche o están todas desde el principio?**
-  - Por qué sigue abierta: hoy están las cuatro desde la apertura, para no mover el presupuesto
-    de trayecto. El GDD no lo dice.
+  - Por qué sigue abierta: hoy están las cuatro desde la apertura. El GDD no lo dice.
   - Decide: el dueño del repo.
   - Bloquea: nada. Cambiaría `BR-CLN-001`.

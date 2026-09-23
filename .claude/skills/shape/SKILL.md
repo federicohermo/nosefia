@@ -108,8 +108,8 @@ Antes de pasarle el material a `to-spec`:
   uno, o está declarado fuera de alcance?
 - **Verificabilidad:** cada regla tiene un criterio que un agente puede cerrar, o está declarada
   como territorio de juicio humano.
-- **Aritmética:** si este cambio mueve un costo o el turno, ¿el margen sigue por encima del
-  mínimo? Ese número sale del dominio.
+- **Aritmética:** si este cambio agrega trabajo o acorta el turno, ¿queda tiempo para
+  investigar? La duración del turno sale del dominio.
 
 ## Salida
 

@@ -7,7 +7,7 @@
 ##
 ## La lista se arma **recorriendo `Tarea.Tipo`**, no enumerando tareas a mano. El turno aterrizó
 ## con las cinco declaradas —`SACAR_LA_BASURA` incluida—, así que acá no hay ningún `5` escrito:
-## una sexta se agrega al `enum` con su costo en `reglas.gd` y este archivo no se toca.
+## una sexta se agrega al `enum` y este archivo no se toca.
 class_name Apertura
 extends RefCounted
 

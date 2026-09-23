@@ -92,19 +92,18 @@ func test_al_despachar_al_ultimo_la_obligatoria_se_cuenta_una_sola_vez() -> void
 	assert_int(_turno.tareas_cumplidas()).is_equal(1)
 
 
-func test_despachar_al_ultimo_descuenta_el_costo_de_la_caja_y_no_lo_repite() -> void:
-	# El `_process` del reloj no corre en este caso, así que este descuento es el único que
-	# puede haber: si además alguien descontara por su cuenta, el restante no daría el número.
+func test_despachar_al_ultimo_cuenta_la_caja_sin_mover_el_turno() -> void:
+	# El `_process` del reloj no corre en este caso: si alguien descontara por su cuenta, el
+	# restante ya no sería el turno entero.
 	var ventanilla := _ventanilla(1)
 	ventanilla.pedir_atender()
 	ventanilla.pedir_cobrar()
-	var esperado := Reglas.DURACION_DEL_TURNO - Reglas.costo_de(Tarea.Tipo.CAJA)
-	assert_float(_turno.tiempo_restante()).is_equal(esperado)
-	# Atender de más no vuelve a cobrar: no queda nadie, y el `Turno` ya sabe que la segunda vez
-	# no cuenta.
+	assert_float(_turno.tiempo_restante()).is_equal(Reglas.DURACION_DEL_TURNO)
+	# Atender de más no la vuelve a contar: no queda nadie, y el `Turno` ya sabe que la segunda
+	# vez no cuenta.
 	ventanilla.pedir_atender()
 	ventanilla.pedir_cobrar()
-	assert_float(_turno.tiempo_restante()).is_equal(esperado)
+	assert_float(_turno.tiempo_restante()).is_equal(Reglas.DURACION_DEL_TURNO)
 	assert_int(_avisos_de_tarea).is_equal(1)
 
 
