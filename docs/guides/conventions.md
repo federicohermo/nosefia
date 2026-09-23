@@ -20,6 +20,7 @@ Esta tabla es lo más útil del documento: dice de qué reglas hay que acordarse
 | Que un skill traiga adentro todo lo que corre, copia por copia | `tests/test_copias_de_skills.py` |
 | Que un doc diga la regla y no la lista de los skills | `tests/test_docs_no_enumeran_skills.py` |
 | No editar `src/` sin issue detrás de la rama | el hook de `.claude/settings.json` |
+| Abrir un worktree sólo en `.claude/worktrees/` del checkout principal | el hook de `.claude/settings.json` |
 | **Tipado estático en toda firma** | **nadie: prosa** |
 | **Comentarios que expliquen el porqué** | **nadie: prosa** |
 | **Español** | **nadie: prosa** |

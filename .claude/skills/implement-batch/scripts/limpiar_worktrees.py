@@ -34,10 +34,13 @@ ok, y el que lo vio fue el usuario mirando el árbol de archivos.
 Por eso `--todos` es la **unión** de lo que git registra y lo que hay en disco bajo
 `.claude/worktrees/`, y no lo primero.
 
-**Y de lo que git registra, sólo lo que vive bajo `.claude/worktrees/`.** El worktree de una
-implementación vive al lado del repo y no es del lote. Un `--todos` que toma todo lo registrado
-lo borra con `--force`, junto con lo que tenga sin commitear. Medido el 2026-09-22 en el lote
-156/157: se llevó un worktree hermano que ninguno de los dos PR había abierto.
+## Y por qué nada fuera de `.claude/worktrees/`
+
+**Un worktree de este repo se abre sólo en `.claude/worktrees/`, y este script sólo borra ahí.**
+Vale para `--todos` y para una ruta explícita: lo que está afuera se rechaza, y el script sale
+con 1. Un worktree afuera no lo abrió ningún flujo del repo, y borrarlo con `--force` se lleva
+lo que tenga sin commitear. Medido el 2026-09-22 en el lote 156/157: `--todos` tomaba todo lo
+registrado y se llevó un worktree al lado del repo que ninguno de los dos PR había abierto.
 
 ## Las ramas también quedan
 
@@ -119,6 +122,10 @@ DIR_DE_WORKTREES = (".claude", "worktrees")
 RAMA_DE_WORKTREE = "worktree-agent-"
 
 
+def del_lote(ruta: Path) -> bool:
+    return ruta.resolve().is_relative_to(RAIZ.joinpath(*DIR_DE_WORKTREES).resolve())
+
+
 def git(*args: str) -> subprocess.CompletedProcess:
     return subprocess.run(
         ["git", *args], capture_output=True, text=True, encoding="utf-8", errors="replace"
@@ -185,14 +192,14 @@ def main() -> None:
     principal = Path(hecho.stdout.strip()).resolve()
 
     if args == ["--todos"]:
-        del_lote = RAIZ.joinpath(*DIR_DE_WORKTREES).resolve()
+        directorio = RAIZ.joinpath(*DIR_DE_WORKTREES).resolve()
         registrados = [
             Path(l[len("worktree ") :]).resolve()
             for l in git("worktree", "list", "--porcelain").stdout.splitlines()
             if l.startswith("worktree ")
         ]
-        objetivos = [w for w in registrados if w != principal and w.is_relative_to(del_lote)]
-        objetivos += huerfanos(del_lote, objetivos, principal)
+        objetivos = [w for w in registrados if del_lote(w)]
+        objetivos += huerfanos(directorio, objetivos, principal)
         if not objetivos:
             print("no hay worktrees del lote para limpiar")
     else:
@@ -200,12 +207,16 @@ def main() -> None:
 
     # Sin objetivos igual se sigue: quedan el `prune` y las ramas, que no dependen de que
     # haya quedado un árbol en disco.
-    padre = objetivos[0].parent if objetivos else RAIZ.joinpath(*DIR_DE_WORKTREES)
+    padre = RAIZ.joinpath(*DIR_DE_WORKTREES)
     fallo = False
     matados = False
 
     for wt in objetivos:
         print(f"== {wt}")
+        if not del_lote(wt):
+            print("   RECHAZADO: no esta bajo .claude/worktrees/", file=sys.stderr)
+            fallo = True
+            continue
         if not wt.exists():
             print("   no existe: nada que hacer")
             continue

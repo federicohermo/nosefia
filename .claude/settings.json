@@ -10,6 +10,16 @@
             "timeout": 10
           }
         ]
+      },
+      {
+        "matcher": "Bash|PowerShell",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python .claude/scripts/gate_de_worktrees.py || python \"$CLAUDE_PROJECT_DIR/.claude/scripts/gate_de_worktrees.py\" || exit 0",
+            "timeout": 10
+          }
+        ]
       }
     ]
   }
