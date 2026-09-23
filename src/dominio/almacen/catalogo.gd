@@ -52,8 +52,7 @@ const FILAS := {
 ## que dos productos con el mismo `id` indexan al mismo lugar. Es lo que permite que esto sea
 ## `static` y que ningún test tenga que compartir estado.
 ##
-## Un `id` sin fila devuelve `null` en vez de indexar el diccionario y reventar, y es la misma
-## forma que `Reglas.costo_de()`, que devuelve `0.0` para un tipo sin costo. El motivo está
+## Un `id` sin fila devuelve `null` en vez de indexar el diccionario y reventar. El motivo está
 ## medido el 2026-09-01: con un séptimo valor en el enum y sin su fila, `FILAS[id]` tira
 ## `Out of bounds get index '6' (on base: 'Dictionary')`, gdUnit4 lo cuenta como *error* y no
 ## como *failure* —la línea de estadísticas del archivo sigue diciendo `PASSED`— y la aserción

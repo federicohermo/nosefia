@@ -107,7 +107,7 @@ func pedir_despachar_sin_vender() -> void:
 ## Publica el despacho y, si no quedó nadie, le pide al reloj que cuente la obligatoria.
 ##
 ## La `Tarea` sale de `RelojDelTurno.obligatoria()` y nunca de una construida acá: una copia
-## devuelve `true`, descuenta el tiempo igual y deja el contador del HUD clavado — la tarea hecha
+## devuelve `true` y deja el contador del HUD clavado — la tarea hecha
 ## y la pantalla diciendo que no, sin error y en verde.
 func _al_despachar() -> void:
 	atencion_despachada.emit(_tarea.despachados())

@@ -151,11 +151,10 @@ func test_registrar_de_nuevo_no_descuenta_ni_emite() -> void:
 	var del_dia := CajaRegistradora.productos_del_dia()
 	for producto in del_dia:
 		escritorio.pedir_registrar(producto)
-	var esperado := Reglas.DURACION_DEL_TURNO - Reglas.costo_de(Tarea.Tipo.REGISTRAR)
-	assert_float(_turno.tiempo_restante()).is_equal(esperado)
+	assert_float(_turno.tiempo_restante()).is_equal(Reglas.DURACION_DEL_TURNO)
 	for producto in del_dia:
 		escritorio.pedir_registrar(producto)
-	assert_float(_turno.tiempo_restante()).is_equal(esperado)
+	assert_float(_turno.tiempo_restante()).is_equal(Reglas.DURACION_DEL_TURNO)
 	assert_int(_avisos_de_tarea).is_equal(1)
 
 

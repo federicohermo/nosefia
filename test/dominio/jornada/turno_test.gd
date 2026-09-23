@@ -1,4 +1,4 @@
-## El presupuesto de la noche: cuánto queda, qué lo consume y cuántas obligatorias se cumplieron.
+## El turno de la noche: cuánto queda, qué lo consume y cuántas obligatorias se cumplieron.
 ##
 ## Ningún turno de acá se arma contra una lista de cinco escrita a mano: los casos que necesitan
 ## las cinco las sacan recorriendo el enum, y hay uno que se arma con una sola. Eso no es pereza:
@@ -49,42 +49,58 @@ func test_un_turno_sin_tiempo_esta_cerrado() -> void:  # AC-SHF-004
 	assert_bool(turno.cerrado()).is_true()
 
 
-# AC-SHF-008
-func test_completar_dos_veces_la_misma_tarea_no_la_cobra_ni_la_cuenta_dos_veces() -> void:
+func test_completar_dos_veces_la_misma_tarea_la_cuenta_una_sola_vez() -> void:  # AC-SHF-008
 	var caja := Tarea.new(Tarea.Tipo.CAJA)
 	var obligatorias: Array[Tarea] = [caja]
 	var turno := Turno.new(28800.0, obligatorias)
-	turno.completar(caja)
-	var restante_tras_la_primera := turno.tiempo_restante()
+	assert_bool(turno.completar(caja)).is_true()
 	assert_bool(turno.completar(caja)).is_false()
-	assert_float(turno.tiempo_restante()).is_equal(restante_tras_la_primera)
+	assert_float(turno.tiempo_restante()).is_equal(28800.0)
 	assert_int(turno.tareas_cumplidas()).is_equal(1)
 
 
-func test_una_tarea_que_no_entra_en_el_tiempo_que_queda_no_se_hace_a_medias() -> void:  # AC-SHF-007
-	# La alternativa —dejar el presupuesto en cero y la tarea sin cumplir— es un estado que el
-	# jugador no puede distinguir de haberla hecho.
+func test_con_un_segundo_restante_cualquier_obligatoria_cuenta() -> void:  # AC-SHF-007
+	# El tiempo que el jugador juega ya salió del turno. Rechazarla en el último segundo le
+	# negaría una tarea hecha, y nada se lo avisaría.
+	for tipo: Tarea.Tipo in Tarea.Tipo.values():
+		var tarea := Tarea.new(tipo)
+		var obligatorias: Array[Tarea] = [tarea]
+		var turno := Turno.new(1.0, obligatorias)
+		assert_bool(turno.completar(tarea)).override_failure_message("tipo %d" % tipo).is_true()
+		assert_int(turno.tareas_cumplidas()).is_equal(1)
+		assert_float(turno.tiempo_restante()).is_equal(1.0)
+
+
+func test_con_el_turno_cerrado_la_obligatoria_no_cuenta() -> void:  # AC-SHF-007
 	var reponer := Tarea.new(Tarea.Tipo.REPONER)
 	var obligatorias: Array[Tarea] = [reponer]
-	var apenas := Reglas.costo_de(Tarea.Tipo.REPONER) - 1.0
-	var turno := Turno.new(apenas, obligatorias)
+	var turno := Turno.new(0.0, obligatorias)
+	assert_bool(turno.cerrado()).is_true()
 	assert_bool(turno.completar(reponer)).is_false()
-	assert_float(turno.tiempo_restante()).is_equal(apenas)
+	assert_int(turno.tareas_cumplidas()).is_equal(0)
 	assert_bool(reponer.completada()).is_false()
 
 
-func test_una_tarea_de_afuera_de_las_obligatorias_consume_pero_no_cuenta() -> void:  # AC-SHF-009
-	# El jefe cuenta las que pidió. Algo que no estaba en la lista se paga igual —el tiempo se
-	# fue— pero no acerca al turno completo, que es lo que hace que investigar tenga precio.
+# AC-SHF-009
+func test_una_tarea_de_afuera_de_las_obligatorias_no_cuenta_ni_mueve_el_turno() -> void:
+	# El jefe cuenta las que pidió. Algo que no estaba en la lista no acerca al turno completo.
 	var declarada := Tarea.new(Tarea.Tipo.CAJA)
 	var obligatorias: Array[Tarea] = [declarada]
 	var turno := Turno.new(Reglas.DURACION_DEL_TURNO, obligatorias)
 	var de_afuera := Tarea.new(Tarea.Tipo.REPONER)
-	assert_bool(turno.completar(de_afuera)).is_true()
-	var esperado := Reglas.DURACION_DEL_TURNO - Reglas.costo_de(Tarea.Tipo.REPONER)
-	assert_float(turno.tiempo_restante()).is_equal(esperado)
+	turno.completar(de_afuera)
+	assert_float(turno.tiempo_restante()).is_equal(Reglas.DURACION_DEL_TURNO)
 	assert_int(turno.tareas_cumplidas()).is_equal(0)
 	assert_bool(turno.todas_cumplidas()).is_false()
+
+
+func test_cumplir_las_cinco_en_el_mismo_cuadro_no_mueve_el_turno() -> void:  # AC-SHF-018
+	var obligatorias := _las_cinco_obligatorias()
+	var turno := Turno.new(43200.0, obligatorias)
+	for tarea in obligatorias:
+		assert_bool(turno.completar(tarea)).is_true()
+	assert_int(turno.tareas_cumplidas()).is_equal(obligatorias.size())
+	assert_float(turno.tiempo_restante()).is_equal(43200.0)
 
 
 func test_un_turno_sin_obligatorias_esta_completo_por_vacuidad() -> void:
