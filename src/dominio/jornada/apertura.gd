@@ -57,6 +57,6 @@ static func inventario_de_la_jornada() -> Inventario:
 	var inventario := Inventario.new(productos)
 	for producto in productos:
 		inventario.ingresar(
-			producto, Inventario.Ubicacion.DEPOSITO, ReglasDelEstante.UNIDADES_POR_CAJA_DEL_DEPOSITO
+			producto, Inventario.Ubicacion.DEPOSITO, ReglasDelEstante.UNIDADES_INICIALES_EN_DEPOSITO
 		)
 	return inventario

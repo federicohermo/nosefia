@@ -55,7 +55,7 @@ func test_el_inventario_de_la_jornada_trae_todo_el_catalogo() -> void:  # AC-STK
 		(
 			assert_int(inventario.unidades(producto, Inventario.Ubicacion.DEPOSITO))
 			. override_failure_message("`%s` no llegó al depósito de la jornada" % producto.nombre)
-			. is_equal(ReglasDelEstante.UNIDADES_POR_CAJA_DEL_DEPOSITO)
+			. is_equal(ReglasDelEstante.UNIDADES_INICIALES_EN_DEPOSITO)
 		)
 
 

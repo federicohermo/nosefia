@@ -191,7 +191,7 @@ func test_el_estante_lleno_conserva_la_unidad_rechazada() -> void:
 	assert_int(estante.unidades_en_gondola(producto)).is_equal(1)
 
 
-func test_no_retira_mas_que_los_lugares_libres_incluidas_las_reservas() -> void:  # AC-STK-018
+func test_no_retira_mas_que_los_lugares_libres_incluidas_las_reservas() -> void:  # AC-STK-017
 	var producto := _producto(Producto.Id.ACTRONCITO)
 	var estante := _estante([producto])
 	var primera := estante.retirar(producto)
@@ -204,21 +204,3 @@ func test_no_retira_mas_que_los_lugares_libres_incluidas_las_reservas() -> void:
 	estante.colocar_unidad(segunda)
 	assert_object(estante.retirar(producto)).is_null()
 	assert_int(estante.unidades_en_deposito(producto)).is_equal(EN_DEPOSITO - CUPO_DE_PRUEBA)
-
-
-func test_la_caja_de_la_jornada_entrega_ocho_y_la_novena_no() -> void:  # AC-STK-016
-	# Mide el catálogo y la apertura de verdad. Vender las 8 es lo que separa «la caja se vació»
-	# de «la góndola se llenó»: con la góndola otra vez vacía, sólo la caja puede negar la novena.
-	var inventario := Apertura.inventario_de_la_jornada()
-	var producto := Catalogo.todos()[0]
-	var estante := Estante.new(inventario, [producto])
-	var por_caja := ReglasDelEstante.UNIDADES_POR_CAJA_DEL_DEPOSITO
-	for indice in por_caja:
-		var unidad := estante.retirar(producto)
-		assert_object(unidad).is_not_null()
-		assert_int(estante.colocar_unidad(unidad)).is_equal(Estante.Rechazo.NINGUNO)
-	var venta := Venta.new()
-	venta.agregar(producto, por_caja)
-	assert_bool(inventario.cobrar(venta)).is_true()
-	assert_int(estante.cupo(producto) - estante.unidades_en_gondola(producto)).is_equal(por_caja)
-	assert_object(estante.retirar(producto)).is_null()

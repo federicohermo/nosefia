@@ -20,7 +20,7 @@ depósito son dos lugares distintos, y mover mercadería del fondo al estante cu
 |---|---|---|
 | **Producto** | qué se vende: identidad, nombre, precio y umbral | ítem, SKU |
 | **Unidad** | una pieza de un producto, la que se agarra con la mano | stock, cantidad |
-| **Depósito** | el fondo, donde arrancan las cajas de la noche | almacén, bodega |
+| **Depósito** | el fondo, donde arranca la mercadería de la noche | almacén, bodega |
 | **Caja del depósito** | la caja de un solo producto de la que se saca de a una unidad | cajón, contenedor |
 | **Caja de traslado** | la caja mixta que se carga para llevar varias cosas a la vez | carrito |
 | **Góndola** | el estante del local, y lo único desde donde se vende | vitrina, exhibidor |
@@ -45,11 +45,11 @@ El sistema DEBE llevar las unidades en **depósito** y **góndola** por separado
 distinción, mover mercadería del fondo al estante no cambia ningún número y reponer deja de ser
 una tarea.
 
-### BR-STK-004 — La noche arranca con una caja llena por producto y la góndola vacía
+### BR-STK-004 — La noche arranca con el depósito lleno y la góndola vacía
 
-CUANDO se abre una jornada, el sistema DEBE poner en el depósito **una caja llena de cada
-producto** y **cero en la góndola**. Lo que el depósito tiene de un producto es lo que tiene su
-caja: no hay unidades del depósito fuera de las cajas.
+CUANDO se abre una jornada, el sistema DEBE poner **10 unidades de cada producto en el depósito**
+y **cero en la góndola**. Ese número tiene que ser estrictamente mayor que el umbral más alto del
+catálogo: con el umbral exacto, una venta dejaría reponer imposible esa noche.
 
 ### BR-STK-005 — Ingresar no resta
 
@@ -111,20 +111,14 @@ entero. Con todos, registrar sería recorrer la lista y no habría nada que eleg
 SI el producto no está entre los del día, o SI ya se registró, ENTONCES el sistema DEBE
 rechazarlo. Registrar cualquier cosa dejaría la tarea cumplible con tres latas del estante.
 
-### BR-STK-016 — Una caja del depósito trae ocho de un solo producto
-
-Cada caja del depósito DEBE guardar **un solo producto** y arrancar la noche con **8
-unidades**. SI la caja ya entregó sus 8, ENTONCES el sistema DEBE negar la unidad siguiente,
-aunque la góndola tenga lugar. Es otra caja que la de traslado: ésta no se carga, se vacía.
-
-### BR-STK-017 — A la caja apoyada se le saca una unidad
+### BR-STK-016 — A la caja apoyada se le saca una unidad
 
 CUANDO el jugador le pide una unidad a una caja del depósito que **no lleva en la mano**, el
 sistema DEBE darle una unidad del producto de la caja, sin importar dónde esté apoyada: el piso,
 un estante, un mostrador u otra caja. SI el jugador lleva esa caja, ENTONCES el sistema NO DEBE
 darle nada. Lo que cobra el traslado es que la caja llevada no entrega, no la altura.
 
-### BR-STK-018 — La caja no entrega lo que la góndola no puede recibir
+### BR-STK-017 — La caja no entrega lo que la góndola no puede recibir
 
 SI la góndola de ese producto ya no tiene lugar, contando las unidades que ya salieron de la caja
 y todavía no se colocaron, ENTONCES el sistema DEBE negar la unidad aunque la caja tenga. Hoy
@@ -149,8 +143,8 @@ DADO 5 unidades en depósito CUANDO se consulta la góndola ENTONCES hay 0.
 
 ### AC-STK-004 — El arranque de la noche *(verifica BR-STK-004)*
 
-DADO una jornada que se abre ENTONCES cada producto del catálogo tiene en el depósito lo que trae
-una caja llena, y 0 en góndola.
+DADO una jornada que se abre ENTONCES cada producto del catálogo tiene 10 en depósito y 0 en
+góndola, y 10 es mayor al umbral más alto del catálogo.
 
 ### AC-STK-005 — Ingresar negativo no hace nada *(verifica BR-STK-005)*
 
@@ -206,18 +200,12 @@ obligatoria.
 DADO los tres del día CUANDO se registra un cuarto producto ENTONCES se rechaza; y registrar dos
 veces el mismo suma una sola vez.
 
-### AC-STK-016 — La caja entrega ocho y la novena no *(verifica BR-STK-016, BR-STK-004)*
-
-DADO una jornada recién abierta CUANDO se sacan 8 unidades de la caja de un producto, se colocan
-en la góndola y se venden las 8 ENTONCES la góndola tiene lugar para 8 y la caja no entrega la
-novena.
-
-### AC-STK-017 — Se saca de la caja apoyada, nunca de la llevada *(verifica BR-STK-017)*
+### AC-STK-016 — Se saca de la caja apoyada, nunca de la llevada *(verifica BR-STK-016)*
 
 DADO una caja del depósito apoyada, en cualquier lado, CUANDO se le pide una unidad ENTONCES se
 puede sacar; DADO la misma caja en la mano del jugador, ENTONCES no.
 
-### AC-STK-018 — Lo que ya salió cuenta contra el lugar de la góndola *(verifica BR-STK-018)*
+### AC-STK-017 — Lo que ya salió cuenta contra el lugar de la góndola *(verifica BR-STK-017)*
 
 DADO un producto de umbral 2, con la góndola vacía y más de 2 en su caja CUANDO se sacan 2
 unidades sin colocarlas ENTONCES la tercera se niega; y colocar esas 2 no habilita una tercera.
@@ -256,14 +244,7 @@ unidades sin colocarlas ENTONCES la tercera se niega; y colocar esas 2 no habili
   - Por qué sigue abierta: hoy son una lista fija. El GDD no dice si varían por noche.
   - Decide: el dueño del repo.
   - Bloquea: nada. Haría variable lo que `AC-STK-014` fija.
-- **OQ-STK-002 — ¿De dónde sale el margen para reponer lo que se vende?**
-  - Por qué sigue abierta: la caja trae lo mismo que pide la góndola. SI un comprador se lleva
-    una unidad de un producto antes de que su góndola se llene, ENTONCES esa noche reponer ya no
-    se puede cumplir. La ficha «Reposición» pone el margen en una góndola que arranca con algo,
-    y hoy arranca vacía.
-  - Decide: el dueño del repo.
-  - Bloquea: nada. Cambiaría `BR-STK-004`.
-- **OQ-STK-003 — ¿La caja de traslado sigue en el juego?**
+- **OQ-STK-002 — ¿La caja de traslado sigue en el juego?**
   - Por qué sigue abierta: las fichas describen sólo las cajas de un producto. La de traslado es
     anterior y ninguna ficha la pide.
   - Decide: el dueño del repo.

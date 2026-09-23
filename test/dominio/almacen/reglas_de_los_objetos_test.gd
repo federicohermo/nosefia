@@ -58,7 +58,7 @@ func test_las_dos_acciones_nuevas_no_se_pisan_con_las_de_caminar() -> void:
 	assert_int(distintos.size()).is_equal(nombres.size())
 
 
-func test_se_retira_de_toda_caja_apoyada_y_nunca_de_la_que_se_lleva() -> void:  # AC-STK-017
+func test_se_retira_de_toda_caja_apoyada_y_nunca_de_la_que_se_lleva() -> void:  # AC-STK-016
 	# Apoyada vale en cualquier lado: el piso, un mostrador, un estante, otra caja. Lo que cobra
 	# el traslado no es la altura: es que mientras se lleva la caja no se le saca nada.
 	assert_bool(ReglasDeLosObjetos.se_puede_retirar(false)).is_true()
