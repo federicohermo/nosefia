@@ -22,7 +22,7 @@ depósito son dos lugares distintos, y mover mercadería del fondo al estante cu
 | **Unidad** | una pieza de un producto, la que se agarra con la mano | stock, cantidad |
 | **Depósito** | el fondo, donde arranca la mercadería de la noche | almacén, bodega |
 | **Caja del depósito** | la caja de un solo producto de la que se saca de a una unidad | cajón, contenedor |
-| **Góndola** | el estante del local, y lo único desde donde se vende. Cuenta sólo los lugares que se reponen: la mercadería que ya está expuesta no entra en el inventario | vitrina, exhibidor |
+| **Góndola** | el estante del local, y lo único desde donde se vende | vitrina, exhibidor |
 | **Umbral** | cuántas unidades pide la góndola de ese producto. Es también su cupo | mínimo, tope |
 | **Faltante** | un producto con la góndola por debajo de su umbral | agotado, sin stock |
 
@@ -47,9 +47,9 @@ una tarea.
 ### BR-STK-004 — La noche arranca con el depósito lleno y nada repuesto
 
 CUANDO se abre una jornada, el sistema DEBE poner **10 unidades de cada producto en el depósito**
-y **cero en la góndola**. La góndola no se ve vacía: ya muestra mercadería expuesta, y lo que
-arranca en cero son los lugares que hay que reponer. El número del depósito tiene que ser estrictamente mayor que el umbral más alto del
-catálogo: con el umbral exacto, una venta dejaría reponer imposible esa noche.
+y **cero en la góndola**. La mercadería ya expuesta no se cuenta. El número del depósito tiene
+que ser estrictamente mayor que el umbral más alto del catálogo: con el umbral exacto, una
+venta dejaría reponer imposible esa noche.
 
 ### BR-STK-005 — Ingresar no resta
 
@@ -241,7 +241,5 @@ unidades sin colocarlas ENTONCES la tercera se niega; y colocar esas 2 no habili
     hace con las cajas de un producto.
   - Efecto: `BR-STK-010` a `BR-STK-012` quedan retiradas.
 - **OQ-STK-003 — ¿La mercadería expuesta entra en el inventario?**
-  - Por qué sigue abierta: la góndola ya muestra unidades al abrir la noche, y el inventario
-    cuenta sólo las que se reponen. Venderle a un comprador una unidad expuesta hoy no es posible.
   - Decide: el dueño del repo.
-  - Bloquea: nada. Contarlas cambiaría lo que `AC-STK-004` fija para la góndola.
+  - Bloquea: nada.
