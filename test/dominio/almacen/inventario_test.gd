@@ -47,7 +47,7 @@ func test_ingresar_al_deposito_no_toca_la_gondola() -> void:  # AC-STK-003
 func test_ingresar_una_cantidad_negativa_no_deja_la_gondola_bajo_cero() -> void:  # AC-STK-005
 	# `ingresar` es la puerta por la que **entra** mercadería; la única que resta es la interna
 	# que usan `mover` y `cobrar`. Sin el corte, un `-5` de quien reponga mal deja la góndola en
-	# un número imposible que `hay_stock()` y `faltantes()` leen como una góndola vacía cualquiera.
+	# un número imposible que `faltantes()` lee como una góndola vacía cualquiera.
 	var actroncito := Producto.new(Producto.Id.ACTRONCITO, "Actroncito", 2500, 4)
 	var productos: Array[Producto] = [actroncito]
 	var inventario := Inventario.new(productos)
@@ -121,13 +121,12 @@ func test_el_inventario_solo_conoce_los_productos_que_recibio() -> void:
 	assert_int(inventario.unidades(malbardo, Inventario.Ubicacion.GONDOLA)).is_equal(0)
 
 
-func test_por_debajo_del_umbral_falta_aunque_todavia_quede_algo_para_vender() -> void:  # AC-STK-007
+func test_por_debajo_del_umbral_falta_aunque_la_gondola_tenga_algo() -> void:  # AC-STK-007
 	var actroncito := Producto.new(Producto.Id.ACTRONCITO, "Actroncito", 2500, 5)
 	var productos: Array[Producto] = [actroncito]
 	var inventario := Inventario.new(productos)
 	inventario.ingresar(actroncito, Inventario.Ubicacion.GONDOLA, 3)
 	assert_array(inventario.faltantes()).contains([actroncito])
-	assert_bool(inventario.hay_stock(actroncito)).is_true()
 
 
 func test_justo_en_el_umbral_no_falta() -> void:  # AC-STK-007
@@ -140,24 +139,14 @@ func test_justo_en_el_umbral_no_falta() -> void:  # AC-STK-007
 	assert_array(inventario.faltantes()).not_contains([actroncito])
 
 
-func test_una_gondola_vacia_falta_y_no_tiene_con_que_vender() -> void:
-	var actroncito := Producto.new(Producto.Id.ACTRONCITO, "Actroncito", 2500, 5)
-	var productos: Array[Producto] = [actroncito]
-	var inventario := Inventario.new(productos)
-	assert_array(inventario.faltantes()).contains([actroncito])
-	assert_bool(inventario.hay_stock(actroncito)).is_false()
-
-
 func test_el_deposito_lleno_no_salva_a_la_gondola_vacia() -> void:  # AC-STK-007
-	# Las dos mitades importan. Un `hay_stock()` que sumara las dos ubicaciones pasa igual los
-	# dos AC de arriba, y la góndola vacía con el depósito lleno —el estado que le da al
-	# jugador la razón para ir al estante— se leería como «hay stock».
+	# Un `faltantes()` que sumara las dos ubicaciones leería como abastecida la góndola vacía con
+	# el depósito lleno, que es el estado que le da al jugador la razón para ir al estante.
 	var actroncito := Producto.new(Producto.Id.ACTRONCITO, "Actroncito", 2500, 5)
 	var productos: Array[Producto] = [actroncito]
 	var inventario := Inventario.new(productos)
 	inventario.ingresar(actroncito, Inventario.Ubicacion.DEPOSITO, 100)
 	assert_array(inventario.faltantes()).contains([actroncito])
-	assert_bool(inventario.hay_stock(actroncito)).is_false()
 
 
 func test_faltantes_devuelve_los_que_faltan_y_solo_esos_en_el_orden_de_construccion() -> void:
@@ -172,53 +161,95 @@ func test_faltantes_devuelve_los_que_faltan_y_solo_esos_en_el_orden_de_construcc
 	assert_array(inventario.faltantes()).contains_exactly([actroncito, laysntt])
 
 
-func test_cobrar_descuenta_de_la_gondola_y_deja_el_deposito_intacto() -> void:
-	# El depósito no se toca: lo que se vende por la ventanilla sale del estante, y si el cobro
-	# pudiera tirar del fondo, reponer dejaría de ser necesario para vender.
-	var actroncito := Producto.new(Producto.Id.ACTRONCITO, "Actroncito", 2500, 4)
-	var laysntt := Producto.new(Producto.Id.LAYSNTT, "Laysntt", 1100, 3)
-	var productos: Array[Producto] = [actroncito, laysntt]
+## Un producto de umbral 8, el del criterio. Se inventa acá y no se lee del catálogo: el día que
+## el balance mueva el umbral, las filas de los criterios no cambian de resultado.
+func _de_umbral_ocho() -> Producto:
+	return Producto.new(Producto.Id.ACTRONCITO, "Actroncito", 2500, 8)
+
+
+func _inventario_con(en_gondola: int, en_deposito: int) -> Inventario:
+	var productos: Array[Producto] = [_de_umbral_ocho()]
 	var inventario := Inventario.new(productos)
-	inventario.ingresar(actroncito, Inventario.Ubicacion.GONDOLA, 5)
-	inventario.ingresar(actroncito, Inventario.Ubicacion.DEPOSITO, 7)
-	inventario.ingresar(laysntt, Inventario.Ubicacion.GONDOLA, 2)
-	var venta := Venta.new()
-	venta.agregar(actroncito, 2)
-	venta.agregar(laysntt, 1)
-	assert_bool(inventario.cobrar(venta)).is_true()
-	assert_int(inventario.unidades(actroncito, Inventario.Ubicacion.GONDOLA)).is_equal(3)
-	assert_int(inventario.unidades(actroncito, Inventario.Ubicacion.DEPOSITO)).is_equal(7)
-	assert_int(inventario.unidades(laysntt, Inventario.Ubicacion.GONDOLA)).is_equal(1)
+	inventario.ingresar(productos[0], Inventario.Ubicacion.GONDOLA, en_gondola)
+	inventario.ingresar(productos[0], Inventario.Ubicacion.DEPOSITO, en_deposito)
+	return inventario
 
 
-func test_un_cobro_que_no_entra_en_el_stock_no_descuenta_una_sola_unidad() -> void:
+func test_los_vendibles_son_lo_que_el_estante_no_necesita() -> void:  # AC-STK-018
+	# Cada fila es `[góndola, depósito, vendibles]`. La de `0, 5` es la que pide el «nunca menos
+	# de cero»: sin el corte daría `-3`, y un pedido de cero unidades pasaría el control.
+	var filas := [[8, 2, 2], [0, 10, 2], [7, 3, 2], [8, 0, 0], [0, 5, 0]]
+	for fila: Array in filas:
+		var inventario := _inventario_con(fila[0], fila[1])
+		(
+			assert_int(inventario.vendibles(_de_umbral_ocho()))
+			. override_failure_message("fila %s" % [fila])
+			. is_equal(fila[2])
+		)
+
+
+func test_un_producto_que_el_inventario_no_conoce_no_tiene_vendibles() -> void:  # AC-STK-018
+	var inventario := _inventario_con(0, 10)
+	var malbardo := Producto.new(Producto.Id.MALBARDO, "Malbardo", 1500, 2)
+	assert_int(inventario.vendibles(malbardo)).is_equal(0)
+
+
+func test_la_venta_sale_del_deposito_y_no_toca_la_gondola() -> void:  # AC-CTR-015
+	# Cada fila es `[góndola, depósito, venta, se cobra, góndola después, depósito después]`.
+	var filas := [
+		[8, 2, 2, true, 8, 0],
+		[0, 10, 2, true, 0, 8],
+		[0, 10, 3, false, 0, 10],
+		[8, 0, 1, false, 8, 0],
+	]
+	for fila: Array in filas:
+		var inventario := _inventario_con(fila[0], fila[1])
+		var venta := Venta.new()
+		venta.agregar(_de_umbral_ocho(), fila[2])
+		var mensaje := "fila %s" % [fila]
+		assert_bool(inventario.cobrar(venta)).override_failure_message(mensaje).is_equal(fila[3])
+		(
+			assert_int(inventario.unidades(_de_umbral_ocho(), Inventario.Ubicacion.GONDOLA))
+			. override_failure_message(mensaje)
+			. is_equal(fila[4])
+		)
+		(
+			assert_int(inventario.unidades(_de_umbral_ocho(), Inventario.Ubicacion.DEPOSITO))
+			. override_failure_message(mensaje)
+			. is_equal(fila[5])
+		)
+
+
+func test_un_cobro_que_supera_los_vendibles_no_mueve_una_sola_unidad() -> void:  # AC-CTR-006
 	# Todo o nada: la línea que sí entraba tampoco se descuenta. Un cobro a medias deja un
 	# estado que el jugador no puede distinguir de una venta completa.
 	var actroncito := Producto.new(Producto.Id.ACTRONCITO, "Actroncito", 2500, 4)
 	var laysntt := Producto.new(Producto.Id.LAYSNTT, "Laysntt", 1100, 3)
 	var productos: Array[Producto] = [actroncito, laysntt]
 	var inventario := Inventario.new(productos)
-	inventario.ingresar(actroncito, Inventario.Ubicacion.GONDOLA, 5)
-	inventario.ingresar(laysntt, Inventario.Ubicacion.GONDOLA, 1)
+	inventario.ingresar(actroncito, Inventario.Ubicacion.GONDOLA, 4)
+	inventario.ingresar(actroncito, Inventario.Ubicacion.DEPOSITO, 6)
+	inventario.ingresar(laysntt, Inventario.Ubicacion.GONDOLA, 3)
 	var venta := Venta.new()
 	venta.agregar(actroncito, 2)
-	venta.agregar(laysntt, 3)
+	venta.agregar(laysntt, 1)
 	assert_bool(inventario.cobrar(venta)).is_false()
-	assert_int(inventario.unidades(actroncito, Inventario.Ubicacion.GONDOLA)).is_equal(5)
-	assert_int(inventario.unidades(laysntt, Inventario.Ubicacion.GONDOLA)).is_equal(1)
+	assert_int(inventario.unidades(actroncito, Inventario.Ubicacion.GONDOLA)).is_equal(4)
+	assert_int(inventario.unidades(actroncito, Inventario.Ubicacion.DEPOSITO)).is_equal(6)
+	assert_int(inventario.unidades(laysntt, Inventario.Ubicacion.GONDOLA)).is_equal(3)
+	assert_int(inventario.unidades(laysntt, Inventario.Ubicacion.DEPOSITO)).is_equal(0)
 
 
 func test_cobrar_un_producto_que_el_inventario_no_conoce_no_vende_ni_toca_nada() -> void:
-	# Es la rama que el comentario de `cobrar()` promete: el desconocido responde 0 unidades y
-	# cae por el mismo camino que «no alcanza el stock». Sin este caso, un `cobrar` que tratara
-	# al desconocido como stock infinito devolvería `true` y nadie se enteraría.
+	# El desconocido tiene cero vendibles y cae por el mismo camino que «no alcanza». Sin este
+	# caso, un `cobrar` que lo tratara como infinito devolvería `true` sin que nadie se entere.
 	var actroncito := Producto.new(Producto.Id.ACTRONCITO, "Actroncito", 2500, 4)
 	var malbardo := Producto.new(Producto.Id.MALBARDO, "Malbardo", 1500, 2)
 	var productos: Array[Producto] = [actroncito]
 	var inventario := Inventario.new(productos)
-	inventario.ingresar(actroncito, Inventario.Ubicacion.GONDOLA, 5)
+	inventario.ingresar(actroncito, Inventario.Ubicacion.DEPOSITO, 10)
 	var venta := Venta.new()
 	venta.agregar(actroncito, 1)
 	venta.agregar(malbardo, 1)
 	assert_bool(inventario.cobrar(venta)).is_false()
-	assert_int(inventario.unidades(actroncito, Inventario.Ubicacion.GONDOLA)).is_equal(5)
+	assert_int(inventario.unidades(actroncito, Inventario.Ubicacion.DEPOSITO)).is_equal(10)

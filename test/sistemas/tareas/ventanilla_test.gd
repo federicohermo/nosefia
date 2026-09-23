@@ -52,6 +52,8 @@ func _inventario() -> Inventario:
 	var actroncito := Catalogo.de(Producto.Id.ACTRONCITO)
 	var inventario := Inventario.new([actroncito])
 	inventario.ingresar(actroncito, Inventario.Ubicacion.GONDOLA, EN_GONDOLA)
+	# La venta sale del depósito: con la góndola llena y el depósito vacío no hay qué vender.
+	inventario.ingresar(actroncito, Inventario.Ubicacion.DEPOSITO, EN_GONDOLA)
 	return inventario
 
 
@@ -270,7 +272,7 @@ func test_cobrar_sin_stock_avisa_lo_que_falta_y_no_despacha() -> void:
 	ventanilla.reloj = reloj
 	ventanilla.cobro_rechazado.connect(_anotar_rechazo)
 	ventanilla.atencion_despachada.connect(_anotar_despacho)
-	# La góndola vacía es el estado de la primera noche, antes de que el 008 reponga nada.
+	# Un inventario sin mercadería no tiene una sola unidad vendible.
 	ventanilla.arrancar(
 		TareaDeAtender.new(_compradores(1), Inventario.new([Catalogo.de(Producto.Id.ACTRONCITO)]))
 	)
