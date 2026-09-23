@@ -214,8 +214,8 @@ del piso menos 5 centímetros.
 ## Preguntas abiertas
 
 - **OQ-PLY-001 — ¿La segunda mano entra alguna vez?**
-  - Por qué sigue abierta: subir las manos a 2 le afloja el costo a sacar la basura sin tocar
-    ningún costo de tarea, y eso es una decisión de balance que nadie tomó.
+  - Por qué sigue abierta: subir las manos a 2 acorta los viajes de sacar la basura, y eso es
+    una decisión de balance que nadie tomó.
   - Decide: el dueño del repo, jugando.
   - Bloquea: nada. Movería `BR-PLY-007` y el tercer criterio de
     [`store-cleanup`](../store-cleanup/store-cleanup.md).
