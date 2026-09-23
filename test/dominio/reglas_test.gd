@@ -92,13 +92,6 @@ func test_al_cuarto_apercibimiento_lo_echan() -> void:
 	assert_int(Reglas.APERCIBIMIENTOS_HASTA_EL_DESPIDO).is_equal(4)
 
 
-func test_la_caja_de_traslado_lleva_mas_de_un_producto() -> void:
-	# Con un solo casillero la caja no cambia nada: reponer seguiría siendo un viaje por unidad
-	# y no habría nada que elegir. La caja de traslado se apoya en que cargarla sea una decisión, y
-	# sin esta aserción el cupo podría bajar a uno con los diez criterios en verde.
-	assert_int(Reglas.CASILLEROS_DE_LA_CAJA_DE_TRASLADO).is_greater(1)
-
-
 func test_el_reloj_de_mesa_falla_adentro_de_la_partida() -> void:
 	# Una jornada posterior a la última dejaría la regla escrita y muerta: el reloj no fallaría
 	# nunca jugando, y los criterios seguirían en verde igual. Es una invariante entre

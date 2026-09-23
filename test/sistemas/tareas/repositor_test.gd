@@ -1,5 +1,5 @@
-## El nodo que repone adentro del motor: saca de la caja, se lo pasa al estante y publica lo que
-## el estante contestó.
+## El nodo que repone adentro del motor: reserva la unidad en la mano, se la pasa al estante y
+## publica lo que el estante contestó.
 ##
 ## **Ningún caso entra un nodo al árbol y ninguno hace correr `_process`.** Se instancia con
 ## `auto_free(Repositor.new())` y se le llama a mano, que es lo que vuelve medible el descuento: sin
@@ -56,8 +56,8 @@ func _producto(id: Producto.Id) -> Producto:
 	return Producto.new(id, "de prueba", 100, CUPO_DE_PRUEBA)
 
 
-## Un repositor cableado a mano: reloj con turno arrancado, caja cargada y estante de un producto.
-func _repositor(unidades_en_la_caja: int, en_deposito: int = 10) -> Repositor:
+## Un repositor cableado a mano: reloj con turno arrancado, agarre y estante de un producto.
+func _repositor(en_deposito: int = 10) -> Repositor:
 	var actroncito := _producto(Producto.Id.ACTRONCITO)
 	var inventario := Inventario.new([actroncito])
 	inventario.ingresar(actroncito, Inventario.Ubicacion.DEPOSITO, en_deposito)
@@ -68,47 +68,56 @@ func _repositor(unidades_en_la_caja: int, en_deposito: int = 10) -> Repositor:
 	reloj.arrancar(_turno, obligatorias)
 	reloj.tarea_completada.connect(_anotar_tarea)
 
-	var carga: CargaDeLaCaja = auto_free(CargaDeLaCaja.new())
-	for _unidad in range(unidades_en_la_caja):
-		carga.caja().guardar(actroncito)
-
 	var repositor: Repositor = auto_free(Repositor.new())
 	repositor.reloj = reloj
-	repositor.carga = carga
+	repositor.agarre = _agarre()
 	repositor.producto_colocado.connect(_anotar_colocado)
 	repositor.colocacion_rechazada.connect(_anotar_rechazo)
 	repositor.arrancar(Estante.new(inventario, [actroncito]))
 	return repositor
 
 
+func _agarre() -> Agarre:
+	var agarre: Agarre = auto_free(Agarre.new())
+	agarre.punto_de_carga = auto_free(Node3D.new())
+	return agarre
+
+
+## Retira una unidad a la mano y la coloca: el único camino por el que hoy se repone.
+func _reponer_una(repositor: Repositor) -> void:
+	var nodo: UnidadFisica = auto_free(UnidadFisica.new())
+	repositor.pedir_retirar(Producto.Id.ACTRONCITO, nodo)
+	repositor.pedir_colocar_de_la_mano()
+
+
 func test_al_llenar_el_estante_las_tareas_cumplidas_suben_exactamente_en_uno() -> void:
-	var repositor := _repositor(CUPO_DE_PRUEBA)
-	repositor.pedir_colocar()
+	var repositor := _repositor()
+	_reponer_una(repositor)
 	assert_int(_avisos_de_tarea).is_equal(0)
-	repositor.pedir_colocar()
+	_reponer_una(repositor)
 	assert_int(_avisos_de_tarea).is_equal(1)
 	assert_int(_cumplidas_avisadas).is_equal(1)
 
 
 func test_colocar_de_mas_no_vuelve_a_contar_la_tarea() -> void:
-	# El estante ya está lleno, así que la colocación siguiente se rechaza y `completar()` no
+	# El estante ya está lleno, así que el intento siguiente se rechaza y `completar()` no
 	# llega a llamarse de nuevo. Y si llegara, el `Turno` contestaría `false`: la regla vive
 	# allá y no acá, que es lo que deja a este nodo sin estado propio.
-	var repositor := _repositor(CUPO_DE_PRUEBA + 1)
+	var repositor := _repositor()
 	for _unidad in range(CUPO_DE_PRUEBA + 1):
-		repositor.pedir_colocar()
+		_reponer_una(repositor)
 	assert_int(_avisos_de_tarea).is_equal(1)
 	assert_int(_cumplidas_avisadas).is_equal(1)
+	assert_int(_colocados).is_equal(CUPO_DE_PRUEBA)
 	assert_int(_rechazos).is_equal(1)
-	assert_int(_ultimo_motivo).is_equal(Estante.Rechazo.ESTANTE_LLENO)
 
 
 func test_llenar_el_estante_descuenta_exactamente_el_costo_de_reponer() -> void:
 	# `_process` no corre en ningún caso de esta suite, así que este descuento es el único que
 	# puede haber: si además alguien llamara a `consumir()`, el restante no daría este número.
-	var repositor := _repositor(CUPO_DE_PRUEBA)
+	var repositor := _repositor()
 	for _unidad in range(CUPO_DE_PRUEBA):
-		repositor.pedir_colocar()
+		_reponer_una(repositor)
 	var esperado := Reglas.DURACION_DEL_TURNO - Reglas.COSTO_DE_REPONER
 	assert_float(_turno.tiempo_restante()).is_equal(esperado)
 
@@ -142,38 +151,15 @@ func test_sin_tiempo_para_reponer_la_tarea_no_se_cuenta_ni_descuenta() -> void:
 	var reloj: RelojDelTurno = auto_free(RelojDelTurno.new())
 	reloj.arrancar(_turno, obligatorias)
 	reloj.tarea_completada.connect(_anotar_tarea)
-	var carga: CargaDeLaCaja = auto_free(CargaDeLaCaja.new())
-	for _unidad in range(CUPO_DE_PRUEBA):
-		carga.caja().guardar(actroncito)
 	var repositor: Repositor = auto_free(Repositor.new())
 	repositor.reloj = reloj
-	repositor.carga = carga
+	repositor.agarre = _agarre()
 	repositor.arrancar(Estante.new(inventario, [actroncito]))
 
 	for _unidad in range(CUPO_DE_PRUEBA):
-		repositor.pedir_colocar()
+		_reponer_una(repositor)
 	assert_int(_avisos_de_tarea).is_equal(0)
 	assert_float(_turno.tiempo_restante()).is_equal(0.0)
-
-
-func test_la_caja_vacia_se_rechaza_como_producto_no_aceptado() -> void:
-	# Sin nada que sacar, el estante recibe `null` y contesta el rechazo en vez de reventar: es
-	# el mismo camino por el que llega un `id` sin fila en el catálogo.
-	var repositor := _repositor(0)
-	repositor.pedir_colocar()
-	assert_int(_colocados).is_equal(0)
-	assert_int(_rechazos).is_equal(1)
-	assert_int(_ultimo_motivo).is_equal(Estante.Rechazo.PRODUCTO_NO_ACEPTADO)
-
-
-func test_una_colocacion_exitosa_saca_la_unidad_de_la_caja() -> void:
-	# Y sólo la exitosa: un rechazo que sacara igual dejaría al jugador con la caja vacía y el
-	# estante sin llenar, sin un solo error.
-	var repositor := _repositor(CUPO_DE_PRUEBA + 1)
-	for _unidad in range(CUPO_DE_PRUEBA + 1):
-		repositor.pedir_colocar()
-	assert_int(_colocados).is_equal(CUPO_DE_PRUEBA)
-	assert_int(repositor.carga.caja().ocupados()).is_equal(1)
 
 
 func test_el_repositor_no_lleva_estado_propio_de_la_tarea() -> void:
@@ -194,10 +180,8 @@ func _anotar_colocado(_producto: Producto, _completos: int) -> void:
 
 
 func test_depositar_desde_la_mano_entrega_el_cuerpo_una_sola_vez() -> void:
-	var repositor := _repositor(0)
-	var agarre: Agarre = auto_free(Agarre.new())
-	agarre.punto_de_carga = auto_free(Node3D.new())
-	repositor.agarre = agarre
+	var repositor := _repositor()
+	var agarre := repositor.agarre
 	var nodo: UnidadFisica = auto_free(UnidadFisica.new())
 	assert_bool(repositor.pedir_retirar(Producto.Id.ACTRONCITO, nodo)).is_true()
 	assert_object(agarre.manos().sostenido()).is_same(nodo.datos)
@@ -211,10 +195,8 @@ func test_depositar_desde_la_mano_entrega_el_cuerpo_una_sola_vez() -> void:
 
 
 func test_con_la_mano_llena_no_reserva_otra_unidad() -> void:
-	var repositor := _repositor(0, 1)
-	var agarre: Agarre = auto_free(Agarre.new())
-	agarre.punto_de_carga = auto_free(Node3D.new())
-	repositor.agarre = agarre
+	var repositor := _repositor(1)
+	var agarre := repositor.agarre
 	var objeto := ObjetoDelAlmacen.new()
 	assert_bool(agarre.manos().agarrar(objeto)).is_true()
 	var nodo: UnidadFisica = auto_free(UnidadFisica.new())

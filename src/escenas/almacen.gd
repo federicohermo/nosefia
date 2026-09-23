@@ -16,12 +16,11 @@ extends Node3D
 ## `Label3D` y llamarle `declarar_jornada()` no compilaría.
 const RelojDeMesaDelLocal := preload("res://src/escenas/puestos/reloj_de_mesa.gd")
 
-## Los tres scripts de `escenas/` se preloadean por el mismo motivo que el del reloj de mesa:
+## Los scripts de `escenas/` se preloadean por el mismo motivo que el del reloj de mesa:
 ## son cáscara y no declaran `class_name`, así que sin esto el tipo estático del `@export` sería
 ## el del nodo y llamarles `mostrar()` no compilaría.
 const EstanteDelLocal := preload("res://src/escenas/puestos/estante.gd")
 const CajaDeProductosDelDeposito := preload("res://src/escenas/objetos/caja_de_productos.gd")
-const CajaDeTrasladoQueSeVe := preload("res://src/escenas/objetos/caja_de_traslado.gd")
 const LimpiezaDelLocal := preload("res://src/escenas/puestos/limpieza_del_almacen.gd")
 const AudioDelLocal := preload("res://src/escenas/puestos/audio_del_almacen.gd")
 const ReposicionManual := preload("res://src/escenas/puestos/reposicion_manual.gd")
@@ -36,10 +35,8 @@ const Jugador := preload("res://src/escenas/jugador.gd")
 @export var _pantalla: PantallaDeCierre
 @export var _reloj_de_mesa: RelojDeMesaDelLocal
 @export var _repositor: Repositor
-@export var _carga: CargaDeLaCaja
 @export var _estante: EstanteDelLocal
 @export var _cajas_de_productos: Array[Node3D]
-@export var _caja_de_traslado: CajaDeTrasladoQueSeVe
 @export var _jugador: Jugador
 @export var _atenciones: Ventanilla
 @export var _computadora: ComputadoraDeEscritorio
@@ -106,7 +103,6 @@ func _ready() -> void:
 				_reloj,
 				_ciclo,
 				_repositor,
-				_carga,
 				_atenciones,
 				_computadora,
 				_limpiador,
@@ -119,10 +115,8 @@ func _ready() -> void:
 	# mano y la zona de reposición la coloca en la góndola. Quien atiende ese clic es
 	# `ReposicionManual`, que se conecta solo. La unidad viaja en la mano, así que el inventario
 	# recién cambia cuando el estante la acepta: soltarla en el piso no repone nada.
-	_carga.producto_guardado.connect(_al_guardar_en_la_caja)
 	_repositor.agarre = _agarre
 	_repositor.unidad_colocada.connect(_reposicion_manual.depositar)
-	_repositor.producto_colocado.connect(_al_colocar_en_el_estante)
 	_atenciones.atencion_despachada.connect(_reposicion_manual.actualizar_stock)
 	# El motor no despierta lo que está sobre una caja empujada. Lo hace el puesto.
 	for caja: CajaDeProductosDelDeposito in _cajas_de_productos:
@@ -199,15 +193,3 @@ func _al_cerrar_la_jornada(jornada: int, cumplidas: int) -> void:
 func _al_despachar_la_placa() -> void:
 	_jugador.reanudar()
 	_ciclo.abrir_la_jornada()
-
-
-## Lo guardado en la caja de traslado se repinta contra el contenido que contesta el dominio, y
-## nunca contra una cuenta llevada acá.
-func _al_guardar_en_la_caja(_producto: Producto) -> void:
-	_caja_de_traslado.mostrar(_carga.caja().contenido())
-
-
-## Lo que se coloca ya lo dibuja `ReposicionManual` con el cuerpo que el jugador soltó, así que
-## acá sólo queda repintar el casillero de la caja de traslado.
-func _al_colocar_en_el_estante(_producto: Producto, _completos: int) -> void:
-	_caja_de_traslado.mostrar(_carga.caja().contenido())

@@ -11,7 +11,7 @@
 [ext_resource type="LightmapGIData" uid="uid://i8kc61len5kv" path="res://src/escenas/almacen.lmbake" id="lightmap"]
 [ext_resource type="PackedScene" path="res://src/escenas/puestos/reposicion_manual.tscn" id="reposicion_manual"]
 
-[node name="Almacen" type="Node3D" unique_id=999617316 node_paths=PackedStringArray("_hud", "_reloj", "_ciclo", "_pantalla", "_reloj_de_mesa", "_repositor", "_carga", "_estante", "_cajas_de_productos", "_caja_de_traslado", "_jugador", "_atenciones", "_computadora", "_limpiador", "_limpieza", "_recolector", "_audio", "_reposicion_manual", "_agarre", "_bolsas", "_muebles_con_contorno")]
+[node name="Almacen" type="Node3D" unique_id=999617316 node_paths=PackedStringArray("_hud", "_reloj", "_ciclo", "_pantalla", "_reloj_de_mesa", "_repositor", "_estante", "_cajas_de_productos", "_jugador", "_atenciones", "_computadora", "_limpiador", "_limpieza", "_recolector", "_audio", "_reposicion_manual", "_agarre", "_bolsas", "_muebles_con_contorno")]
 script = ExtResource("4_almacen")
 _hud = NodePath("Interfaz/Hud")
 _reloj = NodePath("Servicios/RelojDelTurno")
@@ -19,10 +19,8 @@ _ciclo = NodePath("Servicios/CicloDeJornadas")
 _pantalla = NodePath("Interfaz/PantallaDeCierre")
 _reloj_de_mesa = NodePath("Estructura/reloj/Hora")
 _repositor = NodePath("Servicios/Repositor")
-_carga = NodePath("Servicios/CargaDeLaCaja")
 _estante = NodePath("Estructura/gondolanueva/StaticBody3D")
 _cajas_de_productos = [NodePath("Objetos/CajaDeActroncito"), NodePath("Objetos/CajaDeDurextra"), NodePath("Objetos/CajaDeBurbaloo"), NodePath("Objetos/CajaDeZucarachas"), NodePath("Objetos/CajaDeLaysntt"), NodePath("Objetos/CajaDeMalbardo"), NodePath("Objetos/CajaDeProngles"), NodePath("Objetos/CajaDeJorgillo"), NodePath("Objetos/CajaDeArvejas"), NodePath("Objetos/CajaDeChisitos"), NodePath("Objetos/CajaDeOremos"), NodePath("Objetos/CajaDePepitos"), NodePath("Objetos/CajaDeSaladik"), NodePath("Objetos/CajaDeUakas"), NodePath("Objetos/CajaDeCoracola"), NodePath("Objetos/CajaDeFrotlups"), NodePath("Objetos/CajaDeMarolini"), NodePath("Objetos/CajaDeAmargadito"), NodePath("Objetos/CajaDeCindolor"), NodePath("Objetos/CajaDeFlinpuf"), NodePath("Objetos/CajaDeDonsaturados"), NodePath("Objetos/CajaDePetisas"), NodePath("Objetos/CajaDeMacumbas")]
-_caja_de_traslado = NodePath("Objetos/CajaDeTraslado")
 _jugador = NodePath("Jugador")
 _atenciones = NodePath("Servicios/Atenciones")
 _computadora = NodePath("Servicios/Computadora")

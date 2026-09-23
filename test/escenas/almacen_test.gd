@@ -490,34 +490,18 @@ func test_el_reloj_de_mesa_queda_sobre_el_vidrio_del_reloj_del_modelo() -> void:
 	)
 
 
-func test_la_caja_de_traslado_entra_instanciada_y_adentro_del_edificio() -> void:
-	# Una caja colocada afuera de la cáscara se vería flotando en el vacío y ningún test de
-	# cableado lo diría: la escena carga igual y el nodo está.
+# AC-STK-010 AC-STK-011 AC-STK-012
+func test_la_caja_de_traslado_no_existe_mas() -> void:
+	# Las tres reglas se retiraron con la caja. Lo que queda por afirmar es que no volvió: ni el
+	# nodo en el almacén ni una clase que la cargue.
 	var almacen: Node3D = auto_free(load(ESCENA_DEL_ALMACEN).instantiate())
 	add_child(almacen)
 	await get_tree().process_frame
-	assert_bool(almacen.has_node("Objetos/CajaDeTraslado")).is_true()
-	var cascara: MeshInstance3D = almacen.get_node("Estructura/" + CASCARA_DEL_EDIFICIO)
-	var edificio: AABB = cascara.global_transform * cascara.get_aabb()
-	var caja: Node3D = almacen.get_node("Objetos/CajaDeTraslado")
-	(
-		assert_bool(edificio.has_point(caja.global_position))
-		. override_failure_message(
-			"la caja quedó en %s, afuera del edificio %s" % [caja.global_position, edificio]
-		)
-		. is_true()
-	)
-
-
-func test_la_caja_de_traslado_no_se_ve() -> void:
-	# El cuerpo es un blockout —una caja gris de 0.9 × 0.3 × 0.5— parado a metro y medio del
-	# spawn, y la escena ya está modelada. Se oculta en vez de borrarse porque `almacen.gd` le
-	# pide `mostrar()` en dos lugares: sin el nodo, ese `@export` queda en `null` y revienta.
-	var almacen: Node3D = auto_free(load(ESCENA_DEL_ALMACEN).instantiate())
-	add_child(almacen)
-	await get_tree().process_frame
-	var caja: Node3D = almacen.get_node("Objetos/CajaDeTraslado")
-	assert_bool(caja.is_visible_in_tree()).is_false()
+	assert_bool(almacen.has_node("Objetos/CajaDeTraslado")).is_false()
+	var clases: Array[String] = []
+	for clase: Dictionary in ProjectSettings.get_global_class_list():
+		clases.append(String(clase["class"]))
+	assert_array(clases).not_contains(["CajaDeTraslado", "CargaDeLaCaja"])
 
 
 func test_el_cableado_le_da_la_hora_al_reloj_de_mesa_y_no_al_hud() -> void:
@@ -541,7 +525,7 @@ func test_el_cableado_de_reponer_llega_entero_hasta_los_huecos() -> void:
 	# tres: la raíz, el nodo instanciado que apunta afuera de su sub-escena, y el `@export` que
 	# la sub-escena ya traía y que sobrescribir uno de sus hermanos podría borrar.
 	var almacen := _almacen()
-	for propiedad in ["_repositor", "_carga", "_estante", "_caja_de_traslado"]:
+	for propiedad in ["_repositor", "_estante"]:
 		(
 			assert_object(almacen.get(propiedad))
 			. override_failure_message(
@@ -576,7 +560,6 @@ func test_el_cableado_de_reponer_llega_entero_hasta_los_huecos() -> void:
 	)
 	var repositor: Repositor = almacen.get_node("Servicios/Repositor")
 	assert_object(repositor.reloj).is_not_null()
-	assert_object(repositor.carga).is_not_null()
 	var estante: Node3D = almacen.get_node("Estructura/gondolanueva/StaticBody3D")
 	assert_bool(estante.has_node("Contenido")).is_true()
 	estante.mostrar(1)

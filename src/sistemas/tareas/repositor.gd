@@ -25,7 +25,6 @@ signal unidad_colocada(nodo: Node3D, producto: Producto, unidades: int)
 ## que `gate_de_capas.py` no ve un autoload nombrado por su nombre global, así que esa puerta
 ## cruzaría capas sin dejar rastro.
 @export var reloj: RelojDelTurno
-@export var carga: CargaDeLaCaja
 @export var agarre: Agarre
 
 var _estante: Estante = null
@@ -70,39 +69,3 @@ func pedir_colocar_de_la_mano(destino: Producto = null) -> void:
 	producto_colocado.emit(unidad.producto, _estante.productos_completos())
 	if _estante.completada():
 		reloj.completar(reloj.obligatoria(Tarea.Tipo.REPONER))
-
-
-## Intenta colocar una unidad de lo que haya arriba de la caja, y avisa cómo salió.
-##
-## Emite **una** de las dos señales y nunca las dos: emitirlas juntas dejaría a la escena
-## pintando un hueco nuevo y un cartel de «no entra» al mismo tiempo.
-##
-## La unidad se saca de la caja **después** de que el estante la aceptó. Al revés, un rechazo
-## dejaría al jugador con la caja vacía y el estante sin llenar, sin un solo error.
-func pedir_colocar() -> void:
-	if _estante == null or reloj == null or carga == null:
-		# Un cableado incompleto es un `.tscn` mal armado y no un rechazo del juego: emitir
-		# `colocacion_rechazada` acá le diría al jugador que eso no va en el estante, que sería
-		# falso. Quien caza esto es `test/escenas/almacen_test.gd`.
-		push_error("Repositor sin cablear: revisar almacen.tscn")
-		return
-	var producto := _proximo_de_la_caja()
-	var motivo := _estante.colocar(producto)
-	if motivo != Estante.Rechazo.NINGUNO:
-		colocacion_rechazada.emit(motivo)
-		return
-	carga.caja().sacar()
-	producto_colocado.emit(producto, _estante.productos_completos())
-	if _estante.completada():
-		reloj.completar(reloj.obligatoria(Tarea.Tipo.REPONER))
-
-
-## Lo que está arriba de todo en la caja, **sin sacarlo**, o `null` si la caja está vacía.
-##
-## Ese `null` no es un caso especial: el estante lo rechaza por el mismo camino que a un producto
-## que no acepta, así que acá no hay que decidir nada.
-func _proximo_de_la_caja() -> Producto:
-	var contenido := carga.caja().contenido()
-	if contenido.is_empty():
-		return null
-	return contenido[-1]

@@ -1,6 +1,5 @@
 [gd_scene format=3]
 
-[ext_resource type="PackedScene" path="res://src/escenas/objetos/caja_de_traslado.tscn" id="9_caja_de_traslado"]
 [ext_resource type="PackedScene" path="res://src/escenas/objetos/caja_de_productos.tscn" id="11_caja_de_productos"]
 [ext_resource type="PackedScene" path="res://src/escenas/objetos/objeto_agarrable.tscn" id="22_agarrable"]
 [ext_resource type="Resource" path="res://src/dominio/almacen/trapeador.tres" id="23_trapeador"]
@@ -10,10 +9,6 @@
 [ext_resource type="Resource" path="res://src/dominio/almacen/bolsa_de_basura_3.tres" id="28_bolsa3"]
 
 [node name="Objetos" type="Node3D"]
-
-[node name="CajaDeTraslado" parent="." instance=ExtResource("9_caja_de_traslado")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.5, 0.152, 3)
-visible = false
 
 [node name="Trapeador" parent="." instance=ExtResource("22_agarrable")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.5, 0.5, -4)
