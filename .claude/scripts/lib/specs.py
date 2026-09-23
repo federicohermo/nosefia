@@ -46,6 +46,9 @@ _ENCABEZADO = re.compile(r"^###\s+((?:BR|AC)-[A-Z]{3}-\d{3})\b(.*)$", re.MULTILI
 #: Las reglas que un criterio dice verificar: `*(verifica BR-CHK-001, BR-CHK-002)*`.
 _VERIFICA = re.compile(r"BR-[A-Z]{3}-\d{3}")
 
+#: La marca de un ID retirado. Sólo la marca: «retirar una unidad» es vocabulario del juego.
+_RETIRADO = re.compile(r"\*Retirad[ao]\*", re.IGNORECASE)
+
 
 @dataclass
 class Spec:
@@ -105,6 +108,11 @@ def leer_spec(ruta: Path, texto: str) -> Spec:
 
     for encabezado in _ENCABEZADO.finditer(texto):
         identificador = encabezado.group(1)
+        if _RETIRADO.search(encabezado.group(2)):
+            problemas.append(
+                f"{_relativa(ruta)}: `{identificador}` dice «Retirada». Retirar es borrar: se "
+                "borra entero, con su test, y el número queda como hueco"
+            )
         if spec.codigo and not identificador.startswith(("BR-" + spec.codigo, "AC-" + spec.codigo)):
             problemas.append(
                 f"{_relativa(ruta)}: `{identificador}` no lleva el código de la capacidad "
