@@ -79,10 +79,10 @@ Cada agente recibe, literal:
 - **`GODOT_BIN` tiene que estar en el entorno del carril**: sin ella el nodo `tests` sale **rojo**,
   no salteado. Ese salteo vence — existe sólo mientras no haya un solo `*_test.gd`, y hay muchos.
   Un carril que sale a buscar un salteado que nunca va a aparecer pierde una vuelta.
-- **La importación ya no es un paso del carril.** `.godot/` está en el `.gitignore` y ningún
-  worktree nuevo lo tiene, pero desde el 2026-09-18 el nodo `tests` importa antes de correr la
-  suite, siempre. Cuesta 6 s sobre los ~180 s del nodo, y evita los dos rojos que costaba
-  olvidarlo: `Could not find type "GdUnitTestCIRunner"` en un worktree nuevo, e
+- **Con `verificar.py`, la importación no es un paso del carril.** `.godot/` está en el
+  `.gitignore` y ningún worktree nuevo lo tiene, pero desde el 2026-09-18 el nodo `tests` importa
+  antes de correr la suite, siempre. Cuesta 6 s sobre los ~180 s del nodo, y evita los dos rojos
+  que costaba olvidarlo: `Could not find type "GdUnitTestCIRunner"` en un worktree nuevo, e
   `Identifier "X" not declared` con el archivo ya en disco cada vez que se escribe un
   `class_name`. Medido el 2026-08-31: lo pisaron los cuatro carriles del lote.
 - **Y va en PowerShell porque desde Bash no corre, y eso hay que decírselo.** En un worktree
@@ -98,7 +98,7 @@ Cada agente recibe, literal:
 - **Dale al carril el comando del conteo crudo, no sólo la orden de mirarlo.** `verificar.py` **no
   imprime** el `Executed test suites: (N/N)`. **La primera línea importa**: `verificar.py` lo
   hace solo, pero este comando no, y en un worktree nuevo sin ella sale
-  `GdUnitTestCIRunner not declared`. Medido el 2026-09-23: lo pisaron los dos carriles.
+  `Could not find type "GdUnitTestCIRunner"`. Medido el 2026-09-23: lo pisaron los dos carriles.
 
   ```powershell
   & $env:GODOT_BIN --path . --headless --import
@@ -148,7 +148,8 @@ le faltó. Esperá a que vuelvan todos antes del reporte.
 
 - **Las ediciones fuera de carril**, en serie, para que el diff se lea.
 - **El lazo, y es del padre por construcción**: si dos carriles corrigen el mismo `SKILL.md` a la
-  vez, se pisan sin conflicto visible.
+  vez, se pisan sin conflicto visible. Sale en su propio PR `harness/` desde `staging`, no en el PR
+  de un carril: el issue del carril no lo cubre.
 - **El contrato de la capacidad, si dos carriles lo editaron.** `specs/` está trackeado, así que
   dos carriles que agregan una regla a la misma capacidad dan un conflicto de merge de verdad —
   que es mejor que el silencio, pero lo resuelve el padre.
