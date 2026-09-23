@@ -95,10 +95,6 @@ turno entero.
 CUANDO se lee la hora, el sistema DEBE truncar al minuto y nunca redondear hacia arriba. Con cero
 o menos de turno, DEBE leer la hora de cierre: nunca una hora pasada del cierre.
 
-### BR-SHF-013 — *Retirada*
-
-La última media hora ya no avisa. El reloj no cambia de tono.
-
 ### BR-SHF-014 — La lectura es la hora de la noche
 
 CUANDO se lee el reloj, el sistema DEBE contestar la hora de apertura más lo que ya pasó del
@@ -176,10 +172,6 @@ cadena vacía, y no `"08:00"`.
 
 DADO `43141.0` segundos restantes ENTONCES el reloj lee `"20:00"`; con `43140.0`, `"20:01"`; con
 `-10.0`, `"08:00"`.
-
-### AC-SHF-015 — *Retirado* *(verifica BR-SHF-013)*
-
-El aviso de la última media hora no existe más.
 
 ### AC-SHF-016 — La hora de la noche *(verifica BR-SHF-014)*
 
