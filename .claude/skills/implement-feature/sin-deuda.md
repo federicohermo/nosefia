@@ -139,6 +139,7 @@ entregable más caro y el único que hace que el hallazgo no vuelva.
 | una tabla de valores que **no cierra consigo misma** —dos filas que implican duraciones distintas, o una hora de cierre que no es la apertura más la duración— | `to-spec` y `to-issue` — cada fila se recalcula desde la regla antes de escribirla, y las dos puntas se derivan, no se copian de la ficha |
 | un issue sin límites de archivo, o con límites que no se cruzaron contra el árbol de hoy | `to-issue` |
 | un archivo en «Sólo lectura» que **nombra por ruta** algo que el issue deja renombrar | `to-issue` — el `rg` de los límites se corre también sobre los comentarios |
+| un archivo en «Sólo lectura» cuyo comentario **describe en prosa** el comportamiento que el issue quita | `to-issue` — el `rg` busca también cómo lo dice la prosa, no sólo los identificadores |
 | dos issues que se pisan la misma escena | `to-issue` — un `.tscn` compartido se ordena, no se paraleliza |
 | un issue que cambia lo que el juego hace y declara «Spec: ninguno» | `to-issue` — el tipo se decidió sin la prueba del spec |
 | una ficha verde de Notion que se cayó del lote sin motivo escrito | `features-to-issues` — el reparto no se mostró entero |
