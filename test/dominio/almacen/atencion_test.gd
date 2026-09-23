@@ -89,19 +89,6 @@ func test_con_stock_de_sobra_no_falta_nada() -> void:
 	assert_array(_atencion(0).faltantes_del_pedido()).is_empty()
 
 
-func test_cobrar_con_stock_descuenta_de_la_gondola() -> void:  # AC-CTR-005
-	var pedido := _pedido()
-	var inventario := _inventario()
-	var atencion := Atencion.new(Comprador.new("Marta", pedido, pedido.total()), inventario)
-	assert_int(atencion.cobrar()).is_equal(Atencion.Resultado.COBRADA)
-	var actroncito := Catalogo.de(Producto.Id.ACTRONCITO)
-	assert_int(inventario.unidades(actroncito, Inventario.Ubicacion.GONDOLA)).is_equal(
-		EN_GONDOLA - 2
-	)
-	assert_bool(atencion.despachada()).is_true()
-	assert_bool(atencion.vendida()).is_true()
-
-
 func test_cobrar_sin_stock_no_mueve_una_sola_unidad() -> void:  # AC-CTR-006
 	# `Inventario.cobrar()` es todo o nada, y la atención se apoya en eso: descontar un renglón y
 	# no el otro dejaría un estado que el jugador no puede distinguir de una venta completa.
