@@ -157,8 +157,8 @@ func test_cobrar_sobre_una_despachada_a_mano_no_vende() -> void:
 
 
 func test_vender_no_deshace_la_unidad_que_esta_en_la_mano() -> void:  # AC-CTR-016
-	# La unidad en la mano sigue en el depósito hasta que se coloca. Una venta que la contara
-	# como vendible dejaría al jugador con una unidad que no tiene de dónde salir.
+	# La unidad en la mano cuenta una vez: en el depósito y en lo que a la góndola le falta. Si
+	# `retirar()` la sacara del depósito, quedaría 1 vendible y esta venta se rechazaría.
 	var producto := Producto.new(Producto.Id.ACTRONCITO, "Actroncito", 2500, 8)
 	var productos: Array[Producto] = [producto]
 	var inventario := Inventario.new(productos)
