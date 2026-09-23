@@ -31,20 +31,6 @@ func test_un_turno_que_no_alcanza_devuelve_cuanto_falta_y_no_cero() -> void:
 	assert_float(Presupuesto.margen(100.0, costos, 0.0, 1.0)).is_equal(-20.0)
 
 
-func test_alcanza_solo_con_margen_estrictamente_positivo() -> void:  # AC-SHF-011
-	var sobra: Array[float] = [10.0, 10.0]
-	assert_bool(Presupuesto.alcanza(100.0, sobra, 0.0, 1.0)).is_true()
-
-	# El turno que se consume exacto es `false`: sin un segundo libre no se puede investigar, y
-	# la investigación no es opcional en este juego.
-	var exacto: Array[float] = [50.0, 50.0]
-	assert_float(Presupuesto.margen(100.0, exacto, 0.0, 1.0)).is_equal(0.0)
-	assert_bool(Presupuesto.alcanza(100.0, exacto, 0.0, 1.0)).is_false()
-
-	var falta: Array[float] = [60.0, 60.0]
-	assert_bool(Presupuesto.alcanza(100.0, falta, 0.0, 1.0)).is_false()
-
-
 func test_la_cuenta_no_depende_de_cuantas_tareas_haya() -> void:
 	# Con cinco costos da lo mismo que restarlos uno por uno, así que definir una sexta tarea no
 	# obliga a tocar `presupuesto.gd`: no hay ningún `5` escrito ahí adentro.

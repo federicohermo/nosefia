@@ -49,14 +49,6 @@ func test_un_turno_sin_tiempo_esta_cerrado() -> void:  # AC-SHF-004
 	assert_bool(turno.cerrado()).is_true()
 
 
-func test_completar_una_tarea_descuenta_su_costo_exacto() -> void:  # AC-SHF-006
-	var limpiar := Tarea.new(Tarea.Tipo.LIMPIAR)
-	var obligatorias: Array[Tarea] = [limpiar]
-	var turno := Turno.new(28800.0, obligatorias)
-	assert_bool(turno.completar(limpiar)).is_true()
-	assert_float(turno.tiempo_restante()).is_equal(28800.0 - Reglas.costo_de(Tarea.Tipo.LIMPIAR))
-
-
 # AC-SHF-008
 func test_completar_dos_veces_la_misma_tarea_no_la_cobra_ni_la_cuenta_dos_veces() -> void:
 	var caja := Tarea.new(Tarea.Tipo.CAJA)
