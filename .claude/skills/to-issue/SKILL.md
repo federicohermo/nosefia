@@ -88,9 +88,6 @@ Lo que más se rompe:
 - **Si el issue deja renombrar algo, el `rg` de los límites se corre también sobre los
   comentarios.** Un archivo en «Sólo lectura» que nombra por ruta lo que se renombra queda
   mintiendo, y el implementador no lo puede tocar.
-- **Si el issue cambia o quita un comportamiento, el `rg` busca también cómo lo dice la
-  prosa**, no sólo sus identificadores. Un comentario que dice «descuenta el tiempo» no nombra
-  ningún `COSTO_DE_*`, y queda falso igual. El archivo que lo lleva va a «Se escribe».
 
 ## Paso 4 — Mostrar y publicar
 
