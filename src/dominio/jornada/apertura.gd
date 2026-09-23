@@ -40,9 +40,9 @@ static func turno_de_la_jornada(obligatorias: Array[Tarea]) -> Turno:
 	return Turno.new(Reglas.DURACION_DEL_TURNO, obligatorias)
 
 
-## La mercadería con la que arranca la noche: todo el depósito y la góndola vacía.
+## La mercadería con la que arranca la noche: todo el depósito y nada repuesto.
 ##
-## **Que la góndola arranque en cero es lo que hace que reponer sea una tarea.** Con algo puesto,
+## **Que la góndola arranque en cero es lo que hace que reponer sea una tarea.** Con algo repuesto,
 ## la primera noche estaría medio hecha y el jugador no tendría por qué caminar hasta el fondo.
 ##
 ## Se arma sobre `Catalogo.todos()` y no sobre una lista escrita acá: un producto que no llegue

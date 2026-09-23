@@ -63,7 +63,7 @@ func test_el_cuerpo_de_la_caja_se_puede_llevar() -> void:
 
 func test_la_caja_no_decide_nada_sobre_el_cupo() -> void:
 	# El criterio pide que este archivo no tenga un solo `if`, `match` ni `cupo`: cuántas entran
-	# y por qué se rechaza son preguntas de `CajaDeTraslado`, que es donde tienen test.
+	# y por qué se rechaza son preguntas del dominio, que es donde tienen test.
 	var texto := FileAccess.get_file_as_string(SCRIPT)
 	assert_str(texto).is_not_empty()
 	for patron in ["if", "match", "cupo"]:

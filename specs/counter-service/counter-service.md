@@ -59,8 +59,8 @@ distingue de una venta completa.
 
 ### BR-CTR-007 — Se puede despachar sin vender
 
-El sistema DEBE permitir despachar a un comprador sin cobrarle nada. La góndola arranca vacía la
-primera noche, así que exigir la venta encadenaría atender con reponer y dejaría la primera noche
+El sistema DEBE permitir despachar a un comprador sin cobrarle nada. La góndola arranca sin nada
+repuesto, así que exigir la venta encadenaría atender con reponer y dejaría la primera noche
 imposible de cerrar.
 
 ### BR-CTR-008 — Un comprador se despacha una vez

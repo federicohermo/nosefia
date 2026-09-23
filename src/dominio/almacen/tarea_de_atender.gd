@@ -6,8 +6,8 @@
 ## rompería casos que no hablan de él. Es la misma decisión que tomó `Turno` con las obligatorias.
 ##
 ## **Se completa con todos despachados, se les haya vendido o no.** Vender exige stock en góndola
-## y la góndola arranca vacía, así que exigirlo encadenaría esta obligatoria con reponer y dejaría
-## la primera noche imposible de cerrar en cinco.
+## y la góndola arranca sin nada repuesto, así que exigirlo encadenaría esta obligatoria con
+## reponer y dejaría la primera noche imposible de cerrar en cinco.
 class_name TareaDeAtender
 extends RefCounted
 
