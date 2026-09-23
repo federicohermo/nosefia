@@ -22,7 +22,6 @@ depósito son dos lugares distintos, y mover mercadería del fondo al estante cu
 | **Unidad** | una pieza de un producto, la que se agarra con la mano | stock, cantidad |
 | **Depósito** | el fondo, donde arranca la mercadería de la noche | almacén, bodega |
 | **Caja del depósito** | la caja de un solo producto de la que se saca de a una unidad | cajón, contenedor |
-| **Caja de traslado** | la caja mixta que se carga para llevar varias cosas a la vez | carrito |
 | **Góndola** | el estante del local, y lo único desde donde se vende | vitrina, exhibidor |
 | **Umbral** | cuántas unidades pide la góndola de ese producto. Es también su cupo | mínimo, tope |
 | **Faltante** | un producto con la góndola por debajo de su umbral | agotado, sin stock |
@@ -80,21 +79,17 @@ CUANDO se coloca una unidad, el sistema DEBE rechazar por **producto no aceptado
 propiedad del producto y vale siempre; el segundo se resuelve vendiendo; el tercero depende de
 cuánta mercadería trajo la noche.
 
-### BR-STK-010 — La caja de traslado lleva ocho
+### BR-STK-010 — *Retirada*
 
-La caja DEBE aceptar **8 productos** y rechazar el noveno. Es lo que convierte reponer en una
-decisión: sin caja, reponer es un viaje por unidad.
+La caja de traslado ya no existe. No hay una caja mixta de ocho.
 
-### BR-STK-011 — La caja se descarga por arriba
+### BR-STK-011 — *Retirada*
 
-CUANDO se saca algo de la caja, el sistema DEBE devolver **lo último que entró**. Vacía devuelve
-«no hay nada» en vez de romperse.
+La caja de traslado ya no existe. Nada se descarga por arriba.
 
-### BR-STK-012 — La caja rechaza lo que no es un producto
+### BR-STK-012 — *Retirada*
 
-SI lo que se ofrece a la caja no es un producto, ENTONCES el sistema DEBE rechazarlo y decir ese
-motivo, **incluso si la caja está llena**: el problema más cerca de quien lo ofrece es el que se
-nombra.
+La caja de traslado ya no existe. No hay una caja que rechace lo que no es un producto.
 
 ### BR-STK-013 — Reponer está cumplido cuando no falta nada
 
@@ -170,20 +165,17 @@ DADO un estante que no acepta el producto, lleno y sin depósito a la vez CUANDO
 ENTONCES el motivo es producto no aceptado; aceptado y lleno, estante lleno; aceptado, con lugar
 y sin depósito, sin unidades en depósito.
 
-### AC-STK-010 — El noveno no entra *(verifica BR-STK-010)*
+### AC-STK-010 — *Retirado* *(verifica BR-STK-010)*
 
-DADO una caja con 8 productos CUANDO se guarda el noveno ENTONCES se rechaza por caja llena y la
-caja sigue con 8.
+La caja de traslado no existe más.
 
-### AC-STK-011 — Lo último que entró es lo primero que sale *(verifica BR-STK-011)*
+### AC-STK-011 — *Retirado* *(verifica BR-STK-011)*
 
-DADO una caja con A y después B CUANDO se saca ENTONCES sale B; una caja vacía contesta «no hay
-nada».
+La caja de traslado no existe más.
 
-### AC-STK-012 — La caja llena igual nombra lo que no es un producto *(verifica BR-STK-012)*
+### AC-STK-012 — *Retirado* *(verifica BR-STK-012)*
 
-DADO una caja llena CUANDO se le ofrece algo que no es un producto ENTONCES el motivo es «no es
-un producto» y no «caja llena».
+La caja de traslado no existe más.
 
 ### AC-STK-013 — Reponer cumplido *(verifica BR-STK-013)*
 
@@ -222,13 +214,12 @@ unidades sin colocarlas ENTONCES la tercera se niega; y colocar esas 2 no habili
 - **Entrada:** los productos que existen, y los pedidos de ingresar, mover, cobrar y registrar.
 - **Salida:** cuántas unidades hay por ubicación, qué falta, si cada obligatoria está cumplida, y
   el motivo de cada rechazo.
-- **Falla:** las cantidades no positivas se ignoran; el cobro sin stock no mueve nada; la caja
-  vacía y el producto inexistente contestan «no hay» en vez de romper.
+- **Falla:** las cantidades no positivas se ignoran; el cobro sin stock no mueve nada; el producto
+  inexistente contesta «no existe» en vez de romper.
 
 ## Señales
 
-- El producto colocado en la góndola, el producto guardado en la caja y la unidad retirada del
-  depósito.
+- El producto colocado en la góndola y la unidad retirada del depósito.
 
 ## Dependencias
 
@@ -244,8 +235,7 @@ unidades sin colocarlas ENTONCES la tercera se niega; y colocar esas 2 no habili
   - Por qué sigue abierta: hoy son una lista fija. El GDD no dice si varían por noche.
   - Decide: el dueño del repo.
   - Bloquea: nada. Haría variable lo que `AC-STK-014` fija.
-- **OQ-STK-002 — ¿La caja de traslado sigue en el juego?**
-  - Por qué sigue abierta: las fichas describen sólo las cajas de un producto. La de traslado es
-    anterior y ninguna ficha la pide.
-  - Decide: el dueño del repo.
-  - Bloquea: nada. Retiraría `BR-STK-010` a `BR-STK-012`.
+- **OQ-STK-002 — *Cerrada*: la caja de traslado sale del juego.**
+  - Decisión: el dueño del repo la retiró el 2026-09-23. Ninguna ficha la pide, y reponer se
+    hace con las cajas de un producto.
+  - Efecto: `BR-STK-010` a `BR-STK-012` quedan retiradas.
