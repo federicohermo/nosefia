@@ -6,7 +6,7 @@ Uso, desde la raíz del repo:
     python .claude/scripts/limpiar_worktrees.py <ruta> [<ruta> ...]
 
 Ésta es la copia canónica. **Los dos batch que abren worktrees —`pr-review-batch` y
-`spec-implement-batch`— traen la suya en `scripts/`**, porque un skill trae su implementación
+`implement-batch`— traen la suya en `scripts/`**, porque un skill trae su implementación
 completa y uno que dependa de `.claude/scripts/` deja de funcionar apenas viaja solo. Que las tres
 copias no se separen lo verifica `test_copias_de_skills.py`, no la disciplina de nadie.
 
