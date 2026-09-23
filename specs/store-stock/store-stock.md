@@ -80,18 +80,6 @@ CUANDO se coloca una unidad, el sistema DEBE rechazar por **producto no aceptado
 propiedad del producto y vale siempre; el segundo se resuelve vendiendo; el tercero depende de
 cuánta mercadería trajo la noche.
 
-### BR-STK-010 — *Retirada*
-
-La caja de traslado salió del juego.
-
-### BR-STK-011 — *Retirada*
-
-La caja de traslado salió del juego.
-
-### BR-STK-012 — *Retirada*
-
-La caja de traslado salió del juego.
-
 ### BR-STK-013 — Reponer está cumplido cuando no falta nada
 
 CUANDO ningún producto aceptado por el estante está por debajo de su umbral, el sistema DEBE dar
@@ -165,18 +153,6 @@ DADO un estante que no acepta el producto, lleno y sin depósito a la vez CUANDO
 ENTONCES el motivo es producto no aceptado; aceptado y lleno, estante lleno; aceptado, con lugar
 y sin depósito, sin unidades en depósito.
 
-### AC-STK-010 — *Retirado* *(verifica BR-STK-010)*
-
-La caja de traslado no existe más.
-
-### AC-STK-011 — *Retirado* *(verifica BR-STK-011)*
-
-La caja de traslado no existe más.
-
-### AC-STK-012 — *Retirado* *(verifica BR-STK-012)*
-
-La caja de traslado no existe más.
-
 ### AC-STK-013 — Reponer cumplido *(verifica BR-STK-013)*
 
 DADO un estante con todos sus productos en su umbral ENTONCES la obligatoria está cumplida; con
@@ -235,10 +211,6 @@ unidades sin colocarlas ENTONCES la tercera se niega; y colocar esas 2 no habili
   - Por qué sigue abierta: hoy son una lista fija. El GDD no dice si varían por noche.
   - Decide: el dueño del repo.
   - Bloquea: nada. Haría variable lo que `AC-STK-014` fija.
-- **OQ-STK-002 — *Cerrada*: la caja de traslado sale del juego.**
-  - Decisión: el dueño del repo la retiró el 2026-09-23. Ninguna ficha la pide, y reponer se
-    hace con las cajas de un producto.
-  - Efecto: `BR-STK-010` a `BR-STK-012` quedan retiradas.
 - **OQ-STK-003 — ¿La mercadería expuesta entra en el inventario?**
   - Por qué sigue abierta: hoy la góndola arranca en cero y lo expuesto no se cuenta.
   - Decide: el dueño del repo.
