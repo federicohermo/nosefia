@@ -7,7 +7,8 @@ un módulo así en la raíz del harness lo importaría `unittest discover` y la 
 
 ## Las opciones no son gusto: son las que reproducen el par
 
-Están medidas reexportando hasta dar con los mismos bytes que el `.glb` commiteado. Formato GLB,
+Están medidas reexportando hasta dar con el `.glb` commiteado. Los bytes no coinciden nunca: dos
+exportaciones seguidas del mismo `.blend` difieren en el último bit de algunas UV. Formato GLB,
 imágenes AUTO, `export_apply`, `use_visible`, `export_yup`, sin cámaras ni luces.
 
 **`use_visible` importa**: sin él entran los objetos de la colección oculta, que no son parte del
@@ -17,9 +18,10 @@ juego.
 
 Son **Geometry Nodes llamados `Array`**, no modificadores de tipo `ARRAY`: apagar por tipo no
 apaga ninguno y los productos salen multiplicados igual. Y el nombre exacto tampoco alcanza:
-Blender numera el duplicado, así que hay `Array.001` — 34 de ellos acá — y cada uno que queda
-prendido duplica su producto. La regla está en `lib/blender.es_un_array()`, con su medición. Blender 5.0 no realizaba esas instancias
-al exportar y 5.2 sí, así que con el modificador activo el producto sale como una fila entera.
+Blender numera el duplicado, así que hay `Array.001`, y cada uno que queda prendido duplica su
+producto. La regla está en `lib/blender.es_un_array()`, con su medición. Blender 5.0 no realizaba
+esas instancias al exportar y 5.2 sí, así que con el modificador activo el producto sale como una
+fila entera.
 
 El juego necesita **una unidad**: el puesto de reposición toma la superficie 0 de cada grupo como
 el modelo de una y apila copias separadas por su AABB. Con la fila entera, dos productos vecinos

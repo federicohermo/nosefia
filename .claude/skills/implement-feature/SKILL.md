@@ -122,12 +122,12 @@ TDD, y también el de un `class_name` recién creado. La única señal es el con
 ```powershell
 & $env:GODOT_BIN --path . --headless -s -d --remote-debug tcp://127.0.0.1:0 `
   res://addons/gdUnit4/bin/GdUnitCmdTool.gd -a test --continue --ignoreHeadlessMode `
-  -rd reports | Select-String "Executed test suites"
+  -rd reports 2>$null | Select-String "Executed test suites"
 ```
 
 **Va en PowerShell y no en Bash**, porque en un worktree aislado Bash rechaza cualquier forma de
-invocar Godot como comando. Y `--remote-debug tcp://127.0.0.1:0` contesta dos `ERROR:` que **no
-son un fallo**: la corrida sigue y escribe su `(N/N)`.
+invocar Godot como comando. **Y el `2>$null` no se saca**: PowerShell no pasa el stderr de Godot
+por `Select-String`, y sin él la corrida devuelve 4,5 MB. Medido el 2026-09-24.
 
 Ese `(N/N)` tiene que dar igual que `find test -name '*_test.gd' | wc -l`. Si da menos, hay una
 suite que no corrió y el nodo verde no lo dice.
@@ -142,7 +142,9 @@ después de crear cada archivo con `class_name` nuevo.
 todavía no existe, el error de script **aborta la función** y gdUnit4 no cuenta ninguna aserción
 fallida: el caso sale **`PASSED`** por no haber llegado a afirmar nada. Medido el 2026-09-01: **4
 de 5 casos en verde** con la escena sin escribir. El «falla por lo que se espera» se verifica en el
-`ERROR: Failed loading resource` de la salida cruda.
+`ERROR: Failed loading resource` de la salida cruda. Ese `ERROR:` va por stderr: se lee corriendo
+sólo esa suite, con `-a <ruta>` y sin `2>$null`. Los dos `ERROR:` de `--remote-debug` no son un
+fallo.
 
 **Y `--import` reescribe `project.godot`.** El editor no guarda un ajuste igual a su valor por
 defecto: lo borra del archivo. Medido el 2026-09-14 con

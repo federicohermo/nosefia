@@ -49,7 +49,7 @@ Si el tipo no está claro, preguntá. Es la decisión que define la rama y el re
 **Los límites de archivo y los criterios salen del árbol de hoy, no de la memoria.**
 
 ```bash
-rg -n "<lo que el issue va a tocar>" src/ test/
+rg -n "<lo que el issue va a tocar>" src/ test/ docs/   # una guía también describe la regla
 gh issue list --state open --limit 50      # si ya hay uno igual, no se abre otro
 ```
 
@@ -79,6 +79,9 @@ Lo que más se rompe:
   `Depende de #N`.
 - **El primer comando de verificación es siempre `python .claude/scripts/verificar.py`.** El
   veredicto sale del código de salida, nunca de un grep.
+- **Un comando que prueba una ausencia se corre hoy, y devuelve todo lo que el criterio saca.**
+  Si deja casos afuera, se amplía. Si no se puede, el criterio nombra el test que los cubre. En
+  el #140, el `rg` de la verificación no veía los productos de la raíz del modelo.
 - **Un valor de balance no se inventa.** Un costo, un tiempo o un umbral sale del GDD o del
   dominio. Si ninguno lo fija, el criterio lo nombra como pregunta abierta y `to-spec` lo
   registra. Un número propuesto por el agente se lee como decidido.

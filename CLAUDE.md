@@ -195,7 +195,7 @@ su arreglo.
   número que vale es el `Executed test suites: (N/N)` de la salida cruda —
   [.claude/rules/tests.md](./.claude/rules/tests.md).
 
-Y dos del modelo, que no tienen síntoma legible:
+Y las del modelo, que no tienen síntoma legible:
 
 - **El `.glb` tiene que traer UNA unidad de cada producto, y por dos caminos distintos.** Los
   modificadores `Array` se apagan **por nombre** —son Geometry Nodes llamados así, y apagar por
@@ -210,6 +210,3 @@ Y dos del modelo, que no tienen síntoma legible:
 - **La caché de `.godot/imported/` declara verde un modelo que ya cambió.** Costó dos
   diagnósticos equivocados el 2026-09-15. Antes de creerle a un verde que dependa del modelo:
   borrar la caché del `.glb` y correr `--import`.
-
-Las dos, con su procedimiento y sus medidas, en
-[test_modelo_actualizado.py](./.claude/scripts/tests/test_modelo_actualizado.py).

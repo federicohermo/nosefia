@@ -27,7 +27,8 @@ reescriben como reglas y criterios de la capacidad, sin nada propio de esa entre
 - **Actualizar** (ya existe): se produce el **delta**. Las reglas y los criterios nuevos llevan
   **IDs emitidos en continuación**, y **los existentes no se renumeran ni se reescriben** salvo
   que la entrevista haya resuelto explícitamente cambiarlos. El ID es la dirección: los issues y
-  los tests apuntan ahí.
+  los tests apuntan ahí. **La continuación sale del más alto que tuvo el spec**, borrados
+  incluidos: si se borró el último, `git log -p -- <spec>` lo muestra.
 - **Borrar** (la funcionalidad se quita del juego): el spec se borra **en su propio commit**, y
   en la misma rama se borran el código y los tests que lo citaban. La historia queda en git.
   Si otra capacidad dependía de ésta, su spec se actualiza en la misma corrida.
