@@ -1,6 +1,6 @@
 ---
 name: to-issue
-description: "Escribe y publica UN issue de No se fía con formato task-brief — el plan chico y descartable de un cambio puntual — y decide si ese cambio toca un spec. Usar apenas llega un pedido, un bug o una idea que se va a hacer, antes de abrir la rama; también con «abrí un issue», «armá el ticket» o la salida de shape en modo issue. Si el issue cambia lo que el juego tiene que hacer, después va to-spec. No escribe código ni specs."
+description: "Escribe y publica un issue de No se fía, o varios de una, con formato task-brief — el plan chico y descartable de un cambio puntual — y decide si cada cambio toca un spec. Usar apenas llega un pedido, un bug o una idea que se va a hacer, antes de abrir la rama; también con «abrí un issue», «armá el ticket» o la salida de shape en modo issue. Si el issue cambia lo que el juego tiene que hacer, después va to-spec. No escribe código ni specs."
 argument-hint: "[pedido | bug | idea]"
 ---
 
@@ -116,6 +116,21 @@ gh issue edit <N> --body-file <archivo del scratchpad>
 
 `numerar` escribe el número en la rama y revisa sin dejar pasar nada. El cuerpo no se commitea:
 el issue es la fuente.
+
+## Varios de una
+
+Con varios issues de una, antes de mostrar nada:
+
+1. **Cruzá las filas «Se escribe» de todos los borradores.** Si dos comparten un archivo, el que
+   no depende se publica primero. El otro dice `Depende de #N`, con el número ya publicado.
+   Hasta entonces nombra al primero por su título: `<issue>` no sirve, porque `numerar` lo
+   reemplaza por el número propio. Sin un archivo en común, el orden da igual y ninguno lleva
+   `Depende de`.
+2. **Dos issues que se bloquean entre sí son un solo cambio mal cortado.** Cortalo de nuevo antes
+   de publicar.
+3. **Corré `revisar` sobre cada borrador.** Todos tienen que salir con 0.
+4. **Mostrá todos los borradores enteros y esperá un solo sí sobre el lote.** Si el usuario
+   aprueba una parte, publicá sólo esa parte. Los demás borradores quedan en el scratchpad.
 
 ## Al cerrar
 
