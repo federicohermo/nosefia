@@ -2,6 +2,9 @@ extends GdUnitTestSuite
 
 const ALMACEN := preload("res://src/escenas/almacen.tscn")
 
+## Cuánto puede separarse una unidad horneada de la copia sobre la que está parada, en metros.
+const TOLERANCIA := 0.002
+
 
 func test_la_raiz_agrupa_por_rol_y_conserva_sus_enlaces() -> void:
 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
@@ -54,88 +57,42 @@ func test_la_computadora_tiene_apoyo_y_no_queda_tapada_por_otro_cuerpo() -> void
 	assert_object(golpe.get("collider")).is_same(cuerpo)
 
 
+## Recorre el modelo entero y no una lista: una lista prueba sólo sus nodos, y no ve un nodo
+## apagado de más.
 func test_el_surtido_fijo_no_muestra_stock_que_el_dominio_no_tiene() -> void:
 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
+	add_child(almacen)
+	var puesto: Node3D = almacen.get_node("ReposicionManual")
+	var disposicion: DisposicionDeLaGondola = puesto.get("disposicion")
+	var lugares := PackedVector3Array()
+	for bloque in disposicion.principales + disposicion.guias:
+		for indice in DisposicionDeLaGondola.copias(bloque):
+			lugares.append(
+				puesto.global_transform * DisposicionDeLaGondola.copia(bloque, indice).origin
+			)
 	var estructura := almacen.get_node("Estructura")
-	for nombre in [
-		"limpiador",
-		"gondolanueva/macumbas-este2",
-		"gondolanueva/petisas-este1",
-		"heladeranueva/bebida helada02-este4",
-		"heladeranueva_001/bebida helada02-001este4",
-		"gondolanueva2/Actroncito",
-		"gondolanueva2/durextra",
-		"gondolanueva/burgaloo",
-		"gondolanueva/Zucarachas",
-		"gondolanueva/snackpapas1_003",
-		"gondolanueva/malbardocig",
-		"gondolanueva/pringles3_002",
-		"gondolanueva/lataarvejas_002",
-		"gondolanueva/chisitos2",
-		"gondolanueva/oremos",
-		"gondolanueva/pepitos2_025",
-		"gondolanueva/wakas_021",
-		"heladeranueva/bebida helada02-este2",
-		"gondolanueva/cereal",
-		"gondolanueva2/fideos2",
-		"amargadito",
-		"cindolor",
-		"flimpof",
-		"donsaturados",
-		"petisas",
-		"macumbas",
-		"gondolanueva2/Zucarachas-2este0",
-		"gondolanueva/Zucarachas_001",
-		"gondolanueva/Zucarachas-fondo",
-		"gondolanueva2/alfajorescaja2-2oeste1",
-		"gondolanueva/alfajorescaja2",
-		"gondolanueva/alfajorescaja2-fondo",
-		"gondolanueva/alfajorescaja2-sur1",
-		"gondolanueva2/amargadito-2oeste0",
-		"heladeranueva_001/bebida helada02-001este1",
-		"heladeranueva_001/bebida helada02-001este2",
-		"heladeranueva_001/bebida helada02-001este3",
-		"heladeranueva/bebida helada02-este1",
-		"heladeranueva/bebida helada02-este3",
-		"gondolanueva2/burgaloo-2oeste3",
-		"gondolanueva/burgaloo-fondo",
-		"gondolanueva/burgaloo2",
-		"gondolanueva2/burgaloo3",
-		"gondolanueva2/cereal-2norte1",
-		"gondolanueva2/cereal-2norte2",
-		"gondolanueva2/cereal-2norte3",
-		"gondolanueva/cereal_001",
-		"gondolanueva2/cereal_002",
-		"cindolor-fondo",
-		"gondolanueva2/donsaturados-2oeste2",
-		"gondolanueva/fideos2_001",
-		"gondolanueva2/fideos3_",
-		"gondolanueva2/saladix-fondo",
-		"gondolanueva2/lataarvejas-2oeste0",
-		"gondolanueva/lataarvejas_001",
-		"gondolanueva/Zucarachas-fondo_025",
-		"gondolanueva2/oremos-2sur1",
-		"gondolanueva/oremos-fondo",
-		"gondolanueva/oremos-sur3",
-		"gondolanueva/oremos2",
-		"gondolanueva2/oremos3",
-		"gondolanueva/pepitos",
-		"gondolanueva2/pepitos2-2sur3",
-		"gondolanueva/pepitos2",
-		"gondolanueva2/petisas-2este1",
-		"gondolanueva2/pringles3-2este0",
-		"gondolanueva/pringles3",
-		"gondolanueva2/saladix-2oeste2",
-		"gondolanueva2/saladix",
-		"gondolanueva/saladix_001",
-		"gondolanueva/snackpapas1_002",
-		"gondolanueva2/wakas-2oeste3",
-		"gondolanueva2/wakas",
-		"gondolanueva/wakas_001",
-	]:
-		var malla: MeshInstance3D = estructura.get_node(nombre)
-		assert_bool(malla.visible).override_failure_message(nombre).is_false()
-		assert_int(malla.get_node("StaticBody3D").collision_layer).is_zero()
+	var contenido: Node3D = puesto.get("contenido")
+	for malla: MeshInstance3D in estructura.find_children("*", "MeshInstance3D", true, false):
+		if contenido.is_ancestor_of(malla):
+			continue
+		var ruta := str(estructura.get_path_to(malla))
+		# `limpiador` muestra un producto que el catálogo no tiene, y ningún dato del repo lo dice.
+		var oculta := ruta == "limpiador"
+		for lugar in lugares:
+			oculta = oculta or malla.global_position.distance_to(lugar) < TOLERANCIA
+		var falla := "se ve" if oculta else "está oculta fuera de la disposición"
+		(
+			assert_bool(malla.is_visible_in_tree())
+			. override_failure_message("%s %s" % [ruta, falla])
+			. is_equal(not oculta)
+		)
+		if oculta:
+			for cuerpo: PhysicsBody3D in malla.find_children("*", "PhysicsBody3D", true, false):
+				(
+					assert_int(cuerpo.collision_layer)
+					. override_failure_message("%s tiene colisión" % ruta)
+					. is_zero()
+				)
 	for ruta in ["base compu", "gondolanueva"]:
 		var malla: MeshInstance3D = estructura.get_node(ruta)
 		assert_object(malla.mesh).is_instanceof(ArrayMesh)

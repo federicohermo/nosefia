@@ -3,43 +3,18 @@ extends GdUnitTestSuite
 const MODELO := preload("res://assets/models/SEPT_JUEGOS_PROTOTIPO.glb")
 const CONTENIDO := preload("res://src/escenas/puestos/contenido_del_estante.tscn")
 const ESTRUCTURA := preload("res://src/escenas/puestos/estructura_del_almacen.tscn")
+const DISPOSICION := preload("res://src/escenas/puestos/disposicion_de_la_gondola.tres")
 
 ## Cuánto puede separarse un vértice de la colisión del mismo vértice de la malla, en metros.
 const SEPARACION_MAXIMA := 0.001
+
+## Cuánto puede separarse una unidad horneada de la copia sobre la que está parada, en metros.
+const TOLERANCIA := 0.002
 
 ## El lado de la celda con la que se buscan los vertices por cercanía, en metros. Un
 ## centímetro es diez veces la separación que se tolera: alcanza para que el par caiga en
 ## la celda propia o en una de al lado, y deja pocos vertices por celda.
 const CELDA := 0.01
-
-## Qué malla del modelo le toca a cada producto, en el orden de `Producto.Id`. Es el mapeo, y
-## está acá escrito a mano a propósito: si el orden del catálogo y el del contenido se separan,
-## `_preparar_modelos` le da a un producto el modelo de otro sin que nada lo diga.
-const DEL_MODELO := [
-	"gondolanueva2/Actroncito",
-	"gondolanueva2/durextra",
-	"gondolanueva/burgaloo",
-	"gondolanueva/Zucarachas",
-	"gondolanueva/snackpapas1_003",
-	"gondolanueva/malbardocig",
-	"gondolanueva/pringles3_002",
-	"gondolanueva2/alfajorescaja2-2oeste1",
-	"gondolanueva/lataarvejas_002",
-	"gondolanueva/chisitos2",
-	"gondolanueva/oremos",
-	"gondolanueva/pepitos2_025",
-	"gondolanueva2/saladix-2oeste2",
-	"gondolanueva/wakas_021",
-	"heladeranueva/bebida helada02-este2",
-	"gondolanueva2/cereal-2norte2",
-	"gondolanueva2/fideos2",
-	"amargadito",
-	"cindolor",
-	"flimpof",
-	"donsaturados",
-	"petisas",
-	"macumbas",
-]
 
 
 ## El mueble que se juega es el del modelo, sin copia en el medio.
@@ -140,14 +115,23 @@ func _distancia_mas_corta(casilleros: Dictionary, punto: Vector3) -> float:
 
 func test_el_contenido_conserva_material_y_textura_de_cada_producto() -> void:
 	var modelo: Node3D = auto_free(MODELO.instantiate())
+	add_child(modelo)
 	var contenido: Node3D = auto_free(CONTENIDO.instantiate())
-	for id in DEL_MODELO.size():
-		var copia: MeshInstance3D = contenido.get_child(id)
-		var original: MeshInstance3D = modelo.get_node(DEL_MODELO[id])
+	for producto in Catalogo.todos():
+		var copia: MeshInstance3D = contenido.get_child(producto.id)
+		var original := _del_modelo(modelo, producto)
+		if original == null:
+			continue
 		var material: StandardMaterial3D = copia.mesh.surface_get_material(0)
 		var previo: StandardMaterial3D = original.mesh.surface_get_material(0)
 		assert_object(material).override_failure_message(copia.name).is_not_null()
-		assert_object(material.albedo_texture).is_same(previo.albedo_texture)
+		# La disposición y el contenido salen de pasos distintos del pipeline: un hijo del
+		# contenido con la malla de otro producto lleva la textura del otro.
+		(
+			assert_object(material.albedo_texture)
+			. override_failure_message("%s: otra textura que su unidad del modelo" % copia.name)
+			. is_same(previo.albedo_texture)
+		)
 		var sueltos := _sin_par_con_su_uv(copia.mesh, original.mesh)
 		(
 			assert_int(sueltos)
@@ -169,13 +153,13 @@ func test_el_contenido_conserva_material_y_textura_de_cada_producto() -> void:
 ## el mismo vértice sale con un decimal distinto del que guardó el contenido.
 func test_reponer_recupera_los_productos_independientes_del_modelo() -> void:
 	var modelo: Node3D = auto_free(MODELO.instantiate())
+	add_child(modelo)
 	var contenido: Node3D = auto_free(CONTENIDO.instantiate())
-	assert_int(contenido.get_child_count()).is_equal(DEL_MODELO.size())
-	assert_int(Catalogo.todos().size()).is_equal(DEL_MODELO.size())
-	for id in DEL_MODELO.size():
-		var copia: MeshInstance3D = contenido.get_child(id)
-		var original: MeshInstance3D = modelo.get_node(DEL_MODELO[id])
-		assert_str(copia.name).is_equal(Catalogo.de(id).nombre)
+	for producto in Catalogo.todos():
+		var copia: MeshInstance3D = contenido.get_child(producto.id)
+		var original := _del_modelo(modelo, producto)
+		if original == null:
+			continue
 		assert_int(copia.mesh.get_surface_count()).is_equal(original.mesh.get_surface_count())
 		for superficie in original.mesh.get_surface_count():
 			var casilleros := _por_celda(
@@ -199,6 +183,30 @@ func test_reponer_recupera_los_productos_independientes_del_modelo() -> void:
 			. override_failure_message("%s: %s contra %s" % [copia.name, despues.size, antes.size])
 			. is_true()
 		)
+
+
+## La unidad horneada del producto: el único nodo del modelo parado sobre una copia de su bloque.
+##
+## **Por posición, y no por nombre ni por malla.** El nombre lo decide el `.glb`, y el importador
+## vuelve a empaquetar la malla: no es el mismo objeto que la del contenido. La disposición está
+## medida desde la raíz del modelo, así que el modelo va al árbol sin transformar.
+func _del_modelo(modelo: Node3D, producto: Producto) -> MeshInstance3D:
+	var bloque: PackedFloat32Array = DISPOSICION.principales[producto.id]
+	var encima: Array[MeshInstance3D] = []
+	for nodo: MeshInstance3D in modelo.find_children("*", "MeshInstance3D", true, false):
+		for indice in DisposicionDeLaGondola.copias(bloque):
+			var copia := DisposicionDeLaGondola.copia(bloque, indice)
+			if nodo.global_position.distance_to(copia.origin) < TOLERANCIA:
+				encima.append(nodo)
+				break
+	(
+		assert_int(encima.size())
+		. override_failure_message(
+			"%s: %d nodos del modelo sobre su bloque" % [producto.nombre, encima.size()]
+		)
+		. is_equal(1)
+	)
+	return null if encima.is_empty() else encima[0]
 
 
 ## Cuántos vértices de la copia no tienen en el modelo un vértice en el mismo lugar y con la
