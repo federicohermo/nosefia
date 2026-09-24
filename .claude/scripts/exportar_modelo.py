@@ -19,7 +19,10 @@ Una receta escrita es una receta que alguien va a seguir de memoria. Acá es un 
    vértice distintos para la misma malla**, así que exportar con otra deja un diff binario que no
    corresponde a ningún cambio del modelo.
 2. Corre `blender/exportar.py` adentro de Blender, que apaga los `Array` y exporta.
-3. **Borra la caché del `.glb` y reimporta con Godot.** Sin esto, los tests comparan contra la
+3. Escribe al lado del `.glb` la huella del `.blend` del que salió. Va en el mismo commit que el
+   `.glb`. `test_modelo_actualizado.py` la compara con el `.blend` del árbol. Es del `.blend` y
+   no del `.glb`: dos exportaciones del mismo `.blend` no dan los mismos bytes.
+4. **Borra la caché del `.glb` y reimporta con Godot.** Sin esto, los tests comparan contra la
    malla anterior y pasan.
 
 ## Lo que NO hace
@@ -30,6 +33,7 @@ verifican sus tests, y un diff binario que nadie mira es exactamente lo que ello
 no dejar pasar.
 """
 
+import hashlib
 import os
 import subprocess
 import sys
@@ -48,6 +52,7 @@ from lib.repo import RAIZ  # noqa: E402
 
 FUENTE = RAIZ / "assets" / "models" / "SEPT_JUEGOS_PROTOTIPO.blend"
 DESTINO = RAIZ / "assets" / "models" / "SEPT_JUEGOS_PROTOTIPO.glb"
+HUELLA = RAIZ / "assets" / "models" / "SEPT_JUEGOS_PROTOTIPO.glb.fuente"
 EXPORTADOR = Path(__file__).resolve().parent / "blender" / "exportar.py"
 
 #: La caché que Godot escribe por cada recurso importado. Se borra la del modelo y nada más:
@@ -59,6 +64,26 @@ def cache_del_modelo() -> list[Path]:
     if not CACHE.is_dir():
         return []
     return sorted(CACHE.glob(f"{DESTINO.name}-*"))
+
+
+def _huella_de(fuente: Path) -> str:
+    # El formato de `sha256sum`: la huella también se comprueba a mano, con `sha256sum -c`.
+    return f"{hashlib.sha256(fuente.read_bytes()).hexdigest()}  {fuente.name}\n"
+
+
+def escribir_huella(fuente: Path, huella: Path) -> None:
+    huella.write_text(_huella_de(fuente), encoding="utf-8", newline="\n")
+
+
+def desfasaje(fuente: Path, huella: Path) -> str | None:
+    """Por qué el `.glb` no salió de `fuente`, o `None` si salió de ella."""
+    if not huella.is_file():
+        motivo = f"falta {huella.name}"
+    elif huella.read_text(encoding="utf-8") != _huella_de(fuente):
+        motivo = f"{fuente.name} cambió desde la última exportación"
+    else:
+        return None
+    return f"{motivo}: corré python .claude/scripts/exportar_modelo.py"
 
 
 def exportar() -> int:
@@ -86,6 +111,8 @@ def exportar() -> int:
     for linea in proceso.stdout.splitlines():
         if linea.startswith(("modificadores", "exportado")):
             print(f"  {linea}")
+    escribir_huella(FUENTE, HUELLA)
+    print(f"  huella: {HUELLA}")
     return 0
 
 

@@ -2,8 +2,11 @@
 
 import json
 import struct
+import tempfile
 import unittest
+from pathlib import Path
 
+from exportar_modelo import FUENTE, HUELLA, desfasaje, escribir_huella
 from lib.repo import RAIZ
 
 # Firmas de archivo. El test sólo necesita saber que la imagen viaja adentro del `.glb`, y
@@ -20,6 +23,9 @@ class ModeloActualizado(unittest.TestCase):
         longitud = struct.unpack_from("<I", cls.glb, 12)[0]
         cls.modelo = json.loads(cls.glb[20 : 20 + longitud])
         cls.bin_inicio = 20 + longitud + 8
+
+    def test_el_glb_salio_del_blend_del_arbol(self) -> None:
+        self.assertIsNone(desfasaje(FUENTE, HUELLA))
 
     def test_las_mallas_conservan_uv_y_materiales(self):
         # Son mas que las mallas de Blender, y no es un error: con `export_apply` el exportador
@@ -58,3 +64,33 @@ class ModeloActualizado(unittest.TestCase):
                     cabecera.startswith(PNG) or cabecera.startswith(JPEG),
                     "la imagen no empieza por una firma PNG ni JPEG",
                 )
+
+
+class ElCicloDeLaHuella(unittest.TestCase):
+    """`escribir_huella` es lo que corre el exportador después de Blender: acá hace de exportar."""
+
+    def setUp(self) -> None:
+        carpeta = tempfile.TemporaryDirectory()
+        self.addCleanup(carpeta.cleanup)
+        self.fuente = Path(carpeta.name) / "modelo.blend"
+        self.huella = Path(carpeta.name) / "modelo.glb.fuente"
+        self.fuente.write_bytes(b"fuente uno")
+
+    def test_tocar_la_fuente_sin_exportar_da_rojo_y_exportar_la_vuelve_verde(self) -> None:
+        escribir_huella(self.fuente, self.huella)
+        self.assertIsNone(desfasaje(self.fuente, self.huella))
+        self.fuente.write_bytes(b"fuente dos")
+        self.assertIn("exportar_modelo.py", desfasaje(self.fuente, self.huella))
+        escribir_huella(self.fuente, self.huella)
+        self.assertIsNone(desfasaje(self.fuente, self.huella))
+
+    def test_reemplazar_la_fuente_por_otra_da_rojo(self) -> None:
+        escribir_huella(self.fuente, self.huella)
+        self.assertIsNone(desfasaje(self.fuente, self.huella))
+        otra = self.fuente.with_name("otra.blend")
+        otra.write_bytes(b"fuente dos")
+        otra.replace(self.fuente)
+        self.assertIsNotNone(desfasaje(self.fuente, self.huella))
+
+    def test_sin_huella_el_rojo_dice_que_hay_que_correr_el_exportador(self) -> None:
+        self.assertIn("exportar_modelo.py", desfasaje(self.fuente, self.huella))
