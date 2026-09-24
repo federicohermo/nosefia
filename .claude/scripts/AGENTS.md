@@ -48,6 +48,9 @@ Los del hook (`gate_de_rama.py`, `gate_de_worktrees.py`) **dejan pasar** ante cu
 propio, y lo dicen: un gate que rompe la sesión entera se desactiva el mismo día, y ahí no queda
 gate. Los otros —capas, tdd, specs— fallan cerrado, porque corren en `verificar.py` y ahí el rojo es el producto.
 
+`recordatorio_del_indice.py` también corre en el hook, pero **no es un gate**: nunca bloquea ni
+decide un permiso, sólo agrega contexto. Ante un error propio no dice nada.
+
 ## La consola va en UTF-8 y eso se configura
 
 Todo script de acá llama a `configurar()` de `lib/consola.py` antes de imprimir nada. En
