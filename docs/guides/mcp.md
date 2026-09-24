@@ -32,12 +32,6 @@ motivo, y las dos se apartan de la referencia:
 **`mapa_del_sistema` es la primera consulta de cualquier tarea.** Las otras contestan una
 pregunta puntual.
 
-**Un hook lo recuerda.** `recordatorio_del_indice.py` lo nombra al arrancar la sesión, y agrega
-un aviso a cada `Grep`, `Glob`, `Read` o `grep` por `Bash` sobre `src/` o `test/` hasta la
-primera consulta al índice. Avisa y no bloquea: un `Read` después del índice es lo correcto.
-Existe porque la regla era prosa, y una sesión con las herramientas del índice diferidas —sólo
-el nombre, sin la definición— exploró `src/` entero con `grep`.
-
 | Herramienta | Contesta |
 |---|---|
 | `mapa_del_sistema` | las capas, qué puede referenciar cada una, y las capacidades con su estado |

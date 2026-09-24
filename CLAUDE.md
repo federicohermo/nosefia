@@ -54,9 +54,7 @@ Detalle: [verificación](./docs/guides/verificacion.md).
 
 **`nosefia-index`, registrado en `.mcp.json`.** Consultarlo **antes** de un `Grep` o un `Read`
 para ubicar un símbolo, ver quién lo usa, saber qué se mueve si lo tocás o qué declara una
-escena. `mapa_del_sistema` es la primera consulta de cualquier tarea. Un hook,
-`recordatorio_del_indice.py`, lo recuerda en cada búsqueda sobre `src/` hasta la primera
-consulta: avisa, no bloquea.
+escena. `mapa_del_sistema` es la primera consulta de cualquier tarea. Un hook lo recuerda.
 
 No hay nada que instalar ni que regenerar: no tiene dependencias y lee el árbol en cada
 respuesta. Las herramientas y lo que **no** cubren, en [docs/guides/mcp.md](./docs/guides/mcp.md).

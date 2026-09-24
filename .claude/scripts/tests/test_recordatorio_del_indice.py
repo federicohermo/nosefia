@@ -1,8 +1,4 @@
-"""El recordatorio del índice: explorar `src/` sin consultar `nosefia-index` recibe un aviso.
-
-Lo puro —qué llamada explora el código— se ejerce sobre entradas inventadas. La marca de la
-sesión se ejerce sobre una carpeta temporal, que el test inyecta en vez de la del sistema.
-"""
+"""El recordatorio del índice."""
 
 import json
 import subprocess
@@ -49,7 +45,6 @@ class QueExploraElCodigo(unittest.TestCase):
         self.assertFalse(explora_el_codigo("Read", {"file_path": "/otro/src/x.gd"}, RAIZ))
 
     def test_grep_por_bash_sobre_src_explora(self) -> None:
-        # Es el caso que motivó el recordatorio: `Bash` a mano y el índice diferido.
         self.assertTrue(explora_el_codigo("Bash", {"command": "grep -rli comprador src/dominio"}, RAIZ))
         self.assertTrue(explora_el_codigo("Bash", {"command": f"cat {RAIZ}/src/x.gd"}, RAIZ))
 
@@ -95,8 +90,6 @@ class LaMarcaDeLaSesion(unittest.TestCase):
 
 
 class ElHook(unittest.TestCase):
-    """De punta a punta, por stdin, como lo llama Claude Code."""
-
     def _correr(self, entrada: str) -> subprocess.CompletedProcess:
         return subprocess.run(
             [sys.executable, str(SCRIPT)],
@@ -107,7 +100,6 @@ class ElHook(unittest.TestCase):
         )
 
     def test_nunca_decide_un_permiso(self) -> None:
-        # Un `permissionDecision: allow` saltearía el permiso configurado para la herramienta.
         payload = _pre("Bash", {"command": "grep -r x src/"}, sesion="test-sin-marca-nunca")
         hecho = self._correr(json.dumps(payload))
         self.assertEqual(hecho.returncode, 0)
@@ -121,8 +113,6 @@ class ElHook(unittest.TestCase):
 
 
 class LaConfiguracion(unittest.TestCase):
-    """Que el recordatorio esté enchufado en los tres lugares donde actúa."""
-
     def setUp(self) -> None:
         self.hooks = json.loads((RAIZ / ".claude" / "settings.json").read_text(encoding="utf-8"))[
             "hooks"
