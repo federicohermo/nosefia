@@ -57,9 +57,8 @@ func test_la_computadora_tiene_apoyo_y_no_queda_tapada_por_otro_cuerpo() -> void
 	assert_object(golpe.get("collider")).is_same(cuerpo)
 
 
-## **El par sale de la disposición, por posición, y no de una lista de rutas.** Los nombres los
-## decide el `.glb`, y una lista prueba sólo sus nodos: con una así quedaron nodos apagados de
-## más, huérfanos de una distribución anterior, y la suite siguió en verde.
+## Recorre el modelo entero y no una lista: una lista prueba sólo sus nodos, y no ve un nodo
+## apagado de más.
 func test_el_surtido_fijo_no_muestra_stock_que_el_dominio_no_tiene() -> void:
 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
 	add_child(almacen)
