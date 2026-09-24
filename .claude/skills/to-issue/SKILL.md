@@ -121,16 +121,15 @@ el issue es la fuente.
 
 Con varios issues de una, antes de mostrar nada:
 
-1. **Cruzá las filas «Se escribe» de todos los borradores.** Si dos comparten un archivo, el que
-   no depende se publica primero. El otro dice `Depende de #N`, con el número ya publicado.
-   Hasta entonces nombra al primero por su título: `<issue>` no sirve, porque `numerar` lo
-   reemplaza por el número propio. Sin un archivo en común, el orden da igual y ninguno lleva
-   `Depende de`.
+1. **Cruzá las filas «Se escribe» de todos los borradores.** Si dos comparten un archivo,
+   elegí cuál va primero y publicalo primero. El otro dice `Depende de #N`, con el número ya
+   publicado. Hasta entonces nombra al primero por su título: `<issue>` no sirve, porque
+   `numerar` lo reemplaza por el número propio. Sin un archivo en común, el orden da igual.
 2. **Dos issues que se bloquean entre sí son un solo cambio mal cortado.** Cortalo de nuevo antes
    de publicar.
-3. **Corré `revisar` sobre cada borrador.** Todos tienen que salir con 0.
-4. **Mostrá todos los borradores enteros y esperá un solo sí sobre el lote.** Si el usuario
-   aprueba una parte, publicá sólo esa parte. Los demás borradores quedan en el scratchpad.
+3. **Mostrá todos los borradores enteros, cada uno con `revisar` en 0, y esperá un solo sí
+   sobre el lote.** Si el usuario aprueba una parte, publicá sólo esa parte. Los demás
+   borradores quedan en el scratchpad.
 
 ## Al cerrar
 

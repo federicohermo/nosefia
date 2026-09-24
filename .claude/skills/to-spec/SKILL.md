@@ -44,7 +44,7 @@ recién después del merge, y no ve qué test quedó citando un criterio ajeno. 
 - **Escribilos en orden:** el segundo, desde `staging` con la rama del primero ya mergeada.
 
 Si uno de los dos no emite IDs nuevos, como el que sólo borra, no hace falta repartir. Si no
-comparten ningún spec, escribilos uno detrás del otro, sin repartir nada.
+comparten ningún spec, escribilos uno detrás del otro.
 
 ## Qué NO necesita tocar un spec
 
