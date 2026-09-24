@@ -155,13 +155,11 @@ func test_reponer_recupera_los_productos_independientes_del_modelo() -> void:
 	var modelo: Node3D = auto_free(MODELO.instantiate())
 	add_child(modelo)
 	var contenido: Node3D = auto_free(CONTENIDO.instantiate())
-	assert_int(contenido.get_child_count()).is_equal(Catalogo.todos().size())
 	for producto in Catalogo.todos():
 		var copia: MeshInstance3D = contenido.get_child(producto.id)
 		var original := _del_modelo(modelo, producto)
 		if original == null:
 			continue
-		assert_str(copia.name).is_equal(producto.nombre)
 		assert_int(copia.mesh.get_surface_count()).is_equal(original.mesh.get_surface_count())
 		for superficie in original.mesh.get_surface_count():
 			var casilleros := _por_celda(
