@@ -58,7 +58,6 @@ func crear(cantidad: int, escenario: Escenario, agrupado: bool = false) -> Node3
 			for posicion in posiciones:
 				var cuerpo: RigidBody3D = OBJETO.instantiate()
 				cuerpo.freeze = true
-				cuerpo.continuous_cd = true
 				cuerpo.position = posicion + Vector3.UP * 3
 				cuerpo.get_node("Forma").shape = formas[id]
 				var vista: MeshInstance3D = cuerpo.get_node("Malla")
