@@ -14,10 +14,14 @@ _RUTA_INDEXADA = re.compile(
     r"(?:^|[\s\"'=/])(?:" + "|".join(CARPETAS_INDEXADAS) + r")(?:/|[\s\"']|$)"
 )
 
+_COMO_CARGARLO = (
+    "Si sus herramientas aparecen sólo por nombre, cargalas con `ToolSearch` y "
+    f"`select:{PREFIJO_DEL_INDICE}mapa_del_sistema`."
+)
+
 AL_ARRANCAR = (
     "Este repo tiene un índice del código: `nosefia-index`. Consultá `mapa_del_sistema` antes "
-    "de buscar en `src/`. Si sus herramientas aparecen sólo por nombre, cargalas con "
-    "`ToolSearch` y `select:mcp__nosefia-index__mapa_del_sistema`."
+    f"de buscar en `src/`. {_COMO_CARGARLO}"
 )
 
 
@@ -59,6 +63,5 @@ def explora_el_codigo(herramienta: str, entrada: dict, raiz: Path) -> bool:
 def recordatorio(herramienta: str) -> str:
     return (
         f"Este `{herramienta}` explora `src/` o `test/`, y la sesión no consultó "
-        "`nosefia-index`. Consultá `mapa_del_sistema` primero. Si sus herramientas aparecen sólo "
-        "por nombre, cargalas con `ToolSearch` y `select:mcp__nosefia-index__mapa_del_sistema`."
+        f"`nosefia-index`. Consultá `mapa_del_sistema` primero. {_COMO_CARGARLO}"
     )

@@ -45,7 +45,8 @@ class QueExploraElCodigo(unittest.TestCase):
         self.assertFalse(explora_el_codigo("Read", {"file_path": "/otro/src/x.gd"}, RAIZ))
 
     def test_grep_por_bash_sobre_src_explora(self) -> None:
-        self.assertTrue(explora_el_codigo("Bash", {"command": "grep -rli comprador src/dominio"}, RAIZ))
+        comando = "grep -rli comprador src/dominio"
+        self.assertTrue(explora_el_codigo("Bash", {"command": comando}, RAIZ))
         self.assertTrue(explora_el_codigo("Bash", {"command": f"cat {RAIZ}/src/x.gd"}, RAIZ))
 
     def test_bash_que_nombra_src_sin_explorar_no_cuenta(self) -> None:
@@ -107,9 +108,10 @@ class ElHook(unittest.TestCase):
         self.assertNotIn("permissionDecision", salida)
         self.assertIn("additionalContext", salida)
 
-    def test_un_payload_roto_sale_en_cero_y_callado(self) -> None:
+    def test_un_payload_roto_deja_pasar_y_dice_el_error(self) -> None:
         hecho = self._correr("esto no es json")
         self.assertEqual((hecho.returncode, hecho.stdout), (0, ""))
+        self.assertIn("no pudo correr", hecho.stderr)
 
 
 class LaConfiguracion(unittest.TestCase):

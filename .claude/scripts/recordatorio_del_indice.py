@@ -4,7 +4,8 @@ La regla del CLAUDE.md era prosa. Una sesión exploró `src/` con `grep` porque 
 del índice llegaban diferidas.
 
 Avisa y no bloquea. Nunca contesta `permissionDecision`: un `allow` saltearía el permiso del
-usuario.
+usuario. Si falla, deja pasar y escribe el error en stderr: un aviso que muere callado vuelve a
+ser prosa.
 """
 
 import json
@@ -20,7 +21,12 @@ from lib.consola import configurar  # noqa: E402
 
 configurar()
 
-from lib.recordatorio import AL_ARRANCAR, es_del_indice, explora_el_codigo, recordatorio  # noqa: E402
+from lib.recordatorio import (  # noqa: E402
+    AL_ARRANCAR,
+    es_del_indice,
+    explora_el_codigo,
+    recordatorio,
+)
 from lib.repo import RAIZ  # noqa: E402
 
 # Un hook no guarda estado entre llamadas.
@@ -48,7 +54,8 @@ def main() -> None:
     try:
         payload = json.loads(sys.stdin.read())
         texto = contexto(payload)
-    except Exception:  # noqa: BLE001 — falla abierto
+    except Exception as error:  # noqa: BLE001 — falla abierto, y lo dice
+        print(f"recordatorio_del_indice no pudo correr: {error}", file=sys.stderr)
         sys.exit(0)
     if texto:
         salida = {
