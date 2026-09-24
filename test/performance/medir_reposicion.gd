@@ -113,9 +113,6 @@ func _ejecutar() -> void:
 					cuerpo.freeze = false
 				if escenario == Escenario.REPOSO:
 					await get_tree().create_timer(5.0).timeout
-					for cuerpo: RigidBody3D in lote.find_children("*", "RigidBody3D", false, false):
-						cuerpo.sleeping = true
-					await get_tree().create_timer(0.25).timeout
 				var medicion := await _medir()
 				medicion["cantidad"] = cantidad
 				medicion["piso_multimesh"] = agrupado

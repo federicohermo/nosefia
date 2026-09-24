@@ -15,13 +15,14 @@ y sin otras aplicaciones que carguen CPU o GPU. Hacer tres corridas y conservar 
 
 Quince casos: 100, 500 y 2000 productos en estantes con MultiMesh, cayendo con cuerpos físicos
 y en reposo sobre el piso. Cada caso del piso compara dibujo individual y agrupado con los
-mismos cuerpos. Carga los ocho modelos, sus colisiones y el grupo del piso desde el juego.
+mismos cuerpos. Carga los modelos, sus colisiones y el grupo del piso desde el juego.
 No cambia los cupos del juego.
 
 La escena aislada usa cámara fija, luz sin sombras y una cuadrícula de productos sobre un
 piso sólido. Calienta materiales un segundo. Luego toma muestras durante tres segundos.
 En caída incluye los impactos y la transición al reposo. Para el caso de reposo espera cinco
-segundos y duerme los cuerpos. No simula una pila compacta ni la lógica de interacción.
+segundos a que los cuerpos se duerman solos, como en el juego. No simula una pila compacta ni
+la lógica de interacción.
 
 El JSON incluye:
 
