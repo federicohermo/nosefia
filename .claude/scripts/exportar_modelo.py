@@ -50,9 +50,9 @@ from lib.godot import como_declararlo as como_declarar_godot  # noqa: E402
 from lib.godot import resolver as resolver_godot  # noqa: E402
 from lib.repo import RAIZ  # noqa: E402
 
-FUENTE = RAIZ / "assets" / "models" / "SEPT_JUEGOS_PROTOTIPO.blend"
-DESTINO = RAIZ / "assets" / "models" / "SEPT_JUEGOS_PROTOTIPO.glb"
-HUELLA = RAIZ / "assets" / "models" / "SEPT_JUEGOS_PROTOTIPO.glb.fuente"
+FUENTE = RAIZ / "assets/models/SEPT_JUEGOS_PROTOTIPO.blend"
+DESTINO = RAIZ / "assets/models/SEPT_JUEGOS_PROTOTIPO.glb"
+HUELLA = RAIZ / "assets/models/SEPT_JUEGOS_PROTOTIPO.glb.fuente"
 EXPORTADOR = Path(__file__).resolve().parent / "blender" / "exportar.py"
 
 #: La caché que Godot escribe por cada recurso importado. Se borra la del modelo y nada más:
