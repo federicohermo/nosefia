@@ -51,6 +51,15 @@ var _enfocado: Node3D = null
 var _largo_de_carga := 0.0
 var _largo_de_producto := 0.0
 
+## Dónde estaba el cuerpo en los dos últimos pasos de física. Entre uno y otro, la cámara y la
+## caja se dibujan en el medio, y el giro no espera al paso siguiente. Ver `_process()`.
+var _origen_anterior := Vector3.ZERO
+var _origen_actual := Vector3.ZERO
+
+## Dónde van la cámara y la caja sobre el cuerpo, antes de correrlas para el dibujo.
+var _ojo := Vector3.ZERO
+var _lugar_de_la_caja := Vector3.ZERO
+
 @onready var _camara: Camera3D = $Camara
 @onready var _campo: Area3D = $Camara/CampoDeInteraccion
 
@@ -68,6 +77,15 @@ var _largo_de_producto := 0.0
 
 
 func _ready() -> void:
+	# El motor interpola el cuerpo entre dos pasos de física, pero el giro se escribe al llegar el
+	# mouse, en el medio. Medido: el giro dibujado iba de 0,05 a 1,9 veces el pedido. Sin
+	# interpolar, el giro se dibuja entero en el cuadro en que llega; la caminata la interpola
+	# `_process()`.
+	physics_interpolation_mode = Node.PHYSICS_INTERPOLATION_MODE_OFF
+	_ojo = _camara.position
+	_lugar_de_la_caja = _punto_de_la_caja.position
+	_origen_anterior = global_position
+	_origen_actual = global_position
 	_aplicar_el_modo_del_cursor()
 	_aplicar_la_rotacion()
 	# Los brazos barren desde el hombro, que está adentro de la propia cápsula. Está medido que
@@ -161,6 +179,8 @@ func _physics_process(delta: float) -> void:
 	# control: así `suspender()` y `reanudar()` no tienen que acordarse de tocarlo, que es
 	# exactamente el olvido que la suspensión como modo único existe para evitar.
 	_aplicar_el_modo_del_cursor()
+	# La física mira desde donde está el cuerpo, no desde donde se lo dibuja.
+	_correr_para_el_dibujo(Vector3.ZERO)
 
 	if not is_on_floor():
 		velocity += get_gravity() * delta
@@ -178,11 +198,30 @@ func _physics_process(delta: float) -> void:
 	velocity.x = horizontal.x
 	velocity.z = horizontal.z
 	move_and_slide()
+	_origen_anterior = _origen_actual
+	_origen_actual = global_position
 	_empujar_lo_que_estorba()
 
 	_acomodar_las_manos(delta)
 	_acomodar_la_caja()
 	_leer_la_mira()
+
+
+## Dibuja la cámara y la caja entre los dos últimos pasos de física, como el motor dibujaría el
+## cuerpo. Se corre sólo el lugar: el giro ya está entero en el cuerpo.
+##
+## Lo que se lleva cuelga de esos dos puntos, y por eso se corre con ellos. Así no tiembla contra
+## la cámara.
+func _process(_delta: float) -> void:
+	var fraccion := Engine.get_physics_interpolation_fraction()
+	_correr_para_el_dibujo(_origen_anterior.lerp(_origen_actual, fraccion) - _origen_actual)
+
+
+## Corre la cámara y la caja, en metros del mundo, desde su lugar sobre el cuerpo.
+func _correr_para_el_dibujo(desvio: Vector3) -> void:
+	var local := global_basis.inverse() * desvio
+	_camara.position = _ojo + local
+	_punto_de_la_caja.position = _lugar_de_la_caja + local
 
 
 ## Le pasa a lo chocado el paso que no se pudo dar, para que se corra en vez de tapar el paso.
@@ -232,9 +271,11 @@ func ocupar_el_frente(ocupado: bool) -> void:
 ## Sin suavizado, al revés que las manos: el brazo ya contesta un punto libre, y el volumen se
 ## enciende justo ahí. Un punto intermedio quedaría adentro de la madera.
 func _acomodar_la_caja() -> void:
-	var lugar := _brazo_de_la_caja.transform * Vector3(0.0, 0.0, _brazo_de_la_caja.get_hit_length())
-	_punto_de_la_caja.position = lugar
-	_forma_de_la_caja.position = lugar
+	_lugar_de_la_caja = (
+		_brazo_de_la_caja.transform * Vector3(0.0, 0.0, _brazo_de_la_caja.get_hit_length())
+	)
+	_punto_de_la_caja.position = _lugar_de_la_caja
+	_forma_de_la_caja.position = _lugar_de_la_caja
 
 
 ## Desde dónde y hacia dónde mira. La pide `reposicion_manual.gd` para saber dónde quiere el
