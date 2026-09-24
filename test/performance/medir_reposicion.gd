@@ -96,7 +96,8 @@ func _ejecutar() -> void:
 	var suelo := StaticBody3D.new()
 	var colision := CollisionShape3D.new()
 	var caja := BoxShape3D.new()
-	caja.size = Vector3(40, 0.2, 40)
+	# Sin detección continua, una losa fina deja pasar a algún producto; el piso del juego, no.
+	caja.size = Vector3(40, 0.5, 40)
 	colision.shape = caja
 	suelo.add_child(colision)
 	add_child(suelo)
