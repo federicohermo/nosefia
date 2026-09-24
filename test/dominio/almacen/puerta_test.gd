@@ -8,15 +8,16 @@ func test_una_puerta_nueva_arranca_cerrada_y_sin_giro() -> void:
 	assert_float(puerta.angulo()).is_equal(0.0)
 
 
-func test_alternar_abre_y_la_segunda_llamada_cierra() -> void:  # AC-PLY-013
+func test_alternar_abre_y_la_segunda_llamada_cierra() -> void:  # AC-PLY-012
 	var puerta := Puerta.new()
 	puerta.alternar()
 	assert_bool(puerta.abierta()).is_true()
+	assert_float(puerta.angulo()).is_equal(0.0)
 	puerta.alternar()
 	assert_bool(puerta.abierta()).is_false()
 
 
-func test_el_giro_no_se_pasa_de_ninguno_de_los_dos_topes() -> void:  # AC-PLY-012
+func test_el_giro_no_se_pasa_de_ninguno_de_los_dos_topes() -> void:  # AC-PLY-012 AC-PLY-013
 	# Sin el tope el ángulo seguiría creciendo cuadro a cuadro y la hoja daría vueltas enteras,
 	# con la escena cargando sin un solo error.
 	var puerta := Puerta.new()
