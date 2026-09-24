@@ -99,12 +99,14 @@ Cada agente recibe, literal:
   imprime** el `Executed test suites: (N/N)`. **La primera línea importa**: `verificar.py` lo
   hace solo, pero este comando no, y en un worktree nuevo sin ella sale
   `Could not find type "GdUnitTestCIRunner"`. Medido el 2026-09-23: lo pisaron los dos carriles.
+  **Y el `2>$null` también importa**: PowerShell no pasa el stderr de Godot por `Select-String`,
+  y sin él la corrida devuelve 4,5 MB. Medido el 2026-09-24.
 
   ```powershell
-  & $env:GODOT_BIN --path . --headless --import
+  & $env:GODOT_BIN --path . --headless --import 2>$null | Out-Null
   & $env:GODOT_BIN --path . --headless -s -d --remote-debug tcp://127.0.0.1:0 `
     res://addons/gdUnit4/bin/GdUnitCmdTool.gd -a test --continue --ignoreHeadlessMode `
-    -rd reports | Select-String "Executed test suites"
+    -rd reports 2>$null | Select-String "Executed test suites"
   ```
 
 - **El carril no corrige un skill: reporta la falla, y la regla la escribe el padre.**
