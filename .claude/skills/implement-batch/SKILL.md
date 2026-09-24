@@ -114,7 +114,8 @@ Cada agente recibe, literal:
   Medido el 2026-09-23: los dos carriles escribieron la misma regla en `to-issue` y en las siete
   copias de `sin-deuda.md`, y los dos PR chocaban en ocho archivos.
 - **Un nombre propio para cada archivo de scratch.** Dos carriles que escriben el mismo archivo
-  temporal se pisan sin conflicto visible.
+  temporal se pisan sin conflicto visible. **Y se escribe con `Write`:** desde un worktree, Bash
+  rechaza un heredoc hacia el scratch. Medido el 2026-09-24.
 - **Un comando que este skill entrega se vuelve a correr antes de repartirlo**, nunca se copia de
   la corrida anterior: un comando roto se reparte N veces.
 

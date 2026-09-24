@@ -49,7 +49,7 @@ Si el tipo no está claro, preguntá. Es la decisión que define la rama y el re
 **Los límites de archivo y los criterios salen del árbol de hoy, no de la memoria.**
 
 ```bash
-rg -n "<lo que el issue va a tocar>" src/ test/
+rg -n "<lo que el issue va a tocar>" src/ test/ docs/   # una guía también describe la regla
 gh issue list --state open --limit 50      # si ya hay uno igual, no se abre otro
 ```
 
