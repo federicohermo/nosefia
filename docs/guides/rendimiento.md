@@ -20,8 +20,8 @@ No cambia los cupos del juego.
 
 La escena aislada usa cámara fija, luz sin sombras y una cuadrícula de productos sobre un
 piso sólido. Calienta materiales un segundo. Luego toma muestras durante tres segundos.
-En caída incluye los impactos y la transición al reposo. Para el caso de reposo espera cinco
-segundos a que los cuerpos se duerman solos, como en el juego. No simula una pila compacta ni
+En caída incluye los impactos y la transición al reposo. Para el caso de reposo deja que los
+cuerpos se duerman solos, como en el juego. No simula una pila compacta ni
 la lógica de interacción.
 
 El JSON incluye:
