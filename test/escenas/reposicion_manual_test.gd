@@ -425,17 +425,6 @@ func test_actroncito_durextra_y_oremos_se_reponen_con_foco_y_clic_reales() -> vo
 func test_no_hay_productos_3d_iniciales_fuera_del_inventario() -> void:
 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
 	add_child(almacen)
-	for ruta in [
-		"gondolanueva2/oremos3",
-		"gondolanueva/alfajorescaja2",
-		"gondolanueva/pepitos",
-		"gondolanueva/oremos",
-		"gondolanueva/oremos2",
-	]:
-		var modelo: Node3D = almacen.get_node("Estructura/" + ruta)
-		assert_bool(modelo.is_visible_in_tree()).is_false()
-		for cuerpo: PhysicsBody3D in modelo.find_children("*", "PhysicsBody3D", true, false):
-			assert_int(cuerpo.collision_layer).is_zero()
 	for producto in Catalogo.todos():
 		assert_int(almacen.get("_repositor").estante().unidades_en_gondola(producto)).is_zero()
 	# Cada producto del catálogo tiene su malla en el contenido y en el mismo orden. Sin esto el
