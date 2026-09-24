@@ -85,6 +85,10 @@ Lo que más se rompe:
 - **Un valor de balance no se inventa.** Un costo, un tiempo o un umbral sale del GDD o del
   dominio. Si ninguno lo fija, el criterio lo nombra como pregunta abierta y `to-spec` lo
   registra. Un número propuesto por el agente se lee como decidido.
+- **Un síntoma medido se reproduce en las condiciones del criterio antes de pedir su rojo.** Si
+  el criterio excluye un caso —un obstáculo, un cuadro de transición—, la medición también lo
+  excluye. En el #187, los saltos de lo que se lleva se midieron en el local, y eran del brazo
+  rozando un mueble: en un piso libre no había rojo que pedir.
 - **Los bordes van escritos.** El caso feliz lo cubre cualquier implementación.
 - **Una tabla de ejemplos cierra consigo misma.** Cada fila se recalcula desde la regla antes de
   escribirla, y una hora de cierre es apertura más duración, no un número copiado de la ficha.
