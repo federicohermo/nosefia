@@ -43,6 +43,9 @@ class Medidor:
 	var dibujadas: Array[Transform3D] = []
 	var relativos: Array[Vector3] = []
 
+	## El tiempo de física que se dibuja, en pasos.
+	var tiempos: Array[float] = []
+
 	## Lo que el motor dibuja de un nodo. Un hijo sin interpolar sigue la interpolación de su
 	## padre, así que cuenta cualquier ancestro. Medido: en una rama sin nada interpolado,
 	## `get_global_transform_interpolated()` devuelve un valor viejo.
@@ -62,6 +65,9 @@ class Medidor:
 		dibujadas.append(vista)
 		if sostenido != null:
 			relativos.append(vista.affine_inverse() * dibujado(sostenido).origin)
+			tiempos.append(
+				Engine.get_physics_frames() + Engine.get_physics_interpolation_fraction()
+			)
 
 
 ## Marca el ritmo de los cuadros como el vsync del juego. `Engine.max_fps` no sirve en headless:
@@ -254,15 +260,23 @@ func test_una_caja_contra_la_pared_se_corre_sin_escalones() -> void:
 	var medidor := _medir(jugador, caja)
 	almacen.add_child(MouseDeLadoALado.new())
 	await _esperar(3.0)
-	var pasos: Array[float] = []
+	var pasos: Array[Vector3] = []
+	var avances: Array[float] = []
 	for indice in range(1, medidor.relativos.size()):
-		pasos.append(medidor.relativos[indice].distance_to(medidor.relativos[indice - 1]))
+		pasos.append(medidor.relativos[indice] - medidor.relativos[indice - 1])
+		avances.append(medidor.tiempos[indice] - medidor.tiempos[indice - 1])
 	var escalones := 0
 	var moviendose := 0
 	for indice in range(1, pasos.size() - 1):
-		if pasos[indice - 1] > 0.001 and pasos[indice + 1] > 0.001:
+		var antes := pasos[indice - 1]
+		var despues := pasos[indice + 1]
+		if antes.length() > 0.001 and despues.length() > 0.001:
 			moviendose += 1
-			if pasos[indice] < 0.00005:
+			# No es escalón un cuadro quieto entre dos que van a lados opuestos: es la vuelta de la
+			# caja. Tampoco uno que no avanza el tiempo dibujado: después de un cuadro lento el
+			# motor retiene la fracción.
+			var quieto := pasos[indice].length() < 0.00005 and avances[indice] > 0.1
+			if quieto and antes.dot(despues) > 0.0:
 				escalones += 1
 	(
 		assert_int(moviendose)
@@ -279,6 +293,23 @@ func test_una_caja_contra_la_pared_se_corre_sin_escalones() -> void:
 		)
 		. is_equal(0)
 	)
+
+
+func test_la_caja_no_choca_con_el_detalle_de_un_mueble() -> void:
+	var jugador := await _jugador_en_un_piso_libre()
+	var detalle := StaticBody3D.new()
+	var forma := CollisionShape3D.new()
+	forma.shape = BoxShape3D.new()
+	(forma.shape as BoxShape3D).size = Vector3.ONE * 0.1
+	detalle.add_child(forma)
+	jugador.get_parent().add_child(detalle)
+	var punto: Node3D = jugador.get_node("Giro/PuntoDeCaja")
+	var largo: float = (jugador.get_node("Giro/BrazoDeCaja") as SpringArm3D).spring_length
+	detalle.global_position = punto.global_position + Vector3.BACK * largo * 0.5
+	jugador.ignorar_el_detalle(detalle)
+	await get_tree().physics_frame
+	await get_tree().physics_frame
+	assert_float(punto.position.z).is_equal_approx(-largo, 0.001)
 
 
 func test_lo_soltado_despues_de_girar_se_dibuja_donde_se_veia_el_punto_de_soltado() -> void:
