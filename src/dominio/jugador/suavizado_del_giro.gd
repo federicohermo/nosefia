@@ -54,8 +54,6 @@ func agregar(relativo: Vector2) -> void:
 		_reportes.append([relativo, 0.0])
 
 
-## Cierra un cuadro. `delta` entra por parámetro y no se lee del motor: así se prueba sin levantar
-## una escena.
 func avanzar(delta: float) -> void:
 	_contar_el_cuadro(delta)
 	for reporte in _reportes:

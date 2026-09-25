@@ -79,7 +79,6 @@ func avanzar_el_dibujo(delta: float) -> void:
 
 
 ## Hacia adónde mira la cámara que se dibuja: atrás de la mirada lo que el mouse todavía no mostró.
-## Ver `SuavizadoDelGiro`.
 func yaw_dibujado() -> float:
 	return wrapf(_mirada.yaw() - _suavizado.pendiente().x, -PI, PI)
 
@@ -88,7 +87,6 @@ func pitch_dibujado() -> float:
 	return _mirada.pitch() - _suavizado.pendiente().y
 
 
-## Si la cámara todavía tiene giro por dibujar. Sólo pasa con un mouse más lento que la pantalla.
 func giro_atrasado() -> bool:
 	return _suavizado.pendiente() != Vector2.ZERO
 

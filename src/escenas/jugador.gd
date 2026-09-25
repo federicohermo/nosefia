@@ -52,8 +52,7 @@ var _girando_el_dibujo := false
 
 ## El yaw va acá y no al cuerpo, que es la receta de Godot para mirar con el mouse: el cuerpo se
 ## dibuja interpolado entre dos pasos de física, y este nodo no. Así la caminata sale pareja y el
-## giro no espera al paso siguiente. Medido con el yaw en el cuerpo: el giro dibujado iba de 0,05 a
-## 1,9 veces el pedido. Su interpolación apagada está en el `.tscn`.
+## giro no espera al paso siguiente. Su interpolación apagada está en el `.tscn`.
 @onready var _giro: Node3D = $Giro
 @onready var _camara: Camera3D = $Giro/Camara
 @onready var _campo: Area3D = $Giro/Camara/CampoDeInteraccion
@@ -189,8 +188,6 @@ func _physics_process(delta: float) -> void:
 	_leer_la_mira()
 
 
-## Deja que el giro dibujado alcance a la mirada. Sólo trabaja con un mouse más lento que la
-## pantalla: ver `SuavizadoDelGiro`.
 func _process(delta: float) -> void:
 	_control.avanzar_el_dibujo(delta)
 	var atrasado := _control.giro_atrasado()
@@ -404,10 +401,9 @@ func _devolver_al_mundo(nodo: Node3D) -> void:
 	var mundo := get_parent()
 	if nodo == null or mundo == null or not nodo.is_inside_tree():
 		return
-	# Sale de donde se lo veía: el cuerpo se dibuja hasta un paso de física atrás de donde está.
-	# Se mide en el punto del que cuelga, porque soltar lo deja `top_level` y ya no hereda el
-	# dibujo del cuerpo. Y sin la interpolación de antes de agarrarlo, que lo dibujaría cruzando
-	# el local.
+	# Sale de donde se lo veía, que es hasta un paso de física atrás. Se mide en el punto del que
+	# cuelga: soltarlo lo deja `top_level` y ya no hereda el dibujo del cuerpo. El reset evita que
+	# se dibuje cruzando el local desde donde se lo agarró.
 	var ancla := nodo.get_parent() as Node3D
 	var atras := Vector3.ZERO
 	if ancla != null:

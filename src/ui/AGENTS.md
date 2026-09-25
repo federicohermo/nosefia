@@ -71,7 +71,7 @@ implementación de todo el juego.**
 
 **Quién lo verifica: `test/escenas/almacen_test.gd`**, en `_violaciones_de_cableado()`. El
 discriminador es el `owner` y no la profundidad: en una sub-escena instanciada el `owner` de cada
-hijo es la raíz de la sub-escena, así que `Jugador/Giro/Camara` no la viola.
+hijo es la raíz de la sub-escena, así que la cámara del jugador no la viola.
 
 **Hasta dónde llega:** `gate_de_tests.py` no mira `test/escenas/`, así que nada obliga a que ese
 caso exista, y la regla vale para `almacen.tscn` y nada más. Es un caso, no un gate, y el precio
