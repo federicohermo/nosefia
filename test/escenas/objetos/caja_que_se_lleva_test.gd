@@ -148,7 +148,7 @@ func test_la_caja_entrega_apoyada_en_el_estante_y_no_mientras_se_la_lleva() -> v
 	almacen.get("_reposicion_manual").pedir_colocar(producto.id)
 	assert_object(agarre.manos().sostenido()).is_null()
 	_accion(jugador, caja, ReglasDeLosObjetos.ACCION_AGARRAR)
-	assert_object(caja.get_parent()).is_same(jugador.get_node("PuntoDeCaja"))
+	assert_object(caja.get_parent()).is_same(jugador.get_node("Giro/PuntoDeCaja"))
 	var con_la_caja := repositor.estante().disponibles_para_retirar(producto)
 	almacen.get("_reposicion_manual").retirar_de_la_caja(caja)
 	assert_int(repositor.estante().disponibles_para_retirar(producto)).is_equal(con_la_caja)
@@ -166,7 +166,7 @@ func test_el_clic_izquierdo_levanta_la_caja_y_no_entrega_producto() -> void:
 	assert_object(agarre.manos().sostenido()).is_same(caja.datos)
 	assert_bool(agarre.manos().sostenido() is UnidadDeProducto).is_false()
 	assert_int(repositor.estante().disponibles_para_retirar(producto)).is_equal(antes)
-	assert_object(caja.get_parent()).is_same(jugador.get_node("PuntoDeCaja"))
+	assert_object(caja.get_parent()).is_same(jugador.get_node("Giro/PuntoDeCaja"))
 	_accion(jugador, caja, ReglasDeLosObjetos.ACCION_AGARRAR)
 	assert_object(agarre.manos().sostenido()).is_null()
 
@@ -184,7 +184,7 @@ func test_la_caja_llevada_no_tapa_la_mira_ni_atraviesa_la_pared() -> void:
 	# De frente y no de costado: un producto se mira girado en la mano, una caja se lleva con
 	# las dos manos y muestra su cara rotulada.
 	(
-		assert_float(caja.global_basis.x.dot(jugador.global_basis.z))
+		assert_float(caja.global_basis.x.dot(-jugador.frente()))
 		. override_failure_message("la caja va de costado en la mano")
 		. is_equal_approx(1.0, 0.001)
 	)
@@ -195,7 +195,7 @@ func test_la_caja_llevada_no_tapa_la_mira_ni_atraviesa_la_pared() -> void:
 	Input.action_release(ReglasDelJugador.ACCION_ADELANTE)
 	await get_tree().physics_frame
 	(
-		assert_bool(jugador.test_move(jugador.global_transform, -jugador.global_basis.z))
+		assert_bool(jugador.test_move(jugador.global_transform, jugador.frente()))
 		. override_failure_message("el jugador no llegó a chocar: el caso no ejerce nada")
 		. is_true()
 	)
@@ -230,7 +230,7 @@ func test_la_caja_soltada_queda_apoyada_en_el_piso_sin_caer() -> void:
 
 ## Que la caja llevada no se cruce delante de la mira.
 func _comprobar_la_mira_libre(jugador: Node3D, caja: Node3D, donde: String) -> void:
-	var camara: Camera3D = jugador.get_node("Camara")
+	var camara: Camera3D = jugador.get_node("Giro/Camara")
 	var limites := _limites_de(caja)
 	(
 		assert_bool(limites.intersects_ray(camara.global_position, -camara.global_basis.z) == null)
@@ -275,10 +275,10 @@ func _limites_de(cuerpo: Node3D) -> AABB:
 
 ## Gira la vista como lo haría el mouse, a un yaw y un pitch absolutos en radianes.
 func _mirar(jugador: Node3D, giro: float, alto: float) -> void:
-	var camara: Camera3D = jugador.get_node("Camara")
+	var camara: Camera3D = jugador.get_node("Giro/Camara")
 	var evento := InputEventMouseMotion.new()
 	evento.relative = (
-		Vector2(jugador.rotation.y - giro, camara.rotation.x - alto)
+		Vector2(jugador.get_node("Giro").rotation.y - giro, camara.rotation.x - alto)
 		/ ReglasDelJugador.SENSIBILIDAD_DEL_MOUSE
 	)
 	jugador.call("_unhandled_input", evento)
@@ -286,7 +286,7 @@ func _mirar(jugador: Node3D, giro: float, alto: float) -> void:
 
 ## Pone la mira sobre la tapa de un cuerpo.
 func _apuntar_a(jugador: Node3D, objetivo: Node3D) -> void:
-	var camara: Camera3D = jugador.get_node("Camara")
+	var camara: Camera3D = jugador.get_node("Giro/Camara")
 	var blanco := _limites_de(objetivo)
 	var hacia := (
 		Vector3(blanco.get_center().x, blanco.end.y, blanco.get_center().z) - camara.global_position
@@ -357,7 +357,7 @@ func test_soltar_mirando_el_costado_de_una_caja_la_apila_encima() -> void:
 	var debajo: Node3D = almacen.get("_cajas_de_productos")[Producto.Id.SALADIK]
 	_accion(jugador, caja, ReglasDeLosObjetos.ACCION_AGARRAR)
 	await _caminar_hasta(almacen, _limites_de(debajo), Vector3.LEFT)
-	var camara: Camera3D = jugador.get_node("Camara")
+	var camara: Camera3D = jugador.get_node("Giro/Camara")
 	var costado := debajo.global_position + Vector3.RIGHT * _limites_de(debajo).size.x / 2.0
 	var hacia := costado - camara.global_position
 	_mirar(jugador, atan2(-hacia.x, -hacia.z), atan2(hacia.y, Vector2(hacia.x, hacia.z).length()))
@@ -379,7 +379,7 @@ func test_alrededor_de_un_estante_con_lugar_la_caja_siempre_sube_a_el() -> void:
 	# franja junto a la vecina, la pared a más de una caja de altura, y la punta de la tabla.
 	var almacen: Node3D = await _almacen_con_jugador_quieto()
 	var jugador: CharacterBody3D = almacen.get("_jugador")
-	var mano: Node3D = jugador.get_node("PuntoDeCaja")
+	var mano: Node3D = jugador.get_node("Giro/PuntoDeCaja")
 	var caja: Node3D = almacen.get("_cajas_de_productos")[Producto.Id.PRONGLES]
 	var estante := _limites_de(almacen.get_node("Estructura/gondola_deposito03/StaticBody3D"))
 	_accion(jugador, caja, ReglasDeLosObjetos.ACCION_AGARRAR)
@@ -410,7 +410,7 @@ func test_la_mira_que_pasa_por_encima_de_la_caja_de_enfrente_la_apila() -> void:
 	# cursor está donde quedaría la caja apilada, así que se apila.
 	var almacen: Node3D = await _almacen_con_jugador_quieto()
 	var jugador: CharacterBody3D = almacen.get("_jugador")
-	var mano: Node3D = jugador.get_node("PuntoDeCaja")
+	var mano: Node3D = jugador.get_node("Giro/PuntoDeCaja")
 	var cajas: Array = almacen.get("_cajas_de_productos")
 	var base: RigidBody3D = cajas[Producto.Id.SALADIK]
 	var nueva: Node3D = cajas[Producto.Id.LAYSNTT]
@@ -472,7 +472,7 @@ func test_una_pila_de_cajas_de_distinto_tamano_se_sigue_apilando() -> void:
 	await get_tree().physics_frame
 	_accion(jugador, nueva, ReglasDeLosObjetos.ACCION_AGARRAR)
 	await _parar_al_jugador_en(jugador, Vector3(tapa.end.x + 1.1, 0.11, base.global_position.z))
-	var camara: Camera3D = jugador.get_node("Camara")
+	var camara: Camera3D = jugador.get_node("Giro/Camara")
 	var costado := Vector3(tapa.end.x, base.global_position.y, base.global_position.z)
 	var hacia := costado - camara.global_position
 	_mirar(jugador, atan2(-hacia.x, -hacia.z), atan2(hacia.y, Vector2(hacia.x, hacia.z).length()))
@@ -601,13 +601,13 @@ func test_la_caja_va_donde_apunta_la_mira() -> void:
 ## no señala ninguna, y la caja va al piso que haya debajo del cursor.
 func _contrastar_la_mira(almacen: Node3D, caja: Node3D, donde: String) -> Array[int]:
 	var jugador: CharacterBody3D = almacen.get("_jugador")
-	var mano: Node3D = jugador.get_node("PuntoDeCaja")
+	var mano: Node3D = jugador.get_node("Giro/PuntoDeCaja")
 	var contrastadas := 0
 	var al_lado := 0
 	for alto: float in ANGULOS_DE_LA_VISTA:
 		if caja.get_parent() != mano:
 			_accion(jugador, caja, ReglasDeLosObjetos.ACCION_AGARRAR)
-		_mirar(jugador, jugador.rotation.y, deg_to_rad(alto))
+		_mirar(jugador, jugador.get_node("Giro").rotation.y, deg_to_rad(alto))
 		var apuntado := _lo_apuntado(almacen, jugador, caja)
 		_accion(jugador, caja, ReglasDeLosObjetos.ACCION_AGARRAR)
 		# Quedarse en la mano es el último recurso: sólo si tampoco hay lugar al lado.
@@ -698,7 +698,7 @@ func test_la_caja_soltada_nunca_queda_adentro_de_nada() -> void:
 func _soltar_en_los_doce_gestos(almacen: Node3D, mueble: Node3D) -> int:
 	var jugador: CharacterBody3D = almacen.get("_jugador")
 	var caja: Node3D = almacen.get("_cajas_de_productos")[Producto.Id.LAYSNTT]
-	var mano: Node3D = jugador.get_node("PuntoDeCaja")
+	var mano: Node3D = jugador.get_node("Giro/PuntoDeCaja")
 	if caja.get_parent() != mano:
 		_accion(jugador, caja, ReglasDeLosObjetos.ACCION_AGARRAR)
 	await _caminar_hasta(almacen, _limites_de(mueble), Vector3.FORWARD)
@@ -708,7 +708,7 @@ func _soltar_en_los_doce_gestos(almacen: Node3D, mueble: Node3D) -> int:
 		await get_tree().physics_frame
 	Input.action_release(ReglasDelJugador.ACCION_ATRAS)
 	await get_tree().physics_frame
-	var derecho := jugador.rotation.y
+	var derecho: float = jugador.get_node("Giro").rotation.y
 	var soltadas := 0
 	for giro: float in [-20.0, 0.0, 20.0]:
 		for alto: float in [MIRANDO_ABAJO, 0.0, MIRANDO_ARRIBA, 30.0]:
@@ -740,7 +740,7 @@ func test_la_caja_se_suelta_con_la_mira_sobre_un_charco() -> void:
 	await get_tree().physics_frame
 	var jugador: CharacterBody3D = almacen.get("_jugador")
 	var caja: Node3D = almacen.get("_cajas_de_productos")[Producto.Id.LAYSNTT]
-	var mano: Node3D = jugador.get_node("PuntoDeCaja")
+	var mano: Node3D = jugador.get_node("Giro/PuntoDeCaja")
 	var manchas: Array = almacen.get("_limpieza").call("manchas")
 	assert_array(manchas).is_not_empty()
 	var sueltas := 0
@@ -836,7 +836,7 @@ func test_sacar_una_caja_de_la_pila_hace_caer_las_de_arriba() -> void:
 	_accion(jugador, pila[0], ReglasDeLosObjetos.ACCION_AGARRAR)
 	await get_tree().physics_frame
 	_accion(jugador, pila[1], ReglasDeLosObjetos.ACCION_AGARRAR)
-	assert_object(pila[1].get_parent()).is_same(jugador.get_node("PuntoDeCaja"))
+	assert_object(pila[1].get_parent()).is_same(jugador.get_node("Giro/PuntoDeCaja"))
 	for cuadro in CUADROS_CAYENDO:
 		await get_tree().physics_frame
 	var ultima: Node3D = pila[PISOS_DE_LA_PILA - 1]
@@ -867,7 +867,7 @@ func test_agarrar_la_caja_del_estante_no_mueve_al_jugador() -> void:
 	var antes := jugador.global_position
 	_accion(jugador, caja, ReglasDeLosObjetos.ACCION_AGARRAR)
 	await get_tree().physics_frame
-	assert_object(caja.get_parent()).is_same(jugador.get_node("PuntoDeCaja"))
+	assert_object(caja.get_parent()).is_same(jugador.get_node("Giro/PuntoDeCaja"))
 	(
 		assert_float(jugador.global_position.distance_to(antes))
 		. override_failure_message(
@@ -889,9 +889,9 @@ func test_la_caja_del_piso_se_arrastra_en_vez_de_tapar_el_paso() -> void:
 	# que se mediría sería el choque y no el arrastre.
 	var caja: Node3D = almacen.get("_cajas_de_productos")[Producto.Id.CHISITOS]
 	jugador.global_position = PISO_LIBRE_DEL_DEPOSITO + Vector3(0.0, 0.01, 1.2)
-	jugador.rotation.y = 0.0
+	jugador.get_node("Giro").rotation.y = 0.0
 	await get_tree().physics_frame
-	var adelante := -jugador.global_basis.z
+	var adelante: Vector3 = jugador.frente()
 	caja.global_position = (
 		PISO_LIBRE_DEL_DEPOSITO + Vector3.UP * (caja.global_position.y - PISO_LIBRE_DEL_DEPOSITO.y)
 	)
@@ -1035,7 +1035,7 @@ func test_levantar_la_caja_hace_caer_el_producto_apoyado_encima() -> void:
 	var altura := encima.global_position.y
 	var donde_estaba := lejos.global_position
 	_accion(jugador, caja, ReglasDeLosObjetos.ACCION_AGARRAR)
-	assert_object(caja.get_parent()).is_same(jugador.get_node("PuntoDeCaja"))
+	assert_object(caja.get_parent()).is_same(jugador.get_node("Giro/PuntoDeCaja"))
 	for cuadro in CUADROS_CAYENDO:
 		await get_tree().physics_frame
 	_comprobar_que_cayo(almacen, encima, altura, "al levantar la caja")
@@ -1052,7 +1052,7 @@ func test_empujar_la_caja_hasta_sacarla_de_abajo_hace_caer_el_producto() -> void
 	var jugador: CharacterBody3D = almacen.get("_jugador")
 	var caja := _caja_en_el_piso_libre(almacen, 0)
 	jugador.global_position = PISO_LIBRE_DEL_DEPOSITO + DELANTE_DE_LA_CAJA
-	jugador.rotation.y = 0.0
+	jugador.get_node("Giro").rotation.y = 0.0
 	await get_tree().physics_frame
 	var encima := await _producto_dormido_sobre(
 		almacen, caja.global_position + Vector3.UP * MEDIA_CAJA
@@ -1100,7 +1100,7 @@ func test_el_producto_sobre_la_pila_cae_cuando_se_saca_la_caja_de_abajo() -> voi
 	var altura := encima.global_position.y
 	var altura_de_arriba := arriba.global_position.y
 	_accion(jugador, abajo, ReglasDeLosObjetos.ACCION_AGARRAR)
-	assert_object(abajo.get_parent()).is_same(jugador.get_node("PuntoDeCaja"))
+	assert_object(abajo.get_parent()).is_same(jugador.get_node("Giro/PuntoDeCaja"))
 	for cuadro in CUADROS_CAYENDO:
 		await get_tree().physics_frame
 	_comprobar_que_cayo(almacen, arriba, altura_de_arriba, "al sacar la caja de abajo")
