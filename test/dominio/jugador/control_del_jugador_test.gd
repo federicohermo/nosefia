@@ -91,3 +91,46 @@ func test_la_mira_sigue_avisando_cuando_no_esta_suspendido() -> void:
 	var control := _control()
 	assert_bool(control.observar(UN_OBJETO, 2.0, true)).is_true()
 	assert_int(control.objetivo()).is_equal(UN_OBJETO)
+
+
+func test_la_mirada_gira_al_instante_y_el_dibujo_la_alcanza_en_la_ventana() -> void:
+	# Hacia adónde se camina no espera al dibujo: sólo la cámara se atrasa.
+	var control := _control()
+	control.girar(Vector2(10.0, 5.0))
+	assert_float(control.yaw()).is_equal_approx(-0.1, 1e-6)
+	assert_float(control.yaw_dibujado()).is_equal_approx(0.0, 1e-6)
+	assert_float(control.pitch_dibujado()).is_equal_approx(0.0, 1e-6)
+	control.avanzar_el_dibujo(SuavizadoDelGiro.VENTANA / 2.0)
+	assert_float(control.yaw_dibujado()).is_equal_approx(-0.05, 1e-6)
+	assert_float(control.pitch_dibujado()).is_equal_approx(-0.025, 1e-6)
+	control.avanzar_el_dibujo(SuavizadoDelGiro.VENTANA)
+	assert_float(control.yaw_dibujado()).is_equal_approx(control.yaw(), 1e-6)
+	assert_float(control.pitch_dibujado()).is_equal_approx(control.pitch(), 1e-6)
+
+
+func test_contra_el_tope_del_pitch_el_dibujo_no_rebota() -> void:
+	# Lo que la mirada no aplicó no se dibuja. Si no, empujar contra el tope bajaba la cámara y
+	# la volvía a subir.
+	var control := _control()
+	control.girar(Vector2(0.0, -1000.0))
+	control.avanzar_el_dibujo(SuavizadoDelGiro.VENTANA)
+	control.girar(Vector2(0.0, -50.0))
+	assert_float(control.pitch_dibujado()).is_equal_approx(ReglasDelJugador.PITCH_MAXIMO, 1e-6)
+
+
+func test_girar_en_redondo_no_dibuja_la_vuelta_larga() -> void:
+	# El yaw da la vuelta en PI. Sin eso, cruzarlo dibujaba un giro de casi una vuelta entera.
+	var control := _control()
+	control.girar(Vector2(-310.0, 0.0))
+	control.avanzar_el_dibujo(SuavizadoDelGiro.VENTANA)
+	control.girar(Vector2(-10.0, 0.0))
+	control.avanzar_el_dibujo(SuavizadoDelGiro.VENTANA / 2.0)
+	assert_float(absf(wrapf(control.yaw_dibujado() - control.yaw(), -PI, PI))).is_less(0.06)
+
+
+func test_suspendido_el_dibujo_no_se_mueve() -> void:
+	var control := _control()
+	control.suspender()
+	control.girar(Vector2(100.0, 100.0))
+	control.avanzar_el_dibujo(SuavizadoDelGiro.VENTANA / 2.0)
+	assert_float(control.yaw_dibujado()).is_equal(0.0)

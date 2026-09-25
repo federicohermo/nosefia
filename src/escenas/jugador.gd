@@ -55,6 +55,14 @@ var _origen_actual := Vector3.ZERO
 var _ojo := Vector3.ZERO
 var _lugar_de_la_caja := Vector3.ZERO
 
+## Lo que el último cuadro corrió el dibujo, en metros del mundo. Lo reusa cada evento, que llega
+## entre dos cuadros.
+var _desvio := Vector3.ZERO
+
+## Si la cámara quedó girada distinto de la mirada. Sólo entonces se le reescribe la rotación: un
+## test que la apunta a mano no la pierde en el cuadro siguiente.
+var _giro_en_el_dibujo := false
+
 @onready var _camara: Camera3D = $Camara
 @onready var _campo: Area3D = $Camara/CampoDeInteraccion
 
@@ -114,6 +122,9 @@ func ignorar_el_detalle(cuerpo: PhysicsBody3D) -> void:
 
 
 func _unhandled_input(evento: InputEvent) -> void:
+	# Lo que dispara un evento apunta con la mirada, no con el dibujo que la alcanza. El lugar
+	# queda el dibujado: lo que se suelta cae donde se lo veía.
+	_correr_para_el_dibujo(_desvio, false)
 	# El giro se descarta con el cursor suelto porque en `MOUSE_MODE_VISIBLE` el motor sigue
 	# entregando el `relative` del mouse: sin este filtro, ir a apretar el botón de cerrar la
 	# ventana gira la cámara todo el camino, y la salida de emergencia deja de servir.
@@ -175,7 +186,7 @@ func _physics_process(delta: float) -> void:
 	# exactamente el olvido que la suspensión como modo único existe para evitar.
 	_aplicar_el_modo_del_cursor()
 	# La física mira desde donde está el cuerpo, no desde donde se lo dibuja.
-	_correr_para_el_dibujo(Vector3.ZERO)
+	_correr_para_el_dibujo(Vector3.ZERO, false)
 
 	if not is_on_floor():
 		velocity += get_gravity() * delta
@@ -203,20 +214,36 @@ func _physics_process(delta: float) -> void:
 
 
 ## Dibuja la cámara y la caja entre los dos últimos pasos de física, como el motor dibujaría el
-## cuerpo. Se corre sólo el lugar: el giro ya está entero en el cuerpo.
+## cuerpo, y con el giro que el mouse ya mostró.
 ##
 ## Lo que se lleva cuelga de esos dos puntos, y por eso se corre con ellos. Así no tiembla contra
 ## la cámara.
-func _process(_delta: float) -> void:
+func _process(delta: float) -> void:
+	_control.avanzar_el_dibujo(delta)
 	var fraccion := Engine.get_physics_interpolation_fraction()
-	_correr_para_el_dibujo(_origen_anterior.lerp(_origen_actual, fraccion) - _origen_actual)
+	_desvio = _origen_anterior.lerp(_origen_actual, fraccion) - _origen_actual
+	_correr_para_el_dibujo(_desvio, true)
 
 
-## Corre la cámara y la caja, en metros del mundo, desde su lugar sobre el cuerpo.
-func _correr_para_el_dibujo(desvio: Vector3) -> void:
+## Corre la cámara y la caja desde su lugar sobre el cuerpo: `desvio` en metros del mundo, y el
+## giro dibujado sólo si `con_giro`. Sin él, quedan donde la física las busca.
+func _correr_para_el_dibujo(desvio: Vector3, con_giro: bool) -> void:
+	# Un jugador instanciado sin entrar al árbol recibe eventos igual, y todavía no tiene cámara.
+	if _camara == null:
+		return
 	var local := global_basis.inverse() * desvio
+	var atraso := 0.0
+	var pitch := _control.pitch()
+	if con_giro:
+		atraso = wrapf(_control.yaw_dibujado() - _control.yaw(), -PI, PI)
+		pitch = _control.pitch_dibujado()
+	var vuelta := Basis(Vector3.UP, atraso)
 	_camara.position = _ojo + local
-	_punto_de_la_caja.position = _lugar_de_la_caja + local
+	_punto_de_la_caja.transform = Transform3D(vuelta, local + vuelta * _lugar_de_la_caja)
+	var girada := atraso != 0.0 or pitch != _control.pitch()
+	if girada or _giro_en_el_dibujo:
+		_camara.rotation = Vector3(pitch, atraso, 0.0)
+	_giro_en_el_dibujo = girada
 
 
 ## Le pasa a lo chocado el paso que no se pudo dar, para que se corra en vez de tapar el paso.
@@ -275,8 +302,14 @@ func _acomodar_la_caja() -> void:
 
 ## Desde dónde y hacia dónde mira. La pide `reposicion_manual.gd` para saber dónde quiere el
 ## jugador apoyar la caja; el nodo de la cámara es privado y su ruta no se cruza desde afuera.
+##
+## Es la mirada y no el dibujo: mientras la cámara alcanza al mouse, apuntar no espera.
 func mira() -> Transform3D:
-	return _camara.global_transform
+	if not _giro_en_el_dibujo:
+		return _camara.global_transform
+	return Transform3D(
+		global_basis * Basis(Vector3.RIGHT, _control.pitch()), _camara.global_position
+	)
 
 
 ## La única puerta por la que otra escena puede decir «el jugador no controla»: el

@@ -9,7 +9,7 @@
 ##
 ## En este piso libre, lo que se lleva no temblaba contra la cámara ni antes del arreglo. Los
 ## saltos medidos en el local eran del brazo, que corre la mano al rozar un mueble. Los casos
-## quedan de testigo: correr la cámara sin correr la caja da 58 mm por cuadro.
+## quedan de testigo: correr la cámara sin correr la caja da 34 mm por cuadro.
 extends GdUnitTestSuite
 
 const JUGADOR := preload("res://src/escenas/jugador.tscn")
@@ -21,13 +21,14 @@ const CUADROS_POR_SEGUNDO := 144
 ## Píxeles de mouse por cuadro. Con la sensibilidad del dominio dan los 0,018 rad medidos.
 const MOUSE_POR_CUADRO := 6.0
 
+## El mouse medido en el juego: uno de cada cinco o seis cuadros llegaba sin movimiento.
+const REPORTES_POR_SEGUNDO := 125
+
 ## Cuadros de arranque que no se miden: el jugador todavía cae al piso.
 const CUADROS_DE_ARRANQUE := 60
 
 ## Cuánto puede moverse lo que se lleva respecto de la cámara en un cuadro, en metros.
 const TEMBLOR_ADMITIDO := 0.001
-
-var _fps_anterior := 0
 
 
 class Medidor:
@@ -38,16 +39,72 @@ class Medidor:
 	var dibujadas: Array[Transform3D] = []
 	var relativos: Array[Vector3] = []
 
+	## Lo que el motor dibuja de un nodo. Medido: sobre un nodo sin interpolar,
+	## `get_global_transform_interpolated()` devuelve un valor viejo, y la cámara que giraba
+	## pareja se leía yendo y viniendo.
+	static func dibujado(nodo: Node3D) -> Transform3D:
+		if nodo.is_physics_interpolated_and_enabled():
+			return nodo.get_global_transform_interpolated()
+		return nodo.global_transform
+
 	func _init() -> void:
 		process_priority = 1000
 
 	func _process(_delta: float) -> void:
-		var vista := camara.get_global_transform_interpolated()
+		var vista := dibujado(camara)
 		dibujadas.append(vista)
 		if sostenido != null:
-			relativos.append(
-				vista.affine_inverse() * sostenido.get_global_transform_interpolated().origin
-			)
+			relativos.append(vista.affine_inverse() * dibujado(sostenido).origin)
+
+
+## Marca el ritmo de los cuadros como el vsync del juego. `Engine.max_fps` no sirve en headless:
+## medido, los cuadros alternan entre 0,3 y 15,5 ms, y un giro suavizado por tiempo sale
+## desparejo aunque en el juego sea parejo.
+class RitmoDePantalla:
+	extends Node
+
+	var _proximo := 0
+
+	func _init() -> void:
+		process_priority = -2000
+
+	func _process(_delta: float) -> void:
+		if _proximo == 0:
+			_proximo = Time.get_ticks_usec()
+		while Time.get_ticks_usec() < _proximo:
+			pass
+		_proximo += 1000000 / CUADROS_POR_SEGUNDO
+
+
+## Suelta con el clic al final de un cuadro: ahí queda lo que se dibujó, y el evento de verdad
+## llega antes de que nada lo cambie. Un clic después del `await` llega con la física ya corrida.
+class Clic:
+	extends Node
+
+	var jugador: Node3D
+	var producto: Node3D
+	var armado := false
+	var visto := Vector3.ZERO
+	var aparecido := Vector3.ZERO
+	var _esperando := false
+
+	func _init() -> void:
+		process_priority = 2000
+
+	func _process(_delta: float) -> void:
+		if _esperando:
+			aparecido = Medidor.dibujado(producto).origin
+			_esperando = false
+		if not armado:
+			return
+		armado = false
+		var agarre: Agarre = jugador.get("agarre")
+		visto = Medidor.dibujado(agarre.punto_de_soltado).origin
+		var evento := InputEventAction.new()
+		evento.action = ReglasDeLosObjetos.ACCION_AGARRAR
+		evento.pressed = true
+		jugador.call("_unhandled_input", evento)
+		_esperando = true
 
 
 class Mouse:
@@ -59,13 +116,27 @@ class Mouse:
 		Input.parse_input_event(evento)
 
 
-func before_test() -> void:
-	_fps_anterior = Engine.max_fps
-	Engine.max_fps = CUADROS_POR_SEGUNDO
+## Un mouse que reporta a su ritmo y no al de la pantalla, como el del issue. Mueve lo mismo por
+## segundo que `Mouse`.
+class MouseLento:
+	extends Node
+
+	var _proximo := 0
+
+	func _process(_delta: float) -> void:
+		var ahora := Time.get_ticks_usec()
+		if _proximo == 0:
+			_proximo = ahora
+		while _proximo <= ahora:
+			var evento := InputEventMouseMotion.new()
+			evento.relative = Vector2(
+				MOUSE_POR_CUADRO * CUADROS_POR_SEGUNDO / REPORTES_POR_SEGUNDO, 0.0
+			)
+			Input.parse_input_event(evento)
+			_proximo += 1000000 / REPORTES_POR_SEGUNDO
 
 
 func after_test() -> void:
-	Engine.max_fps = _fps_anterior
 	Input.action_release(ReglasDelJugador.ACCION_ADELANTE)
 
 
@@ -97,6 +168,33 @@ func test_girar_con_el_mouse_dibuja_el_mismo_giro_en_cada_cuadro() -> void:
 	)
 
 
+func test_un_mouse_mas_lento_que_la_pantalla_se_dibuja_parejo() -> void:
+	var jugador := await _jugador_en_un_piso_libre()
+	var medidor := _medir(jugador, null)
+	jugador.get_parent().add_child(MouseLento.new())
+	await _esperar(4.0)
+	var giros: Array[float] = []
+	for indice in range(CUADROS_DE_ARRANQUE, medidor.dibujadas.size()):
+		var antes := medidor.dibujadas[indice - 1].basis.get_euler().y
+		var ahora := medidor.dibujadas[indice].basis.get_euler().y
+		giros.append(absf(wrapf(ahora - antes, -PI, PI)))
+	var medio := 0.0
+	for giro in giros:
+		medio += giro / giros.size()
+	var parejos := giros.filter(func(giro: float) -> bool: return absf(giro / medio - 1.0) <= 0.2)
+	var quietos := giros.filter(func(giro: float) -> bool: return giro < medio * 0.1)
+	(
+		assert_float(float(parejos.size()) / giros.size())
+		. override_failure_message(
+			(
+				"sólo %d de %d cuadros dibujan el giro medio; %d no giran"
+				% [parejos.size(), giros.size(), quietos.size()]
+			)
+		)
+		. is_greater_equal(0.95)
+	)
+
+
 func test_un_producto_en_la_mano_no_tiembla_contra_la_camara() -> void:
 	var jugador := await _jugador_en_un_piso_libre()
 	var producto := _cuerpo_suelto(jugador)
@@ -116,26 +214,35 @@ func test_una_caja_en_la_mano_no_tiembla_contra_la_camara() -> void:
 	await _comprobar_que_no_tiembla(jugador, caja)
 
 
-func test_lo_soltado_girando_se_dibuja_donde_se_veia_el_punto_de_soltado() -> void:
+func test_lo_soltado_despues_de_girar_se_dibuja_donde_se_veia_el_punto_de_soltado() -> void:
 	# Soltar pasa entre dos pasos de física. Antes, lo soltado aparecía un paso atrás: 57 mm
-	# caminando, medido.
+	# caminando, medido. Se suelta con el clic, que es el camino del juego.
 	var jugador := await _jugador_en_un_piso_libre()
 	var producto := _cuerpo_suelto(jugador)
 	var agarre: Agarre = jugador.get("agarre")
 	var datos := UnidadDeProducto.new(Catalogo.todos()[0])
 	assert_bool(agarre.pedir_agarrar(datos, producto)).is_true()
-	_mover_el_mouse(jugador)
+	var mouse := Mouse.new()
+	jugador.get_parent().add_child(mouse)
 	Input.action_press(ReglasDelJugador.ACCION_ADELANTE)
 	await _esperar(1.0)
+	# Girando, lo que se ve va atrás del mouse: el clic apunta con la mirada. Se suelta ya
+	# alcanzado el giro.
+	mouse.queue_free()
+	await _esperar(SuavizadoDelGiro.VENTANA * 4.0)
+	var clic := Clic.new()
+	clic.jugador = jugador
+	clic.producto = producto
+	jugador.get_parent().add_child(clic)
 	var mayor := 0.0
 	for vez in 10:
 		# Cuadros sueltos, para soltar en distintos puntos entre dos pasos de física.
 		for cuadro in 7:
 			await get_tree().process_frame
-		var visto := agarre.punto_de_soltado.get_global_transform_interpolated().origin
-		agarre.soltar(true)
-		await get_tree().process_frame
-		mayor = maxf(mayor, visto.distance_to(producto.get_global_transform_interpolated().origin))
+		clic.armado = true
+		for cuadro in 2:
+			await get_tree().process_frame
+		mayor = maxf(mayor, clic.visto.distance_to(clic.aparecido))
 		agarre.pedir_agarrar(datos, producto)
 	(
 		assert_float(mayor)
@@ -192,6 +299,7 @@ func _comprobar_que_no_tiembla(jugador: CharacterBody3D, sostenido: Node3D) -> v
 ## Un piso grande y nada más: los criterios se miden sin obstáculos que corran la mano.
 func _jugador_en_un_piso_libre() -> CharacterBody3D:
 	var mundo: Node3D = auto_free(Node3D.new())
+	mundo.add_child(RitmoDePantalla.new())
 	var piso := StaticBody3D.new()
 	var forma := CollisionShape3D.new()
 	var caja := BoxShape3D.new()
