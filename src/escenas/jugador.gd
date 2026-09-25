@@ -76,8 +76,11 @@ func _ready() -> void:
 	# Los brazos barren desde el hombro, que está adentro de la propia cápsula. Está medido que
 	# un barrido que arranca solapado se descarta entero: sin esta exclusión el brazo nunca
 	# acorta y lo que se lleva en la mano vuelve a meterse en la madera.
+	# Y barren antes de que el cuerpo los lea: con la misma prioridad el padre va primero y lee el
+	# largo del paso anterior.
 	for brazo: SpringArm3D in find_children("*", "SpringArm3D", true, false):
 		brazo.add_excluded_object(get_rid())
+		brazo.process_physics_priority = process_physics_priority - 1
 	# Estirados desde el primer cuadro: arrancar en cero haría que las manos salgan del hombro
 	# a la vista del jugador cada vez que empieza una jornada.
 	_largo_de_carga = _brazo_de_carga.spring_length

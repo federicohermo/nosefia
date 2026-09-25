@@ -254,15 +254,19 @@ func test_una_caja_contra_la_pared_se_corre_sin_escalones() -> void:
 	var medidor := _medir(jugador, caja)
 	almacen.add_child(MouseDeLadoALado.new())
 	await _esperar(3.0)
-	var pasos: Array[float] = []
+	var pasos: Array[Vector3] = []
 	for indice in range(1, medidor.relativos.size()):
-		pasos.append(medidor.relativos[indice].distance_to(medidor.relativos[indice - 1]))
+		pasos.append(medidor.relativos[indice] - medidor.relativos[indice - 1])
 	var escalones := 0
 	var moviendose := 0
 	for indice in range(1, pasos.size() - 1):
-		if pasos[indice - 1] > 0.001 and pasos[indice + 1] > 0.001:
+		var antes := pasos[indice - 1]
+		var despues := pasos[indice + 1]
+		if antes.length() > 0.001 and despues.length() > 0.001:
 			moviendose += 1
-			if pasos[indice] < 0.00005:
+			# Un cuadro quieto entre dos que van para lados opuestos es la vuelta de la caja, no un
+			# escalón.
+			if pasos[indice].length() < 0.00005 and antes.dot(despues) > 0.0:
 				escalones += 1
 	(
 		assert_int(moviendose)
