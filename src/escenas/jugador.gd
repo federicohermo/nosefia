@@ -246,7 +246,18 @@ func ocupar_el_frente(ocupado: bool) -> void:
 ## Sin suavizado, al revés que las manos: el brazo ya contesta un punto libre, y el volumen se
 ## enciende justo ahí. Un punto intermedio quedaría adentro de la madera.
 func _acomodar_la_caja() -> void:
-	var lugar := _brazo_de_la_caja.transform * Vector3(0.0, 0.0, _brazo_de_la_caja.get_hit_length())
+	# Barre acá, después de `move_and_slide()`, y no lee el barrido del brazo, que es de antes de
+	# moverse: con ese largo la forma quedaba adentro de la pared, y el paso siguiente rebotaba el
+	# cuerpo 2 cm.
+	var brazo := _brazo_de_la_caja
+	var barrido := PhysicsShapeQueryParameters3D.new()
+	barrido.shape = brazo.shape
+	barrido.transform = brazo.global_transform
+	barrido.motion = brazo.global_basis.z * brazo.spring_length
+	barrido.collision_mask = brazo.collision_mask
+	barrido.exclude = [get_rid()]
+	var libre := get_world_3d().direct_space_state.cast_motion(barrido)[0]
+	var lugar := brazo.transform * Vector3(0.0, 0.0, brazo.spring_length * libre)
 	_punto_de_la_caja.position = lugar
 	# El cuerpo no gira: la forma se gira con el yaw a mano.
 	_forma_de_la_caja.transform = _giro.transform * Transform3D(Basis.IDENTITY, lugar)

@@ -43,6 +43,9 @@ class Medidor:
 	var dibujadas: Array[Transform3D] = []
 	var relativos: Array[Vector3] = []
 
+	## El tiempo de física que se dibuja, en pasos.
+	var tiempos: Array[float] = []
+
 	## Lo que el motor dibuja de un nodo. Un hijo sin interpolar sigue la interpolación de su
 	## padre, así que cuenta cualquier ancestro. Medido: en una rama sin nada interpolado,
 	## `get_global_transform_interpolated()` devuelve un valor viejo.
@@ -62,6 +65,9 @@ class Medidor:
 		dibujadas.append(vista)
 		if sostenido != null:
 			relativos.append(vista.affine_inverse() * dibujado(sostenido).origin)
+			tiempos.append(
+				Engine.get_physics_frames() + Engine.get_physics_interpolation_fraction()
+			)
 
 
 ## Marca el ritmo de los cuadros como el vsync del juego. `Engine.max_fps` no sirve en headless:
@@ -255,8 +261,10 @@ func test_una_caja_contra_la_pared_se_corre_sin_escalones() -> void:
 	almacen.add_child(MouseDeLadoALado.new())
 	await _esperar(3.0)
 	var pasos: Array[Vector3] = []
+	var avances: Array[float] = []
 	for indice in range(1, medidor.relativos.size()):
 		pasos.append(medidor.relativos[indice] - medidor.relativos[indice - 1])
+		avances.append(medidor.tiempos[indice] - medidor.tiempos[indice - 1])
 	var escalones := 0
 	var moviendose := 0
 	for indice in range(1, pasos.size() - 1):
@@ -266,7 +274,10 @@ func test_una_caja_contra_la_pared_se_corre_sin_escalones() -> void:
 			moviendose += 1
 			# Un cuadro quieto entre dos que van para lados opuestos es la vuelta de la caja, no un
 			# escalón.
-			if pasos[indice].length() < 0.00005 and antes.dot(despues) > 0.0:
+			# Y uno que no avanza el tiempo dibujado tampoco: pasa después de un cuadro lento de la
+			# máquina, y ahí el motor retiene la fracción.
+			var quieto := pasos[indice].length() < 0.00005 and avances[indice] > 0.1
+			if quieto and antes.dot(despues) > 0.0:
 				escalones += 1
 	(
 		assert_int(moviendose)
