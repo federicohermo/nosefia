@@ -46,49 +46,32 @@ var _enfocado: Node3D = null
 var _largo_de_carga := 0.0
 var _largo_de_producto := 0.0
 
-## Dónde estaba el cuerpo en los dos últimos pasos de física. Entre uno y otro, la cámara y la
-## caja se dibujan en el medio, y el giro no espera al paso siguiente. Ver `_process()`.
-var _origen_anterior := Vector3.ZERO
-var _origen_actual := Vector3.ZERO
+## Si el giro dibujado todavía va atrás de la mirada. Mientras tanto se lo reescribe cada cuadro,
+## y sólo entonces: un test que apunta la cámara a mano no la pierde en el cuadro siguiente.
+var _girando_el_dibujo := false
 
-## Dónde van la cámara y la caja sobre el cuerpo, antes de correrlas para el dibujo.
-var _ojo := Vector3.ZERO
-var _lugar_de_la_caja := Vector3.ZERO
-
-## Lo que el último cuadro corrió el dibujo, en metros del mundo. Lo reusa cada evento, que llega
-## entre dos cuadros.
-var _desvio := Vector3.ZERO
-
-## Si la cámara quedó girada distinto de la mirada. Sólo entonces se le reescribe la rotación: un
-## test que la apunta a mano no la pierde en el cuadro siguiente.
-var _giro_en_el_dibujo := false
-
-@onready var _camara: Camera3D = $Camara
-@onready var _campo: Area3D = $Camara/CampoDeInteraccion
+## El yaw va acá y no al cuerpo, que es la receta de Godot para mirar con el mouse: el cuerpo se
+## dibuja interpolado entre dos pasos de física, y este nodo no. Así la caminata sale pareja y el
+## giro no espera al paso siguiente. Medido con el yaw en el cuerpo: el giro dibujado iba de 0,05 a
+## 1,9 veces el pedido. Su interpolación apagada está en el `.tscn`.
+@onready var _giro: Node3D = $Giro
+@onready var _camara: Camera3D = $Giro/Camara
+@onready var _campo: Area3D = $Giro/Camara/CampoDeInteraccion
 
 ## Los dos brazos que miden cuánto lugar hay para lo que se lleva.
-@onready var _brazo_de_carga: SpringArm3D = $Camara/BrazoDeCarga
-@onready var _brazo_de_producto: SpringArm3D = $Camara/BrazoDeProducto
+@onready var _brazo_de_carga: SpringArm3D = $Giro/Camara/BrazoDeCarga
+@onready var _brazo_de_producto: SpringArm3D = $Giro/Camara/BrazoDeProducto
 
-## El brazo de la caja cuelga del cuerpo y no de la cámara: pegado al pitch taparía la mira.
-@onready var _brazo_de_la_caja: SpringArm3D = $BrazoDeCaja
-@onready var _punto_de_la_caja: Node3D = $PuntoDeCaja
+## El brazo de la caja gira con el yaw y no con la cámara: pegado al pitch taparía la mira.
+@onready var _brazo_de_la_caja: SpringArm3D = $Giro/BrazoDeCaja
+@onready var _punto_de_la_caja: Node3D = $Giro/PuntoDeCaja
 
-## La caja cuelga del cuerpo y no de la cámara, y ocupa lugar: mientras se la lleva, el jugador
-## no puede acercarse a una pared más de lo que la caja mide.
+## La caja ocupa lugar: mientras se la lleva, el jugador no puede acercarse a una pared más de lo
+## que la caja mide. La forma es hija del cuerpo y no del giro, porque sólo así choca.
 @onready var _forma_de_la_caja: CollisionShape3D = $FormaDeLaCaja
 
 
 func _ready() -> void:
-	# El motor interpola el cuerpo entre dos pasos de física, pero el giro se escribe al llegar el
-	# mouse, en el medio. Medido: el giro dibujado iba de 0,05 a 1,9 veces el pedido. Sin
-	# interpolar, el giro se dibuja entero en el cuadro en que llega; la caminata la interpola
-	# `_process()`.
-	physics_interpolation_mode = Node.PHYSICS_INTERPOLATION_MODE_OFF
-	_ojo = _camara.position
-	_lugar_de_la_caja = _punto_de_la_caja.position
-	_origen_anterior = global_position
-	_origen_actual = global_position
 	_aplicar_el_modo_del_cursor()
 	_aplicar_la_rotacion()
 	# Los brazos barren desde el hombro, que está adentro de la propia cápsula. Está medido que
@@ -122,9 +105,6 @@ func ignorar_el_detalle(cuerpo: PhysicsBody3D) -> void:
 
 
 func _unhandled_input(evento: InputEvent) -> void:
-	# Lo que dispara un evento apunta con la mirada, no con el dibujo que la alcanza. El lugar
-	# queda el dibujado: lo que se suelta cae donde se lo veía.
-	_correr_para_el_dibujo(_desvio, false)
 	# El giro se descarta con el cursor suelto porque en `MOUSE_MODE_VISIBLE` el motor sigue
 	# entregando el `relative` del mouse: sin este filtro, ir a apretar el botón de cerrar la
 	# ventana gira la cámara todo el camino, y la salida de emergencia deja de servir.
@@ -185,8 +165,6 @@ func _physics_process(delta: float) -> void:
 	# control: así `suspender()` y `reanudar()` no tienen que acordarse de tocarlo, que es
 	# exactamente el olvido que la suspensión como modo único existe para evitar.
 	_aplicar_el_modo_del_cursor()
-	# La física mira desde donde está el cuerpo, no desde donde se lo dibuja.
-	_correr_para_el_dibujo(Vector3.ZERO, false)
 
 	if not is_on_floor():
 		velocity += get_gravity() * delta
@@ -204,8 +182,6 @@ func _physics_process(delta: float) -> void:
 	velocity.x = horizontal.x
 	velocity.z = horizontal.z
 	move_and_slide()
-	_origen_anterior = _origen_actual
-	_origen_actual = global_position
 	_empujar_lo_que_estorba()
 
 	_acomodar_las_manos(delta)
@@ -213,37 +189,14 @@ func _physics_process(delta: float) -> void:
 	_leer_la_mira()
 
 
-## Dibuja la cámara y la caja entre los dos últimos pasos de física, como el motor dibujaría el
-## cuerpo, y con el giro que el mouse ya mostró.
-##
-## Lo que se lleva cuelga de esos dos puntos, y por eso se corre con ellos. Así no tiembla contra
-## la cámara.
+## Deja que el giro dibujado alcance a la mirada. Sólo trabaja con un mouse más lento que la
+## pantalla: ver `SuavizadoDelGiro`.
 func _process(delta: float) -> void:
 	_control.avanzar_el_dibujo(delta)
-	var fraccion := Engine.get_physics_interpolation_fraction()
-	_desvio = _origen_anterior.lerp(_origen_actual, fraccion) - _origen_actual
-	_correr_para_el_dibujo(_desvio, true)
-
-
-## Corre la cámara y la caja desde su lugar sobre el cuerpo: `desvio` en metros del mundo, y el
-## giro dibujado sólo si `con_giro`. Sin él, quedan donde la física las busca.
-func _correr_para_el_dibujo(desvio: Vector3, con_giro: bool) -> void:
-	# Un jugador instanciado sin entrar al árbol recibe eventos igual, y todavía no tiene cámara.
-	if _camara == null:
-		return
-	var local := global_basis.inverse() * desvio
-	var atraso := 0.0
-	var pitch := _control.pitch()
-	if con_giro:
-		atraso = wrapf(_control.yaw_dibujado() - _control.yaw(), -PI, PI)
-		pitch = _control.pitch_dibujado()
-	var vuelta := Basis(Vector3.UP, atraso)
-	_camara.position = _ojo + local
-	_punto_de_la_caja.transform = Transform3D(vuelta, local + vuelta * _lugar_de_la_caja)
-	var girada := atraso != 0.0 or pitch != _control.pitch()
-	if girada or _giro_en_el_dibujo:
-		_camara.rotation = Vector3(pitch, atraso, 0.0)
-	_giro_en_el_dibujo = girada
+	var atrasado := _control.giro_atrasado()
+	if atrasado or _girando_el_dibujo:
+		_aplicar_la_rotacion()
+	_girando_el_dibujo = atrasado
 
 
 ## Le pasa a lo chocado el paso que no se pudo dar, para que se corra en vez de tapar el paso.
@@ -293,23 +246,21 @@ func ocupar_el_frente(ocupado: bool) -> void:
 ## Sin suavizado, al revés que las manos: el brazo ya contesta un punto libre, y el volumen se
 ## enciende justo ahí. Un punto intermedio quedaría adentro de la madera.
 func _acomodar_la_caja() -> void:
-	_lugar_de_la_caja = (
-		_brazo_de_la_caja.transform * Vector3(0.0, 0.0, _brazo_de_la_caja.get_hit_length())
-	)
-	_punto_de_la_caja.position = _lugar_de_la_caja
-	_forma_de_la_caja.position = _lugar_de_la_caja
+	var lugar := _brazo_de_la_caja.transform * Vector3(0.0, 0.0, _brazo_de_la_caja.get_hit_length())
+	_punto_de_la_caja.position = lugar
+	# El cuerpo no gira: la forma se gira con el yaw a mano.
+	_forma_de_la_caja.transform = _giro.transform * Transform3D(Basis.IDENTITY, lugar)
 
 
 ## Desde dónde y hacia dónde mira. La pide `reposicion_manual.gd` para saber dónde quiere el
 ## jugador apoyar la caja; el nodo de la cámara es privado y su ruta no se cruza desde afuera.
-##
-## Es la mirada y no el dibujo: mientras la cámara alcanza al mouse, apuntar no espera.
 func mira() -> Transform3D:
-	if not _giro_en_el_dibujo:
-		return _camara.global_transform
-	return Transform3D(
-		global_basis * Basis(Vector3.RIGHT, _control.pitch()), _camara.global_position
-	)
+	return _camara.global_transform
+
+
+## Hacia adónde mira el jugador en el piso, sin el pitch. El cuerpo no gira: el yaw es del giro.
+func frente() -> Vector3:
+	return -_giro.global_basis.z
 
 
 ## La única puerta por la que otra escena puede decir «el jugador no controla»: el
@@ -344,11 +295,14 @@ func id_en_la_mano() -> StringName:
 	return datos.id
 
 
-## El yaw va al cuerpo —así el adelante de la caminata y el de la vista son el mismo— y el pitch
-## a la cámara. El dominio devuelve dos ángulos y no sabe a qué nodo van.
+## El yaw va al giro y el pitch a la cámara. Son los dibujados: con un mouse rápido, los mismos que
+## los de la mirada. El dominio devuelve dos ángulos y no sabe a qué nodo van.
 func _aplicar_la_rotacion() -> void:
-	rotation.y = _control.yaw()
-	_camara.rotation.x = _control.pitch()
+	# Un jugador instanciado sin entrar al árbol recibe eventos igual, y todavía no tiene cámara.
+	if _camara == null:
+		return
+	_giro.rotation.y = _control.yaw_dibujado()
+	_camara.rotation.x = _control.pitch_dibujado()
 
 
 ## `dominio/` decide SI el cursor tiene que estar tomado, y acá se le suma la salida de
@@ -450,7 +404,21 @@ func _devolver_al_mundo(nodo: Node3D) -> void:
 	var mundo := get_parent()
 	if nodo == null or mundo == null or not nodo.is_inside_tree():
 		return
+	# Sale de donde se lo veía: el cuerpo se dibuja hasta un paso de física atrás de donde está.
+	# Se mide en el punto del que cuelga, porque soltar lo deja `top_level` y ya no hereda el
+	# dibujo del cuerpo. Y sin la interpolación de antes de agarrarlo, que lo dibujaría cruzando
+	# el local.
+	var ancla := nodo.get_parent() as Node3D
+	var atras := Vector3.ZERO
+	if ancla != null:
+		atras = ancla.get_global_transform_interpolated().origin - ancla.global_position
+	# El dibujo va como mucho un paso atrás. El doble ya es un salto del cuerpo, no un atraso.
+	var un_paso := velocity.length() / Engine.physics_ticks_per_second
+	if atras.length() > 2.0 * un_paso:
+		atras = Vector3.ZERO
 	nodo.reparent(mundo, true)
+	nodo.global_position += atras
+	nodo.reset_physics_interpolation()
 	if nodo is RigidBody3D:
 		_ajustar_la_caida(nodo)
 

@@ -9,7 +9,7 @@ func test_soltar_hacia_la_gondola_deja_el_producto_visible_y_recuperable() -> vo
 		add_child(almacen)
 		var jugador: CharacterBody3D = almacen.get_node("Jugador")
 		jugador.set_physics_process(false)
-		var camara: Camera3D = jugador.get_node("Camara")
+		var camara: Camera3D = jugador.get_node("Giro/Camara")
 		var agarre: Agarre = jugador.get("agarre")
 		jugador.global_position = ojo - Vector3.UP * 1.7
 		camara.look_at(Vector3(1.3, 1.7, 0))
@@ -52,7 +52,7 @@ func test_la_bolsa_sostenida_no_desplaza_al_jugador() -> void:
 		await get_tree().physics_frame
 	assert_bool(jugador.is_on_floor()).is_true()
 	assert_bool(agarre.pedir_agarrar(bolsa.get("datos"), bolsa)).is_true()
-	var camara: Camera3D = jugador.get_node("Camara")
+	var camara: Camera3D = jugador.get_node("Giro/Camara")
 	for grados: int in [-20, -40, -60, -80]:
 		camara.rotation.x = deg_to_rad(grados)
 		var inicio := jugador.global_position

@@ -97,7 +97,7 @@ func test_una_caja_chica_soltada_hacia_una_bandeja_no_queda_adentro_de_la_gondol
 	var gondola := almacen.get_node("Estructura/gondolanueva") as MeshInstance3D
 	var mueble := gondola.global_transform * gondola.get_aabb()
 	var caja: Node3D = almacen.get("_cajas_de_productos")[Producto.Id.MALBARDO]
-	var mano: Node3D = jugador.get_node("PuntoDeCaja")
+	var mano: Node3D = jugador.get_node("Giro/PuntoDeCaja")
 	var adentro: Array[String] = []
 	for caso: Array in [
 		[Vector3(-0.43, 0.11, -2.49), Vector3(0.77, 1.0, -2.49)],

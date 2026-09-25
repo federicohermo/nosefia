@@ -161,7 +161,7 @@ func test_laysntt_y_jorgillo_quedan_sobre_el_suelo_al_mover_la_camara() -> void:
 		assert_float(limites.end.y).is_less(suelo.position.y + 0.005)
 	var jugador: CharacterBody3D = almacen.get("_jugador")
 	jugador.set_physics_process(false)
-	var camara: Camera3D = jugador.get_node("Camara")
+	var camara: Camera3D = jugador.get_node("Giro/Camara")
 	var agarre: Agarre = almacen.get("_agarre")
 	var sueltas: Array[RigidBody3D] = []
 	for id in [Producto.Id.LAYSNTT, Producto.Id.JORGILLO]:
@@ -349,7 +349,7 @@ func test_el_frente_se_conserva_al_examinar_y_volver_a_agarrar() -> void:
 		var orientacion := unidad.basis
 		assert_float((orientacion * frentes[producto.id]).dot(Vector3.BACK)).is_greater(0.8)
 		assert_bool(orientacion.is_equal_approx(Basis.IDENTITY)).is_false()
-		agarre.mover_lo_sostenido(almacen.get("_jugador").get_node("Camara/PuntoDeExamen"))
+		agarre.mover_lo_sostenido(almacen.get("_jugador").get_node("Giro/Camara/PuntoDeExamen"))
 		unidad.rotate_y(0.7)
 		agarre.devolver_a_la_mano()
 		assert_bool(unidad.basis.is_equal_approx(orientacion)).is_true()
@@ -436,7 +436,7 @@ func test_no_hay_productos_3d_iniciales_fuera_del_inventario() -> void:
 
 
 func _mirar_foco(jugador: Node3D, ojo: Vector3, punto: Vector3) -> void:
-	var camara: Camera3D = jugador.get_node("Camara")
+	var camara: Camera3D = jugador.get_node("Giro/Camara")
 	camara.position = Vector3.UP * ReglasDelJugador.ALTURA_DE_LA_CAMARA
 	jugador.global_position = ojo - camara.position
 	camara.look_at(punto)
@@ -463,7 +463,7 @@ func test_cada_unidad_ocupa_un_lugar_distinto_y_la_marca_indica_su_base() -> voi
 		var zona := presentacion.get_node("ZonaDe" + producto.nombre)
 		for indice in producto.umbral:
 			_sacar_de_la_caja(jugador, almacen.get("_cajas_de_productos")[producto.id])
-			var unidad: Node3D = jugador.get_node("Camara/PuntoDeProducto").get_child(0)
+			var unidad: Node3D = jugador.get_node("Giro/Camara/PuntoDeProducto").get_child(0)
 			# **La marca es el fantasma del envase, no un rectángulo en el piso.** Lo que tiene
 			# que coincidir con la unidad repuesta es su base: el fantasma se para donde la
 			# unidad se va a parar, y por eso el apoyo sale de su caja y no de su origen.
@@ -507,7 +507,7 @@ func test_el_clic_saca_una_unidad_visible_y_el_estante_la_recibe() -> void:
 	var repositor: Repositor = almacen.get("_repositor")
 	_sacar_de_la_caja(jugador, caja)
 	assert_object(agarre.manos().sostenido()).is_not_null()
-	var punto := jugador.get_node_or_null("Camara/PuntoDeProducto")
+	var punto := jugador.get_node_or_null("Giro/Camara/PuntoDeProducto")
 	assert_object(punto).is_not_null()
 	if punto == null or punto.get_child_count() == 0:
 		return
@@ -550,7 +550,7 @@ func test_con_el_estante_lleno_la_caja_no_entrega_otra_unidad() -> void:
 	assert_object(agarre.manos().sostenido()).is_null()
 	_accion(jugador, estante)
 	assert_object(agarre.manos().sostenido()).is_null()
-	assert_int(jugador.get_node("Camara/PuntoDeProducto").get_child_count()).is_zero()
+	assert_int(jugador.get_node("Giro/Camara/PuntoDeProducto").get_child_count()).is_zero()
 
 
 func test_examinar_no_retira_ni_deposita_y_devuelve_la_unidad_a_la_mira() -> void:
@@ -569,13 +569,13 @@ func test_examinar_no_retira_ni_deposita_y_devuelve_la_unidad_a_la_mira() -> voi
 	var sostenido := agarre.manos().sostenido()
 	_accion(jugador, estante, ReglasDeLosObjetos.ACCION_EXAMINAR)
 	assert_object(agarre.manos().sostenido()).is_same(sostenido)
-	assert_int(jugador.get_node("Camara/PuntoDeExamen").get_child_count()).is_equal(1)
+	assert_int(jugador.get_node("Giro/Camara/PuntoDeExamen").get_child_count()).is_equal(1)
 	# La unidad recién sacada de la caja se examina a la distancia de siempre.
-	assert_float(jugador.get_node("Camara/PuntoDeExamen").position.length()).is_equal_approx(
+	assert_float(jugador.get_node("Giro/Camara/PuntoDeExamen").position.length()).is_equal_approx(
 		ReglasDeLosObjetos.DISTANCIA_DE_EXAMEN, 0.001
 	)
 	_accion(jugador, estante, ReglasDeLosObjetos.ACCION_EXAMINAR)
-	assert_int(jugador.get_node("Camara/PuntoDeProducto").get_child_count()).is_equal(1)
+	assert_int(jugador.get_node("Giro/Camara/PuntoDeProducto").get_child_count()).is_equal(1)
 
 
 func test_las_dos_cajas_se_examinan_enteras_y_vuelven_a_la_cintura() -> void:
@@ -586,9 +586,9 @@ func test_las_dos_cajas_se_examinan_enteras_y_vuelven_a_la_cintura() -> void:
 	var jugador: Node3D = almacen.get("_jugador")
 	jugador.set_physics_process(false)
 	var agarre: Agarre = almacen.get("_agarre")
-	var camara: Camera3D = jugador.get_node("Camara")
-	var cara: Node3D = jugador.get_node("Camara/PuntoDeExamen")
-	var cintura: Node3D = jugador.get_node("PuntoDeCaja")
+	var camara: Camera3D = jugador.get_node("Giro/Camara")
+	var cara: Node3D = jugador.get_node("Giro/Camara/PuntoDeExamen")
+	var cintura: Node3D = jugador.get_node("Giro/PuntoDeCaja")
 	var volumen: CollisionShape3D = jugador.get_node("FormaDeLaCaja")
 	# La chica primero y la grande después: el almacén usa dos tamaños y nada más.
 	var cajas: Array = almacen.get("_cajas_de_productos").duplicate()
@@ -660,7 +660,7 @@ func _sacar_de_la_caja(jugador: Node3D, caja: Node3D) -> void:
 func _apuntar(almacen: Node3D, id: Producto.Id) -> void:
 	var zona: AABB = almacen.get("_reposicion_manual").zona(id)
 	var jugador: Node3D = almacen.get("_jugador")
-	var camara: Camera3D = jugador.get_node("Camara")
+	var camara: Camera3D = jugador.get_node("Giro/Camara")
 	camara.global_position = zona.get_center() + Vector3(0, 0, 1.5)
 	camara.look_at(zona.get_center())
 

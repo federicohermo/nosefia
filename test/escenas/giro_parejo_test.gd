@@ -9,7 +9,7 @@
 ##
 ## En este piso libre, lo que se lleva no temblaba contra la cámara ni antes del arreglo. Los
 ## saltos medidos en el local eran del brazo, que corre la mano al rozar un mueble. Los casos
-## quedan de testigo: correr la cámara sin correr la caja da 34 mm por cuadro.
+## quedan de testigo de que lo que se lleva cuelga del giro y no del cuerpo.
 extends GdUnitTestSuite
 
 const JUGADOR := preload("res://src/escenas/jugador.tscn")
@@ -39,12 +39,15 @@ class Medidor:
 	var dibujadas: Array[Transform3D] = []
 	var relativos: Array[Vector3] = []
 
-	## Lo que el motor dibuja de un nodo. Medido: sobre un nodo sin interpolar,
-	## `get_global_transform_interpolated()` devuelve un valor viejo, y la cámara que giraba
-	## pareja se leía yendo y viniendo.
+	## Lo que el motor dibuja de un nodo. Un hijo sin interpolar sigue la interpolación de su
+	## padre, así que cuenta cualquier ancestro. Medido: en una rama sin nada interpolado,
+	## `get_global_transform_interpolated()` devuelve un valor viejo.
 	static func dibujado(nodo: Node3D) -> Transform3D:
-		if nodo.is_physics_interpolated_and_enabled():
-			return nodo.get_global_transform_interpolated()
+		var actual: Node = nodo
+		while actual is Node3D:
+			if actual.is_physics_interpolated_and_enabled():
+				return nodo.get_global_transform_interpolated()
+			actual = actual.get_parent()
 		return nodo.global_transform
 
 	func _init() -> void:
@@ -209,7 +212,7 @@ func test_una_caja_en_la_mano_no_tiembla_contra_la_camara() -> void:
 	var agarre: Agarre = jugador.get("agarre")
 	assert_bool(agarre.pedir_agarrar(ObjetoDelAlmacen.new(), caja)).is_true()
 	# Lo mismo que hace la reposición con una caja recién levantada: la baja a la cintura.
-	agarre.mover_lo_sostenido(jugador.get_node("PuntoDeCaja"))
+	agarre.mover_lo_sostenido(jugador.get_node("Giro/PuntoDeCaja"))
 	jugador.call("ocupar_el_frente", true)
 	await _comprobar_que_no_tiembla(jugador, caja)
 
@@ -330,7 +333,7 @@ func _cuerpo_suelto(jugador: CharacterBody3D) -> RigidBody3D:
 
 func _medir(jugador: CharacterBody3D, sostenido: Node3D) -> Medidor:
 	var medidor := Medidor.new()
-	medidor.camara = jugador.get_node("Camara")
+	medidor.camara = jugador.get_node("Giro/Camara")
 	medidor.sostenido = sostenido
 	jugador.get_parent().add_child(medidor)
 	return medidor

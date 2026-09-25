@@ -88,6 +88,11 @@ func pitch_dibujado() -> float:
 	return _mirada.pitch() - _suavizado.pendiente().y
 
 
+## Si la cámara todavía tiene giro por dibujar. Sólo pasa con un mouse más lento que la pantalla.
+func giro_atrasado() -> bool:
+	return _suavizado.pendiente() != Vector2.ZERO
+
+
 func objetivo() -> int:
 	return _foco.objetivo()
 
