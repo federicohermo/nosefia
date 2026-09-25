@@ -1,6 +1,6 @@
 ## Lo que dura más que una noche: qué jornada va, el legajo que se arrastra y cómo termina todo.
 ##
-## **Es la pieza que hace jugable la regla del 002.** Hasta acá el legajo vivía adentro del
+## **Es la pieza que hace jugable la regla del despido.** Hasta acá el legajo vivía adentro del
 ## script de la escena y moría con ella, así que `despedido()` no podía devolver `true` jugando:
 ## la regla estaba en verde en los tests y muerta en la build. Con la partida el mismo legajo
 ## cruza las cinco jornadas y el despido se alcanza.

@@ -6,6 +6,10 @@ extends GdUnitTestSuite
 const ReglasDelJugador := preload("res://src/dominio/jugador/reglas_del_jugador.gd")
 
 
+func test_el_techo_angular_se_expresa_en_radianes() -> void:
+	assert_float(ReglasDelJugador.DESVIO_MAXIMO_DE_LA_MIRA).is_equal(deg_to_rad(15.0))
+
+
 func test_el_pitch_encierra_al_cero_y_no_llega_a_los_noventa_grados() -> void:
 	# Es «la cámara no se da vuelta» escrito como aserción en vez de como impresión: si el
 	# límite llegara a PI/2 la vista quedaría vertical, y pasándolo se invierte.
@@ -22,10 +26,10 @@ func test_la_velocidad_y_la_sensibilidad_son_positivas() -> void:
 	assert_float(ReglasDelJugador.SENSIBILIDAD_DEL_MOUSE).is_greater(0.0)
 
 
-func test_el_alcance_de_la_mira_supera_la_distancia_de_soltado_del_006() -> void:
-	# El spec 006 suelta lo que se lleva a 1,2 m y afirma que se lo puede volver a mirar. Un
+func test_el_alcance_de_la_mira_supera_la_distancia_de_soltado() -> void:
+	# Lo que se lleva se suelta a 1,2 m y se afirma que se lo puede volver a mirar. Un
 	# alcance menor deja al jugador soltando cosas que ya no puede agarrar, y ese rojo
-	# aparecería en el test del 006 y no acá.
+	# aparecería en el test de agarrar y no acá.
 	assert_float(ReglasDelJugador.ALCANCE_DE_LA_MIRA).is_greater(1.2)
 
 

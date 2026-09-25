@@ -6,45 +6,57 @@ extends GdUnitTestSuite
 
 const ATENCION := "res://src/dominio/almacen/atencion.gd"
 
-## Cuántas unidades de cada producto se le ponen a la góndola cuando el caso quiere stock de
-## sobra. Cualquier número por encima del pedido más grande de esta suite sirve.
-const EN_GONDOLA := 9
+## Cuántas unidades de cada producto se pueden vender cuando el caso quiere de sobra. Cualquier
+## número por encima del pedido más grande de esta suite sirve.
+const VENDIBLES := 9
 
 
 func _productos() -> Array[Producto]:
-	return [Catalogo.de(Producto.Id.YERBA), Catalogo.de(Producto.Id.JABON)]
+	return [Catalogo.de(Producto.Id.ACTRONCITO), Catalogo.de(Producto.Id.MALBARDO)]
 
 
-func _pedido(unidades_de_yerba: int = 2, unidades_de_jabon: int = 1) -> Venta:
+func _pedido(unidades_de_actroncito: int = 2, unidades_de_malbardo: int = 1) -> Venta:
 	var venta := Venta.new()
-	venta.agregar(Catalogo.de(Producto.Id.YERBA), unidades_de_yerba)
-	venta.agregar(Catalogo.de(Producto.Id.JABON), unidades_de_jabon)
+	venta.agregar(Catalogo.de(Producto.Id.ACTRONCITO), unidades_de_actroncito)
+	venta.agregar(Catalogo.de(Producto.Id.MALBARDO), unidades_de_malbardo)
 	return venta
 
 
-func _inventario(en_gondola: int = EN_GONDOLA) -> Inventario:
+## La góndola llena, así que todo el depósito es vendible. Se arma desde el umbral y no con un
+## número escrito acá: el día que el balance mueva un umbral, los casos no cambian de resultado.
+func _inventario(vendibles: int = VENDIBLES) -> Inventario:
 	var productos := _productos()
 	var inventario := Inventario.new(productos)
 	for producto in productos:
-		inventario.ingresar(producto, Inventario.Ubicacion.GONDOLA, en_gondola)
+		inventario.ingresar(producto, Inventario.Ubicacion.GONDOLA, producto.umbral)
+		inventario.ingresar(producto, Inventario.Ubicacion.DEPOSITO, vendibles)
 	return inventario
 
 
-func _atencion(paga: int, en_gondola: int = EN_GONDOLA, pedido: Venta = null) -> Atencion:
+func _atencion(paga: int, vendibles: int = VENDIBLES, pedido: Venta = null) -> Atencion:
 	var venta := pedido if pedido != null else _pedido()
-	return Atencion.new(Comprador.new("Marta", venta, paga), _inventario(en_gondola))
+	return Atencion.new(Comprador.new("Marta", venta, paga), _inventario(vendibles))
 
 
-func test_la_caja_marca_el_total_del_pedido_y_no_lo_vuelve_a_sumar() -> void:  # 013-AC2
+## Que el inventario siga como lo dejó `_inventario(vendibles)`, en las dos ubicaciones.
+func _sin_cambios(inventario: Inventario, vendibles: int) -> void:
+	for producto in _productos():
+		assert_int(inventario.unidades(producto, Inventario.Ubicacion.GONDOLA)).is_equal(
+			producto.umbral
+		)
+		assert_int(inventario.unidades(producto, Inventario.Ubicacion.DEPOSITO)).is_equal(vendibles)
+
+
+func test_la_caja_marca_el_total_del_pedido_y_no_lo_vuelve_a_sumar() -> void:  # AC-CTR-002
 	# Se compara contra `Venta.total()` y nunca contra un número escrito acá: una segunda suma
 	# en la atención daría el mismo resultado hasta el día que el catálogo cambie, y ahí las dos
 	# ventanas dirían distinto sin un solo error.
 	var pedido := _pedido()
-	var atencion := _atencion(0, EN_GONDOLA, pedido)
+	var atencion := _atencion(0, VENDIBLES, pedido)
 	assert_int(atencion.total_de_la_caja()).is_equal(pedido.total())
 
 
-func test_la_atencion_no_conoce_lo_que_sale_cada_producto() -> void:  # 013-AC2
+func test_la_atencion_no_conoce_lo_que_sale_cada_producto() -> void:  # AC-CTR-002
 	# El criterio pide que la palabra que nombra ese dato no aparezca en el archivo. Es la forma
 	# ejecutable de «la caja no vuelve a sumar»: sin el dato no hay con qué.
 	var texto := FileAccess.get_file_as_string(ATENCION)
@@ -56,20 +68,20 @@ func test_la_atencion_no_conoce_lo_que_sale_cada_producto() -> void:  # 013-AC2
 	)
 
 
-func test_pagar_justo_da_una_diferencia_de_cero() -> void:  # 013-AC3
+func test_pagar_justo_da_una_diferencia_de_cero() -> void:  # AC-CTR-003
 	var atencion := _atencion(0)
 	assert_int(atencion.diferencia()).is_equal(-atencion.total_de_la_caja())
 	var justo := _atencion(_pedido().total())
 	assert_int(justo.diferencia()).is_equal(0)
 
 
-func test_pagar_de_mas_da_una_diferencia_positiva() -> void:  # 013-AC3
+func test_pagar_de_mas_da_una_diferencia_positiva() -> void:  # AC-CTR-003
 	var total := _pedido().total()
 	var atencion := _atencion(total + 700)
 	assert_int(atencion.diferencia()).is_equal(700)
 
 
-func test_pagar_de_menos_da_una_diferencia_negativa() -> void:  # 013-AC3
+func test_pagar_de_menos_da_una_diferencia_negativa() -> void:  # AC-CTR-003
 	# El signo es lo que el spec vino a comprar: un `abs()` mal puesto pasa los otros dos casos
 	# y deja al comprador que paga de menos indistinguible del que paga de más.
 	var total := _pedido().total()
@@ -77,107 +89,122 @@ func test_pagar_de_menos_da_una_diferencia_negativa() -> void:  # 013-AC3
 	assert_int(atencion.diferencia()).is_equal(-700)
 
 
-func test_los_faltantes_nombran_exactamente_los_productos_que_no_alcanzan() -> void:  # 013-AC4
-	# Con una sola unidad en góndola, la yerba —que se pide de a dos— falta y el jabón no.
+func test_los_faltantes_nombran_exactamente_los_productos_que_no_alcanzan() -> void:  # AC-CTR-012
+	# Con una sola unidad vendible, el renglón que se pide de a dos falta y el de a uno no.
 	var atencion := _atencion(0, 1)
 	var faltantes := atencion.faltantes_del_pedido()
 	assert_int(faltantes.size()).is_equal(1)
-	assert_int(faltantes[0].id).is_equal(Producto.Id.YERBA)
+	assert_int(faltantes[0].id).is_equal(Producto.Id.ACTRONCITO)
 
 
-func test_con_stock_de_sobra_no_falta_nada() -> void:  # 013-AC4
+func test_los_faltantes_miran_los_vendibles_y_no_la_gondola() -> void:  # AC-CTR-012
+	# La góndola llena no cubre un pedido: lo que el estante necesita no se vende. Un
+	# `faltantes_del_pedido()` que mirara la góndola daría vacío acá y el cobro fallaría igual.
+	var atencion := _atencion(0, 0)
+	assert_int(atencion.faltantes_del_pedido().size()).is_equal(2)
+
+
+func test_con_vendibles_de_sobra_no_falta_nada() -> void:
 	assert_array(_atencion(0).faltantes_del_pedido()).is_empty()
 
 
-func test_cobrar_con_stock_descuenta_de_la_gondola() -> void:  # 013-AC4
-	var pedido := _pedido()
-	var inventario := _inventario()
-	var atencion := Atencion.new(Comprador.new("Marta", pedido, pedido.total()), inventario)
-	assert_int(atencion.cobrar()).is_equal(Atencion.Resultado.COBRADA)
-	var yerba := Catalogo.de(Producto.Id.YERBA)
-	assert_int(inventario.unidades(yerba, Inventario.Ubicacion.GONDOLA)).is_equal(EN_GONDOLA - 2)
-	assert_bool(atencion.despachada()).is_true()
-	assert_bool(atencion.vendida()).is_true()
-
-
-func test_cobrar_sin_stock_no_mueve_una_sola_unidad() -> void:  # 013-AC4
-	# `Inventario.cobrar()` es todo o nada, y la atención se apoya en eso: descontar el jabón y
-	# no la yerba dejaría un estado que el jugador no puede distinguir de una venta completa.
+func test_cobrar_lo_que_supera_los_vendibles_no_mueve_una_sola_unidad() -> void:  # AC-CTR-006
+	# `Inventario.cobrar()` es todo o nada, y la atención se apoya en eso: descontar un renglón y
+	# no el otro dejaría un estado que el jugador no puede distinguir de una venta completa.
 	var inventario := _inventario(1)
 	var pedido := _pedido()
 	var atencion := Atencion.new(Comprador.new("Marta", pedido, pedido.total()), inventario)
 	assert_int(atencion.cobrar()).is_equal(Atencion.Resultado.SIN_STOCK)
-	for producto in _productos():
-		assert_int(inventario.unidades(producto, Inventario.Ubicacion.GONDOLA)).is_equal(1)
+	_sin_cambios(inventario, 1)
 	assert_bool(atencion.despachada()).is_false()
 
 
-func test_cobrar_dos_veces_avisa_que_ya_estaba_despachada() -> void:  # 013-AC4
+func test_cobrar_dos_veces_avisa_que_ya_estaba_despachada() -> void:  # AC-CTR-008
 	var inventario := _inventario()
 	var pedido := _pedido()
 	var atencion := Atencion.new(Comprador.new("Marta", pedido, pedido.total()), inventario)
 	assert_int(atencion.cobrar()).is_equal(Atencion.Resultado.COBRADA)
 	assert_int(atencion.cobrar()).is_equal(Atencion.Resultado.YA_DESPACHADA)
-	var yerba := Catalogo.de(Producto.Id.YERBA)
-	assert_int(inventario.unidades(yerba, Inventario.Ubicacion.GONDOLA)).is_equal(EN_GONDOLA - 2)
+	var actroncito := Catalogo.de(Producto.Id.ACTRONCITO)
+	assert_int(inventario.unidades(actroncito, Inventario.Ubicacion.DEPOSITO)).is_equal(
+		VENDIBLES - 2
+	)
 
 
-func test_despachar_sin_vender_no_toca_el_inventario() -> void:  # 013-AC5
-	# Es lo que desencadena `CAJA` de `REPONER`: la góndola arranca vacía, así que exigir la
-	# venta dejaría dos obligatorias encadenadas y la primera noche imposible.
-	var inventario := _inventario()
+func test_despachar_sin_vender_no_toca_el_inventario() -> void:  # AC-CTR-007
+	# El pedido supera los vendibles: sin esta salida, el comprador no tendría forma de irse y la
+	# obligatoria de atender no se podría cumplir.
+	var inventario := _inventario(0)
 	var atencion := Atencion.new(Comprador.new("Marta", _pedido(), 0), inventario)
 	assert_bool(atencion.despachar_sin_vender()).is_true()
-	for producto in _productos():
-		assert_int(inventario.unidades(producto, Inventario.Ubicacion.GONDOLA)).is_equal(EN_GONDOLA)
+	_sin_cambios(inventario, 0)
 	assert_bool(atencion.despachada()).is_true()
 	assert_bool(atencion.vendida()).is_false()
 
 
-func test_despachar_dos_veces_devuelve_false_la_segunda() -> void:  # 013-AC5
+func test_despachar_dos_veces_devuelve_false_la_segunda() -> void:  # AC-CTR-008
 	var atencion := _atencion(0)
 	assert_bool(atencion.despachar_sin_vender()).is_true()
 	assert_bool(atencion.despachar_sin_vender()).is_false()
 
 
-func test_cobrar_sobre_una_despachada_a_mano_no_vende() -> void:  # 013-AC5
+func test_cobrar_sobre_una_despachada_a_mano_no_vende() -> void:
 	var inventario := _inventario()
 	var atencion := Atencion.new(Comprador.new("Marta", _pedido(), 0), inventario)
 	atencion.despachar_sin_vender()
 	assert_int(atencion.cobrar()).is_equal(Atencion.Resultado.YA_DESPACHADA)
-	for producto in _productos():
-		assert_int(inventario.unidades(producto, Inventario.Ubicacion.GONDOLA)).is_equal(EN_GONDOLA)
+	_sin_cambios(inventario, VENDIBLES)
 
 
-func test_el_ticket_dice_las_lineas_el_total_lo_que_paga_y_la_diferencia() -> void:  # 013-AC2
+func test_vender_no_deshace_la_unidad_que_esta_en_la_mano() -> void:  # AC-CTR-016
+	# La unidad en la mano cuenta una vez: en el depósito y en lo que a la góndola le falta. Si
+	# `retirar()` la sacara del depósito, quedaría 1 vendible y esta venta se rechazaría.
+	var producto := Producto.new(Producto.Id.ACTRONCITO, "Actroncito", 2500, 8)
+	var productos: Array[Producto] = [producto]
+	var inventario := Inventario.new(productos)
+	inventario.ingresar(producto, Inventario.Ubicacion.GONDOLA, 7)
+	inventario.ingresar(producto, Inventario.Ubicacion.DEPOSITO, 3)
+	var estante := Estante.new(inventario, productos)
+	var en_la_mano := estante.retirar(producto)
+	assert_object(en_la_mano).is_not_null()
+	var venta := Venta.new()
+	venta.agregar(producto, 2)
+	var atencion := Atencion.new(Comprador.new("Marta", venta, venta.total()), inventario)
+	assert_int(atencion.cobrar()).is_equal(Atencion.Resultado.COBRADA)
+	assert_int(estante.colocar_unidad(en_la_mano)).is_equal(Estante.Rechazo.NINGUNO)
+	assert_int(inventario.unidades(producto, Inventario.Ubicacion.GONDOLA)).is_equal(8)
+	assert_bool(estante.completada()).is_true()
+
+
+func test_el_ticket_dice_las_lineas_el_total_lo_que_paga_y_la_diferencia() -> void:  # AC-CTR-013
 	# Los textos viven en `dominio/` justamente para que este caso exista: escritos en el panel
 	# serían una regla en `ui/`, que ni `gate_de_tests.py` ni `gate_de_capas.py` miran.
 	#
 	# Las líneas no llevan cuánto sale cada cosa a propósito: repartir el total por renglón le
 	# daría al jugador la cuenta hecha justo donde el juego puede mentir.
 	var pedido := _pedido()
-	var atencion := _atencion(pedido.total() + 700, EN_GONDOLA, pedido)
+	var atencion := _atencion(pedido.total() + 700, VENDIBLES, pedido)
 	var renglones := atencion.renglones()
 	assert_int(renglones.size()).is_equal(pedido.productos().size() + 3)
-	var yerba := Catalogo.de(Producto.Id.YERBA)
-	assert_str(renglones[0]).is_equal(Atencion.TEXTO_DE_LA_LINEA % [2, yerba.nombre])
+	var actroncito := Catalogo.de(Producto.Id.ACTRONCITO)
+	assert_str(renglones[0]).is_equal(Atencion.TEXTO_DE_LA_LINEA % [2, actroncito.nombre])
 	assert_str(renglones[-3]).is_equal(Atencion.TEXTO_DEL_TOTAL % pedido.total())
 	assert_str(renglones[-2]).is_equal(Atencion.TEXTO_DE_LO_QUE_PAGA % (pedido.total() + 700))
 	# El signo se lee en el ticket y no sólo en el `int`: es lo único que el jugador ve.
 	assert_str(renglones[-1]).contains("+700")
 
 
-func test_el_ticket_muestra_la_diferencia_negativa_con_su_signo() -> void:  # 013-AC3
+func test_el_ticket_muestra_la_diferencia_negativa_con_su_signo() -> void:  # AC-CTR-013
 	# Con un `%d` en vez de `%+d`, el que paga de más y el que paga justo se leerían igual y el
 	# único lugar donde el juego miente en vivo dejaría de mentir.
 	var atencion := _atencion(_pedido().total() - 700)
 	assert_str(atencion.renglones()[-1]).contains("-700")
 
 
-func test_el_aviso_nombra_lo_que_no_hay_en_gondola_y_es_vacio_si_esta_todo() -> void:  # 013-AC4
+func test_el_aviso_nombra_lo_que_no_se_puede_vender_y_es_vacio_si_esta_todo() -> void:  # AC-CTR-012
 	# Vacío y no un `null`: quien lo pinta no tiene que distinguir dos formas de la misma
 	# respuesta, que es lo que dejaría un `if` sobre el juego arriba en `ui/`.
 	assert_str(_atencion(0).aviso()).is_empty()
 	var corta := _atencion(0, 1)
-	var yerba := Catalogo.de(Producto.Id.YERBA)
-	assert_str(corta.aviso()).is_equal(Atencion.TEXTO_DE_LOS_FALTANTES % yerba.nombre)
+	var actroncito := Catalogo.de(Producto.Id.ACTRONCITO)
+	assert_str(corta.aviso()).is_equal(Atencion.TEXTO_DE_LOS_FALTANTES % actroncito.nombre)

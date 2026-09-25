@@ -17,19 +17,20 @@ REPO = "federicohermo/nosefia"
 #: La rama que integra el trabajo y donde vive el registro de specs.
 #:
 #: `main` es release: lo que se publica en cada entrega de la cátedra. `staging` es adonde
-#: aterriza cada PR de spec, y por eso es la default del repositorio — y eso es lo que la
-#: vuelve peligrosa: es adonde apunta cada `gh pr create` y cada clone fresco, o sea el
-#: lugar más fácil de todo el repo donde quedarse parado sin haberlo decidido.
+#: aterriza el trabajo, y es la default del repositorio.
 RAMA_DE_INTEGRACION = "staging"
 
-#: Las ramas COMPARTIDAS: las que reciben trabajo de otros y donde por lo tanto no se edita
-#: una ruta protegida.
+#: Las ramas donde NO se edita una ruta protegida. Hoy es `main` sola.
 #:
-#: Nombrarlas no cambia el veredicto —ninguna rama que no matchee `feature/<NNN>-` pasa el
-#: gate— pero cambia el **diagnóstico**: «la rama `staging` no nombra un spec» se lee como
-#: una invitación a renombrarla, que es lo peor que se puede hacer con la rama de
-#: integración. El mensaje correcto dice que el problema es DÓNDE estás parado.
-RAMAS_COMPARTIDAS = ("main", RAMA_DE_INTEGRACION)
+#: `staging` estuvo acá hasta el 2026-09-14 y salió por decisión del dueño del repo: en un
+#: repo de una persona, abrir una rama para mergearla en el minuto siguiente es ceremonia.
+#: `main` se queda porque es lo que se entrega, y lo que se entrega llega por el PR de
+#: promoción y no por un commit suelto.
+#:
+#: Nombrarla no cambia el veredicto —`main` tampoco matchea `feature/<NNN>-`— pero cambia el
+#: **diagnóstico**: «la rama `main` no nombra un spec» se lee como una invitación a
+#: renombrarla. El mensaje correcto dice que el problema es DÓNDE estás parado.
+RAMAS_COMPARTIDAS = ("main",)
 
 #: Lo que el gate de spec protege: nada se edita acá sin un spec detrás de la rama.
 #:
@@ -64,7 +65,7 @@ PROTEGIDAS = ("src",)
 #:   capa que se puede testear headless sin levantar una escena, y por eso es donde tiene
 #:   que vivir todo lo que se pueda decidir con números.
 #:   **La pureza la verifica `gate_de_capas.py`** —`extends` por lista blanca, más los
-#:   patrones que enumera `.claude/rules/dominio.md`—: hasta el spec 012 esta línea era prosa
+#:   patrones que enumera `.claude/rules/dominio.md`—: esta línea llegó a ser prosa
 #:   adentro de un `.py`, que es la forma más convincente de prosa que hay.
 #: - `sistemas/` — los `Node` y autoloads que orquestan el dominio y hablan con el motor:
 #:   el reloj del turno, el guardado, el bus de señales. Conocen `dominio/`; no conocen la
@@ -140,4 +141,4 @@ TESTS = "test"
 CAPAS_CON_TEST_OBLIGATORIO = ("src/dominio", "src/sistemas")
 
 #: El directorio donde gdUnit4 deja sus reportes. Está en el `.gitignore`.
-REPORTES = "reportes"
+REPORTES = "reports"

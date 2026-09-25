@@ -10,8 +10,8 @@
 ## para reponerla y agarrarla para verle el vencimiento son el mismo movimiento. Examinar sí cae
 ## de un lado, y por eso `Examen` vive en `investigacion/`.
 ##
-## **Reparenta y escribe `position` local, nunca `global_position`.** Está medido en el
-## `research.md` del 006: `global_transform` fuera del árbol de escena tira un error del motor y
+## **Reparenta y escribe `position` local, nunca `global_position`.** Está medido:
+## `global_transform` fuera del árbol de escena tira un error del motor y
 ## devuelve la identidad, así que un sistema que colocara con eso no se podría probar sin
 ## levantar una escena — y el «verde» que diera sería el de un valor que coincide por casualidad.
 class_name Agarre
@@ -27,9 +27,15 @@ signal objeto_soltado(nodo: Node3D)
 @export var punto_de_carga: Node3D
 @export var punto_de_soltado: Node3D
 @export var punto_de_respaldo: Node3D
+@export var punto_de_producto: Node3D
 
 var _manos := Manos.new()
 var _nodo: Node3D = null
+## De dónde colgaba lo sostenido antes de su último movimiento. Una caja se lleva en la cintura y
+## una unidad en su punto propio: volver del examen al punto de carga las dejaba en otra mano.
+var _ancla_de_vuelta: Node3D = null
+var _capa_original: int = 0
+var _mascara_original: int = 0
 
 
 ## Las manos, para que quien las necesite pregunte en vez de que este sistema le copie el estado.
@@ -53,7 +59,14 @@ func pedir_agarrar(datos: ObjetoDelAlmacen, nodo: Node3D) -> bool:
 		return false
 	_manos.agarrar(datos)
 	_nodo = nodo
-	_colgar(nodo, punto_de_carga)
+	_ancla_de_vuelta = null
+	# Guardar solo al agarrar: el examen recibe el cuerpo con las colisiones suspendidas.
+	if nodo is CollisionObject3D:
+		_capa_original = nodo.collision_layer
+		_mascara_original = nodo.collision_mask
+		nodo.collision_layer = 0
+		nodo.collision_mask = 0
+	_colgar(nodo, _punto_de_carga())
 	objeto_agarrado.emit(nodo)
 	return true
 
@@ -68,9 +81,19 @@ func soltar(al_frente: bool) -> Node3D:
 		return null
 	var nodo := _nodo
 	_nodo = null
+	_ancla_de_vuelta = null
 	var ancla := punto_de_soltado if al_frente else punto_de_respaldo
 	if nodo != null and ancla != null:
+		var orientacion := nodo.global_basis if nodo.is_inside_tree() else nodo.basis
 		_colgar(nodo, ancla, false)
+		# Cambiar de padre no debe enderezar el objeto antes de que empiece a caer.
+		if nodo.is_inside_tree():
+			nodo.global_basis = orientacion
+		else:
+			nodo.basis = orientacion
+	if nodo is CollisionObject3D:
+		nodo.collision_layer = _capa_original
+		nodo.collision_mask = _mascara_original
 	objeto_soltado.emit(nodo)
 	return nodo
 
@@ -83,13 +106,40 @@ func soltar(al_frente: bool) -> Node3D:
 func mover_lo_sostenido(ancla: Node3D) -> Node3D:
 	if _nodo == null or ancla == null:
 		return null
+	_ancla_de_vuelta = _nodo.get_parent() as Node3D
 	_colgar(_nodo, ancla)
 	return _nodo
 
 
-## Vuelve a poner en la mano lo que se había acercado a la cara.
+## Vuelve a poner lo que se había acercado a la cara en el punto de donde salió.
+##
+## No anota una vuelta nueva: devolver dos veces deja el objeto donde estaba, y no lo rebota a
+## la cara.
 func devolver_a_la_mano() -> Node3D:
-	return mover_lo_sostenido(punto_de_carga)
+	if _nodo == null:
+		return null
+	var ancla := _ancla_de_vuelta
+	if ancla == null:
+		ancla = _punto_de_carga()
+	if ancla == null:
+		return null
+	_colgar(_nodo, ancla)
+	return _nodo
+
+
+func _punto_de_carga() -> Node3D:
+	if _manos.sostenido() is UnidadDeProducto and punto_de_producto != null:
+		return punto_de_producto
+	return punto_de_carga
+
+
+## Una entrega aceptada deja el cuerpo quieto para que el destino lo ubique.
+func entregar() -> Node3D:
+	_manos.soltar()
+	var nodo := _nodo
+	_nodo = null
+	_ancla_de_vuelta = null
+	return nodo
 
 
 ## El clic izquierdo hace las dos cosas, y cuál de las dos toca es un `if` sobre el estado de las
@@ -116,11 +166,17 @@ func vaciar_las_manos() -> void:
 ## La física se congela mientras se lleva algo: sin eso el objeto se cae de la mano en el mismo
 ## cuadro en que se lo levanta, y el síntoma —«no se puede agarrar nada»— no nombra a la física.
 static func _colgar(nodo: Node3D, ancla: Node3D, quieta: bool = true) -> void:
+	nodo.top_level = false
 	var padre := nodo.get_parent()
 	if padre != null:
 		padre.remove_child(nodo)
 	ancla.add_child(nodo)
 	nodo.position = Vector3.ZERO
 	nodo.rotation = Vector3.ZERO
+	if quieta and "orientacion_en_mano" in nodo:
+		var orientacion: Basis = nodo.get("orientacion_en_mano")
+		nodo.rotation = orientacion.get_euler()
+	# Los cuerpos sueltos no deben heredar los movimientos de la cámara.
+	nodo.top_level = not quieta
 	if nodo is RigidBody3D:
 		(nodo as RigidBody3D).freeze = quieta

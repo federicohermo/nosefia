@@ -7,7 +7,7 @@
 ##
 ## **La escena se instancia y NO se entra al árbol.** `instantiate()` alcanza para leer la
 ## jerarquía y las propiedades —medido—, y entrarla haría correr `_ready()`, que toma el cursor
-## y arranca a leer el `RayCast3D`: cosas que en headless no significan nada.
+## y conecta los sistemas. Estas pruebas sólo revisan el cableado.
 extends GdUnitTestSuite
 
 const ObjetoDelAlmacen := preload("res://src/dominio/almacen/objeto_del_almacen.gd")
@@ -26,23 +26,23 @@ func test_la_raiz_del_jugador_es_un_cuerpo_que_camina() -> void:
 
 func test_la_camara_esta_a_la_altura_que_declara_el_dominio() -> void:
 	var jugador := _jugador()
-	assert_bool(jugador.has_node("Camara")).is_true()
-	var camara: Node = jugador.get_node("Camara")
+	assert_bool(jugador.has_node("Giro/Camara")).is_true()
+	var camara: Node = jugador.get_node("Giro/Camara")
 	assert_object(camara).is_instanceof(Camera3D)
 	assert_float(camara.position.y).is_equal_approx(ReglasDelJugador.ALTURA_DE_LA_CAMARA, 1e-5)
 
 
-func test_la_mira_cuelga_de_la_camara_y_alcanza_lo_que_declara_el_dominio() -> void:
-	# La mira va colgada de la cámara y no del cuerpo: el pitch se aplica a la cámara, así que
-	# un rayo colgado del cuerpo apuntaría siempre al horizonte.
+func test_el_campo_cuelga_del_ojo_y_respeta_el_alcance() -> void:
 	var jugador := _jugador()
-	assert_bool(jugador.has_node("Camara/Mira")).is_true()
-	var mira: Node = jugador.get_node("Camara/Mira")
-	assert_object(mira).is_instanceof(RayCast3D)
-	assert_bool(mira.enabled).is_true()
-	assert_vector(mira.target_position).is_equal_approx(
-		Vector3(0.0, 0.0, -ReglasDelJugador.ALCANCE_DE_LA_MIRA), Vector3(1e-5, 1e-5, 1e-5)
-	)
+	var campo := jugador.get_node_or_null("Giro/Camara/CampoDeInteraccion")
+	assert_object(campo).is_instanceof(Area3D)
+	assert_bool(campo.monitoring).is_true()
+	var forma: CollisionShape3D = campo.get_node("Forma")
+	assert_object(forma.shape).is_instanceof(SphereShape3D)
+	assert_vector(campo.position + forma.position).is_equal(Vector3.ZERO)
+	assert_float(forma.shape.radius).is_equal(ReglasDelJugador.ALCANCE_DE_LA_MIRA)
+	assert_vector(forma.scale).is_equal(Vector3.ONE)
+	assert_vector(campo.scale).is_equal(Vector3.ONE)
 
 
 func test_el_cuerpo_tiene_una_forma_de_colision() -> void:
@@ -75,7 +75,7 @@ func test_las_cuatro_acciones_del_dominio_estan_declaradas_en_el_proyecto() -> v
 
 
 func test_el_jugador_avisa_cuando_enfoca_y_cuando_pierde_el_objetivo() -> void:
-	# Son el punto donde se cuelga el spec 006: sin ellas, agarrar un objeto no tiene de dónde
+	# Son el punto donde se cuelga agarrar: sin ellas, agarrar un objeto no tiene de dónde
 	# enterarse de que hay uno enfocado.
 	var jugador := _jugador()
 	assert_bool(jugador.has_signal("objetivo_enfocado")).is_true()
@@ -108,7 +108,7 @@ func test_suspender_con_algo_enfocado_avisa_que_se_perdio_el_objetivo() -> void:
 	assert_bool(aviso_recibido[0]).is_true()
 
 
-func test_los_dos_sistemas_del_006_llegan_armados_al_instanciar_la_escena() -> void:  # 006-AC11
+func test_los_dos_sistemas_del_006_llegan_armados_al_instanciar_la_escena() -> void:
 	# Entran por `@export` y no por `@onready`: un `@onready` se resuelve recién al entrar la
 	# escena al árbol, y entonces `id_en_la_mano()` se caería sobre un jugador instanciado —que
 	# es exactamente como lo instancia todo test de este archivo, y como lo pide el 014—.
@@ -118,7 +118,7 @@ func test_los_dos_sistemas_del_006_llegan_armados_al_instanciar_la_escena() -> v
 	assert_object(jugador.examen.agarre).is_same(jugador.agarre)
 
 
-func test_el_jugador_dice_que_lleva_en_la_mano() -> void:  # 006-AC11
+func test_el_jugador_dice_que_lleva_en_la_mano() -> void:
 	# La única puerta por la que otra escena pregunta qué se está llevando, y la pide el 014
 	# para saber si lo que hay en la mano es el trapeador: con otra cosa, la pasada no cuenta.
 	# Devuelve el `id` del dominio y nunca el nodo: un nodo cruzaría la dirección de las capas
@@ -131,16 +131,16 @@ func test_el_jugador_dice_que_lleva_en_la_mano() -> void:  # 006-AC11
 	assert_str(String(jugador.id_en_la_mano())).is_equal("lata_de_tomate")
 
 
-func test_los_cuatro_puntos_estan_donde_el_dominio_los_declara() -> void:  # 006-AC12
+func test_los_cuatro_puntos_estan_donde_el_dominio_los_declara() -> void:
 	# Un `.tscn` no puede leer una constante de GDScript, así que las distancias están escritas
 	# a mano en la escena y esto es lo único que impide que se separen del dominio en silencio.
 	# El punto de carga va abajo a la derecha —donde queda una mano que lleva algo— y el de
 	# respaldo a los pies, que es adonde cae lo que se suelta cuando adelante hay una pared.
 	var jugador := _jugador()
 	var puntos := {
-		"Camara/PuntoDeExamen": ReglasDeLosObjetos.DISTANCIA_DE_EXAMEN,
-		"Camara/PuntoDeCarga": ReglasDeLosObjetos.DISTANCIA_DE_CARGA,
-		"Camara/PuntoDeSoltado": ReglasDeLosObjetos.DISTANCIA_DE_SOLTADO,
+		"Giro/Camara/PuntoDeExamen": ReglasDeLosObjetos.DISTANCIA_DE_EXAMEN,
+		"Giro/Camara/PuntoDeCarga": ReglasDeLosObjetos.DISTANCIA_DE_CARGA,
+		"Giro/Camara/PuntoDeSoltado": ReglasDeLosObjetos.DISTANCIA_DE_SOLTADO,
 	}
 	for ruta in puntos:
 		(
@@ -150,29 +150,76 @@ func test_los_cuatro_puntos_estan_donde_el_dominio_los_declara() -> void:  # 006
 		)
 		var punto: Node3D = jugador.get_node(ruta)
 		assert_float(punto.position.length()).is_equal_approx(puntos[ruta], 0.01)
-	assert_bool(jugador.has_node("PuntoDeRespaldo")).is_true()
-	var respaldo: Node3D = jugador.get_node("PuntoDeRespaldo")
+	assert_bool(jugador.has_node("Giro/PuntoDeRespaldo")).is_true()
+	var respaldo: Node3D = jugador.get_node("Giro/PuntoDeRespaldo")
 	assert_float(respaldo.position.y).is_less(ReglasDelJugador.ALTURA_DE_LA_CAMARA)
 
 
-func test_el_punto_de_carga_queda_abajo_y_a_la_derecha() -> void:  # 006-AC12
+func test_el_punto_de_carga_queda_abajo_y_a_la_derecha() -> void:
 	# Centrado taparía la mitad de la pantalla justo cuando el jugador necesita ver dónde
 	# reponer lo que lleva, y arriba flotaría a la altura de la cara.
-	var carga: Node3D = _jugador().get_node("Camara/PuntoDeCarga")
+	var carga: Node3D = _jugador().get_node("Giro/Camara/PuntoDeCarga")
 	assert_float(carga.position.x).is_greater(0.0)
 	assert_float(carga.position.y).is_less(0.0)
 	assert_float(carga.position.z).is_less(0.0)
 
 
-func test_los_dos_sistemas_llegan_con_sus_puntos_cableados() -> void:  # 006-AC12
+func test_los_dos_sistemas_llegan_con_sus_puntos_cableados() -> void:
 	# Que los nodos existan no alcanza: lo que se rompe es la REFERENCIA. Un `node_paths` que
 	# falta deja el `@export` en `null` y la escena carga sin un solo error —medido: borrar las
 	# dos líneas del `.tscn` deja los 36 casos de `test/escenas/` en verde—, mientras el clic
 	# contesta `false` y la E no arranca nada. El síntoma no nombra al `.tscn` que lo causó.
 	var jugador := _jugador()
 	var agarre: Node = jugador.agarre
-	assert_object(agarre.punto_de_carga).is_same(jugador.get_node("Camara/PuntoDeCarga"))
-	assert_object(agarre.punto_de_soltado).is_same(jugador.get_node("Camara/PuntoDeSoltado"))
-	assert_object(agarre.punto_de_respaldo).is_same(jugador.get_node("PuntoDeRespaldo"))
+	assert_object(agarre.punto_de_carga).is_same(jugador.get_node("Giro/Camara/PuntoDeCarga"))
+	assert_object(agarre.punto_de_soltado).is_same(jugador.get_node("Giro/Camara/PuntoDeSoltado"))
+	assert_object(agarre.punto_de_respaldo).is_same(jugador.get_node("Giro/PuntoDeRespaldo"))
 	var examen: Node = jugador.examen
-	assert_object(examen.punto_de_examen).is_same(jugador.get_node("Camara/PuntoDeExamen"))
+	assert_object(examen.punto_de_examen).is_same(jugador.get_node("Giro/Camara/PuntoDeExamen"))
+
+
+func test_cada_brazo_apunta_al_punto_de_mano_que_mueve() -> void:
+	# El brazo no cuelga de nada: `jugador.gd` corre el punto sobre su eje. Si el eje deja de
+	# terminar donde está el punto, la mano salta a otro lado en el primer cuadro de la jornada
+	# y nada más en el repo lo diría.
+	var jugador := _jugador()
+	var manos := {
+		"Giro/Camara/BrazoDeCarga": "Giro/Camara/PuntoDeCarga",
+		"Giro/Camara/BrazoDeProducto": "Giro/Camara/PuntoDeProducto",
+	}
+	for ruta_del_brazo in manos:
+		var brazo: SpringArm3D = jugador.get_node(ruta_del_brazo)
+		var punto: Node3D = jugador.get_node(manos[ruta_del_brazo])
+		var punta := brazo.transform * Vector3(0.0, 0.0, brazo.spring_length)
+		assert_vector(punta).is_equal_approx(punto.position, Vector3.ONE * 0.001)
+
+
+func test_los_brazos_barren_un_volumen_y_no_un_rayo() -> void:
+	# Un brazo sin `shape` barre un rayo, y un rayo sólo frena el CENTRO de lo que se lleva: la
+	# mitad que sobra le sigue entrando a la madera.
+	var jugador := _jugador()
+	for ruta in ["Giro/Camara/BrazoDeCarga", "Giro/Camara/BrazoDeProducto"]:
+		var brazo: SpringArm3D = jugador.get_node(ruta)
+		(
+			assert_object(brazo.shape)
+			. override_failure_message("el brazo %s barre un rayo, no un volumen" % ruta)
+			. is_not_null()
+		)
+
+
+func test_los_brazos_nacen_adentro_de_la_capsula_del_cuerpo() -> void:
+	# Está medido que un barrido que arranca solapado se descarta entero. Si el hombro más el
+	# radio de la esfera sobresalen, apoyarse contra una pared apaga el brazo en silencio y lo
+	# que se lleva vuelve a atravesar los muebles.
+	var jugador := _jugador()
+	var cuerpo: CollisionShape3D = jugador.get_node("Cuerpo")
+	var capsula: CapsuleShape3D = cuerpo.shape
+	for ruta in ["Giro/Camara/BrazoDeCarga", "Giro/Camara/BrazoDeProducto"]:
+		var brazo: SpringArm3D = jugador.get_node(ruta)
+		var esfera: SphereShape3D = brazo.shape
+		var radial := Vector2(brazo.position.x, brazo.position.z).length()
+		(
+			assert_float(radial + esfera.radius)
+			. override_failure_message("el brazo %s nace fuera de la cápsula" % ruta)
+			. is_less(capsula.radius)
+		)

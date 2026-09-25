@@ -5,7 +5,7 @@
 ## el 013 le cuelgue la venta por la ventanilla.
 extends GdUnitTestSuite
 
-const ESCENA := "res://src/escenas/puestos/estante.tscn"
+const ESCENA := "res://src/escenas/almacen.tscn"
 const SCRIPT := "res://src/escenas/puestos/estante.gd"
 
 ## El script del nodo se preloadea para poder tiparlo: los scripts de `escenas/` son cáscara y no
@@ -13,17 +13,16 @@ const SCRIPT := "res://src/escenas/puestos/estante.gd"
 ## `mostrar()` no compilaría.
 const EstanteQueSeVe := preload("res://src/escenas/puestos/estante.gd")
 
-## Cómo se reconoce un hueco en el árbol. Se busca por prefijo y no por cantidad de hijos para
-## que agregarle al estante un cartel o una luz no rompa el conteo.
-const PREFIJO_DEL_HUECO := "Hueco"
 
-
-func test_el_estante_dibuja_un_hueco_por_producto_del_catalogo() -> void:  # 008-AC10
+func test_el_estante_dibuja_un_hueco_por_producto_del_catalogo() -> void:
 	# Se cuenta contra el catálogo y nunca contra un número escrito acá: con un producto más, un
 	# estante de seis huecos dejaría al jugador mirando una góndola que nunca se llena del todo,
 	# sin un solo error.
-	var estante := _estante()
-	var huecos := _huecos_de(estante)
+	var almacen: Node3D = auto_free(load(ESCENA).instantiate())
+	add_child(almacen)
+	var huecos: Array = almacen.get("_reposicion_manual").get_children().filter(
+		func(nodo: Node) -> bool: return nodo is StaticBody3D
+	)
 	(
 		assert_int(huecos.size())
 		. override_failure_message(
@@ -36,32 +35,32 @@ func test_el_estante_dibuja_un_hueco_por_producto_del_catalogo() -> void:  # 008
 	)
 
 
-func test_los_huecos_visibles_son_los_que_dice_el_dominio() -> void:  # 008-AC10
+func test_los_huecos_visibles_son_los_que_dice_el_dominio() -> void:
 	# La escena pregunta y pinta: cuántos huecos se ven sale de `productos_completos()` y no de
 	# una cuenta propia. Con una cuenta propia, el estante y el inventario se contradicen en
 	# silencio.
-	var yerba := Catalogo.de(Producto.Id.YERBA)
-	var inventario := Inventario.new([yerba])
-	inventario.ingresar(yerba, Inventario.Ubicacion.DEPOSITO, yerba.umbral)
-	var dominio := Estante.new(inventario, [yerba])
+	var actroncito := Catalogo.de(Producto.Id.ACTRONCITO)
+	var inventario := Inventario.new([actroncito])
+	inventario.ingresar(actroncito, Inventario.Ubicacion.DEPOSITO, actroncito.umbral)
+	var dominio := Estante.new(inventario, [actroncito])
 	var estante := _estante()
 
 	estante.mostrar(dominio.productos_completos())
 	assert_int(_huecos_visibles(estante)).is_equal(0)
 
-	for _unidad in range(yerba.umbral):
-		dominio.colocar(yerba)
+	for _unidad in range(actroncito.umbral):
+		dominio.colocar(actroncito)
 	estante.mostrar(dominio.productos_completos())
 	assert_int(_huecos_visibles(estante)).is_equal(1)
 
 
-func test_el_estante_arranca_sin_un_solo_hueco_puesto() -> void:  # 008-AC10
+func test_el_estante_arranca_sin_un_solo_hueco_puesto() -> void:
 	# La góndola de la noche arranca vacía, así que un hueco visible en el `.tscn` sería
 	# mercadería que el jugador ve y el inventario no tiene.
 	assert_int(_huecos_visibles(_estante())).is_equal(0)
 
 
-func test_el_estante_de_la_escena_no_lleva_el_stock_adentro() -> void:  # 008-AC10
+func test_el_estante_de_la_escena_no_lleva_el_stock_adentro() -> void:
 	# Está medido que una regla escrita en esta capa pasa los dos gates en verde. Por eso el
 	# criterio la ata con una búsqueda sobre el archivo, que es lo único ejecutable que hay.
 	var texto := FileAccess.get_file_as_string(SCRIPT)
@@ -74,26 +73,26 @@ func test_el_estante_de_la_escena_no_lleva_el_stock_adentro() -> void:  # 008-AC
 		)
 
 
-func test_el_estante_contesta_el_contrato_de_interaccion() -> void:  # 008-AC10
+func test_el_estante_contesta_el_contrato_de_interaccion() -> void:
 	# El contrato es el nombre de un método más el grupo, y no un tipo: ninguna de las capas que
 	# lo necesitan puede nombrar un `class_name` de `escenas/`.
 	var estante := _estante()
 	assert_bool(estante.has_method(ReglasDeLosObjetos.METODO_INTERACTUAR)).is_true()
 	assert_bool(estante.is_in_group(ReglasDelJugador.GRUPO_INTERACTUABLE)).is_true()
-	# Del estante no se levanta nada: si contestara un objeto, el clic del 006 lo agarraría en
+	# Del estante no se levanta nada: si contestara un objeto, el clic de agarrar lo agarraría en
 	# vez de colocar una unidad.
 	assert_object(estante.call(ReglasDeLosObjetos.METODO_INTERACTUAR)).is_null()
 
 
 func _estante() -> EstanteQueSeVe:
-	return auto_free(load(ESCENA).instantiate())
+	var almacen: Node3D = auto_free(load(ESCENA).instantiate())
+	return almacen.get("_estante")
 
 
 func _huecos_de(estante: Node) -> Array[Node3D]:
 	var encontrados: Array[Node3D] = []
-	for nodo in _descendientes(estante):
-		if nodo.name.begins_with(PREFIJO_DEL_HUECO):
-			encontrados.append(nodo)
+	for nodo: Node3D in estante.get("_huecos").get_children():
+		encontrados.append(nodo)
 	return encontrados
 
 
@@ -103,14 +102,3 @@ func _huecos_visibles(estante: Node) -> int:
 		if hueco.visible:
 			visibles += 1
 	return visibles
-
-
-static func _descendientes(nodo: Node) -> Array[Node3D]:
-	var todos: Array[Node3D] = []
-	for hijo in nodo.get_children():
-		var tridimensional := hijo as Node3D
-		if tridimensional == null:
-			continue
-		todos.append(tridimensional)
-		todos.append_array(_descendientes(tridimensional))
-	return todos

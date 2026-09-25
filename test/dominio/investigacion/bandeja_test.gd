@@ -35,20 +35,20 @@ func _bandeja() -> Bandeja:
 	)
 
 
-func test_una_bandeja_nueva_tiene_todo_sin_leer() -> void:  # 009-AC4
+func test_una_bandeja_nueva_tiene_todo_sin_leer() -> void:
 	var bandeja := _bandeja()
 	assert_int(bandeja.no_leidos(Conversacion.Interlocutor.JEFE)).is_equal(2)
 	assert_int(bandeja.no_leidos_totales()).is_equal(9)
 
 
-func test_marcar_leida_deja_esa_conversacion_en_cero() -> void:  # 009-AC4
+func test_marcar_leida_deja_esa_conversacion_en_cero() -> void:  # AC-INV-010
 	var bandeja := _bandeja()
 	assert_bool(bandeja.marcar_leida(Conversacion.Interlocutor.JEFE)).is_true()
 	assert_int(bandeja.no_leidos(Conversacion.Interlocutor.JEFE)).is_equal(0)
 	assert_bool(bandeja.esta_leida(Conversacion.Interlocutor.JEFE)).is_true()
 
 
-func test_marcar_leida_no_toca_las_otras_dos() -> void:  # 009-AC4
+func test_marcar_leida_no_toca_las_otras_dos() -> void:  # AC-INV-010
 	# Es la mitad que un contador único de «no leídos» daría por buena: con uno solo, leer al
 	# jefe apagaría el aviso de los otros dos y el jugador no volvería a mirarlos.
 	var bandeja := _bandeja()
@@ -58,19 +58,19 @@ func test_marcar_leida_no_toca_las_otras_dos() -> void:  # 009-AC4
 	assert_int(bandeja.no_leidos_totales()).is_equal(7)
 
 
-func test_marcar_leida_dos_veces_devuelve_false_la_segunda() -> void:  # 009-AC4
+func test_marcar_leida_dos_veces_devuelve_false_la_segunda() -> void:
 	var bandeja := _bandeja()
 	assert_bool(bandeja.marcar_leida(Conversacion.Interlocutor.JEFE)).is_true()
 	assert_bool(bandeja.marcar_leida(Conversacion.Interlocutor.JEFE)).is_false()
 
 
-func test_marcar_un_interlocutor_que_no_esta_en_la_bandeja_devuelve_false() -> void:  # 009-AC4
+func test_marcar_un_interlocutor_que_no_esta_en_la_bandeja_devuelve_false() -> void:
 	var bandeja := Bandeja.new([_conversacion(Conversacion.Interlocutor.JEFE, 1)])
 	assert_bool(bandeja.marcar_leida(Conversacion.Interlocutor.PROVEEDOR)).is_false()
 	assert_int(bandeja.no_leidos(Conversacion.Interlocutor.PROVEEDOR)).is_equal(0)
 
 
-func test_la_conversacion_se_pide_por_interlocutor_y_la_que_falta_es_null() -> void:  # 009-AC4
+func test_la_conversacion_se_pide_por_interlocutor_y_la_que_falta_es_null() -> void:
 	var bandeja := _bandeja()
 	var del_jefe := bandeja.conversacion_de(Conversacion.Interlocutor.JEFE)
 	assert_object(del_jefe).is_not_null()
@@ -79,8 +79,8 @@ func test_la_conversacion_se_pide_por_interlocutor_y_la_que_falta_es_null() -> v
 	assert_object(vacia.conversacion_de(Conversacion.Interlocutor.JEFE)).is_null()
 
 
+# AC-INV-012
 func test_la_bandeja_no_se_arma_con_las_conversaciones_del_disco_en_cada_llamada() -> void:
-	# 009-AC4
 	# Es la forma ejercible de «lo leído sobrevive a cerrar y reabrir»: la bandeja es una sola
 	# instancia y las lecturas se le quedan adentro. Si la pantalla la reconstruyera al mostrar
 	# los chats, cambiar de app las tiraría — sin un solo error.

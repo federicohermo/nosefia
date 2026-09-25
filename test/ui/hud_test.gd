@@ -1,6 +1,6 @@
 ## Qué NO dibuja el HUD.
 ##
-## El 007 le había puesto un veredicto de cierre, y con la placa del 017 serían dos lugares
+## Le habían puesto un veredicto de cierre, y con la placa de cierre serían dos lugares
 ## diciendo cómo cerró la noche: el que quedara desactualizado no daría rojo, porque
 ## `gate_de_tests.py` no mira `ui/`. Esta suite es lo único ejecutable que lo impide.
 extends GdUnitTestSuite
@@ -12,20 +12,20 @@ const ESCENA_DEL_HUD := "res://src/ui/hud.tscn"
 const CARPETA_DE_UI := "res://src/ui"
 
 ## Lo que se fue con la hora. Los dos colores estaban **sólo** acá —medido con un `grep` sobre
-## `src`, `test` y `project.godot`—, así que se mudaron al reloj de pared en vez de copiarse.
+## `src`, `test` y `project.godot`—, y murieron con la franja de aviso.
 const RASTROS_DE_LA_HORA := [
 	"mostrar_tiempo",
 	"TEXTO_DEL_TIEMPO",
 	"COLOR_TRANQUILO",
 	"COLOR_DE_AVISO",
-	"Marcador.reloj",
+	"Marcador.hora",
 ]
 
 ## Las suites que este spec escribe. Ninguna puede cargar una escena de la computadora: el 009
 ## todavía no existe, y una suite que la cargara pasaría por abortar antes de afirmar nada.
-const SUITES_DEL_RELOJ_DE_PARED := [
-	"res://test/dominio/jornada/reloj_de_pared_test.gd",
-	"res://test/escenas/puestos/reloj_de_pared_test.gd",
+const SUITES_DEL_RELOJ_DE_MESA := [
+	"res://test/dominio/jornada/reloj_de_mesa_test.gd",
+	"res://test/escenas/puestos/reloj_de_mesa_test.gd",
 	"res://test/ui/hud_test.gd",
 ]
 
@@ -34,12 +34,12 @@ const SUITES_DEL_RELOJ_DE_PARED := [
 ## rojo contra su propio verificador.
 const CARPETA_DE_LA_COMPUTADORA := "ui/" + "diegetica"
 
-## Lo que el veredicto del 007 traía consigo. El segundo es el que importa: traducir la banda a
+## Lo que ese veredicto traía consigo. El segundo es el que importa: traducir la banda a
 ## palabras es una regla del juego, y acá arriba nace sin test.
 const RASTROS_DEL_VEREDICTO := ["mostrar_veredicto", "consecuencia_de"]
 
 
-func test_el_hud_no_dibuja_el_veredicto_del_cierre() -> void:  # 017-AC11
+func test_el_hud_no_dibuja_el_veredicto_del_cierre() -> void:
 	var texto := FileAccess.get_file_as_string(HUD)
 	assert_str(texto).is_not_empty()
 	for rastro: String in RASTROS_DEL_VEREDICTO:
@@ -52,14 +52,14 @@ func test_el_hud_no_dibuja_el_veredicto_del_cierre() -> void:  # 017-AC11
 		)
 
 
-func test_el_hud_sigue_pintando_lo_que_si_es_suyo() -> void:  # 017-AC11
+func test_el_hud_sigue_pintando_lo_que_si_es_suyo() -> void:
 	# El par del caso de arriba: sin esto, borrar el archivo entero lo dejaría en verde.
 	var texto := FileAccess.get_file_as_string(HUD)
 	assert_str(texto).contains("func mostrar_tareas")
 	assert_str(texto).contains("func mostrar_apercibimientos")
 
 
-func test_la_hora_se_fue_del_hud_con_todo_lo_que_traia() -> void:  # 032-AC5
+func test_la_hora_se_fue_del_hud_con_todo_lo_que_traia() -> void:
 	# Los dos colores mueren con la hora: no tenían otro cliente, así que dejarlos acá sería
 	# código muerto que la próxima pantalla copiaría sin saber de dónde salió.
 	var texto := FileAccess.get_file_as_string(HUD)
@@ -72,7 +72,7 @@ func test_la_hora_se_fue_del_hud_con_todo_lo_que_traia() -> void:  # 032-AC5
 		)
 
 
-func test_la_escena_del_hud_perdio_el_reloj_y_conserva_los_otros_dos() -> void:  # 032-AC5
+func test_la_escena_del_hud_perdio_el_reloj_y_conserva_los_otros_dos() -> void:
 	# **El `node_paths` de la raíz pierde `"_reloj"` además del `Label`.** Si el nombre quedara
 	# declarado apuntando a un nodo que ya no está, la escena carga sin un solo error y el juego
 	# muere en el primer cuadro con un mensaje que no nombra al `.tscn`.
@@ -87,16 +87,15 @@ func test_la_escena_del_hud_perdio_el_reloj_y_conserva_los_otros_dos() -> void: 
 	assert_str(FileAccess.get_file_as_string(ESCENA_DEL_HUD)).not_contains("_reloj")
 
 
-func test_la_hora_no_vuelve_a_entrar_a_la_pantalla_por_la_ventana() -> void:  # 032-AC9
-	# La computadora del 009 va a mostrar la hora también, y va a vivir en la carpeta diegética.
-	# Mientras no exista, nadie de esta capa puede preguntarle al reloj de pared: la hora se lee
-	# en el local. El caso mira la capa entera y no sólo el HUD, que es lo que lo deja puesto
-	# cuando `ui/` crezca.
+func test_la_hora_no_vuelve_a_entrar_a_la_pantalla_por_la_ventana() -> void:
+	# La hora se lee en un solo lugar, el reloj de mesa del local: ni la computadora ni ninguna
+	# pantalla de esta capa le preguntan al dominio por ella. El caso mira la capa entera y no
+	# sólo el HUD, que es lo que lo deja puesto cuando `ui/` crezca.
 	var culpables: Array[String] = []
 	var mirados := 0
 	for ruta in _scripts_de(CARPETA_DE_UI):
 		mirados += 1
-		if FileAccess.get_file_as_string(ruta).contains("RelojDePared"):
+		if FileAccess.get_file_as_string(ruta).contains("RelojDeMesa"):
 			culpables.append(ruta)
 	(
 		assert_int(mirados)
@@ -106,16 +105,16 @@ func test_la_hora_no_vuelve_a_entrar_a_la_pantalla_por_la_ventana() -> void:  # 
 	(
 		assert_array(culpables)
 		. override_failure_message(
-			"estos archivos de `ui/` le preguntan al reloj de pared: %s" % ", ".join(culpables)
+			"estos archivos de `ui/` le preguntan al reloj de mesa: %s" % ", ".join(culpables)
 		)
 		. is_empty()
 	)
 
 
-func test_ninguna_suite_de_este_spec_carga_la_computadora_del_009() -> void:  # 032-AC9
+func test_ninguna_suite_de_este_spec_carga_la_computadora_del_009() -> void:
 	# Una escena que no existe se carga como `null` y el caso **aborta antes de afirmar**, lo que
 	# gdUnit4 reporta como `PASSED`. Es la peor de las tres formas en que un verde miente acá.
-	for suite: String in SUITES_DEL_RELOJ_DE_PARED:
+	for suite: String in SUITES_DEL_RELOJ_DE_MESA:
 		var texto := FileAccess.get_file_as_string(suite)
 		(
 			assert_str(texto)

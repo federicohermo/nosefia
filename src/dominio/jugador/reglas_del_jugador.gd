@@ -24,15 +24,19 @@ const ALTURA_DE_LA_CAMARA := 1.7
 const PITCH_MINIMO := -1.4
 const PITCH_MAXIMO := 1.4
 
-## Metros de alcance del rayo de la mira. Mayor que 1,2 porque el spec 006 suelta lo que se
+## Metros de alcance de la mira. Mayor que 1,2 porque se suelta lo que se
 ## lleva a esa distancia y afirma que se lo puede volver a mirar: un alcance menor deja al
 ## jugador soltando cosas que ya no puede agarrar.
 const ALCANCE_DE_LA_MIRA := 2.5
 
+## Radianes desde el centro de la vista.
+const DESVIO_MAXIMO_DE_LA_MIRA := deg_to_rad(15.0)
+
 ## El contrato de «se puede interactuar con esto» ES este grupo de Godot, y vive acá por lo que
 ## permite: `dominio/` declara un `String` y no conoce a nadie, y un nodo de `escenas/` cumple
-## el contrato agregándose al grupo en su `.tscn`, sin heredar nada. Las otras dos formas se
-## descartaron midiendo, y está en el `research.md` del spec 004.
+## el contrato agregándose al grupo en su `.tscn`, sin heredar nada. Las otras dos formas —una
+## interfaz heredada y un método declarado— se descartaron midiendo: ninguna sobrevive a que el
+## nodo lo declare desde la escena.
 const GRUPO_INTERACTUABLE := "interactuable"
 
 ## Los nombres de las cuatro acciones del `InputMap`. Tienen que coincidir letra por letra con
@@ -42,3 +46,5 @@ const ACCION_ADELANTE := "mover_adelante"
 const ACCION_ATRAS := "mover_atras"
 const ACCION_IZQUIERDA := "mover_izquierda"
 const ACCION_DERECHA := "mover_derecha"
+
+const ACCION_USAR: StringName = &"usar"

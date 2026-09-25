@@ -1,0 +1,64 @@
+extends GdUnitTestSuite
+
+const ALMACEN := preload("res://src/escenas/almacen.tscn")
+const Medicion := preload("res://test/performance/medir_reposicion.gd")
+
+
+func test_agrupar_el_piso_conserva_los_cuerpos_y_reduce_las_vistas() -> void:
+	var medicion: Node3D = auto_free(Medicion.new())
+	var modelo := BoxMesh.new()
+	var forma := ConvexPolygonShape3D.new()
+	forma.points = modelo.get_faces()
+	medicion.modelos.assign([modelo, modelo])
+	medicion.formas.assign([forma, forma])
+	var lote: Node3D = auto_free(medicion.crear(100, Medicion.Escenario.CAIDA, true))
+	assert_int(lote.find_children("*", "RigidBody3D", false, false).size()).is_equal(100)
+	assert_int(lote.find_children("*", "MultiMeshInstance3D", false, false).size()).is_equal(2)
+	for cuerpo: RigidBody3D in lote.find_children("*", "RigidBody3D", false, false):
+		assert_object(cuerpo.get_node("Forma").shape).is_same(forma)
+		assert_bool(cuerpo.get_node("Malla").visible).is_false()
+
+
+func test_el_percentil_no_confunde_un_pico_con_la_mediana() -> void:
+	var valores: Array[float] = [90, 2, 3, 1, 4]
+	assert_float(Medicion.percentil(valores, 0.5)).is_equal(3.0)
+	assert_float(Medicion.percentil(valores, 0.95)).is_equal(90.0)
+	assert_float(valores[0]).is_equal(90.0)
+
+
+func test_la_carga_conserva_cantidades_y_colisiones_reales() -> void:
+	var medicion: Node3D = auto_free(Medicion.new())
+	var modelo := BoxMesh.new()
+	var forma := ConvexPolygonShape3D.new()
+	forma.points = modelo.get_faces()
+	medicion.modelos.assign([modelo, modelo])
+	medicion.formas.assign([forma, forma])
+	for cantidad in Medicion.CANTIDADES:
+		for escenario: Medicion.Escenario in Medicion.Escenario.values():
+			var lote: Node3D = auto_free(medicion.crear(cantidad, escenario))
+			if escenario == Medicion.Escenario.ESTANTE:
+				assert_int(lote.get_child_count()).is_equal(2)
+				assert_int(lote.get_child(0).multimesh.instance_count).is_equal(cantidad / 2)
+				assert_int(lote.get_child(1).multimesh.instance_count).is_equal(cantidad / 2)
+			else:
+				assert_int(lote.get_child_count()).is_equal(cantidad)
+				assert_object(lote.get_child(0).get_node("Forma").shape).is_same(forma)
+
+
+func test_la_carga_pone_la_deteccion_continua_solo_si_el_juego_la_pone() -> void:
+	var almacen: Node3D = auto_free(ALMACEN.instantiate())
+	add_child(almacen)
+	await get_tree().physics_frame
+	var puesto: Node3D = almacen.get("_reposicion_manual")
+	puesto.call("retirar", Catalogo.todos()[0].id)
+	var agarre: Agarre = almacen.get("_agarre")
+	var unidad: RigidBody3D = agarre.soltar(true)
+	var medicion: Node3D = auto_free(Medicion.new())
+	medicion.modelos.assign(puesto.get("_modelos"))
+	medicion.formas.assign(puesto.get("_formas"))
+	var lote: Node3D = auto_free(medicion.crear(1, Medicion.Escenario.CAIDA))
+	(
+		assert_bool(lote.get_child(0).continuous_cd)
+		. override_failure_message("la medición arma la unidad distinto que el juego")
+		. is_equal(unidad.continuous_cd)
+	)

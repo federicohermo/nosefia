@@ -1,0 +1,12 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://src/escenas/puestos/reposicion_manual.gd" id="script"]
+[ext_resource type="Resource" path="res://src/escenas/puestos/disposicion_de_la_gondola.tres" id="disposicion"]
+[ext_resource type="PackedScene" path="res://src/escenas/puestos/guia_del_estante.tscn" id="guia"]
+
+[node name="ReposicionManual" type="Node3D"]
+script = ExtResource("script")
+disposicion = ExtResource("disposicion")
+giros_del_frente = Array[float]([90.0, 0.0, 270.0, 90.0, 180.0, 0.0, 270.0, 90.0, 270.0, 180.0, 270.0, 270.0, 90.0, 270.0, 270.0, 180.0, 270.0, 270.0, 270.0, 270.0, 270.0, 270.0, 270.0])
+
+[node name="Guia" parent="." instance=ExtResource("guia")]

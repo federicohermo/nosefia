@@ -7,7 +7,7 @@ python .claude/scripts/verificar.py
 Es **el nodo de convergencia**: lo único que hay que correr antes de un PR, y lo mismo que
 corre la CI sobre cada PR y cada push a `staging` y `main`.
 
-## Los seis nodos
+## Los siete nodos
 
 | Nodo | Qué corre | Qué caza |
 |---|---|---|
@@ -15,7 +15,8 @@ corre la CI sobre cada PR y cada push a `staging` y `main`.
 | `formato` | `gdformat --check src test` | todo lo que sea formato. Se arregla con `gdformat src test` |
 | `capas` | `gate_de_capas.py` | una referencia que va en contra de la dirección de dependencia, y un `.gd` o un `.tscn` en una subcarpeta que su capa no declara |
 | `tdd` | `gate_de_tests.py` | un script sin test, un test sin aserción, uno apagado, o uno con un nombre que hace que no corra |
-| `harness` | `unittest` sobre `.claude/scripts/tests/` | las herramientas del proceso, y el registro de specs contra GitHub |
+| `specs` | `gate_de_specs.py` | la forma de los contratos de capacidad, un ID repetido, una cita rota, y un criterio `ratified` que ningún test nombra |
+| `harness` | `unittest` sobre `.claude/scripts/tests/` | las herramientas del proceso |
 | `tests` | gdUnit4 en Godot headless | el juego |
 
 Corren **en paralelo**: son procesos independientes y ninguno depende de la salida de otro.
@@ -51,10 +52,12 @@ escribe al lado, porque un conteo a mano caduca cada vez que la tabla gana una f
 |---|---|---|
 | `lint` y `formato` | no haya un solo `.gd` propio | se escriba el primero |
 | `tests` | no haya un solo `*_test.gd` | se escriba el primero — y ahí `GODOT_BIN` pasa a ser obligatorio |
-| El gate del mapa contra GitHub | no haya `gh` con sesión, o el mapa esté vacío | se publique el primer spec |
-| El gate de convención de specs | no haya specs en vuelo hidratados en disco | `hidratar_specs.py` |
-| El ancla de criterios | la rama no nombre un spec, o no se pueda leer su `spec.md` | se trabaje en una rama de spec |
-| El cruce de rutas del plan | la rama no nombre un spec, no se pueda leer su `plan.md`, o el plan no declare ninguna ruta | ese plan declare una |
+| `specs` | no exista `specs/` | se escriba el primer contrato |
+
+**El ancla AC↔test no se saltea: cambia de fuerza con el estado del spec.** Sobre un `ratified`
+un criterio sin test es rojo; sobre un `draft` el gate cuenta cuántos faltan y lo imprime. La
+frontera es deliberada — cobrarle a todo spec escrito convierte escribir el contrato de una
+capacidad que todavía no existe en un rojo inmediato, y ahí nadie lo escribe.
 
 ## El veredicto sale del código de salida
 
@@ -64,23 +67,6 @@ entera: es la forma más corta conocida de declarar verde una corrida rota.
 Vale también para gdUnit4: el nodo `tests` mira el exit code del proceso de Godot, no el texto
 del reporte.
 
-## En una pila de ramas, la base se declara
-
-`archivos_de_la_rama()` compara contra `GITHUB_BASE_REF` **y contra `staging` si no está**
-(`lib/rama.py`). En una rama suelta da lo mismo; en una pila de PR apilados **le atribuye a
-cada rama el trabajo de todas las de abajo**, y los gates de rutas y de criterios dan rojos
-que no son suyos — se ve como un spec que toca un archivo que su plan prohibió, cuando el
-que lo tocó fue el de abajo.
-
-Se corre declarando la base real del PR, que es lo que la Action hace sola:
-
-```bash
-GITHUB_BASE_REF=feature/033-la-caja-de-traslado-lleva-ocho-productos \n  python .claude/scripts/verificar.py
-```
-
-Medido en la ola 2 del lote del 2026-09-06: el único rojo del 008 era `reglas.gd`, que había
-tocado el 033 dos ramas más abajo.
-
 ## Sobre el nodo `tests`
 
 Corre así, y cada flag está por algo:
@@ -89,7 +75,7 @@ Corre así, y cada flag está por algo:
 $GODOT_BIN --path <repo> --headless -s -d
     --remote-debug tcp://127.0.0.1:0
     res://addons/gdUnit4/bin/GdUnitCmdTool.gd
-    -a test --continue --ignoreHeadlessMode -rd reportes
+    -a test --continue --ignoreHeadlessMode -rd reports
 ```
 
 - **`--remote-debug tcp://127.0.0.1:0`** — sin esto, un error de parseo en cualquier `.gd` abre
@@ -100,7 +86,7 @@ $GODOT_BIN --path <repo> --headless -s -d
   fallan siete cosas y cuáles vale más que saber cuál fue la primera.
 - **`--ignoreHeadlessMode`** — gdUnit4 se niega a correr headless salvo que se lo declare, y
   correr headless es todo el punto: es lo que hace que la CI y tu máquina hagan lo mismo.
-- **`-rd reportes`** — los reportes van a un directorio ignorado por git.
+- **`-rd reports`** — los reportes van a un directorio ignorado por git.
 
 ## Lo que esta verificación NO cubre
 
@@ -108,7 +94,9 @@ Dicho para que no se lea como cobertura total:
 
 - **No hay cobertura de código.** Godot no instrumenta GDScript. Qué la reemplaza y qué se
   pierde con el cambio está en [TDD sin cobertura](./tdd.md).
-- **No verifica escenas.** Un `.tscn` con un nodo mal conectado pasa los seis nodos. Eso se ve
+- **No verifica que un test ejerza el criterio que cita.** El nodo `specs` verifica la **cita**.
+  Un `# AC-EMP-004` en un test que no afirma nada pasa igual.
+- **No verifica escenas.** Un `.tscn` con un nodo mal conectado pasa los siete nodos. Eso se ve
   abriendo el juego.
 - **No verifica que el juego sea divertido**, ni que una tarea del turno se sienta bien. Eso es
   playtesting, y es de las pocas cosas de este repo que no tiene ningún gate — a propósito.

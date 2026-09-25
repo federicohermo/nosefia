@@ -58,6 +58,10 @@ func iniciar(enfocado: ObjetoDelAlmacen = null) -> bool:
 		var nodo := agarre.mover_lo_sostenido(punto_de_examen)
 		if nodo == null:
 			return false
+		# Una distancia fija dejaba la caja grande con las esquinas afuera del cuadro, y al girarla
+		# le metía una esquina adentro de la cámara.
+		var distancia := ReglasDeLosObjetos.distancia_de_examen(_radio(nodo))
+		punto_de_examen.position = Vector3.FORWARD * distancia
 		_examinando = nodo
 		examen_iniciado.emit(nodo)
 		objeto_revelado.emit(datos, _hallazgos.registrar(datos))
@@ -67,8 +71,8 @@ func iniciar(enfocado: ObjetoDelAlmacen = null) -> bool:
 	return false
 
 
-## Devuelve el objeto a la mano y avisa que se terminó. Con nada en examen no hace nada: la
-## tecla se puede apretar dos veces, y la segunda no puede emitir un aviso vacío.
+## Devuelve el objeto a donde se lo llevaba y avisa que se terminó. Con nada en examen no hace
+## nada: la tecla se puede apretar dos veces, y la segunda no puede emitir un aviso vacío.
 func terminar() -> void:
 	if _examinando == null:
 		return
@@ -80,11 +84,11 @@ func terminar() -> void:
 
 ## Devuelve si el examen se comió el clic de agarrar.
 ##
-## Mientras hay algo pegado a la cara, el clic lo devuelve a la mano en vez de soltarlo: soltarlo
-## desde ahí lo dejaría caer contra la cámara, y este sistema se quedaría apuntando a un nodo que
-## ya no está en la mano — o sea, rotando algo que se cayó al piso. Que la escena pregunte esto
-## antes de pasarle el clic a `Agarre` es ruteo; qué hace el clic lo decide acá, que es donde
-## está el estado y donde hay test.
+## Mientras hay algo pegado a la cara, el clic lo devuelve a donde se lo llevaba en vez de
+## soltarlo: soltarlo desde ahí lo dejaría caer contra la cámara, y este sistema se quedaría
+## apuntando a un nodo que ya no está en la mano — o sea, rotando algo que se cayó al piso. Que
+## la escena pregunte esto antes de pasarle el clic a `Agarre` es ruteo; qué hace el clic lo
+## decide acá, que es donde está el estado y donde hay test.
 func atajar_el_clic() -> bool:
 	if _examinando == null:
 		return false
@@ -114,3 +118,22 @@ func rotar(relativo: Vector2) -> void:
 	# ya no es el vertical de la pantalla y el mouse deja de hacer lo que se ve.
 	_examinando.rotate_y(-relativo.x * ReglasDelJugador.SENSIBILIDAD_DEL_MOUSE)
 	_examinando.rotate_x(-relativo.y * ReglasDelJugador.SENSIBILIDAD_DEL_MOUSE)
+
+
+## El radio de la esfera que envuelve lo que se ve del nodo, alrededor de su origen: es el punto
+## sobre el que `rotar()` lo gira.
+##
+## Se compone la transformación local de cada malla hasta el nodo, y no la global: fuera del
+## árbol de escena la global devuelve la identidad, y el test mediría una caja sin escala.
+static func _radio(nodo: Node3D) -> float:
+	var radio := 0.0
+	for visual: VisualInstance3D in nodo.find_children("*", "VisualInstance3D", true, false):
+		var hasta_el_nodo := Transform3D.IDENTITY
+		var actual: Node = visual
+		while actual != nodo and actual is Node3D:
+			hasta_el_nodo = (actual as Node3D).transform * hasta_el_nodo
+			actual = actual.get_parent()
+		var limites := visual.get_aabb()
+		for indice in 8:
+			radio = maxf(radio, (hasta_el_nodo * limites.get_endpoint(indice)).length())
+	return radio

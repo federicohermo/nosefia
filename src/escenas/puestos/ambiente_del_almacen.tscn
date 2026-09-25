@@ -1,0 +1,92 @@
+[gd_scene format=3 uid="uid://davohpa0bua7i"]
+
+[ext_resource type="PackedScene" path="res://src/escenas/puestos/agua_del_bano.tscn" id="1_agua"]
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_cielo"]
+
+[sub_resource type="Sky" id="Sky_cielo"]
+sky_material = SubResource("ProceduralSkyMaterial_cielo")
+
+[sub_resource type="Environment" id="Environment_almacen"]
+background_mode = 1
+background_color = Color(0.0627451, 0.11764706, 0.2509804, 1)
+sky = SubResource("Sky_cielo")
+tonemap_mode = 2
+
+[node name="Ambiente" type="Node3D" unique_id=661562974]
+
+[node name="Entorno" type="WorldEnvironment" parent="." unique_id=664424133]
+environment = SubResource("Environment_almacen")
+
+[node name="AreaLight3D" type="AreaLight3D" parent="." unique_id=1670606995]
+transform = Transform3D(-4.3711392e-08, -0.9997196, 0.023678668, 0, 0.023678668, 0.9997196, -1, 4.3699135e-08, -1.0350275e-09, -0.73424435, 4.044125, -1.5531749)
+light_energy = 5.0
+light_size = 0.399
+light_bake_mode = 1
+area_size = Vector2(9.884546, 1)
+
+[node name="AreaLight3D3" type="AreaLight3D" parent="." unique_id=1624985064]
+transform = Transform3D(-4.3711392e-08, -0.9997196, 0.023678668, 0, 0.023678668, 0.9997196, -1, 4.3699135e-08, -1.0350275e-09, -5.325545, 4.044125, -1.5531746)
+light_energy = 5.0
+light_size = 0.399
+light_bake_mode = 1
+area_size = Vector2(9.884546, 1)
+
+[node name="AreaLight3D7" type="AreaLight3D" parent="." unique_id=1727770897]
+transform = Transform3D(-1, 8.739826e-08, -2.0700548e-09, 0, 0.023678668, 0.9997196, 8.742278e-08, 0.9997196, -0.023678668, -2.4240232, 4.044125, 2.415278)
+light_energy = 5.0
+light_size = 0.399
+light_bake_mode = 1
+area_size = Vector2(9.884546, 1)
+
+[node name="AreaLight3D10" type="AreaLight3D" parent="." unique_id=1041791214]
+transform = Transform3D(-1, 8.739826e-08, -2.0700548e-09, 0, 0.023678668, 0.9997196, 8.742278e-08, 0.9997196, -0.023678668, -2.4240232, 4.044125, 5.2674217)
+light_energy = 5.0
+light_size = 0.399
+light_bake_mode = 1
+area_size = Vector2(9.884546, 1)
+
+[node name="AreaLight3D8" type="AreaLight3D" parent="." unique_id=174603683]
+transform = Transform3D(-1, 8.739826e-08, -2.0700548e-09, 0, 0.023678668, 0.9997196, 8.742278e-08, 0.9997196, -0.023678668, -2.4240232, 4.044125, -5.8359776)
+light_energy = 5.0
+light_size = 0.399
+light_bake_mode = 1
+area_size = Vector2(9.884546, 1)
+
+[node name="AreaLight3D2" type="AreaLight3D" parent="." unique_id=333680017]
+transform = Transform3D(-4.3711392e-08, -0.9997196, 0.023678668, 0, 0.023678668, 0.9997196, -1, 4.3699135e-08, -1.0350275e-09, 3.6526499, 4.044125, -1.553175)
+light_energy = 5.0
+light_size = 0.399
+light_bake_mode = 1
+area_size = Vector2(9.884546, 1)
+
+[node name="AreaLight3D9" type="AreaLight3D" parent="." unique_id=12441013]
+transform = Transform3D(-4.3711392e-08, -0.9997196, 0.023678668, 0, 0.023678668, 0.9997196, -1, 4.3699135e-08, -1.0350275e-09, 7.04758, 4.044125, -1.553175)
+light_energy = 5.0
+light_size = 0.399
+light_bake_mode = 1
+area_size = Vector2(9.884546, 1)
+
+[node name="AreaLight3D4" type="AreaLight3D" parent="." unique_id=186499365]
+transform = Transform3D(1, 0, 0, 0, 0.023678668, 0.9997196, 0, -0.9997196, 0.023678668, 3.318476, 4.044125, -12.095114)
+light_energy = 3.475
+light_size = 0.874
+light_bake_mode = 1
+area_size = Vector2(2.0353312, 1)
+
+[node name="AreaLight3D5" type="AreaLight3D" parent="." unique_id=1115635436]
+transform = Transform3D(1, 0, 0, 0, 0.023678668, 0.9997196, 0, -0.9997196, 0.023678668, 9.725164, 4.044125, -6.653817)
+light_energy = 0.988
+light_size = 0.874
+light_bake_mode = 1
+area_size = Vector2(0.9148388, 1)
+
+[node name="AreaLight3D6" type="AreaLight3D" parent="." unique_id=581634060]
+transform = Transform3D(1, 0, 0, 0, 0.023678668, 0.9997196, 0, -0.9997196, 0.023678668, 4.7662916, 3.1091843, 6.4416533)
+light_color = Color(1, 1, 0.9098039, 1)
+light_energy = 1.055
+light_size = 0.201
+light_bake_mode = 1
+area_size = Vector2(0.9148388, 1)
+
+[node name="AguaDelBano" parent="." instance=ExtResource("1_agua")]

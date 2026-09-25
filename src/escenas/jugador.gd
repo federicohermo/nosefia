@@ -3,20 +3,16 @@
 ## La prueba de que salió bien es que no hay un solo `if` sobre una regla del juego: el clamp
 ## del pitch, la vuelta del yaw, la normalización de la diagonal y «cuándo cambió el objetivo»
 ## viven todos en `src/dominio/` y tienen test. Acá quedan `Input`, `move_and_slide()`, el
-## `RayCast3D` y las señales.
-##
-## Que la aritmética no se haya vuelto a colar acá lo verifica el AC28 del spec 004 con un `rg`
-## sobre este archivo, que busca las cuatro llamadas del motor con las que se harían esas
-## cuentas y exige cero líneas. Los nombres no se escriben ni en un comentario: el gate no
-## distingue código de prosa, y hacerlo pasar comentando distinto sería trampa.
+## campo espacial y las señales.
 extends CharacterBody3D
 
-## Se llaman por lo que pasó y no por lo que hay que hacer. Son el punto donde se cuelga el
-## spec 006: quien las emite no sabe quién las escucha.
+## Se llaman por lo que pasó y no por lo que hay que hacer. Son el punto donde se cuelga
+## agarrar y examinar: quien las emite no sabe quién las escucha.
 signal objetivo_enfocado(objetivo: Node3D, distancia: float)
 signal objetivo_perdido
+signal uso_pedido(objetivo: Node3D)
 
-## Los dos sistemas del spec 006, por `@export` y no por `@onready`: un `@onready` se resuelve
+## Los dos sistemas de agarrar, por `@export` y no por `@onready`: un `@onready` se resuelve
 ## recién al entrar la escena al árbol, y entonces `id_en_la_mano()` se caería sobre un jugador
 ## apenas instanciado — que es como lo instancia todo test de esta escena. Tampoco son autoloads:
 ## está medido que `gate_de_capas.py` no ve uno nombrado por su nombre global, o sea que esa
@@ -26,7 +22,7 @@ signal objetivo_perdido
 
 ## Se arma en la declaración y no en `_ready()` a propósito: así un test puede instanciar la
 ## escena sin entrarla al árbol y el control ya existe. Entrar la escena al árbol haría correr
-## `_ready()`, que toca el cursor y lee el rayo — dos cosas que en headless no significan nada.
+## `_ready()`, que toca el cursor y conecta sistemas — dos cosas que en headless no significan nada.
 var _control := ControlDelJugador.new(
 	Mirada.new(
 		ReglasDelJugador.SENSIBILIDAD_DEL_MOUSE,
@@ -44,19 +40,75 @@ var _cursor_soltado_a_mano := false
 ## necesita el `Node3D`; el dominio sigue viendo sólo el `int` que le pasa `_leer_la_mira()`.
 var _enfocado: Node3D = null
 
-@onready var _camara: Camera3D = $Camara
-@onready var _mira: RayCast3D = $Camara/Mira
+## Cuánto mide ahora el brazo de cada mano. Es estado del dibujo y no del juego: el brazo del
+## motor contesta el lugar libre de golpe, y cuánto de ese salto se recorre por cuadro lo decide
+## `RetornoDeLaMano`.
+var _largo_de_carga := 0.0
+var _largo_de_producto := 0.0
+
+## Lo que el barrido de la caja no ve: lo mismo que excluyen los brazos, que no lo devuelven.
+var _excluidos: Array[RID] = []
+
+## Si el giro dibujado todavía va atrás de la mirada. Mientras tanto se lo reescribe cada cuadro,
+## y sólo entonces: un test que apunta la cámara a mano no la pierde en el cuadro siguiente.
+var _girando_el_dibujo := false
+
+## El yaw va acá y no al cuerpo, que es la receta de Godot para mirar con el mouse: el cuerpo se
+## dibuja interpolado entre dos pasos de física, y este nodo no. Así la caminata sale pareja y el
+## giro no espera al paso siguiente. Su interpolación apagada está en el `.tscn`.
+@onready var _giro: Node3D = $Giro
+@onready var _camara: Camera3D = $Giro/Camara
+@onready var _campo: Area3D = $Giro/Camara/CampoDeInteraccion
+
+## Los dos brazos que miden cuánto lugar hay para lo que se lleva.
+@onready var _brazo_de_carga: SpringArm3D = $Giro/Camara/BrazoDeCarga
+@onready var _brazo_de_producto: SpringArm3D = $Giro/Camara/BrazoDeProducto
+
+## El brazo de la caja gira con el yaw y no con la cámara: pegado al pitch taparía la mira.
+@onready var _brazo_de_la_caja: SpringArm3D = $Giro/BrazoDeCaja
+@onready var _punto_de_la_caja: Node3D = $Giro/PuntoDeCaja
+
+## La caja ocupa lugar: mientras se la lleva, el jugador no puede acercarse a una pared más de lo
+## que la caja mide. La forma es hija del cuerpo y no del giro, porque sólo así choca.
+@onready var _forma_de_la_caja: CollisionShape3D = $FormaDeLaCaja
 
 
 func _ready() -> void:
 	_aplicar_el_modo_del_cursor()
 	_aplicar_la_rotacion()
+	# Los brazos barren desde el hombro, que está adentro de la propia cápsula. Está medido que
+	# un barrido que arranca solapado se descarta entero: sin esta exclusión el brazo nunca
+	# acorta y lo que se lleva en la mano vuelve a meterse en la madera.
+	# Y barren antes de que el cuerpo los lea: con la misma prioridad el padre va primero y lee el
+	# largo del paso anterior.
+	_excluidos.append(get_rid())
+	for brazo: SpringArm3D in find_children("*", "SpringArm3D", true, false):
+		brazo.add_excluded_object(get_rid())
+		brazo.process_physics_priority = process_physics_priority - 1
+	# Estirados desde el primer cuadro: arrancar en cero haría que las manos salgan del hombro
+	# a la vista del jugador cada vez que empieza una jornada.
+	_largo_de_carga = _brazo_de_carga.spring_length
+	_largo_de_producto = _brazo_de_producto.spring_length
 	# Examinar clava la cámara y la caminata. Se cablea acá y no adentro de `Examen` porque
 	# `sistemas/` no puede nombrar un nodo de `escenas/`: allá se emite lo que pasó, acá se
 	# traduce a lo que hay que hacer.
 	examen.examen_iniciado.connect(_al_empezar_a_examinar)
 	examen.examen_terminado.connect(reanudar)
 	agarre.objeto_soltado.connect(_devolver_al_mundo)
+
+
+## Deja de chocar con el detalle de un mueble: el cuerpo y los brazos chocan con su contorno.
+##
+## **El detalle es caro de rozar.** La colisión de una góndola es su malla entera, con cada
+## chapa, labio y agujero del panel. La cápsula que camina pegada al lateral de una cabecera
+## prueba contacto contra cientos de triángulos en cada paso: está medido en 5,4 ms por paso en
+## escritorio contra 0,7 con una caja, y en la web el cuadro llegaba a 80 ms. El detalle sigue
+## ahí para lo que sí lo necesita: los productos que caen y los rayos de la mira.
+func ignorar_el_detalle(cuerpo: PhysicsBody3D) -> void:
+	add_collision_exception_with(cuerpo)
+	_excluidos.append(cuerpo.get_rid())
+	for brazo: SpringArm3D in find_children("*", "SpringArm3D", true, false):
+		brazo.add_excluded_object(cuerpo.get_rid())
 
 
 func _unhandled_input(evento: InputEvent) -> void:
@@ -89,9 +141,30 @@ func _unhandled_input(evento: InputEvent) -> void:
 		# Quién se come el clic lo contesta `Examen`, que es el que sabe si hay algo pegado a la
 		# cara. Acá sólo se lo pasa al que quedó: esto es ruteo, no una regla del juego.
 		if not examen.atajar_el_clic():
-			agarre.alternar(_datos_de_lo_enfocado(), _enfocado)
+			_interactuar()
+	elif evento.is_action_pressed(ReglasDelJugador.ACCION_USAR):
+		if _enfocado != null and not _control.esta_suspendido():
+			uso_pedido.emit(_enfocado)
 	elif evento.is_action_pressed(ReglasDeLosObjetos.ACCION_EXAMINAR):
 		examen.alternar(_datos_de_lo_enfocado())
+
+
+## **El clic se lo gasta quien hace algo con él, y sólo ése.** Tener `interactuar()` es la
+## declaración de que el clic izquierdo es suyo: los puestos lo resuelven por señal y contestan
+## `null` —el escritorio abre, el estante coloca—, y soltar además sería un segundo efecto del
+## mismo clic; las cajas contestan sus datos, y eso es lo que se agarra.
+##
+## **Lo que está en el grupo pero no tiene el método no se gasta nada**, y ésa es la diferencia
+## que antes no existía: el corte miraba si había algo enfocado, así que la mancha del piso
+## —que se limpia con el otro botón y no contesta nada acá— se comía el clic. Llevando una caja
+## y con la mira sobre un charco, soltar no hacía absolutamente nada, sin un solo aviso.
+func _interactuar() -> void:
+	var datos: ObjetoDelAlmacen = null
+	if _enfocado != null and _enfocado.has_method(ReglasDeLosObjetos.METODO_INTERACTUAR):
+		datos = _enfocado.call(ReglasDeLosObjetos.METODO_INTERACTUAR)
+		if datos == null:
+			return
+	agarre.alternar(datos, _enfocado)
 
 
 func _physics_process(delta: float) -> void:
@@ -116,13 +189,98 @@ func _physics_process(delta: float) -> void:
 	velocity.x = horizontal.x
 	velocity.z = horizontal.z
 	move_and_slide()
+	_empujar_lo_que_estorba()
 
+	_acomodar_las_manos(delta)
+	_acomodar_la_caja()
 	_leer_la_mira()
+
+
+func _process(delta: float) -> void:
+	_control.avanzar_el_dibujo(delta)
+	var atrasado := _control.giro_atrasado()
+	if atrasado or _girando_el_dibujo:
+		_aplicar_la_rotacion()
+	_girando_el_dibujo = atrasado
+
+
+## Le pasa a lo chocado el paso que no se pudo dar, para que se corra en vez de tapar el paso.
+##
+## Quién puede recibirlo lo dice el nombre de un método, igual que interactuar: acá no se nombra
+## ninguna escena. Cuánto se corre lo decide quien recibe, con el número del dominio.
+func _empujar_lo_que_estorba() -> void:
+	for indice in get_slide_collision_count():
+		var choque := get_slide_collision(indice)
+		var estorbo := choque.get_collider() as Node
+		if estorbo != null and estorbo.has_method(ReglasDeLosObjetos.METODO_EMPUJAR):
+			estorbo.call(ReglasDeLosObjetos.METODO_EMPUJAR, choque.get_remainder())
+
+
+## Corre las dos manos sobre el eje de su brazo, hasta donde haya lugar.
+##
+## El brazo no mueve a nadie: los puntos cuelgan de la cámara y no de él, así que la única
+## escritura sobre ellos es ésta. Colgarlos del brazo sería más corto, pero entonces el motor
+## les escribiría la posición entera cada cuadro y el suavizado no tendría dónde entrar.
+func _acomodar_las_manos(delta: float) -> void:
+	_largo_de_carga = _acomodar(_brazo_de_carga, agarre.punto_de_carga, _largo_de_carga, delta)
+	_largo_de_producto = _acomodar(
+		_brazo_de_producto, agarre.punto_de_producto, _largo_de_producto, delta
+	)
+
+
+## Mueve un punto sobre el eje de su brazo y devuelve el largo que quedó.
+func _acomodar(brazo: SpringArm3D, punto: Node3D, largo: float, delta: float) -> float:
+	if brazo == null or punto == null:
+		return largo
+	var siguiente := RetornoDeLaMano.siguiente(largo, brazo.get_hit_length(), delta)
+	punto.position = brazo.transform * Vector3(0.0, 0.0, siguiente)
+	return siguiente
+
+
+## Le da o le saca al cuerpo el volumen de la caja que lleva. Es lo que la vuelve un objeto de
+## verdad: con ella en la mano el jugador choca donde chocaría la caja.
+func ocupar_el_frente(ocupado: bool) -> void:
+	# Primero se la acomoda y después se enciende: encender el volumen donde no entra —que es lo
+	# que pasa sacando una caja de un estante pegado a él— empuja al jugador.
+	_acomodar_la_caja()
+	_forma_de_la_caja.disabled = not ocupado
+
+
+## Corre la caja sobre el eje de su brazo, hasta donde haya lugar.
+##
+## Sin suavizado, al revés que las manos: el volumen se enciende justo en el punto libre. Un punto
+## intermedio quedaría adentro de la madera.
+func _acomodar_la_caja() -> void:
+	# Barre acá y no lee el brazo: su barrido es de antes de `move_and_slide()`, y con ese largo la
+	# forma quedaba adentro de la pared y rebotaba el cuerpo.
+	var brazo := _brazo_de_la_caja
+	var barrido := PhysicsShapeQueryParameters3D.new()
+	barrido.shape = brazo.shape
+	barrido.transform = brazo.global_transform
+	barrido.motion = brazo.global_basis.z * brazo.spring_length
+	barrido.collision_mask = brazo.collision_mask
+	barrido.exclude = _excluidos
+	var libre := get_world_3d().direct_space_state.cast_motion(barrido)[0]
+	var lugar := brazo.transform * Vector3(0.0, 0.0, brazo.spring_length * libre)
+	_punto_de_la_caja.position = lugar
+	# El cuerpo no gira: la forma se gira con el yaw a mano.
+	_forma_de_la_caja.transform = _giro.transform * Transform3D(Basis.IDENTITY, lugar)
+
+
+## Desde dónde y hacia dónde mira. La pide `reposicion_manual.gd` para saber dónde quiere el
+## jugador apoyar la caja; el nodo de la cámara es privado y su ruta no se cruza desde afuera.
+func mira() -> Transform3D:
+	return _camara.global_transform
+
+
+## Hacia adónde mira el jugador en el piso, sin el pitch. El cuerpo no gira: el yaw es del giro.
+func frente() -> Vector3:
+	return -_giro.global_basis.z
 
 
 ## La única puerta por la que otra escena puede decir «el jugador no controla»: el
 ## `ControlDelJugador` es de `dominio/` y su instancia vive privada acá. La piden por separado
-## el spec 006 (examinar un objeto) y el 009 (abrir la computadora), y sin ellas los dos
+## examinar un objeto y abrir la computadora, y sin ellas los dos
 ## degradan en silencio —el mouse sigue girando la cámara, el jugador sigue caminando—.
 func suspender() -> void:
 	# El aviso sale una sola vez, acá: mientras dura la suspensión `observar()` devuelve `false`,
@@ -141,7 +299,7 @@ func reanudar() -> void:
 ## Qué `id` del dominio se está llevando en la mano, o `SIN_ID`.
 ##
 ## La única puerta por la que otra escena pregunta qué lleva el jugador — la piden los tres
-## llamadores del 014 para saber si lo que hay en la mano es el trapeador, que es lo que decide
+## llamadores de limpiar para saber si lo que hay en la mano es el trapeador, que es lo que decide
 ## si una pasada cuenta: `PisoDelLocal.pasar()` compara este `id` contra el del trapeador y una
 ## mano con otra cosa no baja una sola pasada. Devuelve el `id` y nunca el nodo: un nodo
 ## cruzaría la dirección de las capas al revés.
@@ -152,11 +310,14 @@ func id_en_la_mano() -> StringName:
 	return datos.id
 
 
-## El yaw va al cuerpo —así el adelante de la caminata y el de la vista son el mismo— y el pitch
-## a la cámara. El dominio devuelve dos ángulos y no sabe a qué nodo van.
+## El yaw va al giro y el pitch a la cámara. Son los dibujados: con un mouse rápido, los mismos que
+## los de la mirada. El dominio devuelve dos ángulos y no sabe a qué nodo van.
 func _aplicar_la_rotacion() -> void:
-	rotation.y = _control.yaw()
-	_camara.rotation.x = _control.pitch()
+	# Un jugador instanciado sin entrar al árbol recibe eventos igual, y todavía no tiene cámara.
+	if _camara == null:
+		return
+	_giro.rotation.y = _control.yaw_dibujado()
+	_camara.rotation.x = _control.pitch_dibujado()
 
 
 ## `dominio/` decide SI el cursor tiene que estar tomado, y acá se le suma la salida de
@@ -172,39 +333,77 @@ func _aplicar_el_modo_del_cursor() -> void:
 	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED if tomado else Input.MOUSE_MODE_VISIBLE
 
 
-## Arma la terna `(id, distancia, interactuable)` y se la pasa al dominio, que contesta si eso
-## CAMBIÓ. La señal sale sólo cuando contesta que sí: sin eso serían 60 emisiones por segundo
-## mirando fijo una estantería.
+## La identidad sigue siendo la del cuerpo; cambiar el punto visible no reemite el foco.
 func _leer_la_mira() -> void:
-	var enfocado := _mira.get_collider() as Node3D
-	var id := Foco.SIN_OBJETIVO
-	var distancia := 0.0
-	var interactuable := false
-	if enfocado != null:
-		# El dominio guarda un `int` y no el nodo: guardar el nodo pondría en rojo el gate de
-		# capas por `src/dominio → src/escenas` sin que haya un solo `preload`.
-		id = enfocado.get_instance_id()
-		# Del ojo al punto donde pegó el rayo, y no entre los dos orígenes: el del cuerpo está
-		# apoyado en el piso y el del objeto en su centro, así que medir origen a origen le suma
-		# la altura de la cámara a todo lo que se mira de cerca. Es el número con el que el spec
-		# 006 decide si algo está al alcance de la mano, y ahí ese error importa.
-		distancia = _camara.global_position.distance_to(_mira.get_collision_point())
-		interactuable = enfocado.is_in_group(ReglasDelJugador.GRUPO_INTERACTUABLE)
-	_enfocado = enfocado
-	if not _control.observar(id, distancia, interactuable):
+	var candidatos: Array[CampoDeInteraccion.Candidato] = []
+	var cuerpos: Dictionary[int, Node3D] = {}
+	var distancias: Dictionary[int, float] = {}
+	for cuerpo: Node3D in _campo.get_overlapping_bodies():
+		if cuerpo == self or not cuerpo.is_in_group(ReglasDelJugador.GRUPO_INTERACTUABLE):
+			continue
+		var candidato := _medir_candidato(cuerpo)
+		candidatos.append(candidato)
+		cuerpos[candidato.id] = cuerpo
+		distancias[candidato.id] = candidato.distancia
+	var excluido := Foco.SIN_OBJETIVO
+	for nodo in agarre.punto_de_carga.get_children() + examen.punto_de_examen.get_children():
+		excluido = nodo.get_instance_id()
+	var id := CampoDeInteraccion.elegir(candidatos, excluido)
+	_enfocado = cuerpos.get(id)
+	var distancia: float = distancias.get(id, 0.0)
+	if not _control.observar(id, distancia, _enfocado != null):
 		return
 	if _control.objetivo() == Foco.SIN_OBJETIVO:
 		objetivo_perdido.emit()
 	else:
-		objetivo_enfocado.emit(enfocado, distancia)
+		objetivo_enfocado.emit(_enfocado, distancia)
 
 
-## Le pide a lo enfocado que se presente, por el nombre de método que ES el contrato. `null` si
-## no hay nada enfocado o si lo que hay no es un objeto del almacén —una pared, una estantería—.
+## Los bounds orientan los rayos. Sólo un impacto real sobre el cuerpo da un punto visible.
+func _medir_candidato(cuerpo: Node3D) -> CampoDeInteraccion.Candidato:
+	var ojo := _camara.global_position
+	var adelante := -_camara.global_basis.z
+	var puntos: Array[Vector3] = [ojo + adelante * ReglasDelJugador.ALCANCE_DE_LA_MIRA]
+	for forma: CollisionShape3D in cuerpo.find_children("*", "CollisionShape3D", false, false):
+		if forma.disabled or forma.shape == null:
+			continue
+		var limites := forma.global_transform * forma.shape.get_debug_mesh().get_aabb()
+		var centro := limites.get_center()
+		var eje := ojo + adelante * (centro - ojo).dot(adelante)
+		puntos.append(eje.clamp(limites.position, limites.end))
+		puntos.append(centro)
+		for direccion in [
+			Vector3.RIGHT, Vector3.LEFT, Vector3.UP, Vector3.DOWN, Vector3.FORWARD, Vector3.BACK
+		]:
+			puntos.append(centro + direccion * limites.size / 2)
+	var espacio := get_world_3d().direct_space_state
+	for punto in puntos:
+		var consulta := PhysicsRayQueryParameters3D.create(
+			ojo, ojo + ojo.direction_to(punto) * ReglasDelJugador.ALCANCE_DE_LA_MIRA
+		)
+		consulta.exclude = [get_rid()]
+		# Con la máscara del campo y no con todas: el contorno de un mueble lo envuelve, y un
+		# rayo que lo mirara pegaría siempre ahí antes que en el mueble.
+		consulta.collision_mask = _campo.collision_mask
+		var golpe := espacio.intersect_ray(consulta)
+		if golpe.get("collider") != cuerpo:
+			continue
+		var impacto: Vector3 = golpe.position
+		return CampoDeInteraccion.Candidato.new(
+			cuerpo.get_instance_id(),
+			ojo.distance_to(impacto),
+			adelante.angle_to(impacto - ojo),
+			true,
+			true
+		)
+	return CampoDeInteraccion.Candidato.new(cuerpo.get_instance_id(), INF, INF, true, false)
+
+
+## Examinar consulta los datos sin activar cajas ni puestos.
 func _datos_de_lo_enfocado() -> ObjetoDelAlmacen:
-	if _enfocado == null or not _enfocado.has_method(ReglasDeLosObjetos.METODO_INTERACTUAR):
-		return null
-	return _enfocado.call(ReglasDeLosObjetos.METODO_INTERACTUAR)
+	if _enfocado is ObjetoAgarrable:
+		return (_enfocado as ObjetoAgarrable).datos
+	return null
 
 
 ## Traduce «empezó un examen» a «el jugador no controla». El argumento se descarta: quién es el
@@ -220,4 +419,40 @@ func _devolver_al_mundo(nodo: Node3D) -> void:
 	var mundo := get_parent()
 	if nodo == null or mundo == null or not nodo.is_inside_tree():
 		return
+	# Sale de donde se lo veía, que es hasta un paso de física atrás. Se mide en el punto del que
+	# cuelga: soltarlo lo deja `top_level` y ya no hereda el dibujo del cuerpo. El reset evita que
+	# se dibuje cruzando el local desde donde se lo agarró.
+	var ancla := nodo.get_parent() as Node3D
+	var atras := Vector3.ZERO
+	if ancla != null:
+		atras = ancla.get_global_transform_interpolated().origin - ancla.global_position
+	# El dibujo va como mucho un paso atrás. El doble ya es un salto del cuerpo, no un atraso.
+	var un_paso := velocity.length() / Engine.physics_ticks_per_second
+	if atras.length() > 2.0 * un_paso:
+		atras = Vector3.ZERO
 	nodo.reparent(mundo, true)
+	nodo.global_position += atras
+	nodo.reset_physics_interpolation()
+	if nodo is RigidBody3D:
+		_ajustar_la_caida(nodo)
+
+
+## El punto fijo puede quedar detrás de la madera. Se barre el volumen desde el jugador.
+func _ajustar_la_caida(cuerpo: RigidBody3D) -> void:
+	var inicio := _camara.global_position
+	var recorrido := cuerpo.global_position - inicio
+	var avance := 1.0
+	var espacio := get_world_3d().direct_space_state
+	for forma: CollisionShape3D in cuerpo.find_children("*", "CollisionShape3D", false, false):
+		if forma.disabled or forma.shape == null:
+			continue
+		var consulta := PhysicsShapeQueryParameters3D.new()
+		consulta.shape = forma.shape
+		consulta.transform = forma.global_transform
+		consulta.transform.origin -= recorrido
+		consulta.motion = recorrido
+		consulta.margin = safe_margin
+		consulta.collision_mask = cuerpo.collision_mask
+		consulta.exclude = [get_rid(), cuerpo.get_rid()]
+		avance = minf(avance, espacio.cast_motion(consulta)[0])
+	cuerpo.global_position = inicio + recorrido * avance

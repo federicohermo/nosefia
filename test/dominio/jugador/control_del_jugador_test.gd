@@ -25,7 +25,7 @@ func _control() -> ControlDelJugador:
 	return ControlDelJugador.new(mirada, ReglasDelJugador.VELOCIDAD_DE_CAMINATA)
 
 
-func test_suspendido_no_gira_la_camara() -> void:
+func test_suspendido_no_gira_la_camara() -> void:  # AC-PLY-007
 	var control := _control()
 	control.girar(Vector2(100.0, 100.0))
 	var yaw_antes := control.yaw()
@@ -37,7 +37,7 @@ func test_suspendido_no_gira_la_camara() -> void:
 	assert_float(control.pitch()).is_equal(pitch_antes)
 
 
-func test_suspendido_devuelve_velocidad_cero_aunque_la_entrada_no_sea_nula() -> void:
+func test_suspendido_devuelve_velocidad_cero_aunque_la_entrada_no_sea_nula() -> void:  # AC-PLY-007
 	var control := _control()
 	control.suspender()
 	assert_vector(control.velocidad(Vector2(0.0, 1.0))).is_equal(Vector3.ZERO)
@@ -68,14 +68,14 @@ func test_suspender_suelta_el_objetivo_que_estaba_enfocado() -> void:
 	assert_bool(control.hay_interactuable()).is_false()
 
 
-func test_suspendido_la_mira_no_enfoca() -> void:
+func test_suspendido_la_mira_no_enfoca() -> void:  # AC-PLY-007
 	var control := _control()
 	control.suspender()
 	assert_bool(control.observar(UN_OBJETO, 2.0, true)).is_false()
 	assert_int(control.objetivo()).is_equal(Foco.SIN_OBJETIVO)
 
 
-func test_suspendido_no_pide_el_cursor_y_al_reanudar_lo_vuelve_a_pedir() -> void:
+func test_suspendido_no_pide_el_cursor_y_al_reanudar_lo_vuelve_a_pedir() -> void:  # AC-PLY-007
 	# Es un `bool` y no un `Input.MOUSE_MODE_*` porque `dominio/` no nombra `Input`: acá se
 	# decide SI, y en `src/escenas/jugador.gd` se traduce a QUÉ.
 	var control := _control()
@@ -91,3 +91,75 @@ func test_la_mira_sigue_avisando_cuando_no_esta_suspendido() -> void:
 	var control := _control()
 	assert_bool(control.observar(UN_OBJETO, 2.0, true)).is_true()
 	assert_int(control.objetivo()).is_equal(UN_OBJETO)
+
+
+func test_con_un_mouse_rapido_el_dibujo_es_la_mirada() -> void:
+	var control := _control()
+	control.girar(Vector2(10.0, 5.0))
+	assert_float(control.yaw_dibujado()).is_equal(control.yaw())
+	assert_float(control.pitch_dibujado()).is_equal(control.pitch())
+	assert_bool(control.giro_atrasado()).is_false()
+
+
+func test_con_un_mouse_lento_el_dibujo_alcanza_a_la_mirada_en_la_ventana() -> void:
+	# Hacia adónde se camina no espera al dibujo: sólo la cámara se atrasa.
+	var control := _lento()
+	var yaw := control.yaw()
+	var pitch := control.pitch()
+	control.girar(Vector2(10.0, 5.0))
+	assert_float(control.yaw()).is_equal_approx(yaw - 0.1, 1e-6)
+	assert_float(control.yaw_dibujado()).is_equal_approx(yaw, 1e-6)
+	assert_float(control.pitch_dibujado()).is_equal_approx(pitch, 1e-6)
+	assert_bool(control.giro_atrasado()).is_true()
+	control.avanzar_el_dibujo(SuavizadoDelGiro.VENTANA / 2.0)
+	assert_float(control.yaw_dibujado()).is_equal_approx(yaw - 0.05, 1e-6)
+	assert_float(control.pitch_dibujado()).is_equal_approx(pitch - 0.025, 1e-6)
+	control.avanzar_el_dibujo(SuavizadoDelGiro.VENTANA)
+	assert_float(control.yaw_dibujado()).is_equal_approx(control.yaw(), 1e-6)
+	assert_float(control.pitch_dibujado()).is_equal_approx(control.pitch(), 1e-6)
+	assert_bool(control.giro_atrasado()).is_false()
+
+
+func test_contra_el_tope_del_pitch_el_dibujo_no_rebota() -> void:
+	# Lo que la mirada no aplicó no se dibuja. Si no, empujar contra el tope bajaba la cámara y
+	# la volvía a subir.
+	var control := _lento()
+	control.girar(Vector2(0.0, -1000.0))
+	control.avanzar_el_dibujo(SuavizadoDelGiro.VENTANA)
+	control.girar(Vector2(0.0, -50.0))
+	assert_float(control.pitch_dibujado()).is_equal_approx(ReglasDelJugador.PITCH_MAXIMO, 1e-6)
+
+
+func test_girar_en_redondo_no_dibuja_la_vuelta_larga() -> void:
+	# El yaw da la vuelta en PI. Sin eso, cruzarlo dibujaba un giro de casi una vuelta entera.
+	var control := _lento()
+	control.girar(Vector2(wrapf(control.yaw() + PI - 0.05, -PI, PI) / SENSIBILIDAD, 0.0))
+	control.avanzar_el_dibujo(SuavizadoDelGiro.VENTANA)
+	control.girar(Vector2(10.0, 0.0))
+	control.avanzar_el_dibujo(SuavizadoDelGiro.VENTANA / 2.0)
+	assert_float(absf(wrapf(control.yaw_dibujado() - control.yaw(), -PI, PI))).is_less(0.06)
+
+
+func test_suspendido_el_dibujo_no_se_mueve() -> void:
+	var control := _lento()
+	var yaw := control.yaw()
+	control.suspender()
+	control.girar(Vector2(100.0, 100.0))
+	control.avanzar_el_dibujo(SuavizadoDelGiro.VENTANA / 2.0)
+	assert_float(control.yaw_dibujado()).is_equal(yaw)
+
+
+## Un control que ya vio un mouse de 125 Hz a 144 cuadros, con el dibujo al día.
+func _lento() -> ControlDelJugador:
+	var control := _control()
+	var cuadro := 1.0 / 144.0
+	var tiempo := 0.0
+	var proximo := 0.0
+	for indice in 300:
+		while proximo <= tiempo:
+			control.girar(Vector2(0.1, 0.0))
+			proximo += 1.0 / 125.0
+		control.avanzar_el_dibujo(cuadro)
+		tiempo += cuadro
+	control.avanzar_el_dibujo(SuavizadoDelGiro.VENTANA)
+	return control

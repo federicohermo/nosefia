@@ -6,13 +6,13 @@ Uso, desde la raíz del repo:
     python .claude/scripts/limpiar_worktrees.py <ruta> [<ruta> ...]
 
 Ésta es la copia canónica. **Los dos batch que abren worktrees —`pr-review-batch` y
-`spec-implement-batch`— traen la suya en `scripts/`**, porque un skill trae su implementación
+`implement-batch`— traen la suya en `scripts/`**, porque un skill trae su implementación
 completa y uno que dependa de `.claude/scripts/` deja de funcionar apenas viaja solo. Que las tres
 copias no se separen lo verifica `test_copias_de_skills.py`, no la disciplina de nadie.
 
 ## Por qué no alcanza `git worktree remove`
 
-`.godot/` y `reportes/` están en el `.gitignore`, así que `remove` borra lo trackeado y el
+`.godot/` y `reports/` están en el `.gitignore`, así que `remove` borra lo trackeado y el
 `.git` pero **el directorio no queda vacío** y el borrado final tira `Directory not empty`.
 `--force` no ayuda: no es un problema de cambios sin commitear. Y le pasa a **todo worktree que
 haya corrido `verificar.py`**, o sea a todos — el nodo `tests` levanta Godot headless, y Godot
@@ -33,6 +33,14 @@ ok, y el que lo vio fue el usuario mirando el árbol de archivos.
 
 Por eso `--todos` es la **unión** de lo que git registra y lo que hay en disco bajo
 `.claude/worktrees/`, y no lo primero.
+
+## Y por qué nada fuera de `.claude/worktrees/`
+
+**Un worktree de este repo se abre sólo en `.claude/worktrees/`, y este script sólo borra ahí.**
+Vale para `--todos` y para una ruta explícita: lo que está afuera se rechaza, y el script sale
+con 1. Un worktree afuera no lo abrió ningún flujo del repo, y borrarlo con `--force` se lleva
+lo que tenga sin commitear. Medido el 2026-09-22 en el lote 156/157: `--todos` tomaba todo lo
+registrado y se llevó un worktree al lado del repo que ninguno de los dos PR había abierto.
 
 ## Las ramas también quedan
 
@@ -107,11 +115,15 @@ $todos |
 """
 
 
-#: Dónde nacen los worktrees de un lote. Se mira ADEMÁS de lo que git registra, nunca en vez.
+#: Dónde nacen los worktrees de un lote. Acota lo que git registra, y además se barre en disco.
 DIR_DE_WORKTREES = (".claude", "worktrees")
 
 #: El prefijo que el harness le pone a la rama de cada worktree.
 RAMA_DE_WORKTREE = "worktree-agent-"
+
+
+def del_lote(ruta: Path) -> bool:
+    return ruta.resolve().is_relative_to(RAIZ.joinpath(*DIR_DE_WORKTREES).resolve())
 
 
 def git(*args: str) -> subprocess.CompletedProcess:
@@ -180,13 +192,14 @@ def main() -> None:
     principal = Path(hecho.stdout.strip()).resolve()
 
     if args == ["--todos"]:
+        directorio = RAIZ.joinpath(*DIR_DE_WORKTREES).resolve()
         registrados = [
             Path(l[len("worktree ") :]).resolve()
             for l in git("worktree", "list", "--porcelain").stdout.splitlines()
             if l.startswith("worktree ")
         ]
-        objetivos = [w for w in registrados if w != principal]
-        objetivos += huerfanos(RAIZ.joinpath(*DIR_DE_WORKTREES), objetivos, principal)
+        objetivos = [w for w in registrados if del_lote(w)]
+        objetivos += huerfanos(directorio, objetivos, principal)
         if not objetivos:
             print("no hay worktrees del lote para limpiar")
     else:
@@ -194,12 +207,16 @@ def main() -> None:
 
     # Sin objetivos igual se sigue: quedan el `prune` y las ramas, que no dependen de que
     # haya quedado un árbol en disco.
-    padre = objetivos[0].parent if objetivos else RAIZ.joinpath(*DIR_DE_WORKTREES)
+    padre = RAIZ.joinpath(*DIR_DE_WORKTREES)
     fallo = False
     matados = False
 
     for wt in objetivos:
         print(f"== {wt}")
+        if not del_lote(wt):
+            print("   RECHAZADO: no esta bajo .claude/worktrees/", file=sys.stderr)
+            fallo = True
+            continue
         if not wt.exists():
             print("   no existe: nada que hacer")
             continue

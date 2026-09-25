@@ -9,7 +9,7 @@ verifica `test_copias_de_skills.py`, que da rojo ante un byte de diferencia.
 Lo que separa un review útil de una lista de ruido está acá, no en la cantidad de hallazgos.
 
 **Y ninguno de esos hallazgos sobrevive a la corrida:** las cinco descargas están en
-[`sin-deuda.md`](sin-deuda.md), que es de los ocho skills. Acá está sólo cómo
+[`sin-deuda.md`](sin-deuda.md), que es de los siete skills que escriben. Acá está sólo cómo
 aterrizan sobre un diff.
 
 ## Los ejes
@@ -39,7 +39,7 @@ esto:
 
 `gate_de_tests.py` sólo exige espejo en `src/dominio/` y `src/sistemas/`. Una regla —cuántas
 tareas cuentan, qué pasa a las tres jornadas, cuánto cuesta atender— escrita adentro de un
-`_process` o de un botón pasa los seis nodos en verde y no la ejerce nadie.
+`_process` o de un botón pasa los siete nodos en verde y no la ejerce nadie.
 
 **La prueba es una sola: ¿se puede ejercer sin levantar una escena?** Si sí y está arriba, es
 hallazgo, y el arreglo no es testear la pantalla: es bajar la regla a `dominio/`.
@@ -143,9 +143,9 @@ Si el hallazgo depende de una premisa sobre el entorno —una config, un flag, u
 un default del motor—, **comprobá la premisa**. Un grep de cinco segundos descarta la mitad de los
 🔴 candidatos, y reportar uno cuesta además un fix innecesario.
 
-**Y para buscar adentro de `specs/`, `rg --no-ignore`.** `Grep` es ripgrep y respeta el
-`.gitignore`: contesta cero sin decir que no miró, que es la peor respuesta posible para verificar
-una premisa.
+**Y para buscar adentro de `.claude/`, `rg --no-ignore --hidden`.** `Grep` es ripgrep y saltea
+los ocultos: contesta cero sin decir que no miró, que es la peor respuesta posible para
+verificar una premisa.
 
 ## Política de triage — al aplicar los fixes
 
@@ -189,8 +189,8 @@ nota al pie**. Un 🟡 archivado y un fix que no te dejaron aplicar se leen igua
 opuestos: del primero ya se decidió, del segundo no decidió nadie.
 
 1. **Reintentá por otro camino.** Y si el bloqueo vino del hook, **mirá el nombre de tu rama antes
-   que nada**: `gate_de_spec.py` exige `feature/<NNN>-` con el `NNN` en `specs/mapa.json` para
-   tocar `src/`. Es la causa número uno de un fix bloqueado acá.
+   que nada**: `gate_de_rama.py` sólo deja tocar `src/` desde los prefijos que su mensaje nombra.
+   Es la causa número uno de un fix bloqueado acá.
 2. Si sigue bloqueado, **la corrida no cierra en verde.** El reporte arranca diciéndolo, con
    `BLOQUEADO: <qué> — <quién lo bloqueó>` y el fix exacto en una línea copiable.
 3. **No lo tapes con un issue.** Eso convierte un rojo en un pendiente, que es la única operación
@@ -226,14 +226,14 @@ Tres cosas que no son obvias:
 - **Sale de `staging`, no de la rama del PR que revisás.** Si sale de ahí, arrastra los commits de
   ese PR y no se puede mergear antes que él — que es justo lo que hace falta cuando el fix es de
   otro archivo.
-- **El nombre lleva un `NNN` que el mapa tenga**, o el hook te bloquea la primera edición de
-  `src/`. Si el hallazgo no tiene spec propio y toca ruta protegida, **eso ya es un hallazgo sobre
-  el proceso**: correspondía un spec, y la descarga es abrirlo con `spec-create`.
+- **El prefijo dice qué clase de cambio es** —`bugfix/`, `refactor/`, `improvement/`—, o el hook
+  te bloquea la primera edición de `src/`. Si el fix cambia lo que el juego tiene que hacer, es
+  una `feature/` y parte del spec: `to-spec`.
 - **Va al reporte con su número de PR.** Quien mergea tiene que saber que hay dos.
 
-**Y no se abre un issue «para dejarlo anotado».** Los issues de este repo son **entrada** —lo que
-`deuda.py` lista y `spec-create` drena—, nunca la forma de terminar una corrida. Un hallazgo
-convertido en issue es trabajo que encontraste, entendiste y decidiste no hacer.
+**Y no se abre un issue «para dejarlo anotado».** Un issue de este repo es **el plan de una
+unidad de entrega**, nunca la forma de terminar una corrida. Un hallazgo convertido en issue es
+trabajo que encontraste, entendiste y decidiste no hacer.
 
 La única excepción es la decisión del usuario ya tomada: si te dijo que algo queda para después,
 **el issue lo registra esa decisión, no tu comodidad**, y el cuerpo la cita.

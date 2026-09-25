@@ -1,8 +1,7 @@
 ## El nodo que saca la basura adentro del motor: traduce el depósito y publica.
 ##
-## **Ningún caso entra el nodo al árbol y ninguno hace correr `_process`.** Es lo que vuelve
-## medible el AC5: sin `_process`, el único descuento que puede aparecer en el turno es el de
-## `completar()`.
+## **Ningún caso entra el nodo al árbol y ninguno hace correr `_process`.** Sin `_process`, el
+## turno no se mueve, y un descuento que apareciera sería un segundo cobro.
 extends GdUnitTestSuite
 
 const RECOLECTOR := "res://src/sistemas/tareas/recolector_de_basura.gd"
@@ -56,7 +55,7 @@ func _recolector(presupuesto: float = Reglas.DURACION_DEL_TURNO) -> RecolectorDe
 	return recolector
 
 
-func test_el_recolector_devuelve_exactamente_lo_que_contesto_el_dominio() -> void:  # 015-AC6
+func test_el_recolector_devuelve_exactamente_lo_que_contesto_el_dominio() -> void:
 	var recolector := _recolector()
 	assert_int(recolector.pedir_depositar(_ids()[0], AFUERA)).is_equal(
 		TareaDeLaBasura.Resultado.FUERA_DE_LA_ZONA
@@ -68,7 +67,7 @@ func test_el_recolector_devuelve_exactamente_lo_que_contesto_el_dominio() -> voi
 	assert_int(_rechazos).is_equal(1)
 
 
-func test_el_recolector_no_lleva_estado_propio() -> void:  # 015-AC6
+func test_el_recolector_no_lleva_estado_propio() -> void:
 	# Está medido que un contador acá pasa los dos gates en verde: `sistemas/` puede escribir la
 	# regla y nadie lo dice.
 	var texto := FileAccess.get_file_as_string(RECOLECTOR)
@@ -81,7 +80,7 @@ func test_el_recolector_no_lleva_estado_propio() -> void:  # 015-AC6
 	)
 
 
-func test_con_una_bolsa_de_menos_la_obligatoria_no_se_cuenta() -> void:  # 015-AC5
+func test_con_una_bolsa_de_menos_la_obligatoria_no_se_cuenta() -> void:
 	var recolector := _recolector()
 	var ids := _ids()
 	for indice in range(ids.size() - 1):
@@ -91,21 +90,21 @@ func test_con_una_bolsa_de_menos_la_obligatoria_no_se_cuenta() -> void:  # 015-A
 	assert_int(_turno.tareas_cumplidas()).is_equal(0)
 
 
-func test_la_ultima_bolsa_cuenta_la_obligatoria_y_descuenta_una_sola_vez() -> void:  # 015-AC5
+func test_la_ultima_bolsa_cuenta_la_obligatoria_una_sola_vez_sin_mover_el_turno() -> void:
 	var recolector := _recolector()
 	for id in _ids():
 		recolector.pedir_depositar(id, ADENTRO)
 	assert_int(_avisos_de_tarea).is_equal(1)
 	assert_int(_cumplidas_avisadas).is_equal(1)
-	var esperado := Reglas.DURACION_DEL_TURNO - Reglas.costo_de(Tarea.Tipo.SACAR_LA_BASURA)
-	assert_float(_turno.tiempo_restante()).is_equal(esperado)
-	# Volver a soltar una bolsa ya depositada no cobra de nuevo: el dominio contesta que ya está.
+	assert_float(_turno.tiempo_restante()).is_equal(Reglas.DURACION_DEL_TURNO)
+	# Volver a soltar una bolsa ya depositada no la cuenta de nuevo: el dominio contesta que ya
+	# está.
 	recolector.pedir_depositar(_ids()[0], ADENTRO)
-	assert_float(_turno.tiempo_restante()).is_equal(esperado)
+	assert_float(_turno.tiempo_restante()).is_equal(Reglas.DURACION_DEL_TURNO)
 	assert_int(_avisos_de_tarea).is_equal(1)
 
 
-func test_sin_tiempo_para_la_basura_la_tarea_no_se_cuenta_ni_descuenta() -> void:  # 015-AC5
+func test_con_el_turno_cerrado_la_basura_no_cuenta() -> void:
 	# Las bolsas igual llegan al fondo: el estado del local no depende de que el jefe lo cuente.
 	var recolector := _recolector(0.0)
 	for id in _ids():
@@ -115,7 +114,7 @@ func test_sin_tiempo_para_la_basura_la_tarea_no_se_cuenta_ni_descuenta() -> void
 	assert_float(_turno.tiempo_restante()).is_equal(0.0)
 
 
-func test_ningun_archivo_de_este_spec_nombra_consumir() -> void:  # 015-AC5
+func test_ningun_archivo_de_este_spec_nombra_consumir() -> void:
 	# El nombre no se escribe ni en un comentario: este caso no distingue código de prosa.
 	for ruta: String in ARCHIVOS_DEL_SPEC:
 		var texto := FileAccess.get_file_as_string(ruta)

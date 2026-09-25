@@ -41,7 +41,6 @@ GATE = Path(gate_de_capas.__file__)
 MARCA = "La pureza la verifica `gate_de_capas.py`"
 DOCUMENTOS_QUE_DECLARAN_LA_PUREZA = (
     ".claude/rules/dominio.md",
-    "docs/architecture/overview.md",
     ".claude/scripts/lib/repo.py",
 )
 
@@ -68,7 +67,7 @@ def correr(raiz: Path) -> subprocess.CompletedProcess:
 
 class ElVeredictoSobreUnDominioImpuro(unittest.TestCase):
     def test_un_extends_node_en_el_dominio_lo_pone_en_rojo(self):
-        # 012-AC8. Y se afirma también la salida, no sólo el código: un gate que sale 1 sin decir
+        # Y se afirma también la salida, no sólo el código: un gate que sale 1 sin decir
         # qué archivo, qué línea y qué patrón manda a buscar a mano en toda la capa.
         with tempfile.TemporaryDirectory() as carpeta:
             proceso = correr(arbol(carpeta, {"src/dominio/x.gd": "extends Node\n"}))
@@ -77,7 +76,7 @@ class ElVeredictoSobreUnDominioImpuro(unittest.TestCase):
         self.assertIn("extends Node", proceso.stdout)
 
     def test_el_mismo_arbol_con_el_dominio_puro_sale_en_verde(self):
-        # 012-AC8, la otra dirección, y sin ella la de arriba no significa nada: un gate que
+        # La otra dirección, y sin ella la de arriba no significa nada: un gate que
         # saliera 1 siempre la pasaría igual.
         with tempfile.TemporaryDirectory() as carpeta:
             proceso = correr(arbol(carpeta, {"src/dominio/x.gd": "extends RefCounted\n"}))
@@ -103,22 +102,29 @@ class ElVeredictoSobreUnDominioImpuro(unittest.TestCase):
         self.assertEqual(proceso.returncode, 2, proceso.stdout + proceso.stderr)
 
 
-class LosSeisNodosSiguenSiendoSeis(unittest.TestCase):
-    def test_verificar_no_gano_un_septimo_nodo(self):
-        # 012-AC9. La pureza es la misma pregunta que la dirección y que los nombres de carpeta
-        # —«¿esta capa es lo que dice ser?»—, y un nodo aparte obligaría a leer dos reportes para
-        # una sola respuesta.
-        self.assertEqual(len(verificar.NODOS), 6)
+class LaPurezaNoTieneNodoPropio(unittest.TestCase):
+    """La pureza del dominio se verifica adentro del nodo `capas`, y no en uno aparte.
+
+    Es la misma pregunta que la dirección y que los nombres de carpeta —«¿esta capa es lo que
+    dice ser?»—, y un nodo aparte obligaría a leer dos reportes para una sola respuesta. El
+    caso afirmaba «los nodos son seis», y eso dejó de servir el día que entró el nodo `specs`:
+    un conteo se rompe con cualquier nodo nuevo, incluso con uno que no tiene nada que ver.
+    """
+
+    def test_ningun_nodo_verifica_la_pureza_por_su_cuenta(self):
+        nombres = {n.__name__.removeprefix("nodo_") for n in verificar.NODOS}
+        for inventado in ("pureza", "dominio", "capas_puras"):
+            self.assertNotIn(inventado, nombres)
 
     def test_el_nodo_capas_es_exactamente_este_gate(self):
-        # 012-AC9, y es lo que hace que «`--solo capas` sale 1» se siga del AC8 en vez de ser una
-        # promesa aparte: el código de salida del nodo ES el del gate que el AC8 ejerce.
+        # Es lo que hace que «`--solo capas` sale 1» se siga del gate en vez de ser una promesa
+        # aparte: el código de salida del nodo ES el del gate.
         self.assertIn("gate_de_capas.py", inspect.getsource(verificar.nodo_capas))
 
 
 class LaReglaNombraASuVerificador(unittest.TestCase):
     def test_los_tres_documentos_lo_nombran(self):
-        # 012-AC10. Hasta hoy la pureza estaba escrita en tres lugares y ninguno era ejecutable;
+        # Hasta hoy la pureza estaba escrita en tres lugares y ninguno era ejecutable;
         # ahora que lo es, los tres tienen que decir quién la mira — si no, se los sigue leyendo
         # como prosa y el próximo apuro la rompe igual.
         for documento in DOCUMENTOS_QUE_DECLARAN_LA_PUREZA:

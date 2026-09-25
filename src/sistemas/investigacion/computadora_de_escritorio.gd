@@ -40,7 +40,7 @@ var _caja: CajaRegistradora = null
 ## Le entrega a la computadora la caja de la noche.
 ##
 ## La caja se recibe y no se construye acá porque necesita el inventario de la jornada, que es el
-## mismo que reponen el 008 y vacía la ventanilla del 013: un segundo inventario sería un segundo
+## mismo que llena reponer y vacía la ventanilla: un segundo inventario sería un segundo
 ## stock, y las dos pantallas dirían números distintos del mismo producto.
 func arrancar(caja: CajaRegistradora) -> void:
 	_caja = caja
@@ -100,7 +100,7 @@ func pedir_escribir(titulo: String, texto: String) -> void:
 ## Pasa un producto por la caja y, si no queda ninguno, le pide al reloj que cuente la obligatoria.
 ##
 ## La `Tarea` sale de `RelojDelTurno.obligatoria()` y nunca de una construida acá: una copia
-## devuelve `true`, descuenta el tiempo igual y deja el `"3/5"` del HUD diciendo que no — sin
+## devuelve `true` y deja el `"3/5"` del HUD diciendo que no — sin
 ## error y en verde.
 func pedir_registrar(producto: Producto) -> void:
 	if _caja == null or reloj == null:

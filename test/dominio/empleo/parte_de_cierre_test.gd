@@ -27,7 +27,7 @@ const ESPEJOS_DEL_SPEC := [
 const JORNADA_DE_PRUEBA := 2
 
 
-func test_el_parte_trae_una_linea_por_obligatoria_en_el_orden_declarado() -> void:  # 017-AC4
+func test_el_parte_trae_una_linea_por_obligatoria_en_el_orden_declarado() -> void:  # AC-EMP-013
 	var obligatorias := Apertura.obligatorias()
 	var parte := ParteDeCierre.new(JORNADA_DE_PRUEBA, obligatorias, 0)
 	var renglones := parte.lineas()
@@ -37,7 +37,7 @@ func test_el_parte_trae_una_linea_por_obligatoria_en_el_orden_declarado() -> voi
 		assert_str(renglones[indice]).is_equal(esperado.texto)
 
 
-func test_la_misma_tarea_cumplida_y_sin_cumplir_dice_cosas_distintas() -> void:  # 017-AC4
+func test_la_misma_tarea_cumplida_y_sin_cumplir_dice_cosas_distintas() -> void:  # AC-EMP-013
 	# Sin esto, un catálogo con las dos celdas apuntando al mismo archivo pasaría el conteo de
 	# filas y dejaría la placa felicitando por una tarea que no se hizo.
 	var limpiar := Tarea.new(Tarea.Tipo.LIMPIAR)
@@ -48,21 +48,21 @@ func test_la_misma_tarea_cumplida_y_sin_cumplir_dice_cosas_distintas() -> void: 
 	assert_str(hecha).is_not_equal(sin_hacer)
 
 
-func test_el_saludo_y_el_comentario_salen_del_parte_ya_escritos() -> void:  # 017-AC4
+func test_el_saludo_y_el_comentario_salen_del_parte_ya_escritos() -> void:
 	var parte := ParteDeCierre.new(JORNADA_DE_PRUEBA, Apertura.obligatorias(), 1)
 	assert_str(parte.saludo()).is_not_empty()
 	assert_str(parte.saludo()).contains(str(JORNADA_DE_PRUEBA))
 	assert_str(parte.comentario()).is_equal(CatalogoDeReacciones.del_comentario(1).texto)
 
 
-func test_el_umbral_del_despido_se_cita_por_su_constante() -> void:  # 017-AC5
-	# Escrito como número en la placa, mover el balance del 002 dejaría a la pantalla mintiendo
+func test_el_umbral_del_despido_se_cita_por_su_constante() -> void:  # AC-EMP-015
+	# Escrito como número en la placa, mover el balance del despido dejaría a la pantalla mintiendo
 	# sin que nada avise: el jugador leería «de 4» con el despido en 5.
 	var parte := ParteDeCierre.new(JORNADA_DE_PRUEBA, Apertura.obligatorias(), 0)
 	assert_int(parte.umbral_del_despido()).is_equal(Reglas.APERCIBIMIENTOS_HASTA_EL_DESPIDO)
 
 
-func test_el_legajo_en_cero_no_esta_en_riesgo_y_de_uno_en_adelante_si() -> void:  # 017-AC5
+func test_el_legajo_en_cero_no_esta_en_riesgo_y_de_uno_en_adelante_si() -> void:  # AC-EMP-015
 	var obligatorias := Apertura.obligatorias()
 	assert_bool(ParteDeCierre.new(JORNADA_DE_PRUEBA, obligatorias, 0).en_riesgo()).is_false()
 	for cuantos in range(1, Reglas.APERCIBIMIENTOS_HASTA_EL_DESPIDO + 1):
@@ -73,13 +73,13 @@ func test_el_legajo_en_cero_no_esta_en_riesgo_y_de_uno_en_adelante_si() -> void:
 		)
 
 
-func test_el_parte_devuelve_lo_que_recibio_sin_recalcular_nada() -> void:  # 017-AC6
+func test_el_parte_devuelve_lo_que_recibio_sin_recalcular_nada() -> void:
 	var parte := ParteDeCierre.new(JORNADA_DE_PRUEBA, Apertura.obligatorias(), 3)
 	assert_int(parte.jornada()).is_equal(JORNADA_DE_PRUEBA)
 	assert_int(parte.apercibimientos()).is_equal(3)
 
 
-func test_los_tres_archivos_del_dominio_son_puros() -> void:  # 017-AC7
+func test_los_tres_archivos_del_dominio_son_puros() -> void:
 	for ruta: String in ARCHIVOS_DEL_DOMINIO:
 		var texto := FileAccess.get_file_as_string(ruta)
 		(
@@ -96,7 +96,7 @@ func test_los_tres_archivos_del_dominio_son_puros() -> void:  # 017-AC7
 			)
 
 
-func test_los_tres_espejos_de_este_spec_estan_escritos() -> void:  # 017-AC13
+func test_los_tres_espejos_de_este_spec_estan_escritos() -> void:
 	# `verificar.py` en verde no se puede afirmar desde adentro de gdUnit4, pero sí lo que hace
 	# fallar a su nodo `tdd`: que falte uno de los tres espejos.
 	for espejo: String in ESPEJOS_DEL_SPEC:

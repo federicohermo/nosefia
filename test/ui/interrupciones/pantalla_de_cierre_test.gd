@@ -3,7 +3,7 @@
 ## **Esta suite existe además del gate, no en su lugar.** Está medido que una pantalla con su
 ## `match` de bandas adentro y sin un solo test da `sin hallazgos` en `tdd` y `capas`: el gate de
 ## tests no mira `ui/`, y que `ui/` nombre a `dominio/` es legal. O sea que la versión ingenua de
-## este spec nace con su única regla sin test y con los seis nodos en verde.
+## este spec nace con su única regla sin test y con los siete nodos en verde.
 ##
 ## Los dos casos de texto son lo único ejecutable que ata esa regla, y por eso están acá y no
 ## librados a la revisión.
@@ -35,14 +35,14 @@ func before_test() -> void:
 	_despachos = 0
 
 
-func test_la_pantalla_arranca_invisible() -> void:  # 017-AC10
+func test_la_pantalla_arranca_invisible() -> void:
 	# La placa es del cierre, no del arranque: visible desde el primer cuadro taparía la jornada
 	# entera, y el jugador no tendría cómo sacarla porque el turno recién empieza.
 	var pantalla := await _pantalla()
 	assert_bool(pantalla.visible).is_false()
 
 
-func test_mostrar_pinta_el_parte_entero_y_oscurece_lo_de_atras() -> void:  # 017-AC10
+func test_mostrar_pinta_el_parte_entero_y_oscurece_lo_de_atras() -> void:
 	var pantalla := await _pantalla()
 	var parte := _parte()
 	pantalla.mostrar(parte)
@@ -65,7 +65,7 @@ func test_mostrar_pinta_el_parte_entero_y_oscurece_lo_de_atras() -> void:  # 017
 		assert_str(etiqueta.text).is_equal(parte.lineas()[indice])
 
 
-func test_mostrar_dos_veces_no_acumula_las_lineas_de_la_jornada_anterior() -> void:  # 017-AC10
+func test_mostrar_dos_veces_no_acumula_las_lineas_de_la_jornada_anterior() -> void:
 	# Cinco noches con la misma pantalla: sin limpiar, la placa de la jornada 5 tendría
 	# veinticinco renglones y ninguna aserción del caso de arriba lo diría.
 	var pantalla := await _pantalla()
@@ -75,7 +75,7 @@ func test_mostrar_dos_veces_no_acumula_las_lineas_de_la_jornada_anterior() -> vo
 	assert_int(renglones.get_child_count()).is_equal(Apertura.cantidad_de_obligatorias())
 
 
-func test_el_aviso_de_riesgo_sale_del_parte_y_se_esconde_con_el_legajo_limpio() -> void:  # 017-AC10
+func test_el_aviso_de_riesgo_sale_del_parte_y_se_esconde_con_el_legajo_limpio() -> void:
 	# Es la única línea de la placa que aparece y desaparece, así que sin los dos estados el
 	# `visible` quedaría escrito y sin ejercer: una placa que avisa siempre no avisa nunca.
 	var pantalla := await _pantalla()
@@ -89,7 +89,7 @@ func test_el_aviso_de_riesgo_sale_del_parte_y_se_esconde_con_el_legajo_limpio() 
 	assert_bool(riesgo.visible).is_false()
 
 
-func test_mostrar_deja_el_boton_con_el_foco_para_alcanzarlo_sin_el_mouse() -> void:  # 017-AC10
+func test_mostrar_deja_el_boton_con_el_foco_para_alcanzarlo_sin_el_mouse() -> void:
 	# El cursor del juego sigue tomado cuando la placa aparece —`jugador.gd` lo recaptura en cada
 	# cuadro de física—, así que el puntero queda clavado en el centro de la ventana y «Seguir»
 	# no se alcanza con el mouse. Sin el foco no hay forma de llegar a la noche 2 jugando.
@@ -103,7 +103,7 @@ func test_mostrar_deja_el_boton_con_el_foco_para_alcanzarlo_sin_el_mouse() -> vo
 	)
 
 
-func test_el_boton_de_continuar_despacha_el_cierre() -> void:  # 017-AC10
+func test_el_boton_de_continuar_despacha_el_cierre() -> void:
 	# Es lo que reabre la jornada siguiente. Sin esta señal la partida se queda en la placa y no
 	# hay forma de llegar a la noche 2.
 	var pantalla := await _pantalla()
@@ -115,7 +115,7 @@ func test_el_boton_de_continuar_despacha_el_cierre() -> void:  # 017-AC10
 	assert_bool(pantalla.visible).is_false()
 
 
-func test_la_pantalla_no_decide_como_cerro_la_noche() -> void:  # 017-AC8
+func test_la_pantalla_no_decide_como_cerro_la_noche() -> void:
 	# El riesgo medido de este spec no es «hacer una pantalla»: es que la única regla nueva
 	# termine acá adentro, donde nace sin test y ningún gate lo dice.
 	var texto := FileAccess.get_file_as_string(PANTALLA)
@@ -133,7 +133,7 @@ func test_la_pantalla_no_decide_como_cerro_la_noche() -> void:  # 017-AC8
 		)
 
 
-func test_nadie_mira_la_pantalla_desde_abajo() -> void:  # 017-AC9
+func test_nadie_mira_la_pantalla_desde_abajo() -> void:
 	var culpables: Array[String] = []
 	var mirados := 0
 	for capa: String in CAPAS_DE_ABAJO:

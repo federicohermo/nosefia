@@ -16,24 +16,23 @@ const ESCENA_AGARRABLE := "res://src/escenas/objetos/objeto_agarrable.tscn"
 ## no declaran `class_name` — y éste **no puede** declararlo, ver el caso de abajo.
 const ZonaQueSeVe := preload("res://src/escenas/puestos/zona_de_descarte.gd")
 
-## Una caja por producto del catálogo, desde que reponer se puede terminar jugando. Antes era una
-## sola llamada `CajaDeProductos`: el nombre viejo dejaba este caso midiendo de menos.
-const CAJAS_DEL_DEPOSITO := [
-	"CajaDeYerba",
-	"CajaDeFideos",
-	"CajaDeGaseosa",
-	"CajaDeGalletitas",
-	"CajaDeArroz",
-	"CajaDeJabon",
+## Los anclajes de las obligatorias que se hacen en el local. El descarte tiene que estar lejos
+## de todos: es lo que hace que la basura no se saque de paso.
+##
+## **Las cajas de reposición estaban en esta lista y salieron en el 043.** Ese spec mandó el
+## stock a los estantes del depósito, así que reponer pasa en el fondo **a propósito**: medidas
+## hoy, las ocho quedan entre 3,19 y 5,48 m del descarte, y exigirles los 6 m sería exigir que el
+## stock no viva ahí. Lo que se sigue midiendo son las tareas del local y las bolsas, que
+## desde el 043 arrancan en el baño.
+const ANCLAJES_DE_LAS_OTRAS_TAREAS := [
+	"Estructura/gondolanueva/StaticBody3D",
+	"Estructura/Ventanilla",
+	"Estructura/base compu/StaticBody3D"
 ]
 
-## Los anclajes de las otras cuatro obligatorias en `almacen.tscn`. El descarte tiene que estar
-## lejos de todos: es lo que hace que ninguna otra tarea visite el fondo.
-const ANCLAJES_DE_LAS_OTRAS_TAREAS := (
-	["Estante", "CajaDeTraslado", "Ventanilla", "Escritorio"] + CAJAS_DEL_DEPOSITO
-)
-
-const NOMBRES_DE_LAS_BOLSAS := ["BolsaDeBasura1", "BolsaDeBasura2", "BolsaDeBasura3"]
+const NOMBRES_DE_LAS_BOLSAS := [
+	"Objetos/BolsaDeBasura1", "Objetos/BolsaDeBasura2", "Objetos/BolsaDeBasura3"
+]
 
 ## Lo que delataría una regla del juego escrita en la zona. Está medido que ahí los dos gates dan
 ## verde, así que el criterio la ata con una búsqueda sobre el archivo.
@@ -68,7 +67,7 @@ static func _descendientes(nodo: Node) -> Array[Node3D]:
 
 
 ## Todo lo que el descarte tiene que tener lejos: los anclajes de las otras tareas, las manchas
-## del 014 y las tres bolsas.
+## de limpiar y las tres bolsas.
 static func _puntos_a_medir(almacen: Node3D) -> Dictionary:
 	var puntos := {}
 	for nombre: String in ANCLAJES_DE_LAS_OTRAS_TAREAS + NOMBRES_DE_LAS_BOLSAS:
@@ -82,7 +81,7 @@ static func _puntos_a_medir(almacen: Node3D) -> Dictionary:
 	return puntos
 
 
-func test_la_zona_no_lleva_una_sola_regla_ni_un_nombre_global() -> void:  # 015-AC6
+func test_la_zona_no_lleva_una_sola_regla_ni_un_nombre_global() -> void:
 	# Sin `class_name` a propósito: nadie la nombra desde abajo, y no tenerlo cierra la única
 	# puerta que el gate de capas sí caza — que `sistemas/` nombre un tipo de `escenas/`.
 	var texto := FileAccess.get_file_as_string(SCRIPT)
@@ -95,7 +94,7 @@ func test_la_zona_no_lleva_una_sola_regla_ni_un_nombre_global() -> void:  # 015-
 	)
 
 
-func test_la_esfera_de_la_escena_es_exactamente_la_de_la_constante() -> void:  # 015-AC6
+func test_la_esfera_de_la_escena_es_exactamente_la_de_la_constante() -> void:  # AC-CLN-010
 	# Un `.tscn` no puede leer un `const`, así que el número está escrito dos veces. Sin este
 	# caso, la esfera y la regla se separan y el jugador suelta la bolsa donde el juego dice que
 	# no cuenta — sin un solo error.
@@ -112,9 +111,9 @@ func test_la_esfera_de_la_escena_es_exactamente_la_de_la_constante() -> void:  #
 	)
 
 
-func test_el_almacen_trae_el_descarte_y_una_bolsa_por_cada_una_del_balance() -> void:  # 015-AC7
+func test_el_almacen_trae_el_descarte_y_una_bolsa_por_cada_una_del_balance() -> void:
 	var almacen := _almacen()
-	assert_bool(almacen.has_node("ZonaDeDescarte")).is_true()
+	assert_bool(almacen.has_node("Objetos/ZonaDeDescarte")).is_true()
 	var bolsas := 0
 	for nombre: String in NOMBRES_DE_LAS_BOLSAS:
 		if almacen.has_node(nombre):
@@ -122,12 +121,12 @@ func test_el_almacen_trae_el_descarte_y_una_bolsa_por_cada_una_del_balance() -> 
 	assert_int(bolsas).is_equal(ReglasDeLaBasura.BOLSAS_DE_LA_JORNADA)
 
 
-func test_el_fondo_esta_lejos_de_todo_lo_demas() -> void:  # 015-AC7
+func test_el_fondo_esta_lejos_de_todo_lo_demas() -> void:  # AC-CLN-008
 	# **No se cierra mirando: se cierra con un número.** Si el descarte estuviera al lado de otra
 	# tarea, la basura se sacaría de paso y el término de trayecto desaparecería sin que nada lo
 	# dijera.
 	var almacen := _almacen()
-	var descarte := _posicion_en(almacen, almacen.get_node("ZonaDeDescarte"))
+	var descarte := _posicion_en(almacen, almacen.get_node("Objetos/ZonaDeDescarte"))
 	var puntos := _puntos_a_medir(almacen)
 	# Un nombre que no está se salteaba en silencio y el caso medía de menos: renombrar un
 	# anclaje dejaba la mitad del local sin comparar contra el fondo, y esto seguía en verde.
@@ -151,7 +150,7 @@ func test_el_fondo_esta_lejos_de_todo_lo_demas() -> void:  # 015-AC7
 		)
 
 
-func test_el_cableado_de_la_basura_llega_entero_hasta_la_zona() -> void:  # 015-AC6
+func test_el_cableado_de_la_basura_llega_entero_hasta_la_zona() -> void:
 	# Un `@export` de tipo `Node` en una escena escrita a mano va declarado ADEMÁS en el
 	# `node_paths` del tag del nodo, o queda en `null`: la escena carga sin un solo error, los
 	# seis nodos dan verde, y el juego muere en el primer cuadro con un
@@ -168,13 +167,13 @@ func test_el_cableado_de_la_basura_llega_entero_hasta_la_zona() -> void:  # 015-
 		)
 		. is_not_null()
 	)
-	var recolector: RecolectorDeBasura = almacen.get_node("Recolector")
+	var recolector: RecolectorDeBasura = almacen.get_node("Servicios/Recolector")
 	(
 		assert_object(recolector.reloj)
 		. override_failure_message("el recolector nace sin reloj: no puede contar la obligatoria")
 		. is_not_null()
 	)
-	var zona: ZonaQueSeVe = almacen.get_node("ZonaDeDescarte")
+	var zona: ZonaQueSeVe = almacen.get_node("Objetos/ZonaDeDescarte")
 	(
 		assert_object(zona.recolector)
 		. override_failure_message("la zona nace sin recolector: la primera bolsa mata al juego")
@@ -189,7 +188,7 @@ func test_el_cableado_de_la_basura_llega_entero_hasta_la_zona() -> void:  # 015-
 	)
 
 
-func test_cada_bolsa_de_la_escena_lleva_el_id_que_espera_el_dominio() -> void:  # 015-AC8
+func test_cada_bolsa_de_la_escena_lleva_el_id_que_espera_el_dominio() -> void:
 	# **Un `id` que no coincide no rompe nada**: la bolsa entra al descarte, el dominio contesta
 	# `NO_ES_BASURA` y la obligatoria queda imposible de cerrar toda la noche, sin un solo error y
 	# con los seis nodos en verde. Contar los nodos por su nombre no lo ve — el nombre del nodo y
@@ -201,7 +200,7 @@ func test_cada_bolsa_de_la_escena_lleva_el_id_que_espera_el_dominio() -> void:  
 		if bolsa == null:
 			(
 				assert_object(bolsa)
-				. override_failure_message("`%s` no está o no es un agarrable del 006" % nombre)
+				. override_failure_message("`%s` no está o no es un agarrable" % nombre)
 				. is_not_null()
 			)
 			continue
@@ -227,27 +226,20 @@ func test_cada_bolsa_de_la_escena_lleva_el_id_que_espera_el_dominio() -> void:  
 	)
 
 
-func test_las_bolsas_son_del_agarre_del_006_y_no_de_un_segundo_sistema() -> void:  # 015-AC8
-	# **No hay un segundo sistema de agarre**: las tres son instancias de la escena que el 006
-	# entrega, con su `.tres` puesto. Un cuerpo propio acá sería un `Agarre` paralelo que el
-	# jugador no puede usar.
-	var texto := FileAccess.get_file_as_string(ESCENA_DEL_ALMACEN)
-	assert_str(texto).is_not_empty()
+func test_las_bolsas_son_del_agarre_del_006_y_no_de_un_segundo_sistema() -> void:
+	var almacen := _almacen()
 	for nombre: String in NOMBRES_DE_LAS_BOLSAS:
-		(
-			assert_bool(texto.contains('[node name="%s" parent="." instance=' % nombre))
-			. override_failure_message("`%s` no entra instanciada del 006" % nombre)
-			. is_true()
-		)
-	assert_bool(texto.contains(ESCENA_AGARRABLE)).is_true()
+		var bolsa := almacen.get_node(nombre)
+		assert_str(bolsa.scene_file_path).is_equal(ESCENA_AGARRABLE)
 
 
-func test_este_spec_no_agrega_ninguna_accion_al_input_map() -> void:  # 015-AC8
-	# Se agarra y se suelta con las del 006. Una acción nueva sería una tecla más para una tarea
+func test_este_spec_no_agrega_ninguna_accion_al_input_map() -> void:
+	# Se agarra y se suelta con las acciones que ya existen. Una acción nueva sería una tecla más
+	# para una tarea
 	# que ya se hace con el clic que el jugador aprendió.
 	var acciones := 0
 	for accion in InputMap.get_actions():
-		if not String(accion).begins_with("ui_"):
+		if not String(accion).begins_with("ui_") and accion != ReglasDelJugador.ACCION_USAR:
 			acciones += 1
 	(
 		assert_int(acciones)
@@ -256,7 +248,7 @@ func test_este_spec_no_agrega_ninguna_accion_al_input_map() -> void:  # 015-AC8
 	)
 
 
-func test_los_cuatro_espejos_estan_y_el_almacen_no_decide_nada() -> void:  # 015-AC9
+func test_los_cuatro_espejos_estan_y_el_almacen_no_decide_nada() -> void:
 	# Las dos mitades falsables del criterio de terminado.
 	for ruta: String in [
 		"res://src/dominio/almacen/reglas_de_la_basura.gd",

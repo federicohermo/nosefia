@@ -1,0 +1,5 @@
+# Las rutas que el harness arma en tiempo de ejecución, para el analizador que no lo
+# ejecuta. Cada script hace un `sys.path.insert` antes de importar; el analizador sólo
+# adivina subiendo por los padres del archivo, y desde `mcp-server/` o desde un skill esa
+# subida nunca pasa por `.claude/scripts/`. Sin esto, cada import de `lib.*` sale en rojo.
+search-path = [".", ".claude/scripts", "mcp-server"]

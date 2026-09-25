@@ -1,29 +1,31 @@
-## El nodo que repone adentro del motor: saca una unidad de la caja de traslado, se la ofrece al
-## estante y publica lo que el estante contestó.
+## El nodo que repone adentro del motor: reserva una unidad del depósito, la pone en la mano y se
+## la ofrece al estante cuando el jugador la deposita.
 ##
 ## **Traduce, no decide.** No sabe cuánto le entra a la góndola, ni qué productos van ahí, ni
 ## cuánto cuesta reponer: las tres son preguntas de `dominio/`, que es donde tienen test. Los
 ## `if` de este archivo son el valor que devolvió el estante y el estado nulo del cableado.
 ##
+## **La unidad viaja en la mano y no en el inventario.** `pedir_retirar()` la reserva —el
+## estante la anota en tránsito— y el stock recién se mueve cuando `pedir_colocar_de_la_mano()`
+## la coloca. Al revés, soltar la unidad en el piso dejaría la góndola contando mercadería que
+## el jugador nunca apoyó.
+##
 ## **No lleva un flag de «ya la conté».** Le pide al reloj que complete la tarea cada vez que el
 ## estante queda lleno, y el `Turno` ya sabe que la segunda vez no cuenta —devuelve `false` sin
 ## descontar—. Un flag acá sería esa misma regla escrita en la capa que traduce, o sea una regla
 ## del juego sin test, y los dos gates darían verde sobre ella.
-##
-## **Es el cliente que le faltaba a `CargaDeLaCaja`.** La caja del 033 es dónde viaja la
-## mercadería y este nodo es quien la descarga: sin él la caja se podía llenar y no había nada
-## que la vaciara, y eso no lo dice ningún gate.
 class_name Repositor
 extends Node
 
 signal producto_colocado(producto: Producto, completos: int)
 signal colocacion_rechazada(motivo: Estante.Rechazo)
+signal unidad_colocada(nodo: Node3D, producto: Producto, unidades: int)
 
 ## Los dos entran por `@export` y no como autoload ni por `get_node()` hacia arriba: está medido
 ## que `gate_de_capas.py` no ve un autoload nombrado por su nombre global, así que esa puerta
 ## cruzaría capas sin dejar rastro.
 @export var reloj: RelojDelTurno
-@export var carga: CargaDeLaCaja
+@export var agarre: Agarre
 
 var _estante: Estante = null
 
@@ -31,9 +33,11 @@ var _estante: Estante = null
 ## Le entrega al repositor el estante de la noche.
 ##
 ## La instancia se recibe y no se construye acá porque el estante necesita el inventario de la
-## jornada, y quién abre una jornada es la escena. Es lo que permite que cada noche empiece con
-## la góndola vacía sin que este nodo sepa qué es una jornada.
+## jornada, y quién abre una jornada es la escena. Es lo que permite que cada noche empiece sin
+## nada repuesto sin que este nodo sepa qué es una jornada.
 func arrancar(un_estante: Estante) -> void:
+	if agarre != null and agarre.manos().sostenido() is UnidadDeProducto:
+		agarre.entregar()
 	_estante = un_estante
 
 
@@ -42,37 +46,26 @@ func estante() -> Estante:
 	return _estante
 
 
-## Intenta colocar una unidad de lo que haya arriba de la caja, y avisa cómo salió.
-##
-## Emite **una** de las dos señales y nunca las dos: emitirlas juntas dejaría a la escena
-## pintando un hueco nuevo y un cartel de «no entra» al mismo tiempo.
-##
-## La unidad se saca de la caja **después** de que el estante la aceptó. Al revés, un rechazo
-## dejaría al jugador con la caja vacía y el estante sin llenar, sin un solo error.
-func pedir_colocar() -> void:
-	if _estante == null or reloj == null or carga == null:
-		# Un cableado incompleto es un `.tscn` mal armado y no un rechazo del juego: emitir
-		# `colocacion_rechazada` acá le diría al jugador que eso no va en el estante, que sería
-		# falso. Quien caza esto es `test/escenas/almacen_test.gd`.
-		push_error("Repositor sin cablear: revisar almacen.tscn")
-		return
-	var producto := _proximo_de_la_caja()
-	var motivo := _estante.colocar(producto)
+func pedir_retirar(id: Producto.Id, nodo: Node3D) -> bool:
+	var producto := Catalogo.de(id)
+	var candidato := UnidadDeProducto.new(producto)
+	if agarre.manos().motivo_de_rechazo(candidato) != Manos.Rechazo.NINGUNO:
+		return false
+	var unidad := _estante.retirar(producto)
+	if unidad == null:
+		return false
+	nodo.set("datos", unidad)
+	return agarre.pedir_agarrar(unidad, nodo)
+
+
+func pedir_colocar_de_la_mano(destino: Producto = null) -> void:
+	var unidad := agarre.manos().sostenido() as UnidadDeProducto
+	var motivo := _estante.colocar_unidad(unidad, destino)
 	if motivo != Estante.Rechazo.NINGUNO:
 		colocacion_rechazada.emit(motivo)
 		return
-	carga.caja().sacar()
-	producto_colocado.emit(producto, _estante.productos_completos())
+	var nodo := agarre.entregar()
+	unidad_colocada.emit(nodo, unidad.producto, _estante.unidades_en_gondola(unidad.producto))
+	producto_colocado.emit(unidad.producto, _estante.productos_completos())
 	if _estante.completada():
 		reloj.completar(reloj.obligatoria(Tarea.Tipo.REPONER))
-
-
-## Lo que está arriba de todo en la caja, **sin sacarlo**, o `null` si la caja está vacía.
-##
-## Ese `null` no es un caso especial: el estante lo rechaza por el mismo camino que a un producto
-## que no acepta, así que acá no hay que decidir nada.
-func _proximo_de_la_caja() -> Producto:
-	var contenido := carga.caja().contenido()
-	if contenido.is_empty():
-		return null
-	return contenido[-1]

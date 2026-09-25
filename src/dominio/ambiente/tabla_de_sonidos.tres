@@ -46,38 +46,33 @@ script = ExtResource("1_qermt")
 evento = 7
 senal = &"producto_colocado"
 
-[sub_resource type="Resource" id="Resource_ylssf"]
-script = ExtResource("1_qermt")
-evento = 8
-senal = &"producto_guardado"
-
 [sub_resource type="Resource" id="Resource_2fnal"]
 script = ExtResource("1_qermt")
-evento = 9
+evento = 8
 senal = &"pasada_dada"
 
 [sub_resource type="Resource" id="Resource_pmrqt"]
 script = ExtResource("1_qermt")
-evento = 10
+evento = 9
 senal = &"bolsa_depositada"
 
 [sub_resource type="Resource" id="Resource_38ejk"]
 script = ExtResource("1_qermt")
-evento = 11
+evento = 10
 senal = &"computadora_abierta"
 bus = "Interfaz"
 
 [sub_resource type="Resource" id="Resource_ql6t2"]
 script = ExtResource("1_qermt")
-evento = 12
+evento = 11
 senal = &"comprador_llegado"
 
 [sub_resource type="Resource" id="Resource_s3myp"]
 script = ExtResource("1_qermt")
-evento = 13
+evento = 12
 bus = "Ambiente"
 en_bucle = true
 
 [resource]
 script = ExtResource("2_xbcco")
-entradas = Array[ExtResource("1_qermt")]([SubResource("Resource_x3pvh"), SubResource("Resource_oefuu"), SubResource("Resource_382as"), SubResource("Resource_b10uv"), SubResource("Resource_jx3m8"), SubResource("Resource_xfwnq"), SubResource("Resource_avff3"), SubResource("Resource_w1qrw"), SubResource("Resource_ylssf"), SubResource("Resource_2fnal"), SubResource("Resource_pmrqt"), SubResource("Resource_38ejk"), SubResource("Resource_ql6t2"), SubResource("Resource_s3myp")])
+entradas = Array[ExtResource("1_qermt")]([SubResource("Resource_x3pvh"), SubResource("Resource_oefuu"), SubResource("Resource_382as"), SubResource("Resource_b10uv"), SubResource("Resource_jx3m8"), SubResource("Resource_xfwnq"), SubResource("Resource_avff3"), SubResource("Resource_w1qrw"), SubResource("Resource_2fnal"), SubResource("Resource_pmrqt"), SubResource("Resource_38ejk"), SubResource("Resource_ql6t2"), SubResource("Resource_s3myp")])

@@ -6,7 +6,7 @@
 extends GdUnitTestSuite
 
 
-func test_hay_una_obligatoria_por_cada_tipo_de_tarea() -> void:
+func test_hay_una_obligatoria_por_cada_tipo_de_tarea() -> void:  # AC-SHF-005
 	assert_int(Apertura.obligatorias().size()).is_equal(Tarea.Tipo.size())
 
 
@@ -26,12 +26,12 @@ func test_la_cantidad_declarada_coincide_con_la_lista_que_se_arma() -> void:
 	assert_int(Apertura.cantidad_de_obligatorias()).is_equal(Apertura.obligatorias().size())
 
 
-func test_el_turno_de_la_jornada_nace_con_el_presupuesto_entero() -> void:
+func test_el_turno_de_la_jornada_nace_con_el_presupuesto_entero() -> void:  # AC-SHF-001
 	var turno := Apertura.turno_de_la_jornada(Apertura.obligatorias())
 	assert_float(turno.tiempo_restante()).is_equal(Reglas.DURACION_DEL_TURNO)
 
 
-func test_el_turno_de_la_jornada_nace_sin_ninguna_tarea_cumplida() -> void:
+func test_el_turno_de_la_jornada_nace_sin_ninguna_tarea_cumplida() -> void:  # AC-SHF-005
 	var turno := Apertura.turno_de_la_jornada(Apertura.obligatorias())
 	assert_int(turno.tareas_cumplidas()).is_equal(0)
 	assert_bool(turno.todas_cumplidas()).is_false()
@@ -46,7 +46,7 @@ func test_el_turno_cuenta_contra_la_lista_que_recibe_y_no_contra_una_copia() -> 
 	assert_int(turno.tareas_cumplidas()).is_equal(1)
 
 
-func test_el_inventario_de_la_jornada_trae_todo_el_catalogo() -> void:  # 008-AC9
+func test_el_inventario_de_la_jornada_trae_todo_el_catalogo() -> void:  # AC-STK-004
 	# Se cuenta contra `Catalogo.todos()` y no contra un número escrito acá: agregar un producto
 	# es una fila en el catálogo, y un producto que no llega al inventario es uno que no se puede
 	# reponer ni vender, sin un solo error.
@@ -59,7 +59,7 @@ func test_el_inventario_de_la_jornada_trae_todo_el_catalogo() -> void:  # 008-AC
 		)
 
 
-func test_la_gondola_arranca_vacia_y_por_eso_reponer_es_una_tarea() -> void:  # 008-AC9
+func test_la_gondola_arranca_vacia_y_por_eso_reponer_es_una_tarea() -> void:  # AC-STK-004
 	# Si la góndola arrancara con algo, la primera noche reponer estaría medio hecha y el jugador
 	# no tendría por qué caminar hasta el depósito.
 	var inventario := Apertura.inventario_de_la_jornada()
@@ -72,12 +72,12 @@ func test_la_gondola_arranca_vacia_y_por_eso_reponer_es_una_tarea() -> void:  # 
 	assert_int(inventario.faltantes().size()).is_equal(Catalogo.todos().size())
 
 
-func test_cada_jornada_recibe_un_inventario_propio() -> void:  # 008-AC9
+func test_cada_jornada_recibe_un_inventario_propio() -> void:  # AC-SHF-005
 	# Instancias distintas y no la misma: con una sola compartida, lo repuesto anoche seguiría
 	# en la góndola esta noche y reponer se cumpliría sola.
 	var una := Apertura.inventario_de_la_jornada()
 	var otra := Apertura.inventario_de_la_jornada()
-	var yerba := Catalogo.de(Producto.Id.YERBA)
-	una.mover(yerba, Inventario.Ubicacion.DEPOSITO, Inventario.Ubicacion.GONDOLA, 1)
-	assert_int(una.unidades(yerba, Inventario.Ubicacion.GONDOLA)).is_equal(1)
-	assert_int(otra.unidades(yerba, Inventario.Ubicacion.GONDOLA)).is_equal(0)
+	var actroncito := Catalogo.de(Producto.Id.ACTRONCITO)
+	una.mover(actroncito, Inventario.Ubicacion.DEPOSITO, Inventario.Ubicacion.GONDOLA, 1)
+	assert_int(una.unidades(actroncito, Inventario.Ubicacion.GONDOLA)).is_equal(1)
+	assert_int(otra.unidades(actroncito, Inventario.Ubicacion.GONDOLA)).is_equal(0)

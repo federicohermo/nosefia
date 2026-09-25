@@ -5,9 +5,9 @@
 ## «cuáles son las obligatorias de una jornada» es una regla del juego, y en `escenas/` una regla
 ## nace sin test y ningún gate lo dice.
 ##
-## La lista se arma **recorriendo `Tarea.Tipo`**, no enumerando tareas a mano. El 001 aterrizó
+## La lista se arma **recorriendo `Tarea.Tipo`**, no enumerando tareas a mano. El turno aterrizó
 ## con las cinco declaradas —`SACAR_LA_BASURA` incluida—, así que acá no hay ningún `5` escrito:
-## una sexta se agrega al `enum` del 001 con su costo en `reglas.gd` y este archivo no se toca.
+## una sexta se agrega al `enum` y este archivo no se toca.
 class_name Apertura
 extends RefCounted
 
@@ -26,7 +26,7 @@ static func obligatorias() -> Array[Tarea]:
 
 ## Cuántas obligatorias tiene una jornada.
 ##
-## Existe porque el `Turno` del 001 no expone cuántas son: recibe la lista y no tiene getter. El
+## Existe porque el `Turno` no expone cuántas son: recibe la lista y no tiene getter. El
 ## HUD pide el número a la misma fuente que armó la lista y no a una segunda copia.
 static func cantidad_de_obligatorias() -> int:
 	return Tarea.Tipo.size()
@@ -40,9 +40,9 @@ static func turno_de_la_jornada(obligatorias: Array[Tarea]) -> Turno:
 	return Turno.new(Reglas.DURACION_DEL_TURNO, obligatorias)
 
 
-## La mercadería con la que arranca la noche: todo el depósito y la góndola vacía.
+## La mercadería con la que arranca la noche: todo el depósito y nada repuesto.
 ##
-## **Que la góndola arranque en cero es lo que hace que reponer sea una tarea.** Con algo puesto,
+## **Que la góndola arranque en cero es lo que hace que reponer sea una tarea.** Con algo repuesto,
 ## la primera noche estaría medio hecha y el jugador no tendría por qué caminar hasta el fondo.
 ##
 ## Se arma sobre `Catalogo.todos()` y no sobre una lista escrita acá: un producto que no llegue

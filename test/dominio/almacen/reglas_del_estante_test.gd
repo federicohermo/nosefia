@@ -7,9 +7,9 @@
 extends GdUnitTestSuite
 
 
-func test_el_deposito_arranca_con_mas_de_lo_que_el_estante_pide() -> void:  # 008-AC9
+func test_el_deposito_arranca_con_mas_de_lo_que_el_estante_pide() -> void:  # AC-STK-004
 	# Estricto y no `>=` a propósito: con exactamente el umbral, vender una sola unidad por la
-	# ventanilla —que es del 013— deja la reposición imposible esa noche.
+	# ventanilla deja la reposición imposible esa noche.
 	var mayor := 0
 	for producto in Catalogo.todos():
 		mayor = maxi(mayor, producto.umbral)
@@ -25,5 +25,5 @@ func test_el_deposito_arranca_con_mas_de_lo_que_el_estante_pide() -> void:  # 00
 	)
 
 
-func test_las_unidades_iniciales_son_una_cantidad_y_no_un_centinela() -> void:  # 008-AC9
+func test_las_unidades_iniciales_son_una_cantidad_y_no_un_centinela() -> void:
 	assert_int(ReglasDelEstante.UNIDADES_INICIALES_EN_DEPOSITO).is_greater(0)

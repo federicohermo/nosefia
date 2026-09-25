@@ -6,21 +6,21 @@
 extends GdUnitTestSuite
 
 
-func test_cumplir_las_cinco_obligatorias_no_trae_consecuencias() -> void:
+func test_cumplir_las_cinco_obligatorias_no_trae_consecuencias() -> void:  # AC-EMP-001
 	assert_int(Consecuencias.consecuencia_de(5, 5)).is_equal(Consecuencias.Banda.NINGUNA)
 
 
-func test_cumplir_cuatro_de_cinco_es_un_aviso() -> void:
+func test_cumplir_cuatro_de_cinco_es_un_aviso() -> void:  # AC-EMP-001
 	assert_int(Consecuencias.consecuencia_de(4, 5)).is_equal(Consecuencias.Banda.AVISO)
 
 
-func test_cumplir_tres_de_cinco_todavia_es_un_aviso() -> void:
+func test_cumplir_tres_de_cinco_todavia_es_un_aviso() -> void:  # AC-EMP-001
 	# El 3 es el borde de abajo del aviso, y el que la lectura de «tres puntos de control» como
 	# tres valores exactos dejaba sin cubrir.
 	assert_int(Consecuencias.consecuencia_de(3, 5)).is_equal(Consecuencias.Banda.AVISO)
 
 
-func test_cumplir_menos_de_tres_es_grave() -> void:
+func test_cumplir_menos_de_tres_es_grave() -> void:  # AC-EMP-001
 	for cumplidas in [2, 1, 0]:
 		(
 			assert_int(Consecuencias.consecuencia_de(cumplidas, 5))
@@ -31,6 +31,7 @@ func test_cumplir_menos_de_tres_es_grave() -> void:
 		)
 
 
+# AC-EMP-001
 func test_cumplir_todas_se_mide_contra_las_obligatorias_y_no_contra_un_cinco() -> void:
 	# El día que haya una sexta tarea, esta función no se toca. Es la misma decisión que
 	# `Turno.todas_cumplidas()`, y las dos tienen que decidir igual o el juego se contradice.
@@ -38,6 +39,7 @@ func test_cumplir_todas_se_mide_contra_las_obligatorias_y_no_contra_un_cinco() -
 	assert_int(Consecuencias.consecuencia_de(4, 4)).is_equal(Consecuencias.Banda.NINGUNA)
 
 
+# AC-EMP-002
 func test_el_corte_del_aviso_son_tres_tareas_y_no_una_fraccion_de_las_obligatorias() -> void:
 	# Es el único caso que distingue las dos lecturas: con 6 obligatorias, un corte por
 	# fracción estaría en 3,6 y contaría estas 3 como GRAVE. Con 5 obligatorias las dos
@@ -45,7 +47,7 @@ func test_el_corte_del_aviso_son_tres_tareas_y_no_una_fraccion_de_las_obligatori
 	assert_int(Consecuencias.consecuencia_de(3, 6)).is_equal(Consecuencias.Banda.AVISO)
 
 
-func test_cumplir_casi_todas_no_es_ninguna_consecuencia() -> void:
+func test_cumplir_casi_todas_no_es_ninguna_consecuencia() -> void:  # AC-EMP-001
 	# Con 6 obligatorias y 5 cumplidas falta una, así que es aviso — no «casi todas, ninguna
 	# consecuencia». `NINGUNA` es `cumplidas == obligatorias` y nunca una fracción de ellas.
 	assert_int(Consecuencias.consecuencia_de(5, 6)).is_equal(Consecuencias.Banda.AVISO)

@@ -28,6 +28,7 @@ var _inventario: Inventario
 ## En el orden en que llegaron, y sin `id` repetido: la identidad es el `id` y nunca la
 ## instancia, porque `Catalogo.de()` construye un producto nuevo en cada llamada.
 var _aceptados: Array[Producto] = []
+var _en_transito: Array[UnidadDeProducto] = []
 
 
 func _init(inventario: Inventario, aceptados: Array[Producto]) -> void:
@@ -40,9 +41,8 @@ func _init(inventario: Inventario, aceptados: Array[Producto]) -> void:
 
 ## Si este estante es el lugar de ese producto.
 ##
-## Compara por `id` y no por instancia, y no es un detalle: reponer la yerba que salió del
-## catálogo sobre un estante armado con otra yerba contestaría «eso no va acá» —dos objetos
-## distintos con el mismo `id`— y el jugador no tendría cómo enterarse de por qué.
+## Compara por `id` y no por instancia, y no es un detalle: dos objetos distintos con el mismo
+## `id` contestarían «eso no va acá», y el jugador no tendría cómo enterarse de por qué.
 func acepta(producto: Producto) -> bool:
 	return _aceptado_con_el_id_de(producto) != null
 
@@ -93,9 +93,50 @@ func productos_aceptados() -> int:
 ## Mueve **una** unidad del depósito a la góndola, y devuelve por qué no pudo.
 ##
 ## Los tres rechazos no mueven nada, y el orden importa: «eso no va acá» es una propiedad del
-## producto y vale siempre, «no entra más» se resuelve vendiendo, y «no queda en el depósito» es
-## el único que depende de cuánta mercadería trajo la noche.
+## producto y vale siempre, «no entra más» es el estado del estante, y «no queda en el depósito»
+## es el único que depende de cuánta mercadería trajo la noche.
 func colocar(producto: Producto) -> Rechazo:
+	if (
+		acepta(producto)
+		and unidades_en_gondola(producto) < cupo(producto)
+		and disponibles_para_retirar(producto) <= 0
+	):
+		return Rechazo.SIN_UNIDADES_EN_DEPOSITO
+	return _colocar(producto)
+
+
+func disponibles_para_retirar(producto: Producto) -> int:
+	if producto == null:
+		return 0
+	var disponibles := mini(
+		unidades_en_deposito(producto), cupo(producto) - unidades_en_gondola(producto)
+	)
+	for unidad in _en_transito:
+		if unidad.producto.id == producto.id:
+			disponibles -= 1
+	return maxi(0, disponibles)
+
+
+func retirar(producto: Producto) -> UnidadDeProducto:
+	if not acepta(producto) or disponibles_para_retirar(producto) <= 0:
+		return null
+	var unidad := UnidadDeProducto.new(producto)
+	_en_transito.append(unidad)
+	return unidad
+
+
+func colocar_unidad(unidad: UnidadDeProducto, destino: Producto = null) -> Rechazo:
+	if not _en_transito.has(unidad):
+		return Rechazo.PRODUCTO_NO_ACEPTADO
+	if destino != null and destino.id != unidad.producto.id:
+		return Rechazo.PRODUCTO_NO_ACEPTADO
+	var motivo := _colocar(unidad.producto)
+	if motivo == Rechazo.NINGUNO:
+		_en_transito.erase(unidad)
+	return motivo
+
+
+func _colocar(producto: Producto) -> Rechazo:
 	if not acepta(producto):
 		return Rechazo.PRODUCTO_NO_ACEPTADO
 	if unidades_en_gondola(producto) >= cupo(producto):

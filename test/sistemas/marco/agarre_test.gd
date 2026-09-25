@@ -1,6 +1,6 @@
 ## `Agarre` se ejerce con `Agarre.new()` y sin árbol de escena, y eso es una decisión medida.
 ##
-## Está en el `research.md` del 006: `global_transform` fuera del árbol tira un error del motor y
+## Está medido: `global_transform` fuera del árbol tira un error del motor y
 ## devuelve la identidad, así que un sistema que colocara con eso pasaría el test **por
 ## casualidad**. Reparentar, emitir señales y `freeze` sí funcionan sin árbol — por eso `Agarre`
 ## reparenta y escribe `position` local, y por eso esto se puede probar.
@@ -44,7 +44,7 @@ func _cuerpo() -> RigidBody3D:
 	return cuerpo
 
 
-func test_agarrar_cuelga_el_objeto_del_punto_de_carga() -> void:  # 006-AC7
+func test_agarrar_cuelga_el_objeto_del_punto_de_carga() -> void:
 	var agarre := _cableado()
 	var cuerpo := _cuerpo()
 	var avisos: Array[Node3D] = []
@@ -55,7 +55,7 @@ func test_agarrar_cuelga_el_objeto_del_punto_de_carga() -> void:  # 006-AC7
 	assert_int(avisos.size()).is_equal(1)
 
 
-func test_agarrar_congela_la_fisica_de_lo_que_se_lleva() -> void:  # 006-AC7
+func test_agarrar_congela_la_fisica_de_lo_que_se_lleva() -> void:
 	# Sin esto el objeto se cae de la mano en el mismo cuadro en que se lo levanta, y el
 	# síntoma —«no se puede agarrar nada»— no nombra a la física.
 	var agarre := _cableado()
@@ -64,7 +64,40 @@ func test_agarrar_congela_la_fisica_de_lo_que_se_lleva() -> void:  # 006-AC7
 	assert_bool(cuerpo.freeze).is_true()
 
 
-func test_con_las_manos_llenas_se_rechaza_y_no_se_mueve_nada() -> void:  # 006-AC7
+func test_soltar_conserva_la_orientacion_mundial_de_la_mano() -> void:
+	var agarre := _cableado()
+	add_child(agarre.punto_de_carga)
+	add_child(agarre.punto_de_soltado)
+	add_child(agarre.punto_de_respaldo)
+	agarre.punto_de_carga.rotation = Vector3(-0.4, 1.2, 0)
+	agarre.punto_de_soltado.rotation = Vector3(0, -0.7, 0)
+	var cuerpo := _cuerpo()
+	for al_frente in [true, false]:
+		agarre.pedir_agarrar(_lata(), cuerpo)
+		cuerpo.rotation = Vector3(-0.3, -0.35, 0.1)
+		var orientacion := cuerpo.global_basis
+		agarre.soltar(al_frente)
+		assert_bool(cuerpo.global_basis.is_equal_approx(orientacion)).is_true()
+		assert_bool(cuerpo.freeze).is_false()
+
+
+func test_lo_suelto_no_se_mueve_con_la_camara_y_vuelve_a_seguir_la_mano() -> void:
+	var agarre := _cableado()
+	add_child(agarre.punto_de_carga)
+	add_child(agarre.punto_de_soltado)
+	var cuerpo := _cuerpo()
+	agarre.pedir_agarrar(_lata(), cuerpo)
+	agarre.soltar(true)
+	var lugar := cuerpo.global_transform
+	agarre.punto_de_soltado.position = Vector3(3, -2, 4)
+	agarre.punto_de_soltado.rotation = Vector3(-0.8, 1.2, 0)
+	assert_bool(cuerpo.global_transform.is_equal_approx(lugar)).is_true()
+	agarre.pedir_agarrar(_lata(), cuerpo)
+	agarre.punto_de_carga.position = Vector3(2, 1, -1)
+	assert_vector(cuerpo.global_position).is_equal(agarre.punto_de_carga.global_position)
+
+
+func test_con_las_manos_llenas_se_rechaza_y_no_se_mueve_nada() -> void:
 	var agarre := _cableado()
 	agarre.pedir_agarrar(_lata(), _cuerpo())
 	var otro := _cuerpo()
@@ -76,7 +109,7 @@ func test_con_las_manos_llenas_se_rechaza_y_no_se_mueve_nada() -> void:  # 006-A
 	assert_object(otro.get_parent()).is_same(padre_de_antes)
 
 
-func test_lo_sostenido_se_puede_mover_a_otro_punto_sin_soltarlo() -> void:  # 006-AC7
+func test_lo_sostenido_se_puede_mover_a_otro_punto_sin_soltarlo() -> void:
 	# Es lo que usa `Examen` para acercar a la cara lo que se lleva. Quien reparenta es siempre
 	# quien tiene el nodo: si `Examen` lo hiciera por su cuenta, habría dos piezas moviendo el
 	# mismo objeto y ninguna de las dos sabría dónde lo dejó la otra.
@@ -91,13 +124,48 @@ func test_lo_sostenido_se_puede_mover_a_otro_punto_sin_soltarlo() -> void:  # 00
 	assert_object(cuerpo.get_parent()).is_same(agarre.punto_de_carga)
 
 
-func test_con_las_manos_vacias_no_hay_nada_que_mover() -> void:  # 006-AC7
+func test_devolver_a_la_mano_vuelve_al_punto_de_donde_salio() -> void:
+	# Una caja se lleva en la cintura y no en la mano derecha. Si volver del examen la colgara
+	# del punto de carga, la caja terminaría pegada a la cámara y fuera de su volumen.
+	var agarre := _cableado()
+	var cuerpo := _cuerpo()
+	var cintura: Node3D = auto_free(Node3D.new())
+	var cara: Node3D = auto_free(Node3D.new())
+	agarre.pedir_agarrar(_lata(), cuerpo)
+	agarre.mover_lo_sostenido(cintura)
+	agarre.mover_lo_sostenido(cara)
+	cuerpo.rotate_y(0.7)
+	assert_object(agarre.devolver_a_la_mano()).is_same(cuerpo)
+	assert_object(cuerpo.get_parent()).is_same(cintura)
+	assert_bool(cuerpo.basis.is_equal_approx(Basis.IDENTITY)).is_true()
+	# La segunda vuelta no rebota a la cara: devolver dos veces deja el objeto donde estaba.
+	agarre.devolver_a_la_mano()
+	assert_object(cuerpo.get_parent()).is_same(cintura)
+
+
+func test_despues_de_soltar_devolver_no_usa_el_punto_de_lo_anterior() -> void:
+	# Lo que se agarra de nuevo empieza en su punto de carga, aunque lo anterior viniera de otro.
+	var agarre := _cableado()
+	var cintura: Node3D = auto_free(Node3D.new())
+	agarre.pedir_agarrar(_lata(), _cuerpo())
+	agarre.mover_lo_sostenido(cintura)
+	agarre.mover_lo_sostenido(auto_free(Node3D.new()))
+	agarre.soltar(true)
+	# Devolver sin haberlo movido antes: si el ancla del objeto anterior sobreviviera, éste
+	# terminaría en la cintura de aquél.
+	var cuerpo := _cuerpo()
+	agarre.pedir_agarrar(_lata(), cuerpo)
+	agarre.devolver_a_la_mano()
+	assert_object(cuerpo.get_parent()).is_same(agarre.punto_de_carga)
+
+
+func test_con_las_manos_vacias_no_hay_nada_que_mover() -> void:
 	var agarre := _cableado()
 	assert_object(agarre.mover_lo_sostenido(auto_free(Node3D.new()))).is_null()
 	assert_object(agarre.devolver_a_la_mano()).is_null()
 
 
-func test_soltar_al_frente_lleva_el_objeto_al_punto_de_soltado() -> void:  # 006-AC8
+func test_soltar_al_frente_lleva_el_objeto_al_punto_de_soltado() -> void:
 	var agarre := _cableado()
 	var cuerpo := _cuerpo()
 	agarre.pedir_agarrar(_lata(), cuerpo)
@@ -111,7 +179,7 @@ func test_soltar_al_frente_lleva_el_objeto_al_punto_de_soltado() -> void:  # 006
 	assert_object(agarre.manos().sostenido()).is_null()
 
 
-func test_soltar_sin_lugar_adelante_lo_deja_en_el_respaldo() -> void:  # 006-AC8
+func test_soltar_sin_lugar_adelante_lo_deja_en_el_respaldo() -> void:
 	# El respaldo está a los pies del jugador: es donde va lo que se suelta cuando adelante hay
 	# una pared. Sin él, soltar contra una estantería empuja el objeto adentro del mundo.
 	var agarre := _cableado()
@@ -121,7 +189,7 @@ func test_soltar_sin_lugar_adelante_lo_deja_en_el_respaldo() -> void:  # 006-AC8
 	assert_object(cuerpo.get_parent()).is_same(agarre.punto_de_respaldo)
 
 
-func test_vaciar_las_manos_vacias_no_avisa_nada() -> void:  # 006-AC8
+func test_vaciar_las_manos_vacias_no_avisa_nada() -> void:
 	# Lo llaman el cierre de la jornada y la suspensión del jugador, que pueden pasar con las
 	# manos ya vacías: un aviso ahí haría que el HUD anuncie que se soltó algo que no existía.
 	var agarre := _cableado()
@@ -131,7 +199,7 @@ func test_vaciar_las_manos_vacias_no_avisa_nada() -> void:  # 006-AC8
 	assert_int(avisos.size()).is_equal(0)
 
 
-func test_vaciar_las_manos_llenas_deja_lo_que_habia_en_el_respaldo() -> void:  # 006-AC8
+func test_vaciar_las_manos_llenas_deja_lo_que_habia_en_el_respaldo() -> void:
 	var agarre := _cableado()
 	var cuerpo := _cuerpo()
 	agarre.pedir_agarrar(_lata(), cuerpo)
@@ -140,7 +208,7 @@ func test_vaciar_las_manos_llenas_deja_lo_que_habia_en_el_respaldo() -> void:  #
 	assert_object(agarre.manos().sostenido()).is_null()
 
 
-func test_el_clic_agarra_y_despues_suelta() -> void:  # 006-AC7
+func test_el_clic_agarra_y_despues_suelta() -> void:
 	# El mismo botón hace las dos cosas, y cuál de las dos toca NO lo decide la escena: es un
 	# `if` sobre el estado de las manos, y las manos viven abajo.
 	var agarre := _cableado()
@@ -150,3 +218,56 @@ func test_el_clic_agarra_y_despues_suelta() -> void:  # 006-AC7
 	agarre.alternar(null, null)
 	assert_object(agarre.manos().sostenido()).is_null()
 	assert_object(cuerpo.get_parent()).is_same(agarre.punto_de_soltado)
+
+
+func test_agarrar_suspende_y_soltar_restaura_colisiones() -> void:
+	var agarre := _cableado()
+	var cuerpo := _cuerpo()
+	cuerpo.collision_layer = 13
+	cuerpo.collision_mask = 22
+	agarre.pedir_agarrar(_lata(), cuerpo)
+	assert_int(cuerpo.collision_layer).is_zero()
+	assert_int(cuerpo.collision_mask).is_zero()
+	agarre.soltar(true)
+	assert_int(cuerpo.collision_layer).is_equal(13)
+	assert_int(cuerpo.collision_mask).is_equal(22)
+
+
+func test_dos_agarres_con_examen_restauran_sus_colisiones() -> void:
+	var agarre := _cableado()
+	var cuerpo := _cuerpo()
+	var examen: Examen = auto_free(Examen.new())
+	examen.agarre = agarre
+	examen.punto_de_examen = auto_free(Node3D.new())
+	for capa: int in [5, 18]:
+		cuerpo.collision_layer = capa
+		cuerpo.collision_mask = capa + 2
+		assert_bool(agarre.pedir_agarrar(_lata(), cuerpo)).is_true()
+		assert_bool(examen.iniciar()).is_true()
+		assert_int(cuerpo.collision_layer).is_zero()
+		assert_int(cuerpo.collision_mask).is_zero()
+		examen.terminar()
+		assert_int(cuerpo.collision_layer).is_zero()
+		assert_int(cuerpo.collision_mask).is_zero()
+		agarre.soltar(true)
+		assert_int(cuerpo.collision_layer).is_equal(capa)
+		assert_int(cuerpo.collision_mask).is_equal(capa + 2)
+
+
+func test_vaciar_restaura_colisiones() -> void:
+	var agarre := _cableado()
+	var cuerpo := _cuerpo()
+	cuerpo.collision_layer = 9
+	cuerpo.collision_mask = 12
+	agarre.pedir_agarrar(_lata(), cuerpo)
+	agarre.vaciar_las_manos()
+	assert_int(cuerpo.collision_layer).is_equal(9)
+	assert_int(cuerpo.collision_mask).is_equal(12)
+
+
+func test_agarrar_y_soltar_un_nodo_sin_colisiones() -> void:
+	var agarre := _cableado()
+	var nodo := Node3D.new()
+	assert_bool(agarre.pedir_agarrar(_lata(), nodo)).is_true()
+	assert_object(agarre.soltar(true)).is_same(nodo)
+	assert_object(nodo.get_parent()).is_same(agarre.punto_de_soltado)

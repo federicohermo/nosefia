@@ -5,10 +5,10 @@
 ## escena. Lo verifican los `rg` del spec, que miran el archivo entero y no distinguen código de
 ## comentario.
 ##
-## **La hora no está acá, y ésa es la decisión.** El GDD la pone en los relojes del local, no en
-## la pantalla: un número siempre visible afloja la tensión, porque saber cuánto queda sale
-## gratis. Con la hora afuera, enterarse cuesta caminar. Lo que quedó de eso vive en
-## `src/dominio/jornada/reloj_de_pared.gd` y en el nodo que lo pinta.
+## **La hora no está acá, y ésa es la decisión.** El GDD la pone en el reloj de mesa del local,
+## no en la pantalla: un número siempre visible afloja la tensión, porque saber cuánto queda
+## sale gratis. Con la hora afuera, enterarse cuesta caminar. Lo que quedó de eso vive en el
+## dominio y en el nodo que lo pinta.
 ##
 ## Lo único propio de esta capa son las palabras. El veredicto del cierre **no** se dibuja acá:
 ## es de la pantalla de fin de jornada, y tenerlo en los dos lados sería la misma banda traducida
@@ -26,7 +26,30 @@ const TEXTO_DE_LOS_APERCIBIMIENTOS := "Apercibimientos %d de %d"
 @export var _tareas: Label
 @export var _apercibimientos: Label
 
+var foco_presente: bool = false
+
 var _obligatorias: int = 0
+
+@onready var _mira: ColorRect = $Mira
+
+
+func _ready() -> void:
+	var mitad := IndicacionDelFoco.TAMANO_DE_MIRA / 2.0
+	_mira.offset_left = -mitad
+	_mira.offset_top = -mitad
+	_mira.offset_right = mitad
+	_mira.offset_bottom = mitad
+	ocultar_foco()
+
+
+func mostrar_foco(_objetivo: Node3D, _distancia: float) -> void:
+	foco_presente = true
+	_mira.color = IndicacionDelFoco.COLOR
+
+
+func ocultar_foco() -> void:
+	foco_presente = false
+	_mira.color = IndicacionDelFoco.COLOR_SIN_FOCO
 
 
 ## Cuántas obligatorias pide la jornada. Se declara una vez al abrir el turno y el HUD la guarda
