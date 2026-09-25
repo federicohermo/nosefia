@@ -77,9 +77,9 @@ declarados distintos.
 - **En headless, `Engine.max_fps` no da cuadros parejos.** Con tope en 144, los cuadros alternan
   entre 0,3 y 15,5 ms. Todo lo que depende del tiempo sale desparejo aunque en el juego sea
   parejo. El ritmo se marca con un nodo que espera activo hasta el cuadro siguiente.
-- **`get_global_transform_interpolated()` sobre un nodo sin interpolar devuelve un valor
-  viejo.** El motor dibuja ese nodo con `global_transform`. Se lee lo interpolado sólo si
-  `is_physics_interpolated_and_enabled()`.
+- **`get_global_transform_interpolated()` en una rama sin nada interpolado devuelve un valor
+  viejo.** Un nodo sin interpolar hijo de uno interpolado sí hereda su dibujo. Se lee lo
+  interpolado si el nodo o algún ancestro `is_physics_interpolated_and_enabled()`.
 
 **Y un tirón que se ve en pantalla se mide también contra la entrada**, no sólo contra el
 dibujo: cuántos eventos del mouse llegan por cuadro. En el #187 la cámara hacía exactamente lo
