@@ -1,6 +1,5 @@
 // Un paso de la ecuación de onda sobre un campo de alturas. El canal r guarda la altura de este
 // paso y el g la del anterior: el esquema necesita los dos, y así viajan en una sola textura.
-// La textura sin `use_hdr_2d` es de 8 bits: sin ese ajuste la onda no tiene resolución.
 // Guarda la altura más 0,5, porque el dibujo 2D recorta los negativos aun con floats. Medido el
 // 2026-09-24: con la altura sin correr, el agua sube con cada paso.
 shader_type canvas_item;

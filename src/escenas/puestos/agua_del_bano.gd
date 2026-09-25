@@ -11,6 +11,10 @@ const ONDAS := preload("res://src/escenas/puestos/agua_del_bano_ondas.gdshader")
 const PASO := 1.0 / 60.0
 ## El esquema de la onda avanza unos 0,7 texeles por paso: con 192 por metro, 22 cm por segundo.
 const TEXELES_POR_METRO := 192.0
+const SEGUNDOS_ENTRE_GOTAS := Vector2(2.5, 5.0)
+const SEGUNDOS_ENTRE_ONDAS_DEL_INODORO := Vector2(6.0, 15.0)
+const FUERZA_DE_LA_GOTA := 0.4
+const FUERZA_DE_LA_ONDA_DEL_INODORO := 0.25
 
 ## El contorno de cada agua sale del modelo: es el corte de la bacha y de la taza a la altura
 ## del agua, en el plano XZ de su nodo.
@@ -18,12 +22,8 @@ const TEXELES_POR_METRO := 192.0
 @export var contorno_del_lavatorio: PackedVector2Array
 @export var inodoro: MeshInstance3D
 @export var contorno_del_inodoro: PackedVector2Array
-## La gota que cae. Arranca en la punta de la canilla.
+## Arranca en la punta de la canilla.
 @export var gota: MeshInstance3D
-@export var segundos_entre_gotas := Vector2(2.5, 5.0)
-@export var segundos_entre_ondas_del_inodoro := Vector2(6.0, 15.0)
-@export var fuerza_de_la_gota := 0.4
-@export var fuerza_de_la_onda_del_inodoro := 0.25
 
 var _lavatorio: Superficie
 var _inodoro: Superficie
@@ -41,9 +41,9 @@ func _ready() -> void:
 	_inodoro = Superficie.new(inodoro, contorno_del_inodoro, simula)
 	_salida_de_la_gota = gota.position
 	gota.visible = false
-	_hasta_la_gota = _azar.randf_range(segundos_entre_gotas.x, segundos_entre_gotas.y)
+	_hasta_la_gota = _azar.randf_range(SEGUNDOS_ENTRE_GOTAS.x, SEGUNDOS_ENTRE_GOTAS.y)
 	_hasta_la_onda = _azar.randf_range(
-		segundos_entre_ondas_del_inodoro.x, segundos_entre_ondas_del_inodoro.y
+		SEGUNDOS_ENTRE_ONDAS_DEL_INODORO.x, SEGUNDOS_ENTRE_ONDAS_DEL_INODORO.y
 	)
 	if not simula:
 		set_process(false)
@@ -52,15 +52,15 @@ func _ready() -> void:
 func _process(delta: float) -> void:
 	_hasta_la_gota -= delta
 	if _hasta_la_gota <= 0.0:
-		_hasta_la_gota = _azar.randf_range(segundos_entre_gotas.x, segundos_entre_gotas.y)
+		_hasta_la_gota = _azar.randf_range(SEGUNDOS_ENTRE_GOTAS.x, SEGUNDOS_ENTRE_GOTAS.y)
 		_soltar_gota()
 	_hasta_la_onda -= delta
 	if _hasta_la_onda <= 0.0:
 		_hasta_la_onda = _azar.randf_range(
-			segundos_entre_ondas_del_inodoro.x, segundos_entre_ondas_del_inodoro.y
+			SEGUNDOS_ENTRE_ONDAS_DEL_INODORO.x, SEGUNDOS_ENTRE_ONDAS_DEL_INODORO.y
 		)
 		var punto := Vector2(_azar.randf_range(0.3, 0.7), _azar.randf_range(0.3, 0.7))
-		_inodoro.tocar(punto, fuerza_de_la_onda_del_inodoro)
+		_inodoro.tocar(punto, FUERZA_DE_LA_ONDA_DEL_INODORO)
 	# Un `SubViewport` se dibuja una vez por cuadro como mucho. Un cuadro de más de un paso
 	# frena la onda, y no la acelera de golpe al cuadro siguiente.
 	_acumulado = minf(_acumulado + delta, 2.0 * PASO)
@@ -85,7 +85,7 @@ func _soltar_gota() -> void:
 
 func _gota_en_el_agua(llegada: Vector3) -> void:
 	gota.visible = false
-	_lavatorio.tocar(_lavatorio.uv_de(llegada - lavatorio.position), fuerza_de_la_gota)
+	_lavatorio.tocar(_lavatorio.uv_de(llegada - lavatorio.position), FUERZA_DE_LA_GOTA)
 
 
 ## En la web, el render target de floats pide una extensión de WebGL2. Sin ella la textura es
@@ -104,7 +104,6 @@ func _hay_floats() -> bool:
 	return hay == 1
 
 
-## Un agua: su malla plana, su material y las dos texturas de la onda.
 class Superficie:
 	var _malla: MeshInstance3D
 	var _material: ShaderMaterial
