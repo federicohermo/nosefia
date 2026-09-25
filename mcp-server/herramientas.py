@@ -338,17 +338,26 @@ def quien_instancia(ruta: str) -> str:
     )
 
 
+def _texto_del_criterio(texto: str, identificador: str) -> str:
+    """El cuerpo de un criterio: lo que hay entre su encabezado y el título siguiente.
+
+    **El corte va también en un `##`.** Abajo del último criterio no hay otro criterio sino la
+    sección siguiente, y cortar sólo en `###` le pegaba todo lo que el spec dice después.
+    """
+    bloque = re.search(
+        rf"^### {re.escape(identificador)}[^\n]*\n(.*?)(?=^#{{2,3}} |\Z)",
+        texto,
+        re.MULTILINE | re.DOTALL,
+    )
+    return bloque.group(1).strip() if bloque else "(sin texto)"
+
+
 def criterio(identificador: str) -> str:
     """Un `AC-<COD>-###`: su texto, la regla que verifica y qué test lo cita."""
     for spec in specs_del_repo():
         if identificador not in spec.criterios:
             continue
         texto = spec.ruta.read_text(encoding="utf-8")
-        bloque = re.search(
-            rf"^### {re.escape(identificador)}[^\n]*\n(.*?)(?=^### |\Z)",
-            texto,
-            re.MULTILINE | re.DOTALL,
-        )
         citas = [
             f"{r}:{n}"
             for r, n in _menciones(
@@ -358,7 +367,7 @@ def criterio(identificador: str) -> str:
         lineas = [
             f"# {identificador} — capacidad `{spec.nombre}` ({spec.estado})",
             "",
-            (bloque.group(1).strip() if bloque else "(sin texto)"),
+            _texto_del_criterio(texto, identificador),
             "",
             f"Verifica: {', '.join(f'`{r}`' for r in spec.criterios[identificador]) or '(ninguna)'}",
             "",

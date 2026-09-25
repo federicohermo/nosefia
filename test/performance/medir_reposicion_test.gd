@@ -1,5 +1,6 @@
 extends GdUnitTestSuite
 
+const ALMACEN := preload("res://src/escenas/almacen.tscn")
 const Medicion := preload("res://test/performance/medir_reposicion.gd")
 
 
@@ -42,4 +43,22 @@ func test_la_carga_conserva_cantidades_y_colisiones_reales() -> void:
 			else:
 				assert_int(lote.get_child_count()).is_equal(cantidad)
 				assert_object(lote.get_child(0).get_node("Forma").shape).is_same(forma)
-				assert_bool(lote.get_child(0).continuous_cd).is_true()
+
+
+func test_la_carga_pone_la_deteccion_continua_solo_si_el_juego_la_pone() -> void:
+	var almacen: Node3D = auto_free(ALMACEN.instantiate())
+	add_child(almacen)
+	await get_tree().physics_frame
+	var puesto: Node3D = almacen.get("_reposicion_manual")
+	puesto.call("retirar", Catalogo.todos()[0].id)
+	var agarre: Agarre = almacen.get("_agarre")
+	var unidad: RigidBody3D = agarre.soltar(true)
+	var medicion: Node3D = auto_free(Medicion.new())
+	medicion.modelos.assign(puesto.get("_modelos"))
+	medicion.formas.assign(puesto.get("_formas"))
+	var lote: Node3D = auto_free(medicion.crear(1, Medicion.Escenario.CAIDA))
+	(
+		assert_bool(lote.get_child(0).continuous_cd)
+		. override_failure_message("la medición arma la unidad distinto que el juego")
+		. is_equal(unidad.continuous_cd)
+	)

@@ -62,7 +62,7 @@ func test_los_puestos_completan_la_jornada_y_permiten_abrir_la_siguiente(
 func _reponer(almacen: Node3D) -> void:
 	var jugador: Node3D = almacen.get("_jugador")
 	jugador.set_physics_process(false)
-	var camara: Camera3D = jugador.get_node("Camara")
+	var camara: Camera3D = jugador.get_node("Giro/Camara")
 	for caja: Node3D in almacen.get("_cajas_de_productos"):
 		var producto := Catalogo.de(caja.get("producto"))
 		var zona: AABB = almacen.get("_reposicion_manual").zona(producto.id)
@@ -186,7 +186,7 @@ func _comprobar_huecos(almacen: Node3D, esperados: int) -> void:
 
 func _enfocar_mancha(jugador: Node3D, mancha: Node3D) -> void:
 	jugador.set_physics_process(false)
-	var camara: Camera3D = jugador.get_node("Camara")
+	var camara: Camera3D = jugador.get_node("Giro/Camara")
 	camara.position = Vector3.UP * ReglasDelJugador.ALTURA_DE_LA_CAMARA
 	for direccion in [Vector3.BACK, Vector3.FORWARD, Vector3.LEFT, Vector3.RIGHT]:
 		jugador.global_position = mancha.global_position + direccion

@@ -313,7 +313,7 @@ func _al_lado_del_jugador(caja: CajaDelDeposito) -> bool:
 	var radio: float = (cuerpo.shape as CapsuleShape3D).radius + media.length()
 	for lado in LADOS_DEL_JUGADOR:
 		var vuelta := Basis(Vector3.UP, TAU * lado / LADOS_DEL_JUGADOR)
-		var costado := jugador.global_position + vuelta * (-jugador.global_basis.z * radio)
+		var costado := jugador.global_position + vuelta * (jugador.frente() * radio)
 		var golpe := _rayo(
 			caja, costado + Vector3.UP * media.y, costado + Vector3.DOWN * CAIDA_MAXIMA
 		)
@@ -915,8 +915,6 @@ func retirar(id: Producto.Id) -> void:
 		add_child(unidad)
 		_unidades.append(unidad)
 		unidad.add_collision_exception_with(jugador)
-		# Las bolsas delgadas necesitan detectar el impacto entre pasos de física.
-		unidad.continuous_cd = true
 	# El frente de cada modelo se alinea antes de darle la inclinación de la mano.
 	unidad.orientacion_en_mano = (
 		Basis.from_euler(Vector3(deg_to_rad(-17), deg_to_rad(-20), 0))

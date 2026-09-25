@@ -1,6 +1,6 @@
 ---
 name: to-issue
-description: "Escribe y publica UN issue de No se fía con formato task-brief — el plan chico y descartable de un cambio puntual — y decide si ese cambio toca un spec. Usar apenas llega un pedido, un bug o una idea que se va a hacer, antes de abrir la rama; también con «abrí un issue», «armá el ticket» o la salida de shape en modo issue. Si el issue cambia lo que el juego tiene que hacer, después va to-spec. No escribe código ni specs."
+description: "Escribe y publica un issue de No se fía, o varios de una, con formato task-brief — el plan chico y descartable de un cambio puntual — y decide si cada cambio toca un spec. Usar apenas llega un pedido, un bug o una idea que se va a hacer, antes de abrir la rama; también con «abrí un issue», «armá el ticket» o la salida de shape en modo issue. Si el issue cambia lo que el juego tiene que hacer, después va to-spec. No escribe código ni specs."
 argument-hint: "[pedido | bug | idea]"
 ---
 
@@ -49,7 +49,7 @@ Si el tipo no está claro, preguntá. Es la decisión que define la rama y el re
 **Los límites de archivo y los criterios salen del árbol de hoy, no de la memoria.**
 
 ```bash
-rg -n "<lo que el issue va a tocar>" src/ test/
+rg -n "<lo que el issue va a tocar>" src/ test/ docs/   # una guía también describe la regla
 gh issue list --state open --limit 50      # si ya hay uno igual, no se abre otro
 ```
 
@@ -79,10 +79,21 @@ Lo que más se rompe:
   `Depende de #N`.
 - **El primer comando de verificación es siempre `python .claude/scripts/verificar.py`.** El
   veredicto sale del código de salida, nunca de un grep.
+- **Un comando que prueba una ausencia se corre hoy, y devuelve todo lo que el criterio saca.**
+  Si deja casos afuera, se amplía. Si no se puede, el criterio nombra el test que los cubre. En
+  el #140, el `rg` de la verificación no veía los productos de la raíz del modelo.
 - **Un valor de balance no se inventa.** Un costo, un tiempo o un umbral sale del GDD o del
   dominio. Si ninguno lo fija, el criterio lo nombra como pregunta abierta y `to-spec` lo
   registra. Un número propuesto por el agente se lee como decidido.
+- **Un síntoma medido se reproduce en las condiciones del criterio antes de pedir su rojo.** Si
+  el criterio excluye un caso —un obstáculo, un cuadro de transición—, la medición también lo
+  excluye. En el #187, los saltos de lo que se lleva se midieron en el local, y eran del brazo
+  rozando un mueble: en un piso libre no había rojo que pedir.
 - **Los bordes van escritos.** El caso feliz lo cubre cualquier implementación.
+- **Un criterio de rendimiento dice desde dónde se mide, y desde ahí se ve lo que el cambio
+  agrega.** Lo que no está en pantalla puede no costar nada. En el #181, el p95 se medía desde
+  donde arranca el jugador, el agua del baño no se veía desde ahí, y su simulación estaba en
+  pausa: el criterio salía verde sin medir el agua.
 - **Una tabla de ejemplos cierra consigo misma.** Cada fila se recalcula desde la regla antes de
   escribirla, y una hora de cierre es apertura más duración, no un número copiado de la ficha.
 - **Si el issue deja renombrar algo, el `rg` de los límites se corre también sobre los
@@ -116,6 +127,20 @@ gh issue edit <N> --body-file <archivo del scratchpad>
 
 `numerar` escribe el número en la rama y revisa sin dejar pasar nada. El cuerpo no se commitea:
 el issue es la fuente.
+
+## Varios de una
+
+Con varios issues de una, antes de mostrar nada:
+
+1. **Cruzá las filas «Se escribe» de todos los borradores.** Si dos comparten un archivo,
+   elegí cuál va primero y publicalo primero. El otro dice `Depende de #N`, con el número ya
+   publicado. Hasta entonces nombra al primero por su título: `<issue>` no sirve, porque
+   `numerar` lo reemplaza por el número propio. Sin un archivo en común, el orden da igual.
+2. **Dos issues que se bloquean entre sí son un solo cambio mal cortado.** Cortalo de nuevo antes
+   de publicar.
+3. **Mostrá todos los borradores enteros, cada uno con `revisar` en 0, y esperá un solo sí
+   sobre el lote.** Si el usuario aprueba una parte, publicá sólo esa parte. Los demás
+   borradores quedan en el scratchpad.
 
 ## Al cerrar
 

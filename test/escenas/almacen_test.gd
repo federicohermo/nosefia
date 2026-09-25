@@ -85,8 +85,8 @@ static func _lecturas_de_la_hora(nodo: Node) -> Array[Label3D]:
 ## nada, y el caso siguiente le pasa un árbol que sí la viola.
 ##
 ## **El discriminador es el `owner` y no la profundidad.** Un recorrido que contara niveles diría
-## que `Jugador/Camara` viola la regla, y no la viola: le llega instanciado de `jugador.tscn`. En
-## una sub-escena instanciada el `owner` de cada hijo es la raíz de la sub-escena, no la de
+## que la cámara del jugador viola la regla, y no la viola: le llega instanciada de `jugador.tscn`.
+## En una sub-escena instanciada el `owner` de cada hijo es la raíz de la sub-escena, no la de
 ## afuera —está medido—, así que `owner == raiz` distingue exactamente los nodos que la
 ## escena declara ella misma.
 static func _violaciones_de_cableado(raiz: Node) -> Array[String]:

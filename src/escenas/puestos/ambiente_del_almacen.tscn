@@ -1,5 +1,7 @@
 [gd_scene format=3 uid="uid://davohpa0bua7i"]
 
+[ext_resource type="PackedScene" path="res://src/escenas/puestos/agua_del_bano.tscn" id="1_agua"]
+
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_cielo"]
 
 [sub_resource type="Sky" id="Sky_cielo"]
@@ -86,3 +88,5 @@ light_energy = 1.055
 light_size = 0.201
 light_bake_mode = 1
 area_size = Vector2(0.9148388, 1)
+
+[node name="AguaDelBano" parent="." instance=ExtResource("1_agua")]

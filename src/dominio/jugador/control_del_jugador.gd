@@ -14,6 +14,9 @@ var _foco := Foco.new()
 var _velocidad_maxima: float
 var _suspendido: bool = false
 
+## Cuánto del giro falta dibujar, en radianes: `x` de yaw, `y` de pitch.
+var _suavizado := SuavizadoDelGiro.new(SuavizadoDelGiro.VENTANA)
+
 
 ## Recibe la `Mirada` ya armada en vez de armarla: es lo que deja que un test la construya con
 ## una sensibilidad de números redondos sin tocar `ReglasDelJugador`.
@@ -41,7 +44,14 @@ func esta_suspendido() -> bool:
 func girar(delta_del_mouse: Vector2) -> void:
 	if _suspendido:
 		return
+	var yaw_antes := _mirada.yaw()
+	var pitch_antes := _mirada.pitch()
 	_mirada.girar(delta_del_mouse)
+	# Se anota lo que la mirada giró y no lo que pidió el mouse: contra el tope del pitch, lo
+	# pedido de más haría rebotar la cámara. Y el yaw por el camino corto, porque da la vuelta.
+	_suavizado.agregar(
+		Vector2(wrapf(_mirada.yaw() - yaw_antes, -PI, PI), _mirada.pitch() - pitch_antes)
+	)
 
 
 func velocidad(entrada: Vector2) -> Vector3:
@@ -62,6 +72,23 @@ func yaw() -> float:
 
 func pitch() -> float:
 	return _mirada.pitch()
+
+
+func avanzar_el_dibujo(delta: float) -> void:
+	_suavizado.avanzar(delta)
+
+
+## Hacia adónde mira la cámara que se dibuja: atrás de la mirada lo que el mouse todavía no mostró.
+func yaw_dibujado() -> float:
+	return wrapf(_mirada.yaw() - _suavizado.pendiente().x, -PI, PI)
+
+
+func pitch_dibujado() -> float:
+	return _mirada.pitch() - _suavizado.pendiente().y
+
+
+func giro_atrasado() -> bool:
+	return _suavizado.pendiente() != Vector2.ZERO
 
 
 func objetivo() -> int:

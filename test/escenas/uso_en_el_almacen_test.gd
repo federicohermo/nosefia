@@ -136,7 +136,7 @@ func _abrir() -> Node3D:
 func _enfocar(jugador: Node3D, mancha: Node3D) -> void:
 	jugador.set_physics_process(false)
 	jugador.global_position = mancha.global_position + Vector3.BACK
-	var camara: Camera3D = jugador.get_node("Camara")
+	var camara: Camera3D = jugador.get_node("Giro/Camara")
 	camara.look_at(mancha.global_position + Vector3.UP * 0.03)
 	for cuadro in 4:
 		await get_tree().physics_frame

@@ -185,6 +185,36 @@ class LosTests(unittest.TestCase):
         self.assertNotIn("FALTA", salida)
 
 
+class ElTextoDeUnCriterio(unittest.TestCase):
+    SPEC = (
+        "## Criterios de aceptación\n"
+        "\n"
+        "### AC-XXX-001 — El primero *(verifica BR-XXX-001)*\n"
+        "\n"
+        "DADO uno ENTONCES uno.\n"
+        "\n"
+        "### AC-XXX-002 — El último *(verifica BR-XXX-001)*\n"
+        "\n"
+        "DADO dos ENTONCES dos.\n"
+        "\n"
+        "## No objetivos\n"
+        "\n"
+        "- Nada.\n"
+    )
+
+    def test_corta_en_el_criterio_siguiente(self):
+        self.assertEqual(
+            herramientas._texto_del_criterio(self.SPEC, "AC-XXX-001"), "DADO uno ENTONCES uno."
+        )
+
+    def test_el_ultimo_corta_en_la_seccion_siguiente(self):
+        # Abajo del último criterio no hay otro criterio: hay una sección. Cortar sólo en `###`
+        # le pegaba al último criterio de cada spec todo lo que el spec dice después.
+        self.assertEqual(
+            herramientas._texto_del_criterio(self.SPEC, "AC-XXX-002"), "DADO dos ENTONCES dos."
+        )
+
+
 class LosAssets(unittest.TestCase):
     #: Un `.glb` mínimo: cabecera de 12 bytes, largo del chunk, `JSON`, y el JSON.
     @staticmethod

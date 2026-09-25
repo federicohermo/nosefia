@@ -72,9 +72,28 @@ del `await` compara la escritura del cuadro anterior contra el instante de éste
 arreglo no alcanza. O se llama al método a mano antes de leer, o se comparan dos instantes
 declarados distintos.
 
+**Un test que mide lo que se dibuja tiene dos trampas más**, medidas el 2026-09-24:
+
+- **En headless, `Engine.max_fps` no da cuadros parejos.** Con tope en 144, los cuadros alternan
+  entre 0,3 y 15,5 ms. Todo lo que depende del tiempo sale desparejo aunque en el juego sea
+  parejo. El ritmo se marca con un nodo que espera activo hasta el cuadro siguiente.
+- **`get_global_transform_interpolated()` en una rama sin nada interpolado devuelve un valor
+  viejo.** Un nodo sin interpolar hijo de uno interpolado sí hereda su dibujo. Se lee lo
+  interpolado si el nodo o algún ancestro `is_physics_interpolated_and_enabled()`.
+
+**Y un tirón que se ve en pantalla se mide también contra la entrada**, no sólo contra el
+dibujo: cuántos eventos del mouse llegan por cuadro. En el #187 la cámara hacía exactamente lo
+que pedía el mouse, y el escalón venía de un mouse de 125 Hz contra una pantalla de 144.
+
 **Si algo no se puede probar sin levantar una escena, no va en esas dos capas.** Va en `ui/` o en
 `escenas/`, que son cáscara — y entonces la regla que tenía adentro hay que bajarla al dominio.
 Ésa es la conversación que el gate fuerza, y es la que hace que el juego se pueda probar.
+
+**Lo que se mira en la web se mira en un Chrome que dibuja.** Un Chrome manejado por Playwright
+que queda tapado por otra ventana casi no pide cuadros: dos capturas seguidas salen iguales. En el
+#181 el agua parecía quieta en la web, y el juego no llegó a 240 cuadros en 20 segundos. Va con
+`--disable-backgrounding-occluded-windows` y `--disable-renderer-backgrounding`, y antes de leer
+una captura se cuentan los `requestAnimationFrame` de un segundo.
 
 ## Cuando lo que escribís es un gate sobre prosa
 
@@ -122,12 +141,12 @@ TDD, y también el de un `class_name` recién creado. La única señal es el con
 ```powershell
 & $env:GODOT_BIN --path . --headless -s -d --remote-debug tcp://127.0.0.1:0 `
   res://addons/gdUnit4/bin/GdUnitCmdTool.gd -a test --continue --ignoreHeadlessMode `
-  -rd reports | Select-String "Executed test suites"
+  -rd reports 2>$null | Select-String "Executed test suites"
 ```
 
 **Va en PowerShell y no en Bash**, porque en un worktree aislado Bash rechaza cualquier forma de
-invocar Godot como comando. Y `--remote-debug tcp://127.0.0.1:0` contesta dos `ERROR:` que **no
-son un fallo**: la corrida sigue y escribe su `(N/N)`.
+invocar Godot como comando. **Y el `2>$null` no se saca**: PowerShell no pasa el stderr de Godot
+por `Select-String`, y sin él la corrida devuelve 4,5 MB. Medido el 2026-09-24.
 
 Ese `(N/N)` tiene que dar igual que `find test -name '*_test.gd' | wc -l`. Si da menos, hay una
 suite que no corrió y el nodo verde no lo dice.
@@ -142,7 +161,9 @@ después de crear cada archivo con `class_name` nuevo.
 todavía no existe, el error de script **aborta la función** y gdUnit4 no cuenta ninguna aserción
 fallida: el caso sale **`PASSED`** por no haber llegado a afirmar nada. Medido el 2026-09-01: **4
 de 5 casos en verde** con la escena sin escribir. El «falla por lo que se espera» se verifica en el
-`ERROR: Failed loading resource` de la salida cruda.
+`ERROR: Failed loading resource` de la salida cruda. Ese `ERROR:` va por stderr: se lee corriendo
+sólo esa suite, con `-a <ruta>` y sin `2>$null`. Los dos `ERROR:` de `--remote-debug` no son un
+fallo.
 
 **Y `--import` reescribe `project.godot`.** El editor no guarda un ajuste igual a su valor por
 defecto: lo borra del archivo. Medido el 2026-09-14 con

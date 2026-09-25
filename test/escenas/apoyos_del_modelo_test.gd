@@ -6,7 +6,7 @@ const ALMACEN := preload("res://src/escenas/almacen.tscn")
 func test_cada_mancha_se_enfoca_desde_un_apoyo_caminable_a_un_metro() -> void:
 	var almacen := await _abrir()
 	var jugador: CharacterBody3D = almacen.get("_jugador")
-	var camara: Camera3D = jugador.get_node("Camara")
+	var camara: Camera3D = jugador.get_node("Giro/Camara")
 	var forma: CollisionShape3D = jugador.get_node("Cuerpo")
 	for mancha: Node3D in almacen.get("_limpieza").manchas():
 		var encontrada := false
