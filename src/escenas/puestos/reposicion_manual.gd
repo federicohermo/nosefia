@@ -313,7 +313,7 @@ func _al_lado_del_jugador(caja: CajaDelDeposito) -> bool:
 	var radio: float = (cuerpo.shape as CapsuleShape3D).radius + media.length()
 	for lado in LADOS_DEL_JUGADOR:
 		var vuelta := Basis(Vector3.UP, TAU * lado / LADOS_DEL_JUGADOR)
-		var costado := jugador.global_position + vuelta * (-jugador.global_basis.z * radio)
+		var costado := jugador.global_position + vuelta * (jugador.frente() * radio)
 		var golpe := _rayo(
 			caja, costado + Vector3.UP * media.y, costado + Vector3.DOWN * CAIDA_MAXIMA
 		)

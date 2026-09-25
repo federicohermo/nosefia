@@ -10,7 +10,7 @@ func test_la_bolsa_pequena_se_enfoca_fuera_del_centro() -> void:
 	var bolsa: RigidBody3D = auto_free(BOLSA.instantiate())
 	bolsa.freeze = true
 	add_child(bolsa)
-	var ojo: Vector3 = jugador.get_node("Camara").global_position
+	var ojo: Vector3 = jugador.get_node("Giro/Camara").global_position
 	var angulo := deg_to_rad(8.0)
 	bolsa.global_position = ojo + Vector3(sin(angulo), 0, -cos(angulo)) * 1.5
 	await _actualizar(jugador)
@@ -65,7 +65,7 @@ func test_la_pared_del_modelo_tapa_un_objeto_dentro_del_alcance() -> void:
 	var ojo := Vector3(0, 1.8, 8.7)
 	_mirar(jugador, ojo, bolsa.global_position)
 	await _actualizar(jugador)
-	assert_bool(jugador.get_node("Camara/CampoDeInteraccion").overlaps_body(bolsa)).is_true()
+	assert_bool(jugador.get_node("Giro/Camara/CampoDeInteraccion").overlaps_body(bolsa)).is_true()
 	var consulta := PhysicsRayQueryParameters3D.create(ojo, bolsa.global_position)
 	consulta.exclude = [jugador.get_rid()]
 	var golpe := jugador.get_world_3d().direct_space_state.intersect_ray(consulta)
@@ -113,7 +113,7 @@ func _jugador() -> CharacterBody3D:
 
 func _mirar(jugador: CharacterBody3D, ojo: Vector3, punto: Vector3) -> void:
 	jugador.global_position = ojo - Vector3.UP * ReglasDelJugador.ALTURA_DE_LA_CAMARA
-	jugador.get_node("Camara").look_at(punto)
+	jugador.get_node("Giro/Camara").look_at(punto)
 
 
 func _actualizar(jugador: CharacterBody3D) -> void:

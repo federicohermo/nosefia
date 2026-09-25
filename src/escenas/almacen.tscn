@@ -38,7 +38,7 @@ repositor = NodePath("../Servicios/Repositor")
 jugador = NodePath("../Jugador")
 estante = NodePath("../Estructura/gondolanueva/StaticBody3D")
 contenido = NodePath("../Estructura/gondolanueva/StaticBody3D/Contenido")
-punto_de_la_caja = NodePath("../Jugador/PuntoDeCaja")
+punto_de_la_caja = NodePath("../Jugador/Giro/PuntoDeCaja")
 
 [node name="Ambiente" parent="." unique_id=1395941829 instance=ExtResource("grupo_Ambiente")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.001781702, 0.011070967, 5.054474e-05)

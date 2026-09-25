@@ -72,6 +72,19 @@ del `await` compara la escritura del cuadro anterior contra el instante de éste
 arreglo no alcanza. O se llama al método a mano antes de leer, o se comparan dos instantes
 declarados distintos.
 
+**Un test que mide lo que se dibuja tiene dos trampas más**, medidas el 2026-09-24:
+
+- **En headless, `Engine.max_fps` no da cuadros parejos.** Con tope en 144, los cuadros alternan
+  entre 0,3 y 15,5 ms. Todo lo que depende del tiempo sale desparejo aunque en el juego sea
+  parejo. El ritmo se marca con un nodo que espera activo hasta el cuadro siguiente.
+- **`get_global_transform_interpolated()` en una rama sin nada interpolado devuelve un valor
+  viejo.** Un nodo sin interpolar hijo de uno interpolado sí hereda su dibujo. Se lee lo
+  interpolado si el nodo o algún ancestro `is_physics_interpolated_and_enabled()`.
+
+**Y un tirón que se ve en pantalla se mide también contra la entrada**, no sólo contra el
+dibujo: cuántos eventos del mouse llegan por cuadro. En el #187 la cámara hacía exactamente lo
+que pedía el mouse, y el escalón venía de un mouse de 125 Hz contra una pantalla de 144.
+
 **Si algo no se puede probar sin levantar una escena, no va en esas dos capas.** Va en `ui/` o en
 `escenas/`, que son cáscara — y entonces la regla que tenía adentro hay que bajarla al dominio.
 Ésa es la conversación que el gate fuerza, y es la que hace que el juego se pueda probar.
