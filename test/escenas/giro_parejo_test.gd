@@ -13,6 +13,10 @@
 extends GdUnitTestSuite
 
 const JUGADOR := preload("res://src/escenas/jugador.tscn")
+const ALMACEN := preload("res://src/escenas/almacen.tscn")
+
+## Un rincón del depósito donde caminar hacia adelante lleva la caja contra la pared.
+const RINCON_DEL_DEPOSITO := Vector2(10.4, -4.0)
 
 ## El monitor del issue fue a 144 Hz. Con el cuadro sin tope, casi todos caen en el mismo punto
 ## entre dos pasos de física y el temblor no aparece.
@@ -119,6 +123,16 @@ class Mouse:
 		Input.parse_input_event(evento)
 
 
+## El mouse de un lado al otro, como girando contra una pared.
+class MouseDeLadoALado:
+	extends Node
+
+	func _process(_delta: float) -> void:
+		var evento := InputEventMouseMotion.new()
+		evento.relative = Vector2(10.0 * sin(Time.get_ticks_msec() / 400.0), 0.0)
+		Input.parse_input_event(evento)
+
+
 ## Un mouse que reporta a su ritmo y no al de la pantalla, como el del issue. Mueve lo mismo por
 ## segundo que `Mouse`.
 class MouseLento:
@@ -215,6 +229,56 @@ func test_una_caja_en_la_mano_no_tiembla_contra_la_camara() -> void:
 	agarre.mover_lo_sostenido(jugador.get_node("Giro/PuntoDeCaja"))
 	jugador.call("ocupar_el_frente", true)
 	await _comprobar_que_no_tiembla(jugador, caja)
+
+
+func test_una_caja_contra_la_pared_se_corre_sin_escalones() -> void:
+	# Contra la pared el brazo corre la caja en cada paso de física. Sin interpolar ese punto, la
+	# caja quedaba quieta entre dos pasos y saltaba en el siguiente: medido, 40 escalones en 4 s
+	# empujando y girando en el rincón del depósito.
+	var almacen: Node3D = auto_free(ALMACEN.instantiate())
+	almacen.add_child(RitmoDePantalla.new())
+	add_child(almacen)
+	await get_tree().physics_frame
+	var jugador: CharacterBody3D = almacen.get("_jugador")
+	var caja: Node3D = almacen.get("_cajas_de_productos")[Producto.Id.LAYSNTT]
+	jugador.set("_enfocado", caja)
+	var clic := InputEventAction.new()
+	clic.action = ReglasDeLosObjetos.ACCION_AGARRAR
+	clic.pressed = true
+	jugador.call("_unhandled_input", clic)
+	jugador.global_position = Vector3(
+		RINCON_DEL_DEPOSITO.x, jugador.global_position.y, RINCON_DEL_DEPOSITO.y
+	)
+	Input.action_press(ReglasDelJugador.ACCION_ADELANTE)
+	await _esperar(1.0)
+	var medidor := _medir(jugador, caja)
+	almacen.add_child(MouseDeLadoALado.new())
+	await _esperar(3.0)
+	var pasos: Array[float] = []
+	for indice in range(1, medidor.relativos.size()):
+		pasos.append(medidor.relativos[indice].distance_to(medidor.relativos[indice - 1]))
+	var escalones := 0
+	var moviendose := 0
+	for indice in range(1, pasos.size() - 1):
+		if pasos[indice - 1] > 0.001 and pasos[indice + 1] > 0.001:
+			moviendose += 1
+			if pasos[indice] < 0.00005:
+				escalones += 1
+	(
+		assert_int(moviendose)
+		. override_failure_message("la caja no se corrió: el caso no ejerce nada")
+		. is_greater(20)
+	)
+	(
+		assert_int(escalones)
+		. override_failure_message(
+			(
+				"la caja quedó quieta entre dos cuadros que se mueven %d veces de %d"
+				% [escalones, moviendose]
+			)
+		)
+		. is_equal(0)
+	)
 
 
 func test_lo_soltado_despues_de_girar_se_dibuja_donde_se_veia_el_punto_de_soltado() -> void:

@@ -51,6 +51,7 @@ spring_length = 0.628032
 margin = 0.01
 
 [node name="PuntoDeCarga" type="Node3D" parent="Giro/Camara"]
+physics_interpolation_mode = 1
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.3, -0.3, -0.618)
 
 [node name="PuntoDeSoltado" type="Node3D" parent="Giro/Camara"]
@@ -64,6 +65,7 @@ spring_length = 0.764591
 margin = 0.01
 
 [node name="PuntoDeProducto" type="Node3D" parent="Giro/Camara"]
+physics_interpolation_mode = 1
 position = Vector3(0.34, -0.3, -0.75)
 
 [node name="BrazoDeCaja" type="SpringArm3D" parent="Giro"]
@@ -74,6 +76,7 @@ spring_length = 0.799
 margin = 0.01
 
 [node name="PuntoDeCaja" type="Node3D" parent="Giro"]
+physics_interpolation_mode = 1
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.141, -0.799)
 
 [node name="FormaDeLaCaja" type="CollisionShape3D" parent="."]
