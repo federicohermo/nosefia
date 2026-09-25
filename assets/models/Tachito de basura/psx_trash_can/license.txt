@@ -1,0 +1,8 @@
+Model Information:
+* title:	PSX Trash Can
+* source:	https://sketchfab.com/3d-models/psx-trash-can-94ddb44b235c460694613c31938bfd0a
+* author:	ziro (https://sketchfab.com/ziromus)
+
+Model License:
+* license type:	SKETCHFAB Standard (https://sketchfab.com/licenses)
+* requirements:	Under basic restrictions, use worldwide, on all types of media, commercially or not, and in all types of derivative works
