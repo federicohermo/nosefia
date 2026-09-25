@@ -46,6 +46,9 @@ var _enfocado: Node3D = null
 var _largo_de_carga := 0.0
 var _largo_de_producto := 0.0
 
+## Lo que el barrido de la caja no ve: lo mismo que excluyen los brazos, que no lo devuelven.
+var _excluidos: Array[RID] = []
+
 ## Si el giro dibujado todavía va atrás de la mirada. Mientras tanto se lo reescribe cada cuadro,
 ## y sólo entonces: un test que apunta la cámara a mano no la pierde en el cuadro siguiente.
 var _girando_el_dibujo := false
@@ -78,6 +81,7 @@ func _ready() -> void:
 	# acorta y lo que se lleva en la mano vuelve a meterse en la madera.
 	# Y barren antes de que el cuerpo los lea: con la misma prioridad el padre va primero y lee el
 	# largo del paso anterior.
+	_excluidos.append(get_rid())
 	for brazo: SpringArm3D in find_children("*", "SpringArm3D", true, false):
 		brazo.add_excluded_object(get_rid())
 		brazo.process_physics_priority = process_physics_priority - 1
@@ -102,6 +106,7 @@ func _ready() -> void:
 ## ahí para lo que sí lo necesita: los productos que caen y los rayos de la mira.
 func ignorar_el_detalle(cuerpo: PhysicsBody3D) -> void:
 	add_collision_exception_with(cuerpo)
+	_excluidos.append(cuerpo.get_rid())
 	for brazo: SpringArm3D in find_children("*", "SpringArm3D", true, false):
 		brazo.add_excluded_object(cuerpo.get_rid())
 
@@ -243,19 +248,18 @@ func ocupar_el_frente(ocupado: bool) -> void:
 
 ## Corre la caja sobre el eje de su brazo, hasta donde haya lugar.
 ##
-## Sin suavizado, al revés que las manos: el brazo ya contesta un punto libre, y el volumen se
-## enciende justo ahí. Un punto intermedio quedaría adentro de la madera.
+## Sin suavizado, al revés que las manos: el volumen se enciende justo en el punto libre. Un punto
+## intermedio quedaría adentro de la madera.
 func _acomodar_la_caja() -> void:
-	# Barre acá, después de `move_and_slide()`, y no lee el barrido del brazo, que es de antes de
-	# moverse: con ese largo la forma quedaba adentro de la pared, y el paso siguiente rebotaba el
-	# cuerpo 2 cm.
+	# Barre acá y no lee el brazo: su barrido es de antes de `move_and_slide()`, y con ese largo la
+	# forma quedaba adentro de la pared y rebotaba el cuerpo.
 	var brazo := _brazo_de_la_caja
 	var barrido := PhysicsShapeQueryParameters3D.new()
 	barrido.shape = brazo.shape
 	barrido.transform = brazo.global_transform
 	barrido.motion = brazo.global_basis.z * brazo.spring_length
 	barrido.collision_mask = brazo.collision_mask
-	barrido.exclude = [get_rid()]
+	barrido.exclude = _excluidos
 	var libre := get_world_3d().direct_space_state.cast_motion(barrido)[0]
 	var lugar := brazo.transform * Vector3(0.0, 0.0, brazo.spring_length * libre)
 	_punto_de_la_caja.position = lugar

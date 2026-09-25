@@ -272,10 +272,9 @@ func test_una_caja_contra_la_pared_se_corre_sin_escalones() -> void:
 		var despues := pasos[indice + 1]
 		if antes.length() > 0.001 and despues.length() > 0.001:
 			moviendose += 1
-			# Un cuadro quieto entre dos que van para lados opuestos es la vuelta de la caja, no un
-			# escalón.
-			# Y uno que no avanza el tiempo dibujado tampoco: pasa después de un cuadro lento de la
-			# máquina, y ahí el motor retiene la fracción.
+			# No es escalón un cuadro quieto entre dos que van a lados opuestos: es la vuelta de la
+			# caja. Tampoco uno que no avanza el tiempo dibujado: después de un cuadro lento el
+			# motor retiene la fracción.
 			var quieto := pasos[indice].length() < 0.00005 and avances[indice] > 0.1
 			if quieto and antes.dot(despues) > 0.0:
 				escalones += 1
@@ -294,6 +293,23 @@ func test_una_caja_contra_la_pared_se_corre_sin_escalones() -> void:
 		)
 		. is_equal(0)
 	)
+
+
+func test_la_caja_no_choca_con_el_detalle_de_un_mueble() -> void:
+	var jugador := await _jugador_en_un_piso_libre()
+	var detalle := StaticBody3D.new()
+	var forma := CollisionShape3D.new()
+	forma.shape = BoxShape3D.new()
+	(forma.shape as BoxShape3D).size = Vector3.ONE * 0.1
+	detalle.add_child(forma)
+	jugador.get_parent().add_child(detalle)
+	var punto: Node3D = jugador.get_node("Giro/PuntoDeCaja")
+	var largo: float = (jugador.get_node("Giro/BrazoDeCaja") as SpringArm3D).spring_length
+	detalle.global_position = punto.global_position + Vector3.BACK * largo * 0.5
+	jugador.ignorar_el_detalle(detalle)
+	await get_tree().physics_frame
+	await get_tree().physics_frame
+	assert_float(punto.position.z).is_equal_approx(-largo, 0.001)
 
 
 func test_lo_soltado_despues_de_girar_se_dibuja_donde_se_veia_el_punto_de_soltado() -> void:
