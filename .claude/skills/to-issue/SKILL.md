@@ -90,6 +90,10 @@ Lo que más se rompe:
   excluye. En el #187, los saltos de lo que se lleva se midieron en el local, y eran del brazo
   rozando un mueble: en un piso libre no había rojo que pedir.
 - **Los bordes van escritos.** El caso feliz lo cubre cualquier implementación.
+- **Un criterio de rendimiento dice desde dónde se mide, y desde ahí se ve lo que el cambio
+  agrega.** Lo que no está en pantalla puede no costar nada. En el #181, el p95 se medía desde
+  donde arranca el jugador, el agua del baño no se veía desde ahí, y su simulación estaba en
+  pausa: el criterio salía verde sin medir el agua.
 - **Una tabla de ejemplos cierra consigo misma.** Cada fila se recalcula desde la regla antes de
   escribirla, y una hora de cierre es apertura más duración, no un número copiado de la ficha.
 - **Si el issue deja renombrar algo, el `rg` de los límites se corre también sobre los

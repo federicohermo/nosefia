@@ -89,6 +89,12 @@ que pedía el mouse, y el escalón venía de un mouse de 125 Hz contra una panta
 `escenas/`, que son cáscara — y entonces la regla que tenía adentro hay que bajarla al dominio.
 Ésa es la conversación que el gate fuerza, y es la que hace que el juego se pueda probar.
 
+**Lo que se mira en la web se mira en un Chrome que dibuja.** Un Chrome manejado por Playwright
+que queda tapado por otra ventana casi no pide cuadros: dos capturas seguidas salen iguales. En el
+#181 el agua parecía quieta en la web, y el juego no llegó a 240 cuadros en 20 segundos. Va con
+`--disable-backgrounding-occluded-windows` y `--disable-renderer-backgrounding`, y antes de leer
+una captura se cuentan los `requestAnimationFrame` de un segundo.
+
 ## Cuando lo que escribís es un gate sobre prosa
 
 Una parte de lo que este repo verifica no es código: es que un `.md` diga algo. Tres cosas se
