@@ -748,7 +748,7 @@ func test_lo_soltado_queda_sobre_el_piso_o_la_tapa_que_se_mira() -> void:  # AC-
 		assert_bool(_encimado(bolsa)).is_false()
 
 
-func test_mirando_una_pared_o_nada_se_suelta_como_siempre() -> void:  # AC-PLY-035
+func test_sin_superficie_que_valga_se_suelta_como_siempre() -> void:  # AC-PLY-035
 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
 	add_child(almacen)
 	await get_tree().physics_frame
@@ -768,6 +768,21 @@ func test_mirando_una_pared_o_nada_se_suelta_como_siempre() -> void:  # AC-PLY-0
 		var sin_mira := agarre.punto_de_soltado.global_position
 		_soltar(almacen, bolsa)
 		assert_vector(bolsa.global_position).is_equal_approx(sin_mira, Vector3.ONE * 0.01)
+	# El piso admite, pero la otra bolsa queda más cerca del rayo que media bolsa: se encimarían.
+	var otra: RigidBody3D = almacen.get_node("Objetos/BolsaDeBasura2")
+	var piso: Vector3 = jugador.global_position + jugador.frente() * 1.2
+	camara.look_at(piso)
+	var toca: Vector3 = _golpe_de_la_mira(jugador, bolsa)["position"]
+	var media: Vector3 = (otra.get_node("Forma").shape as BoxShape3D).size / 2.0
+	otra.global_position = toca + Vector3(media.x * 1.5, media.y, 0.0)
+	await get_tree().physics_frame
+	camara.look_at(piso)
+	var al_costado := _golpe_de_la_mira(jugador, bolsa)
+	assert_object(al_costado["collider"]).is_not_same(otra)
+	assert_float(al_costado["normal"].y).is_greater(ReglasDeLosObjetos.APOYO_HORIZONTAL)
+	var sin_mira_al_costado := agarre.punto_de_soltado.global_position
+	_soltar(almacen, bolsa)
+	assert_vector(bolsa.global_position).is_equal_approx(sin_mira_al_costado, Vector3.ONE * 0.01)
 
 
 func _soltar(almacen: Node3D, cuerpo: RigidBody3D) -> void:

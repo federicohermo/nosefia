@@ -209,8 +209,9 @@ no. Ningún objeto del almacén salvo las cajas contenedoras admite otro encima.
 
 ### AC-PLY-035 — Sin superficie que valga, se suelta como siempre *(verifica BR-PLY-018)*
 
-DADO la mira sobre una pared, o sobre nada al alcance CUANDO se suelta ENTONCES lo soltado sale
-del mismo punto que sin mira.
+DADO la mira sobre una pared, sobre nada al alcance, o sobre un punto donde lo soltado quedaría
+encimado con algo o adentro de un mueble CUANDO se suelta ENTONCES lo soltado sale del mismo
+punto que sin mira.
 
 ## No objetivos
 
