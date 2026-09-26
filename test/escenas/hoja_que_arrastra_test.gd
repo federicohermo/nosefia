@@ -208,6 +208,25 @@ func test_una_caja_apoyada_en_el_recorrido_no_frena_la_hoja() -> void:
 	assert_float(_cuerpo_de(hoja).call("puerta").angulo()).is_equal(Puerta.ANGULO_ABIERTA)
 
 
+## Cerrar de golpe salta sin girar: lo apoyado contra la hoja abierta no sale despedido.
+func test_cerrar_de_golpe_no_despide_lo_que_toca_la_hoja() -> void:
+	var almacen: Node3D = await _almacen()
+	var hoja: MeshInstance3D = almacen.get_node(HOJA)
+	var punto := _en_el_recorrido(almacen, hoja, 0.9)
+	await _girar(hoja)
+	var unidad := await _unidad_dormida(almacen, punto)
+	var partida := unidad.global_position
+	_cuerpo_de(hoja).call("cerrar_de_golpe")
+	for cuadro in CUADROS_PARA_DORMIRSE:
+		await get_tree().physics_frame
+	var corrida := unidad.global_position.distance_to(partida)
+	(
+		assert_float(corrida)
+		. override_failure_message("la hoja despidió la unidad: se corrió %.3f m" % corrida)
+		. is_less(CORRIDA_MINIMA)
+	)
+
+
 func test_la_bolsa_y_el_trapeador_en_el_recorrido_se_arrastran_al_abrir() -> void:
 	for ruta in ["Objetos/BolsaDeBasura1", "Objetos/Trapeador"]:
 		var almacen: Node3D = await _almacen()

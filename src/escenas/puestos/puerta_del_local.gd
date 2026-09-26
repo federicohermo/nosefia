@@ -76,10 +76,14 @@ func puerta() -> Puerta:
 func cerrar_de_golpe() -> void:
 	_puerta.cerrar_de_golpe()
 	_girando = false
-	sync_to_physics = false
 	hoja.transform = _cerrada
-	global_transform = hoja.global_transform * _desde_la_hoja
-	sync_to_physics = true
+	# Animable, el cuerpo llega a su lugar con velocidad y despide lo que toca la hoja: medido el
+	# 2026-09-26, una unidad apoyada salía a 85 m/s. Estático, salta.
+	PhysicsServer3D.body_set_mode(get_rid(), PhysicsServer3D.BODY_MODE_STATIC)
+	PhysicsServer3D.body_set_state(
+		get_rid(), PhysicsServer3D.BODY_STATE_TRANSFORM, hoja.global_transform * _desde_la_hoja
+	)
+	PhysicsServer3D.body_set_mode(get_rid(), PhysicsServer3D.BODY_MODE_KINEMATIC)
 	hoja.reset_physics_interpolation()
 
 
