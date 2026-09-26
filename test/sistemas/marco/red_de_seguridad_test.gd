@@ -180,6 +180,18 @@ func test_lo_congelado_apenas_metido_se_rescata() -> void:
 	assert_int(red.rescates.size()).is_equal(2)
 
 
+## Lo vivo metido entero en la pared se detecta, aunque el motor ya lo saque en parte.
+func test_lo_vivo_metido_entero_se_detecta() -> void:
+	var mundo: Array = await _mundo()
+	var red: RedDeSeguridad = mundo[0]
+	var objeto: RigidBody3D = mundo[1]
+	var forma: CollisionShape3D = objeto.get_node("Forma")
+	objeto.global_basis = Basis.IDENTITY
+	objeto.global_position = Vector3(2.0 + (forma.shape as BoxShape3D).size.x / 2.0, 0.08, 0.0)
+	red.revisar(objeto)
+	assert_int(red.rescates.size()).is_equal(1)
+
+
 ## Lo que nace después de la red también se mira al dormirse.
 func test_lo_que_nace_despues_se_mira_al_dormirse() -> void:
 	var mundo: Array = await _mundo()

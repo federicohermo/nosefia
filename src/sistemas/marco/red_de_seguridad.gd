@@ -151,11 +151,14 @@ func _solido_pisado(cuerpo: PhysicsBody3D) -> Node3D:
 	var tolerado := ReglasDeLosObjetos.ROCE
 	if cuerpo is RigidBody3D and not (cuerpo as RigidBody3D).freeze:
 		tolerado += ProjectSettings.get_setting(PENETRACION_TOLERADA, 0.0)
-	if _hundido(cuerpo, cuerpo.global_transform) <= tolerado:
-		return null
-	for choque in _choques(cuerpo, cuerpo.global_transform):
-		if choque["solido"] is StaticBody3D:
-			return choque["solido"]
+	var resultado := _prueba(cuerpo, cuerpo.global_transform)
+	for indice in resultado.get_collision_count():
+		# Lo que el motor ya sacó en la dirección de este choque también estaba adentro. El total
+		# no sirve: en una pila de unidades vivas suma lo que se hunden entre ellas.
+		var sacado := resultado.get_travel().dot(resultado.get_collision_normal(indice))
+		var solido := resultado.get_collider(indice) as StaticBody3D
+		if solido != null and resultado.get_collision_depth(indice) + sacado > tolerado:
+			return solido
 	return null
 
 
