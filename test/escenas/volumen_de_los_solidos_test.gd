@@ -38,8 +38,9 @@ static func _corte(raiz: Node) -> float:
 	var corte := INF
 	for cuerpo in _agarrables(raiz):
 		for forma: CollisionShape3D in cuerpo.find_children("*", "CollisionShape3D", true, false):
-			var lados := forma.global_basis * forma.shape.get_debug_mesh().get_aabb().size
-			lados = lados.abs()
+			var lados := (
+				forma.shape.get_debug_mesh().get_aabb().size * forma.global_basis.get_scale()
+			)
 			corte = minf(corte, minf(lados.x, minf(lados.y, lados.z)) / 2.0)
 	return corte
 
