@@ -112,7 +112,6 @@ func test_cinco_pedidos_seguidos_ocupan_cinco_voces_distintas() -> void:
 
 
 func test_una_fila_en_bucle_ocupa_la_voz_de_ambiente_y_no_la_ronda() -> void:
-	# Adentro de la ronda, el ambiente se cortaría solo al quinto efecto.
 	var entrada := _entrada(
 		EntradaSonora.Evento.AMBIENTE_DEL_LOCAL, true, EntradaSonora.BUS_DE_AMBIENTE, true
 	)
