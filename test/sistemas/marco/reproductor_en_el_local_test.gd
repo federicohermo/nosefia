@@ -68,7 +68,10 @@ func test_una_fila_del_espacio_sin_objeto_suena_en_su_emisor() -> void:  # AC-AM
 	entrada.posicional = true
 	entrada.emisor = &"Ventanilla"
 	var reproductor := _reproductor([entrada] as Array[EntradaSonora])
-	reproductor.registrar_emisores(_emisores({&"Ventanilla": [Vector3(5, 1, 8)]}))
+	# Sin hijos: el emisor suena desde su propio lugar.
+	var emisores := _emisores({&"Ventanilla": []})
+	(emisores.get_child(0) as Node3D).global_position = Vector3(5, 1, 8)
+	reproductor.registrar_emisores(emisores)
 	assert_bool(reproductor.pedir(EntradaSonora.Evento.TIMBRE_DEL_COMPRADOR)).is_true()
 	var voz := reproductor.voces_en_el_espacio()[0]
 	assert_vector(voz.global_position).is_equal_approx(Vector3(5, 1, 8), Vector3.ONE * 0.001)
@@ -106,6 +109,8 @@ func test_el_ambiente_suena_en_sus_emisores_mas_cercanos() -> void:  # AC-AMB-01
 		posiciones.append(Vector3(indice, 0, 0))
 	reproductor.registrar_emisores(_emisores({&"Neon": posiciones}))
 	assert_bool(reproductor.pedir(EntradaSonora.Evento.AMBIENTE_DEL_LOCAL)).is_true()
+	assert_bool(reproductor.pedir(EntradaSonora.Evento.AMBIENTE_DEL_LOCAL)).is_true()
+	assert_int(_pedidos.size()).is_equal(1)
 	reproductor.actualizar_emisores(Vector3.ZERO)
 	var emisores := reproductor.emisores_en_bucle(EntradaSonora.Evento.AMBIENTE_DEL_LOCAL)
 	assert_int(emisores.size()).is_equal(posiciones.size())
@@ -116,7 +121,11 @@ func test_el_ambiente_suena_en_sus_emisores_mas_cercanos() -> void:  # AC-AMB-01
 	cercanos.assign(range(EmisoresDelAmbiente.TOPE))
 	var evento := EntradaSonora.Evento.AMBIENTE_DEL_LOCAL
 	assert_array(reproductor.emisores_que_suenan(evento)).is_equal(cercanos)
-	reproductor.actualizar_emisores(Vector3(EmisoresDelAmbiente.TOPE, 0, 0))
+	var camara: Camera3D = auto_free(Camera3D.new())
+	add_child(camara)
+	camara.make_current()
+	camara.global_position = Vector3(EmisoresDelAmbiente.TOPE, 0, 0)
+	reproductor._process(0.0)
 	assert_array(reproductor.emisores_que_suenan(evento)).not_contains([0])
 	assert_int(_voces_ocupadas(reproductor)).is_equal(0)
 

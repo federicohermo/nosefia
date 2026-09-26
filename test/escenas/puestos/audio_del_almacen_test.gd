@@ -243,7 +243,9 @@ func test_el_ambiente_tiene_sus_emisores_en_la_heladera_y_los_tubos() -> void:
 
 func test_la_jornada_arranca_la_musica_y_el_cierre_la_corta() -> void:
 	var cascara := FileAccess.get_file_as_string(SCRIPT)
-	assert_str(cascara).contains("EntradaSonora.Evento.MUSICA_DE_LA_NOCHE")
+	for funcion: String in ["arrancar_el_ambiente", "callar_la_musica"]:
+		var cuerpo := cascara.get_slice("func %s(" % funcion, 1).get_slice("\nfunc ", 0)
+		assert_str(cuerpo).contains("EntradaSonora.Evento.MUSICA_DE_LA_NOCHE")
 	var texto := FileAccess.get_file_as_string(SCRIPT_DEL_ALMACEN)
 	var corta := RegEx.create_from_string("_audio\\s*\\.\\s*callar_la_musica\\(\\)")
 	assert_array(corta.search_all(texto)).is_not_empty()
