@@ -2,8 +2,7 @@
 ##
 ## El volumen de los sólidos previene casi todo. Lo que queda es lo que ningún barrido ve:
 ## `cast_motion` ignora lo que ya arranca solapado, y la hoja de una puerta se mueve escribiéndole
-## la posición. Esta red mira en tres momentos —al soltar, al terminar un empujón y al dormirse—
-## y, si hace falta, arma los candidatos con física. Cuál gana lo decide `Rescate`.
+## la posición.
 ##
 ## **Nunca devuelve nada a la mano**: al dormirse o al terminar un empujón, la mano puede estar
 ## llena. Y no toca ninguna tarea: mueve el cuerpo y nada más.

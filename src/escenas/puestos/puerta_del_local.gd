@@ -4,11 +4,6 @@
 ## test; acá viven la bisagra, el sentido y la aritmética de transformadas, que son geometría de
 ## la escena y no una regla del juego.
 ##
-## **Gira la hoja y no este cuerpo**: el script está pegado a un cuerpo hijo de la malla, así
-## que mover al padre se lleva la colisión con la malla y el vano queda libre de verdad. Al
-## revés —girar sólo el cuerpo— dejaría la puerta dibujada en el vano y atravesable, y la escena
-## cargaría sin un solo error.
-##
 ## **El cuerpo es animable y no estático.** Un estático movido a mano le pasa a través a lo que
 ## tiene adelante y no lo despierta. Uno animable lo empuja: el motor arrastra lo suelto sin
 ## código propio. El `.tscn` no le puede cambiar el tipo al cuerpo que trae el modelo, y por eso
@@ -81,8 +76,6 @@ func puerta() -> Puerta:
 func cerrar_de_golpe() -> void:
 	_puerta.cerrar_de_golpe()
 	_girando = false
-	# Sin sincronizar con la física, el cuerpo salta a su lugar en vez de barrer el recorrido y
-	# llevarse por delante lo que haya en el vano.
 	sync_to_physics = false
 	hoja.transform = _cerrada
 	global_transform = hoja.global_transform * _desde_la_hoja

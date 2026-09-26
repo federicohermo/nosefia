@@ -111,7 +111,6 @@ func test_al_quedar_quieta_la_hoja_rescata_lo_que_quedo_adentro() -> void:
 	hoja.add_child(forma)
 	red.get_parent().add_child(hoja)
 	hoja.global_position = Vector3(0.0, 1.0, 3.0)
-	red.puertas.append(hoja)
 	hoja.connect(RedDeSeguridad.SENAL_DE_LA_HOJA_QUIETA, red._al_quedar_quieta)
 	objeto.freeze = true
 	objeto.global_position = Vector3(0.0, 0.08, 3.0)

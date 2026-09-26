@@ -11,8 +11,7 @@ const HOJA := "Estructura/puerta"
 const RADIO_EN_EL_RECORRIDO := 1.0
 const FRACCION_DEL_GIRO := 0.5
 
-## Cuadros de física hasta que la hoja haga el giro entero y lo arrastrado se acomode. El giro
-## tarda poco más de medio segundo.
+## Cuadros de física hasta que la hoja haga el giro entero y lo arrastrado se acomode.
 const CUADROS_DEL_GIRO := 150
 
 ## Cuadros para que una unidad soltada en el piso se duerma.
