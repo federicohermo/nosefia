@@ -79,21 +79,29 @@ func _unidad_dormida(almacen: Node3D, punto: Vector3) -> RigidBody3D:
 
 
 ## Si el cuerpo se hunde en la hoja más de lo que el motor tolera a un cuerpo vivo apoyado.
+##
+## La profundidad sale de los pares de contacto con la hoja sola. La de `body_test_motion` es lo
+## que sobra después de sacar al cuerpo: una unidad metida entera daba 2 cm. Medido el 2026-09-26.
 func _adentro_de_la_hoja(cuerpo: PhysicsBody3D, hoja: PhysicsBody3D) -> bool:
 	var tolerado: float = (
 		ReglasDeLosObjetos.ROCE + ProjectSettings.get_setting(PENETRACION_TOLERADA, 0.0)
 	)
-	var consulta := PhysicsTestMotionParameters3D.new()
-	consulta.from = cuerpo.global_transform
-	consulta.max_collisions = 8
-	var resultado := PhysicsTestMotionResult3D.new()
-	PhysicsServer3D.body_test_motion(cuerpo.get_rid(), consulta, resultado)
-	for indice in resultado.get_collision_count():
-		if (
-			resultado.get_collider(indice) == hoja
-			and resultado.get_collision_depth(indice) > tolerado
-		):
-			return true
+	var espacio := cuerpo.get_world_3d().direct_space_state
+	for forma: CollisionShape3D in cuerpo.find_children("*", "CollisionShape3D", false, false):
+		if forma.disabled:
+			continue
+		var consulta := PhysicsShapeQueryParameters3D.new()
+		consulta.shape = forma.shape
+		consulta.transform = forma.global_transform
+		var otros: Array[RID] = [cuerpo.get_rid()]
+		for golpe in espacio.intersect_shape(consulta, 32):
+			if golpe["collider"] != hoja:
+				otros.append(golpe["rid"])
+		consulta.exclude = otros
+		var pares := espacio.collide_shape(consulta, 16)
+		for indice in range(0, pares.size(), 2):
+			if pares[indice].distance_to(pares[indice + 1]) > tolerado:
+				return true
 	return false
 
 
