@@ -19,6 +19,8 @@
 [ext_resource type="AudioStream" uid="uid://oreab6bxexaq" path="res://assets/audio/SFX_OBJETO_EnvoltorioPlastico_Dejar.wav" id="17_env_d"]
 [ext_resource type="AudioStream" uid="uid://hiulhac17o4o" path="res://assets/audio/SFX_OBJETO_BotellaPlastica_Dejar.wav" id="18_bot_d"]
 [ext_resource type="AudioStream" uid="uid://dhikx4f07t082" path="res://assets/audio/SFX_OBJETO_Papel_Dejar.wav" id="19_papel_d"]
+[ext_resource type="AudioStream" uid="uid://da8wpl5mcvhkx" path="res://assets/audio/MUS_Tema1.ogg" id="20_musica"]
+[ext_resource type="AudioStream" uid="uid://dwxcyknw44hb7" path="res://assets/audio/AMB_PROXIMIDAD_Neon.ogg" id="21_neon"]
 
 [sub_resource type="Resource" id="Resource_x3pvh"]
 script = ExtResource("1_qermt")
@@ -49,6 +51,7 @@ script = ExtResource("1_qermt")
 evento = 4
 senal = &"objeto_agarrado"
 sonoridad = 1
+posicional = true
 stream = ExtResource("8_lata_a")
 
 [sub_resource type="Resource" id="Resource_ag2"]
@@ -56,6 +59,7 @@ script = ExtResource("1_qermt")
 evento = 4
 senal = &"objeto_agarrado"
 sonoridad = 2
+posicional = true
 stream = ExtResource("9_cajita_a")
 
 [sub_resource type="Resource" id="Resource_ag3"]
@@ -63,12 +67,14 @@ script = ExtResource("1_qermt")
 evento = 4
 senal = &"objeto_agarrado"
 sonoridad = 3
+posicional = true
 
 [sub_resource type="Resource" id="Resource_ag4"]
 script = ExtResource("1_qermt")
 evento = 4
 senal = &"objeto_agarrado"
 sonoridad = 4
+posicional = true
 stream = ExtResource("10_env_a")
 
 [sub_resource type="Resource" id="Resource_ag5"]
@@ -76,6 +82,7 @@ script = ExtResource("1_qermt")
 evento = 4
 senal = &"objeto_agarrado"
 sonoridad = 5
+posicional = true
 stream = ExtResource("11_bot_a")
 
 [sub_resource type="Resource" id="Resource_ag6"]
@@ -83,6 +90,7 @@ script = ExtResource("1_qermt")
 evento = 4
 senal = &"objeto_agarrado"
 sonoridad = 6
+posicional = true
 stream = ExtResource("12_papel_a")
 
 [sub_resource type="Resource" id="Resource_ag7"]
@@ -90,6 +98,7 @@ script = ExtResource("1_qermt")
 evento = 4
 senal = &"objeto_agarrado"
 sonoridad = 7
+posicional = true
 stream = ExtResource("13_bolsa_a")
 
 [sub_resource type="Resource" id="Resource_ag8"]
@@ -97,6 +106,7 @@ script = ExtResource("1_qermt")
 evento = 4
 senal = &"objeto_agarrado"
 sonoridad = 8
+posicional = true
 stream = ExtResource("14_mopa_a")
 
 [sub_resource type="Resource" id="Resource_so1"]
@@ -104,6 +114,7 @@ script = ExtResource("1_qermt")
 evento = 5
 senal = &"contacto_recibido"
 sonoridad = 1
+posicional = true
 stream = ExtResource("15_lata_d")
 
 [sub_resource type="Resource" id="Resource_so2"]
@@ -111,6 +122,7 @@ script = ExtResource("1_qermt")
 evento = 5
 senal = &"contacto_recibido"
 sonoridad = 2
+posicional = true
 stream = ExtResource("16_cajita_d")
 
 [sub_resource type="Resource" id="Resource_so3"]
@@ -118,12 +130,14 @@ script = ExtResource("1_qermt")
 evento = 5
 senal = &"contacto_recibido"
 sonoridad = 3
+posicional = true
 
 [sub_resource type="Resource" id="Resource_so4"]
 script = ExtResource("1_qermt")
 evento = 5
 senal = &"contacto_recibido"
 sonoridad = 4
+posicional = true
 stream = ExtResource("17_env_d")
 
 [sub_resource type="Resource" id="Resource_so5"]
@@ -131,6 +145,7 @@ script = ExtResource("1_qermt")
 evento = 5
 senal = &"contacto_recibido"
 sonoridad = 5
+posicional = true
 stream = ExtResource("18_bot_d")
 
 [sub_resource type="Resource" id="Resource_so6"]
@@ -138,6 +153,7 @@ script = ExtResource("1_qermt")
 evento = 5
 senal = &"contacto_recibido"
 sonoridad = 6
+posicional = true
 stream = ExtResource("19_papel_d")
 
 [sub_resource type="Resource" id="Resource_so7"]
@@ -145,12 +161,14 @@ script = ExtResource("1_qermt")
 evento = 5
 senal = &"contacto_recibido"
 sonoridad = 7
+posicional = true
 
 [sub_resource type="Resource" id="Resource_so8"]
 script = ExtResource("1_qermt")
 evento = 5
 senal = &"contacto_recibido"
 sonoridad = 8
+posicional = true
 stream = ExtResource("5_mopa")
 
 [sub_resource type="Resource" id="Resource_avff3"]
@@ -163,6 +181,7 @@ script = ExtResource("1_qermt")
 evento = 7
 senal = &"unidad_colocada"
 sonoridad = 1
+posicional = true
 stream = ExtResource("15_lata_d")
 
 [sub_resource type="Resource" id="Resource_co2"]
@@ -170,6 +189,7 @@ script = ExtResource("1_qermt")
 evento = 7
 senal = &"unidad_colocada"
 sonoridad = 2
+posicional = true
 stream = ExtResource("16_cajita_d")
 
 [sub_resource type="Resource" id="Resource_co3"]
@@ -177,12 +197,14 @@ script = ExtResource("1_qermt")
 evento = 7
 senal = &"unidad_colocada"
 sonoridad = 3
+posicional = true
 
 [sub_resource type="Resource" id="Resource_co4"]
 script = ExtResource("1_qermt")
 evento = 7
 senal = &"unidad_colocada"
 sonoridad = 4
+posicional = true
 stream = ExtResource("17_env_d")
 
 [sub_resource type="Resource" id="Resource_co5"]
@@ -190,6 +212,7 @@ script = ExtResource("1_qermt")
 evento = 7
 senal = &"unidad_colocada"
 sonoridad = 5
+posicional = true
 stream = ExtResource("18_bot_d")
 
 [sub_resource type="Resource" id="Resource_co6"]
@@ -197,6 +220,7 @@ script = ExtResource("1_qermt")
 evento = 7
 senal = &"unidad_colocada"
 sonoridad = 6
+posicional = true
 stream = ExtResource("19_papel_d")
 
 [sub_resource type="Resource" id="Resource_co7"]
@@ -204,12 +228,14 @@ script = ExtResource("1_qermt")
 evento = 7
 senal = &"unidad_colocada"
 sonoridad = 7
+posicional = true
 
 [sub_resource type="Resource" id="Resource_co8"]
 script = ExtResource("1_qermt")
 evento = 7
 senal = &"unidad_colocada"
 sonoridad = 8
+posicional = true
 stream = ExtResource("5_mopa")
 
 [sub_resource type="Resource" id="Resource_2fnal"]
@@ -234,6 +260,8 @@ bus = "Interfaz"
 script = ExtResource("1_qermt")
 evento = 11
 senal = &"comprador_llegado"
+posicional = true
+emisor = &"Ventanilla"
 stream = ExtResource("3_timbre")
 
 [sub_resource type="Resource" id="Resource_s3myp"]
@@ -241,6 +269,9 @@ script = ExtResource("1_qermt")
 evento = 12
 bus = "Ambiente"
 en_bucle = true
+posicional = true
+emisor = &"Neon"
+stream = ExtResource("21_neon")
 
 [sub_resource type="Resource" id="Resource_boton"]
 script = ExtResource("1_qermt")
@@ -249,6 +280,13 @@ senal = &"boton_pulsado"
 bus = "Interfaz"
 stream = ExtResource("7_boton")
 
+[sub_resource type="Resource" id="Resource_musica"]
+script = ExtResource("1_qermt")
+evento = 14
+bus = "Musica"
+en_bucle = true
+stream = ExtResource("20_musica")
+
 [resource]
 script = ExtResource("2_xbcco")
-entradas = Array[ExtResource("1_qermt")]([SubResource("Resource_x3pvh"), SubResource("Resource_oefuu"), SubResource("Resource_382as"), SubResource("Resource_b10uv"), SubResource("Resource_ag1"), SubResource("Resource_ag2"), SubResource("Resource_ag3"), SubResource("Resource_ag4"), SubResource("Resource_ag5"), SubResource("Resource_ag6"), SubResource("Resource_ag7"), SubResource("Resource_ag8"), SubResource("Resource_so1"), SubResource("Resource_so2"), SubResource("Resource_so3"), SubResource("Resource_so4"), SubResource("Resource_so5"), SubResource("Resource_so6"), SubResource("Resource_so7"), SubResource("Resource_so8"), SubResource("Resource_avff3"), SubResource("Resource_co1"), SubResource("Resource_co2"), SubResource("Resource_co3"), SubResource("Resource_co4"), SubResource("Resource_co5"), SubResource("Resource_co6"), SubResource("Resource_co7"), SubResource("Resource_co8"), SubResource("Resource_2fnal"), SubResource("Resource_pmrqt"), SubResource("Resource_38ejk"), SubResource("Resource_ql6t2"), SubResource("Resource_s3myp"), SubResource("Resource_boton")])
+entradas = Array[ExtResource("1_qermt")]([SubResource("Resource_x3pvh"), SubResource("Resource_oefuu"), SubResource("Resource_382as"), SubResource("Resource_b10uv"), SubResource("Resource_ag1"), SubResource("Resource_ag2"), SubResource("Resource_ag3"), SubResource("Resource_ag4"), SubResource("Resource_ag5"), SubResource("Resource_ag6"), SubResource("Resource_ag7"), SubResource("Resource_ag8"), SubResource("Resource_so1"), SubResource("Resource_so2"), SubResource("Resource_so3"), SubResource("Resource_so4"), SubResource("Resource_so5"), SubResource("Resource_so6"), SubResource("Resource_so7"), SubResource("Resource_so8"), SubResource("Resource_avff3"), SubResource("Resource_co1"), SubResource("Resource_co2"), SubResource("Resource_co3"), SubResource("Resource_co4"), SubResource("Resource_co5"), SubResource("Resource_co6"), SubResource("Resource_co7"), SubResource("Resource_co8"), SubResource("Resource_2fnal"), SubResource("Resource_pmrqt"), SubResource("Resource_38ejk"), SubResource("Resource_ql6t2"), SubResource("Resource_s3myp"), SubResource("Resource_boton"), SubResource("Resource_musica")])

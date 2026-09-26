@@ -168,6 +168,43 @@ func test_cada_sonoridad_con_audio_suena_su_propio_archivo() -> void:
 			assert_str(entrada.stream.resource_path.get_file()).contains("_%s_" % nombre)
 
 
+func test_la_musica_y_el_ambiente_van_en_bucle_por_su_bus() -> void:
+	var tabla := _tabla()
+	var musica := tabla.de(EntradaSonora.Evento.MUSICA_DE_LA_NOCHE)
+	var ambiente := tabla.de(EntradaSonora.Evento.AMBIENTE_DEL_LOCAL)
+	assert_object(musica).is_not_null()
+	assert_object(ambiente).is_not_null()
+	if musica == null or ambiente == null:
+		return
+	assert_str(musica.stream.resource_path.get_file().get_basename()).is_equal("MUS_Tema1")
+	assert_str(musica.bus).is_equal(EntradaSonora.BUS_DE_MUSICA)
+	assert_bool(musica.en_bucle and not musica.posicional).is_true()
+	assert_bool(musica.stream.get("loop")).is_true()
+	assert_str(ambiente.stream.resource_path.get_file().get_basename()).is_equal(
+		"AMB_PROXIMIDAD_Neon"
+	)
+	assert_str(ambiente.bus).is_equal(EntradaSonora.BUS_DE_AMBIENTE)
+	assert_bool(ambiente.en_bucle and ambiente.posicional).is_true()
+	assert_bool(ambiente.stream.get("loop")).is_true()
+	assert_str(ambiente.emisor).is_not_empty()
+
+
+func test_lo_que_pasa_en_un_lugar_suena_del_espacio_y_lo_demas_plano() -> void:
+	var tabla := _tabla()
+	var timbre := tabla.de(EntradaSonora.Evento.TIMBRE_DEL_COMPRADOR)
+	assert_bool(timbre.posicional).is_true()
+	assert_str(timbre.emisor).is_not_empty()
+	for evento: EntradaSonora.Evento in EntradaSonora.EVENTOS_DE_OBJETO:
+		for sonoridad in _sonoridades_de(evento):
+			assert_bool(tabla.de(evento, sonoridad).posicional).is_true()
+	for evento in [
+		EntradaSonora.Evento.TURNO_CERRADO,
+		EntradaSonora.Evento.BOTON_DE_LA_COMPUTADORA,
+		EntradaSonora.Evento.MUSICA_DE_LA_NOCHE,
+	]:
+		assert_bool(tabla.de(evento).posicional).is_false()
+
+
 static func _sonoridades_de(evento: EntradaSonora.Evento) -> Array:
 	if not EntradaSonora.EVENTOS_DE_OBJETO.has(evento):
 		return [EntradaSonora.Sonoridad.NINGUNA]
