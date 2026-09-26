@@ -4,7 +4,7 @@ Uso, desde la raíz del repo:
 
     python .claude/scripts/comprimir_audio.py
 
-`AMB_` y `MUS_` van a Ogg Vorbis; `SFX_` va a WAV mono de 16 bits, que Godot importa con QOA.
+`SFX_` queda en WAV: Godot lo comprime con QOA al importarlo.
 El original se reemplaza y su `.import` se borra: el `--import` siguiente de Godot escribe el
 nuevo.
 
@@ -50,7 +50,6 @@ class PrefijoDesconocido(ValueError):
 
 
 def destino(origen: Path) -> Path:
-    """La ruta que el archivo tiene que tener después de comprimirse."""
     if origen.name.startswith(("AMB_", "MUS_")):
         return origen.with_suffix(".ogg")
     if origen.name.startswith("SFX_"):
@@ -63,12 +62,16 @@ def ya_comprimido(origen: Path) -> bool:
         return False
     if origen.suffix == ".ogg":
         return True
-    with wave.open(str(origen), "rb") as leido:
-        return (
-            leido.getnchannels() == 1
-            and leido.getframerate() == HZ_DE_EFECTOS
-            and leido.getsampwidth() == 2
-        )
+    # `wave` sólo lee PCM. Un WAV de punto flotante no está en su formato, y lo convierte ffmpeg.
+    try:
+        with wave.open(str(origen), "rb") as leido:
+            return (
+                leido.getnchannels() == 1
+                and leido.getframerate() == HZ_DE_EFECTOS
+                and leido.getsampwidth() == 2
+            )
+    except wave.Error:
+        return False
 
 
 def _filtro_de_bucle(inicio: float, largo: float, cruce: float) -> str:
@@ -85,7 +88,6 @@ def _filtro_de_bucle(inicio: float, largo: float, cruce: float) -> str:
 
 
 def comando(origen: Path, salida: Path) -> list[str]:
-    """Los argumentos de `ffmpeg` que llevan `origen` a su formato, escritos en `salida`."""
     args = ["ffmpeg", "-y", "-loglevel", "error", "-i", str(origen)]
     bucle = BUCLES.get(origen.stem)
     if bucle:

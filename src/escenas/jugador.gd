@@ -152,7 +152,9 @@ func _unhandled_input(evento: InputEvent) -> void:
 		if _enfocado != null and not _control.esta_suspendido():
 			uso_pedido.emit(_enfocado)
 	elif evento.is_action_pressed(ReglasDeLosObjetos.ACCION_EXAMINAR):
-		examen.alternar(_datos_de(_enfocado), _enfocado)
+		# Con otra pantalla encima, la E no abre un examen: al cerrarlo reanudaría al jugador.
+		if examen.esta_examinando() or not _control.esta_suspendido():
+			examen.alternar(_datos_de(_enfocado), _enfocado)
 
 
 ## **El clic se lo gasta quien hace algo con él, y sólo ése.** Tener `interactuar()` es la
@@ -453,7 +455,8 @@ func _devolver_al_mundo(nodo: Node3D) -> void:
 	if atras.length() > 2.0 * un_paso:
 		atras = Vector3.ZERO
 	nodo.reparent(mundo, true)
-	if nodo is RigidBody3D and _apoyar_sobre_lo_mirado(nodo):
+	# Sólo lo soltado al frente: vaciar las manos lo deja a los pies aunque se mire el piso.
+	if nodo is RigidBody3D and ancla == agarre.punto_de_soltado and _apoyar_sobre_lo_mirado(nodo):
 		nodo.reset_physics_interpolation()
 		return
 	nodo.global_position += atras

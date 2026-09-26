@@ -4,11 +4,6 @@
 ## test; acá viven la bisagra, el sentido y la aritmética de transformadas, que son geometría de
 ## la escena y no una regla del juego.
 ##
-## **Gira la hoja y no este cuerpo**: el script está pegado a un cuerpo hijo de la malla, así
-## que mover al padre se lleva la colisión con la malla y el vano queda libre de verdad. Al
-## revés —girar sólo el cuerpo— dejaría la puerta dibujada en el vano y atravesable, y la escena
-## cargaría sin un solo error.
-##
 ## **El cuerpo es animable y no estático.** Un estático movido a mano le pasa a través a lo que
 ## tiene adelante y no lo despierta. Uno animable lo empuja: el motor arrastra lo suelto sin
 ## código propio. El `.tscn` no le puede cambiar el tipo al cuerpo que trae el modelo, y por eso
@@ -76,17 +71,18 @@ func puerta() -> Puerta:
 	return _puerta
 
 
-## La cierra de golpe y pone la hoja en su lugar en el mismo paso. Sin reiniciar la
-## interpolación, la hoja se dibujaría girando hasta cerrarse.
+## Sin reiniciar la interpolación, la hoja se dibujaría girando hasta cerrarse.
 func cerrar_de_golpe() -> void:
 	_puerta.cerrar_de_golpe()
 	_girando = false
-	# Sin sincronizar con la física, el cuerpo salta a su lugar en vez de barrer el recorrido y
-	# llevarse por delante lo que haya en el vano.
-	sync_to_physics = false
 	hoja.transform = _cerrada
-	global_transform = hoja.global_transform * _desde_la_hoja
-	sync_to_physics = true
+	# Animable, el cuerpo llega a su lugar con velocidad y despide lo que toca la hoja: medido el
+	# 2026-09-26, una unidad apoyada salía a 85 m/s. Estático, salta.
+	PhysicsServer3D.body_set_mode(get_rid(), PhysicsServer3D.BODY_MODE_STATIC)
+	PhysicsServer3D.body_set_state(
+		get_rid(), PhysicsServer3D.BODY_STATE_TRANSFORM, hoja.global_transform * _desde_la_hoja
+	)
+	PhysicsServer3D.body_set_mode(get_rid(), PhysicsServer3D.BODY_MODE_KINEMATIC)
 	hoja.reset_physics_interpolation()
 
 
