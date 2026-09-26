@@ -133,6 +133,20 @@ bus de ambiente. MIENTRAS suena, el sistema DEBE sonar sólo los emisores más c
 hasta el tope de emisores; los demás esperan. Dos emisores a la misma distancia DEBEN quedar en el
 mismo orden entre cuadros. Con cero emisores, NO DEBE sonar nada ni fallar.
 
+### BR-AMB-018 — Una fila puede tener variantes
+
+Una fila DEBE poder tener varios audios, sus variantes. CUANDO suena una fila con variantes, el
+sistema DEBE elegir una que no sea la que sonó la vez anterior. SI la fila tiene una sola
+variante, ENTONCES DEBE repetirla. La elección DEBE salir de un sorteo que entra por parámetro:
+con la misma semilla, la misma secuencia.
+
+### BR-AMB-019 — Los pasos suenan por lo que se camina
+
+MIENTRAS el jugador camina, el sistema DEBE sonar un paso cada cierta distancia recorrida de
+verdad, no cada cierto tiempo. Quieto o empujando una pared NO DEBE sonar. SI un cuadro recorre
+más de una distancia de paso, ENTONCES DEBE sonar un solo paso. Lo que sobra de un paso DEBE
+contar para el siguiente. Los pasos suenan por el bus de efectos.
+
 ## Criterios de aceptación
 
 ### AC-AMB-001 — Un evento, una fila *(verifica BR-AMB-001, BR-AMB-005)*
@@ -225,6 +239,20 @@ DADO distancias 5, 1 y 3 y un tope de 2 ENTONCES suenan el segundo y el tercero.
 3 ENTONCES suenan los tres. DADO dos emisores a la misma distancia en el borde del tope ENTONCES
 suena el primero de la lista, las dos veces. DADO cero emisores ENTONCES no suena ninguno.
 
+### AC-AMB-018 — La variante no repite la anterior *(verifica BR-AMB-018)*
+
+DADO una fila con cuatro variantes y una semilla fija CUANDO suena veinte veces ENTONCES nunca
+suena la misma dos veces seguidas, y con la misma semilla la secuencia es la misma. DADO una
+fila con una sola variante CUANDO suena dos veces ENTONCES suena la misma las dos veces.
+
+### AC-AMB-019 — Un paso por distancia *(verifica BR-AMB-019)*
+
+DADO la distancia de paso CUANDO se recorre cero durante cien cuadros ENTONCES no suena ningún
+paso. CUANDO se recorre justo menos que la distancia ENTONCES no suena; CUANDO se pasa ENTONCES
+suena uno y lo que sobra cuenta para el siguiente. CUANDO un cuadro recorre dos distancias y
+media ENTONCES suena uno solo. DADO el mismo tramo a dos velocidades ENTONCES suenan los mismos
+pasos.
+
 ## No objetivos
 
 - Esta capacidad NO elige los archivos de audio ni los mezcla. Una fila sin sonido es un estado
@@ -276,5 +304,10 @@ suena el primero de la lista, las dos veces. DADO cero emisores ENTONCES no suen
 - **OQ-AMB-006 — ¿A qué distancia deja de oírse un emisor del ambiente?**
   - Por qué sigue abierta: sale de caminar el local escuchando. El juego arranca con un primer
     valor.
+  - Decide: el dueño del repo.
+  - Bloquea: nada de la máquina.
+- **OQ-AMB-007 — ¿Cuántos metros hay entre un paso y el siguiente?**
+  - Por qué sigue abierta: sale de medir la zancada contra la velocidad del jugador. El juego
+    arranca con un primer valor.
   - Decide: el dueño del repo.
   - Bloquea: nada de la máquina.

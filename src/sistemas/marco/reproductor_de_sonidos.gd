@@ -37,6 +37,10 @@ var _oyente := Vector3.ZERO
 ## Un contador de golpes por objeto, por su `get_instance_id()`: la regla es de cada objeto.
 var _golpes: Dictionary = {}
 
+## El sorteo de las variantes, y la última que sonó de cada evento.
+var _azar := RandomNumberGenerator.new()
+var _anteriores: Dictionary = {}
+
 
 ## Las voces se crean acá y no en el `.tscn`: cuántas hay lo dice `RondaDeVoces`, y ocho nodos
 ## escritos a mano en una escena serían ese número copiado donde nadie lo mira.
@@ -69,6 +73,12 @@ func arrancar(tabla: TablaDeSonidos) -> void:
 
 func tabla() -> TablaDeSonidos:
 	return _tabla
+
+
+## Fija la semilla del sorteo de variantes. En el juego queda la que el motor pone al azar.
+func sembrar(semilla: int) -> void:
+	_azar.seed = semilla
+	_anteriores.clear()
 
 
 ## Anota los emisores fijos de la escena: cada hijo es un emisor, con su nombre, y suena desde
@@ -235,7 +245,7 @@ func _fila_que_suena(
 func _sonar_en_bucle(entrada: EntradaSonora) -> bool:
 	if not entrada.posicional:
 		var voz := voz_en_bucle(entrada.evento)
-		if voz.stream == entrada.stream:
+		if voz.stream == entrada.variante(0):
 			return true
 		_poner(voz, entrada, entrada.bus, 0.0)
 		sonido_pedido.emit(entrada.evento)
@@ -281,7 +291,11 @@ func _siguiente(voces_de_la_ronda: Array, ronda: RondaDeVoces) -> Node:
 
 ## Una voz plana y una del espacio no comparten una clase del motor, pero sí estas propiedades.
 func _poner(voz: Node, entrada: EntradaSonora, bus: String, volumen_db: float) -> void:
-	voz.set(&"stream", entrada.stream)
+	var indice := EleccionDeVariante.siguiente(
+		entrada.cantidad_de_variantes(), _anteriores.get(entrada.evento, -1), _azar
+	)
+	_anteriores[entrada.evento] = indice
+	voz.set(&"stream", entrada.variante(indice))
 	voz.set(&"bus", bus)
 	voz.set(&"volume_db", volumen_db)
 	voz.call(&"play")

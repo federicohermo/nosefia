@@ -157,6 +157,35 @@ func _emisores(posiciones_por_nombre: Dictionary) -> Node3D:
 	return raiz
 
 
+func test_las_variantes_no_se_repiten_y_siguen_la_semilla() -> void:  # AC-AMB-018
+	var entrada := _entrada(EntradaSonora.Evento.PASO_DADO, false)
+	for _variante in range(4):
+		entrada.variantes.append(AudioStreamGenerator.new())
+	var primera := _sonadas(entrada, 12)
+	for indice in range(1, primera.size()):
+		assert_object(primera[indice]).is_not_same(primera[indice - 1])
+	# Por referencia: `is_equal` compara por contenido, y las cuatro variantes son iguales.
+	assert_array(_sonadas(entrada, 12)).contains_same_exactly(primera)
+
+
+func test_una_fila_de_una_variante_la_repite() -> void:  # AC-AMB-018
+	var entrada := _entrada(EntradaSonora.Evento.PASO_DADO)
+	var sonadas := _sonadas(entrada, 3)
+	assert_array(sonadas).is_equal([entrada.stream, entrada.stream, entrada.stream])
+
+
+## Los streams que quedaron pedidos, en orden, al pedir la fila tantas veces con una semilla fija.
+func _sonadas(entrada: EntradaSonora, veces: int) -> Array:
+	var reproductor := _reproductor([entrada] as Array[EntradaSonora])
+	reproductor.sembrar(1234)
+	var sonadas := []
+	var voces := reproductor.voces()
+	for vez in range(veces):
+		reproductor.pedir(entrada.evento)
+		sonadas.append(voces[vez % voces.size()].stream)
+	return sonadas
+
+
 func _entrada(
 	evento: EntradaSonora.Evento,
 	con_sonido: bool = true,

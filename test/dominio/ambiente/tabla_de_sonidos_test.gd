@@ -205,6 +205,37 @@ func test_lo_que_pasa_en_un_lugar_suena_del_espacio_y_lo_demas_plano() -> void:
 		assert_bool(tabla.de(evento).posicional).is_false()
 
 
+func test_los_pasos_alternan_cuatro_pisadas_planas() -> void:
+	var tabla := _tabla()
+	var pasos := tabla.de(EntradaSonora.Evento.PASO_DADO)
+	assert_object(pasos).is_not_null()
+	if pasos == null:
+		return
+	assert_str(pasos.senal).is_equal("paso_dado")
+	assert_str(pasos.bus).is_equal(EntradaSonora.BUS_DE_EFECTOS)
+	assert_bool(pasos.posicional or pasos.en_bucle).is_false()
+	var nombres := []
+	for indice in range(pasos.cantidad_de_variantes()):
+		nombres.append(pasos.variante(indice).resource_path.get_file().get_basename())
+	(
+		assert_array(nombres)
+		. is_equal(
+			[
+				"SFX_PERSONAJE_Paso1",
+				"SFX_PERSONAJE_Paso2",
+				"SFX_PERSONAJE_Paso3",
+				"SFX_PERSONAJE_Paso4",
+			]
+		)
+	)
+
+
+func test_la_toma_larga_de_pasos_no_se_usa() -> void:
+	var texto := FileAccess.get_file_as_string(TablaDeSonidos.RUTA)
+	assert_str(texto).is_not_empty()
+	assert_str(texto).not_contains("SFX_PERSONAJE_Pasos.")
+
+
 static func _sonoridades_de(evento: EntradaSonora.Evento) -> Array:
 	if not EntradaSonora.EVENTOS_DE_OBJETO.has(evento):
 		return [EntradaSonora.Sonoridad.NINGUNA]

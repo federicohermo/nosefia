@@ -12,6 +12,9 @@ signal objetivo_enfocado(objetivo: Node3D, distancia: float)
 signal objetivo_perdido
 signal uso_pedido(objetivo: Node3D)
 
+## Cuando la cadencia dice que toca un paso. No se emite por cuadro: ver `CadenciaDePasos`.
+signal paso_dado
+
 ## Los dos sistemas de agarrar, por `@export` y no por `@onready`: un `@onready` se resuelve
 ## recién al entrar la escena al árbol, y entonces `id_en_la_mano()` se caería sobre un jugador
 ## apenas instanciado — que es como lo instancia todo test de esta escena. Tampoco son autoloads:
@@ -35,6 +38,8 @@ var _control := ControlDelJugador.new(
 ## La salida de emergencia mientras se desarrolla, y por eso vive acá y no en `dominio/`: no es
 ## una regla del juego, es poder llegar al botón de cerrar la ventana sin matar el proceso.
 var _cursor_soltado_a_mano := false
+
+var _cadencia := CadenciaDePasos.new()
 
 ## Lo que la mira tiene adelante ahora mismo. Se guarda el nodo y no el `id` porque agarrar
 ## necesita el `Node3D`; el dominio sigue viendo sólo el `int` que le pasa `_leer_la_mira()`.
@@ -180,12 +185,21 @@ func _physics_process(delta: float) -> void:
 	var horizontal := _control.velocidad(_entrada())
 	velocity.x = horizontal.x
 	velocity.z = horizontal.z
+	var antes := global_position
 	move_and_slide()
+	_contar_el_paso(global_position - antes)
 	_empujar_lo_que_estorba()
 
 	_acomodar_las_manos(delta)
 	_acomodar_la_caja()
 	_leer_la_mira()
+
+
+## Cuenta lo que el cuerpo se movió de verdad sobre el piso: contra una pared, nada. Lo vertical
+## no es caminar.
+func _contar_el_paso(recorrido: Vector3) -> void:
+	if _cadencia.avanzar(Vector2(recorrido.x, recorrido.z).length()):
+		paso_dado.emit()
 
 
 func _process(delta: float) -> void:

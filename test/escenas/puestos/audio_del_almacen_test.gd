@@ -241,6 +241,16 @@ func test_el_ambiente_tiene_sus_emisores_en_la_heladera_y_los_tubos() -> void:
 	assert_int(neon.get_child_count()).is_greater(EmisoresDelAmbiente.TOPE)
 
 
+func test_el_jugador_es_una_fuente_del_audio() -> void:
+	# Sin esto `paso_dado` queda sin fuente, que es un estado normal y nada lo avisa.
+	var texto := FileAccess.get_file_as_string(SCRIPT_DEL_ALMACEN)
+	var fuentes := RegEx.create_from_string("(?s)_audio\\s*\\.\\s*enlazar\\(\\s*\\[([^\\]]*)\\]")
+	var hallado := fuentes.search(texto)
+	assert_object(hallado).is_not_null()
+	if hallado != null:
+		assert_str(hallado.get_string(1)).contains("_jugador")
+
+
 func test_la_jornada_arranca_la_musica_y_el_cierre_la_corta() -> void:
 	var cascara := FileAccess.get_file_as_string(SCRIPT)
 	for funcion: String in ["arrancar_el_ambiente", "callar_la_musica"]:

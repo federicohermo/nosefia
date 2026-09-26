@@ -82,6 +82,17 @@ func test_el_jugador_avisa_cuando_enfoca_y_cuando_pierde_el_objetivo() -> void:
 	assert_bool(jugador.has_signal("objetivo_perdido")).is_true()
 
 
+func test_el_jugador_avisa_un_paso_por_lo_que_camina_en_el_piso() -> void:
+	# Lo vertical no es caminar: caer o subir no suena como un paso.
+	var jugador := _jugador()
+	var pasos := [0]
+	jugador.connect("paso_dado", func() -> void: pasos[0] += 1)
+	jugador.call("_contar_el_paso", Vector3(0, CadenciaDePasos.DISTANCIA_ENTRE_PASOS * 3, 0))
+	assert_int(pasos[0]).is_equal(0)
+	jugador.call("_contar_el_paso", Vector3(CadenciaDePasos.DISTANCIA_ENTRE_PASOS, 0, 0))
+	assert_int(pasos[0]).is_equal(1)
+
+
 func test_suspender_y_reanudar_llegan_hasta_el_control_del_dominio() -> void:
 	# Son la única puerta por la que el 006 (examinar un objeto) y el 009 (abrir la computadora)
 	# pueden clavar cámara y locomoción. El test mira `_control` por dentro a propósito: lo que
