@@ -143,3 +143,20 @@ func _esperar_el_giro(almacen: Node3D) -> void:
 				listas += 1
 		if listas == VANOS.size():
 			return
+
+
+func test_cerrar_de_golpe_pone_la_hoja_en_su_lugar_en_el_mismo_paso() -> void:
+	var almacen: Node3D = auto_free(ALMACEN.instantiate())
+	add_child(almacen)
+	await get_tree().physics_frame
+	for hoja: String in VANOS:
+		var malla: Node3D = almacen.get_node(hoja)
+		var cerrada := malla.transform
+		var cuerpo: Node = almacen.get_node(hoja + "/StaticBody3D")
+		cuerpo.call("interactuar")
+		for cuadro in 5:
+			await get_tree().physics_frame
+		assert_bool(malla.transform.is_equal_approx(cerrada)).is_false()
+		cuerpo.call("cerrar_de_golpe")
+		assert_bool(cuerpo.call("puerta").abierta()).is_false()
+		assert_bool(malla.transform.is_equal_approx(cerrada)).is_true()

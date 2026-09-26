@@ -58,6 +58,14 @@ func puerta() -> Puerta:
 	return _puerta
 
 
+## La cierra de golpe y pone la hoja en su lugar en el mismo paso. Sin reiniciar la
+## interpolación, la hoja se dibujaría girando hasta cerrarse.
+func cerrar_de_golpe() -> void:
+	_puerta.cerrar_de_golpe()
+	hoja.transform = _cerrada
+	hoja.reset_physics_interpolation()
+
+
 ## El giro va por cuadro de física y no de dibujo: lo que se mueve es un cuerpo de colisión, y
 ## adelantarlo en el cuadro equivocado lo deja medio paso atrás del jugador que lo está cruzando.
 func _physics_process(delta: float) -> void:

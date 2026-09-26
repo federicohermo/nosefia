@@ -38,6 +38,14 @@ func alternar() -> void:
 	_abierta = not _abierta
 
 
+## La deja cerrada y sin giro, sin pasar por `avanzar()`. Es la apertura de la jornada: una
+## puerta que se cerrara girando arrastraría lo que tiene adelante antes de que el jugador haga
+## nada.
+func cerrar_de_golpe() -> void:
+	_abierta = false
+	_angulo = 0.0
+
+
 ## Acerca la hoja al tope que le toca y devuelve dónde quedó.
 ##
 ## Los segundos entran como parámetro y no se leen de ningún reloj: es lo que deja probar el

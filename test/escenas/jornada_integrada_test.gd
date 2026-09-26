@@ -197,3 +197,37 @@ func _enfocar_mancha(jugador: Node3D, mancha: Node3D) -> void:
 		if jugador.get("_enfocado") == mancha:
 			break
 	assert_object(jugador.get("_enfocado")).is_same(mancha)
+
+
+## Deja las dos puertas giradas `cuadros` pasos de física y abre la jornada siguiente. Afirma
+## que, en el mismo paso, las dos quedaron cerradas y con la hoja en su lugar.
+func _abrir_con_las_puertas_giradas(cuadros: int) -> Array:
+	var almacen: Node3D = auto_free(ALMACEN.instantiate())
+	add_child(almacen)
+	await get_tree().physics_frame
+	var puertas: Array = almacen.get("_puertas")
+	assert_int(puertas.size()).is_equal(2)
+	var cerradas: Array[Transform3D] = []
+	for puerta: Node3D in puertas:
+		cerradas.append(puerta.get_parent().transform)
+		puerta.call("interactuar")
+	for cuadro in cuadros:
+		await get_tree().physics_frame
+	almacen.call("_al_abrir_la_jornada", ReglasDeLaPartida.PRIMERA_JORNADA + 1)
+	for indice in puertas.size():
+		var puerta: Node3D = puertas[indice]
+		var estado: Puerta = puerta.call("puerta")
+		assert_bool(estado.abierta()).is_false()
+		assert_float(estado.angulo()).is_equal(0.0)
+		assert_bool(puerta.get_parent().transform.is_equal_approx(cerradas[indice])).is_true()
+	return puertas
+
+
+func test_la_puerta_abierta_anoche_arranca_cerrada() -> void:  # AC-PLY-036
+	var puertas: Array = await _abrir_con_las_puertas_giradas(120)
+	assert_array(puertas).has_size(2)
+
+
+func test_la_puerta_a_medio_giro_arranca_cerrada() -> void:  # AC-PLY-037
+	var puertas: Array = await _abrir_con_las_puertas_giradas(5)
+	assert_array(puertas).has_size(2)

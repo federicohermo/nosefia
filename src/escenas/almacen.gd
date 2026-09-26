@@ -24,6 +24,7 @@ const CajaDeProductosDelDeposito := preload("res://src/escenas/objetos/caja_de_p
 const LimpiezaDelLocal := preload("res://src/escenas/puestos/limpieza_del_almacen.gd")
 const AudioDelLocal := preload("res://src/escenas/puestos/audio_del_almacen.gd")
 const ReposicionManual := preload("res://src/escenas/puestos/reposicion_manual.gd")
+const PuertaDelLocal := preload("res://src/escenas/puestos/puerta_del_local.gd")
 
 ## El jugador tampoco declara un `class_name` —es cáscara, como este archivo—, así que el
 ## `@export` de abajo no lo puede nombrar sin traerlo por `preload`.
@@ -51,6 +52,9 @@ const Jugador := preload("res://src/escenas/jugador.gd")
 ## conecta lo que le pasan, no sale a recorrer el árbol.
 @export var _agarre: Agarre
 @export var _bolsas: Array[Node3D]
+
+## Las dos puertas interiores. Cada noche arranca con las dos cerradas.
+@export var _puertas: Array[Node3D]
 
 ## Los muebles con los que el jugador choca por su contorno y no por su malla.
 @export var _muebles_con_contorno: Array[PhysicsBody3D]
@@ -162,6 +166,8 @@ func _al_abrir_la_jornada(_jornada: int) -> void:
 		bolsa.volver_a_su_lugar()
 	for caja: CajaDeProductosDelDeposito in _cajas_de_productos:
 		caja.volver_a_su_lugar()
+	for puerta: PuertaDelLocal in _puertas:
+		puerta.cerrar_de_golpe()
 	_audio.arrancar_el_ambiente()
 	_limpieza.repintar()
 	_estante.mostrar(0)
