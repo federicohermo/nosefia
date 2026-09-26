@@ -207,9 +207,6 @@ func alternar(datos: ObjetoDelAlmacen, nodo: Node3D) -> void:
 		soltar(true)
 
 
-## Deja las manos vacías dejando lo que hubiera a los pies. No emite nada si ya estaban vacías:
-## lo llaman el cierre de la jornada y la suspensión del jugador, que pueden pasar dos veces
-## seguidas, y un aviso ahí haría que el HUD anuncie un objeto que no existía.
 func vaciar_las_manos() -> void:
 	if _manos.sostenido() == null:
 		return
