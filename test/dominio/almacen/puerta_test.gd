@@ -87,6 +87,14 @@ func test_girando_no_esta_quieta_y_en_el_tope_si() -> void:
 	assert_bool(puerta.quieta()).is_true()
 
 
+func test_cerrar_de_golpe_a_medio_giro_la_deja_quieta() -> void:
+	var puerta := Puerta.new()
+	puerta.alternar()
+	puerta.avanzar(0.1)
+	puerta.cerrar_de_golpe()
+	assert_bool(puerta.quieta()).is_true()
+
+
 func test_la_trabada_no_se_abre_por_mas_que_se_la_toque() -> void:  # AC-PLY-038
 	var puerta := Puerta.new(true)
 	for vez in 10:

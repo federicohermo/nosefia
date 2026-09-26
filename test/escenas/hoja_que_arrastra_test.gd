@@ -11,8 +11,7 @@ const HOJA := "Estructura/puerta"
 const RADIO_EN_EL_RECORRIDO := 1.0
 const FRACCION_DEL_GIRO := 0.5
 
-## Cuadros de física hasta que la hoja haga el giro entero y lo arrastrado se acomode. El giro
-## tarda poco más de medio segundo.
+## Cuadros de física hasta que la hoja haga el giro entero y lo arrastrado se acomode.
 const CUADROS_DEL_GIRO := 150
 
 ## Cuadros para que una unidad soltada en el piso se duerma.
@@ -80,21 +79,29 @@ func _unidad_dormida(almacen: Node3D, punto: Vector3) -> RigidBody3D:
 
 
 ## Si el cuerpo se hunde en la hoja más de lo que el motor tolera a un cuerpo vivo apoyado.
+##
+## La profundidad sale de los pares de contacto con la hoja sola. La de `body_test_motion` es lo
+## que sobra después de sacar al cuerpo: una unidad metida entera daba 2 cm. Medido el 2026-09-26.
 func _adentro_de_la_hoja(cuerpo: PhysicsBody3D, hoja: PhysicsBody3D) -> bool:
 	var tolerado: float = (
 		ReglasDeLosObjetos.ROCE + ProjectSettings.get_setting(PENETRACION_TOLERADA, 0.0)
 	)
-	var consulta := PhysicsTestMotionParameters3D.new()
-	consulta.from = cuerpo.global_transform
-	consulta.max_collisions = 8
-	var resultado := PhysicsTestMotionResult3D.new()
-	PhysicsServer3D.body_test_motion(cuerpo.get_rid(), consulta, resultado)
-	for indice in resultado.get_collision_count():
-		if (
-			resultado.get_collider(indice) == hoja
-			and resultado.get_collision_depth(indice) > tolerado
-		):
-			return true
+	var espacio := cuerpo.get_world_3d().direct_space_state
+	for forma: CollisionShape3D in cuerpo.find_children("*", "CollisionShape3D", false, false):
+		if forma.disabled:
+			continue
+		var consulta := PhysicsShapeQueryParameters3D.new()
+		consulta.shape = forma.shape
+		consulta.transform = forma.global_transform
+		var otros: Array[RID] = [cuerpo.get_rid()]
+		for golpe in espacio.intersect_shape(consulta, 32):
+			if golpe["collider"] != hoja:
+				otros.append(golpe["rid"])
+		consulta.exclude = otros
+		var pares := espacio.collide_shape(consulta, 16)
+		for indice in range(0, pares.size(), 2):
+			if pares[indice].distance_to(pares[indice + 1]) > tolerado:
+				return true
 	return false
 
 
@@ -140,6 +147,7 @@ func test_la_unidad_dormida_en_el_recorrido_se_arrastra_al_cerrar() -> void:  # 
 	var cerrada := hoja.global_transform
 	await _girar(hoja)
 	var unidad := await _unidad_dormida(almacen, punto)
+	assert_bool(unidad.sleeping).override_failure_message("la unidad no se durmió").is_true()
 	var partida := unidad.global_position
 	await _girar(hoja)
 	assert_bool(_adentro_de_la_hoja(unidad, _cuerpo_de(hoja))).is_false()
@@ -209,23 +217,44 @@ func test_una_caja_apoyada_en_el_recorrido_no_frena_la_hoja() -> void:
 	assert_float(_cuerpo_de(hoja).call("puerta").angulo()).is_equal(Puerta.ANGULO_ABIERTA)
 
 
-func test_la_bolsa_y_el_trapeador_en_el_recorrido_se_arrastran_al_abrir() -> void:
-	for ruta in ["Objetos/BolsaDeBasura1", "Objetos/Trapeador"]:
-		var almacen: Node3D = await _almacen()
-		var hoja: MeshInstance3D = almacen.get_node(HOJA)
-		var objeto: RigidBody3D = almacen.get_node(ruta)
-		objeto.global_basis = Basis.IDENTITY
-		objeto.global_position = (
-			_en_el_recorrido(almacen, hoja, FRACCION_DEL_GIRO) + Vector3.UP * 0.15
-		)
-		for cuadro in CUADROS_PARA_DORMIRSE:
-			await get_tree().physics_frame
-		var partida := objeto.global_position
-		await _girar(hoja)
-		assert_bool(_adentro_de_la_hoja(objeto, _cuerpo_de(hoja))).is_false()
-		var corrida := (objeto.global_position - partida).dot(_sentido_del_giro(hoja, partida))
-		(
-			assert_float(corrida)
-			. override_failure_message("la hoja no arrastró `%s`: %.3f m" % [ruta, corrida])
-			. is_greater(CORRIDA_MINIMA)
-		)
+## Cerrar de golpe salta sin girar: lo apoyado contra la hoja abierta no sale despedido.
+func test_cerrar_de_golpe_no_despide_lo_que_toca_la_hoja() -> void:
+	var almacen: Node3D = await _almacen()
+	var hoja: MeshInstance3D = almacen.get_node(HOJA)
+	var punto := _en_el_recorrido(almacen, hoja, 0.9)
+	await _girar(hoja)
+	var unidad := await _unidad_dormida(almacen, punto)
+	var partida := unidad.global_position
+	_cuerpo_de(hoja).call("cerrar_de_golpe")
+	for cuadro in CUADROS_PARA_DORMIRSE:
+		await get_tree().physics_frame
+	var corrida := unidad.global_position.distance_to(partida)
+	(
+		assert_float(corrida)
+		. override_failure_message("la hoja despidió la unidad: se corrió %.3f m" % corrida)
+		. is_less(CORRIDA_MINIMA)
+	)
+
+
+func test_la_bolsa_en_el_recorrido_se_arrastra_al_abrir() -> void:
+	assert_float(await _corrida_al_abrir("Objetos/BolsaDeBasura1")).is_greater(CORRIDA_MINIMA)
+
+
+func test_el_trapeador_en_el_recorrido_se_arrastra_al_abrir() -> void:
+	assert_float(await _corrida_al_abrir("Objetos/Trapeador")).is_greater(CORRIDA_MINIMA)
+
+
+## Cuánto corre la hoja al abrir al objeto que se le pone en el recorrido. Un almacén por objeto:
+## dos a la vez comparten el mundo, y la red de uno vigila los cuerpos del otro.
+func _corrida_al_abrir(ruta: String) -> float:
+	var almacen: Node3D = await _almacen()
+	var hoja: MeshInstance3D = almacen.get_node(HOJA)
+	var objeto: RigidBody3D = almacen.get_node(ruta)
+	objeto.global_basis = Basis.IDENTITY
+	objeto.global_position = _en_el_recorrido(almacen, hoja, FRACCION_DEL_GIRO) + Vector3.UP * 0.15
+	for cuadro in CUADROS_PARA_DORMIRSE:
+		await get_tree().physics_frame
+	var partida := objeto.global_position
+	await _girar(hoja)
+	assert_bool(_adentro_de_la_hoja(objeto, _cuerpo_de(hoja))).is_false()
+	return (objeto.global_position - partida).dot(_sentido_del_giro(hoja, partida))

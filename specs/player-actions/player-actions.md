@@ -336,8 +336,9 @@ no. Ningún objeto del almacén salvo las cajas contenedoras admite otro encima.
 
 ### AC-PLY-035 — Sin superficie que valga, se suelta como siempre *(verifica BR-PLY-018)*
 
-DADO la mira sobre una pared, o sobre nada al alcance CUANDO se suelta ENTONCES lo soltado sale
-del mismo punto que sin mira.
+DADO la mira sobre una pared, sobre nada al alcance, o sobre un punto donde lo soltado quedaría
+encimado con algo o adentro de un mueble CUANDO se suelta ENTONCES lo soltado sale del mismo
+punto que sin mira.
 
 ### AC-PLY-036 — La puerta abierta anoche arranca cerrada *(verifica BR-PLY-019)*
 
@@ -383,7 +384,7 @@ propio aviso, y la hoja no gira. DADO la apertura de una jornada ENTONCES ningun
 ## Contratos
 
 - **Entrada:** el vector de movimiento, el delta del mouse, los candidatos que el rayo encontró,
-  el objeto que se quiere agarrar y los segundos del cuadro.
+  el objeto que se quiere agarrar, la superficie que la mira toca y los segundos del cuadro.
 - **Salida:** la velocidad, los dos ángulos de la vista, qué está enfocado y si cambió, qué se
   lleva en la mano, el motivo de cada rechazo, el ángulo de la hoja y el efecto de un uso.
 - **Falla:** los dos rechazos de agarrar; soltar con las manos vacías no devuelve nada; un uso no

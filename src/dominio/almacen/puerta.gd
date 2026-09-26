@@ -49,9 +49,6 @@ func alternar() -> bool:
 	return true
 
 
-## La deja cerrada y sin giro, sin pasar por `avanzar()`. Es la apertura de la jornada: una
-## puerta que se cerrara girando arrastraría lo que tiene adelante antes de que el jugador haga
-## nada.
 func cerrar_de_golpe() -> void:
 	_abierta = false
 	_angulo = 0.0
