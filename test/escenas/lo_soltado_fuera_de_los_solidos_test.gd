@@ -50,6 +50,10 @@ const MEDIA_CAJA := 0.3037
 const ROCE_CON_EL_MOUSE := 0.001
 const CAJA_EN_EL_MOUSE := 0.03
 
+## Dos cuadros sin reporte entre cada reporte: así llega un mouse más lento que la pantalla.
+const REPORTES_DE_UN_MOUSE_LENTO := 10
+const CUADRO_SIN_MOUSE := SuavizadoDelGiro.PAUSA / 4.0
+
 ## Los cuatro giros de la mira al soltar, en grados, y los tres del cuerpo.
 ##
 ## **El gemelo de estos gestos está en `caja_que_se_lleva_test.gd`.** Si uno cambia sus ángulos
@@ -202,6 +206,9 @@ func _caja_grande(almacen: Node3D) -> Node3D:
 
 
 ## Gira la vista como lo haría el mouse, a un yaw y un pitch absolutos en radianes.
+##
+## El suavizado del giro atrasa la cámara según cuántos cuadros hubo, y eso cambia con la máquina:
+## sin terminar el dibujo acá, el gesto suelta con otra vista.
 func _mirar(jugador: Node3D, giro: float, alto: float) -> void:
 	var camara: Camera3D = jugador.get_node("Giro/Camara")
 	var evento := InputEventMouseMotion.new()
@@ -210,6 +217,21 @@ func _mirar(jugador: Node3D, giro: float, alto: float) -> void:
 		/ ReglasDelJugador.SENSIBILIDAD_DEL_MOUSE
 	)
 	jugador.call("_unhandled_input", evento)
+	(jugador.get("_control") as ControlDelJugador).avanzar_el_dibujo(SuavizadoDelGiro.VENTANA)
+	jugador.call("_aplicar_la_rotacion")
+
+
+func test_mirar_deja_la_vista_que_se_pide_con_un_mouse_lento() -> void:
+	var almacen: Node3D = await _almacen()
+	var jugador: CharacterBody3D = almacen.get("_jugador")
+	var control: ControlDelJugador = jugador.get("_control")
+	for reporte in REPORTES_DE_UN_MOUSE_LENTO:
+		_mirar(jugador, reporte * 0.01, 0.0)
+		control.avanzar_el_dibujo(CUADRO_SIN_MOUSE)
+		control.avanzar_el_dibujo(CUADRO_SIN_MOUSE)
+	_mirar(jugador, PI / 2.0, 0.3)
+	assert_float(jugador.get_node("Giro").rotation.y).is_equal_approx(PI / 2.0, 0.001)
+	assert_float(jugador.get_node("Giro/Camara").rotation.x).is_equal_approx(0.3, 0.001)
 
 
 ## Para al jugador a `CARRERA` del frente, mirando hacia el mueble, y lo hace caminar.
