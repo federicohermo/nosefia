@@ -21,6 +21,12 @@ const VELOCIDAD_DEL_GIRO := 3.0
 var _abierta := false
 var _angulo := 0.0
 var _quieta := true
+var _trabada := false
+
+
+## Trabada es de nacimiento: ninguna puerta se traba ni se destraba en juego.
+func _init(trabada: bool = false) -> void:
+	_trabada = trabada
 
 
 ## Si quedó pedida abierta. Es la intención, no la hoja: apenas alternada, la puerta ya está
@@ -34,9 +40,17 @@ func angulo() -> float:
 	return _angulo
 
 
-## Un gesto de interacción: la abre si estaba cerrada y la cierra si estaba abierta.
-func alternar() -> void:
+func trabada() -> bool:
+	return _trabada
+
+
+## Un gesto de interacción: la abre si estaba cerrada y la cierra si estaba abierta. Devuelve si
+## alternó: una trabada contesta `false` y queda como estaba.
+func alternar() -> bool:
+	if _trabada:
+		return false
 	_abierta = not _abierta
+	return true
 
 
 ## La deja cerrada y sin giro, sin pasar por `avanzar()`. Es la apertura de la jornada: una
