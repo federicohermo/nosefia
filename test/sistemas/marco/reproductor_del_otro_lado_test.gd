@@ -108,7 +108,6 @@ func test_lo_plano_no_se_apaga() -> void:  # AC-AMB-023
 	assert_str(voz.bus).is_equal(EntradaSonora.BUS_DE_EFECTOS)
 
 
-## Un bloque de dos metros de lado en el medio del camino entre el oído y la fuente.
 func _bloque(cuerpo: StaticBody3D) -> StaticBody3D:
 	var forma := CollisionShape3D.new()
 	var caja := BoxShape3D.new()

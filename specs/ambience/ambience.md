@@ -350,6 +350,6 @@ cambia.
 - **OQ-AMB-008 — ¿Cuánto apaga cada obstáculo, cuántos cuentan y cuánto dura el cambio?**
   - Por qué sigue abierta: el volumen y el corte por obstáculo, el máximo de obstáculos y la
     duración de la transición salen de escuchar en el local. También si una góndola cuenta como
-    pared: hoy cuenta todo lo fijo. El juego arranca con primeros valores.
+    pared. El juego arranca con primeros valores.
   - Decide: el dueño del repo.
   - Bloquea: nada de la máquina.

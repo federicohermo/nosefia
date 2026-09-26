@@ -11,7 +11,6 @@ const MAXIMO := 3
 ## Cuánto baja cada obstáculo, en dB. Primer valor: ver OQ-AMB-008.
 const VOLUMEN_POR_OBSTACULO_DB := -6.0
 
-## El corte que no filtra: el motor no corta nada por encima de 20 500 Hz.
 const SIN_CORTE_HZ := 20500.0
 
 ## El corte del pasa-bajos para cada cantidad de obstáculos, de cero al máximo. Primer valor:
