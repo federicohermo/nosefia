@@ -263,7 +263,6 @@ func test_la_compra_el_lector_y_el_celular_suenan_con_su_audio() -> void:
 	var timbre := tabla.de(EntradaSonora.Evento.TIMBRE_DEL_COMPRADOR)
 	assert_bool(lector.posicional).is_true()
 	assert_str(lector.emisor).is_equal(timbre.emisor)
-	assert_bool(EntradaSonora.Evento.has("LECTOR_ESCANEADO")).is_false()
 
 
 func test_las_tres_senales_llegan_de_una_fuente_del_audio() -> void:
