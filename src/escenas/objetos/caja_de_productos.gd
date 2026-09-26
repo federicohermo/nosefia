@@ -22,6 +22,8 @@ signal empujada(caja: Node3D)
 
 var _lugar_de_origen: Transform3D
 var _padre_de_origen: Node = null
+## El mismo lugar en el mundo: en la mano, el padre es la mano y el local ya no dice nada.
+var _origen_en_el_mundo: Transform3D
 
 ## Dónde se apoyó por última vez. Lo pregunta el puesto al levantarla: para cuando avisa que la
 ## agarró, la caja ya cuelga de la mano y el volumen que dejó libre no lo sabe nadie más.
@@ -31,12 +33,18 @@ var _apoyo_que_dejo := Vector3.ZERO
 func _ready() -> void:
 	_lugar_de_origen = transform
 	_padre_de_origen = get_parent()
+	_origen_en_el_mundo = global_transform
 	_apoyo_que_dejo = global_position
 	sleeping_state_changed.connect(_al_cambiar_el_reposo)
 
 
 func interactuar() -> ObjetoDelAlmacen:
 	return datos
+
+
+## Dónde arranca la noche, en el mundo.
+func lugar_de_origen() -> Transform3D:
+	return _origen_en_el_mundo
 
 
 ## El volumen que ocupaba cuando estaba apoyada. Lo usa el puesto para saber a quién despertar.
