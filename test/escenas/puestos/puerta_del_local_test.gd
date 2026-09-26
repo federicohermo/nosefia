@@ -193,6 +193,56 @@ func test_tres_puertas_estan_trabadas_y_las_dos_interiores_no() -> void:  # AC-P
 		assert_bool(puerta.trabada()).override_failure_message(ruta).is_false()
 
 
+## Llamar a `interactuar()` directo da verde aunque ningún lugar del piso llegue a la puerta.
+func test_cada_trabada_se_enfoca_desde_el_piso_libre() -> void:  # AC-PLY-040
+	var almacen: Node3D = auto_free(ALMACEN.instantiate())
+	add_child(almacen)
+	# Con un solo paso, el cuerpo de la hoja todavía no está sobre ella.
+	await get_tree().physics_frame
+	await get_tree().physics_frame
+	for ruta: String in TRABADAS:
+		var cuerpo: Node3D = almacen.get_node(ruta + "/CuerpoDeLaHoja")
+		assert_bool(_se_enfoca(almacen, cuerpo)).override_failure_message(ruta).is_true()
+
+
+func _se_enfoca(almacen: Node3D, cuerpo: Node3D) -> bool:
+	var jugador: CharacterBody3D = almacen.get("_jugador")
+	var camara: Camera3D = jugador.get_node("Giro/Camara")
+	var forma: CollisionShape3D = jugador.get_node("Cuerpo")
+	var espacio := almacen.get_world_3d().direct_space_state
+	var centro: Vector3 = cuerpo.get_node("Volumen").global_position
+	var pie := Vector3(centro.x, jugador.global_position.y, centro.z)
+	for radio: float in [1.0, 1.5, 2.0]:
+		var lugares := LugaresDelPiso.alrededor(
+			espacio,
+			pie,
+			Vector3.FORWARD,
+			radio,
+			forma.position.y,
+			forma.position.y * 2.0,
+			16,
+			jugador.collision_mask,
+			[jugador.get_rid()] as Array[RID]
+		)
+		for lugar in lugares:
+			var parado := lugar + Vector3.UP * ReglasDeLosObjetos.ROCE
+			var consulta := PhysicsShapeQueryParameters3D.new()
+			consulta.shape = forma.shape
+			consulta.transform = Transform3D(forma.global_basis, parado + forma.position)
+			consulta.collision_mask = jugador.collision_mask
+			consulta.exclude = [jugador.get_rid()]
+			if not espacio.intersect_shape(consulta, 1).is_empty():
+				continue
+			jugador.global_position = parado
+			var hacia := centro - camara.global_position
+			jugador.get_node("Giro").rotation.y = atan2(-hacia.x, -hacia.z)
+			camara.rotation.x = atan2(hacia.y, Vector2(hacia.x, hacia.z).length())
+			var candidato: CampoDeInteraccion.Candidato = jugador.call("_medir_candidato", cuerpo)
+			if candidato.visible and candidato.distancia <= ReglasDelJugador.ALCANCE_DE_LA_MIRA:
+				return true
+	return false
+
+
 func test_tocar_una_trabada_diez_veces_avisa_diez_veces_y_no_gira() -> void:  # AC-PLY-041
 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
 	add_child(almacen)
