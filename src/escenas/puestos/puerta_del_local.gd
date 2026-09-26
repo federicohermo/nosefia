@@ -71,7 +71,7 @@ func interactuar() -> ObjetoDelAlmacen:
 	return null
 
 
-## En qué estado está. Lo pregunta el test del vano para saber cuándo terminó el giro.
+## En qué estado está.
 func puerta() -> Puerta:
 	return _puerta
 

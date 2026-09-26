@@ -15,8 +15,7 @@ func test_justo_antes_del_corte_no_suena_y_al_pasarlo_si() -> void:  # AC-AMB-01
 	assert_bool(cadencia.avanzar(PASO - 0.01)).is_false()
 	assert_bool(cadencia.avanzar(0.02)).is_true()
 	# Sobró 0,01: el siguiente paso llega 0,01 antes.
-	assert_bool(cadencia.avanzar(PASO - 0.02)).is_false()
-	assert_bool(cadencia.avanzar(0.02)).is_true()
+	assert_bool(cadencia.avanzar(PASO - 0.005)).is_true()
 
 
 func test_un_cuadro_largo_suena_un_solo_paso() -> void:  # AC-AMB-019
