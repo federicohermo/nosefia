@@ -420,7 +420,54 @@ func _lugar_libre_cerca(almacen: Node3D, objeto: Node3D) -> Variant:
 
 ## Que el objeto no se superponga con ningún sólido fijo y que la mira real lo enfoque desde un
 ## lugar libre del piso.
+## Un lugar del piso donde el jugador entra parado, cerca de lo que se mira. Los lugares del piso
+## los busca `sistemas/`, igual que para el puesto y la red; acá sólo se prueba que entre la
+## cápsula.
+func _lugar_para_mirar(almacen: Node3D, objeto: Node3D) -> Variant:
+	var jugador: CharacterBody3D = almacen.get("_jugador")
+	var cuerpo: CollisionShape3D = jugador.get_node("Cuerpo")
+	var espacio := almacen.get_world_3d().direct_space_state
+	var pie := Vector3(
+		objeto.global_position.x, jugador.global_position.y, objeto.global_position.z
+	)
+	for radio in RADIOS_DEL_LUGAR_LIBRE:
+		var lugares := LugaresDelPiso.alrededor(
+			espacio,
+			pie,
+			Vector3.FORWARD,
+			radio,
+			cuerpo.position.y,
+			cuerpo.position.y * 2.0,
+			LADOS_DEL_LUGAR_LIBRE,
+			jugador.collision_mask,
+			[jugador.get_rid()] as Array[RID]
+		)
+		for punto in lugares:
+			# Parado sobre el piso lo toca: se lo levanta el roce para que el contacto no cuente.
+			var lugar := punto + Vector3.UP * ReglasDeLosObjetos.ROCE
+			var consulta := PhysicsShapeQueryParameters3D.new()
+			consulta.shape = cuerpo.shape
+			consulta.transform = Transform3D(cuerpo.global_basis, lugar + cuerpo.position)
+			consulta.collision_mask = jugador.collision_mask
+			consulta.exclude = [jugador.get_rid()]
+			if espacio.intersect_shape(consulta, 1).is_empty():
+				return lugar
+	return null
+
+
+## Que la red no haya tenido que rescatar nada: un verde con rescates escondería una prevención
+## rota detrás de la red.
+func _comprobar_sin_rescates(almacen: Node3D, donde: String) -> void:
+	var red: RedDeSeguridad = almacen.get_node("Servicios/RedDeSeguridad")
+	(
+		assert_array(red.rescates)
+		. override_failure_message("%s, la red tuvo que rescatar: la prevención falló" % donde)
+		. is_empty()
+	)
+
+
 func _comprobar_libre_y_enfocable(almacen: Node3D, objeto: Node3D, donde: String) -> void:
+	_comprobar_sin_rescates(almacen, donde)
 	var pisados := _solidos_pisados(objeto)
 	(
 		assert_array(pisados)
@@ -428,7 +475,7 @@ func _comprobar_libre_y_enfocable(almacen: Node3D, objeto: Node3D, donde: String
 		. is_empty()
 	)
 	var jugador: CharacterBody3D = almacen.get("_jugador")
-	var lugar: Variant = _lugar_libre_cerca(almacen, objeto)
+	var lugar: Variant = _lugar_para_mirar(almacen, objeto)
 	(
 		assert_bool(lugar != null)
 		. override_failure_message("%s, no hay piso libre desde donde mirarlo" % donde)
@@ -578,6 +625,7 @@ func test_la_caja_se_sigue_apoyando_en_un_estante_del_deposito() -> void:  # AC-
 	)
 	assert_str(_apoyo_de(almacen, caja)).contains("gondola_deposito01")
 	assert_array(_solidos_pisados(caja)).is_empty()
+	_comprobar_sin_rescates(almacen, "lo legal")
 
 
 func _piso(almacen: Node3D) -> float:
@@ -597,6 +645,7 @@ func test_la_caja_se_sigue_apoyando_arriba_del_mostrador() -> void:  # AC-PLY-02
 	await _soltar_la_caja_sobre(almacen, caja, CARA_DE_AFUERA_DEL_MOSTRADOR, tapa)
 	assert_str(_apoyo_de(almacen, caja)).contains("EscritorioComputadora")
 	assert_array(_solidos_pisados(caja)).is_empty()
+	_comprobar_sin_rescates(almacen, "lo legal")
 
 
 func test_la_caja_se_sigue_apilando_sobre_otra() -> void:  # AC-PLY-023
@@ -627,6 +676,7 @@ func test_la_caja_se_sigue_apilando_sobre_otra() -> void:  # AC-PLY-023
 		. is_equal_approx(MEDIA_CAJA * 2.0, 0.01)
 	)
 	assert_array(_solidos_pisados(arriba)).is_empty()
+	_comprobar_sin_rescates(almacen, "lo legal")
 
 
 func test_la_unidad_se_sigue_dejando_adentro_de_la_heladera() -> void:  # AC-PLY-024

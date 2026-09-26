@@ -39,6 +39,12 @@ func interactuar() -> ObjetoDelAlmacen:
 	return datos
 
 
+## Dónde arranca la noche, en el mundo.
+func lugar_de_origen() -> Transform3D:
+	var padre := _padre_de_origen as Node3D
+	return _lugar_de_origen if padre == null else padre.global_transform * _lugar_de_origen
+
+
 ## El volumen que ocupaba cuando estaba apoyada. Lo usa el puesto para saber a quién despertar.
 func apoyo_que_dejo() -> Vector3:
 	return _apoyo_que_dejo
