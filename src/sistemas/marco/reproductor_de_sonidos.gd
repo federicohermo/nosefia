@@ -41,6 +41,14 @@ var _oyente := Vector3.ZERO
 ## Un contador de golpes por objeto, por su `get_instance_id()`: la regla es de cada objeto.
 var _golpes: Dictionary = {}
 
+## Lo que cada voz del espacio necesita para apagarse: su volumen y su bus sin obstáculos, el
+## objeto que la produjo, su nivel de apagado y su bus propio, si ya lo necesitó.
+var _bases: Dictionary = {}
+var _salidas: Dictionary = {}
+var _origenes: Dictionary = {}
+var _niveles: Dictionary = {}
+var _buses_propios: Dictionary = {}
+
 ## El sorteo de las variantes, y la última que sonó de cada evento.
 var _azar := RandomNumberGenerator.new()
 var _anteriores: Dictionary = {}
@@ -61,6 +69,16 @@ func _ready() -> void:
 		_voces_del_espacio.append(voz)
 
 
+## Los buses propios se crean en juego y se borran con el reproductor: si no, cada partida
+## dejaría los suyos en el mezclador.
+func _exit_tree() -> void:
+	for nombre: String in _buses_propios.values():
+		var indice := AudioServer.get_bus_index(nombre)
+		if indice >= 0:
+			AudioServer.remove_bus(indice)
+	_buses_propios.clear()
+
+
 ## El tope se recalcula en cada cuadro porque el jugador camina. Sin cámara no hay oído.
 func _process(_delta: float) -> void:
 	if _emisores_en_bucle.is_empty():
@@ -68,6 +86,15 @@ func _process(_delta: float) -> void:
 	var camara := get_viewport().get_camera_3d()
 	if camara != null:
 		actualizar_emisores(camara.global_position)
+
+
+## El apagado va por cuadro de física porque tira rayos contra el mundo.
+func _physics_process(delta: float) -> void:
+	if _niveles.is_empty():
+		return
+	var camara := get_viewport().get_camera_3d()
+	if camara != null:
+		actualizar_apagado(camara.global_position, delta)
 
 
 ## Le entrega al reproductor la tabla de la partida.
@@ -157,6 +184,8 @@ func pedir(
 		sonido_rechazado.emit(evento, Motivo.SIN_VOZ)
 		return false
 	_poner(voz, entrada, _bus_filtrado(entrada.bus, golpe.corte_hz), golpe.volumen_db)
+	if entrada.posicional:
+		_preparar_apagado(voz, lugar)
 	sonido_pedido.emit(evento)
 	return true
 
@@ -200,10 +229,50 @@ func emisores_que_suenan(evento: EntradaSonora.Evento) -> Array[int]:
 	return suenan
 
 
+## Acerca el apagado de cada voz del espacio a los obstáculos que hay entre ella y el oído.
+func actualizar_apagado(oyente: Vector3, segundos: float) -> void:
+	_oyente = oyente
+	for clave in _niveles.keys():
+		if not is_instance_valid(clave):
+			_olvidar(clave)
+			continue
+		var voz := clave as AudioStreamPlayer3D
+		if voz.stream == null or voz.stream_paused:
+			continue
+		var cantidad := obstaculos_entre(oyente, voz.global_position, _origenes.get(voz))
+		_niveles[voz] = ApagadoPorObstaculos.acercar(_niveles[voz], cantidad, segundos)
+		_aplicar_apagado(voz)
+
+
+## Cuántos obstáculos hay entre dos puntos, hasta el máximo que apaga. Una pared cuenta; una
+## puerta, sólo cerrada. `propio` es lo que produjo el sonido, que no se tapa a sí mismo.
+func obstaculos_entre(desde: Vector3, hasta: Vector3, propio: Object) -> int:
+	var espacio := get_viewport().world_3d.direct_space_state
+	var excluidos: Array[RID] = []
+	if propio is CollisionObject3D and is_instance_valid(propio):
+		excluidos.append((propio as CollisionObject3D).get_rid())
+	var cantidad := 0
+	# Cada rayo excluye lo que ya tocó. El tope evita un bucle largo entre muchos cuerpos que no
+	# cuentan, como los productos de una góndola.
+	for _rayo in range(ApagadoPorObstaculos.MAXIMO * 4):
+		var consulta := PhysicsRayQueryParameters3D.create(desde, hasta)
+		consulta.exclude = excluidos
+		var choque := espacio.intersect_ray(consulta)
+		if choque.is_empty():
+			break
+		excluidos.append(choque.rid)
+		if _tapa(choque.collider):
+			cantidad += 1
+			if cantidad >= ApagadoPorObstaculos.MAXIMO:
+				break
+	return cantidad
+
+
 ## Corta un bucle. Lo usa el cierre de la jornada para la música.
 func callar(evento: EntradaSonora.Evento) -> void:
 	voz_en_bucle(evento).stream = null
 	for emisor: AudioStreamPlayer3D in _emisores_en_bucle.get(evento, []):
+		_olvidar(emisor)
 		emisor.queue_free()
 	_emisores_en_bucle.erase(evento)
 	_suenan.erase(evento)
@@ -268,11 +337,62 @@ func _sonar_en_bucle(entrada: EntradaSonora) -> bool:
 		add_child(emisor)
 		emisor.global_position = posicion
 		_poner(emisor, entrada, entrada.bus, EmisoresDelAmbiente.VOLUMEN_DB)
+		_preparar_apagado(emisor, null)
 		emisores.append(emisor)
 	_emisores_en_bucle[entrada.evento] = emisores
 	actualizar_emisores(_oyente)
 	sonido_pedido.emit(entrada.evento)
 	return true
+
+
+## Anota lo que la voz necesita para apagarse, y la apaga ya: un sonido que empieza del otro
+## lado de una pared empieza apagado, sin transición.
+func _preparar_apagado(voz: AudioStreamPlayer3D, origen: Object) -> void:
+	_bases[voz] = voz.volume_db
+	_salidas[voz] = voz.bus
+	_origenes[voz] = origen
+	var camara := get_viewport().get_camera_3d()
+	var oido := camara.global_position if camara != null else _oyente
+	var cantidad := obstaculos_entre(oido, voz.global_position, origen)
+	_niveles[voz] = float(mini(cantidad, ApagadoPorObstaculos.MAXIMO))
+	_aplicar_apagado(voz)
+
+
+## Un reproductor del motor no filtra solo: el pasa-bajos vive en un bus propio de la voz, que
+## manda al bus de su fila. Sin obstáculos, la voz sale directo por el de su fila.
+func _aplicar_apagado(voz: AudioStreamPlayer3D) -> void:
+	var nivel: float = _niveles[voz]
+	var salida: String = _salidas[voz]
+	voz.volume_db = _bases[voz] + ApagadoPorObstaculos.volumen_db(nivel)
+	if nivel <= 0.0:
+		voz.bus = salida
+		return
+	if not _buses_propios.has(voz):
+		_buses_propios[voz] = "Apagado %d" % voz.get_instance_id()
+		AudioServer.add_bus()
+		AudioServer.set_bus_name(AudioServer.bus_count - 1, _buses_propios[voz])
+		AudioServer.add_bus_effect(AudioServer.bus_count - 1, AudioEffectLowPassFilter.new())
+	var indice := AudioServer.get_bus_index(_buses_propios[voz])
+	AudioServer.set_bus_send(indice, salida)
+	var filtro := AudioServer.get_bus_effect(indice, 0) as AudioEffectLowPassFilter
+	filtro.cutoff_hz = ApagadoPorObstaculos.corte_hz(nivel)
+	voz.bus = _buses_propios[voz]
+
+
+## Suelta lo anotado de una voz que ya no existe. Su bus propio se borra con el reproductor.
+func _olvidar(voz: Object) -> void:
+	_bases.erase(voz)
+	_salidas.erase(voz)
+	_origenes.erase(voz)
+	_niveles.erase(voz)
+
+
+## Si ese cuerpo tapa el sonido: lo fijo, salvo una puerta abierta.
+func _tapa(cuerpo: Object) -> bool:
+	if cuerpo.has_method(ApagadoPorObstaculos.METODO_DE_LA_PUERTA):
+		var puerta := cuerpo.call(ApagadoPorObstaculos.METODO_DE_LA_PUERTA) as Puerta
+		return puerta != null and not puerta.abierta()
+	return cuerpo is StaticBody3D
 
 
 ## Desde dónde suena una fila del espacio: el objeto, si lo hay, o las posiciones de su emisor.
