@@ -367,25 +367,39 @@ func _accion(jugador: Node3D, objetivo: Node3D, accion: StringName) -> void:
 
 ## Los sólidos fijos con los que se superpone: lo estático, no otro objeto ni el jugador.
 ##
-## **Lo pregunta el motor, con un movimiento nulo del propio cuerpo**, que mide cuánto se hunde.
 ## Un cuerpo vivo apoyado se hunde un poco en lo que lo sostiene, y el motor lo tolera hasta su
-## margen de penetración; uno congelado queda donde se lo puso.
+## margen de penetración; uno congelado queda donde se lo puso. **La profundidad sale de los pares
+## de contacto, sólido por sólido.** La de `body_test_motion` no sirve: el motor saca al cuerpo
+## antes de medir, y una unidad metida 8 cm en la pared daba libre. Achicar la forma tampoco: un
+## casco redondeado se achica menos que su caja. Medido el 2026-09-26.
 static func _solidos_pisados(objeto: PhysicsBody3D) -> Array[String]:
 	var tolerado := ReglasDeLosObjetos.ROCE
 	if objeto is RigidBody3D and not (objeto as RigidBody3D).freeze:
 		tolerado += ProjectSettings.get_setting(PENETRACION_TOLERADA)
-	var consulta := PhysicsTestMotionParameters3D.new()
-	consulta.from = objeto.global_transform
-	consulta.max_collisions = 8
-	var resultado := PhysicsTestMotionResult3D.new()
-	PhysicsServer3D.body_test_motion(objeto.get_rid(), consulta, resultado)
+	var espacio := objeto.get_world_3d().direct_space_state
 	var pisados: Array[String] = []
-	for indice in resultado.get_collision_count():
-		var solido := resultado.get_collider(indice) as Node
-		if solido is StaticBody3D and resultado.get_collision_depth(indice) > tolerado:
-			pisados.append(
-				"%s (%.3f m)" % [solido.get_parent().name, resultado.get_collision_depth(indice)]
-			)
+	for forma: CollisionShape3D in objeto.find_children("*", "CollisionShape3D", true, false):
+		var consulta := PhysicsShapeQueryParameters3D.new()
+		consulta.shape = forma.shape
+		consulta.transform = forma.global_transform
+		consulta.collision_mask = objeto.collision_mask
+		consulta.exclude = [objeto.get_rid()]
+		var golpes := espacio.intersect_shape(consulta, 16)
+		for golpe in golpes:
+			var solido := golpe["collider"] as Node
+			if not solido is StaticBody3D:
+				continue
+			var otros: Array[RID] = [objeto.get_rid()]
+			for otro in golpes:
+				if otro["rid"] != golpe["rid"]:
+					otros.append(otro["rid"])
+			consulta.exclude = otros
+			var hondo := 0.0
+			var pares := espacio.collide_shape(consulta, 16)
+			for indice in range(0, pares.size(), 2):
+				hondo = maxf(hondo, pares[indice].distance_to(pares[indice + 1]))
+			if hondo > tolerado:
+				pisados.append("%s (%.3f m)" % [solido.get_parent().name, hondo])
 	return pisados
 
 
