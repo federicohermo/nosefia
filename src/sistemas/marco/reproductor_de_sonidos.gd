@@ -254,8 +254,6 @@ func obstaculos_entre(desde: Vector3, hasta: Vector3, propio: Object) -> int:
 	if propio is CollisionObject3D and is_instance_valid(propio):
 		excluidos.append((propio as CollisionObject3D).get_rid())
 	var cantidad := 0
-	# Cada rayo excluye lo que ya tocó. El tope evita un bucle largo entre muchos cuerpos que no
-	# cuentan, como los productos de una góndola.
 	for _rayo in range(ApagadoPorObstaculos.MAXIMO * 4):
 		var consulta := PhysicsRayQueryParameters3D.create(desde, hasta)
 		consulta.exclude = excluidos
