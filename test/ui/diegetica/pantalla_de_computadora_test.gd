@@ -38,25 +38,57 @@ func test_las_opciones_permanecen_visibles_y_el_titulo_indica_la_pantalla() -> v
 	assert_array(pedidos).is_equal([Computadora.App.NOTAS, Computadora.App.CAJA])
 
 
-func test_registrar_conserva_el_producto_y_refleja_el_estado_real() -> void:
+func test_la_planilla_muestra_cada_producto_y_sigue_a_los_gestos() -> void:
 	var pantalla: PantallaDeComputadora = auto_free(ESCENA.instantiate())
 	add_child(pantalla)
-	var productos := CajaRegistradora.productos_del_dia()
-	var caja := CajaRegistradora.new(Apertura.inventario_de_la_jornada(), productos)
+	var atender := TareaDeAtender.new([], Apertura.inventario_de_la_jornada())
+	var registro := RegistroDeVentas.new(Catalogo.todos(), atender)
 	var app := pantalla.caja()
-	app.registro_pedido.connect(func(producto: Producto) -> void: caja.registrar(producto))
-	app.mostrar(caja)
-	var botones: Container = app.get("_botones")
-	(botones.get_child(1) as Button).mouse_entered.emit()
-	var boton: Button = botones.get_child(0)
-	boton.pressed.emit()
-	app.mostrar(caja)
-	assert_str((app.get("_nombre") as Label).text).is_equal(productos[1].nombre.to_upper())
-	assert_bool(caja.esta_registrado(productos[0])).is_true()
-	assert_int(caja.registrados()).is_equal(1)
-	assert_bool((botones.get_child(0) as Button).disabled).is_true()
-	assert_bool((botones.get_child(1) as Button).disabled).is_false()
+	app.suma_pedida.connect(func(producto: Producto) -> void: registro.sumar(producto))
+	app.resta_pedida.connect(func(producto: Producto) -> void: registro.restar(producto))
+	app.mostrar(registro)
+	var filas: Container = app.get("_filas")
+	assert_int(filas.get_child_count()).is_equal(Catalogo.todos().size())
+	for fila: Node in filas.get_children():
+		var imagen: TextureRect = fila.get_child(0)
+		assert_object(imagen.texture).is_not_null()
+	var primera := filas.get_child(0)
+	(primera.get_child(5) as Button).pressed.emit()
+	(primera.get_child(5) as Button).pressed.emit()
+	(primera.get_child(3) as Button).pressed.emit()
+	app.mostrar(registro)
+	var producto: Producto = registro.productos()[0]
+	assert_str((primera.get_child(1) as Label).text).is_equal(producto.nombre.to_upper())
+	assert_str((primera.get_child(4) as Label).text).is_equal("01")
+	assert_str((app.get("_total") as Label).text).is_equal("$%d" % producto.precio)
 	await get_tree().process_frame
+
+
+func test_todas_las_filas_se_alcanzan_con_la_rueda_dentro_de_la_pantalla() -> void:
+	var pantalla: PantallaDeComputadora = auto_free(ESCENA.instantiate())
+	add_child(pantalla)
+	pantalla.mostrar(Computadora.App.CAJA)
+	var atender := TareaDeAtender.new([], Apertura.inventario_de_la_jornada())
+	var app := pantalla.caja()
+	app.mostrar(RegistroDeVentas.new(Catalogo.todos(), atender))
+	await get_tree().process_frame
+	await get_tree().process_frame
+	var desplazamiento: ScrollContainer = app.get_node("Desplazamiento")
+	var marco: Control = pantalla.get("_marco")
+	assert_bool(marco.get_global_rect().encloses(desplazamiento.get_global_rect())).is_true()
+	var barra := desplazamiento.get_v_scroll_bar()
+	var ultima: Control = app.get("_filas").get_children().back()
+	assert_float(barra.max_value).is_greater_equal(ultima.position.y + ultima.size.y)
+	var boton: Button = ultima.get_child(5)
+	assert_int(boton.mouse_filter).is_equal(Control.MOUSE_FILTER_PASS)
+	var rueda := InputEventMouseButton.new()
+	rueda.button_index = MOUSE_BUTTON_WHEEL_DOWN
+	rueda.pressed = true
+	rueda.position = desplazamiento.get_global_rect().get_center()
+	rueda.global_position = rueda.position
+	for vez in Catalogo.todos().size() * 4:
+		get_viewport().push_input(rueda)
+	assert_float(barra.value + barra.page).is_equal_approx(barra.max_value, 1.0)
 
 
 func test_anotar_limpia_solo_si_el_cuaderno_acepta_y_muestra_la_nota_nueva() -> void:
