@@ -45,3 +45,43 @@ func test_dos_puertas_no_comparten_el_estado() -> void:
 	una.alternar()
 	assert_bool(otra.abierta()).is_false()
 	assert_float(otra.angulo()).is_equal(0.0)
+
+
+func test_cerrar_de_golpe_deja_la_puerta_cerrada_y_sin_giro_sin_avanzar() -> void:
+	var puerta := Puerta.new()
+	puerta.alternar()
+	puerta.avanzar(0.2)
+	puerta.cerrar_de_golpe()
+	assert_bool(puerta.abierta()).is_false()
+	assert_float(puerta.angulo()).is_equal(0.0)
+
+
+func test_cerrar_de_golpe_una_puerta_cerrada_no_cambia_nada() -> void:
+	var puerta := Puerta.new()
+	puerta.cerrar_de_golpe()
+	assert_bool(puerta.abierta()).is_false()
+	assert_float(puerta.angulo()).is_equal(0.0)
+
+
+func test_despues_de_cerrar_de_golpe_se_porta_como_nueva() -> void:
+	var puerta := Puerta.new()
+	puerta.alternar()
+	puerta.avanzar(10.0)
+	puerta.cerrar_de_golpe()
+	puerta.alternar()
+	assert_float(puerta.avanzar(10.0)).is_equal(Puerta.ANGULO_ABIERTA)
+
+
+func test_una_puerta_nueva_esta_quieta() -> void:
+	assert_bool(Puerta.new().quieta()).is_true()
+
+
+func test_girando_no_esta_quieta_y_en_el_tope_si() -> void:
+	var puerta := Puerta.new()
+	puerta.alternar()
+	puerta.avanzar(0.1)
+	assert_bool(puerta.quieta()).is_false()
+	puerta.avanzar(10.0)
+	assert_bool(puerta.quieta()).is_false()
+	puerta.avanzar(0.1)
+	assert_bool(puerta.quieta()).is_true()
