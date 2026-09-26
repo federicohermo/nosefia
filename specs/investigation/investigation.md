@@ -134,7 +134,7 @@ sobre el eje vertical, adelante y atrás sobre el horizontal, a una velocidad fi
 El mouse DEBE girarlo sólo mientras se arrastra con el clic apretado. Sin tecla y sin arrastre,
 lo examinado NO DEBE girar.
 
-La tecla de examinar es lo único que termina el examen. Durante el examen, el clic NO DEBE
+El jugador termina el examen sólo con la tecla de examinar. Durante el examen, el clic NO DEBE
 terminarlo, ni agarrar, ni soltar, ni colocar.
 
 ### BR-INV-020 — La jornada nueva no hereda un examen

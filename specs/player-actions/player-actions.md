@@ -223,7 +223,7 @@ del mismo punto que sin mira.
 ## Contratos
 
 - **Entrada:** el vector de movimiento, el delta del mouse, los candidatos que el rayo encontró,
-  el objeto que se quiere agarrar y los segundos del cuadro.
+  el objeto que se quiere agarrar, la superficie que la mira toca y los segundos del cuadro.
 - **Salida:** la velocidad, los dos ángulos de la vista, qué está enfocado y si cambió, qué se
   lleva en la mano, el motivo de cada rechazo, el ángulo de la hoja y el efecto de un uso.
 - **Falla:** los dos rechazos de agarrar; soltar con las manos vacías no devuelve nada; un uso no
