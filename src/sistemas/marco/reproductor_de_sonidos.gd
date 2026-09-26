@@ -427,11 +427,10 @@ func _poner(voz: Node, entrada: EntradaSonora, bus: String, volumen_db: float) -
 
 ## Los datos de dominio del objeto que produjo el evento, o `null` si no es un objeto.
 func _datos_de(origen: Object) -> ObjetoDelAlmacen:
-	if not is_instance_valid(origen):
+	# Se leen los datos y no se interactúa: interactuar es un gesto, y sobre una puerta la abre.
+	if not is_instance_valid(origen) or not "datos" in origen:
 		return null
-	if not origen.has_method(ReglasDeLosObjetos.METODO_INTERACTUAR):
-		return null
-	return origen.call(ReglasDeLosObjetos.METODO_INTERACTUAR) as ObjetoDelAlmacen
+	return origen.get("datos") as ObjetoDelAlmacen
 
 
 ## El bus por el que sale un sonido con ese corte pasa-altos. Sin corte es el bus de la fila.

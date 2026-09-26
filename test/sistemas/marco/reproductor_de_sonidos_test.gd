@@ -226,6 +226,28 @@ func test_un_evento_sin_objeto_suena_su_fila_de_siempre() -> void:
 	assert_bool(reproductor.recibir(EntradaSonora.Evento.PASADA_DADA, null)).is_true()
 
 
+func test_sonar_no_interactua_con_lo_que_lo_produjo() -> void:
+	# Interactuar es un gesto: sobre una puerta, la abre. Si el sonido de la puerta la tocara para
+	# leer sus datos, la volvería a abrir, y ese gesto volvería a sonar.
+	var reproductor := _reproductor(
+		[_entrada(EntradaSonora.Evento.PUERTA_ABIERTA)] as Array[EntradaSonora]
+	)
+	var puerta: PuertaDePrueba = auto_free(PuertaDePrueba.new())
+	assert_bool(reproductor.recibir(EntradaSonora.Evento.PUERTA_ABIERTA, puerta)).is_true()
+	assert_int(puerta.gestos).is_equal(0)
+
+
+## Algo que se toca y no tiene datos, como una puerta.
+class PuertaDePrueba:
+	extends Node3D
+
+	var gestos := 0
+
+	func interactuar() -> ObjetoDelAlmacen:
+		gestos += 1
+		return null
+
+
 ## Una cosa del mundo que contesta sus datos, como la cáscara de un objeto.
 class ObjetoDePrueba:
 	extends Node3D

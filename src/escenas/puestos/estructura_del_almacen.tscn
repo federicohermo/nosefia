@@ -294,6 +294,15 @@ size = Vector3(1.724248, 2.78366, 0.232234)
 [sub_resource type="BoxShape3D" id="volumen_de_la_puerta2"]
 size = Vector3(1.724248, 2.78366, 0.232234)
 
+[sub_resource type="BoxShape3D" id="volumen_del_porton"]
+size = Vector3(0.232152, 3.387137, 4.3139)
+
+[sub_resource type="BoxShape3D" id="volumen_de_la_puerta_del_jefe"]
+size = Vector3(1.429581, 2.678461, 0.066503)
+
+[sub_resource type="BoxShape3D" id="volumen_de_la_entrada"]
+size = Vector3(1.724248, 2.78366, 0.232234)
+
 [sub_resource type="ConvexPolygonShape3D" id="volumen_87"]
 points = PackedVector3Array(-0.999998, -0.000000, -1.000002, -0.999998, -0.000000, 0.999998, -0.999998, 0.185543, -1.000002, 1.000002, -0.000000, -1.000002, -0.999998, 0.185543, 0.999998, 1.000002, -0.000000, 0.999998, -0.600037, 1.373421, -0.600041, 1.000002, 0.185543, -1.000002, 1.000002, 0.185543, 0.999998, -0.600037, 0.997764, 0.599841, 0.599845, 1.373421, -0.600041, 0.599845, 0.997764, 0.599841)
 
@@ -1345,6 +1354,51 @@ mallas = [NodePath("..")]
 [node name="Volumen" type="CollisionShape3D" parent="puerta2/CuerpoDeLaHoja"]
 position = Vector3(0, 0.39183, 0)
 shape = SubResource("volumen_de_la_puerta2")
+
+[node name="CollisionShape3D" parent="porton/StaticBody3D"]
+disabled = true
+
+[node name="CuerpoDeLaHoja" type="AnimatableBody3D" parent="porton" node_paths=PackedStringArray("hoja", "mallas") groups=["interactuable"]]
+transform = Transform3D(8.614959, 0, 0, 0, 0.831379, 0, 0, 0, 0.463618, 0, 0, 0)
+script = ExtResource("puerta")
+hoja = NodePath("..")
+mallas = [NodePath("..")]
+traba = 2
+
+[node name="Volumen" type="CollisionShape3D" parent="porton/CuerpoDeLaHoja"]
+position = Vector3(0, 0.490747, 0)
+shape = SubResource("volumen_del_porton")
+
+[node name="CollisionShape3D" parent="puertajefe/StaticBody3D"]
+disabled = true
+
+[node name="StaticBody3D" parent="puertajefe/marco puerta"]
+metadata/sin_volumen = "Marco de una puerta que no abre, contra la pared: su hueco lo ocupa la hoja, y no queda lugar donde soltar un objeto."
+
+[node name="CuerpoDeLaHoja" type="AnimatableBody3D" parent="puertajefe" node_paths=PackedStringArray("hoja", "mallas") groups=["interactuable"]]
+transform = Transform3D(1.467308, 0, 0, 0, 0.56027, 0, 0, 0, 8.006213, 0, 0, 0)
+script = ExtResource("puerta")
+hoja = NodePath("..")
+mallas = [NodePath("..")]
+traba = 1
+
+[node name="Volumen" type="CollisionShape3D" parent="puertajefe/CuerpoDeLaHoja"]
+position = Vector3(0.033268, 0.102234, 0.071348)
+shape = SubResource("volumen_de_la_puerta_del_jefe")
+
+[node name="CollisionShape3D" parent="puertaentrada/StaticBody3D"]
+disabled = true
+
+[node name="CuerpoDeLaHoja" type="AnimatableBody3D" parent="puertaentrada" node_paths=PackedStringArray("hoja", "mallas") groups=["interactuable"]]
+transform = Transform3D(1.159924, 0, 0, 0, 1, 0, 0, 0, 8.611961, 0, 0, 0)
+script = ExtResource("puerta")
+hoja = NodePath("..")
+mallas = [NodePath("..")]
+traba = 1
+
+[node name="Volumen" type="CollisionShape3D" parent="puertaentrada/CuerpoDeLaHoja"]
+position = Vector3(0, 0.39183, 0)
+shape = SubResource("volumen_de_la_entrada")
 
 [node name="Volumen" type="CollisionShape3D" parent="base compu/StaticBody3D"]
 shape = SubResource("volumen_87")

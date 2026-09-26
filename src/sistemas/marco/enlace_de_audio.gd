@@ -60,12 +60,13 @@ func enlazar_todo(fuentes: Array) -> void:
 	enlace_terminado.emit(_enlazados.size(), _sin_fuente.size())
 
 
-## Ata un evento a la primera fuente que declare su señal, y devuelve si lo ató.
+## Ata un evento a cada fuente que declare su señal, y devuelve si ató alguna. Varias fuentes
+## pueden declarar la misma: las cinco puertas avisan con las mismas señales.
 func _enlazar(evento: EntradaSonora.Evento, fuentes: Array) -> bool:
+	var atado := false
 	for fuente: Object in fuentes:
-		if _conectar(evento, fuente):
-			return true
-	return false
+		atado = _conectar(evento, fuente) or atado
+	return atado
 
 
 ## Conecta la señal del evento en esa fuente, si la declara, y devuelve si quedó conectada.
