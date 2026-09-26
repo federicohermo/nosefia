@@ -147,6 +147,7 @@ func test_la_unidad_dormida_en_el_recorrido_se_arrastra_al_cerrar() -> void:  # 
 	var cerrada := hoja.global_transform
 	await _girar(hoja)
 	var unidad := await _unidad_dormida(almacen, punto)
+	assert_bool(unidad.sleeping).override_failure_message("la unidad no se durmió").is_true()
 	var partida := unidad.global_position
 	await _girar(hoja)
 	assert_bool(_adentro_de_la_hoja(unidad, _cuerpo_de(hoja))).is_false()
@@ -235,23 +236,25 @@ func test_cerrar_de_golpe_no_despide_lo_que_toca_la_hoja() -> void:
 	)
 
 
-func test_la_bolsa_y_el_trapeador_en_el_recorrido_se_arrastran_al_abrir() -> void:
-	for ruta in ["Objetos/BolsaDeBasura1", "Objetos/Trapeador"]:
-		var almacen: Node3D = await _almacen()
-		var hoja: MeshInstance3D = almacen.get_node(HOJA)
-		var objeto: RigidBody3D = almacen.get_node(ruta)
-		objeto.global_basis = Basis.IDENTITY
-		objeto.global_position = (
-			_en_el_recorrido(almacen, hoja, FRACCION_DEL_GIRO) + Vector3.UP * 0.15
-		)
-		for cuadro in CUADROS_PARA_DORMIRSE:
-			await get_tree().physics_frame
-		var partida := objeto.global_position
-		await _girar(hoja)
-		assert_bool(_adentro_de_la_hoja(objeto, _cuerpo_de(hoja))).is_false()
-		var corrida := (objeto.global_position - partida).dot(_sentido_del_giro(hoja, partida))
-		(
-			assert_float(corrida)
-			. override_failure_message("la hoja no arrastró `%s`: %.3f m" % [ruta, corrida])
-			. is_greater(CORRIDA_MINIMA)
-		)
+func test_la_bolsa_en_el_recorrido_se_arrastra_al_abrir() -> void:
+	assert_float(await _corrida_al_abrir("Objetos/BolsaDeBasura1")).is_greater(CORRIDA_MINIMA)
+
+
+func test_el_trapeador_en_el_recorrido_se_arrastra_al_abrir() -> void:
+	assert_float(await _corrida_al_abrir("Objetos/Trapeador")).is_greater(CORRIDA_MINIMA)
+
+
+## Cuánto corre la hoja al abrir al objeto que se le pone en el recorrido. Un almacén por objeto:
+## dos a la vez comparten el mundo, y la red de uno vigila los cuerpos del otro.
+func _corrida_al_abrir(ruta: String) -> float:
+	var almacen: Node3D = await _almacen()
+	var hoja: MeshInstance3D = almacen.get_node(HOJA)
+	var objeto: RigidBody3D = almacen.get_node(ruta)
+	objeto.global_basis = Basis.IDENTITY
+	objeto.global_position = _en_el_recorrido(almacen, hoja, FRACCION_DEL_GIRO) + Vector3.UP * 0.15
+	for cuadro in CUADROS_PARA_DORMIRSE:
+		await get_tree().physics_frame
+	var partida := objeto.global_position
+	await _girar(hoja)
+	assert_bool(_adentro_de_la_hoja(objeto, _cuerpo_de(hoja))).is_false()
+	return (objeto.global_position - partida).dot(_sentido_del_giro(hoja, partida))
