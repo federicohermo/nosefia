@@ -89,21 +89,18 @@ layout_mode = 2
 size_flags_horizontal = 3
 theme_type_variation = &"TextoSecundario"
 mouse_filter = 2
-text = "NOMBRE"
 
 [node name="Precio" type="Label" parent="Encabezado"]
 custom_minimum_size = Vector2(200, 0)
 layout_mode = 2
 theme_type_variation = &"TextoSecundario"
 mouse_filter = 2
-text = "PRECIO"
 
 [node name="Unidades" type="Label" parent="Encabezado"]
 custom_minimum_size = Vector2(312, 0)
 layout_mode = 2
 theme_type_variation = &"TextoSecundario"
 mouse_filter = 2
-text = "UNIDADES"
 horizontal_alignment = 1
 
 [node name="Desplazamiento" type="ScrollContainer" parent="."]
@@ -111,7 +108,7 @@ layout_mode = 0
 offset_left = 430.0
 offset_top = 123.0
 offset_right = 1857.0
-offset_bottom = 897.0
+offset_bottom = 740.0
 horizontal_scroll_mode = 0
 
 [node name="Filas" type="VBoxContainer" parent="Desplazamiento"]
@@ -123,9 +120,9 @@ theme_override_constants/separation = 8
 [node name="Total" type="HBoxContainer" parent="."]
 layout_mode = 0
 offset_left = 430.0
-offset_top = 913.0
+offset_top = 756.0
 offset_right = 1857.0
-offset_bottom = 977.0
+offset_bottom = 816.0
 mouse_filter = 2
 theme_override_constants/separation = 24
 
@@ -134,7 +131,6 @@ layout_mode = 2
 size_flags_horizontal = 3
 theme_type_variation = &"Titulo"
 mouse_filter = 2
-text = "TOTAL"
 
 [node name="Valor" type="Label" parent="Total"]
 custom_minimum_size = Vector2(312, 0)

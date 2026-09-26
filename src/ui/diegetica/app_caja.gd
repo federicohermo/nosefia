@@ -11,6 +11,12 @@ signal resta_pedida(producto: Producto)
 const TEXTO_DEL_TITULO := "/ PRODUCTOS:"
 const TEXTO_DEL_SUBTITULO := "REGISTRO DE ARTÍCULOS DEL LOCAL"
 const TEXTO_DE_AYUDA := "Anotá con + y − cuántas unidades se vendieron de cada producto."
+const ENCABEZADOS := {
+	^"Encabezado/Nombre": "NOMBRE",
+	^"Encabezado/Precio": "PRECIO",
+	^"Encabezado/Unidades": "UNIDADES",
+	^"Total/Etiqueta": "TOTAL",
+}
 const TEXTO_DEL_PRECIO := "$%d"
 const TEXTO_DE_LAS_UNIDADES := "%02d"
 const TEXTO_DEL_TOTAL := "$%d"
@@ -60,6 +66,8 @@ func _ready() -> void:
 	_titulo.text = TEXTO_DEL_TITULO
 	_subtitulo.text = TEXTO_DEL_SUBTITULO
 	_ayuda.text = TEXTO_DE_AYUDA
+	for ruta: NodePath in ENCABEZADOS:
+		(get_node(ruta) as Label).text = ENCABEZADOS[ruta]
 
 
 func mostrar(registro: RegistroDeVentas) -> void:
