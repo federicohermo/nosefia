@@ -362,9 +362,7 @@ func _accion(jugador: Node3D, objetivo: Node3D, accion: StringName) -> void:
 ## Los sólidos fijos con los que se superpone: lo estático, no otro objeto ni el jugador.
 ##
 ## Un cuerpo vivo apoyado se hunde un poco en lo que lo sostiene, y el motor lo tolera hasta su
-## margen de penetración; uno congelado queda donde se lo puso. `body_test_motion` no sirve: el
-## motor saca al cuerpo antes de medir, y una unidad metida 8 cm en la pared daba libre. Achicar la
-## forma tampoco: un casco redondeado se achica menos que su caja. Medido el 2026-09-26.
+## margen de penetración; uno congelado queda donde se lo puso.
 static func _solidos_pisados(objeto: PhysicsBody3D) -> Array[String]:
 	var tolerado := ReglasDeLosObjetos.ROCE
 	if objeto is RigidBody3D and not (objeto as RigidBody3D).freeze:
