@@ -76,8 +76,8 @@ const CAPA_DEL_CONTORNO := 8
 ## puesto al ubicar la caja y el test al comprobar que no atraviesa nada: es el mismo número.
 const ROCE := 0.004
 
-## Cuánto gira por segundo lo examinado con cada tecla de movimiento, en radianes. Media vuelta
-## tarda poco más de un segundo: alcanza para leer la cara de atrás sin pasarse de largo.
+## Cuánto gira por segundo lo examinado con cada tecla de movimiento, en radianes. Lo justo para
+## leer la cara de atrás sin pasarse de largo.
 const VELOCIDAD_DE_GIRO_DEL_EXAMEN := 2.5
 
 
