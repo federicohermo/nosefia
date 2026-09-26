@@ -65,6 +65,27 @@ func test_la_revelacion_solo_se_ve_despues_de_examinar() -> void:  # AC-INV-001
 		assert_str(revelado).contains(secreto)
 
 
+func test_cada_objeto_del_almacen_declara_su_sonoridad() -> void:
+	var esperada := {
+		&"lata_de_tomate": EntradaSonora.Sonoridad.LATA,
+		&"caja_de_fideos": EntradaSonora.Sonoridad.CAJITA,
+		&"bolsa_de_basura_1": EntradaSonora.Sonoridad.BOLSA,
+		&"bolsa_de_basura_2": EntradaSonora.Sonoridad.BOLSA,
+		&"bolsa_de_basura_3": EntradaSonora.Sonoridad.BOLSA,
+		&"trapeador": EntradaSonora.Sonoridad.MOPA,
+		&"cuaderno_del_deposito": EntradaSonora.Sonoridad.PAPEL,
+		&"caja_de_reposicion": EntradaSonora.Sonoridad.CAJA,
+	}
+	var objetos := _objetos_del_almacen()
+	assert_int(objetos.size()).is_equal(esperada.size())
+	for objeto in objetos:
+		(
+			assert_int(objeto.sonoridad)
+			. override_failure_message("%s no suena como se espera" % objeto.id)
+			. is_equal(esperada.get(objeto.id, EntradaSonora.Sonoridad.NINGUNA))
+		)
+
+
 func test_solo_la_caja_del_deposito_admite_otro_objeto_encima() -> void:  # AC-PLY-034
 	assert_bool(ObjetoDelAlmacen.new().admite_encima).is_false()
 	for objeto in _objetos_del_almacen():

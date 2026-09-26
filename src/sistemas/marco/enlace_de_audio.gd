@@ -62,23 +62,38 @@ func enlazar_todo(fuentes: Array) -> void:
 
 ## Ata un evento a la primera fuente que declare su señal, y devuelve si lo ató.
 func _enlazar(evento: EntradaSonora.Evento, fuentes: Array) -> bool:
-	var entrada := _tabla.de(evento)
+	for fuente: Object in fuentes:
+		if _conectar(evento, fuente):
+			return true
+	return false
+
+
+## Conecta la señal del evento en esa fuente, si la declara, y devuelve si quedó conectada.
+##
+## El sonido recibe los dos primeros argumentos de la señal: el origen —el objeto que lo produjo—
+## y un detalle, como la rapidez de un contacto. `unbind()` descarta el resto. Sin él, conectar
+## una señal de tres parámetros a un método de tres falla **en runtime**, que es justo cuando ya
+## no hay nadie mirando.
+func _conectar(evento: EntradaSonora.Evento, fuente: Object) -> bool:
+	var entrada := _tabla.alguna_de(evento)
 	if entrada == null or not entrada.tiene_fuente() or not entrada.es_valida():
 		return false
-	for fuente: Object in fuentes:
-		if fuente == null or not fuente.has_signal(entrada.senal):
-			continue
-		var destino := _pedir.bind(evento)
-		var argumentos := _aridad_de(fuente, entrada.senal)
-		if argumentos > 0:
-			# `unbind()` descarta los argumentos que la señal manda y este método no usa. Sin él,
-			# conectar una señal de dos parámetros a un método de uno falla **en runtime**, que
-			# es justo cuando ya no hay nadie mirando.
-			destino = destino.unbind(argumentos)
-		if not fuente.is_connected(entrada.senal, destino):
-			fuente.connect(entrada.senal, destino)
-		return true
-	return false
+	if fuente == null or not fuente.has_signal(entrada.senal):
+		return false
+	var argumentos := _aridad_de(fuente, entrada.senal)
+	var destino: Callable
+	match argumentos:
+		0:
+			destino = _al_emitir.bind(null, null, evento)
+		1:
+			destino = _al_emitir.bind(null, evento)
+		2:
+			destino = _al_emitir.bind(evento)
+		_:
+			destino = _al_emitir.bind(evento).unbind(argumentos - 2)
+	if not fuente.is_connected(entrada.senal, destino):
+		fuente.connect(entrada.senal, destino)
+	return true
 
 
 ## Cuántos argumentos manda esa señal, según el motor.
@@ -90,5 +105,12 @@ func _aridad_de(fuente: Object, senal: StringName) -> int:
 	return 0
 
 
-func _pedir(evento: EntradaSonora.Evento) -> void:
-	reproductor.pedir(evento)
+## Pide el sonido con su origen. Un objeto que llega como origen pasa a ser fuente él también:
+## así sus contactos suenan sin que nadie lo pase en la lista, aunque se cree en juego.
+func _al_emitir(origen: Variant, detalle: Variant, evento: EntradaSonora.Evento) -> void:
+	var objeto: Object = origen if is_instance_valid(origen) else null
+	if objeto != null:
+		for otro: EntradaSonora.Evento in EntradaSonora.Evento.values():
+			_conectar(otro, objeto)
+	var rapidez: float = detalle if detalle is float else 0.0
+	reproductor.recibir(evento, objeto, rapidez)

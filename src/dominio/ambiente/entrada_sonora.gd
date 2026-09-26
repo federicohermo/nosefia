@@ -39,6 +39,28 @@ enum Evento {
 	BOTON_DE_LA_COMPUTADORA,
 }
 
+## Cómo suena una cosa al agarrarla o al dejarla. Los valores salen de la ficha de sonido.
+## `NINGUNA` es la fila de un evento que no es de objeto, y lo fijo del almacén.
+enum Sonoridad {
+	NINGUNA,
+	LATA,
+	CAJITA,
+	CAJA,
+	ENVOLTORIO_PLASTICO,
+	BOTELLA_PLASTICA,
+	PAPEL,
+	BOLSA,
+	MOPA,
+}
+
+## Los eventos que tienen una fila por sonoridad. `OBJETO_SOLTADO` suena al tocar algo, no al
+## soltar.
+const EVENTOS_DE_OBJETO := [
+	Evento.OBJETO_AGARRADO,
+	Evento.OBJETO_SOLTADO,
+	Evento.PRODUCTO_COLOCADO,
+]
+
 ## Los cuatro buses del local, **declarados una sola vez en todo el repo**. El layout de buses los
 ## escribe otra vez porque un `.tres` no puede leer una constante, y hay un caso que compara los
 ## dos: sin él, un bus renombrado deja su canal sonando por `Master` sin que nada avise.
@@ -61,6 +83,8 @@ const BUSES := [BUS_DE_AMBIENTE, BUS_DE_EFECTOS, BUS_DE_INTERFAZ, BUS_DE_MUSICA]
 @export var senal: StringName = &""
 
 @export var bus: String = BUS_DE_EFECTOS
+
+@export var sonoridad: Sonoridad = Sonoridad.NINGUNA
 
 ## Si el sonido se repite mientras dura la noche. Los que van en bucle ocupan la voz de ambiente
 ## y no la ronda: una ronda con un bucle adentro se quedaría sin voces al quinto sonido.

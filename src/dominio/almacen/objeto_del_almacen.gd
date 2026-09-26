@@ -26,6 +26,8 @@ const SIN_ID := &""
 ## Si sobre este objeto se puede soltar otro. Sólo lo declaran las cajas contenedoras.
 @export var admite_encima: bool = false
 
+@export var sonoridad: EntradaSonora.Sonoridad = EntradaSonora.Sonoridad.NINGUNA
+
 @export var revelacion: Revelacion = null
 
 

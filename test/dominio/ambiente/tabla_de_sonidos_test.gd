@@ -106,6 +106,76 @@ func test_una_tabla_con_una_fila_invalida_la_nombra() -> void:  # AC-AMB-004
 	assert_bool(tabla.cubre_todos()).is_false()
 
 
+func test_la_fila_de_un_evento_de_objeto_sale_de_su_sonoridad() -> void:  # AC-AMB-008
+	var tabla := _tabla()
+	var alzar := tabla.de(EntradaSonora.Evento.OBJETO_AGARRADO, EntradaSonora.Sonoridad.LATA)
+	var dejar := tabla.de(EntradaSonora.Evento.PRODUCTO_COLOCADO, EntradaSonora.Sonoridad.CAJITA)
+	assert_object(alzar).is_not_null()
+	assert_object(dejar).is_not_null()
+	if alzar == null or dejar == null:
+		return
+	assert_str(alzar.stream.resource_path.get_file().get_basename()).is_equal(
+		"SFX_OBJETO_Lata_Alzar"
+	)
+	assert_str(dejar.stream.resource_path.get_file().get_basename()).is_equal(
+		"SFX_OBJETO_Cajita_Dejar"
+	)
+
+
+func test_un_par_sin_fila_contesta_null() -> void:  # AC-AMB-008
+	var tabla := TablaDeSonidos.new()
+	var lata := EntradaSonora.new()
+	lata.evento = EntradaSonora.Evento.OBJETO_AGARRADO
+	lata.sonoridad = EntradaSonora.Sonoridad.LATA
+	tabla.entradas = [lata] as Array[EntradaSonora]
+	var papel := EntradaSonora.Sonoridad.PAPEL
+	assert_object(tabla.de(EntradaSonora.Evento.OBJETO_AGARRADO, papel)).is_null()
+	assert_object(tabla.de(EntradaSonora.Evento.OBJETO_AGARRADO)).is_null()
+
+
+func test_la_tabla_nombra_el_par_que_falta() -> void:  # AC-AMB-009
+	assert_array(_tabla().pares_sin_fila()).is_empty()
+	var tabla := TablaDeSonidos.new()
+	var entradas: Array[EntradaSonora] = []
+	for evento: EntradaSonora.Evento in EntradaSonora.Evento.values():
+		for sonoridad in _sonoridades_de(evento):
+			if (
+				evento == EntradaSonora.Evento.OBJETO_SOLTADO
+				and sonoridad == EntradaSonora.Sonoridad.BOLSA
+			):
+				continue
+			var entrada := EntradaSonora.new()
+			entrada.evento = evento
+			entrada.sonoridad = sonoridad
+			entradas.append(entrada)
+	tabla.entradas = entradas
+	assert_bool(tabla.cubre_todos()).is_false()
+	assert_array(tabla.eventos_sin_fila()).is_empty()
+	assert_array(tabla.pares_sin_fila()).is_equal(
+		[[EntradaSonora.Evento.OBJETO_SOLTADO, EntradaSonora.Sonoridad.BOLSA]]
+	)
+
+
+func test_cada_sonoridad_con_audio_suena_su_propio_archivo() -> void:
+	# Una fila copiada de otra sonoridad sonaría, y el rojo no lo diría nunca.
+	var tabla := _tabla()
+	for evento: EntradaSonora.Evento in EntradaSonora.EVENTOS_DE_OBJETO:
+		for sonoridad in _sonoridades_de(evento):
+			var entrada := tabla.de(evento, sonoridad)
+			if entrada == null or not entrada.tiene_sonido():
+				continue
+			var nombre := String(EntradaSonora.Sonoridad.find_key(sonoridad)).to_pascal_case()
+			assert_str(entrada.stream.resource_path.get_file()).contains("_%s_" % nombre)
+
+
+static func _sonoridades_de(evento: EntradaSonora.Evento) -> Array:
+	if not EntradaSonora.EVENTOS_DE_OBJETO.has(evento):
+		return [EntradaSonora.Sonoridad.NINGUNA]
+	var sonoridades := EntradaSonora.Sonoridad.values()
+	sonoridades.erase(EntradaSonora.Sonoridad.NINGUNA)
+	return sonoridades
+
+
 func test_la_ronda_reparte_por_turno_y_vuelve_al_principio() -> void:
 	var ronda := RondaDeVoces.new(3)
 	assert_int(ronda.siguiente()).is_equal(0)

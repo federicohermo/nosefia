@@ -30,27 +30,49 @@ static func desde_disco() -> TablaDeSonidos:
 ##
 ## `null` y no una fila vacía: quien pide un sonido que no está tiene que poder declararlo, y una
 ## fila muda inventada acá lo dejaría creyendo que pidió bien.
-func de(evento: EntradaSonora.Evento) -> EntradaSonora:
+func de(
+	evento: EntradaSonora.Evento,
+	sonoridad: EntradaSonora.Sonoridad = EntradaSonora.Sonoridad.NINGUNA
+) -> EntradaSonora:
+	for entrada in entradas:
+		if entrada != null and entrada.evento == evento and entrada.sonoridad == sonoridad:
+			return entrada
+	return null
+
+
+## Alguna fila de ese evento, sin importar la sonoridad, o `null`. Las filas de un mismo evento
+## comparten la señal y el bus: el enlace necesita una sola.
+func alguna_de(evento: EntradaSonora.Evento) -> EntradaSonora:
 	for entrada in entradas:
 		if entrada != null and entrada.evento == evento:
 			return entrada
 	return null
 
 
-## Si hay una fila por cada valor del `enum`.
+## Si hay una fila por cada valor del `enum`, y una por cada sonoridad de los eventos de objeto.
 ##
 ## Se recorre el `enum` y no se cuentan las filas: dos filas del mismo evento darían el número
 ## correcto con un evento sin sonido, y el jugador no escucharía nada sin que nada lo diga.
 func cubre_todos() -> bool:
-	return eventos_sin_fila().is_empty()
+	return eventos_sin_fila().is_empty() and pares_sin_fila().is_empty()
 
 
-## Los eventos que la tabla no cubre, para que el rojo diga cuál falta y no sólo que falta uno.
+## Los eventos que no son de objeto y la tabla no cubre, para que el rojo diga cuál falta.
 func eventos_sin_fila() -> Array:
 	var faltan := []
 	for evento: EntradaSonora.Evento in EntradaSonora.Evento.values():
-		if de(evento) == null:
+		if not EntradaSonora.EVENTOS_DE_OBJETO.has(evento) and de(evento) == null:
 			faltan.append(evento)
+	return faltan
+
+
+## Los pares `[evento, sonoridad]` de los eventos de objeto que la tabla no cubre.
+func pares_sin_fila() -> Array:
+	var faltan := []
+	for evento: EntradaSonora.Evento in EntradaSonora.EVENTOS_DE_OBJETO:
+		for sonoridad: EntradaSonora.Sonoridad in EntradaSonora.Sonoridad.values():
+			if sonoridad != EntradaSonora.Sonoridad.NINGUNA and de(evento, sonoridad) == null:
+				faltan.append([evento, sonoridad])
 	return faltan
 
 
