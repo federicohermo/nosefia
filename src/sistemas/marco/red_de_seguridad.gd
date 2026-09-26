@@ -185,7 +185,9 @@ func _solido_pisado(cuerpo: PhysicsBody3D) -> Node3D:
 func _choques(cuerpo: PhysicsBody3D, lugar: Transform3D) -> Array[Dictionary]:
 	var consulta := PhysicsTestMotionParameters3D.new()
 	consulta.from = lugar
-	consulta.max_collisions = 8
+	# El tope del motor. Cada cuerpo ocupa varios contactos, y el orden en que vuelven no es fijo:
+	# con 8, dos sólidos fijos llenaron la lista y la caja del origen quedó afuera.
+	consulta.max_collisions = 32
 	if jugador != null:
 		consulta.exclude_bodies = [jugador.get_rid()]
 	var resultado := PhysicsTestMotionResult3D.new()
