@@ -100,6 +100,31 @@ func test_abrir_la_jornada_termina_el_examen_en_curso() -> void:  # AC-INV-025
 	assert_int(terminados[0]).is_equal(3)
 
 
+func test_con_otra_pantalla_encima_la_e_no_abre_un_examen() -> void:
+	# Así suspenden la placa del cierre y la computadora. La E abría un examen de lo enfocado o
+	# de lo que se lleva, y la segunda reanudaba al jugador con la pantalla abierta.
+	var almacen: Node3D = auto_free(ALMACEN.instantiate())
+	add_child(almacen)
+	await get_tree().process_frame
+	var jugador: Node3D = almacen.get("_jugador")
+	var control: ControlDelJugador = jugador.get("_control")
+	var examen: Examen = jugador.get("examen")
+	var agarre: Agarre = almacen.get("_agarre")
+	var trapeador: RigidBody3D = almacen.get_node("Objetos/Trapeador")
+	jugador.suspender()
+	jugador.set("_enfocado", almacen.get_node("Objetos/BolsaDeBasura1"))
+	var evento := InputEventAction.new()
+	evento.action = ReglasDeLosObjetos.ACCION_EXAMINAR
+	evento.pressed = true
+	for llevado: RigidBody3D in [null, trapeador]:
+		if llevado != null:
+			assert_bool(agarre.pedir_agarrar(llevado.get("datos"), llevado)).is_true()
+		for vez in 2:
+			jugador.call("_unhandled_input", evento)
+			assert_bool(examen.esta_examinando()).is_false()
+		assert_bool(control.esta_suspendido()).is_true()
+
+
 func _reponer(almacen: Node3D) -> void:
 	var jugador: Node3D = almacen.get("_jugador")
 	jugador.set_physics_process(false)

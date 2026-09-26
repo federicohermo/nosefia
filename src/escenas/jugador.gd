@@ -147,7 +147,9 @@ func _unhandled_input(evento: InputEvent) -> void:
 		if _enfocado != null and not _control.esta_suspendido():
 			uso_pedido.emit(_enfocado)
 	elif evento.is_action_pressed(ReglasDeLosObjetos.ACCION_EXAMINAR):
-		examen.alternar(_datos_de(_enfocado), _enfocado)
+		# Con otra pantalla encima, la E no abre un examen: al cerrarlo reanudaría al jugador.
+		if examen.esta_examinando() or not _control.esta_suspendido():
+			examen.alternar(_datos_de(_enfocado), _enfocado)
 
 
 ## **El clic se lo gasta quien hace algo con él, y sólo ése.** Tener `interactuar()` es la
