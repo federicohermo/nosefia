@@ -58,8 +58,7 @@ func puerta() -> Puerta:
 	return _puerta
 
 
-## La cierra de golpe y pone la hoja en su lugar en el mismo paso. Sin reiniciar la
-## interpolación, la hoja se dibujaría girando hasta cerrarse.
+## Sin reiniciar la interpolación, la hoja se dibujaría girando hasta cerrarse.
 func cerrar_de_golpe() -> void:
 	_puerta.cerrar_de_golpe()
 	hoja.transform = _cerrada

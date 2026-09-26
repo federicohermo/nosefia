@@ -199,8 +199,6 @@ func _enfocar_mancha(jugador: Node3D, mancha: Node3D) -> void:
 	assert_object(jugador.get("_enfocado")).is_same(mancha)
 
 
-## Deja las dos puertas giradas `cuadros` pasos de física y abre la jornada siguiente. Afirma
-## que, en el mismo paso, las dos quedaron cerradas y con la hoja en su lugar.
 func _abrir_con_las_puertas_giradas(cuadros: int) -> Array:
 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
 	add_child(almacen)
