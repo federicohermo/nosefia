@@ -81,3 +81,15 @@ func diferencia_acumulada() -> int:
 		if atendida.vendida():
 			suma += atendida.diferencia()
 	return suma
+
+
+## Cuántas unidades de un producto salieron en las atenciones **cobradas**. Es contra lo que se
+## compara la planilla de registrar.
+func vendidas_de(producto: Producto) -> int:
+	if producto == null:
+		return 0
+	var suma := 0
+	for atendida in _atenciones:
+		if atendida.vendida():
+			suma += atendida.comprador().pedido().unidades_de(producto)
+	return suma

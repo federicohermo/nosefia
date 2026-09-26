@@ -1,124 +1,128 @@
-## La app de la caja: las tarjetas del día y el detalle de la que tiene el cursor.
+## La app de registro: la planilla de lo vendido, con una fila por producto y el total.
 ##
-## No decide nada: qué es del día, qué ya se registró y qué falta lo contesta `CajaRegistradora`,
-## que tiene test. Acá sólo se dibuja lo que ella responde.
+## No decide nada: las filas, los topes, el total y si coincide con lo vendido los contesta
+## `RegistroDeVentas`, que tiene test. Acá sólo se dibuja lo que responde.
 class_name AppCaja
 extends Control
 
-signal registro_pedido(producto: Producto)
+signal suma_pedida(producto: Producto)
+signal resta_pedida(producto: Producto)
 
 const TEXTO_DEL_TITULO := "/ PRODUCTOS:"
-const TEXTO_DEL_FALTANTE := "FALTA EN GÓNDOLA\n\n%s"
-const TEXTO_SIN_FALTANTES := "LA GÓNDOLA ESTÁ AL DÍA."
-const TEXTO_DEL_BOTON := "REGISTRAR"
-const TEXTO_YA_REGISTRADO := "REGISTRADO"
-const TEXTO_DEL_RESUMEN := "DEL DÍA     %02d\n\nREGISTRADOS  %02d"
-const TEXTO_DE_AYUDA := "CLIC / REGISTRAR\n\nPasá el cursor por un producto para ver su detalle."
-const TEXTO_SIN_PRODUCTOS := "No hay productos para registrar."
-const TEXTO_DEL_PRECIO := "PRECIO / $%d"
-const TEXTO_PENDIENTE := "PRODUCTO SIN REGISTRAR."
-const TEXTO_REGISTRADO := "PRODUCTO REGISTRADO."
+const TEXTO_DEL_SUBTITULO := "REGISTRO DE ARTÍCULOS DEL LOCAL"
+const TEXTO_DE_AYUDA := "Anotá con + y − cuántas unidades se vendieron de cada producto."
+const TEXTO_DEL_PRECIO := "$%d"
+const TEXTO_DE_LAS_UNIDADES := "%02d"
+const TEXTO_DEL_TOTAL := "$%d"
+const TEXTO_DE_SUMAR := "+"
+const TEXTO_DE_RESTAR := "−"
 const IMAGENES := {
 	Producto.Id.ACTRONCITO: preload("res://assets/ui/manada/actroncito.png"),
 	Producto.Id.DUREXTRA: preload("res://assets/ui/manada/durextra.png"),
 	Producto.Id.BURBALOO: preload("res://assets/ui/manada/burbaloo.png"),
+	Producto.Id.ZUCARACHAS: preload("res://assets/ui/manada/zucarachas.png"),
+	Producto.Id.LAYSNTT: preload("res://assets/ui/manada/laysntt.png"),
+	Producto.Id.MALBARDO: preload("res://assets/ui/manada/malbardo.png"),
+	Producto.Id.PRONGLES: preload("res://assets/ui/manada/prongles.png"),
+	Producto.Id.JORGILLO: preload("res://assets/ui/manada/jorgillo.png"),
+	Producto.Id.ARVEJAS: preload("res://assets/ui/manada/arvejas.png"),
+	Producto.Id.CHISITOS: preload("res://assets/ui/manada/chisitos.png"),
+	Producto.Id.OREMOS: preload("res://assets/ui/manada/oremos.png"),
+	Producto.Id.PEPITOS: preload("res://assets/ui/manada/pepitos.png"),
+	Producto.Id.SALADIK: preload("res://assets/ui/manada/saladik.png"),
+	Producto.Id.UAKAS: preload("res://assets/ui/manada/uakas.png"),
+	Producto.Id.CORACOLA: preload("res://assets/ui/manada/coracola.png"),
+	Producto.Id.FROTLUPS: preload("res://assets/ui/manada/frotlups.png"),
+	Producto.Id.MAROLINI: preload("res://assets/ui/manada/marolini.png"),
+	Producto.Id.AMARGADITO: preload("res://assets/ui/manada/amargadito.png"),
+	Producto.Id.CINDOLOR: preload("res://assets/ui/manada/cindolor.png"),
+	Producto.Id.FLINPUF: preload("res://assets/ui/manada/flinpuf.png"),
+	Producto.Id.DONSATURADOS: preload("res://assets/ui/manada/donsaturados.png"),
+	Producto.Id.PETISAS: preload("res://assets/ui/manada/petisas.png"),
+	Producto.Id.MACUMBAS: preload("res://assets/ui/manada/macumbas.png"),
 }
 
 @export var _titulo: Label
-@export var _botones: GridContainer
-@export var _faltantes: Label
-@export var _resumen: Label
+@export var _subtitulo: Label
 @export var _ayuda: Label
-@export var _imagen: TextureRect
-@export var _nombre: Label
-@export var _precio: Label
-@export var _estado: Label
+@export var _filas: VBoxContainer
+@export var _total: Label
 
-var _producto: Producto
-var _caja: CajaRegistradora
+var _registro: RegistroDeVentas
+
+## Las etiquetas de unidades por `producto.id`. Las filas se arman una vez por planilla y después
+## sólo se reescriben: rehacerlas en cada gesto vaciaría el contenedor un instante y el
+## desplazamiento volvería arriba.
+var _unidades_por_id: Dictionary = {}
 
 
 func _ready() -> void:
 	_titulo.text = TEXTO_DEL_TITULO
+	_subtitulo.text = TEXTO_DEL_SUBTITULO
 	_ayuda.text = TEXTO_DE_AYUDA
 
 
-func mostrar(caja: CajaRegistradora) -> void:
-	_caja = caja
-	for viejo in _botones.get_children():
-		_botones.remove_child(viejo)
-		viejo.queue_free()
-	var productos := caja.del_dia()
-	for producto in productos:
-		_botones.add_child(_boton_de(producto, caja.esta_registrado(producto)))
-	_resumen.text = TEXTO_DEL_RESUMEN % [productos.size(), caja.registrados()]
-	_faltantes.text = _aviso_de(caja.faltantes())
-	if productos.is_empty():
-		_producto = null
-		_imagen.texture = null
-		_nombre.text = TEXTO_SIN_PRODUCTOS
-		_precio.text = ""
-		_estado.text = ""
-		return
-	var seleccionado := productos[0]
-	for producto in productos:
-		if _producto != null and producto.id == _producto.id:
-			seleccionado = producto
-	_mostrar_detalle(seleccionado)
+func mostrar(registro: RegistroDeVentas) -> void:
+	if registro != _registro:
+		_registro = registro
+		_armar_filas()
+	for producto in registro.productos():
+		var unidades: Label = _unidades_por_id[producto.id]
+		unidades.text = TEXTO_DE_LAS_UNIDADES % registro.unidades_de(producto)
+	_total.text = TEXTO_DEL_TOTAL % registro.total()
 
 
-func _boton_de(producto: Producto, registrado: bool) -> Button:
-	var boton := Button.new()
-	boton.custom_minimum_size = Vector2(246, 334)
-	boton.disabled = registrado
-	boton.tooltip_text = (
-		producto.nombre + " / " + (TEXTO_YA_REGISTRADO if registrado else TEXTO_DEL_BOTON)
-	)
-	boton.pressed.connect(func() -> void: registro_pedido.emit(producto))
-	boton.mouse_entered.connect(func() -> void: _mostrar_detalle(producto))
-	boton.focus_entered.connect(func() -> void: _mostrar_detalle(producto))
-	var contenido := VBoxContainer.new()
-	contenido.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-	contenido.offset_left = 24
-	contenido.offset_top = 24
-	contenido.offset_right = -24
-	contenido.offset_bottom = -24
-	contenido.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	boton.add_child(contenido)
+func _armar_filas() -> void:
+	for vieja in _filas.get_children():
+		_filas.remove_child(vieja)
+		vieja.queue_free()
+	_unidades_por_id.clear()
+	for producto in _registro.productos():
+		_filas.add_child(_fila_de(producto))
+
+
+func _fila_de(producto: Producto) -> HBoxContainer:
+	var fila := HBoxContainer.new()
+	fila.custom_minimum_size = Vector2(0, 104)
+	fila.add_theme_constant_override(&"separation", 24)
+	fila.mouse_filter = Control.MOUSE_FILTER_PASS
 	var imagen := TextureRect.new()
 	imagen.texture = IMAGENES.get(producto.id)
 	imagen.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 	imagen.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
-	imagen.custom_minimum_size = Vector2(0, 184)
+	imagen.custom_minimum_size = Vector2(96, 96)
 	imagen.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	contenido.add_child(imagen)
-	var nombre := Label.new()
-	nombre.text = producto.nombre.to_upper()
-	nombre.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	nombre.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
-	nombre.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	contenido.add_child(nombre)
-	var estado := Label.new()
-	estado.text = TEXTO_YA_REGISTRADO if registrado else TEXTO_DEL_BOTON
-	estado.theme_type_variation = &"TextoSecundario"
-	estado.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	estado.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	contenido.add_child(estado)
+	fila.add_child(imagen)
+	fila.add_child(_etiqueta(producto.nombre.to_upper(), 0, true))
+	fila.add_child(_etiqueta(TEXTO_DEL_PRECIO % producto.precio, 200))
+	fila.add_child(_boton(TEXTO_DE_RESTAR, func() -> void: resta_pedida.emit(producto)))
+	var unidades := _etiqueta("", 96)
+	unidades.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	_unidades_por_id[producto.id] = unidades
+	fila.add_child(unidades)
+	fila.add_child(_boton(TEXTO_DE_SUMAR, func() -> void: suma_pedida.emit(producto)))
+	return fila
+
+
+func _etiqueta(texto: String, ancho: float, expandir: bool = false) -> Label:
+	var etiqueta := Label.new()
+	etiqueta.text = texto
+	etiqueta.custom_minimum_size = Vector2(ancho, 0)
+	etiqueta.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	etiqueta.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
+	etiqueta.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	if expandir:
+		etiqueta.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	return etiqueta
+
+
+## El botón deja pasar el evento: sin eso, la rueda sobre un «+» no llega al desplazamiento y las
+## filas de abajo quedan fuera de alcance.
+func _boton(texto: String, al_apretar: Callable) -> Button:
+	var boton := Button.new()
+	boton.text = texto
+	boton.custom_minimum_size = Vector2(72, 72)
+	boton.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	boton.mouse_filter = Control.MOUSE_FILTER_PASS
+	boton.pressed.connect(al_apretar)
 	return boton
-
-
-func _mostrar_detalle(producto: Producto) -> void:
-	_producto = producto
-	_imagen.texture = IMAGENES.get(producto.id)
-	_nombre.text = producto.nombre.to_upper()
-	_precio.text = TEXTO_DEL_PRECIO % producto.precio
-	_estado.text = (TEXTO_REGISTRADO if _caja.esta_registrado(producto) else TEXTO_PENDIENTE)
-
-
-func _aviso_de(faltantes: Array[Producto]) -> String:
-	if faltantes.is_empty():
-		return TEXTO_SIN_FALTANTES
-	var nombres: Array[String] = []
-	for producto in faltantes:
-		nombres.append(producto.nombre)
-	return TEXTO_DEL_FALTANTE % "\n".join(nombres)

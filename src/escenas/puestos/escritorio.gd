@@ -35,9 +35,10 @@ func _ready() -> void:
 	computadora.app_cambiada.connect(_al_cambiar_de_app)
 	computadora.chats_actualizados.connect(_al_leer_un_chat)
 	computadora.nota_escrita.connect(_al_escribirse_una_nota)
-	computadora.caja_actualizada.connect(_al_registrarse_un_producto)
+	computadora.registro_actualizado.connect(_al_cambiar_el_registro)
 	pantalla.app_pedida.connect(computadora.pedir_cambiar_a)
-	pantalla.caja().registro_pedido.connect(computadora.pedir_registrar)
+	pantalla.caja().suma_pedida.connect(computadora.pedir_sumar)
+	pantalla.caja().resta_pedida.connect(computadora.pedir_restar)
 	pantalla.chats().lectura_pedida.connect(_al_pedirse_un_chat)
 	pantalla.notas().escritura_pedida.connect(computadora.pedir_escribir)
 
@@ -88,7 +89,7 @@ func _al_cambiar_de_app(app: Computadora.App) -> void:
 ## jugador hace algo, y repintar por cuadro sería reconstruir tres listas sesenta veces por
 ## segundo para que digan lo mismo.
 func _repintar(_app: Computadora.App) -> void:
-	pantalla.caja().mostrar(computadora.caja())
+	pantalla.caja().mostrar(computadora.registro())
 	pantalla.chats().mostrar(computadora.bandeja())
 	pantalla.notas().mostrar(computadora.cuaderno().notas())
 
@@ -107,8 +108,8 @@ func _al_escribirse_una_nota(_nota: Nota) -> void:
 	pantalla.notas().mostrar(computadora.cuaderno().notas())
 
 
-func _al_registrarse_un_producto(_registrados: int) -> void:
-	pantalla.caja().mostrar(computadora.caja())
+func _al_cambiar_el_registro() -> void:
+	pantalla.caja().mostrar(computadora.registro())
 
 
 func _al_cerrar_el_turno(_cumplidas: int) -> void:

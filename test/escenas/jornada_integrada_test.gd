@@ -29,8 +29,8 @@ func test_los_puestos_completan_la_jornada_y_permiten_abrir_la_siguiente(
 	_comprobar_huecos(almacen, 0)
 	await _reponer(almacen)
 	_comprobar_huecos(almacen, Catalogo.todos().size())
-	await _registrar(almacen)
 	await _atender(almacen)
+	await _registrar(almacen)
 	await _limpiar(almacen)
 	await _sacar_la_basura(almacen)
 	for tipo: Tarea.Tipo in Tarea.Tipo.values():
@@ -57,6 +57,14 @@ func test_los_puestos_completan_la_jornada_y_permiten_abrir_la_siguiente(
 	var recolector: RecolectorDeBasura = almacen.get("_recolector")
 	assert_int(recolector.tarea().depositadas()).is_zero()
 	_comprobar_huecos(almacen, 0)
+	_comprobar_planilla_en_cero(almacen)
+
+
+# AC-STK-026
+func _comprobar_planilla_en_cero(almacen: Node3D) -> void:
+	var registro: RegistroDeVentas = almacen.get("_computadora").registro()
+	for producto in Catalogo.todos():
+		assert_int(registro.unidades_de(producto)).is_zero()
 
 
 func _reponer(almacen: Node3D) -> void:
@@ -92,15 +100,29 @@ func _registrar(almacen: Node3D) -> void:
 	assert_bool(pantalla.visible).is_true()
 	await _comprobar_reloj(almacen)
 	var computadora: ComputadoraDeEscritorio = almacen.get("_computadora")
-	var botones: Node = pantalla.caja().get_node("Botones")
-	for indice in computadora.caja().del_dia().size():
-		var boton: Button = botones.get_child(indice)
-		boton.pressed.emit()
-	await get_tree().process_frame
+	var atender: TareaDeAtender = almacen.get("_atenciones").tarea()
+	var filas: Node = pantalla.caja().get_node("Desplazamiento/Filas")
+	var productos := computadora.registro().productos()
 	var reloj: RelojDelTurno = almacen.get("_reloj")
+	var tarea := reloj.obligatoria(Tarea.Tipo.REGISTRAR)
+	assert_int(filas.get_child_count()).is_equal(Catalogo.todos().size())
+	for indice in productos.size():
+		for unidad in atender.vendidas_de(productos[indice]):
+			_boton_de_la_fila(filas, indice, 5).pressed.emit()
+	assert_bool(tarea.completada()).is_true()
+	# Una unidad de más la descumple, y sacarla la vuelve a cumplir.
+	_boton_de_la_fila(filas, 0, 5).pressed.emit()
+	assert_bool(tarea.completada()).is_false()
+	_boton_de_la_fila(filas, 0, 3).pressed.emit()
+	await get_tree().process_frame
 	assert_bool(reloj.corriendo()).is_true()
-	assert_bool(reloj.obligatoria(Tarea.Tipo.REGISTRAR).completada()).is_true()
+	assert_bool(tarea.completada()).is_true()
 	escritorio.call("cerrar")
+
+
+## Los botones de una fila de la planilla: «−» en la columna 3 y «+» en la 5.
+func _boton_de_la_fila(filas: Node, indice: int, columna: int) -> Button:
+	return filas.get_child(indice).get_child(columna)
 
 
 func _atender(almacen: Node3D) -> void:
