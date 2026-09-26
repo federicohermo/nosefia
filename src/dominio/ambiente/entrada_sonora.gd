@@ -39,6 +39,9 @@ enum Evento {
 	BOTON_DE_LA_COMPUTADORA,
 	MUSICA_DE_LA_NOCHE,
 	PASO_DADO,
+	COMPRA_REALIZADA,
+	LECTOR_RECHAZADO,
+	MENSAJE_DEL_CELULAR,
 }
 
 ## Cómo suena una cosa al agarrarla o al dejarla. Los valores salen de la ficha de sonido.

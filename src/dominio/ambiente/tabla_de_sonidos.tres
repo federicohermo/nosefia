@@ -25,6 +25,10 @@
 [ext_resource type="AudioStream" uid="uid://cb447txn2mgcj" path="res://assets/audio/SFX_PERSONAJE_Paso2.wav" id="23_paso2"]
 [ext_resource type="AudioStream" uid="uid://ct6q22q87fa48" path="res://assets/audio/SFX_PERSONAJE_Paso3.wav" id="24_paso3"]
 [ext_resource type="AudioStream" uid="uid://ifxccvxoryy" path="res://assets/audio/SFX_PERSONAJE_Paso4.wav" id="25_paso4"]
+[ext_resource type="AudioStream" uid="uid://dvkgvy26jk3h" path="res://assets/audio/SFX_EVENTO_CompraRealizada.wav" id="26_compra"]
+[ext_resource type="AudioStream" uid="uid://ty1wekcx3qke" path="res://assets/audio/SFX_NOLEV_Lector_Error.wav" id="27_lector"]
+[ext_resource type="AudioStream" uid="uid://ff0xtvb8r8xe" path="res://assets/audio/SFX_INTERFAZ_Celular_Mensaje_A.wav" id="28_celular_a"]
+[ext_resource type="AudioStream" uid="uid://co73sow5coquy" path="res://assets/audio/SFX_INTERFAZ_Celular_Mensaje_B.wav" id="29_celular_b"]
 
 [sub_resource type="Resource" id="Resource_x3pvh"]
 script = ExtResource("1_qermt")
@@ -297,6 +301,29 @@ evento = 15
 senal = &"paso_dado"
 variantes = Array[AudioStream]([ExtResource("22_paso1"), ExtResource("23_paso2"), ExtResource("24_paso3"), ExtResource("25_paso4")])
 
+[sub_resource type="Resource" id="Resource_compra"]
+script = ExtResource("1_qermt")
+evento = 16
+senal = &"compra_realizada"
+posicional = true
+emisor = &"Ventanilla"
+stream = ExtResource("26_compra")
+
+[sub_resource type="Resource" id="Resource_lector"]
+script = ExtResource("1_qermt")
+evento = 17
+senal = &"cobro_rechazado"
+posicional = true
+emisor = &"Ventanilla"
+stream = ExtResource("27_lector")
+
+[sub_resource type="Resource" id="Resource_celular"]
+script = ExtResource("1_qermt")
+evento = 18
+senal = &"nota_escrita"
+bus = "Interfaz"
+variantes = Array[AudioStream]([ExtResource("28_celular_a"), ExtResource("29_celular_b")])
+
 [resource]
 script = ExtResource("2_xbcco")
-entradas = Array[ExtResource("1_qermt")]([SubResource("Resource_x3pvh"), SubResource("Resource_oefuu"), SubResource("Resource_382as"), SubResource("Resource_b10uv"), SubResource("Resource_ag1"), SubResource("Resource_ag2"), SubResource("Resource_ag3"), SubResource("Resource_ag4"), SubResource("Resource_ag5"), SubResource("Resource_ag6"), SubResource("Resource_ag7"), SubResource("Resource_ag8"), SubResource("Resource_so1"), SubResource("Resource_so2"), SubResource("Resource_so3"), SubResource("Resource_so4"), SubResource("Resource_so5"), SubResource("Resource_so6"), SubResource("Resource_so7"), SubResource("Resource_so8"), SubResource("Resource_avff3"), SubResource("Resource_co1"), SubResource("Resource_co2"), SubResource("Resource_co3"), SubResource("Resource_co4"), SubResource("Resource_co5"), SubResource("Resource_co6"), SubResource("Resource_co7"), SubResource("Resource_co8"), SubResource("Resource_2fnal"), SubResource("Resource_pmrqt"), SubResource("Resource_38ejk"), SubResource("Resource_ql6t2"), SubResource("Resource_s3myp"), SubResource("Resource_boton"), SubResource("Resource_musica"), SubResource("Resource_pasos")])
+entradas = Array[ExtResource("1_qermt")]([SubResource("Resource_x3pvh"), SubResource("Resource_oefuu"), SubResource("Resource_382as"), SubResource("Resource_b10uv"), SubResource("Resource_ag1"), SubResource("Resource_ag2"), SubResource("Resource_ag3"), SubResource("Resource_ag4"), SubResource("Resource_ag5"), SubResource("Resource_ag6"), SubResource("Resource_ag7"), SubResource("Resource_ag8"), SubResource("Resource_so1"), SubResource("Resource_so2"), SubResource("Resource_so3"), SubResource("Resource_so4"), SubResource("Resource_so5"), SubResource("Resource_so6"), SubResource("Resource_so7"), SubResource("Resource_so8"), SubResource("Resource_avff3"), SubResource("Resource_co1"), SubResource("Resource_co2"), SubResource("Resource_co3"), SubResource("Resource_co4"), SubResource("Resource_co5"), SubResource("Resource_co6"), SubResource("Resource_co7"), SubResource("Resource_co8"), SubResource("Resource_2fnal"), SubResource("Resource_pmrqt"), SubResource("Resource_38ejk"), SubResource("Resource_ql6t2"), SubResource("Resource_s3myp"), SubResource("Resource_boton"), SubResource("Resource_musica"), SubResource("Resource_pasos"), SubResource("Resource_compra"), SubResource("Resource_lector"), SubResource("Resource_celular")])
