@@ -311,15 +311,19 @@ func _al_lado_del_jugador(caja: CajaDelDeposito) -> bool:
 	var cuerpo: CollisionShape3D = jugador.get_node("Cuerpo")
 	var media := _media_caja(caja)
 	var radio: float = (cuerpo.shape as CapsuleShape3D).radius + media.length()
-	for lado in LADOS_DEL_JUGADOR:
-		var vuelta := Basis(Vector3.UP, TAU * lado / LADOS_DEL_JUGADOR)
-		var costado := jugador.global_position + vuelta * (jugador.frente() * radio)
-		var golpe := _rayo(
-			caja, costado + Vector3.UP * media.y, costado + Vector3.DOWN * CAIDA_MAXIMA
-		)
-		if golpe.is_empty() or not ReglasDeLosObjetos.se_puede_apoyar_en(golpe["normal"].y):
-			continue
-		caja.global_position = _lugar_sobre(caja, golpe["position"])
+	var lugares := LugaresDelPiso.alrededor(
+		get_world_3d().direct_space_state,
+		jugador.global_position,
+		jugador.frente(),
+		radio,
+		media.y,
+		CAIDA_MAXIMA,
+		LADOS_DEL_JUGADOR,
+		caja.collision_mask,
+		[caja.get_rid(), jugador.get_rid()]
+	)
+	for lugar in lugares:
+		caja.global_position = _lugar_sobre(caja, lugar)
 		if _entra_entera(caja) and not _le_queda_encima_al_jugador(caja):
 			return true
 	return false
