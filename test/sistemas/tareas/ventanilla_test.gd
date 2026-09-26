@@ -136,6 +136,19 @@ func test_despachar_sin_vender_avisa_igual_que_cobrar() -> void:
 	assert_int(_avisos_de_tarea).is_equal(1)
 
 
+func test_la_compra_se_avisa_solo_si_hubo_venta() -> void:
+	# De esta señal cuelga el sonido de la compra: sin venta, el comprador se va sin comprar.
+	var ventanilla := _ventanilla(2)
+	var compras := [0]
+	ventanilla.compra_realizada.connect(func() -> void: compras[0] += 1)
+	ventanilla.pedir_atender()
+	ventanilla.pedir_despachar_sin_vender()
+	assert_int(compras[0]).is_equal(0)
+	ventanilla.pedir_atender()
+	ventanilla.pedir_cobrar()
+	assert_int(compras[0]).is_equal(1)
+
+
 func test_el_turno_sigue_corriendo_con_la_ventanilla_abierta() -> void:
 	# **Es la decisión entera del spec**: atender cuesta minutos, y si el reloj se pausara la
 	# ventanilla sería gratis y la tensión aritmética dejaría de apretar. Se mide contra

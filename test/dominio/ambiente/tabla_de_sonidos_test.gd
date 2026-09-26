@@ -238,7 +238,7 @@ func test_la_compra_el_lector_y_el_celular_suenan_con_su_audio() -> void:
 	var tabla := _tabla()
 	var esperado := {
 		EntradaSonora.Evento.COMPRA_REALIZADA:
-		["atencion_despachada", EntradaSonora.BUS_DE_EFECTOS, ["SFX_EVENTO_CompraRealizada"]],
+		["compra_realizada", EntradaSonora.BUS_DE_EFECTOS, ["SFX_EVENTO_CompraRealizada"]],
 		EntradaSonora.Evento.LECTOR_RECHAZADO:
 		["cobro_rechazado", EntradaSonora.BUS_DE_EFECTOS, ["SFX_NOLEV_Lector_Error"]],
 		EntradaSonora.Evento.MENSAJE_DEL_CELULAR:
@@ -269,7 +269,7 @@ func test_la_compra_el_lector_y_el_celular_suenan_con_su_audio() -> void:
 func test_las_tres_senales_llegan_de_una_fuente_del_audio() -> void:
 	# Una fila cuya fuente no está en la lista del almacén queda sin fuente, y eso no avisa.
 	var fuentes := {
-		"atencion_despachada": ["res://src/sistemas/tareas/ventanilla.gd", "_atenciones"],
+		"compra_realizada": ["res://src/sistemas/tareas/ventanilla.gd", "_atenciones"],
 		"cobro_rechazado": ["res://src/sistemas/tareas/ventanilla.gd", "_atenciones"],
 		"nota_escrita":
 		["res://src/sistemas/investigacion/computadora_de_escritorio.gd", "_computadora"],
@@ -280,7 +280,8 @@ func test_las_tres_senales_llegan_de_una_fuente_del_audio() -> void:
 	assert_object(hallada).is_not_null()
 	for senal: String in fuentes:
 		var texto := FileAccess.get_file_as_string(fuentes[senal][0])
-		assert_str(texto).contains("signal %s(" % senal)
+		var declarada := RegEx.create_from_string("(?m)^signal\\s+%s\\b" % senal)
+		assert_object(declarada.search(texto)).is_not_null()
 		if hallada != null:
 			assert_str(hallada.get_string(1)).contains(fuentes[senal][1])
 

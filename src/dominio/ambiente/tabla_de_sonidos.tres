@@ -304,7 +304,7 @@ variantes = Array[AudioStream]([ExtResource("22_paso1"), ExtResource("23_paso2")
 [sub_resource type="Resource" id="Resource_compra"]
 script = ExtResource("1_qermt")
 evento = 16
-senal = &"atencion_despachada"
+senal = &"compra_realizada"
 posicional = true
 emisor = &"Ventanilla"
 stream = ExtResource("26_compra")
