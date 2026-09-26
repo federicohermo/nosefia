@@ -280,8 +280,8 @@ pasos.
 ## Preguntas abiertas
 
 - **OQ-AMB-001 — ¿Qué suena en cada evento?**
-  - Por qué sigue abierta: elegir y mezclar los archivos de audio es trabajo de sonido, y todavía
-    no se hizo. La tabla existe para que hacerlo no toque código.
+  - Por qué sigue abierta: elegir y mezclar los archivos de audio es trabajo de sonido.
+    La tabla existe para que hacerlo no toque código.
   - Decide: el dueño del repo.
   - Bloquea: nada de la máquina.
 - **OQ-AMB-002 — ¿Qué tan rápido tiene que tocar algo un objeto para que cuente como golpe?**

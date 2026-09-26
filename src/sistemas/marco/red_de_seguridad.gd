@@ -2,8 +2,7 @@
 ##
 ## El volumen de los sólidos previene casi todo. Lo que queda es lo que ningún barrido ve:
 ## `cast_motion` ignora lo que ya arranca solapado, y la hoja de una puerta se mueve escribiéndole
-## la posición. Esta red mira en tres momentos —al soltar, al terminar un empujón y al dormirse—
-## y, si hace falta, arma los candidatos con física. Cuál gana lo decide `Rescate`.
+## la posición.
 ##
 ## **Nunca devuelve nada a la mano**: al dormirse o al terminar un empujón, la mano puede estar
 ## llena. Y no toca ninguna tarea: mueve el cuerpo y nada más.
@@ -22,6 +21,9 @@ const HOLGURA_DEL_APOYO := 0.05
 
 ## Cuánto deja el motor que un cuerpo vivo apoyado se hunda en lo que lo sostiene.
 const PENETRACION_TOLERADA := "physics/jolt_physics_3d/simulation/penetration_slop"
+
+## El tope del motor. Cada cuerpo ocupa varios choques: con menos, uno puede quedar afuera.
+const TOPE_DE_CHOQUES := 32
 
 ## La señal de la hoja de una puerta que dejó de girar. La declara la escena de la puerta.
 const SENAL_DE_LA_HOJA_QUIETA := &"hoja_quieta"
@@ -145,7 +147,7 @@ func _al_quedar_quieta(hoja: PhysicsBody3D) -> void:
 		consulta.shape = forma.shape
 		consulta.transform = forma.global_transform
 		consulta.exclude = [hoja.get_rid()]
-		for choque in espacio.intersect_shape(consulta, 16):
+		for choque in espacio.intersect_shape(consulta, TOPE_DE_CHOQUES):
 			var cuerpo := choque["collider"] as RigidBody3D
 			if cuerpo != null and cuerpo.has_method(ReglasDeLosObjetos.METODO_INTERACTUAR):
 				if not adentro.has(cuerpo):
@@ -170,26 +172,23 @@ func _al_empujar(caja: Node3D) -> void:
 		_rachas[caja]["ahora"] = true
 
 
-## El primer sólido fijo en el que el cuerpo se hunde más de lo que el motor tolera.
 func _solido_pisado(cuerpo: PhysicsBody3D) -> Node3D:
 	var tolerado := ReglasDeLosObjetos.ROCE
 	if cuerpo is RigidBody3D and not (cuerpo as RigidBody3D).freeze:
 		tolerado += ProjectSettings.get_setting(PENETRACION_TOLERADA, 0.0)
-	for choque in _choques(cuerpo, cuerpo.global_transform):
-		if choque["solido"] is StaticBody3D and choque["profundidad"] > tolerado:
-			return choque["solido"]
+	var resultado := _prueba(cuerpo, cuerpo.global_transform)
+	for indice in resultado.get_collision_count():
+		# Lo que el motor ya sacó en la dirección de este choque también estaba adentro. El total
+		# no sirve: en una pila de unidades vivas suma lo que se hunden entre ellas.
+		var sacado := resultado.get_travel().dot(resultado.get_collision_normal(indice))
+		var solido := resultado.get_collider(indice) as StaticBody3D
+		if solido != null and resultado.get_collision_depth(indice) + sacado > tolerado:
+			return solido
 	return null
 
 
-## Con qué se superpone el cuerpo si estuviera en `lugar`, sin contar al jugador.
 func _choques(cuerpo: PhysicsBody3D, lugar: Transform3D) -> Array[Dictionary]:
-	var consulta := PhysicsTestMotionParameters3D.new()
-	consulta.from = lugar
-	consulta.max_collisions = 8
-	if jugador != null:
-		consulta.exclude_bodies = [jugador.get_rid()]
-	var resultado := PhysicsTestMotionResult3D.new()
-	PhysicsServer3D.body_test_motion(cuerpo.get_rid(), consulta, resultado)
+	var resultado := _prueba(cuerpo, lugar)
 	var salida: Array[Dictionary] = []
 	for indice in resultado.get_collision_count():
 		(
@@ -204,15 +203,32 @@ func _choques(cuerpo: PhysicsBody3D, lugar: Transform3D) -> Array[Dictionary]:
 	return salida
 
 
-## El primer lugar libre y alcanzable de la lista, en un arreglo de uno, o vacío.
-##
-## Libre y alcanzable: no se superpone con nada, está apoyado, y no cae en un área de tarea en la
-## que no estaba antes.
+func _prueba(cuerpo: PhysicsBody3D, lugar: Transform3D) -> PhysicsTestMotionResult3D:
+	var consulta := PhysicsTestMotionParameters3D.new()
+	consulta.from = lugar
+	consulta.max_collisions = TOPE_DE_CHOQUES
+	# Sin esto, lo que el motor saca del todo no vuelve como choque, y no se sabe contra qué era.
+	consulta.recovery_as_collision = true
+	if jugador != null:
+		consulta.exclude_bodies = [jugador.get_rid()]
+	var resultado := PhysicsTestMotionResult3D.new()
+	PhysicsServer3D.body_test_motion(cuerpo.get_rid(), consulta, resultado)
+	return resultado
+
+
+## El motor saca al cuerpo antes de medir, y cada choque cuenta sólo lo que sobra. Medido el
+## 2026-09-26: cinco centímetros adentro de una pared contestaban siete milímetros.
+func _hundido(cuerpo: PhysicsBody3D, lugar: Transform3D) -> float:
+	var resultado := _prueba(cuerpo, lugar)
+	var sobra := 0.0
+	for indice in resultado.get_collision_count():
+		sobra = maxf(sobra, resultado.get_collision_depth(indice))
+	return resultado.get_travel().length() + sobra
+
+
 func _primero_libre(cuerpo: PhysicsBody3D, lugares: Array, areas: Array[RID]) -> Array:
 	for lugar: Transform3D in lugares:
-		var libre := true
-		for choque in _choques(cuerpo, lugar):
-			libre = libre and choque["profundidad"] <= ReglasDeLosObjetos.ROCE
+		var libre := _hundido(cuerpo, lugar) <= ReglasDeLosObjetos.ROCE
 		for area in _areas_en(cuerpo, lugar):
 			libre = libre and areas.has(area)
 		if libre and _apoyado(cuerpo, lugar):
@@ -231,7 +247,6 @@ func _apoyado(cuerpo: PhysicsBody3D, lugar: Transform3D) -> bool:
 	return not golpe.is_empty() and ReglasDeLosObjetos.se_puede_apoyar_en(golpe["normal"].y)
 
 
-## Las áreas donde caería el cuerpo en `lugar`: la de descarte, y cualquier otra de una tarea.
 func _areas_en(cuerpo: PhysicsBody3D, lugar: Transform3D) -> Array[RID]:
 	var espacio := cuerpo.get_world_3d().direct_space_state
 	var salida: Array[RID] = []
@@ -265,7 +280,6 @@ func _tamano(cuerpo: Node3D) -> float:
 	return maxf(limites.size.x, limites.size.z)
 
 
-## El lugar apoyado sobre un punto del piso, con la vuelta que el cuerpo ya tiene.
 func _sobre(cuerpo: Node3D, punto: Vector3) -> Transform3D:
 	var alto := _media_altura(cuerpo) + ReglasDeLosObjetos.ROCE
 	return Transform3D(cuerpo.global_basis, punto + Vector3.UP * alto)
@@ -275,6 +289,10 @@ func _al_lado_del_jugador(cuerpo: PhysicsBody3D) -> Array[Transform3D]:
 	var salida: Array[Transform3D] = []
 	if jugador == null:
 		return salida
+	# El cuerpo del jugador no gira: su frente lo lleva el punto donde suelta a los pies.
+	var adelante := Vector3.FORWARD
+	if agarre != null and agarre.punto_de_respaldo != null:
+		adelante = -agarre.punto_de_respaldo.global_basis.z
 	var radio := _tamano(cuerpo)
 	for forma: CollisionShape3D in jugador.find_children("*", "CollisionShape3D", false, false):
 		if forma.shape is CapsuleShape3D:
@@ -282,7 +300,7 @@ func _al_lado_del_jugador(cuerpo: PhysicsBody3D) -> Array[Transform3D]:
 	var lugares := LugaresDelPiso.alrededor(
 		cuerpo.get_world_3d().direct_space_state,
 		jugador.global_position,
-		-jugador.global_basis.z,
+		adelante,
 		radio,
 		_media_altura(cuerpo) * 2.0,
 		CAIDA,
