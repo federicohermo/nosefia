@@ -4,6 +4,7 @@ extends GdUnitTestSuite
 const ALMACEN := preload("res://src/escenas/almacen.tscn")
 
 const MOSTRADOR := "Estructura/EscritorioComputadora"
+const MOUSE := "Estructura/mouse"
 
 ## Cuánto se meten hacia adentro los puntos del volumen del objeto antes de preguntar, en metros.
 ## Apoyado, un objeto toca la cara: sin descontar nada, el contacto exacto contaría como adentro.
@@ -44,6 +45,10 @@ const AVANCE_MINIMO := 0.0001
 
 ## Media caja grande, en metros. Las cajas chicas no se usan acá.
 const MEDIA_CAJA := 0.3037
+
+## Cuánto se mete la caja en el mouse al rozarlo, y al meterse de verdad, en metros.
+const ROCE_CON_EL_MOUSE := 0.001
+const CAJA_EN_EL_MOUSE := 0.03
 
 ## Los cuatro giros de la mira al soltar, en grados, y los tres del cuerpo.
 ##
@@ -363,6 +368,10 @@ func _accion(jugador: Node3D, objetivo: Node3D, accion: StringName) -> void:
 ##
 ## Un cuerpo vivo apoyado se hunde un poco en lo que lo sostiene, y el motor lo tolera hasta su
 ## margen de penetración; uno congelado queda donde se lo puso.
+##
+## Lo que el motor saca antes de medir también estaba adentro. La distancia entre los pares de
+## `collide_shape` no es lo hundido contra una malla de triángulos: rozar el mouse 1 mm daba 3 cm.
+## Medido el 2026-09-26.
 static func _solidos_pisados(objeto: PhysicsBody3D) -> Array[String]:
 	var tolerado := ReglasDeLosObjetos.ROCE
 	if objeto is RigidBody3D and not (objeto as RigidBody3D).freeze:
@@ -380,18 +389,55 @@ static func _solidos_pisados(objeto: PhysicsBody3D) -> Array[String]:
 			var solido := golpe["collider"] as Node
 			if not solido is StaticBody3D:
 				continue
-			var otros: Array[RID] = [objeto.get_rid()]
+			var otros: Array[RID] = []
 			for otro in golpes:
 				if otro["rid"] != golpe["rid"]:
 					otros.append(otro["rid"])
-			consulta.exclude = otros
+			var prueba := PhysicsTestMotionParameters3D.new()
+			prueba.from = objeto.global_transform
+			prueba.max_collisions = 32
+			prueba.recovery_as_collision = true
+			prueba.exclude_bodies = otros
+			var resultado := PhysicsTestMotionResult3D.new()
+			PhysicsServer3D.body_test_motion(objeto.get_rid(), prueba, resultado)
 			var hondo := 0.0
-			var pares := espacio.collide_shape(consulta, 16)
-			for indice in range(0, pares.size(), 2):
-				hondo = maxf(hondo, pares[indice].distance_to(pares[indice + 1]))
+			for indice in resultado.get_collision_count():
+				var sacado := resultado.get_travel().dot(resultado.get_collision_normal(indice))
+				hondo = maxf(hondo, resultado.get_collision_depth(indice) + sacado)
 			if hondo > tolerado:
 				pisados.append("%s (%.3f m)" % [solido.get_parent().name, hondo])
 	return pisados
+
+
+## Apoya la caja en la tapa del mostrador, con un costado `metida` metros adentro del mouse.
+func _caja_contra_el_mouse(almacen: Node3D, caja: Node3D, metida: float) -> void:
+	var mouse: MeshInstance3D = almacen.get_node(MOUSE)
+	var suyo := mouse.global_transform * mouse.get_aabb()
+	var mostrador: MeshInstance3D = almacen.get_node(MOSTRADOR)
+	var tapa := (mostrador.global_transform * mostrador.get_aabb()).end.y
+	caja.global_basis = Basis.IDENTITY
+	caja.global_position = Vector3(
+		suyo.end.x + MEDIA_CAJA - metida, tapa + MEDIA_CAJA, suyo.get_center().z
+	)
+	caja.call("quedarse_quieta")
+	await get_tree().physics_frame
+
+
+func test_la_medida_distingue_rozar_el_mouse_de_meterse_en_el() -> void:
+	var almacen: Node3D = await _almacen()
+	var caja := _caja_grande(almacen)
+	await _caja_contra_el_mouse(almacen, caja, ROCE_CON_EL_MOUSE)
+	(
+		assert_array(_solidos_pisados(caja))
+		. override_failure_message("rozar el mouse contó como quedar adentro")
+		. is_empty()
+	)
+	await _caja_contra_el_mouse(almacen, caja, CAJA_EN_EL_MOUSE)
+	(
+		assert_array(_solidos_pisados(caja))
+		. override_failure_message("meterse en el mouse contó como quedar afuera")
+		. is_not_empty()
+	)
 
 
 ## Un lugar del piso donde el jugador entra parado, cerca de lo que se mira.
