@@ -138,7 +138,10 @@ func _ready() -> void:
 func _al_abrir_la_jornada(_jornada: int) -> void:
 	# Primero que nada, y por eso antes de `limpiar()`: lo que quedó en la mano cuelga del
 	# jugador, así que devolverlo a su lugar le escribiría la posición relativa a la mano y la
-	# caja terminaría flotando pegada al cuerpo toda la noche siguiente.
+	# caja terminaría flotando pegada al cuerpo toda la noche siguiente. Y antes, el examen: lo
+	# examinado cuelga de la cara, y vaciar las manos lo dejaría apuntando a un nodo que ya no
+	# está ahí.
+	_jugador.examen.terminar()
 	_agarre.vaciar_las_manos()
 	_hud.declarar_obligatorias(Apertura.cantidad_de_obligatorias())
 	# **Un solo inventario para las dos obligatorias**: reponer lo llena y la ventanilla lo

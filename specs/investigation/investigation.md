@@ -112,10 +112,36 @@ El sistema DEBE poder entregar lo descubierto como una lista de identidades y re
 igual. **Reconstruir sobre un caso que cambió ignora lo que ya no existe** en vez de romper: el
 contenido cambia y los guardados viejos siguen cargando.
 
-### BR-INV-017 — Examinar no clava al jugador
+### BR-INV-017 — Pensar no clava al jugador
 
-MIENTRAS se muestra lo que un objeto reveló, el sistema DEBE dejar al jugador irse. Sólo una
-conversación con otra persona lo retiene, y esa regla es de la ventanilla.
+MIENTRAS se muestra lo que reveló algo no levantable, el sistema DEBE dejar al jugador irse. Es
+un pensamiento, no un examen. El examen de un levantable sí retiene al jugador, hasta que se
+pide examinar otra vez.
+
+### BR-INV-018 — Se examina lo enfocado sin agarrarlo
+
+CUANDO se pide examinar con las manos vacías y la mira sobre un levantable, el sistema DEBE
+acercarlo a la cara, retener al jugador y revelar, igual que con lo que se lleva. Examinarlo NO
+DEBE llenar las manos. Con algo en la mano, se examina lo que se lleva.
+
+CUANDO termina ese examen, el sistema DEBE devolver el objeto a donde estaba: el mismo lugar, la
+misma orientación, y el mismo estado de física y de colisión.
+
+### BR-INV-019 — Lo examinado gira a pedido
+
+MIENTRAS se examina algo, el sistema DEBE girarlo con las teclas de movimiento: los costados
+sobre el eje vertical, adelante y atrás sobre el horizontal, a una velocidad fija por segundo.
+El mouse DEBE girarlo sólo mientras se arrastra con el clic apretado. Sin tecla y sin arrastre,
+lo examinado NO DEBE girar.
+
+La tecla de examinar es lo único que termina el examen. Durante el examen, el clic NO DEBE
+terminarlo, ni agarrar, ni soltar, ni colocar.
+
+### BR-INV-020 — La jornada nueva no hereda un examen
+
+CUANDO se abre una jornada con un examen en curso, el sistema DEBE terminarlo antes de vaciar
+las manos. Lo del mundo vuelve a su lugar, lo que se llevaba queda a los pies, y el jugador no
+queda retenido.
 
 ## Criterios de aceptación
 
@@ -214,6 +240,39 @@ que sobra se ignora y las demás quedan descubiertas.
 DADO un texto de examen de una sola entrada CUANDO todavía no se avanzó ENTONCES ya se puede
 abandonar.
 
+### AC-INV-020 — Examinar sin agarrar *(verifica BR-INV-018)*
+
+DADO las manos vacías y la mira sobre un levantable CUANDO se pide examinar ENTONCES está en
+examen, el jugador queda retenido, se revela, y las manos siguen vacías. DADO algo en la mano y
+la mira sobre otro levantable ENTONCES se examina lo que se lleva.
+
+### AC-INV-021 — Lo examinado vuelve a su lugar *(verifica BR-INV-018)*
+
+DADO un levantable del mundo en examen, girado CUANDO se pide examinar otra vez ENTONCES tiene
+el mismo padre, la misma posición, la misma rotación, la misma capa, la misma máscara y la misma
+física de antes. Una tercera vez lo vuelve a examinar, y no es hallazgo.
+
+### AC-INV-022 — Las teclas giran lo examinado *(verifica BR-INV-019)*
+
+DADO algo en examen CUANDO se aprieta el costado derecho medio segundo ENTONCES gira sobre el
+eje vertical la velocidad fija por medio segundo, y adelante lo gira sobre el horizontal. Sin
+entrada, o con dos teclas opuestas, no gira.
+
+### AC-INV-023 — El mouse gira sólo arrastrando *(verifica BR-INV-019)*
+
+DADO algo en examen CUANDO se mueve el mouse sin clic ENTONCES no gira; con el clic apretado,
+gira.
+
+### AC-INV-024 — El clic no cierra el examen *(verifica BR-INV-019)*
+
+DADO algo en examen CUANDO se hace clic ENTONCES sigue en examen y las manos no cambian. La
+tecla de examinar lo termina.
+
+### AC-INV-025 — La jornada abre sin examen *(verifica BR-INV-020)*
+
+DADO un examen en curso CUANDO se abre la jornada ENTONCES no hay nada en examen y el jugador no
+está retenido. Sin examen en curso, no se avisa que terminó un examen.
+
 ## No objetivos
 
 - Esta capacidad NO escribe el contenido: qué revela cada objeto y qué dice cada chat es
@@ -224,7 +283,8 @@ abandonar.
 
 ## Contratos
 
-- **Entrada:** el objeto examinado, la app elegida, la conversación abierta, el título y el
+- **Entrada:** el objeto examinado, la entrada de movimiento y los segundos del cuadro, el
+  arrastre del mouse, la app elegida, la conversación abierta, el título y el
   cuerpo de una nota, y la identidad de una pista.
 - **Salida:** el texto visible, si fue hallazgo, cuántos mensajes sin leer hay, las notas, el
   resultado de registrar, el desenlace alcanzado y la lista de lo descubierto.
