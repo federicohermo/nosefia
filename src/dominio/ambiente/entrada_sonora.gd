@@ -111,7 +111,6 @@ func tiene_sonido() -> bool:
 	return cantidad_de_variantes() > 0
 
 
-## Una fila con sólo `stream` tiene una variante: se comporta como antes de haber variantes.
 func cantidad_de_variantes() -> int:
 	if not variantes.is_empty():
 		return variantes.size()
