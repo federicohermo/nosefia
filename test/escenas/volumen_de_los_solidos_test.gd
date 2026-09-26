@@ -1,8 +1,6 @@
 ## Lo que ningún mueble futuro puede reabrir: cada sólido donde cabe un objeto tiene volumen.
 ##
-## Una forma cóncava es hueca. Lo que queda del todo adentro no toca ninguna cara y no choca con
-## nada, y las preguntas «¿entra acá?» del juego no lo ven. Se mide sobre el almacén entero, así
-## que un mueble nuevo del modelo entra solo.
+## Se mide sobre el almacén entero, así que un mueble nuevo del modelo entra solo.
 extends GdUnitTestSuite
 
 const ALMACEN := preload("res://src/escenas/almacen.tscn")
@@ -38,8 +36,9 @@ static func _corte(raiz: Node) -> float:
 	var corte := INF
 	for cuerpo in _agarrables(raiz):
 		for forma: CollisionShape3D in cuerpo.find_children("*", "CollisionShape3D", true, false):
-			var lados := forma.global_basis * forma.shape.get_debug_mesh().get_aabb().size
-			lados = lados.abs()
+			var lados := (
+				forma.shape.get_debug_mesh().get_aabb().size * forma.global_basis.get_scale()
+			)
 			corte = minf(corte, minf(lados.x, minf(lados.y, lados.z)) / 2.0)
 	return corte
 
