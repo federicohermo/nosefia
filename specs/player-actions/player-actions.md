@@ -110,6 +110,16 @@ superponerse con el material de ningún sólido fijo: un mueble, una pared, el t
 Apoyado contra una cara, o encima, no es superponerse. El caso que decide es el objeto más chico
 contra el sólido más delgado.
 
+### BR-PLY-016 — Lo que igual queda adentro vuelve a un lugar alcanzable
+
+SI algo que se agarra queda superpuesto con un sólido fijo al soltarlo, al terminar un empujón o
+al dormirse, ENTONCES el sistema DEBE llevarlo al primero de estos lugares que quede libre y
+alcanzable: deshacer el gesto; alrededor del punto donde entró, hasta una distancia de su tamaño;
+encima de lo que ocupa su lugar de origen, si es una caja; y su lugar de origen. Libre y
+alcanzable es sin superponerse con ningún sólido fijo, apoyado y fuera de las áreas de las
+tareas. SI ninguno queda libre, ENTONCES DEBE dejarlo donde está. El sistema NO DEBE devolverlo
+a la mano, y NO DEBE cambiar el estado de ninguna tarea por el rescate.
+
 ## Criterios de aceptación
 
 ### AC-PLY-001 — La diagonal no corre *(verifica BR-PLY-001)*
@@ -234,6 +244,32 @@ apoyada encima de la primera.
 DADO una unidad de producto soltada adentro de la heladera CUANDO pasa un segundo de física
 ENTONCES sigue adentro de la heladera, no se superpone con sus paneles y la mira la puede
 enfocar.
+
+### AC-PLY-025 — El empujón que terminó adentro se deshace *(verifica BR-PLY-016)*
+
+DADO una caja empujada que al terminar la racha de empujones queda superpuesta con un sólido
+fijo, y con el lugar del inicio de la racha libre CUANDO pasa el primer paso de física sin
+empujón ENTONCES la caja vuelve al lugar del inicio de la racha.
+
+### AC-PLY-026 — Lo soltado adentro va al piso al lado del jugador *(verifica BR-PLY-016)*
+
+DADO un objeto que al soltarlo queda superpuesto con un sólido fijo CUANDO pasa un paso de
+física ENTONCES queda apoyado en el piso al lado del jugador, sin superponerse con nada fijo.
+
+### AC-PLY-027 — Encima de la caja que ocupa el origen *(verifica BR-PLY-016)*
+
+DADO una caja adentro de un sólido, sin lugar libre para deshacer ni alrededor, y con otra caja
+en su lugar de origen CUANDO la red la rescata ENTONCES queda apoyada encima de esa caja.
+
+### AC-PLY-028 — El origen es el último recurso *(verifica BR-PLY-016)*
+
+DADO un objeto adentro de un sólido, sin lugar libre para deshacer ni alrededor, y con su lugar
+de origen libre CUANDO la red lo rescata ENTONCES queda en su lugar de origen.
+
+### AC-PLY-029 — La red nunca devuelve a la mano *(verifica BR-PLY-016)*
+
+DADO un objeto adentro de un sólido y ningún candidato libre CUANDO la red lo mira ENTONCES queda
+donde está, la mano sigue como estaba, y el rescate queda registrado sin lugar.
 
 ## No objetivos
 
