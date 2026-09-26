@@ -37,6 +37,47 @@ func test_la_tabla_cubre_todos_los_eventos() -> void:  # AC-AMB-001
 	assert_bool(tabla.cubre_todos()).is_true()
 
 
+func test_cinco_eventos_suenan_con_su_audio_y_su_bus() -> void:
+	var tabla := _tabla()
+	var esperado := {
+		EntradaSonora.Evento.TIMBRE_DEL_COMPRADOR:
+		["SFX_EVENTO_Timbre", EntradaSonora.BUS_DE_EFECTOS],
+		EntradaSonora.Evento.BOLSA_DEPOSITADA:
+		["SFX_NOLEV_Basura_SacarBolsa", EntradaSonora.BUS_DE_EFECTOS],
+		EntradaSonora.Evento.PASADA_DADA:
+		["SFX_OBJETO_Mopa_DejarYLimpiar", EntradaSonora.BUS_DE_EFECTOS],
+		EntradaSonora.Evento.TURNO_CERRADO:
+		["SFX_EVENTO_FinJornada", EntradaSonora.BUS_DE_INTERFAZ],
+		EntradaSonora.Evento.BOTON_DE_LA_COMPUTADORA:
+		["SFX_INTERFAZ_Computadora_Boton", EntradaSonora.BUS_DE_INTERFAZ],
+	}
+	for evento: EntradaSonora.Evento in esperado:
+		var entrada := tabla.de(evento)
+		assert_object(entrada).is_not_null()
+		if entrada == null:
+			continue
+		assert_bool(entrada.tiene_sonido()).is_true()
+		if entrada.tiene_sonido():
+			assert_str(entrada.stream.resource_path.get_file().get_basename()).is_equal(
+				esperado[evento][0]
+			)
+		assert_str(entrada.bus).is_equal(esperado[evento][1])
+
+
+func test_el_boton_de_la_computadora_lo_dispara_boton_pulsado() -> void:
+	var entrada := _tabla().de(EntradaSonora.Evento.BOTON_DE_LA_COMPUTADORA)
+	assert_object(entrada).is_not_null()
+	if entrada != null:
+		assert_str(entrada.senal).is_equal("boton_pulsado")
+
+
+func test_cerrar_la_jornada_y_abrir_la_computadora_quedan_mudos() -> void:
+	# Cerrar el turno también cierra la jornada: si `FinJornada` sonara en las dos, sonaría doble.
+	var tabla := _tabla()
+	for evento in [EntradaSonora.Evento.JORNADA_CERRADA, EntradaSonora.Evento.COMPUTADORA_ABIERTA]:
+		assert_bool(tabla.de(evento).tiene_sonido()).is_false()
+
+
 func test_ninguna_fila_del_disco_sale_por_un_bus_que_no_existe() -> void:
 	var tabla := _tabla()
 	(

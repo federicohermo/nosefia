@@ -108,6 +108,7 @@ func _ready() -> void:
 				_limpiador,
 				_recolector,
 				_agarre,
+				$Interfaz/PantallaDeComputadora,
 			]
 		)
 	)
