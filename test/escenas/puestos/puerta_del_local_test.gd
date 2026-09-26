@@ -19,6 +19,16 @@ const VANOS := {
 	"Estructura/puerta2": [Vector3(5.0, 1.05, -4.658), Vector3(9.5, 1.05, -4.658)],
 }
 
+## Las tres que no abren, con la señal que da cada una al tocarla.
+const TRABADAS := {
+	"Estructura/puertaentrada": &"puerta_trabada",
+	"Estructura/porton": &"porton_trabado",
+	"Estructura/puertajefe": &"puerta_trabada",
+}
+
+## Las señales de un gesto sobre una puerta.
+const AVISOS := [&"puerta_abierta", &"puerta_cerrada", &"puerta_trabada", &"porton_trabado"]
+
 
 func test_las_dos_puertas_cumplen_el_contrato_de_interaccion() -> void:
 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
@@ -160,3 +170,135 @@ func test_cerrar_de_golpe_pone_la_hoja_en_su_lugar_en_el_mismo_paso() -> void:
 		cuerpo.call("cerrar_de_golpe")
 		assert_bool(cuerpo.call("puerta").abierta()).is_false()
 		assert_bool(malla.transform.is_equal_approx(cerrada)).is_true()
+
+
+## Anota cada aviso de las puertas, en orden, como `[ruta, señal]`.
+func _escuchar(almacen: Node3D, rutas: Array) -> Array:
+	var avisos := []
+	for ruta: String in rutas:
+		var cuerpo: Node = almacen.get_node(ruta + "/CuerpoDeLaHoja")
+		for senal: StringName in AVISOS:
+			cuerpo.connect(senal, func(_puerta: Node3D) -> void: avisos.append([ruta, senal]))
+	return avisos
+
+
+func test_tres_puertas_estan_trabadas_y_las_dos_interiores_no() -> void:  # AC-PLY-040
+	var almacen: Node3D = auto_free(ALMACEN.instantiate())
+	for ruta: String in TRABADAS:
+		var cuerpo: StaticBody3D = almacen.get_node(ruta + "/CuerpoDeLaHoja")
+		assert_bool(cuerpo.is_in_group(ReglasDelJugador.GRUPO_INTERACTUABLE)).is_true()
+		assert_bool(cuerpo.has_method(ReglasDeLosObjetos.METODO_INTERACTUAR)).is_true()
+		var mallas: Variant = cuerpo.get("mallas")
+		assert_bool(mallas is Array and not mallas.is_empty()).is_true()
+		assert_bool(cuerpo.call("puerta").trabada()).override_failure_message(ruta).is_true()
+	for ruta: String in VANOS:
+		var puerta: Puerta = almacen.get_node(ruta + "/CuerpoDeLaHoja").call("puerta")
+		assert_bool(puerta.trabada()).override_failure_message(ruta).is_false()
+
+
+func test_tocar_una_trabada_diez_veces_avisa_diez_veces_y_no_gira() -> void:  # AC-PLY-041
+	var almacen: Node3D = auto_free(ALMACEN.instantiate())
+	add_child(almacen)
+	await get_tree().physics_frame
+	var avisos := _escuchar(almacen, TRABADAS.keys())
+	var quietas := {}
+	for ruta: String in TRABADAS:
+		quietas[ruta] = (almacen.get_node(ruta) as Node3D).global_transform
+		for _vez in 10:
+			assert_object(almacen.get_node(ruta + "/CuerpoDeLaHoja").call("interactuar")).is_null()
+	for _cuadro in 10:
+		await get_tree().physics_frame
+	for ruta: String in TRABADAS:
+		var suyos := avisos.filter(func(aviso: Array) -> bool: return aviso[0] == ruta)
+		assert_int(suyos.size()).override_failure_message(ruta).is_equal(10)
+		for aviso: Array in suyos:
+			assert_str(aviso[1]).is_equal(TRABADAS[ruta])
+		var cuerpo: Node = almacen.get_node(ruta + "/CuerpoDeLaHoja")
+		assert_bool(cuerpo.call("puerta").abierta()).is_false()
+		var malla: Node3D = almacen.get_node(ruta)
+		assert_bool(malla.global_transform.is_equal_approx(quietas[ruta])).is_true()
+
+
+func test_dos_toques_seguidos_avisan_abrir_y_despues_cerrar() -> void:  # AC-PLY-041
+	var almacen: Node3D = auto_free(ALMACEN.instantiate())
+	add_child(almacen)
+	await get_tree().physics_frame
+	var avisos := _escuchar(almacen, VANOS.keys())
+	for ruta: String in VANOS:
+		var cuerpo: Node = almacen.get_node(ruta + "/CuerpoDeLaHoja")
+		cuerpo.call("interactuar")
+		await get_tree().physics_frame
+		assert_bool(cuerpo.call("puerta").quieta()).is_false()
+		cuerpo.call("interactuar")
+	for _cuadro in 60:
+		await get_tree().physics_frame
+	var esperado := []
+	for ruta: String in VANOS:
+		esperado.append_array([[ruta, &"puerta_abierta"], [ruta, &"puerta_cerrada"]])
+	assert_array(avisos).is_equal(esperado)
+
+
+func test_cerrar_al_abrir_la_jornada_no_avisa() -> void:  # AC-PLY-041
+	var almacen: Node3D = auto_free(ALMACEN.instantiate())
+	add_child(almacen)
+	await get_tree().physics_frame
+	for ruta: String in VANOS:
+		almacen.get_node(ruta + "/CuerpoDeLaHoja").call("interactuar")
+	var avisos := _escuchar(almacen, VANOS.keys() + TRABADAS.keys())
+	almacen.call("_al_abrir_la_jornada", ReglasDeLaPartida.PRIMERA_JORNADA + 1)
+	for ruta: String in VANOS:
+		assert_bool(almacen.get_node(ruta + "/CuerpoDeLaHoja").call("puerta").abierta()).is_false()
+	assert_array(avisos).is_empty()
+
+
+func test_cada_puerta_pide_su_sonido_al_tocarla() -> void:
+	var almacen: Node3D = auto_free(ALMACEN.instantiate())
+	add_child(almacen)
+	await get_tree().physics_frame
+	var reproductor: ReproductorDeSonidos = almacen.get_node(
+		"Servicios/AudioDelAlmacen/Reproductor"
+	)
+	var pedidos := []
+	reproductor.sonido_pedido.connect(
+		func(evento: EntradaSonora.Evento) -> void: pedidos.append(evento)
+	)
+	var esperado := []
+	for ruta: String in VANOS:
+		var cuerpo: Node = almacen.get_node(ruta + "/CuerpoDeLaHoja")
+		cuerpo.call("interactuar")
+		cuerpo.call("interactuar")
+		esperado.append_array(
+			[EntradaSonora.Evento.PUERTA_ABIERTA, EntradaSonora.Evento.PUERTA_CERRADA]
+		)
+	for ruta: String in TRABADAS:
+		almacen.get_node(ruta + "/CuerpoDeLaHoja").call("interactuar")
+		esperado.append(
+			(
+				EntradaSonora.Evento.PORTON_TRABADO
+				if TRABADAS[ruta] == &"porton_trabado"
+				else EntradaSonora.Evento.PUERTA_TRABADA
+			)
+		)
+	assert_array(pedidos).is_equal(esperado)
+
+
+func test_las_puertas_suenan_desde_la_puerta_con_su_audio() -> void:
+	var tabla := TablaDeSonidos.desde_disco()
+	assert_object(tabla).is_not_null()
+	var esperado := {
+		EntradaSonora.Evento.PUERTA_ABIERTA: ["puerta_abierta", "SFX_NOLEV_Puerta_Abrir"],
+		EntradaSonora.Evento.PUERTA_CERRADA: ["puerta_cerrada", "SFX_NOLEV_Puerta_Cerrar"],
+		EntradaSonora.Evento.PUERTA_TRABADA: ["puerta_trabada", "SFX_NOLEV_Puerta_NoAbre"],
+		EntradaSonora.Evento.PORTON_TRABADO: ["porton_trabado", "SFX_NOLEV_Puerta_Garage"],
+	}
+	for evento: EntradaSonora.Evento in esperado:
+		var entrada := tabla.de(evento)
+		assert_object(entrada).is_not_null()
+		if entrada == null:
+			continue
+		assert_str(entrada.senal).is_equal(esperado[evento][0])
+		assert_str(entrada.bus).is_equal(EntradaSonora.BUS_DE_EFECTOS)
+		assert_bool(entrada.posicional).is_true()
+		assert_str(entrada.stream.resource_path.get_file().get_basename()).is_equal(
+			esperado[evento][1]
+		)

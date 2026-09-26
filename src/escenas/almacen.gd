@@ -115,6 +115,11 @@ func _ready() -> void:
 				_agarre,
 				_jugador,
 				$Interfaz/PantallaDeComputadora,
+				$Estructura/puerta/CuerpoDeLaHoja,
+				$Estructura/puerta2/CuerpoDeLaHoja,
+				$Estructura/puertaentrada/CuerpoDeLaHoja,
+				$Estructura/porton/CuerpoDeLaHoja,
+				$Estructura/puertajefe/CuerpoDeLaHoja,
 			]
 		)
 	)
