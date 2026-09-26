@@ -179,11 +179,13 @@ func test_la_musica_y_el_ambiente_van_en_bucle_por_su_bus() -> void:
 	assert_str(musica.stream.resource_path.get_file().get_basename()).is_equal("MUS_Tema1")
 	assert_str(musica.bus).is_equal(EntradaSonora.BUS_DE_MUSICA)
 	assert_bool(musica.en_bucle and not musica.posicional).is_true()
+	assert_bool(musica.stream.get("loop")).is_true()
 	assert_str(ambiente.stream.resource_path.get_file().get_basename()).is_equal(
 		"AMB_PROXIMIDAD_Neon"
 	)
 	assert_str(ambiente.bus).is_equal(EntradaSonora.BUS_DE_AMBIENTE)
 	assert_bool(ambiente.en_bucle and ambiente.posicional).is_true()
+	assert_bool(ambiente.stream.get("loop")).is_true()
 	assert_str(ambiente.emisor).is_not_empty()
 
 
