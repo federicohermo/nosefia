@@ -783,6 +783,16 @@ func test_sin_superficie_que_valga_se_suelta_como_siempre() -> void:  # AC-PLY-0
 	var sin_mira_al_costado := agarre.punto_de_soltado.global_position
 	_soltar(almacen, bolsa)
 	assert_vector(bolsa.global_position).is_equal_approx(sin_mira_al_costado, Vector3.ONE * 0.01)
+	# Un estante de la góndola es horizontal y la bolsa entra, pero queda adentro del mueble.
+	var estante: Vector3 = almacen.get("_reposicion_manual").call("_apoyo", Producto.Id.UAKAS)
+	camara.global_position = estante + Vector3(1.8, 1.0, 0.0)
+	camara.look_at(estante)
+	var en_el_estante := _golpe_de_la_mira(jugador, bolsa)
+	assert_object(en_el_estante["collider"]).is_same(almacen.get("_estante"))
+	assert_float(en_el_estante["normal"].y).is_greater(ReglasDeLosObjetos.APOYO_HORIZONTAL)
+	var sin_mira_del_estante := agarre.punto_de_soltado.global_position
+	_soltar(almacen, bolsa)
+	assert_vector(bolsa.global_position).is_equal_approx(sin_mira_del_estante, Vector3.ONE * 0.01)
 
 
 func _soltar(almacen: Node3D, cuerpo: RigidBody3D) -> void:
