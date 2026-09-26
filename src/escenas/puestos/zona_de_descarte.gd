@@ -42,10 +42,6 @@ func _al_entrar_un_cuerpo(cuerpo: Node3D) -> void:
 
 
 ## El `id` de lo que entró, o el centinela de «nada» si eso no se presenta.
-##
-## Los dos cortes son de contrato y no del juego: una pared que entrara al área no tiene el método,
-## y un agarrable sin su `.tres` contesta `null`. Los dos terminan en `NO_ES_BASURA`, que lo decide
-## el dominio.
 func _id_de(cuerpo: Node3D) -> StringName:
 	var datos := cuerpo.get("datos") as ObjetoDelAlmacen
 	if datos == null:
