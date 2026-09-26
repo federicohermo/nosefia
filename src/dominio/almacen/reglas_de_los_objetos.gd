@@ -66,9 +66,7 @@ const ARRASTRE_DE_LA_CAJA := 0.5
 ## valdría una pared.
 const APOYO_HORIZONTAL := 0.7
 
-## La capa de física donde viven los contornos de los muebles —la caja que envuelve a cada uno—
-## y el volumen de las paredes, el techo y la fachada. Es la número 4, y su nombre está declarado
-## en `project.godot`. Quien la mira no entra al mueble ni a la pared.
+## Es la número 4, y su nombre está declarado en `project.godot`.
 const CAPA_DEL_CONTORNO := 8
 
 ## Cuánto se le descuenta a una forma para preguntar si entra o si atraviesa algo, en metros.

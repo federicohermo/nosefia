@@ -1,8 +1,4 @@
 ## Lo que se suelta o se empuja no queda adentro de un sólido fijo.
-##
-## **«Adentro» del mostrador se mide contra su malla visible, no contra la colisión.** La
-## colisión de un mueble es justo lo que se arregla: medir contra ella daría verde sin mirar nada
-## el día que sus caras dejen de contestar.
 extends GdUnitTestSuite
 
 const ALMACEN := preload("res://src/escenas/almacen.tscn")
@@ -37,8 +33,7 @@ const CUADROS_CAMINANDO := 240
 ## Cuadros de física que el jugador sigue caminando después de quedar bloqueado contra la caja.
 ##
 ## **Ningún N reproducía el síntoma.** Medido el 2026-09-26 con la escena de ese día, de 60 a 1200
-## pasos: la caja pegada no entraba. Queda como regresión, y la prueba del error es el caso de la
-## caja entera adentro.
+## pasos: la caja pegada no entraba. Queda como regresión.
 const PASOS_DESPUES_DE_BLOQUEARSE := 60
 
 ## Hasta cuántos cuadros se espera a que el jugador quede bloqueado.
@@ -367,10 +362,9 @@ func _accion(jugador: Node3D, objetivo: Node3D, accion: StringName) -> void:
 ## Los sólidos fijos con los que se superpone: lo estático, no otro objeto ni el jugador.
 ##
 ## Un cuerpo vivo apoyado se hunde un poco en lo que lo sostiene, y el motor lo tolera hasta su
-## margen de penetración; uno congelado queda donde se lo puso. **La profundidad sale de los pares
-## de contacto, sólido por sólido.** La de `body_test_motion` no sirve: el motor saca al cuerpo
-## antes de medir, y una unidad metida 8 cm en la pared daba libre. Achicar la forma tampoco: un
-## casco redondeado se achica menos que su caja. Medido el 2026-09-26.
+## margen de penetración; uno congelado queda donde se lo puso. `body_test_motion` no sirve: el
+## motor saca al cuerpo antes de medir, y una unidad metida 8 cm en la pared daba libre. Achicar la
+## forma tampoco: un casco redondeado se achica menos que su caja. Medido el 2026-09-26.
 static func _solidos_pisados(objeto: PhysicsBody3D) -> Array[String]:
 	var tolerado := ReglasDeLosObjetos.ROCE
 	if objeto is RigidBody3D and not (objeto as RigidBody3D).freeze:
