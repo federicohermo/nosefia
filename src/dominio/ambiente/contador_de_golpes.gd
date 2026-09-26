@@ -1,12 +1,11 @@
 ## Los golpes de un objeto desde que se suelta: cuáles suenan, a qué volumen y con qué corte.
 ##
-## Hay uno por objeto. Agarrar lo reinicia, cada contacto rápido gasta un golpe, y colocar lo
-## agota: lo colocado ya no está cayendo.
+## Hay uno por objeto. Agarrar lo reinicia y colocar lo agota: lo colocado ya no está cayendo.
 class_name ContadorDeGolpes
 extends RefCounted
 
-## Un contacto más lento que esto, en m/s, no es un golpe. Primer valor: un objeto apoyado que
-## vibra queda por debajo, y uno que cae desde la mano llega a unos 4 m/s. Ver OQ-AMB-002.
+## Primer valor: un objeto apoyado que vibra queda por debajo, y uno que cae desde la mano llega
+## a unos 4 m/s. Ver OQ-AMB-002.
 const UMBRAL_DE_GOLPE := 0.8
 
 ## El volumen de cada golpe que suena, en dB. Del cuarto en adelante no suena.
@@ -48,7 +47,7 @@ func al_evento(evento: EntradaSonora.Evento, rapidez: float) -> Golpe:
 	return pleno()
 
 
-## El golpe de un contacto a esa rapidez, o `null` si no suena. Un contacto lento no gasta.
+## El golpe de un contacto a esa rapidez, o `null` si no suena.
 func contar(rapidez: float) -> Golpe:
 	# El primero cuenta aunque sea lento: lo que se apoya donde se mira no cae.
 	if (_dados > 0 and rapidez < UMBRAL_DE_GOLPE) or _dados >= VOLUMEN_POR_GOLPE.size():

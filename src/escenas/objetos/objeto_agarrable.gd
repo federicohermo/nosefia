@@ -28,7 +28,6 @@ var _rapidez := 0.0
 var _rapidez_previa := 0.0
 
 
-## El monitoreo de contactos se prende acá y no en el `.tscn`, que comparten otros cambios.
 func _ready() -> void:
 	_lugar_de_origen = transform
 	_origen_en_el_mundo = global_transform

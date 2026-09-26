@@ -1,4 +1,4 @@
-## Qué suena en el juego: una fila por evento, en un archivo que se edita sin tocar código.
+## Qué suena en el juego, en un archivo que se edita sin tocar código.
 ##
 ## **Es la decisión entera del spec.** La versión ingenua —un autoload con un `match` gigante en
 ## `sistemas/`— tiene cobertura cero para siempre: un sistema de audio sólo se prueba escuchando.
@@ -26,8 +26,6 @@ static func desde_disco() -> TablaDeSonidos:
 	return recurso as TablaDeSonidos
 
 
-## La fila de ese evento, o `null` si no tiene.
-##
 ## `null` y no una fila vacía: quien pide un sonido que no está tiene que poder declararlo, y una
 ## fila muda inventada acá lo dejaría creyendo que pidió bien.
 func de(
