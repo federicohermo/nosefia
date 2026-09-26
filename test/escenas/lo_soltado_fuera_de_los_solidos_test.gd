@@ -285,6 +285,7 @@ func test_la_caja_soltada_pegada_no_entra_al_empujarla() -> void:  # AC-PLY-018
 	await get_tree().physics_frame
 	assert_float(caja.global_position.y).is_equal_approx(frente.y + MEDIA_CAJA, 0.005)
 	_comprobar_que_no_entro(almacen, caja, frente, "pegada y empujada")
+	_comprobar_libre_y_enfocable(almacen, caja, "pegada y empujada")
 
 
 # --- La matriz: lo soltado y lo empujado contra cada sólido -----------------------------------
