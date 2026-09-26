@@ -215,6 +215,40 @@ func test_el_cableado_enlaza_las_fuentes_y_arranca_el_ambiente() -> void:
 	assert_array(ambiente.search_all(texto)).is_not_empty()
 
 
+func test_cada_emisor_de_la_tabla_esta_en_la_escena() -> void:
+	# Un emisor que falta deja su fila rechazada por no tener lugar, y el timbre no suena nunca.
+	var audio: Node = auto_free(load(ESCENA).instantiate())
+	var emisores: Node3D = audio.get("emisores")
+	assert_object(emisores).is_not_null()
+	if emisores == null:
+		return
+	for entrada: EntradaSonora in TablaDeSonidos.desde_disco().entradas:
+		if entrada.emisor == &"":
+			continue
+		var emisor := emisores.get_node_or_null(NodePath(String(entrada.emisor)))
+		(
+			assert_object(emisor)
+			. override_failure_message("la escena no tiene el emisor `%s`" % entrada.emisor)
+			. is_not_null()
+		)
+
+
+func test_el_ambiente_tiene_sus_emisores_en_la_heladera_y_los_tubos() -> void:
+	var audio: Node = auto_free(load(ESCENA).instantiate())
+	var emisores: Node3D = audio.get("emisores")
+	var ambiente := TablaDeSonidos.desde_disco().de(EntradaSonora.Evento.AMBIENTE_DEL_LOCAL)
+	var neon := emisores.get_node(NodePath(String(ambiente.emisor)))
+	assert_int(neon.get_child_count()).is_greater(EmisoresDelAmbiente.TOPE)
+
+
+func test_la_jornada_arranca_la_musica_y_el_cierre_la_corta() -> void:
+	var cascara := FileAccess.get_file_as_string(SCRIPT)
+	assert_str(cascara).contains("EntradaSonora.Evento.MUSICA_DE_LA_NOCHE")
+	var texto := FileAccess.get_file_as_string(SCRIPT_DEL_ALMACEN)
+	var corta := RegEx.create_from_string("_audio\\s*\\.\\s*callar_la_musica\\(\\)")
+	assert_array(corta.search_all(texto)).is_not_empty()
+
+
 ## Todos los `.gd` de `src/`, para el caso de las señales de la tabla.
 static func _fuentes(carpeta: String = CARPETA_DE_FUENTES) -> Array[String]:
 	var encontradas: Array[String] = []

@@ -37,6 +37,7 @@ enum Evento {
 	TIMBRE_DEL_COMPRADOR,
 	AMBIENTE_DEL_LOCAL,
 	BOTON_DE_LA_COMPUTADORA,
+	MUSICA_DE_LA_NOCHE,
 }
 
 ## Cómo suena una cosa al agarrarla o al dejarla. Los valores salen de la ficha de sonido.
@@ -86,9 +87,16 @@ const BUSES := [BUS_DE_AMBIENTE, BUS_DE_EFECTOS, BUS_DE_INTERFAZ, BUS_DE_MUSICA]
 
 @export var sonoridad: Sonoridad = Sonoridad.NINGUNA
 
-## Si el sonido se repite mientras dura la noche. Los que van en bucle ocupan la voz de ambiente
-## y no la ronda: una ronda con un bucle adentro se quedaría sin voces al quinto sonido.
+## Si el sonido se repite mientras dura la noche. Cada bucle ocupa su propia voz y no la ronda:
+## una ronda con un bucle adentro se quedaría sin voces al quinto sonido.
 @export var en_bucle: bool = false
+
+## Si suena desde un lugar del local y no pegado a la cabeza del jugador.
+@export var posicional: bool = false
+
+## El emisor fijo desde donde suena una fila del espacio cuando no la produce un objeto. Es el
+## nombre de un emisor de la escena del audio. Vacío si no tiene.
+@export var emisor: StringName = &""
 
 ## Vacío mientras el sonido no esté elegido. Que la fila exista igual es lo que permite que
 ## agregar el sonido no toque código.

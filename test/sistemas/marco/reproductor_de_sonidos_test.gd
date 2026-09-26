@@ -127,7 +127,8 @@ func test_una_fila_en_bucle_ocupa_la_voz_de_ambiente_y_no_la_ronda() -> void:
 	)
 	var reproductor := _reproductor([entrada] as Array[EntradaSonora])
 	assert_bool(reproductor.pedir(EntradaSonora.Evento.AMBIENTE_DEL_LOCAL)).is_true()
-	assert_object(reproductor.ambiente().stream).is_same(entrada.stream)
+	var voz := reproductor.voz_en_bucle(EntradaSonora.Evento.AMBIENTE_DEL_LOCAL)
+	assert_object(voz.stream).is_same(entrada.stream)
 	assert_int(_voces_ocupadas(reproductor)).is_equal(0)
 
 
@@ -152,7 +153,8 @@ func test_silenciar_deja_todas_las_voces_sin_stream() -> void:
 	reproductor.pedir(EntradaSonora.Evento.AMBIENTE_DEL_LOCAL)
 	reproductor.silenciar()
 	assert_int(_voces_ocupadas(reproductor)).is_equal(0)
-	assert_object(reproductor.ambiente().stream).is_null()
+	var voz := reproductor.voz_en_bucle(EntradaSonora.Evento.AMBIENTE_DEL_LOCAL)
+	assert_object(voz.stream).is_null()
 
 
 func test_los_cinco_archivos_de_dominio_y_sistemas_tienen_su_espejo() -> void:

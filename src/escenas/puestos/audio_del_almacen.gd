@@ -13,10 +13,14 @@ extends Node
 @export var reproductor: ReproductorDeSonidos
 @export var enlace: EnlaceDeAudio
 
+## Los emisores fijos, en coordenadas del local: un hijo por nombre de emisor de la tabla.
+@export var emisores: Node3D
+
 
 func _ready() -> void:
 	var tabla := TablaDeSonidos.desde_disco()
 	reproductor.arrancar(tabla)
+	reproductor.registrar_emisores(emisores)
 	enlace.arrancar(tabla)
 
 
@@ -28,7 +32,14 @@ func enlazar(fuentes: Array) -> void:
 	enlace.enlazar_todo(fuentes)
 
 
-## Arranca lo que va en bucle. Lo llama el cableado al abrir la jornada: ninguna señal lo dispara,
-## y por eso su fila queda declarada sin fuente.
+## Arranca lo que va en bucle: el ambiente y la música. Lo llama el cableado al abrir la
+## jornada: ninguna señal lo dispara, y por eso sus filas quedan declaradas sin fuente. Lo que ya
+## suena no empieza de nuevo.
 func arrancar_el_ambiente() -> void:
 	reproductor.pedir(EntradaSonora.Evento.AMBIENTE_DEL_LOCAL)
+	reproductor.pedir(EntradaSonora.Evento.MUSICA_DE_LA_NOCHE)
+
+
+## La música corta al cerrar la jornada. El ambiente sigue: el local no se apaga.
+func callar_la_musica() -> void:
+	reproductor.callar(EntradaSonora.Evento.MUSICA_DE_LA_NOCHE)
