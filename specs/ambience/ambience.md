@@ -147,6 +147,20 @@ verdad, no cada cierto tiempo. Quieto o empujando una pared NO DEBE sonar. SI un
 más de una distancia de paso, ENTONCES DEBE sonar un solo paso. Lo que sobra de un paso DEBE
 contar para el siguiente. Los pasos suenan planos, por el bus de efectos.
 
+### BR-AMB-020 — Lo que suena del otro lado llega apagado
+
+CUANDO entre un sonido del espacio y el oído del jugador hay obstáculos, el sistema DEBE bajarlo
+y filtrarlo con un pasa-bajos. Dos obstáculos DEBEN apagar más que uno, hasta el máximo de
+obstáculos; desde ahí NO DEBE apagar más. Con cero obstáculos, el sonido NO DEBE cambiar.
+
+- Una pared es un obstáculo. Una puerta cerrada, también. Una puerta abierta, no: cuenta como
+  abierta desde que se pide abrirla.
+- El oído es la cámara, no el cuerpo.
+- Lo que el jugador lleva en la mano no es un obstáculo para sus propios sonidos.
+- CUANDO cambia la cantidad de obstáculos, el volumen y el corte DEBEN llegar al nuevo valor en
+  más de un cuadro, sin un salto.
+- Un sonido plano NO DEBE apagarse nunca.
+
 ## Criterios de aceptación
 
 ### AC-AMB-001 — Un evento, una fila *(verifica BR-AMB-001, BR-AMB-005)*
@@ -253,6 +267,28 @@ suena uno y lo que sobra cuenta para el siguiente. CUANDO un cuadro recorre dos 
 media ENTONCES suena uno solo. DADO el mismo tramo a dos velocidades ENTONCES suenan los mismos
 pasos.
 
+### AC-AMB-020 — Más obstáculos, más apagado, hasta el máximo *(verifica BR-AMB-020)*
+
+DADO cero obstáculos ENTONCES el volumen baja 0 dB y no hay corte. DADO uno ENTONCES baja y
+corta. DADO dos ENTONCES baja más y corta más abajo que con uno. DADO el máximo y el máximo más
+uno ENTONCES apagan igual.
+
+### AC-AMB-021 — La pared y la puerta *(verifica BR-AMB-020)*
+
+DADO una pared entre un sonido del espacio y el oído ENTONCES cuenta un obstáculo. DADO una
+puerta cerrada en el mismo lugar ENTONCES cuenta uno; CUANDO se la pide abierta ENTONCES cuenta
+cero. DADO el objeto que produjo el sonido entre los dos ENTONCES no cuenta.
+
+### AC-AMB-022 — Sin salto *(verifica BR-AMB-020)*
+
+DADO un sonido sin obstáculos CUANDO aparece uno y pasa un cuadro de 1/60 s ENTONCES el volumen
+y el corte todavía no llegaron al valor de un obstáculo, y CUANDO pasa un segundo ENTONCES sí.
+
+### AC-AMB-023 — Lo plano no se apaga *(verifica BR-AMB-020)*
+
+DADO un sonido plano con una pared entre el jugador y cualquier cosa ENTONCES su volumen no
+cambia.
+
 ## No objetivos
 
 - Esta capacidad NO elige los archivos de audio ni los mezcla. Una fila sin sonido es un estado
@@ -309,5 +345,11 @@ pasos.
 - **OQ-AMB-007 — ¿Cuántos metros hay entre un paso y el siguiente?**
   - Por qué sigue abierta: sale de medir la zancada contra la velocidad del jugador. El juego
     arranca con un primer valor.
+  - Decide: el dueño del repo.
+  - Bloquea: nada de la máquina.
+- **OQ-AMB-008 — ¿Cuánto apaga cada obstáculo, cuántos cuentan y cuánto dura el cambio?**
+  - Por qué sigue abierta: el volumen y el corte por obstáculo, el máximo de obstáculos y la
+    duración de la transición salen de escuchar en el local. También si una góndola cuenta como
+    pared: hoy cuenta todo lo fijo. El juego arranca con primeros valores.
   - Decide: el dueño del repo.
   - Bloquea: nada de la máquina.
