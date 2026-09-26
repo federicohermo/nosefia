@@ -53,7 +53,6 @@ const Jugador := preload("res://src/escenas/jugador.gd")
 @export var _agarre: Agarre
 @export var _bolsas: Array[Node3D]
 
-## Las dos puertas interiores. Cada noche arranca con las dos cerradas.
 @export var _puertas: Array[Node3D]
 
 ## Los muebles con los que el jugador choca por su contorno y no por su malla.

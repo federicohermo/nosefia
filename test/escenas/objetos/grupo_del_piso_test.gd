@@ -131,6 +131,25 @@ func test_en_caida_libre_la_copia_dibuja_donde_el_motor_dibuja_el_cuerpo() -> vo
 	)
 
 
+func test_lo_dormido_que_se_congela_se_dibuja_donde_lo_llevan() -> void:
+	# Examinar una unidad del piso la congela y la lleva a la cara. Congelada, el motor no le
+	# cambia `sleeping`, y la copia dejaba de seguirla: lo examinado no se veía girar.
+	var mundo := _mundo()
+	_piso(mundo)
+	var grupo := _grupo(mundo, 1)
+	var cuerpo := _cuerpo(mundo, Vector3(0, ALTO / 2.0, 0), true)
+	grupo.agregar(cuerpo)
+	for _cuadro in 120:
+		await get_tree().physics_frame
+	assert_bool(cuerpo.sleeping).is_true()
+	cuerpo.freeze = true
+	cuerpo.position = Vector3(1, 1.5, -2)
+	cuerpo.rotation = Vector3(0, 0.8, 0)
+	await get_tree().process_frame
+	grupo._process(0.0)
+	assert_bool(grupo.get("_matrices")[0].is_equal_approx(_dibujo(grupo, cuerpo))).is_true()
+
+
 func test_el_motor_no_vuelve_a_interpolar_lo_que_el_grupo_escribe() -> void:
 	# El grupo ya escribe la posición interpolada cada cuadro. Si el motor además interpola el
 	# buffer del MultiMesh, interpola entre dos valores interpolados y la copia se atrasa otra
