@@ -115,7 +115,7 @@ contra el sólido más delgado.
 SI algo que se agarra queda superpuesto con un sólido fijo al soltarlo, al terminar un empujón o
 al dormirse, ENTONCES el sistema DEBE llevarlo al primero de estos lugares que quede libre y
 alcanzable: deshacer el gesto; alrededor del punto donde entró, hasta una distancia de su tamaño;
-encima de lo que ocupa su lugar de origen, si es una caja; y su lugar de origen. Libre y
+encima de lo que ocupa su lugar de origen, si admite otro encima; y su lugar de origen. Libre y
 alcanzable es sin superponerse con ningún sólido fijo, apoyado y fuera de las áreas de las
 tareas. SI ninguno queda libre, ENTONCES DEBE dejarlo donde está. El sistema NO DEBE devolverlo
 a la mano, y NO DEBE cambiar el estado de ninguna tarea por el rescate.
@@ -278,10 +278,12 @@ empujón ENTONCES la caja vuelve al lugar del inicio de la racha.
 DADO un objeto que al soltarlo queda superpuesto con un sólido fijo CUANDO pasa un paso de
 física ENTONCES queda apoyado en el piso al lado del jugador, sin superponerse con nada fijo.
 
-### AC-PLY-027 — Encima de la caja que ocupa el origen *(verifica BR-PLY-016)*
+### AC-PLY-027 — Encima de lo que ocupa el origen *(verifica BR-PLY-016)*
 
 DADO una caja adentro de un sólido, sin lugar libre para deshacer ni alrededor, y con otra caja
-en su lugar de origen CUANDO la red la rescata ENTONCES queda apoyada encima de esa caja.
+en su lugar de origen CUANDO la red la rescata ENTONCES queda apoyada encima de esa caja. DADO un
+objeto en el mismo caso, con otro objeto en su origen CUANDO la red lo rescata ENTONCES queda
+encima si ese otro admite otro encima, y no queda encima si no lo admite.
 
 ### AC-PLY-028 — El origen es el último recurso *(verifica BR-PLY-016)*
 
