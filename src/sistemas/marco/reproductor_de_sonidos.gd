@@ -24,6 +24,9 @@ var _ronda := RondaDeVoces.new(RondaDeVoces.VOCES_DEL_LOCAL)
 var _voces: Array[AudioStreamPlayer] = []
 var _ambiente: AudioStreamPlayer = null
 
+## Un contador de golpes por objeto, por su `get_instance_id()`: la regla es de cada objeto.
+var _golpes: Dictionary = {}
+
 
 ## Las voces se crean acá y no en el `.tscn`: cuántas hay lo dice `RondaDeVoces`, y ocho nodos
 ## escritos a mano en una escena serían ese número copiado donde nadie lo mira.
@@ -58,11 +61,15 @@ func ambiente() -> AudioStreamPlayer:
 ## Los cuatro rechazos se declaran por señal en vez de en silencio: un bus mal escrito cae a
 ## `Master` sin que el motor diga una palabra, y ésa es exactamente la falla que este método
 ## existe para cerrar.
-func pedir(evento: EntradaSonora.Evento) -> bool:
+func pedir(
+	evento: EntradaSonora.Evento,
+	sonoridad: EntradaSonora.Sonoridad = EntradaSonora.Sonoridad.NINGUNA,
+	golpe: ContadorDeGolpes.Golpe = null
+) -> bool:
 	if _tabla == null:
 		push_error("Reproductor sin arrancar: revisar audio_del_almacen.gd")
 		return false
-	var entrada := _tabla.de(evento)
+	var entrada := _tabla.de(evento, sonoridad)
 	if entrada == null:
 		sonido_rechazado.emit(evento, Motivo.SIN_FILA)
 		return false
@@ -76,11 +83,31 @@ func pedir(evento: EntradaSonora.Evento) -> bool:
 	if voz == null:
 		sonido_rechazado.emit(evento, Motivo.SIN_VOZ)
 		return false
+	if golpe == null:
+		golpe = ContadorDeGolpes.pleno()
 	voz.stream = entrada.stream
-	voz.bus = entrada.bus
+	voz.bus = _bus_filtrado(entrada.bus, golpe.corte_hz)
+	voz.volume_db = golpe.volumen_db
 	voz.play()
 	sonido_pedido.emit(evento)
 	return true
+
+
+## Pide el sonido de un evento que trae su origen: el objeto que lo produjo, si lo hay, y la
+## rapidez de su contacto. La sonoridad sale del objeto, y el golpe de su contador.
+func recibir(evento: EntradaSonora.Evento, origen: Object = null, rapidez: float = 0.0) -> bool:
+	var datos := _datos_de(origen)
+	if datos == null:
+		return pedir(evento)
+	var clave := origen.get_instance_id()
+	if not _golpes.has(clave):
+		_golpes[clave] = ContadorDeGolpes.new()
+	var golpe: ContadorDeGolpes.Golpe = (_golpes[clave] as ContadorDeGolpes).al_evento(
+		evento, rapidez
+	)
+	if golpe == null:
+		return false
+	return pedir(evento, datos.sonoridad, golpe)
 
 
 ## Deja todas las voces sin nada pedido.
@@ -102,6 +129,34 @@ func _voz_para(entrada: EntradaSonora) -> AudioStreamPlayer:
 	if indice < 0:
 		return null
 	return _voces[indice]
+
+
+## Los datos de dominio del objeto que produjo el evento, o `null` si no es un objeto.
+func _datos_de(origen: Object) -> ObjetoDelAlmacen:
+	if not is_instance_valid(origen):
+		return null
+	if not origen.has_method(ReglasDeLosObjetos.METODO_INTERACTUAR):
+		return null
+	return origen.call(ReglasDeLosObjetos.METODO_INTERACTUAR) as ObjetoDelAlmacen
+
+
+## El bus por el que sale un sonido con ese corte pasa-altos. Sin corte es el bus de la fila.
+##
+## Un reproductor del motor no filtra solo: el filtro vive en un bus. Se crea uno por corte, la
+## primera vez que se pide, y manda al bus de la fila para que su volumen siga mandando.
+func _bus_filtrado(bus: String, corte_hz: float) -> String:
+	if corte_hz <= 0.0:
+		return bus
+	var nombre := "%s · pasa-altos %d Hz" % [bus, int(corte_hz)]
+	if AudioServer.get_bus_index(nombre) < 0:
+		AudioServer.add_bus()
+		var indice := AudioServer.bus_count - 1
+		AudioServer.set_bus_name(indice, nombre)
+		AudioServer.set_bus_send(indice, bus)
+		var filtro := AudioEffectHighPassFilter.new()
+		filtro.cutoff_hz = corte_hz
+		AudioServer.add_bus_effect(indice, filtro)
+	return nombre
 
 
 func _voz_nueva(nombre: String) -> AudioStreamPlayer:

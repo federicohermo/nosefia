@@ -27,7 +27,7 @@ const ARCHIVOS_CON_ESPEJO = [
 	"res://src/dominio/investigacion/bandeja.gd",
 	"res://src/dominio/investigacion/nota.gd",
 	"res://src/dominio/investigacion/cuaderno.gd",
-	"res://src/dominio/almacen/caja_registradora.gd",
+	"res://src/dominio/almacen/registro_de_ventas.gd",
 	"res://src/sistemas/investigacion/computadora_de_escritorio.gd",
 ]
 
@@ -37,12 +37,14 @@ const SEGUNDOS_REALES_ABIERTA := 30.0
 var _turno: Turno = null
 var _avisos_de_tarea: int = 0
 var _cumplidas_avisadas: int = 0
+var _descumplidas: int = 0
 
 
 func before_test() -> void:
 	_turno = null
 	_avisos_de_tarea = 0
 	_cumplidas_avisadas = 0
+	_descumplidas = 0
 
 
 func _reloj() -> RelojDelTurno:
@@ -54,14 +56,34 @@ func _reloj() -> RelojDelTurno:
 	return reloj
 
 
-func _escritorio() -> ComputadoraDeEscritorio:
+## Una noche con los pedidos dados, sin cobrar todavía. Cada caso cobra los que necesita.
+func _atender(pedidos: Array[Venta] = []) -> TareaDeAtender:
+	var inventario := Inventario.new(Catalogo.todos())
+	for producto in Catalogo.todos():
+		inventario.ingresar(producto, Inventario.Ubicacion.GONDOLA, producto.umbral)
+		inventario.ingresar(producto, Inventario.Ubicacion.DEPOSITO, 9)
+	var compradores: Array[Comprador] = []
+	for pedido in pedidos:
+		compradores.append(Comprador.new("Comprador", pedido, pedido.total()))
+	return TareaDeAtender.new(compradores, inventario)
+
+
+func _cobrar_el_siguiente(atender: TareaDeAtender) -> void:
+	atender.atender()
+	atender.atencion().cobrar()
+
+
+func _venta(id: Producto.Id, unidades: int) -> Venta:
+	var venta := Venta.new()
+	venta.agregar(Catalogo.de(id), unidades)
+	return venta
+
+
+func _escritorio(atender: TareaDeAtender = _atender()) -> ComputadoraDeEscritorio:
 	var escritorio: ComputadoraDeEscritorio = auto_free(ComputadoraDeEscritorio.new())
 	escritorio.reloj = _reloj()
-	escritorio.arrancar(
-		CajaRegistradora.new(
-			Apertura.inventario_de_la_jornada(), CajaRegistradora.productos_del_dia()
-		)
-	)
+	escritorio.reloj.tarea_descumplida.connect(_anotar_descumplida)
+	escritorio.arrancar(RegistroDeVentas.new(Catalogo.todos(), atender))
 	return escritorio
 
 
@@ -132,30 +154,93 @@ func test_lo_leido_y_lo_anotado_sobreviven_a_cambiar_de_app_y_a_cerrar() -> void
 	assert_int(escritorio.cuaderno().cuantas()).is_equal(1)
 
 
-func test_registrar_el_ultimo_del_dia_cuenta_la_obligatoria_una_sola_vez() -> void:
+func test_la_planilla_en_cero_de_una_noche_sin_ventas_no_cumple_registrar() -> void:  # AC-STK-024
 	var escritorio := _escritorio()
-	var del_dia := CajaRegistradora.productos_del_dia()
-	for indice in range(del_dia.size() - 1):
-		escritorio.pedir_registrar(del_dia[indice])
-	assert_int(_avisos_de_tarea).is_equal(0)
+	assert_bool(escritorio.registro().coincide()).is_true()
 	assert_int(_turno.tareas_cumplidas()).is_equal(0)
+	# Un «−» sobre la fila en 0 no cambia la fila, así que tampoco revisa.
+	escritorio.pedir_restar(Catalogo.de(Producto.Id.ACTRONCITO))
+	assert_int(_turno.tareas_cumplidas()).is_equal(0)
+	assert_int(_avisos_de_tarea).is_equal(0)
 
-	escritorio.pedir_registrar(del_dia[-1])
+
+func test_anotar_lo_vendido_cumple_registrar_con_el_ultimo_gesto() -> void:  # AC-STK-024
+	var pedidos: Array[Venta] = [_venta(Producto.Id.ACTRONCITO, 2), _venta(Producto.Id.DUREXTRA, 1)]
+	var atender := _atender(pedidos)
+	_cobrar_el_siguiente(atender)
+	_cobrar_el_siguiente(atender)
+	var escritorio := _escritorio(atender)
+	escritorio.pedir_sumar(Catalogo.de(Producto.Id.ACTRONCITO))
+	escritorio.pedir_sumar(Catalogo.de(Producto.Id.ACTRONCITO))
+	assert_int(_avisos_de_tarea).is_equal(0)
+	escritorio.pedir_sumar(Catalogo.de(Producto.Id.DUREXTRA))
 	assert_int(_avisos_de_tarea).is_equal(1)
 	assert_int(_cumplidas_avisadas).is_equal(1)
 	assert_int(_turno.tareas_cumplidas()).is_equal(1)
+	assert_float(_turno.tiempo_restante()).is_equal(Reglas.DURACION_DEL_TURNO)
 
 
-func test_registrar_de_nuevo_no_descuenta_ni_emite() -> void:
+func test_una_unidad_de_mas_descumple_y_restarla_vuelve_a_cumplir() -> void:  # AC-STK-025
+	var pedidos: Array[Venta] = [_venta(Producto.Id.ACTRONCITO, 1)]
+	var atender := _atender(pedidos)
+	_cobrar_el_siguiente(atender)
+	var escritorio := _escritorio(atender)
+	var actroncito := Catalogo.de(Producto.Id.ACTRONCITO)
+	escritorio.pedir_sumar(actroncito)
+	assert_int(_turno.tareas_cumplidas()).is_equal(1)
+	escritorio.pedir_sumar(actroncito)
+	assert_int(_turno.tareas_cumplidas()).is_equal(0)
+	assert_int(_descumplidas).is_equal(1)
+	escritorio.pedir_restar(actroncito)
+	assert_int(_turno.tareas_cumplidas()).is_equal(1)
+	assert_int(_avisos_de_tarea).is_equal(2)
+
+
+func test_una_venta_nueva_no_descumple_registrar() -> void:  # AC-STK-025
+	var pedidos: Array[Venta] = [_venta(Producto.Id.ACTRONCITO, 1), _venta(Producto.Id.BURBALOO, 1)]
+	var atender := _atender(pedidos)
+	_cobrar_el_siguiente(atender)
+	var escritorio := _escritorio(atender)
+	escritorio.pedir_sumar(Catalogo.de(Producto.Id.ACTRONCITO))
+	assert_int(_turno.tareas_cumplidas()).is_equal(1)
+	_cobrar_el_siguiente(atender)
+	assert_bool(escritorio.registro().coincide()).is_false()
+	assert_int(_turno.tareas_cumplidas()).is_equal(1)
+	assert_int(_descumplidas).is_equal(0)
+
+
+func test_el_cierre_cuenta_la_planilla_de_ese_instante() -> void:
+	var pedidos: Array[Venta] = [_venta(Producto.Id.ACTRONCITO, 1), _venta(Producto.Id.DUREXTRA, 2)]
+	for de_mas: int in [0, 1]:
+		var atender := _atender(pedidos)
+		_cobrar_el_siguiente(atender)
+		_cobrar_el_siguiente(atender)
+		var escritorio := _escritorio(atender)
+		var cierres: Array[int] = []
+		escritorio.reloj.turno_cerrado.connect(
+			func(cumplidas: int) -> void: cierres.append(cumplidas)
+		)
+		escritorio.pedir_sumar(Catalogo.de(Producto.Id.ACTRONCITO))
+		escritorio.pedir_sumar(Catalogo.de(Producto.Id.DUREXTRA))
+		escritorio.pedir_sumar(Catalogo.de(Producto.Id.DUREXTRA))
+		for _vez in de_mas:
+			escritorio.pedir_sumar(Catalogo.de(Producto.Id.FLINPUF))
+		escritorio.reloj._process(Reglas.DURACION_DEL_TURNO)
+		assert_array(cierres).is_equal([1 - de_mas])
+		# Con el turno cerrado, un gesto ya no cumple ni descumple.
+		escritorio.pedir_sumar(Catalogo.de(Producto.Id.FLINPUF))
+		assert_int(_turno.tareas_cumplidas()).is_equal(1 - de_mas)
+
+
+func test_cada_gesto_que_cambia_una_fila_avisa_a_la_pantalla() -> void:
 	var escritorio := _escritorio()
-	var del_dia := CajaRegistradora.productos_del_dia()
-	for producto in del_dia:
-		escritorio.pedir_registrar(producto)
-	assert_float(_turno.tiempo_restante()).is_equal(Reglas.DURACION_DEL_TURNO)
-	for producto in del_dia:
-		escritorio.pedir_registrar(producto)
-	assert_float(_turno.tiempo_restante()).is_equal(Reglas.DURACION_DEL_TURNO)
-	assert_int(_avisos_de_tarea).is_equal(1)
+	var avisos: Array[int] = [0]
+	escritorio.registro_actualizado.connect(func() -> void: avisos[0] += 1)
+	var actroncito := Catalogo.de(Producto.Id.ACTRONCITO)
+	escritorio.pedir_restar(actroncito)
+	escritorio.pedir_sumar(actroncito)
+	escritorio.pedir_restar(actroncito)
+	assert_int(avisos[0]).is_equal(2)
 
 
 func test_completar_una_tarea_aparte_no_le_sube_el_contador_al_turno() -> void:
@@ -197,3 +282,7 @@ func test_los_ocho_archivos_de_dominio_y_sistemas_tienen_su_espejo() -> void:
 func _anotar_tarea(cumplidas: int) -> void:
 	_avisos_de_tarea += 1
 	_cumplidas_avisadas = cumplidas
+
+
+func _anotar_descumplida(_cumplidas: int) -> void:
+	_descumplidas += 1

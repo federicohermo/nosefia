@@ -563,8 +563,17 @@ func test_examinar_no_retira_ni_deposita_y_devuelve_la_unidad_a_la_mira() -> voi
 	var caja: Node3D = almacen.get("_cajas_de_productos")[0]
 	var estante: Node3D = almacen.get("_estante")
 	var agarre: Agarre = almacen.get("_agarre")
+	# La caja apoyada se examina sin agarrarla, y la segunda E la devuelve a su lugar.
+	var lugar: Transform3D = caja.global_transform
 	_accion(jugador, caja, ReglasDeLosObjetos.ACCION_EXAMINAR)
+	assert_bool(jugador.examen.esta_examinando()).is_true()
 	assert_object(agarre.manos().sostenido()).is_null()
+	# Mientras dura el examen la física corre, y la caja no se cae de la cara.
+	for cuadro in 10:
+		await get_tree().physics_frame
+	assert_vector(caja.position).is_equal(Vector3.ZERO)
+	_accion(jugador, caja, ReglasDeLosObjetos.ACCION_EXAMINAR)
+	assert_bool(caja.global_transform.is_equal_approx(lugar)).is_true()
 	_sacar_de_la_caja(jugador, caja)
 	var sostenido := agarre.manos().sostenido()
 	_accion(jugador, estante, ReglasDeLosObjetos.ACCION_EXAMINAR)
@@ -612,12 +621,11 @@ func test_las_dos_cajas_se_examinan_enteras_y_vuelven_a_la_cintura() -> void:
 		assert_float(distancia).is_less(camara.position.distance_to(cintura.position))
 		assert_float(distancia).is_less(ReglasDelJugador.ALCANCE_DE_LA_MIRA)
 		distancias.append(distancia)
-		jugador.examen.rotar(Vector2(300.0, 200.0))
-		# La chica cierra con la E y la grande con el clic: los dos caminos vuelven igual.
-		if caja == chica:
-			_accion(jugador, caja, ReglasDeLosObjetos.ACCION_EXAMINAR)
-		else:
-			_accion(jugador, caja)
+		jugador.examen.arrastrar(Vector2(300.0, 200.0), true)
+		# El clic no cierra el examen ni suelta la caja: la E es la única salida.
+		_accion(jugador, caja)
+		assert_object(caja.get_parent()).is_same(cara)
+		_accion(jugador, caja, ReglasDeLosObjetos.ACCION_EXAMINAR)
 		assert_object(caja.get_parent()).is_same(cintura)
 		assert_bool(caja.transform.is_equal_approx(antes)).is_true()
 		agarre.soltar(true)
@@ -710,3 +718,102 @@ func test_solo_la_zona_del_producto_recibe_el_foco_y_el_resto_del_mueble_no_colo
 	assert_object(agarre.manos().sostenido()).is_same(sostenido)
 	presentacion.get_node("ZonaDeDurextra").call("interactuar")
 	assert_object(agarre.manos().sostenido()).is_same(sostenido)
+
+
+func test_lo_soltado_queda_sobre_el_piso_o_la_tapa_que_se_mira() -> void:  # AC-PLY-033
+	var almacen: Node3D = auto_free(ALMACEN.instantiate())
+	add_child(almacen)
+	await get_tree().physics_frame
+	var jugador: Node3D = almacen.get("_jugador")
+	jugador.set_physics_process(false)
+	var camara: Camera3D = jugador.get_node("Giro/Camara")
+	var bolsa: RigidBody3D = almacen.get_node("Objetos/BolsaDeBasura1")
+	var piso: Vector3 = jugador.global_position + jugador.frente() * 1.2
+	# Una caja del depósito llevada al piso de al lado, para mirarle la tapa.
+	var caja: RigidBody3D = almacen.get("_cajas_de_productos")[0]
+	var costado: Vector3 = jugador.global_position + jugador.frente().rotated(Vector3.UP, 0.6)
+	caja.global_position = costado + Vector3.UP * _media_caja(caja).y
+	await get_tree().physics_frame
+	var tapa := caja.global_position + Vector3.UP * _media_caja(caja).y
+	for punto: Vector3 in [piso, tapa]:
+		camara.look_at(punto)
+		var golpe := _golpe_de_la_mira(jugador, bolsa)
+		assert_float(golpe["normal"].y).is_greater(ReglasDeLosObjetos.APOYO_HORIZONTAL)
+		_soltar(almacen, bolsa)
+		var toca: Vector3 = golpe["position"]
+		assert_vector(Vector2(bolsa.global_position.x, bolsa.global_position.z)).is_equal_approx(
+			Vector2(toca.x, toca.z), Vector2.ONE * 0.01
+		)
+		assert_float(_base(bolsa) - toca.y).is_between(0.0, 0.01)
+		assert_bool(_encimado(bolsa)).is_false()
+
+
+func test_mirando_una_pared_o_nada_se_suelta_como_siempre() -> void:  # AC-PLY-035
+	var almacen: Node3D = auto_free(ALMACEN.instantiate())
+	add_child(almacen)
+	await get_tree().physics_frame
+	var jugador: Node3D = almacen.get("_jugador")
+	jugador.set_physics_process(false)
+	var camara: Camera3D = jugador.get_node("Giro/Camara")
+	var agarre: Agarre = almacen.get("_agarre")
+	var bolsa: RigidBody3D = almacen.get_node("Objetos/BolsaDeBasura1")
+	for punto: Vector3 in [
+		camara.global_position + jugador.frente() * 10.0,
+		camara.global_position + Vector3.UP * 10.0 + jugador.frente() * 0.1,
+	]:
+		camara.look_at(punto)
+		var golpe := _golpe_de_la_mira(jugador, bolsa)
+		if not golpe.is_empty():
+			assert_float(golpe["normal"].y).is_less(ReglasDeLosObjetos.APOYO_HORIZONTAL)
+		var sin_mira := agarre.punto_de_soltado.global_position
+		_soltar(almacen, bolsa)
+		assert_vector(bolsa.global_position).is_equal_approx(sin_mira, Vector3.ONE * 0.01)
+
+
+func _soltar(almacen: Node3D, cuerpo: RigidBody3D) -> void:
+	var agarre: Agarre = almacen.get("_agarre")
+	assert_bool(agarre.pedir_agarrar(cuerpo.get("datos"), cuerpo)).is_true()
+	agarre.soltar(true)
+
+
+## Lo que la mira toca, contra lo que el cuerpo choca.
+func _golpe_de_la_mira(jugador: Node3D, cuerpo: RigidBody3D) -> Dictionary:
+	var ojo: Transform3D = jugador.mira()
+	var consulta := PhysicsRayQueryParameters3D.create(
+		ojo.origin,
+		ojo.origin - ojo.basis.z * ReglasDelJugador.ALCANCE_DE_LA_MIRA,
+		cuerpo.collision_mask
+	)
+	consulta.exclude = [jugador.get_rid(), cuerpo.get_rid()]
+	return jugador.get_world_3d().direct_space_state.intersect_ray(consulta)
+
+
+func _formas(cuerpo: RigidBody3D) -> Array[CollisionShape3D]:
+	var formas: Array[CollisionShape3D] = []
+	formas.assign(cuerpo.find_children("*", "CollisionShape3D", false, false))
+	return formas
+
+
+func _base(cuerpo: RigidBody3D) -> float:
+	var base := INF
+	for forma in _formas(cuerpo):
+		var limites := forma.global_transform * forma.shape.get_debug_mesh().get_aabb()
+		base = minf(base, limites.position.y)
+	return base
+
+
+func _encimado(cuerpo: RigidBody3D) -> bool:
+	for forma in _formas(cuerpo):
+		var consulta := PhysicsShapeQueryParameters3D.new()
+		consulta.shape = forma.shape
+		consulta.transform = forma.global_transform
+		consulta.collision_mask = cuerpo.collision_mask | ReglasDeLosObjetos.CAPA_DEL_CONTORNO
+		consulta.exclude = [cuerpo.get_rid()]
+		if not cuerpo.get_world_3d().direct_space_state.intersect_shape(consulta, 1).is_empty():
+			return true
+	return false
+
+
+func _media_caja(caja: RigidBody3D) -> Vector3:
+	var forma: CollisionShape3D = caja.get_node("Cuerpo")
+	return (forma.shape as BoxShape3D).size * forma.scale / 2.0

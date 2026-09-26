@@ -10,3 +10,4 @@ func _init(un_producto: Producto = null) -> void:
 	if producto != null:
 		id = StringName("producto_%d" % producto.id)
 		nombre = producto.nombre
+		sonoridad = Catalogo.sonoridad_de(producto.id)

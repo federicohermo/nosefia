@@ -2,6 +2,23 @@
 
 [ext_resource type="Script" path="res://src/dominio/ambiente/entrada_sonora.gd" id="1_qermt"]
 [ext_resource type="Script" path="res://src/dominio/ambiente/tabla_de_sonidos.gd" id="2_xbcco"]
+[ext_resource type="AudioStream" uid="uid://bhu4lknuugo8s" path="res://assets/audio/SFX_EVENTO_Timbre.wav" id="3_timbre"]
+[ext_resource type="AudioStream" uid="uid://bx3vm8dhrgocb" path="res://assets/audio/SFX_NOLEV_Basura_SacarBolsa.wav" id="4_bolsa"]
+[ext_resource type="AudioStream" uid="uid://cutvbgdawxrms" path="res://assets/audio/SFX_OBJETO_Mopa_DejarYLimpiar.wav" id="5_mopa"]
+[ext_resource type="AudioStream" uid="uid://b0lo8yn2b2vwl" path="res://assets/audio/SFX_EVENTO_FinJornada.wav" id="6_fin"]
+[ext_resource type="AudioStream" uid="uid://cmgvx4tdrkcg3" path="res://assets/audio/SFX_INTERFAZ_Computadora_Boton.wav" id="7_boton"]
+[ext_resource type="AudioStream" uid="uid://dk04n1p36qcn8" path="res://assets/audio/SFX_OBJETO_Lata_Alzar.wav" id="8_lata_a"]
+[ext_resource type="AudioStream" uid="uid://dv2tb15k4i01b" path="res://assets/audio/SFX_OBJETO_Cajita_Alzar.wav" id="9_cajita_a"]
+[ext_resource type="AudioStream" uid="uid://duso3qto2jyn4" path="res://assets/audio/SFX_OBJETO_EnvoltorioPlastico_Alzar.wav" id="10_env_a"]
+[ext_resource type="AudioStream" uid="uid://bi5223yg6iov1" path="res://assets/audio/SFX_OBJETO_BotellaPlastica_Alzar.wav" id="11_bot_a"]
+[ext_resource type="AudioStream" uid="uid://cdvupg4ffblrl" path="res://assets/audio/SFX_OBJETO_Papel_Alzar.wav" id="12_papel_a"]
+[ext_resource type="AudioStream" uid="uid://p6r3cgkghbiw" path="res://assets/audio/SFX_OBJETO_Bolsa_Alzar.wav" id="13_bolsa_a"]
+[ext_resource type="AudioStream" uid="uid://b78r5d511272x" path="res://assets/audio/SFX_OBJETO_Mopa_Alzar.wav" id="14_mopa_a"]
+[ext_resource type="AudioStream" uid="uid://mafylx0jact8" path="res://assets/audio/SFX_OBJETO_Lata_Dejar.wav" id="15_lata_d"]
+[ext_resource type="AudioStream" uid="uid://cpruejjbbkpj7" path="res://assets/audio/SFX_OBJETO_Cajita_Dejar.wav" id="16_cajita_d"]
+[ext_resource type="AudioStream" uid="uid://oreab6bxexaq" path="res://assets/audio/SFX_OBJETO_EnvoltorioPlastico_Dejar.wav" id="17_env_d"]
+[ext_resource type="AudioStream" uid="uid://hiulhac17o4o" path="res://assets/audio/SFX_OBJETO_BotellaPlastica_Dejar.wav" id="18_bot_d"]
+[ext_resource type="AudioStream" uid="uid://dhikx4f07t082" path="res://assets/audio/SFX_OBJETO_Papel_Dejar.wav" id="19_papel_d"]
 
 [sub_resource type="Resource" id="Resource_x3pvh"]
 script = ExtResource("1_qermt")
@@ -13,6 +30,7 @@ script = ExtResource("1_qermt")
 evento = 1
 senal = &"turno_cerrado"
 bus = "Interfaz"
+stream = ExtResource("6_fin")
 
 [sub_resource type="Resource" id="Resource_382as"]
 script = ExtResource("1_qermt")
@@ -26,35 +44,185 @@ evento = 3
 senal = &"jornada_cerrada"
 bus = "Interfaz"
 
-[sub_resource type="Resource" id="Resource_jx3m8"]
+[sub_resource type="Resource" id="Resource_ag1"]
 script = ExtResource("1_qermt")
 evento = 4
 senal = &"objeto_agarrado"
+sonoridad = 1
+stream = ExtResource("8_lata_a")
 
-[sub_resource type="Resource" id="Resource_xfwnq"]
+[sub_resource type="Resource" id="Resource_ag2"]
+script = ExtResource("1_qermt")
+evento = 4
+senal = &"objeto_agarrado"
+sonoridad = 2
+stream = ExtResource("9_cajita_a")
+
+[sub_resource type="Resource" id="Resource_ag3"]
+script = ExtResource("1_qermt")
+evento = 4
+senal = &"objeto_agarrado"
+sonoridad = 3
+
+[sub_resource type="Resource" id="Resource_ag4"]
+script = ExtResource("1_qermt")
+evento = 4
+senal = &"objeto_agarrado"
+sonoridad = 4
+stream = ExtResource("10_env_a")
+
+[sub_resource type="Resource" id="Resource_ag5"]
+script = ExtResource("1_qermt")
+evento = 4
+senal = &"objeto_agarrado"
+sonoridad = 5
+stream = ExtResource("11_bot_a")
+
+[sub_resource type="Resource" id="Resource_ag6"]
+script = ExtResource("1_qermt")
+evento = 4
+senal = &"objeto_agarrado"
+sonoridad = 6
+stream = ExtResource("12_papel_a")
+
+[sub_resource type="Resource" id="Resource_ag7"]
+script = ExtResource("1_qermt")
+evento = 4
+senal = &"objeto_agarrado"
+sonoridad = 7
+stream = ExtResource("13_bolsa_a")
+
+[sub_resource type="Resource" id="Resource_ag8"]
+script = ExtResource("1_qermt")
+evento = 4
+senal = &"objeto_agarrado"
+sonoridad = 8
+stream = ExtResource("14_mopa_a")
+
+[sub_resource type="Resource" id="Resource_so1"]
 script = ExtResource("1_qermt")
 evento = 5
-senal = &"objeto_soltado"
+senal = &"contacto_recibido"
+sonoridad = 1
+stream = ExtResource("15_lata_d")
+
+[sub_resource type="Resource" id="Resource_so2"]
+script = ExtResource("1_qermt")
+evento = 5
+senal = &"contacto_recibido"
+sonoridad = 2
+stream = ExtResource("16_cajita_d")
+
+[sub_resource type="Resource" id="Resource_so3"]
+script = ExtResource("1_qermt")
+evento = 5
+senal = &"contacto_recibido"
+sonoridad = 3
+
+[sub_resource type="Resource" id="Resource_so4"]
+script = ExtResource("1_qermt")
+evento = 5
+senal = &"contacto_recibido"
+sonoridad = 4
+stream = ExtResource("17_env_d")
+
+[sub_resource type="Resource" id="Resource_so5"]
+script = ExtResource("1_qermt")
+evento = 5
+senal = &"contacto_recibido"
+sonoridad = 5
+stream = ExtResource("18_bot_d")
+
+[sub_resource type="Resource" id="Resource_so6"]
+script = ExtResource("1_qermt")
+evento = 5
+senal = &"contacto_recibido"
+sonoridad = 6
+stream = ExtResource("19_papel_d")
+
+[sub_resource type="Resource" id="Resource_so7"]
+script = ExtResource("1_qermt")
+evento = 5
+senal = &"contacto_recibido"
+sonoridad = 7
+
+[sub_resource type="Resource" id="Resource_so8"]
+script = ExtResource("1_qermt")
+evento = 5
+senal = &"contacto_recibido"
+sonoridad = 8
+stream = ExtResource("5_mopa")
 
 [sub_resource type="Resource" id="Resource_avff3"]
 script = ExtResource("1_qermt")
 evento = 6
 senal = &"agarre_rechazado"
 
-[sub_resource type="Resource" id="Resource_w1qrw"]
+[sub_resource type="Resource" id="Resource_co1"]
 script = ExtResource("1_qermt")
 evento = 7
-senal = &"producto_colocado"
+senal = &"unidad_colocada"
+sonoridad = 1
+stream = ExtResource("15_lata_d")
+
+[sub_resource type="Resource" id="Resource_co2"]
+script = ExtResource("1_qermt")
+evento = 7
+senal = &"unidad_colocada"
+sonoridad = 2
+stream = ExtResource("16_cajita_d")
+
+[sub_resource type="Resource" id="Resource_co3"]
+script = ExtResource("1_qermt")
+evento = 7
+senal = &"unidad_colocada"
+sonoridad = 3
+
+[sub_resource type="Resource" id="Resource_co4"]
+script = ExtResource("1_qermt")
+evento = 7
+senal = &"unidad_colocada"
+sonoridad = 4
+stream = ExtResource("17_env_d")
+
+[sub_resource type="Resource" id="Resource_co5"]
+script = ExtResource("1_qermt")
+evento = 7
+senal = &"unidad_colocada"
+sonoridad = 5
+stream = ExtResource("18_bot_d")
+
+[sub_resource type="Resource" id="Resource_co6"]
+script = ExtResource("1_qermt")
+evento = 7
+senal = &"unidad_colocada"
+sonoridad = 6
+stream = ExtResource("19_papel_d")
+
+[sub_resource type="Resource" id="Resource_co7"]
+script = ExtResource("1_qermt")
+evento = 7
+senal = &"unidad_colocada"
+sonoridad = 7
+
+[sub_resource type="Resource" id="Resource_co8"]
+script = ExtResource("1_qermt")
+evento = 7
+senal = &"unidad_colocada"
+sonoridad = 8
+stream = ExtResource("5_mopa")
 
 [sub_resource type="Resource" id="Resource_2fnal"]
 script = ExtResource("1_qermt")
 evento = 8
 senal = &"pasada_dada"
+stream = ExtResource("5_mopa")
 
 [sub_resource type="Resource" id="Resource_pmrqt"]
 script = ExtResource("1_qermt")
 evento = 9
 senal = &"bolsa_depositada"
+stream = ExtResource("4_bolsa")
 
 [sub_resource type="Resource" id="Resource_38ejk"]
 script = ExtResource("1_qermt")
@@ -66,6 +234,7 @@ bus = "Interfaz"
 script = ExtResource("1_qermt")
 evento = 11
 senal = &"comprador_llegado"
+stream = ExtResource("3_timbre")
 
 [sub_resource type="Resource" id="Resource_s3myp"]
 script = ExtResource("1_qermt")
@@ -73,6 +242,13 @@ evento = 12
 bus = "Ambiente"
 en_bucle = true
 
+[sub_resource type="Resource" id="Resource_boton"]
+script = ExtResource("1_qermt")
+evento = 13
+senal = &"boton_pulsado"
+bus = "Interfaz"
+stream = ExtResource("7_boton")
+
 [resource]
 script = ExtResource("2_xbcco")
-entradas = Array[ExtResource("1_qermt")]([SubResource("Resource_x3pvh"), SubResource("Resource_oefuu"), SubResource("Resource_382as"), SubResource("Resource_b10uv"), SubResource("Resource_jx3m8"), SubResource("Resource_xfwnq"), SubResource("Resource_avff3"), SubResource("Resource_w1qrw"), SubResource("Resource_2fnal"), SubResource("Resource_pmrqt"), SubResource("Resource_38ejk"), SubResource("Resource_ql6t2"), SubResource("Resource_s3myp")])
+entradas = Array[ExtResource("1_qermt")]([SubResource("Resource_x3pvh"), SubResource("Resource_oefuu"), SubResource("Resource_382as"), SubResource("Resource_b10uv"), SubResource("Resource_ag1"), SubResource("Resource_ag2"), SubResource("Resource_ag3"), SubResource("Resource_ag4"), SubResource("Resource_ag5"), SubResource("Resource_ag6"), SubResource("Resource_ag7"), SubResource("Resource_ag8"), SubResource("Resource_so1"), SubResource("Resource_so2"), SubResource("Resource_so3"), SubResource("Resource_so4"), SubResource("Resource_so5"), SubResource("Resource_so6"), SubResource("Resource_so7"), SubResource("Resource_so8"), SubResource("Resource_avff3"), SubResource("Resource_co1"), SubResource("Resource_co2"), SubResource("Resource_co3"), SubResource("Resource_co4"), SubResource("Resource_co5"), SubResource("Resource_co6"), SubResource("Resource_co7"), SubResource("Resource_co8"), SubResource("Resource_2fnal"), SubResource("Resource_pmrqt"), SubResource("Resource_38ejk"), SubResource("Resource_ql6t2"), SubResource("Resource_s3myp"), SubResource("Resource_boton")])

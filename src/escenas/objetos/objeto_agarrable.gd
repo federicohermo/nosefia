@@ -10,6 +10,10 @@
 class_name ObjetoAgarrable
 extends RigidBody3D
 
+## Cada vez que toca algo. La rapidez es la de antes del contacto: la de después ya la frenó el
+## choque. Cuál contacto suena lo decide el audio.
+signal contacto_recibido(nodo: Node3D, rapidez: float)
+
 ## Los datos entran por el `.tres`, así que agregar un objeto nuevo al almacén es duplicar la
 ## escena y cambiarle este campo: no se toca código.
 @export var datos: ObjetoDelAlmacen
@@ -18,10 +22,27 @@ extends RigidBody3D
 ## Dónde lo dejó la escena. Se guarda en `_ready()` y no en la declaración porque el `transform`
 ## que importa es el que le puso el `.tscn`, y ése recién existe cuando el nodo entró al árbol.
 var _lugar_de_origen: Transform3D
+## El mismo lugar en el mundo: en la mano, el padre es la mano y el local ya no dice nada.
+var _origen_en_el_mundo: Transform3D
+var _rapidez := 0.0
+var _rapidez_previa := 0.0
 
 
 func _ready() -> void:
 	_lugar_de_origen = transform
+	_origen_en_el_mundo = global_transform
+	contact_monitor = true
+	max_contacts_reported = maxi(max_contacts_reported, 1)
+	body_entered.connect(
+		func(_otro: Node) -> void: contacto_recibido.emit(self, maxf(_rapidez, _rapidez_previa))
+	)
+
+
+## El motor llama a esto con la velocidad ya frenada por el choque del paso, y recién después
+## avisa el contacto. Por eso se guarda también la del paso anterior.
+func _integrate_forces(estado: PhysicsDirectBodyState3D) -> void:
+	_rapidez_previa = _rapidez
+	_rapidez = estado.linear_velocity.length()
 
 
 ## Lo devuelve a donde empezó la noche.
@@ -56,3 +77,8 @@ func volver_a_su_lugar() -> void:
 ## `ReglasDeLosObjetos.METODO_INTERACTUAR` y lo afirma el test de esta escena.
 func interactuar() -> ObjetoDelAlmacen:
 	return datos
+
+
+## Dónde lo dejó la escena, en el mundo. Una unidad que nace en juego contesta dónde nació.
+func lugar_de_origen() -> Transform3D:
+	return _origen_en_el_mundo

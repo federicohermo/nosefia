@@ -25,3 +25,16 @@ func test_completar_una_tarea_ya_completada_no_cambia_nada() -> void:
 	registrar.completar()
 	assert_bool(registrar.completar()).is_false()
 	assert_bool(registrar.completada()).is_true()
+
+
+func test_descompletar_una_tarea_cumplida_la_desmarca_y_avisa_que_pudo() -> void:
+	var registrar := Tarea.new(Tarea.Tipo.REGISTRAR)
+	registrar.completar()
+	assert_bool(registrar.descompletar()).is_true()
+	assert_bool(registrar.completada()).is_false()
+
+
+func test_descompletar_una_tarea_pendiente_no_cambia_nada() -> void:
+	var registrar := Tarea.new(Tarea.Tipo.REGISTRAR)
+	assert_bool(registrar.descompletar()).is_false()
+	assert_bool(registrar.completada()).is_false()

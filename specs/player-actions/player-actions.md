@@ -103,6 +103,45 @@ un objeto que no se apoyó.
 CUANDO un objeto cae desde la altura de la mano o más, el sistema DEBE dejarlo apoyado sobre el
 piso. El caso que decide es el producto más delgado.
 
+### BR-PLY-015 — Lo que se agarra no queda adentro de un sólido fijo
+
+CUANDO algo que se agarra se suelta, se empuja o se duerme, el sistema DEBE dejarlo sin
+superponerse con el material de ningún sólido fijo: un mueble, una pared, el techo o la fachada.
+Apoyado contra una cara, o encima, no es superponerse. El caso que decide es el objeto más chico
+contra el sólido más delgado.
+
+### BR-PLY-016 — Lo que igual queda adentro vuelve a un lugar alcanzable
+
+SI algo que se agarra queda superpuesto con un sólido fijo al soltarlo, al terminar un empujón o
+al dormirse, ENTONCES el sistema DEBE llevarlo al primero de estos lugares que quede libre y
+alcanzable: deshacer el gesto; alrededor del punto donde entró, hasta una distancia de su tamaño;
+encima de lo que ocupa su lugar de origen, si es una caja; y su lugar de origen. Libre y
+alcanzable es sin superponerse con ningún sólido fijo, apoyado y fuera de las áreas de las
+tareas. SI ninguno queda libre, ENTONCES DEBE dejarlo donde está. El sistema NO DEBE devolverlo
+a la mano, y NO DEBE cambiar el estado de ninguna tarea por el rescate.
+
+### BR-PLY-017 — La hoja arrastra lo suelto que tiene adelante
+
+MIENTRAS la hoja de una puerta gira, el sistema DEBE correr en el sentido del giro los objetos
+sueltos que encuentra en su recorrido, despiertos o dormidos. CUANDO la hoja queda quieta, el
+sistema NO DEBE dejar nada adentro de ella: la hoja quieta es un sólido fijo más.
+
+### BR-PLY-018 — Lo soltado se apoya donde se mira
+
+CUANDO se suelta algo con la mira sobre una superficie al alcance, el sistema DEBE apoyarlo sobre
+el punto que la mira toca, si esa superficie lo admite. Una superficie lo admite si es
+horizontal —con el mismo corte que apoyar una caja— y si lo de abajo es el mundo fijo o un objeto
+que admite otro encima. Sólo las cajas contenedoras admiten otro encima.
+
+SI la superficie no lo admite, o ahí lo soltado queda encimado con algo o adentro de un mueble,
+ENTONCES el sistema DEBE soltarlo como sin mira: al frente, o a los pies si adelante no hay
+lugar.
+
+### BR-PLY-019 — Cada noche arranca con las puertas cerradas
+
+CUANDO se abre una jornada, el sistema DEBE dejar las puertas interiores cerradas, con la hoja en
+su lugar y sin girar hasta él, aunque la noche anterior hayan quedado abiertas o a medio giro.
+
 ## Criterios de aceptación
 
 ### AC-PLY-001 — La diagonal no corre *(verifica BR-PLY-001)*
@@ -183,6 +222,121 @@ todos están dormidos, y ninguno pasa de 0,02 rad/s después del segundo 2.
 
 DADO el producto más delgado soltado desde 1,5 metros ENTONCES su altura mínima no baja del plano
 del piso menos 5 centímetros.
+
+### AC-PLY-017 — Adentro de un mueble no hay lugar *(verifica BR-PLY-015)*
+
+DADO una caja puesta entera adentro del mostrador, apoyada en el piso CUANDO el juego pregunta si
+la caja entra ahí ENTONCES contesta que no: el mueble ocupa ese lugar.
+
+### AC-PLY-018 — La caja soltada pegada no entra al empujarla *(verifica BR-PLY-015)*
+
+DADO una caja soltada pegada al mostrador CUANDO el jugador camina contra ella hasta quedar
+bloqueado, y sigue caminando ENTONCES la caja no se superpone con el mostrador y la mira la puede
+enfocar.
+
+### AC-PLY-019 — La unidad no entra en una pared *(verifica BR-PLY-015)*
+
+DADO una unidad de producto en la mano CUANDO se la suelta contra una pared, en cualquiera de
+tres giros y cuatro alturas de la mira ENTONCES no se superpone con la pared y la mira la puede
+enfocar.
+
+### AC-PLY-020 — La unidad no entra en el mostrador *(verifica BR-PLY-015)*
+
+DADO una unidad de producto en la mano CUANDO se la suelta contra el mostrador, en cualquiera de
+tres giros y cuatro alturas de la mira ENTONCES no se superpone con el mostrador y la mira la
+puede enfocar.
+
+### AC-PLY-021 — La caja se sigue apoyando en un estante del depósito *(verifica BR-PLY-015)*
+
+DADO una caja en la mano CUANDO se la suelta mirando un estante del depósito ENTONCES queda
+apoyada en el estante.
+
+### AC-PLY-022 — La caja se sigue apoyando arriba del mostrador *(verifica BR-PLY-015)*
+
+DADO una caja en la mano CUANDO se la suelta mirando la tapa del mostrador ENTONCES queda
+apoyada arriba del mostrador.
+
+### AC-PLY-023 — La caja se sigue apilando *(verifica BR-PLY-015)*
+
+DADO una caja apoyada en el piso CUANDO se suelta otra mirando su tapa ENTONCES la segunda queda
+apoyada encima de la primera.
+
+### AC-PLY-024 — La unidad se sigue dejando adentro de la heladera *(verifica BR-PLY-015)*
+
+DADO una unidad de producto soltada adentro de la heladera CUANDO pasa un segundo de física
+ENTONCES sigue adentro de la heladera, no se superpone con sus paneles y la mira la puede
+enfocar.
+
+### AC-PLY-025 — El empujón que terminó adentro se deshace *(verifica BR-PLY-016)*
+
+DADO una caja empujada que al terminar la racha de empujones queda superpuesta con un sólido
+fijo, y con el lugar del inicio de la racha libre CUANDO pasa el primer paso de física sin
+empujón ENTONCES la caja vuelve al lugar del inicio de la racha.
+
+### AC-PLY-026 — Lo soltado adentro va al piso al lado del jugador *(verifica BR-PLY-016)*
+
+DADO un objeto que al soltarlo queda superpuesto con un sólido fijo CUANDO pasa un paso de
+física ENTONCES queda apoyado en el piso al lado del jugador, sin superponerse con nada fijo.
+
+### AC-PLY-027 — Encima de la caja que ocupa el origen *(verifica BR-PLY-016)*
+
+DADO una caja adentro de un sólido, sin lugar libre para deshacer ni alrededor, y con otra caja
+en su lugar de origen CUANDO la red la rescata ENTONCES queda apoyada encima de esa caja.
+
+### AC-PLY-028 — El origen es el último recurso *(verifica BR-PLY-016)*
+
+DADO un objeto adentro de un sólido, sin lugar libre para deshacer ni alrededor, y con su lugar
+de origen libre CUANDO la red lo rescata ENTONCES queda en su lugar de origen.
+
+### AC-PLY-029 — La red nunca devuelve a la mano *(verifica BR-PLY-016)*
+
+DADO un objeto adentro de un sólido y ningún candidato libre CUANDO la red lo mira ENTONCES queda
+donde está, la mano sigue como estaba, y el rescate queda registrado sin lugar.
+
+### AC-PLY-030 — La unidad arrastrada al abrir *(verifica BR-PLY-017)*
+
+DADO una unidad de producto dormida en el recorrido de la hoja CUANDO se abre la puerta y la hoja
+queda quieta ENTONCES la unidad no se superpone con la hoja, se movió en el sentido del giro y se
+despertó en algún paso.
+
+### AC-PLY-031 — La unidad arrastrada al cerrar *(verifica BR-PLY-017)*
+
+DADO una unidad de producto dormida en el recorrido de la hoja abierta CUANDO se cierra la puerta
+y la hoja queda quieta ENTONCES la unidad no se superpone con la hoja y se movió en el sentido
+del giro.
+
+### AC-PLY-032 — Al quedar quieta, nada adentro de la hoja *(verifica BR-PLY-017)*
+
+DADO un objeto que quedó adentro de la hoja al terminar un giro CUANDO la hoja queda quieta
+ENTONCES el objeto termina fuera de ella, sin superponerse con ningún sólido fijo.
+
+### AC-PLY-033 — Queda donde se mira *(verifica BR-PLY-018)*
+
+DADO algo en la mano y la mira sobre el piso libre, o sobre la tapa de una caja contenedora, a
+menos del alcance CUANDO se suelta ENTONCES su base queda sobre el punto que la mira toca, sin
+encimarse con nada.
+
+### AC-PLY-034 — Qué superficie admite *(verifica BR-PLY-018)*
+
+DADO una superficie con la inclinación justo debajo del corte de horizontal ENTONCES no admite;
+con el corte exacto sobre el mundo fijo, o sobre una caja contenedora, sí; sobre el trapeador,
+no. Ningún objeto del almacén salvo las cajas contenedoras admite otro encima.
+
+### AC-PLY-035 — Sin superficie que valga, se suelta como siempre *(verifica BR-PLY-018)*
+
+DADO la mira sobre una pared, o sobre nada al alcance CUANDO se suelta ENTONCES lo soltado sale
+del mismo punto que sin mira.
+
+### AC-PLY-036 — La puerta abierta anoche arranca cerrada *(verifica BR-PLY-019)*
+
+DADO una puerta abierta del todo al cerrar la noche CUANDO se abre la jornada siguiente ENTONCES
+la puerta está cerrada, su ángulo es `0.0` y la hoja está en su lugar de cerrada, en el mismo
+paso.
+
+### AC-PLY-037 — La puerta a medio giro también *(verifica BR-PLY-019)*
+
+DADO una puerta a medio giro al cerrar la noche CUANDO se abre la jornada siguiente ENTONCES la
+puerta está cerrada, su ángulo es `0.0` y la hoja está en su lugar de cerrada, en el mismo paso.
 
 ## No objetivos
 

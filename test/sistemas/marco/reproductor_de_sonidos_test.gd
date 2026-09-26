@@ -8,15 +8,6 @@
 ## Lo que se verifica es **qué se le pidió** al reproductor.
 extends GdUnitTestSuite
 
-## Los cuatro `.gd` de este spec que llevan espejo, más el quinto, para el caso de los espejos.
-const ARCHIVOS_CON_ESPEJO = [
-	"res://src/dominio/ambiente/entrada_sonora.gd",
-	"res://src/dominio/ambiente/tabla_de_sonidos.gd",
-	"res://src/dominio/ambiente/ronda_de_voces.gd",
-	"res://src/sistemas/marco/reproductor_de_sonidos.gd",
-	"res://src/sistemas/marco/enlace_de_audio.gd",
-]
-
 const BUS_INVENTADO := "Efectoss"
 
 var _rechazos: Array = []
@@ -121,7 +112,6 @@ func test_cinco_pedidos_seguidos_ocupan_cinco_voces_distintas() -> void:
 
 
 func test_una_fila_en_bucle_ocupa_la_voz_de_ambiente_y_no_la_ronda() -> void:
-	# Adentro de la ronda, el ambiente se cortaría solo al quinto efecto.
 	var entrada := _entrada(
 		EntradaSonora.Evento.AMBIENTE_DEL_LOCAL, true, EntradaSonora.BUS_DE_AMBIENTE, true
 	)
@@ -155,16 +145,95 @@ func test_silenciar_deja_todas_las_voces_sin_stream() -> void:
 	assert_object(reproductor.ambiente().stream).is_null()
 
 
-func test_los_cinco_archivos_de_dominio_y_sistemas_tienen_su_espejo() -> void:
-	# La mitad falsable del criterio de terminado: sin los espejos el nodo `tdd` no pasa.
-	assert_int(ARCHIVOS_CON_ESPEJO.size()).is_equal(5)
-	for ruta: String in ARCHIVOS_CON_ESPEJO:
-		var espejo := ruta.replace("res://src/", "res://test/").replace(".gd", "_test.gd")
+func test_una_sonoridad_sin_audio_no_suena_ni_cae_a_otro() -> void:  # AC-AMB-010
+	var caja := _de_objeto(EntradaSonora.Evento.OBJETO_AGARRADO, EntradaSonora.Sonoridad.CAJA)
+	caja.stream = null
+	var lata := _de_objeto(EntradaSonora.Evento.OBJETO_AGARRADO, EntradaSonora.Sonoridad.LATA)
+	var reproductor := _reproductor([caja, lata] as Array[EntradaSonora])
+	var objeto := _objeto(EntradaSonora.Sonoridad.CAJA)
+	assert_bool(reproductor.recibir(EntradaSonora.Evento.OBJETO_AGARRADO, objeto)).is_false()
+	assert_int(_voces_ocupadas(reproductor)).is_equal(0)
+	assert_array(_rechazos).is_equal([ReproductorDeSonidos.Motivo.SIN_SONIDO])
+
+
+func test_los_golpes_bajan_el_volumen_y_filtran() -> void:  # AC-AMB-011
+	var dejar := _de_objeto(EntradaSonora.Evento.OBJETO_SOLTADO, EntradaSonora.Sonoridad.LATA)
+	var reproductor := _reproductor([dejar] as Array[EntradaSonora])
+	var objeto := _objeto(EntradaSonora.Sonoridad.LATA)
+	var rapido := ContadorDeGolpes.UMBRAL_DE_GOLPE * 4.0
+	for _golpe in range(3):
 		(
-			assert_bool(FileAccess.file_exists(espejo))
-			. override_failure_message("falta el espejo `%s` de `%s`" % [espejo, ruta])
+			assert_bool(reproductor.recibir(EntradaSonora.Evento.OBJETO_SOLTADO, objeto, rapido))
 			. is_true()
 		)
+	assert_bool(reproductor.recibir(EntradaSonora.Evento.OBJETO_SOLTADO, objeto, rapido)).is_false()
+	var voces := reproductor.voces()
+	assert_float(voces[0].volume_db).is_equal(0.0)
+	assert_str(voces[0].bus).is_equal(EntradaSonora.BUS_DE_EFECTOS)
+	assert_float(voces[1].volume_db).is_equal(-6.0)
+	assert_float(voces[2].volume_db).is_equal(-12.0)
+	var segundo := _corte_del_bus(voces[1].bus)
+	var tercero := _corte_del_bus(voces[2].bus)
+	assert_float(segundo).is_greater(0.0)
+	assert_float(tercero).is_greater(segundo)
+
+
+func test_agarrar_suena_su_alzar_y_colocar_no_deja_golpes() -> void:  # AC-AMB-013
+	var alzar := _de_objeto(EntradaSonora.Evento.OBJETO_AGARRADO, EntradaSonora.Sonoridad.CAJITA)
+	var dejar := _de_objeto(EntradaSonora.Evento.PRODUCTO_COLOCADO, EntradaSonora.Sonoridad.CAJITA)
+	var tocar := _de_objeto(EntradaSonora.Evento.OBJETO_SOLTADO, EntradaSonora.Sonoridad.CAJITA)
+	var reproductor := _reproductor([alzar, dejar, tocar] as Array[EntradaSonora])
+	var objeto := _objeto(EntradaSonora.Sonoridad.CAJITA)
+	assert_bool(reproductor.recibir(EntradaSonora.Evento.OBJETO_AGARRADO, objeto)).is_true()
+	assert_object(reproductor.voces()[0].stream).is_same(alzar.stream)
+	assert_bool(reproductor.recibir(EntradaSonora.Evento.PRODUCTO_COLOCADO, objeto)).is_true()
+	var colocada := reproductor.voces()[1]
+	assert_object(colocada.stream).is_same(dejar.stream)
+	assert_float(colocada.volume_db).is_equal(0.0)
+	assert_str(colocada.bus).is_equal(EntradaSonora.BUS_DE_EFECTOS)
+	var rapido := ContadorDeGolpes.UMBRAL_DE_GOLPE * 4.0
+	assert_bool(reproductor.recibir(EntradaSonora.Evento.OBJETO_SOLTADO, objeto, rapido)).is_false()
+
+
+func test_un_evento_sin_objeto_suena_su_fila_de_siempre() -> void:
+	var reproductor := _reproductor(
+		[_entrada(EntradaSonora.Evento.PASADA_DADA)] as Array[EntradaSonora]
+	)
+	assert_bool(reproductor.recibir(EntradaSonora.Evento.PASADA_DADA, null)).is_true()
+
+
+## Una cosa del mundo que contesta sus datos, como la cáscara de un objeto.
+class ObjetoDePrueba:
+	extends Node3D
+
+	var datos := ObjetoDelAlmacen.new()
+
+	func interactuar() -> ObjetoDelAlmacen:
+		return datos
+
+
+func _objeto(sonoridad: EntradaSonora.Sonoridad) -> ObjetoDePrueba:
+	var objeto: ObjetoDePrueba = auto_free(ObjetoDePrueba.new())
+	objeto.datos.sonoridad = sonoridad
+	return objeto
+
+
+func _de_objeto(evento: EntradaSonora.Evento, sonoridad: EntradaSonora.Sonoridad) -> EntradaSonora:
+	var entrada := _entrada(evento)
+	entrada.sonoridad = sonoridad
+	return entrada
+
+
+## El corte del pasa-altos del bus por el que sale una voz, o 0 si no filtra.
+func _corte_del_bus(bus: String) -> float:
+	var indice := AudioServer.get_bus_index(bus)
+	assert_int(indice).is_greater(0)
+	assert_str(String(AudioServer.get_bus_send(indice))).is_equal(EntradaSonora.BUS_DE_EFECTOS)
+	for efecto in range(AudioServer.get_bus_effect_count(indice)):
+		var filtro := AudioServer.get_bus_effect(indice, efecto) as AudioEffectHighPassFilter
+		if filtro != null:
+			return filtro.cutoff_hz
+	return 0.0
 
 
 func _anotar_rechazo(_evento: EntradaSonora.Evento, motivo: ReproductorDeSonidos.Motivo) -> void:

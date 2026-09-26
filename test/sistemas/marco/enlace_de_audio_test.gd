@@ -1,9 +1,5 @@
 ## El enlazador: conecta sólo las señales que la fuente declara, con la aridad que informa el
 ## motor, y declara las que no encontró.
-##
-## **Las fuentes son nodos inventados acá adentro.** Es lo que prueba que este spec no nombra una
-## sola clase de los otros siete: si un caso necesitara al reloj o al repositor, el enlace estaría
-## atado a ellos y una señal que cambie de nombre allá rompería acá.
 extends GdUnitTestSuite
 
 const SIN_ARGUMENTOS := &"campanita"
@@ -139,6 +135,47 @@ func test_una_fila_con_un_bus_no_declarado_no_se_enlaza() -> void:
 	var enlace := _enlace([mala] as Array[EntradaSonora])
 	enlace.enlazar_todo([_fuente()])
 	assert_bool(enlace.sin_fuente().has(EntradaSonora.Evento.TAREA_CUMPLIDA)).is_true()
+
+
+## Las manos del jugador: avisan qué agarraron y qué soltaron.
+class ManosDePrueba:
+	extends Node
+
+	signal objeto_agarrado(nodo: Node3D)
+	signal objeto_soltado(nodo: Node3D)
+
+
+## Un objeto suelto: contesta sus datos y avisa cada contacto.
+class ObjetoDePrueba:
+	extends Node3D
+
+	signal contacto_recibido(nodo: Node3D, rapidez: float)
+
+	var datos := ObjetoDelAlmacen.new()
+
+	func interactuar() -> ObjetoDelAlmacen:
+		return datos
+
+
+func test_soltar_no_suena_y_el_objeto_suena_al_tocar_algo() -> void:  # AC-AMB-013
+	var alzar := _entrada(EntradaSonora.Evento.OBJETO_AGARRADO, &"objeto_agarrado")
+	alzar.sonoridad = EntradaSonora.Sonoridad.LATA
+	var dejar := _entrada(EntradaSonora.Evento.OBJETO_SOLTADO, &"contacto_recibido")
+	dejar.sonoridad = EntradaSonora.Sonoridad.LATA
+	var enlace := _enlace([alzar, dejar] as Array[EntradaSonora])
+	var manos: ManosDePrueba = auto_free(ManosDePrueba.new())
+	enlace.enlazar_todo([manos])
+	var lata: ObjetoDePrueba = auto_free(ObjetoDePrueba.new())
+	lata.datos.sonoridad = EntradaSonora.Sonoridad.LATA
+	manos.objeto_agarrado.emit(lata)
+	assert_array(_pedidos).is_equal([EntradaSonora.Evento.OBJETO_AGARRADO])
+	manos.objeto_soltado.emit(lata)
+	assert_int(_pedidos.size()).is_equal(1)
+	lata.contacto_recibido.emit(lata, ContadorDeGolpes.UMBRAL_DE_GOLPE * 4.0)
+	lata.contacto_recibido.emit(lata, ContadorDeGolpes.UMBRAL_DE_GOLPE / 2.0)
+	assert_array(_pedidos).is_equal(
+		[EntradaSonora.Evento.OBJETO_AGARRADO, EntradaSonora.Evento.OBJETO_SOLTADO]
+	)
 
 
 func _anotar_pedido(evento: EntradaSonora.Evento) -> void:

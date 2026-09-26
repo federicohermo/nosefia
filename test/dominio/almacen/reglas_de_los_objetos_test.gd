@@ -5,6 +5,7 @@
 ## archivo: los tres números están bien cada uno por su cuenta.
 extends GdUnitTestSuite
 
+const ObjetoDelAlmacen := preload("res://src/dominio/almacen/objeto_del_almacen.gd")
 const ReglasDeLosObjetos := preload("res://src/dominio/almacen/reglas_de_los_objetos.gd")
 const ReglasDelJugador := preload("res://src/dominio/jugador/reglas_del_jugador.gd")
 
@@ -106,3 +107,28 @@ func test_lo_examinado_queda_entero_delante_del_ojo() -> void:
 	# distancia no le gana al radio, alguna rotación lo mete adentro de la cámara.
 	for radio in [0.1, 0.35, 0.53, 1.0]:
 		assert_float(ReglasDeLosObjetos.distancia_de_examen(radio)).is_greater(radio)
+
+
+func test_lo_soltado_se_apoya_sobre_lo_horizontal_que_lo_admite() -> void:  # AC-PLY-034
+	var corte := ReglasDeLosObjetos.APOYO_HORIZONTAL
+	var caja := ObjetoDelAlmacen.new()
+	caja.admite_encima = true
+	var trapeador := ObjetoDelAlmacen.new()
+	assert_bool(ReglasDeLosObjetos.admite_lo_soltado(corte - 0.001, null)).is_false()
+	assert_bool(ReglasDeLosObjetos.admite_lo_soltado(corte, null)).is_true()
+	assert_bool(ReglasDeLosObjetos.admite_lo_soltado(corte, caja)).is_true()
+	assert_bool(ReglasDeLosObjetos.admite_lo_soltado(corte - 0.001, caja)).is_false()
+	assert_bool(ReglasDeLosObjetos.admite_lo_soltado(1.0, trapeador)).is_false()
+
+
+func test_las_teclas_giran_lo_examinado_a_velocidad_fija() -> void:  # AC-INV-022
+	var velocidad := ReglasDeLosObjetos.VELOCIDAD_DE_GIRO_DEL_EXAMEN
+	var tolerancia := Vector2.ONE * 0.0001
+	assert_float(velocidad).is_greater(0.0)
+	assert_vector(ReglasDeLosObjetos.giro_del_examen(Vector2.RIGHT, 0.5)).is_equal_approx(
+		Vector2(velocidad * 0.5, 0.0), tolerancia
+	)
+	assert_vector(ReglasDeLosObjetos.giro_del_examen(Vector2(0.0, 1.0), 0.5)).is_equal_approx(
+		Vector2(0.0, velocidad * 0.5), tolerancia
+	)
+	assert_vector(ReglasDeLosObjetos.giro_del_examen(Vector2.ZERO, 0.5)).is_equal(Vector2.ZERO)

@@ -6,6 +6,7 @@ class_name PantallaDeComputadora
 extends CanvasLayer
 
 signal app_pedida(app: Computadora.App)
+signal boton_pulsado
 
 ## Chats conserva su cableado para una entrega posterior, pero no ofrece acceso en esta UI.
 const TITULOS := {Computadora.App.CAJA: "/ REGISTRO:", Computadora.App.NOTAS: "/ NOTAS:"}
@@ -32,6 +33,10 @@ func _ready() -> void:
 		_opciones.add_child(_opcion_de(app))
 	get_viewport().size_changed.connect(_ajustar_al_viewport)
 	_ajustar_al_viewport()
+	for boton in find_children("*", "BaseButton", true, false):
+		_escuchar(boton)
+	# Las apps arman botones después de `_ready()`, como los productos de la caja al mostrarla.
+	get_tree().node_added.connect(_al_agregar_nodo)
 
 
 func caja() -> AppCaja:
@@ -79,6 +84,22 @@ func _opcion_de(app: Computadora.App) -> Button:
 	boton.icon_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	boton.pressed.connect(func() -> void: app_pedida.emit(app))
 	return boton
+
+
+func _al_agregar_nodo(nodo: Node) -> void:
+	if nodo is BaseButton and is_ancestor_of(nodo):
+		_escuchar(nodo)
+
+
+func _escuchar(boton: BaseButton) -> void:
+	var avisar := _al_pulsar.bind(boton)
+	if not boton.pressed.is_connected(avisar):
+		boton.pressed.connect(avisar)
+
+
+func _al_pulsar(boton: BaseButton) -> void:
+	if not boton.disabled:
+		boton_pulsado.emit()
 
 
 func _ajustar_al_viewport() -> void:

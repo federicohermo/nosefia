@@ -24,6 +24,7 @@ const CajaDeProductosDelDeposito := preload("res://src/escenas/objetos/caja_de_p
 const LimpiezaDelLocal := preload("res://src/escenas/puestos/limpieza_del_almacen.gd")
 const AudioDelLocal := preload("res://src/escenas/puestos/audio_del_almacen.gd")
 const ReposicionManual := preload("res://src/escenas/puestos/reposicion_manual.gd")
+const PuertaDelLocal := preload("res://src/escenas/puestos/puerta_del_local.gd")
 
 ## El jugador tampoco declara un `class_name` —es cáscara, como este archivo—, así que el
 ## `@export` de abajo no lo puede nombrar sin traerlo por `preload`.
@@ -51,6 +52,9 @@ const Jugador := preload("res://src/escenas/jugador.gd")
 ## conecta lo que le pasan, no sale a recorrer el árbol.
 @export var _agarre: Agarre
 @export var _bolsas: Array[Node3D]
+
+## Las dos puertas interiores. Cada noche arranca con las dos cerradas.
+@export var _puertas: Array[Node3D]
 
 ## Los muebles con los que el jugador choca por su contorno y no por su malla.
 @export var _muebles_con_contorno: Array[PhysicsBody3D]
@@ -81,6 +85,7 @@ func _ready() -> void:
 	_reloj.tiempo_consumido.connect(_reloj_de_mesa.mostrar_tiempo)
 	_ciclo.jornada_abierta.connect(_reloj_de_mesa.declarar_jornada)
 	_reloj.tarea_completada.connect(_hud.mostrar_tareas)
+	_reloj.tarea_descumplida.connect(_hud.mostrar_tareas)
 	_ciclo.jornada_cerrada.connect(_al_cerrar_la_jornada)
 	# El marcador de obligatorias no se reinicia solo: `mostrar_tareas()` se vuelve a llamar
 	# recién cuando el jugador completa una, así que sin esto la noche 2 arranca mostrando las
@@ -108,6 +113,7 @@ func _ready() -> void:
 				_limpiador,
 				_recolector,
 				_agarre,
+				$Interfaz/PantallaDeComputadora,
 			]
 		)
 	)
@@ -137,7 +143,10 @@ func _ready() -> void:
 func _al_abrir_la_jornada(_jornada: int) -> void:
 	# Primero que nada, y por eso antes de `limpiar()`: lo que quedó en la mano cuelga del
 	# jugador, así que devolverlo a su lugar le escribiría la posición relativa a la mano y la
-	# caja terminaría flotando pegada al cuerpo toda la noche siguiente.
+	# caja terminaría flotando pegada al cuerpo toda la noche siguiente. Y antes, el examen: lo
+	# examinado cuelga de la cara, y vaciar las manos lo dejaría apuntando a un nodo que ya no
+	# está ahí.
+	_jugador.examen.terminar()
 	_agarre.vaciar_las_manos()
 	_hud.declarar_obligatorias(Apertura.cantidad_de_obligatorias())
 	# **Un solo inventario para las dos obligatorias**: reponer lo llena y la ventanilla lo
@@ -146,8 +155,9 @@ func _al_abrir_la_jornada(_jornada: int) -> void:
 	var inventario := Apertura.inventario_de_la_jornada()
 	_repositor.arrancar(Estante.new(inventario, Catalogo.todos()))
 	_reposicion_manual.limpiar()
-	_atenciones.arrancar(TareaDeAtender.new(Compradores.de_la_jornada(), inventario))
-	_computadora.arrancar(CajaRegistradora.new(inventario, CajaRegistradora.productos_del_dia()))
+	var atender := TareaDeAtender.new(Compradores.de_la_jornada(), inventario)
+	_atenciones.arrancar(atender)
+	_computadora.arrancar(RegistroDeVentas.new(Catalogo.todos(), atender))
 	# El piso se rehace cada noche: guardar el estado entre jornadas está fuera de alcance, y una
 	# sola instancia dejaría el local limpio de anoche y la obligatoria cumplida sola.
 	_limpiador.arrancar(PisoDelLocal.de_la_jornada())
@@ -162,6 +172,8 @@ func _al_abrir_la_jornada(_jornada: int) -> void:
 		bolsa.volver_a_su_lugar()
 	for caja: CajaDeProductosDelDeposito in _cajas_de_productos:
 		caja.volver_a_su_lugar()
+	for puerta: PuertaDelLocal in _puertas:
+		puerta.cerrar_de_golpe()
 	_audio.arrancar_el_ambiente()
 	_limpieza.repintar()
 	_estante.mostrar(0)

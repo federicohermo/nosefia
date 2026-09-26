@@ -52,3 +52,14 @@ func test_dos_llamadas_al_catalogo_dan_objetos_distintos_con_el_mismo_id() -> vo
 	var otra := Catalogo.de(Producto.Id.ACTRONCITO)
 	assert_object(una).is_not_same(otra)
 	assert_int(una.id).is_equal(otra.id)
+
+
+func test_ningun_producto_queda_sin_sonoridad() -> void:  # AC-STK-027
+	for id: Producto.Id in Producto.Id.values():
+		(
+			assert_int(Catalogo.sonoridad_de(id))
+			. override_failure_message("%s no tiene sonoridad" % Producto.Id.find_key(id))
+			. is_not_equal(EntradaSonora.Sonoridad.NINGUNA)
+		)
+	for id in [Producto.Id.ARVEJAS, Producto.Id.CORACOLA, Producto.Id.PRONGLES]:
+		assert_int(Catalogo.sonoridad_de(id)).is_equal(EntradaSonora.Sonoridad.LATA)
