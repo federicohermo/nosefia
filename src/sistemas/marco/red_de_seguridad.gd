@@ -249,6 +249,10 @@ func _al_lado_del_jugador(cuerpo: PhysicsBody3D) -> Array[Transform3D]:
 	var salida: Array[Transform3D] = []
 	if jugador == null:
 		return salida
+	# El cuerpo del jugador no gira: su frente lo lleva el punto donde suelta a los pies.
+	var adelante := Vector3.FORWARD
+	if agarre != null and agarre.punto_de_respaldo != null:
+		adelante = -agarre.punto_de_respaldo.global_basis.z
 	var radio := _tamano(cuerpo)
 	for forma: CollisionShape3D in jugador.find_children("*", "CollisionShape3D", false, false):
 		if forma.shape is CapsuleShape3D:
@@ -256,7 +260,7 @@ func _al_lado_del_jugador(cuerpo: PhysicsBody3D) -> Array[Transform3D]:
 	var lugares := LugaresDelPiso.alrededor(
 		cuerpo.get_world_3d().direct_space_state,
 		jugador.global_position,
-		-jugador.global_basis.z,
+		adelante,
 		radio,
 		_media_altura(cuerpo) * 2.0,
 		CAIDA,

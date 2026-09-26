@@ -6,6 +6,9 @@ const OBJETO := preload("res://src/escenas/objetos/objeto_agarrable.tscn")
 ## La pared ocupa de x = 2 a x = 6: más gruesa que cualquier anillo alrededor de un objeto.
 const PARED := Vector3(4.0, 1.0, 0.0)
 
+## Apoyado en el piso y metido cinco centímetros en la pared: a su lado hay piso libre.
+const CONTRA_LA_PARED := Vector3(1.99, 0.08, 0.0)
+
 
 func _cuerpo_estatico(raiz: Node3D, tamano: Vector3, lugar: Vector3) -> StaticBody3D:
 	var cuerpo := StaticBody3D.new()
@@ -96,3 +99,24 @@ func test_el_aviso_nombra_el_objeto_el_solido_y_la_posicion() -> void:
 	assert_str(aviso).contains(str(objeto.name))
 	assert_str(aviso).contains(str(red.rescates[0]["solido"].name))
 	assert_str(aviso).contains(str(PARED))
+
+
+## Deshacer va antes que buscar alrededor, y deja lo soltado adelante del jugador.
+func test_lo_soltado_adentro_sale_adelante_del_jugador() -> void:
+	var mundo: Array = await _mundo()
+	var red: RedDeSeguridad = mundo[0]
+	var objeto: RigidBody3D = mundo[1]
+	var agarre: Agarre = mundo[2]
+	var jugador: CharacterBody3D = mundo[3]
+	# Como en el jugador, el cuerpo no gira: gira lo que cuelga de él. Mira hacia +X.
+	var giro := Node3D.new()
+	jugador.add_child(giro)
+	giro.rotation.y = -PI / 2.0
+	agarre.punto_de_respaldo = giro
+	objeto.freeze = true
+	objeto.global_position = CONTRA_LA_PARED
+	agarre.objeto_soltado.emit(objeto)
+	await get_tree().physics_frame
+	await get_tree().physics_frame
+	assert_int(red.rescates[0]["clase"]).is_equal(Rescate.Clase.DESHACER)
+	assert_float(objeto.global_position.x - jugador.global_position.x).is_greater(0.3)
