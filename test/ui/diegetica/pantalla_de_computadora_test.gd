@@ -156,16 +156,15 @@ func test_cada_click_en_un_boton_de_cualquier_app_emite_boton_pulsado() -> void:
 	var anotar: Button = pantalla.notas().get("_anotar")
 	anotar.pressed.emit()
 	assert_int(pulsados[0]).is_equal(1)
-	# Los productos de la caja se agregan después de `_ready()`, al mostrarla.
-	var caja := CajaRegistradora.new(
-		Apertura.inventario_de_la_jornada(), CajaRegistradora.productos_del_dia()
-	)
-	pantalla.caja().mostrar(caja)
-	var producto: Button = (pantalla.caja().get("_botones") as Container).get_child(0)
-	producto.pressed.emit()
-	producto.pressed.emit()
+	# Las filas de la planilla se agregan después de `_ready()`, al mostrarla.
+	var atender := TareaDeAtender.new([], Apertura.inventario_de_la_jornada())
+	pantalla.caja().mostrar(RegistroDeVentas.new(Catalogo.todos(), atender))
+	var fila := (pantalla.caja().get("_filas") as Container).get_child(0)
+	var sumar: Button = fila.get_child(5)
+	sumar.pressed.emit()
+	sumar.pressed.emit()
 	assert_int(pulsados[0]).is_equal(3)
-	producto.disabled = true
-	producto.pressed.emit()
+	sumar.disabled = true
+	sumar.pressed.emit()
 	assert_int(pulsados[0]).is_equal(3)
 	await get_tree().process_frame
