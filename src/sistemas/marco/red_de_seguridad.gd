@@ -333,9 +333,7 @@ func _encima_del_origen(cuerpo: PhysicsBody3D) -> Array[Transform3D]:
 		if ocupante == null or ocupante == cuerpo or not "datos" in ocupante:
 			continue
 		var datos := ocupante.get("datos") as ObjetoDelAlmacen
-		if datos == null:
-			continue
-		if not ReglasDeLosObjetos.admite_lo_soltado(ocupante.global_basis.y.y, datos):
+		if datos == null or not datos.admite_encima:
 			continue
 		var tapa := ocupante.global_position.y + _media_altura(ocupante)
 		var lugar := origen
