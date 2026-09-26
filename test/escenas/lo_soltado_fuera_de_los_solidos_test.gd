@@ -1,8 +1,8 @@
 ## Lo que se suelta o se empuja no queda adentro de un sólido fijo.
 ##
-## **«Adentro» se mide contra la malla visible, no contra la colisión.** La colisión de un mueble
-## es justo lo que se arregla: medir contra ella daría verde sin mirar nada el día que sus caras
-## dejen de contestar.
+## **«Adentro» del mostrador se mide contra su malla visible, no contra la colisión.** La
+## colisión de un mueble es justo lo que se arregla: medir contra ella daría verde sin mirar nada
+## el día que sus caras dejen de contestar.
 extends GdUnitTestSuite
 
 const ALMACEN := preload("res://src/escenas/almacen.tscn")
@@ -38,7 +38,7 @@ const CUADROS_CAMINANDO := 240
 ##
 ## **Ningún N reproducía el síntoma.** Medido el 2026-09-26 con la escena de ese día, de 60 a 1200
 ## pasos: la caja pegada no entraba. Queda como regresión, y la prueba del error es el caso de la
-## caja a medias.
+## caja entera adentro.
 const PASOS_DESPUES_DE_BLOQUEARSE := 60
 
 ## Hasta cuántos cuadros se espera a que el jugador quede bloqueado.
