@@ -1,9 +1,5 @@
 ## El audio del local: trae la tabla, la reparte y ata las señales. Cáscara y nada más.
 ##
-## **No decide nada.** Qué suena, por qué bus y con qué señal se dispara están en la tabla; a qué
-## voz le toca, en la ronda; y qué señales existen se lo pregunta el enlazador al motor. Acá sólo
-## se pasan las tres cosas de un lado al otro.
-##
 ## Va en `puestos/` y no en `objetos/`, que es el criterio de esa carpeta —cuántas instancias
 ## hay—: hay uno solo y llega cableado, aunque no sea un puesto de trabajo en el sentido del GDD.
 extends Node

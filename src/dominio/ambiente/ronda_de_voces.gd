@@ -9,8 +9,6 @@
 class_name RondaDeVoces
 extends RefCounted
 
-## Cuántas voces tiene el local para los sonidos que no van en bucle.
-##
 ## Ocho es un primer valor y el piso importa: con menos de cinco, cinco pedidos seguidos se
 ## pisarían entre ellos y no habría cómo distinguir un sonido perdido de uno que nunca se pidió.
 ## El bucle no gasta ninguna — tiene la suya.

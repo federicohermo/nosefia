@@ -87,8 +87,6 @@ const BUSES := [BUS_DE_AMBIENTE, BUS_DE_EFECTOS, BUS_DE_INTERFAZ, BUS_DE_MUSICA]
 
 @export var sonoridad: Sonoridad = Sonoridad.NINGUNA
 
-## Si el sonido se repite mientras dura la noche. Cada bucle ocupa su propia voz y no la ronda:
-## una ronda con un bucle adentro se quedaría sin voces al quinto sonido.
 @export var en_bucle: bool = false
 
 ## Si suena desde un lugar del local y no pegado a la cabeza del jugador.
