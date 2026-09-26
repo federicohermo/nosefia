@@ -137,7 +137,6 @@ func test_despachar_sin_vender_avisa_igual_que_cobrar() -> void:
 
 
 func test_la_compra_se_avisa_solo_si_hubo_venta() -> void:
-	# De esta señal cuelga el sonido de la compra: sin venta, el comprador se va sin comprar.
 	var ventanilla := _ventanilla(2)
 	var compras := [0]
 	ventanilla.compra_realizada.connect(func() -> void: compras[0] += 1)
@@ -274,8 +273,6 @@ func test_la_ventanilla_sin_cablear_no_hace_nada_y_lo_dice() -> void:
 
 
 func test_cobrar_sin_stock_avisa_lo_que_falta_y_no_despacha() -> void:
-	# Emite **una** de las dos señales y nunca las dos: juntas dejarían a la pantalla despachando
-	# al comprador y avisando que falta mercadería al mismo tiempo.
 	var obligatorias := Apertura.obligatorias()
 	_turno = Turno.new(Reglas.DURACION_DEL_TURNO, obligatorias)
 	var reloj: RelojDelTurno = auto_free(RelojDelTurno.new())

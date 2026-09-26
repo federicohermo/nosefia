@@ -6,10 +6,6 @@
 ## dummy no mezcla. El criterio obvio sería rojo permanente y el arreglo tentador sería apagar el
 ## test. Lo que este archivo deja verificable es **qué se le pidió al reproductor**: qué `stream`
 ## quedó puesto, por qué bus, en qué voz y en qué lugar.
-##
-## **Traduce, no decide.** Qué suena, por dónde, si va en bucle y si sale del espacio son
-## preguntas de la tabla; a qué voz le toca, de la ronda; qué emisor suena, del tope. Los `if` de
-## acá son valores que devolvió el dominio.
 class_name ReproductorDeSonidos
 extends Node
 
@@ -239,36 +235,35 @@ func actualizar_apagado(oyente: Vector3, segundos: float) -> void:
 		var voz := clave as AudioStreamPlayer3D
 		if voz.stream == null or voz.stream_paused:
 			continue
-		var cantidad := obstaculos_entre(oyente, voz.global_position, _origenes.get(voz))
+		if not is_instance_valid(_origenes[voz]):
+			_origenes[voz] = null
+		var cantidad := obstaculos_entre(oyente, voz.global_position, _origenes[voz])
 		_niveles[voz] = ApagadoPorObstaculos.acercar(_niveles[voz], cantidad, segundos)
 		_aplicar_apagado(voz)
 
 
-## Cuántos obstáculos hay entre dos puntos, hasta el máximo que apaga. Una pared cuenta; una
-## puerta, sólo cerrada. `propio` es lo que produjo el sonido, que no se tapa a sí mismo.
-func obstaculos_entre(desde: Vector3, hasta: Vector3, propio: Object) -> int:
+## Cuántos obstáculos hay entre el oído y un sonido, hasta el máximo que apaga. `propio` es lo
+## que produjo el sonido, que no se tapa a sí mismo.
+func obstaculos_entre(oido: Vector3, sonido: Vector3, propio: Object) -> int:
 	var espacio := get_viewport().world_3d.direct_space_state
-	var excluidos: Array[RID] = []
-	if propio is CollisionObject3D and is_instance_valid(propio):
-		excluidos.append((propio as CollisionObject3D).get_rid())
-	var cantidad := 0
-	# Cada rayo excluye lo que ya tocó. El tope evita un bucle largo entre muchos cuerpos que no
-	# cuentan, como los productos de una góndola.
+	# El rayo sale del sonido: lo que lo encierra no lo tapa. Y sigue desde cada choque sin
+	# excluir el cuerpo, porque un mismo sólido puede tener muchas paredes.
+	var consulta := PhysicsRayQueryParameters3D.create(sonido, oido)
+	if propio is CollisionObject3D:
+		consulta.exclude = [(propio as CollisionObject3D).get_rid()]
+	var paso := (oido - sonido).normalized() * 0.01
+	var entradas: Array[float] = []
 	for _rayo in range(ApagadoPorObstaculos.MAXIMO * 4):
-		var consulta := PhysicsRayQueryParameters3D.create(desde, hasta)
-		consulta.exclude = excluidos
 		var choque := espacio.intersect_ray(consulta)
 		if choque.is_empty():
 			break
-		excluidos.append(choque.rid)
 		if _tapa(choque.collider):
-			cantidad += 1
-			if cantidad >= ApagadoPorObstaculos.MAXIMO:
-				break
-	return cantidad
+			entradas.append(sonido.distance_to(choque.position))
+		consulta.from = choque.position + paso
+	return ApagadoPorObstaculos.contar(entradas)
 
 
-## Corta un bucle. Lo usa el cierre de la jornada para la música.
+## Corta un bucle.
 func callar(evento: EntradaSonora.Evento) -> void:
 	voz_en_bucle(evento).stream = null
 	for emisor: AudioStreamPlayer3D in _emisores_en_bucle.get(evento, []):
