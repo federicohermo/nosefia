@@ -35,7 +35,7 @@ func _ready() -> void:
 	_ajustar_al_viewport()
 	for boton in find_children("*", "BaseButton", true, false):
 		_escuchar(boton)
-	# Las apps arman botones después de `_ready()`, como los productos de la caja al mostrarla.
+	# Las apps arman botones después de `_ready()`.
 	get_tree().node_added.connect(_al_agregar_nodo)
 
 

@@ -60,7 +60,6 @@ const METODO_EMPUJAR := "empujar"
 ## motivo: la red de seguridad, en `sistemas/`, no puede nombrar el tipo que lo contesta.
 const METODO_LUGAR_DE_ORIGEN := "lugar_de_origen"
 
-## La señal de la caja que se va a correr. La escuchan el puesto y la red de seguridad.
 const SENAL_EMPUJADA := &"empujada"
 
 ## Qué parte del paso que el jugador no pudo dar recibe lo que le estorba. Con 1 la caja se
@@ -73,9 +72,7 @@ const ARRASTRE_DE_LA_CAJA := 0.5
 ## valdría una pared.
 const APOYO_HORIZONTAL := 0.7
 
-## La capa de física donde viven los contornos de los muebles: la caja que envuelve a cada uno.
-## Es la número 4, y su nombre está declarado en `project.godot`. Quien la mira no entra al
-## mueble: el jugador, y el lugar donde se deja un producto soltado.
+## Es la número 4, y su nombre está declarado en `project.godot`.
 const CAPA_DEL_CONTORNO := 8
 
 ## Cuánto se le descuenta a una forma para preguntar si entra o si atraviesa algo, en metros.
@@ -83,8 +80,8 @@ const CAPA_DEL_CONTORNO := 8
 ## puesto al ubicar la caja y el test al comprobar que no atraviesa nada: es el mismo número.
 const ROCE := 0.004
 
-## Cuánto gira por segundo lo examinado con cada tecla de movimiento, en radianes. Media vuelta
-## tarda poco más de un segundo: alcanza para leer la cara de atrás sin pasarse de largo.
+## Cuánto gira por segundo lo examinado con cada tecla de movimiento, en radianes. Lo justo para
+## leer la cara de atrás sin pasarse de largo.
 const VELOCIDAD_DE_GIRO_DEL_EXAMEN := 2.5
 
 

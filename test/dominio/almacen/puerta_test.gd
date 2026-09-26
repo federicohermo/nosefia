@@ -85,3 +85,11 @@ func test_girando_no_esta_quieta_y_en_el_tope_si() -> void:
 	assert_bool(puerta.quieta()).is_false()
 	puerta.avanzar(0.1)
 	assert_bool(puerta.quieta()).is_true()
+
+
+func test_cerrar_de_golpe_a_medio_giro_la_deja_quieta() -> void:
+	var puerta := Puerta.new()
+	puerta.alternar()
+	puerta.avanzar(0.1)
+	puerta.cerrar_de_golpe()
+	assert_bool(puerta.quieta()).is_true()
