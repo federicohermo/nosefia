@@ -137,7 +137,6 @@ func test_despachar_sin_vender_avisa_igual_que_cobrar() -> void:
 
 
 func test_la_compra_se_avisa_solo_si_hubo_venta() -> void:
-	# De esta señal cuelga el sonido de la compra: sin venta, el comprador se va sin comprar.
 	var ventanilla := _ventanilla(2)
 	var compras := [0]
 	ventanilla.compra_realizada.connect(func() -> void: compras[0] += 1)
