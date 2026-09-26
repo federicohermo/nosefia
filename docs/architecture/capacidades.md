@@ -38,6 +38,7 @@ flowchart TD
   EMP -- "jornada, legajo y final" --> SAV
   INV -- "pistas descubiertas" --> SAV
   STK -- "unidades en góndola" --> CTR
+  CTR -- "lo vendido" --> STK
   PLY -- "qué se lleva, a qué distancia" --> CLN
   PLY -- "la unidad viaja en la mano" --> STK
   PLY -- "qué objeto se examina" --> INV
