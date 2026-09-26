@@ -389,37 +389,6 @@ static func _solidos_pisados(objeto: PhysicsBody3D) -> Array[String]:
 	return pisados
 
 
-## Un lugar del piso donde el jugador entra parado, cerca de lo que se mira.
-##
-## **Es del test y es provisorio.** La búsqueda de lugares libres al lado del jugador vive
-## todavía en un puesto; cuando baje a `sistemas/`, este helper se reemplaza por ella.
-func _lugar_libre_cerca(almacen: Node3D, objeto: Node3D) -> Variant:
-	var jugador: CharacterBody3D = almacen.get("_jugador")
-	var cuerpo: CollisionShape3D = jugador.get_node("Cuerpo")
-	var espacio := almacen.get_world_3d().direct_space_state
-	var alto := jugador.global_position.y
-	for radio in RADIOS_DEL_LUGAR_LIBRE:
-		for lado in LADOS_DEL_LUGAR_LIBRE:
-			var hacia := Basis(Vector3.UP, TAU * lado / LADOS_DEL_LUGAR_LIBRE) * Vector3.FORWARD
-			var pie := Vector3(objeto.global_position.x, alto, objeto.global_position.z)
-			pie += hacia * radio
-			var consulta := PhysicsShapeQueryParameters3D.new()
-			consulta.shape = cuerpo.shape
-			consulta.transform = Transform3D(cuerpo.global_basis, pie + cuerpo.position)
-			consulta.collision_mask = jugador.collision_mask
-			consulta.exclude = [jugador.get_rid()]
-			if not espacio.intersect_shape(consulta, 1).is_empty():
-				continue
-			var rayo := PhysicsRayQueryParameters3D.create(pie, pie + Vector3.DOWN * alto * 2.0)
-			rayo.exclude = [jugador.get_rid()]
-			if espacio.intersect_ray(rayo).is_empty():
-				continue
-			return pie
-	return null
-
-
-## Que el objeto no se superponga con ningún sólido fijo y que la mira real lo enfoque desde un
-## lugar libre del piso.
 ## Un lugar del piso donde el jugador entra parado, cerca de lo que se mira. Los lugares del piso
 ## los busca `sistemas/`, igual que para el puesto y la red; acá sólo se prueba que entre la
 ## cápsula.
