@@ -23,6 +23,9 @@ const HOLGURA_DEL_APOYO := 0.05
 ## Cuánto deja el motor que un cuerpo vivo apoyado se hunda en lo que lo sostiene.
 const PENETRACION_TOLERADA := "physics/jolt_physics_3d/simulation/penetration_slop"
 
+## El tope del motor. Cada cuerpo ocupa varios choques: con menos, uno puede quedar afuera.
+const TOPE_DE_CHOQUES := 32
+
 @export var agarre: Agarre
 @export var jugador: CharacterBody3D
 
@@ -175,7 +178,7 @@ func _choques(cuerpo: PhysicsBody3D, lugar: Transform3D) -> Array[Dictionary]:
 func _prueba(cuerpo: PhysicsBody3D, lugar: Transform3D) -> PhysicsTestMotionResult3D:
 	var consulta := PhysicsTestMotionParameters3D.new()
 	consulta.from = lugar
-	consulta.max_collisions = 8
+	consulta.max_collisions = TOPE_DE_CHOQUES
 	# Sin esto, lo que el motor saca del todo no vuelve como choque, y no se sabe contra qué era.
 	consulta.recovery_as_collision = true
 	if jugador != null:
