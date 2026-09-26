@@ -56,6 +56,13 @@ const METODO_INTERACTUAR := "interactuar"
 ## puede nombrar la caja sin cruzar la dirección de las capas.
 const METODO_EMPUJAR := "empujar"
 
+## Dónde arrancó la noche lo que se agarra, en coordenadas del mundo. Es un método por el mismo
+## motivo: la red de seguridad, en `sistemas/`, no puede nombrar el tipo que lo contesta.
+const METODO_LUGAR_DE_ORIGEN := "lugar_de_origen"
+
+## La señal de la caja que se va a correr. La escuchan el puesto y la red de seguridad.
+const SENAL_EMPUJADA := &"empujada"
+
 ## Qué parte del paso que el jugador no pudo dar recibe lo que le estorba. Con 1 la caja se
 ## mueve a su velocidad y no pesa nada; con 0 no se mueve y le tapa el paso. El medio es lo que
 ## hace que correr una caja cueste caminar más lento, que es el peso que se quiere.
