@@ -186,7 +186,7 @@ func emisores_que_suenan(evento: EntradaSonora.Evento) -> Array[int]:
 	return suenan
 
 
-## Corta un bucle. Lo usa el cierre de la jornada para la música.
+## Corta un bucle.
 func callar(evento: EntradaSonora.Evento) -> void:
 	voz_en_bucle(evento).stream = null
 	for emisor: AudioStreamPlayer3D in _emisores_en_bucle.get(evento, []):

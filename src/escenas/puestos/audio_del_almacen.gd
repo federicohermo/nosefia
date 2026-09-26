@@ -28,14 +28,13 @@ func enlazar(fuentes: Array) -> void:
 	enlace.enlazar_todo(fuentes)
 
 
-## Arranca lo que va en bucle: el ambiente y la música. Lo llama el cableado al abrir la
-## jornada: ninguna señal lo dispara, y por eso sus filas quedan declaradas sin fuente. Lo que ya
-## suena no empieza de nuevo.
+## Arranca lo que va en bucle. Lo llama el cableado al abrir la jornada: ninguna señal lo
+## dispara, y por eso sus filas quedan declaradas sin fuente.
 func arrancar_el_ambiente() -> void:
 	reproductor.pedir(EntradaSonora.Evento.AMBIENTE_DEL_LOCAL)
 	reproductor.pedir(EntradaSonora.Evento.MUSICA_DE_LA_NOCHE)
 
 
-## La música corta al cerrar la jornada. El ambiente sigue: el local no se apaga.
+## El ambiente sigue: el local no se apaga.
 func callar_la_musica() -> void:
 	reproductor.callar(EntradaSonora.Evento.MUSICA_DE_LA_NOCHE)

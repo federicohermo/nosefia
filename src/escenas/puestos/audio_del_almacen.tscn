@@ -21,7 +21,7 @@ reproductor = NodePath("../Reproductor")
 editor_description = "En coordenadas del local: la raíz del audio es un Node, así que estos puntos no heredan ninguna transformada."
 
 [node name="Neon" type="Node3D" parent="Emisores"]
-editor_description = "Las dos heladeras y los tubos del salón. Los tubos del depósito y del baño no suenan."
+editor_description = "Los tubos del depósito y del baño no suenan."
 
 [node name="Heladera" type="Marker3D" parent="Emisores/Neon"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.5, 2.35, 3.3)
