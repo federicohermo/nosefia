@@ -64,10 +64,11 @@ todavía no existe queda sin fuente y se declara, en vez de romper.
 CUANDO suena algo corto, el sistema DEBE usar la voz siguiente y volver al principio al terminar
 la vuelta. Son **8 voces**: sin repartir, dos sonidos seguidos se pisarían en la misma voz.
 
-### BR-AMB-008 — Lo que va en bucle no gasta una voz
+### BR-AMB-008 — Cada bucle tiene su voz
 
-MIENTRAS un sonido va en bucle, el sistema DEBE dejarlo fuera de la ronda. Una ronda con un bucle
-adentro se queda sin voces.
+MIENTRAS un sonido va en bucle, el sistema DEBE dejarlo fuera de la ronda y darle una voz propia.
+Dos bucles distintos, como la música y el ambiente, DEBEN sonar a la vez sin cortarse. Una ronda
+con un bucle adentro se queda sin voces.
 
 ### BR-AMB-009 — Una ronda sin voces no divide por cero
 
@@ -109,6 +110,28 @@ CUANDO el objeto se agarra otra vez, el sistema DEBE volver a contar desde el 1.
 
 CUANDO un producto se coloca en la góndola, el sistema DEBE sonar el dejar de su sonoridad una
 vez, a 0 dB y sin filtro. Colocar NO DEBE contar golpes.
+
+### BR-AMB-015 — La música suena toda la noche
+
+CUANDO se abre una jornada, el sistema DEBE sonar la música en bucle por el bus de música. SI la
+música ya suena, ENTONCES NO DEBE empezarla de nuevo. CUANDO se cierra la jornada, el sistema
+DEBE cortarla, aunque la computadora esté abierta.
+
+### BR-AMB-016 — Lo que pasa en un lugar suena desde ese lugar
+
+Que un sonido salga del espacio o salga plano DEBE ser un dato de su fila. CUANDO suena una fila
+del espacio, el sistema DEBE sonarla desde el objeto que la produjo o, si no hay objeto, desde el
+emisor fijo que la fila nombra. El sonido DEBE quedar donde empezó aunque el objeto se mueva o se
+borre. SI una fila del espacio no tiene de dónde sonar, ENTONCES el sistema DEBE rechazarla con
+un motivo propio, en vez de sonarla plana. La interfaz, el fin del turno, la música y los pasos
+suenan planos.
+
+### BR-AMB-017 — El ambiente suena desde sus emisores, con un tope
+
+El ambiente del local DEBE sonar en bucle desde la heladera y desde los tubos del salón, por el
+bus de ambiente. MIENTRAS suena, el sistema DEBE sonar sólo los emisores más cercanos al jugador,
+hasta el tope de emisores; los demás esperan. Dos emisores a la misma distancia DEBEN quedar en el
+mismo orden entre cuadros. Con cero emisores, NO DEBE sonar nada ni fallar.
 
 ## Criterios de aceptación
 
@@ -177,6 +200,31 @@ DADO una lata CUANDO se la agarra ENTONCES suena el alzar de lata. CUANDO se la 
 no toca nada ENTONCES no suena. DADO un producto de cajita CUANDO se lo coloca ENTONCES suena el
 dejar de cajita a 0 dB, sin filtro, y el contacto siguiente no cuenta como golpe.
 
+### AC-AMB-014 — La música y el ambiente a la vez *(verifica BR-AMB-008)*
+
+DADO la música y el ambiente, los dos en bucle CUANDO se piden los dos ENTONCES los dos quedan
+pedidos, cada uno en su voz, y ninguna voz de la ronda queda ocupada.
+
+### AC-AMB-015 — La música de jornada en jornada *(verifica BR-AMB-015)*
+
+DADO la música sonando CUANDO se abre la jornada otra vez ENTONCES no se pide de nuevo. CUANDO se
+cierra la jornada ENTONCES su voz queda sin nada pedido. CUANDO se abre la siguiente ENTONCES
+suena otra vez.
+
+### AC-AMB-016 — El lugar es un dato de la fila *(verifica BR-AMB-016)*
+
+DADO una fila del espacio y un objeto en (1, 0, 2) CUANDO el objeto la produce ENTONCES suena en
+una voz del espacio, en (1, 0, 2), y la voz se queda ahí aunque el objeto se mueva. DADO una fila
+del espacio con un emisor fijo CUANDO suena sin objeto ENTONCES suena en la posición del emisor.
+DADO una fila del espacio sin objeto y sin emisor ENTONCES se rechaza por no tener posición.
+DADO una fila plana ENTONCES suena en una voz plana.
+
+### AC-AMB-017 — El tope de emisores *(verifica BR-AMB-017)*
+
+DADO distancias 5, 1 y 3 y un tope de 2 ENTONCES suenan el segundo y el tercero. DADO un tope de
+3 ENTONCES suenan los tres. DADO dos emisores a la misma distancia en el borde del tope ENTONCES
+suena el primero de la lista, las dos veces. DADO cero emisores ENTONCES no suena ninguno.
+
 ## No objetivos
 
 - Esta capacidad NO elige los archivos de audio ni los mezcla. Una fila sin sonido es un estado
@@ -214,5 +262,19 @@ dejar de cajita a 0 dB, sin filtro, y el contacto siguiente no cuenta como golpe
 - **OQ-AMB-003 — ¿En qué frecuencias corta el filtro del 2.º y del 3.º golpe?**
   - Por qué sigue abierta: sale de escuchar los golpes en el local. El juego arranca con un
     primer valor.
+  - Decide: el dueño del repo.
+  - Bloquea: nada de la máquina.
+- **OQ-AMB-004 — ¿Qué tan fuerte suena el ambiente de los tubos y la heladera?**
+  - Por qué sigue abierta: tiene que ser sutil, y eso sale de escuchar en el local. El juego
+    arranca con un primer valor.
+  - Decide: el dueño del repo.
+  - Bloquea: nada de la máquina.
+- **OQ-AMB-005 — ¿Cuántos emisores del ambiente suenan a la vez?**
+  - Por qué sigue abierta: sale de escuchar en el local. El juego arranca con un primer valor.
+  - Decide: el dueño del repo.
+  - Bloquea: nada de la máquina.
+- **OQ-AMB-006 — ¿A qué distancia deja de oírse un emisor del ambiente?**
+  - Por qué sigue abierta: sale de caminar el local escuchando. El juego arranca con un primer
+    valor.
   - Decide: el dueño del repo.
   - Bloquea: nada de la máquina.
