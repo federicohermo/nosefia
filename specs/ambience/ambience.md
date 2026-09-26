@@ -157,6 +157,7 @@ obstáculos; desde ahí NO DEBE apagar más. Con cero obstáculos, el sonido NO 
   abierta desde que se pide abrirla.
 - El oído es la cámara, no el cuerpo.
 - Lo que el jugador lleva en la mano no es un obstáculo para sus propios sonidos.
+- Lo que encierra al sonido no lo tapa.
 - CUANDO cambia la cantidad de obstáculos, el volumen y el corte DEBEN llegar al nuevo valor en
   más de un cuadro, sin un salto.
 - Un sonido plano NO DEBE apagarse nunca.
@@ -277,7 +278,8 @@ uno ENTONCES apagan igual.
 
 DADO una pared entre un sonido del espacio y el oído ENTONCES cuenta un obstáculo. DADO una
 puerta cerrada en el mismo lugar ENTONCES cuenta uno; CUANDO se la pide abierta ENTONCES cuenta
-cero. DADO el objeto que produjo el sonido entre los dos ENTONCES no cuenta.
+cero. DADO el objeto que produjo el sonido entre los dos ENTONCES no cuenta. DADO un sonido
+adentro de algo fijo ENTONCES eso no cuenta.
 
 ### AC-AMB-022 — Sin salto *(verifica BR-AMB-020)*
 
