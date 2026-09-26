@@ -91,8 +91,8 @@ func test_la_trabada_no_se_abre_por_mas_que_se_la_toque() -> void:  # AC-PLY-038
 	var puerta := Puerta.new(true)
 	for vez in 10:
 		assert_bool(puerta.alternar()).override_failure_message("vez %d" % vez).is_false()
+		assert_bool(puerta.abierta()).override_failure_message("vez %d" % vez).is_false()
 	assert_bool(puerta.trabada()).is_true()
-	assert_bool(puerta.abierta()).is_false()
 	assert_float(puerta.avanzar(10.0)).is_equal(0.0)
 
 
