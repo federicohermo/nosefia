@@ -19,10 +19,20 @@ func test_suenan_tres_golpes_cada_uno_mas_bajo_y_mas_filtrado() -> void:  # AC-A
 	assert_object(golpes.contar(RAPIDO)).is_null()
 
 
-func test_un_contacto_lento_no_gasta_ningun_golpe() -> void:  # AC-AMB-012
+func test_el_primer_contacto_suena_aunque_sea_lento() -> void:  # AC-AMB-012
+	var primero := ContadorDeGolpes.new().contar(ContadorDeGolpes.UMBRAL_DE_GOLPE - 0.01)
+	assert_object(primero).is_not_null()
+	if primero == null:
+		return
+	assert_float(primero.volumen_db).is_equal(0.0)
+	assert_float(primero.corte_hz).is_equal(0.0)
+
+
+func test_despues_del_primero_un_contacto_lento_no_gasta_ningun_golpe() -> void:  # AC-AMB-012
 	var golpes := ContadorDeGolpes.new()
+	golpes.contar(RAPIDO)
 	assert_object(golpes.contar(ContadorDeGolpes.UMBRAL_DE_GOLPE - 0.01)).is_null()
-	assert_float(golpes.contar(ContadorDeGolpes.UMBRAL_DE_GOLPE).volumen_db).is_equal(0.0)
+	assert_float(golpes.contar(ContadorDeGolpes.UMBRAL_DE_GOLPE).volumen_db).is_equal(-6.0)
 
 
 func test_reiniciar_vuelve_al_primer_golpe() -> void:  # AC-AMB-012

@@ -1,10 +1,5 @@
 ## Ata las señales del juego a los sonidos de la tabla, **sin nombrar una sola clase**.
 ##
-## Qué señal dispara qué evento es un dato de la fila, así que este archivo recibe una lista de
-## fuentes, les pregunta al motor qué señales declaran y conecta las que coinciden. Es lo que
-## desacopla el audio de los otros siete specs: si una señal todavía no existe, su fila **queda
-## sin fuente y se declara** en vez de romper nada.
-##
 ## **La aridad se lee del motor.** `get_signal_list()` informa los argumentos de cada señal, así
 ## que una tabla de aridades escrita a mano se desincronizaría el día que una señal gane un
 ## parámetro — y el síntoma sería una conexión que falla recién en runtime.
