@@ -323,7 +323,6 @@ func _tiene_origen(cuerpo: PhysicsBody3D) -> bool:
 	return not cuerpo.call(ReglasDeLosObjetos.METODO_INTERACTUAR) is UnidadDeProducto
 
 
-## Encima de la caja que ocupa el origen. Sólo una caja admite otra cosa encima.
 func _encima_del_origen(cuerpo: PhysicsBody3D) -> Array[Transform3D]:
 	var salida: Array[Transform3D] = []
 	if not _tiene_origen(cuerpo):
@@ -331,9 +330,10 @@ func _encima_del_origen(cuerpo: PhysicsBody3D) -> Array[Transform3D]:
 	var origen: Transform3D = cuerpo.call(ReglasDeLosObjetos.METODO_LUGAR_DE_ORIGEN)
 	for choque in _choques(cuerpo, origen):
 		var ocupante := choque["solido"] as Node3D
-		if ocupante == null or ocupante == cuerpo:
+		if ocupante == null or ocupante == cuerpo or not "datos" in ocupante:
 			continue
-		if not ocupante.has_method(ReglasDeLosObjetos.METODO_EMPUJAR):
+		var datos := ocupante.get("datos") as ObjetoDelAlmacen
+		if datos == null or not datos.admite_encima:
 			continue
 		var tapa := ocupante.global_position.y + _media_altura(ocupante)
 		var lugar := origen
