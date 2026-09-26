@@ -97,6 +97,12 @@ CUANDO se cobra un pedido, el sistema DEBE descontar cada línea **del depósito
 los vendibles de su producto. La góndola no se toca: una venta que vacía el estante deshace lo
 repuesto, y nada se lo avisa al jugador.
 
+### BR-CTR-015 — Lo vendido cuenta sólo lo cobrado
+
+CUANDO se pregunta cuántas unidades de un producto se vendieron en la noche, el sistema DEBE
+sumar sus unidades en los pedidos **cobrados**. Un comprador despachado sin vender y un cobro
+rechazado no suman nada, y un producto que nadie compró contesta 0.
+
 ## Criterios de aceptación
 
 ### AC-CTR-001 — Dos por noche *(verifica BR-CTR-001)*
@@ -186,6 +192,22 @@ reponer cumplido.
 DADO un producto de umbral 8, con la góndola en 8 y el depósito en 2 CUANDO un comprador compra 1
 y otro pide 2 ENTONCES el primero se cobra y el segundo se rechaza.
 
+### AC-CTR-018 — Lo vendido suma los dos pedidos *(verifica BR-CTR-015)*
+
+DADO dos compradores que piden el mismo producto, uno 2 unidades y otro 1, CUANDO se cobran los
+dos ENTONCES lo vendido de ese producto es 3.
+
+### AC-CTR-019 — Lo no cobrado no es vendido *(verifica BR-CTR-015)*
+
+DADO un comprador que pide 2 unidades de un producto CUANDO se lo despacha sin vender ENTONCES
+lo vendido de ese producto es 0. DADO un pedido que supera los vendibles CUANDO el cobro se
+rechaza ENTONCES lo vendido sigue en 0.
+
+### AC-CTR-020 — Lo que nadie compró *(verifica BR-CTR-015)*
+
+DADO dos ventas cobradas CUANDO se pregunta por un producto que no estaba en ningún pedido
+ENTONCES lo vendido es 0.
+
 ## No objetivos
 
 - Esta capacidad NO decide cuántas unidades hay ni dónde están: se lo pregunta a
@@ -197,7 +219,7 @@ y otro pide 2 ENTONCES el primero se cobra y el segundo se rechaza.
 
 - **Entrada:** el padrón de la noche y los vendibles de cada producto.
 - **Salida:** quién está en la ventanilla, el ticket, el total, la diferencia, el aviso de
-  faltantes, cuántos van despachados y el desvío de la noche.
+  faltantes, cuántos van despachados, el desvío de la noche y lo vendido de cada producto.
 - **Falla:** un pedido que supera sus vendibles se rechaza entero; una atención despachada
   rechaza todo lo demás.
 
@@ -208,7 +230,8 @@ y otro pide 2 ENTONCES el primero se cobra y el segundo se rechaza.
 
 ## Dependencias
 
-- [`store-stock`](../store-stock/store-stock.md) (consume): los vendibles y el cobro.
+- [`store-stock`](../store-stock/store-stock.md) (consume y alimenta): los vendibles y el cobro;
+  y lo vendido de cada producto, contra lo que se compara la planilla de registrar.
 - [`shift-cycle`](../shift-cycle/shift-cycle.md) (alimenta): avisa cuándo la obligatoria quedó
   cumplida.
 
