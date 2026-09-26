@@ -191,10 +191,10 @@ todos están dormidos, y ninguno pasa de 0,02 rad/s después del segundo 2.
 DADO el producto más delgado soltado desde 1,5 metros ENTONCES su altura mínima no baja del plano
 del piso menos 5 centímetros.
 
-### AC-PLY-017 — La caja a medias adentro sale al empujarla *(verifica BR-PLY-015)*
+### AC-PLY-017 — Adentro de un mueble no hay lugar *(verifica BR-PLY-015)*
 
-DADO una caja puesta a medias adentro del mostrador CUANDO el jugador camina contra ella, hacia
-el mueble ENTONCES la caja termina sin superponerse con el mostrador, del lado de afuera.
+DADO una caja puesta entera adentro del mostrador, apoyada en el piso CUANDO el juego pregunta si
+la caja entra ahí ENTONCES contesta que no: el mueble ocupa ese lugar.
 
 ### AC-PLY-018 — La caja soltada pegada no entra al empujarla *(verifica BR-PLY-015)*
 
