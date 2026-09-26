@@ -1,8 +1,6 @@
 ## Lo que ningún mueble futuro puede reabrir: cada sólido donde cabe un objeto tiene volumen.
 ##
-## Una forma cóncava es hueca. Lo que queda del todo adentro no toca ninguna cara y no choca con
-## nada, y las preguntas «¿entra acá?» del juego no lo ven. Se mide sobre el almacén entero, así
-## que un mueble nuevo del modelo entra solo.
+## Se mide sobre el almacén entero, así que un mueble nuevo del modelo entra solo.
 extends GdUnitTestSuite
 
 const ALMACEN := preload("res://src/escenas/almacen.tscn")

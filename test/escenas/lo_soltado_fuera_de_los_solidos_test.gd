@@ -247,8 +247,6 @@ func test_la_caja_entera_adentro_del_mostrador_no_entra_ahi() -> void:  # AC-PLY
 	var almacen: Node3D = await _almacen()
 	var caja := _caja_grande(almacen)
 	var mostrador: MeshInstance3D = almacen.get_node(MOSTRADOR)
-	# Lo más adentro que entra: la caja apoyada en el piso, con su cara de atrás contra el fondo
-	# del brazo del mostrador.
 	var frente := _caja_contra_el_mostrador(almacen, caja, CAJA_ENTERA)
 	await get_tree().physics_frame
 	_comprobar_la_malla(_caras_de(mostrador), "el mostrador")
