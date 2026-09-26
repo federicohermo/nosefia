@@ -145,7 +145,7 @@ con la misma semilla, la misma secuencia.
 MIENTRAS el jugador camina, el sistema DEBE sonar un paso cada cierta distancia recorrida de
 verdad, no cada cierto tiempo. Quieto o empujando una pared NO DEBE sonar. SI un cuadro recorre
 más de una distancia de paso, ENTONCES DEBE sonar un solo paso. Lo que sobra de un paso DEBE
-contar para el siguiente. Los pasos suenan planos, por el bus de efectos.
+contar para el siguiente. Los pasos suenan por el bus de efectos.
 
 ## Criterios de aceptación
 
