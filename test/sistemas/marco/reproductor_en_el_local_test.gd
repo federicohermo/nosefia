@@ -155,7 +155,8 @@ func test_las_variantes_no_se_repiten_y_siguen_la_semilla() -> void:  # AC-AMB-0
 	var primera := _sonadas(entrada, 12)
 	for indice in range(1, primera.size()):
 		assert_object(primera[indice]).is_not_same(primera[indice - 1])
-	assert_array(_sonadas(entrada, 12)).is_equal(primera)
+	# Por referencia: `is_equal` compara por contenido, y las cuatro variantes son iguales.
+	assert_array(_sonadas(entrada, 12)).contains_same_exactly(primera)
 
 
 func test_una_fila_de_una_variante_la_repite() -> void:  # AC-AMB-018
