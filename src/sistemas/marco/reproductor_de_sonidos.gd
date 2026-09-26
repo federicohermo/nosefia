@@ -6,10 +6,6 @@
 ## dummy no mezcla. El criterio obvio sería rojo permanente y el arreglo tentador sería apagar el
 ## test. Lo que este archivo deja verificable es **qué se le pidió al reproductor**: qué `stream`
 ## quedó puesto, por qué bus, en qué voz y en qué lugar.
-##
-## **Traduce, no decide.** Qué suena, por dónde, si va en bucle y si sale del espacio son
-## preguntas de la tabla; a qué voz le toca, de la ronda; qué emisor suena, del tope. Los `if` de
-## acá son valores que devolvió el dominio.
 class_name ReproductorDeSonidos
 extends Node
 
@@ -200,7 +196,7 @@ func emisores_que_suenan(evento: EntradaSonora.Evento) -> Array[int]:
 	return suenan
 
 
-## Corta un bucle. Lo usa el cierre de la jornada para la música.
+## Corta un bucle.
 func callar(evento: EntradaSonora.Evento) -> void:
 	voz_en_bucle(evento).stream = null
 	for emisor: AudioStreamPlayer3D in _emisores_en_bucle.get(evento, []):
