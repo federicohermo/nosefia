@@ -37,6 +37,30 @@ func test_el_objeto_que_suena_no_se_tapa_a_si_mismo() -> void:  # AC-AMB-021
 	assert_int(reproductor.obstaculos_entre(OIDO, FUENTE, propio)).is_equal(0)
 
 
+func test_lo_que_encierra_al_sonido_no_lo_tapa() -> void:  # AC-AMB-021
+	var reproductor := _reproductor([] as Array[EntradaSonora])
+	var encierra := await _bloque(StaticBody3D.new())
+	assert_int(reproductor.obstaculos_entre(OIDO, encierra.global_position, null)).is_equal(0)
+
+
+func test_una_pared_de_dos_solidos_encimados_cuenta_una() -> void:  # AC-AMB-021
+	var reproductor := _reproductor([] as Array[EntradaSonora])
+	await _bloque(StaticBody3D.new())
+	await _bloque(StaticBody3D.new())
+	assert_int(reproductor.obstaculos_entre(OIDO, FUENTE, null)).is_equal(1)
+
+
+func test_dos_paredes_del_mismo_solido_cuentan_dos() -> void:  # AC-AMB-021
+	var reproductor := _reproductor([] as Array[EntradaSonora])
+	var solido := await _bloque(StaticBody3D.new())
+	var segunda := solido.get_child(0).duplicate() as CollisionShape3D
+	segunda.position.z = (FUENTE.z - PARED.z) * 0.75
+	solido.add_child(segunda)
+	await get_tree().physics_frame
+	await get_tree().physics_frame
+	assert_int(reproductor.obstaculos_entre(OIDO, FUENTE, null)).is_equal(2)
+
+
 ## Lo que sonó puede liberarse con su sonido todavía puesto.
 func test_la_voz_se_sigue_apagando_aunque_se_borre_lo_que_sono() -> void:
 	var entrada := _entrada(EntradaSonora.Evento.TIMBRE_DEL_COMPRADOR)

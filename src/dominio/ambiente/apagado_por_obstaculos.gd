@@ -24,6 +24,22 @@ const SEGUNDOS_POR_OBSTACULO := 0.3
 ## El nombre del método con el que un cuerpo del mundo contesta su puerta.
 const METODO_DE_LA_PUERTA := &"puerta"
 
+## En metros. Lo que tapa a menos de esto de lo anterior es el mismo obstáculo: una pared del
+## local es más de un sólido.
+const GROSOR_DE_UN_OBSTACULO := 0.6
+
+
+## Cuántos obstáculos hay, hasta el máximo, según a qué distancia, en orden, entra el rayo en
+## cada cosa que tapa.
+static func contar(entradas: Array[float]) -> int:
+	var cantidad := 0
+	var anterior := -INF
+	for entrada in entradas:
+		if entrada - anterior > GROSOR_DE_UN_OBSTACULO:
+			cantidad += 1
+		anterior = entrada
+	return mini(cantidad, MAXIMO)
+
 
 static func volumen_db(nivel: float) -> float:
 	return VOLUMEN_POR_OBSTACULO_DB * clampf(nivel, 0.0, MAXIMO)

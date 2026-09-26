@@ -246,26 +246,25 @@ func actualizar_apagado(oyente: Vector3, segundos: float) -> void:
 		_aplicar_apagado(voz)
 
 
-## Cuántos obstáculos hay entre dos puntos, hasta el máximo que apaga. Una pared cuenta; una
-## puerta, sólo cerrada. `propio` es lo que produjo el sonido, que no se tapa a sí mismo.
-func obstaculos_entre(desde: Vector3, hasta: Vector3, propio: Object) -> int:
+## Cuántos obstáculos hay entre el oído y un sonido, hasta el máximo que apaga. `propio` es lo
+## que produjo el sonido, que no se tapa a sí mismo.
+func obstaculos_entre(oido: Vector3, sonido: Vector3, propio: Object) -> int:
 	var espacio := get_viewport().world_3d.direct_space_state
-	var excluidos: Array[RID] = []
-	if propio is CollisionObject3D and is_instance_valid(propio):
-		excluidos.append((propio as CollisionObject3D).get_rid())
-	var cantidad := 0
+	# El rayo sale del sonido: lo que lo encierra no lo tapa. Y sigue desde cada choque sin
+	# excluir el cuerpo, porque un mismo sólido puede tener muchas paredes.
+	var consulta := PhysicsRayQueryParameters3D.create(sonido, oido)
+	if propio is CollisionObject3D:
+		consulta.exclude = [(propio as CollisionObject3D).get_rid()]
+	var paso := (oido - sonido).normalized() * 0.01
+	var entradas: Array[float] = []
 	for _rayo in range(ApagadoPorObstaculos.MAXIMO * 4):
-		var consulta := PhysicsRayQueryParameters3D.create(desde, hasta)
-		consulta.exclude = excluidos
 		var choque := espacio.intersect_ray(consulta)
 		if choque.is_empty():
 			break
-		excluidos.append(choque.rid)
 		if _tapa(choque.collider):
-			cantidad += 1
-			if cantidad >= ApagadoPorObstaculos.MAXIMO:
-				break
-	return cantidad
+			entradas.append(sonido.distance_to(choque.position))
+		consulta.from = choque.position + paso
+	return ApagadoPorObstaculos.contar(entradas)
 
 
 ## Corta un bucle. Lo usa el cierre de la jornada para la música.
