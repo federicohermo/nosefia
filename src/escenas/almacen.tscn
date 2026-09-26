@@ -83,6 +83,10 @@ panel = NodePath("../../Interfaz/PanelDeLaVentanilla")
 
 [node name="Servicios" parent="." unique_id=1035790477 instance=ExtResource("grupo_Servicios")]
 
+[node name="RedDeSeguridad" parent="Servicios" index="8" node_paths=PackedStringArray("agarre", "jugador")]
+agarre = NodePath("../../Jugador/Agarre")
+jugador = NodePath("../../Jugador")
+
 [node name="Interfaz" parent="." unique_id=363714406 instance=ExtResource("grupo_Interfaz")]
 
 [node name="Objetos" parent="." unique_id=412597675 instance=ExtResource("grupo_Objetos")]

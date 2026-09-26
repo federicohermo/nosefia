@@ -200,6 +200,12 @@ DADO un producto de umbral 8 CUANDO se piden sus vendibles ENTONCES:
 
 Y un producto que el inventario no conoce contesta 0.
 
+### AC-STK-019 — Rescatar no mueve la mercadería *(verifica BR-STK-017)*
+
+DADO una caja del depósito o una unidad fuera de la góndola, superpuesta con un sólido fijo
+CUANDO se la rescata ENTONCES lo repuesto en la góndola y lo que queda por sacar de cada caja
+siguen iguales.
+
 ## No objetivos
 
 - Esta capacidad NO cobra ni atiende: eso es de
