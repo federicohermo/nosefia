@@ -199,18 +199,21 @@ func _enfocar_mancha(jugador: Node3D, mancha: Node3D) -> void:
 	assert_object(jugador.get("_enfocado")).is_same(mancha)
 
 
-func _abrir_con_las_puertas_giradas(cuadros: int) -> Array:
+func _abrir_con_las_puertas_giradas(cuadros: int) -> Array[float]:
 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
 	add_child(almacen)
 	await get_tree().physics_frame
 	var puertas: Array = almacen.get("_puertas")
-	assert_int(puertas.size()).is_equal(2)
+	assert_array(puertas).is_not_empty()
 	var cerradas: Array[Transform3D] = []
 	for puerta: Node3D in puertas:
 		cerradas.append(puerta.get_parent().transform)
 		puerta.call("interactuar")
 	for cuadro in cuadros:
 		await get_tree().physics_frame
+	var antes: Array[float] = []
+	for puerta: Node3D in puertas:
+		antes.append(puerta.call("puerta").angulo())
 	almacen.call("_al_abrir_la_jornada", ReglasDeLaPartida.PRIMERA_JORNADA + 1)
 	for indice in puertas.size():
 		var puerta: Node3D = puertas[indice]
@@ -218,14 +221,17 @@ func _abrir_con_las_puertas_giradas(cuadros: int) -> Array:
 		assert_bool(estado.abierta()).is_false()
 		assert_float(estado.angulo()).is_equal(0.0)
 		assert_bool(puerta.get_parent().transform.is_equal_approx(cerradas[indice])).is_true()
-	return puertas
+	return antes
 
 
 func test_la_puerta_abierta_anoche_arranca_cerrada() -> void:  # AC-PLY-036
-	var puertas: Array = await _abrir_con_las_puertas_giradas(120)
-	assert_array(puertas).has_size(2)
+	var antes: Array[float] = await _abrir_con_las_puertas_giradas(120)
+	for angulo in antes:
+		assert_float(angulo).is_equal(Puerta.ANGULO_ABIERTA)
 
 
 func test_la_puerta_a_medio_giro_arranca_cerrada() -> void:  # AC-PLY-037
-	var puertas: Array = await _abrir_con_las_puertas_giradas(5)
-	assert_array(puertas).has_size(2)
+	var antes: Array[float] = await _abrir_con_las_puertas_giradas(5)
+	for angulo in antes:
+		assert_float(angulo).is_greater(0.0)
+		assert_float(angulo).is_less(Puerta.ANGULO_ABIERTA)
