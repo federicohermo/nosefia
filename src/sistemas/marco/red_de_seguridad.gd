@@ -157,13 +157,7 @@ func _solido_pisado(cuerpo: PhysicsBody3D) -> Node3D:
 
 ## Con qué se superpone el cuerpo si estuviera en `lugar`, sin contar al jugador.
 func _choques(cuerpo: PhysicsBody3D, lugar: Transform3D) -> Array[Dictionary]:
-	var consulta := PhysicsTestMotionParameters3D.new()
-	consulta.from = lugar
-	consulta.max_collisions = 8
-	if jugador != null:
-		consulta.exclude_bodies = [jugador.get_rid()]
-	var resultado := PhysicsTestMotionResult3D.new()
-	PhysicsServer3D.body_test_motion(cuerpo.get_rid(), consulta, resultado)
+	var resultado := _prueba(cuerpo, lugar)
 	var salida: Array[Dictionary] = []
 	for indice in resultado.get_collision_count():
 		(
@@ -178,15 +172,34 @@ func _choques(cuerpo: PhysicsBody3D, lugar: Transform3D) -> Array[Dictionary]:
 	return salida
 
 
+func _prueba(cuerpo: PhysicsBody3D, lugar: Transform3D) -> PhysicsTestMotionResult3D:
+	var consulta := PhysicsTestMotionParameters3D.new()
+	consulta.from = lugar
+	consulta.max_collisions = 8
+	if jugador != null:
+		consulta.exclude_bodies = [jugador.get_rid()]
+	var resultado := PhysicsTestMotionResult3D.new()
+	PhysicsServer3D.body_test_motion(cuerpo.get_rid(), consulta, resultado)
+	return resultado
+
+
+## El motor saca al cuerpo antes de medir, y cada choque cuenta sólo lo que sobra. Medido el
+## 2026-09-26: cinco centímetros adentro de una pared contestaban siete milímetros.
+func _hundido(cuerpo: PhysicsBody3D, lugar: Transform3D) -> float:
+	var resultado := _prueba(cuerpo, lugar)
+	var sobra := 0.0
+	for indice in resultado.get_collision_count():
+		sobra = maxf(sobra, resultado.get_collision_depth(indice))
+	return resultado.get_travel().length() + sobra
+
+
 ## El primer lugar libre y alcanzable de la lista, en un arreglo de uno, o vacío.
 ##
 ## Libre y alcanzable: no se superpone con nada, está apoyado, y no cae en un área de tarea en la
 ## que no estaba antes.
 func _primero_libre(cuerpo: PhysicsBody3D, lugares: Array, areas: Array[RID]) -> Array:
 	for lugar: Transform3D in lugares:
-		var libre := true
-		for choque in _choques(cuerpo, lugar):
-			libre = libre and choque["profundidad"] <= ReglasDeLosObjetos.ROCE
+		var libre := _hundido(cuerpo, lugar) <= ReglasDeLosObjetos.ROCE
 		for area in _areas_en(cuerpo, lugar):
 			libre = libre and areas.has(area)
 		if libre and _apoyado(cuerpo, lugar):

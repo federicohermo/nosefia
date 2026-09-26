@@ -149,6 +149,21 @@ func test_un_lugar_adentro_de_un_area_nueva_no_es_candidato() -> void:
 	assert_vector(objeto.global_position).is_equal(CONTRA_LA_PARED)
 
 
+## Alrededor sólo vale un lugar libre de verdad: lo rescatado no queda metido en la pared.
+func test_alrededor_no_deja_nada_metido_en_la_pared() -> void:
+	var mundo: Array = await _mundo()
+	var red: RedDeSeguridad = mundo[0]
+	var objeto: RigidBody3D = mundo[1]
+	objeto.freeze = true
+	objeto.global_basis = Basis.IDENTITY
+	objeto.global_position = CONTRA_LA_PARED
+	red.revisar(objeto)
+	assert_int(red.rescates[0]["clase"]).is_equal(Rescate.Clase.ALREDEDOR)
+	var forma: CollisionShape3D = objeto.get_node("Forma")
+	var cara := objeto.global_position.x + (forma.shape as BoxShape3D).size.x / 2.0
+	assert_float(cara).is_less_equal(2.0 + ReglasDeLosObjetos.ROCE)
+
+
 ## Lo que nace después de la red también se mira al dormirse.
 func test_lo_que_nace_despues_se_mira_al_dormirse() -> void:
 	var mundo: Array = await _mundo()
