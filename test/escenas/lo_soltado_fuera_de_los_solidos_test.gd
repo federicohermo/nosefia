@@ -1,8 +1,4 @@
 ## Lo que se suelta o se empuja no queda adentro de un sólido fijo.
-##
-## **«Adentro» se mide contra la malla visible, no contra la colisión.** La colisión de un mueble
-## es justo lo que se arregla: medir contra ella daría verde sin mirar nada el día que sus caras
-## dejen de contestar.
 extends GdUnitTestSuite
 
 const ALMACEN := preload("res://src/escenas/almacen.tscn")
@@ -37,8 +33,7 @@ const CUADROS_CAMINANDO := 240
 ## Cuadros de física que el jugador sigue caminando después de quedar bloqueado contra la caja.
 ##
 ## **Ningún N reproducía el síntoma.** Medido el 2026-09-26 con la escena de ese día, de 60 a 1200
-## pasos: la caja pegada no entraba. Queda como regresión, y la prueba del error es el caso de la
-## caja a medias.
+## pasos: la caja pegada no entraba. Queda como regresión.
 const PASOS_DESPUES_DE_BLOQUEARSE := 60
 
 ## Hasta cuántos cuadros se espera a que el jugador quede bloqueado.
@@ -247,8 +242,6 @@ func test_la_caja_entera_adentro_del_mostrador_no_entra_ahi() -> void:  # AC-PLY
 	var almacen: Node3D = await _almacen()
 	var caja := _caja_grande(almacen)
 	var mostrador: MeshInstance3D = almacen.get_node(MOSTRADOR)
-	# Lo más adentro que entra: la caja apoyada en el piso, con su cara de atrás contra el fondo
-	# del brazo del mostrador.
 	var frente := _caja_contra_el_mostrador(almacen, caja, CAJA_ENTERA)
 	await get_tree().physics_frame
 	_comprobar_la_malla(_caras_de(mostrador), "el mostrador")
@@ -285,6 +278,7 @@ func test_la_caja_soltada_pegada_no_entra_al_empujarla() -> void:  # AC-PLY-018
 	await get_tree().physics_frame
 	assert_float(caja.global_position.y).is_equal_approx(frente.y + MEDIA_CAJA, 0.005)
 	_comprobar_que_no_entro(almacen, caja, frente, "pegada y empujada")
+	_comprobar_libre_y_enfocable(almacen, caja, "pegada y empujada")
 
 
 # --- La matriz: lo soltado y lo empujado contra cada sólido -----------------------------------
@@ -367,31 +361,41 @@ func _accion(jugador: Node3D, objetivo: Node3D, accion: StringName) -> void:
 
 ## Los sólidos fijos con los que se superpone: lo estático, no otro objeto ni el jugador.
 ##
-## **Lo pregunta el motor, con un movimiento nulo del propio cuerpo**, que mide cuánto se hunde.
 ## Un cuerpo vivo apoyado se hunde un poco en lo que lo sostiene, y el motor lo tolera hasta su
-## margen de penetración; uno congelado queda donde se lo puso.
+## margen de penetración; uno congelado queda donde se lo puso. `body_test_motion` no sirve: el
+## motor saca al cuerpo antes de medir, y una unidad metida 8 cm en la pared daba libre. Achicar la
+## forma tampoco: un casco redondeado se achica menos que su caja. Medido el 2026-09-26.
 static func _solidos_pisados(objeto: PhysicsBody3D) -> Array[String]:
 	var tolerado := ReglasDeLosObjetos.ROCE
 	if objeto is RigidBody3D and not (objeto as RigidBody3D).freeze:
 		tolerado += ProjectSettings.get_setting(PENETRACION_TOLERADA)
-	var consulta := PhysicsTestMotionParameters3D.new()
-	consulta.from = objeto.global_transform
-	consulta.max_collisions = 8
-	var resultado := PhysicsTestMotionResult3D.new()
-	PhysicsServer3D.body_test_motion(objeto.get_rid(), consulta, resultado)
+	var espacio := objeto.get_world_3d().direct_space_state
 	var pisados: Array[String] = []
-	for indice in resultado.get_collision_count():
-		var solido := resultado.get_collider(indice) as Node
-		if solido is StaticBody3D and resultado.get_collision_depth(indice) > tolerado:
-			pisados.append(
-				"%s (%.3f m)" % [solido.get_parent().name, resultado.get_collision_depth(indice)]
-			)
+	for forma: CollisionShape3D in objeto.find_children("*", "CollisionShape3D", true, false):
+		var consulta := PhysicsShapeQueryParameters3D.new()
+		consulta.shape = forma.shape
+		consulta.transform = forma.global_transform
+		consulta.collision_mask = objeto.collision_mask
+		consulta.exclude = [objeto.get_rid()]
+		var golpes := espacio.intersect_shape(consulta, 16)
+		for golpe in golpes:
+			var solido := golpe["collider"] as Node
+			if not solido is StaticBody3D:
+				continue
+			var otros: Array[RID] = [objeto.get_rid()]
+			for otro in golpes:
+				if otro["rid"] != golpe["rid"]:
+					otros.append(otro["rid"])
+			consulta.exclude = otros
+			var hondo := 0.0
+			var pares := espacio.collide_shape(consulta, 16)
+			for indice in range(0, pares.size(), 2):
+				hondo = maxf(hondo, pares[indice].distance_to(pares[indice + 1]))
+			if hondo > tolerado:
+				pisados.append("%s (%.3f m)" % [solido.get_parent().name, hondo])
 	return pisados
 
 
-## Un lugar del piso donde el jugador entra parado, cerca de lo que se mira. Los lugares del piso
-## los busca `sistemas/`, igual que para el puesto y la red; acá sólo se prueba que entre la
-## cápsula.
 func _lugar_para_mirar(almacen: Node3D, objeto: Node3D) -> Variant:
 	var jugador: CharacterBody3D = almacen.get("_jugador")
 	var cuerpo: CollisionShape3D = jugador.get_node("Cuerpo")
