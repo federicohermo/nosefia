@@ -439,7 +439,8 @@ func _devolver_al_mundo(nodo: Node3D) -> void:
 	if atras.length() > 2.0 * un_paso:
 		atras = Vector3.ZERO
 	nodo.reparent(mundo, true)
-	if nodo is RigidBody3D and _apoyar_sobre_lo_mirado(nodo):
+	# Sólo lo soltado al frente: vaciar las manos lo deja a los pies aunque se mire el piso.
+	if nodo is RigidBody3D and ancla == agarre.punto_de_soltado and _apoyar_sobre_lo_mirado(nodo):
 		nodo.reset_physics_interpolation()
 		return
 	nodo.global_position += atras

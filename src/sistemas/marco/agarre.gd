@@ -85,8 +85,8 @@ func pedir_agarrar(datos: ObjetoDelAlmacen, nodo: Node3D) -> bool:
 ##
 ## `al_frente` es «adelante hay lugar»: con `false` lo deja a los pies en vez de empujarlo
 ## adentro de una estantería. Quién contesta esa pregunta es la escena, que es la única que puede
-## mirar el mundo; acá sólo se elige el punto. Si la mira señala una superficie que lo admite, la
-## escena lo apoya ahí después de `objeto_soltado`.
+## mirar el mundo; acá sólo se elige el punto. Al frente, si la mira señala una superficie que lo
+## admite, la escena lo apoya ahí después de `objeto_soltado`.
 func soltar(al_frente: bool) -> Node3D:
 	if _manos.soltar() == null:
 		return null
