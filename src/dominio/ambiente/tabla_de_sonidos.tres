@@ -21,6 +21,10 @@
 [ext_resource type="AudioStream" uid="uid://dhikx4f07t082" path="res://assets/audio/SFX_OBJETO_Papel_Dejar.wav" id="19_papel_d"]
 [ext_resource type="AudioStream" uid="uid://da8wpl5mcvhkx" path="res://assets/audio/MUS_Tema1.ogg" id="20_musica"]
 [ext_resource type="AudioStream" uid="uid://dwxcyknw44hb7" path="res://assets/audio/AMB_PROXIMIDAD_Neon.ogg" id="21_neon"]
+[ext_resource type="AudioStream" uid="uid://c2g3t4li6p0cs" path="res://assets/audio/SFX_PERSONAJE_Paso1.wav" id="22_paso1"]
+[ext_resource type="AudioStream" uid="uid://cb447txn2mgcj" path="res://assets/audio/SFX_PERSONAJE_Paso2.wav" id="23_paso2"]
+[ext_resource type="AudioStream" uid="uid://ct6q22q87fa48" path="res://assets/audio/SFX_PERSONAJE_Paso3.wav" id="24_paso3"]
+[ext_resource type="AudioStream" uid="uid://ifxccvxoryy" path="res://assets/audio/SFX_PERSONAJE_Paso4.wav" id="25_paso4"]
 
 [sub_resource type="Resource" id="Resource_x3pvh"]
 script = ExtResource("1_qermt")
@@ -287,6 +291,12 @@ bus = "Musica"
 en_bucle = true
 stream = ExtResource("20_musica")
 
+[sub_resource type="Resource" id="Resource_pasos"]
+script = ExtResource("1_qermt")
+evento = 15
+senal = &"paso_dado"
+variantes = Array[AudioStream]([ExtResource("22_paso1"), ExtResource("23_paso2"), ExtResource("24_paso3"), ExtResource("25_paso4")])
+
 [resource]
 script = ExtResource("2_xbcco")
-entradas = Array[ExtResource("1_qermt")]([SubResource("Resource_x3pvh"), SubResource("Resource_oefuu"), SubResource("Resource_382as"), SubResource("Resource_b10uv"), SubResource("Resource_ag1"), SubResource("Resource_ag2"), SubResource("Resource_ag3"), SubResource("Resource_ag4"), SubResource("Resource_ag5"), SubResource("Resource_ag6"), SubResource("Resource_ag7"), SubResource("Resource_ag8"), SubResource("Resource_so1"), SubResource("Resource_so2"), SubResource("Resource_so3"), SubResource("Resource_so4"), SubResource("Resource_so5"), SubResource("Resource_so6"), SubResource("Resource_so7"), SubResource("Resource_so8"), SubResource("Resource_avff3"), SubResource("Resource_co1"), SubResource("Resource_co2"), SubResource("Resource_co3"), SubResource("Resource_co4"), SubResource("Resource_co5"), SubResource("Resource_co6"), SubResource("Resource_co7"), SubResource("Resource_co8"), SubResource("Resource_2fnal"), SubResource("Resource_pmrqt"), SubResource("Resource_38ejk"), SubResource("Resource_ql6t2"), SubResource("Resource_s3myp"), SubResource("Resource_boton"), SubResource("Resource_musica")])
+entradas = Array[ExtResource("1_qermt")]([SubResource("Resource_x3pvh"), SubResource("Resource_oefuu"), SubResource("Resource_382as"), SubResource("Resource_b10uv"), SubResource("Resource_ag1"), SubResource("Resource_ag2"), SubResource("Resource_ag3"), SubResource("Resource_ag4"), SubResource("Resource_ag5"), SubResource("Resource_ag6"), SubResource("Resource_ag7"), SubResource("Resource_ag8"), SubResource("Resource_so1"), SubResource("Resource_so2"), SubResource("Resource_so3"), SubResource("Resource_so4"), SubResource("Resource_so5"), SubResource("Resource_so6"), SubResource("Resource_so7"), SubResource("Resource_so8"), SubResource("Resource_avff3"), SubResource("Resource_co1"), SubResource("Resource_co2"), SubResource("Resource_co3"), SubResource("Resource_co4"), SubResource("Resource_co5"), SubResource("Resource_co6"), SubResource("Resource_co7"), SubResource("Resource_co8"), SubResource("Resource_2fnal"), SubResource("Resource_pmrqt"), SubResource("Resource_38ejk"), SubResource("Resource_ql6t2"), SubResource("Resource_s3myp"), SubResource("Resource_boton"), SubResource("Resource_musica"), SubResource("Resource_pasos")])

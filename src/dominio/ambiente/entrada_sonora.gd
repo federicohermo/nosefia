@@ -38,6 +38,7 @@ enum Evento {
 	AMBIENTE_DEL_LOCAL,
 	BOTON_DE_LA_COMPUTADORA,
 	MUSICA_DE_LA_NOCHE,
+	PASO_DADO,
 }
 
 ## Cómo suena una cosa al agarrarla o al dejarla. Los valores salen de la ficha de sonido.
@@ -102,9 +103,25 @@ const BUSES := [BUS_DE_AMBIENTE, BUS_DE_EFECTOS, BUS_DE_INTERFAZ, BUS_DE_MUSICA]
 ## agregar el sonido no toque código.
 @export var stream: AudioStream = null
 
+## Varios audios para el mismo evento, que se alternan. Si hay, mandan sobre `stream`.
+@export var variantes: Array[AudioStream] = []
+
 
 func tiene_sonido() -> bool:
-	return stream != null
+	return cantidad_de_variantes() > 0
+
+
+## Una fila con sólo `stream` tiene una variante: se comporta como antes de haber variantes.
+func cantidad_de_variantes() -> int:
+	if not variantes.is_empty():
+		return variantes.size()
+	return 1 if stream != null else 0
+
+
+func variante(indice: int) -> AudioStream:
+	if not variantes.is_empty():
+		return variantes[indice]
+	return stream
 
 
 ## Si esta fila puede sonar por donde dice.
