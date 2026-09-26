@@ -148,8 +148,10 @@ func _solido_pisado(cuerpo: PhysicsBody3D) -> Node3D:
 	var tolerado := ReglasDeLosObjetos.ROCE
 	if cuerpo is RigidBody3D and not (cuerpo as RigidBody3D).freeze:
 		tolerado += ProjectSettings.get_setting(PENETRACION_TOLERADA, 0.0)
+	if _hundido(cuerpo, cuerpo.global_transform) <= tolerado:
+		return null
 	for choque in _choques(cuerpo, cuerpo.global_transform):
-		if choque["solido"] is StaticBody3D and choque["profundidad"] > tolerado:
+		if choque["solido"] is StaticBody3D:
 			return choque["solido"]
 	return null
 
@@ -174,6 +176,8 @@ func _prueba(cuerpo: PhysicsBody3D, lugar: Transform3D) -> PhysicsTestMotionResu
 	var consulta := PhysicsTestMotionParameters3D.new()
 	consulta.from = lugar
 	consulta.max_collisions = 8
+	# Sin esto, lo que el motor saca del todo no vuelve como choque, y no se sabe contra qué era.
+	consulta.recovery_as_collision = true
 	if jugador != null:
 		consulta.exclude_bodies = [jugador.get_rid()]
 	var resultado := PhysicsTestMotionResult3D.new()

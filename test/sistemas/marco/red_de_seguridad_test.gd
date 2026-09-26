@@ -162,6 +162,24 @@ func test_alrededor_no_deja_nada_metido_en_la_pared() -> void:
 	assert_float(cara).is_less_equal(2.0 + ReglasDeLosObjetos.ROCE)
 
 
+## Lo congelado se rescata aunque apenas se meta. Medido el 2026-09-26: a 6 mm el motor no
+## devuelve choques, y a 2 cm lo que sobra no pasa el roce.
+func test_lo_congelado_apenas_metido_se_rescata() -> void:
+	var mundo: Array = await _mundo()
+	var red: RedDeSeguridad = mundo[0]
+	var objeto: RigidBody3D = mundo[1]
+	var forma: CollisionShape3D = objeto.get_node("Forma")
+	var medio_ancho := (forma.shape as BoxShape3D).size.x / 2.0
+	objeto.freeze = true
+	objeto.global_basis = Basis.IDENTITY
+	for metido: float in [0.006, 0.02]:
+		objeto.global_position = Vector3(2.0 - medio_ancho + metido, 0.08, 0.0)
+		red.revisar(objeto)
+		var cara := objeto.global_position.x + medio_ancho
+		assert_float(cara).is_less_equal(2.0 + ReglasDeLosObjetos.ROCE)
+	assert_int(red.rescates.size()).is_equal(2)
+
+
 ## Lo que nace después de la red también se mira al dormirse.
 func test_lo_que_nace_despues_se_mira_al_dormirse() -> void:
 	var mundo: Array = await _mundo()
