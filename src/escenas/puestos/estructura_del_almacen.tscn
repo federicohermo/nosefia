@@ -1376,14 +1376,14 @@ disabled = true
 metadata/sin_volumen = "Marco de una puerta que no abre, contra la pared: su hueco lo ocupa la hoja, y no queda lugar donde soltar un objeto."
 
 [node name="CuerpoDeLaHoja" type="AnimatableBody3D" parent="puertajefe" node_paths=PackedStringArray("hoja", "mallas") groups=["interactuable"]]
-transform = Transform3D(1.467308, 0, 0, 0, 0.56027, 0, 0, 0, 8.006213, 0, 0, 0)
+transform = Transform3D(1.467308, 0, 0, 0, 0.56027, 0, 0, 0, 8.006213, 0.048814, 0, 0.571227)
 script = ExtResource("puerta")
 hoja = NodePath("..")
 mallas = [NodePath("..")]
 traba = 1
 
 [node name="Volumen" type="CollisionShape3D" parent="puertajefe/CuerpoDeLaHoja"]
-position = Vector3(0.033268, 0.102234, 0.071348)
+position = Vector3(0, 0.102234, 0)
 shape = SubResource("volumen_de_la_puerta_del_jefe")
 
 [node name="CollisionShape3D" parent="puertaentrada/StaticBody3D"]

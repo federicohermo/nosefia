@@ -279,6 +279,23 @@ func test_cada_puerta_pide_su_sonido_al_tocarla() -> void:
 	assert_array(pedidos).is_equal(esperado)
 
 
+## La puerta suena desde su cuerpo. Uno corrido de su hoja suena desde adentro del muro, y un
+## rayo que nace adentro de un sólido no lo cuenta: del otro lado se oye como si no hubiera muro.
+func test_cada_cuerpo_queda_adentro_de_su_hoja() -> void:
+	var almacen: Node3D = auto_free(ALMACEN.instantiate())
+	add_child(almacen)
+	# Medido el 2026-09-26: con un solo paso, el cuerpo de cada hoja todavía no estaba sobre ella.
+	await get_tree().physics_frame
+	await get_tree().physics_frame
+	for ruta: String in VANOS.keys() + TRABADAS.keys():
+		var hoja: MeshInstance3D = almacen.get_node(ruta)
+		var cuerpo: Node3D = almacen.get_node(ruta + "/CuerpoDeLaHoja")
+		var caja := hoja.global_transform * hoja.get_aabb()
+		var punto := cuerpo.global_position
+		punto.y = caja.get_center().y
+		assert_bool(caja.has_point(punto)).override_failure_message(ruta).is_true()
+
+
 func test_las_puertas_suenan_desde_la_puerta_con_su_audio() -> void:
 	var tabla := TablaDeSonidos.desde_disco()
 	assert_object(tabla).is_not_null()
