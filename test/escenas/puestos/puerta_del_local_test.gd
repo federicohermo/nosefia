@@ -23,7 +23,7 @@ const VANOS := {
 func test_las_dos_puertas_cumplen_el_contrato_de_interaccion() -> void:
 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
 	for hoja: String in VANOS:
-		var cuerpo: StaticBody3D = almacen.get_node(hoja + "/StaticBody3D")
+		var cuerpo: StaticBody3D = almacen.get_node(hoja + "/CuerpoDeLaHoja")
 		assert_bool(cuerpo.is_in_group(ReglasDelJugador.GRUPO_INTERACTUABLE)).is_true()
 		assert_bool(cuerpo.has_method("interactuar")).is_true()
 		var mallas: Variant = cuerpo.get("mallas")
@@ -34,7 +34,7 @@ func test_interactuar_abre_la_puerta_y_no_se_la_lleva_en_la_mano() -> void:
 	# Devolver un `ObjetoDelAlmacen` dejaría al clic de agarrar cargándose la hoja entera.
 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
 	for hoja: String in VANOS:
-		var cuerpo: StaticBody3D = almacen.get_node(hoja + "/StaticBody3D")
+		var cuerpo: StaticBody3D = almacen.get_node(hoja + "/CuerpoDeLaHoja")
 		assert_object(cuerpo.call("interactuar")).is_null()
 		assert_bool(cuerpo.call("puerta").abierta()).is_true()
 
@@ -46,7 +46,7 @@ func test_el_vano_se_cruza_solo_con_la_puerta_abierta() -> void:
 	for hoja: String in VANOS:
 		assert_float(await _avance(almacen, hoja)).is_less(0.7)
 	for hoja: String in VANOS:
-		almacen.get_node(hoja + "/StaticBody3D").call("interactuar")
+		almacen.get_node(hoja + "/CuerpoDeLaHoja").call("interactuar")
 	await _esperar_el_giro(almacen)
 	for hoja: String in VANOS:
 		assert_float(await _avance(almacen, hoja)).is_equal(1.0)
@@ -61,7 +61,7 @@ func test_la_hoja_gira_sobre_su_borde_y_no_sobre_su_centro() -> void:
 	var antes := {}
 	for hoja: String in VANOS:
 		antes[hoja] = _bordes(almacen.get_node(hoja))
-		almacen.get_node(hoja + "/StaticBody3D").call("interactuar")
+		almacen.get_node(hoja + "/CuerpoDeLaHoja").call("interactuar")
 	await _esperar_el_giro(almacen)
 	for hoja: String in VANOS:
 		var despues := _bordes(almacen.get_node(hoja))
@@ -86,7 +86,7 @@ func test_la_hoja_abierta_entra_al_cuarto_y_no_al_local() -> void:
 	add_child(almacen)
 	await get_tree().physics_frame
 	for hoja: String in VANOS:
-		almacen.get_node(hoja + "/StaticBody3D").call("interactuar")
+		almacen.get_node(hoja + "/CuerpoDeLaHoja").call("interactuar")
 	await _esperar_el_giro(almacen)
 	for hoja: String in VANOS:
 		# El tramo de `VANOS` va del local hacia adentro del cuarto: su dirección es la que la
@@ -138,7 +138,7 @@ func _esperar_el_giro(almacen: Node3D) -> void:
 		await get_tree().physics_frame
 		var listas := 0
 		for hoja: String in VANOS:
-			var puerta: Puerta = almacen.get_node(hoja + "/StaticBody3D").call("puerta")
+			var puerta: Puerta = almacen.get_node(hoja + "/CuerpoDeLaHoja").call("puerta")
 			if is_equal_approx(puerta.angulo(), Puerta.ANGULO_ABIERTA):
 				listas += 1
 		if listas == VANOS.size():
@@ -152,7 +152,7 @@ func test_cerrar_de_golpe_pone_la_hoja_en_su_lugar_en_el_mismo_paso() -> void:
 	for hoja: String in VANOS:
 		var malla: Node3D = almacen.get_node(hoja)
 		var cerrada := malla.transform
-		var cuerpo: Node = almacen.get_node(hoja + "/StaticBody3D")
+		var cuerpo: Node = almacen.get_node(hoja + "/CuerpoDeLaHoja")
 		cuerpo.call("interactuar")
 		for cuadro in 5:
 			await get_tree().physics_frame

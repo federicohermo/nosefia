@@ -32,7 +32,7 @@ _reposicion_manual = NodePath("ReposicionManual")
 _agarre = NodePath("Jugador/Agarre")
 _bolsas = [NodePath("Objetos/BolsaDeBasura1"), NodePath("Objetos/BolsaDeBasura2"), NodePath("Objetos/BolsaDeBasura3")]
 _muebles_con_contorno = [NodePath("Estructura/gondolanueva/StaticBody3D"), NodePath("Estructura/gondolanueva2/StaticBody3D"), NodePath("Estructura/gondolanueva_001/StaticBody3D"), NodePath("Estructura/gondolanueva_002/StaticBody3D")]
-_puertas = [NodePath("Estructura/puerta/StaticBody3D"), NodePath("Estructura/puerta2/StaticBody3D")]
+_puertas = [NodePath("Estructura/puerta/CuerpoDeLaHoja"), NodePath("Estructura/puerta2/CuerpoDeLaHoja")]
 
 [node name="ReposicionManual" parent="." unique_id=916700246 node_paths=PackedStringArray("repositor", "jugador", "estante", "contenido", "punto_de_la_caja") instance=ExtResource("reposicion_manual")]
 repositor = NodePath("../Servicios/Repositor")
@@ -84,9 +84,10 @@ panel = NodePath("../../Interfaz/PanelDeLaVentanilla")
 
 [node name="Servicios" parent="." unique_id=1035790477 instance=ExtResource("grupo_Servicios")]
 
-[node name="RedDeSeguridad" parent="Servicios" index="8" node_paths=PackedStringArray("agarre", "jugador")]
+[node name="RedDeSeguridad" parent="Servicios" index="8" node_paths=PackedStringArray("agarre", "jugador", "puertas")]
 agarre = NodePath("../../Jugador/Agarre")
 jugador = NodePath("../../Jugador")
+puertas = [NodePath("../../Estructura/puerta/CuerpoDeLaHoja"), NodePath("../../Estructura/puerta2/CuerpoDeLaHoja")]
 
 [node name="Interfaz" parent="." unique_id=363714406 instance=ExtResource("grupo_Interfaz")]
 

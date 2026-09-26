@@ -96,3 +96,25 @@ func test_el_aviso_nombra_el_objeto_el_solido_y_la_posicion() -> void:
 	assert_str(aviso).contains(str(objeto.name))
 	assert_str(aviso).contains(str(red.rescates[0]["solido"].name))
 	assert_str(aviso).contains(str(PARED))
+
+
+func test_al_quedar_quieta_la_hoja_rescata_lo_que_quedo_adentro() -> void:
+	var mundo: Array = await _mundo()
+	var red: RedDeSeguridad = mundo[0]
+	var objeto: RigidBody3D = mundo[1]
+	var hoja := AnimatableBody3D.new()
+	hoja.add_user_signal(RedDeSeguridad.SENAL_DE_LA_HOJA_QUIETA, [{"name": "cuerpo"}])
+	var forma := CollisionShape3D.new()
+	var tabla := BoxShape3D.new()
+	tabla.size = Vector3(1.0, 2.0, 0.2)
+	forma.shape = tabla
+	hoja.add_child(forma)
+	red.get_parent().add_child(hoja)
+	hoja.global_position = Vector3(0.0, 1.0, 3.0)
+	hoja.connect(RedDeSeguridad.SENAL_DE_LA_HOJA_QUIETA, red._al_quedar_quieta)
+	objeto.freeze = true
+	objeto.global_position = Vector3(0.0, 0.08, 3.0)
+	await get_tree().physics_frame
+	hoja.emit_signal(RedDeSeguridad.SENAL_DE_LA_HOJA_QUIETA, hoja)
+	assert_int(red.rescates.size()).is_equal(1)
+	assert_object(red.rescates[0]["solido"]).is_same(hoja)

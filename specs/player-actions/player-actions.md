@@ -120,6 +120,12 @@ alcanzable es sin superponerse con ningún sólido fijo, apoyado y fuera de las 
 tareas. SI ninguno queda libre, ENTONCES DEBE dejarlo donde está. El sistema NO DEBE devolverlo
 a la mano, y NO DEBE cambiar el estado de ninguna tarea por el rescate.
 
+### BR-PLY-017 — La hoja arrastra lo suelto que tiene adelante
+
+MIENTRAS la hoja de una puerta gira, el sistema DEBE correr en el sentido del giro los objetos
+sueltos que encuentra en su recorrido, despiertos o dormidos. CUANDO la hoja queda quieta, el
+sistema NO DEBE dejar nada adentro de ella: la hoja quieta es un sólido fijo más.
+
 ### BR-PLY-019 — Cada noche arranca con las puertas cerradas
 
 CUANDO se abre una jornada, el sistema DEBE dejar las puertas interiores cerradas, con la hoja en
@@ -276,6 +282,23 @@ de origen libre CUANDO la red lo rescata ENTONCES queda en su lugar de origen.
 DADO un objeto adentro de un sólido y ningún candidato libre CUANDO la red lo mira ENTONCES queda
 donde está, la mano sigue como estaba, y el rescate queda registrado sin lugar.
 
+### AC-PLY-030 — La unidad arrastrada al abrir *(verifica BR-PLY-017)*
+
+DADO una unidad de producto dormida en el recorrido de la hoja CUANDO se abre la puerta y la hoja
+queda quieta ENTONCES la unidad no se superpone con la hoja, se movió en el sentido del giro y se
+despertó en algún paso.
+
+### AC-PLY-031 — La unidad arrastrada al cerrar *(verifica BR-PLY-017)*
+
+DADO una unidad de producto dormida en el recorrido de la hoja abierta CUANDO se cierra la puerta
+y la hoja queda quieta ENTONCES la unidad no se superpone con la hoja y se movió en el sentido
+del giro.
+
+### AC-PLY-032 — Al quedar quieta, nada adentro de la hoja *(verifica BR-PLY-017)*
+
+DADO un objeto que quedó adentro de la hoja al terminar un giro CUANDO la hoja queda quieta
+ENTONCES el objeto termina fuera de ella, sin superponerse con ningún sólido fijo.
+
 ### AC-PLY-036 — La puerta abierta anoche arranca cerrada *(verifica BR-PLY-019)*
 
 DADO una puerta abierta del todo al cerrar la noche CUANDO se abre la jornada siguiente ENTONCES
@@ -322,9 +345,3 @@ puerta está cerrada, su ángulo es `0.0` y la hoja está en su lugar de cerrada
   - Decide: el dueño del repo, jugando.
   - Bloquea: nada. Movería `BR-PLY-007` y el tercer criterio de
     [`store-cleanup`](../store-cleanup/store-cleanup.md).
-
-- **OQ-PLY-002 — ¿Qué hace la hoja de una puerta con lo que encuentra en su recorrido?**
-  - Por qué sigue abierta: la hoja se mueve sin empujar, y le pasa a través a lo que tiene
-    adelante. Si lo arrastra, lo frena o lo atraviesa no está decidido.
-  - Decide: el dueño del repo.
-  - Bloquea: que `BR-PLY-015` valga también con la hoja en movimiento.

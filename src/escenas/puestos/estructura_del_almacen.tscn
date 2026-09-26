@@ -289,10 +289,10 @@ size = Vector3(0.850638, 0.057008, 1.238094)
 size = Vector3(0.850638, 0.057008, 1.238094)
 
 [sub_resource type="BoxShape3D" id="volumen_de_la_puerta"]
-size = Vector3(2, 2.78366, 2)
+size = Vector3(1.724248, 2.78366, 0.232234)
 
 [sub_resource type="BoxShape3D" id="volumen_de_la_puerta2"]
-size = Vector3(2, 2.78366, 2)
+size = Vector3(1.724248, 2.78366, 0.232234)
 
 [sub_resource type="ConvexPolygonShape3D" id="volumen_87"]
 points = PackedVector3Array(-0.999998, -0.000000, -1.000002, -0.999998, -0.000000, 0.999998, -0.999998, 0.185543, -1.000002, 1.000002, -0.000000, -1.000002, -0.999998, 0.185543, 0.999998, 1.000002, -0.000000, 0.999998, -0.600037, 1.373421, -0.600041, 1.000002, 0.185543, -1.000002, 1.000002, 0.185543, 0.999998, -0.600037, 0.997764, 0.599841, 0.599845, 1.373421, -0.600041, 0.599845, 0.997764, 0.599841)
@@ -370,15 +370,11 @@ script = ExtResource("escritorio")
 metadata/apoyo = NodePath("Estructura/EscritorioComputadora")
 mallas = [NodePath(".."), NodePath("../../teclado")]
 
-[node name="StaticBody3D" parent="puerta" node_paths=PackedStringArray("hoja", "mallas") groups=["interactuable"]]
-script = ExtResource("puerta")
-hoja = NodePath("..")
-mallas = [NodePath("..")]
+[node name="CollisionShape3D" parent="puerta/StaticBody3D"]
+disabled = true
 
-[node name="StaticBody3D" parent="puerta2" node_paths=PackedStringArray("hoja", "mallas") groups=["interactuable"]]
-script = ExtResource("puerta")
-hoja = NodePath("..")
-mallas = [NodePath("..")]
+[node name="CollisionShape3D" parent="puerta2/StaticBody3D"]
+disabled = true
 
 [node name="gondolanueva" parent="."]
 
@@ -1330,11 +1326,23 @@ shape = SubResource("volumen_85")
 position = Vector3(-0.109281, -0.125055, -0.144418)
 shape = SubResource("volumen_86")
 
-[node name="Volumen" type="CollisionShape3D" parent="puerta/StaticBody3D"]
+[node name="CuerpoDeLaHoja" type="AnimatableBody3D" parent="puerta" node_paths=PackedStringArray("hoja", "mallas") groups=["interactuable"]]
+transform = Transform3D(1.159924, 0, 0, 0, 1, 0, 0, 0, 8.611961, 0, 0, 0)
+script = ExtResource("puerta")
+hoja = NodePath("..")
+mallas = [NodePath("..")]
+
+[node name="Volumen" type="CollisionShape3D" parent="puerta/CuerpoDeLaHoja"]
 position = Vector3(0, 0.39183, 0)
 shape = SubResource("volumen_de_la_puerta")
 
-[node name="Volumen" type="CollisionShape3D" parent="puerta2/StaticBody3D"]
+[node name="CuerpoDeLaHoja" type="AnimatableBody3D" parent="puerta2" node_paths=PackedStringArray("hoja", "mallas") groups=["interactuable"]]
+transform = Transform3D(1.159924, 0, 0, 0, 1, 0, 0, 0, 8.611961, 0, 0, 0)
+script = ExtResource("puerta")
+hoja = NodePath("..")
+mallas = [NodePath("..")]
+
+[node name="Volumen" type="CollisionShape3D" parent="puerta2/CuerpoDeLaHoja"]
 position = Vector3(0, 0.39183, 0)
 shape = SubResource("volumen_de_la_puerta2")
 
