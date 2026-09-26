@@ -38,6 +38,11 @@ func alternar() -> void:
 	_abierta = not _abierta
 
 
+func cerrar_de_golpe() -> void:
+	_abierta = false
+	_angulo = 0.0
+
+
 ## Acerca la hoja al tope que le toca y devuelve dónde quedó.
 ##
 ## Los segundos entran como parámetro y no se leen de ningún reloj: es lo que deja probar el

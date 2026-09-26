@@ -120,6 +120,11 @@ alcanzable es sin superponerse con ningún sólido fijo, apoyado y fuera de las 
 tareas. SI ninguno queda libre, ENTONCES DEBE dejarlo donde está. El sistema NO DEBE devolverlo
 a la mano, y NO DEBE cambiar el estado de ninguna tarea por el rescate.
 
+### BR-PLY-019 — Cada noche arranca con las puertas cerradas
+
+CUANDO se abre una jornada, el sistema DEBE dejar las puertas interiores cerradas, con la hoja en
+su lugar y sin girar hasta él, aunque la noche anterior hayan quedado abiertas o a medio giro.
+
 ## Criterios de aceptación
 
 ### AC-PLY-001 — La diagonal no corre *(verifica BR-PLY-001)*
@@ -270,6 +275,17 @@ de origen libre CUANDO la red lo rescata ENTONCES queda en su lugar de origen.
 
 DADO un objeto adentro de un sólido y ningún candidato libre CUANDO la red lo mira ENTONCES queda
 donde está, la mano sigue como estaba, y el rescate queda registrado sin lugar.
+
+### AC-PLY-036 — La puerta abierta anoche arranca cerrada *(verifica BR-PLY-019)*
+
+DADO una puerta abierta del todo al cerrar la noche CUANDO se abre la jornada siguiente ENTONCES
+la puerta está cerrada, su ángulo es `0.0` y la hoja está en su lugar de cerrada, en el mismo
+paso.
+
+### AC-PLY-037 — La puerta a medio giro también *(verifica BR-PLY-019)*
+
+DADO una puerta a medio giro al cerrar la noche CUANDO se abre la jornada siguiente ENTONCES la
+puerta está cerrada, su ángulo es `0.0` y la hoja está en su lugar de cerrada, en el mismo paso.
 
 ## No objetivos
 
