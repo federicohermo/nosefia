@@ -24,7 +24,7 @@ silencio y el mezclador deja de servir.
 | **Voz** | uno de los reproductores que se reparten los sonidos cortos | slot, player |
 | **Sonoridad** | cómo suena una cosa al agarrarla o al dejarla | familia, material, envase |
 | **Evento de objeto** | agarrar un objeto, que un objeto soltado toque algo, o colocar un producto | — |
-| **Golpe** | un contacto de un objeto soltado, lo bastante rápido para sonar | choque, impacto |
+| **Golpe** | un contacto de un objeto soltado que cuenta para sonar | choque, impacto |
 
 ## Comportamiento normativo
 
@@ -92,7 +92,8 @@ rechazo y NO DEBE usar el audio de otra sonoridad.
 
 ### BR-AMB-013 — Lo soltado suena al tocar algo, y cada golpe más bajo
 
-CUANDO un objeto soltado deja de caer contra cualquier cosa, el sistema DEBE contar un golpe. Un
+CUANDO un objeto soltado deja de caer contra cualquier cosa, el sistema DEBE contar un golpe. El
+primer contacto DEBE contar aunque sea lento: lo que se apoya donde se mira no cae. Después, un
 contacto más lento que el umbral de golpe NO DEBE contar ni gastar un golpe. Soltar no suena.
 El sistema DEBE sonar sólo los tres primeros golpes, desde que se suelta hasta que se agarra
 otra vez:
@@ -145,7 +146,7 @@ con la misma semilla, la misma secuencia.
 MIENTRAS el jugador camina, el sistema DEBE sonar un paso cada cierta distancia recorrida de
 verdad, no cada cierto tiempo. Quieto o empujando una pared NO DEBE sonar. SI un cuadro recorre
 más de una distancia de paso, ENTONCES DEBE sonar un solo paso. Lo que sobra de un paso DEBE
-contar para el siguiente. Los pasos suenan planos, por el bus de efectos.
+contar para el siguiente. Los pasos suenan por el bus de efectos.
 
 ### BR-AMB-020 — Lo que suena del otro lado llega apagado
 
@@ -157,6 +158,7 @@ obstáculos; desde ahí NO DEBE apagar más. Con cero obstáculos, el sonido NO 
   abierta desde que se pide abrirla.
 - El oído es la cámara, no el cuerpo.
 - Lo que el jugador lleva en la mano no es un obstáculo para sus propios sonidos.
+- Lo que encierra al sonido no lo tapa.
 - CUANDO cambia la cantidad de obstáculos, el volumen y el corte DEBEN llegar al nuevo valor en
   más de un cuadro, sin un salto.
 - Un sonido plano NO DEBE apagarse nunca.
@@ -216,10 +218,11 @@ DADO un objeto soltado CUANDO toca algo cinco veces, más rápido que el umbral 
 suena a 0 dB sin filtro, el 2.º a −6 dB con un corte, el 3.º a −12 dB con un corte más alto que
 el del 2.º, y el 4.º y el 5.º no suenan.
 
-### AC-AMB-012 — Lo lento no gasta, y agarrar reinicia *(verifica BR-AMB-013)*
+### AC-AMB-012 — Lo lento no gasta salvo el primero, y agarrar reinicia *(verifica BR-AMB-013)*
 
-DADO un objeto soltado CUANDO toca algo justo por debajo del umbral ENTONCES no suena, y el
-contacto siguiente, por encima, es el 1.º. DADO un objeto con dos golpes CUANDO se lo agarra y
+DADO un objeto recién soltado CUANDO toca algo justo por debajo del umbral ENTONCES suena el 1.º.
+CUANDO vuelve a tocar algo justo por debajo del umbral ENTONCES no suena, y el contacto
+siguiente, por encima, es el 2.º. DADO un objeto con dos golpes CUANDO se lo agarra y
 se lo suelta ENTONCES el golpe siguiente es otra vez el 1.º.
 
 ### AC-AMB-013 — Agarrar y colocar suenan por su sonoridad *(verifica BR-AMB-010, BR-AMB-014)*
@@ -277,7 +280,8 @@ uno ENTONCES apagan igual.
 
 DADO una pared entre un sonido del espacio y el oído ENTONCES cuenta un obstáculo. DADO una
 puerta cerrada en el mismo lugar ENTONCES cuenta uno; CUANDO se la pide abierta ENTONCES cuenta
-cero. DADO el objeto que produjo el sonido entre los dos ENTONCES no cuenta.
+cero. DADO el objeto que produjo el sonido entre los dos ENTONCES no cuenta. DADO un sonido
+adentro de algo fijo ENTONCES eso no cuenta.
 
 ### AC-AMB-022 — Sin salto *(verifica BR-AMB-020)*
 
@@ -350,6 +354,6 @@ cambia.
 - **OQ-AMB-008 — ¿Cuánto apaga cada obstáculo, cuántos cuentan y cuánto dura el cambio?**
   - Por qué sigue abierta: el volumen y el corte por obstáculo, el máximo de obstáculos y la
     duración de la transición salen de escuchar en el local. También si una góndola cuenta como
-    pared: hoy cuenta todo lo fijo. El juego arranca con primeros valores.
+    pared. El juego arranca con primeros valores.
   - Decide: el dueño del repo.
   - Bloquea: nada de la máquina.

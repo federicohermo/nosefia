@@ -31,3 +31,11 @@ func test_el_cambio_dura_mas_de_un_cuadro_y_llega() -> void:  # AC-AMB-022
 
 func test_acercar_no_pasa_del_maximo() -> void:
 	assert_float(ApagadoPorObstaculos.acercar(0.0, MAXIMO + 5, 60.0)).is_equal(float(MAXIMO))
+
+
+func test_lo_que_tapa_encimado_es_un_solo_obstaculo() -> void:  # AC-AMB-021
+	var encimado := ApagadoPorObstaculos.GROSOR_DE_UN_OBSTACULO / 2.0
+	assert_int(ApagadoPorObstaculos.contar([] as Array[float])).is_equal(0)
+	assert_int(ApagadoPorObstaculos.contar([1.0, 1.0 + encimado] as Array[float])).is_equal(1)
+	assert_int(ApagadoPorObstaculos.contar([1.0, 3.0] as Array[float])).is_equal(2)
+	assert_int(ApagadoPorObstaculos.contar([1.0, 3.0, 5.0, 7.0] as Array[float])).is_equal(MAXIMO)

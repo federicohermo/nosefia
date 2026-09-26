@@ -1,11 +1,6 @@
 ## Una fila de la tabla de sonidos: qué evento del juego suena, con qué señal se dispara, por qué
 ## bus sale y si va en bucle.
 ##
-## **El `enum` de acá es el único lugar donde los eventos están enumerados.** Agregar un sonido es
-## sumar un valor y una fila del `.tres`; ningún sistema lleva una lista propia, y por eso este
-## spec no nombra una sola clase de los otros siete — el enlace es **por nombre de señal**, que
-## también es dato.
-##
 ## **Un bus mal escrito no da error: cae a `Master` en silencio.** Está medido con un reproductor
 ## del motor cuyo bus no existe — ningún aviso, el sonido sale por el canal equivocado y nada lo
 ## dice. Por eso `es_valida()` existe y por eso una fila inválida se rechaza en vez de sonar. El
@@ -91,8 +86,6 @@ const BUSES := [BUS_DE_AMBIENTE, BUS_DE_EFECTOS, BUS_DE_INTERFAZ, BUS_DE_MUSICA]
 
 @export var sonoridad: Sonoridad = Sonoridad.NINGUNA
 
-## Si el sonido se repite mientras dura la noche. Cada bucle ocupa su propia voz y no la ronda:
-## una ronda con un bucle adentro se quedaría sin voces al quinto sonido.
 @export var en_bucle: bool = false
 
 ## Si suena desde un lugar del local y no pegado a la cabeza del jugador.
@@ -114,7 +107,6 @@ func tiene_sonido() -> bool:
 	return cantidad_de_variantes() > 0
 
 
-## Una fila con sólo `stream` tiene una variante: se comporta como antes de haber variantes.
 func cantidad_de_variantes() -> int:
 	if not variantes.is_empty():
 		return variantes.size()

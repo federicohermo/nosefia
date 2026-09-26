@@ -1,9 +1,5 @@
 ## El audio del local: trae la tabla, la reparte y ata las señales. Cáscara y nada más.
 ##
-## **No decide nada.** Qué suena, por qué bus y con qué señal se dispara están en la tabla; a qué
-## voz le toca, en la ronda; y qué señales existen se lo pregunta el enlazador al motor. Acá sólo
-## se pasan las tres cosas de un lado al otro.
-##
 ## Va en `puestos/` y no en `objetos/`, que es el criterio de esa carpeta —cuántas instancias
 ## hay—: hay uno solo y llega cableado, aunque no sea un puesto de trabajo en el sentido del GDD.
 extends Node
@@ -32,14 +28,13 @@ func enlazar(fuentes: Array) -> void:
 	enlace.enlazar_todo(fuentes)
 
 
-## Arranca lo que va en bucle: el ambiente y la música. Lo llama el cableado al abrir la
-## jornada: ninguna señal lo dispara, y por eso sus filas quedan declaradas sin fuente. Lo que ya
-## suena no empieza de nuevo.
+## Arranca lo que va en bucle. Lo llama el cableado al abrir la jornada: ninguna señal lo
+## dispara, y por eso sus filas quedan declaradas sin fuente.
 func arrancar_el_ambiente() -> void:
 	reproductor.pedir(EntradaSonora.Evento.AMBIENTE_DEL_LOCAL)
 	reproductor.pedir(EntradaSonora.Evento.MUSICA_DE_LA_NOCHE)
 
 
-## La música corta al cerrar la jornada. El ambiente sigue: el local no se apaga.
+## El ambiente sigue: el local no se apaga.
 func callar_la_musica() -> void:
 	reproductor.callar(EntradaSonora.Evento.MUSICA_DE_LA_NOCHE)

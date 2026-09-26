@@ -12,7 +12,7 @@ dest_files=["res://.godot/imported/MUS_Tema1.ogg-6572d84d9d7b09a718243291eaef69b
 
 [params]
 
-loop=false
+loop=true
 loop_offset=0
 bpm=0
 beat_count=0
