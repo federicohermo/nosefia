@@ -234,6 +234,57 @@ func test_la_toma_larga_de_pasos_no_se_usa() -> void:
 	assert_str(texto).not_contains("SFX_PERSONAJE_Pasos.")
 
 
+func test_la_compra_el_lector_y_el_celular_suenan_con_su_audio() -> void:
+	var tabla := _tabla()
+	var esperado := {
+		EntradaSonora.Evento.COMPRA_REALIZADA:
+		["atencion_despachada", EntradaSonora.BUS_DE_EFECTOS, ["SFX_EVENTO_CompraRealizada"]],
+		EntradaSonora.Evento.LECTOR_RECHAZADO:
+		["cobro_rechazado", EntradaSonora.BUS_DE_EFECTOS, ["SFX_NOLEV_Lector_Error"]],
+		EntradaSonora.Evento.MENSAJE_DEL_CELULAR:
+		[
+			"nota_escrita",
+			EntradaSonora.BUS_DE_INTERFAZ,
+			["SFX_INTERFAZ_Celular_Mensaje_A", "SFX_INTERFAZ_Celular_Mensaje_B"],
+		],
+	}
+	for evento: EntradaSonora.Evento in esperado:
+		var entrada := tabla.de(evento)
+		assert_object(entrada).is_not_null()
+		if entrada == null:
+			continue
+		assert_str(entrada.senal).is_equal(esperado[evento][0])
+		assert_str(entrada.bus).is_equal(esperado[evento][1])
+		var nombres := []
+		for indice in range(entrada.cantidad_de_variantes()):
+			nombres.append(entrada.variante(indice).resource_path.get_file().get_basename())
+		assert_array(nombres).is_equal(esperado[evento][2])
+	var lector := tabla.de(EntradaSonora.Evento.LECTOR_RECHAZADO)
+	var timbre := tabla.de(EntradaSonora.Evento.TIMBRE_DEL_COMPRADOR)
+	assert_bool(lector.posicional).is_true()
+	assert_str(lector.emisor).is_equal(timbre.emisor)
+	assert_bool(EntradaSonora.Evento.has("LECTOR_ESCANEADO")).is_false()
+
+
+func test_las_tres_senales_llegan_de_una_fuente_del_audio() -> void:
+	# Una fila cuya fuente no está en la lista del almacén queda sin fuente, y eso no avisa.
+	var fuentes := {
+		"atencion_despachada": ["res://src/sistemas/tareas/ventanilla.gd", "_atenciones"],
+		"cobro_rechazado": ["res://src/sistemas/tareas/ventanilla.gd", "_atenciones"],
+		"nota_escrita":
+		["res://src/sistemas/investigacion/computadora_de_escritorio.gd", "_computadora"],
+	}
+	var almacen := FileAccess.get_file_as_string("res://src/escenas/almacen.gd")
+	var lista := RegEx.create_from_string("(?s)_audio\\s*\\.\\s*enlazar\\(\\s*\\[([^\\]]*)\\]")
+	var hallada := lista.search(almacen)
+	assert_object(hallada).is_not_null()
+	for senal: String in fuentes:
+		var texto := FileAccess.get_file_as_string(fuentes[senal][0])
+		assert_str(texto).contains("signal %s(" % senal)
+		if hallada != null:
+			assert_str(hallada.get_string(1)).contains(fuentes[senal][1])
+
+
 static func _sonoridades_de(evento: EntradaSonora.Evento) -> Array:
 	if not EntradaSonora.EVENTOS_DE_OBJETO.has(evento):
 		return [EntradaSonora.Sonoridad.NINGUNA]
