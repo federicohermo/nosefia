@@ -42,6 +42,10 @@ enum Evento {
 	COMPRA_REALIZADA,
 	LECTOR_RECHAZADO,
 	MENSAJE_DEL_CELULAR,
+	PUERTA_ABIERTA,
+	PUERTA_CERRADA,
+	PUERTA_TRABADA,
+	PORTON_TRABADO,
 }
 
 ## Cómo suena una cosa al agarrarla o al dejarla. Los valores salen de la ficha de sonido.

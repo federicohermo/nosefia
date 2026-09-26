@@ -123,6 +123,20 @@ func test_enlazar_dos_veces_no_duplica_la_conexion() -> void:
 	assert_int(_pedidos.size()).is_equal(1)
 
 
+func test_dos_fuentes_con_la_misma_senal_suenan_las_dos() -> void:
+	# Las cinco puertas declaran las mismas señales. Atar sólo la primera dejaría mudas a las otras.
+	var enlace := _enlace(
+		[_entrada(EntradaSonora.Evento.TAREA_CUMPLIDA, CON_UN_ARGUMENTO)] as Array[EntradaSonora]
+	)
+	var una := _fuente()
+	var otra := _fuente()
+	enlace.enlazar_todo([una, otra])
+	assert_int(enlace.enlazados().size()).is_equal(1)
+	una.tarea_completada.emit(1)
+	otra.tarea_completada.emit(2)
+	assert_int(_pedidos.size()).is_equal(2)
+
+
 func test_una_fila_sin_senal_queda_sin_fuente_y_no_rompe_nada() -> void:
 	# **Es un estado normal**: el ambiente del local no lo dispara ninguna señal, y por eso su
 	# fila deja la señal vacía en vez de nombrar una que no existe.
