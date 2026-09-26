@@ -78,9 +78,6 @@ func pedir_atender() -> void:
 
 
 ## Cobra el pedido del que está en la ventanilla y avisa cómo salió.
-##
-## Emite **una** de las dos señales y nunca las dos: emitirlas juntas dejaría a la pantalla
-## despachando al comprador y avisando que falta mercadería al mismo tiempo.
 func pedir_cobrar() -> void:
 	if _sin_cablear():
 		return
