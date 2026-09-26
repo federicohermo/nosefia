@@ -252,6 +252,11 @@ func test_una_caja_contra_la_pared_se_corre_sin_escalones() -> void:
 	clic.action = ReglasDeLosObjetos.ACCION_AGARRAR
 	clic.pressed = true
 	jugador.call("_unhandled_input", clic)
+	# Las bolsas arrancan en este cuarto, en el camino a la pared. Empujarlas deja al jugador en
+	# otro lugar cada corrida, y la caja a veces no toca la pared: medido, de 6 a 91 cuadros
+	# movidos en la misma rama.
+	for bolsa: Node in almacen.get("_bolsas"):
+		bolsa.process_mode = Node.PROCESS_MODE_DISABLED
 	jugador.global_position = Vector3(
 		RINCON_DEL_DEPOSITO.x, jugador.global_position.y, RINCON_DEL_DEPOSITO.y
 	)
