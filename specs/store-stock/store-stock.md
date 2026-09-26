@@ -27,6 +27,7 @@ depósito son dos lugares distintos, y mover mercadería del fondo al estante cu
 | **Faltante** | un producto con la góndola por debajo de su umbral | agotado, sin stock |
 | **Vendibles** | el depósito menos lo que a la góndola le falta para su umbral | stock, disponible |
 | **Planilla** | la lista donde el jugador anota cuántas unidades se vendieron de cada producto | registro de caja, ticket |
+| **Sonoridad** | cómo suena un producto al agarrarlo o al dejarlo | familia, material, envase |
 | **Lo vendido** | las unidades de un producto que salieron en ventas cobradas esa noche | stock, ventas del día |
 
 ## Comportamiento normativo
@@ -133,6 +134,12 @@ noche, el sistema DEBE dar la obligatoria de registrar por cumplida. CUANDO otro
 «−» deja la planilla distinta de lo vendido, el sistema DEBE descumplirla. La obligatoria NO
 DEBE arrancar cumplida, aunque la planilla en 0 coincida con una noche sin ventas. Una venta
 NO DEBE cumplirla ni descumplirla: sólo el gesto del jugador la cambia.
+
+### BR-STK-023 — Cada producto declara su sonoridad
+
+El sistema DEBE declarar una sonoridad para cada producto del catálogo. La sonoridad sale de la
+ficha del producto: lata, cajita, caja, envoltorio plástico o botella plástica. Un producto sin
+sonoridad no suena al agarrarlo ni al dejarlo, y nada lo avisa.
 
 ## Criterios de aceptación
 
@@ -247,6 +254,11 @@ ENTONCES sigue cumplida.
 
 DADO una jornada con 3 unidades anotadas CUANDO se abre la jornada siguiente ENTONCES todas las
 filas están en 0 y registrar, sin cumplir.
+
+### AC-STK-027 — Ningún producto queda sin sonoridad *(verifica BR-STK-023)*
+
+DADO cada producto del catálogo ENTONCES tiene una sonoridad. Las arvejas, la Coracola y las
+Prongles suenan a lata.
 
 ## No objetivos
 
