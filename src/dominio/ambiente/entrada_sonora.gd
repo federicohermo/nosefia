@@ -1,11 +1,6 @@
 ## Una fila de la tabla de sonidos: qué evento del juego suena, con qué señal se dispara, por qué
 ## bus sale y si va en bucle.
 ##
-## **El `enum` de acá es el único lugar donde los eventos están enumerados.** Agregar un sonido es
-## sumar un valor y una fila del `.tres`; ningún sistema lleva una lista propia, y por eso este
-## spec no nombra una sola clase de los otros siete — el enlace es **por nombre de señal**, que
-## también es dato.
-##
 ## **Un bus mal escrito no da error: cae a `Master` en silencio.** Está medido con un reproductor
 ## del motor cuyo bus no existe — ningún aviso, el sonido sale por el canal equivocado y nada lo
 ## dice. Por eso `es_valida()` existe y por eso una fila inválida se rechaza en vez de sonar. El

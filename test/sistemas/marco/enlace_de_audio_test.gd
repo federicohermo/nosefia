@@ -1,9 +1,5 @@
 ## El enlazador: conecta sólo las señales que la fuente declara, con la aridad que informa el
 ## motor, y declara las que no encontró.
-##
-## **Las fuentes son nodos inventados acá adentro.** Es lo que prueba que este spec no nombra una
-## sola clase de los otros siete: si un caso necesitara al reloj o al repositor, el enlace estaría
-## atado a ellos y una señal que cambie de nombre allá rompería acá.
 extends GdUnitTestSuite
 
 const SIN_ARGUMENTOS := &"campanita"
