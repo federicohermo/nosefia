@@ -144,6 +144,8 @@ Con varios issues de una, antes de mostrar nada:
    elegí cuál va primero y publicalo primero. El otro dice `Depende de #N`, con el número ya
    publicado. Hasta entonces nombra al primero por su título: `<issue>` no sirve, porque
    `numerar` lo reemplaza por el número propio. Sin un archivo en común, el orden da igual.
+   Un `.gd` o un spec con cambios chicos en zonas distintas no lleva `Depende de #N`: lo
+   resuelve el merge.
 2. **Dos issues que se bloquean entre sí son un solo cambio mal cortado.** Cortalo de nuevo antes
    de publicar.
 3. **Mostrá todos los borradores enteros, cada uno con `revisar` en 0, y esperá un solo sí
