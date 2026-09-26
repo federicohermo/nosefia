@@ -46,8 +46,7 @@ func completar(tarea: Tarea) -> bool:
 	return tarea.completar()
 
 
-## Desmarca la tarea si el turno sigue abierto. Con el turno cerrado no se toca: el cierre ya
-## contó el estado de ese instante.
+## Con el turno cerrado no se toca: el cierre ya contó el estado de ese instante.
 func descumplir(tarea: Tarea) -> bool:
 	if cerrado():
 		return false

@@ -83,8 +83,6 @@ func diferencia_acumulada() -> int:
 	return suma
 
 
-## Cuántas unidades de un producto salieron en las atenciones **cobradas**. Es contra lo que se
-## compara la planilla de registrar.
 func vendidas_de(producto: Producto) -> int:
 	if producto == null:
 		return 0
