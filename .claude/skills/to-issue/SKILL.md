@@ -106,9 +106,8 @@ Lo que más se rompe:
 - **Un dato nuevo en una clase base entra con sus herederas.** Si cada una lo declara, cada una
   va en «Se escribe». En el #197 faltó `unidad_de_producto.gd`, que hereda de
   `ObjetoDelAlmacen`.
-- **Un nodo nuevo en una escena se mide contra los tests de esa escena.** Hay un tope de hijos
-  por raíz y una regla de cableado. En el #192, la red no tenía lugar en ningún `.tscn` de «Se
-  escribe».
+- **Un nodo nuevo en una escena se mide contra los tests de esa escena.** En el #192, la red no
+  tenía lugar en ningún `.tscn` de «Se escribe».
 - **Un archivo en «Sólo lectura» se lee antes de ponerlo ahí.** En el #201, el enlace de audio
   ataba una sola fuente por señal, y con cinco puertas sonaba una. Tuvo que pasar a «Se
   escribe».
