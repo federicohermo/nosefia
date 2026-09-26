@@ -117,15 +117,16 @@ func _unhandled_input(evento: InputEvent) -> void:
 	# ventana gira la cámara todo el camino, y la salida de emergencia deja de servir.
 	#
 	# El mismo `relative` va a `Examen` cuando el cursor NO está tomado, que es lo que pasa
-	# mientras se examina algo —examinar suspende—. No hay un `if` sobre el examen acá: `rotar()`
-	# no hace nada si no hay nada en examen, y esa decisión vive donde está el estado.
+	# mientras se examina algo —examinar suspende—. No hay un `if` sobre el examen acá:
+	# `arrastrar()` decide con el estado del examen y del clic.
 	if evento is InputEventMouseMotion:
-		var relativo := (evento as InputEventMouseMotion).relative
+		var movimiento := evento as InputEventMouseMotion
 		if _el_cursor_esta_tomado():
-			_control.girar(relativo)
+			_control.girar(movimiento.relative)
 			_aplicar_la_rotacion()
 		else:
-			examen.rotar(relativo)
+			var con_el_clic := movimiento.button_mask & MOUSE_BUTTON_MASK_LEFT != 0
+			examen.arrastrar(movimiento.relative, con_el_clic)
 		return
 	if evento is InputEventMouseButton and (evento as InputEventMouseButton).pressed:
 		# El primer clic después de la salida de emergencia recupera el cursor **y nada más**: sin
@@ -146,7 +147,9 @@ func _unhandled_input(evento: InputEvent) -> void:
 		if _enfocado != null and not _control.esta_suspendido():
 			uso_pedido.emit(_enfocado)
 	elif evento.is_action_pressed(ReglasDeLosObjetos.ACCION_EXAMINAR):
-		examen.alternar(_datos_de_lo_enfocado())
+		# Con otra pantalla encima, la E no abre un examen: al cerrarlo reanudaría al jugador.
+		if examen.esta_examinando() or not _control.esta_suspendido():
+			examen.alternar(_datos_de(_enfocado), _enfocado)
 
 
 ## **El clic se lo gasta quien hace algo con él, y sólo ése.** Tener `interactuar()` es la
@@ -176,16 +179,7 @@ func _physics_process(delta: float) -> void:
 	if not is_on_floor():
 		velocity += get_gravity() * delta
 
-	# `Input.get_vector` ya devuelve `x` a la derecha e `y` adelante, que es la convención con
-	# la que `Caminata` está escrita. El orden de los cuatro argumentos es
-	# (negativo_x, positivo_x, negativo_y, positivo_y).
-	var entrada := Input.get_vector(
-		ReglasDelJugador.ACCION_IZQUIERDA,
-		ReglasDelJugador.ACCION_DERECHA,
-		ReglasDelJugador.ACCION_ATRAS,
-		ReglasDelJugador.ACCION_ADELANTE
-	)
-	var horizontal := _control.velocidad(entrada)
+	var horizontal := _control.velocidad(_entrada())
 	velocity.x = horizontal.x
 	velocity.z = horizontal.z
 	move_and_slide()
@@ -197,11 +191,26 @@ func _physics_process(delta: float) -> void:
 
 
 func _process(delta: float) -> void:
+	# Lo examinado cuelga de la cámara, que no se interpola: girarlo en el paso de física lo
+	# dibujaría a saltos.
+	examen.girar(_entrada(), delta)
 	_control.avanzar_el_dibujo(delta)
 	var atrasado := _control.giro_atrasado()
 	if atrasado or _girando_el_dibujo:
 		_aplicar_la_rotacion()
 	_girando_el_dibujo = atrasado
+
+
+## `Input.get_vector` ya devuelve `x` a la derecha e `y` adelante, que es la convención con la
+## que `Caminata` y el giro del examen están escritos. El orden de los cuatro argumentos es
+## (negativo_x, positivo_x, negativo_y, positivo_y).
+func _entrada() -> Vector2:
+	return Input.get_vector(
+		ReglasDelJugador.ACCION_IZQUIERDA,
+		ReglasDelJugador.ACCION_DERECHA,
+		ReglasDelJugador.ACCION_ATRAS,
+		ReglasDelJugador.ACCION_ADELANTE
+	)
 
 
 ## Le pasa a lo chocado el paso que no se pudo dar, para que se corra en vez de tapar el paso.
@@ -399,10 +408,11 @@ func _medir_candidato(cuerpo: Node3D) -> CampoDeInteraccion.Candidato:
 	return CampoDeInteraccion.Candidato.new(cuerpo.get_instance_id(), INF, INF, true, false)
 
 
-## Examinar consulta los datos sin activar cajas ni puestos.
-func _datos_de_lo_enfocado() -> ObjetoDelAlmacen:
-	if _enfocado is ObjetoAgarrable:
-		return (_enfocado as ObjetoAgarrable).datos
+## Los datos de un cuerpo del almacén, o `null` si no es un objeto. Se leen sin llamar a
+## `interactuar()`, que activa cajas y puestos.
+func _datos_de(cuerpo: Object) -> ObjetoDelAlmacen:
+	if cuerpo != null and "datos" in cuerpo:
+		return cuerpo.get("datos") as ObjetoDelAlmacen
 	return null
 
 
@@ -431,10 +441,57 @@ func _devolver_al_mundo(nodo: Node3D) -> void:
 	if atras.length() > 2.0 * un_paso:
 		atras = Vector3.ZERO
 	nodo.reparent(mundo, true)
+	# Sólo lo soltado al frente: vaciar las manos lo deja a los pies aunque se mire el piso.
+	if nodo is RigidBody3D and ancla == agarre.punto_de_soltado and _apoyar_sobre_lo_mirado(nodo):
+		nodo.reset_physics_interpolation()
+		return
 	nodo.global_position += atras
 	nodo.reset_physics_interpolation()
 	if nodo is RigidBody3D:
 		_ajustar_la_caida(nodo)
+
+
+## Apoya lo soltado sobre el punto que la mira toca, y devuelve si pudo. Qué superficie lo admite
+## lo decide el dominio; acá se mide la superficie y si ahí entra.
+func _apoyar_sobre_lo_mirado(cuerpo: RigidBody3D) -> bool:
+	var ojo := _camara.global_position
+	var consulta := PhysicsRayQueryParameters3D.create(
+		ojo,
+		ojo - _camara.global_basis.z * ReglasDelJugador.ALCANCE_DE_LA_MIRA,
+		cuerpo.collision_mask
+	)
+	consulta.exclude = [get_rid(), cuerpo.get_rid()]
+	var espacio := get_world_3d().direct_space_state
+	var golpe := espacio.intersect_ray(consulta)
+	if golpe.is_empty():
+		return false
+	var normal: Vector3 = golpe["normal"]
+	if not ReglasDeLosObjetos.admite_lo_soltado(normal.y, _datos_de(golpe["collider"])):
+		return false
+	var formas: Array[CollisionShape3D] = []
+	var base := INF
+	for forma: CollisionShape3D in cuerpo.find_children("*", "CollisionShape3D", false, false):
+		if forma.disabled or forma.shape == null:
+			continue
+		formas.append(forma)
+		var orientada := Transform3D(cuerpo.global_basis) * forma.transform
+		base = minf(base, (orientada * forma.shape.get_debug_mesh().get_aabb()).position.y)
+	if formas.is_empty():
+		return false
+	var antes := cuerpo.global_position
+	# Un roce por encima: apoyado justo, la consulta de abajo contestaría que choca con el piso.
+	cuerpo.global_position = golpe["position"] + Vector3.UP * (ReglasDeLosObjetos.ROCE - base)
+	for forma in formas:
+		var lugar := PhysicsShapeQueryParameters3D.new()
+		lugar.shape = forma.shape
+		lugar.transform = forma.global_transform
+		# Con el contorno de los muebles: el hueco de un estante es lugar libre y no es un apoyo.
+		lugar.collision_mask = cuerpo.collision_mask | ReglasDeLosObjetos.CAPA_DEL_CONTORNO
+		lugar.exclude = [cuerpo.get_rid()]
+		if not espacio.intersect_shape(lugar, 1).is_empty():
+			cuerpo.global_position = antes
+			return false
+	return true
 
 
 ## El punto fijo puede quedar detrás de la madera. Se barre el volumen desde el jugador.

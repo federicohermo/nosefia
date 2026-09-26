@@ -59,6 +59,72 @@ func test_los_puestos_completan_la_jornada_y_permiten_abrir_la_siguiente(
 	_comprobar_huecos(almacen, 0)
 
 
+func test_abrir_la_jornada_termina_el_examen_en_curso() -> void:  # AC-INV-025
+	var almacen: Node3D = auto_free(ALMACEN.instantiate())
+	add_child(almacen)
+	await get_tree().process_frame
+	var jugador: Node3D = almacen.get("_jugador")
+	var control: ControlDelJugador = jugador.get("_control")
+	var examen: Examen = jugador.get("examen")
+	var agarre: Agarre = almacen.get("_agarre")
+	var bolsa: RigidBody3D = almacen.get_node("Objetos/BolsaDeBasura1")
+	var trapeador: RigidBody3D = almacen.get_node("Objetos/Trapeador")
+	var terminados := [0]
+	examen.examen_terminado.connect(func() -> void: terminados[0] += 1)
+	almacen.call("_al_abrir_la_jornada", 2)
+	assert_int(terminados[0]).is_zero()
+	# Lo examinado del mundo vuelve a su lugar.
+	var padre := bolsa.get_parent()
+	assert_bool(examen.iniciar(bolsa.get("datos"), bolsa)).is_true()
+	assert_bool(control.esta_suspendido()).is_true()
+	almacen.call("_al_abrir_la_jornada", 2)
+	assert_bool(examen.esta_examinando()).is_false()
+	assert_bool(control.esta_suspendido()).is_false()
+	assert_object(bolsa.get_parent()).is_same(padre)
+	# Lo que se llevaba queda a los pies, y no en la cara ni donde se mira.
+	assert_bool(agarre.pedir_agarrar(trapeador.get("datos"), trapeador)).is_true()
+	assert_bool(examen.iniciar()).is_true()
+	var camara: Camera3D = jugador.get_node("Giro/Camara")
+	camara.look_at(jugador.global_position + jugador.frente() * 1.2)
+	var pies := agarre.punto_de_respaldo.global_position
+	almacen.call("_al_abrir_la_jornada", 2)
+	assert_bool(examen.esta_examinando()).is_false()
+	assert_bool(control.esta_suspendido()).is_false()
+	assert_object(agarre.manos().sostenido()).is_null()
+	assert_int(examen.punto_de_examen.get_child_count()).is_zero()
+	assert_vector(trapeador.global_position).is_equal_approx(pies, Vector3.ONE * 0.01)
+	# La E siguiente examina lo que la mira tiene adelante.
+	assert_bool(examen.iniciar(bolsa.get("datos"), bolsa)).is_true()
+	assert_object(bolsa.get_parent()).is_same(examen.punto_de_examen)
+	examen.terminar()
+	assert_int(terminados[0]).is_equal(3)
+
+
+func test_con_otra_pantalla_encima_la_e_no_abre_un_examen() -> void:
+	# Así suspenden la placa del cierre y la computadora. La E abría un examen de lo enfocado o
+	# de lo que se lleva, y la segunda reanudaba al jugador con la pantalla abierta.
+	var almacen: Node3D = auto_free(ALMACEN.instantiate())
+	add_child(almacen)
+	await get_tree().process_frame
+	var jugador: Node3D = almacen.get("_jugador")
+	var control: ControlDelJugador = jugador.get("_control")
+	var examen: Examen = jugador.get("examen")
+	var agarre: Agarre = almacen.get("_agarre")
+	var trapeador: RigidBody3D = almacen.get_node("Objetos/Trapeador")
+	jugador.suspender()
+	jugador.set("_enfocado", almacen.get_node("Objetos/BolsaDeBasura1"))
+	var evento := InputEventAction.new()
+	evento.action = ReglasDeLosObjetos.ACCION_EXAMINAR
+	evento.pressed = true
+	for llevado: RigidBody3D in [null, trapeador]:
+		if llevado != null:
+			assert_bool(agarre.pedir_agarrar(llevado.get("datos"), llevado)).is_true()
+		for vez in 2:
+			jugador.call("_unhandled_input", evento)
+			assert_bool(examen.esta_examinando()).is_false()
+		assert_bool(control.esta_suspendido()).is_true()
+
+
 func _reponer(almacen: Node3D) -> void:
 	var jugador: Node3D = almacen.get("_jugador")
 	jugador.set_physics_process(false)

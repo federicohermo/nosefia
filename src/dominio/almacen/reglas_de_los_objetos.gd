@@ -76,6 +76,10 @@ const CAPA_DEL_CONTORNO := 8
 ## puesto al ubicar la caja y el test al comprobar que no atraviesa nada: es el mismo número.
 const ROCE := 0.004
 
+## Cuánto gira por segundo lo examinado con cada tecla de movimiento, en radianes. Lo justo para
+## leer la cara de atrás sin pasarse de largo.
+const VELOCIDAD_DE_GIRO_DEL_EXAMEN := 2.5
+
 
 ## Si a una caja se le puede sacar una unidad: a toda la que esté apoyada, en cualquier lado.
 ##
@@ -88,6 +92,17 @@ static func se_puede_retirar(la_lleva_el_jugador: bool) -> bool:
 
 static func se_puede_apoyar_en(inclinacion: float) -> bool:
 	return inclinacion >= APOYO_HORIZONTAL
+
+
+## Si lo soltado se puede dejar sobre la superficie que la mira toca. `debajo` es `null` cuando
+## la superficie es del mundo fijo.
+static func admite_lo_soltado(inclinacion: float, debajo: ObjetoDelAlmacen) -> bool:
+	return se_puede_apoyar_en(inclinacion) and (debajo == null or debajo.admite_encima)
+
+
+## El giro de lo examinado en este cuadro: `x` sobre el eje vertical, `y` sobre el horizontal.
+static func giro_del_examen(entrada: Vector2, segundos: float) -> Vector2:
+	return entrada * VELOCIDAD_DE_GIRO_DEL_EXAMEN * segundos
 
 
 ## Metros desde el ojo hasta el centro de lo examinado, según el radio de la esfera que lo

@@ -11,4 +11,5 @@ texto = "El remito lleva una etiqueta pegada encima de otra."
 script = ExtResource("1_objeto")
 id = &"caja_de_reposicion"
 nombre = "Caja de reposición"
+admite_encima = true
 revelacion = SubResource("Resource_revelacion")

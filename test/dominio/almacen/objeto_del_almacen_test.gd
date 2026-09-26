@@ -63,3 +63,13 @@ func test_la_revelacion_solo_se_ve_despues_de_examinar() -> void:  # AC-INV-001
 		var secreto: String = objeto.revelacion.texto
 		assert_str(oculto).not_contains(secreto)
 		assert_str(revelado).contains(secreto)
+
+
+func test_solo_la_caja_del_deposito_admite_otro_objeto_encima() -> void:  # AC-PLY-034
+	assert_bool(ObjetoDelAlmacen.new().admite_encima).is_false()
+	for objeto in _objetos_del_almacen():
+		(
+			assert_bool(objeto.admite_encima)
+			. override_failure_message("%s admite otro encima" % objeto.id)
+			. is_equal(objeto.id == &"caja_de_reposicion")
+		)

@@ -103,6 +103,17 @@ un objeto que no se apoyó.
 CUANDO un objeto cae desde la altura de la mano o más, el sistema DEBE dejarlo apoyado sobre el
 piso. El caso que decide es el producto más delgado.
 
+### BR-PLY-018 — Lo soltado se apoya donde se mira
+
+CUANDO se suelta algo con la mira sobre una superficie al alcance, el sistema DEBE apoyarlo sobre
+el punto que la mira toca, si esa superficie lo admite. Una superficie lo admite si es
+horizontal —con el mismo corte que apoyar una caja— y si lo de abajo es el mundo fijo o un objeto
+que admite otro encima. Sólo las cajas contenedoras admiten otro encima.
+
+SI la superficie no lo admite, o ahí lo soltado queda encimado con algo o adentro de un mueble,
+ENTONCES el sistema DEBE soltarlo como sin mira: al frente, o a los pies si adelante no hay
+lugar.
+
 ## Criterios de aceptación
 
 ### AC-PLY-001 — La diagonal no corre *(verifica BR-PLY-001)*
@@ -184,6 +195,24 @@ todos están dormidos, y ninguno pasa de 0,02 rad/s después del segundo 2.
 DADO el producto más delgado soltado desde 1,5 metros ENTONCES su altura mínima no baja del plano
 del piso menos 5 centímetros.
 
+### AC-PLY-033 — Queda donde se mira *(verifica BR-PLY-018)*
+
+DADO algo en la mano y la mira sobre el piso libre, o sobre la tapa de una caja contenedora, a
+menos del alcance CUANDO se suelta ENTONCES su base queda sobre el punto que la mira toca, sin
+encimarse con nada.
+
+### AC-PLY-034 — Qué superficie admite *(verifica BR-PLY-018)*
+
+DADO una superficie con la inclinación justo debajo del corte de horizontal ENTONCES no admite;
+con el corte exacto sobre el mundo fijo, o sobre una caja contenedora, sí; sobre el trapeador,
+no. Ningún objeto del almacén salvo las cajas contenedoras admite otro encima.
+
+### AC-PLY-035 — Sin superficie que valga, se suelta como siempre *(verifica BR-PLY-018)*
+
+DADO la mira sobre una pared, sobre nada al alcance, o sobre un punto donde lo soltado quedaría
+encimado con algo o adentro de un mueble CUANDO se suelta ENTONCES lo soltado sale del mismo
+punto que sin mira.
+
 ## No objetivos
 
 - Esta capacidad NO decide qué esconde un objeto: eso es de
@@ -195,7 +224,7 @@ del piso menos 5 centímetros.
 ## Contratos
 
 - **Entrada:** el vector de movimiento, el delta del mouse, los candidatos que el rayo encontró,
-  el objeto que se quiere agarrar y los segundos del cuadro.
+  el objeto que se quiere agarrar, la superficie que la mira toca y los segundos del cuadro.
 - **Salida:** la velocidad, los dos ángulos de la vista, qué está enfocado y si cambió, qué se
   lleva en la mano, el motivo de cada rechazo, el ángulo de la hoja y el efecto de un uso.
 - **Falla:** los dos rechazos de agarrar; soltar con las manos vacías no devuelve nada; un uso no
