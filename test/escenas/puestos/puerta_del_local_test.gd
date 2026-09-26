@@ -1,5 +1,3 @@
-## Las dos puertas cableadas en el almacén: que se las pueda tocar, que giren sobre su borde
-## hacia adentro del cuarto, y que recién abiertas dejen pasar al jugador.
 extends GdUnitTestSuite
 
 const ALMACEN := preload("res://src/escenas/almacen.tscn")
@@ -19,7 +17,6 @@ const VANOS := {
 	"Estructura/puerta2": [Vector3(5.0, 1.05, -4.658), Vector3(9.5, 1.05, -4.658)],
 }
 
-## Las tres que no abren, con la señal que da cada una al tocarla.
 const TRABADAS := {
 	"Estructura/puertaentrada": &"puerta_trabada",
 	"Estructura/porton": &"porton_trabado",

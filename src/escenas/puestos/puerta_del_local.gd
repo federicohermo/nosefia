@@ -1,5 +1,3 @@
-## Una puerta que se ve: se la toca y la hoja gira hacia adentro del cuarto. Cablea y nada más.
-##
 ## **No decide si está abierta ni cuánto giró.** Eso es `Puerta`, que es de `dominio/` y tiene
 ## test; acá viven la bisagra, el sentido y la aritmética de transformadas, que son geometría de
 ## la escena y no una regla del juego.
@@ -30,7 +28,7 @@ signal puerta_cerrada(puerta: Node3D)
 signal puerta_trabada(puerta: Node3D)
 signal porton_trabado(puerta: Node3D)
 
-## Qué aviso da una puerta que no abre. El portón suena distinto que las otras dos.
+## Qué aviso da una puerta que no abre.
 enum Traba { NINGUNA, PUERTA, PORTON }
 
 ## La malla que gira, que es el padre de este cuerpo. Entra por `@export` y no con un

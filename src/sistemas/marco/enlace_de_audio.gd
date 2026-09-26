@@ -61,7 +61,7 @@ func enlazar_todo(fuentes: Array) -> void:
 
 
 ## Ata un evento a cada fuente que declare su señal, y devuelve si ató alguna. Varias fuentes
-## pueden declarar la misma: las cinco puertas avisan con las mismas señales.
+## pueden declarar la misma.
 func _enlazar(evento: EntradaSonora.Evento, fuentes: Array) -> bool:
 	var atado := false
 	for fuente: Object in fuentes:

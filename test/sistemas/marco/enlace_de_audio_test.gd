@@ -124,7 +124,7 @@ func test_enlazar_dos_veces_no_duplica_la_conexion() -> void:
 
 
 func test_dos_fuentes_con_la_misma_senal_suenan_las_dos() -> void:
-	# Las cinco puertas declaran las mismas señales. Atar sólo la primera dejaría mudas a las otras.
+	# Atar sólo la primera dejaría mudas a las otras.
 	var enlace := _enlace(
 		[_entrada(EntradaSonora.Evento.TAREA_CUMPLIDA, CON_UN_ARGUMENTO)] as Array[EntradaSonora]
 	)

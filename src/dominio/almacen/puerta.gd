@@ -1,9 +1,5 @@
 ## Una de las puertas del local: si está abierta y cuánto le falta al giro de la hoja.
 ##
-## Va en `almacen/` y no en `ambiente/` porque una puerta cerrada cambia **cuánto cuesta cumplir
-## una obligatoria**: la zona de descarte de la basura está del otro lado de una de las dos, así
-## que con la hoja trabada esa tarea no se puede cumplir. No es cómo se siente la noche.
-##
 ## **El ángulo vive acá y no en la escena**, aunque parezca cosa de la hoja: pasarse del tope y
 ## saltar a él en un cuadro son bugs de aritmética, y acá se prueban sin levantar una escena.
 class_name Puerta
