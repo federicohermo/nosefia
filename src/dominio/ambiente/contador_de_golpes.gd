@@ -50,7 +50,8 @@ func al_evento(evento: EntradaSonora.Evento, rapidez: float) -> Golpe:
 
 ## El golpe de un contacto a esa rapidez, o `null` si no suena. Un contacto lento no gasta.
 func contar(rapidez: float) -> Golpe:
-	if rapidez < UMBRAL_DE_GOLPE or _dados >= VOLUMEN_POR_GOLPE.size():
+	# El primero cuenta aunque sea lento: lo que se apoya donde se mira no cae.
+	if (_dados > 0 and rapidez < UMBRAL_DE_GOLPE) or _dados >= VOLUMEN_POR_GOLPE.size():
 		return null
 	var golpe := Golpe.new(VOLUMEN_POR_GOLPE[_dados], CORTE_POR_GOLPE[_dados])
 	_dados += 1

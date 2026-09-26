@@ -24,7 +24,7 @@ silencio y el mezclador deja de servir.
 | **Voz** | uno de los reproductores que se reparten los sonidos cortos | slot, player |
 | **Sonoridad** | cómo suena una cosa al agarrarla o al dejarla | familia, material, envase |
 | **Evento de objeto** | agarrar un objeto, que un objeto soltado toque algo, o colocar un producto | — |
-| **Golpe** | un contacto de un objeto soltado, lo bastante rápido para sonar | choque, impacto |
+| **Golpe** | un contacto de un objeto soltado que cuenta para sonar | choque, impacto |
 
 ## Comportamiento normativo
 
@@ -91,7 +91,8 @@ rechazo y NO DEBE usar el audio de otra sonoridad.
 
 ### BR-AMB-013 — Lo soltado suena al tocar algo, y cada golpe más bajo
 
-CUANDO un objeto soltado deja de caer contra cualquier cosa, el sistema DEBE contar un golpe. Un
+CUANDO un objeto soltado deja de caer contra cualquier cosa, el sistema DEBE contar un golpe. El
+primer contacto DEBE contar aunque sea lento: lo que se apoya donde se mira no cae. Después, un
 contacto más lento que el umbral de golpe NO DEBE contar ni gastar un golpe. Soltar no suena.
 El sistema DEBE sonar sólo los tres primeros golpes, desde que se suelta hasta que se agarra
 otra vez:
@@ -165,10 +166,11 @@ DADO un objeto soltado CUANDO toca algo cinco veces, más rápido que el umbral 
 suena a 0 dB sin filtro, el 2.º a −6 dB con un corte, el 3.º a −12 dB con un corte más alto que
 el del 2.º, y el 4.º y el 5.º no suenan.
 
-### AC-AMB-012 — Lo lento no gasta, y agarrar reinicia *(verifica BR-AMB-013)*
+### AC-AMB-012 — Lo lento no gasta salvo el primero, y agarrar reinicia *(verifica BR-AMB-013)*
 
-DADO un objeto soltado CUANDO toca algo justo por debajo del umbral ENTONCES no suena, y el
-contacto siguiente, por encima, es el 1.º. DADO un objeto con dos golpes CUANDO se lo agarra y
+DADO un objeto recién soltado CUANDO toca algo justo por debajo del umbral ENTONCES suena el 1.º.
+CUANDO vuelve a tocar algo justo por debajo del umbral ENTONCES no suena, y el contacto
+siguiente, por encima, es el 2.º. DADO un objeto con dos golpes CUANDO se lo agarra y
 se lo suelta ENTONCES el golpe siguiente es otra vez el 1.º.
 
 ### AC-AMB-013 — Agarrar y colocar suenan por su sonoridad *(verifica BR-AMB-010, BR-AMB-014)*
