@@ -83,9 +83,9 @@ examinar, llevar y soltar van de la más cerca a la más lejos, y ninguna llega 
 
 ### BR-PLY-011 — La puerta es una intención y una hoja
 
-CUANDO se interactúa con una puerta, el sistema DEBE alternar entre abierta y cerrada de
-inmediato, y DEBE mover la hoja hacia su tope sin pasarse y sin saltar en un cuadro. Abierta, la
-hoja queda a **un cuarto de vuelta** y deja pasar.
+CUANDO se interactúa con una puerta que no está trabada, el sistema DEBE alternar entre abierta
+y cerrada de inmediato, y DEBE mover la hoja hacia su tope sin pasarse y sin saltar en un cuadro.
+Abierta, la hoja queda a **un cuarto de vuelta** y deja pasar.
 
 ### BR-PLY-012 — Una herramienta sirve para algo o para nada
 
@@ -141,6 +141,16 @@ lugar.
 
 CUANDO se abre una jornada, el sistema DEBE dejar las puertas interiores cerradas, con la hoja en
 su lugar y sin girar hasta él, aunque la noche anterior hayan quedado abiertas o a medio giro.
+
+### BR-PLY-020 — Tres puertas no abren, y cada gesto sobre una puerta avisa
+
+SI una puerta está trabada, ENTONCES interactuar con ella NO DEBE abrirla ni girar la hoja, y
+DEBE contestar que está trabada, todas las veces. La entrada al local, el portón del depósito y
+la oficina del jefe están trabadas; las dos puertas interiores no.
+
+CUANDO se interactúa con una puerta, el sistema DEBE avisar una vez qué pasó: se abrió, se cerró
+o está trabada. El aviso de trabada del portón es distinto del de las otras dos. Cerrar las
+puertas al abrir la jornada NO DEBE avisar: no es un gesto del jugador.
 
 ## Criterios de aceptación
 
@@ -339,6 +349,28 @@ paso.
 
 DADO una puerta a medio giro al cerrar la noche CUANDO se abre la jornada siguiente ENTONCES la
 puerta está cerrada, su ángulo es `0.0` y la hoja está en su lugar de cerrada, en el mismo paso.
+
+### AC-PLY-038 — La trabada no se abre *(verifica BR-PLY-020)*
+
+DADO una puerta trabada CUANDO se la alterna diez veces ENTONCES las diez contesta que está
+trabada, sigue cerrada y, después de avanzar 10 segundos, su ángulo es `0.0`.
+
+### AC-PLY-039 — La que no está trabada alterna *(verifica BR-PLY-011, BR-PLY-020)*
+
+DADO una puerta nueva ENTONCES no está trabada. CUANDO se la alterna ENTONCES contesta que no
+está trabada y queda abierta.
+
+### AC-PLY-040 — Qué puertas están trabadas *(verifica BR-PLY-020)*
+
+DADO el almacén armado ENTONCES la entrada, el portón del depósito y la oficina del jefe están
+trabadas y contestan a la interacción, y las dos puertas interiores no están trabadas.
+
+### AC-PLY-041 — Un aviso por gesto *(verifica BR-PLY-020)*
+
+DADO una puerta interior cerrada CUANDO se la toca dos veces seguidas, con la hoja todavía
+girando, ENTONCES avisa una vez que se abrió y después una vez que se cerró. DADO una puerta
+trabada CUANDO se la toca diez veces ENTONCES avisa diez veces que está trabada, el portón con su
+propio aviso, y la hoja no gira. DADO la apertura de una jornada ENTONCES ninguna puerta avisa.
 
 ## No objetivos
 
