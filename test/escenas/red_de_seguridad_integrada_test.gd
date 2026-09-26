@@ -141,6 +141,7 @@ func test_rescatar_una_caja_y_una_unidad_no_mueve_la_mercaderia() -> void:  # AC
 	var caja := _caja(almacen, Producto.Id.ARVEJAS)
 	caja.global_position = ENTRETECHO
 	_red(almacen).revisar(caja)
+	assert_dict(_tareas(almacen)).is_equal(antes)
 	var agarre: Agarre = almacen.get("_agarre")
 	almacen.get("_reposicion_manual").call("retirar", Producto.Id.MALBARDO)
 	var unidad: RigidBody3D = agarre.soltar(true)

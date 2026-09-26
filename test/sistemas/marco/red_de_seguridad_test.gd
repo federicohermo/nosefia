@@ -9,6 +9,9 @@ const PARED := Vector3(4.0, 1.0, 0.0)
 ## Apoyado en el piso y metido cinco centímetros en la pared: a su lado hay piso libre.
 const CONTRA_LA_PARED := Vector3(1.99, 0.08, 0.0)
 
+## Un área de un metro de ancho que tapa ese piso libre, sin llegar a lo metido en la pared.
+const AREA_JUNTO_A_LA_PARED := Vector3(1.42, 0.5, 0.0)
+
 
 func _cuerpo_estatico(raiz: Node3D, tamano: Vector3, lugar: Vector3) -> StaticBody3D:
 	var cuerpo := StaticBody3D.new()
@@ -120,3 +123,40 @@ func test_lo_soltado_adentro_sale_adelante_del_jugador() -> void:
 	await get_tree().physics_frame
 	assert_int(red.rescates[0]["clase"]).is_equal(Rescate.Clase.DESHACER)
 	assert_float(objeto.global_position.x - jugador.global_position.x).is_greater(0.3)
+
+
+## Un lugar libre adentro de un área donde el objeto no estaba no es candidato: ahí contaría para
+## una tarea.
+func test_un_lugar_adentro_de_un_area_nueva_no_es_candidato() -> void:
+	var mundo: Array = await _mundo()
+	var red: RedDeSeguridad = mundo[0]
+	var objeto: RigidBody3D = mundo[1]
+	var area := Area3D.new()
+	var forma := CollisionShape3D.new()
+	var caja := BoxShape3D.new()
+	caja.size = Vector3(1.0, 1.0, 4.0)
+	forma.shape = caja
+	area.add_child(forma)
+	objeto.get_parent().add_child(area)
+	area.global_position = AREA_JUNTO_A_LA_PARED
+	await get_tree().physics_frame
+	objeto.freeze = true
+	objeto.global_basis = Basis.IDENTITY
+	objeto.global_position = CONTRA_LA_PARED
+	objeto.set("_origen_en_el_mundo", objeto.global_transform)
+	red.revisar(objeto)
+	assert_int(red.rescates[0]["clase"]).is_equal(Rescate.NINGUNO)
+	assert_vector(objeto.global_position).is_equal(CONTRA_LA_PARED)
+
+
+## Lo que nace después de la red también se mira al dormirse.
+func test_lo_que_nace_despues_se_mira_al_dormirse() -> void:
+	var mundo: Array = await _mundo()
+	var red: RedDeSeguridad = mundo[0]
+	var nuevo: RigidBody3D = OBJETO.instantiate()
+	red.get_parent().add_child(nuevo)
+	nuevo.global_position = PARED
+	nuevo.sleeping = true
+	nuevo.sleeping_state_changed.emit()
+	assert_int(red.rescates.size()).is_equal(1)
+	assert_object(red.rescates[0]["objeto"]).is_same(nuevo)
