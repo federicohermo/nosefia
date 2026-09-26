@@ -103,6 +103,12 @@ Lo que más se rompe:
   palabras.** Un símbolo no encuentra el comentario que explica la regla con otras palabras, ni
   el test que arma el estado que la regla lee. En el #166 quedaron fuera de «Se escribe» cinco
   archivos con comentarios y un test.
+- **Un dato nuevo en una clase base entra con sus herederas.** Si cada una lo declara, cada una
+  va en «Se escribe». En el #197 faltó `unidad_de_producto.gd`, que hereda de
+  `ObjetoDelAlmacen`.
+- **Un nodo nuevo en una escena se mide contra los tests de esa escena.** Hay un tope de hijos
+  por raíz y una regla de cableado. En el #192, la red no tenía lugar en ningún `.tscn` de «Se
+  escribe».
 
 ## Paso 4 — Mostrar y publicar
 
