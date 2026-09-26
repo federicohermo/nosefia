@@ -103,6 +103,37 @@ func test_cumplir_las_cinco_en_el_mismo_cuadro_no_mueve_el_turno() -> void:  # A
 	assert_float(turno.tiempo_restante()).is_equal(43200.0)
 
 
+func test_descumplir_baja_las_cumplidas_sin_mover_el_turno() -> void:  # AC-SHF-019
+	var obligatorias := _las_cinco_obligatorias()
+	var registrar := obligatorias[Tarea.Tipo.REGISTRAR]
+	var turno := Turno.new(100.0, obligatorias)
+	turno.completar(obligatorias[Tarea.Tipo.CAJA])
+	turno.completar(registrar)
+	assert_bool(turno.descumplir(registrar)).is_true()
+	assert_int(turno.tareas_cumplidas()).is_equal(1)
+	assert_float(turno.tiempo_restante()).is_equal(100.0)
+	assert_bool(turno.completar(registrar)).is_true()
+	assert_int(turno.tareas_cumplidas()).is_equal(2)
+
+
+func test_descumplir_una_sin_cumplir_no_descuenta_nada() -> void:  # AC-SHF-019
+	var obligatorias := _las_cinco_obligatorias()
+	var turno := Turno.new(100.0, obligatorias)
+	turno.completar(obligatorias[Tarea.Tipo.CAJA])
+	assert_bool(turno.descumplir(obligatorias[Tarea.Tipo.REGISTRAR])).is_false()
+	assert_int(turno.tareas_cumplidas()).is_equal(1)
+
+
+func test_con_el_turno_cerrado_descumplir_se_rechaza() -> void:  # AC-SHF-019
+	var registrar := Tarea.new(Tarea.Tipo.REGISTRAR)
+	var obligatorias: Array[Tarea] = [registrar]
+	var turno := Turno.new(1.0, obligatorias)
+	turno.completar(registrar)
+	turno.consumir(1.0)
+	assert_bool(turno.descumplir(registrar)).is_false()
+	assert_int(turno.tareas_cumplidas()).is_equal(1)
+
+
 func test_un_turno_sin_obligatorias_esta_completo_por_vacuidad() -> void:
 	# No es un caso del juego: es el borde que hace que `todas_cumplidas()` no dependa de que la
 	# lista tenga un tamaño mínimo. Con cero declaradas no quedó nada sin hacer.
