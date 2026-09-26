@@ -9,7 +9,7 @@
 class_name RondaDeVoces
 extends RefCounted
 
-## Ocho es un primer valor y el piso importa: con menos de cinco, cinco pedidos seguidos se
+## El piso importa: con menos de cinco, cinco pedidos seguidos se
 ## pisarían entre ellos y no habría cómo distinguir un sonido perdido de uno que nunca se pidió.
 ## El bucle no gasta ninguna — tiene la suya.
 const VOCES_DEL_LOCAL := 8
