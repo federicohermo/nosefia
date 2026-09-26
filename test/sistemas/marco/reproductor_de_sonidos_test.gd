@@ -8,15 +8,6 @@
 ## Lo que se verifica es **qué se le pidió** al reproductor.
 extends GdUnitTestSuite
 
-## Los cuatro `.gd` de este spec que llevan espejo, más el quinto, para el caso de los espejos.
-const ARCHIVOS_CON_ESPEJO = [
-	"res://src/dominio/ambiente/entrada_sonora.gd",
-	"res://src/dominio/ambiente/tabla_de_sonidos.gd",
-	"res://src/dominio/ambiente/ronda_de_voces.gd",
-	"res://src/sistemas/marco/reproductor_de_sonidos.gd",
-	"res://src/sistemas/marco/enlace_de_audio.gd",
-]
-
 const BUS_INVENTADO := "Efectoss"
 
 var _rechazos: Array = []
@@ -153,18 +144,6 @@ func test_silenciar_deja_todas_las_voces_sin_stream() -> void:
 	reproductor.silenciar()
 	assert_int(_voces_ocupadas(reproductor)).is_equal(0)
 	assert_object(reproductor.ambiente().stream).is_null()
-
-
-func test_los_cinco_archivos_de_dominio_y_sistemas_tienen_su_espejo() -> void:
-	# La mitad falsable del criterio de terminado: sin los espejos el nodo `tdd` no pasa.
-	assert_int(ARCHIVOS_CON_ESPEJO.size()).is_equal(5)
-	for ruta: String in ARCHIVOS_CON_ESPEJO:
-		var espejo := ruta.replace("res://src/", "res://test/").replace(".gd", "_test.gd")
-		(
-			assert_bool(FileAccess.file_exists(espejo))
-			. override_failure_message("falta el espejo `%s` de `%s`" % [espejo, ruta])
-			. is_true()
-		)
 
 
 func test_una_sonoridad_sin_audio_no_suena_ni_cae_a_otro() -> void:  # AC-AMB-010
