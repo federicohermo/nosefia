@@ -323,8 +323,6 @@ func _tiene_origen(cuerpo: PhysicsBody3D) -> bool:
 	return not cuerpo.call(ReglasDeLosObjetos.METODO_INTERACTUAR) is UnidadDeProducto
 
 
-## Encima del objeto que ocupa el origen, si admite otro encima. La tapa es su cara de arriba:
-## su inclinación es la de su eje vertical.
 func _encima_del_origen(cuerpo: PhysicsBody3D) -> Array[Transform3D]:
 	var salida: Array[Transform3D] = []
 	if not _tiene_origen(cuerpo):
