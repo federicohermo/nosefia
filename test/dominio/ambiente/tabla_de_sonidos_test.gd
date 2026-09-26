@@ -72,7 +72,7 @@ func test_el_boton_de_la_computadora_lo_dispara_boton_pulsado() -> void:
 
 
 func test_cerrar_la_jornada_y_abrir_la_computadora_quedan_mudos() -> void:
-	# Cerrar el turno también cierra la jornada: si `FinJornada` sonara en las dos, sonaría doble.
+	# Cerrar el turno también cierra la jornada: si sonaran los dos, sonaría doble.
 	var tabla := _tabla()
 	for evento in [EntradaSonora.Evento.JORNADA_CERRADA, EntradaSonora.Evento.COMPUTADORA_ABIERTA]:
 		assert_bool(tabla.de(evento).tiene_sonido()).is_false()
