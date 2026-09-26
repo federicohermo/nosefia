@@ -239,7 +239,9 @@ func actualizar_apagado(oyente: Vector3, segundos: float) -> void:
 		var voz := clave as AudioStreamPlayer3D
 		if voz.stream == null or voz.stream_paused:
 			continue
-		var cantidad := obstaculos_entre(oyente, voz.global_position, _origenes.get(voz))
+		if not is_instance_valid(_origenes[voz]):
+			_origenes[voz] = null
+		var cantidad := obstaculos_entre(oyente, voz.global_position, _origenes[voz])
 		_niveles[voz] = ApagadoPorObstaculos.acercar(_niveles[voz], cantidad, segundos)
 		_aplicar_apagado(voz)
 
