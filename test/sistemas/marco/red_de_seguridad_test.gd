@@ -81,8 +81,6 @@ func test_sin_ningun_lugar_libre_queda_donde_esta_y_se_registra() -> void:
 	var red: RedDeSeguridad = mundo[0]
 	var objeto: RigidBody3D = mundo[1]
 	var jugador: CharacterBody3D = mundo[3]
-	# El origen del objeto se tapa con la pared, y el jugador queda adentro de ella: no hay piso
-	# a su lado.
 	objeto.global_position = PARED
 	objeto.set("_origen_en_el_mundo", objeto.global_transform)
 	jugador.global_position = PARED + Vector3.UP * 5.0

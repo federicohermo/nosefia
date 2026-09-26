@@ -42,7 +42,6 @@ func interactuar() -> ObjetoDelAlmacen:
 	return datos
 
 
-## Dónde arranca la noche, en el mundo.
 func lugar_de_origen() -> Transform3D:
 	return _origen_en_el_mundo
 

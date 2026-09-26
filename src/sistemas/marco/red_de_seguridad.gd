@@ -144,7 +144,6 @@ func _al_empujar(caja: Node3D) -> void:
 		_rachas[caja]["ahora"] = true
 
 
-## El primer sólido fijo en el que el cuerpo se hunde más de lo que el motor tolera.
 func _solido_pisado(cuerpo: PhysicsBody3D) -> Node3D:
 	var tolerado := ReglasDeLosObjetos.ROCE
 	if cuerpo is RigidBody3D and not (cuerpo as RigidBody3D).freeze:
@@ -155,7 +154,6 @@ func _solido_pisado(cuerpo: PhysicsBody3D) -> Node3D:
 	return null
 
 
-## Con qué se superpone el cuerpo si estuviera en `lugar`, sin contar al jugador.
 func _choques(cuerpo: PhysicsBody3D, lugar: Transform3D) -> Array[Dictionary]:
 	var resultado := _prueba(cuerpo, lugar)
 	var salida: Array[Dictionary] = []
@@ -193,10 +191,6 @@ func _hundido(cuerpo: PhysicsBody3D, lugar: Transform3D) -> float:
 	return resultado.get_travel().length() + sobra
 
 
-## El primer lugar libre y alcanzable de la lista, en un arreglo de uno, o vacío.
-##
-## Libre y alcanzable: no se superpone con nada, está apoyado, y no cae en un área de tarea en la
-## que no estaba antes.
 func _primero_libre(cuerpo: PhysicsBody3D, lugares: Array, areas: Array[RID]) -> Array:
 	for lugar: Transform3D in lugares:
 		var libre := _hundido(cuerpo, lugar) <= ReglasDeLosObjetos.ROCE
@@ -218,7 +212,6 @@ func _apoyado(cuerpo: PhysicsBody3D, lugar: Transform3D) -> bool:
 	return not golpe.is_empty() and ReglasDeLosObjetos.se_puede_apoyar_en(golpe["normal"].y)
 
 
-## Las áreas donde caería el cuerpo en `lugar`: la de descarte, y cualquier otra de una tarea.
 func _areas_en(cuerpo: PhysicsBody3D, lugar: Transform3D) -> Array[RID]:
 	var espacio := cuerpo.get_world_3d().direct_space_state
 	var salida: Array[RID] = []
@@ -252,7 +245,6 @@ func _tamano(cuerpo: Node3D) -> float:
 	return maxf(limites.size.x, limites.size.z)
 
 
-## El lugar apoyado sobre un punto del piso, con la vuelta que el cuerpo ya tiene.
 func _sobre(cuerpo: Node3D, punto: Vector3) -> Transform3D:
 	var alto := _media_altura(cuerpo) + ReglasDeLosObjetos.ROCE
 	return Transform3D(cuerpo.global_basis, punto + Vector3.UP * alto)

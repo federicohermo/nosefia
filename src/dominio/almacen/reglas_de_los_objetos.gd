@@ -60,7 +60,6 @@ const METODO_EMPUJAR := "empujar"
 ## motivo: la red de seguridad, en `sistemas/`, no puede nombrar el tipo que lo contesta.
 const METODO_LUGAR_DE_ORIGEN := "lugar_de_origen"
 
-## La señal de la caja que se va a correr. La escuchan el puesto y la red de seguridad.
 const SENAL_EMPUJADA := &"empujada"
 
 ## Qué parte del paso que el jugador no pudo dar recibe lo que le estorba. Con 1 la caja se

@@ -8,7 +8,6 @@ extends RefCounted
 ## Los lugares que se prueban, en el orden en que se prueban.
 enum Clase { DESHACER, ALREDEDOR, ENCIMA_DEL_ORIGEN, ORIGEN }
 
-## Lo que contesta `elegir()` cuando ningún candidato quedó libre.
 const NINGUNO := -1
 
 
@@ -23,7 +22,6 @@ class Candidato:
 		libre = esta_libre
 
 
-## El índice del primer candidato libre, o `NINGUNO`.
 static func elegir(candidatos: Array[Candidato]) -> int:
 	for indice in candidatos.size():
 		if candidatos[indice].libre:

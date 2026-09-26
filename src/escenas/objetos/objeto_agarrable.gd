@@ -61,6 +61,5 @@ func interactuar() -> ObjetoDelAlmacen:
 	return datos
 
 
-## Dónde lo dejó la escena, en el mundo. Una unidad que nace en juego contesta dónde nació.
 func lugar_de_origen() -> Transform3D:
 	return _origen_en_el_mundo

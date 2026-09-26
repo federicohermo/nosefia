@@ -389,9 +389,6 @@ static func _solidos_pisados(objeto: PhysicsBody3D) -> Array[String]:
 	return pisados
 
 
-## Un lugar del piso donde el jugador entra parado, cerca de lo que se mira. Los lugares del piso
-## los busca `sistemas/`, igual que para el puesto y la red; acá sólo se prueba que entre la
-## cápsula.
 func _lugar_para_mirar(almacen: Node3D, objeto: Node3D) -> Variant:
 	var jugador: CharacterBody3D = almacen.get("_jugador")
 	var cuerpo: CollisionShape3D = jugador.get_node("Cuerpo")
