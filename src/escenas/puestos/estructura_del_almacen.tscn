@@ -30,6 +30,306 @@ size = Vector3(0.420795, 0.206508, 1.682868)
 [sub_resource type="BoxShape3D" id="suelo_paso_fondo"]
 size = Vector3(1.703925, 0.206508, 0.382225)
 
+[sub_resource type="BoxShape3D" id="volumen_1"]
+size = Vector3(9.79794, 6.97386, 0.20038)
+
+[sub_resource type="BoxShape3D" id="volumen_2"]
+size = Vector3(0.15167, 7.17986, 6.37274)
+
+[sub_resource type="BoxShape3D" id="volumen_3"]
+size = Vector3(6.37622, 6.97386, 0.17528)
+
+[sub_resource type="BoxShape3D" id="volumen_4"]
+size = Vector3(1.57032, 7.17986, 0.17528)
+
+[sub_resource type="BoxShape3D" id="volumen_5"]
+size = Vector3(5.55188, 7.17986, 0.19107)
+
+[sub_resource type="BoxShape3D" id="volumen_6"]
+size = Vector3(0.21375, 7.17986, 2.37643)
+
+[sub_resource type="BoxShape3D" id="volumen_7"]
+size = Vector3(0.20799, 7.17986, 6.75039)
+
+[sub_resource type="BoxShape3D" id="volumen_8"]
+size = Vector3(0.21375, 7.17986, 2.69523)
+
+[sub_resource type="BoxShape3D" id="volumen_9"]
+size = Vector3(1.80508, 6.97386, 6.77912)
+
+[sub_resource type="BoxShape3D" id="volumen_10"]
+size = Vector3(4.51234, 6.97386, 0.206)
+
+[sub_resource type="BoxShape3D" id="volumen_11"]
+size = Vector3(6.37622, 6.97386, 0.206)
+
+[sub_resource type="BoxShape3D" id="volumen_12"]
+size = Vector3(1.72199, 6.97386, 0.206)
+
+[sub_resource type="BoxShape3D" id="volumen_13"]
+size = Vector3(0.45271, 4.14823, 15.90936)
+
+[sub_resource type="BoxShape3D" id="volumen_14"]
+size = Vector3(0.206, 6.97386, 2.3615)
+
+[sub_resource type="BoxShape3D" id="volumen_15"]
+size = Vector3(0.206, 6.97386, 11.86913)
+
+[sub_resource type="BoxShape3D" id="volumen_16"]
+size = Vector3(5.13014, 6.97386, 2.46871)
+
+[sub_resource type="BoxShape3D" id="volumen_17"]
+size = Vector3(15.45665, 0.92534, 0.206)
+
+[sub_resource type="BoxShape3D" id="volumen_18"]
+size = Vector3(11.358089, 6.04852, 0.206)
+
+[sub_resource type="BoxShape3D" id="volumen_19"]
+size = Vector3(0.93429, 6.04852, 0.206)
+
+[sub_resource type="BoxShape3D" id="volumen_20"]
+size = Vector3(1.69973, 4.23089, 0.38128)
+
+[sub_resource type="BoxShape3D" id="volumen_21"]
+size = Vector3(0.41975, 4.23089, 1.67872)
+
+[sub_resource type="BoxShape3D" id="volumen_22"]
+size = Vector3(3.16427, 4.23089, 0.206)
+
+[sub_resource type="BoxShape3D" id="volumen_23"]
+size = Vector3(0.27747, 2.82563, 15.90936)
+
+[sub_resource type="BoxShape3D" id="volumen_24"]
+size = Vector3(15.45665, 2.82563, 15.70336)
+
+[sub_resource type="BoxShape3D" id="volumen_25"]
+size = Vector3(0.17524, 2.82563, 0.206)
+
+[sub_resource type="BoxShape3D" id="volumen_26"]
+size = Vector3(5.13014, 2.36271, 4.05516)
+
+[sub_resource type="BoxShape3D" id="volumen_27"]
+size = Vector3(0.17524, 2.36271, 15.70336)
+
+[sub_resource type="BoxShape3D" id="volumen_28"]
+size = Vector3(5.13014, 2.21844, 0.22652)
+
+[sub_resource type="BoxShape3D" id="volumen_29"]
+size = Vector3(16.11536, 0.27747, 0.24704)
+
+[sub_resource type="BoxShape3D" id="volumen_30"]
+size = Vector3(9.64627, 2.21518, 6.19746)
+
+[sub_resource type="BoxShape3D" id="volumen_31"]
+size = Vector3(0.27747, 1.94097, 0.24704)
+
+[sub_resource type="BoxShape3D" id="volumen_32"]
+size = Vector3(0.27747, 1.94097, 0.24704)
+
+[sub_resource type="BoxShape3D" id="volumen_33"]
+size = Vector3(15.56042, 0.27747, 0.24704)
+
+[sub_resource type="BoxShape3D" id="volumen_34"]
+size = Vector3(3.07539, 0.88272, 0.90393)
+
+[sub_resource type="BoxShape3D" id="volumen_35"]
+size = Vector3(0.70285, 0.88272, 2.48632)
+
+[sub_resource type="BoxShape3D" id="volumen_36"]
+size = Vector3(2, 2, 2)
+
+[sub_resource type="BoxShape3D" id="volumen_37"]
+size = Vector3(2, 2, 2)
+
+[sub_resource type="BoxShape3D" id="volumen_38"]
+size = Vector3(2, 2, 2)
+
+[sub_resource type="BoxShape3D" id="volumen_39"]
+size = Vector3(2, 2, 2)
+
+[sub_resource type="BoxShape3D" id="volumen_40"]
+size = Vector3(2, 0.04945, 0.77312)
+
+[sub_resource type="BoxShape3D" id="volumen_41"]
+size = Vector3(2, 0.04945, 0.77312)
+
+[sub_resource type="BoxShape3D" id="volumen_42"]
+size = Vector3(2, 0.04945, 0.77312)
+
+[sub_resource type="BoxShape3D" id="volumen_43"]
+size = Vector3(0.05655, 2.03017, 0.06796)
+
+[sub_resource type="BoxShape3D" id="volumen_44"]
+size = Vector3(0.05655, 2.03017, 0.06796)
+
+[sub_resource type="BoxShape3D" id="volumen_45"]
+size = Vector3(0.05655, 2.03017, 0.06796)
+
+[sub_resource type="BoxShape3D" id="volumen_46"]
+size = Vector3(0.05655, 2.03017, 0.06796)
+
+[sub_resource type="BoxShape3D" id="volumen_47"]
+size = Vector3(2, 0.04945, 0.77312)
+
+[sub_resource type="BoxShape3D" id="volumen_48"]
+size = Vector3(2, 0.04945, 0.77312)
+
+[sub_resource type="BoxShape3D" id="volumen_49"]
+size = Vector3(2, 0.04945, 0.77312)
+
+[sub_resource type="BoxShape3D" id="volumen_50"]
+size = Vector3(0.05655, 2.03017, 0.06796)
+
+[sub_resource type="BoxShape3D" id="volumen_51"]
+size = Vector3(0.05655, 2.03017, 0.06796)
+
+[sub_resource type="BoxShape3D" id="volumen_52"]
+size = Vector3(0.05655, 2.03017, 0.06796)
+
+[sub_resource type="BoxShape3D" id="volumen_53"]
+size = Vector3(0.05655, 2.03017, 0.06796)
+
+[sub_resource type="BoxShape3D" id="volumen_54"]
+size = Vector3(2, 0.04945, 0.77312)
+
+[sub_resource type="BoxShape3D" id="volumen_55"]
+size = Vector3(2, 0.04945, 0.77312)
+
+[sub_resource type="BoxShape3D" id="volumen_56"]
+size = Vector3(2, 0.04945, 0.77312)
+
+[sub_resource type="BoxShape3D" id="volumen_57"]
+size = Vector3(0.05655, 2.03017, 0.06796)
+
+[sub_resource type="BoxShape3D" id="volumen_58"]
+size = Vector3(0.05655, 2.03017, 0.06796)
+
+[sub_resource type="BoxShape3D" id="volumen_59"]
+size = Vector3(0.05655, 2.03017, 0.06796)
+
+[sub_resource type="BoxShape3D" id="volumen_60"]
+size = Vector3(0.05655, 2.03017, 0.06796)
+
+[sub_resource type="BoxShape3D" id="volumen_61"]
+size = Vector3(1.09635, 2.49044, 0.0844)
+
+[sub_resource type="BoxShape3D" id="volumen_62"]
+size = Vector3(0.11075, 2.49044, 1.25668)
+
+[sub_resource type="BoxShape3D" id="volumen_63"]
+size = Vector3(0.9856, 2.49044, 0.0844)
+
+[sub_resource type="BoxShape3D" id="volumen_64"]
+size = Vector3(0.9856, 0.08847, 1.17228)
+
+[sub_resource type="BoxShape3D" id="volumen_65"]
+size = Vector3(0.90411, 0.55627, 1.17695)
+
+[sub_resource type="BoxShape3D" id="volumen_66"]
+size = Vector3(0.0115, 0.16724, 1.17695)
+
+[sub_resource type="BoxShape3D" id="volumen_67"]
+size = Vector3(0.94783, 1.84249, 0.04687)
+
+[sub_resource type="BoxShape3D" id="volumen_68"]
+size = Vector3(0.09575, 1.84249, 1.12964)
+
+[sub_resource type="BoxShape3D" id="volumen_69"]
+size = Vector3(0.85208, 1.84249, 0.04688)
+
+[sub_resource type="BoxShape3D" id="volumen_70"]
+size = Vector3(0.85208, 0.05196, 1.08276)
+
+[sub_resource type="BoxShape3D" id="volumen_71"]
+size = Vector3(0.850638, 0.057008, 1.238094)
+
+[sub_resource type="BoxShape3D" id="volumen_72"]
+size = Vector3(0.850638, 0.057008, 1.238094)
+
+[sub_resource type="BoxShape3D" id="volumen_73"]
+size = Vector3(0.850638, 0.057008, 1.238094)
+
+[sub_resource type="BoxShape3D" id="volumen_74"]
+size = Vector3(1.09635, 2.49044, 0.0844)
+
+[sub_resource type="BoxShape3D" id="volumen_75"]
+size = Vector3(0.11075, 2.49044, 1.25668)
+
+[sub_resource type="BoxShape3D" id="volumen_76"]
+size = Vector3(0.9856, 2.49044, 0.0844)
+
+[sub_resource type="BoxShape3D" id="volumen_77"]
+size = Vector3(0.9856, 0.08847, 1.17228)
+
+[sub_resource type="BoxShape3D" id="volumen_78"]
+size = Vector3(0.90411, 0.55627, 1.17695)
+
+[sub_resource type="BoxShape3D" id="volumen_79"]
+size = Vector3(0.0115, 0.16724, 1.17695)
+
+[sub_resource type="BoxShape3D" id="volumen_80"]
+size = Vector3(0.94783, 1.84249, 0.04687)
+
+[sub_resource type="BoxShape3D" id="volumen_81"]
+size = Vector3(0.09575, 1.84249, 1.12964)
+
+[sub_resource type="BoxShape3D" id="volumen_82"]
+size = Vector3(0.85208, 1.84249, 0.04688)
+
+[sub_resource type="BoxShape3D" id="volumen_83"]
+size = Vector3(0.85208, 0.05196, 1.08276)
+
+[sub_resource type="BoxShape3D" id="volumen_84"]
+size = Vector3(0.850638, 0.057008, 1.238094)
+
+[sub_resource type="BoxShape3D" id="volumen_85"]
+size = Vector3(0.850638, 0.057008, 1.238094)
+
+[sub_resource type="BoxShape3D" id="volumen_86"]
+size = Vector3(0.850638, 0.057008, 1.238094)
+
+[sub_resource type="BoxShape3D" id="volumen_de_la_puerta"]
+size = Vector3(2, 2.78366, 2)
+
+[sub_resource type="BoxShape3D" id="volumen_de_la_puerta2"]
+size = Vector3(2, 2.78366, 2)
+
+[sub_resource type="ConvexPolygonShape3D" id="volumen_87"]
+points = PackedVector3Array(-0.999998, -0.000000, -1.000002, -0.999998, -0.000000, 0.999998, -0.999998, 0.185543, -1.000002, 1.000002, -0.000000, -1.000002, -0.999998, 0.185543, 0.999998, 1.000002, -0.000000, 0.999998, -0.600037, 1.373421, -0.600041, 1.000002, 0.185543, -1.000002, 1.000002, 0.185543, 0.999998, -0.600037, 0.997764, 0.599841, 0.599845, 1.373421, -0.600041, 0.599845, 0.997764, 0.599841)
+
+[sub_resource type="ConvexPolygonShape3D" id="volumen_88"]
+points = PackedVector3Array(-0.789013, 1.410645, -1.112827, -1.345026, 0.866088, -0.055380, -1.351485, 0.947833, -0.047698, -0.789013, 2.314563, -1.112827, 0.725294, 1.410645, -0.985688, 1.280015, 0.866788, -0.054996, 1.274073, 0.862237, -0.047698, -1.337792, 0.862237, -0.047698, -1.337792, 0.862237, 0.840165, -1.351485, 0.947833, 0.849000, -1.351485, 2.650294, -0.047698, 1.287766, 2.650294, -0.047698, 0.725294, 2.314563, -0.985688, 1.287766, 0.947833, -0.047698, 1.287766, 0.947833, 0.849000, 1.274073, 0.862237, 0.840165, -1.351485, 2.650294, 0.849192, 1.287766, 2.650294, 0.849192)
+
+[sub_resource type="ConvexPolygonShape3D" id="volumen_89"]
+points = PackedVector3Array(1.000000, 1.000000, 1.000000, 1.000000, 1.000000, -1.000000, 0.130761, 1.000000, 1.000000, 1.000000, -1.000000, 1.000000, 0.130761, 1.000000, -1.000000, 1.000000, -1.000000, -1.000000, 0.130761, -1.000000, 1.000000, 0.130761, -1.000000, -1.000000)
+
+[sub_resource type="ConvexPolygonShape3D" id="volumen_90"]
+points = PackedVector3Array(0.000000, 1.266900, 2.050800, 0.000000, 1.008321, 0.008400, -0.866000, 0.766831, 2.050800, 0.866000, 0.766831, 2.050800, 0.602877, 0.491569, 0.008400, -0.602708, 0.488924, 0.008400, -0.866000, -0.500025, 2.050800, 0.866000, -0.500025, 2.050800, 0.602877, -0.207267, 0.008400, -0.600334, -0.232494, 0.008400, 0.000000, -0.737853, 0.008400, 0.000000, -0.811500, 2.050800)
+
+[sub_resource type="ConvexPolygonShape3D" id="volumen_91"]
+points = PackedVector3Array(0.838900, -0.449107, 2.852211, 0.717097, -0.516508, 3.747867, 0.838900, -0.652425, 2.836925, 0.497885, -0.389835, 2.068185, -0.000093, -0.543300, 4.107900, 0.717097, -0.719721, 3.732581, -0.879800, -0.652425, 2.836925, 0.497885, -0.593014, 2.053100, -0.538954, -0.389835, 2.068185, -0.758165, -0.516508, 3.747867, -0.758165, -0.719721, 3.732581, -0.000093, -0.746200, 4.088188, -0.879800, -0.449107, 2.852211, -0.538954, -0.593014, 2.053100)
+
+[sub_resource type="ConvexPolygonShape3D" id="volumen_92"]
+points = PackedVector3Array(0.847400, -0.709201, 4.100200, 0.847400, -1.356800, 4.100200, 0.847400, -1.356800, 1.710033, 0.718860, -0.619230, 1.710033, 0.095253, 0.042200, 0.078800, -0.894200, -0.709201, 4.100200, -0.894200, -1.356800, 4.100200, -0.894200, -1.356800, 1.710033, 0.053826, -0.421075, 0.454330, 0.012230, 0.000707, 0.078800, -0.759011, -0.619230, 1.710033)
+
+[sub_resource type="BoxShape3D" id="volumen_93"]
+size = Vector3(7.60774, 0.206, 0.20038)
+
+[sub_resource type="BoxShape3D" id="volumen_94"]
+size = Vector3(4.18602, 0.206, 0.17528)
+
+[sub_resource type="BoxShape3D" id="volumen_95"]
+size = Vector3(5.13014, 0.206, 0.15812)
+
+[sub_resource type="ConvexPolygonShape3D" id="volumen_96"]
+points = PackedVector3Array(-3.545344, 0, -8.057677, -1.740258, 0, -8.057677, -1.740258, -0.0931, -8.057677, -3.545344, 0, -14.630804, -1.740258, 0, -14.630804, -1.740258, -0.0931, -14.630804)
+
+[sub_resource type="ConvexPolygonShape3D" id="volumen_97"]
+points = PackedVector3Array(-7.851676, 4.148226, -7.851676, -7.604972, 4.755416, -7.851676, -7.604972, 4.148226, -7.851676, -7.851676, 4.148226, 7.850141, -7.604972, 4.755416, 7.850141, -7.604972, 4.148226, 7.850141)
+
+[sub_resource type="ConvexPolygonShape3D" id="volumen_98"]
+points = PackedVector3Array(8.271435, 4.611152, -3.732354, 8.271435, 4.75542, -3.732354, 8.271435, 4.611152, -3.584931, 13.401068, 4.611152, -3.732354, 13.401068, 4.75542, -3.732354, 13.401068, 4.611152, -3.584931)
+
 [node name="Estructura" instance=ExtResource("modelo")]
 
 [node name="SueloSolido" type="StaticBody3D" parent="."]
@@ -660,3 +960,401 @@ omni_range = 3.0
 omni_attenuation = 1.6
 
 editor_description = "La luminaria que la textura ya dibuja arriba del vidrio. El interior es un volumen cerrado: las luminarias del techo no le llegan y la mercadería queda del color del ambiente en vez del suyo."
+
+[node name="Volumen" type="StaticBody3D" parent="almacen"]
+collision_layer = 8
+collision_mask = 0
+
+[node name="Volumen" type="CollisionShape3D" parent="almacen/Volumen"]
+position = Vector3(3.15871, 3.48693, -14.53061)
+shape = SubResource("volumen_1")
+
+[node name="Volumen2" type="CollisionShape3D" parent="almacen/Volumen"]
+position = Vector3(7.981845, 3.38393, -11.24405)
+shape = SubResource("volumen_2")
+
+[node name="Volumen3" type="CollisionShape3D" parent="almacen/Volumen"]
+position = Vector3(1.44785, 3.48693, -8.14532)
+shape = SubResource("volumen_3")
+
+[node name="Volumen4" type="CollisionShape3D" parent="almacen/Volumen"]
+position = Vector3(7.12085, 3.38393, -8.14532)
+shape = SubResource("volumen_4")
+
+[node name="Volumen5" type="CollisionShape3D" parent="almacen/Volumen"]
+position = Vector3(10.83362, 3.38393, -7.962145)
+shape = SubResource("volumen_5")
+
+[node name="Volumen6" type="CollisionShape3D" parent="almacen/Volumen"]
+position = Vector3(8.164555, 3.38393, -6.678395)
+shape = SubResource("volumen_6")
+
+[node name="Volumen7" type="CollisionShape3D" parent="almacen/Volumen"]
+position = Vector3(13.505566, 3.38393, -4.491415)
+shape = SubResource("volumen_7")
+
+[node name="Volumen8" type="CollisionShape3D" parent="almacen/Volumen"]
+position = Vector3(8.164555, 3.38393, -2.463835)
+shape = SubResource("volumen_8")
+
+[node name="Volumen9" type="CollisionShape3D" parent="almacen/Volumen"]
+position = Vector3(-2.6428, 3.48693, -11.24124)
+shape = SubResource("volumen_9")
+
+[node name="Volumen10" type="CollisionShape3D" parent="almacen/Volumen"]
+position = Vector3(-5.80151, 3.48693, -7.95468)
+shape = SubResource("volumen_10")
+
+[node name="Volumen11" type="CollisionShape3D" parent="almacen/Volumen"]
+position = Vector3(1.44785, 3.48693, -7.95468)
+shape = SubResource("volumen_11")
+
+[node name="Volumen12" type="CollisionShape3D" parent="almacen/Volumen"]
+position = Vector3(7.196685, 3.48693, -7.95468)
+shape = SubResource("volumen_12")
+
+[node name="Volumen13" type="CollisionShape3D" parent="almacen/Volumen"]
+position = Vector3(-7.831325, 2.074115, 0.103)
+shape = SubResource("volumen_13")
+
+[node name="Volumen14" type="CollisionShape3D" parent="almacen/Volumen"]
+position = Vector3(7.95468, 3.48693, -6.67093)
+shape = SubResource("volumen_14")
+
+[node name="Volumen15" type="CollisionShape3D" parent="almacen/Volumen"]
+position = Vector3(7.95468, 3.48693, 2.123115)
+shape = SubResource("volumen_15")
+
+[node name="Volumen16" type="CollisionShape3D" parent="almacen/Volumen"]
+position = Vector3(10.8365, 3.48693, -2.350575)
+shape = SubResource("volumen_16")
+
+[node name="Volumen17" type="CollisionShape3D" parent="almacen/Volumen"]
+position = Vector3(0.123355, 0.46267, 7.95468)
+shape = SubResource("volumen_17")
+
+[node name="Volumen18" type="CollisionShape3D" parent="almacen/Volumen"]
+position = Vector3(-1.925925, 3.9496, 7.95468)
+shape = SubResource("volumen_18")
+
+[node name="Volumen19" type="CollisionShape3D" parent="almacen/Volumen"]
+position = Vector3(7.384535, 3.9496, 7.95468)
+shape = SubResource("volumen_19")
+
+[node name="Volumen20" type="CollisionShape3D" parent="almacen/Volumen"]
+position = Vector3(5.485825, 4.858415, -8.04232)
+shape = SubResource("volumen_20")
+
+[node name="Volumen21" type="CollisionShape3D" parent="almacen/Volumen"]
+position = Vector3(8.061555, 4.858415, -4.65082)
+shape = SubResource("volumen_21")
+
+[node name="Volumen22" type="CollisionShape3D" parent="almacen/Volumen"]
+position = Vector3(5.335255, 4.858415, 7.95468)
+shape = SubResource("volumen_22")
+
+[node name="Volumen23" type="CollisionShape3D" parent="almacen/Volumen"]
+position = Vector3(-7.918945, 5.561045, 0.103)
+shape = SubResource("volumen_23")
+
+[node name="Volumen24" type="CollisionShape3D" parent="almacen/Volumen"]
+position = Vector3(0.123355, 5.561045, 0)
+shape = SubResource("volumen_24")
+
+[node name="Volumen25" type="CollisionShape3D" parent="almacen/Volumen"]
+position = Vector3(-7.69259, 5.561045, 7.95468)
+shape = SubResource("volumen_25")
+
+[node name="Volumen26" type="CollisionShape3D" parent="almacen/Volumen"]
+position = Vector3(10.8365, 5.792505, -5.83903)
+shape = SubResource("volumen_26")
+
+[node name="Volumen27" type="CollisionShape3D" parent="almacen/Volumen"]
+position = Vector3(-7.69259, 5.792505, 0)
+shape = SubResource("volumen_27")
+
+[node name="Volumen28" type="CollisionShape3D" parent="almacen/Volumen"]
+position = Vector3(10.8365, 5.86464, -3.69819)
+shape = SubResource("volumen_28")
+
+[node name="Volumen29" type="CollisionShape3D" parent="almacen/Volumen"]
+position = Vector3(0, 4.894155, 8.1812)
+shape = SubResource("volumen_29")
+
+[node name="Volumen30" type="CollisionShape3D" parent="almacen/Volumen"]
+position = Vector3(3.082875, 5.86627, -11.33169)
+shape = SubResource("volumen_30")
+
+[node name="Volumen31" type="CollisionShape3D" parent="almacen/Volumen"]
+position = Vector3(-7.918945, 6.003375, 8.1812)
+shape = SubResource("volumen_31")
+
+[node name="Volumen32" type="CollisionShape3D" parent="almacen/Volumen"]
+position = Vector3(7.918945, 6.003375, 8.1812)
+shape = SubResource("volumen_32")
+
+[node name="Volumen33" type="CollisionShape3D" parent="almacen/Volumen"]
+position = Vector3(0, 6.835125, 8.1812)
+shape = SubResource("volumen_33")
+
+[node name="Volumen34" type="CollisionShape3D" parent="almacen/Volumen"]
+position = Vector3(4.25381, -0.103, -14.53061)
+shape = SubResource("volumen_93")
+
+[node name="Volumen35" type="CollisionShape3D" parent="almacen/Volumen"]
+position = Vector3(2.54295, -0.103, -8.14532)
+shape = SubResource("volumen_94")
+
+[node name="Volumen36" type="CollisionShape3D" parent="almacen/Volumen"]
+position = Vector3(10.8365, -0.103, -1.19526)
+shape = SubResource("volumen_95")
+
+[node name="Volumen37" type="CollisionShape3D" parent="almacen/Volumen"]
+shape = SubResource("volumen_96")
+
+[node name="Volumen38" type="CollisionShape3D" parent="almacen/Volumen"]
+shape = SubResource("volumen_97")
+
+[node name="Volumen39" type="CollisionShape3D" parent="almacen/Volumen"]
+shape = SubResource("volumen_98")
+
+[node name="Volumen" type="CollisionShape3D" parent="EscritorioComputadora/StaticBody3D"]
+position = Vector3(4.290875, 0.53477, 4.874015)
+shape = SubResource("volumen_34")
+
+[node name="Volumen2" type="CollisionShape3D" parent="EscritorioComputadora/StaticBody3D"]
+position = Vector3(3.104605, 0.53477, 6.56914)
+shape = SubResource("volumen_35")
+
+[node name="Volumen" type="CollisionShape3D" parent="caja_02/StaticBody3D"]
+position = Vector3(0, 0, 0)
+shape = SubResource("volumen_36")
+
+[node name="Volumen" type="CollisionShape3D" parent="caja_02_001/StaticBody3D"]
+position = Vector3(0, 0, 0)
+shape = SubResource("volumen_37")
+
+[node name="Volumen" type="CollisionShape3D" parent="caja_02_002/StaticBody3D"]
+position = Vector3(0, 0, 0)
+shape = SubResource("volumen_38")
+
+[node name="Volumen" type="CollisionShape3D" parent="caja_02_003/StaticBody3D"]
+position = Vector3(0, 0, 0)
+shape = SubResource("volumen_39")
+
+[node name="Volumen" type="CollisionShape3D" parent="gondola_deposito01/StaticBody3D"]
+position = Vector3(0, 0.598585, 0)
+shape = SubResource("volumen_40")
+
+[node name="Volumen2" type="CollisionShape3D" parent="gondola_deposito01/StaticBody3D"]
+position = Vector3(0, 0.063535, 0)
+shape = SubResource("volumen_41")
+
+[node name="Volumen3" type="CollisionShape3D" parent="gondola_deposito01/StaticBody3D"]
+position = Vector3(0, -0.471515, 0)
+shape = SubResource("volumen_42")
+
+[node name="Volumen4" type="CollisionShape3D" parent="gondola_deposito01/StaticBody3D"]
+position = Vector3(-1.028275, -0.047655, 0.35258)
+shape = SubResource("volumen_43")
+
+[node name="Volumen5" type="CollisionShape3D" parent="gondola_deposito01/StaticBody3D"]
+position = Vector3(1.028275, -0.047655, 0.35258)
+shape = SubResource("volumen_44")
+
+[node name="Volumen6" type="CollisionShape3D" parent="gondola_deposito01/StaticBody3D"]
+position = Vector3(-1.028275, -0.047655, -0.35258)
+shape = SubResource("volumen_45")
+
+[node name="Volumen7" type="CollisionShape3D" parent="gondola_deposito01/StaticBody3D"]
+position = Vector3(1.028275, -0.047655, -0.35258)
+shape = SubResource("volumen_46")
+
+[node name="Volumen" type="CollisionShape3D" parent="gondola_deposito02/StaticBody3D"]
+position = Vector3(0, 0.598585, 0)
+shape = SubResource("volumen_47")
+
+[node name="Volumen2" type="CollisionShape3D" parent="gondola_deposito02/StaticBody3D"]
+position = Vector3(0, 0.063535, 0)
+shape = SubResource("volumen_48")
+
+[node name="Volumen3" type="CollisionShape3D" parent="gondola_deposito02/StaticBody3D"]
+position = Vector3(0, -0.471515, 0)
+shape = SubResource("volumen_49")
+
+[node name="Volumen4" type="CollisionShape3D" parent="gondola_deposito02/StaticBody3D"]
+position = Vector3(-1.028275, -0.047655, 0.35258)
+shape = SubResource("volumen_50")
+
+[node name="Volumen5" type="CollisionShape3D" parent="gondola_deposito02/StaticBody3D"]
+position = Vector3(1.028275, -0.047655, 0.35258)
+shape = SubResource("volumen_51")
+
+[node name="Volumen6" type="CollisionShape3D" parent="gondola_deposito02/StaticBody3D"]
+position = Vector3(-1.028275, -0.047655, -0.35258)
+shape = SubResource("volumen_52")
+
+[node name="Volumen7" type="CollisionShape3D" parent="gondola_deposito02/StaticBody3D"]
+position = Vector3(1.028275, -0.047655, -0.35258)
+shape = SubResource("volumen_53")
+
+[node name="Volumen" type="CollisionShape3D" parent="gondola_deposito03/StaticBody3D"]
+position = Vector3(0, 0.598585, 0)
+shape = SubResource("volumen_54")
+
+[node name="Volumen2" type="CollisionShape3D" parent="gondola_deposito03/StaticBody3D"]
+position = Vector3(0, 0.063535, 0)
+shape = SubResource("volumen_55")
+
+[node name="Volumen3" type="CollisionShape3D" parent="gondola_deposito03/StaticBody3D"]
+position = Vector3(0, -0.471515, 0)
+shape = SubResource("volumen_56")
+
+[node name="Volumen4" type="CollisionShape3D" parent="gondola_deposito03/StaticBody3D"]
+position = Vector3(-1.028275, -0.047655, 0.35258)
+shape = SubResource("volumen_57")
+
+[node name="Volumen5" type="CollisionShape3D" parent="gondola_deposito03/StaticBody3D"]
+position = Vector3(1.028275, -0.047655, 0.35258)
+shape = SubResource("volumen_58")
+
+[node name="Volumen6" type="CollisionShape3D" parent="gondola_deposito03/StaticBody3D"]
+position = Vector3(-1.028275, -0.047655, -0.35258)
+shape = SubResource("volumen_59")
+
+[node name="Volumen7" type="CollisionShape3D" parent="gondola_deposito03/StaticBody3D"]
+position = Vector3(1.028275, -0.047655, -0.35258)
+shape = SubResource("volumen_60")
+
+[node name="Volumen" type="CollisionShape3D" parent="heladeranueva/StaticBody3D"]
+position = Vector3(-0.098805, 0.17639, -0.77276)
+shape = SubResource("volumen_61")
+
+[node name="Volumen2" type="CollisionShape3D" parent="heladeranueva/StaticBody3D"]
+position = Vector3(-0.591605, 0.17639, -0.10222)
+shape = SubResource("volumen_62")
+
+[node name="Volumen3" type="CollisionShape3D" parent="heladeranueva/StaticBody3D"]
+position = Vector3(-0.04343, 0.17639, 0.48392)
+shape = SubResource("volumen_63")
+
+[node name="Volumen4" type="CollisionShape3D" parent="heladeranueva/StaticBody3D"]
+position = Vector3(-0.04343, 1.377375, -0.14442)
+shape = SubResource("volumen_64")
+
+[node name="Volumen5" type="CollisionShape3D" parent="heladeranueva/StaticBody3D"]
+position = Vector3(-0.043095, -0.786085, -0.144415)
+shape = SubResource("volumen_65")
+
+[node name="Volumen6" type="CollisionShape3D" parent="heladeranueva/StaticBody3D"]
+position = Vector3(0.414678, -0.59157, -0.144415)
+shape = SubResource("volumen_66")
+
+[node name="Volumen7" type="CollisionShape3D" parent="heladeranueva/StaticBody3D"]
+position = Vector3(-0.116405, 0.410405, -0.709235)
+shape = SubResource("volumen_67")
+
+[node name="Volumen8" type="CollisionShape3D" parent="heladeranueva/StaticBody3D"]
+position = Vector3(-0.542445, 0.410405, -0.12098)
+shape = SubResource("volumen_68")
+
+[node name="Volumen9" type="CollisionShape3D" parent="heladeranueva/StaticBody3D"]
+position = Vector3(-0.06853, 0.410405, 0.4204)
+shape = SubResource("volumen_69")
+
+[node name="Volumen10" type="CollisionShape3D" parent="heladeranueva/StaticBody3D"]
+position = Vector3(-0.06853, 1.30567, -0.14442)
+shape = SubResource("volumen_70")
+
+[node name="Volumen11" type="CollisionShape3D" parent="heladeranueva/StaticBody3D"]
+position = Vector3(-0.109281, 0.817177, -0.144418)
+shape = SubResource("volumen_71")
+
+[node name="Volumen12" type="CollisionShape3D" parent="heladeranueva/StaticBody3D"]
+position = Vector3(-0.109281, 0.346061, -0.144418)
+shape = SubResource("volumen_72")
+
+[node name="Volumen13" type="CollisionShape3D" parent="heladeranueva/StaticBody3D"]
+position = Vector3(-0.109281, -0.125055, -0.144418)
+shape = SubResource("volumen_73")
+
+[node name="Volumen" type="CollisionShape3D" parent="heladeranueva_001/StaticBody3D"]
+position = Vector3(-0.098805, 0.17639, -0.77276)
+shape = SubResource("volumen_74")
+
+[node name="Volumen2" type="CollisionShape3D" parent="heladeranueva_001/StaticBody3D"]
+position = Vector3(-0.591605, 0.17639, -0.10222)
+shape = SubResource("volumen_75")
+
+[node name="Volumen3" type="CollisionShape3D" parent="heladeranueva_001/StaticBody3D"]
+position = Vector3(-0.04343, 0.17639, 0.48392)
+shape = SubResource("volumen_76")
+
+[node name="Volumen4" type="CollisionShape3D" parent="heladeranueva_001/StaticBody3D"]
+position = Vector3(-0.04343, 1.377375, -0.14442)
+shape = SubResource("volumen_77")
+
+[node name="Volumen5" type="CollisionShape3D" parent="heladeranueva_001/StaticBody3D"]
+position = Vector3(-0.043095, -0.786085, -0.144415)
+shape = SubResource("volumen_78")
+
+[node name="Volumen6" type="CollisionShape3D" parent="heladeranueva_001/StaticBody3D"]
+position = Vector3(0.414678, -0.59157, -0.144415)
+shape = SubResource("volumen_79")
+
+[node name="Volumen7" type="CollisionShape3D" parent="heladeranueva_001/StaticBody3D"]
+position = Vector3(-0.116405, 0.410405, -0.709235)
+shape = SubResource("volumen_80")
+
+[node name="Volumen8" type="CollisionShape3D" parent="heladeranueva_001/StaticBody3D"]
+position = Vector3(-0.542445, 0.410405, -0.12098)
+shape = SubResource("volumen_81")
+
+[node name="Volumen9" type="CollisionShape3D" parent="heladeranueva_001/StaticBody3D"]
+position = Vector3(-0.06853, 0.410405, 0.4204)
+shape = SubResource("volumen_82")
+
+[node name="Volumen10" type="CollisionShape3D" parent="heladeranueva_001/StaticBody3D"]
+position = Vector3(-0.06853, 1.30567, -0.14442)
+shape = SubResource("volumen_83")
+
+[node name="Volumen11" type="CollisionShape3D" parent="heladeranueva_001/StaticBody3D"]
+position = Vector3(-0.109281, 0.817177, -0.144418)
+shape = SubResource("volumen_84")
+
+[node name="Volumen12" type="CollisionShape3D" parent="heladeranueva_001/StaticBody3D"]
+position = Vector3(-0.109281, 0.346061, -0.144418)
+shape = SubResource("volumen_85")
+
+[node name="Volumen13" type="CollisionShape3D" parent="heladeranueva_001/StaticBody3D"]
+position = Vector3(-0.109281, -0.125055, -0.144418)
+shape = SubResource("volumen_86")
+
+[node name="Volumen" type="CollisionShape3D" parent="puerta/StaticBody3D"]
+position = Vector3(0, 0.39183, 0)
+shape = SubResource("volumen_de_la_puerta")
+
+[node name="Volumen" type="CollisionShape3D" parent="puerta2/StaticBody3D"]
+position = Vector3(0, 0.39183, 0)
+shape = SubResource("volumen_de_la_puerta2")
+
+[node name="Volumen" type="CollisionShape3D" parent="base compu/StaticBody3D"]
+shape = SubResource("volumen_87")
+
+[node name="Volumen2" type="CollisionShape3D" parent="base compu/StaticBody3D"]
+shape = SubResource("volumen_88")
+
+[node name="Volumen" type="CollisionShape3D" parent="reloj/StaticBody3D"]
+shape = SubResource("volumen_89")
+
+[node name="CollisionShape3D" parent="inodoro/StaticBody3D"]
+disabled = true
+
+[node name="Volumen" type="CollisionShape3D" parent="inodoro/StaticBody3D"]
+shape = SubResource("volumen_90")
+
+[node name="Volumen2" type="CollisionShape3D" parent="inodoro/StaticBody3D"]
+shape = SubResource("volumen_91")
+
+[node name="Volumen3" type="CollisionShape3D" parent="inodoro/StaticBody3D"]
+shape = SubResource("volumen_92")

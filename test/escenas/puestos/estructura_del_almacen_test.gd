@@ -6,6 +6,7 @@
 extends GdUnitTestSuite
 
 const ESCENA_DE_LA_ESTRUCTURA := "res://src/escenas/puestos/estructura_del_almacen.tscn"
+const ESCENA_DEL_ALMACEN := "res://src/escenas/almacen.tscn"
 
 ## La malla que trae la cáscara del edificio: paredes, piso y techo en una sola pieza. Sin su
 ## colisión el jugador no se cae al vacío, atraviesa las paredes y sale del almacén, y el
@@ -23,6 +24,9 @@ const ANCLAJES := [ANCLAJE_DE_LA_ESTANTERIA, "base compu"]
 ## en verde—.
 const PLANTA_MINIMA_EN_METROS := 10.0
 const PLANTA_MAXIMA_EN_METROS := 100.0
+
+## A qué altura del piso se mira si un vano quedó libre, en metros: a media puerta.
+const ALTO_DEL_VANO := 1.2
 
 
 func _estructura() -> Node3D:
@@ -150,7 +154,7 @@ func test_el_colisionador_de_un_anclaje_cuelga_del_nodo_que_lo_nombra() -> void:
 	# afirmaba nadie: se iban a enterar de golpe.
 	#
 	# El almacén completo resuelve los enlaces de los puestos y crea el espacio físico del rayo.
-	var almacen: Node3D = auto_free(load("res://src/escenas/almacen.tscn").instantiate())
+	var almacen: Node3D = auto_free(load(ESCENA_DEL_ALMACEN).instantiate())
 	add_child(almacen)
 	var estructura: Node3D = almacen.get_node("Estructura")
 	await get_tree().physics_frame
@@ -182,4 +186,57 @@ func test_el_colisionador_de_un_anclaje_cuelga_del_nodo_que_lo_nombra() -> void:
 			)
 		)
 		. is_equal(ANCLAJE_DE_LA_ESTANTERIA)
+	)
+
+
+## La estructura adentro del almacén entero, que le resuelve los enlaces a los puestos.
+func _estructura_en_el_arbol() -> Node3D:
+	var almacen: Node3D = auto_free(load(ESCENA_DEL_ALMACEN).instantiate())
+	add_child(almacen)
+	await get_tree().physics_frame
+	return almacen.get_node("Estructura")
+
+
+## Los volúmenes del edificio no tapan los pasos: las dos puertas y la ventanilla.
+func test_las_paredes_con_volumen_dejan_libres_los_vanos() -> void:
+	var estructura: Node3D = await _estructura_en_el_arbol()
+	var espacio := estructura.get_world_3d().direct_space_state
+	var vidrio: Node3D = estructura.get_node("Ventanilla/Vidrio")
+	var vanos := {"la ventanilla": vidrio.global_position}
+	for paso in ["PasoAlFondo", "PasoAlDeposito"]:
+		var suelo: Node3D = estructura.get_node("SueloSolido/" + paso)
+		vanos[paso] = suelo.global_position + Vector3.UP * ALTO_DEL_VANO
+	var paredes: CollisionObject3D = estructura.get_node("almacen/Volumen")
+	for vano: String in vanos:
+		var consulta := PhysicsPointQueryParameters3D.new()
+		consulta.position = vanos[vano]
+		consulta.collision_mask = paredes.collision_layer
+		(
+			assert_array(espacio.intersect_point(consulta))
+			. override_failure_message("el volumen de las paredes tapa %s" % vano)
+			. is_empty()
+		)
+
+
+## El rincón de adentro de la L del mostrador es donde se para el empleado: ningún volumen lo
+## rellena.
+func test_el_rincon_del_mostrador_sigue_libre_para_el_empleado() -> void:
+	var estructura: Node3D = await _estructura_en_el_arbol()
+	var mostrador: MeshInstance3D = estructura.get_node("EscritorioComputadora")
+	var limites := mostrador.global_transform * mostrador.get_aabb()
+	var brazo: CollisionShape3D = mostrador.get_node("StaticBody3D/Volumen")
+	var otro: CollisionShape3D = mostrador.get_node("StaticBody3D/Volumen2")
+	var fondo_del_brazo: float = brazo.global_position.z + (brazo.shape as BoxShape3D).size.z / 2.0
+	var costado_del_otro: float = otro.global_position.x + (otro.shape as BoxShape3D).size.x / 2.0
+	var rincon := Vector3(
+		(costado_del_otro + limites.end.x) / 2.0,
+		limites.get_center().y,
+		(fondo_del_brazo + limites.end.z) / 2.0
+	)
+	var consulta := PhysicsPointQueryParameters3D.new()
+	consulta.position = rincon
+	(
+		assert_array(estructura.get_world_3d().direct_space_state.intersect_point(consulta))
+		. override_failure_message("un volumen rellena el rincón del mostrador en %v" % rincon)
+		. is_empty()
 	)

@@ -103,6 +103,13 @@ un objeto que no se apoyó.
 CUANDO un objeto cae desde la altura de la mano o más, el sistema DEBE dejarlo apoyado sobre el
 piso. El caso que decide es el producto más delgado.
 
+### BR-PLY-015 — Lo que se agarra no queda adentro de un sólido fijo
+
+CUANDO algo que se agarra se suelta, se empuja o se duerme, el sistema DEBE dejarlo sin
+superponerse con el material de ningún sólido fijo: un mueble, una pared, el techo o la fachada.
+Apoyado contra una cara, o encima, no es superponerse. El caso que decide es el objeto más chico
+contra el sólido más delgado.
+
 ## Criterios de aceptación
 
 ### AC-PLY-001 — La diagonal no corre *(verifica BR-PLY-001)*
@@ -184,6 +191,50 @@ todos están dormidos, y ninguno pasa de 0,02 rad/s después del segundo 2.
 DADO el producto más delgado soltado desde 1,5 metros ENTONCES su altura mínima no baja del plano
 del piso menos 5 centímetros.
 
+### AC-PLY-017 — Adentro de un mueble no hay lugar *(verifica BR-PLY-015)*
+
+DADO una caja puesta entera adentro del mostrador, apoyada en el piso CUANDO el juego pregunta si
+la caja entra ahí ENTONCES contesta que no: el mueble ocupa ese lugar.
+
+### AC-PLY-018 — La caja soltada pegada no entra al empujarla *(verifica BR-PLY-015)*
+
+DADO una caja soltada pegada al mostrador CUANDO el jugador camina contra ella hasta quedar
+bloqueado, y sigue caminando ENTONCES la caja no se superpone con el mostrador y la mira la puede
+enfocar.
+
+### AC-PLY-019 — La unidad no entra en una pared *(verifica BR-PLY-015)*
+
+DADO una unidad de producto en la mano CUANDO se la suelta contra una pared, en cualquiera de
+tres giros y cuatro alturas de la mira ENTONCES no se superpone con la pared y la mira la puede
+enfocar.
+
+### AC-PLY-020 — La unidad no entra en el mostrador *(verifica BR-PLY-015)*
+
+DADO una unidad de producto en la mano CUANDO se la suelta contra el mostrador, en cualquiera de
+tres giros y cuatro alturas de la mira ENTONCES no se superpone con el mostrador y la mira la
+puede enfocar.
+
+### AC-PLY-021 — La caja se sigue apoyando en un estante del depósito *(verifica BR-PLY-015)*
+
+DADO una caja en la mano CUANDO se la suelta mirando un estante del depósito ENTONCES queda
+apoyada en el estante.
+
+### AC-PLY-022 — La caja se sigue apoyando arriba del mostrador *(verifica BR-PLY-015)*
+
+DADO una caja en la mano CUANDO se la suelta mirando la tapa del mostrador ENTONCES queda
+apoyada arriba del mostrador.
+
+### AC-PLY-023 — La caja se sigue apilando *(verifica BR-PLY-015)*
+
+DADO una caja apoyada en el piso CUANDO se suelta otra mirando su tapa ENTONCES la segunda queda
+apoyada encima de la primera.
+
+### AC-PLY-024 — La unidad se sigue dejando adentro de la heladera *(verifica BR-PLY-015)*
+
+DADO una unidad de producto soltada adentro de la heladera CUANDO pasa un segundo de física
+ENTONCES sigue adentro de la heladera, no se superpone con sus paneles y la mira la puede
+enfocar.
+
 ## No objetivos
 
 - Esta capacidad NO decide qué esconde un objeto: eso es de
@@ -219,3 +270,9 @@ del piso menos 5 centímetros.
   - Decide: el dueño del repo, jugando.
   - Bloquea: nada. Movería `BR-PLY-007` y el tercer criterio de
     [`store-cleanup`](../store-cleanup/store-cleanup.md).
+
+- **OQ-PLY-002 — ¿Qué hace la hoja de una puerta con lo que encuentra en su recorrido?**
+  - Por qué sigue abierta: la hoja se mueve sin empujar, y le pasa a través a lo que tiene
+    adelante. Si lo arrastra, lo frena o lo atraviesa no está decidido.
+  - Decide: el dueño del repo.
+  - Bloquea: que `BR-PLY-015` valga también con la hoja en movimiento.
