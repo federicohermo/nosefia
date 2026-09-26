@@ -63,12 +63,16 @@ def ya_comprimido(origen: Path) -> bool:
         return False
     if origen.suffix == ".ogg":
         return True
-    with wave.open(str(origen), "rb") as leido:
-        return (
-            leido.getnchannels() == 1
-            and leido.getframerate() == HZ_DE_EFECTOS
-            and leido.getsampwidth() == 2
-        )
+    # `wave` sólo lee PCM. Un WAV de punto flotante no está en su formato, y lo convierte ffmpeg.
+    try:
+        with wave.open(str(origen), "rb") as leido:
+            return (
+                leido.getnchannels() == 1
+                and leido.getframerate() == HZ_DE_EFECTOS
+                and leido.getsampwidth() == 2
+            )
+    except wave.Error:
+        return False
 
 
 def _filtro_de_bucle(inicio: float, largo: float, cruce: float) -> str:

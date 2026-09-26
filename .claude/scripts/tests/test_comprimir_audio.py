@@ -1,6 +1,7 @@
 """El compresor de audio decide bien sin correr `ffmpeg`: la CI no lo tiene instalado."""
 
 import io
+import struct
 import tempfile
 import unittest
 import wave
@@ -16,6 +17,16 @@ def _wav(ruta: Path, canales: int, hz: int) -> Path:
         escrito.setsampwidth(2)
         escrito.setframerate(hz)
         escrito.writeframes(b"\x00\x00" * canales * 10)
+    return ruta
+
+
+def _wav_de_punto_flotante(ruta: Path) -> Path:
+    # `wave` no escribe este formato, así que la cabecera va a mano. El 3 es punto flotante.
+    fmt = struct.pack("<HHIIHH", 3, 1, 22050, 22050 * 4, 4, 32)
+    datos = b"\x00" * 8
+    cuerpo = b"WAVEfmt " + struct.pack("<I", len(fmt)) + fmt
+    cuerpo += b"data" + struct.pack("<I", len(datos)) + datos
+    ruta.write_bytes(b"RIFF" + struct.pack("<I", len(cuerpo)) + cuerpo)
     return ruta
 
 
@@ -70,6 +81,11 @@ class YaComprimido(unittest.TestCase):
         with tempfile.TemporaryDirectory() as carpeta:
             wav = _wav(Path(carpeta) / "SFX_Listo.wav", 1, 22050)
             self.assertTrue(ca.ya_comprimido(wav))
+
+    def test_un_wav_de_punto_flotante_pasa_por_el_script(self) -> None:
+        with tempfile.TemporaryDirectory() as carpeta:
+            wav = _wav_de_punto_flotante(Path(carpeta) / "SFX_Float.wav")
+            self.assertFalse(ca.ya_comprimido(wav))
 
 
 class Comprimir(unittest.TestCase):
