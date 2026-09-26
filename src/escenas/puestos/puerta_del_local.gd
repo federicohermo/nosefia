@@ -4,17 +4,25 @@
 ## test; acá viven la bisagra, el sentido y la aritmética de transformadas, que son geometría de
 ## la escena y no una regla del juego.
 ##
-## **Gira la hoja y no este cuerpo**: el script está pegado al `StaticBody3D` que el sufijo
-## `-col` del modelo cuelga de la malla, así que mover al padre se lleva la colisión con la
-## malla y el vano queda libre de verdad. Al revés —girar sólo el cuerpo— dejaría la puerta
-## dibujada en el vano y atravesable, y la escena cargaría sin un solo error.
+## **Gira la hoja y no este cuerpo**: el script está pegado a un cuerpo hijo de la malla, así
+## que mover al padre se lleva la colisión con la malla y el vano queda libre de verdad. Al
+## revés —girar sólo el cuerpo— dejaría la puerta dibujada en el vano y atravesable, y la escena
+## cargaría sin un solo error.
+##
+## **El cuerpo es animable y no estático.** Un estático movido a mano le pasa a través a lo que
+## tiene adelante y no lo despierta. Uno animable lo empuja: el motor arrastra lo suelto sin
+## código propio. El `.tscn` no le puede cambiar el tipo al cuerpo que trae el modelo, y por eso
+## éste es nuevo y el del modelo queda con la forma apagada.
 ##
 ## Va en `puestos/` y no en `objetos/`, que es el criterio de esa carpeta —cuántas instancias
 ## hay—: de éstas hay una por vano y viven cableadas.
 ##
 ## No declara un nombre global a propósito: es cáscara, nadie la nombra desde abajo, y el `.tscn`
 ## que la usa la trae con su script puesto.
-extends StaticBody3D
+extends AnimatableBody3D
+
+## La hoja dejó de girar. Sale una vez por movimiento, en el paso en que queda quieta.
+signal hoja_quieta(cuerpo: PhysicsBody3D)
 
 ## La malla que gira, que es el padre de este cuerpo. Entra por `@export` y no con un
 ## `get_parent()` para que el `.tscn` diga qué se mueve en vez de que lo suponga el script.
@@ -34,6 +42,14 @@ var _cerrada: Transform3D
 ## El punto por el que pasa el eje, en coordenadas del padre.
 var _bisagra: Vector3
 
+var _girando := false
+
+## Dónde va este cuerpo respecto de la hoja. **El cuerpo no sigue a la hoja solo**: un cuerpo
+## animable sincronizado con la física sólo se entera de su propia transformada, no de la del
+## padre. Medido el 2026-09-26: con la hoja girando, el cuerpo del servidor no se movía. Por eso
+## va suelto de la jerarquía y el giro se le escribe a él.
+var _desde_la_hoja: Transform3D
+
 
 func _ready() -> void:
 	_cerrada = hoja.transform
@@ -42,6 +58,8 @@ func _ready() -> void:
 	# del que la abre en vez de barrerlo. El muro no lo limita: las cuatro combinaciones de
 	# borde y sentido dejan libre el barrido.
 	_bisagra = _cerrada * Vector3(hoja.get_aabb().position.x, 0.0, 0.0)
+	_desde_la_hoja = hoja.global_transform.affine_inverse() * global_transform
+	top_level = true
 
 
 ## El contrato de «con esto se puede interactuar» es este método más el grupo del `.tscn`.
@@ -62,7 +80,13 @@ func puerta() -> Puerta:
 ## interpolación, la hoja se dibujaría girando hasta cerrarse.
 func cerrar_de_golpe() -> void:
 	_puerta.cerrar_de_golpe()
+	_girando = false
+	# Sin sincronizar con la física, el cuerpo salta a su lugar en vez de barrer el recorrido y
+	# llevarse por delante lo que haya en el vano.
+	sync_to_physics = false
 	hoja.transform = _cerrada
+	global_transform = hoja.global_transform * _desde_la_hoja
+	sync_to_physics = true
 	hoja.reset_physics_interpolation()
 
 
@@ -71,3 +95,9 @@ func cerrar_de_golpe() -> void:
 func _physics_process(delta: float) -> void:
 	var giro := Basis(Vector3.UP, _puerta.avanzar(delta))
 	hoja.transform = Transform3D(giro, _bisagra - giro * _bisagra) * _cerrada
+	global_transform = hoja.global_transform * _desde_la_hoja
+	if not _puerta.quieta():
+		_girando = true
+	elif _girando:
+		_girando = false
+		hoja_quieta.emit(self)

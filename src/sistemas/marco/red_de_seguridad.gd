@@ -23,8 +23,14 @@ const HOLGURA_DEL_APOYO := 0.05
 ## Cuánto deja el motor que un cuerpo vivo apoyado se hunda en lo que lo sostiene.
 const PENETRACION_TOLERADA := "physics/jolt_physics_3d/simulation/penetration_slop"
 
+## La señal de la hoja de una puerta que dejó de girar. La declara la escena de la puerta.
+const SENAL_DE_LA_HOJA_QUIETA := &"hoja_quieta"
+
 @export var agarre: Agarre
 @export var jugador: CharacterBody3D
+
+## Las hojas de las puertas. Al quedar quietas, lo que quedó adentro se rescata.
+@export var puertas: Array[PhysicsBody3D] = []
 
 ## Cada rescate, en orden: el objeto, el sólido, dónde estaba, la clase elegida —o
 ## `Rescate.NINGUNO`— y el aviso. Lo leen los tests.
@@ -41,6 +47,8 @@ func _ready() -> void:
 	if agarre != null:
 		agarre.objeto_soltado.connect(_al_soltar)
 	get_tree().node_added.connect(_vigilar)
+	for puerta in puertas:
+		puerta.connect(SENAL_DE_LA_HOJA_QUIETA, _al_quedar_quieta)
 	for nodo in get_tree().root.find_children("*", "RigidBody3D", true, false):
 		_vigilar(nodo)
 
@@ -126,6 +134,24 @@ func _al_soltar(nodo: Node3D) -> void:
 	if cuerpo == null or cuerpo.collision_layer == 0:
 		return
 	revisar(cuerpo, _al_lado_del_jugador(cuerpo))
+
+
+## Lo que quedó superpuesto con la hoja quieta. La hoja quieta es un sólido fijo más.
+func _al_quedar_quieta(hoja: PhysicsBody3D) -> void:
+	var espacio := hoja.get_world_3d().direct_space_state
+	var adentro: Array[PhysicsBody3D] = []
+	for forma: CollisionShape3D in hoja.find_children("*", "CollisionShape3D", false, false):
+		var consulta := PhysicsShapeQueryParameters3D.new()
+		consulta.shape = forma.shape
+		consulta.transform = forma.global_transform
+		consulta.exclude = [hoja.get_rid()]
+		for choque in espacio.intersect_shape(consulta, 16):
+			var cuerpo := choque["collider"] as RigidBody3D
+			if cuerpo != null and cuerpo.has_method(ReglasDeLosObjetos.METODO_INTERACTUAR):
+				if not adentro.has(cuerpo):
+					adentro.append(cuerpo)
+	for cuerpo in adentro:
+		revisar(cuerpo)
 
 
 ## Sólo los rígidos vivos: una caja congelada se mira al soltarla y al terminar el empujón.

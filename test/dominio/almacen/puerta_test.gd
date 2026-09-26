@@ -70,3 +70,18 @@ func test_despues_de_cerrar_de_golpe_se_porta_como_nueva() -> void:
 	puerta.cerrar_de_golpe()
 	puerta.alternar()
 	assert_float(puerta.avanzar(10.0)).is_equal(Puerta.ANGULO_ABIERTA)
+
+
+func test_una_puerta_nueva_esta_quieta() -> void:
+	assert_bool(Puerta.new().quieta()).is_true()
+
+
+func test_girando_no_esta_quieta_y_en_el_tope_si() -> void:
+	var puerta := Puerta.new()
+	puerta.alternar()
+	puerta.avanzar(0.1)
+	assert_bool(puerta.quieta()).is_false()
+	puerta.avanzar(10.0)
+	assert_bool(puerta.quieta()).is_false()
+	puerta.avanzar(0.1)
+	assert_bool(puerta.quieta()).is_true()
