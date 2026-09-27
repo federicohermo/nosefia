@@ -131,6 +131,7 @@ func _ready() -> void:
 	# El motor no despierta lo que está sobre una caja empujada. Lo hace el puesto.
 	for caja: CajaDeProductosDelDeposito in _cajas_de_productos:
 		caja.empujada.connect(_reposicion_manual.despertar_lo_de_arriba)
+	add_child(EnlaceDeGuardado.new(_ciclo, Guardado.new()))
 	_ciclo.arrancar(_partida, _reloj)
 	_reposicion_manual.preparar()
 

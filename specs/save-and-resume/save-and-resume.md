@@ -1,7 +1,7 @@
 ---
 schema_version: 1
 capability_id: CAP-SAV
-status: draft
+status: ratified
 owner: por definir
 provenance: GDD «checkpoint al final de cada noche»; migración de los specs 019, 020, 036
 ---
@@ -103,7 +103,8 @@ partida nueva.
 ### AC-SAV-001 — El cierre guarda una vez *(verifica BR-SAV-001)*
 
 DADO una partida en curso CUANDO cierra la jornada 3 ENTONCES se guarda **exactamente una vez**,
-con la partida sin terminar, y lo guardado devuelve esa jornada y esos apercibimientos.
+con la partida sin terminar. Lo guardado devuelve la jornada que sigue, la que la partida
+tiene por abrir, y esos apercibimientos.
 
 ### AC-SAV-002 — El último cierre borra *(verifica BR-SAV-002)*
 
