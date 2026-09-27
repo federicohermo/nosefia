@@ -7,7 +7,7 @@ const APERCIBIMIENTOS := "apercibimientos"
 
 
 func _guardado() -> Guardado:
-	var guardado: Guardado = auto_free(Guardado.new())
+	var guardado := Guardado.new()
 	guardado.ruta = create_temp_dir("guardado").path_join("partida.guardado")
 	guardado.borrar()
 	return guardado

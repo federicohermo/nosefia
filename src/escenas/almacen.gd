@@ -60,7 +60,7 @@ const Jugador := preload("res://src/escenas/jugador.gd")
 
 ## La partida es de la escena y no del ciclo porque también la mira el HUD: el ciclo publica lo
 ## que pasó, y quien quiera un número lo pide acá. Sale del guardado: sin guardado, es nueva.
-var _partida: Partida
+var _partida := Partida.desde(Guardado.new().cargar())
 
 
 ## Los carteles se pintan acá antes de conectar nada, y no con un `text` escrito en `hud.tscn`:
@@ -68,9 +68,6 @@ var _partida: Partida
 ## obligatorias hay y a cuántos apercibimientos echan—, y el de apercibimientos se quedaría en
 ## pantalla la jornada entera, porque hasta el cierre nadie lo vuelve a escribir.
 func _ready() -> void:
-	var guardado := Guardado.new()
-	add_child(guardado)
-	_partida = Partida.desde(guardado.cargar())
 	var marco := MarcoDelObjetivo.new()
 	add_child(marco)
 	_jugador.objetivo_enfocado.connect(marco.enfocar)

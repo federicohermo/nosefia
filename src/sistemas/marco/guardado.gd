@@ -2,9 +2,9 @@
 ##
 ## Qué es legible y cómo se completa lo decide `PartidaSerializada`. Acá sólo está el disco.
 class_name Guardado
-extends Node
+extends RefCounted
 
-@export var ruta: String = "user://partida.guardado"
+var ruta: String = "user://partida.guardado"
 
 
 ## Devuelve si la escritura llegó al disco. Una que falla no interrumpe a nadie.

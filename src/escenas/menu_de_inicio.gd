@@ -13,8 +13,9 @@ const TEXTOS: Dictionary[MenuDeInicio.Opcion, String] = {
 
 @export var _opciones: VBoxContainer
 @export var _pedidos: PedidosDelMenu
-@export var _guardado: Guardado
 @export var _confirmacion: ConfirmationDialog
+
+var _guardado := Guardado.new()
 
 
 func _ready() -> void:

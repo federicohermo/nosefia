@@ -18,7 +18,7 @@ func _pedidos(hay_guardado: bool = false) -> PedidosDelMenu:
 	_salidas = 0
 	_continuaciones = 0
 	_confirmaciones = 0
-	_guardado = auto_free(Guardado.new())
+	_guardado = Guardado.new()
 	_guardado.ruta = create_temp_dir("pedidos").path_join("partida.guardado")
 	_guardado.borrar()
 	if hay_guardado:

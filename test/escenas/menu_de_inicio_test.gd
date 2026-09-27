@@ -26,13 +26,13 @@ func before_test() -> void:
 ## lee en `_ready()`, y la partida real del usuario no puede decidir un test.
 func _menu() -> Control:
 	var menu: Control = auto_free(load(ESCENA_DEL_MENU).instantiate())
-	(menu.get_node("Guardado") as Guardado).ruta = _ruta
+	(menu.get("_guardado") as Guardado).ruta = _ruta
 	add_child(menu)
 	return menu
 
 
 func _con_guardado() -> void:
-	var guardado: Guardado = auto_free(Guardado.new())
+	var guardado := Guardado.new()
 	guardado.ruta = _ruta
 	guardado.escribir(PartidaSerializada.sanear({}))
 
@@ -97,7 +97,7 @@ func test_un_guardado_corrupto_deja_continuar_cerrado_y_se_borra() -> void:
 
 
 func test_un_guardado_futuro_deja_continuar_cerrado_y_el_archivo_intacto() -> void:
-	var guardado: Guardado = auto_free(Guardado.new())
+	var guardado := Guardado.new()
 	guardado.ruta = _ruta
 	var futuro := PartidaSerializada.sanear({})
 	futuro[PartidaSerializada.CLAVE_DE_VERSION] = PartidaSerializada.VERSION + 1

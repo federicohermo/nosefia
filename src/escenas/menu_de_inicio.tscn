@@ -1,12 +1,11 @@
-[gd_scene load_steps=6 format=3]
+[gd_scene load_steps=5 format=3]
 
 [ext_resource type="Script" path="res://src/escenas/menu_de_inicio.gd" id="1"]
 [ext_resource type="Theme" path="res://assets/ui/manada/tema.tres" id="2"]
 [ext_resource type="Texture2D" path="res://assets/ui/manada/fondo_inicio.png" id="3"]
 [ext_resource type="Script" path="res://src/sistemas/marco/pedidos_del_menu.gd" id="4"]
-[ext_resource type="Script" path="res://src/sistemas/marco/guardado.gd" id="5"]
 
-[node name="MenuDeInicio" type="Control" node_paths=PackedStringArray("_opciones", "_pedidos", "_guardado", "_confirmacion")]
+[node name="MenuDeInicio" type="Control" node_paths=PackedStringArray("_opciones", "_pedidos", "_confirmacion")]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -17,7 +16,6 @@ theme = ExtResource("2")
 script = ExtResource("1")
 _opciones = NodePath("Opciones")
 _pedidos = NodePath("PedidosDelMenu")
-_guardado = NodePath("Guardado")
 _confirmacion = NodePath("Confirmacion")
 
 [node name="Fondo" type="TextureRect" parent="."]
@@ -64,9 +62,6 @@ grow_horizontal = 2
 
 [node name="PedidosDelMenu" type="Node" parent="."]
 script = ExtResource("4")
-
-[node name="Guardado" type="Node" parent="."]
-script = ExtResource("5")
 
 [node name="Confirmacion" type="ConfirmationDialog" parent="."]
 title = "NUEVO JUEGO"
