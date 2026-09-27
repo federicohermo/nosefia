@@ -28,11 +28,15 @@ const CAPAS_DE_ABAJO := ["res://src/dominio", "res://src/sistemas"]
 
 const JORNADA_DE_PRUEBA := 3
 
+const TEMA := "res://assets/ui/manada/tema.tres"
+
 var _despachos: int = 0
+var _opciones_despachadas: Array[ParteDeCierre.Opcion] = []
 
 
 func before_test() -> void:
 	_despachos = 0
+	_opciones_despachadas.clear()
 
 
 func test_la_pantalla_arranca_invisible() -> void:
@@ -85,7 +89,9 @@ func test_el_aviso_de_riesgo_sale_del_parte_y_se_esconde_con_el_legajo_limpio() 
 	assert_str(riesgo.text).is_equal(en_riesgo.aviso_de_riesgo())
 	assert_bool(riesgo.visible).is_true()
 
-	pantalla.mostrar(ParteDeCierre.new(JORNADA_DE_PRUEBA, Apertura.obligatorias(), 0))
+	pantalla.mostrar(
+		ParteDeCierre.new(JORNADA_DE_PRUEBA, Apertura.obligatorias(), 0, Partida.Final.EN_CURSO)
+	)
 	assert_bool(riesgo.visible).is_false()
 
 
@@ -112,7 +118,68 @@ func test_el_boton_de_continuar_despacha_el_cierre() -> void:
 	var boton: Button = pantalla.get_node("Fondo/Panel/Continuar")
 	boton.pressed.emit()
 	assert_int(_despachos).is_equal(1)
+	assert_array(_opciones_despachadas).is_equal([ParteDeCierre.Opcion.SEGUIR])
 	assert_bool(pantalla.visible).is_false()
+
+
+func test_con_la_partida_en_curso_la_placa_ofrece_seguir_y_volver_al_menu() -> void:  # AC-EMP-016
+	var pantalla := await _pantalla()
+	pantalla.mostrar(_parte())
+	var seguir: Button = pantalla.get_node("Fondo/Panel/Continuar")
+	var volver: Button = pantalla.get_node("Fondo/Panel/VolverAlMenu")
+	assert_bool(seguir.visible).is_true()
+	assert_bool(volver.visible).is_true()
+	assert_str(seguir.text).is_equal(PantallaDeCierre.TEXTOS[ParteDeCierre.Opcion.SEGUIR])
+	assert_str(volver.text).is_equal("VOLVER AL MENÚ")
+	assert_bool(seguir.has_focus()).is_true()
+
+
+func test_con_la_partida_terminada_la_placa_ofrece_solo_volver_al_menu() -> void:  # AC-EMP-016
+	var pantalla := await _pantalla()
+	pantalla.mostrar(
+		ParteDeCierre.new(JORNADA_DE_PRUEBA, Apertura.obligatorias(), 5, Partida.Final.DESPEDIDO)
+	)
+	var seguir: Button = pantalla.get_node("Fondo/Panel/Continuar")
+	var volver: Button = pantalla.get_node("Fondo/Panel/VolverAlMenu")
+	assert_bool(seguir.visible).is_false()
+	assert_bool(volver.visible).is_true()
+	assert_bool(volver.has_focus()).is_true()
+
+
+func test_volver_al_menu_despacha_su_opcion() -> void:
+	var pantalla := await _pantalla()
+	pantalla.cierre_despachado.connect(_anotar_despacho)
+	pantalla.mostrar(_parte())
+	var volver: Button = pantalla.get_node("Fondo/Panel/VolverAlMenu")
+	volver.pressed.emit()
+	assert_array(_opciones_despachadas).is_equal([ParteDeCierre.Opcion.VOLVER_AL_MENU])
+	assert_bool(pantalla.visible).is_false()
+
+
+func test_la_placa_usa_el_tema_de_manada_sin_estilos_propios() -> void:
+	var texto := FileAccess.get_file_as_string(ESCENA)
+	assert_str(texto).contains(TEMA)
+	assert_str(texto).not_contains("theme_override_")
+	var pantalla := await _pantalla()
+	for nombre: String in ["Continuar", "VolverAlMenu"]:
+		var boton: Button = pantalla.get_node("Fondo/Panel/" + nombre)
+		assert_str(boton.theme_type_variation).is_equal("BotonContinuar")
+	var tema: Theme = load(TEMA)
+	assert_str(tema.get_type_variation_base("BotonContinuar")).is_equal("Button")
+	for estilo: String in ["normal", "hover", "focus", "pressed"]:
+		assert_bool(tema.has_stylebox(estilo, "BotonContinuar")).is_true()
+
+
+func test_la_placa_escala_con_el_lienzo_de_manada() -> void:
+	var pantalla := await _pantalla()
+	var marco: Control = pantalla.get_node("Fondo/Panel")
+	var visible := pantalla.get_viewport().get_visible_rect().size
+	var esperado := minf(
+		visible.x / LienzoDeManada.TAMANO_DEL_DISENO.x,
+		visible.y / LienzoDeManada.TAMANO_DEL_DISENO.y
+	)
+	assert_vector(marco.scale).is_equal_approx(Vector2.ONE * esperado, Vector2.ONE * 1e-4)
+	assert_vector(marco.size).is_equal(LienzoDeManada.TAMANO_DEL_DISENO)
 
 
 func test_la_pantalla_no_decide_como_cerro_la_noche() -> void:
@@ -167,15 +234,16 @@ func _pantalla() -> PantallaDeCierre:
 
 
 func _parte() -> ParteDeCierre:
-	return ParteDeCierre.new(JORNADA_DE_PRUEBA, Apertura.obligatorias(), 1)
+	return ParteDeCierre.new(JORNADA_DE_PRUEBA, Apertura.obligatorias(), 1, Partida.Final.EN_CURSO)
 
 
 func _etiqueta(pantalla: PantallaDeCierre, nombre: String) -> Label:
 	return pantalla.get_node("Fondo/Panel/" + nombre)
 
 
-func _anotar_despacho() -> void:
+func _anotar_despacho(opcion: ParteDeCierre.Opcion) -> void:
 	_despachos += 1
+	_opciones_despachadas.append(opcion)
 
 
 ## Las líneas de código que abren una condición. Corta en el primer `#`, así que las palabras de

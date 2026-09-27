@@ -319,6 +319,15 @@ func reanudar() -> void:
 	_control.reanudar()
 
 
+## Pone al jugador en `lugar`, quieto y con la vista horizontal hacia donde mira `lugar`.
+func ubicar(lugar: Transform3D) -> void:
+	global_position = lugar.origin
+	velocity = Vector3.ZERO
+	_control.orientar(lugar.basis.get_euler().y)
+	_aplicar_la_rotacion()
+	reset_physics_interpolation()
+
+
 ## Qué `id` del dominio se está llevando en la mano, o `SIN_ID`.
 ##
 ## La única puerta por la que otra escena pregunta qué lleva el jugador — la piden los tres

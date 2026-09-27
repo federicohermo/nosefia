@@ -30,6 +30,8 @@ const PuertaDelLocal := preload("res://src/escenas/puestos/puerta_del_local.gd")
 ## `@export` de abajo no lo puede nombrar sin traerlo por `preload`.
 const Jugador := preload("res://src/escenas/jugador.gd")
 
+const ESCENA_DEL_MENU := "res://src/escenas/menu_de_inicio.tscn"
+
 @export var _hud: Hud
 @export var _reloj: RelojDelTurno
 @export var _ciclo: CicloDeJornadas
@@ -58,9 +60,17 @@ const Jugador := preload("res://src/escenas/jugador.gd")
 ## Los muebles con los que el jugador choca por su contorno y no por su malla.
 @export var _muebles_con_contorno: Array[PhysicsBody3D]
 
+## Donde el jugador arranca cada noche. Es geometría de la escena, y por eso no es un número del
+## dominio: mover la puerta mueve el nodo.
+@export var _arranque: Marker3D
+
 ## La partida es de la escena y no del ciclo porque también la mira el HUD: el ciclo publica lo
 ## que pasó, y quien quiera un número lo pide acá.
 var _partida := Partida.nueva()
+
+## Cómo se sale al menú. Es una variable y no una llamada directa porque un test no puede
+## cambiar de escena: se llevaría puesto al runner.
+var _ir_al_menu: Callable = volver_al_menu
 
 
 ## Los carteles se pintan acá antes de conectar nada, y no con un `text` escrito en `hud.tscn`:
@@ -94,9 +104,6 @@ func _ready() -> void:
 	# **Una sola conexión**: el 017 y el 008 llegaron por separado al mismo `jornada_abierta`, y
 	# conectarlo dos veces es un error de Godot, no dos llamadas.
 	_ciclo.jornada_abierta.connect(_al_abrir_la_jornada)
-	# La placa es quien abre la noche siguiente, y por eso el ciclo no reabre solo: entre una
-	# jornada y la otra hay algo que leer.
-	_pantalla.cierre_despachado.connect(_al_despachar_la_placa)
 	# El audio se ata **por nombre de señal** y no nombrando a nadie: la lista de fuentes se le
 	# pasa entera y el enlazador conecta las que existan. Una señal que todavía no está deja su
 	# fila declarada sin fuente en vez de romper algo.
@@ -153,6 +160,7 @@ func _al_abrir_la_jornada(_jornada: int) -> void:
 	# está ahí.
 	_jugador.examen.terminar()
 	_agarre.vaciar_las_manos()
+	_jugador.ubicar(_arranque.global_transform)
 	_hud.declarar_obligatorias(Apertura.cantidad_de_obligatorias())
 	# **Un solo inventario para las dos obligatorias**: reponer lo llena y la ventanilla lo
 	# vacía. Construir uno por tarea daría dos stocks del mismo producto, y las dos ventanas
@@ -200,15 +208,31 @@ func _al_cerrar_la_jornada(jornada: int, cumplidas: int) -> void:
 		)
 	)
 	# Sin esto la placa es inalcanzable jugando: el jugador clava el puntero en el centro cada
-	# cuadro y el botón «Seguir» cae más abajo, así que no se puede clickear nunca y la jornada 2
-	# no existe en la build. La suspensión suelta el cursor sola, porque el modo se recalcula a
-	# partir del estado del control.
+	# cuadro y los botones caen más abajo, así que no se pueden clickear nunca. La suspensión
+	# suelta el cursor sola, porque el modo se recalcula a partir del estado del control.
 	_jugador.suspender()
+	# Una conexión por placa: un segundo despacho de la misma placa no encuentra a nadie, y no
+	# abre dos noches ni carga el menú dos veces.
+	_pantalla.cierre_despachado.connect(_al_despachar_la_placa, CONNECT_ONE_SHOT)
 
 
-## El orden importa y por eso hay un handler en vez de conectar la señal derecho al ciclo: si el
-## jugador se reanudara después de abrir la jornada, el cuadro del medio correría con el control
-## todavía suspendido. Acá no se decide nada — son dos llamadas, siempre las dos.
-func _al_despachar_la_placa() -> void:
+## Qué hace cada opción de la placa. Cuáles se ofrecen lo decidió el parte; acá sólo se busca
+## la acción de la elegida.
+func _al_despachar_la_placa(opcion: ParteDeCierre.Opcion) -> void:
+	var acciones: Dictionary[ParteDeCierre.Opcion, Callable] = {
+		ParteDeCierre.Opcion.SEGUIR: _seguir,
+		ParteDeCierre.Opcion.VOLVER_AL_MENU: _ir_al_menu,
+	}
+	acciones[opcion].call()
+
+
+## El orden importa: si el jugador se reanudara después de abrir la jornada, el cuadro del medio
+## correría con el control todavía suspendido.
+func _seguir() -> void:
 	_jugador.reanudar()
 	_ciclo.abrir_la_jornada()
+
+
+## Deja la partida y carga el menú de inicio. No abre ninguna jornada.
+func volver_al_menu() -> void:
+	get_tree().change_scene_to_file(ESCENA_DEL_MENU)

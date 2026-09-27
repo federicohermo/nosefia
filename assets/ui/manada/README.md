@@ -23,8 +23,8 @@ Usan las mallas de `contenido_del_estante.tscn`, con la cámara orientada hacia 
 envase. Las de las cabeceras se renderizan sin la inclinación de la rampa.
 No usan productos de ejemplo de Figma que no existen en el registro actual.
 
-El fondo se capturó en Godot a 1920 × 1080, sin HUD, desde la posición inicial del jugador,
-con su cámara apuntando a `(0.5, 1.0, -3.0)`. Conserva los muebles, productos y texturas actuales.
+El fondo se capturó en Godot a 1920 × 1080, sin HUD, desde `(6.58, 1.81, 6.93)`, con la
+cámara apuntando a `(0.5, 1.0, -3.0)`. Conserva los muebles, productos y texturas actuales.
 El velo azul oscuro de la escena de UI aplica el tratamiento visual de Figma sobre esa captura;
 la imagen no contiene modelos ni iluminación tomados del fondo antiguo de Figma.
 

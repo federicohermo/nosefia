@@ -246,6 +246,13 @@ func test_el_jugador_arranca_adentro_del_almacen_y_apoyado_en_el_piso() -> void:
 	for _cuadro in range(CUADROS_DE_FISICA):
 		await get_tree().physics_frame
 	var jugador: CharacterBody3D = almacen.get_node("Jugador")
+	var arranque: Node3D = almacen.get_node("Arranque")
+	var corrimiento := jugador.global_position - arranque.global_position
+	(
+		assert_float(Vector2(corrimiento.x, corrimiento.z).length())
+		. override_failure_message("el jugador no arrancó en el punto de arranque")
+		. is_less(0.05)
+	)
 	(
 		assert_bool(jugador.is_on_floor())
 		. override_failure_message(
@@ -412,6 +419,97 @@ func test_despachar_la_placa_abre_la_noche_siguiente_en_cero() -> void:
 			Hud.TEXTO_DE_LAS_TAREAS % Marcador.tareas(0, Apertura.cantidad_de_obligatorias())
 		)
 	)
+
+
+func test_el_arranque_esta_frente_a_la_entrada_del_lado_de_adentro() -> void:
+	var almacen := _almacen()
+	var arranque: Node3D = almacen.get_node("Arranque")
+	var entrada: Node3D = almacen.get_node("Estructura/puertaentrada")
+	add_child(almacen)
+	var hacia_la_puerta := entrada.global_position - arranque.global_position
+	hacia_la_puerta.y = 0.0
+	assert_float(hacia_la_puerta.length()).is_less(1.5)
+	# Mira al local: la puerta le queda a la espalda.
+	var frente := -arranque.global_basis.z
+	assert_float(frente.dot(hacia_la_puerta.normalized())).is_less(-0.9)
+	var cascara: MeshInstance3D = almacen.get_node("Estructura/" + CASCARA_DEL_EDIFICIO)
+	var caja: AABB = cascara.global_transform * cascara.get_aabb()
+	assert_bool(caja.has_point(arranque.global_position + Vector3.UP)).is_true()
+
+
+func test_abrir_la_jornada_deja_al_jugador_en_el_arranque() -> void:  # AC-PLY-044
+	var almacen: Node3D = auto_free(load(ESCENA_DEL_ALMACEN).instantiate())
+	add_child(almacen)
+	await get_tree().process_frame
+	var jugador: CharacterBody3D = almacen.get_node("Jugador")
+	var control: ControlDelJugador = jugador.get("_control")
+	var arranque: Node3D = almacen.get_node("Arranque")
+	var reloj: RelojDelTurno = almacen.get_node("Servicios/RelojDelTurno")
+	var pantalla: PantallaDeCierre = almacen.get_node("Interfaz/PantallaDeCierre")
+	jugador.global_position = Vector3(5.0, 0.2, -3.0)
+	jugador.velocity = Vector3(2.0, 0.0, 1.0)
+	control.girar(Vector2(170.0, -90.0))
+	reloj._process(SEGUNDOS_REALES_DE_UN_TURNO)
+	(pantalla.get_node("Fondo/Panel/Continuar") as Button).pressed.emit()
+	assert_vector(jugador.global_position).is_equal_approx(
+		arranque.global_position, Vector3.ONE * 1e-4
+	)
+	assert_vector(jugador.velocity).is_equal(Vector3.ZERO)
+	assert_float(control.yaw()).is_equal_approx(arranque.global_rotation.y, 1e-4)
+	assert_float(control.pitch()).is_equal(0.0)
+	var camara: Camera3D = jugador.get_node("Giro/Camara")
+	assert_float(camara.rotation.x).is_equal(0.0)
+	var frente: Vector3 = jugador.call("frente")
+	assert_vector(frente).is_equal_approx(-arranque.global_basis.z, Vector3.ONE * 1e-4)
+
+
+func test_con_el_despido_la_placa_vuelve_al_menu_y_no_abre_otra_noche() -> void:  # AC-EMP-016
+	var almacen: Node3D = auto_free(load(ESCENA_DEL_ALMACEN).instantiate())
+	# Tres apercibimientos y una noche sin tareas: salta de 3 a 5 sin pisar el 4.
+	almacen.set("_partida", Partida.new(Legajo.con_apercibimientos(3)))
+	add_child(almacen)
+	await get_tree().process_frame
+	var menus := [0]
+	almacen.set("_ir_al_menu", func() -> void: menus[0] += 1)
+	var reloj: RelojDelTurno = almacen.get_node("Servicios/RelojDelTurno")
+	var ciclo: CicloDeJornadas = almacen.get_node("Servicios/CicloDeJornadas")
+	var pantalla: PantallaDeCierre = almacen.get_node("Interfaz/PantallaDeCierre")
+	var aperturas := [0]
+	ciclo.jornada_abierta.connect(func(_jornada: int) -> void: aperturas[0] += 1)
+	reloj._process(SEGUNDOS_REALES_DE_UN_TURNO)
+	assert_int(ciclo.partida().final()).is_equal(Partida.Final.DESPEDIDO)
+	assert_bool(pantalla.visible).is_true()
+	assert_bool((pantalla.get_node("Fondo/Panel/Continuar") as Button).visible).is_false()
+	var volver: Button = pantalla.get_node("Fondo/Panel/VolverAlMenu")
+	assert_bool(volver.visible).is_true()
+	volver.pressed.emit()
+	volver.pressed.emit()
+	assert_int(menus[0]).is_equal(1)
+	assert_int(aperturas[0]).is_zero()
+	assert_bool(reloj.corriendo()).is_false()
+
+
+func test_con_la_partida_en_curso_volver_al_menu_no_abre_la_noche_siguiente() -> void:
+	var almacen: Node3D = auto_free(load(ESCENA_DEL_ALMACEN).instantiate())
+	add_child(almacen)
+	await get_tree().process_frame
+	var menus := [0]
+	almacen.set("_ir_al_menu", func() -> void: menus[0] += 1)
+	var reloj: RelojDelTurno = almacen.get_node("Servicios/RelojDelTurno")
+	var ciclo: CicloDeJornadas = almacen.get_node("Servicios/CicloDeJornadas")
+	var pantalla: PantallaDeCierre = almacen.get_node("Interfaz/PantallaDeCierre")
+	reloj._process(SEGUNDOS_REALES_DE_UN_TURNO)
+	assert_bool(ciclo.partida().terminada()).is_false()
+	(pantalla.get_node("Fondo/Panel/VolverAlMenu") as Button).pressed.emit()
+	assert_int(menus[0]).is_equal(1)
+	assert_int(ciclo.partida().jornada()).is_equal(ReglasDeLaPartida.PRIMERA_JORNADA + 1)
+	assert_bool(reloj.corriendo()).is_false()
+
+
+func test_volver_al_menu_carga_el_menu_de_inicio() -> void:
+	var texto := FileAccess.get_file_as_string(SCRIPT_DEL_ALMACEN)
+	assert_str(texto).contains('"res://src/escenas/menu_de_inicio.tscn"')
+	assert_str(texto).contains("change_scene_to_file(")
 
 
 func test_la_hora_se_lee_en_un_solo_lugar_y_es_el_reloj_de_mesa() -> void:  # AC-SHF-017
