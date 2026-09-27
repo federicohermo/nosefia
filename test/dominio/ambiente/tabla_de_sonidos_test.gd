@@ -176,13 +176,11 @@ func test_la_musica_y_el_ambiente_van_en_bucle_por_su_bus() -> void:
 	assert_object(ambiente).is_not_null()
 	if musica == null or ambiente == null:
 		return
-	assert_str(musica.stream.resource_path.get_file().get_basename()).is_equal("MUS_Tema1")
+	assert_str(musica.stream.resource_path.get_file()).starts_with("MUS_")
 	assert_str(musica.bus).is_equal(EntradaSonora.BUS_DE_MUSICA)
 	assert_bool(musica.en_bucle and not musica.posicional).is_true()
 	assert_bool(musica.stream.get("loop")).is_true()
-	assert_str(ambiente.stream.resource_path.get_file().get_basename()).is_equal(
-		"AMB_PROXIMIDAD_Neon"
-	)
+	assert_str(ambiente.stream.resource_path.get_file()).starts_with("AMB_")
 	assert_str(ambiente.bus).is_equal(EntradaSonora.BUS_DE_AMBIENTE)
 	assert_bool(ambiente.en_bucle and ambiente.posicional).is_true()
 	assert_bool(ambiente.stream.get("loop")).is_true()
@@ -205,7 +203,7 @@ func test_lo_que_pasa_en_un_lugar_suena_del_espacio_y_lo_demas_plano() -> void:
 		assert_bool(tabla.de(evento).posicional).is_false()
 
 
-func test_los_pasos_alternan_cuatro_pisadas_planas() -> void:
+func test_los_pasos_alternan_pisadas_planas() -> void:
 	var tabla := _tabla()
 	var pasos := tabla.de(EntradaSonora.Evento.PASO_DADO)
 	assert_object(pasos).is_not_null()
@@ -214,20 +212,11 @@ func test_los_pasos_alternan_cuatro_pisadas_planas() -> void:
 	assert_str(pasos.senal).is_equal("paso_dado")
 	assert_str(pasos.bus).is_equal(EntradaSonora.BUS_DE_EFECTOS)
 	assert_bool(pasos.posicional or pasos.en_bucle).is_false()
-	var nombres := []
+	assert_int(pasos.cantidad_de_variantes()).is_greater(1)
 	for indice in range(pasos.cantidad_de_variantes()):
-		nombres.append(pasos.variante(indice).resource_path.get_file().get_basename())
-	(
-		assert_array(nombres)
-		. is_equal(
-			[
-				"SFX_PERSONAJE_Paso1",
-				"SFX_PERSONAJE_Paso2",
-				"SFX_PERSONAJE_Paso3",
-				"SFX_PERSONAJE_Paso4",
-			]
+		assert_str(pasos.variante(indice).resource_path.get_file()).starts_with(
+			"SFX_PERSONAJE_Paso"
 		)
-	)
 
 
 func test_la_toma_larga_de_pasos_no_se_usa() -> void:

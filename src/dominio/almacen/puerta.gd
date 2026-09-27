@@ -67,7 +67,6 @@ func avanzar(segundos: float) -> float:
 	return _angulo
 
 
-## Si la hoja no giró en el último `avanzar()`. No dice si llegó al tope: una hoja frenada no
-## llegaría nunca, y la consulta tiene que seguir sirviendo entonces.
+## Si la hoja no giró en el último `avanzar()`.
 func quieta() -> bool:
 	return _quieta

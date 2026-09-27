@@ -22,7 +22,6 @@ signal empujada(caja: Node3D)
 
 var _lugar_de_origen: Transform3D
 var _padre_de_origen: Node = null
-## El mismo lugar en el mundo: en la mano, el padre es la mano y el local ya no dice nada.
 var _origen_en_el_mundo: Transform3D
 
 ## Dónde se apoyó por última vez. Lo pregunta el puesto al levantarla: para cuando avisa que la

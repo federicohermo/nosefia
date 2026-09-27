@@ -43,7 +43,7 @@ func _al_entrar_un_cuerpo(cuerpo: Node3D) -> void:
 
 ## El `id` de lo que entró, o el centinela de «nada» si eso no se presenta.
 func _id_de(cuerpo: Node3D) -> StringName:
-	var datos := cuerpo.get("datos") as ObjetoDelAlmacen
+	var datos := cuerpo.get(ReglasDeLosObjetos.PROPIEDAD_DATOS) as ObjetoDelAlmacen
 	if datos == null:
 		return ObjetoDelAlmacen.SIN_ID
 	return datos.id

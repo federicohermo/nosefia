@@ -11,10 +11,6 @@ extends Node
 
 ## En cuántos anillos se busca alrededor del punto donde entró, hasta el tamaño del objeto.
 const ANILLOS := 3
-const LADOS := 8
-
-## Hasta dónde se busca piso debajo de un candidato, en metros.
-const CAIDA := 3.0
 
 ## Cuánto puede separarse un candidato de lo que lo sostiene y seguir apoyado, en metros.
 const HOLGURA_DEL_APOYO := 0.05
@@ -90,28 +86,21 @@ func revisar(objeto: Node3D, deshacer: Array[Transform3D] = []) -> void:
 		_encima_del_origen(cuerpo),
 		_origen(cuerpo),
 	]
-	var clases: Array[Rescate.Clase] = [
-		Rescate.Clase.DESHACER,
-		Rescate.Clase.ALREDEDOR,
-		Rescate.Clase.ENCIMA_DEL_ORIGEN,
-		Rescate.Clase.ORIGEN,
-	]
-	var candidatos: Array[Rescate.Candidato] = []
+	var libres: Array[bool] = []
 	var lugares: Array[Transform3D] = []
-	for indice in opciones.size():
-		var elegido := _primero_libre(cuerpo, opciones[indice], areas)
-		candidatos.append(Rescate.Candidato.new(clases[indice], not elegido.is_empty()))
+	for opcion in opciones:
+		var elegido := _primero_libre(cuerpo, opcion, areas)
+		libres.append(not elegido.is_empty())
 		lugares.append(Transform3D() if elegido.is_empty() else elegido[0])
-	var eleccion := Rescate.elegir(candidatos)
-	var clase := Rescate.NINGUNO if eleccion == Rescate.NINGUNO else clases[eleccion]
+	var clase := Rescate.elegir(libres)
 	var aviso := _aviso(cuerpo, solido, desde, clase)
 	rescates.append(
 		{"objeto": cuerpo, "solido": solido, "posicion": desde, "clase": clase, "aviso": aviso}
 	)
 	if OS.is_debug_build():
 		push_warning(aviso)
-	if eleccion != Rescate.NINGUNO:
-		_mover(cuerpo, lugares[eleccion])
+	if clase != Rescate.NINGUNO:
+		_mover(cuerpo, lugares[clase])
 
 
 func _vigilar(nodo: Node) -> void:
@@ -307,8 +296,8 @@ func _al_lado_del_jugador(cuerpo: PhysicsBody3D) -> Array[Transform3D]:
 		adelante,
 		radio,
 		_media_altura(cuerpo) * 2.0,
-		CAIDA,
-		LADOS,
+		ReglasDeLosObjetos.CAIDA_HASTA_EL_PISO,
+		ReglasDeLosObjetos.LADOS_ALREDEDOR,
 		cuerpo.collision_mask,
 		[cuerpo.get_rid(), jugador.get_rid()]
 	)
@@ -326,8 +315,8 @@ func _alrededor(cuerpo: PhysicsBody3D) -> Array[Transform3D]:
 			Vector3.FORWARD,
 			_tamano(cuerpo) * anillo / ANILLOS,
 			_media_altura(cuerpo) * 2.0,
-			CAIDA,
-			LADOS,
+			ReglasDeLosObjetos.CAIDA_HASTA_EL_PISO,
+			ReglasDeLosObjetos.LADOS_ALREDEDOR,
 			cuerpo.collision_mask,
 			[cuerpo.get_rid()]
 		)
@@ -350,9 +339,13 @@ func _encima_del_origen(cuerpo: PhysicsBody3D) -> Array[Transform3D]:
 	var origen: Transform3D = cuerpo.call(ReglasDeLosObjetos.METODO_LUGAR_DE_ORIGEN)
 	for choque in _choques(cuerpo, origen):
 		var ocupante := choque["solido"] as Node3D
-		if ocupante == null or ocupante == cuerpo or not "datos" in ocupante:
+		if (
+			ocupante == null
+			or ocupante == cuerpo
+			or not ReglasDeLosObjetos.PROPIEDAD_DATOS in ocupante
+		):
 			continue
-		var datos := ocupante.get("datos") as ObjetoDelAlmacen
+		var datos := ocupante.get(ReglasDeLosObjetos.PROPIEDAD_DATOS) as ObjetoDelAlmacen
 		if datos == null or not datos.admite_encima:
 			continue
 		var tapa := ocupante.global_position.y + _media_altura(ocupante)

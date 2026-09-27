@@ -1,31 +1,18 @@
 extends GdUnitTestSuite
 
 
-func _candidatos(libres: Array[bool]) -> Array[Rescate.Candidato]:
-	var clases: Array[Rescate.Clase] = [
-		Rescate.Clase.DESHACER,
-		Rescate.Clase.ALREDEDOR,
-		Rescate.Clase.ENCIMA_DEL_ORIGEN,
-		Rescate.Clase.ORIGEN,
-	]
-	var salida: Array[Rescate.Candidato] = []
-	for indice in libres.size():
-		salida.append(Rescate.Candidato.new(clases[indice], libres[indice]))
-	return salida
-
-
 func test_gana_el_primero_libre_en_el_orden() -> void:
-	assert_int(Rescate.elegir(_candidatos([false, true, true, true]))).is_equal(1)
-	assert_int(Rescate.elegir(_candidatos([true, true, true, true]))).is_equal(0)
+	assert_int(Rescate.elegir([false, true, true, true])).is_equal(Rescate.Clase.ALREDEDOR)
+	assert_int(Rescate.elegir([true, true, true, true])).is_equal(Rescate.Clase.DESHACER)
 
 
 func test_el_origen_es_el_ultimo_recurso() -> void:
-	assert_int(Rescate.elegir(_candidatos([false, false, false, true]))).is_equal(3)
+	assert_int(Rescate.elegir([false, false, false, true])).is_equal(Rescate.Clase.ORIGEN)
 
 
 func test_sin_ningun_libre_no_hay_eleccion() -> void:
-	assert_int(Rescate.elegir(_candidatos([false, false, false, false]))).is_equal(Rescate.NINGUNO)
-	assert_int(Rescate.elegir([] as Array[Rescate.Candidato])).is_equal(Rescate.NINGUNO)
+	assert_int(Rescate.elegir([false, false, false, false])).is_equal(Rescate.NINGUNO)
+	assert_int(Rescate.elegir([] as Array[bool])).is_equal(Rescate.NINGUNO)
 
 
 func test_la_racha_termina_en_el_primer_paso_sin_empujon() -> void:

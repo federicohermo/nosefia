@@ -5,9 +5,8 @@
 ## construyera la pantalla, esconder el panel al cambiar de app tiraría lo leído y lo anotado —
 ## sin un solo error, y con los seis nodos en verde, porque `ui/` no lleva test obligatorio.
 ##
-## **Traduce, no decide.** Cuándo se puede abrir, qué app sigue y cuándo `REGISTRAR` está cumplida
-## son preguntas de `dominio/`. Los `if` de este archivo son valores que
-## devolvió el dominio y el estado nulo del cableado.
+## **Traduce, no decide.** Cuándo se puede abrir, qué app sigue y si lo anotado coincide con lo
+## vendido son preguntas de `dominio/`.
 ##
 ## **No consume tiempo del turno y no lo pausa.** Usar la computadora no descuenta un segundo: lo
 ## que cuesta es que el reloj no se detuvo mientras el jugador leía. Las dos formas de congelarlo
@@ -111,7 +110,7 @@ func pedir_restar(producto: Producto) -> void:
 ##
 ## La `Tarea` sale de `RelojDelTurno.obligatoria()` y nunca de una construida acá: una copia
 ## devuelve `true` y deja el contador del HUD sin subir, sin error y en verde.
-func revisar_registro() -> void:
+func _revisar_registro() -> void:
 	var registrar := reloj.obligatoria(Tarea.Tipo.REGISTRAR)
 	if _registro.coincide():
 		reloj.completar(registrar)
@@ -121,7 +120,7 @@ func revisar_registro() -> void:
 
 func _al_cambiar_el_registro() -> void:
 	registro_actualizado.emit()
-	revisar_registro()
+	_revisar_registro()
 
 
 func _cableada() -> bool:

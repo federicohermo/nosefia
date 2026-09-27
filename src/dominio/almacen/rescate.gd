@@ -11,21 +11,11 @@ enum Clase { DESHACER, ALREDEDOR, ENCIMA_DEL_ORIGEN, ORIGEN }
 const NINGUNO := -1
 
 
-class Candidato:
-	extends RefCounted
-
-	var clase: Rescate.Clase
-	var libre: bool
-
-	func _init(una_clase: Rescate.Clase, esta_libre: bool) -> void:
-		clase = una_clase
-		libre = esta_libre
-
-
-static func elegir(candidatos: Array[Candidato]) -> int:
-	for indice in candidatos.size():
-		if candidatos[indice].libre:
-			return indice
+## La primera clase libre, o `NINGUNO`. `libres` va en el orden de `Clase`.
+static func elegir(libres: Array[bool]) -> int:
+	for clase in libres.size():
+		if libres[clase]:
+			return clase
 	return NINGUNO
 
 

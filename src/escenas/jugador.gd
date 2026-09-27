@@ -425,8 +425,8 @@ func _medir_candidato(cuerpo: Node3D) -> CampoDeInteraccion.Candidato:
 ## Los datos de un cuerpo del almacén, o `null` si no es un objeto. Se leen sin llamar a
 ## `interactuar()`, que activa cajas y puestos.
 func _datos_de(cuerpo: Object) -> ObjetoDelAlmacen:
-	if cuerpo != null and "datos" in cuerpo:
-		return cuerpo.get("datos") as ObjetoDelAlmacen
+	if cuerpo != null and ReglasDeLosObjetos.PROPIEDAD_DATOS in cuerpo:
+		return cuerpo.get(ReglasDeLosObjetos.PROPIEDAD_DATOS) as ObjetoDelAlmacen
 	return null
 
 

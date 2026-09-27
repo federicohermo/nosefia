@@ -1,8 +1,4 @@
 ## La planilla de registrar: cuántas unidades de cada producto anotó el jugador como vendidas.
-##
-## **No decide cuándo la obligatoria cuenta.** Contesta si lo anotado coincide con lo vendido, y
-## quien la usa pregunta sólo después de un gesto del jugador: así una venta nueva no cumple ni
-## descumple la tarea, y la planilla en 0 al abrir la noche no la da por hecha.
 class_name RegistroDeVentas
 extends RefCounted
 
@@ -11,8 +7,6 @@ const TOPE_POR_FILA := 99
 var _atender: TareaDeAtender
 var _productos: Array[Producto] = []
 
-## Por `producto.id` y nunca por instancia: `Catalogo.de()` construye un producto nuevo en cada
-## llamada.
 var _unidades_por_id: Dictionary = {}
 
 

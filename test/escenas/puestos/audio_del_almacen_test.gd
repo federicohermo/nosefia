@@ -134,7 +134,9 @@ func test_el_almacen_instancia_el_audio_exactamente_una_vez() -> void:
 func test_el_dominio_no_nombra_un_solo_nodo_de_audio() -> void:
 	# `AudioStreamPlayer` es un `Node` y `AudioServer` es el motor: los dos romperían la
 	# propiedad de la que cuelga todo lo demás — que el dominio se ejerza sin levantar una escena.
-	for ruta: String in ["entrada_sonora.gd", "tabla_de_sonidos.gd", "ronda_de_voces.gd"]:
+	for ruta: String in DirAccess.get_files_at("res://src/dominio/ambiente"):
+		if not ruta.ends_with(".gd"):
+			continue
 		var texto := FileAccess.get_file_as_string("res://src/dominio/ambiente/" + ruta)
 		assert_str(texto).is_not_empty()
 		for prohibido: String in ["AudioStreamPlayer", "AudioServer"]:

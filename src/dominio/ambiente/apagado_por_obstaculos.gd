@@ -5,19 +5,20 @@
 class_name ApagadoPorObstaculos
 extends RefCounted
 
-## Desde esta cantidad de obstáculos no apaga más. Primer valor: ver OQ-AMB-008.
+## Los valores de las cuatro constantes que siguen son primeros valores: ver OQ-AMB-008.
+##
+## Desde esta cantidad de obstáculos no apaga más.
 const MAXIMO := 3
 
-## Cuánto baja cada obstáculo, en dB. Primer valor: ver OQ-AMB-008.
+## Cuánto baja cada obstáculo, en dB.
 const VOLUMEN_POR_OBSTACULO_DB := -6.0
 
 const SIN_CORTE_HZ := 20500.0
 
-## El corte del pasa-bajos para cada cantidad de obstáculos, de cero al máximo. Primer valor:
-## ver OQ-AMB-008.
+## El corte del pasa-bajos para cada cantidad de obstáculos, de cero al máximo.
 const CORTES_HZ: Array[float] = [SIN_CORTE_HZ, 2500.0, 1200.0, 600.0]
 
-## Cuánto tarda el nivel en moverse un obstáculo. Primer valor: ver OQ-AMB-008.
+## Cuánto tarda el nivel en moverse un obstáculo.
 const SEGUNDOS_POR_OBSTACULO := 0.3
 
 ## El nombre del método con el que un cuerpo del mundo contesta su puerta.

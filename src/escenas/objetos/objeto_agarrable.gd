@@ -22,7 +22,6 @@ signal contacto_recibido(nodo: Node3D, rapidez: float)
 ## Dónde lo dejó la escena. Se guarda en `_ready()` y no en la declaración porque el `transform`
 ## que importa es el que le puso el `.tscn`, y ése recién existe cuando el nodo entró al árbol.
 var _lugar_de_origen: Transform3D
-## El mismo lugar en el mundo: en la mano, el padre es la mano y el local ya no dice nada.
 var _origen_en_el_mundo: Transform3D
 var _rapidez := 0.0
 var _rapidez_previa := 0.0

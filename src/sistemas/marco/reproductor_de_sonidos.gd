@@ -45,7 +45,7 @@ var _origenes: Dictionary = {}
 var _niveles: Dictionary = {}
 var _buses_propios: Dictionary = {}
 
-## El sorteo de las variantes, y la última que sonó de cada evento.
+## El sorteo de las variantes, y la última que sonó de cada fila.
 var _azar := RandomNumberGenerator.new()
 var _anteriores: Dictionary = {}
 
@@ -409,9 +409,9 @@ func _siguiente(voces_de_la_ronda: Array, ronda: RondaDeVoces) -> Node:
 ## Una voz plana y una del espacio no comparten una clase del motor, pero sí estas propiedades.
 func _poner(voz: Node, entrada: EntradaSonora, bus: String, volumen_db: float) -> void:
 	var indice := EleccionDeVariante.siguiente(
-		entrada.cantidad_de_variantes(), _anteriores.get(entrada.evento, -1), _azar
+		entrada.cantidad_de_variantes(), _anteriores.get(entrada, -1), _azar
 	)
-	_anteriores[entrada.evento] = indice
+	_anteriores[entrada] = indice
 	voz.set(&"stream", entrada.variante(indice))
 	voz.set(&"bus", bus)
 	voz.set(&"volume_db", volumen_db)
@@ -421,9 +421,9 @@ func _poner(voz: Node, entrada: EntradaSonora, bus: String, volumen_db: float) -
 ## Los datos de dominio del objeto que produjo el evento, o `null` si no es un objeto.
 func _datos_de(origen: Object) -> ObjetoDelAlmacen:
 	# Se leen los datos y no se interactúa: interactuar es un gesto, y sobre una puerta la abre.
-	if not is_instance_valid(origen) or not "datos" in origen:
+	if not is_instance_valid(origen) or not ReglasDeLosObjetos.PROPIEDAD_DATOS in origen:
 		return null
-	return origen.get("datos") as ObjetoDelAlmacen
+	return origen.get(ReglasDeLosObjetos.PROPIEDAD_DATOS) as ObjetoDelAlmacen
 
 
 ## El bus por el que sale un sonido con ese corte pasa-altos. Sin corte es el bus de la fila.
