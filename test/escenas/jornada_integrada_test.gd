@@ -3,14 +3,19 @@ extends GdUnitTestSuite
 const ALMACEN := preload("res://src/escenas/almacen.tscn")
 
 var _escala_anterior: float
+var _ruta_del_guardado: String
 
 
 func before_test() -> void:
 	_escala_anterior = Engine.time_scale
+	_ruta_del_guardado = Guardado.ruta_por_defecto
+	Guardado.ruta_por_defecto = create_temp_dir("jornada").path_join("partida.guardado")
+	Guardado.new().borrar()
 
 
 func after_test() -> void:
 	Engine.time_scale = _escala_anterior
+	Guardado.ruta_por_defecto = _ruta_del_guardado
 
 
 # El límite usa tiempo del motor, que este caso acelera hasta el cierre.

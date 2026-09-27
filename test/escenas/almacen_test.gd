@@ -65,6 +65,8 @@ const SEGUNDOS_REALES_DE_UN_TURNO := (
 ## segundo, de sobra para medio metro.
 const CUADROS_DE_FISICA := 30
 
+var _ruta_del_guardado: String
+
 
 ## Los labels de la escena que pintan la hora: los que llevan el script del reloj de mesa.
 ## Se recorre el árbol entero, y no un nombre: una segunda copia del label en otro puesto es
@@ -131,6 +133,18 @@ static func _se_llega_desde_afuera(espacio: PhysicsDirectSpaceState3D, punto: Ve
 		if espacio.intersect_ray(PhysicsRayQueryParameters3D.create(desde, punto)).is_empty():
 			return true
 	return false
+
+
+## La escena arma su guardado sola: sin esto, un caso que cierra la noche escribiría la partida
+## del usuario, y la del usuario decidiría el caso siguiente.
+func before_test() -> void:
+	_ruta_del_guardado = Guardado.ruta_por_defecto
+	Guardado.ruta_por_defecto = create_temp_dir("almacen").path_join("partida.guardado")
+	Guardado.new().borrar()
+
+
+func after_test() -> void:
+	Guardado.ruta_por_defecto = _ruta_del_guardado
 
 
 func _almacen() -> Node3D:

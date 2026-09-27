@@ -98,3 +98,12 @@ func test_retomar_arranca_donde_quedo() -> void:  # AC-SAV-017
 	var retomada := Partida.desde(guardado.cargar())
 	assert_int(retomada.jornada()).is_equal(ReglasDeLaPartida.PRIMERA_JORNADA + 2)
 	assert_int(retomada.apercibimientos()).is_equal(Reglas.APERCIBIMIENTOS_POR_AVISO)
+
+
+func test_un_guardado_nuevo_toma_la_ruta_por_defecto() -> void:
+	var anterior := Guardado.ruta_por_defecto
+	Guardado.ruta_por_defecto = "user://otra.guardado"
+	var guardado := Guardado.new()
+	Guardado.ruta_por_defecto = anterior
+	assert_str(guardado.ruta).is_equal("user://otra.guardado")
+	assert_str(Guardado.new().ruta).is_equal(anterior)

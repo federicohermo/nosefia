@@ -4,7 +4,11 @@
 class_name Guardado
 extends RefCounted
 
-var ruta: String = "user://partida.guardado"
+## Los tests que levantan el almacén la apuntan a una carpeta temporal: la escena arma su
+## guardado sola, y la partida del usuario no puede decidir un test ni ser pisada por uno.
+static var ruta_por_defecto: String = "user://partida.guardado"
+
+var ruta: String = ruta_por_defecto
 
 
 ## Devuelve si la escritura llegó al disco. Una que falla no interrumpe a nadie.
