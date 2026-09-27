@@ -26,6 +26,15 @@ func test_la_partida_guarda_el_legajo_que_recibio_y_no_una_copia() -> void:  # A
 	assert_int(partida.apercibimientos()).is_equal(Reglas.APERCIBIMIENTOS_POR_AVISO)
 
 
+func test_una_partida_restaurada_a_un_aviso_del_tope_despide_con_un_aviso() -> void:  # AC-EMP-012
+	var restaurado := Legajo.con_apercibimientos(
+		Reglas.APERCIBIMIENTOS_HASTA_EL_DESPIDO - Reglas.APERCIBIMIENTOS_POR_AVISO
+	)
+	var partida := Partida.new(restaurado)
+	_jugar(partida, Consecuencias.CUMPLIDAS_MINIMAS_PARA_AVISO)
+	assert_int(partida.final()).is_equal(Partida.Final.DESPEDIDO)
+
+
 func test_cerrar_una_jornada_avanza_y_anota_la_banda_en_el_legajo() -> void:
 	var partida := Partida.nueva()
 	_jugar(partida, 0)
@@ -105,6 +114,9 @@ func test_cinco_jornadas_impecables_terminan_la_partida_sin_despido() -> void:  
 	assert_bool(partida.terminada()).is_true()
 	assert_int(partida.final()).is_equal(Partida.Final.CONTRATO_CUMPLIDO)
 	assert_bool(partida.legajo().despedido()).is_false()
+	assert_int(partida.jornada()).is_equal(
+		ReglasDeLaPartida.PRIMERA_JORNADA + ReglasDeLaPartida.JORNADAS_DE_LA_PARTIDA - 1
+	)
 
 
 func test_dos_jornadas_graves_seguidas_terminan_la_partida_con_despido() -> void:  # AC-EMP-004

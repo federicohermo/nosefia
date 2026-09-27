@@ -34,7 +34,7 @@ func test_las_distancias_son_positivas_y_caben_en_el_alcance_de_la_mira() -> voi
 		assert_float(distancia).is_less(ReglasDelJugador.ALCANCE_DE_LA_MIRA)
 
 
-func test_se_lleva_una_sola_cosa_a_la_vez() -> void:  # AC-PLY-008
+func test_se_lleva_una_sola_cosa_a_la_vez() -> void:
 	# El 015 se apoya en este 1: afirma que las bolsas de una jornada son más que las manos, o
 	# sea que sacar la basura cuesta más de un viaje. Subirlo a 2 le afloja el precio en tiempo
 	# a media tarea obligatoria sin que ese spec se entere.

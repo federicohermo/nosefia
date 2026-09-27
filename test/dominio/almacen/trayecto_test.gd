@@ -5,7 +5,7 @@
 extends GdUnitTestSuite
 
 
-func test_con_una_mano_cada_bolsa_es_un_viaje() -> void:  # AC-CLN-007
+func test_con_una_mano_cada_bolsa_es_un_viaje() -> void:
 	assert_int(Trayecto.viajes(3, 1)).is_equal(3)
 
 

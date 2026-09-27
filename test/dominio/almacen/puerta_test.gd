@@ -29,7 +29,7 @@ func test_el_giro_no_se_pasa_de_ninguno_de_los_dos_topes() -> void:  # AC-PLY-01
 	assert_float(puerta.angulo()).is_equal(0.0)
 
 
-func test_el_giro_tarda_y_no_salta_al_tope() -> void:  # AC-PLY-012
+func test_el_giro_tarda_y_no_salta_al_tope() -> void:
 	# El borde que importa es el primer paso: con el ángulo puesto de una, la hoja se
 	# teletransportaría y la colisión atravesaría al jugador que tenga delante.
 	var puerta := Puerta.new()
