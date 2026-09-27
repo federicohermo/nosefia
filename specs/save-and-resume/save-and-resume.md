@@ -71,7 +71,8 @@ arranque siguiente no vuelva a tropezar con él.
 
 ### BR-SAV-010 — El juego arranca en el menú
 
-El sistema DEBE abrir el juego en un menú con **empezar, continuar y salir**, y no en el almacén.
+El sistema DEBE abrir el juego en un menú, y no en el almacén. El menú DEBE mostrar cinco
+opciones, en este orden: **nuevo juego, continuar, configuraciones, logros y salir**.
 
 ### BR-SAV-011 — Continuar está disponible sólo con guardado
 
@@ -85,6 +86,11 @@ que no se puede deshacer.
 ### BR-SAV-013 — Salir pasa por un solo lugar
 
 El sistema DEBE tener un único camino para cerrar el juego, y sólo la opción de salir lo produce.
+
+### BR-SAV-014 — En la web, salir no se muestra
+
+SI el juego corre en la web, ENTONCES el menú NO DEBE mostrar la opción de salir. La página no
+puede cerrar su pestaña. Las otras cuatro opciones DEBEN quedar en el mismo orden.
 
 ## Criterios de aceptación
 
@@ -160,6 +166,11 @@ empezar; recién al confirmar llega el de empezar. Sin guardado, empezar es dire
 
 DADO todo el código del juego ENTONCES el cierre del juego aparece **una sola vez**, y sólo la
 opción de salir lo produce.
+
+### AC-SAV-016 — La web no ofrece salir *(verifica BR-SAV-014)*
+
+DADO el juego en la web ENTONCES el menú muestra cuatro opciones, sin salir, y en el mismo orden
+que fuera de la web.
 
 ## No objetivos
 
