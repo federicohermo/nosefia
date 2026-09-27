@@ -59,7 +59,7 @@ func test_las_cuatro_acciones_del_dominio_estan_declaradas_en_el_proyecto() -> v
 	# El par de String entre `reglas_del_jugador.gd` y la sección `[input]` de `project.godot`
 	# no lo verifica nadie más: renombrar la constante sin tocar el proyecto deja una dirección
 	# que no responde, y el juego arranca igual.
-	for accion in [
+	for accion: String in [
 		ReglasDelJugador.ACCION_ADELANTE,
 		ReglasDelJugador.ACCION_ATRAS,
 		ReglasDelJugador.ACCION_IZQUIERDA,
@@ -153,7 +153,7 @@ func test_los_cuatro_puntos_estan_donde_el_dominio_los_declara() -> void:
 		"Giro/Camara/PuntoDeCarga": ReglasDeLosObjetos.DISTANCIA_DE_CARGA,
 		"Giro/Camara/PuntoDeSoltado": ReglasDeLosObjetos.DISTANCIA_DE_SOLTADO,
 	}
-	for ruta in puntos:
+	for ruta: String in puntos:
 		(
 			assert_bool(jugador.has_node(ruta))
 			. override_failure_message("falta el nodo %s en jugador.tscn" % ruta)
@@ -198,7 +198,7 @@ func test_cada_brazo_apunta_al_punto_de_mano_que_mueve() -> void:
 		"Giro/Camara/BrazoDeCarga": "Giro/Camara/PuntoDeCarga",
 		"Giro/Camara/BrazoDeProducto": "Giro/Camara/PuntoDeProducto",
 	}
-	for ruta_del_brazo in manos:
+	for ruta_del_brazo: String in manos:
 		var brazo: SpringArm3D = jugador.get_node(ruta_del_brazo)
 		var punto: Node3D = jugador.get_node(manos[ruta_del_brazo])
 		var punta := brazo.transform * Vector3(0.0, 0.0, brazo.spring_length)
@@ -209,7 +209,7 @@ func test_los_brazos_barren_un_volumen_y_no_un_rayo() -> void:
 	# Un brazo sin `shape` barre un rayo, y un rayo sólo frena el CENTRO de lo que se lleva: la
 	# mitad que sobra le sigue entrando a la madera.
 	var jugador := _jugador()
-	for ruta in ["Giro/Camara/BrazoDeCarga", "Giro/Camara/BrazoDeProducto"]:
+	for ruta: String in ["Giro/Camara/BrazoDeCarga", "Giro/Camara/BrazoDeProducto"]:
 		var brazo: SpringArm3D = jugador.get_node(ruta)
 		(
 			assert_object(brazo.shape)
@@ -225,7 +225,7 @@ func test_los_brazos_nacen_adentro_de_la_capsula_del_cuerpo() -> void:
 	var jugador := _jugador()
 	var cuerpo: CollisionShape3D = jugador.get_node("Cuerpo")
 	var capsula: CapsuleShape3D = cuerpo.shape
-	for ruta in ["Giro/Camara/BrazoDeCarga", "Giro/Camara/BrazoDeProducto"]:
+	for ruta: String in ["Giro/Camara/BrazoDeCarga", "Giro/Camara/BrazoDeProducto"]:
 		var brazo: SpringArm3D = jugador.get_node(ruta)
 		var esfera: SphereShape3D = brazo.shape
 		var radial := Vector2(brazo.position.x, brazo.position.z).length()

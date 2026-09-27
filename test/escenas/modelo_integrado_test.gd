@@ -19,7 +19,9 @@ func test_la_raiz_agrupa_por_rol_y_conserva_sus_enlaces() -> void:
 
 func test_los_puestos_reemplazados_usan_mallas_del_modelo() -> void:
 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
-	for ruta in ["Estructura/base compu/StaticBody3D", "Estructura/gondolanueva/StaticBody3D"]:
+	for ruta: String in [
+		"Estructura/base compu/StaticBody3D", "Estructura/gondolanueva/StaticBody3D"
+	]:
 		var cuerpo := almacen.get_node_or_null(ruta)
 		assert_object(cuerpo).is_not_null()
 		assert_bool(cuerpo.is_in_group("interactuable")).is_true()
@@ -93,6 +95,6 @@ func test_el_surtido_fijo_no_muestra_stock_que_el_dominio_no_tiene() -> void:
 					. override_failure_message("%s tiene colisión" % ruta)
 					. is_zero()
 				)
-	for ruta in ["base compu", "gondolanueva"]:
+	for ruta: String in ["base compu", "gondolanueva"]:
 		var malla: MeshInstance3D = estructura.get_node(ruta)
 		assert_object(malla.mesh).is_instanceof(ArrayMesh)

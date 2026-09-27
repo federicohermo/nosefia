@@ -72,7 +72,7 @@ func test_soltar_conserva_la_orientacion_mundial_de_la_mano() -> void:
 	agarre.punto_de_carga.rotation = Vector3(-0.4, 1.2, 0)
 	agarre.punto_de_soltado.rotation = Vector3(0, -0.7, 0)
 	var cuerpo := _cuerpo()
-	for al_frente in [true, false]:
+	for al_frente: bool in [true, false]:
 		agarre.pedir_agarrar(_lata(), cuerpo)
 		cuerpo.rotation = Vector3(-0.3, -0.35, 0.1)
 		var orientacion := cuerpo.global_basis

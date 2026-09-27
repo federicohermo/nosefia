@@ -74,7 +74,9 @@ func test_el_boton_de_la_computadora_lo_dispara_boton_pulsado() -> void:
 func test_cerrar_la_jornada_y_abrir_la_computadora_quedan_mudos() -> void:
 	# Cerrar el turno también cierra la jornada: si sonaran los dos, sonaría doble.
 	var tabla := _tabla()
-	for evento in [EntradaSonora.Evento.JORNADA_CERRADA, EntradaSonora.Evento.COMPUTADORA_ABIERTA]:
+	for evento: EntradaSonora.Evento in [
+		EntradaSonora.Evento.JORNADA_CERRADA, EntradaSonora.Evento.COMPUTADORA_ABIERTA
+	]:
 		assert_bool(tabla.de(evento).tiene_sonido()).is_false()
 
 
@@ -138,7 +140,7 @@ func test_la_tabla_nombra_el_par_que_falta() -> void:  # AC-AMB-009
 	var tabla := TablaDeSonidos.new()
 	var entradas: Array[EntradaSonora] = []
 	for evento: EntradaSonora.Evento in EntradaSonora.Evento.values():
-		for sonoridad in _sonoridades_de(evento):
+		for sonoridad: EntradaSonora.Sonoridad in _sonoridades_de(evento):
 			if (
 				evento == EntradaSonora.Evento.OBJETO_SOLTADO
 				and sonoridad == EntradaSonora.Sonoridad.BOLSA
@@ -160,7 +162,7 @@ func test_cada_sonoridad_con_audio_suena_su_propio_archivo() -> void:
 	# Una fila copiada de otra sonoridad sonaría, y el rojo no lo diría nunca.
 	var tabla := _tabla()
 	for evento: EntradaSonora.Evento in EntradaSonora.EVENTOS_DE_OBJETO:
-		for sonoridad in _sonoridades_de(evento):
+		for sonoridad: EntradaSonora.Sonoridad in _sonoridades_de(evento):
 			var entrada := tabla.de(evento, sonoridad)
 			if entrada == null or not entrada.tiene_sonido():
 				continue
@@ -193,9 +195,9 @@ func test_lo_que_pasa_en_un_lugar_suena_del_espacio_y_lo_demas_plano() -> void:
 	assert_bool(timbre.posicional).is_true()
 	assert_str(timbre.emisor).is_not_empty()
 	for evento: EntradaSonora.Evento in EntradaSonora.EVENTOS_DE_OBJETO:
-		for sonoridad in _sonoridades_de(evento):
+		for sonoridad: EntradaSonora.Sonoridad in _sonoridades_de(evento):
 			assert_bool(tabla.de(evento, sonoridad).posicional).is_true()
-	for evento in [
+	for evento: EntradaSonora.Evento in [
 		EntradaSonora.Evento.TURNO_CERRADO,
 		EntradaSonora.Evento.BOTON_DE_LA_COMPUTADORA,
 		EntradaSonora.Evento.MUSICA_DE_LA_NOCHE,

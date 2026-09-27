@@ -36,7 +36,7 @@ func test_un_mouse_de_125_hz_se_dibuja_casi_parejo_a_144_cuadros() -> void:
 	var suavizado := SuavizadoDelGiro.new(SuavizadoDelGiro.VENTANA)
 	var dibujados := _mover_a_125_hz(suavizado, 1000)
 	var medio := 125.0 / 144.0
-	for dibujado in dibujados.slice(200):
+	for dibujado: float in dibujados.slice(200):
 		assert_float(dibujado / medio).is_between(0.8, 1.2)
 
 

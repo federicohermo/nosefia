@@ -37,7 +37,7 @@ func test_la_ventanilla_recibe_al_jugador_y_al_reloj_por_export() -> void:
 	# rompe la ruta sin que nada avise hasta que se corre.
 	var texto := FileAccess.get_file_as_string(SCRIPT)
 	assert_str(texto).is_not_empty()
-	for propiedad in ["@export var jugador", "@export var reloj"]:
+	for propiedad: String in ["@export var jugador", "@export var reloj"]:
 		(
 			assert_bool(texto.contains(propiedad))
 			. override_failure_message("`ventanilla.gd` no declara `%s`" % propiedad)
@@ -115,7 +115,7 @@ func test_el_cableado_de_atender_llega_entero_desde_el_almacen() -> void:
 		. is_not_null()
 	)
 	var puesto: VentanillaQueSeVe = almacen.get_node("Estructura/Ventanilla")
-	for propiedad in ["jugador", "reloj", "atenciones", "panel"]:
+	for propiedad: String in ["jugador", "reloj", "atenciones", "panel"]:
 		(
 			assert_object(puesto.get(propiedad))
 			. override_failure_message(
@@ -132,7 +132,7 @@ func test_el_panel_de_la_ventanilla_llega_con_sus_seis_nodos() -> void:
 	# `@export` que la apunta desde afuera queda en `null` **con el `node_paths` de la raíz bien
 	# escrito**, y se diagnostica mal porque se revisa el `node_paths`, que está bien.
 	var panel: PanelDeLaVentanilla = auto_free(load(ESCENA_DEL_PANEL).instantiate())
-	for propiedad in ["_fondo", "_nombre", "_renglones", "_aviso", "_cobrar", "_despachar"]:
+	for propiedad: String in ["_fondo", "_nombre", "_renglones", "_aviso", "_cobrar", "_despachar"]:
 		(
 			assert_object(panel.get(propiedad))
 			. override_failure_message("`PanelDeLaVentanilla.%s` quedó en null" % propiedad)

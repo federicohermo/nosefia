@@ -154,7 +154,7 @@ func test_el_estante_no_lleva_el_cupo_ni_el_stock_escritos_adentro() -> void:
 	# cuenta propia acá daría verde en los dos gates mientras contradice al inventario.
 	var texto := FileAccess.get_file_as_string("res://src/dominio/almacen/estante.gd")
 	assert_str(texto).is_not_empty()
-	for patron in ["get_child_count", "_unidades", "_stock"]:
+	for patron: String in ["get_child_count", "_unidades", "_stock"]:
 		(
 			assert_bool(texto.contains(patron))
 			. override_failure_message("`estante.gd` de `dominio/` nombra `%s`" % patron)

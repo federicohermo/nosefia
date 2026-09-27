@@ -126,7 +126,7 @@ static func _apagar_todo_menos_la_cascara(nodo: Node) -> void:
 ## centímetros, el punto que está 30 cm debajo del antepecho daría «se llega»: ahí la pared está a
 ## 10 cm, y el caso se pondría verde afirmando lo contrario de lo que quiere decir.
 static func _se_llega_desde_afuera(espacio: PhysicsDirectSpaceState3D, punto: Vector3) -> bool:
-	for rumbo in [Vector3.RIGHT, Vector3.LEFT, Vector3.FORWARD, Vector3.BACK]:
+	for rumbo: Vector3 in [Vector3.RIGHT, Vector3.LEFT, Vector3.FORWARD, Vector3.BACK]:
 		var desde: Vector3 = punto + rumbo * DISTANCIA_DE_AFUERA
 		if espacio.intersect_ray(PhysicsRayQueryParameters3D.create(desde, punto)).is_empty():
 			return true
@@ -511,7 +511,7 @@ func test_el_cableado_de_reponer_llega_entero_hasta_los_huecos() -> void:
 	# tres: la raíz, el nodo instanciado que apunta afuera de su sub-escena, y el `@export` que
 	# la sub-escena ya traía y que sobrescribir uno de sus hermanos podría borrar.
 	var almacen := _almacen()
-	for propiedad in ["_repositor", "_estante"]:
+	for propiedad: String in ["_repositor", "_estante"]:
 		(
 			assert_object(almacen.get(propiedad))
 			. override_failure_message(

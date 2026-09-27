@@ -228,7 +228,7 @@ func emisores_que_suenan(evento: EntradaSonora.Evento) -> Array[int]:
 ## Acerca el apagado de cada voz del espacio a los obstáculos que hay entre ella y el oído.
 func actualizar_apagado(oyente: Vector3, segundos: float) -> void:
 	_oyente = oyente
-	for clave in _niveles.keys():
+	for clave: Variant in _niveles.keys():
 		if not is_instance_valid(clave):
 			_olvidar(clave)
 			continue

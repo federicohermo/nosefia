@@ -31,7 +31,7 @@ func test_el_padron_no_se_sortea() -> void:  # AC-CTR-001
 func test_el_padron_no_llama_al_azar() -> void:
 	var texto := FileAccess.get_file_as_string(COMPRADORES)
 	assert_str(texto).is_not_empty()
-	for patron in ["randi", "randf", "shuffle", "pick_random"]:
+	for patron: String in ["randi", "randf", "shuffle", "pick_random"]:
 		(
 			assert_bool(texto.contains(patron))
 			. override_failure_message("`compradores.gd` nombra `%s`: el azar no entra" % patron)

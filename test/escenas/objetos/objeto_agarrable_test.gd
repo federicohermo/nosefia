@@ -102,7 +102,7 @@ func test_las_dos_acciones_del_006_estan_declaradas_en_el_proyecto() -> void:
 	# El par de String entre `reglas_de_los_objetos.gd` y la sección `[input]` de
 	# `project.godot` no lo verifica nadie más: renombrar la constante sin tocar el proyecto
 	# deja el clic y la E sin responder, y el juego arranca igual.
-	for accion in [ReglasDeLosObjetos.ACCION_AGARRAR, ReglasDeLosObjetos.ACCION_EXAMINAR]:
+	for accion: String in [ReglasDeLosObjetos.ACCION_AGARRAR, ReglasDeLosObjetos.ACCION_EXAMINAR]:
 		(
 			assert_bool(InputMap.has_action(accion))
 			. override_failure_message(

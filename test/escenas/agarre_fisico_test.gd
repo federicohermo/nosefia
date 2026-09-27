@@ -4,7 +4,7 @@ const ALMACEN := preload("res://src/escenas/almacen.tscn")
 
 
 func test_soltar_hacia_la_gondola_deja_el_producto_visible_y_recuperable() -> void:
-	for ojo in [Vector3(2.6, 1.7, 0), Vector3(0, 1.7, 0), Vector3(1.3, 1.7, 3.85)]:
+	for ojo: Vector3 in [Vector3(2.6, 1.7, 0), Vector3(0, 1.7, 0), Vector3(1.3, 1.7, 3.85)]:
 		var almacen: Node3D = auto_free(ALMACEN.instantiate())
 		add_child(almacen)
 		var jugador: CharacterBody3D = almacen.get_node("Jugador")
