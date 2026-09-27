@@ -19,8 +19,9 @@ func consecuencia_de(cumplidas: int, obligatorias: int) -> Consecuencias.Banda:
 ```
 
 Sin tipos, el error de una firma que cambió aparece **en runtime, en la escena, a los tres
-días**. Con tipos lo caza el editor al guardar. No hay gate que lo verifique: depende de la
-revisión.
+días**. Con tipos lo caza el editor al guardar. Lo verifica el motor: `untyped_declaration` está
+en «Error», y un script con una declaración sin tipo no carga. La CI lo ve en cada script que
+carga un test; el resto falla al abrirlo en el editor.
 
 El `-> void` va también en las funciones que no devuelven nada. Omitirlo no es «más corto»: es no
 haber decidido.
