@@ -89,7 +89,7 @@ func test_cada_jornada_abre_un_turno_nuevo_y_tareas_nuevas() -> void:
 		)
 
 
-func test_una_partida_terminada_no_vuelve_a_abrir_una_jornada() -> void:  # AC-EMP-010
+func test_una_partida_que_termino_no_vuelve_a_abrir_una_jornada() -> void:  # AC-EMP-010
 	# El ciclo ya guarda esto antes de llamar, pero la puerta es pública y el 017 la toca desde
 	# una pantalla. Sin el guard acá, la noche de regalo **le borra el legajo al despedido**:
 	# cerrarla impecable lo reinicia a cero y la partida avanza de jornada con el final ya

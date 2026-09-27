@@ -139,7 +139,7 @@ func test_los_tres_espejos_de_este_spec_estan_escritos() -> void:
 		)
 
 
-func test_la_partida_terminada_ofrece_volver_al_menu_y_no_seguir() -> void:  # AC-EMP-016
+func test_la_partida_que_termino_ofrece_volver_al_menu_y_no_seguir() -> void:  # AC-EMP-016
 	for final: Partida.Final in [Partida.Final.DESPEDIDO, Partida.Final.CONTRATO_CUMPLIDO]:
 		var parte := ParteDeCierre.new(JORNADA_DE_PRUEBA, Apertura.obligatorias(), 5, final)
 		(
