@@ -40,8 +40,8 @@ Sin test espejo, sin aserción, apagado, o con un nombre que hace que no corra. 
 cosa: verde sin ejercer nada.** Cada regla, con su modo de falla, está en
 `.claude/scripts/lib/tdd.py`.
 
-En gdUnit4 un test se apaga con el parámetro `do_skip` de la función de test. Saltear un test se
-decide borrándolo o arreglándolo.
+En gdUnit4, el parámetro `do_skip` apaga un test en su función, y la suite entera en `before`.
+Saltear un test se decide borrándolo o arreglándolo.
 
 ## El test se escribe primero, y en rojo
 

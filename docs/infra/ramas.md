@@ -26,7 +26,7 @@ El mensaje del hook manda acá para saber qué significa cada uno:
 prefijos del repo dicen qué tocás.
 
 `<tipo>/<issue>-<kebab>` cuando el cambio sale de un issue, y `<tipo>/<kebab>` cuando no. El
-hook no pide el número. Que una `feature/` parta de un spec lo mira el review del PR.
+hook no pide el número, y el número va sin rellenar. Que una `feature/` parta de un spec lo mira el review del PR.
 
 ## Por qué dos ramas y no una
 
@@ -53,6 +53,9 @@ En un repo de una persona, abrir una rama para mergearla en el minuto siguiente 
 
 **Un cambio que se quiere revisar o que cierra un issue va por su rama y su PR.** Lo demás puede
 ir directo: un arreglo suelto, un asset, el harness, la documentación. `main` sigue bloqueada.
+
+Un hotfix no lleva rama: es un commit directo sobre `staging`, con el mensaje empezando por
+`hotfix:`.
 
 ## Los dos workflows
 

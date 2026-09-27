@@ -1,8 +1,8 @@
 # Las capacidades y lo que pasa entre ellas
 
 **El contrato de cada capacidad vive en su spec** —`specs/<capability>/<capability>.md`—, y su
-código de tres letras, en el frontmatter. Este documento no lo repite: declara **lo que pasa entre ellas**, que es lo único que ningún spec
-puede decir solo.
+código, en el `capability_id` del frontmatter. Este documento no lo repite: declara **lo que
+pasa entre ellas**, que es lo único que ningún spec puede decir solo.
 
 Las reglas de edición de un spec están en [`.claude/rules/specs.md`](../../.claude/rules/specs.md),
 y se cargan solas al tocar ese árbol.
