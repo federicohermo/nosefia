@@ -25,9 +25,9 @@ func _process(delta: float) -> void:
     if _turno.cerrado():
         turno_cerrado.emit(_turno.tareas_cumplidas())
 
-# Mal: la regla de las cinco tareas vive en un Node y ya no se puede probar sin la escena.
+# Mal: la regla de las tareas vive en un Node y ya no se puede probar sin la escena.
 func _process(delta: float) -> void:
-    if _tareas_hechas >= 5 and _minutos <= 0:
+    if _tareas_hechas >= _obligatorias and _minutos <= 0:
         ...
 ```
 
@@ -46,7 +46,7 @@ eximirlo del test.
 | `tareas/` | lo consume **y cumple una obligatoria** |
 | `investigacion/` | lo consume **y no cumple nada**. Es el otro lado de la tensión central |
 
-Es la distinción menos deducible de las cuatro capas: `limpiador.gd` y `examen.gd` son dos `Node`
+Es la distinción menos deducible de todas las capas: `limpiador.gd` y `examen.gd` son dos `Node`
 que se parecen en todo salvo en lo único que importa —uno paga el minuto y el otro no—, y el
 nombre del archivo no lo dice.
 

@@ -7,9 +7,9 @@ no es obvia.
 | Qué | Dónde |
 |---|---|
 | El workflow | [`.github/workflows/desplegar.yml`](../../.github/workflows/desplegar.yml) |
-| El preset | `export_presets.cfg`, preset `Web`, exporta a `export/web/index.html` |
+| El preset | `export_presets.cfg`, el preset de plataforma Web: nombre y destino están ahí |
 | Los headers | `vercel.json` |
-| La versión del motor | `.godot-version` — **el único lugar donde está escrita** |
+| La versión del motor | `.godot-version` |
 | El veredicto del export | `.claude/scripts/verificar_export.py` |
 | El veredicto de la URL | `.claude/scripts/verificar_despliegue.py` |
 | El humo en un navegador | `.github/scripts/humo_en_navegador.mjs` |
@@ -23,10 +23,9 @@ publicaría trabajo a medio integrar sobre la URL que mira la cátedra — ver
 
 ## Los secretos
 
-Los tres van en **Settings → Secrets and variables → Actions**. Sin cualquiera de ellos el
-workflow **falla en el primer paso nombrándolo**, antes de bajar un giga de templates: la
-alternativa —enterarse media hora después por un error de la CLI que no lo nombra, o peor, no
-desplegar y salir en verde— es exactamente el modo de falla que este repo persigue.
+Van en **Settings → Secrets and variables → Actions**. Sin cualquiera de ellos el workflow
+**falla en el primer paso nombrándolo**, antes de bajar las templates. La alternativa es
+enterarse tarde, por un error de la CLI que no lo nombra.
 
 | Secreto | De dónde sale |
 |---|---|
@@ -39,30 +38,25 @@ de la cuenta.
 
 ## Y apagarle la Deployment Protection al proyecto
 
-**Un proyecto de Vercel nace con la protección encendida**, y con eso los cuatro archivos
+**Un proyecto de Vercel nace con la protección encendida.** Con eso, los archivos del juego
 contestan `302` a `vercel.com/sso-api` en vez de servirse. Los dos verificadores de abajo salen
 rojos aunque el export esté perfecto: no llegan a mirar el juego, miran una pantalla de login.
 
 Se apaga en **Project → Settings → Deployment Protection**. Si la producción tiene que quedar
 protegida, hay que darle a la CI un `VERCEL_AUTOMATION_BYPASS_SECRET` y mandarlo en cada
-petición — pero entonces *nadie de afuera puede jugar*, que es lo que este spec existe para
-lograr.
-
-Medido el 2026-09-07 contra el proyecto de este repo, con la protección puesta:
-`verificar_despliegue.py` nombra los cuatro `302` y su destino.
+petición. Pero entonces *nadie de afuera puede jugar*. Con la protección puesta,
+`verificar_despliegue.py` nombra cada `302` y su destino.
 
 ## Los tres veredictos, y por qué no alcanza con uno
 
-**El código de salida del export no dice nada.** Medido: `--export-release "Web"` termina con
-`Program crashed with signal 11` y **devuelve 0**. Un paso de CI que mire el `$?` sale verde con
-un directorio a medio escribir, así que el export corre con `|| true` y quien decide es
-`verificar_export.py`: que estén `index.html`, `index.wasm` e `index.pck`, que el `.wasm` pase
-un piso de 10 MB y que el directorio no pase de 90.
+**El código de salida del export no dice nada.** `--export-release "Web"` puede terminar con
+`Program crashed with signal 11` y **devolver 0**. Un paso de CI que mire el `$?` sale verde con
+un directorio a medio escribir. Por eso el export corre con `|| true`, y quien decide es
+`verificar_export.py`. Qué archivos pide y qué tamaños acepta lo declara `lib/despliegue.py`.
 
-**Contestar 200 no es servir un juego.** `verificar_despliegue.py <URL>` le pide los cuatro
-archivos a la URL publicada y falla si alguno da 404, si falta uno de los dos headers de
-aislamiento, si el `Cache-Control` no trae `must-revalidate` o si el `.wasm` no viene como
-`application/wasm`.
+**Contestar 200 no es servir un juego.** `verificar_despliegue.py <URL>` le pide los archivos
+del juego a la URL publicada. Falla si alguno da 404, si falta un header de aislamiento, si el
+`Cache-Control` no revalida o si el `.wasm` no viene con su tipo.
 
 **Y cargar no es arrancar.** `humo_en_navegador.mjs` abre la URL en un Chromium de verdad y
 falla si `crossOriginIsolated` es `false`, si el overlay de carga de Godot sigue en la página o
@@ -72,10 +66,9 @@ pueden estar en verde con la pantalla en negro.
 ## El par preset↔headers
 
 **Es un par, y las dos mitades viven en archivos distintos.** El preset exporta con hilos
-(`variant/thread_support=true`) y el `index.js` que genera Godot nombra `SharedArrayBuffer` 15
-veces: sin los dos headers de aislamiento que manda `vercel.json` —
-`Cross-Origin-Opener-Policy: same-origin` y `Cross-Origin-Embedder-Policy: require-corp`— el
-deploy contesta 200, el HTML carga y **el juego aborta antes de dibujar un pixel**.
+(`variant/thread_support=true`), y el `index.js` que genera Godot usa `SharedArrayBuffer`. Sin
+los headers de aislamiento que manda `vercel.json`, el deploy contesta 200, el HTML carga y
+**el juego aborta antes de dibujar un pixel**.
 
 Apagar los hilos sin sacar los headers, o al revés, es un cambio de una línea que nadie nota.
 Por eso lo ata un gate: `.claude/scripts/tests/test_despliegue.py` cruza los dos archivos y
@@ -88,22 +81,16 @@ mirar.
 
 ## Por qué exporta Actions y no Vercel
 
-Los runners de Vercel no tienen Godot, y las export templates son **1,2 GB** (1.281.349.702
-bytes, medidos el 2026-09-06) contra un build cache de **1 GB**: no entran, así que se bajarían
-enteras en *cada* deploy, para siempre. El caché de Actions es de 10 GB por repositorio. Vercel
-recibe un directorio ya construido.
-
-**Los tres tamaños de este párrafo viven acá y en ningún otro lado**: los encabezados de
-`verify.yml` y de `desplegar.yml` apuntan a este documento en vez de re-tipearlos. El de las
-templates se mueve con cada bump de `.godot-version`, y escrito en tres archivos envejece en dos
-sin que nadie los cruce.
+Los runners de Vercel no tienen Godot, y las export templates no entran en su build cache: se
+bajarían enteras en *cada* deploy. El caché de Actions sí las aguanta. Vercel recibe un
+directorio ya construido. Los límites de cada caché están en la documentación de cada
+servicio.
 
 ### Y por eso `vercel.json` apaga el deploy automático de Git
 
 El proyecto **está vinculado al repo**, así que sin apagarlo la integración de Vercel construye
-**la raíz** en cada push: sin Godot, sin export, sin juego. No falla — publica. Medido el
-2026-09-07 contra el proyecto de este repo: la producción, desplegada desde `staging` por la
-integración, contestaba **404**.
+**la raíz** en cada push: sin Godot, sin export, sin juego. No falla: publica un sitio que
+contesta **404**.
 
 Y con `desplegar.yml` en `main` serían **dos caminos publicando sobre el mismo proyecto en el
 mismo push**, con el alias de producción para el que termine último: o el juego, o el 404, según
@@ -139,20 +126,3 @@ node .github/scripts/humo_en_navegador.mjs https://<proyecto>.vercel.app
 Las templates se bajan una vez desde el editor (**Editor → Manage Export Templates**) o a mano
 a `~/.local/share/godot/export_templates/<version>.stable/` — con **punto** y no con guion, que
 es como se llama la release: puesto con el nombre equivocado, Godot dice que faltan.
-
-## Lo que todavía no se corrió
-
-**El proyecto de Vercel ya existe, y el verificador se ejerció contra una URL viva.** El
-2026-09-07, en dos estados distintos y contestando distinto en cada uno: con la protección puesta
-nombró los cuatro `302` y su destino; apagada, los cuatro `404` del deploy que la integración de
-Git había hecho de la raíz del repo. **Vercel daba ese deploy por exitoso en los dos casos.** O
-sea que «publicar no es haber publicado» dejó de ser una afirmación sobre el código.
-
-Lo que sigue sin correrse es el resto de la cadena, y falta por dos cosas concretas:
-
-- **Falta `VERCEL_TOKEN`.** Los otros dos están cargados desde el 2026-09-07: no son secretos,
-  son los IDs del proyecto. El workflow falla en su primer paso nombrando el que falte, que es
-  lo que se diseñó.
-
-Con esas dos, la primera corrida de `desplegar` sobre `main` cierra el humo en navegador, que es
-lo único que nunca se ejerció: `humo_en_navegador.mjs` no corrió nunca, ni acá ni en CI.

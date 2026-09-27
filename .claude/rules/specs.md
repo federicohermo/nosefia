@@ -30,7 +30,7 @@ lo que el juego tiene que hacer. No se crean `spec.md`, `research.md`, `plan.md`
 - Un hueco va a `OQ-<COD>-###`. No se inventa un valor por defecto.
 - `status: draft` mientras algún criterio no tenga test. El PR que lo pasa a `ratified` es la
   aprobación. Un spec reemplazado pasa a `superseded`. Una funcionalidad que se quita borra su
-  spec, en su propio commit.
+  spec.
 
 ## Cada AC nombra su test
 

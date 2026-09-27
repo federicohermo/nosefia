@@ -18,34 +18,23 @@ var tareas_hechas: int = 0
 func consecuencia_de(cumplidas: int, obligatorias: int) -> Consecuencias.Banda:
 ```
 
-Sin tipos, el error de una firma que cambió aparece **en runtime, en la escena, a los tres
-días**. Con tipos lo caza el editor al guardar. No hay gate que lo verifique: depende de la
-revisión.
-
-El `-> void` va también en las funciones que no devuelven nada. Omitirlo no es «más corto»: es no
-haber decidido.
+Sin tipos, el error de una firma que cambió aparece **en runtime, en la escena**. Con tipos lo
+caza el editor al guardar. **Lo verifica el motor:** `project.godot` pone en «Error» la
+advertencia de declaración sin tipo. El `-> void` va también en las funciones que no devuelven
+nada.
 
 ## Tabs, y el formato lo pone la herramienta
 
 `gdformat` decide indentación, espacios y cortes de línea. **No se discute formato en una
-revisión**: se corre `gdformat src test`. Lo verifica el nodo `formato`. El largo máximo de línea
-es **100**, y lo verifica `gdlint`.
+revisión.** Un hook corre `gdformat` después de cada edición de un `.gd`, y lo verifica el nodo
+`formato`. El largo máximo de línea lo declara `.gdlintrc`, y lo verifica `gdlint`.
 
-## Los comentarios explican el porqué, no el qué
+## Los comentarios y el lenguaje
 
-`# suma uno a las tareas` arriba de `tareas += 1` no dice nada que el código no diga, y envejece:
-el día que la línea cambie, el comentario miente. Lo que sí hay que escribir es lo que el código
-**no puede** decir — una decisión, una restricción del motor, un bug evitado, un número medido.
-
-El texto va en español, con las reglas del lenguaje en
-[convenciones](../../docs/guides/conventions.md). Las excepciones son las que impone el motor:
-`_ready`, `_process`, `queue_free`, los nombres de los nodos y las APIs de gdUnit4.
-
-## Sin `print` que sobreviva al commit
-
-`print` en producción es ruido en la consola de todos y no se puede filtrar. Para depurar
-mientras se trabaja está bien; lo que no puede es quedar. Un mensaje que sí tiene que quedar va
-con `push_warning` o `push_error`, que aparecen en el panel de depuración con su origen.
+Un comentario explica el porqué, no el qué. El texto va en español. Las dos directrices, con las
+reglas del lenguaje, en [directrices](../../docs/guides/conventions.md). Las excepciones son las
+que impone el motor: `_ready`, `_process`, `queue_free`, los nombres de los nodos y las APIs de
+gdUnit4.
 
 ## Nombres
 
@@ -69,7 +58,7 @@ reacomoda lo rompe sin que nada avise hasta que se corre. Las dos salidas: `@exp
 
 ## La dirección de dependencia, y las dos formas de referenciar
 
-`src/dominio` → `src/sistemas` → `src/ui` → `src/escenas`, y sólo hacia abajo. Lo verifica
+La regla está en la [constitución](../../docs/architecture/constitution.md). Lo verifica
 `gate_de_capas.py`, y vale para las dos maneras en que un script llega a otro:
 
 1. **Por ruta** — `preload("res://src/ui/hud.gd")`, `load(…)`, `extends "res://…"`.

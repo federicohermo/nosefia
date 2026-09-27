@@ -47,9 +47,9 @@ no que un archivo esté en la carpeta correcta: eso es semántica y lo mira la r
 
 ## Un `.tscn` es código
 
-Se revisa como código y se mergea con el mismo cuidado: un merge de tres vías sobre una escena
-grande produce una escena rota, no un conflicto. Las dos formas de que eso no pase: **escenas
-chicas y compuestas**, y **avisar antes de tocar una que otro está tocando**.
+Se revisa como código. **Un `.tscn` no se mergea:** `.gitattributes` hace que un merge dé
+conflicto en vez de una escena rota. Dos issues que tocan la misma escena se ordenan. Por eso
+van **escenas chicas y compuestas**.
 
 ## La escena raíz cablea; lo que tiene estructura entra instanciado
 
@@ -57,11 +57,9 @@ Los nodos que `almacen.tscn` declara son **todos hijos directos de su raíz**. C
 hijos propios —un puesto, la geometría del local, un mueble con sus partes— va a su propio
 `.tscn` y entra con una línea de instancia.
 
-**Por qué, y no es estilo:** ocho specs tenían una tarea que editaba esa escena, y un `.tscn` no
-se mergea. Con el blockout adentro —133 líneas que ninguno de los ocho escribió— cada uno abría
-un archivo grande para agregar tres, y dos que se cruzaran chocaban sobre geometría ajena. El
-se lo sacó a `estructura_del_almacen.tscn`. **La escena grande serializa el orden de
-implementación de todo el juego.**
+**Por qué, y no es estilo:** casi todo cambio del juego toca esa escena, y un `.tscn` no se
+mergea. Con la geometría adentro, dos cambios que se cruzaran chocaban sobre líneas ajenas. **La
+escena grande serializa el orden de implementación de todo el juego.**
 
 **Quién lo verifica: `test/escenas/almacen_test.gd`**, en `_violaciones_de_cableado()`. El
 discriminador es el `owner` y no la profundidad: en una sub-escena instanciada el `owner` de cada
@@ -80,22 +78,22 @@ hijo directo de la raíz **con el `transform` del anclaje**.
 Hacia abajo `@export`, hacia arriba señales, y nunca `get_node("../../…")` — ver
 [gdscript.md](./gdscript.md).
 
-Cuatro modos de falla medidos, y **los cuatro cargan la escena sin un solo error**:
+Modos de falla que **cargan la escena sin un solo error**:
 
 - **Un `@export` de tipo `Node` en un `.tscn` escrito a mano necesita su
   `node_paths=PackedStringArray("_hud", "_reloj")`** en el tag del nodo. El motor guarda el valor
   como `NodePath` y sin esa lista no lo resuelve: queda en `null` y el juego muere en el primer
   cuadro con un `Nonexistent function … in base 'Nil'` que no nombra ni al `.tscn` ni al
-  `@export`. El editor lo escribe solo; una escena a mano, no. Está medido, y desde el
-  2026-09-18 **lo cobra un gate**: `lib/escenas.py`, en el nodo `harness`.
+  `@export`. El editor lo escribe solo; una escena a mano, no. **Lo cobra un gate**:
+  `lib/escenas.py`, en el nodo `harness`.
 - **Una sub-escena instanciada necesita su `script` declarado en su propio `.tscn`.** Sin él, el
   `@export` que la apunta desde afuera queda en `null` **con el `node_paths` bien escrito**. Es
   el mismo síntoma con otra causa, y por eso se diagnostica mal: se revisa el `node_paths`, que
-  está bien. Medido en la ola 2 del lote del 2026-09-06.
+  está bien.
 - **Un `@export` que apunta a un script de `escenas/` no se puede tipar por su `class_name`**:
   esos scripts son cáscara y no declaran uno. Va `const X := preload("res://…/x.gd")` y después
   `@export var _x: X`. Sin eso el tipo estático es el del nodo —`Label3D`— y llamarle su método
-  no compila. Está medido.
+  no compila.
 - **El `_ready()` de un hijo corre ANTES que el de su raíz.** Un puesto que se pinta en su propio
   `_ready()` contra un estado que le da el cableado muere con el mismo mensaje. **Quien pinta es
   el cableado**, cuando abre la jornada.

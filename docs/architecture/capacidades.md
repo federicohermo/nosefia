@@ -1,7 +1,7 @@
 # Las capacidades y lo que pasa entre ellas
 
-**El contrato de cada capacidad vive en su spec** —`specs/<capability>/<capability>.md`—. Este
-documento no lo repite: declara **lo que pasa entre ellas**, que es lo único que ningún spec
+**El contrato de cada capacidad vive en su spec** —`specs/<capability>/<capability>.md`—, y su
+código de tres letras, en el frontmatter. Este documento no lo repite: declara **lo que pasa entre ellas**, que es lo único que ningún spec
 puede decir solo.
 
 Las reglas de edición de un spec están en [`.claude/rules/specs.md`](../../.claude/rules/specs.md),
@@ -14,8 +14,8 @@ góndola, arrastrar el legajo entre noches. Una capa es dónde vive el código q
 Son dos ejes distintos y se cruzan: casi toda capacidad tiene piezas en `dominio/` y en
 `sistemas/`, y varias tienen una en `escenas/`.
 
-Por eso el spec **no nombra archivos, clases ni escenas**: eso cambia con el refactor siguiente y
-el contrato tiene que sobrevivirlo.
+Por eso el spec no nombra archivos, clases ni escenas: lo pide
+[la regla de specs](../../.claude/rules/specs.md).
 
 ## El mapa
 
@@ -91,5 +91,5 @@ Tres pares se confunden seguido, y cada uno tiene su regla escrita en los dos sp
 3. **¿El GDD ya lo decidió?** Entonces el spec dice eso, aunque el código todavía diga otra cosa.
    Esa diferencia es el hallazgo, y sale en un issue.
 
-Una capacidad nueva se abre sólo cuando la regla no entra en ninguna de las nueve **y** no es una
-regla de una de ellas. Una capacidad de un solo criterio casi siempre es lo segundo.
+Una capacidad nueva se abre sólo cuando la regla no entra en ninguna de las que existen **y** no
+es una regla de una de ellas. Una capacidad de un solo criterio casi siempre es lo segundo.

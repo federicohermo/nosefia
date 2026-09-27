@@ -13,24 +13,21 @@ Godot y no a un monorepo de funciones.
 python mcp-server/servidor.py    # lo levanta Claude Code, no se corre a mano
 ```
 
-Sin `install`, sin `build` y **sin un índice en disco**. Las dos decisiones tienen el mismo
-motivo, y las dos se apartan de la referencia:
+Sin `install`, sin `build` y **sin un índice en disco**. Las dos decisiones se apartan de la
+referencia:
 
-- **Sin dependencias.** El servidor de la referencia es TypeScript con el SDK oficial y su propio
-  `package.json`. Acá la regla del harness es que `python archivo.py` alcance en un clone recién
-  hecho, y MCP sobre stdio es JSON-RPC con un objeto por línea: son ochenta líneas de biblioteca
-  estándar. A cambio no hay un `install` que correr por worktree ni un `dist/` que se pueda
-  separar de su fuente.
-- **Sin índice.** La referencia compila a `.index/` y cada respuesta declara con qué commit se
-  generó, porque un índice envejece: un archivo nuevo es invisible y un símbolo renombrado
-  conserva el nombre viejo. Acá `src/` son 96 `.gd` y 18 `.tscn`, así que leer el árbol cuesta
-  milisegundos y **cada respuesta mira el disco de ahora**. Se pierde el paso que hay que
-  acordarse de correr, y con él el modo de falla entero.
+- **Sin dependencias.** La regla del harness es que `python archivo.py` alcance en un clone
+  recién hecho. MCP sobre stdio es JSON-RPC con un objeto por línea, y eso entra en la biblioteca
+  estándar. No hay un `install` por worktree ni un `dist/` que se separe de su fuente.
+- **Sin índice.** Un índice en disco envejece: un archivo nuevo es invisible y un símbolo
+  renombrado conserva el nombre viejo. Leer el árbol de `src/` cuesta milisegundos, así que
+  **cada respuesta mira el disco de ahora**.
 
 ## Las herramientas
 
 **`mapa_del_sistema` es la primera consulta de cualquier tarea.** Las otras contestan una
-pregunta puntual.
+pregunta puntual. La lista la declara `TOOLS` en `mcp-server/servidor.py`, con la descripción de
+cada una. La tabla de abajo la copia, y `test_mcp.py` da rojo si se separan.
 
 | Herramienta | Contesta |
 |---|---|
@@ -46,15 +43,15 @@ pregunta puntual.
 | `sin_test` | qué script no tiene espejo y qué criterio no tiene cita |
 | `contexto_de_test` | qué prueba una suite: sus casos, qué criterios cita, qué clases ejerce |
 | `tests_de` | qué suites prueban un `.gd`, y si le falta el espejo |
-| `contexto_de_asset` | quién referencia un asset, por las cuatro formas que existen acá |
-| `assets_sin_referencia` | qué asset no alcanza ninguna de las cuatro |
+| `contexto_de_asset` | quién referencia un asset, por todas las formas que existen acá |
+| `assets_sin_referencia` | qué asset no alcanza ninguna de esas formas |
 
 ## Lo que la descripción de cada una no dice
 
 - **`quien_usa` distingue tres respuestas**: tiene consumidores, existe sin ninguno, o no existe.
   La del medio puede ser código muerto — o algo que sólo se usa desde un `.tscn` por `@export`,
   y eso lo contesta `contexto_de_escena`.
-- **Las cuatro que miran símbolos ignoran los comentarios.** Un `class_name` nombrado en prosa no
+- **Las que miran símbolos ignoran los comentarios.** Un `class_name` nombrado en prosa no
   es un uso. La excepción es `criterio`: la cita de un AC **vive en un comentario**, así que ésa
   busca sobre el texto crudo.
 - **`contexto_de_escena` marca los `@export` de tipo `Node` que no están en el `node_paths`.** Es
@@ -63,14 +60,11 @@ pregunta puntual.
 - **`quien_instancia` es la consulta de paralelizar.** Un `.tscn` no se mergea, así que dos
   issues que tocan la misma escena se ordenan.
 - **`sin_test` lista, no juzga.** El veredicto lo dan `gate_de_tests.py` y `gate_de_specs.py`.
-- **Las dos de assets miran cuatro formas de referencia, y la cuarta es la que importa.** Un
-  `.glb` lleva sus texturas **embebidas**: el nombre vive en su chunk JSON y Godot las
-  extrae a `<stem>_<name>`, con el índice de la imagen pegado atrás cuando dos comparten
-  nombre. No hay `res://`, no hay `uid://`, y el nombre del archivo tampoco está como cadena
-  adentro del binario. Medirlo con las otras tres da treinta huérfanas que no lo son —eso ya
-  se borró una vez, y la reimportación cayó con `Failed loading resource`.
-- **`assets_sin_referencia` sigue siendo una sospecha.** Cubre lo que este repo usa hoy; la
-  quinta forma que aparezca no está. El que decide es el rojo de una corrida de `--import`.
+- **Las dos de assets miran también las texturas embebidas en un `.glb`.** El nombre vive en su
+  chunk JSON, y Godot las extrae a `<stem>_<name>`. No hay `res://` ni `uid://`. Sin esa forma,
+  salen huérfanas texturas que no lo son, y borrarlas rompe la reimportación.
+- **`assets_sin_referencia` sigue siendo una sospecha.** Cubre las formas que este repo usa hoy.
+  El que decide es el rojo de una corrida de `--import`.
 
 ## Qué no cubre
 
@@ -84,7 +78,6 @@ pregunta puntual.
 
 El índice de `class_name` sale de `lib/capas.py`, **el mismo que usa `gate_de_capas.py`**. No hay
 un segundo indexador, y eso no es economía: una herramienta que contesta distinto que el gate se
-deja de mirar el mismo día. Ya pasó con `estructura.py`, que en su primera versión dibujaba tres
-flechas que el gate pone en rojo.
+deja de mirar el mismo día.
 
 Sus tests corren en el nodo `harness` de `verificar.py`.
