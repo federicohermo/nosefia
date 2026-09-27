@@ -22,5 +22,18 @@ class DelLote(unittest.TestCase):
         self.assertFalse(limpiar_worktrees.del_lote(RAIZ / ".claude" / "worktrees-otro" / "x"))
 
 
+class SinCommitear(unittest.TestCase):
+    """Un worktree con cambios sin commitear puede ser de otra sesión que todavía trabaja."""
+
+    def test_un_arbol_limpio_se_puede_borrar(self) -> None:
+        self.assertFalse(limpiar_worktrees.sin_commitear(""))
+
+    def test_un_archivo_modificado_frena_el_borrado(self) -> None:
+        self.assertTrue(limpiar_worktrees.sin_commitear(" M test/dominio/x_test.gd\n"))
+
+    def test_un_archivo_nuevo_frena_el_borrado(self) -> None:
+        self.assertTrue(limpiar_worktrees.sin_commitear("?? test/dominio/nuevo_test.gd\n"))
+
+
 if __name__ == "__main__":
     unittest.main()

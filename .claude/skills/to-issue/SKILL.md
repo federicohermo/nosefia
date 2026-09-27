@@ -157,6 +157,6 @@ Con varios issues de una, antes de mostrar nada:
 Reportá el número del issue, el tipo, y el paso siguiente:
 
 - **Spec: crea, modifica o borra** → `to-spec`, con el issue como entrada, en la rama
-  `feature/<N>-<kebab>`.
+  `<tipo>/<N>-<kebab>`: `feature/`, o `bugfix/` si el bug era una regla sin escribir.
 - **Spec: ninguno** → `implement-feature`, en la rama `<tipo>/<N>-<kebab>`. Un issue que no toca
   `src/` se nombra por lo que toca: `harness/<N>-<kebab>` o `docs/<N>-<kebab>`.
