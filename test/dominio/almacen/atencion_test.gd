@@ -89,7 +89,7 @@ func test_pagar_de_menos_da_una_diferencia_negativa() -> void:  # AC-CTR-003
 	assert_int(atencion.diferencia()).is_equal(-700)
 
 
-func test_los_faltantes_nombran_exactamente_los_productos_que_no_alcanzan() -> void:  # AC-CTR-012
+func test_los_faltantes_nombran_exactamente_los_productos_que_no_alcanzan() -> void:
 	# Con una sola unidad vendible, el renglón que se pide de a dos falta y el de a uno no.
 	var atencion := _atencion(0, 1)
 	var faltantes := atencion.faltantes_del_pedido()
@@ -97,7 +97,7 @@ func test_los_faltantes_nombran_exactamente_los_productos_que_no_alcanzan() -> v
 	assert_int(faltantes[0].id).is_equal(Producto.Id.ACTRONCITO)
 
 
-func test_los_faltantes_miran_los_vendibles_y_no_la_gondola() -> void:  # AC-CTR-012
+func test_los_faltantes_miran_los_vendibles_y_no_la_gondola() -> void:
 	# La góndola llena no cubre un pedido: lo que el estante necesita no se vende. Un
 	# `faltantes_del_pedido()` que mirara la góndola daría vacío acá y el cobro fallaría igual.
 	var atencion := _atencion(0, 0)
@@ -148,7 +148,7 @@ func test_despachar_dos_veces_devuelve_false_la_segunda() -> void:  # AC-CTR-008
 	assert_bool(atencion.despachar_sin_vender()).is_false()
 
 
-func test_cobrar_sobre_una_despachada_a_mano_no_vende() -> void:
+func test_cobrar_sobre_una_despachada_a_mano_no_vende() -> void:  # AC-CTR-008
 	var inventario := _inventario()
 	var atencion := Atencion.new(Comprador.new("Marta", _pedido(), 0), inventario)
 	atencion.despachar_sin_vender()

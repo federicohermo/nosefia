@@ -5,7 +5,7 @@
 extends GdUnitTestSuite
 
 
-func test_una_mancha_no_se_limpia_en_el_instante_en_que_el_jugador_llega() -> void:  # AC-CLN-001
+func test_una_mancha_no_se_limpia_en_el_instante_en_que_el_jugador_llega() -> void:
 	# El piso es 2: con una sola pasada limpiar volvería a ser un clic, y un clic no compite
 	# contra investigar porque no hay nada que repartir.
 	(

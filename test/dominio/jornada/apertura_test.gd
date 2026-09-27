@@ -37,6 +37,20 @@ func test_el_turno_de_la_jornada_nace_sin_ninguna_tarea_cumplida() -> void:  # A
 	assert_bool(turno.todas_cumplidas()).is_false()
 
 
+func test_la_segunda_jornada_trae_una_por_tipo_y_ninguna_cumplida() -> void:  # AC-SHF-005
+	# Se cumple una de la primera: con instancias compartidas, la segunda la traería cumplida.
+	var primera := Apertura.obligatorias()
+	assert_bool(Apertura.turno_de_la_jornada(primera).completar(primera[0])).is_true()
+	var segunda := Apertura.obligatorias()
+	var tipos: Array[int] = []
+	for tarea: Tarea in segunda:
+		assert_bool(tarea.completada()).is_false()
+		tipos.append(tarea.tipo())
+	assert_int(tipos.size()).is_equal(Tarea.Tipo.size())
+	for tipo: int in Tarea.Tipo.values():
+		assert_int(tipos.count(tipo)).is_equal(1)
+
+
 func test_el_turno_cuenta_contra_la_lista_que_recibe_y_no_contra_una_copia() -> void:
 	# Es lo que hace posible que el reloj entregue la misma instancia por la que el 008 va a
 	# preguntar: completar una copia devolvería `true` sin subir el contador del turno.
@@ -72,7 +86,7 @@ func test_la_gondola_arranca_vacia_y_por_eso_reponer_es_una_tarea() -> void:  # 
 	assert_int(inventario.faltantes().size()).is_equal(Catalogo.todos().size())
 
 
-func test_cada_jornada_recibe_un_inventario_propio() -> void:  # AC-SHF-005
+func test_cada_jornada_recibe_un_inventario_propio() -> void:
 	# Instancias distintas y no la misma: con una sola compartida, lo repuesto anoche seguiría
 	# en la góndola esta noche y reponer se cumpliría sola.
 	var una := Apertura.inventario_de_la_jornada()
