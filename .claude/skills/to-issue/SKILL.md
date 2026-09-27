@@ -111,6 +111,10 @@ Lo que más se rompe:
 - **Un archivo en «Sólo lectura» se lee antes de ponerlo ahí.** En el #201, el enlace de audio
   ataba una sola fuente por señal, y con cinco puertas sonaba una. Tuvo que pasar a «Se
   escribe».
+- **Una regla de `.claude/rules/` que cambia pone en «Se escribe» sus copias `AGENTS.md`.**
+  `test_copias_de_agents_md.py` da rojo si una copia difiere de su regla. Si una copia vive en
+  `src/`, la rama lleva un prefijo del producto, porque `docs/` no escribe en `src/`. En el #231
+  faltaron esas copias, y la rama pasó de `docs/` a `improvement/` a mitad del carril.
 
 ## Paso 4 — Mostrar y publicar
 

@@ -115,6 +115,10 @@ Cada agente recibe, literal:
   `implement-feature` le pide cerrar el lazo, y en un lote eso da N copias de la misma lección.
   Medido el 2026-09-23: los dos carriles escribieron la misma regla en `to-issue` y en las siete
   copias de `sin-deuda.md`, y los dos PR chocaban en ocho archivos.
+- **Godot con `--script` lleva siempre `--path .`, y el script termina con `quit()`.** Sin
+  `--path`, `res://` es el directorio actual, y fuera de la raíz del repo cada `load` falla. Si
+  el script aborta antes de `quit()`, Godot imprime el error y no sale nunca. Medido el
+  2026-09-27: lo pisó el carril que cargaba todos los scripts con el motor.
 - **Un nombre propio para cada archivo de scratch.** Dos carriles que escriben el mismo archivo
   temporal se pisan sin conflicto visible. **Y se escribe con `Write`.**
 - **Un comando que este skill entrega se vuelve a correr antes de repartirlo**, nunca se copia de
@@ -163,8 +167,13 @@ le faltó. Esperá a que vuelvan todos antes del reporte.
 ## Paso 5 — Destruir los worktrees
 
 ```bash
-python .claude/skills/implement-batch/scripts/limpiar_worktrees.py --todos
+python .claude/skills/implement-batch/scripts/limpiar_worktrees.py <ruta> [<ruta> ...]
 ```
+
+**Las rutas son las del lote, una por carril, y nunca `--todos`.** Cada notificación de un
+carril trae su `worktreePath`. `--todos` toma todo lo que hay bajo `.claude/worktrees/`, y eso
+incluye los worktrees de otra sesión que corre al mismo tiempo. Medido el 2026-09-27: se llevó
+dos worktrees ajenos y mató el editor de Godot que tenía uno abierto.
 
 **Va antes del reporte, no después, y no se hace a mano.** `git worktree remove` falla con
 `Directory not empty` en **todo worktree que haya corrido `verificar.py`**, o sea en todos: el
