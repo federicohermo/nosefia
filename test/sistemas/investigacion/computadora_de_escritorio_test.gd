@@ -2,7 +2,7 @@
 ##
 ## **Es dueño de las cuatro piezas del dominio a propósito**: si las construyera la pantalla,
 ## esconder el panel al cambiar de app tiraría lo leído y lo anotado — sin un solo error, y con
-## los seis nodos en verde.
+## los nodos en verde.
 ##
 ## Ningún caso entra el nodo al árbol. El único `_process()` que corre es el del reloj, llamado a
 ## mano, y justamente porque el criterio mide que nadie lo haya pausado.

@@ -3,7 +3,7 @@
 ##
 ## **Es dueño de las cuatro piezas del dominio, y ésa es la decisión del spec.** Si las
 ## construyera la pantalla, esconder el panel al cambiar de app tiraría lo leído y lo anotado —
-## sin un solo error, y con los seis nodos en verde, porque `ui/` no lleva test obligatorio.
+## sin un solo error, y con los nodos en verde, porque `ui/` no lleva test obligatorio.
 ##
 ## **Traduce, no decide.** Cuándo se puede abrir, qué app sigue y si lo anotado coincide con lo
 ## vendido son preguntas de `dominio/`.

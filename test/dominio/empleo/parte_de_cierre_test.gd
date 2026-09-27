@@ -1,7 +1,7 @@
 ## El parte ya decidido: lo que la pantalla va a copiar sin pensar.
 ##
 ## Todo lo que la placa dice se arma acá, y por eso se puede probar sin levantar una escena: el
-## día que un `match` de bandas se escriba en `ui/`, ninguno de los seis nodos lo va a decir, y
+## día que un `match` de bandas se escriba en `ui/`, ninguno de los nodos lo va a decir, y
 ## es lo que estos casos existen para hacer innecesario.
 extends GdUnitTestSuite
 

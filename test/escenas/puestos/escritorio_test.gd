@@ -79,7 +79,7 @@ func test_el_clic_derecho_llega_aunque_la_pantalla_tape_el_viewport() -> void:
 	# `Control` trae `MOUSE_FILTER_STOP` por defecto, así que se come el botón del mouse. Con el
 	# gesto escrito en el callback que corre después de la interfaz, la computadora se abría y no
 	# se cerraba nunca: el jugador quedaba suspendido detrás del panel hasta que cerrara la noche,
-	# con el `MOUSE_BUTTON_RIGHT` escrito y los seis nodos en verde.
+	# con el `MOUSE_BUTTON_RIGHT` escrito y los nodos en verde.
 	var pantalla: CanvasLayer = auto_free(load(ESCENA_DE_LA_PANTALLA).instantiate())
 	var fondo := pantalla.get_node("Fondo") as Control
 	(
