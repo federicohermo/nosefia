@@ -271,3 +271,21 @@ func test_agarrar_y_soltar_un_nodo_sin_colisiones() -> void:
 	assert_bool(agarre.pedir_agarrar(_lata(), nodo)).is_true()
 	assert_object(agarre.soltar(true)).is_same(nodo)
 	assert_object(nodo.get_parent()).is_same(agarre.punto_de_soltado)
+
+
+func test_lo_soltado_vuelve_suelto_del_examen_y_sin_llenar_las_manos() -> void:  # AC-INV-021
+	# Lo que ya se soltó una vez queda suelto del padre, y ahí su `transform` es global: volver
+	# sin el `top_level` lo dejaría en otro lugar.
+	var agarre := _cableado()
+	var cuerpo := _cuerpo()
+	cuerpo.top_level = true
+	cuerpo.transform = Transform3D(Basis(Vector3.UP, 0.4), Vector3(2.0, 0.3, 1.0))
+	var lugar := cuerpo.transform
+	var cara: Node3D = auto_free(Node3D.new())
+	assert_object(agarre.acercar_del_mundo(cuerpo, cara)).is_same(cuerpo)
+	assert_object(agarre.acercar_del_mundo(_cuerpo(), cara)).is_null()
+	assert_object(agarre.manos().sostenido()).is_null()
+	assert_object(agarre.devolver_al_mundo()).is_same(cuerpo)
+	assert_bool(cuerpo.top_level).is_true()
+	assert_bool(cuerpo.transform.is_equal_approx(lugar)).is_true()
+	assert_object(agarre.devolver_al_mundo()).is_null()

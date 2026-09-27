@@ -5,8 +5,8 @@
 ## construyera la pantalla, esconder el panel al cambiar de app tiraría lo leído y lo anotado —
 ## sin un solo error, y con los seis nodos en verde, porque `ui/` no lleva test obligatorio.
 ##
-## **Traduce, no decide.** Cuándo se puede abrir, qué app sigue, qué cuenta como faltante y cuándo
-## `REGISTRAR` está cumplida son preguntas de `dominio/`. Los `if` de este archivo son valores que
+## **Traduce, no decide.** Cuándo se puede abrir, qué app sigue y cuándo `REGISTRAR` está cumplida
+## son preguntas de `dominio/`. Los `if` de este archivo son valores que
 ## devolvió el dominio y el estado nulo del cableado.
 ##
 ## **No consume tiempo del turno y no lo pausa.** Usar la computadora no descuenta un segundo: lo
@@ -21,7 +21,7 @@ signal computadora_cerrada
 signal app_cambiada(app: Computadora.App)
 signal chats_actualizados(sin_leer: int)
 signal nota_escrita(nota: Nota)
-signal caja_actualizada(registrados: int)
+signal registro_actualizado
 
 ## Entra por `@export` y no como autoload ni por `get_node()` hacia arriba: está medido que
 ## `gate_de_capas.py` no ve un autoload nombrado por su nombre global.
@@ -34,16 +34,15 @@ var _computadora := Computadora.new()
 var _bandeja := Bandeja.new(Conversacion.desde_disco())
 var _cuaderno := Cuaderno.new()
 
-var _caja: CajaRegistradora = null
+var _registro: RegistroDeVentas = null
 
 
-## Le entrega a la computadora la caja de la noche.
+## Le entrega a la computadora la planilla de la noche.
 ##
-## La caja se recibe y no se construye acá porque necesita el inventario de la jornada, que es el
-## mismo que llena reponer y vacía la ventanilla: un segundo inventario sería un segundo
-## stock, y las dos pantallas dirían números distintos del mismo producto.
-func arrancar(caja: CajaRegistradora) -> void:
-	_caja = caja
+## La planilla se recibe y no se construye acá porque compara contra las ventas de la jornada, que
+## son las de la ventanilla: una segunda atención daría otra noche sin ventas.
+func arrancar(registro: RegistroDeVentas) -> void:
+	_registro = registro
 
 
 func computadora() -> Computadora:
@@ -58,8 +57,8 @@ func cuaderno() -> Cuaderno:
 	return _cuaderno
 
 
-func caja() -> CajaRegistradora:
-	return _caja
+func registro() -> RegistroDeVentas:
+	return _registro
 
 
 ## Enciende la pantalla en la app donde se dejó, y avisa cuál es.
@@ -97,20 +96,38 @@ func pedir_escribir(titulo: String, texto: String) -> void:
 	nota_escrita.emit(nota)
 
 
-## Pasa un producto por la caja y, si no queda ninguno, le pide al reloj que cuente la obligatoria.
+func pedir_sumar(producto: Producto) -> void:
+	if _cableada() and _registro.sumar(producto):
+		_al_cambiar_el_registro()
+
+
+func pedir_restar(producto: Producto) -> void:
+	if _cableada() and _registro.restar(producto):
+		_al_cambiar_el_registro()
+
+
+## Cumple o descumple registrar según lo anotado. Sólo la llama un gesto que cambió una fila: ni
+## `arrancar()` ni una venta la llaman, así que la noche no arranca con la tarea hecha.
 ##
 ## La `Tarea` sale de `RelojDelTurno.obligatoria()` y nunca de una construida acá: una copia
-## devuelve `true` y deja el `"3/5"` del HUD diciendo que no — sin
-## error y en verde.
-func pedir_registrar(producto: Producto) -> void:
-	if _caja == null or reloj == null:
+## devuelve `true` y deja el contador del HUD sin subir, sin error y en verde.
+func revisar_registro() -> void:
+	var registrar := reloj.obligatoria(Tarea.Tipo.REGISTRAR)
+	if _registro.coincide():
+		reloj.completar(registrar)
+	else:
+		reloj.descumplir(registrar)
+
+
+func _al_cambiar_el_registro() -> void:
+	registro_actualizado.emit()
+	revisar_registro()
+
+
+func _cableada() -> bool:
+	if _registro == null or reloj == null:
 		# Un cableado incompleto es un `.tscn` mal armado y no un rechazo del juego: sale por el
 		# panel de depuración, que es donde se lee.
 		push_error("Computadora sin cablear: revisar almacen.tscn y almacen.gd")
-		return
-	if not _caja.registrar(producto):
-		return
-	caja_actualizada.emit(_caja.registrados())
-	if not _caja.completada():
-		return
-	reloj.completar(reloj.obligatoria(Tarea.Tipo.REGISTRAR))
+		return false
+	return true

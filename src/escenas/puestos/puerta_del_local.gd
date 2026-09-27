@@ -1,5 +1,3 @@
-## Una puerta que se ve: se la toca y la hoja gira hacia adentro del cuarto. Cablea y nada más.
-##
 ## **No decide si está abierta ni cuánto giró.** Eso es `Puerta`, que es de `dominio/` y tiene
 ## test; acá viven la bisagra, el sentido y la aritmética de transformadas, que son geometría de
 ## la escena y no una regla del juego.
@@ -19,6 +17,15 @@ extends AnimatableBody3D
 ## La hoja dejó de girar. Sale una vez por movimiento, en el paso en que queda quieta.
 signal hoja_quieta(cuerpo: PhysicsBody3D)
 
+## Un gesto sobre la puerta. Sale una vez, al pedirlo, y no durante el giro.
+signal puerta_abierta(puerta: Node3D)
+signal puerta_cerrada(puerta: Node3D)
+signal puerta_trabada(puerta: Node3D)
+signal porton_trabado(puerta: Node3D)
+
+## Qué aviso da una puerta que no abre.
+enum Traba { NINGUNA, PUERTA, PORTON }
+
 ## La malla que gira, que es el padre de este cuerpo. Entra por `@export` y no con un
 ## `get_parent()` para que el `.tscn` diga qué se mueve en vez de que lo suponga el script.
 @export var hoja: MeshInstance3D
@@ -26,6 +33,12 @@ signal hoja_quieta(cuerpo: PhysicsBody3D)
 ## Las mallas que el marco del objetivo pinta al enfocar. Sin esto iría a buscar
 ## `MeshInstance3D` hijos de este cuerpo, que no tiene ninguno: la puerta se vería sin contorno.
 @export var mallas: Array[MeshInstance3D] = []
+
+## El setter y no `_ready()`: los tests tocan la puerta sin meter la escena al árbol.
+@export var traba := Traba.NINGUNA:
+	set(valor):
+		traba = valor
+		_puerta = Puerta.new(valor != Traba.NINGUNA)
 
 var _puerta := Puerta.new()
 
@@ -62,11 +75,16 @@ func _ready() -> void:
 ## Devuelve `null` porque una puerta no se levanta: si contestara un objeto, el clic de agarrar se
 ## llevaría la hoja en la mano en vez de abrirla.
 func interactuar() -> ObjetoDelAlmacen:
-	_puerta.alternar()
+	if not _puerta.alternar():
+		(porton_trabado if traba == Traba.PORTON else puerta_trabada).emit(self)
+	elif _puerta.abierta():
+		puerta_abierta.emit(self)
+	else:
+		puerta_cerrada.emit(self)
 	return null
 
 
-## En qué estado está. Lo pregunta el test del vano para saber cuándo terminó el giro.
+## En qué estado está.
 func puerta() -> Puerta:
 	return _puerta
 

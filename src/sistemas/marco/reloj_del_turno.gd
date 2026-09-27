@@ -18,6 +18,7 @@ extends Node
 
 signal tiempo_consumido(restante: float)
 signal tarea_completada(cumplidas: int)
+signal tarea_descumplida(cumplidas: int)
 signal turno_cerrado(cumplidas: int)
 
 var _turno: Turno = null
@@ -71,6 +72,17 @@ func completar(tarea: Tarea) -> bool:
 	if not _turno.completar(tarea):
 		return false
 	tarea_completada.emit(_turno.tareas_cumplidas())
+	return true
+
+
+## Deshace una tarea, con el mismo guard que `completar()`. La señal es aparte de
+## `tarea_completada` para que la tabla de sonidos no suene al descumplir.
+func descumplir(tarea: Tarea) -> bool:
+	if _turno == null or tarea == null:
+		return false
+	if not _turno.descumplir(tarea):
+		return false
+	tarea_descumplida.emit(_turno.tareas_cumplidas())
 	return true
 
 

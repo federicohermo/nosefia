@@ -11,4 +11,5 @@ texto = "Adentro hay remitos rotos con la fecha de mañana."
 script = ExtResource("1_objeto")
 id = &"bolsa_de_basura_2"
 nombre = "Bolsa de basura"
+sonoridad = 7
 revelacion = SubResource("Resource_revelacion")

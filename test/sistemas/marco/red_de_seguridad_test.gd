@@ -225,3 +225,52 @@ func test_lo_que_nace_despues_se_mira_al_dormirse() -> void:
 	nuevo.sleeping_state_changed.emit()
 	assert_int(red.rescates.size()).is_equal(1)
 	assert_object(red.rescates[0]["objeto"]).is_same(nuevo)
+
+
+## Un segundo objeto quieto en el origen del primero, con sus datos propios.
+func _ocupante_del_origen(red: RedDeSeguridad, objeto: RigidBody3D, admite: bool) -> RigidBody3D:
+	var ocupante: RigidBody3D = OBJETO.instantiate()
+	var datos := (ocupante.get("datos") as ObjetoDelAlmacen).duplicate() as ObjetoDelAlmacen
+	datos.admite_encima = admite
+	ocupante.set("datos", datos)
+	ocupante.freeze = true
+	red.get_parent().add_child(ocupante)
+	var origen: Transform3D = objeto.call(ReglasDeLosObjetos.METODO_LUGAR_DE_ORIGEN)
+	ocupante.global_position = origen.origin
+	await get_tree().physics_frame
+	return ocupante
+
+
+func test_va_encima_de_lo_que_ocupa_el_origen_si_admite_otro_encima() -> void:  # AC-PLY-027
+	var mundo: Array = await _mundo()
+	var red: RedDeSeguridad = mundo[0]
+	var objeto: RigidBody3D = mundo[1]
+	var ocupante: RigidBody3D = await _ocupante_del_origen(red, objeto, true)
+	objeto.global_position = PARED
+	red.revisar(objeto)
+	assert_int(red.rescates[0]["clase"]).is_equal(Rescate.Clase.ENCIMA_DEL_ORIGEN)
+	assert_float(objeto.global_position.y).is_greater(ocupante.global_position.y)
+
+
+func test_no_va_encima_de_lo_que_ocupa_el_origen_si_no_admite_otro_encima() -> void:  # AC-PLY-027
+	var mundo: Array = await _mundo()
+	var red: RedDeSeguridad = mundo[0]
+	var objeto: RigidBody3D = mundo[1]
+	await _ocupante_del_origen(red, objeto, false)
+	objeto.global_position = PARED
+	red.revisar(objeto)
+	assert_int(red.rescates[0]["clase"]).is_not_equal(Rescate.Clase.ENCIMA_DEL_ORIGEN)
+	assert_vector(objeto.global_position).is_equal(PARED)
+
+
+func test_va_encima_de_lo_que_ocupa_el_origen_aunque_este_de_costado() -> void:  # AC-PLY-027
+	var mundo: Array = await _mundo()
+	var red: RedDeSeguridad = mundo[0]
+	var objeto: RigidBody3D = mundo[1]
+	var ocupante: RigidBody3D = await _ocupante_del_origen(red, objeto, true)
+	ocupante.global_basis = Basis(Vector3.RIGHT, PI / 2.0)
+	await get_tree().physics_frame
+	objeto.global_position = PARED
+	red.revisar(objeto)
+	assert_int(red.rescates[0]["clase"]).is_equal(Rescate.Clase.ENCIMA_DEL_ORIGEN)
+	assert_float(objeto.global_position.y).is_greater(ocupante.global_position.y)

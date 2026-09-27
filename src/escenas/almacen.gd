@@ -84,6 +84,7 @@ func _ready() -> void:
 	_reloj.tiempo_consumido.connect(_reloj_de_mesa.mostrar_tiempo)
 	_ciclo.jornada_abierta.connect(_reloj_de_mesa.declarar_jornada)
 	_reloj.tarea_completada.connect(_hud.mostrar_tareas)
+	_reloj.tarea_descumplida.connect(_hud.mostrar_tareas)
 	_ciclo.jornada_cerrada.connect(_al_cerrar_la_jornada)
 	# El marcador de obligatorias no se reinicia solo: `mostrar_tareas()` se vuelve a llamar
 	# recién cuando el jugador completa una, así que sin esto la noche 2 arranca mostrando las
@@ -111,7 +112,13 @@ func _ready() -> void:
 				_limpiador,
 				_recolector,
 				_agarre,
+				_jugador,
 				$Interfaz/PantallaDeComputadora,
+				$Estructura/puerta/CuerpoDeLaHoja,
+				$Estructura/puerta2/CuerpoDeLaHoja,
+				$Estructura/puertaentrada/CuerpoDeLaHoja,
+				$Estructura/porton/CuerpoDeLaHoja,
+				$Estructura/puertajefe/CuerpoDeLaHoja,
 			]
 		)
 	)
@@ -141,7 +148,10 @@ func _ready() -> void:
 func _al_abrir_la_jornada(_jornada: int) -> void:
 	# Primero que nada, y por eso antes de `limpiar()`: lo que quedó en la mano cuelga del
 	# jugador, así que devolverlo a su lugar le escribiría la posición relativa a la mano y la
-	# caja terminaría flotando pegada al cuerpo toda la noche siguiente.
+	# caja terminaría flotando pegada al cuerpo toda la noche siguiente. Y antes, el examen: lo
+	# examinado cuelga de la cara, y vaciar las manos lo dejaría apuntando a un nodo que ya no
+	# está ahí.
+	_jugador.examen.terminar()
 	_agarre.vaciar_las_manos()
 	_hud.declarar_obligatorias(Apertura.cantidad_de_obligatorias())
 	# **Un solo inventario para las dos obligatorias**: reponer lo llena y la ventanilla lo
@@ -150,8 +160,9 @@ func _al_abrir_la_jornada(_jornada: int) -> void:
 	var inventario := Apertura.inventario_de_la_jornada()
 	_repositor.arrancar(Estante.new(inventario, Catalogo.todos()))
 	_reposicion_manual.limpiar()
-	_atenciones.arrancar(TareaDeAtender.new(Compradores.de_la_jornada(), inventario))
-	_computadora.arrancar(CajaRegistradora.new(inventario, CajaRegistradora.productos_del_dia()))
+	var atender := TareaDeAtender.new(Compradores.de_la_jornada(), inventario)
+	_atenciones.arrancar(atender)
+	_computadora.arrancar(RegistroDeVentas.new(Catalogo.todos(), atender))
 	# El piso se rehace cada noche: guardar el estado entre jornadas está fuera de alcance, y una
 	# sola instancia dejaría el local limpio de anoche y la obligatoria cumplida sola.
 	_limpiador.arrancar(PisoDelLocal.de_la_jornada())
@@ -180,6 +191,7 @@ func _al_abrir_la_jornada(_jornada: int) -> void:
 ## que el turno estuvo contando toda la noche, así que el parte lee el estado de verdad y no una
 ## copia que nadie completó.
 func _al_cerrar_la_jornada(jornada: int, cumplidas: int) -> void:
+	_audio.callar_la_musica()
 	_hud.mostrar_tareas(cumplidas)
 	_hud.mostrar_apercibimientos(_partida.apercibimientos())
 	_pantalla.mostrar(

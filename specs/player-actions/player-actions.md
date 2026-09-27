@@ -83,9 +83,9 @@ examinar, llevar y soltar van de la más cerca a la más lejos, y ninguna llega 
 
 ### BR-PLY-011 — La puerta es una intención y una hoja
 
-CUANDO se interactúa con una puerta, el sistema DEBE alternar entre abierta y cerrada de
-inmediato, y DEBE mover la hoja hacia su tope sin pasarse y sin saltar en un cuadro. Abierta, la
-hoja queda a **un cuarto de vuelta** y deja pasar.
+CUANDO se interactúa con una puerta que no está trabada, el sistema DEBE alternar entre abierta
+y cerrada de inmediato, y DEBE mover la hoja hacia su tope sin pasarse y sin saltar en un cuadro.
+Abierta, la hoja queda a **un cuarto de vuelta** y deja pasar.
 
 ### BR-PLY-012 — Una herramienta sirve para algo o para nada
 
@@ -115,7 +115,7 @@ contra el sólido más delgado.
 SI algo que se agarra queda superpuesto con un sólido fijo al soltarlo, al terminar un empujón o
 al dormirse, ENTONCES el sistema DEBE llevarlo al primero de estos lugares que quede libre y
 alcanzable: deshacer el gesto; alrededor del punto donde entró, hasta una distancia de su tamaño;
-encima de lo que ocupa su lugar de origen, si es una caja; y su lugar de origen. Libre y
+encima de lo que ocupa su lugar de origen, si admite otro encima; y su lugar de origen. Libre y
 alcanzable es sin superponerse con ningún sólido fijo, apoyado y fuera de las áreas de las
 tareas. SI ninguno queda libre, ENTONCES DEBE dejarlo donde está. El sistema NO DEBE devolverlo
 a la mano, y NO DEBE cambiar el estado de ninguna tarea por el rescate.
@@ -126,10 +126,31 @@ MIENTRAS la hoja de una puerta gira, el sistema DEBE correr en el sentido del gi
 sueltos que encuentra en su recorrido, despiertos o dormidos. CUANDO la hoja queda quieta, el
 sistema NO DEBE dejar nada adentro de ella: la hoja quieta es un sólido fijo más.
 
+### BR-PLY-018 — Lo soltado se apoya donde se mira
+
+CUANDO se suelta algo con la mira sobre una superficie al alcance, el sistema DEBE apoyarlo sobre
+el punto que la mira toca, si esa superficie lo admite. Una superficie lo admite si es
+horizontal —con el mismo corte que apoyar una caja— y si lo de abajo es el mundo fijo o un objeto
+que admite otro encima. Sólo las cajas contenedoras admiten otro encima.
+
+SI la superficie no lo admite, o ahí lo soltado queda encimado con algo o adentro de un mueble,
+ENTONCES el sistema DEBE soltarlo como sin mira: al frente, o a los pies si adelante no hay
+lugar.
+
 ### BR-PLY-019 — Cada noche arranca con las puertas cerradas
 
 CUANDO se abre una jornada, el sistema DEBE dejar las puertas interiores cerradas, con la hoja en
 su lugar y sin girar hasta él, aunque la noche anterior hayan quedado abiertas o a medio giro.
+
+### BR-PLY-020 — Tres puertas no abren, y cada gesto sobre una puerta avisa
+
+SI una puerta está trabada, ENTONCES interactuar con ella NO DEBE abrirla ni girar la hoja, y
+DEBE contestar que está trabada, todas las veces. La entrada al local, el portón del depósito y
+la oficina del jefe están trabadas; las dos puertas interiores no.
+
+CUANDO se interactúa con una puerta, el sistema DEBE avisar una vez qué pasó: se abrió, se cerró
+o está trabada. El aviso de trabada del portón es distinto del de las otras dos. Cerrar las
+puertas al abrir la jornada NO DEBE avisar: no es un gesto del jugador.
 
 ## Criterios de aceptación
 
@@ -267,10 +288,12 @@ empujón ENTONCES la caja vuelve al lugar del inicio de la racha.
 DADO un objeto que al soltarlo queda superpuesto con un sólido fijo CUANDO pasa un paso de
 física ENTONCES queda apoyado en el piso al lado del jugador, sin superponerse con nada fijo.
 
-### AC-PLY-027 — Encima de la caja que ocupa el origen *(verifica BR-PLY-016)*
+### AC-PLY-027 — Encima de lo que ocupa el origen *(verifica BR-PLY-016)*
 
 DADO una caja adentro de un sólido, sin lugar libre para deshacer ni alrededor, y con otra caja
-en su lugar de origen CUANDO la red la rescata ENTONCES queda apoyada encima de esa caja.
+en su lugar de origen CUANDO la red la rescata ENTONCES queda apoyada encima de esa caja. DADO un
+objeto en el mismo caso, con otro objeto en su origen CUANDO la red lo rescata ENTONCES queda
+encima si ese otro admite otro encima, y no queda encima si no lo admite.
 
 ### AC-PLY-028 — El origen es el último recurso *(verifica BR-PLY-016)*
 
@@ -299,6 +322,24 @@ del giro.
 DADO un objeto que quedó adentro de la hoja al terminar un giro CUANDO la hoja queda quieta
 ENTONCES el objeto termina fuera de ella, sin superponerse con ningún sólido fijo.
 
+### AC-PLY-033 — Queda donde se mira *(verifica BR-PLY-018)*
+
+DADO algo en la mano y la mira sobre el piso libre, o sobre la tapa de una caja contenedora, a
+menos del alcance CUANDO se suelta ENTONCES su base queda sobre el punto que la mira toca, sin
+encimarse con nada.
+
+### AC-PLY-034 — Qué superficie admite *(verifica BR-PLY-018)*
+
+DADO una superficie con la inclinación justo debajo del corte de horizontal ENTONCES no admite;
+con el corte exacto sobre el mundo fijo, o sobre una caja contenedora, sí; sobre el trapeador,
+no. Ningún objeto del almacén salvo las cajas contenedoras admite otro encima.
+
+### AC-PLY-035 — Sin superficie que valga, se suelta como siempre *(verifica BR-PLY-018)*
+
+DADO la mira sobre una pared, sobre nada al alcance, o sobre un punto donde lo soltado quedaría
+encimado con algo o adentro de un mueble CUANDO se suelta ENTONCES lo soltado sale del mismo
+punto que sin mira.
+
 ### AC-PLY-036 — La puerta abierta anoche arranca cerrada *(verifica BR-PLY-019)*
 
 DADO una puerta abierta del todo al cerrar la noche CUANDO se abre la jornada siguiente ENTONCES
@@ -309,6 +350,28 @@ paso.
 
 DADO una puerta a medio giro al cerrar la noche CUANDO se abre la jornada siguiente ENTONCES la
 puerta está cerrada, su ángulo es `0.0` y la hoja está en su lugar de cerrada, en el mismo paso.
+
+### AC-PLY-038 — La trabada no se abre *(verifica BR-PLY-020)*
+
+DADO una puerta trabada CUANDO se la alterna diez veces ENTONCES las diez contesta que está
+trabada, sigue cerrada y, después de avanzar 10 segundos, su ángulo es `0.0`.
+
+### AC-PLY-039 — La que no está trabada alterna *(verifica BR-PLY-011, BR-PLY-020)*
+
+DADO una puerta nueva ENTONCES no está trabada. CUANDO se la alterna ENTONCES contesta que no
+está trabada y queda abierta.
+
+### AC-PLY-040 — Qué puertas están trabadas *(verifica BR-PLY-020)*
+
+DADO el almacén armado ENTONCES la entrada, el portón del depósito y la oficina del jefe están
+trabadas y contestan a la interacción, y las dos puertas interiores no están trabadas.
+
+### AC-PLY-041 — Un aviso por gesto *(verifica BR-PLY-020)*
+
+DADO una puerta interior cerrada CUANDO se la toca dos veces seguidas, con la hoja todavía
+girando, ENTONCES avisa una vez que se abrió y después una vez que se cerró. DADO una puerta
+trabada CUANDO se la toca diez veces ENTONCES avisa diez veces que está trabada, el portón con su
+propio aviso, y la hoja no gira. DADO la apertura de una jornada ENTONCES ninguna puerta avisa.
 
 ## No objetivos
 
@@ -321,7 +384,7 @@ puerta está cerrada, su ángulo es `0.0` y la hoja está en su lugar de cerrada
 ## Contratos
 
 - **Entrada:** el vector de movimiento, el delta del mouse, los candidatos que el rayo encontró,
-  el objeto que se quiere agarrar y los segundos del cuadro.
+  el objeto que se quiere agarrar, la superficie que la mira toca y los segundos del cuadro.
 - **Salida:** la velocidad, los dos ángulos de la vista, qué está enfocado y si cambió, qué se
   lleva en la mano, el motivo de cada rechazo, el ángulo de la hoja y el efecto de un uso.
 - **Falla:** los dos rechazos de agarrar; soltar con las manos vacías no devuelve nada; un uso no

@@ -55,11 +55,13 @@ CUANDO se abre una jornada, el sistema DEBE pedir **una tarea de cada tipo decla
 la caja, reponer, registrar, limpiar y sacar la basura. La cantidad sale de recorrer los tipos y
 nunca de un número escrito.
 
-### BR-SHF-007 — Una obligatoria se cumple una vez, y antes del cierre
+### BR-SHF-007 — Una obligatoria cuenta mientras su condición vale, y antes del cierre
 
 MIENTRAS queda turno, el sistema DEBE contar la obligatoria que se cumple, sin importar cuánto
-turno quede. SI la tarea ya está cumplida, o SI el turno está cerrado, ENTONCES el sistema DEBE
-rechazarla y no contarla.
+turno quede, y DEBE dejar de contarla si su condición deja de valer. SI la tarea ya está
+cumplida, ENTONCES cumplirla otra vez NO DEBE contarla dos veces. SI la tarea no está cumplida,
+ENTONCES descumplirla NO DEBE descontar nada. SI el turno está cerrado, ENTONCES el sistema DEBE
+rechazar cumplir y descumplir: el cierre cuenta el estado de ese instante.
 
 ### BR-SHF-008 — Sólo cuentan las declaradas
 
@@ -167,6 +169,14 @@ hora, cuelga del reloj de mesa y no gira hacia la cámara.
 DADO un turno de `43200.0` CUANDO se cumplen las cinco obligatorias en el mismo cuadro ENTONCES
 cuentan las cinco y quedan `43200.0`.
 
+### AC-SHF-019 — Descumplir *(verifica BR-SHF-007)*
+
+DADO una obligatoria cumplida con el turno abierto CUANDO se descumple ENTONCES las cumplidas
+bajan en 1 y el turno restante no cambia; cumplirla de nuevo las deja como antes de descumplir.
+DADO una obligatoria sin cumplir CUANDO se descumple ENTONCES se rechaza y las cumplidas no
+cambian. DADO una obligatoria cumplida con el turno cerrado CUANDO se descumple ENTONCES se
+rechaza y sigue contando.
+
 ## No objetivos
 
 - Esta capacidad NO decide **cómo** se cumple cada obligatoria: eso es de la capacidad de cada
@@ -182,19 +192,20 @@ cuentan las cinco y quedan `43200.0`.
   jornada es.
 - **Salida:** cuánto queda, si el turno cerró, cuántas obligatorias van cumplidas, y la lectura
   del reloj de mesa: la hora, o vacío.
-- **Falla:** cumplir una obligatoria ya cumplida, o con el turno cerrado, se rechaza. Un tiempo
-  negativo se ignora en silencio.
+- **Falla:** cumplir una obligatoria ya cumplida, o con el turno cerrado, se rechaza. Descumplir
+  una sin cumplir, o con el turno cerrado, también. Un tiempo negativo se ignora en silencio.
 
 ## Señales
 
-- El turno cerrado, la tarea cumplida y el tiempo consumido. El último se emite por cuadro: no
+- El turno cerrado, la tarea cumplida, la tarea descumplida y el tiempo consumido. El último se emite por cuadro: no
   se le puede enganchar nada que cueste.
 
 ## Dependencias
 
 - [`employment-record`](../employment-record/employment-record.md) (alimenta): recibe cuántas
   obligatorias se cumplieron al cerrar.
-- Las cinco capacidades de tarea (alimentan): cada una avisa cuándo su obligatoria quedó hecha.
+- Las cinco capacidades de tarea (alimentan): cada una avisa cuándo su obligatoria quedó hecha,
+  y cuándo dejó de estarlo.
 
 ## Preguntas abiertas
 
