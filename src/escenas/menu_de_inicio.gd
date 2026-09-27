@@ -15,8 +15,8 @@ const TEXTOS: Dictionary[MenuDeInicio.Opcion, String] = {
 @export var _opciones: VBoxContainer
 @export var _pedidos: PedidosDelMenu
 
-var _carga := CargaEnSegundoPlano.new()
-var _pantalla := PANTALLA_DE_CARGA.instantiate() as PantallaDeCarga
+var _carga: CargaEnSegundoPlano
+var _pantalla: PantallaDeCarga
 var _almacen: PackedScene
 var _esperando := false
 
@@ -30,6 +30,10 @@ func _ready() -> void:
 		boton.pressed.connect(_pedidos.elegir.bind(opcion))
 		_opciones.add_child(boton)
 	_pedidos.nuevo_juego_pedido.connect(entrar_al_almacen)
+	# Se crean acá y no al declararlos: una instancia que nunca entra al árbol los dejaría
+	# colgados.
+	_carga = CargaEnSegundoPlano.new()
+	_pantalla = PANTALLA_DE_CARGA.instantiate()
 	add_child(_carga)
 	add_child(_pantalla)
 	_carga.lista.connect(_al_cargar_el_almacen)
