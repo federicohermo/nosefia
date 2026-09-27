@@ -452,9 +452,10 @@ Puede ser un carril tuyo que no terminó o el de otra sesión que todavía corre
 fuerza**. Si es tuyo, el carril no cerró, y eso va primero en el reporte.
 
 **Antes de destruir nada, verificá que cada rama del lote es idéntica a su
-`origin/<headRefName>`.** Si difieren, algo no se pusheó. `--todos` saltea un worktree con
-cambios sin commitear, pero no mira si la rama llegó al remoto. No hay ramas de andamio que limpiar después: los carriles
-trabajaron sobre las ramas de los PR, que siguen existiendo y así tienen que quedar.
+`origin/<headRefName>`.** Si difieren, algo no se pusheó. El script saltea un worktree con
+cambios sin commitear, pero no mira si la rama llegó al remoto. No hay ramas de andamio que
+limpiar después: los carriles trabajaron sobre las ramas de los PR, que siguen existiendo y
+así tienen que quedar.
 
 ---
 
