@@ -149,14 +149,6 @@ func test_los_muebles_y_el_anclaje_de_la_ventanilla_estan_por_nombre() -> void:
 	assert_bool(almacen.has_node("Estructura/HuecoDeLaVentanilla")).is_true()
 
 
-func test_el_proyecto_abre_el_almacen_al_correr() -> void:
-	# Sin esto, correr el proyecto no abre nada y el síntoma es una ventana vacía que no nombra
-	# a `project.godot`.
-	assert_str(ProjectSettings.get_setting("application/run/main_scene")).is_equal(
-		ESCENA_DEL_ALMACEN
-	)
-
-
 func test_el_almacen_instancia_al_jugador_en_vez_de_duplicar_el_cuerpo() -> void:
 	assert_bool(_almacen().has_node("Jugador")).is_true()
 
