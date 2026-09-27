@@ -156,8 +156,8 @@ en el descarte ENTONCES la basura está cumplida; con una sola pendiente en cada
   descarte se soltó la bolsa.
 - **Salida:** cómo salió la pasada, cómo salió el depósito, cuántas pasadas y bolsas faltan, y si
   cada obligatoria está cumplida.
-- **Falla:** cuatro motivos de rechazo para limpiar y tres para la basura, cada uno con su
-  cartel. Ninguno cambia el estado.
+- **Falla:** dos motivos de rechazo para limpiar (BR-CLN-002 y BR-CLN-003) y tres para la basura
+  (BR-CLN-009 y BR-CLN-010), cada uno con su cartel. Ninguno cambia el estado.
 
 ## Señales
 
