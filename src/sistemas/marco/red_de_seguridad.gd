@@ -141,7 +141,7 @@ func _al_soltar(nodo: Node3D) -> void:
 ## Lo que quedó superpuesto con la hoja quieta. La hoja quieta es un sólido fijo más.
 func _al_quedar_quieta(hoja: PhysicsBody3D) -> void:
 	var espacio := hoja.get_world_3d().direct_space_state
-	# El nodo de la hoja se entera de un salto recién en el paso siguiente. El servidor ya lo tiene.
+	# Cerrada de golpe, la hoja llega primero al servidor. El nodo la sigue un paso después.
 	var lugar: Transform3D = PhysicsServer3D.body_get_state(
 		hoja.get_rid(), PhysicsServer3D.BODY_STATE_TRANSFORM
 	)

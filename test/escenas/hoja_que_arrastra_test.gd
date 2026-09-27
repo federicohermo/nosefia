@@ -278,3 +278,5 @@ func test_la_hoja_cerrada_de_golpe_no_deja_nada_adentro() -> void:  # AC-PLY-032
 		)
 		. is_false()
 	)
+	var red: RedDeSeguridad = almacen.get_node("Servicios/RedDeSeguridad")
+	assert_int(red.rescates.size()).is_equal(1)
