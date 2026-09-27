@@ -10,9 +10,9 @@ provenance: GDD «Investigación» y «La computadora»; migración de los specs
 
 ## Propósito
 
-Darle al minuto que no se paga algo que comprar. Lo único que tiene que hacer bien es
-**acumular**: lo que se descubre una noche tiene que seguir descubierto la siguiente, y repetir
-no puede rendir. Sin eso, se puede pasar la noche examinando latas y al cierre no cambió nada.
+Darle al minuto que no se paga algo que comprar. Lo único que tiene que hacer bien es **no
+rendir dos veces**: lo que un objeto esconde se ve sólo al examinarlo, y examinarlo otra vez no
+suma. Sin eso, se puede pasar la noche examinando la misma lata.
 
 ## Lenguaje de la capacidad
 
