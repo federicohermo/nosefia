@@ -197,15 +197,15 @@ rechaza y sigue contando.
 
 ## Señales
 
-- El turno cerrado, la tarea cumplida, la tarea descumplida y el tiempo consumido. El último se emite por cuadro: no
-  se le puede enganchar nada que cueste.
+- El turno cerrado, la tarea cumplida, la tarea descumplida y el tiempo consumido. El último se
+  emite por cuadro: no se le puede enganchar nada que cueste.
 
 ## Dependencias
 
 - [`employment-record`](../employment-record/employment-record.md) (alimenta): recibe cuántas
   obligatorias se cumplieron al cerrar.
-- Las cinco capacidades de tarea (alimentan): cada una avisa cuándo su obligatoria quedó hecha,
-  y cuándo dejó de estarlo.
+- Las cinco capacidades de tarea (alimentan): cada una avisa cuándo su obligatoria quedó hecha.
+  Registrar avisa también cuándo dejó de estarlo.
 
 ## Preguntas abiertas
 

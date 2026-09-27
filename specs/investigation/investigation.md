@@ -115,8 +115,7 @@ contenido cambia y los guardados viejos siguen cargando.
 ### BR-INV-017 — Pensar no clava al jugador
 
 MIENTRAS se muestra lo que reveló algo no levantable, el sistema DEBE dejar al jugador irse. Es
-un pensamiento, no un examen. El examen de un levantable sí retiene al jugador, hasta que se
-pide examinar otra vez.
+un pensamiento, no un examen.
 
 ### BR-INV-018 — Se examina lo enfocado sin agarrarlo
 
@@ -235,10 +234,10 @@ descubrió las mismas tres.
 DADO una lista guardada con una pista que el caso ya no tiene CUANDO se reconstruye ENTONCES la
 que sobra se ignora y las demás quedan descubiertas.
 
-### AC-INV-019 — El subtítulo no retiene *(verifica BR-INV-017)*
+### AC-INV-019 — El pensamiento no retiene *(verifica BR-INV-017)*
 
-DADO un texto de examen de una sola entrada CUANDO todavía no se avanzó ENTONCES ya se puede
-abandonar.
+DADO lo que reveló algo no levantable, de una sola entrada, CUANDO todavía no se avanzó
+ENTONCES ya se puede abandonar.
 
 ### AC-INV-020 — Examinar sin agarrar *(verifica BR-INV-018)*
 
@@ -248,9 +247,8 @@ la mira sobre otro levantable ENTONCES se examina lo que se lleva.
 
 ### AC-INV-021 — Lo examinado vuelve a su lugar *(verifica BR-INV-018)*
 
-DADO un levantable del mundo en examen, girado CUANDO se pide examinar otra vez ENTONCES tiene
-el mismo padre, la misma posición, la misma rotación, la misma capa, la misma máscara y la misma
-física de antes. Una tercera vez lo vuelve a examinar, y no es hallazgo.
+DADO un levantable del mundo en examen, girado CUANDO se pide examinar otra vez ENTONCES está
+en el mismo lugar, con la misma orientación y el mismo estado de física y de colisión de antes. Una tercera vez lo vuelve a examinar, y no es hallazgo.
 
 ### AC-INV-022 — Las teclas giran lo examinado *(verifica BR-INV-019)*
 

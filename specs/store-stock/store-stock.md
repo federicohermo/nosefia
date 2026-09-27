@@ -27,7 +27,6 @@ depósito son dos lugares distintos, y mover mercadería del fondo al estante cu
 | **Faltante** | un producto con la góndola por debajo de su umbral | agotado, sin stock |
 | **Vendibles** | el depósito menos lo que a la góndola le falta para su umbral | stock, disponible |
 | **Planilla** | la lista donde el jugador anota cuántas unidades se vendieron de cada producto | registro de caja, ticket |
-| **Sonoridad** | cómo suena un producto al agarrarlo o al dejarlo | familia, material, envase |
 | **Lo vendido** | las unidades de un producto que salieron en ventas cobradas esa noche | stock, ventas del día |
 
 ## Comportamiento normativo
@@ -137,7 +136,8 @@ NO DEBE cumplirla ni descumplirla: sólo el gesto del jugador la cambia.
 
 ### BR-STK-023 — Cada producto declara su sonoridad
 
-El sistema DEBE declarar una sonoridad para cada producto del catálogo. La sonoridad sale de la
+El sistema DEBE declarar una sonoridad (ver [`ambience`](../ambience/ambience.md)) para cada
+producto del catálogo. La sonoridad sale de la
 ficha del producto: lata, cajita, caja, envoltorio plástico o botella plástica. Un producto sin
 sonoridad no suena al agarrarlo ni al dejarlo, y nada lo avisa.
 
@@ -214,12 +214,6 @@ DADO un producto de umbral 8 CUANDO se piden sus vendibles ENTONCES:
 | 0 | 5 | 0 |
 
 Y un producto que el inventario no conoce contesta 0.
-
-### AC-STK-019 — Rescatar no mueve la mercadería *(verifica BR-STK-017)*
-
-DADO una caja del depósito o una unidad fuera de la góndola, superpuesta con un sólido fijo
-CUANDO se la rescata ENTONCES lo repuesto en la góndola y lo que queda por sacar de cada caja
-siguen iguales.
 
 ### AC-STK-020 — Una fila por producto, en cero *(verifica BR-STK-019)*
 

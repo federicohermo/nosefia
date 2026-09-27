@@ -114,7 +114,8 @@ contra el sólido más delgado.
 
 SI algo que se agarra queda superpuesto con un sólido fijo al soltarlo, al terminar un empujón o
 al dormirse, ENTONCES el sistema DEBE llevarlo al primero de estos lugares que quede libre y
-alcanzable: deshacer el gesto; alrededor del punto donde entró, hasta una distancia de su tamaño;
+alcanzable: deshacer el gesto —volver al inicio del empujón o, si se soltó, al piso al lado del
+jugador—; alrededor del punto donde entró, hasta una distancia de su tamaño;
 encima de lo que ocupa su lugar de origen, si admite otro encima; y su lugar de origen. Libre y
 alcanzable es sin superponerse con ningún sólido fijo, apoyado y fuera de las áreas de las
 tareas. SI ninguno queda libre, ENTONCES DEBE dejarlo donde está. El sistema NO DEBE devolverlo
@@ -291,18 +292,18 @@ física ENTONCES queda apoyado en el piso al lado del jugador, sin superponerse 
 ### AC-PLY-027 — Encima de lo que ocupa el origen *(verifica BR-PLY-016)*
 
 DADO una caja adentro de un sólido, sin lugar libre para deshacer ni alrededor, y con otra caja
-en su lugar de origen CUANDO la red la rescata ENTONCES queda apoyada encima de esa caja. DADO un
-objeto en el mismo caso, con otro objeto en su origen CUANDO la red lo rescata ENTONCES queda
+en su lugar de origen CUANDO se la rescata ENTONCES queda apoyada encima de esa caja. DADO un
+objeto en el mismo caso, con otro objeto en su origen CUANDO se lo rescata ENTONCES queda
 encima si ese otro admite otro encima, y no queda encima si no lo admite.
 
 ### AC-PLY-028 — El origen es el último recurso *(verifica BR-PLY-016)*
 
 DADO un objeto adentro de un sólido, sin lugar libre para deshacer ni alrededor, y con su lugar
-de origen libre CUANDO la red lo rescata ENTONCES queda en su lugar de origen.
+de origen libre CUANDO se lo rescata ENTONCES queda en su lugar de origen.
 
-### AC-PLY-029 — La red nunca devuelve a la mano *(verifica BR-PLY-016)*
+### AC-PLY-029 — El rescate nunca devuelve a la mano *(verifica BR-PLY-016)*
 
-DADO un objeto adentro de un sólido y ningún candidato libre CUANDO la red lo mira ENTONCES queda
+DADO un objeto adentro de un sólido y ningún candidato libre CUANDO se lo revisa ENTONCES queda
 donde está, la mano sigue como estaba, y el rescate queda registrado sin lugar.
 
 ### AC-PLY-030 — La unidad arrastrada al abrir *(verifica BR-PLY-017)*
@@ -373,6 +374,18 @@ girando, ENTONCES avisa una vez que se abrió y después una vez que se cerró. 
 trabada CUANDO se la toca diez veces ENTONCES avisa diez veces que está trabada, el portón con su
 propio aviso, y la hoja no gira. DADO la apertura de una jornada ENTONCES ninguna puerta avisa.
 
+### AC-PLY-042 — Rescatar no mueve la mercadería *(verifica BR-PLY-016)*
+
+DADO una caja del depósito o una unidad fuera de la góndola, superpuesta con un sólido fijo
+CUANDO se la rescata ENTONCES lo repuesto en la góndola y lo que queda por sacar de cada caja
+siguen iguales.
+
+### AC-PLY-043 — Rescatar una bolsa no la cuenta ni la descuenta *(verifica BR-PLY-016)*
+
+DADO una bolsa ya depositada, y otra todavía no, cada una superpuesta con un sólido fijo CUANDO
+se las rescata ENTONCES la cantidad de bolsas depositadas no cambia, y ninguna queda adentro del
+área de descarte.
+
 ## No objetivos
 
 - Esta capacidad NO decide qué esconde un objeto: eso es de
@@ -386,7 +399,8 @@ propio aviso, y la hoja no gira. DADO la apertura de una jornada ENTONCES ningun
 - **Entrada:** el vector de movimiento, el delta del mouse, los candidatos que el rayo encontró,
   el objeto que se quiere agarrar, la superficie que la mira toca y los segundos del cuadro.
 - **Salida:** la velocidad, los dos ángulos de la vista, qué está enfocado y si cambió, qué se
-  lleva en la mano, el motivo de cada rechazo, el ángulo de la hoja y el efecto de un uso.
+  lleva en la mano, el motivo de cada rechazo, el ángulo de la hoja, el aviso de cada gesto
+  sobre una puerta y el efecto de un uso.
 - **Falla:** los dos rechazos de agarrar; soltar con las manos vacías no devuelve nada; un uso no
   declarado no tiene efecto.
 

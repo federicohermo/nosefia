@@ -135,7 +135,7 @@ func test_sin_ningun_candidato_la_red_no_devuelve_a_la_mano() -> void:  # AC-PLY
 	assert_object(agarre.manos().sostenido()).is_null()
 
 
-func test_rescatar_una_caja_y_una_unidad_no_mueve_la_mercaderia() -> void:  # AC-STK-019
+func test_rescatar_una_caja_y_una_unidad_no_mueve_la_mercaderia() -> void:  # AC-PLY-042
 	var almacen: Node3D = await _almacen()
 	var antes := _tareas(almacen)
 	var caja := _caja(almacen, Producto.Id.ARVEJAS)
@@ -155,7 +155,7 @@ func test_rescatar_una_caja_y_una_unidad_no_mueve_la_mercaderia() -> void:  # AC
 
 ## El caso de la trampa: una bolsa ya contada que entra en una pared se rescata cerca de donde
 ## entró. Ni se descuenta ni vuelve al baño, donde quedaría a la vista con la tarea cumplida.
-func test_rescatar_las_bolsas_no_las_cuenta_ni_las_descuenta() -> void:  # AC-CLN-013
+func test_rescatar_las_bolsas_no_las_cuenta_ni_las_descuenta() -> void:  # AC-PLY-043
 	var almacen: Node3D = await _almacen()
 	var recolector: RecolectorDeBasura = almacen.get("_recolector")
 	var bolsas: Array = almacen.get("_bolsas")
