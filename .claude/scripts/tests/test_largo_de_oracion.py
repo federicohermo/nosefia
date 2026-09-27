@@ -37,21 +37,25 @@ def _palabras(n: int) -> str:
 
 
 class ElConteo(unittest.TestCase):
-    def test_veinticinco_palabras_pasan_y_veintiseis_no(self):
-        self.assertEqual(largas(f"{_palabras(25)}.\n", TECHO), [])
-        self.assertEqual([o.palabras for o in largas(f"{_palabras(26)}.\n", TECHO)], [26])
+    def test_el_techo_pasa_y_una_palabra_mas_no(self):
+        self.assertEqual(largas(f"{_palabras(TECHO)}.\n", TECHO), [])
+        [larga] = largas(f"{_palabras(TECHO + 1)}.\n", TECHO)
+        self.assertEqual(larga.palabras, TECHO + 1)
 
     def test_una_oracion_que_sigue_en_la_linea_siguiente_cuenta_entera(self):
-        texto = f"Intro.\n\n{_palabras(13)}\n{_palabras(13)}.\n"
+        mitad = TECHO // 2 + 1
+        texto = f"Intro.\n\n{_palabras(mitad)}\n{_palabras(mitad)}.\n"
         [larga] = largas(texto, TECHO)
-        self.assertEqual((larga.linea, larga.palabras), (3, 26))
+        self.assertEqual((larga.linea, larga.palabras), (3, 2 * mitad))
 
     def test_la_linea_es_la_de_la_oracion_y_no_la_del_parrafo(self):
-        texto = f"Corta.\nOtra corta.\nUna {_palabras(25)}.\n"
+        texto = f"Corta.\nOtra corta.\nUna {_palabras(TECHO)}.\n"
         self.assertEqual([o.linea for o in largas(texto, TECHO)], [3])
 
     def test_un_item_de_lista_es_una_oracion_aparte(self):
-        texto = f"{_palabras(20)}:\n\n- {_palabras(20)}.\n- {_palabras(20)}.\n"
+        # Cada parte entra en el techo; juntas, no.
+        parte = _palabras(TECHO - 1)
+        texto = f"{parte}:\n\n- {parte}.\n- {parte}.\n"
         self.assertEqual(largas(texto, TECHO), [])
         self.assertEqual(len(oraciones(texto)), 3)
 
@@ -63,6 +67,10 @@ class ElConteo(unittest.TestCase):
     def test_un_punto_seguido_de_mayuscula_corta(self):
         texto = f"{_palabras(20)}. Otra {_palabras(20)}.\n"
         self.assertEqual([o.palabras for o in oraciones(texto)], [20, 21])
+
+    def test_un_etc_seguido_de_mayuscula_corta(self):
+        # «etc.» cierra la oración cuando lo sigue una mayúscula; seguido de minúscula ya no corta.
+        self.assertEqual([o.palabras for o in oraciones("Uno, dos, etc. Tres cuatro.\n")], [3, 2])
 
     def test_el_codigo_en_linea_cuenta_como_una_palabra(self):
         texto = "Correr `python .claude/scripts/verificar.py --solo harness` antes del PR.\n"

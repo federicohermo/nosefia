@@ -163,8 +163,8 @@ su arreglo.
 Y las del modelo, que no tienen síntoma legible:
 
 - **El `.glb` tiene que traer UNA unidad de cada producto, y por dos caminos distintos.** Los
-  modificadores `Array` se apagan **por nombre**: son Geometry Nodes, y apagar por tipo no apaga
-  ninguno. La colección **`guia`**, donde viven las copias linkeadas, se excluye del view layer.
+  modificadores `Array` se apagan **por nombre**: son Geometry Nodes con ese nombre, y apagar por
+  tipo no apaga ninguno. La colección **`guia`**, donde viven las copias linkeadas, se excluye del view layer.
   Si cualquiera de las dos viaja, cada producto se dibuja dos veces: una horneada y otra por su
   `MultiMesh`. Las dos las hace `exportar_modelo.py`, y la colección queda visible en Blender.
 - **Mover o renombrar arte rompe los enlaces del `.blend`, y ningún nodo lo ve.** Sus rutas son

@@ -79,7 +79,8 @@ de `*_test.gd`. No el color del nodo.
 ```
 
 **1 — La suite que no parsea se descarta en silencio.** Una que hace `preload` de un archivo que
-todavía no existe no corre, y el exit code es 0 igual. Es el estado normal del paso 1 del TDD.
+todavía no existe no corre, y el exit code es 0 igual. Que el archivo falte es el estado normal
+del paso 1 del TDD.
 Un error de parseo puede dejar el dominio entero sin correr **con la CI en verde**. El gate de
 tests no lo ve: el espejo existe, afirma y no está apagado.
 

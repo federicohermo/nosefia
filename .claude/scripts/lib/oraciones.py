@@ -20,8 +20,9 @@ import re
 from collections.abc import Callable
 from dataclasses import dataclass
 
-#: Las abreviaturas con punto que no terminan una oración aunque las siga una mayúscula.
-ABREVIATURAS = ("p. ej.", "e. g.", "etc.", "vs.", "Sr.", "Sra.", "N.º")
+#: Las abreviaturas con punto que no terminan una oración aunque las siga una mayúscula. «etc.»
+#: no está: seguido de mayúscula, sí la termina.
+ABREVIATURAS = ("p. ej.", "e. g.", "vs.", "Sr.", "Sra.", "N.º")
 
 _CERCO = re.compile(r"^\s*(```|~~~)")
 _TITULO = re.compile(r"^\s*#{1,6}\s")
