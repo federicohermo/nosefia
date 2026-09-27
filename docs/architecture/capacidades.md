@@ -57,8 +57,8 @@ sonido no toca a quien lo emite.
 
 ## Las dos mitades de la resta
 
-La tensión central del juego es aritmética, y en el mapa se lee de un vistazo: **`shift-cycle` es
-la resta**, y las capacidades que le apuntan son lo que cada lado compra.
+La tensión central del juego es aritmética, y en el mapa se lee de un vistazo. **`shift-cycle`
+es la resta**, y las capacidades que le apuntan son lo que cada lado compra.
 
 | Lado | Capacidades | Qué le hacen al turno |
 |---|---|---|
@@ -91,5 +91,5 @@ Tres pares se confunden seguido, y cada uno tiene su regla escrita en los dos sp
 3. **¿El GDD ya lo decidió?** Entonces el spec dice eso, aunque el código todavía diga otra cosa.
    Esa diferencia es el hallazgo, y sale en un issue.
 
-Una capacidad nueva se abre sólo cuando la regla no entra en ninguna de las que existen **y** no
-es una regla de una de ellas. Una capacidad de un solo criterio casi siempre es lo segundo.
+Una capacidad nueva se abre sólo si la regla no entra en ninguna **y** no es regla de una de
+ellas. Una capacidad de un solo criterio casi siempre es lo segundo.

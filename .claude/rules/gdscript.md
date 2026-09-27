@@ -47,13 +47,13 @@ gdUnit4.
 | Señal | `snake_case`, en pasado: `turno_cerrado` | `gdlint` |
 
 Una señal se llama por **lo que pasó**, no por lo que hay que hacer: `tarea_completada` y no
-`actualizar_hud`. Quien la emite no sabe quién la escucha, y ponerle el nombre de la reacción ata
-las dos puntas justo donde la señal existía para desatarlas.
+`actualizar_hud`. Quien la emite no sabe quién la escucha. Ponerle el nombre de la reacción ata
+las dos puntas que la señal existía para desatar.
 
 ## Nada de `get_node()` con rutas largas hacia arriba
 
-`get_node("../../Panel/Hud")` ata un script a la forma exacta del árbol, y una escena que se
-reacomoda lo rompe sin que nada avise hasta que se corre. Las dos salidas: `@export var hud: Hud`
+`get_node("../../Panel/Hud")` ata un script a la forma exacta del árbol. Una escena que se
+reacomoda lo rompe, y nada avisa hasta que se corre. Las dos salidas: `@export var hud: Hud`
 —se conecta en el editor— o una señal hacia arriba.
 
 ## La dirección de dependencia, y las dos formas de referenciar

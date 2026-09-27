@@ -16,8 +16,8 @@ addon, y `verify.yml` para Python y gdtoolkit.
 
 ## El motor y el addon se mueven juntos
 
-**El motor y el addon de tests son un solo pin.** gdUnit4 declara una versión mínima de Godot, y
-Godot rompe la sintaxis vieja del addon. Afuera de su ventana, el addon **no compila**, y la
+**El motor y el addon de tests son un solo pin.** El addon declara una versión mínima de Godot,
+y Godot rompe la sintaxis vieja del addon. Afuera de su ventana, el addon **no compila**, y la
 corrida sale con código 0 igual. Moverlos es un cambio para todo el equipo y para la CI a la vez.
 
 - **`.godot-version` es la única fuente de la versión del motor.** `verify.yml` y
@@ -45,15 +45,15 @@ export GODOT_BIN="/ruta/a/godot"
 Tres advertencias que cuestan una tarde cada una:
 
 - **Abrir una terminal nueva NO alcanza.** En Windows un proceso hereda el bloque de entorno de
-  su padre y no lo lee del registro, así que una pestaña nueva que abre el mismo host viejo sigue
-  sin ver la variable. Hay que **cerrar el host de la terminal** —la ventana entera— o cerrar
+  su padre, y no lo lee del registro. Una pestaña nueva del mismo host viejo sigue sin ver la
+  variable. Hay que **cerrar el host de la terminal** —la ventana entera— o cerrar
   sesión de Windows. El síntoma es cruel: el registro contesta la ruta correcta y el script dice
   que no la encuentra, las dos cosas ciertas a la vez.
 - **En Windows conviene el `_console.exe`**, no el otro. El ejecutable normal no escribe en la
   consola, así que la salida de los tests se pierde entera y la corrida parece colgada.
-- **No lo dejes adentro de OneDrive.** Si el archivo está sólo en la nube, Windows lo rechaza
-  con «el proveedor de archivos de nube no se está ejecutando» y los tests no arrancan — con
-  un mensaje que no nombra ni a Godot ni a los tests.
+- **No lo dejes adentro de OneDrive.** Si el archivo está sólo en la nube, los tests no
+  arrancan. Windows lo rechaza con «el proveedor de archivos de nube no se está ejecutando», un
+  mensaje que no nombra a Godot ni a los tests.
 
 Si `GODOT_BIN` no está, el nodo `tests` de `verificar.py` **no se saltea callado**: falla y te
 dice esto mismo.

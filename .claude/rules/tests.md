@@ -79,8 +79,8 @@ de `*_test.gd`. No el color del nodo.
 ```
 
 **1 — La suite que no parsea se descarta en silencio.** Una que hace `preload` de un archivo que
-todavía no existe —el estado normal del paso 1 del TDD— no corre, y el exit code es 0 igual. Un
-error de parseo puede dejar el dominio entero sin correr **con la CI en verde**, y el gate de
+todavía no existe no corre, y el exit code es 0 igual. Es el estado normal del paso 1 del TDD.
+Un error de parseo puede dejar el dominio entero sin correr **con la CI en verde**. El gate de
 tests no lo ve: el espejo existe, afirma y no está apagado.
 
 **2 — Un `class_name` recién escrito no existe hasta el `--import` siguiente.** El síntoma es
@@ -97,5 +97,5 @@ worktree:
 error de script **aborta la función** y gdUnit4 no cuenta ninguna aserción fallida. El caso sale
 `PASSED` por no haber llegado a afirmar nada.
 
-O sea que el «falla por lo que se espera» del paso 1 **no se lee en el conteo de fallos**: se lee
-en el `ERROR: Failed loading resource` de la salida cruda.
+El «falla por lo que se espera» del paso 1 **no se lee en el conteo de fallos**. Se lee en el
+`ERROR: Failed loading resource` de la salida cruda.

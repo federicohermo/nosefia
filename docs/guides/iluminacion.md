@@ -42,8 +42,12 @@ modelo, una luz o el `LightmapGI`, y se commitea lo que deja. El error de OpenGL
 hornear con Vulkan es el
 [reporte 94407 de Godot](https://github.com/godotengine/godot/issues/94407).
 
-Los mandos: la energía de cada luz en su escena, `generate_probes_subdiv` en el `LightmapGI`,
-el tamaño del texel en la importación del modelo, y el umbral de sonda negra en `sondas.gd`.
+Los mandos:
+
+- la energía de cada luz, en su escena;
+- `generate_probes_subdiv`, en el `LightmapGI`;
+- el tamaño del texel, en la importación del modelo;
+- el umbral de sonda negra, en `sondas.gd`.
 
 ## Qué lo verifica
 

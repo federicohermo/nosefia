@@ -9,9 +9,9 @@ Python 3.11+, **sin una sola dependencia**: sólo la biblioteca estándar y `uni
 que se instala en la máquina es `gdtoolkit`, que es el linter del juego y no de estas
 herramientas.
 
-Esa pobreza es deliberada. Un harness con dependencias tiene un `requirements.txt` que hay que
-instalar, un entorno virtual que hay que activar y una forma más de que la CI y la máquina de
-alguien no hagan lo mismo. Acá `python archivo.py` alcanza.
+Esa pobreza es deliberada. Un harness con dependencias pide instalar un `requirements.txt` y
+activar un entorno virtual. Es una forma más de que la CI y la máquina de alguien no hagan lo
+mismo. Acá `python archivo.py` alcanza.
 
 ## La forma: lo puro en `lib/`, el cableado en el script
 
@@ -19,8 +19,8 @@ Todo script de `.claude/scripts/` es **cableado**: stdin, disco, red, `sys.exit`
 **decide** vive en `lib/` y no toca ninguna de esas cosas.
 
 No es prolijidad: es lo único que hace que tenga tests. Mientras la lógica vive adentro de un
-ejecutable, importarla lo corre, así que la única forma de ejercerla es lanzar un subproceso —
-y los modos de falla que importan no se pueden fabricar así.
+ejecutable, importarla lo corre. La única forma de ejercerla es lanzar un subproceso, y así no
+se fabrican los modos de falla que importan.
 
 Cuando el módulo **necesita** el mundo, el mundo se **inyecta** en vez de importarse. Los casos
 que ya existen, y qué habilita cada inyección:
@@ -33,12 +33,12 @@ que ya existen, y qué habilita cada inyección:
 ## Un gate que no puede correr lo dice
 
 Es la regla más importante de este directorio. Un gate que se saltea **callado** se ve igual
-que uno que pasó, y en esa diferencia se esconden los bugs que este harness existe para no
-tener. Cada salteo declara qué no miró y cómo hacer que mire.
+que uno que pasó. En esa diferencia se esconden los bugs que este harness existe para evitar.
+Cada salteo declara qué no miró y cómo hacer que mire.
 
 ## Un gate falla abierto, salvo que sea su trabajo fallar cerrado
 
-Los del hook **dejan pasar** ante cualquier error propio, y lo dicen: un gate que rompe la
+Los del hook **dejan pasar** ante cualquier error propio, y lo dicen. Un gate que rompe la
 sesión entera se desactiva el mismo día, y ahí no queda gate. Los que corren en `verificar.py`
 fallan cerrado, porque ahí el rojo es el producto.
 
@@ -53,14 +53,14 @@ incluido el mensaje de bloqueo del hook. El porqué entero está en el encabezad
 El principio está en la [constitución](../../docs/architecture/constitution.md).
 
 **Encadenar `rg` con `&&` es la misma falla en la otra dirección.** Un `rg A && rg B && rg C`
-corta en el primero sin match —que devuelve 1— y **los otros dos no corren, sin decirlo**: la
-salida vacía se lee como «ninguno matcheó» cuando sólo se preguntó por el primero. **Un `rg` por
+corta en el primero sin match, que devuelve 1. **Los otros dos no corren, sin decirlo.** La
+salida vacía se lee como «ninguno matcheó», y sólo se preguntó por el primero. **Un `rg` por
 línea, separados por `;`, nunca por `&&`.**
 
 **Y `--no-ignore` no alcanza para buscar acá adentro.** Ripgrep saltea los directorios ocultos
-aunque se le apague el `.gitignore`, así que un `rg --no-ignore` sobre la raíz **no mira
-`.claude/`** —ni el harness, ni las reglas, ni los skills— y contesta cero con la misma cara que
-si hubiera mirado. Para el árbol entero: `rg --no-ignore --hidden`.
+aunque se le apague el `.gitignore`. Un `rg --no-ignore` sobre la raíz **no mira `.claude/`**:
+ni el harness, ni las reglas, ni los skills. Contesta cero con la misma cara que si hubiera
+mirado. Para el árbol entero: `rg --no-ignore --hidden`.
 
 ## El estilo
 

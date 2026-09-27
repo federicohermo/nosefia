@@ -40,9 +40,9 @@ El test cita el ID en un comentario de su línea:
 func test_dos_jornadas_graves_seguidas_despiden() -> void:  # AC-EMP-004
 ```
 
-`rg "AC-EMP-004"` encuentra el vínculo. Un AC que ningún test nombra **no está aceptado**, y
-sobre un spec `ratified` eso es rojo: lo cobra `gate_de_specs.py`, en el nodo `specs` de
-`verificar.py`. Sobre un `draft` el gate cuenta cuántos faltan y lo dice.
+`rg "AC-EMP-004"` encuentra el vínculo. Un AC que ningún test nombra **no está aceptado**.
+Sobre un spec `ratified` eso es rojo, y lo cobra `gate_de_specs.py` en el nodo `specs`. Sobre
+un `draft` el gate cuenta cuántos faltan y lo dice.
 
 Verifica la **cita**, no que el test ejerza el criterio. Es el mismo piso que todo lo que este
 repo verifica sin cobertura.

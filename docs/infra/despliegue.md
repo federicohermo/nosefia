@@ -1,7 +1,7 @@
 # Despliegue
 
 **Cada push a `main` deja una web jugable.** El juego se exporta a Web con Godot headless en
-GitHub Actions, se publica en Vercel, y después se verifica que se juegue — que es la mitad que
+GitHub Actions, y se publica en Vercel. Después se verifica que se juegue, que es la mitad que
 no es obvia.
 
 | Qué | Dónde |
@@ -58,9 +58,9 @@ un directorio a medio escribir. Por eso el export corre con `|| true`, y quien d
 del juego a la URL publicada. Falla si alguno da 404, si falta un header de aislamiento, si el
 `Cache-Control` no revalida o si el `.wasm` no viene con su tipo.
 
-**Y cargar no es arrancar.** `humo_en_navegador.mjs` abre la URL en un Chromium de verdad y
-falla si `crossOriginIsolated` es `false`, si el overlay de carga de Godot sigue en la página o
-si hubo un error de consola. Es el único paso que mira lo que ve una persona: los dos de arriba
+**Y cargar no es arrancar.** `humo_en_navegador.mjs` abre la URL en un Chromium de verdad.
+Falla si `crossOriginIsolated` es `false`, si el overlay de carga sigue en la página o si hubo
+un error de consola. Es el único paso que mira lo que ve una persona: los dos de arriba
 pueden estar en verde con la pantalla en negro.
 
 ## El par preset↔headers
@@ -88,28 +88,26 @@ servicio.
 
 ### Y por eso `vercel.json` apaga el deploy automático de Git
 
-El proyecto **está vinculado al repo**, así que sin apagarlo la integración de Vercel construye
-**la raíz** en cada push: sin Godot, sin export, sin juego. No falla: publica un sitio que
+El proyecto **está vinculado al repo**. Sin apagarlo, la integración de Vercel construye **la
+raíz** en cada push: sin Godot, sin export, sin juego. No falla: publica un sitio que
 contesta **404**.
 
 Y con `desplegar.yml` en `main` serían **dos caminos publicando sobre el mismo proyecto en el
-mismo push**, con el alias de producción para el que termine último: o el juego, o el 404, según
-la carrera.
+mismo push**. El alias de producción queda para el que termine último: el juego o el 404.
 
 ```json
 "git": { "deploymentEnabled": false }
 ```
 
-Lo ata `test_despliegue.py`, porque es una línea que se borra sin querer y el síntoma —un 404 en
-producción mientras Actions dice verde— no la nombra. La opción es de
+Lo ata `test_despliegue.py`, porque es una línea que se borra sin querer. El síntoma, un 404 en
+producción con Actions en verde, no la nombra. La opción es de
 [Git configuration](https://vercel.com/docs/project-configuration/git-configuration), y sólo
 gobierna los deploys **automáticos**: el `vercel deploy` explícito del workflow sigue andando.
 
 ## Rehacerlo a mano
 
-Cuando hay que publicar sin pasar por Actions —o reproducir un fallo del workflow—, es esto,
-desde la raíz del repo y con las export templates de la versión que diga `.godot-version` ya
-instaladas:
+Para publicar sin pasar por Actions, o para reproducir un fallo del workflow, es esto. Va desde
+la raíz del repo, con las export templates de la versión de `.godot-version` instaladas:
 
 ```bash
 mkdir -p export/web
@@ -124,5 +122,5 @@ node .github/scripts/humo_en_navegador.mjs https://<proyecto>.vercel.app
 ```
 
 Las templates se bajan una vez desde el editor (**Editor → Manage Export Templates**) o a mano
-a `~/.local/share/godot/export_templates/<version>.stable/` — con **punto** y no con guion, que
-es como se llama la release: puesto con el nombre equivocado, Godot dice que faltan.
+a `~/.local/share/godot/export_templates/<version>.stable/`. El directorio va con **punto** y no
+con guion, como la release. Con el nombre equivocado, Godot dice que faltan.
