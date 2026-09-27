@@ -364,11 +364,9 @@ func _aplicar_apagado(voz: AudioStreamPlayer3D) -> void:
 		return
 	if not _buses_propios.has(voz):
 		_buses_propios[voz] = "Apagado %d" % voz.get_instance_id()
-		AudioServer.add_bus()
-		AudioServer.set_bus_name(AudioServer.bus_count - 1, _buses_propios[voz])
-		AudioServer.add_bus_effect(AudioServer.bus_count - 1, AudioEffectLowPassFilter.new())
+		_agregar_bus(_buses_propios[voz], AudioEffectLowPassFilter.new())
 	var indice := AudioServer.get_bus_index(_buses_propios[voz])
-	AudioServer.set_bus_send(indice, salida)
+	_mandar(indice, salida)
 	var filtro := AudioServer.get_bus_effect(indice, 0) as AudioEffectLowPassFilter
 	filtro.cutoff_hz = ApagadoPorObstaculos.corte_hz(nivel)
 	voz.bus = _buses_propios[voz]
@@ -437,11 +435,29 @@ func _bus_filtrado(bus: String, corte_hz: float) -> String:
 		return bus
 	var nombre := "%s · pasa-altos %d Hz" % [bus, int(corte_hz)]
 	if AudioServer.get_bus_index(nombre) < 0:
-		AudioServer.add_bus()
-		var indice := AudioServer.bus_count - 1
-		AudioServer.set_bus_name(indice, nombre)
-		AudioServer.set_bus_send(indice, bus)
 		var filtro := AudioEffectHighPassFilter.new()
 		filtro.cutoff_hz = corte_hz
-		AudioServer.add_bus_effect(indice, filtro)
+		_mandar(_agregar_bus(nombre, filtro), bus)
 	return nombre
+
+
+## El mezclador corre en otro hilo, y `set_bus_send()` no toma su candado: cambiar el envío
+## mientras mezcla hace caer el motor. Esto se pide en cada cuadro, así que el candado se toma
+## sólo si la salida cambió.
+func _mandar(indice: int, salida: String) -> void:
+	if AudioServer.get_bus_send(indice) == salida:
+		return
+	AudioServer.lock()
+	AudioServer.set_bus_send(indice, salida)
+	AudioServer.unlock()
+
+
+## `add_bus()` tampoco toma el candado.
+func _agregar_bus(nombre: String, filtro: AudioEffect) -> int:
+	AudioServer.lock()
+	AudioServer.add_bus()
+	var indice := AudioServer.bus_count - 1
+	AudioServer.set_bus_name(indice, nombre)
+	AudioServer.add_bus_effect(indice, filtro)
+	AudioServer.unlock()
+	return indice
