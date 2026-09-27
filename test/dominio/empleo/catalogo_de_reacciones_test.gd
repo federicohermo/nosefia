@@ -3,7 +3,7 @@
 ##
 ## **El caso que más pesa es el que cruza la clave.** Un `.tres` colgado de la fila equivocada no
 ## da ningún error —la clave del `enum` se guarda como un entero pelado—, así que sin esa cruza
-## el jugador leería la reacción de otra tarea y los seis nodos seguirían en verde.
+## el jugador leería la reacción de otra tarea y los nodos seguirían en verde.
 extends GdUnitTestSuite
 
 const CATALOGO := "res://src/dominio/empleo/catalogo_de_reacciones.gd"

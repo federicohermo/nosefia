@@ -21,7 +21,7 @@ func test_ningun_comprador_de_la_jornada_queda_sin_atender_por_falta_de_lista() 
 func test_por_la_ventanilla_no_pasan_mas_de_dos_compradores_por_jornada() -> void:  # AC-CTR-001
 	# El techo lo pone el GDD —«no más de dos compradores por día»— y hasta acá vivía sólo en un
 	# comentario: el piso estaba afirmado y el techo no, así que subir la constante a tres pasaba
-	# los seis nodos en verde y le regalaba a atender una interrupción que el balance no pidió.
+	# los nodos en verde y le regalaba a atender una interrupción que el balance no pidió.
 	(
 		assert_int(ReglasDeLaVentanilla.COMPRADORES_POR_JORNADA)
 		. override_failure_message("el GDD no admite más de dos compradores por jornada")

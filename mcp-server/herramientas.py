@@ -6,7 +6,7 @@ El `inventario-index` de las referencias compila un índice a `.index/` y cada r
 el commit con el que se generó, porque un índice envejece: un archivo nuevo es invisible y un
 símbolo renombrado conserva el nombre viejo hasta regenerar.
 
-**Acá no hace falta y por eso no está.** `src/` son 96 `.gd` y 18 `.tscn`: leer el árbol entero
+**Acá no hace falta y por eso no está.** `src/` es chico: leer el árbol entero
 cuesta milisegundos, así que cada respuesta mira el disco de ahora. Se pierde el paso
 `pnpm index` que hay que acordarse de correr, y con él se pierde el modo de falla entero —una
 respuesta vieja que parece fresca—.

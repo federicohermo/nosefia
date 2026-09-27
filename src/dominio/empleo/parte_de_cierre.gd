@@ -3,7 +3,7 @@
 ##
 ## **Todo lo que la placa dice se arma acá, y ésa es la única decisión de diseño de este
 ## archivo.** Los mismos textos elegidos con una condición adentro de la pantalla nacerían sin
-## test y con los seis nodos en verde: está medido que ni el gate de tests ni el de capas ven una
+## test y con los nodos en verde: está medido que ni el gate de tests ni el de capas ven una
 ## regla escrita en `ui/`. Acá el test es barato y obligatorio.
 ##
 ## **Recibe y no recalcula.** La jornada y los apercibimientos llegan de afuera: quien los cuenta
