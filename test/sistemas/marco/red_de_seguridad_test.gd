@@ -1,0 +1,227 @@
+## La red de seguridad en un mundo chico: un piso, una pared gruesa y un objeto que se agarra.
+extends GdUnitTestSuite
+
+const OBJETO := preload("res://src/escenas/objetos/objeto_agarrable.tscn")
+
+## La pared ocupa de x = 2 a x = 6: más gruesa que cualquier anillo alrededor de un objeto.
+const PARED := Vector3(4.0, 1.0, 0.0)
+
+## Apoyado en el piso y metido cinco centímetros en la pared: a su lado hay piso libre.
+const CONTRA_LA_PARED := Vector3(1.99, 0.08, 0.0)
+
+## Un área de un metro de ancho que tapa ese piso libre, sin llegar a lo metido en la pared.
+const AREA_JUNTO_A_LA_PARED := Vector3(1.42, 0.5, 0.0)
+
+
+func _cuerpo_estatico(raiz: Node3D, tamano: Vector3, lugar: Vector3) -> StaticBody3D:
+	var cuerpo := StaticBody3D.new()
+	var forma := CollisionShape3D.new()
+	var caja := BoxShape3D.new()
+	caja.size = tamano
+	forma.shape = caja
+	cuerpo.add_child(forma)
+	raiz.add_child(cuerpo)
+	cuerpo.global_position = lugar
+	return cuerpo
+
+
+## Devuelve la red, con el piso, la pared, el jugador y un objeto quieto en el piso.
+func _mundo() -> Array:
+	var raiz: Node3D = auto_free(Node3D.new())
+	add_child(raiz)
+	_cuerpo_estatico(raiz, Vector3(20.0, 1.0, 20.0), Vector3(0.0, -0.5, 0.0))
+	_cuerpo_estatico(raiz, Vector3(4.0, 2.0, 4.0), PARED)
+	var jugador := CharacterBody3D.new()
+	var capsula := CollisionShape3D.new()
+	capsula.shape = CapsuleShape3D.new()
+	capsula.position = Vector3.UP
+	jugador.add_child(capsula)
+	raiz.add_child(jugador)
+	jugador.global_position = Vector3(-2.0, 0.0, 0.0)
+	var agarre := Agarre.new()
+	raiz.add_child(agarre)
+	var objeto: RigidBody3D = OBJETO.instantiate()
+	raiz.add_child(objeto)
+	objeto.global_position = Vector3(0.0, 0.08, 0.0)
+	var red := RedDeSeguridad.new()
+	red.agarre = agarre
+	red.jugador = jugador
+	raiz.add_child(red)
+	await get_tree().physics_frame
+	return [red, objeto, agarre, jugador]
+
+
+func test_lo_que_no_se_superpone_no_se_toca() -> void:
+	var mundo: Array = await _mundo()
+	var red: RedDeSeguridad = mundo[0]
+	var objeto: RigidBody3D = mundo[1]
+	var antes := objeto.global_position
+	red.revisar(objeto)
+	assert_array(red.rescates).is_empty()
+	assert_vector(objeto.global_position).is_equal(antes)
+
+
+func test_lo_soltado_adentro_de_la_pared_sale_al_piso_al_lado_del_jugador() -> void:
+	var mundo: Array = await _mundo()
+	var red: RedDeSeguridad = mundo[0]
+	var objeto: RigidBody3D = mundo[1]
+	var agarre: Agarre = mundo[2]
+	var jugador: CharacterBody3D = mundo[3]
+	objeto.global_position = PARED
+	agarre.objeto_soltado.emit(objeto)
+	await get_tree().physics_frame
+	await get_tree().physics_frame
+	assert_int(red.rescates.size()).is_equal(1)
+	assert_int(red.rescates[0]["clase"]).is_equal(Rescate.Clase.DESHACER)
+	assert_float(objeto.global_position.distance_to(jugador.global_position)).is_less(1.5)
+
+
+func test_sin_ningun_lugar_libre_queda_donde_esta_y_se_registra() -> void:
+	var mundo: Array = await _mundo()
+	var red: RedDeSeguridad = mundo[0]
+	var objeto: RigidBody3D = mundo[1]
+	var jugador: CharacterBody3D = mundo[3]
+	objeto.global_position = PARED
+	objeto.set("_origen_en_el_mundo", objeto.global_transform)
+	jugador.global_position = PARED + Vector3.UP * 5.0
+	red.revisar(objeto)
+	assert_int(red.rescates.size()).is_equal(1)
+	assert_int(red.rescates[0]["clase"]).is_equal(Rescate.NINGUNO)
+	assert_vector(objeto.global_position).is_equal(PARED)
+
+
+func test_el_aviso_nombra_el_objeto_el_solido_y_la_posicion() -> void:
+	var mundo: Array = await _mundo()
+	var red: RedDeSeguridad = mundo[0]
+	var objeto: RigidBody3D = mundo[1]
+	objeto.global_position = PARED
+	red.revisar(objeto)
+	var aviso: String = red.rescates[0]["aviso"]
+	assert_str(aviso).contains(str(objeto.name))
+	assert_str(aviso).contains(str(red.rescates[0]["solido"].name))
+	assert_str(aviso).contains(str(PARED))
+
+
+func test_al_quedar_quieta_la_hoja_rescata_lo_que_quedo_adentro() -> void:
+	var mundo: Array = await _mundo()
+	var red: RedDeSeguridad = mundo[0]
+	var objeto: RigidBody3D = mundo[1]
+	var hoja := AnimatableBody3D.new()
+	hoja.add_user_signal(RedDeSeguridad.SENAL_DE_LA_HOJA_QUIETA, [{"name": "cuerpo"}])
+	var forma := CollisionShape3D.new()
+	var tabla := BoxShape3D.new()
+	tabla.size = Vector3(1.0, 2.0, 0.2)
+	forma.shape = tabla
+	hoja.add_child(forma)
+	red.get_parent().add_child(hoja)
+	hoja.global_position = Vector3(0.0, 1.0, 3.0)
+	hoja.connect(RedDeSeguridad.SENAL_DE_LA_HOJA_QUIETA, red._al_quedar_quieta)
+	objeto.freeze = true
+	objeto.global_position = Vector3(0.0, 0.08, 3.0)
+	await get_tree().physics_frame
+	hoja.emit_signal(RedDeSeguridad.SENAL_DE_LA_HOJA_QUIETA, hoja)
+	assert_int(red.rescates.size()).is_equal(1)
+	assert_object(red.rescates[0]["solido"]).is_same(hoja)
+
+
+## Deshacer va antes que buscar alrededor, y deja lo soltado adelante del jugador.
+func test_lo_soltado_adentro_sale_adelante_del_jugador() -> void:
+	var mundo: Array = await _mundo()
+	var red: RedDeSeguridad = mundo[0]
+	var objeto: RigidBody3D = mundo[1]
+	var agarre: Agarre = mundo[2]
+	var jugador: CharacterBody3D = mundo[3]
+	# Como en el jugador, el cuerpo no gira: gira lo que cuelga de él. Mira hacia +X.
+	var giro := Node3D.new()
+	jugador.add_child(giro)
+	giro.rotation.y = -PI / 2.0
+	agarre.punto_de_respaldo = giro
+	objeto.freeze = true
+	objeto.global_position = CONTRA_LA_PARED
+	agarre.objeto_soltado.emit(objeto)
+	await get_tree().physics_frame
+	await get_tree().physics_frame
+	assert_int(red.rescates[0]["clase"]).is_equal(Rescate.Clase.DESHACER)
+	assert_float(objeto.global_position.x - jugador.global_position.x).is_greater(0.3)
+
+
+## Un lugar libre adentro de un área donde el objeto no estaba no es candidato: ahí contaría para
+## una tarea.
+func test_un_lugar_adentro_de_un_area_nueva_no_es_candidato() -> void:
+	var mundo: Array = await _mundo()
+	var red: RedDeSeguridad = mundo[0]
+	var objeto: RigidBody3D = mundo[1]
+	var area := Area3D.new()
+	var forma := CollisionShape3D.new()
+	var caja := BoxShape3D.new()
+	caja.size = Vector3(1.0, 1.0, 4.0)
+	forma.shape = caja
+	area.add_child(forma)
+	objeto.get_parent().add_child(area)
+	area.global_position = AREA_JUNTO_A_LA_PARED
+	await get_tree().physics_frame
+	objeto.freeze = true
+	objeto.global_basis = Basis.IDENTITY
+	objeto.global_position = CONTRA_LA_PARED
+	objeto.set("_origen_en_el_mundo", objeto.global_transform)
+	red.revisar(objeto)
+	assert_int(red.rescates[0]["clase"]).is_equal(Rescate.NINGUNO)
+	assert_vector(objeto.global_position).is_equal(CONTRA_LA_PARED)
+
+
+## Alrededor sólo vale un lugar libre de verdad: lo rescatado no queda metido en la pared.
+func test_alrededor_no_deja_nada_metido_en_la_pared() -> void:
+	var mundo: Array = await _mundo()
+	var red: RedDeSeguridad = mundo[0]
+	var objeto: RigidBody3D = mundo[1]
+	objeto.freeze = true
+	objeto.global_basis = Basis.IDENTITY
+	objeto.global_position = CONTRA_LA_PARED
+	red.revisar(objeto)
+	assert_int(red.rescates[0]["clase"]).is_equal(Rescate.Clase.ALREDEDOR)
+	var forma: CollisionShape3D = objeto.get_node("Forma")
+	var cara := objeto.global_position.x + (forma.shape as BoxShape3D).size.x / 2.0
+	assert_float(cara).is_less_equal(2.0 + ReglasDeLosObjetos.ROCE)
+
+
+## Lo congelado se rescata aunque apenas se meta. Medido el 2026-09-26: a 6 mm el motor no
+## devuelve choques, y a 2 cm lo que sobra no pasa el roce.
+func test_lo_congelado_apenas_metido_se_rescata() -> void:
+	var mundo: Array = await _mundo()
+	var red: RedDeSeguridad = mundo[0]
+	var objeto: RigidBody3D = mundo[1]
+	var forma: CollisionShape3D = objeto.get_node("Forma")
+	var medio_ancho := (forma.shape as BoxShape3D).size.x / 2.0
+	objeto.freeze = true
+	objeto.global_basis = Basis.IDENTITY
+	for metido: float in [0.006, 0.02]:
+		objeto.global_position = Vector3(2.0 - medio_ancho + metido, 0.08, 0.0)
+		red.revisar(objeto)
+		var cara := objeto.global_position.x + medio_ancho
+		assert_float(cara).is_less_equal(2.0 + ReglasDeLosObjetos.ROCE)
+	assert_int(red.rescates.size()).is_equal(2)
+
+
+## Lo vivo metido entero en la pared se detecta, aunque el motor ya lo saque en parte.
+func test_lo_vivo_metido_entero_se_detecta() -> void:
+	var mundo: Array = await _mundo()
+	var red: RedDeSeguridad = mundo[0]
+	var objeto: RigidBody3D = mundo[1]
+	var forma: CollisionShape3D = objeto.get_node("Forma")
+	objeto.global_basis = Basis.IDENTITY
+	objeto.global_position = Vector3(2.0 + (forma.shape as BoxShape3D).size.x / 2.0, 0.08, 0.0)
+	red.revisar(objeto)
+	assert_int(red.rescates.size()).is_equal(1)
+
+
+## Lo que nace después de la red también se mira al dormirse.
+func test_lo_que_nace_despues_se_mira_al_dormirse() -> void:
+	var mundo: Array = await _mundo()
+	var red: RedDeSeguridad = mundo[0]
+	var nuevo: RigidBody3D = OBJETO.instantiate()
+	red.get_parent().add_child(nuevo)
+	nuevo.global_position = PARED
+	nuevo.sleeping = true
+	nuevo.sleeping_state_changed.emit()
+	assert_int(red.rescates.size()).is_equal(1)
+	assert_object(red.rescates[0]["objeto"]).is_same(nuevo)

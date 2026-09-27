@@ -56,6 +56,12 @@ const METODO_INTERACTUAR := "interactuar"
 ## puede nombrar la caja sin cruzar la dirección de las capas.
 const METODO_EMPUJAR := "empujar"
 
+## Dónde arrancó la noche lo que se agarra, en coordenadas del mundo. Es un método por el mismo
+## motivo: la red de seguridad, en `sistemas/`, no puede nombrar el tipo que lo contesta.
+const METODO_LUGAR_DE_ORIGEN := "lugar_de_origen"
+
+const SENAL_EMPUJADA := &"empujada"
+
 ## Qué parte del paso que el jugador no pudo dar recibe lo que le estorba. Con 1 la caja se
 ## mueve a su velocidad y no pesa nada; con 0 no se mueve y le tapa el paso. El medio es lo que
 ## hace que correr una caja cueste caminar más lento, que es el peso que se quiere.
@@ -66,9 +72,7 @@ const ARRASTRE_DE_LA_CAJA := 0.5
 ## valdría una pared.
 const APOYO_HORIZONTAL := 0.7
 
-## La capa de física donde viven los contornos de los muebles: la caja que envuelve a cada uno.
-## Es la número 4, y su nombre está declarado en `project.godot`. Quien la mira no entra al
-## mueble: el jugador, y el lugar donde se deja un producto soltado.
+## Es la número 4, y su nombre está declarado en `project.godot`.
 const CAPA_DEL_CONTORNO := 8
 
 ## Cuánto se le descuenta a una forma para preguntar si entra o si atraviesa algo, en metros.

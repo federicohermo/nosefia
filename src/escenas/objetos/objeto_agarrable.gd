@@ -18,10 +18,13 @@ extends RigidBody3D
 ## Dónde lo dejó la escena. Se guarda en `_ready()` y no en la declaración porque el `transform`
 ## que importa es el que le puso el `.tscn`, y ése recién existe cuando el nodo entró al árbol.
 var _lugar_de_origen: Transform3D
+## El mismo lugar en el mundo: en la mano, el padre es la mano y el local ya no dice nada.
+var _origen_en_el_mundo: Transform3D
 
 
 func _ready() -> void:
 	_lugar_de_origen = transform
+	_origen_en_el_mundo = global_transform
 
 
 ## Lo devuelve a donde empezó la noche.
@@ -56,3 +59,7 @@ func volver_a_su_lugar() -> void:
 ## `ReglasDeLosObjetos.METODO_INTERACTUAR` y lo afirma el test de esta escena.
 func interactuar() -> ObjetoDelAlmacen:
 	return datos
+
+
+func lugar_de_origen() -> Transform3D:
+	return _origen_en_el_mundo

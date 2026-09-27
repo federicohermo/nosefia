@@ -145,6 +145,12 @@ DADO una bolsa ya depositada, soltada fuera de la zona, es «ya depositada».
 DADO el piso con las cuatro manchas limpias ENTONCES limpiar está cumplida; DADO las tres bolsas
 en el descarte ENTONCES la basura está cumplida; con una sola pendiente en cada caso, no.
 
+### AC-CLN-013 — Rescatar una bolsa no la cuenta ni la descuenta *(verifica BR-CLN-011)*
+
+DADO una bolsa ya depositada, y otra todavía no, cada una superpuesta con un sólido fijo CUANDO
+se las rescata ENTONCES la cantidad de bolsas depositadas no cambia, y ninguna queda adentro del
+área de descarte.
+
 ## No objetivos
 
 - Esta capacidad NO mide distancias: las recibe ya medidas. El dominio no sabe de física.
