@@ -2,6 +2,11 @@
 
 [ext_resource type="Script" path="res://src/dominio/ambiente/entrada_sonora.gd" id="1_qermt"]
 [ext_resource type="Script" path="res://src/dominio/ambiente/tabla_de_sonidos.gd" id="2_xbcco"]
+[ext_resource type="AudioStream" uid="uid://bhu4lknuugo8s" path="res://assets/audio/SFX_EVENTO_Timbre.wav" id="3_timbre"]
+[ext_resource type="AudioStream" uid="uid://bx3vm8dhrgocb" path="res://assets/audio/SFX_NOLEV_Basura_SacarBolsa.wav" id="4_bolsa"]
+[ext_resource type="AudioStream" uid="uid://cutvbgdawxrms" path="res://assets/audio/SFX_OBJETO_Mopa_DejarYLimpiar.wav" id="5_mopa"]
+[ext_resource type="AudioStream" uid="uid://b0lo8yn2b2vwl" path="res://assets/audio/SFX_EVENTO_FinJornada.wav" id="6_fin"]
+[ext_resource type="AudioStream" uid="uid://cmgvx4tdrkcg3" path="res://assets/audio/SFX_INTERFAZ_Computadora_Boton.wav" id="7_boton"]
 
 [sub_resource type="Resource" id="Resource_x3pvh"]
 script = ExtResource("1_qermt")
@@ -13,6 +18,7 @@ script = ExtResource("1_qermt")
 evento = 1
 senal = &"turno_cerrado"
 bus = "Interfaz"
+stream = ExtResource("6_fin")
 
 [sub_resource type="Resource" id="Resource_382as"]
 script = ExtResource("1_qermt")
@@ -50,11 +56,13 @@ senal = &"producto_colocado"
 script = ExtResource("1_qermt")
 evento = 8
 senal = &"pasada_dada"
+stream = ExtResource("5_mopa")
 
 [sub_resource type="Resource" id="Resource_pmrqt"]
 script = ExtResource("1_qermt")
 evento = 9
 senal = &"bolsa_depositada"
+stream = ExtResource("4_bolsa")
 
 [sub_resource type="Resource" id="Resource_38ejk"]
 script = ExtResource("1_qermt")
@@ -66,6 +74,7 @@ bus = "Interfaz"
 script = ExtResource("1_qermt")
 evento = 11
 senal = &"comprador_llegado"
+stream = ExtResource("3_timbre")
 
 [sub_resource type="Resource" id="Resource_s3myp"]
 script = ExtResource("1_qermt")
@@ -73,6 +82,13 @@ evento = 12
 bus = "Ambiente"
 en_bucle = true
 
+[sub_resource type="Resource" id="Resource_boton"]
+script = ExtResource("1_qermt")
+evento = 13
+senal = &"boton_pulsado"
+bus = "Interfaz"
+stream = ExtResource("7_boton")
+
 [resource]
 script = ExtResource("2_xbcco")
-entradas = Array[ExtResource("1_qermt")]([SubResource("Resource_x3pvh"), SubResource("Resource_oefuu"), SubResource("Resource_382as"), SubResource("Resource_b10uv"), SubResource("Resource_jx3m8"), SubResource("Resource_xfwnq"), SubResource("Resource_avff3"), SubResource("Resource_w1qrw"), SubResource("Resource_2fnal"), SubResource("Resource_pmrqt"), SubResource("Resource_38ejk"), SubResource("Resource_ql6t2"), SubResource("Resource_s3myp")])
+entradas = Array[ExtResource("1_qermt")]([SubResource("Resource_x3pvh"), SubResource("Resource_oefuu"), SubResource("Resource_382as"), SubResource("Resource_b10uv"), SubResource("Resource_jx3m8"), SubResource("Resource_xfwnq"), SubResource("Resource_avff3"), SubResource("Resource_w1qrw"), SubResource("Resource_2fnal"), SubResource("Resource_pmrqt"), SubResource("Resource_38ejk"), SubResource("Resource_ql6t2"), SubResource("Resource_s3myp"), SubResource("Resource_boton")])

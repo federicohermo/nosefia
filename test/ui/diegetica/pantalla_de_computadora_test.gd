@@ -114,3 +114,26 @@ func test_leer_notas_y_cambiar_de_app_conserva_el_borrador() -> void:
 	assert_str(cuerpo.text).is_equal("Todavía estoy escribiendo.")
 	assert_int(cuaderno.notas().size()).is_equal(2)
 	await get_tree().process_frame
+
+
+func test_cada_click_en_un_boton_de_cualquier_app_emite_boton_pulsado() -> void:
+	var pantalla: PantallaDeComputadora = auto_free(ESCENA.instantiate())
+	add_child(pantalla)
+	var pulsados := [0]
+	pantalla.boton_pulsado.connect(func() -> void: pulsados[0] += 1)
+	var anotar: Button = pantalla.notas().get("_anotar")
+	anotar.pressed.emit()
+	assert_int(pulsados[0]).is_equal(1)
+	# Los productos de la caja se agregan después de `_ready()`, al mostrarla.
+	var caja := CajaRegistradora.new(
+		Apertura.inventario_de_la_jornada(), CajaRegistradora.productos_del_dia()
+	)
+	pantalla.caja().mostrar(caja)
+	var producto: Button = (pantalla.caja().get("_botones") as Container).get_child(0)
+	producto.pressed.emit()
+	producto.pressed.emit()
+	assert_int(pulsados[0]).is_equal(3)
+	producto.disabled = true
+	producto.pressed.emit()
+	assert_int(pulsados[0]).is_equal(3)
+	await get_tree().process_frame

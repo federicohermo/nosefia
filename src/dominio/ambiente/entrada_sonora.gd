@@ -36,6 +36,7 @@ enum Evento {
 	COMPUTADORA_ABIERTA,
 	TIMBRE_DEL_COMPRADOR,
 	AMBIENTE_DEL_LOCAL,
+	BOTON_DE_LA_COMPUTADORA,
 }
 
 ## Los cuatro buses del local, **declarados una sola vez en todo el repo**. El layout de buses los
@@ -65,8 +66,8 @@ const BUSES := [BUS_DE_AMBIENTE, BUS_DE_EFECTOS, BUS_DE_INTERFAZ, BUS_DE_MUSICA]
 ## y no la ronda: una ronda con un bucle adentro se quedaría sin voces al quinto sonido.
 @export var en_bucle: bool = false
 
-## Vacío mientras no haya archivos de audio: elegirlos y mezclarlos está fuera de alcance. Que la
-## fila exista igual es lo que permite que agregar el sonido no toque código.
+## Vacío mientras el sonido no esté elegido. Que la fila exista igual es lo que permite que
+## agregar el sonido no toque código.
 @export var stream: AudioStream = null
 
 
