@@ -52,7 +52,7 @@ incluido el mensaje de bloqueo del hook. El porqué entero está en el encabezad
 
 El principio está en la [constitución](../../docs/architecture/constitution.md).
 
-**Encadenar `rg` con `&&` es la misma falla en la otra dirección.** Un `rg A && rg B && rg C`
+**Encadenar `rg` con `&&` también falla en silencio.** Un `rg A && rg B && rg C`
 corta en el primero sin match, que devuelve 1. **Los otros dos no corren, sin decirlo.** La
 salida vacía se lee como «ninguno matcheó», y sólo se preguntó por el primero. **Un `rg` por
 línea, separados por `;`, nunca por `&&`.**

@@ -143,10 +143,6 @@ Si el hallazgo depende de una premisa sobre el entorno —una config, un flag, u
 un default del motor—, **comprobá la premisa**. Un grep de cinco segundos descarta la mitad de los
 🔴 candidatos, y reportar uno cuesta además un fix innecesario.
 
-**Y para buscar adentro de `.claude/`, `rg --no-ignore --hidden`.** `Grep` es ripgrep y saltea
-los ocultos: contesta cero sin decir que no miró, que es la peor respuesta posible para
-verificar una premisa.
-
 ## Política de triage — al aplicar los fixes
 
 **No hay hallazgo que sobreviva a la corrida.** El método entero está en
