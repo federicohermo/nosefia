@@ -11,7 +11,7 @@ Acá van las directrices que ninguna herramienta verifica. Las que sí tienen ve
 - **Ante el rojo de un gate, mover la decisión, no pedir una excepción.** Bajarla a la capa que
   corresponde, o pasar el dato por parámetro en vez de ir a buscarlo.
 - **Escribir en un comentario lo que el código no puede decir:** una decisión, una restricción
-  del motor, un bug evitado. Un comentario que repite la línea miente el día que la línea cambia.
+  del motor, un bug evitado.
 - **Revisar si un archivo está en la carpeta correcta.** El gate de capas valida sólo el nombre
   de la carpeta.
 
@@ -20,7 +20,7 @@ Acá van las directrices que ninguna herramienta verifica. Las que sí tienen ve
 - **Guardar en un doc sólo lo que ninguna fuente dice.** El porqué de una decisión, una trampa,
   el camino entre dos herramientas.
 - **Nombrar la fuente en vez de copiarla.** Un número, una lista o una versión se citan por el
-  archivo o el símbolo que los declara. Una copia miente el día que la fuente cambia.
+  archivo o el símbolo que los declara.
 - **No escribir mediciones en un doc.** Un doc dice cómo se mide y dónde queda el resultado. La
   medición va al PR o al archivo que escribe el script.
 - **Decir cada regla en un solo doc.** El otro enlaza.

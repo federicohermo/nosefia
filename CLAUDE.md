@@ -15,7 +15,7 @@ el detalle de cada feature. El GDD manda sobre este archivo. Si un spec discrepa
 decide el GDD: si el spec dice lo que el GDD pide, el que está mal es el código.
 
 **Stack:** Godot · GDScript · gdUnit4 · gdtoolkit · Python para el harness. Las versiones las
-declaran `project.godot`, `addons/gdUnit4/plugin.cfg` y `.github/workflows/verify.yml`.
+declaran `.godot-version`, `addons/gdUnit4/plugin.cfg` y `.github/workflows/verify.yml`.
 
 ## Comandos
 
@@ -74,8 +74,8 @@ Cada una nombra quién la verifica. El porqué está en la
 
 - **Una capa no nombra un `class_name` de una capa posterior.** No deja rastro en ningún import,
   y por eso `gate_de_capas.py` indexa las clases.
-- **Una subcarpeta de capa sale de `CARPETAS_POR_CAPA`**, en `lib/repo.py`. Lo verifica
-  `gate_de_capas.py`.
+- **Una subcarpeta de capa sale de `CARPETAS_POR_CAPA`**, en `.claude/scripts/lib/repo.py`. Lo
+  verifica `gate_de_capas.py`.
 - **Todo `.gd` de `dominio/` y `sistemas/` tiene su test espejo en `test/<capa>/`.** Lo verifica
   `gate_de_tests.py`, que también frena un test sin aserción o apagado.
 - **Cada criterio de un spec `ratified` lo cita un test como `AC-<COD>-###`.** Lo verifica

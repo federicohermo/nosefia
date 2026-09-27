@@ -120,9 +120,6 @@ juzga. Sin ninguno de los dos, los criterios salen del cuerpo del PR.
 Un review que mira sólo el diff revisa **sin criterios de aceptación**, que es la peor forma de
 este bug, porque igual termina y reporta.
 
-**Y para buscar en `.claude/`, `rg --no-ignore --hidden`**: `Grep` es ripgrep y saltea los ocultos, así
-que contesta cero sin decir que no miró.
-
 ## Paso 3 — Materializar el diff, una sola vez
 
 ```bash
