@@ -89,16 +89,53 @@ class ReglaDelApagado(unittest.TestCase):
         self.assertEqual(len(encontrados), 1)
         self.assertIn("apagado", encontrados[0][1])
 
-    def test_un_skip_es_hallazgo(self):
-        texto = "func test_algo():\n\tskip(true)\n\tassert_int(1).is_equal(2)\n"
+    def _apagados(self, texto):
         encontrados = hallazgos({}, {"test/dominio/turno_test.gd": texto})
-        self.assertEqual(len(encontrados), 1)
-        self.assertIn("apagado", encontrados[0][1])
+        return [h for h in encontrados if "apagado" in h[1]]
+
+    def test_un_parametro_do_skip_es_hallazgo(self):
+        texto = "func test_algo(do_skip := true) -> void:\n\tassert_int(1).is_equal(2)\n"
+        self.assertEqual(len(self._apagados(texto)), 1)
+
+    def test_do_skip_con_una_expresion_es_hallazgo(self):
+        texto = (
+            'func test_algo(do_skip = OS.get_name() == "Web") -> void:\n'
+            "\tassert_int(1).is_equal(2)\n"
+        )
+        self.assertEqual(len(self._apagados(texto)), 1)
+
+    def test_do_skip_en_falso_es_hallazgo(self):
+        # El scanner lee el parámetro con cualquier valor; en falso no hace nada útil, y dejarlo
+        # es dejar la palanca a mano.
+        texto = "func test_algo(do_skip: bool = false) -> void:\n\tassert_int(1).is_equal(2)\n"
+        self.assertEqual(len(self._apagados(texto)), 1)
+
+    def test_do_skip_en_la_segunda_linea_de_la_firma_es_hallazgo(self):
+        texto = (
+            "func test_algo(\n\ttimeout := 2000,\n\tdo_skip := true\n) -> void:\n"
+            "\tassert_int(1).is_equal(2)\n"
+        )
+        self.assertEqual(len(self._apagados(texto)), 1)
+
+    def test_do_skip_en_un_comentario_o_un_texto_no_es_hallazgo(self):
+        texto = (
+            "func test_algo() -> void:  # sin do_skip\n"
+            "\t# do_skip := true\n"
+            '\tassert_str("do_skip").is_equal("do_skip")\n'
+        )
+        self.assertEqual(hallazgos({}, {"test/dominio/turno_test.gd": texto}), [])
+
+    def test_un_ayudante_con_do_skip_no_es_hallazgo(self):
+        texto = (
+            "func armar(do_skip := true) -> void:\n\tpass\n\n"
+            "func test_algo() -> void:\n\tassert_int(1).is_equal(1)\n"
+        )
+        self.assertEqual(hallazgos({}, {"test/dominio/turno_test.gd": texto}), [])
 
     def test_el_apagado_gana_sobre_la_falta_de_asercion(self):
         # Decir «está apagado» es más útil que decir «no afirma nada», que es la consecuencia
         # y no la causa.
-        texto = "func test_algo():\n\tskip(true)\n"
+        texto = "func test_algo(do_skip := true) -> void:\n\tpass\n"
         encontrados = hallazgos({}, {"test/dominio/turno_test.gd": texto})
         self.assertEqual(len(encontrados), 1)
         self.assertIn("apagado", encontrados[0][1])

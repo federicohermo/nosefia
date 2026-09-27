@@ -47,8 +47,11 @@ _CUALQUIER_FUNCION = re.compile(r"^func\s+\w+\s*\(", re.MULTILINE)
 #: aserción sería aceptar como cubierto justo lo que declara no estarlo.
 _ASERCION = re.compile(r"\bassert_(?!not_yet_implemented)\w+\s*\(")
 
-#: Las formas de apagar un test sin borrarlo.
-_APAGADO = re.compile(r"\bassert_not_yet_implemented\b|\bskip\s*\(\s*true\s*\)|@\s*ignore\b")
+#: Las formas de apagar un test sin borrarlo que existen en gdUnit4 6.2.1. `do_skip` se busca
+#: sólo en la firma, sin comentarios ni textos: el scanner lo lee como parámetro, con cualquier
+#: valor, y en cualquier otro lugar es sólo una palabra.
+_APAGADO = re.compile(r"\bassert_not_yet_implemented\b")
+_PARAMETRO_DE_SALTEO = re.compile(r"\bdo_skip\b")
 
 SUFIJO_DE_TEST = "_test.gd"
 
@@ -85,6 +88,45 @@ def funciones_de_test(texto: str) -> list[tuple[str, str]]:
         fin = siguientes[0] if siguientes else len(texto)
         resultado.append((nombre, texto[inicio:fin]))
     return resultado
+
+
+def _parametros(cuerpo: str) -> str:
+    """El código entre los paréntesis de la firma, sin comentarios ni textos.
+
+    Se cuentan los paréntesis porque la firma puede ocupar varias líneas y un valor por
+    defecto puede llamar a una función: `do_skip = OS.get_name() == "Web"`.
+    """
+    codigo = []
+    profundidad = 0
+    i = cuerpo.index("(")
+    while i < len(cuerpo):
+        caracter = cuerpo[i]
+        if caracter == "#":
+            fin = cuerpo.find("\n", i)
+            i = len(cuerpo) if fin == -1 else fin
+            continue
+        if caracter in "\"'":
+            fin = cuerpo.find(caracter, i + 1)
+            i = len(cuerpo) if fin == -1 else fin + 1
+            codigo.append(" ")
+            continue
+        if caracter == "(":
+            profundidad += 1
+        elif caracter == ")":
+            profundidad -= 1
+            if profundidad == 0:
+                break
+        codigo.append(caracter)
+        i += 1
+    return "".join(codigo)
+
+
+def _forma_de_apagado(cuerpo: str) -> str | None:
+    salteo = _PARAMETRO_DE_SALTEO.search(_parametros(cuerpo))
+    if salteo:
+        return salteo.group(0)
+    apagado = _APAGADO.search(cuerpo)
+    return apagado.group(0) if apagado else None
 
 
 def violaciones(
@@ -137,12 +179,12 @@ def violaciones(
         for nombre, cuerpo in funciones:
             # Reglas 2 y 3, en ese orden: si el test está apagado, decirlo antes es más útil
             # que decir que no afirma nada — que es la consecuencia, no la causa.
-            apagado = _APAGADO.search(cuerpo)
+            apagado = _forma_de_apagado(cuerpo)
             if apagado:
                 hallazgos.append(
                     (
                         ruta,
-                        f"`{nombre}` está apagado (`{apagado.group(0)}`): un test que no puede "
+                        f"`{nombre}` está apagado (`{apagado}`): un test que no puede "
                         "fallar es verde permanente. Arreglalo o borralo.",
                     )
                 )
