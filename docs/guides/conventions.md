@@ -32,8 +32,8 @@ Acá van las directrices que ninguna herramienta verifica. Las que sí tienen ve
 ## Lenguaje
 
 El texto sigue el modelo de **ASD-STE100**, aplicado al español. Vale para el código, los tests,
-los comentarios, la documentación, `CLAUDE.md`, las reglas, los specs, los issues, los commits,
-los PR y las respuestas de un agente.
+los comentarios, la documentación, `CLAUDE.md` y las reglas. Vale también para los specs, los
+issues, los commits, los PR y las respuestas de un agente.
 
 1. Escribir una idea por oración.
 2. Escribir instrucciones de 20 palabras o menos. Escribir descripciones de 25 palabras o menos.

@@ -1,8 +1,8 @@
 # CLAUDE.md
 
-Lo que no se puede averiguar mirando un archivo. El detalle vive en `docs/`, las reglas por capa
-en `.claude/rules/` —se cargan solas al tocar sus archivos—, el contrato de cada capacidad en
-`specs/`, y el plan de cada cambio en GitHub Issues.
+Lo que no se puede averiguar mirando un archivo. El detalle vive en `docs/`, y las reglas por
+capa en `.claude/rules/`, que se cargan solas al tocar sus archivos. El contrato de cada
+capacidad vive en `specs/`, y el plan de cada cambio en GitHub Issues.
 
 ## Qué es
 
@@ -12,7 +12,7 @@ cada minuto investigando es un minuto que no va a las tareas.** Una feature se e
 aprieta esa tensión. Los números de la partida los declara `src/dominio/`, y no se citan acá. El
 diseño vive en Notion: el **GDD** tiene la visión y el alcance, y la base «Features y sistemas»
 el detalle de cada feature. El GDD manda sobre este archivo. Si un spec discrepa del código, lo
-decide el GDD: si el spec dice lo que el GDD pide, el que está mal es el código.
+decide el GDD. Si el spec dice lo que el GDD pide, el que está mal es el código.
 
 **Stack:** Godot · GDScript · gdUnit4 · gdtoolkit · Python para el harness. Las versiones las
 declaran `.godot-version`, `addons/gdUnit4/plugin.cfg` y `.github/workflows/verify.yml`.
@@ -38,9 +38,9 @@ Detalle: [verificación](./docs/guides/verificacion.md).
 
 ## El índice del código
 
-**`nosefia-index`, registrado en `.mcp.json`.** Consultarlo **antes** de un `Grep` o un `Read`
-para ubicar un símbolo, ver quién lo usa, saber qué se mueve si lo tocás o qué declara una
-escena. `mapa_del_sistema` es la primera consulta de cualquier tarea. Un hook lo recuerda.
+**`nosefia-index`, registrado en `.mcp.json`.** Consultarlo **antes** de un `Grep` o un `Read`.
+Ubica un símbolo, dice quién lo usa, qué se mueve si lo tocás o qué declara una escena.
+`mapa_del_sistema` es la primera consulta de cualquier tarea. Un hook lo recuerda.
 
 No hay nada que instalar ni que regenerar: no tiene dependencias y lee el árbol en cada
 respuesta. Las herramientas y lo que **no** cubren, en [docs/guides/mcp.md](./docs/guides/mcp.md).
@@ -56,8 +56,8 @@ dominio/  ←  sistemas/  ←  ui/  ←  escenas/
 la presentación. `escenas/` son los scripts pegados a un `.tscn`: cáscara.
 
 **La prueba de que algo va en `dominio/` es una sola: se puede ejercer sin levantar una escena.**
-Es lo que hace testeable a un juego de Godot, donde el patrón por defecto —un `Node` gordo con la
-lógica en `_process`— sólo se prueba jugando.
+Es lo que hace testeable a un juego de Godot. El patrón por defecto, un `Node` gordo con la
+lógica en `_process`, sólo se prueba jugando.
 
 **Una regla del juego que termina en `ui/` o en `escenas/` nace sin test, y ningún gate lo
 dice.** El arreglo no es testear la pantalla: es bajar la regla al dominio.
@@ -111,8 +111,8 @@ Después, lo mínimo para que pase. Después, limpiar con el test de testigo.
 puntual, con límites y criterios propios, y se cierra con su PR. El spec es el contrato durable
 de una funcionalidad. Un issue toca un spec sólo si cambia lo que el juego tiene que hacer.
 
-0. **Traer el pedido de Notion**, si sale de ahí: las fichas con el diseño cerrado de «Features
-   y sistemas» las trae el skill `features-to-issues`, que las deja apuntando a su issue.
+0. **Traer el pedido de Notion**, si sale de ahí. Las fichas con el diseño cerrado de
+   «Features y sistemas» las trae el skill `features-to-issues`, y las deja apuntando a su issue.
 1. **Entrevistar** si algo queda supuesto — el skill `shape`, que no escribe nada.
 2. **Escribir el issue** con formato task-brief — el skill `to-issue`. Declara el tipo, si toca
    un spec, sus criterios, qué puede escribir, qué no se toca y qué comandos dan cero.
@@ -129,8 +129,8 @@ spec, el implementador si no.
 - **Un spec no nombra archivos, clases ni escenas.** Eso caduca con el refactor siguiente.
 - **Un issue no es un vertedero.** Se abre para planificar un cambio, nunca para terminar una
   corrida. La doctrina: [sin-deuda.md](./.claude/skills/to-spec/sin-deuda.md).
-- **Qué NO necesita spec:** un refactor, un bug que no cambia ninguna regla, una mejora de UI,
-  arte, audio o rendimiento, y todo lo que no toca `src/`.
+- **Qué NO necesita spec:** un refactor, un bug que no cambia ninguna regla, o una mejora de UI,
+  arte, audio o rendimiento. Tampoco lo que no toca `src/`.
 
 ## Documentación
 
@@ -164,11 +164,10 @@ su arreglo.
 Y las del modelo, que no tienen síntoma legible:
 
 - **El `.glb` tiene que traer UNA unidad de cada producto, y por dos caminos distintos.** Los
-  modificadores `Array` se apagan **por nombre** —son Geometry Nodes llamados así, y apagar por
-  tipo no apaga ninguno—, y la colección **`guia`**, donde viven las copias linkeadas, se
-  excluye del view layer. Si cualquiera de las dos viaja, cada producto se dibuja dos veces: una
-  horneada y otra por su `MultiMesh`. Las dos las hace `exportar_modelo.py`, y la colección
-  queda visible en Blender.
+  modificadores `Array` se apagan **por nombre**: son Geometry Nodes con ese nombre, y apagar por
+  tipo no apaga ninguno. La colección **`guia`**, donde viven las copias linkeadas, se excluye del view layer.
+  Si cualquiera de las dos viaja, cada producto se dibuja dos veces: una horneada y otra por su
+  `MultiMesh`. Las dos las hace `exportar_modelo.py`, y la colección queda visible en Blender.
 - **Mover o renombrar arte rompe los enlaces del `.blend`, y ningún nodo lo ve.** Sus rutas son
   relativas al archivo, y el `.glb` lleva las texturas embebidas. El juego sigue idéntico, los
   nodos siguen verdes, y la escena se abre en magenta.

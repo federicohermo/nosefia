@@ -7,9 +7,7 @@
 #
 #   - **Exporta acá y no en Vercel.** Sus runners no tienen Godot, y las export templates no
 #     entran en el build cache de Vercel: se bajarían enteras en CADA deploy, para siempre. El
-#     de Actions sí las aguanta. Los tres tamaños, medidos y con fecha, viven una sola vez, en
-#     `docs/infra/despliegue.md` — re-tipeados acá envejecerían con el próximo bump de motor
-#     sin que nadie los cruce. Vercel recibe un directorio ya construido.
+#     de Actions sí las aguanta. Vercel recibe un directorio ya construido.
 #   - **Sólo `main`.** Es lo que ya dice `docs/infra/ramas.md`: `staging` recibe cada PR de
 #     spec, y desplegar desde ahí publicaría trabajo a medio integrar sobre la URL que mira la
 #     cátedra. El `workflow_dispatch` está para rehacer una entrega sin inventar un commit.
