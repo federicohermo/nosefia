@@ -83,6 +83,12 @@ mismo que con 4.
 SI el legajo tiene **más de cero** apercibimientos, ENTONCES el parte DEBE avisar cuántos lleva
 sobre el tope. Con cero no hay nada que avisar: una placa que avisa siempre no avisa nunca.
 
+### BR-EMP-011 — Lo que ofrece el parte depende del final
+
+CUANDO se arma el parte, el sistema DEBE decir qué puede elegir el jugador. Con la partida en
+curso, ofrece seguir con la noche siguiente y volver al menú. Con la partida terminada, despedido
+o contrato cumplido, ofrece sólo volver al menú: no hay noche siguiente que abrir.
+
 ## Criterios de aceptación
 
 ### AC-EMP-001 — Los tres cortes *(verifica BR-EMP-001)*
@@ -158,6 +164,12 @@ queda vacío.
 
 DADO 0 apercibimientos ENTONCES el parte no avisa; con 1, avisa y nombra el tope.
 
+### AC-EMP-016 — La partida terminada no ofrece seguir *(verifica BR-EMP-011)*
+
+DADO una partida que termina al cerrar la noche, despedido o contrato cumplido, CUANDO se arma
+el parte ENTONCES ofrece volver al menú y no ofrece seguir. DADO la partida en curso CUANDO se
+arma el parte ENTONCES ofrece seguir y volver al menú.
+
 ## No objetivos
 
 - Esta capacidad NO cuenta el tiempo de la noche ni cuántas obligatorias hay: las recibe.
@@ -170,13 +182,13 @@ DADO 0 apercibimientos ENTONCES el parte no avisa; con 1, avisa y nombra el tope
 - **Entrada:** cuántas obligatorias se cumplieron y cuántas se habían declarado; un legajo, que
   puede venir de un guardado.
 - **Salida:** la banda, los apercibimientos, si está despedido, qué jornada va, el final, y el
-  parte del jefe.
+  parte del jefe con lo que el jugador puede elegir.
 - **Falla:** cerrar dos veces o abrir sobre una partida terminada no cambian nada y no avisan.
 
 ## Señales
 
-- La jornada abierta, la jornada cerrada y la partida terminada. El cierre y el final pueden
-  llegar en el mismo instante, y quien escuche tiene que tratarlos como uno.
+- La jornada abierta y la jornada cerrada. El final no es una señal aparte: el parte lo lee al
+  armarse.
 
 ## Dependencias
 
