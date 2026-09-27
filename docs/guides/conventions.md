@@ -89,8 +89,8 @@ semanas.
 
 ## Conjuntos cerrados con `enum`
 
-Los tipos de tarea, los tres puntos de corte de las consecuencias, los canales de
-investigación. Lo que **no** va es un `String` suelto: `"limpiar"` escrito en cinco archivos se
+Los tipos de tarea, los tres puntos de corte de las consecuencias, las apps de la
+computadora. Lo que **no** va es un `String` suelto: `"limpiar"` escrito en cinco archivos se
 desincroniza el día que alguien escriba `"limpar"`, y el motor no dice absolutamente nada — el
 `if` simplemente no entra nunca.
 
