@@ -133,6 +133,7 @@ func _ready() -> void:
 		caja.empujada.connect(_reposicion_manual.despertar_lo_de_arriba)
 	_ciclo.arrancar(_partida, _reloj)
 	_reposicion_manual.preparar()
+	print("[carga] almacén en pantalla")
 
 
 ## Cada noche arranca con el marcador en cero, nada repuesto y el depósito lleno.

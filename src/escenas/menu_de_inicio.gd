@@ -24,6 +24,7 @@ func _ready() -> void:
 		boton.pressed.connect(_pedidos.elegir.bind(opcion))
 		_opciones.add_child(boton)
 	_pedidos.nuevo_juego_pedido.connect(entrar_al_almacen)
+	print("[carga] menú visible")
 
 
 func entrar_al_almacen() -> void:
