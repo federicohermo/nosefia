@@ -64,7 +64,9 @@ class NoBorraTrabajoAjeno(unittest.TestCase):
         self._git("worktree", "add", "-q", "-b", "carril", str(self.wt))
 
     def _git(self, *args: str) -> None:
-        subprocess.run(["git", *args], cwd=self.repo, check=True, capture_output=True)
+        subprocess.run(
+            ["git", *args], cwd=self.repo, check=True, capture_output=True, encoding="utf-8"
+        )
 
     def _limpiar(self) -> subprocess.CompletedProcess:
         return subprocess.run(
