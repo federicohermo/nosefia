@@ -787,7 +787,9 @@ func test_sin_superficie_que_valga_se_suelta_como_siempre() -> void:  # AC-PLY-0
 	var estante: Vector3 = almacen.get("_reposicion_manual").call("_apoyo", Producto.Id.UAKAS)
 	camara.global_position = estante + Vector3(1.8, 1.0, 0.0)
 	camara.look_at(estante)
-	var en_el_estante := _golpe_de_la_mira(jugador, bolsa)
+	# Sin el contorno que envuelve al mueble: si lo soltado choca con él, la mira pega en su cara
+	# y no llega al estante.
+	var en_el_estante := _golpe_de_la_mira(jugador, bolsa, true)
 	assert_object(en_el_estante["collider"]).is_same(almacen.get("_estante"))
 	assert_float(en_el_estante["normal"].y).is_greater(ReglasDeLosObjetos.APOYO_HORIZONTAL)
 	var sin_mira_del_estante := agarre.punto_de_soltado.global_position
@@ -802,12 +804,13 @@ func _soltar(almacen: Node3D, cuerpo: RigidBody3D) -> void:
 
 
 ## Lo que la mira toca, contra lo que el cuerpo choca.
-func _golpe_de_la_mira(jugador: Node3D, cuerpo: RigidBody3D) -> Dictionary:
+func _golpe_de_la_mira(jugador: Node3D, cuerpo: RigidBody3D, sin_contorno := false) -> Dictionary:
+	var mascara := cuerpo.collision_mask
+	if sin_contorno:
+		mascara &= ~ReglasDeLosObjetos.CAPA_DEL_CONTORNO
 	var ojo: Transform3D = jugador.mira()
 	var consulta := PhysicsRayQueryParameters3D.create(
-		ojo.origin,
-		ojo.origin - ojo.basis.z * ReglasDelJugador.ALCANCE_DE_LA_MIRA,
-		cuerpo.collision_mask
+		ojo.origin, ojo.origin - ojo.basis.z * ReglasDelJugador.ALCANCE_DE_LA_MIRA, mascara
 	)
 	consulta.exclude = [jugador.get_rid(), cuerpo.get_rid()]
 	return jugador.get_world_3d().direct_space_state.intersect_ray(consulta)
