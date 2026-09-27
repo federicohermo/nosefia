@@ -73,6 +73,11 @@ func test_el_legajo_en_cero_no_esta_en_riesgo_y_de_uno_en_adelante_si() -> void:
 		)
 
 
+func test_con_un_apercibimiento_el_aviso_nombra_el_tope() -> void:  # AC-EMP-015
+	var parte := ParteDeCierre.new(JORNADA_DE_PRUEBA, Apertura.obligatorias(), 1)
+	assert_str(parte.aviso_de_riesgo()).contains(str(Reglas.APERCIBIMIENTOS_HASTA_EL_DESPIDO))
+
+
 func test_el_parte_devuelve_lo_que_recibio_sin_recalcular_nada() -> void:
 	var parte := ParteDeCierre.new(JORNADA_DE_PRUEBA, Apertura.obligatorias(), 3)
 	assert_int(parte.jornada()).is_equal(JORNADA_DE_PRUEBA)

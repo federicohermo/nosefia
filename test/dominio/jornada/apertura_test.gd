@@ -40,7 +40,7 @@ func test_el_turno_de_la_jornada_nace_sin_ninguna_tarea_cumplida() -> void:  # A
 func test_la_segunda_jornada_trae_una_por_tipo_y_ninguna_cumplida() -> void:  # AC-SHF-005
 	# Se cumple una de la primera: con instancias compartidas, la segunda la traería cumplida.
 	var primera := Apertura.obligatorias()
-	Apertura.turno_de_la_jornada(primera).completar(primera[0])
+	assert_bool(Apertura.turno_de_la_jornada(primera).completar(primera[0])).is_true()
 	var segunda := Apertura.obligatorias()
 	var tipos: Array[int] = []
 	for tarea: Tarea in segunda:
