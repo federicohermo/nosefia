@@ -42,6 +42,18 @@
           }
         ]
       }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Edit|Write|MultiEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python .claude/scripts/formatear_al_editar.py || python \"$CLAUDE_PROJECT_DIR/.claude/scripts/formatear_al_editar.py\" || exit 0",
+            "timeout": 30
+          }
+        ]
+      }
     ]
   }
 }
