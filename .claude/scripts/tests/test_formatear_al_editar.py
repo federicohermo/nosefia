@@ -12,7 +12,8 @@ import unittest
 from pathlib import Path
 
 import formatear_al_editar
-from lib.formato import formatear, ruta_a_formatear
+from lib.formato import HERRAMIENTAS_QUE_ESCRIBEN, formatear, ruta_a_formatear
+from lib.repo import RAIZ
 
 SCRIPT = Path(formatear_al_editar.__file__)
 
@@ -142,6 +143,30 @@ class ElHookEntero(unittest.TestCase):
         )
         self.assertEqual(proceso.returncode, 0)
         self.assertIn("formatear_al_editar", proceso.stdout + proceso.stderr)
+
+
+class LaConfiguracionDelHook(unittest.TestCase):
+    """Que el hook esté enchufado: un `matcher` con una errata lo apaga, y los casos de arriba
+    siguen en verde porque lanzan el script a mano."""
+
+    @staticmethod
+    def _entradas() -> list[dict]:
+        config = json.loads((RAIZ / ".claude" / "settings.json").read_text(encoding="utf-8"))
+        return [
+            entrada
+            for entrada in config["hooks"].get("PostToolUse", [])
+            if any(SCRIPT.name in hook["command"] for hook in entrada["hooks"])
+        ]
+
+    def test_el_matcher_mira_las_herramientas_que_el_hook_formatea(self) -> None:
+        mirados = {h for e in self._entradas() for h in e["matcher"].split("|")}
+        self.assertEqual(mirados, set(HERRAMIENTAS_QUE_ESCRIBEN))
+
+    def test_el_comando_falla_abierto(self) -> None:
+        # Sin `|| exit 0`, un error propio del hook se lee como una edición fallida.
+        for entrada in self._entradas():
+            for hook in entrada["hooks"]:
+                self.assertTrue(hook["command"].rstrip().endswith("|| exit 0"))
 
 
 if __name__ == "__main__":
