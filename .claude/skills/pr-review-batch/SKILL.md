@@ -180,8 +180,7 @@ insumos, y los cinco van **destilados**, no como rutas a leer:
 - **La cadena de bases del Paso 0**, con **las seis cláusulas del Paso 0 bis literales**, **la
   lista caliente medida** y **las escenas compartidas**. Las cuatro cosas son del padre y ninguna
   la puede derivar el agente.
-- **Las cuatro trampas de `CLAUDE.md`**, y de ésas dos son operativas acá: la salida en cp1252 y
-  que **`Grep` no ve `specs/`**.
+- **Las trampas de `CLAUDE.md`** que aplican al lote.
 
 Escribilo **a un archivo** y pasá la ruta absoluta, en vez de inlinearlo N veces: los worktrees no
 lo comparten pero sí leen rutas absolutas. Y **escribilo con `Write`, nunca con un heredoc** — los
