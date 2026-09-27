@@ -430,8 +430,13 @@ el texto final ya redactado**, no con una descripción de qué habría que elegi
 ## Paso 7 — Destruir los worktrees
 
 ```bash
-python .claude/skills/pr-review-batch/scripts/limpiar_worktrees.py --todos
+python .claude/skills/pr-review-batch/scripts/limpiar_worktrees.py <ruta> [<ruta> ...]
 ```
+
+**Las rutas son las del lote, una por agente, y nunca `--todos`.** Cada notificación de un
+agente trae su `worktreePath`. `--todos` toma todo lo que hay bajo `.claude/worktrees/`, y eso
+incluye los worktrees de otra sesión que corre al mismo tiempo. Medido el 2026-09-27 en
+`implement-batch`: se llevó dos worktrees ajenos y mató el editor de Godot que tenía uno abierto.
 
 **No lo hagas a mano, y no uses `git worktree remove` solo: va a fallar.** Borra lo trackeado y el
 `.git`, pero `.godot/` y `reports/` están en el `.gitignore`, así que el directorio no queda
