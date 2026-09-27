@@ -54,7 +54,7 @@ func pedir_retirar(id: Producto.Id, nodo: Node3D) -> bool:
 	var unidad := _estante.retirar(producto)
 	if unidad == null:
 		return false
-	nodo.set("datos", unidad)
+	nodo.set(ReglasDeLosObjetos.PROPIEDAD_DATOS, unidad)
 	return agarre.pedir_agarrar(unidad, nodo)
 
 

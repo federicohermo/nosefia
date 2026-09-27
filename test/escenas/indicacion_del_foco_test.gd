@@ -67,6 +67,8 @@ func test_las_senales_del_doble_llegan_al_marco_y_al_hud() -> void:
 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
 	var jugador: JugadorDoble = auto_free(JugadorDoble.new())
 	almacen.get("_jugador").set_physics_process(false)
+	# Abrir la jornada termina el examen del jugador: el doble usa el de la escena.
+	jugador.examen = almacen.get("_jugador").examen
 	almacen.set("_jugador", jugador)
 	add_child(almacen)
 	var hud: Hud = almacen.get("_hud")

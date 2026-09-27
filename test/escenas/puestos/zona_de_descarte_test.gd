@@ -39,6 +39,16 @@ const NOMBRES_DE_LAS_BOLSAS := [
 const PATRONES_DE_REGLA := "BOLSAS_DE_LA_JORNADA|depositadas|completada|class_name"
 
 
+class Tocable:
+	extends Node3D
+	var datos := ObjetoDelAlmacen.new()
+	var toques := 0
+
+	func interactuar() -> ObjetoDelAlmacen:
+		toques += 1
+		return datos
+
+
 func _almacen() -> Node3D:
 	return auto_free(load(ESCENA_DEL_ALMACEN).instantiate())
 
@@ -109,6 +119,15 @@ func test_la_esfera_de_la_escena_es_exactamente_la_de_la_constante() -> void:  #
 		)
 		. is_equal(ReglasDeLaBasura.RADIO_DEL_DESCARTE)
 	)
+
+
+## Tocar es `interactuar()`, y tiene efectos: una puerta trabada adentro del área avisaba sola.
+func test_la_zona_lee_lo_que_entra_sin_tocarlo() -> void:
+	var zona: ZonaQueSeVe = auto_free(load(ESCENA).instantiate())
+	var cuerpo: Tocable = auto_free(Tocable.new())
+	cuerpo.datos.id = &"basura_de_prueba"
+	assert_str(zona.call("_id_de", cuerpo)).is_equal("basura_de_prueba")
+	assert_int(cuerpo.toques).is_zero()
 
 
 func test_el_almacen_trae_el_descarte_y_una_bolsa_por_cada_una_del_balance() -> void:

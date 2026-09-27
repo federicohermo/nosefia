@@ -32,12 +32,13 @@ flowchart TD
   AMB["ambience<br/><i>qué suena</i>"]
 
   CTR -- "obligatoria cumplida" --> SHF
-  STK -- "obligatorias cumplidas" --> SHF
+  STK -- "obligatorias cumplidas y descumplidas" --> SHF
   CLN -- "obligatorias cumplidas" --> SHF
   SHF -- "cuántas se cumplieron" --> EMP
   EMP -- "jornada, legajo y final" --> SAV
   INV -- "pistas descubiertas" --> SAV
   STK -- "unidades en góndola" --> CTR
+  CTR -- "lo vendido" --> STK
   PLY -- "qué se lleva, a qué distancia" --> CLN
   PLY -- "la unidad viaja en la mano" --> STK
   PLY -- "qué objeto se examina" --> INV

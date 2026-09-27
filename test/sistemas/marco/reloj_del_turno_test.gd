@@ -20,9 +20,13 @@ var _completadas: int = 0
 var _cumplidas_al_completar: int = 0
 var _consumos: int = 0
 var _restante_publicado: float = 0.0
+var _descumplidas: int = 0
+var _cumplidas_al_descumplir: int = -1
 
 
 func before_test() -> void:
+	_descumplidas = 0
+	_cumplidas_al_descumplir = -1
 	_turno = null
 	_cierres = 0
 	_cumplidas_al_cerrar = 0
@@ -168,6 +172,34 @@ func test_un_reloj_sin_arrancar_no_completa_nada_en_vez_de_romperse() -> void:
 	# turno, y `completar()` es una puerta pública que se puede tocar antes que `arrancar()`.
 	var reloj: RelojDelTurno = auto_free(RelojDelTurno.new())
 	assert_bool(reloj.completar(Tarea.new(Tarea.Tipo.LIMPIAR))).is_false()
+	assert_bool(reloj.descumplir(Tarea.new(Tarea.Tipo.LIMPIAR))).is_false()
+
+
+func test_descumplir_avisa_por_su_propia_senal_y_no_por_la_de_cumplir() -> void:  # AC-SHF-019
+	var registrar := Tarea.new(Tarea.Tipo.REGISTRAR)
+	var obligatorias: Array[Tarea] = [registrar]
+	var reloj := _reloj_arrancado(Reglas.DURACION_DEL_TURNO, obligatorias)
+	reloj.tarea_descumplida.connect(_anotar_descumplida)
+	reloj.completar(registrar)
+	assert_bool(reloj.descumplir(registrar)).is_true()
+	assert_int(_descumplidas).is_equal(1)
+	assert_int(_cumplidas_al_descumplir).is_equal(0)
+	assert_int(_completadas).is_equal(1)
+
+
+func test_descumplir_una_sin_cumplir_no_avisa() -> void:
+	var registrar := Tarea.new(Tarea.Tipo.REGISTRAR)
+	var obligatorias: Array[Tarea] = [registrar]
+	var reloj := _reloj_arrancado(Reglas.DURACION_DEL_TURNO, obligatorias)
+	reloj.tarea_descumplida.connect(_anotar_descumplida)
+	assert_bool(reloj.descumplir(registrar)).is_false()
+	assert_bool(reloj.descumplir(null)).is_false()
+	assert_int(_descumplidas).is_equal(0)
+
+
+func _anotar_descumplida(cumplidas: int) -> void:
+	_descumplidas += 1
+	_cumplidas_al_descumplir = cumplidas
 
 
 ## Busca por tipo y no por índice a propósito: que la lista salga ordenada como el `enum` es un

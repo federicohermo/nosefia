@@ -33,3 +33,11 @@ func completar() -> bool:
 		return false
 	_completada = true
 	return true
+
+
+## Devuelve `true` **sólo si la desmarcó ahora**, por el mismo motivo que `completar()`.
+func descompletar() -> bool:
+	if not _completada:
+		return false
+	_completada = false
+	return true

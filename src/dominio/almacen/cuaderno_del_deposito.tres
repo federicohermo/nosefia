@@ -11,5 +11,6 @@ texto = "La última entrada es de anteayer y la letra no es la del encargado."
 script = ExtResource("1_objeto")
 id = &"cuaderno_del_deposito"
 nombre = "Cuaderno del depósito"
+sonoridad = 6
 levantable = true
 revelacion = SubResource("Resource_revelacion")

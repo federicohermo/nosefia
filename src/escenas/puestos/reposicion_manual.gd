@@ -8,9 +8,6 @@ const JugadorDelLocal := preload("res://src/escenas/jugador.gd")
 const OBJETO := preload("res://src/escenas/objetos/objeto_agarrable.tscn")
 const FANTASMA := preload("res://src/escenas/puestos/fantasma_de_reposicion.gdshader")
 
-## Hasta dónde se busca piso debajo de una caja recién soltada, en metros.
-const CAIDA_MAXIMA := 3.0
-
 ## Cuántas veces se parte al medio la búsqueda del borde de un apoyo.
 const PASOS_DEL_BORDE := 12
 
@@ -29,9 +26,6 @@ const HOLGURA_DE_LA_MIRA := 0.1
 ## Hasta cuántas cajas se sube buscando la tapa de una pila. Es un tope de cordura: el techo del
 ## local corta antes.
 const PISOS_DE_UNA_PILA := 8
-
-## Cuántas direcciones alrededor del jugador se prueban para dejarle la caja al lado.
-const LADOS_DEL_JUGADOR := 8
 
 ## Las exhibiciones que el jugador NO repone: un `MeshInstance3D` por bloque, en el orden de
 ## `DisposicionDeLaGondola.guias`.
@@ -234,8 +228,10 @@ func _apoyar_la_caja(nodo: Node3D) -> void:
 func _cerca_de(caja: CajaDelDeposito, punto: Vector3) -> bool:
 	var paso := _media_caja(caja).x / PASOS_PARA_ACERCAR * 2.0
 	for anillo in PASOS_PARA_ACERCAR + 1:
-		for lado in 1 if anillo == 0 else LADOS_DEL_JUGADOR:
-			var corrido := Basis(Vector3.UP, TAU * lado / LADOS_DEL_JUGADOR) * Vector3.RIGHT
+		for lado in 1 if anillo == 0 else ReglasDeLosObjetos.LADOS_ALREDEDOR:
+			var corrido := (
+				Basis(Vector3.UP, TAU * lado / ReglasDeLosObjetos.LADOS_ALREDEDOR) * Vector3.RIGHT
+			)
 			var candidato := punto + corrido * paso * anillo
 			if anillo > 0 and not _hay_apoyo(caja, candidato, punto.y):
 				continue
@@ -311,15 +307,19 @@ func _al_lado_del_jugador(caja: CajaDelDeposito) -> bool:
 	var cuerpo: CollisionShape3D = jugador.get_node("Cuerpo")
 	var media := _media_caja(caja)
 	var radio: float = (cuerpo.shape as CapsuleShape3D).radius + media.length()
-	for lado in LADOS_DEL_JUGADOR:
-		var vuelta := Basis(Vector3.UP, TAU * lado / LADOS_DEL_JUGADOR)
-		var costado := jugador.global_position + vuelta * (jugador.frente() * radio)
-		var golpe := _rayo(
-			caja, costado + Vector3.UP * media.y, costado + Vector3.DOWN * CAIDA_MAXIMA
-		)
-		if golpe.is_empty() or not ReglasDeLosObjetos.se_puede_apoyar_en(golpe["normal"].y):
-			continue
-		caja.global_position = _lugar_sobre(caja, golpe["position"])
+	var lugares := LugaresDelPiso.alrededor(
+		get_world_3d().direct_space_state,
+		jugador.global_position,
+		jugador.frente(),
+		radio,
+		media.y,
+		ReglasDeLosObjetos.CAIDA_HASTA_EL_PISO,
+		ReglasDeLosObjetos.LADOS_ALREDEDOR,
+		caja.collision_mask,
+		[caja.get_rid(), jugador.get_rid()]
+	)
+	for lugar in lugares:
+		caja.global_position = _lugar_sobre(caja, lugar)
 		if _entra_entera(caja) and not _le_queda_encima_al_jugador(caja):
 			return true
 	return false
@@ -336,6 +336,8 @@ func _al_lado_del_jugador(caja: CajaDelDeposito) -> bool:
 func _entra_entera(caja: CajaDelDeposito) -> bool:
 	var forma: CollisionShape3D = caja.get_node("Cuerpo")
 	var encogida := BoxShape3D.new()
+	# Jolt redondea las aristas con el margen, y una esquina metida unos milímetros no choca.
+	encogida.margin = 0.0
 	encogida.size = (
 		(forma.shape as BoxShape3D).size * forma.scale - Vector3.ONE * ReglasDeLosObjetos.ROCE
 	)
@@ -381,7 +383,7 @@ func _apoyo_apuntado(caja: CajaDelDeposito) -> Dictionary:
 		# Media caja hacia atrás: el rayo que baja no puede arrancar adentro de lo que la caja
 		# va a ocupar.
 		var punto := lejos + (ojo.origin - lejos).normalized() * _media_caja(caja).length()
-		golpe = _rayo(caja, punto, punto + Vector3.DOWN * CAIDA_MAXIMA)
+		golpe = _rayo(caja, punto, punto + Vector3.DOWN * ReglasDeLosObjetos.CAIDA_HASTA_EL_PISO)
 	elif not ReglasDeLosObjetos.se_puede_apoyar_en(golpe["normal"].y):
 		var enfrente := golpe["collider"] as CajaDelDeposito
 		if enfrente != null:
@@ -498,7 +500,9 @@ func _apoyo_al_pie(caja: CajaDelDeposito, pared: Dictionary) -> Dictionary:
 	var mejor := {}
 	for corrido: float in [0.0, -media.x, media.x]:
 		var punto := desde + afuera.cross(Vector3.UP) * corrido
-		var golpe := _rayo(caja, punto, punto + Vector3.DOWN * CAIDA_MAXIMA)
+		var golpe := _rayo(
+			caja, punto, punto + Vector3.DOWN * ReglasDeLosObjetos.CAIDA_HASTA_EL_PISO
+		)
 		if golpe.is_empty() or not ReglasDeLosObjetos.se_puede_apoyar_en(golpe["normal"].y):
 			continue
 		if mejor.is_empty() or golpe["position"].y > mejor["position"].y + TOLERANCIA_DEL_APOYO:

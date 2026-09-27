@@ -81,6 +81,23 @@ func test_volver_a_su_lugar_no_dibuja_el_objeto_cruzando_el_almacen() -> void:
 	)
 
 
+func test_cada_contacto_avisa_el_objeto_y_su_rapidez() -> void:
+	# Sin el monitoreo de contactos, el cuerpo no emite nada al tocar el piso y soltar queda mudo.
+	var objeto := _objeto()
+	add_child(objeto)
+	assert_bool(objeto.get("contact_monitor")).is_true()
+	assert_int(objeto.get("max_contacts_reported")).is_greater(0)
+	var avisos := []
+	objeto.connect(
+		"contacto_recibido",
+		func(nodo: Node3D, rapidez: float) -> void: avisos.append([nodo, rapidez])
+	)
+	objeto.emit_signal("body_entered", auto_free(StaticBody3D.new()))
+	assert_int(avisos.size()).is_equal(1)
+	assert_object(avisos[0][0]).is_same(objeto)
+	assert_float(avisos[0][1]).is_greater_equal(0.0)
+
+
 func test_las_dos_acciones_del_006_estan_declaradas_en_el_proyecto() -> void:
 	# El par de String entre `reglas_de_los_objetos.gd` y la sección `[input]` de
 	# `project.godot` no lo verifica nadie más: renombrar la constante sin tocar el proyecto

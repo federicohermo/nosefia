@@ -39,7 +39,11 @@ de ayer.
 obligan a poner dos issues en el mismo carril, en orden:
 
 1. **Una dependencia declarada** (`Depende de #N`).
-2. **Un archivo compartido para escritura.** Las dos filas «Se escribe» se cruzan.
+2. **Un archivo compartido para escritura.** Las dos filas «Se escribe» se cruzan. Un `.gd` o
+   un spec con cambios chicos en zonas distintas no obliga: el padre prueba el merge con
+   `git merge-tree --write-tree <rama> <rama>` y resuelve lo que choque. En el lote del
+   2026-09-26, la regla estricta dejaba 13 issues en un solo carril, y los carriles separados
+   chocaron sólo en dos specs y un `.gd`.
 3. **Una escena compartida.** Éste no se negocia: **un `.tscn` no se mergea.** Un merge de tres
    vías sobre una escena no da un conflicto, da una escena corrupta. Dos issues que tocan la misma
    escena van en serie aunque no compartan nada más.
@@ -112,8 +116,7 @@ Cada agente recibe, literal:
   Medido el 2026-09-23: los dos carriles escribieron la misma regla en `to-issue` y en las siete
   copias de `sin-deuda.md`, y los dos PR chocaban en ocho archivos.
 - **Un nombre propio para cada archivo de scratch.** Dos carriles que escriben el mismo archivo
-  temporal se pisan sin conflicto visible. **Y se escribe con `Write`:** desde un worktree, Bash
-  rechaza un heredoc hacia el scratch. Medido el 2026-09-24.
+  temporal se pisan sin conflicto visible. **Y se escribe con `Write`.**
 - **Un comando que este skill entrega se vuelve a correr antes de repartirlo**, nunca se copia de
   la corrida anterior: un comando roto se reparte N veces.
 

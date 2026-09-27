@@ -8,6 +8,7 @@
 | **Python 3.11+** | del sitio oficial o Microsoft Store | las herramientas del harness |
 | **gdtoolkit** | `pip install "gdtoolkit==4.*"` | `gdlint` y `gdformat` |
 | **GitHub CLI** | de [cli.github.com](https://cli.github.com), después `gh auth login` | abrir y leer los issues |
+| **ffmpeg** | `scoop install ffmpeg`, o del sitio oficial | comprimir un audio nuevo con `python .claude/scripts/comprimir_audio.py` |
 
 **gdUnit4 no se instala**: está vendorizado en `addons/gdUnit4/` y viene con el clone.
 
