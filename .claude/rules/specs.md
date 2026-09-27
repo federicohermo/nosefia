@@ -50,8 +50,8 @@ repo verifica sin cobertura.
 ## Cambios
 
 - Un cambio de comportamiento actualiza el spec y los tests en el mismo PR, desde una rama
-  `feature/`. El spec va primero. Un refactor, un bug que no cambia ninguna regla y una mejora no
-  lo tocan.
+  `feature/`, o `bugfix/` si el bug era una regla sin escribir. El spec va primero. Un
+  refactor, un bug que no cambia ninguna regla y una mejora no lo tocan.
 - Si el código no cumple un AC, se corrige el código y su test, no el spec. **Nunca se ajusta el
   spec para que coincida con el código**: si difieren, eso es el hallazgo. Ver la
   [constitución](../../docs/architecture/constitution.md).

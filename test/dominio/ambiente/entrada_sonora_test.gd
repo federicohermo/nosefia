@@ -64,3 +64,10 @@ func test_los_eventos_estan_enumerados_en_un_solo_lugar() -> void:  # AC-AMB-002
 	var texto := FileAccess.get_file_as_string(ENTRADA)
 	assert_str(texto).is_not_empty()
 	assert_bool(texto.contains("enum Evento")).is_true()
+
+
+func test_el_consumo_de_tiempo_del_turno_no_es_un_evento() -> void:  # AC-AMB-002
+	# Es la señal que el reloj emite en cada cuadro: con una fila, sonaría una vez por cuadro.
+	for evento: String in EntradaSonora.Evento.keys():
+		assert_str(evento).not_contains("TIEMPO")
+		assert_str(evento).not_contains("CONSUM")

@@ -126,7 +126,7 @@ static func _apagar_todo_menos_la_cascara(nodo: Node) -> void:
 ## centímetros, el punto que está 30 cm debajo del antepecho daría «se llega»: ahí la pared está a
 ## 10 cm, y el caso se pondría verde afirmando lo contrario de lo que quiere decir.
 static func _se_llega_desde_afuera(espacio: PhysicsDirectSpaceState3D, punto: Vector3) -> bool:
-	for rumbo in [Vector3.RIGHT, Vector3.LEFT, Vector3.FORWARD, Vector3.BACK]:
+	for rumbo: Vector3 in [Vector3.RIGHT, Vector3.LEFT, Vector3.FORWARD, Vector3.BACK]:
 		var desde: Vector3 = punto + rumbo * DISTANCIA_DE_AFUERA
 		if espacio.intersect_ray(PhysicsRayQueryParameters3D.create(desde, punto)).is_empty():
 			return true
@@ -336,7 +336,7 @@ func test_la_escena_trae_el_ciclo_de_jornadas_en_servicios() -> void:
 
 func test_los_tres_cableados_de_la_raiz_llegan_asignados() -> void:
 	# **Un `@export` sin asignar en el `.tscn` deja la escena cargando sin un solo error**, los
-	# seis nodos de `verificar.py` en verde, y el juego muerto en el primer cuadro con un
+	# nodos de `verificar.py` en verde, y el juego muerto en el primer cuadro con un
 	# `Nonexistent function ... in base 'Nil'` que no nombra ni a `almacen.tscn` ni al export que
 	# falta. El caso de arriba mira que el nodo exista; éste, que el cableado lo alcance — que
 	# son dos cosas distintas: el nodo puede estar y el `node_paths` de la raíz no nombrarlo.
@@ -504,14 +504,14 @@ func test_el_cableado_le_da_la_hora_al_reloj_de_mesa_y_no_al_hud() -> void:
 func test_el_cableado_de_reponer_llega_entero_hasta_los_huecos() -> void:
 	# Un `@export` de tipo `Node` en una escena escrita a mano va declarado ADEMÁS en el
 	# `node_paths` del tag del nodo, o queda en `null`: la escena carga sin un solo error, los
-	# seis nodos dan verde, y el juego muere en el primer cuadro con un
+	# nodos dan verde, y el juego muere en el primer cuadro con un
 	# `Nonexistent function … in base 'Nil'` que no nombra ni al `.tscn` ni al `@export`.
 	#
 	# Los tres niveles se afirman juntos y no en tres casos porque la trampa es la misma en los
 	# tres: la raíz, el nodo instanciado que apunta afuera de su sub-escena, y el `@export` que
 	# la sub-escena ya traía y que sobrescribir uno de sus hermanos podría borrar.
 	var almacen := _almacen()
-	for propiedad in ["_repositor", "_estante"]:
+	for propiedad: String in ["_repositor", "_estante"]:
 		(
 			assert_object(almacen.get(propiedad))
 			. override_failure_message(

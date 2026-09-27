@@ -102,13 +102,13 @@ func _por_celda(puntos: PackedVector3Array) -> Dictionary:
 func _distancia_mas_corta(casilleros: Dictionary, punto: Vector3) -> float:
 	var celda := Vector3i((punto / CELDA).floor())
 	var corta := INF
-	for dx in [-1, 0, 1]:
-		for dy in [-1, 0, 1]:
-			for dz in [-1, 0, 1]:
+	for dx: int in [-1, 0, 1]:
+		for dy: int in [-1, 0, 1]:
+			for dz: int in [-1, 0, 1]:
 				var vecina := celda + Vector3i(dx, dy, dz)
 				if not casilleros.has(vecina):
 					continue
-				for otro in casilleros[vecina]:
+				for otro: Vector3 in casilleros[vecina]:
 					corta = minf(corta, punto.distance_to(otro))
 	return corta
 
@@ -166,7 +166,7 @@ func test_reponer_recupera_los_productos_independientes_del_modelo() -> void:
 				original.mesh.surface_get_arrays(superficie)[Mesh.ARRAY_VERTEX]
 			)
 			var sueltos := 0
-			for punto in copia.mesh.surface_get_arrays(superficie)[Mesh.ARRAY_VERTEX]:
+			for punto: Vector3 in copia.mesh.surface_get_arrays(superficie)[Mesh.ARRAY_VERTEX]:
 				if _distancia_mas_corta(casilleros, punto) >= SEPARACION_MAXIMA:
 					sueltos += 1
 			(
@@ -240,10 +240,10 @@ func _hay_par(
 	uv: Vector2
 ) -> bool:
 	var celda := Vector3i((punto / CELDA).floor())
-	for dx in [-1, 0, 1]:
-		for dy in [-1, 0, 1]:
-			for dz in [-1, 0, 1]:
-				for otro in casilleros.get(celda + Vector3i(dx, dy, dz), PackedInt32Array()):
+	for dx: int in [-1, 0, 1]:
+		for dy: int in [-1, 0, 1]:
+			for dz: int in [-1, 0, 1]:
+				for otro: int in casilleros.get(celda + Vector3i(dx, dy, dz), PackedInt32Array()):
 					if (
 						punto.distance_to(vertices[otro]) < SEPARACION_MAXIMA
 						and uv.distance_to(uvs[otro]) < SEPARACION_MAXIMA

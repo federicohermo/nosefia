@@ -6,7 +6,7 @@ ponga en rojo, y que el mismo árbol sin ese archivo lo deje en verde.
 
 ## Por qué el árbol es temporal, y por qué el gate acepta una raíz
 
-`verificar.py` corre sus seis nodos **en paralelo**. Un test que ensuciara el `src/` del repo de
+`verificar.py` corre sus nodos **en paralelo**. Un test que ensuciara el `src/` del repo de
 verdad para fabricar el rojo pondría a `capas`, `tdd`, `lint` y `formato` —que están corriendo en
 ese mismo instante— a fallar por un archivo que este test está por borrar, y el rojo aparecería
 en cuatro nodos que no tienen nada que ver. De ahí el parámetro `raiz` de `main()`: existe para

@@ -65,7 +65,7 @@ func test_el_estante_de_la_escena_no_lleva_el_stock_adentro() -> void:
 	# criterio la ata con una búsqueda sobre el archivo, que es lo único ejecutable que hay.
 	var texto := FileAccess.get_file_as_string(SCRIPT)
 	assert_str(texto).is_not_empty()
-	for patron in ["get_child_count", "_unidades", "_stock"]:
+	for patron: String in ["get_child_count", "_unidades", "_stock"]:
 		(
 			assert_bool(texto.contains(patron))
 			. override_failure_message("`estante.gd` de `escenas/` nombra `%s`" % patron)

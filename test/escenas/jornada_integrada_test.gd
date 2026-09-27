@@ -280,7 +280,7 @@ func _enfocar_mancha(jugador: Node3D, mancha: Node3D) -> void:
 	jugador.set_physics_process(false)
 	var camara: Camera3D = jugador.get_node("Giro/Camara")
 	camara.position = Vector3.UP * ReglasDelJugador.ALTURA_DE_LA_CAMARA
-	for direccion in [Vector3.BACK, Vector3.FORWARD, Vector3.LEFT, Vector3.RIGHT]:
+	for direccion: Vector3 in [Vector3.BACK, Vector3.FORWARD, Vector3.LEFT, Vector3.RIGHT]:
 		jugador.global_position = mancha.global_position + direccion
 		camara.look_at(mancha.global_position + Vector3.UP * 0.03)
 		for cuadro in 4:

@@ -101,7 +101,7 @@ func test_los_dos_rubros_parten_el_enum_sin_solaparse() -> void:
 	enlace.enlazar_todo([_fuente()])
 	var total := enlace.enlazados().size() + enlace.sin_fuente().size()
 	assert_int(total).is_equal(EntradaSonora.Evento.size())
-	for evento in enlace.enlazados():
+	for evento: EntradaSonora.Evento in enlace.enlazados():
 		assert_bool(enlace.sin_fuente().has(evento)).is_false()
 
 

@@ -2,7 +2,7 @@
 ##
 ## **Abrir, cerrar y cambiar de app son decisiones del juego, no del motor**, y por eso viven acá
 ## y no en la pantalla. Es la trampa central de este spec: `src/ui/` es la capa que
-## `gate_de_tests.py` no mira, así que escritas allá arriba nacerían sin test y los seis nodos
+## `gate_de_tests.py` no mira, así que escritas allá arriba nacerían sin test y los nodos
 ## darían verde igual.
 ##
 ## **Y no consume tiempo.** Abrir la computadora no descuenta un segundo del turno: lo que cuesta

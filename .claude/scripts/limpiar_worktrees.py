@@ -126,6 +126,17 @@ def del_lote(ruta: Path) -> bool:
     return ruta.resolve().is_relative_to(RAIZ.joinpath(*DIR_DE_WORKTREES).resolve())
 
 
+def sin_commitear(estado: str) -> bool:
+    """Si la salida de `git status --porcelain` muestra trabajo sin commitear.
+
+    `.godot/` y `reports/` están en el `.gitignore`, así que la caché que deja Godot no
+    cuenta. Lo que cuenta es trabajo, y puede ser de otra sesión que todavía corre:
+    medido el 2026-09-27, el `--todos` de un lote se llevó el carril de otra sesión con
+    el issue hecho y sin commit.
+    """
+    return bool(estado.strip())
+
+
 def git(*args: str) -> subprocess.CompletedProcess:
     return subprocess.run(
         ["git", *args], capture_output=True, text=True, encoding="utf-8", errors="replace"
@@ -191,13 +202,13 @@ def main() -> None:
         sys.exit(1)
     principal = Path(hecho.stdout.strip()).resolve()
 
+    registrados = [
+        Path(l[len("worktree ") :]).resolve()
+        for l in git("worktree", "list", "--porcelain").stdout.splitlines()
+        if l.startswith("worktree ")
+    ]
     if args == ["--todos"]:
         directorio = RAIZ.joinpath(*DIR_DE_WORKTREES).resolve()
-        registrados = [
-            Path(l[len("worktree ") :]).resolve()
-            for l in git("worktree", "list", "--porcelain").stdout.splitlines()
-            if l.startswith("worktree ")
-        ]
         objetivos = [w for w in registrados if del_lote(w)]
         objetivos += huerfanos(directorio, objetivos, principal)
         if not objetivos:
@@ -224,6 +235,19 @@ def main() -> None:
             print("   SALTEADO: es el checkout principal", file=sys.stderr)
             fallo = True
             continue
+
+        # Sólo se pregunta a un worktree que git registra: uno huérfano no tiene su propio
+        # `.git`, y `git -C` contestaría por el checkout principal. Un `status` que falla deja
+        # stdout vacío, que se leería como árbol limpio: por eso cuenta como sin commitear.
+        if wt in registrados:
+            estado = git("-C", str(wt), "status", "--porcelain")
+            if estado.returncode != 0 or sin_commitear(estado.stdout):
+                print(
+                    "   SALTEADO: tiene cambios sin commitear, y puede ser de otra sesion",
+                    file=sys.stderr,
+                )
+                fallo = True
+                continue
 
         # `git worktree remove` y `prune` se NIEGAN los dos sobre un worktree bloqueado, y el
         # harness de agentes los crea bloqueados. Sin este `unlock` el borrado del directorio

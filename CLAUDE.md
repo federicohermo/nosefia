@@ -117,7 +117,8 @@ de una funcionalidad. Un issue toca un spec sólo si cambia lo que el juego tien
 2. **Escribir el issue** con formato task-brief — el skill `to-issue`. Declara el tipo, si toca
    un spec, sus criterios, qué puede escribir, qué no se toca y qué comandos dan cero.
 3. **Escribir el spec** sólo si el cambio crea, modifica o borra una funcionalidad — el skill
-   `to-spec`, desde el issue o directo. Es el primer commit de la rama.
+   `to-spec`, desde el issue o directo. Es el primer commit de la rama: `feature/`, o `bugfix/`
+   si el bug era una regla sin escribir.
 
 **Ahí termina planificar.** La rama la abre quien escribe su primer commit: `to-spec` si hay
 spec, el implementador si no.

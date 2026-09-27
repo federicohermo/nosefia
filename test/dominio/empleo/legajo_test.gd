@@ -5,6 +5,10 @@
 ## el contador en vez de descontarle uno.
 extends GdUnitTestSuite
 
+## Lo justo para caer en cada banda, sacado del corte y no escrito a mano.
+const AVISO := Consecuencias.CUMPLIDAS_MINIMAS_PARA_AVISO
+const GRAVE := Consecuencias.CUMPLIDAS_MINIMAS_PARA_AVISO - 1
+
 
 func test_un_legajo_nuevo_no_tiene_apercibimientos_ni_despido() -> void:
 	var legajo := Legajo.new()
@@ -19,13 +23,14 @@ func test_una_jornada_completa_no_suma_apercibimientos() -> void:  # AC-EMP-005
 
 
 func test_el_aviso_suma_uno_y_la_banda_grave_suma_dos() -> void:  # AC-EMP-003
-	# Es la regla entera en dos líneas: si las dos bandas pesaran igual, la de aviso y la grave
-	# serían dos textos distintos con el mismo efecto.
-	var legajo := Legajo.new()
-	legajo.registrar(4, 5)
-	assert_int(legajo.apercibimientos()).is_equal(1)
-	legajo.registrar(2, 5)
-	assert_int(legajo.apercibimientos()).is_equal(3)
+	# Es la regla entera en dos legajos limpios: si las dos bandas pesaran igual, la de aviso y
+	# la grave serían dos textos distintos con el mismo efecto.
+	var con_aviso := Legajo.new()
+	con_aviso.registrar(AVISO, Tarea.Tipo.size())
+	assert_int(con_aviso.apercibimientos()).is_equal(Reglas.APERCIBIMIENTOS_POR_AVISO)
+	var con_grave := Legajo.new()
+	con_grave.registrar(GRAVE, Tarea.Tipo.size())
+	assert_int(con_grave.apercibimientos()).is_equal(Reglas.APERCIBIMIENTOS_POR_BANDA_GRAVE)
 
 
 func test_hacen_falta_cuatro_jornadas_de_aviso_para_que_lo_echen() -> void:  # AC-EMP-007
@@ -80,6 +85,16 @@ func test_a_la_banda_grave_le_alcanza_con_una_jornada_menos_que_a_la_de_aviso() 
 		incumplidor.registrar(2, 5)
 	assert_int(incumplidor.apercibimientos()).is_equal(4)
 	assert_bool(incumplidor.despedido()).is_true()
+
+
+func test_una_grave_y_dos_avisos_despiden_y_no_antes() -> void:  # AC-EMP-007
+	# El tercer camino al despido, el que mezcla las dos bandas.
+	var legajo := Legajo.new()
+	legajo.registrar(GRAVE, Tarea.Tipo.size())
+	legajo.registrar(AVISO, Tarea.Tipo.size())
+	assert_bool(legajo.despedido()).is_false()
+	legajo.registrar(AVISO, Tarea.Tipo.size())
+	assert_bool(legajo.despedido()).is_true()
 
 
 func test_el_contador_puede_pasar_de_largo_el_umbral_sin_pisarlo() -> void:  # AC-EMP-006

@@ -19,9 +19,10 @@ func consecuencia_de(cumplidas: int, obligatorias: int) -> Consecuencias.Banda:
 ```
 
 Sin tipos, el error de una firma que cambió aparece **en runtime, en la escena**. Con tipos lo
-caza el editor al guardar. **Lo verifica el motor:** `project.godot` pone en «Error» la
-advertencia de declaración sin tipo. El `-> void` va también en las funciones que no devuelven
-nada.
+caza el editor al guardar. **Lo verifica el motor:** `untyped_declaration` está en «Error», y
+un script con una declaración sin tipo no carga. La CI lo ve en cada script que carga un test;
+el resto falla al abrirlo en el editor. El `-> void` va también en las funciones que no
+devuelven nada.
 
 ## Tabs, y el formato lo pone la herramienta
 

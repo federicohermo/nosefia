@@ -847,7 +847,7 @@ func _preparar_la_guia() -> void:
 		_guias_sumadas[id] = DisposicionDeLaGondola.copias(sumadas[id])
 		copias.visible_instance_count = _primera_dibujada(id)
 	var numero := 0
-	for clave in sueltas:
+	for clave: int in sueltas:
 		var modelo: MeshInstance3D = sueltas[clave][0]
 		var herramienta := SurfaceTool.new()
 		herramienta.append_from(modelo.mesh, 0, Transform3D(modelo.global_basis, Vector3.ZERO))
