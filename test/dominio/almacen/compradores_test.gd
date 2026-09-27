@@ -31,7 +31,7 @@ func test_el_padron_no_se_sortea() -> void:  # AC-CTR-001
 func test_el_padron_no_llama_al_azar() -> void:
 	var texto := FileAccess.get_file_as_string(COMPRADORES)
 	assert_str(texto).is_not_empty()
-	for patron in ["randi", "randf", "shuffle", "pick_random"]:
+	for patron: String in ["randi", "randf", "shuffle", "pick_random"]:
 		(
 			assert_bool(texto.contains(patron))
 			. override_failure_message("`compradores.gd` nombra `%s`: el azar no entra" % patron)
@@ -48,7 +48,7 @@ func test_cada_jornada_recibe_compradores_propios() -> void:  # AC-CTR-001
 	assert_object(una[0].pedido()).is_not_same(otra[0].pedido())
 
 
-func test_alguien_paga_distinto_de_lo_que_marca_la_caja() -> void:  # AC-CTR-004
+func test_alguien_paga_distinto_de_lo_que_marca_la_caja() -> void:
 	# Es la única forma que tiene el juego de mentir en vivo, y por eso está en el padrón y no
 	# librada al azar: un padrón donde todos pagan justo deja la ventanilla sin nada que mirar.
 	var inventario := Inventario.new(Catalogo.todos())
@@ -57,6 +57,21 @@ func test_alguien_paga_distinto_de_lo_que_marca_la_caja() -> void:  # AC-CTR-004
 		if Atencion.new(comprador, inventario).diferencia() != 0:
 			diferentes += 1
 	assert_int(diferentes).is_greater(0)
+
+
+func test_el_padron_miente_de_los_dos_lados() -> void:  # AC-CTR-004
+	# Uno que paga de más y otro de menos: con un solo signo, la diferencia se leería sin mirar.
+	var inventario := Inventario.new(Catalogo.todos())
+	var de_mas := 0
+	var de_menos := 0
+	for comprador: Comprador in Compradores.padron():
+		var diferencia := Atencion.new(comprador, inventario).diferencia()
+		if diferencia > 0:
+			de_mas += 1
+		elif diferencia < 0:
+			de_menos += 1
+	assert_int(de_mas).is_greater(0)
+	assert_int(de_menos).is_greater(0)
 
 
 func test_todo_lo_que_se_pide_existe_en_el_catalogo() -> void:

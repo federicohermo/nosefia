@@ -143,8 +143,10 @@ rojo.
 
 ## Paso 6 — La rama y el PR
 
-**El spec es el primer commit de la rama `feature/`**, y viaja en el mismo PR que el código que
-lo cumple. Si sale de un issue, la rama es `feature/<N>-<kebab>`; si no, `feature/<kebab>`.
+**El spec es el primer commit de la rama**, y viaja en el mismo PR que el código que lo
+cumple. El prefijo sale del tipo del issue: `feature/<N>-<kebab>` para una funcionalidad, y
+`bugfix/<N>-<kebab>` para un bug que escribe la regla que nadie había escrito. Sin issue,
+`feature/<kebab>`.
 
 **El merge es la aprobación.** No hay un campo que alguien marque.
 

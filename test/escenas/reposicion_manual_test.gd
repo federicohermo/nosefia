@@ -89,7 +89,7 @@ func test_recoger_del_grupo_del_piso_conserva_foco_identidad_y_reposicion() -> v
 
 
 func test_laysntt_no_atraviesa_el_suelo_al_caer_plana_y_recibir_otras_cajas() -> void:
-	for giro in [0.8, 1.6, 5.6]:
+	for giro: float in [0.8, 1.6, 5.6]:
 		var almacen: Node3D = auto_free(ALMACEN.instantiate())
 		add_child(almacen)
 		almacen.get("_jugador").set_physics_process(false)
@@ -164,7 +164,7 @@ func test_laysntt_y_jorgillo_quedan_sobre_el_suelo_al_mover_la_camara() -> void:
 	var camara: Camera3D = jugador.get_node("Giro/Camara")
 	var agarre: Agarre = almacen.get("_agarre")
 	var sueltas: Array[RigidBody3D] = []
-	for id in [Producto.Id.LAYSNTT, Producto.Id.JORGILLO]:
+	for id: Producto.Id in [Producto.Id.LAYSNTT, Producto.Id.JORGILLO]:
 		for indice in Catalogo.de(id).umbral:
 			almacen.get("_reposicion_manual").retirar(id)
 			var cuerpo: RigidBody3D = agarre.soltar(true)
@@ -379,7 +379,7 @@ func test_actroncito_durextra_y_oremos_se_reponen_con_foco_y_clic_reales() -> vo
 	# Los tres viven en el mismo rack y en bandejas distintas: uno arriba en caja grande y dos
 	# abajo en caja chica. Es el reparto que el depósito tiene desde que hay dos tamaños, y lo
 	# que el caso ejerce es que ninguna de las dos alturas deje la caja fuera del alcance.
-	for id in [Producto.Id.ACTRONCITO, Producto.Id.DUREXTRA, Producto.Id.OREMOS]:
+	for id: Producto.Id in [Producto.Id.ACTRONCITO, Producto.Id.DUREXTRA, Producto.Id.OREMOS]:
 		var caja: Node3D = almacen.get("_cajas_de_productos")[id]
 		var vista: MeshInstance3D = caja.get_node("Malla")
 		var centro := vista.global_transform * vista.mesh.get_aabb().get_center()

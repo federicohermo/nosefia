@@ -11,7 +11,7 @@ func test_hay_exactamente_una_fila_por_cada_valor_del_enum() -> void:  # AC-STK-
 	# viene a cazar: medido el 2026-09-01, un enum con un valor de más hacía reventar a `de()`
 	# adentro del test y la aserción no llegaba a correr.
 	assert_int(Catalogo.FILAS.size()).is_equal(Producto.Id.size())
-	for id in Producto.Id.values():
+	for id: Producto.Id in Producto.Id.values():
 		assert_bool(Catalogo.FILAS.has(id)).is_true()
 
 
@@ -32,7 +32,7 @@ func test_el_catalogo_lista_los_productos_en_el_orden_del_enum() -> void:
 func test_cada_producto_del_catalogo_esta_completo() -> void:  # AC-STK-002
 	# Recorre el enum entero y no una muestra: una fila a medio llenar en cualquiera de ellos
 	# pasaría desapercibida si el test mirara un solo producto.
-	for id in Producto.Id.values():
+	for id: Producto.Id in Producto.Id.values():
 		var producto := Catalogo.de(id)
 		# Sin este corte, un `id` sin fila desreferencia `null` y aborta la función: el caso se
 		# reporta sin haber afirmado nada, que es justo el modo de falla que este archivo cierra.
@@ -61,5 +61,5 @@ func test_ningun_producto_queda_sin_sonoridad() -> void:  # AC-STK-027
 			. override_failure_message("%s no tiene sonoridad" % Producto.Id.find_key(id))
 			. is_not_equal(EntradaSonora.Sonoridad.NINGUNA)
 		)
-	for id in [Producto.Id.ARVEJAS, Producto.Id.CORACOLA, Producto.Id.PRONGLES]:
+	for id: Producto.Id in [Producto.Id.ARVEJAS, Producto.Id.CORACOLA, Producto.Id.PRONGLES]:
 		assert_int(Catalogo.sonoridad_de(id)).is_equal(EntradaSonora.Sonoridad.LATA)

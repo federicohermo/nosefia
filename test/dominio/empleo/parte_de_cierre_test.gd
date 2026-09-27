@@ -1,7 +1,7 @@
 ## El parte ya decidido: lo que la pantalla va a copiar sin pensar.
 ##
 ## Todo lo que la placa dice se arma acá, y por eso se puede probar sin levantar una escena: el
-## día que un `match` de bandas se escriba en `ui/`, ninguno de los seis nodos lo va a decir, y
+## día que un `match` de bandas se escriba en `ui/`, ninguno de los nodos lo va a decir, y
 ## es lo que estos casos existen para hacer innecesario.
 extends GdUnitTestSuite
 
@@ -55,7 +55,7 @@ func test_el_saludo_y_el_comentario_salen_del_parte_ya_escritos() -> void:
 	assert_str(parte.comentario()).is_equal(CatalogoDeReacciones.del_comentario(1).texto)
 
 
-func test_el_umbral_del_despido_se_cita_por_su_constante() -> void:  # AC-EMP-015
+func test_el_umbral_del_despido_se_cita_por_su_constante() -> void:
 	# Escrito como número en la placa, mover el balance del despido dejaría a la pantalla mintiendo
 	# sin que nada avise: el jugador leería «de 4» con el despido en 5.
 	var parte := ParteDeCierre.new(JORNADA_DE_PRUEBA, Apertura.obligatorias(), 0)
@@ -71,6 +71,11 @@ func test_el_legajo_en_cero_no_esta_en_riesgo_y_de_uno_en_adelante_si() -> void:
 			. override_failure_message("con %d apercibimientos el parte no avisa nada" % cuantos)
 			. is_true()
 		)
+
+
+func test_con_un_apercibimiento_el_aviso_nombra_el_tope() -> void:  # AC-EMP-015
+	var parte := ParteDeCierre.new(JORNADA_DE_PRUEBA, Apertura.obligatorias(), 1)
+	assert_str(parte.aviso_de_riesgo()).contains(str(Reglas.APERCIBIMIENTOS_HASTA_EL_DESPIDO))
 
 
 func test_el_parte_devuelve_lo_que_recibio_sin_recalcular_nada() -> void:

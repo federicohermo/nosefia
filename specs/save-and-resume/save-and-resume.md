@@ -163,8 +163,8 @@ opción de salir lo produce.
 
 ## No objetivos
 
-- Esta capacidad NO decide **qué** guarda cada sistema: define el sobre. El expediente de
-  investigación y el inventario entran como campos cuando sus dueños los declaren.
+- Esta capacidad NO decide **qué** guarda cada sistema: define el sobre. El inventario entra
+  como campo cuando su dueño lo declare.
 - Esta capacidad NO migra guardados entre versiones: eso es del día que exista una segunda.
 - Esta capacidad NO ofrece ranuras, autoguardado ni nube.
 - Esta capacidad NO avisa en pantalla que la escritura falló.
@@ -186,12 +186,10 @@ opción de salir lo produce.
 
 - [`employment-record`](../employment-record/employment-record.md) (consume): la jornada, el
   legajo y el final.
-- [`investigation`](../investigation/investigation.md) (consume): la lista de pistas
-  descubiertas.
 
 ## Preguntas abiertas
 
-- **OQ-SAV-001 — ¿Qué más cruza la jornada además del legajo y el expediente?**
+- **OQ-SAV-001 — ¿Qué más cruza la jornada además del legajo?**
   - Por qué sigue abierta: el inventario y los objetos movidos no declararon si su estado cruza.
   - Decide: el dueño del repo.
   - Bloquea: nada. Agrega campos a `BR-SAV-005`.

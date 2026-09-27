@@ -69,7 +69,7 @@ func test_lo_leido_no_vuelve_al_disco() -> void:  # AC-INV-009
 	# partida siguiente también.
 	var texto := FileAccess.get_file_as_string(CONVERSACION)
 	assert_str(texto).is_not_empty()
-	for patron in ["leido", "ResourceSaver"]:
+	for patron: String in ["leido", "ResourceSaver"]:
 		(
 			assert_bool(texto.contains(patron))
 			. override_failure_message("`conversacion.gd` nombra `%s`" % patron)

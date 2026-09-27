@@ -54,7 +54,7 @@ static func _piezas(caras: PackedVector3Array) -> Array[PackedVector3Array]:
 		padre[_clave(caras[indice])] = _clave(caras[indice])
 	for indice in range(0, caras.size(), 3):
 		var raiz := _raiz(padre, _clave(caras[indice]))
-		for lado in [1, 2]:
+		for lado: int in [1, 2]:
 			var otra := _raiz(padre, _clave(caras[indice + lado]))
 			if otra != raiz:
 				padre[otra] = raiz
@@ -247,9 +247,9 @@ static func _cajas_de_volumen(malla: MeshInstance3D) -> Array[CollisionShape3D]:
 static func _esquinas(forma: CollisionShape3D) -> PackedVector3Array:
 	var medio := (forma.shape as BoxShape3D).size / 2.0 - Vector3.ONE * EPSILON
 	var salida := PackedVector3Array()
-	for x in [-1.0, 1.0]:
-		for y in [-1.0, 1.0]:
-			for z in [-1.0, 1.0]:
+	for x: float in [-1.0, 1.0]:
+		for y: float in [-1.0, 1.0]:
+			for z: float in [-1.0, 1.0]:
 				salida.append(forma.global_transform * (medio * Vector3(x, y, z)))
 	return salida
 
@@ -259,7 +259,7 @@ static func _punto_adentro(caras: PackedVector3Array, punto: Vector3) -> bool:
 	for direccion: Vector3 in [
 		Vector3(1.0, 0.0013, 0.0007), Vector3(0.0019, 1.0, 0.0003), Vector3(0.0005, -0.0021, 1.0)
 	]:
-		for sentido in [1.0, -1.0]:
+		for sentido: float in [1.0, -1.0]:
 			var mas_cerca := INF
 			var de_espaldas := false
 			for indice in range(0, caras.size(), 3):

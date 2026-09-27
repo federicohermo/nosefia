@@ -21,3 +21,7 @@ addons/gdUnit4/** linguist-vendored
 *.glb binary
 *.ttf binary
 *.otf binary
+
+# Una escena tampoco se mergea: el merge de tres vías da una escena corrupta, no un conflicto.
+# `merge=binary` sin `-diff` fuerza el conflicto y deja el diff en texto, que se sigue leyendo.
+*.tscn merge=binary

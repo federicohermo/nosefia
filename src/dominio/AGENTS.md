@@ -65,8 +65,8 @@ Es lo que permite probar «dos jornadas graves seguidas y lo echan» sin jugar d
 
 ## Conjuntos cerrados y valores fijos
 
-Un conjunto cerrado —los tipos de tarea, los cortes de las consecuencias, los canales— va como
-`enum`. Un `String` suelto se desincroniza el día que alguien escriba `"limpar"`, y el motor no
+Un conjunto cerrado —los tipos de tarea, los cortes de las consecuencias, las apps de la
+computadora— va como `enum`. Un `String` suelto se desincroniza el día que alguien escriba `"limpar"`, y el motor no
 dice nada.
 
 Un número que dos archivos necesitan igual vive en **un solo** archivo de `src/dominio/`. Dos

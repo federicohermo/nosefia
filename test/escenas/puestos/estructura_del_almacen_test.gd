@@ -82,7 +82,7 @@ func test_el_modelo_entro_con_sus_mallas() -> void:
 
 func test_los_muebles_y_el_edificio_conservan_su_colision() -> void:
 	var estructura := _estructura()
-	for nombre in [
+	for nombre: String in [
 		"almacen", "gondolanueva", "gondolanueva2", "base compu", "EscritorioComputadora"
 	]:
 		var malla: MeshInstance3D = estructura.get_node(nombre)
@@ -121,7 +121,7 @@ func test_la_cascara_del_edificio_esta_y_frena_al_jugador() -> void:
 func test_el_edificio_no_vino_con_la_escala_rota() -> void:
 	var cascara: MeshInstance3D = _estructura().get_node(NodePath(CASCARA_DEL_EDIFICIO))
 	var planta := cascara.get_aabb().size * cascara.scale
-	for lado in [planta.x, planta.z]:
+	for lado: float in [planta.x, planta.z]:
 		(
 			assert_float(lado)
 			. override_failure_message(
@@ -137,7 +137,7 @@ func test_el_edificio_no_vino_con_la_escala_rota() -> void:
 func test_los_muebles_funcionales_conservan_sus_nombres() -> void:
 	# El cableado debe conservar estos destinos aunque cambien sus posiciones.
 	var estructura := _estructura()
-	for anclaje in ANCLAJES:
+	for anclaje: String in ANCLAJES:
 		(
 			assert_bool(estructura.has_node(NodePath(anclaje)))
 			. override_failure_message(
@@ -203,7 +203,7 @@ func test_las_paredes_con_volumen_dejan_libres_los_vanos() -> void:
 	var espacio := estructura.get_world_3d().direct_space_state
 	var vidrio: Node3D = estructura.get_node("Ventanilla/Vidrio")
 	var vanos := {"la ventanilla": vidrio.global_position}
-	for paso in ["PasoAlFondo", "PasoAlDeposito"]:
+	for paso: String in ["PasoAlFondo", "PasoAlDeposito"]:
 		var suelo: Node3D = estructura.get_node("SueloSolido/" + paso)
 		vanos[paso] = suelo.global_position + Vector3.UP * ALTO_DEL_VANO
 	var paredes: CollisionObject3D = estructura.get_node("almacen/Volumen")

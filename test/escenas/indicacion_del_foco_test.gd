@@ -30,7 +30,7 @@ func test_el_campo_real_resalta_la_computadora_y_solo_la_zona_de_reposicion() ->
 		func(objetivo: Node3D, _distancia: float) -> void: avisos.append(objetivo)
 	)
 	jugador.objetivo_perdido.connect(func() -> void: perdidos.append(true))
-	for objetivo in [computadora, estante]:
+	for objetivo: Node3D in [computadora, estante]:
 		var ojo := computadora.global_position + Vector3(0, 1, 1)
 		var punto := computadora.global_position
 		if objetivo == estante:

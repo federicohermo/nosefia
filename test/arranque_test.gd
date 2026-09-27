@@ -25,7 +25,7 @@ func test_las_cuatro_capas_de_src_existen() -> void:
 	# Si alguien renombra una capa, `gate_de_capas.py` deja de mirarla **en silencio**: su regla
 	# se declara por prefijo de ruta, y un prefijo que no matchea nada no es un error. Esto es lo
 	# que lo convierte en un rojo.
-	for capa in ["dominio", "sistemas", "ui", "escenas"]:
+	for capa: String in ["dominio", "sistemas", "ui", "escenas"]:
 		(
 			assert_bool(DirAccess.dir_exists_absolute("res://src/%s" % capa))
 			. override_failure_message(

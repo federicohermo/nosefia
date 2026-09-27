@@ -9,7 +9,7 @@ verifica `test_copias_de_skills.py`, que da rojo ante un byte de diferencia.
 Lo que separa un review útil de una lista de ruido está acá, no en la cantidad de hallazgos.
 
 **Y ninguno de esos hallazgos sobrevive a la corrida:** las cinco descargas están en
-[`sin-deuda.md`](sin-deuda.md), que es de los siete skills que escriben. Acá está sólo cómo
+[`sin-deuda.md`](sin-deuda.md), que traen todos los skills que escriben. Acá está sólo cómo
 aterrizan sobre un diff.
 
 ## Los ejes
@@ -24,7 +24,7 @@ se revisa** — no le busques hallazgos.
 | **Convenciones** (siempre) | **sólo lo que las herramientas no pueden ver** — abajo está la línea, y `CLAUDE.md` ya la dibujó |
 | **Prosa** (docs + comentarios) | texto que dejó de ser cierto. Ver abajo |
 | **Manejo de errores** | ramas de error mudas, un `push_error` que falta, un `if` que se traga el caso |
-| **Firmas y tipos** | un conjunto cerrado escrito como `String` suelto en vez de `enum`; una firma sin tipo |
+| **Firmas y tipos** | un conjunto cerrado escrito como `String` suelto en vez de `enum` |
 | **Cobertura** | **acá no hay red**: Godot no mide cobertura. Ver abajo |
 | **Escenas** | un `.tscn` en el diff. No se revisa línea por línea; ver abajo |
 
@@ -54,13 +54,12 @@ rompe nada — el `if` simplemente no entra nunca, para siempre, en silencio.
 
 | Ya lo verifica una herramienta — **no lo reportes** | Nadie lo verifica — **es tuyo** |
 |---|---|
-| la dirección de dependencia entre capas, incluido el `class_name` | tipado estático en toda firma, `-> void` incluido |
-| que todo `.gd` de `dominio/` y `sistemas/` tenga su test espejo | que el comentario explique el **porqué** y no el qué |
-| el test sin aserción, apagado, o con un nombre que no corre | español en comentarios, nombres, commits y specs |
-| formato, largo de línea, nombres y orden de declaraciones (`gdformat`, `gdlint`) | que un valor fijo no viva en dos lugares |
-| que no se edite `src/` sin un spec detrás de la rama | que no quede ningún `print` |
-| | `get_node("../../…")` en vez de `@export` y señales |
-| | que los borrados vayan en su propio commit |
+| la dirección de dependencia entre capas, incluido el `class_name` | que el comentario explique el **porqué** y no el qué |
+| que todo `.gd` de `dominio/` y `sistemas/` tenga su test espejo | español en comentarios, nombres, commits y specs |
+| el test sin aserción, apagado, o con un nombre que no corre | que un valor fijo no viva en dos lugares |
+| formato, largo de línea, nombres y orden de declaraciones (`gdformat`, `gdlint`) | que no quede ningún `print` |
+| que no se edite `src/` sin un spec detrás de la rama | `get_node("../../…")` en vez de `@export` y señales |
+| una declaración sin tipo, `-> void` incluido: el motor no carga el script | que los borrados vayan en su propio commit |
 | | que el AC del spec sea falsable y esté cubierto |
 
 **`gdformat` decide el formato y no se discute en una revisión.** Si algo del formato te molesta,
