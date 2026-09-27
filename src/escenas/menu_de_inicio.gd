@@ -2,6 +2,7 @@
 extends Control
 
 const ESCENA_DEL_ALMACEN := "res://src/escenas/almacen.tscn"
+const PANTALLA_DE_CARGA := preload("res://src/ui/interrupciones/pantalla_de_carga.tscn")
 
 const TEXTOS: Dictionary[MenuDeInicio.Opcion, String] = {
 	MenuDeInicio.Opcion.NUEVO_JUEGO: "NUEVO JUEGO",
@@ -14,6 +15,11 @@ const TEXTOS: Dictionary[MenuDeInicio.Opcion, String] = {
 @export var _opciones: VBoxContainer
 @export var _pedidos: PedidosDelMenu
 
+var _carga := CargaEnSegundoPlano.new()
+var _pantalla := PANTALLA_DE_CARGA.instantiate() as PantallaDeCarga
+var _almacen: PackedScene
+var _esperando := false
+
 
 func _ready() -> void:
 	var menu := MenuDeInicio.new(OS.has_feature("web"))
@@ -24,8 +30,36 @@ func _ready() -> void:
 		boton.pressed.connect(_pedidos.elegir.bind(opcion))
 		_opciones.add_child(boton)
 	_pedidos.nuevo_juego_pedido.connect(entrar_al_almacen)
+	add_child(_carga)
+	add_child(_pantalla)
+	_carga.lista.connect(_al_cargar_el_almacen)
+	_carga.fallo.connect(_al_fallar_la_carga)
+	_carga.pedir(ESCENA_DEL_ALMACEN)
 	print("[carga] menú visible")
 
 
+func _process(_delta: float) -> void:
+	_pantalla.pintar(_carga.progreso())
+
+
 func entrar_al_almacen() -> void:
-	get_tree().change_scene_to_file(ESCENA_DEL_ALMACEN)
+	if _almacen != null:
+		get_tree().change_scene_to_packed(_almacen)
+		return
+	_esperando = true
+	_carga.pedir(ESCENA_DEL_ALMACEN)
+	_pantalla.mostrar()
+
+
+func _al_cargar_el_almacen(escena: PackedScene) -> void:
+	_almacen = escena
+	if _esperando:
+		get_tree().change_scene_to_packed(_almacen)
+
+
+## Una carga fallida no deja al jugador colgado en la pantalla de carga: vuelve al menú, y el
+## próximo «Nuevo juego» pide el almacén otra vez.
+func _al_fallar_la_carga() -> void:
+	_esperando = false
+	_pantalla.ocultar()
+	_pedidos.rearmar()

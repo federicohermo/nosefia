@@ -26,5 +26,10 @@ func elegir(opcion: MenuDeInicio.Opcion) -> void:
 			salir_pedido.emit()
 
 
+## Vuelve a aceptar un pedido. Sirve cuando la escena no llegó a cambiar.
+func rearmar() -> void:
+	_pidio = false
+
+
 func _cerrar_el_juego() -> void:
 	get_tree().quit()

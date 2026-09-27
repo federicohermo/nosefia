@@ -35,6 +35,15 @@ func test_salir_pide_una_sola_vez_con_doble_clic() -> void:
 	assert_int(_nuevos).is_equal(0)
 
 
+func test_rearmado_nuevo_juego_vuelve_a_pedir() -> void:
+	var pedidos := _pedidos()
+	pedidos.elegir(MenuDeInicio.Opcion.NUEVO_JUEGO)
+	pedidos.rearmar()
+	pedidos.elegir(MenuDeInicio.Opcion.NUEVO_JUEGO)
+	pedidos.elegir(MenuDeInicio.Opcion.NUEVO_JUEGO)
+	assert_int(_nuevos).is_equal(2)
+
+
 func test_las_opciones_deshabilitadas_no_piden_nada() -> void:
 	var pedidos := _pedidos()
 	pedidos.elegir(MenuDeInicio.Opcion.CONTINUAR)
