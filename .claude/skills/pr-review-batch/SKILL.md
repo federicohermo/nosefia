@@ -447,10 +447,15 @@ terminado, así que un proceso vivo adentro de un worktree es **un Godot colgado
 tiene que decir con qué test se colgó. Si dice `SIGUE AHI`, el handle es de afuera —el editor o el
 IDE con la carpeta abierta— y eso lo cierra el usuario, no vos.
 
+Si imprime `SALTEADO: tiene cambios sin commitear`, el worktree queda y el script sale con 1.
+Puede ser un carril tuyo que no terminó o el de otra sesión que todavía corre: **no se
+fuerza**. Si es tuyo, el carril no cerró, y eso va primero en el reporte.
+
 **Antes de destruir nada, verificá que cada rama del lote es idéntica a su
-`origin/<headRefName>`.** Si difieren, algo no se pusheó y ese worktree es lo único que lo tiene —
-y `--todos` lo borra sin preguntar. No hay ramas de andamio que limpiar después: los carriles
-trabajaron sobre las ramas de los PR, que siguen existiendo y así tienen que quedar.
+`origin/<headRefName>`.** Si difieren, algo no se pusheó. El script saltea un worktree con
+cambios sin commitear, pero no mira si la rama llegó al remoto. No hay ramas de andamio que
+limpiar después: los carriles trabajaron sobre las ramas de los PR, que siguen existiendo y
+así tienen que quedar.
 
 ---
 

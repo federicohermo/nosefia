@@ -176,6 +176,10 @@ llevaría puesto el editor que el usuario tiene abierto con el checkout principa
 
 Si imprime `SIGUE AHI`, el handle es de afuera. **Lo cierra el usuario, no vos**: decilo.
 
+Si imprime `SALTEADO: tiene cambios sin commitear`, el worktree queda y el script sale con 1.
+Puede ser un carril tuyo que no terminó o el de otra sesión que todavía corre: **no se
+fuerza**. Si es tuyo, el carril no cerró, y eso va primero en el reporte.
+
 ## Paso 6 — El reporte
 
 1. **Si algo quedó bloqueado, la primera línea dice que la corrida falló.** No «se cerró casi
