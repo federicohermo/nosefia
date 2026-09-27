@@ -11,7 +11,7 @@
 [node name="Objetos" type="Node3D"]
 
 [node name="Trapeador" parent="." instance=ExtResource("22_agarrable")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.5, 0.5, -4)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.5, 0.18, -4)
 datos = ExtResource("23_trapeador")
 
 [node name="ZonaDeDescarte" parent="." instance=ExtResource("25_descarte")]

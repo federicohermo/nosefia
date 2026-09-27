@@ -141,11 +141,15 @@ func _al_soltar(nodo: Node3D) -> void:
 ## Lo que quedó superpuesto con la hoja quieta. La hoja quieta es un sólido fijo más.
 func _al_quedar_quieta(hoja: PhysicsBody3D) -> void:
 	var espacio := hoja.get_world_3d().direct_space_state
+	# El nodo de la hoja se entera de un salto recién en el paso siguiente. El servidor ya lo tiene.
+	var lugar: Transform3D = PhysicsServer3D.body_get_state(
+		hoja.get_rid(), PhysicsServer3D.BODY_STATE_TRANSFORM
+	)
 	var adentro: Array[PhysicsBody3D] = []
 	for forma: CollisionShape3D in hoja.find_children("*", "CollisionShape3D", false, false):
 		var consulta := PhysicsShapeQueryParameters3D.new()
 		consulta.shape = forma.shape
-		consulta.transform = forma.global_transform
+		consulta.transform = lugar * forma.transform
 		consulta.exclude = [hoja.get_rid()]
 		for choque in espacio.intersect_shape(consulta, TOPE_DE_CHOQUES):
 			var cuerpo := choque["collider"] as RigidBody3D

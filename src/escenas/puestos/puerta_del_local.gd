@@ -102,6 +102,7 @@ func cerrar_de_golpe() -> void:
 	)
 	PhysicsServer3D.body_set_mode(get_rid(), PhysicsServer3D.BODY_MODE_KINEMATIC)
 	hoja.reset_physics_interpolation()
+	hoja_quieta.emit(self)
 
 
 ## El giro va por cuadro de física y no de dibujo: lo que se mueve es un cuerpo de colisión, y
