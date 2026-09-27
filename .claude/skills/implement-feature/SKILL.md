@@ -129,6 +129,9 @@ Corre los siete nodos en paralelo: `lint`, `formato`, `capas`, `tdd`, `specs`, `
 `tests`. Correr sólo la suite de gdUnit4 deja afuera los gates, que son justamente los que cuidan
 lo que en este motor nadie más cuida.
 
+**Guardá su salida en un archivo.** El nodo `tests` rojo imprime la corrida entera, y la
+herramienta la corta antes del test que falló. Medido el 2026-09-26.
+
 **Un nodo salteado no es un nodo verde**, y el reporte lo distingue. Pero `tests` sin `GODOT_BIN`
 **no se saltea: sale rojo** — ese salteo vale sólo mientras no exista un solo `*_test.gd`, y hay
 muchos.
