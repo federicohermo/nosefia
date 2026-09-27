@@ -307,11 +307,11 @@ func test_el_cableado_dejo_de_armar_el_turno_y_de_llevar_el_puntaje() -> void:
 	assert_str(texto).not_contains("Legajo")
 	assert_str(texto).not_contains("Turno.new(")
 	(
-		assert_int(texto.count("Partida.nueva()"))
+		assert_int(texto.count("Partida.desde("))
 		. override_failure_message(
 			(
 				"`almacen.gd` arma %d partidas: con dos, el HUD pinta una y el ciclo corre la otra"
-				% texto.count("Partida.nueva()")
+				% texto.count("Partida.desde(")
 			)
 		)
 		. is_equal(1)
