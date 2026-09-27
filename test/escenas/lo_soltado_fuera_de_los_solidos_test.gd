@@ -5,6 +5,7 @@ const ALMACEN := preload("res://src/escenas/almacen.tscn")
 
 const MOSTRADOR := "Estructura/EscritorioComputadora"
 const MOUSE := "Estructura/mouse"
+const TECLADO := "Estructura/teclado"
 
 ## Cuánto se meten hacia adentro los puntos del volumen del objeto antes de preguntar, en metros.
 ## Apoyado, un objeto toca la cara: sin descontar nada, el contacto exacto contaría como adentro.
@@ -49,6 +50,9 @@ const MEDIA_CAJA := 0.3037
 ## Cuánto se mete la caja en el mouse al rozarlo, y al meterse de verdad, en metros.
 const ROCE_CON_EL_MOUSE := 0.001
 const CAJA_EN_EL_MOUSE := 0.03
+
+## Cuánto se mete la esquina de la caja en la del teclado, en metros: más de lo que se tolera.
+const ESQUINA_EN_EL_TECLADO := 0.005
 
 ## Dos cuadros sin reporte entre cada reporte: así llega un mouse más lento que la pantalla.
 const REPORTES_DE_UN_MOUSE_LENTO := 10
@@ -283,6 +287,29 @@ func test_la_caja_entera_adentro_del_mostrador_no_entra_ahi() -> void:  # AC-PLY
 		. override_failure_message(
 			"el puesto dice que la caja entra entera en %v, adentro del mostrador" % frente
 		)
+		. is_false()
+	)
+
+
+func test_la_caja_con_una_esquina_en_el_teclado_no_entra() -> void:
+	var almacen: Node3D = await _almacen()
+	var caja := _caja_grande(almacen)
+	var teclado: MeshInstance3D = almacen.get_node(TECLADO)
+	var suyo := teclado.global_transform * teclado.get_aabb()
+	var mostrador: MeshInstance3D = almacen.get_node(MOSTRADOR)
+	var tapa := (mostrador.global_transform * mostrador.get_aabb()).end.y
+	caja.global_basis = Basis.IDENTITY
+	caja.global_position = Vector3(
+		suyo.position.x - MEDIA_CAJA + ESQUINA_EN_EL_TECLADO,
+		tapa + MEDIA_CAJA,
+		suyo.position.z - MEDIA_CAJA + ESQUINA_EN_EL_TECLADO
+	)
+	caja.call("quedarse_quieta")
+	await get_tree().physics_frame
+	var puesto: Node3D = almacen.get("_reposicion_manual")
+	(
+		assert_bool(puesto.call("_entra_entera", caja))
+		. override_failure_message("la caja entra con una esquina adentro del teclado")
 		. is_false()
 	)
 
