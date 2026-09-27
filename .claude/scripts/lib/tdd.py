@@ -49,9 +49,11 @@ _ASERCION = re.compile(r"\bassert_(?!not_yet_implemented)\w+\s*\(")
 
 #: Las formas de apagar un test sin borrarlo que existen en gdUnit4 6.2.1. `do_skip` se busca
 #: sólo en la firma, sin comentarios ni textos: el scanner lo lee como parámetro, con cualquier
-#: valor, y en cualquier otro lugar es sólo una palabra.
+#: valor, y en cualquier otro lugar es sólo una palabra. El scanner le saca un `_` al nombre, y
+#: en la firma de `before` apaga la suite entera.
 _APAGADO = re.compile(r"\bassert_not_yet_implemented\b")
-_PARAMETRO_DE_SALTEO = re.compile(r"\bdo_skip\b")
+_PARAMETRO_DE_SALTEO = re.compile(r"\b_?do_skip\b")
+_ANTES_DE_LA_SUITE = re.compile(r"^func\s+before\s*\(", re.MULTILINE)
 
 SUFIJO_DE_TEST = "_test.gd"
 
@@ -175,6 +177,17 @@ def violaciones(
         if not funciones:
             hallazgos.append((ruta, "es un `*_test.gd` sin una sola `func test_…`."))
             continue
+
+        antes = _ANTES_DE_LA_SUITE.search(texto)
+        salteo = antes and _PARAMETRO_DE_SALTEO.search(_parametros(texto[antes.start() :]))
+        if salteo:
+            hallazgos.append(
+                (
+                    ruta,
+                    f"la suite está apagada (`{salteo.group(0)}` en `before`): ninguno de sus "
+                    "tests corre. Arreglala o borrala.",
+                )
+            )
 
         for nombre, cuerpo in funciones:
             # Reglas 2 y 3, en ese orden: si el test está apagado, decirlo antes es más útil

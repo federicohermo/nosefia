@@ -117,6 +117,20 @@ class ReglaDelApagado(unittest.TestCase):
         )
         self.assertEqual(len(self._apagados(texto)), 1)
 
+    def test_do_skip_con_guion_bajo_es_hallazgo(self):
+        # El scanner le saca un `_` al nombre, que es como se calla el aviso de parámetro sin usar.
+        texto = "func test_algo(_do_skip := true) -> void:\n\tassert_int(1).is_equal(2)\n"
+        self.assertEqual(len(self._apagados(texto)), 1)
+
+    def test_do_skip_en_before_apaga_la_suite_y_es_hallazgo(self):
+        texto = (
+            "func before(do_skip := true) -> void:\n\tpass\n\n"
+            "func test_algo() -> void:\n\tassert_int(1).is_equal(2)\n"
+        )
+        encontrados = hallazgos({}, {"test/dominio/turno_test.gd": texto})
+        self.assertEqual(len(encontrados), 1)
+        self.assertIn("la suite está apagada", encontrados[0][1])
+
     def test_do_skip_en_un_comentario_o_un_texto_no_es_hallazgo(self):
         texto = (
             "func test_algo() -> void:  # sin do_skip\n"
