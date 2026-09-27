@@ -92,6 +92,12 @@ El sistema DEBE tener un único camino para cerrar el juego, y sólo la opción 
 SI el juego corre en la web, ENTONCES el menú NO DEBE mostrar la opción de salir. La página no
 puede cerrar su pestaña. Las otras cuatro opciones DEBEN quedar en el mismo orden.
 
+### BR-SAV-015 — Retomar sigue desde lo guardado
+
+CUANDO arranca la partida, SI hay guardado, ENTONCES el sistema DEBE seguir en la jornada
+guardada y con los apercibimientos guardados. SI no hay guardado, ENTONCES DEBE arrancar una
+partida nueva.
+
 ## Criterios de aceptación
 
 ### AC-SAV-001 — El cierre guarda una vez *(verifica BR-SAV-001)*
@@ -171,6 +177,12 @@ opción de salir lo produce.
 
 DADO el juego en la web ENTONCES el menú muestra cuatro opciones, sin salir, y en el mismo orden
 que fuera de la web.
+
+### AC-SAV-017 — Retomar arranca donde quedó *(verifica BR-SAV-015)*
+
+DADO un guardado en la jornada 3 con apercibimientos CUANDO arranca la partida ENTONCES está en
+esa jornada y con esos apercibimientos. Sin guardado, arranca en la primera jornada y sin
+apercibimientos.
 
 ## No objetivos
 
