@@ -246,8 +246,8 @@ func test_el_jugador_arranca_adentro_del_almacen_y_apoyado_en_el_piso() -> void:
 	for _cuadro in range(CUADROS_DE_FISICA):
 		await get_tree().physics_frame
 	var jugador: CharacterBody3D = almacen.get_node("Jugador")
-	var arranque: Node3D = almacen.get_node("Arranque")
-	var corrimiento := jugador.global_position - arranque.global_position
+	var arranque: Transform3D = almacen.get("_arranque")
+	var corrimiento := jugador.global_position - arranque.origin
 	(
 		assert_float(Vector2(corrimiento.x, corrimiento.z).length())
 		. override_failure_message("el jugador no arrancó en el punto de arranque")
@@ -423,18 +423,18 @@ func test_despachar_la_placa_abre_la_noche_siguiente_en_cero() -> void:
 
 func test_el_arranque_esta_frente_a_la_entrada_del_lado_de_adentro() -> void:
 	var almacen := _almacen()
-	var arranque: Node3D = almacen.get_node("Arranque")
-	var entrada: Node3D = almacen.get_node("Estructura/puertaentrada")
 	add_child(almacen)
-	var hacia_la_puerta := entrada.global_position - arranque.global_position
+	var arranque: Transform3D = almacen.get("_arranque")
+	var entrada: Node3D = almacen.get_node("Estructura/puertaentrada")
+	var hacia_la_puerta := entrada.global_position - arranque.origin
 	hacia_la_puerta.y = 0.0
 	assert_float(hacia_la_puerta.length()).is_less(1.5)
 	# Mira al local: la puerta le queda a la espalda.
-	var frente := -arranque.global_basis.z
+	var frente := -arranque.basis.z
 	assert_float(frente.dot(hacia_la_puerta.normalized())).is_less(-0.9)
 	var cascara: MeshInstance3D = almacen.get_node("Estructura/" + CASCARA_DEL_EDIFICIO)
 	var caja: AABB = cascara.global_transform * cascara.get_aabb()
-	assert_bool(caja.has_point(arranque.global_position + Vector3.UP)).is_true()
+	assert_bool(caja.has_point(arranque.origin + Vector3.UP)).is_true()
 
 
 func test_abrir_la_jornada_deja_al_jugador_en_el_arranque() -> void:  # AC-PLY-044
@@ -443,7 +443,7 @@ func test_abrir_la_jornada_deja_al_jugador_en_el_arranque() -> void:  # AC-PLY-0
 	await get_tree().process_frame
 	var jugador: CharacterBody3D = almacen.get_node("Jugador")
 	var control: ControlDelJugador = jugador.get("_control")
-	var arranque: Node3D = almacen.get_node("Arranque")
+	var arranque: Transform3D = almacen.get("_arranque")
 	var reloj: RelojDelTurno = almacen.get_node("Servicios/RelojDelTurno")
 	var pantalla: PantallaDeCierre = almacen.get_node("Interfaz/PantallaDeCierre")
 	jugador.global_position = Vector3(5.0, 0.2, -3.0)
@@ -451,16 +451,14 @@ func test_abrir_la_jornada_deja_al_jugador_en_el_arranque() -> void:  # AC-PLY-0
 	control.girar(Vector2(170.0, -90.0))
 	reloj._process(SEGUNDOS_REALES_DE_UN_TURNO)
 	(pantalla.get_node("Fondo/Panel/Continuar") as Button).pressed.emit()
-	assert_vector(jugador.global_position).is_equal_approx(
-		arranque.global_position, Vector3.ONE * 1e-4
-	)
+	assert_vector(jugador.global_position).is_equal_approx(arranque.origin, Vector3.ONE * 1e-4)
 	assert_vector(jugador.velocity).is_equal(Vector3.ZERO)
-	assert_float(control.yaw()).is_equal_approx(arranque.global_rotation.y, 1e-4)
+	assert_float(control.yaw()).is_equal_approx(arranque.basis.get_euler().y, 1e-4)
 	assert_float(control.pitch()).is_equal(0.0)
 	var camara: Camera3D = jugador.get_node("Giro/Camara")
 	assert_float(camara.rotation.x).is_equal(0.0)
 	var frente: Vector3 = jugador.call("frente")
-	assert_vector(frente).is_equal_approx(-arranque.global_basis.z, Vector3.ONE * 1e-4)
+	assert_vector(frente).is_equal_approx(-arranque.basis.z, Vector3.ONE * 1e-4)
 
 
 func test_con_el_despido_la_placa_vuelve_al_menu_y_no_abre_otra_noche() -> void:  # AC-EMP-016

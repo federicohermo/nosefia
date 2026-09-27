@@ -13,6 +13,8 @@
 class_name ParteDeCierre
 extends RefCounted
 
+enum Opcion { SEGUIR, VOLVER_AL_MENU }
+
 ## El número de jornada se muestra sobre el total y no solo: «jornada 4» no dice nada,
 ## «jornada 4 de 5» dice cuánto falta. El total sale de la constante de la partida y nunca de
 ## un número escrito.
@@ -21,8 +23,6 @@ const SALUDO := "Jornada %d de %d. El jefe dejó una nota."
 ## El tope se cita por su constante y nunca como número: escrito acá, moverlo en `reglas.gd`
 ## dejaría la placa mintiendo sin que nada avise.
 const AVISO_DE_RIESGO := "Llevás %d apercibimientos de %d."
-
-enum Opcion { SEGUIR, VOLVER_AL_MENU }
 
 ## Lo que el jugador puede elegir según cómo quedó la partida. Con la partida terminada no hay
 ## noche siguiente que abrir.

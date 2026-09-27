@@ -60,13 +60,14 @@ const ESCENA_DEL_MENU := "res://src/escenas/menu_de_inicio.tscn"
 ## Los muebles con los que el jugador choca por su contorno y no por su malla.
 @export var _muebles_con_contorno: Array[PhysicsBody3D]
 
-## Donde el jugador arranca cada noche. Es geometría de la escena, y por eso no es un número del
-## dominio: mover la puerta mueve el nodo.
-@export var _arranque: Marker3D
-
 ## La partida es de la escena y no del ciclo porque también la mira el HUD: el ciclo publica lo
 ## que pasó, y quien quiera un número lo pide acá.
 var _partida := Partida.nueva()
+
+## Donde el jugador arranca cada noche: el lugar del nodo `Jugador` en la escena, leído antes de
+## la primera apertura. Es geometría de la escena y no un número del dominio. No es un nodo propio
+## porque la raíz no suma hijos y lo que la escena declara cuelga de la raíz.
+var _arranque: Transform3D
 
 ## Cómo se sale al menú. Es una variable y no una llamada directa porque un test no puede
 ## cambiar de escena: se llevaría puesto al runner.
@@ -138,6 +139,7 @@ func _ready() -> void:
 	# El motor no despierta lo que está sobre una caja empujada. Lo hace el puesto.
 	for caja: CajaDeProductosDelDeposito in _cajas_de_productos:
 		caja.empujada.connect(_reposicion_manual.despertar_lo_de_arriba)
+	_arranque = _jugador.global_transform
 	_ciclo.arrancar(_partida, _reloj)
 	_reposicion_manual.preparar()
 
@@ -160,7 +162,7 @@ func _al_abrir_la_jornada(_jornada: int) -> void:
 	# está ahí.
 	_jugador.examen.terminar()
 	_agarre.vaciar_las_manos()
-	_jugador.ubicar(_arranque.global_transform)
+	_jugador.ubicar(_arranque)
 	_hud.declarar_obligatorias(Apertura.cantidad_de_obligatorias())
 	# **Un solo inventario para las dos obligatorias**: reponer lo llena y la ventanilla lo
 	# vacía. Construir uno por tarea daría dos stocks del mismo producto, y las dos ventanas

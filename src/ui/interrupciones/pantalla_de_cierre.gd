@@ -1,9 +1,9 @@
 ## La placa del cierre: copia el parte y lo pone en pantalla.
 ##
 ## **No tiene una sola condición adentro, y eso es lo que este spec vino a comprar.** Qué texto
-## va en cada renglón y qué botones se ofrecen son reglas del juego, y una regla escrita acá arriba nace sin test: está
-## medido que ni `gate_de_tests.py` ni `gate_de_capas.py` la ven. Todo lo que se lee en la placa
-## sale ya decidido de `ParteDeCierre`.
+## va en cada renglón y qué botones se ofrecen son reglas del juego, y una regla escrita acá
+## arriba nace sin test: está medido que ni `gate_de_tests.py` ni `gate_de_capas.py` la ven.
+## Todo lo que se lee en la placa sale ya decidido de `ParteDeCierre`.
 ##
 ## **No pausa nada**, y no hace falta: cuando aparece, el reloj del turno ya cerró.
 ##
