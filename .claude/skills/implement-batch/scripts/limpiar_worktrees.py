@@ -237,12 +237,17 @@ def main() -> None:
             continue
 
         # Sólo se pregunta a un worktree que git registra: uno huérfano no tiene su propio
-        # `.git`, y `git -C` contestaría por el checkout principal.
-        if wt in registrados and sin_commitear(
-            git("-C", str(wt), "status", "--porcelain").stdout
-        ):
-            print("   SALTEADO: tiene cambios sin commitear, y puede ser de otra sesion")
-            continue
+        # `.git`, y `git -C` contestaría por el checkout principal. Un `status` que falla deja
+        # stdout vacío, que se leería como árbol limpio: por eso cuenta como sin commitear.
+        if wt in registrados:
+            estado = git("-C", str(wt), "status", "--porcelain")
+            if estado.returncode != 0 or sin_commitear(estado.stdout):
+                print(
+                    "   SALTEADO: tiene cambios sin commitear, y puede ser de otra sesion",
+                    file=sys.stderr,
+                )
+                fallo = True
+                continue
 
         # `git worktree remove` y `prune` se NIEGAN los dos sobre un worktree bloqueado, y el
         # harness de agentes los crea bloqueados. Sin este `unlock` el borrado del directorio
