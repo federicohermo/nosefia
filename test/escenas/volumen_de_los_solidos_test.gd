@@ -12,6 +12,9 @@ const CAPAS_DE_LOS_SOLIDOS := 1 | ReglasDeLosObjetos.CAPA_DEL_CONTORNO
 ## preguntar de qué lado cae.
 const EPSILON := 0.001
 
+## La clave de metadata que exime a una pieza cóncava. Su valor es la razón, como texto.
+const CLAVE_DE_EXENCION := &"sin_volumen"
+
 
 func _almacen() -> Node3D:
 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
@@ -88,9 +91,14 @@ static func _cabe(pieza: PackedVector3Array, corte: float) -> bool:
 
 static func _exento(forma: CollisionShape3D) -> bool:
 	for nodo: Node in [forma, forma.get_parent()]:
-		if VolumenDeLosSolidos.exime(nodo.get_meta(VolumenDeLosSolidos.CLAVE_DE_EXENCION, null)):
+		if _exime(nodo.get_meta(CLAVE_DE_EXENCION, null)):
 			return true
 	return false
+
+
+## Sólo exime una razón escrita: una clave vacía es un olvido, no una decisión.
+static func _exime(valor: Variant) -> bool:
+	return valor is String and not (valor as String).strip_edges().is_empty()
 
 
 ## Si el punto cae adentro de una forma con volumen: una caja, un convexo o un contorno.
@@ -177,11 +185,11 @@ func test_una_pieza_nueva_sin_volumen_se_nombra_y_una_exencion_vacia_no_la_salva
 	cuerpo.add_child(forma)
 	await get_tree().physics_frame
 	assert_array(_sin_volumen(raiz, 0.06)).contains_exactly(["mueble_nuevo"])
-	forma.set_meta(VolumenDeLosSolidos.CLAVE_DE_EXENCION, "")
+	forma.set_meta(CLAVE_DE_EXENCION, "")
 	assert_array(_sin_volumen(raiz, 0.06)).contains_exactly(["mueble_nuevo"])
-	forma.set_meta(VolumenDeLosSolidos.CLAVE_DE_EXENCION, "un adorno que no se alcanza")
+	forma.set_meta(CLAVE_DE_EXENCION, "un adorno que no se alcanza")
 	assert_array(_sin_volumen(raiz, 0.06)).is_empty()
-	forma.remove_meta(VolumenDeLosSolidos.CLAVE_DE_EXENCION)
+	forma.remove_meta(CLAVE_DE_EXENCION)
 	var volumen := CollisionShape3D.new()
 	var caja := BoxShape3D.new()
 	caja.size = Vector3.ONE
