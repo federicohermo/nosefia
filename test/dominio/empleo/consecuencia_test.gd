@@ -21,7 +21,7 @@ func test_cumplir_tres_de_cinco_todavia_es_un_aviso() -> void:  # AC-EMP-001
 
 
 func test_cumplir_menos_de_tres_es_grave() -> void:  # AC-EMP-001
-	for cumplidas in [2, 1, 0]:
+	for cumplidas: int in [2, 1, 0]:
 		(
 			assert_int(Consecuencias.consecuencia_de(cumplidas, 5))
 			. override_failure_message(

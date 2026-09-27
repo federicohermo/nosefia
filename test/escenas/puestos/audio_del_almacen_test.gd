@@ -158,7 +158,7 @@ func test_la_cascara_carga_con_sus_dos_sistemas_cableados() -> void:
 func test_cada_senal_de_la_tabla_la_declara_alguien_de_verdad() -> void:
 	# **El agujero que deja el desacople.** El enlace es por nombre de señal, así que un nombre
 	# que no existe no rompe nada: la fila cae en `sin_fuente()`, que es un estado normal, y las
-	# suites del enlazador usan fuentes inventadas — con lo cual los seis nodos dan verde y ese
+	# suites del enlazador usan fuentes inventadas — con lo cual los nodos dan verde y ese
 	# sonido no se pide nunca en el juego. Está medido: la fila del timbre decía
 	# `timbre_de_la_ventanilla`, que no lo declara nadie, y nada lo dijo.
 	#
@@ -192,7 +192,7 @@ func test_el_almacen_llega_cableado_al_audio_y_al_agarre() -> void:
 	# Sin `_audio` el juego muere en el primer cuadro; sin `_agarre`, las tres señales del
 	# agarre quedan mudas para siempre y nada lo dice.
 	var almacen: Node3D = auto_free(load(ESCENA_DEL_ALMACEN).instantiate())
-	for propiedad in ["_audio", "_agarre"]:
+	for propiedad: String in ["_audio", "_agarre"]:
 		(
 			assert_object(almacen.get(propiedad))
 			. override_failure_message(

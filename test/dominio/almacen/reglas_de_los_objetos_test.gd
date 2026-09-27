@@ -25,7 +25,7 @@ func test_las_distancias_van_de_la_mas_cerca_a_la_mas_lejos() -> void:  # AC-PLY
 func test_las_distancias_son_positivas_y_caben_en_el_alcance_de_la_mira() -> void:  # AC-PLY-011
 	# Una distancia negativa deja el objeto atrás de la cabeza, y una mayor que el alcance de la
 	# mira lo suelta afuera del rayo: se puede tirar algo y no poder volver a levantarlo.
-	for distancia in [
+	for distancia: float in [
 		ReglasDeLosObjetos.DISTANCIA_DE_EXAMEN,
 		ReglasDeLosObjetos.DISTANCIA_DE_CARGA,
 		ReglasDeLosObjetos.DISTANCIA_DE_SOLTADO,
@@ -34,7 +34,7 @@ func test_las_distancias_son_positivas_y_caben_en_el_alcance_de_la_mira() -> voi
 		assert_float(distancia).is_less(ReglasDelJugador.ALCANCE_DE_LA_MIRA)
 
 
-func test_se_lleva_una_sola_cosa_a_la_vez() -> void:  # AC-PLY-008
+func test_se_lleva_una_sola_cosa_a_la_vez() -> void:
 	# El 015 se apoya en este 1: afirma que las bolsas de una jornada son más que las manos, o
 	# sea que sacar la basura cuesta más de un viaje. Subirlo a 2 le afloja el precio en tiempo
 	# a media tarea obligatoria sin que ese spec se entere.
@@ -87,7 +87,7 @@ func test_solo_una_superficie_horizontal_recibe_una_caja() -> void:
 func test_lo_que_entra_a_la_distancia_de_examen_se_examina_ahi() -> void:
 	# Una lata y una unidad de producto ya se veían enteras a esa distancia: agrandar lo
 	# examinado no puede alejar lo que ya estaba bien.
-	for radio in [0.0, 0.1, ReglasDeLosObjetos.DISTANCIA_DE_EXAMEN / 2.0]:
+	for radio: float in [0.0, 0.1, ReglasDeLosObjetos.DISTANCIA_DE_EXAMEN / 2.0]:
 		assert_float(ReglasDeLosObjetos.distancia_de_examen(radio)).is_equal(
 			ReglasDeLosObjetos.DISTANCIA_DE_EXAMEN
 		)
@@ -105,7 +105,7 @@ func test_lo_mas_grande_se_examina_mas_lejos() -> void:
 func test_lo_examinado_queda_entero_delante_del_ojo() -> void:
 	# El centro está a la distancia y la esfera se extiende un radio hacia el ojo: si la
 	# distancia no le gana al radio, alguna rotación lo mete adentro de la cámara.
-	for radio in [0.1, 0.35, 0.53, 1.0]:
+	for radio: float in [0.1, 0.35, 0.53, 1.0]:
 		assert_float(ReglasDeLosObjetos.distancia_de_examen(radio)).is_greater(radio)
 
 

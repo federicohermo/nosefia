@@ -24,8 +24,10 @@ git checkout -b <tipo>/<N>-<descripcion-kebab>
 
 **El prefijo de la rama es el tipo del issue**, y el hook sólo deja escribir en `src/` desde
 `feature/`, `bugfix/`, `refactor/` e `improvement/`. `feature/` es para código que parte de
-un spec: si el spec todavía no está escrito, primero `to-spec`, en esta misma rama. Lo
-que no toca `src/` se nombra por lo que toca — `harness/` o `docs/`.
+un spec: si el spec todavía no está escrito, primero `to-spec`, en esta misma rama. Un
+`bugfix` que escribe la regla que faltaba también toca un spec, y va igual en `bugfix/`: el
+prefijo sale del tipo, no de si hay spec. Lo que no toca `src/` se nombra por lo que toca —
+`harness/` o `docs/`.
 
 Si el issue ya tiene rama, no la vuelvas a crear: puede haberla abierto otra sesión, y ahí lo que
 corresponde es un worktree propio sobre esa rama. **Un worktree se abre sólo en
@@ -124,6 +126,10 @@ parámetro en vez de ir a buscarlo.
 ```bash
 python .claude/scripts/verificar.py
 ```
+
+**Commiteá y pusheá antes de correrlo.** Tarda minutos, y en ese tiempo otra sesión puede
+cerrar su lote y borrar worktrees. Lo que está en el remoto no se pierde. Medido el
+2026-09-27: un carril perdió el issue entero, hecho y sin commit, a mitad de la corrida.
 
 Corre los siete nodos en paralelo: `lint`, `formato`, `capas`, `tdd`, `specs`, `harness` y
 `tests`. Correr sólo la suite de gdUnit4 deja afuera los gates, que son justamente los que cuidan

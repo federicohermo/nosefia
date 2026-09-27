@@ -1,6 +1,6 @@
 # La imposibilidad de la deuda
 
-**Los siete skills que escriben traen su copia, y la de `to-spec` es la canónica.** Un skill es la
+**Cada skill que escribe trae su copia, y la de `to-spec` es la canónica.** Un skill es la
 unidad que se instala: trae su implementación completa y ninguno lee este archivo por ruta.
 `test_copias_de_skills.py` da rojo si una copia difiere en un byte. `shape` y `review-spec-drift`
 no la traen: no escriben nada, así que no pueden dejar deuda.

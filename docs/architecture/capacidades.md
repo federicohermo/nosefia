@@ -36,7 +36,6 @@ flowchart TD
   CLN -- "obligatorias cumplidas" --> SHF
   SHF -- "cuántas se cumplieron" --> EMP
   EMP -- "jornada, legajo y final" --> SAV
-  INV -- "pistas descubiertas" --> SAV
   STK -- "unidades en góndola" --> CTR
   CTR -- "lo vendido" --> STK
   PLY -- "qué se lleva, a qué distancia" --> CLN

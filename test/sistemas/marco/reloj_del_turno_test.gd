@@ -175,7 +175,7 @@ func test_un_reloj_sin_arrancar_no_completa_nada_en_vez_de_romperse() -> void:
 	assert_bool(reloj.descumplir(Tarea.new(Tarea.Tipo.LIMPIAR))).is_false()
 
 
-func test_descumplir_avisa_por_su_propia_senal_y_no_por_la_de_cumplir() -> void:  # AC-SHF-019
+func test_descumplir_avisa_por_su_propia_senal_y_no_por_la_de_cumplir() -> void:
 	var registrar := Tarea.new(Tarea.Tipo.REGISTRAR)
 	var obligatorias: Array[Tarea] = [registrar]
 	var reloj := _reloj_arrancado(Reglas.DURACION_DEL_TURNO, obligatorias)

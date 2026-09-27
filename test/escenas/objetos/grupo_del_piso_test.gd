@@ -278,7 +278,7 @@ func test_la_caja_del_grupo_cubre_las_copias_que_escribe() -> void:
 	for _cuadro in 60:
 		await get_tree().process_frame
 		grupo._process(0.0)
-		for indice in grupo.cuerpos.size():
+		for indice: int in grupo.cuerpos.size():
 			var copia: Transform3D = grupo.get("_matrices")[indice]
 			(
 				assert_bool(grupo.custom_aabb.has_point(copia.origin))

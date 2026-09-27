@@ -66,6 +66,20 @@ func test_un_objeto_ajeno_no_es_basura() -> void:  # AC-CLN-011
 	assert_int(tarea.depositadas()).is_equal(0)
 
 
+func test_una_ya_depositada_soltada_afuera_dice_que_ya_esta() -> void:  # AC-CLN-011
+	# El estado va antes que la posición: con el orden al revés, el cartel diría «no es el
+	# fondo» sobre una bolsa que ya cuenta.
+	var tarea := _tarea()
+	var bolsa := _ids()[0]
+	tarea.depositar(bolsa, ADENTRO)
+	assert_int(tarea.depositar(bolsa, AFUERA)).is_equal(TareaDeLaBasura.Resultado.YA_DEPOSITADA)
+
+
+func test_un_objeto_ajeno_soltado_afuera_dice_que_no_es_basura() -> void:  # AC-CLN-011
+	var tarea := _tarea()
+	assert_int(tarea.depositar(ID_AJENO, AFUERA)).is_equal(TareaDeLaBasura.Resultado.NO_ES_BASURA)
+
+
 func test_la_tarea_se_completa_recien_con_la_ultima_bolsa() -> void:  # AC-CLN-012
 	var tarea := _tarea()
 	var ids := _ids()

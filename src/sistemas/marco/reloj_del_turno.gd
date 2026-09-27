@@ -9,7 +9,7 @@
 ## ahí que `completar()` y `obligatoria()` existan: quien quiera cumplir una tarea —el 008, el
 ## 009— llama acá, o no tiene a qué llamarle. El modo de falla de saltearse esta puerta es
 ## silencioso: `tarea_completada` no se emite, el HUD se queda en cero toda la jornada, y los
-## seis nodos de `verificar.py` quedan en verde, porque ninguna regla se rompió.
+## nodos de `verificar.py` quedan en verde, porque ninguna regla se rompió.
 ##
 ## **No conoce la pantalla.** Emite hacia arriba y no pregunta nada: quien quiera mostrar algo se
 ## conecta a las señales.

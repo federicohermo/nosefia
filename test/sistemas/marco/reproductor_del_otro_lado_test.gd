@@ -62,7 +62,7 @@ func test_dos_paredes_del_mismo_solido_cuentan_dos() -> void:  # AC-AMB-021
 
 
 ## Lo que sonó puede liberarse con su sonido todavía puesto.
-func test_la_voz_se_sigue_apagando_aunque_se_borre_lo_que_sono() -> void:
+func test_la_voz_se_queda_y_se_apaga_aunque_se_borre_lo_que_sono() -> void:  # AC-AMB-016
 	var entrada := _entrada(EntradaSonora.Evento.TIMBRE_DEL_COMPRADOR)
 	entrada.posicional = true
 	var reproductor := _reproductor([entrada] as Array[EntradaSonora])
@@ -75,6 +75,7 @@ func test_la_voz_se_sigue_apagando_aunque_se_borre_lo_que_sono() -> void:
 	reproductor.actualizar_apagado(OIDO, 1.0)
 	var voz := reproductor.voces_en_el_espacio()[0]
 	assert_float(voz.volume_db).is_equal_approx(ApagadoPorObstaculos.volumen_db(1.0), 0.001)
+	assert_vector(voz.global_position).is_equal_approx(FUENTE, Vector3.ONE * 0.001)
 
 
 func test_aparecer_una_pared_apaga_sin_salto() -> void:  # AC-AMB-022

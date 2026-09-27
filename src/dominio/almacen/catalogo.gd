@@ -108,7 +108,7 @@ static func sonoridad_de(id: Producto.Id) -> EntradaSonora.Sonoridad:
 ## se pone en rojo afirmando, en vez de romperse al desreferenciar.
 static func todos() -> Array[Producto]:
 	var productos: Array[Producto] = []
-	for id in Producto.Id.values():
+	for id: Producto.Id in Producto.Id.values():
 		var producto := de(id)
 		if producto == null:
 			continue

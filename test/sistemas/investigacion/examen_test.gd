@@ -220,7 +220,7 @@ func test_girar_sin_examinar_nada_no_rompe() -> void:
 	assert_bool(examen.esta_examinando()).is_false()
 
 
-func test_lo_fijo_enfocado_se_piensa_sin_agarrarlo() -> void:
+func test_lo_fijo_enfocado_se_piensa_sin_agarrarlo() -> void:  # AC-INV-019
 	# La E sobre una puerta no la levanta: revela lo que se nota mirándola y no suspende a
 	# nadie, porque no hay nada que rotar. Es el pensamiento, no el examen.
 	var agarre := _agarre()
