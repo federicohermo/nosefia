@@ -340,6 +340,8 @@ func _al_lado_del_jugador(caja: CajaDelDeposito) -> bool:
 func _entra_entera(caja: CajaDelDeposito) -> bool:
 	var forma: CollisionShape3D = caja.get_node("Cuerpo")
 	var encogida := BoxShape3D.new()
+	# Jolt redondea las aristas con el margen, y una esquina metida unos milímetros no choca.
+	encogida.margin = 0.0
 	encogida.size = (
 		(forma.shape as BoxShape3D).size * forma.scale - Vector3.ONE * ReglasDeLosObjetos.ROCE
 	)
