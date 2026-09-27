@@ -195,7 +195,9 @@ func _al_cerrar_la_jornada(jornada: int, cumplidas: int) -> void:
 	_hud.mostrar_tareas(cumplidas)
 	_hud.mostrar_apercibimientos(_partida.apercibimientos())
 	_pantalla.mostrar(
-		ParteDeCierre.new(jornada, _partida.obligatorias(), _partida.apercibimientos())
+		ParteDeCierre.new(
+			jornada, _partida.obligatorias(), _partida.apercibimientos(), _partida.final()
+		)
 	)
 	# Sin esto la placa es inalcanzable jugando: el jugador clava el puntero en el centro cada
 	# cuadro y el botón «Seguir» cae más abajo, así que no se puede clickear nunca y la jornada 2
