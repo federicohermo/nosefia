@@ -103,6 +103,14 @@ Lo que más se rompe:
   palabras.** Un símbolo no encuentra el comentario que explica la regla con otras palabras, ni
   el test que arma el estado que la regla lee. En el #166 quedaron fuera de «Se escribe» cinco
   archivos con comentarios y un test.
+- **Un dato nuevo en una clase base entra con sus herederas.** Si cada una lo declara, cada una
+  va en «Se escribe». En el #197 faltó `unidad_de_producto.gd`, que hereda de
+  `ObjetoDelAlmacen`.
+- **Un nodo nuevo en una escena se mide contra los tests de esa escena.** En el #192, la red no
+  tenía lugar en ningún `.tscn` de «Se escribe».
+- **Un archivo en «Sólo lectura» se lee antes de ponerlo ahí.** En el #201, el enlace de audio
+  ataba una sola fuente por señal, y con cinco puertas sonaba una. Tuvo que pasar a «Se
+  escribe».
 
 ## Paso 4 — Mostrar y publicar
 
@@ -136,6 +144,8 @@ Con varios issues de una, antes de mostrar nada:
    elegí cuál va primero y publicalo primero. El otro dice `Depende de #N`, con el número ya
    publicado. Hasta entonces nombra al primero por su título: `<issue>` no sirve, porque
    `numerar` lo reemplaza por el número propio. Sin un archivo en común, el orden da igual.
+   Un `.gd` o un spec con cambios chicos en zonas distintas no lleva `Depende de #N`: lo
+   resuelve el merge.
 2. **Dos issues que se bloquean entre sí son un solo cambio mal cortado.** Cortalo de nuevo antes
    de publicar.
 3. **Mostrá todos los borradores enteros, cada uno con `revisar` en 0, y esperá un solo sí
