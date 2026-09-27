@@ -1,0 +1,63 @@
+[gd_scene load_steps=5 format=3]
+
+[ext_resource type="Script" path="res://src/escenas/menu_de_inicio.gd" id="1"]
+[ext_resource type="Theme" path="res://assets/ui/manada/tema.tres" id="2"]
+[ext_resource type="Texture2D" path="res://assets/ui/manada/fondo_inicio.png" id="3"]
+[ext_resource type="Script" path="res://src/sistemas/marco/pedidos_del_menu.gd" id="4"]
+
+[node name="MenuDeInicio" type="Control" node_paths=PackedStringArray("_opciones", "_pedidos")]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("2")
+script = ExtResource("1")
+_opciones = NodePath("Opciones")
+_pedidos = NodePath("PedidosDelMenu")
+
+[node name="Fondo" type="TextureRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("3")
+expand_mode = 1
+stretch_mode = 6
+
+[node name="Titulo" type="Label" parent="."]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -300.0
+offset_top = -160.0
+offset_right = 300.0
+offset_bottom = -64.0
+grow_horizontal = 2
+grow_vertical = 0
+theme_type_variation = &"Titulo"
+text = "No se fía"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Opciones" type="VBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -214.0
+offset_top = -32.0
+offset_right = 214.0
+offset_bottom = -32.0
+grow_horizontal = 2
+
+[node name="PedidosDelMenu" type="Node" parent="."]
+script = ExtResource("4")

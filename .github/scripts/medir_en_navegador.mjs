@@ -21,6 +21,9 @@
 //
 // ## Qué mide
 //
+// El juego abre en el menú de inicio. El script elige «Nuevo juego», que el menú pone en el
+// centro de la pantalla, y mide el almacén.
+//
 // Desde donde arranca el jugador, que muestra el local entero: es la vista más cara. Tres
 // gestos por cada velocidad de CPU: quieto, caminando de costado y girando sobre sí mismo.
 // De cada uno, los cuadros por segundo y el tiempo entre cuadros: mediana, p95 y máximo.
@@ -36,6 +39,7 @@ import { chromium } from 'playwright';
 
 const ESPERA = 120_000;
 const ARRANQUE = 15_000; // El motor sigue compilando shaders un rato después de dibujar.
+const MENU = 3_000; // El juego abre en el menú de inicio, que dibuja casi al instante.
 
 const url = process.argv[2];
 if (!url) {
@@ -127,6 +131,30 @@ const GESTOS = {
   },
 };
 
+// Cargar el almacén traba el hilo principal: el navegador deja de dibujar hasta que la escena
+// está a la vista. Los cuadros se anotan desde antes del clic, y se espera el hueco que deja la
+// carga y diez cuadros después de él.
+const ANOTAR_CUADROS = () => {
+  window.__cuadrosDelMenu = [];
+  (function anotar(ahora) {
+    window.__cuadrosDelMenu.push(ahora);
+    requestAnimationFrame(anotar);
+  })(performance.now());
+  return performance.now();
+};
+
+async function esperarAlAlmacen(pagina, desde) {
+  await pagina.waitForFunction(
+    (clic) => {
+      const cuadros = window.__cuadrosDelMenu.filter((t) => t >= clic);
+      const hueco = cuadros.findIndex((t, i) => i > 0 && t - cuadros[i - 1] > 500);
+      return hueco > 0 && cuadros.length - hueco >= 10;
+    },
+    desde,
+    { timeout: ESPERA, polling: 250 }
+  );
+}
+
 // Sin tope de cuadros: con el vsync puesto, todo lo que tarde menos que el monitor mide igual.
 const navegador = await chromium.launch({
   channel: 'chrome',
@@ -139,8 +167,12 @@ let equipo = {};
 try {
   await pagina.goto(url, { waitUntil: 'load', timeout: ESPERA });
   await pagina.waitForSelector('#status', { state: 'detached', timeout: ESPERA });
+  await pagina.waitForTimeout(MENU);
+  const lienzo = await pagina.locator('canvas').boundingBox();
+  const clic = await pagina.evaluate(ANOTAR_CUADROS);
+  await pagina.mouse.click(lienzo.x + lienzo.width / 2, lienzo.y + lienzo.height / 2);
+  await esperarAlAlmacen(pagina, clic);
   await pagina.waitForTimeout(ARRANQUE);
-  await pagina.mouse.click(600, 300);
   equipo = await pagina.evaluate(GANCHOS);
   console.log(`GPU: ${equipo.gpu}\ncanvas: ${equipo.canvas}\n`);
 

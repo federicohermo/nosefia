@@ -8,6 +8,7 @@ durante la ejecución.
 |---|---|---|
 | `fondo.png` | Captura de `almacen.tscn` con los modelos actuales | Fondo compartido, conservando proporciones |
 | `fondo_ventanilla.png` | Captura de la ventanilla desde el interior del local | Fondo exclusivo de atención al cliente |
+| `fondo_inicio.png` | Figma, `13:1093`, del frame «UI INICIO» (`13:1075`) | Fondo del menú de inicio |
 | `cabecera.svg` | Figma, `3:911` / `3:814` | Cabecera de 1712 × 70,3 sobre el lienzo de 1920 × 1080 |
 | `linea_detalle.svg` | Figma, `3:912` / `3:446` | Separadores del detalle |
 | `solapa.svg` | Figma, `3:913` / `3:448` | Solapa sobre el separador |
@@ -36,7 +37,7 @@ acceso desde la navegación de esta entrega.
 
 El lienzo escala uniformemente dentro del viewport. No cambia la resolución del juego, la cámara
 ni el avance del turno. El clic derecho conserva la salida al local. Esta entrega no incorpora
-inicio, guardado, opciones ni logros.
+guardado, opciones ni logros.
 
 La ventanilla adapta la composición de Chats (`40:64`): comprador a la izquierda, pedido en el
 panel central y aviso y acciones de cobro a la derecha. Usa los datos y las señales de atención

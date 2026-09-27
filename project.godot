@@ -16,7 +16,7 @@ compatibility/default_parent_skeleton_in_mesh_instance_3d=true
 
 config/name="No se fía"
 config/description="Turno nocturno en un almacén: cinco tareas, una ventanilla y algo que no cierra."
-run/main_scene="res://src/escenas/almacen.tscn"
+run/main_scene="res://src/escenas/menu_de_inicio.tscn"
 config/features=PackedStringArray("4.7", "GL Compatibility")
 config/icon="res://icon.svg"
 
