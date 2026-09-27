@@ -580,7 +580,7 @@ func test_la_caja_soltada_contra_cada_solido_no_queda_adentro() -> void:
 	var almacen: Node3D = await _almacen()
 	var caja := _caja_grande(almacen)
 	var soltadas := 0
-	for cara in [
+	for cara: String in [
 		CARA_DE_AFUERA_DEL_MOSTRADOR,
 		CARA_DE_ADENTRO_DE_LA_L,
 		PARED_DE_LA_FACHADA,

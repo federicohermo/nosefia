@@ -134,7 +134,7 @@ func test_ningun_archivo_de_la_cascara_pausa_el_juego() -> void:
 			. override_failure_message("`%s` está vacío o no existe" % ruta)
 			. is_not_empty()
 		)
-		for patron in ["paused", "time_scale"]:
+		for patron: String in ["paused", "time_scale"]:
 			(
 				assert_bool(texto.contains(patron))
 				. override_failure_message("`%s` nombra `%s`: pausa el turno" % [ruta, patron])
@@ -257,7 +257,7 @@ func test_el_umbral_y_los_interlocutores_no_se_escriben_en_la_cascara() -> void:
 	# pantalla, los dos pasan los dos gates en verde y se desincronizan sin que nadie avise.
 	for ruta: String in ARCHIVOS_DE_LA_CASCARA:
 		var texto := FileAccess.get_file_as_string(ruta)
-		for patron in ["umbral", "JEFE", "PROVEEDOR", "DESCONOCIDO"]:
+		for patron: String in ["umbral", "JEFE", "PROVEEDOR", "DESCONOCIDO"]:
 			(
 				assert_bool(texto.contains(patron))
 				. override_failure_message("`%s` nombra `%s`" % [ruta, patron])

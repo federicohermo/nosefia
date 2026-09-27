@@ -192,7 +192,7 @@ func test_el_almacen_llega_cableado_al_audio_y_al_agarre() -> void:
 	# Sin `_audio` el juego muere en el primer cuadro; sin `_agarre`, las tres señales del
 	# agarre quedan mudas para siempre y nada lo dice.
 	var almacen: Node3D = auto_free(load(ESCENA_DEL_ALMACEN).instantiate())
-	for propiedad in ["_audio", "_agarre"]:
+	for propiedad: String in ["_audio", "_agarre"]:
 		(
 			assert_object(almacen.get(propiedad))
 			. override_failure_message(

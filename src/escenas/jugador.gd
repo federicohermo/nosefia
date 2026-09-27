@@ -395,7 +395,7 @@ func _medir_candidato(cuerpo: Node3D) -> CampoDeInteraccion.Candidato:
 		var eje := ojo + adelante * (centro - ojo).dot(adelante)
 		puntos.append(eje.clamp(limites.position, limites.end))
 		puntos.append(centro)
-		for direccion in [
+		for direccion: Vector3 in [
 			Vector3.RIGHT, Vector3.LEFT, Vector3.UP, Vector3.DOWN, Vector3.FORWARD, Vector3.BACK
 		]:
 			puntos.append(centro + direccion * limites.size / 2)

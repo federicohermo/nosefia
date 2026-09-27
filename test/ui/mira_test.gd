@@ -12,9 +12,9 @@ func test_la_mira_permanece_en_el_centro_al_cambiar_la_resolucion() -> void:
 	assert_object(mira).is_not_null()
 	if mira == null:
 		return
-	for ancla in [mira.anchor_left, mira.anchor_top, mira.anchor_right, mira.anchor_bottom]:
+	for ancla: float in [mira.anchor_left, mira.anchor_top, mira.anchor_right, mira.anchor_bottom]:
 		assert_float(ancla).is_equal(0.5)
-	for resolucion in [Vector2i(800, 600), Vector2i(1920, 1080)]:
+	for resolucion: Vector2i in [Vector2i(800, 600), Vector2i(1920, 1080)]:
 		pantalla.size = resolucion
 		await get_tree().process_frame
 		assert_vector(mira.position + mira.size / 2.0).is_equal(Vector2(resolucion) / 2.0)

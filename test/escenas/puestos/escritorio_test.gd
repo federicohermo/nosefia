@@ -38,7 +38,7 @@ func test_el_escritorio_recibe_al_jugador_y_al_reloj_por_export() -> void:
 	# hasta que se corre.
 	var texto := FileAccess.get_file_as_string(SCRIPT)
 	assert_str(texto).is_not_empty()
-	for propiedad in ["@export var jugador", "@export var reloj"]:
+	for propiedad: String in ["@export var jugador", "@export var reloj"]:
 		(
 			assert_bool(texto.contains(propiedad))
 			. override_failure_message("`escritorio.gd` no declara `%s`" % propiedad)

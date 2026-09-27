@@ -66,7 +66,7 @@ func test_la_caja_no_decide_nada_sobre_el_cupo() -> void:
 	# y por qué se rechaza son preguntas del dominio, que es donde tienen test.
 	var texto := FileAccess.get_file_as_string(SCRIPT)
 	assert_str(texto).is_not_empty()
-	for patron in ["if", "match", "cupo"]:
+	for patron: String in ["if", "match", "cupo"]:
 		(
 			assert_bool(texto.contains(patron))
 			. override_failure_message("`caja_de_productos.gd` nombra `%s`" % patron)
@@ -77,7 +77,7 @@ func test_la_caja_no_decide_nada_sobre_el_cupo() -> void:
 func test_la_caja_ya_no_despacha_por_su_cuenta() -> void:
 	# La señal se fue con el clic izquierdo, y mientras exista el cableado se le puede volver a
 	# colgar: quedarían dos rutas hacia la misma unidad y ninguna daría rojo.
-	for ruta in [SCRIPT, CABLEADO]:
+	for ruta: String in [SCRIPT, CABLEADO]:
 		var texto := FileAccess.get_file_as_string(ruta)
 		assert_str(texto).is_not_empty()
 		(
