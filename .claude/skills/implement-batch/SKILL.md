@@ -116,7 +116,8 @@ Cada agente recibe, literal:
   Medido el 2026-09-23: los dos carriles escribieron la misma regla en `to-issue` y en las siete
   copias de `sin-deuda.md`, y los dos PR chocaban en ocho archivos.
 - **Godot con `--script` lleva siempre `--path .`, y el script termina con `quit()`.** Sin
-  `--path`, o si el script aborta antes de `quit()`, Godot se cuelga sin error. Medido el
+  `--path`, `res://` es el directorio actual, y fuera de la raíz del repo cada `load` falla. Si
+  el script aborta antes de `quit()`, Godot imprime el error y no sale nunca. Medido el
   2026-09-27: lo pisó el carril que cargaba todos los scripts con el motor.
 - **Un nombre propio para cada archivo de scratch.** Dos carriles que escriben el mismo archivo
   temporal se pisan sin conflicto visible. **Y se escribe con `Write`.**
