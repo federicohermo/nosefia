@@ -245,8 +245,9 @@ suena otra vez.
 ### AC-AMB-016 — El lugar es un dato de la fila *(verifica BR-AMB-016)*
 
 DADO una fila del espacio y un objeto en (1, 0, 2) CUANDO el objeto la produce ENTONCES suena en
-una voz del espacio, en (1, 0, 2), y la voz se queda ahí aunque el objeto se mueva. DADO una fila
-del espacio con un emisor fijo CUANDO suena sin objeto ENTONCES suena en la posición del emisor.
+una voz del espacio, en (1, 0, 2), y la voz se queda ahí aunque el objeto se mueva o se borre.
+DADO una fila del espacio con un emisor fijo CUANDO suena sin objeto ENTONCES suena en la
+posición del emisor.
 DADO una fila del espacio sin objeto y sin emisor ENTONCES se rechaza por no tener posición.
 DADO una fila plana ENTONCES suena en una voz plana.
 
