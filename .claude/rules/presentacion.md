@@ -42,8 +42,8 @@ La raíz de cada capa se admite a propósito, y es donde se quedan los que cruza
 **Quién verifica las dos: `gate_de_capas.py`**, con `CARPETAS_POR_CAPA`. Valida los **nombres** y
 no que un archivo esté en la carpeta correcta: eso es semántica y lo mira la revisión.
 
-**Y acá lee los `.tscn` además de los `.gd`** — la **ruta**, nunca el contenido: adentro de un
-`.tscn` de `escenas/` referenciar hacia abajo es correcto por definición.
+**Y acá lee los `.tscn` además de los `.gd`**: la **ruta**, nunca el contenido. Adentro de un
+`.tscn` de `escenas/`, referenciar hacia abajo es correcto por definición.
 
 ## Un `.tscn` es código
 
@@ -54,23 +54,23 @@ van **escenas chicas y compuestas**.
 ## La escena raíz cablea; lo que tiene estructura entra instanciado
 
 Los nodos que `almacen.tscn` declara son **todos hijos directos de su raíz**. Cualquier cosa con
-hijos propios —un puesto, la geometría del local, un mueble con sus partes— va a su propio
-`.tscn` y entra con una línea de instancia.
+hijos propios va a su propio `.tscn`, y entra con una línea de instancia. Por ejemplo: un
+puesto, la geometría del local, un mueble con sus partes.
 
 **Por qué, y no es estilo:** casi todo cambio del juego toca esa escena, y un `.tscn` no se
 mergea. Con la geometría adentro, dos cambios que se cruzaran chocaban sobre líneas ajenas. **La
 escena grande serializa el orden de implementación de todo el juego.**
 
 **Quién lo verifica: `test/escenas/almacen_test.gd`**, en `_violaciones_de_cableado()`. El
-discriminador es el `owner` y no la profundidad: en una sub-escena instanciada el `owner` de cada
-hijo es la raíz de la sub-escena, así que la cámara del jugador no la viola.
+discriminador es el `owner` y no la profundidad. En una sub-escena instanciada, el `owner` de
+cada hijo es la raíz de la sub-escena: la cámara del jugador no la viola.
 
 **Hasta dónde llega:** `gate_de_tests.py` no mira `test/escenas/`, así que nada obliga a que ese
 caso exista, y la regla vale para `almacen.tscn` y nada más. Es un caso, no un gate, y el precio
 se paga a cambio de no reimplementar el formato de escena en Python para contestar peor.
 
-**Un anclaje no es un padre.** Un `Marker3D` como `HuecoDeLaVentanilla` es un punto de cableado:
-colgarle una instancia la deja con `owner` en la raíz y un padre que no lo es. Se instancia como
+**Un anclaje no es un padre.** Un `Marker3D` como `HuecoDeLaVentanilla` es un punto de
+cableado. Colgarle una instancia la deja con `owner` en la raíz y otro padre. Se instancia como
 hijo directo de la raíz **con el `transform` del anclaje**.
 
 ## La comunicación va por señales y `@export`
@@ -82,8 +82,8 @@ Modos de falla que **cargan la escena sin un solo error**:
 
 - **Un `@export` de tipo `Node` en un `.tscn` escrito a mano necesita su
   `node_paths=PackedStringArray("_hud", "_reloj")`** en el tag del nodo. El motor guarda el valor
-  como `NodePath` y sin esa lista no lo resuelve: queda en `null` y el juego muere en el primer
-  cuadro con un `Nonexistent function … in base 'Nil'` que no nombra ni al `.tscn` ni al
+  como `NodePath`, y sin esa lista no lo resuelve: queda en `null`. El juego muere en el primer
+  cuadro con un `Nonexistent function … in base 'Nil'`, que no nombra al `.tscn` ni al
   `@export`. El editor lo escribe solo; una escena a mano, no. **Lo cobra un gate**:
   `lib/escenas.py`, en el nodo `harness`.
 - **Una sub-escena instanciada necesita su `script` declarado en su propio `.tscn`.** Sin él, el

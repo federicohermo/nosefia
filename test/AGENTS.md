@@ -36,18 +36,18 @@ func test_con_un_segundo_restante_la_obligatoria_cuenta() -> void:  # AC-SHF-007
 ```
 
 - **`extends GdUnitTestSuite`** hace que el archivo se descubra como suite.
-- **El archivo termina en `_test.gd`.** Un test con el nombre equivocado **no corre y no se
-  queja**: la suite pasa y el archivo está a la vista.
-- **Cada `func test_…` afirma algo.** Uno sin aserción cuesta lo mismo que uno de verdad y no
-  puede fallar nunca.
+- **El archivo termina en `_test.gd`**, y **cada `func test_…` afirma algo.**
 - **El criterio que verifica va citado al final de la línea**, como `AC-<COD>-###`. Lo cobra
   `gate_de_specs.py` sobre los specs `ratified`.
 
-## Las cuatro cosas que el gate rechaza
+## Lo que el gate rechaza
 
-Sin test espejo, sin aserción, apagado (`skip(true)`, `assert_not_yet_implemented`), o con un
-nombre que hace que no corra. **Las cuatro son la misma cosa: verde sin ejercer nada.** Cada una
-con su modo de falla, en `.claude/scripts/lib/tdd.py`.
+Sin test espejo, sin aserción, apagado, o con un nombre que hace que no corra. **Es la misma
+cosa: verde sin ejercer nada.** Cada regla, con su modo de falla, está en
+`.claude/scripts/lib/tdd.py`.
+
+En gdUnit4 un test se apaga con el parámetro `do_skip` de la función de test. Saltear un test se
+decide borrándolo o arreglándolo.
 
 ## El test se escribe primero, y en rojo
 
@@ -86,9 +86,8 @@ de `*_test.gd`. No el color del nodo.
 
 **1 — La suite que no parsea se descarta en silencio.** Una que hace `preload` de un archivo que
 todavía no existe —el estado normal del paso 1 del TDD— no corre, y el exit code es 0 igual. Un
-error de parseo puede dejar el dominio entero sin correr **con la CI en verde**, y las cuatro
-reglas de arriba no lo ven: el espejo existe, afirma y no está apagado. Medido tres veces en el
-lote 001/002/004/007.
+error de parseo puede dejar el dominio entero sin correr **con la CI en verde**, y el gate de
+tests no lo ve: el espejo existe, afirma y no está apagado.
 
 **2 — Un `class_name` recién escrito no existe hasta el `--import` siguiente.** El síntoma es
 **idéntico** al del archivo ausente: `Parse Error: Identifier "X" not declared`,
@@ -100,12 +99,9 @@ worktree:
 "$GODOT_BIN" --headless --path . --import --quit
 ```
 
-Lo pisaron los dos carriles del lote 005/011/022/023 que crearon clases. Medido el 2026-09-01.
-
 **3 — Y la peor: el paso 1 sale `PASSED`.** Cuando el recurso que el caso carga no existe, el
-error de script **aborta la función** y gdUnit4 no cuenta ninguna aserción fallida. Medido el
-2026-09-01 en el 023, con la escena sin escribir: **4 de 5 casos dieron `PASSED`**, y sólo dio
-rojo el que afirmaba el tipo.
+error de script **aborta la función** y gdUnit4 no cuenta ninguna aserción fallida. El caso sale
+`PASSED` por no haber llegado a afirmar nada.
 
 O sea que el «falla por lo que se espera» del paso 1 **no se lee en el conteo de fallos**: se lee
 en el `ERROR: Failed loading resource` de la salida cruda.

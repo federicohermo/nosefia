@@ -11,8 +11,8 @@ agarre, el audio. Conocen `dominio/`; **no conocen la pantalla**.
 
 ## Qué es un sistema y qué no
 
-Un sistema **traduce entre el motor y el dominio**. Toma lo que el motor le da —un `delta`, un
-evento ya interpretado, un archivo—, lo convierte en una llamada al dominio, y publica como señal
+Un sistema **traduce entre el motor y el dominio**. Toma lo que el motor le da: un `delta`, un
+evento ya interpretado, un archivo. Lo convierte en una llamada al dominio, y publica como señal
 lo que el dominio contesta.
 
 Lo que **no** hace es decidir. Un `if` sobre las reglas del juego acá significa que la regla está
@@ -46,8 +46,8 @@ eximirlo del test.
 | `tareas/` | lo consume **y cumple una obligatoria** |
 | `investigacion/` | lo consume **y no cumple nada**. Es el otro lado de la tensión central |
 
-Es la distinción menos deducible de todas las capas: `limpiador.gd` y `examen.gd` son dos `Node`
-que se parecen en todo salvo en lo único que importa —uno paga el minuto y el otro no—, y el
+Es la distinción menos deducible de todas las capas. `limpiador.gd` y `examen.gd` son dos
+`Node` que se parecen en todo salvo en lo único que importa: uno paga el minuto y el otro no. El
 nombre del archivo no lo dice.
 
 **`agarre.gd` va en `marco/` y no en `tareas/`, y el motivo vale como ejemplo:** agarrar es el

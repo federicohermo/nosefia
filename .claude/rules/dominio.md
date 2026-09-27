@@ -69,17 +69,18 @@ La carpeta no repite el nombre del archivo: dice **qué se rompe si tocás lo qu
 | `investigacion/` | **cuánto rinde el minuto que no se paga**. Es el otro lado de la misma resta |
 | `ambiente/` | cómo se siente la noche, y nada más |
 
-`almacen/` e `investigacion/` son **las dos mitades de la tensión central**, y por eso no entran
-en `jornada/`: `jornada/` es la **resta**, y estas dos son lo que cada lado de la resta compra.
+`almacen/` e `investigacion/` son **las dos mitades de la tensión central**. Por eso no entran
+en `jornada/`: `jornada/` es la **resta**, y estas dos son lo que cada lado compra.
 
 - **`almacen/` y no `tareas/`**, aunque `sistemas/` sí tenga `tareas/`. Allá viven los que
   **ejecutan** una obligatoria; acá, el estado del local sobre el que operan. `inventario.gd` no
   es una tarea: es lo que la tarea de reponer consulta.
-- **`ambiente/` y no `audio/`**, porque sus archivos ya dicen `sonido` o `audio` en su nombre. La carpeta declara el alcance y deja lugar a la luz y al clima.
+- **`ambiente/` y no `audio/`**, porque sus archivos ya dicen `sonido` o `audio` en su nombre.
+  La carpeta declara el alcance y deja lugar a la luz y al clima.
 - **`reglas.gd` se queda en la raíz porque cruza**: lo nombran `jornada/` y `empleo/`, y ningún
   archivo de `jugador/`. La raíz de una capa es válida, y es donde van los que no caben en una.
 
 **Quién lo verifica: `gate_de_capas.py`**, con `CARPETAS_POR_CAPA`. Y su mitad honesta: valida los
-**nombres** de carpeta y **no** que un archivo esté en la correcta. Eso es semántica, lo mira la
-revisión contra el criterio de arriba, y lo que el gate cierra es la puerta de atrás — inventar
-un nombre en vez de usar el criterio.
+**nombres** de carpeta y **no** que un archivo esté en la correcta. Eso es semántica, y lo mira
+la revisión contra el criterio de arriba. El gate cierra la puerta de atrás: inventar un nombre
+en vez de usar el criterio.
