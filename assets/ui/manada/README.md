@@ -8,7 +8,7 @@ durante la ejecución.
 |---|---|---|
 | `fondo.png` | Captura de `almacen.tscn` con los modelos actuales | Fondo compartido, conservando proporciones |
 | `fondo_ventanilla.png` | Captura de la ventanilla desde el interior del local | Fondo exclusivo de atención al cliente |
-| `fondo_inicio.png` | Figma, `13:1093`, del frame «UI INICIO» (`13:1075`) | Fondo del menú de inicio |
+| `fondo_inicio.png` | Figma, `217:532` («FONDO 5 1»), la estación de servicio de luz verde | Fondo del menú de inicio |
 | `cabecera.svg` | Figma, `3:911` / `3:814` | Cabecera de 1712 × 70,3 sobre el lienzo de 1920 × 1080 |
 | `linea_detalle.svg` | Figma, `3:912` / `3:446` | Separadores del detalle |
 | `solapa.svg` | Figma, `3:913` / `3:448` | Solapa sobre el separador |
