@@ -80,7 +80,9 @@ corridas, en milisegundos:
   en el principal. Mientras tanto, el jugador ve la pantalla «Cargando...».
 - **Con el almacén ya cargado, entrar tarda 807 ms desde el clic.** Sin la carga en segundo
   plano, 1257 ms. Es el caso de un jugador que se queda en el menú más de dos segundos. Es una
-  sola corrida de cada lado, con el clic cinco segundos después del aviso del menú.
+  sola corrida de cada lado, con el clic cinco segundos después del aviso del menú. Se midió
+  antes de que la pantalla de carga tuviera un tiempo mínimo a la vista. Hoy ese mínimo va
+  antes de instanciar el almacén, y se suma. La fila final no cambia: su espera ya es mayor.
 - **Mientras carga, el menú sigue dibujando.** En los tres segundos después del aviso del menú,
   el peor hueco entre dos cuadros del navegador fue de 9 ms.
 

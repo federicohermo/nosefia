@@ -1,4 +1,4 @@
-## El menú pide el almacén apenas aparece, y «Nuevo juego» espera la carga si no terminó.
+## El menú pide el almacén apenas aparece, y «Nuevo juego» siempre pasa por la pantalla de carga.
 ##
 ## Ningún caso deja correr un cuadro con «Nuevo juego» elegido: con el almacén listo, el menú
 ## cambiaría la escena de la corrida de tests.
@@ -45,6 +45,13 @@ func test_el_menu_arranca_sin_pantalla_de_carga() -> void:
 func test_doble_clic_mientras_carga_muestra_una_sola_pantalla() -> void:
 	var menu := _menu()
 	_elegir_nuevo_juego(menu)
+	_elegir_nuevo_juego(menu)
+	assert_int(_pantallas_visibles(menu)).is_equal(1)
+
+
+func test_con_el_almacen_ya_cargado_nuevo_juego_tambien_muestra_la_pantalla() -> void:
+	var menu := _menu()
+	_carga_de(menu).lista.emit(PackedScene.new())
 	_elegir_nuevo_juego(menu)
 	assert_int(_pantallas_visibles(menu)).is_equal(1)
 

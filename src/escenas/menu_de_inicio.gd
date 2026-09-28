@@ -21,7 +21,7 @@ var _guardado := Guardado.new()
 var _carga: CargaEnSegundoPlano
 var _pantalla: PantallaDeCarga
 var _almacen: PackedScene
-var _esperando := false
+var _espera: EsperaDeLaCarga
 
 
 func _ready() -> void:
@@ -49,29 +49,35 @@ func _ready() -> void:
 	print("[carga] menú visible")
 
 
-func _process(_delta: float) -> void:
+func _process(delta: float) -> void:
 	_pantalla.pintar(_carga.progreso())
+	if _espera == null:
+		return
+	_espera.avanzar(delta)
+	if _espera.puede_entrar():
+		_espera = null
+		get_tree().change_scene_to_packed(_almacen)
 
 
 ## Nuevo juego y continuar entran por acá. El almacén decide solo si retoma: lee el guardado.
 func entrar_al_almacen() -> void:
+	_espera = EsperaDeLaCarga.new()
 	if _almacen != null:
-		get_tree().change_scene_to_packed(_almacen)
-		return
-	_esperando = true
-	_carga.pedir(ESCENA_DEL_ALMACEN)
+		_espera.terminar_carga()
+	else:
+		_carga.pedir(ESCENA_DEL_ALMACEN)
 	_pantalla.mostrar()
 
 
 func _al_cargar_el_almacen(escena: PackedScene) -> void:
 	_almacen = escena
-	if _esperando:
-		get_tree().change_scene_to_packed(_almacen)
+	if _espera != null:
+		_espera.terminar_carga()
 
 
 ## Una carga fallida no deja al jugador colgado en la pantalla de carga: vuelve al menú, y el
 ## próximo «Nuevo juego» pide el almacén otra vez.
 func _al_fallar_la_carga() -> void:
-	_esperando = false
+	_espera = null
 	_pantalla.ocultar()
 	_pedidos.rearmar()
