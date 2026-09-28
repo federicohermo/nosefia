@@ -46,6 +46,29 @@ func _reloj_arrancado(presupuesto: float, obligatorias: Array[Tarea]) -> RelojDe
 	return reloj
 
 
+func after_test() -> void:
+	get_tree().paused = false
+
+
+## El único caso que entra el reloj al árbol: la pausa es del árbol, y un `_process()` llamado a
+## mano no la ve. Lo que se afirma es que el reloj no tiene un `if` propio para la pausa: se
+## detiene porque el motor deja de llamarlo.
+func test_con_el_arbol_en_pausa_el_turno_no_descuenta() -> void:  # AC-SHF-020
+	var reloj := _reloj_arrancado(Reglas.DURACION_DEL_TURNO, _sin_obligatorias())
+	add_child(reloj)
+	await get_tree().process_frame
+	get_tree().paused = true
+	var al_pausar := _turno.tiempo_restante()
+	for _cuadro in 5:
+		await get_tree().process_frame
+	assert_float(_turno.tiempo_restante()).is_equal(al_pausar)
+	get_tree().paused = false
+	for _cuadro in 3:
+		await get_tree().process_frame
+	assert_float(_turno.tiempo_restante()).is_less(al_pausar)
+	remove_child(reloj)
+
+
 func _sin_obligatorias() -> Array[Tarea]:
 	var ninguna: Array[Tarea] = []
 	return ninguna
