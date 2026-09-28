@@ -1,13 +1,15 @@
-[gd_scene load_steps=3 format=3]
+[gd_scene load_steps=4 format=3]
 
 [ext_resource type="Script" path="res://src/ui/interrupciones/menu_de_pausa.gd" id="1_menu"]
 [ext_resource type="Theme" path="res://assets/ui/manada/tema.tres" id="2_tema"]
+[ext_resource type="Texture2D" path="res://assets/ui/manada/cabecera.svg" id="3_cabecera"]
 
-[node name="MenuDePausa" type="CanvasLayer" node_paths=PackedStringArray("_marco", "_reanudar", "_configuraciones", "_logros", "_volver_al_menu")]
+[node name="MenuDePausa" type="CanvasLayer" node_paths=PackedStringArray("_marco", "_titulo", "_reanudar", "_configuraciones", "_logros", "_volver_al_menu")]
 process_mode = 2
 layer = 3
 script = ExtResource("1_menu")
 _marco = NodePath("Fondo/Panel")
+_titulo = NodePath("Fondo/Panel/Titulo")
 _reanudar = NodePath("Fondo/Panel/Opciones/Reanudar")
 _configuraciones = NodePath("Fondo/Panel/Opciones/Configuraciones")
 _logros = NodePath("Fondo/Panel/Opciones/Logros")
@@ -21,35 +23,68 @@ grow_horizontal = 2
 grow_vertical = 2
 color = Color(0, 0, 0, 0.78)
 
-[node name="Panel" type="VBoxContainer" parent="Fondo"]
+[node name="Panel" type="Control" parent="Fondo"]
 layout_mode = 0
 offset_right = 1920.0
 offset_bottom = 1080.0
 theme = ExtResource("2_tema")
+mouse_filter = 2
+
+[node name="Cabecera" type="TextureRect" parent="Fondo/Panel"]
+layout_mode = 0
+offset_left = 71.0
+offset_top = 80.0
+offset_right = 1783.0
+offset_bottom = 150.3
+texture = ExtResource("3_cabecera")
+expand_mode = 1
+mouse_filter = 2
+
+[node name="Pie" type="TextureRect" parent="Fondo/Panel"]
+layout_mode = 0
+offset_left = 71.0
+offset_top = 999.0
+offset_right = 1783.0
+offset_bottom = 1069.3
+texture = ExtResource("3_cabecera")
+expand_mode = 1
+flip_h = true
+flip_v = true
+mouse_filter = 2
+
+[node name="Titulo" type="Label" parent="Fondo/Panel"]
+layout_mode = 0
+offset_left = 128.0
+offset_top = 82.0
+offset_right = 353.0
+offset_bottom = 128.0
+
+[node name="Opciones" type="VBoxContainer" parent="Fondo/Panel"]
+layout_mode = 0
+offset_left = 746.0
+offset_right = 1173.0
+offset_bottom = 1080.0
 theme_type_variation = &"Placa"
 alignment = 1
 
-[node name="Titulo" type="Label" parent="Fondo/Panel"]
-layout_mode = 2
-theme_type_variation = &"Titulo"
-text = "PAUSA"
-horizontal_alignment = 1
-
-[node name="Opciones" type="VBoxContainer" parent="Fondo/Panel"]
-custom_minimum_size = Vector2(428, 0)
-layout_mode = 2
-size_flags_horizontal = 4
-
 [node name="Reanudar" type="Button" parent="Fondo/Panel/Opciones"]
+custom_minimum_size = Vector2(427, 59)
 layout_mode = 2
+theme_type_variation = &"BotonContinuar"
 
 [node name="Configuraciones" type="Button" parent="Fondo/Panel/Opciones"]
+custom_minimum_size = Vector2(427, 59)
 layout_mode = 2
+theme_type_variation = &"BotonContinuar"
 disabled = true
 
 [node name="Logros" type="Button" parent="Fondo/Panel/Opciones"]
+custom_minimum_size = Vector2(427, 59)
 layout_mode = 2
+theme_type_variation = &"BotonContinuar"
 disabled = true
 
 [node name="VolverAlMenu" type="Button" parent="Fondo/Panel/Opciones"]
+custom_minimum_size = Vector2(427, 59)
 layout_mode = 2
+theme_type_variation = &"BotonContinuar"

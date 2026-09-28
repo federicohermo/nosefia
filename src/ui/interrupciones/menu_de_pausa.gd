@@ -9,12 +9,14 @@ extends CanvasLayer
 signal reanudar_pedido
 signal volver_al_menu_pedido
 
+const TEXTO_DEL_TITULO := "/ PAUSA:"
 const TEXTO_DE_REANUDAR := "REANUDAR"
 const TEXTO_DE_CONFIGURACIONES := "CONFIGURACIONES"
 const TEXTO_DE_LOGROS := "LOGROS"
 const TEXTO_DE_VOLVER_AL_MENU := "VOLVER AL MENÚ"
 
 @export var _marco: Control
+@export var _titulo: Label
 @export var _reanudar: Button
 @export var _configuraciones: Button
 @export var _logros: Button
@@ -23,6 +25,7 @@ const TEXTO_DE_VOLVER_AL_MENU := "VOLVER AL MENÚ"
 
 func _ready() -> void:
 	visible = false
+	_titulo.text = TEXTO_DEL_TITULO
 	_reanudar.text = TEXTO_DE_REANUDAR
 	_configuraciones.text = TEXTO_DE_CONFIGURACIONES
 	_logros.text = TEXTO_DE_LOGROS
