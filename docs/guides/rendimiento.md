@@ -67,8 +67,6 @@ node .github/scripts/medir_la_carga.mjs http://localhost:8060 reports/carga.json
 - **El directorio del export tiene que existir antes.** Sin él, el export falla y devuelve 0.
 
 **El aviso del almacén sale cuando el jugador lo ve**, al final del calentamiento de shaders.
-Hasta el 2026-09-28 salía antes del primer cuadro del almacén, y las mediciones anteriores no
-vieron la compilación de shaders.
 
 ## Los shaders en la web
 

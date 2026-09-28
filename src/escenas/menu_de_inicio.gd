@@ -101,12 +101,13 @@ func entrar_al_almacen() -> void:
 ## El almacén entra al árbol detenido, detrás de la pantalla de carga, y recién pasa a ser la
 ## escena cuando dibujó cada objeto una vez: en la web, cada shader se compila la primera vez que
 ## se dibuja, y cada uno frena el navegador alrededor de un segundo. Detenido, el reloj del turno
-## no corre y el jugador no se mueve.
+## no corre, el jugador no se mueve y no suena nada. Se lo detiene después de entrar: sólo así el
+## motor pausa el sonido que ya arrancó su `_ready`.
 func _calentar_el_almacen() -> void:
 	set_process(false)
 	var almacen := _almacen.instantiate()
-	almacen.process_mode = Node.PROCESS_MODE_DISABLED
 	get_tree().root.add_child(almacen)
+	almacen.process_mode = Node.PROCESS_MODE_DISABLED
 	_calentamiento.terminado.connect(_entrar.bind(almacen))
 	_calentamiento.calentar(almacen)
 

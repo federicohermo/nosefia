@@ -40,21 +40,36 @@ func test_un_cuadro_por_material_nuevo() -> void:
 	var calentamiento := _calentamiento()
 	calentamiento.calentar(escena)
 	assert_int(_visibles(escena)).is_zero()
-	await get_tree().process_frame
-	var tras_el_primero := _visibles(escena)
-	await get_tree().process_frame
-	await get_tree().process_frame
-	await get_tree().process_frame
-	assert_int(tras_el_primero).is_less(CUANTOS)
-	assert_int(_visibles(escena)).is_equal(CUANTOS)
+	var por_cuadro: Array[int] = []
+	for _cuadro: int in 4:
+		await calentamiento.avanzo
+		por_cuadro.append(_visibles(escena))
+	assert_array(por_cuadro).is_equal([1, CUANTOS - 2, CUANTOS - 1, CUANTOS])
+
+
+func test_el_material_de_un_multimesh_cuenta_como_nuevo() -> void:
+	var escena: Node3D = auto_free(Node3D.new())
+	for _i: int in 3:
+		var malla := BoxMesh.new()
+		malla.material = StandardMaterial3D.new()
+		var instancias := MultiMeshInstance3D.new()
+		instancias.multimesh = MultiMesh.new()
+		instancias.multimesh.mesh = malla
+		escena.add_child(instancias)
+	add_child(escena)
+	var calentamiento := _calentamiento()
+	calentamiento.calentar(escena)
+	await calentamiento.avanzo
+	await calentamiento.avanzo
+	assert_int(_visibles(escena)).is_equal(2)
 
 
 func test_los_que_repiten_material_se_destapan_juntos() -> void:
 	var escena := _escena()
 	var calentamiento := _calentamiento()
 	calentamiento.calentar(escena)
-	await get_tree().process_frame
-	await get_tree().process_frame
+	await calentamiento.avanzo
+	await calentamiento.avanzo
 	assert_int(_visibles(escena)).is_equal(CUANTOS)
 
 
