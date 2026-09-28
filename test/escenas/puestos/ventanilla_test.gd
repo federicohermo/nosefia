@@ -141,7 +141,7 @@ func test_el_panel_de_la_ventanilla_llega_con_sus_seis_nodos() -> void:
 
 
 func test_cancelar_con_el_vidrio_cerrado_no_le_devuelve_la_caminata_al_jugador() -> void:
-	# `ui_cancel` llega desde cualquier rincón del local y examinar un objeto también suspende
+	# El clic derecho llega desde cualquier rincón del local y examinar un objeto también suspende
 	# (006): sin el corte, la salida de la ventanilla le devuelve la caminata al jugador en medio
 	# de un examen, con el objeto pegado a la cara y sin un solo error.
 	var ventanilla := _ventanilla()
