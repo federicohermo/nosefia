@@ -13,13 +13,14 @@ durante la ejecución.
 | `solapa.svg` | Figma, `3:913` / `3:448` | Solapa sobre el separador |
 | `computadora.svg` | Figma, instancia `112:411` | Ícono de la opción Registro, en la navegación derecha |
 | `registro.svg` | Figma, componente `3:983` | Ícono de la opción Notas, en la navegación derecha |
-| `actroncito.png`, `durextra.png`, `burbaloo.png`, `zucarachas.png`, `laysntt.png`, `malbardo.png`, `prongles.png`, `jorgillo.png`, `arvejas.png`, `chisitos.png`, `oremos.png`, `pepitos.png`, `saladik.png`, `uakas.png`, `coracola.png`, `frotlups.png`, `marolini.png`, `amargadito.png`, `cindolor.png`, `flinpuf.png`, `donsaturados.png`, `petisas.png`, `macumbas.png` | Mallas actuales de `assets/models/producto_*.res` | Filas de la planilla de registro |
+| `<producto>.png`, una por producto del catálogo | Mallas actuales de `assets/models/producto_*.res` | Filas de la planilla de registro |
 | `unscii-16.ttf` | [Unscii, de Viznut](https://github.com/viznut/unscii) | Tipografía local, variante 16; licencia en `LICENSE-unscii.txt` |
 | `tema.tres` | Adaptación a Godot | Colores, fuente, botones, campos, paneles y estados de foco |
 
 Las miniaturas de los productos son renders transparentes de 512 × 512 del modelo del juego.
 Usan las mallas de `contenido_del_estante.tscn`, con la cámara orientada hacia el frente de cada
-envase. Las de las cabeceras se renderizan sin la inclinación de la rampa. No usan productos de ejemplo de Figma que no existen en el registro actual.
+envase. Las de las cabeceras se renderizan sin la inclinación de la rampa.
+No usan productos de ejemplo de Figma que no existen en el registro actual.
 
 El fondo se capturó en Godot a 1920 × 1080, sin HUD, desde la posición inicial del jugador,
 con su cámara apuntando a `(0.5, 1.0, -3.0)`. Conserva los muebles, productos y texturas actuales.

@@ -83,7 +83,7 @@ hay fila para ese par, ENTONCES el sistema DEBE contestar que no hay.
 ### BR-AMB-011 — La tabla cubre cada sonoridad de cada evento de objeto
 
 El sistema DEBE tener una fila por cada par de evento de objeto y sonoridad, y DEBE poder decir
-**qué pares faltan**. Los demás eventos siguen con una sola fila.
+**qué pares faltan**. Los demás eventos tienen una sola fila.
 
 ### BR-AMB-012 — Una sonoridad sin audio no suena
 
@@ -295,7 +295,7 @@ cambia.
 
 ## No objetivos
 
-- Esta capacidad NO elige los archivos de audio ni los mezcla. Una fila sin sonido es un estado
+- Esta capacidad NO elige los archivos de audio ni fija su volumen de origen. Una fila sin sonido es un estado
   normal: el sonido todavía no está elegido.
 - Esta capacidad NO decide cuándo pasa cada evento: escucha la señal de quien lo produce.
 
@@ -303,9 +303,10 @@ cambia.
 
 - **Entrada:** la tabla de filas, las señales que los otros sistemas emiten, la sonoridad de
   cada objeto y la rapidez de cada contacto de un objeto soltado.
-- **Salida:** la fila de cada evento, cuáles faltan, cuáles son inválidas y qué voz toca.
+- **Salida:** la fila de cada evento, cuáles faltan, cuáles son inválidas, qué voz toca, desde
+  dónde suena, con qué volumen y filtro, qué emisores suenan y cuándo suena un paso.
 - **Falla:** un evento sin fila contesta «no hay» en vez de una fila muda inventada; una ronda
-  vacía contesta que no hay voz.
+  vacía contesta que no hay voz; una fila del espacio sin posición se rechaza con su motivo.
 
 ## Señales
 

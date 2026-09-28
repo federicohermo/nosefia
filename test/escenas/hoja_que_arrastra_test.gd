@@ -258,3 +258,25 @@ func _corrida_al_abrir(ruta: String) -> float:
 	await _girar(hoja)
 	assert_bool(_adentro_de_la_hoja(objeto, _cuerpo_de(hoja))).is_false()
 	return (objeto.global_position - partida).dot(_sentido_del_giro(hoja, partida))
+
+
+func test_la_hoja_cerrada_de_golpe_no_deja_nada_adentro() -> void:  # AC-PLY-032
+	var almacen: Node3D = await _almacen()
+	var hoja: MeshInstance3D = almacen.get_node(HOJA)
+	var cuerpo := _cuerpo_de(hoja)
+	var punto := _en_el_recorrido(almacen, hoja, 0.0)
+	await _girar(hoja)
+	var trapeador: RigidBody3D = almacen.get_node("Objetos/Trapeador")
+	trapeador.freeze = true
+	trapeador.global_position = punto + Vector3.UP * 0.1
+	await get_tree().physics_frame
+	almacen.call("_al_abrir_la_jornada", ReglasDeLaPartida.PRIMERA_JORNADA + 1)
+	(
+		assert_bool(_adentro_de_la_hoja(trapeador, cuerpo))
+		. override_failure_message(
+			"el trapeador quedó adentro de la hoja en %v" % trapeador.global_position
+		)
+		. is_false()
+	)
+	var red: RedDeSeguridad = almacen.get_node("Servicios/RedDeSeguridad")
+	assert_int(red.rescates.size()).is_equal(1)

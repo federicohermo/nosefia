@@ -14,7 +14,7 @@
 ## que la usa la trae con su script puesto.
 extends AnimatableBody3D
 
-## La hoja dejó de girar. Sale una vez por movimiento, en el paso en que queda quieta.
+## La hoja quedó quieta: al terminar un giro, o al cerrarla de golpe.
 signal hoja_quieta(cuerpo: PhysicsBody3D)
 
 ## Un gesto sobre la puerta. Sale una vez, al pedirlo, y no durante el giro.
@@ -102,6 +102,7 @@ func cerrar_de_golpe() -> void:
 	)
 	PhysicsServer3D.body_set_mode(get_rid(), PhysicsServer3D.BODY_MODE_KINEMATIC)
 	hoja.reset_physics_interpolation()
+	hoja_quieta.emit(self)
 
 
 ## El giro va por cuadro de física y no de dibujo: lo que se mueve es un cuerpo de colisión, y

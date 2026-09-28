@@ -32,7 +32,7 @@ flowchart TD
   AMB["ambience<br/><i>qué suena</i>"]
 
   CTR -- "obligatoria cumplida" --> SHF
-  STK -- "obligatorias cumplidas" --> SHF
+  STK -- "obligatorias cumplidas y descumplidas" --> SHF
   CLN -- "obligatorias cumplidas" --> SHF
   SHF -- "cuántas se cumplieron" --> EMP
   EMP -- "jornada, legajo y final" --> SAV
