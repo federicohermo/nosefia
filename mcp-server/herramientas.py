@@ -677,7 +677,7 @@ def assets_sin_referencia() -> str:
         ruta = p.relative_to(RAIZ).as_posix()
         if not p.is_file() or ruta.startswith(FUENTE_DE_ARTE):
             continue
-        if p.suffix in (".import", ".gdignore") or p.name == ".gitkeep":
+        if p.suffix in (".import", ".gdignore", ".unwrap_cache", ".blend1") or p.name == ".gitkeep":
             continue
         if sum(len(v) for v in _referencias_a(ruta, texto, crudos).values()) == 0:
             sospechosos.append(ruta)

@@ -270,6 +270,11 @@ class LosAssets(unittest.TestCase):
         self.assertIn("Godot no lo importa", herramientas.contexto_de_asset(fuente[0]))
         self.assertNotIn(fuente[0], herramientas.assets_sin_referencia())
 
+    def test_lo_que_se_escribe_al_lado_de_un_modelo_no_es_un_asset(self):
+        sospechosos = herramientas.assets_sin_referencia()
+        self.assertNotIn(".unwrap_cache", sospechosos)
+        self.assertNotIn(".blend1", sospechosos)
+
     def test_un_asset_inexistente_lo_dice(self):
         self.assertIn("No hay", herramientas.contexto_de_asset("assets/models/inventado.png"))
 
