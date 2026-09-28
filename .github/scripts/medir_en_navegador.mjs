@@ -21,7 +21,7 @@
 //
 // ## Qué mide
 //
-// El juego abre en el menú de inicio. El script elige «Nuevo juego», que en la web cae al 60 % del
+// El juego abre en el menú de inicio. El script elige «Nuevo juego», que en la web cae al 56 % del
 // alto del lienzo, y mide el almacén.
 //
 // Desde donde arranca el jugador, que muestra el local entero: es la vista más cara. Tres
@@ -38,7 +38,7 @@ import { writeFileSync } from 'node:fs';
 import { chromium } from 'playwright';
 
 const ESPERA = 120_000;
-const ALTURA_DE_NUEVO_JUEGO = 0.6;
+const ALTURA_DE_NUEVO_JUEGO = 0.56;
 const ARRANQUE = 15_000; // El motor sigue compilando shaders un rato después de dibujar.
 const MENU = 3_000; // El juego abre en el menú de inicio, que dibuja casi al instante.
 
