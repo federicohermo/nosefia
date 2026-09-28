@@ -133,6 +133,10 @@ static func _se_llega_desde_afuera(espacio: PhysicsDirectSpaceState3D, punto: Ve
 	return false
 
 
+func after_test() -> void:
+	get_tree().paused = false
+
+
 func _almacen() -> Node3D:
 	return auto_free(load(ESCENA_DEL_ALMACEN).instantiate())
 
@@ -502,6 +506,36 @@ func test_con_la_partida_en_curso_volver_al_menu_no_abre_la_noche_siguiente() ->
 	assert_int(menus[0]).is_equal(1)
 	assert_int(ciclo.partida().jornada()).is_equal(ReglasDeLaPartida.PRIMERA_JORNADA + 1)
 	assert_bool(reloj.corriendo()).is_false()
+
+
+func test_volver_al_menu_desde_la_pausa_sale_de_la_pausa_y_va_al_menu() -> void:  # AC-SAV-020
+	var almacen: Node3D = auto_free(load(ESCENA_DEL_ALMACEN).instantiate())
+	add_child(almacen)
+	await get_tree().process_frame
+	var menus := [0]
+	almacen.set("_ir_al_menu", func() -> void: menus[0] += 1)
+	var pausa: ControlDePausa = almacen.get_node("Interfaz/ControlDePausa")
+	var menu: MenuDePausa = almacen.get_node("Interfaz/MenuDePausa")
+	pausa.pausar()
+	assert_bool(menu.visible).is_true()
+	(menu.get_node("Fondo/Panel/Opciones/VolverAlMenu") as Button).pressed.emit()
+	(menu.get_node("Fondo/Panel/Opciones/VolverAlMenu") as Button).pressed.emit()
+	assert_bool(get_tree().paused).is_false()
+	assert_int(menus[0]).is_equal(1)
+
+
+func test_con_la_placa_en_pantalla_esc_no_pausa() -> void:  # AC-SAV-018
+	var almacen: Node3D = auto_free(load(ESCENA_DEL_ALMACEN).instantiate())
+	add_child(almacen)
+	await get_tree().process_frame
+	var reloj: RelojDelTurno = almacen.get_node("Servicios/RelojDelTurno")
+	reloj._process(SEGUNDOS_REALES_DE_UN_TURNO)
+	var esc := InputEventAction.new()
+	esc.action = &"ui_cancel"
+	esc.pressed = true
+	(almacen.get_node("Interfaz/ControlDePausa") as ControlDePausa)._input(esc)
+	assert_bool(get_tree().paused).is_false()
+	assert_bool((almacen.get_node("Interfaz/MenuDePausa") as MenuDePausa).visible).is_false()
 
 
 func test_volver_al_menu_carga_el_menu_de_inicio() -> void:

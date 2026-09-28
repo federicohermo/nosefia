@@ -35,9 +35,10 @@ var _control := ControlDelJugador.new(
 	ReglasDelJugador.VELOCIDAD_DE_CAMINATA
 )
 
-## La salida de emergencia mientras se desarrolla, y por eso vive acá y no en `dominio/`: no es
-## una regla del juego, es poder llegar al botón de cerrar la ventana sin matar el proceso.
-var _cursor_soltado_a_mano := false
+## Si la pausa soltó el cursor. Al reanudar, el dominio lo quiere tomado y el motor no lo tiene
+## hasta el primer clic: en la web, el navegador no lo devuelve sin uno. Vive acá y no en
+## `dominio/` porque no es una regla del juego: es el estado del motor.
+var _cursor_suelto_por_la_pausa := false
 
 var _cadencia := CadenciaDePasos.new()
 
@@ -118,8 +119,8 @@ func ignorar_el_detalle(cuerpo: PhysicsBody3D) -> void:
 
 func _unhandled_input(evento: InputEvent) -> void:
 	# El giro se descarta con el cursor suelto porque en `MOUSE_MODE_VISIBLE` el motor sigue
-	# entregando el `relative` del mouse: sin este filtro, ir a apretar el botón de cerrar la
-	# ventana gira la cámara todo el camino, y la salida de emergencia deja de servir.
+	# entregando el `relative` del mouse: sin este filtro, mover el mouse hasta el botón de la
+	# pausa gira la cámara todo el camino.
 	#
 	# El mismo `relative` va a `Examen` cuando el cursor NO está tomado, que es lo que pasa
 	# mientras se examina algo —examinar suspende—. No hay un `if` sobre el examen acá:
@@ -134,16 +135,13 @@ func _unhandled_input(evento: InputEvent) -> void:
 			examen.arrastrar(movimiento.relative, con_el_clic)
 		return
 	if evento is InputEventMouseButton and (evento as InputEventMouseButton).pressed:
-		# El primer clic después de la salida de emergencia recupera el cursor **y nada más**: sin
-		# el corte, ir a apretar el botón de cerrar la ventana y volver agarraría de paso lo que
-		# hubiera adelante.
-		var venia_suelto := _cursor_soltado_a_mano
-		_cursor_soltado_a_mano = false
+		# El primer clic después de la pausa recupera el cursor **y nada más**: sin el corte,
+		# volver de la pausa agarraría de paso lo que hubiera adelante.
+		var venia_suelto := _cursor_suelto_por_la_pausa and _control.quiere_el_cursor_tomado()
+		_cursor_suelto_por_la_pausa = false
 		if venia_suelto:
 			return
-	if evento.is_action_pressed("ui_cancel"):
-		_cursor_soltado_a_mano = true
-	elif evento.is_action_pressed(ReglasDeLosObjetos.ACCION_AGARRAR):
+	if evento.is_action_pressed(ReglasDeLosObjetos.ACCION_AGARRAR):
 		# Quién se come el clic lo contesta `Examen`, que es el que sabe si hay algo pegado a la
 		# cara. Acá sólo se lo pasa al que quedó: esto es ruteo, no una regla del juego.
 		if not examen.atajar_el_clic():
@@ -352,11 +350,17 @@ func _aplicar_la_rotacion() -> void:
 	_camara.rotation.x = _control.pitch_dibujado()
 
 
-## `dominio/` decide SI el cursor tiene que estar tomado, y acá se le suma la salida de
-## emergencia, que no es una regla del juego. Vive en una función propia porque la respuesta la
-## necesitan dos: el modo del cursor y el filtro del giro.
+## `dominio/` decide SI el cursor tiene que estar tomado, y acá se le suma el cursor que soltó la
+## pausa. Vive en una función propia porque la respuesta la necesitan dos: el modo del cursor y
+## el filtro del giro.
 func _el_cursor_esta_tomado() -> bool:
-	return _control.quiere_el_cursor_tomado() and not _cursor_soltado_a_mano
+	return _control.quiere_el_cursor_tomado() and not _cursor_suelto_por_la_pausa
+
+
+## La pausa detiene el árbol y suelta el cursor. El jugador se entera porque deja de correr.
+func _notification(que: int) -> void:
+	if que == NOTIFICATION_PAUSED:
+		_cursor_suelto_por_la_pausa = true
 
 
 ## Acá se traduce ese SI a QUÉ modo de cursor es ése.

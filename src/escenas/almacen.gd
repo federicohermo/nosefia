@@ -139,6 +139,9 @@ func _ready() -> void:
 	# El motor no despierta lo que está sobre una caja empujada. Lo hace el puesto.
 	for caja: CajaDeProductosDelDeposito in _cajas_de_productos:
 		caja.empujada.connect(_reposicion_manual.despertar_lo_de_arriba)
+	# «Volver al menú» de la pausa sale por el mismo camino que el de la placa.
+	var pausa: ControlDePausa = get_node("Interfaz/ControlDePausa")
+	pausa.volver_al_menu_pedido.connect(func() -> void: _ir_al_menu.call())
 	_arranque = _jugador.global_transform
 	_ciclo.arrancar(_partida, _reloj)
 	_reposicion_manual.preparar()
