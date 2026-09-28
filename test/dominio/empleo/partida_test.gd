@@ -26,6 +26,39 @@ func test_la_partida_guarda_el_legajo_que_recibio_y_no_una_copia() -> void:  # A
 	assert_int(partida.apercibimientos()).is_equal(Reglas.APERCIBIMIENTOS_POR_AVISO)
 
 
+func test_una_partida_restaurada_a_un_aviso_del_tope_despide_con_un_aviso() -> void:  # AC-EMP-012
+	var restaurado := Legajo.con_apercibimientos(
+		Reglas.APERCIBIMIENTOS_HASTA_EL_DESPIDO - Reglas.APERCIBIMIENTOS_POR_AVISO
+	)
+	var partida := Partida.new(restaurado)
+	_jugar(partida, Consecuencias.CUMPLIDAS_MINIMAS_PARA_AVISO)
+	assert_int(partida.final()).is_equal(Partida.Final.DESPEDIDO)
+
+
+func test_una_partida_guardada_sigue_en_su_jornada_y_con_su_legajo() -> void:
+	var guardada := (
+		PartidaSerializada
+		. sanear(
+			{
+				PartidaSerializada.clave(PartidaSerializada.Campo.JORNADA):
+				ReglasDeLaPartida.PRIMERA_JORNADA + 2,
+				PartidaSerializada.clave(PartidaSerializada.Campo.APERCIBIMIENTOS):
+				Reglas.APERCIBIMIENTOS_POR_AVISO,
+			}
+		)
+	)
+	var partida := Partida.desde(guardada)
+	assert_int(partida.jornada()).is_equal(ReglasDeLaPartida.PRIMERA_JORNADA + 2)
+	assert_int(partida.apercibimientos()).is_equal(Reglas.APERCIBIMIENTOS_POR_AVISO)
+	assert_bool(partida.terminada()).is_false()
+
+
+func test_un_diccionario_vacio_da_una_partida_nueva() -> void:
+	var partida := Partida.desde({})
+	assert_int(partida.jornada()).is_equal(Partida.nueva().jornada())
+	assert_int(partida.apercibimientos()).is_equal(Partida.nueva().apercibimientos())
+
+
 func test_cerrar_una_jornada_avanza_y_anota_la_banda_en_el_legajo() -> void:
 	var partida := Partida.nueva()
 	_jugar(partida, 0)
@@ -80,7 +113,7 @@ func test_cada_jornada_abre_un_turno_nuevo_y_tareas_nuevas() -> void:
 		)
 
 
-func test_una_partida_terminada_no_vuelve_a_abrir_una_jornada() -> void:  # AC-EMP-010
+func test_una_partida_que_termino_no_vuelve_a_abrir_una_jornada() -> void:  # AC-EMP-010
 	# El ciclo ya guarda esto antes de llamar, pero la puerta es pública y el 017 la toca desde
 	# una pantalla. Sin el guard acá, la noche de regalo **le borra el legajo al despedido**:
 	# cerrarla impecable lo reinicia a cero y la partida avanza de jornada con el final ya
@@ -105,6 +138,9 @@ func test_cinco_jornadas_impecables_terminan_la_partida_sin_despido() -> void:  
 	assert_bool(partida.terminada()).is_true()
 	assert_int(partida.final()).is_equal(Partida.Final.CONTRATO_CUMPLIDO)
 	assert_bool(partida.legajo().despedido()).is_false()
+	assert_int(partida.jornada()).is_equal(
+		ReglasDeLaPartida.PRIMERA_JORNADA + ReglasDeLaPartida.JORNADAS_DE_LA_PARTIDA - 1
+	)
 
 
 func test_dos_jornadas_graves_seguidas_terminan_la_partida_con_despido() -> void:  # AC-EMP-004

@@ -88,7 +88,7 @@ class LosIds(unittest.TestCase):
             uno.criterios = {"AC-DEM-001": ["BR-DEM-009"]}
             self._leible(uno, "---\nschema_version: 1\ncapability_id: CAP-DEM\nstatus: draft\n---\n")
             hallazgos = problemas_de_los_ids([uno])
-            # Es la cita rota que aparece cuando una regla se retira y el criterio se queda.
+            # Es la cita rota que aparece cuando una regla se borra y el criterio se queda.
             self.assertTrue(any("BR-DEM-009" in h and "no declara" in h for h in hallazgos))
 
     def test_un_criterio_que_no_nombra_ninguna_regla(self):

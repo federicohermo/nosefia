@@ -218,53 +218,48 @@ class LaReglaDeLaRama(unittest.TestCase):
 
     def test_staging_edita_el_producto_directo(self):
         # Salió de las compartidas el 2026-09-14. Tiene caso propio porque el veredicto no
-        # cae solo del nombre: `staging` tampoco empieza con ninguno de los tres prefijos del
+        # cae solo del nombre: `staging` tampoco empieza con ninguno de los prefijos del
         # producto, así que sin la salida explícita volvería a bloquear por la regla de abajo.
         self.pasa("staging")
 
-    def test_los_tres_prefijos_que_llegan_al_producto(self):
-        self.pasa("feature/038-el-campo-de-interaccion-es-espacial")
+    def test_los_prefijos_que_llegan_al_producto(self):
+        self.pasa("feature/el-campo-de-interaccion-es-espacial")
         self.pasa("bugfix/el-objeto-en-la-mano-empuja-al-jugador")
-        self.pasa("hotfix/la-build-de-la-entrega-no-abre")
+        self.pasa("refactor/el-turno-sin-reloj-propio")
+        self.pasa("improvement/la-computadora-con-el-estilo-de-manada")
 
     def test_una_rama_que_no_toca_el_producto_no_puede_tocarlo(self):
-        # `harness/`, `docs/` y `ci/` son ramas legítimas del repo: lo que no son es ramas que
-        # editen `src/`. Una que lo intente está mal nombrada, y eso es lo que el gate dice.
+        # `harness/` y `docs/` son ramas legítimas del repo: lo que no son es ramas que editen
+        # `src/`. Una que lo intente está mal nombrada, y eso es lo que el gate dice. `ci/`
+        # salió del conjunto: los workflows son harness.
         for rama in ("harness/el-gate-mira-el-prefijo", "docs/una-guia", "ci/el-workflow"):
             self.bloquea(rama)
 
-    def test_el_mensaje_nombra_los_tres_que_si_pueden(self):
+    def test_el_mensaje_nombra_los_que_si_pueden(self):
         # Bloquear sin decir cómo salir produce el reflejo de buscar cómo saltear el bloqueo.
         motivo = self.bloquea("harness/el-gate-mira-el-prefijo")
-        for prefijo in ("feature/", "bugfix/", "hotfix/"):
+        for prefijo in ("feature/", "bugfix/", "refactor/", "improvement/"):
             self.assertIn(prefijo, motivo)
 
     def test_una_rama_sin_prefijo_conocido_bloquea(self):
         # `chore/` y `fix/` estan acá a propósito: son los dos nombres que el repo usó antes de
         # cerrar el conjunto, y un conjunto cerrado que acepta al viejo no cerró nada.
-        for rama in ("arreglos", "mia", "chore/lo-que-sea", "fix/lo-que-sea", "feature-sin-barra"):
+        for rama in (
+            "arreglos",
+            "mia",
+            "chore/lo-que-sea",
+            "fix/lo-que-sea",
+            "hotfix/lo-que-sea",
+            "feature-sin-barra",
+        ):
             self.bloquea(rama)
 
-    def test_solo_feature_pide_el_numero_del_issue(self):
-        # A `bugfix/` y `hotfix/` no se les pide porque pueden no salir de ningún issue, y
-        # exigirlo obligaría a inventar un número.
-        self.assertIn("issue", self.bloquea("feature/el-campo-de-interaccion"))
-        self.pasa("bugfix/el-objeto-en-la-mano-empuja-al-jugador")
-        self.pasa("hotfix/la-build-de-la-entrega-no-abre")
-
-    def test_el_numero_son_los_digitos_que_haya(self):
-        # GitHub numera los issues desde 1 y no rellena a tres dígitos, así que rellenarlos
-        # separaría la rama del issue que nombra. El 38 y el 1234 valen los dos.
-        self.pasa("feature/38-dos-digitos")
-        self.pasa("feature/1234-cuatro-digitos")
-
-    def test_un_bugfix_puede_nombrar_su_issue_igual(self):
+    def test_ninguna_rama_pide_el_numero_del_issue(self):
+        # Exigirlo obligaba a abrir un issue antes de escribir la primera línea. La rama que sí
+        # sale de un issue puede llevarlo igual.
+        self.pasa("feature/el-campo-de-interaccion")
+        self.pasa("feature/38-el-campo-de-interaccion")
         self.pasa("bugfix/12-la-pureza-del-dominio")
-
-    def test_un_issue_que_no_existe_no_frena_nada(self):
-        # El gate mira el NOMBRE y no consulta GitHub: exigir que el issue exista pondría una
-        # llamada de red adentro de cada edición, y un gate lento se apaga.
-        self.pasa("feature/9999-un-issue-que-no-existe")
 
 
 class LaRaizQueManda(unittest.TestCase):

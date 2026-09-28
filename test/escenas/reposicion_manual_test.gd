@@ -3,7 +3,9 @@ extends GdUnitTestSuite
 const ALMACEN := preload("res://src/escenas/almacen.tscn")
 
 
-func test_vender_retira_las_unidades_visibles_y_permite_reponer_sin_superponer() -> void:
+func test_vender_no_cambia_lo_que_la_gondola_dibuja() -> void:  # AC-CTR-015
+	# La venta sale del depósito. Un dibujo que bajara al vender mostraría un estante que el
+	# inventario da por lleno, y el jugador repondría lo que no falta.
 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
 	add_child(almacen)
 	almacen.get("_jugador").set_physics_process(false)
@@ -19,19 +21,7 @@ func test_vender_retira_las_unidades_visibles_y_permite_reponer_sin_superponer()
 	atenciones.pedir_abrir()
 	atenciones.pedir_cobrar()
 	await get_tree().process_frame
-	var stock := 0
-	for producto in Catalogo.todos():
-		var cantidad := repositor.estante().unidades_en_gondola(producto)
-		stock += cantidad
-		var grupo: MultiMeshInstance3D = presentacion.get_node("ProductosDe" + producto.nombre)
-		assert_int(grupo.multimesh.visible_instance_count).is_equal(
-			_guia(grupo, producto) + cantidad
-		)
-	assert_int(stock).is_less(cupo_total)
-	for producto in Catalogo.todos():
-		while repositor.estante().disponibles_para_retirar(producto) > 0:
-			presentacion.retirar(producto.id)
-			presentacion.pedir_colocar(producto.id)
+	assert_bool(atenciones.atencion().vendida()).is_true()
 	var posiciones: Array[Vector3] = []
 	for producto in Catalogo.todos():
 		var grupo: MultiMeshInstance3D = presentacion.get_node("ProductosDe" + producto.nombre)
@@ -99,7 +89,7 @@ func test_recoger_del_grupo_del_piso_conserva_foco_identidad_y_reposicion() -> v
 
 
 func test_laysntt_no_atraviesa_el_suelo_al_caer_plana_y_recibir_otras_cajas() -> void:
-	for giro in [0.8, 1.6, 5.6]:
+	for giro: float in [0.8, 1.6, 5.6]:
 		var almacen: Node3D = auto_free(ALMACEN.instantiate())
 		add_child(almacen)
 		almacen.get("_jugador").set_physics_process(false)
@@ -171,10 +161,10 @@ func test_laysntt_y_jorgillo_quedan_sobre_el_suelo_al_mover_la_camara() -> void:
 		assert_float(limites.end.y).is_less(suelo.position.y + 0.005)
 	var jugador: CharacterBody3D = almacen.get("_jugador")
 	jugador.set_physics_process(false)
-	var camara: Camera3D = jugador.get_node("Camara")
+	var camara: Camera3D = jugador.get_node("Giro/Camara")
 	var agarre: Agarre = almacen.get("_agarre")
 	var sueltas: Array[RigidBody3D] = []
-	for id in [Producto.Id.LAYSNTT, Producto.Id.JORGILLO]:
+	for id: Producto.Id in [Producto.Id.LAYSNTT, Producto.Id.JORGILLO]:
 		for indice in Catalogo.de(id).umbral:
 			almacen.get("_reposicion_manual").retirar(id)
 			var cuerpo: RigidBody3D = agarre.soltar(true)
@@ -359,7 +349,7 @@ func test_el_frente_se_conserva_al_examinar_y_volver_a_agarrar() -> void:
 		var orientacion := unidad.basis
 		assert_float((orientacion * frentes[producto.id]).dot(Vector3.BACK)).is_greater(0.8)
 		assert_bool(orientacion.is_equal_approx(Basis.IDENTITY)).is_false()
-		agarre.mover_lo_sostenido(almacen.get("_jugador").get_node("Camara/PuntoDeExamen"))
+		agarre.mover_lo_sostenido(almacen.get("_jugador").get_node("Giro/Camara/PuntoDeExamen"))
 		unidad.rotate_y(0.7)
 		agarre.devolver_a_la_mano()
 		assert_bool(unidad.basis.is_equal_approx(orientacion)).is_true()
@@ -389,7 +379,7 @@ func test_actroncito_durextra_y_oremos_se_reponen_con_foco_y_clic_reales() -> vo
 	# Los tres viven en el mismo rack y en bandejas distintas: uno arriba en caja grande y dos
 	# abajo en caja chica. Es el reparto que el depósito tiene desde que hay dos tamaños, y lo
 	# que el caso ejerce es que ninguna de las dos alturas deje la caja fuera del alcance.
-	for id in [Producto.Id.ACTRONCITO, Producto.Id.DUREXTRA, Producto.Id.OREMOS]:
+	for id: Producto.Id in [Producto.Id.ACTRONCITO, Producto.Id.DUREXTRA, Producto.Id.OREMOS]:
 		var caja: Node3D = almacen.get("_cajas_de_productos")[id]
 		var vista: MeshInstance3D = caja.get_node("Malla")
 		var centro := vista.global_transform * vista.mesh.get_aabb().get_center()
@@ -435,17 +425,6 @@ func test_actroncito_durextra_y_oremos_se_reponen_con_foco_y_clic_reales() -> vo
 func test_no_hay_productos_3d_iniciales_fuera_del_inventario() -> void:
 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
 	add_child(almacen)
-	for ruta in [
-		"gondolanueva2/oremos3",
-		"gondolanueva/alfajorescaja2",
-		"gondolanueva/pepitos",
-		"gondolanueva/oremos",
-		"gondolanueva/oremos2",
-	]:
-		var modelo: Node3D = almacen.get_node("Estructura/" + ruta)
-		assert_bool(modelo.is_visible_in_tree()).is_false()
-		for cuerpo: PhysicsBody3D in modelo.find_children("*", "PhysicsBody3D", true, false):
-			assert_int(cuerpo.collision_layer).is_zero()
 	for producto in Catalogo.todos():
 		assert_int(almacen.get("_repositor").estante().unidades_en_gondola(producto)).is_zero()
 	# Cada producto del catálogo tiene su malla en el contenido y en el mismo orden. Sin esto el
@@ -457,7 +436,7 @@ func test_no_hay_productos_3d_iniciales_fuera_del_inventario() -> void:
 
 
 func _mirar_foco(jugador: Node3D, ojo: Vector3, punto: Vector3) -> void:
-	var camara: Camera3D = jugador.get_node("Camara")
+	var camara: Camera3D = jugador.get_node("Giro/Camara")
 	camara.position = Vector3.UP * ReglasDelJugador.ALTURA_DE_LA_CAMARA
 	jugador.global_position = ojo - camara.position
 	camara.look_at(punto)
@@ -484,7 +463,7 @@ func test_cada_unidad_ocupa_un_lugar_distinto_y_la_marca_indica_su_base() -> voi
 		var zona := presentacion.get_node("ZonaDe" + producto.nombre)
 		for indice in producto.umbral:
 			_sacar_de_la_caja(jugador, almacen.get("_cajas_de_productos")[producto.id])
-			var unidad: Node3D = jugador.get_node("Camara/PuntoDeProducto").get_child(0)
+			var unidad: Node3D = jugador.get_node("Giro/Camara/PuntoDeProducto").get_child(0)
 			# **La marca es el fantasma del envase, no un rectángulo en el piso.** Lo que tiene
 			# que coincidir con la unidad repuesta es su base: el fantasma se para donde la
 			# unidad se va a parar, y por eso el apoyo sale de su caja y no de su origen.
@@ -528,7 +507,7 @@ func test_el_clic_saca_una_unidad_visible_y_el_estante_la_recibe() -> void:
 	var repositor: Repositor = almacen.get("_repositor")
 	_sacar_de_la_caja(jugador, caja)
 	assert_object(agarre.manos().sostenido()).is_not_null()
-	var punto := jugador.get_node_or_null("Camara/PuntoDeProducto")
+	var punto := jugador.get_node_or_null("Giro/Camara/PuntoDeProducto")
 	assert_object(punto).is_not_null()
 	if punto == null or punto.get_child_count() == 0:
 		return
@@ -571,7 +550,7 @@ func test_con_el_estante_lleno_la_caja_no_entrega_otra_unidad() -> void:
 	assert_object(agarre.manos().sostenido()).is_null()
 	_accion(jugador, estante)
 	assert_object(agarre.manos().sostenido()).is_null()
-	assert_int(jugador.get_node("Camara/PuntoDeProducto").get_child_count()).is_zero()
+	assert_int(jugador.get_node("Giro/Camara/PuntoDeProducto").get_child_count()).is_zero()
 
 
 func test_examinar_no_retira_ni_deposita_y_devuelve_la_unidad_a_la_mira() -> void:
@@ -584,15 +563,87 @@ func test_examinar_no_retira_ni_deposita_y_devuelve_la_unidad_a_la_mira() -> voi
 	var caja: Node3D = almacen.get("_cajas_de_productos")[0]
 	var estante: Node3D = almacen.get("_estante")
 	var agarre: Agarre = almacen.get("_agarre")
+	# La caja apoyada se examina sin agarrarla, y la segunda E la devuelve a su lugar.
+	var lugar: Transform3D = caja.global_transform
 	_accion(jugador, caja, ReglasDeLosObjetos.ACCION_EXAMINAR)
+	assert_bool(jugador.examen.esta_examinando()).is_true()
 	assert_object(agarre.manos().sostenido()).is_null()
+	# Mientras dura el examen la física corre, y la caja no se cae de la cara.
+	for cuadro in 10:
+		await get_tree().physics_frame
+	assert_vector(caja.position).is_equal(Vector3.ZERO)
+	_accion(jugador, caja, ReglasDeLosObjetos.ACCION_EXAMINAR)
+	assert_bool(caja.global_transform.is_equal_approx(lugar)).is_true()
 	_sacar_de_la_caja(jugador, caja)
 	var sostenido := agarre.manos().sostenido()
 	_accion(jugador, estante, ReglasDeLosObjetos.ACCION_EXAMINAR)
 	assert_object(agarre.manos().sostenido()).is_same(sostenido)
-	assert_int(jugador.get_node("Camara/PuntoDeExamen").get_child_count()).is_equal(1)
+	assert_int(jugador.get_node("Giro/Camara/PuntoDeExamen").get_child_count()).is_equal(1)
+	# La unidad recién sacada de la caja se examina a la distancia de siempre.
+	assert_float(jugador.get_node("Giro/Camara/PuntoDeExamen").position.length()).is_equal_approx(
+		ReglasDeLosObjetos.DISTANCIA_DE_EXAMEN, 0.001
+	)
 	_accion(jugador, estante, ReglasDeLosObjetos.ACCION_EXAMINAR)
-	assert_int(jugador.get_node("Camara/PuntoDeProducto").get_child_count()).is_equal(1)
+	assert_int(jugador.get_node("Giro/Camara/PuntoDeProducto").get_child_count()).is_equal(1)
+
+
+func test_las_dos_cajas_se_examinan_enteras_y_vuelven_a_la_cintura() -> void:
+	var almacen: Node3D = auto_free(ALMACEN.instantiate())
+	add_child(almacen)
+	await get_tree().physics_frame
+	await get_tree().physics_frame
+	var jugador: Node3D = almacen.get("_jugador")
+	jugador.set_physics_process(false)
+	var agarre: Agarre = almacen.get("_agarre")
+	var camara: Camera3D = jugador.get_node("Giro/Camara")
+	var cara: Node3D = jugador.get_node("Giro/Camara/PuntoDeExamen")
+	var cintura: Node3D = jugador.get_node("Giro/PuntoDeCaja")
+	var volumen: CollisionShape3D = jugador.get_node("FormaDeLaCaja")
+	# La chica primero y la grande después: el almacén usa dos tamaños y nada más.
+	var cajas: Array = almacen.get("_cajas_de_productos").duplicate()
+	cajas.sort_custom(func(a: Node3D, b: Node3D) -> bool: return _radio(a) < _radio(b))
+	var chica: Node3D = cajas.front()
+	var grande: Node3D = cajas.back()
+	assert_float(_radio(grande)).is_greater(_radio(chica))
+	var distancias: Array[float] = []
+	for caja: Node3D in [chica, grande]:
+		_accion(jugador, caja)
+		assert_object(caja.get_parent()).is_same(cintura)
+		var antes := caja.transform
+		_accion(jugador, caja, ReglasDeLosObjetos.ACCION_EXAMINAR)
+		assert_object(caja.get_parent()).is_same(cara)
+		assert_bool(volumen.disabled).is_false()
+		var distancia := cara.position.length()
+		var radio := _radio(caja)
+		# Ninguna rotación la hace cruzar el plano cercano, y la esfera cabe en el cuadro.
+		assert_float(distancia - radio).is_greater(camara.near)
+		assert_float(radio / distancia).is_less(sin(deg_to_rad(camara.fov / 2.0)))
+		assert_float(distancia).is_less(camara.position.distance_to(cintura.position))
+		assert_float(distancia).is_less(ReglasDelJugador.ALCANCE_DE_LA_MIRA)
+		distancias.append(distancia)
+		jugador.examen.arrastrar(Vector2(300.0, 200.0), true)
+		# El clic no cierra el examen ni suelta la caja: la E es la única salida.
+		_accion(jugador, caja)
+		assert_object(caja.get_parent()).is_same(cara)
+		_accion(jugador, caja, ReglasDeLosObjetos.ACCION_EXAMINAR)
+		assert_object(caja.get_parent()).is_same(cintura)
+		assert_bool(caja.transform.is_equal_approx(antes)).is_true()
+		agarre.soltar(true)
+		assert_object(agarre.manos().sostenido()).is_null()
+		assert_object(caja.get_parent()).is_not_same(cintura)
+		assert_bool(volumen.disabled).is_true()
+	assert_float(distancias[1]).is_greater(distancias[0])
+
+
+## El radio de la esfera que envuelve lo que se ve de la caja, medido desde su origen: el punto
+## alrededor del cual se la gira.
+func _radio(caja: Node3D) -> float:
+	var radio := 0.0
+	for malla: MeshInstance3D in caja.find_children("*", "MeshInstance3D", true, false):
+		var limites := malla.get_aabb()
+		for indice in 8:
+			radio = maxf(radio, (malla.transform * limites.get_endpoint(indice)).length())
+	return radio
 
 
 func _accion(
@@ -617,7 +668,7 @@ func _sacar_de_la_caja(jugador: Node3D, caja: Node3D) -> void:
 func _apuntar(almacen: Node3D, id: Producto.Id) -> void:
 	var zona: AABB = almacen.get("_reposicion_manual").zona(id)
 	var jugador: Node3D = almacen.get("_jugador")
-	var camara: Camera3D = jugador.get_node("Camara")
+	var camara: Camera3D = jugador.get_node("Giro/Camara")
 	camara.global_position = zona.get_center() + Vector3(0, 0, 1.5)
 	camara.look_at(zona.get_center())
 
@@ -667,3 +718,130 @@ func test_solo_la_zona_del_producto_recibe_el_foco_y_el_resto_del_mueble_no_colo
 	assert_object(agarre.manos().sostenido()).is_same(sostenido)
 	presentacion.get_node("ZonaDeDurextra").call("interactuar")
 	assert_object(agarre.manos().sostenido()).is_same(sostenido)
+
+
+func test_lo_soltado_queda_sobre_el_piso_o_la_tapa_que_se_mira() -> void:  # AC-PLY-033
+	var almacen: Node3D = auto_free(ALMACEN.instantiate())
+	add_child(almacen)
+	await get_tree().physics_frame
+	var jugador: Node3D = almacen.get("_jugador")
+	jugador.set_physics_process(false)
+	var camara: Camera3D = jugador.get_node("Giro/Camara")
+	var bolsa: RigidBody3D = almacen.get_node("Objetos/BolsaDeBasura1")
+	var piso: Vector3 = jugador.global_position + jugador.frente() * 1.2
+	# Una caja del depósito llevada al piso de al lado, para mirarle la tapa.
+	var caja: RigidBody3D = almacen.get("_cajas_de_productos")[0]
+	var costado: Vector3 = jugador.global_position + jugador.frente().rotated(Vector3.UP, 0.6)
+	caja.global_position = costado + Vector3.UP * _media_caja(caja).y
+	await get_tree().physics_frame
+	var tapa := caja.global_position + Vector3.UP * _media_caja(caja).y
+	for punto: Vector3 in [piso, tapa]:
+		camara.look_at(punto)
+		var golpe := _golpe_de_la_mira(jugador, bolsa)
+		assert_float(golpe["normal"].y).is_greater(ReglasDeLosObjetos.APOYO_HORIZONTAL)
+		_soltar(almacen, bolsa)
+		var toca: Vector3 = golpe["position"]
+		assert_vector(Vector2(bolsa.global_position.x, bolsa.global_position.z)).is_equal_approx(
+			Vector2(toca.x, toca.z), Vector2.ONE * 0.01
+		)
+		assert_float(_base(bolsa) - toca.y).is_between(0.0, 0.01)
+		assert_bool(_encimado(bolsa)).is_false()
+
+
+func test_sin_superficie_que_valga_se_suelta_como_siempre() -> void:  # AC-PLY-035
+	var almacen: Node3D = auto_free(ALMACEN.instantiate())
+	add_child(almacen)
+	await get_tree().physics_frame
+	var jugador: Node3D = almacen.get("_jugador")
+	jugador.set_physics_process(false)
+	var camara: Camera3D = jugador.get_node("Giro/Camara")
+	var agarre: Agarre = almacen.get("_agarre")
+	var bolsa: RigidBody3D = almacen.get_node("Objetos/BolsaDeBasura1")
+	for punto: Vector3 in [
+		camara.global_position + jugador.frente() * 10.0,
+		camara.global_position + Vector3.UP * 10.0 + jugador.frente() * 0.1,
+	]:
+		camara.look_at(punto)
+		var golpe := _golpe_de_la_mira(jugador, bolsa)
+		if not golpe.is_empty():
+			assert_float(golpe["normal"].y).is_less(ReglasDeLosObjetos.APOYO_HORIZONTAL)
+		var sin_mira := agarre.punto_de_soltado.global_position
+		_soltar(almacen, bolsa)
+		assert_vector(bolsa.global_position).is_equal_approx(sin_mira, Vector3.ONE * 0.01)
+	# El piso admite, pero la otra bolsa queda más cerca del rayo que media bolsa: se encimarían.
+	var otra: RigidBody3D = almacen.get_node("Objetos/BolsaDeBasura2")
+	var piso: Vector3 = jugador.global_position + jugador.frente() * 1.2
+	camara.look_at(piso)
+	var toca: Vector3 = _golpe_de_la_mira(jugador, bolsa)["position"]
+	var media: Vector3 = (otra.get_node("Forma").shape as BoxShape3D).size / 2.0
+	otra.global_position = toca + Vector3(media.x * 1.5, media.y, 0.0)
+	await get_tree().physics_frame
+	camara.look_at(piso)
+	var al_costado := _golpe_de_la_mira(jugador, bolsa)
+	assert_object(al_costado["collider"]).is_not_same(otra)
+	assert_float(al_costado["normal"].y).is_greater(ReglasDeLosObjetos.APOYO_HORIZONTAL)
+	var sin_mira_al_costado := agarre.punto_de_soltado.global_position
+	_soltar(almacen, bolsa)
+	assert_vector(bolsa.global_position).is_equal_approx(sin_mira_al_costado, Vector3.ONE * 0.01)
+	# Un estante de la góndola es horizontal y la bolsa entra, pero queda adentro del mueble.
+	var estante: Vector3 = almacen.get("_reposicion_manual").call("_apoyo", Producto.Id.UAKAS)
+	camara.global_position = estante + Vector3(1.8, 1.0, 0.0)
+	camara.look_at(estante)
+	# Sin el contorno que envuelve al mueble: si lo soltado choca con él, la mira pega en su cara
+	# y no llega al estante.
+	var en_el_estante := _golpe_de_la_mira(jugador, bolsa, true)
+	assert_object(en_el_estante["collider"]).is_same(almacen.get("_estante"))
+	assert_float(en_el_estante["normal"].y).is_greater(ReglasDeLosObjetos.APOYO_HORIZONTAL)
+	var sin_mira_del_estante := agarre.punto_de_soltado.global_position
+	_soltar(almacen, bolsa)
+	assert_vector(bolsa.global_position).is_equal_approx(sin_mira_del_estante, Vector3.ONE * 0.01)
+
+
+func _soltar(almacen: Node3D, cuerpo: RigidBody3D) -> void:
+	var agarre: Agarre = almacen.get("_agarre")
+	assert_bool(agarre.pedir_agarrar(cuerpo.get("datos"), cuerpo)).is_true()
+	agarre.soltar(true)
+
+
+## Lo que la mira toca, contra lo que el cuerpo choca.
+func _golpe_de_la_mira(jugador: Node3D, cuerpo: RigidBody3D, sin_contorno := false) -> Dictionary:
+	var mascara := cuerpo.collision_mask
+	if sin_contorno:
+		mascara &= ~ReglasDeLosObjetos.CAPA_DEL_CONTORNO
+	var ojo: Transform3D = jugador.mira()
+	var consulta := PhysicsRayQueryParameters3D.create(
+		ojo.origin, ojo.origin - ojo.basis.z * ReglasDelJugador.ALCANCE_DE_LA_MIRA, mascara
+	)
+	consulta.exclude = [jugador.get_rid(), cuerpo.get_rid()]
+	return jugador.get_world_3d().direct_space_state.intersect_ray(consulta)
+
+
+func _formas(cuerpo: RigidBody3D) -> Array[CollisionShape3D]:
+	var formas: Array[CollisionShape3D] = []
+	formas.assign(cuerpo.find_children("*", "CollisionShape3D", false, false))
+	return formas
+
+
+func _base(cuerpo: RigidBody3D) -> float:
+	var base := INF
+	for forma in _formas(cuerpo):
+		var limites := forma.global_transform * forma.shape.get_debug_mesh().get_aabb()
+		base = minf(base, limites.position.y)
+	return base
+
+
+func _encimado(cuerpo: RigidBody3D) -> bool:
+	for forma in _formas(cuerpo):
+		var consulta := PhysicsShapeQueryParameters3D.new()
+		consulta.shape = forma.shape
+		consulta.transform = forma.global_transform
+		consulta.collision_mask = cuerpo.collision_mask | ReglasDeLosObjetos.CAPA_DEL_CONTORNO
+		consulta.exclude = [cuerpo.get_rid()]
+		if not cuerpo.get_world_3d().direct_space_state.intersect_shape(consulta, 1).is_empty():
+			return true
+	return false
+
+
+func _media_caja(caja: RigidBody3D) -> Vector3:
+	var forma: CollisionShape3D = caja.get_node("Cuerpo")
+	return (forma.shape as BoxShape3D).size * forma.scale / 2.0

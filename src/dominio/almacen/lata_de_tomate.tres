@@ -11,4 +11,5 @@ texto = "La fecha de vencimiento está tapada con una etiqueta nueva. Abajo se l
 script = ExtResource("1_objeto")
 id = &"lata_de_tomate"
 nombre = "Lata de tomate"
+sonoridad = 1
 revelacion = SubResource("Resource_revelacion")

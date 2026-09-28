@@ -1,28 +1,140 @@
-[gd_scene load_steps=2 format=3]
+[gd_scene format=3]
 
-[ext_resource type="Script" path="res://src/ui/diegetica/app_caja.gd" id="1_caja"]
+[ext_resource type="Script" path="res://src/ui/diegetica/app_caja.gd" id="1"]
 
-[node name="AppCaja" type="VBoxContainer" node_paths=PackedStringArray("_titulo", "_botones", "_faltantes")]
+[ext_resource type="Texture2D" path="res://assets/ui/manada/linea_detalle.svg" id="2"]
+
+[ext_resource type="Texture2D" path="res://assets/ui/manada/solapa.svg" id="3"]
+
+[node name="AppCaja" type="Control" node_paths=PackedStringArray("_titulo", "_subtitulo", "_ayuda", "_filas", "_total")]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-theme_override_constants/separation = 10
-script = ExtResource("1_caja")
+script = ExtResource("1")
 _titulo = NodePath("Titulo")
-_botones = NodePath("Botones")
-_faltantes = NodePath("Faltantes")
+_subtitulo = NodePath("Subtitulo")
+_ayuda = NodePath("Ayuda")
+_filas = NodePath("Desplazamiento/Filas")
+_total = NodePath("Total/Valor")
 
 [node name="Titulo" type="Label" parent="."]
-layout_mode = 2
-theme_override_font_sizes/font_size = 26
+layout_mode = 0
+offset_left = 71.0
+offset_top = 12.0
+offset_right = 591.0
+offset_bottom = 77.0
+theme_type_variation = &"Titulo"
+mouse_filter = 2
 
-[node name="Botones" type="VBoxContainer" parent="."]
-layout_mode = 2
-theme_override_constants/separation = 6
-
-[node name="Faltantes" type="Label" parent="."]
-layout_mode = 2
-theme_override_font_sizes/font_size = 18
+[node name="Subtitulo" type="Label" parent="."]
+layout_mode = 0
+offset_left = 71.0
+offset_top = 144.0
+offset_right = 400.0
+offset_bottom = 309.0
+mouse_filter = 2
 autowrap_mode = 3
+theme_override_font_sizes/font_size = 40
+
+[node name="Ayuda" type="Label" parent="."]
+layout_mode = 0
+offset_left = 71.0
+offset_top = 345.0
+offset_right = 400.0
+offset_bottom = 598.0
+theme_type_variation = &"TextoSecundario"
+mouse_filter = 2
+autowrap_mode = 3
+
+[node name="Linea" type="TextureRect" parent="."]
+layout_mode = 0
+offset_left = 624.0
+offset_top = 29.0
+offset_right = 1743.5
+offset_bottom = 31.0
+texture = ExtResource("2")
+expand_mode = 1
+stretch_mode = 0
+mouse_filter = 2
+
+[node name="Solapa" type="TextureRect" parent="."]
+layout_mode = 0
+offset_left = 629.72
+offset_top = 6.5
+offset_right = 695.499
+offset_bottom = 29.5
+texture = ExtResource("3")
+expand_mode = 1
+stretch_mode = 0
+mouse_filter = 2
+
+[node name="Encabezado" type="HBoxContainer" parent="."]
+layout_mode = 0
+offset_left = 430.0
+offset_top = 67.0
+offset_right = 1857.0
+offset_bottom = 115.0
+mouse_filter = 2
+theme_override_constants/separation = 24
+
+[node name="Imagen" type="Control" parent="Encabezado"]
+custom_minimum_size = Vector2(96, 0)
+layout_mode = 2
+mouse_filter = 2
+
+[node name="Nombre" type="Label" parent="Encabezado"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_type_variation = &"TextoSecundario"
+mouse_filter = 2
+
+[node name="Precio" type="Label" parent="Encabezado"]
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 2
+theme_type_variation = &"TextoSecundario"
+mouse_filter = 2
+
+[node name="Unidades" type="Label" parent="Encabezado"]
+custom_minimum_size = Vector2(312, 0)
+layout_mode = 2
+theme_type_variation = &"TextoSecundario"
+mouse_filter = 2
+horizontal_alignment = 1
+
+[node name="Desplazamiento" type="ScrollContainer" parent="."]
+layout_mode = 0
+offset_left = 430.0
+offset_top = 123.0
+offset_right = 1857.0
+offset_bottom = 740.0
+horizontal_scroll_mode = 0
+
+[node name="Filas" type="VBoxContainer" parent="Desplazamiento"]
+layout_mode = 2
+size_flags_horizontal = 3
+mouse_filter = 1
+theme_override_constants/separation = 8
+
+[node name="Total" type="HBoxContainer" parent="."]
+layout_mode = 0
+offset_left = 430.0
+offset_top = 756.0
+offset_right = 1857.0
+offset_bottom = 816.0
+mouse_filter = 2
+theme_override_constants/separation = 24
+
+[node name="Etiqueta" type="Label" parent="Total"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_type_variation = &"Titulo"
+mouse_filter = 2
+
+[node name="Valor" type="Label" parent="Total"]
+custom_minimum_size = Vector2(312, 0)
+layout_mode = 2
+theme_type_variation = &"Titulo"
+mouse_filter = 2
+horizontal_alignment = 1

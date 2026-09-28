@@ -15,10 +15,10 @@ extends RefCounted
 ## Con cuántas unidades de cada producto arranca el depósito.
 ##
 ## Tiene que ser **estrictamente mayor** que el umbral más alto del catálogo, y eso lo afirma
-## el test: con exactamente el umbral, vender una unidad por la ventanilla dejaría reponer
-## imposible esa noche, y el síntoma no nombraría a esta constante.
+## el test: con exactamente el umbral, ese producto no tendría una sola unidad vendible, y el
+## síntoma no nombraría a esta constante.
 ##
 ## 10 es un primer valor y el margen es a propósito: lo que sobra después de llenar la góndola
-## es lo que se vende, así que este número también es cuánto stock hay para atender. Bajarlo
+## es lo que se vende, así que este número también es cuánto hay para atender. Bajarlo
 ## aprieta las dos cosas a la vez.
 const UNIDADES_INICIALES_EN_DEPOSITO := 10

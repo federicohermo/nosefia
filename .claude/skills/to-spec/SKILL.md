@@ -1,6 +1,7 @@
 ---
 name: to-spec
-description: Escribe o actualiza el contrato durable de una capacidad de No se fía — `specs/<capability>/<capability>.md`, con sus reglas BR y sus criterios AC. Usar cuando cambia lo que el juego tiene que hacer, antes de tocar una línea de código. Para repartir un contrato ya escrito en issues, spec-to-tickets.
+description: "Escribe o actualiza el contrato durable de una capacidad de No se fía — `specs/<capability>/<capability>.md`, con sus reglas BR y sus criterios AC. Usar cuando cambia lo que el juego tiene que hacer —una funcionalidad nueva, cambiada o que se quita—, antes de tocar una línea de código. Parte de un issue de tipo feature, de varios de una, o directo de un pedido. Para escribir el issue, to-issue."
+argument-hint: "[NN del issue | capability | pedido en prosa]"
 ---
 
 # to-spec — el contrato de una capacidad
@@ -9,31 +10,52 @@ Adaptado del skill `to-spec` de *spec-anchored agentic development*. **Un contra
 capacidad, y el código contesta a él.** El spec no es andamio: se queda, y la diferencia entre lo
 que dice y lo que el código hace es un hallazgo, nunca una excusa para reescribir el spec.
 
-**Este skill no entrevista: las preguntas ya pasaron.** Convierte en archivo el material que hay
-—lo normal es una sesión de `shape`, pero pueden ser notas o un pedido en
-prosa—. Si falta material para una sección, **va a preguntas abiertas: no se pregunta acá, no se
+**Este skill no entrevista: las preguntas ya pasaron.** Convierte en archivo el material que hay: un issue
+de tipo `feature`, una sesión de `shape`, notas o un pedido en prosa. Si falta material para una sección, **va a preguntas abiertas: no se pregunta acá, no se
 inventa y no se rellena con un valor por defecto en silencio**.
 
 **No deja deuda**, y eso está en [`sin-deuda.md`](sin-deuda.md).
 
-## Los dos modos
+**Un spec no es un issue.** El issue es el plan descartable de un cambio; el spec es el
+contrato que queda. Un issue puede traer los criterios que el spec necesita, pero acá se
+reescriben como reglas y criterios de la capacidad, sin nada propio de esa entrega.
+
+## Los tres modos
 
 - **Crear** (la capacidad no tiene spec): se llenan todas las secciones de la plantilla con el
   material resuelto.
 - **Actualizar** (ya existe): se produce el **delta**. Las reglas y los criterios nuevos llevan
   **IDs emitidos en continuación**, y **los existentes no se renumeran ni se reescriben** salvo
   que la entrevista haya resuelto explícitamente cambiarlos. El ID es la dirección: los issues y
-  los tests apuntan ahí.
+  los tests apuntan ahí. **La continuación sale del más alto que tuvo el spec**, borrados
+  incluidos: si se borró el último, `git log -p -- <spec>` lo muestra.
+- **Borrar** (la funcionalidad se quita del juego): el spec se borra **en su propio commit**, y
+  en la misma rama se borran el código y los tests que lo citaban. La historia queda en git.
+  Si otra capacidad dependía de ésta, su spec se actualiza en la misma corrida.
+
+## Varios de una
+
+Con varios issues de una, agrupalos por el spec que tocan antes de escribir.
+
+**Dos issues que emiten IDs nuevos en el mismo spec chocan.** Cada rama emite los IDs en
+continuación del último que ve, y las dos emiten el mismo. El gate de specs ve el ID repetido
+recién después del merge, y no ve qué test quedó citando un criterio ajeno. Hay dos salidas:
+
+- **Repartí los IDs nuevos entre los dos antes de abrir las ramas.**
+- **Escribilos en orden:** el segundo, desde `staging` con la rama del primero ya mergeada.
+
+Si uno de los dos no emite IDs nuevos, como el que sólo borra, no hace falta repartir. Si no
+comparten ningún spec, escribilos uno detrás del otro.
 
 ## Qué NO necesita tocar un spec
 
 No todo cambio cambia el contrato. Estos no:
 
-- **Un refactor.** Mismo comportamiento, otra forma. El spec no se entera.
-- **Un bug de motor o de configuración** —una física mal seteada, un `.tscn` mal cableado— que no
-  cambia ninguna regla del juego. Va por un issue de `bugfix/` y nada más.
-- **Arte, audio, texto de contenido.** Entra como dato.
-- **El harness, los docs y la CI.** Rama `harness/`, `docs/` o `ci/`, sin issue de capacidad.
+- **Un refactor.** Mismo comportamiento, otra forma. Va por `refactor/`.
+- **Un bug** que no cambia ninguna regla del juego. Va por `bugfix/`.
+- **Una mejora que no cambia ninguna regla**: UI, arte, audio, rendimiento. Va por
+  `improvement/`.
+- **El harness y los docs.** Rama `harness/` o `docs/`.
 
 Sí lo tocan: una regla nueva, un valor de balance que cambia, un comportamiento que el GDD fija y
 el juego no cumple, y un borde que nadie había escrito.
@@ -61,10 +83,12 @@ rg --no-ignore -n "AC-XXX" specs/ test/         # si ese ID ya se usó
 - **Un valor de balance se cita, no se copia.** El número exacto sale del dominio: los
   apercibimientos de `src/dominio/reglas.gd`, el corte de las bandas de
   `src/dominio/empleo/consecuencia.gd`, y las cinco tareas de recorrer `Tarea.Tipo`.
-- **El GDD manda sobre el código.** Si el GDD dice diez minutos y el código da veinte, la regla
-  dice diez y el código está en falta. Eso es el hallazgo, y sale en un issue.
+- **El GDD manda sobre el código.** Si el GDD y el código difieren en un valor, la regla dice
+  lo que dice el GDD y el código está en falta. Eso es el hallazgo.
 - **Un hueco es una `OQ-<COD>-###`**, con por qué sigue abierta, quién la decide y qué bloquea.
   Nunca un valor inventado.
+- **Lo que el motor soporta se mide en el juego, no en el editor.** Son dos procesos de Godot y
+  pueden contestar distinto. Una medición en el editor no dice qué hace el juego.
 
 ## Paso 3 — Escribir las reglas y los criterios
 
@@ -83,8 +107,14 @@ Lo que más se rompe:
   menos de 3, el cuarto apercibimiento.
 - **Si un criterio barre un directorio y enumera excepciones, corré el barrido antes de escribir
   la lista.** De memoria sale corta y el criterio nace imposible de pasar.
-- **Un ID no se renumera y no se reutiliza: se retira.** Uno nuevo sigue la numeración, aunque
-  queden huecos.
+- **Una tabla de valores se recalcula fila por fila desde la regla, y las puntas se derivan.** Una
+  hora de cierre se calcula como apertura más duración, nunca se copia de la ficha: «doce horas,
+  de las 20:00 a las 06:00» pasó por el spec y el issue con la suma sin hacer, y el primer test
+  lo encontró.
+- **Retirar es borrar.** Una regla o un criterio que sale del juego se borra entero: el
+  encabezado, el texto, la pregunta abierta que lo cerró y el test que sólo lo citaba. No queda
+  un «*Retirada*», ni una nota, ni un test que afirme que no está. El número queda como hueco:
+  no se renumera y no se reutiliza. El gate de specs rechaza un encabezado «Retirada».
 
 ## Paso 4 — El pase de completitud
 
@@ -111,11 +141,12 @@ criterios ya tienen test.
 nombrados por un test, y ahí el gate empieza a cobrarlo: un `ratified` con un criterio sin test es
 rojo.
 
-## Paso 6 — El PR
+## Paso 6 — La rama y el PR
 
-**El spec es el primer commit, solo**, antes de que ningún issue lo referencie: entra por su
-propia rama —`docs/<capability>`— y su propio PR. La excepción es el spec que se edita
-implementando, que viaja en el PR del issue.
+**El spec es el primer commit de la rama**, y viaja en el mismo PR que el código que lo
+cumple. El prefijo sale del tipo del issue: `feature/<N>-<kebab>` para una funcionalidad, y
+`bugfix/<N>-<kebab>` para un bug que escribe la regla que nadie había escrito. Sin issue,
+`feature/<kebab>`.
 
 **El merge es la aprobación.** No hay un campo que alguien marque.
 
@@ -136,7 +167,6 @@ Es el caso que este método existe para hacer visible, y tiene una sola salida:
 - `gate_de_specs.py` en verde, y `python .claude/scripts/verificar.py` si el PR toca código.
 - Cada criterio nuevo que ya tenga test, **citado** en ese test: `# AC-EMP-004` al final de la
   línea de la función.
-- Los criterios que todavía no tienen test se reparten con `spec-to-tickets`, en esta corrida. Un
-  contrato escrito y no repartido es un plan que nadie va a ejecutar.
+- El paso siguiente es `implement-feature`, en la misma rama.
 - Si el spec falsificó algo que la documentación afirma en presente, actualizá `docs/`,
   `.claude/rules/` y `CLAUDE.md`.

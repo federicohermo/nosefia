@@ -1,0 +1,55 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://src/escenas/puestos/agua_del_bano.gd" id="1_agua"]
+[ext_resource type="Shader" path="res://src/escenas/puestos/agua_del_bano.gdshader" id="2_superficie"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_lavatorio"]
+render_priority = 0
+shader = ExtResource("2_superficie")
+shader_parameter/color_del_agua = Color(0.62, 0.66, 0.64, 0.3)
+shader_parameter/hacia_la_luz = Vector3(-0.41, 0.88, 0.23)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_inodoro"]
+render_priority = 0
+shader = ExtResource("2_superficie")
+shader_parameter/color_del_agua = Color(0.6, 0.7, 0.72, 0.4)
+shader_parameter/hacia_la_luz = Vector3(-0.63, 0.76, 0.15)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_gota"]
+transparency = 1
+albedo_color = Color(0.85, 0.9, 0.95, 0.6)
+roughness = 0.05
+
+[sub_resource type="SphereMesh" id="SphereMesh_gota"]
+material = SubResource("StandardMaterial3D_gota")
+radius = 0.004
+height = 0.01
+radial_segments = 8
+rings = 4
+
+[node name="AguaDelBano" type="Node3D" node_paths=PackedStringArray("lavatorio", "inodoro", "gota")]
+script = ExtResource("1_agua")
+lavatorio = NodePath("Lavatorio")
+contorno_del_lavatorio = PackedVector2Array(-0.341, -0.218, -0.341, 0.062, -0.184, 0.218, 0.184, 0.218, 0.341, 0.062, 0.341, -0.218)
+inodoro = NodePath("Inodoro")
+contorno_del_inodoro = PackedVector2Array(-0.136, -0.128, -0.136, 0.104, 0.0, 0.182, 0.136, 0.104, 0.136, -0.128, 0.0, -0.182)
+gota = NodePath("Gota")
+
+[node name="Lavatorio" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 11.353, 0.549, -7.562)
+material_override = SubResource("ShaderMaterial_lavatorio")
+cast_shadow = 0
+gi_mode = 2
+
+[node name="Inodoro" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12.612, 0.549, -7.333)
+material_override = SubResource("ShaderMaterial_inodoro")
+cast_shadow = 0
+gi_mode = 2
+
+[node name="Gota" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 11.353, 0.805, -7.645)
+physics_interpolation_mode = 2
+mesh = SubResource("SphereMesh_gota")
+cast_shadow = 0
+gi_mode = 2

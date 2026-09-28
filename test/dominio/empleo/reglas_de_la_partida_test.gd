@@ -73,7 +73,7 @@ func test_la_demo_alcanza_para_llegar_al_despido() -> void:
 
 
 func test_los_tres_espejos_de_este_spec_estan_escritos() -> void:
-	# `verificar.py` con los seis nodos en verde no se puede afirmar desde adentro de gdUnit4,
+	# `verificar.py` con los nodos en verde no se puede afirmar desde adentro de gdUnit4,
 	# pero sí lo que hace fallar a su nodo `tdd`: que falte uno de los tres espejos.
 	for espejo: String in ESPEJOS_DEL_SPEC:
 		(

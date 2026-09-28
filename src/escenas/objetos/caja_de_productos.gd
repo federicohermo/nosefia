@@ -9,6 +9,10 @@
 ## acá**, lo pide el puesto; volver a dormirse lo resuelve el motor.
 extends RigidBody3D
 
+## La caja se va a correr. Para el motor es un cuerpo estático, y lo apoyado encima no se
+## entera: lo despierta el puesto.
+signal empujada(caja: Node3D)
+
 @export var producto: Producto.Id = Producto.Id.ACTRONCITO
 @export var datos: ObjetoDelAlmacen
 @export var mallas: Array[MeshInstance3D] = []
@@ -18,6 +22,7 @@ extends RigidBody3D
 
 var _lugar_de_origen: Transform3D
 var _padre_de_origen: Node = null
+var _origen_en_el_mundo: Transform3D
 
 ## Dónde se apoyó por última vez. Lo pregunta el puesto al levantarla: para cuando avisa que la
 ## agarró, la caja ya cuelga de la mano y el volumen que dejó libre no lo sabe nadie más.
@@ -27,12 +32,17 @@ var _apoyo_que_dejo := Vector3.ZERO
 func _ready() -> void:
 	_lugar_de_origen = transform
 	_padre_de_origen = get_parent()
+	_origen_en_el_mundo = global_transform
 	_apoyo_que_dejo = global_position
 	sleeping_state_changed.connect(_al_cambiar_el_reposo)
 
 
 func interactuar() -> ObjetoDelAlmacen:
 	return datos
+
+
+func lugar_de_origen() -> Transform3D:
+	return _origen_en_el_mundo
 
 
 ## El volumen que ocupaba cuando estaba apoyada. Lo usa el puesto para saber a quién despertar.
@@ -92,8 +102,11 @@ func volver_a_su_lugar() -> void:
 
 ## Se arrastra por el piso cuando el jugador la empuja al pasar. Cuánto recibe lo dice el
 ## dominio; acá sólo se mueve, en horizontal y sin dar vuelta nada.
+##
+## Avisa **antes** de correrse: lo que hay que despertar está sobre el apoyo que todavía ocupa.
 func empujar(desplazamiento: Vector3) -> void:
 	var arrastre := desplazamiento * ReglasDeLosObjetos.ARRASTRE_DE_LA_CAJA
 	arrastre.y = 0.0
+	empujada.emit(self)
 	move_and_collide(arrastre)
 	_apoyo_que_dejo = global_position

@@ -3,7 +3,7 @@
 ##
 ## **El caso que más pesa es el que cruza la clave.** Un `.tres` colgado de la fila equivocada no
 ## da ningún error —la clave del `enum` se guarda como un entero pelado—, así que sin esa cruza
-## el jugador leería la reacción de otra tarea y los seis nodos seguirían en verde.
+## el jugador leería la reacción de otra tarea y los nodos seguirían en verde.
 extends GdUnitTestSuite
 
 const CATALOGO := "res://src/dominio/empleo/catalogo_de_reacciones.gd"
@@ -16,7 +16,7 @@ const SOBRE_LA_TAREA := [Reaccion.Sobre.TAREA_SIN_CUMPLIR, Reaccion.Sobre.TAREA_
 
 func test_hay_una_reaccion_por_cada_tarea_en_sus_dos_estados() -> void:
 	for tipo: Tarea.Tipo in Tarea.Tipo.values():
-		for cumplida in [false, true]:
+		for cumplida: bool in [false, true]:
 			var reaccion := CatalogoDeReacciones.de_la_tarea(tipo, cumplida)
 			(
 				assert_object(reaccion)
@@ -32,7 +32,7 @@ func test_cada_reaccion_de_tarea_repite_adentro_la_fila_en_la_que_esta() -> void
 	# **Éste es el que caza el `.tres` mal enganchado.** El catálogo lo indexa por una clave y el
 	# archivo la vuelve a decir adentro: si las dos no coinciden, alguien movió una fila.
 	for tipo: Tarea.Tipo in Tarea.Tipo.values():
-		for cumplida in [false, true]:
+		for cumplida: bool in [false, true]:
 			var reaccion := CatalogoDeReacciones.de_la_tarea(tipo, cumplida)
 			(
 				assert_int(reaccion.indice)

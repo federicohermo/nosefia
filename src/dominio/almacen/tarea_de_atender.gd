@@ -5,9 +5,8 @@
 ## adentro, un test se tendría que armar siempre con los que el balance pide, y mover ese número
 ## rompería casos que no hablan de él. Es la misma decisión que tomó `Turno` con las obligatorias.
 ##
-## **Se completa con todos despachados, se les haya vendido o no.** Vender exige stock en góndola
-## y la góndola arranca vacía, así que exigirlo encadenaría esta obligatoria con reponer y dejaría
-## la primera noche imposible de cerrar en cinco.
+## **Se completa con todos despachados, se les haya vendido o no.** Un pedido puede superar
+## los vendibles de la noche, y exigir la venta dejaría a ese comprador sin forma de irse.
 class_name TareaDeAtender
 extends RefCounted
 
@@ -81,4 +80,14 @@ func diferencia_acumulada() -> int:
 	for atendida in _atenciones:
 		if atendida.vendida():
 			suma += atendida.diferencia()
+	return suma
+
+
+func vendidas_de(producto: Producto) -> int:
+	if producto == null:
+		return 0
+	var suma := 0
+	for atendida in _atenciones:
+		if atendida.vendida():
+			suma += atendida.comprador().pedido().unidades_de(producto)
 	return suma

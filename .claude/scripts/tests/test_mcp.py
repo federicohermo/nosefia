@@ -185,6 +185,36 @@ class LosTests(unittest.TestCase):
         self.assertNotIn("FALTA", salida)
 
 
+class ElTextoDeUnCriterio(unittest.TestCase):
+    SPEC = (
+        "## Criterios de aceptación\n"
+        "\n"
+        "### AC-XXX-001 — El primero *(verifica BR-XXX-001)*\n"
+        "\n"
+        "DADO uno ENTONCES uno.\n"
+        "\n"
+        "### AC-XXX-002 — El último *(verifica BR-XXX-001)*\n"
+        "\n"
+        "DADO dos ENTONCES dos.\n"
+        "\n"
+        "## No objetivos\n"
+        "\n"
+        "- Nada.\n"
+    )
+
+    def test_corta_en_el_criterio_siguiente(self):
+        self.assertEqual(
+            herramientas._texto_del_criterio(self.SPEC, "AC-XXX-001"), "DADO uno ENTONCES uno."
+        )
+
+    def test_el_ultimo_corta_en_la_seccion_siguiente(self):
+        # Abajo del último criterio no hay otro criterio: hay una sección. Cortar sólo en `###`
+        # le pegaba al último criterio de cada spec todo lo que el spec dice después.
+        self.assertEqual(
+            herramientas._texto_del_criterio(self.SPEC, "AC-XXX-002"), "DADO dos ENTONCES dos."
+        )
+
+
 class LosAssets(unittest.TestCase):
     #: Un `.glb` mínimo: cabecera de 12 bytes, largo del chunk, `JSON`, y el JSON.
     @staticmethod
@@ -201,6 +231,11 @@ class LosAssets(unittest.TestCase):
     def test_saca_los_nombres_de_las_imagenes_embebidas(self):
         crudo = self._glb(b'{"images":[{"name":"cora cola"},{"name":"jorgillo"},{}]}')
         self.assertEqual(herramientas._imagenes_de_un_glb(crudo), {"cora cola", "jorgillo"})
+
+    def test_el_nombre_con_punto_se_corta_en_el_ultimo(self):
+        # Godot extrae `Material.001_baseColor` como `…_Material.png`.
+        crudo = self._glb(b'{"images":[{"name":"Material.001_baseColor"}]}')
+        self.assertIn("Material", herramientas._imagenes_de_un_glb(crudo))
 
     def test_un_binario_que_no_es_glb_no_revienta(self):
         self.assertEqual(herramientas._imagenes_de_un_glb(b"\x89PNG\r\n\x1a\n"), set())
@@ -234,6 +269,11 @@ class LosAssets(unittest.TestCase):
             self.skipTest("no hay arte de origen")
         self.assertIn("Godot no lo importa", herramientas.contexto_de_asset(fuente[0]))
         self.assertNotIn(fuente[0], herramientas.assets_sin_referencia())
+
+    def test_lo_que_se_escribe_al_lado_de_un_modelo_no_es_un_asset(self):
+        sospechosos = herramientas.assets_sin_referencia()
+        self.assertNotIn(".unwrap_cache", sospechosos)
+        self.assertNotIn(".blend1", sospechosos)
 
     def test_un_asset_inexistente_lo_dice(self):
         self.assertIn("No hay", herramientas.contexto_de_asset("assets/models/inventado.png"))

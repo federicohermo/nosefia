@@ -1,26 +1,24 @@
-## La pantalla de la computadora: las tres apps y las pestañas para cambiar entre ellas.
+## La pantalla de la computadora, con la gráfica de Manada.
 ##
-## **No decide cuál se ve.** Qué app está abierta lo lleva `Computadora`, que es de `dominio/` y
-## tiene test: acá se recibe cuál y se prende ésa. Es la trampa que este spec vino a esquivar —
-## `src/ui/` no lleva test obligatorio, así que un `if` sobre el juego escrito acá nace sin
-## ninguno y los seis nodos dan verde.
-##
-## **No pausa nada, y es deliberado**: mientras la pantalla está arriba el turno sigue corriendo.
-## Leer cuesta lo mismo que reponer, y el jugador se entera porque el reloj no se detuvo.
-##
-## Va en `diegetica/` y no en `interrupciones/`, que es exactamente ese criterio.
+## No decide cuál app se ve: eso lo lleva `Computadora`, que tiene test. Acá se recibe cuál y se
+## prende ésa. No pausa el turno: leer cuesta minutos, igual que reponer.
 class_name PantallaDeComputadora
 extends CanvasLayer
 
 signal app_pedida(app: Computadora.App)
+signal boton_pulsado
 
-## Las palabras de las tres pestañas, en el orden del `enum` del dominio. Es la única lista de
-## este archivo, y se recorre contra `Computadora.App.values()`: una pestaña de más o de menos se
-## ve enseguida porque no le toca ninguna app.
-const TEXTOS_DE_LAS_PESTANAS := ["Caja", "Chats", "Notas"]
+## Chats conserva su cableado para una entrega posterior, pero no ofrece acceso en esta UI.
+const TITULOS := {Computadora.App.CAJA: "/ REGISTRO:", Computadora.App.NOTAS: "/ NOTAS:"}
+const BORDE_DERECHO := {Computadora.App.CAJA: 1857.0, Computadora.App.NOTAS: 1743.5}
+const ICONO_REGISTRO := preload("res://assets/ui/manada/computadora.svg")
+const ICONO_NOTAS := preload("res://assets/ui/manada/registro.svg")
 
 @export var _fondo: ColorRect
-@export var _pestanas: HBoxContainer
+@export var _marco: Control
+@export var _titulo: Label
+@export var _opciones: HBoxContainer
+@export var _salida: Label
 @export var _caja: AppCaja
 @export var _chats: AppChats
 @export var _notas: AppNotas
@@ -30,8 +28,15 @@ const TEXTOS_DE_LAS_PESTANAS := ["Caja", "Chats", "Notas"]
 ## empieza la noche.
 func _ready() -> void:
 	visible = false
-	for app: Computadora.App in Computadora.App.values():
-		_pestanas.add_child(_pestana_de(app))
+	_salida.text = LienzoDeManada.TEXTO_DE_SALIDA
+	for app: Computadora.App in TITULOS:
+		_opciones.add_child(_opcion_de(app))
+	get_viewport().size_changed.connect(_ajustar_al_viewport)
+	_ajustar_al_viewport()
+	for boton in find_children("*", "BaseButton", true, false):
+		_escuchar(boton)
+	# Las apps arman botones después de `_ready()`.
+	get_tree().node_added.connect(_al_agregar_nodo)
 
 
 func caja() -> AppCaja:
@@ -58,14 +63,44 @@ func cambiar_a(app: Computadora.App) -> void:
 	_caja.visible = app == Computadora.App.CAJA
 	_chats.visible = app == Computadora.App.CHATS
 	_notas.visible = app == Computadora.App.NOTAS
+	_titulo.text = TITULOS.get(app, "")
+	_salida.offset_right = BORDE_DERECHO.get(app, 1857.0)
+	for indice in TITULOS.size():
+		var boton: Button = _opciones.get_child(indice)
+		boton.set_pressed_no_signal(TITULOS.keys()[indice] == app)
 
 
 func ocultar() -> void:
 	visible = false
 
 
-func _pestana_de(app: Computadora.App) -> Button:
+func _opcion_de(app: Computadora.App) -> Button:
 	var boton := Button.new()
-	boton.text = TEXTOS_DE_LAS_PESTANAS[app]
+	boton.tooltip_text = TITULOS[app].trim_prefix("/ ").trim_suffix(":")
+	boton.icon = ICONO_REGISTRO if app == Computadora.App.CAJA else ICONO_NOTAS
+	boton.toggle_mode = true
+	boton.theme_type_variation = &"Pestana"
+	boton.custom_minimum_size = Vector2(90, 72)
+	boton.icon_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	boton.pressed.connect(func() -> void: app_pedida.emit(app))
 	return boton
+
+
+func _al_agregar_nodo(nodo: Node) -> void:
+	if nodo is BaseButton and is_ancestor_of(nodo):
+		_escuchar(nodo)
+
+
+func _escuchar(boton: BaseButton) -> void:
+	var avisar := _al_pulsar.bind(boton)
+	if not boton.pressed.is_connected(avisar):
+		boton.pressed.connect(avisar)
+
+
+func _al_pulsar(boton: BaseButton) -> void:
+	if not boton.disabled:
+		boton_pulsado.emit()
+
+
+func _ajustar_al_viewport() -> void:
+	LienzoDeManada.ajustar(_marco, get_viewport().get_visible_rect().size)

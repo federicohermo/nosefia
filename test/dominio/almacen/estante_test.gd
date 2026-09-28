@@ -56,6 +56,20 @@ func test_sin_unidades_en_el_deposito_se_rechaza_sin_mover_una_unidad() -> void:
 	assert_int(estante.unidades_en_deposito(actroncito)).is_equal(0)
 
 
+func test_con_los_tres_rechazos_a_la_vez_gana_el_primero_del_orden() -> void:  # AC-STK-009
+	# Lleno y sin depósito a la vez: el cupo entero pasó del depósito a la góndola.
+	var actroncito := _producto(Producto.Id.ACTRONCITO)
+	var estante := _estante([actroncito], CUPO_DE_PRUEBA)
+	for _unidad in range(CUPO_DE_PRUEBA):
+		estante.colocar(actroncito)
+	assert_int(estante.unidades_en_deposito(actroncito)).is_equal(0)
+	var malbardo := _producto(Producto.Id.MALBARDO)
+	assert_int(estante.colocar(malbardo)).is_equal(Estante.Rechazo.PRODUCTO_NO_ACEPTADO)
+	assert_int(estante.colocar(actroncito)).is_equal(Estante.Rechazo.ESTANTE_LLENO)
+	var con_lugar := _estante([actroncito], 0)
+	assert_int(con_lugar.colocar(actroncito)).is_equal(Estante.Rechazo.SIN_UNIDADES_EN_DEPOSITO)
+
+
 func test_colocar_mueve_la_unidad_en_vez_de_crearla() -> void:
 	# El total es la aserción que importa: un `ingresar()` en la góndola dejaría la góndola
 	# igual de bien y el almacén con una unidad que nadie compró.
@@ -154,7 +168,7 @@ func test_el_estante_no_lleva_el_cupo_ni_el_stock_escritos_adentro() -> void:
 	# cuenta propia acá daría verde en los dos gates mientras contradice al inventario.
 	var texto := FileAccess.get_file_as_string("res://src/dominio/almacen/estante.gd")
 	assert_str(texto).is_not_empty()
-	for patron in ["get_child_count", "_unidades", "_stock"]:
+	for patron: String in ["get_child_count", "_unidades", "_stock"]:
 		(
 			assert_bool(texto.contains(patron))
 			. override_failure_message("`estante.gd` de `dominio/` nombra `%s`" % patron)
@@ -191,7 +205,7 @@ func test_el_estante_lleno_conserva_la_unidad_rechazada() -> void:
 	assert_int(estante.unidades_en_gondola(producto)).is_equal(1)
 
 
-func test_no_retira_mas_que_los_lugares_libres_incluidas_las_reservas() -> void:
+func test_no_retira_mas_que_los_lugares_libres_incluidas_las_reservas() -> void:  # AC-STK-017
 	var producto := _producto(Producto.Id.ACTRONCITO)
 	var estante := _estante([producto])
 	var primera := estante.retirar(producto)

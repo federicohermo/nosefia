@@ -1,14 +1,25 @@
-[gd_scene load_steps=2 format=3]
+[gd_scene format=3]
+[ext_resource type="Script" path="res://src/ui/diegetica/panel_de_la_ventanilla.gd" id="1"]
+[ext_resource type="Theme" path="res://assets/ui/manada/tema.tres" id="2"]
+[ext_resource type="Texture2D" path="res://assets/ui/manada/fondo_ventanilla.png" id="3"]
+[ext_resource type="Texture2D" path="res://assets/ui/manada/cabecera.svg" id="4"]
+[ext_resource type="Texture2D" path="res://assets/ui/manada/linea_detalle.svg" id="5"]
+[ext_resource type="Texture2D" path="res://assets/ui/manada/solapa.svg" id="6"]
 
-[ext_resource type="Script" path="res://src/ui/diegetica/panel_de_la_ventanilla.gd" id="1_panel"]
 
-[node name="PanelDeLaVentanilla" type="CanvasLayer" node_paths=PackedStringArray("_fondo", "_nombre", "_renglones", "_aviso", "_cobrar", "_despachar")]
+[node name="PanelDeLaVentanilla" type="CanvasLayer" node_paths=PackedStringArray("_fondo", "_marco", "_titulo", "_cliente", "_pedido", "_cobro", "_salida", "_nombre", "_renglones", "_aviso", "_cobrar", "_despachar")]
 layer = 3
-script = ExtResource("1_panel")
+script = ExtResource("1")
 _fondo = NodePath("Fondo")
+_marco = NodePath("Fondo/Panel")
+_titulo = NodePath("Fondo/Panel/Titulo")
+_cliente = NodePath("Fondo/Panel/Cliente")
+_pedido = NodePath("Fondo/Panel/Pedido")
+_cobro = NodePath("Fondo/Panel/Cobro")
+_salida = NodePath("Fondo/Panel/Salida")
 _nombre = NodePath("Fondo/Panel/Nombre")
-_renglones = NodePath("Fondo/Panel/Lineas")
-_aviso = NodePath("Fondo/Panel/Aviso")
+_renglones = NodePath("Fondo/Panel/Lectura/Lineas")
+_aviso = NodePath("Fondo/Panel/Estado/Aviso")
 _cobrar = NodePath("Fondo/Panel/Cobrar")
 _despachar = NodePath("Fondo/Panel/Despachar")
 
@@ -18,38 +29,187 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-color = Color(0, 0, 0, 0.55)
+color = Color(0.015, 0.025, 0.025, 1)
 
-[node name="Panel" type="VBoxContainer" parent="Fondo"]
-layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -280.0
-offset_top = -200.0
-offset_right = 280.0
-offset_bottom = 200.0
+[node name="Imagen" type="TextureRect" parent="Fondo"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-theme_override_constants/separation = 14
+texture = ExtResource("3")
+expand_mode = 1
+stretch_mode = 6
+mouse_filter = 2
+
+[node name="Velo" type="ColorRect" parent="Fondo"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.005, 0.025, 0.035, 0.82)
+mouse_filter = 2
+
+[node name="Panel" type="Control" parent="Fondo"]
+layout_mode = 0
+offset_left = 0.0
+offset_top = 0.0
+offset_right = 1920.0
+offset_bottom = 1080.0
+theme = ExtResource("2")
+mouse_filter = 2
+
+[node name="Cabecera" type="TextureRect" parent="Fondo/Panel"]
+layout_mode = 0
+offset_left = 71.0
+offset_top = 45.0
+offset_right = 1783.0
+offset_bottom = 115.3
+texture = ExtResource("4")
+expand_mode = 1
+mouse_filter = 2
+
+[node name="Titulo" type="Label" parent="Fondo/Panel"]
+layout_mode = 0
+offset_left = 101.0
+offset_top = 54.0
+offset_right = 345.0
+offset_bottom = 102.0
+theme_override_font_sizes/font_size = 44
+
+[node name="Cliente" type="Label" parent="Fondo/Panel"]
+layout_mode = 0
+offset_left = 71.0
+offset_top = 137.0
+offset_right = 400.0
+offset_bottom = 202.0
+theme_type_variation = &"Titulo"
 
 [node name="Nombre" type="Label" parent="Fondo/Panel"]
-layout_mode = 2
-theme_override_font_sizes/font_size = 30
+layout_mode = 0
+offset_left = 95.0
+offset_top = 269.0
+offset_right = 376.0
+offset_bottom = 493.0
+autowrap_mode = 3
 
-[node name="Lineas" type="VBoxContainer" parent="Fondo/Panel"]
-layout_mode = 2
-theme_override_constants/separation = 6
+[node name="Linea" type="TextureRect" parent="Fondo/Panel"]
+layout_mode = 0
+offset_left = 624.0
+offset_top = 154.0
+offset_right = 1743.5
+offset_bottom = 156.0
+texture = ExtResource("5")
+expand_mode = 1
+mouse_filter = 2
 
-[node name="Aviso" type="Label" parent="Fondo/Panel"]
+[node name="Solapa" type="TextureRect" parent="Fondo/Panel"]
+layout_mode = 0
+offset_left = 629.72
+offset_top = 131.5
+offset_right = 695.499
+offset_bottom = 154.5
+texture = ExtResource("6")
+expand_mode = 1
+mouse_filter = 2
+
+[node name="PanelPedido" type="PanelContainer" parent="Fondo/Panel"]
+layout_mode = 0
+offset_left = 430.0
+offset_top = 192.0
+offset_right = 1235.0
+offset_bottom = 939.0
+mouse_filter = 2
+
+[node name="PanelCobro" type="PanelContainer" parent="Fondo/Panel"]
+layout_mode = 0
+offset_left = 1258.0
+offset_top = 192.0
+offset_right = 1857.0
+offset_bottom = 939.0
+mouse_filter = 2
+
+[node name="Pedido" type="Label" parent="Fondo/Panel"]
+layout_mode = 0
+offset_left = 454.0
+offset_top = 216.0
+offset_right = 1211.0
+offset_bottom = 280.0
+theme_type_variation = &"Titulo"
+
+[node name="SeparadorPedido" type="HSeparator" parent="Fondo/Panel"]
+layout_mode = 0
+offset_left = 454.0
+offset_top = 304.0
+offset_right = 1211.0
+offset_bottom = 306.0
+mouse_filter = 2
+
+[node name="Lectura" type="ScrollContainer" parent="Fondo/Panel"]
+layout_mode = 0
+offset_left = 454.0
+offset_top = 330.0
+offset_right = 1211.0
+offset_bottom = 903.0
+horizontal_scroll_mode = 0
+
+[node name="Lineas" type="VBoxContainer" parent="Fondo/Panel/Lectura"]
 layout_mode = 2
-theme_override_font_sizes/font_size = 20
+size_flags_horizontal = 3
+theme_override_constants/separation = 24
+
+[node name="Cobro" type="Label" parent="Fondo/Panel"]
+layout_mode = 0
+offset_left = 1294.0
+offset_top = 216.0
+offset_right = 1821.0
+offset_bottom = 280.0
+theme_type_variation = &"Titulo"
+
+[node name="SeparadorCobro" type="HSeparator" parent="Fondo/Panel"]
+layout_mode = 0
+offset_left = 1294.0
+offset_top = 304.0
+offset_right = 1821.0
+offset_bottom = 306.0
+mouse_filter = 2
+
+[node name="Estado" type="ScrollContainer" parent="Fondo/Panel"]
+layout_mode = 0
+offset_left = 1294.0
+offset_top = 330.0
+offset_right = 1821.0
+offset_bottom = 669.0
+horizontal_scroll_mode = 0
+
+[node name="Aviso" type="Label" parent="Fondo/Panel/Estado"]
+layout_mode = 2
+size_flags_horizontal = 3
 autowrap_mode = 3
 
 [node name="Cobrar" type="Button" parent="Fondo/Panel"]
-layout_mode = 2
+layout_mode = 0
+offset_left = 1294.0
+offset_top = 717.0
+offset_right = 1821.0
+offset_bottom = 789.0
+
 
 [node name="Despachar" type="Button" parent="Fondo/Panel"]
-layout_mode = 2
+layout_mode = 0
+offset_left = 1294.0
+offset_top = 813.0
+offset_right = 1821.0
+offset_bottom = 903.0
+
+
+[node name="Salida" type="Label" parent="Fondo/Panel"]
+layout_mode = 0
+offset_left = 71.0
+offset_top = 963.0
+offset_right = 1857.0
+offset_bottom = 1011.0
+theme_type_variation = &"TextoSecundario"
+horizontal_alignment = 2
+mouse_filter = 2

@@ -48,6 +48,6 @@ func pedir_depositar(id: StringName, distancia: float) -> TareaDeLaBasura.Result
 	if not _tarea.completada():
 		return resultado
 	# La `Tarea` sale de `RelojDelTurno.obligatoria()` y nunca de una construida acá: una copia
-	# devuelve `true`, descuenta el tiempo igual y deja el contador del HUD clavado.
+	# devuelve `true` y deja el contador del HUD clavado.
 	reloj.completar(reloj.obligatoria(Tarea.Tipo.SACAR_LA_BASURA))
 	return resultado

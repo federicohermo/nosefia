@@ -26,7 +26,8 @@ provenance: <de dónde sale el contenido>
 
 ## Comportamiento normativo
 
-<!-- Un encabezado por regla con ID tipado estable. No se renumera ni se reutiliza: se retira.
+<!-- Un encabezado por regla con ID tipado estable. No se renumera ni se reutiliza.
+     Retirar es borrar: la regla sale entera, con su test, y el número queda como hueco.
      EARS: "El sistema DEBE", "CUANDO <disparador>, el sistema DEBE",
      "SI <condición>, ENTONCES el sistema DEBE", "MIENTRAS <estado>, el sistema DEBE".
      Un cálculo va con su fórmula y sus valores de referencia. -->

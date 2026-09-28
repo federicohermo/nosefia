@@ -134,7 +134,9 @@ func test_el_almacen_instancia_el_audio_exactamente_una_vez() -> void:
 func test_el_dominio_no_nombra_un_solo_nodo_de_audio() -> void:
 	# `AudioStreamPlayer` es un `Node` y `AudioServer` es el motor: los dos romperían la
 	# propiedad de la que cuelga todo lo demás — que el dominio se ejerza sin levantar una escena.
-	for ruta: String in ["entrada_sonora.gd", "tabla_de_sonidos.gd", "ronda_de_voces.gd"]:
+	for ruta: String in DirAccess.get_files_at("res://src/dominio/ambiente"):
+		if not ruta.ends_with(".gd"):
+			continue
 		var texto := FileAccess.get_file_as_string("res://src/dominio/ambiente/" + ruta)
 		assert_str(texto).is_not_empty()
 		for prohibido: String in ["AudioStreamPlayer", "AudioServer"]:
@@ -156,7 +158,7 @@ func test_la_cascara_carga_con_sus_dos_sistemas_cableados() -> void:
 func test_cada_senal_de_la_tabla_la_declara_alguien_de_verdad() -> void:
 	# **El agujero que deja el desacople.** El enlace es por nombre de señal, así que un nombre
 	# que no existe no rompe nada: la fila cae en `sin_fuente()`, que es un estado normal, y las
-	# suites del enlazador usan fuentes inventadas — con lo cual los seis nodos dan verde y ese
+	# suites del enlazador usan fuentes inventadas — con lo cual los nodos dan verde y ese
 	# sonido no se pide nunca en el juego. Está medido: la fila del timbre decía
 	# `timbre_de_la_ventanilla`, que no lo declara nadie, y nada lo dijo.
 	#
@@ -190,7 +192,7 @@ func test_el_almacen_llega_cableado_al_audio_y_al_agarre() -> void:
 	# Sin `_audio` el juego muere en el primer cuadro; sin `_agarre`, las tres señales del
 	# agarre quedan mudas para siempre y nada lo dice.
 	var almacen: Node3D = auto_free(load(ESCENA_DEL_ALMACEN).instantiate())
-	for propiedad in ["_audio", "_agarre"]:
+	for propiedad: String in ["_audio", "_agarre"]:
 		(
 			assert_object(almacen.get(propiedad))
 			. override_failure_message(
@@ -213,6 +215,52 @@ func test_el_cableado_enlaza_las_fuentes_y_arranca_el_ambiente() -> void:
 	assert_array(enlaza.search_all(texto)).is_not_empty()
 	var ambiente := RegEx.create_from_string("_audio\\s*\\.\\s*arrancar_el_ambiente\\(\\)")
 	assert_array(ambiente.search_all(texto)).is_not_empty()
+
+
+func test_cada_emisor_de_la_tabla_esta_en_la_escena() -> void:
+	# Un emisor que falta deja su fila rechazada por no tener lugar, y el timbre no suena nunca.
+	var audio: Node = auto_free(load(ESCENA).instantiate())
+	var emisores: Node3D = audio.get("emisores")
+	assert_object(emisores).is_not_null()
+	if emisores == null:
+		return
+	for entrada: EntradaSonora in TablaDeSonidos.desde_disco().entradas:
+		if entrada.emisor == &"":
+			continue
+		var emisor := emisores.get_node_or_null(NodePath(String(entrada.emisor)))
+		(
+			assert_object(emisor)
+			. override_failure_message("la escena no tiene el emisor `%s`" % entrada.emisor)
+			. is_not_null()
+		)
+
+
+func test_el_ambiente_tiene_sus_emisores_en_la_heladera_y_los_tubos() -> void:
+	var audio: Node = auto_free(load(ESCENA).instantiate())
+	var emisores: Node3D = audio.get("emisores")
+	var ambiente := TablaDeSonidos.desde_disco().de(EntradaSonora.Evento.AMBIENTE_DEL_LOCAL)
+	var neon := emisores.get_node(NodePath(String(ambiente.emisor)))
+	assert_int(neon.get_child_count()).is_greater(EmisoresDelAmbiente.TOPE)
+
+
+func test_el_jugador_es_una_fuente_del_audio() -> void:
+	# Sin esto `paso_dado` queda sin fuente, que es un estado normal y nada lo avisa.
+	var texto := FileAccess.get_file_as_string(SCRIPT_DEL_ALMACEN)
+	var fuentes := RegEx.create_from_string("(?s)_audio\\s*\\.\\s*enlazar\\(\\s*\\[([^\\]]*)\\]")
+	var hallado := fuentes.search(texto)
+	assert_object(hallado).is_not_null()
+	if hallado != null:
+		assert_str(hallado.get_string(1)).contains("_jugador")
+
+
+func test_la_jornada_arranca_la_musica_y_el_cierre_la_corta() -> void:
+	var cascara := FileAccess.get_file_as_string(SCRIPT)
+	for funcion: String in ["arrancar_el_ambiente", "callar_la_musica"]:
+		var cuerpo := cascara.get_slice("func %s(" % funcion, 1).get_slice("\nfunc ", 0)
+		assert_str(cuerpo).contains("EntradaSonora.Evento.MUSICA_DE_LA_NOCHE")
+	var texto := FileAccess.get_file_as_string(SCRIPT_DEL_ALMACEN)
+	var corta := RegEx.create_from_string("_audio\\s*\\.\\s*callar_la_musica\\(\\)")
+	assert_array(corta.search_all(texto)).is_not_empty()
 
 
 ## Todos los `.gd` de `src/`, para el caso de las señales de la tabla.

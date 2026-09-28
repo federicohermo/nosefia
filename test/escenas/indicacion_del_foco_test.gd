@@ -30,7 +30,7 @@ func test_el_campo_real_resalta_la_computadora_y_solo_la_zona_de_reposicion() ->
 		func(objetivo: Node3D, _distancia: float) -> void: avisos.append(objetivo)
 	)
 	jugador.objetivo_perdido.connect(func() -> void: perdidos.append(true))
-	for objetivo in [computadora, estante]:
+	for objetivo: Node3D in [computadora, estante]:
 		var ojo := computadora.global_position + Vector3(0, 1, 1)
 		var punto := computadora.global_position
 		if objetivo == estante:
@@ -67,6 +67,8 @@ func test_las_senales_del_doble_llegan_al_marco_y_al_hud() -> void:
 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
 	var jugador: JugadorDoble = auto_free(JugadorDoble.new())
 	almacen.get("_jugador").set_physics_process(false)
+	# Abrir la jornada termina el examen del jugador: el doble usa el de la escena.
+	jugador.examen = almacen.get("_jugador").examen
 	almacen.set("_jugador", jugador)
 	add_child(almacen)
 	var hud: Hud = almacen.get("_hud")
@@ -82,7 +84,7 @@ func test_las_senales_del_doble_llegan_al_marco_y_al_hud() -> void:
 
 func _mirar(jugador: CharacterBody3D, ojo: Vector3, punto: Vector3) -> void:
 	jugador.global_position = ojo - Vector3.UP * ReglasDelJugador.ALTURA_DE_LA_CAMARA
-	jugador.get_node("Camara").look_at(punto)
+	jugador.get_node("Giro/Camara").look_at(punto)
 	for cuadro in 4:
 		await get_tree().physics_frame
 	jugador.call("_leer_la_mira")

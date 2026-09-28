@@ -1,6 +1,6 @@
 # La imposibilidad de la deuda
 
-**Los seis skills que escriben traen su copia, y la de `to-spec` es la canónica.** Un skill es la
+**Cada skill que escribe trae su copia, y la de `to-spec` es la canónica.** Un skill es la
 unidad que se instala: trae su implementación completa y ninguno lee este archivo por ruta.
 `test_copias_de_skills.py` da rojo si una copia difiere en un byte. `shape` y `review-spec-drift`
 no la traen: no escriben nada, así que no pueden dejar deuda.
@@ -15,7 +15,8 @@ encuentra, la corrida lo descarga — y descargar tiene una lista cerrada de for
 |---|---|
 | **review** (`pr-review`, `pr-review-batch`) | con **todo** lo que encontraron descargado, verificado, commiteado y pusheado |
 | **contrato** (`to-spec`) | con el comportamiento de la capacidad entero, en criterios cerrables por un agente. Un hueco es una `OQ-<COD>-###`, nunca un valor inventado |
-| **reparto** (`spec-to-tickets`) | con cada criterio asignado a un issue, o declarado fuera del lote y por qué |
+| **plan** (`to-issue`) | con el issue publicado, sus límites medidos contra el árbol de hoy, y el tipo y el spec que toca declarados |
+| **fichas** (`features-to-issues`) | con cada ficha 🟩 traducida a su issue, o declarada fuera del lote y por qué, y la ficha apuntando a él |
 | **implementación** (`implement-feature`, `implement-batch`) | con todo lo que el issue pide hecho, el PR abierto, y un test que nombra cada criterio que entrega |
 
 **«Descargado» no es «metido en este PR».** Dónde aterriza el fix es una decisión aparte de si se
@@ -102,8 +103,8 @@ sin arreglar — y ésa incluye a la que no miró para no tener que arreglar.
 Un bloqueo se descarga así:
 
 1. **Reintentá por otro camino.** Si vino del hook, **mirá el nombre de tu rama antes que nada**:
-   `gate_de_rama.py` sólo deja escribir en `src/` desde `feature/<issue>-<kebab>`, `bugfix/` o
-   `hotfix/`. Es la causa número uno, y el síntoma —un `Edit` denegado— se lee como un problema de
+   `gate_de_rama.py` sólo deja escribir en `src/` desde los prefijos que su mensaje nombra. Es
+   la causa número uno, y el síntoma —un `Edit` denegado— se lee como un problema de
    permisos y no de nombre.
 2. Si sigue bloqueado, **la corrida no cierra en verde**: el reporte arranca con
    `BLOQUEADO: <qué> — <quién>` y el fix exacto en una línea copiable.
@@ -112,9 +113,9 @@ Un bloqueo se descarga así:
 
 ## Los issues son plan, no vertedero
 
-Un issue es el **plan de una unidad de entrega**, con la forma de
-`.github/ISSUE_TEMPLATE/task-brief.md`. Legítimo: un pedido que llega de afuera, un contrato que
-se reparte, un bug reportado. **No legítimo:** abrir uno como forma de terminar. Un hallazgo
+Un issue es el **plan chico y descartable de un cambio puntual**, con la forma de
+`.github/ISSUE_TEMPLATE/task-brief.md`. Legítimo: un pedido que llega de afuera, una
+funcionalidad que se va a cambiar, un bug reportado. **No legítimo:** abrir uno como forma de terminar. Un hallazgo
 convertido en issue es trabajo que la corrida encontró, entendió y decidió no hacer.
 
 La única excepción es la descarga 4 con la respuesta ya dada: **el issue lo registra la decisión
@@ -131,12 +132,22 @@ entregable más caro y el único que hace que el hallazgo no vuelva.
 |---|---|
 | un criterio que no se puede ver fallar | `to-spec` |
 | una regla del juego ubicada en `ui/` o en `escenas/` | `to-spec` — el eje de capas se escribió tarde |
+| una medición corrida en el proceso equivocado | `to-spec` — lo que el motor soporta se midió en el editor y no en el juego: el editor contestó que sí y el juego que no |
 | un criterio que **barre un directorio y enumera excepciones** sin haber corrido el barrido | `to-spec` — de memoria sale corta y el criterio nace imposible de pasar |
 | un identificador que el spec escribe en `código` y que no existe en el repo | `to-spec` — se escribió la prosa sin grepearla |
 | un spec que nombra un archivo o una clase | `to-spec` — caduca con el refactor siguiente |
-| un issue sin límites de archivo, o con límites que no se cruzaron contra el árbol de hoy | `spec-to-tickets` |
-| dos issues que se pisan la misma escena | `spec-to-tickets` — un `.tscn` compartido se ordena, no se paraleliza |
-| una frontera que un issue le pasa a otro y que el otro **no recoge** | `spec-to-tickets` — el reparto dejó un criterio sin dueño |
+| una tabla de valores que **no cierra consigo misma** —dos filas que implican duraciones distintas, o una hora de cierre que no es la apertura más la duración— | `to-spec` y `to-issue` — cada fila se recalcula desde la regla antes de escribirla, y las dos puntas se derivan, no se copian de la ficha |
+| un issue sin límites de archivo, o con límites que no se cruzaron contra el árbol de hoy | `to-issue` |
+| un archivo en «Sólo lectura» que **nombra por ruta** algo que el issue deja renombrar | `to-issue` — el `rg` de los límites se corre también sobre los comentarios |
+| un comentario o un test fuera de «Se escribe» que **explica o arma la regla que el issue cambia** | `to-issue` — el `rg` de los límites busca la regla vieja en palabras, no sólo sus símbolos |
+| dos issues que se pisan la misma escena | `to-issue` — un `.tscn` compartido se ordena, no se paraleliza |
+| un criterio de bug que pide un rojo que en sus propias condiciones no aparece | `to-issue` — el síntoma se midió con el caso que el criterio excluye adentro |
+| un criterio de rendimiento medido desde una vista donde **lo que el cambio agrega no se ve** | `to-issue` — el criterio no dijo desde dónde se mide, y lo que no se ve puede no costar nada |
+| un issue que cambia lo que el juego hace y declara «Spec: ninguno» | `to-issue` — el tipo se decidió sin la prueba del spec |
+| un issue que escribe a disco sin decir cómo lo aíslan los tests | `to-issue` — las suites que levantan la escena escriben la carpeta del usuario, y ningún gate lo ve |
+| un criterio de un issue que contradice un criterio `ratified` de otra capacidad | `to-issue` — el `rg` de los límites no buscó la regla en los specs vecinos |
+| varios carriles que pierden una vuelta con un comando compuesto en Bash | `implement-batch` — el preámbulo no dijo que el worktree los rechaza |
+| una ficha verde de Notion que se cayó del lote sin motivo escrito | `features-to-issues` — el reparto no se mostró entero |
 | un nodo del harness en verde sin haber ejercido nada | `implement-feature` — se leyó el color del nodo y no el conteo |
 | dos carriles que se pisan un archivo de scratch | `implement-batch` — el prompt no le dio un nombre propio |
 | un worktree que quedó abierto y el limpiador dijo que no | `implement-batch` — salía de `git worktree list`, que no ve al que git ya soltó |

@@ -11,5 +11,6 @@ texto = "El código de barras no es el del proveedor de siempre."
 script = ExtResource("1_objeto")
 id = &"caja_de_fideos"
 nombre = "Caja de fideos"
+sonoridad = 2
 levantable = true
 revelacion = SubResource("Resource_revelacion")

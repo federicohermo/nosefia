@@ -1,15 +1,27 @@
-[gd_scene load_steps=5 format=3]
+[gd_scene format=3]
 
-[ext_resource type="Script" path="res://src/ui/diegetica/pantalla_de_computadora.gd" id="1_pantalla"]
-[ext_resource type="PackedScene" path="res://src/ui/diegetica/app_caja.tscn" id="2_caja"]
-[ext_resource type="PackedScene" path="res://src/ui/diegetica/app_chats.tscn" id="3_chats"]
-[ext_resource type="PackedScene" path="res://src/ui/diegetica/app_notas.tscn" id="4_notas"]
+[ext_resource type="Script" path="res://src/ui/diegetica/pantalla_de_computadora.gd" id="1"]
 
-[node name="PantallaDeComputadora" type="CanvasLayer" node_paths=PackedStringArray("_fondo", "_pestanas", "_caja", "_chats", "_notas")]
+[ext_resource type="PackedScene" path="res://src/ui/diegetica/app_caja.tscn" id="2"]
+
+[ext_resource type="PackedScene" path="res://src/ui/diegetica/app_chats.tscn" id="3"]
+
+[ext_resource type="PackedScene" path="res://src/ui/diegetica/app_notas.tscn" id="4"]
+
+[ext_resource type="Theme" path="res://assets/ui/manada/tema.tres" id="5"]
+
+[ext_resource type="Texture2D" path="res://assets/ui/manada/fondo.png" id="6"]
+
+[ext_resource type="Texture2D" path="res://assets/ui/manada/cabecera.svg" id="7"]
+
+[node name="PantallaDeComputadora" type="CanvasLayer" node_paths=PackedStringArray("_fondo", "_marco", "_titulo", "_opciones", "_salida", "_caja", "_chats", "_notas")]
 layer = 3
-script = ExtResource("1_pantalla")
+script = ExtResource("1")
 _fondo = NodePath("Fondo")
-_pestanas = NodePath("Fondo/Marco/Pestanas")
+_marco = NodePath("Fondo/Marco")
+_titulo = NodePath("Fondo/Marco/Titulo")
+_opciones = NodePath("Fondo/Marco/Opciones")
+_salida = NodePath("Fondo/Marco/Salida")
 _caja = NodePath("Fondo/Marco/Apps/AppCaja")
 _chats = NodePath("Fondo/Marco/Apps/AppChats")
 _notas = NodePath("Fondo/Marco/Apps/AppNotas")
@@ -20,38 +32,91 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-color = Color(0.05, 0.06, 0.08, 0.94)
+color = Color(0.015, 0.025, 0.025, 1)
 
-[node name="Marco" type="VBoxContainer" parent="Fondo"]
-layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -380.0
-offset_top = -270.0
-offset_right = 380.0
-offset_bottom = 270.0
+[node name="Imagen" type="TextureRect" parent="Fondo"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-theme_override_constants/separation = 12
+texture = ExtResource("6")
+expand_mode = 1
+stretch_mode = 6
+mouse_filter = 2
 
-[node name="Pestanas" type="HBoxContainer" parent="Fondo/Marco"]
-layout_mode = 2
-theme_override_constants/separation = 8
+[node name="Velo" type="ColorRect" parent="Fondo"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.005, 0.025, 0.035, 0.82)
+mouse_filter = 2
+
+[node name="Marco" type="Control" parent="Fondo"]
+layout_mode = 0
+offset_left = 0.0
+offset_top = 0.0
+offset_right = 1920.0
+offset_bottom = 1080.0
+theme = ExtResource("5")
+mouse_filter = 2
+
+[node name="Cabecera" type="TextureRect" parent="Fondo/Marco"]
+layout_mode = 0
+offset_left = 71.0
+offset_top = 45.0
+offset_right = 1783.0
+offset_bottom = 115.3
+texture = ExtResource("7")
+expand_mode = 1
+stretch_mode = 0
+mouse_filter = 2
+
+[node name="Opciones" type="HBoxContainer" parent="Fondo/Marco"]
+layout_mode = 0
+offset_left = 1120.0
+offset_top = 22.0
+offset_right = 1758.0
+offset_bottom = 94.0
+theme_override_constants/separation = 18
+alignment = 2
+
+[node name="Titulo" type="Label" parent="Fondo/Marco"]
+layout_mode = 0
+offset_left = 100.0
+offset_top = 54.0
+offset_right = 344.0
+offset_bottom = 102.0
+theme_override_font_sizes/font_size = 44
+mouse_filter = 2
 
 [node name="Apps" type="Control" parent="Fondo/Marco"]
-custom_minimum_size = Vector2(0, 460)
-layout_mode = 2
+layout_mode = 0
+offset_left = 0.0
+offset_top = 125.0
+offset_right = 1920.0
+offset_bottom = 1010.0
+mouse_filter = 2
 
-[node name="AppCaja" parent="Fondo/Marco/Apps" instance=ExtResource("2_caja")]
-layout_mode = 1
+[node name="AppCaja" parent="Fondo/Marco/Apps" instance=ExtResource("2")]
+layout_mode = 0
 
-[node name="AppChats" parent="Fondo/Marco/Apps" instance=ExtResource("3_chats")]
-layout_mode = 1
+[node name="AppChats" parent="Fondo/Marco/Apps" instance=ExtResource("3")]
+layout_mode = 0
 visible = false
 
-[node name="AppNotas" parent="Fondo/Marco/Apps" instance=ExtResource("4_notas")]
-layout_mode = 1
+[node name="AppNotas" parent="Fondo/Marco/Apps" instance=ExtResource("4")]
+layout_mode = 0
 visible = false
+
+[node name="Salida" type="Label" parent="Fondo/Marco"]
+layout_mode = 0
+offset_left = 71.0
+offset_top = 963.0
+offset_right = 1857.0
+offset_bottom = 1011.0
+theme_type_variation = &"TextoSecundario"
+mouse_filter = 2
+horizontal_alignment = 2

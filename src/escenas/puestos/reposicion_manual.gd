@@ -8,9 +8,6 @@ const JugadorDelLocal := preload("res://src/escenas/jugador.gd")
 const OBJETO := preload("res://src/escenas/objetos/objeto_agarrable.tscn")
 const FANTASMA := preload("res://src/escenas/puestos/fantasma_de_reposicion.gdshader")
 
-## Hasta dónde se busca piso debajo de una caja recién soltada, en metros.
-const CAIDA_MAXIMA := 3.0
-
 ## Cuántas veces se parte al medio la búsqueda del borde de un apoyo.
 const PASOS_DEL_BORDE := 12
 
@@ -29,9 +26,6 @@ const HOLGURA_DE_LA_MIRA := 0.1
 ## Hasta cuántas cajas se sube buscando la tapa de una pila. Es un tope de cordura: el techo del
 ## local corta antes.
 const PISOS_DE_UNA_PILA := 8
-
-## Cuántas direcciones alrededor del jugador se prueban para dejarle la caja al lado.
-const LADOS_DEL_JUGADOR := 8
 
 ## Las exhibiciones que el jugador NO repone: un `MeshInstance3D` por bloque, en el orden de
 ## `DisposicionDeLaGondola.guias`.
@@ -194,7 +188,7 @@ func _colgar_la_caja(nodo: Node3D) -> void:
 		return
 	repositor.agarre.mover_lo_sostenido(punto_de_la_caja)
 	jugador.ocupar_el_frente(true)
-	_despertar_lo_de_arriba(nodo)
+	despertar_lo_de_arriba(nodo)
 
 
 ## Apoya la caja recién soltada donde el jugador tiene la mira, derecha y de una.
@@ -234,8 +228,10 @@ func _apoyar_la_caja(nodo: Node3D) -> void:
 func _cerca_de(caja: CajaDelDeposito, punto: Vector3) -> bool:
 	var paso := _media_caja(caja).x / PASOS_PARA_ACERCAR * 2.0
 	for anillo in PASOS_PARA_ACERCAR + 1:
-		for lado in 1 if anillo == 0 else LADOS_DEL_JUGADOR:
-			var corrido := Basis(Vector3.UP, TAU * lado / LADOS_DEL_JUGADOR) * Vector3.RIGHT
+		for lado in 1 if anillo == 0 else ReglasDeLosObjetos.LADOS_ALREDEDOR:
+			var corrido := (
+				Basis(Vector3.UP, TAU * lado / ReglasDeLosObjetos.LADOS_ALREDEDOR) * Vector3.RIGHT
+			)
 			var candidato := punto + corrido * paso * anillo
 			if anillo > 0 and not _hay_apoyo(caja, candidato, punto.y):
 				continue
@@ -250,30 +246,30 @@ func _cerca_de(caja: CajaDelDeposito, punto: Vector3) -> bool:
 	return false
 
 
-## Despierta las cajas que la que se acaba de levantar estaba sosteniendo, y es lo que desarma
-## una pila: sacada la de abajo, las de arriba caen hasta el primer apoyo que encuentren.
+## Despierta lo que una caja estaba sosteniendo, y es lo que desarma una pila: sacada la de
+## abajo, las de arriba caen hasta el primer apoyo que encuentren. Vale igual para una caja
+## levantada y para una empujada: en los dos casos la caja se fue.
 ##
 ## Se mira desde **el lugar que dejó** y no desde donde está: para cuando `objeto_agarrado`
 ## avisa, `Agarre` ya la colgó de la mano, así que su `global_position` es el puño del jugador y
 ## ahí arriba no hay ninguna pila.
-func _despertar_lo_de_arriba(nodo: Node3D) -> void:
+func despertar_lo_de_arriba(nodo: Node3D) -> void:
 	var caja := nodo as CajaDelDeposito
 	if caja == null:
 		return
 	_despertar_sobre(caja, caja.apoyo_que_dejo())
 
 
-## Despierta lo apoyado sobre un lugar, y sigue hacia arriba desde cada una que despierta.
+## Despierta lo apoyado sobre un lugar, y sigue hacia arriba desde cada caja que despierta.
 ##
 ## **En cascada, porque una pila es una cadena.** Despertar un solo piso alcanza para dos —la de
-## encima cae, y la siguiente se entera de refilón porque el volumen que se consulta llega a
-## rozarla—, y a partir de la tercera no. Medido con cinco pisos: sacando la base caían la
-## segunda y la tercera, y la cuarta se quedaba flotando a 0,93 m de cualquier apoyo, con la
-## quinta prolijamente encima. Una caja congelada no se entera de que lo que la sostenía se fue.
+## encima cae, y la siguiente se entera de refilón—, y a partir de la tercera no. Una caja
+## congelada es estática para el motor, y un cuerpo estático que se va no despierta a nadie.
+## Lo que no es una caja sólo se despierta.
 ##
-## Despertar de más no cuesta nada, y por eso no se comprueba si la de arriba se iba a caer: si
-## tiene otro apoyo, el motor la deja donde está y la vuelve a dormir. La `freeze` que se mira no
-## es esa pregunta, es el corte de la recursión: una ya despierta no se vuelve a visitar.
+## Despertar de más no cuesta nada, y por eso no se comprueba si lo de arriba se iba a caer: si
+## tiene otro apoyo, el motor lo deja donde está y lo vuelve a dormir. La `freeze` que se mira
+## es el corte de la recursión: una caja ya despierta no se vuelve a visitar.
 func _despertar_sobre(caja: CajaDelDeposito, lugar: Vector3) -> void:
 	var forma: CollisionShape3D = caja.get_node("Cuerpo")
 	var media := _media_caja(caja)
@@ -285,15 +281,18 @@ func _despertar_sobre(caja: CajaDelDeposito, lugar: Vector3) -> void:
 	# **Ésta es la única consulta del archivo que NO pregunta por la máscara de la caja**, y la
 	# razón es el momento: esto corre desde `objeto_agarrado`, y para entonces `Agarre` ya le
 	# puso la máscara en 0 para que no choque con nada mientras la llevan. Preguntando por ella
-	# no contesta nadie y la pila se queda flotando. Acá filtra el tipo, que es más preciso que
-	# una capa: lo que se despierta son cajas, no cualquier cosa que estuviera ahí arriba.
+	# no contesta nadie y la pila se queda flotando. Acá filtra el tipo: lo rígido.
 	consulta.exclude = [caja.get_rid(), jugador.get_rid()]
 	for choque in get_world_3d().direct_space_state.intersect_shape(consulta, 8):
-		var encima := choque["collider"] as CajaDelDeposito
-		if encima == null or not encima.freeze:
+		var encima := choque["collider"] as RigidBody3D
+		if encima == null:
 			continue
-		encima.soltarse()
-		_despertar_sobre(encima, encima.global_position)
+		var caja_de_arriba := encima as CajaDelDeposito
+		if caja_de_arriba == null:
+			encima.sleeping = false
+		elif caja_de_arriba.freeze:
+			caja_de_arriba.soltarse()
+			_despertar_sobre(caja_de_arriba, caja_de_arriba.global_position)
 
 
 ## Deja la caja en el piso al lado del jugador. Devuelve si encontró dónde.
@@ -308,15 +307,19 @@ func _al_lado_del_jugador(caja: CajaDelDeposito) -> bool:
 	var cuerpo: CollisionShape3D = jugador.get_node("Cuerpo")
 	var media := _media_caja(caja)
 	var radio: float = (cuerpo.shape as CapsuleShape3D).radius + media.length()
-	for lado in LADOS_DEL_JUGADOR:
-		var vuelta := Basis(Vector3.UP, TAU * lado / LADOS_DEL_JUGADOR)
-		var costado := jugador.global_position + vuelta * (-jugador.global_basis.z * radio)
-		var golpe := _rayo(
-			caja, costado + Vector3.UP * media.y, costado + Vector3.DOWN * CAIDA_MAXIMA
-		)
-		if golpe.is_empty() or not ReglasDeLosObjetos.se_puede_apoyar_en(golpe["normal"].y):
-			continue
-		caja.global_position = _lugar_sobre(caja, golpe["position"])
+	var lugares := LugaresDelPiso.alrededor(
+		get_world_3d().direct_space_state,
+		jugador.global_position,
+		jugador.frente(),
+		radio,
+		media.y,
+		ReglasDeLosObjetos.CAIDA_HASTA_EL_PISO,
+		ReglasDeLosObjetos.LADOS_ALREDEDOR,
+		caja.collision_mask,
+		[caja.get_rid(), jugador.get_rid()]
+	)
+	for lugar in lugares:
+		caja.global_position = _lugar_sobre(caja, lugar)
 		if _entra_entera(caja) and not _le_queda_encima_al_jugador(caja):
 			return true
 	return false
@@ -333,6 +336,8 @@ func _al_lado_del_jugador(caja: CajaDelDeposito) -> bool:
 func _entra_entera(caja: CajaDelDeposito) -> bool:
 	var forma: CollisionShape3D = caja.get_node("Cuerpo")
 	var encogida := BoxShape3D.new()
+	# Jolt redondea las aristas con el margen, y una esquina metida unos milímetros no choca.
+	encogida.margin = 0.0
 	encogida.size = (
 		(forma.shape as BoxShape3D).size * forma.scale - Vector3.ONE * ReglasDeLosObjetos.ROCE
 	)
@@ -378,7 +383,7 @@ func _apoyo_apuntado(caja: CajaDelDeposito) -> Dictionary:
 		# Media caja hacia atrás: el rayo que baja no puede arrancar adentro de lo que la caja
 		# va a ocupar.
 		var punto := lejos + (ojo.origin - lejos).normalized() * _media_caja(caja).length()
-		golpe = _rayo(caja, punto, punto + Vector3.DOWN * CAIDA_MAXIMA)
+		golpe = _rayo(caja, punto, punto + Vector3.DOWN * ReglasDeLosObjetos.CAIDA_HASTA_EL_PISO)
 	elif not ReglasDeLosObjetos.se_puede_apoyar_en(golpe["normal"].y):
 		var enfrente := golpe["collider"] as CajaDelDeposito
 		if enfrente != null:
@@ -495,7 +500,9 @@ func _apoyo_al_pie(caja: CajaDelDeposito, pared: Dictionary) -> Dictionary:
 	var mejor := {}
 	for corrido: float in [0.0, -media.x, media.x]:
 		var punto := desde + afuera.cross(Vector3.UP) * corrido
-		var golpe := _rayo(caja, punto, punto + Vector3.DOWN * CAIDA_MAXIMA)
+		var golpe := _rayo(
+			caja, punto, punto + Vector3.DOWN * ReglasDeLosObjetos.CAIDA_HASTA_EL_PISO
+		)
 		if golpe.is_empty() or not ReglasDeLosObjetos.se_puede_apoyar_en(golpe["normal"].y):
 			continue
 		if mejor.is_empty() or golpe["position"].y > mejor["position"].y + TOLERANCIA_DEL_APOYO:
@@ -840,7 +847,7 @@ func _preparar_la_guia() -> void:
 		_guias_sumadas[id] = DisposicionDeLaGondola.copias(sumadas[id])
 		copias.visible_instance_count = _primera_dibujada(id)
 	var numero := 0
-	for clave in sueltas:
+	for clave: int in sueltas:
 		var modelo: MeshInstance3D = sueltas[clave][0]
 		var herramienta := SurfaceTool.new()
 		herramienta.append_from(modelo.mesh, 0, Transform3D(modelo.global_basis, Vector3.ZERO))
@@ -912,8 +919,6 @@ func retirar(id: Producto.Id) -> void:
 		add_child(unidad)
 		_unidades.append(unidad)
 		unidad.add_collision_exception_with(jugador)
-		# Las bolsas delgadas necesitan detectar el impacto entre pasos de física.
-		unidad.continuous_cd = true
 	# El frente de cada modelo se alinea antes de darle la inclinación de la mano.
 	unidad.orientacion_en_mano = (
 		Basis.from_euler(Vector3(deg_to_rad(-17), deg_to_rad(-20), 0))
@@ -956,25 +961,6 @@ func _guardar_cuerpo(unidad: ObjetoAgarrable) -> void:
 		unidad.queue_free()
 	else:
 		_disponible = unidad
-
-
-## Deja el dibujo de la góndola en las unidades que el inventario dice que quedan.
-##
-## Vender no pasa por acá: descuenta en `Inventario`, y sin este repintado la góndola seguiría
-## mostrando lo que ya no está. Se redibuja el catálogo entero y no sólo lo vendido porque la
-## atención despacha varios productos de una y el despachado no dice cuáles.
-##
-## **Baja `visible_instance_count` en vez de borrar copias**, y es lo que lo deja de acuerdo con
-## `_apoyo()`: la próxima unidad se coloca en el índice que devuelve `unidades_en_gondola`, o sea
-## justo la primera copia que este método acaba de ocultar. Borrar copias correría los índices y
-## la unidad repuesta caería sobre una que ya se ve.
-func actualizar_stock(_despachados: int) -> void:
-	for producto in Catalogo.todos():
-		var copias := _grupos[producto.id].multimesh
-		copias.visible_instance_count = (
-			_primera_dibujada(producto.id) + repositor.estante().unidades_en_gondola(producto)
-		)
-	_actualizar_zonas()
 
 
 func limpiar() -> void:

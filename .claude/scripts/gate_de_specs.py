@@ -9,7 +9,7 @@ la puede ver una revisión sin abrir los nueve archivos a la vez:
    archivo por capacidad con el nombre de su carpeta.
 2. **Los IDs.** El código de tres letras es único en el repo, ningún ID está dos veces, y cada
    criterio nombra una regla **que existe** en su propio spec. Un `verifica BR-CHK-009` que no
-   existe es una cita rota, y es lo que pasa cuando una regla se retira y el criterio se queda.
+   existe es una cita rota, y es lo que pasa cuando una regla se borra y el criterio se queda.
 3. **Los archivos del régimen viejo.** `spec.md`, `research.md`, `plan.md` y `tasks.md` no se
    escriben más. El día que alguien copie uno de otro repo, el rojo dice por qué.
 4. **El ancla AC↔test**, que es la única que muerde de verdad.

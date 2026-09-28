@@ -7,7 +7,7 @@ extends GdUnitTestSuite
 
 const TAREA := "res://src/dominio/almacen/tarea_de_atender.gd"
 
-const EN_GONDOLA := 9
+const VENDIBLES := 9
 
 
 func _productos() -> Array[Producto]:
@@ -20,11 +20,13 @@ func _pedido(unidades: int = 1) -> Venta:
 	return venta
 
 
-func _inventario(en_gondola: int = EN_GONDOLA) -> Inventario:
+## La góndola llena, así que todo el depósito es vendible.
+func _inventario(vendibles: int = VENDIBLES) -> Inventario:
 	var productos := _productos()
 	var inventario := Inventario.new(productos)
 	for producto in productos:
-		inventario.ingresar(producto, Inventario.Ubicacion.GONDOLA, en_gondola)
+		inventario.ingresar(producto, Inventario.Ubicacion.GONDOLA, producto.umbral)
+		inventario.ingresar(producto, Inventario.Ubicacion.DEPOSITO, vendibles)
 	return inventario
 
 
@@ -135,3 +137,63 @@ func test_en_la_ventanilla_esta_el_que_llego_y_todavia_no_se_despacho() -> void:
 	assert_object(tarea.en_ventanilla()).is_same(primero)
 	tarea.atencion().despachar_sin_vender()
 	assert_object(tarea.en_ventanilla()).is_null()
+
+
+func test_el_segundo_comprador_ve_los_vendibles_que_dejo_el_primero() -> void:  # AC-CTR-017
+	# Los dos compradores comparten el inventario. Si cada atención mirara una copia, el segundo
+	# vería los vendibles del principio de la noche y se llevaría lo que el estante necesita.
+	var producto := Producto.new(Producto.Id.ACTRONCITO, "Actroncito", 2500, 8)
+	var productos: Array[Producto] = [producto]
+	var inventario := Inventario.new(productos)
+	inventario.ingresar(producto, Inventario.Ubicacion.GONDOLA, 8)
+	inventario.ingresar(producto, Inventario.Ubicacion.DEPOSITO, 2)
+	var compradores: Array[Comprador] = []
+	for unidades: int in [1, 2]:
+		var pedido := Venta.new()
+		pedido.agregar(producto, unidades)
+		compradores.append(Comprador.new("Pide %d" % unidades, pedido, pedido.total()))
+	var tarea := TareaDeAtender.new(compradores, inventario)
+	tarea.atender()
+	assert_int(tarea.atencion().cobrar()).is_equal(Atencion.Resultado.COBRADA)
+	tarea.atender()
+	assert_int(tarea.atencion().cobrar()).is_equal(Atencion.Resultado.SIN_STOCK)
+	assert_int(inventario.unidades(producto, Inventario.Ubicacion.GONDOLA)).is_equal(8)
+
+
+func _compradores_que_piden(unidades: Array[int]) -> Array[Comprador]:
+	var lista: Array[Comprador] = []
+	for cuantas in unidades:
+		var pedido := _pedido(cuantas)
+		lista.append(Comprador.new("Pide %d" % cuantas, pedido, pedido.total()))
+	return lista
+
+
+func test_lo_vendido_suma_los_pedidos_cobrados_del_mismo_producto() -> void:  # AC-CTR-018
+	var tarea := TareaDeAtender.new(_compradores_que_piden([2, 1]), _inventario())
+	for _vez in 2:
+		tarea.atender()
+		tarea.atencion().cobrar()
+	assert_int(tarea.vendidas_de(Catalogo.de(Producto.Id.ACTRONCITO))).is_equal(3)
+
+
+func test_despachar_sin_vender_no_suma_a_lo_vendido() -> void:  # AC-CTR-019
+	var tarea := TareaDeAtender.new(_compradores_que_piden([2]), _inventario())
+	tarea.atender()
+	tarea.atencion().despachar_sin_vender()
+	assert_int(tarea.vendidas_de(Catalogo.de(Producto.Id.ACTRONCITO))).is_equal(0)
+
+
+func test_un_cobro_rechazado_no_suma_a_lo_vendido() -> void:  # AC-CTR-019
+	var tarea := TareaDeAtender.new(_compradores_que_piden([2]), _inventario(1))
+	tarea.atender()
+	assert_int(tarea.atencion().cobrar()).is_equal(Atencion.Resultado.SIN_STOCK)
+	assert_int(tarea.vendidas_de(Catalogo.de(Producto.Id.ACTRONCITO))).is_equal(0)
+
+
+func test_un_producto_que_nadie_compro_contesta_cero() -> void:  # AC-CTR-020
+	var tarea := TareaDeAtender.new(_compradores_que_piden([2, 1]), _inventario())
+	for _vez in 2:
+		tarea.atender()
+		tarea.atencion().cobrar()
+	assert_int(tarea.vendidas_de(Catalogo.de(Producto.Id.DUREXTRA))).is_equal(0)
+	assert_int(tarea.vendidas_de(null)).is_equal(0)

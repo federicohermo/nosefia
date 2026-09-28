@@ -89,6 +89,17 @@ class LosIdentificadores(unittest.TestCase):
         self.assertEqual(leido.reglas, ["BR-DEM-001"])
         self.assertEqual(problemas, [])
 
+    def test_una_regla_retirada_es_un_problema(self):
+        # Retirar es borrar. Un «Retirada» deja en el contrato algo que el juego ya no tiene.
+        for encabezado in ("### BR-DEM-001 — *Retirada*\n", "### AC-DEM-001 — *Retirado*\n"):
+            _, problemas = spec(encabezado)
+            self.assertTrue(any("borra" in p for p in problemas), encabezado)
+
+    def test_retirar_una_unidad_no_es_una_regla_retirada(self):
+        # «Retirar» también es vocabulario del juego: sacar una unidad del depósito.
+        _, problemas = spec("### BR-DEM-001 — La unidad retirada vuelve al depósito\n")
+        self.assertEqual(problemas, [])
+
 
 if __name__ == "__main__":
     unittest.main()

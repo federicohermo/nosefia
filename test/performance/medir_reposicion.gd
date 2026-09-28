@@ -58,7 +58,6 @@ func crear(cantidad: int, escenario: Escenario, agrupado: bool = false) -> Node3
 			for posicion in posiciones:
 				var cuerpo: RigidBody3D = OBJETO.instantiate()
 				cuerpo.freeze = true
-				cuerpo.continuous_cd = true
 				cuerpo.position = posicion + Vector3.UP * 3
 				cuerpo.get_node("Forma").shape = formas[id]
 				var vista: MeshInstance3D = cuerpo.get_node("Malla")
@@ -97,7 +96,8 @@ func _ejecutar() -> void:
 	var suelo := StaticBody3D.new()
 	var colision := CollisionShape3D.new()
 	var caja := BoxShape3D.new()
-	caja.size = Vector3(40, 0.2, 40)
+	# Sin detección continua, una losa fina deja pasar a algún producto; el piso del juego, no.
+	caja.size = Vector3(40, 0.5, 40)
 	colision.shape = caja
 	suelo.add_child(colision)
 	add_child(suelo)
@@ -113,9 +113,6 @@ func _ejecutar() -> void:
 					cuerpo.freeze = false
 				if escenario == Escenario.REPOSO:
 					await get_tree().create_timer(5.0).timeout
-					for cuerpo: RigidBody3D in lote.find_children("*", "RigidBody3D", false, false):
-						cuerpo.sleeping = true
-					await get_tree().create_timer(0.25).timeout
 				var medicion := await _medir()
 				medicion["cantidad"] = cantidad
 				medicion["piso_multimesh"] = agrupado

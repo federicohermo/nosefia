@@ -96,7 +96,7 @@ func test_usar_cierra_cada_panel_sin_pasada_ni_pedido_y_el_reloj_avanza() -> voi
 	var limpiador: Limpiador = almacen.get("_limpiador")
 	var zona: PisoDelLocal.Zona = mancha.call("zona_de_la_mancha")
 	var antes := limpiador.piso().pasadas_restantes(zona)
-	for ruta in ["Estructura/base compu/StaticBody3D", "Estructura/Ventanilla"]:
+	for ruta: String in ["Estructura/base compu/StaticBody3D", "Estructura/Ventanilla"]:
 		var puesto: Node3D = almacen.get_node(ruta)
 		var panel: CanvasLayer = puesto.get("pantalla") if "compu" in ruta else puesto.get("panel")
 		puesto.call("abrir")
@@ -136,7 +136,7 @@ func _abrir() -> Node3D:
 func _enfocar(jugador: Node3D, mancha: Node3D) -> void:
 	jugador.set_physics_process(false)
 	jugador.global_position = mancha.global_position + Vector3.BACK
-	var camara: Camera3D = jugador.get_node("Camara")
+	var camara: Camera3D = jugador.get_node("Giro/Camara")
 	camara.look_at(mancha.global_position + Vector3.UP * 0.03)
 	for cuadro in 4:
 		await get_tree().physics_frame

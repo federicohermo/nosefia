@@ -1,13 +1,14 @@
 ---
 name: implement-feature
-description: Implementa UN issue de No se fía — el issue es el único plan, el TDD es obligatorio y verificado, y el nodo de convergencia es verificar.py. Cierra con el PR abierto y cada criterio del contrato citado por un test. Para dos o más issues de una, implement-batch.
+description: "Implementa UN cambio de No se fía — un issue, o un spec recién escrito sin issue — con TDD obligatorio y verificado, y verificar.py como nodo de convergencia. Cierra con el PR abierto, los criterios del issue cumplidos y cada criterio del spec citado por un test. Para dos o más issues de una, implement-batch."
+argument-hint: "[NN del issue | capability con spec sin issue]"
 ---
 
 # implement-feature — No se fía
 
-**Lo que se implementa es un issue**, y el issue dice qué criterios del contrato entrega. El
-contrato —`specs/<capability>/<capability>.md`— dice qué tiene que ser cierto; el issue, qué se
-toca esta vez.
+**Lo que se implementa es un issue**, o un spec que se escribió sin issue. El issue es el plan
+de esta vez: qué se toca y cómo se sabe que está. El spec —`specs/<capability>/<capability>.md`—
+es el contrato que queda. Muchos issues no tocan ningún spec.
 
 **No deja deuda**, y eso está en [`sin-deuda.md`](sin-deuda.md). Lo propio de implementar es el
 lazo: **si acá aparece un problema de planteo, el defecto no es de este issue — es del skill que
@@ -18,18 +19,23 @@ lo dejó salir así**, y se corrigen los dos en esta corrida.
 ```bash
 gh issue view <N>                                  # el plan entero
 git checkout staging && git pull
-git checkout -b feature/<N>-<descripcion-kebab>    # de acá saca el número el hook
+git checkout -b <tipo>/<N>-<descripcion-kebab>
 ```
 
-**El nombre de la rama no es decorativo**: `feature/<issue>-` es lo que el hook exige para dejar
-escribir en `src/`. A `src/` lo pueden tocar `feature/`, `bugfix/` y `hotfix/`; lo que no toca
-`src/` se nombra por lo que toca — `harness/`, `docs/` o `ci/`.
+**El prefijo de la rama es el tipo del issue**, y el hook sólo deja escribir en `src/` desde
+`feature/`, `bugfix/`, `refactor/` e `improvement/`. `feature/` es para código que parte de
+un spec: si el spec todavía no está escrito, primero `to-spec`, en esta misma rama. Un
+`bugfix` que escribe la regla que faltaba también toca un spec, y va igual en `bugfix/`: el
+prefijo sale del tipo, no de si hay spec. Lo que no toca `src/` se nombra por lo que toca —
+`harness/` o `docs/`.
 
 Si el issue ya tiene rama, no la vuelvas a crear: puede haberla abierto otra sesión, y ahí lo que
-corresponde es un worktree propio sobre esa rama.
+corresponde es un worktree propio sobre esa rama. **Un worktree se abre sólo en
+`.claude/worktrees/<nombre>` del checkout principal**, y lo bloquea un hook si va a otro lado:
+es el único lugar que limpia `limpiar_worktrees.py`.
 
-**Leé el contrato entero, no sólo los criterios del issue.** Las reglas de la capacidad son el
-marco: un criterio que se cumple rompiendo otra regla no está cumplido.
+**Si el cambio toca un spec, leelo entero, no sólo sus criterios nuevos.** Las reglas de la
+capacidad son el marco: un criterio que se cumple rompiendo otra regla no está cumplido.
 
 ## Los límites del issue son límites
 
@@ -68,9 +74,28 @@ del `await` compara la escritura del cuadro anterior contra el instante de éste
 arreglo no alcanza. O se llama al método a mano antes de leer, o se comparan dos instantes
 declarados distintos.
 
+**Un test que mide lo que se dibuja tiene dos trampas más**, medidas el 2026-09-24:
+
+- **En headless, `Engine.max_fps` no da cuadros parejos.** Con tope en 144, los cuadros alternan
+  entre 0,3 y 15,5 ms. Todo lo que depende del tiempo sale desparejo aunque en el juego sea
+  parejo. El ritmo se marca con un nodo que espera activo hasta el cuadro siguiente.
+- **`get_global_transform_interpolated()` en una rama sin nada interpolado devuelve un valor
+  viejo.** Un nodo sin interpolar hijo de uno interpolado sí hereda su dibujo. Se lee lo
+  interpolado si el nodo o algún ancestro `is_physics_interpolated_and_enabled()`.
+
+**Y un tirón que se ve en pantalla se mide también contra la entrada**, no sólo contra el
+dibujo: cuántos eventos del mouse llegan por cuadro. En el #187 la cámara hacía exactamente lo
+que pedía el mouse, y el escalón venía de un mouse de 125 Hz contra una pantalla de 144.
+
 **Si algo no se puede probar sin levantar una escena, no va en esas dos capas.** Va en `ui/` o en
 `escenas/`, que son cáscara — y entonces la regla que tenía adentro hay que bajarla al dominio.
 Ésa es la conversación que el gate fuerza, y es la que hace que el juego se pueda probar.
+
+**Lo que se mira en la web se mira en un Chrome que dibuja.** Un Chrome manejado por Playwright
+que queda tapado por otra ventana casi no pide cuadros: dos capturas seguidas salen iguales. En el
+#181 el agua parecía quieta en la web, y el juego no llegó a 240 cuadros en 20 segundos. Va con
+`--disable-backgrounding-occluded-windows` y `--disable-renderer-backgrounding`, y antes de leer
+una captura se cuentan los `requestAnimationFrame` de un segundo.
 
 ## Cuando lo que escribís es un gate sobre prosa
 
@@ -102,9 +127,16 @@ parámetro en vez de ir a buscarlo.
 python .claude/scripts/verificar.py
 ```
 
+**Commiteá y pusheá antes de correrlo.** Tarda minutos, y en ese tiempo otra sesión puede
+cerrar su lote y borrar worktrees. Lo que está en el remoto no se pierde. Medido el
+2026-09-27: un carril perdió el issue entero, hecho y sin commit, a mitad de la corrida.
+
 Corre los siete nodos en paralelo: `lint`, `formato`, `capas`, `tdd`, `specs`, `harness` y
 `tests`. Correr sólo la suite de gdUnit4 deja afuera los gates, que son justamente los que cuidan
 lo que en este motor nadie más cuida.
+
+**Guardá su salida en un archivo.** El nodo `tests` rojo imprime la corrida entera, y la
+herramienta la corta antes del test que falló. Medido el 2026-09-26.
 
 **Un nodo salteado no es un nodo verde**, y el reporte lo distingue. Pero `tests` sin `GODOT_BIN`
 **no se saltea: sale rojo** — ese salteo vale sólo mientras no exista un solo `*_test.gd`, y hay
@@ -118,12 +150,12 @@ TDD, y también el de un `class_name` recién creado. La única señal es el con
 ```powershell
 & $env:GODOT_BIN --path . --headless -s -d --remote-debug tcp://127.0.0.1:0 `
   res://addons/gdUnit4/bin/GdUnitCmdTool.gd -a test --continue --ignoreHeadlessMode `
-  -rd reports | Select-String "Executed test suites"
+  -rd reports 2>$null | Select-String "Executed test suites"
 ```
 
 **Va en PowerShell y no en Bash**, porque en un worktree aislado Bash rechaza cualquier forma de
-invocar Godot como comando. Y `--remote-debug tcp://127.0.0.1:0` contesta dos `ERROR:` que **no
-son un fallo**: la corrida sigue y escribe su `(N/N)`.
+invocar Godot como comando. **Y el `2>$null` no se saca**: PowerShell no pasa el stderr de Godot
+por `Select-String`, y sin él la corrida devuelve 4,5 MB. Medido el 2026-09-24.
 
 Ese `(N/N)` tiene que dar igual que `find test -name '*_test.gd' | wc -l`. Si da menos, hay una
 suite que no corrió y el nodo verde no lo dice.
@@ -138,7 +170,9 @@ después de crear cada archivo con `class_name` nuevo.
 todavía no existe, el error de script **aborta la función** y gdUnit4 no cuenta ninguna aserción
 fallida: el caso sale **`PASSED`** por no haber llegado a afirmar nada. Medido el 2026-09-01: **4
 de 5 casos en verde** con la escena sin escribir. El «falla por lo que se espera» se verifica en el
-`ERROR: Failed loading resource` de la salida cruda.
+`ERROR: Failed loading resource` de la salida cruda. Ese `ERROR:` va por stderr: se lee corriendo
+sólo esa suite, con `-a <ruta>` y sin `2>$null`. Los dos `ERROR:` de `--remote-debug` no son un
+fallo.
 
 **Y `--import` reescribe `project.godot`.** El editor no guarda un ajuste igual a su valor por
 defecto: lo borra del archivo. Medido el 2026-09-14 con
@@ -148,8 +182,8 @@ criterio por cerrado.
 
 ## Cuando el issue o el contrato no alcanzan — el lazo
 
-**Para cuando llegás acá no debería quedar ninguna duda de planteo.** Se resuelven en `to-spec`
-y en `spec-to-tickets`, que es donde cuestan un párrafo. Una duda que aparece implementando es
+**Para cuando llegás acá no debería quedar ninguna duda de planteo.** Se resuelven en `to-issue`
+y en `to-spec`, que es donde cuestan un párrafo. Una duda que aparece implementando es
 evidencia de que uno de esos dos tiene un agujero.
 
 La descarga son dos mitades, las dos en esta corrida:
@@ -170,13 +204,16 @@ se corrige el código.
 
 ## Al cerrar
 
-- **Cada criterio del issue nombrado por el test que lo verifica** —`# AC-EMP-004`, con el código
-  de la capacidad—, en `test/` o en `.claude/scripts/tests/`. No es burocracia de cierre: es lo
-  que reemplazó a la casilla como ancla anti-deuda.
+- **Cada criterio del spec que el cambio agrega o cambia, nombrado por el test que lo verifica**
+  —`# AC-EMP-004`, con el código de la capacidad—, en `test/` o en `.claude/scripts/tests/`. Es
+  el ancla anti-deuda que cobra el gate.
+- **Cada criterio propio del issue, cumplido y marcado en el issue.** Esos no llevan ID ni se
+  citan: mueren con el issue.
 - **Si la capacidad quedó con todos sus criterios citados, pasala a `ratified`** en el frontmatter
   del spec, en este PR. Desde ahí el gate la cobra.
 - `python .claude/scripts/verificar.py` en verde, sin nodos salteados.
-- **El PR declara, por cada criterio, `AC-<COD>-### → test → resultado`**, y lleva `Closes #N`.
+- **El PR declara, por cada `AC-<COD>-###`, `AC → test → resultado`**, y lleva `Closes #N` si hay
+  issue.
 - **Lo que aparece implementando se hace, no se anota.** Un issue incompleto no se cierra abriendo
   otro issue: se completa.
 - Si el trabajo falsificó algo que la documentación afirma en presente, actualizá `docs/`,

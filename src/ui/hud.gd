@@ -5,10 +5,10 @@
 ## escena. Lo verifican los `rg` del spec, que miran el archivo entero y no distinguen código de
 ## comentario.
 ##
-## **La hora no está acá, y ésa es la decisión.** El GDD la pone en los relojes del local, no en
-## la pantalla: un número siempre visible afloja la tensión, porque saber cuánto queda sale
-## gratis. Con la hora afuera, enterarse cuesta caminar. Lo que quedó de eso vive en
-## `src/dominio/jornada/reloj_de_pared.gd` y en el nodo que lo pinta.
+## **La hora no está acá, y ésa es la decisión.** El GDD la pone en el reloj de mesa del local,
+## no en la pantalla: un número siempre visible afloja la tensión, porque saber cuánto queda
+## sale gratis. Con la hora afuera, enterarse cuesta caminar. Lo que quedó de eso vive en el
+## dominio y en el nodo que lo pinta.
 ##
 ## Lo único propio de esta capa son las palabras. El veredicto del cierre **no** se dibuja acá:
 ## es de la pantalla de fin de jornada, y tenerlo en los dos lados sería la misma banda traducida

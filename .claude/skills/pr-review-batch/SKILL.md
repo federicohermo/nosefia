@@ -1,6 +1,6 @@
 ---
 name: pr-review-batch
-description: Revisa los PR abiertos de GitHub en paralelo —un agente por PR, cada uno en su worktree—, arregla lo que encuentra, verifica con verificar.py, commitea y pushea a la rama del PR, y si los PR están apilados cierra poniendo la pila al día. Usar al querer cerrar el review de dos o más PR de este repo. Para uno solo, pr-review. Para interrogar un contrato que todavía es texto, shape.
+description: "Revisa los PR abiertos de GitHub en paralelo —un agente por PR, cada uno en su worktree—, arregla lo que encuentra, verifica con verificar.py, commitea y pushea a la rama del PR, y si los PR están apilados cierra poniendo la pila al día. Usar al querer cerrar el review de dos o más PR de este repo. Para uno solo, pr-review. Para interrogar un contrato que todavía es texto, shape."
 argument-hint: "<NN NN ...> | --abiertos [--comentar] [--dry]"
 # Sin `allowed-tools`, o sea sin restricción, y por el mismo motivo que los demás skills de
 # este repo: declarar una lista parcial le sacaría todo lo que no estuviera en ella —`Agent`,
@@ -37,11 +37,11 @@ Seis sustituciones. Las tres primeras son de herramienta; las tres últimas camb
 | Un review genérico | Acá |
 |---|---|
 | Localiza el PR con las tools de Bitbucket, o con `mcp__github__*` porque `gh` no está | **`gh`, que sí está en el PATH** (medido: `gh 2.98.0`) |
-| Los AC salen de un ticket de Jira | **del contrato de la capacidad** (`specs/<capability>/`, trackeado) y del issue que la rama nombra |
+| Los AC salen de un ticket de Jira | **del issue**, si el PR tiene uno, y **del spec que toca**, si toca uno (`specs/<capability>/`, trackeado) |
 | Cierra con `pnpm verify` | **`python .claude/scripts/verificar.py`**, y un nodo **salteado no es un nodo verde** |
 | La cobertura la garantiza un umbral del 100 % | **Godot no mide cobertura.** El eje de cobertura pasa a ser del reviewer, entero |
 | Un conflicto de merge se resuelve leyendo | **un `.tscn` no se mergea**: da una escena corrupta, no un conflicto. El Paso 6 no puede confiar en git |
-| Eleva todo a comentarios del PR, y lo de afuera del alcance a un issue | **Nada queda anotado.** Lo del alcance entra al PR; lo de afuera sale en **su propio PR** en esta corrida; lo del planteo se corrige en el `spec.md`. Los issues acá son **entrada**, no salida — ver [`sin-deuda.md`](sin-deuda.md). `--comentar` publica además un general por PR |
+| Eleva todo a comentarios del PR, y lo de afuera del alcance a un issue | **Nada queda anotado.** Lo del alcance entra al PR; lo de afuera sale en **su propio PR** en esta corrida; lo del planteo se corrige en el spec. Los issues acá son **entrada**, no salida — ver [`sin-deuda.md`](sin-deuda.md). `--comentar` publica además un general por PR |
 
 ---
 
@@ -135,11 +135,10 @@ Seis cláusulas, que van **literales** en el preámbulo del Paso 1:
    el cambio exacto y quién más la toca. Es la única clase de fix que se declara por el archivo y
    no por el hallazgo.
 6. **Todo hallazgo se descarga, y ninguna descarga es un issue.** Las cinco están en
-   [`sin-deuda.md`](sin-deuda.md). Lo del alcance de tu spec entra a tu PR; lo de
+   [`sin-deuda.md`](sin-deuda.md). Lo del alcance de tu PR entra a tu PR; lo de
    afuera
    **sale en su propio PR desde `staging`**, abierto por vos en esta corrida —no desde tu rama, o
-   arrastra tus commits—; lo que pelea con un AC se descarga **corrigiendo el AC** en el `spec.md`
-   y devolviéndolo al issue. «Es preexistente» y «es de otro spec» deciden **dónde aterriza**, no
+   arrastra tus commits—; lo que pelea con un AC se descarga **corrigiendo el AC** en el spec. «Es preexistente» y «es de otro spec» deciden **dónde aterriza**, no
    si se hace.
 
    **Las dos únicas cosas que devolvés sin aplicar** son las que no podés aplicar desde tu
@@ -181,8 +180,7 @@ insumos, y los cinco van **destilados**, no como rutas a leer:
 - **La cadena de bases del Paso 0**, con **las seis cláusulas del Paso 0 bis literales**, **la
   lista caliente medida** y **las escenas compartidas**. Las cuatro cosas son del padre y ninguna
   la puede derivar el agente.
-- **Las cuatro trampas de `CLAUDE.md`**, y de ésas dos son operativas acá: la salida en cp1252 y
-  que **`Grep` no ve `specs/`**.
+- **Las trampas de `CLAUDE.md`** que aplican al lote.
 
 Escribilo **a un archivo** y pasá la ruta absoluta, en vez de inlinearlo N veces: los worktrees no
 lo comparten pero sí leen rutas absolutas. Y **escribilo con `Write`, nunca con un heredoc** — los
@@ -431,8 +429,13 @@ el texto final ya redactado**, no con una descripción de qué habría que elegi
 ## Paso 7 — Destruir los worktrees
 
 ```bash
-python .claude/skills/pr-review-batch/scripts/limpiar_worktrees.py --todos
+python .claude/skills/pr-review-batch/scripts/limpiar_worktrees.py <ruta> [<ruta> ...]
 ```
+
+**Las rutas son las del lote, una por agente, y nunca `--todos`.** Cada notificación de un
+agente trae su `worktreePath`. `--todos` toma todo lo que hay bajo `.claude/worktrees/`, y eso
+incluye los worktrees de otra sesión que corre al mismo tiempo. Medido el 2026-09-27 en
+`implement-batch`: se llevó dos worktrees ajenos y mató el editor de Godot que tenía uno abierto.
 
 **No lo hagas a mano, y no uses `git worktree remove` solo: va a fallar.** Borra lo trackeado y el
 `.git`, pero `.godot/` y `reports/` están en el `.gitignore`, así que el directorio no queda
@@ -448,10 +451,15 @@ terminado, así que un proceso vivo adentro de un worktree es **un Godot colgado
 tiene que decir con qué test se colgó. Si dice `SIGUE AHI`, el handle es de afuera —el editor o el
 IDE con la carpeta abierta— y eso lo cierra el usuario, no vos.
 
+Si imprime `SALTEADO: tiene cambios sin commitear`, el worktree queda y el script sale con 1.
+Puede ser un carril tuyo que no terminó o el de otra sesión que todavía corre: **no se
+fuerza**. Si es tuyo, el carril no cerró, y eso va primero en el reporte.
+
 **Antes de destruir nada, verificá que cada rama del lote es idéntica a su
-`origin/<headRefName>`.** Si difieren, algo no se pusheó y ese worktree es lo único que lo tiene —
-y `--todos` lo borra sin preguntar. No hay ramas de andamio que limpiar después: los carriles
-trabajaron sobre las ramas de los PR, que siguen existiendo y así tienen que quedar.
+`origin/<headRefName>`.** Si difieren, algo no se pusheó. El script saltea un worktree con
+cambios sin commitear, pero no mira si la rama llegó al remoto. No hay ramas de andamio que
+limpiar después: los carriles trabajaron sobre las ramas de los PR, que siguen existiendo y
+así tienen que quedar.
 
 ---
 
@@ -465,7 +473,7 @@ En este orden y en ~40 líneas más la tabla:
    SHA del merge si el Paso 6 lo tocó, y **si `verificar.py` pasó a la primera, a la segunda, o
    con algún nodo salteado**. La tercera columna no se omite: un salteado no es un verde.
 2. **Lo que apareció en más de un PR** — el patrón transversal es el entregable propio del batch.
-3. **Los PR nuevos que abrió esta corrida** para lo que caía fuera del alcance de cada spec, con
+3. **Los PR nuevos que abrió esta corrida** para lo que caía fuera del alcance de cada PR, con
    su número y en qué orden entran. Quien mergea tiene que saber que la corrida dejó más PRs de
    los que revisó.
 4. **Lo que obligó a corregir un contrato**, y que viajó en el PR que lo corrigió. Y **si esta

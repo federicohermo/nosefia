@@ -6,7 +6,7 @@ El `inventario-index` de las referencias compila un índice a `.index/` y cada r
 el commit con el que se generó, porque un índice envejece: un archivo nuevo es invisible y un
 símbolo renombrado conserva el nombre viejo hasta regenerar.
 
-**Acá no hace falta y por eso no está.** `src/` son 96 `.gd` y 18 `.tscn`: leer el árbol entero
+**Acá no hace falta y por eso no está.** `src/` es chico: leer el árbol entero
 cuesta milisegundos, así que cada respuesta mira el disco de ahora. Se pierde el paso
 `pnpm index` que hay que acordarse de correr, y con él se pierde el modo de falla entero —una
 respuesta vieja que parece fresca—.
@@ -338,17 +338,26 @@ def quien_instancia(ruta: str) -> str:
     )
 
 
+def _texto_del_criterio(texto: str, identificador: str) -> str:
+    """El cuerpo de un criterio: lo que hay entre su encabezado y el título siguiente.
+
+    **El corte va también en un `##`.** Abajo del último criterio no hay otro criterio sino la
+    sección siguiente, y cortar sólo en `###` le pegaba todo lo que el spec dice después.
+    """
+    bloque = re.search(
+        rf"^### {re.escape(identificador)}[^\n]*\n(.*?)(?=^#{{2,3}} |\Z)",
+        texto,
+        re.MULTILINE | re.DOTALL,
+    )
+    return bloque.group(1).strip() if bloque else "(sin texto)"
+
+
 def criterio(identificador: str) -> str:
     """Un `AC-<COD>-###`: su texto, la regla que verifica y qué test lo cita."""
     for spec in specs_del_repo():
         if identificador not in spec.criterios:
             continue
         texto = spec.ruta.read_text(encoding="utf-8")
-        bloque = re.search(
-            rf"^### {re.escape(identificador)}[^\n]*\n(.*?)(?=^### |\Z)",
-            texto,
-            re.MULTILINE | re.DOTALL,
-        )
         citas = [
             f"{r}:{n}"
             for r, n in _menciones(
@@ -358,7 +367,7 @@ def criterio(identificador: str) -> str:
         lineas = [
             f"# {identificador} — capacidad `{spec.nombre}` ({spec.estado})",
             "",
-            (bloque.group(1).strip() if bloque else "(sin texto)"),
+            _texto_del_criterio(texto, identificador),
             "",
             f"Verifica: {', '.join(f'`{r}`' for r in spec.criterios[identificador]) or '(ninguna)'}",
             "",
@@ -578,7 +587,10 @@ def _imagenes_de_un_glb(datos: bytes) -> set[str]:
         cabecera = json.loads(datos[20 : 20 + largo].decode("utf-8"))
     except (UnicodeDecodeError, json.JSONDecodeError):
         return set()
-    return {i["name"] for i in cabecera.get("images", []) if i.get("name")}
+    # Godot corta el nombre en el último punto al extraer: `Material.001_baseColor` → `Material`.
+    return {
+        i["name"].rsplit(".", 1)[0] for i in cabecera.get("images", []) if i.get("name")
+    }
 
 
 def _nombre_embebido(stem: str, stem_del_glb: str) -> set[str]:
@@ -665,7 +677,7 @@ def assets_sin_referencia() -> str:
         ruta = p.relative_to(RAIZ).as_posix()
         if not p.is_file() or ruta.startswith(FUENTE_DE_ARTE):
             continue
-        if p.suffix in (".import", ".gdignore") or p.name == ".gitkeep":
+        if p.suffix in (".import", ".gdignore", ".unwrap_cache", ".blend1") or p.name == ".gitkeep":
             continue
         if sum(len(v) for v in _referencias_a(ruta, texto, crudos).values()) == 0:
             sospechosos.append(ruta)

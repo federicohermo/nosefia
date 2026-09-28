@@ -22,11 +22,10 @@ const ZonaQueSeVe := preload("res://src/escenas/puestos/zona_de_descarte.gd")
 ## **Las cajas de reposición estaban en esta lista y salieron en el 043.** Ese spec mandó el
 ## stock a los estantes del depósito, así que reponer pasa en el fondo **a propósito**: medidas
 ## hoy, las ocho quedan entre 3,19 y 5,48 m del descarte, y exigirles los 6 m sería exigir que el
-## stock no viva ahí. Lo que se sigue midiendo son las cuatro tareas del local y las bolsas, que
+## stock no viva ahí. Lo que se sigue midiendo son las tareas del local y las bolsas, que
 ## desde el 043 arrancan en el baño.
 const ANCLAJES_DE_LAS_OTRAS_TAREAS := [
 	"Estructura/gondolanueva/StaticBody3D",
-	"Objetos/CajaDeTraslado",
 	"Estructura/Ventanilla",
 	"Estructura/base compu/StaticBody3D"
 ]
@@ -38,6 +37,16 @@ const NOMBRES_DE_LAS_BOLSAS := [
 ## Lo que delataría una regla del juego escrita en la zona. Está medido que ahí los dos gates dan
 ## verde, así que el criterio la ata con una búsqueda sobre el archivo.
 const PATRONES_DE_REGLA := "BOLSAS_DE_LA_JORNADA|depositadas|completada|class_name"
+
+
+class Tocable:
+	extends Node3D
+	var datos := ObjetoDelAlmacen.new()
+	var toques := 0
+
+	func interactuar() -> ObjetoDelAlmacen:
+		toques += 1
+		return datos
 
 
 func _almacen() -> Node3D:
@@ -112,6 +121,15 @@ func test_la_esfera_de_la_escena_es_exactamente_la_de_la_constante() -> void:  #
 	)
 
 
+## Tocar es `interactuar()`, y tiene efectos: una puerta trabada adentro del área avisaba sola.
+func test_la_zona_lee_lo_que_entra_sin_tocarlo() -> void:
+	var zona: ZonaQueSeVe = auto_free(load(ESCENA).instantiate())
+	var cuerpo: Tocable = auto_free(Tocable.new())
+	cuerpo.datos.id = &"basura_de_prueba"
+	assert_str(zona.call("_id_de", cuerpo)).is_equal("basura_de_prueba")
+	assert_int(cuerpo.toques).is_zero()
+
+
 func test_el_almacen_trae_el_descarte_y_una_bolsa_por_cada_una_del_balance() -> void:
 	var almacen := _almacen()
 	assert_bool(almacen.has_node("Objetos/ZonaDeDescarte")).is_true()
@@ -154,7 +172,7 @@ func test_el_fondo_esta_lejos_de_todo_lo_demas() -> void:  # AC-CLN-008
 func test_el_cableado_de_la_basura_llega_entero_hasta_la_zona() -> void:
 	# Un `@export` de tipo `Node` en una escena escrita a mano va declarado ADEMÁS en el
 	# `node_paths` del tag del nodo, o queda en `null`: la escena carga sin un solo error, los
-	# seis nodos dan verde, y el juego muere en el primer cuadro con un
+	# nodos dan verde, y el juego muere en el primer cuadro con un
 	# `Nonexistent function … in base 'Nil'` que no nombra ni al `.tscn` ni al `@export`.
 	#
 	# Los cuatro niveles van juntos porque la trampa es la misma en los cuatro: la raíz, el nodo
@@ -192,7 +210,7 @@ func test_el_cableado_de_la_basura_llega_entero_hasta_la_zona() -> void:
 func test_cada_bolsa_de_la_escena_lleva_el_id_que_espera_el_dominio() -> void:
 	# **Un `id` que no coincide no rompe nada**: la bolsa entra al descarte, el dominio contesta
 	# `NO_ES_BASURA` y la obligatoria queda imposible de cerrar toda la noche, sin un solo error y
-	# con los seis nodos en verde. Contar los nodos por su nombre no lo ve — el nombre del nodo y
+	# con los nodos en verde. Contar los nodos por su nombre no lo ve — el nombre del nodo y
 	# el `id` del `.tres` son dos cosas distintas.
 	var almacen := _almacen()
 	var encontrados: Array[StringName] = []

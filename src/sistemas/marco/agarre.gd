@@ -31,8 +31,21 @@ signal objeto_soltado(nodo: Node3D)
 
 var _manos := Manos.new()
 var _nodo: Node3D = null
+## De dónde colgaba lo sostenido antes de su último movimiento. Una caja se lleva en la cintura y
+## una unidad en su punto propio: volver del examen al punto de carga las dejaba en otra mano.
+var _ancla_de_vuelta: Node3D = null
 var _capa_original: int = 0
 var _mascara_original: int = 0
+
+## Lo que se acercó a la cara sin agarrarlo, y todo lo que tiene que recuperar al volver. Las
+## manos no se enteran: examinar algo del mundo no es llevarlo.
+var _del_mundo: Node3D = null
+var _padre_del_mundo: Node = null
+var _lugar_del_mundo := Transform3D.IDENTITY
+var _suelto_del_mundo := false
+var _congelado_del_mundo := false
+var _capa_del_mundo: int = 0
+var _mascara_del_mundo: int = 0
 
 
 ## Las manos, para que quien las necesite pregunte en vez de que este sistema le copie el estado.
@@ -56,6 +69,7 @@ func pedir_agarrar(datos: ObjetoDelAlmacen, nodo: Node3D) -> bool:
 		return false
 	_manos.agarrar(datos)
 	_nodo = nodo
+	_ancla_de_vuelta = null
 	# Guardar solo al agarrar: el examen recibe el cuerpo con las colisiones suspendidas.
 	if nodo is CollisionObject3D:
 		_capa_original = nodo.collision_layer
@@ -71,12 +85,14 @@ func pedir_agarrar(datos: ObjetoDelAlmacen, nodo: Node3D) -> bool:
 ##
 ## `al_frente` es «adelante hay lugar»: con `false` lo deja a los pies en vez de empujarlo
 ## adentro de una estantería. Quién contesta esa pregunta es la escena, que es la única que puede
-## mirar el mundo; acá sólo se elige el punto.
+## mirar el mundo; acá sólo se elige el punto. Al frente, si la mira señala una superficie que lo
+## admite, la escena lo apoya ahí después de `objeto_soltado`.
 func soltar(al_frente: bool) -> Node3D:
 	if _manos.soltar() == null:
 		return null
 	var nodo := _nodo
 	_nodo = null
+	_ancla_de_vuelta = null
 	var ancla := punto_de_soltado if al_frente else punto_de_respaldo
 	if nodo != null and ancla != null:
 		var orientacion := nodo.global_basis if nodo.is_inside_tree() else nodo.basis
@@ -101,13 +117,69 @@ func soltar(al_frente: bool) -> Node3D:
 func mover_lo_sostenido(ancla: Node3D) -> Node3D:
 	if _nodo == null or ancla == null:
 		return null
+	_ancla_de_vuelta = _nodo.get_parent() as Node3D
 	_colgar(_nodo, ancla)
 	return _nodo
 
 
-## Vuelve a poner en la mano lo que se había acercado a la cara.
+## Vuelve a poner lo que se había acercado a la cara en el punto de donde salió.
+##
+## No anota una vuelta nueva: devolver dos veces deja el objeto donde estaba, y no lo rebota a
+## la cara.
 func devolver_a_la_mano() -> Node3D:
-	return mover_lo_sostenido(_punto_de_carga())
+	if _nodo == null:
+		return null
+	var ancla := _ancla_de_vuelta
+	if ancla == null:
+		ancla = _punto_de_carga()
+	if ancla == null:
+		return null
+	_colgar(_nodo, ancla)
+	return _nodo
+
+
+## Cuelga del ancla un nodo del mundo sin agarrarlo, y devuelve el nodo, o `null` si no pudo.
+func acercar_del_mundo(nodo: Node3D, ancla: Node3D) -> Node3D:
+	if nodo == null or ancla == null or _del_mundo != null:
+		return null
+	_del_mundo = nodo
+	_padre_del_mundo = nodo.get_parent()
+	# El `transform` y el `top_level` van juntos: en un nodo suelto, el `transform` es global.
+	_lugar_del_mundo = nodo.transform
+	_suelto_del_mundo = nodo.top_level
+	if nodo is CollisionObject3D:
+		_capa_del_mundo = nodo.collision_layer
+		_mascara_del_mundo = nodo.collision_mask
+		nodo.collision_layer = 0
+		nodo.collision_mask = 0
+	if nodo is RigidBody3D:
+		_congelado_del_mundo = (nodo as RigidBody3D).freeze
+	_colgar(nodo, ancla)
+	return nodo
+
+
+## Vuelve a poner donde estaba lo que se acercó con `acercar_del_mundo()`, y devuelve el nodo,
+## o `null` si no había nada.
+func devolver_al_mundo() -> Node3D:
+	var nodo := _del_mundo
+	if nodo == null:
+		return null
+	_del_mundo = null
+	var padre := nodo.get_parent()
+	if padre != null:
+		padre.remove_child(nodo)
+	if _padre_del_mundo != null:
+		_padre_del_mundo.add_child(nodo)
+	nodo.top_level = _suelto_del_mundo
+	nodo.transform = _lugar_del_mundo
+	if nodo is CollisionObject3D:
+		nodo.collision_layer = _capa_del_mundo
+		nodo.collision_mask = _mascara_del_mundo
+	if nodo is RigidBody3D:
+		(nodo as RigidBody3D).freeze = _congelado_del_mundo
+	if nodo.is_inside_tree():
+		nodo.reset_physics_interpolation()
+	return nodo
 
 
 func _punto_de_carga() -> Node3D:
@@ -121,6 +193,7 @@ func entregar() -> Node3D:
 	_manos.soltar()
 	var nodo := _nodo
 	_nodo = null
+	_ancla_de_vuelta = null
 	return nodo
 
 
@@ -134,9 +207,6 @@ func alternar(datos: ObjetoDelAlmacen, nodo: Node3D) -> void:
 		soltar(true)
 
 
-## Deja las manos vacías dejando lo que hubiera a los pies. No emite nada si ya estaban vacías:
-## lo llaman el cierre de la jornada y la suspensión del jugador, que pueden pasar dos veces
-## seguidas, y un aviso ahí haría que el HUD anuncie un objeto que no existía.
 func vaciar_las_manos() -> void:
 	if _manos.sostenido() == null:
 		return

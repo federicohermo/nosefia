@@ -1,6 +1,7 @@
 ---
 name: implement-batch
-description: Implementa N issues de No se fía en paralelo —un carril por cadena de dependencias, cada uno en su worktree— delegando cada issue a implement-feature, y cierra con un PR por issue, verificar.py en verde y ningún criterio sin test que lo cite. Usar al implementar dos o más issues de una. Para uno solo, implement-feature.
+description: "Implementa N issues de No se fía en paralelo —un carril por cadena de dependencias, cada uno en su worktree— delegando cada issue a implement-feature, y cierra con un PR por issue, verificar.py en verde y ningún criterio sin test que lo cite. Usar al implementar dos o más issues de una. Para uno solo, implement-feature."
+argument-hint: "<NN NN ...>"
 ---
 
 # implement-batch — No se fía
@@ -38,7 +39,11 @@ de ayer.
 obligan a poner dos issues en el mismo carril, en orden:
 
 1. **Una dependencia declarada** (`Depende de #N`).
-2. **Un archivo compartido para escritura.** Las dos filas «Se escribe» se cruzan.
+2. **Un archivo compartido para escritura.** Las dos filas «Se escribe» se cruzan. Un `.gd` o
+   un spec con cambios chicos en zonas distintas no obliga: el padre prueba el merge con
+   `git merge-tree --write-tree <rama> <rama>` y resuelve lo que choque. En el lote del
+   2026-09-26, la regla estricta dejaba 13 issues en un solo carril, y los carriles separados
+   chocaron sólo en dos specs y un `.gd`.
 3. **Una escena compartida.** Éste no se negocia: **un `.tscn` no se mergea.** Un merge de tres
    vías sobre una escena no da un conflicto, da una escena corrupta. Dos issues que tocan la misma
    escena van en serie aunque no compartan nada más.
@@ -65,9 +70,9 @@ Cada agente recibe, literal:
 - **El preámbulo destilado una vez para todo el lote**: las cuatro capas y su dirección, las
   convenciones verificables con quién verifica cada una, y las trampas de este repo. Es el ahorro
   propio del batch — sin esto, N carriles lo re-derivan N veces desde frío.
-- **La rama se llama `feature/<issue>-<kebab>` y eso no es decorativo.** `gate_de_rama.py` corre
-  como hook y **sólo deja escribir en `src/` desde `feature/`, `bugfix/` y `hotfix/`, y a
-  `feature/` le exige el número del issue**. El síntoma es un `Edit` denegado, que se lee como un
+- **La rama se llama `<tipo>/<issue>-<kebab>`, con el tipo del issue, y eso no es decorativo.**
+  `gate_de_rama.py` corre como hook y **sólo deja escribir en `src/` desde `feature/`, `bugfix/`,
+  `refactor/` e `improvement/`**. El síntoma es un `Edit` denegado, que se lee como un
   problema de permisos y no como uno de nombre. **Es la falla número uno de un carril**, y aparece
   recién en la primera edición, con el worktree ya abierto.
 - **El issue entero, pegado.** El worktree no trae el plan: el plan está en GitHub. Un carril que
@@ -78,10 +83,10 @@ Cada agente recibe, literal:
 - **`GODOT_BIN` tiene que estar en el entorno del carril**: sin ella el nodo `tests` sale **rojo**,
   no salteado. Ese salteo vence — existe sólo mientras no haya un solo `*_test.gd`, y hay muchos.
   Un carril que sale a buscar un salteado que nunca va a aparecer pierde una vuelta.
-- **La importación ya no es un paso del carril.** `.godot/` está en el `.gitignore` y ningún
-  worktree nuevo lo tiene, pero desde el 2026-09-18 el nodo `tests` importa antes de correr la
-  suite, siempre. Cuesta 6 s sobre los ~180 s del nodo, y evita los dos rojos que costaba
-  olvidarlo: `Could not find type "GdUnitTestCIRunner"` en un worktree nuevo, e
+- **Con `verificar.py`, la importación no es un paso del carril.** `.godot/` está en el
+  `.gitignore` y ningún worktree nuevo lo tiene, pero desde el 2026-09-18 el nodo `tests` importa
+  antes de correr la suite, siempre. Cuesta 6 s sobre los ~180 s del nodo, y evita los dos rojos
+  que costaba olvidarlo: `Could not find type "GdUnitTestCIRunner"` en un worktree nuevo, e
   `Identifier "X" not declared` con el archivo ya en disco cada vez que se escribe un
   `class_name`. Medido el 2026-08-31: lo pisaron los cuatro carriles del lote.
 - **Y va en PowerShell porque desde Bash no corre, y eso hay que decírselo.** En un worktree
@@ -90,21 +95,36 @@ Cada agente recibe, literal:
   `python .claude/scripts/verificar.py` con `GODOT_BIN` exportada, porque ahí **el comando es
   `python`**. **Medido el 2026-09-06: lo pisaron TRES de los cuatro carriles**, cada uno perdiendo
   una vuelta, y los tres con el comando escrito por este mismo skill en la forma que no corre.
+- **Y en Bash, un comando por llamada.** En un worktree aislado, Bash rechaza por «too complex
+  to verify» un comando compuesto que nombra `git`, un `&&` largo, y un heredoc con `mkdir` y
+  `cat >`. El carril lo lee como un permiso negado. Los archivos se escriben con `Write`. Medido
+  el 2026-09-27: lo pisaron los cuatro carriles del lote.
 - **Y ese `--import` no es una vez: es una por `class_name` nuevo.** Crear el `.gd` no alcanza
   para que su test lo vea, y hasta el `--import` siguiente el error es `Parse Error: Identifier
   "X" not declared` **con el archivo ya escrito en disco**. Se lee como un error del código y no
   de la caché. **Medido el 2026-09-01: lo pisaron los dos carriles que crearon clases.**
 - **Dale al carril el comando del conteo crudo, no sólo la orden de mirarlo.** `verificar.py` **no
-  imprime** el `Executed test suites: (N/N)`:
+  imprime** el `Executed test suites: (N/N)`. **La primera línea importa**: `verificar.py` lo
+  hace solo, pero este comando no, y en un worktree nuevo sin ella sale
+  `Could not find type "GdUnitTestCIRunner"`. Medido el 2026-09-23: lo pisaron los dos carriles.
 
   ```powershell
+  & $env:GODOT_BIN --path . --headless --import 2>$null | Out-Null
   & $env:GODOT_BIN --path . --headless -s -d --remote-debug tcp://127.0.0.1:0 `
     res://addons/gdUnit4/bin/GdUnitCmdTool.gd -a test --continue --ignoreHeadlessMode `
-    -rd reports | Select-String "Executed test suites"
+    -rd reports 2>$null | Select-String "Executed test suites"
   ```
 
+- **El carril no corrige un skill: reporta la falla, y la regla la escribe el padre.**
+  `implement-feature` le pide cerrar el lazo, y en un lote eso da N copias de la misma lección.
+  Medido el 2026-09-23: los dos carriles escribieron la misma regla en `to-issue` y en las siete
+  copias de `sin-deuda.md`, y los dos PR chocaban en ocho archivos.
+- **Godot con `--script` lleva siempre `--path .`, y el script termina con `quit()`.** Sin
+  `--path`, `res://` es el directorio actual, y fuera de la raíz del repo cada `load` falla. Si
+  el script aborta antes de `quit()`, Godot imprime el error y no sale nunca. Medido el
+  2026-09-27: lo pisó el carril que cargaba todos los scripts con el motor.
 - **Un nombre propio para cada archivo de scratch.** Dos carriles que escriben el mismo archivo
-  temporal se pisan sin conflicto visible.
+  temporal se pisan sin conflicto visible. **Y se escribe con `Write`.**
 - **Un comando que este skill entrega se vuelve a correr antes de repartirlo**, nunca se copia de
   la corrida anterior: un comando roto se reparte N veces.
 
@@ -126,7 +146,7 @@ Cada agente recibe, literal:
 **El padre lo verifica, no lo cree.** Cuando vuelva un carril:
 
 ```bash
-gh pr list --repo federicohermo/nosefia --head feature/<N>-<kebab> --json number,statusCheckRollup
+gh pr list --repo federicohermo/nosefia --head <tipo>/<N>-<kebab> --json number,statusCheckRollup
 rg -n "AC-<COD>-###" test/ .claude/scripts/tests/
 ```
 
@@ -140,7 +160,8 @@ le faltó. Esperá a que vuelvan todos antes del reporte.
 
 - **Las ediciones fuera de carril**, en serie, para que el diff se lea.
 - **El lazo, y es del padre por construcción**: si dos carriles corrigen el mismo `SKILL.md` a la
-  vez, se pisan sin conflicto visible.
+  vez, se pisan sin conflicto visible. Sale en su propio PR `harness/` desde `staging`, no en el PR
+  de un carril: el issue del carril no lo cubre.
 - **El contrato de la capacidad, si dos carriles lo editaron.** `specs/` está trackeado, así que
   dos carriles que agregan una regla a la misma capacidad dan un conflicto de merge de verdad —
   que es mejor que el silencio, pero lo resuelve el padre.
@@ -150,8 +171,13 @@ le faltó. Esperá a que vuelvan todos antes del reporte.
 ## Paso 5 — Destruir los worktrees
 
 ```bash
-python .claude/skills/implement-batch/scripts/limpiar_worktrees.py --todos
+python .claude/skills/implement-batch/scripts/limpiar_worktrees.py <ruta> [<ruta> ...]
 ```
+
+**Las rutas son las del lote, una por carril, y nunca `--todos`.** Cada notificación de un
+carril trae su `worktreePath`. `--todos` toma todo lo que hay bajo `.claude/worktrees/`, y eso
+incluye los worktrees de otra sesión que corre al mismo tiempo. Medido el 2026-09-27: se llevó
+dos worktrees ajenos y mató el editor de Godot que tenía uno abierto.
 
 **Va antes del reporte, no después, y no se hace a mano.** `git worktree remove` falla con
 `Directory not empty` en **todo worktree que haya corrido `verificar.py`**, o sea en todos: el
@@ -162,6 +188,10 @@ Y mata **por ruta del worktree, nunca por nombre de proceso**: un filtro por `go
 llevaría puesto el editor que el usuario tiene abierto con el checkout principal.
 
 Si imprime `SIGUE AHI`, el handle es de afuera. **Lo cierra el usuario, no vos**: decilo.
+
+Si imprime `SALTEADO: tiene cambios sin commitear`, el worktree queda y el script sale con 1.
+Puede ser un carril tuyo que no terminó o el de otra sesión que todavía corre: **no se
+fuerza**. Si es tuyo, el carril no cerró, y eso va primero en el reporte.
 
 ## Paso 6 — El reporte
 

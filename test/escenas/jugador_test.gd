@@ -26,15 +26,15 @@ func test_la_raiz_del_jugador_es_un_cuerpo_que_camina() -> void:
 
 func test_la_camara_esta_a_la_altura_que_declara_el_dominio() -> void:
 	var jugador := _jugador()
-	assert_bool(jugador.has_node("Camara")).is_true()
-	var camara: Node = jugador.get_node("Camara")
+	assert_bool(jugador.has_node("Giro/Camara")).is_true()
+	var camara: Node = jugador.get_node("Giro/Camara")
 	assert_object(camara).is_instanceof(Camera3D)
 	assert_float(camara.position.y).is_equal_approx(ReglasDelJugador.ALTURA_DE_LA_CAMARA, 1e-5)
 
 
 func test_el_campo_cuelga_del_ojo_y_respeta_el_alcance() -> void:
 	var jugador := _jugador()
-	var campo := jugador.get_node_or_null("Camara/CampoDeInteraccion")
+	var campo := jugador.get_node_or_null("Giro/Camara/CampoDeInteraccion")
 	assert_object(campo).is_instanceof(Area3D)
 	assert_bool(campo.monitoring).is_true()
 	var forma: CollisionShape3D = campo.get_node("Forma")
@@ -59,7 +59,7 @@ func test_las_cuatro_acciones_del_dominio_estan_declaradas_en_el_proyecto() -> v
 	# El par de String entre `reglas_del_jugador.gd` y la sección `[input]` de `project.godot`
 	# no lo verifica nadie más: renombrar la constante sin tocar el proyecto deja una dirección
 	# que no responde, y el juego arranca igual.
-	for accion in [
+	for accion: String in [
 		ReglasDelJugador.ACCION_ADELANTE,
 		ReglasDelJugador.ACCION_ATRAS,
 		ReglasDelJugador.ACCION_IZQUIERDA,
@@ -82,6 +82,17 @@ func test_el_jugador_avisa_cuando_enfoca_y_cuando_pierde_el_objetivo() -> void:
 	assert_bool(jugador.has_signal("objetivo_perdido")).is_true()
 
 
+func test_el_jugador_avisa_un_paso_por_lo_que_camina_en_el_piso() -> void:
+	# Lo vertical no es caminar: caer o subir no suena como un paso.
+	var jugador := _jugador()
+	var pasos := [0]
+	jugador.connect("paso_dado", func() -> void: pasos[0] += 1)
+	jugador.call("_contar_el_paso", Vector3(0, CadenciaDePasos.DISTANCIA_ENTRE_PASOS * 3, 0))
+	assert_int(pasos[0]).is_equal(0)
+	jugador.call("_contar_el_paso", Vector3(CadenciaDePasos.DISTANCIA_ENTRE_PASOS, 0, 0))
+	assert_int(pasos[0]).is_equal(1)
+
+
 func test_suspender_y_reanudar_llegan_hasta_el_control_del_dominio() -> void:
 	# Son la única puerta por la que el 006 (examinar un objeto) y el 009 (abrir la computadora)
 	# pueden clavar cámara y locomoción. El test mira `_control` por dentro a propósito: lo que
@@ -94,6 +105,21 @@ func test_suspender_y_reanudar_llegan_hasta_el_control_del_dominio() -> void:
 	assert_bool(jugador._control.esta_suspendido()).is_true()
 	jugador.reanudar()
 	assert_bool(jugador._control.esta_suspendido()).is_false()
+
+
+func test_esc_no_es_del_jugador() -> void:
+	# Esc pausa, y lo atiende la pausa: el jugador ya no tiene una salida de emergencia propia.
+	var texto := FileAccess.get_file_as_string("res://src/escenas/jugador.gd")
+	assert_str(texto).is_not_empty()
+	assert_str(texto).not_contains("ui_cancel")
+
+
+## Reanudar ya es el gesto que el navegador pide para devolver el cursor: un clic más no suma nada.
+func test_al_reanudar_el_cursor_vuelve_sin_otro_clic() -> void:
+	var jugador := _jugador()
+	jugador.notification(Node.NOTIFICATION_PAUSED)
+	jugador.notification(Node.NOTIFICATION_UNPAUSED)
+	assert_bool(jugador.call("_el_cursor_esta_tomado")).is_true()
 
 
 func test_suspender_con_algo_enfocado_avisa_que_se_perdio_el_objetivo() -> void:
@@ -138,11 +164,11 @@ func test_los_cuatro_puntos_estan_donde_el_dominio_los_declara() -> void:
 	# respaldo a los pies, que es adonde cae lo que se suelta cuando adelante hay una pared.
 	var jugador := _jugador()
 	var puntos := {
-		"Camara/PuntoDeExamen": ReglasDeLosObjetos.DISTANCIA_DE_EXAMEN,
-		"Camara/PuntoDeCarga": ReglasDeLosObjetos.DISTANCIA_DE_CARGA,
-		"Camara/PuntoDeSoltado": ReglasDeLosObjetos.DISTANCIA_DE_SOLTADO,
+		"Giro/Camara/PuntoDeExamen": ReglasDeLosObjetos.DISTANCIA_DE_EXAMEN,
+		"Giro/Camara/PuntoDeCarga": ReglasDeLosObjetos.DISTANCIA_DE_CARGA,
+		"Giro/Camara/PuntoDeSoltado": ReglasDeLosObjetos.DISTANCIA_DE_SOLTADO,
 	}
-	for ruta in puntos:
+	for ruta: String in puntos:
 		(
 			assert_bool(jugador.has_node(ruta))
 			. override_failure_message("falta el nodo %s en jugador.tscn" % ruta)
@@ -150,15 +176,15 @@ func test_los_cuatro_puntos_estan_donde_el_dominio_los_declara() -> void:
 		)
 		var punto: Node3D = jugador.get_node(ruta)
 		assert_float(punto.position.length()).is_equal_approx(puntos[ruta], 0.01)
-	assert_bool(jugador.has_node("PuntoDeRespaldo")).is_true()
-	var respaldo: Node3D = jugador.get_node("PuntoDeRespaldo")
+	assert_bool(jugador.has_node("Giro/PuntoDeRespaldo")).is_true()
+	var respaldo: Node3D = jugador.get_node("Giro/PuntoDeRespaldo")
 	assert_float(respaldo.position.y).is_less(ReglasDelJugador.ALTURA_DE_LA_CAMARA)
 
 
 func test_el_punto_de_carga_queda_abajo_y_a_la_derecha() -> void:
 	# Centrado taparía la mitad de la pantalla justo cuando el jugador necesita ver dónde
 	# reponer lo que lleva, y arriba flotaría a la altura de la cara.
-	var carga: Node3D = _jugador().get_node("Camara/PuntoDeCarga")
+	var carga: Node3D = _jugador().get_node("Giro/Camara/PuntoDeCarga")
 	assert_float(carga.position.x).is_greater(0.0)
 	assert_float(carga.position.y).is_less(0.0)
 	assert_float(carga.position.z).is_less(0.0)
@@ -171,11 +197,11 @@ func test_los_dos_sistemas_llegan_con_sus_puntos_cableados() -> void:
 	# contesta `false` y la E no arranca nada. El síntoma no nombra al `.tscn` que lo causó.
 	var jugador := _jugador()
 	var agarre: Node = jugador.agarre
-	assert_object(agarre.punto_de_carga).is_same(jugador.get_node("Camara/PuntoDeCarga"))
-	assert_object(agarre.punto_de_soltado).is_same(jugador.get_node("Camara/PuntoDeSoltado"))
-	assert_object(agarre.punto_de_respaldo).is_same(jugador.get_node("PuntoDeRespaldo"))
+	assert_object(agarre.punto_de_carga).is_same(jugador.get_node("Giro/Camara/PuntoDeCarga"))
+	assert_object(agarre.punto_de_soltado).is_same(jugador.get_node("Giro/Camara/PuntoDeSoltado"))
+	assert_object(agarre.punto_de_respaldo).is_same(jugador.get_node("Giro/PuntoDeRespaldo"))
 	var examen: Node = jugador.examen
-	assert_object(examen.punto_de_examen).is_same(jugador.get_node("Camara/PuntoDeExamen"))
+	assert_object(examen.punto_de_examen).is_same(jugador.get_node("Giro/Camara/PuntoDeExamen"))
 
 
 func test_cada_brazo_apunta_al_punto_de_mano_que_mueve() -> void:
@@ -184,10 +210,10 @@ func test_cada_brazo_apunta_al_punto_de_mano_que_mueve() -> void:
 	# y nada más en el repo lo diría.
 	var jugador := _jugador()
 	var manos := {
-		"Camara/BrazoDeCarga": "Camara/PuntoDeCarga",
-		"Camara/BrazoDeProducto": "Camara/PuntoDeProducto",
+		"Giro/Camara/BrazoDeCarga": "Giro/Camara/PuntoDeCarga",
+		"Giro/Camara/BrazoDeProducto": "Giro/Camara/PuntoDeProducto",
 	}
-	for ruta_del_brazo in manos:
+	for ruta_del_brazo: String in manos:
 		var brazo: SpringArm3D = jugador.get_node(ruta_del_brazo)
 		var punto: Node3D = jugador.get_node(manos[ruta_del_brazo])
 		var punta := brazo.transform * Vector3(0.0, 0.0, brazo.spring_length)
@@ -198,7 +224,7 @@ func test_los_brazos_barren_un_volumen_y_no_un_rayo() -> void:
 	# Un brazo sin `shape` barre un rayo, y un rayo sólo frena el CENTRO de lo que se lleva: la
 	# mitad que sobra le sigue entrando a la madera.
 	var jugador := _jugador()
-	for ruta in ["Camara/BrazoDeCarga", "Camara/BrazoDeProducto"]:
+	for ruta: String in ["Giro/Camara/BrazoDeCarga", "Giro/Camara/BrazoDeProducto"]:
 		var brazo: SpringArm3D = jugador.get_node(ruta)
 		(
 			assert_object(brazo.shape)
@@ -214,7 +240,7 @@ func test_los_brazos_nacen_adentro_de_la_capsula_del_cuerpo() -> void:
 	var jugador := _jugador()
 	var cuerpo: CollisionShape3D = jugador.get_node("Cuerpo")
 	var capsula: CapsuleShape3D = cuerpo.shape
-	for ruta in ["Camara/BrazoDeCarga", "Camara/BrazoDeProducto"]:
+	for ruta: String in ["Giro/Camara/BrazoDeCarga", "Giro/Camara/BrazoDeProducto"]:
 		var brazo: SpringArm3D = jugador.get_node(ruta)
 		var esfera: SphereShape3D = brazo.shape
 		var radial := Vector2(brazo.position.x, brazo.position.z).length()

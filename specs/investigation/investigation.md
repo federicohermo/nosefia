@@ -10,20 +10,16 @@ provenance: GDD «Investigación» y «La computadora»; migración de los specs
 
 ## Propósito
 
-Darle al minuto que no se paga algo que comprar. Lo único que tiene que hacer bien es
-**acumular**: lo que se descubre una noche tiene que seguir descubierto la siguiente, y repetir
-no puede rendir. Sin eso, se puede pasar la noche examinando latas y al cierre no cambió nada.
+Darle al minuto que no se paga algo que comprar. Lo único que tiene que hacer bien es **no
+rendir dos veces**: lo que un objeto esconde se ve sólo al examinarlo, y examinarlo otra vez no
+suma. Sin eso, se puede pasar la noche examinando la misma lata.
 
 ## Lenguaje de la capacidad
 
 | Término | Significado acá | Evitar |
 |---|---|---|
-| **Pista** | una unidad de lo que se descubre, con su canal y su texto | dato, clue |
-| **Canal** | por dónde se descubre una pista: objetos, chats, notas | fuente, medio |
 | **Revelación** | lo que un objeto esconde y sólo se ve al examinarlo | secreto, lore |
 | **Hallazgo** | la primera vez que se ve una revelación. La segunda no lo es | descubrimiento |
-| **Expediente** | qué pistas van descubiertas, y lo único que cruza la noche | progreso, save |
-| **Desenlace** | a qué lleva haber descubierto lo suficiente | final, ending |
 
 ## Comportamiento normativo
 
@@ -86,36 +82,35 @@ estar vacío.
 
 El sistema DEBE conservar lo anotado y lo leído al cambiar de app o cerrar la computadora.
 
-### BR-INV-012 — Una pista se anota una vez
+### BR-INV-017 — Pensar no clava al jugador
 
-CUANDO se registra una pista, el sistema DEBE contestar **anotada** la primera vez, **repetida**
-la segunda sin mover el progreso, y **desconocida** si no es del caso.
+MIENTRAS se muestra lo que reveló algo no levantable, el sistema DEBE dejar al jugador irse. Es
+un pensamiento, no un examen.
 
-### BR-INV-013 — Una pista puede exigir otras
+### BR-INV-018 — Se examina lo enfocado sin agarrarlo
 
-SI una pista exige otras y alguna no está descubierta, ENTONCES el sistema DEBE tratarla como
-desconocida. Descubiertas todas las que exige, se anota.
+CUANDO se pide examinar con las manos vacías y la mira sobre un levantable, el sistema DEBE
+acercarlo a la cara, retener al jugador y revelar, igual que con lo que se lleva. Examinarlo NO
+DEBE llenar las manos. Con algo en la mano, se examina lo que se lleva.
 
-### BR-INV-014 — Un desenlace exige cantidad y condiciones a la vez
+CUANDO termina ese examen, el sistema DEBE devolver el objeto a donde estaba: el mismo lugar, la
+misma orientación, y el mismo estado de física y de colisión.
 
-CUANDO un desenlace declara un umbral y unas pistas exigidas, el sistema DEBE alcanzarlo sólo si
-**las dos** condiciones se cumplen. Con umbral y sin exigencias, alcanza con llegar al número.
+### BR-INV-019 — Lo examinado gira a pedido
 
-### BR-INV-015 — Un caso mal armado se declara inconsistente
+MIENTRAS se examina algo, el sistema DEBE girarlo con las teclas de movimiento: los costados
+sobre el eje vertical, adelante y atrás sobre el horizontal, a una velocidad fija por segundo.
+El mouse DEBE girarlo sólo mientras se arrastra con el clic apretado. Sin tecla y sin arrastre,
+lo examinado NO DEBE girar.
 
-El sistema DEBE rechazar un caso con identidades repetidas, con una exigencia que nombra una
-pista inexistente, con un ciclo de exigencias, o con un desenlace inalcanzable.
+El jugador termina el examen sólo con la tecla de examinar. Durante el examen, el clic NO DEBE
+terminarlo, ni agarrar, ni soltar, ni colocar.
 
-### BR-INV-016 — El expediente cruza la noche y no toca disco
+### BR-INV-020 — La jornada nueva no hereda un examen
 
-El sistema DEBE poder entregar lo descubierto como una lista de identidades y reconstruirlo
-igual. **Reconstruir sobre un caso que cambió ignora lo que ya no existe** en vez de romper: el
-contenido cambia y los guardados viejos siguen cargando.
-
-### BR-INV-017 — Examinar no clava al jugador
-
-MIENTRAS se muestra lo que un objeto reveló, el sistema DEBE dejar al jugador irse. Sólo una
-conversación con otra persona lo retiene, y esa regla es de la ventanilla.
+CUANDO se abre una jornada con un examen en curso, el sistema DEBE terminarlo antes de vaciar
+las manos. Lo del mundo vuelve a su lugar, lo que se llevaba queda a los pies, y el jugador no
+queda retenido.
 
 ## Criterios de aceptación
 
@@ -177,75 +172,66 @@ sigue con las que tenía; con título y cuerpo vacío, se guarda.
 DADO dos notas escritas y un chat leído CUANDO se cambia de app y se vuelve ENTONCES las notas
 siguen y el chat sigue leído.
 
-### AC-INV-013 — Las tres respuestas de registrar *(verifica BR-INV-012)*
+### AC-INV-019 — El pensamiento no retiene *(verifica BR-INV-017)*
 
-DADO una pista del caso CUANDO se la registra ENTONCES contesta anotada; la segunda vez,
-repetida, sin mover el progreso; una identidad ajena contesta desconocida.
+DADO lo que reveló algo no levantable, de una sola entrada, CUANDO todavía no se avanzó
+ENTONCES ya se puede abandonar.
 
-### AC-INV-014 — La pista que exige otra *(verifica BR-INV-013)*
+### AC-INV-020 — Examinar sin agarrar *(verifica BR-INV-018)*
 
-DADO una pista que exige otra CUANDO se la registra primero ENTONCES contesta desconocida; y
-después de registrar la que la habilita, contesta anotada.
+DADO las manos vacías y la mira sobre un levantable CUANDO se pide examinar ENTONCES está en
+examen, el jugador queda retenido, se revela, y las manos siguen vacías. DADO algo en la mano y
+la mira sobre otro levantable ENTONCES se examina lo que se lleva.
 
-### AC-INV-015 — Las dos condiciones del desenlace *(verifica BR-INV-014)*
+### AC-INV-021 — Lo examinado vuelve a su lugar *(verifica BR-INV-018)*
 
-DADO un desenlace de umbral 3 sin exigencias CUANDO se descubren 3 pistas ENTONCES se alcanza;
-DADO uno de umbral 3 que además exige una pista puntual, con 3 pistas que no la incluyen no se
-alcanza.
+DADO un levantable del mundo en examen, girado CUANDO se pide examinar otra vez ENTONCES está
+en el mismo lugar, con la misma orientación y el mismo estado de física y de colisión de antes. Una tercera vez lo vuelve a examinar, y no es hallazgo.
 
-### AC-INV-016 — El caso roto se declara roto *(verifica BR-INV-015)*
+### AC-INV-022 — Las teclas giran lo examinado *(verifica BR-INV-019)*
 
-DADO un caso con una identidad repetida, o con una exigencia que nombra una pista inexistente, o
-con un ciclo, o con un desenlace inalcanzable ENTONCES es inconsistente; el caso de ejemplo es
-consistente.
+DADO algo en examen CUANDO se aprieta el costado derecho medio segundo ENTONCES gira sobre el
+eje vertical la velocidad fija por medio segundo, y adelante lo gira sobre el horizontal. Sin
+entrada, o con dos teclas opuestas, no gira.
 
-### AC-INV-017 — Ida y vuelta del expediente *(verifica BR-INV-016)*
+### AC-INV-023 — El mouse gira sólo arrastrando *(verifica BR-INV-019)*
 
-DADO un expediente con tres pistas CUANDO se lo entrega como lista y se lo reconstruye ENTONCES
-descubrió las mismas tres.
+DADO algo en examen CUANDO se mueve el mouse sin clic ENTONCES no gira; con el clic apretado,
+gira.
 
-### AC-INV-018 — El caso que cambió no rompe *(verifica BR-INV-016)*
+### AC-INV-024 — El clic no cierra el examen *(verifica BR-INV-019)*
 
-DADO una lista guardada con una pista que el caso ya no tiene CUANDO se reconstruye ENTONCES la
-que sobra se ignora y las demás quedan descubiertas.
+DADO algo en examen CUANDO se hace clic ENTONCES sigue en examen y las manos no cambian. La
+tecla de examinar lo termina.
 
-### AC-INV-019 — El subtítulo no retiene *(verifica BR-INV-017)*
+### AC-INV-025 — La jornada abre sin examen *(verifica BR-INV-020)*
 
-DADO un texto de examen de una sola entrada CUANDO todavía no se avanzó ENTONCES ya se puede
-abandonar.
+DADO un examen en curso CUANDO se abre la jornada ENTONCES no hay nada en examen y el jugador no
+está retenido. Sin examen en curso, no se avisa que terminó un examen.
 
 ## No objetivos
 
 - Esta capacidad NO escribe el contenido: qué revela cada objeto y qué dice cada chat es
   contenido, y entra como dato.
-- Esta capacidad NO escribe al disco: entrega la lista de lo descubierto a
-  [`save-and-resume`](../save-and-resume/save-and-resume.md).
 - Esta capacidad NO descuenta tiempo del turno.
 
 ## Contratos
 
-- **Entrada:** el objeto examinado, la app elegida, la conversación abierta, el título y el
-  cuerpo de una nota, y la identidad de una pista.
-- **Salida:** el texto visible, si fue hallazgo, cuántos mensajes sin leer hay, las notas, el
-  resultado de registrar, el desenlace alcanzado y la lista de lo descubierto.
-- **Falla:** una revelación vacía, una nota sin título, una pista ajena y un caso inconsistente
-  se rechazan sin cambiar nada.
+- **Entrada:** el objeto examinado, la entrada de movimiento y los segundos del cuadro, el
+  arrastre del mouse, la app elegida, la conversación abierta, y el título y el
+  cuerpo de una nota.
+- **Salida:** el texto visible, si fue hallazgo, cuántos mensajes sin leer hay y las notas.
+- **Falla:** una revelación vacía y una nota sin título se rechazan sin cambiar nada.
 
 ## Señales
 
-- El hallazgo nuevo, la pista anotada, el desenlace alcanzado y la computadora abierta.
+- El hallazgo nuevo y la computadora abierta.
 
 ## Dependencias
 
 - [`player-actions`](../player-actions/player-actions.md) (consume): qué objeto se está
   examinando.
-- [`save-and-resume`](../save-and-resume/save-and-resume.md) (alimenta): la lista de pistas
-  descubiertas.
 
 ## Preguntas abiertas
 
-- **OQ-INV-001 — ¿Cuáles son los desenlaces y qué los separa?**
-  - Por qué sigue abierta: el GDD los describe en potencial. Las pistas y los umbrales de hoy son
-    datos de ejemplo para que los criterios tengan qué verificar.
-  - Decide: el dueño del repo, con el GDD.
-  - Bloquea: el contenido, no la máquina.
+Ninguna.

@@ -1,8 +1,8 @@
 # Las capacidades y lo que pasa entre ellas
 
-**El contrato de cada capacidad vive en su spec** —`specs/<capability>/<capability>.md`—. Este
-documento no lo repite: declara **lo que pasa entre ellas**, que es lo único que ningún spec
-puede decir solo.
+**El contrato de cada capacidad vive en su spec** —`specs/<capability>/<capability>.md`—, y su
+código, en el `capability_id` del frontmatter. Este documento no lo repite: declara **lo que
+pasa entre ellas**, que es lo único que ningún spec puede decir solo.
 
 Las reglas de edición de un spec están en [`.claude/rules/specs.md`](../../.claude/rules/specs.md),
 y se cargan solas al tocar ese árbol.
@@ -14,8 +14,8 @@ góndola, arrastrar el legajo entre noches. Una capa es dónde vive el código q
 Son dos ejes distintos y se cruzan: casi toda capacidad tiene piezas en `dominio/` y en
 `sistemas/`, y varias tienen una en `escenas/`.
 
-Por eso el spec **no nombra archivos, clases ni escenas**: eso cambia con el refactor siguiente y
-el contrato tiene que sobrevivirlo.
+Por eso el spec no nombra archivos, clases ni escenas: lo pide
+[la regla de specs](../../.claude/rules/specs.md).
 
 ## El mapa
 
@@ -32,12 +32,12 @@ flowchart TD
   AMB["ambience<br/><i>qué suena</i>"]
 
   CTR -- "obligatoria cumplida" --> SHF
-  STK -- "obligatorias cumplidas" --> SHF
+  STK -- "obligatorias cumplidas y descumplidas" --> SHF
   CLN -- "obligatorias cumplidas" --> SHF
   SHF -- "cuántas se cumplieron" --> EMP
   EMP -- "jornada, legajo y final" --> SAV
-  INV -- "pistas descubiertas" --> SAV
   STK -- "unidades en góndola" --> CTR
+  CTR -- "lo vendido" --> STK
   PLY -- "qué se lleva, a qué distancia" --> CLN
   PLY -- "la unidad viaja en la mano" --> STK
   PLY -- "qué objeto se examina" --> INV
@@ -56,8 +56,8 @@ sonido no toca a quien lo emite.
 
 ## Las dos mitades de la resta
 
-La tensión central del juego es aritmética, y en el mapa se lee de un vistazo: **`shift-cycle` es
-la resta**, y las capacidades que le apuntan son lo que cada lado compra.
+La tensión central del juego es aritmética, y en el mapa se lee de un vistazo. **`shift-cycle`
+es la resta**, y las capacidades que le apuntan son lo que cada lado compra.
 
 | Lado | Capacidades | Qué le hacen al turno |
 |---|---|---|
@@ -90,5 +90,5 @@ Tres pares se confunden seguido, y cada uno tiene su regla escrita en los dos sp
 3. **¿El GDD ya lo decidió?** Entonces el spec dice eso, aunque el código todavía diga otra cosa.
    Esa diferencia es el hallazgo, y sale en un issue.
 
-Una capacidad nueva se abre sólo cuando la regla no entra en ninguna de las nueve **y** no es una
-regla de una de ellas. Una capacidad de un solo criterio casi siempre es lo segundo.
+Una capacidad nueva se abre sólo si la regla no entra en ninguna **y** no es regla de una de
+ellas. Una capacidad de un solo criterio casi siempre es lo segundo.

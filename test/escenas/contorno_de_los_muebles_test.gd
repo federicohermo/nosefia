@@ -22,7 +22,7 @@ func test_el_jugador_que_camina_contra_una_gondola_choca_con_su_contorno() -> vo
 	add_child(almacen)
 	var jugador: CharacterBody3D = almacen.get("_jugador")
 	jugador.set_physics_process(false)
-	for ruta in GONDOLAS:
+	for ruta: String in GONDOLAS:
 		var gondola := almacen.get_node(ruta) as MeshInstance3D
 		var caja := gondola.global_transform * gondola.get_aabb()
 		var hacia: Vector3 = GONDOLAS[ruta]
@@ -45,7 +45,7 @@ func test_el_jugador_que_camina_contra_una_gondola_choca_con_su_contorno() -> vo
 func test_la_malla_de_la_gondola_sigue_siendo_la_colision_de_los_productos() -> void:
 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
 	add_child(almacen)
-	for ruta in GONDOLAS:
+	for ruta: String in GONDOLAS:
 		var malla := almacen.get_node(ruta + "/StaticBody3D") as StaticBody3D
 		var contorno := almacen.get_node(ruta + "/Contorno") as StaticBody3D
 		assert_int(malla.collision_layer & 1).is_equal(1)
@@ -97,7 +97,7 @@ func test_una_caja_chica_soltada_hacia_una_bandeja_no_queda_adentro_de_la_gondol
 	var gondola := almacen.get_node("Estructura/gondolanueva") as MeshInstance3D
 	var mueble := gondola.global_transform * gondola.get_aabb()
 	var caja: Node3D = almacen.get("_cajas_de_productos")[Producto.Id.MALBARDO]
-	var mano: Node3D = jugador.get_node("PuntoDeCaja")
+	var mano: Node3D = jugador.get_node("Giro/PuntoDeCaja")
 	var adentro: Array[String] = []
 	for caso: Array in [
 		[Vector3(-0.43, 0.11, -2.49), Vector3(0.77, 1.0, -2.49)],

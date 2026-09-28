@@ -47,13 +47,40 @@ const FILAS := {
 	Producto.Id.MACUMBAS: ["Macumbas", 1250, 8],
 }
 
+## La sonoridad de cada producto, de la columna «Familia sonora» de la ficha. Va aparte de
+## `FILAS` porque `Producto` no la lleva: sólo la usa el audio.
+const SONORIDADES := {
+	Producto.Id.ACTRONCITO: EntradaSonora.Sonoridad.CAJITA,
+	Producto.Id.DUREXTRA: EntradaSonora.Sonoridad.CAJITA,
+	Producto.Id.BURBALOO: EntradaSonora.Sonoridad.CAJITA,
+	Producto.Id.ZUCARACHAS: EntradaSonora.Sonoridad.CAJITA,
+	Producto.Id.LAYSNTT: EntradaSonora.Sonoridad.ENVOLTORIO_PLASTICO,
+	Producto.Id.MALBARDO: EntradaSonora.Sonoridad.CAJITA,
+	Producto.Id.PRONGLES: EntradaSonora.Sonoridad.LATA,
+	Producto.Id.JORGILLO: EntradaSonora.Sonoridad.CAJITA,
+	Producto.Id.ARVEJAS: EntradaSonora.Sonoridad.LATA,
+	Producto.Id.CHISITOS: EntradaSonora.Sonoridad.ENVOLTORIO_PLASTICO,
+	Producto.Id.OREMOS: EntradaSonora.Sonoridad.CAJITA,
+	Producto.Id.PEPITOS: EntradaSonora.Sonoridad.CAJITA,
+	Producto.Id.SALADIK: EntradaSonora.Sonoridad.CAJITA,
+	Producto.Id.UAKAS: EntradaSonora.Sonoridad.CAJITA,
+	Producto.Id.CORACOLA: EntradaSonora.Sonoridad.LATA,
+	Producto.Id.FROTLUPS: EntradaSonora.Sonoridad.CAJITA,
+	Producto.Id.MAROLINI: EntradaSonora.Sonoridad.CAJITA,
+	Producto.Id.AMARGADITO: EntradaSonora.Sonoridad.CAJA,
+	Producto.Id.CINDOLOR: EntradaSonora.Sonoridad.CAJA,
+	Producto.Id.FLINPUF: EntradaSonora.Sonoridad.CAJITA,
+	Producto.Id.DONSATURADOS: EntradaSonora.Sonoridad.ENVOLTORIO_PLASTICO,
+	Producto.Id.PETISAS: EntradaSonora.Sonoridad.ENVOLTORIO_PLASTICO,
+	Producto.Id.MACUMBAS: EntradaSonora.Sonoridad.ENVOLTORIO_PLASTICO,
+}
+
 
 ## Construye un producto nuevo en cada llamada, y eso es correcto: la identidad es el `id`, así
 ## que dos productos con el mismo `id` indexan al mismo lugar. Es lo que permite que esto sea
 ## `static` y que ningún test tenga que compartir estado.
 ##
-## Un `id` sin fila devuelve `null` en vez de indexar el diccionario y reventar, y es la misma
-## forma que `Reglas.costo_de()`, que devuelve `0.0` para un tipo sin costo. El motivo está
+## Un `id` sin fila devuelve `null` en vez de indexar el diccionario y reventar. El motivo está
 ## medido el 2026-09-01: con un séptimo valor en el enum y sin su fila, `FILAS[id]` tira
 ## `Out of bounds get index '6' (on base: 'Dictionary')`, gdUnit4 lo cuenta como *error* y no
 ## como *failure* —la línea de estadísticas del archivo sigue diciendo `PASSED`— y la aserción
@@ -69,6 +96,11 @@ static func de(id: Producto.Id) -> Producto:
 	return Producto.new(id, nombre, precio, umbral)
 
 
+## La sonoridad de ese producto, o `NINGUNA` si no tiene fila.
+static func sonoridad_de(id: Producto.Id) -> EntradaSonora.Sonoridad:
+	return SONORIDADES.get(id, EntradaSonora.Sonoridad.NINGUNA)
+
+
 ## En el orden del enum, que es el orden en que el jugador los va a ver listados.
 ##
 ## Saltea los `id` sin fila para no meter un `null` en la lista que después recorre la pantalla:
@@ -76,7 +108,7 @@ static func de(id: Producto.Id) -> Producto:
 ## se pone en rojo afirmando, en vez de romperse al desreferenciar.
 static func todos() -> Array[Producto]:
 	var productos: Array[Producto] = []
-	for id in Producto.Id.values():
+	for id: Producto.Id in Producto.Id.values():
 		var producto := de(id)
 		if producto == null:
 			continue

@@ -9,7 +9,7 @@
 ## ahí que `completar()` y `obligatoria()` existan: quien quiera cumplir una tarea —el 008, el
 ## 009— llama acá, o no tiene a qué llamarle. El modo de falla de saltearse esta puerta es
 ## silencioso: `tarea_completada` no se emite, el HUD se queda en cero toda la jornada, y los
-## seis nodos de `verificar.py` quedan en verde, porque ninguna regla se rompió.
+## nodos de `verificar.py` quedan en verde, porque ninguna regla se rompió.
 ##
 ## **No conoce la pantalla.** Emite hacia arriba y no pregunta nada: quien quiera mostrar algo se
 ## conecta a las señales.
@@ -18,6 +18,7 @@ extends Node
 
 signal tiempo_consumido(restante: float)
 signal tarea_completada(cumplidas: int)
+signal tarea_descumplida(cumplidas: int)
 signal turno_cerrado(cumplidas: int)
 
 var _turno: Turno = null
@@ -58,20 +59,30 @@ func corriendo() -> bool:
 
 ## Hace una tarea, y devuelve lo mismo que contestó el dominio.
 ##
-## Emite **sólo** cuando el dominio dijo que sí. Los dos motivos de fallo —ya estaba hecha, o no
-## entra en lo que queda— son del `Turno` y no se distinguen acá.
+## Emite **sólo** cuando el dominio dijo que sí. Los dos motivos de fallo —ya estaba hecha, o el
+## turno cerró— son del `Turno` y no se distinguen acá.
 ##
 ## El guard no es una regla del juego: es el mismo estado nulo que ya guarda `_process()`. Sin
 ## turno no hay a quién preguntarle, y `obligatoria()` devuelve `null` **por diseño** cuando la
 ## jornada no pidió ese tipo, así que devolverlo derecho acá es la llamada natural. Que
-## el turno esté cerrado, en cambio, **no** se guarda: el dominio ya contesta `false` porque
-## ninguna tarea entra en cero.
+## el turno esté cerrado, en cambio, **no** se guarda: el dominio ya contesta `false`.
 func completar(tarea: Tarea) -> bool:
 	if _turno == null or tarea == null:
 		return false
 	if not _turno.completar(tarea):
 		return false
 	tarea_completada.emit(_turno.tareas_cumplidas())
+	return true
+
+
+## Deshace una tarea, con el mismo guard que `completar()`. La señal es aparte de
+## `tarea_completada` para que la tabla de sonidos no suene al descumplir.
+func descumplir(tarea: Tarea) -> bool:
+	if _turno == null or tarea == null:
+		return false
+	if not _turno.descumplir(tarea):
+		return false
+	tarea_descumplida.emit(_turno.tareas_cumplidas())
 	return true
 
 

@@ -2,7 +2,7 @@
 ##
 ## **Es una sola instancia y vive en el sistema, no en la pantalla.** Si lo construyera la app de
 ## notas, esconder el panel al pasar a los chats tiraría todo lo anotado — sin un solo error, y
-## con los seis nodos en verde: `ui/` no lleva test obligatorio.
+## con los nodos en verde: `ui/` no lleva test obligatorio.
 ##
 ## **Qué llega a ser una nota es una regla del juego** y por eso está acá: una sin título es un
 ## renglón que el jugador no va a poder encontrar después, y guardarla igual llenaría el cuaderno

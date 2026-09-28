@@ -38,7 +38,7 @@ func test_el_escritorio_recibe_al_jugador_y_al_reloj_por_export() -> void:
 	# hasta que se corre.
 	var texto := FileAccess.get_file_as_string(SCRIPT)
 	assert_str(texto).is_not_empty()
-	for propiedad in ["@export var jugador", "@export var reloj"]:
+	for propiedad: String in ["@export var jugador", "@export var reloj"]:
 		(
 			assert_bool(texto.contains(propiedad))
 			. override_failure_message("`escritorio.gd` no declara `%s`" % propiedad)
@@ -79,7 +79,7 @@ func test_el_clic_derecho_llega_aunque_la_pantalla_tape_el_viewport() -> void:
 	# `Control` trae `MOUSE_FILTER_STOP` por defecto, así que se come el botón del mouse. Con el
 	# gesto escrito en el callback que corre después de la interfaz, la computadora se abría y no
 	# se cerraba nunca: el jugador quedaba suspendido detrás del panel hasta que cerrara la noche,
-	# con el `MOUSE_BUTTON_RIGHT` escrito y los seis nodos en verde.
+	# con el `MOUSE_BUTTON_RIGHT` escrito y los nodos en verde.
 	var pantalla: CanvasLayer = auto_free(load(ESCENA_DE_LA_PANTALLA).instantiate())
 	var fondo := pantalla.get_node("Fondo") as Control
 	(
@@ -107,11 +107,10 @@ func test_tocar_el_escritorio_suspende_al_jugador_y_no_entrega_nada() -> void:
 	reloj.arrancar(Apertura.turno_de_la_jornada(obligatorias), obligatorias)
 	var computadora: ComputadoraDeEscritorio = auto_free(ComputadoraDeEscritorio.new())
 	computadora.reloj = reloj
-	computadora.arrancar(
-		CajaRegistradora.new(
-			Apertura.inventario_de_la_jornada(), CajaRegistradora.productos_del_dia()
-		)
+	var atender := TareaDeAtender.new(
+		Compradores.de_la_jornada(), Apertura.inventario_de_la_jornada()
 	)
+	computadora.arrancar(RegistroDeVentas.new(Catalogo.todos(), atender))
 	escritorio.jugador = jugador
 	escritorio.reloj = reloj
 	escritorio.computadora = computadora

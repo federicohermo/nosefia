@@ -19,6 +19,8 @@ extends Node
 
 signal comprador_llegado(comprador: Comprador)
 signal atencion_despachada(despachados: int)
+## Sólo cuando se cobró: despachar sin vender también despacha, y no es una compra.
+signal compra_realizada
 signal cobro_rechazado(faltantes: Array[Producto])
 signal ventanilla_vacia
 
@@ -76,9 +78,6 @@ func pedir_atender() -> void:
 
 
 ## Cobra el pedido del que está en la ventanilla y avisa cómo salió.
-##
-## Emite **una** de las dos señales y nunca las dos: emitirlas juntas dejaría a la pantalla
-## despachando al comprador y avisando que falta mercadería al mismo tiempo.
 func pedir_cobrar() -> void:
 	if _sin_cablear():
 		return
@@ -91,10 +90,12 @@ func pedir_cobrar() -> void:
 		return
 	if resultado != Atencion.Resultado.COBRADA:
 		return
+	compra_realizada.emit()
 	_al_despachar()
 
 
-## Lo despacha sin cobrarle. Es lo que deja cumplir la obligatoria con la góndola vacía.
+## Lo despacha sin cobrarle. Es lo que deja cumplir la obligatoria cuando el pedido supera
+## los vendibles.
 func pedir_despachar_sin_vender() -> void:
 	if _sin_cablear():
 		return
@@ -107,7 +108,7 @@ func pedir_despachar_sin_vender() -> void:
 ## Publica el despacho y, si no quedó nadie, le pide al reloj que cuente la obligatoria.
 ##
 ## La `Tarea` sale de `RelojDelTurno.obligatoria()` y nunca de una construida acá: una copia
-## devuelve `true`, descuenta el tiempo igual y deja el contador del HUD clavado — la tarea hecha
+## devuelve `true` y deja el contador del HUD clavado — la tarea hecha
 ## y la pantalla diciendo que no, sin error y en verde.
 func _al_despachar() -> void:
 	atencion_despachada.emit(_tarea.despachados())

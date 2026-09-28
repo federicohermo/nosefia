@@ -2,7 +2,7 @@
 
 import unittest
 
-from lib.horneado import PLUGIN, project_con_el_plugin, veredicto
+from lib.horneado import PLUGIN, project_con_el_plugin, sesion_bloqueada, veredicto
 
 PROJECT = (
     "config_version=5\n\n[editor_plugins]\n\n"
@@ -40,3 +40,14 @@ class Veredicto(unittest.TestCase):
     def test_las_dos_salidas_escritas_es_un_horneado(self):
         ok, _ = veredicto(0, {"a.lmbake": True, "a.exr": True})
         self.assertTrue(ok)
+
+
+class SesionBloqueada(unittest.TestCase):
+    # Con la sesión de Windows bloqueada el editor no dibuja, no aprieta el botón y el horneado
+    # espera el tope entero sin decir por qué.
+    def test_la_pantalla_de_bloqueo_corriendo_es_una_sesion_bloqueada(self):
+        procesos = '"explorer.exe","1","Console"\n"LogonUI.exe","2","Console"\n'
+        self.assertTrue(sesion_bloqueada(procesos))
+
+    def test_sin_la_pantalla_de_bloqueo_la_sesion_esta_abierta(self):
+        self.assertFalse(sesion_bloqueada('"explorer.exe","1","Console"\n'))

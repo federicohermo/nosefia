@@ -10,7 +10,7 @@ func test_una_mancha_nueva_arranca_con_todas_las_pasadas() -> void:
 	assert_bool(mancha.esta_limpia()).is_false()
 
 
-func test_cada_pasada_baja_exactamente_una() -> void:  # AC-CLN-005
+func test_cada_pasada_baja_exactamente_una() -> void:
 	var mancha := Mancha.new()
 	var antes := mancha.pasadas_restantes()
 	assert_bool(mancha.pasar()).is_true()

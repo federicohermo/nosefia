@@ -11,35 +11,35 @@
 ## levantar nada. Acá quedó lo único que necesita la escena delante: conectar y pintar.
 extends Node3D
 
-## El script del reloj de pared se preloadea para poder tiparlo: los scripts de `escenas/` son
+## El script del reloj de mesa se preloadea para poder tiparlo: los scripts de `escenas/` son
 ## cáscara y no declaran `class_name`, así que sin esto el tipo estático del `@export` sería
 ## `Label3D` y llamarle `declarar_jornada()` no compilaría.
-const RelojDeParedDelLocal := preload("res://src/escenas/puestos/reloj_de_pared.gd")
+const RelojDeMesaDelLocal := preload("res://src/escenas/puestos/reloj_de_mesa.gd")
 
-## Los tres scripts de `escenas/` se preloadean por el mismo motivo que el del reloj de pared:
+## Los scripts de `escenas/` se preloadean por el mismo motivo que el del reloj de mesa:
 ## son cáscara y no declaran `class_name`, así que sin esto el tipo estático del `@export` sería
 ## el del nodo y llamarles `mostrar()` no compilaría.
 const EstanteDelLocal := preload("res://src/escenas/puestos/estante.gd")
 const CajaDeProductosDelDeposito := preload("res://src/escenas/objetos/caja_de_productos.gd")
-const CajaDeTrasladoQueSeVe := preload("res://src/escenas/objetos/caja_de_traslado.gd")
 const LimpiezaDelLocal := preload("res://src/escenas/puestos/limpieza_del_almacen.gd")
 const AudioDelLocal := preload("res://src/escenas/puestos/audio_del_almacen.gd")
 const ReposicionManual := preload("res://src/escenas/puestos/reposicion_manual.gd")
+const PuertaDelLocal := preload("res://src/escenas/puestos/puerta_del_local.gd")
 
 ## El jugador tampoco declara un `class_name` —es cáscara, como este archivo—, así que el
 ## `@export` de abajo no lo puede nombrar sin traerlo por `preload`.
 const Jugador := preload("res://src/escenas/jugador.gd")
 
+const ESCENA_DEL_MENU := "res://src/escenas/menu_de_inicio.tscn"
+
 @export var _hud: Hud
 @export var _reloj: RelojDelTurno
 @export var _ciclo: CicloDeJornadas
 @export var _pantalla: PantallaDeCierre
-@export var _reloj_de_pared: RelojDeParedDelLocal
+@export var _reloj_de_mesa: RelojDeMesaDelLocal
 @export var _repositor: Repositor
-@export var _carga: CargaDeLaCaja
 @export var _estante: EstanteDelLocal
 @export var _cajas_de_productos: Array[Node3D]
-@export var _caja_de_traslado: CajaDeTrasladoQueSeVe
 @export var _jugador: Jugador
 @export var _atenciones: Ventanilla
 @export var _computadora: ComputadoraDeEscritorio
@@ -55,12 +55,23 @@ const Jugador := preload("res://src/escenas/jugador.gd")
 @export var _agarre: Agarre
 @export var _bolsas: Array[Node3D]
 
+@export var _puertas: Array[Node3D]
+
 ## Los muebles con los que el jugador choca por su contorno y no por su malla.
 @export var _muebles_con_contorno: Array[PhysicsBody3D]
 
 ## La partida es de la escena y no del ciclo porque también la mira el HUD: el ciclo publica lo
-## que pasó, y quien quiera un número lo pide acá.
-var _partida := Partida.nueva()
+## que pasó, y quien quiera un número lo pide acá. Sale del guardado: sin guardado, es nueva.
+var _partida := Partida.desde(Guardado.new().cargar())
+
+## Donde el jugador arranca cada noche: el lugar del nodo `Jugador` en la escena, leído antes de
+## la primera apertura. Es geometría de la escena y no un número del dominio. No es un nodo propio
+## porque la raíz no suma hijos y lo que la escena declara cuelga de la raíz.
+var _arranque: Transform3D
+
+## Cómo se sale al menú. Es una variable y no una llamada directa porque un test no puede
+## cambiar de escena: se llevaría puesto al runner.
+var _ir_al_menu: Callable = volver_al_menu
 
 
 ## Los carteles se pintan acá antes de conectar nada, y no con un `text` escrito en `hud.tscn`:
@@ -78,24 +89,22 @@ func _ready() -> void:
 		_jugador.ignorar_el_detalle(mueble)
 	_hud.declarar_obligatorias(Apertura.cantidad_de_obligatorias())
 	_hud.mostrar_apercibimientos(_partida.apercibimientos())
-	# La hora se lee en el local y no en la pantalla: enterarse cuesta caminar hasta el reloj, y
-	# desde la noche en que se rompe, ni caminar alcanza. La jornada se declara antes de arrancar
+	# La hora se lee en el local y no en la pantalla: enterarse cuesta caminar hasta el reloj de
+	# mesa, y la noche en que falla, ni caminar alcanza. La jornada se declara antes de arrancar
 	# porque el ciclo abre la primera adentro de `arrancar()`.
-	_reloj.tiempo_consumido.connect(_reloj_de_pared.mostrar_tiempo)
-	_ciclo.jornada_abierta.connect(_reloj_de_pared.declarar_jornada)
+	_reloj.tiempo_consumido.connect(_reloj_de_mesa.mostrar_tiempo)
+	_ciclo.jornada_abierta.connect(_reloj_de_mesa.declarar_jornada)
 	_reloj.tarea_completada.connect(_hud.mostrar_tareas)
+	_reloj.tarea_descumplida.connect(_hud.mostrar_tareas)
 	_ciclo.jornada_cerrada.connect(_al_cerrar_la_jornada)
 	# El marcador de obligatorias no se reinicia solo: `mostrar_tareas()` se vuelve a llamar
 	# recién cuando el jugador completa una, así que sin esto la noche 2 arranca mostrando las
 	# que se cumplieron en la 1 hasta que se cumpla la primera de la 2. Y la góndola de cada
-	# noche arranca vacía, así que el estante se rehace en la misma apertura: uno compartido
-	# dejaría lo repuesto anoche puesto, y reponer se cumpliría sola a partir de la segunda.
+	# noche arranca sin nada repuesto, así que el estante se rehace en la misma apertura: uno
+	# compartido dejaría lo repuesto anoche puesto, y reponer se cumpliría sola a partir de la segunda.
 	# **Una sola conexión**: el 017 y el 008 llegaron por separado al mismo `jornada_abierta`, y
 	# conectarlo dos veces es un error de Godot, no dos llamadas.
 	_ciclo.jornada_abierta.connect(_al_abrir_la_jornada)
-	# La placa es quien abre la noche siguiente, y por eso el ciclo no reabre solo: entre una
-	# jornada y la otra hay algo que leer.
-	_pantalla.cierre_despachado.connect(_al_despachar_la_placa)
 	# El audio se ata **por nombre de señal** y no nombrando a nadie: la lista de fuentes se le
 	# pasa entera y el enlazador conecta las que existan. Una señal que todavía no está deja su
 	# fila declarada sin fuente en vez de romper algo.
@@ -106,12 +115,18 @@ func _ready() -> void:
 				_reloj,
 				_ciclo,
 				_repositor,
-				_carga,
 				_atenciones,
 				_computadora,
 				_limpiador,
 				_recolector,
 				_agarre,
+				_jugador,
+				$Interfaz/PantallaDeComputadora,
+				$Estructura/puerta/CuerpoDeLaHoja,
+				$Estructura/puerta2/CuerpoDeLaHoja,
+				$Estructura/puertaentrada/CuerpoDeLaHoja,
+				$Estructura/porton/CuerpoDeLaHoja,
+				$Estructura/puertajefe/CuerpoDeLaHoja,
 			]
 		)
 	)
@@ -119,16 +134,21 @@ func _ready() -> void:
 	# mano y la zona de reposición la coloca en la góndola. Quien atiende ese clic es
 	# `ReposicionManual`, que se conecta solo. La unidad viaja en la mano, así que el inventario
 	# recién cambia cuando el estante la acepta: soltarla en el piso no repone nada.
-	_carga.producto_guardado.connect(_al_guardar_en_la_caja)
 	_repositor.agarre = _agarre
 	_repositor.unidad_colocada.connect(_reposicion_manual.depositar)
-	_repositor.producto_colocado.connect(_al_colocar_en_el_estante)
-	_atenciones.atencion_despachada.connect(_reposicion_manual.actualizar_stock)
+	# El motor no despierta lo que está sobre una caja empujada. Lo hace el puesto.
+	for caja: CajaDeProductosDelDeposito in _cajas_de_productos:
+		caja.empujada.connect(_reposicion_manual.despertar_lo_de_arriba)
+	# «Volver al menú» de la pausa sale por el mismo camino que el de la placa.
+	var pausa: ControlDePausa = get_node("Interfaz/ControlDePausa")
+	pausa.volver_al_menu_pedido.connect(func() -> void: _ir_al_menu.call())
+	_arranque = _jugador.global_transform
+	add_child(EnlaceDeGuardado.new(_ciclo, Guardado.new()))
 	_ciclo.arrancar(_partida, _reloj)
 	_reposicion_manual.preparar()
 
 
-## Cada noche arranca con el marcador en cero, la góndola vacía y el depósito lleno.
+## Cada noche arranca con el marcador en cero, nada repuesto y el depósito lleno.
 ##
 ## El marcador lo dice la apertura y no el cierre de la anterior: entre las dos hay una placa que
 ## el jugador tarda lo que quiera en despachar, y el conteo de ayer no puede quedar colgado ahí.
@@ -141,8 +161,12 @@ func _ready() -> void:
 func _al_abrir_la_jornada(_jornada: int) -> void:
 	# Primero que nada, y por eso antes de `limpiar()`: lo que quedó en la mano cuelga del
 	# jugador, así que devolverlo a su lugar le escribiría la posición relativa a la mano y la
-	# caja terminaría flotando pegada al cuerpo toda la noche siguiente.
+	# caja terminaría flotando pegada al cuerpo toda la noche siguiente. Y antes, el examen: lo
+	# examinado cuelga de la cara, y vaciar las manos lo dejaría apuntando a un nodo que ya no
+	# está ahí.
+	_jugador.examen.terminar()
 	_agarre.vaciar_las_manos()
+	_jugador.ubicar(_arranque)
 	_hud.declarar_obligatorias(Apertura.cantidad_de_obligatorias())
 	# **Un solo inventario para las dos obligatorias**: reponer lo llena y la ventanilla lo
 	# vacía. Construir uno por tarea daría dos stocks del mismo producto, y las dos ventanas
@@ -150,8 +174,9 @@ func _al_abrir_la_jornada(_jornada: int) -> void:
 	var inventario := Apertura.inventario_de_la_jornada()
 	_repositor.arrancar(Estante.new(inventario, Catalogo.todos()))
 	_reposicion_manual.limpiar()
-	_atenciones.arrancar(TareaDeAtender.new(Compradores.de_la_jornada(), inventario))
-	_computadora.arrancar(CajaRegistradora.new(inventario, CajaRegistradora.productos_del_dia()))
+	var atender := TareaDeAtender.new(Compradores.de_la_jornada(), inventario)
+	_atenciones.arrancar(atender)
+	_computadora.arrancar(RegistroDeVentas.new(Catalogo.todos(), atender))
 	# El piso se rehace cada noche: guardar el estado entre jornadas está fuera de alcance, y una
 	# sola instancia dejaría el local limpio de anoche y la obligatoria cumplida sola.
 	_limpiador.arrancar(PisoDelLocal.de_la_jornada())
@@ -166,6 +191,8 @@ func _al_abrir_la_jornada(_jornada: int) -> void:
 		bolsa.volver_a_su_lugar()
 	for caja: CajaDeProductosDelDeposito in _cajas_de_productos:
 		caja.volver_a_su_lugar()
+	for puerta: PuertaDelLocal in _puertas:
+		puerta.cerrar_de_golpe()
 	_audio.arrancar_el_ambiente()
 	_limpieza.repintar()
 	_estante.mostrar(0)
@@ -178,33 +205,40 @@ func _al_abrir_la_jornada(_jornada: int) -> void:
 ## que el turno estuvo contando toda la noche, así que el parte lee el estado de verdad y no una
 ## copia que nadie completó.
 func _al_cerrar_la_jornada(jornada: int, cumplidas: int) -> void:
+	_audio.callar_la_musica()
 	_hud.mostrar_tareas(cumplidas)
 	_hud.mostrar_apercibimientos(_partida.apercibimientos())
 	_pantalla.mostrar(
-		ParteDeCierre.new(jornada, _partida.obligatorias(), _partida.apercibimientos())
+		ParteDeCierre.new(
+			jornada, _partida.obligatorias(), _partida.apercibimientos(), _partida.final()
+		)
 	)
 	# Sin esto la placa es inalcanzable jugando: el jugador clava el puntero en el centro cada
-	# cuadro y el botón «Seguir» cae más abajo, así que no se puede clickear nunca y la jornada 2
-	# no existe en la build. La suspensión suelta el cursor sola, porque el modo se recalcula a
-	# partir del estado del control.
+	# cuadro y los botones caen más abajo, así que no se pueden clickear nunca. La suspensión
+	# suelta el cursor sola, porque el modo se recalcula a partir del estado del control.
 	_jugador.suspender()
+	# Una conexión por placa: un segundo despacho de la misma placa no encuentra a nadie, y no
+	# abre dos noches ni carga el menú dos veces.
+	_pantalla.cierre_despachado.connect(_al_despachar_la_placa, CONNECT_ONE_SHOT)
 
 
-## El orden importa y por eso hay un handler en vez de conectar la señal derecho al ciclo: si el
-## jugador se reanudara después de abrir la jornada, el cuadro del medio correría con el control
-## todavía suspendido. Acá no se decide nada — son dos llamadas, siempre las dos.
-func _al_despachar_la_placa() -> void:
+## Qué hace cada opción de la placa. Cuáles se ofrecen lo decidió el parte; acá sólo se busca
+## la acción de la elegida.
+func _al_despachar_la_placa(opcion: ParteDeCierre.Opcion) -> void:
+	var acciones: Dictionary[ParteDeCierre.Opcion, Callable] = {
+		ParteDeCierre.Opcion.SEGUIR: _seguir,
+		ParteDeCierre.Opcion.VOLVER_AL_MENU: _ir_al_menu,
+	}
+	acciones[opcion].call()
+
+
+## El orden importa: si el jugador se reanudara después de abrir la jornada, el cuadro del medio
+## correría con el control todavía suspendido.
+func _seguir() -> void:
 	_jugador.reanudar()
 	_ciclo.abrir_la_jornada()
 
 
-## Lo guardado en la caja de traslado se repinta contra el contenido que contesta el dominio, y
-## nunca contra una cuenta llevada acá.
-func _al_guardar_en_la_caja(_producto: Producto) -> void:
-	_caja_de_traslado.mostrar(_carga.caja().contenido())
-
-
-## Lo que se coloca ya lo dibuja `ReposicionManual` con el cuerpo que el jugador soltó, así que
-## acá sólo queda repintar el casillero de la caja de traslado.
-func _al_colocar_en_el_estante(_producto: Producto, _completos: int) -> void:
-	_caja_de_traslado.mostrar(_carga.caja().contenido())
+## Deja la partida y carga el menú de inicio. No abre ninguna jornada.
+func volver_al_menu() -> void:
+	get_tree().change_scene_to_file(ESCENA_DEL_MENU)

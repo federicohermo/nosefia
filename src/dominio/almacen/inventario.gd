@@ -45,7 +45,7 @@ func unidades(producto: Producto, ubicacion: Ubicacion) -> int:
 ## Suma unidades a una ubicación. Una cantidad que no es positiva se ignora en silencio, igual
 ## que los segundos negativos de `Turno.consumir()`: por acá se **ingresa** mercadería, y el
 ## único que la resta es este archivo. Sin el corte, un `ingresar(p, GONDOLA, -5)` de quien
-## reponga mal deja la góndola en `-5`, que `hay_stock()` lee como vacía y `mover()` como que no
+## reponga mal deja la góndola en `-5`, que `faltantes()` lee como vacía y `mover()` como que no
 ## hay nada: un estado imposible que ningún número delata.
 func ingresar(producto: Producto, ubicacion: Ubicacion, cuantas: int) -> void:
 	if cuantas <= 0:
@@ -89,26 +89,40 @@ func faltantes() -> Array[Producto]:
 	return faltan
 
 
-## Si hay al menos una unidad **en la góndola**. Lo que está en el depósito no se puede vender
-## por la ventanilla: hay que reponerlo primero.
-func hay_stock(producto: Producto) -> bool:
-	return unidades(producto, Ubicacion.GONDOLA) > 0
+## Cuántas unidades de ese producto se pueden vender: el depósito menos lo que a la góndola le
+## falta para su umbral, y nunca menos de 0.
+##
+## Lo que el estante necesita no se vende. Sin ese descuento, una venta se llevaría la unidad
+## que el jugador iba a colocar, y reponer quedaría sin cumplir sin que nada lo avise.
+##
+## Una unidad en la mano sigue en el depósito hasta que se coloca, y también en lo que a la
+## góndola le falta: por eso no se vende, y colocarla después sigue funcionando.
+##
+## El umbral sale del producto que recibió el `_init` y no del que llega por parámetro: la
+## identidad es el `id`, y dos instancias con el mismo `id` podrían traer umbrales distintos.
+func vendibles(producto: Producto) -> int:
+	for conocido in _productos:
+		if conocido.id != producto.id:
+			continue
+		var le_falta := maxi(0, conocido.umbral - unidades(conocido, Ubicacion.GONDOLA))
+		return maxi(0, unidades(conocido, Ubicacion.DEPOSITO) - le_falta)
+	return 0
 
 
-## Descuenta de la góndola lo que la venta pide, y devuelve si pudo.
+## Descuenta del depósito lo que la venta pide, y devuelve si pudo. La góndola no se toca.
 ##
 ## Es **todo o nada**: recorre las líneas enteras antes de tocar una sola unidad. Descontar lo
 ## que se pueda dejaría un estado que el jugador no puede distinguir de una venta completa —la
 ## misma decisión que `Tarea.completar()`—.
 ##
-## Un producto que la venta pide y este inventario no conoce responde 0 unidades, así que cae
-## por el mismo camino que «no alcanza el stock». El `bool` alcanza porque para el jugador los
-## dos motivos son el mismo: eso no se vende hoy.
+## Un producto que la venta pide y este inventario no conoce tiene 0 vendibles, así que cae por
+## el mismo camino que «no alcanza». El `bool` alcanza porque para el jugador los dos motivos
+## son el mismo: eso no se vende hoy.
 func cobrar(venta: Venta) -> bool:
 	var pedido := venta.productos()
 	for producto in pedido:
-		if venta.unidades_de(producto) > unidades(producto, Ubicacion.GONDOLA):
+		if venta.unidades_de(producto) > vendibles(producto):
 			return false
 	for producto in pedido:
-		_sumar(producto, Ubicacion.GONDOLA, -venta.unidades_de(producto))
+		_sumar(producto, Ubicacion.DEPOSITO, -venta.unidades_de(producto))
 	return true

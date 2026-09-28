@@ -53,3 +53,17 @@ func test_una_mirada_recien_creada_arranca_derecha() -> void:
 	var mirada := Mirada.new(SENSIBILIDAD, MINIMO, MAXIMO)
 	assert_float(mirada.yaw()).is_equal(0.0)
 	assert_float(mirada.pitch()).is_equal(0.0)
+
+
+func test_orientar_fija_el_yaw_y_deja_la_vista_horizontal() -> void:  # AC-PLY-044
+	var mirada := Mirada.new(SENSIBILIDAD, MINIMO, MAXIMO)
+	mirada.girar(Vector2(123.0, 80.0))
+	mirada.orientar(0.5)
+	assert_float(mirada.yaw()).is_equal_approx(0.5, 1e-6)
+	assert_float(mirada.pitch()).is_equal(0.0)
+
+
+func test_orientar_deja_el_yaw_adentro_de_una_vuelta() -> void:  # AC-PLY-044
+	var mirada := Mirada.new(SENSIBILIDAD, MINIMO, MAXIMO)
+	mirada.orientar(TAU + 0.25)
+	assert_float(mirada.yaw()).is_equal_approx(0.25, 1e-5)

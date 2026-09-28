@@ -31,8 +31,8 @@ func _init(manchas: Dictionary) -> void:
 ## El piso de una noche: una mancha por cada zona declarada.
 ##
 ## Se recorre el `enum` y no se enumeran cuatro a mano: una quinta zona es una línea en el `enum`
-## y este archivo no se toca. Y no se sortea nada — sortear las zonas haría variar el presupuesto
-## de trayecto que el 011 mide.
+## y este archivo no se toca. Y no se sortea nada — sortear las zonas haría variar cuánto camina
+## el jugador de una noche a otra.
 static func de_la_jornada() -> PisoDelLocal:
 	var manchas := {}
 	for zona: Zona in Zona.values():

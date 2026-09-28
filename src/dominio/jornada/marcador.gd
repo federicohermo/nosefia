@@ -1,48 +1,31 @@
-## Los números del turno, ya formateados, y el umbral con el que quien los pinta cambia de tono.
+## Los números del turno, ya formateados.
 ##
 ## **La frontera con quien dibuja se dice en una línea: acá viven los números, allá las
-## palabras.** `"01:30"` y `"3/4"` son números formateados; «Apercibimientos» y los dos colores
-## del reloj de pared son de arriba.
+## palabras.** `"20:00"` y `"3/4"` son números formateados; «Apercibimientos» es de arriba.
 ##
-## Con la hora fuera del HUD, `reloj()` y `en_aviso()` tienen un solo cliente cada uno y los dos
-## están en el reloj de pared del local: `src/dominio/jornada/reloj_de_pared.gd` para el formato
-## y `src/escenas/puestos/reloj_de_pared.gd` para el tono.
-##
-## El umbral está acá y no arriba porque es **un número que decide**, y un número que decide en
-## `ui/` o en `escenas/` nace sin test: es la trampa que describe `.claude/rules/presentacion.md`.
+## Con la hora fuera del HUD, `hora()` tiene un solo cliente, el reloj de mesa del dominio, que
+## decide si esta noche se puede leer. La aritmética está acá y no en el nodo que pinta porque es
+## **una regla que decide**, y una regla en `escenas/` nace sin test: es la trampa que describe
+## `.claude/rules/presentacion.md`.
 class_name Marcador
 extends RefCounted
 
 const SEGUNDOS_POR_MINUTO := 60
 const MINUTOS_POR_HORA := 60
-const SEGUNDOS_POR_HORA := SEGUNDOS_POR_MINUTO * MINUTOS_POR_HORA
+const HORAS_POR_DIA := 24
 
-## Media hora de ficción. Es un primer valor de balance, no una medición, y moverlo no toca el
-## nodo que pinta el reloj de pared: le pregunta acá en cada cuadro.
-const SEGUNDOS_DE_AVISO := 1800.0
-
-## Lo que queda del turno, en un texto que se lee de un vistazo.
+## La hora de la noche, en `HH:MM` de 24 horas: la apertura más lo que ya se gastó del turno.
 ##
-## Cambia de forma en la hora porque un turno entero en minutos puros daría `"480:00"`, que
-## nadie lee como ocho horas.
-##
-## **Trunca y no redondea**, y por debajo de cero devuelve el cero: mostrar `"01:00"` cuando ya
-## no queda un minuto entero es mentirle al jugador justo cuando el número importa, y un
-## `"-00:00"` es un tiempo imposible.
+## **Trunca al minuto y no redondea**: mostrar `20:01` cuando todavía no pasó un minuto entero es
+## adelantarle la hora al jugador. Y lo gastado se acota al turno entero: con el turno en cero o
+## por debajo se lee la hora de cierre, nunca una pasada del cierre.
 @warning_ignore("integer_division")
-static func reloj(restante: float) -> String:
-	var segundos := int(maxf(0.0, restante))
-	var horas := segundos / SEGUNDOS_POR_HORA
-	var minutos := segundos / SEGUNDOS_POR_MINUTO
-	var resto := segundos % SEGUNDOS_POR_MINUTO
-	if horas > 0:
-		return "%d:%02d:%02d" % [horas, minutos % MINUTOS_POR_HORA, resto]
-	return "%02d:%02d" % [minutos, resto]
-
-
-## Si lo que queda ya entra en la franja en la que el reloj de pared se pinta distinto.
-static func en_aviso(restante: float) -> bool:
-	return restante <= SEGUNDOS_DE_AVISO
+static func hora(restante: float) -> String:
+	var turno := Reglas.DURACION_DEL_TURNO
+	var transcurrido := int(turno - clampf(restante, 0.0, turno))
+	var minutos := transcurrido / SEGUNDOS_POR_MINUTO
+	var horas := (Reglas.HORA_DE_APERTURA + minutos / MINUTOS_POR_HORA) % HORAS_POR_DIA
+	return "%02d:%02d" % [horas, minutos % MINUTOS_POR_HORA]
 
 
 ## Cuántas obligatorias van sobre cuántas se declararon.

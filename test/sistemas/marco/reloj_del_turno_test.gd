@@ -9,8 +9,8 @@
 ## reloj: el reloj es el único dueño del turno mientras la escena corre, y abrirle una puerta
 ## para mirarlo desde afuera sería exactamente lo que este spec cierra.
 ##
-## Los turnos son chicos —`100.0`, `12.0`— y no de ocho horas: el factor de `Ritmo` los agota en
-## uno o dos `_process`, así que el cierre se prueba en dos líneas.
+## Los turnos son chicos —`100.0`, `12.0`— y no de una noche entera: el factor de `Ritmo` los
+## agota en uno o dos `_process`, así que el cierre se prueba en dos líneas.
 extends GdUnitTestSuite
 
 var _turno: Turno = null
@@ -20,9 +20,13 @@ var _completadas: int = 0
 var _cumplidas_al_completar: int = 0
 var _consumos: int = 0
 var _restante_publicado: float = 0.0
+var _descumplidas: int = 0
+var _cumplidas_al_descumplir: int = -1
 
 
 func before_test() -> void:
+	_descumplidas = 0
+	_cumplidas_al_descumplir = -1
 	_turno = null
 	_cierres = 0
 	_cumplidas_al_cerrar = 0
@@ -40,6 +44,29 @@ func _reloj_arrancado(presupuesto: float, obligatorias: Array[Tarea]) -> RelojDe
 	_turno = Turno.new(presupuesto, obligatorias)
 	reloj.arrancar(_turno, obligatorias)
 	return reloj
+
+
+func after_test() -> void:
+	get_tree().paused = false
+
+
+## El único caso que entra el reloj al árbol: la pausa es del árbol, y un `_process()` llamado a
+## mano no la ve. Lo que se afirma es que el reloj no tiene un `if` propio para la pausa: se
+## detiene porque el motor deja de llamarlo.
+func test_con_el_arbol_en_pausa_el_turno_no_descuenta() -> void:  # AC-SHF-020
+	var reloj := _reloj_arrancado(Reglas.DURACION_DEL_TURNO, _sin_obligatorias())
+	add_child(reloj)
+	await get_tree().process_frame
+	get_tree().paused = true
+	var al_pausar := _turno.tiempo_restante()
+	for _cuadro in 5:
+		await get_tree().process_frame
+	assert_float(_turno.tiempo_restante()).is_equal(al_pausar)
+	get_tree().paused = false
+	for _cuadro in 3:
+		await get_tree().process_frame
+	assert_float(_turno.tiempo_restante()).is_less(al_pausar)
+	remove_child(reloj)
 
 
 func _sin_obligatorias() -> Array[Tarea]:
@@ -63,18 +90,18 @@ func _anotar_cierre(cumplidas: int) -> void:
 
 
 func test_un_cuadro_consume_el_delta_ya_escalado_por_el_ritmo() -> void:
-	# Medio segundo real son doce de turno. Que dé 88 y no 99.5 es lo que verifica que el reloj
-	# escala; que no dé 76 es lo que verifica que llama a `consumir()` una vez y no dos.
+	# Medio segundo real son treinta de turno. Que dé 70 y no 99.5 es lo que verifica que el reloj
+	# escala; que no dé 40 es lo que verifica que llama a `consumir()` una vez y no dos.
 	var reloj := _reloj_arrancado(100.0, _sin_obligatorias())
 	reloj._process(0.5)
-	assert_float(_turno.tiempo_restante()).is_equal(88.0)
+	assert_float(_turno.tiempo_restante()).is_equal(70.0)
 
 
 func test_dos_cuadros_consumen_el_doble() -> void:
 	var reloj := _reloj_arrancado(100.0, _sin_obligatorias())
 	reloj._process(0.5)
 	reloj._process(0.5)
-	assert_float(_turno.tiempo_restante()).is_equal(76.0)
+	assert_float(_turno.tiempo_restante()).is_equal(40.0)
 
 
 func test_un_reloj_sin_arrancar_no_esta_corriendo() -> void:
@@ -168,6 +195,34 @@ func test_un_reloj_sin_arrancar_no_completa_nada_en_vez_de_romperse() -> void:
 	# turno, y `completar()` es una puerta pública que se puede tocar antes que `arrancar()`.
 	var reloj: RelojDelTurno = auto_free(RelojDelTurno.new())
 	assert_bool(reloj.completar(Tarea.new(Tarea.Tipo.LIMPIAR))).is_false()
+	assert_bool(reloj.descumplir(Tarea.new(Tarea.Tipo.LIMPIAR))).is_false()
+
+
+func test_descumplir_avisa_por_su_propia_senal_y_no_por_la_de_cumplir() -> void:
+	var registrar := Tarea.new(Tarea.Tipo.REGISTRAR)
+	var obligatorias: Array[Tarea] = [registrar]
+	var reloj := _reloj_arrancado(Reglas.DURACION_DEL_TURNO, obligatorias)
+	reloj.tarea_descumplida.connect(_anotar_descumplida)
+	reloj.completar(registrar)
+	assert_bool(reloj.descumplir(registrar)).is_true()
+	assert_int(_descumplidas).is_equal(1)
+	assert_int(_cumplidas_al_descumplir).is_equal(0)
+	assert_int(_completadas).is_equal(1)
+
+
+func test_descumplir_una_sin_cumplir_no_avisa() -> void:
+	var registrar := Tarea.new(Tarea.Tipo.REGISTRAR)
+	var obligatorias: Array[Tarea] = [registrar]
+	var reloj := _reloj_arrancado(Reglas.DURACION_DEL_TURNO, obligatorias)
+	reloj.tarea_descumplida.connect(_anotar_descumplida)
+	assert_bool(reloj.descumplir(registrar)).is_false()
+	assert_bool(reloj.descumplir(null)).is_false()
+	assert_int(_descumplidas).is_equal(0)
+
+
+func _anotar_descumplida(cumplidas: int) -> void:
+	_descumplidas += 1
+	_cumplidas_al_descumplir = cumplidas
 
 
 ## Busca por tipo y no por índice a propósito: que la lista salga ordenada como el `enum` es un
