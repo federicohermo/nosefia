@@ -1,6 +1,6 @@
 ## Lo que las pantallas de Manada comparten: el lienzo de Figma y la salida al local.
 ##
-## Vive una sola vez porque lo usan dos pantallas. Se escala el marco entero, y no cada control,
+## Vive una sola vez porque lo usan varias pantallas. Se escala el marco entero, y no cada control,
 ## para conservar las proporciones del diseño sin tocar el viewport ni la cámara del juego.
 class_name LienzoDeManada
 extends RefCounted

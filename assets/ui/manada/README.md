@@ -12,6 +12,7 @@ durante la ejecución.
 | `cabecera.svg` | Figma, `3:911` / `3:814` | Cabecera de 1712 × 70,3 sobre el lienzo de 1920 × 1080 |
 | `linea_detalle.svg` | Figma, `3:912` / `3:446` | Separadores del detalle |
 | `solapa.svg` | Figma, `3:913` / `3:448` | Solapa sobre el separador |
+| `puntos_de_carga.svg` | Figma, las elipses del frame «UI INICIO» (`105:97`) | Puntos del marco de la pantalla de carga, sobre el lienzo de 1920 × 1080; las líneas son `cabecera.svg` |
 | `computadora.svg` | Figma, instancia `112:411` | Ícono de la opción Registro, en la navegación derecha |
 | `registro.svg` | Figma, componente `3:983` | Ícono de la opción Notas, en la navegación derecha |
 | `<producto>.png`, una por producto del catálogo | Mallas actuales de `assets/models/producto_*.res` | Filas de la planilla de registro |

@@ -4,8 +4,14 @@ extends Control
 
 const TEXTO := "CARGANDO..."
 
+@export var _marco: Control
 @export var _barra: ProgressBar
 @export var _texto: Label
+
+
+func _notification(que: int) -> void:
+	if que == NOTIFICATION_RESIZED:
+		LienzoDeManada.ajustar(_marco, size)
 
 
 func _ready() -> void:
