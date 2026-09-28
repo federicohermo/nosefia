@@ -35,6 +35,30 @@ func test_una_partida_restaurada_a_un_aviso_del_tope_despide_con_un_aviso() -> v
 	assert_int(partida.final()).is_equal(Partida.Final.DESPEDIDO)
 
 
+func test_una_partida_guardada_sigue_en_su_jornada_y_con_su_legajo() -> void:
+	var guardada := (
+		PartidaSerializada
+		. sanear(
+			{
+				PartidaSerializada.clave(PartidaSerializada.Campo.JORNADA):
+				ReglasDeLaPartida.PRIMERA_JORNADA + 2,
+				PartidaSerializada.clave(PartidaSerializada.Campo.APERCIBIMIENTOS):
+				Reglas.APERCIBIMIENTOS_POR_AVISO,
+			}
+		)
+	)
+	var partida := Partida.desde(guardada)
+	assert_int(partida.jornada()).is_equal(ReglasDeLaPartida.PRIMERA_JORNADA + 2)
+	assert_int(partida.apercibimientos()).is_equal(Reglas.APERCIBIMIENTOS_POR_AVISO)
+	assert_bool(partida.terminada()).is_false()
+
+
+func test_un_diccionario_vacio_da_una_partida_nueva() -> void:
+	var partida := Partida.desde({})
+	assert_int(partida.jornada()).is_equal(Partida.nueva().jornada())
+	assert_int(partida.apercibimientos()).is_equal(Partida.nueva().apercibimientos())
+
+
 func test_cerrar_una_jornada_avanza_y_anota_la_banda_en_el_legajo() -> void:
 	var partida := Partida.nueva()
 	_jugar(partida, 0)

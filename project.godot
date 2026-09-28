@@ -42,6 +42,12 @@ enabled=PackedStringArray("res://addons/gdUnit4/plugin.cfg", "res://addons/godot
 
 import/blender/enabled=false
 
+[gdunit4]
+
+hooks/session_hooks=Dictionary[String, bool]({
+"res://test/guardado_de_la_sesion.gd": true
+})
+
 [input]
 
 mover_adelante={
