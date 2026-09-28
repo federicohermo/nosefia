@@ -35,20 +35,20 @@ mouse_filter = 2
 
 [node name="BarraSuperior" type="TextureRect" parent="Marco"]
 layout_mode = 0
-offset_left = 71.0
-offset_top = 80.0
-offset_right = 1783.0
-offset_bottom = 150.3
+offset_left = 104.0
+offset_top = 46.0
+offset_right = 1816.0
+offset_bottom = 116.3
 mouse_filter = 2
 texture = ExtResource("3_cabecera")
 expand_mode = 1
 
 [node name="BarraInferior" type="TextureRect" parent="Marco"]
 layout_mode = 0
-offset_left = 71.0
-offset_top = 997.7
-offset_right = 1783.0
-offset_bottom = 1068.0
+offset_left = 104.0
+offset_top = 963.7
+offset_right = 1816.0
+offset_bottom = 1034.0
 mouse_filter = 2
 texture = ExtResource("3_cabecera")
 expand_mode = 1
@@ -57,8 +57,10 @@ flip_v = true
 
 [node name="Puntos" type="TextureRect" parent="Marco"]
 layout_mode = 0
-offset_right = 1920.0
-offset_bottom = 1080.0
+offset_left = 33.0
+offset_top = -34.0
+offset_right = 1953.0
+offset_bottom = 1046.0
 mouse_filter = 2
 texture = ExtResource("4_puntos")
 expand_mode = 1
