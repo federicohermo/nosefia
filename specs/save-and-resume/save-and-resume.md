@@ -72,7 +72,7 @@ arranque siguiente no vuelva a tropezar con él.
 ### BR-SAV-010 — El juego arranca en el menú
 
 El sistema DEBE abrir el juego en un menú, y no en el almacén. El menú DEBE mostrar cinco
-opciones, en este orden: **nuevo juego, continuar, configuraciones, logros y salir**.
+opciones, en este orden: **continuar, nuevo juego, logros, configuraciones y salir**.
 
 ### BR-SAV-011 — Continuar está disponible sólo con guardado
 

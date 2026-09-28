@@ -2,10 +2,10 @@
 extends GdUnitTestSuite
 
 const TODAS: Array[MenuDeInicio.Opcion] = [
-	MenuDeInicio.Opcion.NUEVO_JUEGO,
 	MenuDeInicio.Opcion.CONTINUAR,
-	MenuDeInicio.Opcion.CONFIGURACIONES,
+	MenuDeInicio.Opcion.NUEVO_JUEGO,
 	MenuDeInicio.Opcion.LOGROS,
+	MenuDeInicio.Opcion.CONFIGURACIONES,
 	MenuDeInicio.Opcion.SALIR,
 ]
 
