@@ -21,8 +21,8 @@
 //
 // ## Qué mide
 //
-// El juego abre en el menú de inicio. El script elige «Nuevo juego», que el menú pone en el
-// centro de la pantalla, y mide el almacén.
+// El juego abre en el menú de inicio. El script elige «Nuevo juego», que en la web cae al 60 % del
+// alto del lienzo, y mide el almacén.
 //
 // Desde donde arranca el jugador, que muestra el local entero: es la vista más cara. Tres
 // gestos por cada velocidad de CPU: quieto, caminando de costado y girando sobre sí mismo.
@@ -38,6 +38,7 @@ import { writeFileSync } from 'node:fs';
 import { chromium } from 'playwright';
 
 const ESPERA = 120_000;
+const ALTURA_DE_NUEVO_JUEGO = 0.6;
 const ARRANQUE = 15_000; // El motor sigue compilando shaders un rato después de dibujar.
 const MENU = 3_000; // El juego abre en el menú de inicio, que dibuja casi al instante.
 
@@ -170,7 +171,7 @@ try {
   await pagina.waitForTimeout(MENU);
   const lienzo = await pagina.locator('canvas').boundingBox();
   const clic = await pagina.evaluate(ANOTAR_CUADROS);
-  await pagina.mouse.click(lienzo.x + lienzo.width / 2, lienzo.y + lienzo.height / 2);
+  await pagina.mouse.click(lienzo.x + lienzo.width / 2, lienzo.y + lienzo.height * ALTURA_DE_NUEVO_JUEGO);
   await esperarAlAlmacen(pagina, clic);
   await pagina.waitForTimeout(ARRANQUE);
   equipo = await pagina.evaluate(GANCHOS);
