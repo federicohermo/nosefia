@@ -103,6 +103,12 @@ Lo que más se rompe:
   palabras.** Un símbolo no encuentra el comentario que explica la regla con otras palabras, ni
   el test que arma el estado que la regla lee. En el #166 quedaron fuera de «Se escribe» cinco
   archivos con comentarios y un test.
+- **Si el issue escribe a disco, dice cómo lo aíslan los tests.** Toda suite que levanta la
+  escena lee y escribe la ruta real del usuario, y ningún gate lo ve. En el #23 una partida
+  guardada cambiaba en qué noche arrancaban unas 28 suites.
+- **Un criterio del issue no contradice un criterio `ratified` de otra capacidad.** El `rg` de
+  los límites busca la regla también en los specs vecinos. En el #179 la puerta «no se abre»
+  chocaba con `AC-PLY-040`, y la puerta ya existía en el modelo.
 - **Un dato nuevo en una clase base entra con sus herederas.** Si cada una lo declara, cada una
   va en «Se escribe». En el #197 faltó `unidad_de_producto.gd`, que hereda de
   `ObjetoDelAlmacen`.

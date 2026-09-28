@@ -95,6 +95,10 @@ Cada agente recibe, literal:
   `python .claude/scripts/verificar.py` con `GODOT_BIN` exportada, porque ahí **el comando es
   `python`**. **Medido el 2026-09-06: lo pisaron TRES de los cuatro carriles**, cada uno perdiendo
   una vuelta, y los tres con el comando escrito por este mismo skill en la forma que no corre.
+- **Y en Bash, un comando por llamada.** En un worktree aislado, Bash rechaza por «too complex
+  to verify» un comando compuesto que nombra `git`, un `&&` largo, y un heredoc con `mkdir` y
+  `cat >`. El carril lo lee como un permiso negado. Los archivos se escriben con `Write`. Medido
+  el 2026-09-27: lo pisaron los cuatro carriles del lote.
 - **Y ese `--import` no es una vez: es una por `class_name` nuevo.** Crear el `.gd` no alcanza
   para que su test lo vea, y hasta el `--import` siguiente el error es `Parse Error: Identifier
   "X" not declared` **con el archivo ya escrito en disco**. Se lee como un error del código y no

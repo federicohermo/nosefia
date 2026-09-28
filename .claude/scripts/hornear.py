@@ -37,7 +37,7 @@ from lib.consola import configurar  # noqa: E402
 configurar()
 
 from lib.godot import como_declararlo, resolver  # noqa: E402
-from lib.horneado import SALIDAS, project_con_el_plugin, veredicto  # noqa: E402
+from lib.horneado import SALIDAS, project_con_el_plugin, sesion_bloqueada, veredicto  # noqa: E402
 from lib.repo import RAIZ  # noqa: E402
 
 PROJECT = Path(RAIZ) / "project.godot"
@@ -50,6 +50,18 @@ def main() -> int:
     if godot is None:
         print(como_declararlo(dict(os.environ)))
         return 2
+
+    if os.name == "nt":
+        procesos = subprocess.run(
+            ["tasklist", "/fo", "csv"],
+            capture_output=True,
+            text=True,
+            encoding="utf-8",
+            errors="replace",
+        ).stdout
+        if sesion_bloqueada(procesos):
+            print("la sesión de Windows está bloqueada: el editor no hornea sin pantalla")
+            return 2
 
     desde = time.time()
     original = PROJECT.read_bytes()

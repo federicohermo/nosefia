@@ -42,3 +42,11 @@ def veredicto(codigo: int, actualizados: dict[str, bool]) -> tuple[bool, str]:
     if faltan:
         return False, "el editor cerró bien pero no escribió " + ", ".join(faltan)
     return True, "horneado: " + ", ".join(actualizados)
+
+
+def sesion_bloqueada(procesos: str) -> bool:
+    """Si la lista de `tasklist` trae la pantalla de bloqueo de Windows.
+
+    Con la sesión bloqueada el editor no dibuja y el plugin nunca aprieta el botón.
+    """
+    return "logonui.exe" in procesos.lower()

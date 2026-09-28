@@ -144,6 +144,9 @@ entregable más caro y el único que hace que el hallazgo no vuelva.
 | un criterio de bug que pide un rojo que en sus propias condiciones no aparece | `to-issue` — el síntoma se midió con el caso que el criterio excluye adentro |
 | un criterio de rendimiento medido desde una vista donde **lo que el cambio agrega no se ve** | `to-issue` — el criterio no dijo desde dónde se mide, y lo que no se ve puede no costar nada |
 | un issue que cambia lo que el juego hace y declara «Spec: ninguno» | `to-issue` — el tipo se decidió sin la prueba del spec |
+| un issue que escribe a disco sin decir cómo lo aíslan los tests | `to-issue` — las suites que levantan la escena escriben la carpeta del usuario, y ningún gate lo ve |
+| un criterio de un issue que contradice un criterio `ratified` de otra capacidad | `to-issue` — el `rg` de los límites no buscó la regla en los specs vecinos |
+| varios carriles que pierden una vuelta con un comando compuesto en Bash | `implement-batch` — el preámbulo no dijo que el worktree los rechaza |
 | una ficha verde de Notion que se cayó del lote sin motivo escrito | `features-to-issues` — el reparto no se mostró entero |
 | un nodo del harness en verde sin haber ejercido nada | `implement-feature` — se leyó el color del nodo y no el conteo |
 | dos carriles que se pisan un archivo de scratch | `implement-batch` — el prompt no le dio un nombre propio |
