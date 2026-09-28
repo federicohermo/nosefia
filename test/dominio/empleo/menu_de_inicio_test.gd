@@ -29,6 +29,15 @@ func test_nuevo_juego_y_salir_estan_habilitadas() -> void:
 	assert_bool(menu.habilitada(MenuDeInicio.Opcion.SALIR)).is_true()
 
 
+func test_con_guardado_continuar_se_habilita() -> void:
+	assert_bool(MenuDeInicio.new(false, true).habilitada(MenuDeInicio.Opcion.CONTINUAR)).is_true()
+
+
+func test_nuevo_juego_pide_confirmacion_solo_con_guardado() -> void:
+	assert_bool(MenuDeInicio.new(false, true).nuevo_juego_pide_confirmacion()).is_true()
+	assert_bool(MenuDeInicio.new(false, false).nuevo_juego_pide_confirmacion()).is_false()
+
+
 func test_continuar_configuraciones_y_logros_se_ven_deshabilitadas() -> void:
 	var menu := MenuDeInicio.new(false)
 	for opcion: MenuDeInicio.Opcion in [

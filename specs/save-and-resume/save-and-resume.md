@@ -1,7 +1,7 @@
 ---
 schema_version: 1
 capability_id: CAP-SAV
-status: draft
+status: ratified
 owner: por definir
 provenance: GDD «checkpoint al final de cada noche»; migración de los specs 019, 020, 036
 ---
@@ -93,6 +93,12 @@ El sistema DEBE tener un único camino para cerrar el juego, y sólo la opción 
 SI el juego corre en la web, ENTONCES el menú NO DEBE mostrar la opción de salir. La página no
 puede cerrar su pestaña. Las otras cuatro opciones DEBEN quedar en el mismo orden.
 
+### BR-SAV-015 — Retomar sigue desde lo guardado
+
+CUANDO arranca la partida, SI hay guardado, ENTONCES el sistema DEBE seguir en la jornada
+guardada y con los apercibimientos guardados. SI no hay guardado, ENTONCES DEBE arrancar una
+partida nueva.
+
 ### BR-SAV-016 — Esc pausa la jornada
 
 CUANDO el jugador aprieta Esc durante la jornada, el sistema DEBE pausarla y mostrar el menú de
@@ -117,7 +123,8 @@ llevarlo al menú de inicio y NO DEBE guardar nada.
 ### AC-SAV-001 — El cierre guarda una vez *(verifica BR-SAV-001)*
 
 DADO una partida en curso CUANDO cierra la jornada 3 ENTONCES se guarda **exactamente una vez**,
-con la partida sin terminar, y lo guardado devuelve esa jornada y esos apercibimientos.
+con la partida sin terminar. Lo guardado devuelve la jornada que sigue, la que la partida
+tiene por abrir, y esos apercibimientos.
 
 ### AC-SAV-002 — El último cierre borra *(verifica BR-SAV-002)*
 
@@ -191,6 +198,12 @@ opción de salir lo produce.
 
 DADO el juego en la web ENTONCES el menú muestra cuatro opciones, sin salir, y en el mismo orden
 que fuera de la web.
+
+### AC-SAV-017 — Retomar arranca donde quedó *(verifica BR-SAV-015)*
+
+DADO un guardado en la jornada 3 con apercibimientos CUANDO arranca la partida ENTONCES está en
+esa jornada y con esos apercibimientos. Sin guardado, arranca en la primera jornada y sin
+apercibimientos.
 
 ### AC-SAV-018 — Esc pausa y reanuda *(verifica BR-SAV-016)*
 
