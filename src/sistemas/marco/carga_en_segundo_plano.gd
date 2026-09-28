@@ -8,6 +8,11 @@ extends Node
 signal lista(escena: PackedScene)
 signal fallo
 
+## Lo que ya se cargó, por ruta. Es de la clase y no del nodo: el menú muere al entrar al almacén,
+## con él la última referencia a la escena, y el motor la descarta. Volver al menú la cargaría
+## entera otra vez.
+static var _cargadas: Dictionary[String, PackedScene] = {}
+
 var _ruta := ""
 var _progreso := 0.0
 
@@ -19,7 +24,7 @@ func _init() -> void:
 ## El motor guarda cada pedido hasta que alguien retira la escena. Si el nodo muere antes, la
 ## retira acá: sin eso, la carga sigue en otro hilo mientras el juego se cierra.
 func _notification(que: int) -> void:
-	if que == NOTIFICATION_PREDELETE and not _ruta.is_empty():
+	if que == NOTIFICATION_PREDELETE and not _ruta.is_empty() and not _cargadas.has(_ruta):
 		ResourceLoader.load_threaded_get(_ruta)
 
 
@@ -27,6 +32,10 @@ func pedir(ruta: String) -> void:
 	if not _ruta.is_empty():
 		return
 	_ruta = ruta
+	if _cargadas.has(ruta):
+		_progreso = 1.0
+		_entregar_la_cargada.call_deferred()
+		return
 	_progreso = 0.0
 	if ResourceLoader.load_threaded_request(ruta, "PackedScene") != OK:
 		_terminar()
@@ -50,11 +59,20 @@ func _process(_delta: float) -> void:
 		if estado == ResourceLoader.THREAD_LOAD_LOADED
 		else null
 	)
+	var ruta := _ruta
 	_terminar()
 	if escena == null:
 		fallo.emit()
 		return
+	_cargadas[ruta] = escena
 	_progreso = 1.0
+	lista.emit(escena)
+
+
+## Diferida como las señales de una carga de verdad: quien pide conecta después de pedir.
+func _entregar_la_cargada() -> void:
+	var escena := _cargadas[_ruta]
+	_terminar()
 	lista.emit(escena)
 
 

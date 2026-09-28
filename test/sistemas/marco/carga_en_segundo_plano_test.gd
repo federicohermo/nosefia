@@ -3,6 +3,8 @@ extends GdUnitTestSuite
 
 const ESCENA_CHICA := "res://src/ui/interrupciones/pantalla_de_cierre.tscn"
 const RUTA_QUE_NO_EXISTE := "res://no_existe.tscn"
+## Otra escena chica, que ningún otro test pide: una escena ya cargada no vuelve a pedirse.
+const ESCENA_SIN_PEDIR := "res://src/ui/interrupciones/menu_de_pausa.tscn"
 const CUADROS_DE_ESPERA := 600
 const CUADROS_DESPUES := 10
 
@@ -74,7 +76,22 @@ func test_despues_de_un_fallo_un_pedido_nuevo_vuelve_a_emitir() -> void:
 
 func test_liberarla_con_la_carga_en_curso_no_deja_la_carga_colgada() -> void:
 	var carga := CargaEnSegundoPlano.new()
-	carga.pedir(ESCENA_CHICA)
+	carga.pedir(ESCENA_SIN_PEDIR)
 	carga.free()
+	var estado := ResourceLoader.load_threaded_get_status(ESCENA_SIN_PEDIR)
+	assert_int(estado).is_equal(ResourceLoader.THREAD_LOAD_INVALID_RESOURCE)
+
+
+## El menú muere al entrar al almacén, y su carga con él. Al volver, el almacén no se carga de
+## nuevo.
+func test_una_escena_ya_cargada_llega_sin_volver_a_cargarla() -> void:
+	_carga().pedir(ESCENA_CHICA)
+	await _esperar_respuestas(1)
+	var escena := _listas[0]
+	var otra := _carga()
+	otra.pedir(ESCENA_CHICA)
 	var estado := ResourceLoader.load_threaded_get_status(ESCENA_CHICA)
 	assert_int(estado).is_equal(ResourceLoader.THREAD_LOAD_INVALID_RESOURCE)
+	assert_float(otra.progreso()).is_equal(1.0)
+	await _esperar_respuestas(1)
+	assert_object(_listas[0]).is_same(escena)
