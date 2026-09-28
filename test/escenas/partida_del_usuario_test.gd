@@ -27,3 +27,14 @@ func test_cerrar_una_noche_no_toca_la_partida_del_usuario() -> void:
 	await get_tree().process_frame
 	assert_bool((almacen.get("_pantalla") as PantallaDeCierre).visible).is_true()
 	assert_str(_huella_del_usuario()).is_equal(antes)
+
+
+## Los dos casos que siguen van juntos y en este orden: el primero deja un guardado, y el
+## segundo afirma que no lo hereda.
+func test_un_caso_deja_un_guardado_en_la_carpeta_de_la_sesion() -> void:
+	assert_bool(Guardado.new().escribir(PartidaSerializada.sanear({}))).is_true()
+	assert_bool(Guardado.new().hay_guardado()).is_true()
+
+
+func test_el_caso_siguiente_arranca_sin_guardado() -> void:
+	assert_bool(Guardado.new().hay_guardado()).is_false()
