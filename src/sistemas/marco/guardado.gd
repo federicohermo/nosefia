@@ -4,9 +4,11 @@
 class_name Guardado
 extends RefCounted
 
-## Los tests que levantan el almacén la apuntan a una carpeta temporal: la escena arma su
-## guardado sola, y la partida del usuario no puede decidir un test ni ser pisada por uno.
-static var ruta_por_defecto: String = "user://partida.guardado"
+const RUTA_DEL_USUARIO := "user://partida.guardado"
+
+## La corrida de tests la apunta a otra carpeta: las escenas arman su guardado solas, y la
+## partida del usuario no puede decidir un test ni ser pisada por uno.
+static var ruta_por_defecto: String = RUTA_DEL_USUARIO
 
 var ruta: String = ruta_por_defecto
 
