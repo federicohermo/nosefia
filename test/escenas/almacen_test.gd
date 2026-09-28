@@ -329,6 +329,23 @@ func test_el_cableado_dejo_de_armar_el_turno_y_de_llevar_el_puntaje() -> void:
 	)
 
 
+func test_el_almacen_arranca_desde_el_guardado() -> void:  # AC-SAV-017
+	# El conteo de arriba no dice de dónde sale la partida: `Partida.desde({})` también lo pasa.
+	var nueva: Partida = _almacen().get("_partida")
+	assert_int(nueva.jornada()).is_equal(ReglasDeLaPartida.PRIMERA_JORNADA)
+	assert_int(nueva.apercibimientos()).is_equal(0)
+	var guardada := {
+		PartidaSerializada.clave(PartidaSerializada.Campo.JORNADA):
+		ReglasDeLaPartida.PRIMERA_JORNADA + 2,
+		PartidaSerializada.clave(PartidaSerializada.Campo.APERCIBIMIENTOS):
+		Reglas.APERCIBIMIENTOS_POR_AVISO,
+	}
+	assert_bool(Guardado.new().escribir(guardada)).is_true()
+	var retomada: Partida = _almacen().get("_partida")
+	assert_int(retomada.jornada()).is_equal(ReglasDeLaPartida.PRIMERA_JORNADA + 2)
+	assert_int(retomada.apercibimientos()).is_equal(Reglas.APERCIBIMIENTOS_POR_AVISO)
+
+
 func test_la_escena_trae_el_ciclo_de_jornadas_en_servicios() -> void:
 	# Sin el nodo, el `@export` del cableado llega nulo y el juego muere en el primer cuadro con
 	# un error que no nombra a `almacen.tscn`.
@@ -522,6 +539,7 @@ func test_volver_al_menu_desde_la_pausa_sale_de_la_pausa_y_va_al_menu() -> void:
 	(menu.get_node("Fondo/Panel/Opciones/VolverAlMenu") as Button).pressed.emit()
 	assert_bool(get_tree().paused).is_false()
 	assert_int(menus[0]).is_equal(1)
+	assert_bool(Guardado.new().hay_guardado()).is_false()
 
 
 func test_con_la_placa_en_pantalla_esc_no_pausa() -> void:  # AC-SAV-018

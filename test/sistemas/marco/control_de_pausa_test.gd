@@ -1,8 +1,6 @@
 ## El nodo de la pausa: traduce Esc y el cursor a la pregunta del dominio, y pausa el árbol.
 extends GdUnitTestSuite
 
-const CONTROL := "res://src/sistemas/marco/control_de_pausa.gd"
-
 var _pausas: int = 0
 var _reanudaciones: int = 0
 var _menus: int = 0
@@ -86,13 +84,6 @@ func test_volver_al_menu_sale_de_la_pausa_y_pide_el_menu_una_vez() -> void:  # A
 	control.pedir_volver_al_menu()
 	assert_bool(get_tree().paused).is_false()
 	assert_int(_menus).is_equal(1)
-
-
-func test_volver_al_menu_no_guarda_nada() -> void:  # AC-SAV-020
-	var texto := FileAccess.get_file_as_string(CONTROL).to_lower()
-	assert_str(texto).is_not_empty()
-	assert_str(texto).not_contains("guardad")
-	assert_str(texto).not_contains("fileaccess")
 
 
 func test_reanudar_fuera_de_la_pausa_no_avisa() -> void:

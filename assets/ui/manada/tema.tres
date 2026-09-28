@@ -269,6 +269,18 @@ Titulo/base_type = &"Label"
 
 Titulo/font_sizes/font_size = 54
 
+BotonDelMenu/base_type = &"Button"
+
+BotonDelMenu/font_sizes/font_size = 36
+
+ColumnaDelMenu/base_type = &"VBoxContainer"
+
+ColumnaDelMenu/constants/separation = 14
+
+FilaDelMenu/base_type = &"HBoxContainer"
+
+FilaDelMenu/constants/separation = 32
+
 NotaDeLista/base_type = &"Button"
 
 NotaDeLista/font_sizes/font_size = 40

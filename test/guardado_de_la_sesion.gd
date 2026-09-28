@@ -8,7 +8,10 @@
 ## que levanta el almacén arrancaría en otra jornada.
 extends GdUnitTestSessionHook
 
-const CARPETA := "user://guardado_de_los_tests"
+## Una carpeta por proceso: `user://` es uno solo por proyecto, y lo comparten todas las
+## corridas a la vez, de cualquier worktree. Con una carpeta fija, el cierre de una corrida borra
+## el guardado que otra está por leer.
+var carpeta := "user://guardado_de_los_tests_%d" % OS.get_process_id()
 
 
 func _init() -> void:
@@ -17,8 +20,8 @@ func _init() -> void:
 
 func startup(session: GdUnitTestSession) -> GdUnitResult:
 	_borrar_la_carpeta()
-	DirAccess.make_dir_recursive_absolute(CARPETA)
-	Guardado.ruta_por_defecto = CARPETA.path_join("partida.guardado")
+	DirAccess.make_dir_recursive_absolute(carpeta)
+	Guardado.ruta_por_defecto = carpeta.path_join("partida.guardado")
 	session.test_event.connect(_al_llegar_un_evento)
 	return GdUnitResult.success()
 
@@ -34,6 +37,6 @@ func _al_llegar_un_evento(evento: GdUnitEvent) -> void:
 
 
 func _borrar_la_carpeta() -> void:
-	for archivo: String in DirAccess.get_files_at(CARPETA):
-		DirAccess.remove_absolute(CARPETA.path_join(archivo))
-	DirAccess.remove_absolute(CARPETA)
+	for archivo: String in DirAccess.get_files_at(carpeta):
+		DirAccess.remove_absolute(carpeta.path_join(archivo))
+	DirAccess.remove_absolute(carpeta)

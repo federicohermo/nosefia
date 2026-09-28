@@ -7,10 +7,10 @@
 ## jugador: sin esas dos puertas, abrir la computadora degradaría en silencio —el mouse seguiría
 ## girando la cámara y el jugador seguiría caminando detrás del panel—.
 ##
-## **Se sale con el clic derecho, y no con la tecla que suelta el cursor.** `jugador.gd` ya usa
-## esa tecla y retoma con cualquier botón, así que compartirla dejaría al jugador cerrando la
-## computadora cada vez que va a apretar el botón de cerrar la ventana. El nombre de esa acción no
-## se escribe acá ni en un comentario: el caso que lo verifica no distingue código de prosa.
+## **Se sale con el clic derecho, y no con la tecla de la pausa.** Esa tecla pausa la jornada
+## desde cualquier puesto, así que compartirla cerraría la computadora cada vez que el jugador
+## pausa. El nombre de esa acción no se escribe acá ni en un comentario: el caso que lo verifica
+## no distingue código de prosa.
 ##
 ## **El reloj está acá para apagar la pantalla cuando la noche termina**, no para pausarlo: una
 ## computadora abierta encima de la placa de cierre dejaría al jugador viendo las dos.
