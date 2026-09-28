@@ -134,7 +134,7 @@ func test_con_la_partida_en_curso_la_placa_ofrece_seguir_y_volver_al_menu() -> v
 	assert_bool(seguir.has_focus()).is_true()
 
 
-func test_con_la_partida_terminada_la_placa_ofrece_solo_volver_al_menu() -> void:  # AC-EMP-016
+func test_con_la_partida_que_termino_la_placa_ofrece_solo_volver_al_menu() -> void:  # AC-EMP-016
 	var pantalla := await _pantalla()
 	pantalla.mostrar(
 		ParteDeCierre.new(JORNADA_DE_PRUEBA, Apertura.obligatorias(), 5, Partida.Final.DESPEDIDO)
