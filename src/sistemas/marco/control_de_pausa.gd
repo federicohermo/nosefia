@@ -25,7 +25,16 @@ func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS
 	# Después del jugador, que escribe el modo del cursor en su paso de física.
 	process_physics_priority = 1000
+
+
+## El cuadro de física es del árbol, no del nodo: al salir de la escena el nodo queda fuera del
+## árbol unos cuadros antes de liberarse, y la señal lo seguiría llamando.
+func _enter_tree() -> void:
 	get_tree().physics_frame.connect(_mirar_el_cursor)
+
+
+func _exit_tree() -> void:
+	get_tree().physics_frame.disconnect(_mirar_el_cursor)
 
 
 func _input(evento: InputEvent) -> void:

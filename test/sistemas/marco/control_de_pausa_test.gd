@@ -90,3 +90,12 @@ func test_reanudar_fuera_de_la_pausa_no_avisa() -> void:
 	var control := _control()
 	control.reanudar()
 	assert_int(_reanudaciones).is_zero()
+
+
+## Al volver al menú, el almacén sale del árbol unos cuadros antes de liberarse. Si en esos
+## cuadros el nodo sigue mirando el cursor, lee la pausa de un árbol nulo.
+func test_fuera_del_arbol_deja_de_mirar_el_cursor() -> void:
+	var control := _control()
+	var arbol := get_tree()
+	remove_child(control)
+	assert_bool(arbol.physics_frame.is_connected(control._mirar_el_cursor)).is_false()
