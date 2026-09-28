@@ -30,7 +30,7 @@ const ESPERA = 180_000;
 const CORRIDAS = 3;
 const AVISO_DEL_MENU = '[carga] menú visible';
 const AVISO_DEL_ALMACEN = '[carga] almacén en pantalla';
-const ALTURA_DE_NUEVO_JUEGO = 0.32;
+const ALTURA_DE_NUEVO_JUEGO = 0.6;
 
 const url = process.argv[2];
 if (!url) {
