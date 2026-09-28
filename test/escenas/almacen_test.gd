@@ -522,6 +522,7 @@ func test_volver_al_menu_desde_la_pausa_sale_de_la_pausa_y_va_al_menu() -> void:
 	(menu.get_node("Fondo/Panel/Opciones/VolverAlMenu") as Button).pressed.emit()
 	assert_bool(get_tree().paused).is_false()
 	assert_int(menus[0]).is_equal(1)
+	assert_bool(Guardado.new().hay_guardado()).is_false()
 
 
 func test_con_la_placa_en_pantalla_esc_no_pausa() -> void:  # AC-SAV-018
