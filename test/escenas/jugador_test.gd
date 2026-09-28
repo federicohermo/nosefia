@@ -114,16 +114,11 @@ func test_esc_no_es_del_jugador() -> void:
 	assert_str(texto).not_contains("ui_cancel")
 
 
-func test_despues_de_la_pausa_el_primer_clic_solo_toma_el_cursor() -> void:
+## Reanudar ya es el gesto que el navegador pide para devolver el cursor: un clic más no suma nada.
+func test_al_reanudar_el_cursor_vuelve_sin_otro_clic() -> void:
 	var jugador := _jugador()
 	jugador.notification(Node.NOTIFICATION_PAUSED)
-	assert_bool(jugador.get("_cursor_suelto_por_la_pausa")).is_true()
-	assert_bool(jugador.call("_el_cursor_esta_tomado")).is_false()
-	var clic := InputEventMouseButton.new()
-	clic.button_index = MOUSE_BUTTON_LEFT
-	clic.pressed = true
-	jugador._unhandled_input(clic)
-	assert_bool(jugador.get("_cursor_suelto_por_la_pausa")).is_false()
+	jugador.notification(Node.NOTIFICATION_UNPAUSED)
 	assert_bool(jugador.call("_el_cursor_esta_tomado")).is_true()
 
 

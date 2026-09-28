@@ -35,11 +35,6 @@ var _control := ControlDelJugador.new(
 	ReglasDelJugador.VELOCIDAD_DE_CAMINATA
 )
 
-## Si la pausa soltó el cursor. Al reanudar, el dominio lo quiere tomado y el motor no lo tiene
-## hasta el primer clic: en la web, el navegador no lo devuelve sin uno. Vive acá y no en
-## `dominio/` porque no es una regla del juego: es el estado del motor.
-var _cursor_suelto_por_la_pausa := false
-
 var _cadencia := CadenciaDePasos.new()
 
 ## Lo que la mira tiene adelante ahora mismo. Se guarda el nodo y no el `id` porque agarrar
@@ -134,13 +129,6 @@ func _unhandled_input(evento: InputEvent) -> void:
 			var con_el_clic := movimiento.button_mask & MOUSE_BUTTON_MASK_LEFT != 0
 			examen.arrastrar(movimiento.relative, con_el_clic)
 		return
-	if evento is InputEventMouseButton and (evento as InputEventMouseButton).pressed:
-		# El primer clic después de la pausa recupera el cursor **y nada más**: sin el corte,
-		# volver de la pausa agarraría de paso lo que hubiera adelante.
-		var venia_suelto := _cursor_suelto_por_la_pausa and _control.quiere_el_cursor_tomado()
-		_cursor_suelto_por_la_pausa = false
-		if venia_suelto:
-			return
 	if evento.is_action_pressed(ReglasDeLosObjetos.ACCION_AGARRAR):
 		# Quién se come el clic lo contesta `Examen`, que es el que sabe si hay algo pegado a la
 		# cara. Acá sólo se lo pasa al que quedó: esto es ruteo, no una regla del juego.
@@ -350,17 +338,10 @@ func _aplicar_la_rotacion() -> void:
 	_camara.rotation.x = _control.pitch_dibujado()
 
 
-## `dominio/` decide SI el cursor tiene que estar tomado, y acá se le suma el cursor que soltó la
-## pausa. Vive en una función propia porque la respuesta la necesitan dos: el modo del cursor y
-## el filtro del giro.
+## `dominio/` decide SI el cursor tiene que estar tomado. La pausa lo suelta sin preguntarle, y
+## al reanudar el cuadro siguiente lo vuelve a tomar.
 func _el_cursor_esta_tomado() -> bool:
-	return _control.quiere_el_cursor_tomado() and not _cursor_suelto_por_la_pausa
-
-
-## La pausa detiene el árbol y suelta el cursor. El jugador se entera porque deja de correr.
-func _notification(que: int) -> void:
-	if que == NOTIFICATION_PAUSED:
-		_cursor_suelto_por_la_pausa = true
+	return _control.quiere_el_cursor_tomado()
 
 
 ## Acá se traduce ese SI a QUÉ modo de cursor es ése.
