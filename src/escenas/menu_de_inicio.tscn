@@ -63,9 +63,9 @@ flip_v = true
 
 [node name="Titulo" type="TextureRect" parent="Marco"]
 layout_mode = 0
-offset_left = 691.0
+offset_left = 658.0
 offset_top = 261.0
-offset_right = 1295.0
+offset_right = 1262.0
 offset_bottom = 420.0
 mouse_filter = 2
 texture = ExtResource("6")
@@ -73,17 +73,17 @@ expand_mode = 1
 
 [node name="Opciones" type="VBoxContainer" parent="Marco"]
 layout_mode = 0
-offset_left = 779.0
+offset_left = 746.0
 offset_top = 507.0
-offset_right = 1206.0
+offset_right = 1173.0
 offset_bottom = 715.0
 theme_type_variation = &"ColumnaDelMenu"
 
 [node name="Fila" type="HBoxContainer" parent="Marco"]
 layout_mode = 0
-offset_left = 550.0
+offset_left = 517.0
 offset_top = 768.0
-offset_right = 1436.0
+offset_right = 1403.0
 offset_bottom = 828.0
 theme_type_variation = &"FilaDelMenu"
 alignment = 1
