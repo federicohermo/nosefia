@@ -3,10 +3,10 @@ extends GdUnitTestSuite
 
 const ESCENA_DEL_MENU := "res://src/escenas/menu_de_inicio.tscn"
 const TEXTOS_FUERA_DE_LA_WEB: Array[String] = [
-	"NUEVO JUEGO",
 	"CONTINUAR",
-	"CONFIGURACIONES",
+	"NUEVO JUEGO",
 	"LOGROS",
+	"CONFIGURACIONES",
 	"SALIR",
 ]
 const HABILITADOS_FUERA_DE_LA_WEB: Array[String] = ["NUEVO JUEGO", "SALIR"]
@@ -33,6 +33,18 @@ func test_muestra_los_cinco_botones_y_habilita_dos() -> void:
 				habilitados.append(boton.text)
 	assert_array(textos).is_equal(TEXTOS_FUERA_DE_LA_WEB)
 	assert_array(habilitados).is_equal(HABILITADOS_FUERA_DE_LA_WEB)
+
+
+func test_configuraciones_y_salir_van_en_la_fila_debajo_de_la_columna() -> void:
+	var menu := _menu()
+	var columna: Array[String] = []
+	var fila: Array[String] = []
+	for boton: Button in menu.get_node("Marco/Opciones").get_children():
+		columna.append(boton.text)
+	for boton: Button in menu.get_node("Marco/Fila").get_children():
+		fila.append(boton.text)
+	assert_array(columna).is_equal(["CONTINUAR", "NUEVO JUEGO", "LOGROS"])
+	assert_array(fila).is_equal(["CONFIGURACIONES", "SALIR"])
 
 
 func test_el_menu_no_declara_estilos_propios() -> void:
