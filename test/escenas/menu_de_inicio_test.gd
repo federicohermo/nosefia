@@ -5,10 +5,10 @@ extends GdUnitTestSuite
 
 const ESCENA_DEL_MENU := "res://src/escenas/menu_de_inicio.tscn"
 const TEXTOS_FUERA_DE_LA_WEB: Array[String] = [
-	"NUEVO JUEGO",
 	"CONTINUAR",
-	"CONFIGURACIONES",
+	"NUEVO JUEGO",
 	"LOGROS",
+	"CONFIGURACIONES",
 	"SALIR",
 ]
 const HABILITADOS_FUERA_DE_LA_WEB: Array[String] = ["NUEVO JUEGO", "SALIR"]
@@ -46,7 +46,7 @@ func _boton(menu: Control, texto: String) -> Button:
 
 func _habilitados(menu: Control) -> Array[String]:
 	var habilitados: Array[String] = []
-	for boton: Button in menu.get_node("Opciones").get_children():
+	for boton: Button in menu.get_node("Marco").find_children("*", "Button", true, false):
 		if not boton.disabled:
 			habilitados.append(boton.text)
 	return habilitados
@@ -60,7 +60,7 @@ func test_el_juego_abre_en_el_menu() -> void:  # AC-SAV-012
 func test_muestra_los_cinco_botones_y_habilita_dos() -> void:
 	var textos: Array[String] = []
 	var menu := _menu()
-	for boton: Button in menu.get_node("Opciones").get_children():
+	for boton: Button in menu.get_node("Marco").find_children("*", "Button", true, false):
 		textos.append(boton.text)
 	assert_array(textos).is_equal(TEXTOS_FUERA_DE_LA_WEB)
 	assert_array(_habilitados(menu)).is_equal(HABILITADOS_FUERA_DE_LA_WEB)
@@ -121,6 +121,18 @@ func test_con_guardado_nuevo_juego_abre_la_confirmacion_y_cancelar_no_borra() ->
 	assert_int(nuevos[0]).is_equal(0)
 	assert_bool(FileAccess.file_exists(_ruta)).is_true()
 	assert_bool(confirmacion.confirmed.is_connected(pedidos.confirmar_nuevo_juego)).is_true()
+
+
+func test_configuraciones_y_salir_van_en_la_fila_debajo_de_la_columna() -> void:
+	var menu := _menu()
+	var columna: Array[String] = []
+	var fila: Array[String] = []
+	for boton: Button in menu.get_node("Marco/Opciones").get_children():
+		columna.append(boton.text)
+	for boton: Button in menu.get_node("Marco/Fila").get_children():
+		fila.append(boton.text)
+	assert_array(columna).is_equal(["CONTINUAR", "NUEVO JUEGO", "LOGROS"])
+	assert_array(fila).is_equal(["CONFIGURACIONES", "SALIR"])
 
 
 func test_el_menu_no_declara_estilos_propios() -> void:

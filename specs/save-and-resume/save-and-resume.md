@@ -72,7 +72,7 @@ arranque siguiente no vuelva a tropezar con él.
 ### BR-SAV-010 — El juego arranca en el menú
 
 El sistema DEBE abrir el juego en un menú, y no en el almacén. El menú DEBE mostrar cinco
-opciones, en este orden: **nuevo juego, continuar, configuraciones, logros y salir**.
+opciones, en este orden: **continuar, nuevo juego, logros, configuraciones y salir**.
 
 ### BR-SAV-011 — Continuar está disponible sólo con guardado
 
@@ -80,7 +80,7 @@ SI no hay guardado, ENTONCES «continuar» NO DEBE estar disponible y NO DEBE ll
 
 ### BR-SAV-012 — Empezar de nuevo sobre una partida pide confirmación
 
-SI hay un guardado, ENTONCES «empezar» DEBE pedir confirmación antes de borrarlo. Es la pérdida
+SI hay un guardado, ENTONCES «nuevo juego» DEBE pedir confirmación antes de borrarlo. Es la pérdida
 que no se puede deshacer.
 
 ### BR-SAV-013 — Salir pasa por un solo lugar
@@ -166,8 +166,8 @@ para creer que está cerrado.
 
 ### AC-SAV-014 — Empezar sobre una partida confirma *(verifica BR-SAV-012)*
 
-DADO un guardado CUANDO se elige empezar ENTONCES el pedido es el de confirmar y no el de
-empezar; recién al confirmar llega el de empezar. Sin guardado, empezar es directo.
+DADO un guardado CUANDO se elige nuevo juego ENTONCES el pedido es el de confirmar y no el
+de nuevo juego; recién al confirmar llega el de nuevo juego. Sin guardado, es directo.
 
 ### AC-SAV-015 — Salir por un solo lugar *(verifica BR-SAV-013)*
 
@@ -203,7 +203,7 @@ apercibimientos.
 
 ## Señales
 
-- Empezar, continuar y salir. Cada una se emite **exactamente una vez** por la opción que la
+- Nuevo juego, continuar y salir. Cada una se emite **exactamente una vez** por la opción que la
   produce.
 
 ## Dependencias

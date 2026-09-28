@@ -18,10 +18,10 @@ func _init(es_web: bool, hay_guardado: bool = false) -> void:
 
 func opciones() -> Array[Opcion]:
 	var todas: Array[Opcion] = [
-		Opcion.NUEVO_JUEGO,
 		Opcion.CONTINUAR,
-		Opcion.CONFIGURACIONES,
+		Opcion.NUEVO_JUEGO,
 		Opcion.LOGROS,
+		Opcion.CONFIGURACIONES,
 	]
 	if not _es_web:
 		todas.append(Opcion.SALIR)
