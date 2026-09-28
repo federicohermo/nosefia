@@ -153,6 +153,13 @@ CUANDO se interactúa con una puerta, el sistema DEBE avisar una vez qué pasó:
 o está trabada. El aviso de trabada del portón es distinto del de las otras dos. Cerrar las
 puertas al abrir la jornada NO DEBE avisar: no es un gesto del jugador.
 
+### BR-PLY-021 — Cada noche arranca en la entrada
+
+CUANDO se abre una jornada, el sistema DEBE dejar al jugador en el punto de arranque: frente a la
+entrada del local, del lado de adentro y mirando hacia el local. Queda con la vista horizontal y
+quieto, aunque la noche anterior haya terminado en otro lugar, mirando a otro lado y caminando.
+Vale también para la primera noche.
+
 ## Criterios de aceptación
 
 ### AC-PLY-001 — La diagonal no corre *(verifica BR-PLY-001)*
@@ -386,6 +393,12 @@ DADO una bolsa ya depositada, y otra todavía no, cada una superpuesta con un s�
 se las rescata ENTONCES la cantidad de bolsas depositadas no cambia, y ninguna queda adentro del
 área de descarte.
 
+### AC-PLY-044 — La jornada arranca en la entrada *(verifica BR-PLY-021)*
+
+DADO un jugador en cualquier lugar, mirando a cualquier lado y en movimiento CUANDO abre una
+jornada ENTONCES queda en el punto de arranque, con el yaw del arranque, la vista horizontal y la
+velocidad en cero.
+
 ## No objetivos
 
 - Esta capacidad NO decide qué esconde un objeto: eso es de
@@ -396,8 +409,9 @@ se las rescata ENTONCES la cantidad de bolsas depositadas no cambia, y ninguna q
 
 ## Contratos
 
-- **Entrada:** el vector de movimiento, el delta del mouse, los candidatos que el rayo encontró,
-  el objeto que se quiere agarrar, la superficie que la mira toca y los segundos del cuadro.
+- **Entrada:** el vector de movimiento, el delta del mouse, el yaw del arranque, los candidatos
+  que el rayo encontró, el objeto que se quiere agarrar, la superficie que la mira toca y los
+  segundos del cuadro.
 - **Salida:** la velocidad, los dos ángulos de la vista, qué está enfocado y si cambió, qué se
   lleva en la mano, el motivo de cada rechazo, el ángulo de la hoja, el aviso de cada gesto
   sobre una puerta y el efecto de un uso.

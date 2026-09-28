@@ -1,0 +1,55 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://src/ui/interrupciones/menu_de_pausa.gd" id="1_menu"]
+[ext_resource type="Theme" path="res://assets/ui/manada/tema.tres" id="2_tema"]
+
+[node name="MenuDePausa" type="CanvasLayer" node_paths=PackedStringArray("_marco", "_reanudar", "_configuraciones", "_logros", "_volver_al_menu")]
+process_mode = 2
+layer = 3
+script = ExtResource("1_menu")
+_marco = NodePath("Fondo/Panel")
+_reanudar = NodePath("Fondo/Panel/Opciones/Reanudar")
+_configuraciones = NodePath("Fondo/Panel/Opciones/Configuraciones")
+_logros = NodePath("Fondo/Panel/Opciones/Logros")
+_volver_al_menu = NodePath("Fondo/Panel/Opciones/VolverAlMenu")
+
+[node name="Fondo" type="ColorRect" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 0.78)
+
+[node name="Panel" type="VBoxContainer" parent="Fondo"]
+layout_mode = 0
+offset_right = 1920.0
+offset_bottom = 1080.0
+theme = ExtResource("2_tema")
+theme_type_variation = &"Placa"
+alignment = 1
+
+[node name="Titulo" type="Label" parent="Fondo/Panel"]
+layout_mode = 2
+theme_type_variation = &"Titulo"
+text = "PAUSA"
+horizontal_alignment = 1
+
+[node name="Opciones" type="VBoxContainer" parent="Fondo/Panel"]
+custom_minimum_size = Vector2(428, 0)
+layout_mode = 2
+size_flags_horizontal = 4
+
+[node name="Reanudar" type="Button" parent="Fondo/Panel/Opciones"]
+layout_mode = 2
+
+[node name="Configuraciones" type="Button" parent="Fondo/Panel/Opciones"]
+layout_mode = 2
+disabled = true
+
+[node name="Logros" type="Button" parent="Fondo/Panel/Opciones"]
+layout_mode = 2
+disabled = true
+
+[node name="VolverAlMenu" type="Button" parent="Fondo/Panel/Opciones"]
+layout_mode = 2

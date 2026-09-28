@@ -40,9 +40,10 @@ reales cubran el turno entero**: un minuto real por hora de ficción. El factor 
 
 ### BR-SHF-003 — El tiempo entra, no se busca
 
-CUANDO pasa tiempo real, el sistema DEBE recibir cuántos segundos pasaron y descontarlos del
-turno. El turno nunca lee un reloj propio. Un valor que no es positivo no descuenta nada. El
-tiempo real es lo único que descuenta del turno: cumplir una obligatoria no lo mueve.
+CUANDO pasa tiempo real de juego, el sistema DEBE recibir cuántos segundos pasaron y descontarlos
+del turno. El turno nunca lee un reloj propio. Un valor que no es positivo no descuenta nada. El
+tiempo real es lo único que descuenta del turno: cumplir una obligatoria no lo mueve. El tiempo
+en pausa no es tiempo de juego y NO DEBE descontar.
 
 ### BR-SHF-004 — El turno no baja de cero
 
@@ -177,6 +178,11 @@ DADO una obligatoria sin cumplir CUANDO se descumple ENTONCES se rechaza y las c
 cambian. DADO una obligatoria cumplida con el turno cerrado CUANDO se descumple ENTONCES se
 rechaza y sigue contando.
 
+### AC-SHF-020 — La pausa detiene el turno *(verifica BR-SHF-003)*
+
+DADO un turno abierto CUANDO el juego está en pausa y pasan cuadros ENTONCES el tiempo restante
+no cambia. CUANDO se reanuda ENTONCES el turno sigue descontando desde ese mismo valor.
+
 ## No objetivos
 
 - Esta capacidad NO decide **cómo** se cumple cada obligatoria: eso es de la capacidad de cada
@@ -184,7 +190,7 @@ rechaza y sigue contando.
 - Esta capacidad NO anota la noche en el legajo ni decide el final: eso es de
   [`employment-record`](../employment-record/employment-record.md).
 - Esta capacidad NO cobra tiempo por ninguna acción: ni por cumplir ni por investigar. Todo
-  cuesta porque el reloj no se detiene, no porque alguien descuente.
+  cuesta porque el reloj no se detiene, no porque alguien descuente. Sólo la pausa lo detiene.
 
 ## Contratos
 

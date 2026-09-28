@@ -17,17 +17,13 @@ const CICLO := "res://src/sistemas/marco/ciclo_de_jornadas.gd"
 
 var _aperturas: int = 0
 var _cierres: int = 0
-var _terminadas: int = 0
 var _ultima_jornada_cerrada: int = 0
-var _final_publicado: int = Partida.Final.EN_CURSO
 
 
 func before_test() -> void:
 	_aperturas = 0
 	_cierres = 0
-	_terminadas = 0
 	_ultima_jornada_cerrada = 0
-	_final_publicado = Partida.Final.EN_CURSO
 
 
 func test_arrancar_deja_el_reloj_corriendo_con_las_tareas_alcanzables() -> void:
@@ -46,9 +42,9 @@ func test_la_partida_entera_cierra_cada_jornada_incluida_la_ultima() -> void:
 	var ciclo := _ciclo_arrancado(Partida.nueva(), reloj)
 	_jugar_la_noche_impecable(reloj)
 	(
-		assert_int(_terminadas)
+		assert_bool(ciclo.partida().terminada())
 		. override_failure_message("la partida se dio por terminada en la primera jornada")
-		. is_equal(0)
+		. is_false()
 	)
 	for _jornada in range(ReglasDeLaPartida.JORNADAS_DE_LA_PARTIDA - 1):
 		ciclo.abrir_la_jornada()
@@ -59,11 +55,10 @@ func test_la_partida_entera_cierra_cada_jornada_incluida_la_ultima() -> void:
 		. is_equal(ReglasDeLaPartida.JORNADAS_DE_LA_PARTIDA)
 	)
 	assert_int(_ultima_jornada_cerrada).is_equal(ReglasDeLaPartida.JORNADAS_DE_LA_PARTIDA)
-	assert_int(_terminadas).is_equal(1)
-	assert_int(_final_publicado).is_equal(Partida.Final.CONTRATO_CUMPLIDO)
+	assert_int(ciclo.partida().final()).is_equal(Partida.Final.CONTRATO_CUMPLIDO)
 
 
-func test_sobre_una_partida_terminada_no_se_abre_nada_ni_se_emite_nada() -> void:
+func test_sobre_una_partida_que_termino_no_se_abre_nada_ni_se_emite_nada() -> void:
 	# El despido corta la partida a la segunda noche grave, y desde ahí el ciclo es una puerta
 	# cerrada: sin esto, la pantalla de cierre reabriría la jornada 3 de una partida terminada.
 	var reloj: RelojDelTurno = auto_free(RelojDelTurno.new())
@@ -71,12 +66,10 @@ func test_sobre_una_partida_terminada_no_se_abre_nada_ni_se_emite_nada() -> void
 	_agotar_la_noche(reloj)
 	ciclo.abrir_la_jornada()
 	_agotar_la_noche(reloj)
-	assert_int(_final_publicado).is_equal(Partida.Final.DESPEDIDO)
-	assert_int(_terminadas).is_equal(1)
+	assert_int(ciclo.partida().final()).is_equal(Partida.Final.DESPEDIDO)
 	var aperturas_antes := _aperturas
 	assert_bool(ciclo.abrir_la_jornada()).is_false()
 	assert_int(_aperturas).is_equal(aperturas_antes)
-	assert_int(_terminadas).is_equal(1)
 
 
 func test_el_ciclo_no_decide_como_pesa_una_jornada() -> void:
@@ -93,12 +86,11 @@ func test_el_ciclo_no_decide_como_pesa_una_jornada() -> void:
 		)
 
 
-## Un ciclo ya arrancado sobre esa partida y ese reloj, con las tres señales anotadas.
+## Un ciclo ya arrancado sobre esa partida y ese reloj, con sus dos señales anotadas.
 func _ciclo_arrancado(partida: Partida, reloj: RelojDelTurno) -> CicloDeJornadas:
 	var ciclo: CicloDeJornadas = auto_free(CicloDeJornadas.new())
 	ciclo.jornada_abierta.connect(_anotar_apertura)
 	ciclo.jornada_cerrada.connect(_anotar_cierre)
-	ciclo.partida_terminada.connect(_anotar_final)
 	ciclo.arrancar(partida, reloj)
 	return ciclo
 
@@ -128,8 +120,3 @@ func _anotar_apertura(_jornada: int) -> void:
 func _anotar_cierre(jornada: int, _cumplidas: int) -> void:
 	_cierres += 1
 	_ultima_jornada_cerrada = jornada
-
-
-func _anotar_final(final: Partida.Final) -> void:
-	_terminadas += 1
-	_final_publicado = final

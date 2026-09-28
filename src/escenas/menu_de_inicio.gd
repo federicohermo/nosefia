@@ -14,6 +14,9 @@ const TEXTOS: Dictionary[MenuDeInicio.Opcion, String] = {
 
 @export var _opciones: VBoxContainer
 @export var _pedidos: PedidosDelMenu
+@export var _confirmacion: ConfirmationDialog
+
+var _guardado := Guardado.new()
 
 var _carga: CargaEnSegundoPlano
 var _pantalla: PantallaDeCarga
@@ -22,7 +25,8 @@ var _esperando := false
 
 
 func _ready() -> void:
-	var menu := MenuDeInicio.new(OS.has_feature("web"))
+	var menu := MenuDeInicio.new(OS.has_feature("web"), _guardado.hay_guardado())
+	_pedidos.preparar(menu, _guardado)
 	for opcion: MenuDeInicio.Opcion in menu.opciones():
 		var boton := Button.new()
 		boton.text = TEXTOS[opcion]
@@ -30,6 +34,9 @@ func _ready() -> void:
 		boton.pressed.connect(_pedidos.elegir.bind(opcion))
 		_opciones.add_child(boton)
 	_pedidos.nuevo_juego_pedido.connect(entrar_al_almacen)
+	_pedidos.continuar_pedido.connect(entrar_al_almacen)
+	_pedidos.confirmacion_pedida.connect(_confirmacion.popup_centered)
+	_confirmacion.confirmed.connect(_pedidos.confirmar_nuevo_juego)
 	# Se crean acá y no al declararlos: una instancia que nunca entra al árbol los dejaría
 	# colgados.
 	_carga = CargaEnSegundoPlano.new()
@@ -46,6 +53,7 @@ func _process(_delta: float) -> void:
 	_pantalla.pintar(_carga.progreso())
 
 
+## Nuevo juego y continuar entran por acá. El almacén decide solo si retoma: lee el guardado.
 func entrar_al_almacen() -> void:
 	if _almacen != null:
 		get_tree().change_scene_to_packed(_almacen)
