@@ -232,6 +232,11 @@ class LosAssets(unittest.TestCase):
         crudo = self._glb(b'{"images":[{"name":"cora cola"},{"name":"jorgillo"},{}]}')
         self.assertEqual(herramientas._imagenes_de_un_glb(crudo), {"cora cola", "jorgillo"})
 
+    def test_el_nombre_con_punto_se_corta_en_el_ultimo(self):
+        # Godot extrae `Material.001_baseColor` como `…_Material.png`.
+        crudo = self._glb(b'{"images":[{"name":"Material.001_baseColor"}]}')
+        self.assertIn("Material", herramientas._imagenes_de_un_glb(crudo))
+
     def test_un_binario_que_no_es_glb_no_revienta(self):
         self.assertEqual(herramientas._imagenes_de_un_glb(b"\x89PNG\r\n\x1a\n"), set())
         self.assertEqual(herramientas._imagenes_de_un_glb(self._glb(b"{roto")), set())

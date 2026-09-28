@@ -587,7 +587,10 @@ def _imagenes_de_un_glb(datos: bytes) -> set[str]:
         cabecera = json.loads(datos[20 : 20 + largo].decode("utf-8"))
     except (UnicodeDecodeError, json.JSONDecodeError):
         return set()
-    return {i["name"] for i in cabecera.get("images", []) if i.get("name")}
+    # Godot corta el nombre en el último punto al extraer: `Material.001_baseColor` → `Material`.
+    return {
+        i["name"].rsplit(".", 1)[0] for i in cabecera.get("images", []) if i.get("name")
+    }
 
 
 def _nombre_embebido(stem: str, stem_del_glb: str) -> set[str]:
