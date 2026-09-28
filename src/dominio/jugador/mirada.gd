@@ -35,6 +35,12 @@ func girar(delta_del_mouse: Vector2) -> void:
 	_pitch = clampf(_pitch - delta_del_mouse.y * _sensibilidad, _pitch_minimo, _pitch_maximo)
 
 
+## Deja la vista hacia `nuevo_yaw` y horizontal, sin pasar por el mouse.
+func orientar(nuevo_yaw: float) -> void:
+	_yaw = wrapf(nuevo_yaw, -PI, PI)
+	_pitch = 0.0
+
+
 func yaw() -> float:
 	return _yaw
 

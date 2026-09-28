@@ -308,7 +308,8 @@ jugador = NodePath("../Jugador")
 limpiador = NodePath("../Servicios/Limpiador")
 
 [node name="Jugador" parent="." unique_id=2126157413 instance=ExtResource("1_jugador")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.5791006, 0.112, 6.933177)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.91, 0.112, 6.9)
+editor_description = "Donde el jugador arranca cada noche: frente a la puerta de entrada, del lado de adentro. Mira hacia -Z, que es el local."
 
 [node name="LightmapGI" type="LightmapGI" parent="." unique_id=2127617826]
 quality = 2

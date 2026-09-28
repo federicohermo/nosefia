@@ -1,0 +1,98 @@
+[gd_scene load_steps=7 format=3]
+
+[ext_resource type="Script" path="res://src/escenas/menu_de_inicio.gd" id="1"]
+[ext_resource type="Theme" path="res://assets/ui/manada/tema.tres" id="2"]
+[ext_resource type="Texture2D" path="res://assets/ui/manada/fondo_inicio.png" id="3"]
+[ext_resource type="Script" path="res://src/sistemas/marco/pedidos_del_menu.gd" id="4"]
+[ext_resource type="Texture2D" path="res://assets/ui/manada/cabecera.svg" id="5"]
+[ext_resource type="Texture2D" path="res://assets/ui/manada/titulo_inicio.png" id="6"]
+
+[node name="MenuDeInicio" type="Control" node_paths=PackedStringArray("_opciones", "_pedidos", "_marco", "_fila", "_confirmacion")]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("2")
+script = ExtResource("1")
+_opciones = NodePath("Marco/Opciones")
+_pedidos = NodePath("PedidosDelMenu")
+_marco = NodePath("Marco")
+_fila = NodePath("Marco/Fila")
+_confirmacion = NodePath("Confirmacion")
+
+[node name="Fondo" type="TextureRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("3")
+expand_mode = 1
+stretch_mode = 6
+
+[node name="Marco" type="Control" parent="."]
+layout_mode = 0
+offset_right = 1920.0
+offset_bottom = 1080.0
+mouse_filter = 2
+
+[node name="BarraSuperior" type="TextureRect" parent="Marco"]
+layout_mode = 0
+offset_left = 71.0
+offset_top = 80.0
+offset_right = 1783.0
+offset_bottom = 150.3
+mouse_filter = 2
+texture = ExtResource("5")
+expand_mode = 1
+
+[node name="BarraInferior" type="TextureRect" parent="Marco"]
+layout_mode = 0
+offset_left = 71.0
+offset_top = 997.7
+offset_right = 1783.0
+offset_bottom = 1068.0
+mouse_filter = 2
+texture = ExtResource("5")
+expand_mode = 1
+flip_h = true
+flip_v = true
+
+[node name="Titulo" type="TextureRect" parent="Marco"]
+layout_mode = 0
+offset_left = 658.0
+offset_top = 295.0
+offset_right = 1262.0
+offset_bottom = 454.0
+mouse_filter = 2
+texture = ExtResource("6")
+expand_mode = 1
+
+[node name="Opciones" type="VBoxContainer" parent="Marco"]
+layout_mode = 0
+offset_left = 746.0
+offset_top = 541.0
+offset_right = 1173.0
+offset_bottom = 749.0
+theme_type_variation = &"ColumnaDelMenu"
+
+[node name="Fila" type="HBoxContainer" parent="Marco"]
+layout_mode = 0
+offset_left = 517.0
+offset_top = 802.0
+offset_right = 1403.0
+offset_bottom = 862.0
+theme_type_variation = &"FilaDelMenu"
+alignment = 1
+
+[node name="PedidosDelMenu" type="Node" parent="."]
+script = ExtResource("4")
+
+[node name="Confirmacion" type="ConfirmationDialog" parent="."]
+title = "NUEVO JUEGO"
+dialog_text = "Empezar de nuevo borra la partida guardada."
+ok_button_text = "EMPEZAR"
+cancel_button_text = "VOLVER"

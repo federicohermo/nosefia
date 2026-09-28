@@ -13,6 +13,8 @@
 class_name ParteDeCierre
 extends RefCounted
 
+enum Opcion { SEGUIR, VOLVER_AL_MENU }
+
 ## El número de jornada se muestra sobre el total y no solo: «jornada 4» no dice nada,
 ## «jornada 4 de 5» dice cuánto falta. El total sale de la constante de la partida y nunca de
 ## un número escrito.
@@ -22,15 +24,27 @@ const SALUDO := "Jornada %d de %d. El jefe dejó una nota."
 ## dejaría la placa mintiendo sin que nada avise.
 const AVISO_DE_RIESGO := "Llevás %d apercibimientos de %d."
 
+## Lo que el jugador puede elegir según cómo quedó la partida. Con la partida terminada no hay
+## noche siguiente que abrir.
+const OPCIONES_POR_FINAL: Dictionary[Partida.Final, Array] = {
+	Partida.Final.EN_CURSO: [Opcion.SEGUIR, Opcion.VOLVER_AL_MENU],
+	Partida.Final.DESPEDIDO: [Opcion.VOLVER_AL_MENU],
+	Partida.Final.CONTRATO_CUMPLIDO: [Opcion.VOLVER_AL_MENU],
+}
+
 var _jornada: int
 var _obligatorias: Array[Tarea]
 var _apercibimientos: int
+var _final: Partida.Final
 
 
-func _init(jornada: int, obligatorias: Array[Tarea], apercibimientos: int) -> void:
+func _init(
+	jornada: int, obligatorias: Array[Tarea], apercibimientos: int, final: Partida.Final
+) -> void:
 	_jornada = jornada
 	_obligatorias = obligatorias
 	_apercibimientos = apercibimientos
+	_final = final
 
 
 func jornada() -> int:
@@ -72,3 +86,10 @@ func en_riesgo() -> bool:
 
 func aviso_de_riesgo() -> String:
 	return AVISO_DE_RIESGO % [_apercibimientos, umbral_del_despido()]
+
+
+## Qué botones lleva la placa, en orden.
+func opciones() -> Array[Opcion]:
+	var elegibles: Array[Opcion] = []
+	elegibles.assign(OPCIONES_POR_FINAL[_final])
+	return elegibles

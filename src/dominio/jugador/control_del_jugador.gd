@@ -54,6 +54,12 @@ func girar(delta_del_mouse: Vector2) -> void:
 	)
 
 
+## El giro que faltaba dibujar se descarta: es de la mirada anterior.
+func orientar(nuevo_yaw: float) -> void:
+	_mirada.orientar(nuevo_yaw)
+	_suavizado = SuavizadoDelGiro.new(SuavizadoDelGiro.VENTANA)
+
+
 func velocidad(entrada: Vector2) -> Vector3:
 	if _suspendido:
 		return Vector3.ZERO

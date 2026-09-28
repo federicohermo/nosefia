@@ -107,6 +107,26 @@ func test_suspender_y_reanudar_llegan_hasta_el_control_del_dominio() -> void:
 	assert_bool(jugador._control.esta_suspendido()).is_false()
 
 
+func test_esc_no_es_del_jugador() -> void:
+	# Esc pausa, y lo atiende la pausa: el jugador ya no tiene una salida de emergencia propia.
+	var texto := FileAccess.get_file_as_string("res://src/escenas/jugador.gd")
+	assert_str(texto).is_not_empty()
+	assert_str(texto).not_contains("ui_cancel")
+
+
+func test_despues_de_la_pausa_el_primer_clic_solo_toma_el_cursor() -> void:
+	var jugador := _jugador()
+	jugador.notification(Node.NOTIFICATION_PAUSED)
+	assert_bool(jugador.get("_cursor_suelto_por_la_pausa")).is_true()
+	assert_bool(jugador.call("_el_cursor_esta_tomado")).is_false()
+	var clic := InputEventMouseButton.new()
+	clic.button_index = MOUSE_BUTTON_LEFT
+	clic.pressed = true
+	jugador._unhandled_input(clic)
+	assert_bool(jugador.get("_cursor_suelto_por_la_pausa")).is_false()
+	assert_bool(jugador.call("_el_cursor_esta_tomado")).is_true()
+
+
 func test_suspender_con_algo_enfocado_avisa_que_se_perdio_el_objetivo() -> void:
 	# Mientras dura la suspensión `observar()` devuelve `false`, así que si el aviso no saliera
 	# en el momento de suspender no saldría nunca: quien escucha se quedaría con el cartel de

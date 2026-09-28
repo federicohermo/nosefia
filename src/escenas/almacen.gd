@@ -30,6 +30,8 @@ const PuertaDelLocal := preload("res://src/escenas/puestos/puerta_del_local.gd")
 ## `@export` de abajo no lo puede nombrar sin traerlo por `preload`.
 const Jugador := preload("res://src/escenas/jugador.gd")
 
+const ESCENA_DEL_MENU := "res://src/escenas/menu_de_inicio.tscn"
+
 @export var _hud: Hud
 @export var _reloj: RelojDelTurno
 @export var _ciclo: CicloDeJornadas
@@ -59,8 +61,17 @@ const Jugador := preload("res://src/escenas/jugador.gd")
 @export var _muebles_con_contorno: Array[PhysicsBody3D]
 
 ## La partida es de la escena y no del ciclo porque también la mira el HUD: el ciclo publica lo
-## que pasó, y quien quiera un número lo pide acá.
-var _partida := Partida.nueva()
+## que pasó, y quien quiera un número lo pide acá. Sale del guardado: sin guardado, es nueva.
+var _partida := Partida.desde(Guardado.new().cargar())
+
+## Donde el jugador arranca cada noche: el lugar del nodo `Jugador` en la escena, leído antes de
+## la primera apertura. Es geometría de la escena y no un número del dominio. No es un nodo propio
+## porque la raíz no suma hijos y lo que la escena declara cuelga de la raíz.
+var _arranque: Transform3D
+
+## Cómo se sale al menú. Es una variable y no una llamada directa porque un test no puede
+## cambiar de escena: se llevaría puesto al runner.
+var _ir_al_menu: Callable = volver_al_menu
 
 
 ## Los carteles se pintan acá antes de conectar nada, y no con un `text` escrito en `hud.tscn`:
@@ -94,9 +105,6 @@ func _ready() -> void:
 	# **Una sola conexión**: el 017 y el 008 llegaron por separado al mismo `jornada_abierta`, y
 	# conectarlo dos veces es un error de Godot, no dos llamadas.
 	_ciclo.jornada_abierta.connect(_al_abrir_la_jornada)
-	# La placa es quien abre la noche siguiente, y por eso el ciclo no reabre solo: entre una
-	# jornada y la otra hay algo que leer.
-	_pantalla.cierre_despachado.connect(_al_despachar_la_placa)
 	# El audio se ata **por nombre de señal** y no nombrando a nadie: la lista de fuentes se le
 	# pasa entera y el enlazador conecta las que existan. Una señal que todavía no está deja su
 	# fila declarada sin fuente en vez de romper algo.
@@ -131,8 +139,14 @@ func _ready() -> void:
 	# El motor no despierta lo que está sobre una caja empujada. Lo hace el puesto.
 	for caja: CajaDeProductosDelDeposito in _cajas_de_productos:
 		caja.empujada.connect(_reposicion_manual.despertar_lo_de_arriba)
+	# «Volver al menú» de la pausa sale por el mismo camino que el de la placa.
+	var pausa: ControlDePausa = get_node("Interfaz/ControlDePausa")
+	pausa.volver_al_menu_pedido.connect(func() -> void: _ir_al_menu.call())
+	_arranque = _jugador.global_transform
+	add_child(EnlaceDeGuardado.new(_ciclo, Guardado.new()))
 	_ciclo.arrancar(_partida, _reloj)
 	_reposicion_manual.preparar()
+	print("[carga] almacén en pantalla")
 
 
 ## Cada noche arranca con el marcador en cero, nada repuesto y el depósito lleno.
@@ -153,6 +167,7 @@ func _al_abrir_la_jornada(_jornada: int) -> void:
 	# está ahí.
 	_jugador.examen.terminar()
 	_agarre.vaciar_las_manos()
+	_jugador.ubicar(_arranque)
 	_hud.declarar_obligatorias(Apertura.cantidad_de_obligatorias())
 	# **Un solo inventario para las dos obligatorias**: reponer lo llena y la ventanilla lo
 	# vacía. Construir uno por tarea daría dos stocks del mismo producto, y las dos ventanas
@@ -195,18 +210,36 @@ func _al_cerrar_la_jornada(jornada: int, cumplidas: int) -> void:
 	_hud.mostrar_tareas(cumplidas)
 	_hud.mostrar_apercibimientos(_partida.apercibimientos())
 	_pantalla.mostrar(
-		ParteDeCierre.new(jornada, _partida.obligatorias(), _partida.apercibimientos())
+		ParteDeCierre.new(
+			jornada, _partida.obligatorias(), _partida.apercibimientos(), _partida.final()
+		)
 	)
 	# Sin esto la placa es inalcanzable jugando: el jugador clava el puntero en el centro cada
-	# cuadro y el botón «Seguir» cae más abajo, así que no se puede clickear nunca y la jornada 2
-	# no existe en la build. La suspensión suelta el cursor sola, porque el modo se recalcula a
-	# partir del estado del control.
+	# cuadro y los botones caen más abajo, así que no se pueden clickear nunca. La suspensión
+	# suelta el cursor sola, porque el modo se recalcula a partir del estado del control.
 	_jugador.suspender()
+	# Una conexión por placa: un segundo despacho de la misma placa no encuentra a nadie, y no
+	# abre dos noches ni carga el menú dos veces.
+	_pantalla.cierre_despachado.connect(_al_despachar_la_placa, CONNECT_ONE_SHOT)
 
 
-## El orden importa y por eso hay un handler en vez de conectar la señal derecho al ciclo: si el
-## jugador se reanudara después de abrir la jornada, el cuadro del medio correría con el control
-## todavía suspendido. Acá no se decide nada — son dos llamadas, siempre las dos.
-func _al_despachar_la_placa() -> void:
+## Qué hace cada opción de la placa. Cuáles se ofrecen lo decidió el parte; acá sólo se busca
+## la acción de la elegida.
+func _al_despachar_la_placa(opcion: ParteDeCierre.Opcion) -> void:
+	var acciones: Dictionary[ParteDeCierre.Opcion, Callable] = {
+		ParteDeCierre.Opcion.SEGUIR: _seguir,
+		ParteDeCierre.Opcion.VOLVER_AL_MENU: _ir_al_menu,
+	}
+	acciones[opcion].call()
+
+
+## El orden importa: si el jugador se reanudara después de abrir la jornada, el cuadro del medio
+## correría con el control todavía suspendido.
+func _seguir() -> void:
 	_jugador.reanudar()
 	_ciclo.abrir_la_jornada()
+
+
+## Deja la partida y carga el menú de inicio. No abre ninguna jornada.
+func volver_al_menu() -> void:
+	get_tree().change_scene_to_file(ESCENA_DEL_MENU)

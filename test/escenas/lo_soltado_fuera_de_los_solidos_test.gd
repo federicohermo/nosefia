@@ -90,8 +90,9 @@ const CARA_DE_ADENTRO_DE_LA_L := "adentro de la L"
 const PARED_DE_LA_FACHADA := "la pared de la fachada"
 const GONDOLA_DEL_DEPOSITO := "la góndola del depósito"
 
-## Un tramo libre de la pared de la fachada, lejos de la ventanilla y de las góndolas.
-const PARED_LIBRE := Vector2(-3.0, 7.871)
+## Un tramo libre de la pared de la fachada, lejos de la ventanilla, de las góndolas y de la puerta
+## de entrada.
+const PARED_LIBRE := Vector2(-5.0, 7.871)
 
 
 func _almacen() -> Node3D:

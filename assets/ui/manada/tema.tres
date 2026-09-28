@@ -1,4 +1,4 @@
-[gd_resource type="Theme" load_steps=14 format=3]
+[gd_resource type="Theme" load_steps=19 format=3]
 
 [ext_resource type="FontFile" path="res://assets/ui/manada/unscii-16.ttf" id="1"]
 
@@ -147,6 +147,48 @@ content_margin_right = 24.0
 content_margin_top = 12.0
 content_margin_bottom = 12.0
 
+[sub_resource type="StyleBoxFlat" id="continuar_normal"]
+bg_color = Color(0, 0, 0, 0)
+border_color = Color(0.941176, 0.956863, 0.819608, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+content_margin_left = 24.0
+content_margin_top = 8.0
+content_margin_right = 24.0
+content_margin_bottom = 8.0
+
+[sub_resource type="StyleBoxFlat" id="continuar_lleno"]
+bg_color = Color(0.941176, 0.956863, 0.819608, 1)
+border_color = Color(0.941176, 0.956863, 0.819608, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+content_margin_left = 24.0
+content_margin_top = 8.0
+content_margin_right = 24.0
+content_margin_bottom = 8.0
+
+[sub_resource type="StyleBoxFlat" id="marco_de_la_barra"]
+bg_color = Color(0, 0, 0, 0)
+border_color = Color(0.847059, 0.705882, 0.407843, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+content_margin_left = 9.0
+content_margin_top = 4.0
+content_margin_right = 9.0
+content_margin_bottom = 4.0
+
+[sub_resource type="StyleBoxFlat" id="barra_fondo"]
+bg_color = Color(0.85098, 0.85098, 0.85098, 1)
+
+[sub_resource type="StyleBoxFlat" id="barra_relleno"]
+bg_color = Color(0.847059, 0.705882, 0.407843, 1)
+
 [resource]
 default_font = ExtResource("1")
 default_font_size = 40
@@ -227,6 +269,18 @@ Titulo/base_type = &"Label"
 
 Titulo/font_sizes/font_size = 54
 
+BotonDelMenu/base_type = &"Button"
+
+BotonDelMenu/font_sizes/font_size = 36
+
+ColumnaDelMenu/base_type = &"VBoxContainer"
+
+ColumnaDelMenu/constants/separation = 14
+
+FilaDelMenu/base_type = &"HBoxContainer"
+
+FilaDelMenu/constants/separation = 32
+
 NotaDeLista/base_type = &"Button"
 
 NotaDeLista/font_sizes/font_size = 40
@@ -240,3 +294,25 @@ NotaDeLista/styles/normal = SubResource("nota_normal")
 NotaDeLista/styles/pressed = SubResource("nota_activa")
 NotaDeLista/styles/hover = SubResource("nota_activa")
 NotaDeLista/styles/hover_pressed = SubResource("nota_activa")
+
+BotonContinuar/base_type = &"Button"
+BotonContinuar/font_sizes/font_size = 36
+BotonContinuar/colors/font_color = Color(0.941176, 0.956863, 0.819608, 1)
+BotonContinuar/colors/font_hover_color = Color(0.101961, 0.101961, 0.101961, 1)
+BotonContinuar/colors/font_focus_color = Color(0.101961, 0.101961, 0.101961, 1)
+BotonContinuar/colors/font_pressed_color = Color(0.101961, 0.101961, 0.101961, 1)
+BotonContinuar/colors/font_hover_pressed_color = Color(0.101961, 0.101961, 0.101961, 1)
+BotonContinuar/styles/normal = SubResource("continuar_normal")
+BotonContinuar/styles/hover = SubResource("continuar_lleno")
+BotonContinuar/styles/pressed = SubResource("continuar_lleno")
+BotonContinuar/styles/hover_pressed = SubResource("continuar_lleno")
+BotonContinuar/styles/focus = SubResource("continuar_lleno")
+Placa/base_type = &"VBoxContainer"
+Placa/constants/separation = 24
+MarcoDeLaBarra/base_type = &"PanelContainer"
+MarcoDeLaBarra/styles/panel = SubResource("marco_de_la_barra")
+BarraDeCarga/base_type = &"ProgressBar"
+BarraDeCarga/styles/background = SubResource("barra_fondo")
+BarraDeCarga/styles/fill = SubResource("barra_relleno")
+TextoDeCarga/base_type = &"Label"
+TextoDeCarga/font_sizes/font_size = 36

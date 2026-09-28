@@ -1,7 +1,8 @@
 # Rendimiento
 
 Cómo se mide y dónde queda el resultado. Los números no van en este doc: van al PR que los
-usa, junto con el equipo y el commit.
+usa, junto con el equipo y el commit. La excepción es la carga en la web, que registra su base
+y su medición final.
 
 ## Dónde queda el resultado
 
@@ -49,6 +50,41 @@ ponerlo en `reports/`.
 - **No es un gate.** El número depende del equipo. Sirve para comparar un cambio contra el
   anterior en la misma máquina.
 - **Con la CPU frenada el ruido es grande.** Hacer tres corridas y mirar la mediana.
+
+## La carga en la web
+
+`.github/scripts/medir_la_carga.mjs` mide tres tiempos desde la navegación: el overlay de
+Godot fuera, el aviso `[carga] menú visible` y el aviso `[carga] almacén en pantalla`. Elige
+«Nuevo juego» apenas ve el primer aviso. Hace tres corridas con el caché vacío y da la mediana.
+Mide un export local, servido con los headers de `vercel.json`:
+
+```powershell
+& $env:GODOT_BIN --headless --path . --export-release "Web" export/web/index.html
+python .github/scripts/servir_export.py export/web 8060
+node .github/scripts/medir_la_carga.mjs http://localhost:8060 reports/carga.json
+```
+
+- **El directorio del export tiene que existir antes.** Sin él, el export falla y devuelve 0.
+
+Medido el 2026-09-27 en una notebook con AMD Ryzen 7 7435HS, NVIDIA GeForce RTX 4050 Laptop
+y 24 GB, con Chrome. Las dos filas se midieron una detrás de la otra. Mediana de tres
+corridas, en milisegundos:
+
+| Medición | Overlay fuera | Menú visible | Almacén en pantalla |
+|---|---|---|---|
+| Base: el almacén carga al elegir «Nuevo juego» | 1051 | 1020 | 2426 |
+| Final: el almacén carga detrás del menú | 1039 | 1003 | 2828 |
+
+- **El menú aparece igual.** La carga en segundo plano no lo demora.
+- **Con el clic inmediato, entrar tarda unos 400 ms más.** La carga en otro hilo tarda más que
+  en el principal. Mientras tanto, el jugador ve la pantalla «Cargando...».
+- **Con el almacén ya cargado, entrar tarda 807 ms desde el clic.** Sin la carga en segundo
+  plano, 1257 ms. Es el caso de un jugador que se queda en el menú más de dos segundos. Es una
+  sola corrida de cada lado, con el clic cinco segundos después del aviso del menú. Se midió
+  antes de que la pantalla de carga tuviera un tiempo mínimo a la vista. Hoy ese mínimo va
+  antes de instanciar el almacén, y se suma. La fila final no cambia: su espera ya es mayor.
+- **Mientras carga, el menú sigue dibujando.** En los tres segundos después del aviso del menú,
+  el peor hueco entre dos cuadros del navegador fue de 9 ms.
 
 ## Lo que ya se sabe de las luces
 

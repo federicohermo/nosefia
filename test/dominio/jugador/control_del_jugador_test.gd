@@ -149,6 +149,18 @@ func test_suspendido_el_dibujo_no_se_mueve() -> void:
 	assert_float(control.yaw_dibujado()).is_equal(yaw)
 
 
+func test_orientar_deja_el_dibujo_en_la_mirada_nueva() -> void:  # AC-PLY-044
+	# Con un giro pendiente de dibujar, la cámara arrancaría la noche girando desde donde quedó.
+	var control := _lento()
+	control.girar(Vector2(10.0, 5.0))
+	control.orientar(1.0)
+	assert_float(control.yaw()).is_equal_approx(1.0, 1e-6)
+	assert_float(control.pitch()).is_equal(0.0)
+	assert_float(control.yaw_dibujado()).is_equal_approx(1.0, 1e-6)
+	assert_float(control.pitch_dibujado()).is_equal(0.0)
+	assert_bool(control.giro_atrasado()).is_false()
+
+
 ## Un control que ya vio un mouse de 125 Hz a 144 cuadros, con el dibujo al día.
 func _lento() -> ControlDelJugador:
 	var control := _control()
