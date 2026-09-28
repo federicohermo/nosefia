@@ -65,8 +65,6 @@ node .github/scripts/medir_la_carga.mjs http://localhost:8060 reports/carga.json
 ```
 
 - **El directorio del export tiene que existir antes.** Sin él, el export falla y devuelve 0.
-- **Un reporte de gdUnit4 en `reports/` entra al `.pck`.** El export incluye todo recurso del
-  proyecto. Borrar `reports/` antes de exportar para medir.
 
 Medido el 2026-09-27 en una notebook con AMD Ryzen 7 7435HS, NVIDIA GeForce RTX 4050 Laptop
 y 24 GB, con Chrome. Las dos filas se midieron una detrás de la otra. Mediana de tres
