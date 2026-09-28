@@ -66,25 +66,32 @@ node .github/scripts/medir_la_carga.mjs http://localhost:8060 reports/carga.json
 
 - **El directorio del export tiene que existir antes.** Sin él, el export falla y devuelve 0.
 
-Medido el 2026-09-27 en una notebook con AMD Ryzen 7 7435HS, NVIDIA GeForce RTX 4050 Laptop
-y 24 GB, con Chrome. Las dos filas se midieron una detrás de la otra. Mediana de tres
-corridas, en milisegundos:
+**El aviso del almacén sale cuando el jugador lo ve**, al final del calentamiento de shaders.
 
-| Medición | Overlay fuera | Menú visible | Almacén en pantalla |
-|---|---|---|---|
-| Base: el almacén carga al elegir «Nuevo juego» | 1051 | 1020 | 2426 |
-| Final: el almacén carga detrás del menú | 1039 | 1003 | 2828 |
+## Los shaders en la web
 
-- **El menú aparece igual.** La carga en segundo plano no lo demora.
-- **Con el clic inmediato, entrar tarda unos 400 ms más.** La carga en otro hilo tarda más que
-  en el principal. Mientras tanto, el jugador ve la pantalla «Cargando...».
-- **Con el almacén ya cargado, entrar tarda 807 ms desde el clic.** Sin la carga en segundo
-  plano, 1257 ms. Es el caso de un jugador que se queda en el menú más de dos segundos. Es una
-  sola corrida de cada lado, con el clic cinco segundos después del aviso del menú. Se midió
-  antes de que la pantalla de carga tuviera un tiempo mínimo a la vista. Hoy ese mínimo va
-  antes de instanciar el almacén, y se suma. La fila final no cambia: su espera ya es mayor.
-- **Mientras carga, el menú sigue dibujando.** En los tres segundos después del aviso del menú,
-  el peor hueco entre dos cuadros del navegador fue de 9 ms.
+Compatibility no precompila shaders. Cada variante se compila la primera vez que se dibuja, y
+en Chrome sobre Windows cada programa tarda alrededor de un segundo. Mientras compila, el
+navegador no dibuja nada. Por eso el almacén se calienta detrás de la pantalla de carga. Cada
+objeto se dibuja una vez antes de mostrarlo, también lo que está oculto.
+
+Medido el 2026-09-28 en la misma notebook, con Chrome. Es el tiempo desde el clic en «Nuevo
+juego», con el almacén ya cargado, hasta el aviso del almacén:
+
+| Visita | Sin calentar | Con el calentamiento |
+|---|---|---|
+| Primera, con el caché vacío | 27–29 s, con la barra llena y la imagen congelada | 33 s, con la barra avanzando |
+| Segunda, con el caché de Chrome | 3,5 s | 3,9 s |
+
+- **Después de entrar no se compila ningún programa.** Sin calentar, el primer cuadro
+  compilaba 88, y lo que aparecía después compilaba en medio del juego.
+- **Los 20 programas más caros no se usan nunca.** La primera vez que el motor usa un shader,
+  compila dos variantes por defecto con todas las luces activas. Cada una cuesta alrededor de
+  1,1 s. Sólo se evitan con menos shaders distintos.
+- **Bajar los límites de luces no cambia nada.** Se midió con `max_lights_per_object` en 2 y
+  con `max_renderable_lights` en 16.
+- **El caché de Chrome no reemplaza al calentamiento.** Se borra con cada actualización de
+  Chrome o del driver.
 
 ## Lo que ya se sabe de las luces
 
