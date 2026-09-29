@@ -221,3 +221,92 @@ func _anotar_rechazo(_motivo: Estante.Rechazo) -> void:
 func _anotar_tarea(cumplidas: int) -> void:
 	_avisos_de_tarea += 1
 	_cumplidas_avisadas = cumplidas
+
+
+func test_devolver_saca_la_unidad_de_la_mano_y_la_mete_en_su_caja() -> void:  # AC-STK-039
+	var repositor := _repositor(ReglasDelEstante.UNIDADES_POR_CAJA)
+	var agarre := repositor.agarre
+	var caja := repositor.caja(Producto.Id.ACTRONCITO)
+	var disponibles := repositor.estante().disponibles_para_retirar(caja.producto)
+	var nodo: UnidadFisica = auto_free(UnidadFisica.new())
+	assert_bool(repositor.pedir_retirar(Producto.Id.ACTRONCITO, nodo)).is_true()
+	assert_int(caja.unidades()).is_equal(ReglasDelEstante.UNIDADES_POR_CAJA - 1)
+	# Devuelve el cuerpo que sacó de la mano: esconderlo es de quien lo dibuja.
+	assert_object(repositor.pedir_devolver(Producto.Id.ACTRONCITO)).is_same(nodo)
+	assert_object(agarre.manos().sostenido()).is_null()
+	assert_int(caja.unidades()).is_equal(ReglasDelEstante.UNIDADES_POR_CAJA)
+	assert_int(repositor.estante().disponibles_para_retirar(caja.producto)).is_equal(disponibles)
+	assert_int(repositor.estante().unidades_en_gondola(caja.producto)).is_zero()
+	assert_int(_colocados).is_zero()
+
+
+func test_si_la_caja_no_la_recibe_la_unidad_sigue_en_la_mano() -> void:  # AC-STK-040
+	# Nueve en el depósito: con una afuera, la caja tiene las de una caja entera y no recibe.
+	var repositor := _repositor(ReglasDelEstante.UNIDADES_POR_CAJA + 1)
+	var agarre := repositor.agarre
+	var nodo: UnidadFisica = auto_free(UnidadFisica.new())
+	assert_bool(repositor.pedir_retirar(Producto.Id.ACTRONCITO, nodo)).is_true()
+	var unidad := agarre.manos().sostenido()
+	assert_object(repositor.pedir_devolver(Producto.Id.ACTRONCITO)).is_null()
+	assert_object(agarre.manos().sostenido()).is_same(unidad)
+	assert_int(repositor.caja(Producto.Id.ACTRONCITO).unidades()).is_equal(
+		ReglasDelEstante.UNIDADES_POR_CAJA
+	)
+
+
+func test_devolver_con_otra_cosa_en_la_mano_no_saca_nada() -> void:  # AC-STK-038
+	var repositor := _repositor(ReglasDelEstante.UNIDADES_POR_CAJA)
+	var agarre := repositor.agarre
+	assert_object(repositor.pedir_devolver(Producto.Id.ACTRONCITO)).is_null()
+	var objeto := ObjetoDelAlmacen.new()
+	assert_bool(agarre.manos().agarrar(objeto)).is_true()
+	assert_object(repositor.pedir_devolver(Producto.Id.ACTRONCITO)).is_null()
+	assert_object(agarre.manos().sostenido()).is_same(objeto)
+	assert_int(repositor.caja(Producto.Id.ACTRONCITO).unidades()).is_equal(
+		ReglasDelEstante.UNIDADES_POR_CAJA
+	)
+
+
+func test_con_la_caja_vacia_no_retira_aunque_la_gondola_tenga_lugar() -> void:  # AC-STK-016
+	# Una sola unidad en el depósito, y la fila de dos casilleros vacía. La que salió queda en el
+	# piso: la mano está libre y a la góndola le sobra un casillero, pero la caja no tiene más.
+	var repositor := _repositor(1)
+	var agarre := repositor.agarre
+	var primera: UnidadFisica = auto_free(UnidadFisica.new())
+	assert_bool(repositor.pedir_retirar(Producto.Id.ACTRONCITO, primera)).is_true()
+	assert_object(agarre.soltar(true)).is_same(primera)
+	var producto := Catalogo.de(Producto.Id.ACTRONCITO)
+	var estante := repositor.estante()
+	assert_int(repositor.caja(Producto.Id.ACTRONCITO).unidades()).is_zero()
+	(
+		assert_int(
+			(
+				estante.cupo(producto)
+				- estante.unidades_en_gondola(producto)
+				- estante.reservadas(producto)
+			)
+		)
+		. is_greater(0)
+	)
+	var segunda: UnidadFisica = auto_free(UnidadFisica.new())
+	assert_bool(repositor.pedir_retirar(Producto.Id.ACTRONCITO, segunda)).is_false()
+	assert_object(agarre.manos().sostenido()).is_null()
+
+
+func test_la_caja_es_la_del_estante_de_la_noche() -> void:  # AC-STK-037
+	# Arrancar otra noche con una unidad en la mano la entrega, y la caja se cuenta sobre el
+	# estante nuevo: no queda nada afuera y vuelve a estar llena.
+	var repositor := _repositor(ReglasDelEstante.UNIDADES_POR_CAJA)
+	var nodo: UnidadFisica = auto_free(UnidadFisica.new())
+	assert_bool(repositor.pedir_retirar(Producto.Id.ACTRONCITO, nodo)).is_true()
+	var actroncito := _producto(Producto.Id.ACTRONCITO)
+	var inventario := Inventario.new([actroncito], {Producto.Id.ACTRONCITO: CUPO_DE_PRUEBA})
+	inventario.ingresar(
+		actroncito, Inventario.Ubicacion.DEPOSITO, ReglasDelEstante.UNIDADES_POR_CAJA
+	)
+	repositor.arrancar(Estante.new(inventario, [actroncito]))
+	assert_object(repositor.agarre.manos().sostenido()).is_null()
+	assert_int(repositor.caja(Producto.Id.ACTRONCITO).unidades()).is_equal(
+		ReglasDelEstante.UNIDADES_POR_CAJA
+	)
+	assert_int(repositor.estante().reservadas(actroncito)).is_zero()
