@@ -214,6 +214,10 @@ se corrige el código.
 - `python .claude/scripts/verificar.py` en verde, sin nodos salteados.
 - **El PR declara, por cada `AC-<COD>-###`, `AC → test → resultado`**, y lleva `Closes #N` si hay
   issue.
+- **Si el cambio redefine un gesto, buscá los casos que lo ejercen en el estado nuevo** y corré
+  esas suites sueltas antes de `verificar.py`. En el #176, dos clics seguidos sobre la misma caja
+  pasaron de «no hace nada» a «devuelve la unidad», y un caso de `reposicion_manual_test.gd` que
+  afirmaba lo viejo costó una corrida entera en 6/7.
 - **Lo que aparece implementando se hace, no se anota.** Un issue incompleto no se cierra abriendo
   otro issue: se completa.
 - **Las capturas que pide el issue van al PR, no a la rama.** Suben a la rama huérfana

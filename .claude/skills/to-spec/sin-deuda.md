@@ -168,6 +168,8 @@ entregable más caro y el único que hace que el hallazgo no vuelva.
 | un índice que contesta sobre **otro árbol** que el del carril | `implement-batch` — el preámbulo mandó a consultar el índice desde un worktree, y el servidor mira el checkout principal |
 | una textura que **no se ve desde donde mira el jugador** | `to-issue` — el issue no cruzó la textura con las UV de la malla ni con la cara visible |
 | una pregunta al usuario **que una medición contestaba** | `implement-batch` — el padre preguntó sin medir lo que suponía cada opción, ni cruzarla con lo que el usuario ya había decidido |
+| un issue reescrito en el cruce **cuyo contrato sigue diciendo lo de antes** | `implement-batch` — se reescribió la premisa y no el contrato que salía de ella |
+| un caso que **afirma el gesto viejo** y sale rojo en la corrida entera | `implement-feature` — no se buscaron los casos que ejercen el gesto redefinido antes de `verificar.py` |
 
 **Si el problema no entra en ninguna fila, agregá la fila.** Esa tabla es el registro de lo que
 esta doctrina ya aprendió, y está incompleta a propósito.

@@ -113,6 +113,9 @@ Lo que más se rompe:
   enum corre sobre `src/`, `test/` y `assets/`. En el #262, las 23 cajas del depósito vivían en
   `objetos_del_almacen.tscn` y la planilla pedía una miniatura por producto: ninguna de las dos
   estaba en los límites.
+- **Cada suite de «Se escribe» se cuenta contra el tope de 20 casos de `gdlint`.** Si una ya está
+  en el tope, el issue dice adónde van los casos nuevos. En el #176, `reposicion_manual_test.gd`
+  estaba en 20 y `caja_que_se_lleva_test.gd` en 19, y la suite nueva no estaba en los límites.
 - **Una lista que reparte un conjunto suma el total.** Si el issue divide los productos en dos
   grupos, los dos grupos se cuentan contra el catálogo. En el #264, las cajas con textura y sin
   textura eran 19 y 11 de 31: Malbardo no estaba en ninguna.

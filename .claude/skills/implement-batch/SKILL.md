@@ -64,6 +64,11 @@ Antes de lanzar nada, cruzá los issues del lote entre sí y **decí qué encont
 - **Un borde que describe un gesto que el juego no tiene.** Se implementa inventando la regla que
   falta. En el mismo lote, dos issues vendían «de la góndola» contra `BR-CTR-014`.
 
+**Un issue que el cruce reescribe se reescribe entero**: su premisa, su contrato y sus
+criterios. El contrato sale de la premisa, y la premisa nueva deja mintiendo al viejo. En el lote
+del 2026-09-29, el cruce reescribió la premisa de #176 (la caja cuenta desde el depósito), y su
+contrato siguió pidiendo `sacar() -> bool` y una caja que guarda su propio número.
+
 Lo que aparezca se corrige ahora —el issue con `gh issue edit`, el contrato con `to-spec`— y no
 se reparte roto.
 
