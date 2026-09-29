@@ -23,6 +23,9 @@ const ORIGEN := "res://assets/source/textures/stockroom/DEPOSITO CAJAS TEXTURA/"
 ## La textura de la caja genérica «DEPÓSITO».
 const GENERICA := "res://assets/models/SEPT_JUEGOS_PROTOTIPO_caja.png"
 
+## El parámetro de importación que achica una textura: su lado más grande, en píxeles.
+const LADO_TOPE := "process/size_limit"
+
 ## Los productos con etiqueta propia, con el archivo del artista del que sale cada una.
 ## `caja jorgillata.png` es otra textura de Jorgillo, y no va: va `CAJA JORGILLO.png`.
 const ORIGEN_DE_CADA_ETIQUETA := {
@@ -220,9 +223,13 @@ func test_la_etiqueta_de_cada_producto_es_una_linea_del_script() -> void:
 
 
 ## Filtra pixelado como el resto del arte: el material es el de la caja genérica con otra
-## textura, y la textura se importa con los mismos parámetros que la de la genérica —comprimida,
-## con mipmaps y con el mismo lado tope—. El mismo material es también el mismo shader: en la web
-## un shader nuevo se compila en la pantalla de carga.
+## textura, y la textura se importa con los mismos parámetros que la de la genérica, comprimida
+## y con mipmaps. El mismo material es también el mismo shader: en la web un shader nuevo se
+## compila en la pantalla de carga.
+##
+## **El lado tope es el único parámetro que cambia**, y no pasa el de la genérica. Las etiquetas
+## viajan a 512 como las de la góndola: medido, a 1024 el `.pck` de la web crecía 12,7 MiB más, y
+## la caja en la mano se veía igual.
 ##
 ## Y no va como `material_override`: el calentamiento de shaders dibuja uno por cuadro, y con
 ## las 31 cajas pasaba de 129 cuadros a 159 sin compilar nada nuevo.
@@ -257,11 +264,21 @@ func test_la_etiqueta_filtra_pixelado_como_la_caja_generica() -> void:
 		var suya := ConfigFile.new()
 		assert_int(suya.load(_ruta_de_la_etiqueta(id) + ".import")).is_equal(OK)
 		for clave: String in generica.get_section_keys("params"):
+			if clave == LADO_TOPE:
+				continue
 			(
 				assert_that(suya.get_value("params", clave))
 				. override_failure_message("%s importa `%s` distinto" % [_nombre(id), clave])
 				. is_equal(generica.get_value("params", clave))
 			)
+		# Un lado tope en cero es sin tope: Godot importa la textura entera, de 2084 px.
+		(
+			assert_int(suya.get_value("params", LADO_TOPE))
+			. override_failure_message(
+				"%s viaja sin tope o más grande que la genérica" % _nombre(id)
+			)
+			. is_between(1, generica.get_value("params", LADO_TOPE))
+		)
 
 
 ## La copia es la textura del artista byte por byte: con otro nombre y nada más. Si el artista
