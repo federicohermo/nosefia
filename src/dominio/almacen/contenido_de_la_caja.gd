@@ -25,17 +25,22 @@ const TEXTO_DEL_EXAMEN := "Una caja con %d %s de %s."
 const TEXTO_DE_UNA_MAS := " Entra %d más."
 const TEXTO_DE_VARIAS_MAS := " Entran %d más."
 
-## Cómo se nombra la unidad en el texto, en singular y en plural, según la sonoridad de su
+## Cómo se nombra la unidad en el texto, en singular y en plural, según la familia sonora de su
 ## producto.
 ##
-## **Sale de la sonoridad y no de lo que el producto es.** Actroncito es una caja de medicamentos
-## y Malbardo un paquete de cigarrillos, y la ficha cuenta a los dos en cajitas. Las otras
-## familias no tienen palabra decidida (OQ-STK-006): mientras tanto se cuentan con la palabra de
-## la capacidad. Decidir una es agregar su fila acá.
+## **Sale de la familia sonora y no de lo que el producto es.** Actroncito es una caja de
+## medicamentos y Malbardo un paquete de cigarrillos, y la ficha cuenta a los dos en cajitas. Una
+## caja se cuenta en cartones y no en cajas: el texto diría «una caja con 8 cajas».
+##
+## **No hay una palabra de repuesto.** Una familia sin fila deja el texto sin palabra, y el caso
+## que recorre el catálogo nombra el producto y la familia que la necesitan.
 const NOMBRES_DE_LA_UNIDAD := {
 	EntradaSonora.Sonoridad.CAJITA: ["cajita", "cajitas"],
+	EntradaSonora.Sonoridad.ENVOLTORIO_PLASTICO: ["paquete", "paquetes"],
+	EntradaSonora.Sonoridad.LATA: ["lata", "latas"],
+	EntradaSonora.Sonoridad.CAJA: ["cartón", "cartones"],
+	EntradaSonora.Sonoridad.BOTELLA_PLASTICA: ["botella", "botellas"],
 }
-const NOMBRE_SIN_DECIDIR := ["unidad", "unidades"]
 
 var producto: Producto
 
@@ -97,9 +102,7 @@ func texto_del_examen() -> String:
 	if producto == null:
 		return ""
 	var cuantas := unidades()
-	var nombres: Array = NOMBRES_DE_LA_UNIDAD.get(
-		Catalogo.sonoridad_de(producto.id), NOMBRE_SIN_DECIDIR
-	)
+	var nombres: Array = NOMBRES_DE_LA_UNIDAD.get(Catalogo.sonoridad_de(producto.id), ["", ""])
 	var nombre: String = nombres[0] if cuantas == 1 else nombres[1]
 	var texto := TEXTO_DEL_EXAMEN % [cuantas, nombre, producto.nombre]
 	var entran := ReglasDelEstante.UNIDADES_POR_CAJA - cuantas

@@ -226,13 +226,18 @@ func test_otro_producto_o_nada_no_entra() -> void:  # AC-STK-038
 
 func test_el_texto_dice_cuantas_tiene_y_cuantas_entran() -> void:  # AC-STK-041
 	# Cada fila sale de «las unidades de una caja menos lo que hay», y el nombre es el del
-	# catálogo: Malbardo y no «cigarrillos Malbardo», que es como lo dice la ficha.
+	# catálogo: Malbardo y no «cigarrillos Malbardo», que es como lo dice la ficha. Las cuatro
+	# últimas son una por familia sonora: Terminator es una caja, y se cuenta en cartones.
 	var filas := [
 		[Producto.Id.ACTRONCITO, 8, "Una caja con 8 cajitas de Actroncito."],
 		[Producto.Id.MALBARDO, 5, "Una caja con 5 cajitas de Malbardo. Entran 3 más."],
 		[Producto.Id.ACTRONCITO, 7, "Una caja con 7 cajitas de Actroncito. Entra 1 más."],
 		[Producto.Id.ACTRONCITO, 1, "Una caja con 1 cajita de Actroncito. Entran 7 más."],
 		[Producto.Id.ACTRONCITO, 0, "Una caja con 0 cajitas de Actroncito. Entran 8 más."],
+		[Producto.Id.LAYSNTT, 8, "Una caja con 8 paquetes de Laysntt."],
+		[Producto.Id.CORACOLA, 1, "Una caja con 1 lata de Coracola. Entran 7 más."],
+		[Producto.Id.TERMINATOR, 6, "Una caja con 6 cartones de Terminator. Entran 2 más."],
+		[Producto.Id.FERNET_GOD, 1, "Una caja con 1 botella de Fernet God. Entran 7 más."],
 	]
 	assert_int(ReglasDelEstante.UNIDADES_POR_CAJA).is_equal(8)
 	for fila: Array in filas:
@@ -254,14 +259,41 @@ func test_la_cuenta_de_lo_que_entra_sale_de_lo_que_esta_afuera() -> void:  # AC-
 	)
 
 
-func test_una_familia_sin_palabra_se_cuenta_en_unidades() -> void:
-	# OQ-STK-006: la palabra de una lata no está decidida, y mientras tanto se usa la de la
-	# capacidad. Sin este caso, un producto sin fila en la tabla dejaría el texto con un hueco.
-	var coracola := _producto(Producto.Id.CORACOLA)
-	var caja := _caja(coracola, _estante(coracola, ReglasDelEstante.UNIDADES_POR_CAJA))
-	assert_str(caja.texto_del_examen()).is_equal("Una caja con 8 unidades de Coracola.")
-	var una := _caja(coracola, _estante(coracola, 1))
-	assert_str(una.texto_del_examen()).is_equal("Una caja con 1 unidad de Coracola. Entran 7 más.")
+func test_cada_familia_del_catalogo_se_cuenta_en_su_palabra() -> void:  # AC-STK-041
+	# Recorre el catálogo y no una lista de productos: el día que un producto traiga una familia
+	# sin palabra, el caso la nombra. Con una unidad va el singular, con dos el plural.
+	var palabras := {
+		EntradaSonora.Sonoridad.CAJITA: ["cajita", "cajitas"],
+		EntradaSonora.Sonoridad.ENVOLTORIO_PLASTICO: ["paquete", "paquetes"],
+		EntradaSonora.Sonoridad.LATA: ["lata", "latas"],
+		EntradaSonora.Sonoridad.CAJA: ["cartón", "cartones"],
+		EntradaSonora.Sonoridad.BOTELLA_PLASTICA: ["botella", "botellas"],
+	}
+	# La tabla del juego es la de la decisión, fila por fila.
+	for familia: EntradaSonora.Sonoridad in palabras:
+		assert_array(ContenidoDeLaCaja.NOMBRES_DE_LA_UNIDAD.get(familia, [])).is_equal(
+			palabras[familia]
+		)
+	for producto in Catalogo.todos():
+		var familia := Catalogo.sonoridad_de(producto.id)
+		var nombre_de_la_familia: String = EntradaSonora.Sonoridad.find_key(familia)
+		(
+			assert_bool(ContenidoDeLaCaja.NOMBRES_DE_LA_UNIDAD.has(familia))
+			. override_failure_message(
+				"%s es %s, y esa familia no tiene palabra" % [producto.nombre, nombre_de_la_familia]
+			)
+			. is_true()
+		)
+		if not palabras.has(familia):
+			continue
+		var una := _caja(producto, _estante(producto, 1))
+		assert_str(una.texto_del_examen()).is_equal(
+			"Una caja con 1 %s de %s. Entran 7 más." % [palabras[familia][0], producto.nombre]
+		)
+		var dos := _caja(producto, _estante(producto, 2))
+		assert_str(dos.texto_del_examen()).is_equal(
+			"Una caja con 2 %s de %s. Entran 6 más." % [palabras[familia][1], producto.nombre]
+		)
 
 
 func test_cada_producto_del_catalogo_tiene_su_texto() -> void:
