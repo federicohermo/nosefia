@@ -31,7 +31,8 @@ vuelve a lo que tenía antes. El detalle y la medición, en `lib/horneado.reescr
   horneador OpenGL. El juego conserva el renderer definido en `project.godot`.
 
 En Linux sin pantalla ni GPU alcanza con Xvfb y el Vulkan por software de Mesa (lavapipe).
-Medido el 2026-09-29: nueve minutos para el local entero.
+Medido el 2026-09-29: nueve minutos para el local entero, y 17,7 con otros procesos corriendo.
+Con lavapipe declarado, el tope de espera se estira: ver `lib/horneado.tope_en_segundos()`.
 
     VK_ICD_FILENAMES=/usr/share/vulkan/icd.d/lvp_icd.json xvfb-run -a \\
         -s "-screen 0 1600x900x24" python .claude/scripts/hornear.py
@@ -55,15 +56,12 @@ from lib.horneado import (  # noqa: E402
     project_con_el_plugin,
     reescritos_de_mas,
     sesion_bloqueada,
+    tope_en_segundos,
     veredicto,
 )
 from lib.repo import RAIZ  # noqa: E402
 
 PROJECT = Path(RAIZ) / "project.godot"
-#: Un horneado del local tarda segundos. Si pasa de esto, el editor se quedó esperando algo.
-TOPE_SEGUNDOS = 20 * 60
-
-
 def _git(*argumentos: str) -> str:
     return subprocess.run(
         ["git", "-C", str(RAIZ), *argumentos],
@@ -117,6 +115,7 @@ def main() -> int:
             print("la sesión de Windows está bloqueada: el editor no hornea sin pantalla")
             return 2
 
+    tope = tope_en_segundos(dict(os.environ))
     sucios = _sucios()
     desde = time.time()
     original = PROJECT.read_bytes()
@@ -132,10 +131,10 @@ def main() -> int:
             text=True,
             encoding="utf-8",
             errors="replace",
-            timeout=TOPE_SEGUNDOS,
+            timeout=tope,
         )
     except subprocess.TimeoutExpired:
-        print(f"el editor no cerró en {TOPE_SEGUNDOS // 60} minutos")
+        print(f"el editor no cerró en {tope // 60} minutos")
         return 1
     finally:
         PROJECT.write_bytes(original)

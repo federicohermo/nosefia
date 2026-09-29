@@ -61,6 +61,26 @@ def reescritos_de_mas(escritos: list[str]) -> list[str]:
     return sorted(ruta for ruta in escritos if ruta not in SALIDAS and ruta != "project.godot")
 
 
+#: Con GPU, el local se hornea en segundos: si el editor pasa de esto, se quedó esperando algo.
+TOPE_CON_GPU = 20 * 60
+
+#: Con el Vulkan por software de Mesa (lavapipe), el mismo horneado tarda minutos. Medido el
+#: 2026-09-29: 9 con la máquina libre y 17,7 con otros procesos corriendo. El tope deja el
+#: doble del peor, para no confundir una máquina ocupada con un editor colgado.
+TOPE_POR_SOFTWARE = 45 * 60
+
+
+def tope_en_segundos(entorno: dict[str, str]) -> int:
+    """Cuánto se espera al editor antes de darlo por colgado.
+
+    Lavapipe se reconoce por el ICD que declara `VK_ICD_FILENAMES`, que es como se lo elige: sin
+    declararlo, el cargador de Vulkan prefiere una GPU si la hay.
+    """
+    if "lvp_icd" in entorno.get("VK_ICD_FILENAMES", ""):
+        return TOPE_POR_SOFTWARE
+    return TOPE_CON_GPU
+
+
 def sesion_bloqueada(procesos: str) -> bool:
     """Si la lista de `tasklist` trae la pantalla de bloqueo de Windows.
 

@@ -8,6 +8,7 @@ from lib.horneado import (
     project_con_el_plugin,
     reescritos_de_mas,
     sesion_bloqueada,
+    tope_en_segundos,
     veredicto,
 )
 
@@ -88,3 +89,19 @@ class ReescritosDeMas(unittest.TestCase):
         # Ya lo restaura `hornear.py` con el contenido de antes: devolverlo acá otra vez lo
         # pisaría con el de git, y un `project.godot` con cambios sin commitear los perdería.
         self.assertEqual(reescritos_de_mas(["project.godot"]), [])
+
+
+class TopeDelHorneado(unittest.TestCase):
+    # Con GPU el local se hornea en segundos; con el Vulkan por software de Mesa, medido el
+    # 2026-09-29, en 9 minutos con la máquina libre y en 17,7 con otros procesos corriendo. Un
+    # tope de 20 minutos confundía una máquina ocupada con un editor colgado.
+    def test_con_gpu_el_tope_es_el_de_siempre(self):
+        self.assertEqual(tope_en_segundos({}), 20 * 60)
+
+    def test_con_vulkan_por_software_el_tope_se_estira(self):
+        entorno = {"VK_ICD_FILENAMES": "/usr/share/vulkan/icd.d/lvp_icd.json"}
+        self.assertGreater(tope_en_segundos(entorno), 2 * 17.7 * 60)
+
+    def test_otro_driver_declarado_no_es_software(self):
+        entorno = {"VK_ICD_FILENAMES": "/usr/share/vulkan/icd.d/radeon_icd.json"}
+        self.assertEqual(tope_en_segundos(entorno), 20 * 60)
