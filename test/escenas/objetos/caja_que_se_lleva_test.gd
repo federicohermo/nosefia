@@ -3,7 +3,6 @@ extends GdUnitTestSuite
 
 const ALMACEN := preload("res://src/escenas/almacen.tscn")
 
-## El estante vacío del depósito: el único donde una caja entra sin apilarse sobre otra.
 const ESTANTE_DEL_DEPOSITO := "Estructura/gondola_deposito03_001/StaticBody3D"
 
 ## La góndola del pasillo, que tiene paneles a los costados de cada estante. Es la forma difícil:
@@ -64,7 +63,7 @@ const CUADROS_CAYENDO := 150
 
 ## A qué altura está la tabla del medio del estante del depósito, en metros: de ahí para abajo
 ## ya no es el estante con lugar.
-const TABLA_DE_ARRIBA := 1.48
+const TABLA_DEL_MEDIO := 1.48
 
 ## Cuánto separa una tabla del estante del depósito de la de abajo, en metros.
 const ENTRE_TABLAS := 0.69
@@ -386,8 +385,7 @@ func test_alrededor_de_un_estante_con_lugar_la_caja_siempre_sube_a_el() -> void:
 	var mano: Node3D = jugador.get_node("Giro/PuntoDeCaja")
 	var caja: Node3D = almacen.get("_cajas_de_productos")[Producto.Id.PRONGLES]
 	var estante := _limites_de(almacen.get_node(ESTANTE_DEL_DEPOSITO))
-	# La vecina sube de la tabla de abajo a la de arriba, que está abierta como la del rack viejo:
-	# deja media tabla libre a su lado y la del medio entera.
+	# La vecina sube a la tabla de arriba: deja media tabla libre a su lado y la del medio entera.
 	var vecina: Node3D = almacen.get("_cajas_de_productos")[Producto.Id.MAROLINI]
 	vecina.global_position += Vector3.UP * ENTRE_TABLAS * 2.0
 	vecina.call("quedarse_quieta")
@@ -402,8 +400,7 @@ func test_alrededor_de_un_estante_con_lugar_la_caja_siempre_sube_a_el() -> void:
 			_mirar(jugador, deg_to_rad(giro), deg_to_rad(alto))
 			jugador.force_update_transform()
 			_accion(jugador, caja, ReglasDeLosObjetos.ACCION_AGARRAR)
-			# La tabla libre está a 1,48 m: de ahí para abajo es otra tabla o el piso.
-			if caja.get_parent() == mano or caja.global_position.y < TABLA_DE_ARRIBA:
+			if caja.get_parent() == mano or caja.global_position.y < TABLA_DEL_MEDIO:
 				al_piso.append("mira %.0f, giro %.0f" % [alto, giro])
 			else:
 				_comprobar_apoyo_entero(almacen, caja, "mira %.0f, giro %.0f" % [alto, giro])
@@ -680,15 +677,10 @@ func test_la_caja_soltada_nunca_queda_adentro_de_nada() -> void:
 	# madera. Se prueban las dos vueltas y los cuatro ángulos, no sólo el tiro de frente.
 	# Las que no encuentran lugar no se sueltan, y eso también es correcto.
 	#
-	# **Se mide un paso atrás del estante, y no pegado a él.** Pegado no entra en ningún lado:
-	# los estantes tienen 0,477 m de aire y la caja mide 0,607, y el piso que la mira alcanza cae
-	# debajo de la madera. Ahí las doce se quedan en la mano —correcto, pero no ejerce nada—.
-	#
-	# **Y se mide contra las dos góndolas, no contra una.** La del depósito está vacía y la del
-	# pasillo tiene paneles a los costados de cada estante: ahí la caja entraba de canto entre
-	# dos y el barrido decía que había llegado, porque `cast_motion` contesta que el movimiento
-	# entero es seguro cuando la forma arranca ya tocando algo. De 256 soltadas alrededor de esa
-	# góndola, 20 quedaban adentro de ella.
+	# **Y se mide contra las dos góndolas, no contra una.** La del pasillo tiene paneles a los
+	# costados de cada estante: ahí la caja entraba de canto entre dos y el barrido decía que había
+	# llegado, porque `cast_motion` contesta que el movimiento entero es seguro cuando la forma
+	# arranca ya tocando algo. De 256 soltadas alrededor de esa góndola, 20 quedaban adentro de ella.
 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
 	add_child(almacen)
 	await get_tree().physics_frame
