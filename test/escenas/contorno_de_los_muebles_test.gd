@@ -7,6 +7,7 @@
 extends GdUnitTestSuite
 
 const ALMACEN := preload("res://src/escenas/almacen.tscn")
+const AperturaConLugar := preload("res://test/escenas/apertura_con_lugar.gd")
 ## Cada góndola, y hacia dónde camina el jugador para chocarla. Las dos del fondo están contra la
 ## pared del oeste: del otro lado no hay piso.
 const GONDOLAS := {
@@ -96,6 +97,7 @@ func test_un_producto_soltado_hacia_la_gondola_no_queda_adentro_de_ella() -> voi
 	# bandeja, el punto de soltado cae en el hueco del estante, y ahí hay lugar libre.
 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
 	add_child(almacen)
+	AperturaConLugar.abrir_con_todo_el_lugar(almacen)
 	await get_tree().physics_frame
 	var jugador: CharacterBody3D = almacen.get("_jugador")
 	jugador.set_physics_process(false)

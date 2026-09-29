@@ -2,6 +2,7 @@
 extends GdUnitTestSuite
 
 const ALMACEN := preload("res://src/escenas/almacen.tscn")
+const AperturaConLugar := preload("res://test/escenas/apertura_con_lugar.gd")
 
 const ESTANTE_DEL_DEPOSITO := "Estructura/gondola_deposito03_001/StaticBody3D"
 
@@ -1023,6 +1024,7 @@ func test_levantar_la_caja_hace_caer_el_producto_apoyado_encima() -> void:
 	# producto del piso, a un metro, no estaba encima de nada.
 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
 	add_child(almacen)
+	AperturaConLugar.abrir_con_todo_el_lugar(almacen)
 	await get_tree().physics_frame
 	var jugador: CharacterBody3D = almacen.get("_jugador")
 	var caja := _caja_en_el_piso_libre(almacen, 0)
@@ -1050,6 +1052,7 @@ func test_empujar_la_caja_hasta_sacarla_de_abajo_hace_caer_el_producto() -> void
 	# doble que el caso del arrastre, porque tiene que salir entera y no sólo moverse.
 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
 	add_child(almacen)
+	AperturaConLugar.abrir_con_todo_el_lugar(almacen)
 	await get_tree().physics_frame
 	var jugador: CharacterBody3D = almacen.get("_jugador")
 	var caja := _caja_en_el_piso_libre(almacen, 0)
@@ -1090,6 +1093,7 @@ func test_el_producto_sobre_la_pila_cae_cuando_se_saca_la_caja_de_abajo() -> voi
 	# sacada la de abajo, la del medio cae, y el producto cae con ella.
 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
 	add_child(almacen)
+	AperturaConLugar.abrir_con_todo_el_lugar(almacen)
 	await get_tree().physics_frame
 	var jugador: CharacterBody3D = almacen.get("_jugador")
 	var abajo := _caja_en_el_piso_libre(almacen, 0)
