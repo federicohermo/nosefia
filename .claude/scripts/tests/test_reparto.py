@@ -14,6 +14,7 @@ from collections import Counter
 from lib.reparto import (
     CABECERAS,
     DE_CABECERA,
+    DEL_ZOCALO,
     ESTANTES,
     FRIOS,
     HELADERAS,
@@ -81,6 +82,13 @@ class ElReparto(unittest.TestCase):
             for t in tandas:
                 if t.producto in DE_CABECERA:
                     self.assertTrue(es_cabecera(estante), f"{t.producto} en {estante}")
+
+    def test_lo_que_no_entra_en_dos_filas_arriba_va_en_el_zocalo(self):
+        for estante, tandas in ESTANTES.items():
+            _, _, nivel = partes(estante)
+            for t in tandas:
+                if t.producto in DEL_ZOCALO:
+                    self.assertEqual(nivel, 0, f"{t.producto} en {estante}")
 
     def test_la_heladera_lleva_lo_frio_una_sola_vez_y_nada_mas(self):
         en_heladera = [

@@ -13,9 +13,10 @@ en ese orden.
    `Array` prendido la dibujaría dos veces en el viewport.
 2. **Palpa cada estante del reparto.** La chapa es la cara de arriba de una isla de la malla del
    mueble. El tramo útil se recorta contra lo que haya a los costados —**adentro de una pared la
-   chapa sigue**, y medida sola da un tramo que no se puede llenar— y contra lo que haya encima:
-   el labio de una cabecera, la tapa del panel sobre el estante de arriba, el dintel de la
-   heladera.
+   chapa sigue**, y medida sola da un tramo que no se puede llenar—, contra lo que haya detrás
+   —**la chapa también sigue detrás del panel perforado**, hasta el centro de la góndola— y
+   contra lo que haya encima: el labio de una cabecera, la tapa del panel sobre el estante de
+   arriba, el dintel de la heladera.
 3. **Achica cada estante de góndola** a la profundidad de dos unidades de su producto más
    profundo, más lo que el mueble le tapa. El mueble se achica por su malla y no por su objeto:
    lo que cuelga del objeto se escalaría con él. Se corren hacia el fondo los vértices del frente
@@ -230,6 +231,32 @@ def tramo_util(estante, arbol, desde_v, hasta_v):
     return izquierda, derecha
 
 
+def fondo_util(estante, arbol, desde_v):
+    """Hasta dónde se puede llenar la chapa hacia atrás: lo primero que corta un rayo que entra
+    desde el frente del tramo libre, a dos alturas y en tres puntos a lo largo.
+
+    **Detrás del panel perforado la chapa sigue**: en las góndolas del medio llega hasta el centro
+    del mueble, y los rayos que miden lo libre encima no ven el panel, que es vertical. Medido el
+    2026-09-29: sin este corte, la fila de atrás de cada estante de lado quedaba adentro de la
+    góndola, detrás del panel, y desde el pasillo se veía un estante vacío.
+    """
+    hasta = estante.fondo
+    v = desde_v + PASO_DEL_TANTEO / 2
+    for alto in ALTURAS_DEL_TANTEO:
+        for fraccion in (0.3, 0.5, 0.7):
+            desde = estante.punto(estante.largo * fraccion, v) + estante.normal * alto
+            golpe = arbol.ray_cast(desde, estante.v, estante.fondo)
+            if golpe[0] is not None:
+                hasta = min(hasta, v + golpe[3])
+    return hasta
+
+
+def franja_del_estante(estante, arbol, alto):
+    """El tramo de fondo donde van las filas: libre encima para el alto, y delante del panel."""
+    desde, hasta = franja_libre(muestras_de_arriba(estante, arbol), alto)
+    return desde, min(hasta, fondo_util(estante, arbol, desde) - PASO_DEL_TANTEO)
+
+
 def muestras_de_arriba(estante, arbol):
     """Lo que hay libre encima de la chapa, cada `PASO_DEL_TANTEO` de adelante hacia atrás.
 
@@ -418,7 +445,7 @@ def acomodar_mueble(letra, envases, resumen):
         for clave, estante in propios.items():
             de_estas = [envases[t.producto] for t in ESTANTES[clave]]
             alto = max(e.alto for e in de_estas) - ROCE_DE_ARRIBA
-            desde, hasta = franja_libre(muestras_de_arriba(estante, arbol), alto)
+            desde, hasta = franja_del_estante(estante, arbol, alto)
             nuevo = fondo_nuevo(desde, de_estas, estante.fondo - hasta) + PASO_DEL_TANTEO
             deltas[clave] = achicar(estante, nuevo)
         islas = _islas(bm)
@@ -437,7 +464,7 @@ def acomodar_mueble(letra, envases, resumen):
         reparto = ESTANTES[clave]
         de_estas = [envases[t.producto] for t in reparto]
         alto = max(e.alto for e in de_estas) - ROCE_DE_ARRIBA
-        desde_v, hasta_v = franja_libre(muestras_de_arriba(estante, arbol), alto)
+        desde_v, hasta_v = franja_del_estante(estante, arbol, alto)
         if hasta_v - desde_v < fondo_del_estante(de_estas) - PASO_DEL_TANTEO:
             resumen["choques"].append(
                 f"{clave}: hay {hasta_v - desde_v:.3f} m de fondo libre para "

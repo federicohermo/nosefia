@@ -311,8 +311,10 @@ func test_el_frente_se_conserva_al_examinar_y_volver_a_agarrar() -> void:
 	jugador.set_physics_process(false)
 	var agarre: Agarre = almacen.get("_agarre")
 	# Hacia dónde está horneado cada modelo: es la cara del mueble hacia la que su tanda
-	# exhibe, medida del `.blend`, y está acá para que la mano tenga contra qué medirse. Lo que
-	# se afirma es que **la mano lo gira hasta la cámara**, sea cual sea esa cara.
+	# exhibe, medida del `.blend` con el eje del frente de cada producto —el de su etiqueta— y
+	# no con las filas de su tanda, que es de donde el puesto saca el giro. Está acá para que la
+	# mano tenga contra qué medirse. Lo que se afirma es que **la mano lo gira hasta la cámara**,
+	# sea cual sea esa cara. Medido el 2026-09-29 sobre el reparto de un lugar por producto.
 	#
 	# Los doce estuvieron mal hasta el 2026-09-19: los de +X figuraban en -X y los de +Z en -Z,
 	# o sea 180° girados. Con el giro de la mano también al revés, las dos mitades se cancelaban
@@ -324,23 +326,31 @@ func test_el_frente_se_conserva_al_examinar_y_volver_a_agarrar() -> void:
 		Vector3.LEFT,  # Zucarachas
 		Vector3.FORWARD,  # Laysntt
 		Vector3.BACK,  # Malbardo
-		Vector3.RIGHT,  # Prongles
+		Vector3.BACK,  # Prongles
 		Vector3.LEFT,  # Jorgillo
 		Vector3.RIGHT,  # Arvejas
 		Vector3.FORWARD,  # Chisitos
-		Vector3.RIGHT,  # Oremos
+		Vector3.LEFT,  # Oremos
 		Vector3.RIGHT,  # Pepitos
-		Vector3.LEFT,  # Saladik
+		Vector3.RIGHT,  # Saladik
 		Vector3.RIGHT,  # Uakas
 		Vector3.RIGHT,  # Coracola
-		Vector3.FORWARD,  # Frotlups
+		Vector3.LEFT,  # Frotlups
 		Vector3.RIGHT,  # Marolini
 		Vector3.RIGHT,  # Amargadito
 		Vector3.RIGHT,  # Cindolor
 		Vector3.RIGHT,  # Flinpuf
-		Vector3.RIGHT,  # Donsaturados
+		Vector3.LEFT,  # Donsaturados
 		Vector3.RIGHT,  # Petisas
-		Vector3.RIGHT  # Macumbas
+		Vector3.BACK,  # Macumbas
+		Vector3.RIGHT,  # Cosa de Maní
+		Vector3.BACK,  # Duronga
+		Vector3.RIGHT,  # Fernet God
+		Vector3.RIGHT,  # Mayonchis
+		Vector3.RIGHT,  # Oaaaa
+		Vector3.RIGHT,  # Terminator
+		Vector3.RIGHT,  # Marranos
+		Vector3.RIGHT  # Feel Ricky Fort
 	]
 	assert_int(frentes.size()).is_equal(Catalogo.todos().size())
 	for producto in Catalogo.todos():

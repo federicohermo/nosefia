@@ -111,6 +111,13 @@ FRIOS = ("CORACOLA", "FERNET_GOD", "TERMINATOR", "MAYONCHIS", "OAAAA")
 DE_CABECERA = ("MALBARDO", "DUREXTRA", "LAYSNTT", "CHISITOS", "DURONGA")
 
 
+#: Lo que no entra en dos filas en un estante de lado con panel detrás: su fondo pasa de la
+#: mitad de los 0,646 m que el panel deja libres. Va en el zócalo, que no tiene panel. Medido el
+#: 2026-09-29: Actroncito mide 0,395 de fondo y Cosa de Maní 0,340; arriba, el estante crecía
+#: hasta asomar 15 cm por delante de los laterales de la góndola.
+DEL_ZOCALO = ("ACTRONCITO", "COSA_DE_MANI")
+
+
 @dataclass(frozen=True)
 class Tanda:
     """Una tanda de un estante. `fija` es la que completa el estante repitiendo un producto: no
@@ -155,10 +162,10 @@ ESTANTES: dict[str, tuple[Tanda, ...]] = {
     "B.este.2": (_p("MAROLINI"), _f("UAKAS")),
     "B.este.1": (_p("FEEL_RICKY_FORT"), _f("CINDOLOR")),
     "B.este.0": (_f("DONSATURADOS"), _f("PETISAS")),
-    "B.oeste.3": (_p("ACTRONCITO"), _f("FLINPUF")),
-    "B.oeste.2": (_p("JORGILLO"), _f("ACTRONCITO")),
-    "B.oeste.1": (_p("DONSATURADOS"), _f("COSA_DE_MANI")),
-    "B.oeste.0": (_f("ARVEJAS"), _f("MARRANOS")),
+    "B.oeste.3": (_f("FLINPUF"), _f("SALADIK")),
+    "B.oeste.2": (_p("JORGILLO"), _f("FROTLUPS")),
+    "B.oeste.1": (_p("DONSATURADOS"), _f("PEPITOS")),
+    "B.oeste.0": (_p("ACTRONCITO"), _f("MARRANOS")),
     "B.sur.2": (_p("DURONGA"),),
     "B.sur.1": (_p("DUREXTRA"),),
     "B.sur.0": (_f("LAYSNTT"),),
@@ -167,13 +174,15 @@ ESTANTES: dict[str, tuple[Tanda, ...]] = {
     "B.norte.0": (_f("MACUMBAS"),),
     # Las dos góndolas contra la pared del oeste.
     "N.este.3": (_p("FLINPUF"), _f("AMARGADITO")),
-    "N.este.2": (_p("COSA_DE_MANI"), _f("JORGILLO")),
+    "N.este.2": (_f("CINDOLOR"), _f("JORGILLO")),
     "N.este.1": (_p("PETISAS"), _f("DONSATURADOS")),
-    "N.este.0": (_p("MARRANOS"), _f("ARVEJAS")),
+    # Marranos es una lata chata: en el estante de abajo el portaprecio le tapa la etiqueta —sube
+    # 6,5 cm y la lata mide 8,6, medido el 2026-09-29—, así que su tanda con casilleros va arriba.
+    "N.este.0": (_p("ARVEJAS"), _f("MARRANOS")),
     "S.este.3": (_p("AMARGADITO"), _f("CINDOLOR")),
     "S.este.2": (_p("CINDOLOR"), _f("AMARGADITO")),
-    "S.este.1": (_p("ARVEJAS"), _f("MARRANOS")),
-    "S.este.0": (_f("FLINPUF"), _f("COSA_DE_MANI")),
+    "S.este.1": (_p("MARRANOS"), _f("ARVEJAS")),
+    "S.este.0": (_p("COSA_DE_MANI"), _f("FLINPUF")),
     # Las heladeras. La de abajo de cada una y la de arriba de la segunda quedan vacías: lo frío
     # es menos que las bandejas, y va una sola vez.
     "H1.este.1": (_p("CORACOLA"),),

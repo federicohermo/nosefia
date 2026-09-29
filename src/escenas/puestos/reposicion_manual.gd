@@ -27,8 +27,8 @@ const HOLGURA_DE_LA_MIRA := 0.1
 ## local corta antes.
 const PISOS_DE_UNA_PILA := 8
 
-## Las exhibiciones que el jugador NO repone: un `MeshInstance3D` por bloque, en el orden de
-## `DisposicionDeLaGondola.guias`.
+## Las tandas fijas —lo que se repite para completar un estante, y que el jugador NO repone—:
+## un `MeshInstance3D` por bloque, en el orden de `DisposicionDeLaGondola.guias`.
 ##
 ## **Entra instanciada adentro de este puesto y no cableada por `@export`.** Apuntada desde
 ## `almacen.tscn` con un `NodePath` hacia otra rama llegaba en `null` con el `node_paths` bien
@@ -48,20 +48,10 @@ const GUIA := "Guia"
 ## Dónde va cada unidad de la góndola, y en qué orden.
 ##
 ## **Ningún apoyo está escrito acá.** Antes eran doce posiciones y doce direcciones a mano, una
-## fila recta por producto; ahora el modelo trae tandas de varias filas de fondo y por dos caras
-## del mueble, y una recta ya no las describe. Las mide el `.blend` y llegan en este recurso.
+## fila recta por producto; ahora cada producto tiene una tanda de dos filas en una de las
+## cuatro caras de un mueble, y una recta ya no las describe. Las mide el `.blend` y llegan en
+## este recurso.
 @export var disposicion: DisposicionDeLaGondola
-
-## Cuánto gira cada modelo para mostrarle el frente a la cámara, en grados.
-##
-## **No se elige: se deriva.** El modelo está horneado mirando hacia donde su tanda exhibe en la
-## góndola, y la mano tiene que girarlo hasta que ese frente apunte a +Z, que es de donde mira
-## la cámara. Con el frente en -X el giro es 90, en +X es 270, en +Z es 0 y en -Z es 180, y no
-## hay más casos porque un estante exhibe hacia una de las cuatro caras del mueble.
-##
-## Los doce estuvieron mal hasta el 2026-09-19 y el síntoma es mudo: el producto se agarra de
-## costado o dado vuelta, y no hay error ni test que lo diga. Se mira.
-@export var giros_del_frente: Array[float] = []
 
 var _unidades: Array[Node3D] = []
 var _zonas: Array[StaticBody3D] = []
@@ -736,8 +726,27 @@ func _posicion(id: Producto.Id, indice: int) -> Vector3:
 	return caja.get_center() - Vector3.UP * caja.size.y / 2.0
 
 
-## Desde qué copia arranca el tramo que el jugador repone: las de antes son la guía, y están
-## siempre a la vista.
+## Cuánto gira el modelo de un producto para mostrarle el frente a la cámara, en grados.
+##
+## **No se elige: se deriva de su tanda.** El modelo está horneado mirando hacia el pasillo de
+## su tanda, que es el lado de la fila de adelante. Medido el 2026-09-19: cuando estaba escrito
+## a mano estuvo mal en los doce productos, y el síntoma es mudo —se agarra de costado o dado
+## vuelta—.
+func _giro_del_frente(id: Producto.Id) -> float:
+	var frente := DisposicionDeLaGondola.frente(
+		disposicion.principales[id], disposicion.filas_de_adelante[id]
+	)
+	return giro_hacia_la_camara(global_basis * frente)
+
+
+## El giro alrededor de la vertical que lleva `frente` a +Z, que es de donde mira la cámara: con
+## el frente en -X es 90, en +X es 270 —o -90—, en +Z es 0 y en -Z es 180.
+static func giro_hacia_la_camara(frente: Vector3) -> float:
+	return rad_to_deg(atan2(-frente.x, frente.z))
+
+
+## Desde qué copia arranca el tramo que el jugador repone: las de antes —la fila de atrás
+## entera, y lo que sobra del cupo en la de adelante— están siempre a la vista.
 ##
 ## **El cupo sale del dominio y no de un número de acá.** El bloque tiene lo que el artista puso
 ## y el cupo dice cuántas de esas quedan vacías al abrir; escribir el corte en esta capa sería el
@@ -927,7 +936,7 @@ func retirar(id: Producto.Id) -> void:
 	# El frente de cada modelo se alinea antes de darle la inclinación de la mano.
 	unidad.orientacion_en_mano = (
 		Basis.from_euler(Vector3(deg_to_rad(-17), deg_to_rad(-20), 0))
-		* Basis(Vector3.UP, deg_to_rad(giros_del_frente[id]))
+		* Basis(Vector3.UP, deg_to_rad(_giro_del_frente(id)))
 	)
 	unidad.collision_layer = 1
 	# Choca también con el contorno de los muebles: caída al pie de una góndola, la unidad rodaba

@@ -1,9 +1,10 @@
 ## Dónde va cada unidad de la góndola, medida del modelo y no escrita a mano.
 ##
 ## **Es dato, no regla.** Sale de recorrer el `.blend`: cada exhibición de un producto —una
-## tanda contigua de copias sobre un estante— llega acá como el `buffer` que un `MultiMesh`
-## espera, con las copias en el orden en que están puestas. Por eso vive en `escenas/` y no en
-## `dominio/`: mover una caja en Blender la cambia, y eso es una medición y no una decisión.
+## tanda de copias sobre un estante— llega acá como el `buffer` que un `MultiMesh` espera, con
+## las copias en el orden en que están puestas. Por eso vive en `escenas/` y no en `dominio/`:
+## mover una caja en Blender la cambia, y eso es una medición y no una decisión. La escribe
+## `.claude/scripts/blender/disponer.py`, y a mano no se toca.
 ##
 ## **Los `Array` de Blender se apagan al exportar**, así que el `.glb` trae **una unidad** de
 ## cada producto y es este recurso el que dice cuántas hay y dónde. Sin él la góndola se ve
@@ -11,15 +12,17 @@
 ##
 ## Hay dos listas porque el juego las trata distinto:
 ##
-## - `principales`, una por producto y **en el orden de `Producto.Id`**, es la exhibición que el
-##   jugador repone. Sus copias van con **la guía primero y el tramo reponible al final**, del
-##   fondo hacia el pasillo: `visible_instance_count` corta por el final, así que vender apaga
-##   la copia más visible y reponer prende la siguiente hacia adelante.
-## - `guias` son las otras caras donde el mismo producto se exhibe. No cambian nunca: están
-##   enteras desde que abre el local, y muestran dónde va cada cosa.
+## - `principales`, una por producto y **en el orden de `Producto.Id`**, es la única tanda con
+##   casilleros de ese producto. Tiene dos filas del mismo largo, y sus copias van con **la
+##   fila de atrás primero y la de adelante al final**, cada una de izquierda a derecha:
+##   `visible_instance_count` corta por el final, así que los casilleros son las últimas copias
+##   y caen todos en la fila de adelante, que es la que da al pasillo.
+## - `guias` son las tandas fijas: lo que se repite para completar un estante. No cambian
+##   nunca, y están enteras desde que abre el local.
 ##
-## **Cuántas del final son reponibles no está acá**: es el `umbral` del `Catalogo`, y el puesto
-## lo resta del total. Copiarlo acá sería el mismo número escrito en dos lugares.
+## **Cuántas del final son casilleros no está acá**: es el cupo del `Estante`, y el puesto lo
+## resta del total. Lo que está es cuántas forman la fila de adelante, que es el lugar que el
+## modelo le da al cupo.
 class_name DisposicionDeLaGondola
 extends Resource
 
@@ -32,6 +35,10 @@ const FLOTANTES_POR_COPIA := 12
 
 ## Las exhibiciones que no cambian, en el orden de los hijos de `guia_del_estante.tscn`.
 @export var guias: Array[PackedFloat32Array] = []
+
+## Cuántas copias del final de cada bloque principal forman su fila de adelante, en el orden
+## de `Producto.Id`. La de atrás tiene las mismas: son las primeras del bloque.
+@export var filas_de_adelante: PackedInt32Array = PackedInt32Array()
 
 
 ## Cuántas copias trae un bloque.
@@ -57,3 +64,25 @@ static func copia(bloque: PackedFloat32Array, indice: int) -> Transform3D:
 		Vector3(bloque[desde + 2], bloque[desde + 6], bloque[desde + 10]),
 		Vector3(bloque[desde + 3], bloque[desde + 7], bloque[desde + 11])
 	)
+
+
+## Hacia dónde mira una tanda: de su fila de atrás a la de adelante, en horizontal. Es el lado
+## del pasillo, y hacia ahí mira también cada unidad, porque el modelo la pone de frente.
+##
+## Un bloque sin las dos filas no tiene frente, y contesta el vector nulo en vez de inventar
+## una dirección: quien lo use para girar algo lo deja como estaba.
+static func frente(bloque: PackedFloat32Array, fila_de_adelante: int) -> Vector3:
+	var total := copias(bloque)
+	if fila_de_adelante <= 0 or fila_de_adelante >= total:
+		return Vector3.ZERO
+	var atras := Vector3.ZERO
+	var adelante := Vector3.ZERO
+	for indice in total:
+		var origen := copia(bloque, indice).origin
+		if indice < total - fila_de_adelante:
+			atras += origen / (total - fila_de_adelante)
+		else:
+			adelante += origen / fila_de_adelante
+	var direccion := adelante - atras
+	direccion.y = 0.0
+	return direccion.normalized()
