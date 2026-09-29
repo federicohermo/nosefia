@@ -15,7 +15,8 @@
 ## a palabras en dos archivos que no llevan test obligatorio.
 ##
 ## **El subtítulo llega escrito.** Lo que dice una caja examinada lo arma `dominio/`, que es donde
-## tiene test; acá se pinta y se vacía. Va con el tema de Manada y sin fuente ni color propios.
+## tiene test; acá se pinta y se vacía. Va con el tema de Manada y sin fuente ni color propios: el
+## contorno que lo deja leer sobre el blanco del estante es de su variación en el tema.
 class_name Hud
 extends CanvasLayer
 

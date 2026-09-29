@@ -41,6 +41,9 @@ const RASTROS_DEL_VEREDICTO := ["mostrar_veredicto", "consecuencia_de"]
 ## El tema de la UI de Manada, el mismo que aplica la computadora.
 const TEMA := "res://assets/ui/manada/tema.tres"
 
+## La variación del tema que lleva el subtítulo: la del `Label`, con contorno.
+const VARIACION_DEL_SUBTITULO := "Subtitulo"
+
 ## Lo que delataría el texto de la caja armado acá: sus palabras, su cuenta y quien la lleva.
 const RASTROS_DEL_TEXTO_DE_LA_CAJA := [
 	"Una caja con", "Entra", "ContenidoDeLaCaja", "UNIDADES_POR_CAJA"
@@ -155,6 +158,41 @@ func test_el_subtitulo_usa_el_tema_de_manada_sin_fuente_ni_color_propios() -> vo
 	)
 	# No retiene al jugador: el mouse lo atraviesa y el examen se cierra con la E, como siempre.
 	assert_int(subtitulo.mouse_filter).is_equal(Control.MOUSE_FILTER_IGNORE)
+
+
+func test_el_subtitulo_se_lee_sobre_el_blanco_con_el_contorno_de_su_variacion() -> void:
+	# Sobre el blanco del estante, el texto claro del tema no se leía. El contorno vive en una
+	# variación del tema y no en el `Label`: el subtítulo sigue sin fuente ni color propios, y el
+	# `Label` de los demás textos no cambia.
+	var hud: Hud = auto_free(load(ESCENA_DEL_HUD).instantiate())
+	add_child(hud)
+	var subtitulo: Label = hud.get_node("Subtitulo")
+	var tema: Theme = load(TEMA)
+	assert_str(subtitulo.theme_type_variation).is_equal(VARIACION_DEL_SUBTITULO)
+	assert_str(tema.get_type_variation_base(VARIACION_DEL_SUBTITULO)).is_equal("Label")
+	# El contorno es el color más oscuro de la paleta, el fondo de los paneles, y opaco.
+	var contorno := tema.get_color("font_outline_color", VARIACION_DEL_SUBTITULO)
+	var fondo := (tema.get_stylebox("panel", "PanelContainer") as StyleBoxFlat).bg_color
+	assert_that(Color(contorno, 1.0)).is_equal(Color(fondo, 1.0))
+	assert_float(contorno.a).is_equal(1.0)
+	assert_int(tema.get_constant("outline_size", VARIACION_DEL_SUBTITULO)).is_greater(0)
+	assert_that(subtitulo.get_theme_color("font_outline_color")).is_equal(contorno)
+	assert_int(subtitulo.get_theme_constant("outline_size")).is_equal(
+		tema.get_constant("outline_size", VARIACION_DEL_SUBTITULO)
+	)
+	# Contra un `Label` del mismo tema sin la variación: la misma fuente, el mismo color y el
+	# mismo tamaño, y él sin contorno.
+	var base: Label = auto_free(Label.new())
+	base.theme = tema
+	add_child(base)
+	assert_object(subtitulo.get_theme_font("font")).is_same(base.get_theme_font("font"))
+	assert_that(subtitulo.get_theme_color("font_color")).is_equal(
+		base.get_theme_color("font_color")
+	)
+	assert_int(subtitulo.get_theme_font_size("font_size")).is_equal(
+		base.get_theme_font_size("font_size")
+	)
+	assert_int(base.get_theme_constant("outline_size")).is_zero()
 
 
 func test_el_hud_pinta_el_subtitulo_que_le_llega_y_lo_vacia() -> void:

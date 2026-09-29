@@ -316,3 +316,6 @@ BarraDeCarga/styles/background = SubResource("barra_fondo")
 BarraDeCarga/styles/fill = SubResource("barra_relleno")
 TextoDeCarga/base_type = &"Label"
 TextoDeCarga/font_sizes/font_size = 36
+Subtitulo/base_type = &"Label"
+Subtitulo/colors/font_outline_color = Color(0.01, 0.04, 0.05, 1)
+Subtitulo/constants/outline_size = 8

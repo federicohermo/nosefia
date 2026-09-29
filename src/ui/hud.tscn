@@ -45,6 +45,7 @@ offset_bottom = -48.0
 grow_horizontal = 2
 grow_vertical = 0
 theme = ExtResource("2_tema")
+theme_type_variation = &"Subtitulo"
 horizontal_alignment = 1
 vertical_alignment = 2
 autowrap_mode = 3
