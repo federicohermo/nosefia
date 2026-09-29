@@ -84,3 +84,9 @@ def es_un_array(nombre: str) -> bool:
 #: con un `MultiMesh`, y horneadas en el `.glb` cada producto se vería dos veces. Queda visible
 #: en Blender —el artista acomoda las copias ahí— y la excluye el exportador.
 COLECCION_DE_GUIA = "guia"
+
+#: El lado más grande que puede tener una textura del modelo, en píxeles. Ningún grupo lo pasa
+#: al exportar, y Godot importa cada textura que extrae del `.glb` con este límite
+#: (`process/size_limit`): son dos redes, y una textura que se cuele por la primera no llega a
+#: la placa de video más grande que esto.
+LADO_TOPE = 1024
