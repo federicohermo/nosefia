@@ -12,9 +12,6 @@
 ##
 ## Vive al lado de `extraer_mallas.gd`, que escribe las mallas que dibuja: los dos sacan recursos
 ## del modelo, como `importar_modelo.gd`.
-##
-## El frente es el de la tanda, que es el del envase salvo en Actroncito: va de costado, y su
-## miniatura saldría del lateral de la caja. La que muestra la planilla es de antes del giro.
 extends SceneTree
 
 const ExtraerMallas := preload("res://assets/models/extraer_mallas.gd")
