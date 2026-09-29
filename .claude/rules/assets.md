@@ -34,3 +34,8 @@ paths:
 6. **Y después va `exportar_modelo.py`.** El par `.blend` ↔ `.glb` se verifica por hash. Un
    `.blend` que cambió sin reexportar es rojo, aunque el cambio no toque una sola malla. El
    exportador recodifica las imágenes: reapuntar una textura cambia el `.glb`.
+
+7. **El lado con el que viaja cada textura lo decide la carpeta de `source/` de donde sale.**
+   Los lados de cada grupo y la tabla de carpetas viven en `.claude/scripts/lib/blender.py`.
+   Una etiqueta de producto guardada en otra carpeta viaja con el lado de un mueble, y ningún
+   test lo ve. Por eso las cinco etiquetas de `textures/props/` van nombradas en esa tabla.

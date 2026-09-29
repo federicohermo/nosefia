@@ -18,12 +18,16 @@ Una receta escrita es una receta que alguien va a seguir de memoria. Acá es un 
 1. Resuelve Blender. La serie está pinneada: **dos versiones del exportador devuelven datos de
    vértice distintos para la misma malla**, así que exportar con otra deja un diff binario que no
    corresponde a ningún cambio del modelo.
-2. Corre `blender/exportar.py` adentro de Blender, que apaga los `Array` y exporta.
-3. Escribe al lado del `.glb` la huella del `.blend` del que salió. Va en el mismo commit que el
+2. Corre `blender/exportar.py` adentro de Blender, que apaga los `Array`, achica cada textura
+   al lado de su grupo y exporta.
+3. **Recomprime cada PNG del `.glb` con el nivel más alto de zlib.** Blender los escribe con una
+   compresión floja que no deja cambiar, y el mismo flujo, sin tocar un píxel, pesa entre un 10
+   y un 25 % menos. Lo hace `recomprimir_las_imagenes()` de `lib/blender.py`.
+4. Escribe al lado del `.glb` la huella del `.blend` del que salió. Va en el mismo commit que el
    `.glb`. `test_modelo_actualizado.py` la compara con el `.blend` del árbol. Es del `.blend` y
    no del `.glb`: dos exportaciones del mismo `.blend` no dan los mismos bytes.
-4. **Borra la caché del `.glb` y reimporta con Godot.** Sin esto, los tests comparan contra la
-   malla anterior y pasan.
+5. **Borra la caché del `.glb` y reimporta con Godot.** Sin esto, los tests comparan contra la
+   malla anterior y pasan. Godot vuelve a extraer al lado del `.glb` cada textura que cambió.
 
 ## Lo que NO hace
 
@@ -45,7 +49,7 @@ from lib.consola import configurar  # noqa: E402
 
 configurar()
 
-from lib.blender import como_declararlo, resolver  # noqa: E402
+from lib.blender import como_declararlo, recomprimir_las_imagenes, resolver  # noqa: E402
 from lib.godot import como_declararlo as como_declarar_godot  # noqa: E402
 from lib.godot import resolver as resolver_godot  # noqa: E402
 from lib.repo import RAIZ  # noqa: E402
@@ -109,8 +113,11 @@ def exportar() -> int:
         print(proceso.stdout + proceso.stderr, file=sys.stderr)
         return proceso.returncode
     for linea in proceso.stdout.splitlines():
-        if linea.startswith(("modificadores", "exportado")):
+        if linea.startswith(("modificadores", "texturas", "exportado")):
             print(f"  {linea}")
+    antes = DESTINO.stat().st_size
+    DESTINO.write_bytes(recomprimir_las_imagenes(DESTINO.read_bytes()))
+    print(f"  imágenes recomprimidas: {antes:,} -> {DESTINO.stat().st_size:,} bytes")
     escribir_huella(FUENTE, HUELLA)
     print(f"  huella: {HUELLA}")
     return 0
