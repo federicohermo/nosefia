@@ -10,8 +10,8 @@
 ## planilla carga. **Necesita pantalla**: con `--headless` no se dibuja nada, y en una máquina sin
 ## monitor va con `xvfb-run -a` delante. Después va `--import`, para que Godot tome las imágenes.
 ##
-## Vive al lado de `extraer_mallas.gd`, que escribe las mallas que dibuja, y no en
-## `assets/ui/manada/`: es de Godot y no de la planilla, como `importar_modelo.gd`.
+## Vive al lado de `extraer_mallas.gd`, que escribe las mallas que dibuja: los dos sacan recursos
+## del modelo, como `importar_modelo.gd`.
 ##
 ## El frente es el de la tanda, que es el del envase salvo en Actroncito: va de costado, y su
 ## miniatura saldría del lateral de la caja. La que muestra la planilla es de antes del giro.
