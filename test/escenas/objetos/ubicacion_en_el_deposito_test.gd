@@ -204,9 +204,10 @@ func test_abrir_la_jornada_devuelve_cada_caja_a_su_lugar() -> void:
 		giros.append(caja.global_basis)
 	var mundo: Node3D = cajas[0].get_parent()
 	# Una movida a mano y otra en la mano: la noche termina tantas veces cargando una caja como
-	# habiéndola dejado tirada, y las dos tienen que volver al depósito.
+	# habiéndola dejado tirada, y las dos tienen que volver al depósito. La movida queda además
+	# girada: el jugador suelta cada caja mirando para cualquier lado.
 	for caja: Node3D in cajas:
-		caja.global_position = LEJOS_DE_SU_LUGAR
+		caja.global_transform = Transform3D(Basis(Vector3.UP, 0.5), LEJOS_DE_SU_LUGAR)
 	var jugador: Node3D = almacen.get("_jugador")
 	var en_brazos: Node3D = cajas[Producto.Id.LAYSNTT]
 	_agarrar(jugador, en_brazos)
