@@ -65,7 +65,7 @@ func test_la_camara_mira_el_frente_y_ve_el_envase_entero() -> void:
 ## Lo que se exhibe en una rampa sale derecho, y lo que está en un estante plano no se gira.
 ##
 ## La normal sale de las dos filas del estante y no del giro de la unidad, que depende de cómo
-## está puesto cada envase: Actroncito va de costado.
+## está modelado cada envase: el eje que queda arriba no es el mismo en todos.
 func test_la_miniatura_endereza_la_rampa_y_deja_quieto_lo_que_esta_derecho() -> void:
 	var en_rampa := 0
 	for producto in Catalogo.todos():
