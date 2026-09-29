@@ -11,6 +11,9 @@
 class_name Catalogo
 extends RefCounted
 
+## Los dos tamaños de caja que guarda el depósito.
+enum TamanoDeCaja { CHICA, GRANDE }
+
 ## Cada `Producto.Id` con su nombre, su precio en pesos enteros y su umbral de reposición.
 ##
 ## **Los nombres son los del modelo 3D**, y no una etiqueta genérica: cada fila tiene detrás
@@ -45,10 +48,22 @@ const FILAS := {
 	Producto.Id.DONSATURADOS: ["Donsaturados", 1150, 8],
 	Producto.Id.PETISAS: ["Petisas", 980, 8],
 	Producto.Id.MACUMBAS: ["Macumbas", 1250, 8],
+	Producto.Id.COSA_DE_MANI: ["Cosa de Maní", 700, 8],
+	Producto.Id.DURONGA: ["Duronga", 1300, 8],
+	Producto.Id.FERNET_GOD: ["Fernet God", 4500, 8],
+	Producto.Id.MAYONCHIS: ["Mayonchis", 1100, 8],
+	Producto.Id.OAAAA: ["Oaaaa", 600, 8],
+	Producto.Id.TERMINATOR: ["Terminator", 2800, 8],
+	Producto.Id.MARRANOS: ["Marranos", 1400, 8],
+	Producto.Id.FEEL_RICKY_FORT: ["Feel Ricky Fort", 800, 8],
 }
 
 ## La sonoridad de cada producto, de la columna «Familia sonora» de la ficha. Va aparte de
 ## `FILAS` porque `Producto` no la lleva: sólo la usa el audio.
+##
+## **Dos familias de la ficha no existen acá**: la botella de vidrio suena como la plástica y la
+## caja de cereal como la cajita, que son las más parecidas. Cuáles suenan de verdad es
+## OQ-STK-004.
 const SONORIDADES := {
 	Producto.Id.ACTRONCITO: EntradaSonora.Sonoridad.CAJITA,
 	Producto.Id.DUREXTRA: EntradaSonora.Sonoridad.CAJITA,
@@ -73,6 +88,53 @@ const SONORIDADES := {
 	Producto.Id.DONSATURADOS: EntradaSonora.Sonoridad.ENVOLTORIO_PLASTICO,
 	Producto.Id.PETISAS: EntradaSonora.Sonoridad.ENVOLTORIO_PLASTICO,
 	Producto.Id.MACUMBAS: EntradaSonora.Sonoridad.ENVOLTORIO_PLASTICO,
+	Producto.Id.COSA_DE_MANI: EntradaSonora.Sonoridad.ENVOLTORIO_PLASTICO,
+	Producto.Id.DURONGA: EntradaSonora.Sonoridad.CAJITA,
+	Producto.Id.FERNET_GOD: EntradaSonora.Sonoridad.BOTELLA_PLASTICA,
+	Producto.Id.MAYONCHIS: EntradaSonora.Sonoridad.ENVOLTORIO_PLASTICO,
+	Producto.Id.OAAAA: EntradaSonora.Sonoridad.CAJA,
+	Producto.Id.TERMINATOR: EntradaSonora.Sonoridad.CAJA,
+	Producto.Id.MARRANOS: EntradaSonora.Sonoridad.LATA,
+	Producto.Id.FEEL_RICKY_FORT: EntradaSonora.Sonoridad.CAJITA,
+}
+
+## El tamaño de la caja del depósito de cada producto, de la columna «Caja» de la ficha.
+##
+## **Es un dato y no una medida de la escena.** No sale del volumen de la unidad: Actroncito es un
+## envase grande y va en caja chica, y Zucarachas al revés. Cuánto mide cada tamaño es de la
+## escena de la caja; qué tamaño lleva cada producto, de acá.
+const TAMANOS_DE_CAJA := {
+	Producto.Id.ACTRONCITO: TamanoDeCaja.CHICA,
+	Producto.Id.DUREXTRA: TamanoDeCaja.CHICA,
+	Producto.Id.BURBALOO: TamanoDeCaja.GRANDE,
+	Producto.Id.ZUCARACHAS: TamanoDeCaja.GRANDE,
+	Producto.Id.LAYSNTT: TamanoDeCaja.GRANDE,
+	Producto.Id.MALBARDO: TamanoDeCaja.CHICA,
+	Producto.Id.PRONGLES: TamanoDeCaja.GRANDE,
+	Producto.Id.JORGILLO: TamanoDeCaja.CHICA,
+	Producto.Id.ARVEJAS: TamanoDeCaja.CHICA,
+	Producto.Id.CHISITOS: TamanoDeCaja.GRANDE,
+	Producto.Id.OREMOS: TamanoDeCaja.GRANDE,
+	Producto.Id.PEPITOS: TamanoDeCaja.GRANDE,
+	Producto.Id.SALADIK: TamanoDeCaja.GRANDE,
+	Producto.Id.UAKAS: TamanoDeCaja.GRANDE,
+	Producto.Id.CORACOLA: TamanoDeCaja.GRANDE,
+	Producto.Id.FROTLUPS: TamanoDeCaja.GRANDE,
+	Producto.Id.MAROLINI: TamanoDeCaja.GRANDE,
+	Producto.Id.AMARGADITO: TamanoDeCaja.GRANDE,
+	Producto.Id.CINDOLOR: TamanoDeCaja.GRANDE,
+	Producto.Id.FLINPUF: TamanoDeCaja.GRANDE,
+	Producto.Id.DONSATURADOS: TamanoDeCaja.GRANDE,
+	Producto.Id.PETISAS: TamanoDeCaja.GRANDE,
+	Producto.Id.MACUMBAS: TamanoDeCaja.GRANDE,
+	Producto.Id.COSA_DE_MANI: TamanoDeCaja.CHICA,
+	Producto.Id.DURONGA: TamanoDeCaja.CHICA,
+	Producto.Id.FERNET_GOD: TamanoDeCaja.GRANDE,
+	Producto.Id.MAYONCHIS: TamanoDeCaja.GRANDE,
+	Producto.Id.OAAAA: TamanoDeCaja.CHICA,
+	Producto.Id.TERMINATOR: TamanoDeCaja.GRANDE,
+	Producto.Id.MARRANOS: TamanoDeCaja.GRANDE,
+	Producto.Id.FEEL_RICKY_FORT: TamanoDeCaja.GRANDE,
 }
 
 
@@ -99,6 +161,11 @@ static func de(id: Producto.Id) -> Producto:
 ## La sonoridad de ese producto, o `NINGUNA` si no tiene fila.
 static func sonoridad_de(id: Producto.Id) -> EntradaSonora.Sonoridad:
 	return SONORIDADES.get(id, EntradaSonora.Sonoridad.NINGUNA)
+
+
+## El tamaño de la caja del depósito de ese producto.
+static func caja_de(id: Producto.Id) -> TamanoDeCaja:
+	return TAMANOS_DE_CAJA.get(id, TamanoDeCaja.GRANDE)
 
 
 ## En el orden del enum, que es el orden en que el jugador los va a ver listados.

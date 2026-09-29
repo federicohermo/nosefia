@@ -13,6 +13,9 @@ extends RefCounted
 ## construye un producto nuevo en cada llamada, así que dos con el mismo `id` son objetos
 ## distintos y un
 ## diccionario indexado por instancia contesta ausente donde tenía que haber un número.
+##
+## **Un producto nuevo va al final.** Una partida guardada nombra al producto por su número:
+## insertarlo en el medio le cambia el nombre a todos los que siguen.
 enum Id {
 	ACTRONCITO,
 	DUREXTRA,
@@ -37,6 +40,14 @@ enum Id {
 	DONSATURADOS,
 	PETISAS,
 	MACUMBAS,
+	COSA_DE_MANI,
+	DURONGA,
+	FERNET_GOD,
+	MAYONCHIS,
+	OAAAA,
+	TERMINATOR,
+	MARRANOS,
+	FEEL_RICKY_FORT,
 }
 
 var id: Id
