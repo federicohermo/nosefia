@@ -63,6 +63,10 @@ cada una. La tabla de abajo la copia, y `test_mcp.py` da rojo si se separan.
 - **Las dos de assets miran también las texturas embebidas en un `.glb`.** El nombre vive en su
   chunk JSON, y Godot las extrae a `<stem>_<name>`. No hay `res://` ni `uid://`. Sin esa forma,
   salen huérfanas texturas que no lo son, y borrarlas rompe la reimportación.
+- **Un `.res` comprimido no se mira adentro, y las dos de assets lo dicen.** Godot lo guarda con
+  la cabecera `RSCC` y zstd, que la biblioteca estándar no abre. Hoy son 73 de los 74 `.res`, los
+  de cada producto y cada guía de la góndola. Lo que nombran no sale en ninguna forma: sale
+  aparte, como binario sin mirar, y no cuenta como referencia ni como ausencia.
 - **`assets_sin_referencia` sigue siendo una sospecha.** Cubre las formas que este repo usa hoy.
   El que decide es el rojo de una corrida de `--import`.
 

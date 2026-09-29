@@ -259,6 +259,36 @@ class LosAssets(unittest.TestCase):
         )
         self.assertEqual(formas["embebido en un `.glb`"], ["assets/models/M.glb"])
 
+    def test_un_res_comprimido_no_se_da_por_mirado(self):
+        # Godot guarda un `.res` comprimido con la cabecera `RSCC` y zstd adentro, y la
+        # biblioteca estándar no lo abre: buscar el nombre en esos bytes no encuentra nada aunque
+        # esté. Medido el 2026-09-29: 73 de los 74 `.res` de `assets/` son así, y el índice
+        # contestaba «(nadie)» para texturas que usan todos ellos.
+        crudo_comprimido = b"RSCC\x02\x00\x00\x00" + b"\x00" * 16
+        formas = herramientas._referencias_a(
+            "assets/models/M_cora cola.png",
+            texto={},
+            crudos={"assets/models/producto.res": crudo_comprimido},
+        )
+        self.assertEqual(formas["adentro de un binario"], [])
+        self.assertEqual(
+            formas[herramientas.SIN_MIRAR_ADENTRO], ["assets/models/producto.res"]
+        )
+
+    def test_lo_que_no_se_pudo_mirar_no_cuenta_como_referencia(self):
+        formas = {herramientas.SIN_MIRAR_ADENTRO: ["assets/models/producto.res"], "por su ruta": []}
+        self.assertEqual(herramientas._referencias_mirando(formas), 0)
+
+    def test_un_asset_sin_referencias_miradas_no_se_declara_huerfano_si_hay_comprimidos(self):
+        comprimidos = [
+            p
+            for p in (herramientas.RAIZ / "assets").rglob("*.res")
+            if p.read_bytes()[:4] == b"RSCC"
+        ]
+        if not comprimidos:
+            self.skipTest("no hay `.res` comprimidos")
+        self.assertIn("comprimido", herramientas.assets_sin_referencia())
+
     def test_el_arte_de_origen_no_se_pregunta(self):
         fuente = sorted(
             p.relative_to(herramientas.RAIZ).as_posix()
