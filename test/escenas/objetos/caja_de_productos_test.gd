@@ -228,8 +228,8 @@ func test_la_etiqueta_de_cada_producto_es_una_linea_del_script() -> void:
 ## compila en la pantalla de carga.
 ##
 ## **El lado tope es el único parámetro que cambia**, y no pasa el de la genérica. Las etiquetas
-## viajan a 512 como las de la góndola: medido, a 1024 el `.pck` de la web crecía 12,7 MiB más, y
-## la caja en la mano se veía igual.
+## viajan a 512 como las de la góndola. Medido: a 1024 el `.pck` de la web crecía 12,7 MiB, a 512
+## crece 3,2, y la caja en la mano se ve igual.
 ##
 ## Y no va como `material_override`: el calentamiento de shaders dibuja uno por cuadro, y con
 ## las 31 cajas pasaba de 129 cuadros a 159 sin compilar nada nuevo.
