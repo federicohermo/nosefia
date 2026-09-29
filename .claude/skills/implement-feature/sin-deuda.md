@@ -153,6 +153,12 @@ entregable más caro y el único que hace que el hallazgo no vuelva.
 | un worktree que quedó abierto y el limpiador dijo que no | `implement-batch` — salía de `git worktree list`, que no ve al que git ya soltó |
 | un número que el contrato midió bien y que **envejeció** | `implement-batch` — se leyó la base que el issue declara en vez de medir hoy |
 | **varios carriles pisando el mismo comando que el skill les dio escrito** | `implement-batch` — un comando se vuelve a correr antes de repartirlo, no se copia |
+| una lista que reparte un conjunto y **no suma el total** | `to-issue` — los grupos se cuentan contra el catálogo antes de escribirlos |
+| un borde que describe un gesto que el juego no tiene, o que la regla de otra capacidad prohíbe | `to-issue` — el `rg` de los límites miró los criterios `ratified` y no los bordes ni los specs `draft` |
+| un recurso generado **cuyo generador no está en el repo** | `implement-feature` — quien lo generó no commiteó la herramienta; y `to-issue`, que no la puso en «Se escribe» |
+| un issue de un lote que lee un dato que ningún otro entrega, o que reescribe una regla que otro del lote acaba de escribir | `to-issue` — los borradores de «Varios de una» se cruzaron por archivo y no por lo que cada uno da por hecho |
+| un issue abierto **fuera** del lote que parte de una regla que el lote cambia | `implement-batch` — el checker cruzado miró sólo adentro del lote |
+| un preámbulo escrito para **la máquina de otro** | `implement-batch` — el entorno de los carriles se mide antes de repartir, no se copia del skill |
 
 **Si el problema no entra en ninguna fila, agregá la fila.** Esa tabla es el registro de lo que
 esta doctrina ya aprendió, y está incompleta a propósito.

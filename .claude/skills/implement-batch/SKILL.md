@@ -57,6 +57,12 @@ Antes de lanzar nada, cruzá los issues del lote entre sí y **decí qué encont
 - Dos issues que entregan el **mismo criterio**. Uno de los dos sobra.
 - Un criterio que **ningún issue del lote entrega** y que el lote da por hecho.
 - Dos issues que contradicen la misma regla del contrato.
+- **Un issue abierto fuera del lote que parte de una regla que el lote cambia.** No se reparte,
+  pero queda mintiendo el día que el lote aterrice. Se buscan por el spec que tocan, no por el
+  número. En el lote del 2026-09-29, #176 —abierto— contaba un depósito de 10 que #263 pasaba a
+  8, y el usuario lo sumó al lote.
+- **Un borde que describe un gesto que el juego no tiene.** Se implementa inventando la regla que
+  falta. En el mismo lote, dos issues vendían «de la góndola» contra `BR-CTR-014`.
 
 Lo que aparezca se corrige ahora —el issue con `gh issue edit`, el contrato con `to-spec`— y no
 se reparte roto.
@@ -70,6 +76,21 @@ Cada agente recibe, literal:
 - **El preámbulo destilado una vez para todo el lote**: las cuatro capas y su dirección, las
   convenciones verificables con quién verifica cada una, y las trampas de este repo. Es el ahorro
   propio del batch — sin esto, N carriles lo re-derivan N veces desde frío.
+- **Y el preámbulo se mide en la máquina donde corren los carriles.** Los comandos de este skill
+  son los de la máquina Windows del equipo. En un contenedor Linux de la nube no hay PowerShell,
+  ni Godot, ni Blender, y `download.blender.org` puede estar bloqueado. Lo que anduvo el
+  2026-09-29, medido antes de repartir:
+  - Godot del zip de la release, con un enlace en el PATH: `lib/godot.py` lo encuentra ahí.
+  - Blender como `bpy` de PyPI, de la serie que pinnea `lib/blender.py`, envuelto en un script
+    que emula `blender <x.blend> --background --python <s.py> -- <args>`, y declarado en
+    `BLENDER_BIN` adelante de cada comando. Reexportó el `.glb` con el mismo tamaño en bytes.
+  - Las capturas, con `xvfb-run` y `--rendering-driver opengl3` (llvmpipe).
+  - El horneado, con `xvfb-run` y lavapipe: `VK_ICD_FILENAMES=/usr/share/vulkan/icd.d/lvp_icd.json`.
+  - El conteo crudo sale sin volver a correr: `grep -c "<testsuite "` sobre el `results.xml` del
+    último `reports/report_N/`.
+  - **El `-rd` de gdUnit4 es relativo al proyecto aunque empiece con `/`**: `-rd /tmp/x` crea
+    `tmp/x` adentro del repo.
+  - Las variables de entorno no sobreviven entre llamadas a Bash: van adelante del comando.
 - **La rama se llama `<tipo>/<issue>-<kebab>`, con el tipo del issue, y eso no es decorativo.**
   `gate_de_rama.py` corre como hook y **sólo deja escribir en `src/` desde `feature/`, `bugfix/`,
   `refactor/` e `improvement/`**. El síntoma es un `Edit` denegado, que se lee como un

@@ -96,6 +96,9 @@ Lo que más se rompe:
   pausa: el criterio salía verde sin medir el agua.
 - **Una tabla de ejemplos cierra consigo misma.** Cada fila se recalcula desde la regla antes de
   escribirla, y una hora de cierre es apertura más duración, no un número copiado de la ficha.
+- **Una lista que reparte un conjunto suma el total.** Si el issue divide los productos en dos
+  grupos, los dos grupos se cuentan contra el catálogo. En el #264, las cajas con textura y sin
+  textura eran 19 y 11 de 31: Malbardo no estaba en ninguna.
 - **Si el issue deja renombrar algo, el `rg` de los límites se corre también sobre los
   comentarios.** Un archivo en «Sólo lectura» que nombra por ruta lo que se renombra queda
   mintiendo, y el implementador no lo puede tocar.
@@ -109,6 +112,13 @@ Lo que más se rompe:
 - **Un criterio del issue no contradice un criterio `ratified` de otra capacidad.** El `rg` de
   los límites busca la regla también en los specs vecinos. En el #179 la puerta «no se abre»
   chocaba con `AC-PLY-040`, y la puerta ya existía en el modelo.
+- **Un borde tampoco, y vale igual contra un spec `draft`.** Un borde que describe un gesto que
+  el juego no tiene se implementa inventando la regla que falta. En el #263, «vender una unidad
+  de la góndola» chocaba con `BR-CTR-014` —la venta sale del depósito—, y «una partida guardada
+  a mitad de noche» describía un guardado que no existe (`AC-SAV-020`).
+- **Si el issue cambia un recurso generado, lo que lo genera está en el repo o entra en «Se
+  escribe».** Un recurso sin su generador sólo se edita a mano. En el #262, la disposición de la
+  góndola salía de un acomodador que vivió en el scratch de una sesión y nunca se commiteó.
 - **Un dato nuevo en una clase base entra con sus herederas.** Si cada una lo declara, cada una
   va en «Se escribe». En el #197 faltó `unidad_de_producto.gd`, que hereda de
   `ObjetoDelAlmacen`.
@@ -158,7 +168,12 @@ Con varios issues de una, antes de mostrar nada:
    resuelve el merge.
 2. **Dos issues que se bloquean entre sí son un solo cambio mal cortado.** Cortalo de nuevo antes
    de publicar.
-3. **Mostrá todos los borradores enteros, cada uno con `revisar` en 0, y esperá un solo sí
+3. **Cruzá también lo que cada uno da por hecho.** Un dato que un issue lee lo entrega él o uno
+   anterior, y una regla que un issue escribe no la reescribe el siguiente. Cruzalos además con
+   los issues abiertos que tocan el mismo spec: no van en el lote, pero parten de sus reglas. En
+   el lote del #262, #263 tomaba el cupo de una fila que ningún issue declaraba, #262 la fijaba en
+   8 y #263 la hacía variable, y #176, abierto, suponía un depósito que #263 cambiaba.
+4. **Mostrá todos los borradores enteros, cada uno con `revisar` en 0, y esperá un solo sí
    sobre el lote.** Si el usuario aprueba una parte, publicá sólo esa parte. Los demás
    borradores quedan en el scratchpad.
 

@@ -216,5 +216,9 @@ se corrige el código.
   issue.
 - **Lo que aparece implementando se hace, no se anota.** Un issue incompleto no se cierra abriendo
   otro issue: se completa.
+- **Lo que genera un recurso commiteado va al repo con él**, con su test. Un recurso sin su
+  generador sólo se puede editar a mano, y el cambio siguiente lo escribe de nuevo desde cero. La
+  disposición de la góndola, sus dos escenas y sus 71 mallas salían de un acomodador que vivió en
+  el scratch de una sesión: el #262 tuvo que escribirlo otra vez.
 - Si el trabajo falsificó algo que la documentación afirma en presente, actualizá `docs/`,
   `.claude/rules/` y `CLAUDE.md`.
