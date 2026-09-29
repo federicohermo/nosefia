@@ -314,7 +314,7 @@ def transform_de_escena(base: Matriz, origen: Vector) -> str:
 def slug(nombre: str) -> str:
     """El nombre de archivo de un producto: minúsculas, sin acentos y con guion bajo.
 
-    La misma regla vive en `blender/extraer_mallas.gd`, que es quien escribe la malla: si
+    La misma regla vive en `assets/models/extraer_mallas.gd`, que es quien escribe la malla: si
     difieren, la escena apunta a un archivo que nadie escribió.
     """
     sin_acentos = unicodedata.normalize("NFKD", nombre).encode("ascii", "ignore").decode()

@@ -14,7 +14,8 @@ Las verifica `tests/test_reparto.py` sobre este mismo dato, antes de que llegue 
 - un estante de lado lleva entre dos y cuatro productos distintos, y una cabecera puede llevar
   uno solo;
 - Malbardo, Durextra, Laysntt, Chisitos y Duronga van en cabecera;
-- la heladera lleva lo que se vende frío, y cada uno una sola vez;
+- la heladera lleva lo que se vende frío: cada uno se repone en una sola tanda, y lo que
+  repite para llenar una bandeja es fijo;
 - ningún estante de góndola queda vacío.
 
 ## Cómo se nombra un estante
@@ -51,10 +52,13 @@ _X = (1.0, 0.0, 0.0)
 _MENOS_X = (-1.0, 0.0, 0.0)
 _MENOS_Y = (0.0, -1.0, 0.0)
 _Z = (0.0, 0.0, 1.0)
+_MENOS_Z = (0.0, 0.0, -1.0)
 
 #: En el orden de `Producto.Id`. `tests/test_reparto.py` lo compara con el catálogo del juego.
 PRODUCTOS: tuple[Producto, ...] = (
-    Producto("ACTRONCITO", "Actroncito", "Actroncito-col", _MENOS_Y, _X),
+    # De costado, con el lateral de la caja hacia el pasillo: de frente mide 0,395 de fondo, y
+    # dos filas no entraban en ningún estante. Decidido por el usuario el 2026-09-29.
+    Producto("ACTRONCITO", "Actroncito", "Actroncito-col", _MENOS_Z, _X),
     Producto("DUREXTRA", "Durextra", "durextra-col", _MENOS_Y, _Z),
     Producto("BURBALOO", "Burbaloo", "burgaloo-convcol", _X, _Z),
     Producto("ZUCARACHAS", "Zucarachas", "Zucarachas-col", _MENOS_X, _Z),
@@ -113,9 +117,9 @@ DE_CABECERA = ("MALBARDO", "DUREXTRA", "LAYSNTT", "CHISITOS", "DURONGA")
 
 #: Lo que no entra en dos filas en un estante de lado con panel detrás: su fondo pasa de la
 #: mitad de los 0,646 m que el panel deja libres. Va en el zócalo, que no tiene panel. Medido el
-#: 2026-09-29: Actroncito mide 0,395 de fondo y Cosa de Maní 0,340; arriba, el estante crecía
-#: hasta asomar 15 cm por delante de los laterales de la góndola.
-DEL_ZOCALO = ("ACTRONCITO", "COSA_DE_MANI")
+#: 2026-09-29: Cosa de Maní mide 0,340 de fondo; arriba, el estante crecía y asomaba por delante
+#: de los laterales de la góndola. Actroncito estuvo acá hasta que se lo puso de costado.
+DEL_ZOCALO = ("COSA_DE_MANI",)
 
 
 @dataclass(frozen=True)
@@ -185,11 +189,16 @@ ESTANTES: dict[str, tuple[Tanda, ...]] = {
     "S.este.0": (_p("COSA_DE_MANI"), _f("FLINPUF")),
     # Las heladeras. La de abajo de cada una y la de arriba de la segunda quedan vacías: lo frío
     # es menos que las bandejas, y va una sola vez.
+    # Las bandejas que sobran llevan repetidos fijos de lo frío. Decidido por el usuario el
+    # 2026-09-29, igual que los estantes de góndola que no se completan sin repetir.
+    "H1.este.0": (_f("OAAAA"),),
     "H1.este.1": (_p("CORACOLA"),),
     "H1.este.2": (_p("TERMINATOR"),),
     "H1.este.3": (_p("FERNET_GOD"),),
+    "H2.este.0": (_f("CORACOLA"),),
     "H2.este.1": (_p("MAYONCHIS"),),
     "H2.este.2": (_p("OAAAA"),),
+    "H2.este.3": (_f("FERNET_GOD"),),
 }
 
 
