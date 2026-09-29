@@ -21,6 +21,25 @@ func test_la_caja_declara_su_producto_con_un_id_del_catalogo() -> void:
 	assert_int(Catalogo.de(caja.producto).id).is_equal(Producto.Id.MALBARDO)
 
 
+## El tamaño lo dice la ficha del producto, que el catálogo lleva, y no la escena: la caja chica
+## de Jorgillo y la grande de Zucarachas salen de la misma escena, cambiando sólo el producto.
+func test_la_caja_tiene_el_tamano_que_le_da_el_catalogo() -> void:
+	var medias: Array[float] = []
+	for id: Producto.Id in [Producto.Id.JORGILLO, Producto.Id.ZUCARACHAS]:
+		var caja := _caja()
+		caja.producto = id
+		add_child(caja)
+		var media: float = CajaQueSeLleva.MEDIA_CAJA[Catalogo.caja_de(id)]
+		for parte: String in ["Cuerpo", "Malla"]:
+			(
+				assert_vector((caja.get_node(parte) as Node3D).scale)
+				. override_failure_message("%s de %s" % [parte, Catalogo.de(id).nombre])
+				. is_equal_approx(Vector3.ONE * media, Vector3.ONE * 1e-6)
+			)
+		medias.append(media)
+	assert_float(medias[0]).is_less(medias[1])
+
+
 func test_tocar_la_caja_la_entrega_para_levantarla() -> void:
 	# Antes devolvía `null` y el clic sacaba una unidad. Ahora contesta sus propios datos, que es
 	# lo que `Agarre` necesita para llevársela, y no son los de una unidad de producto: quien

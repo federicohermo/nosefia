@@ -16,6 +16,9 @@ const GONDOLAS := {
 	"Estructura/gondolanueva_002": Vector3.LEFT,
 }
 
+## Lo que el contorno le agrega a la malla de cada lado, a lo sumo, en metros.
+const HOLGURA_DEL_CONTORNO := 0.05
+
 
 func test_el_jugador_que_camina_contra_una_gondola_choca_con_su_contorno() -> void:
 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
@@ -40,6 +43,41 @@ func test_el_jugador_que_camina_contra_una_gondola_choca_con_su_contorno() -> vo
 		# es que el jugador la siga probando en cada paso, y eso lo dice la excepción.
 		var malla := gondola.get_node("StaticBody3D")
 		assert_bool(jugador.get_collision_exceptions().has(malla)).is_true()
+
+
+## El contorno sigue a la malla: la envuelve entera, y no le sobra más que la holgura. **Achicar
+## un estante en el `.blend` cambia la malla y no el contorno**: una cabecera que se achica deja
+## una pared invisible delante de su mercadería, y un estante que crece asoma por fuera de la caja
+## y el jugador lo atraviesa.
+func test_el_contorno_envuelve_la_malla_sin_que_le_sobre() -> void:
+	var almacen: Node3D = auto_free(ALMACEN.instantiate())
+	add_child(almacen)
+	for ruta: String in GONDOLAS:
+		var gondola := almacen.get_node(ruta) as MeshInstance3D
+		var malla := gondola.global_transform * gondola.get_aabb()
+		var forma := gondola.get_node("Contorno/Forma") as CollisionShape3D
+		var lados := (forma.shape as BoxShape3D).size
+		var contorno := forma.global_transform * AABB(-lados / 2.0, lados)
+		for eje in 3:
+			var antes := malla.position[eje] - contorno.position[eje]
+			var despues := contorno.end[eje] - malla.end[eje]
+			var mensaje := (
+				"%s: el contorno sobra %.3f y %.3f en el eje %d; va %s con tamaño %s"
+				% [
+					ruta,
+					antes,
+					despues,
+					eje,
+					malla.get_center() - gondola.global_position,
+					malla.size + Vector3(2.0, 0.0, 2.0) * HOLGURA_DEL_CONTORNO,
+				]
+			)
+			assert_float(antes).override_failure_message(mensaje).is_between(
+				-0.001, HOLGURA_DEL_CONTORNO + 0.001
+			)
+			assert_float(despues).override_failure_message(mensaje).is_between(
+				-0.001, HOLGURA_DEL_CONTORNO + 0.001
+			)
 
 
 func test_la_malla_de_la_gondola_sigue_siendo_la_colision_de_los_productos() -> void:

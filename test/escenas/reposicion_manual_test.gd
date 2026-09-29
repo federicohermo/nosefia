@@ -386,8 +386,8 @@ func test_actroncito_durextra_y_oremos_se_reponen_con_foco_y_clic_reales() -> vo
 	add_child(almacen)
 	var jugador: Node3D = almacen.get("_jugador")
 	jugador.set_physics_process(false)
-	# Los tres viven en el mismo rack y en bandejas distintas: uno arriba en caja grande y dos
-	# abajo en caja chica. Es el reparto que el depósito tiene desde que hay dos tamaños, y lo
+	# Los tres viven en el mismo rack y en bandejas distintas: dos arriba en caja chica y uno
+	# abajo en caja grande. Es el reparto que el depósito tiene desde que hay dos tamaños, y lo
 	# que el caso ejerce es que ninguna de las dos alturas deje la caja fuera del alcance.
 	for id: Producto.Id in [Producto.Id.ACTRONCITO, Producto.Id.DUREXTRA, Producto.Id.OREMOS]:
 		var caja: Node3D = almacen.get("_cajas_de_productos")[id]
@@ -794,8 +794,13 @@ func test_sin_superficie_que_valga_se_suelta_como_siempre() -> void:  # AC-PLY-0
 	_soltar(almacen, bolsa)
 	assert_vector(bolsa.global_position).is_equal_approx(sin_mira_al_costado, Vector3.ONE * 0.01)
 	# Un estante de la góndola es horizontal y la bolsa entra, pero queda adentro del mueble.
-	var estante: Vector3 = almacen.get("_reposicion_manual").call("_apoyo", Producto.Id.UAKAS)
-	camara.global_position = estante + Vector3(1.8, 1.0, 0.0)
+	var apoyo: Vector3 = almacen.get("_reposicion_manual").call("_apoyo", Producto.Id.UAKAS)
+	# Detrás del casillero, sobre la misma chapa, y desde arriba: el casillero está a seis
+	# centímetros del frente del estante, y un rayo tendido hacia él pega en el portaprecio, que
+	# es inclinado. La cámara queda lo bastante afuera para que el punto de soltar sin mira caiga
+	# en el pasillo y no adentro del contorno del mueble.
+	var estante := apoyo + Vector3.LEFT * 0.12
+	camara.global_position = estante + Vector3(2.0, 1.4, 0.0)
 	camara.look_at(estante)
 	# Sin el contorno que envuelve al mueble: si lo soltado choca con él, la mira pega en su cara
 	# y no llega al estante.

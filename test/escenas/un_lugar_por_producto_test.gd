@@ -9,9 +9,10 @@ extends GdUnitTestSuite
 const ALMACEN := preload("res://src/escenas/almacen.tscn")
 const ReposicionManual := preload("res://src/escenas/puestos/reposicion_manual.gd")
 
-## Hasta dónde se busca, delante de la fila de adelante, un lugar donde el jugador entre
-## parado, en metros. El pasillo más angosto mide 1,73: el lugar tiene que aparecer antes.
-const HASTA_EL_PASILLO := 1.2
+## Hasta dónde se busca, delante de una unidad, un lugar donde el jugador entre parado, en
+## metros. Un estante achicado queda hundido entre los laterales del mueble, y el cuerpo del
+## jugador no pasa del contorno: el lugar aparece a un metro y algo, y antes de cruzar el pasillo.
+const HASTA_EL_PASILLO := 1.5
 
 ## De a cuánto se avanza buscando ese lugar, en metros.
 const PASO_HACIA_EL_PASILLO := 0.05
@@ -188,14 +189,16 @@ func test_el_casillero_de_cada_producto_esta_al_alcance_desde_el_pasillo() -> vo
 		(almacen.get("_agarre") as Agarre).vaciar_las_manos()
 
 
-## Las dos filas de cada tanda dan al pasillo: delante de la de adelante hay dónde pararse, y
-## entre cada unidad de las dos filas y ese pasillo no se interpone nada del mueble. Una fila
-## metida detrás del panel perforado —la chapa sigue detrás de él— es una fila que el jugador
-## no ve, y desde el pasillo el estante parece vacío.
+## Las dos filas de cada tanda, una detrás de la otra y de cara al pasillo: parado frente a
+## cualquier unidad de la fila de adelante, el jugador la ve, porque nada del mueble se
+## interpone; y entre cada unidad de la fila de atrás y la de adelante que tiene delante no hay
+## nada del mueble. Una fila metida detrás del panel perforado —la chapa sigue detrás de él— es
+## una fila que el jugador no ve, y desde el pasillo el estante parece vacío.
 ##
-## **Se tantea a tres alturas de la unidad, y alcanza con que una llegue**: el portaprecio tapa
-## la base de una lata chata, y el labio de una cabecera, la de un paquete; lo que no puede
-## pasar es que el mueble la tape entera.
+## **La de adelante se mira a cuatro alturas, y alcanza con que una se vea**: el portaprecio tapa
+## el pie de una lata chata, y el borde del estante de arriba, la tapa de una caja alta. La de
+## atrás no se mira desde el pasillo: en un estante hondo, bajo otro, queda debajo de él, como
+## en cualquier góndola.
 func test_las_dos_filas_dan_al_pasillo() -> void:  # AC-STK-030
 	var almacen := _almacen()
 	await get_tree().physics_frame
@@ -203,25 +206,33 @@ func test_las_dos_filas_dan_al_pasillo() -> void:  # AC-STK-030
 	var disposicion := _disposicion(almacen)
 	for producto in Catalogo.todos():
 		var frente := _frente(almacen, producto)
-		var delante := _centro_de_la_fila(almacen, producto, true)
-		var pie := _lugar_en_el_pasillo(almacen, delante, frente)
-		if not pie.is_finite():
-			fail("%s: no hay dónde pararse frente a su tanda" % producto.nombre)
-			continue
-		for indice in 2 * disposicion.filas_de_adelante[producto.id]:
-			var caja := _caja_de_la_copia(almacen, producto, indice)
-			var hasta_el_pasillo := (pie - caja.get_center()).dot(frente)
-			var tapada := true
-			for altura: float in [0.25, 0.5, 0.75]:
-				var desde := caja.position + caja.size * Vector3(0.5, altura, 0.5)
-				tapada = (
-					tapada
-					and not _golpe(almacen, desde, desde + frente * hasta_el_pasillo).is_empty()
+		var fila := disposicion.filas_de_adelante[producto.id]
+		for columna in fila:
+			var atras := _caja_de_la_copia(almacen, producto, columna).get_center()
+			var delante := _caja_de_la_copia(almacen, producto, fila + columna)
+			(
+				assert_dict(_golpe(almacen, atras, delante.get_center()))
+				. override_failure_message(
+					(
+						"%s: el mueble separa sus dos filas en la columna %d"
+						% [producto.nombre, columna]
+					)
 				)
+				. is_empty()
+			)
+			var pie := _lugar_en_el_pasillo(almacen, delante.get_center(), frente)
+			if not pie.is_finite():
+				fail("%s: no hay dónde pararse frente a su columna %d" % [producto.nombre, columna])
+				continue
+			var ojo := pie + Vector3.UP * ReglasDelJugador.ALTURA_DE_LA_CAMARA
+			var tapada := true
+			for altura: float in [0.25, 0.5, 0.75, 0.95]:
+				var punto := delante.position + delante.size * Vector3(0.5, altura, 0.5)
+				tapada = tapada and not _golpe(almacen, ojo, punto).is_empty()
 			(
 				assert_bool(tapada)
 				. override_failure_message(
-					"%s: el mueble tapa su copia %d desde el pasillo" % [producto.nombre, indice]
+					"%s: el mueble tapa su columna %d desde el pasillo" % [producto.nombre, columna]
 				)
 				. is_false()
 			)

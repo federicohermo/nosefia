@@ -46,6 +46,14 @@ const IMAGENES := {
 	Producto.Id.DONSATURADOS: preload("res://assets/ui/manada/donsaturados.png"),
 	Producto.Id.PETISAS: preload("res://assets/ui/manada/petisas.png"),
 	Producto.Id.MACUMBAS: preload("res://assets/ui/manada/macumbas.png"),
+	Producto.Id.COSA_DE_MANI: preload("res://assets/ui/manada/cosa_de_mani.png"),
+	Producto.Id.DURONGA: preload("res://assets/ui/manada/duronga.png"),
+	Producto.Id.FERNET_GOD: preload("res://assets/ui/manada/fernet_god.png"),
+	Producto.Id.MAYONCHIS: preload("res://assets/ui/manada/mayonchis.png"),
+	Producto.Id.OAAAA: preload("res://assets/ui/manada/oaaaa.png"),
+	Producto.Id.TERMINATOR: preload("res://assets/ui/manada/terminator.png"),
+	Producto.Id.MARRANOS: preload("res://assets/ui/manada/marranos.png"),
+	Producto.Id.FEEL_RICKY_FORT: preload("res://assets/ui/manada/feel_ricky_fort.png"),
 }
 
 @export var _titulo: Label
