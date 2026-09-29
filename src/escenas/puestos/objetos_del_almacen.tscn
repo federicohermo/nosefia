@@ -74,7 +74,7 @@ position = Vector3(3.19, 1.08992, -8.75)
 producto = 10
 
 [node name="CajaDePepitos" parent="." instance=ExtResource("11_caja_de_productos")]
-position = Vector3(-6.3, 0.406445, -14.1)
+transform = Transform3D(0, 0, -1, 0, 1, 0, 1, 0, 0, -6.3, 0.406445, -14.1)
 producto = 11
 
 [node name="CajaDeSaladik" parent="." instance=ExtResource("11_caja_de_productos")]
@@ -82,19 +82,19 @@ position = Vector3(-6.2, 0.406445, -9.3)
 producto = 12
 
 [node name="CajaDeUakas" parent="." instance=ExtResource("11_caja_de_productos")]
-position = Vector3(6.79, 1.08992, -14.02)
+transform = Transform3D(0, 0, -1, 0, 1, 0, 1, 0, 0, 6.79, 1.08992, -14.02)
 producto = 13
 
 [node name="CajaDeCoracola" parent="." instance=ExtResource("11_caja_de_productos")]
-position = Vector3(-5.55, 0.406445, -14.1)
+transform = Transform3D(0, 0, -1, 0, 1, 0, 1, 0, 0, -5.55, 0.406445, -14.1)
 producto = 14
 
 [node name="CajaDeFrotlups" parent="." instance=ExtResource("11_caja_de_productos")]
-position = Vector3(-4.8, 0.406445, -14.1)
+transform = Transform3D(0, 0, -1, 0, 1, 0, 1, 0, 0, -4.8, 0.406445, -14.1)
 producto = 15
 
 [node name="CajaDeMarolini" parent="." instance=ExtResource("11_caja_de_productos")]
-position = Vector3(7.48, 1.08992, -14.02)
+transform = Transform3D(0, 0, -1, 0, 1, 0, 1, 0, 0, 7.48, 1.08992, -14.02)
 producto = 16
 
 [node name="CajaDeAmargadito" parent="." instance=ExtResource("11_caja_de_productos")]
@@ -102,7 +102,7 @@ position = Vector3(-0.41, 1.7866177, -8.75)
 producto = 17
 
 [node name="CajaDeCindolor" parent="." instance=ExtResource("11_caja_de_productos")]
-position = Vector3(-4.05, 0.406445, -14.1)
+transform = Transform3D(0, 0, -1, 0, 1, 0, 1, 0, 0, -4.05, 0.406445, -14.1)
 producto = 18
 
 [node name="CajaDeFlinpuf" parent="." instance=ExtResource("11_caja_de_productos")]
@@ -110,11 +110,11 @@ position = Vector3(-0.41, 1.7866177, -9.39)
 producto = 19
 
 [node name="CajaDeDonsaturados" parent="." instance=ExtResource("11_caja_de_productos")]
-position = Vector3(-3.3, 0.406445, -14.1)
+transform = Transform3D(0, 0, -1, 0, 1, 0, 1, 0, 0, -3.3, 0.406445, -14.1)
 producto = 20
 
 [node name="CajaDePetisas" parent="." instance=ExtResource("11_caja_de_productos")]
-position = Vector3(-2.55, 0.406445, -14.1)
+transform = Transform3D(0, 0, -1, 0, 1, 0, 1, 0, 0, -2.55, 0.406445, -14.1)
 producto = 21
 
 [node name="CajaDeMacumbas" parent="." instance=ExtResource("11_caja_de_productos")]
@@ -122,7 +122,7 @@ position = Vector3(-6.3, 0.406445, -8.65)
 producto = 22
 
 [node name="CajaDeCosaDeMani" parent="." instance=ExtResource("11_caja_de_productos")]
-position = Vector3(-0.3, 0.3027373, -14.1)
+transform = Transform3D(0, 0, -1, 0, 1, 0, 1, 0, 0, -0.3, 0.3027373, -14.1)
 producto = 23
 
 [node name="CajaDeDuronga" parent="." instance=ExtResource("11_caja_de_productos")]
@@ -130,11 +130,11 @@ position = Vector3(-6.45, 0.3027373, -10.2)
 producto = 24
 
 [node name="CajaDeFernetGod" parent="." instance=ExtResource("11_caja_de_productos")]
-position = Vector3(-1.8, 0.406445, -14.1)
+transform = Transform3D(0, 0, -1, 0, 1, 0, 1, 0, 0, -1.8, 0.406445, -14.1)
 producto = 25
 
 [node name="CajaDeMayonchis" parent="." instance=ExtResource("11_caja_de_productos")]
-position = Vector3(-1.05, 0.406445, -14.1)
+transform = Transform3D(0, 0, -1, 0, 1, 0, 1, 0, 0, -1.05, 0.406445, -14.1)
 producto = 26
 
 [node name="CajaDeOaaaa" parent="." instance=ExtResource("11_caja_de_productos")]
