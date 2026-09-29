@@ -62,7 +62,8 @@ const CUADROS_QUIETOS := 20
 ## una caja y media tarda menos de treinta; el resto es el margen del reposo.
 const CUADROS_CAYENDO := 150
 
-## A qué altura está la tabla libre del estante del depósito, en metros: la del medio.
+## A qué altura está la tabla del medio del estante del depósito, en metros: de ahí para abajo
+## ya no es el estante con lugar.
 const TABLA_DE_ARRIBA := 1.48
 
 ## Cuánto separa una tabla del estante del depósito de la de abajo, en metros.
@@ -385,9 +386,10 @@ func test_alrededor_de_un_estante_con_lugar_la_caja_siempre_sube_a_el() -> void:
 	var mano: Node3D = jugador.get_node("Giro/PuntoDeCaja")
 	var caja: Node3D = almacen.get("_cajas_de_productos")[Producto.Id.PRONGLES]
 	var estante := _limites_de(almacen.get_node(ESTANTE_DEL_DEPOSITO))
-	# La vecina sube de la tabla de abajo a la libre, y deja media tabla libre a su lado.
+	# La vecina sube de la tabla de abajo a la de arriba, que está abierta como la del rack viejo:
+	# deja media tabla libre a su lado y la del medio entera.
 	var vecina: Node3D = almacen.get("_cajas_de_productos")[Producto.Id.MAROLINI]
-	vecina.global_position += Vector3.UP * ENTRE_TABLAS
+	vecina.global_position += Vector3.UP * ENTRE_TABLAS * 2.0
 	vecina.call("quedarse_quieta")
 	_accion(jugador, caja, ReglasDeLosObjetos.ACCION_AGARRAR)
 	var frente := Vector3(estante.position.x + estante.size.x * 0.3, 0.11, estante.end.z + 1.0)

@@ -205,7 +205,7 @@ transform = Transform3D(0.2, 0, 0, 0, 0.2, 0, 0, 0, 0.2, 0, 0, 0)
 transform = Transform3D(0.2, 0, 0, 0, 0.2, 0, 0, 0, 0.2, 0, 0, 0)
 
 [node name="CajaDeSaladik" parent="Objetos" index="18"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.45, 0.406445, -9.3)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.2, 0.406445, -9.3)
 
 [node name="Cuerpo" parent="Objetos/CajaDeSaladik" index="0"]
 transform = Transform3D(0.3037077, 0, 0, 0, 0.3037077, 0, 0, 0, 0.3037077, 0, 0, 0)
@@ -214,7 +214,7 @@ transform = Transform3D(0.3037077, 0, 0, 0, 0.3037077, 0, 0, 0, 0.3037077, 0, 0,
 transform = Transform3D(0.3037077, 0, 0, 0, 0.3037077, 0, 0, 0, 0.3037077, 0, 0, 0)
 
 [node name="CajaDeUakas" parent="Objetos" index="19"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.79, 1.08992, -14.05)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.79, 1.08992, -14.02)
 
 [node name="Cuerpo" parent="Objetos/CajaDeUakas" index="0"]
 transform = Transform3D(0.3037077, 0, 0, 0, 0.3037077, 0, 0, 0, 0.3037077, 0, 0, 0)
@@ -241,7 +241,7 @@ transform = Transform3D(0.2, 0, 0, 0, 0.2, 0, 0, 0, 0.2, 0, 0, 0)
 transform = Transform3D(0.2, 0, 0, 0, 0.2, 0, 0, 0, 0.2, 0, 0, 0)
 
 [node name="CajaDeMarolini" parent="Objetos" index="22"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7.48, 1.08992, -14.05)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7.48, 1.08992, -14.02)
 
 [node name="Cuerpo" parent="Objetos/CajaDeMarolini" index="0"]
 transform = Transform3D(0.3037077, 0, 0, 0, 0.3037077, 0, 0, 0, 0.3037077, 0, 0, 0)
