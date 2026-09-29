@@ -29,17 +29,13 @@ const LEJOS_DE_SU_LUGAR := Vector3(0.0, 2.0, 0.0)
 ## el `.tscn` le pone a un cubo de dos.
 ##
 ## **Sale de cada caja y no de una constante, porque hay dos tamaños.** Los productos que entran
-## en poco volumen llevan una caja chica, que es la única que cabe entre dos bandejas del
-## depósito; con un solo número, once cajas darían «flotando» estando apoyadas.
+## en poco volumen llevan una caja chica; con un solo número, once cajas darían «flotando»
+## estando apoyadas.
 func _media_caja(caja: Node3D) -> float:
 	return (caja.get_node("Cuerpo") as Node3D).scale.x
 
 
 func test_las_cajas_de_reposicion_estan_apoyadas_en_el_deposito() -> void:
-	# Las grandes se reparten entre el estante de arriba de los tres racks y el piso, y las
-	# chicas ocupan los dos estantes de abajo: entre estantes hay 0,477 m, la caja grande mide
-	# 0,607 y la chica 0,40. Lo que el caso afirma no es el reparto sino que ninguna quede
-	# flotando ni clavada adentro de otra cosa.
 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
 	add_child(almacen)
 	await get_tree().physics_frame

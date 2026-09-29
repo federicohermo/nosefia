@@ -2,20 +2,20 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://kv5kgwi5n6bv"
-path.s3tc="res://.godot/imported/SEPT_JUEGOS_PROTOTIPO_jorgillo.png-e276abf35dc58cc0f9a19c6e0a295b00.s3tc.ctex"
+uid="uid://ccf5jlu8uerix"
+path.s3tc="res://.godot/imported/SEPT_JUEGOS_PROTOTIPO_caja luz exterior.png-1e4d5cab1215368feec99d846dce37df.s3tc.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc"],
 "vram_texture": true
 }
 generator_parameters={
-"md5": "e435849a2d7369cfcfbb53adf8241e92"
+"md5": "73b13f20576fb56fd198b1bef5797322"
 }
 
 [deps]
 
-source_file="res://assets/models/SEPT_JUEGOS_PROTOTIPO_jorgillo.png"
-dest_files=["res://.godot/imported/SEPT_JUEGOS_PROTOTIPO_jorgillo.png-e276abf35dc58cc0f9a19c6e0a295b00.s3tc.ctex"]
+source_file="res://assets/models/SEPT_JUEGOS_PROTOTIPO_caja luz exterior.png"
+dest_files=["res://.godot/imported/SEPT_JUEGOS_PROTOTIPO_caja luz exterior.png-1e4d5cab1215368feec99d846dce37df.s3tc.ctex"]
 
 [params]
 

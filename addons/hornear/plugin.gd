@@ -57,6 +57,9 @@ func _abrir() -> void:
 func _seleccionar() -> void:
 	var raiz := EditorInterface.get_edited_scene_root()
 	if raiz == null or raiz.scene_file_path != ESCENA:
+		# El editor restaura las pestañas de la sesión anterior después del primer cuadro, y la
+		# que queda al frente puede ser otra: se vuelve a pedir la escena, que la trae al frente.
+		EditorInterface.open_scene_from_path(ESCENA)
 		return
 	var horno := raiz.get_node_or_null(NODO) as LightmapGI
 	if horno == null:

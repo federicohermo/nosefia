@@ -474,9 +474,14 @@ func _caja_sobrevolada(
 ## Apuntarle al canto de una tabla es apuntarle a la tabla. Se mira apenas adentro de la cara
 ## tocada, desde una caja más arriba: si ahí hay una tapa, es la de ese mismo mueble. Una pared
 ## no la tiene —sigue para arriba—, y entonces esto no contesta nada.
+##
+## **La cara de abajo de una tabla no es un canto.** Encima de ella está esa misma tabla, que la
+## mira no ve: la caja tiene que ir a la de abajo, que es la que se mira.
 func _tapa_de_ese_canto(caja: CajaDelDeposito, canto: Dictionary) -> Dictionary:
 	var adentro: Vector3 = -canto["normal"]
 	adentro.y = 0.0
+	if adentro.is_zero_approx():
+		return {}
 	var punto: Vector3 = canto["position"] + adentro.normalized() * HOLGURA_DE_LA_MIRA
 	var alto := _media_caja(caja).y * 2.0
 	return _rayo(caja, punto + Vector3.UP * alto, punto + Vector3.DOWN * TOLERANCIA_DEL_APOYO)

@@ -2,20 +2,20 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bn8l84t2mxvml"
-path.s3tc="res://.godot/imported/SEPT_JUEGOS_PROTOTIPO_saladix.png-7874e05653fbb90f70f330bfe8f55385.s3tc.ctex"
+uid="uid://bhy4rc0blp53s"
+path.s3tc="res://.godot/imported/SEPT_JUEGOS_PROTOTIPO_progres.png-7ebee7380478f6e9fada5c2886a820ca.s3tc.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc"],
 "vram_texture": true
 }
 generator_parameters={
-"md5": "a40a043bfcf694308f575dcc2ca5e041"
+"md5": "935f0ea55f50e6808fbd464843964ebd"
 }
 
 [deps]
 
-source_file="res://assets/models/SEPT_JUEGOS_PROTOTIPO_saladix.png"
-dest_files=["res://.godot/imported/SEPT_JUEGOS_PROTOTIPO_saladix.png-7874e05653fbb90f70f330bfe8f55385.s3tc.ctex"]
+source_file="res://assets/models/SEPT_JUEGOS_PROTOTIPO_progres.png"
+dest_files=["res://.godot/imported/SEPT_JUEGOS_PROTOTIPO_progres.png-7ebee7380478f6e9fada5c2886a820ca.s3tc.ctex"]
 
 [params]
 
@@ -40,5 +40,5 @@ process/premult_alpha=false
 process/normal_map_invert_y=false
 process/hdr_as_srgb=false
 process/hdr_clamp_exposure=false
-process/size_limit=0
+process/size_limit=1024
 detect_3d/compress_to=0

@@ -33,7 +33,7 @@ mesh = ExtResource("malla0")
 gi_mode = 2
 
 [node name="Durextra" type="MeshInstance3D" parent="."]
-transform = Transform3D(0.117388, 0, 0, 0, 0.113776, 0.026476, 0, -0.020058, 0.15018, -2.905947, 1.442975, 1.394817)
+transform = Transform3D(0.117388, 0, 0, 0, 0.113776, 0.026476, 0, -0.020058, 0.15018, -2.814639, 1.441923, 1.394817)
 visible = false
 mesh = ExtResource("malla1")
 gi_mode = 2
@@ -57,7 +57,7 @@ mesh = ExtResource("malla4")
 gi_mode = 2
 
 [node name="Malbardo" type="MeshInstance3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 0.987837, 0.155495, 0, -0.155495, 0.987837, 0.845948, 1.41275, 1.319248)
+transform = Transform3D(1, 0, 0, 0, 0.987837, 0.155495, 0, -0.155495, 0.987837, 0.845948, 1.415742, 1.319248)
 visible = false
 mesh = ExtResource("malla5")
 gi_mode = 2
