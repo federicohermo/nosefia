@@ -1,9 +1,10 @@
 ## Cuántas unidades hay de cada producto y **dónde**: qué falta en la góndola, qué se puede
 ## mover del depósito al estante y qué se puede cobrar.
 ##
-## No conoce al `Catalogo`: los productos se los pasan al `_init`. Es lo que permite armar un
-## inventario de prueba con dos productos inventados en tres líneas, y lo que hace que el día
-## que un producto cambie de umbral ningún test de acá se entere.
+## No conoce al `Catalogo` ni al local: los productos y los casilleros de la fila de adelante
+## de cada uno se los pasan al `_init`. Es lo que permite armar un inventario de prueba con dos
+## productos inventados en tres líneas, y lo que hace que el día que el modelo mueva una fila
+## ningún test de acá se entere.
 ##
 ## Nadie de este archivo abre una pantalla. Acá está la aritmética; mostrarla es de `ui/` y
 ## mover una unidad con la mano es de la escena.
@@ -20,10 +21,20 @@ var _productos: Array[Producto] = []
 ## `id` → `{ Ubicacion: unidades }`. La clave es el `id` y nunca la instancia.
 var _unidades: Dictionary = {}
 
+## Cuántos casilleros tiene la fila de adelante de cada producto: cuántas unidades pide su
+## góndola. La clave es el `id`, como en `_unidades`.
+var _casilleros: Dictionary[Producto.Id, int] = {}
 
-## Recibe los productos en vez de ir a buscarlos al `Catalogo`, y ésa es la decisión que hace
-## que rebalancear los precios y los umbrales no ponga en rojo un solo test de este archivo.
-func _init(productos: Array[Producto]) -> void:
+
+## Recibe los productos y sus casilleros en vez de ir a buscarlos, y ésa es la decisión que hace
+## que rebalancear el catálogo o mover una fila en el modelo no ponga en rojo un solo test de
+## este archivo.
+##
+## **Los casilleros vienen del local armado y no del producto**: cuántas unidades pide la
+## góndola de cada uno es lo que entra en su fila de adelante, que lo mide la escena. El
+## `umbral` que el catálogo le pone al producto no decide nada acá. Un producto sin casilleros
+## no tiene dónde ir en la góndola: no falta nunca y todo su depósito se vende.
+func _init(productos: Array[Producto], casilleros: Dictionary[Producto.Id, int] = {}) -> void:
 	for producto in productos:
 		# Un `id` repetido en la lista se ignora: sin este corte, el segundo pisaría con
 		# ceros lo ya contado y `faltantes()` devolvería el mismo producto dos veces, que es una
@@ -32,6 +43,16 @@ func _init(productos: Array[Producto]) -> void:
 			continue
 		_productos.append(producto)
 		_unidades[producto.id] = {Ubicacion.DEPOSITO: 0, Ubicacion.GONDOLA: 0}
+		var declarados: int = casilleros.get(producto.id, 0)
+		_casilleros[producto.id] = maxi(0, declarados)
+
+
+## Cuántos casilleros tiene la fila de adelante de ese producto: su cupo. Cero si el inventario
+## no lo conoce o no le declararon casilleros.
+func casilleros(producto: Producto) -> int:
+	if producto == null:
+		return 0
+	return _casilleros.get(producto.id, 0)
 
 
 func unidades(producto: Producto, ubicacion: Ubicacion) -> int:
@@ -75,38 +96,40 @@ func mover(producto: Producto, desde: Ubicacion, hacia: Ubicacion, cuantas: int)
 	return a_mover
 
 
-## Los productos cuya góndola está por debajo de su umbral, en el orden en que llegaron al
-## `_init`. Ese orden es el que la pantalla lista, y sin él la lista se barajaría entre dos
+## Los productos con algún casillero vacío en su fila de adelante, en el orden en que llegaron
+## al `_init`. Ese orden es el que la pantalla lista, y sin él la lista se barajaría entre dos
 ## cuadros.
 ##
 ## Mira **sólo la góndola**: un producto con el depósito lleno y la góndola vacía es faltante, y
-## ésa es exactamente la situación que le da al jugador la razón para ir al estante.
+## ésa es exactamente la situación que le da al jugador la razón para ir al estante. Y cuenta
+## contra la fila, no contra lo que la jornada hizo faltar: un casillero que se vacía durante la
+## noche vuelve a faltar aunque la jornada no lo haya pedido.
 func faltantes() -> Array[Producto]:
 	var faltan: Array[Producto] = []
 	for producto in _productos:
-		if unidades(producto, Ubicacion.GONDOLA) < producto.umbral:
+		if _vacios(producto) > 0:
 			faltan.append(producto)
 	return faltan
 
 
-## Cuántas unidades de ese producto se pueden vender: el depósito menos lo que a la góndola le
-## falta para su umbral, y nunca menos de 0.
+## Cuántos casilleros de la fila de adelante de ese producto están vacíos: lo que a su góndola
+## le falta. Nunca menos de cero, aunque la góndola tenga más de lo que su fila pide.
+func _vacios(producto: Producto) -> int:
+	return maxi(0, casilleros(producto) - unidades(producto, Ubicacion.GONDOLA))
+
+
+## Cuántas unidades de ese producto se pueden vender: el depósito menos los casilleros vacíos de
+## su fila de adelante, y nunca menos de 0.
 ##
 ## Lo que el estante necesita no se vende. Sin ese descuento, una venta se llevaría la unidad
 ## que el jugador iba a colocar, y reponer quedaría sin cumplir sin que nada lo avise.
 ##
 ## Una unidad en la mano sigue en el depósito hasta que se coloca, y también en lo que a la
 ## góndola le falta: por eso no se vende, y colocarla después sigue funcionando.
-##
-## El umbral sale del producto que recibió el `_init` y no del que llega por parámetro: la
-## identidad es el `id`, y dos instancias con el mismo `id` podrían traer umbrales distintos.
 func vendibles(producto: Producto) -> int:
-	for conocido in _productos:
-		if conocido.id != producto.id:
-			continue
-		var le_falta := maxi(0, conocido.umbral - unidades(conocido, Ubicacion.GONDOLA))
-		return maxi(0, unidades(conocido, Ubicacion.DEPOSITO) - le_falta)
-	return 0
+	if not _unidades.has(producto.id):
+		return 0
+	return maxi(0, unidades(producto, Ubicacion.DEPOSITO) - _vacios(producto))
 
 
 ## Descuenta del depósito lo que la venta pide, y devuelve si pudo. La góndola no se toca.

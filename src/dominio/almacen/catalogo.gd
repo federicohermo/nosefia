@@ -25,10 +25,10 @@ enum TamanoDeCaja { CHICA, GRANDE }
 ## fila es rojo: `catalogo_test.gd` cuenta las filas de acá contra `Producto.Id.size()`, y las
 ## cuenta sobre este diccionario y no sobre `todos()` a propósito —ver `de()`—.
 ##
-## **El umbral es el cupo, y el cupo va en la fila de adelante de su tanda** (BR-STK-025). Es
-## ocho, salvo donde la góndola no da para ocho de frente: una lata de heladera o una bolsa de
-## cabecera. Ahí es lo que entra, que lo mide el acomodador del modelo y lo cobra
-## `disposicion_de_la_gondola_test.gd`: si el reparto cambia, ese test dice cuál no entra.
+## **El umbral ya no es el cupo.** Cuántas unidades pide la góndola de cada producto son los
+## casilleros de su fila de adelante (BR-STK-008), que mide el modelo y le llegan al inventario
+## desde la escena: ninguna regla lee esta columna. Quedó como la dejó el reparto de un lugar por
+## producto —ocho, salvo donde la góndola no da para ocho de frente—.
 const FILAS := {
 	Producto.Id.ACTRONCITO: ["Actroncito", 2500, 8],
 	Producto.Id.DUREXTRA: ["Durextra", 1200, 7],

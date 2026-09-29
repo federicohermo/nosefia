@@ -1,8 +1,9 @@
 ## Cuántas unidades hay de cada producto y **dónde**: el depósito y la góndola son dos lugares
 ## distintos, y esa distinción es la que hace que reponer sea una tarea y no una animación.
 ##
-## Los productos son inventados acá con sus valores a propósito, y no leídos del catálogo: el
-## día que el balance mueva un precio o un umbral, ninguno de estos AC cambia de resultado. La
+## Los productos y sus casilleros son inventados acá a propósito, y no leídos del catálogo ni del
+## local: el día que el balance mueva un precio o el modelo una fila, ninguno de estos AC cambia
+## de resultado. La
 ## única excepción es el AC de la identidad por `id`, que necesita **dos instancias distintas del
 ## mismo producto** y por eso sí llama a `Catalogo.de()` — pero sólo compara unidades, así que
 ## tampoco se entera de un cambio de balance.
@@ -26,7 +27,7 @@ func test_el_mismo_producto_repetido_en_la_construccion_entra_una_sola_vez() -> 
 	var actroncito := Producto.new(Producto.Id.ACTRONCITO, "Actroncito", 2500, 4)
 	var otro_actroncito := Producto.new(Producto.Id.ACTRONCITO, "Actroncito", 2500, 4)
 	var productos: Array[Producto] = [actroncito, otro_actroncito]
-	var inventario := Inventario.new(productos)
+	var inventario := Inventario.new(productos, {Producto.Id.ACTRONCITO: 4})
 	inventario.ingresar(actroncito, Inventario.Ubicacion.GONDOLA, 1)
 	assert_int(inventario.unidades(actroncito, Inventario.Ubicacion.GONDOLA)).is_equal(1)
 	assert_array(inventario.faltantes()).has_size(1)
@@ -121,22 +122,35 @@ func test_el_inventario_solo_conoce_los_productos_que_recibio() -> void:
 	assert_int(inventario.unidades(malbardo, Inventario.Ubicacion.GONDOLA)).is_equal(0)
 
 
-func test_por_debajo_del_umbral_falta_aunque_la_gondola_tenga_algo() -> void:  # AC-STK-007
+func test_con_un_casillero_vacio_falta_aunque_la_gondola_tenga_algo() -> void:  # AC-STK-007
 	var actroncito := Producto.new(Producto.Id.ACTRONCITO, "Actroncito", 2500, 5)
 	var productos: Array[Producto] = [actroncito]
-	var inventario := Inventario.new(productos)
-	inventario.ingresar(actroncito, Inventario.Ubicacion.GONDOLA, 3)
+	var inventario := Inventario.new(productos, {Producto.Id.ACTRONCITO: 3})
+	inventario.ingresar(actroncito, Inventario.Ubicacion.GONDOLA, 2)
 	assert_array(inventario.faltantes()).contains([actroncito])
 
 
-func test_justo_en_el_umbral_no_falta() -> void:  # AC-STK-007
-	# El corte es `<`, no `<=`: con el umbral pisado la góndola está abastecida y reponer no
+func test_con_la_fila_completa_no_falta() -> void:  # AC-STK-007
+	# El corte es `<`, no `<=`: con la fila completa la góndola está abastecida y reponer no
 	# sería una tarea sino un trámite que nunca se termina.
 	var actroncito := Producto.new(Producto.Id.ACTRONCITO, "Actroncito", 2500, 5)
 	var productos: Array[Producto] = [actroncito]
-	var inventario := Inventario.new(productos)
-	inventario.ingresar(actroncito, Inventario.Ubicacion.GONDOLA, 5)
+	var inventario := Inventario.new(productos, {Producto.Id.ACTRONCITO: 3})
+	inventario.ingresar(actroncito, Inventario.Ubicacion.GONDOLA, 3)
 	assert_array(inventario.faltantes()).not_contains([actroncito])
+
+
+func test_el_umbral_del_producto_no_decide_que_falta() -> void:  # AC-STK-007
+	# El umbral de este producto es 5 y su fila tiene 3 casilleros: con 3 en la góndola está
+	# completo. Medir contra el umbral lo daría por faltante, y la tarea no se cumpliría nunca.
+	var actroncito := Producto.new(Producto.Id.ACTRONCITO, "Actroncito", 2500, 5)
+	var productos: Array[Producto] = [actroncito]
+	var inventario := Inventario.new(productos, {Producto.Id.ACTRONCITO: 3})
+	inventario.ingresar(actroncito, Inventario.Ubicacion.GONDOLA, 3)
+	inventario.ingresar(actroncito, Inventario.Ubicacion.DEPOSITO, 4)
+	assert_array(inventario.faltantes()).is_empty()
+	assert_int(inventario.casilleros(actroncito)).is_equal(3)
+	assert_int(inventario.vendibles(actroncito)).is_equal(4)
 
 
 func test_el_deposito_lleno_no_salva_a_la_gondola_vacia() -> void:  # AC-STK-007
@@ -144,9 +158,23 @@ func test_el_deposito_lleno_no_salva_a_la_gondola_vacia() -> void:  # AC-STK-007
 	# el depósito lleno, que es el estado que le da al jugador la razón para ir al estante.
 	var actroncito := Producto.new(Producto.Id.ACTRONCITO, "Actroncito", 2500, 5)
 	var productos: Array[Producto] = [actroncito]
-	var inventario := Inventario.new(productos)
+	var inventario := Inventario.new(productos, {Producto.Id.ACTRONCITO: 5})
 	inventario.ingresar(actroncito, Inventario.Ubicacion.DEPOSITO, 100)
 	assert_array(inventario.faltantes()).contains([actroncito])
+
+
+func test_sin_casilleros_la_gondola_no_pide_nada() -> void:
+	# Un producto sin casilleros declarados no tiene dónde ir en la góndola: no falta nunca y todo
+	# su depósito se vende. Uno que el inventario no conoce tampoco tiene casilleros.
+	var actroncito := Producto.new(Producto.Id.ACTRONCITO, "Actroncito", 2500, 5)
+	var malbardo := Producto.new(Producto.Id.MALBARDO, "Malbardo", 1500, 2)
+	var productos: Array[Producto] = [actroncito]
+	var inventario := Inventario.new(productos)
+	inventario.ingresar(actroncito, Inventario.Ubicacion.DEPOSITO, 6)
+	assert_int(inventario.casilleros(actroncito)).is_zero()
+	assert_int(inventario.casilleros(malbardo)).is_zero()
+	assert_array(inventario.faltantes()).is_empty()
+	assert_int(inventario.vendibles(actroncito)).is_equal(6)
 
 
 func test_faltantes_devuelve_los_que_faltan_y_solo_esos_en_el_orden_de_construccion() -> void:
@@ -156,20 +184,24 @@ func test_faltantes_devuelve_los_que_faltan_y_solo_esos_en_el_orden_de_construcc
 	var durextra := Producto.new(Producto.Id.DUREXTRA, "Durextra", 1200, 2)
 	var laysntt := Producto.new(Producto.Id.LAYSNTT, "Laysntt", 1100, 3)
 	var productos: Array[Producto] = [actroncito, durextra, laysntt]
-	var inventario := Inventario.new(productos)
+	var casilleros: Dictionary[Producto.Id, int] = {
+		Producto.Id.ACTRONCITO: 5, Producto.Id.DUREXTRA: 2, Producto.Id.LAYSNTT: 3
+	}
+	var inventario := Inventario.new(productos, casilleros)
 	inventario.ingresar(durextra, Inventario.Ubicacion.GONDOLA, 2)
 	assert_array(inventario.faltantes()).contains_exactly([actroncito, laysntt])
 
 
-## Un producto de umbral 8, el del criterio. Se inventa acá y no se lee del catálogo: el día que
-## el balance mueva el umbral, las filas de los criterios no cambian de resultado.
-func _de_umbral_ocho() -> Producto:
+## El producto de los criterios de vendibles. Se inventa acá y no se lee del catálogo, y su fila
+## de 8 casilleros la declara `_inventario_con()`: el día que el modelo mueva una fila, las filas
+## de los criterios no cambian de resultado.
+func _de_ocho_casilleros() -> Producto:
 	return Producto.new(Producto.Id.ACTRONCITO, "Actroncito", 2500, 8)
 
 
 func _inventario_con(en_gondola: int, en_deposito: int) -> Inventario:
-	var productos: Array[Producto] = [_de_umbral_ocho()]
-	var inventario := Inventario.new(productos)
+	var productos: Array[Producto] = [_de_ocho_casilleros()]
+	var inventario := Inventario.new(productos, {Producto.Id.ACTRONCITO: 8})
 	inventario.ingresar(productos[0], Inventario.Ubicacion.GONDOLA, en_gondola)
 	inventario.ingresar(productos[0], Inventario.Ubicacion.DEPOSITO, en_deposito)
 	return inventario
@@ -182,7 +214,7 @@ func test_los_vendibles_son_lo_que_el_estante_no_necesita() -> void:  # AC-STK-0
 	for fila: Array in filas:
 		var inventario := _inventario_con(fila[0], fila[1])
 		(
-			assert_int(inventario.vendibles(_de_umbral_ocho()))
+			assert_int(inventario.vendibles(_de_ocho_casilleros()))
 			. override_failure_message("fila %s" % [fila])
 			. is_equal(fila[2])
 		)
@@ -205,16 +237,16 @@ func test_la_venta_sale_del_deposito_y_no_toca_la_gondola() -> void:  # AC-CTR-0
 	for fila: Array in filas:
 		var inventario := _inventario_con(fila[0], fila[1])
 		var venta := Venta.new()
-		venta.agregar(_de_umbral_ocho(), fila[2])
+		venta.agregar(_de_ocho_casilleros(), fila[2])
 		var mensaje := "fila %s" % [fila]
 		assert_bool(inventario.cobrar(venta)).override_failure_message(mensaje).is_equal(fila[3])
 		(
-			assert_int(inventario.unidades(_de_umbral_ocho(), Inventario.Ubicacion.GONDOLA))
+			assert_int(inventario.unidades(_de_ocho_casilleros(), Inventario.Ubicacion.GONDOLA))
 			. override_failure_message(mensaje)
 			. is_equal(fila[4])
 		)
 		(
-			assert_int(inventario.unidades(_de_umbral_ocho(), Inventario.Ubicacion.DEPOSITO))
+			assert_int(inventario.unidades(_de_ocho_casilleros(), Inventario.Ubicacion.DEPOSITO))
 			. override_failure_message(mensaje)
 			. is_equal(fila[5])
 		)
@@ -226,7 +258,7 @@ func test_un_cobro_que_supera_los_vendibles_no_mueve_una_sola_unidad() -> void: 
 	var actroncito := Producto.new(Producto.Id.ACTRONCITO, "Actroncito", 2500, 4)
 	var laysntt := Producto.new(Producto.Id.LAYSNTT, "Laysntt", 1100, 3)
 	var productos: Array[Producto] = [actroncito, laysntt]
-	var inventario := Inventario.new(productos)
+	var inventario := Inventario.new(productos, {Producto.Id.ACTRONCITO: 4, Producto.Id.LAYSNTT: 3})
 	inventario.ingresar(actroncito, Inventario.Ubicacion.GONDOLA, 4)
 	inventario.ingresar(actroncito, Inventario.Ubicacion.DEPOSITO, 6)
 	inventario.ingresar(laysntt, Inventario.Ubicacion.GONDOLA, 3)

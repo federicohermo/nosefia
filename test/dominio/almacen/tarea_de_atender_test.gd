@@ -144,7 +144,7 @@ func test_el_segundo_comprador_ve_los_vendibles_que_dejo_el_primero() -> void:  
 	# vería los vendibles del principio de la noche y se llevaría lo que el estante necesita.
 	var producto := Producto.new(Producto.Id.ACTRONCITO, "Actroncito", 2500, 8)
 	var productos: Array[Producto] = [producto]
-	var inventario := Inventario.new(productos)
+	var inventario := Inventario.new(productos, {Producto.Id.ACTRONCITO: 8})
 	inventario.ingresar(producto, Inventario.Ubicacion.GONDOLA, 8)
 	inventario.ingresar(producto, Inventario.Ubicacion.DEPOSITO, 2)
 	var compradores: Array[Comprador] = []

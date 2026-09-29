@@ -161,7 +161,7 @@ func test_vender_no_deshace_la_unidad_que_esta_en_la_mano() -> void:  # AC-CTR-0
 	# `retirar()` la sacara del depósito, quedaría 1 vendible y esta venta se rechazaría.
 	var producto := Producto.new(Producto.Id.ACTRONCITO, "Actroncito", 2500, 8)
 	var productos: Array[Producto] = [producto]
-	var inventario := Inventario.new(productos)
+	var inventario := Inventario.new(productos, {Producto.Id.ACTRONCITO: 8})
 	inventario.ingresar(producto, Inventario.Ubicacion.GONDOLA, 7)
 	inventario.ingresar(producto, Inventario.Ubicacion.DEPOSITO, 3)
 	var estante := Estante.new(inventario, productos)

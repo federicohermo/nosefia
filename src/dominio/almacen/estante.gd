@@ -6,9 +6,10 @@
 ## por la ventanilla, y ningún error lo diría. Es lo mismo que hace que el estante que se ve sea
 ## un reflejo del inventario y no su fuente.
 ##
-## **El cupo de cada producto es su `umbral`**, el que el 005 le puso en el `Catalogo`. Un número
+## **El cupo de cada producto son los casilleros de su fila de adelante**, y el estante se los
+## pregunta al inventario: se los pasó quien armó el local, que los mide del modelo. Un número
 ## propio acá sería el mismo valor escrito dos veces, y `Inventario.faltantes()` —que es de donde
-## sale `completada()`— seguiría midiendo contra el otro.
+## sale `completada()`— seguiría midiendo contra el otro. El `umbral` del catálogo no decide.
 ##
 ## Es la mitad de reponer que se ejerce sin levantar una escena: acá no hay un solo `Node3D`.
 ## Colocar la unidad con la mano, dibujar el hueco que se llenó y cobrar el tiempo son las tres
@@ -47,15 +48,16 @@ func acepta(producto: Producto) -> bool:
 	return _aceptado_con_el_id_de(producto) != null
 
 
-## Cuántas unidades pide la góndola de ese producto, o `0` si el estante no lo acepta.
+## Cuántas unidades pide la góndola de ese producto: los casilleros de su fila de adelante, o
+## `0` si el estante no lo acepta.
 ##
-## Sale del `umbral` del producto **que el estante declaró aceptar** y no del que le pasan: así
-## un producto armado a mano con otro umbral no cambia cuánto le entra a esta góndola.
+## Sale del inventario por el `id` **del producto que el estante declaró aceptar**, así que dos
+## instancias del mismo producto contestan lo mismo, y una que el estante no acepta, cero.
 func cupo(producto: Producto) -> int:
 	var aceptado := _aceptado_con_el_id_de(producto)
 	if aceptado == null:
 		return 0
-	return aceptado.umbral
+	return _inventario.casilleros(aceptado)
 
 
 ## Cuántas hay en la góndola ahora mismo, preguntándole al inventario.
@@ -149,7 +151,7 @@ func _colocar(producto: Producto) -> Rechazo:
 	return Rechazo.NINGUNO
 
 
-## Si ningún producto aceptado está por debajo de su umbral.
+## Si ningún producto aceptado tiene un casillero vacío en su fila de adelante.
 ##
 ## Sale de `Inventario.faltantes()` y no de una comparación propia: es exactamente la misma
 ## pregunta —«qué le falta a la góndola»— y escribirla dos veces daría dos respuestas el día

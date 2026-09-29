@@ -69,10 +69,10 @@ const SONORIDADES_NUEVAS := {
 	"Feel Ricky Fort": EntradaSonora.Sonoridad.CAJITA,
 }
 
-## Los que no llenan ocho casilleros en la fila de adelante de su tanda, con los que llenan. El
-## cupo es el umbral y tiene que entrar adelante (BR-STK-025): una lata de heladera o una bolsa
-## de cabecera no dan para ocho de frente, y el resto de la tanda quedaría atrás. Lo midió el
-## acomodador sobre el modelo el 2026-09-29, y `disposicion_de_la_gondola_test` lo cobra.
+## Los que no llenan ocho casilleros en la fila de adelante de su tanda, con los que llenan: una
+## lata de heladera o una bolsa de cabecera no dan para ocho de frente. Lo midió el acomodador
+## sobre el modelo el 2026-09-29. **El cupo ya no sale de acá** sino de la fila de adelante
+## (BR-STK-008), así que este umbral no decide qué falta ni cuánto entra.
 const UMBRALES_MENORES := {
 	"Laysntt": 5,
 	"Chisitos": 5,
