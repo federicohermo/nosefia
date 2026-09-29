@@ -27,6 +27,17 @@ El juego necesita **una unidad**: el puesto de reposición toma la superficie 0 
 el modelo de una y apila copias separadas por su AABB. Con la fila entera, dos productos vecinos
 se pisan y el test de apoyos del modelo da rojo — un síntoma que no nombra ni a Blender ni al
 modificador, que es lo que lo vuelve caro.
+
+## Y cada textura viaja achicada al lado de su grupo, sobre una copia
+
+El arte del artista pasa los 9.000 px de lado, y el `.glb` llevaba cada imagen entera: 62 MB, el
+95 % en texturas, para un juego que igual las importa a 1024. El lado de cada grupo y de qué grupo
+es cada imagen lo decide `lib/blender.py`. Acá se achica **una copia en memoria**, que reemplaza a
+la original sólo mientras dura la exportación: ni el `.blend` ni los PNG del artista cambian.
+
+**La copia tiene que quedar marcada como modificada**, o el exportador copia los bytes del archivo
+original en vez de codificar los píxeles achicados, y el `.glb` sale igual de pesado sin que nada
+lo diga. `scale()` la marca en 5.2; si otra versión dejara de hacerlo, la exportación se corta.
 """
 
 import sys
@@ -38,7 +49,15 @@ import bpy  # type: ignore[import-not-found]  # sólo existe adentro de Blender
 # acá adentro corre el Python de Blender y nada de esto se puede importar desde un test.
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
-from lib.blender import COLECCION_DE_GUIA, MODIFICADOR, es_un_array  # noqa: E402
+from lib.blender import (  # noqa: E402
+    COLECCION_DE_GUIA,
+    FUENTES,
+    LADO_MAXIMO,
+    MODIFICADOR,
+    achicada,
+    es_un_array,
+    grupo_de,
+)
 
 
 def apagar_los_array() -> list[tuple[str, str]]:
@@ -69,6 +88,59 @@ def apagar_la_guia() -> bool:
         return False
     capa.exclude = True
     return True
+
+
+def ruta_en_fuentes(imagen: "bpy.types.Image") -> str | None:
+    """La ruta del archivo de una imagen adentro de `assets/source/`, o `None` si no sale de ahí.
+
+    Las empaquetadas con la ruta de la máquina donde se armaron no salen de ahí: la ruta no
+    existe en esta, y la resolución la deja afuera.
+    """
+    ruta = Path(bpy.path.abspath(imagen.filepath))
+    try:
+        return ruta.resolve().relative_to(FUENTES.resolve()).as_posix()
+    except (OSError, ValueError):
+        return None
+
+
+def achicar_las_imagenes() -> list[tuple["bpy.types.Image", "bpy.types.Image"]]:
+    """Reemplaza cada imagen que pasa el lado de su grupo por una copia achicada, y devuelve los
+    pares para deshacerlo.
+
+    La copia conserva la ruta de la original, que es de donde el exportador saca el nombre de la
+    imagen en el `.glb`, y Godot el del archivo que extrae: cambiarlo dejaría huérfana la textura
+    que los `.res` de `assets/models/` ya referencian.
+    """
+    pares = []
+    for imagen in list(bpy.data.images):
+        if imagen.source != "FILE":
+            continue
+        ancho, alto = imagen.size
+        if ancho == 0 or alto == 0:
+            continue
+        lado = LADO_MAXIMO[grupo_de(ruta_en_fuentes(imagen))]
+        nuevo = achicada(ancho, alto, lado)
+        if nuevo == (ancho, alto):
+            continue
+        copia = imagen.copy()
+        copia.scale(*nuevo)
+        if not copia.is_dirty:
+            bpy.data.images.remove(copia)
+            restaurar_las_imagenes(pares)
+            raise SystemExit(
+                f"{imagen.name}: la copia achicada no quedó marcada como modificada, y el "
+                "exportador copiaría el archivo original entero."
+            )
+        imagen.user_remap(copia)
+        pares.append((imagen, copia))
+    return pares
+
+
+def restaurar_las_imagenes(pares: list[tuple["bpy.types.Image", "bpy.types.Image"]]) -> None:
+    """Vuelve a poner cada original en su lugar y borra las copias."""
+    for imagen, copia in pares:
+        copia.user_remap(imagen)
+        bpy.data.images.remove(copia)
 
 
 def restaurar(apagados: list[tuple[str, str]]) -> None:
@@ -113,9 +185,13 @@ def main() -> None:
     print(f"modificadores `{MODIFICADOR}` apagados: {len(apagados)}")
     guia_apagada = apagar_la_guia()
     print(f"colección `{COLECCION_DE_GUIA}` excluida: {guia_apagada}")
+    achicadas: list[tuple[bpy.types.Image, bpy.types.Image]] = []
     try:
+        achicadas = achicar_las_imagenes()
+        print(f"texturas achicadas: {len(achicadas)}")
         exportar(destino)
     finally:
+        restaurar_las_imagenes(achicadas)
         restaurar(apagados)
         if guia_apagada:
             bpy.context.view_layer.layer_collection.children[COLECCION_DE_GUIA].exclude = False
