@@ -1,7 +1,7 @@
 [gd_scene format=3]
 
 [ext_resource type="Script" path="res://src/escenas/objetos/caja_de_productos.gd" id="script"]
-[ext_resource type="ArrayMesh" path="res://assets/models/caja_de_productos.res" id="malla"]
+[ext_resource type="ArrayMesh" path="res://assets/boxes/caja_de_productos.tres" id="malla"]
 [ext_resource type="Shape3D" path="res://assets/models/caja_colision.tres" id="forma"]
 [ext_resource type="Resource" path="res://src/dominio/almacen/caja_de_reposicion.tres" id="datos"]
 

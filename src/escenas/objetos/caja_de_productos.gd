@@ -17,6 +17,34 @@ signal empujada(caja: Node3D)
 ## Qué tamaño lleva cada producto lo dice el catálogo; cuánto mide cada tamaño es de la escena.
 const MEDIA_CAJA := {Catalogo.TamanoDeCaja.CHICA: 0.2, Catalogo.TamanoDeCaja.GRANDE: 0.3037077}
 
+## La etiqueta de cada producto que el artista dibujó. Los demás siguen con la caja genérica
+## «DEPÓSITO», que es la textura de la malla. Agregar la de un producto es una línea: su copia va a
+## `assets/boxes/`, con el nombre del `Producto.Id` en minúsculas.
+##
+## **Las copias existen porque `source/` no se importa.** El nombre en ASCII es a propósito: el
+## del artista lleva acentos, y «Ó» se escribe distinto en cada sistema de archivos.
+const ETIQUETAS := {
+	Producto.Id.ACTRONCITO: preload("res://assets/boxes/actroncito.png"),
+	Producto.Id.DUREXTRA: preload("res://assets/boxes/durextra.png"),
+	Producto.Id.BURBALOO: preload("res://assets/boxes/burbaloo.png"),
+	Producto.Id.ZUCARACHAS: preload("res://assets/boxes/zucarachas.png"),
+	Producto.Id.LAYSNTT: preload("res://assets/boxes/laysntt.png"),
+	Producto.Id.JORGILLO: preload("res://assets/boxes/jorgillo.png"),
+	Producto.Id.FROTLUPS: preload("res://assets/boxes/frotlups.png"),
+	Producto.Id.AMARGADITO: preload("res://assets/boxes/amargadito.png"),
+	Producto.Id.CINDOLOR: preload("res://assets/boxes/cindolor.png"),
+	Producto.Id.FLINPUF: preload("res://assets/boxes/flinpuf.png"),
+	Producto.Id.DONSATURADOS: preload("res://assets/boxes/donsaturados.png"),
+	Producto.Id.PETISAS: preload("res://assets/boxes/petisas.png"),
+	Producto.Id.MACUMBAS: preload("res://assets/boxes/macumbas.png"),
+	Producto.Id.COSA_DE_MANI: preload("res://assets/boxes/cosa_de_mani.png"),
+	Producto.Id.DURONGA: preload("res://assets/boxes/duronga.png"),
+	Producto.Id.FERNET_GOD: preload("res://assets/boxes/fernet_god.png"),
+	Producto.Id.MAYONCHIS: preload("res://assets/boxes/mayonchis.png"),
+	Producto.Id.OAAAA: preload("res://assets/boxes/oaaaa.png"),
+	Producto.Id.TERMINATOR: preload("res://assets/boxes/terminator.png"),
+}
+
 @export var producto: Producto.Id = Producto.Id.ACTRONCITO
 @export var datos: ObjetoDelAlmacen
 @export var mallas: Array[MeshInstance3D] = []
@@ -37,11 +65,25 @@ func _ready() -> void:
 	# Antes de anotar el lugar: el tamaño cambia dónde apoya, y el `.tscn` ya lo cuenta.
 	for parte: Node3D in [get_node("Cuerpo"), get_node("Malla")]:
 		parte.scale = Vector3.ONE * MEDIA_CAJA[Catalogo.caja_de(producto)]
+	_ponerse_su_etiqueta()
 	_lugar_de_origen = transform
 	_padre_de_origen = get_parent()
 	_origen_en_el_mundo = global_transform
 	_apoyo_que_dejo = global_position
 	sleeping_state_changed.connect(_al_cambiar_el_reposo)
+
+
+## Viste la malla con la etiqueta de su producto: el material de la caja genérica con otra
+## textura. Así filtra pixelado igual, y en la web usa el mismo shader, que ya está compilado.
+##
+## La malla muestra el frente de la textura en los cuatro costados. Las cajas del depósito no
+## giran, y cada una le da al cuarto una cara distinta: la fila del fondo, la +Z.
+func _ponerse_su_etiqueta() -> void:
+	var malla: MeshInstance3D = get_node("Malla")
+	var generico := malla.mesh.surface_get_material(0) as BaseMaterial3D
+	var rotulado := generico.duplicate() as BaseMaterial3D
+	rotulado.albedo_texture = ETIQUETAS.get(producto, generico.albedo_texture)
+	malla.material_override = rotulado
 
 
 func interactuar() -> ObjetoDelAlmacen:
