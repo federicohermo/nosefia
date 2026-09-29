@@ -216,6 +216,10 @@ se corrige el código.
   issue.
 - **Lo que aparece implementando se hace, no se anota.** Un issue incompleto no se cierra abriendo
   otro issue: se completa.
+- **Las capturas que pide el issue van al PR, no a la rama.** Suben a la rama huérfana
+  `capturas/<N>` con `python .claude/skills/implement-feature/scripts/capturas_a_rama.py <N>
+  <carpeta>`, y el PR las muestra por su URL de `raw.githubusercontent.com`. El script existe
+  porque desde un worktree el guard rechaza `git -C` sobre otro.
 - **Lo que genera un recurso commiteado va al repo con él**, con su test. Un recurso sin su
   generador sólo se puede editar a mano, y el cambio siguiente lo escribe de nuevo desde cero. La
   disposición de la góndola, sus dos escenas y sus 71 mallas salían de un acomodador que vivió en

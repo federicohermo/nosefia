@@ -96,6 +96,10 @@ Lo que más se rompe:
   pausa: el criterio salía verde sin medir el agua.
 - **Una tabla de ejemplos cierra consigo misma.** Cada fila se recalcula desde la regla antes de
   escribirla, y una hora de cierre es apertura más duración, no un número copiado de la ficha.
+- **Un objetivo numérico se mide con la propuesta del issue antes de publicarlo**, y un criterio
+  que agrupa archivos se corre contra el árbol. En el #267, productos a 512 y el resto a 1024
+  daban 30,9 MB contra un tope de 30, y agrupar por carpeta dejaba cinco etiquetas afuera: 31,3.
+  El carril tuvo que sumar una recompresión que el issue no traía.
 - **Una lista que reparte un conjunto suma el total.** Si el issue divide los productos en dos
   grupos, los dos grupos se cuentan contra el catálogo. En el #264, las cajas con textura y sin
   textura eran 19 y 11 de 31: Malbardo no estaba en ninguna.

@@ -159,6 +159,9 @@ entregable más caro y el único que hace que el hallazgo no vuelva.
 | un issue de un lote que lee un dato que ningún otro entrega, o que reescribe una regla que otro del lote acaba de escribir | `to-issue` — los borradores de «Varios de una» se cruzaron por archivo y no por lo que cada uno da por hecho |
 | un issue abierto **fuera** del lote que parte de una regla que el lote cambia | `implement-batch` — el checker cruzado miró sólo adentro del lote |
 | un preámbulo escrito para **la máquina de otro** | `implement-batch` — el entorno de los carriles se mide antes de repartir, no se copia del skill |
+| un carril que trabaja **sobre otra base que la del issue** | `implement-batch` — el worktree arranca en `origin/main`, y la rama no salió de una base explícita |
+| un objetivo numérico que **la propuesta del issue no alcanza** | `to-issue` — el número se escribió sin medir la propuesta contra el árbol |
+| capturas pedidas en el PR **sin una forma que ande de subirlas** | `implement-feature` e `implement-batch` — la receta no se probó desde el worktree de un carril |
 
 **Si el problema no entra en ninguna fila, agregá la fila.** Esa tabla es el registro de lo que
 esta doctrina ya aprendió, y está incompleta a propósito.

@@ -91,6 +91,18 @@ Cada agente recibe, literal:
   - **El `-rd` de gdUnit4 es relativo al proyecto aunque empiece con `/`**: `-rd /tmp/x` crea
     `tmp/x` adentro del repo.
   - Las variables de entorno no sobreviven entre llamadas a Bash: van adelante del comando.
+- **Las capturas que pide un issue suben con `scripts/capturas_a_rama.py`**, a la rama huérfana
+  `capturas/<N>`, que no se mergea, y el PR las muestra por su URL cruda. **No con un worktree
+  aparte**: el guard rechaza `git -C <otro worktree>` desde el worktree de un carril. Medido el
+  2026-09-29 en el carril de #267, que las subió a mano con plumbing de git.
+- **Y Bash rechaza un comando con la palabra `source` en una ruta**, con «runs a string through
+  source». Para mirar `assets/source/` va `Glob`, `Grep` o Python. Medido el mismo día.
+- **Y la rama sale de una base explícita, porque el worktree no arranca en ella.** El
+  `isolation: "worktree"` arma el worktree sobre `origin/main`: medido el 2026-09-29, 469
+  commits detrás de `staging`, en los dos primeros carriles del lote. Un carril que crea su rama
+  desde donde está trabaja sobre el árbol de la última entrega. Va `git fetch origin <base>` y
+  `git checkout -b <rama> origin/<base>`, y `git merge-base --is-ancestor origin/<base> HEAD`
+  antes de la primera edición.
 - **La rama se llama `<tipo>/<issue>-<kebab>`, con el tipo del issue, y eso no es decorativo.**
   `gate_de_rama.py` corre como hook y **sólo deja escribir en `src/` desde `feature/`, `bugfix/`,
   `refactor/` e `improvement/`**. El síntoma es un `Edit` denegado, que se lee como un
