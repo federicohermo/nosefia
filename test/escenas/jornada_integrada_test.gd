@@ -1,6 +1,7 @@
 extends GdUnitTestSuite
 
 const ALMACEN := preload("res://src/escenas/almacen.tscn")
+const AperturaConLugar := preload("res://test/escenas/apertura_con_lugar.gd")
 
 var _escala_anterior: float
 
@@ -157,7 +158,7 @@ func _reponer(almacen: Node3D) -> void:
 		camara.global_position = zona.get_center() + direccion
 		camara.look_at(zona.get_center())
 		for unidad in estante.cupo(producto) - estante.unidades_en_gondola(producto):
-			almacen.get("_reposicion_manual").call("retirar_de_la_caja", caja)
+			almacen.get("_reposicion_manual").call("usar_la_caja", caja)
 			almacen.get("_reposicion_manual").get_node("ZonaDe" + producto.nombre).call(
 				"interactuar"
 			)
@@ -335,3 +336,38 @@ func test_la_puerta_a_medio_giro_arranca_cerrada() -> void:  # AC-PLY-037
 	for angulo in antes:
 		assert_float(angulo).is_greater(0.0)
 		assert_float(angulo).is_less(Puerta.ANGULO_ABIERTA)
+
+
+func test_la_noche_siguiente_abre_con_cada_caja_llena_y_nada_afuera() -> void:  # AC-STK-037
+	# Tres cajas que terminan la noche distinto: una vacía, otra con una unidad suya en la mano y
+	# otra con una unidad devuelta. La noche siguiente no hereda ninguna de las tres.
+	var almacen: Node3D = auto_free(ALMACEN.instantiate())
+	add_child(almacen)
+	await get_tree().process_frame
+	AperturaConLugar.abrir_con_todo_el_lugar(almacen)
+	almacen.get("_jugador").set_physics_process(false)
+	var puesto: Node3D = almacen.get("_reposicion_manual")
+	var agarre: Agarre = almacen.get("_agarre")
+	var cajas: Array = almacen.get("_cajas_de_productos")
+	# Actroncito tiene lugar para una caja entera: se vacía colocando de a una.
+	var vacia := Producto.Id.ACTRONCITO
+	for unidad in ReglasDelEstante.UNIDADES_POR_CAJA:
+		puesto.call("usar_la_caja", cajas[vacia])
+		puesto.call("pedir_colocar", vacia)
+	var repositor: Repositor = almacen.get("_repositor")
+	assert_int(repositor.caja(vacia).unidades()).is_zero()
+	puesto.call("usar_la_caja", cajas[Producto.Id.JORGILLO])
+	puesto.call("usar_la_caja", cajas[Producto.Id.JORGILLO])
+	assert_object(agarre.manos().sostenido()).is_null()
+	puesto.call("usar_la_caja", cajas[Producto.Id.MALBARDO])
+	assert_object(agarre.manos().sostenido() as UnidadDeProducto).is_not_null()
+	almacen.call("_al_abrir_la_jornada", ReglasDeLaPartida.PRIMERA_JORNADA + 1)
+	assert_object(agarre.manos().sostenido()).is_null()
+	var estante := repositor.estante()
+	for producto in Catalogo.todos():
+		(
+			assert_int(repositor.caja(producto.id).unidades())
+			. override_failure_message("la caja de %s no abre llena" % producto.nombre)
+			. is_equal(ReglasDelEstante.UNIDADES_POR_CAJA)
+		)
+		assert_int(estante.reservadas(producto)).is_zero()

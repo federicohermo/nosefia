@@ -132,11 +132,19 @@ func _ready() -> void:
 		)
 	)
 	# Reponer, de punta a punta: el clic derecho sobre una caja apoyada entrega una unidad a la
-	# mano y la zona de reposición la coloca en la góndola. Quien atiende ese clic es
-	# `ReposicionManual`, que se conecta solo. La unidad viaja en la mano, así que el inventario
-	# recién cambia cuando el estante la acepta: soltarla en el piso no repone nada.
+	# mano, o le devuelve la de su producto que la mano lleva, y la zona de reposición la coloca
+	# en la góndola. Quien atiende ese clic es `ReposicionManual`, que se conecta solo. La unidad
+	# viaja en la mano y sigue contada en el depósito, así que el inventario recién cambia cuando
+	# el estante la acepta: soltarla en el piso no repone nada, y devolverla no mueve nada.
 	_repositor.agarre = _agarre
 	_repositor.unidad_colocada.connect(_reposicion_manual.depositar)
+	# El subtítulo del examen: lo que dice la caja examinada, y nada cuando termina. El texto lo
+	# arma la caja en `dominio/`; lo examinado que no es una caja no dice nada, y el HUD lo pinta.
+	_jugador.examen.examen_iniciado.connect(
+		func(nodo: Node3D) -> void:
+			_hud.mostrar_subtitulo(_reposicion_manual.texto_del_examen(nodo))
+	)
+	_jugador.examen.examen_terminado.connect(_hud.vaciar_subtitulo)
 	# El motor no despierta lo que está sobre una caja empujada. Lo hace el puesto.
 	for caja: CajaDeProductosDelDeposito in _cajas_de_productos:
 		caja.empujada.connect(_reposicion_manual.despertar_lo_de_arriba)

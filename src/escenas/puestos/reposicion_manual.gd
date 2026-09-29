@@ -111,7 +111,7 @@ func preparar() -> void:
 		casillero.material_de_foco = _fantasma(modelo, 0.45, 1.0)
 		casillero.colocacion_pedida.connect(pedir_colocar)
 		_zonas.append(casillero)
-	jugador.uso_pedido.connect(retirar_de_la_caja)
+	jugador.uso_pedido.connect(usar_la_caja)
 	repositor.agarre.objeto_agarrado.connect(_actualizar_zonas)
 	repositor.agarre.objeto_soltado.connect(_actualizar_zonas)
 	repositor.agarre.objeto_soltado.connect(_desatascar_lo_soltado)
@@ -168,18 +168,45 @@ func _retirar_del_grupo(nodo: Node3D) -> void:
 		_sueltos[nodo.datos.producto.id].quitar(nodo)
 
 
-## Saca una unidad de la caja apuntada, y sólo con la caja apoyada.
+## Lo que el clic derecho hace con la caja apuntada: sacarle una unidad, devolverle la de la mano
+## o nada.
 ##
 ## El clic derecho llega por `uso_pedido`, que se reparte entre los puestos: acá se descarta lo
-## que no es una caja. Cuándo entrega lo decide `ReglasDeLosObjetos`, donde tiene test.
-func retirar_de_la_caja(objetivo: Node3D) -> void:
+## que no es una caja. **Cuál de los tres toca lo contesta la caja**, en `dominio/`, según lo que
+## haya en la mano; acá sólo se busca la acción de ese gesto. Llevar una caja es otra cosa en la
+## mano, y por eso a la que se lleva no se le saca nada.
+func usar_la_caja(objetivo: Node3D) -> void:
 	var caja := objetivo as CajaDelDeposito
 	if caja == null:
 		return
-	var la_lleva := repositor.agarre.manos().sostenido() == caja.datos
-	if not ReglasDeLosObjetos.se_puede_retirar(la_lleva):
+	var acciones: Dictionary[ContenidoDeLaCaja.Gesto, Callable] = {
+		ContenidoDeLaCaja.Gesto.SACAR: retirar,
+		ContenidoDeLaCaja.Gesto.METER: devolver,
+		ContenidoDeLaCaja.Gesto.NADA: func(_id: Producto.Id) -> void: pass,
+	}
+	var gesto := repositor.caja(caja.producto).uso(repositor.agarre.manos().sostenido())
+	acciones[gesto].call(caja.producto)
+
+
+## Mete en su caja la unidad de la mano y guarda su cuerpo, que deja de verse. Si la caja no la
+## recibe, la unidad sigue en la mano y acá no pasa nada.
+func devolver(id: Producto.Id) -> void:
+	var cuerpo := repositor.pedir_devolver(id) as ObjetoAgarrable
+	if cuerpo == null:
 		return
-	retirar(caja.producto)
+	_guardar_cuerpo(cuerpo)
+	_actualizar_zonas()
+
+
+## Lo que dice la caja examinada, o nada si lo examinado no es una caja.
+##
+## El texto lo arma la caja en `dominio/`, donde tiene test, y contado sobre el estante de esta
+## noche: la misma caja dice lo mismo apoyada que en la mano.
+func texto_del_examen(nodo: Node3D) -> String:
+	var caja := nodo as CajaDelDeposito
+	if caja == null:
+		return ""
+	return repositor.caja(caja.producto).texto_del_examen()
 
 
 ## Baja a la cintura la caja recién levantada y le da su volumen al cuerpo del jugador.

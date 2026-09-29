@@ -38,6 +38,14 @@ const CARPETA_DE_LA_COMPUTADORA := "ui/" + "diegetica"
 ## palabras es una regla del juego, y acá arriba nace sin test.
 const RASTROS_DEL_VEREDICTO := ["mostrar_veredicto", "consecuencia_de"]
 
+## El tema de la UI de Manada, el mismo que aplica la computadora.
+const TEMA := "res://assets/ui/manada/tema.tres"
+
+## Lo que delataría el texto de la caja armado acá: sus palabras, su cuenta y quien la lleva.
+const RASTROS_DEL_TEXTO_DE_LA_CAJA := [
+	"Una caja con", "Entra", "ContenidoDeLaCaja", "UNIDADES_POR_CAJA"
+]
+
 
 func test_el_hud_no_dibuja_el_veredicto_del_cierre() -> void:
 	var texto := FileAccess.get_file_as_string(HUD)
@@ -122,6 +130,55 @@ func test_ninguna_suite_de_este_spec_carga_la_computadora_del_009() -> void:
 			. is_not_empty()
 		)
 		assert_str(texto).not_contains(CARPETA_DE_LA_COMPUTADORA)
+
+
+func test_el_subtitulo_usa_el_tema_de_manada_sin_fuente_ni_color_propios() -> void:
+	# La identidad de la UI de Manada, la misma que aplica la computadora. Una fuente o un color
+	# propios serían un segundo estilo, que se separa del tema sin que nada se ponga en rojo.
+	var hud: Hud = auto_free(load(ESCENA_DEL_HUD).instantiate())
+	add_child(hud)
+	var subtitulo := hud.get_node_or_null("Subtitulo") as Label
+	assert_object(subtitulo).is_not_null()
+	if subtitulo == null:
+		return
+	assert_object(subtitulo.theme).is_not_null()
+	if subtitulo.theme == null:
+		return
+	assert_str(subtitulo.theme.resource_path).is_equal(TEMA)
+	assert_bool(subtitulo.has_theme_font_override("font")).is_false()
+	assert_bool(subtitulo.has_theme_color_override("font_color")).is_false()
+	var tema: Theme = load(TEMA)
+	assert_str(tema.default_font.resource_path).contains("unscii-16")
+	assert_object(subtitulo.get_theme_font("font")).is_same(tema.default_font)
+	assert_that(subtitulo.get_theme_color("font_color")).is_equal(
+		tema.get_color("font_color", "Label")
+	)
+	# No retiene al jugador: el mouse lo atraviesa y el examen se cierra con la E, como siempre.
+	assert_int(subtitulo.mouse_filter).is_equal(Control.MOUSE_FILTER_IGNORE)
+
+
+func test_el_hud_pinta_el_subtitulo_que_le_llega_y_lo_vacia() -> void:
+	var hud: Hud = auto_free(load(ESCENA_DEL_HUD).instantiate())
+	add_child(hud)
+	var subtitulo: Label = hud.get_node("Subtitulo")
+	assert_str(subtitulo.text).is_empty()
+	hud.mostrar_subtitulo("Una caja con 8 cajitas de Actroncito.")
+	assert_str(subtitulo.text).is_equal("Una caja con 8 cajitas de Actroncito.")
+	hud.vaciar_subtitulo()
+	assert_str(subtitulo.text).is_empty()
+
+
+func test_el_hud_no_arma_el_texto_de_la_caja() -> void:
+	# El texto lo arma la caja en `dominio/`, donde tiene test. Armado acá, cuántas le entran a
+	# una caja sería una regla del juego en una capa que el gate de tests no mira.
+	var texto := FileAccess.get_file_as_string(HUD)
+	assert_str(texto).is_not_empty()
+	for rastro: String in RASTROS_DEL_TEXTO_DE_LA_CAJA:
+		(
+			assert_bool(texto.contains(rastro))
+			. override_failure_message("`hud.gd` nombra `%s`: arma el texto de la caja" % rastro)
+			. is_false()
+		)
 
 
 ## Todos los `.gd` de una carpeta, recorriendo las subcarpetas. `DirAccess` y no una lista a
