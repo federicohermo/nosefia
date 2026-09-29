@@ -212,10 +212,23 @@ nada: la unidad sigue en la mano. Una caja no pasa nunca de las unidades de una 
 CUANDO el jugador examina una caja del depósito, apoyada o en la mano, el sistema DEBE mostrar
 un texto con su contenido y el nombre de su producto en el catálogo. SI la caja no está llena,
 ENTONCES el texto DEBE decir además cuántas le entran: las unidades de una caja menos su
-contenido. El texto NO DEBE decir nada más: la pista de la caja no se muestra. La unidad se
-nombra por la sonoridad de su producto (BR-STK-023): una cajita se cuenta en cajitas, y las demás
-familias son OQ-STK-006. CUANDO termina el examen, el texto DEBE desaparecer. Examinar NO DEBE
-cambiar el contenido.
+contenido. El texto NO DEBE decir nada más: la pista de la caja no se muestra. CUANDO termina el
+examen, el texto DEBE desaparecer. Examinar NO DEBE cambiar el contenido.
+
+La unidad DEBE nombrarse por la familia sonora de su producto (BR-STK-023), y no por lo que el
+producto es: Actroncito es una caja de medicamentos y Malbardo un paquete de cigarrillos, y los
+dos se cuentan en cajitas. Con una sola unidad va el singular:
+
+| Familia sonora | Singular | Plural |
+|---|---|---|
+| cajita | cajita | cajitas |
+| envoltorio plástico | paquete | paquetes |
+| lata | lata | latas |
+| caja | cartón | cartones |
+| botella plástica | botella | botellas |
+
+Una caja se cuenta en cartones y no en cajas: el texto diría «una caja con 8 cajas». Cada familia
+que usa un producto del catálogo DEBE tener su palabra.
 
 ## Criterios de aceptación
 
@@ -432,6 +445,13 @@ DADO una caja con tope de 8 CUANDO se la examina ENTONCES el texto es:
 | 7 de Actroncito | Una caja con 7 cajitas de Actroncito. Entra 1 más. |
 | 1 de Actroncito | Una caja con 1 cajita de Actroncito. Entran 7 más. |
 | 0 de Actroncito | Una caja con 0 cajitas de Actroncito. Entran 8 más. |
+| 8 de Laysntt | Una caja con 8 paquetes de Laysntt. |
+| 1 de Coracola | Una caja con 1 lata de Coracola. Entran 7 más. |
+| 6 de Terminator | Una caja con 6 cartones de Terminator. Entran 2 más. |
+| 1 de Fernet God | Una caja con 1 botella de Fernet God. Entran 7 más. |
+
+DADO cada producto del catálogo ENTONCES su familia sonora tiene su palabra, en singular y en
+plural.
 
 ### AC-STK-042 — El texto dura lo que dura el examen *(verifica BR-STK-031)*
 
@@ -490,14 +510,5 @@ desaparece, y la caja tiene lo mismo que antes de examinarla.
   - Por qué sigue abierta: la ficha «8. Tarea: Reposición» fija los faltantes de la jornada 1 y
     dice «A definir» en las otras cuatro. Mientras tanto arrancan con los de la jornada 1
     (BR-STK-026).
-  - Decide: el diseño, en la ficha.
-  - Bloquea: nada.
-- **OQ-STK-006 — ¿Cómo se cuentan en el texto de la caja una lata, una botella, un envoltorio y
-  una caja?**
-  - Por qué sigue abierta: los dos ejemplos de la ficha son cajitas, y la palabra sale de la
-    sonoridad y no de lo que el producto es: Actroncito es una caja de medicamentos y Malbardo un
-    paquete de cigarrillos, y los dos se cuentan en cajitas. Para las otras familias sonoras la
-    palabra no está decidida. Mientras tanto se cuentan en unidades, la palabra de esta
-    capacidad: «Una caja con 8 unidades de Coracola.».
   - Decide: el diseño, en la ficha.
   - Bloquea: nada.
