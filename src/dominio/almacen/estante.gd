@@ -9,7 +9,7 @@
 ## **El cupo de cada producto son los casilleros de su fila de adelante**, y el estante se los
 ## pregunta al inventario: se los pasó quien armó el local, que los mide del modelo. Un número
 ## propio acá sería el mismo valor escrito dos veces, y `Inventario.faltantes()` —que es de donde
-## sale `completada()`— seguiría midiendo contra el otro. El `umbral` del catálogo no decide.
+## sale `completada()`— seguiría midiendo contra el otro.
 ##
 ## Es la mitad de reponer que se ejerce sin levantar una escena: acá no hay un solo `Node3D`.
 ## Colocar la unidad con la mano, dibujar el hueco que se llenó y cobrar el tiempo son las tres

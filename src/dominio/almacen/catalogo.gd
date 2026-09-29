@@ -1,20 +1,19 @@
 ## Qué productos existen en el almacén y con qué valores.
 ##
-## Es el único lugar donde viven el nombre, el precio y el umbral de cada producto. Están acá y
-## no adentro de `inventario.gd` porque son los números que se van a mover balanceando, y un
-## valor que vive al lado de la lógica que lo usa termina copiado en el segundo lugar que lo
-## necesita.
+## Es el único lugar donde viven el nombre y el precio de cada producto. Están acá y no adentro
+## de `inventario.gd` porque son los números que se van a mover balanceando, y un valor que vive
+## al lado de la lógica que lo usa termina copiado en el segundo lugar que lo necesita.
 ##
-## Los productos y sus tres columnas son un **primer valor**: el GDD no los fija. Se
-## ajustan jugando, y ajustarlos no rompe ningún test de `inventario.gd`, que recibe los
-## productos en vez de venir a buscarlos acá.
+## Los productos y sus columnas son un **primer valor**: el GDD no los fija. Se ajustan jugando,
+## y ajustarlos no rompe ningún test de `inventario.gd`, que recibe los productos en vez de venir
+## a buscarlos acá.
 class_name Catalogo
 extends RefCounted
 
 ## Los dos tamaños de caja que guarda el depósito.
 enum TamanoDeCaja { CHICA, GRANDE }
 
-## Cada `Producto.Id` con su nombre, su precio en pesos enteros y su umbral de reposición.
+## Cada `Producto.Id` con su nombre y su precio en pesos enteros.
 ##
 ## **Los nombres son los del modelo 3D**, y no una etiqueta genérica: cada fila tiene detrás
 ## una malla que el jugador ve en la góndola, y un nombre que no coincide con lo que se ve
@@ -25,42 +24,40 @@ enum TamanoDeCaja { CHICA, GRANDE }
 ## fila es rojo: `catalogo_test.gd` cuenta las filas de acá contra `Producto.Id.size()`, y las
 ## cuenta sobre este diccionario y no sobre `todos()` a propósito —ver `de()`—.
 ##
-## **El umbral ya no es el cupo.** Cuántas unidades pide la góndola de cada producto son los
-## casilleros de su fila de adelante (BR-STK-008), que mide el modelo y le llegan al inventario
-## desde la escena: ninguna regla lee esta columna. Quedó como la dejó el reparto de un lugar por
-## producto —ocho, salvo donde la góndola no da para ocho de frente—.
+## **Cuántas unidades pide la góndola de cada producto no está acá**: son los casilleros de su
+## fila de adelante (BR-STK-008), que mide el modelo y le llegan al inventario desde la escena.
 const FILAS := {
-	Producto.Id.ACTRONCITO: ["Actroncito", 2500, 8],
-	Producto.Id.DUREXTRA: ["Durextra", 1200, 7],
-	Producto.Id.BURBALOO: ["Burbaloo", 1800, 8],
-	Producto.Id.ZUCARACHAS: ["Zucarachas", 900, 8],
-	Producto.Id.LAYSNTT: ["Laysntt", 1100, 5],
-	Producto.Id.MALBARDO: ["Malbardo", 1500, 8],
-	Producto.Id.PRONGLES: ["Prongles", 1200, 8],
-	Producto.Id.JORGILLO: ["Jorgillo", 900, 8],
-	Producto.Id.ARVEJAS: ["Arvejas", 800, 8],
-	Producto.Id.CHISITOS: ["Chisitos", 700, 5],
-	Producto.Id.OREMOS: ["Oremos", 1000, 8],
-	Producto.Id.PEPITOS: ["Pepitos", 950, 8],
-	Producto.Id.SALADIK: ["Saladik", 850, 8],
-	Producto.Id.UAKAS: ["Uakas", 1300, 8],
-	Producto.Id.CORACOLA: ["Coracola", 1400, 6],
-	Producto.Id.FROTLUPS: ["Frotlups", 1600, 8],
-	Producto.Id.MAROLINI: ["Marolini", 1050, 8],
-	Producto.Id.AMARGADITO: ["Amargadito", 3200, 8],
-	Producto.Id.CINDOLOR: ["Cindolor", 1900, 8],
-	Producto.Id.FLINPUF: ["Flinpuf", 600, 8],
-	Producto.Id.DONSATURADOS: ["Donsaturados", 1150, 8],
-	Producto.Id.PETISAS: ["Petisas", 980, 8],
-	Producto.Id.MACUMBAS: ["Macumbas", 1250, 8],
-	Producto.Id.COSA_DE_MANI: ["Cosa de Maní", 700, 8],
-	Producto.Id.DURONGA: ["Duronga", 1300, 7],
-	Producto.Id.FERNET_GOD: ["Fernet God", 4500, 5],
-	Producto.Id.MAYONCHIS: ["Mayonchis", 1100, 4],
-	Producto.Id.OAAAA: ["Oaaaa", 600, 4],
-	Producto.Id.TERMINATOR: ["Terminator", 2800, 4],
-	Producto.Id.MARRANOS: ["Marranos", 1400, 8],
-	Producto.Id.FEEL_RICKY_FORT: ["Feel Ricky Fort", 800, 7],
+	Producto.Id.ACTRONCITO: ["Actroncito", 2500],
+	Producto.Id.DUREXTRA: ["Durextra", 1200],
+	Producto.Id.BURBALOO: ["Burbaloo", 1800],
+	Producto.Id.ZUCARACHAS: ["Zucarachas", 900],
+	Producto.Id.LAYSNTT: ["Laysntt", 1100],
+	Producto.Id.MALBARDO: ["Malbardo", 1500],
+	Producto.Id.PRONGLES: ["Prongles", 1200],
+	Producto.Id.JORGILLO: ["Jorgillo", 900],
+	Producto.Id.ARVEJAS: ["Arvejas", 800],
+	Producto.Id.CHISITOS: ["Chisitos", 700],
+	Producto.Id.OREMOS: ["Oremos", 1000],
+	Producto.Id.PEPITOS: ["Pepitos", 950],
+	Producto.Id.SALADIK: ["Saladik", 850],
+	Producto.Id.UAKAS: ["Uakas", 1300],
+	Producto.Id.CORACOLA: ["Coracola", 1400],
+	Producto.Id.FROTLUPS: ["Frotlups", 1600],
+	Producto.Id.MAROLINI: ["Marolini", 1050],
+	Producto.Id.AMARGADITO: ["Amargadito", 3200],
+	Producto.Id.CINDOLOR: ["Cindolor", 1900],
+	Producto.Id.FLINPUF: ["Flinpuf", 600],
+	Producto.Id.DONSATURADOS: ["Donsaturados", 1150],
+	Producto.Id.PETISAS: ["Petisas", 980],
+	Producto.Id.MACUMBAS: ["Macumbas", 1250],
+	Producto.Id.COSA_DE_MANI: ["Cosa de Maní", 700],
+	Producto.Id.DURONGA: ["Duronga", 1300],
+	Producto.Id.FERNET_GOD: ["Fernet God", 4500],
+	Producto.Id.MAYONCHIS: ["Mayonchis", 1100],
+	Producto.Id.OAAAA: ["Oaaaa", 600],
+	Producto.Id.TERMINATOR: ["Terminator", 2800],
+	Producto.Id.MARRANOS: ["Marranos", 1400],
+	Producto.Id.FEEL_RICKY_FORT: ["Feel Ricky Fort", 800],
 }
 
 ## La sonoridad de cada producto, de la columna «Familia sonora» de la ficha. Va aparte de
@@ -159,8 +156,7 @@ static func de(id: Producto.Id) -> Producto:
 	var fila: Array = FILAS[id]
 	var nombre: String = fila[0]
 	var precio: int = fila[1]
-	var umbral: int = fila[2]
-	return Producto.new(id, nombre, precio, umbral)
+	return Producto.new(id, nombre, precio)
 
 
 ## La sonoridad de ese producto, o `NINGUNA` si no tiene fila.

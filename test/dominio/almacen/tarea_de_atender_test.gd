@@ -20,12 +20,11 @@ func _pedido(unidades: int = 1) -> Venta:
 	return venta
 
 
-## La góndola llena, así que todo el depósito es vendible.
+## Una góndola sin casilleros declarados no pide nada, así que todo el depósito es vendible.
 func _inventario(vendibles: int = VENDIBLES) -> Inventario:
 	var productos := _productos()
 	var inventario := Inventario.new(productos)
 	for producto in productos:
-		inventario.ingresar(producto, Inventario.Ubicacion.GONDOLA, producto.umbral)
 		inventario.ingresar(producto, Inventario.Ubicacion.DEPOSITO, vendibles)
 	return inventario
 
@@ -142,7 +141,7 @@ func test_en_la_ventanilla_esta_el_que_llego_y_todavia_no_se_despacho() -> void:
 func test_el_segundo_comprador_ve_los_vendibles_que_dejo_el_primero() -> void:  # AC-CTR-017
 	# Los dos compradores comparten el inventario. Si cada atención mirara una copia, el segundo
 	# vería los vendibles del principio de la noche y se llevaría lo que el estante necesita.
-	var producto := Producto.new(Producto.Id.ACTRONCITO, "Actroncito", 2500, 8)
+	var producto := Producto.new(Producto.Id.ACTRONCITO, "Actroncito", 2500)
 	var productos: Array[Producto] = [producto]
 	var inventario := Inventario.new(productos, {Producto.Id.ACTRONCITO: 8})
 	inventario.ingresar(producto, Inventario.Ubicacion.GONDOLA, 8)

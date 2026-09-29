@@ -15,14 +15,10 @@ const CUPO_DE_PRUEBA := 2
 ## Más de las que entran en el estante, para separar «se llenó» de «se acabó el depósito».
 const EN_DEPOSITO := 5
 
-## El umbral de los productos de prueba, distinto de su fila a propósito: si el estante lo
-## leyera en vez de los casilleros, los casos de cupo darían otro número.
-const UMBRAL_QUE_NO_DECIDE := 7
-
 
 ## Un producto con el `id` que el caso necesita, sin pasar por el catálogo.
 func _producto(id: Producto.Id) -> Producto:
-	return Producto.new(id, "de prueba", 100, UMBRAL_QUE_NO_DECIDE)
+	return Producto.new(id, "de prueba", 100)
 
 
 ## Un estante que acepta esos productos, con el depósito ya cargado, la góndola en cero y la
@@ -165,8 +161,8 @@ func test_un_producto_nulo_se_rechaza_en_vez_de_reventar() -> void:
 
 
 func test_el_cupo_de_cada_producto_son_los_casilleros_de_su_fila() -> void:  # AC-STK-008
-	# Dos filas distintas en el mismo estante, y el umbral de los dos productos en otro número:
-	# el cupo es el de la fila de cada uno, y no uno solo para el estante ni el del catálogo.
+	# Dos filas distintas en el mismo estante: el cupo es el de la fila de cada uno, y no uno
+	# solo para el estante.
 	var actroncito := _producto(Producto.Id.ACTRONCITO)
 	var malbardo := _producto(Producto.Id.MALBARDO)
 	var aceptados: Array[Producto] = [actroncito, malbardo]
@@ -182,26 +178,15 @@ func test_el_cupo_de_cada_producto_son_los_casilleros_de_su_fila() -> void:  # A
 func test_el_estante_no_lleva_el_cupo_ni_el_stock_escritos_adentro() -> void:
 	# El estante del dominio tampoco: la fuente es el inventario, con los casilleros que le pasó
 	# quien armó el local, y una cuenta propia acá daría verde en los dos gates mientras
-	# contradice al inventario. Tampoco lee el umbral del catálogo: ya no decide nada.
-	for ruta: String in [
-		"res://src/dominio/almacen/estante.gd", "res://src/dominio/almacen/inventario.gd"
-	]:
-		var texto := FileAccess.get_file_as_string(ruta)
-		assert_str(texto).is_not_empty()
-		for patron: String in ["get_child_count", "_stock", ".umbral"]:
-			(
-				assert_bool(texto.contains(patron))
-				. override_failure_message("`%s` nombra `%s`" % [ruta, patron])
-				. is_false()
-			)
-	(
-		assert_bool(
-			FileAccess.get_file_as_string("res://src/dominio/almacen/estante.gd").contains(
-				"_unidades"
-			)
+	# contradice al inventario.
+	var texto := FileAccess.get_file_as_string("res://src/dominio/almacen/estante.gd")
+	assert_str(texto).is_not_empty()
+	for patron: String in ["get_child_count", "_unidades", "_stock"]:
+		(
+			assert_bool(texto.contains(patron))
+			. override_failure_message("`estante.gd` de `dominio/` nombra `%s`" % patron)
+			. is_false()
 		)
-		. is_false()
-	)
 
 
 func test_retirar_reserva_la_unidad_sin_duplicar_el_stock() -> void:
@@ -222,7 +207,7 @@ func test_retirar_reserva_la_unidad_sin_duplicar_el_stock() -> void:
 
 
 func test_el_estante_lleno_conserva_la_unidad_rechazada() -> void:
-	var producto := Producto.new(Producto.Id.ACTRONCITO, "Actroncito", 1, UMBRAL_QUE_NO_DECIDE)
+	var producto := Producto.new(Producto.Id.ACTRONCITO, "Actroncito", 1)
 	var inventario := Inventario.new([producto], {Producto.Id.ACTRONCITO: 1})
 	inventario.ingresar(producto, Inventario.Ubicacion.DEPOSITO, 2)
 	var estante := Estante.new(inventario, [producto])

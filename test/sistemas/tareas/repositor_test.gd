@@ -51,7 +51,7 @@ func before_test() -> void:
 
 
 func _producto(id: Producto.Id) -> Producto:
-	return Producto.new(id, "de prueba", 100, CUPO_DE_PRUEBA)
+	return Producto.new(id, "de prueba", 100)
 
 
 ## Un repositor cableado a mano: reloj con turno arrancado, agarre y estante de un producto.

@@ -31,9 +31,9 @@ var _casilleros: Dictionary[Producto.Id, int] = {}
 ## este archivo.
 ##
 ## **Los casilleros vienen del local armado y no del producto**: cuántas unidades pide la
-## góndola de cada uno es lo que entra en su fila de adelante, que lo mide la escena. El
-## `umbral` que el catálogo le pone al producto no decide nada acá. Un producto sin casilleros
-## no tiene dónde ir en la góndola: no falta nunca y todo su depósito se vende.
+## góndola de cada uno es lo que entra en su fila de adelante, que lo mide la escena. Un
+## producto sin casilleros no tiene dónde ir en la góndola: no falta nunca y todo su depósito se
+## vende.
 func _init(productos: Array[Producto], casilleros: Dictionary[Producto.Id, int] = {}) -> void:
 	for producto in productos:
 		# Un `id` repetido en la lista se ignora: sin este corte, el segundo pisaría con

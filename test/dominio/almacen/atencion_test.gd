@@ -10,6 +10,10 @@ const ATENCION := "res://src/dominio/almacen/atencion.gd"
 ## número por encima del pedido más grande de esta suite sirve.
 const VENDIBLES := 9
 
+## Cuántos casilleros tiene la fila de adelante de cada producto de la suite, y cuántas unidades
+## pone en ella `_inventario()`: la góndola llena.
+const EN_GONDOLA := 8
+
 
 func _productos() -> Array[Producto]:
 	return [Catalogo.de(Producto.Id.ACTRONCITO), Catalogo.de(Producto.Id.MALBARDO)]
@@ -22,13 +26,16 @@ func _pedido(unidades_de_actroncito: int = 2, unidades_de_malbardo: int = 1) -> 
 	return venta
 
 
-## La góndola llena, así que todo el depósito es vendible. Se arma desde el umbral y no con un
-## número escrito acá: el día que el balance mueva un umbral, los casos no cambian de resultado.
+## La góndola llena, así que todo el depósito es vendible. La fila de adelante se declara acá
+## y no se lee del local: el día que el modelo mueva una fila, los casos no cambian de resultado.
 func _inventario(vendibles: int = VENDIBLES) -> Inventario:
 	var productos := _productos()
-	var inventario := Inventario.new(productos)
+	var casilleros: Dictionary[Producto.Id, int] = {}
 	for producto in productos:
-		inventario.ingresar(producto, Inventario.Ubicacion.GONDOLA, producto.umbral)
+		casilleros[producto.id] = EN_GONDOLA
+	var inventario := Inventario.new(productos, casilleros)
+	for producto in productos:
+		inventario.ingresar(producto, Inventario.Ubicacion.GONDOLA, EN_GONDOLA)
 		inventario.ingresar(producto, Inventario.Ubicacion.DEPOSITO, vendibles)
 	return inventario
 
@@ -41,9 +48,7 @@ func _atencion(paga: int, vendibles: int = VENDIBLES, pedido: Venta = null) -> A
 ## Que el inventario siga como lo dejó `_inventario(vendibles)`, en las dos ubicaciones.
 func _sin_cambios(inventario: Inventario, vendibles: int) -> void:
 	for producto in _productos():
-		assert_int(inventario.unidades(producto, Inventario.Ubicacion.GONDOLA)).is_equal(
-			producto.umbral
-		)
+		assert_int(inventario.unidades(producto, Inventario.Ubicacion.GONDOLA)).is_equal(EN_GONDOLA)
 		assert_int(inventario.unidades(producto, Inventario.Ubicacion.DEPOSITO)).is_equal(vendibles)
 
 
@@ -159,7 +164,7 @@ func test_cobrar_sobre_una_despachada_a_mano_no_vende() -> void:  # AC-CTR-008
 func test_vender_no_deshace_la_unidad_que_esta_en_la_mano() -> void:  # AC-CTR-016
 	# La unidad en la mano cuenta una vez: en el depósito y en lo que a la góndola le falta. Si
 	# `retirar()` la sacara del depósito, quedaría 1 vendible y esta venta se rechazaría.
-	var producto := Producto.new(Producto.Id.ACTRONCITO, "Actroncito", 2500, 8)
+	var producto := Producto.new(Producto.Id.ACTRONCITO, "Actroncito", 2500)
 	var productos: Array[Producto] = [producto]
 	var inventario := Inventario.new(productos, {Producto.Id.ACTRONCITO: 8})
 	inventario.ingresar(producto, Inventario.Ubicacion.GONDOLA, 7)
