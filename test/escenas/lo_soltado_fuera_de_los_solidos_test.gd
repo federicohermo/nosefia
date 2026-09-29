@@ -355,7 +355,7 @@ func _frente_a(almacen: Node3D, cara: String, parado: float) -> Array:
 			return [Vector3(limites.end.x - 0.6, alto, fondo + parado), Vector3.FORWARD]
 		PARED_DE_LA_FACHADA:
 			return [Vector3(PARED_LIBRE.x, alto, PARED_LIBRE.y - parado), Vector3.BACK]
-	var gondola: MeshInstance3D = almacen.get_node("Estructura/gondola_deposito01")
+	var gondola: MeshInstance3D = almacen.get_node("Estructura/gondola_deposito03_001")
 	var suya := gondola.global_transform * gondola.get_aabb()
 	return [Vector3(suya.get_center().x, alto, suya.end.z + parado), Vector3.FORWARD]
 
@@ -677,12 +677,12 @@ func _soltar_la_caja_sobre(almacen: Node3D, caja: Node3D, cara: String, tapa: Ve
 	_accion(jugador, caja, ReglasDeLosObjetos.ACCION_AGARRAR)
 
 
-## **La tabla de arriba arranca con dos cajas**, y en las de abajo una caja grande no entra: se
-## corre una de las dos al piso para dejarle lugar a la que se suelta.
+## **La tabla de abajo del estante del fondo arranca llena**: se corre al piso la caja del medio
+## para dejarle lugar a la que se suelta.
 func test_la_caja_se_sigue_apoyando_en_un_estante_del_deposito() -> void:  # AC-PLY-021
 	var almacen: Node3D = await _almacen()
 	var caja := _caja_grande(almacen)
-	var tabla: Node3D = almacen.get("_cajas_de_productos")[Producto.Id.CHISITOS]
+	var tabla: Node3D = almacen.get("_cajas_de_productos")[Producto.Id.UAKAS]
 	var lugar := tabla.global_position
 	tabla.global_position = Vector3(lugar.x, lugar.y, lugar.z + 3.0)
 	tabla.global_position.y = MEDIA_CAJA + _piso(almacen)
@@ -690,7 +690,7 @@ func test_la_caja_se_sigue_apoyando_en_un_estante_del_deposito() -> void:  # AC-
 	await _soltar_la_caja_sobre(
 		almacen, caja, GONDOLA_DEL_DEPOSITO, lugar + Vector3.DOWN * MEDIA_CAJA
 	)
-	assert_str(_apoyo_de(almacen, caja)).contains("gondola_deposito01")
+	assert_str(_apoyo_de(almacen, caja)).contains("gondola_deposito03_001")
 	assert_array(_solidos_pisados(caja)).is_empty()
 	_comprobar_sin_rescates(almacen, "lo legal")
 

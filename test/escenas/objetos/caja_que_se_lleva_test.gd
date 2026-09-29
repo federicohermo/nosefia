@@ -4,7 +4,7 @@ extends GdUnitTestSuite
 const ALMACEN := preload("res://src/escenas/almacen.tscn")
 
 ## El estante vacío del depósito: el único donde una caja entra sin apilarse sobre otra.
-const ESTANTE_DEL_DEPOSITO := "Estructura/gondola_deposito01/StaticBody3D"
+const ESTANTE_DEL_DEPOSITO := "Estructura/gondola_deposito03_001/StaticBody3D"
 
 ## La góndola del pasillo, que tiene paneles a los costados de cada estante. Es la forma difícil:
 ## el hueco entre dos paneles es de los pocos lugares donde la caja entra de canto.
@@ -62,8 +62,11 @@ const CUADROS_QUIETOS := 20
 ## una caja y media tarda menos de treinta; el resto es el margen del reposo.
 const CUADROS_CAYENDO := 150
 
-## A qué altura está la tabla más alta del estante del depósito, en metros.
-const TABLA_DE_ARRIBA := 1.6
+## A qué altura está la tabla libre del estante del depósito, en metros: la del medio.
+const TABLA_DE_ARRIBA := 1.48
+
+## Cuánto separa una tabla del estante del depósito de la de abajo, en metros.
+const ENTRE_TABLAS := 0.69
 
 ## De cuántos pisos es la pila que se arma. Con tres el caso pasa en verde sin cascada: despertar
 ## un solo piso alcanza para dos. Con cinco, sin cascada, la cuarta queda flotando.
@@ -381,18 +384,23 @@ func test_alrededor_de_un_estante_con_lugar_la_caja_siempre_sube_a_el() -> void:
 	var jugador: CharacterBody3D = almacen.get("_jugador")
 	var mano: Node3D = jugador.get_node("Giro/PuntoDeCaja")
 	var caja: Node3D = almacen.get("_cajas_de_productos")[Producto.Id.PRONGLES]
-	var estante := _limites_de(almacen.get_node("Estructura/gondola_deposito03/StaticBody3D"))
+	var estante := _limites_de(almacen.get_node(ESTANTE_DEL_DEPOSITO))
+	# La vecina sube de la tabla de abajo a la libre, y deja media tabla libre a su lado.
+	var vecina: Node3D = almacen.get("_cajas_de_productos")[Producto.Id.MAROLINI]
+	vecina.global_position += Vector3.UP * ENTRE_TABLAS
+	vecina.call("quedarse_quieta")
 	_accion(jugador, caja, ReglasDeLosObjetos.ACCION_AGARRAR)
-	await _parar_al_jugador_en(jugador, Vector3(estante.position.x - 1.0, 0.11, -11.3))
+	var frente := Vector3(estante.position.x + estante.size.x * 0.3, 0.11, estante.end.z + 1.0)
+	await _parar_al_jugador_en(jugador, frente)
 	var al_piso: Array[String] = []
 	for alto: float in [33.0, 25.0, 17.0, 5.0, -7.0]:
 		for giro: float in [14.0, 6.0, 2.0, -4.0, -20.0, -28.0]:
 			if caja.get_parent() != mano:
 				_accion(jugador, caja, ReglasDeLosObjetos.ACCION_AGARRAR)
-			_mirar(jugador, -PI / 2.0 + deg_to_rad(giro), deg_to_rad(alto))
+			_mirar(jugador, deg_to_rad(giro), deg_to_rad(alto))
 			jugador.force_update_transform()
 			_accion(jugador, caja, ReglasDeLosObjetos.ACCION_AGARRAR)
-			# La tabla de arriba está a 1,6 m: de ahí para abajo es otro estante o el piso.
+			# La tabla libre está a 1,48 m: de ahí para abajo es otra tabla o el piso.
 			if caja.get_parent() == mano or caja.global_position.y < TABLA_DE_ARRIBA:
 				al_piso.append("mira %.0f, giro %.0f" % [alto, giro])
 			else:

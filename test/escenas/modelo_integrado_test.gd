@@ -78,8 +78,7 @@ func test_el_surtido_fijo_no_muestra_stock_que_el_dominio_no_tiene() -> void:
 		if contenido.is_ancestor_of(malla):
 			continue
 		var ruta := str(estructura.get_path_to(malla))
-		# `limpiador` muestra un producto que el catálogo no tiene, y ningún dato del repo lo dice.
-		var oculta := ruta == "limpiador"
+		var oculta := false
 		for lugar in lugares:
 			oculta = oculta or malla.global_position.distance_to(lugar) < TOLERANCIA
 		var falla := "se ve" if oculta else "está oculta fuera de la disposición"
