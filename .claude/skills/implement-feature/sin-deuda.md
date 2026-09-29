@@ -162,6 +162,8 @@ entregable más caro y el único que hace que el hallazgo no vuelva.
 | un carril que trabaja **sobre otra base que la del issue** | `implement-batch` — el worktree arranca en `origin/main`, y la rama no salió de una base explícita |
 | un objetivo numérico que **la propuesta del issue no alcanza** | `to-issue` — el número se escribió sin medir la propuesta contra el árbol |
 | capturas pedidas en el PR **sin una forma que ande de subirlas** | `implement-feature` e `implement-batch` — la receta no se probó desde el worktree de un carril |
+| un criterio de arte que **no entra en el modelo** | `to-issue` — el criterio se escribió sin medirlo sobre el `.blend` |
+| un valor nuevo de un enum **cuyo índice vive fuera de los límites** | `to-issue` — el `rg` buscó el enum en el catálogo y no en todo lo que se indexa con él |
 
 **Si el problema no entra en ninguna fila, agregá la fila.** Esa tabla es el registro de lo que
 esta doctrina ya aprendió, y está incompleta a propósito.

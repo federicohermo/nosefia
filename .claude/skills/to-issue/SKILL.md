@@ -100,6 +100,15 @@ Lo que más se rompe:
   que agrupa archivos se corre contra el árbol. En el #267, productos a 512 y el resto a 1024
   daban 30,9 MB contra un tope de 30, y agrupar por carpeta dejaba cinco etiquetas afuera: 31,3.
   El carril tuvo que sumar una recompresión que el issue no traía.
+- **Un criterio que depende del modelo se mide sobre el modelo, o se escribe como pregunta.** En
+  el #262, «umbral 8 de frente» y «los estantes se achican» salieron sin medir: 10 de los 31
+  productos no entraban ocho de frente donde el issue los ponía, y el umbral lo decidió el
+  usuario mirando las capturas del PR.
+- **Un valor nuevo en un enum del dominio lleva a «Se escribe» todo lo que se indexa con él.** No
+  sólo el catálogo: la escena que declara uno por valor, las miniaturas, las tablas. El `rg` del
+  enum corre sobre `src/`, `test/` y `assets/`. En el #262, las 23 cajas del depósito vivían en
+  `objetos_del_almacen.tscn` y la planilla pedía una miniatura por producto: ninguna de las dos
+  estaba en los límites.
 - **Una lista que reparte un conjunto suma el total.** Si el issue divide los productos en dos
   grupos, los dos grupos se cuentan contra el catálogo. En el #264, las cajas con textura y sin
   textura eran 19 y 11 de 31: Malbardo no estaba en ninguna.

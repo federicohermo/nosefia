@@ -39,6 +39,9 @@ func test_con_un_segundo_restante_la_obligatoria_cuenta() -> void:  # AC-SHF-007
 - **El archivo termina en `_test.gd`**, y **cada `func test_…` afirma algo.**
 - **El criterio que verifica va citado al final de la línea**, como `AC-<COD>-###`. Lo cobra
   `gate_de_specs.py` sobre los specs `ratified`.
+- **Una suite tiene hasta 20 `test_`.** Cada uno es un método público, y `.gdlintrc` pone
+  `max-public-methods: 20`. La que se pasa sale roja en el nodo `lint`, no en `tests`, y se parte
+  por lo que prueba. Le costó una vuelta al carril de #262.
 
 ## Lo que el gate rechaza
 
