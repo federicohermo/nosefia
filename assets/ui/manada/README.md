@@ -23,6 +23,7 @@ durante la ejecución.
 Las miniaturas de los productos son renders transparentes de 512 × 512 del modelo del juego.
 Usan las mallas de `contenido_del_estante.tscn`, con la cámara orientada hacia el frente de cada
 envase. Las de las cabeceras se renderizan sin la inclinación de la rampa.
+Las genera `assets/models/generar_miniaturas.gd`, con el comando de su encabezado.
 No usan productos de ejemplo de Figma que no existen en el registro actual.
 
 El fondo se capturó en Godot a 1920 × 1080, sin HUD, desde `(6.58, 1.81, 6.93)`, con la
