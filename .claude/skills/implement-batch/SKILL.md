@@ -202,10 +202,13 @@ le faltó. Esperá a que vuelvan todos antes del reporte.
 ## Paso 4 — Lo que sólo el padre puede cerrar
 
 - **Las ediciones fuera de carril**, en serie, para que el diff se lea.
-- **Las decisiones de diseño que traen los carriles se le preguntan al usuario con la captura
-  de cada opción**, no con su descripción. En el lote del 2026-09-29, «Actroncito de costado»
-  se eligió leyendo que mostraba el lateral de la caja. La captura mostró el lateral turquesa
-  liso, y deshacerlo costó otra vuelta de pipeline y de horneado.
+- **Antes de preguntarle algo al usuario, el padre mide lo que la pregunta supone**: qué cara
+  ve el jugador, qué muestra la textura en esa cara, qué decidió ya el usuario. Si una sola
+  opción cumple todo, se decide y se informa con su evidencia. Al usuario va sólo lo que
+  ninguna medición contesta, y con la captura de cada opción. En el lote del 2026-09-29 se
+  preguntó «Actroncito de costado» sin mirar que su lateral era liso, y deshacerlo costó otra
+  vuelta de pipeline y de horneado. Después se preguntó cómo etiquetar las cajas, cuando el
+  usuario ya había dicho «no modifiques el modelo»: las dos respuestas se podían medir.
 - **El lazo, y es del padre por construcción**: si dos carriles corrigen el mismo `SKILL.md` a la
   vez, se pisan sin conflicto visible. Sale en su propio PR `harness/` desde `staging`, no en el PR
   de un carril: el issue del carril no lo cubre.
