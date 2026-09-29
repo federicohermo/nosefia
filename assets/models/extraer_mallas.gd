@@ -1,16 +1,20 @@
 ## Guarda la malla de cada producto del modelo importado. Es el último paso del acomodador, y el
 ## único que corre adentro de Godot y no de Blender.
 ##
-##     godot --headless --path . --script .claude/scripts/blender/extraer_mallas.gd
+##     godot --headless --path . --script assets/models/extraer_mallas.gd
 ##
-## Va después de `exportar_modelo.py`, que reimporta el `.glb`, y de `blender/disponer.py`, que
-## escribe la disposición: la unidad de cada producto es **el nodo del modelo parado sobre una
-## copia de su tanda**, y se la encuentra por esa posición y no por su nombre, que lo decide el
-## `.glb`. Es el mismo criterio de `modelo_exportado_test.gd`.
+## Va después de `.claude/scripts/exportar_modelo.py`, que reimporta el `.glb`, y de
+## `.claude/scripts/blender/disponer.py`, que escribe la disposición: la unidad de cada producto es
+## **el nodo del modelo parado sobre una copia de su tanda**, y se la encuentra por esa posición y
+## no por su nombre, que lo decide el `.glb`. Es el mismo criterio de `modelo_exportado_test.gd`.
+##
+## Vive al lado de las mallas que escribe, y no con los scripts de `.claude/scripts/blender/`, que
+## son de Blender: éste es de Godot.
 ##
 ## La malla viaja intacta, con su material: la vuelta y la escala las lleva el nodo de
 ## `contenido_del_estante.tscn`. El archivo se llama como el producto, con la misma regla que
-## `lib/gondola.slug()`: si difieren, la escena apunta a un archivo que nadie escribió.
+## `.claude/scripts/lib/gondola.py` (`slug()`): si difieren, la escena apunta a un archivo que
+## nadie escribió.
 extends SceneTree
 
 const MODELO := "res://assets/models/SEPT_JUEGOS_PROTOTIPO.glb"
@@ -52,7 +56,7 @@ func _extraer() -> void:
 			push_error("%s: %d nodos del modelo sobre su tanda" % [producto.nombre, encima.size()])
 			fallas += 1
 			continue
-		var ruta := CARPETA + "producto_%s.res" % slug(producto.nombre)
+		var ruta := ruta_de_la_malla(producto)
 		var error := ResourceSaver.save(encima[0].mesh, ruta)
 		if error != OK:
 			push_error("%s: no se pudo guardar %s (%d)" % [producto.nombre, ruta, error])
@@ -61,6 +65,11 @@ func _extraer() -> void:
 		print("guardada: ", ruta)
 	modelo.free()
 	quit(1 if fallas > 0 else 0)
+
+
+## Dónde se guarda la malla de un producto.
+static func ruta_de_la_malla(producto: Producto) -> String:
+	return CARPETA + "producto_%s.res" % slug(producto.nombre)
 
 
 ## El nombre de archivo de un producto: minúsculas, sin acentos y con guion bajo.
