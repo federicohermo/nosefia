@@ -76,6 +76,9 @@ func _ready() -> void:
 ## Viste la malla con la etiqueta de su producto: el material de la caja genérica con otra
 ## textura. Así filtra pixelado igual, y en la web usa el mismo shader, que ya está compilado.
 ##
+## Va como material de la superficie y no como `material_override`, que el calentamiento de
+## shaders dibuja de a uno por cuadro. Medido: treinta cuadros más, y ningún shader nuevo.
+##
 ## La malla muestra el frente de la textura en los cuatro costados. Las cajas del depósito no
 ## giran, y cada una le da al cuarto una cara distinta: la fila del fondo, la +Z.
 func _ponerse_su_etiqueta() -> void:
@@ -83,7 +86,7 @@ func _ponerse_su_etiqueta() -> void:
 	var generico := malla.mesh.surface_get_material(0) as BaseMaterial3D
 	var rotulado := generico.duplicate() as BaseMaterial3D
 	rotulado.albedo_texture = ETIQUETAS.get(producto, generico.albedo_texture)
-	malla.material_override = rotulado
+	malla.set_surface_override_material(0, rotulado)
 
 
 func interactuar() -> ObjetoDelAlmacen:

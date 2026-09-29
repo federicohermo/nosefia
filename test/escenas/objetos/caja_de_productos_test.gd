@@ -223,12 +223,20 @@ func test_la_etiqueta_de_cada_producto_es_una_linea_del_script() -> void:
 ## textura, y la textura se importa con los mismos parámetros que la de la genérica —comprimida,
 ## con mipmaps y con el mismo lado tope—. El mismo material es también el mismo shader: en la web
 ## un shader nuevo se compila en la pantalla de carga.
+##
+## Y no va como `material_override`: el calentamiento de shaders dibuja uno por cuadro, y con
+## las 31 cajas pasaba de 129 cuadros a 159 sin compilar nada nuevo.
 func test_la_etiqueta_filtra_pixelado_como_la_caja_generica() -> void:
 	var generica := ConfigFile.new()
 	assert_int(generica.load(GENERICA + ".import")).is_equal(OK)
 	for id: Producto.Id in ORIGEN_DE_CADA_ETIQUETA:
 		var caja := _caja_armada(id)
 		var material := _material(caja)
+		(
+			assert_object((caja.get_node("Malla") as MeshInstance3D).material_override)
+			. override_failure_message("%s suma un cuadro al calentamiento" % _nombre(id))
+			. is_null()
+		)
 		(
 			assert_int(material.texture_filter)
 			. override_failure_message("la etiqueta de %s no filtra pixelado" % _nombre(id))
