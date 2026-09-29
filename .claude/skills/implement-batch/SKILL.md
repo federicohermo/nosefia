@@ -96,7 +96,14 @@ Cada agente recibe, literal:
   aparte**: el guard rechaza `git -C <otro worktree>` desde el worktree de un carril. Medido el
   2026-09-29 en el carril de #267, que las subió a mano con plumbing de git.
 - **Y Bash rechaza un comando con la palabra `source` en una ruta**, con «runs a string through
-  source». Para mirar `assets/source/` va `Glob`, `Grep` o Python. Medido el mismo día.
+  source». Para mirar `assets/source/` va `Glob`, `Grep` o Python. Medido el mismo día. También
+  rechaza un `for` que corre Godot con una variable y un heredoc largo de Python: los dos van a
+  un script en el scratch del carril.
+- **`nosefia-index` no mira el worktree del carril.** Lo levanta la sesión desde el checkout
+  principal, y los subagentes lo comparten: contesta sobre ese árbol. En un carril apilado sobre
+  otro PR describe el árbol de antes. El 2026-09-29, en el carril de #263, decía 18 reglas y 21
+  criterios de `store-stock`, y la rama tenía 20 y 25. Adentro de un carril, lo que cuenta es el
+  `rg` sobre el worktree.
 - **Y la rama sale de una base explícita, porque el worktree no arranca en ella.** El
   `isolation: "worktree"` arma el worktree sobre `origin/main`: medido el 2026-09-29, 469
   commits detrás de `staging`, en los dos primeros carriles del lote. Un carril que crea su rama

@@ -119,6 +119,12 @@ Lo que más se rompe:
   palabras.** Un símbolo no encuentra el comentario que explica la regla con otras palabras, ni
   el test que arma el estado que la regla lee. En el #166 quedaron fuera de «Se escribe» cinco
   archivos con comentarios y un test.
+- **Y busca a cada lector del valor que se mueve, en `src/` y en `test/`.** El contrato sigue a
+  todos, no al primero. En el #263 el cupo dejaba de ser `.umbral`, pero `faltantes()` y
+  `vendibles()` también lo leían. Además, 20 tests armaban con `retirar(` la góndola vacía que el
+  issue llenaba. La primera corrida dio 37 casos rojos en 11 archivos fuera de «Se escribe».
+- **Un criterio que conserva un enunciado se lee contra lo que el issue retira.** En el #263,
+  «`BR-STK-013` sin cambiar su enunciado» nombraba el umbral que el mismo issue sacaba.
 - **Si el issue escribe a disco, dice cómo lo aíslan los tests.** Toda suite que levanta la
   escena lee y escribe la ruta real del usuario, y ningún gate lo ve. En el #23 una partida
   guardada cambiaba en qué noche arrancaban unas 28 suites.
