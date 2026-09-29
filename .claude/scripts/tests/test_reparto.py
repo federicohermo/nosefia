@@ -33,6 +33,9 @@ CATALOGO = RAIZ / "src/dominio/almacen/catalogo.gd"
 NIVELES_DE_LADO = 4
 NIVELES_DE_CABECERA = 3
 
+#: Cuántas bandejas tiene cada heladera. Medido sobre el mismo `.blend`.
+BANDEJAS_DE_HELADERA = 4
+
 
 def _filas_del_catalogo() -> list[tuple[str, str]]:
     """Las filas de `FILAS` del catálogo del juego, en su orden: la clave del enum y el nombre."""
@@ -90,16 +93,25 @@ class ElReparto(unittest.TestCase):
                 if t.producto in DEL_ZOCALO:
                     self.assertEqual(nivel, 0, f"{t.producto} en {estante}")
 
-    def test_la_heladera_lleva_lo_frio_una_sola_vez_y_nada_mas(self):
+    def test_la_heladera_repone_lo_frio_una_sola_vez_y_repite_solo_lo_frio(self):
         en_heladera = [
             t for estante, tandas in ESTANTES.items() if es_heladera(estante) for t in tandas
         ]
-        self.assertEqual(sorted(t.producto for t in en_heladera), sorted(FRIOS))
-        self.assertTrue(all(not t.fija for t in en_heladera))
+        con_casilleros = sorted(t.producto for t in en_heladera if not t.fija)
+        self.assertEqual(con_casilleros, sorted(FRIOS))
+        for t in en_heladera:
+            self.assertIn(t.producto, FRIOS)
         for estante, tandas in ESTANTES.items():
             for t in tandas:
                 if t.producto in FRIOS:
                     self.assertTrue(es_heladera(estante), f"{t.producto} en {estante}")
+
+    def test_ninguna_bandeja_de_heladera_queda_vacia(self):
+        # Decidido por el usuario el 2026-09-29: las bandejas que sobran se llenan con repetidos
+        # fijos de lo frío, como los estantes de góndola que no se completan sin repetir.
+        for letra in HELADERAS:
+            for nivel in range(BANDEJAS_DE_HELADERA):
+                self.assertIn(f"{letra}.este.{nivel}", ESTANTES)
 
     def test_ningun_estante_de_gondola_queda_vacio(self):
         for letra in MUEBLES:
