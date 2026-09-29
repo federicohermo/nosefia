@@ -26,6 +26,25 @@ capturas = importlib.util.module_from_spec(_spec)
 _spec.loader.exec_module(capturas)
 
 
+def _git(*argumentos: str) -> str:
+    return subprocess.run(
+        ["git", *argumentos],
+        capture_output=True,
+        text=True,
+        encoding="utf-8",
+        errors="replace",
+        check=True,
+    ).stdout.strip()
+
+
+def _commit(arbol: str) -> str:
+    return _git("commit-tree", arbol, "-m", "una corrida anterior")
+
+
+def _listado(arbol: str) -> list[str]:
+    return _git("ls-tree", "-r", "--name-only", arbol).split()
+
+
 class ElArbol(unittest.TestCase):
     def setUp(self):
         self._previo = Path.cwd()
@@ -53,6 +72,36 @@ class ElArbol(unittest.TestCase):
                 check=True,
             ).stdout.split()
         self.assertEqual(listado, ["comparacion/salon_lado_a_lado.png", "salon.png"])
+
+    def test_suma_sobre_el_arbol_del_padre_y_reemplaza_la_misma_ruta(self):
+        with tempfile.TemporaryDirectory() as antes, tempfile.TemporaryDirectory() as ahora:
+            (Path(antes) / "a.png").write_bytes(b"viejo")
+            (Path(antes) / "giro").mkdir()
+            (Path(antes) / "giro" / "c.png").write_bytes(b"\x89PNG de la otra corrida")
+            (Path(ahora) / "a.png").write_bytes(b"nuevo")
+            (Path(ahora) / "b.png").write_bytes(b"\x89PNG que se suma")
+            padre = _commit(capturas.arbol(Path(antes)))
+            arbol = capturas.arbol(Path(ahora), padre)
+        self.assertEqual(_listado(arbol), ["a.png", "b.png", "giro/c.png"])
+        self.assertEqual(_git("cat-file", "-p", f"{arbol}:a.png"), "nuevo")
+
+    def test_sin_push_suma_sobre_la_cabeza_de_la_rama_del_remoto(self):
+        # El remoto es el mismo repo temporal: la rama que `ls-remote` encuentra es la de acá.
+        with tempfile.TemporaryDirectory() as antes, tempfile.TemporaryDirectory() as ahora:
+            (Path(antes) / "de_la_primera.png").write_bytes(b"\x89PNG")
+            _git("update-ref", "refs/heads/capturas/999", _commit(capturas.arbol(Path(antes))))
+            (Path(ahora) / "de_la_segunda.png").write_bytes(b"\x89PNG")
+            subprocess.run(["git", "remote", "add", "origin", self._repo.name], check=True)
+            argv = sys.argv
+            sys.argv = ["capturas_a_rama.py", "999", ahora, "--sin-push"]
+            try:
+                with contextlib.redirect_stdout(io.StringIO()) as salida:
+                    codigo = capturas.main()
+            finally:
+                sys.argv = argv
+        self.assertEqual(codigo, 0)
+        self.assertIn("de_la_primera.png", salida.getvalue())
+        self.assertIn("de_la_segunda.png", salida.getvalue())
 
     def test_sin_push_no_toca_ningun_remoto(self):
         # El repo temporal no tiene remoto: si el script intentara empujar, `git push` fallaría.

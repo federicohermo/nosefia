@@ -10,19 +10,28 @@ rama: van a `capturas/<N>`, que nunca se mergea, y el PR las muestra por su URL 
 
 **El guard del entorno rechaza `git -C <otro worktree>`**, con «redirects git to the shared
 checkout via -C». La receta de abrir un worktree huérfano y commitear desde afuera no anda desde
-el worktree de un carril: medido el 2026-09-29, en el carril de #267. Acá se arman los blobs, los
-árboles —con subcarpetas— y un commit con `hash-object`, `mktree` y `commit-tree`, en el repo del
-directorio actual, y se empuja el commit directo a la rama del remoto. Si la rama ya existe, el
-commit nuevo va encima del anterior: cada corrida suma y ninguna pisa.
+el worktree de un carril: medido el 2026-09-29, en el carril de #267. Acá se arman los blobs y
+un árbol con subcarpetas en un índice temporal, y un commit con `commit-tree`, en el repo del
+directorio actual. El commit se empuja directo a la rama del remoto.
+
+## Cada corrida suma y ninguna pisa
+
+**Si la rama ya existe, el árbol nuevo parte del de su cabeza**, y los archivos de la carpeta van
+encima: lo que ya estaba queda, y un archivo con la misma ruta se reemplaza. Sin eso, la cabeza
+de la rama tenía sólo la carpeta de la última corrida, y cada URL de una corrida anterior daba
+404 aunque el PR la siguiera mostrando. Lo encontró el carril de #263, el 2026-09-29.
 """
 
+import os
 import re
 import subprocess
 import sys
+import tempfile
 from pathlib import Path
 
 
-def git(*argumentos: str, entrada: str | None = None) -> str:
+def git(*argumentos: str, entrada: str | None = None, indice: Path | None = None) -> str:
+    entorno = None if indice is None else {**os.environ, "GIT_INDEX_FILE": str(indice)}
     return subprocess.run(
         ["git", *argumentos],
         input=entrada,
@@ -30,19 +39,22 @@ def git(*argumentos: str, entrada: str | None = None) -> str:
         text=True,
         encoding="utf-8",
         errors="replace",
+        env=entorno,
         check=True,
     ).stdout.strip()
 
 
-def arbol(carpeta: Path) -> str:
-    """El hash del árbol de `carpeta`, con sus subcarpetas, escrito en el repo actual."""
-    entradas = []
-    for ruta in sorted(carpeta.iterdir()):
-        if ruta.is_dir():
-            entradas.append(f"040000 tree {arbol(ruta)}\t{ruta.name}")
-        elif ruta.is_file():
-            entradas.append(f"100644 blob {git('hash-object', '-w', str(ruta))}\t{ruta.name}")
-    return git("mktree", entrada="\n".join(entradas) + "\n")
+def arbol(carpeta: Path, padre: str | None = None) -> str:
+    """El hash del árbol de `carpeta`, con sus subcarpetas, sobre el árbol del commit `padre`."""
+    with tempfile.TemporaryDirectory() as temporal:
+        indice = Path(temporal) / "index"
+        if padre is not None:
+            git("read-tree", padre, indice=indice)
+        for ruta in sorted(p for p in carpeta.rglob("*") if p.is_file()):
+            blob = git("hash-object", "-w", str(ruta))
+            relativa = ruta.relative_to(carpeta).as_posix()
+            git("update-index", "--add", "--cacheinfo", f"100644,{blob},{relativa}", indice=indice)
+        return git("write-tree", indice=indice)
 
 
 def base_cruda(url_del_remoto: str) -> str | None:
@@ -62,12 +74,13 @@ def main() -> int:
         print(f"no es una carpeta: {carpeta}", file=sys.stderr)
         return 2
     rama = f"capturas/{numero}"
-    arbol_nuevo = arbol(carpeta)
-    padres: list[str] = []
+    padre: str | None = None
     remoto = git("ls-remote", "origin", f"refs/heads/{rama}")
     if remoto:
         git("fetch", "-q", "origin", rama)
-        padres = ["-p", remoto.split()[0]]
+        padre = remoto.split()[0]
+    arbol_nuevo = arbol(carpeta, padre)
+    padres = [] if padre is None else ["-p", padre]
     commit = git("commit-tree", arbol_nuevo, *padres, "-m", f"capturas de #{numero}")
     print(git("ls-tree", "-r", "--name-only", commit))
     if "--sin-push" in sys.argv:
