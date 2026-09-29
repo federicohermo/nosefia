@@ -331,30 +331,6 @@ func test_la_etiqueta_no_se_estira_en_la_caja_chica_ni_en_la_grande() -> void:
 	)
 
 
-## Las cuatro caras de los costados muestran el frente de la textura, sin espejar. Las cajas del
-## depósito no giran: la fila del fondo le da al cuarto su cara +Z, y el estante, la ±X.
-func test_la_etiqueta_se_lee_desde_los_cuatro_costados() -> void:
-	var caja := _caja_armada(Producto.Id.ACTRONCITO)
-	var malla := (caja.get_node("Malla") as MeshInstance3D).mesh
-	# La cara que la mano pone de frente a la cámara es la rotulada: la que mira a +Z de la mano.
-	var rotulada := (caja.orientacion_en_mano.inverse() * Vector3.BACK).round()
-	var frente := _rectangulo_uv(malla, rotulada)
-	assert_float(frente.get_area()).is_greater(0.0)
-	for normal: Vector3 in [Vector3.RIGHT, Vector3.LEFT, Vector3.FORWARD, Vector3.BACK]:
-		var cara := _rectangulo_uv(malla, normal)
-		(
-			assert_vector(cara.position)
-			. override_failure_message("la cara %s no muestra el frente" % normal)
-			. is_equal_approx(frente.position, Vector2.ONE * 1e-4)
-		)
-		assert_vector(cara.end).is_equal_approx(frente.end, Vector2.ONE * 1e-4)
-		(
-			assert_bool(_se_lee_derecha(malla, normal))
-			. override_failure_message("la cara %s muestra la etiqueta espejada" % normal)
-			. is_true()
-		)
-
-
 func _caja() -> CajaQueSeLleva:
 	return auto_free(load(ESCENA).instantiate())
 
@@ -410,37 +386,3 @@ func _estiramiento_de_cada_triangulo(malla: MeshInstance3D) -> Array[float]:
 		var por_v := (lado_2 * uv_1.x - lado_1 * uv_2.x) / det
 		estiramientos.append(por_u.length() / por_v.length())
 	return estiramientos
-
-
-## El rectángulo de la textura que muestra la cara con esa normal.
-func _rectangulo_uv(malla: Mesh, normal: Vector3) -> Rect2:
-	var arrays := malla.surface_get_arrays(0)
-	var normales: PackedVector3Array = arrays[Mesh.ARRAY_NORMAL]
-	var uvs: PackedVector2Array = arrays[Mesh.ARRAY_TEX_UV]
-	var rectangulo := Rect2()
-	var vacio := true
-	for i: int in normales.size():
-		if normales[i].dot(normal) < 0.9:
-			continue
-		rectangulo = Rect2(uvs[i], Vector2.ZERO) if vacio else rectangulo.expand(uvs[i])
-		vacio = false
-	return rectangulo
-
-
-## Mirada de frente, la textura crece hacia la derecha de quien mira y hacia abajo: así no sale
-## espejada ni cabeza abajo.
-func _se_lee_derecha(malla: Mesh, normal: Vector3) -> bool:
-	var arrays := malla.surface_get_arrays(0)
-	var normales: PackedVector3Array = arrays[Mesh.ARRAY_NORMAL]
-	var posiciones: PackedVector3Array = arrays[Mesh.ARRAY_VERTEX]
-	var uvs: PackedVector2Array = arrays[Mesh.ARRAY_TEX_UV]
-	var derecha := Vector3.UP.cross(normal)
-	var centro := _rectangulo_uv(malla, normal).get_center()
-	for i: int in normales.size():
-		if normales[i].dot(normal) < 0.9:
-			continue
-		var hacia_la_derecha := (uvs[i].x - centro.x) * posiciones[i].dot(derecha) > 0.0
-		var hacia_abajo := (uvs[i].y - centro.y) * posiciones[i].y < 0.0
-		if not (hacia_la_derecha and hacia_abajo):
-			return false
-	return true

@@ -79,8 +79,8 @@ func _ready() -> void:
 ## Va como material de la superficie y no como `material_override`, que el calentamiento de
 ## shaders dibuja de a uno por cuadro. Medido: treinta cuadros más, y ningún shader nuevo.
 ##
-## La malla muestra el frente de la textura en los cuatro costados. Las cajas del depósito no
-## giran, y cada una le da al cuarto una cara distinta: la fila del fondo, la +Z.
+## La malla es la del modelo, y lleva la etiqueta en sus caras ±X. Cuál ve el cuarto lo decide
+## el giro de cada caja en `objetos_del_almacen.tscn`.
 func _ponerse_su_etiqueta() -> void:
 	var malla: MeshInstance3D = get_node("Malla")
 	var generico := malla.mesh.surface_get_material(0) as BaseMaterial3D
