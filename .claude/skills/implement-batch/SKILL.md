@@ -97,8 +97,9 @@ Cada agente recibe, literal:
   2026-09-29 en el carril de #267, que las subió a mano con plumbing de git.
 - **Y Bash rechaza un comando con la palabra `source` en una ruta**, con «runs a string through
   source». Para mirar `assets/source/` va `Glob`, `Grep` o Python. Medido el mismo día. También
-  rechaza un `for` que corre Godot con una variable y un heredoc largo de Python: los dos van a
-  un script en el scratch del carril.
+  rechaza, con «too complex to verify», un subshell que corre Godot, `godot … "$VAR"`, un `for`
+  que corre Godot con una variable y un heredoc largo de Python con `git` adentro. Todo eso va a
+  un script en el scratch del carril, que se corre en una línea.
 - **`nosefia-index` no mira el worktree del carril.** Lo levanta la sesión desde el checkout
   principal, y los subagentes lo comparten: contesta sobre ese árbol. En un carril apilado sobre
   otro PR describe el árbol de antes. El 2026-09-29, en el carril de #263, decía 18 reglas y 21
@@ -108,8 +109,10 @@ Cada agente recibe, literal:
   `isolation: "worktree"` arma el worktree sobre `origin/main`: medido el 2026-09-29, 469
   commits detrás de `staging`, en los dos primeros carriles del lote. Un carril que crea su rama
   desde donde está trabaja sobre el árbol de la última entrega. Va `git fetch origin <base>` y
-  `git checkout -b <rama> origin/<base>`, y `git merge-base --is-ancestor origin/<base> HEAD`
-  antes de la primera edición.
+  `git checkout --no-track -b <rama> origin/<base>`, y `git merge-base --is-ancestor
+  origin/<base> HEAD` antes de la primera edición. **El `--no-track` evita que dos carriles
+  escriban a la vez el `.git/config` compartido.** Al de #264 le pasó: la rama quedó creada, el
+  índice cambiado y HEAD todavía en `worktree-agent-…`. El upstream lo pone el `push -u`.
 - **La rama se llama `<tipo>/<issue>-<kebab>`, con el tipo del issue, y eso no es decorativo.**
   `gate_de_rama.py` corre como hook y **sólo deja escribir en `src/` desde `feature/`, `bugfix/`,
   `refactor/` e `improvement/`**. El síntoma es un `Edit` denegado, que se lee como un
@@ -199,6 +202,10 @@ le faltó. Esperá a que vuelvan todos antes del reporte.
 ## Paso 4 — Lo que sólo el padre puede cerrar
 
 - **Las ediciones fuera de carril**, en serie, para que el diff se lea.
+- **Las decisiones de diseño que traen los carriles se le preguntan al usuario con la captura
+  de cada opción**, no con su descripción. En el lote del 2026-09-29, «Actroncito de costado»
+  se eligió leyendo que mostraba el lateral de la caja. La captura mostró el lateral turquesa
+  liso, y deshacerlo costó otra vuelta de pipeline y de horneado.
 - **El lazo, y es del padre por construcción**: si dos carriles corrigen el mismo `SKILL.md` a la
   vez, se pisan sin conflicto visible. Sale en su propio PR `harness/` desde `staging`, no en el PR
   de un carril: el issue del carril no lo cubre.

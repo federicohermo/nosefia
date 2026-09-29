@@ -166,6 +166,8 @@ entregable más caro y el único que hace que el hallazgo no vuelva.
 | un valor nuevo de un enum **cuyo índice vive fuera de los límites** | `to-issue` — el `rg` buscó el enum en el catálogo y no en todo lo que se indexa con él |
 | un contrato que mueve un valor y **no sigue a todos sus lectores** | `to-issue` — el `rg` encontró al primer lector y el contrato se escribió sobre ése |
 | un índice que contesta sobre **otro árbol** que el del carril | `implement-batch` — el preámbulo mandó a consultar el índice desde un worktree, y el servidor mira el checkout principal |
+| una textura que **no se ve desde donde mira el jugador** | `to-issue` — el issue no cruzó la textura con las UV de la malla ni con la cara visible |
+| una decisión del usuario que **se deshace al ver el resultado** | `implement-batch` — se preguntó con la descripción de cada opción y no con su captura |
 
 **Si el problema no entra en ninguna fila, agregá la fila.** Esa tabla es el registro de lo que
 esta doctrina ya aprendió, y está incompleta a propósito.

@@ -104,6 +104,10 @@ Lo que más se rompe:
   el #262, «umbral 8 de frente» y «los estantes se achican» salieron sin medir: 10 de los 31
   productos no entraban ocho de frente donde el issue los ponía, y el umbral lo decidió el
   usuario mirando las capturas del PR.
+- **Una textura sobre una malla que ya existe se cruza con sus UV y con la cara que ve el
+  jugador.** En el #264, la etiqueta de cada caja caía en las caras ±X, y la fila del fondo del
+  depósito le mostraba al cuarto la +Z: desde ahí no se leía ningún nombre. En el #262, los
+  laterales de Actroncito caían en una zona lisa del atlas.
 - **Un valor nuevo en un enum del dominio lleva a «Se escribe» todo lo que se indexa con él.** No
   sólo el catálogo: la escena que declara uno por valor, las miniaturas, las tablas. El `rg` del
   enum corre sobre `src/`, `test/` y `assets/`. En el #262, las 23 cajas del depósito vivían en
