@@ -2,7 +2,14 @@
 
 import unittest
 
-from lib.horneado import PLUGIN, project_con_el_plugin, sesion_bloqueada, veredicto
+from lib.horneado import (
+    PLUGIN,
+    SALIDAS,
+    project_con_el_plugin,
+    reescritos_de_mas,
+    sesion_bloqueada,
+    veredicto,
+)
 
 PROJECT = (
     "config_version=5\n\n[editor_plugins]\n\n"
@@ -51,3 +58,33 @@ class SesionBloqueada(unittest.TestCase):
 
     def test_sin_la_pantalla_de_bloqueo_la_sesion_esta_abierta(self):
         self.assertFalse(sesion_bloqueada('"explorer.exe","1","Console"\n'))
+
+
+class ReescritosDeMas(unittest.TestCase):
+    # El editor guarda la escena para escribir el horneado, y al guardar re-serializa más de lo
+    # que el horneado cambió. Medido el 2026-09-29: además de las dos salidas, dejó `almacen.tscn`
+    # con 94 overrides de `transform` iguales a los de la estructura, y reescritos `tema.tres` y
+    # `caja_de_reposicion.tres`.
+    def test_las_salidas_del_horneado_no_se_devuelven(self):
+        self.assertEqual(reescritos_de_mas(list(SALIDAS)), [])
+
+    def test_lo_que_el_editor_re_serializo_se_devuelve(self):
+        escritos = [
+            *SALIDAS,
+            "src/escenas/almacen.tscn",
+            "assets/ui/manada/tema.tres",
+            "src/dominio/almacen/caja_de_reposicion.tres",
+        ]
+        self.assertEqual(
+            reescritos_de_mas(escritos),
+            [
+                "assets/ui/manada/tema.tres",
+                "src/dominio/almacen/caja_de_reposicion.tres",
+                "src/escenas/almacen.tscn",
+            ],
+        )
+
+    def test_project_godot_lo_devuelve_el_script_byte_por_byte(self):
+        # Ya lo restaura `hornear.py` con el contenido de antes: devolverlo acá otra vez lo
+        # pisaría con el de git, y un `project.godot` con cambios sin commitear los perdería.
+        self.assertEqual(reescritos_de_mas(["project.godot"]), [])

@@ -15,6 +15,13 @@ Escribiendo `project.godot` con el plugin como único prendido, y devolviéndolo
 terminar, pase lo que pase. No hay otra: el editor no lee la lista de plugins de `override.cfg`.
 Dejar el plugin en `project.godot` haría que cada apertura del editor horneara y cerrara.
 
+## Lo que el editor ensucia al guardar, se devuelve
+
+El plugin guarda la escena para escribir el horneado, y el editor re-serializa de paso lo que
+no le pidieron: `almacen.tscn` con overrides de los volúmenes de la estructura, y recursos que
+cargó. Al terminar, todo archivo rastreado que se escribió durante la corrida y no es una salida
+vuelve a lo que tenía antes. El detalle y la medición, en `lib/horneado.reescritos_de_mas()`.
+
 ## Qué hace falta
 
 - `GODOT_BIN`, la misma que usa `verificar.py`.
@@ -22,6 +29,12 @@ Dejar el plugin en `project.godot` haría que cada apertura del editor horneara 
 - Una sesión con pantalla: el editor abre una ventana. El horneado no anda headless.
 - Una GPU con Vulkan: el editor de horneado usa Mobile para evitar la textura nula del
   horneador OpenGL. El juego conserva el renderer definido en `project.godot`.
+
+En Linux sin pantalla ni GPU alcanza con Xvfb y el Vulkan por software de Mesa (lavapipe).
+Medido el 2026-09-29: nueve minutos para el local entero.
+
+    VK_ICD_FILENAMES=/usr/share/vulkan/icd.d/lvp_icd.json xvfb-run -a \\
+        -s "-screen 0 1600x900x24" python .claude/scripts/hornear.py
 """
 
 import os
@@ -37,12 +50,53 @@ from lib.consola import configurar  # noqa: E402
 configurar()
 
 from lib.godot import como_declararlo, resolver  # noqa: E402
-from lib.horneado import SALIDAS, project_con_el_plugin, sesion_bloqueada, veredicto  # noqa: E402
+from lib.horneado import (  # noqa: E402
+    SALIDAS,
+    project_con_el_plugin,
+    reescritos_de_mas,
+    sesion_bloqueada,
+    veredicto,
+)
 from lib.repo import RAIZ  # noqa: E402
 
 PROJECT = Path(RAIZ) / "project.godot"
 #: Un horneado del local tarda segundos. Si pasa de esto, el editor se quedó esperando algo.
 TOPE_SEGUNDOS = 20 * 60
+
+
+def _git(*argumentos: str) -> str:
+    return subprocess.run(
+        ["git", "-C", str(RAIZ), *argumentos],
+        capture_output=True,
+        text=True,
+        encoding="utf-8",
+        errors="replace",
+        check=True,
+    ).stdout
+
+
+def _sucios() -> dict[str, bytes]:
+    """Lo rastreado que ya tenía cambios antes de hornear, con su contenido de ese momento."""
+    rutas = [r for r in _git("diff", "--name-only", "HEAD").splitlines() if r]
+    return {r: (Path(RAIZ) / r).read_bytes() for r in rutas if (Path(RAIZ) / r).is_file()}
+
+
+def _devolver_lo_reescrito(desde: float, sucios: dict[str, bytes]) -> None:
+    """Devuelve a su contenido de antes lo que el editor re-serializó sin que se lo pidieran.
+
+    Lo que ya tenía cambios vuelve a esos cambios; lo que estaba limpio vuelve a lo de git.
+    """
+    escritos = [
+        r
+        for r in _git("ls-files").splitlines()
+        if (Path(RAIZ) / r).is_file() and (Path(RAIZ) / r).stat().st_mtime >= desde
+    ]
+    for ruta in reescritos_de_mas(escritos):
+        if ruta in sucios:
+            (Path(RAIZ) / ruta).write_bytes(sucios[ruta])
+        else:
+            _git("checkout", "--", ruta)
+        print(f"devuelto (el editor lo re-serializó al guardar): {ruta}")
 
 
 def main() -> int:
@@ -63,6 +117,7 @@ def main() -> int:
             print("la sesión de Windows está bloqueada: el editor no hornea sin pantalla")
             return 2
 
+    sucios = _sucios()
     desde = time.time()
     original = PROJECT.read_bytes()
     PROJECT.write_text(project_con_el_plugin(original.decode("utf-8")), encoding="utf-8")
@@ -84,6 +139,7 @@ def main() -> int:
         return 1
     finally:
         PROJECT.write_bytes(original)
+        _devolver_lo_reescrito(desde, sucios)
 
     for linea in (corrida.stdout + corrida.stderr).splitlines():
         if "[hornear]" in linea:

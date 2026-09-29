@@ -38,8 +38,11 @@ python .claude/scripts/hornear.py
 ```
 
 Qué hace y qué necesita lo dice el encabezado del script. Se corre cada vez que cambia el
-modelo, una luz o el `LightmapGI`, y se commitea lo que deja. El error de OpenGL que obliga a
-hornear con Vulkan es el
+modelo, una luz o el `LightmapGI`, y se commitea lo que deja: el `.lmbake` y el `.exr`. **Lo
+demás que el editor re-serializa al guardar, el script lo devuelve.** Sin eso, `almacen.tscn`
+quedaba con un override por cada volumen de la estructura, y el override congela su posición.
+En Linux sin pantalla ni GPU anda con Xvfb y el Vulkan por software de Mesa; el comando está en
+el encabezado. El error de OpenGL que obliga a hornear con Vulkan es el
 [reporte 94407 de Godot](https://github.com/godotengine/godot/issues/94407).
 
 Los mandos:

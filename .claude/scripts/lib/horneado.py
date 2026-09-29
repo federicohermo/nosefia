@@ -44,6 +44,23 @@ def veredicto(codigo: int, actualizados: dict[str, bool]) -> tuple[bool, str]:
     return True, "horneado: " + ", ".join(actualizados)
 
 
+def reescritos_de_mas(escritos: list[str]) -> list[str]:
+    """Lo que el editor reescribió durante el horneado sin que el horneado lo pidiera.
+
+    **Para escribir el horneado, el editor guarda la escena, y al guardar re-serializa más de
+    lo que cambió.** Medido el 2026-09-29 sobre `staging`: además de las dos salidas dejó
+    `almacen.tscn` con 94 overrides de `transform` —los de los volúmenes de la estructura, con
+    los mismos valores que ya tenían— y reescritos `tema.tres` y `caja_de_reposicion.tres`. El
+    `LightmapGI` no había cambiado. Esos overrides no son inocentes: congelan en la escena de
+    arriba la posición de hoy de cada volumen, y el día que la estructura mueva uno, la escena
+    lo vuelve a poner donde estaba sin que nada lo diga.
+
+    `project.godot` no va: lo devuelve `hornear.py` byte por byte con lo que tenía antes, que
+    puede incluir cambios sin commitear.
+    """
+    return sorted(ruta for ruta in escritos if ruta not in SALIDAS and ruta != "project.godot")
+
+
 def sesion_bloqueada(procesos: str) -> bool:
     """Si la lista de `tasklist` trae la pantalla de bloqueo de Windows.
 
