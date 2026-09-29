@@ -3,7 +3,7 @@ schema_version: 1
 capability_id: CAP-STK
 status: ratified
 owner: por definir
-provenance: GDD «Reponer» y «Registrar»; fichas «6) Tarea: Registro de productos vendidos» y «8. Tarea: Reposición»; base «Productos y cajas contenedoras»; migración de los specs 005, 008, 033, 042, 047
+provenance: GDD «Reponer» y «Registrar»; fichas «6) Tarea: Registro de productos vendidos», «8. Tarea: Reposición» y «5. Formas de interacción con objetos»; base «Productos y cajas contenedoras»; migración de los specs 005, 008, 033, 042, 047
 ---
 
 # Capacidad: la mercadería del almacén
@@ -21,7 +21,8 @@ depósito son dos lugares distintos, y mover mercadería del fondo al estante cu
 | **Producto** | qué se vende: identidad, nombre y precio | ítem, SKU |
 | **Unidad** | una pieza de un producto, la que se agarra con la mano | stock, cantidad |
 | **Depósito** | el fondo, con la caja de cada producto: de ahí sale lo que se repone y lo que se vende | almacén, bodega |
-| **Caja del depósito** | la caja de un solo producto de la que se saca de a una unidad | cajón, contenedor |
+| **Caja del depósito** | la caja de un solo producto, donde está su depósito: se le saca de a una unidad y recibe de vuelta las de su producto, hasta llenarse | cajón, contenedor |
+| **Contenido de la caja** | cuántas unidades tiene la caja: su depósito menos las que salieron de ella y todavía no se colocaron | stock, carga |
 | **Góndola** | el estante del local, el que el jugador repone | vitrina, exhibidor |
 | **Tanda** | las unidades de un mismo producto puestas juntas sobre un estante del local, en dos filas | bloque, exhibición |
 | **Fila de adelante** | la fila de una tanda del lado del pasillo: la única que el jugador repone | frente, cara |
@@ -98,18 +99,19 @@ de cuánta mercadería trajo la noche.
 CUANDO ningún producto aceptado por el estante es faltante, el sistema DEBE dar la obligatoria de
 reponer por cumplida. La pregunta se la hace al inventario y no la recalcula.
 
-### BR-STK-016 — A la caja apoyada se le saca una unidad
+### BR-STK-016 — A la caja apoyada y con contenido se le saca una unidad
 
-CUANDO el jugador le pide una unidad a una caja del depósito que **no lleva en la mano**, el
-sistema DEBE darle una unidad del producto de la caja, sin importar dónde esté apoyada: el piso,
-un estante, un mostrador u otra caja. SI el jugador lleva esa caja, ENTONCES el sistema NO DEBE
-darle nada.
+CUANDO el jugador le pide una unidad a una caja del depósito que **no lleva en la mano** y que
+**tiene contenido**, el sistema DEBE darle una unidad del producto de la caja, sin importar dónde
+esté apoyada: el piso, un estante, un mostrador u otra caja. SI el jugador lleva esa caja, o la
+caja está vacía, ENTONCES el sistema NO DEBE darle nada, aunque la góndola tenga lugar.
 
 ### BR-STK-017 — La caja no entrega lo que la góndola no puede recibir
 
 SI la góndola de ese producto ya no tiene lugar, contando las unidades que ya salieron de la caja
 y todavía no se colocaron, ENTONCES el sistema DEBE negar la unidad aunque la caja tenga. Una
-unidad que sale de la caja no vuelve a ella: sin este corte, queda en la mano sin lugar.
+unidad que sale de la caja vuelve a ella sólo si el jugador la devuelve (BR-STK-030): sin este
+corte, sale una unidad que ningún casillero espera.
 
 ### BR-STK-018 — Se vende lo que el estante no necesita
 
@@ -182,6 +184,39 @@ Lo que los compradores de una jornada piden de un producto, sumado a lo que le f
 de adelante al abrir, NO DEBE pasar de las unidades de una caja. La venta y la reposición salen
 de la misma caja: con más, vender y reponer no se pueden cumplir en la misma noche.
 
+### BR-STK-028 — La caja cuenta desde su depósito
+
+El sistema DEBE contar el contenido de la caja de cada producto como su depósito menos las
+unidades que salieron de ella y todavía no se colocaron. La caja y el depósito NO DEBEN contar
+distinto: una venta le resta una unidad a la caja, y colocar una unidad no le cambia nada, porque
+ya había salido. CUANDO se abre una jornada, cada caja DEBE arrancar llena, con las unidades de
+una caja (BR-STK-004), sin importar cómo terminó la anterior.
+
+### BR-STK-029 — El clic sobre la caja: sacar, devolver o nada
+
+CUANDO el jugador usa una caja del depósito apoyada, el sistema DEBE elegir el gesto por lo que
+lleva en la mano. Con las manos vacías, DEBE sacarle una unidad (BR-STK-016). Con una unidad del
+producto de la caja, DEBE devolvérsela (BR-STK-030). Con cualquier otra cosa en la mano NO DEBE
+pasar nada: la ficha no le da un efecto, y el sistema no le inventa uno.
+
+### BR-STK-030 — Devolver a la caja
+
+CUANDO el jugador devuelve a la caja una unidad de su producto que salió de ella y no se colocó,
+el sistema DEBE sacarla de la mano y sumarla al contenido de la caja. La caja la puede volver a
+dar, y el depósito y la góndola no cambian. SI la caja está llena —tiene las unidades de una
+caja—, o la unidad es de otro producto, o ya volvió a la caja, ENTONCES el sistema NO DEBE cambiar
+nada: la unidad sigue en la mano. Una caja no pasa nunca de las unidades de una caja.
+
+### BR-STK-031 — La caja examinada dice cuántas tiene
+
+CUANDO el jugador examina una caja del depósito, apoyada o en la mano, el sistema DEBE mostrar
+un texto con su contenido y el nombre de su producto en el catálogo. SI la caja no está llena,
+ENTONCES el texto DEBE decir además cuántas le entran: las unidades de una caja menos su
+contenido. El texto NO DEBE decir nada más: la pista de la caja no se muestra. La unidad se
+nombra por la sonoridad de su producto (BR-STK-023): una cajita se cuenta en cajitas, y las demás
+familias son OQ-STK-006. CUANDO termina el examen, el texto DEBE desaparecer. Examinar NO DEBE
+cambiar el contenido.
+
 ## Criterios de aceptación
 
 ### AC-STK-001 — La identidad manda *(verifica BR-STK-001)*
@@ -236,10 +271,12 @@ y sin depósito, sin unidades en depósito.
 DADO un estante con la fila de adelante de todos sus productos completa ENTONCES la obligatoria
 está cumplida; con un solo casillero vacío, no.
 
-### AC-STK-016 — Se saca de la caja apoyada, nunca de la llevada *(verifica BR-STK-016)*
+### AC-STK-016 — Se saca de la caja apoyada y con contenido, nunca de la llevada *(verifica BR-STK-016)*
 
-DADO una caja del depósito apoyada, en cualquier lado, CUANDO se le pide una unidad ENTONCES se
-puede sacar; DADO la misma caja en la mano del jugador, ENTONCES no.
+DADO una caja del depósito apoyada, en cualquier lado y con contenido, CUANDO se le pide una
+unidad ENTONCES se puede sacar; DADO la misma caja en la mano del jugador, ENTONCES no. DADO una
+caja en 0 y la góndola de su producto con lugar para 6 CUANDO se le pide una unidad ENTONCES no se
+saca nada.
 
 ### AC-STK-017 — Lo que ya salió cuenta contra el lugar de la góndola *(verifica BR-STK-017)*
 
@@ -351,6 +388,57 @@ DADO cada jornada, de la 1 a la 5, CUANDO se les cobra a todos sus compradores a
 ENTONCES ningún cobro se rechaza, y después se puede reponer todo lo que falta y dar reponer por
 cumplida.
 
+### AC-STK-036 — La caja arranca en 8 y cuenta lo que sale *(verifica BR-STK-028)*
+
+DADO una jornada que se abre ENTONCES la caja de cada producto del catálogo tiene 8. DADO una
+caja en 8 CUANDO se saca una unidad ENTONCES tiene 7; CUANDO esa unidad se coloca ENTONCES sigue
+en 7; CUANDO se cobra una unidad de su producto ENTONCES tiene 6, igual que su depósito.
+
+### AC-STK-037 — Cada noche las cajas vuelven a 8 *(verifica BR-STK-028)*
+
+DADO una jornada que termina con una caja en 0, otra con una unidad suya en la mano y otra con
+una unidad devuelta CUANDO se abre la jornada siguiente ENTONCES todas las cajas tienen 8, y
+ninguna unidad quedó afuera de su caja.
+
+### AC-STK-038 — El clic sobre la caja: sacar, devolver o nada *(verifica BR-STK-029)*
+
+DADO una caja de Actroncito apoyada CUANDO el jugador la usa ENTONCES: con las manos vacías saca
+una unidad; con una unidad de Actroncito, la devuelve; con una unidad de Malbardo, con otra caja o
+con cualquier otro objeto en la mano no pasa nada: lo que lleva sigue en la mano y la caja no
+cambia.
+
+### AC-STK-039 — Devolver anula la salida *(verifica BR-STK-030)*
+
+DADO una caja en 8 CUANDO se saca una unidad, se la devuelve y se saca otra ENTONCES la caja pasa
+por 7, 8 y 7, lo que se puede sacar de ella baja, sube y baja con la caja, y el depósito y la
+góndola no cambian. DADO una unidad devuelta CUANDO se la devuelve otra vez ENTONCES no cambia
+nada. DADO una unidad que salió de la caja, se soltó en el piso y se volvió a levantar CUANDO se
+la devuelve ENTONCES la caja suma 1.
+
+### AC-STK-040 — La caja llena no recibe *(verifica BR-STK-030)*
+
+DADO una caja en 8 y una unidad de su producto en la mano CUANDO se la devuelve ENTONCES la caja
+sigue en 8 y la unidad sigue en la mano. DADO una caja en 0 CUANDO se le devuelve una unidad de su
+producto ENTONCES tiene 1.
+
+### AC-STK-041 — El texto de la caja examinada *(verifica BR-STK-031)*
+
+DADO una caja con tope de 8 CUANDO se la examina ENTONCES el texto es:
+
+| En la caja | Texto |
+|---|---|
+| 8 de Actroncito | Una caja con 8 cajitas de Actroncito. |
+| 5 de Malbardo | Una caja con 5 cajitas de Malbardo. Entran 3 más. |
+| 7 de Actroncito | Una caja con 7 cajitas de Actroncito. Entra 1 más. |
+| 1 de Actroncito | Una caja con 1 cajita de Actroncito. Entran 7 más. |
+| 0 de Actroncito | Una caja con 0 cajitas de Actroncito. Entran 8 más. |
+
+### AC-STK-042 — El texto dura lo que dura el examen *(verifica BR-STK-031)*
+
+DADO una caja apoyada CUANDO se la examina ENTONCES se lee su texto y no su pista; CUANDO se la
+examina en la mano ENTONCES se lee el mismo texto. CUANDO termina el examen ENTONCES el texto
+desaparece, y la caja tiene lo mismo que antes de examinarla.
+
 ## No objetivos
 
 - Esta capacidad NO cobra ni atiende: eso es de
@@ -361,14 +449,16 @@ cumplida.
 ## Contratos
 
 - **Entrada:** los productos que existen, los casilleros de la fila de adelante de cada uno, la
-  jornada que se abre, lo vendido de cada producto, y los pedidos de ingresar, mover, cobrar,
-  sumar y restar en la planilla.
-- **Salida:** cuántas unidades hay por ubicación, qué falta, lo anotado y el total de la
-  planilla, si cada obligatoria está cumplida, y el motivo de cada rechazo.
+  jornada que se abre, lo vendido de cada producto, lo que el jugador lleva en la mano, la caja
+  que examina, y los pedidos de ingresar, mover, cobrar, sacar y devolver a la caja, sumar y
+  restar en la planilla.
+- **Salida:** cuántas unidades hay por ubicación y en cada caja, qué falta, qué hace el clic
+  sobre cada caja, el texto de la caja examinada, lo anotado y el total de la planilla, si cada
+  obligatoria está cumplida, y el motivo de cada rechazo.
 - **Falla:** las cantidades no positivas se ignoran; el cobro que supera los vendibles no mueve
-  nada; el producto inexistente contesta «no existe» en vez de romper. Un faltante de más de una
-  caja o de más que su fila es un error de los datos, que un test detecta: el juego no lo
-  acomoda.
+  nada; el producto inexistente contesta «no existe» en vez de romper; devolver a una caja llena,
+  de otro producto o una unidad que ya volvió no cambia nada. Un faltante de más de una caja o de
+  más que su fila es un error de los datos, que un test detecta: el juego no lo acomoda.
 
 ## Señales
 
@@ -380,7 +470,10 @@ cumplida.
   descuenta del depósito, hasta los vendibles; lo vendido de cada producto es contra qué se
   compara la planilla; y lo que piden los compradores de cada jornada entra en lo que la
   reposición deja (BR-STK-027).
-- [`player-actions`](../player-actions/player-actions.md) (consume): la unidad viaja en la mano.
+- [`player-actions`](../player-actions/player-actions.md) (consume): la unidad viaja en la mano,
+  y lo que la mano lleva decide qué hace el clic sobre la caja.
+- [`investigation`](../investigation/investigation.md) (consume): el examen de una caja, que es
+  el de cualquier levantable. Mientras dura se muestra el texto de la caja.
 - [`shift-cycle`](../shift-cycle/shift-cycle.md) (alimenta y consume): avisa cuándo reponer y
   registrar quedaron cumplidas, y cuándo registrar dejó de estarlo; y la jornada que abre decide
   lo que falta.
@@ -397,5 +490,14 @@ cumplida.
   - Por qué sigue abierta: la ficha «8. Tarea: Reposición» fija los faltantes de la jornada 1 y
     dice «A definir» en las otras cuatro. Mientras tanto arrancan con los de la jornada 1
     (BR-STK-026).
+  - Decide: el diseño, en la ficha.
+  - Bloquea: nada.
+- **OQ-STK-006 — ¿Cómo se cuentan en el texto de la caja una lata, una botella, un envoltorio y
+  una caja?**
+  - Por qué sigue abierta: los dos ejemplos de la ficha son cajitas, y la palabra sale de la
+    sonoridad y no de lo que el producto es: Actroncito es una caja de medicamentos y Malbardo un
+    paquete de cigarrillos, y los dos se cuentan en cajitas. Para las otras familias sonoras la
+    palabra no está decidida. Mientras tanto se cuentan en unidades, la palabra de esta
+    capacidad: «Una caja con 8 unidades de Coracola.».
   - Decide: el diseño, en la ficha.
   - Bloquea: nada.
