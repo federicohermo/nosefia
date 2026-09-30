@@ -17,6 +17,9 @@ extends Resource
 ## **`tiempo_consumido` del reloj no está, y no es un olvido**: se emite en cada `_process`, así que
 ## engancharle un sonido sería pedir uno por cuadro. Es la razón por la que esto es un `enum`
 ## revisable y no «cualquier señal que exista».
+##
+## **Uno nuevo va al final.** Los `.tres` guardan el evento por número, y uno metido en el medio le
+## cambiaría el significado a cada fila de abajo sin que el archivo cambie un byte.
 enum Evento {
 	TAREA_CUMPLIDA,
 	TURNO_CERRADO,
@@ -41,10 +44,16 @@ enum Evento {
 	PUERTA_CERRADA,
 	PUERTA_TRABADA,
 	PORTON_TRABADO,
+	BALDE_LLENADO,
+	BALDE_TENIDO,
+	BALDE_VACIADO,
+	MOPA_MOJADA,
+	UNIDAD_DEVUELTA,
 }
 
 ## Cómo suena una cosa al agarrarla o al dejarla. Los valores salen de la ficha de sonido.
-## `NINGUNA` es la fila de un evento que no es de objeto, y lo fijo del almacén.
+## `NINGUNA` es la fila de un evento que no es de objeto, y lo fijo del almacén. Una nueva va al
+## final, por lo mismo que un evento.
 enum Sonoridad {
 	NINGUNA,
 	LATA,
@@ -55,6 +64,7 @@ enum Sonoridad {
 	PAPEL,
 	BOLSA,
 	MOPA,
+	BALDE,
 }
 
 ## Los eventos que tienen una fila por sonoridad. `OBJETO_SOLTADO` suena al tocar algo, no al

@@ -192,5 +192,60 @@ func test_soltar_no_suena_y_el_objeto_suena_al_tocar_algo() -> void:  # AC-AMB-0
 	)
 
 
+# AC-AMB-025
+func test_los_gestos_con_el_balde_suenan_planos_y_un_uso_sin_efecto_no() -> void:
+	# El limpiador de verdad y la tabla del juego: sus señales no traen el balde, así que llegan
+	# sin origen, y una fila del espacio se rechazaría por no tener lugar.
+	var tabla := TablaDeSonidos.desde_disco()
+	assert_object(tabla).is_not_null()
+	if tabla == null:
+		return
+	var enlace := _enlace(tabla.entradas)
+	var rechazos := []
+	enlace.reproductor.sonido_rechazado.connect(
+		func(evento: EntradaSonora.Evento, _motivo: ReproductorDeSonidos.Motivo) -> void:
+			rechazos.append(evento)
+	)
+	var limpiador: Limpiador = auto_free(Limpiador.new())
+	limpiador.reloj = auto_free(RelojDelTurno.new())
+	limpiador.arrancar(PisoDelLocal.de_la_jornada())
+	enlace.enlazar_todo([limpiador])
+	var balde := ReglasDeLaLimpieza.ID_DEL_BALDE
+	var mopa := ReglasDeLaLimpieza.ID_DE_LA_MOPA
+	# Cada uso, en orden. Los que no cambian nada van entre los que sí.
+	var usos := [
+		[balde, ReglasDeLaLimpieza.ID_DEL_LAVATORIO],
+		[balde, ReglasDeLaLimpieza.ID_DEL_LAVATORIO],
+		[&"jabon_rosa", balde],
+		[&"jabon_amarillo", balde],
+		[mopa, balde],
+		[balde, ReglasDeLaLimpieza.ID_DEL_INODORO],
+		[balde, ReglasDeLaLimpieza.ID_DEL_INODORO],
+		[&"jabon_rosa", balde],
+		[mopa, balde],
+	]
+	for uso: Array in usos:
+		limpiador.usar(uso[0], uso[1])
+	(
+		assert_array(_pedidos)
+		. is_equal(
+			[
+				EntradaSonora.Evento.BALDE_LLENADO,
+				EntradaSonora.Evento.BALDE_TENIDO,
+				EntradaSonora.Evento.MOPA_MOJADA,
+				EntradaSonora.Evento.BALDE_VACIADO,
+			]
+		)
+	)
+	assert_array(rechazos).is_empty()
+	var planas := 0
+	for voz in enlace.reproductor.voces():
+		if voz.stream != null:
+			planas += 1
+	assert_int(planas).is_equal(4)
+	for voz in enlace.reproductor.voces_en_el_espacio():
+		assert_object(voz.stream).is_null()
+
+
 func _anotar_pedido(evento: EntradaSonora.Evento) -> void:
 	_pedidos.append(evento)

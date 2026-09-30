@@ -4,6 +4,9 @@
 ## Como allá, ningún caso afirma sobre el estado de reproducción: se mira qué se pidió.
 extends GdUnitTestSuite
 
+## Los datos del balde del almacén: su sonoridad es la que se mide.
+const BALDE := "res://src/dominio/almacen/balde.tres"
+
 var _rechazos: Array = []
 var _pedidos: Array = []
 
@@ -140,6 +143,43 @@ func test_el_ambiente_sin_emisores_no_suena_ni_falla() -> void:  # AC-AMB-017
 	assert_bool(reproductor.pedir(EntradaSonora.Evento.AMBIENTE_DEL_LOCAL)).is_false()
 	reproductor.actualizar_emisores(Vector3.ZERO)
 	assert_array(reproductor.emisores_en_bucle(EntradaSonora.Evento.AMBIENTE_DEL_LOCAL)).is_empty()
+
+
+func test_el_balde_suena_su_alzar_y_tres_golpes_de_su_dejar() -> void:  # AC-AMB-024
+	# Con la tabla del juego y los datos del balde del almacén, no con filas armadas acá: lo que se
+	# afirma es que el balde suena lo suyo, no que el reproductor sepa sonar.
+	var tabla := TablaDeSonidos.desde_disco()
+	assert_object(tabla).is_not_null()
+	if tabla == null:
+		return
+	var reproductor := _reproductor(tabla.entradas)
+	var balde: ObjetoDePrueba = auto_free(ObjetoDePrueba.new())
+	balde.datos = load(BALDE)
+	add_child(balde)
+	assert_bool(reproductor.recibir(EntradaSonora.Evento.OBJETO_AGARRADO, balde)).is_true()
+	var rapido := ContadorDeGolpes.UMBRAL_DE_GOLPE * 4.0
+	for _contacto in range(4):
+		reproductor.recibir(EntradaSonora.Evento.OBJETO_SOLTADO, balde, rapido)
+	var voces := reproductor.voces_en_el_espacio()
+	var sonadas := []
+	var volumenes := []
+	for voz: AudioStreamPlayer3D in voces.slice(0, 4):
+		sonadas.append(voz.stream.resource_path.get_file().get_basename() if voz.stream else "")
+		volumenes.append(voz.volume_db)
+	(
+		assert_array(sonadas)
+		. is_equal(
+			[
+				"SFX_OBJETO_Balde_Alzar",
+				"SFX_OBJETO_Balde_Dejar",
+				"SFX_OBJETO_Balde_Dejar",
+				"SFX_OBJETO_Balde_Dejar",
+			]
+		)
+	)
+	assert_array(volumenes.slice(1)).is_equal([0.0, -6.0, -12.0])
+	assert_object(voces[4].stream).is_null()
+	assert_array(_rechazos).is_empty()
 
 
 ## Un nodo con un hijo por emisor. Cada emisor tiene un hijo por posición, como en la escena.

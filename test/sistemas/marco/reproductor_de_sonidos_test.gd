@@ -197,6 +197,25 @@ func test_agarrar_suena_su_alzar_y_colocar_no_deja_golpes() -> void:  # AC-AMB-0
 	assert_bool(reproductor.recibir(EntradaSonora.Evento.OBJETO_SOLTADO, objeto, rapido)).is_false()
 
 
+func test_devolver_suena_su_dejar_pleno_aunque_los_golpes_esten_gastados() -> void:  # AC-AMB-026
+	# Si devolver contara como un golpe, con los tres gastados no sonaría, y con uno sonaría bajo.
+	var tocar := _de_objeto(EntradaSonora.Evento.OBJETO_SOLTADO, EntradaSonora.Sonoridad.CAJITA)
+	var devolver := _de_objeto(EntradaSonora.Evento.UNIDAD_DEVUELTA, EntradaSonora.Sonoridad.CAJITA)
+	var reproductor := _reproductor([tocar, devolver] as Array[EntradaSonora])
+	var objeto := _objeto(EntradaSonora.Sonoridad.CAJITA)
+	var rapido := ContadorDeGolpes.UMBRAL_DE_GOLPE * 4.0
+	var golpes := ContadorDeGolpes.VOLUMEN_POR_GOLPE.size()
+	for _golpe in range(golpes):
+		reproductor.recibir(EntradaSonora.Evento.OBJETO_SOLTADO, objeto, rapido)
+	assert_bool(reproductor.recibir(EntradaSonora.Evento.OBJETO_SOLTADO, objeto, rapido)).is_false()
+	assert_bool(reproductor.recibir(EntradaSonora.Evento.UNIDAD_DEVUELTA, objeto)).is_true()
+	var devuelta := reproductor.voces()[golpes]
+	assert_object(devuelta.stream).is_same(devolver.stream)
+	assert_float(devuelta.volume_db).is_equal(0.0)
+	assert_str(devuelta.bus).is_equal(EntradaSonora.BUS_DE_EFECTOS)
+	assert_int(_pedidos.count(EntradaSonora.Evento.UNIDAD_DEVUELTA)).is_equal(1)
+
+
 func test_un_evento_sin_objeto_suena_su_fila_de_siempre() -> void:
 	var reproductor := _reproductor(
 		[_entrada(EntradaSonora.Evento.PASADA_DADA)] as Array[EntradaSonora]

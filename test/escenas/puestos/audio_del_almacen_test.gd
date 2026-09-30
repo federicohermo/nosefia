@@ -2,7 +2,11 @@
 ## afirme sobre el estado de reproducción.
 ##
 ## **La escena se instancia y no se entra al árbol**, igual que las otras suites de `escenas/`.
+## Salvo en los casos que escuchan el local entero: lo que suena desde un lugar tiene que estar en
+## el árbol, y fuera de él se rechaza por no tener posición.
 extends GdUnitTestSuite
+
+const AperturaConLugar := preload("res://test/escenas/apertura_con_lugar.gd")
 
 const ESCENA := "res://src/escenas/puestos/audio_del_almacen.tscn"
 const SCRIPT := "res://src/escenas/puestos/audio_del_almacen.gd"
@@ -36,6 +40,9 @@ const NOMBRES_DE_REPRODUCCION := ["play" + "ing", "get_playback" + "_position", 
 const CARPETA_DE_TESTS := "res://test"
 
 const CARPETA_DE_FUENTES := "res://src"
+
+## El reproductor del local, adentro del almacén.
+const REPRODUCTOR := "Servicios/AudioDelAlmacen/Reproductor"
 
 
 func test_los_cuatro_buses_existen_en_el_motor() -> void:  # AC-AMB-003
@@ -261,6 +268,117 @@ func test_la_jornada_arranca_la_musica_y_el_cierre_la_corta() -> void:
 	var texto := FileAccess.get_file_as_string(SCRIPT_DEL_ALMACEN)
 	var corta := RegEx.create_from_string("_audio\\s*\\.\\s*callar_la_musica\\(\\)")
 	assert_array(corta.search_all(texto)).is_not_empty()
+
+
+# AC-AMB-024 AC-AMB-025
+func test_el_balde_y_sus_gestos_suenan_en_el_local_sin_un_rechazo() -> void:
+	# El limpiador de la escena, el agarre de la escena y el cableado de la raíz: que las filas
+	# existan no dice que el local las ate.
+	var almacen: Node3D = auto_free(load(ESCENA_DEL_ALMACEN).instantiate())
+	add_child(almacen)
+	await get_tree().physics_frame
+	(almacen.get("_jugador") as Node3D).set_physics_process(false)
+	var escucha := _escuchar(almacen)
+	var balde: RigidBody3D = almacen.get_node("Objetos/Balde")
+	var agarre: Agarre = almacen.get("_agarre")
+	assert_bool(agarre.pedir_agarrar(balde.get("datos"), balde)).is_true()
+	var limpiador: Limpiador = almacen.get("_limpiador")
+	var id_del_balde := ReglasDeLaLimpieza.ID_DEL_BALDE
+	for uso: Array in [
+		[id_del_balde, ReglasDeLaLimpieza.ID_DEL_LAVATORIO],
+		[&"jabon_azul", id_del_balde],
+		[ReglasDeLaLimpieza.ID_DE_LA_MOPA, id_del_balde],
+		[id_del_balde, ReglasDeLaLimpieza.ID_DEL_INODORO],
+		[id_del_balde, ReglasDeLaLimpieza.ID_DEL_INODORO],
+	]:
+		limpiador.usar(uso[0], uso[1])
+	var esperados := [
+		EntradaSonora.Evento.OBJETO_AGARRADO,
+		EntradaSonora.Evento.BALDE_LLENADO,
+		EntradaSonora.Evento.BALDE_TENIDO,
+		EntradaSonora.Evento.MOPA_MOJADA,
+		EntradaSonora.Evento.BALDE_VACIADO,
+	]
+	var de_estos := func(evento: EntradaSonora.Evento) -> bool: return esperados.has(evento)
+	assert_array(escucha["pedidos"].filter(de_estos)).is_equal(esperados)
+	assert_array(escucha["rechazados"].filter(de_estos)).is_empty()
+	var reproductor: ReproductorDeSonidos = almacen.get_node(REPRODUCTOR)
+	assert_array(_audios(reproductor.voces_en_el_espacio())).contains(["SFX_OBJETO_Balde_Alzar"])
+	(
+		assert_array(_audios(reproductor.voces()))
+		. contains(
+			[
+				"SFX_OBJETO_Balde_Llenar",
+				"SFX_OBJETO_Jabon_VertirEnBalde",
+				"SFX_OBJETO_Mopa_MojarEnBalde",
+				"SFX_OBJETO_Balde_Vaciar",
+			]
+		)
+	)
+
+
+func test_devolver_una_unidad_suena_una_vez_desde_la_mano() -> void:  # AC-AMB-026
+	# Con el clic sobre la caja, como en el juego: el primero saca y el segundo devuelve.
+	var almacen: Node3D = auto_free(load(ESCENA_DEL_ALMACEN).instantiate())
+	add_child(almacen)
+	await get_tree().physics_frame
+	AperturaConLugar.abrir_con_todo_el_lugar(almacen)
+	(almacen.get("_jugador") as Node3D).set_physics_process(false)
+	var escucha := _escuchar(almacen)
+	var puesto: Node3D = almacen.get("_reposicion_manual")
+	var caja: Node3D = (almacen.get("_cajas_de_productos") as Array)[Producto.Id.ACTRONCITO]
+	var repositor: Repositor = almacen.get("_repositor")
+	var lugares: Array[Vector3] = []
+	repositor.unidad_devuelta.connect(
+		func(nodo: Node3D, _producto: Producto) -> void: lugares.append(nodo.global_position)
+	)
+	puesto.call("usar_la_caja", caja)
+	assert_object(repositor.agarre.manos().sostenido() as UnidadDeProducto).is_not_null()
+	puesto.call("usar_la_caja", caja)
+	assert_object(repositor.agarre.manos().sostenido()).is_null()
+	assert_int(escucha["pedidos"].count(EntradaSonora.Evento.UNIDAD_DEVUELTA)).is_equal(1)
+	assert_bool(escucha["rechazados"].has(EntradaSonora.Evento.UNIDAD_DEVUELTA)).is_false()
+	assert_int(lugares.size()).is_equal(1)
+	var reproductor: ReproductorDeSonidos = almacen.get_node(REPRODUCTOR)
+	var dejar: Array[AudioStreamPlayer3D] = []
+	for voz in reproductor.voces_en_el_espacio():
+		if voz.stream != null and _audio(voz.stream) == "SFX_OBJETO_Cajita_Dejar":
+			dejar.append(voz)
+	assert_int(dejar.size()).is_equal(1)
+	if dejar.size() != 1 or lugares.size() != 1:
+		return
+	assert_vector(dejar[0].global_position).is_equal_approx(lugares[0], Vector3.ONE * 0.001)
+	assert_float(dejar[0].volume_db).is_equal(0.0)
+	assert_str(dejar[0].bus).is_equal(EntradaSonora.BUS_DE_EFECTOS)
+
+
+## Lo que el reproductor del local pide y lo que rechaza, evento por evento y en orden.
+func _escuchar(almacen: Node3D) -> Dictionary:
+	var reproductor: ReproductorDeSonidos = almacen.get_node(REPRODUCTOR)
+	var escucha := {"pedidos": [], "rechazados": []}
+	reproductor.sonido_pedido.connect(
+		func(evento: EntradaSonora.Evento) -> void: escucha["pedidos"].append(evento)
+	)
+	reproductor.sonido_rechazado.connect(
+		func(evento: EntradaSonora.Evento, _motivo: ReproductorDeSonidos.Motivo) -> void:
+			escucha["rechazados"].append(evento)
+	)
+	return escucha
+
+
+## El nombre del audio de un stream, sin carpeta ni extensión.
+static func _audio(stream: AudioStream) -> String:
+	return stream.resource_path.get_file().get_basename()
+
+
+## Los nombres de los audios que quedaron pedidos en esas voces.
+static func _audios(voces: Array) -> Array:
+	var nombres := []
+	for voz: Node in voces:
+		var stream: AudioStream = voz.get(&"stream")
+		if stream != null:
+			nombres.append(_audio(stream))
+	return nombres
 
 
 ## Todos los `.gd` de `src/`, para el caso de las señales de la tabla.

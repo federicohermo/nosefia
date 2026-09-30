@@ -26,6 +26,10 @@ signal producto_colocado(producto: Producto, completos: int)
 signal colocacion_rechazada(motivo: Estante.Rechazo)
 signal unidad_colocada(nodo: Node3D, producto: Producto, unidades: int)
 
+## La unidad que su caja recibió de vuelta, con el cuerpo que salió de la mano. El audio se ata
+## por el nombre de la señal y suena desde ese cuerpo.
+signal unidad_devuelta(nodo: Node3D, producto: Producto)
+
 ## Los dos entran por `@export` y no como autoload ni por `get_node()` hacia arriba: está medido
 ## que `gate_de_capas.py` no ve un autoload nombrado por su nombre global, así que esa puerta
 ## cruzaría capas sin dejar rastro.
