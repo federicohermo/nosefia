@@ -14,6 +14,9 @@ const ESCENAS_CON_CAJAS := [
 	"res://src/escenas/puestos/objetos_del_almacen.tscn", "res://src/escenas/almacen.tscn"
 ]
 
+## La escena que lista las cajas, en `_cajas_de_productos`.
+const CAJAS_DEL_ALMACEN := "res://src/escenas/almacen.tscn"
+
 ## Donde el juego carga las etiquetas: `source/` no se importa, y el juego no lo ve.
 const ETIQUETAS := "res://assets/boxes/"
 
@@ -212,14 +215,50 @@ func test_la_etiqueta_de_cada_producto_es_una_linea_del_script() -> void:
 			. override_failure_message("el script no tiene la línea `%s`" % linea)
 			. is_equal(1)
 		)
+	var cajas := _nombres_de_las_cajas()
+	assert_int(cajas.size()).is_equal(ORIGEN_DE_CADA_ETIQUETA.size() + SIN_ETIQUETA.size())
 	for ruta: String in ESCENAS_CON_CAJAS + [ESCENA]:
 		var escena := FileAccess.get_file_as_string(ruta)
 		assert_str(escena).is_not_empty()
-		(
-			assert_str(escena)
-			. override_failure_message("`%s` le pisa el material a una caja" % ruta)
-			. not_contains("material_override")
-		)
+		for seccion in _secciones_de_cajas(escena, ruta, cajas):
+			(
+				assert_str(seccion)
+				. override_failure_message("`%s` le pisa el material a una caja" % ruta)
+				. not_contains("material_override")
+			)
+
+
+## Las secciones de la escena que declaran una caja o algo adentro de una: la escena de la caja,
+## entera, y en las demás los nodos con el nombre de una caja en su camino. El material de lo
+## demás del almacén —el agua del balde, la punta de la mopa— no es asunto de las etiquetas.
+static func _secciones_de_cajas(
+	escena: String, ruta: String, cajas: Array[String]
+) -> PackedStringArray:
+	var secciones := ("\n" + escena).split("\n[", false)
+	if ruta == ESCENA:
+		return secciones
+	var de_cajas := PackedStringArray()
+	for seccion in secciones:
+		var cabecera := seccion.get_slice("\n", 0)
+		if not cabecera.begins_with("node "):
+			continue
+		var camino := cabecera.get_slice('parent="', 1).get_slice('"', 0).split("/")
+		camino.append(cabecera.get_slice('name="', 1).get_slice('"', 0))
+		for nombre in camino:
+			if nombre in cajas:
+				de_cajas.append(seccion)
+				break
+	return de_cajas
+
+
+## Los nombres de las cajas, de la lista que el almacén exporta.
+static func _nombres_de_las_cajas() -> Array[String]:
+	var almacen := FileAccess.get_file_as_string(CAJAS_DEL_ALMACEN)
+	var lista := almacen.get_slice("_cajas_de_productos = [", 1).get_slice("]", 0)
+	var nombres: Array[String] = []
+	for camino in RegEx.create_from_string('NodePath\\("([^"]*)"\\)').search_all(lista):
+		nombres.append(camino.get_string(1).get_file())
+	return nombres
 
 
 ## Filtra pixelado como el resto del arte: el material es el de la caja genérica con otra

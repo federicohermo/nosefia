@@ -74,10 +74,18 @@ func test_el_surtido_fijo_no_muestra_stock_que_el_dominio_no_tiene() -> void:
 			)
 	var estructura := almacen.get_node("Estructura")
 	var contenido: Node3D = puesto.get("contenido")
+	# La copia fija de cada útil de limpieza la dibuja el útil que se levanta: está apagada a
+	# propósito, y eso lo cobra `utiles_de_limpieza_test.gd`.
+	var de_los_utiles: Array[String] = []
+	for util: Node in almacen.get("_utiles_de_limpieza"):
+		de_los_utiles.append(String(util.get("nodo_del_modelo")))
+	assert_int(de_los_utiles.size()).is_equal(5)
 	for malla: MeshInstance3D in estructura.find_children("*", "MeshInstance3D", true, false):
 		if contenido.is_ancestor_of(malla):
 			continue
 		var ruta := str(estructura.get_path_to(malla))
+		if ruta in de_los_utiles:
+			continue
 		var oculta := false
 		for lugar in lugares:
 			oculta = oculta or malla.global_position.distance_to(lugar) < TOLERANCIA

@@ -568,13 +568,14 @@ func _metido_en_el_cuerpo(cuerpo: RigidBody3D) -> bool:
 ## Lo deja derecho en el piso, al lado del jugador, en el primer lugar donde entra entero, y
 ## devuelve si lo encontró. Se prueba de adelante hacia los costados, como la caja.
 ##
-## Derecho como la caja: la mira lo inclina, y un bidón inclinado apoyado en el piso se vuelca.
+## Derecho como la caja: la mira lo inclina, y un bidón inclinado apoyado en el piso se vuelca. Con
+## el mismo rumbo, eso sí: lo que ya venía derecho cae sin girar.
 func _dejar_al_lado(cuerpo: RigidBody3D) -> bool:
 	var formas := _formas_de(cuerpo)
 	if formas.is_empty():
 		return false
 	var antes := cuerpo.global_transform
-	cuerpo.global_basis = Basis.IDENTITY
+	cuerpo.global_basis = _derecho(cuerpo.global_basis)
 	var limites := AABB()
 	for indice in formas.size():
 		var forma := formas[indice]
@@ -618,6 +619,19 @@ func _entra_entero(cuerpo: RigidBody3D, formas: Array[CollisionShape3D]) -> bool
 		if not espacio.intersect_shape(lugar, 1).is_empty():
 			return false
 	return true
+
+
+## La misma orientación sin la inclinación: el rumbo en el piso, y arriba para arriba. Si el
+## costado quedó vertical —lo soltado venía acostado—, el rumbo sale del frente.
+static func _derecho(base: Basis) -> Basis:
+	var costado := Vector3(base.x.x, 0.0, base.x.z)
+	if costado.length_squared() < 0.0001:
+		var frente := Vector3(base.z.x, 0.0, base.z.z)
+		if frente.length_squared() < 0.0001:
+			return Basis.IDENTITY
+		costado = Vector3.UP.cross(frente)
+	costado = costado.normalized()
+	return Basis(costado, Vector3.UP, costado.cross(Vector3.UP))
 
 
 ## Las formas con las que el cuerpo choca: las apagadas no cuentan.
