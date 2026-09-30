@@ -105,6 +105,12 @@ Cada agente recibe, literal:
   rechaza, con «too complex to verify», un subshell que corre Godot, `godot … "$VAR"`, un `for`
   que corre Godot con una variable y un heredoc largo de Python con `git` adentro. Todo eso va a
   un script en el scratch del carril, que se corre en una línea.
+- **Un carril se corta sin avisar, y se retoma, no se relanza.** El límite de sesión de la API
+  corta a todos los carriles a la vez, y un reinicio del contenedor mata sus procesos. El
+  worktree y el scratch sobreviven; el proceso, no. Se retoma con `SendMessage` al mismo
+  agente: el mensaje dice en qué commit quedó el worktree, qué quedó sin commitear y que no se
+  apoye en un log cortado. Por eso cada carril commitea y empuja a medida que avanza. En el
+  lote del 2026-09-29 pasó cuatro veces, y no se perdió nada que estuviera commiteado.
 - **`nosefia-index` no mira el worktree del carril.** Lo levanta la sesión desde el checkout
   principal, y los subagentes lo comparten: contesta sobre ese árbol. En un carril apilado sobre
   otro PR describe el árbol de antes. El 2026-09-29, en el carril de #263, decía 18 reglas y 21
