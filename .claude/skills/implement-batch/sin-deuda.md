@@ -174,6 +174,11 @@ entregable más caro y el único que hace que el hallazgo no vuelva.
 | un gesto que **deshace una obligatoria** sin que el issue diga qué pasa | `to-issue` — el cruce miró los criterios del gesto y no las tareas que su efecto toca |
 | un caso de escena **verde por suerte** después de que cambió el local | la regla de tests — el caso afirmaba el resultado y no su premisa |
 | un generador que **da vuelta lo que el artista hizo** | `implement-feature` — se probó el generador contra el issue y no contra el `.blend` del artista |
+| un nombre que el issue borra **y que un carril en vuelo vuelve a usar** | `to-issue` — «Verificación» no llevaba el `rg` del nombre, y nadie lo corrió después del merge |
+| un test que afirma sobre **una escena entera que el issue escribe**, afuera de «Se escribe» | `to-issue` — los tests de la escena no se buscaron con `tests_de` ni `quien_instancia` |
+| un archivo nuevo **que el contrato implica y «Se escribe» no nombra** | `to-issue` — «Se escribe» se armó sólo con lo que ya existía |
+| un conflicto entre dos carriles **que le queda a quien mergee** | `implement-batch` — las cadenas llegaban por separado a `staging`, y la resolución no vivía en ninguna rama |
+| una carpeta que gdUnit4 crea **adentro del repo** con `-rd /tmp/...` | `.gitignore` e `implement-batch` — la advertencia del preámbulo no alcanzó, y el ignore la vuelve inofensiva |
 
 **Si el problema no entra en ninguna fila, agregá la fila.** Esa tabla es el registro de lo que
 esta doctrina ya aprendió, y está incompleta a propósito.

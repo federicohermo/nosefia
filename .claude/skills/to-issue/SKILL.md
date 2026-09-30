@@ -131,6 +131,10 @@ Lo que más se rompe:
 - **Si el issue deja renombrar algo, el `rg` de los límites se corre también sobre los
   comentarios.** Un archivo en «Sólo lectura» que nombra por ruta lo que se renombra queda
   mintiendo, y el implementador no lo puede tocar.
+- **Si el issue borra un nombre, «Verificación» lleva el `rg` que lo prueba**: `rg -i <nombre>
+  src test specs docs .claude` da cero. El carril lo corre también después de mergear otra
+  rama, porque un carril en vuelo puede sumarle un lector. En el #266, un caso de #176, escrito
+  en otro carril, cargaba `trapeador.tres`, y la corrida entera salió 6/7.
 - **Si el issue cambia una regla, el `rg` de los límites busca también la regla vieja en
   palabras.** Un símbolo no encuentra el comentario que explica la regla con otras palabras, ni
   el test que arma el estado que la regla lee. En el #166 quedaron fuera de «Se escribe» cinco
@@ -157,8 +161,15 @@ Lo que más se rompe:
 - **Un dato nuevo en una clase base entra con sus herederas.** Si cada una lo declara, cada una
   va en «Se escribe». En el #197 faltó `unidad_de_producto.gd`, que hereda de
   `ObjetoDelAlmacen`.
+- **«Se escribe» nombra también lo nuevo que el contrato implica**, archivo o carpeta. Si no, el
+  implementador lo declara en el PR como un desvío. En el #266 el contrato pedía el balde y la
+  mopa en `dominio/`, y quedaron sin nombrar sus scripts, sus `.tres`, los de los tres jabones
+  y dos scripts de escena.
 - **Un nodo nuevo en una escena se mide contra los tests de esa escena.** En el #192, la red no
-  tenía lugar en ningún `.tscn` de «Se escribe».
+  tenía lugar en ningún `.tscn` de «Se escribe». Los tests de cada escena de «Se escribe» se
+  buscan con `tests_de` y `quien_instancia` de `nosefia-index`, y cada uno entra a «Se escribe»
+  o queda descartado con una línea. En el #266 quedaron afuera cuatro que afirmaban sobre una
+  escena entera, y los cuatro salieron rojos recién en la corrida.
 - **Un archivo en «Sólo lectura» se lee antes de ponerlo ahí.** En el #201, el enlace de audio
   ataba una sola fuente por señal, y con cinco puertas sonaba una. Tuvo que pasar a «Se
   escribe».

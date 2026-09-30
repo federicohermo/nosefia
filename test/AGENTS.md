@@ -64,6 +64,10 @@ Un test escrito después se escribe **mirando el código**, y entonces prueba lo
 hace en vez de lo que tenía que hacer. El ciclo y lo que reemplaza a la cobertura, en
 [TDD sin cobertura](../../docs/guides/tdd.md).
 
+**gdUnit4 no corre un caso solo desde la línea de comandos.** `-a` toma una suite o una
+carpeta, y la forma `suite:caso` la entiende sólo `-i`, que saltea. Para ver fallar un caso se
+corre su suite entera. Le costó una vuelta al carril de #266.
+
 ## Nombres que dicen qué se rompe
 
 `test_cerrar_con_menos_de_tres_tareas_avisa_al_jefe`, no `test_consecuencias_2`. El nombre es lo
