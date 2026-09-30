@@ -97,5 +97,53 @@ class NoBorraTrabajoAjeno(unittest.TestCase):
         self.assertTrue((self.wt / "x.txt").exists())
 
 
+class RamasDeLosCarriles(NoBorraTrabajoAjeno):
+    """Las ramas `worktree-agent-…` con que arranca cada carril, y cuáles se barren.
+
+    Los carriles arrancan en `origin/main`, que no es ancestro de `staging`: `branch -d` se
+    niega aunque la rama no tenga un solo commit propio. Medido el 2026-09-30 cerrando el lote
+    #262–#267, donde las nueve quedaron como ANOMALIA. Acá `main` diverge de `HEAD` igual.
+    """
+
+    def setUp(self) -> None:
+        super().setUp()
+        remoto = Path(tempfile.mkdtemp(prefix="remoto_")).resolve()
+        self.addCleanup(shutil.rmtree, remoto, True)
+        self._git("init", "-q", "--bare", str(remoto))
+        self._git("remote", "add", "origin", str(remoto))
+        self._git("checkout", "-q", "-b", "main")
+        self._commit("en main")
+        self._git("push", "-q", "origin", "main")
+        self._git("checkout", "-q", "-")
+        self._git("branch", "-D", "main")
+
+    def _commit(self, mensaje: str) -> None:
+        self._git("-c", "user.name=t", "-c", "user.email=t@t", "commit", "-q", "--allow-empty",
+                  "-m", mensaje)
+
+    def _ramas(self) -> list[str]:
+        salida = subprocess.run(
+            ["git", "branch", "--format=%(refname:short)"], cwd=self.repo, check=True,
+            capture_output=True, encoding="utf-8",
+        ).stdout
+        return salida.split()
+
+    def test_la_rama_que_esta_entera_en_un_remoto_se_barre(self) -> None:
+        # Sin upstream, como las de los carriles: con él, `-d` la aceptaría por estar en él.
+        self._git("branch", "--no-track", "worktree-agent-a1", "origin/main")
+        hecho = self._limpiar()
+        self.assertEqual(hecho.returncode, 0, hecho.stderr)
+        self.assertNotIn("worktree-agent-a1", self._ramas())
+        self.assertNotIn("ANOMALIA", hecho.stderr)
+
+    def test_la_rama_con_un_commit_que_no_esta_en_ningun_remoto_queda(self) -> None:
+        self._git("checkout", "-q", "--no-track", "-b", "worktree-agent-a2", "origin/main")
+        self._commit("trabajo propio")
+        self._git("checkout", "-q", "-")
+        hecho = self._limpiar()
+        self.assertIn("worktree-agent-a2", self._ramas())
+        self.assertIn("ANOMALIA: la rama worktree-agent-a2", hecho.stderr)
+
+
 if __name__ == "__main__":
     unittest.main()
