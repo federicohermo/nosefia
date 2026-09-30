@@ -3,8 +3,8 @@
 ##
 ## **No lleva un número propio, y es la decisión.** Lo que tiene la caja es el depósito de su
 ## producto menos lo que salió de ella y todavía no se colocó, y las dos cosas ya las cuenta el
-## estante. Un contador acá diría otra cosa apenas la ventanilla vendiera una unidad, que sale del
-## mismo depósito, y ningún error lo avisaría.
+## inventario, que el estante le pregunta. Un contador acá diría otra cosa apenas la ventanilla
+## vendiera una unidad, que sale del mismo depósito, y ningún error lo avisaría.
 ##
 ## **Por eso se arma en cada pregunta y no se guarda en la caja del local.** Cada jornada abre
 ## con un estante nuevo, y una guardada seguiría contestando por el estante de la noche en que se

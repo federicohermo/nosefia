@@ -185,9 +185,8 @@ func test_devolver_dos_veces_la_misma_unidad_no_suma_la_segunda() -> void:  # AC
 
 
 func test_la_caja_llena_no_recibe_y_la_unidad_sigue_afuera() -> void:  # AC-STK-040
-	# Nueve en el depósito y una afuera: la caja tiene 8 y la unidad que salió no entra. Con lo
-	# que hoy trae la noche no pasa, porque la caja arranca en 8; pasa el día que una unidad
-	# vuelva a su caja desde la góndola.
+	# Nueve en el depósito y una afuera: la caja tiene 8 y la unidad que salió no entra. Es lo
+	# que pasa al agarrar una unidad de la góndola con la caja llena (BR-STK-034).
 	var actroncito := _producto(Producto.Id.ACTRONCITO)
 	var estante := _estante(actroncito, ReglasDelEstante.UNIDADES_POR_CAJA + 1)
 	var caja := _caja(actroncito, estante)

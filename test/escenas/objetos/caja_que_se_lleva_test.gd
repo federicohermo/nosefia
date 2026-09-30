@@ -91,8 +91,8 @@ const HASTA_EL_PISO := 4.0
 ## 1,46.
 const CAIDA_DESDE_LO_APUNTADO := 1.14
 
-## El producto que se apoya sobre la caja. Uno cualquiera con más de una unidad en la góndola:
-## se retira uno para la tapa y otro para el piso de al lado.
+## El producto que se apoya sobre la caja. Uno cualquiera: su caja da las dos que hacen falta,
+## una para la tapa y otra para el piso de al lado.
 const PRODUCTO_QUE_SE_APOYA := Producto.Id.MALBARDO
 
 ## A qué distancia de la caja se deja el producto que NO tiene que despertarse, en metros.

@@ -24,8 +24,8 @@ const PISO_LIBRE := Vector3(4.49, 0.0, -10.0)
 func _almacen() -> Node3D:
 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
 	add_child(almacen)
-	# La noche abre con la góndola llena, y una caja llena no entrega: estos casos sacan
-	# unidades para usarlas de objeto, así que abren con lugar para reponer.
+	# Estos casos sacan unidades para usarlas de objeto. Abren con lugar para reponer, que es la
+	# noche contra la que se midieron: sacar no lo pide (BR-STK-017).
 	AperturaConLugar.abrir_con_todo_el_lugar(almacen)
 	await get_tree().physics_frame
 	almacen.get("_jugador").set_physics_process(false)
