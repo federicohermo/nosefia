@@ -27,7 +27,7 @@ depósito son dos lugares distintos, y mover mercadería del fondo al estante cu
 | **Tanda** | las unidades de un mismo producto puestas juntas sobre un estante del local, en dos filas | bloque, exhibición |
 | **Fila de adelante** | la fila de una tanda del lado del pasillo: la única que el jugador repone | frente, cara |
 | **Fila de atrás** | la fila de una tanda contra el fondo del estante: fija, entera toda la noche | guía, fondo |
-| **Casillero** | cada lugar de la fila de adelante, que el jugador llena colocando una unidad | hueco, slot |
+| **Casillero** | cada lugar de la fila de adelante, que el jugador llena colocando una unidad y vacía agarrándola. Cada uno está vacío u ocupado por separado | hueco, slot |
 | **Cupo** | cuántos casilleros tiene la fila de adelante de un producto: cuántas unidades pide su góndola. Es distinto para cada producto | umbral, mínimo, tope |
 | **Faltante** | un producto con algún casillero vacío en su fila de adelante | agotado, sin stock |
 | **Faltantes de la jornada** | cuántas unidades de cada producto faltan en la góndola cuando abre una jornada | pedido, reposición |
@@ -87,12 +87,14 @@ El sistema DEBE llenar la góndola de cada producto hasta los casilleros de su f
 que son distintos para cada producto, y rechazar la unidad que sobra. Cuántos casilleros tiene
 cada fila lo dice el local armado: un número aparte sería el mismo valor en dos lugares.
 
-### BR-STK-009 — Los tres rechazos de colocar, en orden
+### BR-STK-009 — Los rechazos de colocar, en orden
 
-CUANDO se coloca una unidad, el sistema DEBE rechazar por **producto no aceptado** primero, por
-**estante lleno** después, y por **sin unidades en depósito** al final. El primero es una
-propiedad del producto y vale siempre; el segundo es el estado del estante; el tercero depende
-de cuánta mercadería trajo la noche.
+CUANDO se coloca una unidad en un casillero, el sistema DEBE rechazar por **producto no
+aceptado** primero —también cuando el casillero es de otro producto—, por **estante lleno**
+después, por **casillero ocupado** en tercer lugar, y por **sin unidades en depósito** al final.
+El primero es una propiedad del producto y vale siempre; el segundo y el tercero son el estado
+del estante, y la fila llena va antes porque es la respuesta para cualquier casillero; el último
+depende de cuánta mercadería trajo la noche. Ningún rechazo mueve nada.
 
 ### BR-STK-013 — Reponer está cumplido cuando no falta nada
 
@@ -229,6 +231,36 @@ dos se cuentan en cajitas. Con una sola unidad va el singular:
 
 Una caja se cuenta en cartones y no en cajas: el texto diría «una caja con 8 cajas». Cada familia
 que usa un producto del catálogo DEBE tener su palabra.
+
+### BR-STK-032 — Cada casillero se ocupa y se vacía por separado
+
+El sistema DEBE saber qué casilleros de la fila de adelante de cada producto están ocupados, y no
+sólo cuántos. CUANDO se coloca una unidad, el sistema DEBE ocupar el casillero elegido y ningún
+otro. CUANDO una unidad sale de la góndola, DEBE vaciar el casillero de esa unidad y ningún otro.
+Las unidades de al lado NO DEBEN correrse: el jugador ve un hueco donde sacó la unidad, y ahí la
+vuelve a poner.
+
+### BR-STK-033 — Se agarra una unidad colocada de la fila de adelante
+
+CUANDO el jugador agarra una unidad colocada en un casillero de la fila de adelante, el sistema
+DEBE dársela y dejar ese casillero vacío: el producto vuelve a faltar (BR-STK-007). Da lo mismo
+que la haya colocado él o que estuviera desde que abrió la jornada. SI el casillero está vacío,
+ENTONCES el sistema NO DEBE darle nada. La fila de atrás no se agarra (BR-STK-025).
+
+Con esa unidad en la mano vale todo lo que vale para una que salió de su caja: se coloca en
+cualquier casillero vacío de su producto, se suelta, o se devuelve a su caja (BR-STK-030). SI
+reponer estaba cumplida, ENTONCES el sistema DEBE descumplirla al agarrar la unidad, porque
+vuelve a faltar algo (BR-STK-013).
+
+### BR-STK-034 — La unidad agarrada de la góndola se cuenta una sola vez
+
+CUANDO se agarra una unidad de la góndola, el sistema DEBE contarla como una que salió de su caja
+y todavía no se colocó (BR-STK-028): la góndola tiene una menos, la caja no cambia, y los
+vendibles tampoco, porque su casillero vacío la espera (BR-STK-018). MIENTRAS está en la mano o
+soltada en el piso, el sistema NO DEBE contarla en la góndola ni venderla. CUANDO se la devuelve a
+su caja, la caja DEBE sumarla y la góndola seguir con ese casillero vacío; SI la caja está llena,
+ENTONCES la unidad no entra y sigue en la mano (BR-STK-030). CUANDO se la coloca, la góndola, la
+caja y los vendibles DEBEN quedar como antes de agarrarla.
 
 ## Criterios de aceptación
 
@@ -459,6 +491,48 @@ DADO una caja apoyada CUANDO se la examina ENTONCES se lee su texto y no su pist
 examina en la mano ENTONCES se lee el mismo texto. CUANDO termina el examen ENTONCES el texto
 desaparece, y la caja tiene lo mismo que antes de examinarla.
 
+### AC-STK-043 — El casillero ocupado se rechaza *(verifica BR-STK-009, BR-STK-032)*
+
+DADO un producto de 3 casilleros con sólo el segundo ocupado y unidades en el depósito CUANDO se
+coloca en el segundo ENTONCES se rechaza por casillero ocupado y ni la góndola ni el depósito
+cambian; CUANDO se coloca en el primero ENTONCES queda ocupado el primero, el segundo sigue
+ocupado y el tercero vacío. DADO el mismo casillero ocupado y el depósito en 0 ENTONCES el motivo
+es casillero ocupado. DADO la fila llena ENTONCES el motivo es estante lleno en cualquier
+casillero. DADO una unidad de otro producto ENTONCES el motivo es producto no aceptado.
+
+### AC-STK-044 — Las de al lado no se corren *(verifica BR-STK-032, BR-STK-033)*
+
+DADO un producto de 5 casilleros con la fila completa CUANDO se agarra la unidad del tercero
+ENTONCES el único casillero vacío es el tercero, los otros cuatro siguen ocupados y el producto
+es faltante. CUANDO se coloca una unidad en el tercero ENTONCES la fila vuelve a estar completa
+y no es faltante.
+
+### AC-STK-045 — Sólo se agarra lo colocado *(verifica BR-STK-033)*
+
+DADO un casillero vacío CUANDO se lo agarra ENTONCES no se da nada y la góndola no cambia. DADO
+una unidad agarrada de la góndola ENTONCES se coloca en cualquier casillero vacío de su producto,
+y en uno de otro producto se rechaza por producto no aceptado.
+
+### AC-STK-046 — La unidad agarrada se cuenta una sola vez *(verifica BR-STK-034, BR-STK-018)*
+
+DADO un producto de 8 casilleros con la fila completa y su caja en 5 CUANDO se agarra una unidad
+de la góndola ENTONCES la góndola tiene 7, la caja sigue en 5, los vendibles siguen en 5 y el
+producto es faltante; CUANDO se la suelta en el piso ENTONCES nada de eso cambia. CUANDO se la
+devuelve a su caja ENTONCES la caja tiene 6, la góndola sigue en 7 y los vendibles en 5. CUANDO
+se la vuelve a sacar y se la coloca ENTONCES la góndola tiene 8, la caja 5 y los vendibles 5.
+
+### AC-STK-047 — La caja llena no recibe la unidad de la góndola *(verifica BR-STK-034)*
+
+DADO la fila completa y la caja en 8 CUANDO se agarra una unidad de la góndola y se la devuelve a
+su caja ENTONCES la caja sigue en 8, la unidad sigue en la mano y la góndola tiene un casillero
+vacío.
+
+### AC-STK-048 — Agarrar de la góndola descumple reponer *(verifica BR-STK-033)*
+
+DADO reponer cumplida CUANDO se agarra una unidad de la góndola ENTONCES reponer deja de estar
+cumplida y las cumplidas bajan en 1. CUANDO se la vuelve a colocar ENTONCES reponer se cumple
+otra vez.
+
 ## No objetivos
 
 - Esta capacidad NO cobra ni atiende: eso es de
@@ -470,15 +544,17 @@ desaparece, y la caja tiene lo mismo que antes de examinarla.
 
 - **Entrada:** los productos que existen, los casilleros de la fila de adelante de cada uno, la
   jornada que se abre, lo vendido de cada producto, lo que el jugador lleva en la mano, la caja
-  que examina, y los pedidos de ingresar, mover, cobrar, sacar y devolver a la caja, sumar y
-  restar en la planilla.
-- **Salida:** cuántas unidades hay por ubicación y en cada caja, qué falta, qué hace el clic
-  sobre cada caja, el texto de la caja examinada, lo anotado y el total de la planilla, si cada
+  que examina, el casillero que elige, y los pedidos de ingresar, mover, cobrar, sacar y devolver
+  a la caja, colocar y agarrar de la góndola, sumar y restar en la planilla.
+- **Salida:** cuántas unidades hay por ubicación y en cada caja, qué casilleros de cada producto
+  están vacíos y cuáles ocupados, qué falta, qué hace el clic sobre cada caja y sobre cada
+  casillero, el texto de la caja examinada, lo anotado y el total de la planilla, si cada
   obligatoria está cumplida, y el motivo de cada rechazo.
 - **Falla:** las cantidades no positivas se ignoran; el cobro que supera los vendibles no mueve
   nada; el producto inexistente contesta «no existe» en vez de romper; devolver a una caja llena,
-  de otro producto o una unidad que ya volvió no cambia nada. Un faltante de más de una caja o de
-  más que su fila es un error de los datos, que un test detecta: el juego no lo acomoda.
+  de otro producto o una unidad que ya volvió no cambia nada; colocar en un casillero ocupado no
+  mueve nada, y agarrar de un casillero vacío no da nada. Un faltante de más de una caja o de más
+  que su fila es un error de los datos, que un test detecta: el juego no lo acomoda.
 
 ## Señales
 
@@ -490,13 +566,14 @@ desaparece, y la caja tiene lo mismo que antes de examinarla.
   descuenta del depósito, hasta los vendibles; lo vendido de cada producto es contra qué se
   compara la planilla; y lo que piden los compradores de cada jornada entra en lo que la
   reposición deja (BR-STK-027).
-- [`player-actions`](../player-actions/player-actions.md) (consume): la unidad viaja en la mano,
-  y lo que la mano lleva decide qué hace el clic sobre la caja.
+- [`player-actions`](../player-actions/player-actions.md) (consume y alimenta): la unidad viaja
+  en la mano, y lo que la mano lleva decide qué hace el clic sobre la caja y sobre cada casillero;
+  qué casilleros están vacíos y cuáles ocupados decide cuáles se muestran y cuáles se agarran.
 - [`investigation`](../investigation/investigation.md) (consume): el examen de una caja, que es
   el de cualquier levantable. Mientras dura se muestra el texto de la caja.
 - [`shift-cycle`](../shift-cycle/shift-cycle.md) (alimenta y consume): avisa cuándo reponer y
-  registrar quedaron cumplidas, y cuándo registrar dejó de estarlo; y la jornada que abre decide
-  lo que falta.
+  registrar quedaron cumplidas, y cuándo dejaron de estarlo; y la jornada que abre decide lo que
+  falta.
 
 ## Preguntas abiertas
 
