@@ -15,6 +15,7 @@ import sys
 import tempfile
 import unittest
 from pathlib import Path
+from unittest import mock
 
 from lib.repo import RAIZ
 
@@ -45,8 +46,22 @@ def _listado(arbol: str) -> list[str]:
     return _git("ls-tree", "-r", "--name-only", arbol).split()
 
 
+#: La identidad de git de los commits de los casos. La CI no tiene ninguna, y sin ella
+#: `commit-tree` sale con 128: medido el 2026-09-30 en el PR #280, donde tres casos que pasaban
+#: acá fallaron allá. Va por el entorno para que la hereden también los `git` del script.
+IDENTIDAD = {
+    "GIT_AUTHOR_NAME": "t",
+    "GIT_AUTHOR_EMAIL": "t@t",
+    "GIT_COMMITTER_NAME": "t",
+    "GIT_COMMITTER_EMAIL": "t@t",
+}
+
+
 class ElArbol(unittest.TestCase):
     def setUp(self):
+        entorno = mock.patch.dict(os.environ, IDENTIDAD)
+        entorno.start()
+        self.addCleanup(entorno.stop)
         self._previo = Path.cwd()
         self._repo = tempfile.TemporaryDirectory()
         os.chdir(self._repo.name)
