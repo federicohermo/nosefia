@@ -578,7 +578,7 @@ las 3 ENTONCES la caja tiene 3.
 
 ## Señales
 
-- El producto colocado en la góndola y la unidad retirada del depósito.
+- El producto colocado en la góndola, la unidad retirada del depósito y la devuelta a su caja.
 
 ## Dependencias
 
