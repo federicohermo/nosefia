@@ -649,6 +649,37 @@ func test_la_bolsa_y_los_utiles_soltados_contra_una_pared_no_quedan_adentro() ->
 		assert_int(soltados).override_failure_message("`%s` no se soltó" % objeto.name).is_equal(2)
 
 
+func test_lo_soltado_contra_una_pared_cae_sin_rozarla() -> void:  # AC-PLY-019
+	# El barrido dejaba lo soltado pegado a la pared, y caía rozándola. Una unidad se enganchaba en
+	# una arista del modelo, giraba y se hundía 3 cm en el rincón con el piso: la red la rescataba,
+	# según qué suites hubieran corrido antes. Medido el 2026-09-30, con el cuerpo girado 20°.
+	var almacen: Node3D = await _almacen()
+	var jugador: CharacterBody3D = almacen.get("_jugador")
+	var agarre: Agarre = almacen.get("_agarre")
+	var unidad := _unidad_en_la_mano(almacen)
+	assert_object(unidad).is_not_null()
+	for giro in GIROS_DEL_CUERPO:
+		var donde := "`%s` soltado mirando derecho, girado %.0f" % [unidad.name, giro]
+		var derecho := _parar_frente_a(almacen, PARED_DE_LA_FACHADA, PARADO_DEL_SOLIDO)
+		if agarre.manos().sostenido() == null:
+			_accion(jugador, unidad, ReglasDeLosObjetos.ACCION_AGARRAR)
+		await get_tree().physics_frame
+		_mirar(jugador, derecho + deg_to_rad(giro), 0.0)
+		_accion(jugador, unidad, ReglasDeLosObjetos.ACCION_AGARRAR)
+		assert_object(agarre.manos().sostenido()).override_failure_message(donde).is_null()
+		var separacion := _separacion_de_la_fachada(unidad)
+		(
+			assert_float(separacion)
+			. override_failure_message(
+				"%s, cae a %.4f m de la pared: la roza" % [donde, separacion]
+			)
+			. is_greater(ReglasDeLosObjetos.ROCE)
+		)
+		for cuadro in CUADROS_DE_REPOSO:
+			await get_tree().physics_frame
+		_comprobar_libre_y_enfocable(almacen, unidad, donde)
+
+
 func test_el_bidon_encimado_con_el_cuerpo_cae_derecho_al_lado_del_jugador() -> void:
 	# El bidón mide 0,70 × 0,46 m, y la mira lo inclina: tiene más fondo que el lugar entre el
 	# cuerpo y la pared. La caída lo barría hasta tocarla sin contar el cuerpo, la física lo sacaba

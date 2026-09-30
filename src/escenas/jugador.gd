@@ -18,6 +18,9 @@ signal paso_dado
 ## Cuántos choques se piden por consulta al medir lo soltado contra el cuerpo. El motor corta ahí.
 const TOPE_DE_CHOQUES := 32
 
+## Cuánto se aparta lo soltado de lo que frenó el barrido, en metros, para caer sin rozarlo.
+const HOLGURA_DE_LA_CAIDA := 0.01
+
 ## Los dos sistemas de agarrar, por `@export` y no por `@onready`: un `@onready` se resuelve
 ## recién al entrar la escena al árbol, y entonces `id_en_la_mano()` se caería sobre un jugador
 ## apenas instanciado — que es como lo instancia todo test de esta escena. Tampoco son autoloads:
@@ -525,6 +528,12 @@ func _ajustar_la_caida(cuerpo: RigidBody3D) -> void:
 		consulta.exclude = [get_rid(), cuerpo.get_rid()]
 		avance = minf(avance, espacio.cast_motion(consulta)[0])
 	cuerpo.global_position = inicio + recorrido * avance
+	# Lo que el barrido frenó contra algo queda a un centímetro, y no pegado. Cayendo pegada a una
+	# pared, una unidad se enganchaba en una arista del modelo, giraba y se hundía 3 cm en el
+	# rincón con el piso. Medido el 2026-09-30 al pie de la fachada: pasaba según qué suites
+	# hubieran corrido antes, y con el centímetro no pasa en ningún orden.
+	if avance < 1.0:
+		cuerpo.global_position -= recorrido.normalized() * HOLGURA_DE_LA_CAIDA
 	# Si al lado tampoco entra, queda donde lo dejó el barrido: lo que ya no tiene lugar lo resuelve
 	# la red de seguridad.
 	if _metido_en_el_cuerpo(cuerpo) and _dejar_al_lado(cuerpo):
