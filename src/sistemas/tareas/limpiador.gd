@@ -11,8 +11,8 @@
 class_name Limpiador
 extends Node
 
-## Un gesto que cambió algo. Se llaman por lo que pasó, y cada uno es la fuente de su sonido: el
-## audio se ata por el nombre de la señal.
+## Un gesto que cambió algo. Se llaman por lo que pasó. El audio se ata por el nombre de la señal:
+## una fila de la tabla de sonidos las hace sonar sin tocar este archivo.
 signal balde_llenado
 signal balde_tenido(agua: ReglasDeLaLimpieza.Agua)
 signal balde_vaciado
