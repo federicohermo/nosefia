@@ -116,6 +116,15 @@ Lo que más se rompe:
 - **Cada suite de «Se escribe» se cuenta contra el tope de 20 casos de `gdlint`.** Si una ya está
   en el tope, el issue dice adónde van los casos nuevos. En el #176, `reposicion_manual_test.gd`
   estaba en 20 y `caja_que_se_lleva_test.gd` en 19, y la suite nueva no estaba en los límites.
+- **Un issue que suma cuerpos al grupo `interactuable` mide lo que cuesta la mira.** Se mide
+  `_leer_la_mira` en el pasillo más cargado, con la mano vacía y con algo en la mano. En el
+  #265, pasar de una zona por producto a una por casillero multiplicó por 60 lo enfocable, y la
+  lectura pasó de 30 µs a 2 ms por paso de física.
+- **Si el issue cambia cuántos nodos crea un puesto, el `rg` busca los tests que filtran sus
+  hijos por tipo.** Un `is StaticBody3D` no nombra lo que cambia. En el #265,
+  `estante_test.gd` contaba un cuerpo por producto, y costó una corrida entera.
+- **Un gesto que deshace la condición de una obligatoria dice qué pasa con ella.** En el #265,
+  agarrar una unidad colocada descumplía reponer, y el issue no lo decía (`BR-SHF-007`).
 - **Una lista que reparte un conjunto suma el total.** Si el issue divide los productos en dos
   grupos, los dos grupos se cuentan contra el catálogo. En el #264, las cajas con textura y sin
   textura eran 19 y 11 de 31: Malbardo no estaba en ninguna.

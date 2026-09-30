@@ -170,6 +170,8 @@ entregable más caro y el único que hace que el hallazgo no vuelva.
 | una pregunta al usuario **que una medición contestaba** | `implement-batch` — el padre preguntó sin medir lo que suponía cada opción, ni cruzarla con lo que el usuario ya había decidido |
 | un issue reescrito en el cruce **cuyo contrato sigue diciendo lo de antes** | `implement-batch` — se reescribió la premisa y no el contrato que salía de ella |
 | un caso que **afirma el gesto viejo** y sale rojo en la corrida entera | `implement-feature` — no se buscaron los casos que ejercen el gesto redefinido antes de `verificar.py` |
+| un issue que multiplica lo enfocable **sin medir la mira** | `to-issue` — el costo de `_leer_la_mira` no se midió antes de sumar cuerpos al grupo `interactuable` |
+| un gesto que **deshace una obligatoria** sin que el issue diga qué pasa | `to-issue` — el cruce miró los criterios del gesto y no las tareas que su efecto toca |
 
 **Si el problema no entra en ninguna fila, agregá la fila.** Esa tabla es el registro de lo que
 esta doctrina ya aprendió, y está incompleta a propósito.
