@@ -150,7 +150,7 @@ func test_acepta_compara_por_id_y_no_por_instancia() -> void:
 	assert_bool(estante.acepta(_producto(Producto.Id.MALBARDO))).is_false()
 
 
-func test_un_producto_nulo_se_rechaza_en_vez_de_reventar() -> void:
+func test_un_producto_nulo_o_desconocido_se_rechaza_en_vez_de_reventar() -> void:
 	# Es la forma en que un `id` sin fila llega hasta acá: `Catalogo.de()` contesta `null`,
 	# medido. Sin este camino el rechazo sería un error del motor, y gdUnit4 cuenta un error
 	# como *error* y no como *failure* — el archivo sigue diciendo `PASSED`.
@@ -158,6 +158,10 @@ func test_un_producto_nulo_se_rechaza_en_vez_de_reventar() -> void:
 	assert_bool(estante.acepta(null)).is_false()
 	assert_int(estante.colocar(null)).is_equal(Estante.Rechazo.PRODUCTO_NO_ACEPTADO)
 	assert_int(estante.unidades_en_gondola(null)).is_equal(0)
+	# Sin caja en este estante no sale nada: ni del nulo ni de uno que no acepta.
+	for producto: Producto in [null, _producto(Producto.Id.MALBARDO)]:
+		assert_int(estante.disponibles_para_retirar(producto)).is_zero()
+		assert_object(estante.retirar(producto)).is_null()
 
 
 func test_el_cupo_de_cada_producto_son_los_casilleros_de_su_fila() -> void:  # AC-STK-008
@@ -218,9 +222,10 @@ func test_el_estante_lleno_conserva_la_unidad_rechazada() -> void:
 	assert_int(estante.unidades_en_gondola(producto)).is_equal(1)
 
 
-func test_con_la_fila_completa_la_caja_entrega_hasta_vaciarse() -> void:  # AC-STK-017
+func test_con_la_fila_completa_la_caja_entrega_hasta_vaciarse() -> void:  # AC-STK-017 AC-STK-018
 	# Ningún casillero espera una unidad, y la caja las da igual, de a una, hasta quedar en 0. La
 	# que no tiene casillero se rechaza al colocarla y sigue afuera; devueltas, la caja se llena.
+	# Con las 8 afuera no se vende ninguna, y devueltas se venden las 8.
 	var casilleros := 8
 	var producto := _producto(Producto.Id.ACTRONCITO)
 	var inventario := Inventario.new([producto], {producto.id: casilleros})
@@ -238,9 +243,11 @@ func test_con_la_fila_completa_la_caja_entrega_hasta_vaciarse() -> void:  # AC-S
 	assert_object(estante.retirar(producto)).is_null()
 	assert_int(estante.colocar_unidad(afuera[0])).is_equal(Estante.Rechazo.ESTANTE_LLENO)
 	assert_int(estante.reservadas(producto)).is_equal(casilleros)
+	assert_int(inventario.vendibles(producto)).is_zero()
 	for unidad in afuera:
 		assert_bool(estante.devolver(unidad)).is_true()
 	assert_int(estante.disponibles_para_retirar(producto)).is_equal(casilleros)
+	assert_int(inventario.vendibles(producto)).is_equal(casilleros)
 	assert_int(estante.unidades_en_deposito(producto)).is_equal(casilleros)
 	assert_int(estante.unidades_en_gondola(producto)).is_equal(casilleros)
 

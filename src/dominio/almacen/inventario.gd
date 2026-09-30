@@ -1,5 +1,5 @@
 ## Cuántas unidades hay de cada producto y **dónde**: qué falta en la góndola, qué se puede
-## mover del depósito al estante y qué se puede cobrar.
+## mover del depósito al estante, cuáles están afuera de su caja y qué se puede cobrar.
 ##
 ## No conoce al `Catalogo` ni al local: los productos y los casilleros de la fila de adelante
 ## de cada uno se los pasan al `_init`. Es lo que permite armar un inventario de prueba con dos
@@ -24,6 +24,16 @@ var _unidades: Dictionary = {}
 ## Cuántos casilleros tiene la fila de adelante de cada producto: cuántas unidades pide su
 ## góndola. La clave es el `id`, como en `_unidades`.
 var _casilleros: Dictionary[Producto.Id, int] = {}
+
+## Las unidades que salieron de su caja y todavía no se colocaron ni volvieron a ella: en la mano
+## o soltadas en el piso.
+##
+## **Siguen contadas en el depósito**, y por eso son una lista aparte y no una tercera ubicación:
+## la caja se cuenta restándolas, y una venta que baja el depósito le resta a la caja sin que
+## nadie se lo avise. **Viven acá y no en el estante porque la venta las tiene que ver**: los
+## vendibles se cuentan contra ellas, y la ventanilla no conoce el estante. El estante las anota y
+## las quita.
+var _afuera: Array[UnidadDeProducto] = []
 
 
 ## Recibe los productos y sus casilleros en vez de ir a buscarlos, y ésa es la decisión que hace
@@ -118,18 +128,60 @@ func _vacios(producto: Producto) -> int:
 	return maxi(0, casilleros(producto) - unidades(producto, Ubicacion.GONDOLA))
 
 
-## Cuántas unidades de ese producto se pueden vender: el depósito menos los casilleros vacíos de
-## su fila de adelante, y nunca menos de 0.
+## Cuántas unidades de ese producto están afuera de su caja. Siguen contadas en el depósito.
+func afuera(producto: Producto) -> int:
+	if producto == null:
+		return 0
+	var cuantas := 0
+	for unidad in _afuera:
+		if unidad.producto.id == producto.id:
+			cuantas += 1
+	return cuantas
+
+
+## Si esa unidad está afuera de su caja: salió y todavía no se colocó ni volvió a ella.
+func esta_afuera(unidad: UnidadDeProducto) -> bool:
+	return unidad != null and _afuera.has(unidad)
+
+
+## Anota afuera de su caja una unidad que sale, y devuelve si la anotó. No mueve mercadería.
 ##
-## Lo que el estante necesita no se vende. Sin ese descuento, una venta se llevaría la unidad
-## que el jugador iba a colocar, y reponer quedaría sin cumplir sin que nada lo avise.
+## Una unidad sin producto, de un producto que el inventario no conoce o ya anotada no se anota:
+## la misma unidad dos veces le restaría dos a la caja por una sola que salió.
+func anotar_afuera(unidad: UnidadDeProducto) -> bool:
+	if unidad == null or unidad.producto == null or not _unidades.has(unidad.producto.id):
+		return false
+	if _afuera.has(unidad):
+		return false
+	_afuera.append(unidad)
+	return true
+
+
+## Deja de contar afuera esa unidad, que volvió a su caja o se colocó, y devuelve si estaba. No
+## mueve mercadería: quien la coloca la pasa a la góndola aparte.
+func quitar_de_afuera(unidad: UnidadDeProducto) -> bool:
+	if not esta_afuera(unidad):
+		return false
+	_afuera.erase(unidad)
+	return true
+
+
+## Cuántas unidades de ese producto se pueden vender: el depósito menos el mayor entre los
+## casilleros vacíos de su fila de adelante y sus unidades afuera, y nunca menos de 0.
 ##
-## Una unidad en la mano sigue en el depósito hasta que se coloca, y también en lo que a la
-## góndola le falta: por eso no se vende, y colocarla después sigue funcionando.
+## Es lo que queda en la caja, menos lo que a la góndola todavía le falta de ella. Lo que el
+## estante necesita no se vende: sin ese descuento, una venta se llevaría la unidad que el
+## jugador iba a colocar, y reponer quedaría sin cumplir sin que nada lo avise. Lo que está
+## afuera tampoco: vendida, el depósito quedaría debiendo una unidad que está en la mano, y esa
+## unidad ya no se coloca ni suma al volver a su caja.
+##
+## **El mayor y no la suma**: la unidad afuera suele ser la que su casillero vacío espera, y
+## restar las dos dejaría sin vender una unidad que sobra.
 func vendibles(producto: Producto) -> int:
 	if not _unidades.has(producto.id):
 		return 0
-	return maxi(0, unidades(producto, Ubicacion.DEPOSITO) - _vacios(producto))
+	var sin_vender := maxi(_vacios(producto), afuera(producto))
+	return maxi(0, unidades(producto, Ubicacion.DEPOSITO) - sin_vender)
 
 
 ## Descuenta del depósito lo que la venta pide, y devuelve si pudo. La góndola no se toca.
