@@ -84,11 +84,16 @@ func pedir_retirar(id: Producto.Id, nodo: Node3D) -> bool:
 ##
 ## Si la caja no la recibe, la unidad sigue en la mano: sale de ella sólo cuando la caja ya la
 ## contó. Qué recibe la caja lo decide ella, y el cuerpo lo esconde quien lo dibuja.
+##
+## Avisa antes de devolver el cuerpo, mientras sigue en la mano y con sus datos: quien lo dibuja lo
+## esconde al recibirlo, y el sonido sale desde donde está y según lo que es.
 func pedir_devolver(id: Producto.Id) -> Node3D:
 	var unidad := agarre.manos().sostenido() as UnidadDeProducto
 	if not caja(id).meter(unidad):
 		return null
-	return agarre.entregar()
+	var nodo := agarre.entregar()
+	unidad_devuelta.emit(nodo, unidad.producto)
+	return nodo
 
 
 ## Coloca la unidad de la mano en ese casillero de `destino`, o en el primero vacío. Si el

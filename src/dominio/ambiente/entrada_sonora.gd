@@ -73,6 +73,7 @@ const EVENTOS_DE_OBJETO := [
 	Evento.OBJETO_AGARRADO,
 	Evento.OBJETO_SOLTADO,
 	Evento.PRODUCTO_COLOCADO,
+	Evento.UNIDAD_DEVUELTA,
 ]
 
 ## Los cuatro buses del local, **declarados una sola vez en todo el repo**. El layout de buses los
