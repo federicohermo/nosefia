@@ -782,8 +782,8 @@ func _process(_delta: float) -> void:
 ## en parte, adentro de su alcance y de su desvío (BR-PLY-004).
 ##
 ## **Es un costo medido, no una regla.** Con la mano vacía, todas las unidades puestas de la fila
-## de adelante se pueden agarrar, y parado en el pasillo de las góndolas la mira tenía entre 60 y
-## 70 casilleros al alcance: medirlos a todos llevaba la lectura de la mira de 30 µs a 2 ms por
+## de adelante se pueden agarrar, y parado en el pasillo de las góndolas la mira tiene entre 43 y
+## 54 casilleros al alcance: medirlos a todos lleva la lectura de la mira de 30 µs a 1,5 ms por
 ## paso de física, medido el 2026-09-30. Los que quedan afuera de este corte la mira no los
 ## elegiría nunca, así que ofrecerle sólo los de adentro no cambia qué enfoca.
 func _physics_process(_delta: float) -> void:
