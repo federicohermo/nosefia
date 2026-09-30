@@ -10,8 +10,8 @@ const ALMACEN := preload("res://src/escenas/almacen.tscn")
 const ReposicionManual := preload("res://src/escenas/puestos/reposicion_manual.gd")
 
 ## Hasta dónde se busca, delante de una unidad, un lugar donde el jugador entre parado, en
-## metros. Un estante achicado queda hundido entre los laterales del mueble, y el cuerpo del
-## jugador no pasa del contorno: el lugar aparece a un metro y algo, y antes de cruzar el pasillo.
+## metros. El cuerpo del jugador no pasa del contorno del mueble, y un zócalo hondo asoma por
+## delante de lo de arriba: el lugar aparece antes de cruzar el pasillo.
 const HASTA_EL_PASILLO := 1.5
 
 ## De a cuánto se avanza buscando ese lugar, en metros.
@@ -106,6 +106,56 @@ func test_la_mano_gira_el_frente_de_la_tanda_hacia_la_camara() -> void:
 		assert_vector(Basis(Vector3.UP, deg_to_rad(giro)) * frente).is_equal_approx(
 			Vector3.BACK, Vector3.ONE * 1e-5
 		)
+
+
+## En la mano, lo de una cabecera va derecho y con el frente hacia la cámara, igual que lo de un
+## estante plano: la inclinación de la rampa es del estante, no del producto. Se mide sobre el
+## envase y relativo a la cámara, de la que cuelga la mano: lo de arriba es el eje del envase más
+## cercano a la vertical, y el frente, el pasillo de su tanda visto desde el envase —en la rampa,
+## echado con él—. No sale de sus ejes: una lata puede tener la etiqueta entre dos.
+func test_en_la_mano_lo_de_una_cabecera_va_derecho_como_lo_de_un_estante_plano() -> void:
+	var almacen := _almacen()
+	var agarre: Agarre = almacen.get("_agarre")
+	var presentacion: Node3D = almacen.get("_reposicion_manual")
+	var contenido: Node3D = presentacion.get("contenido")
+	var arriba_de_referencia := Vector3.ZERO
+	var frente_de_referencia := Vector3.ZERO
+	var en_rampa := 0
+	for producto in Catalogo.todos():
+		var modelo := (contenido.get_child(producto.id) as Node3D).global_basis
+		var arriba := _eje(modelo, Vector3.UP)
+		var pasillo := presentacion.global_basis * _frente(almacen, producto)
+		var frente := (pasillo - arriba * pasillo.dot(arriba)).normalized()
+		if arriba.angle_to(Vector3.UP) > deg_to_rad(1.0):
+			en_rampa += 1
+		presentacion.call("retirar", producto.id)
+		var en_la_mano := (agarre.punto_de_producto.get_child(0) as Node3D).basis.orthonormalized()
+		if arriba_de_referencia == Vector3.ZERO:
+			arriba_de_referencia = en_la_mano * arriba
+			frente_de_referencia = en_la_mano * frente
+		(
+			assert_float(rad_to_deg((en_la_mano * arriba).angle_to(arriba_de_referencia)))
+			. override_failure_message("%s no va derecho en la mano" % producto.nombre)
+			. is_less(1.0)
+		)
+		(
+			assert_float(rad_to_deg((en_la_mano * frente).angle_to(frente_de_referencia)))
+			. override_failure_message("%s no muestra el frente como los demás" % producto.nombre)
+			. is_less(1.0)
+		)
+		presentacion.call("pedir_colocar", producto.id)
+	# Las cabeceras son rampas: sin ninguna, el caso no está mirando lo que dice.
+	assert_int(en_rampa).is_greater(0)
+
+
+## El eje de un giro que más se parece a `hacia`, dado vuelta si apunta al revés.
+static func _eje(giro: Basis, hacia: Vector3) -> Vector3:
+	var mejor := Vector3.ZERO
+	for columna in 3:
+		var eje := giro[columna].normalized()
+		if absf(eje.dot(hacia)) > absf(mejor.dot(hacia)):
+			mejor = eje
+	return mejor if mejor.dot(hacia) > 0.0 else -mejor
 
 
 ## Al abrir, de cada producto falta sólo su cupo, y lo que falta son las últimas copias de su
