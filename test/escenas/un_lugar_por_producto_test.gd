@@ -8,6 +8,7 @@ extends GdUnitTestSuite
 
 const ALMACEN := preload("res://src/escenas/almacen.tscn")
 const ReposicionManual := preload("res://src/escenas/puestos/reposicion_manual.gd")
+const AperturaConLugar := preload("res://test/escenas/apertura_con_lugar.gd")
 
 ## Hasta dónde se busca, delante de una unidad, un lugar donde el jugador entre parado, en
 ## metros. El cuerpo del jugador no pasa del contorno del mueble, y un zócalo hondo asoma por
@@ -37,13 +38,23 @@ func _cupo(almacen: Node3D, producto: Producto) -> int:
 	return (almacen.get("_repositor") as Repositor).estante().cupo(producto)
 
 
+## Lo que la jornada 1 hace faltar de ese producto, que es con lo que abre el local armado.
+func _faltante(producto: Producto) -> int:
+	return Apertura.faltantes_de_la_jornada(ReglasDeLaPartida.PRIMERA_JORNADA).get(producto.id, 0)
+
+
+## Una copia del bloque principal, en el mundo.
+func _copia_en_el_mundo(almacen: Node3D, producto: Producto, indice: int) -> Transform3D:
+	var presentacion: Node3D = almacen.get("_reposicion_manual")
+	var bloque := _disposicion(almacen).principales[producto.id]
+	return presentacion.global_transform * DisposicionDeLaGondola.copia(bloque, indice)
+
+
 ## La caja que ocupa una copia del bloque principal, en el mundo.
 func _caja_de_la_copia(almacen: Node3D, producto: Producto, indice: int) -> AABB:
 	var presentacion: Node3D = almacen.get("_reposicion_manual")
 	var grupo: MultiMeshInstance3D = presentacion.get_node("ProductosDe" + producto.nombre)
-	var bloque := _disposicion(almacen).principales[producto.id]
-	var copia := presentacion.global_transform * DisposicionDeLaGondola.copia(bloque, indice)
-	return copia * grupo.multimesh.mesh.get_aabb()
+	return _copia_en_el_mundo(almacen, producto, indice) * grupo.multimesh.mesh.get_aabb()
 
 
 ## El centro de una fila del bloque principal, en el mundo.
@@ -115,6 +126,9 @@ func test_la_mano_gira_el_frente_de_la_tanda_hacia_la_camara() -> void:
 ## echado con él—. No sale de sus ejes: una lata puede tener la etiqueta entre dos.
 func test_en_la_mano_lo_de_una_cabecera_va_derecho_como_lo_de_un_estante_plano() -> void:
 	var almacen := _almacen()
+	# Cada producto tiene que poder volver a la góndola: si no, la unidad se queda en la mano
+	# y el retiro del siguiente se rechaza, y se mide la de antes.
+	AperturaConLugar.abrir_con_todo_el_lugar(almacen)
 	var agarre: Agarre = almacen.get("_agarre")
 	var presentacion: Node3D = almacen.get("_reposicion_manual")
 	var contenido: Node3D = presentacion.get("contenido")
@@ -158,9 +172,80 @@ static func _eje(giro: Basis, hacia: Vector3) -> Vector3:
 	return mejor if mejor.dot(hacia) > 0.0 else -mejor
 
 
-## Al abrir, de cada producto falta sólo su cupo, y lo que falta son las últimas copias de su
-## tanda: las guías que lo repiten en otros estantes se dibujan enteras y no se reponen nunca.
-## Llenar el cupo prende exactamente esas copias, y ninguna otra.
+## Agarrada con la mano vacía de su casillero, lo de una cabecera también va derecho en la mano,
+## como lo de un estante plano: la rampa se queda en el estante. Se mide como al retirarlo de la
+## caja, sobre el último casillero de cada producto. Un casillero es de una cabecera si la chapa
+## de debajo de su unidad está inclinada, y ahí la unidad va echada con ella; en un estante plano
+## va derecha, y es contra lo que se mide.
+func test_lo_agarrado_de_una_cabecera_va_derecho_como_lo_de_un_estante_plano() -> void:
+	var almacen := _almacen()
+	await get_tree().physics_frame
+	await get_tree().physics_frame
+	# La góndola llena: cada casillero tiene su unidad para agarrar.
+	var sin_faltantes: Dictionary[Producto.Id, int] = {}
+	AperturaConLugar.abrir_con_faltantes(almacen, sin_faltantes)
+	var agarre: Agarre = almacen.get("_agarre")
+	var presentacion: Node3D = almacen.get("_reposicion_manual")
+	var contenido: Node3D = presentacion.get("contenido")
+	var estante := (almacen.get("_repositor") as Repositor).estante()
+	var de_cabecera: Dictionary[String, PackedVector3Array] = {}
+	var planos: Array[PackedVector3Array] = []
+	for producto in Catalogo.todos():
+		var ocupados := estante.casilleros_ocupados(producto)
+		var indice := ocupados[ocupados.size() - 1]
+		var bloque := _disposicion(almacen).principales[producto.id]
+		var de_la_tanda := DisposicionDeLaGondola.copias(bloque) - _cupo(almacen, producto) + indice
+		var unidad := _caja_de_la_copia(almacen, producto, de_la_tanda).get_center()
+		var chapa := _golpe(almacen, unidad, unidad + Vector3.DOWN)
+		var en_rampa := not chapa.is_empty() and _inclinado(chapa["normal"])
+		var modelo := (contenido.get_child(producto.id) as Node3D).global_basis
+		var arriba := _eje(modelo, Vector3.UP)
+		var pasillo := presentacion.global_basis * _frente(almacen, producto)
+		var frente := (pasillo - arriba * pasillo.dot(arriba)).normalized()
+		var copia := _copia_en_el_mundo(almacen, producto, de_la_tanda)
+		(
+			assert_bool(_inclinado(copia.basis.orthonormalized() * arriba))
+			. override_failure_message("%s no va echado como su chapa" % producto.nombre)
+			. is_equal(en_rampa)
+		)
+		presentacion.call("agarrar_de_la_gondola", producto.id, indice)
+		(
+			assert_array(estante.casilleros_vacios(producto))
+			. override_failure_message("%s no se agarró de su casillero" % producto.nombre)
+			. contains_exactly([indice])
+		)
+		var en_la_mano := (agarre.punto_de_producto.get_child(0) as Node3D).basis.orthonormalized()
+		var medida := PackedVector3Array([en_la_mano * arriba, en_la_mano * frente])
+		if en_rampa:
+			de_cabecera[producto.nombre] = medida
+		else:
+			planos.append(medida)
+		presentacion.call("pedir_colocar", producto.id, indice)
+	# Sin una cabecera el caso no mira lo que dice, y sin un estante plano no tiene contra qué.
+	assert_int(de_cabecera.size()).is_greater(0)
+	assert_int(planos.size()).is_greater(0)
+	for nombre: String in de_cabecera:
+		var medida := de_cabecera[nombre]
+		(
+			assert_float(rad_to_deg(medida[0].angle_to(planos[0][0])))
+			. override_failure_message("%s no va derecho en la mano" % nombre)
+			. is_less(1.0)
+		)
+		(
+			assert_float(rad_to_deg(medida[1].angle_to(planos[0][1])))
+			. override_failure_message("%s no muestra el frente como los demás" % nombre)
+			. is_less(1.0)
+		)
+
+
+## Si un eje se aparta de la vertical más de un grado.
+static func _inclinado(eje: Vector3) -> bool:
+	return eje.angle_to(Vector3.UP) > deg_to_rad(1.0)
+
+
+## Al abrir, de cada producto falta sólo lo que su jornada pide, y los casilleros son las
+## últimas copias de su tanda: las guías que lo repiten en otros estantes se dibujan enteras y no
+## se reponen nunca. Reponer lo que falta prende exactamente esas copias, y ninguna otra.
 func test_cada_producto_se_repone_en_una_sola_tanda_y_lo_repetido_es_fijo() -> void:  # AC-STK-028
 	var almacen := _almacen()
 	var presentacion: Node3D = almacen.get("_reposicion_manual")
@@ -177,8 +262,8 @@ func test_cada_producto_se_repone_en_una_sola_tanda_y_lo_repetido_es_fijo() -> v
 		var copias := grupo.multimesh
 		(
 			assert_int(copias.instance_count - copias.visible_instance_count)
-			. override_failure_message("%s: al abrir no falta sólo su cupo" % nombre)
-			. is_equal(cupo)
+			. override_failure_message("%s: al abrir no falta sólo lo de la jornada" % nombre)
+			. is_equal(_faltante(producto))
 		)
 		var bloque := disposicion.principales[producto.id]
 		var principales := DisposicionDeLaGondola.copias(bloque)
@@ -192,7 +277,7 @@ func test_cada_producto_se_repone_en_una_sola_tanda_y_lo_repetido_es_fijo() -> v
 				)
 				. is_equal_approx(de_la_tanda.origin, Vector3.ONE * 1e-4)
 			)
-		for indice in cupo:
+		for indice in _faltante(producto):
 			presentacion.retirar(producto.id)
 			presentacion.pedir_colocar(producto.id)
 		assert_int(copias.visible_instance_count).is_equal(copias.instance_count)
@@ -200,7 +285,8 @@ func test_cada_producto_se_repone_en_una_sola_tanda_y_lo_repetido_es_fijo() -> v
 
 ## Parado en el pasillo frente a su casillero, con el producto en la mano, la mira lo encuentra
 ## y el clic lo coloca. Es el camino del jugador, entero, para cada producto: donde se para es
-## donde su cuerpo entra, y no un punto elegido para que el caso pase.
+## donde su cuerpo entra, y no un punto elegido para que el caso pase. Cada producto arranca con
+## un casillero vacío, que es lo que la noche le pide reponer.
 func test_el_casillero_de_cada_producto_esta_al_alcance_desde_el_pasillo() -> void:  # AC-STK-029
 	var almacen := _almacen()
 	await get_tree().physics_frame
@@ -208,9 +294,13 @@ func test_el_casillero_de_cada_producto_esta_al_alcance_desde_el_pasillo() -> vo
 	var jugador: Node3D = almacen.get("_jugador")
 	var presentacion: Node3D = almacen.get("_reposicion_manual")
 	var repositor: Repositor = almacen.get("_repositor")
+	var uno_de_cada: Dictionary[Producto.Id, int] = {}
+	for producto in Catalogo.todos():
+		uno_de_cada[producto.id] = 1
+	AperturaConLugar.abrir_con_faltantes(almacen, uno_de_cada)
 	for producto in Catalogo.todos():
 		presentacion.retirar(producto.id)
-		var zona: Node3D = presentacion.get_node("ZonaDe" + producto.nombre)
+		var zona: Node3D = presentacion.casillero(producto.id)
 		var pie := _lugar_en_el_pasillo(almacen, zona.global_position, _frente(almacen, producto))
 		(
 			assert_bool(pie.is_finite())
@@ -234,7 +324,7 @@ func test_el_casillero_de_cada_producto_esta_al_alcance_desde_el_pasillo() -> vo
 		(
 			assert_int(repositor.estante().unidades_en_gondola(producto))
 			. override_failure_message("%s no se colocó" % producto.nombre)
-			. is_equal(1)
+			. is_equal(_cupo(almacen, producto))
 		)
 		(almacen.get("_agarre") as Agarre).vaciar_las_manos()
 
@@ -257,6 +347,13 @@ func test_las_dos_filas_dan_al_pasillo() -> void:  # AC-STK-030
 	for producto in Catalogo.todos():
 		var frente := _frente(almacen, producto)
 		var fila := disposicion.filas_de_adelante[producto.id]
+		(
+			assert_int(_cupo(almacen, producto))
+			. override_failure_message(
+				"%s: su fila de adelante no es entera de casilleros" % producto.nombre
+			)
+			. is_equal(fila)
+		)
 		for columna in fila:
 			var atras := _caja_de_la_copia(almacen, producto, columna).get_center()
 			var delante := _caja_de_la_copia(almacen, producto, fila + columna)
@@ -288,15 +385,16 @@ func test_las_dos_filas_dan_al_pasillo() -> void:  # AC-STK-030
 			)
 
 
-## Al abrir la jornada la fila de atrás se ve entera, y de la de adelante sólo lo que sobra del
-## cupo. Reponer el cupo completa la de adelante y no mueve nada de la de atrás.
+## Al abrir la jornada la fila de atrás se ve entera, y la de adelante completa salvo lo que la
+## jornada hace faltar. Reponer lo que falta completa la de adelante y no mueve nada de la de
+## atrás.
 func test_la_fila_de_atras_se_ve_entera_desde_que_abre() -> void:  # AC-STK-031
 	var almacen := _almacen()
 	var presentacion: Node3D = almacen.get("_reposicion_manual")
 	var disposicion := _disposicion(almacen)
 	for producto in Catalogo.todos():
 		var nombre := producto.nombre
-		var cupo := _cupo(almacen, producto)
+		var falta := _faltante(producto)
 		var fila := disposicion.filas_de_adelante[producto.id]
 		var copias := (
 			(presentacion.get_node("ProductosDe" + nombre) as MultiMeshInstance3D).multimesh
@@ -305,12 +403,12 @@ func test_la_fila_de_atras_se_ve_entera_desde_que_abre() -> void:  # AC-STK-031
 		(
 			assert_int(copias.visible_instance_count - guias)
 			. override_failure_message(
-				"%s: al abrir no se ven su fila de atrás y lo que sobra" % nombre
+				"%s: al abrir no se ven su fila de atrás y su fila menos lo que falta" % nombre
 			)
-			. is_equal(fila + fila - cupo)
+			. is_equal(fila + fila - falta)
 		)
 		var antes := copias.buffer
-		for indice in cupo:
+		for indice in falta:
 			presentacion.retirar(producto.id)
 			presentacion.pedir_colocar(producto.id)
 		assert_int(copias.visible_instance_count - guias).is_equal(2 * fila)
@@ -319,6 +417,35 @@ func test_la_fila_de_atras_se_ve_entera_desde_que_abre() -> void:  # AC-STK-031
 			. override_failure_message("%s: reponer movió la fila de atrás" % nombre)
 			. is_equal(Array(antes.slice(0, (guias + fila) * 12)))
 		)
+
+
+## La jornada 1 abre con 5 Actroncito y 6 Coracola faltando, y todos los demás con su fila de
+## adelante completa; cada caja del depósito, llena. Es la cuenta del inventario con los
+## casilleros que mide el modelo, y no con unos inventados: Coracola tiene seis, así que su fila
+## arranca vacía entera.
+func test_la_jornada_1_abre_con_lo_que_dice_la_ficha() -> void:  # AC-STK-034 AC-STK-004
+	var almacen := _almacen()
+	var estante := (almacen.get("_repositor") as Repositor).estante()
+	var disposicion := _disposicion(almacen)
+	var faltan: Array[String] = []
+	for producto in Catalogo.todos():
+		var nombre := producto.nombre
+		var fila := disposicion.filas_de_adelante[producto.id]
+		(
+			assert_int(estante.unidades_en_gondola(producto))
+			. override_failure_message("%s no abrió con su fila menos lo que falta" % nombre)
+			. is_equal(fila - _faltante(producto))
+		)
+		(
+			assert_int(estante.unidades_en_deposito(producto))
+			. override_failure_message("la caja de %s no abrió llena" % nombre)
+			. is_equal(ReglasDelEstante.UNIDADES_POR_CAJA)
+		)
+		if estante.unidades_en_gondola(producto) < estante.cupo(producto):
+			faltan.append(nombre)
+	assert_array(faltan).contains_exactly(["Actroncito", "Coracola"])
+	assert_int(estante.unidades_en_gondola(Catalogo.de(Producto.Id.CORACOLA))).is_zero()
+	assert_bool(estante.completada()).is_false()
 
 
 func _mirar_foco(jugador: Node3D, ojo: Vector3, punto: Vector3) -> void:

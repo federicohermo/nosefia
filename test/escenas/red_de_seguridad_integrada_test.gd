@@ -6,6 +6,7 @@
 extends GdUnitTestSuite
 
 const ALMACEN := preload("res://src/escenas/almacen.tscn")
+const AperturaConLugar := preload("res://test/escenas/apertura_con_lugar.gd")
 
 const ENTRETECHO := Vector3(0.0, 5.5, 0.0)
 
@@ -23,6 +24,9 @@ const PISO_LIBRE := Vector3(4.49, 0.0, -10.0)
 func _almacen() -> Node3D:
 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
 	add_child(almacen)
+	# La noche abre con la góndola llena, y una caja llena no entrega: estos casos sacan
+	# unidades para usarlas de objeto, así que abren con lugar para reponer.
+	AperturaConLugar.abrir_con_todo_el_lugar(almacen)
 	await get_tree().physics_frame
 	almacen.get("_jugador").set_physics_process(false)
 	return almacen

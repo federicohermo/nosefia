@@ -18,10 +18,13 @@ func test_el_estante_dibuja_un_hueco_por_producto_del_catalogo() -> void:
 	# Se cuenta contra el catálogo y nunca contra un número escrito acá: con un producto más, un
 	# estante de seis huecos dejaría al jugador mirando una góndola que nunca se llena del todo,
 	# sin un solo error.
+	# Un hueco es la fila de adelante de un producto, con un casillero por cada lugar: cuántos
+	# lugares tiene cada fila lo mide el modelo.
 	var almacen: Node3D = auto_free(load(ESCENA).instantiate())
 	add_child(almacen)
-	var huecos: Array = almacen.get("_reposicion_manual").get_children().filter(
-		func(nodo: Node) -> bool: return nodo is StaticBody3D
+	var puesto: Node3D = almacen.get("_reposicion_manual")
+	var huecos: Array = puesto.get_children().filter(
+		func(nodo: Node) -> bool: return nodo.name.begins_with("ZonaDe")
 	)
 	(
 		assert_int(huecos.size())
@@ -33,6 +36,16 @@ func test_el_estante_dibuja_un_hueco_por_producto_del_catalogo() -> void:
 		)
 		. is_equal(Catalogo.todos().size())
 	)
+	var disposicion: DisposicionDeLaGondola = puesto.get("disposicion")
+	for producto in Catalogo.todos():
+		var casilleros: Array = puesto.get_node("ZonaDe" + producto.nombre).get_children().filter(
+			func(nodo: Node) -> bool: return nodo is StaticBody3D
+		)
+		(
+			assert_int(casilleros.size())
+			. override_failure_message("%s: casilleros de su fila" % producto.nombre)
+			. is_equal(disposicion.filas_de_adelante[producto.id])
+		)
 
 
 func test_los_huecos_visibles_son_los_que_dice_el_dominio() -> void:
@@ -40,23 +53,25 @@ func test_los_huecos_visibles_son_los_que_dice_el_dominio() -> void:
 	# una cuenta propia. Con una cuenta propia, el estante y el inventario se contradicen en
 	# silencio.
 	var actroncito := Catalogo.de(Producto.Id.ACTRONCITO)
-	var inventario := Inventario.new([actroncito])
-	inventario.ingresar(actroncito, Inventario.Ubicacion.DEPOSITO, actroncito.umbral)
+	var casilleros := 3
+	var inventario := Inventario.new([actroncito], {Producto.Id.ACTRONCITO: casilleros})
+	inventario.ingresar(actroncito, Inventario.Ubicacion.DEPOSITO, casilleros)
 	var dominio := Estante.new(inventario, [actroncito])
 	var estante := _estante()
 
 	estante.mostrar(dominio.productos_completos())
 	assert_int(_huecos_visibles(estante)).is_equal(0)
 
-	for _unidad in range(actroncito.umbral):
+	for _unidad in range(casilleros):
 		dominio.colocar(actroncito)
 	estante.mostrar(dominio.productos_completos())
 	assert_int(_huecos_visibles(estante)).is_equal(1)
 
 
 func test_el_estante_arranca_sin_un_solo_hueco_puesto() -> void:
-	# La góndola de la noche arranca vacía, así que un hueco visible en el `.tscn` sería
-	# mercadería que el jugador ve y el inventario no tiene.
+	# Los huecos de este estante son las mallas de las que el puesto de reponer saca cada
+	# producto: la góndola la dibuja el puesto, contra el inventario. Un hueco visible en el
+	# `.tscn` sería un producto dibujado dos veces, en un lugar que el inventario no cuenta.
 	assert_int(_huecos_visibles(_estante())).is_equal(0)
 
 

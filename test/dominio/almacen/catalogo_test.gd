@@ -69,27 +69,6 @@ const SONORIDADES_NUEVAS := {
 	"Feel Ricky Fort": EntradaSonora.Sonoridad.CAJITA,
 }
 
-## Los que no llenan ocho casilleros en la fila de adelante de su tanda, con los que llenan. El
-## cupo es el umbral y tiene que entrar adelante (BR-STK-025): una lata de heladera o lo que va
-## en una cabecera no dan para ocho de frente, y el resto de la tanda quedaría atrás. Lo midió el
-## acomodador sobre el modelo el 2026-09-30, con cada cabecera angostada hasta sus estantes, y
-## `disposicion_de_la_gondola_test` lo cobra.
-const UMBRALES_MENORES := {
-	"Laysntt": 3,
-	"Chisitos": 3,
-	"Coracola": 6,
-	"Durextra": 5,
-	"Duronga": 5,
-	"Feel Ricky Fort": 7,
-	"Fernet God": 5,
-	"Macumbas": 6,
-	"Malbardo": 7,
-	"Mayonchis": 4,
-	"Oaaaa": 4,
-	"Prongles": 5,
-	"Terminator": 4,
-}
-
 ## Los productos que el depósito guarda en caja chica, según la columna «Caja» de la ficha. Los
 ## demás van en caja grande. **No sale del volumen de la unidad**: Actroncito es una caja grande
 ## de remedio y va en caja chica, y Zucarachas al revés.
@@ -115,13 +94,6 @@ func test_los_que_entran_tienen_su_precio() -> void:  # AC-STK-002
 		)
 		if por_nombre.has(nombre):
 			assert_int(por_nombre[nombre].precio).is_equal(PRECIOS_NUEVOS[nombre])
-
-
-func test_el_umbral_es_ocho_salvo_donde_no_entran_ocho_de_frente() -> void:  # AC-STK-002
-	for producto in Catalogo.todos():
-		assert_int(producto.umbral).override_failure_message(producto.nombre).is_equal(
-			UMBRALES_MENORES.get(producto.nombre, 8)
-		)
 
 
 func test_los_que_entran_suenan_como_dice_su_ficha() -> void:  # AC-STK-027
@@ -197,7 +169,6 @@ func test_cada_producto_del_catalogo_esta_completo() -> void:  # AC-STK-002
 		assert_int(producto.id).is_equal(id)
 		assert_str(producto.nombre).is_not_empty()
 		assert_int(producto.precio).is_greater(0)
-		assert_int(producto.umbral).is_greater_equal(1)
 
 
 func test_dos_llamadas_al_catalogo_dan_objetos_distintos_con_el_mismo_id() -> void:

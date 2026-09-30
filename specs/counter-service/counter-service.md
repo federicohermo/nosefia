@@ -172,7 +172,7 @@ al tercer avance sí. Con cero entradas se puede desde el principio.
 
 ### AC-CTR-015 — La venta no toca el estante *(verifica BR-CTR-014)*
 
-DADO un producto de umbral 8 CUANDO se cobra la venta ENTONCES:
+DADO un producto de 8 casilleros CUANDO se cobra la venta ENTONCES:
 
 | Góndola | Depósito | Venta | Resultado | Góndola después | Depósito después |
 |---|---|---|---|---|---|
@@ -183,14 +183,14 @@ DADO un producto de umbral 8 CUANDO se cobra la venta ENTONCES:
 
 ### AC-CTR-016 — Lo repuesto sigue repuesto *(verifica BR-CTR-014)*
 
-DADO un producto de umbral 8, con la góndola en 7, el depósito en 3 y 1 unidad en la mano CUANDO
-se cobra una venta de 2 ENTONCES se cobra, y colocar la unidad de la mano deja la góndola en 8 y
-reponer cumplido.
+DADO un producto de 8 casilleros, con la góndola en 7, el depósito en 3 y 1 unidad en la mano
+CUANDO se cobra una venta de 2 ENTONCES se cobra, y colocar la unidad de la mano deja la góndola
+en 8 y reponer cumplido.
 
 ### AC-CTR-017 — El segundo comprador ve lo que dejó el primero *(verifica BR-CTR-014)*
 
-DADO un producto de umbral 8, con la góndola en 8 y el depósito en 2 CUANDO un comprador compra 1
-y otro pide 2 ENTONCES el primero se cobra y el segundo se rechaza.
+DADO un producto de 8 casilleros, con la góndola en 8 y el depósito en 2 CUANDO un comprador
+compra 1 y otro pide 2 ENTONCES el primero se cobra y el segundo se rechaza.
 
 ### AC-CTR-018 — Lo vendido suma los dos pedidos *(verifica BR-CTR-015)*
 

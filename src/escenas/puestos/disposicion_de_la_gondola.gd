@@ -20,9 +20,9 @@
 ## - `guias` son las tandas fijas: lo que se repite para completar un estante. No cambian
 ##   nunca, y están enteras desde que abre el local.
 ##
-## **Cuántas del final son casilleros no está acá**: es el cupo del `Estante`, y el puesto lo
-## resta del total. Lo que está es cuántas forman la fila de adelante, que es el lugar que el
-## modelo le da al cupo.
+## **Cuántas del final son casilleros sale de acá**: cada lugar de la fila de adelante es un
+## casillero, así que el cupo de cada producto es su `filas_de_adelante`. El puesto se lo pasa
+## al inventario de cada jornada, y el `Estante` lo contesta desde ahí.
 class_name DisposicionDeLaGondola
 extends Resource
 

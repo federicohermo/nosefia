@@ -3,6 +3,7 @@
 extends GdUnitTestSuite
 
 const ALMACEN := preload("res://src/escenas/almacen.tscn")
+const AperturaConLugar := preload("res://test/escenas/apertura_con_lugar.gd")
 
 ## La hoja que se mide: la del paso al fondo, que abre hacia el cuarto de atrás.
 const HOJA := "Estructura/puerta"
@@ -30,6 +31,9 @@ const PRODUCTO_DE_LA_CAJA := Producto.Id.CHISITOS
 func _almacen() -> Node3D:
 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
 	add_child(almacen)
+	# La noche abre con la góndola llena, y una caja llena no entrega: estos casos sacan
+	# unidades para usarlas de objeto, así que abren con lugar para reponer.
+	AperturaConLugar.abrir_con_todo_el_lugar(almacen)
 	await get_tree().physics_frame
 	return almacen
 

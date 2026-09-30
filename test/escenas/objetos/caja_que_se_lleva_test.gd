@@ -2,6 +2,7 @@
 extends GdUnitTestSuite
 
 const ALMACEN := preload("res://src/escenas/almacen.tscn")
+const AperturaConLugar := preload("res://test/escenas/apertura_con_lugar.gd")
 
 const ESTANTE_DEL_DEPOSITO := "Estructura/gondola_deposito03_001/StaticBody3D"
 
@@ -131,9 +132,10 @@ func _almacen_con_jugador_quieto() -> Node3D:
 	return almacen
 
 
-func test_la_caja_entrega_apoyada_en_el_estante_y_no_mientras_se_la_lleva() -> void:
+func test_la_caja_entrega_apoyada_en_el_estante_y_no_mientras_se_la_lleva() -> void:  # AC-STK-016
 	# Apoyada entrega en cualquier superficie, y el estante del depósito es la más alta que hay.
-	# En la mano no: llevarla es lo que cuesta, y sacarle una unidad pide apoyarla primero.
+	# En la mano no: llevarla es lo que cuesta, y sacarle una unidad pide apoyarla primero. La
+	# caja llevada es otra cosa en la mano, y con otra cosa en la mano el clic no hace nada.
 	var almacen: Node3D = await _almacen_con_jugador_quieto()
 	var jugador: Node3D = almacen.get("_jugador")
 	var agarre: Agarre = almacen.get("_agarre")
@@ -153,7 +155,7 @@ func test_la_caja_entrega_apoyada_en_el_estante_y_no_mientras_se_la_lleva() -> v
 	_accion(jugador, caja, ReglasDeLosObjetos.ACCION_AGARRAR)
 	assert_object(caja.get_parent()).is_same(jugador.get_node("Giro/PuntoDeCaja"))
 	var con_la_caja := repositor.estante().disponibles_para_retirar(producto)
-	almacen.get("_reposicion_manual").retirar_de_la_caja(caja)
+	almacen.get("_reposicion_manual").usar_la_caja(caja)
 	assert_int(repositor.estante().disponibles_para_retirar(producto)).is_equal(con_la_caja)
 
 
@@ -1023,6 +1025,7 @@ func test_levantar_la_caja_hace_caer_el_producto_apoyado_encima() -> void:
 	# producto del piso, a un metro, no estaba encima de nada.
 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
 	add_child(almacen)
+	AperturaConLugar.abrir_con_todo_el_lugar(almacen)
 	await get_tree().physics_frame
 	var jugador: CharacterBody3D = almacen.get("_jugador")
 	var caja := _caja_en_el_piso_libre(almacen, 0)
@@ -1050,6 +1053,7 @@ func test_empujar_la_caja_hasta_sacarla_de_abajo_hace_caer_el_producto() -> void
 	# doble que el caso del arrastre, porque tiene que salir entera y no sólo moverse.
 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
 	add_child(almacen)
+	AperturaConLugar.abrir_con_todo_el_lugar(almacen)
 	await get_tree().physics_frame
 	var jugador: CharacterBody3D = almacen.get("_jugador")
 	var caja := _caja_en_el_piso_libre(almacen, 0)
@@ -1090,6 +1094,7 @@ func test_el_producto_sobre_la_pila_cae_cuando_se_saca_la_caja_de_abajo() -> voi
 	# sacada la de abajo, la del medio cae, y el producto cae con ella.
 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
 	add_child(almacen)
+	AperturaConLugar.abrir_con_todo_el_lugar(almacen)
 	await get_tree().physics_frame
 	var jugador: CharacterBody3D = almacen.get("_jugador")
 	var abajo := _caja_en_el_piso_libre(almacen, 0)

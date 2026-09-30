@@ -56,11 +56,11 @@ func _reloj() -> RelojDelTurno:
 	return reloj
 
 
-## Una noche con los pedidos dados, sin cobrar todavía. Cada caso cobra los que necesita.
+## Una noche con los pedidos dados, sin cobrar todavía. Cada caso cobra los que necesita. La
+## góndola no tiene casilleros declarados, así que no pide nada y todo el depósito se vende.
 func _atender(pedidos: Array[Venta] = []) -> TareaDeAtender:
 	var inventario := Inventario.new(Catalogo.todos())
 	for producto in Catalogo.todos():
-		inventario.ingresar(producto, Inventario.Ubicacion.GONDOLA, producto.umbral)
 		inventario.ingresar(producto, Inventario.Ubicacion.DEPOSITO, 9)
 	var compradores: Array[Comprador] = []
 	for pedido in pedidos:
@@ -252,12 +252,13 @@ func test_completar_una_tarea_aparte_no_le_sube_el_contador_al_turno() -> void:
 	assert_int(turno.tareas_cumplidas()).is_equal(0)
 
 
-func test_el_umbral_y_los_interlocutores_no_se_escriben_en_la_cascara() -> void:
-	# Qué es un faltante lo decide el 005 y quiénes escriben lo decide el `.tres`. Copiados en la
-	# pantalla, los dos pasan los dos gates en verde y se desincronizan sin que nadie avise.
+func test_los_casilleros_y_los_interlocutores_no_se_escriben_en_la_cascara() -> void:
+	# Qué es un faltante lo deciden los casilleros de cada fila, que recibe el inventario, y
+	# quiénes escriben lo decide el `.tres`. Copiados en la pantalla, los dos pasan los dos gates
+	# en verde y se desincronizan sin que nadie avise.
 	for ruta: String in ARCHIVOS_DE_LA_CASCARA:
 		var texto := FileAccess.get_file_as_string(ruta)
-		for patron: String in ["umbral", "JEFE", "PROVEEDOR", "DESCONOCIDO"]:
+		for patron: String in ["casillero", "JEFE", "PROVEEDOR", "DESCONOCIDO"]:
 			(
 				assert_bool(texto.contains(patron))
 				. override_failure_message("`%s` nombra `%s`" % [ruta, patron])
