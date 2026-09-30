@@ -7,11 +7,11 @@ func _de(id: Producto.Id) -> Producto:
 	return Catalogo.de(id)
 
 
-## Una noche con el depósito y la góndola llenos, y cada pedido ya cobrado.
+## Una noche con el depósito lleno y una góndola que no pide nada —sin casilleros declarados,
+## todo se vende—, y cada pedido ya cobrado.
 func _atender_con_ventas(pedidos: Array[Venta]) -> TareaDeAtender:
 	var inventario := Inventario.new(Catalogo.todos())
 	for producto in Catalogo.todos():
-		inventario.ingresar(producto, Inventario.Ubicacion.GONDOLA, producto.umbral)
 		inventario.ingresar(producto, Inventario.Ubicacion.DEPOSITO, 9)
 	var compradores: Array[Comprador] = []
 	for pedido in pedidos:

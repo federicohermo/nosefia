@@ -1,20 +1,20 @@
-// Dónde va la próxima unidad: el producto mismo, transparente y titilando despacio.
+// El envase de un casillero vacío: el producto mismo, transparente, quieto o titilando.
 //
 // **Muestra el producto y no una marca abstracta.** Antes era un rectángulo con el borde
 // amarillo del foco dibujado en el piso, y con la iluminación de la noche ese amarillo se
 // perdía contra el estante: la marca estaba y no se leía. Un fantasma del envase dice dos cosas
 // a la vez —dónde va y qué va— sin ningún cartel.
 //
-// **El envase con su color apagado mientras es una marca, y con su color entero al quedar
-// puesto.** Teñirlo de rojo lo hacía leer como otro producto puesto en el lugar equivocado;
-// dejarle su color entero, con tan poca opacidad, lo hacía perderse entre la mercadería de al
-// lado. Y en blanco y negro se distinguía, pero dejaba de decir qué producto va: la marca se
-// reconoce por su color antes que por su dibujo. Desaturado dice las dos cosas —se separa de lo
-// que ya está puesto y sigue siendo reconocible—, y el color entero que aparece al colocar la
-// unidad es el aviso de que quedó puesta.
+// **En blanco y negro mientras espera, y en color con emisión cuando la mira lo enfoca.** El gris
+// lo separa de la mercadería ya puesta, que tiene su color entero; el color y el brillo de más
+// del apuntado dicen cuál de todos los que esperan es el que va a recibir el clic, y qué producto
+// va ahí. Cuánto gris, cuánto brillo, qué opacidades y qué ritmo los pone la escena, que los lee
+// de las reglas del estante: acá ninguno trae un valor propio, porque un número escrito acá sería
+// el mismo valor en dos lugares, y el que se ajusta jugando no sería éste.
 //
 // `unshaded` porque es una indicación y no un objeto: tiene que verse igual con luz o sin ella,
-// y `depth_draw_never` para que no tape lo que hay atrás.
+// y `depth_draw_never` para que no tape lo que hay atrás. Por lo mismo, la emisión no es luz: es
+// el color por encima del suyo, que el tonemap del entorno lleva hacia el blanco.
 //
 // **Las caras de atrás no se dibujan.** Con `cull_disabled` el fantasma mostraba su propio
 // reverso a través del frente: en una lata se veía la tapa de abajo como una mancha negra, y en
@@ -28,13 +28,18 @@ render_mode unshaded, depth_draw_never;
 
 uniform sampler2D textura : source_color, filter_nearest;
 
-uniform float opacidad_minima = 0.0;
-uniform float opacidad_maxima = 1.0;
+// Entre qué opacidades titila. Iguales, el envase queda quieto.
+uniform float opacidad_minima;
+uniform float opacidad_maxima;
 
-// Cuánto tarda un ciclo completo, en segundos. El titileo recorre la opacidad entera, de nada a
-// todo: es lo único que distingue la marca de la mercadería, así que tiene que alcanzar a
-// leerse mientras el jugador mira el estante. Más rápido que esto se lee como un parpadeo roto.
-uniform float periodo = 1.2;
+// Cuánto tarda un ciclo completo del titileo, en segundos.
+uniform float periodo;
+
+// Cuánto color le queda al envase: 0 es blanco y negro y 1 es el envase tal cual.
+uniform float saturacion;
+
+// Cuánto brilla de más sobre su propio color: 0 es su color, sin nada encima.
+uniform float emision;
 
 const float VUELTA = 6.28318530718;
 
@@ -42,17 +47,16 @@ const float VUELTA = 6.28318530718;
 // apaga el rojo y enciende el azul, y los envases quedan todos del mismo gris medio.
 const vec3 LUMINANCIA = vec3(0.2126, 0.7152, 0.0722);
 
-// Cuánto color le queda al fantasma: 0 es blanco y negro y 1 es el envase tal cual. Poco más de
-// la mitad alcanza para reconocer la marca de lejos; bajando de ahí el envase se vuelve gris y
-// deja de decir qué producto va, que es la mitad de lo que el fantasma existe para decir. Lo
-// que lo separa de la mercadería ya puesta es el titileo y el color entero de la de al lado.
-uniform float saturacion : hint_range(0.0, 1.0) = 0.55;
+// Un ciclo nunca dura cero: sin ritmo, el titileo se queda en su punto medio en vez de dividir
+// por cero.
+const float PERIODO_MINIMO = 0.001;
 
 
 void fragment() {
 	vec3 color = texture(textura, UV).rgb;
-	ALBEDO = mix(vec3(dot(color, LUMINANCIA)), color, saturacion);
+	vec3 tenido = mix(vec3(dot(color, LUMINANCIA)), color, saturacion);
+	ALBEDO = tenido * (1.0 + emision);
 
-	float pulso = 0.5 + 0.5 * sin(TIME * VUELTA / periodo);
+	float pulso = 0.5 + 0.5 * sin(TIME * VUELTA / max(periodo, PERIODO_MINIMO));
 	ALPHA = mix(opacidad_minima, opacidad_maxima, pulso);
 }

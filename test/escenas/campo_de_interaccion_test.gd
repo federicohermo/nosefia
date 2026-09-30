@@ -2,6 +2,7 @@ extends GdUnitTestSuite
 
 const JUGADOR := preload("res://src/escenas/jugador.tscn")
 const ALMACEN := preload("res://src/escenas/almacen.tscn")
+const AperturaConLugar := preload("res://test/escenas/apertura_con_lugar.gd")
 const BOLSA := preload("res://src/escenas/objetos/objeto_agarrable.tscn")
 
 
@@ -23,6 +24,7 @@ func test_la_bolsa_pequena_se_enfoca_fuera_del_centro() -> void:
 func test_el_campo_y_el_clic_usan_los_cuerpos_de_los_muebles() -> void:
 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
 	add_child(almacen)
+	AperturaConLugar.abrir_con_todo_el_lugar(almacen)
 	var jugador: CharacterBody3D = almacen.get("_jugador")
 	jugador.set_physics_process(false)
 	var avisos: Array[Node3D] = []
@@ -41,9 +43,15 @@ func test_el_campo_y_el_clic_usan_los_cuerpos_de_los_muebles() -> void:
 	almacen.get("_reposicion_manual").call("retirar", caja.producto)
 	var agarre: Agarre = almacen.get("_agarre")
 	assert_object(agarre.manos().sostenido()).is_instanceof(UnidadDeProducto)
-	var estante: Node3D = almacen.get("_reposicion_manual").get_node("ZonaDeActroncito")
+	var estante: Node3D = almacen.get("_reposicion_manual").casillero(Producto.Id.ACTRONCITO)
 	var zona: AABB = almacen.get("_reposicion_manual").zona(Producto.Id.ACTRONCITO)
-	_mirar(jugador, zona.get_center() + Vector3(-1.2, 0.3, 0), zona.get_center())
+	# Del lado del pasillo de su tanda, que lo mide el modelo.
+	var disposicion: DisposicionDeLaGondola = almacen.get("_reposicion_manual").get("disposicion")
+	var frente := DisposicionDeLaGondola.frente(
+		disposicion.principales[Producto.Id.ACTRONCITO],
+		disposicion.filas_de_adelante[Producto.Id.ACTRONCITO]
+	)
+	_mirar(jugador, zona.get_center() + frente * 1.2 + Vector3.UP * 0.3, zona.get_center())
 	await _actualizar(jugador)
 	assert_object(jugador.get("_enfocado")).is_same(estante)
 	assert_array(avisos).contains([estante])

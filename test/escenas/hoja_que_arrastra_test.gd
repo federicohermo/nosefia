@@ -3,6 +3,7 @@
 extends GdUnitTestSuite
 
 const ALMACEN := preload("res://src/escenas/almacen.tscn")
+const AperturaConLugar := preload("res://test/escenas/apertura_con_lugar.gd")
 const OBJETO_SUELTO := preload("res://src/escenas/objetos/objeto_agarrable.tscn")
 
 ## Dónde nace el objeto suelto que crea un caso: un punto libre del piso del local. Es su lugar de
@@ -35,6 +36,9 @@ const PRODUCTO_DE_LA_CAJA := Producto.Id.CHISITOS
 func _almacen() -> Node3D:
 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
 	add_child(almacen)
+	# La noche abre con la góndola llena, y una caja llena no entrega: estos casos sacan
+	# unidades para usarlas de objeto, así que abren con lugar para reponer.
+	AperturaConLugar.abrir_con_todo_el_lugar(almacen)
 	await get_tree().physics_frame
 	return almacen
 
@@ -278,6 +282,11 @@ func test_la_hoja_cerrada_de_golpe_no_deja_nada_adentro() -> void:  # AC-PLY-032
 	var suelto: RigidBody3D = OBJETO_SUELTO.instantiate()
 	suelto.position = LIBRE_EN_EL_LOCAL
 	almacen.add_child(suelto)
+	(
+		assert_bool(_libre_en_el_local(suelto))
+		. override_failure_message("%v ya no está libre en el local" % LIBRE_EN_EL_LOCAL)
+		. is_true()
+	)
 	suelto.freeze = true
 	suelto.global_position = punto + Vector3.UP * 0.1
 	await get_tree().physics_frame
@@ -291,3 +300,22 @@ func test_la_hoja_cerrada_de_golpe_no_deja_nada_adentro() -> void:  # AC-PLY-032
 	)
 	var red: RedDeSeguridad = almacen.get_node("Servicios/RedDeSeguridad")
 	assert_int(red.rescates.size()).is_equal(1)
+
+
+## La premisa del objeto suelto de los casos: su lugar de origen está libre en el local, con el
+## piso justo abajo. La red lo devuelve ahí, y si el local cambia ese lugar puede dejar de serlo.
+static func _libre_en_el_local(cuerpo: RigidBody3D) -> bool:
+	var espacio := cuerpo.get_world_3d().direct_space_state
+	for forma: CollisionShape3D in cuerpo.find_children("*", "CollisionShape3D", false, false):
+		var consulta := PhysicsShapeQueryParameters3D.new()
+		consulta.shape = forma.shape
+		consulta.transform = forma.global_transform
+		consulta.collision_mask = cuerpo.collision_mask
+		consulta.exclude = [cuerpo.get_rid()]
+		if not espacio.intersect_shape(consulta, 1).is_empty():
+			return false
+	var abajo := PhysicsRayQueryParameters3D.create(
+		cuerpo.global_position, cuerpo.global_position + Vector3.DOWN * 0.2, cuerpo.collision_mask
+	)
+	abajo.exclude = [cuerpo.get_rid()]
+	return not espacio.intersect_ray(abajo).is_empty()

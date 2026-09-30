@@ -41,7 +41,9 @@ func test_las_opciones_permanecen_visibles_y_el_titulo_indica_la_pantalla() -> v
 func test_la_planilla_muestra_cada_producto_y_sigue_a_los_gestos() -> void:
 	var pantalla: PantallaDeComputadora = auto_free(ESCENA.instantiate())
 	add_child(pantalla)
-	var atender := TareaDeAtender.new([], Apertura.inventario_de_la_jornada())
+	var atender := TareaDeAtender.new(
+		[], Apertura.inventario_de_la_jornada(ReglasDeLaPartida.PRIMERA_JORNADA, {})
+	)
 	var registro := RegistroDeVentas.new(Catalogo.todos(), atender)
 	var app := pantalla.caja()
 	app.suma_pedida.connect(func(producto: Producto) -> void: registro.sumar(producto))
@@ -68,7 +70,9 @@ func test_todas_las_filas_se_alcanzan_con_la_rueda_dentro_de_la_pantalla() -> vo
 	var pantalla: PantallaDeComputadora = auto_free(ESCENA.instantiate())
 	add_child(pantalla)
 	pantalla.mostrar(Computadora.App.CAJA)
-	var atender := TareaDeAtender.new([], Apertura.inventario_de_la_jornada())
+	var atender := TareaDeAtender.new(
+		[], Apertura.inventario_de_la_jornada(ReglasDeLaPartida.PRIMERA_JORNADA, {})
+	)
 	var app := pantalla.caja()
 	app.mostrar(RegistroDeVentas.new(Catalogo.todos(), atender))
 	await get_tree().process_frame
@@ -157,7 +161,9 @@ func test_cada_click_en_un_boton_de_cualquier_app_emite_boton_pulsado() -> void:
 	anotar.pressed.emit()
 	assert_int(pulsados[0]).is_equal(1)
 	# Las filas de la planilla se agregan después de `_ready()`, al mostrarla.
-	var atender := TareaDeAtender.new([], Apertura.inventario_de_la_jornada())
+	var atender := TareaDeAtender.new(
+		[], Apertura.inventario_de_la_jornada(ReglasDeLaPartida.PRIMERA_JORNADA, {})
+	)
 	pantalla.caja().mostrar(RegistroDeVentas.new(Catalogo.todos(), atender))
 	var fila := (pantalla.caja().get("_filas") as Container).get_child(0)
 	var sumar: Button = fila.get_child(5)

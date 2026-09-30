@@ -103,8 +103,9 @@ func _ready() -> void:
 	# El marcador de obligatorias no se reinicia solo: `mostrar_tareas()` se vuelve a llamar
 	# recién cuando el jugador completa una, así que sin esto la noche 2 arranca mostrando las
 	# que se cumplieron en la 1 hasta que se cumpla la primera de la 2. Y la góndola de cada
-	# noche arranca sin nada repuesto, así que el estante se rehace en la misma apertura: uno
-	# compartido dejaría lo repuesto anoche puesto, y reponer se cumpliría sola a partir de la segunda.
+	# noche arranca con lo que dice su jornada, así que el estante se rehace en la misma
+	# apertura: uno compartido dejaría lo repuesto anoche puesto, y reponer se cumpliría sola a
+	# partir de la segunda.
 	# **Una sola conexión**: el 017 y el 008 llegaron por separado al mismo `jornada_abierta`, y
 	# conectarlo dos veces es un error de Godot, no dos llamadas.
 	_ciclo.jornada_abierta.connect(_al_abrir_la_jornada)
@@ -134,11 +135,19 @@ func _ready() -> void:
 		)
 	)
 	# Reponer, de punta a punta: el clic derecho sobre una caja apoyada entrega una unidad a la
-	# mano y la zona de reposición la coloca en la góndola. Quien atiende ese clic es
-	# `ReposicionManual`, que se conecta solo. La unidad viaja en la mano, así que el inventario
-	# recién cambia cuando el estante la acepta: soltarla en el piso no repone nada.
+	# mano, o le devuelve la de su producto que la mano lleva, y la zona de reposición la coloca
+	# en la góndola. Quien atiende ese clic es `ReposicionManual`, que se conecta solo. La unidad
+	# viaja en la mano y sigue contada en el depósito, así que el inventario recién cambia cuando
+	# el estante la acepta: soltarla en el piso no repone nada, y devolverla no mueve nada.
 	_repositor.agarre = _agarre
 	_repositor.unidad_colocada.connect(_reposicion_manual.depositar)
+	# El subtítulo del examen: lo que dice la caja examinada, y nada cuando termina. El texto lo
+	# arma la caja en `dominio/`; lo examinado que no es una caja no dice nada, y el HUD lo pinta.
+	_jugador.examen.examen_iniciado.connect(
+		func(nodo: Node3D) -> void:
+			_hud.mostrar_subtitulo(_reposicion_manual.texto_del_examen(nodo))
+	)
+	_jugador.examen.examen_terminado.connect(_hud.vaciar_subtitulo)
 	# El motor no despierta lo que está sobre una caja empujada. Lo hace el puesto.
 	for caja: CajaDeProductosDelDeposito in _cajas_de_productos:
 		caja.empujada.connect(_reposicion_manual.despertar_lo_de_arriba)
@@ -151,7 +160,8 @@ func _ready() -> void:
 	_reposicion_manual.preparar()
 
 
-## Cada noche arranca con el marcador en cero, nada repuesto y el depósito lleno.
+## Cada noche arranca con el marcador en cero, cada caja del depósito llena y la góndola
+## completa salvo lo que esa jornada hace faltar.
 ##
 ## El marcador lo dice la apertura y no el cierre de la anterior: entre las dos hay una placa que
 ## el jugador tarda lo que quiera en despachar, y el conteo de ayer no puede quedar colgado ahí.
@@ -161,7 +171,7 @@ func _ready() -> void:
 ## una sola vez —conectar `jornada_abierta` dos veces es un error de Godot—. El inventario se
 ## arma en este lado y no en el `Repositor` porque «con cuánta mercadería arranca una jornada»
 ## es una regla del juego, y `Apertura` es donde tiene test.
-func _al_abrir_la_jornada(_jornada: int) -> void:
+func _al_abrir_la_jornada(jornada: int) -> void:
 	# Primero que nada, y por eso antes de `limpiar()`: lo que quedó en la mano cuelga del
 	# jugador, así que devolverlo a su lugar le escribiría la posición relativa a la mano y la
 	# caja terminaría flotando pegada al cuerpo toda la noche siguiente. Y antes, el examen: lo
@@ -173,8 +183,9 @@ func _al_abrir_la_jornada(_jornada: int) -> void:
 	_hud.declarar_obligatorias(Apertura.cantidad_de_obligatorias())
 	# **Un solo inventario para las dos obligatorias**: reponer lo llena y la ventanilla lo
 	# vacía. Construir uno por tarea daría dos stocks del mismo producto, y las dos ventanas
-	# dirían números distintos sin que nada se ponga en rojo.
-	var inventario := Apertura.inventario_de_la_jornada()
+	# dirían números distintos sin que nada se ponga en rojo. Cuántos casilleros tiene la fila
+	# de adelante de cada producto lo mide el puesto sobre el modelo; lo que falta, la jornada.
+	var inventario := Apertura.inventario_de_la_jornada(jornada, _reposicion_manual.casilleros())
 	_repositor.arrancar(Estante.new(inventario, Catalogo.todos()))
 	_reposicion_manual.limpiar()
 	var atender := TareaDeAtender.new(Compradores.de_la_jornada(), inventario)

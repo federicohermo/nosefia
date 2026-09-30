@@ -108,7 +108,8 @@ func test_tocar_el_escritorio_suspende_al_jugador_y_no_entrega_nada() -> void:
 	var computadora: ComputadoraDeEscritorio = auto_free(ComputadoraDeEscritorio.new())
 	computadora.reloj = reloj
 	var atender := TareaDeAtender.new(
-		Compradores.de_la_jornada(), Apertura.inventario_de_la_jornada()
+		Compradores.de_la_jornada(),
+		Apertura.inventario_de_la_jornada(ReglasDeLaPartida.PRIMERA_JORNADA, {})
 	)
 	computadora.arrancar(RegistroDeVentas.new(Catalogo.todos(), atender))
 	escritorio.jugador = jugador

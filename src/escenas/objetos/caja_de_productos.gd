@@ -1,6 +1,8 @@
 ## La caja del depósito: se lleva, se apoya, y declara qué producto guarda.
 ##
-## No decide nada. Qué sale de ella y desde dónde lo resuelve `reposicion_manual.gd`.
+## No decide nada. Cuántas unidades tiene, qué hace el clic sobre ella y qué dice al examinarla
+## lo contesta su contenido, en `dominio/`, contado sobre el depósito de la noche: por eso la caja
+## no guarda ningún número. `reposicion_manual.gd` busca la acción del gesto que le contesta.
 ##
 ## **Su cuerpo es rígido pero congelado.** Apoyada se porta como algo estático —no rebota, no
 ## rueda, no tiembla— y el puesto le escribe el lugar derecho, que es lo que deja apoyar una caja
