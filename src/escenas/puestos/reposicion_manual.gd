@@ -779,6 +779,22 @@ func _giro_del_frente(id: Producto.Id) -> float:
 	return giro_hacia_la_camara(global_basis * frente)
 
 
+## El giro que para derecho el modelo de un producto: lleva a la vertical el eje del envase que
+## más se le acerca. En la rampa de una cabecera la unidad va echada hacia atrás lo que baja la
+## chapa, y en la mano va derecha como las demás; en un estante plano no gira nada.
+##
+## Sale del modelo y no de la chapa: es el envase el que va echado, y su eje de arriba no es el
+## mismo en todos.
+func _derecho(id: Producto.Id) -> Basis:
+	var modelo := (contenido.get_child(id) as Node3D).global_basis
+	var arriba := Vector3.ZERO
+	for columna in 3:
+		var eje := modelo[columna].normalized()
+		if absf(eje.y) > absf(arriba.y):
+			arriba = eje
+	return Basis(Quaternion(arriba if arriba.y > 0.0 else -arriba, Vector3.UP))
+
+
 ## El giro alrededor de la vertical que lleva `frente` a +Z, que es de donde mira la cámara: con
 ## el frente en -X es 90, en +X es 270 —o -90—, en +Z es 0 y en -Z es 180.
 static func giro_hacia_la_camara(frente: Vector3) -> float:
@@ -986,10 +1002,12 @@ func retirar(id: Producto.Id) -> void:
 		add_child(unidad)
 		_unidades.append(unidad)
 		unidad.add_collision_exception_with(jugador)
-	# El frente de cada modelo se alinea antes de darle la inclinación de la mano.
+	# El frente de cada modelo se alinea antes de darle la inclinación de la mano, y antes de eso
+	# se endereza lo que en su estante va echado: la inclinación de la rampa es del estante.
 	unidad.orientacion_en_mano = (
 		Basis.from_euler(Vector3(deg_to_rad(-17), deg_to_rad(-20), 0))
 		* Basis(Vector3.UP, deg_to_rad(_giro_del_frente(id)))
+		* _derecho(id)
 	)
 	unidad.collision_layer = 1
 	# Choca también con el contorno de los muebles: caída al pie de una góndola, la unidad rodaba
