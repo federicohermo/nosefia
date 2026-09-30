@@ -51,11 +51,11 @@ func lugar_de_la_mancha() -> PisoDelLocal.Lugar:
 func mostrar(sucia: bool, color: Color) -> void:
 	visible = sucia
 	_cuerpo.disabled = not sucia
-	var pintura := _mancha.get_surface_override_material(0) as StandardMaterial3D
+	var pintura := _mancha.material_override as StandardMaterial3D
 	pintura.albedo_color = Color(color, OPACIDAD)
 
 
 ## El color con que se ve ahora. Lo leen los casos que miden la escena.
 func color() -> Color:
-	var pintura := _mancha.get_surface_override_material(0) as StandardMaterial3D
+	var pintura := _mancha.material_override as StandardMaterial3D
 	return pintura.albedo_color

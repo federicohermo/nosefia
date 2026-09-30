@@ -71,8 +71,15 @@ func test_cada_util_es_la_malla_del_modelo_donde_el_modelo_la_dibujaba() -> void
 		var del_modelo: MeshInstance3D = almacen.get_node("Estructura/" + util.nodo_del_modelo)
 		assert_object(util.malla.mesh).override_failure_message(util.name).is_not_null()
 		assert_object(util.malla.mesh).is_same(del_modelo.mesh)
-		assert_bool(util.malla.global_basis.is_equal_approx(del_modelo.global_basis)).is_true()
-		var aca := util.malla.global_position
+		# Donde lo pone la escena, y no donde quedó: al apoyarse, la física asienta la mopa unas
+		# centésimas de milímetro. Medido el 2026-09-30: 0,08 mm en los primeros dos cuadros.
+		var puesta := util.lugar_de_origen() * util.malla.transform
+		(
+			assert_bool(puesta.basis.is_equal_approx(del_modelo.global_basis))
+			. override_failure_message("`%s` no está girado como en el modelo" % util.name)
+			. is_true()
+		)
+		var aca := puesta.origin
 		var alla := del_modelo.global_position
 		(
 			assert_float(Vector2(aca.x, aca.z).distance_to(Vector2(alla.x, alla.z)))
@@ -130,9 +137,6 @@ func test_los_utiles_arrancan_en_el_bano() -> void:  # AC-CLN-018
 func test_abrir_la_jornada_devuelve_los_utiles_al_bano_vacios_y_secos() -> void:  # AC-CLN-018
 	var almacen: Node3D = await _almacen()
 	var utiles: Array = almacen.get("_utiles_de_limpieza")
-	var lugares: Array[Transform3D] = []
-	for util: Node3D in utiles:
-		lugares.append(util.global_transform)
 	var balde := _util(almacen, "Balde")
 	var mopa := _util(almacen, "Mopa")
 	_usar(almacen, balde, almacen.get_node(LAVATORIO))
@@ -147,10 +151,9 @@ func test_abrir_la_jornada_devuelve_los_utiles_al_bano_vacios_y_secos() -> void:
 	assert_bool(agarre.pedir_agarrar(jabon.datos, jabon)).is_true()
 	almacen.get("_ciclo").abrir_la_jornada()
 	assert_object(agarre.manos().sostenido()).is_null()
-	for indice in utiles.size():
-		var util: Node3D = utiles[indice]
+	for util: UtilDeLimpieza in utiles:
 		(
-			assert_bool(util.global_transform.is_equal_approx(lugares[indice]))
+			assert_bool(util.global_transform.is_equal_approx(util.lugar_de_origen()))
 			. override_failure_message(
 				"`%s` abrió la jornada en %v" % [util.name, util.global_position]
 			)

@@ -29,6 +29,6 @@ shape = SubResource("CylinderShape3D_mancha")
 
 [node name="Malla" type="MeshInstance3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.001, 0)
+material_override = SubResource("StandardMaterial3D_mancha")
 mesh = SubResource("CylinderMesh_mancha")
-surface_material_override/0 = SubResource("StandardMaterial3D_mancha")
 gi_mode = 2

@@ -3,6 +3,10 @@ extends GdUnitTestSuite
 const ALMACEN := preload("res://src/escenas/almacen.tscn")
 const OBJETO_SUELTO := preload("res://src/escenas/objetos/objeto_agarrable.tscn")
 
+## Dónde nace el objeto suelto que crea un caso: un punto libre del piso del local. Es su lugar de
+## origen, adonde la red de seguridad lo puede devolver.
+const LIBRE_EN_EL_LOCAL := Vector3(0.0, 0.2, 3.0)
+
 var _escala_anterior: float
 
 
@@ -80,6 +84,7 @@ func test_abrir_la_jornada_termina_el_examen_en_curso() -> void:  # AC-INV-025
 	# Un objeto suelto propio del caso: los útiles y las bolsas vuelven a su lugar al abrir la
 	# jornada, y ahí no se vería dónde quedó lo que se llevaba.
 	var llevado: RigidBody3D = OBJETO_SUELTO.instantiate()
+	llevado.position = LIBRE_EN_EL_LOCAL
 	almacen.add_child(llevado)
 	var terminados := [0]
 	examen.examen_terminado.connect(func() -> void: terminados[0] += 1)
@@ -226,19 +231,21 @@ func _limpiar(almacen: Node3D) -> void:
 	var balde: Node3D = almacen.get_node("Objetos/Balde")
 	var mopa: Node3D = almacen.get_node("Objetos/Mopa")
 	var limpieza: Node3D = almacen.get("_limpieza")
-	for jabon: String in ["JabonAmarillo", "JabonAzul", "JabonRosa"]:
+	# Se buscan antes de soltar nada: lo soltado cuelga del almacén, y ya no de `Objetos`.
+	var jabones: Array[Node3D] = []
+	for nombre: String in ["JabonAmarillo", "JabonAzul", "JabonRosa"]:
+		jabones.append(almacen.get_node("Objetos/" + nombre))
+	for jabon in jabones:
+		var pedida := ReglasDeLaLimpieza.agua_del_jabon(jabon.get("datos").id)
 		_agarrar(agarre, balde)
 		_usar_sobre(jugador, inodoro)
 		_usar_sobre(jugador, lavatorio)
 		_soltar_lejos(agarre)
-		_agarrar(agarre, almacen.get_node("Objetos/" + jabon))
+		_agarrar(agarre, jabon)
 		_usar_sobre(jugador, balde)
 		_soltar_lejos(agarre)
 		_agarrar(agarre, mopa)
 		_usar_sobre(jugador, balde)
-		var pedida := ReglasDeLaLimpieza.agua_del_jabon(
-			almacen.get_node("Objetos/" + jabon).get("datos").id
-		)
 		for mancha: Node3D in limpieza.call("manchas"):
 			var tipo := _piso(almacen).mancha_de(mancha.call("lugar_de_la_mancha")).tipo()
 			if ReglasDeLaLimpieza.AGUA_QUE_BORRA[tipo] != pedida:

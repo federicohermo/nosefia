@@ -5,6 +5,10 @@ extends GdUnitTestSuite
 const ALMACEN := preload("res://src/escenas/almacen.tscn")
 const OBJETO_SUELTO := preload("res://src/escenas/objetos/objeto_agarrable.tscn")
 
+## Dónde nace el objeto suelto que crea un caso: un punto libre del piso del local. Es su lugar de
+## origen, adonde la red de seguridad lo puede devolver.
+const LIBRE_EN_EL_LOCAL := Vector3(0.0, 0.2, 3.0)
+
 ## La hoja que se mide: la del paso al fondo, que abre hacia el cuarto de atrás.
 const HOJA := "Estructura/puerta"
 
@@ -272,6 +276,7 @@ func test_la_hoja_cerrada_de_golpe_no_deja_nada_adentro() -> void:  # AC-PLY-032
 	# Un objeto suelto propio del caso: lo que ya trae el almacén vuelve a su lugar al abrir la
 	# jornada, y ahí la hoja no tendría nada adentro que dejar afuera.
 	var suelto: RigidBody3D = OBJETO_SUELTO.instantiate()
+	suelto.position = LIBRE_EN_EL_LOCAL
 	almacen.add_child(suelto)
 	suelto.freeze = true
 	suelto.global_position = punto + Vector3.UP * 0.1
