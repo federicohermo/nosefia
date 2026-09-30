@@ -180,6 +180,8 @@ entregable más caro y el único que hace que el hallazgo no vuelva.
 | un conflicto entre dos carriles **que le queda a quien mergee** | `implement-batch` — las cadenas llegaban por separado a `staging`, y la resolución no vivía en ninguna rama |
 | una carpeta que gdUnit4 crea **adentro del repo** con `-rd /tmp/...` | `.gitignore` e `implement-batch` — la advertencia del preámbulo no alcanzó, y el ignore la vuelve inofensiva |
 | una regla que se saca y **deja caer un invariante** que otra daba por hecho | `to-issue` — el cruce sigue a los lectores de un valor que se mueve, y sacar una regla no mueve ningún valor |
+| una suite que el issue manda a crecer **y ya está en el tope de `gdlint`** | `to-issue` — se contaron los `test_` y no los métodos públicos |
+| una regla de tests que describe **una versión vieja de la herramienta** | la regla de tests — se escribió midiendo gdUnit4 antes de 6.2.1, y nadie la volvió a medir al actualizarlo |
 
 **Si el problema no entra en ninguna fila, agregá la fila.** Esa tabla es el registro de lo que
 esta doctrina ya aprendió, y está incompleta a propósito.

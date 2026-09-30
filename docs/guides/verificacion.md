@@ -32,7 +32,8 @@ El veredicto es el código de salida del proceso de Godot, no el texto del repor
 la invocación lleva su porqué en un comentario de `nodo_tests`. Los reportes van a `reports/`,
 que está en `.gitignore`.
 
-Un verde de gdUnit4 puede ser una suite que no corrió. Cómo leer el conteo crudo, en
+Desde gdUnit4 6.2.1, una suite que no parsea corta la corrida con 105 y el nodo sale rojo. El
+conteo crudo sigue siendo el control de que corrió todo. Cómo leerlo, en
 [la regla de tests](../../.claude/rules/tests.md).
 
 ## Lo que esta verificación NO cubre

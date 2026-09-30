@@ -157,7 +157,8 @@ su arreglo.
 - **`GODOT_BIN` declarada no es `GODOT_BIN` visible.** Una terminal abierta antes de declararla
   no la ve nunca. Se cierra el host de la terminal.
 - **Godot adentro de OneDrive no se puede ejecutar** si el archivo no está descargado.
-- **Un verde de gdUnit4 puede ser una suite que no corrió.** El número que vale es el
+- **`verificar.py` no imprime cuántas suites corrieron.** Desde gdUnit4 6.2.1, una suite que no
+  parsea sale roja, pero el control de que corrió todo sigue siendo el
   `Executed test suites: (N/N)` de la salida cruda. Cómo leerlo, en
   [.claude/rules/tests.md](./.claude/rules/tests.md).
 

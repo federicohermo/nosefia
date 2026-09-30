@@ -113,7 +113,9 @@ Lo que más se rompe:
   enum corre sobre `src/`, `test/` y `assets/`. En el #262, las 23 cajas del depósito vivían en
   `objetos_del_almacen.tscn` y la planilla pedía una miniatura por producto: ninguna de las dos
   estaba en los límites.
-- **Cada suite de «Se escribe» se cuenta contra el tope de 20 casos de `gdlint`.** Si una ya está
+- **Cada suite de «Se escribe» se cuenta contra el tope de 20 métodos públicos de `gdlint`**, con
+  `rg -c '^func [a-z]'`: cuentan también `before_test` y cualquier ayudante sin `_`. En el #277,
+  `repositor_test.gd` tenía 19 casos y 20 métodos, y el issue le pedía uno más. Si una ya está
   en el tope, el issue dice adónde van los casos nuevos. En el #176, `reposicion_manual_test.gd`
   estaba en 20 y `caja_que_se_lleva_test.gd` en 19, y la suite nueva no estaba en los límites.
 - **Un issue que suma cuerpos al grupo `interactuable` mide lo que cuesta la mira.** Se mide
