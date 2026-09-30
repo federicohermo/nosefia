@@ -6,6 +6,7 @@ cada estante— lo mide `blender/acomodar.py`, y el resultado lo miran los tests
 disposición que queda en el repo.
 """
 
+import math
 import unittest
 
 from lib.gondola import (
@@ -13,6 +14,7 @@ from lib.gondola import (
     MARGEN,
     Envase,
     NodoDeMalla,
+    alto_en_la_rampa,
     ancho_de_la_tanda,
     apagar_las_unidades,
     base_en_godot,
@@ -40,6 +42,10 @@ from lib.gondola import (
 
 CAJA = Envase(ancho=0.30, fondo=0.10, alto=0.40)
 LATA = Envase(ancho=0.18, fondo=0.18, alto=0.23)
+
+#: Lo que se echa hacia atrás una unidad sobre la rampa de una cabecera, contra su chapa: la
+#: chapa baja once grados hacia el pasillo y la unidad sube otro tanto, como la ponía el artista.
+INCLINACION = 2 * math.asin(0.19)
 
 
 class Repartir(unittest.TestCase):
@@ -125,6 +131,45 @@ class LaTanda(unittest.TestCase):
         # Y la fila de atrás del más profundo termina justo antes del margen del fondo.
         atras = tanda(LATA, [0.1])[0]
         self.assertAlmostEqual(atras.v + LATA.fondo / 2 + MARGEN, fondo)
+
+
+class EnLaRampa(unittest.TestCase):
+    def test_en_un_estante_plano_nada_cambia(self):
+        self.assertEqual(tanda(CAJA, [0.2, 0.5], 0.0), tanda(CAJA, [0.2, 0.5]))
+        self.assertEqual(fondo_del_estante([CAJA, LATA], 0.0), fondo_del_estante([CAJA, LATA]))
+        self.assertEqual(alto_en_la_rampa(CAJA, 0.0), CAJA.alto)
+
+    def test_las_dos_filas_echadas_no_se_meten_una_en_la_otra(self):
+        atras, adelante = tanda(CAJA, [0.2], INCLINACION)
+        # Medida a lo hondo de la unidad, que está echada, la separación es la unidad y el aire.
+        separacion = (atras.v - adelante.v) * math.cos(INCLINACION)
+        self.assertAlmostEqual(separacion, CAJA.fondo + AIRE)
+
+    def test_echada_lo_mas_adelante_es_su_canto_de_abajo_y_va_detras_del_margen(self):
+        adelante = tanda(CAJA, [0.2], INCLINACION)[1]
+        self.assertAlmostEqual(adelante.v - CAJA.fondo / 2 * math.cos(INCLINACION), MARGEN)
+
+    def test_el_estante_de_una_rampa_alcanza_para_la_cabeza_de_la_fila_de_atras(self):
+        fondo = fondo_del_estante([CAJA], INCLINACION)
+        atras = tanda(CAJA, [0.2], INCLINACION)[0]
+        # Echada hacia atrás, lo más hondo de la unidad es su canto de arriba.
+        cabeza = (
+            atras.v + CAJA.fondo / 2 * math.cos(INCLINACION) + CAJA.alto * math.sin(INCLINACION)
+        )
+        self.assertAlmostEqual(cabeza + MARGEN, fondo)
+        self.assertGreater(fondo, fondo_del_estante([CAJA]))
+
+    def test_echada_pide_mas_alto_libre(self):
+        self.assertAlmostEqual(
+            alto_en_la_rampa(CAJA, INCLINACION),
+            CAJA.alto * math.cos(INCLINACION) + CAJA.fondo * math.sin(INCLINACION),
+        )
+
+    def test_el_estante_se_achica_con_la_rampa(self):
+        self.assertAlmostEqual(
+            fondo_nuevo(0.01, [CAJA], 0.12, INCLINACION),
+            0.01 + fondo_del_estante([CAJA], INCLINACION) + 0.12,
+        )
 
 
 class LoQueTapaElMueble(unittest.TestCase):
