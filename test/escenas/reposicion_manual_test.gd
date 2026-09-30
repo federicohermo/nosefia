@@ -772,7 +772,7 @@ func test_solo_la_zona_del_producto_recibe_el_foco_y_el_resto_del_mueble_no_colo
 	assert_bool(estante.is_in_group(ReglasDelJugador.GRUPO_INTERACTUABLE)).is_false()
 	var presentacion: Node3D = almacen.get("_reposicion_manual")
 	# Los casilleros vacíos de Actroncito esperan la unidad; los ocupados y los de cualquier otro
-	# producto no están para la mira.
+	# producto no tienen papel, y no están para la mira aunque la tengan enfrente.
 	var actroncito := Catalogo.de(Producto.Id.ACTRONCITO)
 	var vacios: Array[int] = almacen.get("_repositor").estante().casilleros_vacios(actroncito)
 	assert_array(vacios).is_not_empty()
@@ -780,10 +780,12 @@ func test_solo_la_zona_del_producto_recibe_el_foco_y_el_resto_del_mueble_no_colo
 		for zona: Node3D in presentacion.get_node("ZonaDe" + producto.nombre).get_children():
 			var espera: bool = producto.id == actroncito.id and vacios.has(zona.get("casillero"))
 			(
-				assert_int(zona.get("collision_layer"))
+				assert_bool(zona.get("papel") != 0)
 				. override_failure_message("%s: %s" % [producto.nombre, zona.name])
-				. is_equal(2 if espera else 0)
+				. is_equal(espera)
 			)
+			if not espera:
+				assert_int(zona.get("collision_layer")).is_zero()
 	var mueble: MeshInstance3D = estante.get_parent()
 	assert_object(mueble.material_overlay).is_null()
 	estante.call("interactuar")

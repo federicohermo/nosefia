@@ -27,6 +27,14 @@ const CAPA_DE_LA_MIRA := 2
 
 var papel := Papel.NINGUNO
 
+## Si la mira podría elegirlo ahora: cerca de su alcance y de su centro. Sólo así se le ofrece
+## a la mira; con papel y lejos, no está para ella. Lo decide el puesto en cada paso de física.
+var cerca_de_la_mira := false
+
+## El radio de la esfera que envuelve la unidad, en metros: con él se sabe si alguna parte de
+## ella puede caer adentro del alcance y del desvío de la mira.
+var radio := 0.0
+
 ## El envase de la unidad, puesto donde va.
 var vista: MeshInstance3D
 ## El envase en blanco y negro, quieto: el casillero que espera la unidad de la mano.
@@ -51,7 +59,7 @@ func interactuar() -> ObjetoDelAlmacen:
 ## **Escribe sólo lo que cambia**: el casillero que espera la unidad se repinta cada cuadro, porque
 ## la vista se mueve, y cada escritura de un material o de una capa es un pedido al motor.
 func pintar(enfocado: bool, al_alcance: bool) -> void:
-	var capa := CAPA_DE_LA_MIRA
+	var capa := CAPA_DE_LA_MIRA if cerca_de_la_mira else 0
 	var reemplazo: Material = null
 	var encima: Material = null
 	var se_ve := false

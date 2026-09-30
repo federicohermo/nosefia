@@ -60,6 +60,12 @@ var _casilleros: Array[Array] = []
 var _para_colocar: Array[ZonaDeReposicion] = []
 ## Lo que la mira enfoca, según el jugador. El casillero enfocado se pinta distinto.
 var _enfocado: Node3D = null
+## Los casilleros con papel que la mira podría elegir ahora: los únicos que se le ofrecen.
+var _cerca_de_la_mira: Dictionary[ZonaDeReposicion, bool] = {}
+## El centro y el radio de la esfera que envuelve cada fila de adelante, en el orden de
+## `Producto.Id`: con ellos se descarta de una vez una fila entera que la mira no alcanza.
+var _centros_de_las_filas: Array[Vector3] = []
+var _radios_de_las_filas: Array[float] = []
 var _modelos: Array[Mesh] = []
 var _formas: Array[ConvexPolygonShape3D] = []
 var _grupos: Array[MultiMeshInstance3D] = []
@@ -768,6 +774,58 @@ func _process(_delta: float) -> void:
 		_pintar(zona)
 
 
+## Le ofrece a la mira sólo los casilleros con papel que podría elegir: los que caen, aunque sea
+## en parte, adentro de su alcance y de su desvío (BR-PLY-004).
+##
+## **Es un costo medido, no una regla.** Con la mano vacía, todas las unidades puestas de la fila
+## de adelante se pueden agarrar, y parado en el pasillo de las góndolas la mira tenía entre 60 y
+## 70 casilleros al alcance: medirlos a todos llevaba la lectura de la mira de 30 µs a 2 ms por
+## paso de física, medido el 2026-09-30. Los que quedan afuera de este corte la mira no los
+## elegiría nunca, así que ofrecerle sólo los de adentro no cambia qué enfoca.
+func _physics_process(_delta: float) -> void:
+	_ofrecer_a_la_mira()
+
+
+func _ofrecer_a_la_mira() -> void:
+	if _casilleros.is_empty():
+		return
+	var ojo := jugador.mira()
+	var adelante := -ojo.basis.z
+	var ahora: Dictionary[ZonaDeReposicion, bool] = {}
+	for id in _casilleros.size():
+		if not _podria_enfocar(
+			ojo.origin, adelante, _centros_de_las_filas[id], _radios_de_las_filas[id]
+		):
+			continue
+		for zona: ZonaDeReposicion in _casilleros[id]:
+			if zona.papel == ZonaDeReposicion.Papel.NINGUNO:
+				continue
+			if _podria_enfocar(ojo.origin, adelante, zona.global_position, zona.radio):
+				ahora[zona] = true
+	for zona: ZonaDeReposicion in _cerca_de_la_mira:
+		if not ahora.has(zona):
+			zona.cerca_de_la_mira = false
+			_pintar(zona)
+	for zona: ZonaDeReposicion in ahora:
+		if not _cerca_de_la_mira.has(zona):
+			zona.cerca_de_la_mira = true
+			_pintar(zona)
+	_cerca_de_la_mira = ahora
+
+
+## Si alguna parte de la esfera de ese centro y ese radio cae adentro del alcance y del desvío de
+## la mira, mirando desde `ojo` hacia `adelante`.
+static func _podria_enfocar(ojo: Vector3, adelante: Vector3, centro: Vector3, radio: float) -> bool:
+	var hacia := centro - ojo
+	var distancia := hacia.length()
+	if distancia - radio > ReglasDelJugador.ALCANCE_DE_LA_MIRA:
+		return false
+	if distancia <= radio:
+		return true
+	var margen := asin(radio / distancia)
+	return adelante.angle_to(hacia) - margen <= ReglasDelJugador.DESVIO_MAXIMO_DE_LA_MIRA
+
+
 ## Pinta un casillero con su papel, si la mira lo enfoca y si está al alcance de la vista. Cuánto
 ## es el alcance lo dicen las reglas del estante (BR-PLY-022).
 func _pintar(zona: ZonaDeReposicion) -> void:
@@ -955,9 +1013,24 @@ func _preparar_los_casilleros() -> void:
 			zona.material_apuntado = apuntado
 			zona.material_invisible = invisible
 			zona.contorno = contorno
+			zona.radio = caja.size.length() / 2.0
 			zona.casillero_usado.connect(_usar_el_casillero)
 			zonas.append(zona)
 		_casilleros.append(zonas)
+		_envolver_la_fila(zonas)
+
+
+## La esfera que envuelve una fila entera: su centro es el promedio de sus casilleros, y su radio
+## llega hasta el borde del más lejano.
+func _envolver_la_fila(zonas: Array[ZonaDeReposicion]) -> void:
+	var centro := Vector3.ZERO
+	for zona in zonas:
+		centro += zona.global_position / zonas.size()
+	var radio := 0.0
+	for zona in zonas:
+		radio = maxf(radio, centro.distance_to(zona.global_position) + zona.radio)
+	_centros_de_las_filas.append(centro)
+	_radios_de_las_filas.append(radio)
 
 
 ## La textura del envase de un modelo, o nada si su material no la trae.

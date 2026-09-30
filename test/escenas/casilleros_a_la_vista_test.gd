@@ -150,9 +150,11 @@ func test_con_una_unidad_en_la_mano_se_ven_solo_sus_casilleros_vacios() -> void:
 			)
 			var nombre := "%s: %s" % [producto.nombre, casillero.name]
 			assert_bool(vista.visible).override_failure_message(nombre).is_equal(espera)
-			assert_int(casillero.get("collision_layer")).override_failure_message(nombre).is_equal(
-				2 if espera else 0
+			assert_bool(casillero.get("papel") != 0).override_failure_message(nombre).is_equal(
+				espera
 			)
+			if not espera:
+				assert_int(casillero.get("collision_layer")).is_zero()
 			if espera:
 				var quieto: ShaderMaterial = vista.material_override
 				assert_object(quieto).is_same(casillero.get("material_quieto"))
@@ -396,8 +398,12 @@ func test_cada_casillero_se_enfoca_desde_el_pasillo() -> void:  # AC-STK-029
 			continue
 		var ojo := pie + Vector3.UP * ReglasDelJugador.ALTURA_DE_LA_CAMARA
 		_vista_en(almacen, ojo, casillero.global_position)
+		# Lo que el puesto le ofrece a la mira es lo único que su campo encuentra.
+		_puesto(almacen).call("_ofrecer_a_la_mira")
 		var candidatos: Array[CampoDeInteraccion.Candidato] = []
 		for otro in todos:
+			if otro.get("collision_layer") == 0:
+				continue
 			if (
 				otro.global_position.distance_to(ojo)
 				> ReglasDelJugador.ALCANCE_DE_LA_MIRA + MARGEN_DEL_CAMPO
