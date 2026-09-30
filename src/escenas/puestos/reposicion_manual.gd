@@ -60,6 +60,9 @@ var _casilleros: Array[Array] = []
 var _para_colocar: Array[ZonaDeReposicion] = []
 ## Lo que la mira enfoca, según el jugador. El casillero enfocado se pinta distinto.
 var _enfocado: Node3D = null
+## La unidad puesta que la mira enfoca con la mano vacía. La dibuja su casillero, resaltada, y la
+## góndola no: dos veces en el mismo lugar, el resaltado no se vería parejo.
+var _resaltado: ZonaDeReposicion = null
 ## Los casilleros con papel que la mira podría elegir ahora: los únicos que se le ofrecen.
 var _cerca_de_la_mira: Dictionary[ZonaDeReposicion, bool] = {}
 ## El centro y el radio de la esfera que envuelve cada fila de adelante, en el orden de
@@ -765,6 +768,7 @@ func _actualizar_zonas(_nodo: Node3D = null) -> void:
 			elif para_agarrar.has(zona.casillero):
 				zona.papel = ZonaDeReposicion.Papel.AGARRAR
 			_pintar(zona)
+	_resaltar()
 
 
 ## Los casilleros vacíos que se ven dependen de dónde está la vista: se repintan cada cuadro, y son
@@ -840,12 +844,32 @@ func _al_enfocar(objetivo: Node3D, _distancia: float) -> void:
 	_enfocado = objetivo
 	_repintar(antes)
 	_repintar(objetivo)
+	_resaltar()
 
 
 func _al_perder_el_foco() -> void:
 	var antes := _enfocado
 	_enfocado = null
 	_repintar(antes)
+	_resaltar()
+
+
+## Resalta la unidad puesta que la mira enfoca con la mano vacía, y le devuelve a la góndola la
+## que dejó de estar enfocada.
+func _resaltar() -> void:
+	var nuevo: ZonaDeReposicion = null
+	if is_instance_valid(_enfocado):
+		var zona := _enfocado as ZonaDeReposicion
+		if zona != null and zona.papel == ZonaDeReposicion.Papel.AGARRAR:
+			nuevo = zona
+	if nuevo == _resaltado:
+		return
+	var antes := _resaltado
+	_resaltado = nuevo
+	if antes != null:
+		_mostrar_lo_puesto(antes.producto)
+	if nuevo != null:
+		_mostrar_lo_puesto(nuevo.producto)
 
 
 func _repintar(nodo: Node3D) -> void:
@@ -964,11 +988,6 @@ func _preparar_grupos() -> void:
 ## agarrar cambia con cada gesto, y lo decide el estante. Los materiales son uno por producto, y
 ## no uno por casillero: lo que cambia entre dos casilleros del mismo producto es el lugar.
 func _preparar_los_casilleros() -> void:
-	var invisible := _fantasma(null, 0.0, 0.0, 0.0, 0.0)
-	var contorno := ShaderMaterial.new()
-	contorno.shader = MarcoDelObjetivo.CONTORNO
-	contorno.set_shader_parameter("color", IndicacionDelFoco.COLOR)
-	contorno.set_shader_parameter("grosor", IndicacionDelFoco.GROSOR)
 	var opacidad := ReglasDelEstante.OPACIDAD_DEL_CASILLERO
 	for producto in Catalogo.todos():
 		var modelo := _modelos[producto.id]
@@ -1006,13 +1025,12 @@ func _preparar_los_casilleros() -> void:
 			vista.mesh = modelo
 			vista.gi_mode = GeometryInstance3D.GI_MODE_DYNAMIC
 			vista.position = -caja.get_center()
+			vista.material_override = quieto
 			vista.visible = false
 			zona.add_child(vista)
 			zona.vista = vista
 			zona.material_quieto = quieto
 			zona.material_apuntado = apuntado
-			zona.material_invisible = invisible
-			zona.contorno = contorno
 			zona.radio = caja.size.length() / 2.0
 			zona.casillero_usado.connect(_usar_el_casillero)
 			zonas.append(zona)
@@ -1153,13 +1171,18 @@ func _primera_dibujada(id: Producto.Id) -> int:
 ## góndola que el inventario no tiene. `visible_instance_count` corta por el final, así que el
 ## dibujo se reordena: primero las guías y la fila de atrás, tal cual; después los casilleros
 ## ocupados, y al final los vacíos, que quedan fuera del corte. Cada copia lleva su lugar, así que
-## reordenarlas no mueve ninguna: la que se agarró del medio deja un hueco en el medio.
+## reordenarlas no mueve ninguna: la que se agarró del medio deja un hueco en el medio. La unidad
+## resaltada va con los vacíos: mientras la mira la enfoca, la dibuja su casillero.
 func _mostrar_lo_puesto(id: Producto.Id) -> void:
 	var producto := Catalogo.de(id)
 	var de_la_noche := repositor.estante()
 	var primera := _primera_dibujada(id)
 	var ocupados := de_la_noche.casilleros_ocupados(producto)
-	var orden := ocupados + de_la_noche.casilleros_vacios(producto)
+	var afuera := de_la_noche.casilleros_vacios(producto)
+	if _resaltado != null and _resaltado.producto == id and ocupados.has(_resaltado.casillero):
+		ocupados.erase(_resaltado.casillero)
+		afuera.push_front(_resaltado.casillero)
+	var orden := ocupados + afuera
 	var bloque := _bloques[id]
 	var flotantes := DisposicionDeLaGondola.FLOTANTES_POR_COPIA
 	var dibujo := bloque.slice(0, primera * flotantes)

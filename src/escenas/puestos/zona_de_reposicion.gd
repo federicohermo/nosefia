@@ -2,10 +2,10 @@
 ## que va ahí, y el envase que se dibuja en él.
 ##
 ## **Hay uno por casillero, y se pinta según su papel.** Vacío, con una unidad de su producto en la
-## mano, es el envase en blanco y negro, quieto, o titilando en color si la mira lo enfoca.
-## Ocupado, con la mano vacía, es la unidad que se agarra, con el contorno del foco si la mira la
-## enfoca. Sin papel no está para la mira. Qué papel le toca lo decide el estante, en `dominio/`,
-## y cuándo está al alcance, sus reglas: acá sólo se pinta.
+## mano, es el envase en blanco y negro, quieto, o titilando en color y con emisión si la mira lo
+## enfoca. Ocupado, con la mano vacía, es la unidad que se agarra: enfocada, la dibuja él y no la
+## góndola, con el mismo titileo encima. Sin papel no está para la mira. Qué papel le toca lo
+## decide el estante, en `dominio/`, y cuándo está al alcance, sus reglas: acá sólo se pinta.
 extends StaticBody3D
 
 signal casillero_usado(producto: Producto.Id, casillero: int)
@@ -22,7 +22,7 @@ const CAPA_DE_LA_MIRA := 2
 
 ## **Vacía a propósito.** La marca del foco pinta las mallas que un objetivo declara, y sin la
 ## lista iría a buscarlas entre los hijos: le pondría su contorno encima al envase que titila. El
-## casillero se pinta solo, y su contorno lo pone él cuando corresponde.
+## casillero se pinta solo.
 @export var mallas: Array[MeshInstance3D] = []
 
 var papel := Papel.NINGUNO
@@ -39,12 +39,8 @@ var radio := 0.0
 var vista: MeshInstance3D
 ## El envase en blanco y negro, quieto: el casillero que espera la unidad de la mano.
 var material_quieto: Material
-## El envase en color y con emisión, titilando: el que espera la unidad y la mira enfoca.
+## El envase en color y con emisión, titilando: lo que espera el clic y la mira enfoca.
 var material_apuntado: Material
-## Lo que no dibuja nada: la unidad puesta ya la dibuja la góndola, y acá sólo va su contorno.
-var material_invisible: Material
-## El contorno del foco, para la unidad puesta que la mira enfoca.
-var contorno: Material
 
 
 ## El clic lo resuelve el puesto de la góndola, que sabe qué hay en la mano: acá sólo se avisa
@@ -56,20 +52,27 @@ func interactuar() -> ObjetoDelAlmacen:
 
 ## Se pinta según su papel, si la mira lo enfoca y si está al alcance de la vista.
 ##
+## **La unidad puesta y enfocada se dibuja con su propio material**, y el titileo va encima: la
+## góndola deja de dibujarla mientras tanto, y así la unidad no se dibuja dos veces en el mismo
+## lugar. Sin enfocar, el envase queda con el fantasma quieto aunque no se vea, y es lo que deja
+## que el calentamiento de los shaders lo encuentre.
+##
 ## **Escribe sólo lo que cambia**: el casillero que espera la unidad se repinta cada cuadro, porque
 ## la vista se mueve, y cada escritura de un material o de una capa es un pedido al motor.
 func pintar(enfocado: bool, al_alcance: bool) -> void:
 	var capa := CAPA_DE_LA_MIRA if cerca_de_la_mira else 0
-	var reemplazo: Material = null
+	var reemplazo: Material = material_quieto
 	var encima: Material = null
 	var se_ve := false
 	match papel:
 		Papel.COLOCAR:
-			reemplazo = material_apuntado if enfocado else material_quieto
+			if enfocado:
+				reemplazo = material_apuntado
 			se_ve = enfocado or al_alcance
 		Papel.AGARRAR:
-			reemplazo = material_invisible
-			encima = contorno if enfocado else null
+			if enfocado:
+				reemplazo = null
+				encima = material_apuntado
 			se_ve = enfocado
 		_:
 			capa = 0
@@ -77,7 +80,7 @@ func pintar(enfocado: bool, al_alcance: bool) -> void:
 		collision_layer = capa
 	if vista == null:
 		return
-	if reemplazo != null and vista.material_override != reemplazo:
+	if vista.material_override != reemplazo:
 		vista.material_override = reemplazo
 	if vista.material_overlay != encima:
 		vista.material_overlay = encima

@@ -228,6 +228,12 @@ func test_el_clic_coloca_en_el_casillero_apuntado_y_no_en_otro() -> void:  # AC-
 	assert_array(estante.casilleros_ocupados(actroncito)).contains([vacios[1]])
 	assert_array(estante.casilleros_vacios(actroncito)).is_equal([vacios[0], vacios[2]])
 	assert_int(estante.unidades_en_gondola(actroncito)).is_equal(antes + 1)
+	# Recién colocada y todavía enfocada, la dibuja su casillero, resaltada; sin el foco, la góndola.
+	var vista: MeshInstance3D = elegido.get("vista")
+	assert_bool(vista.visible).is_true()
+	assert_object(vista.material_override).is_null()
+	almacen.get("_jugador").objetivo_perdido.emit()
+	assert_bool(vista.visible).is_false()
 	var dibujadas := _dibujadas(almacen, actroncito)
 	assert_bool(_contiene(dibujadas, _lugar_de(elegido))).is_true()
 	var primero: Node3D = _puesto(almacen).call("casillero", actroncito.id, vacios[0])
@@ -253,11 +259,15 @@ func test_con_las_manos_vacias_se_agarra_la_del_medio() -> void:  # AC-PLY-049 A
 	var dibujadas_antes := _dibujadas(almacen, actroncito)
 	await _mirar_foco(almacen, _ojo_para(almacen, elegido), elegido.global_position)
 	assert_object(almacen.get("_jugador").get("_enfocado")).is_same(elegido)
-	# Enfocada, la unidad lleva el contorno del foco, y el envase no se dibuja dos veces.
+	# Enfocada, la dibuja su casillero con su material y el titileo encima, y la góndola no: la
+	# unidad no se dibuja dos veces en el mismo lugar.
 	var vista: MeshInstance3D = elegido.get("vista")
 	assert_bool(vista.visible).is_true()
-	assert_object(vista.material_overlay).is_same(elegido.get("contorno"))
-	assert_object(vista.material_override).is_same(elegido.get("material_invisible"))
+	assert_object(vista.material_override).is_null()
+	assert_object(vista.material_overlay).is_same(elegido.get("material_apuntado"))
+	var enfocada := _dibujadas(almacen, actroncito)
+	assert_int(enfocada.size()).is_equal(dibujadas_antes.size() - 1)
+	assert_bool(_contiene(enfocada, _lugar_de(elegido))).is_false()
 	_clic_real(almacen)
 	var unidad := _agarre(almacen).manos().sostenido() as UnidadDeProducto
 	assert_object(unidad).is_not_null()
