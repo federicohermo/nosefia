@@ -107,8 +107,11 @@ Cada agente recibe, literal:
 - **Y Bash rechaza un comando con la palabra `source` en una ruta**, con «runs a string through
   source». Para mirar `assets/source/` va `Glob`, `Grep` o Python. Medido el mismo día. También
   rechaza, con «too complex to verify», un subshell que corre Godot, `godot … "$VAR"`, un `for`
-  que corre Godot con una variable y un heredoc largo de Python con `git` adentro. Todo eso va a
-  un script en el scratch del carril, que se corre en una línea.
+  que corre Godot con una variable y un heredoc largo de Python con `git` adentro. En el carril
+  de #276 rechazó además tres comandos sin Godot: un `for` sobre `$(rg -l …)`,
+  `gdlint $(git diff --name-only …)`, y `git rev-parse … && test -z "$(rg …)"`. Lo que tienen en
+  común es una sustitución `$(…)` como argumento. Todo eso va a un script en el scratch del
+  carril, que se corre en una línea.
 - **Un carril se corta sin avisar, y se retoma, no se relanza.** El límite de sesión de la API
   corta a todos los carriles a la vez, y un reinicio del contenedor mata sus procesos. El
   worktree y el scratch sobreviven; el proceso, no. Se retoma con `SendMessage` al mismo

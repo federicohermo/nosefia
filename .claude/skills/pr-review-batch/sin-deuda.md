@@ -182,6 +182,7 @@ entregable más caro y el único que hace que el hallazgo no vuelva.
 | una regla que se saca y **deja caer un invariante** que otra daba por hecho | `to-issue` — el cruce sigue a los lectores de un valor que se mueve, y sacar una regla no mueve ningún valor |
 | una suite que el issue manda a crecer **y ya está en el tope de `gdlint`** | `to-issue` — se contaron los `test_` y no los métodos públicos |
 | una regla de tests que describe **una versión vieja de la herramienta** | la regla de tests — se escribió midiendo gdUnit4 antes de 6.2.1, y nadie la volvió a medir al actualizarlo |
+| un caso que **afirma la regla que el issue invierte** sin decirla en prosa | `to-issue` — los límites salieron de un `rg`, y la inversión no se probó con un parche antes de publicar |
 
 **Si el problema no entra en ninguna fila, agregá la fila.** Esa tabla es el registro de lo que
 esta doctrina ya aprendió, y está incompleta a propósito.

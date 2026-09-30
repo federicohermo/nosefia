@@ -140,7 +140,13 @@ Lo que más se rompe:
 - **Si el issue cambia una regla, el `rg` de los límites busca también la regla vieja en
   palabras.** Un símbolo no encuentra el comentario que explica la regla con otras palabras, ni
   el test que arma el estado que la regla lee. En el #166 quedaron fuera de «Se escribe» cinco
-  archivos con comentarios y un test.
+  archivos con comentarios y un test. En el #276 se buscaron las frases del corte y no «una caja
+  llena no entrega», y quedaron afuera tres suites.
+- **Si el issue invierte una regla, la inversión se prueba antes de publicar.** Un caso que
+  afirma la regla sin decirla en prosa no lo encuentra ningún `rg`. Se invierte con un parche de
+  una línea en el scratch, se corren las suites que ejercen la regla, y los casos que salen rojos
+  van a «Se escribe». En el #276, tres casos de `reposicion_manual_test.gd` afirmaban el corte
+  sin nombrarlo, y aparecieron recién en la corrida del carril.
 - **Y busca a cada lector del valor que se mueve, en `src/` y en `test/`.** El contrato sigue a
   todos, no al primero. En el #263 el cupo dejaba de ser `.umbral`, pero `faltantes()` y
   `vendibles()` también lo leían. Además, 20 tests armaban con `retirar(` la góndola vacía que el
