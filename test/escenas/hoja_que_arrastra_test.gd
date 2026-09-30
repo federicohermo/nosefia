@@ -3,6 +3,7 @@
 extends GdUnitTestSuite
 
 const ALMACEN := preload("res://src/escenas/almacen.tscn")
+const OBJETO_SUELTO := preload("res://src/escenas/objetos/objeto_agarrable.tscn")
 
 ## La hoja que se mide: la del paso al fondo, que abre hacia el cuarto de atrás.
 const HOJA := "Estructura/puerta"
@@ -240,18 +241,20 @@ func test_la_bolsa_en_el_recorrido_se_arrastra_al_abrir() -> void:
 	assert_float(await _corrida_al_abrir("Objetos/BolsaDeBasura1")).is_greater(CORRIDA_MINIMA)
 
 
-func test_el_trapeador_en_el_recorrido_se_arrastra_al_abrir() -> void:
-	assert_float(await _corrida_al_abrir("Objetos/Trapeador")).is_greater(CORRIDA_MINIMA)
+func test_el_balde_en_el_recorrido_se_arrastra_al_abrir() -> void:
+	# El balde es más alto que la bolsa: su centro va más arriba para no nacer adentro del piso.
+	assert_float(await _corrida_al_abrir("Objetos/Balde", 0.2)).is_greater(CORRIDA_MINIMA)
 
 
-## Cuánto corre la hoja al abrir al objeto que se le pone en el recorrido. Un almacén por objeto:
-## dos a la vez comparten el mundo, y la red de uno vigila los cuerpos del otro.
-func _corrida_al_abrir(ruta: String) -> float:
+## Cuánto corre la hoja al abrir al objeto que se le pone en el recorrido, soltado con el centro a
+## `alto` del piso. Un almacén por objeto: dos a la vez comparten el mundo, y la red de uno vigila
+## los cuerpos del otro.
+func _corrida_al_abrir(ruta: String, alto: float = 0.15) -> float:
 	var almacen: Node3D = await _almacen()
 	var hoja: MeshInstance3D = almacen.get_node(HOJA)
 	var objeto: RigidBody3D = almacen.get_node(ruta)
 	objeto.global_basis = Basis.IDENTITY
-	objeto.global_position = _en_el_recorrido(almacen, hoja, FRACCION_DEL_GIRO) + Vector3.UP * 0.15
+	objeto.global_position = _en_el_recorrido(almacen, hoja, FRACCION_DEL_GIRO) + Vector3.UP * alto
 	for cuadro in CUADROS_PARA_DORMIRSE:
 		await get_tree().physics_frame
 	var partida := objeto.global_position
@@ -266,15 +269,18 @@ func test_la_hoja_cerrada_de_golpe_no_deja_nada_adentro() -> void:  # AC-PLY-032
 	var cuerpo := _cuerpo_de(hoja)
 	var punto := _en_el_recorrido(almacen, hoja, 0.0)
 	await _girar(hoja)
-	var trapeador: RigidBody3D = almacen.get_node("Objetos/Trapeador")
-	trapeador.freeze = true
-	trapeador.global_position = punto + Vector3.UP * 0.1
+	# Un objeto suelto propio del caso: lo que ya trae el almacén vuelve a su lugar al abrir la
+	# jornada, y ahí la hoja no tendría nada adentro que dejar afuera.
+	var suelto: RigidBody3D = OBJETO_SUELTO.instantiate()
+	almacen.add_child(suelto)
+	suelto.freeze = true
+	suelto.global_position = punto + Vector3.UP * 0.1
 	await get_tree().physics_frame
 	almacen.call("_al_abrir_la_jornada", ReglasDeLaPartida.PRIMERA_JORNADA + 1)
 	(
-		assert_bool(_adentro_de_la_hoja(trapeador, cuerpo))
+		assert_bool(_adentro_de_la_hoja(suelto, cuerpo))
 		. override_failure_message(
-			"el trapeador quedó adentro de la hoja en %v" % trapeador.global_position
+			"el objeto quedó adentro de la hoja en %v" % suelto.global_position
 		)
 		. is_false()
 	)

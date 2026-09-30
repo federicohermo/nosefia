@@ -145,8 +145,8 @@ func test_los_dos_sistemas_del_006_llegan_armados_al_instanciar_la_escena() -> v
 
 
 func test_el_jugador_dice_que_lleva_en_la_mano() -> void:
-	# La única puerta por la que otra escena pregunta qué se está llevando, y la pide el 014
-	# para saber si lo que hay en la mano es el trapeador: con otra cosa, la pasada no cuenta.
+	# La única puerta por la que otra escena pregunta qué se está llevando, y la pide la limpieza
+	# para saber qué útil hay en la mano: con otra cosa, el uso no hace nada.
 	# Devuelve el `id` del dominio y nunca el nodo: un nodo cruzaría la dirección de las capas
 	# al revés.
 	var jugador := _jugador()

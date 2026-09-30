@@ -55,6 +55,9 @@ const ESCENA_DEL_MENU := "res://src/escenas/menu_de_inicio.tscn"
 @export var _agarre: Agarre
 @export var _bolsas: Array[Node3D]
 
+## La mopa, el balde y los tres jabones, que arrancan cada noche en el baño.
+@export var _utiles_de_limpieza: Array[Node3D]
+
 @export var _puertas: Array[Node3D]
 
 ## Los muebles con los que el jugador choca por su contorno y no por su malla.
@@ -191,6 +194,11 @@ func _al_abrir_la_jornada(_jornada: int) -> void:
 		bolsa.volver_a_su_lugar()
 	for caja: CajaDeProductosDelDeposito in _cajas_de_productos:
 		caja.volver_a_su_lugar()
+	# Los útiles de limpieza van por lo mismo que las cajas: se trasladan, y la noche siguiente
+	# arrancaría con la mopa y el balde donde los dejó la anterior. Vacío y seca los deja el piso
+	# nuevo, que el limpiador recibe arriba y el puesto pinta abajo.
+	for util: ObjetoAgarrable in _utiles_de_limpieza:
+		util.volver_a_su_lugar()
 	for puerta: PuertaDelLocal in _puertas:
 		puerta.cerrar_de_golpe()
 	_audio.arrancar_el_ambiente()

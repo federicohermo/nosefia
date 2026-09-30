@@ -1,129 +1,192 @@
-## El piso del local: las cuatro zonas, el trapeador y cuándo la tarea queda hecha.
+## El piso de una jornada: sus cuatro manchas, el balde y la mopa, y lo que contesta cada uso.
 ##
-## **Ni un `Node3D` en toda la suite.** Todo lo que un criterio de este spec afirma se ejerce acá,
-## sin poner una sola mancha en la escena: es lo que hace que `mancha_en_el_piso.gd` pueda ser
-## cáscara.
+## Es la mitad de limpiar que se ejerce sin levantar una escena: acá se prueban las reglas de la
+## ficha sin poner una sola mancha en el almacén.
 extends GdUnitTestSuite
 
-## Un `id` que no es el del trapeador. Es la forma en que llega «tengo otra cosa en la mano».
-const ID_DE_OTRO_OBJETO := &"caja_de_fideos"
+const MOPA := ReglasDeLaLimpieza.ID_DE_LA_MOPA
+const BALDE := ReglasDeLaLimpieza.ID_DEL_BALDE
+const LAVATORIO := ReglasDeLaLimpieza.ID_DEL_LAVATORIO
+const INODORO := ReglasDeLaLimpieza.ID_DEL_INODORO
+const JABON_AZUL := &"jabon_azul"
+const JABON_ROSA := &"jabon_rosa"
+const JABON_AMARILLO := &"jabon_amarillo"
 
 
 func _piso() -> PisoDelLocal:
 	return PisoDelLocal.de_la_jornada()
 
 
-## Pasa el trapeador hasta dejar esa zona limpia, y devuelve el último resultado.
-func _limpiar(piso: PisoDelLocal, zona: PisoDelLocal.Zona) -> PisoDelLocal.Resultado:
-	var ultimo := PisoDelLocal.Resultado.YA_ESTABA_LIMPIA
-	for _pasada in range(ReglasDeLaLimpieza.PASADAS_POR_MANCHA):
-		ultimo = piso.pasar(zona, ReglasDeLaLimpieza.ID_DEL_TRAPEADOR)
-	return ultimo
+## Llena el balde, lo tiñe con ese jabón y moja la mopa: lo que se hace en el baño antes de salir.
+func _preparar(piso: PisoDelLocal, jabon: StringName) -> void:
+	assert_int(piso.usar(BALDE, LAVATORIO)).is_equal(ReglasDeLaLimpieza.Resultado.BALDE_LLENADO)
+	assert_int(piso.usar(jabon, BALDE)).is_equal(ReglasDeLaLimpieza.Resultado.BALDE_TENIDO)
+	assert_int(piso.usar(MOPA, BALDE)).is_equal(ReglasDeLaLimpieza.Resultado.MOPA_MOJADA)
 
 
-func test_la_jornada_arranca_con_una_mancha_por_zona() -> void:  # AC-CLN-001
-	# Se cuenta contra el `enum` y nunca contra un `4` escrito acá: una quinta zona es una línea
-	# en el `enum`, y una zona sin mancha sería un rincón que el jugador no tiene que visitar.
+## Lo que hay que borrar, de un vistazo: cada lugar sucio.
+func _sucias(piso: PisoDelLocal) -> Array:
+	var sucias := []
+	for lugar: PisoDelLocal.Lugar in piso.lugares():
+		if not piso.mancha_de(lugar).esta_limpia():
+			sucias.append(lugar)
+	return sucias
+
+
+func test_la_jornada_trae_dos_de_polvo_una_de_moho_y_una_de_caca() -> void:  # AC-CLN-016
 	var piso := _piso()
-	assert_int(piso.zonas().size()).is_equal(PisoDelLocal.Zona.size())
-	for zona: PisoDelLocal.Zona in PisoDelLocal.Zona.values():
-		(
-			assert_object(piso.mancha_de(zona))
-			. override_failure_message("la zona %d arrancó sin mancha" % zona)
-			. is_not_null()
+	var por_tipo := {}
+	for lugar: PisoDelLocal.Lugar in piso.lugares():
+		var mancha := piso.mancha_de(lugar)
+		assert_bool(mancha.esta_limpia()).is_false()
+		por_tipo[mancha.tipo()] = por_tipo.get(mancha.tipo(), 0) + 1
+	assert_int(piso.lugares().size()).is_equal(4)
+	assert_int(por_tipo.get(ReglasDeLaLimpieza.TipoDeMancha.POLVO, 0)).is_equal(2)
+	assert_int(por_tipo.get(ReglasDeLaLimpieza.TipoDeMancha.MOHO, 0)).is_equal(1)
+	assert_int(por_tipo.get(ReglasDeLaLimpieza.TipoDeMancha.CACA, 0)).is_equal(1)
+
+
+func test_cada_lugar_lleva_la_mancha_de_la_ficha() -> void:  # AC-CLN-016
+	var piso := _piso()
+	var esperados := {
+		PisoDelLocal.Lugar.ENTRADA: ReglasDeLaLimpieza.TipoDeMancha.POLVO,
+		PisoDelLocal.Lugar.GONDOLAS: ReglasDeLaLimpieza.TipoDeMancha.POLVO,
+		PisoDelLocal.Lugar.DEPOSITO: ReglasDeLaLimpieza.TipoDeMancha.MOHO,
+		PisoDelLocal.Lugar.BANO: ReglasDeLaLimpieza.TipoDeMancha.CACA,
+	}
+	for lugar: PisoDelLocal.Lugar in esperados:
+		assert_int(piso.mancha_de(lugar).tipo()).is_equal(esperados[lugar])
+
+
+func test_cada_jornada_arranca_sucia_con_el_balde_vacio_y_la_mopa_seca() -> void:  # AC-CLN-016
+	# Instancias nuevas y no las mismas: con un piso compartido, lo limpiado anoche llegaría
+	# limpio esta noche, y el balde teñido de anoche ahorraría el primer viaje a la canilla.
+	var anoche := _piso()
+	_preparar(anoche, JABON_AMARILLO)
+	anoche.pasar(MOPA, PisoDelLocal.Lugar.ENTRADA)
+	var hoy := _piso()
+	assert_int(_sucias(hoy).size()).is_equal(4)
+	assert_bool(hoy.balde().tiene_agua()).is_false()
+	assert_bool(hoy.mopa().esta_mojada()).is_false()
+
+
+func test_el_piso_queda_limpio_recien_con_la_ultima_mancha() -> void:  # AC-CLN-012
+	var piso := _piso()
+	var pedidos := {
+		PisoDelLocal.Lugar.ENTRADA: JABON_AMARILLO,
+		PisoDelLocal.Lugar.GONDOLAS: JABON_AMARILLO,
+		PisoDelLocal.Lugar.DEPOSITO: JABON_AZUL,
+		PisoDelLocal.Lugar.BANO: JABON_ROSA,
+	}
+	var lugares := pedidos.keys()
+	for indice in lugares.size():
+		piso.usar(BALDE, INODORO)
+		_preparar(piso, pedidos[lugares[indice]])
+		assert_bool(piso.esta_limpio()).is_false()
+		assert_int(piso.pasar(MOPA, lugares[indice])).is_equal(
+			ReglasDeLaLimpieza.Resultado.MANCHA_BORRADA
 		)
-
-
-# AC-CLN-001
-func test_las_pasadas_totales_salen_de_multiplicar_y_no_de_una_cuenta_a_mano() -> void:
-	# Un `12` escrito quedaría viejo el día que se agregue una zona o se rebalanceen las pasadas,
-	# y el número seguiría pareciendo correcto.
-	assert_int(_piso().pasadas_totales()).is_equal(
-		PisoDelLocal.Zona.size() * ReglasDeLaLimpieza.PASADAS_POR_MANCHA
-	)
-
-
-func test_una_pasada_con_el_trapeador_es_una_pasada() -> void:  # AC-CLN-004
-	var piso := _piso()
-	assert_int(piso.pasar(PisoDelLocal.Zona.ENTRADA, ReglasDeLaLimpieza.ID_DEL_TRAPEADOR)).is_equal(
-		PisoDelLocal.Resultado.PASADA
-	)
-
-
-func test_la_ultima_pasada_de_una_zona_avisa_que_la_mancha_desaparecio() -> void:  # AC-CLN-004
-	# Son dos cosas distintas adelante del jugador —una mancha que se aclara y una que
-	# desaparece— y aplanarlas daría un solo cartel para las dos.
-	var piso := _piso()
-	assert_int(_limpiar(piso, PisoDelLocal.Zona.ENTRADA)).is_equal(
-		PisoDelLocal.Resultado.MANCHA_LIMPIADA
-	)
-
-
-func test_con_las_manos_vacias_no_se_limpia_nada() -> void:  # AC-CLN-002
-	var piso := _piso()
-	var antes := piso.pasadas_restantes(PisoDelLocal.Zona.ENTRADA)
-	assert_int(piso.pasar(PisoDelLocal.Zona.ENTRADA, ObjetoDelAlmacen.SIN_ID)).is_equal(
-		PisoDelLocal.Resultado.SIN_TRAPEADOR
-	)
-	assert_int(piso.pasadas_restantes(PisoDelLocal.Zona.ENTRADA)).is_equal(antes)
-
-
-func test_con_otro_objeto_en_la_mano_tampoco() -> void:  # AC-CLN-002
-	# Limpiar con la lata en la mano sería limpiar gratis: el trapeador ocupa la única mano, y
-	# ésa es la mitad de la tarea que la vuelve imposible de intercalar.
-	var piso := _piso()
-	var antes := piso.pasadas_restantes(PisoDelLocal.Zona.PASILLO)
-	assert_int(piso.pasar(PisoDelLocal.Zona.PASILLO, ID_DE_OTRO_OBJETO)).is_equal(
-		PisoDelLocal.Resultado.SIN_TRAPEADOR
-	)
-	assert_int(piso.pasadas_restantes(PisoDelLocal.Zona.PASILLO)).is_equal(antes)
-
-
-func test_sobre_una_zona_ya_limpia_avisa_que_ya_estaba_limpia() -> void:  # AC-CLN-003
-	var piso := _piso()
-	_limpiar(piso, PisoDelLocal.Zona.ENTRADA)
-	assert_int(piso.pasar(PisoDelLocal.Zona.ENTRADA, ReglasDeLaLimpieza.ID_DEL_TRAPEADOR)).is_equal(
-		PisoDelLocal.Resultado.YA_ESTABA_LIMPIA
-	)
-
-
-# AC-CLN-012
-func test_el_piso_queda_limpio_recien_con_la_ultima_pasada_de_la_ultima_zona() -> void:
-	# Machacar sobre una mancha limpia no cierra nada: hay que haber estado en las cuatro zonas.
-	var piso := _piso()
-	var zonas := PisoDelLocal.Zona.values()
-	for indice in range(zonas.size() - 1):
-		_limpiar(piso, zonas[indice])
-		(
-			assert_bool(piso.esta_limpio())
-			. override_failure_message(
-				"el piso quedó limpio con %d de %d zonas" % [indice + 1, zonas.size()]
-			)
-			. is_false()
-		)
-	_limpiar(piso, zonas[-1])
 	assert_bool(piso.esta_limpio()).is_true()
 
 
-func test_una_zona_se_puede_dejar_por_la_mitad_y_retomar() -> void:  # AC-CLN-005
-	# **Es la mitad que vuelve a limpiar parte de la tensión**: dos pasadas, irse a otra zona,
-	# volver, y la mancha sigue esperando en una. Con una barra que hay que mantener apretada
-	# esto no se podría escribir.
+func test_cambiar_de_jabon_es_vaciar_el_balde_y_volver_a_llenarlo() -> void:  # AC-CLN-021
 	var piso := _piso()
-	piso.pasar(PisoDelLocal.Zona.PASILLO, ReglasDeLaLimpieza.ID_DEL_TRAPEADOR)
-	piso.pasar(PisoDelLocal.Zona.PASILLO, ReglasDeLaLimpieza.ID_DEL_TRAPEADOR)
-	piso.pasar(PisoDelLocal.Zona.DEPOSITO, ReglasDeLaLimpieza.ID_DEL_TRAPEADOR)
-	var faltan := ReglasDeLaLimpieza.PASADAS_POR_MANCHA - 2
-	assert_int(piso.pasadas_restantes(PisoDelLocal.Zona.PASILLO)).is_equal(faltan)
-	assert_bool(piso.esta_limpio()).is_false()
-
-
-func test_cada_jornada_arranca_con_el_piso_sucio() -> void:
-	# Instancias nuevas y no las mismas: con un piso compartido, lo limpiado anoche llegaría
-	# limpio esta noche y la obligatoria se cumpliría sola a partir de la segunda.
-	var una := _piso()
-	_limpiar(una, PisoDelLocal.Zona.ENTRADA)
-	var otra := _piso()
-	assert_int(otra.pasadas_restantes(PisoDelLocal.Zona.ENTRADA)).is_equal(
-		ReglasDeLaLimpieza.PASADAS_POR_MANCHA
+	_preparar(piso, JABON_AMARILLO)
+	assert_int(piso.pasar(MOPA, PisoDelLocal.Lugar.DEPOSITO)).is_equal(
+		ReglasDeLaLimpieza.Resultado.JABON_EQUIVOCADO
 	)
+	assert_int(piso.usar(JABON_AZUL, BALDE)).is_equal(ReglasDeLaLimpieza.Resultado.BALDE_YA_TENIDO)
+	assert_int(piso.usar(BALDE, LAVATORIO)).is_equal(ReglasDeLaLimpieza.Resultado.BALDE_YA_LLENO)
+	assert_int(piso.usar(BALDE, INODORO)).is_equal(ReglasDeLaLimpieza.Resultado.BALDE_VACIADO)
+	_preparar(piso, JABON_AZUL)
+	assert_int(piso.pasar(MOPA, PisoDelLocal.Lugar.DEPOSITO)).is_equal(
+		ReglasDeLaLimpieza.Resultado.MANCHA_BORRADA
+	)
+
+
+func test_con_una_mojada_de_amarillo_se_borran_las_dos_de_polvo() -> void:  # AC-CLN-023
+	var piso := _piso()
+	_preparar(piso, JABON_AMARILLO)
+	for lugar: PisoDelLocal.Lugar in [PisoDelLocal.Lugar.ENTRADA, PisoDelLocal.Lugar.GONDOLAS]:
+		assert_int(piso.pasar(MOPA, lugar)).is_equal(ReglasDeLaLimpieza.Resultado.MANCHA_BORRADA)
+	assert_array(_sucias(piso)).contains_exactly_in_any_order(
+		[PisoDelLocal.Lugar.DEPOSITO, PisoDelLocal.Lugar.BANO]
+	)
+
+
+func test_lo_que_no_es_un_gesto_de_limpiar_no_hace_nada() -> void:  # AC-CLN-024
+	var piso := _piso()
+	_preparar(piso, JABON_AZUL)
+	var ajenos: Array[StringName] = [ObjetoDelAlmacen.SIN_ID, &"bolsa_de_basura_1"]
+	for en_la_mano in ajenos:
+		for objetivo: StringName in [BALDE, LAVATORIO, INODORO]:
+			assert_int(piso.usar(en_la_mano, objetivo)).is_equal(
+				ReglasDeLaLimpieza.Resultado.SIN_EFECTO
+			)
+		for lugar: PisoDelLocal.Lugar in piso.lugares():
+			assert_int(piso.pasar(en_la_mano, lugar)).is_equal(
+				ReglasDeLaLimpieza.Resultado.SIN_EFECTO
+			)
+	assert_int(piso.balde().agua()).is_equal(ReglasDeLaLimpieza.Agua.AZUL)
+	assert_int(piso.mopa().agua()).is_equal(ReglasDeLaLimpieza.Agua.AZUL)
+	assert_int(_sucias(piso).size()).is_equal(4)
+
+
+func test_los_gestos_al_reves_o_cruzados_no_hacen_nada() -> void:  # AC-CLN-024
+	var piso := _piso()
+	var pares: Array[Array] = [
+		[LAVATORIO, BALDE],
+		[BALDE, BALDE],
+		[JABON_AZUL, LAVATORIO],
+		[MOPA, LAVATORIO],
+		[MOPA, INODORO],
+		[BALDE, Uso.MANCHA],
+		[MOPA, Uso.MANCHA],
+	]
+	for par in pares:
+		(
+			assert_int(piso.usar(par[0], par[1]))
+			. override_failure_message("%s sobre %s hizo algo" % par)
+			. is_equal(ReglasDeLaLimpieza.Resultado.SIN_EFECTO)
+		)
+	assert_int(piso.pasar(BALDE, PisoDelLocal.Lugar.BANO)).is_equal(
+		ReglasDeLaLimpieza.Resultado.SIN_EFECTO
+	)
+	assert_bool(piso.balde().tiene_agua()).is_false()
+
+
+func test_el_uso_necesita_un_efecto_declarado() -> void:
+	# El despacho es la única puerta: sin el par declarado, la mopa mojada del jabón justo no
+	# borra nada aunque la mancha y la mopa estén listas.
+	var piso := _piso()
+	_preparar(piso, JABON_AMARILLO)
+	piso.set("_uso", Uso.new())
+	assert_int(piso.pasar(MOPA, PisoDelLocal.Lugar.ENTRADA)).is_equal(
+		ReglasDeLaLimpieza.Resultado.SIN_EFECTO
+	)
+	assert_int(_sucias(piso).size()).is_equal(4)
+
+
+func test_la_mezcla_espera_mientras_se_hace_otra_cosa() -> void:  # AC-CLN-025
+	var piso := _piso()
+	_preparar(piso, JABON_AZUL)
+	piso.pasar(MOPA, PisoDelLocal.Lugar.DEPOSITO)
+	piso.pasar(MOPA, PisoDelLocal.Lugar.ENTRADA)
+	piso.usar(&"lata_de_tomate", BALDE)
+	piso.usar(ObjetoDelAlmacen.SIN_ID, INODORO)
+	assert_int(piso.balde().agua()).is_equal(ReglasDeLaLimpieza.Agua.AZUL)
+	assert_int(piso.mopa().agua()).is_equal(ReglasDeLaLimpieza.Agua.AZUL)
+	assert_bool(piso.mancha_de(PisoDelLocal.Lugar.DEPOSITO).esta_limpia()).is_true()
+
+
+func test_un_lugar_sin_mancha_no_se_borra() -> void:
+	# No es un caso del juego: es el borde de la firma, y un `null` acá mataría el cuadro.
+	var solo_el_bano: Dictionary[PisoDelLocal.Lugar, Mancha] = {
+		PisoDelLocal.Lugar.BANO: Mancha.new(ReglasDeLaLimpieza.TipoDeMancha.CACA)
+	}
+	var piso := PisoDelLocal.new(solo_el_bano)
+	_preparar(piso, JABON_ROSA)
+	assert_int(piso.pasar(MOPA, PisoDelLocal.Lugar.ENTRADA)).is_equal(
+		ReglasDeLaLimpieza.Resultado.SIN_EFECTO
+	)
+	assert_object(piso.mancha_de(PisoDelLocal.Lugar.ENTRADA)).is_null()

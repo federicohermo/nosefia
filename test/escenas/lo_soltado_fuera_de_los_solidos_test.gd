@@ -615,9 +615,12 @@ func test_la_unidad_soltada_contra_el_mostrador_no_queda_adentro() -> void:  # A
 	assert_int(soltadas).override_failure_message("casi ninguna se soltó").is_greater(6)
 
 
-func test_la_bolsa_y_el_trapeador_soltados_contra_una_pared_no_quedan_adentro() -> void:
+func test_la_bolsa_y_los_utiles_soltados_contra_una_pared_no_quedan_adentro() -> void:
+	# La mopa es el caso que decide: mide un metro y cuarto, y la mano la lleva inclinada.
 	var almacen: Node3D = await _almacen()
-	var objetos: Array[Node3D] = [almacen.get("_bolsas")[0], almacen.get_node("Objetos/Trapeador")]
+	var objetos: Array[Node3D] = [almacen.get("_bolsas")[0]]
+	for util: String in ["Mopa", "Balde", "JabonAzul"]:
+		objetos.append(almacen.get_node("Objetos/" + util))
 	var derecho: Array[float] = [0.0]
 	var dos_alturas: Array[float] = [-40.0, 0.0]
 	for objeto in objetos:

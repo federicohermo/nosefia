@@ -113,12 +113,13 @@ func test_lo_soltado_se_apoya_sobre_lo_horizontal_que_lo_admite() -> void:  # AC
 	var corte := ReglasDeLosObjetos.APOYO_HORIZONTAL
 	var caja := ObjetoDelAlmacen.new()
 	caja.admite_encima = true
-	var trapeador := ObjetoDelAlmacen.new()
+	var mopa := load("res://src/dominio/almacen/mopa.tres") as ObjetoDelAlmacen
+	assert_object(mopa).is_not_null()
 	assert_bool(ReglasDeLosObjetos.admite_lo_soltado(corte - 0.001, null)).is_false()
 	assert_bool(ReglasDeLosObjetos.admite_lo_soltado(corte, null)).is_true()
 	assert_bool(ReglasDeLosObjetos.admite_lo_soltado(corte, caja)).is_true()
 	assert_bool(ReglasDeLosObjetos.admite_lo_soltado(corte - 0.001, caja)).is_false()
-	assert_bool(ReglasDeLosObjetos.admite_lo_soltado(1.0, trapeador)).is_false()
+	assert_bool(ReglasDeLosObjetos.admite_lo_soltado(1.0, mopa)).is_false()
 
 
 func test_las_teclas_giran_lo_examinado_a_velocidad_fija() -> void:  # AC-INV-022
