@@ -145,6 +145,11 @@ Lo que más se rompe:
   issue llenaba. La primera corrida dio 37 casos rojos en 11 archivos fuera de «Se escribe».
 - **Un criterio que conserva un enunciado se lee contra lo que el issue retira.** En el #263,
   «`BR-STK-013` sin cambiar su enunciado» nombraba el umbral que el mismo issue sacaba.
+- **Si el issue saca una regla, busca qué otra contaba con ella sin decirlo.** Un corte suele
+  sostener un invariante que ninguna regla escribe. En el #276, sacar el corte de `BR-STK-017`
+  dejaba que la venta alcanzara las unidades en la mano: `BR-STK-018` contaba con que nunca
+  pasaran de los casilleros vacíos. Lo encontró el padre al escribir el issue, preguntando qué
+  dejaba de ser cierto sin el corte.
 - **Si el issue escribe a disco, dice cómo lo aíslan los tests.** Toda suite que levanta la
   escena lee y escribe la ruta real del usuario, y ningún gate lo ve. En el #23 una partida
   guardada cambiaba en qué noche arrancaban unas 28 suites.

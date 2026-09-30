@@ -97,6 +97,9 @@ Cada agente recibe, literal:
     `tmp/x` adentro del repo. Pasó en dos carriles del lote del 2026-09-29, el segundo con la
     advertencia en su preámbulo, y por eso `/tmp/` está en `.gitignore`.
   - Las variables de entorno no sobreviven entre llamadas a Bash: van adelante del comando.
+  - Lo que corre de fondo va con el `run_in_background` de Bash. Un `nohup … &` adentro de un
+    comando muere con él, sin dejar salida: le pasó a una verificación integrada del padre el
+    2026-09-30.
 - **Las capturas que pide un issue suben con `scripts/capturas_a_rama.py`**, a la rama huérfana
   `capturas/<N>`, que no se mergea, y el PR las muestra por su URL cruda. **No con un worktree
   aparte**: el guard rechaza `git -C <otro worktree>` desde el worktree de un carril. Medido el

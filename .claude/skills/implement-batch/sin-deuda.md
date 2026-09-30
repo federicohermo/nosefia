@@ -179,6 +179,7 @@ entregable más caro y el único que hace que el hallazgo no vuelva.
 | un archivo nuevo **que el contrato implica y «Se escribe» no nombra** | `to-issue` — «Se escribe» se armó sólo con lo que ya existía |
 | un conflicto entre dos carriles **que le queda a quien mergee** | `implement-batch` — las cadenas llegaban por separado a `staging`, y la resolución no vivía en ninguna rama |
 | una carpeta que gdUnit4 crea **adentro del repo** con `-rd /tmp/...` | `.gitignore` e `implement-batch` — la advertencia del preámbulo no alcanzó, y el ignore la vuelve inofensiva |
+| una regla que se saca y **deja caer un invariante** que otra daba por hecho | `to-issue` — el cruce sigue a los lectores de un valor que se mueve, y sacar una regla no mueve ningún valor |
 
 **Si el problema no entra en ninguna fila, agregá la fila.** Esa tabla es el registro de lo que
 esta doctrina ya aprendió, y está incompleta a propósito.
