@@ -218,19 +218,31 @@ func test_el_estante_lleno_conserva_la_unidad_rechazada() -> void:
 	assert_int(estante.unidades_en_gondola(producto)).is_equal(1)
 
 
-func test_no_retira_mas_que_los_lugares_libres_incluidas_las_reservas() -> void:  # AC-STK-017
+func test_con_la_fila_completa_la_caja_entrega_hasta_vaciarse() -> void:  # AC-STK-017
+	# Ningún casillero espera una unidad, y la caja las da igual, de a una, hasta quedar en 0. La
+	# que no tiene casillero se rechaza al colocarla y sigue afuera; devueltas, la caja se llena.
+	var casilleros := 8
 	var producto := _producto(Producto.Id.ACTRONCITO)
-	var estante := _estante([producto])
-	var primera := estante.retirar(producto)
-	var segunda := estante.retirar(producto)
-	assert_object(primera).is_not_null()
-	assert_object(segunda).is_not_null()
+	var inventario := Inventario.new([producto], {producto.id: casilleros})
+	inventario.ingresar(producto, Inventario.Ubicacion.GONDOLA, casilleros)
+	inventario.ingresar(producto, Inventario.Ubicacion.DEPOSITO, casilleros)
+	var estante := Estante.new(inventario, [producto])
+	assert_array(estante.casilleros_vacios(producto)).is_empty()
+	var afuera: Array[UnidadDeProducto] = []
+	for en_la_caja in range(casilleros, 0, -1):
+		assert_int(estante.disponibles_para_retirar(producto)).is_equal(en_la_caja)
+		var unidad := estante.retirar(producto)
+		assert_object(unidad).is_not_null()
+		afuera.append(unidad)
+	assert_int(estante.disponibles_para_retirar(producto)).is_zero()
 	assert_object(estante.retirar(producto)).is_null()
-	estante.colocar_unidad(primera)
-	assert_object(estante.retirar(producto)).is_null()
-	estante.colocar_unidad(segunda)
-	assert_object(estante.retirar(producto)).is_null()
-	assert_int(estante.unidades_en_deposito(producto)).is_equal(EN_DEPOSITO - CUPO_DE_PRUEBA)
+	assert_int(estante.colocar_unidad(afuera[0])).is_equal(Estante.Rechazo.ESTANTE_LLENO)
+	assert_int(estante.reservadas(producto)).is_equal(casilleros)
+	for unidad in afuera:
+		assert_bool(estante.devolver(unidad)).is_true()
+	assert_int(estante.disponibles_para_retirar(producto)).is_equal(casilleros)
+	assert_int(estante.unidades_en_deposito(producto)).is_equal(casilleros)
+	assert_int(estante.unidades_en_gondola(producto)).is_equal(casilleros)
 
 
 func test_devolver_anula_la_reserva_y_no_mueve_mercaderia() -> void:  # AC-STK-039

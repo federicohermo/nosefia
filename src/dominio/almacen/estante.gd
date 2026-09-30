@@ -178,19 +178,16 @@ func colocar(producto: Producto, casillero: int = PRIMERO_VACIO) -> Rechazo:
 	return _ocupar(producto, casillero)
 
 
-## Cuántas se pueden sacar todavía: lo que queda en la caja, sin pasar de los casilleros vacíos
-## que ninguna unidad afuera va a ocupar.
+## Cuántas se pueden sacar todavía: lo que queda en la caja, el depósito menos las que están
+## afuera. Un producto que el estante no acepta no tiene caja acá, y contesta 0.
 ##
-## Es la cuenta de `BR-STK-017` escrita una sola vez. El depósito menos las reservadas es la caja,
-## y los casilleros vacíos menos las reservadas son el lugar que queda: con cualquiera de los dos
-## en cero, no sale nada.
+## **La góndola no pone tope** (BR-STK-017): con la fila completa la caja entrega igual. La unidad
+## que no tiene casillero se rechaza al colocarla por estante lleno, y vuelve a la caja si se la
+## devuelve. Cuántas se pueden vender es otra cuenta, y la lleva el inventario.
 func disponibles_para_retirar(producto: Producto) -> int:
-	if producto == null:
+	if not acepta(producto):
 		return 0
-	var disponibles := mini(
-		unidades_en_deposito(producto), cupo(producto) - unidades_en_gondola(producto)
-	)
-	return maxi(0, disponibles - reservadas(producto))
+	return maxi(0, unidades_en_deposito(producto) - reservadas(producto))
 
 
 func retirar(producto: Producto) -> UnidadDeProducto:

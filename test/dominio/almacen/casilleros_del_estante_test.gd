@@ -154,8 +154,10 @@ func test_la_unidad_agarrada_se_cuenta_una_sola_vez() -> void:  # AC-STK-046
 	assert_int(caja.unidades()).is_equal(5)
 	assert_int(_vendibles(estante, actroncito)).is_equal(5)
 	assert_bool(_es_faltante(estante, actroncito)).is_true()
-	# La caja no la da otra vez: el casillero que dejó ya la espera a ella (BR-STK-017).
-	assert_int(estante.disponibles_para_retirar(actroncito)).is_zero()
+	# El único casillero vacío ya espera a la agarrada, y la caja da otra igual: lo que sale de
+	# ella lo corta sólo lo que tiene (BR-STK-017).
+	assert_array(estante.casilleros_vacios(actroncito)).has_size(estante.reservadas(actroncito))
+	assert_int(estante.disponibles_para_retirar(actroncito)).is_equal(5)
 	assert_bool(caja.meter(unidad)).is_true()
 	assert_int(caja.unidades()).is_equal(6)
 	assert_int(estante.unidades_en_gondola(actroncito)).is_equal(7)

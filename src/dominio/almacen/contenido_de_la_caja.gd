@@ -63,8 +63,8 @@ func unidades() -> int:
 
 ## Saca una unidad para la mano, o devuelve `null` si no la da.
 ##
-## Vacía no da nada aunque la góndola tenga lugar. Con unidades, la que sale la anota afuera el
-## estante, que es además quien cuenta si la góndola todavía la espera (BR-STK-017).
+## Vacía no da nada aunque la góndola tenga lugar, y con unidades da una aunque la góndola esté
+## llena (BR-STK-017). La que sale la anota afuera el estante.
 func sacar() -> UnidadDeProducto:
 	if unidades() <= 0:
 		return null

@@ -147,12 +147,14 @@ func test_el_gesto_sale_de_lo_que_lleva_la_mano() -> void:  # AC-STK-038
 
 
 func test_sacar_devolver_y_sacar_pasa_por_siete_ocho_y_siete() -> void:  # AC-STK-039
-	# A la góndola le faltan 6: lo que se puede sacar lo corta ella, y acompaña a la caja.
+	# A la góndola le faltan 6 y la caja tiene 8: lo que se puede sacar es la caja entera, y
+	# la acompaña.
 	var actroncito := _producto(Producto.Id.ACTRONCITO)
 	var estante := _estante(actroncito, ReglasDelEstante.UNIDADES_POR_CAJA, 2)
 	var caja := _caja(actroncito, estante)
 	var lleno := ReglasDelEstante.UNIDADES_POR_CAJA
 	var disponibles := estante.disponibles_para_retirar(actroncito)
+	assert_int(disponibles).is_equal(lleno)
 	var primera := caja.sacar()
 	assert_int(caja.unidades()).is_equal(lleno - 1)
 	assert_int(estante.disponibles_para_retirar(actroncito)).is_equal(disponibles - 1)
