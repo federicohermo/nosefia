@@ -26,20 +26,20 @@ enum TamanoDeCaja { CHICA, GRANDE }
 ## cuenta sobre este diccionario y no sobre `todos()` a propósito —ver `de()`—.
 ##
 ## **El umbral es el cupo, y el cupo va en la fila de adelante de su tanda** (BR-STK-025). Es
-## ocho, salvo donde la góndola no da para ocho de frente: una lata de heladera o una bolsa de
-## cabecera. Ahí es lo que entra, que lo mide el acomodador del modelo y lo cobra
-## `disposicion_de_la_gondola_test.gd`: si el reparto cambia, ese test dice cuál no entra.
+## ocho, salvo donde la góndola no da para ocho de frente: una lata de heladera o lo que va en
+## una cabecera, que es angosta. Ahí es lo que entra, que lo mide el acomodador del modelo y lo
+## cobra `disposicion_de_la_gondola_test.gd`: si el reparto cambia, ese test dice cuál no entra.
 const FILAS := {
 	Producto.Id.ACTRONCITO: ["Actroncito", 2500, 8],
-	Producto.Id.DUREXTRA: ["Durextra", 1200, 7],
+	Producto.Id.DUREXTRA: ["Durextra", 1200, 5],
 	Producto.Id.BURBALOO: ["Burbaloo", 1800, 8],
 	Producto.Id.ZUCARACHAS: ["Zucarachas", 900, 8],
-	Producto.Id.LAYSNTT: ["Laysntt", 1100, 5],
-	Producto.Id.MALBARDO: ["Malbardo", 1500, 8],
-	Producto.Id.PRONGLES: ["Prongles", 1200, 8],
+	Producto.Id.LAYSNTT: ["Laysntt", 1100, 3],
+	Producto.Id.MALBARDO: ["Malbardo", 1500, 7],
+	Producto.Id.PRONGLES: ["Prongles", 1200, 5],
 	Producto.Id.JORGILLO: ["Jorgillo", 900, 8],
 	Producto.Id.ARVEJAS: ["Arvejas", 800, 8],
-	Producto.Id.CHISITOS: ["Chisitos", 700, 5],
+	Producto.Id.CHISITOS: ["Chisitos", 700, 3],
 	Producto.Id.OREMOS: ["Oremos", 1000, 8],
 	Producto.Id.PEPITOS: ["Pepitos", 950, 8],
 	Producto.Id.SALADIK: ["Saladik", 850, 8],
@@ -52,9 +52,9 @@ const FILAS := {
 	Producto.Id.FLINPUF: ["Flinpuf", 600, 8],
 	Producto.Id.DONSATURADOS: ["Donsaturados", 1150, 8],
 	Producto.Id.PETISAS: ["Petisas", 980, 8],
-	Producto.Id.MACUMBAS: ["Macumbas", 1250, 8],
+	Producto.Id.MACUMBAS: ["Macumbas", 1250, 6],
 	Producto.Id.COSA_DE_MANI: ["Cosa de Maní", 700, 8],
-	Producto.Id.DURONGA: ["Duronga", 1300, 7],
+	Producto.Id.DURONGA: ["Duronga", 1300, 5],
 	Producto.Id.FERNET_GOD: ["Fernet God", 4500, 5],
 	Producto.Id.MAYONCHIS: ["Mayonchis", 1100, 4],
 	Producto.Id.OAAAA: ["Oaaaa", 600, 4],

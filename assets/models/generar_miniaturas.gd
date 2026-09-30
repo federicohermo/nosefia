@@ -128,10 +128,11 @@ static func normal_del_estante(bloque: PackedFloat32Array, fila_de_adelante: int
 	return -normal if normal.y < 0.0 else normal
 
 
-## El giro que lleva la normal del estante a la vertical: en una rampa endereza el envase, y en un
-## estante plano no gira nada.
+## El giro que endereza el envase: en una rampa la unidad va echada hacia atrás lo mismo que la
+## chapa baja hacia el pasillo, así que se la gira hacia el pasillo lo mismo, de la vertical a la
+## normal. En un estante plano no gira nada.
 static func enderezar(normal: Vector3) -> Basis:
-	return Basis(Quaternion(normal, Vector3.UP))
+	return Basis(Quaternion(Vector3.UP, normal))
 
 
 func _entorno() -> WorldEnvironment:
