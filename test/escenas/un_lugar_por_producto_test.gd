@@ -43,13 +43,18 @@ func _faltante(producto: Producto) -> int:
 	return Apertura.faltantes_de_la_jornada(ReglasDeLaPartida.PRIMERA_JORNADA).get(producto.id, 0)
 
 
+## Una copia del bloque principal, en el mundo.
+func _copia_en_el_mundo(almacen: Node3D, producto: Producto, indice: int) -> Transform3D:
+	var presentacion: Node3D = almacen.get("_reposicion_manual")
+	var bloque := _disposicion(almacen).principales[producto.id]
+	return presentacion.global_transform * DisposicionDeLaGondola.copia(bloque, indice)
+
+
 ## La caja que ocupa una copia del bloque principal, en el mundo.
 func _caja_de_la_copia(almacen: Node3D, producto: Producto, indice: int) -> AABB:
 	var presentacion: Node3D = almacen.get("_reposicion_manual")
 	var grupo: MultiMeshInstance3D = presentacion.get_node("ProductosDe" + producto.nombre)
-	var bloque := _disposicion(almacen).principales[producto.id]
-	var copia := presentacion.global_transform * DisposicionDeLaGondola.copia(bloque, indice)
-	return copia * grupo.multimesh.mesh.get_aabb()
+	return _copia_en_el_mundo(almacen, producto, indice) * grupo.multimesh.mesh.get_aabb()
 
 
 ## El centro de una fila del bloque principal, en el mundo.
@@ -165,6 +170,77 @@ static func _eje(giro: Basis, hacia: Vector3) -> Vector3:
 		if absf(eje.dot(hacia)) > absf(mejor.dot(hacia)):
 			mejor = eje
 	return mejor if mejor.dot(hacia) > 0.0 else -mejor
+
+
+## Agarrada con la mano vacía de su casillero, lo de una cabecera también va derecho en la mano,
+## como lo de un estante plano: la rampa se queda en el estante. Se mide como al retirarlo de la
+## caja, sobre el último casillero de cada producto. Un casillero es de una cabecera si la chapa
+## de debajo de su unidad está inclinada, y ahí la unidad va echada con ella; en un estante plano
+## va derecha, y es contra lo que se mide.
+func test_lo_agarrado_de_una_cabecera_va_derecho_como_lo_de_un_estante_plano() -> void:
+	var almacen := _almacen()
+	await get_tree().physics_frame
+	await get_tree().physics_frame
+	# La góndola llena: cada casillero tiene su unidad para agarrar.
+	var sin_faltantes: Dictionary[Producto.Id, int] = {}
+	AperturaConLugar.abrir_con_faltantes(almacen, sin_faltantes)
+	var agarre: Agarre = almacen.get("_agarre")
+	var presentacion: Node3D = almacen.get("_reposicion_manual")
+	var contenido: Node3D = presentacion.get("contenido")
+	var estante := (almacen.get("_repositor") as Repositor).estante()
+	var de_cabecera: Dictionary[String, PackedVector3Array] = {}
+	var planos: Array[PackedVector3Array] = []
+	for producto in Catalogo.todos():
+		var ocupados := estante.casilleros_ocupados(producto)
+		var indice := ocupados[ocupados.size() - 1]
+		var bloque := _disposicion(almacen).principales[producto.id]
+		var de_la_tanda := DisposicionDeLaGondola.copias(bloque) - _cupo(almacen, producto) + indice
+		var unidad := _caja_de_la_copia(almacen, producto, de_la_tanda).get_center()
+		var chapa := _golpe(almacen, unidad, unidad + Vector3.DOWN)
+		var en_rampa := not chapa.is_empty() and _inclinado(chapa["normal"])
+		var modelo := (contenido.get_child(producto.id) as Node3D).global_basis
+		var arriba := _eje(modelo, Vector3.UP)
+		var pasillo := presentacion.global_basis * _frente(almacen, producto)
+		var frente := (pasillo - arriba * pasillo.dot(arriba)).normalized()
+		var copia := _copia_en_el_mundo(almacen, producto, de_la_tanda)
+		(
+			assert_bool(_inclinado(copia.basis.orthonormalized() * arriba))
+			. override_failure_message("%s no va echado como su chapa" % producto.nombre)
+			. is_equal(en_rampa)
+		)
+		presentacion.call("agarrar_de_la_gondola", producto.id, indice)
+		(
+			assert_array(estante.casilleros_vacios(producto))
+			. override_failure_message("%s no se agarró de su casillero" % producto.nombre)
+			. contains_exactly([indice])
+		)
+		var en_la_mano := (agarre.punto_de_producto.get_child(0) as Node3D).basis.orthonormalized()
+		var medida := PackedVector3Array([en_la_mano * arriba, en_la_mano * frente])
+		if en_rampa:
+			de_cabecera[producto.nombre] = medida
+		else:
+			planos.append(medida)
+		presentacion.call("pedir_colocar", producto.id, indice)
+	# Sin una cabecera el caso no mira lo que dice, y sin un estante plano no tiene contra qué.
+	assert_int(de_cabecera.size()).is_greater(0)
+	assert_int(planos.size()).is_greater(0)
+	for nombre: String in de_cabecera:
+		var medida := de_cabecera[nombre]
+		(
+			assert_float(rad_to_deg(medida[0].angle_to(planos[0][0])))
+			. override_failure_message("%s no va derecho en la mano" % nombre)
+			. is_less(1.0)
+		)
+		(
+			assert_float(rad_to_deg(medida[1].angle_to(planos[0][1])))
+			. override_failure_message("%s no muestra el frente como los demás" % nombre)
+			. is_less(1.0)
+		)
+
+
+## Si un eje se aparta de la vertical más de un grado.
+static func _inclinado(eje: Vector3) -> bool:
+	return eje.angle_to(Vector3.UP) > deg_to_rad(1.0)
 
 
 ## Al abrir, de cada producto falta sólo lo que su jornada pide, y los casilleros son las
