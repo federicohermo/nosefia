@@ -43,7 +43,7 @@ func test_el_campo_y_el_clic_usan_los_cuerpos_de_los_muebles() -> void:
 	almacen.get("_reposicion_manual").call("retirar", caja.producto)
 	var agarre: Agarre = almacen.get("_agarre")
 	assert_object(agarre.manos().sostenido()).is_instanceof(UnidadDeProducto)
-	var estante: Node3D = almacen.get("_reposicion_manual").get_node("ZonaDeActroncito")
+	var estante: Node3D = almacen.get("_reposicion_manual").casillero(Producto.Id.ACTRONCITO)
 	var zona: AABB = almacen.get("_reposicion_manual").zona(Producto.Id.ACTRONCITO)
 	_mirar(jugador, zona.get_center() + Vector3(-1.2, 0.3, 0), zona.get_center())
 	await _actualizar(jugador)

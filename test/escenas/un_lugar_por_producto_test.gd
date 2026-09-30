@@ -171,7 +171,7 @@ func test_el_casillero_de_cada_producto_esta_al_alcance_desde_el_pasillo() -> vo
 	AperturaConLugar.abrir_con_faltantes(almacen, uno_de_cada)
 	for producto in Catalogo.todos():
 		presentacion.retirar(producto.id)
-		var zona: Node3D = presentacion.get_node("ZonaDe" + producto.nombre)
+		var zona: Node3D = presentacion.casillero(producto.id)
 		var pie := _lugar_en_el_pasillo(almacen, zona.global_position, _frente(almacen, producto))
 		(
 			assert_bool(pie.is_finite())

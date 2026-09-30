@@ -159,9 +159,7 @@ func _reponer(almacen: Node3D) -> void:
 		camara.look_at(zona.get_center())
 		for unidad in estante.cupo(producto) - estante.unidades_en_gondola(producto):
 			almacen.get("_reposicion_manual").call("usar_la_caja", caja)
-			almacen.get("_reposicion_manual").get_node("ZonaDe" + producto.nombre).call(
-				"interactuar"
-			)
+			almacen.get("_reposicion_manual").casillero(producto.id).call("interactuar")
 	await get_tree().process_frame
 	var reloj: RelojDelTurno = almacen.get("_reloj")
 	assert_bool(reloj.obligatoria(Tarea.Tipo.REPONER).completada()).is_true()
