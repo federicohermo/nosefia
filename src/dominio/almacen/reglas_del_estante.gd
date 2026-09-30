@@ -1,4 +1,5 @@
-## Los valores fijos de reponer: cuánto trae la caja de cada producto.
+## Los valores fijos de reponer: cuánto trae la caja de cada producto, y cómo se ven los
+## casilleros que esperan una unidad.
 ##
 ## Es un archivo aparte de `reglas.gd` y de `reglas_de_los_objetos.gd` por el mismo criterio que
 ## separa a esos dos: no es de qué trata el número, es quién lo toca y probando qué. `reglas.gd`
@@ -24,3 +25,34 @@ extends RefCounted
 ## Lo que se vende sale de la misma caja: lo que queda después de reponer es lo que hay para
 ## atender, así que bajar este número aprieta las dos cosas a la vez.
 const UNIDADES_POR_CAJA := 8
+
+## **Cómo se ven los casilleros vacíos con una unidad en la mano** (BR-PLY-022, BR-PLY-023). Son
+## primeros valores y se ajustan jugando (OQ-PLY-002): viven acá, juntos, y la escena y su shader
+## los leen de acá. Una copia en el shader sería el mismo número en dos lugares, y el que se
+## ajusta jugando es el que no manda.
+
+## La opacidad del casillero vacío quieto, el envase en blanco y negro. Es también el piso del
+## titileo del que apunta la mira: el apuntado nunca se ve menos que los demás.
+const OPACIDAD_DEL_CASILLERO := 0.25
+
+## La opacidad del techo del titileo del casillero apuntado: la entera, el envase como si ya
+## estuviera puesto.
+const OPACIDAD_DEL_APUNTADO := 1.0
+
+## Cuánto tarda un ciclo del titileo, en segundos. Más rápido se lee como un parpadeo roto, y más
+## lento no alcanza a verse mientras el jugador pasea la mira por el estante.
+const PERIODO_DEL_TITILEO := 1.2
+
+## Cuánto brilla de más el casillero apuntado, sobre su propio color: con cero, en su punto más
+## opaco se confunde con la unidad de al lado, que ya está puesta.
+const EMISION_DEL_CASILLERO := 0.6
+
+## Hasta qué distancia de la vista se ven los casilleros vacíos, en metros. **El primer valor es
+## el alcance de la mira**, escrito como referencia y no como copia: un casillero que se ve es uno
+## que la mira puede enfocar. Si jugando se lo separa, se lo separa acá.
+const ALCANCE_DE_LOS_CASILLEROS := ReglasDelJugador.ALCANCE_DE_LA_MIRA
+
+
+## Si un casillero a esa distancia de la vista se ve. El borde es de adentro, como el de la mira.
+static func al_alcance(distancia: float) -> bool:
+	return distancia <= ALCANCE_DE_LOS_CASILLEROS
