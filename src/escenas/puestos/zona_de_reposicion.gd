@@ -47,18 +47,31 @@ func interactuar() -> ObjetoDelAlmacen:
 
 
 ## Se pinta según su papel, si la mira lo enfoca y si está al alcance de la vista.
+##
+## **Escribe sólo lo que cambia**: el casillero que espera la unidad se repinta cada cuadro, porque
+## la vista se mueve, y cada escritura de un material o de una capa es un pedido al motor.
 func pintar(enfocado: bool, al_alcance: bool) -> void:
-	collision_layer = 0 if papel == Papel.NINGUNO else CAPA_DE_LA_MIRA
-	if vista == null:
-		return
-	vista.material_overlay = null
+	var capa := CAPA_DE_LA_MIRA
+	var reemplazo: Material = null
+	var encima: Material = null
+	var se_ve := false
 	match papel:
 		Papel.COLOCAR:
-			vista.material_override = material_apuntado if enfocado else material_quieto
-			vista.visible = enfocado or al_alcance
+			reemplazo = material_apuntado if enfocado else material_quieto
+			se_ve = enfocado or al_alcance
 		Papel.AGARRAR:
-			vista.material_override = material_invisible
-			vista.material_overlay = contorno if enfocado else null
-			vista.visible = enfocado
+			reemplazo = material_invisible
+			encima = contorno if enfocado else null
+			se_ve = enfocado
 		_:
-			vista.visible = false
+			capa = 0
+	if collision_layer != capa:
+		collision_layer = capa
+	if vista == null:
+		return
+	if reemplazo != null and vista.material_override != reemplazo:
+		vista.material_override = reemplazo
+	if vista.material_overlay != encima:
+		vista.material_overlay = encima
+	if vista.visible != se_ve:
+		vista.visible = se_ve
