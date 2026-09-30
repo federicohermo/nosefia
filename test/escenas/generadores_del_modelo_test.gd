@@ -16,6 +16,9 @@ const DISPOSICION := preload("res://src/escenas/puestos/disposicion_de_la_gondol
 ## Desde cuánta inclinación un estante es una rampa, en grados.
 const RAMPA := 1.0
 
+## Cuánto puede apartarse de la vertical lo de arriba de un envase en su miniatura, en grados.
+const DERECHO := 0.5
+
 
 func test_el_nombre_de_archivo_va_en_minusculas_sin_acentos_y_con_guion_bajo() -> void:
 	assert_str(ExtraerMallas.slug("Cosa de Maní")).is_equal("cosa_de_mani")
@@ -64,20 +67,24 @@ func test_la_camara_mira_el_frente_y_ve_el_envase_entero() -> void:
 
 ## Lo que se exhibe en una rampa sale derecho, y lo que está en un estante plano no se gira.
 ##
-## La normal sale de las dos filas del estante y no del giro de la unidad, que depende de cómo
-## está modelado cada envase: el eje que queda arriba no es el mismo en todos.
+## En la rampa la unidad va echada hacia atrás, y la miniatura la endereza: se mira el envase como
+## lo gira el generador, y no la normal de la chapa. El eje que queda arriba no es el mismo en
+## todos los envases, y por eso se busca entre los tres.
 func test_la_miniatura_endereza_la_rampa_y_deja_quieto_lo_que_esta_derecho() -> void:
+	var contenido: Node3D = auto_free(CONTENIDO.instantiate())
 	var en_rampa := 0
 	for producto in Catalogo.todos():
 		var bloque := DISPOSICION.principales[producto.id]
 		var fila := DISPOSICION.filas_de_adelante[producto.id]
 		var normal: Vector3 = GenerarMiniaturas.normal_del_estante(bloque, fila)
 		var derecho: Basis = GenerarMiniaturas.enderezar(normal)
+		var modelo := contenido.get_child(producto.id) as Node3D
+		var arriba := _arriba((derecho * modelo.basis).orthonormalized())
 		assert_float(normal.y).override_failure_message(producto.nombre).is_greater(0.0)
 		(
-			assert_bool((derecho * normal).is_equal_approx(Vector3.UP))
-			. override_failure_message(producto.nombre)
-			. is_true()
+			assert_float(rad_to_deg(arriba.angle_to(Vector3.UP)))
+			. override_failure_message("%s sale torcido en su miniatura" % producto.nombre)
+			. is_less(DERECHO)
 		)
 		if normal.angle_to(Vector3.UP) > deg_to_rad(RAMPA):
 			en_rampa += 1
@@ -89,3 +96,13 @@ func test_la_miniatura_endereza_la_rampa_y_deja_quieto_lo_que_esta_derecho() -> 
 			)
 	# Las cabeceras son rampas: sin ninguna, este test no está mirando lo que endereza.
 	assert_int(en_rampa).is_greater(0)
+
+
+## El eje de la unidad que más se acerca a la vertical, hacia arriba.
+static func _arriba(giro: Basis) -> Vector3:
+	var mejor := Vector3.ZERO
+	for columna in 3:
+		var eje := giro[columna].normalized()
+		if absf(eje.y) > absf(mejor.y):
+			mejor = eje
+	return mejor if mejor.y > 0.0 else -mejor

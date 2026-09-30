@@ -102,45 +102,51 @@ func test_cada_caja_del_deposito_arranca_con_ocho_en_todas_las_jornadas() -> voi
 
 ## Cero, uno del medio y una caja entera: la góndola arranca con su fila menos lo que falta, y el
 ## depósito lleno en los tres. Sin faltantes el producto arranca completo y no falta.
+##
+## Los 8 casilleros son los del criterio y no los de una fila del modelo: el dominio no sabe
+## cuántos lugares tiene cada fila, y el producto es uno cualquiera de un estante de lado.
 func test_la_gondola_arranca_con_su_fila_menos_lo_que_falta() -> void:  # AC-STK-004
-	var malbardo := Catalogo.de(Producto.Id.MALBARDO)
-	var casilleros: Dictionary[Producto.Id, int] = {Producto.Id.MALBARDO: 8}
+	var burbaloo := Catalogo.de(Producto.Id.BURBALOO)
+	var casilleros: Dictionary[Producto.Id, int] = {Producto.Id.BURBALOO: 8}
 	for fila: Array in [[0, 8], [5, 3], [8, 0]]:
 		var faltantes: Dictionary[Producto.Id, int] = {}
 		if fila[0] > 0:
-			faltantes[Producto.Id.MALBARDO] = fila[0]
+			faltantes[Producto.Id.BURBALOO] = fila[0]
 		var inventario := Apertura.inventario_con_faltantes(faltantes, casilleros)
 		var mensaje := "faltan %d" % fila[0]
 		(
-			assert_int(inventario.unidades(malbardo, Inventario.Ubicacion.GONDOLA))
+			assert_int(inventario.unidades(burbaloo, Inventario.Ubicacion.GONDOLA))
 			. override_failure_message(mensaje)
 			. is_equal(fila[1])
 		)
 		(
-			assert_int(inventario.unidades(malbardo, Inventario.Ubicacion.DEPOSITO))
+			assert_int(inventario.unidades(burbaloo, Inventario.Ubicacion.DEPOSITO))
 			. override_failure_message(mensaje)
 			. is_equal(ReglasDelEstante.UNIDADES_POR_CAJA)
 		)
-		assert_bool(_falta(inventario, malbardo)).override_failure_message(mensaje).is_equal(
+		assert_bool(_falta(inventario, burbaloo)).override_failure_message(mensaje).is_equal(
 			fila[0] > 0
 		)
 
 
 ## El faltante más grande que la regla admite se repone con la caja entera, y no con una unidad
 ## de menos: por eso el tope es la caja y no algo más chico.
+##
+## Los 12 casilleros son los del criterio y no los de una fila del modelo: el dominio no sabe
+## cuántos lugares tiene cada fila, y el producto es uno cualquiera de un estante de lado.
 func test_un_faltante_de_una_caja_entera_se_repone_con_esa_caja() -> void:  # AC-STK-032
-	var malbardo := Catalogo.de(Producto.Id.MALBARDO)
+	var burbaloo := Catalogo.de(Producto.Id.BURBALOO)
 	var faltantes: Dictionary[Producto.Id, int] = {
-		Producto.Id.MALBARDO: ReglasDelEstante.UNIDADES_POR_CAJA
+		Producto.Id.BURBALOO: ReglasDelEstante.UNIDADES_POR_CAJA
 	}
-	var casilleros: Dictionary[Producto.Id, int] = {Producto.Id.MALBARDO: 12}
+	var casilleros: Dictionary[Producto.Id, int] = {Producto.Id.BURBALOO: 12}
 	var inventario := Apertura.inventario_con_faltantes(faltantes, casilleros)
-	var aceptados: Array[Producto] = [malbardo]
+	var aceptados: Array[Producto] = [burbaloo]
 	var estante := Estante.new(inventario, aceptados)
 	for unidad in ReglasDelEstante.UNIDADES_POR_CAJA:
-		assert_int(estante.colocar(malbardo)).is_equal(Estante.Rechazo.NINGUNO)
-	assert_int(inventario.unidades(malbardo, Inventario.Ubicacion.GONDOLA)).is_equal(12)
-	assert_int(inventario.unidades(malbardo, Inventario.Ubicacion.DEPOSITO)).is_zero()
+		assert_int(estante.colocar(burbaloo)).is_equal(Estante.Rechazo.NINGUNO)
+	assert_int(inventario.unidades(burbaloo, Inventario.Ubicacion.GONDOLA)).is_equal(12)
+	assert_int(inventario.unidades(burbaloo, Inventario.Ubicacion.DEPOSITO)).is_zero()
 	assert_array(inventario.faltantes()).is_empty()
 	assert_bool(estante.completada()).is_true()
 
