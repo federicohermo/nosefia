@@ -64,9 +64,14 @@ func test_el_casillero_apuntado_titila_y_nada_mas_cambia() -> void:  # AC-PLY-04
 	var previos := _overlays(mallas)
 	var materiales := _overrides(mallas)
 	var avisos := _avisos(jugador)
-	# Actroncito da al pasillo por -X.
+	# Del lado del pasillo de su tanda, que lo mide el modelo.
+	var disposicion: DisposicionDeLaGondola = puesto.get("disposicion")
+	var frente := DisposicionDeLaGondola.frente(
+		disposicion.principales[Producto.Id.ACTRONCITO],
+		disposicion.filas_de_adelante[Producto.Id.ACTRONCITO]
+	)
 	var punto := casillero.global_position
-	await _mirar(jugador, punto + Vector3(-1.2, 0.3, 0), punto)
+	await _mirar(jugador, punto + frente * 1.2 + Vector3.UP * 0.3, punto)
 	assert_object(jugador.get("_enfocado")).is_same(casillero)
 	assert_array(avisos).contains([casillero])
 	assert_bool(hud.foco_presente).is_true()
