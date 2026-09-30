@@ -226,6 +226,11 @@ le faltó. Esperá a que vuelvan todos antes del reporte.
 - **El contrato de la capacidad, si dos carriles lo editaron.** `specs/` está trackeado, así que
   dos carriles que agregan una regla a la misma capacidad dan un conflicto de merge de verdad —
   que es mejor que el silencio, pero lo resuelve el padre.
+- **Un conflicto entre dos carriles se resuelve en una rama, no en el reporte.** Dos carriles que
+  se juntan recién en `staging` le dejan el conflicto a quien mergee el segundo PR. El padre los
+  pone en una sola pila: el primer issue del carril que va después trae la cabeza final del otro,
+  y su PR se repunta a esa rama. En el lote del 2026-09-29, #265 y #266 chocaban en dos
+  encabezados de test, y #264, la base de #266, pasó a salir de #265.
 - **`python .claude/scripts/verificar.py`** en el checkout principal, con todo mergeado hacia
   arriba. Los siete nodos verdes por carril no implican los siete verdes juntos.
 
