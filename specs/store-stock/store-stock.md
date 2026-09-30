@@ -22,7 +22,8 @@ depósito son dos lugares distintos, y mover mercadería del fondo al estante cu
 | **Unidad** | una pieza de un producto, la que se agarra con la mano | stock, cantidad |
 | **Depósito** | el fondo, con la caja de cada producto: de ahí sale lo que se repone y lo que se vende | almacén, bodega |
 | **Caja del depósito** | la caja de un solo producto, donde está su depósito: se le saca de a una unidad y recibe de vuelta las de su producto, hasta llenarse | cajón, contenedor |
-| **Contenido de la caja** | cuántas unidades tiene la caja: su depósito menos las que salieron de ella y todavía no se colocaron | stock, carga |
+| **Contenido de la caja** | cuántas unidades tiene la caja: su depósito menos sus unidades afuera | stock, carga |
+| **Unidad afuera** | una unidad que salió de su caja, o que se agarró de la góndola, y todavía no se colocó ni volvió a su caja: en la mano o soltada en el piso. Sigue contada en el depósito | reservada, en tránsito |
 | **Góndola** | el estante del local, el que el jugador repone | vitrina, exhibidor |
 | **Tanda** | las unidades de un mismo producto puestas juntas sobre un estante del local, en dos filas | bloque, exhibición |
 | **Fila de adelante** | la fila de una tanda del lado del pasillo: la única que el jugador repone | frente, cara |
@@ -31,7 +32,7 @@ depósito son dos lugares distintos, y mover mercadería del fondo al estante cu
 | **Cupo** | cuántos casilleros tiene la fila de adelante de un producto: cuántas unidades pide su góndola. Es distinto para cada producto | umbral, mínimo, tope |
 | **Faltante** | un producto con algún casillero vacío en su fila de adelante | agotado, sin stock |
 | **Faltantes de la jornada** | cuántas unidades de cada producto faltan en la góndola cuando abre una jornada | pedido, reposición |
-| **Vendibles** | el depósito menos los casilleros vacíos de la fila de adelante del producto | stock, disponible |
+| **Vendibles** | lo que queda en la caja menos lo que a la góndola todavía le falta de ella: el depósito menos el mayor entre los casilleros vacíos de la fila de adelante y las unidades afuera | stock, disponible |
 | **Planilla** | la lista donde el jugador anota cuántas unidades se vendieron de cada producto | registro de caja, ticket |
 | **Lo vendido** | las unidades de un producto que salieron en ventas cobradas esa noche | stock, ventas del día |
 
@@ -108,19 +109,22 @@ CUANDO el jugador le pide una unidad a una caja del depósito que **no lleva en 
 esté apoyada: el piso, un estante, un mostrador u otra caja. SI el jugador lleva esa caja, o la
 caja está vacía, ENTONCES el sistema NO DEBE darle nada, aunque la góndola tenga lugar.
 
-### BR-STK-017 — La caja no entrega lo que la góndola no puede recibir
+### BR-STK-017 — La caja entrega hasta vaciarse
 
-SI la góndola de ese producto ya no tiene lugar, contando las unidades que ya salieron de la caja
-y todavía no se colocaron, ENTONCES el sistema DEBE negar la unidad aunque la caja tenga. Una
-unidad que sale de la caja vuelve a ella sólo si el jugador la devuelve (BR-STK-030): sin este
-corte, sale una unidad que ningún casillero espera.
+CUANDO el jugador le pide una unidad a una caja del depósito con contenido, el sistema DEBE darla
+aunque la fila de adelante de su producto esté completa. El sistema NO DEBE limitar lo que sale
+de la caja por los casilleros vacíos ni por las unidades afuera: sólo por su contenido
+(BR-STK-028). La unidad sin casillero se rechaza al colocarla por estante lleno (BR-STK-009) y
+sigue en la mano; vuelve a la caja si el jugador se la devuelve (BR-STK-030).
 
-### BR-STK-018 — Se vende lo que el estante no necesita
+### BR-STK-018 — Se vende lo que queda en la caja y la góndola no necesita
 
-El sistema DEBE contestar los vendibles de un producto como su depósito menos los casilleros
-vacíos de su fila de adelante, y nunca menos de cero. Una unidad en la mano sigue contada en el
-depósito, y también en lo que a la góndola le falta. Un producto que el inventario no conoce
-tiene cero vendibles.
+El sistema DEBE contestar los vendibles de un producto como su depósito menos el mayor entre los
+casilleros vacíos de su fila de adelante y sus unidades afuera, y nunca menos de cero. Es lo que
+queda en la caja menos lo que a la góndola todavía le falta de ella: un casillero vacío que ya
+espera una unidad afuera no se descuenta dos veces. El sistema NO DEBE vender una unidad afuera:
+ninguna venta deja el depósito por debajo de las unidades afuera. Un producto que el inventario
+no conoce tiene cero vendibles.
 
 ### BR-STK-019 — La planilla tiene una fila por producto, y arranca en cero
 
@@ -323,22 +327,31 @@ unidad ENTONCES se puede sacar; DADO la misma caja en la mano del jugador, ENTON
 caja en 0 y la góndola de su producto con lugar para 6 CUANDO se le pide una unidad ENTONCES no se
 saca nada.
 
-### AC-STK-017 — Lo que ya salió cuenta contra el lugar de la góndola *(verifica BR-STK-017)*
+### AC-STK-017 — La caja se vacía con la fila completa *(verifica BR-STK-017)*
 
-DADO un producto de 2 casilleros, con la góndola vacía y más de 2 en su caja CUANDO se sacan 2
-unidades sin colocarlas ENTONCES la tercera se niega; y colocar esas 2 no habilita una tercera.
+DADO un producto de 8 casilleros con la fila de adelante completa y su caja en 8 CUANDO se le
+piden unidades a la caja, de a una, ENTONCES salen 8, la caja pasa de 8 a 0 y la novena no sale.
+CUANDO se coloca una de las que salieron ENTONCES se rechaza por estante lleno y sigue afuera.
+CUANDO se devuelven las 8 ENTONCES la caja vuelve a 8.
 
 ### AC-STK-018 — Los vendibles *(verifica BR-STK-018)*
 
-DADO un producto de 8 casilleros CUANDO se piden sus vendibles ENTONCES:
+DADO un producto de 8 casilleros, con esas unidades en la góndola, en el depósito y afuera,
+CUANDO se piden sus vendibles ENTONCES:
 
-| Góndola | Depósito | Vendibles |
-|---|---|---|
-| 8 | 2 | 2 |
-| 0 | 10 | 2 |
-| 7 | 3 | 2 |
-| 8 | 0 | 0 |
-| 0 | 5 | 0 |
+| Góndola | Depósito | Afuera | Vendibles |
+|---|---|---|---|
+| 8 | 2 | 0 | 2 |
+| 0 | 10 | 0 | 2 |
+| 7 | 3 | 0 | 2 |
+| 8 | 0 | 0 | 0 |
+| 0 | 5 | 0 | 0 |
+| 8 | 8 | 0 | 8 |
+| 8 | 8 | 3 | 5 |
+| 5 | 8 | 1 | 5 |
+| 5 | 8 | 4 | 4 |
+| 0 | 8 | 8 | 0 |
+| 8 | 8 | 8 | 0 |
 
 Y un producto que el inventario no conoce contesta 0.
 
@@ -533,6 +546,13 @@ DADO reponer cumplida CUANDO se agarra una unidad de la góndola ENTONCES repone
 cumplida y las cumplidas bajan en 1. CUANDO se la vuelve a colocar ENTONCES reponer se cumple
 otra vez.
 
+### AC-STK-049 — La venta no se lleva lo que está afuera *(verifica BR-STK-018, BR-STK-030)*
+
+DADO un producto de 8 casilleros con la fila de adelante completa, su caja en 8 y 3 unidades
+sacadas de ella CUANDO se cobra una venta de 6 ENTONCES se rechaza, y ni el depósito ni la caja
+cambian. CUANDO se cobra una de 5 ENTONCES se cobra y la caja queda en 0. CUANDO se devuelven
+las 3 ENTONCES la caja tiene 3.
+
 ## No objetivos
 
 - Esta capacidad NO cobra ni atiende: eso es de
@@ -546,9 +566,9 @@ otra vez.
   jornada que se abre, lo vendido de cada producto, lo que el jugador lleva en la mano, la caja
   que examina, el casillero que elige, y los pedidos de ingresar, mover, cobrar, sacar y devolver
   a la caja, colocar y agarrar de la góndola, sumar y restar en la planilla.
-- **Salida:** cuántas unidades hay por ubicación y en cada caja, qué casilleros de cada producto
-  están vacíos y cuáles ocupados, qué falta, qué hace el clic sobre cada caja y sobre cada
-  casillero, el texto de la caja examinada, lo anotado y el total de la planilla, si cada
+- **Salida:** cuántas unidades hay por ubicación, en cada caja y afuera, qué casilleros de cada
+  producto están vacíos y cuáles ocupados, qué falta, qué hace el clic sobre cada caja y sobre
+  cada casillero, el texto de la caja examinada, lo anotado y el total de la planilla, si cada
   obligatoria está cumplida, y el motivo de cada rechazo.
 - **Falla:** las cantidades no positivas se ignoran; el cobro que supera los vendibles no mueve
   nada; el producto inexistente contesta «no existe» en vez de romper; devolver a una caja llena,
