@@ -172,6 +172,8 @@ entregable más caro y el único que hace que el hallazgo no vuelva.
 | un caso que **afirma el gesto viejo** y sale rojo en la corrida entera | `implement-feature` — no se buscaron los casos que ejercen el gesto redefinido antes de `verificar.py` |
 | un issue que multiplica lo enfocable **sin medir la mira** | `to-issue` — el costo de `_leer_la_mira` no se midió antes de sumar cuerpos al grupo `interactuable` |
 | un gesto que **deshace una obligatoria** sin que el issue diga qué pasa | `to-issue` — el cruce miró los criterios del gesto y no las tareas que su efecto toca |
+| un caso de escena **verde por suerte** después de que cambió el local | la regla de tests — el caso afirmaba el resultado y no su premisa |
+| un generador que **da vuelta lo que el artista hizo** | `implement-feature` — se probó el generador contra el issue y no contra el `.blend` del artista |
 
 **Si el problema no entra en ninguna fila, agregá la fila.** Esa tabla es el registro de lo que
 esta doctrina ya aprendió, y está incompleta a propósito.

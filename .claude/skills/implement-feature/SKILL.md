@@ -224,6 +224,10 @@ se corrige el código.
   `capturas/<N>` con `python .claude/skills/implement-feature/scripts/capturas_a_rama.py <N>
   <carpeta>`, y el PR las muestra por su URL de `raw.githubusercontent.com`. El script existe
   porque desde un worktree el guard rechaza `git -C` sobre otro.
+- **Un generador que reemplaza el trabajo a mano del artista se prueba contra lo que hizo el
+  artista**, en todo lo que el issue no pide cambiar. En el #262, el acomodador apoyaba cada
+  unidad de plano sobre la chapa, y en las rampas de las cabeceras las echó hacia adelante: el
+  artista las tenía hacia atrás. Lo vio el usuario, no un test.
 - **Lo que genera un recurso commiteado va al repo con él**, con su test. Un recurso sin su
   generador sólo se puede editar a mano, y el cambio siguiente lo escribe de nuevo desde cero. La
   disposición de la góndola, sus dos escenas y sus 71 mallas salían de un acomodador que vivió en

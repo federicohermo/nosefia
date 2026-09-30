@@ -43,6 +43,12 @@ func test_con_un_segundo_restante_la_obligatoria_cuenta() -> void:  # AC-SHF-007
   `max-public-methods: 20`. La que se pasa sale roja en el nodo `lint`, no en `tests`, y se parte
   por lo que prueba. Le costó una vuelta al carril de #262.
 
+- **Un caso de escena afirma su premisa, además de su resultado**: dónde pegó el rayo que lo
+  ubica, hacia qué mira. Cuando el local cambia, la premisa sale roja en vez de pasar por suerte.
+  En el #262, `producto_soltado_test.gd` soltaba desde la tapa de una góndola del depósito. Y
+  los casos de `contorno_de_los_muebles_test.gd` caían al pasillo al angostarse la góndola. Los
+  dos seguían verdes sin probar nada.
+
 ## Lo que el gate rechaza
 
 Sin test espejo, sin aserción, apagado, o con un nombre que hace que no corra. **Es la misma
