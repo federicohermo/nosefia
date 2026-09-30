@@ -19,6 +19,15 @@ Cada tanda tiene dos filas, una detrás de la otra. La de adelante toca el frent
 atrás va pegada a ella, con el mismo aire que separa dos unidades vecinas. El estante se achica
 hasta la profundidad de dos unidades del producto más profundo que lleva: más hondo queda un
 hueco detrás de la fila de atrás, que desde el pasillo se lee como mercadería que falta.
+
+## En la rampa de una cabecera, la unidad se echa hacia atrás
+
+La chapa de una cabecera baja hacia el pasillo. Apoyada de plano, la unidad caía hacia adelante,
+con el frente mirando al piso; el artista la ponía echada hacia atrás lo mismo que baja la
+chapa, con el frente mirando hacia arriba y hacia el pasillo. Contra la chapa, entonces, la
+unidad queda girada el doble: es la `inclinacion` que reciben las funciones de acá, en radianes,
+y cero en un estante plano. Echada, se apoya en su canto de abajo de atrás, y su cabeza se va
+hacia el fondo: las filas se separan más, y el estante pide más fondo y más alto.
 """
 
 from __future__ import annotations
@@ -72,11 +81,21 @@ def paso(envase: Envase) -> float:
     return envase.ancho + AIRE
 
 
-def fondo_del_estante(envases: Sequence[Envase]) -> float:
-    """La profundidad útil que necesita un estante para dos filas de su producto más profundo."""
+def fondo_del_estante(envases: Sequence[Envase], inclinacion: float = 0.0) -> float:
+    """La profundidad útil que necesita un estante para dos filas de su producto más profundo.
+
+    En una rampa va del canto de abajo de adelante de la fila de adelante hasta la cabeza de la
+    fila de atrás, que está echada hacia el fondo.
+    """
     if not envases:
         raise ValueError("un estante sin productos no tiene fondo")
-    return 2 * MARGEN + 2 * max(e.fondo for e in envases) + AIRE
+    if inclinacion == 0.0:
+        return 2 * MARGEN + 2 * max(e.fondo for e in envases) + AIRE
+    coseno = math.cos(inclinacion)
+    seno = math.sin(inclinacion)
+    return 2 * MARGEN + max(
+        (e.fondo + AIRE) / coseno + e.fondo * coseno + e.alto * seno for e in envases
+    )
 
 
 def ancho_de_la_tanda(envase: Envase, columnas: int) -> float:
@@ -154,7 +173,7 @@ def centros(largo: float, envases: Sequence[Envase], cuentas: Sequence[int]) -> 
     return salida
 
 
-def tanda(envase: Envase, centros_u: Sequence[float]) -> list[Lugar]:
+def tanda(envase: Envase, centros_u: Sequence[float], inclinacion: float = 0.0) -> list[Lugar]:
     """Las unidades de una tanda: la fila de atrás entera y después la de adelante, cada una de
     izquierda a derecha.
 
@@ -162,8 +181,12 @@ def tanda(envase: Envase, centros_u: Sequence[float]) -> list[Lugar]:
     mostrar sólo lo repuesto, así que lo que va último es lo que el jugador llena: la fila de
     adelante, empezando por su izquierda.
     """
-    adelante = MARGEN + envase.fondo / 2
-    atras = adelante + envase.fondo + AIRE
+    # En una rampa, `v` sigue siendo el medio de la base de la unidad. Echada, su canto de abajo
+    # de adelante queda a medio fondo por el coseno, y la fila de atrás se aparta lo que haga
+    # falta para que, medido a lo hondo de la unidad, entre ella y el aire.
+    coseno = math.cos(inclinacion)
+    adelante = MARGEN + envase.fondo / 2 * coseno
+    atras = adelante + envase.fondo / coseno + AIRE / coseno
     lugares = [Lugar("atras", j, u, atras) for j, u in enumerate(centros_u)]
     lugares += [Lugar("adelante", j, u, adelante) for j, u in enumerate(centros_u)]
     return lugares
@@ -195,14 +218,24 @@ def franja_libre(muestras: Sequence[tuple[float, float]], alto: float) -> tuple[
     return mejor
 
 
-def fondo_nuevo(adelante: float, envases: Sequence[Envase], atras: float) -> float:
+def fondo_nuevo(
+    adelante: float, envases: Sequence[Envase], atras: float, inclinacion: float = 0.0
+) -> float:
     """La profundidad a la que se achica un estante: sus dos filas, más lo que el mueble tapa.
 
     `adelante` es lo que el labio le quita al frente y `atras` lo que la tapa del panel le quita
     al fondo: ahí no entra el producto de alto, y achicar la chapa sin contarlo lo metería
     debajo de la tapa.
     """
-    return adelante + fondo_del_estante(envases) + atras
+    return adelante + fondo_del_estante(envases, inclinacion) + atras
+
+
+def alto_en_la_rampa(envase: Envase, inclinacion: float) -> float:
+    """Lo alto que queda una unidad sobre la chapa: echada, su canto de arriba de adelante sube
+    lo que le suma su fondo."""
+    if inclinacion == 0.0:
+        return envase.alto
+    return envase.alto * math.cos(inclinacion) + envase.fondo * math.sin(inclinacion)
 
 
 def _ocupado(envases: Sequence[Envase], cuentas: Sequence[int]) -> float:

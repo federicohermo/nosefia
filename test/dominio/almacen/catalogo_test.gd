@@ -70,19 +70,23 @@ const SONORIDADES_NUEVAS := {
 }
 
 ## Los que no llenan ocho casilleros en la fila de adelante de su tanda, con los que llenan. El
-## cupo es el umbral y tiene que entrar adelante (BR-STK-025): una lata de heladera o una bolsa
-## de cabecera no dan para ocho de frente, y el resto de la tanda quedaría atrás. Lo midió el
-## acomodador sobre el modelo el 2026-09-29, y `disposicion_de_la_gondola_test` lo cobra.
+## cupo es el umbral y tiene que entrar adelante (BR-STK-025): una lata de heladera o lo que va
+## en una cabecera no dan para ocho de frente, y el resto de la tanda quedaría atrás. Lo midió el
+## acomodador sobre el modelo el 2026-09-30, con cada cabecera angostada hasta sus estantes, y
+## `disposicion_de_la_gondola_test` lo cobra.
 const UMBRALES_MENORES := {
-	"Laysntt": 5,
-	"Chisitos": 5,
+	"Laysntt": 3,
+	"Chisitos": 3,
 	"Coracola": 6,
-	"Durextra": 7,
-	"Duronga": 7,
+	"Durextra": 5,
+	"Duronga": 5,
 	"Feel Ricky Fort": 7,
 	"Fernet God": 5,
+	"Macumbas": 6,
+	"Malbardo": 7,
 	"Mayonchis": 4,
 	"Oaaaa": 4,
+	"Prongles": 5,
 	"Terminator": 4,
 }
 
