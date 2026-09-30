@@ -94,7 +94,8 @@ Cada agente recibe, literal:
   - El conteo crudo sale sin volver a correr: `grep -c "<testsuite "` sobre el `results.xml` del
     último `reports/report_N/`.
   - **El `-rd` de gdUnit4 es relativo al proyecto aunque empiece con `/`**: `-rd /tmp/x` crea
-    `tmp/x` adentro del repo.
+    `tmp/x` adentro del repo. Pasó en dos carriles del lote del 2026-09-29, el segundo con la
+    advertencia en su preámbulo, y por eso `/tmp/` está en `.gitignore`.
   - Las variables de entorno no sobreviven entre llamadas a Bash: van adelante del comando.
 - **Las capturas que pide un issue suben con `scripts/capturas_a_rama.py`**, a la rama huérfana
   `capturas/<N>`, que no se mergea, y el PR las muestra por su URL cruda. **No con un worktree
