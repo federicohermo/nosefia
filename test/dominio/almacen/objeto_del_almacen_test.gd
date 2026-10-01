@@ -65,7 +65,7 @@ func test_la_revelacion_solo_se_ve_despues_de_examinar() -> void:  # AC-INV-001
 		assert_str(revelado).contains(secreto)
 
 
-func test_cada_objeto_del_almacen_declara_su_sonoridad() -> void:
+func test_cada_objeto_del_almacen_declara_su_sonoridad() -> void:  # AC-AMB-024
 	var esperada := {
 		&"lata_de_tomate": EntradaSonora.Sonoridad.LATA,
 		&"caja_de_fideos": EntradaSonora.Sonoridad.CAJITA,
@@ -73,9 +73,8 @@ func test_cada_objeto_del_almacen_declara_su_sonoridad() -> void:
 		&"bolsa_de_basura_2": EntradaSonora.Sonoridad.BOLSA,
 		&"bolsa_de_basura_3": EntradaSonora.Sonoridad.BOLSA,
 		&"mopa": EntradaSonora.Sonoridad.MOPA,
-		# El balde no tiene una sonoridad propia todavía: suena como la botella plástica, que
-		# es la más parecida de las que hay.
-		&"balde": EntradaSonora.Sonoridad.BOTELLA_PLASTICA,
+		&"balde": EntradaSonora.Sonoridad.BALDE,
+		# Los jabones son bidones, y no tienen audio propio: suenan como la botella plástica.
 		&"jabon_azul": EntradaSonora.Sonoridad.BOTELLA_PLASTICA,
 		&"jabon_rosa": EntradaSonora.Sonoridad.BOTELLA_PLASTICA,
 		&"jabon_amarillo": EntradaSonora.Sonoridad.BOTELLA_PLASTICA,

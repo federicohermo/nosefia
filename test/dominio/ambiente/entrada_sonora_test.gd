@@ -71,3 +71,37 @@ func test_el_consumo_de_tiempo_del_turno_no_es_un_evento() -> void:  # AC-AMB-00
 	for evento: String in EntradaSonora.Evento.keys():
 		assert_str(evento).not_contains("TIEMPO")
 		assert_str(evento).not_contains("CONSUM")
+
+
+func test_lo_nuevo_va_al_final_y_no_renumera_lo_que_habia() -> void:
+	# Los `.tres` guardan el evento y la sonoridad por número. Un valor metido en el medio le
+	# cambiaría el significado a cada fila de abajo sin que el archivo cambie un byte.
+	assert_int(EntradaSonora.Sonoridad.MOPA).is_equal(8)
+	assert_int(EntradaSonora.Sonoridad.BALDE).is_equal(9)
+	assert_int(EntradaSonora.Evento.PORTON_TRABADO).is_equal(22)
+	(
+		assert_array(
+			[
+				EntradaSonora.Evento.BALDE_LLENADO,
+				EntradaSonora.Evento.BALDE_TENIDO,
+				EntradaSonora.Evento.BALDE_VACIADO,
+				EntradaSonora.Evento.MOPA_MOJADA,
+				EntradaSonora.Evento.UNIDAD_DEVUELTA,
+			]
+		)
+		. is_equal([23, 24, 25, 26, 27])
+	)
+
+
+func test_devolver_es_un_evento_de_objeto_y_los_gestos_con_el_balde_no() -> void:
+	# Un evento de objeto tiene una fila por sonoridad. Los gestos con el balde no traen el balde,
+	# así que no tienen de dónde sacar una.
+	var devolver := EntradaSonora.Evento.UNIDAD_DEVUELTA
+	assert_bool(EntradaSonora.EVENTOS_DE_OBJETO.has(devolver)).is_true()
+	for gesto: EntradaSonora.Evento in [
+		EntradaSonora.Evento.BALDE_LLENADO,
+		EntradaSonora.Evento.BALDE_TENIDO,
+		EntradaSonora.Evento.BALDE_VACIADO,
+		EntradaSonora.Evento.MOPA_MOJADA,
+	]:
+		assert_bool(EntradaSonora.EVENTOS_DE_OBJETO.has(gesto)).is_false()

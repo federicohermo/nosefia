@@ -33,6 +33,12 @@
 [ext_resource type="AudioStream" uid="uid://tn7a6tyaw8nc" path="res://assets/audio/SFX_NOLEV_Puerta_Cerrar.wav" id="31_puerta_cerrar"]
 [ext_resource type="AudioStream" uid="uid://bqa8ic22l21ac" path="res://assets/audio/SFX_NOLEV_Puerta_NoAbre.wav" id="32_puerta_no_abre"]
 [ext_resource type="AudioStream" uid="uid://dhkfrg2p1qq41" path="res://assets/audio/SFX_NOLEV_Puerta_Garage.wav" id="33_porton"]
+[ext_resource type="AudioStream" uid="uid://fi4x2eytpv1f" path="res://assets/audio/SFX_OBJETO_Balde_Alzar.wav" id="34_balde_a"]
+[ext_resource type="AudioStream" uid="uid://blfry6si37bxi" path="res://assets/audio/SFX_OBJETO_Balde_Dejar.wav" id="35_balde_d"]
+[ext_resource type="AudioStream" uid="uid://d1lgdxemq1h03" path="res://assets/audio/SFX_OBJETO_Balde_Llenar.wav" id="36_balde_llenar"]
+[ext_resource type="AudioStream" uid="uid://ctjk30vvtxe46" path="res://assets/audio/SFX_OBJETO_Balde_Vaciar.wav" id="37_balde_vaciar"]
+[ext_resource type="AudioStream" uid="uid://84v4c4kt6vo4" path="res://assets/audio/SFX_OBJETO_Jabon_VertirEnBalde.wav" id="38_jabon_verter"]
+[ext_resource type="AudioStream" uid="uid://cotofglhx68qs" path="res://assets/audio/SFX_OBJETO_Mopa_MojarEnBalde.wav" id="39_mopa_mojar"]
 
 [sub_resource type="Resource" id="Resource_x3pvh"]
 script = ExtResource("1_qermt")
@@ -121,6 +127,14 @@ sonoridad = 8
 posicional = true
 stream = ExtResource("14_mopa_a")
 
+[sub_resource type="Resource" id="Resource_ag9"]
+script = ExtResource("1_qermt")
+evento = 4
+senal = &"objeto_agarrado"
+sonoridad = 9
+posicional = true
+stream = ExtResource("34_balde_a")
+
 [sub_resource type="Resource" id="Resource_so1"]
 script = ExtResource("1_qermt")
 evento = 5
@@ -182,6 +196,14 @@ senal = &"contacto_recibido"
 sonoridad = 8
 posicional = true
 stream = ExtResource("5_mopa")
+
+[sub_resource type="Resource" id="Resource_so9"]
+script = ExtResource("1_qermt")
+evento = 5
+senal = &"contacto_recibido"
+sonoridad = 9
+posicional = true
+stream = ExtResource("35_balde_d")
 
 [sub_resource type="Resource" id="Resource_avff3"]
 script = ExtResource("1_qermt")
@@ -249,6 +271,14 @@ senal = &"unidad_colocada"
 sonoridad = 8
 posicional = true
 stream = ExtResource("5_mopa")
+
+[sub_resource type="Resource" id="Resource_co9"]
+script = ExtResource("1_qermt")
+evento = 7
+senal = &"unidad_colocada"
+sonoridad = 9
+posicional = true
+stream = ExtResource("35_balde_d")
 
 [sub_resource type="Resource" id="Resource_2fnal"]
 script = ExtResource("1_qermt")
@@ -356,6 +386,100 @@ senal = &"porton_trabado"
 posicional = true
 stream = ExtResource("33_porton")
 
+[sub_resource type="Resource" id="Resource_balde_llenado"]
+script = ExtResource("1_qermt")
+evento = 23
+senal = &"balde_llenado"
+stream = ExtResource("36_balde_llenar")
+
+[sub_resource type="Resource" id="Resource_balde_tenido"]
+script = ExtResource("1_qermt")
+evento = 24
+senal = &"balde_tenido"
+stream = ExtResource("38_jabon_verter")
+
+[sub_resource type="Resource" id="Resource_balde_vaciado"]
+script = ExtResource("1_qermt")
+evento = 25
+senal = &"balde_vaciado"
+stream = ExtResource("37_balde_vaciar")
+
+[sub_resource type="Resource" id="Resource_mopa_mojada"]
+script = ExtResource("1_qermt")
+evento = 26
+senal = &"mopa_mojada"
+stream = ExtResource("39_mopa_mojar")
+
+[sub_resource type="Resource" id="Resource_de1"]
+script = ExtResource("1_qermt")
+evento = 27
+senal = &"unidad_devuelta"
+sonoridad = 1
+posicional = true
+stream = ExtResource("15_lata_d")
+
+[sub_resource type="Resource" id="Resource_de2"]
+script = ExtResource("1_qermt")
+evento = 27
+senal = &"unidad_devuelta"
+sonoridad = 2
+posicional = true
+stream = ExtResource("16_cajita_d")
+
+[sub_resource type="Resource" id="Resource_de3"]
+script = ExtResource("1_qermt")
+evento = 27
+senal = &"unidad_devuelta"
+sonoridad = 3
+posicional = true
+
+[sub_resource type="Resource" id="Resource_de4"]
+script = ExtResource("1_qermt")
+evento = 27
+senal = &"unidad_devuelta"
+sonoridad = 4
+posicional = true
+stream = ExtResource("17_env_d")
+
+[sub_resource type="Resource" id="Resource_de5"]
+script = ExtResource("1_qermt")
+evento = 27
+senal = &"unidad_devuelta"
+sonoridad = 5
+posicional = true
+stream = ExtResource("18_bot_d")
+
+[sub_resource type="Resource" id="Resource_de6"]
+script = ExtResource("1_qermt")
+evento = 27
+senal = &"unidad_devuelta"
+sonoridad = 6
+posicional = true
+stream = ExtResource("19_papel_d")
+
+[sub_resource type="Resource" id="Resource_de7"]
+script = ExtResource("1_qermt")
+evento = 27
+senal = &"unidad_devuelta"
+sonoridad = 7
+posicional = true
+
+[sub_resource type="Resource" id="Resource_de8"]
+script = ExtResource("1_qermt")
+evento = 27
+senal = &"unidad_devuelta"
+sonoridad = 8
+posicional = true
+stream = ExtResource("5_mopa")
+
+[sub_resource type="Resource" id="Resource_de9"]
+script = ExtResource("1_qermt")
+evento = 27
+senal = &"unidad_devuelta"
+sonoridad = 9
+posicional = true
+stream = ExtResource("35_balde_d")
+
 [resource]
 script = ExtResource("2_xbcco")
-entradas = Array[ExtResource("1_qermt")]([SubResource("Resource_x3pvh"), SubResource("Resource_oefuu"), SubResource("Resource_382as"), SubResource("Resource_b10uv"), SubResource("Resource_ag1"), SubResource("Resource_ag2"), SubResource("Resource_ag3"), SubResource("Resource_ag4"), SubResource("Resource_ag5"), SubResource("Resource_ag6"), SubResource("Resource_ag7"), SubResource("Resource_ag8"), SubResource("Resource_so1"), SubResource("Resource_so2"), SubResource("Resource_so3"), SubResource("Resource_so4"), SubResource("Resource_so5"), SubResource("Resource_so6"), SubResource("Resource_so7"), SubResource("Resource_so8"), SubResource("Resource_avff3"), SubResource("Resource_co1"), SubResource("Resource_co2"), SubResource("Resource_co3"), SubResource("Resource_co4"), SubResource("Resource_co5"), SubResource("Resource_co6"), SubResource("Resource_co7"), SubResource("Resource_co8"), SubResource("Resource_2fnal"), SubResource("Resource_pmrqt"), SubResource("Resource_38ejk"), SubResource("Resource_ql6t2"), SubResource("Resource_s3myp"), SubResource("Resource_boton"), SubResource("Resource_musica"), SubResource("Resource_pasos"), SubResource("Resource_compra"), SubResource("Resource_lector"), SubResource("Resource_celular"), SubResource("Resource_puerta_abierta"), SubResource("Resource_puerta_cerrada"), SubResource("Resource_puerta_trabada"), SubResource("Resource_porton_trabado")])
+entradas = Array[ExtResource("1_qermt")]([SubResource("Resource_x3pvh"), SubResource("Resource_oefuu"), SubResource("Resource_382as"), SubResource("Resource_b10uv"), SubResource("Resource_ag1"), SubResource("Resource_ag2"), SubResource("Resource_ag3"), SubResource("Resource_ag4"), SubResource("Resource_ag5"), SubResource("Resource_ag6"), SubResource("Resource_ag7"), SubResource("Resource_ag8"), SubResource("Resource_ag9"), SubResource("Resource_so1"), SubResource("Resource_so2"), SubResource("Resource_so3"), SubResource("Resource_so4"), SubResource("Resource_so5"), SubResource("Resource_so6"), SubResource("Resource_so7"), SubResource("Resource_so8"), SubResource("Resource_so9"), SubResource("Resource_avff3"), SubResource("Resource_co1"), SubResource("Resource_co2"), SubResource("Resource_co3"), SubResource("Resource_co4"), SubResource("Resource_co5"), SubResource("Resource_co6"), SubResource("Resource_co7"), SubResource("Resource_co8"), SubResource("Resource_co9"), SubResource("Resource_2fnal"), SubResource("Resource_pmrqt"), SubResource("Resource_38ejk"), SubResource("Resource_ql6t2"), SubResource("Resource_s3myp"), SubResource("Resource_boton"), SubResource("Resource_musica"), SubResource("Resource_pasos"), SubResource("Resource_compra"), SubResource("Resource_lector"), SubResource("Resource_celular"), SubResource("Resource_puerta_abierta"), SubResource("Resource_puerta_cerrada"), SubResource("Resource_puerta_trabada"), SubResource("Resource_porton_trabado"), SubResource("Resource_balde_llenado"), SubResource("Resource_balde_tenido"), SubResource("Resource_balde_vaciado"), SubResource("Resource_mopa_mojada"), SubResource("Resource_de1"), SubResource("Resource_de2"), SubResource("Resource_de3"), SubResource("Resource_de4"), SubResource("Resource_de5"), SubResource("Resource_de6"), SubResource("Resource_de7"), SubResource("Resource_de8"), SubResource("Resource_de9")])

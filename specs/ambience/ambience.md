@@ -23,8 +23,9 @@ silencio y el mezclador deja de servir.
 | **Bus** | uno de los cuatro canales de mezcla del local | pista, canal |
 | **Voz** | uno de los reproductores que se reparten los sonidos cortos | slot, player |
 | **Sonoridad** | cómo suena una cosa al agarrarla o al dejarla | familia, material, envase |
-| **Evento de objeto** | agarrar un objeto, que un objeto soltado toque algo, o colocar un producto | — |
+| **Evento de objeto** | agarrar un objeto, que un objeto soltado toque algo, colocar un producto o devolver una unidad a su caja | — |
 | **Golpe** | un contacto de un objeto soltado que cuenta para sonar | choque, impacto |
+| **Gesto con el balde** | llenarlo, teñir su agua con un jabón, vaciarlo o mojar la mopa en él | — |
 
 ## Comportamiento normativo
 
@@ -77,8 +78,8 @@ SI no hay ninguna voz, ENTONCES el sistema DEBE contestar que no hay y no ocupar
 ### BR-AMB-010 — Un evento de objeto suena según la sonoridad del objeto
 
 CUANDO pasa un evento de objeto, el sistema DEBE usar la fila de ese evento para la sonoridad
-del objeto. Agarrar suena el alzar de esa sonoridad; tocar algo y colocar suenan el dejar. SI no
-hay fila para ese par, ENTONCES el sistema DEBE contestar que no hay.
+del objeto. Agarrar suena el alzar de esa sonoridad; tocar algo, colocar y devolver suenan el
+dejar. SI no hay fila para ese par, ENTONCES el sistema DEBE contestar que no hay.
 
 ### BR-AMB-011 — La tabla cubre cada sonoridad de cada evento de objeto
 
@@ -107,10 +108,11 @@ otra vez:
 
 CUANDO el objeto se agarra otra vez, el sistema DEBE volver a contar desde el 1.º.
 
-### BR-AMB-014 — Colocar suena una vez
+### BR-AMB-014 — Colocar y devolver suenan una vez
 
-CUANDO un producto se coloca en la góndola, el sistema DEBE sonar el dejar de su sonoridad una
-vez, a 0 dB y sin filtro. Colocar NO DEBE contar golpes.
+CUANDO un producto se coloca en la góndola, o una unidad vuelve a su caja, el sistema DEBE sonar
+el dejar de su sonoridad una vez, a 0 dB y sin filtro. Colocar y devolver NO DEBEN contar golpes.
+SI la caja no recibe la unidad, ENTONCES el sistema NO DEBE sonar.
 
 ### BR-AMB-015 — La música suena toda la noche
 
@@ -162,6 +164,12 @@ obstáculos; desde ahí NO DEBE apagar más. Con cero obstáculos, el sonido NO 
 - CUANDO cambia la cantidad de obstáculos, el volumen y el corte DEBEN llegar al nuevo valor en
   más de un cuadro, sin un salto.
 - Un sonido plano NO DEBE apagarse nunca.
+
+### BR-AMB-021 — Los gestos con el balde suenan planos
+
+CUANDO se hace un gesto con el balde, el sistema DEBE sonar el audio de ese gesto una vez, plano
+y por el bus de efectos: cada vez que pasa, el jugador está al lado del balde. SI el uso no cambia
+nada, ENTONCES el sistema NO DEBE sonar.
 
 ## Criterios de aceptación
 
@@ -293,6 +301,34 @@ y el corte todavía no llegaron al valor de un obstáculo, y CUANDO pasa un segu
 
 DADO un sonido plano con una pared entre el jugador y cualquier cosa ENTONCES su volumen no
 cambia.
+
+### AC-AMB-024 — El balde suena por su sonoridad *(verifica BR-AMB-010, BR-AMB-011, BR-AMB-013)*
+
+DADO el balde CUANDO se lo agarra ENTONCES suena el alzar del balde. CUANDO se lo suelta y toca
+algo cuatro veces, más rápido que el umbral, ENTONCES los tres primeros suenan el dejar del balde
+a 0, −6 y −12 dB, y el cuarto no suena. DADO la tabla del juego ENTONCES el balde tiene su fila en
+cada evento de objeto, y colocarlo o devolverlo suena también el dejar del balde.
+
+### AC-AMB-025 — Los gestos con el balde *(verifica BR-AMB-021)*
+
+DADO el balde vacío CUANDO se lo llena, se tiñe su agua, se moja la mopa en él y se lo vacía
+ENTONCES suenan, en ese orden, el llenar del balde, el verter del jabón en el balde, el mojar de
+la mopa en el balde y el vaciar del balde: cuatro sonidos, cada uno plano y por el bus de efectos.
+DADO un uso que no cambia nada —llenar un balde que ya tiene agua, teñir uno ya teñido, y vaciar,
+teñir o mojar la mopa en uno vacío— ENTONCES no suena.
+
+### AC-AMB-026 — Devolver suena como colocar *(verifica BR-AMB-010, BR-AMB-014, BR-AMB-016)*
+
+DADO una unidad de cajita en la mano CUANDO se la devuelve a su caja ENTONCES suena el dejar de
+cajita una vez, a 0 dB, sin filtro y desde donde está la unidad. DADO una unidad que ya gastó sus
+tres golpes CUANDO se la devuelve ENTONCES suena igual, a 0 dB y sin filtro. DADO la tabla del
+juego ENTONCES devolver suena, en cada sonoridad, el mismo audio que colocar.
+
+### AC-AMB-027 — Devolver suena sólo si la caja la recibe *(verifica BR-AMB-014)*
+
+DADO una unidad devuelta CUANDO se la devuelve otra vez ENTONCES no suena. DADO una caja llena y
+una unidad de su producto en la mano CUANDO se la devuelve ENTONCES no suena, y con una unidad de
+otro producto tampoco.
 
 ## No objetivos
 
