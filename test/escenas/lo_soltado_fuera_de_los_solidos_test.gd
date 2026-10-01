@@ -95,6 +95,25 @@ const GONDOLA_DEL_DEPOSITO := "la góndola del depósito"
 ## de entrada.
 const PARED_LIBRE := Vector2(-5.0, 7.871)
 
+## Hacia dónde mira quien suelta algo contra una pared, en grados: 40° abajo inclina lo que se
+## lleva, y eso le da fondo.
+const MIRANDO_ABAJO := -40.0
+
+## De 0,5 a 1,1 m de una pared: lo más cerca que se para el jugador y lo más lejos que lo soltado
+## todavía la toca.
+const CERCA_DE_LA_PARED: Array[float] = [0.5, 0.7, 0.8, 0.9, 1.0, 1.1]
+
+## Desde cuántos metros de la pared la bolsa, la mopa, el balde y la unidad soltados ya no tocan el
+## cuerpo: caen adelante, donde apunta la mira. Medido el 2026-09-30.
+const SIN_TOCAR_EL_CUERPO := 1.0
+
+## Cuánto puede quedar inclinado lo que cae derecho, en grados. Inclinado por la mira eran 40.
+const DERECHO := 3.0
+
+## A cuánto del jugador queda lo que cae a su lado, como mucho, en metros: el cuerpo mide 0,4 de
+## radio y el bidón 0,46 de ancho.
+const AL_LADO := 1.0
+
 
 func _almacen() -> Node3D:
 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
@@ -619,9 +638,12 @@ func test_la_unidad_soltada_contra_el_mostrador_no_queda_adentro() -> void:  # A
 	assert_int(soltadas).override_failure_message("casi ninguna se soltó").is_greater(6)
 
 
-func test_la_bolsa_y_el_trapeador_soltados_contra_una_pared_no_quedan_adentro() -> void:
+func test_la_bolsa_y_los_utiles_soltados_contra_una_pared_no_quedan_adentro() -> void:
+	# La mopa mide un metro y cuarto y la mano la lleva inclinada; el bidón es el más ancho.
 	var almacen: Node3D = await _almacen()
-	var objetos: Array[Node3D] = [almacen.get("_bolsas")[0], almacen.get_node("Objetos/Trapeador")]
+	var objetos: Array[Node3D] = [almacen.get("_bolsas")[0]]
+	for util: String in ["Mopa", "Balde", "JabonAzul"]:
+		objetos.append(almacen.get_node("Objetos/" + util))
 	var derecho: Array[float] = [0.0]
 	var dos_alturas: Array[float] = [-40.0, 0.0]
 	for objeto in objetos:
@@ -629,6 +651,173 @@ func test_la_bolsa_y_el_trapeador_soltados_contra_una_pared_no_quedan_adentro() 
 			almacen, objeto, PARED_DE_LA_FACHADA, derecho, dos_alturas
 		)
 		assert_int(soltados).override_failure_message("`%s` no se soltó" % objeto.name).is_equal(2)
+
+
+func test_lo_soltado_contra_una_pared_cae_sin_rozarla() -> void:  # AC-PLY-019
+	# El barrido dejaba lo soltado pegado a la pared, y caía rozándola. Una unidad se enganchaba en
+	# una arista del modelo, giraba y se hundía 3 cm en el rincón con el piso: la red la rescataba,
+	# según qué suites hubieran corrido antes. Medido el 2026-09-30, con el cuerpo girado 20°.
+	var almacen: Node3D = await _almacen()
+	var jugador: CharacterBody3D = almacen.get("_jugador")
+	var agarre: Agarre = almacen.get("_agarre")
+	var unidad := _unidad_en_la_mano(almacen)
+	assert_object(unidad).is_not_null()
+	for giro in GIROS_DEL_CUERPO:
+		var donde := "`%s` soltado mirando derecho, girado %.0f" % [unidad.name, giro]
+		var derecho := _parar_frente_a(almacen, PARED_DE_LA_FACHADA, PARADO_DEL_SOLIDO)
+		if agarre.manos().sostenido() == null:
+			_accion(jugador, unidad, ReglasDeLosObjetos.ACCION_AGARRAR)
+		await get_tree().physics_frame
+		_mirar(jugador, derecho + deg_to_rad(giro), 0.0)
+		_accion(jugador, unidad, ReglasDeLosObjetos.ACCION_AGARRAR)
+		assert_object(agarre.manos().sostenido()).override_failure_message(donde).is_null()
+		var separacion := _separacion_de_la_fachada(unidad)
+		(
+			assert_float(separacion)
+			. override_failure_message(
+				"%s, cae a %.4f m de la pared: la roza" % [donde, separacion]
+			)
+			. is_greater(ReglasDeLosObjetos.ROCE)
+		)
+		for cuadro in CUADROS_DE_REPOSO:
+			await get_tree().physics_frame
+		_comprobar_libre_y_enfocable(almacen, unidad, donde)
+
+
+func test_el_bidon_encimado_con_el_cuerpo_cae_derecho_al_lado_del_jugador() -> void:
+	# El bidón mide 0,70 × 0,46 m, y la mira lo inclina: tiene más fondo que el lugar entre el
+	# cuerpo y la pared. La caída lo barría hasta tocarla sin contar el cuerpo, la física lo sacaba
+	# del cuerpo a los empujones, y a 0,7-1,0 m lo metía 5 cm en la pared.
+	var almacen: Node3D = await _almacen()
+	var jugador: CharacterBody3D = almacen.get("_jugador")
+	var bidon: Node3D = almacen.get_node("Objetos/JabonAzul")
+	for parado in CERCA_DE_LA_PARED:
+		var donde := "`%s` soltado a %.1f m de la pared" % [bidon.name, parado]
+		await _soltar_contra_la_fachada(almacen, bidon, parado, donde)
+		for cuadro in CUADROS_DE_REPOSO:
+			await get_tree().physics_frame
+		_comprobar_libre_y_enfocable(almacen, bidon, donde)
+		var inclinado := rad_to_deg(bidon.global_basis.y.angle_to(Vector3.UP))
+		(
+			assert_float(inclinado)
+			. override_failure_message("%s, quedó inclinado %.0f°" % [donde, inclinado])
+			. is_less(DERECHO)
+		)
+		var lejos := _en_el_piso(bidon.global_position - jugador.global_position).length()
+		(
+			assert_float(lejos)
+			. override_failure_message("%s, cayó a %.2f m del jugador" % [donde, lejos])
+			. is_less(AL_LADO)
+		)
+
+
+func test_lo_que_no_toca_el_cuerpo_se_sigue_soltando_adelante() -> void:
+	# Arreglar el bidón no mueve lo que ya caía bien: lo que no toca el cuerpo cae donde apunta la
+	# mira, entre el jugador y la pared. Y más cerca, lo que lo toca cae al lado.
+	var almacen: Node3D = await _almacen()
+	var jugador: CharacterBody3D = almacen.get("_jugador")
+	var cuerpo: CollisionShape3D = jugador.get_node("Cuerpo")
+	var radio := (cuerpo.shape as CapsuleShape3D).radius
+	var objetos: Array[Node3D] = [almacen.get("_bolsas")[0]]
+	for util: String in ["Mopa", "Balde"]:
+		objetos.append(almacen.get_node("Objetos/" + util))
+	# La unidad va última y se saca recién ahí: sacarla es tenerla en la mano.
+	objetos.append(null)
+	for objeto in objetos:
+		if objeto == null:
+			objeto = _unidad_en_la_mano(almacen)
+			assert_object(objeto).is_not_null()
+		for parado in CERCA_DE_LA_PARED:
+			var donde := "`%s` soltado a %.1f m de la pared" % [objeto.name, parado]
+			await _soltar_contra_la_fachada(almacen, objeto, parado, donde)
+			for cuadro in CUADROS_DE_REPOSO:
+				await get_tree().physics_frame
+			if parado >= SIN_TOCAR_EL_CUERPO:
+				(
+					assert_float(objeto.global_position.z - jugador.global_position.z)
+					. override_failure_message("%s, no cayó adelante" % donde)
+					. is_greater(radio)
+				)
+			_comprobar_libre_y_enfocable(almacen, objeto, donde)
+		# Lo soltado se queda contra la pared: se lo devuelve para que no se cruce con el siguiente.
+		if objeto.has_method(ReglasDeLosObjetos.METODO_LUGAR_DE_ORIGEN):
+			objeto.global_transform = objeto.call(ReglasDeLosObjetos.METODO_LUGAR_DE_ORIGEN)
+
+
+## Suelta `objeto` parado a `parado` metros de la pared de la fachada, mirando abajo, y afirma las
+## dos cosas que se ven antes de que la física se mueva: que no quedó encimado con nada —ni con
+## el cuerpo del jugador— y que después del primer paso de física no está adentro de la pared.
+##
+## La pared se mide antes que la red, que lo mira en ese mismo cuadro y lo puede mover: la medida
+## se engancha antes de soltar, y la señal llama a los enganchados en orden.
+func _soltar_contra_la_fachada(
+	almacen: Node3D, objeto: Node3D, parado: float, donde: String
+) -> void:
+	var jugador: CharacterBody3D = almacen.get("_jugador")
+	var agarre: Agarre = almacen.get("_agarre")
+	var derecho := _parar_frente_a(almacen, PARED_DE_LA_FACHADA, parado)
+	if agarre.manos().sostenido() == null:
+		_accion(jugador, objeto, ReglasDeLosObjetos.ACCION_AGARRAR)
+	await get_tree().physics_frame
+	_mirar(jugador, derecho, deg_to_rad(MIRANDO_ABAJO))
+	var separaciones: Array[float] = []
+	var medir := func() -> void: separaciones.append(_separacion_de_la_fachada(objeto))
+	get_tree().physics_frame.connect(medir, CONNECT_ONE_SHOT)
+	_accion(jugador, objeto, ReglasDeLosObjetos.ACCION_AGARRAR)
+	(
+		assert_object(agarre.manos().sostenido())
+		. override_failure_message("%s, no se soltó" % donde)
+		. is_null()
+	)
+	var empujon := _empujon_para_sacarlo(objeto as PhysicsBody3D)
+	(
+		assert_float(empujon.length())
+		. override_failure_message(
+			"%s, quedó encimado: la física lo iba a sacar empujándolo %v" % [donde, empujon]
+		)
+		. is_less_equal(ReglasDeLosObjetos.ROCE)
+	)
+	await get_tree().physics_frame
+	var separacion: float = separaciones[0] if not separaciones.is_empty() else -INF
+	(
+		assert_float(separacion)
+		. override_failure_message(
+			"%s, en el primer cuadro quedó %.3f m adentro de la pared" % [donde, -separacion]
+		)
+		. is_greater_equal(-_hundimiento_tolerado(objeto))
+	)
+
+
+## Cuánto tendría que mover el motor al cuerpo para sacarlo de todo lo que pisa, el jugador
+## incluido. Cero es que quedó donde entra.
+static func _empujon_para_sacarlo(cuerpo: PhysicsBody3D) -> Vector3:
+	var consulta := PhysicsTestMotionParameters3D.new()
+	consulta.from = cuerpo.global_transform
+	consulta.max_collisions = 32
+	var resultado := PhysicsTestMotionResult3D.new()
+	PhysicsServer3D.body_test_motion(cuerpo.get_rid(), consulta, resultado)
+	return resultado.get_travel()
+
+
+## Cuánto separa el volumen del objeto de la cara de la pared de la fachada, en metros.
+static func _separacion_de_la_fachada(objeto: Node3D) -> float:
+	var frente := -INF
+	for punto in _puntos_del_volumen(objeto):
+		frente = maxf(frente, punto.z)
+	return PARED_LIBRE.y - frente
+
+
+## Cuánto puede hundirse un cuerpo vivo en lo que toca sin estar adentro: el roce y el margen del
+## motor, lo mismo que tolera `_solidos_pisados()`.
+static func _hundimiento_tolerado(objeto: Node3D) -> float:
+	var tolerado := ReglasDeLosObjetos.ROCE
+	if objeto is RigidBody3D and not (objeto as RigidBody3D).freeze:
+		tolerado += ProjectSettings.get_setting(PENETRACION_TOLERADA)
+	return tolerado
+
+
+static func _en_el_piso(vector: Vector3) -> Vector2:
+	return Vector2(vector.x, vector.z)
 
 
 func test_la_caja_soltada_pegada_a_una_pared_no_entra_al_empujarla() -> void:

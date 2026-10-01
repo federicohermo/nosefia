@@ -1,29 +1,45 @@
-## Una mancha del piso: cuántas pasadas le faltan.
+## Una mancha: de qué tipo es y si ya se borró.
 ##
-## Una mancha no sabe dónde está ni de qué zona es: eso lo lleva `PisoDelLocal`. Acá sólo vive el
-## contador, y vive acá y no en la escena porque «cuántas pasadas quedan» es una regla del juego —
-## escrita contando los hijos de un `Node3D` daría cero hallazgos en los dos gates.
+## Una mancha no sabe dónde está: eso lo lleva `PisoDelLocal`. Acá vive qué la borra, y vive acá y
+## no en la escena porque «qué jabón pide» es una regla del juego — escrita en la mancha que se
+## dibuja daría cero hallazgos en los dos gates.
 class_name Mancha
 extends RefCounted
 
-var _restantes: int = ReglasDeLaLimpieza.PASADAS_POR_MANCHA
+var _tipo: ReglasDeLaLimpieza.TipoDeMancha
+var _limpia := false
 
 
-func pasadas_restantes() -> int:
-	return _restantes
+func _init(tipo: ReglasDeLaLimpieza.TipoDeMancha) -> void:
+	_tipo = tipo
+
+
+func tipo() -> ReglasDeLaLimpieza.TipoDeMancha:
+	return _tipo
 
 
 func esta_limpia() -> bool:
-	return _restantes <= 0
+	return _limpia
 
 
-## Pasa el trapeador una vez, y devuelve `true` **sólo si bajó una pasada**.
+## El color con que se ve, que es lo que le dice al jugador qué jabón ir a buscar.
+func color() -> Color:
+	return ReglasDeLaLimpieza.COLOR_DE_LA_MANCHA[_tipo]
+
+
+## Pasa la mopa, y devuelve cómo salió. Sólo la borra la mopa mojada del jabón que le toca.
 ##
-## Sobre una mancha ya limpia devuelve `false` y no baja de cero: machacar sobre lo limpio no
-## cierra nada, y sin el corte el contador se iría a negativo y `esta_limpia()` seguiría diciendo
-## que sí — un estado imposible que ningún número delata.
-func pasar() -> bool:
-	if esta_limpia():
-		return false
-	_restantes -= 1
-	return true
+## **El orden de los rechazos es el de la regla**: primero si la mancha todavía está —es una
+## propiedad de la mancha, y ninguna mopa la cambia—, después lo que le falta a la mopa, del
+## rechazo que más pide al que menos: mojarla, echarle jabón al balde, cambiar el jabón.
+func borrar_con(mopa: Mopa) -> ReglasDeLaLimpieza.Resultado:
+	if _limpia:
+		return ReglasDeLaLimpieza.Resultado.YA_ESTABA_LIMPIA
+	if not mopa.esta_mojada():
+		return ReglasDeLaLimpieza.Resultado.MOPA_SECA
+	if mopa.agua() == ReglasDeLaLimpieza.Agua.LIMPIA:
+		return ReglasDeLaLimpieza.Resultado.SIN_JABON
+	if mopa.agua() != ReglasDeLaLimpieza.AGUA_QUE_BORRA[_tipo]:
+		return ReglasDeLaLimpieza.Resultado.JABON_EQUIVOCADO
+	_limpia = true
+	return ReglasDeLaLimpieza.Resultado.MANCHA_BORRADA

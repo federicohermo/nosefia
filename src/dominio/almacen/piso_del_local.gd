@@ -1,96 +1,106 @@
-## El piso del local: qué zonas hay que limpiar y cuánto le falta a cada una.
+## El piso de una jornada: las manchas que hay que borrar y los útiles con que se borran.
 ##
-## **Son cuatro zonas y están repartidas**, y ahí está el término que esta tarea aporta a la resta
-## del turno: cada una obliga a un tramo de caminata que no se puede saltear. La distancia la fija
-## `ReglasDeLaLimpieza` y la escena la cumple; acá vive la cuenta.
+## «Piso» es lo que hay que dejar limpio, aunque la mancha del depósito esté en una pared: el
+## nombre es el de la obligatoria, no el de la superficie.
 ##
-## **Limpiar se puede dejar por la mitad**, que es lo que la vuelve parte de la tensión: dos
-## pasadas, irse a la computadora, volver, y la mancha sigue esperando en una. Es la misma forma
-## de reponer con otro recurso escaso — allá la unidad del depósito, acá la única mano.
+## **Limpiar cuesta ir al baño**, y ahí está el término que esta tarea aporta a la resta del turno:
+## cada mancha pide su jabón, el jabón se mezcla en el balde, y cambiar de jabón es vaciar el balde
+## y volver a llenarlo. Acá vive la cuenta; la distancia la pone la escena.
 ##
 ## Es la mitad de limpiar que se ejerce sin levantar una escena: acá no hay un solo `Node3D`.
 class_name PisoDelLocal
 extends RefCounted
 
-## Las cuatro esquinas del local que hay que pasar. Es un `enum` porque el conjunto es cerrado: un
-## `"deposito"` mal escrito no rompe nada, la mancha simplemente no se limpia nunca.
-enum Zona { ENTRADA, PASILLO, DEPOSITO, VENTANILLA }
+## Dónde pone la jornada cada mancha. Es un `enum` porque el conjunto es cerrado: un lugar mal
+## escrito no rompe nada, la mancha simplemente no se borra nunca.
+enum Lugar { ENTRADA, GONDOLAS, DEPOSITO, BANO }
 
-## Cómo salió la pasada. `MANCHA_LIMPIADA` y `PASADA` se distinguen porque son dos cosas distintas
-## adelante del jugador: una mancha que desaparece y una que se aclara.
-enum Resultado { PASADA, MANCHA_LIMPIADA, SIN_TRAPEADOR, YA_ESTABA_LIMPIA }
+## Qué mancha hay en cada lugar al abrir la jornada: dos de polvo en el local, una de moho en la
+## pared del depósito y una de caca al lado del inodoro. Es la primera jornada de la ficha; las
+## otras cuatro no están definidas todavía, y arrancan como ésta.
+const MANCHAS_DE_LA_JORNADA: Dictionary[Lugar, ReglasDeLaLimpieza.TipoDeMancha] = {
+	Lugar.ENTRADA: ReglasDeLaLimpieza.TipoDeMancha.POLVO,
+	Lugar.GONDOLAS: ReglasDeLaLimpieza.TipoDeMancha.POLVO,
+	Lugar.DEPOSITO: ReglasDeLaLimpieza.TipoDeMancha.MOHO,
+	Lugar.BANO: ReglasDeLaLimpieza.TipoDeMancha.CACA,
+}
 
-## `Zona` → `Mancha`, en el orden del `enum`.
-var _manchas: Dictionary = {}
+var _manchas: Dictionary[Lugar, Mancha] = {}
+var _balde := Balde.new()
+var _mopa := Mopa.new()
+
+## Qué hace cada cosa en la mano sobre cada otra. Es la única puerta de los gestos: sin el par
+## declarado, ni la mopa mojada del jabón justo borra nada.
+var _uso := Uso.para_el_almacen()
 
 
-func _init(manchas: Dictionary) -> void:
+func _init(manchas: Dictionary[Lugar, Mancha]) -> void:
 	_manchas = manchas
 
 
-## El piso de una noche: una mancha por cada zona declarada.
+## El piso de una noche: sus cuatro manchas sucias, el balde vacío y la mopa seca.
 ##
-## Se recorre el `enum` y no se enumeran cuatro a mano: una quinta zona es una línea en el `enum`
-## y este archivo no se toca. Y no se sortea nada — sortear las zonas haría variar cuánto camina
-## el jugador de una noche a otra.
+## Se construye entero cada vez: con un piso compartido, lo borrado anoche llegaría borrado esta
+## noche, y el balde teñido de anoche ahorraría el primer viaje a la canilla.
 static func de_la_jornada() -> PisoDelLocal:
-	var manchas := {}
-	for zona: Zona in Zona.values():
-		manchas[zona] = Mancha.new()
+	var manchas: Dictionary[Lugar, Mancha] = {}
+	for lugar: Lugar in MANCHAS_DE_LA_JORNADA:
+		manchas[lugar] = Mancha.new(MANCHAS_DE_LA_JORNADA[lugar])
 	return PisoDelLocal.new(manchas)
 
 
-## Cuántas pasadas lleva el piso entero.
-##
-## Se multiplica y nunca se escribe el producto: con las cuatro zonas y tres pasadas son doce, y
-## un `12` acá quedaría viejo el día que se agregue una zona o se rebalanceen las pasadas.
-func pasadas_totales() -> int:
-	return _manchas.size() * ReglasDeLaLimpieza.PASADAS_POR_MANCHA
+func lugares() -> Array[Lugar]:
+	var lugares: Array[Lugar] = []
+	lugares.assign(_manchas.keys())
+	return lugares
 
 
-func zonas() -> Array:
-	return _manchas.keys()
+## La mancha de ese lugar, o `null` si la jornada no puso ninguna ahí.
+func mancha_de(lugar: Lugar) -> Mancha:
+	return _manchas.get(lugar, null)
 
 
-## Cuántas pasadas le faltan a esa zona, o `0` si no es una zona del piso.
-func pasadas_restantes(zona: Zona) -> int:
-	var mancha := mancha_de(zona)
-	if mancha == null:
-		return 0
-	return mancha.pasadas_restantes()
+func balde() -> Balde:
+	return _balde
 
 
-## La mancha de esa zona, o `null`.
-func mancha_de(zona: Zona) -> Mancha:
-	if not _manchas.has(zona):
-		return null
-	var mancha: Mancha = _manchas[zona]
-	return mancha
-
-
-## Pasa el trapeador por esa zona, y devuelve cómo salió.
-##
-## **Lo que se lleva en la mano entra como `id` y no como objeto**: es lo que permite ejercer esto
-## sin el 006 puesto, y lo que evita que el dominio de la limpieza tenga que conocer al de agarrar.
-## Un `id` que no es el del trapeador —incluido el centinela de mano vacía— no baja una sola
-## pasada: limpiar con la lata en la mano sería limpiar gratis.
-func pasar(zona: Zona, id_en_la_mano: StringName) -> Resultado:
-	if id_en_la_mano != ReglasDeLaLimpieza.ID_DEL_TRAPEADOR:
-		return Resultado.SIN_TRAPEADOR
-	var mancha := mancha_de(zona)
-	if mancha == null or not mancha.pasar():
-		return Resultado.YA_ESTABA_LIMPIA
-	if mancha.esta_limpia():
-		return Resultado.MANCHA_LIMPIADA
-	return Resultado.PASADA
+func mopa() -> Mopa:
+	return _mopa
 
 
 ## Si no queda una sola mancha.
 ##
-## Se recorren todas y no se lleva un contador de limpias: un contador se desincronizaría el día
-## que alguien limpie por otro camino, y ésa es la clase de bug que no da error.
+## Se recorren todas y no se lleva un contador de borradas: un contador se desincronizaría el día
+## que alguien borre por otro camino, y ésa es la clase de bug que no da error.
 func esta_limpio() -> bool:
-	for zona: Zona in _manchas:
-		if not mancha_de(zona).esta_limpia():
+	for lugar: Lugar in _manchas:
+		if not _manchas[lugar].esta_limpia():
 			return false
 	return true
+
+
+## Usa lo que se lleva en la mano sobre el balde, el lavatorio o el inodoro, y devuelve cómo salió.
+##
+## **Lo que se lleva entra como `id` y no como objeto**: es lo que permite ejercer esto sin agarrar
+## nada, y lo que evita que el dominio de la limpieza tenga que conocer al de agarrar. Un par que
+## no es un gesto de limpiar —otro objeto, la mano vacía, uno de los gestos al revés— contesta
+## `SIN_EFECTO` y no cambia nada. Sobre una mancha se pasa con `pasar()`, que sabe cuál.
+func usar(en_la_mano: StringName, objetivo: StringName) -> ReglasDeLaLimpieza.Resultado:
+	match _uso.resolver(en_la_mano, objetivo):
+		Uso.Efecto.LLENAR:
+			return _balde.llenar()
+		Uso.Efecto.TENIR:
+			return _balde.tenir(ReglasDeLaLimpieza.agua_del_jabon(en_la_mano))
+		Uso.Efecto.VACIAR:
+			return _balde.vaciar()
+		Uso.Efecto.MOJAR:
+			return _mopa.mojar_en(_balde)
+	return ReglasDeLaLimpieza.Resultado.SIN_EFECTO
+
+
+## Pasa lo que se lleva en la mano por la mancha de ese lugar, y devuelve cómo salió.
+func pasar(en_la_mano: StringName, lugar: Lugar) -> ReglasDeLaLimpieza.Resultado:
+	var mancha := mancha_de(lugar)
+	if mancha == null or _uso.resolver(en_la_mano, Uso.MANCHA) != Uso.Efecto.LIMPIAR:
+		return ReglasDeLaLimpieza.Resultado.SIN_EFECTO
+	return mancha.borrar_con(_mopa)

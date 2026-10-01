@@ -123,8 +123,8 @@ func test_la_caja_que_se_lleva_no_da_nada() -> void:  # AC-STK-016
 func test_el_gesto_sale_de_lo_que_lleva_la_mano() -> void:  # AC-STK-038
 	var actroncito := _producto(Producto.Id.ACTRONCITO)
 	var caja := _caja(actroncito, _estante(actroncito, ReglasDelEstante.UNIDADES_POR_CAJA))
-	var trapeador := load("res://src/dominio/almacen/trapeador.tres") as ObjetoDelAlmacen
-	assert_object(trapeador).is_not_null()
+	var mopa := load("res://src/dominio/almacen/mopa.tres") as ObjetoDelAlmacen
+	assert_object(mopa).is_not_null()
 	var gestos := {
 		"las manos vacías": [null, ContenidoDeLaCaja.Gesto.SACAR],
 		"su producto": [UnidadDeProducto.new(actroncito), ContenidoDeLaCaja.Gesto.METER],
@@ -135,7 +135,7 @@ func test_el_gesto_sale_de_lo_que_lleva_la_mano() -> void:  # AC-STK-038
 		],
 		"otro producto":
 		[UnidadDeProducto.new(_producto(Producto.Id.MALBARDO)), ContenidoDeLaCaja.Gesto.NADA],
-		"el trapeador": [trapeador, ContenidoDeLaCaja.Gesto.NADA],
+		"la mopa": [mopa, ContenidoDeLaCaja.Gesto.NADA],
 	}
 	for mano: String in gestos:
 		var sostenido: ObjetoDelAlmacen = gestos[mano][0]

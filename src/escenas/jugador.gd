@@ -15,6 +15,12 @@ signal uso_pedido(objetivo: Node3D)
 ## Cuando la cadencia dice que toca un paso. No se emite por cuadro: ver `CadenciaDePasos`.
 signal paso_dado
 
+## Cuántos choques se piden por consulta al medir lo soltado contra el cuerpo. El motor corta ahí.
+const TOPE_DE_CHOQUES := 32
+
+## Cuánto se aparta lo soltado de lo que frenó el barrido, en metros, para caer sin rozarlo.
+const HOLGURA_DE_LA_CAIDA := 0.01
+
 ## Los dos sistemas de agarrar, por `@export` y no por `@onready`: un `@onready` se resuelve
 ## recién al entrar la escena al árbol, y entonces `id_en_la_mano()` se caería sobre un jugador
 ## apenas instanciado — que es como lo instancia todo test de esta escena. Tampoco son autoloads:
@@ -72,6 +78,9 @@ var _girando_el_dibujo := false
 ## La caja ocupa lugar: mientras se la lleva, el jugador no puede acercarse a una pared más de lo
 ## que la caja mide. La forma es hija del cuerpo y no del giro, porque sólo así choca.
 @onready var _forma_de_la_caja: CollisionShape3D = $FormaDeLaCaja
+
+## El cuerpo del jugador: lo soltado que queda metido en él cae al lado.
+@onready var _forma_del_cuerpo: CollisionShape3D = $Cuerpo
 
 
 func _ready() -> void:
@@ -316,11 +325,10 @@ func ubicar(lugar: Transform3D) -> void:
 
 ## Qué `id` del dominio se está llevando en la mano, o `SIN_ID`.
 ##
-## La única puerta por la que otra escena pregunta qué lleva el jugador — la piden los tres
-## llamadores de limpiar para saber si lo que hay en la mano es el trapeador, que es lo que decide
-## si una pasada cuenta: `PisoDelLocal.pasar()` compara este `id` contra el del trapeador y una
-## mano con otra cosa no baja una sola pasada. Devuelve el `id` y nunca el nodo: un nodo
-## cruzaría la dirección de las capas al revés.
+## La única puerta por la que otra escena pregunta qué lleva el jugador — la pide el puesto de
+## limpieza para saber qué útil hay en la mano, que es lo que decide qué hace cada uso:
+## `PisoDelLocal` busca este `id` en su tabla de usos, y una mano con otra cosa no hace nada.
+## Devuelve el `id` y nunca el nodo: un nodo cruzaría la dirección de las capas al revés.
 func id_en_la_mano() -> StringName:
 	var datos := agarre.manos().sostenido()
 	if datos == null:
@@ -489,20 +497,19 @@ func _apoyar_sobre_lo_mirado(cuerpo: RigidBody3D) -> bool:
 	var antes := cuerpo.global_position
 	# Un roce por encima: apoyado justo, la consulta de abajo contestaría que choca con el piso.
 	cuerpo.global_position = golpe["position"] + Vector3.UP * (ReglasDeLosObjetos.ROCE - base)
-	for forma in formas:
-		var lugar := PhysicsShapeQueryParameters3D.new()
-		lugar.shape = forma.shape
-		lugar.transform = forma.global_transform
-		# Con el contorno de los muebles: el hueco de un estante es lugar libre y no es un apoyo.
-		lugar.collision_mask = cuerpo.collision_mask | ReglasDeLosObjetos.CAPA_DEL_CONTORNO
-		lugar.exclude = [cuerpo.get_rid()]
-		if not espacio.intersect_shape(lugar, 1).is_empty():
-			cuerpo.global_position = antes
-			return false
+	if not _entra_entero(cuerpo, formas):
+		cuerpo.global_position = antes
+		return false
 	return true
 
 
 ## El punto fijo puede quedar detrás de la madera. Se barre el volumen desde el jugador.
+##
+## **Y lo que queda metido en el cuerpo cae derecho al piso, al lado del jugador**, como la caja.
+## El barrido no cuenta el cuerpo, que es de donde sale: lo que tiene más fondo que el lugar entre
+## el cuerpo y una pared quedaba encimado con él, y la física lo sacaba a los empujones. Medido el
+## 2026-09-30 mirando 40° abajo: un bidón a 0,7-1,0 m de una pared quedaba 5 cm adentro de ella, y
+## a 0,5 m un balde saltaba 28 cm y la mopa salía despedida 42 cm de costado.
 func _ajustar_la_caida(cuerpo: RigidBody3D) -> void:
 	var inicio := _camara.global_position
 	var recorrido := cuerpo.global_position - inicio
@@ -521,3 +528,125 @@ func _ajustar_la_caida(cuerpo: RigidBody3D) -> void:
 		consulta.exclude = [get_rid(), cuerpo.get_rid()]
 		avance = minf(avance, espacio.cast_motion(consulta)[0])
 	cuerpo.global_position = inicio + recorrido * avance
+	# Lo que el barrido frenó contra algo queda a un centímetro, y no pegado. Cayendo pegada a una
+	# pared, una unidad se enganchaba en una arista del modelo, giraba y se hundía 3 cm en el
+	# rincón con el piso. Medido el 2026-09-30 al pie de la fachada: pasaba según qué suites
+	# hubieran corrido antes, y con el centímetro no pasa en ningún orden.
+	if avance < 1.0:
+		cuerpo.global_position -= recorrido.normalized() * HOLGURA_DE_LA_CAIDA
+	# Si al lado tampoco entra, queda donde lo dejó el barrido: lo que ya no tiene lugar lo resuelve
+	# la red de seguridad.
+	if _metido_en_el_cuerpo(cuerpo) and _dejar_al_lado(cuerpo):
+		cuerpo.reset_physics_interpolation()
+
+
+## Si lo soltado quedó metido en el cuerpo del jugador más que un roce.
+##
+## Se mide con las formas de lo soltado contra el cuerpo solo: lo demás que tocan se excluye, y
+## lo que queda es cuánto se superponen los dos. Tocarlo no cuenta: la física no tiene nada que
+## sacar. Se pregunta desde lo soltado y no desde la cápsula: recién vuelto al mundo, el motor no
+## lo encuentra donde quedó. Medido el 2026-09-30: preguntando desde la cápsula no aparecía.
+func _metido_en_el_cuerpo(cuerpo: RigidBody3D) -> bool:
+	# Llevando una caja, su volumen es parte del cuerpo, y lo que se suelta es ella: se mediría
+	# metida en sí misma. A la caja la acomoda la reposición, que corre después.
+	if not _forma_de_la_caja.disabled:
+		return false
+	var espacio := get_world_3d().direct_space_state
+	for forma in _formas_de(cuerpo):
+		var consulta := PhysicsShapeQueryParameters3D.new()
+		consulta.shape = forma.shape
+		consulta.transform = forma.global_transform
+		consulta.collision_mask = collision_layer
+		var otros: Array[RID] = [cuerpo.get_rid()]
+		var lo_toca := false
+		for choque in espacio.intersect_shape(consulta, TOPE_DE_CHOQUES):
+			if choque["rid"] == get_rid():
+				lo_toca = true
+			else:
+				otros.append(choque["rid"])
+		if not lo_toca:
+			continue
+		consulta.exclude = otros
+		var puntos := espacio.collide_shape(consulta, TOPE_DE_CHOQUES)
+		for indice in range(0, puntos.size() - 1, 2):
+			if puntos[indice].distance_to(puntos[indice + 1]) > ReglasDeLosObjetos.ROCE:
+				return true
+	return false
+
+
+## Lo deja derecho en el piso, al lado del jugador, en el primer lugar donde entra entero, y
+## devuelve si lo encontró. Se prueba de adelante hacia los costados, como la caja.
+##
+## Derecho como la caja: la mira lo inclina, y un bidón inclinado apoyado en el piso se vuelca. Con
+## el mismo rumbo, eso sí: lo que ya venía derecho cae sin girar.
+func _dejar_al_lado(cuerpo: RigidBody3D) -> bool:
+	var formas := _formas_de(cuerpo)
+	if formas.is_empty():
+		return false
+	var antes := cuerpo.global_transform
+	cuerpo.global_basis = _derecho(cuerpo.global_basis)
+	var limites := AABB()
+	for indice in formas.size():
+		var forma := formas[indice]
+		var suyos := forma.transform * forma.shape.get_debug_mesh().get_aabb()
+		limites = suyos if indice == 0 else limites.merge(suyos)
+	var capsula := _forma_del_cuerpo.shape as CapsuleShape3D
+	var ancho := Vector2(limites.size.x, limites.size.z).length() / 2.0
+	var lugares := LugaresDelPiso.alrededor(
+		get_world_3d().direct_space_state,
+		global_position,
+		frente(),
+		capsula.radius + ancho + ReglasDeLosObjetos.ROCE,
+		limites.size.y,
+		ReglasDeLosObjetos.CAIDA_HASTA_EL_PISO,
+		ReglasDeLosObjetos.LADOS_ALREDEDOR,
+		cuerpo.collision_mask,
+		[cuerpo.get_rid(), get_rid()]
+	)
+	var centro := limites.get_center()
+	for punto in lugares:
+		# Un roce por encima del piso, como al apoyarlo sobre lo mirado.
+		cuerpo.global_position = (
+			punto + Vector3(-centro.x, ReglasDeLosObjetos.ROCE - limites.position.y, -centro.z)
+		)
+		if _entra_entero(cuerpo, formas):
+			return true
+	cuerpo.global_transform = antes
+	return false
+
+
+## Si lo soltado entra entero donde está, cuerpo del jugador incluido. Con el contorno de los
+## muebles: el hueco de un estante es lugar libre y no es un apoyo.
+func _entra_entero(cuerpo: RigidBody3D, formas: Array[CollisionShape3D]) -> bool:
+	var espacio := get_world_3d().direct_space_state
+	for forma in formas:
+		var lugar := PhysicsShapeQueryParameters3D.new()
+		lugar.shape = forma.shape
+		lugar.transform = forma.global_transform
+		lugar.collision_mask = cuerpo.collision_mask | ReglasDeLosObjetos.CAPA_DEL_CONTORNO
+		lugar.exclude = [cuerpo.get_rid()]
+		if not espacio.intersect_shape(lugar, 1).is_empty():
+			return false
+	return true
+
+
+## La misma orientación sin la inclinación: el rumbo en el piso, y arriba para arriba. Si el
+## costado quedó vertical —lo soltado venía acostado—, el rumbo sale del frente.
+static func _derecho(base: Basis) -> Basis:
+	var costado := Vector3(base.x.x, 0.0, base.x.z)
+	if costado.length_squared() < 0.0001:
+		var frente := Vector3(base.z.x, 0.0, base.z.z)
+		if frente.length_squared() < 0.0001:
+			return Basis.IDENTITY
+		costado = Vector3.UP.cross(frente)
+	costado = costado.normalized()
+	return Basis(costado, Vector3.UP, costado.cross(Vector3.UP))
+
+
+## Las formas con las que el cuerpo choca: las apagadas no cuentan.
+static func _formas_de(cuerpo: RigidBody3D) -> Array[CollisionShape3D]:
+	var formas: Array[CollisionShape3D] = []
+	for forma: CollisionShape3D in cuerpo.find_children("*", "CollisionShape3D", false, false):
+		if not forma.disabled and forma.shape != null:
+			formas.append(forma)
+	return formas

@@ -72,7 +72,13 @@ func test_cada_objeto_del_almacen_declara_su_sonoridad() -> void:
 		&"bolsa_de_basura_1": EntradaSonora.Sonoridad.BOLSA,
 		&"bolsa_de_basura_2": EntradaSonora.Sonoridad.BOLSA,
 		&"bolsa_de_basura_3": EntradaSonora.Sonoridad.BOLSA,
-		&"trapeador": EntradaSonora.Sonoridad.MOPA,
+		&"mopa": EntradaSonora.Sonoridad.MOPA,
+		# El balde no tiene una sonoridad propia todavía: suena como la botella plástica, que
+		# es la más parecida de las que hay.
+		&"balde": EntradaSonora.Sonoridad.BOTELLA_PLASTICA,
+		&"jabon_azul": EntradaSonora.Sonoridad.BOTELLA_PLASTICA,
+		&"jabon_rosa": EntradaSonora.Sonoridad.BOTELLA_PLASTICA,
+		&"jabon_amarillo": EntradaSonora.Sonoridad.BOTELLA_PLASTICA,
 		&"cuaderno_del_deposito": EntradaSonora.Sonoridad.PAPEL,
 		&"caja_de_reposicion": EntradaSonora.Sonoridad.CAJA,
 	}

@@ -254,8 +254,10 @@ no baja.
 
 ### AC-PLY-014 — El uso declarado y los demás *(verifica BR-PLY-012)*
 
-DADO el trapeador sobre una mancha ENTONCES el efecto es limpiar; con cualquier otro par, o con
-las manos vacías, no hay efecto.
+DADO la mopa sobre una mancha ENTONCES el efecto es limpiar; el balde sobre el lavatorio, llenar;
+cualquiera de los tres jabones sobre el balde, teñir; la mopa sobre el balde, mojar; y el balde
+sobre el inodoro, vaciar. Con cualquier otro par —uno de ésos al revés, u otro objeto— o con las
+manos vacías, no hay efecto.
 
 ### AC-PLY-015 — Lo soltado se duerme *(verifica BR-PLY-013)*
 
@@ -365,8 +367,8 @@ encimarse con nada.
 ### AC-PLY-034 — Qué superficie admite *(verifica BR-PLY-018)*
 
 DADO una superficie con la inclinación justo debajo del corte de horizontal ENTONCES no admite;
-con el corte exacto sobre el mundo fijo, o sobre una caja contenedora, sí; sobre el trapeador,
-no. Ningún objeto del almacén salvo las cajas contenedoras admite otro encima.
+con el corte exacto sobre el mundo fijo, o sobre una caja contenedora, sí; sobre la mopa, no.
+Ningún objeto del almacén salvo las cajas contenedoras admite otro encima.
 
 ### AC-PLY-035 — Sin superficie que valga, se suelta como siempre *(verifica BR-PLY-018)*
 

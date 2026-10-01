@@ -1,34 +1,94 @@
-## Los valores fijos de limpiar el local: cuántas pasadas lleva una mancha, cuán lejos están una
-## de otra y con qué se limpia.
+## Los valores fijos de limpiar el local: qué jabón borra cada mancha, cómo se llama cada cosa que
+## interviene y de qué color se ve.
 ##
 ## Es un archivo aparte de `reglas.gd` por el mismo criterio que separa a los otros `reglas_de_*`
 ## de esta carpeta: no es de qué trata el número, es quién lo toca y probando qué. `reglas.gd` se
-## toca discutiendo cuánto dura la noche; esto, probando si limpiar obliga a recorrer.
+## toca discutiendo cuánto dura la noche; esto, probando si limpiar obliga a ir al baño.
 class_name ReglasDeLaLimpieza
 extends RefCounted
 
-## Cuántas veces hay que pasar el trapeador por una mancha.
+## Qué tiene el balde, o de qué está mojada la mopa: nada, agua limpia, o agua teñida de uno de
+## los tres jabones.
 ##
-## **El piso es 2, y el invariante importa más que el número**: con una sola pasada la mancha se
-## limpiaría en el instante en que el jugador llega, y limpiar volvería a ser un clic — que es
-## exactamente lo que no compite contra investigar, porque no hay nada que repartir.
-##
-## Tres es un primer valor. Es un `int` que baja de a uno y **no una barra que se llena**: la
-## barra pide mantener apretado, y mantener apretado no se puede dejar por la mitad y retomar.
-const PASADAS_POR_MANCHA := 3
+## **Es un solo `enum` para los dos, y es a propósito**: mojar la mopa es copiarle el agua del
+## balde, y borrar es comparar la de la mopa con la que pide la mancha. Con un estado por objeto,
+## esas dos reglas serían dos traducciones que se pueden separar sin que nada lo diga.
+enum Agua { NINGUNA, LIMPIA, AZUL, ROSA, AMARILLO }
 
-## A cuánto están las manchas una de otra, y del trapeador, en metros.
-##
-## **Tiene que ser estrictamente mayor que `ReglasDelJugador.ALCANCE_DE_LA_MIRA`**, y ahí está el
-## término que esta tarea aporta a la resta del turno: si fuera menor, desde una mancha se podría
-## enfocar la siguiente y los tres tramos de caminata dejarían de existir sin que nada lo dijera.
-##
-## Es un mínimo y no la distancia exacta: `almacen.tscn` las pone más lejos, y hay un caso que
-## mide las posiciones de verdad para que el recorrido exista fuera de la prosa.
-const DISTANCIA_MINIMA_ENTRE_MANCHAS := 4.0
+## Los tres tipos de mancha. Cada uno lo borra un solo jabón: ver `AGUA_QUE_BORRA`.
+enum TipoDeMancha { MOHO, CACA, POLVO }
 
-## El `id` del objeto con el que se limpia. Es el mismo `StringName` que declara `trapeador.tres`,
-## y hay un caso que afirma que coinciden: es la única forma de que ese par no se separe en
-## silencio, porque un `id` que no coincide no rompe nada — el piso simplemente no se limpia
-## nunca.
-const ID_DEL_TRAPEADOR := &"trapeador"
+## Cómo salió un uso. Los cinco primeros después de `SIN_EFECTO` cambian algo; los demás son
+## rechazos, y ninguno cambia el estado.
+##
+## **Son distintos a propósito**: adelante del jugador, «el balde está vacío» y «ese jabón no es»
+## son dos cosas que resuelve distinto, y aplanarlas daría un solo cartel para las dos.
+enum Resultado {
+	SIN_EFECTO,
+	BALDE_LLENADO,
+	BALDE_TENIDO,
+	BALDE_VACIADO,
+	MOPA_MOJADA,
+	MANCHA_BORRADA,
+	BALDE_VACIO,
+	BALDE_YA_LLENO,
+	BALDE_YA_TENIDO,
+	MOPA_SECA,
+	SIN_JABON,
+	JABON_EQUIVOCADO,
+	YA_ESTABA_LIMPIA,
+}
+
+## Los `id` de lo que interviene en limpiar. Los dos útiles son los mismos `StringName` que
+## declaran sus `.tres`, y los dos artefactos del baño los declara la estructura del local: hay
+## un caso de cada lado que afirma que coinciden, porque un `id` que no coincide no rompe nada —el
+## gesto simplemente no pasa nunca—.
+const ID_DE_LA_MOPA := &"mopa"
+const ID_DEL_BALDE := &"balde"
+const ID_DEL_LAVATORIO := &"lavatorio"
+const ID_DEL_INODORO := &"inodoro"
+
+## El `id` de cada bidón, con el agua que deja al echarlo en el balde.
+const JABONES: Dictionary[StringName, Agua] = {
+	&"jabon_azul": Agua.AZUL,
+	&"jabon_rosa": Agua.ROSA,
+	&"jabon_amarillo": Agua.AMARILLO,
+}
+
+## Qué agua borra cada tipo de mancha: la del jabón que le corresponde, según la ficha.
+const AGUA_QUE_BORRA: Dictionary[TipoDeMancha, Agua] = {
+	TipoDeMancha.MOHO: Agua.AZUL,
+	TipoDeMancha.CACA: Agua.ROSA,
+	TipoDeMancha.POLVO: Agua.AMARILLO,
+}
+
+## De qué color se ve el agua: en el balde y en la punta de la mopa, que es la misma.
+##
+## **El color es lo único que le dice al jugador qué jabón tiene el balde**, y por eso vive acá y
+## no en la escena: la escena pinta lo que esto contesta. Los tres jabones son los de sus bidones.
+## Sin agua no hay color: `NINGUNA` es transparente.
+const COLOR_DEL_AGUA: Dictionary[Agua, Color] = {
+	Agua.NINGUNA: Color(0.0, 0.0, 0.0, 0.0),
+	Agua.LIMPIA: Color(0.74, 0.89, 0.98),
+	Agua.AZUL: Color(0.16, 0.45, 0.92),
+	Agua.ROSA: Color(0.93, 0.3, 0.62),
+	Agua.AMARILLO: Color(0.97, 0.84, 0.2),
+}
+
+## De qué color se ve cada tipo de mancha: es lo que le dice al jugador qué jabón ir a buscar.
+##
+## Mientras el arte no tenga una textura por tipo, las tres son la misma mancha teñida de esto.
+const COLOR_DE_LA_MANCHA: Dictionary[TipoDeMancha, Color] = {
+	TipoDeMancha.MOHO: Color(0.3, 0.46, 0.16),
+	TipoDeMancha.CACA: Color(0.38, 0.24, 0.1),
+	TipoDeMancha.POLVO: Color(0.33, 0.33, 0.33),
+}
+
+
+## El agua que deja en el balde lo que se lleva en la mano, o `NINGUNA` si no es un jabón.
+##
+## Lo que se lleva entra como `id` y no como objeto: es lo que evita que el dominio de la limpieza
+## tenga que conocer al de agarrar.
+static func agua_del_jabon(id: StringName) -> Agua:
+	var agua: Agua = JABONES.get(id, Agua.NINGUNA)
+	return agua

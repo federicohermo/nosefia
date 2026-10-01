@@ -2,6 +2,11 @@ extends GdUnitTestSuite
 
 const ALMACEN := preload("res://src/escenas/almacen.tscn")
 const AperturaConLugar := preload("res://test/escenas/apertura_con_lugar.gd")
+const OBJETO_SUELTO := preload("res://src/escenas/objetos/objeto_agarrable.tscn")
+
+## Dónde nace el objeto suelto que crea un caso: un punto libre del piso del local. Es su lugar de
+## origen, adonde la red de seguridad lo puede devolver.
+const LIBRE_EN_EL_LOCAL := Vector3(0.0, 0.2, 3.0)
 
 var _escala_anterior: float
 
@@ -83,7 +88,16 @@ func test_abrir_la_jornada_termina_el_examen_en_curso() -> void:  # AC-INV-025
 	var examen: Examen = jugador.get("examen")
 	var agarre: Agarre = almacen.get("_agarre")
 	var bolsa: RigidBody3D = almacen.get_node("Objetos/BolsaDeBasura1")
-	var trapeador: RigidBody3D = almacen.get_node("Objetos/Trapeador")
+	# Un objeto suelto propio del caso: los útiles y las bolsas vuelven a su lugar al abrir la
+	# jornada, y ahí no se vería dónde quedó lo que se llevaba.
+	var llevado: RigidBody3D = OBJETO_SUELTO.instantiate()
+	llevado.position = LIBRE_EN_EL_LOCAL
+	almacen.add_child(llevado)
+	(
+		assert_bool(_libre_en_el_local(llevado))
+		. override_failure_message("%v ya no está libre en el local" % LIBRE_EN_EL_LOCAL)
+		. is_true()
+	)
 	var terminados := [0]
 	examen.examen_terminado.connect(func() -> void: terminados[0] += 1)
 	almacen.call("_al_abrir_la_jornada", 2)
@@ -97,7 +111,7 @@ func test_abrir_la_jornada_termina_el_examen_en_curso() -> void:  # AC-INV-025
 	assert_bool(control.esta_suspendido()).is_false()
 	assert_object(bolsa.get_parent()).is_same(padre)
 	# Lo que se llevaba queda a los pies, y no en la cara ni donde se mira.
-	assert_bool(agarre.pedir_agarrar(trapeador.get("datos"), trapeador)).is_true()
+	assert_bool(agarre.pedir_agarrar(llevado.get("datos"), llevado)).is_true()
 	assert_bool(examen.iniciar()).is_true()
 	var camara: Camera3D = jugador.get_node("Giro/Camara")
 	camara.look_at(jugador.global_position + jugador.frente() * 1.2)
@@ -107,7 +121,7 @@ func test_abrir_la_jornada_termina_el_examen_en_curso() -> void:  # AC-INV-025
 	assert_bool(control.esta_suspendido()).is_false()
 	assert_object(agarre.manos().sostenido()).is_null()
 	assert_int(examen.punto_de_examen.get_child_count()).is_zero()
-	assert_vector(trapeador.global_position).is_equal_approx(pies, Vector3.ONE * 0.01)
+	assert_vector(llevado.global_position).is_equal_approx(pies, Vector3.ONE * 0.01)
 	# La E siguiente examina lo que la mira tiene adelante.
 	assert_bool(examen.iniciar(bolsa.get("datos"), bolsa)).is_true()
 	assert_object(bolsa.get_parent()).is_same(examen.punto_de_examen)
@@ -125,13 +139,13 @@ func test_con_otra_pantalla_encima_la_e_no_abre_un_examen() -> void:
 	var control: ControlDelJugador = jugador.get("_control")
 	var examen: Examen = jugador.get("examen")
 	var agarre: Agarre = almacen.get("_agarre")
-	var trapeador: RigidBody3D = almacen.get_node("Objetos/Trapeador")
+	var balde: RigidBody3D = almacen.get_node("Objetos/Balde")
 	jugador.suspender()
 	jugador.set("_enfocado", almacen.get_node("Objetos/BolsaDeBasura1"))
 	var evento := InputEventAction.new()
 	evento.action = ReglasDeLosObjetos.ACCION_EXAMINAR
 	evento.pressed = true
-	for llevado: RigidBody3D in [null, trapeador]:
+	for llevado: RigidBody3D in [null, balde]:
 		if llevado != null:
 			assert_bool(agarre.pedir_agarrar(llevado.get("datos"), llevado)).is_true()
 		for vez in 2:
@@ -217,24 +231,71 @@ func _atender(almacen: Node3D) -> void:
 	ventanilla.call("cerrar")
 
 
+## Borra las cuatro manchas como en el juego: por cada jabón, el balde se vacía en el inodoro, se
+## llena en el lavatorio y se tiñe; la mopa se moja en él y pasa por las manchas que ese jabón
+## borra.
 func _limpiar(almacen: Node3D) -> void:
 	var jugador: Node3D = almacen.get("_jugador")
 	var agarre: Agarre = almacen.get("_agarre")
-	var trapeador: Node3D = almacen.get_node("Objetos/Trapeador")
-	assert_bool(agarre.pedir_agarrar(trapeador.call("interactuar"), trapeador)).is_true()
+	var lavatorio: Node3D = almacen.get_node("Estructura/vanitory/StaticBody3D")
+	var inodoro: Node3D = almacen.get_node("Estructura/inodoro/StaticBody3D")
+	var balde: Node3D = almacen.get_node("Objetos/Balde")
+	var mopa: Node3D = almacen.get_node("Objetos/Mopa")
 	var limpieza: Node3D = almacen.get("_limpieza")
-	for mancha: Node3D in limpieza.call("manchas"):
-		await _enfocar_mancha(jugador, mancha)
-		for pasada in ReglasDeLaLimpieza.PASADAS_POR_MANCHA:
+	# Se buscan antes de soltar nada: lo soltado cuelga del almacén, y ya no de `Objetos`.
+	var jabones: Array[Node3D] = []
+	for nombre: String in ["JabonAmarillo", "JabonAzul", "JabonRosa"]:
+		jabones.append(almacen.get_node("Objetos/" + nombre))
+	for jabon in jabones:
+		var pedida := ReglasDeLaLimpieza.agua_del_jabon(jabon.get("datos").id)
+		_agarrar(agarre, balde)
+		_usar_sobre(jugador, inodoro)
+		_usar_sobre(jugador, lavatorio)
+		_soltar_lejos(agarre)
+		_agarrar(agarre, jabon)
+		_usar_sobre(jugador, balde)
+		_soltar_lejos(agarre)
+		_agarrar(agarre, mopa)
+		_usar_sobre(jugador, balde)
+		for mancha: Node3D in limpieza.call("manchas"):
+			var tipo := _piso(almacen).mancha_de(mancha.call("lugar_de_la_mancha")).tipo()
+			if ReglasDeLaLimpieza.AGUA_QUE_BORRA[tipo] != pedida:
+				continue
+			await _enfocar_mancha(jugador, mancha)
 			var clic := InputEventMouseButton.new()
 			clic.button_index = MOUSE_BUTTON_RIGHT
 			clic.pressed = true
 			get_viewport().push_input(clic)
-		assert_bool(mancha.visible).is_false()
-	agarre.soltar(true)
+			assert_bool(mancha.visible).override_failure_message(mancha.name).is_false()
+		_soltar_lejos(agarre)
 	await get_tree().process_frame
 	var reloj: RelojDelTurno = almacen.get("_reloj")
 	assert_bool(reloj.obligatoria(Tarea.Tipo.LIMPIAR).completada()).is_true()
+
+
+func _piso(almacen: Node3D) -> PisoDelLocal:
+	return (almacen.get("_limpiador") as Limpiador).piso()
+
+
+func _agarrar(agarre: Agarre, util: Node3D) -> void:
+	assert_bool(agarre.pedir_agarrar(util.call("interactuar"), util)).is_true()
+
+
+## El clic derecho sobre el objetivo, con la mira apagada: lo que se tiene adelante lo pone el caso.
+func _usar_sobre(jugador: Node3D, objetivo: Node3D) -> void:
+	jugador.set_physics_process(false)
+	jugador.set("_enfocado", objetivo)
+	var evento := InputEventAction.new()
+	evento.action = ReglasDelJugador.ACCION_USAR
+	evento.pressed = true
+	jugador.call("_unhandled_input", evento)
+
+
+## Suelta lo que se lleva y lo devuelve a su lugar del baño: tirado adelante, taparía la mancha
+## que se enfoca después.
+func _soltar_lejos(agarre: Agarre) -> void:
+	var soltado := agarre.soltar(true)
+	soltado.global_transform = soltado.call(ReglasDeLosObjetos.METODO_LUGAR_DE_ORIGEN)
 
 
 func _sacar_la_basura(almacen: Node3D) -> void:
@@ -369,3 +430,22 @@ func test_la_noche_siguiente_abre_con_cada_caja_llena_y_nada_afuera() -> void:  
 			. is_equal(ReglasDelEstante.UNIDADES_POR_CAJA)
 		)
 		assert_int(estante.reservadas(producto)).is_zero()
+
+
+## La premisa del objeto suelto de los casos: su lugar de origen está libre en el local, con el
+## piso justo abajo. La red lo devuelve ahí, y si el local cambia ese lugar puede dejar de serlo.
+static func _libre_en_el_local(cuerpo: RigidBody3D) -> bool:
+	var espacio := cuerpo.get_world_3d().direct_space_state
+	for forma: CollisionShape3D in cuerpo.find_children("*", "CollisionShape3D", false, false):
+		var consulta := PhysicsShapeQueryParameters3D.new()
+		consulta.shape = forma.shape
+		consulta.transform = forma.global_transform
+		consulta.collision_mask = cuerpo.collision_mask
+		consulta.exclude = [cuerpo.get_rid()]
+		if not espacio.intersect_shape(consulta, 1).is_empty():
+			return false
+	var abajo := PhysicsRayQueryParameters3D.create(
+		cuerpo.global_position, cuerpo.global_position + Vector3.DOWN * 0.2, cuerpo.collision_mask
+	)
+	abajo.exclude = [cuerpo.get_rid()]
+	return not espacio.intersect_ray(abajo).is_empty()

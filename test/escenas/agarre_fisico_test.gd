@@ -21,7 +21,25 @@ func test_soltar_hacia_la_gondola_deja_el_producto_visible_y_recuperable() -> vo
 			var cuerpo: RigidBody3D = agarre.punto_de_producto.get_child(0)
 			var orientacion := cuerpo.global_basis
 			agarre.soltar(true)
-			assert_bool(cuerpo.global_basis.is_equal_approx(orientacion)).is_true()
+			# Soltar no lo endereza. Salvo lo que queda metido en el cuerpo, que cae derecho al piso
+			# al lado del jugador, como la caja: pegado a la góndola, el barrido lo deja en la cara.
+			if not cuerpo.global_basis.is_equal_approx(orientacion):
+				var inclinado := rad_to_deg(cuerpo.global_basis.y.angle_to(Vector3.UP))
+				(
+					assert_float(inclinado)
+					. override_failure_message(
+						"%s se enderezó a %.0f° sin caer al lado" % [producto.nombre, inclinado]
+					)
+					. is_less(1.0)
+				)
+				var al_lado := cuerpo.global_position - jugador.global_position
+				(
+					assert_float(Vector2(al_lado.x, al_lado.z).length())
+					. override_failure_message(
+						"%s se enderezó a %v del jugador" % [producto.nombre, al_lado]
+					)
+					. is_less(1.0)
+				)
 			for cuadro in 90:
 				await get_tree().physics_frame
 			camara.look_at(cuerpo.global_position)

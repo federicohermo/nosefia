@@ -157,6 +157,9 @@ func test_laysntt_y_jorgillo_quedan_sobre_el_suelo_al_mover_la_camara() -> void:
 	add_child(almacen)
 	await get_tree().physics_frame
 	for mancha: Node3D in almacen.get_node("LimpiezaDelAlmacen").get_children():
+		# Las del piso: la del moho va en una pared, y su apoyo lo mide `apoyos_del_modelo_test`.
+		if mancha.global_basis.y.dot(Vector3.UP) < 0.99:
+			continue
 		var consulta := PhysicsRayQueryParameters3D.create(
 			mancha.global_position + Vector3.UP, mancha.global_position + Vector3.DOWN, 1
 		)
@@ -191,7 +194,9 @@ func test_laysntt_y_jorgillo_quedan_sobre_el_suelo_al_mover_la_camara() -> void:
 		assert_bool(cuerpo.is_visible_in_tree()).is_true()
 		var vista: MeshInstance3D = cuerpo.get_node("Malla")
 		var limites := vista.global_transform * vista.mesh.get_aabb()
-		var mancha: MeshInstance3D = almacen.get_node("LimpiezaDelAlmacen/ManchaDelDeposito/Malla")
+		var mancha: MeshInstance3D = almacen.get_node(
+			"LimpiezaDelAlmacen/ManchaEntreLasGondolas/Malla"
+		)
 		var limites_mancha := mancha.global_transform * mancha.mesh.get_aabb()
 		assert_float(limites.end.y).is_greater(limites_mancha.end.y)
 		assert_bool(agarre.pedir_agarrar(cuerpo.datos, cuerpo)).is_true()
