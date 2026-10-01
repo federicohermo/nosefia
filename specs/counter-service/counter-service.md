@@ -23,7 +23,7 @@ jugador**: es el único lugar donde el juego puede mentir en vivo.
 | **Diferencia** | lo que paga menos lo que marca la caja, **con signo** | vuelto, error |
 | **Despachar** | dar por terminada la atención, se le haya vendido o no | atender, cerrar |
 | **Ventanilla** | la única ventana por la que se atiende. Nadie entra al local | mostrador, caja |
-| **Vendibles** | las unidades de un producto que se pueden vender: lo que el estante no necesita | stock, disponible |
+| **Vendibles** | las unidades de un producto que se pueden vender: lo que queda en la caja y el estante no necesita | stock, disponible |
 
 ## Comportamiento normativo
 

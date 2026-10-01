@@ -11,8 +11,8 @@ extends GdUnitTestSuite
 
 const CONTENIDO := "res://src/dominio/almacen/contenido_de_la_caja.gd"
 
-## Casilleros de la fila de adelante del producto de prueba: tantos como una caja, para que la
-## góndola no corte antes que la caja en los casos que no la miden.
+## Casilleros de la fila de adelante del producto de prueba: tantos como una caja. Sacar no los
+## mira (BR-STK-017); los miran colocar y los vendibles, que los casos cuentan contra este número.
 const CASILLEROS := 8
 
 ## Desde este número un entero escrito en el código es balance y no estructura: el `0` y el `1`
