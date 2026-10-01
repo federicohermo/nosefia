@@ -142,10 +142,10 @@ herramienta la corta antes del test que falló. Medido el 2026-09-26.
 **no se saltea: sale rojo** — ese salteo vale sólo mientras no exista un solo `*_test.gd`, y hay
 muchos.
 
-**Y `verificar.py` verde no prueba que la suite haya corrido.** Una suite de gdUnit4 que no parsea
-se descarta **en silencio** y el nodo `tests` sale verde igual — es el estado normal del paso 1 del
-TDD, y también el de un `class_name` recién creado. La única señal es el conteo crudo, que
-`verificar.py` **no imprime**:
+**Y el conteo crudo confirma que corrió todo.** Desde gdUnit4 6.2.1, una suite que no parsea corta
+la corrida entera con 105, y el nodo `tests` sale rojo. Con la versión de antes se descartaba en
+silencio y el nodo salía verde. Medido el 2026-09-30, en `.claude/rules/tests.md`. El conteo
+crudo sigue siendo el control, y `verificar.py` **no lo imprime**:
 
 ```powershell
 & $env:GODOT_BIN --path . --headless -s -d --remote-debug tcp://127.0.0.1:0 `
@@ -158,18 +158,18 @@ invocar Godot como comando. **Y el `2>$null` no se saca**: PowerShell no pasa el
 por `Select-String`, y sin él la corrida devuelve 4,5 MB. Medido el 2026-09-24.
 
 Ese `(N/N)` tiene que dar igual que `find test -name '*_test.gd' | wc -l`. Si da menos, hay una
-suite que no corrió y el nodo verde no lo dice.
+suite que no corrió.
 
 **El escalón que cuesta una vuelta:** crear el `.gd` no alcanza para que su test lo vea. Un
 `class_name` nuevo no entra al registro global hasta que se vuelve a correr
 `& $env:GODOT_BIN --headless --path . --import --quit`, desde PowerShell, y hasta entonces el error
-es `Parse Error: Identifier "X" not declared` **con el archivo ya escrito en disco**. Re-importá
-después de crear cada archivo con `class_name` nuevo.
+es `Parse Error: Identifier "X" not declared` **con el archivo ya escrito en disco**, y la
+corrida entera sale con 105. Re-importá después de crear cada archivo con `class_name` nuevo.
 
-**Y el rojo del paso 1 no se lee en el conteo de fallos.** Cuando el recurso que el caso carga
-todavía no existe, el error de script **aborta la función** y gdUnit4 no cuenta ninguna aserción
-fallida: el caso sale **`PASSED`** por no haber llegado a afirmar nada. Medido el 2026-09-01: **4
-de 5 casos en verde** con la escena sin escribir. El «falla por lo que se espera» se verifica en el
+**Y el rojo del paso 1 se lee en la salida cruda.** Desde 6.2.1, un caso que aborta por un error
+de script sale `FAILED`, con el error contado. Con la versión de antes salía `PASSED`: el
+2026-09-01 dio **4 de 5 casos en verde** con la escena sin escribir. Pero un `FAILED` por un error
+de script no es todavía el rojo que se espera. El «falla por lo que se espera» se verifica en el
 `ERROR: Failed loading resource` de la salida cruda. Ese `ERROR:` va por stderr: se lee corriendo
 sólo esa suite, con `-a <ruta>` y sin `2>$null`. Los dos `ERROR:` de `--remote-debug` no son un
 fallo.
@@ -214,7 +214,23 @@ se corrige el código.
 - `python .claude/scripts/verificar.py` en verde, sin nodos salteados.
 - **El PR declara, por cada `AC-<COD>-###`, `AC → test → resultado`**, y lleva `Closes #N` si hay
   issue.
+- **Si el cambio redefine un gesto, buscá los casos que lo ejercen en el estado nuevo** y corré
+  esas suites sueltas antes de `verificar.py`. En el #176, dos clics seguidos sobre la misma caja
+  pasaron de «no hace nada» a «devuelve la unidad», y un caso de `reposicion_manual_test.gd` que
+  afirmaba lo viejo costó una corrida entera en 6/7.
 - **Lo que aparece implementando se hace, no se anota.** Un issue incompleto no se cierra abriendo
   otro issue: se completa.
+- **Las capturas que pide el issue van al PR, no a la rama.** Suben a la rama huérfana
+  `capturas/<N>` con `python .claude/skills/implement-feature/scripts/capturas_a_rama.py <N>
+  <carpeta>`, y el PR las muestra por su URL de `raw.githubusercontent.com`. El script existe
+  porque desde un worktree el guard rechaza `git -C` sobre otro.
+- **Un generador que reemplaza el trabajo a mano del artista se prueba contra lo que hizo el
+  artista**, en todo lo que el issue no pide cambiar. En el #262, el acomodador apoyaba cada
+  unidad de plano sobre la chapa, y en las rampas de las cabeceras las echó hacia adelante: el
+  artista las tenía hacia atrás. Lo vio el usuario, no un test.
+- **Lo que genera un recurso commiteado va al repo con él**, con su test. Un recurso sin su
+  generador sólo se puede editar a mano, y el cambio siguiente lo escribe de nuevo desde cero. La
+  disposición de la góndola, sus dos escenas y sus 71 mallas salían de un acomodador que vivió en
+  el scratch de una sesión: el #262 tuvo que escribirlo otra vez.
 - Si el trabajo falsificó algo que la documentación afirma en presente, actualizá `docs/`,
   `.claude/rules/` y `CLAUDE.md`.

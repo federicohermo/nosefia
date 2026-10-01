@@ -22,6 +22,11 @@
 # se olvidara dejaba un directorio sin trackear listo para commitear por error.
 /reports/
 
+# El `-rd` de gdUnit4 es relativo al proyecto aunque empiece con `/`: un `-rd /tmp/x` crea
+# `tmp/x` adentro del repo, listo para que un `git add -A` lo commitee. Pasó en dos carriles
+# del lote del 2026-09-29, el segundo con la advertencia escrita en su preámbulo.
+/tmp/
+
 # Python: las herramientas del harness viven en .claude/scripts/
 __pycache__/
 *.py[cod]

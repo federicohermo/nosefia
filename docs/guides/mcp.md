@@ -77,6 +77,9 @@ cada una. La tabla de abajo la copia, y `test_mcp.py` da rojo si se separan.
 - **Los autoloads**, que son globales por construcción y no dejan referencia.
 - **Las llamadas en ejecución.** Sin consumidores no hay prueba de código muerto: hay una
   sospecha.
+- **Un worktree.** El servidor lo levanta la sesión desde su checkout. Un subagente que trabaja
+  en `.claude/worktrees/` lo comparte, y recibe respuestas sobre el checkout principal. En un
+  carril apilado sobre otro PR, lo que el índice dice es de antes. Ahí va `rg` sobre el worktree.
 
 ## Que no contradiga al gate
 

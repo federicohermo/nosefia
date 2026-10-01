@@ -173,7 +173,13 @@ def huerfanos(directorio: Path, ya_estan: list[Path], principal: Path) -> list[P
 
 
 def barrer_ramas() -> tuple[list[str], list[str]]:
-    """Borra las ramas de worktree sin trabajo propio. El `-d` es el que pone el límite."""
+    """Borra las ramas de worktree sin trabajo propio. El `-d` es el que pone el límite.
+
+    **Y una rama entera en un remoto tampoco tiene trabajo propio**, aunque `-d` se niegue.
+    Los carriles arrancan en `origin/main`, que no es ancestro de `staging`, y sin upstream:
+    `-d` no la ve mergeada en ningún lado. Cerrando el lote #262–#267, el 2026-09-30, las nueve
+    ramas quedaron como ANOMALIA sin un solo commit que no estuviera en `origin/main`.
+    """
     salida = git(
         "branch", "--list", f"{RAMA_DE_WORKTREE}*", "--format=%(refname:short)"
     ).stdout
@@ -182,9 +188,17 @@ def barrer_ramas() -> tuple[list[str], list[str]]:
     for rama in (r.strip() for r in salida.splitlines() if r.strip()):
         if git("branch", "-d", rama).returncode == 0:
             borradas.append(rama)
+        elif entera_en_un_remoto(rama) and git("branch", "-D", rama).returncode == 0:
+            borradas.append(rama)
         else:
             quedaron.append(rama)
     return borradas, quedaron
+
+
+def entera_en_un_remoto(rama: str) -> bool:
+    """Si cada commit de la rama está en alguna rama remota. Un `rev-list` que falla no lo es."""
+    hecho = git("rev-list", "--count", rama, "--not", "--remotes")
+    return hecho.returncode == 0 and hecho.stdout.strip() == "0"
 
 
 def main() -> None:

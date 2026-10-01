@@ -48,6 +48,13 @@ Todo script de acá llama a `configurar()` de `lib/consola.py` antes de imprimir
 Windows, la salida a una tubería sale en cp1252 y **cualquier acento tira el script abajo** —
 incluido el mensaje de bloqueo del hook. El porqué entero está en el encabezado de ese módulo.
 
+## Un test que commitea declara su identidad de git
+
+La CI no tiene ninguna, y sin ella `commit-tree` y `commit` salen con 128. Un caso que pasa
+acá porque la máquina tiene `user.name` falla allá. Va por el entorno del proceso, así la
+heredan también los `git` del script que el caso corre. Medido el 2026-09-30 en el PR #280:
+tres casos de `test_capturas_a_rama.py`.
+
 ## El veredicto sale del código de salida
 
 El principio está en la [constitución](../../docs/architecture/constitution.md).
