@@ -1,3 +1,11 @@
+# gdlint:ignore=max-public-methods
+#
+# La unión de la pila cruzó el techo de 20: el review de los faltantes de la jornada le sumó un
+# caso y la entrega hasta vaciarse los suyos, y juntos dan 21 públicos —medido al mergear el 266
+# en el 276—. El techo existe para cazar god-objects en `src/`, y una suite no es uno: los casos
+# no comparten estado y cada uno se lee solo. Partirla es la salida de verdad, pero no desde una
+# unión: la rama de arriba todavía puede agregarle casos. La directiva va en la línea 1 porque
+# el chequeo se reporta ahí.
 ## Cuántas unidades hay de cada producto y **dónde**: el depósito y la góndola son dos lugares
 ## distintos, y esa distinción es la que hace que reponer sea una tarea y no una animación.
 ##
@@ -200,25 +208,66 @@ func _de_ocho_casilleros() -> Producto:
 	return Producto.new(Producto.Id.ACTRONCITO, "Actroncito", 2500)
 
 
-func _inventario_con(en_gondola: int, en_deposito: int) -> Inventario:
+## El inventario del producto de los criterios, con esas unidades en cada lugar y esas afuera de
+## su caja, que siguen contadas en el depósito.
+func _inventario_con(en_gondola: int, en_deposito: int, afuera: int = 0) -> Inventario:
 	var productos: Array[Producto] = [_de_ocho_casilleros()]
 	var inventario := Inventario.new(productos, {Producto.Id.ACTRONCITO: 8})
 	inventario.ingresar(productos[0], Inventario.Ubicacion.GONDOLA, en_gondola)
 	inventario.ingresar(productos[0], Inventario.Ubicacion.DEPOSITO, en_deposito)
+	for _unidad in afuera:
+		inventario.anotar_afuera(UnidadDeProducto.new(productos[0]))
 	return inventario
 
 
-func test_los_vendibles_son_lo_que_el_estante_no_necesita() -> void:  # AC-STK-018
-	# Cada fila es `[góndola, depósito, vendibles]`. La de `0, 5` es la que pide el «nunca menos
-	# de cero»: sin el corte daría `-3`, y un pedido de cero unidades pasaría el control.
-	var filas := [[8, 2, 2], [0, 10, 2], [7, 3, 2], [8, 0, 0], [0, 5, 0]]
+func test_los_vendibles_descuentan_el_mayor_entre_vacios_y_afuera() -> void:  # AC-STK-018
+	# Cada fila es `[góndola, depósito, afuera, vendibles]`. La de `0, 5` es la que pide el «nunca
+	# menos de cero»: sin el corte daría `-3`, y un pedido de cero unidades pasaría el control. Las
+	# de `5, 8` separan el mayor de la suma: con 1 afuera la espera un vacío, y con 4 no alcanzan.
+	var filas := [
+		[8, 2, 0, 2],
+		[0, 10, 0, 2],
+		[7, 3, 0, 2],
+		[8, 0, 0, 0],
+		[0, 5, 0, 0],
+		[8, 8, 0, 8],
+		[8, 8, 3, 5],
+		[5, 8, 1, 5],
+		[5, 8, 4, 4],
+		[0, 8, 8, 0],
+		[8, 8, 8, 0],
+	]
 	for fila: Array in filas:
-		var inventario := _inventario_con(fila[0], fila[1])
+		var inventario := _inventario_con(fila[0], fila[1], fila[2])
 		(
 			assert_int(inventario.vendibles(_de_ocho_casilleros()))
 			. override_failure_message("fila %s" % [fila])
-			. is_equal(fila[2])
+			. is_equal(fila[3])
 		)
+
+
+func test_lo_de_afuera_se_anota_una_vez_y_no_sale_del_deposito() -> void:
+	# Afuera es una marca sobre el depósito y no un tercer lugar: anotarla y quitarla no mueven una
+	# unidad. La misma unidad anotada dos veces le restaría dos a la caja por una sola que salió.
+	var actroncito := _de_ocho_casilleros()
+	var inventario := _inventario_con(0, 3)
+	var unidad := UnidadDeProducto.new(actroncito)
+	assert_bool(inventario.esta_afuera(unidad)).is_false()
+	assert_bool(inventario.anotar_afuera(unidad)).is_true()
+	assert_bool(inventario.anotar_afuera(unidad)).is_false()
+	assert_bool(inventario.esta_afuera(unidad)).is_true()
+	assert_int(inventario.afuera(Catalogo.de(Producto.Id.ACTRONCITO))).is_equal(1)
+	assert_int(inventario.unidades(actroncito, Inventario.Ubicacion.DEPOSITO)).is_equal(3)
+	# Lo que el inventario no conoce no se anota, y nada se cuenta afuera por un producto nulo.
+	var malbardo := Producto.new(Producto.Id.MALBARDO, "Malbardo", 1500)
+	assert_bool(inventario.anotar_afuera(UnidadDeProducto.new(malbardo))).is_false()
+	assert_bool(inventario.anotar_afuera(null)).is_false()
+	assert_int(inventario.afuera(malbardo)).is_zero()
+	assert_int(inventario.afuera(null)).is_zero()
+	assert_bool(inventario.quitar_de_afuera(unidad)).is_true()
+	assert_bool(inventario.quitar_de_afuera(unidad)).is_false()
+	assert_int(inventario.afuera(actroncito)).is_zero()
+	assert_int(inventario.unidades(actroncito, Inventario.Ubicacion.DEPOSITO)).is_equal(3)
 
 
 func test_un_producto_que_el_inventario_no_conoce_no_tiene_vendibles() -> void:  # AC-STK-018

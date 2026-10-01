@@ -6,6 +6,10 @@
 ## por la ventanilla, y ningún error lo diría. Es lo mismo que hace que el estante que se ve sea
 ## un reflejo del inventario y no su fuente.
 ##
+## **Tampoco las que salieron de su caja.** El estante las anota afuera y las quita, pero la lista
+## es del inventario: la venta las tiene que ver para no llevárselas, y la ventanilla no conoce el
+## estante.
+##
 ## **Lo que sí lleva es en qué casilleros están**, que el inventario no sabe: el orden en que se
 ## ocupan los de cada fila. Cuántos de ese orden están ocupados sigue saliendo de la góndola del
 ## inventario, así que el orden no puede contradecir a la cuenta: sólo dice cuáles.
@@ -50,7 +54,6 @@ var _inventario: Inventario
 ## En el orden en que llegaron, y sin `id` repetido: la identidad es el `id` y nunca la
 ## instancia, porque `Catalogo.de()` construye un producto nuevo en cada llamada.
 var _aceptados: Array[Producto] = []
-var _en_transito: Array[UnidadDeProducto] = []
 
 ## `id` → los casilleros de su fila, con los ocupados primero. Arranca en el orden de la fila, así
 ## que la góndola que llenó la apertura ocupa los primeros y lo que falta queda al final.
@@ -178,26 +181,23 @@ func colocar(producto: Producto, casillero: int = PRIMERO_VACIO) -> Rechazo:
 	return _ocupar(producto, casillero)
 
 
-## Cuántas se pueden sacar todavía: lo que queda en la caja, sin pasar de los casilleros vacíos
-## que ninguna unidad afuera va a ocupar.
+## Cuántas se pueden sacar todavía: lo que queda en la caja, el depósito menos las que están
+## afuera. Un producto que el estante no acepta no tiene caja acá, y contesta 0.
 ##
-## Es la cuenta de `BR-STK-017` escrita una sola vez. El depósito menos las reservadas es la caja,
-## y los casilleros vacíos menos las reservadas son el lugar que queda: con cualquiera de los dos
-## en cero, no sale nada.
+## **La góndola no pone tope** (BR-STK-017): con la fila completa la caja entrega igual. La unidad
+## que no tiene casillero se rechaza al colocarla por estante lleno, y vuelve a la caja si se la
+## devuelve. Cuántas se pueden vender es otra cuenta, y la lleva el inventario.
 func disponibles_para_retirar(producto: Producto) -> int:
-	if producto == null:
+	if not acepta(producto):
 		return 0
-	var disponibles := mini(
-		unidades_en_deposito(producto), cupo(producto) - unidades_en_gondola(producto)
-	)
-	return maxi(0, disponibles - reservadas(producto))
+	return maxi(0, unidades_en_deposito(producto) - reservadas(producto))
 
 
 func retirar(producto: Producto) -> UnidadDeProducto:
-	if not acepta(producto) or disponibles_para_retirar(producto) <= 0:
+	if disponibles_para_retirar(producto) <= 0:
 		return null
 	var unidad := UnidadDeProducto.new(producto)
-	_en_transito.append(unidad)
+	_inventario.anotar_afuera(unidad)
 	return unidad
 
 
@@ -216,23 +216,17 @@ func agarrar(producto: Producto, casillero: int) -> UnidadDeProducto:
 	_inventario.mover(producto, Inventario.Ubicacion.GONDOLA, Inventario.Ubicacion.DEPOSITO, 1)
 	_poner_en_el_orden(producto, casillero, ocupados - 1)
 	var unidad := UnidadDeProducto.new(producto)
-	_en_transito.append(unidad)
+	_inventario.anotar_afuera(unidad)
 	return unidad
 
 
 ## Cuántas unidades de ese producto salieron de su caja y todavía no se colocaron: en la mano o
-## soltadas en el piso.
+## soltadas en el piso. Las cuenta el inventario, que es donde la venta las ve.
 ##
 ## **Siguen contadas en el depósito**, y por eso la caja se cuenta restándolas y no con un número
 ## propio: una venta que baja el depósito le resta a la caja sin que nadie se lo avise.
 func reservadas(producto: Producto) -> int:
-	if producto == null:
-		return 0
-	var afuera := 0
-	for unidad in _en_transito:
-		if unidad.producto.id == producto.id:
-			afuera += 1
-	return afuera
+	return _inventario.afuera(producto)
 
 
 ## Anula la reserva de una unidad que salió de la caja y no se colocó, y devuelve si la anuló.
@@ -241,10 +235,7 @@ func reservadas(producto: Producto) -> int:
 ## colocó, ya volvió o nunca salió— no anula nada, y así la misma unidad no vuelve dos veces.
 ## Cuánto le entra a la caja no se mira acá: es de la caja, que llama a esto.
 func devolver(unidad: UnidadDeProducto) -> bool:
-	if not _en_transito.has(unidad):
-		return false
-	_en_transito.erase(unidad)
-	return true
+	return _inventario.quitar_de_afuera(unidad)
 
 
 ## Coloca en ese casillero de `destino` una unidad que salió y no se colocó. Sin casillero, va al
@@ -256,7 +247,7 @@ func devolver(unidad: UnidadDeProducto) -> bool:
 func colocar_unidad(
 	unidad: UnidadDeProducto, destino: Producto = null, casillero: int = PRIMERO_VACIO
 ) -> Rechazo:
-	if not _en_transito.has(unidad):
+	if not _inventario.esta_afuera(unidad):
 		return Rechazo.PRODUCTO_NO_ACEPTADO
 	if destino != null and destino.id != unidad.producto.id:
 		return Rechazo.PRODUCTO_NO_ACEPTADO
@@ -264,7 +255,7 @@ func colocar_unidad(
 	if motivo == Rechazo.NINGUNO:
 		motivo = _ocupar(unidad.producto, casillero)
 	if motivo == Rechazo.NINGUNO:
-		_en_transito.erase(unidad)
+		_inventario.quitar_de_afuera(unidad)
 	return motivo
 
 

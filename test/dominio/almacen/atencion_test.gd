@@ -181,6 +181,45 @@ func test_vender_no_deshace_la_unidad_que_esta_en_la_mano() -> void:  # AC-CTR-0
 	assert_bool(estante.completada()).is_true()
 
 
+## La atención de un comprador que pide esas unidades de un solo producto y paga justo.
+func _atencion_de(producto: Producto, unidades: int, inventario: Inventario) -> Atencion:
+	var venta := Venta.new()
+	venta.agregar(producto, unidades)
+	return Atencion.new(Comprador.new("Marta", venta, venta.total()), inventario)
+
+
+func test_la_venta_no_se_lleva_lo_que_esta_afuera_de_la_caja() -> void:  # AC-STK-049
+	# La fila completa, la caja en 8 y 3 afuera: quedan 5 en la caja, y a la góndola no le falta
+	# nada. Un pedido de 6 se llevaría una de la mano. El aviso y el cobro miran la misma cuenta:
+	# el aviso nombra el producto justo cuando el cobro se rechaza.
+	var producto := Producto.new(Producto.Id.ACTRONCITO, "Actroncito", 2500)
+	var productos: Array[Producto] = [producto]
+	var inventario := Inventario.new(productos, {Producto.Id.ACTRONCITO: 8})
+	inventario.ingresar(producto, Inventario.Ubicacion.GONDOLA, 8)
+	inventario.ingresar(producto, Inventario.Ubicacion.DEPOSITO, 8)
+	var estante := Estante.new(inventario, productos)
+	var caja := ContenidoDeLaCaja.new(producto, estante)
+	assert_array(estante.casilleros_vacios(producto)).is_empty()
+	var afuera: Array[UnidadDeProducto] = []
+	for _vez in 3:
+		afuera.append(caja.sacar())
+	assert_int(caja.unidades()).is_equal(5)
+	var de_seis := _atencion_de(producto, 6, inventario)
+	assert_array(de_seis.faltantes_del_pedido()).has_size(1)
+	assert_int(de_seis.cobrar()).is_equal(Atencion.Resultado.SIN_STOCK)
+	assert_int(inventario.unidades(producto, Inventario.Ubicacion.DEPOSITO)).is_equal(8)
+	assert_int(caja.unidades()).is_equal(5)
+	var de_cinco := _atencion_de(producto, 5, inventario)
+	assert_array(de_cinco.faltantes_del_pedido()).is_empty()
+	assert_int(de_cinco.cobrar()).is_equal(Atencion.Resultado.COBRADA)
+	assert_int(caja.unidades()).is_zero()
+	# La venta llegó hasta lo que está afuera y no más: el depósito es justo lo de la mano.
+	assert_int(inventario.unidades(producto, Inventario.Ubicacion.DEPOSITO)).is_equal(3)
+	for unidad in afuera:
+		assert_bool(caja.meter(unidad)).is_true()
+	assert_int(caja.unidades()).is_equal(3)
+
+
 func test_el_ticket_dice_las_lineas_el_total_lo_que_paga_y_la_diferencia() -> void:  # AC-CTR-013
 	# Los textos viven en `dominio/` justamente para que este caso exista: escritos en el panel
 	# serían una regla en `ui/`, que ni `gate_de_tests.py` ni `gate_de_capas.py` miran.

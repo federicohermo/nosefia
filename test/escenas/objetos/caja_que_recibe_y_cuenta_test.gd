@@ -112,7 +112,7 @@ func test_con_una_caja_en_la_mano_el_clic_sobre_otra_no_hace_nada() -> void:  # 
 
 func test_con_la_caja_llena_la_unidad_sigue_en_la_mano() -> void:  # AC-STK-040
 	# Una noche con nueve Coracola en el depósito: sacada una, la caja sigue con las de una caja
-	# entera. Es lo que pasa el día que una unidad vuelva a su caja desde la góndola.
+	# entera. Es lo que pasa al agarrar una unidad de la góndola con la caja llena (BR-STK-034).
 	var almacen: Node3D = await _almacen_con_jugador_quieto()
 	var puesto: Node3D = almacen.get("_reposicion_manual")
 	var casilleros: Dictionary[Producto.Id, int] = puesto.call("casilleros")

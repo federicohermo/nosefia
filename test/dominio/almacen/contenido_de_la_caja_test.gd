@@ -11,8 +11,8 @@ extends GdUnitTestSuite
 
 const CONTENIDO := "res://src/dominio/almacen/contenido_de_la_caja.gd"
 
-## Casilleros de la fila de adelante del producto de prueba: tantos como una caja, para que la
-## góndola no corte antes que la caja en los casos que no la miden.
+## Casilleros de la fila de adelante del producto de prueba: tantos como una caja. Sacar no los
+## mira (BR-STK-017); los miran colocar y los vendibles, que los casos cuentan contra este número.
 const CASILLEROS := 8
 
 ## Desde este número un entero escrito en el código es balance y no estructura: el `0` y el `1`
@@ -147,12 +147,14 @@ func test_el_gesto_sale_de_lo_que_lleva_la_mano() -> void:  # AC-STK-038
 
 
 func test_sacar_devolver_y_sacar_pasa_por_siete_ocho_y_siete() -> void:  # AC-STK-039
-	# A la góndola le faltan 6: lo que se puede sacar lo corta ella, y acompaña a la caja.
+	# A la góndola le faltan 6 y la caja tiene 8: lo que se puede sacar es la caja entera, y
+	# la acompaña.
 	var actroncito := _producto(Producto.Id.ACTRONCITO)
 	var estante := _estante(actroncito, ReglasDelEstante.UNIDADES_POR_CAJA, 2)
 	var caja := _caja(actroncito, estante)
 	var lleno := ReglasDelEstante.UNIDADES_POR_CAJA
 	var disponibles := estante.disponibles_para_retirar(actroncito)
+	assert_int(disponibles).is_equal(lleno)
 	var primera := caja.sacar()
 	assert_int(caja.unidades()).is_equal(lleno - 1)
 	assert_int(estante.disponibles_para_retirar(actroncito)).is_equal(disponibles - 1)
@@ -183,9 +185,8 @@ func test_devolver_dos_veces_la_misma_unidad_no_suma_la_segunda() -> void:  # AC
 
 
 func test_la_caja_llena_no_recibe_y_la_unidad_sigue_afuera() -> void:  # AC-STK-040
-	# Nueve en el depósito y una afuera: la caja tiene 8 y la unidad que salió no entra. Con lo
-	# que hoy trae la noche no pasa, porque la caja arranca en 8; pasa el día que una unidad
-	# vuelva a su caja desde la góndola.
+	# Nueve en el depósito y una afuera: la caja tiene 8 y la unidad que salió no entra. Es lo
+	# que pasa al agarrar una unidad de la góndola con la caja llena (BR-STK-034).
 	var actroncito := _producto(Producto.Id.ACTRONCITO)
 	var estante := _estante(actroncito, ReglasDelEstante.UNIDADES_POR_CAJA + 1)
 	var caja := _caja(actroncito, estante)

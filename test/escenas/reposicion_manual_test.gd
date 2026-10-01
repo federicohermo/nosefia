@@ -176,8 +176,10 @@ func test_laysntt_y_jorgillo_quedan_sobre_el_suelo_al_mover_la_camara() -> void:
 	var sueltas: Array[RigidBody3D] = []
 	AperturaConLugar.abrir_con_todo_el_lugar(almacen)
 	var estante: Estante = almacen.get("_repositor").estante()
+	# Tantas como casilleros vacíos: al final se colocan todas, y la caja da más que eso.
 	for id: Producto.Id in [Producto.Id.LAYSNTT, Producto.Id.JORGILLO]:
-		for indice in estante.disponibles_para_retirar(Catalogo.de(id)):
+		var producto := Catalogo.de(id)
+		for indice in estante.cupo(producto) - estante.unidades_en_gondola(producto):
 			almacen.get("_reposicion_manual").retirar(id)
 			var cuerpo: RigidBody3D = agarre.soltar(true)
 			cuerpo.global_position = Vector3(-1.2 + indice * 0.6, 1.5, -5.8 + (id % 2) * 0.5)
@@ -297,6 +299,11 @@ func test_las_unidades_sueltas_caen_y_se_recuperan_sin_perder_su_reserva() -> vo
 		assert_bool(agarre.pedir_agarrar(sueltas[indice].datos, sueltas[indice])).is_true()
 		presentacion.call("pedir_colocar", producto.id)
 	assert_int(estante.unidades_en_gondola(producto)).is_equal(estante.cupo(producto))
+	# Salió la caja entera, aunque la fila tenga menos casilleros (BR-STK-017): las que no
+	# entraron siguen afuera, y ninguna perdió su lugar en la cuenta.
+	assert_int(estante.reservadas(producto)).is_equal(
+		sueltas.size() - (estante.cupo(producto) - antes)
+	)
 
 
 func test_otra_jornada_vacia_grupos_mano_y_productos_sueltos() -> void:
@@ -545,8 +552,16 @@ func test_cada_unidad_ocupa_un_lugar_distinto_y_la_marca_indica_su_base() -> voi
 			for ocupado in ocupados:
 				assert_bool(limites.get_center().is_equal_approx(ocupado.get_center())).is_false()
 			ocupados.append(limites)
-		_sacar_de_la_caja(jugador, almacen.get("_cajas_de_productos")[producto.id])
+		# Con la fila completa la caja da la que le quede, y vacía no da nada (BR-STK-017). La
+		# que sale vuelve a la caja, y el producto siguiente arranca con las manos vacías.
+		assert_int(estante.unidades_en_gondola(producto)).is_equal(estante.cupo(producto))
+		var caja: Node3D = almacen.get("_cajas_de_productos")[producto.id]
+		var le_quedan := estante.disponibles_para_retirar(producto)
+		_sacar_de_la_caja(jugador, caja)
+		assert_int(estante.disponibles_para_retirar(producto)).is_equal(maxi(0, le_quedan - 1))
+		_sacar_de_la_caja(jugador, caja)
 		assert_object(almacen.get("_agarre").manos().sostenido()).is_null()
+		assert_int(estante.disponibles_para_retirar(producto)).is_equal(le_quedan)
 
 
 func test_el_clic_saca_una_unidad_visible_y_el_estante_la_recibe() -> void:
@@ -592,7 +607,7 @@ func test_el_clic_saca_una_unidad_visible_y_el_estante_la_recibe() -> void:
 	assert_int(repositor.estante().unidades_en_gondola(Catalogo.todos()[0])).is_equal(1)
 
 
-func test_con_el_estante_lleno_la_caja_no_entrega_otra_unidad() -> void:
+func test_con_el_estante_lleno_la_caja_entrega_y_la_gondola_la_rechaza() -> void:  # AC-STK-017
 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
 	add_child(almacen)
 	await get_tree().physics_frame
@@ -604,15 +619,32 @@ func test_con_el_estante_lleno_la_caja_no_entrega_otra_unidad() -> void:
 	var agarre: Agarre = almacen.get("_agarre")
 	var producto := Catalogo.todos()[0]
 	var del_dominio: Estante = almacen.get("_repositor").estante()
-	for unidad in del_dominio.cupo(producto) - del_dominio.unidades_en_gondola(producto):
+	var motivos: Array[Estante.Rechazo] = []
+	(almacen.get("_repositor") as Repositor).colocacion_rechazada.connect(
+		func(motivo: Estante.Rechazo) -> void: motivos.append(motivo)
+	)
+	for _vez in del_dominio.cupo(producto) - del_dominio.unidades_en_gondola(producto):
 		_sacar_de_la_caja(jugador, caja)
 		_accion(jugador, estante)
-	# Con la fila llena, la caja no da otra. El clic sobre la góndola con la mano vacía ya no es
-	# «nada»: agarra la unidad puesta (BR-PLY-024), y eso lo miden los casos de los casilleros.
+	assert_int(del_dominio.unidades_en_gondola(producto)).is_equal(del_dominio.cupo(producto))
+	var en_la_caja := del_dominio.disponibles_para_retirar(producto)
+	assert_int(en_la_caja).is_greater(0)
+	# Con la fila llena, la caja da otra (BR-STK-017), y la góndola la rechaza: sigue en la mano.
+	# El clic sobre la góndola con la mano vacía ya no es «nada»: agarra la unidad puesta
+	# (BR-PLY-024), y eso lo miden los casos de los casilleros.
+	_sacar_de_la_caja(jugador, caja)
+	var unidad := agarre.manos().sostenido() as UnidadDeProducto
+	assert_object(unidad).is_not_null()
+	assert_int(del_dominio.disponibles_para_retirar(producto)).is_equal(en_la_caja - 1)
+	_accion(jugador, estante)
+	assert_array(motivos).is_equal([Estante.Rechazo.ESTANTE_LLENO])
+	assert_object(agarre.manos().sostenido()).is_same(unidad)
+	assert_int(jugador.get_node("Giro/Camara/PuntoDeProducto").get_child_count()).is_equal(1)
+	assert_int(del_dominio.unidades_en_gondola(producto)).is_equal(del_dominio.cupo(producto))
+	# Devuelta a su caja, la caja la vuelve a contar.
 	_sacar_de_la_caja(jugador, caja)
 	assert_object(agarre.manos().sostenido()).is_null()
-	assert_int(jugador.get_node("Giro/Camara/PuntoDeProducto").get_child_count()).is_zero()
-	assert_int(del_dominio.unidades_en_gondola(producto)).is_equal(del_dominio.cupo(producto))
+	assert_int(del_dominio.disponibles_para_retirar(producto)).is_equal(en_la_caja)
 
 
 func test_examinar_no_retira_ni_deposita_y_devuelve_la_unidad_a_la_mira() -> void:
