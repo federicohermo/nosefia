@@ -1,6 +1,7 @@
 extends GdUnitTestSuite
 
 const ALMACEN := preload("res://src/escenas/almacen.tscn")
+const AperturaConLugar := preload("res://test/escenas/apertura_con_lugar.gd")
 
 
 func test_vender_no_cambia_lo_que_la_gondola_dibuja() -> void:  # AC-CTR-015
@@ -14,7 +15,10 @@ func test_vender_no_cambia_lo_que_la_gondola_dibuja() -> void:  # AC-CTR-015
 	var cupo_total := 0
 	for producto in Catalogo.todos():
 		cupo_total += repositor.estante().cupo(producto)
-		for indice in repositor.estante().cupo(producto):
+		var falta := (
+			repositor.estante().cupo(producto) - repositor.estante().unidades_en_gondola(producto)
+		)
+		for indice in falta:
 			presentacion.retirar(producto.id)
 			presentacion.pedir_colocar(producto.id)
 	var atenciones: Ventanilla = almacen.get("_atenciones")
@@ -30,7 +34,7 @@ func test_vender_no_cambia_lo_que_la_gondola_dibuja() -> void:  # AC-CTR-015
 			var posicion := (
 				(
 					grupo.global_transform
-					* _transformacion_de_copia(grupo.multimesh, _guia(grupo, producto) + indice)
+					* _transformacion_de_copia(grupo.multimesh, _guia(almacen, producto) + indice)
 				)
 				. origin
 			)
@@ -42,6 +46,7 @@ func test_vender_no_cambia_lo_que_la_gondola_dibuja() -> void:  # AC-CTR-015
 func test_recoger_del_grupo_del_piso_conserva_foco_identidad_y_reposicion() -> void:
 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
 	add_child(almacen)
+	AperturaConLugar.abrir_con_todo_el_lugar(almacen)
 	almacen.get("_jugador").set_physics_process(false)
 	var presentacion: Node3D = almacen.get("_reposicion_manual")
 	var agarre: Agarre = almacen.get("_agarre")
@@ -92,6 +97,7 @@ func test_laysntt_no_atraviesa_el_suelo_al_caer_plana_y_recibir_otras_cajas() ->
 	for giro: float in [0.8, 1.6, 5.6]:
 		var almacen: Node3D = auto_free(ALMACEN.instantiate())
 		add_child(almacen)
+		AperturaConLugar.abrir_con_todo_el_lugar(almacen)
 		almacen.get("_jugador").set_physics_process(false)
 		var agarre: Agarre = almacen.get("_agarre")
 		var bolsas: Array[RigidBody3D] = []
@@ -129,6 +135,7 @@ func test_laysntt_no_atraviesa_el_suelo_al_caer_plana_y_recibir_otras_cajas() ->
 func test_el_burbaloo_del_piso_no_bloquea_al_jugador() -> void:
 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
 	add_child(almacen)
+	AperturaConLugar.abrir_con_todo_el_lugar(almacen)
 	var jugador: CharacterBody3D = almacen.get("_jugador")
 	jugador.set_physics_process(false)
 	jugador.global_position = Vector3(0, 0.5, -5.8)
@@ -164,8 +171,10 @@ func test_laysntt_y_jorgillo_quedan_sobre_el_suelo_al_mover_la_camara() -> void:
 	var camara: Camera3D = jugador.get_node("Giro/Camara")
 	var agarre: Agarre = almacen.get("_agarre")
 	var sueltas: Array[RigidBody3D] = []
+	AperturaConLugar.abrir_con_todo_el_lugar(almacen)
+	var estante: Estante = almacen.get("_repositor").estante()
 	for id: Producto.Id in [Producto.Id.LAYSNTT, Producto.Id.JORGILLO]:
-		for indice in Catalogo.de(id).umbral:
+		for indice in estante.disponibles_para_retirar(Catalogo.de(id)):
 			almacen.get("_reposicion_manual").retirar(id)
 			var cuerpo: RigidBody3D = agarre.soltar(true)
 			cuerpo.global_position = Vector3(-1.2 + indice * 0.6, 1.5, -5.8 + (id % 2) * 0.5)
@@ -195,20 +204,26 @@ func test_los_estantes_agrupan_las_unidades_sin_cuerpos_por_producto() -> void:
 	var presentacion: Node3D = almacen.get("_reposicion_manual")
 	var grupos := presentacion.find_children("ProductosDe*", "MultiMeshInstance3D", true, false)
 	assert_int(grupos.size()).is_equal(Catalogo.todos().size())
+	# Al abrir se ven la guía y lo que la góndola tiene puesto: la fila menos lo que falta.
+	var al_abrir: Estante = almacen.get("_repositor").estante()
 	for indice in grupos.size():
 		var grupo: MultiMeshInstance3D = grupos[indice]
 		var producto := Catalogo.todos()[indice]
-		assert_int(grupo.multimesh.visible_instance_count).is_equal(_guia(grupo, producto))
+		assert_int(grupo.multimesh.visible_instance_count).is_equal(
+			_guia(almacen, producto) + al_abrir.unidades_en_gondola(producto)
+		)
+	AperturaConLugar.abrir_con_todo_el_lugar(almacen)
+	var estante: Estante = almacen.get("_repositor").estante()
 	var agarre: Agarre = almacen.get("_agarre")
 	for producto in Catalogo.todos():
 		var grupo: MultiMeshInstance3D = presentacion.get_node("ProductosDe" + producto.nombre)
-		assert_int(grupo.multimesh.instance_count).is_greater_equal(producto.umbral)
-		for indice in producto.umbral:
+		var antes := estante.unidades_en_gondola(producto)
+		for indice in estante.cupo(producto) - antes:
 			presentacion.call("retirar", producto.id)
 			assert_object(agarre.manos().sostenido()).is_not_null()
 			presentacion.call("pedir_colocar", producto.id)
 			assert_int(grupo.multimesh.visible_instance_count).is_equal(
-				_guia(grupo, producto) + indice + 1
+				_guia(almacen, producto) + antes + indice + 1
 			)
 		assert_int(grupo.get_child_count()).is_zero()
 	assert_int(presentacion.find_children("*", "RigidBody3D", true, false).size()).is_equal(1)
@@ -217,6 +232,7 @@ func test_los_estantes_agrupan_las_unidades_sin_cuerpos_por_producto() -> void:
 func test_reutiliza_el_cuerpo_al_depositar_y_cambia_de_producto() -> void:
 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
 	add_child(almacen)
+	AperturaConLugar.abrir_con_todo_el_lugar(almacen)
 	var presentacion: Node3D = almacen.get("_reposicion_manual")
 	var agarre: Agarre = almacen.get("_agarre")
 	presentacion.call("retirar", Producto.Id.ACTRONCITO)
@@ -239,12 +255,14 @@ func test_las_unidades_sueltas_caen_y_se_recuperan_sin_perder_su_reserva() -> vo
 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
 	add_child(almacen)
 	almacen.get("_jugador").set_physics_process(false)
+	AperturaConLugar.abrir_con_todo_el_lugar(almacen)
 	var presentacion: Node3D = almacen.get("_reposicion_manual")
 	var agarre: Agarre = almacen.get("_agarre")
 	var estante: Estante = almacen.get("_repositor").estante()
 	var producto := Catalogo.de(Producto.Id.MALBARDO)
+	var antes := estante.unidades_en_gondola(producto)
 	var sueltas: Array[RigidBody3D] = []
-	for indice in producto.umbral:
+	for indice in estante.disponibles_para_retirar(producto):
 		presentacion.call("retirar", producto.id)
 		var cuerpo: RigidBody3D = agarre.soltar(true)
 		cuerpo.global_position = Vector3(indice, 2, -6)
@@ -265,20 +283,21 @@ func test_las_unidades_sueltas_caen_y_se_recuperan_sin_perder_su_reserva() -> vo
 	presentacion.call("pedir_colocar", Producto.Id.ACTRONCITO)
 	assert_object(agarre.manos().sostenido()).is_same(identidad)
 	presentacion.call("pedir_colocar", producto.id)
-	assert_int(estante.unidades_en_gondola(producto)).is_equal(1)
+	assert_int(estante.unidades_en_gondola(producto)).is_equal(antes + 1)
 	assert_int(estante.disponibles_para_retirar(producto)).is_zero()
-	# Se recorren las que quedan y no sólo la segunda: el cupo sale del catálogo y se mueve.
+	# Se recorren las que quedan y no sólo la segunda: el cupo sale del modelo y se mueve.
 	for indice in range(1, sueltas.size()):
 		assert_bool(sueltas[indice].is_visible_in_tree()).is_true()
 		assert_bool(sueltas[indice].freeze).is_false()
 		assert_bool(agarre.pedir_agarrar(sueltas[indice].datos, sueltas[indice])).is_true()
 		presentacion.call("pedir_colocar", producto.id)
-	assert_int(estante.unidades_en_gondola(producto)).is_equal(producto.umbral)
+	assert_int(estante.unidades_en_gondola(producto)).is_equal(estante.cupo(producto))
 
 
 func test_otra_jornada_vacia_grupos_mano_y_productos_sueltos() -> void:
 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
 	add_child(almacen)
+	AperturaConLugar.abrir_con_todo_el_lugar(almacen)
 	var presentacion: Node3D = almacen.get("_reposicion_manual")
 	var agarre: Agarre = almacen.get("_agarre")
 	presentacion.call("retirar", Producto.Id.ACTRONCITO)
@@ -293,20 +312,25 @@ func test_otra_jornada_vacia_grupos_mano_y_productos_sueltos() -> void:
 	assert_bool(is_instance_valid(sostenida)).is_false()
 	assert_object(agarre.manos().sostenido()).is_null()
 	assert_int(agarre.punto_de_producto.get_child_count()).is_zero()
+	# La noche nueva abre con lo que dice su jornada, no con lo que quedó de la anterior.
+	var estante: Estante = almacen.get("_repositor").estante()
 	for producto in Catalogo.todos():
 		var grupo: MultiMeshInstance3D = presentacion.get_node("ProductosDe" + producto.nombre)
-		assert_int(grupo.multimesh.visible_instance_count).is_equal(_guia(grupo, producto))
+		assert_int(grupo.multimesh.visible_instance_count).is_equal(
+			_guia(almacen, producto) + estante.unidades_en_gondola(producto)
+		)
 	for grupo: MultiMeshInstance3D in presentacion.find_children(
 		"SueltosDe*", "MultiMeshInstance3D", true, false
 	):
 		assert_int(grupo.multimesh.visible_instance_count).is_zero()
-	presentacion.call("retirar", Producto.Id.JORGILLO)
+	presentacion.call("retirar", Producto.Id.ACTRONCITO)
 	assert_object(agarre.manos().sostenido()).is_not_null()
 
 
 func test_el_frente_se_conserva_al_examinar_y_volver_a_agarrar() -> void:
 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
 	add_child(almacen)
+	AperturaConLugar.abrir_con_todo_el_lugar(almacen)
 	var jugador: Node3D = almacen.get("_jugador")
 	jugador.set_physics_process(false)
 	var agarre: Agarre = almacen.get("_agarre")
@@ -384,6 +408,7 @@ func test_el_frente_se_conserva_al_examinar_y_volver_a_agarrar() -> void:
 func test_actroncito_durextra_y_oremos_se_reponen_con_foco_y_clic_reales() -> void:
 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
 	add_child(almacen)
+	AperturaConLugar.abrir_con_todo_el_lugar(almacen)
 	var jugador: Node3D = almacen.get("_jugador")
 	jugador.set_physics_process(false)
 	# Los tres viven en el mismo rack y en bandejas distintas: dos arriba en caja chica y uno
@@ -435,8 +460,19 @@ func test_actroncito_durextra_y_oremos_se_reponen_con_foco_y_clic_reales() -> vo
 func test_no_hay_productos_3d_iniciales_fuera_del_inventario() -> void:
 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
 	add_child(almacen)
+	# Lo expuesto al abrir se cuenta: la góndola del inventario es la fila menos lo que la jornada
+	# hace faltar, y lo dibujado son esas mismas unidades y ninguna más.
+	var estante: Estante = almacen.get("_repositor").estante()
+	var faltantes := Apertura.faltantes_de_la_jornada(ReglasDeLaPartida.PRIMERA_JORNADA)
 	for producto in Catalogo.todos():
-		assert_int(almacen.get("_repositor").estante().unidades_en_gondola(producto)).is_zero()
+		var puestas := estante.unidades_en_gondola(producto)
+		assert_int(puestas).is_equal(estante.cupo(producto) - faltantes.get(producto.id, 0))
+		var grupo: MultiMeshInstance3D = almacen.get("_reposicion_manual").get_node(
+			"ProductosDe" + producto.nombre
+		)
+		assert_int(grupo.multimesh.visible_instance_count).is_equal(
+			_guia(almacen, producto) + puestas
+		)
 	# Cada producto del catálogo tiene su malla en el contenido y en el mismo orden. Sin esto el
 	# inventario habla de un producto y la góndola muestra otro, y los dos dan verde.
 	var contenido: Node3D = almacen.get_node("Estructura/gondolanueva/StaticBody3D/Contenido")
@@ -467,11 +503,14 @@ func test_cada_unidad_ocupa_un_lugar_distinto_y_la_marca_indica_su_base() -> voi
 	add_child(almacen)
 	var jugador: Node3D = almacen.get("_jugador")
 	jugador.set_physics_process(false)
+	AperturaConLugar.abrir_con_todo_el_lugar(almacen)
+	var estante: Estante = almacen.get("_repositor").estante()
 	var presentacion: Node3D = almacen.get("_reposicion_manual")
 	var ocupados: Array[AABB] = []
 	for producto in Catalogo.todos():
 		var zona := presentacion.get_node("ZonaDe" + producto.nombre)
-		for indice in producto.umbral:
+		var antes := estante.unidades_en_gondola(producto)
+		for indice in estante.cupo(producto) - antes:
 			_sacar_de_la_caja(jugador, almacen.get("_cajas_de_productos")[producto.id])
 			var unidad: Node3D = jugador.get_node("Giro/Camara/PuntoDeProducto").get_child(0)
 			# **La marca es el fantasma del envase, no un rectángulo en el piso.** Lo que tiene
@@ -486,7 +525,9 @@ func test_cada_unidad_ocupa_un_lugar_distinto_y_la_marca_indica_su_base() -> voi
 			var grupo: MultiMeshInstance3D = presentacion.get_node("ProductosDe" + producto.nombre)
 			var transformacion := (
 				grupo.global_transform
-				* _transformacion_de_copia(grupo.multimesh, _guia(grupo, producto) + indice)
+				* _transformacion_de_copia(
+					grupo.multimesh, _guia(almacen, producto) + antes + indice
+				)
 			)
 			var limites := transformacion * grupo.multimesh.mesh.get_aabb()
 			assert_float(limites.get_center().x).is_equal_approx(apoyo.x, 0.001)
@@ -507,6 +548,7 @@ func test_cada_unidad_ocupa_un_lugar_distinto_y_la_marca_indica_su_base() -> voi
 func test_el_clic_saca_una_unidad_visible_y_el_estante_la_recibe() -> void:
 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
 	add_child(almacen)
+	AperturaConLugar.abrir_con_todo_el_lugar(almacen)
 	await get_tree().physics_frame
 	await get_tree().physics_frame
 	almacen.get("_jugador").set_physics_process(false)
@@ -538,7 +580,7 @@ func test_el_clic_saca_una_unidad_visible_y_el_estante_la_recibe() -> void:
 		"ProductosDeActroncito"
 	)
 	assert_int(grupo.multimesh.visible_instance_count).is_equal(
-		_guia(grupo, Catalogo.todos()[0]) + 1
+		_guia(almacen, Catalogo.todos()[0]) + 1
 	)
 	assert_int(repositor.estante().unidades_en_gondola(Catalogo.todos()[0])).is_equal(1)
 
@@ -553,7 +595,9 @@ func test_con_el_estante_lleno_la_caja_no_entrega_otra_unidad() -> void:
 	var caja: Node3D = almacen.get("_cajas_de_productos")[0]
 	var estante: Node3D = almacen.get("_estante")
 	var agarre: Agarre = almacen.get("_agarre")
-	for unidad in Catalogo.todos()[0].umbral:
+	var producto := Catalogo.todos()[0]
+	var del_dominio: Estante = almacen.get("_repositor").estante()
+	for unidad in del_dominio.cupo(producto) - del_dominio.unidades_en_gondola(producto):
 		_sacar_de_la_caja(jugador, caja)
 		_accion(jugador, estante)
 	_sacar_de_la_caja(jugador, caja)
@@ -685,10 +729,15 @@ func _apuntar(almacen: Node3D, id: Producto.Id) -> void:
 
 ## Cuantas copias de ese producto son guia: las que estan siempre y el jugador no repone.
 ##
-## **Sale de restar y no de un numero escrito.** Cuantas se reponen lo dice el `umbral` del
-## `Catalogo`, y cuantas hay en total lo dice el modelo: entre los dos queda el tramo fijo.
-func _guia(grupo: MultiMeshInstance3D, producto: Producto) -> int:
-	return grupo.multimesh.instance_count - producto.umbral
+## **Sale de restar y no de un numero escrito.** Cuantas se reponen lo dice el cupo del estante
+## —los casilleros de la fila de adelante, que mide el modelo—, y cuantas hay en total lo dice el
+## dibujo: entre los dos queda el tramo fijo.
+func _guia(almacen: Node3D, producto: Producto) -> int:
+	var grupo: MultiMeshInstance3D = almacen.get("_reposicion_manual").get_node(
+		"ProductosDe" + producto.nombre
+	)
+	var estante: Estante = almacen.get("_repositor").estante()
+	return grupo.multimesh.instance_count - estante.cupo(producto)
 
 
 func _transformacion_de_copia(copias: MultiMesh, indice: int) -> Transform3D:

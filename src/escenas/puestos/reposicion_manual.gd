@@ -64,6 +64,19 @@ var _sueltos: Array[GrupoDelPiso] = []
 var _disponible: ObjetoAgarrable = null
 
 
+## Cuántos casilleros tiene la fila de adelante de cada producto: su cupo, medido del modelo.
+##
+## Es lo que la apertura de cada jornada le pasa al inventario. **Sale de la disposición, y no
+## de un número escrito acá ni del catálogo**: cuántas unidades entran de frente lo dice el
+## modelo, y una tanda que el artista alarga en Blender cambia de cupo sin que nadie lo copie.
+## Cada lugar de la fila de adelante es un casillero (BR-STK-025).
+func casilleros() -> Dictionary[Producto.Id, int]:
+	var por_producto: Dictionary[Producto.Id, int] = {}
+	for producto in Catalogo.todos():
+		por_producto[producto.id] = disposicion.filas_de_adelante[producto.id]
+	return por_producto
+
+
 func preparar() -> void:
 	_preparar_modelos()
 	_preparar_grupos()
@@ -762,11 +775,11 @@ static func giro_hacia_la_camara(frente: Vector3) -> float:
 
 
 ## Desde qué copia arranca el tramo que el jugador repone: las de antes —la fila de atrás
-## entera, y lo que sobra del cupo en la de adelante— están siempre a la vista.
+## entera— están siempre a la vista.
 ##
 ## **El cupo sale del dominio y no de un número de acá.** El bloque tiene lo que el artista puso
-## y el cupo dice cuántas de esas quedan vacías al abrir; escribir el corte en esta capa sería el
-## mismo valor en dos lugares, que es justo lo que `Estante.cupo()` existe para evitar.
+## y el cupo dice cuántas de esas son casilleros; escribir el corte en esta capa sería el mismo
+## valor en dos lugares, que es justo lo que `Estante.cupo()` existe para evitar.
 func _primera_reponible(id: Producto.Id) -> int:
 	var bloque := disposicion.principales[id]
 	return DisposicionDeLaGondola.copias(bloque) - repositor.estante().cupo(Catalogo.de(id))
@@ -875,7 +888,7 @@ func _preparar_la_guia() -> void:
 		copias.instance_count = DisposicionDeLaGondola.copias(bloque)
 		copias.buffer = bloque
 		_guias_sumadas[id] = DisposicionDeLaGondola.copias(sumadas[id])
-		copias.visible_instance_count = _primera_dibujada(id)
+		_mostrar_lo_puesto(id)
 	var numero := 0
 	for clave: int in sueltas:
 		var modelo: MeshInstance3D = sueltas[clave][0]
@@ -919,6 +932,19 @@ func _rebasar(bloque: PackedFloat32Array, desde: Basis, hacia: Basis) -> PackedF
 ## bloque más las de otras exhibiciones que se le sumaron adelante.
 func _primera_dibujada(id: Producto.Id) -> int:
 	return _guias_sumadas[id] + _primera_reponible(id)
+
+
+## Prende de la fila de adelante las unidades que la góndola tiene puestas, y apaga el resto.
+##
+## **Cuántas se ven lo cuenta el inventario, y no este puesto**: la noche abre con la fila
+## completa salvo lo que falta esa jornada, y lo que falta son las últimas copias, porque
+## `visible_instance_count` corta por el final. Un número propio acá dibujaría una góndola que
+## el inventario no tiene.
+func _mostrar_lo_puesto(id: Producto.Id) -> void:
+	var producto := Catalogo.de(id)
+	var estante := repositor.estante()
+	var puestas := mini(estante.unidades_en_gondola(producto), estante.cupo(producto))
+	_grupos[id].multimesh.visible_instance_count = _primera_dibujada(id) + puestas
 
 
 ## Un `MultiMeshInstance3D` con todas las copias de un bloque, prendidas.
@@ -1009,5 +1035,5 @@ func limpiar() -> void:
 	# por `id` mata el primer cuadro con un `Out of bounds` que no nombra ni a la jornada ni a
 	# este puesto.
 	for id in _grupos.size():
-		_grupos[id].multimesh.visible_instance_count = _primera_dibujada(id)
+		_mostrar_lo_puesto(id)
 	_actualizar_zonas()

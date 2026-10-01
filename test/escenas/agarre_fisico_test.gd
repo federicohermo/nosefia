@@ -1,12 +1,14 @@
 extends GdUnitTestSuite
 
 const ALMACEN := preload("res://src/escenas/almacen.tscn")
+const AperturaConLugar := preload("res://test/escenas/apertura_con_lugar.gd")
 
 
 func test_soltar_hacia_la_gondola_deja_el_producto_visible_y_recuperable() -> void:
 	for ojo: Vector3 in [Vector3(2.6, 1.7, 0), Vector3(0, 1.7, 0), Vector3(1.3, 1.7, 3.85)]:
 		var almacen: Node3D = auto_free(ALMACEN.instantiate())
 		add_child(almacen)
+		AperturaConLugar.abrir_con_todo_el_lugar(almacen)
 		var jugador: CharacterBody3D = almacen.get_node("Jugador")
 		jugador.set_physics_process(false)
 		var camara: Camera3D = jugador.get_node("Giro/Camara")

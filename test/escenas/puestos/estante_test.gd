@@ -40,23 +40,25 @@ func test_los_huecos_visibles_son_los_que_dice_el_dominio() -> void:
 	# una cuenta propia. Con una cuenta propia, el estante y el inventario se contradicen en
 	# silencio.
 	var actroncito := Catalogo.de(Producto.Id.ACTRONCITO)
-	var inventario := Inventario.new([actroncito])
-	inventario.ingresar(actroncito, Inventario.Ubicacion.DEPOSITO, actroncito.umbral)
+	var casilleros := 3
+	var inventario := Inventario.new([actroncito], {Producto.Id.ACTRONCITO: casilleros})
+	inventario.ingresar(actroncito, Inventario.Ubicacion.DEPOSITO, casilleros)
 	var dominio := Estante.new(inventario, [actroncito])
 	var estante := _estante()
 
 	estante.mostrar(dominio.productos_completos())
 	assert_int(_huecos_visibles(estante)).is_equal(0)
 
-	for _unidad in range(actroncito.umbral):
+	for _unidad in range(casilleros):
 		dominio.colocar(actroncito)
 	estante.mostrar(dominio.productos_completos())
 	assert_int(_huecos_visibles(estante)).is_equal(1)
 
 
 func test_el_estante_arranca_sin_un_solo_hueco_puesto() -> void:
-	# La góndola de la noche arranca vacía, así que un hueco visible en el `.tscn` sería
-	# mercadería que el jugador ve y el inventario no tiene.
+	# Los huecos de este estante son las mallas de las que el puesto de reponer saca cada
+	# producto: la góndola la dibuja el puesto, contra el inventario. Un hueco visible en el
+	# `.tscn` sería un producto dibujado dos veces, en un lugar que el inventario no cuenta.
 	assert_int(_huecos_visibles(_estante())).is_equal(0)
 
 

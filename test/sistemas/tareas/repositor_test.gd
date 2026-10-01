@@ -23,7 +23,7 @@ const ARCHIVOS_DEL_SPEC := [
 ## segunda vez no cuenta; un flag acá sería esa misma regla escrita en la capa que traduce.
 const PATRONES_DE_ESTADO_PROPIO := "var\\s+_cumplida|_colocadas"
 
-## Un umbral chico para que llenar el estante sean dos colocaciones y no seis.
+## Una fila chica para que llenar el estante sean dos colocaciones y no seis.
 const CUPO_DE_PRUEBA := 2
 
 var _colocados: int = 0
@@ -51,13 +51,13 @@ func before_test() -> void:
 
 
 func _producto(id: Producto.Id) -> Producto:
-	return Producto.new(id, "de prueba", 100, CUPO_DE_PRUEBA)
+	return Producto.new(id, "de prueba", 100)
 
 
 ## Un repositor cableado a mano: reloj con turno arrancado, agarre y estante de un producto.
 func _repositor(en_deposito: int = 10, restante: float = Reglas.DURACION_DEL_TURNO) -> Repositor:
 	var actroncito := _producto(Producto.Id.ACTRONCITO)
-	var inventario := Inventario.new([actroncito])
+	var inventario := Inventario.new([actroncito], {Producto.Id.ACTRONCITO: CUPO_DE_PRUEBA})
 	inventario.ingresar(actroncito, Inventario.Ubicacion.DEPOSITO, en_deposito)
 
 	var obligatorias := Apertura.obligatorias()
@@ -153,7 +153,7 @@ func test_sin_tiempo_para_reponer_la_tarea_no_se_cuenta_ni_descuenta() -> void:
 	# El turno arranca cerrado, así que no cuenta nada. El estante igual se llena:
 	# el estado del mundo no depende de que el jefe la cuente.
 	var actroncito := _producto(Producto.Id.ACTRONCITO)
-	var inventario := Inventario.new([actroncito])
+	var inventario := Inventario.new([actroncito], {Producto.Id.ACTRONCITO: CUPO_DE_PRUEBA})
 	inventario.ingresar(actroncito, Inventario.Ubicacion.DEPOSITO, 10)
 	var obligatorias := Apertura.obligatorias()
 	_turno = Turno.new(0.0, obligatorias)

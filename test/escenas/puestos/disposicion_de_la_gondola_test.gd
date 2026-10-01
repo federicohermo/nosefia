@@ -18,10 +18,6 @@ func _disposicion() -> DisposicionDeLaGondola:
 	return load(DISPOSICION) as DisposicionDeLaGondola
 
 
-func _estante() -> Estante:
-	return Estante.new(Inventario.new(Catalogo.todos()), Catalogo.todos())
-
-
 ## Una copia puesta a mano: sin giro, en `origen`.
 static func _copia(origen: Vector3) -> PackedFloat32Array:
 	return PackedFloat32Array([1, 0, 0, origen.x, 0, 1, 0, origen.y, 0, 0, 1, origen.z])
@@ -32,25 +28,55 @@ func test_hay_un_bloque_principal_por_producto() -> void:
 	assert_int(_disposicion().principales.size()).is_equal(Producto.Id.size())
 
 
-## El cupo de #263 sale de acá: un producto sin su número deja a la jornada sin saber cuántos
-## casilleros tiene.
+## El cupo de cada producto sale de acá: un producto sin su número deja a la jornada sin saber
+## cuántos casilleros tiene.
 func test_cada_producto_declara_su_fila_de_adelante() -> void:
 	assert_int(_disposicion().filas_de_adelante.size()).is_equal(Producto.Id.size())
 
 
-## Las últimas `cupo` copias de cada bloque son las reponibles. Un bloque más chico deja la
-## primera reponible en un índice negativo, y la marca cae en el origen del local.
-func test_cada_bloque_principal_alcanza_para_el_cupo() -> void:
+## Las últimas copias de cada bloque, tantas como su fila de adelante, son los casilleros. Un
+## producto sin ninguno no se repone ni falta nunca, y una fila más larga que el bloque deja la
+## primera reponible en un índice negativo, con la marca en el origen del local.
+func test_cada_producto_tiene_casilleros_y_entran_en_su_bloque() -> void:
 	var disposicion := _disposicion()
 	for producto in Catalogo.todos():
 		var copias := DisposicionDeLaGondola.copias(disposicion.principales[producto.id])
-		assert_int(copias).override_failure_message(producto.nombre).is_greater_equal(
-			_estante().cupo(producto)
+		(
+			assert_int(disposicion.filas_de_adelante[producto.id])
+			. override_failure_message(producto.nombre)
+			. is_between(1, copias)
 		)
 
 
-## Dos filas del mismo largo, una detrás de la otra, y el cupo entero en la de adelante: las
-## reponibles son las últimas del bloque, y la fila de adelante también.
+## Lo que una jornada hace faltar de un producto tiene que entrar en su fila: con más, la góndola
+## arrancaría vacía y faltaría menos de lo que la jornada dice. Coracola tiene seis casilleros a
+## propósito, para los seis que le faltan en la jornada 1.
+func test_ningun_faltante_de_ninguna_jornada_pasa_de_su_fila() -> void:  # AC-STK-033
+	var disposicion := _disposicion()
+	for numero in ReglasDeLaPartida.JORNADAS_DE_LA_PARTIDA:
+		var jornada := ReglasDeLaPartida.PRIMERA_JORNADA + numero
+		var faltantes := Apertura.faltantes_de_la_jornada(jornada)
+		for id: Producto.Id in faltantes:
+			(
+				assert_int(faltantes[id])
+				. override_failure_message(
+					(
+						"jornada %d: faltan %d %s y su fila tiene %d casilleros"
+						% [
+							jornada,
+							faltantes[id],
+							Catalogo.de(id).nombre,
+							disposicion.filas_de_adelante[id],
+						]
+					)
+				)
+				. is_less_equal(disposicion.filas_de_adelante[id])
+			)
+
+
+## Dos filas del mismo largo, una detrás de la otra, y los casilleros en la de adelante: las
+## reponibles son las últimas del bloque, y la fila de adelante también. Que cada lugar de esa
+## fila sea un casillero lo afirma `un_lugar_por_producto_test.gd` con el local armado.
 ##
 ## **Detrás no es a la misma altura.** El estante de una cabecera está inclinado hacia el
 ## pasillo, y ahí la fila de atrás queda más arriba. Lo que no puede pasar es que se corra de
@@ -65,11 +91,6 @@ func test_la_tanda_tiene_dos_filas_y_el_cupo_entra_en_la_de_adelante() -> void: 
 			assert_int(DisposicionDeLaGondola.copias(bloque))
 			. override_failure_message("%s no tiene dos filas iguales" % nombre)
 			. is_equal(2 * adelante)
-		)
-		(
-			assert_int(adelante)
-			. override_failure_message("%s: su cupo no entra en la fila de adelante" % nombre)
-			. is_greater_equal(_estante().cupo(producto))
 		)
 		var frente := DisposicionDeLaGondola.frente(bloque, adelante)
 		var costado := frente.cross(Vector3.UP)

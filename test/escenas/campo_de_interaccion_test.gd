@@ -2,6 +2,7 @@ extends GdUnitTestSuite
 
 const JUGADOR := preload("res://src/escenas/jugador.tscn")
 const ALMACEN := preload("res://src/escenas/almacen.tscn")
+const AperturaConLugar := preload("res://test/escenas/apertura_con_lugar.gd")
 const BOLSA := preload("res://src/escenas/objetos/objeto_agarrable.tscn")
 
 
@@ -23,6 +24,7 @@ func test_la_bolsa_pequena_se_enfoca_fuera_del_centro() -> void:
 func test_el_campo_y_el_clic_usan_los_cuerpos_de_los_muebles() -> void:
 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
 	add_child(almacen)
+	AperturaConLugar.abrir_con_todo_el_lugar(almacen)
 	var jugador: CharacterBody3D = almacen.get("_jugador")
 	jugador.set_physics_process(false)
 	var avisos: Array[Node3D] = []

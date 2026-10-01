@@ -26,7 +26,7 @@ func test_los_puestos_completan_la_jornada_y_permiten_abrir_la_siguiente(
 	await get_tree().process_frame
 	await get_tree().process_frame
 	assert_bool(reloj.corriendo()).is_true()
-	_comprobar_huecos(almacen, 0)
+	_comprobar_huecos(almacen, _completos_al_abrir(ReglasDeLaPartida.PRIMERA_JORNADA))
 	await _reponer(almacen)
 	_comprobar_huecos(almacen, Catalogo.todos().size())
 	await _atender(almacen)
@@ -56,8 +56,14 @@ func test_los_puestos_completan_la_jornada_y_permiten_abrir_la_siguiente(
 		assert_bool(reloj.obligatoria(tipo).completada()).is_false()
 	var recolector: RecolectorDeBasura = almacen.get("_recolector")
 	assert_int(recolector.tarea().depositadas()).is_zero()
-	_comprobar_huecos(almacen, 0)
+	_comprobar_huecos(almacen, _completos_al_abrir(ReglasDeLaPartida.PRIMERA_JORNADA + 1))
 	_comprobar_planilla_en_cero(almacen)
+
+
+## Cuántos productos abren esa jornada con la fila de adelante completa: todos menos los que
+## ella hace faltar. La noche no abre vacía, y la siguiente tampoco hereda lo repuesto.
+func _completos_al_abrir(jornada: int) -> int:
+	return Catalogo.todos().size() - Apertura.faltantes_de_la_jornada(jornada).size()
 
 
 # AC-STK-026
@@ -137,6 +143,7 @@ func _reponer(almacen: Node3D) -> void:
 	var jugador: Node3D = almacen.get("_jugador")
 	jugador.set_physics_process(false)
 	var camara: Camera3D = jugador.get_node("Giro/Camara")
+	var estante: Estante = almacen.get("_repositor").estante()
 	for caja: Node3D in almacen.get("_cajas_de_productos"):
 		var producto := Catalogo.de(caja.get("producto"))
 		var zona: AABB = almacen.get("_reposicion_manual").zona(producto.id)
@@ -149,7 +156,7 @@ func _reponer(almacen: Node3D) -> void:
 			direccion = Vector3(0, 0, -1.5)
 		camara.global_position = zona.get_center() + direccion
 		camara.look_at(zona.get_center())
-		for unidad in producto.umbral:
+		for unidad in estante.cupo(producto) - estante.unidades_en_gondola(producto):
 			almacen.get("_reposicion_manual").call("retirar_de_la_caja", caja)
 			almacen.get("_reposicion_manual").get_node("ZonaDe" + producto.nombre).call(
 				"interactuar"
@@ -267,9 +274,10 @@ func _comprobar_huecos(almacen: Node3D, esperados: int) -> void:
 	var repositor: Repositor = almacen.get("_repositor")
 	for producto in Catalogo.todos():
 		var grupo: MultiMeshInstance3D = presentacion.get_node("ProductosDe" + producto.nombre)
-		# Las copias visibles son la guía entera más lo repuesto: la guía no cambia nunca y
-		# arranca a la vista, así que el cero del inventario no es un cero de copias.
-		var guia := grupo.multimesh.instance_count - producto.umbral
+		# Las copias visibles son la guía entera más lo que la góndola tiene puesto: la guía no
+		# cambia nunca y arranca a la vista, y los casilleros son las últimas copias, tantos
+		# como el cupo del producto.
+		var guia := grupo.multimesh.instance_count - repositor.estante().cupo(producto)
 		assert_int(grupo.multimesh.visible_instance_count).is_equal(
 			guia + repositor.estante().unidades_en_gondola(producto)
 		)
