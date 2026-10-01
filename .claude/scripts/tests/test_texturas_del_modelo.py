@@ -54,7 +54,11 @@ def lado_de_la_imagen(datos: bytes) -> tuple[int, int]:
             if marcador in CUADROS_JPEG:
                 alto, ancho = struct.unpack(">HH", datos[indice + 5 : indice + 9])
                 return ancho, alto
-            if marcador == 0xFF or 0xD0 <= marcador <= 0xD9 or marcador == 0x01:
+            if marcador == 0xFF:
+                # Relleno: el marcador empieza en el 0xFF siguiente, no dos bytes más allá.
+                indice += 1
+                continue
+            if 0xD0 <= marcador <= 0xD9 or marcador == 0x01:
                 indice += 2
                 continue
             indice += 2 + struct.unpack(">H", datos[indice + 2 : indice + 4])[0]
@@ -116,6 +120,12 @@ class LaLecturaDeLasCabeceras(unittest.TestCase):
         dht = b"\xff\xc4" + struct.pack(">H", 5) + b"\x00\x00\x00"
         sof0 = b"\xff\xc0" + struct.pack(">HBHH", 11, 8, 1536, 1024) + b"\x03\x00\x00"
         self.assertEqual(lado_de_la_imagen(JPEG[:2] + app0 + dht + sof0), (1024, 1536))
+
+    def test_un_byte_de_relleno_antes_del_cuadro_no_lo_esconde(self) -> None:
+        # JPEG deja poner cualquier cantidad de 0xFF antes de un marcador. Saltear el relleno de
+        # a dos pisa el primer byte del marcador, y el cuadro que trae el lado no se lee nunca.
+        sof0 = b"\xff\xc0" + struct.pack(">HBHH", 11, 8, 1536, 1024) + b"\x03\x00\x00"
+        self.assertEqual(lado_de_la_imagen(JPEG[:2] + b"\xff" + sof0), (1024, 1536))
 
     def test_lo_que_no_es_png_ni_jpeg_no_se_lee_como_si_lo_fuera(self) -> None:
         with self.assertRaises(ValueError):
