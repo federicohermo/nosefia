@@ -24,6 +24,10 @@ const CERCA_DEL_INODORO := 4.0
 ## local, lejos del depósito y de cualquier apoyo.
 const LEJOS_DE_SU_LUGAR := Vector3(0.0, 2.0, 0.0)
 
+## A cuántos metros de una caja se para el jugador para leer su etiqueta. Entre dos cajas de la
+## misma fila quedan 14 cm: desde ahí, la de al lado tapa la etiqueta.
+const DONDE_SE_PARA_EL_JUGADOR := 2.0
+
 
 ## Cuánto separa el centro de una caja apoyada de la superficie que la sostiene: la escala que
 ## el `.tscn` le pone a un cubo de dos.
@@ -70,6 +74,46 @@ func test_las_cajas_de_reposicion_estan_apoyadas_en_el_deposito() -> void:
 			. is_true()
 		)
 		assert_array(_lo_que_pisa(almacen, cuerpo, apoyo, media)).is_empty()
+
+
+## La malla del modelo lleva la etiqueta en dos caras opuestas: la que la mano pone de frente a la
+## cámara y su contraria. Las cajas no giran solas, así que lo que ve el cuarto lo decide el giro
+## de cada una en la escena. Al menos una de sus dos caras rotuladas se ve desde los ojos de un
+## jugador parado delante: si no, el jugador ve el costado de las flechas.
+##
+## **La vista baja desde los ojos, y no va derecha.** Una caja chica delante de una grande no le
+## tapa la etiqueta a quien la mira desde arriba: es la esquina del portón.
+func test_cada_caja_le_muestra_su_etiqueta_al_cuarto() -> void:
+	var almacen: Node3D = auto_free(ALMACEN.instantiate())
+	add_child(almacen)
+	await get_tree().physics_frame
+	var espacio := almacen.get_world_3d().direct_space_state
+	var cajas: Array = almacen.get("_cajas_de_productos")
+	assert_int(cajas.size()).is_equal(Catalogo.todos().size())
+	# El piso del depósito es donde apoyan las cajas más bajas.
+	var suelo := INF
+	for caja: Node3D in cajas:
+		suelo = minf(suelo, caja.global_position.y - _media_caja(caja))
+	for caja: Node3D in cajas:
+		var orientacion: Basis = caja.get("orientacion_en_mano")
+		var rotulada := orientacion.inverse() * Vector3.BACK
+		var vistas: Array[Vector3] = []
+		for cara: Vector3 in [rotulada, -rotulada]:
+			var normal := (caja.global_basis * cara).normalized()
+			var etiqueta := caja.global_position + normal * (_media_caja(caja) + 0.01)
+			var ojos := etiqueta + normal * DONDE_SE_PARA_EL_JUGADOR
+			ojos.y = suelo + ReglasDelJugador.ALTURA_DE_LA_CAMARA
+			var consulta := PhysicsRayQueryParameters3D.create(etiqueta, ojos)
+			consulta.exclude = [(caja as PhysicsBody3D).get_rid()]
+			if espacio.intersect_ray(consulta).is_empty():
+				vistas.append(normal)
+		(
+			assert_array(vistas)
+			. override_failure_message(
+				"`%s` le muestra al cuarto el costado de las flechas" % caja.name
+			)
+			. is_not_empty()
+		)
 
 
 func test_las_tres_bolsas_arrancan_en_el_bano_y_lejos_del_descarte() -> void:
@@ -154,13 +198,16 @@ func test_abrir_la_jornada_devuelve_cada_caja_a_su_lugar() -> void:
 	await get_tree().physics_frame
 	var cajas: Array = almacen.get("_cajas_de_productos")
 	var lugares: Array[Vector3] = []
+	var giros: Array[Basis] = []
 	for caja: Node3D in cajas:
 		lugares.append(caja.global_position)
+		giros.append(caja.global_basis)
 	var mundo: Node3D = cajas[0].get_parent()
 	# Una movida a mano y otra en la mano: la noche termina tantas veces cargando una caja como
-	# habiéndola dejado tirada, y las dos tienen que volver al depósito.
+	# habiéndola dejado tirada, y las dos tienen que volver al depósito. La movida queda además
+	# girada: el jugador suelta cada caja mirando para cualquier lado.
 	for caja: Node3D in cajas:
-		caja.global_position = LEJOS_DE_SU_LUGAR
+		caja.global_transform = Transform3D(Basis(Vector3.UP, 0.5), LEJOS_DE_SU_LUGAR)
 	var jugador: Node3D = almacen.get("_jugador")
 	var en_brazos: Node3D = cajas[Producto.Id.LAYSNTT]
 	_agarrar(jugador, en_brazos)
@@ -183,6 +230,13 @@ func test_abrir_la_jornada_devuelve_cada_caja_a_su_lugar() -> void:
 				)
 			)
 			. is_equal_approx(lugares[indice], Vector3.ONE * 0.001)
+		)
+		# Vuelve también con su giro: la mano la cuelga derecha, y una caja de la fila del fondo
+		# que volviera sin girar le mostraría al cuarto el costado de las flechas.
+		(
+			assert_bool(caja.global_basis.is_equal_approx(giros[indice]))
+			. override_failure_message("`%s` abrió la jornada con otro giro" % caja.name)
+			. is_true()
 		)
 
 
