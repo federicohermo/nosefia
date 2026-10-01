@@ -570,8 +570,11 @@ func test_el_clic_saca_una_unidad_visible_y_el_estante_la_recibe() -> void:
 	# gesto siguiente es apuntar al casillero del estante.
 	assert_float(punto.position.x).is_greater(0.0)
 	assert_float(punto.position.y).is_less(0.0)
-	_sacar_de_la_caja(jugador, caja)
+	# Con la mano ocupada no sale una segunda unidad. Se pide a la caja de otro producto: sobre la
+	# misma caja, el clic le devolvería la que se lleva.
+	_sacar_de_la_caja(jugador, almacen.get("_cajas_de_productos")[Producto.Id.DUREXTRA])
 	assert_int(punto.get_child_count()).is_equal(1)
+	assert_object(punto.get_child(0)).is_same(unidad)
 	_apuntar(almacen, Producto.Id.ACTRONCITO)
 	_accion(jugador, almacen.get("_reposicion_manual").get_node("ZonaDeActroncito"))
 	assert_object(agarre.manos().sostenido()).is_null()

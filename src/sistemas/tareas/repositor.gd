@@ -2,13 +2,15 @@
 ## la ofrece al estante cuando el jugador la deposita.
 ##
 ## **Traduce, no decide.** No sabe cuánto le entra a la góndola, ni qué productos van ahí, ni
-## cuánto cuesta reponer: las tres son preguntas de `dominio/`, que es donde tienen test. Los
-## `if` de este archivo son el valor que devolvió el estante y el estado nulo del cableado.
+## cuánto cuesta reponer, ni qué recibe una caja: son preguntas de `dominio/`, que es donde
+## tienen test. Los `if` de este archivo son el valor que devolvieron el estante o la caja, y el
+## estado nulo del cableado.
 ##
-## **La unidad viaja en la mano y no en el inventario.** `pedir_retirar()` la reserva —el
-## estante la anota en tránsito— y el stock recién se mueve cuando `pedir_colocar_de_la_mano()`
-## la coloca. Al revés, soltar la unidad en el piso dejaría la góndola contando mercadería que
-## el jugador nunca apoyó.
+## **La unidad viaja en la mano y no en el inventario.** `pedir_retirar()` la saca de su caja
+## —el estante la anota afuera, y sigue contada en el depósito— y el stock recién se mueve cuando
+## `pedir_colocar_de_la_mano()` la coloca. `pedir_devolver()` la mete de vuelta en su caja y
+## anula esa salida, sin mover mercadería. Al revés, soltar la unidad en el piso dejaría la
+## góndola contando mercadería que el jugador nunca apoyó.
 ##
 ## **No lleva un flag de «ya la conté».** Le pide al reloj que complete la tarea cada vez que el
 ## estante queda lleno, y el `Turno` ya sabe que la segunda vez no cuenta —devuelve `false` sin
@@ -46,16 +48,40 @@ func estante() -> Estante:
 	return _estante
 
 
+## La caja del depósito de ese producto, contada sobre el estante de esta noche.
+##
+## **Se arma en cada pregunta y no se guarda.** Lo que tiene sale del depósito del estante que
+## recibió `arrancar()`, así que una guardada seguiría contando el de la noche anterior.
+func caja(id: Producto.Id) -> ContenidoDeLaCaja:
+	return ContenidoDeLaCaja.new(Catalogo.de(id), _estante)
+
+
+## Saca una unidad de la caja de ese producto y la pone en la mano, colgada de `nodo`. Devuelve
+## si la puso.
+##
+## La mano se pregunta antes que la caja: con la mano llena, sacar anotaría afuera una unidad
+## que nadie lleva.
 func pedir_retirar(id: Producto.Id, nodo: Node3D) -> bool:
-	var producto := Catalogo.de(id)
-	var candidato := UnidadDeProducto.new(producto)
+	var candidato := UnidadDeProducto.new(Catalogo.de(id))
 	if agarre.manos().motivo_de_rechazo(candidato) != Manos.Rechazo.NINGUNO:
 		return false
-	var unidad := _estante.retirar(producto)
+	var unidad := caja(id).sacar()
 	if unidad == null:
 		return false
 	nodo.set(ReglasDeLosObjetos.PROPIEDAD_DATOS, unidad)
 	return agarre.pedir_agarrar(unidad, nodo)
+
+
+## Mete en la caja de ese producto la unidad que hay en la mano, y devuelve el cuerpo que sacó de
+## la mano, o `null` si la caja no la recibió.
+##
+## Si la caja no la recibe, la unidad sigue en la mano: sale de ella sólo cuando la caja ya la
+## contó. Qué recibe la caja lo decide ella, y el cuerpo lo esconde quien lo dibuja.
+func pedir_devolver(id: Producto.Id) -> Node3D:
+	var unidad := agarre.manos().sostenido() as UnidadDeProducto
+	if not caja(id).meter(unidad):
+		return null
+	return agarre.entregar()
 
 
 func pedir_colocar_de_la_mano(destino: Producto = null) -> void:

@@ -132,9 +132,10 @@ func _almacen_con_jugador_quieto() -> Node3D:
 	return almacen
 
 
-func test_la_caja_entrega_apoyada_en_el_estante_y_no_mientras_se_la_lleva() -> void:
+func test_la_caja_entrega_apoyada_en_el_estante_y_no_mientras_se_la_lleva() -> void:  # AC-STK-016
 	# Apoyada entrega en cualquier superficie, y el estante del depósito es la más alta que hay.
-	# En la mano no: llevarla es lo que cuesta, y sacarle una unidad pide apoyarla primero.
+	# En la mano no: llevarla es lo que cuesta, y sacarle una unidad pide apoyarla primero. La
+	# caja llevada es otra cosa en la mano, y con otra cosa en la mano el clic no hace nada.
 	var almacen: Node3D = await _almacen_con_jugador_quieto()
 	var jugador: Node3D = almacen.get("_jugador")
 	var agarre: Agarre = almacen.get("_agarre")
@@ -154,7 +155,7 @@ func test_la_caja_entrega_apoyada_en_el_estante_y_no_mientras_se_la_lleva() -> v
 	_accion(jugador, caja, ReglasDeLosObjetos.ACCION_AGARRAR)
 	assert_object(caja.get_parent()).is_same(jugador.get_node("Giro/PuntoDeCaja"))
 	var con_la_caja := repositor.estante().disponibles_para_retirar(producto)
-	almacen.get("_reposicion_manual").retirar_de_la_caja(caja)
+	almacen.get("_reposicion_manual").usar_la_caja(caja)
 	assert_int(repositor.estante().disponibles_para_retirar(producto)).is_equal(con_la_caja)
 
 

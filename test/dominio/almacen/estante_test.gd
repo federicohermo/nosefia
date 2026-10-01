@@ -231,3 +231,37 @@ func test_no_retira_mas_que_los_lugares_libres_incluidas_las_reservas() -> void:
 	estante.colocar_unidad(segunda)
 	assert_object(estante.retirar(producto)).is_null()
 	assert_int(estante.unidades_en_deposito(producto)).is_equal(EN_DEPOSITO - CUPO_DE_PRUEBA)
+
+
+func test_devolver_anula_la_reserva_y_no_mueve_mercaderia() -> void:  # AC-STK-039
+	# La unidad nunca salió del depósito: devolverla sólo la deja de contar afuera. La segunda
+	# vez ya no está afuera, y no anula nada.
+	var producto := _producto(Producto.Id.ACTRONCITO)
+	var estante := _estante([producto])
+	var disponibles := estante.disponibles_para_retirar(producto)
+	var unidad := estante.retirar(producto)
+	assert_int(estante.disponibles_para_retirar(producto)).is_equal(disponibles - 1)
+	assert_bool(estante.devolver(unidad)).is_true()
+	assert_int(estante.disponibles_para_retirar(producto)).is_equal(disponibles)
+	assert_int(estante.unidades_en_deposito(producto)).is_equal(EN_DEPOSITO)
+	assert_int(estante.unidades_en_gondola(producto)).is_zero()
+	assert_bool(estante.devolver(unidad)).is_false()
+	assert_int(estante.disponibles_para_retirar(producto)).is_equal(disponibles)
+	# Una unidad devuelta no se coloca: ya no es una que salió.
+	assert_int(estante.colocar_unidad(unidad)).is_equal(Estante.Rechazo.PRODUCTO_NO_ACEPTADO)
+	assert_int(estante.unidades_en_gondola(producto)).is_zero()
+
+
+func test_las_reservadas_son_las_que_salieron_y_no_se_colocaron() -> void:
+	# Por producto: la que salió de una caja no cuenta contra la de al lado.
+	var actroncito := _producto(Producto.Id.ACTRONCITO)
+	var malbardo := _producto(Producto.Id.MALBARDO)
+	var estante := _estante([actroncito, malbardo])
+	var primera := estante.retirar(actroncito)
+	estante.retirar(actroncito)
+	assert_int(estante.reservadas(actroncito)).is_equal(2)
+	assert_int(estante.reservadas(malbardo)).is_zero()
+	assert_int(estante.colocar_unidad(primera)).is_equal(Estante.Rechazo.NINGUNO)
+	assert_int(estante.reservadas(actroncito)).is_equal(1)
+	assert_int(estante.reservadas(null)).is_zero()
+	assert_bool(estante.devolver(null)).is_false()

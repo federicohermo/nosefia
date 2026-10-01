@@ -94,15 +94,6 @@ const ROCE := 0.004
 const VELOCIDAD_DE_GIRO_DEL_EXAMEN := 2.5
 
 
-## Si a una caja se le puede sacar una unidad: a toda la que esté apoyada, en cualquier lado.
-##
-## **Lo que cobra el traslado es que la caja llevada no entrega**, no la altura a la que quede.
-## Antes el corte era una altura, y una caja apoyada en un mostrador, en un estante o sobre otra
-## caja no entregaba nada sin que nada dijera por qué.
-static func se_puede_retirar(la_lleva_el_jugador: bool) -> bool:
-	return not la_lleva_el_jugador
-
-
 static func se_puede_apoyar_en(inclinacion: float) -> bool:
 	return inclinacion >= APOYO_HORIZONTAL
 

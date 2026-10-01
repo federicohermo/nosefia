@@ -107,16 +107,19 @@ func colocar(producto: Producto) -> Rechazo:
 	return _colocar(producto)
 
 
+## Cuántas se pueden sacar todavía: lo que queda en la caja, sin pasar de los casilleros vacíos
+## que ninguna unidad afuera va a ocupar.
+##
+## Es la cuenta de `BR-STK-017` escrita una sola vez. El depósito menos las reservadas es la caja,
+## y los casilleros vacíos menos las reservadas son el lugar que queda: con cualquiera de los dos
+## en cero, no sale nada.
 func disponibles_para_retirar(producto: Producto) -> int:
 	if producto == null:
 		return 0
 	var disponibles := mini(
 		unidades_en_deposito(producto), cupo(producto) - unidades_en_gondola(producto)
 	)
-	for unidad in _en_transito:
-		if unidad.producto.id == producto.id:
-			disponibles -= 1
-	return maxi(0, disponibles)
+	return maxi(0, disponibles - reservadas(producto))
 
 
 func retirar(producto: Producto) -> UnidadDeProducto:
@@ -125,6 +128,33 @@ func retirar(producto: Producto) -> UnidadDeProducto:
 	var unidad := UnidadDeProducto.new(producto)
 	_en_transito.append(unidad)
 	return unidad
+
+
+## Cuántas unidades de ese producto salieron de su caja y todavía no se colocaron: en la mano o
+## soltadas en el piso.
+##
+## **Siguen contadas en el depósito**, y por eso la caja se cuenta restándolas y no con un número
+## propio: una venta que baja el depósito le resta a la caja sin que nadie se lo avise.
+func reservadas(producto: Producto) -> int:
+	if producto == null:
+		return 0
+	var afuera := 0
+	for unidad in _en_transito:
+		if unidad.producto.id == producto.id:
+			afuera += 1
+	return afuera
+
+
+## Anula la reserva de una unidad que salió de la caja y no se colocó, y devuelve si la anuló.
+##
+## No mueve mercadería: la unidad nunca dejó el depósito. Una que no está afuera —porque ya se
+## colocó, ya volvió o nunca salió— no anula nada, y así la misma unidad no vuelve dos veces.
+## Cuánto le entra a la caja no se mira acá: es de la caja, que llama a esto.
+func devolver(unidad: UnidadDeProducto) -> bool:
+	if not _en_transito.has(unidad):
+		return false
+	_en_transito.erase(unidad)
+	return true
 
 
 func colocar_unidad(unidad: UnidadDeProducto, destino: Producto = null) -> Rechazo:
