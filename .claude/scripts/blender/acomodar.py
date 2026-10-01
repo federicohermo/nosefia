@@ -68,9 +68,10 @@ from lib.reparto import (  # noqa: E402
     producto,
 )
 
-#: Lo que se le pide como mínimo a la fila de adelante de un producto: su cupo en el juego, que
-#: hoy es el umbral del catálogo. Si el estante no da para tanto, la fila lleva lo que entra y el
-#: resumen lo dice.
+#: Lo que se le pide como mínimo a la fila de adelante de un producto: el umbral de ocho del
+#: catálogo. Si el estante no da para tanto, la fila lleva lo que entra y el resumen la nombra
+#: entre las cortas: lo que entró es el umbral de ese producto en el catálogo, y
+#: `disposicion_de_la_gondola_test.gd` cobra que el cupo entre adelante.
 FILA_DE_ADELANTE_PEDIDA = 8
 
 #: Hacia dónde mira cada cara, en el mundo de Blender.
