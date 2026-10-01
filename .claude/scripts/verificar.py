@@ -45,7 +45,12 @@ from lib.consola import configurar  # noqa: E402
 configurar()
 
 from lib.archivos import scripts_gd  # noqa: E402
-from lib.godot import aviso_de_entorno_viejo, como_declararlo, resolver  # noqa: E402
+from lib.godot import (  # noqa: E402
+    aviso_de_entorno_viejo,
+    como_declararlo,
+    entorno_de_la_suite,
+    resolver,
+)
 from lib.repo import RAIZ, REPORTES, TESTS  # noqa: E402
 from lib.tdd import SUFIJO_DE_TEST  # noqa: E402
 from lib.verificacion import resumen  # noqa: E402
@@ -66,11 +71,19 @@ class Resultado:
     aviso: str | None = None
 
 
-def _correr(nodo: str, comando: list[str], cwd: Path = RAIZ) -> Resultado:
+def _correr(
+    nodo: str, comando: list[str], cwd: Path = RAIZ, entorno: dict[str, str] | None = None
+) -> Resultado:
     arranque = time.monotonic()
     try:
         proceso = subprocess.run(
-            comando, cwd=cwd, capture_output=True, text=True, encoding="utf-8", errors="replace"
+            comando,
+            cwd=cwd,
+            env=entorno,
+            capture_output=True,
+            text=True,
+            encoding="utf-8",
+            errors="replace",
         )
     except FileNotFoundError:
         return Resultado(
@@ -188,6 +201,8 @@ def nodo_tests() -> Resultado:
             "--ignoreHeadlessMode",
             "-rd", REPORTES,
         ],
+        # `user://` adentro del checkout: si no, dos corridas a la vez se borran `user://tmp`.
+        entorno=entorno_de_la_suite(dict(os.environ), RAIZ, sys.platform),
     )
     resultado.aviso = aviso
     return resultado

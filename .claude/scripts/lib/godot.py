@@ -40,6 +40,7 @@ registro que leer.
 import os
 import shutil
 from collections.abc import Callable
+from pathlib import Path
 
 #: La variable donde vive la ruta. Es la misma que usa el propio runner de gdUnit4
 #: (`runtest.cmd` / `runtest.sh`), así que declararla sirve para las dos cosas.
@@ -157,3 +158,29 @@ def aviso_de_entorno_viejo(origen: str | None) -> str | None:
         "       lo que lance. Se arregla cerrando el HOST de la terminal —no una pestaña— o\n"
         "       cerrando sesión; hasta entonces, otras herramientas van a seguir sin verla."
     )
+
+
+#: Dónde vive `user://` durante la suite: adentro de `.godot/`, que está en el `.gitignore` y
+#: que `limpiar_worktrees.py` ya sabe borrar.
+USUARIO_DE_LOS_TESTS = (".godot", "usuario_de_los_tests")
+
+
+def entorno_de_la_suite(entorno: dict[str, str], raiz: Path, plataforma: str) -> dict[str, str]:
+    """Una copia de `entorno` donde `user://` de Godot cae adentro del checkout.
+
+    `user://` es **una carpeta por proyecto en la máquina**, no por checkout, y gdUnit4 borra
+    `user://tmp` al terminar cada suite. Dos corridas a la vez —los worktrees de un batch— se
+    borran la carpeta temporal una a la otra en medio de un caso, y el rojo cae en un test que el
+    PR no tocó. Medido el 2026-10-01: `menu_de_inicio_test.gd` falló en un carril y pasó solo.
+
+    Godot no tiene una opción de línea de comandos para esto. Lo deriva del entorno: de
+    `XDG_DATA_HOME` en Linux y de `APPDATA` en Windows. En macOS no hay variable que lo mueva, y
+    ahí queda como estaba.
+    """
+    copia = dict(entorno)
+    carpeta = str(raiz.joinpath(*USUARIO_DE_LOS_TESTS))
+    if plataforma == "win32":
+        copia["APPDATA"] = carpeta
+    elif plataforma != "darwin":
+        copia["XDG_DATA_HOME"] = carpeta
+    return copia
