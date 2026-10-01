@@ -530,6 +530,26 @@ def tests_de(ruta: str) -> str:
 FUENTE_DE_ARTE = "assets/source/"
 
 
+#: La forma de referencia que se nombra pero no se puede comprobar.
+#:
+#: **Un `.res` comprimido no se lee.** Godot lo guarda con la cabecera `RSCC` y el contenido en
+#: zstd, y la biblioteca estándar de Python no abre zstd: buscar un nombre en esos bytes no lo
+#: encuentra aunque esté. Medido el 2026-09-29: 73 de los 74 `.res` de `assets/` son así —los de
+#: cada producto y cada guía de la góndola—, y las texturas que usan todos ellos salían como que
+#: no las referenciaba nadie. Es el mismo modo de falla que ya costó treinta texturas borradas.
+SIN_MIRAR_ADENTRO = "en un binario comprimido, sin mirar adentro"
+
+
+def _comprimido(datos: bytes) -> bool:
+    """Si es un recurso de Godot comprimido, que no se puede leer sin descomprimir."""
+    return datos[:4] == b"RSCC"
+
+
+def _referencias_mirando(formas: dict[str, list[str]]) -> int:
+    """Cuántas referencias se comprobaron. Lo que no se pudo mirar no cuenta ni a favor ni en contra."""
+    return sum(len(v) for forma, v in formas.items() if forma != SIN_MIRAR_ADENTRO)
+
+
 def _uid_de(ruta: str) -> str:
     """El `uid://` que el `.import` de un asset declara, o vacío."""
     importe = RAIZ / (ruta + ".import")
@@ -608,10 +628,11 @@ def _nombre_embebido(stem: str, stem_del_glb: str) -> set[str]:
 def _referencias_a(
     ruta: str, texto: dict[str, str] | None = None, crudos: dict[str, bytes] | None = None
 ) -> dict[str, list[str]]:
-    """Quién referencia un asset, **por las tres formas que existen en este repo**.
+    """Quién referencia un asset, **por las cuatro formas que existen en este repo**.
 
-    Las tres no son teoría: cada una esconde una referencia que una búsqueda por ruta no ve, y
-    mezclarlas ya produjo un borrado equivocado de treinta texturas.
+    Las cuatro no son teoría: cada una esconde una referencia que una búsqueda por ruta no ve, y
+    mezclarlas ya produjo un borrado equivocado de treinta texturas. La quinta clave no es una
+    forma: son los binarios que no se pudieron mirar, y no cuentan ni a favor ni en contra.
 
     `texto` y `crudos` se pasan cuando hay que preguntar por muchos assets seguidos: releer
     el `.glb` de 40 MB una vez por archivo convierte medio segundo de barrido en minutos.
@@ -624,13 +645,16 @@ def _referencias_a(
     return {
         "por su ruta": sorted(r for r, t in texto.items() if ruta in t),
         "por `uid://`": sorted(r for r, t in texto.items() if uid and uid in t),
-        "adentro de un binario": sorted(r for r, d in crudos.items() if r != ruta and aguja in d),
+        "adentro de un binario": sorted(
+            r for r, d in crudos.items() if r != ruta and not _comprimido(d) and aguja in d
+        ),
         "embebido en un `.glb`": sorted(
             r
             for r, d in crudos.items()
             if r.lower().endswith(".glb")
             and _nombre_embebido(Path(ruta).stem, Path(r).stem) & _imagenes_de_un_glb(d)
         ),
+        SIN_MIRAR_ADENTRO: sorted(r for r, d in crudos.items() if r != ruta and _comprimido(d)),
     }
 
 
@@ -646,7 +670,8 @@ def contexto_de_asset(ruta: str) -> str:
         )
 
     formas = _referencias_a(ruta)
-    total = sum(len(v) for v in formas.values())
+    total = _referencias_mirando(formas)
+    sin_mirar = formas.pop(SIN_MIRAR_ADENTRO)
     lineas = [
         f"# {ruta}",
         "",
@@ -657,7 +682,20 @@ def contexto_de_asset(ruta: str) -> str:
         lineas.append(f"## {forma}")
         lineas += [f"- {r}" for r in quienes] or ["- (nadie)"]
         lineas.append("")
-    if total == 0:
+    if sin_mirar:
+        lineas.append(f"## {SIN_MIRAR_ADENTRO}")
+        lineas.append(
+            f"- {len(sin_mirar)} `.res` comprimidos (`RSCC`, zstd), como `{sin_mirar[0]}`: "
+            "cualquiera puede nombrarlo, y ninguna de las formas de arriba lo ve."
+        )
+        lineas.append("")
+    if total == 0 and sin_mirar:
+        lineas.append(
+            "**Nadie lo referencia por las formas que se pueden mirar, y quedan binarios "
+            "comprimidos sin mirar: no prueba que sobre.** Antes de borrar va una corrida de "
+            "`--import`, y el rojo de un asset que hacía falta sale ahí."
+        )
+    elif total == 0:
         lineas.append(
             "**Nadie lo referencia por ninguna de las cuatro formas, y eso no prueba que sobre.** "
             "Antes de borrar va una corrida de `--import`: el rojo que deja un asset que hacía "
@@ -679,10 +717,21 @@ def assets_sin_referencia() -> str:
             continue
         if p.suffix in (".import", ".gdignore", ".unwrap_cache", ".blend1") or p.name == ".gitkeep":
             continue
-        if sum(len(v) for v in _referencias_a(ruta, texto, crudos).values()) == 0:
+        if _referencias_mirando(_referencias_a(ruta, texto, crudos)) == 0:
             sospechosos.append(ruta)
+    comprimidos = sorted(r for r, d in crudos.items() if _comprimido(d))
+    aviso = (
+        [
+            f"**Hay {len(comprimidos)} `.res` comprimidos que no se pueden mirar adentro**: "
+            "cualquiera de estos sospechosos puede estar nombrado en uno de ellos.",
+            "",
+        ]
+        if comprimidos
+        else []
+    )
     return "\n".join(
         ["# Assets que ninguna referencia alcanza", ""]
+        + aviso
         + ([f"- {r}" for r in sospechosos] or ["- (ninguno)"])
         + [
             "",
