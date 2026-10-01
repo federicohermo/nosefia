@@ -164,6 +164,20 @@ func test_sin_casilleros_la_gondola_no_pide_nada() -> void:
 	assert_int(inventario.vendibles(actroncito)).is_equal(6)
 
 
+func test_una_fila_negativa_es_una_fila_sin_casilleros() -> void:
+	# Un número negativo de casilleros no es una fila: contestarlo tal cual daría un cupo
+	# negativo, y el estante lo leería como un cupo que ninguna góndola alcanza a pedir. Y
+	# preguntar por un producto nulo contesta cero en vez de reventar.
+	var actroncito := Producto.new(Producto.Id.ACTRONCITO, "Actroncito", 2500)
+	var productos: Array[Producto] = [actroncito]
+	var inventario := Inventario.new(productos, {Producto.Id.ACTRONCITO: -3})
+	inventario.ingresar(actroncito, Inventario.Ubicacion.DEPOSITO, 4)
+	assert_int(inventario.casilleros(actroncito)).is_zero()
+	assert_int(inventario.casilleros(null)).is_zero()
+	assert_array(inventario.faltantes()).is_empty()
+	assert_int(inventario.vendibles(actroncito)).is_equal(4)
+
+
 func test_faltantes_devuelve_los_que_faltan_y_solo_esos_en_el_orden_de_construccion() -> void:
 	# Con tres productos y el del medio abastecido, un `faltantes()` que devolviera todos, o que
 	# devolviera otro orden, se pone en rojo. Con dos productos los dos errores pasarían.
