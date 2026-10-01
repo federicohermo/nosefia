@@ -62,9 +62,11 @@ from lib.horneado import (  # noqa: E402
 from lib.repo import RAIZ  # noqa: E402
 
 PROJECT = Path(RAIZ) / "project.godot"
-def _git(*argumentos: str) -> str:
+
+
+def _git(raiz: Path, *argumentos: str) -> str:
     return subprocess.run(
-        ["git", "-C", str(RAIZ), *argumentos],
+        ["git", "-C", str(raiz), *argumentos],
         capture_output=True,
         text=True,
         encoding="utf-8",
@@ -73,28 +75,39 @@ def _git(*argumentos: str) -> str:
     ).stdout
 
 
-def _sucios() -> dict[str, bytes]:
+def _rutas(raiz: Path, *argumentos: str) -> list[str]:
+    """Las rutas que lista git, con `-z`.
+
+    Sin él, una ruta con acento sale entre comillas y con escapes octales, no existe en el disco
+    y se saltea sin decirlo. Las texturas del modelo tienen rutas así: `textura portón.png`.
+    """
+    return [r for r in _git(raiz, *argumentos, "-z").split("\0") if r]
+
+
+def sucios(raiz: Path) -> dict[str, bytes]:
     """Lo rastreado que ya tenía cambios antes de hornear, con su contenido de ese momento."""
-    rutas = [r for r in _git("diff", "--name-only", "HEAD").splitlines() if r]
-    return {r: (Path(RAIZ) / r).read_bytes() for r in rutas if (Path(RAIZ) / r).is_file()}
+    rutas = _rutas(raiz, "diff", "--name-only", "HEAD")
+    return {r: (raiz / r).read_bytes() for r in rutas if (raiz / r).is_file()}
 
 
-def _devolver_lo_reescrito(desde: float, sucios: dict[str, bytes]) -> None:
+def devolver_lo_reescrito(raiz: Path, desde: float, previos: dict[str, bytes]) -> list[str]:
     """Devuelve a su contenido de antes lo que el editor re-serializó sin que se lo pidieran.
 
     Lo que ya tenía cambios vuelve a esos cambios; lo que estaba limpio vuelve a lo de git.
     """
     escritos = [
         r
-        for r in _git("ls-files").splitlines()
-        if (Path(RAIZ) / r).is_file() and (Path(RAIZ) / r).stat().st_mtime >= desde
+        for r in _rutas(raiz, "ls-files")
+        if (raiz / r).is_file() and (raiz / r).stat().st_mtime >= desde
     ]
-    for ruta in reescritos_de_mas(escritos):
-        if ruta in sucios:
-            (Path(RAIZ) / ruta).write_bytes(sucios[ruta])
+    devueltos = reescritos_de_mas(escritos)
+    for ruta in devueltos:
+        if ruta in previos:
+            (raiz / ruta).write_bytes(previos[ruta])
         else:
-            _git("checkout", "--", ruta)
+            _git(raiz, "checkout", "--", ruta)
         print(f"devuelto (el editor lo re-serializó al guardar): {ruta}")
+    return devueltos
 
 
 def main() -> int:
@@ -116,7 +129,7 @@ def main() -> int:
             return 2
 
     tope = tope_en_segundos(dict(os.environ))
-    sucios = _sucios()
+    previos = sucios(Path(RAIZ))
     desde = time.time()
     original = PROJECT.read_bytes()
     PROJECT.write_text(project_con_el_plugin(original.decode("utf-8")), encoding="utf-8")
@@ -138,7 +151,7 @@ def main() -> int:
         return 1
     finally:
         PROJECT.write_bytes(original)
-        _devolver_lo_reescrito(desde, sucios)
+        devolver_lo_reescrito(Path(RAIZ), desde, previos)
 
     for linea in (corrida.stdout + corrida.stderr).splitlines():
         if "[hornear]" in linea:
