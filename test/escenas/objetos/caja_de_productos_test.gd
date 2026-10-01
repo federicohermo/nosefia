@@ -26,6 +26,10 @@ const GENERICA := "res://assets/models/SEPT_JUEGOS_PROTOTIPO_caja.png"
 ## El parámetro de importación que achica una textura: su lado más grande, en píxeles.
 const LADO_TOPE := "process/size_limit"
 
+## Una etiqueta de la góndola. Viaja en el `.glb` con el lado que el exportador le da a las de
+## los productos, y ése es el lado con el que viajan las de las cajas.
+const ETIQUETA_DE_LA_GONDOLA := "res://assets/models/SEPT_JUEGOS_PROTOTIPO_Actroncito completo.png"
+
 ## Los productos con etiqueta propia, con el archivo del artista del que sale cada una.
 ## `caja jorgillata.png` es otra textura de Jorgillo, y no va: va `CAJA JORGILLO.png`.
 const ORIGEN_DE_CADA_ETIQUETA := {
@@ -236,6 +240,9 @@ func test_la_etiqueta_de_cada_producto_es_una_linea_del_script() -> void:
 func test_la_etiqueta_filtra_pixelado_como_la_caja_generica() -> void:
 	var generica := ConfigFile.new()
 	assert_int(generica.load(GENERICA + ".import")).is_equal(OK)
+	var gondola: Texture2D = load(ETIQUETA_DE_LA_GONDOLA)
+	var lado_de_la_gondola := maxi(gondola.get_width(), gondola.get_height())
+	assert_int(lado_de_la_gondola).is_less(generica.get_value("params", LADO_TOPE))
 	for id: Producto.Id in ORIGEN_DE_CADA_ETIQUETA:
 		var caja := _caja_armada(id)
 		var material := _material(caja)
@@ -271,13 +278,14 @@ func test_la_etiqueta_filtra_pixelado_como_la_caja_generica() -> void:
 				. override_failure_message("%s importa `%s` distinto" % [_nombre(id), clave])
 				. is_equal(generica.get_value("params", clave))
 			)
-		# Un lado tope en cero es sin tope: Godot importa la textura entera, de 2084 px.
+		# Un lado tope en cero es sin tope: Godot importa la textura entera, de 2084 px. Y quedar
+		# por debajo de la genérica no alcanza: a 1024 el `.pck` crece 12,7 MiB.
 		(
 			assert_int(suya.get_value("params", LADO_TOPE))
 			. override_failure_message(
-				"%s viaja sin tope o más grande que la genérica" % _nombre(id)
+				"%s no viaja con el lado de las etiquetas de la góndola" % _nombre(id)
 			)
-			. is_between(1, generica.get_value("params", LADO_TOPE))
+			. is_equal(lado_de_la_gondola)
 		)
 
 
