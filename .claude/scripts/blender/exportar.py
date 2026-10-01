@@ -30,7 +30,7 @@ modificador, que es lo que lo vuelve caro.
 
 ## Y cada textura viaja achicada al lado de su grupo, sobre una copia
 
-El arte del artista pasa los 9.000 px de lado, y el `.glb` llevaba cada imagen entera: 62 MB, el
+El arte del artista pasa los 9.000 px de lado, y el `.glb` llevaba cada imagen entera: 65 MB, el
 95 % en texturas, para un juego que igual las importa a 1024. El lado de cada grupo y de qué grupo
 es cada imagen lo decide `lib/blender.py`. Acá se achica **una copia en memoria**, que reemplaza a
 la original sólo mientras dura la exportación: ni el `.blend` ni los PNG del artista cambian.
