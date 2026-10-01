@@ -29,7 +29,12 @@ paths:
    El modelo trae **una** unidad de cada producto. Las copias que llenan el estante viven en la
    colección `guia` del `.blend`, visible para el artista y excluida al exportar. Las dibuja un
    `MultiMesh` por bloque. Mover una caja en Blender no llega al juego hasta regenerar ese
-   recurso: el `.glb` no la lleva.
+   recurso: el `.glb` no la lleva. Lo regenera `.claude/scripts/blender/disponer.py`.
+
+   **Las copias de `guia` no se mueven a mano.** Las pone `.claude/scripts/blender/acomodar.py`
+   desde el reparto de `.claude/scripts/lib/reparto.py`, y las rehace enteras en cada corrida: una
+   copia movida a mano se pierde en la siguiente. Lo que se itera es el reparto, y después van
+   `acomodar.py`, `exportar_modelo.py`, `disponer.py` y `assets/models/extraer_mallas.gd`.
 
 6. **Y después va `exportar_modelo.py`.** El par `.blend` ↔ `.glb` se verifica por hash. Un
    `.blend` que cambió sin reexportar es rojo, aunque el cambio no toque una sola malla. El
