@@ -182,6 +182,31 @@ func test_de_la_segunda_a_la_quinta_faltan_los_mismos_que_en_la_primera() -> voi
 		)
 
 
+## Lo que devuelve es una copia: quien la recibe puede tocarla, y la jornada de mañana sigue
+## contestando lo de la tabla.
+func test_los_faltantes_de_una_jornada_se_devuelven_en_una_copia() -> void:
+	var recibidos := Apertura.faltantes_de_la_jornada(ReglasDeLaPartida.PRIMERA_JORNADA)
+	recibidos[Producto.Id.MALBARDO] = 3
+	recibidos.erase(Producto.Id.ACTRONCITO)
+	assert_dict(Apertura.faltantes_de_la_jornada(ReglasDeLaPartida.PRIMERA_JORNADA)).is_equal(
+		{Producto.Id.ACTRONCITO: 5, Producto.Id.CORACOLA: 6}
+	)
+
+
+## Un faltante más grande que su fila es un error de los datos y no se acomoda: la góndola
+## arranca vacía, y no en un número negativo que `faltantes()` leería como cualquier otro.
+func test_un_faltante_mas_grande_que_su_fila_deja_la_gondola_en_cero() -> void:
+	var burbaloo := Catalogo.de(Producto.Id.BURBALOO)
+	var faltantes: Dictionary[Producto.Id, int] = {Producto.Id.BURBALOO: 5}
+	var casilleros: Dictionary[Producto.Id, int] = {Producto.Id.BURBALOO: 3}
+	var inventario := Apertura.inventario_con_faltantes(faltantes, casilleros)
+	assert_int(inventario.unidades(burbaloo, Inventario.Ubicacion.GONDOLA)).is_zero()
+	assert_int(inventario.unidades(burbaloo, Inventario.Ubicacion.DEPOSITO)).is_equal(
+		ReglasDelEstante.UNIDADES_POR_CAJA
+	)
+	assert_bool(_falta(inventario, burbaloo)).is_true()
+
+
 ## La cuenta es contra la fila y no contra el dato de la jornada: Malbardo arranca completo en la
 ## jornada 1, y en cuanto una unidad sale de su góndola vuelve a faltar.
 func test_un_casillero_que_se_vacia_vuelve_a_faltar() -> void:  # AC-STK-007
