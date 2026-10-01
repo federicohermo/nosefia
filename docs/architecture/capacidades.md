@@ -40,6 +40,7 @@ flowchart TD
   CTR -- "lo vendido" --> STK
   PLY -- "qué se lleva, a qué distancia" --> CLN
   PLY -- "la unidad viaja en la mano" --> STK
+  STK -- "qué casilleros están vacíos y cuáles ocupados" --> PLY
   PLY -- "qué objeto se examina" --> INV
   INV -- "la caja que se examina" --> STK
   SHF -.-> AMB

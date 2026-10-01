@@ -1,3 +1,11 @@
+# gdlint:ignore=max-public-methods
+#
+# La unión de la pila cruzó el techo de 20: el review de los faltantes de la jornada le sumó un
+# caso y la entrega hasta vaciarse los suyos, y juntos dan 21 públicos —medido al mergear el 266
+# en el 276—. El techo existe para cazar god-objects en `src/`, y una suite no es uno: los casos
+# no comparten estado y cada uno se lee solo. Partirla es la salida de verdad, pero no desde una
+# unión: la rama de arriba todavía puede agregarle casos. La directiva va en la línea 1 porque
+# el chequeo se reporta ahí.
 ## Cuántas unidades hay de cada producto y **dónde**: el depósito y la góndola son dos lugares
 ## distintos, y esa distinción es la que hace que reponer sea una tarea y no una animación.
 ##
@@ -162,6 +170,20 @@ func test_sin_casilleros_la_gondola_no_pide_nada() -> void:
 	assert_int(inventario.casilleros(malbardo)).is_zero()
 	assert_array(inventario.faltantes()).is_empty()
 	assert_int(inventario.vendibles(actroncito)).is_equal(6)
+
+
+func test_una_fila_negativa_es_una_fila_sin_casilleros() -> void:
+	# Un número negativo de casilleros no es una fila: contestarlo tal cual daría un cupo
+	# negativo, y el estante lo leería como un cupo que ninguna góndola alcanza a pedir. Y
+	# preguntar por un producto nulo contesta cero en vez de reventar.
+	var actroncito := Producto.new(Producto.Id.ACTRONCITO, "Actroncito", 2500)
+	var productos: Array[Producto] = [actroncito]
+	var inventario := Inventario.new(productos, {Producto.Id.ACTRONCITO: -3})
+	inventario.ingresar(actroncito, Inventario.Ubicacion.DEPOSITO, 4)
+	assert_int(inventario.casilleros(actroncito)).is_zero()
+	assert_int(inventario.casilleros(null)).is_zero()
+	assert_array(inventario.faltantes()).is_empty()
+	assert_int(inventario.vendibles(actroncito)).is_equal(4)
 
 
 func test_faltantes_devuelve_los_que_faltan_y_solo_esos_en_el_orden_de_construccion() -> void:
