@@ -311,8 +311,10 @@ func test_el_frente_se_conserva_al_examinar_y_volver_a_agarrar() -> void:
 	jugador.set_physics_process(false)
 	var agarre: Agarre = almacen.get("_agarre")
 	# Hacia dónde está horneado cada modelo: es la cara del mueble hacia la que su tanda
-	# exhibe, medida del `.blend`, y está acá para que la mano tenga contra qué medirse. Lo que
-	# se afirma es que **la mano lo gira hasta la cámara**, sea cual sea esa cara.
+	# exhibe, medida del `.blend` con el eje del frente de cada producto —el de su etiqueta— y
+	# no con las filas de su tanda, que es de donde el puesto saca el giro. Está acá para que la
+	# mano tenga contra qué medirse. Lo que se afirma es que **la mano lo gira hasta la cámara**,
+	# sea cual sea esa cara. Medido el 2026-09-29 sobre el reparto de un lugar por producto.
 	#
 	# Los doce estuvieron mal hasta el 2026-09-19: los de +X figuraban en -X y los de +Z en -Z,
 	# o sea 180° girados. Con el giro de la mano también al revés, las dos mitades se cancelaban
@@ -324,23 +326,31 @@ func test_el_frente_se_conserva_al_examinar_y_volver_a_agarrar() -> void:
 		Vector3.LEFT,  # Zucarachas
 		Vector3.FORWARD,  # Laysntt
 		Vector3.BACK,  # Malbardo
-		Vector3.RIGHT,  # Prongles
+		Vector3.BACK,  # Prongles
 		Vector3.LEFT,  # Jorgillo
 		Vector3.RIGHT,  # Arvejas
 		Vector3.FORWARD,  # Chisitos
-		Vector3.RIGHT,  # Oremos
+		Vector3.LEFT,  # Oremos
 		Vector3.RIGHT,  # Pepitos
-		Vector3.LEFT,  # Saladik
+		Vector3.RIGHT,  # Saladik
 		Vector3.RIGHT,  # Uakas
 		Vector3.RIGHT,  # Coracola
-		Vector3.FORWARD,  # Frotlups
+		Vector3.LEFT,  # Frotlups
 		Vector3.RIGHT,  # Marolini
 		Vector3.RIGHT,  # Amargadito
 		Vector3.RIGHT,  # Cindolor
 		Vector3.RIGHT,  # Flinpuf
-		Vector3.RIGHT,  # Donsaturados
+		Vector3.LEFT,  # Donsaturados
 		Vector3.RIGHT,  # Petisas
-		Vector3.RIGHT  # Macumbas
+		Vector3.BACK,  # Macumbas
+		Vector3.RIGHT,  # Cosa de Maní
+		Vector3.BACK,  # Duronga
+		Vector3.RIGHT,  # Fernet God
+		Vector3.RIGHT,  # Mayonchis
+		Vector3.RIGHT,  # Oaaaa
+		Vector3.RIGHT,  # Terminator
+		Vector3.RIGHT,  # Marranos
+		Vector3.RIGHT  # Feel Ricky Fort
 	]
 	assert_int(frentes.size()).is_equal(Catalogo.todos().size())
 	for producto in Catalogo.todos():
@@ -376,8 +386,8 @@ func test_actroncito_durextra_y_oremos_se_reponen_con_foco_y_clic_reales() -> vo
 	add_child(almacen)
 	var jugador: Node3D = almacen.get("_jugador")
 	jugador.set_physics_process(false)
-	# Los tres viven en el mismo rack y en bandejas distintas: uno arriba en caja grande y dos
-	# abajo en caja chica. Es el reparto que el depósito tiene desde que hay dos tamaños, y lo
+	# Los tres viven en el mismo rack y en bandejas distintas: dos arriba en caja chica y uno
+	# abajo en caja grande. Es el reparto que el depósito tiene desde que hay dos tamaños, y lo
 	# que el caso ejerce es que ninguna de las dos alturas deje la caja fuera del alcance.
 	for id: Producto.Id in [Producto.Id.ACTRONCITO, Producto.Id.DUREXTRA, Producto.Id.OREMOS]:
 		var caja: Node3D = almacen.get("_cajas_de_productos")[id]
@@ -784,8 +794,13 @@ func test_sin_superficie_que_valga_se_suelta_como_siempre() -> void:  # AC-PLY-0
 	_soltar(almacen, bolsa)
 	assert_vector(bolsa.global_position).is_equal_approx(sin_mira_al_costado, Vector3.ONE * 0.01)
 	# Un estante de la góndola es horizontal y la bolsa entra, pero queda adentro del mueble.
-	var estante: Vector3 = almacen.get("_reposicion_manual").call("_apoyo", Producto.Id.UAKAS)
-	camara.global_position = estante + Vector3(1.8, 1.0, 0.0)
+	var apoyo: Vector3 = almacen.get("_reposicion_manual").call("_apoyo", Producto.Id.UAKAS)
+	# Detrás del casillero, sobre la misma chapa, y desde arriba: el casillero está a seis
+	# centímetros del frente del estante, y un rayo tendido hacia él pega en el portaprecio, que
+	# es inclinado. La cámara queda lo bastante afuera para que el punto de soltar sin mira caiga
+	# en el pasillo y no adentro del contorno del mueble.
+	var estante := apoyo + Vector3.LEFT * 0.12
+	camara.global_position = estante + Vector3(2.0, 1.4, 0.0)
 	camara.look_at(estante)
 	# Sin el contorno que envuelve al mueble: si lo soltado choca con él, la mira pega en su cara
 	# y no llega al estante.

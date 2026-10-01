@@ -16,6 +16,9 @@ const GONDOLAS := {
 	"Estructura/gondolanueva_002": Vector3.LEFT,
 }
 
+## Lo que el contorno le agrega a la malla de cada lado, a lo sumo, en metros.
+const HOLGURA_DEL_CONTORNO := 0.05
+
 
 func test_el_jugador_que_camina_contra_una_gondola_choca_con_su_contorno() -> void:
 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
@@ -42,6 +45,41 @@ func test_el_jugador_que_camina_contra_una_gondola_choca_con_su_contorno() -> vo
 		assert_bool(jugador.get_collision_exceptions().has(malla)).is_true()
 
 
+## El contorno sigue a la malla: la envuelve entera, y no le sobra más que la holgura. **Achicar
+## un estante en el `.blend` cambia la malla y no el contorno**: una cabecera que se achica deja
+## una pared invisible delante de su mercadería, y un estante que crece asoma por fuera de la caja
+## y el jugador lo atraviesa.
+func test_el_contorno_envuelve_la_malla_sin_que_le_sobre() -> void:
+	var almacen: Node3D = auto_free(ALMACEN.instantiate())
+	add_child(almacen)
+	for ruta: String in GONDOLAS:
+		var gondola := almacen.get_node(ruta) as MeshInstance3D
+		var malla := gondola.global_transform * gondola.get_aabb()
+		var forma := gondola.get_node("Contorno/Forma") as CollisionShape3D
+		var lados := (forma.shape as BoxShape3D).size
+		var contorno := forma.global_transform * AABB(-lados / 2.0, lados)
+		for eje in 3:
+			var antes := malla.position[eje] - contorno.position[eje]
+			var despues := contorno.end[eje] - malla.end[eje]
+			var mensaje := (
+				"%s: el contorno sobra %.3f y %.3f en el eje %d; va %s con tamaño %s"
+				% [
+					ruta,
+					antes,
+					despues,
+					eje,
+					malla.get_center() - gondola.global_position,
+					malla.size + Vector3(2.0, 0.0, 2.0) * HOLGURA_DEL_CONTORNO,
+				]
+			)
+			assert_float(antes).override_failure_message(mensaje).is_between(
+				-0.001, HOLGURA_DEL_CONTORNO + 0.001
+			)
+			assert_float(despues).override_failure_message(mensaje).is_between(
+				-0.001, HOLGURA_DEL_CONTORNO + 0.001
+			)
+
+
 func test_la_malla_de_la_gondola_sigue_siendo_la_colision_de_los_productos() -> void:
 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
 	add_child(almacen)
@@ -55,7 +93,9 @@ func test_la_malla_de_la_gondola_sigue_siendo_la_colision_de_los_productos() -> 
 func test_un_producto_soltado_hacia_la_gondola_no_queda_adentro_de_ella() -> void:
 	# Adentro del mueble se pierde de vista y se superpone con la mercadería, que no tiene cuerpo.
 	# Los tres casos están medidos: parado en el pasillo o frente a una cabecera, mirando una
-	# bandeja, el punto de soltado cae en el hueco del estante, y ahí hay lugar libre.
+	# bandeja, el punto de soltado cae en el hueco del estante, y ahí hay lugar libre. Se volvieron
+	# a medir el 2026-09-30, con la góndola angostada hasta sus estantes: sin el contorno, dos de
+	# los tres quedan adentro.
 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
 	add_child(almacen)
 	await get_tree().physics_frame
@@ -65,15 +105,24 @@ func test_un_producto_soltado_hacia_la_gondola_no_queda_adentro_de_ella() -> voi
 	var gondola := almacen.get_node("Estructura/gondolanueva") as MeshInstance3D
 	var mueble := gondola.global_transform * gondola.get_aabb()
 	var casos := [
-		[Vector3(-0.43, 0.11, -2.79), Vector3(1.44, 1.9, -2.79), Producto.Id.MALBARDO],
-		[Vector3(3.07, 0.11, -2.79), Vector3(1.44, 0.5, -2.79), Producto.Id.MALBARDO],
-		[Vector3(0.97, 0.11, 2.11), Vector3(0.97, 0.5, -1.28), Producto.Id.OREMOS],
+		[Vector3(0.05, 0.11, -2.79), Vector3(1.44, 1.9, -2.79), Producto.Id.MALBARDO],
+		[Vector3(2.87, 0.11, -2.79), Vector3(1.44, 0.5, -2.79), Producto.Id.MALBARDO],
+		[Vector3(1.45, 0.11, 2.28), Vector3(1.45, 0.5, -1.11), Producto.Id.OREMOS],
 	]
 	var sueltas: Array[Node3D] = []
 	for caso: Array in casos:
 		jugador.global_position = caso[0]
 		_mirar(jugador, caso[1])
 		almacen.get("_reposicion_manual").retirar(caso[2])
+		# Con el punto de soltado en el pasillo, lo soltado cae al piso y el caso no ejerce nada:
+		# es lo que pasa si la góndola se angosta y los casos no se mueven con ella.
+		(
+			assert_bool(mueble.has_point(agarre.punto_de_soltado.global_position))
+			. override_failure_message(
+				"desde %v, el punto de soltado no cae en la góndola" % caso[0]
+			)
+			. is_true()
+		)
 		sueltas.append(agarre.soltar(true))
 	for cuadro in 90:
 		await get_tree().physics_frame
@@ -89,7 +138,8 @@ func test_un_producto_soltado_hacia_la_gondola_no_queda_adentro_de_ella() -> voi
 
 func test_una_caja_chica_soltada_hacia_una_bandeja_no_queda_adentro_de_la_gondola() -> void:
 	# Los casos están medidos: una caja chica entra en el hueco de una bandeja, y ahí se encima
-	# con la mercadería, que no tiene cuerpo.
+	# con la mercadería, que no tiene cuerpo. Se volvieron a medir el 2026-09-30, con la góndola
+	# angostada hasta sus estantes: sin el contorno, dos de los cuatro quedan adentro.
 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
 	add_child(almacen)
 	await get_tree().physics_frame
@@ -100,14 +150,20 @@ func test_una_caja_chica_soltada_hacia_una_bandeja_no_queda_adentro_de_la_gondol
 	var mano: Node3D = jugador.get_node("Giro/PuntoDeCaja")
 	var adentro: Array[String] = []
 	for caso: Array in [
-		[Vector3(-0.43, 0.11, -2.49), Vector3(0.77, 1.0, -2.49)],
-		[Vector3(-0.43, 0.11, -2.49), Vector3(0.77, 1.7, -2.49)],
-		[Vector3(-0.43, 0.11, -1.89), Vector3(0.77, 1.0, -1.89)],
+		[Vector3(0.05, 0.11, -2.49), Vector3(1.25, 1.0, -2.49)],
+		[Vector3(0.05, 0.11, -2.49), Vector3(1.25, 1.7, -2.49)],
+		[Vector3(0.05, 0.11, -1.89), Vector3(1.25, 1.0, -1.89)],
 		# Frente a una cabecera, mirando su base, que es hueca: así se perdió la caja de Malbardo.
-		[Vector3(0.97, 0.11, 2.11), Vector3(0.97, 0.15, 1.13)],
+		[Vector3(1.45, 0.11, 2.28), Vector3(1.45, 0.15, 1.3)],
 	]:
 		if caja.get_parent() != mano:
 			_accion(jugador, caja)
+		# Mirando al pasillo, la caja cae al piso y el caso no ejerce nada.
+		(
+			assert_bool(mueble.has_point(caso[1]))
+			. override_failure_message("mirando %v no se mira la góndola" % caso[1])
+			. is_true()
+		)
 		jugador.global_position = caso[0]
 		_mirar(jugador, caso[1])
 		for cuadro in 6:

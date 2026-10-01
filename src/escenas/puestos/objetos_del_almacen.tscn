@@ -30,255 +30,125 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12.2, 0.5, -4.9)
 datos = ExtResource("28_bolsa3")
 
 [node name="CajaDeActroncito" parent="." instance=ExtResource("11_caja_de_productos")]
-position = Vector3(-1.4000, 1.9077, -11.7900)
+position = Vector3(3.19, 1.68291, -9.08)
 producto = 0
 
-[node name="Cuerpo" parent="CajaDeActroncito" index="0"]
-scale = Vector3(0.3037077, 0.3037077, 0.3037077)
-
-[node name="Malla" parent="CajaDeActroncito" index="1"]
-scale = Vector3(0.3037077, 0.3037077, 0.3037077)
-
 [node name="CajaDeDurextra" parent="." instance=ExtResource("11_caja_de_productos")]
-position = Vector3(-1.4000, 1.3270, -10.9000)
+position = Vector3(3.19, 1.68291, -8.6)
 producto = 1
 
-[node name="Cuerpo" parent="CajaDeDurextra" index="0"]
-scale = Vector3(0.2000000, 0.2000000, 0.2000000)
-
-[node name="Malla" parent="CajaDeDurextra" index="1"]
-scale = Vector3(0.2000000, 0.2000000, 0.2000000)
-
 [node name="CajaDeBurbaloo" parent="." instance=ExtResource("11_caja_de_productos")]
-position = Vector3(-1.4000, 1.9077, -11.0900)
+position = Vector3(3.19, 1.08992, -9.39)
 producto = 2
 
-[node name="Cuerpo" parent="CajaDeBurbaloo" index="0"]
-scale = Vector3(0.3037077, 0.3037077, 0.3037077)
-
-[node name="Malla" parent="CajaDeBurbaloo" index="1"]
-scale = Vector3(0.3037077, 0.3037077, 0.3037077)
-
 [node name="CajaDeZucarachas" parent="." instance=ExtResource("11_caja_de_productos")]
-position = Vector3(-1.4000, 1.3270, -11.4500)
+position = Vector3(-0.41, 1.08992, -9.39)
 producto = 3
 
-[node name="Cuerpo" parent="CajaDeZucarachas" index="0"]
-scale = Vector3(0.2000000, 0.2000000, 0.2000000)
-
-[node name="Malla" parent="CajaDeZucarachas" index="1"]
-scale = Vector3(0.2000000, 0.2000000, 0.2000000)
-
 [node name="CajaDeLaysntt" parent="." instance=ExtResource("11_caja_de_productos")]
-position = Vector3(7.5770, 1.9077, -11.7900)
+position = Vector3(3.19, 1.08992, -10.03)
 producto = 4
 
-[node name="Cuerpo" parent="CajaDeLaysntt" index="0"]
-scale = Vector3(0.3037077, 0.3037077, 0.3037077)
-
-[node name="Malla" parent="CajaDeLaysntt" index="1"]
-scale = Vector3(0.3037077, 0.3037077, 0.3037077)
-
 [node name="CajaDeMalbardo" parent="." instance=ExtResource("11_caja_de_productos")]
-position = Vector3(-1.4000, 1.3270, -12.0000)
+position = Vector3(3.19, 1.68291, -9.56)
 producto = 5
 
-[node name="Cuerpo" parent="CajaDeMalbardo" index="0"]
-scale = Vector3(0.2000000, 0.2000000, 0.2000000)
-
-[node name="Malla" parent="CajaDeMalbardo" index="1"]
-scale = Vector3(0.2000000, 0.2000000, 0.2000000)
-
 [node name="CajaDeProngles" parent="." instance=ExtResource("11_caja_de_productos")]
-position = Vector3(7.5770, 1.9077, -11.0900)
+position = Vector3(-0.41, 1.08992, -8.75)
 producto = 6
 
-[node name="Cuerpo" parent="CajaDeProngles" index="0"]
-scale = Vector3(0.3037077, 0.3037077, 0.3037077)
-
-[node name="Malla" parent="CajaDeProngles" index="1"]
-scale = Vector3(0.3037077, 0.3037077, 0.3037077)
-
 [node name="CajaDeJorgillo" parent="." instance=ExtResource("11_caja_de_productos")]
-position = Vector3(-1.4000, 0.8510, -10.9000)
+position = Vector3(3.19, 1.68291, -10.04)
 producto = 7
 
-[node name="Cuerpo" parent="CajaDeJorgillo" index="0"]
-scale = Vector3(0.2000000, 0.2000000, 0.2000000)
-
-[node name="Malla" parent="CajaDeJorgillo" index="1"]
-scale = Vector3(0.2000000, 0.2000000, 0.2000000)
-
 [node name="CajaDeArvejas" parent="." instance=ExtResource("11_caja_de_productos")]
-position = Vector3(4.1000, 1.9077, -14.1150)
+position = Vector3(-6.45, 0.3027373, -13.3)
 producto = 8
 
-[node name="Cuerpo" parent="CajaDeArvejas" index="0"]
-scale = Vector3(0.3037077, 0.3037077, 0.3037077)
-
-[node name="Malla" parent="CajaDeArvejas" index="1"]
-scale = Vector3(0.3037077, 0.3037077, 0.3037077)
-
 [node name="CajaDeChisitos" parent="." instance=ExtResource("11_caja_de_productos")]
-position = Vector3(4.7500, 1.9077, -14.1150)
+position = Vector3(-0.41, 1.08992, -10.03)
 producto = 9
 
-[node name="Cuerpo" parent="CajaDeChisitos" index="0"]
-scale = Vector3(0.3037077, 0.3037077, 0.3037077)
-
-[node name="Malla" parent="CajaDeChisitos" index="1"]
-scale = Vector3(0.3037077, 0.3037077, 0.3037077)
-
 [node name="CajaDeOremos" parent="." instance=ExtResource("11_caja_de_productos")]
-position = Vector3(-1.4000, 0.8510, -11.4500)
+position = Vector3(3.19, 1.08992, -8.75)
 producto = 10
 
-[node name="Cuerpo" parent="CajaDeOremos" index="0"]
-scale = Vector3(0.2000000, 0.2000000, 0.2000000)
-
-[node name="Malla" parent="CajaDeOremos" index="1"]
-scale = Vector3(0.2000000, 0.2000000, 0.2000000)
-
 [node name="CajaDePepitos" parent="." instance=ExtResource("11_caja_de_productos")]
-position = Vector3(-1.4000, 0.8510, -12.0000)
+position = Vector3(-6.3, 0.406445, -14.1)
 producto = 11
 
-[node name="Cuerpo" parent="CajaDePepitos" index="0"]
-scale = Vector3(0.2000000, 0.2000000, 0.2000000)
-
-[node name="Malla" parent="CajaDePepitos" index="1"]
-scale = Vector3(0.2000000, 0.2000000, 0.2000000)
-
 [node name="CajaDeSaladik" parent="." instance=ExtResource("11_caja_de_productos")]
-position = Vector3(0.3000, 0.4059, -10.6000)
+position = Vector3(-6.2, 0.406445, -9.3)
 producto = 12
 
-[node name="Cuerpo" parent="CajaDeSaladik" index="0"]
-scale = Vector3(0.3037077, 0.3037077, 0.3037077)
-
-[node name="Malla" parent="CajaDeSaladik" index="1"]
-scale = Vector3(0.3037077, 0.3037077, 0.3037077)
-
 [node name="CajaDeUakas" parent="." instance=ExtResource("11_caja_de_productos")]
-position = Vector3(0.3000, 0.4059, -11.3000)
+position = Vector3(6.79, 1.08992, -14.02)
 producto = 13
 
-[node name="Cuerpo" parent="CajaDeUakas" index="0"]
-scale = Vector3(0.3037077, 0.3037077, 0.3037077)
-
-[node name="Malla" parent="CajaDeUakas" index="1"]
-scale = Vector3(0.3037077, 0.3037077, 0.3037077)
-
 [node name="CajaDeCoracola" parent="." instance=ExtResource("11_caja_de_productos")]
-position = Vector3(7.5770, 1.3270, -10.9000)
+position = Vector3(-5.55, 0.406445, -14.1)
 producto = 14
 
-[node name="Cuerpo" parent="CajaDeCoracola" index="0"]
-scale = Vector3(0.2000000, 0.2000000, 0.2000000)
-
-[node name="Malla" parent="CajaDeCoracola" index="1"]
-scale = Vector3(0.2000000, 0.2000000, 0.2000000)
-
 [node name="CajaDeFrotlups" parent="." instance=ExtResource("11_caja_de_productos")]
-position = Vector3(7.5770, 1.3270, -11.4500)
+position = Vector3(-4.8, 0.406445, -14.1)
 producto = 15
 
-[node name="Cuerpo" parent="CajaDeFrotlups" index="0"]
-scale = Vector3(0.2000000, 0.2000000, 0.2000000)
-
-[node name="Malla" parent="CajaDeFrotlups" index="1"]
-scale = Vector3(0.2000000, 0.2000000, 0.2000000)
-
 [node name="CajaDeMarolini" parent="." instance=ExtResource("11_caja_de_productos")]
-position = Vector3(0.3000, 0.4059, -12.0000)
+position = Vector3(7.48, 1.08992, -14.02)
 producto = 16
 
-[node name="Cuerpo" parent="CajaDeMarolini" index="0"]
-scale = Vector3(0.3037077, 0.3037077, 0.3037077)
-
-[node name="Malla" parent="CajaDeMarolini" index="1"]
-scale = Vector3(0.3037077, 0.3037077, 0.3037077)
-
 [node name="CajaDeAmargadito" parent="." instance=ExtResource("11_caja_de_productos")]
-position = Vector3(0.3000, 0.4059, -12.7000)
+position = Vector3(-0.41, 1.7866177, -8.75)
 producto = 17
 
-[node name="Cuerpo" parent="CajaDeAmargadito" index="0"]
-scale = Vector3(0.3037077, 0.3037077, 0.3037077)
-
-[node name="Malla" parent="CajaDeAmargadito" index="1"]
-scale = Vector3(0.3037077, 0.3037077, 0.3037077)
-
 [node name="CajaDeCindolor" parent="." instance=ExtResource("11_caja_de_productos")]
-position = Vector3(7.5770, 1.3270, -12.0000)
+position = Vector3(-4.05, 0.406445, -14.1)
 producto = 18
 
-[node name="Cuerpo" parent="CajaDeCindolor" index="0"]
-scale = Vector3(0.2000000, 0.2000000, 0.2000000)
-
-[node name="Malla" parent="CajaDeCindolor" index="1"]
-scale = Vector3(0.2000000, 0.2000000, 0.2000000)
-
 [node name="CajaDeFlinpuf" parent="." instance=ExtResource("11_caja_de_productos")]
-position = Vector3(0.3000, 0.4059, -13.4000)
+position = Vector3(-0.41, 1.7866177, -9.39)
 producto = 19
 
-[node name="Cuerpo" parent="CajaDeFlinpuf" index="0"]
-scale = Vector3(0.3037077, 0.3037077, 0.3037077)
-
-[node name="Malla" parent="CajaDeFlinpuf" index="1"]
-scale = Vector3(0.3037077, 0.3037077, 0.3037077)
-
 [node name="CajaDeDonsaturados" parent="." instance=ExtResource("11_caja_de_productos")]
-position = Vector3(7.5770, 0.8510, -10.9000)
+position = Vector3(-3.3, 0.406445, -14.1)
 producto = 20
 
-[node name="Cuerpo" parent="CajaDeDonsaturados" index="0"]
-scale = Vector3(0.2000000, 0.2000000, 0.2000000)
-
-[node name="Malla" parent="CajaDeDonsaturados" index="1"]
-scale = Vector3(0.2000000, 0.2000000, 0.2000000)
-
 [node name="CajaDePetisas" parent="." instance=ExtResource("11_caja_de_productos")]
-position = Vector3(7.5770, 0.8510, -11.4500)
+position = Vector3(-2.55, 0.406445, -14.1)
 producto = 21
 
-[node name="Cuerpo" parent="CajaDePetisas" index="0"]
-scale = Vector3(0.2000000, 0.2000000, 0.2000000)
-
-[node name="Malla" parent="CajaDePetisas" index="1"]
-scale = Vector3(0.2000000, 0.2000000, 0.2000000)
-
 [node name="CajaDeMacumbas" parent="." instance=ExtResource("11_caja_de_productos")]
-position = Vector3(7.5770, 0.8510, -12.0000)
+position = Vector3(-6.3, 0.406445, -8.65)
 producto = 22
 
-[node name="Cuerpo" parent="CajaDeMacumbas" index="0"]
-scale = Vector3(0.2000000, 0.2000000, 0.2000000)
+[node name="CajaDeCosaDeMani" parent="." instance=ExtResource("11_caja_de_productos")]
+position = Vector3(-0.3, 0.3027373, -14.1)
+producto = 23
 
-[node name="Malla" parent="CajaDeMacumbas" index="1"]
-scale = Vector3(0.2000000, 0.2000000, 0.2000000)
+[node name="CajaDeDuronga" parent="." instance=ExtResource("11_caja_de_productos")]
+position = Vector3(-6.45, 0.3027373, -10.2)
+producto = 24
 
-[editable path="CajaDeActroncito"]
-[editable path="CajaDeDurextra"]
-[editable path="CajaDeBurbaloo"]
-[editable path="CajaDeZucarachas"]
-[editable path="CajaDeLaysntt"]
-[editable path="CajaDeMalbardo"]
-[editable path="CajaDeProngles"]
-[editable path="CajaDeJorgillo"]
-[editable path="CajaDeArvejas"]
-[editable path="CajaDeChisitos"]
-[editable path="CajaDeOremos"]
-[editable path="CajaDePepitos"]
-[editable path="CajaDeSaladik"]
-[editable path="CajaDeUakas"]
-[editable path="CajaDeCoracola"]
-[editable path="CajaDeFrotlups"]
-[editable path="CajaDeMarolini"]
-[editable path="CajaDeAmargadito"]
-[editable path="CajaDeCindolor"]
-[editable path="CajaDeFlinpuf"]
-[editable path="CajaDeDonsaturados"]
-[editable path="CajaDePetisas"]
-[editable path="CajaDeMacumbas"]
+[node name="CajaDeFernetGod" parent="." instance=ExtResource("11_caja_de_productos")]
+position = Vector3(-1.8, 0.406445, -14.1)
+producto = 25
+
+[node name="CajaDeMayonchis" parent="." instance=ExtResource("11_caja_de_productos")]
+position = Vector3(-1.05, 0.406445, -14.1)
+producto = 26
+
+[node name="CajaDeOaaaa" parent="." instance=ExtResource("11_caja_de_productos")]
+position = Vector3(-0.41, 1.68291, -10.03)
+producto = 27
+
+[node name="CajaDeTerminator" parent="." instance=ExtResource("11_caja_de_productos")]
+position = Vector3(-6.45, 0.406445, -12.55)
+producto = 28
+
+[node name="CajaDeMarranos" parent="." instance=ExtResource("11_caja_de_productos")]
+position = Vector3(-6.45, 0.406445, -11.8)
+producto = 29
+
+[node name="CajaDeFeelRickyFort" parent="." instance=ExtResource("11_caja_de_productos")]
+position = Vector3(-6.45, 0.406445, -11.05)
+producto = 30

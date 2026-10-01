@@ -41,6 +41,11 @@ func _caja(almacen: Node3D, id: Producto.Id) -> Node3D:
 	return almacen.get("_cajas_de_productos")[id]
 
 
+## Media caja, en metros: la escala del cubo de dos de su cuerpo, que sale del tamaño de la caja.
+func _media(caja: Node3D) -> float:
+	return (caja.get_node("Cuerpo") as Node3D).scale.x
+
+
 ## El estado de todas las tareas que un rescate podría tocar.
 func _tareas(almacen: Node3D) -> Dictionary:
 	var repositor: Repositor = almacen.get("_repositor")
@@ -105,9 +110,9 @@ func test_encima_de_la_caja_que_ocupa_el_origen() -> void:  # AC-PLY-027
 	await get_tree().physics_frame
 	_red(almacen).revisar(caja)
 	assert_int(_red(almacen).rescates[0]["clase"]).is_equal(Rescate.Clase.ENCIMA_DEL_ORIGEN)
-	assert_float(caja.global_position.y - ocupante.global_position.y).is_equal_approx(
-		MEDIA_CAJA * 2.0, 0.01
-	)
+	# Media caja de cada una, que no son del mismo tamaño: Arvejas va en caja chica.
+	var alto := _media(caja) + _media(ocupante)
+	assert_float(caja.global_position.y - ocupante.global_position.y).is_equal_approx(alto, 0.01)
 
 
 func test_el_origen_es_el_ultimo_recurso() -> void:  # AC-PLY-028

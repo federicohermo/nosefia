@@ -13,6 +13,10 @@ extends RigidBody3D
 ## entera: lo despierta el puesto.
 signal empujada(caja: Node3D)
 
+## Media caja de cada tamaño, en metros: la escala del cubo de dos de su malla y de su cuerpo.
+## Qué tamaño lleva cada producto lo dice el catálogo; cuánto mide cada tamaño es de la escena.
+const MEDIA_CAJA := {Catalogo.TamanoDeCaja.CHICA: 0.2, Catalogo.TamanoDeCaja.GRANDE: 0.3037077}
+
 @export var producto: Producto.Id = Producto.Id.ACTRONCITO
 @export var datos: ObjetoDelAlmacen
 @export var mallas: Array[MeshInstance3D] = []
@@ -30,6 +34,9 @@ var _apoyo_que_dejo := Vector3.ZERO
 
 
 func _ready() -> void:
+	# Antes de anotar el lugar: el tamaño cambia dónde apoya, y el `.tscn` ya lo cuenta.
+	for parte: Node3D in [get_node("Cuerpo"), get_node("Malla")]:
+		parte.scale = Vector3.ONE * MEDIA_CAJA[Catalogo.caja_de(producto)]
 	_lugar_de_origen = transform
 	_padre_de_origen = get_parent()
 	_origen_en_el_mundo = global_transform

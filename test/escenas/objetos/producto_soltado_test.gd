@@ -6,8 +6,11 @@ extends GdUnitTestSuite
 
 const ALMACEN := preload("res://src/escenas/almacen.tscn")
 
-## Piso libre del fondo, lejos de los muebles. Las unidades se apoyan en filas desde acá.
-const PISO_LIBRE := Vector3(2.89, 0.0, -10.0)
+## Piso libre del depósito, lejos de los muebles y sin nada encima. Las unidades se apoyan en
+## filas desde acá. Medido el 2026-09-30: la grilla entera entra con 40 cm alrededor de cada
+## lugar. En (2.89, -10), donde estaba, el rayo que busca el piso pega en la tapa de una góndola
+## del depósito desde que los sólidos tienen volumen, y las unidades caían desde 2 m.
+const PISO_LIBRE := Vector3(4.18, 0.0, -8.95)
 
 ## Cuántas unidades van por fila, y a qué distancia, en metros: una que se cae no llega a la de
 ## al lado.
@@ -68,24 +71,50 @@ func _grosor(malla: Mesh) -> float:
 	return tamano[tamano.min_axis_index()]
 
 
+## El eje de un giro que más se acerca a la vertical, hacia arriba.
+static func _arriba(giro: Basis) -> Vector3:
+	var mejor := Vector3.ZERO
+	for columna in 3:
+		var eje := giro[columna].normalized()
+		if absf(eje.y) > absf(mejor.y):
+			mejor = eje
+	return mejor if mejor.y > 0.0 else -mejor
+
+
 func test_una_unidad_de_cada_producto_se_duerme_apoyada_en_el_piso() -> void:  # AC-PLY-015
 	var almacen := await _almacen()
 	var piso := _piso_en(almacen, PISO_LIBRE)
+	var contenido: Node3D = almacen.get("_reposicion_manual").get("contenido")
 	var nombres: Dictionary[ObjetoAgarrable, String] = {}
 	for producto in Catalogo.todos():
 		var unidad := _unidad(almacen, producto)
 		var indice := nombres.size()
 		var vista: MeshInstance3D = unidad.get_node("Malla")
+		# Derecha, apoyada en su base. La unidad lleva la vuelta que tiene en el estante, y en la
+		# rampa de una cabecera va echada hacia atrás: suelta así, cae sobre un canto y se hamaca.
+		# Se la endereza por el eje del modelo más cercano a la vertical, que en un estante plano
+		# ya es la vertical.
+		var modelo := contenido.get_child(producto.id) as Node3D
+		var derecha := Basis(Quaternion(_arriba(modelo.global_basis), Vector3.UP))
+		var abajo := INF
+		for punto in vista.mesh.get_faces():
+			abajo = minf(abajo, (derecha * (punto + vista.position)).y)
 		var lugar := (
 			PISO_LIBRE
 			+ Vector3(
 				(indice % COLUMNAS) * SEPARACION,
-				piso + vista.mesh.get_aabb().size.y / 2.0 + HOLGURA,
+				piso - abajo + HOLGURA,
 				-floori(float(indice) / COLUMNAS) * SEPARACION
 			)
 		)
-		# Derecha, como la muestra el estante.
-		unidad.global_transform = Transform3D(Basis.IDENTITY, lugar)
+		# Si el piso de este lugar no es el medido, la unidad no queda apoyada: cae de otra altura,
+		# o sobre un mueble.
+		(
+			assert_float(_piso_en(almacen, Vector3(lugar.x, PISO_LIBRE.y, lugar.z)))
+			. override_failure_message("`%s` no queda sobre el piso libre" % producto.nombre)
+			. is_equal_approx(piso, 0.001)
+		)
+		unidad.global_transform = Transform3D(derecha, lugar)
 		unidad.linear_velocity = Vector3.ZERO
 		unidad.angular_velocity = Vector3.ZERO
 		nombres[unidad] = producto.nombre

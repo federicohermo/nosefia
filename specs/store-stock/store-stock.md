@@ -3,7 +3,7 @@ schema_version: 1
 capability_id: CAP-STK
 status: ratified
 owner: por definir
-provenance: GDD «Reponer» y «Registrar»; ficha «6) Tarea: Registro de productos vendidos»; migración de los specs 005, 008, 033, 042, 047
+provenance: GDD «Reponer» y «Registrar»; fichas «6) Tarea: Registro de productos vendidos» y «8. Tarea: Reposición»; base «Productos y cajas contenedoras»; migración de los specs 005, 008, 033, 042, 047
 ---
 
 # Capacidad: la mercadería del almacén
@@ -23,6 +23,10 @@ depósito son dos lugares distintos, y mover mercadería del fondo al estante cu
 | **Depósito** | el fondo, donde arranca la mercadería de la noche y de donde sale la venta | almacén, bodega |
 | **Caja del depósito** | la caja de un solo producto de la que se saca de a una unidad | cajón, contenedor |
 | **Góndola** | el estante del local, el que el jugador repone | vitrina, exhibidor |
+| **Tanda** | las unidades de un mismo producto puestas juntas sobre un estante del local, en dos filas | bloque, exhibición |
+| **Fila de adelante** | la fila de una tanda del lado del pasillo: la única que el jugador repone | frente, cara |
+| **Fila de atrás** | la fila de una tanda contra el fondo del estante: fija, entera toda la noche | guía, fondo |
+| **Casillero** | un lugar de la fila de adelante que el jugador llena colocando una unidad | hueco, slot |
 | **Umbral** | cuántas unidades pide la góndola de ese producto. Es también su cupo | mínimo, tope |
 | **Faltante** | un producto con la góndola por debajo de su umbral | agotado, sin stock |
 | **Vendibles** | el depósito menos lo que a la góndola le falta para su umbral | stock, disponible |
@@ -140,6 +144,22 @@ El sistema DEBE declarar una sonoridad (ver [`ambience`](../ambience/ambience.md
 producto del catálogo. La sonoridad sale de la
 ficha del producto: lata, cajita, caja, envoltorio plástico o botella plástica. Un producto sin
 sonoridad no suena al agarrarlo ni al dejarlo, y nada lo avisa.
+
+### BR-STK-024 — Un producto, un lugar
+
+El sistema DEBE exhibir cada producto del catálogo en una sola tanda del local, al alcance de un
+jugador parado en el pasillo, y DEBE ubicar todos los casilleros de ese producto en esa tanda.
+SI un estante no se puede completar sin repetir un producto, ENTONCES lo que se repite DEBE ser
+fijo: no tiene casilleros y nunca se vacía. Con los casilleros de un producto repartidos en dos
+lugares, el jugador no sabe adónde va lo que lleva en la mano.
+
+### BR-STK-025 — La tanda tiene dos filas
+
+La tanda de cada producto DEBE tener dos filas, una detrás de la otra. Los casilleros del
+producto DEBEN estar en la fila de adelante, que DEBE tener al menos tantos lugares como el cupo
+del producto. La fila de atrás DEBE verse entera desde que abre la jornada y NO DEBE poder
+agarrarse ni vaciarse: es la que dice qué va ahí. SI la fila de adelante tiene más lugares que
+el cupo, ENTONCES los que sobran DEBEN ser fijos, a la vista desde que abre la jornada.
 
 ## Criterios de aceptación
 
@@ -260,6 +280,29 @@ filas están en 0 y registrar, sin cumplir.
 DADO cada producto del catálogo ENTONCES tiene una sonoridad. Las arvejas, la Coracola y las
 Prongles suenan a lata.
 
+### AC-STK-028 — Cada producto se repone en un solo lugar *(verifica BR-STK-024)*
+
+DADO el local armado ENTONCES cada producto del catálogo tiene una sola tanda con casilleros,
+sobre un solo estante y con sus unidades juntas, y cualquier otra unidad de ese producto que se
+vea en el local es fija.
+
+### AC-STK-029 — El casillero está al alcance *(verifica BR-STK-024)*
+
+DADO cualquier producto del catálogo en la mano CUANDO el jugador se para en el pasillo frente a
+su tanda ENTONCES la mira alcanza su casillero y el producto se coloca.
+
+### AC-STK-030 — Dos filas, y el cupo adelante *(verifica BR-STK-025)*
+
+DADO la tanda de cualquier producto ENTONCES tiene dos filas, una detrás de la otra; la de
+adelante es la más cercana al pasillo, tiene al menos tantos lugares como el cupo del producto,
+y todos sus casilleros están en ella.
+
+### AC-STK-031 — La fila de atrás, entera toda la noche *(verifica BR-STK-025)*
+
+DADO una jornada que se abre ENTONCES de cada producto se ve entera la fila de atrás, y de la de
+adelante sólo los lugares que sobran del cupo. CUANDO se repone el cupo entero ENTONCES la fila
+de adelante queda completa y la de atrás no cambió.
+
 ## No objetivos
 
 - Esta capacidad NO cobra ni atiende: eso es de
@@ -294,4 +337,10 @@ Prongles suenan a lata.
 - **OQ-STK-003 — ¿La mercadería expuesta entra en el inventario?**
   - Por qué sigue abierta: hoy la góndola arranca en cero y lo expuesto no se cuenta.
   - Decide: el dueño del repo.
+  - Bloquea: nada.
+- **OQ-STK-004 — ¿Cómo suenan la botella de vidrio y la caja de cereal?**
+  - Por qué sigue abierta: la ficha nombra dos familias sonoras que el juego no tiene
+    —botella de vidrio y caja de cereal— y no hay audio para ellas. Mientras tanto suenan como
+    la botella plástica y la cajita, que son las más parecidas.
+  - Decide: el equipo de sonido.
   - Bloquea: nada.
