@@ -8,13 +8,16 @@
 ##
 ## **La unidad viaja en la mano y no en el inventario.** `pedir_retirar()` la saca de su caja
 ## —el estante la anota afuera, y sigue contada en el depósito— y el stock recién se mueve cuando
-## `pedir_colocar_de_la_mano()` la coloca. `pedir_devolver()` la mete de vuelta en su caja y
-## anula esa salida, sin mover mercadería. Al revés, soltar la unidad en el piso dejaría la
-## góndola contando mercadería que el jugador nunca apoyó.
+## `pedir_colocar_de_la_mano()` la coloca en el casillero que se eligió. `pedir_devolver()` la
+## mete de vuelta en su caja y anula esa salida, sin mover mercadería. Al revés, soltar la unidad
+## en el piso dejaría la góndola contando mercadería que el jugador nunca apoyó.
+## `pedir_agarrar_de_la_gondola()` es el camino de vuelta: la unidad de un casillero pasa a la
+## mano, contada como una que salió de su caja.
 ##
-## **No lleva un flag de «ya la conté».** Le pide al reloj que complete la tarea cada vez que el
-## estante queda lleno, y el `Turno` ya sabe que la segunda vez no cuenta —devuelve `false` sin
-## descontar—. Un flag acá sería esa misma regla escrita en la capa que traduce, o sea una regla
+## **No lleva un flag de «ya la conté».** Después de cada cambio de la góndola le pide al reloj que
+## complete la tarea si el estante quedó lleno, y que la descumpla si no: el `Turno` ya sabe que
+## la segunda vez no cuenta y que descumplir una sin cumplir no descuenta —devuelve `false` en los
+## dos casos—. Un flag acá sería esa misma regla escrita en la capa que traduce, o sea una regla
 ## del juego sin test, y los dos gates darían verde sobre ella.
 class_name Repositor
 extends Node
@@ -84,14 +87,45 @@ func pedir_devolver(id: Producto.Id) -> Node3D:
 	return agarre.entregar()
 
 
-func pedir_colocar_de_la_mano(destino: Producto = null) -> void:
+## Coloca la unidad de la mano en ese casillero de `destino`, o en el primero vacío. Si el
+## estante la rechaza, avisa el motivo y la unidad sigue en la mano.
+func pedir_colocar_de_la_mano(
+	destino: Producto = null, casillero: int = Estante.PRIMERO_VACIO
+) -> void:
 	var unidad := agarre.manos().sostenido() as UnidadDeProducto
-	var motivo := _estante.colocar_unidad(unidad, destino)
+	var motivo := _estante.colocar_unidad(unidad, destino, casillero)
 	if motivo != Estante.Rechazo.NINGUNO:
 		colocacion_rechazada.emit(motivo)
 		return
 	var nodo := agarre.entregar()
 	unidad_colocada.emit(nodo, unidad.producto, _estante.unidades_en_gondola(unidad.producto))
 	producto_colocado.emit(unidad.producto, _estante.productos_completos())
+	_revisar_reponer()
+
+
+## Saca de la góndola la unidad de ese casillero y la pone en la mano, colgada de `nodo`.
+## Devuelve si la puso.
+##
+## La mano se pregunta antes que el estante, igual que al sacar de la caja: con la mano llena,
+## el casillero quedaría vacío y la unidad afuera, sin nadie que la lleve.
+func pedir_agarrar_de_la_gondola(id: Producto.Id, casillero: int, nodo: Node3D) -> bool:
+	var producto := Catalogo.de(id)
+	var candidato := UnidadDeProducto.new(producto)
+	if agarre.manos().motivo_de_rechazo(candidato) != Manos.Rechazo.NINGUNO:
+		return false
+	var unidad := _estante.agarrar(producto, casillero)
+	if unidad == null:
+		return false
+	nodo.set(ReglasDeLosObjetos.PROPIEDAD_DATOS, unidad)
+	_revisar_reponer()
+	return agarre.pedir_agarrar(unidad, nodo)
+
+
+## Cumple reponer si la góndola quedó llena, y la descumple si no: una unidad agarrada de un
+## estante completo lo deja con un casillero vacío (BR-STK-033).
+func _revisar_reponer() -> void:
+	var reponer := reloj.obligatoria(Tarea.Tipo.REPONER)
 	if _estante.completada():
-		reloj.completar(reloj.obligatoria(Tarea.Tipo.REPONER))
+		reloj.completar(reponer)
+	else:
+		reloj.descumplir(reponer)

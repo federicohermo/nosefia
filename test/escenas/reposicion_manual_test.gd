@@ -390,7 +390,7 @@ func test_el_frente_se_conserva_al_examinar_y_volver_a_agarrar() -> void:
 		agarre.soltar(true)
 		assert_bool(agarre.pedir_agarrar(unidad.datos, unidad)).is_true()
 		assert_bool(unidad.basis.is_equal_approx(orientacion)).is_true()
-		almacen.get("_reposicion_manual").get_node("ZonaDe" + producto.nombre).interactuar()
+		almacen.get("_reposicion_manual").casillero(producto.id).interactuar()
 		var grupo: MultiMeshInstance3D = almacen.get("_reposicion_manual").get_node(
 			"ProductosDe" + producto.nombre
 		)
@@ -430,9 +430,7 @@ func test_actroncito_durextra_y_oremos_se_reponen_con_foco_y_clic_reales() -> vo
 		if unidad == null:
 			return
 		assert_int(unidad.producto.id).is_equal(id)
-		var zona: Node3D = almacen.get("_reposicion_manual").get_node(
-			"ZonaDe" + unidad.producto.nombre
-		)
+		var zona: Node3D = almacen.get("_reposicion_manual").casillero(unidad.producto.id)
 		# **Se prueban las cuatro caras y gana la que enfoca.** Cual exhibe cada producto lo
 		# decide el modelo —hay bloques contra el panel del fondo y bloques de cabecera, y son
 		# perpendiculares entre si—, asi que escribirlo aca lo deja caducando con el proximo
@@ -508,15 +506,16 @@ func test_cada_unidad_ocupa_un_lugar_distinto_y_la_marca_indica_su_base() -> voi
 	var presentacion: Node3D = almacen.get("_reposicion_manual")
 	var ocupados: Array[AABB] = []
 	for producto in Catalogo.todos():
-		var zona := presentacion.get_node("ZonaDe" + producto.nombre)
 		var antes := estante.unidades_en_gondola(producto)
 		for indice in estante.cupo(producto) - antes:
 			_sacar_de_la_caja(jugador, almacen.get("_cajas_de_productos")[producto.id])
 			var unidad: Node3D = jugador.get_node("Giro/Camara/PuntoDeProducto").get_child(0)
 			# **La marca es el fantasma del envase, no un rectángulo en el piso.** Lo que tiene
 			# que coincidir con la unidad repuesta es su base: el fantasma se para donde la
-			# unidad se va a parar, y por eso el apoyo sale de su caja y no de su origen.
-			var marca: MeshInstance3D = zona.mallas[0]
+			# unidad se va a parar, y por eso el apoyo sale de su caja y no de su origen. El
+			# casillero es el primero vacío, que es donde coloca el clic sobre él.
+			var zona: Node3D = presentacion.casillero(producto.id)
+			var marca: MeshInstance3D = zona.vista
 			var sombra: AABB = marca.global_transform * marca.mesh.get_aabb()
 			var apoyo := Vector3(sombra.get_center().x, sombra.position.y, sombra.get_center().z)
 			_accion(jugador, zona)
@@ -576,7 +575,7 @@ func test_el_clic_saca_una_unidad_visible_y_el_estante_la_recibe() -> void:
 	assert_int(punto.get_child_count()).is_equal(1)
 	assert_object(punto.get_child(0)).is_same(unidad)
 	_apuntar(almacen, Producto.Id.ACTRONCITO)
-	_accion(jugador, almacen.get("_reposicion_manual").get_node("ZonaDeActroncito"))
+	_accion(jugador, almacen.get("_reposicion_manual").casillero(Producto.Id.ACTRONCITO))
 	assert_object(agarre.manos().sostenido()).is_null()
 	assert_bool(unidad.is_visible_in_tree()).is_false()
 	var grupo: MultiMeshInstance3D = almacen.get("_reposicion_manual").get_node(
@@ -603,11 +602,12 @@ func test_con_el_estante_lleno_la_caja_no_entrega_otra_unidad() -> void:
 	for unidad in del_dominio.cupo(producto) - del_dominio.unidades_en_gondola(producto):
 		_sacar_de_la_caja(jugador, caja)
 		_accion(jugador, estante)
+	# Con la fila llena, la caja no da otra. El clic sobre la góndola con la mano vacía ya no es
+	# «nada»: agarra la unidad puesta (BR-PLY-024), y eso lo miden los casos de los casilleros.
 	_sacar_de_la_caja(jugador, caja)
 	assert_object(agarre.manos().sostenido()).is_null()
-	_accion(jugador, estante)
-	assert_object(agarre.manos().sostenido()).is_null()
 	assert_int(jugador.get_node("Giro/Camara/PuntoDeProducto").get_child_count()).is_zero()
+	assert_int(del_dominio.unidades_en_gondola(producto)).is_equal(del_dominio.cupo(producto))
 
 
 func test_examinar_no_retira_ni_deposita_y_devuelve_la_unidad_a_la_mira() -> void:
@@ -708,7 +708,7 @@ func _accion(
 ) -> void:
 	if objetivo == jugador.get_parent().get("_estante"):
 		_apuntar(jugador.get_parent(), Producto.Id.ACTRONCITO)
-		objetivo = jugador.get_parent().get("_reposicion_manual").get_node("ZonaDeActroncito")
+		objetivo = jugador.get_parent().get("_reposicion_manual").casillero(Producto.Id.ACTRONCITO)
 	jugador.set("_enfocado", objetivo)
 	var evento := InputEventAction.new()
 	evento.action = accion
@@ -771,14 +771,26 @@ func test_solo_la_zona_del_producto_recibe_el_foco_y_el_resto_del_mueble_no_colo
 	var sostenido := agarre.manos().sostenido()
 	assert_bool(estante.is_in_group(ReglasDelJugador.GRUPO_INTERACTUABLE)).is_false()
 	var presentacion: Node3D = almacen.get("_reposicion_manual")
-	var zona := presentacion.get_node("ZonaDeActroncito")
-	assert_int(zona.collision_layer).is_equal(2)
-	assert_int(presentacion.get_node("ZonaDeDurextra").collision_layer).is_zero()
+	# Los casilleros vacíos de Actroncito esperan la unidad; los ocupados y los de cualquier otro
+	# producto no tienen papel, y no están para la mira aunque la tengan enfrente.
+	var actroncito := Catalogo.de(Producto.Id.ACTRONCITO)
+	var vacios: Array[int] = almacen.get("_repositor").estante().casilleros_vacios(actroncito)
+	assert_array(vacios).is_not_empty()
+	for producto in Catalogo.todos():
+		for zona: Node3D in presentacion.get_node("ZonaDe" + producto.nombre).get_children():
+			var espera: bool = producto.id == actroncito.id and vacios.has(zona.get("casillero"))
+			(
+				assert_bool(zona.get("papel") != 0)
+				. override_failure_message("%s: %s" % [producto.nombre, zona.name])
+				. is_equal(espera)
+			)
+			if not espera:
+				assert_int(zona.get("collision_layer")).is_zero()
 	var mueble: MeshInstance3D = estante.get_parent()
 	assert_object(mueble.material_overlay).is_null()
 	estante.call("interactuar")
 	assert_object(agarre.manos().sostenido()).is_same(sostenido)
-	presentacion.get_node("ZonaDeDurextra").call("interactuar")
+	presentacion.casillero(Producto.Id.DUREXTRA).call("interactuar")
 	assert_object(agarre.manos().sostenido()).is_same(sostenido)
 
 

@@ -1,10 +1,14 @@
-## La góndola del local: qué productos acepta, cuántos le entran y qué pasa con la unidad que se
-## coloca.
+## La góndola del local: qué productos acepta, cuántos le entran, en qué casillero va cada
+## unidad y qué pasa con la que se coloca o se agarra.
 ##
 ## **No guarda una sola unidad.** Cuántas hay y dónde están lo lleva `Inventario`, y este estante
 ## le pregunta cada vez: un contador propio acá contestaría el número viejo apenas alguien venda
 ## por la ventanilla, y ningún error lo diría. Es lo mismo que hace que el estante que se ve sea
 ## un reflejo del inventario y no su fuente.
+##
+## **Lo que sí lleva es en qué casilleros están**, que el inventario no sabe: el orden en que se
+## ocupan los de cada fila. Cuántos de ese orden están ocupados sigue saliendo de la góndola del
+## inventario, así que el orden no puede contradecir a la cuenta: sólo dice cuáles.
 ##
 ## **El cupo de cada producto son los casilleros de su fila de adelante**, y el estante se los
 ## pregunta al inventario: se los pasó quien armó el local, que los mide del modelo. Un número
@@ -21,8 +25,25 @@ extends RefCounted
 ## dejaría a la escena con un cartel que no se muestra nunca, sin que el motor diga una palabra.
 ##
 ## `NINGUNO` es «se colocó», y existe para que `colocar()` conteste una sola cosa en vez de un
-## `bool` más un motivo que hay que ir a buscar aparte.
-enum Rechazo { NINGUNO, PRODUCTO_NO_ACEPTADO, ESTANTE_LLENO, SIN_UNIDADES_EN_DEPOSITO }
+## `bool` más un motivo que hay que ir a buscar aparte. El casillero ocupado va al final del
+## `enum` y no en su lugar del orden: el orden de los rechazos lo decide `colocar()`, y los
+## valores que ya existían no cambian de número.
+enum Rechazo {
+	NINGUNO,
+	PRODUCTO_NO_ACEPTADO,
+	ESTANTE_LLENO,
+	SIN_UNIDADES_EN_DEPOSITO,
+	CASILLERO_OCUPADO,
+}
+
+## Lo que hace el clic sobre un casillero según lo que haya en la mano. Es el mismo reparto que
+## el de la caja: con nada, agarrar la unidad puesta; con una unidad, colocarla; con cualquier
+## otra cosa, nada. Si el casillero la recibe lo contestan `agarrar()` y `colocar_unidad()`.
+enum Gesto { COLOCAR, AGARRAR, NADA }
+
+## «El primer casillero vacío de la fila», para quien coloca sin elegir dónde: la apertura de una
+## noche de prueba y los casos que miden aritmética. El jugador siempre elige.
+const PRIMERO_VACIO := -1
 
 var _inventario: Inventario
 
@@ -30,6 +51,10 @@ var _inventario: Inventario
 ## instancia, porque `Catalogo.de()` construye un producto nuevo en cada llamada.
 var _aceptados: Array[Producto] = []
 var _en_transito: Array[UnidadDeProducto] = []
+
+## `id` → los casilleros de su fila, con los ocupados primero. Arranca en el orden de la fila, así
+## que la góndola que llenó la apertura ocupa los primeros y lo que falta queda al final.
+var _orden: Dictionary[Producto.Id, PackedInt32Array] = {}
 
 
 func _init(inventario: Inventario, aceptados: Array[Producto]) -> void:
@@ -74,6 +99,51 @@ func unidades_en_deposito(producto: Producto) -> int:
 	return _inventario.unidades(producto, Inventario.Ubicacion.DEPOSITO)
 
 
+## Los casilleros de la fila de ese producto que tienen una unidad, de menor a mayor. Ninguno si
+## el estante no lo acepta.
+func casilleros_ocupados(producto: Producto) -> Array[int]:
+	var orden := _orden_de(producto)
+	return _ordenados(orden.slice(0, _ocupados_en_la_fila(producto)))
+
+
+## Los casilleros de la fila de ese producto que esperan una unidad, de menor a mayor. Son los
+## que lo hacen faltante.
+func casilleros_vacios(producto: Producto) -> Array[int]:
+	var orden := _orden_de(producto)
+	return _ordenados(orden.slice(_ocupados_en_la_fila(producto)))
+
+
+## Los casilleros de ese producto donde va lo que hay en la mano: con una unidad suya, los vacíos;
+## con cualquier otra cosa o con nada, ninguno. Son los que se muestran (BR-PLY-022).
+##
+## Una unidad de otro producto no ve los casilleros de éste: la ficha no deja colocar un producto
+## en el casillero de otro, y mostrarlo sería invitar al rechazo.
+func casilleros_para_colocar(producto: Producto, sostenido: ObjetoDelAlmacen) -> Array[int]:
+	var unidad := sostenido as UnidadDeProducto
+	if unidad == null or unidad.producto == null or producto == null:
+		return []
+	if unidad.producto.id != producto.id:
+		return []
+	return casilleros_vacios(producto)
+
+
+## Los casilleros de ese producto de los que se puede agarrar con lo que hay en la mano: con la
+## mano vacía, los ocupados; con cualquier cosa, ninguno (BR-PLY-007, BR-PLY-024).
+func casilleros_para_agarrar(producto: Producto, sostenido: ObjetoDelAlmacen) -> Array[int]:
+	if sostenido != null:
+		return []
+	return casilleros_ocupados(producto)
+
+
+## Qué hace el clic sobre un casillero con eso en la mano.
+func uso(sostenido: ObjetoDelAlmacen) -> Gesto:
+	if sostenido == null:
+		return Gesto.AGARRAR
+	if sostenido is UnidadDeProducto:
+		return Gesto.COLOCAR
+	return Gesto.NADA
+
+
 ## Cuántos de los productos aceptados ya llegaron a su cupo.
 ##
 ## Existe para que el estante que se ve pinte contra un número del dominio en vez de contar sus
@@ -92,19 +162,20 @@ func productos_aceptados() -> int:
 	return _aceptados.size()
 
 
-## Mueve **una** unidad del depósito a la góndola, y devuelve por qué no pudo.
+## Mueve **una** unidad del depósito a ese casillero de la góndola, y devuelve por qué no pudo.
+## Sin casillero, va al primero vacío.
 ##
-## Los tres rechazos no mueven nada, y el orden importa: «eso no va acá» es una propiedad del
-## producto y vale siempre, «no entra más» es el estado del estante, y «no queda en el depósito»
+## Los rechazos no mueven nada, y el orden importa: «eso no va acá» es una propiedad del producto
+## y vale siempre; «no entra más» y «ese lugar ya tiene una» son el estado del estante, y la fila
+## llena va primero porque es la respuesta para cualquier casillero; «no queda en el depósito»
 ## es el único que depende de cuánta mercadería trajo la noche.
-func colocar(producto: Producto) -> Rechazo:
-	if (
-		acepta(producto)
-		and unidades_en_gondola(producto) < cupo(producto)
-		and disponibles_para_retirar(producto) <= 0
-	):
+func colocar(producto: Producto, casillero: int = PRIMERO_VACIO) -> Rechazo:
+	var motivo := _motivo_del_casillero(producto, casillero)
+	if motivo != Rechazo.NINGUNO:
+		return motivo
+	if disponibles_para_retirar(producto) <= 0:
 		return Rechazo.SIN_UNIDADES_EN_DEPOSITO
-	return _colocar(producto)
+	return _ocupar(producto, casillero)
 
 
 ## Cuántas se pueden sacar todavía: lo que queda en la caja, sin pasar de los casilleros vacíos
@@ -125,6 +196,25 @@ func disponibles_para_retirar(producto: Producto) -> int:
 func retirar(producto: Producto) -> UnidadDeProducto:
 	if not acepta(producto) or disponibles_para_retirar(producto) <= 0:
 		return null
+	var unidad := UnidadDeProducto.new(producto)
+	_en_transito.append(unidad)
+	return unidad
+
+
+## Saca de la góndola la unidad de ese casillero y la da para la mano, o devuelve `null` si el
+## casillero no tiene una.
+##
+## **Queda contada como una que salió de su caja** (BR-STK-034): vuelve al depósito y queda
+## afuera, igual que una sacada de la caja. Así la caja no cambia —su cuenta es el depósito menos
+## lo que está afuera—, los vendibles tampoco —su casillero vacío la espera— y se la puede
+## devolver a la caja o colocar como a cualquier otra. Contarla aparte sería un tercer lugar donde
+## puede estar una unidad, y cada cuenta tendría que acordarse de él.
+func agarrar(producto: Producto, casillero: int) -> UnidadDeProducto:
+	if not casilleros_ocupados(producto).has(casillero):
+		return null
+	var ocupados := _ocupados_en_la_fila(producto)
+	_inventario.mover(producto, Inventario.Ubicacion.GONDOLA, Inventario.Ubicacion.DEPOSITO, 1)
+	_poner_en_el_orden(producto, casillero, ocupados - 1)
 	var unidad := UnidadDeProducto.new(producto)
 	_en_transito.append(unidad)
 	return unidad
@@ -157,28 +247,25 @@ func devolver(unidad: UnidadDeProducto) -> bool:
 	return true
 
 
-func colocar_unidad(unidad: UnidadDeProducto, destino: Producto = null) -> Rechazo:
+## Coloca en ese casillero de `destino` una unidad que salió y no se colocó. Sin casillero, va al
+## primero vacío.
+##
+## Una unidad que no está afuera —ya colocada o devuelta— se rechaza como producto no aceptado:
+## es la que no tiene lugar en ningún casillero, y es lo que hace que dos clics seguidos coloquen
+## una sola.
+func colocar_unidad(
+	unidad: UnidadDeProducto, destino: Producto = null, casillero: int = PRIMERO_VACIO
+) -> Rechazo:
 	if not _en_transito.has(unidad):
 		return Rechazo.PRODUCTO_NO_ACEPTADO
 	if destino != null and destino.id != unidad.producto.id:
 		return Rechazo.PRODUCTO_NO_ACEPTADO
-	var motivo := _colocar(unidad.producto)
+	var motivo := _motivo_del_casillero(unidad.producto, casillero)
+	if motivo == Rechazo.NINGUNO:
+		motivo = _ocupar(unidad.producto, casillero)
 	if motivo == Rechazo.NINGUNO:
 		_en_transito.erase(unidad)
 	return motivo
-
-
-func _colocar(producto: Producto) -> Rechazo:
-	if not acepta(producto):
-		return Rechazo.PRODUCTO_NO_ACEPTADO
-	if unidades_en_gondola(producto) >= cupo(producto):
-		return Rechazo.ESTANTE_LLENO
-	var movidas := _inventario.mover(
-		producto, Inventario.Ubicacion.DEPOSITO, Inventario.Ubicacion.GONDOLA, 1
-	)
-	if movidas == 0:
-		return Rechazo.SIN_UNIDADES_EN_DEPOSITO
-	return Rechazo.NINGUNO
 
 
 ## Si ningún producto aceptado tiene un casillero vacío en su fila de adelante.
@@ -195,6 +282,78 @@ func completada() -> bool:
 		if acepta(producto):
 			return false
 	return true
+
+
+## Los tres primeros rechazos de colocar, en su orden: el producto —también un casillero que no es
+## de su fila—, la fila llena y el casillero ocupado.
+func _motivo_del_casillero(producto: Producto, casillero: int) -> Rechazo:
+	if not acepta(producto):
+		return Rechazo.PRODUCTO_NO_ACEPTADO
+	if casillero != PRIMERO_VACIO and (casillero < 0 or casillero >= cupo(producto)):
+		return Rechazo.PRODUCTO_NO_ACEPTADO
+	if unidades_en_gondola(producto) >= cupo(producto):
+		return Rechazo.ESTANTE_LLENO
+	if casillero != PRIMERO_VACIO and not casilleros_vacios(producto).has(casillero):
+		return Rechazo.CASILLERO_OCUPADO
+	return Rechazo.NINGUNO
+
+
+## Mueve una unidad del depósito a la góndola y la pone en ese casillero, que ya se sabe vacío.
+func _ocupar(producto: Producto, casillero: int) -> Rechazo:
+	var ocupados := _ocupados_en_la_fila(producto)
+	var elegido := casillero
+	if elegido == PRIMERO_VACIO:
+		elegido = casilleros_vacios(producto)[0]
+	var movidas := _inventario.mover(
+		producto, Inventario.Ubicacion.DEPOSITO, Inventario.Ubicacion.GONDOLA, 1
+	)
+	if movidas == 0:
+		return Rechazo.SIN_UNIDADES_EN_DEPOSITO
+	_poner_en_el_orden(producto, elegido, ocupados)
+	return Rechazo.NINGUNO
+
+
+## Cuántos casilleros de la fila de ese producto están ocupados: lo que dice la góndola del
+## inventario, sin pasar de la fila.
+func _ocupados_en_la_fila(producto: Producto) -> int:
+	return clampi(unidades_en_gondola(producto), 0, cupo(producto))
+
+
+## El orden de ocupación de la fila de ese producto: los ocupados primero. Uno que el estante no
+## acepta no tiene fila.
+##
+## Se arma la primera vez que se pregunta, y de nuevo si la fila cambió de largo: el largo lo dice
+## el inventario, y un orden más corto dejaría casilleros sin lugar.
+func _orden_de(producto: Producto) -> PackedInt32Array:
+	var aceptado := _aceptado_con_el_id_de(producto)
+	if aceptado == null:
+		return PackedInt32Array()
+	var largo := cupo(aceptado)
+	var orden: PackedInt32Array = _orden.get(aceptado.id, PackedInt32Array())
+	if orden.size() != largo:
+		orden = PackedInt32Array(range(largo))
+		_orden[aceptado.id] = orden
+	return orden
+
+
+## Lleva el casillero a esa posición del orden, corriendo a los que estaban entre las dos. Es lo
+## único que ocupa o vacía un casillero: el borde entre ocupados y vacíos lo mueve la góndola.
+func _poner_en_el_orden(producto: Producto, casillero: int, posicion: int) -> void:
+	var orden := _orden_de(producto)
+	var donde := orden.find(casillero)
+	if donde < 0:
+		return
+	orden.remove_at(donde)
+	orden.insert(posicion, casillero)
+	_orden[producto.id] = orden
+
+
+## Un tramo del orden como lista de casilleros, de menor a mayor.
+func _ordenados(tramo: PackedInt32Array) -> Array[int]:
+	var casilleros: Array[int] = []
+	casilleros.assign(Array(tramo))
+	casilleros.sort()
+	return casilleros
 
 
 ## El producto declarado que tiene ese `id`, o `null`.

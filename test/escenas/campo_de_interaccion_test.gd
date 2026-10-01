@@ -43,9 +43,15 @@ func test_el_campo_y_el_clic_usan_los_cuerpos_de_los_muebles() -> void:
 	almacen.get("_reposicion_manual").call("retirar", caja.producto)
 	var agarre: Agarre = almacen.get("_agarre")
 	assert_object(agarre.manos().sostenido()).is_instanceof(UnidadDeProducto)
-	var estante: Node3D = almacen.get("_reposicion_manual").get_node("ZonaDeActroncito")
+	var estante: Node3D = almacen.get("_reposicion_manual").casillero(Producto.Id.ACTRONCITO)
 	var zona: AABB = almacen.get("_reposicion_manual").zona(Producto.Id.ACTRONCITO)
-	_mirar(jugador, zona.get_center() + Vector3(-1.2, 0.3, 0), zona.get_center())
+	# Del lado del pasillo de su tanda, que lo mide el modelo.
+	var disposicion: DisposicionDeLaGondola = almacen.get("_reposicion_manual").get("disposicion")
+	var frente := DisposicionDeLaGondola.frente(
+		disposicion.principales[Producto.Id.ACTRONCITO],
+		disposicion.filas_de_adelante[Producto.Id.ACTRONCITO]
+	)
+	_mirar(jugador, zona.get_center() + frente * 1.2 + Vector3.UP * 0.3, zona.get_center())
 	await _actualizar(jugador)
 	assert_object(jugador.get("_enfocado")).is_same(estante)
 	assert_array(avisos).contains([estante])
