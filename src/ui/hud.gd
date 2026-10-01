@@ -1,6 +1,7 @@
-## La pantalla del turno: cuántas obligatorias van y cuántos apercibimientos hay.
+## La pantalla del turno: cuántas obligatorias van, cuántos apercibimientos hay y lo que dice la
+## caja examinada.
 ##
-## **Recibe números ya decididos y los pinta.** No formatea nada —eso es `Marcador`—, no sabe qué
+## **Recibe todo ya decidido y lo pinta.** No formatea nada —eso es `Marcador`—, no sabe qué
 ## es un umbral, y no conoce al nodo que le manda los números: se conecta por señal desde la
 ## escena. Lo verifican los `rg` del spec, que miran el archivo entero y no distinguen código de
 ## comentario.
