@@ -6,7 +6,17 @@ ejercen en las tres plataformas y sin tocar el registro de la máquina que corre
 
 import unittest
 
-from lib.godot import ENTORNO, PATH, REGISTRO, aviso_de_entorno_viejo, como_declararlo, resolver
+from pathlib import Path
+
+from lib.godot import (
+    ENTORNO,
+    PATH,
+    REGISTRO,
+    aviso_de_entorno_viejo,
+    como_declararlo,
+    entorno_de_la_suite,
+    resolver,
+)
 
 
 def nada() -> None:
@@ -130,3 +140,32 @@ class AvisoDeEntornoViejo(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class EntornoDeLaSuite(unittest.TestCase):
+    """`user://` es una carpeta por proyecto, y la comparten todos los checkouts de la máquina.
+
+    gdUnit4 borra `user://tmp` al terminar cada suite, así que dos corridas a la vez —dos
+    worktrees de un batch— se borran la carpeta temporal una a la otra en medio de un caso.
+    """
+
+    RAIZ = Path("/un/checkout")
+
+    def test_en_linux_el_usuario_de_godot_vive_adentro_del_checkout(self):
+        entorno = entorno_de_la_suite({"HOME": "/home/x"}, self.RAIZ, "linux")
+        self.assertEqual(entorno["XDG_DATA_HOME"], str(self.RAIZ / ".godot" / "usuario_de_los_tests"))
+        self.assertEqual(entorno["HOME"], "/home/x")
+
+    def test_en_windows_el_usuario_de_godot_vive_adentro_del_checkout(self):
+        entorno = entorno_de_la_suite({"APPDATA": r"C:\Users\x\AppData\Roaming"}, self.RAIZ, "win32")
+        self.assertEqual(entorno["APPDATA"], str(self.RAIZ / ".godot" / "usuario_de_los_tests"))
+
+    def test_dos_checkouts_no_comparten_la_carpeta(self):
+        uno = entorno_de_la_suite({}, Path("/a"), "linux")
+        otro = entorno_de_la_suite({}, Path("/b"), "linux")
+        self.assertNotEqual(uno["XDG_DATA_HOME"], otro["XDG_DATA_HOME"])
+
+    def test_no_toca_el_entorno_que_recibe(self):
+        original = {"XDG_DATA_HOME": "/del/usuario"}
+        entorno_de_la_suite(original, self.RAIZ, "linux")
+        self.assertEqual(original, {"XDG_DATA_HOME": "/del/usuario"})

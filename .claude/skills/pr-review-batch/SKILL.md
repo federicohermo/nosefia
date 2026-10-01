@@ -287,6 +287,10 @@ El protocolo, y no hay que improvisarlo:
    volvé a correr. Si no se puede, **es un bloqueante del lote y no del PR**.
 3. ¿El test que falló está en un archivo que el PR toca? **Si sí, es tuyo** — arreglalo.
 4. Si no, y huele a contención —N motores a la vez—, **corré `verificar.py --solo tests`** solo.
+   Una contención ya no es: hasta el 2026-10-01 los N carriles compartían `user://`, y gdUnit4
+   borra `user://tmp` después de cada suite, así que un carril le borraba a otro la carpeta
+   temporal en medio de un caso. Desde entonces `verificar.py` lleva `user://` adentro del
+   checkout. Un rojo en una suite que usa `create_temp_dir` ya no tiene esa excusa.
 5. **Verde ⇒ seguí, y declaralo en el reporte** con las dos corridas. No lo escondas: el usuario
    tiene que poder distinguir «pasó» de «pasó en la segunda».
 6. **Rojo de nuevo ⇒ no pushees.** Reportalo como bloqueante del lote.
