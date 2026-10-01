@@ -628,10 +628,11 @@ def _nombre_embebido(stem: str, stem_del_glb: str) -> set[str]:
 def _referencias_a(
     ruta: str, texto: dict[str, str] | None = None, crudos: dict[str, bytes] | None = None
 ) -> dict[str, list[str]]:
-    """Quién referencia un asset, **por las tres formas que existen en este repo**.
+    """Quién referencia un asset, **por las cuatro formas que existen en este repo**.
 
-    Las tres no son teoría: cada una esconde una referencia que una búsqueda por ruta no ve, y
-    mezclarlas ya produjo un borrado equivocado de treinta texturas.
+    Las cuatro no son teoría: cada una esconde una referencia que una búsqueda por ruta no ve, y
+    mezclarlas ya produjo un borrado equivocado de treinta texturas. La quinta clave no es una
+    forma: son los binarios que no se pudieron mirar, y no cuentan ni a favor ni en contra.
 
     `texto` y `crudos` se pasan cuando hay que preguntar por muchos assets seguidos: releer
     el `.glb` de 40 MB una vez por archivo convierte medio segundo de barrido en minutos.

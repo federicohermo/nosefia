@@ -12,6 +12,7 @@ import sys
 import unittest
 from contextlib import redirect_stdout
 from pathlib import Path
+from unittest import mock
 
 from lib.repo import RAIZ
 
@@ -287,7 +288,27 @@ class LosAssets(unittest.TestCase):
         ]
         if not comprimidos:
             self.skipTest("no hay `.res` comprimidos")
-        self.assertIn("comprimido", herramientas.assets_sin_referencia())
+        self.assertIn(
+            f"Hay {len(comprimidos)} `.res` comprimidos", herramientas.assets_sin_referencia()
+        )
+
+    def test_un_asset_que_solo_podrian_nombrar_los_comprimidos_no_se_da_por_sobrante(self):
+        # La rama que cambia el veredicto de `contexto_de_asset`: ninguna forma mirable lo
+        # alcanza, pero queda un binario sin mirar. Con los binarios del repo de hoy no se puede
+        # fijar, porque depende de qué asset nadie nombra; se los reemplaza por uno solo.
+        asset = next(
+            p.relative_to(herramientas.RAIZ).as_posix()
+            for p in sorted((herramientas.RAIZ / "assets").rglob("*.png"))
+        )
+        comprimido = {"assets/models/producto.res": b"RSCC\x02\x00\x00\x00" + b"\x00" * 16}
+        with (
+            mock.patch.object(herramientas, "_texto_del_repo", return_value={}),
+            mock.patch.object(herramientas, "_binarios_del_repo", return_value=comprimido),
+        ):
+            salida = herramientas.contexto_de_asset(asset)
+        self.assertIn("1 `.res` comprimidos", salida)
+        self.assertIn("no prueba que sobre", salida)
+        self.assertNotIn("ninguna de las cuatro formas", salida)
 
     def test_el_arte_de_origen_no_se_pregunta(self):
         fuente = sorted(
