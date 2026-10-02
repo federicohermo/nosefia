@@ -11,5 +11,6 @@ texto = "Se llena en la canilla del lavatorio y se vacía en el inodoro."
 script = ExtResource("1_objeto")
 id = &"balde"
 nombre = "Balde"
+se_apoya_derecho = true
 sonoridad = 9
 revelacion = SubResource("Resource_revelacion")

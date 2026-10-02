@@ -457,6 +457,18 @@ func _devolver_al_mundo(nodo: Node3D) -> void:
 	if atras.length() > 2.0 * un_paso:
 		atras = Vector3.ZERO
 	nodo.reparent(mundo, true)
+	var datos := _datos_de(nodo)
+	if nodo is RigidBody3D and datos != null and datos.se_apoya_derecho:
+		nodo.global_basis = _derecho(nodo.global_basis)
+		if ancla == agarre.punto_de_soltado and _apoyar_derecho_sobre_lo_mirado(nodo):
+			nodo.reset_physics_interpolation()
+			return
+		if _dejar_al_lado(nodo):
+			nodo.reset_physics_interpolation()
+			return
+		_ajustar_la_caida(nodo)
+		nodo.reset_physics_interpolation()
+		return
 	# Sólo lo soltado al frente: vaciar las manos lo deja a los pies aunque se mire el piso.
 	if nodo is RigidBody3D and ancla == agarre.punto_de_soltado and _apoyar_sobre_lo_mirado(nodo):
 		nodo.reset_physics_interpolation()
@@ -501,6 +513,73 @@ func _apoyar_sobre_lo_mirado(cuerpo: RigidBody3D) -> bool:
 		cuerpo.global_position = antes
 		return false
 	return true
+
+
+## Mide lugares cercanos sobre el mismo apoyo, con el volumen ya derecho.
+func _apoyar_derecho_sobre_lo_mirado(cuerpo: RigidBody3D) -> bool:
+	var ojo := _camara.global_position
+	var consulta := PhysicsRayQueryParameters3D.create(
+		ojo,
+		ojo - _camara.global_basis.z * ReglasDelJugador.ALCANCE_DE_LA_MIRA,
+		cuerpo.collision_mask
+	)
+	consulta.exclude = [get_rid(), cuerpo.get_rid()]
+	var espacio := get_world_3d().direct_space_state
+	var golpe := espacio.intersect_ray(consulta)
+	if (
+		golpe.is_empty()
+		or not ReglasDeLosObjetos.admite_lo_soltado(golpe["normal"].y, _datos_de(golpe["collider"]))
+	):
+		return false
+	var formas := _formas_de(cuerpo)
+	if formas.is_empty():
+		return false
+	var limites := AABB()
+	for indice in formas.size():
+		var forma := formas[indice]
+		var suyos := (
+			Transform3D(cuerpo.global_basis)
+			* forma.transform
+			* forma.shape.get_debug_mesh().get_aabb()
+		)
+		limites = suyos if indice == 0 else limites.merge(suyos)
+	var antes := cuerpo.global_position
+	var punto: Vector3 = golpe["position"]
+	# El piso tiene malla y volumen superpuestos: se identifica el apoyo con el mismo rayo
+	# vertical que se usa alrededor, en vez de comparar dos maneras distintas de medirlo.
+	consulta.from = punto + Vector3.UP * ReglasDeLosObjetos.ROCE
+	consulta.to = punto - Vector3.UP * ReglasDeLosObjetos.ROCE
+	var apoyo_apuntado := espacio.intersect_ray(consulta)
+	if apoyo_apuntado.is_empty():
+		return false
+	var ancho := maxf(limites.size.x, limites.size.z)
+	for anillo in ReglasDeLosObjetos.LADOS_ALREDEDOR + 1:
+		for lado in 1 if anillo == 0 else ReglasDeLosObjetos.LADOS_ALREDEDOR:
+			var vuelta := Basis(Vector3.UP, TAU * lado / ReglasDeLosObjetos.LADOS_ALREDEDOR)
+			var candidato := (
+				punto + vuelta * Vector3.RIGHT * ancho * anillo / ReglasDeLosObjetos.LADOS_ALREDEDOR
+			)
+			consulta.from = candidato + Vector3.UP * ReglasDeLosObjetos.ROCE
+			consulta.to = candidato - Vector3.UP * ReglasDeLosObjetos.ROCE
+			var apoyo := espacio.intersect_ray(consulta)
+			# Dos cajas pueden tener tapas a la misma altura: la altura sola no conserva el apoyo.
+			if (
+				apoyo.is_empty()
+				or apoyo["rid"] != apoyo_apuntado["rid"]
+				or absf(apoyo["position"].y - punto.y) > ReglasDeLosObjetos.ROCE
+			):
+				continue
+			if not ReglasDeLosObjetos.admite_lo_soltado(
+				apoyo["normal"].y, _datos_de(apoyo["collider"])
+			):
+				continue
+			cuerpo.global_position = (
+				candidato + Vector3.UP * (ReglasDeLosObjetos.ROCE - limites.position.y)
+			)
+			if _entra_entero(cuerpo, formas):
+				return true
+	cuerpo.global_position = antes
+	return false
 
 
 ## El punto fijo puede quedar detrás de la madera. Se barre el volumen desde el jugador.

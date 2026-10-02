@@ -48,6 +48,10 @@ const ID_DEL_BALDE := &"balde"
 const ID_DEL_LAVATORIO := &"lavatorio"
 const ID_DEL_INODORO := &"inodoro"
 
+## Cuánto se inclina el balde en la mano, en radianes: lo justo para ver el agua desde arriba.
+## Positiva es la boca hacia la vista.
+const INCLINACION_DEL_BALDE_EN_LA_MANO := PI / 6.0
+
 ## El `id` de cada bidón, con el agua que deja al echarlo en el balde.
 const JABONES: Dictionary[StringName, Agua] = {
 	&"jabon_azul": Agua.AZUL,

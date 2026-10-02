@@ -29,6 +29,10 @@ const MODELO := preload("res://assets/models/SEPT_JUEGOS_PROTOTIPO.glb")
 func _ready() -> void:
 	super()
 	malla.mesh = malla_del_modelo(nodo_del_modelo)
+	if datos.id == ReglasDeLaLimpieza.ID_DEL_BALDE:
+		orientacion_en_mano = Basis(
+			Vector3.RIGHT, ReglasDeLaLimpieza.INCLINACION_DEL_BALDE_EN_LA_MANO
+		)
 
 
 ## Muestra la carga del color que se le pasa, o la esconde. Cuál y de qué color lo decide el

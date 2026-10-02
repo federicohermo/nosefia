@@ -26,6 +26,9 @@ const SIN_ID := &""
 ## Si sobre este objeto se puede soltar otro.
 @export var admite_encima: bool = false
 
+## Si al soltarlo queda con su eje vertical, mire adonde mire la vista.
+@export var se_apoya_derecho: bool = false
+
 @export var sonoridad: EntradaSonora.Sonoridad = EntradaSonora.Sonoridad.NINGUNA
 
 @export var revelacion: Revelacion = null
