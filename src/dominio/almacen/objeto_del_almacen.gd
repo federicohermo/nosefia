@@ -29,6 +29,10 @@ const SIN_ID := &""
 ## Si al soltarlo queda con su eje vertical, mire adonde mire la vista.
 @export var se_apoya_derecho: bool = false
 
+## Si en la mano sobresale tanto que hay que retraerlo contra una pared, y soltarlo barre su
+## volumen desde la cámara.
+@export var es_largo: bool = false
+
 @export var sonoridad: EntradaSonora.Sonoridad = EntradaSonora.Sonoridad.NINGUNA
 
 @export var revelacion: Revelacion = null

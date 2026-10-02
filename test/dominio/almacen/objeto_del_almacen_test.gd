@@ -109,3 +109,11 @@ func test_solo_el_balde_se_apoya_derecho() -> void:  # AC-PLY-051
 			. override_failure_message("%s: se apoya derecho" % objeto.id)
 			. is_equal(objeto.id == ReglasDeLaLimpieza.ID_DEL_BALDE)
 		)
+
+
+func test_solo_la_mopa_es_larga() -> void:
+	assert_bool(ObjetoDelAlmacen.new().es_largo).is_false()
+	for objeto in _objetos_del_almacen():
+		assert_bool(objeto.es_largo).override_failure_message("%s: es largo" % objeto.id).is_equal(
+			objeto.id == ReglasDeLaLimpieza.ID_DE_LA_MOPA
+		)

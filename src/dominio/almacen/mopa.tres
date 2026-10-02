@@ -11,5 +11,6 @@ texto = "Alguien la usó hace poco: las tiras todavía están húmedas."
 script = ExtResource("1_objeto")
 id = &"mopa"
 nombre = "Mopa"
+es_largo = true
 sonoridad = 8
 revelacion = SubResource("Resource_revelacion")
