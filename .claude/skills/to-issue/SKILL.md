@@ -168,6 +168,10 @@ Lo que más se rompe:
   el juego no tiene se implementa inventando la regla que falta. En el #263, «vender una unidad
   de la góndola» chocaba con `BR-CTR-014` —la venta sale del depósito—, y «una partida guardada
   a mitad de noche» describía un guardado que no existe (`AC-SAV-020`).
+- **El contrato y los bordes del mismo issue tienen que pedir el mismo resultado.** En el #285,
+  el contrato devolvía la mopa a su orientación de reposo al cancelar la animación, pero el borde
+  de soltado conservaba su orientación mundial de ese instante. Separá soltar de volver a agarrar
+  y contrastá los dos estados antes de publicar.
 - **Si el issue cambia un recurso generado, lo que lo genera está en el repo o entra en «Se
   escribe».** Un recurso sin su generador sólo se edita a mano. En el #262, la disposición de la
   góndola salía de un acomodador que vivió en el scratch de una sesión y nunca se commiteó.
