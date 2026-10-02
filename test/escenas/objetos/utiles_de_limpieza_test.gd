@@ -33,7 +33,10 @@ func _almacen() -> Node3D:
 
 
 func _util(almacen: Node3D, nombre: String) -> UtilDeLimpieza:
-	return almacen.get_node("Objetos/" + nombre)
+	for util: UtilDeLimpieza in almacen.get("_utiles_de_limpieza"):
+		if util.name == nombre:
+			return util
+	return null
 
 
 ## Le pone el foco al objetivo y le manda la acción, que es lo que hace el clic de verdad.
@@ -291,6 +294,8 @@ func _muestrear_la_mojada(almacen: Node3D, mopa: UtilDeLimpieza) -> void:
 	assert_object(bajada).is_not_null()
 	if bajada == null:
 		return
+	var termino: Array[bool] = []
+	bajada.finished.connect(func() -> void: termino.append(true))
 	bajada.pause()
 	for instante in 5:
 		bajada.custom_step(0.04)
@@ -298,10 +303,16 @@ func _muestrear_la_mojada(almacen: Node3D, mopa: UtilDeLimpieza) -> void:
 		assert_bool(camara.global_transform.is_equal_approx(vista)).is_true()
 	assert_float(mopa.position.y).is_less(antes.origin.y)
 	assert_float(mopa.position.z).is_less(antes.origin.z)
-	for instante in 5:
+	for instante in 4:
 		bajada.custom_step(0.04)
 		_ver_la_punta(camara, mopa)
 		assert_bool(camara.global_transform.is_equal_approx(vista)).is_true()
+	assert_array(termino).is_empty()
+	bajada.custom_step(0.04001)
+	_ver_la_punta(camara, mopa)
+	assert_bool(camara.global_transform.is_equal_approx(vista)).is_true()
+	assert_array(termino).is_equal([true])
+	assert_float(bajada.get_total_elapsed_time()).is_equal_approx(0.4, 0.0001)
 	assert_bool(mopa.transform.is_equal_approx(antes)).is_true()
 	assert_that((mopa.carga.material_override as StandardMaterial3D).albedo_color).is_equal(
 		_piso(almacen).balde().color()

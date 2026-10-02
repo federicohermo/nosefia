@@ -26,12 +26,17 @@ func _ready() -> void:
 	limpiador.balde_llenado.connect(repintar)
 	limpiador.balde_tenido.connect(repintar.unbind(1))
 	limpiador.balde_vaciado.connect(repintar)
-	limpiador.mopa_mojada.connect(repintar.unbind(1))
+	limpiador.mopa_mojada.connect(_al_mojar_la_mopa.unbind(1))
 	limpiador.pasada_dada.connect(repintar.unbind(1))
 	# **No se repinta acá.** El `_ready()` de un hijo corre ANTES que el de la raíz, así que el
 	# limpiador todavía no tiene piso y `repintar()` moriría con un `Nonexistent function … in
 	# base 'Nil'` que no nombra ni a este archivo ni al orden. Quien repinta es el cableado, al
 	# abrir la jornada.
+
+
+func _al_mojar_la_mopa() -> void:
+	repintar()
+	mopa.mostrar_la_mojada()
 
 
 ## Deja las manchas, el balde y la mopa como los ve el dominio. Lo llama el cableado al abrir la
