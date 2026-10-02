@@ -214,9 +214,14 @@ func actualizar_emisores(oyente: Vector3) -> void:
 		for emisor: AudioStreamPlayer3D in emisores:
 			distancias.append(emisor.global_position.distance_to(oyente))
 		var suenan := EmisoresDelAmbiente.que_suenan(distancias, EmisoresDelAmbiente.TOPE)
+		var primera := not _suenan.has(evento)
+		var antes: Array = _suenan.get(evento, [])
 		_suenan[evento] = suenan
+		# Sólo se escribe lo que cambió: en la web, cada escritura de la pausa reinicia el sample y
+		# copia su buffer entero. Escrita en cada cuadro, se llevaba casi toda la CPU.
 		for indice in range(emisores.size()):
-			(emisores[indice] as AudioStreamPlayer3D).stream_paused = not suenan.has(indice)
+			if primera or suenan.has(indice) != antes.has(indice):
+				(emisores[indice] as AudioStreamPlayer3D).stream_paused = not suenan.has(indice)
 
 
 ## Los índices de los emisores de ese bucle que dejó sonar el último tope. Se guardan aparte
@@ -360,9 +365,12 @@ func _preparar_apagado(voz: AudioStreamPlayer3D, origen: Object) -> void:
 func _aplicar_apagado(voz: AudioStreamPlayer3D) -> void:
 	var nivel: float = _niveles[voz]
 	var salida: String = _salidas[voz]
-	voz.volume_db = _bases[voz] + ApagadoPorObstaculos.volumen_db(nivel)
+	var volumen: float = _bases[voz] + ApagadoPorObstaculos.volumen_db(nivel)
+	if voz.volume_db != volumen:
+		voz.volume_db = volumen
 	if nivel <= 0.0:
-		voz.bus = salida
+		if voz.bus != salida:
+			voz.bus = salida
 		return
 	if not _buses_propios.has(voz):
 		_buses_propios[voz] = "Apagado %d" % voz.get_instance_id()
@@ -371,7 +379,8 @@ func _aplicar_apagado(voz: AudioStreamPlayer3D) -> void:
 	_mandar(indice, salida)
 	var filtro := AudioServer.get_bus_effect(indice, 0) as AudioEffectLowPassFilter
 	filtro.cutoff_hz = ApagadoPorObstaculos.corte_hz(nivel)
-	voz.bus = _buses_propios[voz]
+	if voz.bus != _buses_propios[voz]:
+		voz.bus = _buses_propios[voz]
 
 
 ## Una voz del espacio que terminó deja de medir obstáculos hasta que se la vuelva a pedir.
