@@ -1,7 +1,7 @@
 ---
 schema_version: 1
 capability_id: CAP-PLY
-status: ratified
+status: draft
 owner: por definir
 provenance: GDD «Controles»; ficha «8. Tarea: Reposición»; migración de los specs 003, 004, 006, 014, 034, 043
 ---
@@ -140,6 +140,13 @@ SI la superficie no lo admite, o ahí lo soltado queda encimado con algo o adent
 ENTONCES el sistema DEBE soltarlo como sin mira: al frente, o a los pies si adelante no hay
 lugar.
 
+Algunas cosas se apoyan derechas: hoy, sólo el balde. CUANDO se suelta una de ellas, el sistema
+DEBE dejarla con su eje vertical, mire adonde mire la vista. SI justo en el punto que la mira
+toca no entra, ENTONCES el sistema DEBE probar alrededor de ese punto, sobre el mismo apoyo y
+hasta un ancho de lo soltado. SI ahí tampoco entra, o la superficie no la admite, ENTONCES DEBE
+dejarla derecha en el piso al lado del jugador. Soltar suelta: el sistema NO DEBE devolverla a la
+mano.
+
 ### BR-PLY-019 — Cada noche arranca con las puertas cerradas
 
 CUANDO se abre una jornada, el sistema DEBE dejar las puertas interiores cerradas, con la hoja en
@@ -185,6 +192,13 @@ MIENTRAS las manos están vacías, la mira DEBE poder enfocar cada unidad coloca
 adelante de la góndola, y CUANDO el jugador hace clic, el sistema DEBE ponérsela en la mano
 (BR-STK-033). La mira NO DEBE enfocar la fila de atrás, ni ninguna unidad colocada mientras la
 mano lleva algo: agarrar de la góndola es una cosa más por vez (BR-PLY-007).
+
+### BR-PLY-025 — El balde se lleva inclinado hacia la vista
+
+MIENTRAS el jugador lleva el balde en la mano, el sistema DEBE mostrarlo inclinado hacia la
+vista, con la inclinación del balde en la mano que declara el dominio, para que el agua se vea
+desde arriba. La boca DEBE quedar del lado de la vista, no del lado de afuera. La inclinación es
+de la mano: CUANDO se lo suelta, queda derecho (BR-PLY-018).
 
 ## Criterios de aceptación
 
@@ -460,6 +474,39 @@ DADO las manos vacías y la mira sobre una unidad del medio de la fila de adelan
 clic ENTONCES esa unidad pasa a la mano, su casillero queda vacío y las de al lado siguen donde
 estaban. DADO cualquier cosa en la mano ENTONCES la mira no enfoca ninguna unidad colocada, y el
 clic no la agarra. DADO la fila de atrás ENTONCES ninguna de sus unidades se enfoca.
+
+### AC-PLY-050 — El balde en la mano, inclinado hacia la vista *(verifica BR-PLY-025)*
+
+DADO el balde en la mano ENTONCES el ángulo entre su eje y el arriba de la vista es la
+inclinación del balde en la mano, con medio grado de tolerancia, y su boca queda del lado de la
+vista. DADO el balde apoyado después de soltarlo CUANDO se lo vuelve a agarrar ENTONCES tiene la
+misma inclinación.
+
+### AC-PLY-051 — El balde se apoya derecho donde se mira *(verifica BR-PLY-018)*
+
+DADO el balde en la mano, la vista 40 grados hacia abajo y la mira sobre el piso libre, la tapa
+de una caja contenedora, un estante del depósito o el mostrador, a menos del alcance CUANDO se
+lo suelta ENTONCES su eje queda a menos de 1 grado de la vertical, su base sobre el punto que la
+mira toca, sin encimarse con nada, y la mano vacía. CUANDO pasan dos segundos de física ENTONCES
+sigue derecho y a menos de 1 centímetro de donde quedó. DADO el balde con agua ENTONCES después
+de apoyarlo el agua se sigue viendo, del mismo color.
+
+### AC-PLY-052 — Si justo ahí no entra, cerca y sobre el mismo apoyo *(verifica BR-PLY-018)*
+
+DADO la mira sobre un apoyo que admite, pegada a algo que no deja entrar el balde en ese punto, y
+con lugar libre sobre el mismo apoyo a menos de un ancho de balde CUANDO se lo suelta ENTONCES
+queda derecho en ese lugar, a la altura de ese apoyo. DADO además otro apoyo libre más cerca del
+punto, a otra altura, ENTONCES no queda en ése.
+
+### AC-PLY-053 — Sin superficie que valga, derecho al lado del jugador *(verifica BR-PLY-018)*
+
+DADO el balde en la mano y la mira sobre una pared, sobre nada al alcance, sobre la mopa o sobre
+una superficie con la inclinación justo debajo del corte de horizontal CUANDO se lo suelta
+ENTONCES queda derecho en el piso al lado del jugador, sin encimarse con nada, y la mano vacía.
+DADO la vista 40 grados hacia abajo a medio metro de una pared CUANDO se lo suelta ENTONCES queda
+derecho y, al pasar dos segundos de física, a menos de 1 centímetro de donde quedó. DADO el
+jugador en un hueco del tamaño de su cuerpo, sin lugar libre al lado, CUANDO se lo suelta
+ENTONCES el balde no vuelve a la mano: la mano queda vacía y el balde, derecho.
 
 ## No objetivos
 
