@@ -220,6 +220,11 @@ se corrige el código.
   afirmaba lo viejo costó una corrida entera en 6/7.
 - **Lo que aparece implementando se hace, no se anota.** Un issue incompleto no se cierra abriendo
   otro issue: se completa.
+- **Un reparto nuevo exige revisar los supuestos de los tests que leen el modelo.** Buscá
+  cantidades literales y `visible_instance_count` en esas suites antes de la corrida completa.
+  En el #282, el fixture dejaba ocho huecos y Actron empezaba con tres unidades: reponer una
+  debía afirmar stock inicial más uno. Si cambia la cara de un producto, medí el frente de
+  su etiqueta en Blender y conservá el umbral del test, sin deducir el frente del reparto.
 - **Las capturas que pide el issue van al PR, no a la rama.** Suben a la rama huérfana
   `capturas/<N>` con `python .claude/skills/implement-feature/scripts/capturas_a_rama.py <N>
   <carpeta>`, y el PR las muestra por su URL de `raw.githubusercontent.com`. El script existe
