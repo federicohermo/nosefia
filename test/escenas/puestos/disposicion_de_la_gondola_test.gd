@@ -112,6 +112,8 @@ func test_la_tanda_tiene_dos_filas_y_el_cupo_entra_en_la_de_adelante() -> void: 
 				Producto.Id.ACTRONCITO,
 				Producto.Id.COSA_DE_MANI,
 				Producto.Id.PRONGLES,
+				Producto.Id.FLINPUF,
+				Producto.Id.BURBALOO,
 			]
 		)
 		(

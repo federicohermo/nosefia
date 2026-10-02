@@ -15,6 +15,8 @@ from lib.gondola import (
     Envase,
     NodoDeMalla,
     alto_en_la_rampa,
+    alinear_frentes,
+    actualizar_contorno,
     ancho_de_la_tanda,
     apagar_las_unidades,
     base_en_godot,
@@ -49,6 +51,31 @@ INCLINACION = 2 * math.asin(0.19)
 
 
 class Repartir(unittest.TestCase):
+    def test_el_contorno_sigue_el_tamano_y_centro_nuevos_sin_tocar_otras_formas(self):
+        texto = (
+            '[sub_resource type="BoxShape3D" id="contorno"]\nsize = Vector3(9, 9, 9)\n\n'
+            '[sub_resource type="BoxShape3D" id="otro"]\nsize = Vector3(8, 8, 8)\n\n'
+            '[node name="Forma" type="CollisionShape3D" parent="mueble/Contorno"]\n'
+            'transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9, 9, 9)\n'
+            'shape = SubResource("contorno")\n'
+        )
+        nuevo = actualizar_contorno(texto, "contorno", "mueble", (1, 2, 3), (4, 5, 6))
+        self.assertIn('id="contorno"]\nsize = Vector3(4, 5, 6)', nuevo)
+        self.assertIn('id="otro"]\nsize = Vector3(8, 8, 8)', nuevo)
+        self.assertIn('Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 2, 3)', nuevo)
+        self.assertEqual(nuevo, actualizar_contorno(nuevo, "contorno", "mueble", (1, 2, 3), (4, 5, 6)))
+
+    def test_el_zocalo_no_sobresale_del_frente_de_los_estantes_superiores(self):
+        self.assertEqual(alinear_frentes([0.0, 0.0, 0.0], [0.3, 0.4, 0.6]), [0.6] * 3)
+
+    def test_alinear_no_borra_la_tanda_fija_del_zocalo_si_necesita_mas_fondo(self):
+        self.assertEqual(alinear_frentes([0.0, 0.0, 0.0], [0.8, 0.4, 0.6]), [0.8] * 3)
+
+    def test_alinear_considera_el_panel_de_cada_estante_y_expande_un_zocalo_hundido(self):
+        zocalo, arriba = alinear_frentes([-0.2, 0.0], [0.1, 0.4])
+        self.assertAlmostEqual(zocalo, 0.6)
+        self.assertAlmostEqual(arriba, 0.4)
+
     def test_una_tanda_sola_ocupa_el_estante_de_punta_a_punta(self):  # AC-STK-051
         (cuenta,) = repartir(3.5, [CAJA])
         libre = sobrante(3.5, [CAJA], [cuenta])

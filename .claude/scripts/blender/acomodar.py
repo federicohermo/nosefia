@@ -50,6 +50,7 @@ from lib.blender import COLECCION_DE_GUIA, es_un_array  # noqa: E402
 from lib.gondola import (  # noqa: E402
     Envase,
     alto_en_la_rampa,
+    alinear_frentes,
     centros,
     fondo_del_estante,
     fondo_nuevo,
@@ -371,8 +372,8 @@ def achicar_cabecera(estantes, deltas, islas):
 def parejos(letra, estantes, nuevos):
     """Los estantes de una cara de lado llegan todos al frente del más hondo de arriba del zócalo.
 
-    Las dos filas de cada producto siguen yendo al frente, y lo que sobra de fondo queda detrás,
-    contra el panel. El zócalo también llega si quedaba detrás; si asoma, sigue asomando.
+    Las filas de cada producto siguen yendo al frente, y lo que sobra queda detrás del producto.
+    El zócalo llega al mismo plano, tanto si estaba hundido como si sobresalía.
     """
     for cara in CARAS_QUE_SE_ANGOSTAN.get(letra, ()):
         de_la_cara = {c: e for c, e in estantes.items() if partes(c)[1] == cara}
@@ -381,10 +382,11 @@ def parejos(letra, estantes, nuevos):
         # El fondo de cada chapa, medido hacia el pasillo: achicada a `nuevo`, su frente queda ahí
         # más lo nuevo, porque en un estante plano `v` es lo contrario de hacia dónde mira.
         fondo = {c: e.punto(0, e.fondo).dot(e.mira) for c, e in de_la_cara.items()}
-        frente = max(fondo[c] + nuevos[c] for c in de_la_cara if partes(c)[2] > 0)
-        for c in de_la_cara:
-            if partes(c)[2] > 0 or fondo[c] + nuevos[c] < frente:
-                nuevos[c] = frente - fondo[c]
+        claves = list(de_la_cara)
+        alineados = alinear_frentes(
+            [fondo[c] for c in claves], [nuevos[c] for c in claves],
+        )
+        nuevos.update(zip(claves, alineados))
 
 
 def angostar(letra, estantes, islas, objeto):
@@ -593,11 +595,11 @@ def acomodar_mueble(letra, envases, resumen):
             nuevos[clave] = (
                 fondo_nuevo(desde, de_estas, atras, inclinacion, filas) + PASO_DEL_TANTEO
             )
-        parejos(letra, propios, nuevos)
         if letra in ("A", "B"):
             for clave, estante in propios.items():
-                if partes(clave)[1] not in CABECERAS:
+                if partes(clave)[1] not in CABECERAS and partes(clave)[2] > 0:
                     nuevos[clave] = max(nuevos[clave], estante.fondo)
+        parejos(letra, propios, nuevos)
         for clave, estante in propios.items():
             deltas[clave] = achicar(estante, nuevos[clave])
         islas = _islas(bm)
@@ -693,6 +695,13 @@ def principal():
     preparar_unidades()
     igualar_muebles_del_medio()
     envases = {p.clave: envase_de(p, bpy.data.objects[p.objeto]) for p in PRODUCTOS}
+    resumen = {"tandas": 0, "unidades": 0, "choques": [], "cortas": [], "entradas": {}}
+    for letra in sorted({partes(clave)[0] for clave in ESTANTES}):
+        acomodar_mueble(letra, envases, resumen)
+    # Sacar el saliente del zócalo cambia el contorno medido de B. Se iguala después de esa
+    # corrección y se vuelven a ubicar las unidades, manteniendo el tamaño de cada envase.
+    igualar_muebles_del_medio()
+    limpiar_guia()
     resumen = {"tandas": 0, "unidades": 0, "choques": [], "cortas": [], "entradas": {}}
     for letra in sorted({partes(clave)[0] for clave in ESTANTES}):
         acomodar_mueble(letra, envases, resumen)

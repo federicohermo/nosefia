@@ -11,16 +11,16 @@
 [ext_resource type="PackedScene" path="res://src/escenas/puestos/contenido_del_estante.tscn" id="contenido"]
 
 [sub_resource type="BoxShape3D" id="contorno_de_gondola"]
-size = Vector3(1.263544, 2.292614, 5.090931)
+size = Vector3(1.800454, 2.292613, 4.978426)
 
 [sub_resource type="BoxShape3D" id="contorno_de_gondola2"]
-size = Vector3(1.800454, 2.292614, 5.090931)
+size = Vector3(1.800454, 2.292613, 4.870332)
 
 [sub_resource type="BoxShape3D" id="contorno_de_gondola_del_fondo_norte"]
-size = Vector3(0.986894, 2.294011, 3.838209)
+size = Vector3(0.852622, 2.294011, 3.838209)
 
 [sub_resource type="BoxShape3D" id="contorno_de_gondola_del_fondo_sur"]
-size = Vector3(1.044685, 2.294011, 3.838209)
+size = Vector3(0.852138, 2.294011, 3.838209)
 
 [sub_resource type="BoxShape3D" id="suelo_local"]
 size = Vector3(16.15515, 0.206508, 16.15515)
@@ -422,7 +422,7 @@ collision_mask = 0
 editor_description = "El jugador choca con esta caja y no con la malla del mueble. **Rozar la malla es caro**: cada chapa, labio y agujero es un triángulo, y caminar pegado al lateral de una cabecera llevaba el cuadro de la web a 80 ms. La malla sigue siendo la colisión de los productos que caen y de la mira."
 
 [node name="Forma" type="CollisionShape3D" parent="gondolanueva/Contorno"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.14027, -0.056863, 0.104339)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.14027, -0.056863, 0.048086)
 shape = SubResource("contorno_de_gondola")
 
 [node name="Contorno" type="StaticBody3D" parent="gondolanueva2"]
@@ -431,7 +431,7 @@ collision_mask = 0
 editor_description = "El jugador choca con esta caja y no con la malla del mueble. **Rozar la malla es caro**: cada chapa, labio y agujero es un triángulo, y caminar pegado al lateral de una cabecera llevaba el cuadro de la web a 80 ms. La malla sigue siendo la colisión de los productos que caen y de la mira."
 
 [node name="Forma" type="CollisionShape3D" parent="gondolanueva2/Contorno"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.128185, -0.056863, -0.104339)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.04424, -0.056863, 0.045102)
 shape = SubResource("contorno_de_gondola2")
 
 
@@ -440,7 +440,7 @@ collision_layer = 8
 collision_mask = 0
 
 [node name="Forma" type="CollisionShape3D" parent="gondolanueva_001/Contorno"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.367074, -0.057562, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.274939, -0.057562, 0)
 shape = SubResource("contorno_de_gondola_del_fondo_norte")
 
 [node name="Contorno" type="StaticBody3D" parent="gondolanueva_002"]
@@ -448,7 +448,7 @@ collision_layer = 8
 collision_mask = 0
 
 [node name="Forma" type="CollisionShape3D" parent="gondolanueva_002/Contorno"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.39597, -0.057562, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.274697, -0.057562, 0)
 shape = SubResource("contorno_de_gondola_del_fondo_sur")
 
 [node name="Zucarachas" parent="gondolanueva"]
@@ -483,13 +483,6 @@ collision_mask = 0
 visible = false
 
 [node name="StaticBody3D" parent="gondolanueva/malbardocig"]
-collision_layer = 0
-collision_mask = 0
-
-[node name="oremos" parent="gondolanueva"]
-visible = false
-
-[node name="StaticBody3D" parent="gondolanueva/oremos"]
 collision_layer = 0
 collision_mask = 0
 
@@ -549,6 +542,13 @@ visible = false
 collision_layer = 0
 collision_mask = 0
 
+[node name="cindolor" parent="gondolanueva2"]
+visible = false
+
+[node name="StaticBody3D" parent="gondolanueva2/cindolor"]
+collision_layer = 0
+collision_mask = 0
+
 [node name="donsaturados" parent="gondolanueva2"]
 visible = false
 
@@ -584,6 +584,13 @@ visible = false
 collision_layer = 0
 collision_mask = 0
 
+[node name="oremos" parent="gondolanueva2"]
+visible = false
+
+[node name="StaticBody3D" parent="gondolanueva2/oremos"]
+collision_layer = 0
+collision_mask = 0
+
 [node name="flimpof" parent="gondolanueva_001"]
 visible = false
 
@@ -616,13 +623,6 @@ collision_mask = 0
 visible = false
 
 [node name="StaticBody3D" parent="gondolanueva_002/atun"]
-collision_layer = 0
-collision_mask = 0
-
-[node name="cindolor" parent="gondolanueva_002"]
-visible = false
-
-[node name="StaticBody3D" parent="gondolanueva_002/cindolor"]
 collision_layer = 0
 collision_mask = 0
 

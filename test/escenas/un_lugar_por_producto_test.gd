@@ -514,14 +514,22 @@ func test_una_tanda_de_una_fila_no_deja_unidades_detras_al_vaciarla() -> void:  
 	AperturaConLugar.abrir_con_faltantes(almacen, completos)
 	var presentacion: Node3D = almacen.get("_reposicion_manual")
 	var agarre: Agarre = almacen.get("_agarre")
-	for id: Producto.Id in [Producto.Id.ACTRONCITO, Producto.Id.COSA_DE_MANI, Producto.Id.PRONGLES]:
+	for id: Producto.Id in [
+		Producto.Id.ACTRONCITO,
+		Producto.Id.COSA_DE_MANI,
+		Producto.Id.PRONGLES,
+		Producto.Id.FLINPUF,
+		Producto.Id.BURBALOO,
+	]:
 		var producto := Catalogo.de(id)
 		for indice in _cupo(almacen, producto):
 			presentacion.agarrar_de_la_gondola(id, indice)
 			agarre.vaciar_las_manos()
 		var dibujo := presentacion.get_node("ProductosDe" + producto.nombre) as MultiMeshInstance3D
+		var principales := DisposicionDeLaGondola.copias(_disposicion(almacen).principales[id])
+		var fijas := dibujo.multimesh.instance_count - principales
 		(
-			assert_int(dibujo.multimesh.visible_instance_count)
+			assert_int(dibujo.multimesh.visible_instance_count - fijas)
 			. override_failure_message(producto.nombre)
 			. is_zero()
 		)

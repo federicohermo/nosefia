@@ -89,6 +89,12 @@ def paso(envase: Envase) -> float:
     return envase.ancho + AIRE
 
 
+def alinear_frentes(fondos: Sequence[float], requeridos: Sequence[float]) -> list[float]:
+    """Alinea también el zócalo sin perder las tandas que necesitan más fondo."""
+    frente = max(f + r for f, r in zip(fondos, requeridos))
+    return [frente - fondo for fondo in fondos]
+
+
 def fondo_del_estante(
     envases: Sequence[Envase], inclinacion: float = 0.0, filas: Sequence[int] | None = None
 ) -> float:
@@ -484,3 +490,26 @@ def apagar_las_unidades(texto: str, rutas: Sequence[str]) -> str:
         raise ValueError("la escena no tiene unidades apagadas: no se sabe dónde van las nuevas")
     salida.insert(lugar, "".join(_unidad_apagada(r) for r in sorted(set(rutas))))
     return "".join(salida).rstrip("\n") + "\n"
+
+
+def actualizar_contorno(
+    texto: str, recurso: str, padre: str, centro: Vector, tamano: Vector
+) -> str:
+    """Actualiza sólo la caja del jugador: las demás colisiones no cambian con la góndola."""
+    tamano_escrito = ", ".join(numero_de_escena(n) for n in tamano)
+    patron = (
+        rf'(\[sub_resource type="BoxShape3D" id="{re.escape(recurso)}"\]\n)'
+        r'size = Vector3\([^\n]*\)'
+    )
+    texto, formas = re.subn(patron, lambda m: m[1] + f"size = Vector3({tamano_escrito})", texto)
+    identidad: Matriz = ((1, 0, 0), (0, 1, 0), (0, 0, 1))
+    patron = (
+        rf'(\[node name="Forma" type="CollisionShape3D" '
+        rf'parent="{re.escape(padre)}/Contorno"\]\n)transform = Transform3D\([^\n]*\)'
+    )
+    texto, centros = re.subn(
+        patron, lambda m: m[1] + "transform = " + transform_de_escena(identidad, centro), texto
+    )
+    if formas != 1 or centros != 1:
+        raise ValueError(f"no se encontró el contorno único de {padre}: {formas}, {centros}")
+    return texto

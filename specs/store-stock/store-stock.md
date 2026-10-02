@@ -177,17 +177,17 @@ agarra y se repone. Los demás estantes —el de arriba y el zócalo de una cara
 arriba de una cabecera— DEBEN llevar sólo tandas fijas, que repiten un producto del local. En una
 heladera, cualquier bandeja puede llevar la tanda con casilleros o una tanda fija.
 
-### BR-STK-025 — La tanda tiene dos filas, o una si dos no entran
+### BR-STK-025 — La tanda tiene dos filas, o una según el reparto aprobado
 
 La tanda con casilleros de cada producto DEBE tener dos filas, una detrás de la otra. Cada lugar
 de la fila de adelante DEBE ser un casillero del producto, y ninguno de la fila de atrás. La fila
 de atrás DEBE verse entera desde que abre la jornada y NO DEBE poder agarrarse ni vaciarse: es la
 que dice qué va ahí.
 
-SI dos filas de un producto piden un estante más hondo que los demás de su mueble, ENTONCES su
-tanda DEBE tener una sola fila, y cada uno de sus lugares DEBE ser un casillero. Esa tanda no
-tiene fila de atrás. El estante NO DEBE ensancharse para un producto: dos muebles iguales miden
-lo mismo.
+Las tandas de Actroncito, Cosa de Maní, Prongles, Flin Puf y Burbaloo DEBEN tener una sola fila,
+según el reparto aprobado. Cada lugar de su tanda con casilleros DEBE ser un casillero; sus
+tandas fijas, si las hay, siguen siendo fijas (BR-STK-024). Esas tandas no tienen fila de atrás.
+El estante NO DEBE ensancharse para un producto: dos muebles iguales miden lo mismo.
 
 ### BR-STK-026 — Lo que falta al abrir cada jornada
 
@@ -286,7 +286,8 @@ caja y los vendibles DEBEN quedar como antes de agarrarla.
 Un estante de reposición de una cara de lado DEBE llevar dos productos, cada uno en una mitad del
 estante, o un solo producto que lo ocupa entero. NO DEBE llevar tres productos ni dos en partes
 desiguales. Dos muebles de estantes iguales DEBEN medir lo mismo: ningún estante se ensancha para
-un producto (BR-STK-025).
+un producto (BR-STK-025). En cada cara de lado, el estante inferior NO DEBE sobresalir respecto
+de los estantes superiores.
 
 ## Criterios de aceptación
 
@@ -438,10 +439,12 @@ su tanda ENTONCES la mira alcanza su casillero y el producto se coloca.
 
 ### AC-STK-030 — Dos filas, o una, y el cupo adelante *(verifica BR-STK-025)*
 
-DADO la tanda con casilleros de cualquier producto, salvo Actroncito, Cosa de Maní y Prongles,
+DADO la tanda con casilleros de cualquier producto, salvo Actroncito, Cosa de Maní, Prongles,
+Flin Puf y Burbaloo,
 ENTONCES tiene dos filas, una detrás de la otra; la de adelante es la más cercana al pasillo, y
 cada uno de sus lugares es un casillero: tiene tantos como el cupo del producto. DADO la tanda
-de Actroncito, la de Cosa de Maní y la de Prongles ENTONCES cada una tiene una sola fila, y
+de Actroncito, la de Cosa de Maní, la de Prongles, la de Flin Puf y la de Burbaloo ENTONCES cada
+una tiene una sola fila, y
 tantas unidades como el cupo de su producto.
 
 ### AC-STK-031 — La fila de atrás, entera toda la noche *(verifica BR-STK-025)*
@@ -596,7 +599,8 @@ DADO cada estante de reposición de una cara de lado ENTONCES lleva dos producto
 con dos productos ENTONCES el largo que ocupa cada uno difiere del otro en menos de lo que ocupa
 la unidad más ancha de ese estante. DADO uno con un solo producto ENTONCES ese producto lo ocupa
 de punta a punta. DADO los dos muebles de estantes del medio del local ENTONCES miden lo mismo de
-ancho, con 1 centímetro de tolerancia.
+ancho, con 1 centímetro de tolerancia. DADO cada cara de lado ENTONCES el borde del estante
+inferior no está más hacia el pasillo que el frente de los estantes superiores.
 
 ## No objetivos
 

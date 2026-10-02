@@ -11,7 +11,8 @@ repo salió de ese `.blend`.
   fila de adelante de cada producto.
 - `contenido_del_estante.tscn`: la unidad de cada producto, con la vuelta que le da el modelo.
 - `guia_del_estante.tscn`: una malla por tanda fija, con la vuelta de la unidad de su producto.
-- `estructura_del_almacen.tscn`, sólo las unidades apagadas: el `.glb` trae la unidad de cada
+- `estructura_del_almacen.tscn`, las unidades apagadas y los cuatro contornos de góndola:
+  las cajas de colisión siguen el tamaño y centro del mueble. El `.glb` trae la unidad de cada
   producto y la escena la apaga, porque la dibuja su tanda. Cuelga del mueble de su tanda, y si
   la tanda cambia de mueble cambia su ruta.
 
@@ -31,6 +32,7 @@ from lib.gondola import (  # noqa: E402
     SUFIJOS_DE_IMPORTACION,
     NodoDeMalla,
     apagar_las_unidades,
+    actualizar_contorno,
     base_en_godot,
     copia_relativa,
     escribir_disposicion,
@@ -40,7 +42,7 @@ from lib.gondola import (  # noqa: E402
     punto_en_godot,
     ruta_de_la_malla,
 )
-from lib.reparto import PRODUCTOS  # noqa: E402
+from lib.reparto import MUEBLES, PRODUCTOS  # noqa: E402
 
 RAIZ = Path(__file__).resolve().parents[3]
 PUESTOS = RAIZ / "src" / "escenas" / "puestos"
@@ -144,7 +146,23 @@ def principal():
     )
     escribir(CONTENIDO, escribir_escena_de_mallas("Contenido", contenido))
     escribir(GUIA, escribir_escena_de_mallas("Guia", nodos_de_guia))
-    escribir(ESTRUCTURA, apagar_las_unidades(ESTRUCTURA.read_text(encoding="utf-8"), apagadas))
+    estructura = apagar_las_unidades(ESTRUCTURA.read_text(encoding="utf-8"), apagadas)
+    contornos = {
+        "A": "contorno_de_gondola", "B": "contorno_de_gondola2",
+        "N": "contorno_de_gondola_del_fondo_norte", "S": "contorno_de_gondola_del_fondo_sur",
+    }
+    for letra, recurso in contornos.items():
+        mueble = bpy.data.objects[MUEBLES[letra]]
+        puntos = [punto_en_godot(tuple(v.co)) for v in mueble.data.vertices]
+        minimo = tuple(min(p[i] for p in puntos) for i in range(3))
+        maximo = tuple(max(p[i] for p in puntos) for i in range(3))
+        centro = tuple((a + b) / 2 for a, b in zip(minimo, maximo))
+        margen = (0.1, 0, 0.1) if letra in ("A", "B") else (0.05, 0, 0)
+        tamano = tuple(b - a + aire for a, b, aire in zip(minimo, maximo, margen))
+        estructura = actualizar_contorno(
+            estructura, recurso, nombre_en_godot(mueble.name), centro, tamano
+        )
+    escribir(ESTRUCTURA, estructura)
     unidades = sum(len(c) for c in tandas.values())
     print(
         f"tandas con casilleros: {len(principales)}, fijas: {len(guias)}, unidades: {unidades}"

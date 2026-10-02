@@ -127,11 +127,13 @@ class ElReparto(unittest.TestCase):
                     self.assertTrue(es_cabecera(estante), f"{t.producto} en {estante}")
 
     def test_lo_de_una_fila_va_una_sola_vez_y_en_una_cara_de_lado(self):  # AC-STK-030
-        # Toda su tanda es casilleros: una tanda fija suya sería una fila sola que no se repone.
+        self.assertEqual(
+            set(DE_UNA_FILA),
+            {"ACTRONCITO", "COSA_DE_MANI", "PRONGLES", "FLINPUF", "BURBALOO"},
+        )
         for estante, tandas in ESTANTES.items():
             for t in tandas:
-                if t.producto in DE_UNA_FILA:
-                    self.assertFalse(t.fija, f"{t.producto} en {estante}")
+                if t.producto in DE_UNA_FILA and not t.fija:
                     self.assertTrue(estante in _de_lado(), f"{t.producto} en {estante}")
 
     def test_la_heladera_repone_lo_frio_una_sola_vez_y_repite_solo_lo_frio(self):

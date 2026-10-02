@@ -18,8 +18,8 @@ Las verifica `tests/test_reparto.py` sobre este mismo dato, antes de que llegue 
   entero. Cada cara de lado tiene un solo estante entero;
 - ningún producto va justo encima de sí mismo en la misma cara;
 - Malbardo, Durextra, Laysntt, Chisitos y Duronga van en cabecera;
-- Actroncito, Cosa de Maní y Prongles van en una sola fila, toda de casilleros, y en una cara
-  de lado;
+- Actroncito, Cosa de Maní, Prongles, Flin Puf y Burbaloo van en una sola fila: su tanda con
+  casilleros está en una cara de lado y toda es de casilleros;
 - la heladera lleva lo que se vende frío: cada uno se repone en una sola tanda, y lo que
   repite para llenar una bandeja es fijo;
 - ningún estante de góndola queda vacío.
@@ -124,8 +124,9 @@ DE_CABECERA = ("MALBARDO", "DUREXTRA", "LAYSNTT", "CHISITOS", "DURONGA")
 #: piden un estante más hondo que cualquier otro producto, y la góndola crecía para ellos: con
 #: Actroncito en el zócalo, una del medio medía 54 cm más que la otra. Medido el 2026-09-29:
 #: Actroncito mide 0,395 de fondo y Cosa de Maní 0,340. Las Prongles van en una fila para que su
-#: estante dé los casilleros que una jornada les hace faltar.
-DE_UNA_FILA = ("ACTRONCITO", "COSA_DE_MANI", "PRONGLES")
+#: estante dé los casilleros que una jornada les hace faltar. Flin Puf y Burbaloo llevan una
+#: fila por decisión del usuario al revisar el reparto el 2026-10-02; sus tandas fijas se conservan.
+DE_UNA_FILA = ("ACTRONCITO", "COSA_DE_MANI", "PRONGLES", "FLINPUF", "BURBALOO")
 
 
 @dataclass(frozen=True)
