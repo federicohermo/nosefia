@@ -521,3 +521,38 @@ func test_vaciar_las_manos_deja_el_balde_derecho_a_los_pies() -> void:
 	assert_object(agarre.manos().sostenido()).is_null()
 	_comprobar_al_lado(almacen, balde, "al vaciar las manos")
 	await _comprobar_que_se_queda(balde, "al vaciar las manos")
+
+
+func _apoyo_de_prueba(almacen: Node3D, centro: Vector3, tamano: Vector3) -> StaticBody3D:
+	var apoyo := StaticBody3D.new()
+	var forma := CollisionShape3D.new()
+	var caja := BoxShape3D.new()
+	caja.size = tamano
+	forma.shape = caja
+	apoyo.add_child(forma)
+	almacen.add_child(apoyo)
+	apoyo.global_position = centro
+	return apoyo
+
+
+func test_no_cambia_a_otro_apoyo_a_la_misma_altura() -> void:  # AC-PLY-052
+	var almacen: Node3D = await _almacen()
+	var jugador: CharacterBody3D = almacen.get("_jugador")
+	var balde := _balde(almacen)
+	balde.freeze = true
+	balde.global_basis = Basis.IDENTITY
+	var punto := Vector3(PISO_LIBRE.x, _piso(almacen) + 0.9, PISO_LIBRE.y)
+	var original := _apoyo_de_prueba(almacen, punto - Vector3.UP * 0.05, Vector3(0.08, 0.1, 0.08))
+	var vecino := _apoyo_de_prueba(
+		almacen, punto + Vector3(0.35, -0.05, 0.0), Vector3(0.5, 0.1, 0.5)
+	)
+	# La mira toca el apoyo chico; la pared impide dejar el balde centrado sobre él.
+	_apoyo_de_prueba(almacen, punto + Vector3(0.0, 0.3, -0.12), Vector3(0.12, 0.6, 0.12))
+	await _mirar_a(jugador, punto, Vector3.FORWARD, MIRANDO_ABAJO)
+	var golpe := _golpe_de_la_mira(jugador, balde, balde.collision_mask)
+	assert_object(golpe.get("collider")).is_same(original)
+	assert_float((golpe.get("position", Vector3.ZERO) as Vector3).distance_to(punto)).is_less(0.01)
+	assert_float(vecino.global_position.y).is_equal(original.global_position.y)
+	var antes := balde.global_position
+	assert_bool(jugador.call("_apoyar_derecho_sobre_lo_mirado", balde)).is_false()
+	assert_vector(balde.global_position).is_equal(antes)

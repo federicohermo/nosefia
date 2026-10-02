@@ -545,6 +545,13 @@ func _apoyar_derecho_sobre_lo_mirado(cuerpo: RigidBody3D) -> bool:
 		limites = suyos if indice == 0 else limites.merge(suyos)
 	var antes := cuerpo.global_position
 	var punto: Vector3 = golpe["position"]
+	# El piso tiene malla y volumen superpuestos: se identifica el apoyo con el mismo rayo
+	# vertical que se usa alrededor, en vez de comparar dos maneras distintas de medirlo.
+	consulta.from = punto + Vector3.UP * ReglasDeLosObjetos.ROCE
+	consulta.to = punto - Vector3.UP * ReglasDeLosObjetos.ROCE
+	var apoyo_apuntado := espacio.intersect_ray(consulta)
+	if apoyo_apuntado.is_empty():
+		return false
 	var ancho := maxf(limites.size.x, limites.size.z)
 	for anillo in ReglasDeLosObjetos.LADOS_ALREDEDOR + 1:
 		for lado in 1 if anillo == 0 else ReglasDeLosObjetos.LADOS_ALREDEDOR:
@@ -555,7 +562,12 @@ func _apoyar_derecho_sobre_lo_mirado(cuerpo: RigidBody3D) -> bool:
 			consulta.from = candidato + Vector3.UP * ReglasDeLosObjetos.ROCE
 			consulta.to = candidato - Vector3.UP * ReglasDeLosObjetos.ROCE
 			var apoyo := espacio.intersect_ray(consulta)
-			if apoyo.is_empty() or absf(apoyo["position"].y - punto.y) > ReglasDeLosObjetos.ROCE:
+			# Dos cajas pueden tener tapas a la misma altura: la altura sola no conserva el apoyo.
+			if (
+				apoyo.is_empty()
+				or apoyo["rid"] != apoyo_apuntado["rid"]
+				or absf(apoyo["position"].y - punto.y) > ReglasDeLosObjetos.ROCE
+			):
 				continue
 			if not ReglasDeLosObjetos.admite_lo_soltado(
 				apoyo["normal"].y, _datos_de(apoyo["collider"])
