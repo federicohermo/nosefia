@@ -88,9 +88,18 @@ func _bloques() -> Array[Dictionary]:
 	for indice in DISPOSICION.guias.size():
 		var bloque := DISPOSICION.guias[indice]
 		var modelo := guia.get_child(indice) as MeshInstance3D
-		# Las guías tienen las dos filas del mismo largo, como toda tanda.
+		var filas := 0
+		for producto in Catalogo.todos():
+			var principal := contenido.get_child(producto.id) as MeshInstance3D
+			if principal.mesh.resource_path == modelo.mesh.resource_path:
+				@warning_ignore("integer_division")
+				filas = (
+					DisposicionDeLaGondola.copias(DISPOSICION.principales[producto.id])
+					/ DISPOSICION.filas_de_adelante[producto.id]
+				)
+		assert_bool(filas in [1, 2]).override_failure_message(modelo.name).is_true()
 		@warning_ignore("integer_division")
-		var fila := DisposicionDeLaGondola.copias(bloque) / 2
+		var fila := DisposicionDeLaGondola.copias(bloque) / filas
 		bloques.append({"nombre": modelo.name, "bloque": bloque, "fila": fila, "modelo": modelo})
 	return bloques
 
@@ -104,6 +113,8 @@ static func _copia_en_el_mundo(datos: Dictionary, indice: int) -> Transform3D:
 ## Cuánto sube la fila de atrás sobre la de adelante.
 static func _sube_hacia_el_fondo(bloque: PackedFloat32Array, fila: int) -> float:
 	var total := DisposicionDeLaGondola.copias(bloque)
+	if total == fila:
+		return 0.0
 	var atras := 0.0
 	var adelante := 0.0
 	for indice in total:
@@ -157,7 +168,7 @@ func test_en_la_rampa_de_una_cabecera_cada_unidad_se_echa_hacia_atras() -> void:
 
 ## Cada cara de lado se angosta hasta sus estantes: ninguno de arriba del zócalo queda hundido
 ## entre los laterales. Entre el frente de la fila de adelante de cada estante y lo más afuera del
-## mueble a esa altura no queda más que el margen y el portaprecio. El zócalo puede asomar.
+## mueble a esa altura no queda más que el margen y el portaprecio.
 func test_ningun_estante_de_arriba_queda_detras_del_lateral() -> void:
 	var estructura: Node3D = auto_free(ESTRUCTURA.instantiate())
 	var gondolas: Array[MeshInstance3D] = []
