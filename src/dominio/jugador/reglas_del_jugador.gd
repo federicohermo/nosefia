@@ -31,6 +31,8 @@ const ALCANCE_DE_LA_MIRA := 2.5
 
 ## Radianes desde el centro de la vista.
 const DESVIO_MAXIMO_DE_LA_MIRA := deg_to_rad(15.0)
+## Los productos y sus huecos requieren apuntar cerca de su superficie.
+const DESVIO_MAXIMO_DE_PRODUCTOS := deg_to_rad(3.0)
 
 ## El contrato de «se puede interactuar con esto» ES este grupo de Godot, y vive acá por lo que
 ## permite: `dominio/` declara un `String` y no conoce a nadie, y un nodo de `escenas/` cumple

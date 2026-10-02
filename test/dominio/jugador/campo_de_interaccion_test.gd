@@ -75,3 +75,22 @@ func test_un_centimetro_fuera_del_alcance_se_rechaza() -> void:  # AC-PLY-004
 	var cercano := Campo.Candidato.new(2, 1.0, 0.1, true, true)
 	assert_int(Campo.elegir([lejano])).is_equal(Foco.SIN_OBJETIVO)
 	assert_int(Campo.elegir([lejano, cercano])).is_equal(2)
+
+
+func test_un_producto_alejado_del_cursor_no_se_enfoca() -> void:  # AC-PLY-004
+	var producto := Campo.Candidato.new(1, 1.0, deg_to_rad(6.0), true, true)
+	producto.es_producto = true
+	assert_int(Campo.elegir([producto])).is_equal(Foco.SIN_OBJETIVO)
+
+
+func test_un_producto_cerca_del_cursor_se_enfoca() -> void:  # AC-PLY-004
+	var producto := Campo.Candidato.new(1, 1.0, deg_to_rad(3.0), true, true)
+	producto.es_producto = true
+	assert_int(Campo.elegir([producto])).is_equal(1)
+
+
+func test_la_precision_del_producto_no_reduce_la_de_otros_objetos() -> void:  # AC-PLY-005
+	var producto := Campo.Candidato.new(1, 0.5, deg_to_rad(6.0), true, true)
+	producto.es_producto = true
+	var objeto := Campo.Candidato.new(2, 1.0, deg_to_rad(8.0), true, true)
+	assert_int(Campo.elegir([producto, objeto])).is_equal(2)

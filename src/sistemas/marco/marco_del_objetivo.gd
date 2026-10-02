@@ -24,8 +24,9 @@ func enfocar(objetivo: Node3D, _distancia: float = 0.0) -> void:
 	apagar()
 	_objetivo = objetivo
 	var material: Material = _material
-	if "material_de_foco" in objetivo:
-		material = objetivo.get("material_de_foco")
+	var propio: Variant = objetivo.get("material_de_foco")
+	if propio is Material:
+		material = propio
 	var mallas: Array[MeshInstance3D] = []
 	if "mallas" in objetivo:
 		mallas.assign(objetivo.get("mallas"))
