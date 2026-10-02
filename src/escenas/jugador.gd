@@ -266,41 +266,47 @@ func _acomodar_la_mopa() -> void:
 		var datos := _datos_de(nodo)
 		if not nodo is RigidBody3D or datos == null or datos.id != ReglasDeLaLimpieza.ID_DE_LA_MOPA:
 			continue
-		var cuerpo := nodo as RigidBody3D
-		var forma: CollisionShape3D = cuerpo.get_node("Forma")
-		var consulta := PhysicsShapeQueryParameters3D.new()
-		consulta.shape = forma.shape
-		consulta.transform = forma.global_transform
-		consulta.margin = HOLGURA_DE_LA_CAIDA
-		consulta.collision_mask = _brazo_de_carga.collision_mask
-		consulta.exclude = [get_rid(), cuerpo.get_rid()]
-		var espacio := get_world_3d().direct_space_state
-		# La cabeza entra en el balde al mojarse. Ese contacto con un objeto móvil no debe
-		# esconderla detrás de la cámara como si fuera una pared del almacén.
-		var excluidos: Array[RID] = consulta.exclude
-		for choque: Dictionary in espacio.intersect_shape(consulta, TOPE_DE_CHOQUES):
-			if choque.collider is RigidBody3D:
-				excluidos.append(choque.rid)
-		consulta.exclude = excluidos
-		if espacio.intersect_shape(consulta, 1).is_empty():
+		var retroceso := _retroceso_libre(nodo as RigidBody3D)
+		if retroceso == 0.0:
 			return
-		var original := consulta.transform
-		var eje := _brazo_de_carga.global_basis.z.normalized()
-		var largo := (original * forma.shape.get_debug_mesh().get_aabb()).size.length()
-		for paso in range(1, PASOS_DEL_UTIL_EN_LA_MANO + 1):
-			var retroceso := largo * paso / PASOS_DEL_UTIL_EN_LA_MANO
-			consulta.transform.origin = original.origin - eje * retroceso
-			if not espacio.intersect_shape(consulta, 1).is_empty():
-				continue
-			# Desde un inicio libre, el barrido mide el borde exacto: los pasos no se dibujan.
-			consulta.motion = eje * retroceso
-			var avance := espacio.cast_motion(consulta)[0]
-			_largo_de_carga -= retroceso * (1.0 - avance)
-			agarre.punto_de_carga.position = (
-				_brazo_de_carga.transform * Vector3(0, 0, _largo_de_carga)
-			)
-			agarre.punto_de_carga.reset_physics_interpolation()
-			return
+		_largo_de_carga -= retroceso
+		agarre.punto_de_carga.position = _brazo_de_carga.transform * Vector3(0, 0, _largo_de_carga)
+		agarre.punto_de_carga.reset_physics_interpolation()
+		return
+
+
+## Cuánto tiene que retroceder el cuerpo por el brazo de carga para no tocar una pared. No mueve
+## nada: cero es que ya está libre, o que no hay lugar libre en todo su largo.
+func _retroceso_libre(cuerpo: RigidBody3D) -> float:
+	var forma: CollisionShape3D = cuerpo.get_node("Forma")
+	var consulta := PhysicsShapeQueryParameters3D.new()
+	consulta.shape = forma.shape
+	consulta.transform = forma.global_transform
+	consulta.margin = HOLGURA_DE_LA_CAIDA
+	consulta.collision_mask = _brazo_de_carga.collision_mask
+	consulta.exclude = [get_rid(), cuerpo.get_rid()]
+	var espacio := get_world_3d().direct_space_state
+	# La cabeza entra en el balde al mojarse. Ese contacto con un objeto móvil no debe
+	# esconderla detrás de la cámara como si fuera una pared del almacén.
+	var excluidos: Array[RID] = consulta.exclude
+	for choque: Dictionary in espacio.intersect_shape(consulta, TOPE_DE_CHOQUES):
+		if choque.collider is RigidBody3D:
+			excluidos.append(choque.rid)
+	consulta.exclude = excluidos
+	if espacio.intersect_shape(consulta, 1).is_empty():
+		return 0.0
+	var original := consulta.transform
+	var eje := _brazo_de_carga.global_basis.z.normalized()
+	var largo := (original * forma.shape.get_debug_mesh().get_aabb()).size.length()
+	for paso in range(1, PASOS_DEL_UTIL_EN_LA_MANO + 1):
+		var retroceso := largo * paso / PASOS_DEL_UTIL_EN_LA_MANO
+		consulta.transform.origin = original.origin - eje * retroceso
+		if not espacio.intersect_shape(consulta, 1).is_empty():
+			continue
+		# Desde un inicio libre, el barrido mide el borde exacto: los pasos no se dibujan.
+		consulta.motion = eje * retroceso
+		return retroceso * (1.0 - espacio.cast_motion(consulta)[0])
+	return 0.0
 
 
 ## Le da o le saca al cuerpo el volumen de la caja que lleva. Es lo que la vuelve un objeto de

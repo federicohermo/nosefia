@@ -87,3 +87,22 @@ func test_la_mira_no_atrae_un_producto_fuera_de_su_tolerancia() -> void:  # AC-P
 	assert_float(apartado.desvio).is_greater(ReglasDelJugador.DESVIO_MAXIMO_DE_PRODUCTOS)
 	assert_float(apartado.desvio).is_less(ReglasDelJugador.DESVIO_MAXIMO_DE_LA_MIRA)
 	assert_int(CampoDeInteraccion.elegir([apartado])).is_equal(Foco.SIN_OBJETIVO)
+
+
+func test_el_producto_suelto_se_enfoca_con_las_aristas_de_los_casilleros() -> void:
+	var almacen: Node3D = auto_free(ALMACEN.instantiate())
+	add_child(almacen)
+	almacen.get("_jugador").set_physics_process(false)
+	var faltantes: Dictionary[Producto.Id, int] = {}
+	AperturaConLugar.abrir_con_faltantes(almacen, faltantes)
+	var puesto: Node3D = almacen.get("_reposicion_manual")
+	var producto := Catalogo.de(Producto.Id.ARVEJAS)
+	puesto.call("agarrar_de_la_gondola", producto.id, 1)
+	var unidades: Array[Node3D] = puesto.get("_unidades")
+	assert_int(unidades.size()).is_equal(1)
+	var zona: MeshInstance3D = puesto.get_node("ZonaDe" + producto.nombre).get_child(0).get("vista")
+	var aristas := unidades[0].get("material_de_foco") as ShaderMaterial
+	assert_object(aristas).is_same(zona.material_overlay)
+	assert_float(aristas.get_shader_parameter("grosor")).is_equal(
+		IndicacionDelFoco.GROSOR_DE_PRODUCTOS
+	)

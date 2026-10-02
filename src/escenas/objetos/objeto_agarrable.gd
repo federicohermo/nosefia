@@ -18,6 +18,8 @@ signal contacto_recibido(nodo: Node3D, rapidez: float)
 ## escena y cambiarle este campo: no se toca código.
 @export var datos: ObjetoDelAlmacen
 @export var orientacion_en_mano := Basis.IDENTITY
+## Sin él, el marco le pone el contorno común.
+var material_de_foco: Material = null
 
 ## Dónde lo dejó la escena. Se guarda en `_ready()` y no en la declaración porque el `transform`
 ## que importa es el que le puso el `.tscn`, y ése recién existe cuando el nodo entró al árbol.

@@ -76,6 +76,8 @@ var _guias_sumadas: Array[int] = []
 var _bloques: Array[PackedFloat32Array] = []
 var _sueltos: Array[GrupoDelPiso] = []
 var _disponible: ObjetoAgarrable = null
+## Las aristas que dibuja el foco. Piden las mallas que arma `AristasDelProducto`.
+var _aristas := ShaderMaterial.new()
 
 
 ## Cuántos casilleros tiene la fila de adelante de cada producto: su cupo, medido del modelo.
@@ -965,10 +967,9 @@ func _preparar_grupos() -> void:
 ## agarrar cambia con cada gesto, y lo decide el estante. Los dos materiales son los mismos para
 ## todos los casilleros: lo que cambia entre dos casilleros es la forma y el lugar.
 func _preparar_los_casilleros() -> void:
-	var contorno := ShaderMaterial.new()
-	contorno.shader = CONTORNO
-	contorno.set_shader_parameter("color", IndicacionDelFoco.COLOR)
-	contorno.set_shader_parameter("grosor", IndicacionDelFoco.GROSOR_DE_PRODUCTOS)
+	_aristas.shader = CONTORNO
+	_aristas.set_shader_parameter("color", IndicacionDelFoco.COLOR)
+	_aristas.set_shader_parameter("grosor", IndicacionDelFoco.GROSOR_DE_PRODUCTOS)
 	var sin_superficie := ShaderMaterial.new()
 	sin_superficie.shader = SIN_SUPERFICIE
 	# La superficie invisible fija la profundidad antes de dibujar las aristas.
@@ -1002,7 +1003,7 @@ func _preparar_los_casilleros() -> void:
 			vista.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 			vista.position = -caja.get_center()
 			vista.material_override = sin_superficie
-			vista.material_overlay = contorno
+			vista.material_overlay = _aristas
 			vista.visible = false
 			zona.add_child(vista)
 			zona.vista = vista
@@ -1181,6 +1182,7 @@ func _cuerpo_para(id: Producto.Id) -> ObjetoAgarrable:
 		add_child(unidad)
 		_unidades.append(unidad)
 		unidad.add_collision_exception_with(jugador)
+		unidad.material_de_foco = _aristas
 	# El frente de cada modelo se alinea antes de darle la inclinación de la mano, y antes de eso
 	# se endereza lo que en su estante va echado: la inclinación de la rampa es del estante.
 	unidad.orientacion_en_mano = (

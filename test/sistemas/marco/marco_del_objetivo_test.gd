@@ -6,32 +6,36 @@ class Mueble:
 	var mallas: Array[MeshInstance3D] = []
 
 
-class Unidad:
+class ConFoco:
 	extends Node3D
-	var datos: ObjetoDelAlmacen
+	var material_de_foco: Material
 
 
-func test_el_producto_suelto_lleva_aristas_y_conserva_su_superficie() -> void:
+func test_el_objetivo_con_material_propio_lo_recibe_y_conserva_su_superficie() -> void:
 	var marco: MarcoDelObjetivo = auto_free(MarcoDelObjetivo.new())
-	var unidad: Unidad = auto_free(Unidad.new())
-	unidad.datos = UnidadDeProducto.new(Catalogo.de(Producto.Id.ACTRONCITO))
+	var objetivo: ConFoco = auto_free(ConFoco.new())
+	objetivo.material_de_foco = ShaderMaterial.new()
 	var malla := _malla()
-	unidad.add_child(malla)
+	objetivo.add_child(malla)
 	var geometria := malla.mesh
 	var superficie := geometria.surface_get_material(0)
-	marco.enfocar(unidad)
-	var material := malla.material_overlay as ShaderMaterial
-	assert_str(material.shader.resource_path).is_equal(
-		"res://src/sistemas/marco/aristas_del_foco.gdshader"
-	)
-	assert_float(material.get_shader_parameter("grosor")).is_equal(
-		IndicacionDelFoco.GROSOR_DE_PRODUCTOS
-	)
+	marco.enfocar(objetivo)
+	assert_object(malla.material_overlay).is_same(objetivo.material_de_foco)
 	assert_object(malla.mesh).is_same(geometria)
 	assert_object(geometria.surface_get_material(0)).is_same(superficie)
 	marco.apagar()
 	assert_object(malla.material_overlay).is_null()
-	assert_object(malla.mesh).is_same(geometria)
+
+
+func test_el_material_propio_vacio_deja_el_contorno_comun() -> void:
+	var marco: MarcoDelObjetivo = auto_free(MarcoDelObjetivo.new())
+	var objetivo: ConFoco = auto_free(ConFoco.new())
+	var malla := _malla()
+	objetivo.add_child(malla)
+	marco.enfocar(objetivo)
+	var material := malla.material_overlay as ShaderMaterial
+	assert_str(material.shader.resource_path).is_equal("res://src/sistemas/marco/contorno.gdshader")
+	marco.apagar()
 
 
 func test_resalta_siete_mallas_vinculadas_y_no_las_ajenas() -> void:

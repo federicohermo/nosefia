@@ -24,6 +24,22 @@ func test_la_mopa_no_atraviesa_las_paredes_de_una_esquina() -> void:
 	assert_int(await _comprobar_pared(Vector3(0, 0, -0.5), Vector3.ZERO, 0.0, true)).is_zero()
 
 
+func test_la_mopa_sin_paredes_cerca_no_retrocede() -> void:
+	var almacen: Node3D = auto_free(ALMACEN.instantiate())
+	add_child(almacen)
+	var jugador: Node3D = almacen.get("_jugador")
+	jugador.set_physics_process(false)
+	jugador.set_process(false)
+	jugador.global_position = Vector3(0, 10, 0)
+	var mopa: RigidBody3D = almacen.get_node("Objetos/Mopa")
+	var agarre: Agarre = almacen.get("_agarre")
+	assert_bool(agarre.pedir_agarrar(mopa.get("datos"), mopa)).is_true()
+	for cuadro in 2:
+		await get_tree().physics_frame
+	assert_float(jugador.call("_retroceso_libre", mopa)).is_zero()
+	agarre.soltar(true)
+
+
 func _comprobar_pared(
 	desplazamiento: Vector3, rotacion: Vector3, inclinacion: float = 0.0, esquina: bool = false
 ) -> int:
