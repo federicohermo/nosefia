@@ -5,10 +5,8 @@ paths:
 
 # Assets
 
-1. **`source/` no se importa.** Lleva un solo `.gdignore` arriba, así que Godot saltea el árbol
-   entero: el arte de origen y los packs de terceros no cuestan importación ni entran a la build.
-   Antes eran cuatro `.gdignore` sueltos, y cinco carpetas de textura fuente que **sí** se
-   importaban sin que nada las usara.
+1. **`source/` no se importa.** Lleva un solo `.gdignore` arriba, y Godot saltea el árbol
+   entero. El arte de origen y los packs de terceros no cuestan importación ni entran a la build.
 
 2. **Lo que el juego carga tiene su carpeta**, y el nombre va en inglés como el de cualquier
    carpeta fuera de `src/`: `models/` y `reactions/`.
@@ -19,22 +17,30 @@ paths:
    prefijo ya las agrupa. El día que Blender exporte otra vez, Godot vuelve a dejarlas ahí.
 
 4. **Renombrar una carpeta de `source/` rompe el `.blend`, y ningún nodo lo ve.** Sus rutas son
-   relativas al archivo (`//carpeta/textura.png`), el `.glb` lleva las texturas **embebidas**, y
-   el juego sigue idéntico: los siete nodos quedan verdes y la escena se abre entera en magenta,
-   que es el color de textura faltante de Blender. Reorganizar `assets/` costó 37 de 39 imágenes
-   el 2026-09-18.
+   relativas al archivo (`//carpeta/textura.png`), y el `.glb` lleva las texturas **embebidas**.
+   El juego sigue idéntico y todos los nodos quedan verdes. La escena se abre entera en magenta,
+   el color de textura faltante de Blender.
 
-   Si ya pasó, se reapunta cada imagen contra `source/` desde la consola de Python de Blender,
-   indexando por **(carpeta, archivo)** y no sólo por archivo: `jorgillo.png` está dos veces, y
-   sólo la carpeta que la ruta vieja nombraba las desempata.
+   Si ya pasó, se reapunta cada imagen contra `source/` desde la consola de Python de Blender.
+   Se indexa por **(carpeta, archivo)** y no sólo por archivo: `jorgillo.png` está dos veces.
+   Sólo la carpeta que la ruta vieja nombraba las desempata.
 
 5. **Dónde va cada unidad de la góndola lo dice `disposicion_de_la_gondola.tres`, no el `.glb`.**
-   El modelo trae **una** unidad de cada producto; las copias que llenan el estante viven en la
-   colección `guia` del `.blend` —visible para el artista, excluida al exportar— y las dibuja un
+   El modelo trae **una** unidad de cada producto. Las copias que llenan el estante viven en la
+   colección `guia` del `.blend`, visible para el artista y excluida al exportar. Las dibuja un
    `MultiMesh` por bloque. Mover una caja en Blender no llega al juego hasta regenerar ese
-   recurso: el `.glb` no la lleva.
+   recurso: el `.glb` no la lleva. Lo regenera `.claude/scripts/blender/disponer.py`.
 
-6. **Y después va `exportar_modelo.py`.** El par `.blend` ↔ `.glb` se verifica por hash, así que
-   un `.blend` que cambió sin reexportar es rojo — aunque el cambio no toque una sola malla. No
-   es burocracia: reapuntar las texturas dejó la estructura igual —67 mallas, 42 materiales, 35
-   imágenes— y el `.glb` salió 279 KB distinto, porque el exportador recodifica las imágenes.
+   **Las copias de `guia` no se mueven a mano.** Las pone `.claude/scripts/blender/acomodar.py`
+   desde el reparto de `.claude/scripts/lib/reparto.py`, y las rehace enteras en cada corrida: una
+   copia movida a mano se pierde en la siguiente. Lo que se itera es el reparto, y después van
+   `acomodar.py`, `exportar_modelo.py`, `disponer.py` y `assets/models/extraer_mallas.gd`.
+
+6. **Y después va `exportar_modelo.py`.** El par `.blend` ↔ `.glb` se verifica por hash. Un
+   `.blend` que cambió sin reexportar es rojo, aunque el cambio no toque una sola malla. El
+   exportador recodifica las imágenes: reapuntar una textura cambia el `.glb`.
+
+7. **El lado con el que viaja cada textura lo decide la carpeta de `source/` de donde sale.**
+   Los lados de cada grupo y la tabla de carpetas viven en `.claude/scripts/lib/blender.py`.
+   Una etiqueta de producto guardada en otra carpeta viaja con el lado de un mueble, y ningún
+   test lo ve. Por eso las cinco etiquetas de `textures/props/` van nombradas en esa tabla.

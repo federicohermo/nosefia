@@ -6,10 +6,8 @@ const GrupoDelPiso := preload("res://src/escenas/objetos/grupo_del_piso.gd")
 const CajaDelDeposito := preload("res://src/escenas/objetos/caja_de_productos.gd")
 const JugadorDelLocal := preload("res://src/escenas/jugador.gd")
 const OBJETO := preload("res://src/escenas/objetos/objeto_agarrable.tscn")
-const FANTASMA := preload("res://src/escenas/puestos/fantasma_de_reposicion.gdshader")
-
-## Hasta dónde se busca piso debajo de una caja recién soltada, en metros.
-const CAIDA_MAXIMA := 3.0
+const CONTORNO := preload("res://src/sistemas/marco/aristas_del_foco.gdshader")
+const SIN_SUPERFICIE := preload("res://src/escenas/puestos/casillero_sin_superficie.gdshader")
 
 ## Cuántas veces se parte al medio la búsqueda del borde de un apoyo.
 const PASOS_DEL_BORDE := 12
@@ -30,11 +28,8 @@ const HOLGURA_DE_LA_MIRA := 0.1
 ## local corta antes.
 const PISOS_DE_UNA_PILA := 8
 
-## Cuántas direcciones alrededor del jugador se prueban para dejarle la caja al lado.
-const LADOS_DEL_JUGADOR := 8
-
-## Las exhibiciones que el jugador NO repone: un `MeshInstance3D` por bloque, en el orden de
-## `DisposicionDeLaGondola.guias`.
+## Las tandas fijas —lo que se repite para completar un estante, y que el jugador NO repone—:
+## un `MeshInstance3D` por bloque, en el orden de `DisposicionDeLaGondola.guias`.
 ##
 ## **Entra instanciada adentro de este puesto y no cableada por `@export`.** Apuntada desde
 ## `almacen.tscn` con un `NodePath` hacia otra rama llegaba en `null` con el `node_paths` bien
@@ -53,31 +48,46 @@ const GUIA := "Guia"
 @export var punto_de_la_caja: Node3D
 ## Dónde va cada unidad de la góndola, y en qué orden.
 ##
-## **Ningún apoyo está escrito acá.** Antes eran doce posiciones y doce direcciones a mano, una
-## fila recta por producto; ahora el modelo trae tandas de varias filas de fondo y por dos caras
-## del mueble, y una recta ya no las describe. Las mide el `.blend` y llegan en este recurso.
+## **Ningún apoyo está escrito acá.** Los mide el `.blend` y llegan en este recurso.
 @export var disposicion: DisposicionDeLaGondola
 
-## Cuánto gira cada modelo para mostrarle el frente a la cámara, en grados.
-##
-## **No se elige: se deriva.** El modelo está horneado mirando hacia donde su tanda exhibe en la
-## góndola, y la mano tiene que girarlo hasta que ese frente apunte a +Z, que es de donde mira
-## la cámara. Con el frente en -X el giro es 90, en +X es 270, en +Z es 0 y en -Z es 180, y no
-## hay más casos porque un estante exhibe hacia una de las cuatro caras del mueble.
-##
-## Los doce estuvieron mal hasta el 2026-09-19 y el síntoma es mudo: el producto se agarra de
-## costado o dado vuelta, y no hay error ni test que lo diga. Se mira.
-@export var giros_del_frente: Array[float] = []
-
 var _unidades: Array[Node3D] = []
-var _zonas: Array[StaticBody3D] = []
+## Los casilleros de cada producto, en el orden de `Producto.Id` y, adentro, en el de su fila.
+var _casilleros: Array[Array] = []
+## Lo que la mira enfoca, según el jugador. El casillero enfocado es el único que se dibuja.
+var _enfocado: Node3D = null
+## Los casilleros con papel que la mira podría elegir ahora: los únicos que se le ofrecen.
+var _cerca_de_la_mira: Dictionary[ZonaDeReposicion, bool] = {}
+## El centro y el radio de la esfera que envuelve cada fila de adelante, en el orden de
+## `Producto.Id`: con ellos se descarta de una vez una fila entera que la mira no alcanza.
+var _centros_de_las_filas: Array[Vector3] = []
+var _radios_de_las_filas: Array[float] = []
 var _modelos: Array[Mesh] = []
 var _formas: Array[ConvexPolygonShape3D] = []
 var _grupos: Array[MultiMeshInstance3D] = []
 ## Cuántas copias de otras exhibiciones van al principio del dibujo de cada producto.
 var _guias_sumadas: Array[int] = []
+## El bloque entero que dibuja cada producto, guías incluidas, en el orden en que lo midió el
+## modelo. El dibujo lo reordena, y de acá sale cada vez: leerlo del dibujo obliga a bajarlo de la
+## placa de video.
+var _bloques: Array[PackedFloat32Array] = []
 var _sueltos: Array[GrupoDelPiso] = []
 var _disponible: ObjetoAgarrable = null
+## Las aristas que dibuja el foco. Piden las mallas que arma `AristasDelProducto`.
+var _aristas := ShaderMaterial.new()
+
+
+## Cuántos casilleros tiene la fila de adelante de cada producto: su cupo, medido del modelo.
+##
+## Es lo que la apertura de cada jornada le pasa al inventario. **Sale de la disposición, y no
+## de un número escrito acá ni del catálogo**: cuántas unidades entran de frente lo dice el
+## modelo, y una tanda que el artista alarga en Blender cambia de cupo sin que nadie lo copie.
+## Cada lugar de la fila de adelante es un casillero (BR-STK-025).
+func casilleros() -> Dictionary[Producto.Id, int]:
+	var por_producto: Dictionary[Producto.Id, int] = {}
+	for producto in Catalogo.todos():
+		por_producto[producto.id] = disposicion.filas_de_adelante[producto.id]
+	return por_producto
 
 
 func preparar() -> void:
@@ -85,36 +95,10 @@ func preparar() -> void:
 	_preparar_grupos()
 	_preparar_la_guia()
 	estante.remove_from_group(ReglasDelJugador.GRUPO_INTERACTUABLE)
-	for producto in Catalogo.todos():
-		var casillero := ZonaDeReposicion.new()
-		casillero.name = "ZonaDe" + producto.nombre
-		casillero.producto = producto.id
-		casillero.collision_layer = 0
-		casillero.collision_mask = 0
-		casillero.add_to_group(ReglasDelJugador.GRUPO_INTERACTUABLE)
-		add_child(casillero)
-		var limites := zona(producto.id)
-		casillero.global_position = limites.get_center()
-		var cuerpo := CollisionShape3D.new()
-		var forma := BoxShape3D.new()
-		forma.size = limites.size
-		cuerpo.shape = forma
-		casillero.add_child(cuerpo)
-		var vista := MeshInstance3D.new()
-		var modelo := _modelos[producto.id]
-		vista.mesh = modelo
-		vista.gi_mode = GeometryInstance3D.GI_MODE_DYNAMIC
-		vista.position = _pie_del_fantasma(modelo)
-		vista.material_override = _fantasma(modelo, 0.0, 1.0)
-		casillero.add_child(vista)
-		casillero.mallas = [vista]
-		# **El foco va de `material_overlay` y el fantasma de `material_override`**, que es lo
-		# que deja los dos encendidos a la vez. Enfocado sube el piso del titileo y nada más: lo
-		# que distingue el hueco señalado del hueco a secas es que no llega a apagarse.
-		casillero.material_de_foco = _fantasma(modelo, 0.45, 1.0)
-		casillero.colocacion_pedida.connect(pedir_colocar)
-		_zonas.append(casillero)
-	jugador.uso_pedido.connect(retirar_de_la_caja)
+	_preparar_los_casilleros()
+	jugador.uso_pedido.connect(usar_la_caja)
+	jugador.objetivo_enfocado.connect(_al_enfocar)
+	jugador.objetivo_perdido.connect(_al_perder_el_foco)
 	repositor.agarre.objeto_agarrado.connect(_actualizar_zonas)
 	repositor.agarre.objeto_soltado.connect(_actualizar_zonas)
 	repositor.agarre.objeto_soltado.connect(_desatascar_lo_soltado)
@@ -171,18 +155,45 @@ func _retirar_del_grupo(nodo: Node3D) -> void:
 		_sueltos[nodo.datos.producto.id].quitar(nodo)
 
 
-## Saca una unidad de la caja apuntada, y sólo con la caja apoyada.
+## Lo que el clic derecho hace con la caja apuntada: sacarle una unidad, devolverle la de la mano
+## o nada.
 ##
 ## El clic derecho llega por `uso_pedido`, que se reparte entre los puestos: acá se descarta lo
-## que no es una caja. Cuándo entrega lo decide `ReglasDeLosObjetos`, donde tiene test.
-func retirar_de_la_caja(objetivo: Node3D) -> void:
+## que no es una caja. **Cuál de los tres toca lo contesta la caja**, en `dominio/`, según lo que
+## haya en la mano; acá sólo se busca la acción de ese gesto. Llevar una caja es otra cosa en la
+## mano, y por eso a la que se lleva no se le saca nada.
+func usar_la_caja(objetivo: Node3D) -> void:
 	var caja := objetivo as CajaDelDeposito
 	if caja == null:
 		return
-	var la_lleva := repositor.agarre.manos().sostenido() == caja.datos
-	if not ReglasDeLosObjetos.se_puede_retirar(la_lleva):
+	var acciones: Dictionary[ContenidoDeLaCaja.Gesto, Callable] = {
+		ContenidoDeLaCaja.Gesto.SACAR: retirar,
+		ContenidoDeLaCaja.Gesto.METER: devolver,
+		ContenidoDeLaCaja.Gesto.NADA: func(_id: Producto.Id) -> void: pass,
+	}
+	var gesto := repositor.caja(caja.producto).uso(repositor.agarre.manos().sostenido())
+	acciones[gesto].call(caja.producto)
+
+
+## Mete en su caja la unidad de la mano y guarda su cuerpo, que deja de verse. Si la caja no la
+## recibe, la unidad sigue en la mano y acá no pasa nada.
+func devolver(id: Producto.Id) -> void:
+	var cuerpo := repositor.pedir_devolver(id) as ObjetoAgarrable
+	if cuerpo == null:
 		return
-	retirar(caja.producto)
+	_guardar_cuerpo(cuerpo)
+	_actualizar_zonas()
+
+
+## Lo que dice la caja examinada, o nada si lo examinado no es una caja.
+##
+## El texto lo arma la caja en `dominio/`, donde tiene test, y contado sobre el estante de esta
+## noche: la misma caja dice lo mismo apoyada que en la mano.
+func texto_del_examen(nodo: Node3D) -> String:
+	var caja := nodo as CajaDelDeposito
+	if caja == null:
+		return ""
+	return repositor.caja(caja.producto).texto_del_examen()
 
 
 ## Baja a la cintura la caja recién levantada y le da su volumen al cuerpo del jugador.
@@ -234,8 +245,10 @@ func _apoyar_la_caja(nodo: Node3D) -> void:
 func _cerca_de(caja: CajaDelDeposito, punto: Vector3) -> bool:
 	var paso := _media_caja(caja).x / PASOS_PARA_ACERCAR * 2.0
 	for anillo in PASOS_PARA_ACERCAR + 1:
-		for lado in 1 if anillo == 0 else LADOS_DEL_JUGADOR:
-			var corrido := Basis(Vector3.UP, TAU * lado / LADOS_DEL_JUGADOR) * Vector3.RIGHT
+		for lado in 1 if anillo == 0 else ReglasDeLosObjetos.LADOS_ALREDEDOR:
+			var corrido := (
+				Basis(Vector3.UP, TAU * lado / ReglasDeLosObjetos.LADOS_ALREDEDOR) * Vector3.RIGHT
+			)
 			var candidato := punto + corrido * paso * anillo
 			if anillo > 0 and not _hay_apoyo(caja, candidato, punto.y):
 				continue
@@ -311,15 +324,19 @@ func _al_lado_del_jugador(caja: CajaDelDeposito) -> bool:
 	var cuerpo: CollisionShape3D = jugador.get_node("Cuerpo")
 	var media := _media_caja(caja)
 	var radio: float = (cuerpo.shape as CapsuleShape3D).radius + media.length()
-	for lado in LADOS_DEL_JUGADOR:
-		var vuelta := Basis(Vector3.UP, TAU * lado / LADOS_DEL_JUGADOR)
-		var costado := jugador.global_position + vuelta * (jugador.frente() * radio)
-		var golpe := _rayo(
-			caja, costado + Vector3.UP * media.y, costado + Vector3.DOWN * CAIDA_MAXIMA
-		)
-		if golpe.is_empty() or not ReglasDeLosObjetos.se_puede_apoyar_en(golpe["normal"].y):
-			continue
-		caja.global_position = _lugar_sobre(caja, golpe["position"])
+	var lugares := LugaresDelPiso.alrededor(
+		get_world_3d().direct_space_state,
+		jugador.global_position,
+		jugador.frente(),
+		radio,
+		media.y,
+		ReglasDeLosObjetos.CAIDA_HASTA_EL_PISO,
+		ReglasDeLosObjetos.LADOS_ALREDEDOR,
+		caja.collision_mask,
+		[caja.get_rid(), jugador.get_rid()]
+	)
+	for lugar in lugares:
+		caja.global_position = _lugar_sobre(caja, lugar)
 		if _entra_entera(caja) and not _le_queda_encima_al_jugador(caja):
 			return true
 	return false
@@ -336,6 +353,8 @@ func _al_lado_del_jugador(caja: CajaDelDeposito) -> bool:
 func _entra_entera(caja: CajaDelDeposito) -> bool:
 	var forma: CollisionShape3D = caja.get_node("Cuerpo")
 	var encogida := BoxShape3D.new()
+	# Jolt redondea las aristas con el margen, y una esquina metida unos milímetros no choca.
+	encogida.margin = 0.0
 	encogida.size = (
 		(forma.shape as BoxShape3D).size * forma.scale - Vector3.ONE * ReglasDeLosObjetos.ROCE
 	)
@@ -348,7 +367,7 @@ func _entra_entera(caja: CajaDelDeposito) -> bool:
 
 
 ## Si la caja terminó adentro del cuerpo del jugador es que ahí no hay lugar para apoyarla, y
-## dejarla igual lo sube arriba de ella. Entonces no se suelta: se la vuelve a la mano.
+## dejarla igual lo sube arriba de ella.
 func _le_queda_encima_al_jugador(caja: CajaDelDeposito) -> bool:
 	var forma: CollisionShape3D = caja.get_node("Cuerpo")
 	var consulta := PhysicsShapeQueryParameters3D.new()
@@ -381,7 +400,7 @@ func _apoyo_apuntado(caja: CajaDelDeposito) -> Dictionary:
 		# Media caja hacia atrás: el rayo que baja no puede arrancar adentro de lo que la caja
 		# va a ocupar.
 		var punto := lejos + (ojo.origin - lejos).normalized() * _media_caja(caja).length()
-		golpe = _rayo(caja, punto, punto + Vector3.DOWN * CAIDA_MAXIMA)
+		golpe = _rayo(caja, punto, punto + Vector3.DOWN * ReglasDeLosObjetos.CAIDA_HASTA_EL_PISO)
 	elif not ReglasDeLosObjetos.se_puede_apoyar_en(golpe["normal"].y):
 		var enfrente := golpe["collider"] as CajaDelDeposito
 		if enfrente != null:
@@ -472,9 +491,14 @@ func _caja_sobrevolada(
 ## Apuntarle al canto de una tabla es apuntarle a la tabla. Se mira apenas adentro de la cara
 ## tocada, desde una caja más arriba: si ahí hay una tapa, es la de ese mismo mueble. Una pared
 ## no la tiene —sigue para arriba—, y entonces esto no contesta nada.
+##
+## **La cara de abajo de una tabla no es un canto.** Encima de ella está esa misma tabla, que la
+## mira no ve: la caja tiene que ir a la de abajo, que es la que se mira.
 func _tapa_de_ese_canto(caja: CajaDelDeposito, canto: Dictionary) -> Dictionary:
 	var adentro: Vector3 = -canto["normal"]
 	adentro.y = 0.0
+	if adentro.is_zero_approx():
+		return {}
 	var punto: Vector3 = canto["position"] + adentro.normalized() * HOLGURA_DE_LA_MIRA
 	var alto := _media_caja(caja).y * 2.0
 	return _rayo(caja, punto + Vector3.UP * alto, punto + Vector3.DOWN * TOLERANCIA_DEL_APOYO)
@@ -498,7 +522,9 @@ func _apoyo_al_pie(caja: CajaDelDeposito, pared: Dictionary) -> Dictionary:
 	var mejor := {}
 	for corrido: float in [0.0, -media.x, media.x]:
 		var punto := desde + afuera.cross(Vector3.UP) * corrido
-		var golpe := _rayo(caja, punto, punto + Vector3.DOWN * CAIDA_MAXIMA)
+		var golpe := _rayo(
+			caja, punto, punto + Vector3.DOWN * ReglasDeLosObjetos.CAIDA_HASTA_EL_PISO
+		)
 		if golpe.is_empty() or not ReglasDeLosObjetos.se_puede_apoyar_en(golpe["normal"].y):
 			continue
 		if mejor.is_empty() or golpe["position"].y > mejor["position"].y + TOLERANCIA_DEL_APOYO:
@@ -681,61 +707,218 @@ func _media_caja(caja: CajaDelDeposito) -> Vector3:
 	return (forma.shape as BoxShape3D).size * forma.scale / 2.0
 
 
-func pedir_colocar(id: Producto.Id) -> void:
-	repositor.pedir_colocar_de_la_mano(Catalogo.de(id))
+## Coloca la unidad de la mano en ese casillero de ese producto, o en el primero vacío. Si el
+## estante la rechaza, sigue en la mano.
+func pedir_colocar(id: Producto.Id, indice: int = Estante.PRIMERO_VACIO) -> void:
+	repositor.pedir_colocar_de_la_mano(Catalogo.de(id), indice)
 	_actualizar_zonas()
 
 
+## Pone en la mano la unidad de ese casillero, si la mano está libre y el casillero la tiene. Su
+## copia deja de dibujarse, y las de al lado siguen donde estaban.
+func agarrar_de_la_gondola(id: Producto.Id, indice: int) -> void:
+	var unidad := _cuerpo_para(id)
+	if not repositor.pedir_agarrar_de_la_gondola(id, indice, unidad):
+		_guardar_cuerpo(unidad)
+		return
+	_vestir(unidad, id)
+	_mostrar_lo_puesto(id)
+
+
+## Lo que hace el clic sobre un casillero. **Qué gesto toca lo contesta el estante**, en
+## `dominio/`, según lo que haya en la mano; acá sólo se busca la acción de ese gesto. Si el
+## casillero lo recibe lo contesta después el estante también: un casillero de otro producto se
+## rechaza allá, y no acá.
+func _usar_el_casillero(id: Producto.Id, indice: int) -> void:
+	var acciones: Dictionary[Estante.Gesto, Callable] = {
+		Estante.Gesto.COLOCAR: pedir_colocar,
+		Estante.Gesto.AGARRAR: agarrar_de_la_gondola,
+		Estante.Gesto.NADA: func(_id: Producto.Id, _indice: int) -> void: pass,
+	}
+	var gesto := repositor.estante().uso(repositor.agarre.manos().sostenido())
+	acciones[gesto].call(id, indice)
+
+
+## Le da a cada casillero su papel con lo que hay en la mano, y lo pinta.
+##
+## **Qué casilleros esperan la unidad y cuáles se pueden agarrar lo dice el estante** (BR-PLY-022,
+## BR-PLY-024): los vacíos de su producto con una unidad en la mano, los ocupados con la mano
+## vacía, y ninguno con cualquier otra cosa. Un casillero sin papel no está para la mira: con una
+## caja en la mano, un casillero enfocable se comería el clic que la suelta.
 func _actualizar_zonas(_nodo: Node3D = null) -> void:
-	var unidad := repositor.agarre.manos().sostenido() as UnidadDeProducto
-	for casillero in _zonas:
-		var activo: bool = unidad != null and unidad.producto.id == casillero.producto
-		casillero.collision_layer = 2 if activo else 0
-		casillero.visible = activo
-		casillero.global_position = _apoyo(casillero.producto) + Vector3.UP * 0.15
+	var de_la_noche := repositor.estante()
+	if de_la_noche == null:
+		return
+	var sostenido := repositor.agarre.manos().sostenido()
+	for id in _casilleros.size():
+		var producto := Catalogo.de(id)
+		var para_colocar := de_la_noche.casilleros_para_colocar(producto, sostenido)
+		var para_agarrar := de_la_noche.casilleros_para_agarrar(producto, sostenido)
+		for zona: ZonaDeReposicion in _casilleros[id]:
+			zona.papel = ZonaDeReposicion.Papel.NINGUNO
+			if para_colocar.has(zona.casillero):
+				zona.papel = ZonaDeReposicion.Papel.COLOCAR
+			elif para_agarrar.has(zona.casillero):
+				zona.papel = ZonaDeReposicion.Papel.AGARRAR
+			_pintar(zona)
 
 
-## La tolerancia permite apuntar al entorno del producto, no a un píxel.
-func zona(id: Producto.Id) -> AABB:
-	var tamano := _modelos[id].get_aabb().size
-	tamano.y = 0.3
-	return AABB(_apoyo(id) - Vector3(tamano.x / 2, 0, tamano.z / 2), tamano).grow(0.25)
+## Le ofrece a la mira sólo los casilleros con papel que podría elegir: los que caen, aunque sea
+## en parte, adentro de su alcance y de su desvío (BR-PLY-004).
+##
+## **Es un costo medido, no una regla.** Con la mano vacía, todas las unidades puestas de la fila
+## de adelante se pueden agarrar, y parado en el pasillo de las góndolas la mira tiene entre 43 y
+## 54 casilleros al alcance: medirlos a todos lleva la lectura de la mira de 30 µs a 1,5 ms por
+## paso de física, medido el 2026-09-30. Los que quedan afuera de este corte la mira no los
+## elegiría nunca, así que ofrecerle sólo los de adentro no cambia qué enfoca.
+func _physics_process(_delta: float) -> void:
+	_ofrecer_a_la_mira()
 
 
-## Dónde se apoya la próxima unidad: el lugar de la primera copia que todavía no está repuesta.
+func _ofrecer_a_la_mira() -> void:
+	if _casilleros.is_empty():
+		return
+	var ojo := jugador.mira()
+	var adelante := -ojo.basis.z
+	var ahora: Dictionary[ZonaDeReposicion, bool] = {}
+	for id in _casilleros.size():
+		if not _podria_enfocar(
+			ojo.origin, adelante, _centros_de_las_filas[id], _radios_de_las_filas[id]
+		):
+			continue
+		for zona: ZonaDeReposicion in _casilleros[id]:
+			if zona.papel == ZonaDeReposicion.Papel.NINGUNO:
+				continue
+			if _podria_enfocar(ojo.origin, adelante, zona.global_position, zona.radio):
+				ahora[zona] = true
+	for zona: ZonaDeReposicion in _cerca_de_la_mira:
+		if not ahora.has(zona):
+			zona.cerca_de_la_mira = false
+			_pintar(zona)
+	for zona: ZonaDeReposicion in ahora:
+		if not _cerca_de_la_mira.has(zona):
+			zona.cerca_de_la_mira = true
+			_pintar(zona)
+	_cerca_de_la_mira = ahora
+
+
+## Si alguna parte de la esfera de ese centro y ese radio cae adentro del alcance y del desvío de
+## la mira, mirando desde `ojo` hacia `adelante`.
+static func _podria_enfocar(ojo: Vector3, adelante: Vector3, centro: Vector3, radio: float) -> bool:
+	var hacia := centro - ojo
+	var distancia := hacia.length()
+	if distancia - radio > ReglasDelJugador.ALCANCE_DE_LA_MIRA:
+		return false
+	if distancia <= radio:
+		return true
+	var margen := asin(radio / distancia)
+	return adelante.angle_to(hacia) - margen <= ReglasDelJugador.DESVIO_MAXIMO_DE_LA_MIRA
+
+
+## Pinta un casillero con su papel y con si la mira lo enfoca (BR-PLY-022, BR-PLY-023).
+func _pintar(zona: ZonaDeReposicion) -> void:
+	zona.pintar(zona == _enfocado)
+
+
+func _al_enfocar(objetivo: Node3D, _distancia: float) -> void:
+	var antes := _enfocado
+	_enfocado = objetivo
+	_repintar(antes)
+	_repintar(objetivo)
+
+
+func _al_perder_el_foco() -> void:
+	var antes := _enfocado
+	_enfocado = null
+	_repintar(antes)
+
+
+func _repintar(nodo: Node3D) -> void:
+	if not is_instance_valid(nodo):
+		return
+	var zona := nodo as ZonaDeReposicion
+	if zona != null:
+		_pintar(zona)
+
+
+## El casillero de la góndola con ese índice en la fila de ese producto. Sin índice, el primero
+## vacío, o el último si la fila está llena.
+func casillero(id: Producto.Id, indice: int = Estante.PRIMERO_VACIO) -> ZonaDeReposicion:
+	var zonas: Array = _casilleros[id]
+	if indice == Estante.PRIMERO_VACIO:
+		var vacios := repositor.estante().casilleros_vacios(Catalogo.de(id))
+		indice = zonas.size() - 1 if vacios.is_empty() else vacios[0]
+	return zonas[indice]
+
+
+## Dónde está la unidad de ese casillero, alineado a los ejes del local: donde la mira la
+## encuentra. Sin índice, el del primero vacío.
+func zona(id: Producto.Id, indice: int = Estante.PRIMERO_VACIO) -> AABB:
+	var elegido := casillero(id, indice).casillero
+	return global_transform * _copia_del_casillero(id, elegido) * _modelos[id].get_aabb()
+
+
+## Dónde se apoya la unidad de ese casillero: el pie de su copia. Sin índice, el del primero
+## vacío, o el del último si la fila está llena.
 ##
 ## Es el **pie** de esa copia y no su centro: la copia trae el origen de su modelo, que según el
-## producto cae en el medio o en la base, y el casillero de la góndola se dibuja desde el
-## estante hacia arriba.
-func _apoyo(id: Producto.Id) -> Vector3:
-	var producto := Catalogo.de(id)
-	var cantidad := repositor.estante().unidades_en_gondola(producto)
-	# **Con el estante lleno no hay próxima, y se marca la última.** El casillero se reubica en
-	# cada cambio, también cuando ya no entra nada: sin el tope, el índice se va una copia más
-	# allá del bloque y el recurso contesta la identidad, que deja la marca en el origen del
-	# local. Colocar de más lo rechaza `Estante`, que es donde esa regla tiene test.
-	return _posicion(id, mini(cantidad, repositor.estante().cupo(producto) - 1))
-
-
-func _posicion(id: Producto.Id, indice: int) -> Vector3:
-	var bloque := disposicion.principales[id]
-	var copia := DisposicionDeLaGondola.copia(bloque, _primera_reponible(id) + indice)
-	# **El pie sale de la caja ya transformada y no de la local.** Una copia con la inclinación
-	# que el estante le da ocupa otro volumen que el modelo derecho, y restarle media altura
-	# local la deja 2 mm fuera de su marca: justo lo que el casillero dibuja en el piso.
-	var caja := copia * _modelos[id].get_aabb()
+## producto cae en el medio o en la base, y la unidad se para sobre el estante. Sale de la caja ya
+## transformada y no de la local: una copia con la inclinación que el estante le da ocupa otro
+## volumen que el modelo derecho.
+func _apoyo(id: Producto.Id, indice: int = Estante.PRIMERO_VACIO) -> Vector3:
+	var caja := zona(id, indice)
 	return caja.get_center() - Vector3.UP * caja.size.y / 2.0
 
 
-## Desde qué copia arranca el tramo que el jugador repone: las de antes son la guía, y están
-## siempre a la vista.
+## Dónde está la copia de ese casillero en el bloque del producto, como la midió el modelo.
+func _copia_del_casillero(id: Producto.Id, indice: int) -> Transform3D:
+	var bloque := disposicion.principales[id]
+	return DisposicionDeLaGondola.copia(bloque, _primera_reponible(id) + indice)
+
+
+## Cuánto gira el modelo de un producto para mostrarle el frente a la cámara, en grados.
+##
+## **No se elige: se deriva de su tanda.** El modelo está horneado mirando hacia el pasillo de
+## su tanda, que es el lado de la fila de adelante. Medido el 2026-09-19: cuando estaba escrito
+## a mano estuvo mal en los doce productos, y el síntoma es mudo —se agarra de costado o dado
+## vuelta—.
+func _giro_del_frente(id: Producto.Id) -> float:
+	var frente := DisposicionDeLaGondola.frente(
+		disposicion.principales[id], disposicion.filas_de_adelante[id]
+	)
+	return giro_hacia_la_camara(global_basis * frente)
+
+
+## El giro que para derecho el modelo de un producto: lleva a la vertical el eje del envase que
+## más se le acerca. En la rampa de una cabecera la unidad va echada hacia atrás lo que baja la
+## chapa, y en la mano va derecha como las demás; en un estante plano no gira nada.
+##
+## Sale del modelo y no de la chapa: es el envase el que va echado, y su eje de arriba no es el
+## mismo en todos.
+func _derecho(id: Producto.Id) -> Basis:
+	var modelo := (contenido.get_child(id) as Node3D).global_basis
+	var arriba := Vector3.ZERO
+	for columna in 3:
+		var eje := modelo[columna].normalized()
+		if absf(eje.y) > absf(arriba.y):
+			arriba = eje
+	return Basis(Quaternion(arriba if arriba.y > 0.0 else -arriba, Vector3.UP))
+
+
+## El giro alrededor de la vertical que lleva `frente` a +Z, que es de donde mira la cámara: con
+## el frente en -X es 90, en +X es 270 —o -90—, en +Z es 0 y en -Z es 180.
+static func giro_hacia_la_camara(frente: Vector3) -> float:
+	return rad_to_deg(atan2(-frente.x, frente.z))
+
+
+## Desde qué copia arranca el tramo que el jugador repone: las de antes —la fila de atrás
+## entera— están siempre a la vista.
 ##
 ## **El cupo sale del dominio y no de un número de acá.** El bloque tiene lo que el artista puso
-## y el cupo dice cuántas de esas quedan vacías al abrir; escribir el corte en esta capa sería el
-## mismo valor en dos lugares, que es justo lo que `Estante.cupo()` existe para evitar.
+## y el cupo dice cuántas de esas son casilleros; escribir el corte en esta capa sería el mismo
+## valor en dos lugares, que es justo lo que `Estante.cupo()` existe para evitar.
 func _primera_reponible(id: Producto.Id) -> int:
-	var bloque := disposicion.principales[id]
-	return DisposicionDeLaGondola.copias(bloque) - repositor.estante().cupo(Catalogo.de(id))
+	return disposicion.primera_reponible(id, repositor.estante().cupo(Catalogo.de(id)))
 
 
 func _preparar_modelos() -> void:
@@ -743,7 +926,7 @@ func _preparar_modelos() -> void:
 		var herramienta := SurfaceTool.new()
 		herramienta.append_from(grupo.mesh, 0, Transform3D(grupo.global_basis, Vector3.ZERO))
 		herramienta.set_material(grupo.mesh.surface_get_material(0))
-		_modelos.append(herramienta.commit())
+		_modelos.append(AristasDelProducto.preparar(herramienta.commit()))
 	for modelo in _modelos:
 		# **El casco sale de `create_convex_shape` y no de `get_faces()`.** Los vértices crudos
 		# vienen repetidos —tres por cada esquina de una caja—, y con esa nube el solver arma un
@@ -774,31 +957,72 @@ func _preparar_grupos() -> void:
 		_sueltos.append(sueltos)
 
 
-## El fantasma que marca dónde va la próxima unidad: el envase mismo, transparente y titilando.
+## Un casillero por lugar de la fila de adelante de cada producto: el cuerpo que la mira enfoca,
+## puesto donde va la unidad y con su volumen, y el envase que se dibuja ahí.
 ##
-## Se arma uno por casillero y no uno compartido porque cada uno lleva **su** textura: lo que
-## indica no es sólo el lugar, es qué producto va en ese lugar.
-func _fantasma(modelo: Mesh, minima: float, maxima: float) -> ShaderMaterial:
-	var material := ShaderMaterial.new()
-	material.shader = FANTASMA
-	var base := modelo.surface_get_material(0) as BaseMaterial3D
-	if base != null:
-		material.set_shader_parameter("textura", base.albedo_texture)
-	material.set_shader_parameter("opacidad_minima", minima)
-	material.set_shader_parameter("opacidad_maxima", maxima)
-	return material
+## **Van todos desde el principio, sin papel**: cuál espera la unidad de la mano y cuál se puede
+## agarrar cambia con cada gesto, y lo decide el estante. Los dos materiales son los mismos para
+## todos los casilleros: lo que cambia entre dos casilleros es la forma y el lugar.
+func _preparar_los_casilleros() -> void:
+	_aristas.shader = CONTORNO
+	_aristas.set_shader_parameter("color", IndicacionDelFoco.COLOR)
+	_aristas.set_shader_parameter("grosor", IndicacionDelFoco.GROSOR_DE_PRODUCTOS)
+	var sin_superficie := ShaderMaterial.new()
+	sin_superficie.shader = SIN_SUPERFICIE
+	# La superficie invisible fija la profundidad antes de dibujar las aristas.
+	sin_superficie.render_priority = -1
+	for producto in Catalogo.todos():
+		var modelo := _modelos[producto.id]
+		var fila := Node3D.new()
+		fila.name = "ZonaDe" + producto.nombre
+		add_child(fila)
+		var zonas: Array[ZonaDeReposicion] = []
+		for indice in disposicion.filas_de_adelante[producto.id]:
+			var zona := ZonaDeReposicion.new()
+			zona.name = "Casillero%d" % indice
+			zona.producto = producto.id
+			zona.casillero = indice
+			zona.collision_layer = 0
+			zona.collision_mask = 0
+			zona.add_to_group(ReglasDelJugador.GRUPO_INTERACTUABLE)
+			fila.add_child(zona)
+			var caja := modelo.get_aabb()
+			var copia := global_transform * _copia_del_casillero(producto.id, indice)
+			zona.global_transform = Transform3D(copia.basis, copia * caja.get_center())
+			var cuerpo := CollisionShape3D.new()
+			var forma := BoxShape3D.new()
+			forma.size = caja.size
+			cuerpo.shape = forma
+			zona.add_child(cuerpo)
+			var vista := MeshInstance3D.new()
+			vista.mesh = modelo
+			vista.gi_mode = GeometryInstance3D.GI_MODE_DYNAMIC
+			vista.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+			vista.position = -caja.get_center()
+			vista.material_override = sin_superficie
+			vista.material_overlay = _aristas
+			vista.visible = false
+			zona.add_child(vista)
+			zona.vista = vista
+			zona.sin_superficie = sin_superficie
+			zona.radio = caja.size.length() / 2.0
+			zona.casillero_usado.connect(_usar_el_casillero)
+			zonas.append(zona)
+		_casilleros.append(zonas)
+		_envolver_la_fila(zonas)
 
 
-## Dónde se cuelga el fantasma adentro del casillero para que su base caiga en el apoyo.
-##
-## El casillero está 15 cm por encima del apoyo —lo necesita para que la mira lo alcance—, así
-## que el fantasma baja esos 15 cm y se corre hasta que el centro de su base quede en el origen.
-func _pie_del_fantasma(modelo: Mesh) -> Vector3:
-	var caja := modelo.get_aabb()
-	var centro_de_la_base := Vector3(
-		caja.position.x + caja.size.x / 2.0, caja.position.y, caja.position.z + caja.size.z / 2.0
-	)
-	return Vector3.DOWN * 0.15 - centro_de_la_base
+## La esfera que envuelve una fila entera: su centro es el promedio de sus casilleros, y su radio
+## llega hasta el borde del más lejano.
+func _envolver_la_fila(zonas: Array[ZonaDeReposicion]) -> void:
+	var centro := Vector3.ZERO
+	for zona in zonas:
+		centro += zona.global_position / zonas.size()
+	var radio := 0.0
+	for zona in zonas:
+		radio = maxf(radio, centro.distance_to(zona.global_position) + zona.radio)
+	_centros_de_las_filas.append(centro)
+	_radios_de_las_filas.append(radio)
 
 
 ## Las exhibiciones que no cambian. Se dibujan una vez y quedan enteras: nada las vende ni las
@@ -818,6 +1042,7 @@ func _preparar_la_guia() -> void:
 		destino[_clave(contenido.get_child(id).mesh)] = id
 	var sumadas: Array[PackedFloat32Array] = []
 	sumadas.resize(_grupos.size())
+	_bloques.resize(_grupos.size())
 	var sueltas := {}
 	for indice in disposicion.guias.size():
 		var modelo := get_node(GUIA).get_child(indice) as MeshInstance3D
@@ -840,10 +1065,11 @@ func _preparar_la_guia() -> void:
 		var bloque := sumadas[id] + disposicion.principales[id]
 		copias.instance_count = DisposicionDeLaGondola.copias(bloque)
 		copias.buffer = bloque
+		_bloques[id] = bloque
 		_guias_sumadas[id] = DisposicionDeLaGondola.copias(sumadas[id])
-		copias.visible_instance_count = _primera_dibujada(id)
+		_mostrar_lo_puesto(id)
 	var numero := 0
-	for clave in sueltas:
+	for clave: int in sueltas:
 		var modelo: MeshInstance3D = sueltas[clave][0]
 		var herramienta := SurfaceTool.new()
 		herramienta.append_from(modelo.mesh, 0, Transform3D(modelo.global_basis, Vector3.ZERO))
@@ -887,6 +1113,32 @@ func _primera_dibujada(id: Producto.Id) -> int:
 	return _guias_sumadas[id] + _primera_reponible(id)
 
 
+## Prende de la fila de adelante las unidades que la góndola tiene puestas, y apaga el resto.
+##
+## **Cuáles se ven las dice el estante, y no este puesto**: un número propio acá dibujaría una
+## góndola que el inventario no tiene. `visible_instance_count` corta por el final, así que el
+## dibujo se reordena: primero las guías y la fila de atrás, tal cual; después los casilleros
+## ocupados, y al final los vacíos, que quedan fuera del corte. Cada copia lleva su lugar, así que
+## reordenarlas no mueve ninguna: la que se agarró del medio deja un hueco en el medio.
+func _mostrar_lo_puesto(id: Producto.Id) -> void:
+	var producto := Catalogo.de(id)
+	var de_la_noche := repositor.estante()
+	var primera := _primera_dibujada(id)
+	var ocupados := de_la_noche.casilleros_ocupados(producto)
+	var afuera := de_la_noche.casilleros_vacios(producto)
+	var orden := ocupados + afuera
+	var bloque := _bloques[id]
+	var flotantes := DisposicionDeLaGondola.FLOTANTES_POR_COPIA
+	var dibujo := bloque.slice(0, primera * flotantes)
+	for puesto in orden:
+		var desde := (primera + puesto) * flotantes
+		dibujo.append_array(bloque.slice(desde, desde + flotantes))
+	var copias := _grupos[id].multimesh
+	if dibujo.size() == bloque.size():
+		copias.buffer = dibujo
+	copias.visible_instance_count = primera + ocupados.size()
+
+
 ## Un `MultiMeshInstance3D` con todas las copias de un bloque, prendidas.
 ##
 ## **El buffer se escribe tal cual viene del recurso**: cada copia ya trae su lugar y su vuelta
@@ -895,6 +1147,9 @@ func _primera_dibujada(id: Producto.Id) -> int:
 func _dibujar(nombre: String, malla: Mesh, bloque: PackedFloat32Array) -> MultiMeshInstance3D:
 	var grupo := MultiMeshInstance3D.new()
 	grupo.name = nombre
+	# Los envases no se mueven: al compactar el buffer cambia el casillero de cada índice.
+	# Interpolar entre esos índices hace deslizar las demás unidades al sacar o colocar una.
+	grupo.physics_interpolation_mode = Node.PHYSICS_INTERPOLATION_MODE_OFF
 	grupo.gi_mode = GeometryInstance3D.GI_MODE_DYNAMIC
 	var copias := MultiMesh.new()
 	copias.transform_format = MultiMesh.TRANSFORM_3D
@@ -908,6 +1163,15 @@ func _dibujar(nombre: String, malla: Mesh, bloque: PackedFloat32Array) -> MultiM
 
 
 func retirar(id: Producto.Id) -> void:
+	var unidad := _cuerpo_para(id)
+	if not repositor.pedir_retirar(id, unidad):
+		_guardar_cuerpo(unidad)
+		return
+	_vestir(unidad, id)
+
+
+## El cuerpo para una unidad de ese producto que va a la mano: el guardado, o uno nuevo.
+func _cuerpo_para(id: Producto.Id) -> ObjetoAgarrable:
 	var unidad := _disponible
 	_disponible = null
 	if unidad == null:
@@ -915,18 +1179,23 @@ func retirar(id: Producto.Id) -> void:
 		add_child(unidad)
 		_unidades.append(unidad)
 		unidad.add_collision_exception_with(jugador)
-	# El frente de cada modelo se alinea antes de darle la inclinación de la mano.
+		unidad.material_de_foco = _aristas
+	# El frente de cada modelo se alinea antes de darle la inclinación de la mano, y antes de eso
+	# se endereza lo que en su estante va echado: la inclinación de la rampa es del estante.
 	unidad.orientacion_en_mano = (
 		Basis.from_euler(Vector3(deg_to_rad(-17), deg_to_rad(-20), 0))
-		* Basis(Vector3.UP, deg_to_rad(giros_del_frente[id]))
+		* Basis(Vector3.UP, deg_to_rad(_giro_del_frente(id)))
+		* _derecho(id)
 	)
 	unidad.collision_layer = 1
 	# Choca también con el contorno de los muebles: caída al pie de una góndola, la unidad rodaba
 	# hacia adentro del estante de abajo.
 	unidad.collision_mask = 1 | ReglasDeLosObjetos.CAPA_DEL_CONTORNO
-	if not repositor.pedir_retirar(id, unidad):
-		_guardar_cuerpo(unidad)
-		return
+	return unidad
+
+
+## Le pone al cuerpo que ya está en la mano la malla y la forma de su producto.
+func _vestir(unidad: ObjetoAgarrable, id: Producto.Id) -> void:
 	unidad.show()
 	var malla := _modelos[id]
 	var limites := malla.get_aabb()
@@ -936,10 +1205,10 @@ func retirar(id: Producto.Id) -> void:
 	unidad.get_node("Forma").shape = _formas[id]
 
 
-func depositar(unidad: Node3D, producto: Producto, unidades: int) -> void:
-	_grupos[producto.id].multimesh.visible_instance_count = (
-		_primera_dibujada(producto.id) + unidades
-	)
+## La unidad que el estante aceptó deja de ser un cuerpo y pasa a ser una copia del dibujo: la de
+## su casillero, que el estante ya dice ocupado.
+func depositar(unidad: Node3D, producto: Producto, _unidades: int) -> void:
+	_mostrar_lo_puesto(producto.id)
 	_guardar_cuerpo(unidad)
 
 
@@ -973,5 +1242,5 @@ func limpiar() -> void:
 	# por `id` mata el primer cuadro con un `Out of bounds` que no nombra ni a la jornada ni a
 	# este puesto.
 	for id in _grupos.size():
-		_grupos[id].multimesh.visible_instance_count = _primera_dibujada(id)
+		_mostrar_lo_puesto(id)
 	_actualizar_zonas()

@@ -42,3 +42,48 @@ def veredicto(codigo: int, actualizados: dict[str, bool]) -> tuple[bool, str]:
     if faltan:
         return False, "el editor cerró bien pero no escribió " + ", ".join(faltan)
     return True, "horneado: " + ", ".join(actualizados)
+
+
+def reescritos_de_mas(escritos: list[str]) -> list[str]:
+    """Lo que el editor reescribió durante el horneado sin que el horneado lo pidiera.
+
+    **Para escribir el horneado, el editor guarda la escena, y al guardar re-serializa más de
+    lo que cambió.** Medido el 2026-09-29 sobre `staging`: además de las dos salidas dejó
+    `almacen.tscn` con 94 overrides de `transform` —los de los volúmenes de la estructura, con
+    los mismos valores que ya tenían— y reescritos `tema.tres` y `caja_de_reposicion.tres`. El
+    `LightmapGI` no había cambiado. Esos overrides no son inocentes: congelan en la escena de
+    arriba la posición de hoy de cada volumen, y el día que la estructura mueva uno, la escena
+    lo vuelve a poner donde estaba sin que nada lo diga.
+
+    `project.godot` no va: lo devuelve `hornear.py` byte por byte con lo que tenía antes, que
+    puede incluir cambios sin commitear.
+    """
+    return sorted(ruta for ruta in escritos if ruta not in SALIDAS and ruta != "project.godot")
+
+
+#: Con GPU, el local se hornea en segundos: si el editor pasa de esto, se quedó esperando algo.
+TOPE_CON_GPU = 20 * 60
+
+#: Con el Vulkan por software de Mesa (lavapipe), el mismo horneado tarda minutos. Medido el
+#: 2026-09-29: 9 con la máquina libre y 17,7 con otros procesos corriendo. El tope deja el
+#: doble del peor, para no confundir una máquina ocupada con un editor colgado.
+TOPE_POR_SOFTWARE = 45 * 60
+
+
+def tope_en_segundos(entorno: dict[str, str]) -> int:
+    """Cuánto se espera al editor antes de darlo por colgado.
+
+    Lavapipe se reconoce por el ICD que declara `VK_ICD_FILENAMES`, que es como se lo elige: sin
+    declararlo, el cargador de Vulkan prefiere una GPU si la hay.
+    """
+    if "lvp_icd" in entorno.get("VK_ICD_FILENAMES", ""):
+        return TOPE_POR_SOFTWARE
+    return TOPE_CON_GPU
+
+
+def sesion_bloqueada(procesos: str) -> bool:
+    """Si la lista de `tasklist` trae la pantalla de bloqueo de Windows.
+
+    Con la sesión bloqueada el editor no dibuja y el plugin nunca aprieta el botón.
+    """
+    return "logonui.exe" in procesos.lower()

@@ -1,8 +1,9 @@
-## Qué es un producto del almacén: su identidad, el nombre que lee el jugador, cuánto sale y a
-## partir de cuántas unidades en góndola hay que reponerlo.
+## Qué es un producto del almacén: su identidad, el nombre que lee el jugador y cuánto sale.
 ##
 ## Un producto no hace nada, **es**: no sabe cuántas unidades hay ni dónde están —eso es
-## `Inventario`— ni cuáles existen ni cuánto valen —eso es `Catalogo`—.
+## `Inventario`—, ni cuáles existen ni cuánto valen —eso es `Catalogo`—, ni cuántas le entran a
+## su góndola —eso son los casilleros de su fila de adelante, que el inventario recibe del
+## local—.
 class_name Producto
 extends RefCounted
 
@@ -13,6 +14,9 @@ extends RefCounted
 ## construye un producto nuevo en cada llamada, así que dos con el mismo `id` son objetos
 ## distintos y un
 ## diccionario indexado por instancia contesta ausente donde tenía que haber un número.
+##
+## **Un producto nuevo va al final.** Una partida guardada nombra al producto por su número:
+## insertarlo en el medio le cambia el nombre a todos los que siguen.
 enum Id {
 	ACTRONCITO,
 	DUREXTRA,
@@ -37,17 +41,23 @@ enum Id {
 	DONSATURADOS,
 	PETISAS,
 	MACUMBAS,
+	COSA_DE_MANI,
+	DURONGA,
+	FERNET_GOD,
+	MAYONCHIS,
+	OAAAA,
+	TERMINATOR,
+	MARRANOS,
+	FEEL_RICKY_FORT,
 }
 
 var id: Id
 var nombre: String
 var precio: int
-var umbral: int
 
 
 ## Los argumentos van con prefijo `un_` para no sombrear los campos que asignan.
-func _init(un_id: Id, un_nombre: String, un_precio: int, un_umbral: int) -> void:
+func _init(un_id: Id, un_nombre: String, un_precio: int) -> void:
 	id = un_id
 	nombre = un_nombre
 	precio = un_precio
-	umbral = un_umbral

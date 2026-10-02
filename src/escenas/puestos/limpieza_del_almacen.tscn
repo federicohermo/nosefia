@@ -7,17 +7,21 @@
 script = ExtResource("1_limpieza")
 
 [node name="ManchaDeLaEntrada" parent="." instance=ExtResource("2_mancha")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5, 0.104, 2)
-zona = 0
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.91, 0.104, 5.8)
+editor_description = "Polvo, en el piso frente a la puerta de entrada: es lo primero que se ve al arrancar la noche."
+lugar = 0
 
-[node name="ManchaDelPasillo" parent="." instance=ExtResource("2_mancha")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.3, 0.104, 1)
-zona = 1
+[node name="ManchaEntreLasGondolas" parent="." instance=ExtResource("2_mancha")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.76, 0.104, -1)
+editor_description = "Polvo, en el piso del pasillo entre las dos góndolas del medio."
+lugar = 1
 
 [node name="ManchaDelDeposito" parent="." instance=ExtResource("2_mancha")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.5, 0.104, -5)
-zona = 2
+transform = Transform3D(1, 0, 0, 0, 0, 1, 0, -1, 0, 7.14, 1.2, -8.255)
+editor_description = "Moho, en la pared del depósito junto a la puerta al local, del lado del depósito. El disco va vertical: su arriba mira al cuarto."
+lugar = 2
 
-[node name="ManchaDeLaVentanilla" parent="." instance=ExtResource("2_mancha")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6, 0.104, 6.5)
-zona = 3
+[node name="ManchaDelBano" parent="." instance=ExtResource("2_mancha")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12, 0.104, -4.3)
+editor_description = "Caca, en el piso del baño al lado del inodoro."
+lugar = 3

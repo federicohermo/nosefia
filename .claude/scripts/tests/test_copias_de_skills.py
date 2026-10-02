@@ -56,6 +56,10 @@ COPIAS: dict[Path, tuple[Path, ...]] = {
         SKILLS / "pr-review-batch" / "scripts" / "limpiar_worktrees.py",
         SKILLS / "implement-batch" / "scripts" / "limpiar_worktrees.py",
     ),
+    SKILLS
+    / "implement-batch"
+    / "scripts"
+    / "capturas_a_rama.py": (SKILLS / "implement-feature" / "scripts" / "capturas_a_rama.py",),
 }
 
 

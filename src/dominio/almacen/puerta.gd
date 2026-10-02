@@ -1,9 +1,5 @@
 ## Una de las puertas del local: si está abierta y cuánto le falta al giro de la hoja.
 ##
-## Va en `almacen/` y no en `ambiente/` porque una puerta cerrada cambia **cuánto cuesta cumplir
-## una obligatoria**: la zona de descarte de la basura está del otro lado de una de las dos, así
-## que con la hoja trabada esa tarea no se puede cumplir. No es cómo se siente la noche.
-##
 ## **El ángulo vive acá y no en la escena**, aunque parezca cosa de la hoja: pasarse del tope y
 ## saltar a él en un cuadro son bugs de aritmética, y acá se prueban sin levantar una escena.
 class_name Puerta
@@ -20,6 +16,13 @@ const VELOCIDAD_DEL_GIRO := 3.0
 
 var _abierta := false
 var _angulo := 0.0
+var _quieta := true
+var _trabada := false
+
+
+## Trabada es de nacimiento: ninguna puerta se traba ni se destraba en juego.
+func _init(trabada: bool = false) -> void:
+	_trabada = trabada
 
 
 ## Si quedó pedida abierta. Es la intención, no la hoja: apenas alternada, la puerta ya está
@@ -33,9 +36,23 @@ func angulo() -> float:
 	return _angulo
 
 
-## Un gesto de interacción: la abre si estaba cerrada y la cierra si estaba abierta.
-func alternar() -> void:
+func trabada() -> bool:
+	return _trabada
+
+
+## Un gesto de interacción: la abre si estaba cerrada y la cierra si estaba abierta. Devuelve si
+## alternó: una trabada contesta `false` y queda como estaba.
+func alternar() -> bool:
+	if _trabada:
+		return false
 	_abierta = not _abierta
+	return true
+
+
+func cerrar_de_golpe() -> void:
+	_abierta = false
+	_angulo = 0.0
+	_quieta = true
 
 
 ## Acerca la hoja al tope que le toca y devuelve dónde quedó.
@@ -44,5 +61,12 @@ func alternar() -> void:
 ## giro entero, los dos topes incluidos, sin un solo cuadro.
 func avanzar(segundos: float) -> float:
 	var destino := ANGULO_ABIERTA if _abierta else 0.0
+	var antes := _angulo
 	_angulo = move_toward(_angulo, destino, VELOCIDAD_DEL_GIRO * segundos)
+	_quieta = is_equal_approx(_angulo, antes)
 	return _angulo
+
+
+## Si la hoja no giró en el último `avanzar()`.
+func quieta() -> bool:
+	return _quieta

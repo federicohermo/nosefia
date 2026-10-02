@@ -11,4 +11,5 @@ texto = "Pesa más de lo que debería para ser cartón."
 script = ExtResource("1_objeto")
 id = &"bolsa_de_basura_1"
 nombre = "Bolsa de basura"
+sonoridad = 7
 revelacion = SubResource("Resource_revelacion")

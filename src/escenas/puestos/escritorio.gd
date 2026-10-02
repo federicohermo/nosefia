@@ -7,10 +7,10 @@
 ## jugador: sin esas dos puertas, abrir la computadora degradaría en silencio —el mouse seguiría
 ## girando la cámara y el jugador seguiría caminando detrás del panel—.
 ##
-## **Se sale con el clic derecho, y no con la tecla que suelta el cursor.** `jugador.gd` ya usa
-## esa tecla y retoma con cualquier botón, así que compartirla dejaría al jugador cerrando la
-## computadora cada vez que va a apretar el botón de cerrar la ventana. El nombre de esa acción no
-## se escribe acá ni en un comentario: el caso que lo verifica no distingue código de prosa.
+## **Se sale con el clic derecho, y no con la tecla de la pausa.** Esa tecla pausa la jornada
+## desde cualquier puesto, así que compartirla cerraría la computadora cada vez que el jugador
+## pausa. El nombre de esa acción no se escribe acá ni en un comentario: el caso que lo verifica
+## no distingue código de prosa.
 ##
 ## **El reloj está acá para apagar la pantalla cuando la noche termina**, no para pausarlo: una
 ## computadora abierta encima de la placa de cierre dejaría al jugador viendo las dos.
@@ -35,9 +35,10 @@ func _ready() -> void:
 	computadora.app_cambiada.connect(_al_cambiar_de_app)
 	computadora.chats_actualizados.connect(_al_leer_un_chat)
 	computadora.nota_escrita.connect(_al_escribirse_una_nota)
-	computadora.caja_actualizada.connect(_al_registrarse_un_producto)
+	computadora.registro_actualizado.connect(_al_cambiar_el_registro)
 	pantalla.app_pedida.connect(computadora.pedir_cambiar_a)
-	pantalla.caja().registro_pedido.connect(computadora.pedir_registrar)
+	pantalla.caja().suma_pedida.connect(computadora.pedir_sumar)
+	pantalla.caja().resta_pedida.connect(computadora.pedir_restar)
 	pantalla.chats().lectura_pedida.connect(_al_pedirse_un_chat)
 	pantalla.notas().escritura_pedida.connect(computadora.pedir_escribir)
 
@@ -88,7 +89,7 @@ func _al_cambiar_de_app(app: Computadora.App) -> void:
 ## jugador hace algo, y repintar por cuadro sería reconstruir tres listas sesenta veces por
 ## segundo para que digan lo mismo.
 func _repintar(_app: Computadora.App) -> void:
-	pantalla.caja().mostrar(computadora.caja())
+	pantalla.caja().mostrar(computadora.registro())
 	pantalla.chats().mostrar(computadora.bandeja())
 	pantalla.notas().mostrar(computadora.cuaderno().notas())
 
@@ -107,8 +108,8 @@ func _al_escribirse_una_nota(_nota: Nota) -> void:
 	pantalla.notas().mostrar(computadora.cuaderno().notas())
 
 
-func _al_registrarse_un_producto(_registrados: int) -> void:
-	pantalla.caja().mostrar(computadora.caja())
+func _al_cambiar_el_registro() -> void:
+	pantalla.caja().mostrar(computadora.registro())
 
 
 func _al_cerrar_el_turno(_cumplidas: int) -> void:

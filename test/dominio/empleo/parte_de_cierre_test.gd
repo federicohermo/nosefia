@@ -1,7 +1,7 @@
 ## El parte ya decidido: lo que la pantalla va a copiar sin pensar.
 ##
 ## Todo lo que la placa dice se arma acá, y por eso se puede probar sin levantar una escena: el
-## día que un `match` de bandas se escriba en `ui/`, ninguno de los seis nodos lo va a decir, y
+## día que un `match` de bandas se escriba en `ui/`, ninguno de los nodos lo va a decir, y
 ## es lo que estos casos existen para hacer innecesario.
 extends GdUnitTestSuite
 
@@ -29,7 +29,7 @@ const JORNADA_DE_PRUEBA := 2
 
 func test_el_parte_trae_una_linea_por_obligatoria_en_el_orden_declarado() -> void:  # AC-EMP-013
 	var obligatorias := Apertura.obligatorias()
-	var parte := ParteDeCierre.new(JORNADA_DE_PRUEBA, obligatorias, 0)
+	var parte := ParteDeCierre.new(JORNADA_DE_PRUEBA, obligatorias, 0, Partida.Final.EN_CURSO)
 	var renglones := parte.lineas()
 	assert_int(renglones.size()).is_equal(obligatorias.size())
 	for indice in range(obligatorias.size()):
@@ -42,39 +42,71 @@ func test_la_misma_tarea_cumplida_y_sin_cumplir_dice_cosas_distintas() -> void: 
 	# filas y dejaría la placa felicitando por una tarea que no se hizo.
 	var limpiar := Tarea.new(Tarea.Tipo.LIMPIAR)
 	var pendiente: Array[Tarea] = [limpiar]
-	var sin_hacer := ParteDeCierre.new(JORNADA_DE_PRUEBA, pendiente, 0).lineas()[0]
+	var sin_hacer := (
+		ParteDeCierre.new(JORNADA_DE_PRUEBA, pendiente, 0, Partida.Final.EN_CURSO).lineas()[0]
+	)
 	limpiar.completar()
-	var hecha := ParteDeCierre.new(JORNADA_DE_PRUEBA, pendiente, 0).lineas()[0]
+	var hecha := (
+		ParteDeCierre.new(JORNADA_DE_PRUEBA, pendiente, 0, Partida.Final.EN_CURSO).lineas()[0]
+	)
 	assert_str(hecha).is_not_equal(sin_hacer)
 
 
 func test_el_saludo_y_el_comentario_salen_del_parte_ya_escritos() -> void:
-	var parte := ParteDeCierre.new(JORNADA_DE_PRUEBA, Apertura.obligatorias(), 1)
+	var parte := ParteDeCierre.new(
+		JORNADA_DE_PRUEBA, Apertura.obligatorias(), 1, Partida.Final.EN_CURSO
+	)
 	assert_str(parte.saludo()).is_not_empty()
 	assert_str(parte.saludo()).contains(str(JORNADA_DE_PRUEBA))
 	assert_str(parte.comentario()).is_equal(CatalogoDeReacciones.del_comentario(1).texto)
 
 
-func test_el_umbral_del_despido_se_cita_por_su_constante() -> void:  # AC-EMP-015
+func test_el_umbral_del_despido_se_cita_por_su_constante() -> void:
 	# Escrito como número en la placa, mover el balance del despido dejaría a la pantalla mintiendo
 	# sin que nada avise: el jugador leería «de 4» con el despido en 5.
-	var parte := ParteDeCierre.new(JORNADA_DE_PRUEBA, Apertura.obligatorias(), 0)
+	var parte := ParteDeCierre.new(
+		JORNADA_DE_PRUEBA, Apertura.obligatorias(), 0, Partida.Final.EN_CURSO
+	)
 	assert_int(parte.umbral_del_despido()).is_equal(Reglas.APERCIBIMIENTOS_HASTA_EL_DESPIDO)
 
 
 func test_el_legajo_en_cero_no_esta_en_riesgo_y_de_uno_en_adelante_si() -> void:  # AC-EMP-015
 	var obligatorias := Apertura.obligatorias()
-	assert_bool(ParteDeCierre.new(JORNADA_DE_PRUEBA, obligatorias, 0).en_riesgo()).is_false()
+	(
+		assert_bool(
+			(
+				ParteDeCierre
+				. new(JORNADA_DE_PRUEBA, obligatorias, 0, Partida.Final.EN_CURSO)
+				. en_riesgo()
+			)
+		)
+		. is_false()
+	)
 	for cuantos in range(1, Reglas.APERCIBIMIENTOS_HASTA_EL_DESPIDO + 1):
 		(
-			assert_bool(ParteDeCierre.new(JORNADA_DE_PRUEBA, obligatorias, cuantos).en_riesgo())
+			assert_bool(
+				(
+					ParteDeCierre
+					. new(JORNADA_DE_PRUEBA, obligatorias, cuantos, Partida.Final.EN_CURSO)
+					. en_riesgo()
+				)
+			)
 			. override_failure_message("con %d apercibimientos el parte no avisa nada" % cuantos)
 			. is_true()
 		)
 
 
+func test_con_un_apercibimiento_el_aviso_nombra_el_tope() -> void:  # AC-EMP-015
+	var parte := ParteDeCierre.new(
+		JORNADA_DE_PRUEBA, Apertura.obligatorias(), 1, Partida.Final.EN_CURSO
+	)
+	assert_str(parte.aviso_de_riesgo()).contains(str(Reglas.APERCIBIMIENTOS_HASTA_EL_DESPIDO))
+
+
 func test_el_parte_devuelve_lo_que_recibio_sin_recalcular_nada() -> void:
-	var parte := ParteDeCierre.new(JORNADA_DE_PRUEBA, Apertura.obligatorias(), 3)
+	var parte := ParteDeCierre.new(
+		JORNADA_DE_PRUEBA, Apertura.obligatorias(), 3, Partida.Final.EN_CURSO
+	)
 	assert_int(parte.jornada()).is_equal(JORNADA_DE_PRUEBA)
 	assert_int(parte.apercibimientos()).is_equal(3)
 
@@ -105,3 +137,35 @@ func test_los_tres_espejos_de_este_spec_estan_escritos() -> void:
 			. override_failure_message("falta el espejo `%s`" % espejo)
 			. is_true()
 		)
+
+
+func test_la_partida_que_termino_ofrece_volver_al_menu_y_no_seguir() -> void:  # AC-EMP-016
+	for final: Partida.Final in [Partida.Final.DESPEDIDO, Partida.Final.CONTRATO_CUMPLIDO]:
+		var parte := ParteDeCierre.new(JORNADA_DE_PRUEBA, Apertura.obligatorias(), 5, final)
+		(
+			assert_array(parte.opciones())
+			. override_failure_message("el final %d ofrece %s" % [final, parte.opciones()])
+			. is_equal([ParteDeCierre.Opcion.VOLVER_AL_MENU])
+		)
+
+
+func test_la_partida_en_curso_ofrece_seguir_y_volver_al_menu() -> void:  # AC-EMP-016
+	# Tres apercibimientos es la noche antes del tope: todavía hay noche siguiente.
+	var parte := ParteDeCierre.new(
+		JORNADA_DE_PRUEBA, Apertura.obligatorias(), 3, Partida.Final.EN_CURSO
+	)
+	assert_array(parte.opciones()).is_equal(
+		[ParteDeCierre.Opcion.SEGUIR, ParteDeCierre.Opcion.VOLVER_AL_MENU]
+	)
+
+
+func test_el_parte_de_la_partida_real_despedida_no_ofrece_seguir() -> void:  # AC-EMP-016
+	# El salto del tope: de 3 a 5 con una noche grave, sin pisar el 4.
+	var partida := Partida.new(Legajo.con_apercibimientos(3))
+	partida.abrir_la_jornada()
+	partida.cerrar_la_jornada(0)
+	var parte := ParteDeCierre.new(
+		partida.jornada(), partida.obligatorias(), partida.apercibimientos(), partida.final()
+	)
+	assert_array(parte.opciones()).not_contains([ParteDeCierre.Opcion.SEGUIR])
+	assert_str(parte.comentario()).is_equal(CatalogoDeReacciones.del_comentario(5).texto)

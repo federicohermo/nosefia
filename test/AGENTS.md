@@ -36,24 +36,39 @@ func test_con_un_segundo_restante_la_obligatoria_cuenta() -> void:  # AC-SHF-007
 ```
 
 - **`extends GdUnitTestSuite`** hace que el archivo se descubra como suite.
-- **El archivo termina en `_test.gd`.** Un test con el nombre equivocado **no corre y no se
-  queja**: la suite pasa y el archivo está a la vista.
-- **Cada `func test_…` afirma algo.** Uno sin aserción cuesta lo mismo que uno de verdad y no
-  puede fallar nunca.
+- **El archivo termina en `_test.gd`**, y **cada `func test_…` afirma algo.**
 - **El criterio que verifica va citado al final de la línea**, como `AC-<COD>-###`. Lo cobra
   `gate_de_specs.py` sobre los specs `ratified`.
+- **Una suite tiene hasta 20 métodos públicos**, y `.gdlintrc` pone `max-public-methods: 20`.
+  Cuentan sus `test_`, y también `before`, `after`, `before_test`, `after_test` y cualquier
+  función que no empiece con `_`. La que se pasa sale roja en el nodo `lint`, no en `tests`, y se
+  parte por lo que prueba. Se cuenta con `rg -c '^func [a-z]'`, no con los `test_`. Le costó una
+  vuelta al carril de #262, y en el #277 `repositor_test.gd` tenía 19 casos y 20 métodos.
 
-## Las cuatro cosas que el gate rechaza
+- **Un caso de escena afirma su premisa, además de su resultado**: dónde pegó el rayo que lo
+  ubica, hacia qué mira. Cuando el local cambia, la premisa sale roja en vez de pasar por suerte.
+  En el #262, `producto_soltado_test.gd` soltaba desde la tapa de una góndola del depósito. Y
+  los casos de `contorno_de_los_muebles_test.gd` caían al pasillo al angostarse la góndola. Los
+  dos seguían verdes sin probar nada.
 
-Sin test espejo, sin aserción, apagado (`skip(true)`, `assert_not_yet_implemented`), o con un
-nombre que hace que no corra. **Las cuatro son la misma cosa: verde sin ejercer nada.** Cada una
-con su modo de falla, en `.claude/scripts/lib/tdd.py`.
+## Lo que el gate rechaza
+
+Sin test espejo, sin aserción, apagado, o con un nombre que hace que no corra. **Es la misma
+cosa: verde sin ejercer nada.** Cada regla, con su modo de falla, está en
+`.claude/scripts/lib/tdd.py`.
+
+En gdUnit4, el parámetro `do_skip` apaga un test en su función, y la suite entera en `before`.
+Saltear un test se decide borrándolo o arreglándolo.
 
 ## El test se escribe primero, y en rojo
 
 Un test escrito después se escribe **mirando el código**, y entonces prueba lo que el código
 hace en vez de lo que tenía que hacer. El ciclo y lo que reemplaza a la cobertura, en
 [TDD sin cobertura](../../docs/guides/tdd.md).
+
+**gdUnit4 no corre un caso solo desde la línea de comandos.** `-a` toma una suite o una
+carpeta, y la forma `suite:caso` la entiende sólo `-i`, que saltea. Para ver fallar un caso se
+corre su suite entera. Le costó una vuelta al carril de #266.
 
 ## Nombres que dicen qué se rompe
 
@@ -69,14 +84,24 @@ siguientes:
 var reloj := auto_free(Reloj.new())   # se libera al terminar el test
 ```
 
-## Las tres formas en que un verde de gdUnit4 miente
+## Cómo sale rojo gdUnit4, y qué se lee en la salida cruda
 
-Es lo más caro de este repo y no lo ve ningún gate: **el nodo `tests` sale `ok` sin haber corrido
-lo que creías.** `verificar.py` hace lo correcto —el veredicto es el código de salida— y aun así
-declara verde, porque gdUnit4 devuelve 0.
+**Desde gdUnit4 6.2.1, lo que no llega a afirmar sale rojo.** Medido el 2026-09-30, con una suite
+de sonda por caso:
 
-**El número que vale es el `Executed test suites: (N/N)` de la salida cruda**, contra la cantidad
-de `*_test.gd`. No el color del nodo.
+| Qué pasa | Qué hace el runner |
+|---|---|
+| una suite hace `preload` de un archivo que no existe | corta la corrida entera antes de correr nada, y sale con 105 |
+| un `class_name` recién escrito, sin el `--import` siguiente | lo mismo: `Identifier "X" not declared`, y 105 |
+| un caso aborta por un error de script antes de afirmar | el caso sale `FAILED` con el error contado, y el runner sale con 100 |
+
+El corte de los dos primeros lo anuncia «Script errors were detected during test discovery!».
+`verificar.py` toma el veredicto del código de salida, así que el nodo `tests` sale rojo en los
+tres. Con la versión de antes, medida el 2026-09-01, salían con 0. Un error de parseo dejaba el
+dominio entero sin correr con la CI en verde.
+
+**El conteo crudo sigue siendo el control, y no cuesta nada**: el `Executed test suites: (N/N)`
+de la salida cruda, contra la cantidad de `*_test.gd`. `verificar.py` no lo imprime.
 
 ```bash
 "$GODOT_BIN" --path . --headless -s -d --remote-debug tcp://127.0.0.1:0 \
@@ -84,28 +109,14 @@ de `*_test.gd`. No el color del nodo.
   -rd reports 2>&1 | grep "Executed test suites"
 ```
 
-**1 — La suite que no parsea se descarta en silencio.** Una que hace `preload` de un archivo que
-todavía no existe —el estado normal del paso 1 del TDD— no corre, y el exit code es 0 igual. Un
-error de parseo puede dejar el dominio entero sin correr **con la CI en verde**, y las cuatro
-reglas de arriba no lo ven: el espejo existe, afirma y no está apagado. Medido tres veces en el
-lote 001/002/004/007.
-
-**2 — Un `class_name` recién escrito no existe hasta el `--import` siguiente.** El síntoma es
-**idéntico** al del archivo ausente: `Parse Error: Identifier "X" not declared`,
-`No test cases found`, `Exit code: 0`. Se lee como «todavía no lo escribí» cuando ya está en
-disco. Re-importá **después de crear cada archivo con `class_name` nuevo**, no una vez por
-worktree:
+**Re-importá después de crear cada archivo con `class_name` nuevo**, no una vez por worktree. Sin
+eso la corrida entera sale con 105 aunque el archivo ya esté en disco, y se lee como «todavía no
+lo escribí»:
 
 ```bash
 "$GODOT_BIN" --headless --path . --import --quit
 ```
 
-Lo pisaron los dos carriles del lote 005/011/022/023 que crearon clases. Medido el 2026-09-01.
-
-**3 — Y la peor: el paso 1 sale `PASSED`.** Cuando el recurso que el caso carga no existe, el
-error de script **aborta la función** y gdUnit4 no cuenta ninguna aserción fallida. Medido el
-2026-09-01 en el 023, con la escena sin escribir: **4 de 5 casos dieron `PASSED`**, y sólo dio
-rojo el que afirmaba el tipo.
-
-O sea que el «falla por lo que se espera» del paso 1 **no se lee en el conteo de fallos**: se lee
-en el `ERROR: Failed loading resource` de la salida cruda.
+**El rojo del paso 1 se lee en la salida cruda.** Un 105 por el `preload` de lo que todavía no
+existe prueba que el archivo falta, no el criterio. El criterio lo prueba el caso `FAILED` por su
+aserción, o por el `ERROR: Failed loading resource` del recurso que carga.

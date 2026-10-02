@@ -40,9 +40,10 @@ reales cubran el turno entero**: un minuto real por hora de ficción. El factor 
 
 ### BR-SHF-003 — El tiempo entra, no se busca
 
-CUANDO pasa tiempo real, el sistema DEBE recibir cuántos segundos pasaron y descontarlos del
-turno. El turno nunca lee un reloj propio. Un valor que no es positivo no descuenta nada. El
-tiempo real es lo único que descuenta del turno: cumplir una obligatoria no lo mueve.
+CUANDO pasa tiempo real de juego, el sistema DEBE recibir cuántos segundos pasaron y descontarlos
+del turno. El turno nunca lee un reloj propio. Un valor que no es positivo no descuenta nada. El
+tiempo real es lo único que descuenta del turno: cumplir una obligatoria no lo mueve. El tiempo
+en pausa no es tiempo de juego y NO DEBE descontar.
 
 ### BR-SHF-004 — El turno no baja de cero
 
@@ -55,11 +56,13 @@ CUANDO se abre una jornada, el sistema DEBE pedir **una tarea de cada tipo decla
 la caja, reponer, registrar, limpiar y sacar la basura. La cantidad sale de recorrer los tipos y
 nunca de un número escrito.
 
-### BR-SHF-007 — Una obligatoria se cumple una vez, y antes del cierre
+### BR-SHF-007 — Una obligatoria cuenta mientras su condición vale, y antes del cierre
 
 MIENTRAS queda turno, el sistema DEBE contar la obligatoria que se cumple, sin importar cuánto
-turno quede. SI la tarea ya está cumplida, o SI el turno está cerrado, ENTONCES el sistema DEBE
-rechazarla y no contarla.
+turno quede, y DEBE dejar de contarla si su condición deja de valer. SI la tarea ya está
+cumplida, ENTONCES cumplirla otra vez NO DEBE contarla dos veces. SI la tarea no está cumplida,
+ENTONCES descumplirla NO DEBE descontar nada. SI el turno está cerrado, ENTONCES el sistema DEBE
+rechazar cumplir y descumplir: el cierre cuenta el estado de ese instante.
 
 ### BR-SHF-008 — Sólo cuentan las declaradas
 
@@ -167,6 +170,19 @@ hora, cuelga del reloj de mesa y no gira hacia la cámara.
 DADO un turno de `43200.0` CUANDO se cumplen las cinco obligatorias en el mismo cuadro ENTONCES
 cuentan las cinco y quedan `43200.0`.
 
+### AC-SHF-019 — Descumplir *(verifica BR-SHF-007)*
+
+DADO una obligatoria cumplida con el turno abierto CUANDO se descumple ENTONCES las cumplidas
+bajan en 1 y el turno restante no cambia; cumplirla de nuevo las deja como antes de descumplir.
+DADO una obligatoria sin cumplir CUANDO se descumple ENTONCES se rechaza y las cumplidas no
+cambian. DADO una obligatoria cumplida con el turno cerrado CUANDO se descumple ENTONCES se
+rechaza y sigue contando.
+
+### AC-SHF-020 — La pausa detiene el turno *(verifica BR-SHF-003)*
+
+DADO un turno abierto CUANDO el juego está en pausa y pasan cuadros ENTONCES el tiempo restante
+no cambia. CUANDO se reanuda ENTONCES el turno sigue descontando desde ese mismo valor.
+
 ## No objetivos
 
 - Esta capacidad NO decide **cómo** se cumple cada obligatoria: eso es de la capacidad de cada
@@ -174,7 +190,7 @@ cuentan las cinco y quedan `43200.0`.
 - Esta capacidad NO anota la noche en el legajo ni decide el final: eso es de
   [`employment-record`](../employment-record/employment-record.md).
 - Esta capacidad NO cobra tiempo por ninguna acción: ni por cumplir ni por investigar. Todo
-  cuesta porque el reloj no se detiene, no porque alguien descuente.
+  cuesta porque el reloj no se detiene, no porque alguien descuente. Sólo la pausa lo detiene.
 
 ## Contratos
 
@@ -182,19 +198,20 @@ cuentan las cinco y quedan `43200.0`.
   jornada es.
 - **Salida:** cuánto queda, si el turno cerró, cuántas obligatorias van cumplidas, y la lectura
   del reloj de mesa: la hora, o vacío.
-- **Falla:** cumplir una obligatoria ya cumplida, o con el turno cerrado, se rechaza. Un tiempo
-  negativo se ignora en silencio.
+- **Falla:** cumplir una obligatoria ya cumplida, o con el turno cerrado, se rechaza. Descumplir
+  una sin cumplir, o con el turno cerrado, también. Un tiempo negativo se ignora en silencio.
 
 ## Señales
 
-- El turno cerrado, la tarea cumplida y el tiempo consumido. El último se emite por cuadro: no
-  se le puede enganchar nada que cueste.
+- El turno cerrado, la tarea cumplida, la tarea descumplida y el tiempo consumido. El último se
+  emite por cuadro: no se le puede enganchar nada que cueste.
 
 ## Dependencias
 
 - [`employment-record`](../employment-record/employment-record.md) (alimenta): recibe cuántas
   obligatorias se cumplieron al cerrar.
 - Las cinco capacidades de tarea (alimentan): cada una avisa cuándo su obligatoria quedó hecha.
+  Registrar avisa también cuándo dejó de estarlo.
 
 ## Preguntas abiertas
 

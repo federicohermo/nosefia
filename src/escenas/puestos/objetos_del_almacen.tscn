@@ -2,283 +2,287 @@
 
 [ext_resource type="PackedScene" path="res://src/escenas/objetos/caja_de_productos.tscn" id="11_caja_de_productos"]
 [ext_resource type="PackedScene" path="res://src/escenas/objetos/objeto_agarrable.tscn" id="22_agarrable"]
-[ext_resource type="Resource" path="res://src/dominio/almacen/trapeador.tres" id="23_trapeador"]
 [ext_resource type="PackedScene" path="res://src/escenas/puestos/zona_de_descarte.tscn" id="25_descarte"]
 [ext_resource type="Resource" path="res://src/dominio/almacen/bolsa_de_basura_1.tres" id="26_bolsa1"]
 [ext_resource type="Resource" path="res://src/dominio/almacen/bolsa_de_basura_2.tres" id="27_bolsa2"]
 [ext_resource type="Resource" path="res://src/dominio/almacen/bolsa_de_basura_3.tres" id="28_bolsa3"]
+[ext_resource type="Script" path="res://src/escenas/objetos/util_de_limpieza.gd" id="30_util"]
+[ext_resource type="Resource" path="res://src/dominio/almacen/mopa.tres" id="31_mopa"]
+[ext_resource type="Resource" path="res://src/dominio/almacen/balde.tres" id="32_balde"]
+[ext_resource type="Resource" path="res://src/dominio/almacen/jabon_azul.tres" id="33_jabon_azul"]
+[ext_resource type="Resource" path="res://src/dominio/almacen/jabon_rosa.tres" id="34_jabon_rosa"]
+[ext_resource type="Resource" path="res://src/dominio/almacen/jabon_amarillo.tres" id="35_jabon_amarillo"]
+
+[sub_resource type="ConvexPolygonShape3D" id="forma_de_la_mopa"]
+points = PackedVector3Array(-0.08456, -0.8477633, -0.2511637, 0.083623, -0.8477633, -0.2511637, -0.08456, -0.8477633, 0.2511637, 0.083623, -0.8477633, 0.2511637, -0.08456, -0.6940926, -0.2511637, 0.083623, -0.6940926, -0.2511637, -0.08456, -0.6940926, 0.2511637, 0.083623, -0.6940926, 0.2511637, -0.02297, 0.3979809, -0.02643, 0.02297, 0.3979809, -0.02643, -0.02297, 0.3979809, 0.02643, 0.02297, 0.3979809, 0.02643)
+
+[sub_resource type="BoxMesh" id="punta_de_la_mopa"]
+size = Vector3(0.172183, 0.108542, 0.506327)
+
+[sub_resource type="StandardMaterial3D" id="tinte_de_la_mopa"]
+resource_local_to_scene = true
+blend_mode = 3
+shading_mode = 0
+albedo_color = Color(0.74, 0.89, 0.98, 1)
+
+[sub_resource type="CylinderShape3D" id="forma_del_balde"]
+height = 0.350985
+radius = 0.195
+
+[sub_resource type="CylinderMesh" id="agua_del_balde"]
+top_radius = 0.172
+bottom_radius = 0.172
+height = 0.002
+radial_segments = 6
+rings = 1
+
+[sub_resource type="StandardMaterial3D" id="color_del_agua"]
+resource_local_to_scene = true
+albedo_color = Color(0.74, 0.89, 0.98, 1)
+roughness = 0.2
+
+[sub_resource type="CylinderShape3D" id="forma_del_bidon"]
+height = 0.70162
+radius = 0.229
 
 [node name="Objetos" type="Node3D"]
 
-[node name="Trapeador" parent="." instance=ExtResource("22_agarrable")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.5, 0.5, -4)
-datos = ExtResource("23_trapeador")
+[node name="Mopa" type="RigidBody3D" parent="." node_paths=PackedStringArray("malla", "carga", "mallas") groups=["interactuable"]]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8.37642, 0.95, -6.6543927)
+collision_mask = 9
+script = ExtResource("30_util")
+datos = ExtResource("31_mopa")
+orientacion_en_mano = Basis(1, 0, 0, 0, 0.258819, -0.965926, 0, 0.965926, 0.258819)
+nodo_del_modelo = &"mopa"
+malla = NodePath("Malla")
+carga = NodePath("Punta")
+mallas = [NodePath("Malla")]
+
+[node name="Forma" type="CollisionShape3D" parent="Mopa"]
+shape = SubResource("forma_de_la_mopa")
+
+[node name="Malla" type="MeshInstance3D" parent="Mopa"]
+transform = Transform3D(0, 0, -0.17668723, -0.024567725, 0, 0, 0, 0.22025196, 0, 0.102476, -0.7186603, 0)
+gi_mode = 2
+
+[node name="Punta" type="MeshInstance3D" parent="Mopa"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0004685, -0.7955, 0)
+visible = false
+material_override = SubResource("tinte_de_la_mopa")
+cast_shadow = 0
+mesh = SubResource("punta_de_la_mopa")
+gi_mode = 2
 
 [node name="ZonaDeDescarte" parent="." instance=ExtResource("25_descarte")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3, 0.103, -13.5)
 
 [node name="BolsaDeBasura1" parent="." instance=ExtResource("22_agarrable")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9.3, 0.5, -6.9)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 11.0, 0.5, -4.4)
 datos = ExtResource("26_bolsa1")
 
 [node name="BolsaDeBasura2" parent="." instance=ExtResource("22_agarrable")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9.9, 0.5, -6.9)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10.4, 0.5, -4.4)
 datos = ExtResource("27_bolsa2")
 
 [node name="BolsaDeBasura3" parent="." instance=ExtResource("22_agarrable")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10.5, 0.5, -6.9)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10.7, 0.5, -4.95)
 datos = ExtResource("28_bolsa3")
 
 [node name="CajaDeActroncito" parent="." instance=ExtResource("11_caja_de_productos")]
-position = Vector3(-1.4000, 1.9077, -11.7900)
+position = Vector3(3.19, 1.68291, -9.08)
 producto = 0
 
-[node name="Cuerpo" parent="CajaDeActroncito" index="0"]
-scale = Vector3(0.3037077, 0.3037077, 0.3037077)
-
-[node name="Malla" parent="CajaDeActroncito" index="1"]
-scale = Vector3(0.3037077, 0.3037077, 0.3037077)
-
 [node name="CajaDeDurextra" parent="." instance=ExtResource("11_caja_de_productos")]
-position = Vector3(-1.4000, 1.3270, -10.9000)
+position = Vector3(3.19, 1.68291, -8.6)
 producto = 1
 
-[node name="Cuerpo" parent="CajaDeDurextra" index="0"]
-scale = Vector3(0.2000000, 0.2000000, 0.2000000)
-
-[node name="Malla" parent="CajaDeDurextra" index="1"]
-scale = Vector3(0.2000000, 0.2000000, 0.2000000)
-
 [node name="CajaDeBurbaloo" parent="." instance=ExtResource("11_caja_de_productos")]
-position = Vector3(-1.4000, 1.9077, -11.0900)
+position = Vector3(3.19, 1.08992, -9.39)
 producto = 2
 
-[node name="Cuerpo" parent="CajaDeBurbaloo" index="0"]
-scale = Vector3(0.3037077, 0.3037077, 0.3037077)
-
-[node name="Malla" parent="CajaDeBurbaloo" index="1"]
-scale = Vector3(0.3037077, 0.3037077, 0.3037077)
-
 [node name="CajaDeZucarachas" parent="." instance=ExtResource("11_caja_de_productos")]
-position = Vector3(-1.4000, 1.3270, -11.4500)
+position = Vector3(-0.41, 1.08992, -9.39)
 producto = 3
 
-[node name="Cuerpo" parent="CajaDeZucarachas" index="0"]
-scale = Vector3(0.2000000, 0.2000000, 0.2000000)
-
-[node name="Malla" parent="CajaDeZucarachas" index="1"]
-scale = Vector3(0.2000000, 0.2000000, 0.2000000)
-
 [node name="CajaDeLaysntt" parent="." instance=ExtResource("11_caja_de_productos")]
-position = Vector3(7.5770, 1.9077, -11.7900)
+position = Vector3(3.19, 1.08992, -10.03)
 producto = 4
 
-[node name="Cuerpo" parent="CajaDeLaysntt" index="0"]
-scale = Vector3(0.3037077, 0.3037077, 0.3037077)
-
-[node name="Malla" parent="CajaDeLaysntt" index="1"]
-scale = Vector3(0.3037077, 0.3037077, 0.3037077)
-
 [node name="CajaDeMalbardo" parent="." instance=ExtResource("11_caja_de_productos")]
-position = Vector3(-1.4000, 1.3270, -12.0000)
+position = Vector3(3.19, 1.68291, -9.56)
 producto = 5
 
-[node name="Cuerpo" parent="CajaDeMalbardo" index="0"]
-scale = Vector3(0.2000000, 0.2000000, 0.2000000)
-
-[node name="Malla" parent="CajaDeMalbardo" index="1"]
-scale = Vector3(0.2000000, 0.2000000, 0.2000000)
-
 [node name="CajaDeProngles" parent="." instance=ExtResource("11_caja_de_productos")]
-position = Vector3(7.5770, 1.9077, -11.0900)
+position = Vector3(-0.41, 1.08992, -8.75)
 producto = 6
 
-[node name="Cuerpo" parent="CajaDeProngles" index="0"]
-scale = Vector3(0.3037077, 0.3037077, 0.3037077)
-
-[node name="Malla" parent="CajaDeProngles" index="1"]
-scale = Vector3(0.3037077, 0.3037077, 0.3037077)
-
 [node name="CajaDeJorgillo" parent="." instance=ExtResource("11_caja_de_productos")]
-position = Vector3(-1.4000, 0.8510, -10.9000)
+position = Vector3(3.19, 1.68291, -10.04)
 producto = 7
 
-[node name="Cuerpo" parent="CajaDeJorgillo" index="0"]
-scale = Vector3(0.2000000, 0.2000000, 0.2000000)
-
-[node name="Malla" parent="CajaDeJorgillo" index="1"]
-scale = Vector3(0.2000000, 0.2000000, 0.2000000)
-
 [node name="CajaDeArvejas" parent="." instance=ExtResource("11_caja_de_productos")]
-position = Vector3(4.1000, 1.9077, -14.1150)
+position = Vector3(-6.45, 0.3027373, -13.3)
 producto = 8
 
-[node name="Cuerpo" parent="CajaDeArvejas" index="0"]
-scale = Vector3(0.3037077, 0.3037077, 0.3037077)
-
-[node name="Malla" parent="CajaDeArvejas" index="1"]
-scale = Vector3(0.3037077, 0.3037077, 0.3037077)
-
 [node name="CajaDeChisitos" parent="." instance=ExtResource("11_caja_de_productos")]
-position = Vector3(4.7500, 1.9077, -14.1150)
+position = Vector3(-0.41, 1.08992, -10.03)
 producto = 9
 
-[node name="Cuerpo" parent="CajaDeChisitos" index="0"]
-scale = Vector3(0.3037077, 0.3037077, 0.3037077)
-
-[node name="Malla" parent="CajaDeChisitos" index="1"]
-scale = Vector3(0.3037077, 0.3037077, 0.3037077)
-
 [node name="CajaDeOremos" parent="." instance=ExtResource("11_caja_de_productos")]
-position = Vector3(-1.4000, 0.8510, -11.4500)
+position = Vector3(3.19, 1.08992, -8.75)
 producto = 10
 
-[node name="Cuerpo" parent="CajaDeOremos" index="0"]
-scale = Vector3(0.2000000, 0.2000000, 0.2000000)
-
-[node name="Malla" parent="CajaDeOremos" index="1"]
-scale = Vector3(0.2000000, 0.2000000, 0.2000000)
-
 [node name="CajaDePepitos" parent="." instance=ExtResource("11_caja_de_productos")]
-position = Vector3(-1.4000, 0.8510, -12.0000)
+transform = Transform3D(0, 0, -1, 0, 1, 0, 1, 0, 0, -6.3, 0.406445, -14.1)
 producto = 11
 
-[node name="Cuerpo" parent="CajaDePepitos" index="0"]
-scale = Vector3(0.2000000, 0.2000000, 0.2000000)
-
-[node name="Malla" parent="CajaDePepitos" index="1"]
-scale = Vector3(0.2000000, 0.2000000, 0.2000000)
-
 [node name="CajaDeSaladik" parent="." instance=ExtResource("11_caja_de_productos")]
-position = Vector3(0.3000, 0.4059, -10.6000)
+position = Vector3(-6.2, 0.406445, -9.3)
 producto = 12
 
-[node name="Cuerpo" parent="CajaDeSaladik" index="0"]
-scale = Vector3(0.3037077, 0.3037077, 0.3037077)
-
-[node name="Malla" parent="CajaDeSaladik" index="1"]
-scale = Vector3(0.3037077, 0.3037077, 0.3037077)
-
 [node name="CajaDeUakas" parent="." instance=ExtResource("11_caja_de_productos")]
-position = Vector3(0.3000, 0.4059, -11.3000)
+transform = Transform3D(0, 0, -1, 0, 1, 0, 1, 0, 0, 6.79, 1.08992, -14.02)
 producto = 13
 
-[node name="Cuerpo" parent="CajaDeUakas" index="0"]
-scale = Vector3(0.3037077, 0.3037077, 0.3037077)
-
-[node name="Malla" parent="CajaDeUakas" index="1"]
-scale = Vector3(0.3037077, 0.3037077, 0.3037077)
-
 [node name="CajaDeCoracola" parent="." instance=ExtResource("11_caja_de_productos")]
-position = Vector3(7.5770, 1.3270, -10.9000)
+transform = Transform3D(0, 0, -1, 0, 1, 0, 1, 0, 0, -5.55, 0.406445, -14.1)
 producto = 14
 
-[node name="Cuerpo" parent="CajaDeCoracola" index="0"]
-scale = Vector3(0.2000000, 0.2000000, 0.2000000)
-
-[node name="Malla" parent="CajaDeCoracola" index="1"]
-scale = Vector3(0.2000000, 0.2000000, 0.2000000)
-
 [node name="CajaDeFrotlups" parent="." instance=ExtResource("11_caja_de_productos")]
-position = Vector3(7.5770, 1.3270, -11.4500)
+transform = Transform3D(0, 0, -1, 0, 1, 0, 1, 0, 0, -4.8, 0.406445, -14.1)
 producto = 15
 
-[node name="Cuerpo" parent="CajaDeFrotlups" index="0"]
-scale = Vector3(0.2000000, 0.2000000, 0.2000000)
-
-[node name="Malla" parent="CajaDeFrotlups" index="1"]
-scale = Vector3(0.2000000, 0.2000000, 0.2000000)
-
 [node name="CajaDeMarolini" parent="." instance=ExtResource("11_caja_de_productos")]
-position = Vector3(0.3000, 0.4059, -12.0000)
+transform = Transform3D(0, 0, -1, 0, 1, 0, 1, 0, 0, 7.48, 1.08992, -14.02)
 producto = 16
 
-[node name="Cuerpo" parent="CajaDeMarolini" index="0"]
-scale = Vector3(0.3037077, 0.3037077, 0.3037077)
-
-[node name="Malla" parent="CajaDeMarolini" index="1"]
-scale = Vector3(0.3037077, 0.3037077, 0.3037077)
-
 [node name="CajaDeAmargadito" parent="." instance=ExtResource("11_caja_de_productos")]
-position = Vector3(0.3000, 0.4059, -12.7000)
+position = Vector3(-0.41, 1.7866177, -8.75)
 producto = 17
 
-[node name="Cuerpo" parent="CajaDeAmargadito" index="0"]
-scale = Vector3(0.3037077, 0.3037077, 0.3037077)
-
-[node name="Malla" parent="CajaDeAmargadito" index="1"]
-scale = Vector3(0.3037077, 0.3037077, 0.3037077)
-
 [node name="CajaDeCindolor" parent="." instance=ExtResource("11_caja_de_productos")]
-position = Vector3(7.5770, 1.3270, -12.0000)
+transform = Transform3D(0, 0, -1, 0, 1, 0, 1, 0, 0, -4.05, 0.406445, -14.1)
 producto = 18
 
-[node name="Cuerpo" parent="CajaDeCindolor" index="0"]
-scale = Vector3(0.2000000, 0.2000000, 0.2000000)
-
-[node name="Malla" parent="CajaDeCindolor" index="1"]
-scale = Vector3(0.2000000, 0.2000000, 0.2000000)
-
 [node name="CajaDeFlinpuf" parent="." instance=ExtResource("11_caja_de_productos")]
-position = Vector3(0.3000, 0.4059, -13.4000)
+position = Vector3(-0.41, 1.7866177, -9.39)
 producto = 19
 
-[node name="Cuerpo" parent="CajaDeFlinpuf" index="0"]
-scale = Vector3(0.3037077, 0.3037077, 0.3037077)
-
-[node name="Malla" parent="CajaDeFlinpuf" index="1"]
-scale = Vector3(0.3037077, 0.3037077, 0.3037077)
-
 [node name="CajaDeDonsaturados" parent="." instance=ExtResource("11_caja_de_productos")]
-position = Vector3(7.5770, 0.8510, -10.9000)
+transform = Transform3D(0, 0, -1, 0, 1, 0, 1, 0, 0, -3.3, 0.406445, -14.1)
 producto = 20
 
-[node name="Cuerpo" parent="CajaDeDonsaturados" index="0"]
-scale = Vector3(0.2000000, 0.2000000, 0.2000000)
-
-[node name="Malla" parent="CajaDeDonsaturados" index="1"]
-scale = Vector3(0.2000000, 0.2000000, 0.2000000)
-
 [node name="CajaDePetisas" parent="." instance=ExtResource("11_caja_de_productos")]
-position = Vector3(7.5770, 0.8510, -11.4500)
+transform = Transform3D(0, 0, -1, 0, 1, 0, 1, 0, 0, -2.55, 0.406445, -14.1)
 producto = 21
 
-[node name="Cuerpo" parent="CajaDePetisas" index="0"]
-scale = Vector3(0.2000000, 0.2000000, 0.2000000)
-
-[node name="Malla" parent="CajaDePetisas" index="1"]
-scale = Vector3(0.2000000, 0.2000000, 0.2000000)
-
 [node name="CajaDeMacumbas" parent="." instance=ExtResource("11_caja_de_productos")]
-position = Vector3(7.5770, 0.8510, -12.0000)
+position = Vector3(-6.3, 0.406445, -8.65)
 producto = 22
 
-[node name="Cuerpo" parent="CajaDeMacumbas" index="0"]
-scale = Vector3(0.2000000, 0.2000000, 0.2000000)
+[node name="CajaDeCosaDeMani" parent="." instance=ExtResource("11_caja_de_productos")]
+transform = Transform3D(0, 0, -1, 0, 1, 0, 1, 0, 0, -0.3, 0.3027373, -14.1)
+producto = 23
 
-[node name="Malla" parent="CajaDeMacumbas" index="1"]
-scale = Vector3(0.2000000, 0.2000000, 0.2000000)
+[node name="CajaDeDuronga" parent="." instance=ExtResource("11_caja_de_productos")]
+position = Vector3(-6.45, 0.3027373, -10.2)
+producto = 24
 
-[editable path="CajaDeActroncito"]
-[editable path="CajaDeDurextra"]
-[editable path="CajaDeBurbaloo"]
-[editable path="CajaDeZucarachas"]
-[editable path="CajaDeLaysntt"]
-[editable path="CajaDeMalbardo"]
-[editable path="CajaDeProngles"]
-[editable path="CajaDeJorgillo"]
-[editable path="CajaDeArvejas"]
-[editable path="CajaDeChisitos"]
-[editable path="CajaDeOremos"]
-[editable path="CajaDePepitos"]
-[editable path="CajaDeSaladik"]
-[editable path="CajaDeUakas"]
-[editable path="CajaDeCoracola"]
-[editable path="CajaDeFrotlups"]
-[editable path="CajaDeMarolini"]
-[editable path="CajaDeAmargadito"]
-[editable path="CajaDeCindolor"]
-[editable path="CajaDeFlinpuf"]
-[editable path="CajaDeDonsaturados"]
-[editable path="CajaDePetisas"]
-[editable path="CajaDeMacumbas"]
+[node name="CajaDeFernetGod" parent="." instance=ExtResource("11_caja_de_productos")]
+transform = Transform3D(0, 0, -1, 0, 1, 0, 1, 0, 0, -1.8, 0.406445, -14.1)
+producto = 25
+
+[node name="CajaDeMayonchis" parent="." instance=ExtResource("11_caja_de_productos")]
+transform = Transform3D(0, 0, -1, 0, 1, 0, 1, 0, 0, -1.05, 0.406445, -14.1)
+producto = 26
+
+[node name="CajaDeOaaaa" parent="." instance=ExtResource("11_caja_de_productos")]
+position = Vector3(-0.41, 1.68291, -10.03)
+producto = 27
+
+[node name="CajaDeTerminator" parent="." instance=ExtResource("11_caja_de_productos")]
+position = Vector3(-6.45, 0.406445, -12.55)
+producto = 28
+
+[node name="CajaDeMarranos" parent="." instance=ExtResource("11_caja_de_productos")]
+position = Vector3(-6.45, 0.406445, -11.8)
+producto = 29
+
+[node name="CajaDeFeelRickyFort" parent="." instance=ExtResource("11_caja_de_productos")]
+position = Vector3(-6.45, 0.406445, -11.05)
+producto = 30
+
+[node name="Balde" type="RigidBody3D" parent="." node_paths=PackedStringArray("malla", "carga", "mallas") groups=["interactuable"]]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12.456797, 0.2777296, -7.1073775)
+collision_mask = 9
+script = ExtResource("30_util")
+datos = ExtResource("32_balde")
+nodo_del_modelo = &"balde"
+malla = NodePath("Malla")
+carga = NodePath("Agua")
+mallas = [NodePath("Malla")]
+
+[node name="Forma" type="CollisionShape3D" parent="Balde"]
+shape = SubResource("forma_del_balde")
+
+[node name="Malla" type="MeshInstance3D" parent="Balde"]
+transform = Transform3D(0.17549245, 0, 0, 0, 0, 0.17549248, 0, -0.17549248, 0, 0, 0, 0)
+gi_mode = 2
+
+[node name="Agua" type="MeshInstance3D" parent="Balde"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.07, 0)
+visible = false
+material_override = SubResource("color_del_agua")
+mesh = SubResource("agua_del_balde")
+gi_mode = 2
+
+[node name="JabonAzul" type="RigidBody3D" parent="." node_paths=PackedStringArray("malla", "mallas") groups=["interactuable"]]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10.501369, 0.3964323, -7.6729193)
+collision_mask = 9
+script = ExtResource("30_util")
+datos = ExtResource("33_jabon_azul")
+nodo_del_modelo = &"bidón jabon01_001"
+malla = NodePath("Malla")
+mallas = [NodePath("Malla")]
+
+[node name="Forma" type="CollisionShape3D" parent="JabonAzul"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.056615, 0)
+shape = SubResource("forma_del_bidon")
+
+[node name="Malla" type="MeshInstance3D" parent="JabonAzul"]
+transform = Transform3D(0.2290317, 0, 0, 0, 0.2290317, 0, 0, 0, 0.2290317, 0, 0, 0)
+gi_mode = 2
+
+[node name="JabonRosa" type="RigidBody3D" parent="." node_paths=PackedStringArray("malla", "mallas") groups=["interactuable"]]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9.9666195, 0.3964323, -7.6729193)
+collision_mask = 9
+script = ExtResource("30_util")
+datos = ExtResource("34_jabon_rosa")
+nodo_del_modelo = &"bidón jabon01"
+malla = NodePath("Malla")
+mallas = [NodePath("Malla")]
+
+[node name="Forma" type="CollisionShape3D" parent="JabonRosa"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.056615, 0)
+shape = SubResource("forma_del_bidon")
+
+[node name="Malla" type="MeshInstance3D" parent="JabonRosa"]
+transform = Transform3D(0.2290317, 0, 0, 0, 0.2290317, 0, 0, 0, 0.2290317, 0, 0, 0)
+gi_mode = 2
+
+[node name="JabonAmarillo" type="RigidBody3D" parent="." node_paths=PackedStringArray("malla", "mallas") groups=["interactuable"]]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 11.03491, 0.3964323, -7.6729193)
+collision_mask = 9
+script = ExtResource("30_util")
+datos = ExtResource("35_jabon_amarillo")
+nodo_del_modelo = &"bidón jabon01_002"
+malla = NodePath("Malla")
+mallas = [NodePath("Malla")]
+
+[node name="Forma" type="CollisionShape3D" parent="JabonAmarillo"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.056615, 0)
+shape = SubResource("forma_del_bidon")
+
+[node name="Malla" type="MeshInstance3D" parent="JabonAmarillo"]
+transform = Transform3D(0.2290317, 0, 0, 0, 0.2290317, 0, 0, 0, 0.2290317, 0, 0, 0)
+gi_mode = 2

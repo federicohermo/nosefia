@@ -56,6 +56,21 @@ const METODO_INTERACTUAR := "interactuar"
 ## puede nombrar la caja sin cruzar la dirección de las capas.
 const METODO_EMPUJAR := "empujar"
 
+## Dónde arrancó la noche lo que se agarra, en coordenadas del mundo. Es un método por el mismo
+## motivo: la red de seguridad, en `sistemas/`, no puede nombrar el tipo que lo contesta.
+const METODO_LUGAR_DE_ORIGEN := "lugar_de_origen"
+
+const SENAL_EMPUJADA := &"empujada"
+
+## La propiedad con la que un cuerpo del mundo contesta su `ObjetoDelAlmacen`.
+const PROPIEDAD_DATOS := &"datos"
+
+## En cuántas direcciones se busca un lugar alrededor de un punto.
+const LADOS_ALREDEDOR := 8
+
+## Hasta dónde se busca piso debajo de un lugar, en metros.
+const CAIDA_HASTA_EL_PISO := 3.0
+
 ## Qué parte del paso que el jugador no pudo dar recibe lo que le estorba. Con 1 la caja se
 ## mueve a su velocidad y no pesa nada; con 0 no se mueve y le tapa el paso. El medio es lo que
 ## hace que correr una caja cueste caminar más lento, que es el peso que se quiere.
@@ -66,9 +81,7 @@ const ARRASTRE_DE_LA_CAJA := 0.5
 ## valdría una pared.
 const APOYO_HORIZONTAL := 0.7
 
-## La capa de física donde viven los contornos de los muebles: la caja que envuelve a cada uno.
-## Es la número 4, y su nombre está declarado en `project.godot`. Quien la mira no entra al
-## mueble: el jugador, y el lugar donde se deja un producto soltado.
+## Es la número 4, y su nombre está declarado en `project.godot`.
 const CAPA_DEL_CONTORNO := 8
 
 ## Cuánto se le descuenta a una forma para preguntar si entra o si atraviesa algo, en metros.
@@ -76,18 +89,24 @@ const CAPA_DEL_CONTORNO := 8
 ## puesto al ubicar la caja y el test al comprobar que no atraviesa nada: es el mismo número.
 const ROCE := 0.004
 
-
-## Si a una caja se le puede sacar una unidad: a toda la que esté apoyada, en cualquier lado.
-##
-## **Lo que cobra el traslado es que la caja llevada no entrega**, no la altura a la que quede.
-## Antes el corte era una altura, y una caja apoyada en un mostrador, en un estante o sobre otra
-## caja no entregaba nada sin que nada dijera por qué.
-static func se_puede_retirar(la_lleva_el_jugador: bool) -> bool:
-	return not la_lleva_el_jugador
+## Cuánto gira por segundo lo examinado con cada tecla de movimiento, en radianes. Lo justo para
+## leer la cara de atrás sin pasarse de largo.
+const VELOCIDAD_DE_GIRO_DEL_EXAMEN := 2.5
 
 
 static func se_puede_apoyar_en(inclinacion: float) -> bool:
 	return inclinacion >= APOYO_HORIZONTAL
+
+
+## Si lo soltado se puede dejar sobre la superficie que la mira toca. `debajo` es `null` cuando
+## la superficie es del mundo fijo.
+static func admite_lo_soltado(inclinacion: float, debajo: ObjetoDelAlmacen) -> bool:
+	return se_puede_apoyar_en(inclinacion) and (debajo == null or debajo.admite_encima)
+
+
+## El giro de lo examinado en este cuadro: `x` sobre el eje vertical, `y` sobre el horizontal.
+static func giro_del_examen(entrada: Vector2, segundos: float) -> Vector2:
+	return entrada * VELOCIDAD_DE_GIRO_DEL_EXAMEN * segundos
 
 
 ## Metros desde el ojo hasta el centro de lo examinado, según el radio de la esfera que lo

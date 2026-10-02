@@ -4,6 +4,8 @@
 [ext_resource type="PackedScene" path="res://src/ui/interrupciones/pantalla_de_cierre.tscn" id="7_cierre"]
 [ext_resource type="PackedScene" path="res://src/ui/diegetica/panel_de_la_ventanilla.tscn" id="16_panel"]
 [ext_resource type="PackedScene" path="res://src/ui/diegetica/pantalla_de_computadora.tscn" id="19_pantalla"]
+[ext_resource type="PackedScene" path="res://src/ui/interrupciones/menu_de_pausa.tscn" id="20_menu_de_pausa"]
+[ext_resource type="Script" path="res://src/sistemas/marco/control_de_pausa.gd" id="21_control_de_pausa"]
 
 [node name="Interfaz" type="Node3D"]
 
@@ -14,3 +16,14 @@
 [node name="PantallaDeComputadora" parent="." instance=ExtResource("19_pantalla")]
 
 [node name="PantallaDeCierre" parent="." instance=ExtResource("7_cierre")]
+
+[node name="MenuDePausa" parent="." instance=ExtResource("20_menu_de_pausa")]
+
+[node name="ControlDePausa" type="Node" parent="." node_paths=PackedStringArray("placa")]
+script = ExtResource("21_control_de_pausa")
+placa = NodePath("../PantallaDeCierre")
+
+[connection signal="pausado" from="ControlDePausa" to="MenuDePausa" method="mostrar"]
+[connection signal="reanudado" from="ControlDePausa" to="MenuDePausa" method="ocultar"]
+[connection signal="reanudar_pedido" from="MenuDePausa" to="ControlDePausa" method="reanudar"]
+[connection signal="volver_al_menu_pedido" from="MenuDePausa" to="ControlDePausa" method="pedir_volver_al_menu"]

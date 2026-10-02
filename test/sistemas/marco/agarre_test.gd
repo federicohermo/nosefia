@@ -72,7 +72,7 @@ func test_soltar_conserva_la_orientacion_mundial_de_la_mano() -> void:
 	agarre.punto_de_carga.rotation = Vector3(-0.4, 1.2, 0)
 	agarre.punto_de_soltado.rotation = Vector3(0, -0.7, 0)
 	var cuerpo := _cuerpo()
-	for al_frente in [true, false]:
+	for al_frente: bool in [true, false]:
 		agarre.pedir_agarrar(_lata(), cuerpo)
 		cuerpo.rotation = Vector3(-0.3, -0.35, 0.1)
 		var orientacion := cuerpo.global_basis
@@ -271,3 +271,21 @@ func test_agarrar_y_soltar_un_nodo_sin_colisiones() -> void:
 	assert_bool(agarre.pedir_agarrar(_lata(), nodo)).is_true()
 	assert_object(agarre.soltar(true)).is_same(nodo)
 	assert_object(nodo.get_parent()).is_same(agarre.punto_de_soltado)
+
+
+func test_lo_soltado_vuelve_suelto_del_examen_y_sin_llenar_las_manos() -> void:  # AC-INV-021
+	# Lo que ya se soltó una vez queda suelto del padre, y ahí su `transform` es global: volver
+	# sin el `top_level` lo dejaría en otro lugar.
+	var agarre := _cableado()
+	var cuerpo := _cuerpo()
+	cuerpo.top_level = true
+	cuerpo.transform = Transform3D(Basis(Vector3.UP, 0.4), Vector3(2.0, 0.3, 1.0))
+	var lugar := cuerpo.transform
+	var cara: Node3D = auto_free(Node3D.new())
+	assert_object(agarre.acercar_del_mundo(cuerpo, cara)).is_same(cuerpo)
+	assert_object(agarre.acercar_del_mundo(_cuerpo(), cara)).is_null()
+	assert_object(agarre.manos().sostenido()).is_null()
+	assert_object(agarre.devolver_al_mundo()).is_same(cuerpo)
+	assert_bool(cuerpo.top_level).is_true()
+	assert_bool(cuerpo.transform.is_equal_approx(lugar)).is_true()
+	assert_object(agarre.devolver_al_mundo()).is_null()

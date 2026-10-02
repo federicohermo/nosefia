@@ -136,6 +136,18 @@ func test_despachar_sin_vender_avisa_igual_que_cobrar() -> void:
 	assert_int(_avisos_de_tarea).is_equal(1)
 
 
+func test_la_compra_se_avisa_solo_si_hubo_venta() -> void:
+	var ventanilla := _ventanilla(2)
+	var compras := [0]
+	ventanilla.compra_realizada.connect(func() -> void: compras[0] += 1)
+	ventanilla.pedir_atender()
+	ventanilla.pedir_despachar_sin_vender()
+	assert_int(compras[0]).is_equal(0)
+	ventanilla.pedir_atender()
+	ventanilla.pedir_cobrar()
+	assert_int(compras[0]).is_equal(1)
+
+
 func test_el_turno_sigue_corriendo_con_la_ventanilla_abierta() -> void:
 	# **Es la decisión entera del spec**: atender cuesta minutos, y si el reloj se pausara la
 	# ventanilla sería gratis y la tensión aritmética dejaría de apretar. Se mide contra
@@ -158,7 +170,7 @@ func test_ningun_archivo_de_este_spec_pausa_el_juego() -> void:
 			. override_failure_message("`%s` está vacío o no existe" % ruta)
 			. is_not_empty()
 		)
-		for patron in ["get_tree().paused", "time_scale"]:
+		for patron: String in ["get_tree().paused", "time_scale"]:
 			(
 				assert_bool(texto.contains(patron))
 				. override_failure_message("`%s` nombra `%s`: pausa el turno" % [ruta, patron])
@@ -182,7 +194,7 @@ func test_ningun_archivo_de_este_spec_mueve_stock_ni_sortea() -> void:
 	# Mover unidades del depósito a la góndola es de reponer, y el azar no entra en ningún lado.
 	for ruta: String in ARCHIVOS_DEL_SPEC:
 		var texto := FileAccess.get_file_as_string(ruta)
-		for patron in ["randi(", "randf(", "ingresar("]:
+		for patron: String in ["randi(", "randf(", "ingresar("]:
 			(
 				assert_bool(texto.contains(patron))
 				. override_failure_message("`%s` nombra `%s`" % [ruta, patron])
@@ -261,8 +273,6 @@ func test_la_ventanilla_sin_cablear_no_hace_nada_y_lo_dice() -> void:
 
 
 func test_cobrar_sin_stock_avisa_lo_que_falta_y_no_despacha() -> void:
-	# Emite **una** de las dos señales y nunca las dos: juntas dejarían a la pantalla despachando
-	# al comprador y avisando que falta mercadería al mismo tiempo.
 	var obligatorias := Apertura.obligatorias()
 	_turno = Turno.new(Reglas.DURACION_DEL_TURNO, obligatorias)
 	var reloj: RelojDelTurno = auto_free(RelojDelTurno.new())

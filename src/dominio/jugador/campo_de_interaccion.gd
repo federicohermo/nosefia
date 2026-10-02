@@ -10,6 +10,7 @@ class Candidato:
 	var desvio: float
 	var interactuable: bool
 	var visible: bool
+	var es_producto := false
 
 	func _init(
 		un_id: int, una_distancia: float, un_desvio: float, es_interactuable: bool, es_visible: bool
@@ -28,7 +29,12 @@ static func elegir(candidatos: Array[Candidato], excluido: int = Foco.SIN_OBJETI
 			continue
 		if candidato.distancia > ReglasDelJugador.ALCANCE_DE_LA_MIRA:
 			continue
-		if candidato.desvio > ReglasDelJugador.DESVIO_MAXIMO_DE_LA_MIRA:
+		var desvio_maximo := (
+			ReglasDelJugador.DESVIO_MAXIMO_DE_PRODUCTOS
+			if candidato.es_producto
+			else ReglasDelJugador.DESVIO_MAXIMO_DE_LA_MIRA
+		)
+		if candidato.desvio > desvio_maximo:
 			continue
 		if (
 			elegido == null

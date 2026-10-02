@@ -1,6 +1,6 @@
 # La imposibilidad de la deuda
 
-**Los siete skills que escriben traen su copia, y la de `to-spec` es la canónica.** Un skill es la
+**Cada skill que escribe trae su copia, y la de `to-spec` es la canónica.** Un skill es la
 unidad que se instala: trae su implementación completa y ninguno lee este archivo por ruta.
 `test_copias_de_skills.py` da rojo si una copia difiere en un byte. `shape` y `review-spec-drift`
 no la traen: no escriben nada, así que no pueden dejar deuda.
@@ -144,12 +144,45 @@ entregable más caro y el único que hace que el hallazgo no vuelva.
 | un criterio de bug que pide un rojo que en sus propias condiciones no aparece | `to-issue` — el síntoma se midió con el caso que el criterio excluye adentro |
 | un criterio de rendimiento medido desde una vista donde **lo que el cambio agrega no se ve** | `to-issue` — el criterio no dijo desde dónde se mide, y lo que no se ve puede no costar nada |
 | un issue que cambia lo que el juego hace y declara «Spec: ninguno» | `to-issue` — el tipo se decidió sin la prueba del spec |
+| un issue que escribe a disco sin decir cómo lo aíslan los tests | `to-issue` — las suites que levantan la escena escriben la carpeta del usuario, y ningún gate lo ve |
+| un criterio de un issue que contradice un criterio `ratified` de otra capacidad | `to-issue` — el `rg` de los límites no buscó la regla en los specs vecinos |
+| varios carriles que pierden una vuelta con un comando compuesto en Bash | `implement-batch` — el preámbulo no dijo que el worktree los rechaza |
 | una ficha verde de Notion que se cayó del lote sin motivo escrito | `features-to-issues` — el reparto no se mostró entero |
 | un nodo del harness en verde sin haber ejercido nada | `implement-feature` — se leyó el color del nodo y no el conteo |
 | dos carriles que se pisan un archivo de scratch | `implement-batch` — el prompt no le dio un nombre propio |
 | un worktree que quedó abierto y el limpiador dijo que no | `implement-batch` — salía de `git worktree list`, que no ve al que git ya soltó |
 | un número que el contrato midió bien y que **envejeció** | `implement-batch` — se leyó la base que el issue declara en vez de medir hoy |
 | **varios carriles pisando el mismo comando que el skill les dio escrito** | `implement-batch` — un comando se vuelve a correr antes de repartirlo, no se copia |
+| una lista que reparte un conjunto y **no suma el total** | `to-issue` — los grupos se cuentan contra el catálogo antes de escribirlos |
+| un borde que describe un gesto que el juego no tiene, o que la regla de otra capacidad prohíbe | `to-issue` — el `rg` de los límites miró los criterios `ratified` y no los bordes ni los specs `draft` |
+| un recurso generado **cuyo generador no está en el repo** | `implement-feature` — quien lo generó no commiteó la herramienta; y `to-issue`, que no la puso en «Se escribe» |
+| un issue de un lote que lee un dato que ningún otro entrega, o que reescribe una regla que otro del lote acaba de escribir | `to-issue` — los borradores de «Varios de una» se cruzaron por archivo y no por lo que cada uno da por hecho |
+| un issue abierto **fuera** del lote que parte de una regla que el lote cambia | `implement-batch` — el checker cruzado miró sólo adentro del lote |
+| un preámbulo escrito para **la máquina de otro** | `implement-batch` — el entorno de los carriles se mide antes de repartir, no se copia del skill |
+| un carril que trabaja **sobre otra base que la del issue** | `implement-batch` — el worktree arranca en `origin/main`, y la rama no salió de una base explícita |
+| un objetivo numérico que **la propuesta del issue no alcanza** | `to-issue` — el número se escribió sin medir la propuesta contra el árbol |
+| capturas pedidas en el PR **sin una forma que ande de subirlas** | `implement-feature` e `implement-batch` — la receta no se probó desde el worktree de un carril |
+| un criterio de arte que **no entra en el modelo** | `to-issue` — el criterio se escribió sin medirlo sobre el `.blend` |
+| un valor nuevo de un enum **cuyo índice vive fuera de los límites** | `to-issue` — el `rg` buscó el enum en el catálogo y no en todo lo que se indexa con él |
+| un contrato que mueve un valor y **no sigue a todos sus lectores** | `to-issue` — el `rg` encontró al primer lector y el contrato se escribió sobre ése |
+| un índice que contesta sobre **otro árbol** que el del carril | `implement-batch` — el preámbulo mandó a consultar el índice desde un worktree, y el servidor mira el checkout principal |
+| una textura que **no se ve desde donde mira el jugador** | `to-issue` — el issue no cruzó la textura con las UV de la malla ni con la cara visible |
+| una pregunta al usuario **que una medición contestaba** | `implement-batch` — el padre preguntó sin medir lo que suponía cada opción, ni cruzarla con lo que el usuario ya había decidido |
+| un issue reescrito en el cruce **cuyo contrato sigue diciendo lo de antes** | `implement-batch` — se reescribió la premisa y no el contrato que salía de ella |
+| un caso que **afirma el gesto viejo** y sale rojo en la corrida entera | `implement-feature` — no se buscaron los casos que ejercen el gesto redefinido antes de `verificar.py` |
+| un issue que multiplica lo enfocable **sin medir la mira** | `to-issue` — el costo de `_leer_la_mira` no se midió antes de sumar cuerpos al grupo `interactuable` |
+| un gesto que **deshace una obligatoria** sin que el issue diga qué pasa | `to-issue` — el cruce miró los criterios del gesto y no las tareas que su efecto toca |
+| un caso de escena **verde por suerte** después de que cambió el local | la regla de tests — el caso afirmaba el resultado y no su premisa |
+| un generador que **da vuelta lo que el artista hizo** | `implement-feature` — se probó el generador contra el issue y no contra el `.blend` del artista |
+| un nombre que el issue borra **y que un carril en vuelo vuelve a usar** | `to-issue` — «Verificación» no llevaba el `rg` del nombre, y nadie lo corrió después del merge |
+| un test que afirma sobre **una escena entera que el issue escribe**, afuera de «Se escribe» | `to-issue` — los tests de la escena no se buscaron con `tests_de` ni `quien_instancia` |
+| un archivo nuevo **que el contrato implica y «Se escribe» no nombra** | `to-issue` — «Se escribe» se armó sólo con lo que ya existía |
+| un conflicto entre dos carriles **que le queda a quien mergee** | `implement-batch` — las cadenas llegaban por separado a `staging`, y la resolución no vivía en ninguna rama |
+| una carpeta que gdUnit4 crea **adentro del repo** con `-rd /tmp/...` | `.gitignore` e `implement-batch` — la advertencia del preámbulo no alcanzó, y el ignore la vuelve inofensiva |
+| una regla que se saca y **deja caer un invariante** que otra daba por hecho | `to-issue` — el cruce sigue a los lectores de un valor que se mueve, y sacar una regla no mueve ningún valor |
+| una suite que el issue manda a crecer **y ya está en el tope de `gdlint`** | `to-issue` — se contaron los `test_` y no los métodos públicos |
+| una regla de tests que describe **una versión vieja de la herramienta** | la regla de tests — se escribió midiendo gdUnit4 antes de 6.2.1, y nadie la volvió a medir al actualizarlo |
+| un caso que **afirma la regla que el issue invierte** sin decirla en prosa | `to-issue` — los límites salieron de un `rg`, y la inversión no se probó con un parche antes de publicar |
 
 **Si el problema no entra en ninguna fila, agregá la fila.** Esa tabla es el registro de lo que
 esta doctrina ya aprendió, y está incompleta a propósito.

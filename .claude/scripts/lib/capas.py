@@ -75,8 +75,8 @@ _EXTENDS_PUROS = frozenset({"RefCounted", "Resource"})
 #: el primero que no lo declare estrenaría el bug mandando a leer la línea equivocada.
 _EXTENDS_POR_NOMBRE = re.compile(r"^[ \t]*extends\s+([A-Za-z_]\w*)", re.MULTILINE)
 
-#: Los usos de motor que la capa pura no puede tener: uno por fila de la tabla de
-#: `.claude/rules/dominio.md`, más el acceso a disco.
+#: Los usos de motor que la capa pura no puede tener, más el acceso a disco. Es la lista que
+#: `.claude/rules/dominio.md` nombra como fuente, y no la repite.
 #:
 #: **Esta lista no crece por trámite.** El objetivo no es un linter de GDScript: es la propiedad
 #: de la que cuelga todo lo demás —que el dominio se pueda ejercer sin levantar una escena—, y

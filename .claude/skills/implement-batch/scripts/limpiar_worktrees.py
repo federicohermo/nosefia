@@ -126,6 +126,17 @@ def del_lote(ruta: Path) -> bool:
     return ruta.resolve().is_relative_to(RAIZ.joinpath(*DIR_DE_WORKTREES).resolve())
 
 
+def sin_commitear(estado: str) -> bool:
+    """Si la salida de `git status --porcelain` muestra trabajo sin commitear.
+
+    `.godot/` y `reports/` están en el `.gitignore`, así que la caché que deja Godot no
+    cuenta. Lo que cuenta es trabajo, y puede ser de otra sesión que todavía corre:
+    medido el 2026-09-27, el `--todos` de un lote se llevó el carril de otra sesión con
+    el issue hecho y sin commit.
+    """
+    return bool(estado.strip())
+
+
 def git(*args: str) -> subprocess.CompletedProcess:
     return subprocess.run(
         ["git", *args], capture_output=True, text=True, encoding="utf-8", errors="replace"
@@ -162,7 +173,13 @@ def huerfanos(directorio: Path, ya_estan: list[Path], principal: Path) -> list[P
 
 
 def barrer_ramas() -> tuple[list[str], list[str]]:
-    """Borra las ramas de worktree sin trabajo propio. El `-d` es el que pone el límite."""
+    """Borra las ramas de worktree sin trabajo propio. El `-d` es el que pone el límite.
+
+    **Y una rama entera en un remoto tampoco tiene trabajo propio**, aunque `-d` se niegue.
+    Los carriles arrancan en `origin/main`, que no es ancestro de `staging`, y sin upstream:
+    `-d` no la ve mergeada en ningún lado. Cerrando el lote #262–#267, el 2026-09-30, las nueve
+    ramas quedaron como ANOMALIA sin un solo commit que no estuviera en `origin/main`.
+    """
     salida = git(
         "branch", "--list", f"{RAMA_DE_WORKTREE}*", "--format=%(refname:short)"
     ).stdout
@@ -171,9 +188,17 @@ def barrer_ramas() -> tuple[list[str], list[str]]:
     for rama in (r.strip() for r in salida.splitlines() if r.strip()):
         if git("branch", "-d", rama).returncode == 0:
             borradas.append(rama)
+        elif entera_en_un_remoto(rama) and git("branch", "-D", rama).returncode == 0:
+            borradas.append(rama)
         else:
             quedaron.append(rama)
     return borradas, quedaron
+
+
+def entera_en_un_remoto(rama: str) -> bool:
+    """Si cada commit de la rama está en alguna rama remota. Un `rev-list` que falla no lo es."""
+    hecho = git("rev-list", "--count", rama, "--not", "--remotes")
+    return hecho.returncode == 0 and hecho.stdout.strip() == "0"
 
 
 def main() -> None:
@@ -191,13 +216,13 @@ def main() -> None:
         sys.exit(1)
     principal = Path(hecho.stdout.strip()).resolve()
 
+    registrados = [
+        Path(l[len("worktree ") :]).resolve()
+        for l in git("worktree", "list", "--porcelain").stdout.splitlines()
+        if l.startswith("worktree ")
+    ]
     if args == ["--todos"]:
         directorio = RAIZ.joinpath(*DIR_DE_WORKTREES).resolve()
-        registrados = [
-            Path(l[len("worktree ") :]).resolve()
-            for l in git("worktree", "list", "--porcelain").stdout.splitlines()
-            if l.startswith("worktree ")
-        ]
         objetivos = [w for w in registrados if del_lote(w)]
         objetivos += huerfanos(directorio, objetivos, principal)
         if not objetivos:
@@ -224,6 +249,19 @@ def main() -> None:
             print("   SALTEADO: es el checkout principal", file=sys.stderr)
             fallo = True
             continue
+
+        # Sólo se pregunta a un worktree que git registra: uno huérfano no tiene su propio
+        # `.git`, y `git -C` contestaría por el checkout principal. Un `status` que falla deja
+        # stdout vacío, que se leería como árbol limpio: por eso cuenta como sin commitear.
+        if wt in registrados:
+            estado = git("-C", str(wt), "status", "--porcelain")
+            if estado.returncode != 0 or sin_commitear(estado.stdout):
+                print(
+                    "   SALTEADO: tiene cambios sin commitear, y puede ser de otra sesion",
+                    file=sys.stderr,
+                )
+                fallo = True
+                continue
 
         # `git worktree remove` y `prune` se NIEGAN los dos sobre un worktree bloqueado, y el
         # harness de agentes los crea bloqueados. Sin este `unlock` el borrado del directorio

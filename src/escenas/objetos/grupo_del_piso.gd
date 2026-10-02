@@ -90,7 +90,8 @@ func _actualizar(indice: int, forzar: bool = false) -> void:
 	var vista := _vistas[indice]
 	# El contorno existente necesita la malla individual mientras está enfocado.
 	var enfocado := vista.material_overlay != null
-	var dormido := cuerpo.sleeping
+	# Congelado no lo mueve la física y `sleeping` no cambia: examinarlo lo lleva a la cara.
+	var dormido := cuerpo.sleeping and not cuerpo.freeze
 	if not forzar and dormido and _reposos[indice] and vista.visible == enfocado:
 		return
 	_reposos[indice] = dormido

@@ -12,10 +12,11 @@ func test_cada_mancha_se_enfoca_desde_un_apoyo_caminable_a_un_metro() -> void:
 		var encontrada := false
 		for direccion: Vector3 in [Vector3.FORWARD, Vector3.BACK, Vector3.LEFT, Vector3.RIGHT]:
 			var pie := mancha.global_position + direccion
-			var apoyo := _rayo(jugador, pie + Vector3.UP, pie + Vector3.DOWN)
+			# Hasta un metro abajo del piso y no de la mancha: la del moho está en una pared.
+			var apoyo := _rayo(jugador, pie + Vector3.UP, Vector3(pie.x, -1.0, pie.z))
 			if apoyo.is_empty():
 				continue
-			if apoyo.collider != almacen.get_node("Estructura/almacen/StaticBody3D"):
+			if not _es_piso(almacen, apoyo.collider):
 				continue
 			pie.y = apoyo.position.y + 0.01
 			var consulta := PhysicsShapeQueryParameters3D.new()
@@ -38,15 +39,20 @@ func test_cada_mancha_se_enfoca_desde_un_apoyo_caminable_a_un_metro() -> void:
 func test_los_objetos_y_manchas_quedan_sobre_el_modelo() -> void:
 	var almacen := await _abrir()
 	var objetos: Array[Node] = almacen.get_node("Objetos").get_children()
-	objetos.append_array(almacen.get("_limpieza").manchas())
+	var manchas: Array = almacen.get("_limpieza").manchas()
+	objetos.append_array(manchas)
 	for objeto: Node3D in objetos:
+		# Cada cosa se apoya hacia su propio abajo: la mancha de la pared, contra la pared.
+		var abajo := Vector3.DOWN
+		if objeto in manchas:
+			abajo = -objeto.global_basis.y.normalized()
 		for malla: MeshInstance3D in objeto.find_children("*", "MeshInstance3D", true, false):
 			if not malla.is_visible_in_tree():
 				continue
 			var limites := malla.global_transform * malla.get_aabb()
-			var pie := limites.get_center()
-			pie.y = limites.position.y
-			var apoyo := _rayo(objeto, pie + Vector3.UP * 0.1, pie + Vector3.DOWN)
+			var medio := (limites.size * abajo.abs()).length() / 2.0
+			var pie := limites.get_center() + abajo * medio
+			var apoyo := _rayo(objeto, pie - abajo * 0.1, pie + abajo)
 			assert_bool(apoyo.is_empty()).override_failure_message(str(objeto.name)).is_false()
 			if not apoyo.is_empty():
 				# **No todo se apoya en la malla del edificio desde el 043.** Ese spec mandó
@@ -59,10 +65,11 @@ func test_los_objetos_y_manchas_quedan_sobre_el_modelo() -> void:
 					. override_failure_message("%s se apoya en `%s`" % [objeto.name, sostiene])
 					. is_true()
 				)
+				var hueco: float = (apoyo.position - pie).dot(abajo)
 				(
-					assert_float(pie.y - apoyo.position.y)
+					assert_float(hueco)
 					. override_failure_message(
-						"%s: base %f, apoyo %f" % [objeto.name, pie.y, apoyo.position.y]
+						"%s: base %v, apoyo %v" % [objeto.name, pie, apoyo.position]
 					)
 					. is_between(-0.01, 0.06)
 				)
@@ -95,6 +102,15 @@ func _abrir() -> Node3D:
 	for cuadro in 60:
 		await get_tree().physics_frame
 	return almacen
+
+
+## Si lo que el rayo tocó es piso donde se camina: el del edificio, o el volumen sólido que lo
+## dobla por debajo.
+func _es_piso(almacen: Node3D, cuerpo: Object) -> bool:
+	return (
+		cuerpo == almacen.get_node("Estructura/almacen/StaticBody3D")
+		or cuerpo == almacen.get_node("Estructura/SueloSolido")
+	)
 
 
 func _rayo(objeto: Node3D, desde: Vector3, hasta: Vector3) -> Dictionary:

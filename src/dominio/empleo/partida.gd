@@ -33,6 +33,17 @@ static func nueva() -> Partida:
 	return Partida.new(Legajo.new())
 
 
+## La partida de un guardado. Un diccionario vacío da la partida nueva.
+static func desde(datos: Dictionary) -> Partida:
+	var saneado := PartidaSerializada.sanear(datos)
+	var apercibimientos: int = saneado[PartidaSerializada.clave(
+		PartidaSerializada.Campo.APERCIBIMIENTOS
+	)]
+	var partida := Partida.new(Legajo.con_apercibimientos(apercibimientos))
+	partida._jornada = saneado[PartidaSerializada.clave(PartidaSerializada.Campo.JORNADA)]
+	return partida
+
+
 func _init(legajo: Legajo) -> void:
 	_legajo = legajo
 

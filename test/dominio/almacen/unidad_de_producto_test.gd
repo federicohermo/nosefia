@@ -17,3 +17,8 @@ func test_las_unidades_del_mismo_producto_tienen_la_misma_identidad() -> void:
 	var segunda := UnidadDeProducto.new(Catalogo.todos()[0])
 	assert_str(String(primera.id)).is_equal(String(segunda.id))
 	assert_str(String(primera.id)).is_not_empty()
+
+
+func test_la_unidad_suena_como_su_producto() -> void:
+	var unidad := UnidadDeProducto.new(Catalogo.de(Producto.Id.CORACOLA))
+	assert_int(unidad.sonoridad).is_equal(EntradaSonora.Sonoridad.LATA)

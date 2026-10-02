@@ -1,7 +1,7 @@
 ---
 schema_version: 1
 capability_id: CAP-SAV
-status: draft
+status: ratified
 owner: por definir
 provenance: GDD «checkpoint al final de cada noche»; migración de los specs 019, 020, 036
 ---
@@ -22,6 +22,7 @@ guardado hay que jugar las cinco de una sentada.
 | **Campo** | un dato que cruza la sesión, con su tipo y su valor por defecto | clave, columna |
 | **Sanear** | completar un guardado incompleto o mal tipado con sus defectos | migrar, parchear |
 | **Retomar** | seguir la partida guardada desde el menú | cargar, continuar |
+| **Pausa** | la jornada detenida, con su menú en pantalla | freeze, stop |
 
 ## Comportamiento normativo
 
@@ -71,7 +72,8 @@ arranque siguiente no vuelva a tropezar con él.
 
 ### BR-SAV-010 — El juego arranca en el menú
 
-El sistema DEBE abrir el juego en un menú con **empezar, continuar y salir**, y no en el almacén.
+El sistema DEBE abrir el juego en un menú, y no en el almacén. El menú DEBE mostrar cinco
+opciones, en este orden: **continuar, nuevo juego, logros, configuraciones y salir**.
 
 ### BR-SAV-011 — Continuar está disponible sólo con guardado
 
@@ -79,19 +81,50 @@ SI no hay guardado, ENTONCES «continuar» NO DEBE estar disponible y NO DEBE ll
 
 ### BR-SAV-012 — Empezar de nuevo sobre una partida pide confirmación
 
-SI hay un guardado, ENTONCES «empezar» DEBE pedir confirmación antes de borrarlo. Es la pérdida
+SI hay un guardado, ENTONCES «nuevo juego» DEBE pedir confirmación antes de borrarlo. Es la pérdida
 que no se puede deshacer.
 
 ### BR-SAV-013 — Salir pasa por un solo lugar
 
 El sistema DEBE tener un único camino para cerrar el juego, y sólo la opción de salir lo produce.
 
+### BR-SAV-014 — En la web, salir no se muestra
+
+SI el juego corre en la web, ENTONCES el menú NO DEBE mostrar la opción de salir. La página no
+puede cerrar su pestaña. Las otras cuatro opciones DEBEN quedar en el mismo orden.
+
+### BR-SAV-015 — Retomar sigue desde lo guardado
+
+CUANDO arranca la partida, SI hay guardado, ENTONCES el sistema DEBE seguir en la jornada
+guardada y con los apercibimientos guardados. SI no hay guardado, ENTONCES DEBE arrancar una
+partida nueva.
+
+### BR-SAV-016 — Esc pausa la jornada
+
+CUANDO el jugador aprieta Esc durante la jornada, el sistema DEBE pausarla y mostrar el menú de
+pausa. Un segundo Esc DEBE reanudarla, igual que «reanudar». SI la placa del cierre está en
+pantalla, ENTONCES Esc NO DEBE hacer nada: la placa ya ofrece volver al menú. SI el cursor pasa
+de tomado a suelto sin que el juego lo suelte, ENTONCES el sistema DEBE pausar: en la web el
+navegador consume Esc para soltar el cursor. Soltarlo el propio juego NO DEBE pausar.
+
+### BR-SAV-017 — El menú de pausa muestra cuatro opciones
+
+El menú de pausa DEBE mostrar cuatro opciones, en este orden: **reanudar, configuraciones, logros
+y volver al menú**. Configuraciones y logros DEBEN verse deshabilitadas. El menú de pausa no
+ofrece salir: el juego se cierra sólo desde el menú de inicio.
+
+### BR-SAV-018 — Volver al menú abandona la jornada
+
+CUANDO el jugador elige «volver al menú» en la pausa, el sistema DEBE sacar el juego de la pausa,
+llevarlo al menú de inicio y NO DEBE guardar nada.
+
 ## Criterios de aceptación
 
 ### AC-SAV-001 — El cierre guarda una vez *(verifica BR-SAV-001)*
 
 DADO una partida en curso CUANDO cierra la jornada 3 ENTONCES se guarda **exactamente una vez**,
-con la partida sin terminar, y lo guardado devuelve esa jornada y esos apercibimientos.
+con la partida sin terminar. Lo guardado devuelve la jornada que sigue, la que la partida
+tiene por abrir, y esos apercibimientos.
 
 ### AC-SAV-002 — El último cierre borra *(verifica BR-SAV-002)*
 
@@ -153,18 +186,46 @@ para creer que está cerrado.
 
 ### AC-SAV-014 — Empezar sobre una partida confirma *(verifica BR-SAV-012)*
 
-DADO un guardado CUANDO se elige empezar ENTONCES el pedido es el de confirmar y no el de
-empezar; recién al confirmar llega el de empezar. Sin guardado, empezar es directo.
+DADO un guardado CUANDO se elige nuevo juego ENTONCES el pedido es el de confirmar y no el
+de nuevo juego; recién al confirmar llega el de nuevo juego. Sin guardado, es directo.
 
 ### AC-SAV-015 — Salir por un solo lugar *(verifica BR-SAV-013)*
 
 DADO todo el código del juego ENTONCES el cierre del juego aparece **una sola vez**, y sólo la
 opción de salir lo produce.
 
+### AC-SAV-016 — La web no ofrece salir *(verifica BR-SAV-014)*
+
+DADO el juego en la web ENTONCES el menú muestra cuatro opciones, sin salir, y en el mismo orden
+que fuera de la web.
+
+### AC-SAV-017 — Retomar arranca donde quedó *(verifica BR-SAV-015)*
+
+DADO un guardado en la jornada 3 con apercibimientos CUANDO arranca la partida ENTONCES está en
+esa jornada y con esos apercibimientos. Sin guardado, arranca en la primera jornada y sin
+apercibimientos.
+
+### AC-SAV-018 — Esc pausa y reanuda *(verifica BR-SAV-016)*
+
+DADO la jornada en curso CUANDO llega Esc ENTONCES el juego queda en pausa; CUANDO llega otro Esc
+ENTONCES se reanuda. DADO la placa del cierre en pantalla CUANDO llega Esc ENTONCES no pasa nada.
+DADO el cursor tomado CUANDO queda suelto sin que el juego lo suelte ENTONCES el juego queda en
+pausa; CUANDO lo suelta el propio juego ENTONCES no.
+
+### AC-SAV-019 — Los cuatro botones de la pausa *(verifica BR-SAV-017)*
+
+DADO el menú de pausa ENTONCES muestra reanudar, configuraciones, logros y volver al menú, en ese
+orden, y sólo reanudar y volver al menú están habilitados.
+
+### AC-SAV-020 — Volver al menú no guarda *(verifica BR-SAV-018)*
+
+DADO el juego en pausa CUANDO se elige volver al menú ENTONCES el juego sale de la pausa, el
+pedido de ir al menú se emite una sola vez y no se escribe ningún guardado.
+
 ## No objetivos
 
-- Esta capacidad NO decide **qué** guarda cada sistema: define el sobre. El expediente de
-  investigación y el inventario entran como campos cuando sus dueños los declaren.
+- Esta capacidad NO decide **qué** guarda cada sistema: define el sobre. El inventario entra
+  como campo cuando su dueño lo declare.
 - Esta capacidad NO migra guardados entre versiones: eso es del día que exista una segunda.
 - Esta capacidad NO ofrece ranuras, autoguardado ni nube.
 - Esta capacidad NO avisa en pantalla que la escritura falló.
@@ -179,19 +240,18 @@ opción de salir lo produce.
 
 ## Señales
 
-- Empezar, continuar y salir. Cada una se emite **exactamente una vez** por la opción que la
+- Nuevo juego, continuar y salir. Cada una se emite **exactamente una vez** por la opción que la
   produce.
+- Pausado, reanudado y volver al menú pedido. Cada una se emite una sola vez por acción.
 
 ## Dependencias
 
 - [`employment-record`](../employment-record/employment-record.md) (consume): la jornada, el
   legajo y el final.
-- [`investigation`](../investigation/investigation.md) (consume): la lista de pistas
-  descubiertas.
 
 ## Preguntas abiertas
 
-- **OQ-SAV-001 — ¿Qué más cruza la jornada además del legajo y el expediente?**
+- **OQ-SAV-001 — ¿Qué más cruza la jornada además del legajo?**
   - Por qué sigue abierta: el inventario y los objetos movidos no declararon si su estado cruza.
   - Decide: el dueño del repo.
   - Bloquea: nada. Agrega campos a `BR-SAV-005`.

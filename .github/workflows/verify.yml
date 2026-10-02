@@ -8,8 +8,7 @@
 # Lo que este workflow NO hace, a propósito:
 #
 #   - No exporta el juego, y sigue sin hacerlo ahora que hay quien sí: el que exporta y publica
-#     es `desplegar.yml`, y sólo en `main`. Las export templates pesan más de un giga —el
-#     número exacto, medido y con fecha, vive una sola vez en `docs/infra/despliegue.md`— y no
+#     es `desplegar.yml`, y sólo en `main`. Las export templates pesan más de un giga, y no
 #     tiene sentido bajarlas en cada PR: allá se cachean por versión, acá no se bajan nunca.
 #   - No corre el editor. Los tests corren headless, que es lo que hace que la CI y la máquina
 #     de cualquiera del equipo hagan exactamente lo mismo.

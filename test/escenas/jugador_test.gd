@@ -59,7 +59,7 @@ func test_las_cuatro_acciones_del_dominio_estan_declaradas_en_el_proyecto() -> v
 	# El par de String entre `reglas_del_jugador.gd` y la sección `[input]` de `project.godot`
 	# no lo verifica nadie más: renombrar la constante sin tocar el proyecto deja una dirección
 	# que no responde, y el juego arranca igual.
-	for accion in [
+	for accion: String in [
 		ReglasDelJugador.ACCION_ADELANTE,
 		ReglasDelJugador.ACCION_ATRAS,
 		ReglasDelJugador.ACCION_IZQUIERDA,
@@ -82,6 +82,17 @@ func test_el_jugador_avisa_cuando_enfoca_y_cuando_pierde_el_objetivo() -> void:
 	assert_bool(jugador.has_signal("objetivo_perdido")).is_true()
 
 
+func test_el_jugador_avisa_un_paso_por_lo_que_camina_en_el_piso() -> void:
+	# Lo vertical no es caminar: caer o subir no suena como un paso.
+	var jugador := _jugador()
+	var pasos := [0]
+	jugador.connect("paso_dado", func() -> void: pasos[0] += 1)
+	jugador.call("_contar_el_paso", Vector3(0, CadenciaDePasos.DISTANCIA_ENTRE_PASOS * 3, 0))
+	assert_int(pasos[0]).is_equal(0)
+	jugador.call("_contar_el_paso", Vector3(CadenciaDePasos.DISTANCIA_ENTRE_PASOS, 0, 0))
+	assert_int(pasos[0]).is_equal(1)
+
+
 func test_suspender_y_reanudar_llegan_hasta_el_control_del_dominio() -> void:
 	# Son la única puerta por la que el 006 (examinar un objeto) y el 009 (abrir la computadora)
 	# pueden clavar cámara y locomoción. El test mira `_control` por dentro a propósito: lo que
@@ -94,6 +105,21 @@ func test_suspender_y_reanudar_llegan_hasta_el_control_del_dominio() -> void:
 	assert_bool(jugador._control.esta_suspendido()).is_true()
 	jugador.reanudar()
 	assert_bool(jugador._control.esta_suspendido()).is_false()
+
+
+func test_esc_no_es_del_jugador() -> void:
+	# Esc pausa, y lo atiende la pausa: el jugador ya no tiene una salida de emergencia propia.
+	var texto := FileAccess.get_file_as_string("res://src/escenas/jugador.gd")
+	assert_str(texto).is_not_empty()
+	assert_str(texto).not_contains("ui_cancel")
+
+
+## Reanudar ya es el gesto que el navegador pide para devolver el cursor: un clic más no suma nada.
+func test_al_reanudar_el_cursor_vuelve_sin_otro_clic() -> void:
+	var jugador := _jugador()
+	jugador.notification(Node.NOTIFICATION_PAUSED)
+	jugador.notification(Node.NOTIFICATION_UNPAUSED)
+	assert_bool(jugador.call("_el_cursor_esta_tomado")).is_true()
 
 
 func test_suspender_con_algo_enfocado_avisa_que_se_perdio_el_objetivo() -> void:
@@ -119,8 +145,8 @@ func test_los_dos_sistemas_del_006_llegan_armados_al_instanciar_la_escena() -> v
 
 
 func test_el_jugador_dice_que_lleva_en_la_mano() -> void:
-	# La única puerta por la que otra escena pregunta qué se está llevando, y la pide el 014
-	# para saber si lo que hay en la mano es el trapeador: con otra cosa, la pasada no cuenta.
+	# La única puerta por la que otra escena pregunta qué se está llevando, y la pide la limpieza
+	# para saber qué útil hay en la mano: con otra cosa, el uso no hace nada.
 	# Devuelve el `id` del dominio y nunca el nodo: un nodo cruzaría la dirección de las capas
 	# al revés.
 	var jugador := _jugador()
@@ -142,7 +168,7 @@ func test_los_cuatro_puntos_estan_donde_el_dominio_los_declara() -> void:
 		"Giro/Camara/PuntoDeCarga": ReglasDeLosObjetos.DISTANCIA_DE_CARGA,
 		"Giro/Camara/PuntoDeSoltado": ReglasDeLosObjetos.DISTANCIA_DE_SOLTADO,
 	}
-	for ruta in puntos:
+	for ruta: String in puntos:
 		(
 			assert_bool(jugador.has_node(ruta))
 			. override_failure_message("falta el nodo %s en jugador.tscn" % ruta)
@@ -187,7 +213,7 @@ func test_cada_brazo_apunta_al_punto_de_mano_que_mueve() -> void:
 		"Giro/Camara/BrazoDeCarga": "Giro/Camara/PuntoDeCarga",
 		"Giro/Camara/BrazoDeProducto": "Giro/Camara/PuntoDeProducto",
 	}
-	for ruta_del_brazo in manos:
+	for ruta_del_brazo: String in manos:
 		var brazo: SpringArm3D = jugador.get_node(ruta_del_brazo)
 		var punto: Node3D = jugador.get_node(manos[ruta_del_brazo])
 		var punta := brazo.transform * Vector3(0.0, 0.0, brazo.spring_length)
@@ -198,7 +224,7 @@ func test_los_brazos_barren_un_volumen_y_no_un_rayo() -> void:
 	# Un brazo sin `shape` barre un rayo, y un rayo sólo frena el CENTRO de lo que se lleva: la
 	# mitad que sobra le sigue entrando a la madera.
 	var jugador := _jugador()
-	for ruta in ["Giro/Camara/BrazoDeCarga", "Giro/Camara/BrazoDeProducto"]:
+	for ruta: String in ["Giro/Camara/BrazoDeCarga", "Giro/Camara/BrazoDeProducto"]:
 		var brazo: SpringArm3D = jugador.get_node(ruta)
 		(
 			assert_object(brazo.shape)
@@ -214,7 +240,7 @@ func test_los_brazos_nacen_adentro_de_la_capsula_del_cuerpo() -> void:
 	var jugador := _jugador()
 	var cuerpo: CollisionShape3D = jugador.get_node("Cuerpo")
 	var capsula: CapsuleShape3D = cuerpo.shape
-	for ruta in ["Giro/Camara/BrazoDeCarga", "Giro/Camara/BrazoDeProducto"]:
+	for ruta: String in ["Giro/Camara/BrazoDeCarga", "Giro/Camara/BrazoDeProducto"]:
 		var brazo: SpringArm3D = jugador.get_node(ruta)
 		var esfera: SphereShape3D = brazo.shape
 		var radial := Vector2(brazo.position.x, brazo.position.z).length()

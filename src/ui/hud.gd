@@ -1,9 +1,8 @@
-## La pantalla del turno: cuántas obligatorias van y cuántos apercibimientos hay.
+## La pantalla del turno: cuántas obligatorias van, cuántos apercibimientos hay y lo que dice la
+## caja examinada.
 ##
-## **Recibe números ya decididos y los pinta.** No formatea nada —eso es `Marcador`—, no sabe qué
-## es un umbral, y no conoce al nodo que le manda los números: se conecta por señal desde la
-## escena. Lo verifican los `rg` del spec, que miran el archivo entero y no distinguen código de
-## comentario.
+## **Recibe todo ya decidido y lo pinta.** No conoce al nodo que le manda los números: se
+## conecta por señal desde la escena.
 ##
 ## **La hora no está acá, y ésa es la decisión.** El GDD la pone en el reloj de mesa del local,
 ## no en la pantalla: un número siempre visible afloja la tensión, porque saber cuánto queda
@@ -13,6 +12,10 @@
 ## Lo único propio de esta capa son las palabras. El veredicto del cierre **no** se dibuja acá:
 ## es de la pantalla de fin de jornada, y tenerlo en los dos lados sería la misma banda traducida
 ## a palabras en dos archivos que no llevan test obligatorio.
+##
+## **El subtítulo llega escrito.** Lo que dice una caja examinada lo arma `dominio/`, que es donde
+## tiene test; acá se pinta y se vacía. Va con el tema de Manada y sin fuente ni color propios: el
+## contorno que lo deja leer sobre el blanco del estante es de su variación en el tema.
 class_name Hud
 extends CanvasLayer
 
@@ -25,6 +28,7 @@ const TEXTO_DE_LOS_APERCIBIMIENTOS := "Apercibimientos %d de %d"
 
 @export var _tareas: Label
 @export var _apercibimientos: Label
+@export var _subtitulo: Label
 
 var foco_presente: bool = false
 
@@ -70,3 +74,13 @@ func mostrar_tareas(cumplidas: int) -> void:
 func mostrar_apercibimientos(cuantos: int) -> void:
 	var tope := Reglas.APERCIBIMIENTOS_HASTA_EL_DESPIDO
 	_apercibimientos.text = TEXTO_DE_LOS_APERCIBIMIENTOS % [cuantos, tope]
+
+
+## Pinta la línea de subtítulo tal como llega. Un texto vacío es no decir nada.
+func mostrar_subtitulo(texto: String) -> void:
+	_subtitulo.text = texto
+
+
+## Borra la línea de subtítulo. La llama el fin del examen: el subtítulo dura lo que dura él.
+func vaciar_subtitulo() -> void:
+	_subtitulo.text = ""

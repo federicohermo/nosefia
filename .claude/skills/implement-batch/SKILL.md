@@ -39,7 +39,11 @@ de ayer.
 obligan a poner dos issues en el mismo carril, en orden:
 
 1. **Una dependencia declarada** (`Depende de #N`).
-2. **Un archivo compartido para escritura.** Las dos filas «Se escribe» se cruzan.
+2. **Un archivo compartido para escritura.** Las dos filas «Se escribe» se cruzan. Un `.gd` o
+   un spec con cambios chicos en zonas distintas no obliga: el padre prueba el merge con
+   `git merge-tree --write-tree <rama> <rama>` y resuelve lo que choque. En el lote del
+   2026-09-26, la regla estricta dejaba 13 issues en un solo carril, y los carriles separados
+   chocaron sólo en dos specs y un `.gd`.
 3. **Una escena compartida.** Éste no se negocia: **un `.tscn` no se mergea.** Un merge de tres
    vías sobre una escena no da un conflicto, da una escena corrupta. Dos issues que tocan la misma
    escena van en serie aunque no compartan nada más.
@@ -53,6 +57,17 @@ Antes de lanzar nada, cruzá los issues del lote entre sí y **decí qué encont
 - Dos issues que entregan el **mismo criterio**. Uno de los dos sobra.
 - Un criterio que **ningún issue del lote entrega** y que el lote da por hecho.
 - Dos issues que contradicen la misma regla del contrato.
+- **Un issue abierto fuera del lote que parte de una regla que el lote cambia.** No se reparte,
+  pero queda mintiendo el día que el lote aterrice. Se buscan por el spec que tocan, no por el
+  número. En el lote del 2026-09-29, #176 —abierto— contaba un depósito de 10 que #263 pasaba a
+  8, y el usuario lo sumó al lote.
+- **Un borde que describe un gesto que el juego no tiene.** Se implementa inventando la regla que
+  falta. En el mismo lote, dos issues vendían «de la góndola» contra `BR-CTR-014`.
+
+**Un issue que el cruce reescribe se reescribe entero**: su premisa, su contrato y sus
+criterios. El contrato sale de la premisa, y la premisa nueva deja mintiendo al viejo. En el lote
+del 2026-09-29, el cruce reescribió la premisa de #176 (la caja cuenta desde el depósito), y su
+contrato siguió pidiendo `sacar() -> bool` y una caja que guarda su propio número.
 
 Lo que aparezca se corrige ahora —el issue con `gh issue edit`, el contrato con `to-spec`— y no
 se reparte roto.
@@ -66,6 +81,56 @@ Cada agente recibe, literal:
 - **El preámbulo destilado una vez para todo el lote**: las cuatro capas y su dirección, las
   convenciones verificables con quién verifica cada una, y las trampas de este repo. Es el ahorro
   propio del batch — sin esto, N carriles lo re-derivan N veces desde frío.
+- **Y el preámbulo se mide en la máquina donde corren los carriles.** Los comandos de este skill
+  son los de la máquina Windows del equipo. En un contenedor Linux de la nube no hay PowerShell,
+  ni Godot, ni Blender, y `download.blender.org` puede estar bloqueado. Lo que anduvo el
+  2026-09-29, medido antes de repartir:
+  - Godot del zip de la release, con un enlace en el PATH: `lib/godot.py` lo encuentra ahí.
+  - Blender como `bpy` de PyPI, de la serie que pinnea `lib/blender.py`, envuelto en un script
+    que emula `blender <x.blend> --background --python <s.py> -- <args>`, y declarado en
+    `BLENDER_BIN` adelante de cada comando. Reexportó el `.glb` con el mismo tamaño en bytes.
+  - Las capturas, con `xvfb-run` y `--rendering-driver opengl3` (llvmpipe).
+  - El horneado, con `xvfb-run` y lavapipe: `VK_ICD_FILENAMES=/usr/share/vulkan/icd.d/lvp_icd.json`.
+  - El conteo crudo sale sin volver a correr: `grep -c "<testsuite "` sobre el `results.xml` del
+    último `reports/report_N/`.
+  - **El `-rd` de gdUnit4 es relativo al proyecto aunque empiece con `/`**: `-rd /tmp/x` crea
+    `tmp/x` adentro del repo. Pasó en dos carriles del lote del 2026-09-29, el segundo con la
+    advertencia en su preámbulo, y por eso `/tmp/` está en `.gitignore`.
+  - Las variables de entorno no sobreviven entre llamadas a Bash: van adelante del comando.
+  - Lo que corre de fondo va con el `run_in_background` de Bash. Un `nohup … &` adentro de un
+    comando muere con él, sin dejar salida: le pasó a una verificación integrada del padre el
+    2026-09-30.
+- **Las capturas que pide un issue suben con `scripts/capturas_a_rama.py`**, a la rama huérfana
+  `capturas/<N>`, que no se mergea, y el PR las muestra por su URL cruda. **No con un worktree
+  aparte**: el guard rechaza `git -C <otro worktree>` desde el worktree de un carril. Medido el
+  2026-09-29 en el carril de #267, que las subió a mano con plumbing de git.
+- **Y Bash rechaza un comando con la palabra `source` en una ruta**, con «runs a string through
+  source». Para mirar `assets/source/` va `Glob`, `Grep` o Python. Medido el mismo día. También
+  rechaza, con «too complex to verify», un subshell que corre Godot, `godot … "$VAR"`, un `for`
+  que corre Godot con una variable y un heredoc largo de Python con `git` adentro. En el carril
+  de #276 rechazó además tres comandos sin Godot: un `for` sobre `$(rg -l …)`,
+  `gdlint $(git diff --name-only …)`, y `git rev-parse … && test -z "$(rg …)"`. Lo que tienen en
+  común es una sustitución `$(…)` como argumento. Todo eso va a un script en el scratch del
+  carril, que se corre en una línea.
+- **Un carril se corta sin avisar, y se retoma, no se relanza.** El límite de sesión de la API
+  corta a todos los carriles a la vez, y un reinicio del contenedor mata sus procesos. El
+  worktree y el scratch sobreviven; el proceso, no. Se retoma con `SendMessage` al mismo
+  agente: el mensaje dice en qué commit quedó el worktree, qué quedó sin commitear y que no se
+  apoye en un log cortado. Por eso cada carril commitea y empuja a medida que avanza. En el
+  lote del 2026-09-29 pasó cuatro veces, y no se perdió nada que estuviera commiteado.
+- **`nosefia-index` no mira el worktree del carril.** Lo levanta la sesión desde el checkout
+  principal, y los subagentes lo comparten: contesta sobre ese árbol. En un carril apilado sobre
+  otro PR describe el árbol de antes. El 2026-09-29, en el carril de #263, decía 18 reglas y 21
+  criterios de `store-stock`, y la rama tenía 20 y 25. Adentro de un carril, lo que cuenta es el
+  `rg` sobre el worktree.
+- **Y la rama sale de una base explícita, porque el worktree no arranca en ella.** El
+  `isolation: "worktree"` arma el worktree sobre `origin/main`: medido el 2026-09-29, 469
+  commits detrás de `staging`, en los dos primeros carriles del lote. Un carril que crea su rama
+  desde donde está trabaja sobre el árbol de la última entrega. Va `git fetch origin <base>` y
+  `git checkout --no-track -b <rama> origin/<base>`, y `git merge-base --is-ancestor
+  origin/<base> HEAD` antes de la primera edición. **El `--no-track` evita que dos carriles
+  escriban a la vez el `.git/config` compartido.** Al de #264 le pasó: la rama quedó creada, el
+  índice cambiado y HEAD todavía en `worktree-agent-…`. El upstream lo pone el `push -u`.
 - **La rama se llama `<tipo>/<issue>-<kebab>`, con el tipo del issue, y eso no es decorativo.**
   `gate_de_rama.py` corre como hook y **sólo deja escribir en `src/` desde `feature/`, `bugfix/`,
   `refactor/` e `improvement/`**. El síntoma es un `Edit` denegado, que se lee como un
@@ -91,6 +156,10 @@ Cada agente recibe, literal:
   `python .claude/scripts/verificar.py` con `GODOT_BIN` exportada, porque ahí **el comando es
   `python`**. **Medido el 2026-09-06: lo pisaron TRES de los cuatro carriles**, cada uno perdiendo
   una vuelta, y los tres con el comando escrito por este mismo skill en la forma que no corre.
+- **Y en Bash, un comando por llamada.** En un worktree aislado, Bash rechaza por «too complex
+  to verify» un comando compuesto que nombra `git`, un `&&` largo, y un heredoc con `mkdir` y
+  `cat >`. El carril lo lee como un permiso negado. Los archivos se escriben con `Write`. Medido
+  el 2026-09-27: lo pisaron los cuatro carriles del lote.
 - **Y ese `--import` no es una vez: es una por `class_name` nuevo.** Crear el `.gd` no alcanza
   para que su test lo vea, y hasta el `--import` siguiente el error es `Parse Error: Identifier
   "X" not declared` **con el archivo ya escrito en disco**. Se lee como un error del código y no
@@ -111,11 +180,24 @@ Cada agente recibe, literal:
   `implement-feature` le pide cerrar el lazo, y en un lote eso da N copias de la misma lección.
   Medido el 2026-09-23: los dos carriles escribieron la misma regla en `to-issue` y en las siete
   copias de `sin-deuda.md`, y los dos PR chocaban en ocho archivos.
+- **Godot con `--script` lleva siempre `--path .`, y el script termina con `quit()`.** Sin
+  `--path`, `res://` es el directorio actual, y fuera de la raíz del repo cada `load` falla. Si
+  el script aborta antes de `quit()`, Godot imprime el error y no sale nunca. Medido el
+  2026-09-27: lo pisó el carril que cargaba todos los scripts con el motor.
 - **Un nombre propio para cada archivo de scratch.** Dos carriles que escriben el mismo archivo
-  temporal se pisan sin conflicto visible. **Y se escribe con `Write`:** desde un worktree, Bash
-  rechaza un heredoc hacia el scratch. Medido el 2026-09-24.
+  temporal se pisan sin conflicto visible. **Y se escribe con `Write`.**
 - **Un comando que este skill entrega se vuelve a correr antes de repartirlo**, nunca se copia de
   la corrida anterior: un comando roto se reparte N veces.
+
+- **Coordiná las corridas del motor y las capturas entre carriles.** Una suite que mide tiempos
+  por cuadro puede fallar bajo carga aunque el código no cambie. En el lote 282–285 del
+  2026-10-02, las primeras verificaciones de #283 y #284 fallaron sólo en el caso del mouse de
+  `giro_parejo_test.gd`; las dos repeticiones aisladas pasaron. Las capturas también corrían
+  durante la primera verificación de #283. No hagas capturas durante la suite completa y
+  asigná un turno para cada corrida completa del motor. Los carriles pueden seguir escribiendo
+  en sus worktrees mientras otro verifica. Ante un fallo, conservá el log, comprobá el caso
+  aislado y repetí la convergencia con la carga controlada. No cambies el umbral del test para
+  esconder el fallo ni declares verde la primera corrida.
 
 ### La condición de terminado del carril — no se negocia
 
@@ -148,20 +230,37 @@ le faltó. Esperá a que vuelvan todos antes del reporte.
 ## Paso 4 — Lo que sólo el padre puede cerrar
 
 - **Las ediciones fuera de carril**, en serie, para que el diff se lea.
+- **Antes de preguntarle algo al usuario, el padre mide lo que la pregunta supone**: qué cara
+  ve el jugador, qué muestra la textura en esa cara, qué decidió ya el usuario. Si una sola
+  opción cumple todo, se decide y se informa con su evidencia. Al usuario va sólo lo que
+  ninguna medición contesta, y con la captura de cada opción. En el lote del 2026-09-29 se
+  preguntó «Actroncito de costado» sin mirar que su lateral era liso, y deshacerlo costó otra
+  vuelta de pipeline y de horneado. Después se preguntó cómo etiquetar las cajas, cuando el
+  usuario ya había dicho «no modifiques el modelo»: las dos respuestas se podían medir.
 - **El lazo, y es del padre por construcción**: si dos carriles corrigen el mismo `SKILL.md` a la
   vez, se pisan sin conflicto visible. Sale en su propio PR `harness/` desde `staging`, no en el PR
   de un carril: el issue del carril no lo cubre.
 - **El contrato de la capacidad, si dos carriles lo editaron.** `specs/` está trackeado, así que
   dos carriles que agregan una regla a la misma capacidad dan un conflicto de merge de verdad —
   que es mejor que el silencio, pero lo resuelve el padre.
+- **Un conflicto entre dos carriles se resuelve en una rama, no en el reporte.** Dos carriles que
+  se juntan recién en `staging` le dejan el conflicto a quien mergee el segundo PR. El padre los
+  pone en una sola pila: el primer issue del carril que va después trae la cabeza final del otro,
+  y su PR se repunta a esa rama. En el lote del 2026-09-29, #265 y #266 chocaban en dos
+  encabezados de test, y #264, la base de #266, pasó a salir de #265.
 - **`python .claude/scripts/verificar.py`** en el checkout principal, con todo mergeado hacia
   arriba. Los siete nodos verdes por carril no implican los siete verdes juntos.
 
 ## Paso 5 — Destruir los worktrees
 
 ```bash
-python .claude/skills/implement-batch/scripts/limpiar_worktrees.py --todos
+python .claude/skills/implement-batch/scripts/limpiar_worktrees.py <ruta> [<ruta> ...]
 ```
+
+**Las rutas son las del lote, una por carril, y nunca `--todos`.** Cada notificación de un
+carril trae su `worktreePath`. `--todos` toma todo lo que hay bajo `.claude/worktrees/`, y eso
+incluye los worktrees de otra sesión que corre al mismo tiempo. Medido el 2026-09-27: se llevó
+dos worktrees ajenos y mató el editor de Godot que tenía uno abierto.
 
 **Va antes del reporte, no después, y no se hace a mano.** `git worktree remove` falla con
 `Directory not empty` en **todo worktree que haya corrido `verificar.py`**, o sea en todos: el
@@ -172,6 +271,10 @@ Y mata **por ruta del worktree, nunca por nombre de proceso**: un filtro por `go
 llevaría puesto el editor que el usuario tiene abierto con el checkout principal.
 
 Si imprime `SIGUE AHI`, el handle es de afuera. **Lo cierra el usuario, no vos**: decilo.
+
+Si imprime `SALTEADO: tiene cambios sin commitear`, el worktree queda y el script sale con 1.
+Puede ser un carril tuyo que no terminó o el de otra sesión que todavía corre: **no se
+fuerza**. Si es tuyo, el carril no cerró, y eso va primero en el reporte.
 
 ## Paso 6 — El reporte
 

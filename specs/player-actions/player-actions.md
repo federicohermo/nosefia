@@ -3,7 +3,7 @@ schema_version: 1
 capability_id: CAP-PLY
 status: ratified
 owner: por definir
-provenance: GDD «Controles»; migración de los specs 003, 004, 006, 014, 034, 043
+provenance: GDD «Controles»; ficha «8. Tarea: Reposición»; migración de los specs 003, 004, 006, 014, 034, 043
 ---
 
 # Capacidad: lo que el empleado puede hacer
@@ -23,6 +23,7 @@ una tarea son los metros, no la torpeza del control.
 | **Manos** | qué se lleva encima. Es una sola | inventario, mochila |
 | **Suspender** | apagar juntos la caminata, la mirada y el foco | pausar, bloquear |
 | **Interactuable** | lo que contesta cuando se lo usa | clickeable, activable |
+| **Casillero** | cada lugar de la fila de adelante de la góndola, vacío u ocupado: lo define [`store-stock`](../store-stock/store-stock.md) | hueco, slot |
 
 ## Comportamiento normativo
 
@@ -44,9 +45,10 @@ radianes**. Pasarse de ahí da vuelta la cámara, y eso no es un límite de gust
 
 ### BR-PLY-004 — Se enfoca lo que está a mano
 
-El sistema DEBE enfocar lo que está a **2,5 metros o menos** y a **15 grados o menos** del centro
-de la vista. Entre varios candidatos gana el de menor desvío, y con el mismo desvío el más
-cercano.
+El sistema DEBE enfocar lo que está a **2,5 metros o menos** y dentro de su tolerancia angular
+respecto del centro de la vista: **3 grados o menos** para productos y huecos de reposición,
+**15 grados o menos** para los otros objetos. El desvío se mide respecto de la superficie
+visible. Entre varios candidatos gana el de menor desvío, y con el mismo desvío el más cercano.
 
 ### BR-PLY-005 — El foco avisa sólo cuando cambió
 
@@ -83,9 +85,9 @@ examinar, llevar y soltar van de la más cerca a la más lejos, y ninguna llega 
 
 ### BR-PLY-011 — La puerta es una intención y una hoja
 
-CUANDO se interactúa con una puerta, el sistema DEBE alternar entre abierta y cerrada de
-inmediato, y DEBE mover la hoja hacia su tope sin pasarse y sin saltar en un cuadro. Abierta, la
-hoja queda a **un cuarto de vuelta** y deja pasar.
+CUANDO se interactúa con una puerta que no está trabada, el sistema DEBE alternar entre abierta
+y cerrada de inmediato, y DEBE mover la hoja hacia su tope sin pasarse y sin saltar en un cuadro.
+Abierta, la hoja queda a **un cuarto de vuelta** y deja pasar.
 
 ### BR-PLY-012 — Una herramienta sirve para algo o para nada
 
@@ -102,6 +104,104 @@ un objeto que no se apoyó.
 
 CUANDO un objeto cae desde la altura de la mano o más, el sistema DEBE dejarlo apoyado sobre el
 piso. El caso que decide es el producto más delgado.
+
+### BR-PLY-015 — Lo que se agarra no queda adentro de un sólido fijo
+
+CUANDO algo que se agarra se suelta, se empuja o se duerme, el sistema DEBE dejarlo sin
+superponerse con el material de ningún sólido fijo: un mueble, una pared, el techo o la fachada.
+Apoyado contra una cara, o encima, no es superponerse. El caso que decide es el objeto más chico
+contra el sólido más delgado.
+
+### BR-PLY-016 — Lo que igual queda adentro vuelve a un lugar alcanzable
+
+SI algo que se agarra queda superpuesto con un sólido fijo al soltarlo, al terminar un empujón o
+al dormirse, ENTONCES el sistema DEBE llevarlo al primero de estos lugares que quede libre y
+alcanzable: deshacer el gesto —volver al inicio del empujón o, si se soltó, al piso al lado del
+jugador—; alrededor del punto donde entró, hasta una distancia de su tamaño;
+encima de lo que ocupa su lugar de origen, si admite otro encima; y su lugar de origen. Libre y
+alcanzable es sin superponerse con ningún sólido fijo, apoyado y fuera de las áreas de las
+tareas. SI ninguno queda libre, ENTONCES DEBE dejarlo donde está. El sistema NO DEBE devolverlo
+a la mano, y NO DEBE cambiar el estado de ninguna tarea por el rescate.
+
+### BR-PLY-017 — La hoja arrastra lo suelto que tiene adelante
+
+MIENTRAS la hoja de una puerta gira, el sistema DEBE correr en el sentido del giro los objetos
+sueltos que encuentra en su recorrido, despiertos o dormidos. CUANDO la hoja queda quieta, el
+sistema NO DEBE dejar nada adentro de ella: la hoja quieta es un sólido fijo más.
+
+### BR-PLY-018 — Lo soltado se apoya donde se mira
+
+CUANDO se suelta algo con la mira sobre una superficie al alcance, el sistema DEBE apoyarlo sobre
+el punto que la mira toca, si esa superficie lo admite. Una superficie lo admite si es
+horizontal —con el mismo corte que apoyar una caja— y si lo de abajo es el mundo fijo o un objeto
+que admite otro encima. Sólo las cajas contenedoras admiten otro encima.
+
+SI la superficie no lo admite, o ahí lo soltado queda encimado con algo o adentro de un mueble,
+ENTONCES el sistema DEBE soltarlo como sin mira: al frente, o a los pies si adelante no hay
+lugar.
+
+Algunas cosas se apoyan derechas: hoy, sólo el balde. CUANDO se suelta una de ellas, el sistema
+DEBE dejarla con su eje vertical, mire adonde mire la vista. SI justo en el punto que la mira
+toca no entra, ENTONCES el sistema DEBE probar alrededor de ese punto, sobre el mismo apoyo y
+hasta un ancho de lo soltado. SI ahí tampoco entra, o la superficie no la admite, ENTONCES DEBE
+dejarla derecha en el piso al lado del jugador. Soltar suelta: el sistema NO DEBE devolverla a la
+mano.
+
+### BR-PLY-019 — Cada noche arranca con las puertas cerradas
+
+CUANDO se abre una jornada, el sistema DEBE dejar las puertas interiores cerradas, con la hoja en
+su lugar y sin girar hasta él, aunque la noche anterior hayan quedado abiertas o a medio giro.
+
+### BR-PLY-020 — Tres puertas no abren, y cada gesto sobre una puerta avisa
+
+SI una puerta está trabada, ENTONCES interactuar con ella NO DEBE abrirla ni girar la hoja, y
+DEBE contestar que está trabada, todas las veces. La entrada al local, el portón del depósito y
+la oficina del jefe están trabadas; las dos puertas interiores no.
+
+CUANDO se interactúa con una puerta, el sistema DEBE avisar una vez qué pasó: se abrió, se cerró
+o está trabada. El aviso de trabada del portón es distinto del de las otras dos. Cerrar las
+puertas al abrir la jornada NO DEBE avisar: no es un gesto del jugador.
+
+### BR-PLY-021 — Cada noche arranca en la entrada
+
+CUANDO se abre una jornada, el sistema DEBE dejar al jugador en el punto de arranque: frente a la
+entrada del local, del lado de adentro y mirando hacia el local. Queda con la vista horizontal y
+quieto, aunque la noche anterior haya terminado en otro lugar, mirando a otro lado y caminando.
+Vale también para la primera noche.
+
+### BR-PLY-022 — El casillero vacío no se ve
+
+El sistema NO DEBE dibujar un casillero vacío que la mira no enfoca: sobre la góndola sólo se ve
+lo que está colocado. Vale con las manos vacías, con una unidad en la mano y con cualquier otra
+cosa. MIENTRAS el jugador lleva en la mano una unidad de un producto, la mira DEBE poder enfocar
+cada casillero vacío de ese producto, y ninguno ocupado ni de otro producto. SI la mano está
+vacía o lleva cualquier otra cosa, ENTONCES la mira NO DEBE enfocar ningún casillero vacío: una
+caja se apoya, no se coloca.
+
+### BR-PLY-023 — El casillero que apunta la mira se marca con el contorno, y el clic coloca ahí
+
+CUANDO la mira enfoca un casillero vacío del producto que se lleva en la mano, el sistema DEBE
+dibujar sólo el contorno del producto en ese casillero, con el color y el grosor del contorno del
+foco, el mismo que marca cualquier otro objeto enfocado. NO DEBE dibujar la superficie del
+producto: por adentro del contorno se ve lo que hay detrás. Los demás casilleros vacíos siguen sin
+dibujarse. CUANDO el jugador hace clic, el sistema DEBE colocar la unidad en ese casillero y en
+ningún otro (BR-STK-009). La mira elige entre casilleros como entre cualquier otro candidato
+(BR-PLY-004).
+
+### BR-PLY-024 — Con las manos vacías se agarra de la fila de adelante
+
+MIENTRAS las manos están vacías, la mira DEBE poder enfocar cada unidad colocada en la fila de
+adelante de la góndola, y CUANDO el jugador hace clic, el sistema DEBE ponérsela en la mano
+(BR-STK-033). La unidad enfocada DEBE llevar el contorno del foco sobre su propio aspecto, y
+dibujarse una sola vez. La mira NO DEBE enfocar la fila de atrás, ni ninguna unidad colocada
+mientras la mano lleva algo: agarrar de la góndola es una cosa más por vez (BR-PLY-007).
+
+### BR-PLY-025 — El balde se lleva inclinado hacia la vista
+
+MIENTRAS el jugador lleva el balde en la mano, el sistema DEBE mostrarlo inclinado hacia la
+vista, con la inclinación del balde en la mano que declara el dominio, para que el agua se vea
+desde arriba. La boca DEBE quedar del lado de la vista, no del lado de afuera. La inclinación es
+de la mano: CUANDO se lo suelta, queda derecho (BR-PLY-018).
 
 ## Criterios de aceptación
 
@@ -122,8 +222,12 @@ DADO un giro hacia abajo enorme ENTONCES el ángulo vertical queda en `-1.4`; ha
 
 ### AC-PLY-004 — Los dos bordes de la mira *(verifica BR-PLY-004)*
 
-DADO un candidato a 2,5 metros ENTONCES se enfoca; a 2,6, no. DADO uno a 15 grados de desvío
+DADO un candidato a 2,5 metros ENTONCES se enfoca; a 2,6, no. DADO un objeto que no sea
+un producto ni un hueco de reposición a 15 grados de desvío
 ENTONCES se enfoca; a 16, no.
+
+DADO un producto o un hueco de reposición a 3 grados de desvío ENTONCES se enfoca;
+a 6 grados, no. Esta precisión NO DEBE reducir la tolerancia de los otros objetos.
 
 ### AC-PLY-005 — Gana el menor desvío *(verifica BR-PLY-004)*
 
@@ -171,8 +275,10 @@ no baja.
 
 ### AC-PLY-014 — El uso declarado y los demás *(verifica BR-PLY-012)*
 
-DADO el trapeador sobre una mancha ENTONCES el efecto es limpiar; con cualquier otro par, o con
-las manos vacías, no hay efecto.
+DADO la mopa sobre una mancha ENTONCES el efecto es limpiar; el balde sobre el lavatorio, llenar;
+cualquiera de los tres jabones sobre el balde, teñir; la mopa sobre el balde, mojar; y el balde
+sobre el inodoro, vaciar. Con cualquier otro par —uno de ésos al revés, u otro objeto— o con las
+manos vacías, no hay efecto.
 
 ### AC-PLY-015 — Lo soltado se duerme *(verifica BR-PLY-013)*
 
@@ -184,6 +290,228 @@ todos están dormidos, y ninguno pasa de 0,02 rad/s después del segundo 2.
 DADO el producto más delgado soltado desde 1,5 metros ENTONCES su altura mínima no baja del plano
 del piso menos 5 centímetros.
 
+### AC-PLY-017 — Adentro de un mueble no hay lugar *(verifica BR-PLY-015)*
+
+DADO una caja puesta entera adentro del mostrador, apoyada en el piso CUANDO el juego pregunta si
+la caja entra ahí ENTONCES contesta que no: el mueble ocupa ese lugar.
+
+### AC-PLY-018 — La caja soltada pegada no entra al empujarla *(verifica BR-PLY-015)*
+
+DADO una caja soltada pegada al mostrador CUANDO el jugador camina contra ella hasta quedar
+bloqueado, y sigue caminando ENTONCES la caja no se superpone con el mostrador y la mira la puede
+enfocar.
+
+### AC-PLY-019 — La unidad no entra en una pared *(verifica BR-PLY-015)*
+
+DADO una unidad de producto en la mano CUANDO se la suelta contra una pared, en cualquiera de
+tres giros y cuatro alturas de la mira ENTONCES no se superpone con la pared y la mira la puede
+enfocar.
+
+### AC-PLY-020 — La unidad no entra en el mostrador *(verifica BR-PLY-015)*
+
+DADO una unidad de producto en la mano CUANDO se la suelta contra el mostrador, en cualquiera de
+tres giros y cuatro alturas de la mira ENTONCES no se superpone con el mostrador y la mira la
+puede enfocar.
+
+### AC-PLY-021 — La caja se sigue apoyando en un estante del depósito *(verifica BR-PLY-015)*
+
+DADO una caja en la mano CUANDO se la suelta mirando un estante del depósito ENTONCES queda
+apoyada en el estante.
+
+### AC-PLY-022 — La caja se sigue apoyando arriba del mostrador *(verifica BR-PLY-015)*
+
+DADO una caja en la mano CUANDO se la suelta mirando la tapa del mostrador ENTONCES queda
+apoyada arriba del mostrador.
+
+### AC-PLY-023 — La caja se sigue apilando *(verifica BR-PLY-015)*
+
+DADO una caja apoyada en el piso CUANDO se suelta otra mirando su tapa ENTONCES la segunda queda
+apoyada encima de la primera.
+
+### AC-PLY-024 — La unidad se sigue dejando adentro de la heladera *(verifica BR-PLY-015)*
+
+DADO una unidad de producto soltada adentro de la heladera CUANDO pasa un segundo de física
+ENTONCES sigue adentro de la heladera, no se superpone con sus paneles y la mira la puede
+enfocar.
+
+### AC-PLY-025 — El empujón que terminó adentro se deshace *(verifica BR-PLY-016)*
+
+DADO una caja empujada que al terminar la racha de empujones queda superpuesta con un sólido
+fijo, y con el lugar del inicio de la racha libre CUANDO pasa el primer paso de física sin
+empujón ENTONCES la caja vuelve al lugar del inicio de la racha.
+
+### AC-PLY-026 — Lo soltado adentro va al piso al lado del jugador *(verifica BR-PLY-016)*
+
+DADO un objeto que al soltarlo queda superpuesto con un sólido fijo CUANDO pasa un paso de
+física ENTONCES queda apoyado en el piso al lado del jugador, sin superponerse con nada fijo.
+
+### AC-PLY-027 — Encima de lo que ocupa el origen *(verifica BR-PLY-016)*
+
+DADO una caja adentro de un sólido, sin lugar libre para deshacer ni alrededor, y con otra caja
+en su lugar de origen CUANDO se la rescata ENTONCES queda apoyada encima de esa caja. DADO un
+objeto en el mismo caso, con otro objeto en su origen CUANDO se lo rescata ENTONCES queda
+encima si ese otro admite otro encima, y no queda encima si no lo admite.
+
+### AC-PLY-028 — El origen es el último recurso *(verifica BR-PLY-016)*
+
+DADO un objeto adentro de un sólido, sin lugar libre para deshacer ni alrededor, y con su lugar
+de origen libre CUANDO se lo rescata ENTONCES queda en su lugar de origen.
+
+### AC-PLY-029 — El rescate nunca devuelve a la mano *(verifica BR-PLY-016)*
+
+DADO un objeto adentro de un sólido y ningún candidato libre CUANDO se lo revisa ENTONCES queda
+donde está, la mano sigue como estaba, y el rescate queda registrado sin lugar.
+
+### AC-PLY-030 — La unidad arrastrada al abrir *(verifica BR-PLY-017)*
+
+DADO una unidad de producto dormida en el recorrido de la hoja CUANDO se abre la puerta y la hoja
+queda quieta ENTONCES la unidad no se superpone con la hoja, se movió en el sentido del giro y se
+despertó en algún paso.
+
+### AC-PLY-031 — La unidad arrastrada al cerrar *(verifica BR-PLY-017)*
+
+DADO una unidad de producto dormida en el recorrido de la hoja abierta CUANDO se cierra la puerta
+y la hoja queda quieta ENTONCES la unidad no se superpone con la hoja y se movió en el sentido
+del giro.
+
+### AC-PLY-032 — Al quedar quieta, nada adentro de la hoja *(verifica BR-PLY-017)*
+
+DADO un objeto que quedó adentro de la hoja al terminar un giro CUANDO la hoja queda quieta
+ENTONCES el objeto termina fuera de ella, sin superponerse con ningún sólido fijo.
+
+### AC-PLY-033 — Queda donde se mira *(verifica BR-PLY-018)*
+
+DADO algo en la mano y la mira sobre el piso libre, o sobre la tapa de una caja contenedora, a
+menos del alcance CUANDO se suelta ENTONCES su base queda sobre el punto que la mira toca, sin
+encimarse con nada.
+
+### AC-PLY-034 — Qué superficie admite *(verifica BR-PLY-018)*
+
+DADO una superficie con la inclinación justo debajo del corte de horizontal ENTONCES no admite;
+con el corte exacto sobre el mundo fijo, o sobre una caja contenedora, sí; sobre la mopa, no.
+Ningún objeto del almacén salvo las cajas contenedoras admite otro encima.
+
+### AC-PLY-035 — Sin superficie que valga, se suelta como siempre *(verifica BR-PLY-018)*
+
+DADO la mira sobre una pared, sobre nada al alcance, o sobre un punto donde lo soltado quedaría
+encimado con algo o adentro de un mueble CUANDO se suelta ENTONCES lo soltado sale del mismo
+punto que sin mira.
+
+### AC-PLY-036 — La puerta abierta anoche arranca cerrada *(verifica BR-PLY-019)*
+
+DADO una puerta abierta del todo al cerrar la noche CUANDO se abre la jornada siguiente ENTONCES
+la puerta está cerrada, su ángulo es `0.0` y la hoja está en su lugar de cerrada, en el mismo
+paso.
+
+### AC-PLY-037 — La puerta a medio giro también *(verifica BR-PLY-019)*
+
+DADO una puerta a medio giro al cerrar la noche CUANDO se abre la jornada siguiente ENTONCES la
+puerta está cerrada, su ángulo es `0.0` y la hoja está en su lugar de cerrada, en el mismo paso.
+
+### AC-PLY-038 — La trabada no se abre *(verifica BR-PLY-020)*
+
+DADO una puerta trabada CUANDO se la alterna diez veces ENTONCES las diez contesta que está
+trabada, sigue cerrada y, después de avanzar 10 segundos, su ángulo es `0.0`.
+
+### AC-PLY-039 — La que no está trabada alterna *(verifica BR-PLY-011, BR-PLY-020)*
+
+DADO una puerta nueva ENTONCES no está trabada. CUANDO se la alterna ENTONCES contesta que no
+está trabada y queda abierta.
+
+### AC-PLY-040 — Qué puertas están trabadas *(verifica BR-PLY-020)*
+
+DADO el almacén armado ENTONCES la entrada, el portón del depósito y la oficina del jefe están
+trabadas y contestan a la interacción, y las dos puertas interiores no están trabadas.
+
+### AC-PLY-041 — Un aviso por gesto *(verifica BR-PLY-020)*
+
+DADO una puerta interior cerrada CUANDO se la toca dos veces seguidas, con la hoja todavía
+girando, ENTONCES avisa una vez que se abrió y después una vez que se cerró. DADO una puerta
+trabada CUANDO se la toca diez veces ENTONCES avisa diez veces que está trabada, el portón con su
+propio aviso, y la hoja no gira. DADO la apertura de una jornada ENTONCES ninguna puerta avisa.
+
+### AC-PLY-042 — Rescatar no mueve la mercadería *(verifica BR-PLY-016)*
+
+DADO una caja del depósito o una unidad fuera de la góndola, superpuesta con un sólido fijo
+CUANDO se la rescata ENTONCES lo repuesto en la góndola y lo que queda por sacar de cada caja
+siguen iguales.
+
+### AC-PLY-043 — Rescatar una bolsa no la cuenta ni la descuenta *(verifica BR-PLY-016)*
+
+DADO una bolsa ya depositada, y otra todavía no, cada una superpuesta con un sólido fijo CUANDO
+se las rescata ENTONCES la cantidad de bolsas depositadas no cambia, y ninguna queda adentro del
+área de descarte.
+
+### AC-PLY-044 — La jornada arranca en la entrada *(verifica BR-PLY-021)*
+
+DADO un jugador en cualquier lugar, mirando a cualquier lado y en movimiento CUANDO abre una
+jornada ENTONCES queda en el punto de arranque, con el yaw del arranque, la vista horizontal y la
+velocidad en cero.
+
+### AC-PLY-045 — Ningún casillero vacío se dibuja *(verifica BR-PLY-022)*
+
+DADO una unidad de Actroncito en la mano, con dos casilleros de Actroncito vacíos y otro producto
+con casilleros vacíos, todos al alcance de la mira y ninguno enfocado, ENTONCES no se dibuja
+ninguno, y la mira puede enfocar los dos de Actroncito y ninguno del otro producto ni ninguno
+ocupado. DADO las manos vacías, una caja o cualquier otro objeto en la mano ENTONCES no se dibuja
+ningún casillero vacío y la mira no enfoca ninguno.
+
+### AC-PLY-047 — El casillero apuntado lleva sólo el contorno *(verifica BR-PLY-023)*
+
+DADO una unidad en la mano y dos de sus casilleros vacíos CUANDO la mira enfoca uno ENTONCES ése
+muestra el contorno del producto con el color y el grosor del contorno del foco, sin su
+superficie, y el otro sigue sin dibujarse. CUANDO la mira pasa al otro ENTONCES el contorno queda
+sólo en el otro. CUANDO la mira deja de enfocarlos ENTONCES no se dibuja ninguno.
+
+### AC-PLY-048 — El clic coloca en el casillero apuntado *(verifica BR-PLY-023)*
+
+DADO una unidad en la mano y la mira sobre uno de sus casilleros vacíos, que no es el primero
+CUANDO se hace clic ENTONCES la unidad queda en ese casillero y en ningún otro, y la mano queda
+vacía. CUANDO se hace clic otra vez sobre el mismo casillero ENTONCES la góndola no tiene una
+unidad más: con la mano vacía, el clic agarra la que acaba de colocar.
+
+### AC-PLY-049 — Con las manos vacías se agarra de la fila de adelante *(verifica BR-PLY-024)*
+
+DADO las manos vacías y la mira sobre una unidad del medio de la fila de adelante CUANDO se hace
+clic ENTONCES esa unidad pasa a la mano, su casillero queda vacío y las de al lado siguen donde
+estaban. DADO las manos vacías CUANDO la mira enfoca una unidad colocada ENTONCES esa unidad lleva
+el contorno del foco sobre su propio aspecto, se dibuja una sola vez y ninguna otra cambia. DADO
+cualquier cosa en la mano ENTONCES la mira no enfoca ninguna unidad colocada, y el
+clic no la agarra. DADO la fila de atrás ENTONCES ninguna de sus unidades se enfoca.
+
+### AC-PLY-050 — El balde en la mano, inclinado hacia la vista *(verifica BR-PLY-025)*
+
+DADO el balde en la mano ENTONCES el ángulo entre su eje y el arriba de la vista es la
+inclinación del balde en la mano, con medio grado de tolerancia, y su boca queda del lado de la
+vista. DADO el balde apoyado después de soltarlo CUANDO se lo vuelve a agarrar ENTONCES tiene la
+misma inclinación.
+
+### AC-PLY-051 — El balde se apoya derecho donde se mira *(verifica BR-PLY-018)*
+
+DADO el balde en la mano, la vista 40 grados hacia abajo y la mira sobre el piso libre, la tapa
+de una caja contenedora, un estante del depósito o el mostrador, a menos del alcance CUANDO se
+lo suelta ENTONCES su eje queda a menos de 1 grado de la vertical, su base sobre el punto que la
+mira toca, sin encimarse con nada, y la mano vacía. CUANDO pasan dos segundos de física ENTONCES
+sigue derecho y a menos de 1 centímetro de donde quedó. DADO el balde con agua ENTONCES después
+de apoyarlo el agua se sigue viendo, del mismo color.
+
+### AC-PLY-052 — Si justo ahí no entra, cerca y sobre el mismo apoyo *(verifica BR-PLY-018)*
+
+DADO la mira sobre un apoyo que admite, pegada a algo que no deja entrar el balde en ese punto, y
+con lugar libre sobre el mismo apoyo a menos de un ancho de balde CUANDO se lo suelta ENTONCES
+queda derecho en ese lugar, a la altura de ese apoyo. DADO además otro apoyo libre más cerca del
+punto, a otra altura, ENTONCES no queda en ése.
+
+### AC-PLY-053 — Sin superficie que valga, derecho al lado del jugador *(verifica BR-PLY-018)*
+
+DADO el balde en la mano y la mira sobre una pared, sobre nada al alcance, sobre la mopa o sobre
+una superficie con la inclinación justo debajo del corte de horizontal CUANDO se lo suelta
+ENTONCES queda derecho en el piso al lado del jugador, sin encimarse con nada, y la mano vacía.
+DADO la vista 40 grados hacia abajo a medio metro de una pared CUANDO se lo suelta ENTONCES queda
+derecho y, al pasar dos segundos de física, a menos de 1 centímetro de donde quedó. DADO el
+jugador en un hueco del tamaño de su cuerpo, sin lugar libre al lado, CUANDO se lo suelta
+ENTONCES el balde no vuelve a la mano: la mano queda vacía y el balde, derecho.
+
 ## No objetivos
 
 - Esta capacidad NO decide qué esconde un objeto: eso es de
@@ -194,12 +522,15 @@ del piso menos 5 centímetros.
 
 ## Contratos
 
-- **Entrada:** el vector de movimiento, el delta del mouse, los candidatos que el rayo encontró,
-  el objeto que se quiere agarrar y los segundos del cuadro.
+- **Entrada:** el vector de movimiento, el delta del mouse, el yaw del arranque, los candidatos
+  que el rayo encontró, el objeto que se quiere agarrar, la superficie que la mira toca, los
+  casilleros vacíos y ocupados de cada producto y los segundos del cuadro.
 - **Salida:** la velocidad, los dos ángulos de la vista, qué está enfocado y si cambió, qué se
-  lleva en la mano, el motivo de cada rechazo, el ángulo de la hoja y el efecto de un uso.
+  lleva en la mano, qué casillero lleva el contorno, el motivo de cada rechazo, el ángulo de
+  la hoja, el aviso de cada gesto sobre una puerta y el efecto de un uso.
 - **Falla:** los dos rechazos de agarrar; soltar con las manos vacías no devuelve nada; un uso no
-  declarado no tiene efecto.
+  declarado no tiene efecto; con algo que no es una unidad en la mano, ningún casillero vacío se
+  enfoca.
 
 ## Señales
 
@@ -210,6 +541,9 @@ del piso menos 5 centímetros.
 - [`store-cleanup`](../store-cleanup/store-cleanup.md) (alimenta): qué se lleva en la mano
   decide si se puede limpiar.
 - [`investigation`](../investigation/investigation.md) (alimenta): qué objeto se examina.
+- [`store-stock`](../store-stock/store-stock.md) (consume y alimenta): qué casilleros de cada
+  producto están vacíos y cuáles ocupados; el clic sobre un casillero le pide colocar la unidad
+  de la mano o agarrar la que está puesta.
 
 ## Preguntas abiertas
 

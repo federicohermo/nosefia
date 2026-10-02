@@ -12,6 +12,7 @@ import sys
 import unittest
 from contextlib import redirect_stdout
 from pathlib import Path
+from unittest import mock
 
 from lib.repo import RAIZ
 
@@ -232,6 +233,11 @@ class LosAssets(unittest.TestCase):
         crudo = self._glb(b'{"images":[{"name":"cora cola"},{"name":"jorgillo"},{}]}')
         self.assertEqual(herramientas._imagenes_de_un_glb(crudo), {"cora cola", "jorgillo"})
 
+    def test_el_nombre_con_punto_se_corta_en_el_ultimo(self):
+        # Godot extrae `Material.001_baseColor` como `…_Material.png`.
+        crudo = self._glb(b'{"images":[{"name":"Material.001_baseColor"}]}')
+        self.assertIn("Material", herramientas._imagenes_de_un_glb(crudo))
+
     def test_un_binario_que_no_es_glb_no_revienta(self):
         self.assertEqual(herramientas._imagenes_de_un_glb(b"\x89PNG\r\n\x1a\n"), set())
         self.assertEqual(herramientas._imagenes_de_un_glb(self._glb(b"{roto")), set())
@@ -254,6 +260,56 @@ class LosAssets(unittest.TestCase):
         )
         self.assertEqual(formas["embebido en un `.glb`"], ["assets/models/M.glb"])
 
+    def test_un_res_comprimido_no_se_da_por_mirado(self):
+        # Godot guarda un `.res` comprimido con la cabecera `RSCC` y zstd adentro, y la
+        # biblioteca estándar no lo abre: buscar el nombre en esos bytes no encuentra nada aunque
+        # esté. Medido el 2026-09-29: 73 de los 74 `.res` de `assets/` son así, y el índice
+        # contestaba «(nadie)» para texturas que usan todos ellos.
+        crudo_comprimido = b"RSCC\x02\x00\x00\x00" + b"\x00" * 16
+        formas = herramientas._referencias_a(
+            "assets/models/M_cora cola.png",
+            texto={},
+            crudos={"assets/models/producto.res": crudo_comprimido},
+        )
+        self.assertEqual(formas["adentro de un binario"], [])
+        self.assertEqual(
+            formas[herramientas.SIN_MIRAR_ADENTRO], ["assets/models/producto.res"]
+        )
+
+    def test_lo_que_no_se_pudo_mirar_no_cuenta_como_referencia(self):
+        formas = {herramientas.SIN_MIRAR_ADENTRO: ["assets/models/producto.res"], "por su ruta": []}
+        self.assertEqual(herramientas._referencias_mirando(formas), 0)
+
+    def test_un_asset_sin_referencias_miradas_no_se_declara_huerfano_si_hay_comprimidos(self):
+        comprimidos = [
+            p
+            for p in (herramientas.RAIZ / "assets").rglob("*.res")
+            if p.read_bytes()[:4] == b"RSCC"
+        ]
+        if not comprimidos:
+            self.skipTest("no hay `.res` comprimidos")
+        self.assertIn(
+            f"Hay {len(comprimidos)} `.res` comprimidos", herramientas.assets_sin_referencia()
+        )
+
+    def test_un_asset_que_solo_podrian_nombrar_los_comprimidos_no_se_da_por_sobrante(self):
+        # La rama que cambia el veredicto de `contexto_de_asset`: ninguna forma mirable lo
+        # alcanza, pero queda un binario sin mirar. Con los binarios del repo de hoy no se puede
+        # fijar, porque depende de qué asset nadie nombra; se los reemplaza por uno solo.
+        asset = next(
+            p.relative_to(herramientas.RAIZ).as_posix()
+            for p in sorted((herramientas.RAIZ / "assets").rglob("*.png"))
+        )
+        comprimido = {"assets/models/producto.res": b"RSCC\x02\x00\x00\x00" + b"\x00" * 16}
+        with (
+            mock.patch.object(herramientas, "_texto_del_repo", return_value={}),
+            mock.patch.object(herramientas, "_binarios_del_repo", return_value=comprimido),
+        ):
+            salida = herramientas.contexto_de_asset(asset)
+        self.assertIn("1 `.res` comprimidos", salida)
+        self.assertIn("no prueba que sobre", salida)
+        self.assertNotIn("ninguna de las cuatro formas", salida)
+
     def test_el_arte_de_origen_no_se_pregunta(self):
         fuente = sorted(
             p.relative_to(herramientas.RAIZ).as_posix()
@@ -264,6 +320,11 @@ class LosAssets(unittest.TestCase):
             self.skipTest("no hay arte de origen")
         self.assertIn("Godot no lo importa", herramientas.contexto_de_asset(fuente[0]))
         self.assertNotIn(fuente[0], herramientas.assets_sin_referencia())
+
+    def test_lo_que_se_escribe_al_lado_de_un_modelo_no_es_un_asset(self):
+        sospechosos = herramientas.assets_sin_referencia()
+        self.assertNotIn(".unwrap_cache", sospechosos)
+        self.assertNotIn(".blend1", sospechosos)
 
     def test_un_asset_inexistente_lo_dice(self):
         self.assertIn("No hay", herramientas.contexto_de_asset("assets/models/inventado.png"))

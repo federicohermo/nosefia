@@ -17,8 +17,8 @@ agarre, el audio. Conocen `dominio/`; **no conocen la pantalla**.
 
 ## Qué es un sistema y qué no
 
-Un sistema **traduce entre el motor y el dominio**. Toma lo que el motor le da —un `delta`, un
-evento ya interpretado, un archivo—, lo convierte en una llamada al dominio, y publica como señal
+Un sistema **traduce entre el motor y el dominio**. Toma lo que el motor le da: un `delta`, un
+evento ya interpretado, un archivo. Lo convierte en una llamada al dominio, y publica como señal
 lo que el dominio contesta.
 
 Lo que **no** hace es decidir. Un `if` sobre las reglas del juego acá significa que la regla está
@@ -31,9 +31,9 @@ func _process(delta: float) -> void:
     if _turno.cerrado():
         turno_cerrado.emit(_turno.tareas_cumplidas())
 
-# Mal: la regla de las cinco tareas vive en un Node y ya no se puede probar sin la escena.
+# Mal: la regla de las tareas vive en un Node y ya no se puede probar sin la escena.
 func _process(delta: float) -> void:
-    if _tareas_hechas >= 5 and _minutos <= 0:
+    if _tareas_hechas >= _obligatorias and _minutos <= 0:
         ...
 ```
 
@@ -52,8 +52,8 @@ eximirlo del test.
 | `tareas/` | lo consume **y cumple una obligatoria** |
 | `investigacion/` | lo consume **y no cumple nada**. Es el otro lado de la tensión central |
 
-Es la distinción menos deducible de las cuatro capas: `limpiador.gd` y `examen.gd` son dos `Node`
-que se parecen en todo salvo en lo único que importa —uno paga el minuto y el otro no—, y el
+Es la distinción menos deducible de todas las capas. `limpiador.gd` y `examen.gd` son dos
+`Node` que se parecen en todo salvo en lo único que importa: uno paga el minuto y el otro no. El
 nombre del archivo no lo dice.
 
 **`agarre.gd` va en `marco/` y no en `tareas/`, y el motivo vale como ejemplo:** agarrar es el

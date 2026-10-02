@@ -2,7 +2,15 @@
 
 import unittest
 
-from lib.horneado import PLUGIN, project_con_el_plugin, veredicto
+from lib.horneado import (
+    PLUGIN,
+    SALIDAS,
+    project_con_el_plugin,
+    reescritos_de_mas,
+    sesion_bloqueada,
+    tope_en_segundos,
+    veredicto,
+)
 
 PROJECT = (
     "config_version=5\n\n[editor_plugins]\n\n"
@@ -40,3 +48,60 @@ class Veredicto(unittest.TestCase):
     def test_las_dos_salidas_escritas_es_un_horneado(self):
         ok, _ = veredicto(0, {"a.lmbake": True, "a.exr": True})
         self.assertTrue(ok)
+
+
+class SesionBloqueada(unittest.TestCase):
+    # Con la sesión de Windows bloqueada el editor no dibuja, no aprieta el botón y el horneado
+    # espera el tope entero sin decir por qué.
+    def test_la_pantalla_de_bloqueo_corriendo_es_una_sesion_bloqueada(self):
+        procesos = '"explorer.exe","1","Console"\n"LogonUI.exe","2","Console"\n'
+        self.assertTrue(sesion_bloqueada(procesos))
+
+    def test_sin_la_pantalla_de_bloqueo_la_sesion_esta_abierta(self):
+        self.assertFalse(sesion_bloqueada('"explorer.exe","1","Console"\n'))
+
+
+class ReescritosDeMas(unittest.TestCase):
+    # El editor guarda la escena para escribir el horneado, y al guardar re-serializa más de lo
+    # que el horneado cambió. Medido el 2026-09-29: además de las dos salidas, dejó `almacen.tscn`
+    # con 94 overrides de `transform` iguales a los de la estructura, y reescritos `tema.tres` y
+    # `caja_de_reposicion.tres`.
+    def test_las_salidas_del_horneado_no_se_devuelven(self):
+        self.assertEqual(reescritos_de_mas(list(SALIDAS)), [])
+
+    def test_lo_que_el_editor_re_serializo_se_devuelve(self):
+        escritos = [
+            *SALIDAS,
+            "src/escenas/almacen.tscn",
+            "assets/ui/manada/tema.tres",
+            "src/dominio/almacen/caja_de_reposicion.tres",
+        ]
+        self.assertEqual(
+            reescritos_de_mas(escritos),
+            [
+                "assets/ui/manada/tema.tres",
+                "src/dominio/almacen/caja_de_reposicion.tres",
+                "src/escenas/almacen.tscn",
+            ],
+        )
+
+    def test_project_godot_lo_devuelve_el_script_byte_por_byte(self):
+        # Ya lo restaura `hornear.py` con el contenido de antes: devolverlo acá otra vez lo
+        # pisaría con el de git, y un `project.godot` con cambios sin commitear los perdería.
+        self.assertEqual(reescritos_de_mas(["project.godot"]), [])
+
+
+class TopeDelHorneado(unittest.TestCase):
+    # Con GPU el local se hornea en segundos; con el Vulkan por software de Mesa, medido el
+    # 2026-09-29, en 9 minutos con la máquina libre y en 17,7 con otros procesos corriendo. Un
+    # tope de 20 minutos confundía una máquina ocupada con un editor colgado.
+    def test_con_gpu_el_tope_es_el_de_siempre(self):
+        self.assertEqual(tope_en_segundos({}), 20 * 60)
+
+    def test_con_vulkan_por_software_el_tope_se_estira(self):
+        entorno = {"VK_ICD_FILENAMES": "/usr/share/vulkan/icd.d/lvp_icd.json"}
+        self.assertGreater(tope_en_segundos(entorno), 2 * 17.7 * 60)
+
+    def test_otro_driver_declarado_no_es_software(self):
+        entorno = {"VK_ICD_FILENAMES": "/usr/share/vulkan/icd.d/radeon_icd.json"}
+        self.assertEqual(tope_en_segundos(entorno), 20 * 60)

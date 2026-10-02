@@ -11,4 +11,5 @@ texto = "El nudo está hecho al revés: la ató alguien zurdo, y el jefe no lo e
 script = ExtResource("1_objeto")
 id = &"bolsa_de_basura_3"
 nombre = "Bolsa de basura"
+sonoridad = 7
 revelacion = SubResource("Resource_revelacion")

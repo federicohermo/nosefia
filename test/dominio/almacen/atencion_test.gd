@@ -10,6 +10,10 @@ const ATENCION := "res://src/dominio/almacen/atencion.gd"
 ## número por encima del pedido más grande de esta suite sirve.
 const VENDIBLES := 9
 
+## Cuántos casilleros tiene la fila de adelante de cada producto de la suite, y cuántas unidades
+## pone en ella `_inventario()`: la góndola llena.
+const EN_GONDOLA := 8
+
 
 func _productos() -> Array[Producto]:
 	return [Catalogo.de(Producto.Id.ACTRONCITO), Catalogo.de(Producto.Id.MALBARDO)]
@@ -22,13 +26,16 @@ func _pedido(unidades_de_actroncito: int = 2, unidades_de_malbardo: int = 1) -> 
 	return venta
 
 
-## La góndola llena, así que todo el depósito es vendible. Se arma desde el umbral y no con un
-## número escrito acá: el día que el balance mueva un umbral, los casos no cambian de resultado.
+## La góndola llena, así que todo el depósito es vendible. La fila de adelante se declara acá
+## y no se lee del local: el día que el modelo mueva una fila, los casos no cambian de resultado.
 func _inventario(vendibles: int = VENDIBLES) -> Inventario:
 	var productos := _productos()
-	var inventario := Inventario.new(productos)
+	var casilleros: Dictionary[Producto.Id, int] = {}
 	for producto in productos:
-		inventario.ingresar(producto, Inventario.Ubicacion.GONDOLA, producto.umbral)
+		casilleros[producto.id] = EN_GONDOLA
+	var inventario := Inventario.new(productos, casilleros)
+	for producto in productos:
+		inventario.ingresar(producto, Inventario.Ubicacion.GONDOLA, EN_GONDOLA)
 		inventario.ingresar(producto, Inventario.Ubicacion.DEPOSITO, vendibles)
 	return inventario
 
@@ -41,9 +48,7 @@ func _atencion(paga: int, vendibles: int = VENDIBLES, pedido: Venta = null) -> A
 ## Que el inventario siga como lo dejó `_inventario(vendibles)`, en las dos ubicaciones.
 func _sin_cambios(inventario: Inventario, vendibles: int) -> void:
 	for producto in _productos():
-		assert_int(inventario.unidades(producto, Inventario.Ubicacion.GONDOLA)).is_equal(
-			producto.umbral
-		)
+		assert_int(inventario.unidades(producto, Inventario.Ubicacion.GONDOLA)).is_equal(EN_GONDOLA)
 		assert_int(inventario.unidades(producto, Inventario.Ubicacion.DEPOSITO)).is_equal(vendibles)
 
 
@@ -89,7 +94,7 @@ func test_pagar_de_menos_da_una_diferencia_negativa() -> void:  # AC-CTR-003
 	assert_int(atencion.diferencia()).is_equal(-700)
 
 
-func test_los_faltantes_nombran_exactamente_los_productos_que_no_alcanzan() -> void:  # AC-CTR-012
+func test_los_faltantes_nombran_exactamente_los_productos_que_no_alcanzan() -> void:
 	# Con una sola unidad vendible, el renglón que se pide de a dos falta y el de a uno no.
 	var atencion := _atencion(0, 1)
 	var faltantes := atencion.faltantes_del_pedido()
@@ -97,7 +102,7 @@ func test_los_faltantes_nombran_exactamente_los_productos_que_no_alcanzan() -> v
 	assert_int(faltantes[0].id).is_equal(Producto.Id.ACTRONCITO)
 
 
-func test_los_faltantes_miran_los_vendibles_y_no_la_gondola() -> void:  # AC-CTR-012
+func test_los_faltantes_miran_los_vendibles_y_no_la_gondola() -> void:
 	# La góndola llena no cubre un pedido: lo que el estante necesita no se vende. Un
 	# `faltantes_del_pedido()` que mirara la góndola daría vacío acá y el cobro fallaría igual.
 	var atencion := _atencion(0, 0)
@@ -148,7 +153,7 @@ func test_despachar_dos_veces_devuelve_false_la_segunda() -> void:  # AC-CTR-008
 	assert_bool(atencion.despachar_sin_vender()).is_false()
 
 
-func test_cobrar_sobre_una_despachada_a_mano_no_vende() -> void:
+func test_cobrar_sobre_una_despachada_a_mano_no_vende() -> void:  # AC-CTR-008
 	var inventario := _inventario()
 	var atencion := Atencion.new(Comprador.new("Marta", _pedido(), 0), inventario)
 	atencion.despachar_sin_vender()
@@ -159,9 +164,9 @@ func test_cobrar_sobre_una_despachada_a_mano_no_vende() -> void:
 func test_vender_no_deshace_la_unidad_que_esta_en_la_mano() -> void:  # AC-CTR-016
 	# La unidad en la mano cuenta una vez: en el depósito y en lo que a la góndola le falta. Si
 	# `retirar()` la sacara del depósito, quedaría 1 vendible y esta venta se rechazaría.
-	var producto := Producto.new(Producto.Id.ACTRONCITO, "Actroncito", 2500, 8)
+	var producto := Producto.new(Producto.Id.ACTRONCITO, "Actroncito", 2500)
 	var productos: Array[Producto] = [producto]
-	var inventario := Inventario.new(productos)
+	var inventario := Inventario.new(productos, {Producto.Id.ACTRONCITO: 8})
 	inventario.ingresar(producto, Inventario.Ubicacion.GONDOLA, 7)
 	inventario.ingresar(producto, Inventario.Ubicacion.DEPOSITO, 3)
 	var estante := Estante.new(inventario, productos)
@@ -174,6 +179,45 @@ func test_vender_no_deshace_la_unidad_que_esta_en_la_mano() -> void:  # AC-CTR-0
 	assert_int(estante.colocar_unidad(en_la_mano)).is_equal(Estante.Rechazo.NINGUNO)
 	assert_int(inventario.unidades(producto, Inventario.Ubicacion.GONDOLA)).is_equal(8)
 	assert_bool(estante.completada()).is_true()
+
+
+## La atención de un comprador que pide esas unidades de un solo producto y paga justo.
+func _atencion_de(producto: Producto, unidades: int, inventario: Inventario) -> Atencion:
+	var venta := Venta.new()
+	venta.agregar(producto, unidades)
+	return Atencion.new(Comprador.new("Marta", venta, venta.total()), inventario)
+
+
+func test_la_venta_no_se_lleva_lo_que_esta_afuera_de_la_caja() -> void:  # AC-STK-049
+	# La fila completa, la caja en 8 y 3 afuera: quedan 5 en la caja, y a la góndola no le falta
+	# nada. Un pedido de 6 se llevaría una de la mano. El aviso y el cobro miran la misma cuenta:
+	# el aviso nombra el producto justo cuando el cobro se rechaza.
+	var producto := Producto.new(Producto.Id.ACTRONCITO, "Actroncito", 2500)
+	var productos: Array[Producto] = [producto]
+	var inventario := Inventario.new(productos, {Producto.Id.ACTRONCITO: 8})
+	inventario.ingresar(producto, Inventario.Ubicacion.GONDOLA, 8)
+	inventario.ingresar(producto, Inventario.Ubicacion.DEPOSITO, 8)
+	var estante := Estante.new(inventario, productos)
+	var caja := ContenidoDeLaCaja.new(producto, estante)
+	assert_array(estante.casilleros_vacios(producto)).is_empty()
+	var afuera: Array[UnidadDeProducto] = []
+	for _vez in 3:
+		afuera.append(caja.sacar())
+	assert_int(caja.unidades()).is_equal(5)
+	var de_seis := _atencion_de(producto, 6, inventario)
+	assert_array(de_seis.faltantes_del_pedido()).has_size(1)
+	assert_int(de_seis.cobrar()).is_equal(Atencion.Resultado.SIN_STOCK)
+	assert_int(inventario.unidades(producto, Inventario.Ubicacion.DEPOSITO)).is_equal(8)
+	assert_int(caja.unidades()).is_equal(5)
+	var de_cinco := _atencion_de(producto, 5, inventario)
+	assert_array(de_cinco.faltantes_del_pedido()).is_empty()
+	assert_int(de_cinco.cobrar()).is_equal(Atencion.Resultado.COBRADA)
+	assert_int(caja.unidades()).is_zero()
+	# La venta llegó hasta lo que está afuera y no más: el depósito es justo lo de la mano.
+	assert_int(inventario.unidades(producto, Inventario.Ubicacion.DEPOSITO)).is_equal(3)
+	for unidad in afuera:
+		assert_bool(caja.meter(unidad)).is_true()
+	assert_int(caja.unidades()).is_equal(3)
 
 
 func test_el_ticket_dice_las_lineas_el_total_lo_que_paga_y_la_diferencia() -> void:  # AC-CTR-013

@@ -23,13 +23,14 @@ const ARCHIVOS_DEL_SPEC := [
 ## segunda vez no cuenta; un flag acá sería esa misma regla escrita en la capa que traduce.
 const PATRONES_DE_ESTADO_PROPIO := "var\\s+_cumplida|_colocadas"
 
-## Un umbral chico para que llenar el estante sean dos colocaciones y no seis.
+## Una fila chica para que llenar el estante sean dos colocaciones y no seis.
 const CUPO_DE_PRUEBA := 2
 
 var _colocados: int = 0
 var _rechazos: int = 0
 var _cumplidas_avisadas: int = 0
 var _avisos_de_tarea: int = 0
+var _descumplidas: int = 0
 
 ## El turno que el reloj está corriendo. Se guarda acá porque `RelojDelTurno` es su único dueño
 ## y no lo expone: sin esta referencia, cuánto se descontó sólo se podría leer por la señal
@@ -47,24 +48,29 @@ func before_test() -> void:
 	_rechazos = 0
 	_cumplidas_avisadas = 0
 	_avisos_de_tarea = 0
+	_descumplidas = 0
 	_turno = null
 
 
 func _producto(id: Producto.Id) -> Producto:
-	return Producto.new(id, "de prueba", 100, CUPO_DE_PRUEBA)
+	return Producto.new(id, "de prueba", 100)
 
 
 ## Un repositor cableado a mano: reloj con turno arrancado, agarre y estante de un producto.
-func _repositor(en_deposito: int = 10, restante: float = Reglas.DURACION_DEL_TURNO) -> Repositor:
+func _repositor(
+	en_deposito: int = 10, restante: float = Reglas.DURACION_DEL_TURNO, en_gondola: int = 0
+) -> Repositor:
 	var actroncito := _producto(Producto.Id.ACTRONCITO)
-	var inventario := Inventario.new([actroncito])
+	var inventario := Inventario.new([actroncito], {Producto.Id.ACTRONCITO: CUPO_DE_PRUEBA})
 	inventario.ingresar(actroncito, Inventario.Ubicacion.DEPOSITO, en_deposito)
+	inventario.ingresar(actroncito, Inventario.Ubicacion.GONDOLA, en_gondola)
 
 	var obligatorias := Apertura.obligatorias()
 	_turno = Turno.new(restante, obligatorias)
 	var reloj: RelojDelTurno = auto_free(RelojDelTurno.new())
 	reloj.arrancar(_turno, obligatorias)
 	reloj.tarea_completada.connect(_anotar_tarea)
+	reloj.tarea_descumplida.connect(_anotar_descumplida)
 
 	var repositor: Repositor = auto_free(Repositor.new())
 	repositor.reloj = reloj
@@ -153,7 +159,7 @@ func test_sin_tiempo_para_reponer_la_tarea_no_se_cuenta_ni_descuenta() -> void:
 	# El turno arranca cerrado, así que no cuenta nada. El estante igual se llena:
 	# el estado del mundo no depende de que el jefe la cuente.
 	var actroncito := _producto(Producto.Id.ACTRONCITO)
-	var inventario := Inventario.new([actroncito])
+	var inventario := Inventario.new([actroncito], {Producto.Id.ACTRONCITO: CUPO_DE_PRUEBA})
 	inventario.ingresar(actroncito, Inventario.Ubicacion.DEPOSITO, 10)
 	var obligatorias := Apertura.obligatorias()
 	_turno = Turno.new(0.0, obligatorias)
@@ -221,3 +227,170 @@ func _anotar_rechazo(_motivo: Estante.Rechazo) -> void:
 func _anotar_tarea(cumplidas: int) -> void:
 	_avisos_de_tarea += 1
 	_cumplidas_avisadas = cumplidas
+
+
+func test_devolver_saca_la_unidad_de_la_mano_y_la_mete_en_su_caja() -> void:  # AC-STK-039
+	var repositor := _repositor(ReglasDelEstante.UNIDADES_POR_CAJA)
+	var agarre := repositor.agarre
+	var caja := repositor.caja(Producto.Id.ACTRONCITO)
+	var disponibles := repositor.estante().disponibles_para_retirar(caja.producto)
+	var nodo: UnidadFisica = auto_free(UnidadFisica.new())
+	assert_bool(repositor.pedir_retirar(Producto.Id.ACTRONCITO, nodo)).is_true()
+	assert_int(caja.unidades()).is_equal(ReglasDelEstante.UNIDADES_POR_CAJA - 1)
+	# Devuelve el cuerpo que sacó de la mano: esconderlo es de quien lo dibuja.
+	assert_object(repositor.pedir_devolver(Producto.Id.ACTRONCITO)).is_same(nodo)
+	assert_object(agarre.manos().sostenido()).is_null()
+	assert_int(caja.unidades()).is_equal(ReglasDelEstante.UNIDADES_POR_CAJA)
+	assert_int(repositor.estante().disponibles_para_retirar(caja.producto)).is_equal(disponibles)
+	assert_int(repositor.estante().unidades_en_gondola(caja.producto)).is_zero()
+	assert_int(_colocados).is_zero()
+
+
+func test_si_la_caja_no_la_recibe_la_unidad_sigue_en_la_mano() -> void:  # AC-STK-040
+	# Nueve en el depósito: con una afuera, la caja tiene las de una caja entera y no recibe.
+	var repositor := _repositor(ReglasDelEstante.UNIDADES_POR_CAJA + 1)
+	var agarre := repositor.agarre
+	var nodo: UnidadFisica = auto_free(UnidadFisica.new())
+	assert_bool(repositor.pedir_retirar(Producto.Id.ACTRONCITO, nodo)).is_true()
+	var unidad := agarre.manos().sostenido()
+	assert_object(repositor.pedir_devolver(Producto.Id.ACTRONCITO)).is_null()
+	assert_object(agarre.manos().sostenido()).is_same(unidad)
+	assert_int(repositor.caja(Producto.Id.ACTRONCITO).unidades()).is_equal(
+		ReglasDelEstante.UNIDADES_POR_CAJA
+	)
+
+
+func test_devolver_con_otra_cosa_en_la_mano_no_saca_nada() -> void:  # AC-STK-038
+	var repositor := _repositor(ReglasDelEstante.UNIDADES_POR_CAJA)
+	var agarre := repositor.agarre
+	assert_object(repositor.pedir_devolver(Producto.Id.ACTRONCITO)).is_null()
+	var objeto := ObjetoDelAlmacen.new()
+	assert_bool(agarre.manos().agarrar(objeto)).is_true()
+	assert_object(repositor.pedir_devolver(Producto.Id.ACTRONCITO)).is_null()
+	assert_object(agarre.manos().sostenido()).is_same(objeto)
+	assert_int(repositor.caja(Producto.Id.ACTRONCITO).unidades()).is_equal(
+		ReglasDelEstante.UNIDADES_POR_CAJA
+	)
+
+
+func test_con_la_caja_vacia_no_retira_aunque_la_gondola_tenga_lugar() -> void:  # AC-STK-016
+	# Una sola unidad en el depósito, y la fila de dos casilleros vacía. La que salió queda en el
+	# piso: la mano está libre y a la góndola le sobra un casillero, pero la caja no tiene más.
+	var repositor := _repositor(1)
+	var agarre := repositor.agarre
+	var primera: UnidadFisica = auto_free(UnidadFisica.new())
+	assert_bool(repositor.pedir_retirar(Producto.Id.ACTRONCITO, primera)).is_true()
+	assert_object(agarre.soltar(true)).is_same(primera)
+	var producto := Catalogo.de(Producto.Id.ACTRONCITO)
+	var estante := repositor.estante()
+	assert_int(repositor.caja(Producto.Id.ACTRONCITO).unidades()).is_zero()
+	(
+		assert_int(
+			(
+				estante.cupo(producto)
+				- estante.unidades_en_gondola(producto)
+				- estante.reservadas(producto)
+			)
+		)
+		. is_greater(0)
+	)
+	var segunda: UnidadFisica = auto_free(UnidadFisica.new())
+	assert_bool(repositor.pedir_retirar(Producto.Id.ACTRONCITO, segunda)).is_false()
+	assert_object(agarre.manos().sostenido()).is_null()
+
+
+func test_la_caja_es_la_del_estante_de_la_noche() -> void:  # AC-STK-037
+	# Arrancar otra noche con una unidad en la mano la entrega, y la caja se cuenta sobre el
+	# estante nuevo: no queda nada afuera y vuelve a estar llena.
+	var repositor := _repositor(ReglasDelEstante.UNIDADES_POR_CAJA)
+	var nodo: UnidadFisica = auto_free(UnidadFisica.new())
+	assert_bool(repositor.pedir_retirar(Producto.Id.ACTRONCITO, nodo)).is_true()
+	var actroncito := _producto(Producto.Id.ACTRONCITO)
+	var inventario := Inventario.new([actroncito], {Producto.Id.ACTRONCITO: CUPO_DE_PRUEBA})
+	inventario.ingresar(
+		actroncito, Inventario.Ubicacion.DEPOSITO, ReglasDelEstante.UNIDADES_POR_CAJA
+	)
+	repositor.arrancar(Estante.new(inventario, [actroncito]))
+	assert_object(repositor.agarre.manos().sostenido()).is_null()
+	assert_int(repositor.caja(Producto.Id.ACTRONCITO).unidades()).is_equal(
+		ReglasDelEstante.UNIDADES_POR_CAJA
+	)
+	assert_int(repositor.estante().reservadas(actroncito)).is_zero()
+
+
+func _anotar_descumplida(_cumplidas: int) -> void:
+	_descumplidas += 1
+
+
+func test_agarrar_de_la_gondola_pone_la_unidad_en_la_mano() -> void:  # AC-PLY-049 AC-STK-044
+	var repositor := _repositor(ReglasDelEstante.UNIDADES_POR_CAJA, Reglas.DURACION_DEL_TURNO, 2)
+	var agarre := repositor.agarre
+	var nodo: UnidadFisica = auto_free(UnidadFisica.new())
+	assert_bool(repositor.pedir_agarrar_de_la_gondola(Producto.Id.ACTRONCITO, 1, nodo)).is_true()
+	var unidad := agarre.manos().sostenido() as UnidadDeProducto
+	assert_object(unidad).is_not_null()
+	assert_object(nodo.datos).is_same(unidad)
+	var actroncito := _producto(Producto.Id.ACTRONCITO)
+	assert_array(repositor.estante().casilleros_vacios(actroncito)).is_equal([1])
+	assert_array(repositor.estante().casilleros_ocupados(actroncito)).is_equal([0])
+	# Un casillero vacío no da nada, aunque la mano esté libre.
+	agarre.soltar(true)
+	var otro: UnidadFisica = auto_free(UnidadFisica.new())
+	assert_bool(repositor.pedir_agarrar_de_la_gondola(Producto.Id.ACTRONCITO, 1, otro)).is_false()
+	assert_object(agarre.manos().sostenido()).is_null()
+
+
+func test_con_algo_en_la_mano_no_se_agarra_de_la_gondola() -> void:  # AC-PLY-049
+	var repositor := _repositor(ReglasDelEstante.UNIDADES_POR_CAJA, Reglas.DURACION_DEL_TURNO, 2)
+	var agarre := repositor.agarre
+	var objeto := ObjetoDelAlmacen.new()
+	assert_bool(agarre.manos().agarrar(objeto)).is_true()
+	var nodo: UnidadFisica = auto_free(UnidadFisica.new())
+	assert_bool(repositor.pedir_agarrar_de_la_gondola(Producto.Id.ACTRONCITO, 0, nodo)).is_false()
+	assert_object(agarre.manos().sostenido()).is_same(objeto)
+	var actroncito := _producto(Producto.Id.ACTRONCITO)
+	assert_int(repositor.estante().unidades_en_gondola(actroncito)).is_equal(2)
+
+
+func test_agarrar_de_la_gondola_descumple_reponer_y_colocarla_la_cumple() -> void:  # AC-STK-048
+	var repositor := _repositor()
+	for _unidad in range(CUPO_DE_PRUEBA):
+		_reponer_una(repositor)
+	assert_int(_turno.tareas_cumplidas()).is_equal(1)
+	var nodo: UnidadFisica = auto_free(UnidadFisica.new())
+	assert_bool(repositor.pedir_agarrar_de_la_gondola(Producto.Id.ACTRONCITO, 0, nodo)).is_true()
+	assert_int(_turno.tareas_cumplidas()).is_zero()
+	assert_int(_descumplidas).is_equal(1)
+	repositor.pedir_colocar_de_la_mano(_producto(Producto.Id.ACTRONCITO), 0)
+	assert_int(_turno.tareas_cumplidas()).is_equal(1)
+	assert_int(_avisos_de_tarea).is_equal(2)
+
+
+func test_la_unidad_se_coloca_en_el_casillero_que_se_pide() -> void:  # AC-PLY-048
+	var repositor := _repositor()
+	var nodo: UnidadFisica = auto_free(UnidadFisica.new())
+	assert_bool(repositor.pedir_retirar(Producto.Id.ACTRONCITO, nodo)).is_true()
+	var actroncito := _producto(Producto.Id.ACTRONCITO)
+	repositor.pedir_colocar_de_la_mano(actroncito, 1)
+	assert_object(repositor.agarre.manos().sostenido()).is_null()
+	assert_array(repositor.estante().casilleros_ocupados(actroncito)).is_equal([1])
+	assert_int(_colocados).is_equal(1)
+	# Otra al mismo casillero se rechaza, y sigue en la mano.
+	var otra: UnidadFisica = auto_free(UnidadFisica.new())
+	assert_bool(repositor.pedir_retirar(Producto.Id.ACTRONCITO, otra)).is_true()
+	repositor.pedir_colocar_de_la_mano(actroncito, 1)
+	assert_object(repositor.agarre.manos().sostenido()).is_same(otra.datos)
+	assert_int(_rechazos).is_equal(1)
+
+
+func test_la_unidad_de_la_gondola_no_entra_en_la_caja_llena() -> void:  # AC-STK-047
+	var repositor := _repositor(ReglasDelEstante.UNIDADES_POR_CAJA, Reglas.DURACION_DEL_TURNO, 2)
+	var agarre := repositor.agarre
+	var nodo: UnidadFisica = auto_free(UnidadFisica.new())
+	assert_bool(repositor.pedir_agarrar_de_la_gondola(Producto.Id.ACTRONCITO, 1, nodo)).is_true()
+	var unidad := agarre.manos().sostenido()
+	assert_object(repositor.pedir_devolver(Producto.Id.ACTRONCITO)).is_null()
+	assert_object(agarre.manos().sostenido()).is_same(unidad)
+	assert_int(repositor.caja(Producto.Id.ACTRONCITO).unidades()).is_equal(
+		ReglasDelEstante.UNIDADES_POR_CAJA
+	)

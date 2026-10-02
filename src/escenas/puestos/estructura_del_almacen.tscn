@@ -7,13 +7,20 @@
 [ext_resource type="Script" path="res://src/escenas/puestos/escritorio.gd" id="escritorio"]
 [ext_resource type="Script" path="res://src/escenas/puestos/estante.gd" id="estante"]
 [ext_resource type="Script" path="res://src/escenas/puestos/puerta_del_local.gd" id="puerta"]
+[ext_resource type="Script" path="res://src/escenas/puestos/artefacto_del_bano.gd" id="artefacto"]
 [ext_resource type="PackedScene" path="res://src/escenas/puestos/contenido_del_estante.tscn" id="contenido"]
 
 [sub_resource type="BoxShape3D" id="contorno_de_gondola"]
-size = Vector3(1.939379, 2.292614, 5.417235)
+size = Vector3(1.800454, 2.292613, 4.978426)
 
-[sub_resource type="BoxShape3D" id="contorno_de_gondola_del_fondo"]
-size = Vector3(1.096062, 2.294011, 3.838209)
+[sub_resource type="BoxShape3D" id="contorno_de_gondola2"]
+size = Vector3(1.800454, 2.292613, 4.870332)
+
+[sub_resource type="BoxShape3D" id="contorno_de_gondola_del_fondo_norte"]
+size = Vector3(0.852622, 2.294011, 3.838209)
+
+[sub_resource type="BoxShape3D" id="contorno_de_gondola_del_fondo_sur"]
+size = Vector3(0.852138, 2.294011, 3.838209)
 
 [sub_resource type="BoxShape3D" id="suelo_local"]
 size = Vector3(16.15515, 0.206508, 16.15515)
@@ -22,13 +29,337 @@ size = Vector3(16.15515, 0.206508, 16.15515)
 size = Vector3(5.1428, 0.206508, 6.608355)
 
 [sub_resource type="BoxShape3D" id="suelo_fondo"]
-size = Vector3(9.670091, 0.206508, 6.21277)
+size = Vector3(14.7293, 0.206508, 6.21277)
 
 [sub_resource type="BoxShape3D" id="suelo_paso_deposito"]
 size = Vector3(0.420795, 0.206508, 1.682868)
 
 [sub_resource type="BoxShape3D" id="suelo_paso_fondo"]
 size = Vector3(1.703925, 0.206508, 0.382225)
+
+[sub_resource type="BoxShape3D" id="volumen_1"]
+size = Vector3(9.79794, 6.97386, 0.20038)
+
+[sub_resource type="BoxShape3D" id="volumen_2"]
+size = Vector3(0.15167, 7.17986, 6.37274)
+
+[sub_resource type="BoxShape3D" id="volumen_3"]
+size = Vector3(6.37622, 6.97386, 0.17528)
+
+[sub_resource type="BoxShape3D" id="volumen_4"]
+size = Vector3(1.57032, 7.17986, 0.17528)
+
+[sub_resource type="BoxShape3D" id="volumen_5"]
+size = Vector3(5.55188, 7.17986, 0.19107)
+
+[sub_resource type="BoxShape3D" id="volumen_6"]
+size = Vector3(0.21375, 7.17986, 2.37643)
+
+[sub_resource type="BoxShape3D" id="volumen_7"]
+size = Vector3(0.20799, 7.17986, 6.75039)
+
+[sub_resource type="BoxShape3D" id="volumen_8"]
+size = Vector3(0.21375, 7.17986, 2.69523)
+
+[sub_resource type="BoxShape3D" id="volumen_10"]
+size = Vector3(4.51234, 6.97386, 0.206)
+
+[sub_resource type="BoxShape3D" id="volumen_11"]
+size = Vector3(6.37622, 6.97386, 0.206)
+
+[sub_resource type="BoxShape3D" id="volumen_12"]
+size = Vector3(1.72199, 6.97386, 0.206)
+
+[sub_resource type="BoxShape3D" id="volumen_13"]
+size = Vector3(0.45271, 4.14823, 15.90936)
+
+[sub_resource type="BoxShape3D" id="volumen_14"]
+size = Vector3(0.206, 6.97386, 2.3615)
+
+[sub_resource type="BoxShape3D" id="volumen_15"]
+size = Vector3(0.206, 6.97386, 11.86913)
+
+[sub_resource type="BoxShape3D" id="volumen_16"]
+size = Vector3(5.13014, 6.97386, 2.46871)
+
+[sub_resource type="BoxShape3D" id="volumen_17"]
+size = Vector3(15.45665, 0.92534, 0.206)
+
+[sub_resource type="BoxShape3D" id="volumen_18"]
+size = Vector3(11.358089, 6.04852, 0.206)
+
+[sub_resource type="BoxShape3D" id="volumen_19"]
+size = Vector3(0.93429, 6.04852, 0.206)
+
+[sub_resource type="BoxShape3D" id="volumen_20"]
+size = Vector3(1.69973, 4.23089, 0.38128)
+
+[sub_resource type="BoxShape3D" id="volumen_21"]
+size = Vector3(0.41975, 4.23089, 1.67872)
+
+[sub_resource type="BoxShape3D" id="volumen_22"]
+size = Vector3(3.16427, 4.23089, 0.206)
+
+[sub_resource type="BoxShape3D" id="volumen_23"]
+size = Vector3(0.27747, 2.82563, 15.90936)
+
+[sub_resource type="BoxShape3D" id="volumen_24"]
+size = Vector3(15.45665, 2.82563, 15.70336)
+
+[sub_resource type="BoxShape3D" id="volumen_25"]
+size = Vector3(0.17524, 2.82563, 0.206)
+
+[sub_resource type="BoxShape3D" id="volumen_26"]
+size = Vector3(5.13014, 2.36271, 4.05516)
+
+[sub_resource type="BoxShape3D" id="volumen_27"]
+size = Vector3(0.17524, 2.36271, 15.70336)
+
+[sub_resource type="BoxShape3D" id="volumen_28"]
+size = Vector3(5.13014, 2.21844, 0.22652)
+
+[sub_resource type="BoxShape3D" id="volumen_29"]
+size = Vector3(16.11536, 0.27747, 0.24704)
+
+[sub_resource type="BoxShape3D" id="volumen_30"]
+size = Vector3(9.64627, 2.21518, 6.19746)
+
+[sub_resource type="BoxShape3D" id="volumen_31"]
+size = Vector3(0.27747, 1.94097, 0.24704)
+
+[sub_resource type="BoxShape3D" id="volumen_32"]
+size = Vector3(0.27747, 1.94097, 0.24704)
+
+[sub_resource type="BoxShape3D" id="volumen_33"]
+size = Vector3(15.56042, 0.27747, 0.24704)
+
+[sub_resource type="BoxShape3D" id="volumen_34"]
+size = Vector3(3.07539, 0.88272, 0.90393)
+
+[sub_resource type="BoxShape3D" id="volumen_35"]
+size = Vector3(0.70285, 0.88272, 2.48632)
+
+[sub_resource type="BoxShape3D" id="volumen_61"]
+size = Vector3(1.09635, 2.49044, 0.0844)
+
+[sub_resource type="BoxShape3D" id="volumen_62"]
+size = Vector3(0.11075, 2.49044, 1.25668)
+
+[sub_resource type="BoxShape3D" id="volumen_63"]
+size = Vector3(0.9856, 2.49044, 0.0844)
+
+[sub_resource type="BoxShape3D" id="volumen_64"]
+size = Vector3(0.9856, 0.08847, 1.17228)
+
+[sub_resource type="BoxShape3D" id="volumen_65"]
+size = Vector3(0.90411, 0.55627, 1.17695)
+
+[sub_resource type="BoxShape3D" id="volumen_66"]
+size = Vector3(0.0115, 0.16724, 1.17695)
+
+[sub_resource type="BoxShape3D" id="volumen_67"]
+size = Vector3(0.94783, 1.84249, 0.04687)
+
+[sub_resource type="BoxShape3D" id="volumen_68"]
+size = Vector3(0.09575, 1.84249, 1.12964)
+
+[sub_resource type="BoxShape3D" id="volumen_69"]
+size = Vector3(0.85208, 1.84249, 0.04688)
+
+[sub_resource type="BoxShape3D" id="volumen_70"]
+size = Vector3(0.85208, 0.05196, 1.08276)
+
+[sub_resource type="BoxShape3D" id="volumen_71"]
+size = Vector3(0.850638, 0.057008, 1.238094)
+
+[sub_resource type="BoxShape3D" id="volumen_72"]
+size = Vector3(0.850638, 0.057008, 1.238094)
+
+[sub_resource type="BoxShape3D" id="volumen_73"]
+size = Vector3(0.850638, 0.057008, 1.238094)
+
+[sub_resource type="BoxShape3D" id="volumen_74"]
+size = Vector3(1.09635, 2.49044, 0.0844)
+
+[sub_resource type="BoxShape3D" id="volumen_75"]
+size = Vector3(0.11075, 2.49044, 1.25668)
+
+[sub_resource type="BoxShape3D" id="volumen_76"]
+size = Vector3(0.9856, 2.49044, 0.0844)
+
+[sub_resource type="BoxShape3D" id="volumen_77"]
+size = Vector3(0.9856, 0.08847, 1.17228)
+
+[sub_resource type="BoxShape3D" id="volumen_78"]
+size = Vector3(0.90411, 0.55627, 1.17695)
+
+[sub_resource type="BoxShape3D" id="volumen_79"]
+size = Vector3(0.0115, 0.16724, 1.17695)
+
+[sub_resource type="BoxShape3D" id="volumen_80"]
+size = Vector3(0.94783, 1.84249, 0.04687)
+
+[sub_resource type="BoxShape3D" id="volumen_81"]
+size = Vector3(0.09575, 1.84249, 1.12964)
+
+[sub_resource type="BoxShape3D" id="volumen_82"]
+size = Vector3(0.85208, 1.84249, 0.04688)
+
+[sub_resource type="BoxShape3D" id="volumen_83"]
+size = Vector3(0.85208, 0.05196, 1.08276)
+
+[sub_resource type="BoxShape3D" id="volumen_84"]
+size = Vector3(0.850638, 0.057008, 1.238094)
+
+[sub_resource type="BoxShape3D" id="volumen_85"]
+size = Vector3(0.850638, 0.057008, 1.238094)
+
+[sub_resource type="BoxShape3D" id="volumen_86"]
+size = Vector3(0.850638, 0.057008, 1.238094)
+
+[sub_resource type="BoxShape3D" id="volumen_de_la_puerta"]
+size = Vector3(1.724248, 2.78366, 0.232234)
+
+[sub_resource type="BoxShape3D" id="volumen_de_la_puerta2"]
+size = Vector3(1.724248, 2.78366, 0.232234)
+
+[sub_resource type="BoxShape3D" id="volumen_del_porton"]
+size = Vector3(0.232152, 3.387137, 4.3139)
+
+[sub_resource type="BoxShape3D" id="volumen_de_la_puerta_del_jefe"]
+size = Vector3(1.429581, 2.678461, 0.066503)
+
+[sub_resource type="BoxShape3D" id="volumen_de_la_entrada"]
+size = Vector3(1.724248, 2.78366, 0.232234)
+
+[sub_resource type="ConvexPolygonShape3D" id="volumen_87"]
+points = PackedVector3Array(-0.999998, -0.000000, -1.000002, -0.999998, -0.000000, 0.999998, -0.999998, 0.185543, -1.000002, 1.000002, -0.000000, -1.000002, -0.999998, 0.185543, 0.999998, 1.000002, -0.000000, 0.999998, -0.600037, 1.373421, -0.600041, 1.000002, 0.185543, -1.000002, 1.000002, 0.185543, 0.999998, -0.600037, 0.997764, 0.599841, 0.599845, 1.373421, -0.600041, 0.599845, 0.997764, 0.599841)
+
+[sub_resource type="ConvexPolygonShape3D" id="volumen_88"]
+points = PackedVector3Array(-0.789013, 1.410645, -1.112827, -1.345026, 0.866088, -0.055380, -1.351485, 0.947833, -0.047698, -0.789013, 2.314563, -1.112827, 0.725294, 1.410645, -0.985688, 1.280015, 0.866788, -0.054996, 1.274073, 0.862237, -0.047698, -1.337792, 0.862237, -0.047698, -1.337792, 0.862237, 0.840165, -1.351485, 0.947833, 0.849000, -1.351485, 2.650294, -0.047698, 1.287766, 2.650294, -0.047698, 0.725294, 2.314563, -0.985688, 1.287766, 0.947833, -0.047698, 1.287766, 0.947833, 0.849000, 1.274073, 0.862237, 0.840165, -1.351485, 2.650294, 0.849192, 1.287766, 2.650294, 0.849192)
+
+[sub_resource type="ConvexPolygonShape3D" id="volumen_89"]
+points = PackedVector3Array(0.434698, 1.000000, 1.000000, 0.434698, 1.000000, -1.000000, -0.434541, 1.000000, 1.000000, 0.434698, -1.000000, 1.000000, -0.434541, 1.000000, -1.000000, 0.434698, -1.000000, -1.000000, -0.434541, -1.000000, 1.000000, -0.434541, -1.000000, -1.000000)
+
+[sub_resource type="ConvexPolygonShape3D" id="volumen_90"]
+points = PackedVector3Array(0.000000, 1.266900, 2.050800, 0.000000, 1.008321, 0.008400, -0.866000, 0.766831, 2.050800, 0.866000, 0.766831, 2.050800, 0.602877, 0.491569, 0.008400, -0.602708, 0.488924, 0.008400, -0.866000, -0.500025, 2.050800, 0.866000, -0.500025, 2.050800, 0.602877, -0.207267, 0.008400, -0.600334, -0.232494, 0.008400, 0.000000, -0.737853, 0.008400, 0.000000, -0.811500, 2.050800)
+
+[sub_resource type="ConvexPolygonShape3D" id="volumen_91"]
+points = PackedVector3Array(0.838900, -0.449107, 2.852211, 0.717097, -0.516508, 3.747867, 0.838900, -0.652425, 2.836925, 0.497885, -0.389835, 2.068185, -0.000093, -0.543300, 4.107900, 0.717097, -0.719721, 3.732581, -0.879800, -0.652425, 2.836925, 0.497885, -0.593014, 2.053100, -0.538954, -0.389835, 2.068185, -0.758165, -0.516508, 3.747867, -0.758165, -0.719721, 3.732581, -0.000093, -0.746200, 4.088188, -0.879800, -0.449107, 2.852211, -0.538954, -0.593014, 2.053100)
+
+[sub_resource type="ConvexPolygonShape3D" id="volumen_92"]
+points = PackedVector3Array(0.847400, -0.709201, 4.100200, 0.847400, -1.356800, 4.100200, 0.847400, -1.356800, 1.710033, 0.718860, -0.619230, 1.710033, 0.095253, 0.042200, 0.078800, -0.894200, -0.709201, 4.100200, -0.894200, -1.356800, 4.100200, -0.894200, -1.356800, 1.710033, 0.053826, -0.421075, 0.454330, 0.012230, 0.000707, 0.078800, -0.759011, -0.619230, 1.710033)
+
+[sub_resource type="BoxShape3D" id="volumen_93"]
+size = Vector3(7.60774, 0.206, 0.20038)
+
+[sub_resource type="BoxShape3D" id="volumen_94"]
+size = Vector3(4.18602, 0.206, 0.17528)
+
+[sub_resource type="BoxShape3D" id="volumen_95"]
+size = Vector3(5.13014, 0.206, 0.15812)
+
+[sub_resource type="ConvexPolygonShape3D" id="volumen_97"]
+points = PackedVector3Array(-7.851676, 4.148226, -7.851676, -7.604972, 4.755416, -7.851676, -7.604972, 4.148226, -7.851676, -7.851676, 4.148226, 7.850141, -7.604972, 4.755416, 7.850141, -7.604972, 4.148226, 7.850141)
+
+[sub_resource type="ConvexPolygonShape3D" id="volumen_98"]
+points = PackedVector3Array(8.271435, 4.611152, -3.732354, 8.271435, 4.75542, -3.732354, 8.271435, 4.611152, -3.584931, 13.401068, 4.611152, -3.732354, 13.401068, 4.75542, -3.732354, 13.401068, 4.611152, -3.584931)
+
+[sub_resource type="ConvexPolygonShape3D" id="casco_17"]
+points = PackedVector3Array(-1.088461, -0.429251, -1.000000, -1.088461, 0.390416, -1.000000, -1.079217, -0.588097, -1.000000, -1.088461, -0.429251, 1.000000, -1.088461, 0.390416, 1.000000, -0.849301, 0.571744, -1.000000, -1.079217, -0.588097, 1.000000, 0.920601, -0.440605, -1.000000, -0.849301, 0.571744, 1.000000, 0.814002, 0.108829, -1.000000, 0.920601, -0.440605, 1.000000, 0.920601, -0.407337, -1.000000, 0.814002, 0.108829, 1.000000, 0.911357, -0.019701, -1.000000, 0.920601, -0.407337, 1.000000, 0.911357, -0.019701, 1.000000)
+
+[sub_resource type="ConvexPolygonShape3D" id="casco_24"]
+points = PackedVector3Array(-2.817846, -19.587069, 21.073584, 8.219631, -18.003384, 21.073584, -12.959572, -14.958723, 21.073584, -2.802664, -19.487370, 19.939322, 16.645767, -10.698497, 21.073584, 8.174086, -17.907520, 19.939322, 16.558468, -10.644813, 19.939322, -18.986916, -5.575489, 21.073584, -18.888231, -5.548647, 19.939322, -12.891253, -14.878197, 19.939322, -10.181225, -11.749174, -21.063227, -2.214352, -15.388197, -21.063227, 6.454699, -14.141955, -21.063227, 19.788486, 0.000000, 21.073584, 13.074146, -8.405414, -21.063227, 15.541260, 0.000000, -21.063227, 19.682213, 0.000000, 19.939322, -18.986916, 5.571653, 21.073584, -14.918079, -4.382933, -21.063227, -18.888231, 5.544811, 19.939322, 16.645767, 10.694662, 21.073584, 16.558468, 10.640978, 19.939322, 13.074146, 8.401579, -21.063227, -12.959572, 14.954889, 21.073584, -14.918079, 4.379097, -21.063227, -12.891253, 14.874361, 19.939322, 8.219631, 17.999548, 21.073584, 6.454699, 14.138121, -21.063227, 8.174086, 17.903685, 19.939322, -2.817846, 19.587069, 21.073584, -2.802664, 19.483534, 19.939322, -10.181225, 11.745338, -21.063227, -2.214352, 15.384359, -21.063227)
+
+[sub_resource type="ConvexPolygonShape3D" id="casco_25"]
+points = PackedVector3Array(-2.817846, -19.587069, 21.073584, 8.219631, -18.003384, 21.073584, -12.959572, -14.958723, 21.073584, -2.802664, -19.487370, 19.939322, 16.645767, -10.698497, 21.073584, 8.174086, -17.907520, 19.939322, 16.558468, -10.644813, 19.939322, -18.986916, -5.575489, 21.073584, -18.888231, -5.548647, 19.939322, -12.891253, -14.878197, 19.939322, -10.181225, -11.749174, -21.063227, -2.214352, -15.388197, -21.063227, 6.454699, -14.141955, -21.063227, 19.788486, 0.000000, 21.073584, 13.074146, -8.405414, -21.063227, 15.541260, 0.000000, -21.063227, 19.682213, 0.000000, 19.939322, -18.986916, 5.571653, 21.073584, -14.918079, -4.382933, -21.063227, -18.888231, 5.544811, 19.939322, 16.645767, 10.694662, 21.073584, 16.558468, 10.640978, 19.939322, 13.074146, 8.401579, -21.063227, -12.959572, 14.954889, 21.073584, -14.918079, 4.379097, -21.063227, -12.891253, 14.874361, 19.939322, 8.219631, 17.999548, 21.073584, 6.454699, 14.138121, -21.063227, 8.174086, 17.903685, 19.939322, -2.817846, 19.587069, 21.073584, -2.802664, 19.483534, 19.939322, -10.181225, 11.745338, -21.063227, -2.214352, 15.384359, -21.063227)
+
+[sub_resource type="ConvexPolygonShape3D" id="casco_26"]
+points = PackedVector3Array(-2.817846, -19.587069, 21.073584, 8.219631, -18.003384, 21.073584, -12.959572, -14.958723, 21.073584, -2.802664, -19.487370, 19.939322, 16.645767, -10.698497, 21.073584, 8.174086, -17.907520, 19.939322, 16.558468, -10.644813, 19.939322, -18.986916, -5.575489, 21.073584, -18.888231, -5.548647, 19.939322, -12.891253, -14.878197, 19.939322, -10.181225, -11.749174, -21.063227, -2.214352, -15.388197, -21.063227, 6.454699, -14.141955, -21.063227, 19.788486, 0.000000, 21.073584, 13.074146, -8.405414, -21.063227, 15.541260, 0.000000, -21.063227, 19.682213, 0.000000, 19.939322, -18.986916, 5.571653, 21.073584, -14.918079, -4.382933, -21.063227, -18.888231, 5.544811, 19.939322, 16.645767, 10.694662, 21.073584, 16.558468, 10.640978, 19.939322, 13.074146, 8.401579, -21.063227, -12.959572, 14.954889, 21.073584, -14.918079, 4.379097, -21.063227, -12.891253, 14.874361, 19.939322, 8.219631, 17.999548, 21.073584, 6.454699, 14.138121, -21.063227, 8.174086, 17.903685, 19.939322, -2.817846, 19.587069, 21.073584, -2.802664, 19.483534, 19.939322, -10.181225, 11.745338, -21.063227, -2.214352, 15.384359, -21.063227)
+
+[sub_resource type="BoxShape3D" id="volumen_norte_oeste"]
+size = Vector3(11.532565, 4.755019, 0.199976)
+
+[sub_resource type="BoxShape3D" id="volumen_sur_oeste"]
+size = Vector3(11.532565, 4.755019, 0.174884)
+
+[sub_resource type="BoxShape3D" id="volumen_pared_oeste"]
+size = Vector3(0.109994, 4.755019, 6.197069)
+
+[sub_resource type="BoxShape3D" id="volumen_entretecho_oeste"]
+size = Vector3(1.809532, 2.214784, 6.572728)
+
+[sub_resource type="ConvexPolygonShape3D" id="volumen_faldon_oeste"]
+points = PackedVector3Array(-6.897210, 4.755617, -14.630607, 4.635355, 4.755617, -14.630607, 4.635355, 6.973663, -14.630607, -3.545247, 6.973663, -14.630607, -6.897210, 4.755617, -8.057879, 4.635355, 4.755617, -8.057879, 4.635355, 6.973663, -8.057879, -3.545247, 6.973663, -8.057879)
+
+[sub_resource type="ConvexPolygonShape3D" id="volumen_zocalo_norte"]
+points = PackedVector3Array(-6.897210, 0.000200, -14.630607, 0.449889, -0.205800, -14.630607, 4.635355, -0.205800, -14.630607, 4.635355, 0.000200, -14.630607, -6.897210, 0.000200, -14.430631, 0.449889, -0.205800, -14.430631, 4.635355, -0.205800, -14.430631, 4.635355, 0.000200, -14.430631)
+
+[sub_resource type="ConvexPolygonShape3D" id="volumen_zocalo_sur"]
+points = PackedVector3Array(-6.897210, 0.000200, -8.232763, 0.449889, -0.205800, -8.232763, 4.635355, -0.205800, -8.232763, 4.635355, 0.000200, -8.232763, -6.897210, 0.000200, -8.057879, 0.449889, -0.205800, -8.057879, 4.635355, -0.205800, -8.057879, 4.635355, 0.000200, -8.057879)
+
+[sub_resource type="BoxShape3D" id="estante_o03_1"]
+size = Vector3(2, 0.0587, 0.7732)
+
+[sub_resource type="BoxShape3D" id="estante_o03_2"]
+size = Vector3(2, 0.0587, 0.7732)
+
+[sub_resource type="BoxShape3D" id="estante_o03_3"]
+size = Vector3(2, 0.0495, 0.7732)
+
+[sub_resource type="BoxShape3D" id="estante_o03_4"]
+size = Vector3(0.0566, 2.0301, 0.068)
+
+[sub_resource type="BoxShape3D" id="estante_o03_5"]
+size = Vector3(0.0566, 2.0301, 0.068)
+
+[sub_resource type="BoxShape3D" id="estante_o03_6"]
+size = Vector3(0.0566, 2.0301, 0.068)
+
+[sub_resource type="BoxShape3D" id="estante_o03_7"]
+size = Vector3(0.0566, 2.0301, 0.068)
+
+[sub_resource type="BoxShape3D" id="estante_o03_8"]
+size = Vector3(2, 0.0587, 0.7731)
+
+[sub_resource type="BoxShape3D" id="estante_o03_9"]
+size = Vector3(2, 0.0587, 0.7731)
+
+[sub_resource type="BoxShape3D" id="estante_o03_10"]
+size = Vector3(2, 0.0495, 0.7731)
+
+[sub_resource type="BoxShape3D" id="estante_o03_11"]
+size = Vector3(0.0566, 2.0301, 0.068)
+
+[sub_resource type="BoxShape3D" id="estante_o03_12"]
+size = Vector3(0.0566, 2.0301, 0.068)
+
+[sub_resource type="BoxShape3D" id="estante_o03_13"]
+size = Vector3(0.0566, 2.0301, 0.0679)
+
+[sub_resource type="BoxShape3D" id="estante_o03_14"]
+size = Vector3(0.0566, 2.0301, 0.0679)
+
+[sub_resource type="BoxShape3D" id="estante_001_1"]
+size = Vector3(2, 0.0587, 0.7732)
+
+[sub_resource type="BoxShape3D" id="estante_001_2"]
+size = Vector3(2, 0.0587, 0.7732)
+
+[sub_resource type="BoxShape3D" id="estante_001_3"]
+size = Vector3(2, 0.0495, 0.7732)
+
+[sub_resource type="BoxShape3D" id="estante_001_4"]
+size = Vector3(0.0566, 2.0301, 0.068)
+
+[sub_resource type="BoxShape3D" id="estante_001_5"]
+size = Vector3(0.0566, 2.0301, 0.068)
+
+[sub_resource type="BoxShape3D" id="estante_001_6"]
+size = Vector3(0.0566, 2.0301, 0.068)
+
+[sub_resource type="BoxShape3D" id="estante_001_7"]
+size = Vector3(0.0566, 2.0301, 0.068)
 
 [node name="Estructura" instance=ExtResource("modelo")]
 
@@ -44,7 +375,7 @@ position = Vector3(10.86326, 0, -4.5818585)
 shape = SubResource("suelo_deposito")
 
 [node name="Fondo" type="CollisionShape3D" parent="SueloSolido"]
-position = Vector3(3.0904905, 0, -11.359675)
+position = Vector3(0.56085, 0.0005, -11.359675)
 shape = SubResource("suelo_fondo")
 
 [node name="PasoAlDeposito" type="CollisionShape3D" parent="SueloSolido"]
@@ -62,7 +393,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.35, 1.04, 7.974)
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.35, 1.04, 7.974)
 
 [node name="Hora" parent="reloj" instance=ExtResource("8_reloj_de_mesa")]
-transform = Transform3D(0, 0, 3.24931, 0, 14.32601, 0, -3.95604, 0, 0, 1.0065, 0, 0.45)
+transform = Transform3D(0, 0, 3.24931, 0, 14.32601, 0, -3.95604, 0, 0, 0.4412, 0, 0.45)
 editor_description = "Sobre el vidrio del reloj de mesa, mirando al +X de la malla. La base deshace la escala no uniforme del padre (1/0.3078, 1/0.0698, 1/0.2528) y gira el label 90 grados en Y para que su frente sea el del display."
 
 [node name="StaticBody3D" parent="base compu" node_paths=PackedStringArray("mallas") groups=["interactuable"]]
@@ -70,15 +401,11 @@ script = ExtResource("escritorio")
 metadata/apoyo = NodePath("Estructura/EscritorioComputadora")
 mallas = [NodePath(".."), NodePath("../../teclado")]
 
-[node name="StaticBody3D" parent="puerta" node_paths=PackedStringArray("hoja", "mallas") groups=["interactuable"]]
-script = ExtResource("puerta")
-hoja = NodePath("..")
-mallas = [NodePath("..")]
+[node name="CollisionShape3D" parent="puerta/StaticBody3D"]
+disabled = true
 
-[node name="StaticBody3D" parent="puerta2" node_paths=PackedStringArray("hoja", "mallas") groups=["interactuable"]]
-script = ExtResource("puerta")
-hoja = NodePath("..")
-mallas = [NodePath("..")]
+[node name="CollisionShape3D" parent="puerta2/StaticBody3D"]
+disabled = true
 
 [node name="gondolanueva" parent="."]
 
@@ -95,7 +422,7 @@ collision_mask = 0
 editor_description = "El jugador choca con esta caja y no con la malla del mueble. **Rozar la malla es caro**: cada chapa, labio y agujero es un triángulo, y caminar pegado al lateral de una cabecera llevaba el cuadro de la web a 80 ms. La malla sigue siendo la colisión de los productos que caen y de la mira."
 
 [node name="Forma" type="CollisionShape3D" parent="gondolanueva/Contorno"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.056863, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.14027, -0.056863, 0.048086)
 shape = SubResource("contorno_de_gondola")
 
 [node name="Contorno" type="StaticBody3D" parent="gondolanueva2"]
@@ -104,8 +431,8 @@ collision_mask = 0
 editor_description = "El jugador choca con esta caja y no con la malla del mueble. **Rozar la malla es caro**: cada chapa, labio y agujero es un triángulo, y caminar pegado al lateral de una cabecera llevaba el cuadro de la web a 80 ms. La malla sigue siendo la colisión de los productos que caen y de la mira."
 
 [node name="Forma" type="CollisionShape3D" parent="gondolanueva2/Contorno"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.056863, 0)
-shape = SubResource("contorno_de_gondola")
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.04424, -0.056863, 0.045102)
+shape = SubResource("contorno_de_gondola2")
 
 
 [node name="Contorno" type="StaticBody3D" parent="gondolanueva_001"]
@@ -113,44 +440,16 @@ collision_layer = 8
 collision_mask = 0
 
 [node name="Forma" type="CollisionShape3D" parent="gondolanueva_001/Contorno"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.421658, -0.057562, 0)
-shape = SubResource("contorno_de_gondola_del_fondo")
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.274939, -0.057562, 0)
+shape = SubResource("contorno_de_gondola_del_fondo_norte")
 
 [node name="Contorno" type="StaticBody3D" parent="gondolanueva_002"]
 collision_layer = 8
 collision_mask = 0
 
 [node name="Forma" type="CollisionShape3D" parent="gondolanueva_002/Contorno"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.421658, -0.057562, 0)
-shape = SubResource("contorno_de_gondola_del_fondo")
-
-[node name="limpiador" parent="."]
-visible = false
-
-[node name="StaticBody3D" parent="limpiador"]
-collision_layer = 0
-collision_mask = 0
-
-[node name="Actroncito" parent="gondolanueva2"]
-visible = false
-
-[node name="StaticBody3D" parent="gondolanueva2/Actroncito"]
-collision_layer = 0
-collision_mask = 0
-
-[node name="durextra" parent="gondolanueva2"]
-visible = false
-
-[node name="StaticBody3D" parent="gondolanueva2/durextra"]
-collision_layer = 0
-collision_mask = 0
-
-[node name="burgaloo" parent="gondolanueva"]
-visible = false
-
-[node name="StaticBody3D" parent="gondolanueva/burgaloo"]
-collision_layer = 0
-collision_mask = 0
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.274697, -0.057562, 0)
+shape = SubResource("contorno_de_gondola_del_fondo_sur")
 
 [node name="Zucarachas" parent="gondolanueva"]
 visible = false
@@ -159,38 +458,10 @@ visible = false
 collision_layer = 0
 collision_mask = 0
 
-[node name="snackpapas1_003" parent="gondolanueva"]
+[node name="cereal-2norte2" parent="gondolanueva"]
 visible = false
 
-[node name="StaticBody3D" parent="gondolanueva/snackpapas1_003"]
-collision_layer = 0
-collision_mask = 0
-
-[node name="malbardocig" parent="gondolanueva"]
-visible = false
-
-[node name="StaticBody3D" parent="gondolanueva/malbardocig"]
-collision_layer = 0
-collision_mask = 0
-
-[node name="pringles3_002" parent="gondolanueva"]
-visible = false
-
-[node name="StaticBody3D" parent="gondolanueva/pringles3_002"]
-collision_layer = 0
-collision_mask = 0
-
-[node name="alfajorescaja2-2oeste1" parent="gondolanueva2"]
-visible = false
-
-[node name="StaticBody3D" parent="gondolanueva2/alfajorescaja2-2oeste1"]
-collision_layer = 0
-collision_mask = 0
-
-[node name="lataarvejas_002" parent="gondolanueva"]
-visible = false
-
-[node name="StaticBody3D" parent="gondolanueva/lataarvejas_002"]
+[node name="StaticBody3D" parent="gondolanueva/cereal-2norte2"]
 collision_layer = 0
 collision_mask = 0
 
@@ -201,10 +472,17 @@ visible = false
 collision_layer = 0
 collision_mask = 0
 
-[node name="oremos" parent="gondolanueva"]
+[node name="macumbas" parent="gondolanueva"]
 visible = false
 
-[node name="StaticBody3D" parent="gondolanueva/oremos"]
+[node name="StaticBody3D" parent="gondolanueva/macumbas"]
+collision_layer = 0
+collision_mask = 0
+
+[node name="malbardocig" parent="gondolanueva"]
+visible = false
+
+[node name="StaticBody3D" parent="gondolanueva/malbardocig"]
 collision_layer = 0
 collision_mask = 0
 
@@ -215,10 +493,24 @@ visible = false
 collision_layer = 0
 collision_mask = 0
 
-[node name="saladix-2oeste2" parent="gondolanueva2"]
+[node name="pringles3_002" parent="gondolanueva"]
 visible = false
 
-[node name="StaticBody3D" parent="gondolanueva2/saladix-2oeste2"]
+[node name="StaticBody3D" parent="gondolanueva/pringles3_002"]
+collision_layer = 0
+collision_mask = 0
+
+[node name="saladix-2oeste2" parent="gondolanueva"]
+visible = false
+
+[node name="StaticBody3D" parent="gondolanueva/saladix-2oeste2"]
+collision_layer = 0
+collision_mask = 0
+
+[node name="snackpapas1_003" parent="gondolanueva"]
+visible = false
+
+[node name="StaticBody3D" parent="gondolanueva/snackpapas1_003"]
 collision_layer = 0
 collision_mask = 0
 
@@ -229,17 +521,59 @@ visible = false
 collision_layer = 0
 collision_mask = 0
 
-[node name="bebida helada02-este2" parent="heladeranueva"]
+[node name="Actroncito" parent="gondolanueva2"]
 visible = false
 
-[node name="StaticBody3D" parent="heladeranueva/bebida helada02-este2"]
+[node name="StaticBody3D" parent="gondolanueva2/Actroncito"]
 collision_layer = 0
 collision_mask = 0
 
-[node name="cereal-2norte2" parent="gondolanueva2"]
+[node name="alfajorescaja2-2oeste1" parent="gondolanueva2"]
 visible = false
 
-[node name="StaticBody3D" parent="gondolanueva2/cereal-2norte2"]
+[node name="StaticBody3D" parent="gondolanueva2/alfajorescaja2-2oeste1"]
+collision_layer = 0
+collision_mask = 0
+
+[node name="burgaloo" parent="gondolanueva2"]
+visible = false
+
+[node name="StaticBody3D" parent="gondolanueva2/burgaloo"]
+collision_layer = 0
+collision_mask = 0
+
+[node name="cindolor" parent="gondolanueva2"]
+visible = false
+
+[node name="StaticBody3D" parent="gondolanueva2/cindolor"]
+collision_layer = 0
+collision_mask = 0
+
+[node name="donsaturados" parent="gondolanueva2"]
+visible = false
+
+[node name="StaticBody3D" parent="gondolanueva2/donsaturados"]
+collision_layer = 0
+collision_mask = 0
+
+[node name="durextra" parent="gondolanueva2"]
+visible = false
+
+[node name="StaticBody3D" parent="gondolanueva2/durextra"]
+collision_layer = 0
+collision_mask = 0
+
+[node name="duronga" parent="gondolanueva2"]
+visible = false
+
+[node name="StaticBody3D" parent="gondolanueva2/duronga"]
+collision_layer = 0
+collision_mask = 0
+
+[node name="feelrickyfort" parent="gondolanueva2"]
+visible = false
+
+[node name="StaticBody3D" parent="gondolanueva2/feelrickyfort"]
 collision_layer = 0
 collision_mask = 0
 
@@ -250,395 +584,87 @@ visible = false
 collision_layer = 0
 collision_mask = 0
 
-[node name="amargadito" parent="."]
+[node name="oremos" parent="gondolanueva2"]
 visible = false
 
-[node name="StaticBody3D" parent="amargadito"]
+[node name="StaticBody3D" parent="gondolanueva2/oremos"]
 collision_layer = 0
 collision_mask = 0
 
-[node name="cindolor" parent="."]
+[node name="flimpof" parent="gondolanueva_001"]
 visible = false
 
-[node name="StaticBody3D" parent="cindolor"]
+[node name="StaticBody3D" parent="gondolanueva_001/flimpof"]
 collision_layer = 0
 collision_mask = 0
 
-[node name="flimpof" parent="."]
+[node name="lataarvejas_002" parent="gondolanueva_001"]
 visible = false
 
-[node name="StaticBody3D" parent="flimpof"]
+[node name="StaticBody3D" parent="gondolanueva_001/lataarvejas_002"]
 collision_layer = 0
 collision_mask = 0
 
-[node name="donsaturados" parent="."]
+[node name="petisas" parent="gondolanueva_001"]
 visible = false
 
-[node name="StaticBody3D" parent="donsaturados"]
+[node name="StaticBody3D" parent="gondolanueva_001/petisas"]
 collision_layer = 0
 collision_mask = 0
 
-[node name="petisas" parent="."]
+[node name="amargadito" parent="gondolanueva_002"]
 visible = false
 
-[node name="StaticBody3D" parent="petisas"]
+[node name="StaticBody3D" parent="gondolanueva_002/amargadito"]
 collision_layer = 0
 collision_mask = 0
 
-[node name="macumbas" parent="."]
+[node name="atun" parent="gondolanueva_002"]
 visible = false
 
-[node name="StaticBody3D" parent="macumbas"]
+[node name="StaticBody3D" parent="gondolanueva_002/atun"]
 collision_layer = 0
 collision_mask = 0
 
-[node name="Zucarachas-2este0" parent="gondolanueva2"]
+[node name="cosademani" parent="gondolanueva_002"]
 visible = false
 
-[node name="StaticBody3D" parent="gondolanueva2/Zucarachas-2este0"]
+[node name="StaticBody3D" parent="gondolanueva_002/cosademani"]
 collision_layer = 0
 collision_mask = 0
 
-[node name="Zucarachas_001" parent="gondolanueva"]
+[node name="Fernetgod" parent="heladeranueva"]
 visible = false
 
-[node name="StaticBody3D" parent="gondolanueva/Zucarachas_001"]
+[node name="StaticBody3D" parent="heladeranueva/Fernetgod"]
 collision_layer = 0
 collision_mask = 0
 
-[node name="Zucarachas-fondo" parent="gondolanueva"]
+[node name="bebida helada02-este2" parent="heladeranueva"]
 visible = false
 
-[node name="StaticBody3D" parent="gondolanueva/Zucarachas-fondo"]
+[node name="StaticBody3D" parent="heladeranueva/bebida helada02-este2"]
 collision_layer = 0
 collision_mask = 0
 
-[node name="Zucarachas-fondo_025" parent="gondolanueva"]
+[node name="terminator" parent="heladeranueva"]
 visible = false
 
-[node name="StaticBody3D" parent="gondolanueva/Zucarachas-fondo_025"]
+[node name="StaticBody3D" parent="heladeranueva/terminator"]
 collision_layer = 0
 collision_mask = 0
 
-[node name="alfajorescaja2" parent="gondolanueva"]
+[node name="mayonchis" parent="heladeranueva_001"]
 visible = false
 
-[node name="StaticBody3D" parent="gondolanueva/alfajorescaja2"]
+[node name="StaticBody3D" parent="heladeranueva_001/mayonchis"]
 collision_layer = 0
 collision_mask = 0
 
-[node name="alfajorescaja2-fondo" parent="gondolanueva"]
+[node name="oaaa" parent="heladeranueva_001"]
 visible = false
 
-[node name="StaticBody3D" parent="gondolanueva/alfajorescaja2-fondo"]
-collision_layer = 0
-collision_mask = 0
-
-[node name="alfajorescaja2-sur1" parent="gondolanueva"]
-visible = false
-
-[node name="StaticBody3D" parent="gondolanueva/alfajorescaja2-sur1"]
-collision_layer = 0
-collision_mask = 0
-
-[node name="amargadito-2oeste0" parent="gondolanueva2"]
-visible = false
-
-[node name="StaticBody3D" parent="gondolanueva2/amargadito-2oeste0"]
-collision_layer = 0
-collision_mask = 0
-
-[node name="bebida helada02-001este1" parent="heladeranueva_001"]
-visible = false
-
-[node name="StaticBody3D" parent="heladeranueva_001/bebida helada02-001este1"]
-collision_layer = 0
-collision_mask = 0
-
-[node name="bebida helada02-001este2" parent="heladeranueva_001"]
-visible = false
-
-[node name="StaticBody3D" parent="heladeranueva_001/bebida helada02-001este2"]
-collision_layer = 0
-collision_mask = 0
-
-[node name="bebida helada02-001este3" parent="heladeranueva_001"]
-visible = false
-
-[node name="StaticBody3D" parent="heladeranueva_001/bebida helada02-001este3"]
-collision_layer = 0
-collision_mask = 0
-
-[node name="bebida helada02-001este4" parent="heladeranueva_001"]
-visible = false
-
-[node name="StaticBody3D" parent="heladeranueva_001/bebida helada02-001este4"]
-collision_layer = 0
-collision_mask = 0
-
-[node name="bebida helada02-este1" parent="heladeranueva"]
-visible = false
-
-[node name="StaticBody3D" parent="heladeranueva/bebida helada02-este1"]
-collision_layer = 0
-collision_mask = 0
-
-[node name="bebida helada02-este3" parent="heladeranueva"]
-visible = false
-
-[node name="StaticBody3D" parent="heladeranueva/bebida helada02-este3"]
-collision_layer = 0
-collision_mask = 0
-
-[node name="bebida helada02-este4" parent="heladeranueva"]
-visible = false
-
-[node name="StaticBody3D" parent="heladeranueva/bebida helada02-este4"]
-collision_layer = 0
-collision_mask = 0
-
-[node name="burgaloo-2oeste3" parent="gondolanueva2"]
-visible = false
-
-[node name="StaticBody3D" parent="gondolanueva2/burgaloo-2oeste3"]
-collision_layer = 0
-collision_mask = 0
-
-[node name="burgaloo-fondo" parent="gondolanueva"]
-visible = false
-
-[node name="StaticBody3D" parent="gondolanueva/burgaloo-fondo"]
-collision_layer = 0
-collision_mask = 0
-
-[node name="burgaloo2" parent="gondolanueva"]
-visible = false
-
-[node name="StaticBody3D" parent="gondolanueva/burgaloo2"]
-collision_layer = 0
-collision_mask = 0
-
-[node name="burgaloo3" parent="gondolanueva2"]
-visible = false
-
-[node name="StaticBody3D" parent="gondolanueva2/burgaloo3"]
-collision_layer = 0
-collision_mask = 0
-
-[node name="cereal-2norte1" parent="gondolanueva2"]
-visible = false
-
-[node name="StaticBody3D" parent="gondolanueva2/cereal-2norte1"]
-collision_layer = 0
-collision_mask = 0
-
-[node name="cereal-2norte3" parent="gondolanueva2"]
-visible = false
-
-[node name="StaticBody3D" parent="gondolanueva2/cereal-2norte3"]
-collision_layer = 0
-collision_mask = 0
-
-[node name="cereal" parent="gondolanueva"]
-visible = false
-
-[node name="StaticBody3D" parent="gondolanueva/cereal"]
-collision_layer = 0
-collision_mask = 0
-
-[node name="cereal_001" parent="gondolanueva"]
-visible = false
-
-[node name="StaticBody3D" parent="gondolanueva/cereal_001"]
-collision_layer = 0
-collision_mask = 0
-
-[node name="cereal_002" parent="gondolanueva2"]
-visible = false
-
-[node name="StaticBody3D" parent="gondolanueva2/cereal_002"]
-collision_layer = 0
-collision_mask = 0
-
-[node name="cindolor-fondo" parent="."]
-visible = false
-
-[node name="StaticBody3D" parent="cindolor-fondo"]
-collision_layer = 0
-collision_mask = 0
-
-[node name="donsaturados-2oeste2" parent="gondolanueva2"]
-visible = false
-
-[node name="StaticBody3D" parent="gondolanueva2/donsaturados-2oeste2"]
-collision_layer = 0
-collision_mask = 0
-
-[node name="fideos2_001" parent="gondolanueva"]
-visible = false
-
-[node name="StaticBody3D" parent="gondolanueva/fideos2_001"]
-collision_layer = 0
-collision_mask = 0
-
-[node name="fideos3_" parent="gondolanueva2"]
-visible = false
-
-[node name="StaticBody3D" parent="gondolanueva2/fideos3_"]
-collision_layer = 0
-collision_mask = 0
-
-[node name="lataarvejas-2oeste0" parent="gondolanueva2"]
-visible = false
-
-[node name="StaticBody3D" parent="gondolanueva2/lataarvejas-2oeste0"]
-collision_layer = 0
-collision_mask = 0
-
-[node name="lataarvejas_001" parent="gondolanueva"]
-visible = false
-
-[node name="StaticBody3D" parent="gondolanueva/lataarvejas_001"]
-collision_layer = 0
-collision_mask = 0
-
-[node name="macumbas-este2" parent="gondolanueva"]
-visible = false
-
-[node name="StaticBody3D" parent="gondolanueva/macumbas-este2"]
-collision_layer = 0
-collision_mask = 0
-
-[node name="oremos-2sur1" parent="gondolanueva2"]
-visible = false
-
-[node name="StaticBody3D" parent="gondolanueva2/oremos-2sur1"]
-collision_layer = 0
-collision_mask = 0
-
-[node name="oremos-fondo" parent="gondolanueva"]
-visible = false
-
-[node name="StaticBody3D" parent="gondolanueva/oremos-fondo"]
-collision_layer = 0
-collision_mask = 0
-
-[node name="oremos-sur3" parent="gondolanueva"]
-visible = false
-
-[node name="StaticBody3D" parent="gondolanueva/oremos-sur3"]
-collision_layer = 0
-collision_mask = 0
-
-[node name="oremos2" parent="gondolanueva"]
-visible = false
-
-[node name="StaticBody3D" parent="gondolanueva/oremos2"]
-collision_layer = 0
-collision_mask = 0
-
-[node name="oremos3" parent="gondolanueva2"]
-visible = false
-
-[node name="StaticBody3D" parent="gondolanueva2/oremos3"]
-collision_layer = 0
-collision_mask = 0
-
-[node name="pepitos" parent="gondolanueva"]
-visible = false
-
-[node name="StaticBody3D" parent="gondolanueva/pepitos"]
-collision_layer = 0
-collision_mask = 0
-
-[node name="pepitos2-2sur3" parent="gondolanueva2"]
-visible = false
-
-[node name="StaticBody3D" parent="gondolanueva2/pepitos2-2sur3"]
-collision_layer = 0
-collision_mask = 0
-
-[node name="pepitos2" parent="gondolanueva"]
-visible = false
-
-[node name="StaticBody3D" parent="gondolanueva/pepitos2"]
-collision_layer = 0
-collision_mask = 0
-
-[node name="petisas-2este1" parent="gondolanueva2"]
-visible = false
-
-[node name="StaticBody3D" parent="gondolanueva2/petisas-2este1"]
-collision_layer = 0
-collision_mask = 0
-
-[node name="petisas-este1" parent="gondolanueva"]
-visible = false
-
-[node name="StaticBody3D" parent="gondolanueva/petisas-este1"]
-collision_layer = 0
-collision_mask = 0
-
-[node name="pringles3-2este0" parent="gondolanueva2"]
-visible = false
-
-[node name="StaticBody3D" parent="gondolanueva2/pringles3-2este0"]
-collision_layer = 0
-collision_mask = 0
-
-[node name="pringles3" parent="gondolanueva"]
-visible = false
-
-[node name="StaticBody3D" parent="gondolanueva/pringles3"]
-collision_layer = 0
-collision_mask = 0
-
-[node name="saladix" parent="gondolanueva2"]
-visible = false
-
-[node name="StaticBody3D" parent="gondolanueva2/saladix"]
-collision_layer = 0
-collision_mask = 0
-
-[node name="saladix_001" parent="gondolanueva"]
-visible = false
-
-[node name="StaticBody3D" parent="gondolanueva/saladix_001"]
-collision_layer = 0
-collision_mask = 0
-
-[node name="saladix-fondo" parent="gondolanueva2"]
-visible = false
-
-[node name="StaticBody3D" parent="gondolanueva2/saladix-fondo"]
-collision_layer = 0
-collision_mask = 0
-
-[node name="snackpapas1_002" parent="gondolanueva"]
-visible = false
-
-[node name="StaticBody3D" parent="gondolanueva/snackpapas1_002"]
-collision_layer = 0
-collision_mask = 0
-
-[node name="wakas-2oeste3" parent="gondolanueva2"]
-visible = false
-
-[node name="StaticBody3D" parent="gondolanueva2/wakas-2oeste3"]
-collision_layer = 0
-collision_mask = 0
-
-[node name="wakas" parent="gondolanueva2"]
-visible = false
-
-[node name="StaticBody3D" parent="gondolanueva2/wakas"]
-collision_layer = 0
-collision_mask = 0
-
-[node name="wakas_001" parent="gondolanueva"]
-visible = false
-
-[node name="StaticBody3D" parent="gondolanueva/wakas_001"]
+[node name="StaticBody3D" parent="heladeranueva_001/oaaa"]
 collision_layer = 0
 collision_mask = 0
 
@@ -660,3 +686,517 @@ omni_range = 3.0
 omni_attenuation = 1.6
 
 editor_description = "La luminaria que la textura ya dibuja arriba del vidrio. El interior es un volumen cerrado: las luminarias del techo no le llegan y la mercadería queda del color del ambiente en vez del suyo."
+
+[node name="Volumen" type="StaticBody3D" parent="almacen"]
+collision_layer = 8
+collision_mask = 0
+
+[node name="Volumen" type="CollisionShape3D" parent="almacen/Volumen"]
+position = Vector3(3.15871, 3.48693, -14.53061)
+shape = SubResource("volumen_1")
+
+[node name="Volumen2" type="CollisionShape3D" parent="almacen/Volumen"]
+position = Vector3(7.981845, 3.38393, -11.24405)
+shape = SubResource("volumen_2")
+
+[node name="Volumen3" type="CollisionShape3D" parent="almacen/Volumen"]
+position = Vector3(1.44785, 3.48693, -8.14532)
+shape = SubResource("volumen_3")
+
+[node name="Volumen4" type="CollisionShape3D" parent="almacen/Volumen"]
+position = Vector3(7.12085, 3.38393, -8.14532)
+shape = SubResource("volumen_4")
+
+[node name="Volumen5" type="CollisionShape3D" parent="almacen/Volumen"]
+position = Vector3(10.83362, 3.38393, -7.962145)
+shape = SubResource("volumen_5")
+
+[node name="Volumen6" type="CollisionShape3D" parent="almacen/Volumen"]
+position = Vector3(8.164555, 3.38393, -6.678395)
+shape = SubResource("volumen_6")
+
+[node name="Volumen7" type="CollisionShape3D" parent="almacen/Volumen"]
+position = Vector3(13.505566, 3.38393, -4.491415)
+shape = SubResource("volumen_7")
+
+[node name="Volumen8" type="CollisionShape3D" parent="almacen/Volumen"]
+position = Vector3(8.164555, 3.38393, -2.463835)
+shape = SubResource("volumen_8")
+
+[node name="Volumen10" type="CollisionShape3D" parent="almacen/Volumen"]
+position = Vector3(-5.80151, 3.48693, -7.95468)
+shape = SubResource("volumen_10")
+
+[node name="Volumen11" type="CollisionShape3D" parent="almacen/Volumen"]
+position = Vector3(1.44785, 3.48693, -7.95468)
+shape = SubResource("volumen_11")
+
+[node name="Volumen12" type="CollisionShape3D" parent="almacen/Volumen"]
+position = Vector3(7.196685, 3.48693, -7.95468)
+shape = SubResource("volumen_12")
+
+[node name="Volumen13" type="CollisionShape3D" parent="almacen/Volumen"]
+position = Vector3(-7.831325, 2.074115, 0.103)
+shape = SubResource("volumen_13")
+
+[node name="Volumen14" type="CollisionShape3D" parent="almacen/Volumen"]
+position = Vector3(7.95468, 3.48693, -6.67093)
+shape = SubResource("volumen_14")
+
+[node name="Volumen15" type="CollisionShape3D" parent="almacen/Volumen"]
+position = Vector3(7.95468, 3.48693, 2.123115)
+shape = SubResource("volumen_15")
+
+[node name="Volumen16" type="CollisionShape3D" parent="almacen/Volumen"]
+position = Vector3(10.8365, 3.48693, -2.350575)
+shape = SubResource("volumen_16")
+
+[node name="Volumen17" type="CollisionShape3D" parent="almacen/Volumen"]
+position = Vector3(0.123355, 0.46267, 7.95468)
+shape = SubResource("volumen_17")
+
+[node name="Volumen18" type="CollisionShape3D" parent="almacen/Volumen"]
+position = Vector3(-1.925925, 3.9496, 7.95468)
+shape = SubResource("volumen_18")
+
+[node name="Volumen19" type="CollisionShape3D" parent="almacen/Volumen"]
+position = Vector3(7.384535, 3.9496, 7.95468)
+shape = SubResource("volumen_19")
+
+[node name="Volumen20" type="CollisionShape3D" parent="almacen/Volumen"]
+position = Vector3(5.485825, 4.858415, -8.04232)
+shape = SubResource("volumen_20")
+
+[node name="Volumen21" type="CollisionShape3D" parent="almacen/Volumen"]
+position = Vector3(8.061555, 4.858415, -4.65082)
+shape = SubResource("volumen_21")
+
+[node name="Volumen22" type="CollisionShape3D" parent="almacen/Volumen"]
+position = Vector3(5.335255, 4.858415, 7.95468)
+shape = SubResource("volumen_22")
+
+[node name="Volumen23" type="CollisionShape3D" parent="almacen/Volumen"]
+position = Vector3(-7.918945, 5.561045, 0.103)
+shape = SubResource("volumen_23")
+
+[node name="Volumen24" type="CollisionShape3D" parent="almacen/Volumen"]
+position = Vector3(0.123355, 5.561045, 0)
+shape = SubResource("volumen_24")
+
+[node name="Volumen25" type="CollisionShape3D" parent="almacen/Volumen"]
+position = Vector3(-7.69259, 5.561045, 7.95468)
+shape = SubResource("volumen_25")
+
+[node name="Volumen26" type="CollisionShape3D" parent="almacen/Volumen"]
+position = Vector3(10.8365, 5.792505, -5.83903)
+shape = SubResource("volumen_26")
+
+[node name="Volumen27" type="CollisionShape3D" parent="almacen/Volumen"]
+position = Vector3(-7.69259, 5.792505, 0)
+shape = SubResource("volumen_27")
+
+[node name="Volumen28" type="CollisionShape3D" parent="almacen/Volumen"]
+position = Vector3(10.8365, 5.86464, -3.69819)
+shape = SubResource("volumen_28")
+
+[node name="Volumen29" type="CollisionShape3D" parent="almacen/Volumen"]
+position = Vector3(0, 4.894155, 8.1812)
+shape = SubResource("volumen_29")
+
+[node name="Volumen30" type="CollisionShape3D" parent="almacen/Volumen"]
+position = Vector3(3.082875, 5.86627, -11.33169)
+shape = SubResource("volumen_30")
+
+[node name="Volumen31" type="CollisionShape3D" parent="almacen/Volumen"]
+position = Vector3(-7.918945, 6.003375, 8.1812)
+shape = SubResource("volumen_31")
+
+[node name="Volumen32" type="CollisionShape3D" parent="almacen/Volumen"]
+position = Vector3(7.918945, 6.003375, 8.1812)
+shape = SubResource("volumen_32")
+
+[node name="Volumen33" type="CollisionShape3D" parent="almacen/Volumen"]
+position = Vector3(0, 6.835125, 8.1812)
+shape = SubResource("volumen_33")
+
+[node name="Volumen34" type="CollisionShape3D" parent="almacen/Volumen"]
+position = Vector3(4.25381, -0.103, -14.53061)
+shape = SubResource("volumen_93")
+
+[node name="Volumen35" type="CollisionShape3D" parent="almacen/Volumen"]
+position = Vector3(2.54295, -0.103, -8.14532)
+shape = SubResource("volumen_94")
+
+[node name="Volumen36" type="CollisionShape3D" parent="almacen/Volumen"]
+position = Vector3(10.8365, -0.103, -1.19526)
+shape = SubResource("volumen_95")
+
+[node name="Volumen_norte_oeste" type="CollisionShape3D" parent="almacen/Volumen"]
+position = Vector3(-1.130927, 2.377709, -14.530619)
+shape = SubResource("volumen_norte_oeste")
+
+[node name="Volumen_sur_oeste" type="CollisionShape3D" parent="almacen/Volumen"]
+position = Vector3(-1.130927, 2.377709, -8.145321)
+shape = SubResource("volumen_sur_oeste")
+
+[node name="Volumen_pared_oeste" type="CollisionShape3D" parent="almacen/Volumen"]
+position = Vector3(-6.842213, 2.377709, -11.331697)
+shape = SubResource("volumen_pared_oeste")
+
+[node name="Volumen_entretecho_oeste" type="CollisionShape3D" parent="almacen/Volumen"]
+position = Vector3(-2.640481, 5.866271, -11.344243)
+shape = SubResource("volumen_entretecho_oeste")
+
+[node name="Volumen_faldon_oeste" type="CollisionShape3D" parent="almacen/Volumen"]
+shape = SubResource("volumen_faldon_oeste")
+
+[node name="Volumen_zocalo_norte" type="CollisionShape3D" parent="almacen/Volumen"]
+shape = SubResource("volumen_zocalo_norte")
+
+[node name="Volumen_zocalo_sur" type="CollisionShape3D" parent="almacen/Volumen"]
+shape = SubResource("volumen_zocalo_sur")
+
+[node name="Volumen38" type="CollisionShape3D" parent="almacen/Volumen"]
+shape = SubResource("volumen_97")
+
+[node name="Volumen39" type="CollisionShape3D" parent="almacen/Volumen"]
+shape = SubResource("volumen_98")
+
+[node name="Volumen" type="CollisionShape3D" parent="EscritorioComputadora/StaticBody3D"]
+position = Vector3(0.499275, -0.23283, -0.739785)
+shape = SubResource("volumen_34")
+
+[node name="Volumen2" type="CollisionShape3D" parent="EscritorioComputadora/StaticBody3D"]
+position = Vector3(-0.686995, -0.23283, 0.95534)
+shape = SubResource("volumen_35")
+
+[node name="Volumen" type="CollisionShape3D" parent="heladeranueva/StaticBody3D"]
+position = Vector3(-0.098805, 0.17639, -0.77276)
+shape = SubResource("volumen_61")
+
+[node name="Volumen2" type="CollisionShape3D" parent="heladeranueva/StaticBody3D"]
+position = Vector3(-0.591605, 0.17639, -0.10222)
+shape = SubResource("volumen_62")
+
+[node name="Volumen3" type="CollisionShape3D" parent="heladeranueva/StaticBody3D"]
+position = Vector3(-0.04343, 0.17639, 0.48392)
+shape = SubResource("volumen_63")
+
+[node name="Volumen4" type="CollisionShape3D" parent="heladeranueva/StaticBody3D"]
+position = Vector3(-0.04343, 1.377375, -0.14442)
+shape = SubResource("volumen_64")
+
+[node name="Volumen5" type="CollisionShape3D" parent="heladeranueva/StaticBody3D"]
+position = Vector3(-0.043095, -0.786085, -0.144415)
+shape = SubResource("volumen_65")
+
+[node name="Volumen6" type="CollisionShape3D" parent="heladeranueva/StaticBody3D"]
+position = Vector3(0.414678, -0.59157, -0.144415)
+shape = SubResource("volumen_66")
+
+[node name="Volumen7" type="CollisionShape3D" parent="heladeranueva/StaticBody3D"]
+position = Vector3(-0.116405, 0.410405, -0.709235)
+shape = SubResource("volumen_67")
+
+[node name="Volumen8" type="CollisionShape3D" parent="heladeranueva/StaticBody3D"]
+position = Vector3(-0.542445, 0.410405, -0.12098)
+shape = SubResource("volumen_68")
+
+[node name="Volumen9" type="CollisionShape3D" parent="heladeranueva/StaticBody3D"]
+position = Vector3(-0.06853, 0.410405, 0.4204)
+shape = SubResource("volumen_69")
+
+[node name="Volumen10" type="CollisionShape3D" parent="heladeranueva/StaticBody3D"]
+position = Vector3(-0.06853, 1.30567, -0.14442)
+shape = SubResource("volumen_70")
+
+[node name="Volumen11" type="CollisionShape3D" parent="heladeranueva/StaticBody3D"]
+position = Vector3(-0.109281, 0.817177, -0.144418)
+shape = SubResource("volumen_71")
+
+[node name="Volumen12" type="CollisionShape3D" parent="heladeranueva/StaticBody3D"]
+position = Vector3(-0.109281, 0.346061, -0.144418)
+shape = SubResource("volumen_72")
+
+[node name="Volumen13" type="CollisionShape3D" parent="heladeranueva/StaticBody3D"]
+position = Vector3(-0.109281, -0.125055, -0.144418)
+shape = SubResource("volumen_73")
+
+[node name="Volumen" type="CollisionShape3D" parent="heladeranueva_001/StaticBody3D"]
+position = Vector3(-0.098805, 0.17639, -0.77276)
+shape = SubResource("volumen_74")
+
+[node name="Volumen2" type="CollisionShape3D" parent="heladeranueva_001/StaticBody3D"]
+position = Vector3(-0.591605, 0.17639, -0.10222)
+shape = SubResource("volumen_75")
+
+[node name="Volumen3" type="CollisionShape3D" parent="heladeranueva_001/StaticBody3D"]
+position = Vector3(-0.04343, 0.17639, 0.48392)
+shape = SubResource("volumen_76")
+
+[node name="Volumen4" type="CollisionShape3D" parent="heladeranueva_001/StaticBody3D"]
+position = Vector3(-0.04343, 1.377375, -0.14442)
+shape = SubResource("volumen_77")
+
+[node name="Volumen5" type="CollisionShape3D" parent="heladeranueva_001/StaticBody3D"]
+position = Vector3(-0.043095, -0.786085, -0.144415)
+shape = SubResource("volumen_78")
+
+[node name="Volumen6" type="CollisionShape3D" parent="heladeranueva_001/StaticBody3D"]
+position = Vector3(0.414678, -0.59157, -0.144415)
+shape = SubResource("volumen_79")
+
+[node name="Volumen7" type="CollisionShape3D" parent="heladeranueva_001/StaticBody3D"]
+position = Vector3(-0.116405, 0.410405, -0.709235)
+shape = SubResource("volumen_80")
+
+[node name="Volumen8" type="CollisionShape3D" parent="heladeranueva_001/StaticBody3D"]
+position = Vector3(-0.542445, 0.410405, -0.12098)
+shape = SubResource("volumen_81")
+
+[node name="Volumen9" type="CollisionShape3D" parent="heladeranueva_001/StaticBody3D"]
+position = Vector3(-0.06853, 0.410405, 0.4204)
+shape = SubResource("volumen_82")
+
+[node name="Volumen10" type="CollisionShape3D" parent="heladeranueva_001/StaticBody3D"]
+position = Vector3(-0.06853, 1.30567, -0.14442)
+shape = SubResource("volumen_83")
+
+[node name="Volumen11" type="CollisionShape3D" parent="heladeranueva_001/StaticBody3D"]
+position = Vector3(-0.109281, 0.817177, -0.144418)
+shape = SubResource("volumen_84")
+
+[node name="Volumen12" type="CollisionShape3D" parent="heladeranueva_001/StaticBody3D"]
+position = Vector3(-0.109281, 0.346061, -0.144418)
+shape = SubResource("volumen_85")
+
+[node name="Volumen13" type="CollisionShape3D" parent="heladeranueva_001/StaticBody3D"]
+position = Vector3(-0.109281, -0.125055, -0.144418)
+shape = SubResource("volumen_86")
+
+[node name="CuerpoDeLaHoja" type="AnimatableBody3D" parent="puerta" node_paths=PackedStringArray("hoja", "mallas") groups=["interactuable"]]
+transform = Transform3D(1.159924, 0, 0, 0, 1, 0, 0, 0, 8.611961, 0, 0, 0)
+script = ExtResource("puerta")
+hoja = NodePath("..")
+mallas = [NodePath("..")]
+
+[node name="Volumen" type="CollisionShape3D" parent="puerta/CuerpoDeLaHoja"]
+position = Vector3(0, 0.39183, 0)
+shape = SubResource("volumen_de_la_puerta")
+
+[node name="CuerpoDeLaHoja" type="AnimatableBody3D" parent="puerta2" node_paths=PackedStringArray("hoja", "mallas") groups=["interactuable"]]
+transform = Transform3D(1.159924, 0, 0, 0, 1, 0, 0, 0, 8.611961, 0, 0, 0)
+script = ExtResource("puerta")
+hoja = NodePath("..")
+mallas = [NodePath("..")]
+
+[node name="Volumen" type="CollisionShape3D" parent="puerta2/CuerpoDeLaHoja"]
+position = Vector3(0, 0.39183, 0)
+shape = SubResource("volumen_de_la_puerta2")
+
+[node name="CollisionShape3D" parent="porton/StaticBody3D"]
+disabled = true
+
+[node name="CuerpoDeLaHoja" type="AnimatableBody3D" parent="porton" node_paths=PackedStringArray("hoja", "mallas") groups=["interactuable"]]
+transform = Transform3D(8.614959, 0, 0, 0, 0.831379, 0, 0, 0, 0.463618, 0, 0, 0)
+script = ExtResource("puerta")
+hoja = NodePath("..")
+mallas = [NodePath("..")]
+traba = 2
+
+[node name="Volumen" type="CollisionShape3D" parent="porton/CuerpoDeLaHoja"]
+position = Vector3(0, 0.490747, 0)
+shape = SubResource("volumen_del_porton")
+
+[node name="CollisionShape3D" parent="puertajefe/StaticBody3D"]
+disabled = true
+
+[node name="StaticBody3D" parent="puertajefe/marco puerta"]
+metadata/sin_volumen = "Marco de una puerta que no abre, contra la pared: su hueco lo ocupa la hoja, y no queda lugar donde soltar un objeto."
+
+[node name="CuerpoDeLaHoja" type="AnimatableBody3D" parent="puertajefe" node_paths=PackedStringArray("hoja", "mallas") groups=["interactuable"]]
+transform = Transform3D(1.467308, 0, 0, 0, 0.56027, 0, 0, 0, 8.006213, 0.048814, 0, 0.571227)
+script = ExtResource("puerta")
+hoja = NodePath("..")
+mallas = [NodePath("..")]
+traba = 1
+
+[node name="Volumen" type="CollisionShape3D" parent="puertajefe/CuerpoDeLaHoja"]
+position = Vector3(0, 0.102234, 0)
+shape = SubResource("volumen_de_la_puerta_del_jefe")
+
+[node name="CollisionShape3D" parent="puertaentrada/StaticBody3D"]
+disabled = true
+
+[node name="CuerpoDeLaHoja" type="AnimatableBody3D" parent="puertaentrada" node_paths=PackedStringArray("hoja", "mallas") groups=["interactuable"]]
+transform = Transform3D(1.159924, 0, 0, 0, 1, 0, 0, 0, 8.611961, 0, 0, 0)
+script = ExtResource("puerta")
+hoja = NodePath("..")
+mallas = [NodePath("..")]
+traba = 1
+
+[node name="Volumen" type="CollisionShape3D" parent="puertaentrada/CuerpoDeLaHoja"]
+position = Vector3(0, 0.39183, 0)
+shape = SubResource("volumen_de_la_entrada")
+
+[node name="Volumen" type="CollisionShape3D" parent="base compu/StaticBody3D"]
+shape = SubResource("volumen_87")
+
+[node name="Volumen2" type="CollisionShape3D" parent="base compu/StaticBody3D"]
+shape = SubResource("volumen_88")
+
+[node name="Volumen" type="CollisionShape3D" parent="reloj/StaticBody3D"]
+shape = SubResource("volumen_89")
+
+[node name="StaticBody3D" parent="inodoro" node_paths=PackedStringArray("mallas") groups=["interactuable"]]
+script = ExtResource("artefacto")
+destino = &"inodoro"
+mallas = [NodePath("..")]
+
+[node name="CollisionShape3D" parent="inodoro/StaticBody3D"]
+disabled = true
+
+[node name="Volumen" type="CollisionShape3D" parent="inodoro/StaticBody3D"]
+shape = SubResource("volumen_90")
+
+[node name="Volumen2" type="CollisionShape3D" parent="inodoro/StaticBody3D"]
+shape = SubResource("volumen_91")
+
+[node name="Volumen3" type="CollisionShape3D" parent="inodoro/StaticBody3D"]
+shape = SubResource("volumen_92")
+
+[node name="StaticBody3D" parent="vanitory" node_paths=PackedStringArray("mallas") groups=["interactuable"]]
+script = ExtResource("artefacto")
+destino = &"lavatorio"
+mallas = [NodePath("..")]
+
+[node name="balde" parent="."]
+visible = false
+editor_description = "Lo dibuja el balde que se levanta, en los objetos del almacén, con esta misma malla."
+
+[node name="CollisionShape3D" parent="balde/StaticBody3D"]
+disabled = true
+
+[node name="bidón jabon01" parent="."]
+visible = false
+editor_description = "Lo dibuja el jabón rosa que se levanta, en los objetos del almacén, con esta misma malla."
+
+[node name="CollisionShape3D" parent="bidón jabon01/StaticBody3D"]
+disabled = true
+
+[node name="bidón jabon01_001" parent="."]
+visible = false
+editor_description = "Lo dibuja el jabón azul que se levanta, en los objetos del almacén, con esta misma malla."
+
+[node name="CollisionShape3D" parent="bidón jabon01_001/StaticBody3D"]
+disabled = true
+
+[node name="bidón jabon01_002" parent="."]
+visible = false
+editor_description = "Lo dibuja el jabón amarillo que se levanta, en los objetos del almacén, con esta misma malla."
+
+[node name="CollisionShape3D" parent="bidón jabon01_002/StaticBody3D"]
+disabled = true
+
+[node name="mopa" parent="."]
+visible = false
+editor_description = "Lo dibuja la mopa que se levanta, en los objetos del almacén, con esta misma malla."
+
+[node name="CollisionShape3D" parent="mopa/StaticBody3D"]
+disabled = true
+
+[node name="Volumen" type="CollisionShape3D" parent="cajaregistradora/StaticBody3D"]
+shape = SubResource("casco_17")
+
+[node name="Volumen" type="CollisionShape3D" parent="tachitobasura/StaticBody3D"]
+shape = SubResource("casco_24")
+
+[node name="Volumen" type="CollisionShape3D" parent="tachitobasura_001/StaticBody3D"]
+shape = SubResource("casco_25")
+
+[node name="Volumen" type="CollisionShape3D" parent="tachitobasura_002/StaticBody3D"]
+shape = SubResource("casco_26")
+
+[node name="Volumen" type="CollisionShape3D" parent="gondola_deposito03/StaticBody3D"]
+position = Vector3(0, 0.82585, 0)
+shape = SubResource("estante_o03_1")
+
+[node name="Volumen2" type="CollisionShape3D" parent="gondola_deposito03/StaticBody3D"]
+position = Vector3(0, 0.18875, 0)
+shape = SubResource("estante_o03_2")
+
+[node name="Volumen3" type="CollisionShape3D" parent="gondola_deposito03/StaticBody3D"]
+position = Vector3(0, -0.45295, 0)
+shape = SubResource("estante_o03_3")
+
+[node name="Volumen4" type="CollisionShape3D" parent="gondola_deposito03/StaticBody3D"]
+position = Vector3(-1.0283, -0.04765, 0.3526)
+shape = SubResource("estante_o03_4")
+
+[node name="Volumen5" type="CollisionShape3D" parent="gondola_deposito03/StaticBody3D"]
+position = Vector3(1.0283, -0.04765, 0.3526)
+shape = SubResource("estante_o03_5")
+
+[node name="Volumen6" type="CollisionShape3D" parent="gondola_deposito03/StaticBody3D"]
+position = Vector3(-1.0283, -0.04765, -0.3526)
+shape = SubResource("estante_o03_6")
+
+[node name="Volumen7" type="CollisionShape3D" parent="gondola_deposito03/StaticBody3D"]
+position = Vector3(1.0283, -0.04765, -0.3526)
+shape = SubResource("estante_o03_7")
+
+[node name="Volumen8" type="CollisionShape3D" parent="gondola_deposito03/StaticBody3D"]
+position = Vector3(0, 0.82585, -3.34755)
+shape = SubResource("estante_o03_8")
+
+[node name="Volumen9" type="CollisionShape3D" parent="gondola_deposito03/StaticBody3D"]
+position = Vector3(0, 0.18875, -3.34755)
+shape = SubResource("estante_o03_9")
+
+[node name="Volumen10" type="CollisionShape3D" parent="gondola_deposito03/StaticBody3D"]
+position = Vector3(0, -0.45295, -3.34755)
+shape = SubResource("estante_o03_10")
+
+[node name="Volumen11" type="CollisionShape3D" parent="gondola_deposito03/StaticBody3D"]
+position = Vector3(-1.0283, -0.04765, -2.995)
+shape = SubResource("estante_o03_11")
+
+[node name="Volumen12" type="CollisionShape3D" parent="gondola_deposito03/StaticBody3D"]
+position = Vector3(1.0283, -0.04765, -2.995)
+shape = SubResource("estante_o03_12")
+
+[node name="Volumen13" type="CollisionShape3D" parent="gondola_deposito03/StaticBody3D"]
+position = Vector3(-1.0283, -0.04765, -3.70015)
+shape = SubResource("estante_o03_13")
+
+[node name="Volumen14" type="CollisionShape3D" parent="gondola_deposito03/StaticBody3D"]
+position = Vector3(1.0283, -0.04765, -3.70015)
+shape = SubResource("estante_o03_14")
+
+[node name="Volumen" type="CollisionShape3D" parent="gondola_deposito03_001/StaticBody3D"]
+position = Vector3(0, 0.82585, 0)
+shape = SubResource("estante_001_1")
+
+[node name="Volumen2" type="CollisionShape3D" parent="gondola_deposito03_001/StaticBody3D"]
+position = Vector3(0, 0.18875, 0)
+shape = SubResource("estante_001_2")
+
+[node name="Volumen3" type="CollisionShape3D" parent="gondola_deposito03_001/StaticBody3D"]
+position = Vector3(0, -0.45295, 0)
+shape = SubResource("estante_001_3")
+
+[node name="Volumen4" type="CollisionShape3D" parent="gondola_deposito03_001/StaticBody3D"]
+position = Vector3(-1.0283, -0.04765, 0.3526)
+shape = SubResource("estante_001_4")
+
+[node name="Volumen5" type="CollisionShape3D" parent="gondola_deposito03_001/StaticBody3D"]
+position = Vector3(1.0283, -0.04765, 0.3526)
+shape = SubResource("estante_001_5")
+
+[node name="Volumen6" type="CollisionShape3D" parent="gondola_deposito03_001/StaticBody3D"]
+position = Vector3(-1.0283, -0.04765, -0.3526)
+shape = SubResource("estante_001_6")
+
+[node name="Volumen7" type="CollisionShape3D" parent="gondola_deposito03_001/StaticBody3D"]
+position = Vector3(1.0283, -0.04765, -0.3526)
+shape = SubResource("estante_001_7")

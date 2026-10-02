@@ -2,8 +2,8 @@
 ## publica lo que la partida contesta.
 ##
 ## **Traduce, no decide.** No sabe cuántas noches hay, ni cuánto pesa una noche mala, ni cuándo
-## echan a alguien: todo eso se lo pregunta a `Partida`, que es donde tiene test. Los dos `if`
-## de este archivo son preguntas al dominio y no decisiones propias.
+## echan a alguien: todo eso se lo pregunta a `Partida`, que es donde tiene test. El único `if`
+## de este archivo es una pregunta al dominio y no una decisión propia.
 ##
 ## **No conoce la pantalla.** Emite hacia arriba y no pregunta nada: quien quiera dibujar el
 ## cierre de la noche —la pantalla de cierre— se conecta a `jornada_cerrada` y vuelve a llamar a
@@ -14,7 +14,6 @@ extends Node
 
 signal jornada_abierta(jornada: int)
 signal jornada_cerrada(jornada: int, cumplidas: int)
-signal partida_terminada(final: Partida.Final)
 
 var _partida: Partida = null
 var _reloj: RelojDelTurno = null
@@ -56,5 +55,3 @@ func _al_cerrar_el_turno(cumplidas: int) -> void:
 	var jornada := _partida.jornada()
 	_partida.cerrar_la_jornada(cumplidas)
 	jornada_cerrada.emit(jornada, cumplidas)
-	if _partida.terminada():
-		partida_terminada.emit(_partida.final())

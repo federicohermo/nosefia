@@ -1,29 +1,43 @@
 ## Los valores fijos de reponer, y la relación que los vuelve jugables.
 ##
-## No afirma el número: afirma **contra qué tiene que ser** ese número. Un
-## `UNIDADES_INICIALES_EN_DEPOSITO` por debajo del umbral más alto del catálogo deja una noche en
-## la que reponer no se puede terminar, y el síntoma no nombra a esta constante: el jugador
-## coloca todo lo que hay y la tarea sigue sin contar.
+## No afirma el número: afirma **contra qué tiene que ser** ese número. Una caja que trae menos
+## unidades de las que a un producto le faltan deja una noche en la que reponer no se puede
+## terminar, y el síntoma no nombra a esta constante: el jugador vacía la caja, coloca todo lo
+## que tenía y la tarea sigue sin contar.
 extends GdUnitTestSuite
 
 
-func test_el_deposito_arranca_con_mas_de_lo_que_el_estante_pide() -> void:  # AC-STK-004
-	# Estricto y no `>=` a propósito: con exactamente el umbral, vender una sola unidad por la
-	# ventanilla deja la reposición imposible esa noche.
-	var mayor := 0
-	for producto in Catalogo.todos():
-		mayor = maxi(mayor, producto.umbral)
-	(
-		assert_int(ReglasDelEstante.UNIDADES_INICIALES_EN_DEPOSITO)
-		. override_failure_message(
+## Las jornadas de la partida, de la primera a la última.
+func _jornadas() -> Array[int]:
+	var jornadas: Array[int] = []
+	for numero in ReglasDeLaPartida.JORNADAS_DE_LA_PARTIDA:
+		jornadas.append(ReglasDeLaPartida.PRIMERA_JORNADA + numero)
+	return jornadas
+
+
+## Un faltante de 9 es un error de los datos y no un caso que el juego acomoda: la caja trae 8, y
+## ninguna otra cosa del depósito repone ese producto. Se recorren las cinco jornadas y no sólo
+## la primera: las que la ficha todavía no decidió también arrancan con algo.
+func test_ningun_faltante_de_ninguna_jornada_pasa_de_una_caja() -> void:  # AC-STK-033
+	for jornada in _jornadas():
+		var faltantes := Apertura.faltantes_de_la_jornada(jornada)
+		for id: Producto.Id in faltantes:
 			(
-				"el depósito arranca con %d y el umbral más alto del catálogo es %d"
-				% [ReglasDelEstante.UNIDADES_INICIALES_EN_DEPOSITO, mayor]
+				assert_int(faltantes[id])
+				. override_failure_message(
+					(
+						"jornada %d: faltan %d %s y la caja trae %d"
+						% [
+							jornada,
+							faltantes[id],
+							Catalogo.de(id).nombre,
+							ReglasDelEstante.UNIDADES_POR_CAJA,
+						]
+					)
+				)
+				. is_between(1, ReglasDelEstante.UNIDADES_POR_CAJA)
 			)
-		)
-		. is_greater(mayor)
-	)
 
 
-func test_las_unidades_iniciales_son_una_cantidad_y_no_un_centinela() -> void:
-	assert_int(ReglasDelEstante.UNIDADES_INICIALES_EN_DEPOSITO).is_greater(0)
+func test_las_unidades_de_una_caja_son_una_cantidad_y_no_un_centinela() -> void:
+	assert_int(ReglasDelEstante.UNIDADES_POR_CAJA).is_greater(0)

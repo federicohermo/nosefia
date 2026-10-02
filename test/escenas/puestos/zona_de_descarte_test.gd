@@ -39,6 +39,16 @@ const NOMBRES_DE_LAS_BOLSAS := [
 const PATRONES_DE_REGLA := "BOLSAS_DE_LA_JORNADA|depositadas|completada|class_name"
 
 
+class Tocable:
+	extends Node3D
+	var datos := ObjetoDelAlmacen.new()
+	var toques := 0
+
+	func interactuar() -> ObjetoDelAlmacen:
+		toques += 1
+		return datos
+
+
 func _almacen() -> Node3D:
 	return auto_free(load(ESCENA_DEL_ALMACEN).instantiate())
 
@@ -111,6 +121,15 @@ func test_la_esfera_de_la_escena_es_exactamente_la_de_la_constante() -> void:  #
 	)
 
 
+## Tocar es `interactuar()`, y tiene efectos: una puerta trabada adentro del área avisaba sola.
+func test_la_zona_lee_lo_que_entra_sin_tocarlo() -> void:
+	var zona: ZonaQueSeVe = auto_free(load(ESCENA).instantiate())
+	var cuerpo: Tocable = auto_free(Tocable.new())
+	cuerpo.datos.id = &"basura_de_prueba"
+	assert_str(zona.call("_id_de", cuerpo)).is_equal("basura_de_prueba")
+	assert_int(cuerpo.toques).is_zero()
+
+
 func test_el_almacen_trae_el_descarte_y_una_bolsa_por_cada_una_del_balance() -> void:
 	var almacen := _almacen()
 	assert_bool(almacen.has_node("Objetos/ZonaDeDescarte")).is_true()
@@ -153,7 +172,7 @@ func test_el_fondo_esta_lejos_de_todo_lo_demas() -> void:  # AC-CLN-008
 func test_el_cableado_de_la_basura_llega_entero_hasta_la_zona() -> void:
 	# Un `@export` de tipo `Node` en una escena escrita a mano va declarado ADEMÁS en el
 	# `node_paths` del tag del nodo, o queda en `null`: la escena carga sin un solo error, los
-	# seis nodos dan verde, y el juego muere en el primer cuadro con un
+	# nodos dan verde, y el juego muere en el primer cuadro con un
 	# `Nonexistent function … in base 'Nil'` que no nombra ni al `.tscn` ni al `@export`.
 	#
 	# Los cuatro niveles van juntos porque la trampa es la misma en los cuatro: la raíz, el nodo
@@ -191,7 +210,7 @@ func test_el_cableado_de_la_basura_llega_entero_hasta_la_zona() -> void:
 func test_cada_bolsa_de_la_escena_lleva_el_id_que_espera_el_dominio() -> void:
 	# **Un `id` que no coincide no rompe nada**: la bolsa entra al descarte, el dominio contesta
 	# `NO_ES_BASURA` y la obligatoria queda imposible de cerrar toda la noche, sin un solo error y
-	# con los seis nodos en verde. Contar los nodos por su nombre no lo ve — el nombre del nodo y
+	# con los nodos en verde. Contar los nodos por su nombre no lo ve — el nombre del nodo y
 	# el `id` del `.tres` son dos cosas distintas.
 	var almacen := _almacen()
 	var encontrados: Array[StringName] = []

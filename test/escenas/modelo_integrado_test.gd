@@ -19,7 +19,9 @@ func test_la_raiz_agrupa_por_rol_y_conserva_sus_enlaces() -> void:
 
 func test_los_puestos_reemplazados_usan_mallas_del_modelo() -> void:
 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
-	for ruta in ["Estructura/base compu/StaticBody3D", "Estructura/gondolanueva/StaticBody3D"]:
+	for ruta: String in [
+		"Estructura/base compu/StaticBody3D", "Estructura/gondolanueva/StaticBody3D"
+	]:
 		var cuerpo := almacen.get_node_or_null(ruta)
 		assert_object(cuerpo).is_not_null()
 		assert_bool(cuerpo.is_in_group("interactuable")).is_true()
@@ -72,12 +74,19 @@ func test_el_surtido_fijo_no_muestra_stock_que_el_dominio_no_tiene() -> void:
 			)
 	var estructura := almacen.get_node("Estructura")
 	var contenido: Node3D = puesto.get("contenido")
+	# La copia fija de cada útil de limpieza la dibuja el útil que se levanta: está apagada a
+	# propósito, y eso lo cobra `utiles_de_limpieza_test.gd`.
+	var de_los_utiles: Array[String] = []
+	for util: Node in almacen.get("_utiles_de_limpieza"):
+		de_los_utiles.append(String(util.get("nodo_del_modelo")))
+	assert_int(de_los_utiles.size()).is_equal(5)
 	for malla: MeshInstance3D in estructura.find_children("*", "MeshInstance3D", true, false):
 		if contenido.is_ancestor_of(malla):
 			continue
 		var ruta := str(estructura.get_path_to(malla))
-		# `limpiador` muestra un producto que el catálogo no tiene, y ningún dato del repo lo dice.
-		var oculta := ruta == "limpiador"
+		if ruta in de_los_utiles:
+			continue
+		var oculta := false
 		for lugar in lugares:
 			oculta = oculta or malla.global_position.distance_to(lugar) < TOLERANCIA
 		var falla := "se ve" if oculta else "está oculta fuera de la disposición"
@@ -93,6 +102,6 @@ func test_el_surtido_fijo_no_muestra_stock_que_el_dominio_no_tiene() -> void:
 					. override_failure_message("%s tiene colisión" % ruta)
 					. is_zero()
 				)
-	for ruta in ["base compu", "gondolanueva"]:
+	for ruta: String in ["base compu", "gondolanueva"]:
 		var malla: MeshInstance3D = estructura.get_node(ruta)
 		assert_object(malla.mesh).is_instanceof(ArrayMesh)

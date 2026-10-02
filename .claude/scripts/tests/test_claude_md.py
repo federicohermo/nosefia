@@ -17,6 +17,10 @@ from lib.repo import RAIZ
 #: preferencia, es no dejarla crecer.
 LINEAS_POR_TRAMPA = 6
 
+#: El techo del archivo entero. Es el que pide la documentación de Anthropic para una memoria de
+#: proyecto: más largo, el modelo lo sigue peor.
+LINEAS_DE_CLAUDE_MD = 200
+
 #: El consejo que no alcanza. Una terminal nueva **no** ve una `GODOT_BIN` recién declarada si el
 #: host es anterior al cambio, y dejar los dos consejos al lado es peor que cualquiera solo.
 CONSEJO_QUE_NO_ALCANZA = "Después hay que abrir una terminal nueva."
@@ -32,6 +36,16 @@ def _items(texto: str, titulo: str) -> list[list[str]]:
         elif items and linea.startswith("  "):
             items[-1].append(linea)
     return items
+
+
+class ElArchivo(unittest.TestCase):
+    def test_mide_menos_que_el_techo(self):
+        lineas = (RAIZ / "CLAUDE.md").read_text(encoding="utf-8").splitlines()
+        self.assertLess(
+            len(lineas),
+            LINEAS_DE_CLAUDE_MD,
+            "el detalle va al doc que corresponde; acá va la línea que lo nombra.",
+        )
 
 
 class LasTrampas(unittest.TestCase):

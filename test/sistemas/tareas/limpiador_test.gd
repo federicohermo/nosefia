@@ -1,4 +1,4 @@
-## El nodo que limpia adentro del motor: traduce la pasada y publica lo que el dominio contestó.
+## El nodo que limpia adentro del motor: traduce cada uso y publica lo que el dominio contestó.
 ##
 ## **Ningún caso entra el nodo al árbol y ninguno hace correr `_process`.** Se instancia con
 ## `auto_free(Limpiador.new())` y se le llama a mano: sin `_process`, el turno no se mueve, y un
@@ -7,36 +7,50 @@ extends GdUnitTestSuite
 
 const LIMPIADOR := "res://src/sistemas/tareas/limpiador.gd"
 
-## Los cuatro `.gd` de este spec más los dos de la cáscara. Ninguno puede nombrar `consumir`: el
-## tiempo de limpiar lo descuenta el reloj mientras el jugador limpia, y nadie más.
+const MOPA := ReglasDeLaLimpieza.ID_DE_LA_MOPA
+const BALDE := ReglasDeLaLimpieza.ID_DEL_BALDE
+const LAVATORIO := ReglasDeLaLimpieza.ID_DEL_LAVATORIO
+const INODORO := ReglasDeLaLimpieza.ID_DEL_INODORO
+
+## Los `.gd` de este spec, del dominio a la cáscara. Ninguno puede nombrar `consumir`: el tiempo de
+## limpiar lo descuenta el reloj mientras el jugador limpia, y nadie más.
 const ARCHIVOS_DEL_SPEC := [
 	"res://src/dominio/almacen/reglas_de_la_limpieza.gd",
 	"res://src/dominio/almacen/mancha.gd",
+	"res://src/dominio/almacen/balde.gd",
+	"res://src/dominio/almacen/mopa.gd",
 	"res://src/dominio/almacen/piso_del_local.gd",
 	"res://src/sistemas/tareas/limpiador.gd",
 	"res://src/escenas/objetos/mancha_en_el_piso.gd",
+	"res://src/escenas/objetos/util_de_limpieza.gd",
+	"res://src/escenas/puestos/artefacto_del_bano.gd",
 	"res://src/escenas/puestos/limpieza_del_almacen.gd",
 ]
 
-## Lo que delataría un contador propio de la tarea adentro del nodo. El `PisoDelLocal` ya lleva la
-## cuenta y el `Turno` ya sabe que la segunda vez no cuenta.
-const PATRONES_DE_ESTADO_PROPIO := "var\\s+_pasadas|var\\s+_limpias|var\\s+_cumplida"
+## Lo que delataría estado propio de la tarea adentro del nodo. El piso ya lleva las manchas, el
+## balde y la mopa, y el `Turno` ya sabe que la segunda vez no cuenta.
+const PATRONES_DE_ESTADO_PROPIO := "var\\s+_(manchas|limpias|cumplida|balde|mopa|agua)\\b"
+
+## El jabón de cada lugar de la jornada, para borrarla entera.
+const JABON_DE := {
+	PisoDelLocal.Lugar.ENTRADA: &"jabon_amarillo",
+	PisoDelLocal.Lugar.GONDOLAS: &"jabon_amarillo",
+	PisoDelLocal.Lugar.DEPOSITO: &"jabon_azul",
+	PisoDelLocal.Lugar.BANO: &"jabon_rosa",
+}
 
 var _turno: Turno = null
-var _pasadas: int = 0
-var _limpiadas: int = 0
-var _rechazos: int = 0
 var _avisos_de_tarea: int = 0
 var _cumplidas_avisadas: int = 0
+## Cada señal emitida, en orden, con su argumento: `[nombre, valor]`.
+var _emitidas: Array[Array] = []
 
 
 func before_test() -> void:
 	_turno = null
-	_pasadas = 0
-	_limpiadas = 0
-	_rechazos = 0
 	_avisos_de_tarea = 0
 	_cumplidas_avisadas = 0
+	_emitidas = []
 
 
 func _limpiador(presupuesto: float = Reglas.DURACION_DEL_TURNO) -> Limpiador:
@@ -48,57 +62,134 @@ func _limpiador(presupuesto: float = Reglas.DURACION_DEL_TURNO) -> Limpiador:
 
 	var limpiador: Limpiador = auto_free(Limpiador.new())
 	limpiador.reloj = reloj
-	limpiador.pasada_dada.connect(_anotar_pasada)
-	limpiador.mancha_limpiada.connect(_anotar_limpiada)
-	limpiador.pasada_rechazada.connect(_anotar_rechazo)
+	limpiador.balde_llenado.connect(func() -> void: _emitidas.append(["balde_llenado", null]))
+	limpiador.balde_tenido.connect(
+		func(agua: ReglasDeLaLimpieza.Agua) -> void: _emitidas.append(["balde_tenido", agua])
+	)
+	limpiador.balde_vaciado.connect(func() -> void: _emitidas.append(["balde_vaciado", null]))
+	limpiador.mopa_mojada.connect(
+		func(agua: ReglasDeLaLimpieza.Agua) -> void: _emitidas.append(["mopa_mojada", agua])
+	)
+	limpiador.pasada_dada.connect(
+		func(lugar: PisoDelLocal.Lugar) -> void: _emitidas.append(["pasada_dada", lugar])
+	)
+	limpiador.uso_rechazado.connect(
+		func(motivo: ReglasDeLaLimpieza.Resultado) -> void:
+			_emitidas.append(["uso_rechazado", motivo])
+	)
 	limpiador.arrancar(PisoDelLocal.de_la_jornada())
 	return limpiador
 
 
-## Deja el piso entero limpio menos las pasadas que se pidan, y devuelve cuántas dio.
-func _limpiar_menos(limpiador: Limpiador, que_falten: int) -> int:
-	var piso := limpiador.piso()
-	var dadas := 0
-	for zona: PisoDelLocal.Zona in PisoDelLocal.Zona.values():
-		for _pasada in range(ReglasDeLaLimpieza.PASADAS_POR_MANCHA):
-			if piso.pasadas_totales() - dadas <= que_falten:
-				return dadas
-			limpiador.pedir_pasada(zona, ReglasDeLaLimpieza.ID_DEL_TRAPEADOR)
-			dadas += 1
-	return dadas
+## Prepara el balde con ese jabón y moja la mopa, desde el balde como esté.
+func _preparar(limpiador: Limpiador, jabon: StringName) -> void:
+	limpiador.usar(BALDE, INODORO)
+	limpiador.usar(BALDE, LAVATORIO)
+	limpiador.usar(jabon, BALDE)
+	limpiador.usar(MOPA, BALDE)
+
+
+## Borra todas las manchas menos las que se pidan, y devuelve cuántas borró.
+func _borrar_menos(limpiador: Limpiador, que_falten: int) -> int:
+	var borradas := 0
+	for lugar: PisoDelLocal.Lugar in JABON_DE:
+		if JABON_DE.size() - borradas <= que_falten:
+			break
+		_preparar(limpiador, JABON_DE[lugar])
+		limpiador.pasar(MOPA, lugar)
+		borradas += 1
+	return borradas
+
+
+func _anotar_tarea(cumplidas: int) -> void:
+	_avisos_de_tarea += 1
+	_cumplidas_avisadas = cumplidas
 
 
 func test_el_limpiador_devuelve_exactamente_lo_que_contesto_el_dominio() -> void:
-	# No lo traduce a un `bool`: los tres rechazos se leen distinto adelante del jugador, y
-	# aplanarlos daría un solo cartel para dos situaciones.
+	# No lo traduce a un `bool`: los rechazos se leen distinto adelante del jugador, y aplanarlos
+	# daría un solo cartel para situaciones que se resuelven distinto.
 	var limpiador := _limpiador()
+	assert_int(limpiador.usar(BALDE, INODORO)).is_equal(ReglasDeLaLimpieza.Resultado.BALDE_VACIO)
+	assert_int(limpiador.usar(BALDE, LAVATORIO)).is_equal(
+		ReglasDeLaLimpieza.Resultado.BALDE_LLENADO
+	)
+	assert_int(limpiador.pasar(MOPA, PisoDelLocal.Lugar.ENTRADA)).is_equal(
+		ReglasDeLaLimpieza.Resultado.MOPA_SECA
+	)
+	assert_int(limpiador.usar(ObjetoDelAlmacen.SIN_ID, BALDE)).is_equal(
+		ReglasDeLaLimpieza.Resultado.SIN_EFECTO
+	)
+
+
+func test_cada_gesto_que_cambia_algo_emite_su_senal_una_vez() -> void:
+	var limpiador := _limpiador()
+	limpiador.usar(BALDE, LAVATORIO)
+	limpiador.usar(&"jabon_amarillo", BALDE)
+	limpiador.usar(MOPA, BALDE)
+	limpiador.pasar(MOPA, PisoDelLocal.Lugar.GONDOLAS)
+	limpiador.usar(BALDE, INODORO)
 	(
-		assert_int(
-			limpiador.pedir_pasada(PisoDelLocal.Zona.ENTRADA, ReglasDeLaLimpieza.ID_DEL_TRAPEADOR)
+		assert_array(_emitidas)
+		. is_equal(
+			[
+				["balde_llenado", null],
+				["balde_tenido", ReglasDeLaLimpieza.Agua.AMARILLO],
+				["mopa_mojada", ReglasDeLaLimpieza.Agua.AMARILLO],
+				["pasada_dada", PisoDelLocal.Lugar.GONDOLAS],
+				["balde_vaciado", null],
+			]
 		)
-		. is_equal(PisoDelLocal.Resultado.PASADA)
-	)
-	assert_int(limpiador.pedir_pasada(PisoDelLocal.Zona.ENTRADA, ObjetoDelAlmacen.SIN_ID)).is_equal(
-		PisoDelLocal.Resultado.SIN_TRAPEADOR
 	)
 
 
-func test_emite_una_sola_vez_por_pasada_aceptada_y_ninguna_por_rechazada() -> void:
+func test_cada_rechazo_emite_su_motivo_y_nada_mas() -> void:  # AC-CLN-024
 	var limpiador := _limpiador()
-	limpiador.pedir_pasada(PisoDelLocal.Zona.ENTRADA, ReglasDeLaLimpieza.ID_DEL_TRAPEADOR)
-	assert_int(_pasadas).is_equal(1)
-	assert_int(_rechazos).is_equal(0)
-	limpiador.pedir_pasada(PisoDelLocal.Zona.ENTRADA, ObjetoDelAlmacen.SIN_ID)
-	assert_int(_pasadas).is_equal(1)
-	assert_int(_rechazos).is_equal(1)
+	limpiador.usar(BALDE, INODORO)
+	limpiador.pasar(MOPA, PisoDelLocal.Lugar.BANO)
+	limpiador.usar(&"bolsa_de_basura_1", BALDE)
+	(
+		assert_array(_emitidas)
+		. is_equal(
+			[
+				["uso_rechazado", ReglasDeLaLimpieza.Resultado.BALDE_VACIO],
+				["uso_rechazado", ReglasDeLaLimpieza.Resultado.MOPA_SECA],
+				["uso_rechazado", ReglasDeLaLimpieza.Resultado.SIN_EFECTO],
+			]
+		)
+	)
 
 
-func test_la_ultima_pasada_de_una_zona_avisa_que_la_mancha_se_fue() -> void:
+func test_con_una_mancha_de_menos_la_obligatoria_no_se_cuenta() -> void:  # AC-CLN-012
 	var limpiador := _limpiador()
-	for _pasada in range(ReglasDeLaLimpieza.PASADAS_POR_MANCHA):
-		limpiador.pedir_pasada(PisoDelLocal.Zona.ENTRADA, ReglasDeLaLimpieza.ID_DEL_TRAPEADOR)
-	assert_int(_limpiadas).is_equal(1)
-	assert_int(_pasadas).is_equal(ReglasDeLaLimpieza.PASADAS_POR_MANCHA)
+	assert_int(_borrar_menos(limpiador, 1)).is_equal(JABON_DE.size() - 1)
+	assert_bool(limpiador.piso().esta_limpio()).is_false()
+	assert_int(_avisos_de_tarea).is_equal(0)
+	assert_int(_turno.tareas_cumplidas()).is_equal(0)
+
+
+func test_la_ultima_mancha_cuenta_la_obligatoria_una_sola_vez() -> void:  # AC-CLN-012
+	var limpiador := _limpiador()
+	_borrar_menos(limpiador, 0)
+	assert_bool(limpiador.piso().esta_limpio()).is_true()
+	assert_int(_avisos_de_tarea).is_equal(1)
+	assert_int(_cumplidas_avisadas).is_equal(1)
+	assert_float(_turno.tiempo_restante()).is_equal(Reglas.DURACION_DEL_TURNO)
+	# Pasar otra vez no la vuelve a contar: la mancha ya no está y el dominio rechaza.
+	assert_int(limpiador.pasar(MOPA, PisoDelLocal.Lugar.ENTRADA)).is_equal(
+		ReglasDeLaLimpieza.Resultado.YA_ESTABA_LIMPIA
+	)
+	assert_float(_turno.tiempo_restante()).is_equal(Reglas.DURACION_DEL_TURNO)
+	assert_int(_avisos_de_tarea).is_equal(1)
+
+
+func test_con_el_turno_cerrado_limpiar_no_cuenta() -> void:
+	# El piso igual queda limpio: el estado del local no depende de que el jefe lo cuente.
+	var limpiador := _limpiador(0.0)
+	_borrar_menos(limpiador, 0)
+	assert_bool(limpiador.piso().esta_limpio()).is_true()
+	assert_int(_avisos_de_tarea).is_equal(0)
+	assert_float(_turno.tiempo_restante()).is_equal(0.0)
 
 
 func test_el_limpiador_no_lleva_estado_propio_de_la_tarea() -> void:
@@ -112,35 +203,6 @@ func test_el_limpiador_no_lleva_estado_propio_de_la_tarea() -> void:
 		. override_failure_message("`limpiador.gd` lleva estado propio de la tarea")
 		. is_empty()
 	)
-
-
-func test_con_una_pasada_de_menos_la_obligatoria_no_se_cuenta() -> void:
-	var limpiador := _limpiador()
-	var dadas := _limpiar_menos(limpiador, 1)
-	assert_int(dadas).is_equal(limpiador.piso().pasadas_totales() - 1)
-	assert_int(_avisos_de_tarea).is_equal(0)
-	assert_int(_turno.tareas_cumplidas()).is_equal(0)
-
-
-func test_la_ultima_pasada_cuenta_la_obligatoria_una_sola_vez_sin_mover_el_turno() -> void:
-	var limpiador := _limpiador()
-	_limpiar_menos(limpiador, 0)
-	assert_int(_avisos_de_tarea).is_equal(1)
-	assert_int(_cumplidas_avisadas).is_equal(1)
-	assert_float(_turno.tiempo_restante()).is_equal(Reglas.DURACION_DEL_TURNO)
-	# Machacar de más no la vuelve a contar: las cuatro zonas están limpias y el dominio rechaza.
-	limpiador.pedir_pasada(PisoDelLocal.Zona.ENTRADA, ReglasDeLaLimpieza.ID_DEL_TRAPEADOR)
-	assert_float(_turno.tiempo_restante()).is_equal(Reglas.DURACION_DEL_TURNO)
-	assert_int(_avisos_de_tarea).is_equal(1)
-
-
-func test_con_el_turno_cerrado_limpiar_no_cuenta() -> void:
-	# El piso igual queda limpio: el estado del local no depende de que el jefe lo cuente.
-	var limpiador := _limpiador(0.0)
-	_limpiar_menos(limpiador, 0)
-	assert_bool(limpiador.piso().esta_limpio()).is_true()
-	assert_int(_avisos_de_tarea).is_equal(0)
-	assert_float(_turno.tiempo_restante()).is_equal(0.0)
 
 
 func test_ningun_archivo_de_este_spec_nombra_consumir() -> void:
@@ -158,34 +220,3 @@ func test_ningun_archivo_de_este_spec_nombra_consumir() -> void:
 			. override_failure_message("`%s` nombra `consumir`: es un segundo cobro" % ruta)
 			. is_false()
 		)
-
-
-func _anotar_pasada(_zona: PisoDelLocal.Zona, _restantes: int) -> void:
-	_pasadas += 1
-
-
-func _anotar_limpiada(_zona: PisoDelLocal.Zona) -> void:
-	_limpiadas += 1
-
-
-func _anotar_rechazo(_motivo: PisoDelLocal.Resultado) -> void:
-	_rechazos += 1
-
-
-func _anotar_tarea(cumplidas: int) -> void:
-	_avisos_de_tarea += 1
-	_cumplidas_avisadas = cumplidas
-
-
-func test_la_pasada_necesita_un_efecto_del_despacho() -> void:
-	var limpiador := _limpiador()
-	limpiador.set("_uso", Uso.new())
-	var antes := limpiador.piso().pasadas_restantes(PisoDelLocal.Zona.ENTRADA)
-	(
-		assert_int(
-			limpiador.pedir_pasada(PisoDelLocal.Zona.ENTRADA, ReglasDeLaLimpieza.ID_DEL_TRAPEADOR)
-		)
-		. is_equal(PisoDelLocal.Resultado.SIN_TRAPEADOR)
-	)
-	assert_int(limpiador.piso().pasadas_restantes(PisoDelLocal.Zona.ENTRADA)).is_equal(antes)
-	assert_int(_rechazos).is_equal(1)

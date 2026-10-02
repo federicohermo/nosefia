@@ -1,11 +1,6 @@
 ## Una fila de la tabla de sonidos: qué evento del juego suena, con qué señal se dispara, por qué
 ## bus sale y si va en bucle.
 ##
-## **El `enum` de acá es el único lugar donde los eventos están enumerados.** Agregar un sonido es
-## sumar un valor y una fila del `.tres`; ningún sistema lleva una lista propia, y por eso este
-## spec no nombra una sola clase de los otros siete — el enlace es **por nombre de señal**, que
-## también es dato.
-##
 ## **Un bus mal escrito no da error: cae a `Master` en silencio.** Está medido con un reproductor
 ## del motor cuyo bus no existe — ningún aviso, el sonido sale por el canal equivocado y nada lo
 ## dice. Por eso `es_valida()` existe y por eso una fila inválida se rechaza en vez de sonar. El
@@ -22,6 +17,9 @@ extends Resource
 ## **`tiempo_consumido` del reloj no está, y no es un olvido**: se emite en cada `_process`, así que
 ## engancharle un sonido sería pedir uno por cuadro. Es la razón por la que esto es un `enum`
 ## revisable y no «cualquier señal que exista».
+##
+## **Uno nuevo va al final.** Los `.tres` guardan el evento por número, y uno metido en el medio le
+## cambiaría el significado a cada fila de abajo sin que el archivo cambie un byte.
 enum Evento {
 	TAREA_CUMPLIDA,
 	TURNO_CERRADO,
@@ -36,7 +34,47 @@ enum Evento {
 	COMPUTADORA_ABIERTA,
 	TIMBRE_DEL_COMPRADOR,
 	AMBIENTE_DEL_LOCAL,
+	BOTON_DE_LA_COMPUTADORA,
+	MUSICA_DE_LA_NOCHE,
+	PASO_DADO,
+	COMPRA_REALIZADA,
+	LECTOR_RECHAZADO,
+	MENSAJE_DEL_CELULAR,
+	PUERTA_ABIERTA,
+	PUERTA_CERRADA,
+	PUERTA_TRABADA,
+	PORTON_TRABADO,
+	BALDE_LLENADO,
+	BALDE_TENIDO,
+	BALDE_VACIADO,
+	MOPA_MOJADA,
+	UNIDAD_DEVUELTA,
 }
+
+## Cómo suena una cosa al agarrarla o al dejarla. Los valores salen de la ficha de sonido.
+## `NINGUNA` es la fila de un evento que no es de objeto, y lo fijo del almacén. Una nueva va al
+## final, por lo mismo que un evento.
+enum Sonoridad {
+	NINGUNA,
+	LATA,
+	CAJITA,
+	CAJA,
+	ENVOLTORIO_PLASTICO,
+	BOTELLA_PLASTICA,
+	PAPEL,
+	BOLSA,
+	MOPA,
+	BALDE,
+}
+
+## Los eventos que tienen una fila por sonoridad. `OBJETO_SOLTADO` suena al tocar algo, no al
+## soltar.
+const EVENTOS_DE_OBJETO := [
+	Evento.OBJETO_AGARRADO,
+	Evento.OBJETO_SOLTADO,
+	Evento.PRODUCTO_COLOCADO,
+	Evento.UNIDAD_DEVUELTA,
+]
 
 ## Los cuatro buses del local, **declarados una sola vez en todo el repo**. El layout de buses los
 ## escribe otra vez porque un `.tres` no puede leer una constante, y hay un caso que compara los
@@ -61,17 +99,39 @@ const BUSES := [BUS_DE_AMBIENTE, BUS_DE_EFECTOS, BUS_DE_INTERFAZ, BUS_DE_MUSICA]
 
 @export var bus: String = BUS_DE_EFECTOS
 
-## Si el sonido se repite mientras dura la noche. Los que van en bucle ocupan la voz de ambiente
-## y no la ronda: una ronda con un bucle adentro se quedaría sin voces al quinto sonido.
+@export var sonoridad: Sonoridad = Sonoridad.NINGUNA
+
 @export var en_bucle: bool = false
 
-## Vacío mientras no haya archivos de audio: elegirlos y mezclarlos está fuera de alcance. Que la
-## fila exista igual es lo que permite que agregar el sonido no toque código.
+## Si suena desde un lugar del local y no pegado a la cabeza del jugador.
+@export var posicional: bool = false
+
+## El emisor fijo desde donde suena una fila del espacio cuando no la produce un objeto. Es el
+## nombre de un emisor de la escena del audio. Vacío si no tiene.
+@export var emisor: StringName = &""
+
+## Vacío mientras el sonido no esté elegido. Que la fila exista igual es lo que permite que
+## agregar el sonido no toque código.
 @export var stream: AudioStream = null
+
+## Varios audios para el mismo evento, que se alternan. Si hay, mandan sobre `stream`.
+@export var variantes: Array[AudioStream] = []
 
 
 func tiene_sonido() -> bool:
-	return stream != null
+	return cantidad_de_variantes() > 0
+
+
+func cantidad_de_variantes() -> int:
+	if not variantes.is_empty():
+		return variantes.size()
+	return 1 if stream != null else 0
+
+
+func variante(indice: int) -> AudioStream:
+	if not variantes.is_empty():
+		return variantes[indice]
+	return stream
 
 
 ## Si esta fila puede sonar por donde dice.

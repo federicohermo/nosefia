@@ -51,52 +51,59 @@ func test_sin_foco_o_suspendido_no_emite_y_al_reanudar_si() -> void:
 	assert_array(avisos).contains_exactly([objetivo])
 
 
-func test_el_clic_da_una_pasada_y_solo_con_trapeador() -> void:
+func test_el_clic_derecho_limpia_una_mancha_de_punta_a_punta() -> void:  # AC-CLN-023
+	# El camino entero, con el clic de verdad: la mano vacía y la mopa seca no borran; el balde se
+	# llena en el lavatorio, el jabón lo tiñe, la mopa se moja, y recién ahí la mancha se va.
 	var almacen := await _abrir()
 	var jugador: Node3D = almacen.get("_jugador")
-	var mancha: Node3D = almacen.get("_limpieza").manchas()[0]
-	await _enfocar(jugador, mancha)
-	var limpiador: Limpiador = almacen.get("_limpiador")
-	var zona: PisoDelLocal.Zona = mancha.call("zona_de_la_mancha")
-	var antes := limpiador.piso().pasadas_restantes(zona)
-	await _clic(true)
-	await _clic(false)
-	assert_int(limpiador.piso().pasadas_restantes(zona)).is_equal(antes)
 	var agarre: Agarre = almacen.get("_agarre")
-	var otro: Node3D = almacen.get("_bolsas")[0]
-	assert_bool(agarre.pedir_agarrar(otro.call("interactuar"), otro)).is_true()
-	await _clic(true)
-	await _clic(false)
-	assert_int(limpiador.piso().pasadas_restantes(zona)).is_equal(antes)
-	agarre.soltar(true)
-	otro.global_position = Vector3(5, 1, -10)
-	var trapeador: Node3D = almacen.get_node("Objetos/Trapeador")
-	assert_bool(agarre.pedir_agarrar(trapeador.call("interactuar"), trapeador)).is_true()
+	var mancha := _mancha_de(almacen, PisoDelLocal.Lugar.ENTRADA)
+	var piso: PisoDelLocal = (almacen.get("_limpiador") as Limpiador).piso()
+	var estado := piso.mancha_de(PisoDelLocal.Lugar.ENTRADA)
 	await _enfocar(jugador, mancha)
 	await _clic(true)
-	assert_int(limpiador.piso().pasadas_restantes(zona)).is_equal(antes - 1)
-	for cuadro in 5:
-		await get_tree().physics_frame
-	assert_int(limpiador.piso().pasadas_restantes(zona)).is_equal(antes - 1)
 	await _clic(false)
-	assert_int(limpiador.piso().pasadas_restantes(zona)).is_equal(antes - 1)
+	assert_bool(estado.esta_limpia()).is_false()
+	var mopa: Node3D = almacen.get_node("Objetos/Mopa")
+	assert_bool(agarre.pedir_agarrar(mopa.call("interactuar"), mopa)).is_true()
+	await _enfocar(jugador, mancha)
+	await _clic(true)
+	await _clic(false)
+	assert_bool(estado.esta_limpia()).is_false()
+	agarre.soltar(true)
+	mopa.global_transform = mopa.call(ReglasDeLosObjetos.METODO_LUGAR_DE_ORIGEN)
+	var balde: Node3D = almacen.get_node("Objetos/Balde")
+	await _usar_con(jugador, agarre, balde, almacen.get_node("Estructura/vanitory/StaticBody3D"))
+	await _usar_con(jugador, agarre, almacen.get_node("Objetos/JabonAmarillo"), balde)
+	assert_bool(agarre.pedir_agarrar(mopa.call("interactuar"), mopa)).is_true()
+	jugador.set("_enfocado", balde)
+	await _clic(true)
+	await _clic(false)
+	assert_int(piso.mopa().agua()).is_equal(ReglasDeLaLimpieza.Agua.AMARILLO)
+	await _enfocar(jugador, mancha)
+	await _clic(true)
+	assert_bool(estado.esta_limpia()).is_true()
+	assert_bool(mancha.visible).is_false()
+	await _clic(false)
 
 
 func test_usar_cierra_cada_panel_sin_pasada_ni_pedido_y_el_reloj_avanza() -> void:
 	var almacen := await _abrir()
 	var jugador: Node3D = almacen.get("_jugador")
-	var mancha: Node3D = almacen.get("_limpieza").manchas()[0]
+	var limpiador: Limpiador = almacen.get("_limpiador")
+	limpiador.usar(ReglasDeLaLimpieza.ID_DEL_BALDE, ReglasDeLaLimpieza.ID_DEL_LAVATORIO)
+	limpiador.usar(&"jabon_amarillo", ReglasDeLaLimpieza.ID_DEL_BALDE)
+	limpiador.usar(ReglasDeLaLimpieza.ID_DE_LA_MOPA, ReglasDeLaLimpieza.ID_DEL_BALDE)
+	var mancha := _mancha_de(almacen, PisoDelLocal.Lugar.ENTRADA)
 	await _enfocar(jugador, mancha)
 	var agarre: Agarre = almacen.get("_agarre")
-	var trapeador: Node3D = almacen.get_node("Objetos/Trapeador")
-	assert_bool(agarre.pedir_agarrar(trapeador.call("interactuar"), trapeador)).is_true()
+	var mopa: Node3D = almacen.get_node("Objetos/Mopa")
+	assert_bool(agarre.pedir_agarrar(mopa.call("interactuar"), mopa)).is_true()
 	var avisos: Array[Node3D] = []
 	if jugador.has_signal("uso_pedido"):
 		jugador.connect("uso_pedido", func(nodo: Node3D) -> void: avisos.append(nodo))
-	var limpiador: Limpiador = almacen.get("_limpiador")
-	var zona: PisoDelLocal.Zona = mancha.call("zona_de_la_mancha")
-	var antes := limpiador.piso().pasadas_restantes(zona)
-	for ruta in ["Estructura/base compu/StaticBody3D", "Estructura/Ventanilla"]:
+	var estado := limpiador.piso().mancha_de(PisoDelLocal.Lugar.ENTRADA)
+	for ruta: String in ["Estructura/base compu/StaticBody3D", "Estructura/Ventanilla"]:
 		var puesto: Node3D = almacen.get_node(ruta)
 		var panel: CanvasLayer = puesto.get("pantalla") if "compu" in ruta else puesto.get("panel")
 		puesto.call("abrir")
@@ -117,12 +124,31 @@ func test_usar_cierra_cada_panel_sin_pasada_ni_pedido_y_el_reloj_avanza() -> voi
 		assert_bool(jugador.get("_control").esta_suspendido()).is_false()
 		assert_bool(panel.visible).is_false()
 		assert_array(avisos).is_empty()
-		assert_int(limpiador.piso().pasadas_restantes(zona)).is_equal(antes)
+		assert_bool(estado.esta_limpia()).is_false()
 	await _enfocar(jugador, mancha)
 	await _clic(true)
 	await _clic(false)
 	assert_int(avisos.size()).is_equal(1)
-	assert_int(limpiador.piso().pasadas_restantes(zona)).is_equal(antes - 1)
+	assert_bool(estado.esta_limpia()).is_true()
+
+
+## Agarra el útil, lo usa con el clic derecho sobre el objetivo y lo devuelve a su lugar del baño:
+## soltado adelante, taparía la mancha que el caso enfoca después. Lo que se tiene adelante lo
+## pone el caso: la mira del jugador está apagada.
+func _usar_con(jugador: Node3D, agarre: Agarre, util: Node3D, objetivo: Node3D) -> void:
+	assert_bool(agarre.pedir_agarrar(util.call("interactuar"), util)).is_true()
+	jugador.set("_enfocado", objetivo)
+	await _clic(true)
+	await _clic(false)
+	agarre.soltar(true)
+	util.global_transform = util.call(ReglasDeLosObjetos.METODO_LUGAR_DE_ORIGEN)
+
+
+func _mancha_de(almacen: Node3D, lugar: PisoDelLocal.Lugar) -> Node3D:
+	for mancha: Node3D in almacen.get("_limpieza").call("manchas"):
+		if mancha.call("lugar_de_la_mancha") == lugar:
+			return mancha
+	return null
 
 
 func _abrir() -> Node3D:

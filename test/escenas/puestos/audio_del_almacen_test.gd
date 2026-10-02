@@ -2,7 +2,11 @@
 ## afirme sobre el estado de reproducción.
 ##
 ## **La escena se instancia y no se entra al árbol**, igual que las otras suites de `escenas/`.
+## Salvo en los casos que escuchan el local entero: lo que suena desde un lugar tiene que estar en
+## el árbol, y fuera de él se rechaza por no tener posición.
 extends GdUnitTestSuite
+
+const AperturaConLugar := preload("res://test/escenas/apertura_con_lugar.gd")
 
 const ESCENA := "res://src/escenas/puestos/audio_del_almacen.tscn"
 const SCRIPT := "res://src/escenas/puestos/audio_del_almacen.gd"
@@ -36,6 +40,9 @@ const NOMBRES_DE_REPRODUCCION := ["play" + "ing", "get_playback" + "_position", 
 const CARPETA_DE_TESTS := "res://test"
 
 const CARPETA_DE_FUENTES := "res://src"
+
+## El reproductor del local, adentro del almacén.
+const REPRODUCTOR := "Servicios/AudioDelAlmacen/Reproductor"
 
 
 func test_los_cuatro_buses_existen_en_el_motor() -> void:  # AC-AMB-003
@@ -103,14 +110,84 @@ func test_ningun_test_de_este_spec_afirma_sobre_el_estado_de_reproduccion() -> v
 	# cualquier suite que toque audio, y en headless eso es rojo permanente.
 	for ruta: String in _suites():
 		var texto := FileAccess.get_file_as_string(ruta)
-		for nombre: String in NOMBRES_DE_REPRODUCCION:
-			(
-				assert_bool(texto.contains(nombre))
-				. override_failure_message(
-					"`%s` afirma sobre `%s`, que en headless no cambia nunca" % [ruta, nombre]
+		var estados := _estados_de_audio_en(texto)
+		(
+			assert_array(estados)
+			. override_failure_message(
+				(
+					"`%s` afirma sobre estados de audio que no cambian en headless: %s"
+					% [ruta, estados]
 				)
-				. is_false()
 			)
+			. is_empty()
+		)
+
+
+func test_el_detector_acepta_fin_de_tween_y_rechaza_fin_de_audio() -> void:
+	var fin: String = NOMBRES_DE_REPRODUCCION[-1]
+	var animacion := "var bajada: Tween\nbajada.%s.connect(func(): pass)" % fin
+	assert_array(_estados_de_audio_en(animacion)).is_empty()
+	for tipo: String in ["AudioStreamPlayer", "AudioStreamPlayer3D"]:
+		var sonido := "var voz: %s\nawait voz.%s" % [tipo, fin]
+		assert_array(_estados_de_audio_en(sonido)).is_equal([fin])
+	var dos_funciones := (
+		"func animar():\n\tvar voz: Tween\n\tawait voz.%s\n" % fin
+		+ "func sonar():\n\tvar voz: AudioStreamPlayer\n\tawait voz.%s" % fin
+	)
+	assert_array(_estados_de_audio_en(dos_funciones)).is_equal([fin])
+	assert_array(_estados_de_audio_en('await Signal(voz, "%s")' % fin)).is_equal([fin])
+	assert_array(_estados_de_audio_en("await %s" % fin)).is_equal([fin])
+	for miembro: String in ["otro.voz", "otro . voz"]:
+		var cadena := "var voz: Tween\nawait %s.%s" % [miembro, fin]
+		assert_array(_estados_de_audio_en(cadena)).is_equal([fin])
+	for local: String in ["var voz: AudioStreamPlayer", "var voz := AudioStreamPlayer.new()"]:
+		var sombra := "var voz: Tween\nfunc sonar():\n\t%s\n\tawait voz.%s" % [local, fin]
+		assert_array(_estados_de_audio_en(sombra)).is_equal([fin])
+
+
+## La senal de fin se admite solo para un receptor de tipo Tween en ese mismo alcance.
+## Un receptor desconocido sigue bloqueado: no se pierde el guard de audio.
+static func _estados_de_audio_en(texto: String) -> Array[String]:
+	var estados: Array[String] = []
+	for indice in NOMBRES_DE_REPRODUCCION.size() - 1:
+		var nombre: String = NOMBRES_DE_REPRODUCCION[indice]
+		if texto.contains(nombre):
+			estados.append(nombre)
+	var fin: String = NOMBRES_DE_REPRODUCCION[-1]
+	var declaracion := RegEx.new()
+	declaracion.compile("([A-Za-z_]\\w*)\\s*:\\s*Tween\\b")
+	var creacion := RegEx.new()
+	creacion.compile("\\bvar\\s+(\\w+)\\s*:=\\s*(?:\\w+\\.)?create_tween\\s*\\(")
+	var acceso := RegEx.new()
+	acceso.compile("\\b" + fin + "\\b")
+	var receptor := RegEx.new()
+	receptor.compile("(?<![\\w.])\\b(\\w+)\\s*\\.\\s*$")
+	var variable := RegEx.new()
+	variable.compile("\\bvar\\s+(\\w+)\\b")
+	var globales: Dictionary[String, bool] = {}
+	var tweens: Dictionary[String, bool] = {}
+	var en_funcion := false
+	for linea: String in texto.split("\n"):
+		var inicio := linea.strip_edges()
+		if inicio.begins_with("func ") or inicio.begins_with("static func "):
+			en_funcion = true
+			tweens = globales.duplicate()
+		for encontrado: RegExMatch in variable.search_all(linea):
+			tweens.erase(encontrado.get_string(1))
+		for patron: RegEx in [declaracion, creacion]:
+			for encontrado: RegExMatch in patron.search_all(linea):
+				var nombre := encontrado.get_string(1)
+				tweens[nombre] = true
+				if not en_funcion:
+					globales[nombre] = true
+		for encontrado: RegExMatch in acceso.search_all(linea):
+			var quien := receptor.search(linea.substr(0, encontrado.get_start()))
+			var simple := quien != null
+			if simple:
+				simple = not linea.substr(0, quien.get_start()).strip_edges().ends_with(".")
+			if (not simple or not tweens.has(quien.get_string(1))) and not estados.has(fin):
+				estados.append(fin)
+	return estados
 
 
 func test_la_cascara_no_tiene_una_sola_regla() -> void:
@@ -134,7 +211,9 @@ func test_el_almacen_instancia_el_audio_exactamente_una_vez() -> void:
 func test_el_dominio_no_nombra_un_solo_nodo_de_audio() -> void:
 	# `AudioStreamPlayer` es un `Node` y `AudioServer` es el motor: los dos romperían la
 	# propiedad de la que cuelga todo lo demás — que el dominio se ejerza sin levantar una escena.
-	for ruta: String in ["entrada_sonora.gd", "tabla_de_sonidos.gd", "ronda_de_voces.gd"]:
+	for ruta: String in DirAccess.get_files_at("res://src/dominio/ambiente"):
+		if not ruta.ends_with(".gd"):
+			continue
 		var texto := FileAccess.get_file_as_string("res://src/dominio/ambiente/" + ruta)
 		assert_str(texto).is_not_empty()
 		for prohibido: String in ["AudioStreamPlayer", "AudioServer"]:
@@ -156,7 +235,7 @@ func test_la_cascara_carga_con_sus_dos_sistemas_cableados() -> void:
 func test_cada_senal_de_la_tabla_la_declara_alguien_de_verdad() -> void:
 	# **El agujero que deja el desacople.** El enlace es por nombre de señal, así que un nombre
 	# que no existe no rompe nada: la fila cae en `sin_fuente()`, que es un estado normal, y las
-	# suites del enlazador usan fuentes inventadas — con lo cual los seis nodos dan verde y ese
+	# suites del enlazador usan fuentes inventadas — con lo cual los nodos dan verde y ese
 	# sonido no se pide nunca en el juego. Está medido: la fila del timbre decía
 	# `timbre_de_la_ventanilla`, que no lo declara nadie, y nada lo dijo.
 	#
@@ -190,7 +269,7 @@ func test_el_almacen_llega_cableado_al_audio_y_al_agarre() -> void:
 	# Sin `_audio` el juego muere en el primer cuadro; sin `_agarre`, las tres señales del
 	# agarre quedan mudas para siempre y nada lo dice.
 	var almacen: Node3D = auto_free(load(ESCENA_DEL_ALMACEN).instantiate())
-	for propiedad in ["_audio", "_agarre"]:
+	for propiedad: String in ["_audio", "_agarre"]:
 		(
 			assert_object(almacen.get(propiedad))
 			. override_failure_message(
@@ -213,6 +292,163 @@ func test_el_cableado_enlaza_las_fuentes_y_arranca_el_ambiente() -> void:
 	assert_array(enlaza.search_all(texto)).is_not_empty()
 	var ambiente := RegEx.create_from_string("_audio\\s*\\.\\s*arrancar_el_ambiente\\(\\)")
 	assert_array(ambiente.search_all(texto)).is_not_empty()
+
+
+func test_cada_emisor_de_la_tabla_esta_en_la_escena() -> void:
+	# Un emisor que falta deja su fila rechazada por no tener lugar, y el timbre no suena nunca.
+	var audio: Node = auto_free(load(ESCENA).instantiate())
+	var emisores: Node3D = audio.get("emisores")
+	assert_object(emisores).is_not_null()
+	if emisores == null:
+		return
+	for entrada: EntradaSonora in TablaDeSonidos.desde_disco().entradas:
+		if entrada.emisor == &"":
+			continue
+		var emisor := emisores.get_node_or_null(NodePath(String(entrada.emisor)))
+		(
+			assert_object(emisor)
+			. override_failure_message("la escena no tiene el emisor `%s`" % entrada.emisor)
+			. is_not_null()
+		)
+
+
+func test_el_ambiente_tiene_sus_emisores_en_la_heladera_y_los_tubos() -> void:
+	var audio: Node = auto_free(load(ESCENA).instantiate())
+	var emisores: Node3D = audio.get("emisores")
+	var ambiente := TablaDeSonidos.desde_disco().de(EntradaSonora.Evento.AMBIENTE_DEL_LOCAL)
+	var neon := emisores.get_node(NodePath(String(ambiente.emisor)))
+	assert_int(neon.get_child_count()).is_greater(EmisoresDelAmbiente.TOPE)
+
+
+func test_el_jugador_es_una_fuente_del_audio() -> void:
+	# Sin esto `paso_dado` queda sin fuente, que es un estado normal y nada lo avisa.
+	var texto := FileAccess.get_file_as_string(SCRIPT_DEL_ALMACEN)
+	var fuentes := RegEx.create_from_string("(?s)_audio\\s*\\.\\s*enlazar\\(\\s*\\[([^\\]]*)\\]")
+	var hallado := fuentes.search(texto)
+	assert_object(hallado).is_not_null()
+	if hallado != null:
+		assert_str(hallado.get_string(1)).contains("_jugador")
+
+
+func test_la_jornada_arranca_la_musica_y_el_cierre_la_corta() -> void:
+	var cascara := FileAccess.get_file_as_string(SCRIPT)
+	for funcion: String in ["arrancar_el_ambiente", "callar_la_musica"]:
+		var cuerpo := cascara.get_slice("func %s(" % funcion, 1).get_slice("\nfunc ", 0)
+		assert_str(cuerpo).contains("EntradaSonora.Evento.MUSICA_DE_LA_NOCHE")
+	var texto := FileAccess.get_file_as_string(SCRIPT_DEL_ALMACEN)
+	var corta := RegEx.create_from_string("_audio\\s*\\.\\s*callar_la_musica\\(\\)")
+	assert_array(corta.search_all(texto)).is_not_empty()
+
+
+# AC-AMB-024 AC-AMB-025
+func test_el_balde_y_sus_gestos_suenan_en_el_local_sin_un_rechazo() -> void:
+	# El limpiador de la escena, el agarre de la escena y el cableado de la raíz: que las filas
+	# existan no dice que el local las ate.
+	var almacen: Node3D = auto_free(load(ESCENA_DEL_ALMACEN).instantiate())
+	add_child(almacen)
+	await get_tree().physics_frame
+	(almacen.get("_jugador") as Node3D).set_physics_process(false)
+	var escucha := _escuchar(almacen)
+	var balde: RigidBody3D = almacen.get_node("Objetos/Balde")
+	var agarre: Agarre = almacen.get("_agarre")
+	assert_bool(agarre.pedir_agarrar(balde.get("datos"), balde)).is_true()
+	var limpiador: Limpiador = almacen.get("_limpiador")
+	var id_del_balde := ReglasDeLaLimpieza.ID_DEL_BALDE
+	for uso: Array in [
+		[id_del_balde, ReglasDeLaLimpieza.ID_DEL_LAVATORIO],
+		[&"jabon_azul", id_del_balde],
+		[ReglasDeLaLimpieza.ID_DE_LA_MOPA, id_del_balde],
+		[id_del_balde, ReglasDeLaLimpieza.ID_DEL_INODORO],
+		[id_del_balde, ReglasDeLaLimpieza.ID_DEL_INODORO],
+	]:
+		limpiador.usar(uso[0], uso[1])
+	var esperados := [
+		EntradaSonora.Evento.OBJETO_AGARRADO,
+		EntradaSonora.Evento.BALDE_LLENADO,
+		EntradaSonora.Evento.BALDE_TENIDO,
+		EntradaSonora.Evento.MOPA_MOJADA,
+		EntradaSonora.Evento.BALDE_VACIADO,
+	]
+	var de_estos := func(evento: EntradaSonora.Evento) -> bool: return esperados.has(evento)
+	assert_array(escucha["pedidos"].filter(de_estos)).is_equal(esperados)
+	assert_array(escucha["rechazados"].filter(de_estos)).is_empty()
+	var reproductor: ReproductorDeSonidos = almacen.get_node(REPRODUCTOR)
+	assert_array(_audios(reproductor.voces_en_el_espacio())).contains(["SFX_OBJETO_Balde_Alzar"])
+	(
+		assert_array(_audios(reproductor.voces()))
+		. contains(
+			[
+				"SFX_OBJETO_Balde_Llenar",
+				"SFX_OBJETO_Jabon_VertirEnBalde",
+				"SFX_OBJETO_Mopa_MojarEnBalde",
+				"SFX_OBJETO_Balde_Vaciar",
+			]
+		)
+	)
+
+
+func test_devolver_una_unidad_suena_una_vez_desde_la_mano() -> void:  # AC-AMB-026
+	# Con el clic sobre la caja, como en el juego: el primero saca y el segundo devuelve.
+	var almacen: Node3D = auto_free(load(ESCENA_DEL_ALMACEN).instantiate())
+	add_child(almacen)
+	await get_tree().physics_frame
+	AperturaConLugar.abrir_con_todo_el_lugar(almacen)
+	(almacen.get("_jugador") as Node3D).set_physics_process(false)
+	var escucha := _escuchar(almacen)
+	var puesto: Node3D = almacen.get("_reposicion_manual")
+	var caja: Node3D = (almacen.get("_cajas_de_productos") as Array)[Producto.Id.ACTRONCITO]
+	var repositor: Repositor = almacen.get("_repositor")
+	var lugares: Array[Vector3] = []
+	repositor.unidad_devuelta.connect(
+		func(nodo: Node3D, _producto: Producto) -> void: lugares.append(nodo.global_position)
+	)
+	puesto.call("usar_la_caja", caja)
+	assert_object(repositor.agarre.manos().sostenido() as UnidadDeProducto).is_not_null()
+	puesto.call("usar_la_caja", caja)
+	assert_object(repositor.agarre.manos().sostenido()).is_null()
+	assert_int(escucha["pedidos"].count(EntradaSonora.Evento.UNIDAD_DEVUELTA)).is_equal(1)
+	assert_bool(escucha["rechazados"].has(EntradaSonora.Evento.UNIDAD_DEVUELTA)).is_false()
+	assert_int(lugares.size()).is_equal(1)
+	var reproductor: ReproductorDeSonidos = almacen.get_node(REPRODUCTOR)
+	var dejar: Array[AudioStreamPlayer3D] = []
+	for voz in reproductor.voces_en_el_espacio():
+		if voz.stream != null and _audio(voz.stream) == "SFX_OBJETO_Cajita_Dejar":
+			dejar.append(voz)
+	assert_int(dejar.size()).is_equal(1)
+	if dejar.size() != 1 or lugares.size() != 1:
+		return
+	assert_vector(dejar[0].global_position).is_equal_approx(lugares[0], Vector3.ONE * 0.001)
+	assert_float(dejar[0].volume_db).is_equal(0.0)
+	assert_str(dejar[0].bus).is_equal(EntradaSonora.BUS_DE_EFECTOS)
+
+
+## Lo que el reproductor del local pide y lo que rechaza, evento por evento y en orden.
+func _escuchar(almacen: Node3D) -> Dictionary:
+	var reproductor: ReproductorDeSonidos = almacen.get_node(REPRODUCTOR)
+	var escucha := {"pedidos": [], "rechazados": []}
+	reproductor.sonido_pedido.connect(
+		func(evento: EntradaSonora.Evento) -> void: escucha["pedidos"].append(evento)
+	)
+	reproductor.sonido_rechazado.connect(
+		func(evento: EntradaSonora.Evento, _motivo: ReproductorDeSonidos.Motivo) -> void:
+			escucha["rechazados"].append(evento)
+	)
+	return escucha
+
+
+## El nombre del audio de un stream, sin carpeta ni extensión.
+static func _audio(stream: AudioStream) -> String:
+	return stream.resource_path.get_file().get_basename()
+
+
+## Los nombres de los audios que quedaron pedidos en esas voces.
+static func _audios(voces: Array) -> Array:
+	var nombres := []
+	for voz: Node in voces:
+		var stream: AudioStream = voz.get(&"stream")
+		if stream != null:
+			nombres.append(_audio(stream))
+	return nombres
 
 
 ## Todos los `.gd` de `src/`, para el caso de las señales de la tabla.

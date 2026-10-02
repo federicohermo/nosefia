@@ -23,6 +23,14 @@ const SIN_ID := &""
 ## sueltas: el que se olvide de declararlo va a estar bien más veces de las que no.
 @export var levantable: bool = true
 
+## Si sobre este objeto se puede soltar otro.
+@export var admite_encima: bool = false
+
+## Si al soltarlo queda con su eje vertical, mire adonde mire la vista.
+@export var se_apoya_derecho: bool = false
+
+@export var sonoridad: EntradaSonora.Sonoridad = EntradaSonora.Sonoridad.NINGUNA
+
 @export var revelacion: Revelacion = null
 
 
