@@ -146,3 +146,9 @@ func test_el_balde_se_lleva_inclinado_treinta_grados_hacia_la_vista() -> void:  
 	# Positiva es la boca hacia la vista: al revés, el agua queda del lado de afuera y no se ve.
 	var inclinacion := rad_to_deg(ReglasDeLaLimpieza.INCLINACION_DEL_BALDE_EN_LA_MANO)
 	assert_float(inclinacion).is_equal_approx(30.0, 0.001)
+
+
+func test_mojar_la_mopa_dura_cuatro_decimas_de_segundo() -> void:
+	var reglas := load("res://src/dominio/almacen/reglas_de_la_limpieza.gd") as GDScript
+	var duracion: float = reglas.get_script_constant_map().get("DURACION_DE_LA_MOJADA", -1.0)
+	assert_float(duracion).is_equal_approx(0.4, 0.0001)

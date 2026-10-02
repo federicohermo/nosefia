@@ -52,6 +52,9 @@ const ID_DEL_INODORO := &"inodoro"
 ## Positiva es la boca hacia la vista.
 const INCLINACION_DEL_BALDE_EN_LA_MANO := PI / 6.0
 
+## Lo que dura el gesto visible de mojar la mopa, en segundos.
+const DURACION_DE_LA_MOJADA := 0.4
+
 ## El `id` de cada bidón, con el agua que deja al echarlo en el balde.
 const JABONES: Dictionary[StringName, Agua] = {
 	&"jabon_azul": Agua.AZUL,

@@ -25,6 +25,8 @@ const MODELO := preload("res://assets/models/SEPT_JUEGOS_PROTOTIPO.glb")
 ## Lo que se marca al enfocarlo: la malla, y no la carga, que queda adentro del balde.
 @export var mallas: Array[MeshInstance3D] = []
 
+var _bajada: Tween
+
 
 func _ready() -> void:
 	super()
@@ -33,6 +35,32 @@ func _ready() -> void:
 		orientacion_en_mano = Basis(
 			Vector3.RIGHT, ReglasDeLaLimpieza.INCLINACION_DEL_BALDE_EN_LA_MANO
 		)
+
+
+## El movimiento pertenece al util: el ancla sigue el brazo del jugador en cada cuadro.
+func mostrar_la_mojada() -> void:
+	if not freeze or top_level:
+		return
+	if _bajada != null:
+		_bajada.kill()
+	var reposo := Transform3D(orientacion_en_mano, Vector3.ZERO)
+	transform = reposo
+	var abajo := reposo
+	abajo.origin += Vector3(0.0, -0.04, -0.12)
+	_bajada = create_tween()
+	_bajada.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
+	_bajada.tween_property(self, "transform", abajo, ReglasDeLaLimpieza.DURACION_DE_LA_MOJADA / 2.0)
+	_bajada.tween_property(
+		self, "transform", reposo, ReglasDeLaLimpieza.DURACION_DE_LA_MOJADA / 2.0
+	)
+
+
+## Agarre quita y vuelve a colgar el nodo tanto al soltar como al cambiar de mano.
+## La orientacion mundial de ese instante la conserva Agarre antes de quitarlo.
+func _notification(que: int) -> void:
+	if que == NOTIFICATION_UNPARENTED and _bajada != null:
+		_bajada.kill()
+		_bajada = null
 
 
 ## Muestra la carga del color que se le pasa, o la esconde. Cuál y de qué color lo decide el
