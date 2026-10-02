@@ -220,6 +220,11 @@ se corrige el código.
   afirmaba lo viejo costó una corrida entera en 6/7.
 - **Lo que aparece implementando se hace, no se anota.** Un issue incompleto no se cierra abriendo
   otro issue: se completa.
+- **Un reparto nuevo exige revisar los supuestos de los tests que leen el modelo.** Buscá
+  cantidades literales y `visible_instance_count` en esas suites antes de la corrida completa.
+  En el #282, el fixture dejaba ocho huecos y Actron empezaba con tres unidades: reponer una
+  debía afirmar stock inicial más uno. Si cambia la cara de un producto, medí el frente de
+  su etiqueta en Blender y conservá el umbral del test, sin deducir el frente del reparto.
 - **Las capturas que pide el issue van al PR, no a la rama.** Suben a la rama huérfana
   `capturas/<N>` con `python .claude/skills/implement-feature/scripts/capturas_a_rama.py <N>
   <carpeta>`, y el PR las muestra por su URL de `raw.githubusercontent.com`. El script existe
@@ -228,6 +233,13 @@ se corrige el código.
   artista**, en todo lo que el issue no pide cambiar. En el #262, el acomodador apoyaba cada
   unidad de plano sobre la chapa, y en las rampas de las cabeceras las echó hacia adelante: el
   artista las tenía hacia atrás. Lo vio el usuario, no un test.
+- **Una previsualización también valida antes de renderizar.** Si el acomodador detecta un
+  choque o pierde una tanda, el script aborta y no publica la captura. En el #282, al quitar
+  el saliente inferior, una previsualización siguió después del error y mostró el estante de
+  N vacío. Se corrigió midiendo el fondo necesario de todos los niveles y verificando que
+  conservara cada tanda. Una captura de un reparto inválido no sirve para pedir aprobación.
+  Al ejecutar Python en Blender, pasá `--python-exit-code 1` antes de `--python`: sin ese
+  parámetro, una excepción del script puede devolver código 0. Medido también en el #282.
 - **Lo que genera un recurso commiteado va al repo con él**, con su test. Un recurso sin su
   generador sólo se puede editar a mano, y el cambio siguiente lo escribe de nuevo desde cero. La
   disposición de la góndola, sus dos escenas y sus 71 mallas salían de un acomodador que vivió en

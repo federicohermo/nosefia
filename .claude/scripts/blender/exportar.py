@@ -1,6 +1,7 @@
 """El exportador, del lado de Blender. Lo corre `exportar_modelo.py`; no se corre a mano.
 
-    blender <fuente>.blend --background --python .claude/scripts/blender/exportar.py -- <destino>
+    blender <fuente>.blend --background --python-exit-code 1 --python \
+        .claude/scripts/blender/exportar.py -- <destino>
 
 Vive acá y no en `.claude/scripts/` porque **importa `bpy`**, que sólo existe adentro de Blender:
 un módulo así en la raíz del harness lo importaría `unittest discover` y la suite se caería.

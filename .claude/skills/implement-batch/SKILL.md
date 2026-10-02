@@ -189,6 +189,16 @@ Cada agente recibe, literal:
 - **Un comando que este skill entrega se vuelve a correr antes de repartirlo**, nunca se copia de
   la corrida anterior: un comando roto se reparte N veces.
 
+- **Coordiná las corridas del motor y las capturas entre carriles.** Una suite que mide tiempos
+  por cuadro puede fallar bajo carga aunque el código no cambie. En el lote 282–285 del
+  2026-10-02, las primeras verificaciones de #283 y #284 fallaron sólo en el caso del mouse de
+  `giro_parejo_test.gd`; las dos repeticiones aisladas pasaron. Las capturas también corrían
+  durante la primera verificación de #283. No hagas capturas durante la suite completa y
+  asigná un turno para cada corrida completa del motor. Los carriles pueden seguir escribiendo
+  en sus worktrees mientras otro verifica. Ante un fallo, conservá el log, comprobá el caso
+  aislado y repetí la convergencia con la carga controlada. No cambies el umbral del test para
+  esconder el fallo ni declares verde la primera corrida.
+
 ### La condición de terminado del carril — no se negocia
 
 > **Un carril termina con el PR abierto y sin un solo criterio sin test que lo cite. No antes.**
