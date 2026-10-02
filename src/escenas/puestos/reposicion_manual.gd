@@ -957,8 +957,7 @@ static func giro_hacia_la_camara(frente: Vector3) -> float:
 ## y el cupo dice cuántas de esas son casilleros; escribir el corte en esta capa sería el mismo
 ## valor en dos lugares, que es justo lo que `Estante.cupo()` existe para evitar.
 func _primera_reponible(id: Producto.Id) -> int:
-	var bloque := disposicion.principales[id]
-	return DisposicionDeLaGondola.copias(bloque) - repositor.estante().cupo(Catalogo.de(id))
+	return disposicion.primera_reponible(id, repositor.estante().cupo(Catalogo.de(id)))
 
 
 func _preparar_modelos() -> void:

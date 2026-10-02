@@ -13,8 +13,8 @@
 ## Hay dos listas porque el juego las trata distinto:
 ##
 ## - `principales`, una por producto y **en el orden de `Producto.Id`**, es la única tanda con
-##   casilleros de ese producto. Tiene dos filas del mismo largo, y sus copias van con **la
-##   fila de atrás primero y la de adelante al final**, cada una de izquierda a derecha:
+##   casilleros de ese producto. Tiene una fila, o dos del mismo largo. En dos filas sus copias
+##   van con la fila de atrás primero y la de adelante al final, de izquierda a derecha:
 ##   `visible_instance_count` corta por el final, así que los casilleros son las últimas copias
 ##   y caen todos en la fila de adelante, que es la que da al pasillo.
 ## - `guias` son las tandas fijas: lo que se repite para completar un estante. No cambian
@@ -37,8 +37,27 @@ const FLOTANTES_POR_COPIA := 12
 @export var guias: Array[PackedFloat32Array] = []
 
 ## Cuántas copias del final de cada bloque principal forman su fila de adelante, en el orden
-## de `Producto.Id`. La de atrás tiene las mismas: son las primeras del bloque.
+## de `Producto.Id`. Si tiene fila de atrás, son las primeras del bloque y tienen igual largo.
 @export var filas_de_adelante: PackedInt32Array = PackedInt32Array()
+
+
+func primera_reponible(id: Producto.Id, cupo: int) -> int:
+	var bloque := principales[id]
+	var total := copias(bloque)
+	if cupo <= 0 or total not in [cupo, 2 * cupo] or bloque.size() % FLOTANTES_POR_COPIA != 0:
+		push_error(
+			(
+				"DisposicionDeLaGondola %s: el bloque %d tiene %d copias para %d casilleros"
+				% [
+					resource_path if not resource_path.is_empty() else resource_name,
+					id,
+					total,
+					cupo
+				]
+			)
+		)
+		return -1
+	return total - cupo
 
 
 ## Cuántas copias trae un bloque.
@@ -66,15 +85,21 @@ static func copia(bloque: PackedFloat32Array, indice: int) -> Transform3D:
 	)
 
 
-## Hacia dónde mira una tanda: de su fila de atrás a la de adelante, en horizontal. Es el lado
-## del pasillo, y hacia ahí mira también cada unidad, porque el modelo la pone de frente.
+## Hacia dónde mira una tanda: de atrás hacia adelante, o perpendicular al orden de sus columnas
+## en una sola fila. El acomodador las escribe de izquierda a derecha mirando desde el pasillo.
 ##
-## Un bloque sin las dos filas no tiene frente, y contesta el vector nulo en vez de inventar
-## una dirección: quien lo use para girar algo lo deja como estaba.
+## Un bloque sin cupo o con una sola copia contesta el vector nulo en vez de inventar una
+## dirección: quien lo use para girar algo lo deja como estaba.
 static func frente(bloque: PackedFloat32Array, fila_de_adelante: int) -> Vector3:
 	var total := copias(bloque)
-	if fila_de_adelante <= 0 or fila_de_adelante >= total:
+	if fila_de_adelante <= 0 or fila_de_adelante > total:
 		return Vector3.ZERO
+	if fila_de_adelante == total:
+		if total < 2:
+			return Vector3.ZERO
+		var costado := copia(bloque, total - 1).origin - copia(bloque, 0).origin
+		costado.y = 0.0
+		return costado.cross(Vector3.UP).normalized()
 	var atras := Vector3.ZERO
 	var adelante := Vector3.ZERO
 	for indice in total:

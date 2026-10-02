@@ -33,6 +33,17 @@ func _estructura() -> Node3D:
 	return auto_free(load(ESCENA_DE_LA_ESTRUCTURA).instantiate())
 
 
+func test_las_dos_gondolas_del_medio_tienen_el_mismo_ancho_de_contorno() -> void:  # AC-STK-051
+	var estructura := _estructura()
+	var anchos: Array[float] = []
+	for nombre: String in ["gondolanueva", "gondolanueva2"]:
+		var mueble := estructura.get_node(nombre) as MeshInstance3D
+		var cuerpo := mueble.get_node("Contorno") as StaticBody3D
+		var forma := cuerpo.get_child(0) as CollisionShape3D
+		anchos.append((forma.shape as BoxShape3D).size.x * absf(mueble.scale.x * forma.scale.x))
+	assert_float(anchos[0]).is_equal_approx(anchos[1], 0.01)
+
+
 ## Las mallas del modelo, a cualquier profundidad: las del board de tareas cuelgan de otra malla
 ## y no de la raíz, así que una recorrida de un solo nivel las dejaría sin mirar.
 static func _mallas(nodo: Node) -> Array[MeshInstance3D]:

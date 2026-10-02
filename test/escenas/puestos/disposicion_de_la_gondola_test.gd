@@ -14,6 +14,25 @@ const GUIA := "res://src/escenas/puestos/guia_del_estante.tscn"
 const TOLERANCIA := 0.002
 
 
+func test_una_fila_es_entera_de_casilleros_y_dos_conservan_la_de_atras() -> void:  # AC-STK-030
+	var disposicion := DisposicionDeLaGondola.new()
+	disposicion.principales = [_copia(Vector3.ZERO) + _copia(Vector3.RIGHT)]
+	assert_int(disposicion.primera_reponible(Producto.Id.ACTRONCITO, 2)).is_zero()
+	assert_int(disposicion.primera_reponible(Producto.Id.ACTRONCITO, 1)).is_equal(1)
+
+
+func test_un_bloque_que_no_tiene_una_o_dos_filas_nombra_el_recurso() -> void:
+	var disposicion := DisposicionDeLaGondola.new()
+	disposicion.resource_name = "disposicion_erronea"
+	disposicion.principales = [_copia(Vector3.ZERO) + _copia(Vector3.RIGHT) + _copia(Vector3.LEFT)]
+	await (
+		assert_error(func() -> void: disposicion.primera_reponible(Producto.Id.ACTRONCITO, 2))
+		. is_push_error(
+			"DisposicionDeLaGondola disposicion_erronea: el bloque 0 tiene 3 copias para 2 casilleros"
+		)
+	)
+
+
 func _disposicion() -> DisposicionDeLaGondola:
 	return load(DISPOSICION) as DisposicionDeLaGondola
 
@@ -87,11 +106,21 @@ func test_la_tanda_tiene_dos_filas_y_el_cupo_entra_en_la_de_adelante() -> void: 
 		var bloque := disposicion.principales[producto.id]
 		var adelante := disposicion.filas_de_adelante[producto.id]
 		var nombre := producto.nombre
+		var una_fila := (
+			producto.id
+			in [
+				Producto.Id.ACTRONCITO,
+				Producto.Id.COSA_DE_MANI,
+				Producto.Id.PRONGLES,
+			]
+		)
 		(
 			assert_int(DisposicionDeLaGondola.copias(bloque))
 			. override_failure_message("%s no tiene dos filas iguales" % nombre)
-			. is_equal(2 * adelante)
+			. is_equal(adelante if una_fila else 2 * adelante)
 		)
+		if una_fila:
+			continue
 		var frente := DisposicionDeLaGondola.frente(bloque, adelante)
 		var costado := frente.cross(Vector3.UP)
 		for columna: int in adelante:
@@ -124,11 +153,13 @@ func test_la_tanda_de_cada_producto_esta_junta_sobre_un_solo_estante() -> void: 
 		var adelante := disposicion.filas_de_adelante[producto.id]
 		var frente := DisposicionDeLaGondola.frente(bloque, adelante)
 		var costado := frente.cross(Vector3.UP)
+		var total := DisposicionDeLaGondola.copias(bloque)
+		var inicio_adelante := total - adelante
 		var primeras: Array[Vector3] = [
 			DisposicionDeLaGondola.copia(bloque, 0).origin,
-			DisposicionDeLaGondola.copia(bloque, adelante).origin,
+			DisposicionDeLaGondola.copia(bloque, inicio_adelante).origin,
 		]
-		var segunda := DisposicionDeLaGondola.copia(bloque, mini(adelante + 1, 2 * adelante - 1))
+		var segunda := DisposicionDeLaGondola.copia(bloque, mini(inicio_adelante + 1, total - 1))
 		var paso := absf((segunda.origin - primeras[1]).dot(costado))
 		var fondo := (primeras[1] - primeras[0]).dot(frente)
 		(
@@ -136,11 +167,11 @@ func test_la_tanda_de_cada_producto_esta_junta_sobre_un_solo_estante() -> void: 
 			. override_failure_message(
 				"%s: sus dos filas están en estantes distintos" % producto.nombre
 			)
-			. is_less(fondo)
+			. is_less_equal(fondo)
 		)
 		for indice: int in DisposicionDeLaGondola.copias(bloque):
 			var origen := DisposicionDeLaGondola.copia(bloque, indice).origin
-			var primera := primeras[0 if indice < adelante else 1]
+			var primera := primeras[0 if indice < inicio_adelante else 1]
 			var mensaje := "%s: la copia %d está fuera de su tanda" % [producto.nombre, indice]
 			assert_float(origen.y - primera.y).override_failure_message(mensaje).is_equal_approx(
 				0.0, TOLERANCIA
@@ -171,9 +202,9 @@ func test_el_frente_va_de_la_fila_de_atras_a_la_de_adelante() -> void:
 
 
 ## Un bloque sin dos filas no tiene frente: se avisa, y no se inventa una dirección.
-func test_un_bloque_sin_fila_de_atras_no_tiene_frente() -> void:
+func test_una_fila_tiene_frente_por_el_orden_de_sus_columnas() -> void:  # AC-STK-030
 	var bloque := _copia(Vector3.ZERO) + _copia(Vector3.RIGHT)
-	assert_vector(DisposicionDeLaGondola.frente(bloque, 2)).is_equal(Vector3.ZERO)
+	assert_vector(DisposicionDeLaGondola.frente(bloque, 2)).is_equal(Vector3.BACK)
 	assert_vector(DisposicionDeLaGondola.frente(bloque, 0)).is_equal(Vector3.ZERO)
 
 

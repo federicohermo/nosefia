@@ -30,8 +30,8 @@ from lib.gondola import (
     nombre_en_godot,
     numero_de_escena,
     numero_de_recurso,
+    paso,
     punto_en_godot,
-    rebajar,
     repartir,
     ruta_de_la_malla,
     slug,
@@ -49,46 +49,36 @@ INCLINACION = 2 * math.asin(0.19)
 
 
 class Repartir(unittest.TestCase):
-    def test_el_estante_se_llena_hasta_que_no_entra_otra_columna(self):
-        cuentas = repartir(3.5, [CAJA, LATA], [8, 1])
-        libre = sobrante(3.5, [CAJA, LATA], cuentas)
+    def test_una_tanda_sola_ocupa_el_estante_de_punta_a_punta(self):  # AC-STK-051
+        (cuenta,) = repartir(3.5, [CAJA])
+        libre = sobrante(3.5, [CAJA], [cuenta])
         self.assertGreaterEqual(libre, 0.0)
-        # Ni una columna más de ninguna de las dos entraría.
-        self.assertLess(libre, min(CAJA.ancho, LATA.ancho) + AIRE)
+        # Ni una columna más entraría.
+        self.assertLess(libre, paso(CAJA))
 
-    def test_los_minimos_se_respetan(self):
-        cuentas = repartir(3.5, [CAJA, LATA], [8, 1])
-        self.assertGreaterEqual(cuentas[0], 8)
-        self.assertGreaterEqual(cuentas[1], 1)
+    def test_dos_tandas_ocupan_una_mitad_cada_una(self):  # AC-STK-051
+        for largo in (1.9, 3.5, 3.512):
+            for envases in ([CAJA, LATA], [LATA, CAJA], [CAJA, CAJA]):
+                cuentas = repartir(largo, envases)
+                mitad = (largo - AIRE) / 2
+                for envase, cuenta in zip(envases, cuentas):
+                    ocupado = ancho_de_la_tanda(envase, cuenta)
+                    self.assertLessEqual(ocupado, mitad + 1e-9)
+                    # Ni una columna más entraría en su mitad.
+                    self.assertGreater(ocupado + paso(envase), mitad)
 
-    def test_lo_que_sobra_va_a_la_tanda_mas_angosta(self):
-        # Con 8 de la caja, la lata arranca con una sola y es la más angosta: se lleva todo lo
-        # que sobra mientras siga siéndolo.
-        cuentas = repartir(3.5, [CAJA, LATA], [8, 1])
-        self.assertEqual(cuentas[0], 8)
-        self.assertEqual(cuentas[1], 5)
+    def test_las_dos_mitades_difieren_en_menos_que_la_unidad_mas_ancha(self):  # AC-STK-051
+        ancha = Envase(ancho=0.44, fondo=0.13, alto=0.45)
+        for envases in ([CAJA, LATA], [ancha, LATA], [LATA, ancha]):
+            cuentas = repartir(3.512, envases)
+            ocupados = [ancho_de_la_tanda(e, c) for e, c in zip(envases, cuentas)]
+            self.assertLess(abs(ocupados[0] - ocupados[1]), max(paso(e) for e in envases))
 
-    def test_dos_tandas_iguales_quedan_parejas(self):
-        cuentas = repartir(3.5, [CAJA, CAJA], [1, 1])
-        self.assertLessEqual(abs(cuentas[0] - cuentas[1]), 1)
-
-    def test_si_los_minimos_no_entran_es_un_error_y_no_se_acomoda(self):
+    def test_si_una_tanda_no_entra_en_su_mitad_es_un_error_y_no_se_acomoda(self):
         with self.assertRaises(ValueError):
-            repartir(2.0, [CAJA], [8])
-
-    def test_si_lo_pedido_no_entra_se_rebaja_la_tanda_mas_ancha(self):
-        # Una cabecera de 1,73 m y un paquete de 30 cm: ocho no entran, cinco sí.
-        paquete = Envase(ancho=0.30, fondo=0.09, alto=0.43)
-        self.assertEqual(rebajar(1.73, [paquete], [8]), [5])
-        # Con otra tanda al lado, la que se rebaja es la ancha y la otra conserva su mínimo.
-        self.assertEqual(rebajar(3.5, [CAJA, LATA], [11, 1]), [10, 1])
-
-    def test_lo_que_ya_entra_no_se_rebaja(self):
-        self.assertEqual(rebajar(3.5, [CAJA, LATA], [8, 1]), [8, 1])
-
-    def test_si_ni_una_columna_entra_es_un_error(self):
+            repartir(0.5, [CAJA, LATA])
         with self.assertRaises(ValueError):
-            rebajar(0.2, [CAJA], [1])
+            repartir(0.2, [CAJA])
 
     def test_columnas_que_entran_es_el_borde_exacto(self):
         largo = ancho_de_la_tanda(CAJA, 5)
@@ -131,6 +121,38 @@ class LaTanda(unittest.TestCase):
         # Y la fila de atrás del más profundo termina justo antes del margen del fondo.
         atras = tanda(LATA, [0.1])[0]
         self.assertAlmostEqual(atras.v + LATA.fondo / 2 + MARGEN, fondo)
+
+
+class UnaSolaFila(unittest.TestCase):
+    def test_la_tanda_de_una_fila_es_toda_de_adelante(self):  # AC-STK-030
+        lugares = tanda(CAJA, [0.2, 0.5, 0.8], filas=1)
+        self.assertEqual([l.fila for l in lugares], ["adelante"] * 3)
+        self.assertEqual([l.columna for l in lugares], [0, 1, 2])
+        # Va donde va la fila de adelante de cualquier tanda: contra el frente útil.
+        self.assertEqual(lugares, tanda(CAJA, [0.2, 0.5, 0.8])[3:])
+
+    def test_una_fila_pide_el_fondo_de_una_sola_unidad(self):
+        self.assertAlmostEqual(fondo_del_estante([LATA], filas=[1]), LATA.fondo + 2 * MARGEN)
+
+    def test_el_estante_no_crece_para_el_producto_de_una_fila(self):
+        # Dos filas de una caja de 40 cm de fondo pedirían 80: en una sola, manda la lata.
+        honda = Envase(ancho=0.31, fondo=0.40, alto=0.27)
+        chata = Envase(ancho=0.25, fondo=0.25, alto=0.09)
+        self.assertAlmostEqual(
+            fondo_del_estante([honda, chata], filas=[1, 2]), fondo_del_estante([chata])
+        )
+        self.assertAlmostEqual(
+            fondo_nuevo(0.01, [honda, chata], 0.12, filas=[1, 2]),
+            0.01 + fondo_del_estante([chata]) + 0.12,
+        )
+
+    def test_en_la_rampa_una_fila_llega_hasta_su_cabeza(self):
+        fondo = fondo_del_estante([CAJA], INCLINACION, filas=[1])
+        (unidad,) = tanda(CAJA, [0.2], INCLINACION, filas=1)
+        cabeza = (
+            unidad.v + CAJA.fondo / 2 * math.cos(INCLINACION) + CAJA.alto * math.sin(INCLINACION)
+        )
+        self.assertAlmostEqual(cabeza + MARGEN, fondo)
 
 
 class EnLaRampa(unittest.TestCase):
