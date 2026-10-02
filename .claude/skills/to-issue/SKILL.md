@@ -172,6 +172,10 @@ Lo que más se rompe:
   el contrato devolvía la mopa a su orientación de reposo al cancelar la animación, pero el borde
   de soltado conservaba su orientación mundial de ese instante. Separá soltar de volver a agarrar
   y contrastá los dos estados antes de publicar.
+- **Una orientación nueva también cambia el volumen de lo que se suelta.** Antes de fijar los
+  límites de una mejora de la mano, probá la propuesta contra la matriz de soltado junto a los
+  sólidos. En el #285, inclinar la mopa a 75 grados dejaba su cabeza dentro de una pared al
+  empezar el barrido, y hubo que sumar `jugador.gd` a «Se escribe».
 - **Si el issue cambia un recurso generado, lo que lo genera está en el repo o entra en «Se
   escribe».** Un recurso sin su generador sólo se edita a mano. En el #262, la disposición de la
   góndola salía de un acomodador que vivió en el scratch de una sesión y nunca se commiteó.
