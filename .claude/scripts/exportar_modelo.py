@@ -101,7 +101,10 @@ def exportar() -> int:
 
     print(f"Blender ({origen}): {blender}")
     proceso = subprocess.run(
-        [blender, str(FUENTE), "--background", "--python", str(EXPORTADOR), "--", str(DESTINO)],
+        [
+            blender, str(FUENTE), "--background", "--python-exit-code", "1",
+            "--python", str(EXPORTADOR), "--", str(DESTINO),
+        ],
         capture_output=True,
         text=True,
         encoding="utf-8",

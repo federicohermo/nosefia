@@ -233,6 +233,8 @@ se corrige el código.
   el saliente inferior, una previsualización siguió después del error y mostró el estante de
   N vacío. Se corrigió midiendo el fondo necesario de todos los niveles y verificando que
   conservara cada tanda. Una captura de un reparto inválido no sirve para pedir aprobación.
+  Al ejecutar Python en Blender, pasá `--python-exit-code 1` antes de `--python`: sin ese
+  parámetro, una excepción del script puede devolver código 0. Medido también en el #282.
 - **Lo que genera un recurso commiteado va al repo con él**, con su test. Un recurso sin su
   generador sólo se puede editar a mano, y el cambio siguiente lo escribe de nuevo desde cero. La
   disposición de la góndola, sus dos escenas y sus 71 mallas salían de un acomodador que vivió en
