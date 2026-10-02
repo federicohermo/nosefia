@@ -284,7 +284,7 @@ func _ver_la_punta(camara: Camera3D, mopa: UtilDeLimpieza) -> void:
 ## Pasos explicitos del tween: cinco instantes, sin depender del ritmo del headless.
 func _muestrear_la_mojada(almacen: Node3D, mopa: UtilDeLimpieza) -> void:
 	var camara := _camara(almacen)
-	var antes := mopa.transform
+	var antes := Transform3D(mopa.orientacion_en_mano, Vector3.ZERO)
 	var vista := camara.global_transform
 	_accion(almacen, _util(almacen, "Balde"), ReglasDelJugador.ACCION_USAR)
 	var bajada: Tween = mopa.get("_bajada")
