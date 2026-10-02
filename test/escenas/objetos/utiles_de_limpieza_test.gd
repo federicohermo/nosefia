@@ -341,11 +341,18 @@ func test_la_punta_sigue_a_la_vista_con_el_brazo_acortado_y_mirando_abajo() -> v
 	var mopa := _mopa_en_la_mano(almacen)
 	var camara := _camara(almacen)
 	camara.rotation.x = deg_to_rad(-40.0)
+	var jugador: Node3D = almacen.get("_jugador")
+	jugador.set_process(false)
+	var balde := _util(almacen, "Balde")
+	balde.freeze = true
+	balde.global_position = camara.global_transform * Vector3(0.2, -0.35, -0.1)
+	await get_tree().physics_frame
+	await get_tree().physics_frame
+	var brazo: SpringArm3D = camara.get_node("BrazoDeCarga")
+	assert_float(brazo.get_hit_length()).is_less(brazo.spring_length / 2.0)
+	jugador.call("_acomodar_las_manos", 1.0)
 	var ancla := mopa.get_parent() as Node3D
-	# El brazo pegado al balde coloca el ancla cerca del ojo. La animacion queda en la mopa.
-	ancla.position = Vector3(0.2, -0.35, -0.01)
-	assert_float(ancla.position.z).is_greater(-0.02)
-	_util(almacen, "Balde").global_position = camara.global_position - camara.global_basis.z * 0.5
+	assert_float(ancla.position.z).is_greater(-0.3)
 	_muestrear_la_mojada(almacen, mopa)
 
 
@@ -397,3 +404,23 @@ func test_soltar_a_mitad_del_mojado_mata_el_tween_y_conserva_la_orientacion() ->
 	assert_bool(agarre.pedir_agarrar(mopa.datos, mopa)).is_true()
 	assert_vector(mopa.position).is_equal(Vector3.ZERO)
 	assert_bool(mopa.basis.is_equal_approx(mopa.orientacion_en_mano)).is_true()
+
+
+func test_mojar_con_el_balde_en_el_piso_y_la_vista_abajo_mantiene_la_punta_visible() -> void:
+	var almacen: Node3D = await _almacen()
+	var mopa := _mopa_en_la_mano(almacen)
+	var camara := _camara(almacen)
+	camara.rotation.x = deg_to_rad(-40.0)
+	var balde := _util(almacen, "Balde")
+	balde.freeze = true
+	var forma := balde.get_node("Forma") as CollisionShape3D
+	var base := (forma.transform * forma.shape.get_debug_mesh().get_aabb()).position.y
+	var suelo := almacen.get_node("Estructura/SueloSolido/Local") as CollisionShape3D
+	var piso := suelo.global_position.y + (suelo.shape as BoxShape3D).size.y / 2.0
+	var jugador: Node3D = almacen.get("_jugador")
+	balde.global_basis = Basis.IDENTITY
+	balde.global_position = Vector3(
+		jugador.global_position.x, piso - base, jugador.global_position.z - 0.7
+	)
+	assert_float(balde.global_position.y + base).is_equal_approx(piso, 0.001)
+	_muestrear_la_mojada(almacen, mopa)
