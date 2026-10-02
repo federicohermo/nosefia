@@ -49,7 +49,7 @@ const GUIA := "Guia"
 ## Dónde va cada unidad de la góndola, y en qué orden.
 ##
 ## **Ningún apoyo está escrito acá.** Antes eran doce posiciones y doce direcciones a mano, una
-## fila recta por producto; ahora cada producto tiene una tanda de dos filas en una de las
+## fila recta por producto; ahora cada producto tiene una tanda de una o dos filas en una de las
 ## cuatro caras de un mueble, y una recta ya no las describe. Las mide el `.blend` y llegan en
 ## este recurso.
 @export var disposicion: DisposicionDeLaGondola
@@ -943,8 +943,7 @@ static func giro_hacia_la_camara(frente: Vector3) -> float:
 ## y el cupo dice cuántas de esas son casilleros; escribir el corte en esta capa sería el mismo
 ## valor en dos lugares, que es justo lo que `Estante.cupo()` existe para evitar.
 func _primera_reponible(id: Producto.Id) -> int:
-	var bloque := disposicion.principales[id]
-	return DisposicionDeLaGondola.copias(bloque) - repositor.estante().cupo(Catalogo.de(id))
+	return disposicion.primera_reponible(id, repositor.estante().cupo(Catalogo.de(id)))
 
 
 func _preparar_modelos() -> void:

@@ -13,12 +13,20 @@ Un estante se describe con tres ejes: `u` a lo largo, de izquierda a derecha par
 desde el pasillo; `v` hacia adentro, desde el frente útil —detrás del labio— hasta el fondo; y la
 normal de la chapa. Acá sólo importan `u` y `v`: dónde queda la chapa en el mundo lo sabe Blender.
 
-## Dos filas, y el estante del tamaño de las dos
+## Dos filas, o una, y el estante del tamaño de la tanda más honda
 
-Cada tanda tiene dos filas, una detrás de la otra. La de adelante toca el frente útil y la de
+En una tanda de dos filas, una queda detrás de la otra. La de adelante toca el frente útil y la de
 atrás va pegada a ella, con el mismo aire que separa dos unidades vecinas. El estante se achica
-hasta la profundidad de dos unidades del producto más profundo que lleva: más hondo queda un
-hueco detrás de la fila de atrás, que desde el pasillo se lee como mercadería que falta.
+hasta la profundidad de la tanda más honda que lleva: más hondo queda un hueco detrás de la fila
+de atrás, que desde el pasillo se lee como mercadería que falta.
+
+Un producto demasiado hondo para dos filas va en una sola, que es toda de adelante: el estante
+no crece para él.
+
+## Mitad y mitad, o el estante entero
+
+Dos tandas se reparten el estante en partes iguales, y cada una llena la suya. Una tanda sola lo
+ocupa de punta a punta.
 
 ## En la rampa de una cabecera, la unidad se echa hacia atrás
 
@@ -81,20 +89,28 @@ def paso(envase: Envase) -> float:
     return envase.ancho + AIRE
 
 
-def fondo_del_estante(envases: Sequence[Envase], inclinacion: float = 0.0) -> float:
-    """La profundidad útil que necesita un estante para dos filas de su producto más profundo.
+def alinear_frentes(fondos: Sequence[float], requeridos: Sequence[float]) -> list[float]:
+    """Alinea también el zócalo sin perder las tandas que necesitan más fondo."""
+    frente = max(f + r for f, r in zip(fondos, requeridos))
+    return [frente - fondo for fondo in fondos]
 
-    En una rampa va del canto de abajo de adelante de la fila de adelante hasta la cabeza de la
-    fila de atrás, que está echada hacia el fondo.
+
+def fondo_del_estante(
+    envases: Sequence[Envase], inclinacion: float = 0.0, filas: Sequence[int] | None = None
+) -> float:
+    """La profundidad útil que necesita un estante para su tanda más honda.
+
+    `filas` dice cuántas filas tiene la tanda de cada envase; sin ella, todas tienen dos. En una
+    rampa va del canto de abajo de adelante de la fila de adelante hasta la cabeza de la última
+    fila, que está echada hacia el fondo.
     """
     if not envases:
         raise ValueError("un estante sin productos no tiene fondo")
-    if inclinacion == 0.0:
-        return 2 * MARGEN + 2 * max(e.fondo for e in envases) + AIRE
     coseno = math.cos(inclinacion)
     seno = math.sin(inclinacion)
     return 2 * MARGEN + max(
-        (e.fondo + AIRE) / coseno + e.fondo * coseno + e.alto * seno for e in envases
+        (n - 1) * (e.fondo + AIRE) / coseno + e.fondo * coseno + e.alto * seno
+        for e, n in zip(envases, filas or [2] * len(envases))
     )
 
 
@@ -108,49 +124,21 @@ def columnas_que_entran(envase: Envase, largo: float) -> int:
     return max(0, math.floor((largo + AIRE) / paso(envase) + 1e-9))
 
 
-def repartir(largo: float, envases: Sequence[Envase], minimos: Sequence[int]) -> list[int]:
+def repartir(largo: float, envases: Sequence[Envase]) -> list[int]:
     """Cuántas columnas lleva cada tanda de un estante, de izquierda a derecha.
 
-    Cada tanda arranca con su mínimo, y el estante se llena de punta a punta agregando una
-    columna por vez a la tanda **más angosta** que todavía entre: así las tandas de un mismo
-    estante terminan de anchos parecidos, y no una enorme al lado de una de dos unidades.
+    El estante se parte en tantas partes iguales como tandas lleva, y cada tanda llena la suya:
+    dos tandas ocupan una mitad cada una, y sus largos difieren en menos de una unidad de la más
+    ancha. Una tanda sola ocupa el estante de punta a punta.
 
     Lo que no alcanza ni para una columna más queda como sobrante, y lo reparte `centros()`.
-    Si los mínimos no entran, es un error del reparto y no algo que se acomode en silencio.
+    Una tanda que no entra en su parte es un error del reparto y no algo que se acomode en
+    silencio.
     """
-    if len(envases) != len(minimos):
-        raise ValueError("un mínimo por tanda")
-    cuentas = list(minimos)
-    if _ocupado(envases, cuentas) > largo + 1e-9:
-        raise ValueError(
-            f"los mínimos ocupan {_ocupado(envases, cuentas):.3f} m y el estante mide {largo:.3f}"
-        )
-    while True:
-        candidatas = [
-            i
-            for i in range(len(envases))
-            if _ocupado(envases, [c + (j == i) for j, c in enumerate(cuentas)]) <= largo + 1e-9
-        ]
-        if not candidatas:
-            return cuentas
-        angosta = min(candidatas, key=lambda i: (cuentas[i] * paso(envases[i]), i))
-        cuentas[angosta] += 1
-
-
-def rebajar(largo: float, envases: Sequence[Envase], pedidos: Sequence[int]) -> list[int]:
-    """Los mínimos que de verdad entran: se le saca una columna por vez a la tanda más ancha.
-
-    Es lo que pasa cuando un producto pide más fila de adelante de la que el estante da: un
-    paquete de treinta centímetros no llena ocho columnas en una cabecera de un metro setenta.
-    Ninguna tanda baja de una columna; si ni así entran, el reparto está mal y es un error.
-    """
-    cuentas = list(pedidos)
-    while _ocupado(envases, cuentas) > largo + 1e-9:
-        bajables = [i for i, c in enumerate(cuentas) if c > 1]
-        if not bajables:
-            raise ValueError(f"ni una columna de cada tanda entra en {largo:.3f} m")
-        ancha = max(bajables, key=lambda i: (cuentas[i] * paso(envases[i]), -i))
-        cuentas[ancha] -= 1
+    parte = (largo - (len(envases) - 1) * AIRE) / len(envases)
+    cuentas = [columnas_que_entran(envase, parte) for envase in envases]
+    if 0 in cuentas:
+        raise ValueError(f"una tanda no entra en su parte del estante, de {parte:.3f} m")
     return cuentas
 
 
@@ -173,9 +161,11 @@ def centros(largo: float, envases: Sequence[Envase], cuentas: Sequence[int]) -> 
     return salida
 
 
-def tanda(envase: Envase, centros_u: Sequence[float], inclinacion: float = 0.0) -> list[Lugar]:
+def tanda(
+    envase: Envase, centros_u: Sequence[float], inclinacion: float = 0.0, filas: int = 2
+) -> list[Lugar]:
     """Las unidades de una tanda: la fila de atrás entera y después la de adelante, cada una de
-    izquierda a derecha.
+    izquierda a derecha. Una tanda de una sola fila es toda de adelante.
 
     **El orden es el del dibujo.** El juego corta las copias de un bloque por el final para
     mostrar sólo lo repuesto, así que lo que va último es lo que el jugador llena: la fila de
@@ -187,7 +177,7 @@ def tanda(envase: Envase, centros_u: Sequence[float], inclinacion: float = 0.0) 
     coseno = math.cos(inclinacion)
     adelante = MARGEN + envase.fondo / 2 * coseno
     atras = adelante + envase.fondo / coseno + AIRE / coseno
-    lugares = [Lugar("atras", j, u, atras) for j, u in enumerate(centros_u)]
+    lugares = [Lugar("atras", j, u, atras) for j, u in enumerate(centros_u)] if filas == 2 else []
     lugares += [Lugar("adelante", j, u, adelante) for j, u in enumerate(centros_u)]
     return lugares
 
@@ -219,15 +209,19 @@ def franja_libre(muestras: Sequence[tuple[float, float]], alto: float) -> tuple[
 
 
 def fondo_nuevo(
-    adelante: float, envases: Sequence[Envase], atras: float, inclinacion: float = 0.0
+    adelante: float,
+    envases: Sequence[Envase],
+    atras: float,
+    inclinacion: float = 0.0,
+    filas: Sequence[int] | None = None,
 ) -> float:
-    """La profundidad a la que se achica un estante: sus dos filas, más lo que el mueble tapa.
+    """La profundidad a la que se achica un estante: su tanda más honda, más lo que el mueble tapa.
 
     `adelante` es lo que el labio le quita al frente y `atras` lo que la tapa del panel le quita
     al fondo: ahí no entra el producto de alto, y achicar la chapa sin contarlo lo metería
     debajo de la tapa.
     """
-    return adelante + fondo_del_estante(envases, inclinacion) + atras
+    return adelante + fondo_del_estante(envases, inclinacion, filas) + atras
 
 
 def alto_en_la_rampa(envase: Envase, inclinacion: float) -> float:
@@ -496,3 +490,26 @@ def apagar_las_unidades(texto: str, rutas: Sequence[str]) -> str:
         raise ValueError("la escena no tiene unidades apagadas: no se sabe dónde van las nuevas")
     salida.insert(lugar, "".join(_unidad_apagada(r) for r in sorted(set(rutas))))
     return "".join(salida).rstrip("\n") + "\n"
+
+
+def actualizar_contorno(
+    texto: str, recurso: str, padre: str, centro: Vector, tamano: Vector
+) -> str:
+    """Actualiza sólo la caja del jugador: las demás colisiones no cambian con la góndola."""
+    tamano_escrito = ", ".join(numero_de_escena(n) for n in tamano)
+    patron = (
+        rf'(\[sub_resource type="BoxShape3D" id="{re.escape(recurso)}"\]\n)'
+        r'size = Vector3\([^\n]*\)'
+    )
+    texto, formas = re.subn(patron, lambda m: m[1] + f"size = Vector3({tamano_escrito})", texto)
+    identidad: Matriz = ((1, 0, 0), (0, 1, 0), (0, 0, 1))
+    patron = (
+        rf'(\[node name="Forma" type="CollisionShape3D" '
+        rf'parent="{re.escape(padre)}/Contorno"\]\n)transform = Transform3D\([^\n]*\)'
+    )
+    texto, centros = re.subn(
+        patron, lambda m: m[1] + "transform = " + transform_de_escena(identidad, centro), texto
+    )
+    if formas != 1 or centros != 1:
+        raise ValueError(f"no se encontró el contorno único de {padre}: {formas}, {centros}")
+    return texto

@@ -1,4 +1,4 @@
-## Un producto, un lugar: cada producto se repone en una sola tanda de dos filas, al alcance de
+## Un producto, un lugar: cada producto se repone en una tanda de una o dos filas, al alcance de
 ## quien está parado en el pasillo, y lo que se repite en otro estante es fijo.
 ##
 ## La forma de cada tanda sale del recurso y la prueba `disposicion_de_la_gondola_test.gd`. Acá
@@ -60,9 +60,12 @@ func _caja_de_la_copia(almacen: Node3D, producto: Producto, indice: int) -> AABB
 ## El centro de una fila del bloque principal, en el mundo.
 func _centro_de_la_fila(almacen: Node3D, producto: Producto, adelante: bool) -> Vector3:
 	var fila := _disposicion(almacen).filas_de_adelante[producto.id]
+	var total := DisposicionDeLaGondola.copias(_disposicion(almacen).principales[producto.id])
 	var centro := Vector3.ZERO
 	for columna in fila:
-		var caja := _caja_de_la_copia(almacen, producto, columna + (fila if adelante else 0))
+		var caja := _caja_de_la_copia(
+			almacen, producto, columna + (total - fila if adelante else 0)
+		)
 		centro += caja.get_center() / fila
 	return centro
 
@@ -347,6 +350,7 @@ func test_las_dos_filas_dan_al_pasillo() -> void:  # AC-STK-030
 	for producto in Catalogo.todos():
 		var frente := _frente(almacen, producto)
 		var fila := disposicion.filas_de_adelante[producto.id]
+		var total := DisposicionDeLaGondola.copias(disposicion.principales[producto.id])
 		(
 			assert_int(_cupo(almacen, producto))
 			. override_failure_message(
@@ -356,17 +360,18 @@ func test_las_dos_filas_dan_al_pasillo() -> void:  # AC-STK-030
 		)
 		for columna in fila:
 			var atras := _caja_de_la_copia(almacen, producto, columna).get_center()
-			var delante := _caja_de_la_copia(almacen, producto, fila + columna)
-			(
-				assert_dict(_golpe(almacen, atras, delante.get_center()))
-				. override_failure_message(
-					(
-						"%s: el mueble separa sus dos filas en la columna %d"
-						% [producto.nombre, columna]
+			var delante := _caja_de_la_copia(almacen, producto, total - fila + columna)
+			if total > fila:
+				(
+					assert_dict(_golpe(almacen, atras, delante.get_center()))
+					. override_failure_message(
+						(
+							"%s: el mueble separa sus dos filas en la columna %d"
+							% [producto.nombre, columna]
+						)
 					)
+					. is_empty()
 				)
-				. is_empty()
-			)
 			var pie := _lugar_en_el_pasillo(almacen, delante.get_center(), frente)
 			if not pie.is_finite():
 				fail("%s: no hay dónde pararse frente a su columna %d" % [producto.nombre, columna])
@@ -399,23 +404,24 @@ func test_la_fila_de_atras_se_ve_entera_desde_que_abre() -> void:  # AC-STK-031
 		var copias := (
 			(presentacion.get_node("ProductosDe" + nombre) as MultiMeshInstance3D).multimesh
 		)
-		var guias := copias.instance_count - 2 * fila
+		var principales := DisposicionDeLaGondola.copias(disposicion.principales[producto.id])
+		var guias := copias.instance_count - principales
 		(
 			assert_int(copias.visible_instance_count - guias)
 			. override_failure_message(
 				"%s: al abrir no se ven su fila de atrás y su fila menos lo que falta" % nombre
 			)
-			. is_equal(fila + fila - falta)
+			. is_equal(principales - falta)
 		)
 		var antes := copias.buffer
 		for indice in falta:
 			presentacion.retirar(producto.id)
 			presentacion.pedir_colocar(producto.id)
-		assert_int(copias.visible_instance_count - guias).is_equal(2 * fila)
+		assert_int(copias.visible_instance_count - guias).is_equal(principales)
 		(
-			assert_array(Array(copias.buffer.slice(0, (guias + fila) * 12)))
+			assert_array(Array(copias.buffer.slice(0, (guias + principales - fila) * 12)))
 			. override_failure_message("%s: reponer movió la fila de atrás" % nombre)
-			. is_equal(Array(antes.slice(0, (guias + fila) * 12)))
+			. is_equal(Array(antes.slice(0, (guias + principales - fila) * 12)))
 		)
 
 
@@ -443,7 +449,9 @@ func test_la_jornada_1_abre_con_lo_que_dice_la_ficha() -> void:  # AC-STK-034 AC
 		)
 		if estante.unidades_en_gondola(producto) < estante.cupo(producto):
 			faltan.append(nombre)
-	assert_array(faltan).contains_exactly(["Actroncito", "Coracola"])
+	assert_array(faltan).contains_exactly(
+		["Actroncito", "Laysntt", "Prongles", "Coracola", "Marolini"]
+	)
 	assert_int(estante.unidades_en_gondola(Catalogo.de(Producto.Id.CORACOLA))).is_zero()
 	assert_bool(estante.completada()).is_false()
 
@@ -463,6 +471,68 @@ func _clic_real(jugador: Node3D) -> void:
 	clic.action = ReglasDeLosObjetos.ACCION_AGARRAR
 	clic.pressed = true
 	jugador.call("_unhandled_input", clic)
+
+
+func test_se_enfoca_y_agarra_una_unidad_de_cada_producto_desde_el_pasillo() -> void:  # AC-STK-050
+	var almacen := _almacen()
+	var completos: Dictionary[Producto.Id, int] = {}
+	AperturaConLugar.abrir_con_faltantes(almacen, completos)
+	await get_tree().physics_frame
+	await get_tree().physics_frame
+	var jugador: Node3D = almacen.get("_jugador")
+	var presentacion: Node3D = almacen.get("_reposicion_manual")
+	var agarre: Agarre = almacen.get("_agarre")
+	var estante := (almacen.get("_repositor") as Repositor).estante()
+	for producto in Catalogo.todos():
+		var zona: Node3D = presentacion.casillero(producto.id, 0)
+		assert_bool(estante.casilleros_ocupados(producto).has(0)).is_true()
+		assert_object(agarre.manos().sostenido()).is_null()
+		var pie := _lugar_en_el_pasillo(almacen, zona.global_position, _frente(almacen, producto))
+		assert_bool(pie.is_finite()).override_failure_message(producto.nombre).is_true()
+		if not pie.is_finite():
+			continue
+		await _mirar_foco(
+			jugador, pie + Vector3.UP * ReglasDelJugador.ALTURA_DE_LA_CAMARA, zona.global_position
+		)
+		assert_object(jugador.get("_enfocado")).override_failure_message(producto.nombre).is_same(
+			zona
+		)
+		_clic_real(jugador)
+		(
+			assert_object(agarre.manos().sostenido())
+			. override_failure_message(producto.nombre)
+			. is_not_null()
+		)
+		assert_bool(estante.casilleros_ocupados(producto).has(0)).is_false()
+		presentacion.pedir_colocar(producto.id, 0)
+		assert_object(agarre.manos().sostenido()).is_null()
+
+
+func test_una_tanda_de_una_fila_no_deja_unidades_detras_al_vaciarla() -> void:  # AC-STK-031
+	var almacen := _almacen()
+	var completos: Dictionary[Producto.Id, int] = {}
+	AperturaConLugar.abrir_con_faltantes(almacen, completos)
+	var presentacion: Node3D = almacen.get("_reposicion_manual")
+	var agarre: Agarre = almacen.get("_agarre")
+	for id: Producto.Id in [
+		Producto.Id.ACTRONCITO,
+		Producto.Id.COSA_DE_MANI,
+		Producto.Id.PRONGLES,
+		Producto.Id.FLINPUF,
+		Producto.Id.BURBALOO,
+	]:
+		var producto := Catalogo.de(id)
+		for indice in _cupo(almacen, producto):
+			presentacion.agarrar_de_la_gondola(id, indice)
+			agarre.vaciar_las_manos()
+		var dibujo := presentacion.get_node("ProductosDe" + producto.nombre) as MultiMeshInstance3D
+		var principales := DisposicionDeLaGondola.copias(_disposicion(almacen).principales[id])
+		var fijas := dibujo.multimesh.instance_count - principales
+		(
+			assert_int(dibujo.multimesh.visible_instance_count - fijas)
+			. override_failure_message(producto.nombre)
+			. is_zero()
+		)
 
 
 ## La copia de un `MultiMesh`, leída del `buffer`: el renderizador de las corridas sin pantalla

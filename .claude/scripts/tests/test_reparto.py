@@ -2,8 +2,8 @@
 al `.blend`.
 
 El reparto se itera con el usuario mirando capturas, y cada vuelta es una línea que se mueve de
-un estante a otro. Una regla rota ahí —un producto que se repone en dos lugares, un estante de
-lado con uno solo— no la ve ningún test del juego hasta después de acomodar, exportar y medir:
+un estante a otro. Una regla rota ahí —un producto que se repone en dos lugares, una tanda fija
+a la altura de la mano— no la ve ningún test del juego hasta después de acomodar, exportar y medir:
 acá se ve antes de correr nada.
 """
 
@@ -14,7 +14,7 @@ from collections import Counter
 from lib.reparto import (
     CABECERAS,
     DE_CABECERA,
-    DEL_ZOCALO,
+    DE_UNA_FILA,
     ESTANTES,
     FRIOS,
     HELADERAS,
@@ -35,6 +35,26 @@ NIVELES_DE_CABECERA = 3
 
 #: Cuántas bandejas tiene cada heladera. Medido sobre el mismo `.blend`.
 BANDEJAS_DE_HELADERA = 4
+
+#: Las caras de lado del local: las dos de cada góndola del medio y la única de las de pared.
+CARAS_DE_LADO = ("A.oeste", "A.este", "B.oeste", "B.este", "N.este", "S.este")
+
+
+def _es_de_reposicion(estante: str) -> bool:
+    """Si el estante está a la altura de la mano: en una cara de lado, los que no son ni el de
+    arriba ni el zócalo; en una cabecera, los que no son el de arriba."""
+    _, _, nivel = partes(estante)
+    if es_cabecera(estante):
+        return nivel < NIVELES_DE_CABECERA - 1
+    return 0 < nivel < NIVELES_DE_LADO - 1
+
+
+def _de_gondola() -> dict:
+    return {e: tandas for e, tandas in ESTANTES.items() if not es_heladera(e)}
+
+
+def _de_lado() -> dict:
+    return {e: tandas for e, tandas in _de_gondola().items() if not es_cabecera(e)}
 
 
 def _filas_del_catalogo() -> list[tuple[str, str]]:
@@ -69,11 +89,31 @@ class ElReparto(unittest.TestCase):
             productos = [t.producto for t in tandas]
             self.assertEqual(len(productos), len(set(productos)), estante)
 
-    def test_un_estante_de_lado_lleva_entre_dos_y_cuatro_productos(self):
-        for estante, tandas in ESTANTES.items():
-            if es_cabecera(estante) or es_heladera(estante):
-                continue
-            self.assertTrue(2 <= len(tandas) <= 4, f"{estante}: {len(tandas)}")
+    def test_se_repone_solo_a_la_altura_de_la_mano(self):  # AC-STK-028
+        for estante, tandas in _de_gondola().items():
+            for t in tandas:
+                self.assertEqual(
+                    not t.fija, _es_de_reposicion(estante), f"{t.producto} en {estante}"
+                )
+
+    def test_un_estante_de_lado_lleva_dos_tandas_o_una_sola_con_casilleros(self):  # AC-STK-051
+        for estante, tandas in _de_lado().items():
+            entero = len(tandas) == 1 and not tandas[0].fija
+            self.assertTrue(len(tandas) == 2 or entero, f"{estante}: {len(tandas)}")
+
+    def test_cada_cara_de_lado_tiene_un_solo_estante_entero(self):
+        # Los lugares a la altura de la mano son más que los productos: lo que sobra no se llena
+        # con tandas fijas, sino con un estante entero de un solo producto por cara.
+        enteros = [e for e, tandas in _de_lado().items() if len(tandas) == 1]
+        caras = sorted(".".join(e.split(".")[:2]) for e in enteros)
+        self.assertEqual(caras, sorted(CARAS_DE_LADO))
+
+    def test_ningun_producto_va_justo_encima_de_si_mismo(self):
+        for estante, tandas in _de_gondola().items():
+            mueble, cara, nivel = partes(estante)
+            arriba = ESTANTES.get(f"{mueble}.{cara}.{nivel + 1}", ())
+            repetidos = {t.producto for t in tandas} & {t.producto for t in arriba}
+            self.assertEqual(repetidos, set(), f"sobre {estante}")
 
     def test_una_cabecera_lleva_al_menos_uno(self):
         for estante, tandas in ESTANTES.items():
@@ -86,12 +126,15 @@ class ElReparto(unittest.TestCase):
                 if t.producto in DE_CABECERA:
                     self.assertTrue(es_cabecera(estante), f"{t.producto} en {estante}")
 
-    def test_lo_que_no_entra_en_dos_filas_arriba_va_en_el_zocalo(self):
+    def test_lo_de_una_fila_va_una_sola_vez_y_en_una_cara_de_lado(self):  # AC-STK-030
+        self.assertEqual(
+            set(DE_UNA_FILA),
+            {"ACTRONCITO", "COSA_DE_MANI", "PRONGLES", "FLINPUF", "BURBALOO"},
+        )
         for estante, tandas in ESTANTES.items():
-            _, _, nivel = partes(estante)
             for t in tandas:
-                if t.producto in DEL_ZOCALO:
-                    self.assertEqual(nivel, 0, f"{t.producto} en {estante}")
+                if t.producto in DE_UNA_FILA and not t.fija:
+                    self.assertTrue(estante in _de_lado(), f"{t.producto} en {estante}")
 
     def test_la_heladera_repone_lo_frio_una_sola_vez_y_repite_solo_lo_frio(self):
         en_heladera = [

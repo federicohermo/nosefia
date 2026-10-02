@@ -121,6 +121,9 @@ static func lugar_de_la_camara(caja: AABB, frente: Vector3) -> Vector3:
 ## adelante y de ahí hacia la de atrás. No sale del giro de la unidad, que depende de cómo está
 ## puesto cada envase.
 static func normal_del_estante(bloque: PackedFloat32Array, fila_de_adelante: int) -> Vector3:
+	# Las tandas de una fila del reparto van sobre estantes laterales planos.
+	if DisposicionDeLaGondola.copias(bloque) == fila_de_adelante:
+		return Vector3.UP
 	var primera := DisposicionDeLaGondola.copia(bloque, fila_de_adelante).origin
 	var a_lo_largo := DisposicionDeLaGondola.copia(bloque, fila_de_adelante + 1).origin - primera
 	var al_fondo := DisposicionDeLaGondola.copia(bloque, 0).origin - primera

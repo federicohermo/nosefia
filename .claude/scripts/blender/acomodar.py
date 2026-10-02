@@ -50,16 +50,17 @@ from lib.blender import COLECCION_DE_GUIA, es_un_array  # noqa: E402
 from lib.gondola import (  # noqa: E402
     Envase,
     alto_en_la_rampa,
+    alinear_frentes,
     centros,
     fondo_del_estante,
     fondo_nuevo,
     franja_libre,
-    rebajar,
     repartir,
     tanda,
 )
 from lib.reparto import (  # noqa: E402
     CABECERAS,
+    DE_UNA_FILA,
     ESTANTES,
     HELADERAS,
     MUEBLES,
@@ -371,8 +372,8 @@ def achicar_cabecera(estantes, deltas, islas):
 def parejos(letra, estantes, nuevos):
     """Los estantes de una cara de lado llegan todos al frente del más hondo de arriba del zócalo.
 
-    Las dos filas de cada producto siguen yendo al frente, y lo que sobra de fondo queda detrás,
-    contra el panel. El zócalo también llega si quedaba detrás; si asoma, sigue asomando.
+    Las filas de cada producto siguen yendo al frente, y lo que sobra queda detrás del producto.
+    El zócalo llega al mismo plano, tanto si estaba hundido como si sobresalía.
     """
     for cara in CARAS_QUE_SE_ANGOSTAN.get(letra, ()):
         de_la_cara = {c: e for c, e in estantes.items() if partes(c)[1] == cara}
@@ -381,10 +382,11 @@ def parejos(letra, estantes, nuevos):
         # El fondo de cada chapa, medido hacia el pasillo: achicada a `nuevo`, su frente queda ahí
         # más lo nuevo, porque en un estante plano `v` es lo contrario de hacia dónde mira.
         fondo = {c: e.punto(0, e.fondo).dot(e.mira) for c, e in de_la_cara.items()}
-        frente = max(fondo[c] + nuevos[c] for c in de_la_cara if partes(c)[2] > 0)
-        for c in de_la_cara:
-            if partes(c)[2] > 0 or fondo[c] + nuevos[c] < frente:
-                nuevos[c] = frente - fondo[c]
+        claves = list(de_la_cara)
+        alineados = alinear_frentes(
+            [fondo[c] for c in claves], [nuevos[c] for c in claves],
+        )
+        nuevos.update(zip(claves, alineados))
 
 
 def angostar(letra, estantes, islas, objeto):
@@ -589,7 +591,14 @@ def acomodar_mueble(letra, envases, resumen):
             alto = max(alto_en_la_rampa(e, inclinacion) for e in de_estas) - ROCE_DE_ARRIBA
             desde, hasta = franja_del_estante(estante, arbol, alto)
             atras = estante.fondo - hasta
-            nuevos[clave] = fondo_nuevo(desde, de_estas, atras, inclinacion) + PASO_DEL_TANTEO
+            filas = [1 if t.producto in DE_UNA_FILA else 2 for t in ESTANTES[clave]]
+            nuevos[clave] = (
+                fondo_nuevo(desde, de_estas, atras, inclinacion, filas) + PASO_DEL_TANTEO
+            )
+        if letra in ("A", "B"):
+            for clave, estante in propios.items():
+                if partes(clave)[1] not in CABECERAS and partes(clave)[2] > 0:
+                    nuevos[clave] = max(nuevos[clave], estante.fondo)
         parejos(letra, propios, nuevos)
         for clave, estante in propios.items():
             deltas[clave] = achicar(estante, nuevos[clave])
@@ -598,7 +607,8 @@ def acomodar_mueble(letra, envases, resumen):
             de_la_cara = [e for c, e in propios.items() if partes(c)[1] == cara]
             if de_la_cara:
                 achicar_cabecera(de_la_cara, deltas, islas)
-        resumen["entradas"].update(angostar(letra, estantes, islas, objeto))
+        if letra not in ("A", "B"):
+            resumen["entradas"].update(angostar(letra, estantes, islas, objeto))
         bm.transform(objeto.matrix_world.inverted())
         bm.to_mesh(objeto.data)
         objeto.data.update()
@@ -612,7 +622,8 @@ def acomodar_mueble(letra, envases, resumen):
         inclinacion = inclinacion_de(estante)
         alto = max(alto_en_la_rampa(e, inclinacion) for e in de_estas) - ROCE_DE_ARRIBA
         desde_v, hasta_v = franja_del_estante(estante, arbol, alto)
-        hace_falta = fondo_del_estante(de_estas, inclinacion)
+        filas = [1 if t.producto in DE_UNA_FILA else 2 for t in reparto]
+        hace_falta = fondo_del_estante(de_estas, inclinacion, filas)
         if hasta_v - desde_v < hace_falta - PASO_DEL_TANTEO:
             resumen["choques"].append(
                 f"{clave}: hay {hasta_v - desde_v:.3f} m de fondo libre para "
@@ -622,17 +633,16 @@ def acomodar_mueble(letra, envases, resumen):
         izquierda, derecha = tramo_util(estante, arbol, desde_v, hasta_v)
         largo = derecha - izquierda
         pedidos = [1 if t.fija else FILA_DE_ADELANTE_PEDIDA for t in reparto]
-        minimos = rebajar(largo, de_estas, pedidos)
-        for t, pedido, minimo in zip(reparto, pedidos, minimos):
-            if minimo < pedido:
-                resumen["cortas"].append(f"{producto(t.producto).nombre} en {clave}: {minimo}")
-        cuentas = repartir(largo, de_estas, minimos)
+        cuentas = repartir(largo, de_estas)
+        for t, pedido, cuenta in zip(reparto, pedidos, cuentas):
+            if cuenta < pedido:
+                resumen["cortas"].append(f"{producto(t.producto).nombre} en {clave}: {cuenta}")
         for indice, (t, envase, us) in enumerate(
             zip(reparto, de_estas, centros(largo, de_estas, cuentas))
         ):
             p = producto(t.producto)
             unidad = bpy.data.objects[p.objeto]
-            lugares = tanda(envase, [izquierda + u for u in us], inclinacion)
+            lugares = tanda(envase, [izquierda + u for u in us], inclinacion, filas[indice])
             resumen["tandas"] += 1
             for orden, lugar in enumerate(lugares):
                 matriz = matriz_de(p, unidad, estante, lugar.u, desde_v + lugar.v)
@@ -655,12 +665,43 @@ def acomodar_mueble(letra, envases, resumen):
     bm.free()
 
 
+def igualar_muebles_del_medio():
+    """Conserva el contorno mayor para que cuatro bolsas entren también en la cabecera de A.
+
+    Cambia sólo la malla del mueble: escalar el objeto deformaría las unidades hijas.
+    """
+    objetos = [bpy.data.objects[MUEBLES[letra]] for letra in ("A", "B")]
+    medidas = []
+    for objeto in objetos:
+        xs = [(objeto.matrix_world @ vert.co).x for vert in objeto.data.vertices]
+        medidas.append((min(xs), max(xs)))
+    ancho = max(hasta - desde for desde, hasta in medidas)
+    for objeto, (desde, hasta) in zip(objetos, medidas):
+        centro = (desde + hasta) / 2
+        factor = ancho / (hasta - desde)
+        inversa = objeto.matrix_world.inverted()
+        for vert in objeto.data.vertices:
+            mundo = objeto.matrix_world @ vert.co
+            mundo.x = centro + (mundo.x - centro) * factor
+            vert.co = inversa @ mundo
+        objeto.data.update()
+    bpy.context.view_layer.update()
+
+
 def principal():
     if hasattr(sys.stdout, "reconfigure"):
         sys.stdout.reconfigure(encoding="utf-8", errors="replace")
     limpiar_guia()
     preparar_unidades()
+    igualar_muebles_del_medio()
     envases = {p.clave: envase_de(p, bpy.data.objects[p.objeto]) for p in PRODUCTOS}
+    resumen = {"tandas": 0, "unidades": 0, "choques": [], "cortas": [], "entradas": {}}
+    for letra in sorted({partes(clave)[0] for clave in ESTANTES}):
+        acomodar_mueble(letra, envases, resumen)
+    # Sacar el saliente del zócalo cambia el contorno medido de B. Se iguala después de esa
+    # corrección y se vuelven a ubicar las unidades, manteniendo el tamaño de cada envase.
+    igualar_muebles_del_medio()
+    limpiar_guia()
     resumen = {"tandas": 0, "unidades": 0, "choques": [], "cortas": [], "entradas": {}}
     for letra in sorted({partes(clave)[0] for clave in ESTANTES}):
         acomodar_mueble(letra, envases, resumen)

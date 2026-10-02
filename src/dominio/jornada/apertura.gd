@@ -19,7 +19,14 @@ extends RefCounted
 ## Por ahora tiene una sola fila: las otras jornadas dicen «A definir» y arrancan como la primera
 ## (ver `faltantes_de_la_jornada()`).
 const FALTANTES_POR_JORNADA := {
-	ReglasDeLaPartida.PRIMERA_JORNADA: {Producto.Id.ACTRONCITO: 5, Producto.Id.CORACOLA: 6},
+	ReglasDeLaPartida.PRIMERA_JORNADA:
+	{
+		Producto.Id.ACTRONCITO: 5,
+		Producto.Id.CORACOLA: 6,
+		Producto.Id.MAROLINI: 2,
+		Producto.Id.PRONGLES: 8,
+		Producto.Id.LAYSNTT: 4,
+	},
 }
 
 

@@ -22,12 +22,48 @@ const SUBE_LA_RAMPA := 0.01
 ## artista las echaba entre 9 y 15 grados, y la chapa baja 11.
 const ECHADA := 0.1
 
-## Hasta qué altura va el zócalo, que puede asomar, en metros.
+## Hasta qué altura va el zócalo, en metros.
 const ALTO_DEL_ZOCALO := 0.5
 
 ## Lo que puede quedar entre el frente de la fila de adelante y lo más afuera del mueble a esa
 ## altura, en metros: el margen detrás del labio y el portaprecio, que asoma 4,7 cm.
 const HASTA_EL_LATERAL := 0.08
+
+
+func test_ningun_estante_inferior_sobresale_de_los_superiores() -> void:  # AC-STK-051
+	var estructura: Node3D = auto_free(ESTRUCTURA.instantiate())
+	for nombre: String in GONDOLAS:
+		var mueble := estructura.get_node(nombre) as MeshInstance3D
+		var caras := mueble.mesh.get_faces()
+		var lados: Array[Vector3] = [Vector3.RIGHT]
+		if nombre in ["gondolanueva", "gondolanueva2"]:
+			lados.append(Vector3.LEFT)
+		for lado in lados:
+			var abajo := -INF
+			var arriba := -INF
+			for inicio in range(0, caras.size(), 3):
+				var a := mueble.transform * caras[inicio]
+				var b := mueble.transform * caras[inicio + 1]
+				var c := mueble.transform * caras[inicio + 2]
+				var normal := (b - a).cross(c - a).normalized()
+				var altura := (a.y + b.y + c.y) / 3.0
+				if absf(normal.dot(Vector3.UP)) < 0.999 or altura < 0.1 or altura > 2.0:
+					continue
+				var frente := maxf(a.dot(lado), maxf(b.dot(lado), c.dot(lado)))
+				if altura < ALTO_DEL_ZOCALO:
+					abajo = maxf(abajo, frente)
+				else:
+					arriba = maxf(arriba, frente)
+			(
+				assert_bool(is_finite(abajo) and is_finite(arriba))
+				. override_failure_message(nombre)
+				. is_true()
+			)
+			(
+				assert_float(abajo - arriba)
+				. override_failure_message("%s %s" % [nombre, lado])
+				. is_less_equal(0.005)
+			)
 
 
 ## Cada bloque de la disposición, con lo que hace falta para ubicar sus copias en el mundo: la
@@ -52,9 +88,18 @@ func _bloques() -> Array[Dictionary]:
 	for indice in DISPOSICION.guias.size():
 		var bloque := DISPOSICION.guias[indice]
 		var modelo := guia.get_child(indice) as MeshInstance3D
-		# Las guías tienen las dos filas del mismo largo, como toda tanda.
+		var filas := 0
+		for producto in Catalogo.todos():
+			var principal := contenido.get_child(producto.id) as MeshInstance3D
+			if principal.mesh.resource_path == modelo.mesh.resource_path:
+				@warning_ignore("integer_division")
+				filas = (
+					DisposicionDeLaGondola.copias(DISPOSICION.principales[producto.id])
+					/ DISPOSICION.filas_de_adelante[producto.id]
+				)
+		assert_bool(filas in [1, 2]).override_failure_message(modelo.name).is_true()
 		@warning_ignore("integer_division")
-		var fila := DisposicionDeLaGondola.copias(bloque) / 2
+		var fila := DisposicionDeLaGondola.copias(bloque) / filas
 		bloques.append({"nombre": modelo.name, "bloque": bloque, "fila": fila, "modelo": modelo})
 	return bloques
 
@@ -68,6 +113,8 @@ static func _copia_en_el_mundo(datos: Dictionary, indice: int) -> Transform3D:
 ## Cuánto sube la fila de atrás sobre la de adelante.
 static func _sube_hacia_el_fondo(bloque: PackedFloat32Array, fila: int) -> float:
 	var total := DisposicionDeLaGondola.copias(bloque)
+	if total == fila:
+		return 0.0
 	var atras := 0.0
 	var adelante := 0.0
 	for indice in total:
@@ -121,7 +168,7 @@ func test_en_la_rampa_de_una_cabecera_cada_unidad_se_echa_hacia_atras() -> void:
 
 ## Cada cara de lado se angosta hasta sus estantes: ninguno de arriba del zócalo queda hundido
 ## entre los laterales. Entre el frente de la fila de adelante de cada estante y lo más afuera del
-## mueble a esa altura no queda más que el margen y el portaprecio. El zócalo puede asomar.
+## mueble a esa altura no queda más que el margen y el portaprecio.
 func test_ningun_estante_de_arriba_queda_detras_del_lateral() -> void:
 	var estructura: Node3D = auto_free(ESTRUCTURA.instantiate())
 	var gondolas: Array[MeshInstance3D] = []

@@ -65,6 +65,18 @@ func test_la_camara_mira_el_frente_y_ve_el_envase_entero() -> void:
 		assert_float(asin(radio / desde.length())).is_less(mitad_del_campo)
 
 
+func test_una_fila_lateral_plana_no_se_endereza() -> void:  # AC-STK-030
+	var bloque := PackedFloat32Array(
+		[1, 0, 0, 0, 0, 1, 0, 1, 0, 0, 1, 0, 1, 0, 0, 0, 0, 1, 0, 1, 0, 0, 1, 1]
+	)
+	var normal: Vector3 = GenerarMiniaturas.normal_del_estante(bloque, 2)
+	assert_vector(normal).is_equal(Vector3.UP)
+	(
+		assert_float(GenerarMiniaturas.enderezar(normal).get_rotation_quaternion().get_angle())
+		. is_equal(0.0)
+	)
+
+
 ## Lo que se exhibe en una rampa sale derecho, y lo que está en un estante plano no se gira.
 ##
 ## En la rampa la unidad va echada hacia atrás, y la miniatura la endereza: se mira el envase como

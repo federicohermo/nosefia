@@ -40,6 +40,8 @@ func test_el_campo_y_el_clic_usan_los_cuerpos_de_los_muebles() -> void:
 	assert_bool(computadora.get("pantalla").visible).is_true()
 	computadora.call("cerrar")
 	var caja: Node3D = almacen.get("_cajas_de_productos")[0]
+	var repositor: Repositor = almacen.get("_repositor")
+	var antes := repositor.estante().unidades_en_gondola(Catalogo.todos()[0])
 	almacen.get("_reposicion_manual").call("retirar", caja.producto)
 	var agarre: Agarre = almacen.get("_agarre")
 	assert_object(agarre.manos().sostenido()).is_instanceof(UnidadDeProducto)
@@ -57,8 +59,7 @@ func test_el_campo_y_el_clic_usan_los_cuerpos_de_los_muebles() -> void:
 	assert_array(avisos).contains([estante])
 	_clic()
 	assert_object(agarre.manos().sostenido()).is_null()
-	var repositor: Repositor = almacen.get("_repositor")
-	assert_int(repositor.estante().unidades_en_gondola(Catalogo.todos()[0])).is_equal(1)
+	assert_int(repositor.estante().unidades_en_gondola(Catalogo.todos()[0])).is_equal(antes + 1)
 
 
 func test_la_pared_del_modelo_tapa_un_objeto_dentro_del_alcance() -> void:

@@ -2,250 +2,212 @@
 
 [ext_resource type="ArrayMesh" path="res://assets/models/producto_jorgillo.res" id="malla0"]
 [ext_resource type="ArrayMesh" path="res://assets/models/producto_petisas.res" id="malla1"]
-[ext_resource type="ArrayMesh" path="res://assets/models/producto_marolini.res" id="malla2"]
-[ext_resource type="ArrayMesh" path="res://assets/models/producto_oremos.res" id="malla3"]
-[ext_resource type="ArrayMesh" path="res://assets/models/producto_burbaloo.res" id="malla4"]
-[ext_resource type="ArrayMesh" path="res://assets/models/producto_chisitos.res" id="malla5"]
+[ext_resource type="ArrayMesh" path="res://assets/models/producto_saladik.res" id="malla2"]
+[ext_resource type="ArrayMesh" path="res://assets/models/producto_burbaloo.res" id="malla3"]
+[ext_resource type="ArrayMesh" path="res://assets/models/producto_chisitos.res" id="malla4"]
+[ext_resource type="ArrayMesh" path="res://assets/models/producto_marolini.res" id="malla5"]
 [ext_resource type="ArrayMesh" path="res://assets/models/producto_uakas.res" id="malla6"]
-[ext_resource type="ArrayMesh" path="res://assets/models/producto_pepitos.res" id="malla7"]
-[ext_resource type="ArrayMesh" path="res://assets/models/producto_feel_ricky_fort.res" id="malla8"]
-[ext_resource type="ArrayMesh" path="res://assets/models/producto_zucarachas.res" id="malla9"]
+[ext_resource type="ArrayMesh" path="res://assets/models/producto_oremos.res" id="malla7"]
+[ext_resource type="ArrayMesh" path="res://assets/models/producto_pepitos.res" id="malla8"]
+[ext_resource type="ArrayMesh" path="res://assets/models/producto_durextra.res" id="malla9"]
 [ext_resource type="ArrayMesh" path="res://assets/models/producto_donsaturados.res" id="malla10"]
-[ext_resource type="ArrayMesh" path="res://assets/models/producto_cindolor.res" id="malla11"]
-[ext_resource type="ArrayMesh" path="res://assets/models/producto_saladik.res" id="malla12"]
-[ext_resource type="ArrayMesh" path="res://assets/models/producto_macumbas.res" id="malla13"]
-[ext_resource type="ArrayMesh" path="res://assets/models/producto_prongles.res" id="malla14"]
-[ext_resource type="ArrayMesh" path="res://assets/models/producto_malbardo.res" id="malla15"]
-[ext_resource type="ArrayMesh" path="res://assets/models/producto_marranos.res" id="malla16"]
-[ext_resource type="ArrayMesh" path="res://assets/models/producto_frotlups.res" id="malla17"]
-[ext_resource type="ArrayMesh" path="res://assets/models/producto_flinpuf.res" id="malla18"]
-[ext_resource type="ArrayMesh" path="res://assets/models/producto_laysntt.res" id="malla19"]
-[ext_resource type="ArrayMesh" path="res://assets/models/producto_oaaaa.res" id="malla20"]
-[ext_resource type="ArrayMesh" path="res://assets/models/producto_coracola.res" id="malla21"]
-[ext_resource type="ArrayMesh" path="res://assets/models/producto_fernet_god.res" id="malla22"]
-[ext_resource type="ArrayMesh" path="res://assets/models/producto_amargadito.res" id="malla23"]
-[ext_resource type="ArrayMesh" path="res://assets/models/producto_arvejas.res" id="malla24"]
+[ext_resource type="ArrayMesh" path="res://assets/models/producto_frotlups.res" id="malla11"]
+[ext_resource type="ArrayMesh" path="res://assets/models/producto_malbardo.res" id="malla12"]
+[ext_resource type="ArrayMesh" path="res://assets/models/producto_cindolor.res" id="malla13"]
+[ext_resource type="ArrayMesh" path="res://assets/models/producto_marranos.res" id="malla14"]
+[ext_resource type="ArrayMesh" path="res://assets/models/producto_zucarachas.res" id="malla15"]
+[ext_resource type="ArrayMesh" path="res://assets/models/producto_duronga.res" id="malla16"]
+[ext_resource type="ArrayMesh" path="res://assets/models/producto_oaaaa.res" id="malla17"]
+[ext_resource type="ArrayMesh" path="res://assets/models/producto_coracola.res" id="malla18"]
+[ext_resource type="ArrayMesh" path="res://assets/models/producto_fernet_god.res" id="malla19"]
+[ext_resource type="ArrayMesh" path="res://assets/models/producto_amargadito.res" id="malla20"]
+[ext_resource type="ArrayMesh" path="res://assets/models/producto_arvejas.res" id="malla21"]
+[ext_resource type="ArrayMesh" path="res://assets/models/producto_flinpuf.res" id="malla22"]
 
 [node name="Guia" type="Node3D"]
 
 [node name="Guia00" type="MeshInstance3D" parent="."]
-transform = Transform3D(0, -0.055572, 0, 0.089471, 0, 0, 0, 0, 0.146099, 1.940782, 0.393405, 0.294508)
+transform = Transform3D(0, 0, -0.146099, 0.087839, 0.010566, 0, 0.017012, -0.054558, 0, 2.187473, 0.393405, 0.14641)
 visible = false
 mesh = ExtResource("malla0")
 gi_mode = 2
 
 [node name="Guia01" type="MeshInstance3D" parent="."]
-transform = Transform3D(-1, 0, 0, 0, 1, 0, 0, 0, -1, 2.004372, 0.456232, -1.474081)
+transform = Transform3D(-1, 0, 0, 0, 1, 0, 0, 0, -1, 2.251063, 0.456232, -1.325982)
 visible = false
 mesh = ExtResource("malla1")
 gi_mode = 2
 
 [node name="Guia02" type="MeshInstance3D" parent="."]
-transform = Transform3D(-0.057178, 0, 0, 0, 0.222479, 0, 0, 0, -0.154469, 1.935962, 1.014621, -2.221803)
+transform = Transform3D(-0.057178, 0, 0, 0, 0.222479, 0, 0, 0, -0.154469, 2.182652, 2.206827, 0.155897)
 visible = false
 mesh = ExtResource("malla2")
 gi_mode = 2
 
 [node name="Guia03" type="MeshInstance3D" parent="."]
-transform = Transform3D(-0.166939, 0, 0, 0, 0.078542, 0, 0, 0, -0.152174, 1.85276, 1.349934, -2.208033)
+transform = Transform3D(0.133501, 0, 0, 0, 0.133501, 0, 0, 0, 0.133501, 2.224687, 2.016044, -1.387828)
 visible = false
 mesh = ExtResource("malla3")
 gi_mode = 2
 
 [node name="Guia04" type="MeshInstance3D" parent="."]
-transform = Transform3D(0.133501, 0, 0, 0, 0.133501, 0, 0, 0, 0.133501, 1.706993, 2.016044, -2.26374)
+transform = Transform3D(0, 0, 0.108243, 0.039893, 0.205988, 0, -0.205988, 0.039893, 0, 2.146739, 2.048958, -3.437902)
 visible = false
 mesh = ExtResource("malla4")
 gi_mode = 2
 
 [node name="Guia05" type="MeshInstance3D" parent="."]
-transform = Transform3D(0, 0, 0.108243, 0.039893, 0.205988, 0, -0.205988, 0.039893, 0, 1.852731, 2.048958, -3.437902)
+transform = Transform3D(-0.057178, 0, 0, 0, 0.222479, 0, 0, 0, -0.154469, 0.980128, 0.526414, -2.691211)
 visible = false
 mesh = ExtResource("malla5")
 gi_mode = 2
 
 [node name="Guia06" type="MeshInstance3D" parent="."]
-transform = Transform3D(-0.057178, 0, 0, 0, 0.222479, 0, 0, 0, -0.154469, 1.226819, 0.526414, -2.847681)
-visible = false
-mesh = ExtResource("malla2")
-gi_mode = 2
-
-[node name="Guia07" type="MeshInstance3D" parent="."]
-transform = Transform3D(-0.057178, 0, 0, 0, 0.222479, 0, 0, 0, -0.154469, 1.226819, 0.526414, -0.970048)
+transform = Transform3D(-0.057178, 0, 0, 0, 0.222479, 0, 0, 0, -0.154469, 0.980128, 0.526414, -1.126517)
 visible = false
 mesh = ExtResource("malla6")
 gi_mode = 2
 
-[node name="Guia08" type="MeshInstance3D" parent="."]
-transform = Transform3D(0.166939, 0, 0, 0, 0.078542, 0, 0, 0, 0.152174, 1.31002, 0.870683, -0.35794)
+[node name="Guia07" type="MeshInstance3D" parent="."]
+transform = Transform3D(-0.166939, 0, 0, 0, 0.078542, 0, 0, 0, -0.152174, 1.063329, 1.961084, -2.670556)
 visible = false
 mesh = ExtResource("malla7")
 gi_mode = 2
 
-[node name="Guia09" type="MeshInstance3D" parent="."]
-transform = Transform3D(0.240969, 0, 0, 0, 0.113371, 0, 0, 0, 0.219657, 1.422985, 1.486568, -0.219148)
+[node name="Guia08" type="MeshInstance3D" parent="."]
+transform = Transform3D(0.166939, 0, 0, 0, 0.078542, 0, 0, 0, 0.152174, 1.063329, 2.062889, -1.128812)
 visible = false
 mesh = ExtResource("malla8")
 gi_mode = 2
 
-[node name="Guia10" type="MeshInstance3D" parent="."]
-transform = Transform3D(0.052131, 0, 0, 0, 0.202839, 0, 0, 0, 0.140833, 1.211676, 2.14982, -0.568823)
+[node name="Guia09" type="MeshInstance3D" parent="."]
+transform = Transform3D(0.117388, 0, 0, 0, 0.113423, 0.028995, 0, -0.021966, 0.149714, 0.984452, 2.126217, 0.926919)
 visible = false
 mesh = ExtResource("malla9")
 gi_mode = 2
 
-[node name="Guia11" type="MeshInstance3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.386656, 0.480663, 0.314013)
+[node name="Guia10" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.307878, 0.480663, 0.162013)
 visible = false
 mesh = ExtResource("malla10")
 gi_mode = 2
 
-[node name="Guia12" type="MeshInstance3D" parent="."]
-transform = Transform3D(-1, 0, 0, 0, 1, 0, 0, 0, -1, -2.386656, 0.456232, -1.497487)
+[node name="Guia11" type="MeshInstance3D" parent="."]
+transform = Transform3D(-1, 0, 0, 0, 1, 0, 0, 0, -1, -2.307878, 0.456232, -1.345487)
 visible = false
 mesh = ExtResource("malla1")
 gi_mode = 2
 
-[node name="Guia13" type="MeshInstance3D" parent="."]
-transform = Transform3D(-1, 0, 0, 0, 1, 0, 0, 0, -1, -2.478525, 0.953969, -2.834584)
+[node name="Guia12" type="MeshInstance3D" parent="."]
+transform = Transform3D(0.052131, 0, 0, 0, 0.202839, 0, 0, 0, 0.140833, -2.361145, 2.14982, 0.213524)
 visible = false
 mesh = ExtResource("malla11")
 gi_mode = 2
 
-[node name="Guia14" type="MeshInstance3D" parent="."]
-transform = Transform3D(-0.057178, 0, 0, 0, 0.222479, 0, 0, 0, -0.154469, -2.455066, 1.595676, -2.221803)
+[node name="Guia13" type="MeshInstance3D" parent="."]
+transform = Transform3D(-0.057178, 0, 0, 0, 0.222479, 0, 0, 0, -0.154469, -2.376288, 2.206827, -1.514106)
 visible = false
-mesh = ExtResource("malla6")
+mesh = ExtResource("malla2")
 gi_mode = 2
 
-[node name="Guia15" type="MeshInstance3D" parent="."]
-transform = Transform3D(-0.057178, 0, 0, 0, 0.222479, 0, 0, 0, -0.154469, -2.455066, 2.206827, -1.897587)
+[node name="Guia14" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0.981758, 0.190135, 0, -0.190135, 0.981758, -2.302921, 2.110059, -3.343394)
 visible = false
 mesh = ExtResource("malla12")
 gi_mode = 2
 
-[node name="Guia16" type="MeshInstance3D" parent="."]
-transform = Transform3D(0, 0, 1, -0.190135, 0.981758, 0, -0.981758, -0.190135, 0, -2.437647, 0.93354, -3.450484)
+[node name="Guia15" type="MeshInstance3D" parent="."]
+transform = Transform3D(0, 0, 1, -0.190135, 0.981758, 0, -0.981758, -0.190135, 0, -3.588548, 0.465762, -2.87501)
 visible = false
 mesh = ExtResource("malla13")
 gi_mode = 2
 
-[node name="Guia17" type="MeshInstance3D" parent="."]
-transform = Transform3D(0, 0, 1, -0.190135, 0.981758, 0, -0.981758, -0.190135, 0, -2.411428, 1.58016, -3.505105)
+[node name="Guia16" type="MeshInstance3D" parent="."]
+transform = Transform3D(0.092079, 0, 0.080359, 0, 0.122213, 0, -0.080359, 0, 0.092079, -3.417746, 0.330605, -1.181328)
 visible = false
 mesh = ExtResource("malla14")
 gi_mode = 2
 
-[node name="Guia18" type="MeshInstance3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 0.981758, 0.190135, 0, -0.190135, 0.981758, -2.372024, 2.110059, -3.343394)
+[node name="Guia17" type="MeshInstance3D" parent="."]
+transform = Transform3D(0.052131, 0, 0, 0, 0.202839, 0, 0, 0, 0.140833, -3.62715, 2.14982, -2.779498)
 visible = false
 mesh = ExtResource("malla15")
 gi_mode = 2
 
+[node name="Guia18" type="MeshInstance3D" parent="."]
+transform = Transform3D(-0.057178, 0, 0, 0, 0.222479, 0, 0, 0, -0.154469, -3.612007, 2.206827, -1.051867)
+visible = false
+mesh = ExtResource("malla2")
+gi_mode = 2
+
 [node name="Guia19" type="MeshInstance3D" parent="."]
-transform = Transform3D(0.092079, 0, 0.080359, 0, 0.122213, 0, -0.080359, 0, 0.092079, -3.506858, 0.330605, -0.3968)
+transform = Transform3D(-0.117388, 0, 0, 0, 0.113423, 0.028995, 0, 0.021966, -0.149714, -3.591085, 2.126227, 0.926868)
 visible = false
 mesh = ExtResource("malla16")
 gi_mode = 2
 
 [node name="Guia20" type="MeshInstance3D" parent="."]
-transform = Transform3D(0.166939, 0, 0, 0, 0.078542, 0, 0, 0, 0.152174, -3.450027, 0.870683, -0.375335)
-visible = false
-mesh = ExtResource("malla7")
-gi_mode = 2
-
-[node name="Guia21" type="MeshInstance3D" parent="."]
-transform = Transform3D(0.052131, 0, 0, 0, 0.202839, 0, 0, 0, 0.140833, -3.548372, 1.53867, -0.526693)
+transform = Transform3D(-1, 0, 0, 0, 1, 0, 0, 0, -1, -6.675983, 0.824899, 3.670938)
 visible = false
 mesh = ExtResource("malla17")
 gi_mode = 2
 
-[node name="Guia22" type="MeshInstance3D" parent="."]
-transform = Transform3D(-1, 0, 0, 0, 1, 0, 0, 0, -1, -3.237901, 2.136571, -2.854803)
+[node name="Guia21" type="MeshInstance3D" parent="."]
+transform = Transform3D(-1.431817, 0, 0.358987, 0, 1.476134, 0, -0.358988, 0, -1.431816, -6.745664, 0.75171, 5.109334)
 visible = false
 mesh = ExtResource("malla18")
 gi_mode = 2
 
-[node name="Guia23" type="MeshInstance3D" parent="."]
-transform = Transform3D(-0.057178, 0, 0, 0, 0.222479, 0, 0, 0, -0.154469, -3.533229, 2.206827, -1.274084)
-visible = false
-mesh = ExtResource("malla12")
-gi_mode = 2
-
-[node name="Guia24" type="MeshInstance3D" parent="."]
-transform = Transform3D(0, 0, 0.111841, 0.041219, 0.212836, 0, -0.212836, 0.041219, 0, -3.4262, 0.928967, 0.876718)
+[node name="Guia22" type="MeshInstance3D" parent="."]
+transform = Transform3D(-0.110498, 0, -0.03494, 0, 0.115891, 0, 0.03494, 0, -0.110498, -6.860471, 2.102042, 5.035346)
 visible = false
 mesh = ExtResource("malla19")
 gi_mode = 2
 
-[node name="Guia25" type="MeshInstance3D" parent="."]
-transform = Transform3D(-1, 0, 0, 0, 1, 0, 0, 0, -1, -6.675983, 0.824899, 3.670938)
-visible = false
-mesh = ExtResource("malla20")
-gi_mode = 2
-
-[node name="Guia26" type="MeshInstance3D" parent="."]
-transform = Transform3D(-1.431817, 0, 0.358987, 0, 1.476134, 0, -0.358988, 0, -1.431816, -6.745664, 0.75171, 5.109334)
-visible = false
-mesh = ExtResource("malla21")
-gi_mode = 2
-
-[node name="Guia27" type="MeshInstance3D" parent="."]
-transform = Transform3D(-0.110498, 0, -0.03494, 0, 0.115891, 0, 0.03494, 0, -0.110498, -6.860471, 2.102042, 5.035346)
-visible = false
-mesh = ExtResource("malla22")
-gi_mode = 2
-
-[node name="Guia28" type="MeshInstance3D" parent="."]
-transform = Transform3D(0.092079, 0, 0.080359, 0, 0.122213, 0, -0.080359, 0, 0.092079, -7.079854, 0.354214, -3.56197)
-visible = false
-mesh = ExtResource("malla16")
-gi_mode = 2
-
-[node name="Guia29" type="MeshInstance3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.817183, 0.974185, -3.93684)
-visible = false
-mesh = ExtResource("malla10")
-gi_mode = 2
-
-[node name="Guia30" type="MeshInstance3D" parent="."]
-transform = Transform3D(-1, 0, 0, 0, 1, 0, 0, 0, -1, -6.909052, 1.542629, -1.663746)
-visible = false
-mesh = ExtResource("malla11")
-gi_mode = 2
-
-[node name="Guia31" type="MeshInstance3D" parent="."]
-transform = Transform3D(0, -0.055572, 0, 0.089471, 0, 0, 0, 0, 0.146099, -6.880773, 1.470272, -3.381595)
+[node name="Guia23" type="MeshInstance3D" parent="."]
+transform = Transform3D(0, 0, -0.146099, 0.087839, 0.010566, 0, 0.017012, -0.054558, 0, -7.015045, 0.417014, -1.816921)
 visible = false
 mesh = ExtResource("malla0")
 gi_mode = 2
 
-[node name="Guia32" type="MeshInstance3D" parent="."]
-transform = Transform3D(-1, 0, 0, 0, 1, 0, 0, 0, -1, -6.923314, 2.227732, -4.28884)
+[node name="Guia24" type="MeshInstance3D" parent="."]
+transform = Transform3D(0.092079, 0, 0.080359, 0, 0.122213, 0, -0.080359, 0, 0.092079, -7.214126, 0.354214, -3.273744)
 visible = false
-mesh = ExtResource("malla23")
+mesh = ExtResource("malla14")
 gi_mode = 2
 
-[node name="Guia33" type="MeshInstance3D" parent="."]
-transform = Transform3D(-1, 0, 0, 0, 1, 0, 0, 0, -1, -7.12313, 0.479768, 0.00156)
+[node name="Guia25" type="MeshInstance3D" parent="."]
+transform = Transform3D(0, 0, 1, -0.190135, 0.981758, 0, -0.981758, -0.190135, 0, -7.043324, 2.155111, -1.79034)
 visible = false
-mesh = ExtResource("malla18")
+mesh = ExtResource("malla13")
 gi_mode = 2
 
-[node name="Guia34" type="MeshInstance3D" parent="."]
-transform = Transform3D(-0.032862, 0, 1.856241, 0, 1.856531, 0, -1.856241, 0, -0.032862, -7.180806, 0.871572, 0.197197)
+[node name="Guia26" type="MeshInstance3D" parent="."]
+transform = Transform3D(-1, 0, 0, 0, 1, 0, 0, 0, -1, -7.057586, 2.227732, -3.48709)
 visible = false
-mesh = ExtResource("malla24")
+mesh = ExtResource("malla20")
 gi_mode = 2
 
-[node name="Guia35" type="MeshInstance3D" parent="."]
-transform = Transform3D(-1, 0, 0, 0, 1, 0, 0, 0, -1, -7.05807, 1.615251, 0.29216)
+[node name="Guia27" type="MeshInstance3D" parent="."]
+transform = Transform3D(-0.032862, 0, 1.856241, 0, 1.856531, 0, -1.856241, 0, -0.032862, -7.180806, 0.401659, 2.093002)
 visible = false
-mesh = ExtResource("malla23")
+mesh = ExtResource("malla21")
 gi_mode = 2
 
-[node name="Guia36" type="MeshInstance3D" parent="."]
-transform = Transform3D(-1, 0, 0, 0, 1, 0, 0, 0, -1, -7.043808, 2.155111, 0.21091)
+[node name="Guia28" type="MeshInstance3D" parent="."]
+transform = Transform3D(-1, 0, 0, 0, 1, 0, 0, 0, -1, -7.000435, 0.479768, 0.464469)
 visible = false
-mesh = ExtResource("malla11")
+mesh = ExtResource("malla22")
+gi_mode = 2
+
+[node name="Guia29" type="MeshInstance3D" parent="."]
+transform = Transform3D(-1, 0, 0, 0, 1, 0, 0, 0, -1, -7.000435, 2.145507, 2.10141)
+visible = false
+mesh = ExtResource("malla22")
+gi_mode = 2
+
+[node name="Guia30" type="MeshInstance3D" parent="."]
+transform = Transform3D(0, 0, 1, -0.190135, 0.981758, 0, -0.981758, -0.190135, 0, -7.043808, 2.155111, 0.55641)
+visible = false
+mesh = ExtResource("malla13")
 gi_mode = 2

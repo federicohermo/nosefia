@@ -151,17 +151,30 @@ func test_un_faltante_de_una_caja_entera_se_repone_con_esa_caja() -> void:  # AC
 	assert_bool(estante.completada()).is_true()
 
 
-## La ficha: en la jornada 1 faltan 5 Actroncito y 6 Coracola, y nada más.
-func test_la_primera_jornada_hace_faltar_5_actroncito_y_6_coracola() -> void:  # AC-STK-034
+## La tabla de la ficha deja cinco productos por reponer, y los demás completos.
+func test_la_primera_jornada_abre_con_los_cinco_faltantes_de_la_ficha() -> void:  # AC-STK-034
 	var faltantes := Apertura.faltantes_de_la_jornada(ReglasDeLaPartida.PRIMERA_JORNADA)
-	assert_dict(faltantes).is_equal({Producto.Id.ACTRONCITO: 5, Producto.Id.CORACOLA: 6})
+	(
+		assert_dict(faltantes)
+		. is_equal(
+			{
+				Producto.Id.ACTRONCITO: 5,
+				Producto.Id.CORACOLA: 6,
+				Producto.Id.MAROLINI: 2,
+				Producto.Id.PRONGLES: 8,
+				Producto.Id.LAYSNTT: 4,
+			}
+		)
+	)
 	var inventario := Apertura.inventario_de_la_jornada(
 		ReglasDeLaPartida.PRIMERA_JORNADA, _casilleros()
 	)
 	var nombres: Array[String] = []
 	for producto in inventario.faltantes():
 		nombres.append(producto.nombre)
-	assert_array(nombres).contains_exactly(["Actroncito", "Coracola"])
+	assert_array(nombres).contains_exactly(
+		["Actroncito", "Laysntt", "Prongles", "Coracola", "Marolini"]
+	)
 	for producto in Catalogo.todos():
 		(
 			assert_int(inventario.unidades(producto, Inventario.Ubicacion.GONDOLA))
@@ -188,8 +201,17 @@ func test_los_faltantes_de_una_jornada_se_devuelven_en_una_copia() -> void:
 	var recibidos := Apertura.faltantes_de_la_jornada(ReglasDeLaPartida.PRIMERA_JORNADA)
 	recibidos[Producto.Id.MALBARDO] = 3
 	recibidos.erase(Producto.Id.ACTRONCITO)
-	assert_dict(Apertura.faltantes_de_la_jornada(ReglasDeLaPartida.PRIMERA_JORNADA)).is_equal(
-		{Producto.Id.ACTRONCITO: 5, Producto.Id.CORACOLA: 6}
+	(
+		assert_dict(Apertura.faltantes_de_la_jornada(ReglasDeLaPartida.PRIMERA_JORNADA))
+		. is_equal(
+			{
+				Producto.Id.ACTRONCITO: 5,
+				Producto.Id.CORACOLA: 6,
+				Producto.Id.MAROLINI: 2,
+				Producto.Id.PRONGLES: 8,
+				Producto.Id.LAYSNTT: 4,
+			}
+		)
 	)
 
 
