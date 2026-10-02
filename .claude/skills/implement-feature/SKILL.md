@@ -228,6 +228,11 @@ se corrige el código.
   artista**, en todo lo que el issue no pide cambiar. En el #262, el acomodador apoyaba cada
   unidad de plano sobre la chapa, y en las rampas de las cabeceras las echó hacia adelante: el
   artista las tenía hacia atrás. Lo vio el usuario, no un test.
+- **Una previsualización también valida antes de renderizar.** Si el acomodador detecta un
+  choque o pierde una tanda, el script aborta y no publica la captura. En el #282, al quitar
+  el saliente inferior, una previsualización siguió después del error y mostró el estante de
+  N vacío. Se corrigió midiendo el fondo necesario de todos los niveles y verificando que
+  conservara cada tanda. Una captura de un reparto inválido no sirve para pedir aprobación.
 - **Lo que genera un recurso commiteado va al repo con él**, con su test. Un recurso sin su
   generador sólo se puede editar a mano, y el cambio siguiente lo escribe de nuevo desde cero. La
   disposición de la góndola, sus dos escenas y sus 71 mallas salían de un acomodador que vivió en
