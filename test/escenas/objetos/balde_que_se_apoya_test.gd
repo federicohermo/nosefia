@@ -244,6 +244,7 @@ func test_el_balde_en_la_mano_va_inclinado_hacia_la_vista() -> void:  # AC-PLY-0
 		await _dos_segundos_de_fisica()
 		_comprobar_derecho(balde, "soltado mirando %.0f°" % alto)
 	_agarrar(almacen, balde)
+	assert_object(agarre.manos().sostenido()).is_same(balde.datos)
 	_comprobar_inclinado_en_la_mano(jugador, balde, "vuelto a agarrar")
 
 
@@ -517,5 +518,6 @@ func test_vaciar_las_manos_deja_el_balde_derecho_a_los_pies() -> void:
 	await _parar(jugador, PISO_LIBRE, Vector3.FORWARD, MIRANDO_AL_PISO)
 	_agarrar(almacen, balde)
 	agarre.vaciar_las_manos()
+	assert_object(agarre.manos().sostenido()).is_null()
 	_comprobar_al_lado(almacen, balde, "al vaciar las manos")
 	await _comprobar_que_se_queda(balde, "al vaciar las manos")
