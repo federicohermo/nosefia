@@ -156,7 +156,10 @@ func test_una_caja_chica_soltada_hacia_una_bandeja_no_queda_adentro_de_la_gondol
 		[Vector3(0.05, 0.11, -2.49), Vector3(1.25, 1.7, -2.49)],
 		[Vector3(0.05, 0.11, -1.89), Vector3(1.25, 1.0, -1.89)],
 		# Frente a una cabecera, mirando su base, que es hueca: así se perdió la caja de Malbardo.
-		[Vector3(1.45, 0.11, 2.28), Vector3(1.45, 0.15, 1.3)],
+		[
+			Vector3(mueble.get_center().x, 0.11, mueble.end.z + 1.0),
+			Vector3(mueble.get_center().x, mueble.position.y + 0.15, mueble.end.z - 0.1),
+		],
 	]:
 		if caja.get_parent() != mano:
 			_accion(jugador, caja)
