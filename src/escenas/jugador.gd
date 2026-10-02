@@ -414,13 +414,15 @@ func _medir_candidato(cuerpo: Node3D) -> CampoDeInteraccion.Candidato:
 		if golpe.get("collider") != cuerpo:
 			continue
 		var impacto: Vector3 = golpe.position
-		return CampoDeInteraccion.Candidato.new(
+		var candidato := CampoDeInteraccion.Candidato.new(
 			cuerpo.get_instance_id(),
 			ojo.distance_to(impacto),
 			adelante.angle_to(impacto - ojo),
 			true,
 			true
 		)
+		candidato.es_producto = "casillero" in cuerpo or _datos_de(cuerpo) is UnidadDeProducto
+		return candidato
 	return CampoDeInteraccion.Candidato.new(cuerpo.get_instance_id(), INF, INF, true, false)
 
 
