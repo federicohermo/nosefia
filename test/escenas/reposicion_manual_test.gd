@@ -350,7 +350,8 @@ func test_el_frente_se_conserva_al_examinar_y_volver_a_agarrar() -> void:
 	# exhibe, medida del `.blend` con el eje del frente de cada producto —el de su etiqueta— y
 	# no con las filas de su tanda, que es de donde el puesto saca el giro. Está acá para que la
 	# mano tenga contra qué medirse. Lo que se afirma es que **la mano lo gira hasta la cámara**,
-	# sea cual sea esa cara. Medido el 2026-09-29 sobre el reparto de un lugar por producto.
+	# sea cual sea esa cara. Medido el 2026-10-02 sobre el reparto aprobado, con el eje de la
+	# etiqueta y la matriz del producto en Blender, sin inferirlo de las filas.
 	#
 	# Los doce estuvieron mal hasta el 2026-09-19: los de +X figuraban en -X y los de +Z en -Z,
 	# o sea 180° girados. Con el giro de la mano también al revés, las dos mitades se cancelaban
@@ -362,8 +363,8 @@ func test_el_frente_se_conserva_al_examinar_y_volver_a_agarrar() -> void:
 		Vector3.LEFT,  # Zucarachas
 		Vector3.FORWARD,  # Laysntt
 		Vector3.BACK,  # Malbardo
-		Vector3.BACK,  # Prongles
-		Vector3.LEFT,  # Jorgillo
+		Vector3.LEFT,  # Prongles
+		Vector3.FORWARD,  # Jorgillo
 		Vector3.RIGHT,  # Arvejas
 		Vector3.FORWARD,  # Chisitos
 		Vector3.LEFT,  # Oremos
@@ -374,13 +375,13 @@ func test_el_frente_se_conserva_al_examinar_y_volver_a_agarrar() -> void:
 		Vector3.LEFT,  # Frotlups
 		Vector3.RIGHT,  # Marolini
 		Vector3.RIGHT,  # Amargadito
-		Vector3.RIGHT,  # Cindolor
+		Vector3.BACK,  # Cindolor
 		Vector3.RIGHT,  # Flinpuf
 		Vector3.LEFT,  # Donsaturados
 		Vector3.RIGHT,  # Petisas
 		Vector3.BACK,  # Macumbas
 		Vector3.RIGHT,  # Cosa de Maní
-		Vector3.BACK,  # Duronga
+		Vector3.FORWARD,  # Duronga
 		Vector3.RIGHT,  # Fernet God
 		Vector3.RIGHT,  # Mayonchis
 		Vector3.RIGHT,  # Oaaaa
@@ -427,6 +428,7 @@ func test_actroncito_durextra_y_oremos_se_reponen_con_foco_y_clic_reales() -> vo
 	# abajo en caja grande. Es el reparto que el depósito tiene desde que hay dos tamaños, y lo
 	# que el caso ejerce es que ninguna de las dos alturas deje la caja fuera del alcance.
 	for id: Producto.Id in [Producto.Id.ACTRONCITO, Producto.Id.DUREXTRA, Producto.Id.OREMOS]:
+		var antes: int = almacen.get("_repositor").estante().unidades_en_gondola(Catalogo.de(id))
 		var caja: Node3D = almacen.get("_cajas_de_productos")[id]
 		var vista: MeshInstance3D = caja.get_node("Malla")
 		var centro := vista.global_transform * vista.mesh.get_aabb().get_center()
@@ -463,7 +465,7 @@ func test_actroncito_durextra_y_oremos_se_reponen_con_foco_y_clic_reales() -> vo
 		assert_object(almacen.get("_agarre").manos().sostenido()).is_null()
 		(
 			assert_int(almacen.get("_repositor").estante().unidades_en_gondola(Catalogo.de(id)))
-			. is_equal(1)
+			. is_equal(antes + 1)
 		)
 
 
@@ -576,6 +578,7 @@ func test_el_clic_saca_una_unidad_visible_y_el_estante_la_recibe() -> void:
 	var caja: Node3D = almacen.get("_cajas_de_productos")[0]
 	var estante: Node3D = almacen.get("_estante")
 	var repositor: Repositor = almacen.get("_repositor")
+	var antes := repositor.estante().unidades_en_gondola(Catalogo.todos()[0])
 	_sacar_de_la_caja(jugador, caja)
 	assert_object(agarre.manos().sostenido()).is_not_null()
 	var punto := jugador.get_node_or_null("Giro/Camara/PuntoDeProducto")
@@ -602,9 +605,9 @@ func test_el_clic_saca_una_unidad_visible_y_el_estante_la_recibe() -> void:
 		"ProductosDeActroncito"
 	)
 	assert_int(grupo.multimesh.visible_instance_count).is_equal(
-		_guia(almacen, Catalogo.todos()[0]) + 1
+		_guia(almacen, Catalogo.todos()[0]) + antes + 1
 	)
-	assert_int(repositor.estante().unidades_en_gondola(Catalogo.todos()[0])).is_equal(1)
+	assert_int(repositor.estante().unidades_en_gondola(Catalogo.todos()[0])).is_equal(antes + 1)
 
 
 func test_con_el_estante_lleno_la_caja_entrega_y_la_gondola_la_rechaza() -> void:  # AC-STK-017
