@@ -1,9 +1,4 @@
-## La cáscara del jugador: traduce el motor al dominio y de vuelta, y no decide nada.
-##
-## La prueba de que salió bien es que no hay un solo `if` sobre una regla del juego: el clamp
-## del pitch, la vuelta del yaw, la normalización de la diagonal y «cuándo cambió el objetivo»
-## viven todos en `src/dominio/` y tienen test. Acá quedan `Input`, `move_and_slide()`, el
-## campo espacial y las señales.
+## La cáscara del jugador: traduce el motor al dominio y de vuelta.
 extends CharacterBody3D
 
 ## Se llaman por lo que pasó y no por lo que hay que hacer. Son el punto donde se cuelga
@@ -779,7 +774,11 @@ func _dejar_al_lado(cuerpo: RigidBody3D) -> bool:
 	var limites := AABB()
 	for indice in formas.size():
 		var forma := formas[indice]
-		var suyos := forma.transform * forma.shape.get_debug_mesh().get_aabb()
+		var suyos := (
+			Transform3D(cuerpo.global_basis)
+			* forma.transform
+			* forma.shape.get_debug_mesh().get_aabb()
+		)
 		limites = suyos if indice == 0 else limites.merge(suyos)
 	var capsula := _forma_del_cuerpo.shape as CapsuleShape3D
 	var ancho := Vector2(limites.size.x, limites.size.z).length() / 2.0
