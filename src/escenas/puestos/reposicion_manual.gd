@@ -6,7 +6,7 @@ const GrupoDelPiso := preload("res://src/escenas/objetos/grupo_del_piso.gd")
 const CajaDelDeposito := preload("res://src/escenas/objetos/caja_de_productos.gd")
 const JugadorDelLocal := preload("res://src/escenas/jugador.gd")
 const OBJETO := preload("res://src/escenas/objetos/objeto_agarrable.tscn")
-const CONTORNO := preload("res://src/sistemas/marco/contorno.gdshader")
+const CONTORNO := preload("res://src/sistemas/marco/aristas_del_foco.gdshader")
 const SIN_SUPERFICIE := preload("res://src/escenas/puestos/casillero_sin_superficie.gdshader")
 
 ## Cuántas veces se parte al medio la búsqueda del borde de un apoyo.
@@ -59,9 +59,6 @@ var _unidades: Array[Node3D] = []
 var _casilleros: Array[Array] = []
 ## Lo que la mira enfoca, según el jugador. El casillero enfocado es el único que se dibuja.
 var _enfocado: Node3D = null
-## La unidad puesta que la mira enfoca con la mano vacía. La dibuja su casillero, con el contorno
-## encima, y la góndola no: la unidad se dibuja una sola vez.
-var _resaltado: ZonaDeReposicion = null
 ## Los casilleros con papel que la mira podría elegir ahora: los únicos que se le ofrecen.
 var _cerca_de_la_mira: Dictionary[ZonaDeReposicion, bool] = {}
 ## El centro y el radio de la esfera que envuelve cada fila de adelante, en el orden de
@@ -765,7 +762,6 @@ func _actualizar_zonas(_nodo: Node3D = null) -> void:
 			elif para_agarrar.has(zona.casillero):
 				zona.papel = ZonaDeReposicion.Papel.AGARRAR
 			_pintar(zona)
-	_resaltar()
 
 
 ## Le ofrece a la mira sólo los casilleros con papel que podría elegir: los que caen, aunque sea
@@ -830,32 +826,12 @@ func _al_enfocar(objetivo: Node3D, _distancia: float) -> void:
 	_enfocado = objetivo
 	_repintar(antes)
 	_repintar(objetivo)
-	_resaltar()
 
 
 func _al_perder_el_foco() -> void:
 	var antes := _enfocado
 	_enfocado = null
 	_repintar(antes)
-	_resaltar()
-
-
-## Resalta la unidad puesta que la mira enfoca con la mano vacía, y le devuelve a la góndola la
-## que dejó de estar enfocada.
-func _resaltar() -> void:
-	var nuevo: ZonaDeReposicion = null
-	if is_instance_valid(_enfocado):
-		var zona := _enfocado as ZonaDeReposicion
-		if zona != null and zona.papel == ZonaDeReposicion.Papel.AGARRAR:
-			nuevo = zona
-	if nuevo == _resaltado:
-		return
-	var antes := _resaltado
-	_resaltado = nuevo
-	if antes != null:
-		_mostrar_lo_puesto(antes.producto)
-	if nuevo != null:
-		_mostrar_lo_puesto(nuevo.producto)
 
 
 func _repintar(nodo: Node3D) -> void:
@@ -951,7 +927,7 @@ func _preparar_modelos() -> void:
 		var herramienta := SurfaceTool.new()
 		herramienta.append_from(grupo.mesh, 0, Transform3D(grupo.global_basis, Vector3.ZERO))
 		herramienta.set_material(grupo.mesh.surface_get_material(0))
-		_modelos.append(herramienta.commit())
+		_modelos.append(AristasDelProducto.preparar(herramienta.commit()))
 	for modelo in _modelos:
 		# **El casco sale de `create_convex_shape` y no de `get_faces()`.** Los vértices crudos
 		# vienen repetidos —tres por cada esquina de una caja—, y con esa nube el solver arma un
@@ -992,11 +968,10 @@ func _preparar_los_casilleros() -> void:
 	var contorno := ShaderMaterial.new()
 	contorno.shader = CONTORNO
 	contorno.set_shader_parameter("color", IndicacionDelFoco.COLOR)
-	contorno.set_shader_parameter("grosor", IndicacionDelFoco.GROSOR)
+	contorno.set_shader_parameter("grosor", IndicacionDelFoco.GROSOR_DE_PRODUCTOS)
 	var sin_superficie := ShaderMaterial.new()
 	sin_superficie.shader = SIN_SUPERFICIE
-	# Antes que el contorno: se dibujan los dos con lo transparente, y entre dos materiales de la
-	# misma malla el motor no promete un orden.
+	# La superficie invisible fija la profundidad antes de dibujar las aristas.
 	sin_superficie.render_priority = -1
 	for producto in Catalogo.todos():
 		var modelo := _modelos[producto.id]
@@ -1024,6 +999,7 @@ func _preparar_los_casilleros() -> void:
 			var vista := MeshInstance3D.new()
 			vista.mesh = modelo
 			vista.gi_mode = GeometryInstance3D.GI_MODE_DYNAMIC
+			vista.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 			vista.position = -caja.get_center()
 			vista.material_override = sin_superficie
 			vista.material_overlay = contorno
@@ -1145,17 +1121,13 @@ func _primera_dibujada(id: Producto.Id) -> int:
 ## góndola que el inventario no tiene. `visible_instance_count` corta por el final, así que el
 ## dibujo se reordena: primero las guías y la fila de atrás, tal cual; después los casilleros
 ## ocupados, y al final los vacíos, que quedan fuera del corte. Cada copia lleva su lugar, así que
-## reordenarlas no mueve ninguna: la que se agarró del medio deja un hueco en el medio. La unidad
-## resaltada va con los vacíos: mientras la mira la enfoca, la dibuja su casillero.
+## reordenarlas no mueve ninguna: la que se agarró del medio deja un hueco en el medio.
 func _mostrar_lo_puesto(id: Producto.Id) -> void:
 	var producto := Catalogo.de(id)
 	var de_la_noche := repositor.estante()
 	var primera := _primera_dibujada(id)
 	var ocupados := de_la_noche.casilleros_ocupados(producto)
 	var afuera := de_la_noche.casilleros_vacios(producto)
-	if _resaltado != null and _resaltado.producto == id and ocupados.has(_resaltado.casillero):
-		ocupados.erase(_resaltado.casillero)
-		afuera.push_front(_resaltado.casillero)
 	var orden := ocupados + afuera
 	var bloque := _bloques[id]
 	var flotantes := DisposicionDeLaGondola.FLOTANTES_POR_COPIA

@@ -11,7 +11,7 @@ extends GdUnitTestSuite
 
 const ALMACEN := preload("res://src/escenas/almacen.tscn")
 const AperturaConLugar := preload("res://test/escenas/apertura_con_lugar.gd")
-const CONTORNO := preload("res://src/sistemas/marco/contorno.gdshader")
+const CONTORNO := preload("res://src/sistemas/marco/aristas_del_foco.gdshader")
 const SIN_SUPERFICIE := "res://src/escenas/puestos/casillero_sin_superficie.gdshader"
 
 ## Hasta dónde se busca, delante de un casillero, un lugar donde el jugador entre parado, en
@@ -134,7 +134,7 @@ func _lleva_el_contorno(vista: MeshInstance3D) -> bool:
 		encima != null
 		and encima.shader == CONTORNO
 		and encima.get_shader_parameter("color") == IndicacionDelFoco.COLOR
-		and is_equal_approx(encima.get_shader_parameter("grosor"), IndicacionDelFoco.GROSOR)
+		and encima.get_shader_parameter("grosor") > 0.0
 	)
 
 
@@ -265,7 +265,7 @@ func test_el_clic_coloca_en_el_casillero_apuntado_y_no_en_otro() -> void:  # AC-
 	# encima; sin el foco, la góndola.
 	var vista: MeshInstance3D = elegido.get("vista")
 	assert_bool(vista.visible).is_true()
-	assert_object(vista.material_override).is_null()
+	assert_bool(_sin_superficie(vista)).is_true()
 	assert_bool(_lleva_el_contorno(vista)).is_true()
 	almacen.get("_jugador").objetivo_perdido.emit()
 	assert_bool(vista.visible).is_false()
@@ -294,18 +294,17 @@ func test_con_las_manos_vacias_se_agarra_la_del_medio() -> void:  # AC-PLY-049 A
 	var dibujadas_antes := _dibujadas(almacen, actroncito)
 	await _mirar_foco(almacen, _ojo_para(almacen, elegido), elegido.global_position)
 	assert_object(almacen.get("_jugador").get("_enfocado")).is_same(elegido)
-	# Enfocada, la dibuja su casillero con su material y el contorno del foco encima, y la góndola
-	# no: la unidad no se dibuja dos veces en el mismo lugar. Ninguna otra cambia.
+	# El casillero agrega las aristas. La góndola conserva la superficie para no cambiar su luz.
 	var vista: MeshInstance3D = elegido.get("vista")
 	assert_bool(vista.visible).is_true()
-	assert_object(vista.material_override).is_null()
+	assert_bool(_sin_superficie(vista)).is_true()
 	assert_bool(_lleva_el_contorno(vista)).is_true()
 	for otro: Node3D in _casilleros(almacen, actroncito):
 		if otro != elegido:
 			assert_bool((otro.get("vista") as MeshInstance3D).visible).is_false()
 	var enfocada := _dibujadas(almacen, actroncito)
-	assert_int(enfocada.size()).is_equal(dibujadas_antes.size() - 1)
-	assert_bool(_contiene(enfocada, _lugar_de(elegido))).is_false()
+	assert_int(enfocada.size()).is_equal(dibujadas_antes.size())
+	assert_bool(_contiene(enfocada, _lugar_de(elegido))).is_true()
 	_clic_real(almacen)
 	var unidad := _agarre(almacen).manos().sostenido() as UnidadDeProducto
 	assert_object(unidad).is_not_null()

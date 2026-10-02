@@ -3,7 +3,7 @@ extends GdUnitTestSuite
 const ALMACEN := preload("res://src/escenas/almacen.tscn")
 const Jugador := preload("res://src/escenas/jugador.gd")
 const AperturaConLugar := preload("res://test/escenas/apertura_con_lugar.gd")
-const CONTORNO := preload("res://src/sistemas/marco/contorno.gdshader")
+const CONTORNO := preload("res://src/sistemas/marco/aristas_del_foco.gdshader")
 const SIN_SUPERFICIE := "res://src/escenas/puestos/casillero_sin_superficie.gdshader"
 
 
@@ -85,7 +85,9 @@ func test_el_casillero_apuntado_lleva_solo_el_contorno() -> void:  # AC-PLY-047
 		assert_object(contorno).is_not_null()
 		assert_object(contorno.shader).is_same(CONTORNO)
 		assert_bool(contorno.get_shader_parameter("color") == IndicacionDelFoco.COLOR).is_true()
-		assert_float(contorno.get_shader_parameter("grosor")).is_equal(IndicacionDelFoco.GROSOR)
+		assert_float(contorno.get_shader_parameter("grosor")).is_equal(
+			IndicacionDelFoco.GROSOR_DE_PRODUCTOS
+		)
 		var superficie := vista.material_override as ShaderMaterial
 		assert_object(superficie).is_not_null()
 		assert_str(superficie.shader.resource_path).is_equal(SIN_SUPERFICIE)
