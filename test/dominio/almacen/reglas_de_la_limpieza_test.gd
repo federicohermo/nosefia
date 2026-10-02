@@ -140,3 +140,9 @@ func test_cada_util_carga_con_el_id_de_su_constante_y_se_levanta() -> void:  # A
 			continue
 		assert_str(String(datos.id)).is_equal(String(utiles[archivo]))
 		assert_bool(datos.es_levantable()).is_true()
+
+
+func test_el_balde_se_lleva_inclinado_treinta_grados_hacia_la_vista() -> void:  # AC-PLY-050
+	# Positiva es la boca hacia la vista: al revés, el agua queda del lado de afuera y no se ve.
+	var inclinacion := rad_to_deg(ReglasDeLaLimpieza.INCLINACION_DEL_BALDE_EN_LA_MANO)
+	assert_float(inclinacion).is_equal_approx(30.0, 0.001)

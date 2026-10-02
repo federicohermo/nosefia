@@ -99,3 +99,13 @@ func test_solo_la_caja_del_deposito_admite_otro_objeto_encima() -> void:  # AC-P
 			. override_failure_message("%s admite otro encima" % objeto.id)
 			. is_equal(objeto.id == &"caja_de_reposicion")
 		)
+
+
+func test_solo_el_balde_se_apoya_derecho() -> void:  # AC-PLY-051
+	assert_bool(ObjetoDelAlmacen.new().se_apoya_derecho).is_false()
+	for objeto in _objetos_del_almacen():
+		(
+			assert_bool(objeto.se_apoya_derecho)
+			. override_failure_message("%s: se apoya derecho" % objeto.id)
+			. is_equal(objeto.id == ReglasDeLaLimpieza.ID_DEL_BALDE)
+		)
