@@ -239,7 +239,7 @@ func _empujar_lo_que_estorba() -> void:
 ## les escribiría la posición entera cada cuadro y el suavizado no tendría dónde entrar.
 func _acomodar_las_manos(delta: float) -> void:
 	_largo_de_carga = _acomodar(_brazo_de_carga, agarre.punto_de_carga, _largo_de_carga, delta)
-	_acomodar_la_mopa()
+	_acomodar_lo_largo()
 	_largo_de_producto = _acomodar(
 		_brazo_de_producto, agarre.punto_de_producto, _largo_de_producto, delta
 	)
@@ -254,12 +254,12 @@ func _acomodar(brazo: SpringArm3D, punto: Node3D, largo: float, delta: float) ->
 	return siguiente
 
 
-## La esfera del brazo protege la mano, pero no alcanza la cabeza de una mopa inclinada.
-## Se mide su forma real, incluida la posición transitoria de la animación de mojarla.
-func _acomodar_la_mopa() -> void:
+## La esfera del brazo protege la mano, pero no alcanza la punta de un útil largo, como la cabeza
+## de la mopa inclinada. Se mide su forma real, incluida la posición transitoria de mojarla.
+func _acomodar_lo_largo() -> void:
 	for nodo in agarre.punto_de_carga.get_children():
 		var datos := _datos_de(nodo)
-		if not nodo is RigidBody3D or datos == null or datos.id != ReglasDeLaLimpieza.ID_DE_LA_MOPA:
+		if not nodo is RigidBody3D or datos == null or not datos.es_largo:
 			continue
 		var retroceso := _retroceso_libre(nodo as RigidBody3D)
 		if retroceso == 0.0:
@@ -273,35 +273,50 @@ func _acomodar_la_mopa() -> void:
 ## Cuánto tiene que retroceder el cuerpo por el brazo de carga para no tocar una pared. No mueve
 ## nada: cero es que ya está libre, o que no hay lugar libre en todo su largo.
 func _retroceso_libre(cuerpo: RigidBody3D) -> float:
-	var forma: CollisionShape3D = cuerpo.get_node("Forma")
-	var consulta := PhysicsShapeQueryParameters3D.new()
-	consulta.shape = forma.shape
-	consulta.transform = forma.global_transform
-	consulta.margin = HOLGURA_DE_LA_CAIDA
-	consulta.collision_mask = _brazo_de_carga.collision_mask
-	consulta.exclude = [get_rid(), cuerpo.get_rid()]
 	var espacio := get_world_3d().direct_space_state
-	# La cabeza entra en el balde al mojarse. Ese contacto con un objeto móvil no debe
-	# esconderla detrás de la cámara como si fuera una pared del almacén.
-	var excluidos: Array[RID] = consulta.exclude
-	for choque: Dictionary in espacio.intersect_shape(consulta, TOPE_DE_CHOQUES):
-		if choque.collider is RigidBody3D:
-			excluidos.append(choque.rid)
-	consulta.exclude = excluidos
-	if espacio.intersect_shape(consulta, 1).is_empty():
+	var consultas: Array[PhysicsShapeQueryParameters3D] = []
+	var largo := 0.0
+	for forma in _formas_de(cuerpo):
+		var consulta := _consulta_de(forma, cuerpo)
+		consulta.margin = HOLGURA_DE_LA_CAIDA
+		consulta.collision_mask = _brazo_de_carga.collision_mask
+		# La cabeza entra en el balde al mojarse. Ese contacto con un objeto móvil no debe
+		# esconderla detrás de la cámara como si fuera una pared del almacén.
+		var excluidos: Array[RID] = consulta.exclude
+		for choque: Dictionary in espacio.intersect_shape(consulta, TOPE_DE_CHOQUES):
+			if choque.collider is RigidBody3D:
+				excluidos.append(choque.rid)
+		consulta.exclude = excluidos
+		consultas.append(consulta)
+		var limites := consulta.transform * forma.shape.get_debug_mesh().get_aabb()
+		largo = maxf(largo, limites.size.length())
+	if _libres(consultas, Vector3.ZERO):
 		return 0.0
-	var original := consulta.transform
 	var eje := _brazo_de_carga.global_basis.z.normalized()
-	var largo := (original * forma.shape.get_debug_mesh().get_aabb()).size.length()
 	for paso in range(1, PASOS_DEL_UTIL_EN_LA_MANO + 1):
 		var retroceso := largo * paso / PASOS_DEL_UTIL_EN_LA_MANO
-		consulta.transform.origin = original.origin - eje * retroceso
-		if not espacio.intersect_shape(consulta, 1).is_empty():
+		if not _libres(consultas, -eje * retroceso):
 			continue
 		# Desde un inicio libre, el barrido mide el borde exacto: los pasos no se dibujan.
-		consulta.motion = eje * retroceso
-		return retroceso * (1.0 - espacio.cast_motion(consulta)[0])
+		var avance := 1.0
+		for consulta in consultas:
+			consulta.transform.origin -= eje * retroceso
+			consulta.motion = eje * retroceso
+			avance = minf(avance, espacio.cast_motion(consulta)[0])
+		return retroceso * (1.0 - avance)
 	return 0.0
+
+
+## Si todas las consultas quedan libres corridas en `corrimiento`. Las deja como estaban.
+func _libres(consultas: Array[PhysicsShapeQueryParameters3D], corrimiento: Vector3) -> bool:
+	var espacio := get_world_3d().direct_space_state
+	for consulta in consultas:
+		consulta.transform.origin += corrimiento
+		var choca := not espacio.intersect_shape(consulta, 1).is_empty()
+		consulta.transform.origin -= corrimiento
+		if choca:
+			return false
+	return true
 
 
 ## Le da o le saca al cuerpo el volumen de la caja que lleva. Es lo que la vuelve un objeto de
@@ -533,30 +548,13 @@ func _devolver_al_mundo(nodo: Node3D) -> void:
 ## Apoya lo soltado sobre el punto que la mira toca, y devuelve si pudo. Qué superficie lo admite
 ## lo decide el dominio; acá se mide la superficie y si ahí entra.
 func _apoyar_sobre_lo_mirado(cuerpo: RigidBody3D) -> bool:
-	var ojo := _camara.global_position
-	var consulta := PhysicsRayQueryParameters3D.create(
-		ojo,
-		ojo - _camara.global_basis.z * ReglasDelJugador.ALCANCE_DE_LA_MIRA,
-		cuerpo.collision_mask
-	)
-	consulta.exclude = [get_rid(), cuerpo.get_rid()]
-	var espacio := get_world_3d().direct_space_state
-	var golpe := espacio.intersect_ray(consulta)
+	var golpe := _golpe_de_la_mira(cuerpo)
 	if golpe.is_empty():
 		return false
-	var normal: Vector3 = golpe["normal"]
-	if not ReglasDeLosObjetos.admite_lo_soltado(normal.y, _datos_de(golpe["collider"])):
-		return false
-	var formas: Array[CollisionShape3D] = []
-	var base := INF
-	for forma: CollisionShape3D in cuerpo.find_children("*", "CollisionShape3D", false, false):
-		if forma.disabled or forma.shape == null:
-			continue
-		formas.append(forma)
-		var orientada := Transform3D(cuerpo.global_basis) * forma.transform
-		base = minf(base, (orientada * forma.shape.get_debug_mesh().get_aabb()).position.y)
+	var formas := _formas_de(cuerpo)
 	if formas.is_empty():
 		return false
+	var base := _limites_de(cuerpo, formas).position.y
 	var antes := cuerpo.global_position
 	# Un roce por encima: apoyado justo, la consulta de abajo contestaría que choca con el piso.
 	cuerpo.global_position = golpe["position"] + Vector3.UP * (ReglasDeLosObjetos.ROCE - base)
@@ -568,32 +566,17 @@ func _apoyar_sobre_lo_mirado(cuerpo: RigidBody3D) -> bool:
 
 ## Mide lugares cercanos sobre el mismo apoyo, con el volumen ya derecho.
 func _apoyar_derecho_sobre_lo_mirado(cuerpo: RigidBody3D) -> bool:
-	var ojo := _camara.global_position
-	var consulta := PhysicsRayQueryParameters3D.create(
-		ojo,
-		ojo - _camara.global_basis.z * ReglasDelJugador.ALCANCE_DE_LA_MIRA,
-		cuerpo.collision_mask
-	)
-	consulta.exclude = [get_rid(), cuerpo.get_rid()]
-	var espacio := get_world_3d().direct_space_state
-	var golpe := espacio.intersect_ray(consulta)
-	if (
-		golpe.is_empty()
-		or not ReglasDeLosObjetos.admite_lo_soltado(golpe["normal"].y, _datos_de(golpe["collider"]))
-	):
+	var golpe := _golpe_de_la_mira(cuerpo)
+	if golpe.is_empty():
 		return false
 	var formas := _formas_de(cuerpo)
 	if formas.is_empty():
 		return false
-	var limites := AABB()
-	for indice in formas.size():
-		var forma := formas[indice]
-		var suyos := (
-			Transform3D(cuerpo.global_basis)
-			* forma.transform
-			* forma.shape.get_debug_mesh().get_aabb()
-		)
-		limites = suyos if indice == 0 else limites.merge(suyos)
+	var limites := _limites_de(cuerpo, formas)
+	var espacio := get_world_3d().direct_space_state
+	var consulta := PhysicsRayQueryParameters3D.new()
+	consulta.collision_mask = cuerpo.collision_mask
+	consulta.exclude = [get_rid(), cuerpo.get_rid()]
 	var antes := cuerpo.global_position
 	var punto: Vector3 = golpe["position"]
 	# El piso tiene malla y volumen superpuestos: se identifica el apoyo con el mismo rayo
@@ -652,17 +635,9 @@ func _ajustar_la_caida(cuerpo: RigidBody3D) -> void:
 	recorrido = cuerpo.global_position - inicio
 	var avance := 1.0
 	var espacio := get_world_3d().direct_space_state
-	for forma: CollisionShape3D in cuerpo.find_children("*", "CollisionShape3D", false, false):
-		if forma.disabled or forma.shape == null:
-			continue
-		var consulta := PhysicsShapeQueryParameters3D.new()
-		consulta.shape = forma.shape
-		consulta.transform = forma.global_transform
-		consulta.transform.origin -= recorrido
+	for forma in _formas_de(cuerpo):
+		var consulta := _consulta_de(forma, cuerpo, -recorrido)
 		consulta.motion = recorrido
-		consulta.margin = safe_margin
-		consulta.collision_mask = cuerpo.collision_mask
-		consulta.exclude = [get_rid(), cuerpo.get_rid()]
 		avance = minf(avance, espacio.cast_motion(consulta)[0])
 	cuerpo.global_position = inicio + recorrido * avance
 	# Lo que el barrido frenó contra algo queda a un centímetro, y no pegado. Cayendo pegada a una
@@ -684,7 +659,7 @@ func _inicios_del_barrido(
 	cuerpo: RigidBody3D, inicio: Vector3, recorrido: Vector3
 ) -> Array[Vector3]:
 	var datos := _datos_de(cuerpo)
-	if datos == null or datos.id != ReglasDeLaLimpieza.ID_DE_LA_MOPA:
+	if datos == null or not datos.es_largo:
 		return [inicio]
 	var formas := _formas_de(cuerpo)
 	var espacio := get_world_3d().direct_space_state
@@ -692,13 +667,7 @@ func _inicios_del_barrido(
 	var retroceso := 0.0
 	var direccion := recorrido.normalized()
 	for forma in formas:
-		var consulta := PhysicsShapeQueryParameters3D.new()
-		consulta.shape = forma.shape
-		consulta.transform = forma.global_transform
-		consulta.transform.origin -= recorrido
-		consulta.margin = safe_margin
-		consulta.collision_mask = cuerpo.collision_mask
-		consulta.exclude = [get_rid(), cuerpo.get_rid()]
+		var consulta := _consulta_de(forma, cuerpo, -recorrido)
 		toca = toca or not espacio.intersect_shape(consulta, 1).is_empty()
 		var limites := (
 			Transform3D(cuerpo.global_basis)
@@ -714,13 +683,7 @@ func _inicios_del_barrido(
 		return [inicio]
 	var libre := inicio - direccion * (retroceso + ReglasDeLosObjetos.ROCE)
 	for forma in formas:
-		var consulta := PhysicsShapeQueryParameters3D.new()
-		consulta.shape = forma.shape
-		consulta.transform = forma.global_transform
-		consulta.transform.origin -= cuerpo.global_position - libre
-		consulta.margin = safe_margin
-		consulta.collision_mask = cuerpo.collision_mask
-		consulta.exclude = [get_rid(), cuerpo.get_rid()]
+		var consulta := _consulta_de(forma, cuerpo, libre - cuerpo.global_position)
 		if not espacio.intersect_shape(consulta, 1).is_empty():
 			return []
 	return [libre]
@@ -771,15 +734,7 @@ func _dejar_al_lado(cuerpo: RigidBody3D) -> bool:
 		return false
 	var antes := cuerpo.global_transform
 	cuerpo.global_basis = _derecho(cuerpo.global_basis)
-	var limites := AABB()
-	for indice in formas.size():
-		var forma := formas[indice]
-		var suyos := (
-			Transform3D(cuerpo.global_basis)
-			* forma.transform
-			* forma.shape.get_debug_mesh().get_aabb()
-		)
-		limites = suyos if indice == 0 else limites.merge(suyos)
+	var limites := _limites_de(cuerpo, formas)
 	var capsula := _forma_del_cuerpo.shape as CapsuleShape3D
 	var ancho := Vector2(limites.size.x, limites.size.z).length() / 2.0
 	var lugares := LugaresDelPiso.alrededor(
@@ -840,3 +795,50 @@ static func _formas_de(cuerpo: RigidBody3D) -> Array[CollisionShape3D]:
 		if not forma.disabled and forma.shape != null:
 			formas.append(forma)
 	return formas
+
+
+## Dónde toca la mira una superficie que admite lo soltado. Vacío si no toca nada o no lo admite.
+func _golpe_de_la_mira(cuerpo: RigidBody3D) -> Dictionary:
+	var ojo := _camara.global_position
+	var consulta := PhysicsRayQueryParameters3D.create(
+		ojo,
+		ojo - _camara.global_basis.z * ReglasDelJugador.ALCANCE_DE_LA_MIRA,
+		cuerpo.collision_mask
+	)
+	consulta.exclude = [get_rid(), cuerpo.get_rid()]
+	var golpe := get_world_3d().direct_space_state.intersect_ray(consulta)
+	if (
+		golpe.is_empty()
+		or not ReglasDeLosObjetos.admite_lo_soltado(golpe["normal"].y, _datos_de(golpe["collider"]))
+	):
+		return {}
+	return golpe
+
+
+## La consulta de una forma de lo soltado corrida en `corrimiento`, contra lo que choca el cuerpo
+## y sin el jugador ni el cuerpo mismo.
+func _consulta_de(
+	forma: CollisionShape3D, cuerpo: RigidBody3D, corrimiento := Vector3.ZERO
+) -> PhysicsShapeQueryParameters3D:
+	var consulta := PhysicsShapeQueryParameters3D.new()
+	consulta.shape = forma.shape
+	consulta.transform = forma.global_transform
+	consulta.transform.origin += corrimiento
+	consulta.margin = safe_margin
+	consulta.collision_mask = cuerpo.collision_mask
+	consulta.exclude = [get_rid(), cuerpo.get_rid()]
+	return consulta
+
+
+## Los límites de las formas en el mundo, con la orientación del cuerpo y sin su posición.
+static func _limites_de(cuerpo: RigidBody3D, formas: Array[CollisionShape3D]) -> AABB:
+	var limites := AABB()
+	for indice in formas.size():
+		var forma := formas[indice]
+		var suyos := (
+			Transform3D(cuerpo.global_basis)
+			* forma.transform
+			* forma.shape.get_debug_mesh().get_aabb()
+		)
+		limites = suyos if indice == 0 else limites.merge(suyos)
+	return limites

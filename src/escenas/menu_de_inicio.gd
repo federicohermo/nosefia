@@ -11,8 +11,8 @@ const PARTE_DE_LA_LECTURA := 0.5
 const TEXTOS: Dictionary[MenuDeInicio.Opcion, String] = {
 	MenuDeInicio.Opcion.NUEVO_JUEGO: "NUEVO JUEGO",
 	MenuDeInicio.Opcion.CONTINUAR: "CONTINUAR",
-	MenuDeInicio.Opcion.CONFIGURACIONES: "CONFIGURACIONES",
-	MenuDeInicio.Opcion.LOGROS: "LOGROS",
+	MenuDeInicio.Opcion.CONFIGURACIONES: MenuDePausa.TEXTO_DE_CONFIGURACIONES,
+	MenuDeInicio.Opcion.LOGROS: MenuDePausa.TEXTO_DE_LOGROS,
 	MenuDeInicio.Opcion.SALIR: "SALIR",
 }
 
