@@ -427,3 +427,45 @@ func test_mojar_con_el_balde_en_el_piso_y_la_vista_abajo_mantiene_la_punta_visib
 	# El arbol retira los tweens terminados en el cuadro siguiente.
 	await get_tree().process_frame
 	await get_tree().process_frame
+
+
+func test_la_mopa_soltada_entre_dos_paredes_no_atraviesa_la_de_atras() -> void:
+	var almacen: Node3D = await _almacen()
+	var mopa := _mopa_en_la_mano(almacen)
+	var jugador: Node3D = almacen.get("_jugador")
+	jugador.set_process(false)
+	var camara := _camara(almacen)
+	var ojo := camara.global_transform
+	_util(almacen, "Balde").global_position += Vector3.RIGHT * 5.0
+	for distancia: float in [-0.5, 0.3]:
+		var pared := StaticBody3D.new()
+		var forma := CollisionShape3D.new()
+		var volumen := BoxShape3D.new()
+		volumen.size = Vector3(4.0, 4.0, 0.05)
+		forma.shape = volumen
+		pared.add_child(forma)
+		almacen.add_child(pared)
+		pared.global_transform = Transform3D(ojo.basis, ojo.origin + ojo.basis.z * distancia)
+		assert_float(ojo.origin.distance_to(pared.global_position)).is_equal_approx(
+			absf(distancia), 0.001
+		)
+	await get_tree().physics_frame
+	await get_tree().physics_frame
+	var forma := mopa.get_node("Forma") as CollisionShape3D
+	var consulta := PhysicsShapeQueryParameters3D.new()
+	consulta.shape = forma.shape
+	consulta.transform = Transform3D(mopa.global_basis, ojo.origin) * forma.transform
+	consulta.collision_mask = ReglasDeLosObjetos.CAPA_DEL_CONTORNO | 1
+	consulta.exclude = [mopa.get_rid()]
+	var espacio := almacen.get_world_3d().direct_space_state
+	# La forma en el ojo ya toca la pared de adelante: es la premisa que falla en cast_motion.
+	assert_bool(espacio.intersect_shape(consulta, 1).is_empty()).is_false()
+	var agarre: Agarre = almacen.get("_agarre")
+	agarre.soltar(true)
+	assert_object(agarre.manos().sostenido()).is_null()
+	consulta.transform = forma.global_transform
+	consulta.collision_mask = mopa.collision_mask | (jugador as CollisionObject3D).collision_layer
+	assert_array(espacio.intersect_shape(consulta)).is_empty()
+	assert_float(ojo.basis.z.dot(mopa.global_position - ojo.origin)).is_less(0.3)
+	await get_tree().process_frame
+	await get_tree().process_frame

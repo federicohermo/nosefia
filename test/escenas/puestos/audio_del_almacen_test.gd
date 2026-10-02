@@ -135,6 +135,14 @@ func test_el_detector_acepta_fin_de_tween_y_rechaza_fin_de_audio() -> void:
 		+ "func sonar():\n\tvar voz: AudioStreamPlayer\n\tawait voz.%s" % fin
 	)
 	assert_array(_estados_de_audio_en(dos_funciones)).is_equal([fin])
+	assert_array(_estados_de_audio_en('await Signal(voz, "%s")' % fin)).is_equal([fin])
+	assert_array(_estados_de_audio_en("await %s" % fin)).is_equal([fin])
+	for miembro: String in ["otro.voz", "otro . voz"]:
+		var cadena := "var voz: Tween\nawait %s.%s" % [miembro, fin]
+		assert_array(_estados_de_audio_en(cadena)).is_equal([fin])
+	for local: String in ["var voz: AudioStreamPlayer", "var voz := AudioStreamPlayer.new()"]:
+		var sombra := "var voz: Tween\nfunc sonar():\n\t%s\n\tawait voz.%s" % [local, fin]
+		assert_array(_estados_de_audio_en(sombra)).is_equal([fin])
 
 
 ## La senal de fin se admite solo para un receptor de tipo Tween en ese mismo alcance.
@@ -151,7 +159,11 @@ static func _estados_de_audio_en(texto: String) -> Array[String]:
 	var creacion := RegEx.new()
 	creacion.compile("\\bvar\\s+(\\w+)\\s*:=\\s*(?:\\w+\\.)?create_tween\\s*\\(")
 	var acceso := RegEx.new()
-	acceso.compile("(?:(\\b\\w+)\\s*)?\\.\\s*" + fin + "\\b")
+	acceso.compile("\\b" + fin + "\\b")
+	var receptor := RegEx.new()
+	receptor.compile("(?<![\\w.])\\b(\\w+)\\s*\\.\\s*$")
+	var variable := RegEx.new()
+	variable.compile("\\bvar\\s+(\\w+)\\b")
 	var globales: Dictionary[String, bool] = {}
 	var tweens: Dictionary[String, bool] = {}
 	var en_funcion := false
@@ -160,6 +172,8 @@ static func _estados_de_audio_en(texto: String) -> Array[String]:
 		if inicio.begins_with("func ") or inicio.begins_with("static func "):
 			en_funcion = true
 			tweens = globales.duplicate()
+		for encontrado: RegExMatch in variable.search_all(linea):
+			tweens.erase(encontrado.get_string(1))
 		for patron: RegEx in [declaracion, creacion]:
 			for encontrado: RegExMatch in patron.search_all(linea):
 				var nombre := encontrado.get_string(1)
@@ -167,7 +181,11 @@ static func _estados_de_audio_en(texto: String) -> Array[String]:
 				if not en_funcion:
 					globales[nombre] = true
 		for encontrado: RegExMatch in acceso.search_all(linea):
-			if not tweens.has(encontrado.get_string(1)) and not estados.has(fin):
+			var quien := receptor.search(linea.substr(0, encontrado.get_start()))
+			var simple := quien != null
+			if simple:
+				simple = not linea.substr(0, quien.get_start()).strip_edges().ends_with(".")
+			if (not simple or not tweens.has(quien.get_string(1))) and not estados.has(fin):
 				estados.append(fin)
 	return estados
 
