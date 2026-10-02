@@ -110,14 +110,66 @@ func test_ningun_test_de_este_spec_afirma_sobre_el_estado_de_reproduccion() -> v
 	# cualquier suite que toque audio, y en headless eso es rojo permanente.
 	for ruta: String in _suites():
 		var texto := FileAccess.get_file_as_string(ruta)
-		for nombre: String in NOMBRES_DE_REPRODUCCION:
-			(
-				assert_bool(texto.contains(nombre))
-				. override_failure_message(
-					"`%s` afirma sobre `%s`, que en headless no cambia nunca" % [ruta, nombre]
+		var estados := _estados_de_audio_en(texto)
+		(
+			assert_array(estados)
+			. override_failure_message(
+				(
+					"`%s` afirma sobre estados de audio que no cambian en headless: %s"
+					% [ruta, estados]
 				)
-				. is_false()
 			)
+			. is_empty()
+		)
+
+
+func test_el_detector_acepta_fin_de_tween_y_rechaza_fin_de_audio() -> void:
+	var fin: String = NOMBRES_DE_REPRODUCCION[-1]
+	var animacion := "var bajada: Tween\nbajada.%s.connect(func(): pass)" % fin
+	assert_array(_estados_de_audio_en(animacion)).is_empty()
+	for tipo: String in ["AudioStreamPlayer", "AudioStreamPlayer3D"]:
+		var sonido := "var voz: %s\nawait voz.%s" % [tipo, fin]
+		assert_array(_estados_de_audio_en(sonido)).is_equal([fin])
+	var dos_funciones := (
+		"func animar():\n\tvar voz: Tween\n\tawait voz.%s\n" % fin
+		+ "func sonar():\n\tvar voz: AudioStreamPlayer\n\tawait voz.%s" % fin
+	)
+	assert_array(_estados_de_audio_en(dos_funciones)).is_equal([fin])
+
+
+## La senal de fin se admite solo para un receptor de tipo Tween en ese mismo alcance.
+## Un receptor desconocido sigue bloqueado: no se pierde el guard de audio.
+static func _estados_de_audio_en(texto: String) -> Array[String]:
+	var estados: Array[String] = []
+	for indice in NOMBRES_DE_REPRODUCCION.size() - 1:
+		var nombre: String = NOMBRES_DE_REPRODUCCION[indice]
+		if texto.contains(nombre):
+			estados.append(nombre)
+	var fin: String = NOMBRES_DE_REPRODUCCION[-1]
+	var declaracion := RegEx.new()
+	declaracion.compile("([A-Za-z_]\\w*)\\s*:\\s*Tween\\b")
+	var creacion := RegEx.new()
+	creacion.compile("\\bvar\\s+(\\w+)\\s*:=\\s*(?:\\w+\\.)?create_tween\\s*\\(")
+	var acceso := RegEx.new()
+	acceso.compile("(?:(\\b\\w+)\\s*)?\\.\\s*" + fin + "\\b")
+	var globales: Dictionary[String, bool] = {}
+	var tweens: Dictionary[String, bool] = {}
+	var en_funcion := false
+	for linea: String in texto.split("\n"):
+		var inicio := linea.strip_edges()
+		if inicio.begins_with("func ") or inicio.begins_with("static func "):
+			en_funcion = true
+			tweens = globales.duplicate()
+		for patron: RegEx in [declaracion, creacion]:
+			for encontrado: RegExMatch in patron.search_all(linea):
+				var nombre := encontrado.get_string(1)
+				tweens[nombre] = true
+				if not en_funcion:
+					globales[nombre] = true
+		for encontrado: RegExMatch in acceso.search_all(linea):
+			if not tweens.has(encontrado.get_string(1)) and not estados.has(fin):
+				estados.append(fin)
+	return estados
 
 
 func test_la_cascara_no_tiene_una_sola_regla() -> void:

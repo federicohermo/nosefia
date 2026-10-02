@@ -580,6 +580,13 @@ func _apoyar_derecho_sobre_lo_mirado(cuerpo: RigidBody3D) -> bool:
 func _ajustar_la_caida(cuerpo: RigidBody3D) -> void:
 	var inicio := _camara.global_position
 	var recorrido := cuerpo.global_position - inicio
+	var iniciales := _inicios_del_barrido(cuerpo, inicio, recorrido)
+	if iniciales.is_empty():
+		_dejar_al_lado(cuerpo)
+		cuerpo.reset_physics_interpolation()
+		return
+	inicio = iniciales[0]
+	recorrido = cuerpo.global_position - inicio
 	var avance := 1.0
 	var espacio := get_world_3d().direct_space_state
 	for forma: CollisionShape3D in cuerpo.find_children("*", "CollisionShape3D", false, false):
@@ -605,6 +612,55 @@ func _ajustar_la_caida(cuerpo: RigidBody3D) -> void:
 	# la red de seguridad.
 	if _metido_en_el_cuerpo(cuerpo) and _dejar_al_lado(cuerpo):
 		cuerpo.reset_physics_interpolation()
+
+
+## Una cabeza muy adelantada puede empezar el barrido ya dentro de la pared.
+## cast_motion no resuelve solapes iniciales. Se comienza con la punta del volumen
+## en la camara, solo si ese inicio completo esta libre, incluidos los solidos detras.
+func _inicios_del_barrido(
+	cuerpo: RigidBody3D, inicio: Vector3, recorrido: Vector3
+) -> Array[Vector3]:
+	var datos := _datos_de(cuerpo)
+	if datos == null or datos.id != ReglasDeLaLimpieza.ID_DE_LA_MOPA:
+		return [inicio]
+	var formas := _formas_de(cuerpo)
+	var espacio := get_world_3d().direct_space_state
+	var toca := false
+	var retroceso := 0.0
+	var direccion := recorrido.normalized()
+	for forma in formas:
+		var consulta := PhysicsShapeQueryParameters3D.new()
+		consulta.shape = forma.shape
+		consulta.transform = forma.global_transform
+		consulta.transform.origin -= recorrido
+		consulta.margin = safe_margin
+		consulta.collision_mask = cuerpo.collision_mask
+		consulta.exclude = [get_rid(), cuerpo.get_rid()]
+		toca = toca or not espacio.intersect_shape(consulta, 1).is_empty()
+		var limites := (
+			Transform3D(cuerpo.global_basis)
+			* forma.transform
+			* forma.shape.get_debug_mesh().get_aabb()
+		)
+		var punta := limites.position
+		for eje in 3:
+			if direccion[eje] > 0.0:
+				punta[eje] += limites.size[eje]
+		retroceso = maxf(retroceso, punta.dot(direccion))
+	if not toca:
+		return [inicio]
+	var libre := inicio - direccion * (retroceso + ReglasDeLosObjetos.ROCE)
+	for forma in formas:
+		var consulta := PhysicsShapeQueryParameters3D.new()
+		consulta.shape = forma.shape
+		consulta.transform = forma.global_transform
+		consulta.transform.origin -= cuerpo.global_position - libre
+		consulta.margin = safe_margin
+		consulta.collision_mask = cuerpo.collision_mask
+		consulta.exclude = [get_rid(), cuerpo.get_rid()]
+		if not espacio.intersect_shape(consulta, 1).is_empty():
+			return []
+	return [libre]
 
 
 ## Si lo soltado quedó metido en el cuerpo del jugador más que un roce.
