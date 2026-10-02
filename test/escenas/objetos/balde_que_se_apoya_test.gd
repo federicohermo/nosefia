@@ -271,7 +271,7 @@ func _apoyos(almacen: Node3D) -> Dictionary[String, Array]:
 	var tapa := limites.end.y
 	return {
 		"el piso libre":
-		[Vector3(PISO_LIBRE.x, piso, PISO_LIBRE.y), Vector3.FORWARD, MIRANDO_AL_PISO],
+		[Vector3(PISO_LIBRE.x, piso, PISO_LIBRE.y), Vector3.FORWARD, MIRANDO_ABAJO],
 		"la tapa de una caja apilada":
 		[
 			pila + Vector3.UP * 2.0 * (media_de_abajo + media_de_arriba),
@@ -296,6 +296,9 @@ func _apoyos(almacen: Node3D) -> Dictionary[String, Array]:
 func test_el_balde_se_apoya_derecho_donde_se_mira() -> void:  # AC-PLY-051
 	var almacen: Node3D = await _almacen()
 	var jugador: CharacterBody3D = almacen.get("_jugador")
+	# El piso a 40 grados entra al alcance con el ojo un poco mas bajo.
+	# Se acondiciona la premisa del caso, sin cambiar la altura del juego.
+	(jugador.get_node("Giro/Camara") as Camera3D).position.y = 1.5
 	var agarre: Agarre = almacen.get("_agarre")
 	var balde := _balde(almacen)
 	var mascara := balde.collision_mask
@@ -321,6 +324,8 @@ func test_el_balde_se_apoya_derecho_donde_se_mira() -> void:  # AC-PLY-051
 		if golpe.is_empty():
 			continue
 		var toca: Vector3 = golpe["position"]
+		var ojo: Transform3D = jugador.call("mira")
+		assert_float(ojo.origin.distance_to(toca)).is_less(ReglasDelJugador.ALCANCE_DE_LA_MIRA)
 		(
 			assert_float(toca.distance_to(punto))
 			. override_failure_message(
