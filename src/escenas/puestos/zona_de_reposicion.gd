@@ -37,8 +37,7 @@ var radio := 0.0
 
 ## El envase de la unidad, puesto donde va. Lleva siempre encima el contorno del foco.
 var vista: MeshInstance3D
-## Con qué se dibuja el envase del casillero vacío: tapa lo que el contorno tiene detrás, y no se
-## ve.
+## Con qué se dibuja el envase: tapa lo que el contorno tiene detrás, y no se ve.
 var sin_superficie: Material
 
 
@@ -54,21 +53,15 @@ func interactuar() -> ObjetoDelAlmacen:
 ## La góndola conserva la superficie y su iluminación durante el hover. El casillero dibuja
 ## solamente sus aristas: reemplazar la superficie cambiaba su color al enfocar y al salir.
 ##
-## **Apagado, el envase queda con la superficie que no se ve.** El calentamiento de los shaders
-## dibuja una vez lo oculto con los materiales que tiene puestos, y así encuentra los dos.
-##
 ## **Escribe sólo lo que cambia**: cada escritura de un material o de una capa es un pedido al
 ## motor.
 func pintar(enfocado: bool) -> void:
 	var con_papel := papel != Papel.NINGUNO
 	var capa := CAPA_DE_LA_MIRA if cerca_de_la_mira and con_papel else 0
 	var se_ve := enfocado and con_papel
-	var reemplazo: Material = sin_superficie
 	if collision_layer != capa:
 		collision_layer = capa
 	if vista == null:
 		return
-	if vista.material_override != reemplazo:
-		vista.material_override = reemplazo
 	if vista.visible != se_ve:
 		vista.visible = se_ve

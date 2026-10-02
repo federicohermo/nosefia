@@ -39,8 +39,8 @@ La carpeta dice **qué se rompe si tocás lo que hay adentro**. Lo que cambia es
   decide si algo se puede referenciar por `@export` o hay que salir a buscarlo.
 
 **El criterio es cuántas instancias hay, no si el nombre suena a puesto de trabajo.**
-`audio_del_almacen` y `manos_del_jugador` no son puestos en el sentido del GDD y van igual en
-`puestos/`: hay uno solo de cada uno y llegan cableados.
+`audio_del_almacen` no es un puesto en el sentido del GDD y va igual en `puestos/`: hay uno
+solo y llega cableado.
 
 La raíz de cada capa se admite a propósito, y es donde se quedan los que cruzan o son la raíz del
 árbol. El árbol de cada carpeta lo imprime `python .claude/scripts/estructura.py`.

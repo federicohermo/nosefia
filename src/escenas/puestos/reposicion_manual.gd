@@ -48,10 +48,7 @@ const GUIA := "Guia"
 @export var punto_de_la_caja: Node3D
 ## Dónde va cada unidad de la góndola, y en qué orden.
 ##
-## **Ningún apoyo está escrito acá.** Antes eran doce posiciones y doce direcciones a mano, una
-## fila recta por producto; ahora cada producto tiene una tanda de una o dos filas en una de las
-## cuatro caras de un mueble, y una recta ya no las describe. Las mide el `.blend` y llegan en
-## este recurso.
+## **Ningún apoyo está escrito acá.** Los mide el `.blend` y llegan en este recurso.
 @export var disposicion: DisposicionDeLaGondola
 
 var _unidades: Array[Node3D] = []
@@ -370,7 +367,7 @@ func _entra_entera(caja: CajaDelDeposito) -> bool:
 
 
 ## Si la caja terminó adentro del cuerpo del jugador es que ahí no hay lugar para apoyarla, y
-## dejarla igual lo sube arriba de ella. Entonces no se suelta: se la vuelve a la mano.
+## dejarla igual lo sube arriba de ella.
 func _le_queda_encima_al_jugador(caja: CajaDelDeposito) -> bool:
 	var forma: CollisionShape3D = caja.get_node("Cuerpo")
 	var consulta := PhysicsShapeQueryParameters3D.new()

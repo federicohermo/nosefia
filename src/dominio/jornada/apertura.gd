@@ -1,14 +1,8 @@
 ## Cómo se abre una jornada: qué tareas pide el jefe esta noche, con cuánto tiempo se arranca y
 ## con qué mercadería.
 ##
-## El 001 dejó esto abierto a propósito —«las obligatorias se reciben, no se construyen adentro
-## del `Turno`»— y acá se cierra. **Va en `dominio/` y no en el script de la escena** porque
-## «cuáles son las obligatorias de una jornada» es una regla del juego, y en `escenas/` una regla
-## nace sin test y ningún gate lo dice.
-##
-## La lista se arma **recorriendo `Tarea.Tipo`**, no enumerando tareas a mano. El turno aterrizó
-## con las cinco declaradas —`SACAR_LA_BASURA` incluida—, así que acá no hay ningún `5` escrito:
-## una sexta se agrega al `enum` y este archivo no se toca.
+## La lista se arma **recorriendo `Tarea.Tipo`**: una tarea nueva se agrega al `enum` y este
+## archivo no se toca.
 class_name Apertura
 extends RefCounted
 

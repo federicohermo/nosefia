@@ -1,10 +1,8 @@
 ## La pantalla del turno: cuántas obligatorias van, cuántos apercibimientos hay y lo que dice la
 ## caja examinada.
 ##
-## **Recibe todo ya decidido y lo pinta.** No formatea nada —eso es `Marcador`—, no sabe qué
-## es un umbral, y no conoce al nodo que le manda los números: se conecta por señal desde la
-## escena. Lo verifican los `rg` del spec, que miran el archivo entero y no distinguen código de
-## comentario.
+## **Recibe todo ya decidido y lo pinta.** No conoce al nodo que le manda los números: se
+## conecta por señal desde la escena.
 ##
 ## **La hora no está acá, y ésa es la decisión.** El GDD la pone en el reloj de mesa del local,
 ## no en la pantalla: un número siempre visible afloja la tensión, porque saber cuánto queda
