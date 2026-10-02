@@ -97,6 +97,23 @@ func test_aparecer_una_pared_apaga_sin_salto() -> void:  # AC-AMB-022
 	assert_float(_corte(voz)).is_equal_approx(ApagadoPorObstaculos.corte_hz(1.0), 0.001)
 
 
+## En headless ninguna voz termina sola: el driver no mezcla. Se avisa a mano.
+func test_la_voz_que_termino_deja_de_medir_obstaculos() -> void:
+	var entrada := _entrada(EntradaSonora.Evento.TIMBRE_DEL_COMPRADOR)
+	entrada.posicional = true
+	var reproductor := _reproductor([entrada] as Array[EntradaSonora])
+	var lugar: Node3D = auto_free(Node3D.new())
+	add_child(lugar)
+	lugar.global_position = FUENTE
+	assert_bool(reproductor.recibir(EntradaSonora.Evento.TIMBRE_DEL_COMPRADOR, lugar)).is_true()
+	var voz := reproductor.voces_en_el_espacio()[0]
+	var sin_apagar := voz.volume_db
+	reproductor.voz_terminada(voz)
+	await _bloque(StaticBody3D.new())
+	reproductor.actualizar_apagado(OIDO, 1.0)
+	assert_float(voz.volume_db).is_equal(sin_apagar)
+
+
 func test_lo_plano_no_se_apaga() -> void:  # AC-AMB-023
 	var reproductor := _reproductor(
 		[_entrada(EntradaSonora.Evento.TURNO_CERRADO)] as Array[EntradaSonora]

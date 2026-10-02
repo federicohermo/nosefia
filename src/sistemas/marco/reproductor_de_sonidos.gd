@@ -61,6 +61,8 @@ func _ready() -> void:
 	for indice in range(_ronda_del_espacio.voces()):
 		var voz := AudioStreamPlayer3D.new()
 		voz.name = "VozDelEspacio%d" % indice
+		# Terminada, deja de tirar rayos en cada cuadro. Volver a pedirla la anota de nuevo.
+		voz.finished.connect(voz_terminada.bind(voz))
 		add_child(voz)
 		_voces_del_espacio.append(voz)
 
@@ -372,7 +374,13 @@ func _aplicar_apagado(voz: AudioStreamPlayer3D) -> void:
 	voz.bus = _buses_propios[voz]
 
 
-## Suelta lo anotado de una voz que ya no existe. Su bus propio se borra con el reproductor.
+## Una voz del espacio que terminó deja de medir obstáculos hasta que se la vuelva a pedir.
+func voz_terminada(voz: AudioStreamPlayer3D) -> void:
+	_olvidar(voz)
+
+
+## Suelta lo anotado de una voz que ya no existe o que terminó. Su bus propio se borra con el
+## reproductor.
 func _olvidar(voz: Object) -> void:
 	_bases.erase(voz)
 	_salidas.erase(voz)
