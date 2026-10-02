@@ -345,10 +345,10 @@ func test_la_punta_sigue_a_la_vista_con_el_brazo_acortado_y_mirando_abajo() -> v
 	jugador.set_process(false)
 	var balde := _util(almacen, "Balde")
 	balde.freeze = true
-	balde.global_position = camara.global_transform * Vector3(0.2, -0.35, -0.1)
-	await get_tree().physics_frame
-	await get_tree().physics_frame
 	var brazo: SpringArm3D = camara.get_node("BrazoDeCarga")
+	balde.global_position = brazo.global_transform * Vector3(0.0, 0.0, 0.45)
+	await get_tree().physics_frame
+	await get_tree().physics_frame
 	assert_float(brazo.get_hit_length()).is_less(brazo.spring_length / 2.0)
 	jugador.call("_acomodar_las_manos", 1.0)
 	var ancla := mopa.get_parent() as Node3D
@@ -424,3 +424,6 @@ func test_mojar_con_el_balde_en_el_piso_y_la_vista_abajo_mantiene_la_punta_visib
 	)
 	assert_float(balde.global_position.y + base).is_equal_approx(piso, 0.001)
 	_muestrear_la_mojada(almacen, mopa)
+	# El arbol retira los tweens terminados en el cuadro siguiente.
+	await get_tree().process_frame
+	await get_tree().process_frame
