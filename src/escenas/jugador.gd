@@ -21,6 +21,9 @@ const TOPE_DE_CHOQUES := 32
 ## Cuánto se aparta lo soltado de lo que frenó el barrido, en metros, para caer sin rozarlo.
 const HOLGURA_DE_LA_CAIDA := 0.01
 
+## Resolución de la búsqueda del volumen libre para un útil largo junto a una pared.
+const PASOS_DEL_UTIL_EN_LA_MANO := 64
+
 ## Los dos sistemas de agarrar, por `@export` y no por `@onready`: un `@onready` se resuelve
 ## recién al entrar la escena al árbol, y entonces `id_en_la_mano()` se caería sobre un jugador
 ## apenas instanciado — que es como lo instancia todo test de esta escena. Tampoco son autoloads:
@@ -241,6 +244,7 @@ func _empujar_lo_que_estorba() -> void:
 ## les escribiría la posición entera cada cuadro y el suavizado no tendría dónde entrar.
 func _acomodar_las_manos(delta: float) -> void:
 	_largo_de_carga = _acomodar(_brazo_de_carga, agarre.punto_de_carga, _largo_de_carga, delta)
+	_acomodar_la_mopa()
 	_largo_de_producto = _acomodar(
 		_brazo_de_producto, agarre.punto_de_producto, _largo_de_producto, delta
 	)
@@ -253,6 +257,50 @@ func _acomodar(brazo: SpringArm3D, punto: Node3D, largo: float, delta: float) ->
 	var siguiente := RetornoDeLaMano.siguiente(largo, brazo.get_hit_length(), delta)
 	punto.position = brazo.transform * Vector3(0.0, 0.0, siguiente)
 	return siguiente
+
+
+## La esfera del brazo protege la mano, pero no alcanza la cabeza de una mopa inclinada.
+## Se mide su forma real, incluida la posición transitoria de la animación de mojarla.
+func _acomodar_la_mopa() -> void:
+	for nodo in agarre.punto_de_carga.get_children():
+		var datos := _datos_de(nodo)
+		if not nodo is RigidBody3D or datos == null or datos.id != ReglasDeLaLimpieza.ID_DE_LA_MOPA:
+			continue
+		var cuerpo := nodo as RigidBody3D
+		var forma: CollisionShape3D = cuerpo.get_node("Forma")
+		var consulta := PhysicsShapeQueryParameters3D.new()
+		consulta.shape = forma.shape
+		consulta.transform = forma.global_transform
+		consulta.margin = HOLGURA_DE_LA_CAIDA
+		consulta.collision_mask = _brazo_de_carga.collision_mask
+		consulta.exclude = [get_rid(), cuerpo.get_rid()]
+		var espacio := get_world_3d().direct_space_state
+		# La cabeza entra en el balde al mojarse. Ese contacto con un objeto móvil no debe
+		# esconderla detrás de la cámara como si fuera una pared del almacén.
+		var excluidos: Array[RID] = consulta.exclude
+		for choque: Dictionary in espacio.intersect_shape(consulta, TOPE_DE_CHOQUES):
+			if choque.collider is RigidBody3D:
+				excluidos.append(choque.rid)
+		consulta.exclude = excluidos
+		if espacio.intersect_shape(consulta, 1).is_empty():
+			return
+		var original := consulta.transform
+		var eje := _brazo_de_carga.global_basis.z.normalized()
+		var largo := (original * forma.shape.get_debug_mesh().get_aabb()).size.length()
+		for paso in range(1, PASOS_DEL_UTIL_EN_LA_MANO + 1):
+			var retroceso := largo * paso / PASOS_DEL_UTIL_EN_LA_MANO
+			consulta.transform.origin = original.origin - eje * retroceso
+			if not espacio.intersect_shape(consulta, 1).is_empty():
+				continue
+			# Desde un inicio libre, el barrido mide el borde exacto: los pasos no se dibujan.
+			consulta.motion = eje * retroceso
+			var avance := espacio.cast_motion(consulta)[0]
+			_largo_de_carga -= retroceso * (1.0 - avance)
+			agarre.punto_de_carga.position = (
+				_brazo_de_carga.transform * Vector3(0, 0, _largo_de_carga)
+			)
+			agarre.punto_de_carga.reset_physics_interpolation()
+			return
 
 
 ## Le da o le saca al cuerpo el volumen de la caja que lleva. Es lo que la vuelve un objeto de
