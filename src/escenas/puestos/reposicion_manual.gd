@@ -6,7 +6,8 @@ const GrupoDelPiso := preload("res://src/escenas/objetos/grupo_del_piso.gd")
 const CajaDelDeposito := preload("res://src/escenas/objetos/caja_de_productos.gd")
 const JugadorDelLocal := preload("res://src/escenas/jugador.gd")
 const OBJETO := preload("res://src/escenas/objetos/objeto_agarrable.tscn")
-const FANTASMA := preload("res://src/escenas/puestos/fantasma_de_reposicion.gdshader")
+const CONTORNO := preload("res://src/sistemas/marco/contorno.gdshader")
+const SIN_SUPERFICIE := preload("res://src/escenas/puestos/casillero_sin_superficie.gdshader")
 
 ## Cuántas veces se parte al medio la búsqueda del borde de un apoyo.
 const PASOS_DEL_BORDE := 12
@@ -56,12 +57,10 @@ const GUIA := "Guia"
 var _unidades: Array[Node3D] = []
 ## Los casilleros de cada producto, en el orden de `Producto.Id` y, adentro, en el de su fila.
 var _casilleros: Array[Array] = []
-## Los que esperan la unidad de la mano: los únicos que cambian cuando la vista se mueve.
-var _para_colocar: Array[ZonaDeReposicion] = []
-## Lo que la mira enfoca, según el jugador. El casillero enfocado se pinta distinto.
+## Lo que la mira enfoca, según el jugador. El casillero enfocado es el único que se dibuja.
 var _enfocado: Node3D = null
-## La unidad puesta que la mira enfoca con la mano vacía. La dibuja su casillero, resaltada, y la
-## góndola no: dos veces en el mismo lugar, el resaltado no se vería parejo.
+## La unidad puesta que la mira enfoca con la mano vacía. La dibuja su casillero, con el contorno
+## encima, y la góndola no: la unidad se dibuja una sola vez.
 var _resaltado: ZonaDeReposicion = null
 ## Los casilleros con papel que la mira podría elegir ahora: los únicos que se le ofrecen.
 var _cerca_de_la_mira: Dictionary[ZonaDeReposicion, bool] = {}
@@ -751,7 +750,6 @@ func _usar_el_casillero(id: Producto.Id, indice: int) -> void:
 ## vacía, y ninguno con cualquier otra cosa. Un casillero sin papel no está para la mira: con una
 ## caja en la mano, un casillero enfocable se comería el clic que la suelta.
 func _actualizar_zonas(_nodo: Node3D = null) -> void:
-	_para_colocar.clear()
 	var de_la_noche := repositor.estante()
 	if de_la_noche == null:
 		return
@@ -764,18 +762,10 @@ func _actualizar_zonas(_nodo: Node3D = null) -> void:
 			zona.papel = ZonaDeReposicion.Papel.NINGUNO
 			if para_colocar.has(zona.casillero):
 				zona.papel = ZonaDeReposicion.Papel.COLOCAR
-				_para_colocar.append(zona)
 			elif para_agarrar.has(zona.casillero):
 				zona.papel = ZonaDeReposicion.Papel.AGARRAR
 			_pintar(zona)
 	_resaltar()
-
-
-## Los casilleros vacíos que se ven dependen de dónde está la vista: se repintan cada cuadro, y son
-## sólo los que esperan la unidad de la mano.
-func _process(_delta: float) -> void:
-	for zona in _para_colocar:
-		_pintar(zona)
 
 
 ## Le ofrece a la mira sólo los casilleros con papel que podría elegir: los que caen, aunque sea
@@ -830,13 +820,9 @@ static func _podria_enfocar(ojo: Vector3, adelante: Vector3, centro: Vector3, ra
 	return adelante.angle_to(hacia) - margen <= ReglasDelJugador.DESVIO_MAXIMO_DE_LA_MIRA
 
 
-## Pinta un casillero con su papel, si la mira lo enfoca y si está al alcance de la vista. Cuánto
-## es el alcance lo dicen las reglas del estante (BR-PLY-022).
+## Pinta un casillero con su papel y con si la mira lo enfoca (BR-PLY-022, BR-PLY-023).
 func _pintar(zona: ZonaDeReposicion) -> void:
-	var cerca := false
-	if zona.papel == ZonaDeReposicion.Papel.COLOCAR:
-		cerca = ReglasDelEstante.al_alcance(jugador.mira().origin.distance_to(zona.global_position))
-	zona.pintar(zona == _enfocado, cerca)
+	zona.pintar(zona == _enfocado)
 
 
 func _al_enfocar(objetivo: Node3D, _distancia: float) -> void:
@@ -1001,21 +987,20 @@ func _preparar_grupos() -> void:
 ## puesto donde va la unidad y con su volumen, y el envase que se dibuja ahí.
 ##
 ## **Van todos desde el principio, sin papel**: cuál espera la unidad de la mano y cuál se puede
-## agarrar cambia con cada gesto, y lo decide el estante. Los materiales son uno por producto, y
-## no uno por casillero: lo que cambia entre dos casilleros del mismo producto es el lugar.
+## agarrar cambia con cada gesto, y lo decide el estante. Los dos materiales son los mismos para
+## todos los casilleros: lo que cambia entre dos casilleros es la forma y el lugar.
 func _preparar_los_casilleros() -> void:
-	var opacidad := ReglasDelEstante.OPACIDAD_DEL_CASILLERO
+	var contorno := ShaderMaterial.new()
+	contorno.shader = CONTORNO
+	contorno.set_shader_parameter("color", IndicacionDelFoco.COLOR)
+	contorno.set_shader_parameter("grosor", IndicacionDelFoco.GROSOR)
+	var sin_superficie := ShaderMaterial.new()
+	sin_superficie.shader = SIN_SUPERFICIE
+	# Antes que el contorno: se dibujan los dos con lo transparente, y entre dos materiales de la
+	# misma malla el motor no promete un orden.
+	sin_superficie.render_priority = -1
 	for producto in Catalogo.todos():
 		var modelo := _modelos[producto.id]
-		var textura := _textura(modelo)
-		var quieto := _fantasma(textura, 0.0, opacidad, opacidad, 0.0)
-		var apuntado := _fantasma(
-			textura,
-			1.0,
-			opacidad,
-			ReglasDelEstante.OPACIDAD_DEL_APUNTADO,
-			ReglasDelEstante.EMISION_DEL_CASILLERO
-		)
 		var fila := Node3D.new()
 		fila.name = "ZonaDe" + producto.nombre
 		add_child(fila)
@@ -1041,12 +1026,12 @@ func _preparar_los_casilleros() -> void:
 			vista.mesh = modelo
 			vista.gi_mode = GeometryInstance3D.GI_MODE_DYNAMIC
 			vista.position = -caja.get_center()
-			vista.material_override = quieto
+			vista.material_override = sin_superficie
+			vista.material_overlay = contorno
 			vista.visible = false
 			zona.add_child(vista)
 			zona.vista = vista
-			zona.material_quieto = quieto
-			zona.material_apuntado = apuntado
+			zona.sin_superficie = sin_superficie
 			zona.radio = caja.size.length() / 2.0
 			zona.casillero_usado.connect(_usar_el_casillero)
 			zonas.append(zona)
@@ -1065,32 +1050,6 @@ func _envolver_la_fila(zonas: Array[ZonaDeReposicion]) -> void:
 		radio = maxf(radio, centro.distance_to(zona.global_position) + zona.radio)
 	_centros_de_las_filas.append(centro)
 	_radios_de_las_filas.append(radio)
-
-
-## La textura del envase de un modelo, o nada si su material no la trae.
-func _textura(modelo: Mesh) -> Texture2D:
-	var base := modelo.surface_get_material(0) as BaseMaterial3D
-	return null if base == null else base.albedo_texture
-
-
-## El envase de un casillero: el producto mismo, transparente, en blanco y negro o en color,
-## quieto o titilando.
-##
-## **Todos los números salen de las reglas del estante**, y el shader no trae los suyos: son
-## primeros valores que se ajustan jugando, y un segundo lugar donde vivan es el que no se
-## ajusta.
-func _fantasma(
-	textura: Texture2D, saturacion: float, minima: float, maxima: float, emision: float
-) -> ShaderMaterial:
-	var material := ShaderMaterial.new()
-	material.shader = FANTASMA
-	material.set_shader_parameter("textura", textura)
-	material.set_shader_parameter("saturacion", saturacion)
-	material.set_shader_parameter("opacidad_minima", minima)
-	material.set_shader_parameter("opacidad_maxima", maxima)
-	material.set_shader_parameter("emision", emision)
-	material.set_shader_parameter("periodo", ReglasDelEstante.PERIODO_DEL_TITILEO)
-	return material
 
 
 ## Las exhibiciones que no cambian. Se dibujan una vez y quedan enteras: nada las vende ni las
