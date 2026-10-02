@@ -15,7 +15,7 @@ normal de la chapa. Acá sólo importan `u` y `v`: dónde queda la chapa en el m
 
 ## Dos filas, o una, y el estante del tamaño de la tanda más honda
 
-Cada tanda tiene dos filas, una detrás de la otra. La de adelante toca el frente útil y la de
+En una tanda de dos filas, una queda detrás de la otra. La de adelante toca el frente útil y la de
 atrás va pegada a ella, con el mismo aire que separa dos unidades vecinas. El estante se achica
 hasta la profundidad de la tanda más honda que lleva: más hondo queda un hueco detrás de la fila
 de atrás, que desde el pasillo se lee como mercadería que falta.

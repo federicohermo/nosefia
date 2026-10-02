@@ -93,7 +93,7 @@ func test_ningun_faltante_de_ninguna_jornada_pasa_de_su_fila() -> void:  # AC-ST
 			)
 
 
-## Dos filas del mismo largo, una detrás de la otra, y los casilleros en la de adelante: las
+## Una fila entera de casilleros, o dos iguales con los casilleros en la de adelante: las
 ## reponibles son las últimas del bloque, y la fila de adelante también. Que cada lugar de esa
 ## fila sea un casillero lo afirma `un_lugar_por_producto_test.gd` con el local armado.
 ##
@@ -203,7 +203,7 @@ func test_el_frente_va_de_la_fila_de_atras_a_la_de_adelante() -> void:
 	)
 
 
-## Un bloque sin dos filas no tiene frente: se avisa, y no se inventa una dirección.
+## Una fila conserva el frente por el orden de sus columnas; sin cupo no se inventa dirección.
 func test_una_fila_tiene_frente_por_el_orden_de_sus_columnas() -> void:  # AC-STK-030
 	var bloque := _copia(Vector3.ZERO) + _copia(Vector3.RIGHT)
 	assert_vector(DisposicionDeLaGondola.frente(bloque, 2)).is_equal(Vector3.BACK)
