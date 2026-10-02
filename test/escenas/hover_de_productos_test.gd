@@ -4,6 +4,30 @@ const ALMACEN := preload("res://src/escenas/almacen.tscn")
 const AperturaConLugar := preload("res://test/escenas/apertura_con_lugar.gd")
 
 
+func test_sacar_y_colocar_no_interpola_las_otras_copias_entre_casilleros() -> void:
+	var almacen: Node3D = auto_free(ALMACEN.instantiate())
+	add_child(almacen)
+	almacen.get("_jugador").set_physics_process(false)
+	var faltantes: Dictionary[Producto.Id, int] = {}
+	AperturaConLugar.abrir_con_faltantes(almacen, faltantes)
+	var puesto: Node3D = almacen.get("_reposicion_manual")
+	for producto in Catalogo.todos():
+		var grupo: MultiMeshInstance3D = puesto.get_node("ProductosDe" + producto.nombre)
+		var antes := grupo.multimesh.buffer
+		var visibles := grupo.multimesh.visible_instance_count
+		assert_int(visibles).is_greater(2)
+		puesto.call("agarrar_de_la_gondola", producto.id, 1)
+		assert_int(grupo.multimesh.visible_instance_count).is_equal(visibles - 1)
+		# El buffer compacta las copias, pero esos índices no identifican al mismo casillero.
+		# Interpolarlos hace viajar los envases restantes durante un cuadro, aunque los datos
+		# finales sean correctos. El renderer es quien interpola, fuera del estado del script.
+		assert_bool(grupo.is_physics_interpolated()).is_false()
+		puesto.call("pedir_colocar", producto.id, 1)
+		assert_bool(grupo.multimesh.buffer == antes).is_true()
+		assert_int(grupo.multimesh.visible_instance_count).is_equal(visibles)
+		assert_bool(grupo.is_physics_interpolated()).is_false()
+
+
 func test_pasarse_por_los_productos_no_reemplaza_ni_reordena_sus_superficies() -> void:
 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
 	add_child(almacen)

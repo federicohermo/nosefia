@@ -1149,6 +1149,9 @@ func _mostrar_lo_puesto(id: Producto.Id) -> void:
 func _dibujar(nombre: String, malla: Mesh, bloque: PackedFloat32Array) -> MultiMeshInstance3D:
 	var grupo := MultiMeshInstance3D.new()
 	grupo.name = nombre
+	# Los envases no se mueven: al compactar el buffer cambia el casillero de cada índice.
+	# Interpolar entre esos índices hace deslizar las demás unidades al sacar o colocar una.
+	grupo.physics_interpolation_mode = Node.PHYSICS_INTERPOLATION_MODE_OFF
 	grupo.gi_mode = GeometryInstance3D.GI_MODE_DYNAMIC
 	var copias := MultiMesh.new()
 	copias.transform_format = MultiMesh.TRANSFORM_3D
