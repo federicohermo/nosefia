@@ -260,3 +260,129 @@ func test_la_mezcla_espera_aunque_se_suelten_los_utiles_en_otro_cuarto() -> void
 	assert_that((balde.carga.material_override as StandardMaterial3D).albedo_color).is_equal(azul)
 	assert_bool(mopa.carga.visible).is_true()
 	assert_that((mopa.carga.material_override as StandardMaterial3D).albedo_color).is_equal(azul)
+
+
+func _mopa_en_la_mano(almacen: Node3D, con_agua: bool = true) -> UtilDeLimpieza:
+	var jugador: Node3D = almacen.get("_jugador")
+	jugador.global_position = Vector3(-1.91, jugador.global_position.y, 5.2)
+	var balde := _util(almacen, "Balde")
+	if con_agua:
+		_usar(almacen, balde, almacen.get_node(LAVATORIO))
+	var mopa := _util(almacen, "Mopa")
+	assert_bool((almacen.get("_agarre") as Agarre).pedir_agarrar(mopa.datos, mopa)).is_true()
+	return mopa
+
+
+func _camara(almacen: Node3D) -> Camera3D:
+	return (almacen.get("_jugador") as Node3D).get_node("Giro/Camara")
+
+
+func _ver_la_punta(camara: Camera3D, mopa: UtilDeLimpieza) -> void:
+	assert_bool(camara.is_position_in_frustum(mopa.carga.global_position)).is_true()
+
+
+## Pasos explicitos del tween: cinco instantes, sin depender del ritmo del headless.
+func _muestrear_la_mojada(almacen: Node3D, mopa: UtilDeLimpieza) -> void:
+	var camara := _camara(almacen)
+	var antes := mopa.transform
+	var vista := camara.global_transform
+	_accion(almacen, _util(almacen, "Balde"), ReglasDelJugador.ACCION_USAR)
+	var bajada: Tween = mopa.get("_bajada")
+	assert_object(bajada).is_not_null()
+	if bajada == null:
+		return
+	bajada.pause()
+	for instante in 5:
+		bajada.custom_step(0.04)
+		_ver_la_punta(camara, mopa)
+		assert_bool(camara.global_transform.is_equal_approx(vista)).is_true()
+	assert_float(mopa.position.y).is_less(antes.origin.y)
+	assert_float(mopa.position.z).is_less(antes.origin.z)
+	for instante in 5:
+		bajada.custom_step(0.04)
+		_ver_la_punta(camara, mopa)
+		assert_bool(camara.global_transform.is_equal_approx(vista)).is_true()
+	assert_bool(mopa.transform.is_equal_approx(antes)).is_true()
+	assert_that((mopa.carga.material_override as StandardMaterial3D).albedo_color).is_equal(
+		_piso(almacen).balde().color()
+	)
+
+
+func test_la_cabeza_de_la_mopa_se_ve_y_el_agarre_sigue_en_el_origen() -> void:
+	var almacen: Node3D = await _almacen()
+	var mopa := _mopa_en_la_mano(almacen)
+	assert_bool(_camara(almacen).is_position_in_frustum(mopa.carga.global_position)).is_true()
+	assert_vector(mopa.position).is_equal(Vector3.ZERO)
+	assert_bool(mopa.basis.is_equal_approx(mopa.orientacion_en_mano)).is_true()
+	var abajo := (mopa.malla.global_transform * mopa.malla.get_aabb()).position.y
+	assert_float(abajo).is_greater(0.1)
+
+
+func test_mojar_baja_la_punta_a_la_vista_y_vuelve_sin_mover_la_camara() -> void:
+	var almacen: Node3D = await _almacen()
+	var mopa := _mopa_en_la_mano(almacen)
+	assert_bool(_piso(almacen).balde().tiene_agua()).is_true()
+	_muestrear_la_mojada(almacen, mopa)
+
+
+func test_la_punta_sigue_a_la_vista_con_el_brazo_acortado_y_mirando_abajo() -> void:
+	var almacen: Node3D = await _almacen()
+	var mopa := _mopa_en_la_mano(almacen)
+	var camara := _camara(almacen)
+	camara.rotation.x = deg_to_rad(-40.0)
+	var ancla := mopa.get_parent() as Node3D
+	# El brazo pegado al balde coloca el ancla cerca del ojo. La animacion queda en la mopa.
+	ancla.position = Vector3(0.2, -0.35, -0.01)
+	assert_float(ancla.position.z).is_greater(-0.02)
+	_util(almacen, "Balde").global_position = camara.global_position - camara.global_basis.z * 0.5
+	_muestrear_la_mojada(almacen, mopa)
+
+
+func test_rechazar_el_mojado_no_mueve_la_mopa() -> void:
+	var almacen: Node3D = await _almacen()
+	var mopa := _mopa_en_la_mano(almacen, false)
+	var antes := mopa.transform
+	for destino: Node3D in [_util(almacen, "Balde"), almacen.get_node(INODORO)]:
+		_accion(almacen, destino, ReglasDelJugador.ACCION_USAR)
+		await get_tree().process_frame
+		assert_bool(mopa.transform.is_equal_approx(antes)).is_true()
+		assert_object(mopa.get("_bajada")).is_null()
+
+
+func test_mojar_dos_veces_reinicia_sin_acumular_desplazamiento() -> void:
+	var almacen: Node3D = await _almacen()
+	var mopa := _mopa_en_la_mano(almacen)
+	var antes := mopa.transform
+	_accion(almacen, _util(almacen, "Balde"), ReglasDelJugador.ACCION_USAR)
+	var primera: Tween = mopa.get("_bajada")
+	assert_object(primera).is_not_null()
+	if primera == null:
+		return
+	primera.pause()
+	primera.custom_step(0.1)
+	_muestrear_la_mojada(almacen, mopa)
+	assert_bool(primera.is_valid()).is_false()
+	assert_bool(mopa.transform.is_equal_approx(antes)).is_true()
+
+
+func test_soltar_a_mitad_del_mojado_mata_el_tween_y_conserva_la_orientacion() -> void:
+	var almacen: Node3D = await _almacen()
+	var mopa := _mopa_en_la_mano(almacen)
+	_accion(almacen, _util(almacen, "Balde"), ReglasDelJugador.ACCION_USAR)
+	var bajada: Tween = mopa.get("_bajada")
+	assert_object(bajada).is_not_null()
+	if bajada == null:
+		return
+	bajada.pause()
+	bajada.custom_step(0.1)
+	var orientacion := mopa.global_basis
+	var agarre: Agarre = almacen.get("_agarre")
+	agarre.soltar(true)
+	assert_bool(bajada.is_valid()).is_false()
+	assert_bool(mopa.global_basis.is_equal_approx(orientacion)).is_true()
+	var soltada := mopa.global_transform
+	bajada.custom_step(0.2)
+	assert_bool(mopa.global_transform.is_equal_approx(soltada)).is_true()
+	assert_bool(agarre.pedir_agarrar(mopa.datos, mopa)).is_true()
+	assert_vector(mopa.position).is_equal(Vector3.ZERO)
+	assert_bool(mopa.basis.is_equal_approx(mopa.orientacion_en_mano)).is_true()
