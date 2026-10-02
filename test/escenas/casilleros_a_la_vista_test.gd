@@ -261,8 +261,6 @@ func test_el_clic_coloca_en_el_casillero_apuntado_y_no_en_otro() -> void:  # AC-
 	assert_array(estante.casilleros_ocupados(actroncito)).contains([vacios[1]])
 	assert_array(estante.casilleros_vacios(actroncito)).is_equal([vacios[0], vacios[2]])
 	assert_int(estante.unidades_en_gondola(actroncito)).is_equal(antes + 1)
-	# Recién colocada y todavía enfocada, la dibuja su casillero con su material y el contorno
-	# encima; sin el foco, la góndola.
 	var vista: MeshInstance3D = elegido.get("vista")
 	assert_bool(vista.visible).is_true()
 	assert_bool(_sin_superficie(vista)).is_true()
