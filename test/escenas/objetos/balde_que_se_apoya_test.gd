@@ -402,7 +402,7 @@ func _rampa(almacen: Node3D, centro: Vector3) -> StaticBody3D:
 	return rampa
 
 
-func test_sin_superficie_que_valga_el_balde_queda_derecho_al_lado_del_jugador() -> void:  # AC-PLY-053
+func test_sin_apoyo_el_balde_queda_derecho_al_lado_del_jugador() -> void:  # AC-PLY-053
 	var almacen: Node3D = await _almacen()
 	var jugador: CharacterBody3D = almacen.get("_jugador")
 	var agarre: Agarre = almacen.get("_agarre")
@@ -427,7 +427,7 @@ func test_sin_superficie_que_valga_el_balde_queda_derecho_al_lado_del_jugador() 
 	agarre.soltar(true)
 	_comprobar_al_lado(almacen, balde, "mirando a nada al alcance")
 
-	# La mopa acostada: la cara de arriba de su cabeza es horizontal, y la mopa no admite nada.
+	# La mopa acostada tiene una cabeza horizontal, pero no admite nada encima.
 	var mopa: RigidBody3D = almacen.get_node("Objetos/Mopa")
 	mopa.freeze = true
 	var acostada := Basis(Vector3.BACK, PI / 2.0)
