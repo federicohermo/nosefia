@@ -19,7 +19,7 @@ signal cierre_despachado(opcion: ParteDeCierre.Opcion)
 ## cambia en uno solo el día que haya que cambiarlo.
 const TEXTOS: Dictionary[ParteDeCierre.Opcion, String] = {
 	ParteDeCierre.Opcion.SEGUIR: "SEGUIR",
-	ParteDeCierre.Opcion.VOLVER_AL_MENU: "VOLVER AL MENÚ",
+	ParteDeCierre.Opcion.VOLVER_AL_MENU: MenuDePausa.TEXTO_DE_VOLVER_AL_MENU,
 }
 
 @export var _fondo: ColorRect
