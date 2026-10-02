@@ -24,7 +24,6 @@ una tarea son los metros, no la torpeza del control.
 | **Suspender** | apagar juntos la caminata, la mirada y el foco | pausar, bloquear |
 | **Interactuable** | lo que contesta cuando se lo usa | clickeable, activable |
 | **Casillero** | cada lugar de la fila de adelante de la góndola, vacío u ocupado: lo define [`store-stock`](../store-stock/store-stock.md) | hueco, slot |
-| **Titilar** | subir y bajar la opacidad sin parar, con un ritmo fijo | parpadear, latir |
 
 ## Comportamiento normativo
 
@@ -162,29 +161,32 @@ entrada del local, del lado de adentro y mirando hacia el local. Queda con la vi
 quieto, aunque la noche anterior haya terminado en otro lugar, mirando a otro lado y caminando.
 Vale también para la primera noche.
 
-### BR-PLY-022 — Con una unidad en la mano se ven sus casilleros vacíos
+### BR-PLY-022 — El casillero vacío no se ve
 
-MIENTRAS el jugador lleva en la mano una unidad de un producto, el sistema DEBE mostrar cada
-casillero vacío de ese producto que esté al alcance de los casilleros, medido desde la vista:
-como el envase del producto, en blanco y negro, quieto y a la opacidad del casillero. NO DEBE
-mostrar los casilleros ocupados, los de otro producto ni los que quedan más lejos. SI la mano
-está vacía o lleva cualquier otra cosa, ENTONCES el sistema NO DEBE mostrar ningún casillero:
-una caja se apoya, no se coloca. El alcance y la opacidad son primeros valores (OQ-PLY-002).
+El sistema NO DEBE dibujar un casillero vacío que la mira no enfoca: sobre la góndola sólo se ve
+lo que está colocado. Vale con las manos vacías, con una unidad en la mano y con cualquier otra
+cosa. MIENTRAS el jugador lleva en la mano una unidad de un producto, la mira DEBE poder enfocar
+cada casillero vacío de ese producto, y ninguno ocupado ni de otro producto. SI la mano está
+vacía o lleva cualquier otra cosa, ENTONCES la mira NO DEBE enfocar ningún casillero vacío: una
+caja se apoya, no se coloca.
 
-### BR-PLY-023 — El casillero que apunta la mira titila, y el clic coloca ahí
+### BR-PLY-023 — El casillero que apunta la mira se marca con el contorno, y el clic coloca ahí
 
 CUANDO la mira enfoca un casillero vacío del producto que se lleva en la mano, el sistema DEBE
-hacerlo titilar en color y con emisión, entre la opacidad del casillero y la entera, con el ritmo
-del titileo (OQ-PLY-002); los demás siguen quietos. CUANDO el jugador hace clic, el sistema DEBE
-colocar la unidad en ese casillero y en ningún otro (BR-STK-009). La mira elige entre casilleros
-como entre cualquier otro candidato (BR-PLY-004).
+dibujar sólo el contorno del producto en ese casillero, con el color y el grosor del contorno del
+foco, el mismo que marca cualquier otro objeto enfocado. NO DEBE dibujar la superficie del
+producto: por adentro del contorno se ve lo que hay detrás. Los demás casilleros vacíos siguen sin
+dibujarse. CUANDO el jugador hace clic, el sistema DEBE colocar la unidad en ese casillero y en
+ningún otro (BR-STK-009). La mira elige entre casilleros como entre cualquier otro candidato
+(BR-PLY-004).
 
 ### BR-PLY-024 — Con las manos vacías se agarra de la fila de adelante
 
 MIENTRAS las manos están vacías, la mira DEBE poder enfocar cada unidad colocada en la fila de
 adelante de la góndola, y CUANDO el jugador hace clic, el sistema DEBE ponérsela en la mano
-(BR-STK-033). La mira NO DEBE enfocar la fila de atrás, ni ninguna unidad colocada mientras la
-mano lleva algo: agarrar de la góndola es una cosa más por vez (BR-PLY-007).
+(BR-STK-033). La unidad enfocada DEBE llevar el contorno del foco sobre su propio aspecto, y
+dibujarse una sola vez. La mira NO DEBE enfocar la fila de atrás, ni ninguna unidad colocada
+mientras la mano lleva algo: agarrar de la góndola es una cosa más por vez (BR-PLY-007).
 
 ## Criterios de aceptación
 
@@ -427,25 +429,20 @@ DADO un jugador en cualquier lugar, mirando a cualquier lado y en movimiento CUA
 jornada ENTONCES queda en el punto de arranque, con el yaw del arranque, la vista horizontal y la
 velocidad en cero.
 
-### AC-PLY-045 — Qué casilleros se ven *(verifica BR-PLY-022)*
+### AC-PLY-045 — Ningún casillero vacío se dibuja *(verifica BR-PLY-022)*
 
 DADO una unidad de Actroncito en la mano, con dos casilleros de Actroncito vacíos y otro producto
-con casilleros vacíos, todos al alcance, ENTONCES se ven los dos de Actroncito, en blanco y
-negro, quietos y a la opacidad del casillero, y ninguno del otro producto ni ninguno ocupado.
-DADO la fila de Actroncito completa ENTONCES no se ve ningún casillero. DADO las manos vacías,
-una caja o cualquier otro objeto en la mano ENTONCES no se ve ningún casillero.
+con casilleros vacíos, todos al alcance de la mira y ninguno enfocado, ENTONCES no se dibuja
+ninguno, y la mira puede enfocar los dos de Actroncito y ninguno del otro producto ni ninguno
+ocupado. DADO las manos vacías, una caja o cualquier otro objeto en la mano ENTONCES no se dibuja
+ningún casillero vacío y la mira no enfoca ninguno.
 
-### AC-PLY-046 — El alcance de los casilleros *(verifica BR-PLY-022)*
+### AC-PLY-047 — El casillero apuntado lleva sólo el contorno *(verifica BR-PLY-023)*
 
-DADO un casillero vacío del producto que se lleva en la mano CUANDO la vista queda justo dentro
-del alcance de los casilleros ENTONCES se ve; justo afuera, no.
-
-### AC-PLY-047 — El casillero apuntado titila en color *(verifica BR-PLY-023)*
-
-DADO una unidad en la mano CUANDO la mira enfoca uno de sus casilleros vacíos ENTONCES ése titila
-en color y con emisión, entre la opacidad del casillero y 1, con el ritmo del titileo, y los
-demás siguen en blanco y negro y quietos. CUANDO la mira deja de enfocarlo ENTONCES vuelve a
-quedar en blanco y negro y quieto.
+DADO una unidad en la mano y dos de sus casilleros vacíos CUANDO la mira enfoca uno ENTONCES ése
+muestra el contorno del producto con el color y el grosor del contorno del foco, sin su
+superficie, y el otro sigue sin dibujarse. CUANDO la mira pasa al otro ENTONCES el contorno queda
+sólo en el otro. CUANDO la mira deja de enfocarlos ENTONCES no se dibuja ninguno.
 
 ### AC-PLY-048 — El clic coloca en el casillero apuntado *(verifica BR-PLY-023)*
 
@@ -458,7 +455,9 @@ unidad más: con la mano vacía, el clic agarra la que acaba de colocar.
 
 DADO las manos vacías y la mira sobre una unidad del medio de la fila de adelante CUANDO se hace
 clic ENTONCES esa unidad pasa a la mano, su casillero queda vacío y las de al lado siguen donde
-estaban. DADO cualquier cosa en la mano ENTONCES la mira no enfoca ninguna unidad colocada, y el
+estaban. DADO las manos vacías CUANDO la mira enfoca una unidad colocada ENTONCES esa unidad lleva
+el contorno del foco sobre su propio aspecto, se dibuja una sola vez y ninguna otra cambia. DADO
+cualquier cosa en la mano ENTONCES la mira no enfoca ninguna unidad colocada, y el
 clic no la agarra. DADO la fila de atrás ENTONCES ninguna de sus unidades se enfoca.
 
 ## No objetivos
@@ -473,13 +472,13 @@ clic no la agarra. DADO la fila de atrás ENTONCES ninguna de sus unidades se en
 
 - **Entrada:** el vector de movimiento, el delta del mouse, el yaw del arranque, los candidatos
   que el rayo encontró, el objeto que se quiere agarrar, la superficie que la mira toca, los
-  casilleros vacíos y ocupados de cada producto, la distancia de la vista a cada casillero y los
-  segundos del cuadro.
+  casilleros vacíos y ocupados de cada producto y los segundos del cuadro.
 - **Salida:** la velocidad, los dos ángulos de la vista, qué está enfocado y si cambió, qué se
-  lleva en la mano, qué casilleros se ven y cuál titila, el motivo de cada rechazo, el ángulo de
+  lleva en la mano, qué casillero lleva el contorno, el motivo de cada rechazo, el ángulo de
   la hoja, el aviso de cada gesto sobre una puerta y el efecto de un uso.
 - **Falla:** los dos rechazos de agarrar; soltar con las manos vacías no devuelve nada; un uso no
-  declarado no tiene efecto; con algo que no es una unidad en la mano, ningún casillero se ve.
+  declarado no tiene efecto; con algo que no es una unidad en la mano, ningún casillero vacío se
+  enfoca.
 
 ## Señales
 
@@ -502,9 +501,3 @@ clic no la agarra. DADO la fila de atrás ENTONCES ninguna de sus unidades se en
   - Decide: el dueño del repo, jugando.
   - Bloquea: nada. Movería `BR-PLY-007` y el tercer criterio de
     [`store-cleanup`](../store-cleanup/store-cleanup.md).
-- **OQ-PLY-002 — ¿Con qué opacidad, hasta qué distancia y a qué ritmo se ven los casilleros?**
-  - Por qué sigue abierta: sale de jugar con la góndola a la vista, con la luz de la noche. El
-    juego arranca con un primer valor para cada uno: la opacidad del casillero, el alcance de los
-    casilleros —el de la mira— y el ritmo del titileo, escritos en un solo lugar.
-  - Decide: el dueño del repo, jugando.
-  - Bloquea: nada. Mueve lo que se ve en `BR-PLY-022` y `BR-PLY-023`, no lo que se cuenta.

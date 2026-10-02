@@ -1,9 +1,9 @@
-## Los casilleros de la góndola con el local armado: cuáles se ven con una unidad en la mano, cuál
-## titila, en cuál coloca el clic y cuál agarra la mano vacía.
+## Los casilleros de la góndola con el local armado: cuál se le ofrece a la mira, cuál se dibuja,
+## en cuál coloca el clic y cuál agarra la mano vacía.
 ##
 ## Qué casillero espera la unidad y cuál se agarra lo decide el estante, y lo prueban los casos de
-## `dominio/`. Acá va lo que sólo se ve con la escena: el envase dibujado donde va la unidad, la
-## mira que lo encuentra, y la copia de la góndola que se prende o se apaga.
+## `dominio/`. Acá va lo que sólo se ve con la escena: el contorno donde va la unidad, la mira que
+## lo encuentra, y la copia de la góndola que se prende o se apaga.
 ##
 ## **Ningún caso escribe cuántos casilleros tiene una fila ni dónde está uno**: los dos los mide el
 ## modelo, y salen de la disposición, del estante de la noche o del casillero mismo.
@@ -11,7 +11,8 @@ extends GdUnitTestSuite
 
 const ALMACEN := preload("res://src/escenas/almacen.tscn")
 const AperturaConLugar := preload("res://test/escenas/apertura_con_lugar.gd")
-const FANTASMA := "res://src/escenas/puestos/fantasma_de_reposicion.gdshader"
+const CONTORNO := preload("res://src/sistemas/marco/contorno.gdshader")
+const SIN_SUPERFICIE := "res://src/escenas/puestos/casillero_sin_superficie.gdshader"
 
 ## Hasta dónde se busca, delante de un casillero, un lugar donde el jugador entre parado, en
 ## metros, y de a cuánto se avanza. Los mismos que el caso de un lugar por producto.
@@ -20,9 +21,6 @@ const PASO_HACIA_EL_PASILLO := 0.05
 
 ## Cuánto se levanta el cuerpo al tantear el lugar: apoyado justo en el piso, lo toca.
 const HOLGURA_DEL_PISO := 0.02
-
-## Cuánto antes y cuánto después del borde del alcance se mira un casillero, en metros.
-const JUSTO := 0.05
 
 ## A cuántos metros del casillero, del lado del pasillo, se para la mira que lo apunta: dentro
 ## del alcance y lejos del mueble.
@@ -129,7 +127,57 @@ func _contiene(lugares: Array[Vector3], lugar: Vector3) -> bool:
 	return false
 
 
-func test_con_una_unidad_en_la_mano_se_ven_solo_sus_casilleros_vacios() -> void:  # AC-PLY-045
+## Si esa malla lleva encima el contorno del foco, con su color y su grosor.
+func _lleva_el_contorno(vista: MeshInstance3D) -> bool:
+	var encima := vista.material_overlay as ShaderMaterial
+	return (
+		encima != null
+		and encima.shader == CONTORNO
+		and encima.get_shader_parameter("color") == IndicacionDelFoco.COLOR
+		and is_equal_approx(encima.get_shader_parameter("grosor"), IndicacionDelFoco.GROSOR)
+	)
+
+
+## Si esa malla se dibuja sin su superficie: con el material que no escribe ningún color.
+func _sin_superficie(vista: MeshInstance3D) -> bool:
+	var reemplazo := vista.material_override as ShaderMaterial
+	return reemplazo != null and reemplazo.shader.resource_path == SIN_SUPERFICIE
+
+
+## Pone la vista frente a ese casillero, a su alcance y sin enfocarlo, y le ofrece a la mira lo
+## que tiene adelante.
+func _pararse_frente_a(almacen: Node3D, casillero: Node3D) -> void:
+	var ojo := _ojo_para(almacen, casillero)
+	_vista_en(almacen, ojo, casillero.global_position)
+	assert_float(ojo.distance_to(casillero.global_position)).is_less(
+		ReglasDelJugador.ALCANCE_DE_LA_MIRA
+	)
+	assert_object(almacen.get("_jugador").get("_enfocado")).is_null()
+	_puesto(almacen).call("_ofrecer_a_la_mira")
+
+
+func _ninguno_dibujado(almacen: Node3D) -> void:
+	for producto in Catalogo.todos():
+		for casillero: Node3D in _casilleros(almacen, producto):
+			var vista: MeshInstance3D = casillero.get("vista")
+			(
+				assert_bool(vista.visible)
+				. override_failure_message("%s: %s se dibuja" % [producto.nombre, casillero.name])
+				. is_false()
+			)
+
+
+## Los casilleros que la mira puede enfocar ahora: los que el puesto le ofrece.
+func _ofrecidos(almacen: Node3D) -> Array[Node3D]:
+	var ofrecidos: Array[Node3D] = []
+	for producto in Catalogo.todos():
+		for casillero: Node3D in _casilleros(almacen, producto):
+			if casillero.get("collision_layer") != 0:
+				ofrecidos.append(casillero)
+	return ofrecidos
+
+
+func test_ningun_casillero_vacio_se_dibuja_sin_la_mira_encima() -> void:  # AC-PLY-045
 	var almacen := _almacen()
 	var actroncito := Catalogo.de(Producto.Id.ACTRONCITO)
 	var durextra := Catalogo.de(Producto.Id.DUREXTRA)
@@ -137,76 +185,61 @@ func test_con_una_unidad_en_la_mano_se_ven_solo_sus_casilleros_vacios() -> void:
 	AperturaConLugar.abrir_con_faltantes(almacen, faltantes)
 	_puesto(almacen).call("retirar", actroncito.id)
 	assert_object(_agarre(almacen).manos().sostenido()).is_not_null()
-	var primero: Node3D = _puesto(almacen).call("casillero", actroncito.id)
-	_vista_en(almacen, _ojo_para(almacen, primero), primero.global_position)
-	_puesto(almacen).call("_process", 0.0)
-	var vacios := _estante(almacen).casilleros_vacios(actroncito)
-	assert_int(vacios.size()).is_equal(2)
-	for producto in Catalogo.todos():
-		for casillero: Node3D in _casilleros(almacen, producto):
-			var vista: MeshInstance3D = casillero.get("vista")
-			var espera: bool = (
-				producto.id == actroncito.id and vacios.has(casillero.get("casillero"))
-			)
-			var nombre := "%s: %s" % [producto.nombre, casillero.name]
-			assert_bool(vista.visible).override_failure_message(nombre).is_equal(espera)
-			assert_bool(casillero.get("papel") != 0).override_failure_message(nombre).is_equal(
-				espera
-			)
-			if not espera:
-				assert_int(casillero.get("collision_layer")).is_zero()
-			if espera:
-				var quieto: ShaderMaterial = vista.material_override
-				assert_object(quieto).is_same(casillero.get("material_quieto"))
-				assert_float(quieto.get_shader_parameter("saturacion")).is_equal(0.0)
-				for opacidad: String in ["opacidad_minima", "opacidad_maxima"]:
-					assert_float(quieto.get_shader_parameter(opacidad)).is_equal(
-						ReglasDelEstante.OPACIDAD_DEL_CASILLERO
-					)
-	# Con la mano vacía, con una caja o con una unidad de una fila completa, ninguno se ve.
+	var vacios: Array[Node3D] = []
+	for producto: Producto in [actroncito, durextra]:
+		var indices := _estante(almacen).casilleros_vacios(producto)
+		assert_int(indices.size()).is_equal(2)
+		for indice in indices:
+			vacios.append(_puesto(almacen).call("casillero", producto.id, indice))
+	# Con la unidad en la mano, parado frente a cada vacío: la mira puede enfocar los de su
+	# producto y ningún otro, ni vacío ni ocupado, y ninguno se dibuja.
+	for vacio in vacios:
+		_pararse_frente_a(almacen, vacio)
+		var ofrecidos := _ofrecidos(almacen)
+		assert_bool(ofrecidos.has(vacio)).is_equal(vacio.get("producto") == actroncito.id)
+		for ofrecido in ofrecidos:
+			assert_int(ofrecido.get("producto")).is_equal(actroncito.id)
+			assert_array(vacios).contains([ofrecido])
+		_ninguno_dibujado(almacen)
+	# Con la mano vacía la mira sólo puede enfocar lo ocupado, y con una caja o con una unidad de
+	# una fila completa, nada. Ninguno se dibuja.
 	_agarre(almacen).vaciar_las_manos()
-	_sin_ninguno_a_la_vista(almacen)
+	for vacio in vacios:
+		_pararse_frente_a(almacen, vacio)
+		for ofrecido in _ofrecidos(almacen):
+			assert_array(vacios).not_contains([ofrecido])
+		_ninguno_dibujado(almacen)
 	var caja: Node3D = almacen.get("_cajas_de_productos")[actroncito.id]
 	assert_bool(_agarre(almacen).pedir_agarrar(caja.get("datos"), caja)).is_true()
-	_sin_ninguno_a_la_vista(almacen)
+	_sin_casilleros_para_la_mira(almacen, vacios)
 	_agarre(almacen).vaciar_las_manos()
 	var burbaloo := Catalogo.de(Producto.Id.BURBALOO)
 	assert_array(_estante(almacen).casilleros_vacios(burbaloo)).is_empty()
 	var cuerpo: RigidBody3D = auto_free(RigidBody3D.new())
 	add_child(cuerpo)
 	assert_bool(_agarre(almacen).pedir_agarrar(UnidadDeProducto.new(burbaloo), cuerpo)).is_true()
-	_sin_ninguno_a_la_vista(almacen)
+	_sin_casilleros_para_la_mira(almacen, vacios)
 
 
-func _sin_ninguno_a_la_vista(almacen: Node3D) -> void:
-	_puesto(almacen).call("_process", 0.0)
+func _sin_casilleros_para_la_mira(almacen: Node3D, vacios: Array[Node3D]) -> void:
+	for vacio in vacios:
+		_pararse_frente_a(almacen, vacio)
+		assert_array(_ofrecidos(almacen)).is_empty()
+		_ninguno_dibujado(almacen)
+
+
+## Sin la mira encima, cada casillero guarda la superficie que no se ve y el contorno, apagados:
+## el calentamiento de shaders dibuja una vez lo oculto con los materiales que lleva puestos, y
+## así el primer casillero apuntado no compila ninguno.
+func test_el_casillero_apagado_lleva_los_dos_materiales_del_apuntado() -> void:
+	var almacen := _almacen()
 	for producto in Catalogo.todos():
 		for casillero: Node3D in _casilleros(almacen, producto):
 			var vista: MeshInstance3D = casillero.get("vista")
-			(
-				assert_bool(vista.visible)
-				. override_failure_message("%s: %s se ve" % [producto.nombre, casillero.name])
-				. is_false()
-			)
-
-
-func test_el_alcance_de_los_casilleros_se_mide_desde_la_vista() -> void:  # AC-PLY-046
-	var almacen := _almacen()
-	var actroncito := Catalogo.de(Producto.Id.ACTRONCITO)
-	var faltantes: Dictionary[Producto.Id, int] = {actroncito.id: 1}
-	AperturaConLugar.abrir_con_faltantes(almacen, faltantes)
-	_puesto(almacen).call("retirar", actroncito.id)
-	var casillero: Node3D = _puesto(almacen).call("casillero", actroncito.id)
-	var vista: MeshInstance3D = casillero.get("vista")
-	var afuera := _frente(almacen, actroncito)
-	var centro := casillero.global_position
-	var alcance := ReglasDelEstante.ALCANCE_DE_LOS_CASILLEROS
-	_vista_en(almacen, centro + afuera * (alcance - JUSTO), centro)
-	_puesto(almacen).call("_process", 0.0)
-	assert_bool(vista.visible).is_true()
-	_vista_en(almacen, centro + afuera * (alcance + JUSTO), centro)
-	_puesto(almacen).call("_process", 0.0)
-	assert_bool(vista.visible).is_false()
+			var nombre := "%s: %s" % [producto.nombre, casillero.name]
+			assert_bool(vista.visible).override_failure_message(nombre).is_false()
+			assert_bool(_sin_superficie(vista)).override_failure_message(nombre).is_true()
+			assert_bool(_lleva_el_contorno(vista)).override_failure_message(nombre).is_true()
 
 
 func test_el_clic_coloca_en_el_casillero_apuntado_y_no_en_otro() -> void:  # AC-PLY-048
@@ -228,10 +261,12 @@ func test_el_clic_coloca_en_el_casillero_apuntado_y_no_en_otro() -> void:  # AC-
 	assert_array(estante.casilleros_ocupados(actroncito)).contains([vacios[1]])
 	assert_array(estante.casilleros_vacios(actroncito)).is_equal([vacios[0], vacios[2]])
 	assert_int(estante.unidades_en_gondola(actroncito)).is_equal(antes + 1)
-	# Recién colocada y todavía enfocada, la dibuja su casillero, resaltada; sin el foco, la góndola.
+	# Recién colocada y todavía enfocada, la dibuja su casillero con su material y el contorno
+	# encima; sin el foco, la góndola.
 	var vista: MeshInstance3D = elegido.get("vista")
 	assert_bool(vista.visible).is_true()
 	assert_object(vista.material_override).is_null()
+	assert_bool(_lleva_el_contorno(vista)).is_true()
 	almacen.get("_jugador").objetivo_perdido.emit()
 	assert_bool(vista.visible).is_false()
 	var dibujadas := _dibujadas(almacen, actroncito)
@@ -259,12 +294,15 @@ func test_con_las_manos_vacias_se_agarra_la_del_medio() -> void:  # AC-PLY-049 A
 	var dibujadas_antes := _dibujadas(almacen, actroncito)
 	await _mirar_foco(almacen, _ojo_para(almacen, elegido), elegido.global_position)
 	assert_object(almacen.get("_jugador").get("_enfocado")).is_same(elegido)
-	# Enfocada, la dibuja su casillero con su material y el titileo encima, y la góndola no: la
-	# unidad no se dibuja dos veces en el mismo lugar.
+	# Enfocada, la dibuja su casillero con su material y el contorno del foco encima, y la góndola
+	# no: la unidad no se dibuja dos veces en el mismo lugar. Ninguna otra cambia.
 	var vista: MeshInstance3D = elegido.get("vista")
 	assert_bool(vista.visible).is_true()
 	assert_object(vista.material_override).is_null()
-	assert_object(vista.material_overlay).is_same(elegido.get("material_apuntado"))
+	assert_bool(_lleva_el_contorno(vista)).is_true()
+	for otro: Node3D in _casilleros(almacen, actroncito):
+		if otro != elegido:
+			assert_bool((otro.get("vista") as MeshInstance3D).visible).is_false()
 	var enfocada := _dibujadas(almacen, actroncito)
 	assert_int(enfocada.size()).is_equal(dibujadas_antes.size() - 1)
 	assert_bool(_contiene(enfocada, _lugar_de(elegido))).is_false()
@@ -279,11 +317,11 @@ func test_con_las_manos_vacias_se_agarra_la_del_medio() -> void:  # AC-PLY-049 A
 	for otra in dibujadas_antes:
 		if not otra.is_equal_approx(_lugar_de(elegido)):
 			assert_bool(_contiene(dibujadas, otra)).is_true()
-	# Con la unidad en la mano, el casillero que dejó espera la unidad: se ve, y titila enfocado.
-	_puesto(almacen).call("_process", 0.0)
+	# Con la unidad en la mano y la mira todavía encima, el casillero que dejó espera la unidad:
+	# queda sólo el contorno, sin la superficie de la unidad.
 	assert_bool(vista.visible).is_true()
-	assert_object(vista.material_overlay).is_null()
-	assert_object(vista.material_override).is_same(elegido.get("material_apuntado"))
+	assert_bool(_sin_superficie(vista)).is_true()
+	assert_bool(_lleva_el_contorno(vista)).is_true()
 
 
 func test_con_algo_en_la_mano_no_se_enfoca_ninguna_unidad_puesta() -> void:  # AC-PLY-049
@@ -453,19 +491,3 @@ func _lugar_en_el_pasillo(almacen: Node3D, delante: Vector3, frente: Vector3) ->
 		if espacio.intersect_shape(consulta, 1).is_empty():
 			return pie
 	return Vector3.INF
-
-
-func test_los_valores_del_fantasma_no_viven_en_el_shader() -> void:
-	# Opacidad, ritmo, gris y brillo son primeros valores que se ajustan jugando: los pone la
-	# escena desde las reglas del estante, y el shader no trae uno propio que los pise.
-	var texto := FileAccess.get_file_as_string(FANTASMA)
-	assert_str(texto).is_not_empty()
-	for uniforme: String in [
-		"opacidad_minima", "opacidad_maxima", "periodo", "saturacion", "emision"
-	]:
-		var declaracion := RegEx.create_from_string("uniform float %s\\s*;" % uniforme)
-		(
-			assert_object(declaracion.search(texto))
-			. override_failure_message("`%s` trae un valor propio en el shader" % uniforme)
-			. is_not_null()
-		)

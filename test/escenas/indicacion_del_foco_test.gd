@@ -2,6 +2,9 @@ extends GdUnitTestSuite
 
 const ALMACEN := preload("res://src/escenas/almacen.tscn")
 const Jugador := preload("res://src/escenas/jugador.gd")
+const AperturaConLugar := preload("res://test/escenas/apertura_con_lugar.gd")
+const CONTORNO := preload("res://src/sistemas/marco/contorno.gdshader")
+const SIN_SUPERFICIE := "res://src/escenas/puestos/casillero_sin_superficie.gdshader"
 
 
 class JugadorDoble:
@@ -47,58 +50,71 @@ func test_el_campo_real_resalta_la_computadora() -> void:
 		assert_bool(malla.material_overlay == previos[malla]).is_true()
 
 
-## El casillero que la mira enfoca titila en color y con emisión, y ninguna otra malla cambia: la
-## marca del foco no lo pinta, porque el casillero se pinta solo. Cuando la mira se va, vuelve a
-## quedar quieto y en blanco y negro.
-func test_el_casillero_apuntado_titila_y_nada_mas_cambia() -> void:  # AC-PLY-047
+## El casillero vacío que la mira enfoca muestra sólo el contorno del foco, y ninguna otra malla
+## cambia: ni sus materiales ni si se dibuja. Cuando la mira se va, no queda nada dibujado.
+func test_el_casillero_apuntado_lleva_solo_el_contorno() -> void:  # AC-PLY-047
 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
 	add_child(almacen)
 	var jugador: CharacterBody3D = almacen.get("_jugador")
 	jugador.set_physics_process(false)
 	var hud: Hud = almacen.get("_hud")
 	var puesto: Node3D = almacen.get("_reposicion_manual")
-	puesto.call("retirar", Producto.Id.ACTRONCITO)
-	var casillero: Node3D = puesto.call("casillero", Producto.Id.ACTRONCITO)
-	var vista: MeshInstance3D = casillero.get("vista")
+	var actroncito := Catalogo.de(Producto.Id.ACTRONCITO)
+	var faltantes: Dictionary[Producto.Id, int] = {actroncito.id: 2}
+	AperturaConLugar.abrir_con_faltantes(almacen, faltantes)
+	puesto.call("retirar", actroncito.id)
+	var estante: Estante = almacen.get("_repositor").estante()
+	var vacios := estante.casilleros_vacios(actroncito)
+	assert_int(vacios.size()).is_equal(2)
+	var uno: Node3D = puesto.call("casillero", actroncito.id, vacios[0])
+	var otro: Node3D = puesto.call("casillero", actroncito.id, vacios[1])
 	var mallas := almacen.find_children("*", "MeshInstance3D", true, false)
 	var previos := _overlays(mallas)
 	var materiales := _overrides(mallas)
+	var dibujadas := _dibujadas(mallas)
 	var avisos := _avisos(jugador)
-	# Del lado del pasillo de su tanda, que lo mide el modelo.
-	var disposicion: DisposicionDeLaGondola = puesto.get("disposicion")
-	var frente := DisposicionDeLaGondola.frente(
-		disposicion.principales[Producto.Id.ACTRONCITO],
-		disposicion.filas_de_adelante[Producto.Id.ACTRONCITO]
-	)
-	var punto := casillero.global_position
-	await _mirar(jugador, punto + frente * 1.2 + Vector3.UP * 0.3, punto)
-	assert_object(jugador.get("_enfocado")).is_same(casillero)
-	assert_array(avisos).contains([casillero])
-	assert_bool(hud.foco_presente).is_true()
-	assert_array(casillero.get("mallas")).is_empty()
-	assert_bool(vista.visible).is_true()
-	assert_object(vista.material_override).is_same(casillero.get("material_apuntado"))
-	var apuntado: ShaderMaterial = vista.material_override
-	assert_float(apuntado.get_shader_parameter("saturacion")).is_equal(1.0)
-	assert_float(apuntado.get_shader_parameter("opacidad_minima")).is_equal(
-		ReglasDelEstante.OPACIDAD_DEL_CASILLERO
-	)
-	assert_float(apuntado.get_shader_parameter("opacidad_maxima")).is_equal(
-		ReglasDelEstante.OPACIDAD_DEL_APUNTADO
-	)
-	assert_float(apuntado.get_shader_parameter("emision")).is_equal(
-		ReglasDelEstante.EMISION_DEL_CASILLERO
-	)
-	assert_float(apuntado.get_shader_parameter("periodo")).is_equal(
-		ReglasDelEstante.PERIODO_DEL_TITILEO
-	)
-	for malla: MeshInstance3D in mallas:
-		assert_bool(malla.material_overlay == previos[malla]).is_true()
-		if malla != vista:
+	for apuntado: Node3D in [uno, otro]:
+		var vista: MeshInstance3D = apuntado.get("vista")
+		assert_bool(dibujadas[vista]).is_false()
+		await _mirar(jugador, _ojo_frente_a(puesto, apuntado), apuntado.global_position)
+		assert_object(jugador.get("_enfocado")).is_same(apuntado)
+		assert_array(avisos).contains([apuntado])
+		assert_bool(hud.foco_presente).is_true()
+		assert_bool(vista.visible).is_true()
+		var contorno := vista.material_overlay as ShaderMaterial
+		assert_object(contorno).is_not_null()
+		assert_object(contorno.shader).is_same(CONTORNO)
+		assert_bool(contorno.get_shader_parameter("color") == IndicacionDelFoco.COLOR).is_true()
+		assert_float(contorno.get_shader_parameter("grosor")).is_equal(IndicacionDelFoco.GROSOR)
+		var superficie := vista.material_override as ShaderMaterial
+		assert_object(superficie).is_not_null()
+		assert_str(superficie.shader.resource_path).is_equal(SIN_SUPERFICIE)
+		for malla: MeshInstance3D in mallas:
+			assert_bool(malla.material_overlay == previos[malla]).is_true()
 			assert_bool(malla.material_override == materiales[malla]).is_true()
+			if malla != vista:
+				assert_bool(malla.visible).is_equal(dibujadas[malla])
 	await _mirar(jugador, Vector3(0, 10, 0), Vector3(0, 10, -1))
 	assert_object(jugador.get("_enfocado")).is_null()
-	assert_object(vista.material_override).is_same(casillero.get("material_quieto"))
+	for malla: MeshInstance3D in mallas:
+		assert_bool(malla.visible).is_equal(dibujadas[malla])
+
+
+## Desde dónde se apunta a un casillero: del lado del pasillo de su tanda, que lo mide el modelo.
+func _ojo_frente_a(puesto: Node3D, casillero: Node3D) -> Vector3:
+	var disposicion: DisposicionDeLaGondola = puesto.get("disposicion")
+	var id: Producto.Id = casillero.get("producto")
+	var frente := DisposicionDeLaGondola.frente(
+		disposicion.principales[id], disposicion.filas_de_adelante[id]
+	)
+	return casillero.global_position + frente * 1.2 + Vector3.UP * 0.3
+
+
+func _dibujadas(mallas: Array[Node]) -> Dictionary[MeshInstance3D, bool]:
+	var dibujadas: Dictionary[MeshInstance3D, bool] = {}
+	for malla: MeshInstance3D in mallas:
+		dibujadas[malla] = malla.visible
+	return dibujadas
 
 
 func _overlays(mallas: Array[Node]) -> Dictionary[MeshInstance3D, Material]:
