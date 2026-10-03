@@ -23,11 +23,12 @@ const ArtefactoDelBano := preload("res://src/escenas/puestos/artefacto_del_bano.
 
 func _ready() -> void:
 	jugador.uso_pedido.connect(_al_pedir_uso)
+	jugador.paso_dado.connect(_al_dar_un_paso)
 	limpiador.balde_llenado.connect(repintar)
 	limpiador.balde_tenido.connect(repintar.unbind(1))
 	limpiador.balde_vaciado.connect(repintar)
 	limpiador.mopa_mojada.connect(_al_mojar_la_mopa.unbind(1))
-	limpiador.pasada_dada.connect(repintar.unbind(1))
+	limpiador.pasada_dada.connect(_al_dar_pasada)
 	# **No se repinta acá.** El `_ready()` de un hijo corre ANTES que el de la raíz, así que el
 	# limpiador todavía no tiene piso y `repintar()` moriría con un `Nonexistent function … in
 	# base 'Nil'` que no nombra ni a este archivo ni al orden. Quien repinta es el cableado, al
@@ -36,7 +37,23 @@ func _ready() -> void:
 
 func _al_mojar_la_mopa() -> void:
 	repintar()
-	mopa.mostrar_la_mojada()
+	mopa.mostrar_la_mojada(balde)
+
+
+func _al_dar_pasada(lugar: PisoDelLocal.Lugar) -> void:
+	repintar()
+	if not limpiador.piso().mancha_de(lugar).esta_limpia():
+		return
+	for mancha: ManchaQueSeVe in manchas():
+		if mancha.lugar_de_la_mancha() == lugar:
+			mancha.encoger()
+
+
+func _al_dar_un_paso() -> void:
+	for mancha: ManchaQueSeVe in manchas():
+		var distancia := mancha.global_position - jugador.global_position
+		if Vector2(distancia.x, distancia.z).length() <= 0.75:
+			mancha.tocar_en(jugador.global_position)
 
 
 ## Deja las manchas, el balde y la mopa como los ve el dominio. Lo llama el cableado al abrir la
@@ -66,6 +83,7 @@ func manchas() -> Array[ManchaQueSeVe]:
 func _al_pedir_uso(objetivo: Node3D) -> void:
 	var mancha := objetivo as ManchaQueSeVe
 	if mancha != null:
+		mancha.tocar_en(jugador.global_position)
 		limpiador.pasar(jugador.id_en_la_mano(), mancha.lugar_de_la_mancha())
 		return
 	var destino := _destino_de(objetivo)

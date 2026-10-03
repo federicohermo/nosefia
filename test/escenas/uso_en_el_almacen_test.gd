@@ -83,6 +83,8 @@ func test_el_clic_derecho_limpia_una_mancha_de_punta_a_punta() -> void:  # AC-CL
 	await _enfocar(jugador, mancha)
 	await _clic(true)
 	assert_bool(estado.esta_limpia()).is_true()
+	assert_bool(mancha.visible).is_true()
+	await get_tree().create_timer(0.5).timeout
 	assert_bool(mancha.visible).is_false()
 	await _clic(false)
 

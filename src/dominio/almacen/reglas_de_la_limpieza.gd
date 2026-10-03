@@ -48,9 +48,8 @@ const ID_DEL_BALDE := &"balde"
 const ID_DEL_LAVATORIO := &"lavatorio"
 const ID_DEL_INODORO := &"inodoro"
 
-## Cuánto se inclina el balde en la mano, en radianes: lo justo para ver el agua desde arriba.
-## Positiva es la boca hacia la vista.
-const INCLINACION_DEL_BALDE_EN_LA_MANO := PI / 6.0
+## El balde usa el mismo agarre derecho que las cajas, sin rotación adicional hacia la cara.
+const INCLINACION_DEL_BALDE_EN_LA_MANO := 0.0
 
 ## Lo que dura el gesto visible de mojar la mopa, en segundos.
 const DURACION_DE_LA_MOJADA := 0.4
@@ -88,7 +87,7 @@ const COLOR_DEL_AGUA: Dictionary[Agua, Color] = {
 const COLOR_DE_LA_MANCHA: Dictionary[TipoDeMancha, Color] = {
 	TipoDeMancha.MOHO: Color(0.3, 0.46, 0.16),
 	TipoDeMancha.CACA: Color(0.38, 0.24, 0.1),
-	TipoDeMancha.POLVO: Color(0.33, 0.33, 0.33),
+	TipoDeMancha.POLVO: Color(0.25, 0.55, 0.75),
 }
 
 

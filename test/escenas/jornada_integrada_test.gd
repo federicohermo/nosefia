@@ -266,6 +266,13 @@ func _limpiar(almacen: Node3D) -> void:
 			clic.button_index = MOUSE_BUTTON_RIGHT
 			clic.pressed = true
 			get_viewport().push_input(clic)
+			(
+				assert_bool(
+					_piso(almacen).mancha_de(mancha.call("lugar_de_la_mancha")).esta_limpia()
+				)
+				. is_true()
+			)
+			await get_tree().create_timer(0.5).timeout
 			assert_bool(mancha.visible).override_failure_message(mancha.name).is_false()
 		_soltar_lejos(agarre)
 	await get_tree().process_frame

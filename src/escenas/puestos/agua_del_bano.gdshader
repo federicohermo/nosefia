@@ -11,14 +11,19 @@ uniform vec4 color_del_agua : source_color = vec4(0.55, 0.6, 0.55, 0.35);
 // El reflejo de la luz del techo es falso: la luz del baño está horneada y no da brillo.
 uniform vec3 hacia_la_luz = vec3(0.0, 1.0, 0.0);
 uniform float brillo = 1.2;
+// El balde trae alturas y normales calculadas en CPU; el baño sigue leyendo su textura.
+uniform bool normal_de_la_malla = false;
+uniform float transparencia = 1.0;
 
 void fragment() {
 	float dx = texture(ondas, UV + vec2(texel.x, 0.0)).r - texture(ondas, UV - vec2(texel.x, 0.0)).r;
 	float dz = texture(ondas, UV + vec2(0.0, texel.y)).r - texture(ondas, UV - vec2(0.0, texel.y)).r;
 	vec3 normal_local = normalize(vec3(-dx * relieve, 1.0, -dz * relieve));
-	NORMAL = normalize((VIEW_MATRIX * MODEL_MATRIX * vec4(normal_local, 0.0)).xyz);
+	if (!normal_de_la_malla) {
+		NORMAL = normalize((VIEW_MATRIX * MODEL_MATRIX * vec4(normal_local, 0.0)).xyz);
+	}
 	ALBEDO = color_del_agua.rgb;
-	ALPHA = color_del_agua.a;
+	ALPHA = color_del_agua.a * transparencia;
 	ROUGHNESS = 0.05;
 	vec3 luz = normalize((VIEW_MATRIX * vec4(hacia_la_luz, 0.0)).xyz);
 	float reflejo = pow(max(dot(reflect(-VIEW, NORMAL), luz), 0.0), 12.0);

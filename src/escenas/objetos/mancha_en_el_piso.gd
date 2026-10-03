@@ -12,6 +12,8 @@
 ## hay—: de esto hay una por lugar, y se ven y desaparecen en juego.
 extends StaticBody3D
 
+const SuperficieLiquida := preload("res://src/escenas/objetos/superficie_liquida.gd")
+
 ## Cuánto deja ver del piso que tiene abajo: es un charco, no una pintura.
 const OPACIDAD := 0.85
 
@@ -19,6 +21,7 @@ const OPACIDAD := 0.85
 ## es cerrado, y un nombre mal escrito no rompería nada — la mancha simplemente no se borraría
 ## nunca.
 @export var lugar: PisoDelLocal.Lugar = PisoDelLocal.Lugar.ENTRADA
+@export var acuosa := false
 
 @export var _mancha: MeshInstance3D
 
@@ -28,6 +31,11 @@ const OPACIDAD := 0.85
 ## mancha ya borrada sigue frenando el rayo de la mira y se sigue enfocando, con la escena
 ## cargando sin un solo error.
 @export var _cuerpo: CollisionShape3D
+
+
+func _ready() -> void:
+	(_mancha as SuperficieLiquida).configurar_agua(acuosa)
+	(_mancha as SuperficieLiquida).encogida.connect(hide)
 
 
 ## En qué lugar está. Lo pregunta el puesto de limpieza para saber qué mancha tiene delante, y es
@@ -49,13 +57,21 @@ func lugar_de_la_mancha() -> PisoDelLocal.Lugar:
 ## Recibe los dos datos en vez de ir a buscarlos: esta mancha no es dueña de ninguno. Es lo que la
 ## deja dibujarse sin conocer al piso.
 func mostrar(sucia: bool, color: Color) -> void:
-	visible = sucia
+	(_mancha as SuperficieLiquida).presentar(sucia)
+	visible = sucia or (_mancha as SuperficieLiquida).esta_encogiendo()
 	_cuerpo.disabled = not sucia
-	var pintura := _mancha.material_override as StandardMaterial3D
-	pintura.albedo_color = Color(color, OPACIDAD)
+	(_mancha as SuperficieLiquida).pintar(Color(color, OPACIDAD))
+
+
+func encoger() -> void:
+	show()
+	(_mancha as SuperficieLiquida).encoger()
+
+
+func tocar_en(punto: Vector3) -> void:
+	(_mancha as SuperficieLiquida).tocar_en(punto)
 
 
 ## El color con que se ve ahora. Lo leen los casos que miden la escena.
 func color() -> Color:
-	var pintura := _mancha.material_override as StandardMaterial3D
-	return pintura.albedo_color
+	return (_mancha as SuperficieLiquida).color_de_la_superficie()

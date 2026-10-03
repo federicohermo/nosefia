@@ -32,8 +32,7 @@ const AL_LADO_DEL_INODORO := 1.2
 ## pared.
 const TOLERANCIA_DE_LA_CARA := 0.1
 
-## Cuánto pueden separarse los tres canales de un gris, y lo más claro que puede ser un marrón.
-const TOLERANCIA_DEL_GRIS := 0.05
+## Lo más claro que puede ser un marrón.
 const LO_MAS_CLARO_DEL_MARRON := 0.5
 
 
@@ -295,9 +294,12 @@ func test_cada_mancha_se_ve_del_color_de_su_tipo() -> void:  # AC-CLN-015
 	assert_float(caca.g).is_greater(caca.b)
 	assert_float(caca.v).is_less(LO_MAS_CLARO_DEL_MARRON)
 	for lugar: PisoDelLocal.Lugar in [PisoDelLocal.Lugar.ENTRADA, PisoDelLocal.Lugar.GONDOLAS]:
-		var polvo := _mancha_de(almacen, lugar).color()
-		assert_float(absf(polvo.r - polvo.g)).is_less(TOLERANCIA_DEL_GRIS)
-		assert_float(absf(polvo.g - polvo.b)).is_less(TOLERANCIA_DEL_GRIS)
+		var charco := _mancha_de(almacen, lugar).color()
+		assert_float(charco.b).is_greater(charco.g)
+		assert_float(charco.g).is_greater(charco.r)
+		var malla := _mancha_de(almacen, lugar).get_node("Malla") as MeshInstance3D
+		var pintura := malla.material_override as ShaderMaterial
+		assert_float(pintura.get_shader_parameter("transparencia")).is_equal(0.55)
 	# Y es el color que declara el dominio para el tipo de mancha que hay en ese lugar.
 	var piso: PisoDelLocal = (almacen.get("_limpiador") as Limpiador).piso()
 	for mancha: ManchaQueSeVe in _manchas(almacen):

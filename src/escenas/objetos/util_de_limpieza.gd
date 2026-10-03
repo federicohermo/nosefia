@@ -12,6 +12,8 @@
 extends ObjetoAgarrable
 
 const MODELO := preload("res://assets/models/SEPT_JUEGOS_PROTOTIPO.glb")
+const SuperficieLiquida := preload("res://src/escenas/objetos/superficie_liquida.gd")
+const FibrasDeLaMopa := preload("res://src/escenas/objetos/fibras_de_la_mopa.gd")
 
 ## El nodo del modelo que lo dibujaba fijo: su malla es la de este útil.
 @export var nodo_del_modelo: StringName
@@ -31,33 +33,75 @@ var _bajada: Tween
 func _ready() -> void:
 	super()
 	malla.mesh = malla_del_modelo(nodo_del_modelo)
+	set_process(datos.id == ReglasDeLaLimpieza.ID_DEL_BALDE)
 	if datos.id == ReglasDeLaLimpieza.ID_DEL_BALDE:
+		set_notify_transform(true)
 		orientacion_en_mano = Basis(
 			Vector3.RIGHT, ReglasDeLaLimpieza.INCLINACION_DEL_BALDE_EN_LA_MANO
 		)
 
 
+func _process(_delta: float) -> void:
+	_mantener_vertical()
+
+
+## Conserva el punto de carga y el giro horizontal, sin heredar el cabeceo de la vista.
+func _mantener_vertical() -> void:
+	if not is_inside_tree() or datos == null or datos.id != ReglasDeLaLimpieza.ID_DEL_BALDE:
+		return
+	if not freeze or top_level:
+		return
+	var ancla := get_parent() as Node3D
+	if ancla == null:
+		return
+	var derecha := ancla.global_basis.x
+	derecha.y = 0.0
+	if derecha.length_squared() < 0.000001:
+		return
+	derecha = derecha.normalized()
+	var vertical := Basis(derecha, Vector3.UP, derecha.cross(Vector3.UP))
+	# Evita volver a notificar un transform que ya corregimos.
+	if not global_basis.is_equal_approx(vertical):
+		global_basis = vertical
+
+
 ## El movimiento pertenece al util: el ancla sigue el brazo del jugador en cada cuadro.
-func mostrar_la_mojada() -> void:
+func mostrar_la_mojada(balde: Node3D) -> void:
 	if not freeze or top_level:
 		return
 	if _bajada != null:
 		_bajada.kill()
-	var reposo := Transform3D(orientacion_en_mano, Vector3.ZERO)
-	transform = reposo
-	var abajo := reposo
-	abajo.origin += Vector3(0.0, -0.04, -0.12)
+	transform = Transform3D(orientacion_en_mano, Vector3.ZERO)
 	_bajada = create_tween()
 	_bajada.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
-	_bajada.tween_property(self, "transform", abajo, ReglasDeLaLimpieza.DURACION_DE_LA_MOJADA / 2.0)
-	_bajada.tween_property(
-		self, "transform", reposo, ReglasDeLaLimpieza.DURACION_DE_LA_MOJADA / 2.0
-	)
+	var mover := _mover_la_mopa.bind(balde)
+	var duracion := ReglasDeLaLimpieza.DURACION_DE_LA_MOJADA
+	_bajada.tween_method(mover, 0.0, 1.0, duracion * 0.4)
+	_bajada.tween_interval(duracion * 0.2)
+	_bajada.tween_method(mover, 1.0, 0.0, duracion * 0.4)
+
+
+## Interpola la cabeza y calcula el mango a partir de ella, para que entre en el balde real.
+func _mover_la_mopa(progreso: float, balde: Node3D) -> void:
+	if not is_instance_valid(balde) or not freeze or top_level:
+		return
+	var reposo := Transform3D(orientacion_en_mano, Vector3.ZERO)
+	if progreso <= 0.0:
+		transform = reposo
+		return
+	var ancla := get_parent() as Node3D
+	var inicio := ancla.global_transform * reposo
+	var destino := balde.global_basis.orthonormalized()
+	var orientacion := inicio.basis.orthonormalized().slerp(destino, progreso)
+	var cabeza := (inicio * carga.position).lerp(balde.to_global(Vector3(0.0, 0.07, 0.0)), progreso)
+	global_transform = Transform3D(orientacion, cabeza - orientacion * carga.position)
 
 
 ## Agarre quita y vuelve a colgar el nodo tanto al soltar como al cambiar de mano.
 ## La orientacion mundial de ese instante la conserva Agarre antes de quitarlo.
 func _notification(que: int) -> void:
+	if que == NOTIFICATION_TRANSFORM_CHANGED:
+		_mantener_vertical()
 	if que == NOTIFICATION_UNPARENTED and _bajada != null:
 		_bajada.kill()
 		_bajada = null
@@ -66,8 +110,20 @@ func _notification(que: int) -> void:
 ## Muestra la carga del color que se le pasa, o la esconde. Cuál y de qué color lo decide el
 ## dominio: acá sólo se pinta.
 func mostrar_la_carga(cargada: bool, color: Color) -> void:
-	carga.visible = cargada
-	(carga.material_override as StandardMaterial3D).albedo_color = color
+	if carga is SuperficieLiquida:
+		(carga as SuperficieLiquida).presentar(cargada)
+		(carga as SuperficieLiquida).pintar(color)
+	else:
+		carga.visible = cargada
+		(carga.material_override as StandardMaterial3D).albedo_color = color
+		if malla is FibrasDeLaMopa:
+			(malla as FibrasDeLaMopa).mostrar_la_carga(cargada, color)
+
+
+func color_de_la_carga() -> Color:
+	if carga is SuperficieLiquida:
+		return (carga as SuperficieLiquida).color_de_la_superficie()
+	return (carga.material_override as StandardMaterial3D).albedo_color
 
 
 ## La malla del nodo del modelo que se llama así, o `null`.

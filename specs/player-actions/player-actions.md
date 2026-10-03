@@ -196,12 +196,12 @@ adelante de la góndola, y CUANDO el jugador hace clic, el sistema DEBE ponérse
 dibujarse una sola vez. La mira NO DEBE enfocar la fila de atrás, ni ninguna unidad colocada
 mientras la mano lleva algo: agarrar de la góndola es una cosa más por vez (BR-PLY-007).
 
-### BR-PLY-025 — El balde se lleva inclinado hacia la vista
+### BR-PLY-025 — El balde se lleva vertical
 
-MIENTRAS el jugador lleva el balde en la mano, el sistema DEBE mostrarlo inclinado hacia la
-vista, con la inclinación del balde en la mano que declara el dominio, para que el agua se vea
-desde arriba. La boca DEBE quedar del lado de la vista, no del lado de afuera. La inclinación es
-de la mano: CUANDO se lo suelta, queda derecho (BR-PLY-018).
+MIENTRAS el jugador lleva el balde en la mano, el sistema DEBE sostenerlo en el mismo punto
+de carga que las cajas, sin rotación adicional hacia la cara. Su eje DEBE permanecer vertical
+respecto del piso al mirar arriba o abajo, y DEBE acompañar el giro horizontal del jugador.
+CUANDO se lo suelta, queda derecho sobre el apoyo (BR-PLY-018).
 
 ## Criterios de aceptación
 
@@ -479,12 +479,13 @@ el contorno del foco sobre su propio aspecto, se dibuja una sola vez y ninguna o
 cualquier cosa en la mano ENTONCES la mira no enfoca ninguna unidad colocada, y el
 clic no la agarra. DADO la fila de atrás ENTONCES ninguna de sus unidades se enfoca.
 
-### AC-PLY-050 — El balde en la mano, inclinado hacia la vista *(verifica BR-PLY-025)*
+### AC-PLY-050 — El balde en la mano permanece vertical *(verifica BR-PLY-025)*
 
-DADO el balde en la mano ENTONCES el ángulo entre su eje y el arriba de la vista es la
-inclinación del balde en la mano, con medio grado de tolerancia, y su boca queda del lado de la
-vista. DADO el balde apoyado después de soltarlo CUANDO se lo vuelve a agarrar ENTONCES tiene la
-misma inclinación.
+DADO el balde en la mano CUANDO el jugador mira arriba o abajo ENTONCES su eje permanece
+vertical respecto del piso, con medio grado de tolerancia, y conserva el punto de carga.
+CUANDO gira horizontalmente ENTONCES el balde acompaña ese giro. DADO el balde apoyado
+CUANDO se lo vuelve a agarrar ENTONCES vuelve a ese mismo agarre.
+
 
 ### AC-PLY-051 — El balde se apoya derecho donde se mira *(verifica BR-PLY-018)*
 

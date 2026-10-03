@@ -64,7 +64,9 @@ declaró y nunca contra un número escrito.
 
 El sistema DEBE tener **tres tipos de mancha**, y a cada uno lo borra **un solo jabón**: al moho,
 el azul; a la caca, el rosa; al polvo, el amarillo. Cada tipo DEBE verse de su color —el moho
-verde, la caca marrón, el polvo negro o gris—, que es lo que le dice al jugador qué jabón buscar.
+verde, la caca marrón, y el polvo del local como un charco celeste y transparente—, que es lo
+que le dice al jugador qué jabón buscar. El agua del balde también DEBE verse transparente,
+conservando el color del jabón cuando está teñida.
 
 ### BR-CLN-013 — Las manchas de la jornada
 
@@ -167,8 +169,8 @@ polvo con amarillo.
 ### AC-CLN-015 — El color de cada mancha *(verifica BR-CLN-012)*
 
 DADO las manchas de la jornada en la escena ENTONCES la de moho se ve verde —el verde es su canal
-más alto—, la de caca marrón —rojo sobre verde sobre azul, y oscura— y las de polvo grises —los
-tres canales a menos de 0,05 entre sí—.
+más alto—, la de caca marrón —rojo sobre verde sobre azul, y oscura— y las dos del local celestes
+—azul sobre verde sobre rojo—, con transparencia que deja ver el piso.
 
 ### AC-CLN-016 — Las cuatro de la jornada *(verifica BR-CLN-013)*
 

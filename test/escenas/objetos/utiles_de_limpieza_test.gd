@@ -194,12 +194,12 @@ func test_el_agua_del_balde_se_ve_celeste_y_despues_del_color_del_jabon() -> voi
 	assert_bool(balde.carga.visible).is_false()
 	_usar(almacen, balde, almacen.get_node(LAVATORIO))
 	assert_bool(balde.carga.visible).is_true()
-	var celeste: Color = (balde.carga.material_override as StandardMaterial3D).albedo_color
+	var celeste: Color = balde.color_de_la_carga()
 	assert_float(celeste.b).is_greater_equal(celeste.g)
 	assert_float(celeste.b).is_greater(celeste.r)
 	assert_float(minf(celeste.r, minf(celeste.g, celeste.b))).is_greater_equal(0.6)
 	_usar(almacen, _util(almacen, "JabonRosa"), balde)
-	var rosa: Color = (balde.carga.material_override as StandardMaterial3D).albedo_color
+	var rosa: Color = balde.color_de_la_carga()
 	assert_that(rosa).is_equal(ReglasDeLaLimpieza.COLOR_DEL_AGUA[ReglasDeLaLimpieza.Agua.ROSA])
 
 
@@ -209,7 +209,7 @@ func test_un_segundo_jabon_no_cambia_el_agua_que_se_ve() -> void:  # AC-CLN-020
 	_usar(almacen, balde, almacen.get_node(LAVATORIO))
 	_usar(almacen, _util(almacen, "JabonRosa"), balde)
 	_usar(almacen, _util(almacen, "JabonAmarillo"), balde)
-	var agua: Color = (balde.carga.material_override as StandardMaterial3D).albedo_color
+	var agua: Color = balde.color_de_la_carga()
 	assert_that(agua).is_equal(ReglasDeLaLimpieza.COLOR_DEL_AGUA[ReglasDeLaLimpieza.Agua.ROSA])
 
 
@@ -232,7 +232,7 @@ func test_la_punta_de_la_mopa_se_ve_del_color_del_agua() -> void:  # AC-CLN-022
 	_usar(almacen, mopa, balde)
 	assert_bool(mopa.carga.visible).is_true()
 	var punta: Color = (mopa.carga.material_override as StandardMaterial3D).albedo_color
-	var agua: Color = (balde.carga.material_override as StandardMaterial3D).albedo_color
+	var agua: Color = balde.color_de_la_carga()
 	assert_that(punta).is_equal(agua)
 	_usar(almacen, _util(almacen, "JabonAmarillo"), balde)
 	_usar(almacen, mopa, balde)
@@ -260,7 +260,7 @@ func test_la_mezcla_espera_aunque_se_suelten_los_utiles_en_otro_cuarto() -> void
 	assert_int(_piso(almacen).balde().agua()).is_equal(ReglasDeLaLimpieza.Agua.AZUL)
 	assert_int(_piso(almacen).mopa().agua()).is_equal(ReglasDeLaLimpieza.Agua.AZUL)
 	assert_bool(balde.carga.visible).is_true()
-	assert_that((balde.carga.material_override as StandardMaterial3D).albedo_color).is_equal(azul)
+	assert_that(balde.color_de_la_carga()).is_equal(azul)
 	assert_bool(mopa.carga.visible).is_true()
 	assert_that((mopa.carga.material_override as StandardMaterial3D).albedo_color).is_equal(azul)
 
@@ -288,6 +288,9 @@ func _ver_la_punta(camara: Camera3D, mopa: UtilDeLimpieza) -> void:
 func _muestrear_la_mojada(almacen: Node3D, mopa: UtilDeLimpieza) -> void:
 	var camara := _camara(almacen)
 	var antes := Transform3D(mopa.orientacion_en_mano, Vector3.ZERO)
+	# El gesto entra en el objetivo real: el jugador debe estar mirando ese balde.
+	var objetivo := _util(almacen, "Balde")
+	camara.look_at(objetivo.carga.global_position)
 	var vista := camara.global_transform
 	_accion(almacen, _util(almacen, "Balde"), ReglasDelJugador.ACCION_USAR)
 	var bajada: Tween = mopa.get("_bajada")
@@ -301,8 +304,11 @@ func _muestrear_la_mojada(almacen: Node3D, mopa: UtilDeLimpieza) -> void:
 		bajada.custom_step(0.04)
 		_ver_la_punta(camara, mopa)
 		assert_bool(camara.global_transform.is_equal_approx(vista)).is_true()
-	assert_float(mopa.position.y).is_less(antes.origin.y)
-	assert_float(mopa.position.z).is_less(antes.origin.z)
+	var balde := _util(almacen, "Balde")
+	var cabeza := balde.to_local(mopa.carga.global_position)
+	assert_float(Vector2(cabeza.x, cabeza.z).length()).is_less(0.001)
+	assert_float(cabeza.y).is_equal_approx(0.07, 0.001)
+	assert_float(mopa.global_basis.y.angle_to(balde.global_basis.y)).is_less(0.001)
 	for instante in 4:
 		bajada.custom_step(0.04)
 		_ver_la_punta(camara, mopa)

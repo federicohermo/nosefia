@@ -1,5 +1,8 @@
 [gd_scene format=3]
 
+[ext_resource type="Script" path="res://src/escenas/objetos/superficie_liquida.gd" id="liquido"]
+[ext_resource type="Script" path="res://src/escenas/objetos/fibras_de_la_mopa.gd" id="fibras"]
+
 [ext_resource type="PackedScene" path="res://src/escenas/objetos/caja_de_productos.tscn" id="11_caja_de_productos"]
 [ext_resource type="PackedScene" path="res://src/escenas/objetos/objeto_agarrable.tscn" id="22_agarrable"]
 [ext_resource type="PackedScene" path="res://src/escenas/puestos/zona_de_descarte.tscn" id="25_descarte"]
@@ -14,10 +17,13 @@
 [ext_resource type="Resource" path="res://src/dominio/almacen/jabon_amarillo.tres" id="35_jabon_amarillo"]
 
 [sub_resource type="ConvexPolygonShape3D" id="forma_de_la_mopa"]
-points = PackedVector3Array(-0.08456, -0.8477633, -0.2511637, 0.083623, -0.8477633, -0.2511637, -0.08456, -0.8477633, 0.2511637, 0.083623, -0.8477633, 0.2511637, -0.08456, -0.6940926, -0.2511637, 0.083623, -0.6940926, -0.2511637, -0.08456, -0.6940926, 0.2511637, 0.083623, -0.6940926, 0.2511637, -0.02297, 0.3979809, -0.02643, 0.02297, 0.3979809, -0.02643, -0.02297, 0.3979809, 0.02643, 0.02297, 0.3979809, 0.02643)
+points = PackedVector3Array(0.1300000, -0.8777633, 0.0000000, 0.1125833, -0.8777633, 0.0650000, 0.0650000, -0.8777633, 0.1125833, 0.0000000, -0.8777633, 0.1300000, -0.0650000, -0.8777633, 0.1125833, -0.1125833, -0.8777633, 0.0650000, -0.1300000, -0.8777633, 0.0000000, -0.1125833, -0.8777633, -0.0650000, -0.0650000, -0.8777633, -0.1125833, -0.0000000, -0.8777633, -0.1300000, 0.0650000, -0.8777633, -0.1125833, 0.1125833, -0.8777633, -0.0650000, 0.1300000, -0.7560000, 0.0000000, 0.1125833, -0.7560000, 0.0650000, 0.0650000, -0.7560000, 0.1125833, 0.0000000, -0.7560000, 0.1300000, -0.0650000, -0.7560000, 0.1125833, -0.1125833, -0.7560000, 0.0650000, -0.1300000, -0.7560000, 0.0000000, -0.1125833, -0.7560000, -0.0650000, -0.0650000, -0.7560000, -0.1125833, -0.0000000, -0.7560000, -0.1300000, 0.0650000, -0.7560000, -0.1125833, 0.1125833, -0.7560000, -0.0650000, 0.0230000, 0.3979809, 0.0000000, 0.0162635, 0.3979809, 0.0162635, 0.0000000, 0.3979809, 0.0230000, -0.0162635, 0.3979809, 0.0162635, -0.0230000, 0.3979809, 0.0000000, -0.0162635, 0.3979809, -0.0162635, -0.0000000, 0.3979809, -0.0230000, 0.0162635, 0.3979809, -0.0162635)
 
-[sub_resource type="BoxMesh" id="punta_de_la_mopa"]
-size = Vector3(0.172183, 0.108542, 0.506327)
+[sub_resource type="CylinderMesh" id="punta_de_la_mopa"]
+top_radius = 0.060
+bottom_radius = 0.075
+height = 0.092
+radial_segments = 18
 
 [sub_resource type="StandardMaterial3D" id="tinte_de_la_mopa"]
 resource_local_to_scene = true
@@ -48,7 +54,7 @@ radius = 0.229
 [node name="Objetos" type="Node3D"]
 
 [node name="Mopa" type="RigidBody3D" parent="." node_paths=PackedStringArray("malla", "carga", "mallas") groups=["interactuable"]]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8.37642, 0.95, -6.6543927)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8.37642, 0.98, -6.6543927)
 collision_mask = 9
 script = ExtResource("30_util")
 datos = ExtResource("31_mopa")
@@ -62,11 +68,11 @@ mallas = [NodePath("Malla")]
 shape = SubResource("forma_de_la_mopa")
 
 [node name="Malla" type="MeshInstance3D" parent="Mopa"]
-transform = Transform3D(0, 0, -0.17668723, -0.024567725, 0, 0, 0, 0.22025196, 0, 0.102476, -0.7186603, 0)
+script = ExtResource("fibras")
 gi_mode = 2
 
 [node name="Punta" type="MeshInstance3D" parent="Mopa"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0004685, -0.7955, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.831, 0)
 visible = false
 material_override = SubResource("tinte_de_la_mopa")
 cast_shadow = 0
@@ -226,10 +232,11 @@ mallas = [NodePath("Malla")]
 shape = SubResource("forma_del_balde")
 
 [node name="Malla" type="MeshInstance3D" parent="Balde"]
-transform = Transform3D(0.17549245, 0, 0, 0, 0, 0.17549248, 0, -0.17549248, 0, 0, 0, 0)
 gi_mode = 2
 
 [node name="Agua" type="MeshInstance3D" parent="Balde"]
+script = ExtResource("liquido")
+en_balde = true
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.07, 0)
 visible = false
 material_override = SubResource("color_del_agua")
