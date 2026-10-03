@@ -43,6 +43,13 @@ func piso() -> PisoDelLocal:
 	return _piso
 
 
+## El reloj sigue siendo el único que descuenta tiempo de la jornada.
+func desgastar_mopa(segundos: float, metros: float) -> void:
+	if _piso == null or reloj == null or not reloj.corriendo():
+		return
+	_piso.mopa().desgastar(segundos, metros)
+
+
 ## Usa lo que se lleva en la mano sobre el balde, el lavatorio o el inodoro.
 ##
 ## **Devuelve exactamente lo que contestó el dominio** en vez de traducirlo a un `bool`: los

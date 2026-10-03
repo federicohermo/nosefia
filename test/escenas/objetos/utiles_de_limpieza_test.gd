@@ -266,7 +266,9 @@ func test_la_mezcla_espera_aunque_se_suelten_los_utiles_en_otro_cuarto() -> void
 	assert_bool(balde.carga.visible).is_true()
 	assert_that(balde.color_de_la_carga()).is_equal(azul)
 	assert_bool(mopa.carga.visible).is_true()
-	assert_that((mopa.carga.material_override as StandardMaterial3D).albedo_color).is_equal(azul)
+	var punta: Color = (mopa.carga.material_override as StandardMaterial3D).albedo_color
+	assert_float(punta.b).is_greater(punta.r)
+	assert_float(_piso(almacen).mopa().carga_restante()).is_less(1.0)
 
 
 func _mopa_en_la_mano(almacen: Node3D, con_agua: bool = true) -> UtilDeLimpieza:

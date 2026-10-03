@@ -39,6 +39,10 @@ enum Resultado {
 	YA_ESTABA_LIMPIA,
 }
 
+## Tiempo real y recorrido adicionales: la caminata combina ambas pérdidas.
+const DURACION_DE_LA_CARGA := 15.0
+const RECORRIDO_DE_LA_CARGA := 52.5
+
 ## Los `id` de lo que interviene en limpiar. Los dos útiles son los mismos `StringName` que
 ## declaran sus `.tres`, y los dos artefactos del baño los declara la estructura del local: hay
 ## un caso de cada lado que afirma que coinciden, porque un `id` que no coincide no rompe nada —el

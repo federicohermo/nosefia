@@ -78,7 +78,7 @@ func _pintar() -> void:
 
 
 ## El agua tiñe las mismas fibras que se flexionan, sin envolverlas en una superficie rígida.
-func mostrar_la_carga(cargada: bool, color: Color) -> void:
+func mostrar_la_carga(cargada: bool, color: Color, cantidad: float = 1.0) -> void:
 	for pintura: ShaderMaterial in _pinturas:
-		pintura.set_shader_parameter("humedad", 0.65 if cargada else 0.0)
+		pintura.set_shader_parameter("humedad", 0.65 * cantidad if cargada else 0.0)
 		pintura.set_shader_parameter("color_del_agua", color)

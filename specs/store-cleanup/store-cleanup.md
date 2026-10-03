@@ -3,7 +3,7 @@ schema_version: 1
 capability_id: CAP-CLN
 status: ratified
 owner: por definir
-provenance: GDD «Limpiar» y «Sacar la basura»; ficha «9. Tarea: Limpieza»; migración de los specs 010, 015, 043
+provenance: GDD «Limpiar» y «Sacar la basura»; ficha «9. Tarea: Limpieza»; migración de los specs 010, 015, 043; ajustes del dueño sobre duración de la mopa y aspecto de las manchas
 ---
 
 # Capacidad: dejar el local en orden
@@ -111,9 +111,9 @@ balde está vacío, ENTONCES DEBE rechazarlo por **balde vacío** y dejar la mop
 ### BR-CLN-019 — Sólo el jabón que corresponde borra
 
 CUANDO se pasa la mopa por una mancha, SI la mopa está mojada del jabón que borra esa mancha,
-ENTONCES el sistema DEBE borrar la mancha, y la mopa DEBE seguir mojada: con una mojada se borran
-todas las manchas de ese jabón. SI no, ENTONCES DEBE rechazar la pasada sin cambiar nada, en este
-orden: **ya limpia**, si la mancha ya se borró; **mopa seca**; **sin jabón**, si está mojada de
+ENTONCES el sistema DEBE borrar la mancha mientras conserve carga útil. Borrar no descuenta
+carga adicional al tiempo y recorrido. SI no, ENTONCES DEBE rechazar la pasada sin cambiar nada,
+en este orden: **ya limpia**, si la mancha ya se borró; **mopa seca**; **sin jabón**, si está mojada de
 agua sola; y **jabón equivocado**.
 
 ### BR-CLN-020 — Cada uso contesta qué pasó
@@ -126,8 +126,17 @@ nada.
 ### BR-CLN-021 — Limpiar se puede dejar por la mitad
 
 MIENTRAS dura la jornada, el sistema DEBE conservar qué tiene el balde, de qué está mojada la mopa
-y qué manchas quedan. Cambian sólo con los gestos de esta capacidad: soltar un útil, llevarlo a
-otro cuarto o hacer otra tarea no los toca.
+y qué manchas quedan. Soltar un útil o cambiar de mano no recarga ni vacía el balde. La mopa
+sigue perdiendo su carga por el tiempo transcurrido, incluso apoyada o examinada.
+
+### BR-CLN-022 — La carga de la mopa tiene duración y recorrido limitados
+
+MIENTRAS dura la jornada, el sistema DEBE descontar la carga de la mopa por tiempo real y,
+cuando se lleva en la mano, por distancia recorrida. Los límites están en
+`ReglasDeLaLimpieza.DURACION_DE_LA_CARGA` y `RECORRIDO_DE_LA_CARGA`. CUANDO se agota,
+ENTONCES DEBE quedar seca y rechazar la limpieza. Remojarla en un balde con agua recupera
+la carga completa. La punta DEBE perder intensidad de color y gotear durante el desgaste,
+sin generar nuevas manchas ni reservar partículas sin límite. La pausa detiene el desgaste.
 
 ## Criterios de aceptación
 
@@ -169,8 +178,8 @@ polvo con amarillo.
 ### AC-CLN-015 — El color de cada mancha *(verifica BR-CLN-012)*
 
 DADO las manchas de la jornada en la escena ENTONCES la de moho se ve verde —el verde es su canal
-más alto—, la de caca marrón —rojo sobre verde sobre azul, y oscura— y las dos del local celestes
-—azul sobre verde sobre rojo—, con transparencia que deja ver el piso.
+más alto—, la de caca marrón —rojo sobre verde sobre azul, y oscura— y las dos del local negras,
+con el dibujo de polvo de la guía y transparencia entre los trazos que deja ver el piso.
 
 ### AC-CLN-016 — Las cuatro de la jornada *(verifica BR-CLN-013)*
 
@@ -226,8 +235,8 @@ seca.
 DADO una mancha de polvo CUANDO se pasa la mopa seca ENTONCES el resultado es «mopa seca»; mojada
 de agua, «sin jabón»; mojada de azul, «jabón equivocado»; y en los tres casos la mancha sigue.
 CUANDO se pasa mojada de amarillo ENTONCES la mancha se borra, la mopa sigue mojada de amarillo y
-borra la otra de polvo sin volver al balde. DADO una mancha ya borrada CUANDO se pasa la mopa
-seca ENTONCES el resultado es «ya limpia».
+puede borrar la otra de polvo mientras conserve carga; agotada debe volver al balde.
+DADO una mancha ya borrada CUANDO se pasa la mopa seca ENTONCES el resultado es «ya limpia».
 
 ### AC-CLN-024 — Lo que no es un gesto de limpiar *(verifica BR-CLN-020)*
 
@@ -239,7 +248,20 @@ manchas siguen como estaban.
 
 DADO el balde teñido de azul y la mopa mojada de azul CUANDO se sueltan en otro cuarto, se agarra
 y se suelta otra cosa y se los vuelve a agarrar ENTONCES el balde sigue teñido de azul y la mopa
-mojada de azul; DADO una mancha borrada, sigue borrada.
+con la carga que reste tras el tiempo y recorrido transcurridos;
+DADO una mancha borrada, sigue borrada.
+
+### AC-CLN-026 — La carga caduca sin depender de los cuadros *(verifica BR-CLN-022)*
+
+DADO una mopa recién mojada CUANDO transcurre la duración máxima en reposo ENTONCES queda
+seca y no borra una mancha. Dividir el mismo tiempo y recorrido entre cuadros produce
+la misma carga restante. Los valores negativos no recuperan producto.
+
+### AC-CLN-027 — Acercar el balde permite limpiar *(verifica BR-CLN-022)*
+
+DADO la mopa recién mojada CUANDO se recorre su distancia máxima ENTONCES llega seca y
+la mancha sigue. CUANDO se moja nuevamente en el balde cercano ENTONCES recupera toda
+la carga y borra la mancha correspondiente. La punta pierde color y gotea durante el viaje.
 
 ## No objetivos
 
@@ -252,8 +274,8 @@ mojada de azul; DADO una mancha borrada, sigue borrada.
 ## Contratos
 
 - **Entrada:** qué se lleva en la mano, sobre qué se usa —una mancha, el balde, el lavatorio o el
-  inodoro— y a qué distancia del descarte se soltó la bolsa.
-- **Salida:** cómo salió cada uso, qué tiene el balde y de qué está mojada la mopa, qué manchas
+  inodoro—, tiempo real y recorrido de la mopa, y a qué distancia del descarte se soltó la bolsa.
+- **Salida:** cómo salió cada uso, qué tiene el balde y la carga restante de la mopa, qué manchas
   quedan, el color de cada cosa, cuántas bolsas faltan, y si cada obligatoria está cumplida.
 - **Falla:** ocho motivos de rechazo para limpiar —sin efecto, balde vacío, balde ya lleno, balde
   ya teñido, mopa seca, sin jabón, jabón equivocado y ya limpia (BR-CLN-015 a BR-CLN-020)— y tres
@@ -282,9 +304,3 @@ mojada de azul; DADO una mancha borrada, sigue borrada.
     arrancan con las cuatro de la primera.
   - Decide: el dueño del repo.
   - Bloquea: nada. Cambiaría `BR-CLN-013`.
-- **OQ-CLN-003 — ¿Qué textura tiene cada tipo de mancha?**
-  - Por qué sigue abierta: la ficha le da una textura a cada tipo, para cuando la paranoia apague
-    los colores, y el arte todavía no tiene texturas de manchas. Por decisión del usuario del
-    2026-09-29, mientras tanto las tres son la misma mancha teñida de su color.
-  - Decide: el dueño del repo, con el arte.
-  - Bloquea: nada. Cambiaría cómo se distingue cada tipo en `BR-CLN-012`.

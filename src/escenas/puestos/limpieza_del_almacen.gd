@@ -20,6 +20,31 @@ const ArtefactoDelBano := preload("res://src/escenas/puestos/artefacto_del_bano.
 @export var balde: UtilDeLimpieza
 @export var mopa: UtilDeLimpieza
 
+var _posicion_previa := Vector3.ZERO
+var _muestreada := false
+var _intervalo_visual := 0.0
+var _cantidad_mostrada := -1.0
+
+
+func _physics_process(delta: float) -> void:
+	var posicion := jugador.global_position
+	var metros := posicion.distance_to(_posicion_previa) if _muestreada else 0.0
+	_posicion_previa = posicion
+	_muestreada = true
+	if jugador.id_en_la_mano() != ReglasDeLaLimpieza.ID_DE_LA_MOPA:
+		metros = 0.0
+	limpiador.desgastar_mopa(delta, metros)
+	_intervalo_visual += delta
+	if _intervalo_visual < 0.15 or limpiador.piso() == null:
+		return
+	_intervalo_visual = 0.0
+	var estado := limpiador.piso().mopa()
+	if estado.carga_restante() == _cantidad_mostrada:
+		return
+	_cantidad_mostrada = estado.carga_restante()
+	mopa.mostrar_la_carga(estado.esta_mojada(), estado.color(), estado.carga_restante())
+	mopa.mostrar_goteo(estado.esta_mojada(), estado.color())
+
 
 func _ready() -> void:
 	jugador.uso_pedido.connect(_al_pedir_uso)
@@ -36,6 +61,9 @@ func _ready() -> void:
 
 
 func _al_mojar_la_mopa() -> void:
+	# El recorrido anterior a mojarla no pertenece a la carga recién recuperada.
+	_posicion_previa = jugador.global_position
+	_muestreada = true
 	repintar()
 	mopa.mostrar_la_mojada(balde)
 
@@ -64,7 +92,9 @@ func repintar() -> void:
 		var estado := piso.mancha_de(mancha.lugar_de_la_mancha())
 		mancha.mostrar(not estado.esta_limpia(), estado.color(), estado.tipo())
 	balde.mostrar_la_carga(piso.balde().tiene_agua(), piso.balde().color())
-	mopa.mostrar_la_carga(piso.mopa().esta_mojada(), piso.mopa().color())
+	mopa.mostrar_la_carga(
+		piso.mopa().esta_mojada(), piso.mopa().color(), piso.mopa().carga_restante()
+	)
 
 
 ## Las manchas que cuelgan de este puesto, en el orden del `.tscn`.

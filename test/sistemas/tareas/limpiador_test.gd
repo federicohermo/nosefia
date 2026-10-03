@@ -220,3 +220,29 @@ func test_ningun_archivo_de_este_spec_nombra_consumir() -> void:
 			. override_failure_message("`%s` nombra `consumir`: es un segundo cobro" % ruta)
 			. is_false()
 		)
+
+
+func test_desgastar_la_mopa_rechaza_la_pasada_sin_cobrar_tiempo() -> void:  # AC-CLN-026
+	var limpiador := _limpiador()
+	_preparar(limpiador, &"jabon_amarillo")
+	var tiempo := _turno.tiempo_restante()
+	limpiador.desgastar_mopa(ReglasDeLaLimpieza.DURACION_DE_LA_CARGA, 0.0)
+	assert_int(limpiador.pasar(MOPA, PisoDelLocal.Lugar.ENTRADA)).is_equal(
+		ReglasDeLaLimpieza.Resultado.MOPA_SECA
+	)
+	assert_bool(limpiador.piso().mancha_de(PisoDelLocal.Lugar.ENTRADA).esta_limpia()).is_false()
+	assert_float(_turno.tiempo_restante()).is_equal(tiempo)
+
+
+func test_remojar_cerca_recupera_la_limpieza_despues_del_viaje() -> void:  # AC-CLN-027
+	var limpiador := _limpiador()
+	_preparar(limpiador, &"jabon_amarillo")
+	limpiador.desgastar_mopa(3.0, ReglasDeLaLimpieza.RECORRIDO_DE_LA_CARGA)
+	assert_int(limpiador.pasar(MOPA, PisoDelLocal.Lugar.ENTRADA)).is_equal(
+		ReglasDeLaLimpieza.Resultado.MOPA_SECA
+	)
+	limpiador.usar(MOPA, BALDE)
+	limpiador.desgastar_mopa(0.5, 0.5)
+	assert_int(limpiador.pasar(MOPA, PisoDelLocal.Lugar.ENTRADA)).is_equal(
+		ReglasDeLaLimpieza.Resultado.MANCHA_BORRADA
+	)

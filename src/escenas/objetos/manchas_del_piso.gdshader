@@ -54,7 +54,7 @@ void fragment() {
 		ROUGHNESS = 0.80;
 	} else {
 		// Reutiliza el dibujo del cartel; el papel queda transparente.
-		vec2 recorte = clamp((UV - 0.5) / 0.70 + 0.5, vec2(0.0), vec2(1.0));
+		vec2 recorte = clamp((UV - 0.5) / 0.78 + 0.5, vec2(0.0), vec2(1.0));
 		vec3 tinta = texture(guia_de_manchas,
 			vec2(0.585, 0.704) + recorte * vec2(0.369, 0.250)).rgb;
 		float claridad = dot(tinta, vec3(0.299, 0.587, 0.114));

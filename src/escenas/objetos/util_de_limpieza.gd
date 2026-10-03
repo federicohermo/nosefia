@@ -14,6 +14,7 @@ extends ObjetoAgarrable
 const MODELO := preload("res://assets/models/SEPT_JUEGOS_PROTOTIPO.glb")
 const SuperficieLiquida := preload("res://src/escenas/objetos/superficie_liquida.gd")
 const FibrasDeLaMopa := preload("res://src/escenas/objetos/fibras_de_la_mopa.gd")
+const Gotas := preload("res://src/escenas/objetos/gotas_del_balde.gd")
 
 ## El nodo del modelo que lo dibujaba fijo: su malla es la de este útil.
 @export var nodo_del_modelo: StringName
@@ -30,11 +31,19 @@ const FibrasDeLaMopa := preload("res://src/escenas/objetos/fibras_de_la_mopa.gd"
 
 var _bajada: Tween
 var _tamanos_originales: Dictionary[Node3D, Transform3D] = {}
+var _gotas: Gotas
+var _pintura_de_gotas: StandardMaterial3D
 
 
 func _ready() -> void:
 	super()
 	malla.mesh = malla_del_modelo(nodo_del_modelo)
+	if datos.id == ReglasDeLaLimpieza.ID_DE_LA_MOPA:
+		_gotas = Gotas.new()
+		_pintura_de_gotas = StandardMaterial3D.new()
+		_pintura_de_gotas.roughness = 0.3
+		add_child(_gotas)
+		_gotas.preparar(_pintura_de_gotas)
 	if escala_apoyada != 1.0:
 		for parte: Node3D in [malla, carga, get_node("Forma")]:
 			_tamanos_originales[parte] = parte.transform
@@ -130,15 +139,25 @@ func _actualizar_tamano() -> void:
 
 ## Muestra la carga del color que se le pasa, o la esconde. Cuál y de qué color lo decide el
 ## dominio: acá sólo se pinta.
-func mostrar_la_carga(cargada: bool, color: Color) -> void:
+func mostrar_la_carga(cargada: bool, color: Color, cantidad: float = 1.0) -> void:
 	if carga is SuperficieLiquida:
 		(carga as SuperficieLiquida).presentar(cargada)
 		(carga as SuperficieLiquida).pintar(color)
 	else:
 		carga.visible = cargada
-		(carga.material_override as StandardMaterial3D).albedo_color = color
+		(carga.material_override as StandardMaterial3D).albedo_color = (
+			color if cantidad >= 1.0 else Color(0.72, 0.70, 0.62).lerp(color, cantidad)
+		)
 		if malla is FibrasDeLaMopa:
-			(malla as FibrasDeLaMopa).mostrar_la_carga(cargada, color)
+			(malla as FibrasDeLaMopa).mostrar_la_carga(cargada, color, cantidad)
+
+
+func mostrar_goteo(cargada: bool, color: Color) -> void:
+	if _gotas == null or not cargada or not is_visible_in_tree():
+		return
+	if not _pintura_de_gotas.albedo_color.is_equal_approx(color):
+		_pintura_de_gotas.albedo_color = color
+	_gotas.emitir(carga.global_position + Vector3.DOWN * 0.025, Vector3.DOWN * 0.2, 1)
 
 
 func color_de_la_carga() -> Color:

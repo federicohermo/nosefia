@@ -36,8 +36,8 @@ func preparar(pintura: Material) -> void:
 	limpiar()
 
 
-func emitir(origen: Vector3, velocidad: Vector3) -> void:
-	for indice: int in 4:
+func emitir(origen: Vector3, velocidad: Vector3, cantidad: int = 4) -> void:
+	for indice: int in clampi(cantidad, 0, CUPO):
 		var turno := _siguiente % CUPO
 		_siguiente += 1
 		_posiciones[turno] = origen

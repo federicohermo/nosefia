@@ -150,9 +150,16 @@ static func _radio(nodo: Node3D) -> float:
 	for visual: VisualInstance3D in nodo.find_children("*", "VisualInstance3D", true, false):
 		var hasta_el_nodo := Transform3D.IDENTITY
 		var actual: Node = visual
+		var pertenece := true
 		while actual != nodo and actual is Node3D:
+			# Las gotas tienen coordenadas mundiales, aunque cuelguen del recipiente.
+			if (actual as Node3D).top_level or not (actual as Node3D).visible:
+				pertenece = false
+				break
 			hasta_el_nodo = (actual as Node3D).transform * hasta_el_nodo
 			actual = actual.get_parent()
+		if not pertenece:
+			continue
 		var limites := visual.get_aabb()
 		for indice in 8:
 			radio = maxf(radio, (hasta_el_nodo * limites.get_endpoint(indice)).length())
