@@ -17,7 +17,7 @@ func _agua() -> Superficie:
 	var agua := balde.get_node("Agua") as Superficie
 	agua.set_physics_process(false)
 	agua.presentar(true)
-	agua._physics_process(1.0 / 60.0)
+	_avanzar(agua, 1.0 / 60.0)
 	return agua
 
 
@@ -30,10 +30,8 @@ func _alturas(agua: MeshInstance3D) -> Array[float]:
 
 
 func _cantidad_de_gotas(agua: Node) -> int:
-	var cantidad := 0
-	for gota: MeshInstance3D in agua.get_child(0).get_children():
-		cantidad += int(gota.visible)
-	return cantidad
+	var lote := agua.get_child(0).get_child(0) as MultiMeshInstance3D
+	return lote.multimesh.visible_instance_count if lote.visible else 0
 
 
 func test_el_agua_tiene_superficie_curva_en_vez_de_un_hexagono() -> void:
@@ -62,11 +60,11 @@ func test_acelerar_agita_el_agua_y_frenar_la_deja_asentarse() -> void:
 	var agua := _agua()
 	for paso: int in 12:
 		agua.get_parent().position.x += 0.05
-		agua._physics_process(1.0 / 60.0)
+		_avanzar(agua, 1.0 / 60.0)
 	var agitada := _alturas(agua)
 	assert_float(agitada.max() - agitada.min()).is_greater(0.01)
 	for paso: int in 360:
-		agua._physics_process(1.0 / 60.0)
+		_avanzar(agua, 1.0 / 60.0)
 	var quieta := _alturas(agua)
 	assert_float(quieta.max() - quieta.min()).is_less(0.001)
 
@@ -75,12 +73,14 @@ func test_un_movimiento_brusco_salpica_sin_crear_nodos_sin_limite() -> void:
 	var agua := _agua()
 	(agua.get_parent() as Node3D).rotation.x = ReglasDeLaLimpieza.INCLINACION_DEL_BALDE_EN_LA_MANO
 	agua.reiniciar()
-	agua._physics_process(1.0 / 60.0)
+	_avanzar(agua, 1.0 / 60.0)
 	for paso: int in 90:
 		agua.get_parent().position.x += 0.04 if paso % 20 < 10 else -0.04
-		agua._physics_process(1.0 / 60.0)
+		_avanzar(agua, 1.0 / 60.0)
 	assert_int(_cantidad_de_gotas(agua)).is_greater(0)
-	assert_int(agua.get_child(0).get_child_count()).is_equal(24)
+	var lote := agua.get_child(0).get_child(0) as MultiMeshInstance3D
+	assert_int(lote.multimesh.instance_count).is_equal(24)
+	assert_int(agua.get_child(0).get_child_count()).is_equal(1)
 	var alturas := _alturas(agua)
 	assert_float(alturas.min()).is_greater_equal(-0.100001)
 	assert_float(alturas.max()).is_less_equal(0.105001)
@@ -90,17 +90,17 @@ func test_vaciar_y_teletransportar_no_dejan_gotas_ni_inventan_impulso() -> void:
 	var agua := _agua()
 	(agua.get_parent() as Node3D).rotation.x = ReglasDeLaLimpieza.INCLINACION_DEL_BALDE_EN_LA_MANO
 	agua.reiniciar()
-	agua._physics_process(1.0 / 60.0)
+	_avanzar(agua, 1.0 / 60.0)
 	for paso: int in 30:
 		agua.get_parent().position.x += 0.04 if paso % 10 < 5 else -0.04
-		agua._physics_process(1.0 / 60.0)
+		_avanzar(agua, 1.0 / 60.0)
 	assert_int(_cantidad_de_gotas(agua)).is_greater(0)
 	agua.presentar(false)
 	assert_int(_cantidad_de_gotas(agua)).is_equal(0)
 	(agua.get_parent() as Node3D).rotation = Vector3.ZERO
 	agua.get_parent().position.x += 20.0
 	agua.presentar(true)
-	agua._physics_process(1.0 / 60.0)
+	_avanzar(agua, 1.0 / 60.0)
 	var alturas := _alturas(agua)
 	assert_float(alturas.max() - alturas.min()).is_less(0.001)
 	assert_int(_cantidad_de_gotas(agua)).is_equal(0)
@@ -111,7 +111,7 @@ func test_el_agua_inclinada_compensa_la_orientacion_del_balde() -> void:
 	(agua.get_parent() as Node3D).rotation.x = PI / 6.0
 	assert_float(agua.global_basis.y.angle_to(Vector3.UP)).is_greater(0.5)
 	agua.reiniciar()
-	agua._physics_process(1.0 / 60.0)
+	_avanzar(agua, 1.0 / 60.0)
 	var vertices: PackedVector3Array = agua.mesh.surface_get_arrays(0)[Mesh.ARRAY_VERTEX]
 	var alturas: Array[float] = []
 	for vertice: Vector3 in vertices:
@@ -126,16 +126,16 @@ func test_el_charco_se_deforma_y_luego_deja_de_ondular() -> void:
 	var superficie := mancha.get_node("Malla") as Superficie
 	superficie.set_physics_process(false)
 	var antes: PackedVector3Array = superficie.mesh.surface_get_arrays(0)[Mesh.ARRAY_VERTEX]
-	superficie._physics_process(0.1)
+	_avanzar(superficie, 0.1)
 	var despues: PackedVector3Array = superficie.mesh.surface_get_arrays(0)[Mesh.ARRAY_VERTEX]
 	assert_bool(antes == despues).is_false()
 	for paso: int in 80:
-		superficie._physics_process(0.1)
+		_avanzar(superficie, 0.1)
 	var asentada: PackedVector3Array = superficie.mesh.surface_get_arrays(0)[Mesh.ARRAY_VERTEX]
-	superficie._physics_process(0.1)
+	_avanzar(superficie, 0.1)
 	assert_bool(asentada == superficie.mesh.surface_get_arrays(0)[Mesh.ARRAY_VERTEX]).is_true()
 	superficie.tocar_en(mancha.global_position + Vector3(0.2, 0.0, 0.0))
-	superficie._physics_process(0.1)
+	_avanzar(superficie, 0.1)
 	assert_bool(asentada == superficie.mesh.surface_get_arrays(0)[Mesh.ARRAY_VERTEX]).is_false()
 
 
@@ -146,7 +146,7 @@ func test_el_moho_de_la_pared_no_ondula_como_un_charco() -> void:
 	var superficie := mancha.get_node("Malla") as Superficie
 	var antes: PackedVector3Array = superficie.mesh.surface_get_arrays(0)[Mesh.ARRAY_VERTEX]
 	superficie.perturbar()
-	superficie._physics_process(0.1)
+	_avanzar(superficie, 0.1)
 	assert_bool(antes == superficie.mesh.surface_get_arrays(0)[Mesh.ARRAY_VERTEX]).is_true()
 
 
@@ -157,11 +157,15 @@ func test_las_gotas_caen_en_el_mundo_y_expiran() -> void:
 	gotas.emitir(Vector3(0.0, 100.0, 0.0), Vector3.RIGHT)
 	gotas.position.x += 10.0
 	gotas._physics_process(0.1)
-	var gota := gotas.get_child(0) as MeshInstance3D
-	assert_float(gota.global_position.x).is_between(0.05, 0.15)
-	assert_float(gota.global_position.y).is_less(100.0)
+	var lote := gotas.get_child(0) as MultiMeshInstance3D
+	# El servidor sin pantalla no conserva transforms de MultiMesh; la caída es física visual.
+	var posiciones: PackedVector3Array = gotas.get("_posiciones")
+	var gota := posiciones[0]
+	assert_bool(lote.global_transform.is_equal_approx(Transform3D.IDENTITY)).is_true()
+	assert_float(gota.x).is_between(0.05, 0.15)
+	assert_float(gota.y).is_less(100.0)
 	gotas._physics_process(1.0)
-	assert_bool(gota.visible).is_false()
+	assert_bool(lote.visible).is_false()
 	assert_bool(gotas.is_physics_processing()).is_false()
 
 
@@ -182,8 +186,7 @@ func test_las_gotas_se_extinguen_al_tocar_un_solido() -> void:
 	assert_bool(gotas.get_world_3d().direct_space_state.intersect_ray(rayo).is_empty()).is_false()
 	gotas.emitir(Vector3(0.0, 100.0, 0.0), Vector3.DOWN)
 	gotas._physics_process(0.3)
-	for gota: MeshInstance3D in gotas.get_children():
-		assert_bool(gota.visible).is_false()
+	assert_bool((gotas.get_child(0) as MultiMeshInstance3D).visible).is_false()
 
 
 func test_un_paso_sobre_el_charco_lo_agita_sin_cambiar_la_limpieza() -> void:
@@ -198,11 +201,11 @@ func test_un_paso_sobre_el_charco_lo_agita_sin_cambiar_la_limpieza() -> void:
 	var superficie := mancha.get_node("Malla") as Superficie
 	superficie.set_physics_process(false)
 	for paso: int in 80:
-		superficie._physics_process(0.1)
+		_avanzar(superficie, 0.1)
 	var antes: PackedVector3Array = superficie.mesh.surface_get_arrays(0)[Mesh.ARRAY_VERTEX]
 	jugador.global_position = mancha.global_position + Vector3.UP
 	jugador.emit_signal("paso_dado")
-	superficie._physics_process(0.1)
+	_avanzar(superficie, 0.1)
 	assert_bool(antes == superficie.mesh.surface_get_arrays(0)[Mesh.ARRAY_VERTEX]).is_false()
 	var piso: PisoDelLocal = (almacen.get("_limpiador") as Limpiador).piso()
 	assert_bool(piso.mancha_de(PisoDelLocal.Lugar.ENTRADA).esta_limpia()).is_false()
@@ -213,7 +216,7 @@ func test_el_agua_no_atraviesa_ninguna_de_las_seis_paredes() -> void:
 	var agua := _agua()
 	for paso: int in 60:
 		agua.get_parent().position.x += 0.04 if paso % 10 < 5 else -0.04
-		agua._physics_process(1.0 / 60.0)
+		_avanzar(agua, 1.0 / 60.0)
 	var vertices: PackedVector3Array = agua.mesh.surface_get_arrays(0)[Mesh.ARRAY_VERTEX]
 	for vertice: Vector3 in vertices:
 		for pared: int in 12:
@@ -296,3 +299,37 @@ func test_la_pared_no_fija_la_altura_del_agua_a_cero() -> void:
 	var junto := ondas.altura_en(Vector2(11.0 / 12.0, 0.0))
 	assert_float(absf(junto)).is_greater(0.0001)
 	assert_float(ondas.altura_en(Vector2(0.97, 0.0))).is_equal_approx(junto, 0.00001)
+
+
+func _avanzar(superficie: Superficie, delta: float) -> void:
+	superficie._physics_process(delta)
+	superficie._process(delta)
+
+
+func test_recuperar_la_fisica_no_reconstruye_la_malla_hasta_dibujar() -> void:
+	var agua := _agua()
+	var antes: PackedVector3Array = agua.mesh.surface_get_arrays(0)[Mesh.ARRAY_VERTEX]
+	for paso: int in 8:
+		agua.get_parent().position.x += 0.04
+		agua._physics_process(1.0 / 60.0)
+	assert_bool(antes == agua.mesh.surface_get_arrays(0)[Mesh.ARRAY_VERTEX]).is_true()
+	agua._process(1.0 / 60.0)
+	assert_bool(antes == agua.mesh.surface_get_arrays(0)[Mesh.ARRAY_VERTEX]).is_false()
+	var normales: PackedVector3Array = agua.mesh.surface_get_arrays(0)[Mesh.ARRAY_NORMAL]
+	for normal: Vector3 in normales:
+		assert_float(normal.length()).is_equal_approx(1.0, 0.0001)
+		assert_float(normal.y).is_greater(0.0)
+
+
+func test_el_muestreo_preparado_conserva_las_ondas_del_centro_y_de_la_pared() -> void:
+	var ondas := Ondas.new()
+	var puntos := PackedVector2Array(
+		[Vector2.ZERO, Vector2(0.31, -0.24), Vector2(0.97, 0.0), Vector2(-0.9, 0.3)]
+	)
+	ondas.preparar_muestras(puntos)
+	ondas.perturbar(Vector2(0.8, 0.0), 0.5)
+	for paso: int in 20:
+		ondas.avanzar(1.0 / 60.0, Vector2(5.0, -2.0))
+		var alturas := ondas.alturas_muestreadas()
+		for indice: int in puntos.size():
+			assert_float(alturas[indice]).is_equal_approx(ondas.altura_en(puntos[indice]), 0.000001)

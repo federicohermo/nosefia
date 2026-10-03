@@ -83,6 +83,14 @@ class ElParEnDisco(unittest.TestCase):
         self.assertEqual(preset.get("export_path"), "export/web/index.html")
         self.assertTrue(pide_hilos(self.cfg), f"el preset Web no declara `{HILOS}=true`.")
 
+    def test_la_web_no_empaqueta_las_herramientas_ni_los_tests(self):
+        preset = preset_web(self.cfg)
+        self.assertIsNotNone(preset)
+        excluidos = {ruta.strip() for ruta in preset.get("exclude_filter", "").split(",")}
+        for carpeta in ("reports", "node_modules", "test", "addons/gdUnit4"):
+            with self.subTest(carpeta=carpeta):
+                self.assertIn(f"{carpeta}/*", excluidos)
+
     def test_vercel_apaga_el_deploy_automatico_de_git(self):
         # `docs/infra/despliegue.md` dedica una sección entera a por qué exporta Actions y no
         # Vercel, y nada lo hacía cumplir: el proyecto está vinculado al repo, así que la

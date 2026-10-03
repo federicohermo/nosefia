@@ -82,7 +82,11 @@ func _materiales_de(objeto: GeometryInstance3D) -> Array:
 		malla = (objeto as MultiMeshInstance3D).multimesh.mesh
 	if malla != null:
 		for superficie: int in malla.get_surface_count():
-			materiales.append(malla.surface_get_material(superficie))
+			# Las fibras reemplazan el material por superficie sin cambiar la malla del modelo.
+			if objeto is MeshInstance3D:
+				materiales.append((objeto as MeshInstance3D).get_active_material(superficie))
+			else:
+				materiales.append(malla.surface_get_material(superficie))
 	return materiales.filter(func(material: Variant) -> bool: return material != null)
 
 

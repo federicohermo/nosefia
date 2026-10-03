@@ -24,8 +24,12 @@ var _tiempo := 0.0
 var _onda := 0.0
 var _espera := 0.0
 var _vertices := PackedVector3Array()
+var _puntos := PackedVector2Array()
 var _indices := PackedInt32Array()
 var _superficie := ArrayMesh.new()
+var _normales_empaquetadas := PackedInt32Array()
+var _inicio_de_normales := 0
+var _paso_de_normales := 0
 var _gotas: Gotas
 var _nivel_previo := Vector2.ZERO
 var _centro_de_onda := Vector2.ZERO
@@ -99,6 +103,7 @@ func perturbar() -> void:
 		_onda = 1.0
 		_tiempo = 0.0
 		set_physics_process(true)
+		set_process(true)
 
 
 func presentar(activa: bool) -> void:
@@ -160,9 +165,15 @@ func _physics_process(delta: float) -> void:
 	else:
 		if _onda < 0.001:
 			set_physics_process(false)
+			set_process(false)
 			return
 		_onda *= exp(-paso * 1.8)
-	_dibujar()
+
+
+## La física puede recuperar varios pasos; basta subir la malla una vez por cuadro.
+func _process(_delta: float) -> void:
+	if is_visible_in_tree() and (en_balde or _onda >= 0.001):
+		_dibujar()
 
 
 func _mover_agua(delta: float) -> void:
@@ -232,6 +243,25 @@ func _radio_del_borde(angulo: float) -> float:
 
 func _crear_topologia() -> void:
 	_vertices.resize(1 + ANILLOS * SEGMENTOS)
+	_puntos.resize(_vertices.size())
+	var fase := 0.0 if en_balde else float(get_parent().get("lugar")) * 1.7
+	for anillo: int in range(1, ANILLOS + 1):
+		for segmento: int in SEGMENTOS:
+			var angulo := TAU * segmento / SEGMENTOS
+			var radio := _radio_del_borde(angulo) if en_balde else _radio
+			var borde := (
+				1.0
+				if en_balde
+				else 0.84 + 0.08 * sin(angulo * 3.0 + fase) + 0.04 * cos(angulo * 7.0)
+			)
+			_puntos[1 + (anillo - 1) * SEGMENTOS + segmento] = (
+				Vector2(cos(angulo), sin(angulo)) * radio * float(anillo) / ANILLOS * borde
+			)
+	if en_balde:
+		var muestras := PackedVector2Array()
+		for punto: Vector2 in _puntos:
+			muestras.append(punto / _radio)
+		_ondas.preparar_muestras(muestras)
 	for segmento: int in SEGMENTOS:
 		_indices.append_array(PackedInt32Array([0, 1 + segmento, 1 + (segmento + 1) % SEGMENTOS]))
 	for anillo: int in range(1, ANILLOS):
@@ -250,24 +280,16 @@ func _dibujar() -> void:
 		return
 	_estaba_quieta = quieta
 	_ultima_inclinacion = inclinacion
-	_vertices[0] = Vector3(
-		0.0, _ondas.altura_en(Vector2.ZERO) * RELIEVE_DE_LAS_ONDAS if en_balde else 0.0, 0.0
-	)
+	var alturas := _ondas.alturas_muestreadas() if en_balde else PackedFloat32Array()
+	_vertices[0] = Vector3(0.0, alturas[0] * RELIEVE_DE_LAS_ONDAS if en_balde else 0.0, 0.0)
+	var borde := 1.0 if en_balde else 1.0 - _onda * 0.12 * (0.5 + 0.5 * cos(_tiempo * 5.0))
 	for anillo: int in range(1, ANILLOS + 1):
 		var proporcion := float(anillo) / ANILLOS
 		for segmento: int in SEGMENTOS:
-			var angulo := TAU * segmento / SEGMENTOS
-			var borde := 1.0
-			if not en_balde:
-				# El contorno queda dentro del cuerpo enfocable y se asienta después de la onda.
-				var fase := float(get_parent().get("lugar")) * 1.7
-				borde = 0.84 + 0.08 * sin(angulo * 3.0 + fase) + 0.04 * cos(angulo * 7.0)
-				borde *= 1.0 - _onda * 0.12 * (0.5 + 0.5 * cos(_tiempo * 5.0))
-			var radio := _radio_del_borde(angulo) if en_balde else _radio
-			var punto := Vector2(cos(angulo), sin(angulo)) * radio * proporcion * borde
+			var punto := _puntos[1 + (anillo - 1) * SEGMENTOS + segmento] * borde
 			var altura := inclinacion.dot(punto)
 			if en_balde:
-				altura += _ondas.altura_en(punto / _radio) * RELIEVE_DE_LAS_ONDAS
+				altura += alturas[1 + (anillo - 1) * SEGMENTOS + segmento] * RELIEVE_DE_LAS_ONDAS
 			else:
 				var distancia := punto.distance_to(_centro_de_onda) / _radio
 				altura += sin(distancia * 12.0 - _tiempo * 9.0) * 0.0015 * _onda
@@ -277,20 +299,56 @@ func _dibujar() -> void:
 			)
 	var normales := PackedVector3Array()
 	normales.resize(_vertices.size())
-	for triangulo: int in range(0, _indices.size(), 3):
-		var a := _indices[triangulo]
-		var b := _indices[triangulo + 1]
-		var c := _indices[triangulo + 2]
-		var normal := (_vertices[c] - _vertices[a]).cross(_vertices[b] - _vertices[a])
-		normales[a] += normal
-		normales[b] += normal
-		normales[c] += normal
-	for indice: int in normales.size():
-		normales[indice] = normales[indice].normalized()
+	# Dos tangentes por vértice evitan acumular cada triángulo de la superficie.
+	normales[0] = (
+		(_vertices[1 + SEGMENTOS / 4] - _vertices[1 + SEGMENTOS * 3 / 4])
+		. cross(_vertices[1] - _vertices[1 + SEGMENTOS / 2])
+		. normalized()
+	)
+	for anillo: int in ANILLOS:
+		var inicio := 1 + anillo * SEGMENTOS
+		for segmento: int in SEGMENTOS:
+			var indice := inicio + segmento
+			var anterior := inicio + (segmento + SEGMENTOS - 1) % SEGMENTOS
+			var siguiente := inicio + (segmento + 1) % SEGMENTOS
+			var interior := indice - SEGMENTOS if anillo > 0 else 0
+			var exterior := indice + SEGMENTOS if anillo < ANILLOS - 1 else indice
+			normales[indice] = (
+				(_vertices[siguiente] - _vertices[anterior])
+				. cross(_vertices[exterior] - _vertices[interior])
+				. normalized()
+			)
 	var arrays: Array = []
 	arrays.resize(Mesh.ARRAY_MAX)
 	arrays[Mesh.ARRAY_VERTEX] = _vertices
 	arrays[Mesh.ARRAY_NORMAL] = normales
 	arrays[Mesh.ARRAY_INDEX] = _indices
-	_superficie.clear_surfaces()
-	_superficie.add_surface_from_arrays(Mesh.PRIMITIVE_TRIANGLES, arrays)
+	# El renderizador sin pantalla no implementa las escrituras de buffers.
+	if DisplayServer.get_name() == "headless":
+		_superficie.clear_surfaces()
+	if _superficie.get_surface_count() == 0:
+		_superficie.add_surface_from_arrays(
+			Mesh.PRIMITIVE_TRIANGLES, arrays, [], {}, Mesh.ARRAY_FLAG_USE_DYNAMIC_UPDATE
+		)
+		_superficie.custom_aabb = AABB(
+			Vector3(-_radio, -0.1, -_radio), Vector3(_radio * 2.0, 0.205, _radio * 2.0)
+		)
+		var formato := _superficie.surface_get_format(0)
+		_inicio_de_normales = RenderingServer.mesh_surface_get_format_offset(
+			formato, _vertices.size(), Mesh.ARRAY_NORMAL
+		)
+		_paso_de_normales = (
+			RenderingServer.mesh_surface_get_format_normal_tangent_stride(formato, _vertices.size())
+			/ 4
+		)
+		_normales_empaquetadas.resize(_vertices.size() * _paso_de_normales)
+	else:
+		for indice: int in normales.size():
+			var normal := normales[indice].octahedron_encode() * 65535.0
+			_normales_empaquetadas[indice * _paso_de_normales] = (
+				int(normal.x) | (int(normal.y) << 16)
+			)
+		_superficie.surface_update_vertex_region(0, 0, _vertices.to_byte_array())
+		_superficie.surface_update_vertex_region(
+			0, _inicio_de_normales, _normales_empaquetadas.to_byte_array()
+		)

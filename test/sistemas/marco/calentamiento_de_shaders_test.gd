@@ -64,6 +64,23 @@ func test_el_material_de_un_multimesh_cuenta_como_nuevo() -> void:
 	assert_int(_visibles(escena)).is_equal(2)
 
 
+func test_el_material_reemplazado_en_una_superficie_cuenta_como_nuevo() -> void:
+	var escena: Node3D = auto_free(Node3D.new())
+	var comun := BoxMesh.new()
+	comun.material = StandardMaterial3D.new()
+	for _i: int in 3:
+		var malla := MeshInstance3D.new()
+		malla.mesh = comun
+		malla.set_surface_override_material(0, ShaderMaterial.new())
+		escena.add_child(malla)
+	add_child(escena)
+	var calentamiento := _calentamiento()
+	calentamiento.calentar(escena)
+	await calentamiento.avanzo
+	await calentamiento.avanzo
+	assert_int(_visibles(escena)).is_equal(2)
+
+
 func test_los_que_repiten_material_se_destapan_juntos() -> void:
 	var escena := _escena()
 	var calentamiento := _calentamiento()
