@@ -89,8 +89,8 @@ func test_cada_tipo_de_mancha_se_ve_de_su_color() -> void:  # AC-CLN-015
 	assert_float(caca.g).is_greater(caca.b)
 	assert_float(caca.v).is_less(LO_MAS_CLARO_DEL_MARRON)
 	var polvo: Color = colores[ReglasDeLaLimpieza.TipoDeMancha.POLVO]
-	assert_float(polvo.b).is_greater(polvo.g)
-	assert_float(polvo.g).is_greater(polvo.r)
+	assert_float(polvo.v).is_less(0.15)
+	assert_float(absf(polvo.r - polvo.b)).is_less(0.03)
 
 
 func test_el_agua_sin_jabon_es_celeste_y_bien_clara() -> void:  # AC-CLN-019

@@ -6,6 +6,10 @@ signal encogida
 const Gotas := preload("res://src/escenas/objetos/gotas_del_balde.gd")
 const Ondas := preload("res://src/escenas/objetos/ondas_del_balde.gd")
 const AGUA_VISIBLE := preload("res://src/escenas/puestos/agua_del_bano.gdshader")
+const MANCHAS_VISIBLES := preload("res://src/escenas/objetos/manchas_del_piso.gdshader")
+const GUIA_DE_MANCHAS := preload(
+	"res://assets/models/SEPT_JUEGOS_PROTOTIPO_Guía de jabones y manchas copy.png"
+)
 const SEGMENTOS := 48
 const ANILLOS := 12
 const PASO := 1.0 / 120.0
@@ -25,6 +29,7 @@ var _onda := 0.0
 var _espera := 0.0
 var _vertices := PackedVector3Array()
 var _puntos := PackedVector2Array()
+var _coordenadas := PackedVector2Array()
 var _indices := PackedInt32Array()
 var _superficie := ArrayMesh.new()
 var _normales_empaquetadas := PackedInt32Array()
@@ -75,6 +80,20 @@ func pintar(color: Color) -> void:
 		(material_override as ShaderMaterial).set_shader_parameter("color_del_agua", color)
 	else:
 		(material_override as StandardMaterial3D).albedo_color = color
+
+
+func configurar_mancha(tipo: ReglasDeLaLimpieza.TipoDeMancha, acuosa: bool) -> void:
+	var pintura := material_override as ShaderMaterial
+	if pintura == null or pintura.shader != MANCHAS_VISIBLES:
+		var color_previo := color_de_la_superficie()
+		pintura = ShaderMaterial.new()
+		pintura.shader = MANCHAS_VISIBLES
+		pintura.set_shader_parameter("guia_de_manchas", GUIA_DE_MANCHAS)
+		pintura.set_shader_parameter("color_del_agua", color_previo)
+		material_override = pintura
+	pintura.set_shader_parameter("tipo_de_suciedad", tipo)
+	pintura.set_shader_parameter("acuosa", acuosa)
+	pintura.set_shader_parameter("transparencia", 0.55 if acuosa else 1.0)
 
 
 func color_de_la_superficie() -> Color:
@@ -257,6 +276,8 @@ func _crear_topologia() -> void:
 			_puntos[1 + (anillo - 1) * SEGMENTOS + segmento] = (
 				Vector2(cos(angulo), sin(angulo)) * radio * float(anillo) / ANILLOS * borde
 			)
+	for punto: Vector2 in _puntos:
+		_coordenadas.append(punto / (_radio * 2.0) + Vector2(0.5, 0.5))
 	if en_balde:
 		var muestras := PackedVector2Array()
 		for punto: Vector2 in _puntos:
@@ -322,6 +343,7 @@ func _dibujar() -> void:
 	arrays.resize(Mesh.ARRAY_MAX)
 	arrays[Mesh.ARRAY_VERTEX] = _vertices
 	arrays[Mesh.ARRAY_NORMAL] = normales
+	arrays[Mesh.ARRAY_TEX_UV] = _coordenadas
 	arrays[Mesh.ARRAY_INDEX] = _indices
 	# El renderizador sin pantalla no implementa las escrituras de buffers.
 	if DisplayServer.get_name() == "headless":

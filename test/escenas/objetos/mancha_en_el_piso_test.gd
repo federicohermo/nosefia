@@ -295,8 +295,7 @@ func test_cada_mancha_se_ve_del_color_de_su_tipo() -> void:  # AC-CLN-015
 	assert_float(caca.v).is_less(LO_MAS_CLARO_DEL_MARRON)
 	for lugar: PisoDelLocal.Lugar in [PisoDelLocal.Lugar.ENTRADA, PisoDelLocal.Lugar.GONDOLAS]:
 		var charco := _mancha_de(almacen, lugar).color()
-		assert_float(charco.b).is_greater(charco.g)
-		assert_float(charco.g).is_greater(charco.r)
+		assert_float(charco.v).is_less(0.15)
 		var malla := _mancha_de(almacen, lugar).get_node("Malla") as MeshInstance3D
 		var pintura := malla.material_override as ShaderMaterial
 		assert_float(pintura.get_shader_parameter("transparencia")).is_equal(0.55)

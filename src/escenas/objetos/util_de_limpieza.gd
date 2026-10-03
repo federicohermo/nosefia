@@ -19,6 +19,7 @@ const FibrasDeLaMopa := preload("res://src/escenas/objetos/fibras_de_la_mopa.gd"
 @export var nodo_del_modelo: StringName
 
 @export var malla: MeshInstance3D
+@export var escala_apoyada := 1.0
 
 ## Lo que muestra de qué está cargado: el agua del balde, la punta mojada de la mopa. Los jabones
 ## no llevan.
@@ -28,11 +29,16 @@ const FibrasDeLaMopa := preload("res://src/escenas/objetos/fibras_de_la_mopa.gd"
 @export var mallas: Array[MeshInstance3D] = []
 
 var _bajada: Tween
+var _tamanos_originales: Dictionary[Node3D, Transform3D] = {}
 
 
 func _ready() -> void:
 	super()
 	malla.mesh = malla_del_modelo(nodo_del_modelo)
+	if escala_apoyada != 1.0:
+		for parte: Node3D in [malla, carga, get_node("Forma")]:
+			_tamanos_originales[parte] = parte.transform
+		_actualizar_tamano()
 	set_process(datos.id == ReglasDeLaLimpieza.ID_DEL_BALDE)
 	if datos.id == ReglasDeLaLimpieza.ID_DEL_BALDE:
 		set_notify_transform(true)
@@ -100,11 +106,26 @@ func _mover_la_mopa(progreso: float, balde: Node3D) -> void:
 ## Agarre quita y vuelve a colgar el nodo tanto al soltar como al cambiar de mano.
 ## La orientacion mundial de ese instante la conserva Agarre antes de quitarlo.
 func _notification(que: int) -> void:
+	if que == NOTIFICATION_PARENTED:
+		_actualizar_tamano.call_deferred()
 	if que == NOTIFICATION_TRANSFORM_CHANGED:
 		_mantener_vertical()
 	if que == NOTIFICATION_UNPARENTED and _bajada != null:
 		_bajada.kill()
 		_bajada = null
+
+
+## Agranda lo apoyado desde su base, sin cambiar el tamaño que ocupa en la mano.
+func _actualizar_tamano() -> void:
+	if _tamanos_originales.is_empty() or not is_inside_tree():
+		return
+	var escala := 1.0 if freeze and not top_level else escala_apoyada
+	var base := malla.mesh.get_aabb().position.y
+	var ajuste := Transform3D(
+		Basis.IDENTITY.scaled(Vector3.ONE * escala), Vector3.UP * base * (1.0 - escala)
+	)
+	for parte: Node3D in _tamanos_originales:
+		parte.transform = ajuste * _tamanos_originales[parte]
 
 
 ## Muestra la carga del color que se le pasa, o la esconde. Cuál y de qué color lo decide el

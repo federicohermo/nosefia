@@ -32,7 +32,7 @@ shading_mode = 0
 albedo_color = Color(0.74, 0.89, 0.98, 1)
 
 [sub_resource type="CylinderShape3D" id="forma_del_balde"]
-height = 0.350985
+height = 0.3314925
 radius = 0.195
 
 [sub_resource type="CylinderMesh" id="agua_del_balde"]
@@ -48,18 +48,19 @@ albedo_color = Color(0.74, 0.89, 0.98, 1)
 roughness = 0.2
 
 [sub_resource type="CylinderShape3D" id="forma_del_bidon"]
-height = 0.70162
-radius = 0.229
+height = 0.66
+radius = 0.1689
 
 [node name="Objetos" type="Node3D"]
 
 [node name="Mopa" type="RigidBody3D" parent="." node_paths=PackedStringArray("malla", "carga", "mallas") groups=["interactuable"]]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8.37642, 0.98, -6.6543927)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8.41, 0.98, -6.6543927)
 collision_mask = 9
 script = ExtResource("30_util")
 datos = ExtResource("31_mopa")
 orientacion_en_mano = Basis(1, 0, 0, 0, 0.258819, -0.965926, 0, 0.965926, 0.258819)
 nodo_del_modelo = &"mopa"
+escala_apoyada = 1.12
 malla = NodePath("Malla")
 carga = NodePath("Punta")
 mallas = [NodePath("Malla")]
@@ -219,7 +220,7 @@ position = Vector3(-6.45, 0.406445, -11.05)
 producto = 30
 
 [node name="Balde" type="RigidBody3D" parent="." node_paths=PackedStringArray("malla", "carga", "mallas") groups=["interactuable"]]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12.456797, 0.2777296, -7.1073775)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12.456797, 0.2582371, -7.1073775)
 collision_mask = 9
 script = ExtResource("30_util")
 datos = ExtResource("32_balde")
@@ -229,6 +230,7 @@ carga = NodePath("Agua")
 mallas = [NodePath("Malla")]
 
 [node name="Forma" type="CollisionShape3D" parent="Balde"]
+position = Vector3(0, 0.00974625, 0)
 shape = SubResource("forma_del_balde")
 
 [node name="Malla" type="MeshInstance3D" parent="Balde"]
@@ -244,7 +246,7 @@ mesh = SubResource("agua_del_balde")
 gi_mode = 2
 
 [node name="JabonAzul" type="RigidBody3D" parent="." node_paths=PackedStringArray("malla", "mallas") groups=["interactuable"]]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10.501369, 0.3964323, -7.6729193)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10.501369, 0.432, -7.2241883)
 collision_mask = 9
 script = ExtResource("30_util")
 datos = ExtResource("33_jabon_azul")
@@ -253,15 +255,13 @@ malla = NodePath("Malla")
 mallas = [NodePath("Malla")]
 
 [node name="Forma" type="CollisionShape3D" parent="JabonAzul"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.056615, 0)
 shape = SubResource("forma_del_bidon")
 
 [node name="Malla" type="MeshInstance3D" parent="JabonAzul"]
-transform = Transform3D(0.2290317, 0, 0, 0, 0.2290317, 0, 0, 0, 0.2290317, 0, 0, 0)
 gi_mode = 2
 
 [node name="JabonRosa" type="RigidBody3D" parent="." node_paths=PackedStringArray("malla", "mallas") groups=["interactuable"]]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9.9666195, 0.3964323, -7.6729193)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9.9666195, 0.432, -7.6729193)
 collision_mask = 9
 script = ExtResource("30_util")
 datos = ExtResource("34_jabon_rosa")
@@ -270,15 +270,13 @@ malla = NodePath("Malla")
 mallas = [NodePath("Malla")]
 
 [node name="Forma" type="CollisionShape3D" parent="JabonRosa"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.056615, 0)
 shape = SubResource("forma_del_bidon")
 
 [node name="Malla" type="MeshInstance3D" parent="JabonRosa"]
-transform = Transform3D(0.2290317, 0, 0, 0, 0.2290317, 0, 0, 0, 0.2290317, 0, 0, 0)
 gi_mode = 2
 
 [node name="JabonAmarillo" type="RigidBody3D" parent="." node_paths=PackedStringArray("malla", "mallas") groups=["interactuable"]]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 11.03491, 0.3964323, -7.6729193)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 11.03491, 0.432, -7.6729193)
 collision_mask = 9
 script = ExtResource("30_util")
 datos = ExtResource("35_jabon_amarillo")
@@ -287,9 +285,7 @@ malla = NodePath("Malla")
 mallas = [NodePath("Malla")]
 
 [node name="Forma" type="CollisionShape3D" parent="JabonAmarillo"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.056615, 0)
 shape = SubResource("forma_del_bidon")
 
 [node name="Malla" type="MeshInstance3D" parent="JabonAmarillo"]
-transform = Transform3D(0.2290317, 0, 0, 0, 0.2290317, 0, 0, 0, 0.2290317, 0, 0, 0)
 gi_mode = 2

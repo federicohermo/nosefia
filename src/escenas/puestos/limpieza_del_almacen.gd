@@ -62,7 +62,7 @@ func repintar() -> void:
 	var piso := limpiador.piso()
 	for mancha in manchas():
 		var estado := piso.mancha_de(mancha.lugar_de_la_mancha())
-		mancha.mostrar(not estado.esta_limpia(), estado.color())
+		mancha.mostrar(not estado.esta_limpia(), estado.color(), estado.tipo())
 	balde.mostrar_la_carga(piso.balde().tiene_agua(), piso.balde().color())
 	mopa.mostrar_la_carga(piso.mopa().esta_mojada(), piso.mopa().color())
 

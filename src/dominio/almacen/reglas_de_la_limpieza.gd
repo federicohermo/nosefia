@@ -87,7 +87,7 @@ const COLOR_DEL_AGUA: Dictionary[Agua, Color] = {
 const COLOR_DE_LA_MANCHA: Dictionary[TipoDeMancha, Color] = {
 	TipoDeMancha.MOHO: Color(0.3, 0.46, 0.16),
 	TipoDeMancha.CACA: Color(0.38, 0.24, 0.1),
-	TipoDeMancha.POLVO: Color(0.25, 0.55, 0.75),
+	TipoDeMancha.POLVO: Color(0.07, 0.075, 0.07),
 }
 
 

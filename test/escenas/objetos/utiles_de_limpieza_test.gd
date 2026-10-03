@@ -78,7 +78,11 @@ func test_cada_util_es_la_malla_del_modelo_donde_el_modelo_la_dibujaba() -> void
 		# centésimas de milímetro. Medido el 2026-09-30: 0,08 mm en los primeros dos cuadros.
 		var puesta := util.lugar_de_origen() * util.malla.transform
 		(
-			assert_bool(puesta.basis.is_equal_approx(del_modelo.global_basis))
+			assert_bool(
+				puesta.basis.orthonormalized().is_equal_approx(
+					del_modelo.global_basis.orthonormalized()
+				)
+			)
 			. override_failure_message("`%s` no está girado como en el modelo" % util.name)
 			. is_true()
 		)

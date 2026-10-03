@@ -56,7 +56,12 @@ func lugar_de_la_mancha() -> PisoDelLocal.Lugar:
 ##
 ## Recibe los dos datos en vez de ir a buscarlos: esta mancha no es dueña de ninguno. Es lo que la
 ## deja dibujarse sin conocer al piso.
-func mostrar(sucia: bool, color: Color) -> void:
+func mostrar(
+	sucia: bool,
+	color: Color,
+	tipo: ReglasDeLaLimpieza.TipoDeMancha = ReglasDeLaLimpieza.TipoDeMancha.MOHO
+) -> void:
+	(_mancha as SuperficieLiquida).configurar_mancha(tipo, acuosa)
 	(_mancha as SuperficieLiquida).presentar(sucia)
 	visible = sucia or (_mancha as SuperficieLiquida).esta_encogiendo()
 	_cuerpo.disabled = not sucia
