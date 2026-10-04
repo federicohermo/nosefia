@@ -495,15 +495,17 @@ nota.matrix_world = (
 
 # Coordenadas de las superficies de agua, calculadas por el mismo movimiento que el artefacto.
 agua_inodoro = movimiento @ Vector((13.009, 4.185, .549))
-agua_lavatorio = Vector((13.02, 5.30, .9828))
-gota = mov_lavatorio @ Vector((13.193, 6.567, 1.084))
+agua_lavatorio = Vector((13.159, 5.30, 1.023))
+gota = Vector((13.159, 5.30, 1.162))
 print("AGUA_INODORO", tuple(agua_inodoro))
 print("AGUA_LAVATORIO", tuple(agua_lavatorio))
 print("GOTA", tuple(gota))
 sys.path.insert(0, str(Path(__file__).parent))
 from refinar_artefactos import refinar_artefactos
+from ajustar_marco_bano import aplicar as ajustar_marco_entrada
 
 refinar_artefactos()
+ajustar_marco_entrada()
 destino = FUENTE if "--aplicar" in sys.argv else RAIZ / "reports/bano-publico.blend"
 bpy.ops.wm.save_as_mainfile(filepath=str(destino), check_existing=False)
 print("Baño público preparado:", destino)

@@ -3,22 +3,68 @@ extends GdUnitTestSuite
 const ALMACEN := preload("res://src/escenas/almacen.tscn")
 
 
-func test_el_volumen_del_tanque_coincide_con_su_tapa_visible() -> void:
+func test_el_agua_de_ambos_lavatorios_llega_hasta_la_pared_de_la_cubeta() -> void:
 	var almacen: Node3D = await _almacen()
-	var malla := almacen.get_node("Estructura/inodoro") as MeshInstance3D
-	var desde := Vector3(10.94, 1.4, -1.45)
-	var hasta := desde - Vector3.UP
-	var cruces := _cruces(malla, desde, hasta)
-	assert_array(cruces).is_not_empty()
-	var consulta := PhysicsRayQueryParameters3D.create(desde, hasta, 1)
-	var choque := almacen.get_world_3d().direct_space_state.intersect_ray(consulta)
-	assert_object(choque.get("collider")).is_same(malla.get_node("StaticBody3D"))
-	if cruces.is_empty() or choque.is_empty():
-		return
-	var tapa := -INF
-	for cruce: Vector3 in cruces:
-		tapa = maxf(tapa, cruce.y)
-	assert_float(choque.position.y).is_equal_approx(tapa, 0.008)
+	for numero: int in [1, 2]:
+		var nombre := "vanitory" if numero == 1 else "bano_lavatorio_2"
+		var malla := almacen.get_node("Estructura/" + nombre) as MeshInstance3D
+		var puesto := "AguaDelBano" if numero == 1 else "AguaDelBanoSegunda"
+		var agua := almacen.get_node("Ambiente/" + puesto + "/Lavatorio") as MeshInstance3D
+		var contorno: PackedVector2Array = almacen.get_node("Ambiente/" + puesto).get(
+			"contorno_del_lavatorio"
+		)
+		var centro := agua.global_position
+		for muestra in 16:
+			var angulo := TAU * muestra / 16.0
+			var hasta := centro + Vector3(cos(angulo), 0, sin(angulo))
+			var cruces := _cruces(malla, centro, hasta)
+			assert_array(cruces).override_failure_message(nombre).is_not_empty()
+			if cruces.is_empty():
+				continue
+			var pared := INF
+			for punto: Vector3 in cruces:
+				pared = minf(pared, centro.distance_to(punto))
+			var rayo := agua.to_local(hasta)
+			var borde := INF
+			for i in contorno.size():
+				var corte: Variant = Geometry2D.segment_intersects_segment(
+					Vector2.ZERO,
+					Vector2(rayo.x, rayo.z),
+					contorno[i],
+					contorno[(i + 1) % contorno.size()]
+				)
+				if corte != null:
+					var mundial := agua.to_global(Vector3(corte.x, 0, corte.y))
+					borde = minf(borde, centro.distance_to(mundial))
+			(
+				assert_float(borde)
+				. override_failure_message(
+					"%s, rayo %d: agua %.6f, pared %.6f" % [nombre, muestra, borde, pared]
+				)
+				. is_between(pared - 0.0005, pared + 0.005)
+			)
+
+
+func test_los_volumenes_de_los_tanques_coinciden_con_sus_tapas_visibles() -> void:
+	var almacen: Node3D = await _almacen()
+	for nombre: String in ["inodoro", "bano_inodoro_2"]:
+		var malla := almacen.get_node("Estructura/" + nombre) as MeshInstance3D
+		var x := 10.94 if nombre == "inodoro" else 12.55
+		var desde := Vector3(x, 1.4, -1.45)
+		var hasta := desde - Vector3.UP
+		var cruces := _cruces(malla, desde, hasta)
+		assert_array(cruces).override_failure_message(nombre).is_not_empty()
+		var consulta := PhysicsRayQueryParameters3D.create(desde, hasta, 1)
+		var choque := almacen.get_world_3d().direct_space_state.intersect_ray(consulta)
+		assert_object(choque.get("collider")).is_same(malla.get_node("StaticBody3D"))
+		if cruces.is_empty() or choque.is_empty():
+			continue
+		var tapa := -INF
+		for cruce: Vector3 in cruces:
+			tapa = maxf(tapa, cruce.y)
+		assert_float(choque.position.y).override_failure_message(nombre).is_equal_approx(
+			tapa, 0.008
+		)
 
 
 func test_los_lavatorios_y_los_inodoros_tienen_porcelana_clara() -> void:
@@ -169,6 +215,16 @@ func test_la_entrada_conserva_la_escala_de_las_otras_puertas_y_un_marco_continuo
 	assert_object(almacen.get_node_or_null("Estructura/bano_marco_entrada")).is_not_null()
 	assert_object(almacen.get_node_or_null("Estructura/bano_marco_entrada_001")).is_null()
 	assert_object(almacen.get_node_or_null("Estructura/bano_muro_entrada")).is_null()
+	var marco := almacen.get_node("Estructura/bano_marco_entrada") as MeshInstance3D
+	# Estos rayos cruzan las bandas que antes dejaban visible la pared del almacén.
+	for punto: Vector3 in [
+		Vector3(7.70, 2.86461, -6.82),
+		Vector3(7.70, 1.70, -5.97574),
+		Vector3(7.70, 1.70, -7.66418),
+	]:
+		assert_str(_material_de_la_cara(marco, punto, punto + Vector3.RIGHT * 0.5)).is_equal(
+			"bano_entrada_blanca"
+		)
 
 
 func _almacen() -> Node3D:
