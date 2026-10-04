@@ -218,7 +218,7 @@ size = Vector3(0.850638, 0.057008, 1.238094)
 size = Vector3(1.724248, 2.78366, 0.232234)
 
 [sub_resource type="BoxShape3D" id="volumen_de_la_puerta2"]
-size = Vector3(1.66, 2.7, 0.075)
+size = Vector3(1.66, 2.724, 0.075)
 
 [sub_resource type="BoxShape3D" id="volumen_del_porton"]
 size = Vector3(0.232152, 3.387137, 4.3139)
@@ -1009,6 +1009,7 @@ hoja = NodePath("..")
 mallas = [NodePath("..")]
 
 [node name="Volumen" type="CollisionShape3D" parent="puerta2/CuerpoDeLaHoja"]
+position = Vector3(0, -0.012, 0)
 shape = SubResource("volumen_de_la_puerta2")
 
 [node name="CollisionShape3D" parent="porton/StaticBody3D"]

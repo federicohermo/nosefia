@@ -328,3 +328,42 @@ func test_la_puerta_del_bano_abierta_no_corta_el_recorrido_hacia_las_cabinas() -
 	jugador.global_position = Vector3(10.9, 0.12, -6.82)
 	await get_tree().physics_frame
 	assert_object(jugador.move_and_collide(Vector3(0.0, 0.0, 2.8), true)).is_null()
+
+
+func test_la_entrada_cerrada_no_deja_ver_el_bano_por_los_bordes_de_la_hoja() -> void:
+	var almacen: Node3D = await _almacen()
+	var puerta := almacen.get_node("Estructura/puerta2/CuerpoDeLaHoja")
+	assert_bool(puerta.call("puerta").abierta()).is_false()
+	var superficies: Array[MeshInstance3D] = []
+	for nombre: String in ["puerta2", "bano_marco_entrada", "almacen"]:
+		superficies.append(almacen.get_node("Estructura/" + nombre) as MeshInstance3D)
+	# Los puntos cruzan las rendijas visibles entre hoja, marco y piso del vano real.
+	for banda: Vector3 in [
+		Vector3(7.974, 0.35, -7.6532),
+		Vector3(7.974, 1.40, -7.6532),
+		Vector3(7.974, 2.60, -7.6532),
+		Vector3(7.974, 1.40, -5.9867),
+		Vector3(7.974, 0.115, -6.20),
+		Vector3(7.974, 0.115, -6.82),
+		Vector3(7.974, 0.115, -7.40),
+	]:
+		for pendiente: float in [-0.15, 0.0, 0.15]:
+			for lado: float in [-1.0, 1.0]:
+				var direccion := Vector3(1.0, 0.0, pendiente) * lado
+				var desde := banda - direccion * 0.5
+				var hasta := banda + direccion * 0.5
+				var bloqueado := false
+				for superficie: MeshInstance3D in superficies:
+					if not _cruces(superficie, desde, hasta).is_empty():
+						bloqueado = true
+						break
+				(
+					assert_bool(bloqueado)
+					. override_failure_message(
+						(
+							"Vista sin bloquear en %s, pendiente %.2f, lado %.0f"
+							% [banda, pendiente, lado]
+						)
+					)
+					. is_true()
+				)
