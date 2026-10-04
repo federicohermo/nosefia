@@ -79,9 +79,6 @@ size = Vector3(0.206, 6.97386, 2.3615)
 [sub_resource type="BoxShape3D" id="volumen_15"]
 size = Vector3(0.206, 6.97386, 11.86913)
 
-[sub_resource type="BoxShape3D" id="volumen_16"]
-size = Vector3(5.13014, 6.97386, 2.46871)
-
 [sub_resource type="BoxShape3D" id="volumen_17"]
 size = Vector3(15.45665, 0.92534, 0.206)
 
@@ -772,11 +769,6 @@ disabled = true
 [node name="Volumen15" type="CollisionShape3D" parent="almacen/Volumen"]
 position = Vector3(7.95468, 3.48693, 2.123115)
 shape = SubResource("volumen_15")
-
-[node name="Volumen16" type="CollisionShape3D" parent="almacen/Volumen"]
-position = Vector3(10.8365, 3.48693, -2.350575)
-shape = SubResource("volumen_16")
-disabled = true
 
 [node name="Volumen17" type="CollisionShape3D" parent="almacen/Volumen"]
 position = Vector3(0.123355, 0.46267, 7.95468)

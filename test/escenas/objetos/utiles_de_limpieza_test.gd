@@ -90,7 +90,7 @@ func test_cada_util_es_la_malla_del_modelo_donde_el_modelo_la_dibujaba() -> void
 		var alla := del_modelo.global_position
 		# Estos dos objetos dejan libres la entrada y los lavamanos.
 		if util.name == &"Mopa":
-			alla = Vector3(12.75, alla.y, -5.25)
+			alla = Vector3(12.75, alla.y, -4.3)
 		elif util.name == &"JabonAzul":
 			alla.z = -7.6729193
 		(

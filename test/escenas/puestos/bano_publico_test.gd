@@ -3,6 +3,46 @@ extends GdUnitTestSuite
 const ALMACEN := preload("res://src/escenas/almacen.tscn")
 
 
+func test_el_piso_ampliado_forma_parte_de_la_misma_superficie_del_edificio() -> void:
+	var almacen: Node3D = await _almacen()
+	var edificio := almacen.get_node("Estructura/almacen") as MeshInstance3D
+	for z: float in [-2.17, -3.48, -3.71, -4.33]:
+		var cruces := _cruces(edificio, Vector3(10.17, 1.0, z), Vector3(10.17, 0.0, z))
+		assert_array(cruces).override_failure_message("piso en z=%s" % z).has_size(1)
+		if cruces.size() == 1:
+			assert_float(cruces[0].y).is_equal_approx(0.102237, 0.00001)
+	assert_object(almacen.get_node_or_null("Estructura/bano_piso_ampliado")).is_null()
+
+
+func test_las_paredes_del_bano_tienen_un_plano_continuo_hasta_el_dintel() -> void:
+	var almacen: Node3D = await _almacen()
+	var edificio := almacen.get_node("Estructura/almacen") as MeshInstance3D
+	for muestra: Vector3 in [Vector3(11, 1.43, -2.17), Vector3(11, 3.02, -6.82)]:
+		var hasta := muestra + Vector3.LEFT * 3.05
+		var cruces := _cruces(edificio, muestra, hasta)
+		assert_array(cruces).has_size(1)
+		if cruces.size() == 1:
+			assert_float(cruces[0].x).is_equal_approx(8.29186, 0.0001)
+	for nombre: String in ["bano_revestimiento_oeste", "bano_revestimiento_ampliado"]:
+		assert_object(almacen.get_node_or_null("Estructura/" + nombre)).is_null()
+
+
+func _cruces(malla: MeshInstance3D, desde: Vector3, hasta: Vector3) -> Array[Vector3]:
+	var caras := malla.mesh.get_faces()
+	var cruces: Array[Vector3] = []
+	for indice in range(0, caras.size(), 3):
+		var cruce: Variant = Geometry3D.segment_intersects_triangle(
+			desde,
+			hasta,
+			malla.global_transform * caras[indice],
+			malla.global_transform * caras[indice + 1],
+			malla.global_transform * caras[indice + 2]
+		)
+		if cruce != null:
+			cruces.append(cruce)
+	return cruces
+
+
 func test_cada_cabina_tiene_una_luminaria_encima_del_inodoro() -> void:
 	var almacen: Node3D = await _almacen()
 	for numero: int in [7, 8]:

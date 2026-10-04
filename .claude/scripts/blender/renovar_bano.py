@@ -160,6 +160,123 @@ for mat in (piso, pared, techo):
         malla.materials.append(mat)
     slots[mat.name] = list(malla.materials).index(mat)
 uv = malla.uv_layers.active
+# Las superficies interiores pertenecen al edificio. Se retiran las pieles
+# duplicadas y los paños deformados por el antiguo tabique, y se construyen
+# con aristas compartidas, un único plano por pared y un piso continuo.
+bm = bmesh.new()
+bm.from_mesh(malla)
+inversa = edificio.matrix_world.inverted()
+x_oeste, x_este = 8.29186, 13.43466
+y_frente, y_fondo = 1.27768, 7.88604
+y_izquierda, y_derecha = 5.97848, 7.66135
+z_piso, z_dintel, z_muro = .10223747, 2.851981, 4.86940
+x_exterior = 7.87107
+
+
+def cerca(valor, referencia):
+    return abs(valor - referencia) < .0001
+
+
+retirar = []
+for cara in bm.faces:
+    puntos = [edificio.matrix_world @ v.co for v in cara.verts]
+    en_sector = all(7.86 < v.x < 13.65 and 1.11 < v.y < 8.08 for v in puntos)
+    if not en_sector:
+        continue
+    altura_interior = all(.1021 < v.z < 4.870 for v in puntos)
+    oeste = altura_interior and any(
+        all(cerca(v.x, plano) for v in puntos) for plano in (8.077575, x_oeste)
+    ) and abs(cara.normal.x) > .9
+    este = altura_interior and all(cerca(v.x, x_este) for v in puntos)
+    extremos = altura_interior and any(
+        all(cerca(v.y, plano) for v in puntos) for plano in (y_frente, y_fondo)
+    )
+    piso_superior = all(cerca(v.z, z_piso) for v in puntos)
+    piso_inferior = all(cerca(v.z, -.10427) for v in puntos)
+    hueco = all(v.x < x_oeste + .0001 and v.z < z_dintel + .0001 for v in puntos) and (
+        all(cerca(v.z, z_dintel) for v in puntos)
+        or any(all(cerca(v.y, plano) for v in puntos) for plano in (y_izquierda, y_derecha))
+    )
+    if oeste or este or extremos or piso_superior or piso_inferior or hueco:
+        retirar.append(cara)
+bmesh.ops.delete(bm, geom=retirar, context="FACES")
+uv_bm = bm.loops.layers.uv.active
+# Las esquinas de encuentros se insertan antes de armar los paños: así el
+# dintel y los laterales dividen la misma arista, sin uniones en T.
+esquinas = [(x_oeste, y, z) for y in (y_frente, y_izquierda, y_derecha, y_fondo)
+            for z in (z_piso, z_dintel, z_muro)]
+esquinas += [(x_este, y, z) for y in (y_frente, y_fondo)
+             for z in (z_piso, z_dintel, z_muro)]
+esquinas += [(x_exterior, y, z) for y in (y_izquierda, y_derecha)
+             for z in (z_piso, z_dintel)]
+for esquina in esquinas:
+    punto = Vector(esquina)
+    if not any((edificio.matrix_world @ v.co - punto).length < .00001 for v in bm.verts):
+        bm.verts.new(inversa @ punto)
+
+
+def cara_interior(coordenadas, mat, normal):
+    # Reutiliza los vértices del perímetro y conserva sus divisiones de arista.
+    puntos = [Vector(v) for v in coordenadas]
+    existentes = []
+    for vertice in bm.verts:
+        punto = edificio.matrix_world @ vertice.co
+        if not any((punto - p).length < .00001 for _, p in existentes):
+            existentes.append((vertice, punto))
+    contorno = []
+    for a, b in zip(puntos, puntos[1:] + puntos[:1]):
+        vector = b - a
+        intermedios = []
+        for vertice, punto in existentes:
+            t = (punto - a).dot(vector) / vector.length_squared
+            if 0.00001 < t < .99999 and (punto - (a + vector * t)).length < .00001:
+                intermedios.append((t, vertice))
+        vertice = next((v for v, p in existentes if (p - a).length < .00001), None)
+        if vertice is None:
+            vertice = bm.verts.new(inversa @ a)
+        contorno.append(vertice)
+        contorno.extend(v for _, v in sorted(intermedios, key=lambda item: item[0]))
+    cara = bm.faces.new(contorno)
+    cara.normal_update()
+    if cara.normal.dot(Vector(normal)) < 0:
+        cara.normal_flip()
+    cara.material_index = slots[mat.name]
+    for bucle in cara.loops:
+        punto = edificio.matrix_world @ bucle.vert.co
+        bucle[uv_bm].uv = (
+            (punto.x / .6, punto.y / .6) if mat == piso
+            else ((punto.y if abs(normal[0]) > .5 else punto.x) / .5, punto.z / .25)
+        )
+
+
+for a, b, base in ((y_frente, y_izquierda, z_piso),
+                   (y_izquierda, y_derecha, z_dintel), (y_derecha, y_fondo, z_piso)):
+    cara_interior([(x_oeste, a, base), (x_oeste, b, base),
+                   (x_oeste, b, z_muro), (x_oeste, a, z_muro)], pared, (1, 0, 0))
+cara_interior([(x_este, y_frente, z_piso), (x_este, y_fondo, z_piso),
+               (x_este, y_fondo, z_muro), (x_este, y_frente, z_muro)], pared, (-1, 0, 0))
+for y, normal in ((y_frente, (0, 1, 0)), (y_fondo, (0, -1, 0))):
+    cara_interior([(x_oeste, y, z_piso), (x_este, y, z_piso),
+                   (x_este, y, z_muro), (x_oeste, y, z_muro)], pared, normal)
+for y, normal in ((y_izquierda, (0, 1, 0)), (y_derecha, (0, -1, 0))):
+    cara_interior([(x_exterior, y, z_piso), (x_oeste, y, z_piso),
+                   (x_oeste, y, z_dintel), (x_exterior, y, z_dintel)], pared, normal)
+cara_interior([(x_exterior, y_izquierda, z_dintel), (x_oeste, y_izquierda, z_dintel),
+               (x_oeste, y_derecha, z_dintel), (x_exterior, y_derecha, z_dintel)],
+              pared, (0, 0, -1))
+cara_interior([(x_exterior, y_izquierda, z_piso), (x_oeste, y_izquierda, z_piso),
+               (x_oeste, y_frente, z_piso), (x_este, y_frente, z_piso),
+               (x_este, y_fondo, z_piso), (x_oeste, y_fondo, z_piso),
+               (x_oeste, y_derecha, z_piso), (x_exterior, y_derecha, z_piso)],
+              piso, (0, 0, 1))
+cara_interior([(8.077575, 1.11898, -.10427), (13.64317, 1.11898, -.10427),
+               (13.64317, 8.07757, -.10427), (8.077575, 8.07757, -.10427)],
+              pared, (0, 0, -1))
+assert all(cara.calc_area() > 1e-8 for cara in bm.faces), "Cara degenerada en el edificio"
+bm.to_mesh(malla)
+bm.free()
+malla.update()
+uv = malla.uv_layers.active
 for cara in malla.polygons:
     centro = edificio.matrix_world @ cara.center
     puntos = [edificio.matrix_world @ malla.vertices[i].co for i in cara.vertices]
@@ -231,15 +348,8 @@ def cilindro(nombre, centro, radio, profundidad, mat):
 
 
 # El perímetro exterior se conserva. El piso suma 12 m² antes inaccesibles.
-caja("bano_cielorraso", (10.86, 4.58, 3.18), (5.13, 6.61, .08), techo, True)
-caja("bano_piso_ampliado", (10.86326, 2.43573, .052237), (5.1428, 2.31611, .1), piso)
-caja("bano_pared_delantera", (10.86326, 1.28768, 1.62), (5.1428, .02, 3.03553), pared, True)
-# Una única terminación interior cubre el cambio de espesor del cuarto antiguo.
-# Termina en la jamba del hueco; no corta ni sustituye el muro estructural.
-caja("bano_revestimiento_oeste", (8.29, 3.62748, 1.62112),
-     (.04, 4.70001, 3.03776), pared)
-for x in (13.424,):
-    caja("bano_revestimiento_ampliado", (x, 2.43573, 1.62), (.02, 2.31611, 3.03553), pared)
+caja("bano_cielorraso", ((x_oeste+x_este)/2, (y_frente+y_fondo)/2, 3.18),
+     (x_este-x_oeste, y_fondo-y_frente, .08), techo, True)
 
 # El acceso queda frente a los lavatorios. La cara del local conserva su material.
 for x in (9.1, 11.0, 12.8):
@@ -359,7 +469,7 @@ segundo.location.x += 1.61
 lavatorio = bpy.data.objects["vanitory-convcol"]
 base = original(lavatorio)
 centro = sum((base @ Vector(v) for v in lavatorio.bound_box), Vector()) / 8
-destino = Vector((13.02, 5.70, .282 + (centro.z - .102) * .8))
+destino = Vector((13.02, 5.30, .402 + (centro.z - .102) * .8))
 mov_lavatorio = Matrix.Translation(destino) @ Matrix.Scale(.8, 4) @ Matrix.Translation(-centro)
 lavatorio.matrix_world = mov_lavatorio @ base
 duplicar(lavatorio, "bano_lavatorio_2-convcol").location.y += 1.62
@@ -373,7 +483,7 @@ nota = bpy.data.objects["nota baño inodoro-col"]
 base = original(nota)
 centro = sum((base @ Vector(v) for v in nota.bound_box), Vector()) / 8
 nota.matrix_world = (
-    Matrix.Translation((10.945, 1.335, 1.52)) @ giro @ Matrix.Translation(-centro) @ base
+    Matrix.Translation((10.945, 1.285, 1.52)) @ giro @ Matrix.Translation(-centro) @ base
 )
 
 # Coordenadas de las superficies de agua, calculadas por el mismo movimiento que el artefacto.
