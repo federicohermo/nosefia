@@ -66,6 +66,7 @@ func _al_mojar_la_mopa() -> void:
 	_muestreada = true
 	repintar()
 	mopa.mostrar_la_mojada(balde)
+	jugador.preparar_el_uso_en_la_mano()
 
 
 func _al_dar_pasada(lugar: PisoDelLocal.Lugar) -> void:

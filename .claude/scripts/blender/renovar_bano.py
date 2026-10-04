@@ -401,6 +401,13 @@ def duplicar(objeto, nombre):
     return copia
 
 
+def centro_original(objeto, base):
+    clave = "bano_centro_original"
+    if clave not in objeto:
+        objeto[clave] = tuple(sum((base @ Vector(v) for v in objeto.bound_box), Vector()) / 8)
+    return Vector(objeto[clave])
+
+
 # Una hoja opaca con panel, manija y rejilla, con pocos polígonos como el resto del local.
 puerta_entrada = bpy.data.objects["puerta2-col"]
 centro = Vector((7.974, 6.82, .127237 + 2.70 / 2))
@@ -458,7 +465,7 @@ coleccion.objects.link(objeto)
 
 inodoro = bpy.data.objects["inodoro-convcol"]
 base = original(inodoro)
-centro = sum((base @ Vector(v) for v in inodoro.bound_box), Vector()) / 8
+centro = centro_original(inodoro, base)
 giro = Matrix.Rotation(-math.pi / 2, 4, "Z")
 destino = Vector((10.945, 1.73, centro.z))
 movimiento = Matrix.Translation(destino) @ giro @ Matrix.Translation(-centro)
@@ -468,7 +475,7 @@ segundo.location.x += 1.61
 
 lavatorio = bpy.data.objects["vanitory-convcol"]
 base = original(lavatorio)
-centro = sum((base @ Vector(v) for v in lavatorio.bound_box), Vector()) / 8
+centro = centro_original(lavatorio, base)
 destino = Vector((13.02, 5.30, .402 + (centro.z - .102) * .8))
 mov_lavatorio = Matrix.Translation(destino) @ Matrix.Scale(.8, 4) @ Matrix.Translation(-centro)
 lavatorio.matrix_world = mov_lavatorio @ base
@@ -488,11 +495,15 @@ nota.matrix_world = (
 
 # Coordenadas de las superficies de agua, calculadas por el mismo movimiento que el artefacto.
 agua_inodoro = movimiento @ Vector((13.009, 4.185, .549))
-agua_lavatorio = mov_lavatorio @ Vector((13.11, 6.567, .828))
+agua_lavatorio = Vector((13.02, 5.30, .9828))
 gota = mov_lavatorio @ Vector((13.193, 6.567, 1.084))
 print("AGUA_INODORO", tuple(agua_inodoro))
 print("AGUA_LAVATORIO", tuple(agua_lavatorio))
 print("GOTA", tuple(gota))
+sys.path.insert(0, str(Path(__file__).parent))
+from refinar_artefactos import refinar_artefactos
+
+refinar_artefactos()
 destino = FUENTE if "--aplicar" in sys.argv else RAIZ / "reports/bano-publico.blend"
 bpy.ops.wm.save_as_mainfile(filepath=str(destino), check_existing=False)
 print("Baño público preparado:", destino)

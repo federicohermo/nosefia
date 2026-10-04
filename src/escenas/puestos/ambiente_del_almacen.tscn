@@ -88,7 +88,7 @@ area_size = Vector2(0.9148388, 1)
 [node name="AguaDelBanoSegunda" parent="." instance=ExtResource("1_agua")]
 
 [node name="Lavatorio" parent="AguaDelBanoSegunda"]
-position = Vector3(13.092658, 0.9828, -6.919853)
+position = Vector3(13.02, 0.9828, -6.92)
 
 [node name="Inodoro" parent="AguaDelBanoSegunda"]
 position = Vector3(12.558092, 0.549, -1.790065)

@@ -3,6 +3,39 @@ extends GdUnitTestSuite
 const ALMACEN := preload("res://src/escenas/almacen.tscn")
 
 
+func test_el_volumen_del_tanque_coincide_con_su_tapa_visible() -> void:
+	var almacen: Node3D = await _almacen()
+	var malla := almacen.get_node("Estructura/inodoro") as MeshInstance3D
+	var desde := Vector3(10.94, 1.4, -1.45)
+	var hasta := desde - Vector3.UP
+	var cruces := _cruces(malla, desde, hasta)
+	assert_array(cruces).is_not_empty()
+	var consulta := PhysicsRayQueryParameters3D.create(desde, hasta, 1)
+	var choque := almacen.get_world_3d().direct_space_state.intersect_ray(consulta)
+	assert_object(choque.get("collider")).is_same(malla.get_node("StaticBody3D"))
+	if cruces.is_empty() or choque.is_empty():
+		return
+	var tapa := -INF
+	for cruce: Vector3 in cruces:
+		tapa = maxf(tapa, cruce.y)
+	assert_float(choque.position.y).is_equal_approx(tapa, 0.008)
+
+
+func test_los_lavatorios_y_los_inodoros_tienen_porcelana_clara() -> void:
+	var almacen: Node3D = await _almacen()
+	for nombre: String in ["vanitory", "bano_lavatorio_2", "inodoro", "bano_inodoro_2"]:
+		var malla := almacen.get_node("Estructura/" + nombre) as MeshInstance3D
+		var porcelana: StandardMaterial3D = null
+		for superficie in malla.mesh.get_surface_count():
+			var material := malla.mesh.surface_get_material(superficie) as StandardMaterial3D
+			if material != null and material.resource_name == "bano_porcelana":
+				porcelana = material
+		assert_object(porcelana).override_failure_message(nombre).is_not_null()
+		if porcelana != null:
+			assert_float(porcelana.albedo_color.r).is_greater(0.7)
+			assert_float(porcelana.roughness).is_between(0.2, 0.4)
+
+
 func test_el_piso_ampliado_forma_parte_de_la_misma_superficie_del_edificio() -> void:
 	var almacen: Node3D = await _almacen()
 	var edificio := almacen.get_node("Estructura/almacen") as MeshInstance3D

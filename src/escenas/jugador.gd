@@ -245,6 +245,13 @@ func _acomodar_las_manos(delta: float) -> void:
 	)
 
 
+## El uso ya habilitó el contacto con su recipiente. Descarta el retroceso previo contra él.
+func preparar_el_uso_en_la_mano() -> void:
+	_largo_de_carga = _brazo_de_carga.get_hit_length()
+	agarre.punto_de_carga.position = (_brazo_de_carga.transform * Vector3(0, 0, _largo_de_carga))
+	_acomodar_lo_largo()
+
+
 ## Mueve un punto sobre el eje de su brazo y devuelve el largo que quedó.
 func _acomodar(brazo: SpringArm3D, punto: Node3D, largo: float, delta: float) -> float:
 	if brazo == null or punto == null:
@@ -254,12 +261,12 @@ func _acomodar(brazo: SpringArm3D, punto: Node3D, largo: float, delta: float) ->
 	return siguiente
 
 
-## La esfera del brazo protege la mano, pero no alcanza la punta de un útil largo, como la cabeza
-## de la mopa inclinada. Se mide su forma real, incluida la posición transitoria de mojarla.
+## La esfera del brazo protege la mano. La forma del objeto protege su extremo y sus costados,
+## incluida la posición transitoria de la mopa al mojarla.
 func _acomodar_lo_largo() -> void:
 	for nodo in agarre.punto_de_carga.get_children():
 		var datos := _datos_de(nodo)
-		if not nodo is RigidBody3D or datos == null or not datos.es_largo:
+		if not nodo is RigidBody3D or datos == null:
 			continue
 		var retroceso := _retroceso_libre(nodo as RigidBody3D)
 		if retroceso == 0.0:
@@ -270,7 +277,7 @@ func _acomodar_lo_largo() -> void:
 		return
 
 
-## Cuánto tiene que retroceder el cuerpo por el brazo de carga para no tocar una pared. No mueve
+## Cuánto tiene que retroceder el cuerpo por el brazo de carga para no atravesar un objeto. No mueve
 ## nada: cero es que ya está libre, o que no hay lugar libre en todo su largo.
 func _retroceso_libre(cuerpo: RigidBody3D) -> float:
 	var espacio := get_world_3d().direct_space_state
@@ -280,13 +287,13 @@ func _retroceso_libre(cuerpo: RigidBody3D) -> float:
 		var consulta := _consulta_de(forma, cuerpo)
 		consulta.margin = HOLGURA_DE_LA_CAIDA
 		consulta.collision_mask = _brazo_de_carga.collision_mask
-		# La cabeza entra en el balde al mojarse. Ese contacto con un objeto móvil no debe
-		# esconderla detrás de la cámara como si fuera una pared del almacén.
-		var excluidos: Array[RID] = consulta.exclude
-		for choque: Dictionary in espacio.intersect_shape(consulta, TOPE_DE_CHOQUES):
-			if choque.collider is RigidBody3D:
-				excluidos.append(choque.rid)
-		consulta.exclude = excluidos
+		# Sólo el recipiente de la mojada admite contacto durante ese gesto.
+		if "contacto_del_movimiento" in cuerpo:
+			var recipiente: PhysicsBody3D = cuerpo.get("contacto_del_movimiento")
+			if is_instance_valid(recipiente):
+				var excluidos: Array[RID] = consulta.exclude
+				excluidos.append(recipiente.get_rid())
+				consulta.exclude = excluidos
 		consultas.append(consulta)
 		var limites := consulta.transform * forma.shape.get_debug_mesh().get_aabb()
 		largo = maxf(largo, limites.size.length())

@@ -352,6 +352,31 @@ func test_la_cabeza_de_la_mopa_se_ve_y_el_agarre_sigue_en_el_origen() -> void:
 	assert_float(abajo).is_greater(0.1)
 
 
+func test_la_mojada_sube_en_arco_y_entra_desde_arriba_del_borde() -> void:
+	var almacen: Node3D = await _almacen()
+	var mopa := _mopa_en_la_mano(almacen)
+	var balde := _util(almacen, "Balde")
+	var desde := mopa.carga.global_position
+	balde.freeze = true
+	balde.global_position = desde + Vector3(0.6, -0.25, 0)
+	var superficie := balde.carga.global_position
+	mopa.call("_mover_la_mopa", 0.0, balde)
+	mopa.call("_mover_la_mopa", 0.5, balde)
+	assert_object(mopa.contacto_del_movimiento).is_same(balde)
+	assert_float(mopa.carga.global_position.y).is_greater(maxf(desde.y, superficie.y) + 0.08)
+	# La aproximación final es vertical: la cabeza ya está sobre la abertura al bajar.
+	mopa.call("_mover_la_mopa", 0.85, balde)
+	var relativo := balde.to_local(mopa.carga.global_position)
+	assert_float(Vector2(relativo.x, relativo.z).length()).is_less(0.03)
+	assert_float(relativo.y).is_greater(0.18)
+	mopa.call("_mover_la_mopa", 1.0, balde)
+	assert_vector(balde.to_local(mopa.carga.global_position)).is_equal_approx(
+		Vector3(0, 0.07, 0), Vector3.ONE * 0.001
+	)
+	mopa.call("_mover_la_mopa", 0.0, balde)
+	assert_object(mopa.contacto_del_movimiento).is_null()
+
+
 func test_mojar_baja_la_punta_a_la_vista_y_vuelve_sin_mover_la_camara() -> void:
 	var almacen: Node3D = await _almacen()
 	var mopa := _mopa_en_la_mano(almacen)

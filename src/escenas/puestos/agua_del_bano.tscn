@@ -38,7 +38,7 @@ contorno_del_inodoro = PackedVector2Array(-0.136, -0.128, -0.136, 0.104, 0.0, 0.
 gota = NodePath("Gota")
 
 [node name="Lavatorio" type="MeshInstance3D" parent="."]
-transform = Transform3D(0, 0, 0.8, 0, 0.8, 0, -0.8, 0, 0, 13.092658, 0.9828, -5.299853)
+transform = Transform3D(0, 0, 0.8, 0, 0.8, 0, -0.8, 0, 0, 13.02, 0.9828, -5.3)
 material_override = SubResource("ShaderMaterial_lavatorio")
 cast_shadow = 0
 gi_mode = 2

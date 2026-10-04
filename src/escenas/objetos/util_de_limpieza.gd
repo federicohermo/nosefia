@@ -30,6 +30,7 @@ const Gotas := preload("res://src/escenas/objetos/gotas_del_balde.gd")
 ## Lo que se marca al enfocarlo: la malla, y no la carga, que queda adentro del balde.
 @export var mallas: Array[MeshInstance3D] = []
 
+var contacto_del_movimiento: PhysicsBody3D
 var _bajada: Tween
 var _tamanos_originales: Dictionary[Node3D, Transform3D] = {}
 var _gotas: Gotas
@@ -89,6 +90,7 @@ func mostrar_la_mojada(balde: Node3D) -> void:
 		return
 	if _bajada != null:
 		_bajada.kill()
+	contacto_del_movimiento = balde as PhysicsBody3D
 	transform = Transform3D(orientacion_en_mano, Vector3.ZERO)
 	_bajada = create_tween()
 	_bajada.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
@@ -106,13 +108,20 @@ func _mover_la_mopa(progreso: float, balde: Node3D) -> void:
 	var reposo := Transform3D(orientacion_en_mano, Vector3.ZERO)
 	if progreso <= 0.0:
 		transform = reposo
+		contacto_del_movimiento = null
 		(malla as FibrasDeLaMopa).limitar_en(balde, 0.0)
 		return
+	contacto_del_movimiento = balde as PhysicsBody3D
 	var ancla := get_parent() as Node3D
 	var inicio := ancla.global_transform * reposo
 	var destino := balde.global_basis.orthonormalized()
 	var orientacion := inicio.basis.orthonormalized().slerp(destino, progreso)
-	var cabeza := (inicio * carga.position).lerp(balde.to_global(Vector3(0.0, 0.07, 0.0)), progreso)
+	var desde := inicio * carga.position
+	var hasta := balde.to_global(Vector3(0.0, 0.07, 0.0))
+	var control := hasta
+	control.y = maxf(desde.y, balde.to_global(Vector3(0.0, 0.18, 0.0)).y) + 0.35
+	# La tangente final es vertical: primero salva el borde, luego baja por la abertura.
+	var cabeza := desde.lerp(control, progreso).lerp(control.lerp(hasta, progreso), progreso)
 	global_transform = Transform3D(orientacion, cabeza - orientacion * carga.position)
 	(malla as FibrasDeLaMopa).limitar_en(balde, progreso)
 
@@ -127,6 +136,7 @@ func _notification(que: int) -> void:
 	if que == NOTIFICATION_UNPARENTED and _bajada != null:
 		_bajada.kill()
 		_bajada = null
+		contacto_del_movimiento = null
 		(malla as FibrasDeLaMopa).liberar()
 
 
