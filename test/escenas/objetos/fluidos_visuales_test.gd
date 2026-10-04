@@ -268,7 +268,7 @@ func test_la_mopa_encoge_el_charco_antes_de_ocultarlo() -> void:
 	assert_bool(mancha.is_visible_in_tree()).is_true()
 	assert_bool((mancha.get_node("Cuerpo") as CollisionShape3D).disabled).is_true()
 	await get_tree().create_timer(0.15).timeout
-	assert_float(superficie.scale.x).is_between(0.05, 0.95)
+	assert_float(superficie.scale.x / superficie.escala_de_reposo.x).is_between(0.05, 0.95)
 	assert_float(superficie.global_position.distance_to(centro)).is_less(0.001)
 	limpieza.call("repintar")
 	assert_bool(mancha.is_visible_in_tree()).is_true()

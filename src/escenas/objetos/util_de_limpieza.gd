@@ -21,6 +21,7 @@ const Gotas := preload("res://src/escenas/objetos/gotas_del_balde.gd")
 
 @export var malla: MeshInstance3D
 @export var escala_apoyada := 1.0
+@export var examen: Examen
 
 ## Lo que muestra de qué está cargado: el agua del balde, la punta mojada de la mopa. Los jabones
 ## no llevan.
@@ -66,6 +67,8 @@ func _mantener_vertical() -> void:
 		return
 	if not freeze or top_level:
 		return
+	if examen != null and examen.esta_examinando():
+		return
 	var ancla := get_parent() as Node3D
 	if ancla == null:
 		return
@@ -103,6 +106,7 @@ func _mover_la_mopa(progreso: float, balde: Node3D) -> void:
 	var reposo := Transform3D(orientacion_en_mano, Vector3.ZERO)
 	if progreso <= 0.0:
 		transform = reposo
+		(malla as FibrasDeLaMopa).limitar_en(balde, 0.0)
 		return
 	var ancla := get_parent() as Node3D
 	var inicio := ancla.global_transform * reposo
@@ -110,6 +114,7 @@ func _mover_la_mopa(progreso: float, balde: Node3D) -> void:
 	var orientacion := inicio.basis.orthonormalized().slerp(destino, progreso)
 	var cabeza := (inicio * carga.position).lerp(balde.to_global(Vector3(0.0, 0.07, 0.0)), progreso)
 	global_transform = Transform3D(orientacion, cabeza - orientacion * carga.position)
+	(malla as FibrasDeLaMopa).limitar_en(balde, progreso)
 
 
 ## Agarre quita y vuelve a colgar el nodo tanto al soltar como al cambiar de mano.
@@ -122,6 +127,7 @@ func _notification(que: int) -> void:
 	if que == NOTIFICATION_UNPARENTED and _bajada != null:
 		_bajada.kill()
 		_bajada = null
+		(malla as FibrasDeLaMopa).liberar()
 
 
 ## Agranda lo apoyado desde su base, sin cambiar el tamaño que ocupa en la mano.

@@ -21,6 +21,7 @@ func test_cada_mancha_se_enfoca_desde_un_apoyo_caminable_a_un_metro() -> void:
 			pie.y = apoyo.position.y + 0.01
 			var consulta := PhysicsShapeQueryParameters3D.new()
 			consulta.shape = forma.shape
+			consulta.collision_mask = jugador.collision_mask
 			consulta.transform = Transform3D(Basis.IDENTITY, pie + forma.position)
 			consulta.exclude = [jugador.get_rid()]
 			if not jugador.get_world_3d().direct_space_state.intersect_shape(consulta).is_empty():

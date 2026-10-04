@@ -263,6 +263,11 @@ DADO la mopa recién mojada CUANDO se recorre su distancia máxima ENTONCES lleg
 la mancha sigue. CUANDO se moja nuevamente en el balde cercano ENTONCES recupera toda
 la carga y borra la mancha correspondiente. La punta pierde color y gotea durante el viaje.
 
+DADO el balde en su ubicación inicial del baño CUANDO se lleva la mopa hasta cualquiera
+de las manchas del almacén ENTONCES se agota antes de poder limpiarla, incluso tomando
+el trayecto más corto y aprovechando el alcance de interacción. DADO el balde acercado
+a la zona de limpieza ENTONCES hay carga suficiente para caminar unos pasos y limpiar.
+
 ## No objetivos
 
 - Esta capacidad NO mide distancias: las recibe ya medidas. El dominio no sabe de física.

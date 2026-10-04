@@ -16,6 +16,7 @@ const PASO := 1.0 / 120.0
 const RELIEVE_DE_LAS_ONDAS := 1.8
 
 @export var en_balde := false
+@export var escala_de_reposo := Vector3.ONE
 
 var _radio := 0.6
 var _pendiente := Vector2.ZERO
@@ -146,7 +147,7 @@ func encoger() -> void:
 	visible = true
 	_encogimiento = create_tween()
 	_encogimiento.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
-	_encogimiento.tween_property(self, "scale", Vector3(0.01, 1.0, 0.01), 0.45)
+	_encogimiento.tween_property(self, "scale", escala_de_reposo * Vector3(0.01, 1.0, 0.01), 0.45)
 	_encogimiento.tween_callback(_terminar_encogimiento)
 
 
@@ -154,7 +155,7 @@ func _cancelar_encogimiento() -> void:
 	if _encogimiento != null:
 		_encogimiento.kill()
 		_encogimiento = null
-	scale = Vector3.ONE
+	scale = escala_de_reposo
 
 
 func _terminar_encogimiento() -> void:

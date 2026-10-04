@@ -11,6 +11,24 @@ class ConFoco:
 	var material_de_foco: Material
 
 
+class MallaDeformable:
+	extends MeshInstance3D
+	var foco: Material
+
+	func mostrar_contorno(material: Material) -> void:
+		foco = material
+
+
+func test_la_malla_deformable_dibuja_y_apaga_su_propio_contorno() -> void:
+	var marco: MarcoDelObjetivo = auto_free(MarcoDelObjetivo.new())
+	var malla: MallaDeformable = auto_free(MallaDeformable.new())
+	marco.enfocar(malla)
+	assert_object(malla.foco).is_not_null()
+	assert_object(malla.material_overlay).is_null()
+	marco.apagar()
+	assert_object(malla.foco).is_null()
+
+
 func test_el_objetivo_con_material_propio_lo_recibe_y_conserva_su_superficie() -> void:
 	var marco: MarcoDelObjetivo = auto_free(MarcoDelObjetivo.new())
 	var objetivo: ConFoco = auto_free(ConFoco.new())

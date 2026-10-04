@@ -22,6 +22,7 @@ const OPACIDAD := 0.85
 ## nunca.
 @export var lugar: PisoDelLocal.Lugar = PisoDelLocal.Lugar.ENTRADA
 @export var acuosa := false
+@export var escala_visual := 1.0
 
 @export var _mancha: MeshInstance3D
 
@@ -34,6 +35,11 @@ const OPACIDAD := 0.85
 
 
 func _ready() -> void:
+	_mancha.scale *= Vector3(escala_visual, 1.0, escala_visual)
+	(_mancha as SuperficieLiquida).escala_de_reposo = _mancha.scale
+	var forma := _cuerpo.shape.duplicate() as CylinderShape3D
+	forma.radius *= escala_visual
+	_cuerpo.shape = forma
 	(_mancha as SuperficieLiquida).configurar_agua(acuosa)
 	(_mancha as SuperficieLiquida).encogida.connect(hide)
 

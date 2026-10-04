@@ -25,6 +25,7 @@ const LimpiezaDelLocal := preload("res://src/escenas/puestos/limpieza_del_almace
 const AudioDelLocal := preload("res://src/escenas/puestos/audio_del_almacen.gd")
 const ReposicionManual := preload("res://src/escenas/puestos/reposicion_manual.gd")
 const PuertaDelLocal := preload("res://src/escenas/puestos/puerta_del_local.gd")
+const UtilDeLimpieza := preload("res://src/escenas/objetos/util_de_limpieza.gd")
 
 ## El jugador tampoco declara un `class_name` —es cáscara, como este archivo—, así que el
 ## `@export` de abajo no lo puede nombrar sin traerlo por `preload`.
@@ -148,6 +149,8 @@ func _ready() -> void:
 			_hud.mostrar_subtitulo(_reposicion_manual.texto_del_examen(nodo))
 	)
 	_jugador.examen.examen_terminado.connect(_hud.vaciar_subtitulo)
+	for util: UtilDeLimpieza in _utiles_de_limpieza:
+		util.examen = _jugador.examen
 	# El motor no despierta lo que está sobre una caja empujada. Lo hace el puesto.
 	for caja: CajaDeProductosDelDeposito in _cajas_de_productos:
 		caja.empujada.connect(_reposicion_manual.despertar_lo_de_arriba)

@@ -262,6 +262,14 @@ func _limpiar(almacen: Node3D) -> void:
 			if ReglasDeLaLimpieza.AGUA_QUE_BORRA[tipo] != pedida:
 				continue
 			await _enfocar_mancha(jugador, mancha)
+			# La mopa requiere recarga junto a cada mancha: se transporta el balde antes.
+			_soltar_lejos(agarre)
+			_agarrar(agarre, balde)
+			agarre.soltar(true)
+			balde.global_position = jugador.global_position + Vector3.RIGHT * 0.8
+			_agarrar(agarre, mopa)
+			_usar_sobre(jugador, balde)
+			await _enfocar_mancha(jugador, mancha)
 			var clic := InputEventMouseButton.new()
 			clic.button_index = MOUSE_BUTTON_RIGHT
 			clic.pressed = true
@@ -310,10 +318,14 @@ func _sacar_la_basura(almacen: Node3D) -> void:
 	var zona: Area3D = almacen.get_node("Objetos/ZonaDeDescarte")
 	var jugador: Node3D = almacen.get("_jugador")
 	jugador.global_position = zona.global_position + Vector3.BACK
+	var camara := jugador.get_node("Giro/Camara") as Camera3D
+	camara.look_at(zona.global_position + Vector3.UP * 0.4)
 	var recolector: RecolectorDeBasura = almacen.get("_recolector")
 	for bolsa: Node3D in almacen.get("_bolsas"):
 		var datos: ObjetoDelAlmacen = bolsa.call("interactuar")
 		assert_bool(agarre.pedir_agarrar(datos, bolsa)).is_true()
+		# El área debe registrar que la bolsa dejó el mundo antes de recibirla otra vez.
+		await get_tree().physics_frame
 		agarre.punto_de_soltado.global_position = zona.global_position + Vector3.UP * 0.3
 		assert_object(agarre.soltar(true)).is_same(bolsa)
 		for cuadro in 5:

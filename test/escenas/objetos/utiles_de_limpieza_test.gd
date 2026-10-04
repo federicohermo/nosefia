@@ -315,6 +315,10 @@ func _muestrear_la_mojada(almacen: Node3D, mopa: UtilDeLimpieza) -> void:
 	assert_float(Vector2(cabeza.x, cabeza.z).length()).is_less(0.001)
 	assert_float(cabeza.y).is_equal_approx(0.07, 0.001)
 	assert_float(mopa.global_basis.y.angle_to(balde.global_basis.y)).is_less(0.001)
+	var fibras: Array = mopa.malla.get("_pinturas")
+	assert_array(fibras).is_not_empty()
+	for pintura: ShaderMaterial in fibras:
+		assert_float(pintura.get_shader_parameter("inmersion")).is_equal(1.0)
 	for instante in 4:
 		bajada.custom_step(0.04)
 		_ver_la_punta(camara, mopa)
@@ -326,6 +330,8 @@ func _muestrear_la_mojada(almacen: Node3D, mopa: UtilDeLimpieza) -> void:
 	assert_array(termino).is_equal([true])
 	assert_float(bajada.get_total_elapsed_time()).is_equal_approx(0.4, 0.0001)
 	assert_bool(mopa.transform.is_equal_approx(antes)).is_true()
+	for pintura: ShaderMaterial in fibras:
+		assert_float(pintura.get_shader_parameter("inmersion")).is_equal(0.0)
 	assert_that((mopa.carga.material_override as StandardMaterial3D).albedo_color).is_equal(
 		_piso(almacen).balde().color()
 	)
