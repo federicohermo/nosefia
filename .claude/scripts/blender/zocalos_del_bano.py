@@ -9,6 +9,7 @@ from mathutils import Vector
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from lib.consola import configurar  # noqa: E402
+from lib.piso_del_bano import coordenada_del_zocalo  # noqa: E402
 
 configurar()
 
@@ -20,11 +21,13 @@ anterior = bpy.data.objects.get(nombre)
 if anterior is not None:
     bpy.data.objects.remove(anterior, do_unlink=True)
 
-# El recorrido incluye las dos jambas del acceso y deja libre su abertura completa.
+# El remate llega al fondo del marco: una cota fija atravesaría su rebaje al ajustarlo.
+marco = bpy.data.objects["bano_marco_entrada"]
+fin_del_marco = max((marco.matrix_world @ v.co).x for v in marco.data.vertices)
 recorrido = [Vector(p) for p in (
-    (7.906, 5.97848), (8.29186, 5.97848), (8.29186, 1.27768),
+    (fin_del_marco, 5.97848), (8.29186, 5.97848), (8.29186, 1.27768),
     (13.43466, 1.27768), (13.43466, 7.88604), (8.29186, 7.88604),
-    (8.29186, 7.66135), (7.906, 7.66135),
+    (8.29186, 7.66135), (fin_del_marco, 7.66135),
 )]
 perfil = [(0, 0), (.016, 0), (.016, .102), (.012, .11), (0, .11)]
 vertices = []
@@ -67,13 +70,7 @@ for cara in malla.polygons:
     normal = cara.normal
     for indice in cara.loop_indices:
         punto = malla.vertices[malla.loops[indice].vertex_index].co
-        if abs(normal.z) > .5:
-            coordenada = (punto.x, punto.y)
-        elif abs(normal.x) > .5:
-            coordenada = (punto.y, punto.z - .10223747)
-        else:
-            coordenada = (punto.x, punto.z - .10223747)
-        uv.data[indice].uv = Vector(coordenada) / .6
+        uv.data[indice].uv = coordenada_del_zocalo(punto, normal, .10223747)
 objeto = bpy.data.objects.new(nombre, malla)
 bpy.data.collections["Bano publico"].objects.link(objeto)
 destino = fuente if "--aplicar" in sys.argv else raiz / "reports/bano-con-zocalos.blend"

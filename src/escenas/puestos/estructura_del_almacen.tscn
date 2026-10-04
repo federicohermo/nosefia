@@ -1222,9 +1222,13 @@ shape = SubResource("estante_001_7")
 [node name="bano_puerta_1" parent="."]
 gi_mode = 2
 
-[node name="CuerpoDeLaHoja" type="AnimatableBody3D" parent="bano_puerta_1" node_paths=PackedStringArray("hoja", "mallas") groups=["interactuable"]]
+[node name="EjeDeLaBisagra" type="Marker3D" parent="bano_puerta_1"]
+position = Vector3(-0.51, 0, 0)
+
+[node name="CuerpoDeLaHoja" type="AnimatableBody3D" parent="bano_puerta_1" node_paths=PackedStringArray("hoja", "eje_de_la_bisagra", "mallas") groups=["interactuable"]]
 script = ExtResource("puerta")
 hoja = NodePath("..")
+eje_de_la_bisagra = NodePath("../EjeDeLaBisagra")
 mallas = [NodePath("..")]
 
 [node name="Volumen" type="CollisionShape3D" parent="bano_puerta_1/CuerpoDeLaHoja"]
@@ -1233,9 +1237,13 @@ shape = SubResource("puerta_de_cabina")
 [node name="bano_puerta_2" parent="."]
 gi_mode = 2
 
-[node name="CuerpoDeLaHoja" type="AnimatableBody3D" parent="bano_puerta_2" node_paths=PackedStringArray("hoja", "mallas") groups=["interactuable"]]
+[node name="EjeDeLaBisagra" type="Marker3D" parent="bano_puerta_2"]
+position = Vector3(-0.51, 0, 0)
+
+[node name="CuerpoDeLaHoja" type="AnimatableBody3D" parent="bano_puerta_2" node_paths=PackedStringArray("hoja", "eje_de_la_bisagra", "mallas") groups=["interactuable"]]
 script = ExtResource("puerta")
 hoja = NodePath("..")
+eje_de_la_bisagra = NodePath("../EjeDeLaBisagra")
 mallas = [NodePath("..")]
 
 [node name="Volumen" type="CollisionShape3D" parent="bano_puerta_2/CuerpoDeLaHoja"]

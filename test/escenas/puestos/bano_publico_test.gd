@@ -367,3 +367,71 @@ func test_la_entrada_cerrada_no_deja_ver_el_bano_por_los_bordes_de_la_hoja() -> 
 					)
 					. is_true()
 				)
+
+
+func test_el_acabado_del_bano_no_sobresale_delante_de_la_hoja_cerrada() -> void:
+	var almacen: Node3D = await _almacen()
+	var puerta := almacen.get_node("Estructura/puerta2/CuerpoDeLaHoja")
+	assert_bool(puerta.call("puerta").abierta()).is_false()
+	var edificio := almacen.get_node("Estructura/almacen") as MeshInstance3D
+	var hoja := almacen.get_node("Estructura/puerta2") as MeshInstance3D
+	var referencia := _material_de_la_cara(
+		edificio, Vector3(7.70, 0.25, -6.82), Vector3(7.70, 0.0, -6.82)
+	)
+	var interior := _material_de_la_cara(
+		edificio, Vector3(8.08, 0.25, -6.82), Vector3(8.08, 0.0, -6.82)
+	)
+	assert_str(referencia).is_not_empty()
+	assert_str(interior).is_not_empty().is_not_equal(referencia)
+	# La franja delante de la hoja era visible aun con la puerta cerrada.
+	for z: float in [-6.20, -6.82, -7.40]:
+		var desde := Vector3(7.918, 0.25, z)
+		var hasta := Vector3(7.918, 0.0, z)
+		assert_array(_cruces(hoja, desde, hasta)).is_empty()
+		(
+			assert_str(_material_de_la_cara(edificio, desde, hasta))
+			. override_failure_message(
+				"El acabado exterior cambia delante de la puerta en z=%s" % z
+			)
+			. is_equal(referencia)
+		)
+
+
+func test_las_hojas_de_cabina_giran_unidas_a_un_soporte_fijo() -> void:
+	var almacen: Node3D = await _almacen()
+	var estructura := almacen.get_node("Estructura") as Node3D
+	for numero: int in [1, 2]:
+		var hoja := estructura.get_node("bano_puerta_%d" % numero) as MeshInstance3D
+		var cuerpo := hoja.get_node("CuerpoDeLaHoja")
+		var x := 11.455 if numero == 1 else 13.065
+		var eje := Vector3(x, 1.25, -3.35)
+		var ancla_local := hoja.to_local(eje)
+		for altura: float in [0.59, 1.95]:
+			var pasador := Vector3(x, altura, -3.35)
+			(
+				assert_float(_distancia_al_pasador_fijo(estructura, hoja, pasador))
+				. override_failure_message("Falta soporte fijo junto al eje %s" % pasador)
+				. is_less_equal(0.005)
+			)
+		cuerpo.call("interactuar")
+		for cuadro in 60:
+			await get_tree().physics_frame
+		var estado := cuerpo.call("puerta") as Puerta
+		assert_float(estado.angulo()).is_equal_approx(Puerta.ANGULO_ABIERTA, 0.001)
+		assert_float(hoja.to_global(ancla_local).distance_to(eje)).is_less(0.0001)
+		for altura: float in [0.59, 1.95]:
+			var pasador := Vector3(x, altura, -3.35)
+			assert_float(_distancia_al_pasador_fijo(estructura, hoja, pasador)).is_less_equal(0.005)
+
+
+func _distancia_al_pasador_fijo(estructura: Node3D, hoja: MeshInstance3D, eje: Vector3) -> float:
+	var distancia := INF
+	var desde := eje + Vector3.FORWARD * 0.04
+	var hasta := eje + Vector3.BACK * 0.04
+	for hijo: Node in estructura.get_children():
+		var malla := hijo as MeshInstance3D
+		if malla == null or malla == hoja:
+			continue
+		for punto: Vector3 in _cruces(malla, desde, hasta):
+			distancia = minf(distancia, eje.distance_to(punto))
+	return distancia
