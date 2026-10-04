@@ -1,4 +1,4 @@
-"""Dejar juntas finas de cierre y apoyar las mamparas fijas sobre el suelo.
+"""Dejar juntas visibles al enfocar y apoyar sólo los perfiles metálicos sobre el suelo.
 
 Editar los extremos existentes conserva el montaje, las hojas y sus bisagras. Las UV
 se prolongan desde cada cara, sin estirar sus coordenadas anteriores ni regenerar el baño.
@@ -30,7 +30,8 @@ FIJAS = (
     "bano_perfil_encuentro_2",
 )
 PATAS = ("bano_pata_mampara", "bano_pata_mampara.001", "bano_pata_mampara.002")
-HOLGURA = 0.008
+# El contorno del juego crece 8 mm. Quedan 4 mm visibles incluso con la puerta enfocada.
+HOLGURA = 0.012
 
 
 def prolongar_uv(objeto, previos):
@@ -86,7 +87,7 @@ def aplicar():
         for vertice, punto in zip(objeto.data.vertices, puntos):
             cambiado = False
             if abs(punto.z - inferior) < 0.000001:
-                punto.z = piso
+                punto.z = piso if nombre.startswith("bano_perfil_") else 0.30
                 cambiado = True
             if nombre in cierres and abs(punto.x - extremo) < 0.000001:
                 punto.x = cierres[nombre]
@@ -102,8 +103,9 @@ def aplicar():
         assert all(f.calc_area() > 0 for f in editable.faces), nombre
         editable.to_mesh(objeto.data)
         editable.free()
+        apoyo = piso if nombre.startswith("bano_perfil_") else 0.30
         assert abs(min((objeto.matrix_world @ v.co).z
-                       for v in objeto.data.vertices) - piso) < 0.000001, nombre
+                       for v in objeto.data.vertices) - apoyo) < 0.000001, nombre
     for nombre in PATAS:
         objeto = bpy.data.objects.get(nombre)
         if objeto is not None:
@@ -121,7 +123,9 @@ def aplicar():
             movil = arbol(hoja, giro @ Matrix.Translation(-eje))
             assert all(not movil.overlap(fijo) for _, fijo in arboles), (hoja.name, grados)
     informe = {"piso_z": piso, "holgura_cierre_mm": HOLGURA * 1000,
-               "piezas_apoyadas": FIJAS, "patas_eliminadas": PATAS,
+               "perfiles_apoyados": [n for n in FIJAS if n.startswith("bano_perfil_")],
+               "paneles_elevados": [n for n in FIJAS if n.startswith("bano_mampara_")],
+               "patas_eliminadas": PATAS,
                "mallas_ajenas_identicas": len(ajenos), "barrido_sin_choques": True}
     informes = RAIZ / "reports"
     informes.mkdir(exist_ok=True)
