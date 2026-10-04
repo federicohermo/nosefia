@@ -43,10 +43,10 @@ func test_las_tres_notas_se_ven_en_el_bano_con_sus_imagenes() -> void:
 		var alto_minimo := 0.3 if nombre == NOTAS[0] else 1.1
 		assert_float(nota.mesh.get_aabb().size.y).is_greater(alto_minimo)
 		assert_float(nota.global_position.x).is_between(8.0, 13.5)
-		assert_float(nota.global_position.z).is_between(-8.0, -4.0)
+		assert_float(nota.global_position.z).is_between(-8.0, -1.3)
 		assert_float(nota.global_position.y).is_between(1.2, 1.9)
 		var centro := nota.to_global(nota.mesh.get_aabb().get_center())
-		var frente := Vector3.LEFT if nombre == NOTAS[0] else Vector3.BACK
+		var frente := Vector3.FORWARD if nombre == NOTAS[0] else Vector3.BACK
 		var rayo := PhysicsRayQueryParameters3D.create(centro + frente, centro, 1)
 		var choque := almacen.get_world_3d().direct_space_state.intersect_ray(rayo)
 		assert_bool(choque.is_empty()).is_false()

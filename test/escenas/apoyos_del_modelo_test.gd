@@ -100,6 +100,9 @@ func test_las_manchas_superan_el_alcance_entre_si() -> void:
 func _abrir() -> Node3D:
 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
 	add_child(almacen)
+	await get_tree().physics_frame
+	for numero: int in [1, 2]:
+		almacen.get_node("Estructura/bano_puerta_%d/CuerpoDeLaHoja" % numero).call("interactuar")
 	for cuadro in 60:
 		await get_tree().physics_frame
 	return almacen

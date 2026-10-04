@@ -132,3 +132,41 @@ func test_antes_de_calentar_no_hace_nada() -> void:
 	await get_tree().process_frame
 	await get_tree().process_frame
 	assert_bool(calentamiento.is_processing()).is_false()
+
+
+func test_los_objetos_movibles_se_dibujan_tambien_sin_los_focos_del_cuarto() -> void:
+	var escena := _escena()
+	var movible := escena.get_child(0) as MeshInstance3D
+	movible.gi_mode = GeometryInstance3D.GI_MODE_DYNAMIC
+	var foco := SpotLight3D.new()
+	escena.add_child(foco)
+	var apagado := SpotLight3D.new()
+	apagado.visible = false
+	escena.add_child(apagado)
+	var area := AreaLight3D.new()
+	area.area_range = 2.0
+	escena.add_child(area)
+	var calentamiento := _calentamiento()
+	var sin_focos := [false]
+	var con_ambas_luces := [false]
+	var camara := Camera3D.new()
+	camara.position = Vector3(1.0, 2.0, 2.0)
+	escena.add_child(camara)
+	camara.make_current()
+	var original := movible.global_transform
+	calentamiento.avanzo.connect(
+		func(_progreso: float) -> void:
+			sin_focos[0] = sin_focos[0] or (movible.visible and not foco.visible)
+			con_ambas_luces[0] = (
+				con_ambas_luces[0] or (movible.visible and foco.visible and area.area_range > 2.0)
+			)
+	)
+	calentamiento.calentar(escena)
+	await assert_signal(calentamiento).wait_until(ESPERA_MS).is_emitted("terminado")
+	assert_bool(sin_focos[0]).is_true()
+	assert_bool(con_ambas_luces[0]).is_true()
+	assert_float(area.area_range).is_equal(2.0)
+	assert_that(movible.global_transform).is_equal(original)
+	assert_bool(foco.visible).is_true()
+	assert_bool(apagado.visible).is_false()
+	assert_int(_visibles(escena)).is_equal(CUANTOS)

@@ -12,7 +12,7 @@ const LAVATORIO := "Estructura/vanitory/StaticBody3D"
 const INODORO := "Estructura/inodoro/StaticBody3D"
 
 ## Justo adentro de la puerta del baño, del lado del cuarto: desde acá se ve todo lo que hay en él.
-const ENTRADA_DEL_BANO := Vector3(8.8, 1.05, -4.658)
+const ENTRADA_DEL_BANO := Vector3(8.8, 1.05, -6.82)
 
 ## Cuánto puede quedar lo apoyado por encima del piso, en metros.
 const APOYADO := 0.005
@@ -88,6 +88,11 @@ func test_cada_util_es_la_malla_del_modelo_donde_el_modelo_la_dibujaba() -> void
 		)
 		var aca := puesta.origin
 		var alla := del_modelo.global_position
+		# Estos dos objetos dejan libres la entrada y los lavamanos.
+		if util.name == &"Mopa":
+			alla = Vector3(12.75, alla.y, -5.25)
+		elif util.name == &"JabonAzul":
+			alla.z = -7.6729193
 		(
 			assert_float(Vector2(aca.x, aca.z).distance_to(Vector2(alla.x, alla.z)))
 			. override_failure_message("`%s` no está donde lo dibujaba el modelo" % util.name)

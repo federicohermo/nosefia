@@ -221,7 +221,7 @@ size = Vector3(0.850638, 0.057008, 1.238094)
 size = Vector3(1.724248, 2.78366, 0.232234)
 
 [sub_resource type="BoxShape3D" id="volumen_de_la_puerta2"]
-size = Vector3(1.724248, 2.78366, 0.232234)
+size = Vector3(1.66, 2.7, 0.075)
 
 [sub_resource type="BoxShape3D" id="volumen_del_porton"]
 size = Vector3(0.232152, 3.387137, 4.3139)
@@ -361,6 +361,30 @@ size = Vector3(0.0566, 2.0301, 0.068)
 [sub_resource type="BoxShape3D" id="estante_001_7"]
 size = Vector3(0.0566, 2.0301, 0.068)
 
+[sub_resource type="BoxShape3D" id="puerta_de_cabina"]
+size = Vector3(1.0, 1.9, 0.048)
+
+[sub_resource type="BoxShape3D" id="volumen_FrenteDelBano"]
+size = Vector3(5.15, 7.18, 0.21)
+
+[sub_resource type="BoxShape3D" id="volumen_MuroAltoDelBano"]
+size = Vector3(0.48, 4.08, 6.61)
+
+[sub_resource type="BoxShape3D" id="volumen_TechoAltoDelBano"]
+size = Vector3(5.16, 4.08, 2.66)
+
+[sub_resource type="BoxShape3D" id="volumen_UmbralAnterior"]
+size = Vector3(0.43, 0.206508, 1.7)
+
+[sub_resource type="BoxShape3D" id="acceso_bano_izquierda"]
+size = Vector3(0.421, 2.75, 4.8585)
+
+[sub_resource type="BoxShape3D" id="acceso_bano_derecha"]
+size = Vector3(0.421, 2.75, 0.4195)
+
+[sub_resource type="BoxShape3D" id="acceso_bano_superior"]
+size = Vector3(0.421, 4.244, 6.9586)
+
 [node name="Estructura" instance=ExtResource("modelo")]
 
 [node name="SueloSolido" type="StaticBody3D" parent="."]
@@ -379,7 +403,7 @@ position = Vector3(0.56085, 0.0005, -11.359675)
 shape = SubResource("suelo_fondo")
 
 [node name="PasoAlDeposito" type="CollisionShape3D" parent="SueloSolido"]
-position = Vector3(8.0814625, 0, -4.662301)
+position = Vector3(8.0814625, 0, -6.82)
 shape = SubResource("suelo_paso_deposito")
 
 [node name="PasoAlFondo" type="CollisionShape3D" parent="SueloSolido"]
@@ -714,6 +738,7 @@ shape = SubResource("volumen_5")
 [node name="Volumen6" type="CollisionShape3D" parent="almacen/Volumen"]
 position = Vector3(8.164555, 3.38393, -6.678395)
 shape = SubResource("volumen_6")
+disabled = true
 
 [node name="Volumen7" type="CollisionShape3D" parent="almacen/Volumen"]
 position = Vector3(13.505566, 3.38393, -4.491415)
@@ -742,6 +767,7 @@ shape = SubResource("volumen_13")
 [node name="Volumen14" type="CollisionShape3D" parent="almacen/Volumen"]
 position = Vector3(7.95468, 3.48693, -6.67093)
 shape = SubResource("volumen_14")
+disabled = true
 
 [node name="Volumen15" type="CollisionShape3D" parent="almacen/Volumen"]
 position = Vector3(7.95468, 3.48693, 2.123115)
@@ -750,6 +776,7 @@ shape = SubResource("volumen_15")
 [node name="Volumen16" type="CollisionShape3D" parent="almacen/Volumen"]
 position = Vector3(10.8365, 3.48693, -2.350575)
 shape = SubResource("volumen_16")
+disabled = true
 
 [node name="Volumen17" type="CollisionShape3D" parent="almacen/Volumen"]
 position = Vector3(0.123355, 0.46267, 7.95468)
@@ -985,13 +1012,11 @@ position = Vector3(0, 0.39183, 0)
 shape = SubResource("volumen_de_la_puerta")
 
 [node name="CuerpoDeLaHoja" type="AnimatableBody3D" parent="puerta2" node_paths=PackedStringArray("hoja", "mallas") groups=["interactuable"]]
-transform = Transform3D(1.159924, 0, 0, 0, 1, 0, 0, 0, 8.611961, 0, 0, 0)
 script = ExtResource("puerta")
 hoja = NodePath("..")
 mallas = [NodePath("..")]
 
 [node name="Volumen" type="CollisionShape3D" parent="puerta2/CuerpoDeLaHoja"]
-position = Vector3(0, 0.39183, 0)
 shape = SubResource("volumen_de_la_puerta2")
 
 [node name="CollisionShape3D" parent="porton/StaticBody3D"]
@@ -1200,3 +1225,67 @@ shape = SubResource("estante_001_6")
 [node name="Volumen7" type="CollisionShape3D" parent="gondola_deposito03_001/StaticBody3D"]
 position = Vector3(1.0283, -0.04765, -0.3526)
 shape = SubResource("estante_001_7")
+
+[node name="bano_puerta_1" parent="."]
+gi_mode = 2
+
+[node name="CuerpoDeLaHoja" type="AnimatableBody3D" parent="bano_puerta_1" node_paths=PackedStringArray("hoja", "mallas") groups=["interactuable"]]
+script = ExtResource("puerta")
+hoja = NodePath("..")
+mallas = [NodePath("..")]
+
+[node name="Volumen" type="CollisionShape3D" parent="bano_puerta_1/CuerpoDeLaHoja"]
+shape = SubResource("puerta_de_cabina")
+
+[node name="bano_puerta_2" parent="."]
+gi_mode = 2
+
+[node name="CuerpoDeLaHoja" type="AnimatableBody3D" parent="bano_puerta_2" node_paths=PackedStringArray("hoja", "mallas") groups=["interactuable"]]
+script = ExtResource("puerta")
+hoja = NodePath("..")
+mallas = [NodePath("..")]
+
+[node name="Volumen" type="CollisionShape3D" parent="bano_puerta_2/CuerpoDeLaHoja"]
+shape = SubResource("puerta_de_cabina")
+
+[node name="StaticBody3D" parent="bano_inodoro_2" node_paths=PackedStringArray("mallas") groups=["interactuable"]]
+script = ExtResource("artefacto")
+destino = &"inodoro"
+mallas = [NodePath("..")]
+
+[node name="StaticBody3D" parent="bano_lavatorio_2" node_paths=PackedStringArray("mallas") groups=["interactuable"]]
+script = ExtResource("artefacto")
+destino = &"lavatorio"
+mallas = [NodePath("..")]
+
+[node name="FrenteDelBano" type="CollisionShape3D" parent="almacen/Volumen"]
+position = Vector3(10.86, 3.59, -1.18)
+shape = SubResource("volumen_FrenteDelBano")
+
+[node name="MuroAltoDelBano" type="CollisionShape3D" parent="almacen/Volumen"]
+position = Vector3(8.08146, 5.16, -4.58)
+shape = SubResource("volumen_MuroAltoDelBano")
+
+[node name="TechoAltoDelBano" type="CollisionShape3D" parent="almacen/Volumen"]
+position = Vector3(10.86, 5.17, -2.44)
+shape = SubResource("volumen_TechoAltoDelBano")
+
+[node name="UmbralAnterior" type="CollisionShape3D" parent="almacen/Volumen"]
+position = Vector3(8.08146, 0, -4.658)
+shape = SubResource("volumen_UmbralAnterior")
+
+[node name="VolumenDelAccesoDelBano" type="StaticBody3D" parent="."]
+collision_layer = 8
+collision_mask = 0
+
+[node name="JambaIzquierda" type="CollisionShape3D" parent="VolumenDelAccesoDelBano"]
+position = Vector3(8.08146, 1.477, -3.54825)
+shape = SubResource("acceso_bano_izquierda")
+
+[node name="JambaDerecha" type="CollisionShape3D" parent="VolumenDelAccesoDelBano"]
+position = Vector3(8.08146, 1.477, -7.87065)
+shape = SubResource("acceso_bano_derecha")
+
+[node name="Dintel" type="CollisionShape3D" parent="VolumenDelAccesoDelBano"]
+position = Vector3(8.08146, 4.971, -4.5983)
+shape = SubResource("acceso_bano_superior")

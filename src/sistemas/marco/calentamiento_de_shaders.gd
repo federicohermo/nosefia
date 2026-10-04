@@ -15,6 +15,13 @@ signal terminado
 const ALTURA_EXTRA := 10.0
 
 var _pendientes: Array[GeometryInstance3D] = []
+var _sin_focos: Array[GeometryInstance3D] = []
+var _con_area: Array[GeometryInstance3D] = []
+var _objetos: Array[GeometryInstance3D] = []
+var _focos: Array[SpotLight3D] = []
+var _area: AreaLight3D
+var _alcance_area := 0.0
+var _alcance_ampliado := 0.0
 ## Lo que estaba oculto también se dibuja, porque aparece después en medio del juego. Al terminar
 ## vuelve a quedar oculto.
 var _ocultos: Array[GeometryInstance3D] = []
@@ -35,6 +42,15 @@ func _ready() -> void:
 
 func calentar(escena: Node3D) -> void:
 	var caja := AABB()
+	for foco: SpotLight3D in escena.find_children("*", "SpotLight3D", true, false):
+		if foco.visible:
+			_focos.append(foco)
+	if not _focos.is_empty():
+		for area: AreaLight3D in escena.find_children("*", "AreaLight3D", true, false):
+			if area.visible:
+				_area = area
+				_alcance_area = area.area_range
+				break
 	for objeto: GeometryInstance3D in escena.find_children("*", "GeometryInstance3D", true, false):
 		var suya := objeto.global_transform * objeto.get_aabb()
 		caja = suya if _pendientes.is_empty() else caja.merge(suya)
@@ -42,7 +58,16 @@ func calentar(escena: Node3D) -> void:
 			_ocultos.append(objeto)
 		objeto.visible = false
 		_pendientes.append(objeto)
-	_total = _pendientes.size()
+		_objetos.append(objeto)
+		if not _focos.is_empty() and objeto.gi_mode == GeometryInstance3D.GI_MODE_DYNAMIC:
+			_sin_focos.append(objeto)
+			if _area != null:
+				_con_area.append(objeto)
+	if _area != null:
+		_alcance_ampliado = maxf(
+			_alcance_area, caja.size.length() + caja.get_center().distance_to(_area.global_position)
+		)
+	_total = _pendientes.size() + _sin_focos.size() + _con_area.size()
 	_anterior = get_viewport().get_camera_3d()
 	_camara = Camera3D.new()
 	add_child(_camara)
@@ -52,7 +77,7 @@ func calentar(escena: Node3D) -> void:
 
 
 func progreso() -> float:
-	return 1.0 - float(_pendientes.size()) / maxi(_total, 1)
+	return 1.0 - float(_pendientes.size() + _sin_focos.size() + _con_area.size()) / maxi(_total, 1)
 
 
 ## Cada cuadro destapa objetos hasta el primero que trae un material sin dibujar: el costo está
@@ -60,8 +85,23 @@ func progreso() -> float:
 ## es el cuadro en que se dibuja.
 func _process(_delta: float) -> void:
 	if _pendientes.is_empty():
-		_terminar()
-		return
+		if _sin_focos.is_empty() and _con_area.is_empty():
+			_terminar()
+			return
+		# Al salir del baño, un útil puede recibir sus focos y las luces de área del local,
+		# o sólo las del local. El material necesita ambas variantes antes del primer uso.
+		for objeto: GeometryInstance3D in _objetos:
+			objeto.visible = false
+		if not _con_area.is_empty():
+			_area.area_range = _alcance_ampliado
+			_pendientes.assign(_con_area)
+			_con_area.clear()
+		else:
+			for foco: SpotLight3D in _focos:
+				foco.visible = false
+			_pendientes.assign(_sin_focos)
+			_sin_focos.clear()
+		_vistos.clear()
 	var nuevo := false
 	while not nuevo and not _pendientes.is_empty():
 		var objeto: GeometryInstance3D = _pendientes.pop_back()
@@ -101,8 +141,12 @@ func _encuadrar(caja: AABB) -> void:
 
 func _terminar() -> void:
 	set_process(false)
-	for objeto: GeometryInstance3D in _ocultos:
-		objeto.visible = false
+	if _area != null:
+		_area.area_range = _alcance_area
+	for foco: SpotLight3D in _focos:
+		foco.visible = true
+	for objeto: GeometryInstance3D in _objetos:
+		objeto.visible = not _ocultos.has(objeto)
 	_camara.queue_free()
 	if _anterior != null:
 		_anterior.make_current()

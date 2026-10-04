@@ -129,6 +129,8 @@ func _ready() -> void:
 				$Interfaz/PantallaDeComputadora,
 				$Estructura/puerta/CuerpoDeLaHoja,
 				$Estructura/puerta2/CuerpoDeLaHoja,
+				$Estructura/bano_puerta_1/CuerpoDeLaHoja,
+				$Estructura/bano_puerta_2/CuerpoDeLaHoja,
 				$Estructura/puertaentrada/CuerpoDeLaHoja,
 				$Estructura/porton/CuerpoDeLaHoja,
 				$Estructura/puertajefe/CuerpoDeLaHoja,

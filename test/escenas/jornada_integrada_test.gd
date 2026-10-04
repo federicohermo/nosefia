@@ -235,6 +235,11 @@ func _atender(almacen: Node3D) -> void:
 ## llena en el lavatorio y se tiñe; la mopa se moja en él y pasa por las manchas que ese jabón
 ## borra.
 func _limpiar(almacen: Node3D) -> void:
+	# Se accede al inodoro y a su mancha abriendo la cabina, como en la partida.
+	for numero: int in [1, 2]:
+		almacen.get_node("Estructura/bano_puerta_%d/CuerpoDeLaHoja" % numero).call("interactuar")
+	for cuadro in 60:
+		await get_tree().physics_frame
 	var jugador: Node3D = almacen.get("_jugador")
 	var agarre: Agarre = almacen.get("_agarre")
 	var lavatorio: Node3D = almacen.get_node("Estructura/vanitory/StaticBody3D")
