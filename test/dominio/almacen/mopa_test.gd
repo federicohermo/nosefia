@@ -96,3 +96,17 @@ func test_el_desgaste_es_independiente_de_los_cuadros_y_no_recarga() -> void:  #
 	var anterior := entera.carga_restante()
 	entera.desgastar(-2.0, -3.0)
 	assert_float(entera.carga_restante()).is_equal(anterior)
+
+
+func test_caminar_agota_antes_sin_acortar_el_tiempo_en_reposo() -> void:  # AC-CLN-028
+	var caminando := Mopa.new()
+	var quieta := Mopa.new()
+	caminando.mojar_en(_balde(AZUL))
+	quieta.mojar_en(_balde(AZUL))
+	caminando.desgastar(0.0, 7.5)
+	assert_bool(caminando.esta_mojada()).is_false()
+	assert_float(ReglasDeLaLimpieza.RECORRIDO_DE_LA_CARGA).is_less(10.0)
+	quieta.desgastar(11.9, 0.0)
+	assert_bool(quieta.esta_mojada()).is_true()
+	quieta.desgastar(0.1, 0.0)
+	assert_bool(quieta.esta_mojada()).is_false()

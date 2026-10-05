@@ -69,6 +69,7 @@ func test_los_ids_de_la_limpieza_son_distintos_y_ninguno_es_la_mano_vacia() -> v
 		ReglasDeLaLimpieza.ID_DEL_LAVATORIO,
 		ReglasDeLaLimpieza.ID_DEL_INODORO,
 		Uso.MANCHA,
+		Uso.PISO,
 	]
 	for id: StringName in ReglasDeLaLimpieza.JABONES:
 		ids.append(id)

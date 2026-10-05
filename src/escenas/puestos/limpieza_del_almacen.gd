@@ -12,9 +12,14 @@ const JugadorDelLocal := preload("res://src/escenas/jugador.gd")
 const ManchaQueSeVe := preload("res://src/escenas/objetos/mancha_en_el_piso.gd")
 const UtilDeLimpieza := preload("res://src/escenas/objetos/util_de_limpieza.gd")
 const ArtefactoDelBano := preload("res://src/escenas/puestos/artefacto_del_bano.gd")
+const CharcosTemporales := preload("res://src/escenas/objetos/charcos_temporales.gd")
+const PisoParaAgua := preload("res://src/escenas/objetos/piso_para_agua.gd")
+const SuperficieLiquida := preload("res://src/escenas/objetos/superficie_liquida.gd")
 
 @export var jugador: JugadorDelLocal
 @export var limpiador: Limpiador
+@export var suelo: StaticBody3D
+@export var casco_del_local: StaticBody3D
 
 ## Los dos útiles que muestran su carga. Los jabones no cambian cómo se ven.
 @export var balde: UtilDeLimpieza
@@ -24,6 +29,13 @@ var _posicion_previa := Vector3.ZERO
 var _muestreada := false
 var _intervalo_visual := 0.0
 var _cantidad_mostrada := -1.0
+var _charcos := CharcosTemporales.new()
+var _recipiente_de_la_mojada: Node3D
+
+
+func _init() -> void:
+	# La escena también puede descartarse antes de entrar al árbol: el dibujo ya tiene dueño.
+	add_child(_charcos)
 
 
 func _physics_process(delta: float) -> void:
@@ -48,10 +60,11 @@ func _physics_process(delta: float) -> void:
 
 func _ready() -> void:
 	jugador.uso_pedido.connect(_al_pedir_uso)
+	jugador.uso_sobre_superficie_pedido.connect(_al_usar_la_superficie)
 	jugador.paso_dado.connect(_al_dar_un_paso)
-	limpiador.balde_llenado.connect(repintar)
-	limpiador.balde_tenido.connect(repintar.unbind(1))
-	limpiador.balde_vaciado.connect(repintar)
+	limpiador.balde_llenado.connect(_al_llenar_el_balde)
+	limpiador.balde_tenido.connect(_al_tenir_el_balde)
+	limpiador.balde_vaciado.connect(_al_vaciar_el_balde)
 	limpiador.mopa_mojada.connect(_al_mojar_la_mopa.unbind(1))
 	limpiador.pasada_dada.connect(_al_dar_pasada)
 	# **No se repinta acá.** El `_ready()` de un hijo corre ANTES que el de la raíz, así que el
@@ -65,8 +78,50 @@ func _al_mojar_la_mopa() -> void:
 	_posicion_previa = jugador.global_position
 	_muestreada = true
 	repintar()
-	mopa.mostrar_la_mojada(balde)
+	var artefacto := _recipiente_de_la_mojada as ArtefactoDelBano
+	if artefacto != null:
+		mopa.mostrar_la_mojada(artefacto, artefacto.punto_para_la_mopa(), Basis.IDENTITY)
+	else:
+		mopa.mostrar_la_mojada(balde)
 	jugador.preparar_el_uso_en_la_mano()
+
+
+func _al_tenir_el_balde(_agua: ReglasDeLaLimpieza.Agua) -> void:
+	(balde.carga as SuperficieLiquida).mezclar(limpiador.piso().balde().color())
+	repintar()
+
+
+func _al_llenar_el_balde() -> void:
+	(balde.carga as SuperficieLiquida).llenar()
+	repintar()
+
+
+func _al_vaciar_el_balde() -> void:
+	(balde.carga as SuperficieLiquida).vaciar()
+	repintar()
+
+
+func _al_usar_la_superficie(punto: Vector3, normal: Vector3, cuerpo: PhysicsBody3D) -> void:
+	var sectores: Array[Node3D] = []
+	sectores.assign(manchas())
+	var libre := PisoParaAgua.admite(
+		{"position": punto, "normal": normal, "collider": cuerpo},
+		suelo,
+		sectores,
+		[jugador.get_rid()],
+		casco_del_local
+	)
+	var resultado := limpiador.humedecer_piso(jugador.id_en_la_mano(), libre)
+	if resultado == ReglasDeLaLimpieza.Resultado.CHARCO_DEJADO:
+		_charcos.dejar_en(punto, normal)
+
+
+func reiniciar() -> void:
+	_charcos.limpiar()
+	_muestreada = false
+	_cantidad_mostrada = -1.0
+	(balde.carga as SuperficieLiquida).reiniciar()
+	repintar()
 
 
 func _al_dar_pasada(lugar: PisoDelLocal.Lugar) -> void:
@@ -119,7 +174,9 @@ func _al_pedir_uso(objetivo: Node3D) -> void:
 		return
 	var destino := _destino_de(objetivo)
 	if destino != &"":
+		_recipiente_de_la_mojada = objetivo
 		limpiador.usar(jugador.id_en_la_mano(), destino)
+		_recipiente_de_la_mojada = null
 
 
 ## Qué es, para limpiar, lo que la mira tiene adelante: un artefacto del baño dice qué es, y un

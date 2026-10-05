@@ -45,6 +45,15 @@ func color() -> Color:
 func mojar_en(balde: Balde) -> ReglasDeLaLimpieza.Resultado:
 	if not balde.tiene_agua():
 		return ReglasDeLaLimpieza.Resultado.BALDE_VACIO
-	_agua = balde.agua()
+	return _mojar_con(balde.agua())
+
+
+## Enjuagar no consulta ni modifica el balde o las manchas.
+func enjuagar() -> ReglasDeLaLimpieza.Resultado:
+	return _mojar_con(ReglasDeLaLimpieza.Agua.LIMPIA)
+
+
+func _mojar_con(agua: ReglasDeLaLimpieza.Agua) -> ReglasDeLaLimpieza.Resultado:
+	_agua = agua
 	_carga = 1.0
 	return ReglasDeLaLimpieza.Resultado.MOPA_MOJADA

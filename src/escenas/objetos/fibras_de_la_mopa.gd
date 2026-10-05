@@ -20,6 +20,7 @@ var _padre_previo: Node
 var _muestreada := false
 var _caida := Vector3.ZERO
 var _inmersion := 0.0
+var _apoyo_ignorado: PhysicsBody3D
 var _rigidas: Array[ShaderMaterial] = []
 var _articulacion := Basis.IDENTITY
 var _contornos_fibra: Array[ShaderMaterial] = []
@@ -116,7 +117,10 @@ func _pintar(paso: float) -> void:
 	var consulta := PhysicsRayQueryParameters3D.create(
 		cabeza + Vector3.UP * 0.25, cabeza + Vector3.DOWN * 0.8, 9
 	)
-	consulta.exclude = [(get_parent() as CollisionObject3D).get_rid()]
+	var excluidos: Array[RID] = [(get_parent() as CollisionObject3D).get_rid()]
+	if is_instance_valid(_apoyo_ignorado):
+		excluidos.append(_apoyo_ignorado.get_rid())
+	consulta.exclude = excluidos
 	var apoyo := get_world_3d().direct_space_state.intersect_ray(consulta)
 	var suelo := -1000.0 if apoyo.is_empty() else (apoyo.position as Vector3).y
 	var pivot := Vector3(0.0, -0.752, 0.0)
@@ -141,6 +145,7 @@ func _pintar(paso: float) -> void:
 
 
 func limitar_en(balde: Node3D, progreso: float) -> void:
+	_apoyo_ignorado = null
 	_inmersion = smoothstep(0.55, 0.85, progreso)
 	var centro := to_local(balde.to_global(Vector3(0.0, 0.07, 0.0)))
 	var vertical := (global_basis.inverse() * balde.global_basis.y).normalized()
@@ -151,9 +156,16 @@ func limitar_en(balde: Node3D, progreso: float) -> void:
 
 
 func liberar() -> void:
+	_apoyo_ignorado = null
 	_inmersion = 0.0
 	for pintura: ShaderMaterial in _pinturas + _contornos_fibra:
 		pintura.set_shader_parameter("inmersion", 0.0)
+
+
+## El asiento rodea la cabeza sumergida: no debe levantar sus fibras como un piso.
+func enjuagar_en(recipiente: PhysicsBody3D) -> void:
+	liberar()
+	_apoyo_ignorado = recipiente
 
 
 func mostrar_contorno(material: ShaderMaterial) -> void:

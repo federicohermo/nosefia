@@ -1,7 +1,7 @@
 ---
 schema_version: 1
 capability_id: CAP-CLN
-status: draft
+status: ratified
 owner: por definir
 provenance: GDD «Limpiar» y «Sacar la basura»; ficha «9. Tarea: Limpieza»; migración de los specs 010, 015, 043; ajustes del dueño sobre duración de la mopa, mezcla, enjuague y agua temporal
 ---
@@ -88,6 +88,8 @@ lado, en la mano, llenos o mojados. Los cinco se levantan; el lavatorio y el ino
 CUANDO se usa el balde sobre el lavatorio, SI el balde está vacío, ENTONCES el sistema DEBE
 llenarlo de agua sin jabón, que se ve **celeste**. SI ya tiene agua, con jabón o sin él, ENTONCES
 DEBE rechazarlo por **balde ya lleno** y dejarlo como estaba: llenar no lava el jabón.
+El llenado aceptado DEBE mostrar el nivel subiendo rápidamente desde el fondo, con una
+transición. El agua está disponible desde la aceptación; repintar no reinicia el gesto.
 
 ### BR-CLN-016 — El jabón tiñe el agua
 
@@ -104,6 +106,9 @@ dibujo; vaciar el balde o abrir otra jornada la cancela.
 CUANDO se usa el balde sobre el inodoro, SI tiene agua, ENTONCES el sistema DEBE vaciarlo, con
 jabón o sin él. SI está vacío, ENTONCES DEBE rechazarlo por **balde vacío**. Cambiar de jabón es
 vaciar el balde y volver a llenarlo.
+El vaciado aceptado DEBE mostrar el nivel bajando rápidamente antes de ocultar el agua,
+conservando su color durante la descarga. El balde queda vacío desde la aceptación. Una
+nueva carga parte del nivel visible actual; abrir otra jornada cancela estas transiciones.
 
 ### BR-CLN-018 — La mopa se moja de lo que tiene el balde
 

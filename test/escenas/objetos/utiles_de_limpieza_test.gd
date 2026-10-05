@@ -239,8 +239,10 @@ func test_vaciar_en_el_inodoro_esconde_el_agua() -> void:  # AC-CLN-021
 	_usar(almacen, balde, almacen.get_node(LAVATORIO))
 	_usar(almacen, _util(almacen, "JabonRosa"), balde)
 	_usar(almacen, balde, almacen.get_node(INODORO))
-	assert_bool(balde.carga.visible).is_false()
 	assert_bool(_piso(almacen).balde().tiene_agua()).is_false()
+	assert_bool(balde.carga.visible).is_true()
+	balde.carga.call("_physics_process", .25)
+	assert_bool(balde.carga.visible).is_false()
 
 
 func test_la_punta_de_la_mopa_se_ve_del_color_del_agua() -> void:  # AC-CLN-022
@@ -419,7 +421,7 @@ func test_rechazar_el_mojado_no_mueve_la_mopa() -> void:
 	var almacen: Node3D = await _almacen()
 	var mopa := _mopa_en_la_mano(almacen, false)
 	var antes := mopa.transform
-	for destino: Node3D in [_util(almacen, "Balde"), almacen.get_node(INODORO)]:
+	for destino: Node3D in [_util(almacen, "Balde"), almacen.get_node(LAVATORIO)]:
 		_accion(almacen, destino, ReglasDelJugador.ACCION_USAR)
 		await get_tree().process_frame
 		assert_bool(mopa.transform.is_equal_approx(antes)).is_true()

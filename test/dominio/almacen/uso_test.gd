@@ -53,9 +53,7 @@ func test_la_mano_vacia_no_produce_un_efecto_aunque_este_registrada() -> void:  
 	assert_int(uso.resolver(ObjetoDelAlmacen.SIN_ID, Uso.MANCHA)).is_equal(Uso.Efecto.NINGUNO)
 
 
-func test_el_almacen_declara_los_cinco_gestos_de_limpiar() -> void:  # AC-PLY-014
-	# Uno por cada paso de la ficha. Un par de más haría que algo limpie sin pasar por el baño; uno
-	# de menos, que un paso no se pueda dar nunca y la obligatoria quede inalcanzable.
+func test_el_almacen_declara_solo_los_gestos_de_limpiar() -> void:  # AC-PLY-014
 	var uso := Uso.para_el_almacen()
 	var mopa := ReglasDeLaLimpieza.ID_DE_LA_MOPA
 	var balde := ReglasDeLaLimpieza.ID_DEL_BALDE
@@ -64,6 +62,8 @@ func test_el_almacen_declara_los_cinco_gestos_de_limpiar() -> void:  # AC-PLY-01
 		[balde, ReglasDeLaLimpieza.ID_DEL_LAVATORIO, Uso.Efecto.LLENAR],
 		[mopa, balde, Uso.Efecto.MOJAR],
 		[balde, ReglasDeLaLimpieza.ID_DEL_INODORO, Uso.Efecto.VACIAR],
+		[mopa, ReglasDeLaLimpieza.ID_DEL_INODORO, Uso.Efecto.ENJUAGAR],
+		[mopa, Uso.PISO, Uso.Efecto.HUMEDECER],
 	]
 	for jabon: StringName in ReglasDeLaLimpieza.JABONES:
 		declarados.append([jabon, balde, Uso.Efecto.TENIR])

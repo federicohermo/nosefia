@@ -139,7 +139,6 @@ func test_los_gestos_al_reves_o_cruzados_no_hacen_nada() -> void:  # AC-CLN-024
 		[BALDE, BALDE],
 		[JABON_AZUL, LAVATORIO],
 		[MOPA, LAVATORIO],
-		[MOPA, INODORO],
 		[BALDE, Uso.MANCHA],
 		[MOPA, Uso.MANCHA],
 	]
@@ -190,3 +189,113 @@ func test_un_lugar_sin_mancha_no_se_borra() -> void:
 		ReglasDeLaLimpieza.Resultado.SIN_EFECTO
 	)
 	assert_object(piso.mancha_de(PisoDelLocal.Lugar.ENTRADA)).is_null()
+
+
+func test_enjuagar_en_inodoro_quita_jabon_recarga_y_preserva_el_local() -> void:  # AC-CLN-029
+	for jabon: StringName in ReglasDeLaLimpieza.JABONES:
+		var piso := _piso()
+		_preparar(piso, jabon)
+		piso.pasar(MOPA, PisoDelLocal.Lugar.DEPOSITO)
+		var sucias := _sucias(piso)
+		piso.mopa().desgastar(2.0, 1.0)
+		assert_int(piso.usar(MOPA, INODORO)).is_equal(ReglasDeLaLimpieza.Resultado.MOPA_MOJADA)
+		assert_int(piso.mopa().agua()).is_equal(ReglasDeLaLimpieza.Agua.LIMPIA)
+		assert_float(piso.mopa().carga_restante()).is_equal(1.0)
+		assert_that(piso.mopa().color()).is_equal(
+			ReglasDeLaLimpieza.COLOR_DEL_AGUA[ReglasDeLaLimpieza.Agua.LIMPIA]
+		)
+		assert_int(piso.balde().agua()).is_equal(ReglasDeLaLimpieza.JABONES[jabon])
+		assert_array(_sucias(piso)).is_equal(sucias)
+
+
+func test_enjuagar_mopa_seca_en_inodoro_equivale_a_balde_limpio() -> void:  # AC-CLN-029
+	var inodoro := _piso()
+	var balde := _piso()
+	balde.usar(BALDE, LAVATORIO)
+	assert_int(inodoro.usar(MOPA, INODORO)).is_equal(balde.usar(MOPA, BALDE))
+	assert_int(inodoro.mopa().agua()).is_equal(balde.mopa().agua())
+	assert_float(inodoro.mopa().carga_restante()).is_equal(balde.mopa().carga_restante())
+	assert_bool(inodoro.balde().tiene_agua()).is_false()
+	assert_int(balde.balde().agua()).is_equal(ReglasDeLaLimpieza.Agua.LIMPIA)
+
+
+func test_agua_limpia_deja_charco_sin_cambiar_carga_balde_ni_manchas() -> void:  # AC-CLN-030
+	var piso := _piso()
+	piso.usar(BALDE, LAVATORIO)
+	piso.usar(MOPA, BALDE)
+	piso.mopa().desgastar(1.0, 0.5)
+	var carga := piso.mopa().carga_restante()
+	var sucias := _sucias(piso)
+	assert_int(piso.humedecer_piso(MOPA, true)).is_equal(ReglasDeLaLimpieza.Resultado.CHARCO_DEJADO)
+	assert_float(piso.mopa().carga_restante()).is_equal(carga)
+	assert_int(piso.balde().agua()).is_equal(ReglasDeLaLimpieza.Agua.LIMPIA)
+	assert_array(_sucias(piso)).is_equal(sucias)
+	assert_bool(piso.esta_limpio()).is_false()
+
+
+func test_seca_y_cada_jabon_rechazan_charcos_sin_gastar_carga() -> void:  # AC-CLN-030
+	var piso := _piso()
+	assert_int(piso.humedecer_piso(MOPA, true)).is_equal(ReglasDeLaLimpieza.Resultado.MOPA_SECA)
+	for jabon: StringName in ReglasDeLaLimpieza.JABONES:
+		piso.usar(BALDE, INODORO)
+		_preparar(piso, jabon)
+		piso.mopa().desgastar(1.0, 0.5)
+		var carga := piso.mopa().carga_restante()
+		assert_int(piso.humedecer_piso(MOPA, true)).is_equal(
+			ReglasDeLaLimpieza.Resultado.SIN_EFECTO
+		)
+		assert_float(piso.mopa().carga_restante()).is_equal(carga)
+		assert_int(piso.mopa().agua()).is_equal(ReglasDeLaLimpieza.JABONES[jabon])
+	assert_int(_sucias(piso).size()).is_equal(4)
+
+
+func test_superficie_deshabilitada_no_gasta_carga_aunque_mancha_este_limpia() -> void:  # AC-CLN-031
+	var piso := _piso()
+	_preparar(piso, JABON_AMARILLO)
+	piso.pasar(MOPA, PisoDelLocal.Lugar.ENTRADA)
+	piso.usar(BALDE, INODORO)
+	piso.usar(BALDE, LAVATORIO)
+	piso.usar(MOPA, BALDE)
+	piso.mopa().desgastar(1.0, 0.5)
+	var carga := piso.mopa().carga_restante()
+	var sucias := _sucias(piso)
+	assert_int(piso.humedecer_piso(MOPA, false)).is_equal(ReglasDeLaLimpieza.Resultado.SIN_EFECTO)
+	assert_float(piso.mopa().carga_restante()).is_equal(carga)
+	assert_array(_sucias(piso)).is_equal(sucias)
+	assert_bool(piso.mancha_de(PisoDelLocal.Lugar.ENTRADA).esta_limpia()).is_true()
+
+
+func test_agua_sola_sobre_mancha_sigue_sin_jabon() -> void:  # AC-CLN-031
+	var piso := _piso()
+	piso.usar(BALDE, LAVATORIO)
+	piso.usar(MOPA, BALDE)
+	assert_int(piso.pasar(MOPA, PisoDelLocal.Lugar.BANO)).is_equal(
+		ReglasDeLaLimpieza.Resultado.SIN_JABON
+	)
+	assert_bool(piso.mancha_de(PisoDelLocal.Lugar.BANO).esta_limpia()).is_false()
+	assert_float(piso.mopa().carga_restante()).is_equal(1.0)
+
+
+func test_charco_necesita_mopa_en_mano_y_gesto_declarado() -> void:  # AC-CLN-030
+	var piso := _piso()
+	piso.usar(BALDE, LAVATORIO)
+	piso.usar(MOPA, BALDE)
+	for ajeno: StringName in [ObjetoDelAlmacen.SIN_ID, BALDE, JABON_AZUL, &"bolsa_de_basura_1"]:
+		assert_int(piso.humedecer_piso(ajeno, true)).is_equal(
+			ReglasDeLaLimpieza.Resultado.SIN_EFECTO
+		)
+	piso.set("_uso", Uso.new())
+	assert_int(piso.humedecer_piso(MOPA, true)).is_equal(ReglasDeLaLimpieza.Resultado.SIN_EFECTO)
+	assert_float(piso.mopa().carga_restante()).is_equal(1.0)
+	assert_int(_sucias(piso).size()).is_equal(4)
+
+
+func test_carga_agotada_no_deja_charco_hasta_enjuagar() -> void:  # AC-CLN-030
+	var piso := _piso()
+	piso.usar(MOPA, INODORO)
+	piso.mopa().desgastar(ReglasDeLaLimpieza.DURACION_DE_LA_CARGA, 0.0)
+	assert_int(piso.humedecer_piso(MOPA, true)).is_equal(ReglasDeLaLimpieza.Resultado.MOPA_SECA)
+	assert_float(piso.mopa().carga_restante()).is_zero()
+	piso.usar(MOPA, INODORO)
+	assert_int(piso.humedecer_piso(MOPA, true)).is_equal(ReglasDeLaLimpieza.Resultado.CHARCO_DEJADO)
+	assert_float(piso.mopa().carga_restante()).is_equal(1.0)

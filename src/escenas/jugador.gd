@@ -6,6 +6,7 @@ extends CharacterBody3D
 signal objetivo_enfocado(objetivo: Node3D, distancia: float)
 signal objetivo_perdido
 signal uso_pedido(objetivo: Node3D)
+signal uso_sobre_superficie_pedido(punto: Vector3, normal: Vector3, cuerpo: PhysicsBody3D)
 
 ## Cuando la cadencia dice que toca un paso. No se emite por cuadro: ver `CadenciaDePasos`.
 signal paso_dado
@@ -142,12 +143,30 @@ func _unhandled_input(evento: InputEvent) -> void:
 		if not examen.atajar_el_clic():
 			_interactuar()
 	elif evento.is_action_pressed(ReglasDelJugador.ACCION_USAR):
-		if _enfocado != null and not _control.esta_suspendido():
-			uso_pedido.emit(_enfocado)
+		if not _control.esta_suspendido():
+			if _enfocado != null:
+				uso_pedido.emit(_enfocado)
+			else:
+				_usar_la_superficie_mirada()
 	elif evento.is_action_pressed(ReglasDeLosObjetos.ACCION_EXAMINAR):
 		# Con otra pantalla encima, la E no abre un examen: al cerrarlo reanudaría al jugador.
 		if examen.esta_examinando() or not _control.esta_suspendido():
 			examen.alternar(_datos_de(_enfocado), _enfocado)
+
+
+func _usar_la_superficie_mirada() -> void:
+	if _camara == null or not is_inside_tree():
+		return
+	var ojo := _camara.global_position
+	var consulta := PhysicsRayQueryParameters3D.create(
+		ojo,
+		ojo - _camara.global_basis.z * ReglasDelJugador.ALCANCE_DE_LA_MIRA,
+		_campo.collision_mask
+	)
+	consulta.exclude = [get_rid()]
+	var golpe := get_world_3d().direct_space_state.intersect_ray(consulta)
+	if not golpe.is_empty() and golpe.collider is PhysicsBody3D:
+		uso_sobre_superficie_pedido.emit(golpe.position, golpe.normal, golpe.collider)
 
 
 ## **El clic se lo gasta quien hace algo con él, y sólo ése.** Tener `interactuar()` es la

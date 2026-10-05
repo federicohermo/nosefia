@@ -14,6 +14,10 @@ const SEGMENTOS := 48
 const ANILLOS := 12
 const PASO := 1.0 / 120.0
 const RELIEVE_DE_LAS_ONDAS := 1.8
+const DURACION_DE_MEZCLA := 0.7
+const DURACION_DEL_NIVEL := 0.25
+# Tapa interior del modelo a -0.138054 m: el agua empieza 3 mm por encima.
+const ALTURA_MINIMA := -0.135
 
 @export var en_balde := false
 @export var escala_de_reposo := Vector3.ONE
@@ -44,9 +48,18 @@ var _estaba_quieta := false
 var _ondas := Ondas.new()
 var _aceleracion := Vector2.ZERO
 var _encogimiento: Tween
+var _color_previo := Color.TRANSPARENT
+var _progreso_de_mezcla := 1.0
+var _altura_de_reposo := 0.0
+var _nivel_visual := 1.0
+var _nivel_desde := 1.0
+var _nivel_hasta := 1.0
+var _tiempo_del_nivel := DURACION_DEL_NIVEL
+var _cambiando_nivel := false
 
 
 func _ready() -> void:
+	_altura_de_reposo = position.y
 	_radio = (mesh as CylinderMesh).top_radius
 	_crear_topologia()
 	mesh = _superficie
@@ -73,14 +86,92 @@ func configurar_agua(acuosa: bool) -> void:
 	pintura.set_shader_parameter("hacia_la_luz", Vector3(-0.41, 0.88, 0.23))
 	pintura.set_shader_parameter("brillo", 0.65)
 	material_override = pintura
+	_cancelar_mezcla()
 	cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 
 
 func pintar(color: Color) -> void:
+	if _cambiando_nivel and _nivel_hasta == 0.0 and color.a <= 0.0:
+		return
+	if color == color_de_la_superficie():
+		return
 	if material_override is ShaderMaterial:
 		(material_override as ShaderMaterial).set_shader_parameter("color_del_agua", color)
 	else:
 		(material_override as StandardMaterial3D).albedo_color = color
+	_cancelar_mezcla()
+
+
+func mezclar(color: Color) -> void:
+	var pintura := material_override as ShaderMaterial
+	if not en_balde or not visible or pintura == null or pintura.shader != AGUA_VISIBLE:
+		pintar(color)
+		return
+	if color == color_de_la_superficie():
+		return
+	# El destino ya sirve para la carga de la mopa; únicamente la superficie tarda en teñirse.
+	_color_previo = color_de_la_superficie()
+	pintura.set_shader_parameter("color_del_agua", color)
+	_progreso_de_mezcla = 0.0
+	_actualizar_mezcla()
+	set_physics_process(true)
+	set_process(true)
+
+
+func llenar() -> void:
+	if not en_balde or (visible and not _cambiando_nivel):
+		return
+	if not visible:
+		reiniciar()
+		_nivel_visual = 0.0
+	visible = true
+	_cambiar_nivel(1.0)
+
+
+func vaciar() -> void:
+	if not en_balde or not visible:
+		return
+	_cancelar_mezcla()
+	_cambiar_nivel(0.0)
+
+
+func _cambiar_nivel(hasta: float) -> void:
+	if _cambiando_nivel and _nivel_hasta == hasta:
+		return
+	_nivel_desde = _nivel_visual
+	_nivel_hasta = hasta
+	_tiempo_del_nivel = 0.0
+	_cambiando_nivel = true
+	position.y = lerpf(ALTURA_MINIMA, _altura_de_reposo, _nivel_visual)
+	_estaba_quieta = false
+	set_physics_process(true)
+	set_process(true)
+
+
+func _avanzar_nivel(delta: float) -> void:
+	if not _cambiando_nivel:
+		return
+	_tiempo_del_nivel = minf(DURACION_DEL_NIVEL, _tiempo_del_nivel + delta)
+	var progreso := smoothstep(0.0, 1.0, _tiempo_del_nivel / DURACION_DEL_NIVEL)
+	_nivel_visual = lerpf(_nivel_desde, _nivel_hasta, progreso)
+	position.y = lerpf(ALTURA_MINIMA, _altura_de_reposo, _nivel_visual)
+	_estaba_quieta = false
+	if _tiempo_del_nivel >= DURACION_DEL_NIVEL:
+		_cambiando_nivel = false
+		visible = _nivel_hasta != 0.0
+
+
+func _cancelar_mezcla() -> void:
+	_progreso_de_mezcla = 1.0
+	_color_previo = color_de_la_superficie()
+	_actualizar_mezcla()
+
+
+func _actualizar_mezcla() -> void:
+	var pintura := material_override as ShaderMaterial
+	if pintura != null and pintura.shader == AGUA_VISIBLE:
+		pintura.set_shader_parameter("color_previo", _color_previo)
+		pintura.set_shader_parameter("progreso_de_mezcla", _progreso_de_mezcla)
 
 
 func configurar_mancha(tipo: ReglasDeLaLimpieza.TipoDeMancha, acuosa: bool) -> void:
@@ -105,6 +196,15 @@ func color_de_la_superficie() -> Color:
 
 ## Llenar, vaciar y transportar entre escenas no producen chorros espurios.
 func reiniciar() -> void:
+	if en_balde:
+		_cambiando_nivel = false
+		_nivel_visual = 1.0
+		_nivel_desde = 1.0
+		_nivel_hasta = 1.0
+		_tiempo_del_nivel = DURACION_DEL_NIVEL
+		position.y = _altura_de_reposo
+		_estaba_quieta = false
+	_cancelar_mezcla()
 	_pendiente = Vector2.ZERO
 	_impulso = Vector2.ZERO
 	_velocidad_previa = Vector3.ZERO
@@ -127,6 +227,8 @@ func perturbar() -> void:
 
 
 func presentar(activa: bool) -> void:
+	if en_balde and _cambiando_nivel:
+		return
 	if not en_balde and activa:
 		_cancelar_encogimiento()
 	if not en_balde and not activa and esta_encogiendo():
@@ -176,7 +278,13 @@ func _physics_process(delta: float) -> void:
 		return
 	if delta <= 0.0:
 		return
+	_avanzar_nivel(delta)
+	if not visible:
+		return
 	var paso := minf(delta, 0.1)
+	if _progreso_de_mezcla < 1.0:
+		_progreso_de_mezcla = minf(1.0, _progreso_de_mezcla + delta / DURACION_DE_MEZCLA)
+		_actualizar_mezcla()
 	_tiempo += paso
 	_espera = maxf(0.0, _espera - paso)
 	if en_balde:
@@ -256,9 +364,11 @@ func _nivel() -> Vector2:
 
 
 func _radio_del_borde(angulo: float) -> float:
-	# Medido en la malla: doce paredes con apotema 0,1719 m, no un recipiente circular.
-	var normal := cos(wrapf(angulo + PI / 12.0, 0.0, PI / 6.0) - PI / 12.0)
-	return minf(_radio, 0.167 / normal)
+	# Las esquinas de las doce paredes están a 0°, 30°…; sus normales, a 15°, 45°…
+	var normal := cos(wrapf(angulo, 0.0, PI / 6.0) - PI / 12.0)
+	# El apotema interior a la altura llena es 0.1663 m y el fondo es más angosto.
+	var apotema := 0.165 * lerpf(0.9, 1.0, _nivel_visual)
+	return minf(_radio, apotema / normal)
 
 
 func _crear_topologia() -> void:
@@ -303,8 +413,14 @@ func _dibujar() -> void:
 	_estaba_quieta = quieta
 	_ultima_inclinacion = inclinacion
 	var alturas := _ondas.alturas_muestreadas() if en_balde else PackedFloat32Array()
-	_vertices[0] = Vector3(0.0, alturas[0] * RELIEVE_DE_LAS_ONDAS if en_balde else 0.0, 0.0)
-	var borde := 1.0 if en_balde else 1.0 - _onda * 0.12 * (0.5 + 0.5 * cos(_tiempo * 5.0))
+	_vertices[0] = Vector3(
+		0.0, alturas[0] * RELIEVE_DE_LAS_ONDAS * _nivel_visual if en_balde else 0.0, 0.0
+	)
+	var borde := (
+		lerpf(0.9, 1.0, _nivel_visual)
+		if en_balde
+		else 1.0 - _onda * 0.12 * (0.5 + 0.5 * cos(_tiempo * 5.0))
+	)
 	for anillo: int in range(1, ANILLOS + 1):
 		var proporcion := float(anillo) / ANILLOS
 		for segmento: int in SEGMENTOS:
@@ -312,6 +428,7 @@ func _dibujar() -> void:
 			var altura := inclinacion.dot(punto)
 			if en_balde:
 				altura += alturas[1 + (anillo - 1) * SEGMENTOS + segmento] * RELIEVE_DE_LAS_ONDAS
+				altura *= _nivel_visual
 			else:
 				var distancia := punto.distance_to(_centro_de_onda) / _radio
 				altura += sin(distancia * 12.0 - _tiempo * 9.0) * 0.0015 * _onda

@@ -221,7 +221,7 @@ func _al_abrir_la_jornada(jornada: int) -> void:
 	for puerta: PuertaDelLocal in _puertas:
 		puerta.cerrar_de_golpe()
 	_audio.arrancar_el_ambiente()
-	_limpieza.repintar()
+	_limpieza.reiniciar()
 	_estante.mostrar(0)
 
 

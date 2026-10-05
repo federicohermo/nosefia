@@ -85,45 +85,69 @@ func _mantener_vertical() -> void:
 
 
 ## El movimiento pertenece al util: el ancla sigue el brazo del jugador en cada cuadro.
-func mostrar_la_mojada(balde: Node3D) -> void:
+func mostrar_la_mojada(
+	balde: Node3D,
+	punto_mundo: Vector3 = Vector3.INF,
+	orientacion_de_destino: Basis = Basis.IDENTITY
+) -> void:
 	if not freeze or top_level:
 		return
 	if _bajada != null:
 		_bajada.kill()
 	contacto_del_movimiento = balde as PhysicsBody3D
+	if punto_mundo.is_finite():
+		(malla as FibrasDeLaMopa).liberar()
 	transform = Transform3D(orientacion_en_mano, Vector3.ZERO)
 	_bajada = create_tween()
 	_bajada.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
-	var mover := _mover_la_mopa.bind(balde)
+	var mover := _mover_la_mopa.bind(balde, punto_mundo, orientacion_de_destino)
 	var duracion := ReglasDeLaLimpieza.DURACION_DE_LA_MOJADA
 	_bajada.tween_method(mover, 0.0, 1.0, duracion * 0.4)
 	_bajada.tween_interval(duracion * 0.2)
 	_bajada.tween_method(mover, 1.0, 0.0, duracion * 0.4)
 
 
-## Interpola la cabeza y calcula el mango a partir de ella, para que entre en el balde real.
-func _mover_la_mopa(progreso: float, balde: Node3D) -> void:
+## La cabeza salva el borde del recipiente y entra desde arriba, sin mover la cámara.
+func _mover_la_mopa(
+	progreso: float,
+	balde: Node3D,
+	punto_mundo: Vector3 = Vector3.INF,
+	orientacion_de_destino: Basis = Basis.IDENTITY
+) -> void:
 	if not is_instance_valid(balde) or not freeze or top_level:
 		return
 	var reposo := Transform3D(orientacion_en_mano, Vector3.ZERO)
+	var destino_explicito := punto_mundo.is_finite()
 	if progreso <= 0.0:
 		transform = reposo
 		contacto_del_movimiento = null
-		(malla as FibrasDeLaMopa).limitar_en(balde, 0.0)
+		if destino_explicito:
+			(malla as FibrasDeLaMopa).liberar()
+		else:
+			(malla as FibrasDeLaMopa).limitar_en(balde, 0.0)
 		return
 	contacto_del_movimiento = balde as PhysicsBody3D
 	var ancla := get_parent() as Node3D
 	var inicio := ancla.global_transform * reposo
-	var destino := balde.global_basis.orthonormalized()
+	var destino := (
+		orientacion_de_destino.orthonormalized()
+		if destino_explicito
+		else balde.global_basis.orthonormalized()
+	)
 	var orientacion := inicio.basis.orthonormalized().slerp(destino, progreso)
 	var desde := inicio * carga.position
-	var hasta := balde.to_global(Vector3(0.0, 0.07, 0.0))
+	var hasta := punto_mundo if destino_explicito else balde.to_global(Vector3(0.0, 0.07, 0.0))
+	# El punto del inodoro queda bajo el asiento; el arco lo salva antes de bajar a la taza.
+	var borde := hasta.y + 0.24 if destino_explicito else balde.to_global(Vector3(0.0, 0.18, 0.0)).y
 	var control := hasta
-	control.y = maxf(desde.y, balde.to_global(Vector3(0.0, 0.18, 0.0)).y) + 0.35
+	control.y = maxf(desde.y, borde) + 0.35
 	# La tangente final es vertical: primero salva el borde, luego baja por la abertura.
 	var cabeza := desde.lerp(control, progreso).lerp(control.lerp(hasta, progreso), progreso)
 	global_transform = Transform3D(orientacion, cabeza - orientacion * carga.position)
-	(malla as FibrasDeLaMopa).limitar_en(balde, progreso)
+	if destino_explicito:
+		(malla as FibrasDeLaMopa).enjuagar_en(contacto_del_movimiento)
+	else:
+		(malla as FibrasDeLaMopa).limitar_en(balde, progreso)
 
 
 ## Agarre quita y vuelve a colgar el nodo tanto al soltar como al cambiar de mano.

@@ -17,6 +17,7 @@ signal balde_llenado
 signal balde_tenido(agua: ReglasDeLaLimpieza.Agua)
 signal balde_vaciado
 signal mopa_mojada(agua: ReglasDeLaLimpieza.Agua)
+signal piso_humedecido
 
 ## La pasada que borra una mancha. Es la que suena con la mopa en la tabla de sonidos.
 signal pasada_dada(lugar: PisoDelLocal.Lugar)
@@ -84,6 +85,17 @@ func pasar(en_la_mano: StringName, lugar: PisoDelLocal.Lugar) -> ReglasDeLaLimpi
 	pasada_dada.emit(lugar)
 	if _piso.esta_limpio():
 		reloj.completar(reloj.obligatoria(Tarea.Tipo.LIMPIAR))
+	return resultado
+
+
+func humedecer_piso(en_la_mano: StringName, habilitado: bool) -> ReglasDeLaLimpieza.Resultado:
+	if not _cableado():
+		return ReglasDeLaLimpieza.Resultado.SIN_EFECTO
+	var resultado := _piso.humedecer_piso(en_la_mano, habilitado)
+	if resultado == ReglasDeLaLimpieza.Resultado.CHARCO_DEJADO:
+		piso_humedecido.emit()
+	else:
+		uso_rechazado.emit(resultado)
 	return resultado
 
 

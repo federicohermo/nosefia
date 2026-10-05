@@ -98,11 +98,13 @@ puertas = [NodePath("../../Estructura/puerta/CuerpoDeLaHoja"), NodePath("../../E
 [node name="ZonaDeDescarte" parent="Objetos" index="2" node_paths=PackedStringArray("recolector")]
 recolector = NodePath("../../Servicios/Recolector")
 
-[node name="LimpiezaDelAlmacen" parent="." unique_id=2007323218 node_paths=PackedStringArray("jugador", "limpiador", "balde", "mopa") instance=ExtResource("21_limpieza")]
+[node name="LimpiezaDelAlmacen" parent="." unique_id=2007323218 node_paths=PackedStringArray("jugador", "limpiador", "balde", "mopa", "suelo", "casco_del_local") instance=ExtResource("21_limpieza")]
 jugador = NodePath("../Jugador")
 limpiador = NodePath("../Servicios/Limpiador")
 balde = NodePath("../Objetos/Balde")
 mopa = NodePath("../Objetos/Mopa")
+suelo = NodePath("../Estructura/SueloSolido")
+casco_del_local = NodePath("../Estructura/almacen/StaticBody3D")
 
 [node name="Jugador" parent="." unique_id=2126157413 instance=ExtResource("1_jugador")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.91, 0.112, 6.9)

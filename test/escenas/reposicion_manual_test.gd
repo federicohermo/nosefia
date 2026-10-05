@@ -156,7 +156,9 @@ func test_laysntt_y_jorgillo_quedan_sobre_el_suelo_al_mover_la_camara() -> void:
 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
 	add_child(almacen)
 	await get_tree().physics_frame
-	for mancha: Node3D in almacen.get_node("LimpiezaDelAlmacen").get_children():
+	var manchas: Array = almacen.get_node("LimpiezaDelAlmacen").manchas()
+	assert_array(manchas).is_not_empty()
+	for mancha: Node3D in manchas:
 		# Las del piso: la del moho va en una pared, y su apoyo lo mide `apoyos_del_modelo_test`.
 		if mancha.global_basis.y.dot(Vector3.UP) < 0.99:
 			continue
