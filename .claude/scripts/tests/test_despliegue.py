@@ -91,7 +91,7 @@ class ElParEnDisco(unittest.TestCase):
         # export/ también volvía a empaquetar los iconos de builds anteriores.
         for carpeta in (
             "reports", "node_modules", "test", "addons/gdUnit4", "tmp", "export",
-            "addons/hornear",
+            "addons/hornear", "build",
         ):
             with self.subTest(carpeta=carpeta):
                 self.assertIn(f"{carpeta}/*", excluidos)
@@ -351,7 +351,26 @@ class ElWorkflowDeDespliegue(unittest.TestCase):
 
     def test_las_templates_se_cachean_por_version(self):
         self.assertIn("actions/cache", self.texto)
-        self.assertIn("export_templates", self.texto)
+        self.assertIn("build/templates", self.texto)
+        self.assertIn("env.GODOT_VERSION", self.texto)
+        for entrada in (
+            ".godot-version", ".github/patches/godot-web-compilacion.json",
+            ".github/patches/godot-web-compilacion.patch",
+            ".github/scripts/preparar_plantilla_web.py",
+        ):
+            self.assertIn(entrada, self.texto)
+
+    def test_la_plantilla_se_valida_aun_con_cache_y_se_cruza_con_el_export(self):
+        # Un cache-hit no prueba compatibilidad y un export completo puede usar otro motor.
+        preparacion = "python .github/scripts/preparar_plantilla_web.py --jobs 2"
+        self.assertIn(preparacion, self.texto)
+        paso = self.texto.split(preparacion, 1)[0].rsplit("      - name:", 1)[1]
+        self.assertNotIn("if:", paso)
+        export = self.texto.index('"$GODOT_BIN" --headless --path . --export-release "Web"')
+        self.assertLess(self.texto.index(preparacion), export)
+        self.assertGreater(
+            self.texto.index("--verificar-export export/web"), export,
+        )
 
     def test_el_veredicto_del_export_no_es_el_codigo_de_salida(self):
         self.assertIn("verificar_export.py", self.texto)

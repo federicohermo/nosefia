@@ -62,7 +62,10 @@ Mide con la sincronización habitual de cuadros y sin limitar la CPU. Usa un exp
 servido con los headers de `vercel.json`:
 
 ```powershell
+python .github/scripts/preparar_plantilla_web.py
 & $env:GODOT_BIN --headless --path . --export-release "Web" export/web/index.html
+python .claude/scripts/verificar_export.py export/web
+python .github/scripts/preparar_plantilla_web.py --verificar-export export/web
 python .github/scripts/servir_export.py export/web 8060
 node .github/scripts/medir_la_carga.mjs http://localhost:8060 reports/carga.json
 ```
@@ -149,6 +152,66 @@ La validación pasa 60 de 60 casos en 11 suites y los seis nodos restantes de ve
 Las comparaciones de GPU cubren 23 poses de agua, manchas y contornos, con diferencia RGB cero.
 Esas poses verifican la conservación de la imagen en los casos comparados. No cubren todas
 las vistas posibles.
+
+### Comparación de la plantilla web
+
+El parche del repo evita compilar variantes predeterminadas que la partida no solicita.
+Modifica `_initialize_version` sólo bajo `WEB_ENABLED`. Conserva la compilación síncrona al
+primer uso. El camino nativo queda intacto. La referencia es
+[`shader_gles3.cpp` del commit fijado](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/drivers/gles3/shader_gles3.cpp).
+
+El parche no implementa compilación asíncrona. La extensión
+[`KHR_parallel_shader_compile`](https://registry.khronos.org/webgl/extensions/KHR_parallel_shader_compile/)
+permite consultar cuándo termina un programa sin bloquear la consulta. Incorporarla exige otro
+cambio del motor. El calentamiento prepara las variantes usadas antes de mostrar el almacén.
+
+Se comparan la plantilla base y la modificada con el mismo PCK de 43.589.692 bytes.
+Los exports conservan los recursos, la iluminación y las texturas. Se usa Chrome 154,
+RTX 4050 mediante ANGLE D3D11, 1536×760, sincronización habitual de cuadros y CPU sin límite.
+Las cuatro corridas alternan base/modificada y modificada/base. Cada una abre un perfil nuevo.
+No se limpia la caché del driver. Estas mediciones preceden la corrección posterior del
+calentamiento.
+
+Los tiempos van desde el clic en «Nuevo juego» hasta el aviso del almacén:
+
+| Par | Base | Modificada |
+|---|---|---|
+| 1 | 64,823 s | 29,305 s |
+| 2 | 64,974 s | 26,955 s |
+| Mediana | 64,8985 s | 28,130 s |
+
+La mediana baja un 56,65 % en estas condiciones. El PCK idéntico permite comparar el cambio
+de plantilla sin atribuir la mejora a un paquete más pequeño.
+
+Una prueba del export actual conserva el mismo Chrome y abre contextos HTTP nuevos.
+La primera entrada tarda 33,586 s desde el clic. Las siguientes tardan 5,761 y 5,882 s.
+El navegador comparte caché entre esas entradas. Un perfil nuevo tampoco garantiza una GPU
+sin caché del driver.
+
+La validación del calentamiento pasa 14 de 14 casos de gdUnit4. La validación de GPU cubre
+15 de 15 casos con jugador, útiles, productos y agua. El recorrido medido no registra llamadas
+GL superiores a 50 ms después del calentamiento. Esa muestra no cubre todos los equipos ni
+todas las variantes posibles de la partida.
+
+El preset de release usa esta plantilla. La preparación y las comprobaciones antes de exportar
+se describen en [despliegue](../infra/despliegue.md).
+
+Después de integrar el preset, se repite la medición sin nuestros tests en ejecución.
+El control conserva el mismo PCK y JavaScript del export nuevo. Sólo cambia el WASM y su
+tamaño declarado en el HTML. Las dos mediciones son secuenciales, sin alternar el orden.
+Conservan Chrome, GPU, resolución y sincronización. No se controlan los otros procesos de
+la máquina ni se limpia la caché del driver.
+
+La primera entrada tarda 141,381 s con la plantilla base y 77,699 s con la optimizada.
+Las siguientes tardan 9,225 y 8,664 s con la base, y 17,501 y 6,488 s con la optimizada.
+Cada grupo conserva su Chrome y puede compartir caché de shaders. Estos datos confirman
+una carga menor en la primera entrada de esa comparación. No reproducen los tiempos absolutos
+anteriores ni demuestran la causa de su variación. Tampoco prueban una ventaja en cada carga
+con caché.
+
+Los datos crudos quedan en `reports/plantilla-integrada-base-carga.json` y
+`reports/plantilla-integrada-carga-sin-tests.json`. El resumen queda en
+`reports/plantilla-integrada-resumen.json`.
 
 ## Lo que ya se sabe de las luces
 

@@ -33,6 +33,7 @@ var _anterior: Camera3D
 var _contornos_listos := false
 var _pases_originales: Dictionary[Material, Material] = {}
 var _parametros_originales: Dictionary[ShaderMaterial, Dictionary] = {}
+var _muestras: Array[MultiMeshInstance3D] = []
 
 
 func _init() -> void:
@@ -46,6 +47,8 @@ func _ready() -> void:
 
 func calentar(escena: Node3D) -> void:
 	var caja := AABB()
+	var objetos := escena.find_children("*", "GeometryInstance3D", true, false)
+	objetos.append_array(_muestras_con_omni(escena))
 	for foco: SpotLight3D in escena.find_children("*", "SpotLight3D", true, false):
 		if foco.visible:
 			_focos.append(foco)
@@ -55,7 +58,7 @@ func calentar(escena: Node3D) -> void:
 				_area = area
 				_alcance_area = area.area_range
 				break
-	for objeto: GeometryInstance3D in escena.find_children("*", "GeometryInstance3D", true, false):
+	for objeto: GeometryInstance3D in objetos:
 		# El modelo de referencia queda en el GLB para editarlo, pero tiene un reemplazo en
 		# producción. Dibujarlo acá compilaría variantes que nunca aparecen en la partida.
 		if objeto.is_in_group(&"geometria_de_referencia"):
@@ -85,6 +88,54 @@ func calentar(escena: Node3D) -> void:
 	# La nuestra entra después: sus contornos deben existir antes del primer dibujo.
 	_preparar_contornos.call_deferred()
 	set_process(true)
+
+
+## Un lote oculto conserva una instancia para calentarse en su lugar de origen. Al llevarlo
+## hasta una heladera recibe una luz omni que allí no lo alcanza: hace falta ese mismo material
+## instanciado, sin modificar posiciones ni buffers de la simulación.
+func _muestras_con_omni(escena: Node3D) -> Array[MultiMeshInstance3D]:
+	var omni: OmniLight3D = null
+	for luz: OmniLight3D in escena.find_children("*", "OmniLight3D", true, false):
+		if luz.is_visible_in_tree() and luz.omni_range > 0.0:
+			omni = luz
+			break
+	if omni == null:
+		return []
+	for objeto: MultiMeshInstance3D in escena.find_children(
+		"*", "MultiMeshInstance3D", true, false
+	):
+		if (
+			objeto.visible
+			or objeto.gi_mode != GeometryInstance3D.GI_MODE_DYNAMIC
+			or objeto.material_override == null
+			or objeto.multimesh == null
+			or objeto.multimesh.mesh == null
+			or objeto.multimesh.instance_count == 0
+		):
+			continue
+		var muestra := MultiMeshInstance3D.new()
+		muestra.gi_mode = objeto.gi_mode
+		muestra.cast_shadow = objeto.cast_shadow
+		muestra.layers = objeto.layers
+		muestra.material_override = objeto.material_override
+		muestra.material_overlay = objeto.material_overlay
+		var lote := MultiMesh.new()
+		lote.transform_format = objeto.multimesh.transform_format
+		lote.use_colors = objeto.multimesh.use_colors
+		lote.use_custom_data = objeto.multimesh.use_custom_data
+		lote.mesh = objeto.multimesh.mesh
+		lote.instance_count = 1
+		lote.visible_instance_count = 1
+		lote.set_instance_transform(0, Transform3D.IDENTITY)
+		if lote.use_colors:
+			lote.set_instance_color(0, objeto.multimesh.get_instance_color(0))
+		if lote.use_custom_data:
+			lote.set_instance_custom_data(0, objeto.multimesh.get_instance_custom_data(0))
+		muestra.multimesh = lote
+		add_child(muestra)
+		muestra.global_position = omni.global_position
+		_muestras.append(muestra)
+	return _muestras
 
 
 func progreso() -> float:
@@ -198,14 +249,31 @@ func _encuadrar(caja: AABB) -> void:
 
 func _terminar() -> void:
 	set_process(false)
+	_restaurar_escena()
+	terminado.emit()
+
+
+func _exit_tree() -> void:
+	if _camara != null:
+		_restaurar_escena()
+
+
+func _restaurar_escena() -> void:
 	_restaurar_pases()
-	if _area != null:
+	if is_instance_valid(_area):
 		_area.area_range = _alcance_area
 	for foco: SpotLight3D in _focos:
-		foco.visible = true
+		if is_instance_valid(foco):
+			foco.visible = true
 	for objeto: GeometryInstance3D in _objetos:
-		objeto.visible = not _ocultos.has(objeto)
-	_camara.queue_free()
-	if _anterior != null:
+		if is_instance_valid(objeto):
+			objeto.visible = not _ocultos.has(objeto)
+	for muestra in _muestras:
+		muestra.hide()
+		muestra.queue_free()
+	_muestras.clear()
+	if is_instance_valid(_camara):
+		_camara.queue_free()
+	_camara = null
+	if is_instance_valid(_anterior) and _anterior.is_inside_tree():
 		_anterior.make_current()
-	terminado.emit()

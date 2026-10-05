@@ -237,3 +237,112 @@ func test_el_calentamiento_restaura_el_pase_y_los_uniformes_del_foco_previo() ->
 	assert_object(malla.material_override.next_pass).is_same(malla.borde)
 	assert_float(float(malla.borde.get_shader_parameter("grosor"))).is_equal(.023)
 	assert_that(malla.borde.get_shader_parameter("color")).is_equal(Color.CYAN)
+
+
+func _escena_con_gotas() -> Node3D:
+	var escena: Node3D = auto_free(Node3D.new())
+	var gotas := MultiMeshInstance3D.new()
+	gotas.name = "Gotas"
+	gotas.gi_mode = GeometryInstance3D.GI_MODE_DYNAMIC
+	gotas.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+	gotas.multimesh = MultiMesh.new()
+	gotas.multimesh.transform_format = MultiMesh.TRANSFORM_3D
+	gotas.multimesh.mesh = SphereMesh.new()
+	gotas.multimesh.instance_count = 24
+	gotas.multimesh.visible_instance_count = 1
+	gotas.multimesh.set_instance_transform(0, Transform3D(Basis.IDENTITY, Vector3(0, 1, 0)))
+	gotas.custom_aabb = AABB(Vector3(-1, 0, -1), Vector3(2, 2, 2))
+	gotas.material_override = ShaderMaterial.new()
+	gotas.visible = false
+	escena.add_child(gotas)
+	var omni := OmniLight3D.new()
+	omni.name = "Omni"
+	omni.position = Vector3(10, 2, 0)
+	omni.omni_range = 2.0
+	escena.add_child(omni)
+	var foco := SpotLight3D.new()
+	foco.name = "Foco"
+	escena.add_child(foco)
+	var area := AreaLight3D.new()
+	area.name = "Area"
+	area.position = omni.position
+	area.area_range = 2.0
+	escena.add_child(area)
+	add_child(escena)
+	return escena
+
+
+func test_las_gotas_se_calientan_con_omni_y_area_sin_mover_el_lote_real() -> void:
+	var escena := _escena_con_gotas()
+	var gotas := escena.get_node("Gotas") as MultiMeshInstance3D
+	var omni := escena.get_node("Omni") as OmniLight3D
+	var foco := escena.get_node("Foco") as SpotLight3D
+	var area := escena.get_node("Area") as AreaLight3D
+	var original := gotas.global_transform
+	var caja := gotas.custom_aabb
+	var buffer := gotas.multimesh.buffer
+	assert_float(gotas.get_aabb().get_center().distance_to(omni.position)).is_greater(
+		omni.omni_range
+	)
+	var calentamiento := _calentamiento()
+	var muestras: Array[MultiMeshInstance3D] = []
+	calentamiento.avanzo.connect(
+		func(_progreso: float) -> void:
+			for objeto: MultiMeshInstance3D in calentamiento.find_children(
+				"*", "MultiMeshInstance3D", true, false
+			):
+				if not objeto.visible or foco.visible:
+					continue
+				var punto := objeto.global_transform * objeto.get_aabb().get_center()
+				if (
+					punto.distance_to(omni.global_position) >= omni.omni_range
+					or punto.distance_to(area.global_position) >= area.area_range
+				):
+					continue
+				assert_object(objeto.multimesh.mesh).is_same(gotas.multimesh.mesh)
+				assert_object(objeto.material_override).is_same(gotas.material_override)
+				assert_int(objeto.gi_mode).is_equal(gotas.gi_mode)
+				assert_int(objeto.cast_shadow).is_equal(gotas.cast_shadow)
+				assert_int(objeto.multimesh.visible_instance_count).is_equal(1)
+				muestras.append(objeto)
+	)
+	calentamiento.calentar(escena)
+	await assert_signal(calentamiento).wait_until(ESPERA_MS).is_emitted("terminado")
+	assert_array(muestras).is_not_empty()
+	assert_that(gotas.global_transform).is_equal(original)
+	assert_that(gotas.custom_aabb).is_equal(caja)
+	assert_that(gotas.multimesh.buffer).is_equal(buffer)
+	assert_int(gotas.multimesh.instance_count).is_equal(24)
+	assert_int(gotas.multimesh.visible_instance_count).is_equal(1)
+	assert_bool(gotas.visible).is_false()
+	assert_bool(foco.visible).is_true()
+	assert_float(area.area_range).is_equal(2.0)
+	await get_tree().process_frame
+	for muestra in muestras:
+		assert_bool(is_instance_valid(muestra)).is_false()
+
+
+func test_cancelar_el_calentamiento_restaura_luces_y_gotas_y_libera_muestras() -> void:
+	var escena := _escena_con_gotas()
+	var gotas := escena.get_node("Gotas") as MultiMeshInstance3D
+	var area := escena.get_node("Area") as AreaLight3D
+	var foco := escena.get_node("Foco") as SpotLight3D
+	var camara := Camera3D.new()
+	escena.add_child(camara)
+	camara.make_current()
+	var calentamiento := _calentamiento()
+	calentamiento.calentar(escena)
+	while foco.visible:
+		await calentamiento.avanzo
+	var muestras := calentamiento.find_children("*", "MultiMeshInstance3D", true, false)
+	assert_array(muestras).is_not_empty()
+	assert_float(area.area_range).is_greater(2.0)
+	calentamiento.queue_free()
+	await get_tree().process_frame
+	await get_tree().process_frame
+	assert_bool(foco.visible).is_true()
+	assert_float(area.area_range).is_equal(2.0)
+	assert_bool(gotas.visible).is_false()
+	assert_object(get_viewport().get_camera_3d()).is_same(camara)
+	for muestra in muestras:
+		assert_bool(is_instance_valid(muestra)).is_false()

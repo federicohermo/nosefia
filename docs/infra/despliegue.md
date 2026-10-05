@@ -10,6 +10,8 @@ no es obvia.
 | El preset | `export_presets.cfg`, el preset de plataforma Web: nombre y destino están ahí |
 | Los headers | `vercel.json` |
 | La versión del motor | `.godot-version` |
+| La preparación de la plantilla web | [`.github/scripts/preparar_plantilla_web.py`](../../.github/scripts/preparar_plantilla_web.py) |
+| El parche y la receta de compilación | [`.github/patches/godot-web-compilacion.json`](../../.github/patches/godot-web-compilacion.json) |
 | El veredicto del export | `.claude/scripts/verificar_export.py` |
 | El veredicto de la URL | `.claude/scripts/verificar_despliegue.py` |
 | El humo en un navegador | `.github/scripts/humo_en_navegador.mjs` |
@@ -24,7 +26,7 @@ publicaría trabajo a medio integrar sobre la URL que mira la cátedra — ver
 ## Los secretos
 
 Van en **Settings → Secrets and variables → Actions**. Sin cualquiera de ellos el workflow
-**falla en el primer paso nombrándolo**, antes de bajar las templates. La alternativa es
+**falla en el primer paso nombrándolo**, antes de preparar la plantilla. La alternativa es
 enterarse tarde, por un error de la CLI que no lo nombra.
 
 | Secreto | De dónde sale |
@@ -104,15 +106,46 @@ producción con Actions en verde, no la nombra. La opción es de
 [Git configuration](https://vercel.com/docs/project-configuration/git-configuration), y sólo
 gobierna los deploys **automáticos**: el `vercel deploy` explícito del workflow sigue andando.
 
+## La plantilla web
+
+El preset usa `res://build/templates/web_release.zip` como `custom_template/release`. La plantilla
+incluye el parche de compilación de shaders medido en [rendimiento](../guides/rendimiento.md).
+El editor usa Godot oficial. El export de debug usa la plantilla oficial. El motor nativo
+conserva su código.
+
+`preparar_plantilla_web.py` lee la receta del repo. Comprueba la versión del motor y las
+huellas de la fuente y del parche. Sin argumentos, valida la plantilla guardada en
+`build/templates` y compila cuando falta o quedó desactualizada. La receta fija el SDK y las
+opciones de compilación. Los ZIP generados quedan fuera de Git.
+
+La primera compilación local medida tarda unos 30 minutos. Las siguientes preparaciones
+reutilizan la plantilla validada. Actions guarda `build/templates` en caché. Su clave incluye
+la versión, el parche, la receta y el script. Restaurar la caché no reemplaza las comprobaciones.
+El workflow prepara la plantilla con `--jobs 2` para limitar la memoria de compilación.
+
+Para importar una plantilla local ya compilada, correr:
+
+```bash
+python .github/scripts/preparar_plantilla_web.py --desde tmp/godot-web/web-sin-defaults.zip
+```
+
+Para comprobar la plantilla guardada sin compilar, correr:
+
+```bash
+python .github/scripts/preparar_plantilla_web.py --comprobar
+```
+
 ## Rehacerlo a mano
 
 Para publicar sin pasar por Actions, o para reproducir un fallo del workflow, es esto. Va desde
-la raíz del repo, con las export templates de la versión de `.godot-version` instaladas:
+la raíz del repo, con `GODOT_BIN` apuntando a la versión de `.godot-version`:
 
 ```bash
+python .github/scripts/preparar_plantilla_web.py
 mkdir -p export/web
 "$GODOT_BIN" --headless --path . --export-release "Web" export/web/index.html || true
 python .claude/scripts/verificar_export.py export/web   # el veredicto NO es el $? de arriba
+python .github/scripts/preparar_plantilla_web.py --verificar-export export/web
 
 cp vercel.json export/web/
 vercel deploy export/web --prod --yes --token "$VERCEL_TOKEN"
@@ -121,6 +154,9 @@ python .claude/scripts/verificar_despliegue.py https://<proyecto>.vercel.app
 node .github/scripts/humo_en_navegador.mjs https://<proyecto>.vercel.app
 ```
 
-Las templates se bajan una vez desde el editor (**Editor → Manage Export Templates**) o a mano
-a `~/.local/share/godot/export_templates/<version>.stable/`. El directorio va con **punto** y no
-con guion, como la release. Con el nombre equivocado, Godot dice que faltan.
+`--verificar-export` comprueba que `index.wasm` corresponde a la plantilla preparada.
+`verificar_export.py` comprueba que el directorio contiene un export completo. Ambos deben pasar.
+
+Las plantillas oficiales de debug se instalan desde **Editor → Manage Export Templates** o en
+`~/.local/share/godot/export_templates/<version>.stable/`. El directorio lleva punto, no guion.
+La preparación anterior produce la plantilla de release que usa este preset.
