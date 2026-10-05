@@ -87,7 +87,12 @@ class ElParEnDisco(unittest.TestCase):
         preset = preset_web(self.cfg)
         self.assertIsNotNone(preset)
         excluidos = {ruta.strip() for ruta in preset.get("exclude_filter", "").split(",")}
-        for carpeta in ("reports", "node_modules", "test", "addons/gdUnit4"):
+        # Las capturas de tmp/ entraban como texturas y añadían 5,87 MB al PCK;
+        # export/ también volvía a empaquetar los iconos de builds anteriores.
+        for carpeta in (
+            "reports", "node_modules", "test", "addons/gdUnit4", "tmp", "export",
+            "addons/hornear",
+        ):
             with self.subTest(carpeta=carpeta):
                 self.assertIn(f"{carpeta}/*", excluidos)
 

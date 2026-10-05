@@ -4,8 +4,7 @@ extends MeshInstance3D
 
 const FIBRAS := preload("res://src/escenas/objetos/fibras_de_la_mopa.gdshader")
 const CABEZA := preload("res://src/escenas/objetos/cabeza_de_la_mopa.gdshader")
-const CONTORNO_FIBRAS := preload("res://src/escenas/objetos/contorno_de_fibras.gdshader")
-const CONTORNO_CABEZA := preload("res://src/escenas/objetos/contorno_de_cabeza.gdshader")
+const CONTORNO_DEL_UTIL := preload("res://src/escenas/objetos/contorno_del_util.gdshader")
 const CONTORNO := preload("res://src/sistemas/marco/contorno.gdshader")
 const Raices := preload("res://src/escenas/objetos/raices_de_fibras.gd")
 const PASO := 1.0 / 120.0
@@ -49,14 +48,16 @@ func _preparar() -> void:
 			pintura.shader = FIBRAS
 			pintura.set_shader_parameter("color_de_fibra", original.albedo_color)
 			_pinturas.append(pintura)
-			contorno.shader = CONTORNO_FIBRAS
+			contorno.shader = CONTORNO_DEL_UTIL
+			contorno.set_shader_parameter("deformacion", 0)
 			_contornos_fibra.append(contorno)
 		elif original.resource_name in ["util_plastico_azul", "util_asa_grafito"]:
 			pintura.shader = CABEZA
 			pintura.set_shader_parameter("color_plastico", original.albedo_color)
 			pintura.set_shader_parameter("rugosidad", original.roughness)
 			_rigidas.append(pintura)
-			contorno.shader = CONTORNO_CABEZA
+			contorno.shader = CONTORNO_DEL_UTIL
+			contorno.set_shader_parameter("deformacion", 1)
 			_contornos_rigidos.append(contorno)
 		else:
 			var copia := original.duplicate() as StandardMaterial3D

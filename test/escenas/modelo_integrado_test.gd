@@ -6,6 +6,49 @@ const ALMACEN := preload("res://src/escenas/almacen.tscn")
 const TOLERANCIA := 0.002
 
 
+func test_solo_las_mallas_reemplazadas_son_geometria_de_referencia() -> void:
+	var almacen: Node3D = auto_free(ALMACEN.instantiate())
+	add_child(almacen)
+	var estructura := almacen.get_node("Estructura")
+	var puesto: Node3D = almacen.get("_reposicion_manual")
+	var disposicion: DisposicionDeLaGondola = puesto.get("disposicion")
+	var lugares := PackedVector3Array()
+	for bloque: PackedFloat32Array in disposicion.principales + disposicion.guias:
+		for indice: int in DisposicionDeLaGondola.copias(bloque):
+			lugares.append(
+				puesto.global_transform * DisposicionDeLaGondola.copia(bloque, indice).origin
+			)
+	var utiles: Array[String] = []
+	for util: Node in almacen.get("_utiles_de_limpieza"):
+		utiles.append(String(util.get("nodo_del_modelo")))
+	var esperados: Array[String] = []
+	for malla: MeshInstance3D in estructura.find_children("*", "MeshInstance3D", true, false):
+		var reemplazada := String(estructura.get_path_to(malla)) in utiles
+		for lugar: Vector3 in lugares:
+			reemplazada = reemplazada or malla.global_position.distance_to(lugar) < TOLERANCIA
+		if not reemplazada:
+			continue
+		esperados.append(String(almacen.get_path_to(malla)))
+		assert_bool(malla.visible).is_false()
+		for cuerpo: PhysicsBody3D in malla.find_children("*", "PhysicsBody3D", true, false):
+			for forma: CollisionShape3D in cuerpo.find_children(
+				"*", "CollisionShape3D", true, false
+			):
+				assert_bool(forma.disabled or cuerpo.collision_layer == 0).is_true()
+	# La premisa no usa visible=false: identifica el surtido reemplazado por su disposición
+	# y los cinco útiles por el modelo que declaran sus instancias de producción.
+	assert_int(esperados.size()).is_equal(Catalogo.todos().size() + utiles.size())
+	var marcados: Array[String] = []
+	for geometria: GeometryInstance3D in almacen.find_children(
+		"*", "GeometryInstance3D", true, false
+	):
+		if geometria.is_in_group(&"geometria_de_referencia"):
+			marcados.append(String(almacen.get_path_to(geometria)))
+	esperados.sort()
+	marcados.sort()
+	assert_array(marcados).is_equal(esperados)
+
+
 func test_la_raiz_agrupa_por_rol_y_conserva_sus_enlaces() -> void:
 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
 	assert_int(almacen.get_child_count()).is_less(10)

@@ -56,6 +56,10 @@ func calentar(escena: Node3D) -> void:
 				_alcance_area = area.area_range
 				break
 	for objeto: GeometryInstance3D in escena.find_children("*", "GeometryInstance3D", true, false):
+		# El modelo de referencia queda en el GLB para editarlo, pero tiene un reemplazo en
+		# producción. Dibujarlo acá compilaría variantes que nunca aparecen en la partida.
+		if objeto.is_in_group(&"geometria_de_referencia"):
+			continue
 		var suya := objeto.global_transform * objeto.get_aabb()
 		caja = suya if _pendientes.is_empty() else caja.merge(suya)
 		if not objeto.visible:

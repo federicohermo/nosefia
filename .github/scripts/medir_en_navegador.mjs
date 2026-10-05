@@ -26,6 +26,8 @@
 // Desde donde arranca el jugador, que muestra el local entero: es la vista más cara. Tres
 // gestos por cada velocidad de CPU: quieto, caminando de costado y girando sobre sí mismo.
 // De cada uno, los cuadros por segundo y el tiempo entre cuadros: mediana, p95 y máximo.
+// Los tiempos de carga registrados usan cuadros sin límite para esta prueba de FPS; no
+// representan la carga habitual. Para comparar esperas, usar medir_la_carga.mjs con vsync.
 //
 // **Abre una ventana y tiene que quedar a la vista**: un navegador no dibuja cuadros de una
 // pestaña tapada o minimizada, y la medición sale vacía.
@@ -171,7 +173,7 @@ await pagina.mouse.move(768, 760 * ALTURA_DE_NUEVO_JUEGO);
 await pagina.addInitScript(GANCHOS_DE_ENTRADA);
 const filas = [];
 let equipo = {};
-const carga = {};
+const carga = { cuadrosSinLimite: true };
 const desde = Date.now();
 const etapa = (nombre) => console.log(`[medición] ${nombre}: ${Date.now() - desde} ms`);
 const foto = async (nombre) => {

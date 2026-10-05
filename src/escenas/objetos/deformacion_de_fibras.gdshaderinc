@@ -4,7 +4,10 @@ uniform float suelo_y = -1000.0;
 uniform vec3 centro_balde = vec3(0.0);
 uniform vec3 vertical_balde = vec3(0.0, 1.0, 0.0);
 uniform float inmersion = 0.0;
+#ifndef ARTICULACION_DEL_UTIL
+#define ARTICULACION_DEL_UTIL
 uniform mat4 articulacion = mat4(1.0);
+#endif
 
 // Longitud local de las fibras del modelo: la punta conserva la flexión completa.
 const float LONGITUD_DE_FIBRA = 0.077822447;

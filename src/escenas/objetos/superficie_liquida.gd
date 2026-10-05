@@ -5,8 +5,7 @@ signal encogida
 
 const Gotas := preload("res://src/escenas/objetos/gotas_del_balde.gd")
 const Ondas := preload("res://src/escenas/objetos/ondas_del_balde.gd")
-const AGUA_VISIBLE := preload("res://src/escenas/puestos/agua_del_bano.gdshader")
-const MANCHAS_VISIBLES := preload("res://src/escenas/objetos/manchas_del_piso.gdshader")
+const ASPECTO_VISIBLE := preload("res://src/escenas/objetos/agua_y_manchas.gdshader")
 const GUIA_DE_MANCHAS := preload(
 	"res://assets/models/SEPT_JUEGOS_PROTOTIPO_Guía de jabones y manchas copy.png"
 )
@@ -75,13 +74,19 @@ func _ready() -> void:
 
 
 func configurar_agua(acuosa: bool) -> void:
-	if not acuosa or material_override is ShaderMaterial:
+	if not acuosa:
 		return
-	var pintura := ShaderMaterial.new()
-	pintura.shader = AGUA_VISIBLE
-	pintura.set_shader_parameter(
-		"color_del_agua", (material_override as StandardMaterial3D).albedo_color
-	)
+	var pintura := material_override as ShaderMaterial
+	if pintura != null:
+		if pintura.shader != ASPECTO_VISIBLE or not pintura.get_shader_parameter("es_mancha"):
+			return
+	else:
+		var color_previo := color_de_la_superficie()
+		pintura = ShaderMaterial.new()
+		pintura.shader = ASPECTO_VISIBLE
+		pintura.set_shader_parameter("color_del_agua", color_previo)
+		material_override = pintura
+	pintura.set_shader_parameter("es_mancha", false)
 	pintura.set_shader_parameter("densidad_de_solucion", _densidad_visual(color_de_la_superficie()))
 	pintura.set_shader_parameter("normal_de_la_malla", true)
 	pintura.set_shader_parameter("transparencia", 0.4 if en_balde else 0.55)
@@ -109,7 +114,13 @@ func pintar(color: Color) -> void:
 
 func mezclar(color: Color) -> void:
 	var pintura := material_override as ShaderMaterial
-	if not en_balde or not visible or pintura == null or pintura.shader != AGUA_VISIBLE:
+	if (
+		not en_balde
+		or not visible
+		or pintura == null
+		or pintura.shader != ASPECTO_VISIBLE
+		or pintura.get_shader_parameter("es_mancha")
+	):
 		pintar(color)
 		return
 	if color == color_de_la_superficie():
@@ -177,7 +188,7 @@ func _cancelar_mezcla() -> void:
 
 func _actualizar_mezcla() -> void:
 	var pintura := material_override as ShaderMaterial
-	if pintura != null and pintura.shader == AGUA_VISIBLE:
+	if pintura != null and pintura.shader == ASPECTO_VISIBLE:
 		pintura.set_shader_parameter("color_previo", _color_previo)
 		pintura.set_shader_parameter("densidad_previa", _densidad_previa)
 		pintura.set_shader_parameter("progreso_de_mezcla", _progreso_de_mezcla)
@@ -191,13 +202,15 @@ func _densidad_visual(color: Color) -> float:
 
 func configurar_mancha(tipo: ReglasDeLaLimpieza.TipoDeMancha, acuosa: bool) -> void:
 	var pintura := material_override as ShaderMaterial
-	if pintura == null or pintura.shader != MANCHAS_VISIBLES:
+	if pintura == null or pintura.shader != ASPECTO_VISIBLE:
 		var color_previo := color_de_la_superficie()
 		pintura = ShaderMaterial.new()
-		pintura.shader = MANCHAS_VISIBLES
-		pintura.set_shader_parameter("guia_de_manchas", GUIA_DE_MANCHAS)
+		pintura.shader = ASPECTO_VISIBLE
 		pintura.set_shader_parameter("color_del_agua", color_previo)
 		material_override = pintura
+	_cancelar_mezcla()
+	pintura.set_shader_parameter("es_mancha", true)
+	pintura.set_shader_parameter("guia_de_manchas", GUIA_DE_MANCHAS)
 	pintura.set_shader_parameter("tipo_de_suciedad", tipo)
 	pintura.set_shader_parameter("acuosa", acuosa)
 	pintura.set_shader_parameter("transparencia", 0.55 if acuosa else 1.0)

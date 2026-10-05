@@ -137,6 +137,21 @@ func test_lo_oculto_se_dibuja_y_vuelve_a_quedar_oculto() -> void:
 	assert_int(_visibles(escena)).is_equal(CUANTOS - 1)
 
 
+func test_el_modelo_reemplazado_no_se_destapa_durante_el_calentamiento() -> void:
+	var escena := _escena()
+	var referencia := escena.get_child(0) as MeshInstance3D
+	referencia.visible = false
+	referencia.add_to_group(&"geometria_de_referencia")
+	var cambios: Array[bool] = []
+	referencia.visibility_changed.connect(func() -> void: cambios.append(referencia.visible))
+	var calentamiento := _calentamiento()
+	calentamiento.calentar(escena)
+	await assert_signal(calentamiento).wait_until(ESPERA_MS).is_emitted("terminado")
+	assert_array(cambios).is_empty()
+	assert_bool(referencia.visible).is_false()
+	assert_int(_visibles(escena)).is_equal(CUANTOS - 1)
+
+
 func test_una_escena_sin_objetos_termina_igual() -> void:
 	var escena: Node3D = auto_free(Node3D.new())
 	add_child(escena)

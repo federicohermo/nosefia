@@ -55,8 +55,11 @@ ponerlo en `reports/`.
 
 `.github/scripts/medir_la_carga.mjs` mide tres tiempos desde la navegación: el overlay de
 Godot fuera, el aviso `[carga] menú visible` y el aviso `[carga] almacén en pantalla`. Elige
-«Nuevo juego» apenas ve el primer aviso. Hace tres corridas con el caché vacío y da la mediana.
-Mide un export local, servido con los headers de `vercel.json`:
+«Nuevo juego» apenas ve el primer aviso. Hace tres corridas con contextos HTTP nuevos dentro
+del mismo Chrome. El navegador puede conservar su caché de shaders entre corridas. No son tres
+cargas frías. El JSON conserva cada corrida y la mediana, que mezcla la primera con las siguientes.
+Mide con la sincronización habitual de cuadros y sin limitar la CPU. Usa un export local,
+servido con los headers de `vercel.json`:
 
 ```powershell
 & $env:GODOT_BIN --headless --path . --export-release "Web" export/web/index.html
@@ -66,14 +69,32 @@ node .github/scripts/medir_la_carga.mjs http://localhost:8060 reports/carga.json
 
 - **El directorio del export tiene que existir antes.** Sin él, el export falla y devuelve 0.
 
+Para medir sin dejar Chrome a la vista, agregar `--sin-ventana` después de la ruta del JSON:
+
+```powershell
+node .github/scripts/medir_la_carga.mjs http://localhost:8060 reports/carga.json --sin-ventana
+```
+
+El script registra el renderizador de GPU y rechaza la medición sin ventana si Chrome usa
+renderizado por software o no identifica la GPU. Este modo mide la carga, no la presentación
+de una ventana ni los FPS durante la partida. Comparar corridas con el mismo modo y renderizador.
+
 **El aviso del almacén sale cuando el jugador lo ve**, al final del calentamiento de shaders.
+Los tiempos de carga de `medir_en_navegador.mjs` usan cuadros sin límite para medir FPS.
+No compararlos con las esperas de `medir_la_carga.mjs`.
 
 ## Los shaders en la web
 
-Compatibility no precompila shaders. Cada variante se compila la primera vez que se dibuja, y
-en Chrome sobre Windows cada programa tarda alrededor de un segundo. Mientras compila, el
-navegador no dibuja nada. Por eso el almacén se calienta detrás de la pantalla de carga. Cada
-objeto se dibuja una vez antes de mostrarlo, también lo que está oculto.
+Compatibility compila programas GL al usar los shaders y sus variantes. En la web, esa
+compilación puede frenar el navegador. Por eso el almacén se calienta detrás de la pantalla de
+carga. El calentamiento dibuja los objetos que pueden aparecer en la partida, incluidos los
+ocultos. Excluye las mallas de referencia que ya tienen un reemplazo en producción.
+
+Godot 4.7.2 declara cuatro variantes predeterminadas: color y profundidad, cada una con y sin
+instancing. Las de color incluyen todos los tipos de luces. Lo declara
+[`scene.glsl` del motor](https://github.com/godotengine/godot/blob/4.7.2-stable/drivers/gles3/shaders/scene.glsl).
+Compartir un shader evita duplicar sus programas predeterminados. No demuestra que todas las
+variantes posibles ya se hayan compilado.
 
 Medido el 2026-09-28 en la misma notebook, con Chrome. Es el tiempo desde el clic en «Nuevo
 juego», con el almacén ya cargado, hasta el aviso del almacén:
@@ -83,20 +104,59 @@ juego», con el almacén ya cargado, hasta el aviso del almacén:
 | Primera, con el caché vacío | 27–29 s, con la barra llena y la imagen congelada | 33 s, con la barra avanzando |
 | Segunda, con el caché de Chrome | 3,5 s | 3,9 s |
 
-- **Después de entrar no se compila ningún programa.** Sin calentar, el primer cuadro
-  compilaba 88, y lo que aparecía después compilaba en medio del juego.
-- **Los 20 programas más caros no se usan nunca.** La primera vez que el motor usa un shader,
-  compila dos variantes por defecto con todas las luces activas. Cada una cuesta alrededor de
-  1,1 s. Sólo se evitan con menos shaders distintos.
-- **Bajar los límites de luces no cambia nada.** Se midió con `max_lights_per_object` en 2 y
-  con `max_renderable_lights` en 16.
-- **El caché de Chrome no reemplaza al calentamiento.** Se borra con cada actualización de
-  Chrome o del driver.
+Estos tiempos y los siguientes conteos son históricos. No describen el motor ni la escena
+actuales.
+
+- En el recorrido medido el 2026-09-28 no se registraron compilaciones después de entrar con
+  calentamiento. Sin calentamiento, el primer cuadro compilaba 88 programas y aparecían otros
+  durante el juego. El resultado cubre ese recorrido, no todos los gestos posibles.
+- En aquella corrida, los 20 programas más caros correspondían a variantes predeterminadas
+  que no se usaban después. Cada una costaba alrededor de 1,1 s.
+- La prueba de aquella fecha no registró una mejora al bajar `max_lights_per_object` a 2 y
+  `max_renderable_lights` a 16. No demuestra que esos ajustes sean irrelevantes en otras
+  versiones o escenas.
+- El caché de Chrome puede reducir la espera, pero no reemplaza al calentamiento. Una
+  actualización del navegador o del driver puede invalidarlo.
+
+## Medición del 2026-10-05
+
+Comparación del export anterior con el export que comparte shaders de contornos, agua y
+manchas. El calentamiento excluye las referencias reemplazadas y el PCK excluye capturas y
+exports anteriores. La comparación conserva la configuración de luces y las texturas.
+
+Ambos exports usan Godot 4.7.2, Chrome 154 y una RTX 4050 mediante ANGLE D3D11, a 1536×760.
+Se midió sin ventana, con la sincronización habitual de cuadros y sin limitar la CPU.
+Se alternaron los dos exports en tres pares. Cada corrida abrió Chrome con un perfil nuevo.
+No se limpió la caché del driver.
+
+Los tiempos van desde el clic en «Nuevo juego» hasta `[carga] almacén en pantalla`:
+
+| Par | Anterior | Final |
+|---|---|---|
+| 1 | 64,913 s | 58,054 s |
+| 2 | 64,176 s | 55,706 s |
+| 3 | 62,831 s | 55,202 s |
+| Mediana | 64,176 s | 55,706 s |
+
+La mediana baja 8,470 s, un 13,2 % en este equipo y estas condiciones. El PCK pasa de
+49.631.148 a 43.589.692 bytes: 6.041.456 bytes menos, un 12,2 %.
+
+Una prueba separada del export final conserva el mismo Chrome y abre contextos HTTP nuevos.
+La primera entrada tarda 57,254 s desde el clic. Las siguientes tardan 6,506 y 6,337 s.
+Esos tiempos con caché compartida se informan aparte de la comparación con perfiles nuevos.
+
+La validación pasa 60 de 60 casos en 11 suites y los seis nodos restantes de verificación.
+Las comparaciones de GPU cubren 23 poses de agua, manchas y contornos, con diferencia RGB cero.
+Esas poses verifican la conservación de la imagen en los casos comparados. No cubren todas
+las vistas posibles.
 
 ## Lo que ya se sabe de las luces
 
-- Compatibility alumbra cada objeto con un tope de luces, y la vista entera con otro. Los dos
-  topes son ajustes del proyecto, y subirlos sube el costo.
+- Compatibility limita las luces de cada tipo por objeto y por vista. Los dos topes son
+  ajustes del proyecto, y subirlos sube el costo.
+- Reducir `rendering/limits/opengl/max_lights_per_object` puede cambiar la imagen del baño:
+  los focos se superponen sobre útiles, agua y hojas móviles que no tienen lightmap. Una mejora
+  de carga exige comparar también su iluminación desde distintas posiciones.
 - Cada luz con sombra vuelve a dibujar todo lo que alumbra. La sombra se paga en llamadas de
   dibujo, y eso es CPU.
 - Una luz de área no da sombra en Compatibility, y atraviesa las paredes.

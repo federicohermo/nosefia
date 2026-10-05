@@ -3,7 +3,7 @@ extends MeshInstance3D
 
 const Partes := preload("res://src/escenas/objetos/partes_de_manija.gd")
 const PINTURA := preload("res://src/escenas/objetos/manija_del_balde.gdshader")
-const CONTORNO_MANIJA := preload("res://src/escenas/objetos/contorno_de_manija.gdshader")
+const CONTORNO_DEL_UTIL := preload("res://src/escenas/objetos/contorno_del_util.gdshader")
 const CONTORNO := preload("res://src/sistemas/marco/contorno.gdshader")
 const REPOSO := PI / 2.0
 const DURACION := 0.25
@@ -50,7 +50,8 @@ func _preparar() -> void:
 			animada.set_shader_parameter("metal", original.metallic)
 			_pinturas.append(animada)
 			pintura = animada
-			borde.shader = CONTORNO_MANIJA
+			borde.shader = CONTORNO_DEL_UTIL
+			borde.set_shader_parameter("deformacion", 2)
 			_contornos.append(borde)
 		else:
 			pintura = original.duplicate() as StandardMaterial3D

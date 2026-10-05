@@ -472,217 +472,217 @@ collision_mask = 0
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.274697, -0.057562, 0)
 shape = SubResource("contorno_de_gondola_del_fondo_sur")
 
-[node name="Zucarachas" parent="gondolanueva"]
+[node name="Zucarachas" parent="gondolanueva" groups=["geometria_de_referencia"]]
 visible = false
 
 [node name="StaticBody3D" parent="gondolanueva/Zucarachas"]
 collision_layer = 0
 collision_mask = 0
 
-[node name="cereal-2norte2" parent="gondolanueva"]
+[node name="cereal-2norte2" parent="gondolanueva" groups=["geometria_de_referencia"]]
 visible = false
 
 [node name="StaticBody3D" parent="gondolanueva/cereal-2norte2"]
 collision_layer = 0
 collision_mask = 0
 
-[node name="chisitos2" parent="gondolanueva"]
+[node name="chisitos2" parent="gondolanueva" groups=["geometria_de_referencia"]]
 visible = false
 
 [node name="StaticBody3D" parent="gondolanueva/chisitos2"]
 collision_layer = 0
 collision_mask = 0
 
-[node name="macumbas" parent="gondolanueva"]
+[node name="macumbas" parent="gondolanueva" groups=["geometria_de_referencia"]]
 visible = false
 
 [node name="StaticBody3D" parent="gondolanueva/macumbas"]
 collision_layer = 0
 collision_mask = 0
 
-[node name="malbardocig" parent="gondolanueva"]
+[node name="malbardocig" parent="gondolanueva" groups=["geometria_de_referencia"]]
 visible = false
 
 [node name="StaticBody3D" parent="gondolanueva/malbardocig"]
 collision_layer = 0
 collision_mask = 0
 
-[node name="pepitos2_025" parent="gondolanueva"]
+[node name="pepitos2_025" parent="gondolanueva" groups=["geometria_de_referencia"]]
 visible = false
 
 [node name="StaticBody3D" parent="gondolanueva/pepitos2_025"]
 collision_layer = 0
 collision_mask = 0
 
-[node name="pringles3_002" parent="gondolanueva"]
+[node name="pringles3_002" parent="gondolanueva" groups=["geometria_de_referencia"]]
 visible = false
 
 [node name="StaticBody3D" parent="gondolanueva/pringles3_002"]
 collision_layer = 0
 collision_mask = 0
 
-[node name="saladix-2oeste2" parent="gondolanueva"]
+[node name="saladix-2oeste2" parent="gondolanueva" groups=["geometria_de_referencia"]]
 visible = false
 
 [node name="StaticBody3D" parent="gondolanueva/saladix-2oeste2"]
 collision_layer = 0
 collision_mask = 0
 
-[node name="snackpapas1_003" parent="gondolanueva"]
+[node name="snackpapas1_003" parent="gondolanueva" groups=["geometria_de_referencia"]]
 visible = false
 
 [node name="StaticBody3D" parent="gondolanueva/snackpapas1_003"]
 collision_layer = 0
 collision_mask = 0
 
-[node name="wakas_021" parent="gondolanueva"]
+[node name="wakas_021" parent="gondolanueva" groups=["geometria_de_referencia"]]
 visible = false
 
 [node name="StaticBody3D" parent="gondolanueva/wakas_021"]
 collision_layer = 0
 collision_mask = 0
 
-[node name="Actroncito" parent="gondolanueva2"]
+[node name="Actroncito" parent="gondolanueva2" groups=["geometria_de_referencia"]]
 visible = false
 
 [node name="StaticBody3D" parent="gondolanueva2/Actroncito"]
 collision_layer = 0
 collision_mask = 0
 
-[node name="alfajorescaja2-2oeste1" parent="gondolanueva2"]
+[node name="alfajorescaja2-2oeste1" parent="gondolanueva2" groups=["geometria_de_referencia"]]
 visible = false
 
 [node name="StaticBody3D" parent="gondolanueva2/alfajorescaja2-2oeste1"]
 collision_layer = 0
 collision_mask = 0
 
-[node name="burgaloo" parent="gondolanueva2"]
+[node name="burgaloo" parent="gondolanueva2" groups=["geometria_de_referencia"]]
 visible = false
 
 [node name="StaticBody3D" parent="gondolanueva2/burgaloo"]
 collision_layer = 0
 collision_mask = 0
 
-[node name="cindolor" parent="gondolanueva2"]
+[node name="cindolor" parent="gondolanueva2" groups=["geometria_de_referencia"]]
 visible = false
 
 [node name="StaticBody3D" parent="gondolanueva2/cindolor"]
 collision_layer = 0
 collision_mask = 0
 
-[node name="donsaturados" parent="gondolanueva2"]
+[node name="donsaturados" parent="gondolanueva2" groups=["geometria_de_referencia"]]
 visible = false
 
 [node name="StaticBody3D" parent="gondolanueva2/donsaturados"]
 collision_layer = 0
 collision_mask = 0
 
-[node name="durextra" parent="gondolanueva2"]
+[node name="durextra" parent="gondolanueva2" groups=["geometria_de_referencia"]]
 visible = false
 
 [node name="StaticBody3D" parent="gondolanueva2/durextra"]
 collision_layer = 0
 collision_mask = 0
 
-[node name="duronga" parent="gondolanueva2"]
+[node name="duronga" parent="gondolanueva2" groups=["geometria_de_referencia"]]
 visible = false
 
 [node name="StaticBody3D" parent="gondolanueva2/duronga"]
 collision_layer = 0
 collision_mask = 0
 
-[node name="feelrickyfort" parent="gondolanueva2"]
+[node name="feelrickyfort" parent="gondolanueva2" groups=["geometria_de_referencia"]]
 visible = false
 
 [node name="StaticBody3D" parent="gondolanueva2/feelrickyfort"]
 collision_layer = 0
 collision_mask = 0
 
-[node name="fideos2" parent="gondolanueva2"]
+[node name="fideos2" parent="gondolanueva2" groups=["geometria_de_referencia"]]
 visible = false
 
 [node name="StaticBody3D" parent="gondolanueva2/fideos2"]
 collision_layer = 0
 collision_mask = 0
 
-[node name="oremos" parent="gondolanueva2"]
+[node name="oremos" parent="gondolanueva2" groups=["geometria_de_referencia"]]
 visible = false
 
 [node name="StaticBody3D" parent="gondolanueva2/oremos"]
 collision_layer = 0
 collision_mask = 0
 
-[node name="flimpof" parent="gondolanueva_001"]
+[node name="flimpof" parent="gondolanueva_001" groups=["geometria_de_referencia"]]
 visible = false
 
 [node name="StaticBody3D" parent="gondolanueva_001/flimpof"]
 collision_layer = 0
 collision_mask = 0
 
-[node name="lataarvejas_002" parent="gondolanueva_001"]
+[node name="lataarvejas_002" parent="gondolanueva_001" groups=["geometria_de_referencia"]]
 visible = false
 
 [node name="StaticBody3D" parent="gondolanueva_001/lataarvejas_002"]
 collision_layer = 0
 collision_mask = 0
 
-[node name="petisas" parent="gondolanueva_001"]
+[node name="petisas" parent="gondolanueva_001" groups=["geometria_de_referencia"]]
 visible = false
 
 [node name="StaticBody3D" parent="gondolanueva_001/petisas"]
 collision_layer = 0
 collision_mask = 0
 
-[node name="amargadito" parent="gondolanueva_002"]
+[node name="amargadito" parent="gondolanueva_002" groups=["geometria_de_referencia"]]
 visible = false
 
 [node name="StaticBody3D" parent="gondolanueva_002/amargadito"]
 collision_layer = 0
 collision_mask = 0
 
-[node name="atun" parent="gondolanueva_002"]
+[node name="atun" parent="gondolanueva_002" groups=["geometria_de_referencia"]]
 visible = false
 
 [node name="StaticBody3D" parent="gondolanueva_002/atun"]
 collision_layer = 0
 collision_mask = 0
 
-[node name="cosademani" parent="gondolanueva_002"]
+[node name="cosademani" parent="gondolanueva_002" groups=["geometria_de_referencia"]]
 visible = false
 
 [node name="StaticBody3D" parent="gondolanueva_002/cosademani"]
 collision_layer = 0
 collision_mask = 0
 
-[node name="Fernetgod" parent="heladeranueva"]
+[node name="Fernetgod" parent="heladeranueva" groups=["geometria_de_referencia"]]
 visible = false
 
 [node name="StaticBody3D" parent="heladeranueva/Fernetgod"]
 collision_layer = 0
 collision_mask = 0
 
-[node name="bebida helada02-este2" parent="heladeranueva"]
+[node name="bebida helada02-este2" parent="heladeranueva" groups=["geometria_de_referencia"]]
 visible = false
 
 [node name="StaticBody3D" parent="heladeranueva/bebida helada02-este2"]
 collision_layer = 0
 collision_mask = 0
 
-[node name="terminator" parent="heladeranueva"]
+[node name="terminator" parent="heladeranueva" groups=["geometria_de_referencia"]]
 visible = false
 
 [node name="StaticBody3D" parent="heladeranueva/terminator"]
 collision_layer = 0
 collision_mask = 0
 
-[node name="mayonchis" parent="heladeranueva_001"]
+[node name="mayonchis" parent="heladeranueva_001" groups=["geometria_de_referencia"]]
 visible = false
 
 [node name="StaticBody3D" parent="heladeranueva_001/mayonchis"]
 collision_layer = 0
 collision_mask = 0
 
-[node name="oaaa" parent="heladeranueva_001"]
+[node name="oaaa" parent="heladeranueva_001" groups=["geometria_de_referencia"]]
 visible = false
 
 [node name="StaticBody3D" parent="heladeranueva_001/oaaa"]
@@ -1088,35 +1088,35 @@ script = ExtResource("artefacto")
 destino = &"lavatorio"
 mallas = [NodePath("..")]
 
-[node name="balde" parent="."]
+[node name="balde" parent="." groups=["geometria_de_referencia"]]
 visible = false
 editor_description = "Lo dibuja el balde que se levanta, en los objetos del almacén, con esta misma malla."
 
 [node name="CollisionShape3D" parent="balde/StaticBody3D"]
 disabled = true
 
-[node name="bidón jabon01" parent="."]
+[node name="bidón jabon01" parent="." groups=["geometria_de_referencia"]]
 visible = false
 editor_description = "Lo dibuja el jabón rosa que se levanta, en los objetos del almacén, con esta misma malla."
 
 [node name="CollisionShape3D" parent="bidón jabon01/StaticBody3D"]
 disabled = true
 
-[node name="bidón jabon01_001" parent="."]
+[node name="bidón jabon01_001" parent="." groups=["geometria_de_referencia"]]
 visible = false
 editor_description = "Lo dibuja el jabón azul que se levanta, en los objetos del almacén, con esta misma malla."
 
 [node name="CollisionShape3D" parent="bidón jabon01_001/StaticBody3D"]
 disabled = true
 
-[node name="bidón jabon01_002" parent="."]
+[node name="bidón jabon01_002" parent="." groups=["geometria_de_referencia"]]
 visible = false
 editor_description = "Lo dibuja el jabón amarillo que se levanta, en los objetos del almacén, con esta misma malla."
 
 [node name="CollisionShape3D" parent="bidón jabon01_002/StaticBody3D"]
 disabled = true
 
-[node name="mopa" parent="."]
+[node name="mopa" parent="." groups=["geometria_de_referencia"]]
 visible = false
 editor_description = "Lo dibuja la mopa que se levanta, en los objetos del almacén, con esta misma malla."
 

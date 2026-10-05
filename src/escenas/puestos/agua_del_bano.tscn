@@ -1,12 +1,13 @@
 [gd_scene format=3]
 
 [ext_resource type="Script" path="res://src/escenas/puestos/agua_del_bano.gd" id="1_agua"]
-[ext_resource type="Shader" path="res://src/escenas/puestos/agua_del_bano.gdshader" id="2_superficie"]
+[ext_resource type="Shader" path="res://src/escenas/objetos/agua_y_manchas.gdshader" id="2_superficie"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_lavatorio"]
 resource_local_to_scene = true
 render_priority = 0
 shader = ExtResource("2_superficie")
+shader_parameter/es_mancha = false
 shader_parameter/color_del_agua = Color(0.62, 0.66, 0.64, 0.3)
 shader_parameter/hacia_la_luz = Vector3(-0.41, 0.88, 0.23)
 
@@ -14,6 +15,7 @@ shader_parameter/hacia_la_luz = Vector3(-0.41, 0.88, 0.23)
 resource_local_to_scene = true
 render_priority = 0
 shader = ExtResource("2_superficie")
+shader_parameter/es_mancha = false
 shader_parameter/color_del_agua = Color(0.6, 0.7, 0.72, 0.4)
 shader_parameter/hacia_la_luz = Vector3(-0.63, 0.76, 0.15)
 
