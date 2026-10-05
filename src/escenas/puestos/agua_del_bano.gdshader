@@ -11,6 +11,9 @@ uniform vec4 color_del_agua : source_color = vec4(0.55, 0.6, 0.55, 0.35);
 uniform vec4 color_previo : source_color = vec4(0.55, 0.6, 0.55, 0.35);
 // Uno conserva el agua habitual del baño; sólo el balde inicia esta mezcla en cero.
 uniform float progreso_de_mezcla : hint_range(0.0, 1.0) = 1.0;
+// Sólo el balde con producto refuerza su tinte; el agua limpia mantiene su transparencia.
+uniform float densidad_de_solucion : hint_range(0.0, 1.0) = 0.0;
+uniform float densidad_previa : hint_range(0.0, 1.0) = 0.0;
 // El reflejo de la luz del techo es falso: la luz del baño está horneada y no da brillo.
 uniform vec3 hacia_la_luz = vec3(0.0, 1.0, 0.0);
 uniform float brillo = 1.2;
@@ -41,8 +44,11 @@ void fragment() {
 		NORMAL = normalize((VIEW_MATRIX * MODEL_MATRIX * vec4(normal_local, 0.0)).xyz);
 	}
 	vec4 color_visible = color_del_agua;
+	float densidad_visible = densidad_de_solucion;
 	if (progreso_de_mezcla < 1.0) {
-		color_visible = mix(color_previo, color_del_agua, mezcla_en(UV));
+		float mezclado = mezcla_en(UV);
+		color_visible = mix(color_previo, color_del_agua, mezclado);
+		densidad_visible = mix(densidad_previa, densidad_de_solucion, mezclado);
 		// Ondas de brillo muy pequeñas acompañan el frente, sin mover el nivel del recipiente.
 		float mx = (onda_de_mezcla(UV + vec2(0.002, 0.0))
 			- onda_de_mezcla(UV - vec2(0.002, 0.0))) / 0.004;
@@ -52,10 +58,13 @@ void fragment() {
 		NORMAL = normalize(NORMAL + desviacion);
 	}
 	ALBEDO = color_visible.rgb;
-	ALPHA = color_visible.a * transparencia;
+	ALPHA = color_visible.a * mix(transparencia, 0.85, densidad_visible);
 	ROUGHNESS = 0.05;
 	vec3 luz = normalize((VIEW_MATRIX * vec4(hacia_la_luz, 0.0)).xyz);
 	float reflejo = pow(max(dot(reflect(-VIEW, NORMAL), luz), 0.0), 12.0);
-	EMISSION = vec3(brillo * reflejo);
-	ALPHA = max(ALPHA, reflejo);
+	// El reflejo blanco y el fondo azul lavaban los colores rosa y amarillo según el ángulo.
+	float reflejo_visible = reflejo * mix(1.0, 0.4, densidad_visible);
+	vec3 tinte_del_reflejo = mix(vec3(1.0), vec3(0.5) + color_visible.rgb * 0.5, densidad_visible);
+	EMISSION = tinte_del_reflejo * brillo * reflejo_visible;
+	ALPHA = max(ALPHA, reflejo_visible);
 }

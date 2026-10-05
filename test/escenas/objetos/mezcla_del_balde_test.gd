@@ -95,6 +95,42 @@ func test_los_liquidos_ajenos_al_balde_conservan_su_pintado_inmediato() -> void:
 	assert_float(_progreso(agua)).is_equal(1.0)
 
 
+func _densidad(pintura: ShaderMaterial, nombre: StringName) -> float:
+	var valor: Variant = pintura.get_shader_parameter(nombre)
+	return -1.0 if valor == null else float(valor)
+
+
+func test_el_contraste_del_producto_se_mezcla_sin_cambiar_el_agua_limpia() -> void:
+	var agua := _agua()
+	var limpia: Color = ReglasDeLaLimpieza.COLOR_DEL_AGUA[ReglasDeLaLimpieza.Agua.LIMPIA]
+	var rosa: Color = ReglasDeLaLimpieza.COLOR_DEL_AGUA[ReglasDeLaLimpieza.Agua.ROSA]
+	agua.pintar(limpia)
+	var pintura := agua.material_override as ShaderMaterial
+	assert_float(_densidad(pintura, &"densidad_de_solucion")).is_equal(0.0)
+	assert_float(_densidad(pintura, &"densidad_previa")).is_equal(0.0)
+	agua.mezclar(rosa)
+	assert_float(_densidad(pintura, &"densidad_de_solucion")).is_equal(1.0)
+	assert_float(_densidad(pintura, &"densidad_previa")).is_equal(0.0)
+	assert_float(_progreso(agua)).is_equal(0.0)
+	agua.call("_physics_process", .1)
+	var progreso := _progreso(agua)
+	assert_float(progreso).is_between(.1, .2)
+	agua.pintar(rosa)
+	assert_float(_progreso(agua)).is_equal(progreso)
+	agua.vaciar()
+	assert_float(_progreso(agua)).is_equal(1.0)
+	assert_float(_densidad(pintura, &"densidad_previa")).is_equal(1.0)
+	assert_bool(agua.color_de_la_superficie() == rosa).is_true()
+	agua.reiniciar()
+	agua.pintar(limpia)
+	assert_float(_densidad(pintura, &"densidad_de_solucion")).is_equal(0.0)
+	assert_float(_densidad(pintura, &"densidad_previa")).is_equal(0.0)
+	var ajena := _agua(false)
+	ajena.configurar_agua(true)
+	ajena.pintar(rosa)
+	assert_float(_densidad(ajena.material_override, &"densidad_de_solucion")).is_equal(0.0)
+
+
 class Recipiente:
 	extends Node3D
 	var lugar := 0

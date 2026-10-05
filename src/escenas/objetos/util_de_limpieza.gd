@@ -23,8 +23,8 @@ const Gotas := preload("res://src/escenas/objetos/gotas_del_balde.gd")
 @export var escala_apoyada := 1.0
 @export var examen: Examen
 
-## Lo que muestra de qué está cargado: el agua del balde, la punta mojada de la mopa. Los jabones
-## no llevan.
+## Superficie del balde o anclaje de la punta para mojar y gotear. El color de la mopa
+## lo dibujan sus fibras articuladas; los jabones no llevan carga.
 @export var carga: MeshInstance3D
 
 ## Lo que se marca al enfocarlo: la malla, y no la carga, que queda adentro del balde.
@@ -41,6 +41,9 @@ func _ready() -> void:
 	super()
 	malla.mesh = malla_del_modelo(nodo_del_modelo)
 	if datos.id == ReglasDeLaLimpieza.ID_DE_LA_MOPA:
+		# Un volumen rígido no acompaña la cabeza al apoyarse. La humedad ya tiñe las fibras;
+		# conservar este nodo como anclaje mantiene la mojada, el goteo y el color de la carga.
+		carga.mesh = null
 		_gotas = Gotas.new()
 		_pintura_de_gotas = StandardMaterial3D.new()
 		_pintura_de_gotas.roughness = 0.3

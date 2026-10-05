@@ -49,6 +49,7 @@ var _ondas := Ondas.new()
 var _aceleracion := Vector2.ZERO
 var _encogimiento: Tween
 var _color_previo := Color.TRANSPARENT
+var _densidad_previa := 0.0
 var _progreso_de_mezcla := 1.0
 var _altura_de_reposo := 0.0
 var _nivel_visual := 1.0
@@ -81,6 +82,7 @@ func configurar_agua(acuosa: bool) -> void:
 	pintura.set_shader_parameter(
 		"color_del_agua", (material_override as StandardMaterial3D).albedo_color
 	)
+	pintura.set_shader_parameter("densidad_de_solucion", _densidad_visual(color_de_la_superficie()))
 	pintura.set_shader_parameter("normal_de_la_malla", true)
 	pintura.set_shader_parameter("transparencia", 0.4 if en_balde else 0.55)
 	pintura.set_shader_parameter("hacia_la_luz", Vector3(-0.41, 0.88, 0.23))
@@ -97,6 +99,9 @@ func pintar(color: Color) -> void:
 		return
 	if material_override is ShaderMaterial:
 		(material_override as ShaderMaterial).set_shader_parameter("color_del_agua", color)
+		(material_override as ShaderMaterial).set_shader_parameter(
+			"densidad_de_solucion", _densidad_visual(color)
+		)
 	else:
 		(material_override as StandardMaterial3D).albedo_color = color
 	_cancelar_mezcla()
@@ -111,7 +116,9 @@ func mezclar(color: Color) -> void:
 		return
 	# El destino ya sirve para la carga de la mopa; únicamente la superficie tarda en teñirse.
 	_color_previo = color_de_la_superficie()
+	_densidad_previa = _densidad_visual(_color_previo)
 	pintura.set_shader_parameter("color_del_agua", color)
+	pintura.set_shader_parameter("densidad_de_solucion", _densidad_visual(color))
 	_progreso_de_mezcla = 0.0
 	_actualizar_mezcla()
 	set_physics_process(true)
@@ -164,6 +171,7 @@ func _avanzar_nivel(delta: float) -> void:
 func _cancelar_mezcla() -> void:
 	_progreso_de_mezcla = 1.0
 	_color_previo = color_de_la_superficie()
+	_densidad_previa = _densidad_visual(_color_previo)
 	_actualizar_mezcla()
 
 
@@ -171,7 +179,14 @@ func _actualizar_mezcla() -> void:
 	var pintura := material_override as ShaderMaterial
 	if pintura != null and pintura.shader == AGUA_VISIBLE:
 		pintura.set_shader_parameter("color_previo", _color_previo)
+		pintura.set_shader_parameter("densidad_previa", _densidad_previa)
 		pintura.set_shader_parameter("progreso_de_mezcla", _progreso_de_mezcla)
+
+
+func _densidad_visual(color: Color) -> float:
+	# El interior azul no debe cambiar el matiz que identifica al producto.
+	var limpia: Color = ReglasDeLaLimpieza.COLOR_DEL_AGUA[ReglasDeLaLimpieza.Agua.LIMPIA]
+	return float(en_balde and color.a > 0.0 and not color.is_equal_approx(limpia))
 
 
 func configurar_mancha(tipo: ReglasDeLaLimpieza.TipoDeMancha, acuosa: bool) -> void:
