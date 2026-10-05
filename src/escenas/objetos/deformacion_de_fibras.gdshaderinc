@@ -6,9 +6,11 @@ uniform vec3 vertical_balde = vec3(0.0, 1.0, 0.0);
 uniform float inmersion = 0.0;
 uniform mat4 articulacion = mat4(1.0);
 
+// Longitud local de las fibras del modelo: la punta conserva la flexión completa.
+const float LONGITUD_DE_FIBRA = 0.077822447;
 
 void deformar_fibras(inout vec3 vertice, inout vec3 normal, mat4 modelo) {
-	float tramo = clamp((-0.774 - vertice.y) / 0.104, 0.0, 1.0);
+	float tramo = clamp((-0.774 - vertice.y) / LONGITUD_DE_FIBRA, 0.0, 1.0);
 	float peso = tramo * tramo;
 	float variacion = 0.85 + 0.15 * sin(vertice.x * 65.0 + vertice.z * 48.0);
 	vec2 cambio = flexion * peso * variacion;
@@ -21,7 +23,7 @@ void deformar_fibras(inout vec3 vertice, inout vec3 normal, mat4 modelo) {
 		vertice -= radial * (1.0 - 0.145 / radio) * inmersion;
 	}
 	// La inversa transpuesta del gradiente mantiene la iluminación al curvar la fibra.
-	float derivada = -2.0 * tramo / 0.104;
+	float derivada = -2.0 * tramo / LONGITUD_DE_FIBRA;
 	normal.y -= dot(normal.xz, flexion * derivada * variacion);
 	normal = normalize(normal);
 	vertice = (articulacion * vec4(vertice, 1.0)).xyz;
