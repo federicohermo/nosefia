@@ -13,6 +13,7 @@ signal terminado
 
 ## Cuánto más arriba del techo va la cámara, para que el techo entre en el cuadro.
 const ALTURA_EXTRA := 10.0
+const CONTORNO := preload("res://src/sistemas/marco/contorno.gdshader")
 
 var _pendientes: Array[GeometryInstance3D] = []
 var _sin_focos: Array[GeometryInstance3D] = []
@@ -29,6 +30,9 @@ var _vistos: Dictionary = {}
 var _total := 0
 var _camara: Camera3D
 var _anterior: Camera3D
+var _contornos_listos := false
+var _pases_originales: Dictionary[Material, Material] = {}
+var _parametros_originales: Dictionary[ShaderMaterial, Dictionary] = {}
 
 
 func _init() -> void:
@@ -73,6 +77,9 @@ func calentar(escena: Node3D) -> void:
 	add_child(_camara)
 	_encuadrar(caja)
 	_camara.make_current()
+	# Los objetos preparan sus materiales por llamada diferida al entrar al árbol.
+	# La nuestra entra después: sus contornos deben existir antes del primer dibujo.
+	_preparar_contornos.call_deferred()
 	set_process(true)
 
 
@@ -84,6 +91,8 @@ func progreso() -> float:
 ## en el material nuevo, no en la cantidad de objetos. Termina un cuadro después del último, que
 ## es el cuadro en que se dibuja.
 func _process(_delta: float) -> void:
+	if not _contornos_listos:
+		return
 	if _pendientes.is_empty():
 		if _sin_focos.is_empty() and _con_area.is_empty():
 			_terminar()
@@ -110,6 +119,50 @@ func _process(_delta: float) -> void:
 			nuevo = nuevo or not _vistos.has(material)
 			_vistos[material] = true
 	avanzo.emit(progreso())
+
+
+func _preparar_contornos() -> void:
+	var indicacion := ShaderMaterial.new()
+	indicacion.shader = CONTORNO
+	indicacion.set_shader_parameter("grosor", 0.0)
+	indicacion.set_shader_parameter("color", Color.WHITE)
+	for objeto: GeometryInstance3D in _objetos:
+		if not objeto.has_method("mostrar_contorno"):
+			continue
+		for material: Variant in _materiales_de(objeto):
+			if material is Material:
+				_guardar_pases(material as Material)
+		# El protocolo lo declara el objeto; el sistema no conoce su clase ni su escena.
+		objeto.call("mostrar_contorno", indicacion)
+	_contornos_listos = true
+
+
+func _guardar_pases(material: Material) -> void:
+	if _pases_originales.has(material):
+		return
+	_pases_originales[material] = material.next_pass
+	var pase := material.next_pass
+	while pase != null:
+		var sombreado := pase as ShaderMaterial
+		if sombreado != null and not _parametros_originales.has(sombreado):
+			var shader := sombreado.shader
+			var parametros: Dictionary = {}
+			if shader != null:
+				for uniforme: Dictionary in shader.get_shader_uniform_list():
+					var nombre := StringName(uniforme["name"])
+					parametros[nombre] = sombreado.get_shader_parameter(nombre)
+			_parametros_originales[sombreado] = parametros
+		pase = pase.next_pass
+
+
+func _restaurar_pases() -> void:
+	for material: Material in _pases_originales:
+		material.next_pass = _pases_originales[material]
+	for pase: ShaderMaterial in _parametros_originales:
+		for nombre: StringName in _parametros_originales[pase]:
+			pase.set_shader_parameter(nombre, _parametros_originales[pase][nombre])
+	_pases_originales.clear()
+	_parametros_originales.clear()
 
 
 ## La clase entra como un material más: un `Label3D` o un `Sprite3D` traen el suyo adentro.
@@ -141,6 +194,7 @@ func _encuadrar(caja: AABB) -> void:
 
 func _terminar() -> void:
 	set_process(false)
+	_restaurar_pases()
 	if _area != null:
 		_area.area_range = _alcance_area
 	for foco: SpotLight3D in _focos:

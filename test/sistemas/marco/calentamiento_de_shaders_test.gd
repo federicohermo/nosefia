@@ -6,6 +6,25 @@ const CUANTOS := 20
 const ESPERA_MS := 5000
 
 
+class MallaConContorno:
+	extends MeshInstance3D
+
+	var borde := ShaderMaterial.new()
+
+	func _init() -> void:
+		mesh = BoxMesh.new()
+		material_override = StandardMaterial3D.new()
+		borde.shader = preload("res://src/sistemas/marco/contorno.gdshader")
+		borde.set_shader_parameter("grosor", .023)
+		borde.set_shader_parameter("color", Color.CYAN)
+
+	func mostrar_contorno(presentacion: ShaderMaterial) -> void:
+		material_override.next_pass = borde if presentacion != null else null
+		if presentacion != null:
+			borde.set_shader_parameter("grosor", presentacion.get_shader_parameter("grosor"))
+			borde.set_shader_parameter("color", presentacion.get_shader_parameter("color"))
+
+
 ## Todas las cajas comparten un material, salvo las que se le pidan con uno propio.
 func _escena(con_material_propio: int = 0) -> Node3D:
 	var escena: Node3D = auto_free(Node3D.new())
@@ -170,3 +189,36 @@ func test_los_objetos_movibles_se_dibujan_tambien_sin_los_focos_del_cuarto() -> 
 	assert_bool(foco.visible).is_true()
 	assert_bool(apagado.visible).is_false()
 	assert_int(_visibles(escena)).is_equal(CUANTOS)
+
+
+func test_el_contorno_se_dibuja_antes_de_jugar_y_se_retira_al_terminar() -> void:
+	var escena: Node3D = auto_free(Node3D.new())
+	var malla := MallaConContorno.new()
+	escena.add_child(malla)
+	add_child(escena)
+	var calentamiento := _calentamiento()
+	var se_dibujo := [false]
+	calentamiento.avanzo.connect(
+		func(_progreso: float) -> void:
+			se_dibujo[0] = (
+				se_dibujo[0] or (malla.visible and malla.material_override.next_pass == malla.borde)
+			)
+	)
+	calentamiento.calentar(escena)
+	await assert_signal(calentamiento).wait_until(ESPERA_MS).is_emitted("terminado")
+	assert_bool(se_dibujo[0]).is_true()
+	assert_object(malla.material_override.next_pass).is_null()
+
+
+func test_el_calentamiento_restaura_el_pase_y_los_uniformes_del_foco_previo() -> void:
+	var escena: Node3D = auto_free(Node3D.new())
+	var malla := MallaConContorno.new()
+	escena.add_child(malla)
+	add_child(escena)
+	malla.material_override.next_pass = malla.borde
+	var calentamiento := _calentamiento()
+	calentamiento.calentar(escena)
+	await assert_signal(calentamiento).wait_until(ESPERA_MS).is_emitted("terminado")
+	assert_object(malla.material_override.next_pass).is_same(malla.borde)
+	assert_float(float(malla.borde.get_shader_parameter("grosor"))).is_equal(.023)
+	assert_that(malla.borde.get_shader_parameter("color")).is_equal(Color.CYAN)

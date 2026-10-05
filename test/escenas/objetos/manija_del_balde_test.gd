@@ -4,6 +4,16 @@ const ALMACEN := preload("res://src/escenas/almacen.tscn")
 const Util := preload("res://src/escenas/objetos/util_de_limpieza.gd")
 
 
+class ManijaObservada:
+	extends "res://src/escenas/objetos/manija_del_balde.gd"
+
+	var pintadas := 0
+
+	func _pintar() -> void:
+		pintadas += 1
+		super._pintar()
+
+
 func _almacen() -> Node3D:
 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
 	add_child(almacen)
@@ -224,3 +234,32 @@ func _examinar(jugador: Node3D, objetivo: Node3D) -> void:
 	tecla.action = ReglasDeLosObjetos.ACCION_EXAMINAR
 	tecla.pressed = true
 	jugador.call("_unhandled_input", tecla)
+
+
+func test_el_asa_quieta_no_repite_el_pintado_pero_vuelve_a_animarse_al_agarrar() -> void:
+	var cuerpo: RigidBody3D = auto_free(RigidBody3D.new())
+	cuerpo.freeze = true
+	cuerpo.top_level = true
+	var malla := ManijaObservada.new()
+	malla.mesh = Util.malla_del_modelo(&"balde")
+	assert_object(malla.mesh).is_not_null()
+	cuerpo.add_child(malla)
+	add_child(cuerpo)
+	await get_tree().physics_frame
+	await get_tree().physics_frame
+	malla.set_process(false)
+	_avanzar(malla, .5)
+	var reposo := _angulo(malla)
+	assert_float(absf(reposo)).is_greater(1.5)
+	var pintadas := malla.pintadas
+	for cuadro in 100:
+		_avanzar(malla, 1.0 / 60.0)
+	assert_int(malla.pintadas).is_equal(pintadas)
+	assert_float(_angulo(malla)).is_equal_approx(reposo, .00001)
+	# El polling del agarre permanece vivo aunque el dibujo de reposo ya esté terminado.
+	cuerpo.top_level = false
+	_avanzar(malla, .125)
+	assert_int(malla.pintadas).is_greater(pintadas)
+	assert_float(absf(_angulo(malla))).is_between(.001, absf(reposo) - .001)
+	_avanzar(malla, .5)
+	assert_float(_angulo(malla)).is_equal_approx(0.0, .00001)

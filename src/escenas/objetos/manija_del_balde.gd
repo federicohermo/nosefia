@@ -62,6 +62,7 @@ func _preparar() -> void:
 
 
 func _process(delta: float) -> void:
+	var anterior := _angulo
 	# Agarre termina de escribir estos flags después de reparentar, también durante el examen.
 	var suspendido := _balde.freeze and not _balde.top_level
 	if suspendido != _suspendido:
@@ -76,7 +77,8 @@ func _process(delta: float) -> void:
 	# Conserva el ángulo al interrumpir el gesto; caminar no vuelve a elegir el lado de caída.
 	_tiempo = minf(_tiempo + maxf(delta, 0.0), DURACION)
 	_angulo = lerpf(_desde, _hasta, smoothstep(0.0, 1.0, _tiempo / DURACION))
-	_pintar()
+	if _angulo != anterior:
+		_pintar()
 
 
 func _pintar() -> void:

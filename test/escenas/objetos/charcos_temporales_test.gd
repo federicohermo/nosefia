@@ -13,7 +13,7 @@ func _charcos() -> Charcos:
 func _mallas(charcos: Charcos) -> Array[MeshInstance3D]:
 	var mallas: Array[MeshInstance3D] = []
 	for hijo in charcos.get_children():
-		if hijo is MeshInstance3D:
+		if hijo is MeshInstance3D and hijo.visible:
 			mallas.append(hijo)
 	return mallas
 
@@ -130,3 +130,30 @@ func test_reutiliza_el_mas_viejo_y_limpiar_retira_todos() -> void:  # AC-CLN-032
 	charcos.limpiar()
 	charcos.dejar_en(Vector3.ZERO)
 	assert_int(charcos.cantidad()).is_equal(1)
+
+
+func test_el_shader_del_primer_charco_ya_tiene_un_testigo_para_el_calentamiento() -> void:
+	var charcos := _charcos()
+	var testigos := charcos.find_children("*", "MeshInstance3D", true, false)
+	assert_int(testigos.size()).is_equal(1)
+	if testigos.is_empty():
+		return
+	var testigo := testigos[0] as MeshInstance3D
+	assert_bool(testigo.visible).is_false()
+	assert_int(charcos.cantidad()).is_zero()
+	assert_float(_opacidad(testigo)).is_zero()
+	charcos.dejar_en(Vector3(2, .1, 3))
+	var activa := _mallas(charcos)[0]
+	assert_object(activa.mesh).is_same(testigo.mesh)
+	assert_object((activa.material_override as ShaderMaterial).shader).is_same(
+		(testigo.material_override as ShaderMaterial).shader
+	)
+	assert_int(activa.gi_mode).is_equal(testigo.gi_mode)
+	assert_int(activa.cast_shadow).is_equal(testigo.cast_shadow)
+	assert_int(charcos.cantidad()).is_equal(1)
+	charcos.limpiar()
+	await get_tree().process_frame
+	assert_bool(testigo.is_inside_tree()).is_true()
+	assert_bool(testigo.visible).is_false()
+	assert_int(charcos.cantidad()).is_zero()
+	assert_array(_mallas(charcos)).is_empty()

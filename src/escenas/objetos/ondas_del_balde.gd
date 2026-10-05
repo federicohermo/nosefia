@@ -12,6 +12,7 @@ var _velocidades := PackedFloat32Array()
 var _siguientes := PackedFloat32Array()
 var _interior := PackedByteArray()
 var _activa := false
+var _amplitud := 0.0
 var _celdas := PackedInt32Array()
 var _vecinos := PackedInt32Array()
 var _puntos := PackedVector2Array()
@@ -73,6 +74,7 @@ func reiniciar() -> void:
 	_velocidades.fill(0.0)
 	_siguientes.fill(0.0)
 	_activa = false
+	_amplitud = 0.0
 
 
 func perturbar(centro: Vector2, fuerza: float) -> void:
@@ -89,10 +91,7 @@ func perturbar(centro: Vector2, fuerza: float) -> void:
 
 
 func amplitud() -> float:
-	var mayor := 0.0
-	for altura: float in _alturas:
-		mayor = maxf(mayor, absf(altura))
-	return mayor
+	return _amplitud
 
 
 func avanzar(delta: float, aceleracion: Vector2) -> void:
@@ -124,8 +123,11 @@ func avanzar(delta: float, aceleracion: Vector2) -> void:
 	for indice: int in _celdas:
 		suma += _alturas[indice]
 	var media := suma / _celdas.size()
+	_amplitud = 0.0
 	for indice: int in _celdas:
 		_alturas[indice] -= media
+		# Se conserva el máximo del campo al recorrerlo; el dibujo lo consulta varias veces.
+		_amplitud = maxf(_amplitud, absf(_alturas[indice]))
 	_siguientes = _alturas.duplicate()
 	if amplitud() < 0.000001 and aceleracion.length_squared() < 0.0001:
 		var rapidez := 0.0
