@@ -1,10 +1,10 @@
 ## Un útil de limpieza —la mopa, el balde o un jabón—: se levanta como cualquier objeto del
 ## almacén, y se dibuja con la malla del modelo que lo trae.
 ##
-## **La malla no se copia**: se toma, por su nombre, del nodo del `.glb` que la dibujaba fija en el
-## baño. Una copia en `assets/` quedaría vieja el día que el artista toque el balde, sin que nada
-## lo dijera. El `transform` de la malla sí está escrito en la escena, y un caso afirma que
-## coincide con el del modelo.
+## La geometría se toma, por su nombre, del nodo del `.glb` que la dibujaba fija en el baño.
+## La mopa añade anclajes de fibras a una copia temporal; no hay un asset duplicado que pueda
+## quedar viejo al cambiar el modelo. El `transform` sí está escrito en la escena, y un caso
+## afirma que coincide con el del modelo.
 ##
 ## Es cáscara: qué tiene el balde y de qué está mojada la mopa lo sabe `PisoDelLocal`. Acá vive la
 ## carga que se ve —el agua del balde, la punta mojada de la mopa—, y quien la pinta es el puesto

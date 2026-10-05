@@ -3,6 +3,27 @@ extends GdUnitTestSuite
 const ALMACEN := preload("res://src/escenas/almacen.tscn")
 
 
+func test_agrandar_la_mopa_apoyada_no_cambia_la_gravedad_de_sus_fibras() -> void:
+	var almacen: Node3D = auto_free(ALMACEN.instantiate())
+	add_child(almacen)
+	await get_tree().physics_frame
+	await get_tree().physics_frame
+	var mopa: RigidBody3D = almacen.get_node("Objetos/Mopa")
+	mopa.freeze = true
+	mopa.top_level = true
+	mopa.global_position = Vector3(0, 10, 0)
+	mopa.global_basis = Basis.IDENTITY
+	var fibras: MeshInstance3D = mopa.get_node("Malla")
+	fibras.set_physics_process(false)
+	fibras.scale = Vector3.ONE * 1.12
+	for cuadro in 120:
+		fibras.call("_physics_process", 1.0 / 60.0)
+	var pinturas: Array = fibras.get("_pinturas")
+	assert_array(pinturas).is_not_empty()
+	var caida: Vector3 = (pinturas[0] as ShaderMaterial).get_shader_parameter("caida")
+	assert_float(caida.length()).is_less(0.00001)
+
+
 func test_las_fibras_reaccionan_al_movimiento_y_se_asientan_al_parar() -> void:
 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
 	add_child(almacen)

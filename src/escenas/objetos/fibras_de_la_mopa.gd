@@ -7,6 +7,7 @@ const CABEZA := preload("res://src/escenas/objetos/cabeza_de_la_mopa.gdshader")
 const CONTORNO_FIBRAS := preload("res://src/escenas/objetos/contorno_de_fibras.gdshader")
 const CONTORNO_CABEZA := preload("res://src/escenas/objetos/contorno_de_cabeza.gdshader")
 const CONTORNO := preload("res://src/sistemas/marco/contorno.gdshader")
+const Raices := preload("res://src/escenas/objetos/raices_de_fibras.gd")
 const PASO := 1.0 / 120.0
 
 var _pinturas: Array[ShaderMaterial] = []
@@ -32,6 +33,9 @@ func _ready() -> void:
 
 
 func _preparar() -> void:
+	if mesh == null:
+		return
+	mesh = Raices.preparar(mesh)
 	if mesh == null:
 		return
 	for superficie: int in mesh.get_surface_count():
@@ -69,7 +73,9 @@ func _physics_process(delta: float) -> void:
 		_muestreada = false
 		return
 	var paso := minf(delta, 0.1)
-	var gravedad_local := _articulacion.inverse() * global_basis.inverse() * Vector3.DOWN
+	var gravedad_local := (
+		_articulacion.inverse() * global_basis.orthonormalized().inverse() * Vector3.DOWN
+	)
 	_caida = _caida.lerp((gravedad_local - Vector3.DOWN) * 0.08, 1.0 - exp(-paso / 0.15))
 	var punto := to_global(Vector3(0.0, -0.78, 0.0))
 	var padre := get_parent().get_parent()

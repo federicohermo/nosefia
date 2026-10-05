@@ -8,7 +8,7 @@ uniform float humedad = 0.0;
 #include "res://src/escenas/objetos/deformacion_de_fibras.gdshaderinc"
 
 void vertex() {
-	deformar_fibras(VERTEX, NORMAL, MODEL_MATRIX);
+	deformar_fibras(VERTEX, NORMAL, MODEL_MATRIX, UV2);
 }
 
 void fragment() {

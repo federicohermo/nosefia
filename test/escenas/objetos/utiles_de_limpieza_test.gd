@@ -62,9 +62,7 @@ func _piso(almacen: Node3D) -> PisoDelLocal:
 
 
 func test_cada_util_es_la_malla_del_modelo_donde_el_modelo_la_dibujaba() -> void:
-	# **Sin copia en el medio**: la malla es el mismo recurso que el modelo trae, y queda donde el
-	# modelo la dibujaba, apoyada en el piso. Una copia quedaría vieja el día que el artista toque
-	# el balde.
+	# Las mallas vienen del modelo; los anclajes de la mopa se añaden sin cambiar su geometría.
 	var almacen: Node3D = await _almacen()
 	var utiles: Array = almacen.get("_utiles_de_limpieza")
 	assert_int(utiles.size()).is_equal(5)
@@ -73,7 +71,10 @@ func test_cada_util_es_la_malla_del_modelo_donde_el_modelo_la_dibujaba() -> void
 	for util: UtilDeLimpieza in utiles:
 		var del_modelo: MeshInstance3D = almacen.get_node("Estructura/" + util.nodo_del_modelo)
 		assert_object(util.malla.mesh).override_failure_message(util.name).is_not_null()
-		assert_object(util.malla.mesh).is_same(del_modelo.mesh)
+		if util.name == &"Mopa":
+			_comprobar_geometria(util.malla.mesh, del_modelo.mesh)
+		else:
+			assert_object(util.malla.mesh).is_same(del_modelo.mesh)
 		# Donde lo pone la escena, y no donde quedó: al apoyarse, la física asienta la mopa unas
 		# centésimas de milímetro. Medido el 2026-09-30: 0,08 mm en los primeros dos cuadros.
 		var puesta := util.lugar_de_origen() * util.malla.transform
@@ -104,6 +105,16 @@ func test_cada_util_es_la_malla_del_modelo_donde_el_modelo_la_dibujaba() -> void
 			. override_failure_message("`%s` queda a %.3f m del piso" % [util.name, abajo - piso])
 			. is_between(-APOYADO, APOYADO)
 		)
+
+
+func _comprobar_geometria(malla: Mesh, original: Mesh) -> void:
+	assert_int(malla.get_surface_count()).is_equal(original.get_surface_count())
+	for superficie in original.get_surface_count():
+		var esperados := original.surface_get_arrays(superficie)
+		var actuales := malla.surface_get_arrays(superficie)
+		for canal in Mesh.ARRAY_MAX:
+			if canal != Mesh.ARRAY_TEX_UV2:
+				assert_bool(actuales[canal] == esperados[canal]).is_true()
 
 
 func test_la_copia_fija_del_modelo_ni_se_ve_ni_choca() -> void:
