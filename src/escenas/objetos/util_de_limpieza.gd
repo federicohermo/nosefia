@@ -2,9 +2,9 @@
 ## almacén, y se dibuja con la malla del modelo que lo trae.
 ##
 ## La geometría se toma, por su nombre, del nodo del `.glb` que la dibujaba fija en el baño.
-## La mopa añade anclajes de fibras a una copia temporal; no hay un asset duplicado que pueda
-## quedar viejo al cambiar el modelo. El `transform` sí está escrito en la escena, y un caso
-## afirma que coincide con el del modelo.
+## La mopa y el balde añaden anclajes de fibras y datos del asa a copias temporales; no hay un
+## asset duplicado que pueda quedar viejo al cambiar el modelo. El `transform` sí está escrito
+## en la escena, y un caso afirma que coincide con el del modelo.
 ##
 ## Es cáscara: qué tiene el balde y de qué está mojada la mopa lo sabe `PisoDelLocal`. Acá vive la
 ## carga que se ve —el agua del balde, la punta mojada de la mopa—, y quien la pinta es el puesto

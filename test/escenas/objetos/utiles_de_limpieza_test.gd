@@ -62,7 +62,7 @@ func _piso(almacen: Node3D) -> PisoDelLocal:
 
 
 func test_cada_util_es_la_malla_del_modelo_donde_el_modelo_la_dibujaba() -> void:
-	# Las mallas vienen del modelo; los anclajes de la mopa se añaden sin cambiar su geometría.
+	# La mopa y el balde añaden datos de animación sin cambiar la geometría del modelo.
 	var almacen: Node3D = await _almacen()
 	var utiles: Array = almacen.get("_utiles_de_limpieza")
 	assert_int(utiles.size()).is_equal(5)
@@ -71,7 +71,7 @@ func test_cada_util_es_la_malla_del_modelo_donde_el_modelo_la_dibujaba() -> void
 	for util: UtilDeLimpieza in utiles:
 		var del_modelo: MeshInstance3D = almacen.get_node("Estructura/" + util.nodo_del_modelo)
 		assert_object(util.malla.mesh).override_failure_message(util.name).is_not_null()
-		if util.name == &"Mopa":
+		if util.name in [&"Mopa", &"Balde"]:
 			_comprobar_geometria(util.malla.mesh, del_modelo.mesh)
 		else:
 			assert_object(util.malla.mesh).is_same(del_modelo.mesh)

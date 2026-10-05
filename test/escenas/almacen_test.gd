@@ -31,9 +31,9 @@ const SCRIPT_DEL_RELOJ_DE_MESA := preload("res://src/escenas/puestos/reloj_de_me
 ## Dónde cuelga: del reloj de mesa del modelo, al lado de la computadora.
 const RUTA_DEL_RELOJ_DE_MESA := "Estructura/reloj/Hora"
 
-## Los tres `@export` que la raíz declara. Se listan acá y no adentro del caso porque son el
+## Los `@export` que este caso verifica. Se listan acá y no adentro del caso porque son el
 ## contrato del cableado: agregar uno sin asignarlo en la escena tiene que dar rojo.
-const CABLEADOS_DE_LA_RAIZ := ["_hud", "_reloj", "_ciclo"]
+const CABLEADOS_DE_LA_RAIZ := ["_hud", "_reloj", "_ciclo", "_manija_del_balde"]
 
 ## La malla que trae la cáscara del edificio. Los rayos de acá miran sólo contra ella.
 const CASCARA_DEL_EDIFICIO := "almacen"
@@ -354,7 +354,7 @@ func test_la_escena_trae_el_ciclo_de_jornadas_en_servicios() -> void:
 	assert_object(almacen.get_node("Servicios/CicloDeJornadas")).is_instanceof(CicloDeJornadas)
 
 
-func test_los_tres_cableados_de_la_raiz_llegan_asignados() -> void:
+func test_los_cableados_de_la_raiz_llegan_asignados() -> void:
 	# **Un `@export` sin asignar en el `.tscn` deja la escena cargando sin un solo error**, los
 	# nodos de `verificar.py` en verde, y el juego muerto en el primer cuadro con un
 	# `Nonexistent function ... in base 'Nil'` que no nombra ni a `almacen.tscn` ni al export que
