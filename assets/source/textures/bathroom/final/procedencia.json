@@ -1,0 +1,60 @@
+{
+  "proveedor": "Poliigon",
+  "asset": "TilesCeramicWhite_6956",
+  "url": "https://www.poliigon.com/texture/square-ceramic-glossy-tile-texture-ivory/6956",
+  "origen": "ZIP descargado por el usuario, mapas originales a 1K",
+  "originales": [
+    {
+      "archivo": "../poliigon/6956-ivory/1K/Poliigon_TilesCeramicWhite_6956_BaseColor.jpg",
+      "sha256": "009e8099863c70cec691b174e063e36318217ad25bbb43225ae3f7f6b48dc7a7"
+    },
+    {
+      "archivo": "../poliigon/6956-ivory/1K/Poliigon_TilesCeramicWhite_6956_Roughness.jpg",
+      "sha256": "db3c3eadf179afc697c4bd675172f80d469f9d66c67602d0d30fba5f37bb48c2"
+    },
+    {
+      "archivo": "../poliigon/6956-ivory/1K/Poliigon_TilesCeramicWhite_6956_AmbientOcclusion.jpg",
+      "sha256": "80aa5b3c18257ae263a6b1494b0cd1e1030fe28cf76b68400bfa65c980c03508"
+    },
+    {
+      "archivo": "../poliigon/6956-ivory/1K/Poliigon_TilesCeramicWhite_6956_Normal.png",
+      "sha256": "e238a476e209da5faec0a3f6aecbf468944a887be92e4bec1676270262590e64"
+    }
+  ],
+  "receta": ".claude/scripts/blender/texturizar_piso_bano.py",
+  "referencia_de_tono": "assets/source/textures/props/bano_piso_gris.png",
+  "tono_interior_srgb_medido": [
+    0.4431373,
+    0.4862745,
+    0.4745098
+  ],
+  "tono_junta_srgb_medido": [
+    0.2235294,
+    0.254902,
+    0.2431373
+  ],
+  "tratamiento": "Albedo Ivory normalizado por su media lineal y multiplicado por el grano interior gris original. Las juntas provienen del Roughness Ivory, ensanchadas 0.0013 UV por lado, y usan el color de junta gris original. Bake EMIT de Blender.",
+  "mapas_derivados": {
+    "bano_ivory_oscuro_color.png": "Albedo sRGB horneado, tono del piso original",
+    "bano_ivory_oscuro_orm.png": "R: AO, G: rugosidad Ivory 96% + 0.43 al 4%, B: metal=0",
+    "bano_ivory_oscuro_normal.png": "Normal OpenGL original, copia idéntica sin modificación"
+  },
+  "resolucion": [
+    1024,
+    1024
+  ],
+  "maximo_px": 1024,
+  "cobertura_m": [
+    2.0,
+    2.0
+  ],
+  "ceramicas_por_lado": 5,
+  "ceramica_m": 0.4,
+  "normal": "OpenGL",
+  "coordenadas": "Piso worldX/2, worldY/2 en Blender. Zócalo horizontal worldX/2 o worldY/2 según pared, vertical (worldZ-suelo)/2. Escala incorporada en UV antes de exportar a glTF, sin escala adicional del material.",
+  "sha256_derivados": {
+    "bano_ivory_oscuro_color.png": "d7b5849097d45057e4312b5d4e8469967ca032180cd56783dc2fbc9ca32363fd",
+    "bano_ivory_oscuro_orm.png": "e9a9b4b37514c24117ef8178c4bfa86f7af882b353c0ea8967166fd9937b0fd6",
+    "bano_ivory_oscuro_normal.png": "e238a476e209da5faec0a3f6aecbf468944a887be92e4bec1676270262590e64"
+  }
+}

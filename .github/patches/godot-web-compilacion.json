@@ -1,0 +1,19 @@
+{
+  "version_del_motor": "4.7.2-stable",
+  "commit_del_motor": "ed1daf0bf001b61586d9930840f2f1394092c079",
+  "fuente_zip_sha256": "098b0a71e95ad98ab44651199d55c3f085e4e02c735514e284a2d5263ac81fb2",
+  "parche": "godot-web-compilacion.patch",
+  "emscripten": "4.0.11",
+  "emsdk_zip_sha256": "1e0e53bb21fd9308079991eb222efa6216ca8fdb53f742f9c98b6156c13e5ac4",
+  "scons": "4.9.1",
+  "opciones": ["platform=web", "target=template_release", "threads=yes", "optimize=size", "lto=thin"],
+  "cpp_original_sha256": "17c01277dc3468a1d53081f01a6f7665f5d0f82e7882a8198e1f486ee344d5d8",
+  "cpp_modificado_sha256": "6f388ca767e0f05c08de265d5ba4a5c475365f189fdb54633cd8960edc82ec1d",
+  "plantilla_local": {
+    "receta_sha256": "8ba51c08755ee1f1b4f0a68bb0b21f53148e67d793f416b1f17bd291399c27af",
+    "zip_sha256": "4e051c924e3ef3b8c848180318b6df87da8f3488f7555292054343607dab2660",
+    "wasm_sha256": "46d9bcb1df7a640d20c753b3608c8734ebbe22c3b01f2d2912c926051ce5a4ec"
+  },
+  "uso": "Aplicar con git apply --check antes de compilar la plantilla web; comprobar el commit y ambos SHA256. Conserva el camino nativo.",
+  "estado": "Plantilla release validada localmente e integrada al preset Web y al flujo de despliegue. El editor y la plantilla debug siguen usando el motor oficial."
+}

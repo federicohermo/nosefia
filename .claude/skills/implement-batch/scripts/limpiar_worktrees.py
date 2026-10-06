@@ -74,6 +74,7 @@ import time
 from pathlib import Path
 from typing import Callable
 
+# Sólo para importar `lib/`: el lote se busca desde `checkout_principal()`, que es otra cosa.
 # La raíz sale de buscar `.claude/scripts/lib` hacia arriba, y NO de un `parents[N]` fijo: este
 # archivo vive además copiado adentro de cada skill que lo usa —que es la regla: un skill trae su
 # propia implementación—, y ahí la profundidad es otra. Un índice fijo lo ata a una ubicación y
@@ -122,8 +123,22 @@ DIR_DE_WORKTREES = (".claude", "worktrees")
 RAMA_DE_WORKTREE = "worktree-agent-"
 
 
-def del_lote(ruta: Path) -> bool:
-    return ruta.resolve().is_relative_to(RAIZ.joinpath(*DIR_DE_WORKTREES).resolve())
+def checkout_principal() -> Path | None:
+    """El checkout principal del repo, o `None` si no hay repo.
+
+    Sale del `--git-common-dir`, que es el mismo desde cualquier worktree, y no de `RAIZ` ni
+    de `--show-toplevel`: los dos contestan el checkout desde donde se corre. Corrido desde un
+    worktree secundario, el lote quedaba buscado adentro de ese worktree, y la ruta legítima
+    salía `RECHAZADO`. Medido el 2026-10-05 cerrando el lote 310/311.
+    """
+    hecho = git("-C", str(RAIZ), "rev-parse", "--path-format=absolute", "--git-common-dir")
+    if hecho.returncode != 0:
+        return None
+    return Path(hecho.stdout.strip()).resolve().parent
+
+
+def del_lote(ruta: Path, principal: Path) -> bool:
+    return ruta.resolve().is_relative_to(principal.joinpath(*DIR_DE_WORKTREES).resolve())
 
 
 def sin_commitear(estado: str) -> bool:
@@ -210,11 +225,10 @@ def main() -> None:
         )
         sys.exit(2)
 
-    hecho = git("rev-parse", "--show-toplevel")
-    if hecho.returncode != 0:
+    principal = checkout_principal()
+    if principal is None:
         print("ABORT: no es un repo git", file=sys.stderr)
         sys.exit(1)
-    principal = Path(hecho.stdout.strip()).resolve()
 
     registrados = [
         Path(l[len("worktree ") :]).resolve()
@@ -222,8 +236,8 @@ def main() -> None:
         if l.startswith("worktree ")
     ]
     if args == ["--todos"]:
-        directorio = RAIZ.joinpath(*DIR_DE_WORKTREES).resolve()
-        objetivos = [w for w in registrados if del_lote(w)]
+        directorio = principal.joinpath(*DIR_DE_WORKTREES).resolve()
+        objetivos = [w for w in registrados if del_lote(w, principal)]
         objetivos += huerfanos(directorio, objetivos, principal)
         if not objetivos:
             print("no hay worktrees del lote para limpiar")
@@ -232,13 +246,13 @@ def main() -> None:
 
     # Sin objetivos igual se sigue: quedan el `prune` y las ramas, que no dependen de que
     # haya quedado un árbol en disco.
-    padre = RAIZ.joinpath(*DIR_DE_WORKTREES)
+    padre = principal.joinpath(*DIR_DE_WORKTREES)
     fallo = False
     matados = False
 
     for wt in objetivos:
         print(f"== {wt}")
-        if not del_lote(wt):
+        if not del_lote(wt, principal):
             print("   RECHAZADO: no esta bajo .claude/worktrees/", file=sys.stderr)
             fallo = True
             continue

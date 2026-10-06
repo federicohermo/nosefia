@@ -235,6 +235,11 @@ func _atender(almacen: Node3D) -> void:
 ## llena en el lavatorio y se tiñe; la mopa se moja en él y pasa por las manchas que ese jabón
 ## borra.
 func _limpiar(almacen: Node3D) -> void:
+	# Se accede al inodoro y a su mancha abriendo la cabina, como en la partida.
+	for numero: int in [1, 2]:
+		almacen.get_node("Estructura/bano_puerta_%d/CuerpoDeLaHoja" % numero).call("interactuar")
+	for cuadro in 60:
+		await get_tree().physics_frame
 	var jugador: Node3D = almacen.get("_jugador")
 	var agarre: Agarre = almacen.get("_agarre")
 	var lavatorio: Node3D = almacen.get_node("Estructura/vanitory/StaticBody3D")
@@ -262,10 +267,25 @@ func _limpiar(almacen: Node3D) -> void:
 			if ReglasDeLaLimpieza.AGUA_QUE_BORRA[tipo] != pedida:
 				continue
 			await _enfocar_mancha(jugador, mancha)
+			# La mopa requiere recarga junto a cada mancha: se transporta el balde antes.
+			_soltar_lejos(agarre)
+			_agarrar(agarre, balde)
+			agarre.soltar(true)
+			balde.global_position = jugador.global_position + Vector3.RIGHT * 0.8
+			_agarrar(agarre, mopa)
+			_usar_sobre(jugador, balde)
+			await _enfocar_mancha(jugador, mancha)
 			var clic := InputEventMouseButton.new()
 			clic.button_index = MOUSE_BUTTON_RIGHT
 			clic.pressed = true
 			get_viewport().push_input(clic)
+			(
+				assert_bool(
+					_piso(almacen).mancha_de(mancha.call("lugar_de_la_mancha")).esta_limpia()
+				)
+				. is_true()
+			)
+			await get_tree().create_timer(0.5).timeout
 			assert_bool(mancha.visible).override_failure_message(mancha.name).is_false()
 		_soltar_lejos(agarre)
 	await get_tree().process_frame
@@ -303,10 +323,14 @@ func _sacar_la_basura(almacen: Node3D) -> void:
 	var zona: Area3D = almacen.get_node("Objetos/ZonaDeDescarte")
 	var jugador: Node3D = almacen.get("_jugador")
 	jugador.global_position = zona.global_position + Vector3.BACK
+	var camara := jugador.get_node("Giro/Camara") as Camera3D
+	camara.look_at(zona.global_position + Vector3.UP * 0.4)
 	var recolector: RecolectorDeBasura = almacen.get("_recolector")
 	for bolsa: Node3D in almacen.get("_bolsas"):
 		var datos: ObjetoDelAlmacen = bolsa.call("interactuar")
 		assert_bool(agarre.pedir_agarrar(datos, bolsa)).is_true()
+		# El área debe registrar que la bolsa dejó el mundo antes de recibirla otra vez.
+		await get_tree().physics_frame
 		agarre.punto_de_soltado.global_position = zona.global_position + Vector3.UP * 0.3
 		assert_object(agarre.soltar(true)).is_same(bolsa)
 		for cuadro in 5:

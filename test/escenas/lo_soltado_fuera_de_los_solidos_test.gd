@@ -516,6 +516,9 @@ func test_la_medida_distingue_rozar_el_mouse_de_meterse_en_el() -> void:
 func _lugar_para_mirar(almacen: Node3D, objeto: Node3D) -> Variant:
 	var jugador: CharacterBody3D = almacen.get("_jugador")
 	var cuerpo: CollisionShape3D = jugador.get_node("Cuerpo")
+	var camara: Camera3D = jugador.get_node("Giro/Camara")
+	var ojo_sobre_el_pie := camara.global_position - jugador.global_position
+	var campo: Area3D = jugador.get("_campo")
 	var espacio := almacen.get_world_3d().direct_space_state
 	var pie := Vector3(
 		objeto.global_position.x, jugador.global_position.y, objeto.global_position.z
@@ -541,7 +544,15 @@ func _lugar_para_mirar(almacen: Node3D, objeto: Node3D) -> Variant:
 			consulta.collision_mask = jugador.collision_mask
 			consulta.exclude = [jugador.get_rid()]
 			if espacio.intersect_shape(consulta, 1).is_empty():
-				return lugar
+				# Los objetos soltados antes pueden tapar el siguiente. Un lugar libre
+				# para pararse no garantiza que desde él se vea el objeto que se mide.
+				var rayo := PhysicsRayQueryParameters3D.create(
+					lugar + ojo_sobre_el_pie, objeto.global_position
+				)
+				rayo.collision_mask = campo.collision_mask
+				rayo.exclude = [jugador.get_rid()]
+				if espacio.intersect_ray(rayo).get("collider") == objeto:
+					return lugar
 	return null
 
 
@@ -628,6 +639,38 @@ func test_la_unidad_soltada_contra_una_pared_no_queda_adentro() -> void:  # AC-P
 	assert_int(soltadas).override_failure_message("casi ninguna se soltó").is_greater(6)
 
 
+func test_la_unidad_soltada_mirando_arriba_cae_sin_golpear_la_fachada() -> void:  # AC-PLY-019
+	var almacen: Node3D = await _almacen()
+	var jugador: CharacterBody3D = almacen.get("_jugador")
+	var agarre: Agarre = almacen.get("_agarre")
+	var unidad := _unidad_en_la_mano(almacen) as RigidBody3D
+	assert_object(unidad).is_not_null()
+	var derecho := _parar_frente_a(almacen, PARED_DE_LA_FACHADA, PARADO_DEL_SOLIDO)
+	await get_tree().physics_frame
+	_mirar(jugador, derecho, deg_to_rad(30.0))
+	var contactos: Array[Node] = []
+	unidad.body_entered.connect(func(otro: Node) -> void: contactos.append(otro))
+	_accion(jugador, unidad, ReglasDeLosObjetos.ACCION_AGARRAR)
+	assert_object(agarre.manos().sostenido()).is_null()
+	for cuadro in 32:
+		await get_tree().physics_frame
+	var base := INF
+	for punto in _puntos_del_volumen(unidad):
+		base = minf(base, punto.y)
+	var suelo: CollisionShape3D = almacen.get_node("Estructura/SueloSolido/Local")
+	var piso := suelo.global_position.y + (suelo.shape as BoxShape3D).size.y / 2.0
+	(
+		assert_float(base)
+		. override_failure_message("todavía debe estar cayendo sobre el piso")
+		. is_greater(piso + ReglasDeLosObjetos.ROCE)
+	)
+	(
+		assert_array(contactos)
+		. override_failure_message("antes de llegar al piso golpeó la fachada y empezó a girar")
+		. is_empty()
+	)
+
+
 func test_la_unidad_soltada_contra_el_mostrador_no_queda_adentro() -> void:  # AC-PLY-020
 	var almacen: Node3D = await _almacen()
 	var unidad := _unidad_en_la_mano(almacen)
@@ -639,7 +682,7 @@ func test_la_unidad_soltada_contra_el_mostrador_no_queda_adentro() -> void:  # A
 
 
 func test_la_bolsa_y_los_utiles_soltados_contra_una_pared_no_quedan_adentro() -> void:
-	# La mopa mide un metro y cuarto y la mano la lleva inclinada; el bidón es el más ancho.
+	# La mopa se lleva inclinada; la botella nueva también debe poder recuperarse.
 	var almacen: Node3D = await _almacen()
 	var objetos: Array[Node3D] = [almacen.get("_bolsas")[0]]
 	for util: String in ["Mopa", "Balde", "JabonAzul"]:
@@ -685,12 +728,20 @@ func test_lo_soltado_contra_una_pared_cae_sin_rozarla() -> void:  # AC-PLY-019
 
 
 func test_el_bidon_encimado_con_el_cuerpo_cae_derecho_al_lado_del_jugador() -> void:
-	# El bidón mide 0,70 × 0,46 m, y la mira lo inclina: tiene más fondo que el lugar entre el
-	# cuerpo y la pared. La caída lo barría hasta tocarla sin contar el cuerpo, la física lo sacaba
-	# del cuerpo a los empujones, y a 0,7-1,0 m lo metía 5 cm en la pared.
+	# La regresión requiere el bidón ancho original, de 0,70 × 0,46 m. La botella nueva
+	# entra en ese hueco y cae con el giro de la mano, sin activar el respaldo al costado.
+	# Conservar el volumen original mantiene el caso que antes quedaba metido en la pared.
 	var almacen: Node3D = await _almacen()
 	var jugador: CharacterBody3D = almacen.get("_jugador")
 	var bidon: Node3D = almacen.get_node("Objetos/JabonAzul")
+	var forma: CollisionShape3D = bidon.get_node("Forma")
+	var grande := CylinderShape3D.new()
+	grande.height = 0.70162
+	grande.radius = 0.229
+	forma.shape = grande
+	var malla: MeshInstance3D = bidon.get_node("Malla")
+	var tamano := malla.mesh.get_aabb().size
+	malla.scale = Vector3(0.458 / tamano.x, 0.70162 / tamano.y, 0.458 / tamano.z)
 	for parado in CERCA_DE_LA_PARED:
 		var donde := "`%s` soltado a %.1f m de la pared" % [bidon.name, parado]
 		await _soltar_contra_la_fachada(almacen, bidon, parado, donde)

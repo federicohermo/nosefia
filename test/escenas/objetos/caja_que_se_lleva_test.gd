@@ -216,7 +216,7 @@ func test_la_caja_soltada_queda_apoyada_en_el_piso_sin_caer() -> void:
 	_accion(jugador, caja, ReglasDeLosObjetos.ACCION_AGARRAR)
 	# Sin un solo cuadro de física de por medio: la caja no cae, se apoya.
 	var consulta := PhysicsRayQueryParameters3D.create(
-		caja.global_position, caja.global_position + Vector3.DOWN
+		caja.global_position, caja.global_position + Vector3.DOWN, 9
 	)
 	consulta.exclude = [(caja as CollisionObject3D).get_rid()]
 	var golpe := jugador.get_world_3d().direct_space_state.intersect_ray(consulta)

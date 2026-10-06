@@ -3,7 +3,7 @@ schema_version: 1
 capability_id: CAP-CLN
 status: ratified
 owner: por definir
-provenance: GDD «Limpiar» y «Sacar la basura»; ficha «9. Tarea: Limpieza»; migración de los specs 010, 015, 043
+provenance: GDD «Limpiar» y «Sacar la basura»; ficha «9. Tarea: Limpieza»; migración de los specs 010, 015, 043; ajustes del dueño sobre duración de la mopa, mezcla, enjuague y agua temporal
 ---
 
 # Capacidad: dejar el local en orden
@@ -24,7 +24,8 @@ jabón, el jabón se mezcla en el balde, y cambiar de jabón es vaciar el balde 
 | **Balde** | donde se prepara la mezcla: vacío, con agua, o con agua teñida de un jabón | cubeta |
 | **Mopa** | con lo que se borra una mancha: seca, o mojada de lo que tenía el balde | trapo, escoba |
 | **Lavatorio** | donde se llena el balde | pileta, canilla |
-| **Inodoro** | donde se vacía el balde | — |
+| **Inodoro** | donde se vacía el balde y se enjuaga la mopa | — |
+| **Charco temporal** | agua que deja una mopa húmeda sobre piso despejado y se evapora; no es una mancha de la jornada | suciedad, tarea |
 | **Útiles** | la mopa, el balde y los tres jabones: lo que se levanta para limpiar | herramientas |
 | **Pasada** | pasar la mopa por una mancha | — |
 | **Bolsa** | una unidad de basura que hay que llevar al descarte | residuo |
@@ -64,7 +65,9 @@ declaró y nunca contra un número escrito.
 
 El sistema DEBE tener **tres tipos de mancha**, y a cada uno lo borra **un solo jabón**: al moho,
 el azul; a la caca, el rosa; al polvo, el amarillo. Cada tipo DEBE verse de su color —el moho
-verde, la caca marrón, el polvo negro o gris—, que es lo que le dice al jugador qué jabón buscar.
+verde, la caca marrón, y el polvo del local como un charco celeste y transparente—, que es lo
+que le dice al jugador qué jabón buscar. El agua del balde también DEBE verse transparente,
+conservando el color del jabón cuando está teñida.
 
 ### BR-CLN-013 — Las manchas de la jornada
 
@@ -85,6 +88,8 @@ lado, en la mano, llenos o mojados. Los cinco se levantan; el lavatorio y el ino
 CUANDO se usa el balde sobre el lavatorio, SI el balde está vacío, ENTONCES el sistema DEBE
 llenarlo de agua sin jabón, que se ve **celeste**. SI ya tiene agua, con jabón o sin él, ENTONCES
 DEBE rechazarlo por **balde ya lleno** y dejarlo como estaba: llenar no lava el jabón.
+El llenado aceptado DEBE mostrar el nivel subiendo rápidamente desde el fondo, con una
+transición. El agua está disponible desde la aceptación; repintar no reinicia el gesto.
 
 ### BR-CLN-016 — El jabón tiñe el agua
 
@@ -92,12 +97,18 @@ CUANDO se usa un jabón sobre el balde, SI el balde tiene agua sin jabón, ENTON
 teñirla de ese jabón, y el agua DEBE verse del color del jabón. SI el balde está vacío, ENTONCES
 DEBE rechazarlo por **balde vacío**. SI el agua ya está teñida —del mismo jabón o de otro—,
 ENTONCES DEBE rechazarlo por **balde ya teñido** y dejar el color que tenía.
+La incorporación aceptada de jabón DEBE verse como una mezcla gradual de líquidos, sin un salto
+de color. La animación no retrasa la disponibilidad del jabón ni se reinicia al actualizar el
+dibujo; vaciar el balde o abrir otra jornada la cancela.
 
 ### BR-CLN-017 — El balde se vacía en el inodoro
 
 CUANDO se usa el balde sobre el inodoro, SI tiene agua, ENTONCES el sistema DEBE vaciarlo, con
 jabón o sin él. SI está vacío, ENTONCES DEBE rechazarlo por **balde vacío**. Cambiar de jabón es
 vaciar el balde y volver a llenarlo.
+El vaciado aceptado DEBE mostrar el nivel bajando rápidamente antes de ocultar el agua,
+conservando su color durante la descarga. El balde queda vacío desde la aceptación. Una
+nueva carga parte del nivel visible actual; abrir otra jornada cancela estas transiciones.
 
 ### BR-CLN-018 — La mopa se moja de lo que tiene el balde
 
@@ -109,9 +120,9 @@ balde está vacío, ENTONCES DEBE rechazarlo por **balde vacío** y dejar la mop
 ### BR-CLN-019 — Sólo el jabón que corresponde borra
 
 CUANDO se pasa la mopa por una mancha, SI la mopa está mojada del jabón que borra esa mancha,
-ENTONCES el sistema DEBE borrar la mancha, y la mopa DEBE seguir mojada: con una mojada se borran
-todas las manchas de ese jabón. SI no, ENTONCES DEBE rechazar la pasada sin cambiar nada, en este
-orden: **ya limpia**, si la mancha ya se borró; **mopa seca**; **sin jabón**, si está mojada de
+ENTONCES el sistema DEBE borrar la mancha mientras conserve carga útil. Borrar no descuenta
+carga adicional al tiempo y recorrido. SI no, ENTONCES DEBE rechazar la pasada sin cambiar nada,
+en este orden: **ya limpia**, si la mancha ya se borró; **mopa seca**; **sin jabón**, si está mojada de
 agua sola; y **jabón equivocado**.
 
 ### BR-CLN-020 — Cada uso contesta qué pasó
@@ -124,8 +135,43 @@ nada.
 ### BR-CLN-021 — Limpiar se puede dejar por la mitad
 
 MIENTRAS dura la jornada, el sistema DEBE conservar qué tiene el balde, de qué está mojada la mopa
-y qué manchas quedan. Cambian sólo con los gestos de esta capacidad: soltar un útil, llevarlo a
-otro cuarto o hacer otra tarea no los toca.
+y qué manchas quedan. Soltar un útil o cambiar de mano no recarga ni vacía el balde. La mopa
+sigue perdiendo su carga por el tiempo transcurrido, incluso apoyada o examinada.
+
+### BR-CLN-022 — La carga de la mopa tiene duración y recorrido limitados
+
+MIENTRAS dura la jornada, el sistema DEBE descontar la carga de la mopa por tiempo real y,
+cuando se lleva en la mano, por distancia recorrida. Los dos límites —una duración en reposo
+y un recorrido— los declara el dominio. CUANDO se agota, ENTONCES DEBE quedar seca y
+rechazar la limpieza. Remojarla en un balde con agua recupera la carga completa. La punta
+DEBE perder intensidad de color y gotear durante el desgaste, sin generar nuevas manchas ni
+reservar partículas sin límite. La pausa detiene el desgaste. Caminar DEBE agotarla antes
+que esperar quieta el mismo tiempo, sin acortar la duración máxima en reposo. Los charcos
+temporales producidos por una pasada intencional de agua no son manchas nuevas.
+
+### BR-CLN-023 — Enjuagar la mopa
+
+CUANDO se usa la mopa sobre el inodoro, ENTONCES el sistema DEBE quitarle cualquier jabón y
+dejarla húmeda de agua sin jabón, con carga completa, incluso si estaba seca. El balde y las
+manchas DEBEN conservar su estado. Mojarla en un balde con agua sin jabón produce el mismo
+enjuague, sin gastar ni teñir su agua.
+
+### BR-CLN-024 — Agua temporal sobre piso despejado
+
+CUANDO se usa una mopa con carga de agua sin jabón sobre un piso horizontal despejado, ENTONCES
+el sistema DEBE dejar un charco temporal en el punto alcanzado por la mira. La pasada no limpia
+manchas ni modifica tareas, penalizaciones o el agua del balde. Una mopa seca o con jabón no
+produce este charco; agua sola sobre una mancha conserva el rechazo por falta de jabón.
+
+El charco DEBE quedar enteramente fuera de los sectores de las manchas de la jornada, incluidos
+los ya limpiados, y fuera de paredes, muebles y superficies que no sean suelo. Una superficie
+fuera del alcance de interacción u oculta por un obstáculo DEBE rechazarse. El rechazo no cambia
+la carga ni el piso.
+
+El agua temporal DEBE desaparecer gradualmente tras la duración definida para los charcos,
+detener su evaporación durante la pausa y desaparecer al abrir otra jornada. La cantidad
+simultánea DEBE estar acotada; repetir pasadas no reserva nodos sin límite. Los charcos no
+obstruyen el movimiento ni la mira.
 
 ## Criterios de aceptación
 
@@ -167,8 +213,8 @@ polvo con amarillo.
 ### AC-CLN-015 — El color de cada mancha *(verifica BR-CLN-012)*
 
 DADO las manchas de la jornada en la escena ENTONCES la de moho se ve verde —el verde es su canal
-más alto—, la de caca marrón —rojo sobre verde sobre azul, y oscura— y las de polvo grises —los
-tres canales a menos de 0,05 entre sí—.
+más alto—, la de caca marrón —rojo sobre verde sobre azul, y oscura— y las dos del local negras,
+con el dibujo de polvo de la guía y transparencia entre los trazos que deja ver el piso.
 
 ### AC-CLN-016 — Las cuatro de la jornada *(verifica BR-CLN-013)*
 
@@ -224,8 +270,8 @@ seca.
 DADO una mancha de polvo CUANDO se pasa la mopa seca ENTONCES el resultado es «mopa seca»; mojada
 de agua, «sin jabón»; mojada de azul, «jabón equivocado»; y en los tres casos la mancha sigue.
 CUANDO se pasa mojada de amarillo ENTONCES la mancha se borra, la mopa sigue mojada de amarillo y
-borra la otra de polvo sin volver al balde. DADO una mancha ya borrada CUANDO se pasa la mopa
-seca ENTONCES el resultado es «ya limpia».
+puede borrar la otra de polvo mientras conserve carga; agotada debe volver al balde.
+DADO una mancha ya borrada CUANDO se pasa la mopa seca ENTONCES el resultado es «ya limpia».
 
 ### AC-CLN-024 — Lo que no es un gesto de limpiar *(verifica BR-CLN-020)*
 
@@ -237,7 +283,66 @@ manchas siguen como estaban.
 
 DADO el balde teñido de azul y la mopa mojada de azul CUANDO se sueltan en otro cuarto, se agarra
 y se suelta otra cosa y se los vuelve a agarrar ENTONCES el balde sigue teñido de azul y la mopa
-mojada de azul; DADO una mancha borrada, sigue borrada.
+con la carga que reste tras el tiempo y recorrido transcurridos;
+DADO una mancha borrada, sigue borrada.
+
+### AC-CLN-026 — La carga caduca sin depender de los cuadros *(verifica BR-CLN-022)*
+
+DADO una mopa recién mojada CUANDO transcurre la duración máxima en reposo ENTONCES queda
+seca y no borra una mancha. Dividir el mismo tiempo y recorrido entre cuadros produce
+la misma carga restante. Los valores negativos no recuperan producto.
+
+### AC-CLN-027 — Acercar el balde permite limpiar *(verifica BR-CLN-022)*
+
+DADO la mopa recién mojada CUANDO se recorre su distancia máxima ENTONCES llega seca y
+la mancha sigue. CUANDO se moja nuevamente en el balde cercano ENTONCES recupera toda
+la carga y borra la mancha correspondiente. La punta pierde color y gotea durante el viaje.
+
+DADO el balde en su ubicación inicial del baño CUANDO se lleva la mopa hasta cualquiera
+de las manchas del almacén ENTONCES se agota antes de poder limpiarla, incluso tomando
+el trayecto más corto y aprovechando el alcance de interacción. DADO el balde acercado
+a la zona de limpieza ENTONCES hay carga suficiente para caminar unos pasos y limpiar.
+
+### AC-CLN-028 — Menor alcance en movimiento *(verifica BR-CLN-022)*
+
+DADO dos mopas recién mojadas CUANDO una recorre metros en el mismo tiempo en que la otra
+espera quieta ENTONCES la que caminó tiene menos carga y se agota antes. DADO la mopa quieta
+CUANDO transcurre menos que la duración en reposo ENTONCES sigue mojada, y al cumplirla queda
+seca. Dividir el trayecto entre cuadros no modifica el resultado ni permite recuperar carga.
+
+### AC-CLN-029 — Enjuague sin cambiar el resto del local *(verifica BR-CLN-023)*
+
+DADO la mopa con cualquiera de los tres jabones, seca o parcialmente gastada CUANDO se usa sobre
+el inodoro ENTONCES queda húmeda de agua sin jabón, con carga completa y color de agua limpia;
+el balde y las cuatro manchas conservan su estado. DADO un balde con agua sin jabón CUANDO se
+enjuaga la mopa en él ENTONCES se obtiene lo mismo y el balde conserva su agua.
+
+### AC-CLN-030 — Charco de agua separado de la suciedad *(verifica BR-CLN-024)*
+
+DADO una mopa húmeda de agua sin jabón y un piso despejado dentro del alcance CUANDO se la usa
+sobre ese piso ENTONCES aparece un charco sin colisiones ni foco de interacción, sin modificar
+las manchas, las tareas o el balde. Con mopa seca o con jabón no aparece.
+
+### AC-CLN-031 — Los sectores de las manchas quedan libres *(verifica BR-CLN-024)*
+
+DADO un punto fuera de una mancha pero un charco que alcanzaría su sector CUANDO se intenta
+dejar agua ENTONCES se rechaza sin cambiar carga o manchas, incluso si la mancha ya se limpió.
+Sobre la mancha sucia el agua sola sigue rechazándose por falta de jabón. Sobre una pared, un
+mueble, detrás de un obstáculo o fuera de alcance tampoco aparece un charco.
+
+### AC-CLN-032 — Evaporación, pausa y cantidad acotada *(verifica BR-CLN-024)*
+
+DADO un charco recién creado ENTONCES sigue visible antes de los cuatro segundos de juego,
+pierde opacidad y desaparece al cumplirlos. La pausa no avanza ese tiempo. Repetir pasadas más
+veces que el límite simultáneo conserva como máximo ese límite. Abrir una jornada elimina
+todos los charcos y conserva únicamente las cuatro manchas propias de la jornada.
+
+### AC-CLN-033 — Mezcla visible sin salto ni reinicio *(verifica BR-CLN-016)*
+
+DADO agua sin jabón CUANDO se acepta un jabón ENTONCES la mezcla empieza con el aspecto previo,
+muestra ambos líquidos durante la transición y termina con el color del jabón; el estado del
+agua acepta inmediatamente mojar la mopa de ese jabón. Una actualización repetida no reinicia
+la transición; un uso rechazado no la dispara. Vaciar o abrir otra jornada cancela la mezcla.
 
 ## No objetivos
 
@@ -249,10 +354,12 @@ mojada de azul; DADO una mancha borrada, sigue borrada.
 
 ## Contratos
 
-- **Entrada:** qué se lleva en la mano, sobre qué se usa —una mancha, el balde, el lavatorio o el
-  inodoro— y a qué distancia del descarte se soltó la bolsa.
-- **Salida:** cómo salió cada uso, qué tiene el balde y de qué está mojada la mopa, qué manchas
-  quedan, el color de cada cosa, cuántas bolsas faltan, y si cada obligatoria está cumplida.
+- **Entrada:** qué se lleva en la mano, sobre qué se usa —una mancha, el balde, el lavatorio,
+  el inodoro o piso despejado—, tiempo real y recorrido de la mopa, y a qué distancia del
+  descarte se soltó la bolsa.
+- **Salida:** cómo salió cada uso, qué tiene el balde y la carga restante de la mopa, qué manchas
+  quedan, el color de cada cosa, el agua temporal, cuántas bolsas faltan y si cada obligatoria
+  está cumplida.
 - **Falla:** ocho motivos de rechazo para limpiar —sin efecto, balde vacío, balde ya lleno, balde
   ya teñido, mopa seca, sin jabón, jabón equivocado y ya limpia (BR-CLN-015 a BR-CLN-020)— y tres
   para la basura (BR-CLN-009 y BR-CLN-010), cada uno con su motivo. Ninguno cambia el estado.
@@ -280,9 +387,3 @@ mojada de azul; DADO una mancha borrada, sigue borrada.
     arrancan con las cuatro de la primera.
   - Decide: el dueño del repo.
   - Bloquea: nada. Cambiaría `BR-CLN-013`.
-- **OQ-CLN-003 — ¿Qué textura tiene cada tipo de mancha?**
-  - Por qué sigue abierta: la ficha le da una textura a cada tipo, para cuando la paranoia apague
-    los colores, y el arte todavía no tiene texturas de manchas. Por decisión del usuario del
-    2026-09-29, mientras tanto las tres son la misma mancha teñida de su color.
-  - Decide: el dueño del repo, con el arte.
-  - Bloquea: nada. Cambiaría cómo se distingue cada tipo en `BR-CLN-012`.

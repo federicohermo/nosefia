@@ -1,4 +1,4 @@
-## El balde se lleva inclinado hacia la vista, y al soltarlo queda derecho: donde se mira, cerca
+## El balde se lleva derecho como las cajas, y al soltarlo queda derecho: donde se mira, cerca
 ## de ahí sobre el mismo apoyo, o en el piso al lado del jugador.
 ##
 ## El jugador no corre su física: cada caso lo para, le apunta la vista y suelta.
@@ -20,9 +20,6 @@ const MIRANDO_AL_PISO := -45.0
 
 ## Cuánto puede quedar inclinado lo que queda derecho, en grados.
 const DERECHO := 1.0
-
-## Cuánto puede errarle la inclinación en la mano, en grados.
-const TOLERANCIA_EN_LA_MANO := 0.5
 
 ## Cuánto puede separarse lo apoyado del punto, y moverse después, en metros.
 const MISMO_LUGAR := 0.01
@@ -210,42 +207,35 @@ func _comprobar_al_lado(almacen: Node3D, balde: RigidBody3D, donde: String) -> v
 	)
 
 
-## El ángulo entre el eje del balde y el arriba de la vista, y de qué lado queda la boca.
-func _comprobar_inclinado_en_la_mano(jugador: Node3D, balde: Node3D, donde: String) -> void:
-	var vista: Transform3D = jugador.call("mira")
-	var eje := vista.basis.inverse() * balde.global_basis.y
-	(
-		assert_float(rad_to_deg(eje.angle_to(Vector3.UP)))
-		. override_failure_message(
-			"%s, el balde va inclinado %.1f°" % [donde, rad_to_deg(eje.angle_to(Vector3.UP))]
-		)
-		. is_equal_approx(
-			rad_to_deg(ReglasDeLaLimpieza.INCLINACION_DEL_BALDE_EN_LA_MANO), TOLERANCIA_EN_LA_MANO
-		)
-	)
-	# La vista mira hacia su -z: con `z` positivo la boca queda del lado del jugador.
-	(
-		assert_float(eje.z)
-		. override_failure_message("%s, la boca no mira hacia la vista" % donde)
-		. is_greater(0.0)
-	)
+## La vertical se mide contra el piso al mover la vista.
+func _comprobar_vertical_en_la_mano(balde: Node3D, donde: String) -> void:
+	_comprobar_derecho(balde, donde)
+	var ancla := balde.get_parent() as Node3D
+	assert_float(balde.global_position.distance_to(ancla.global_position)).is_less(0.001)
+	var derecha := ancla.global_basis.x
+	derecha.y = 0.0
+	assert_float(balde.global_basis.x.angle_to(derecha.normalized())).is_less(0.001)
 
 
-func test_el_balde_en_la_mano_va_inclinado_hacia_la_vista() -> void:  # AC-PLY-050
+func test_el_balde_se_mantiene_vertical_al_mirar_en_la_mano() -> void:  # AC-PLY-050
 	var almacen: Node3D = await _almacen()
 	var jugador: CharacterBody3D = almacen.get("_jugador")
 	var agarre: Agarre = almacen.get("_agarre")
 	var balde := _balde(almacen)
-	for alto: float in [0.0, MIRANDO_ABAJO]:
-		await _parar(jugador, PISO_LIBRE, Vector3.FORWARD, alto)
-		_agarrar(almacen, balde)
-		_comprobar_inclinado_en_la_mano(jugador, balde, "mirando %.0f°" % alto)
+	_agarrar(almacen, balde)
+	for alto: float in [0.0, MIRANDO_ABAJO, 65.0, -80.0]:
+		await _parar(jugador, PISO_LIBRE, Vector3.RIGHT, alto)
+		await get_tree().process_frame
+		await get_tree().process_frame
+		_comprobar_vertical_en_la_mano(balde, "mirando %.0f grados" % alto)
 		agarre.soltar(true)
 		await _dos_segundos_de_fisica()
-		_comprobar_derecho(balde, "soltado mirando %.0f°" % alto)
-	_agarrar(almacen, balde)
+		_comprobar_derecho(balde, "soltado mirando %.0f grados" % alto)
+		_agarrar(almacen, balde)
+		await get_tree().process_frame
+		await get_tree().process_frame
+		_comprobar_vertical_en_la_mano(balde, "vuelto a agarrar")
 	assert_object(agarre.manos().sostenido()).is_same(balde.datos)
-	_comprobar_inclinado_en_la_mano(jugador, balde, "vuelto a agarrar")
 
 
 ## Los cuatro apoyos: el punto que se mira, hacia dónde mira el jugador y cuánto baja la vista.
@@ -311,7 +301,7 @@ func test_el_balde_se_apoya_derecho_donde_se_mira() -> void:  # AC-PLY-051
 	uso.pressed = true
 	jugador.call("_unhandled_input", uso)
 	assert_bool(balde.carga.visible).is_true()
-	var agua: Color = (balde.carga.material_override as StandardMaterial3D).albedo_color
+	var agua: Color = balde.color_de_la_carga()
 	var apoyos := _apoyos(almacen)
 	for donde: String in apoyos:
 		var punto: Vector3 = apoyos[donde][0]
@@ -348,9 +338,7 @@ func test_el_balde_se_apoya_derecho_donde_se_mira() -> void:  # AC-PLY-051
 		)
 		await _comprobar_que_se_queda(balde, "sobre " + donde)
 		assert_bool(balde.carga.visible).override_failure_message(donde).is_true()
-		assert_that((balde.carga.material_override as StandardMaterial3D).albedo_color).is_equal(
-			agua
-		)
+		assert_that(balde.color_de_la_carga()).is_equal(agua)
 		_agarrar(almacen, balde)
 
 

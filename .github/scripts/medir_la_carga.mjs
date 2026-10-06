@@ -4,6 +4,7 @@
 //     python .github/scripts/servir_export.py export/web 8060     (en otra terminal)
 //     node .github/scripts/medir_la_carga.mjs http://localhost:8060
 //     node .github/scripts/medir_la_carga.mjs http://localhost:8060 reports/carga.json
+//     node .github/scripts/medir_la_carga.mjs http://localhost:8060 reports/carga.json --sin-ventana
 //
 // ## Qué mide
 //
@@ -16,9 +17,15 @@
 //   apenas ve el aviso del menú. El clic va a la altura del botón con la ventana de 1536×760
 //   que abre el script: con otro tamaño, el botón queda en otro lado.
 //
-// Hace tres corridas, cada una con el caché vacío, y da la mediana de cada tiempo.
+// Hace tres corridas con contextos HTTP nuevos dentro del mismo Chrome. El navegador puede
+// conservar su caché de shaders entre corridas: la primera y las siguientes se informan aparte.
+// Usa la sincronización de cuadros habitual del navegador; quitarla para medir FPS puede
+// aumentar la contención durante la lectura de recursos y falsear la espera de carga.
 //
 // **Abre una ventana y tiene que quedar a la vista**: un Chrome tapado casi no pide cuadros.
+// --sin-ventana evita esa pausa para medir la carga mientras se usa otra aplicación. Registra
+// el renderer real y falla si Chrome usa renderizado por software. No mide la presentación
+// de una ventana ni reemplaza un benchmark de FPS durante la partida.
 //
 // No es un gate y no tiene umbral: el número depende de la máquina. Sirve para comparar un
 // cambio contra el anterior en el mismo equipo.
@@ -32,20 +39,24 @@ const AVISO_DEL_MENU = '[carga] menú visible';
 const AVISO_DEL_ALMACEN = '[carga] almacén en pantalla';
 const ALTURA_DE_NUEVO_JUEGO = 0.56;
 
-const url = process.argv[2];
+const argumentos = process.argv.slice(2).filter((argumento) => argumento !== '--sin-ventana');
+const url = argumentos[0];
 if (!url) {
   console.error('uso: node .github/scripts/medir_la_carga.mjs <URL> [salida.json]');
   process.exit(2);
 }
-const salida = process.argv[3];
+const salida = argumentos[1];
+const sinVentana = process.argv.includes('--sin-ventana');
 
 const navegador = await chromium.launch({
   channel: 'chrome',
-  headless: false,
+  headless: sinVentana,
   args: [
     '--window-size=1600,900',
     '--disable-backgrounding-occluded-windows',
     '--disable-renderer-backgrounding',
+    '--disable-background-timer-throttling',
+    ...(sinVentana && process.platform === 'win32' ? ['--use-angle=d3d11'] : []),
   ],
 });
 
@@ -58,22 +69,32 @@ function aviso(pagina, texto) {
 }
 
 function dentroDe(promesa, que) {
+  let temporizador;
   const plazo = new Promise((_, falla) =>
-    setTimeout(() => falla(new Error(`no llegó ${que} en ${ESPERA / 1000} s`)), ESPERA)
+    temporizador = setTimeout(() => falla(new Error(`no llegó ${que} en ${ESPERA / 1000} s`)), ESPERA)
   );
-  return Promise.race([promesa, plazo]);
+  return Promise.race([promesa, plazo]).finally(() => clearTimeout(temporizador));
 }
 
 async function corrida() {
   const contexto = await navegador.newContext({ viewport: { width: 1536, height: 760 } });
   const pagina = await contexto.newPage();
   try {
+    await pagina.mouse.move(768, 760 * ALTURA_DE_NUEVO_JUEGO);
     const menu = aviso(pagina, AVISO_DEL_MENU);
     const almacen = aviso(pagina, AVISO_DEL_ALMACEN);
     const desde = Date.now();
     await pagina.goto(url, { waitUntil: 'load', timeout: ESPERA });
     await pagina.waitForSelector('#status', { state: 'detached', timeout: ESPERA });
     const overlay = Date.now() - desde;
+    const gpu = await pagina.evaluate(() => {
+      const gl = document.createElement('canvas').getContext('webgl2');
+      const info = gl?.getExtension('WEBGL_debug_renderer_info');
+      return info ? gl.getParameter(info.UNMASKED_RENDERER_WEBGL) : null;
+    });
+    if (sinVentana && (!gpu || /swiftshader|llvmpipe|software|basic render driver|warp/i.test(gpu))) {
+      throw new Error(`la medición sin ventana exige GPU real; renderer: ${gpu}`);
+    }
     const vioElMenu = (await dentroDe(menu, 'el aviso del menú')) - desde;
     // El aviso sale antes del primer cuadro del menú: se espera ese cuadro para que el botón
     // ya esté dibujado cuando llega el clic.
@@ -81,12 +102,13 @@ async function corrida() {
       () => new Promise((listo) => requestAnimationFrame(() => requestAnimationFrame(listo)))
     );
     const lienzo = await pagina.locator('canvas').boundingBox();
+    const clic = Date.now() - desde;
     await pagina.mouse.click(
       lienzo.x + lienzo.width / 2,
       lienzo.y + lienzo.height * ALTURA_DE_NUEVO_JUEGO
     );
     const entro = (await dentroDe(almacen, 'el aviso del almacén')) - desde;
-    return { overlay, menu: vioElMenu, almacen: entro };
+    return { overlay, menu: vioElMenu, clic, almacen: entro, desdeElClic: entro - clic, gpu };
   } finally {
     await contexto.close();
   }
@@ -118,8 +140,16 @@ console.log(
   `\nmediana: overlay ${medianas.overlay} ms   menú ${medianas.menu} ms   ` +
     `almacén ${medianas.almacen} ms`
 );
+console.log(
+  `desde el clic: primera ${corridas[0].desdeElClic} ms; ` +
+    `siguientes ${corridas.slice(1).map((c) => c.desdeElClic + ' ms').join(', ')}`
+);
 
 if (salida) {
-  writeFileSync(salida, JSON.stringify({ url, fecha: new Date().toISOString(), corridas, medianas }, null, 1));
+  writeFileSync(salida, JSON.stringify({ url, fecha: new Date().toISOString(), corridas, medianas,
+    condiciones: { navegador: navegador.version(), viewport: { ancho: 1536, alto: 760 },
+      sincronizacionHabitual: true, cpuLimitada: false, contextosHTTPNuevos: true,
+      sinVentana,
+      cacheDeShadersCompartida: 'posible dentro del mismo navegador' } }, null, 1));
   console.log(`guardado en ${salida}`);
 }

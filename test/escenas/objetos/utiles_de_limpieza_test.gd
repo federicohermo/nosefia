@@ -12,7 +12,7 @@ const LAVATORIO := "Estructura/vanitory/StaticBody3D"
 const INODORO := "Estructura/inodoro/StaticBody3D"
 
 ## Justo adentro de la puerta del baño, del lado del cuarto: desde acá se ve todo lo que hay en él.
-const ENTRADA_DEL_BANO := Vector3(8.8, 1.05, -4.658)
+const ENTRADA_DEL_BANO := Vector3(8.8, 1.05, -6.82)
 
 ## Cuánto puede quedar lo apoyado por encima del piso, en metros.
 const APOYADO := 0.005
@@ -62,9 +62,7 @@ func _piso(almacen: Node3D) -> PisoDelLocal:
 
 
 func test_cada_util_es_la_malla_del_modelo_donde_el_modelo_la_dibujaba() -> void:
-	# **Sin copia en el medio**: la malla es el mismo recurso que el modelo trae, y queda donde el
-	# modelo la dibujaba, apoyada en el piso. Una copia quedaría vieja el día que el artista toque
-	# el balde.
+	# La mopa y el balde añaden datos de animación sin cambiar la geometría del modelo.
 	var almacen: Node3D = await _almacen()
 	var utiles: Array = almacen.get("_utiles_de_limpieza")
 	assert_int(utiles.size()).is_equal(5)
@@ -73,17 +71,29 @@ func test_cada_util_es_la_malla_del_modelo_donde_el_modelo_la_dibujaba() -> void
 	for util: UtilDeLimpieza in utiles:
 		var del_modelo: MeshInstance3D = almacen.get_node("Estructura/" + util.nodo_del_modelo)
 		assert_object(util.malla.mesh).override_failure_message(util.name).is_not_null()
-		assert_object(util.malla.mesh).is_same(del_modelo.mesh)
+		if util.name in [&"Mopa", &"Balde"]:
+			_comprobar_geometria(util.malla.mesh, del_modelo.mesh)
+		else:
+			assert_object(util.malla.mesh).is_same(del_modelo.mesh)
 		# Donde lo pone la escena, y no donde quedó: al apoyarse, la física asienta la mopa unas
 		# centésimas de milímetro. Medido el 2026-09-30: 0,08 mm en los primeros dos cuadros.
 		var puesta := util.lugar_de_origen() * util.malla.transform
 		(
-			assert_bool(puesta.basis.is_equal_approx(del_modelo.global_basis))
+			assert_bool(
+				puesta.basis.orthonormalized().is_equal_approx(
+					del_modelo.global_basis.orthonormalized()
+				)
+			)
 			. override_failure_message("`%s` no está girado como en el modelo" % util.name)
 			. is_true()
 		)
 		var aca := puesta.origin
 		var alla := del_modelo.global_position
+		# Estos dos objetos dejan libres la entrada y los lavamanos.
+		if util.name == &"Mopa":
+			alla = Vector3(12.75, alla.y, -4.3)
+		elif util.name == &"JabonAzul":
+			alla.z = -7.6729193
 		(
 			assert_float(Vector2(aca.x, aca.z).distance_to(Vector2(alla.x, alla.z)))
 			. override_failure_message("`%s` no está donde lo dibujaba el modelo" % util.name)
@@ -95,6 +105,16 @@ func test_cada_util_es_la_malla_del_modelo_donde_el_modelo_la_dibujaba() -> void
 			. override_failure_message("`%s` queda a %.3f m del piso" % [util.name, abajo - piso])
 			. is_between(-APOYADO, APOYADO)
 		)
+
+
+func _comprobar_geometria(malla: Mesh, original: Mesh) -> void:
+	assert_int(malla.get_surface_count()).is_equal(original.get_surface_count())
+	for superficie in original.get_surface_count():
+		var esperados := original.surface_get_arrays(superficie)
+		var actuales := malla.surface_get_arrays(superficie)
+		for canal in Mesh.ARRAY_MAX:
+			if canal != Mesh.ARRAY_TEX_UV2:
+				assert_bool(actuales[canal] == esperados[canal]).is_true()
 
 
 func test_la_copia_fija_del_modelo_ni_se_ve_ni_choca() -> void:
@@ -194,12 +214,12 @@ func test_el_agua_del_balde_se_ve_celeste_y_despues_del_color_del_jabon() -> voi
 	assert_bool(balde.carga.visible).is_false()
 	_usar(almacen, balde, almacen.get_node(LAVATORIO))
 	assert_bool(balde.carga.visible).is_true()
-	var celeste: Color = (balde.carga.material_override as StandardMaterial3D).albedo_color
+	var celeste: Color = balde.color_de_la_carga()
 	assert_float(celeste.b).is_greater_equal(celeste.g)
 	assert_float(celeste.b).is_greater(celeste.r)
 	assert_float(minf(celeste.r, minf(celeste.g, celeste.b))).is_greater_equal(0.6)
 	_usar(almacen, _util(almacen, "JabonRosa"), balde)
-	var rosa: Color = (balde.carga.material_override as StandardMaterial3D).albedo_color
+	var rosa: Color = balde.color_de_la_carga()
 	assert_that(rosa).is_equal(ReglasDeLaLimpieza.COLOR_DEL_AGUA[ReglasDeLaLimpieza.Agua.ROSA])
 
 
@@ -209,7 +229,7 @@ func test_un_segundo_jabon_no_cambia_el_agua_que_se_ve() -> void:  # AC-CLN-020
 	_usar(almacen, balde, almacen.get_node(LAVATORIO))
 	_usar(almacen, _util(almacen, "JabonRosa"), balde)
 	_usar(almacen, _util(almacen, "JabonAmarillo"), balde)
-	var agua: Color = (balde.carga.material_override as StandardMaterial3D).albedo_color
+	var agua: Color = balde.color_de_la_carga()
 	assert_that(agua).is_equal(ReglasDeLaLimpieza.COLOR_DEL_AGUA[ReglasDeLaLimpieza.Agua.ROSA])
 
 
@@ -219,8 +239,10 @@ func test_vaciar_en_el_inodoro_esconde_el_agua() -> void:  # AC-CLN-021
 	_usar(almacen, balde, almacen.get_node(LAVATORIO))
 	_usar(almacen, _util(almacen, "JabonRosa"), balde)
 	_usar(almacen, balde, almacen.get_node(INODORO))
-	assert_bool(balde.carga.visible).is_false()
 	assert_bool(_piso(almacen).balde().tiene_agua()).is_false()
+	assert_bool(balde.carga.visible).is_true()
+	balde.carga.call("_physics_process", .25)
+	assert_bool(balde.carga.visible).is_false()
 
 
 func test_la_punta_de_la_mopa_se_ve_del_color_del_agua() -> void:  # AC-CLN-022
@@ -232,7 +254,7 @@ func test_la_punta_de_la_mopa_se_ve_del_color_del_agua() -> void:  # AC-CLN-022
 	_usar(almacen, mopa, balde)
 	assert_bool(mopa.carga.visible).is_true()
 	var punta: Color = (mopa.carga.material_override as StandardMaterial3D).albedo_color
-	var agua: Color = (balde.carga.material_override as StandardMaterial3D).albedo_color
+	var agua: Color = balde.color_de_la_carga()
 	assert_that(punta).is_equal(agua)
 	_usar(almacen, _util(almacen, "JabonAmarillo"), balde)
 	_usar(almacen, mopa, balde)
@@ -260,9 +282,11 @@ func test_la_mezcla_espera_aunque_se_suelten_los_utiles_en_otro_cuarto() -> void
 	assert_int(_piso(almacen).balde().agua()).is_equal(ReglasDeLaLimpieza.Agua.AZUL)
 	assert_int(_piso(almacen).mopa().agua()).is_equal(ReglasDeLaLimpieza.Agua.AZUL)
 	assert_bool(balde.carga.visible).is_true()
-	assert_that((balde.carga.material_override as StandardMaterial3D).albedo_color).is_equal(azul)
+	assert_that(balde.color_de_la_carga()).is_equal(azul)
 	assert_bool(mopa.carga.visible).is_true()
-	assert_that((mopa.carga.material_override as StandardMaterial3D).albedo_color).is_equal(azul)
+	var punta: Color = (mopa.carga.material_override as StandardMaterial3D).albedo_color
+	assert_float(punta.b).is_greater(punta.r)
+	assert_float(_piso(almacen).mopa().carga_restante()).is_less(1.0)
 
 
 func _mopa_en_la_mano(almacen: Node3D, con_agua: bool = true) -> UtilDeLimpieza:
@@ -288,6 +312,9 @@ func _ver_la_punta(camara: Camera3D, mopa: UtilDeLimpieza) -> void:
 func _muestrear_la_mojada(almacen: Node3D, mopa: UtilDeLimpieza) -> void:
 	var camara := _camara(almacen)
 	var antes := Transform3D(mopa.orientacion_en_mano, Vector3.ZERO)
+	# El gesto entra en el objetivo real: el jugador debe estar mirando ese balde.
+	var objetivo := _util(almacen, "Balde")
+	camara.look_at(objetivo.carga.global_position)
 	var vista := camara.global_transform
 	_accion(almacen, _util(almacen, "Balde"), ReglasDelJugador.ACCION_USAR)
 	var bajada: Tween = mopa.get("_bajada")
@@ -301,8 +328,15 @@ func _muestrear_la_mojada(almacen: Node3D, mopa: UtilDeLimpieza) -> void:
 		bajada.custom_step(0.04)
 		_ver_la_punta(camara, mopa)
 		assert_bool(camara.global_transform.is_equal_approx(vista)).is_true()
-	assert_float(mopa.position.y).is_less(antes.origin.y)
-	assert_float(mopa.position.z).is_less(antes.origin.z)
+	var balde := _util(almacen, "Balde")
+	var cabeza := balde.to_local(mopa.carga.global_position)
+	assert_float(Vector2(cabeza.x, cabeza.z).length()).is_less(0.001)
+	assert_float(cabeza.y).is_equal_approx(0.07, 0.001)
+	assert_float(mopa.global_basis.y.angle_to(balde.global_basis.y)).is_less(0.001)
+	var fibras: Array = mopa.malla.get("_pinturas")
+	assert_array(fibras).is_not_empty()
+	for pintura: ShaderMaterial in fibras:
+		assert_float(pintura.get_shader_parameter("inmersion")).is_equal(1.0)
 	for instante in 4:
 		bajada.custom_step(0.04)
 		_ver_la_punta(camara, mopa)
@@ -314,6 +348,8 @@ func _muestrear_la_mojada(almacen: Node3D, mopa: UtilDeLimpieza) -> void:
 	assert_array(termino).is_equal([true])
 	assert_float(bajada.get_total_elapsed_time()).is_equal_approx(0.4, 0.0001)
 	assert_bool(mopa.transform.is_equal_approx(antes)).is_true()
+	for pintura: ShaderMaterial in fibras:
+		assert_float(pintura.get_shader_parameter("inmersion")).is_equal(0.0)
 	assert_that((mopa.carga.material_override as StandardMaterial3D).albedo_color).is_equal(
 		_piso(almacen).balde().color()
 	)
@@ -327,6 +363,31 @@ func test_la_cabeza_de_la_mopa_se_ve_y_el_agarre_sigue_en_el_origen() -> void:
 	assert_bool(mopa.basis.is_equal_approx(mopa.orientacion_en_mano)).is_true()
 	var abajo := (mopa.malla.global_transform * mopa.malla.get_aabb()).position.y
 	assert_float(abajo).is_greater(0.1)
+
+
+func test_la_mojada_sube_en_arco_y_entra_desde_arriba_del_borde() -> void:
+	var almacen: Node3D = await _almacen()
+	var mopa := _mopa_en_la_mano(almacen)
+	var balde := _util(almacen, "Balde")
+	var desde := mopa.carga.global_position
+	balde.freeze = true
+	balde.global_position = desde + Vector3(0.6, -0.25, 0)
+	var superficie := balde.carga.global_position
+	mopa.call("_mover_la_mopa", 0.0, balde)
+	mopa.call("_mover_la_mopa", 0.5, balde)
+	assert_object(mopa.contacto_del_movimiento).is_same(balde)
+	assert_float(mopa.carga.global_position.y).is_greater(maxf(desde.y, superficie.y) + 0.08)
+	# La aproximación final es vertical: la cabeza ya está sobre la abertura al bajar.
+	mopa.call("_mover_la_mopa", 0.85, balde)
+	var relativo := balde.to_local(mopa.carga.global_position)
+	assert_float(Vector2(relativo.x, relativo.z).length()).is_less(0.03)
+	assert_float(relativo.y).is_greater(0.18)
+	mopa.call("_mover_la_mopa", 1.0, balde)
+	assert_vector(balde.to_local(mopa.carga.global_position)).is_equal_approx(
+		Vector3(0, 0.07, 0), Vector3.ONE * 0.001
+	)
+	mopa.call("_mover_la_mopa", 0.0, balde)
+	assert_object(mopa.contacto_del_movimiento).is_null()
 
 
 func test_mojar_baja_la_punta_a_la_vista_y_vuelve_sin_mover_la_camara() -> void:
@@ -360,7 +421,7 @@ func test_rechazar_el_mojado_no_mueve_la_mopa() -> void:
 	var almacen: Node3D = await _almacen()
 	var mopa := _mopa_en_la_mano(almacen, false)
 	var antes := mopa.transform
-	for destino: Node3D in [_util(almacen, "Balde"), almacen.get_node(INODORO)]:
+	for destino: Node3D in [_util(almacen, "Balde"), almacen.get_node(LAVATORIO)]:
 		_accion(almacen, destino, ReglasDelJugador.ACCION_USAR)
 		await get_tree().process_frame
 		assert_bool(mopa.transform.is_equal_approx(antes)).is_true()

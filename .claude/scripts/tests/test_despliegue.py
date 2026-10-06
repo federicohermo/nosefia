@@ -83,6 +83,19 @@ class ElParEnDisco(unittest.TestCase):
         self.assertEqual(preset.get("export_path"), "export/web/index.html")
         self.assertTrue(pide_hilos(self.cfg), f"el preset Web no declara `{HILOS}=true`.")
 
+    def test_la_web_no_empaqueta_las_herramientas_ni_los_tests(self):
+        preset = preset_web(self.cfg)
+        self.assertIsNotNone(preset)
+        excluidos = {ruta.strip() for ruta in preset.get("exclude_filter", "").split(",")}
+        # Las capturas de tmp/ entraban como texturas y añadían 5,87 MB al PCK;
+        # export/ también volvía a empaquetar los iconos de builds anteriores.
+        for carpeta in (
+            "reports", "node_modules", "test", "addons/gdUnit4", "tmp", "export",
+            "addons/hornear", "build",
+        ):
+            with self.subTest(carpeta=carpeta):
+                self.assertIn(f"{carpeta}/*", excluidos)
+
     def test_vercel_apaga_el_deploy_automatico_de_git(self):
         # `docs/infra/despliegue.md` dedica una sección entera a por qué exporta Actions y no
         # Vercel, y nada lo hacía cumplir: el proyecto está vinculado al repo, así que la
@@ -338,7 +351,26 @@ class ElWorkflowDeDespliegue(unittest.TestCase):
 
     def test_las_templates_se_cachean_por_version(self):
         self.assertIn("actions/cache", self.texto)
-        self.assertIn("export_templates", self.texto)
+        self.assertIn("build/templates", self.texto)
+        self.assertIn("env.GODOT_VERSION", self.texto)
+        for entrada in (
+            ".godot-version", ".github/patches/godot-web-compilacion.json",
+            ".github/patches/godot-web-compilacion.patch",
+            ".github/scripts/preparar_plantilla_web.py",
+        ):
+            self.assertIn(entrada, self.texto)
+
+    def test_la_plantilla_se_valida_aun_con_cache_y_se_cruza_con_el_export(self):
+        # Un cache-hit no prueba compatibilidad y un export completo puede usar otro motor.
+        preparacion = "python .github/scripts/preparar_plantilla_web.py --jobs 2"
+        self.assertIn(preparacion, self.texto)
+        paso = self.texto.split(preparacion, 1)[0].rsplit("      - name:", 1)[1]
+        self.assertNotIn("if:", paso)
+        export = self.texto.index('"$GODOT_BIN" --headless --path . --export-release "Web"')
+        self.assertLess(self.texto.index(preparacion), export)
+        self.assertGreater(
+            self.texto.index("--verificar-export export/web"), export,
+        )
 
     def test_el_veredicto_del_export_no_es_el_codigo_de_salida(self):
         self.assertIn("verificar_export.py", self.texto)

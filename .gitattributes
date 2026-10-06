@@ -25,3 +25,7 @@ addons/gdUnit4/** linguist-vendored
 # Una escena tampoco se mergea: el merge de tres vías da una escena corrupta, no un conflicto.
 # `merge=binary` sin `-diff` fuerza el conflicto y deja el diff en texto, que se sigue leyendo.
 *.tscn merge=binary
+
+# Un diff unificado exige espacio antes de las líneas de contexto, incluso las vacías.
+# Su indentación no es la del CPP; el preparador verifica el parche y el CPP resultante.
+.github/patches/godot-web-compilacion.patch whitespace=-blank-at-eol,-space-before-tab

@@ -70,6 +70,7 @@ func pedir_agarrar(datos: ObjetoDelAlmacen, nodo: Node3D) -> bool:
 	_manos.agarrar(datos)
 	_nodo = nodo
 	_ancla_de_vuelta = null
+	_despertar_contactos(nodo)
 	# Guardar solo al agarrar: el examen recibe el cuerpo con las colisiones suspendidas.
 	if nodo is CollisionObject3D:
 		_capa_original = nodo.collision_layer
@@ -142,6 +143,7 @@ func devolver_a_la_mano() -> Node3D:
 func acercar_del_mundo(nodo: Node3D, ancla: Node3D) -> Node3D:
 	if nodo == null or ancla == null or _del_mundo != null:
 		return null
+	_despertar_contactos(nodo)
 	_del_mundo = nodo
 	_padre_del_mundo = nodo.get_parent()
 	# El `transform` y el `top_level` van juntos: en un nodo suelto, el `transform` es global.
@@ -213,10 +215,28 @@ func vaciar_las_manos() -> void:
 	soltar(false)
 
 
+## Despierta lo apoyado antes de quitar el cuerpo que lo sostiene.
+static func _despertar_contactos(nodo: Node3D) -> void:
+	if not nodo is PhysicsBody3D or not nodo.is_inside_tree():
+		return
+	var espacio := nodo.get_world_3d().direct_space_state
+	for forma: CollisionShape3D in nodo.find_children("*", "CollisionShape3D", false, false):
+		if forma.disabled or forma.shape == null:
+			continue
+		var consulta := PhysicsShapeQueryParameters3D.new()
+		consulta.shape = forma.shape
+		consulta.transform = forma.global_transform
+		# Al congelarse, el apoyo pasa a ser estático y Jolt no despierta lo que sostenía.
+		consulta.margin = 0.02
+		consulta.exclude = [(nodo as PhysicsBody3D).get_rid()]
+		for choque: Dictionary in espacio.intersect_shape(consulta, 32):
+			var contacto := choque.collider as RigidBody3D
+			if contacto != null and not contacto.freeze:
+				contacto.sleeping = false
+
+
 ## Cuelga el nodo del ancla, en el origen del ancla y sin rotación heredada.
-##
-## La física se congela mientras se lleva algo: sin eso el objeto se cae de la mano en el mismo
-## cuadro en que se lo levanta, y el síntoma —«no se puede agarrar nada»— no nombra a la física.
+## La física se congela mientras se lleva algo para que no se caiga de la mano.
 static func _colgar(nodo: Node3D, ancla: Node3D, quieta: bool = true) -> void:
 	nodo.top_level = false
 	var padre := nodo.get_parent()

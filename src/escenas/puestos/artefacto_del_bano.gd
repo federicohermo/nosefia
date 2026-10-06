@@ -15,6 +15,13 @@ extends StaticBody3D
 ## buscaría mallas entre sus hijos y no marcaría nada.
 @export var mallas: Array[MeshInstance3D] = []
 
+## Centro de la cuba sobre el desagüe, en las coordenadas del modelo importado.
+@export var punto_de_enjuague := Vector3(-0.01408, 0.153435, 1.35)
+
 
 func destino_del_uso() -> StringName:
 	return destino
+
+
+func punto_para_la_mopa() -> Vector3:
+	return to_global(punto_de_enjuague)

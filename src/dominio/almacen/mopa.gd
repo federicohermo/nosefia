@@ -1,13 +1,29 @@
 ## La mopa: se moja de lo que tiene el balde, y con eso borra.
 ##
-## **Mojarla no gasta el agua del balde, y borrar no la seca.** Ninguna de las dos está en la
-## ficha, que lista todo lo que cambia cada paso: con una mojada de amarillo se borran las dos
-## manchas de polvo de la jornada sin volver al baño, y el viaje que limpiar cuesta es el de
-## cambiar de jabón.
+## La carga se pierde con el tiempo y el recorrido; remojarla la recupera sin vaciar el balde.
 class_name Mopa
 extends RefCounted
 
 var _agua := ReglasDeLaLimpieza.Agua.NINGUNA
+var _carga := 0.0
+
+
+func carga_restante() -> float:
+	return _carga
+
+
+func desgastar(segundos: float, metros: float) -> void:
+	_carga = maxf(
+		0.0,
+		(
+			_carga
+			- maxf(0.0, segundos) / ReglasDeLaLimpieza.DURACION_DE_LA_CARGA
+			- maxf(0.0, metros) / ReglasDeLaLimpieza.RECORRIDO_DE_LA_CARGA
+		)
+	)
+	if _carga <= 0.000001:
+		_carga = 0.0
+		_agua = ReglasDeLaLimpieza.Agua.NINGUNA
 
 
 ## De qué está mojada: `NINGUNA` si está seca.
@@ -29,5 +45,15 @@ func color() -> Color:
 func mojar_en(balde: Balde) -> ReglasDeLaLimpieza.Resultado:
 	if not balde.tiene_agua():
 		return ReglasDeLaLimpieza.Resultado.BALDE_VACIO
-	_agua = balde.agua()
+	return _mojar_con(balde.agua())
+
+
+## Enjuagar no consulta ni modifica el balde o las manchas.
+func enjuagar() -> ReglasDeLaLimpieza.Resultado:
+	return _mojar_con(ReglasDeLaLimpieza.Agua.LIMPIA)
+
+
+func _mojar_con(agua: ReglasDeLaLimpieza.Agua) -> ReglasDeLaLimpieza.Resultado:
+	_agua = agua
+	_carga = 1.0
 	return ReglasDeLaLimpieza.Resultado.MOPA_MOJADA

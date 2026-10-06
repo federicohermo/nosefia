@@ -13,9 +13,8 @@
 //
 // ## Qué simula y qué no
 //
-// - **La CPU sí.** Chrome la frena por el protocolo de DevTools. En este juego el cuadro se gasta
-//   en CPU —preparar cada objeto y cada llamada de dibujo—, así que es la simulación que vale.
-//   De guía: 4 veces es una notebook de oficina de hace unos años, 6 veces una máquina floja.
+// - **La CPU sí.** Chrome la frena por el protocolo de DevTools. Las tasas 4 y 6 son estrés
+//   sintético; no representan un modelo de equipo ni prueban qué componente limita el juego.
 // - **La GPU no.** No se emula. Sin GPU —con el dibujo por software— el juego ni llega a
 //   dibujar. Una GPU floja se mide en una máquina que la tenga, con este mismo comando.
 //
@@ -27,6 +26,8 @@
 // Desde donde arranca el jugador, que muestra el local entero: es la vista más cara. Tres
 // gestos por cada velocidad de CPU: quieto, caminando de costado y girando sobre sí mismo.
 // De cada uno, los cuadros por segundo y el tiempo entre cuadros: mediana, p95 y máximo.
+// Los tiempos de carga registrados usan cuadros sin límite para esta prueba de FPS; no
+// representan la carga habitual. Para comparar esperas, usar medir_la_carga.mjs con vsync.
 //
 // **Abre una ventana y tiene que quedar a la vista**: un navegador no dibuja cuadros de una
 // pestaña tapada o minimizada, y la medición sale vacía.
@@ -35,12 +36,14 @@
 // cambio contra el anterior en el mismo equipo. Entre dos corridas iguales hay un 20 % de ruido.
 
 import { writeFileSync } from 'node:fs';
+import { cpus, platform, release, totalmem } from 'node:os';
+import { basename, dirname, join } from 'node:path';
 import { chromium } from 'playwright';
 
-const ESPERA = 120_000;
+const ESPERA = 180_000;
 const ALTURA_DE_NUEVO_JUEGO = 0.56;
-const ARRANQUE = 15_000; // El motor sigue compilando shaders un rato después de dibujar.
-const MENU = 3_000; // El juego abre en el menú de inicio, que dibuja casi al instante.
+const AVISO_DEL_MENU = '[carga] menú visible';
+const AVISO_DEL_ALMACEN = '[carga] almacén en pantalla';
 
 const url = process.argv[2];
 if (!url) {
@@ -53,14 +56,21 @@ const salida = process.argv[4];
 // El motor escucha `pointermove` sobre `window` y las teclas sobre el canvas, y sólo gira la
 // cámara con el cursor capturado. Un navegador manejado no puede capturarlo, así que se le
 // contesta al motor que ya lo está.
-const GANCHOS = () => {
-  const canvas = document.querySelector('canvas');
-  Object.defineProperty(document, 'pointerLockElement', { configurable: true, get: () => canvas });
+const GANCHOS_DE_ENTRADA = () => {
+  // El motor pide la captura mientras entra al árbol, antes del aviso del almacén.
+  Object.defineProperty(document, 'pointerLockElement', {
+    configurable: true,
+    get: () => document.querySelector('canvas'),
+  });
   Element.prototype.requestPointerLock = function () {
     setTimeout(() => document.dispatchEvent(new Event('pointerlockchange')), 0);
     return Promise.resolve();
   };
   document.exitPointerLock = function () {};
+};
+
+const GANCHOS = () => {
+  const canvas = document.querySelector('canvas');
   document.dispatchEvent(new Event('pointerlockchange'));
 
   const pausa = (ms) => new Promise((listo) => setTimeout(listo, ms));
@@ -110,6 +120,10 @@ const GANCHOS = () => {
   return {
     gpu: info ? gl.getParameter(info.UNMASKED_RENDERER_WEBGL) : 'desconocida',
     canvas: `${canvas.width}x${canvas.height}`,
+    ventana: `${innerWidth}x${innerHeight}`,
+    escala: devicePixelRatio,
+    navegador: navigator.userAgent,
+    procesadoresLogicos: navigator.hardwareConcurrency,
   };
 };
 
@@ -132,50 +146,91 @@ const GESTOS = {
   },
 };
 
-// Cargar el almacén traba el hilo principal: el navegador deja de dibujar hasta que la escena
-// está a la vista. Los cuadros se anotan desde antes del clic, y se espera el hueco que deja la
-// carga y diez cuadros después de él.
-const ANOTAR_CUADROS = () => {
-  window.__cuadrosDelMenu = [];
-  (function anotar(ahora) {
-    window.__cuadrosDelMenu.push(ahora);
-    requestAnimationFrame(anotar);
-  })(performance.now());
-  return performance.now();
-};
-
-async function esperarAlAlmacen(pagina, desde) {
-  await pagina.waitForFunction(
-    (clic) => {
-      const cuadros = window.__cuadrosDelMenu.filter((t) => t >= clic);
-      const hueco = cuadros.findIndex((t, i) => i > 0 && t - cuadros[i - 1] > 500);
-      return hueco > 0 && cuadros.length - hueco >= 10;
-    },
-    desde,
-    { timeout: ESPERA, polling: 250 }
-  );
+// El aviso llega después del calentamiento. Un caché caliente puede no dejar ningún hueco
+// entre cuadros; esperar ese hueco confundía la carga con el juego o vencía el plazo.
+function esperarAviso(pagina, texto) {
+  return pagina.waitForEvent('console', {
+    predicate: (mensaje) => mensaje.text().includes(texto),
+    timeout: ESPERA,
+  });
 }
 
 // Sin tope de cuadros: con el vsync puesto, todo lo que tarde menos que el monitor mide igual.
 const navegador = await chromium.launch({
   channel: 'chrome',
   headless: false,
-  args: ['--window-size=1600,900', '--disable-frame-rate-limit', '--disable-gpu-vsync'],
+  args: [
+    '--window-size=1600,900',
+    '--disable-frame-rate-limit',
+    '--disable-gpu-vsync',
+    '--disable-backgrounding-occluded-windows',
+    '--disable-renderer-backgrounding',
+  ],
 });
 const pagina = await navegador.newPage({ viewport: { width: 1536, height: 760 } });
+// Se coloca antes de cargar Godot: moverlo al primer clic podía girar la cámara del juego.
+await pagina.mouse.move(768, 760 * ALTURA_DE_NUEVO_JUEGO);
+await pagina.addInitScript(GANCHOS_DE_ENTRADA);
 const filas = [];
 let equipo = {};
+const carga = { cuadrosSinLimite: true };
+const desde = Date.now();
+const etapa = (nombre) => console.log(`[medición] ${nombre}: ${Date.now() - desde} ms`);
+const foto = async (nombre) => {
+  if (!salida) return;
+  const archivo = `${basename(salida, '.json')}-${nombre}.png`;
+  await pagina.screenshot({ path: join(dirname(salida), archivo) });
+};
 try {
-  await pagina.goto(url, { waitUntil: 'load', timeout: ESPERA });
+  const menu = esperarAviso(pagina, AVISO_DEL_MENU).then(() => {
+    carga.menu = Date.now() - desde;
+    etapa('menú visible');
+  });
+  etapa('navegación');
+  await Promise.all([pagina.goto(url, { waitUntil: 'load', timeout: ESPERA }), menu]);
   await pagina.waitForSelector('#status', { state: 'detached', timeout: ESPERA });
-  await pagina.waitForTimeout(MENU);
+  carga.overlay = Date.now() - desde;
+  // El aviso antecede al primer dibujo: el botón debe existir cuando llega el clic.
+  await pagina.evaluate(
+    () => new Promise((listo) => requestAnimationFrame(() => requestAnimationFrame(listo)))
+  );
   const lienzo = await pagina.locator('canvas').boundingBox();
-  const clic = await pagina.evaluate(ANOTAR_CUADROS);
-  await pagina.mouse.click(lienzo.x + lienzo.width / 2, lienzo.y + lienzo.height * ALTURA_DE_NUEVO_JUEGO);
-  await esperarAlAlmacen(pagina, clic);
-  await pagina.waitForTimeout(ARRANQUE);
+  const almacen = esperarAviso(pagina, AVISO_DEL_ALMACEN);
+  await Promise.all([
+    pagina.mouse.click(
+      lienzo.x + lienzo.width / 2,
+      lienzo.y + lienzo.height * ALTURA_DE_NUEVO_JUEGO
+    ),
+    almacen,
+  ]);
+  carga.almacen = Date.now() - desde;
+  etapa('almacén visible');
   equipo = await pagina.evaluate(GANCHOS);
+  equipo.host = {
+    sistema: platform(),
+    version: release(),
+    cpu: cpus()[0]?.model ?? 'desconocida',
+    procesadoresLogicos: cpus().length,
+    memoriaBytes: totalmem(),
+  };
   console.log(`GPU: ${equipo.gpu}\ncanvas: ${equipo.canvas}\n`);
+  // Las fotos de entrada quedan fuera del intervalo medido: capturarlas altera un cuadro.
+  await foto('inicio');
+  await pagina.evaluate(() => window.__girar(250, 12));
+  await foto('giro-de-prueba');
+  await pagina.evaluate(() => window.__girar(-250, 12));
+  await pagina.evaluate(async () => {
+    const soltar = window.__apretar('KeyA', 'a');
+    await new Promise((listo) => setTimeout(listo, 600));
+    soltar();
+  });
+  await foto('paso-de-prueba');
+  await pagina.evaluate(async () => {
+    const soltar = window.__apretar('KeyD', 'd');
+    await new Promise((listo) => setTimeout(listo, 600));
+    soltar();
+  });
+  etapa('entrada preparada');
 
   const devtools = await pagina.context().newCDPSession(pagina);
   for (const tasa of tasas) {
@@ -197,11 +252,15 @@ try {
       );
     }
   }
+  await foto('fin');
 } finally {
   await navegador.close();
 }
 
 if (salida) {
-  writeFileSync(salida, JSON.stringify({ url, fecha: new Date().toISOString(), equipo, filas }, null, 1));
+  writeFileSync(
+    salida,
+    JSON.stringify({ url, fecha: new Date().toISOString(), equipo, carga, filas }, null, 1)
+  );
   console.log(`\nguardado en ${salida}`);
 }
