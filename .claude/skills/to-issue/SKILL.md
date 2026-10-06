@@ -56,6 +56,12 @@ gh issue list --state open --limit 50      # si ya hay uno igual, no se abre otr
 Consultá `nosefia-index` para saber quién usa lo que vas a tocar. Lo que aparece ahí entra en
 «Sólo lectura» o en «No se toca».
 
+**Si el issue tiene pantalla, buscá su frame en Figma.** El campo «Diseño» del Contexto lleva
+el link al frame, con su `node-id`, y no al archivo entero; el link a la base lo trae el template.
+El `node-id` se copia de la URL del frame, nunca se escribe de memoria. Si la pantalla no tiene
+frame, el campo lo dice. Si el frame y la ficha se contradicen, manda la ficha, y la diferencia
+se nombra en el campo.
+
 ## Paso 3 — Escribir el issue
 
 **El borrador sale del template, nunca de memoria.** Arrancalo con el script y llená el archivo

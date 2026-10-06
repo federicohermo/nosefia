@@ -17,6 +17,7 @@ labels: ""
 - **Tipo:** `feature` | `bugfix` | `refactor` | `improvement`
 - **Spec:** ninguno | crea | modifica | borra — `specs/<capability>/<capability>.md`
 - **Rama:** `<tipo>/<issue>-<kebab>`, o `harness/` o `docs/` si no toca `src/`
+- **Diseño:** sin pantalla | sin frame | el frame en [Manada — UI](https://www.figma.com/design/SQEAfczyRvyOHokmzPOee7/Manada---UI), con su `node-id`
 
 <!-- `feature` es el único tipo que siempre toca un spec. Un `bugfix` toca uno sólo si el bug
      era una regla que nadie había escrito. La etiqueta sale del tipo: `enhancement`, `bug`,
