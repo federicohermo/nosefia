@@ -71,7 +71,6 @@ func test_acelerar_agita_el_agua_y_frenar_la_deja_asentarse() -> void:
 
 func test_un_movimiento_brusco_salpica_sin_crear_nodos_sin_limite() -> void:
 	var agua := _agua()
-	(agua.get_parent() as Node3D).rotation.x = ReglasDeLaLimpieza.INCLINACION_DEL_BALDE_EN_LA_MANO
 	agua.reiniciar()
 	_avanzar(agua, 1.0 / 60.0)
 	for paso: int in 90:
@@ -88,7 +87,6 @@ func test_un_movimiento_brusco_salpica_sin_crear_nodos_sin_limite() -> void:
 
 func test_vaciar_y_teletransportar_no_dejan_gotas_ni_inventan_impulso() -> void:
 	var agua := _agua()
-	(agua.get_parent() as Node3D).rotation.x = ReglasDeLaLimpieza.INCLINACION_DEL_BALDE_EN_LA_MANO
 	agua.reiniciar()
 	_avanzar(agua, 1.0 / 60.0)
 	for paso: int in 30:

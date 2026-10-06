@@ -56,9 +56,6 @@ func _ready() -> void:
 	set_process(datos.id == ReglasDeLaLimpieza.ID_DEL_BALDE)
 	if datos.id == ReglasDeLaLimpieza.ID_DEL_BALDE:
 		set_notify_transform(true)
-		orientacion_en_mano = Basis(
-			Vector3.RIGHT, ReglasDeLaLimpieza.INCLINACION_DEL_BALDE_EN_LA_MANO
-		)
 
 
 func _process(_delta: float) -> void:

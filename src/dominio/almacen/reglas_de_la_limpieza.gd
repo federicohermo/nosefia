@@ -58,9 +58,6 @@ const ID_DEL_BALDE := &"balde"
 const ID_DEL_LAVATORIO := &"lavatorio"
 const ID_DEL_INODORO := &"inodoro"
 
-## El balde usa el mismo agarre derecho que las cajas, sin rotación adicional hacia la cara.
-const INCLINACION_DEL_BALDE_EN_LA_MANO := 0.0
-
 ## Lo que dura el gesto visible de mojar la mopa, en segundos.
 const DURACION_DE_LA_MOJADA := 0.4
 

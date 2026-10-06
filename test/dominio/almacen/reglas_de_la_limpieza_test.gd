@@ -141,11 +141,6 @@ func test_cada_util_carga_con_el_id_de_su_constante_y_se_levanta() -> void:  # A
 		assert_bool(datos.es_levantable()).is_true()
 
 
-func test_el_balde_se_lleva_derecho_como_las_cajas() -> void:  # AC-PLY-050
-	var inclinacion := rad_to_deg(ReglasDeLaLimpieza.INCLINACION_DEL_BALDE_EN_LA_MANO)
-	assert_float(inclinacion).is_equal_approx(0.0, 0.001)
-
-
 func test_mojar_la_mopa_dura_cuatro_decimas_de_segundo() -> void:
 	var reglas := load("res://src/dominio/almacen/reglas_de_la_limpieza.gd") as GDScript
 	var duracion: float = reglas.get_script_constant_map().get("DURACION_DE_LA_MOJADA", -1.0)
