@@ -11,8 +11,8 @@ const CANALES_POR_TIPO_DE_COLOR = { 2: 3, 6: 4 };
 // El tiempo de GPU de cada cuadro válido, en milisegundos.
 //
 // Cada consulta es `{ cuadro, ns, disjunta }`, y `ns` es `null` si su resultado no llegó. Un
-// cuadro puede traer varias: el navegador llama a más de un `requestAnimationFrame` por cuadro.
-// Una consulta disjunta mide un intervalo que la GPU interrumpió, y vuelve inservible la suma.
+// cuadro trae una por llamada de dibujo. Una consulta disjunta mide un intervalo que la GPU
+// interrumpió, y vuelve inservible la suma.
 export function tiemposPorCuadro(consultas) {
   const cuadros = new Map();
   for (const { cuadro, ns, disjunta } of consultas) {

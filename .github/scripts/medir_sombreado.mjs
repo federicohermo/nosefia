@@ -12,12 +12,17 @@
 // ## Qué mide
 //
 // Por cada caso, el escenario dibuja el shader sobre un panel que ocupa la vista. El script
-// espera 25 cuadros, mide 60 y saca una captura. El tiempo de un cuadro es la suma de sus
-// consultas `TIME_ELAPSED` de WebGL2: cuánto trabajó la GPU, no cuánto esperó el navegador.
+// espera 25 cuadros, mide 60 y saca una captura. Cada llamada de dibujo va adentro de una
+// consulta `TIME_ELAPSED` de WebGL2, y el tiempo de un cuadro es la suma de las suyas. Una
+// sola consulta por cuadro contaría también las esperas de la GPU entre un comando y otro.
 // Un cuadro con una consulta disjunta o sin resultado no cuenta.
 //
 // Hace tres rondas, y cada una carga los dos exports de nuevo. El orden se alterna: lo que
 // se mide segundo encuentra la GPU en otro estado que lo que se mide primero.
+//
+// Chrome dibuja sin tope de cuadros. Con el tope, la GPU casi no trabaja, y el mismo export
+// midió varias veces más en unas cargas que en otras. Aun sin tope queda ruido: medir un
+// export contra sí mismo dice cuánto, y una diferencia menor que ésa no es una mejora.
 //
 // ## Cuándo falla
 //
@@ -44,6 +49,8 @@ const ESPERA = 180_000;
 const RONDAS = 3;
 const CUADROS_DE_ESPERA = 25;
 const CUADROS_MEDIDOS = 60;
+// El primer caso de una carga recién abierta midió más del doble que el mismo caso después.
+const CALENTAMIENTO_MS = 2000;
 const VISTA = { width: 1536, height: 760 };
 
 // Los nombres son los de `casos()` en `test/performance/medir_sombreado.gd`. Un caso `aparte`
@@ -76,19 +83,11 @@ if (!opciones.base || !opciones.propuesta || !opciones.salida || !casos) {
 }
 const copias = { base: opciones.base, propuesta: opciones.propuesta };
 
-// Corre antes que el motor: envuelve cada cuadro en una consulta de tiempo de GPU.
+// Corre antes que el motor: envuelve cada llamada de dibujo en una consulta de tiempo de GPU.
 const GANCHOS = () => {
   const PLAZO_DE_RESULTADOS = 120;
-  const contextos = new WeakMap();
-  const pedirContexto = HTMLCanvasElement.prototype.getContext;
-  HTMLCanvasElement.prototype.getContext = function (tipo, ...resto) {
-    const contexto = pedirContexto.call(this, tipo, ...resto);
-    if (tipo === 'webgl2' && contexto) contextos.set(this, contexto);
-    return contexto;
-  };
-
+  const DIBUJOS = ['drawArrays', 'drawElements', 'drawArraysInstanced', 'drawElementsInstanced'];
   let cuadro = 0;
-  let instante = -1;
   let medicion = null;
 
   const recoger = () => {
@@ -112,34 +111,35 @@ const GANCHOS = () => {
     medicion = null;
   };
 
-  // Un cuadro del navegador llama a todos los pedidos con el mismo instante: el del motor y
-  // los de cualquier otro script de la página.
-  const pedirCuadro = window.requestAnimationFrame.bind(window);
-  window.requestAnimationFrame = (dibujar) =>
-    pedirCuadro((ahora) => {
-      if (ahora !== instante) {
-        instante = ahora;
-        cuadro++;
-        if (medicion) recoger();
-      }
-      if (!medicion || cuadro < medicion.desde || cuadro >= medicion.hasta) {
-        dibujar(ahora);
-        return;
-      }
-      const { gl, extension } = medicion;
-      const consulta = gl.createQuery();
-      gl.beginQuery(extension.TIME_ELAPSED_EXT, consulta);
+  for (const nombre of DIBUJOS) {
+    const dibujar = WebGL2RenderingContext.prototype[nombre];
+    WebGL2RenderingContext.prototype[nombre] = function (...argumentos) {
+      const mide = medicion?.gl === this && cuadro >= medicion.desde && cuadro < medicion.hasta;
+      if (!mide) return dibujar.apply(this, argumentos);
+      const consulta = this.createQuery();
+      this.beginQuery(medicion.extension.TIME_ELAPSED_EXT, consulta);
       try {
-        dibujar(ahora);
+        return dibujar.apply(this, argumentos);
       } finally {
-        gl.endQuery(extension.TIME_ELAPSED_EXT);
+        this.endQuery(medicion.extension.TIME_ELAPSED_EXT);
         medicion.pendientes.push({ cuadro, consulta, disjunta: false });
       }
-    });
+    };
+  }
+
+  // El navegador llama a este pedido y al del motor una vez por cuadro, siempre en el mismo
+  // orden: todos los dibujos de un cuadro del motor quedan con el mismo número.
+  const alCuadro = () => {
+    cuadro++;
+    if (medicion) recoger();
+    requestAnimationFrame(alCuadro);
+  };
+  requestAnimationFrame(alCuadro);
 
   window.__medirGpu = (espera, cuadros) =>
     new Promise((lista, falla) => {
-      const gl = contextos.get(document.querySelector('canvas'));
+      // Un lienzo devuelve siempre su mismo contexto: éste es el del motor.
+      const gl = document.querySelector('canvas').getContext('webgl2');
       const extension = gl?.getExtension('EXT_disjoint_timer_query_webgl2');
       if (!extension) {
         falla(new Error('el navegador no ofrece consultas de tiempo de GPU'));
@@ -148,7 +148,8 @@ const GANCHOS = () => {
       // Un corte anterior al pedido no invalida lo que se va a medir.
       gl.getParameter(extension.GPU_DISJOINT_EXT);
       const desde = cuadro + 1 + espera;
-      medicion = { gl, extension, desde, hasta: desde + cuadros, pendientes: [], consultas: [], lista };
+      const hasta = desde + cuadros;
+      medicion = { gl, extension, desde, hasta, pendientes: [], consultas: [], lista };
     });
 };
 
@@ -160,6 +161,8 @@ const navegador = await chromium.launch({
     '--disable-backgrounding-occluded-windows',
     '--disable-renderer-backgrounding',
     '--disable-background-timer-throttling',
+    '--disable-frame-rate-limit',
+    '--disable-gpu-vsync',
     ...(process.platform === 'win32' ? ['--use-angle=d3d11'] : []),
   ],
 });
@@ -170,8 +173,9 @@ const condiciones = {
   vista: `${VISTA.width}x${VISTA.height}`,
   cuadrosDeEspera: CUADROS_DE_ESPERA,
   cuadrosMedidos: CUADROS_MEDIDOS,
+  calentamientoMs: CALENTAMIENTO_MS,
   sinVentana: true,
-  sincronizacionHabitual: true,
+  sinLimiteDeCuadros: true,
 };
 
 // Una carga nueva de un export: mide y captura todos los casos, en el orden declarado.
@@ -204,6 +208,7 @@ async function cargar(url, prefijo) {
       const lienzo = document.querySelector('canvas');
       return `${lienzo.width}x${lienzo.height}`;
     });
+    await pagina.waitForTimeout(CALENTAMIENTO_MS);
     const medidos = {};
     for (const { nombre } of casos) {
       const mostrado = await pagina.evaluate((caso) => {
