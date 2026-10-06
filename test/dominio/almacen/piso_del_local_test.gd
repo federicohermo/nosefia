@@ -299,3 +299,18 @@ func test_carga_agotada_no_deja_charco_hasta_enjuagar() -> void:  # AC-CLN-030
 	piso.usar(MOPA, INODORO)
 	assert_int(piso.humedecer_piso(MOPA, true)).is_equal(ReglasDeLaLimpieza.Resultado.CHARCO_DEJADO)
 	assert_float(piso.mopa().carga_restante()).is_equal(1.0)
+
+
+func test_los_metros_solo_gastan_la_mopa_que_se_lleva_en_la_mano() -> void:  # AC-CLN-027
+	var en_la_mano := _piso()
+	var apoyada := _piso()
+	var quieta := _piso()
+	for piso: PisoDelLocal in [en_la_mano, apoyada, quieta]:
+		_preparar(piso, JABON_AZUL)
+	en_la_mano.desgastar_mopa(MOPA, 1.0, 2.0)
+	for ajeno: StringName in [ObjetoDelAlmacen.SIN_ID, BALDE, JABON_AZUL]:
+		apoyada.desgastar_mopa(ajeno, 0.0, 2.0)
+	quieta.desgastar_mopa(MOPA, 1.0, 0.0)
+	apoyada.desgastar_mopa(ObjetoDelAlmacen.SIN_ID, 1.0, 0.0)
+	assert_float(apoyada.mopa().carga_restante()).is_equal(quieta.mopa().carga_restante())
+	assert_float(en_la_mano.mopa().carga_restante()).is_less(quieta.mopa().carga_restante())

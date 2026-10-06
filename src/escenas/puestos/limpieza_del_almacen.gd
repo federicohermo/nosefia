@@ -43,9 +43,7 @@ func _physics_process(delta: float) -> void:
 	var metros := posicion.distance_to(_posicion_previa) if _muestreada else 0.0
 	_posicion_previa = posicion
 	_muestreada = true
-	if jugador.id_en_la_mano() != ReglasDeLaLimpieza.ID_DE_LA_MOPA:
-		metros = 0.0
-	limpiador.desgastar_mopa(delta, metros)
+	limpiador.desgastar_mopa(jugador.id_en_la_mano(), delta, metros)
 	_intervalo_visual += delta
 	if _intervalo_visual < 0.15 or limpiador.piso() == null:
 		return

@@ -227,7 +227,7 @@ func test_desgastar_la_mopa_rechaza_la_pasada_sin_cobrar_tiempo() -> void:  # AC
 	var limpiador := _limpiador()
 	_preparar(limpiador, &"jabon_amarillo")
 	var tiempo := _turno.tiempo_restante()
-	limpiador.desgastar_mopa(ReglasDeLaLimpieza.DURACION_DE_LA_CARGA, 0.0)
+	limpiador.desgastar_mopa(MOPA, ReglasDeLaLimpieza.DURACION_DE_LA_CARGA, 0.0)
 	assert_int(limpiador.pasar(MOPA, PisoDelLocal.Lugar.ENTRADA)).is_equal(
 		ReglasDeLaLimpieza.Resultado.MOPA_SECA
 	)
@@ -238,12 +238,12 @@ func test_desgastar_la_mopa_rechaza_la_pasada_sin_cobrar_tiempo() -> void:  # AC
 func test_remojar_cerca_recupera_la_limpieza_despues_del_viaje() -> void:  # AC-CLN-027
 	var limpiador := _limpiador()
 	_preparar(limpiador, &"jabon_amarillo")
-	limpiador.desgastar_mopa(3.0, ReglasDeLaLimpieza.RECORRIDO_DE_LA_CARGA)
+	limpiador.desgastar_mopa(MOPA, 3.0, ReglasDeLaLimpieza.RECORRIDO_DE_LA_CARGA)
 	assert_int(limpiador.pasar(MOPA, PisoDelLocal.Lugar.ENTRADA)).is_equal(
 		ReglasDeLaLimpieza.Resultado.MOPA_SECA
 	)
 	limpiador.usar(MOPA, BALDE)
-	limpiador.desgastar_mopa(0.5, 0.5)
+	limpiador.desgastar_mopa(MOPA, 0.5, 0.5)
 	assert_int(limpiador.pasar(MOPA, PisoDelLocal.Lugar.ENTRADA)).is_equal(
 		ReglasDeLaLimpieza.Resultado.MANCHA_BORRADA
 	)
@@ -252,7 +252,7 @@ func test_remojar_cerca_recupera_la_limpieza_despues_del_viaje() -> void:  # AC-
 func test_enjuagar_en_inodoro_publica_agua_limpia_sin_contar_tarea() -> void:  # AC-CLN-029
 	var limpiador := _limpiador()
 	_preparar(limpiador, &"jabon_rosa")
-	limpiador.desgastar_mopa(2.0, 1.0)
+	limpiador.desgastar_mopa(MOPA, 2.0, 1.0)
 	_emitidas.clear()
 	var tiempo := _turno.tiempo_restante()
 	assert_int(limpiador.usar(MOPA, INODORO)).is_equal(ReglasDeLaLimpieza.Resultado.MOPA_MOJADA)
@@ -267,7 +267,7 @@ func test_charco_aceptado_emite_una_senal_sin_tarea_ni_desgaste() -> void:  # AC
 	var limpiador := _limpiador()
 	limpiador.usar(BALDE, LAVATORIO)
 	limpiador.usar(MOPA, BALDE)
-	limpiador.desgastar_mopa(1.0, 0.5)
+	limpiador.desgastar_mopa(MOPA, 1.0, 0.5)
 	var carga := limpiador.piso().mopa().carga_restante()
 	var tiempo := _turno.tiempo_restante()
 	_emitidas.clear()

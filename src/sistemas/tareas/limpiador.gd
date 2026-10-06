@@ -45,10 +45,10 @@ func piso() -> PisoDelLocal:
 
 
 ## El reloj sigue siendo el único que descuenta tiempo de la jornada.
-func desgastar_mopa(segundos: float, metros: float) -> void:
+func desgastar_mopa(en_la_mano: StringName, segundos: float, metros: float) -> void:
 	if _piso == null or reloj == null or not reloj.corriendo():
 		return
-	_piso.mopa().desgastar(segundos, metros)
+	_piso.desgastar_mopa(en_la_mano, segundos, metros)
 
 
 ## Usa lo que se lleva en la mano sobre el balde, el lavatorio o el inodoro.
