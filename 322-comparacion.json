@@ -1,0 +1,107 @@
+{
+ "condiciones": {
+  "navegador": "154.0.8037.92",
+  "renderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 4050 Laptop GPU (0x000028E1) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+  "viewport": "1536x760",
+  "lienzo": "1536x760",
+  "sinVentana": true,
+  "sinLimiteDeCuadros": false
+ },
+ "costo": {
+  "quieta_visible": {
+   "base_us": 2.75905,
+   "propuesta_us": 2.48205,
+   "por_ronda": {
+    "base": [
+     2.90105,
+     2.3782,
+     2.75905
+    ],
+    "propuesta": [
+     2.72355,
+     2.36645,
+     2.48205
+    ]
+   }
+  },
+  "activa_visible": {
+   "base_us": 616.891,
+   "propuesta_us": 622.75,
+   "por_ronda": {
+    "base": [
+     604.136,
+     616.891,
+     639.54
+    ],
+    "propuesta": [
+     633.016,
+     622.75,
+     615.565
+    ]
+   }
+  },
+  "activa_fuera": {
+   "base_us": 597.116,
+   "propuesta_us": 4.115,
+   "por_ronda": {
+    "base": [
+     606.321,
+     597.116,
+     590.59
+    ],
+    "propuesta": [
+     4.3,
+     3.844,
+     4.115
+    ]
+   }
+  }
+ },
+ "rondas": [
+  {
+   "premisas": true,
+   "estados_de_los_120_pasos": true,
+   "estado_al_volver": true,
+   "vertices_calculados_al_volver": true,
+   "malla_leida_al_volver": true,
+   "capturas": [
+    [
+     "322-ronda1-base-retorno.png"
+    ],
+    [
+     "322-ronda1-propuesta-retorno.png"
+    ]
+   ]
+  },
+  {
+   "premisas": true,
+   "estados_de_los_120_pasos": true,
+   "estado_al_volver": true,
+   "vertices_calculados_al_volver": true,
+   "malla_leida_al_volver": true,
+   "capturas": [
+    [
+     "322-ronda2-base-retorno.png"
+    ],
+    [
+     "322-ronda2-propuesta-retorno.png"
+    ]
+   ]
+  },
+  {
+   "premisas": true,
+   "estados_de_los_120_pasos": true,
+   "estado_al_volver": true,
+   "vertices_calculados_al_volver": true,
+   "malla_leida_al_volver": true,
+   "capturas": [
+    [
+     "322-ronda3-base-retorno.png"
+    ],
+    [
+     "322-ronda3-propuesta-retorno.png"
+    ]
+   ]
+  }
+ ]
+}

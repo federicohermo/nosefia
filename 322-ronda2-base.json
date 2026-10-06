@@ -1,0 +1,93 @@
+{
+ "url": "http://localhost:8064",
+ "fecha": "2026-10-06T23:57:41.380Z",
+ "condiciones": {
+  "navegador": "154.0.8037.92",
+  "renderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 4050 Laptop GPU (0x000028E1) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+  "viewport": "1536x760",
+  "lienzo": "1536x760",
+  "sinVentana": true,
+  "sinLimiteDeCuadros": false
+ },
+ "capturas": [
+  "322-ronda2-base-retorno.png"
+ ],
+ "informe": {
+  "compilacion_debug": false,
+  "costo": {
+   "activa_fuera": {
+    "llamadas": 1000,
+    "premisa_del_encuadre": true,
+    "subidas_por_tanda": [
+     2000,
+     2000,
+     2000
+    ],
+    "us_por_llamada": [
+     590.735,
+     597.116,
+     626.145
+    ]
+   },
+   "activa_visible": {
+    "llamadas": 1000,
+    "premisa_del_encuadre": true,
+    "subidas_por_tanda": [
+     2000,
+     2000,
+     2000
+    ],
+    "us_por_llamada": [
+     605.031,
+     616.891,
+     620.231
+    ]
+   },
+   "quieta_visible": {
+    "llamadas": 20000,
+    "premisa_del_encuadre": true,
+    "subidas_por_tanda": [
+     0,
+     0,
+     0
+    ],
+    "us_por_llamada": [
+     2.3782,
+     2.18525,
+     2.5052
+    ]
+   }
+  },
+  "cpu": "",
+  "fecha_utc": "2026-10-06T23:57:35",
+  "fuera": {
+   "estados_sha256": "fc3944f6f859b9006e25d8e66da9d81f8b372925c2bbe91e6f1ce30b5f0dccc8",
+   "onda_al_final": 0.0635988564789295,
+   "pasos": 120,
+   "pasos_con_la_caja_fuera": 120,
+   "premisa_del_encuadre": true,
+   "subidas_de_la_malla": 240
+  },
+  "godot": "4.7.2-stable (custom_build)",
+  "gpu": "WebKit WebGL",
+  "renderizador": "gl_compatibility",
+  "resolucion": "(1536.0, 760.0)",
+  "retorno": {
+   "esquinas_en_cuadro": 8,
+   "estado_sha256": "e79ece51e650e6bb067b2b86548d2339abe8c56a8e764a9746707b560f313e44",
+   "malla": {
+    "aabb": "[P: (-0.5, -0.1, -0.5), S: (1.0, 0.205, 1.0)]",
+    "indices_sha256": "820777d2bddc3beb25bcbdd1854738d7e1775564f336c93e9f91dbab18625d04",
+    "normales_sha256": "6b4f0c36f499e1482de55547cbc66e50b0cfd1d6246663b120f7f59670cf6dbc",
+    "superficies": 1,
+    "uv_sha256": "03a2a1201e9f2bbcf455ae3210e9969e05aef80035624c7a2589e5d3c5e49c55",
+    "vertices": 577,
+    "vertices_sha256": "c7d3c29cb0d5d3cae8a61a165168b73a55627ce4a1f0ca2473aee74c59293c25"
+   },
+   "premisa_del_encuadre": true,
+   "subidas_de_la_malla": 2,
+   "vertices_calculados_sha256": "c7d3c29cb0d5d3cae8a61a165168b73a55627ce4a1f0ca2473aee74c59293c25"
+  },
+  "sistema": "Web"
+ }
+}

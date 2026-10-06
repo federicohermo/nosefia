@@ -1,0 +1,8 @@
+{
+ "commit": "2d25560c088a6a42bdb8495829f12117f3db0cfd",
+ "escena": "res://test/performance/medir_agua_fuera_de_camara.tscn",
+ "pck_bytes": 44571124,
+ "pck_sha256": "ff04145e090a864ccb93ff2be0a659e53d6c6c74b7e1147a0dbe3190e9e6120b",
+ "wasm_bytes": 38849809,
+ "wasm_sha256": "46d9bcb1df7a640d20c753b3608c8734ebbe22c3b01f2d2912c926051ce5a4ec"
+}
