@@ -1,0 +1,52 @@
+extends SceneTree
+
+# Sonda: qué comparte un alias de PackedFloat32Array, y cuándo se copia de verdad.
+
+var _a := PackedFloat32Array()
+var _b := PackedFloat32Array()
+
+
+func _init() -> void:
+	_a.resize(4)
+	_b.resize(4)
+	var alias: PackedFloat32Array = get("_a")
+	print("alias por get es el mismo: ", is_same(alias, _a))
+	alias[0] = 7.0
+	print("escribir por el alias se ve en el miembro: ", _a[0])
+	var copia := _a.duplicate()
+	print("duplicate es el mismo: ", is_same(copia, _a))
+	var cambio := _a
+	_a = _b
+	_b = cambio
+	print(
+		"tras el cruce, _b es el alias original: ",
+		is_same(_b, alias),
+		" y _a no: ",
+		is_same(_a, alias)
+	)
+	_b[1] = 3.0
+	print("escribir tras el cruce se ve por el alias: ", alias[1])
+
+	# Tiempo de la primera escritura: con un alias, y con un duplicate vivo.
+	var grande := PackedFloat32Array()
+	grande.resize(32 * 1024 * 1024)
+	var otro_alias := grande
+	var t0 := Time.get_ticks_usec()
+	grande[0] = 1.0
+	var t1 := Time.get_ticks_usec()
+	var duplicado := grande.duplicate()
+	var t2 := Time.get_ticks_usec()
+	grande[0] = 2.0
+	var t3 := Time.get_ticks_usec()
+	grande[1] = 2.0
+	var t4 := Time.get_ticks_usec()
+	print("escritura con alias vivo: ", t1 - t0, " us; alias ve el cambio: ", otro_alias[0])
+	print("duplicate(): ", t2 - t1, " us")
+	print(
+		"primera escritura con el duplicado vivo: ",
+		t3 - t2,
+		" us; duplicado conserva: ",
+		duplicado[0]
+	)
+	print("segunda escritura: ", t4 - t3, " us")
+	quit()

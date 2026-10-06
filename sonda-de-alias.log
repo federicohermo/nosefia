@@ -1,0 +1,11 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+alias por get es el mismo: true
+escribir por el alias se ve en el miembro: 7.0
+duplicate es el mismo: false
+tras el cruce, _b es el alias original: true y _a no: false
+escribir tras el cruce se ve por el alias: 3.0
+escritura con alias vivo: 1 us; alias ve el cambio: 2.0
+duplicate(): 6 us
+primera escritura con el duplicado vivo: 19917 us; duplicado conserva: 1.0
+segunda escritura: 2 us
