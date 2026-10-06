@@ -1,8 +1,8 @@
 {
- "commit": "ae88e0ff54657a4458bee2b52a64150a0cbff97a",
+ "commit": "296f4bfabc9ef48467c0bd3c277865ea61a08113",
  "escena": "res://test/performance/medir_ondas_del_balde.tscn",
- "pck_bytes": 44550868,
- "pck_sha256": "b9cfda5400b3e68f6b487c989b6034f417d0762731b219261673689ac05bf677",
+ "pck_bytes": 44550372,
+ "pck_sha256": "b650ac8672d1cf584163d9e2c3494f1df367b755751a7ffb96e278fcf9ceef9a",
  "wasm_bytes": 38849809,
  "wasm_sha256": "46d9bcb1df7a640d20c753b3608c8734ebbe22c3b01f2d2912c926051ce5a4ec"
 }
