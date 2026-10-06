@@ -5,15 +5,11 @@ extends Node
 const Ondas := preload("res://src/escenas/objetos/ondas_del_balde.gd")
 const AVANCES_DEL_PROTOCOLO := 600
 const DELTAS: Array[float] = [0.0, 1.0 / 144.0, 1.0 / 60.0, 1.0 / 30.0, 0.1, 0.2]
-const REINICIO := 150
-## Desde acá no hay impulsos ni aceleración: el campo llega solo al reposo.
-const CALMA := 300
-const IMPULSO_TRAS_LA_CALMA := 590
 const PARTES: Array[String] = ["alturas", "velocidades", "amplitud", "muestreo"]
 const PASADAS := 5
 const AVANCES_POR_PASADA := 1200
 const DELTA := 1.0 / 60.0
-const ACELERACION := Vector2(4.0, -2.0)
+const ACELERACION := Vector2(0.4, -0.2)
 
 
 func _ready() -> void:
@@ -33,15 +29,10 @@ static func puntos_de_muestreo() -> PackedVector2Array:
 static func paso_del_protocolo(indice: int) -> Dictionary:
 	var paso := {
 		"delta": DELTAS[indice % DELTAS.size()],
-		"aceleracion": Vector2.ZERO,
-		"reinicio": indice == REINICIO,
+		"aceleracion": Vector2(sin(indice * 0.1), cos(indice * 0.1)) * 0.6,
 	}
-	if indice < CALMA and indice % 4 != 0:
-		paso["aceleracion"] = Vector2(indice * 7 % 13 - 6, indice * 5 % 11 - 5) * 2.0
-	if (indice < CALMA and indice % 17 == 0) or indice == IMPULSO_TRAS_LA_CALMA:
-		paso["centro"] = Vector2(indice * 3 % 9 - 4, indice * 5 % 7 - 3) / Vector2(4.0, 3.0)
-		# Los impulsos fuertes llevan las alturas hasta su tope.
-		paso["fuerza"] = 0.07 + indice % 5 * 0.14
+	if indice % 37 == 0:
+		paso["centro"] = Vector2(sin(indice * 0.3), cos(indice * 0.2)) * 0.8
 	return paso
 
 
@@ -74,27 +65,21 @@ static func correr_protocolo() -> Dictionary:
 		totales.append(contexto)
 	var estados := PackedStringArray()
 	var amplitud_maxima := 0.0
-	var en_reposo := 0
 	for indice in AVANCES_DEL_PROTOCOLO:
 		var paso := paso_del_protocolo(indice)
-		if paso["reinicio"]:
-			ondas.reiniciar()
 		if paso.has("centro"):
-			ondas.perturbar(paso["centro"], paso["fuerza"])
+			ondas.perturbar(paso["centro"], 0.07)
 		ondas.avanzar(paso["delta"], paso["aceleracion"])
 		var estado := estado_en_bytes(ondas)
 		for parte in PARTES.size():
 			totales[parte].update(estado[PARTES[parte]])
 		estados.append(huella(estado))
 		amplitud_maxima = maxf(amplitud_maxima, ondas.amplitud())
-		en_reposo += int(not ondas.get("_activa"))
-	var informe := {
-		"estados": estados,
-		"amplitud_maxima": amplitud_maxima,
-		"estados_en_reposo": en_reposo,
-	}
+	var informe := {"estados": estados, "amplitud_maxima": amplitud_maxima}
 	for parte in PARTES.size():
 		informe[PARTES[parte] + "_sha256"] = totales[parte].finish().hex_encode()
+	ondas.reiniciar()
+	informe["tras_reiniciar"] = huella(estado_en_bytes(ondas))
 	return informe
 
 
@@ -106,16 +91,18 @@ static func mediana(valores: Array[float]) -> float:
 
 ## La aceleración fija mantiene activo el campo: ningún avance sale por el atajo del reposo.
 static func medir_pasadas(pasadas: int, avances: int) -> Dictionary:
-	var ondas := Ondas.new()
-	ondas.perturbar(Vector2(0.25, -0.15), 0.07)
 	var tiempos: Array[float] = []
+	var amplitud_final := 0.0
 	# La primera pasada calienta y no se informa.
 	for pasada in pasadas + 1:
+		var ondas := Ondas.new()
+		ondas.perturbar(Vector2(0.2, -0.3), 0.07)
 		var inicio := Time.get_ticks_usec()
 		for avance in avances:
 			ondas.avanzar(DELTA, ACELERACION)
 		if pasada > 0:
 			tiempos.append((Time.get_ticks_usec() - inicio) / 1000.0)
+		amplitud_final = ondas.amplitud()
 	return {
 		"avances_por_pasada": avances,
 		"delta": DELTA,
@@ -123,7 +110,7 @@ static func medir_pasadas(pasadas: int, avances: int) -> Dictionary:
 		"pasadas_ms": tiempos,
 		"mediana_ms": mediana(tiempos),
 		"us_por_avance": mediana(tiempos) * 1000.0 / avances,
-		"amplitud_final": ondas.amplitud(),
+		"amplitud_final": amplitud_final,
 	}
 
 

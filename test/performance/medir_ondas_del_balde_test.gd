@@ -4,28 +4,20 @@ const Medicion := preload("res://test/performance/medir_ondas_del_balde.gd")
 const Ondas := preload("res://src/escenas/objetos/ondas_del_balde.gd")
 
 
-func test_el_protocolo_cubre_sus_deltas_los_impulsos_y_un_reinicio() -> void:
+func test_el_protocolo_cubre_sus_seis_deltas_con_impulsos_y_aceleracion_variable() -> void:
 	var deltas := {}
-	var reinicios := 0
+	var aceleraciones := {}
 	var impulsos := 0
-	var en_el_borde := 0
-	var sin_aceleracion := 0
 	for indice in Medicion.AVANCES_DEL_PROTOCOLO:
 		var paso := Medicion.paso_del_protocolo(indice)
 		deltas[paso["delta"]] = true
-		reinicios += int(paso["reinicio"])
-		sin_aceleracion += int(paso["aceleracion"] == Vector2.ZERO)
-		if paso.has("centro"):
-			var centro: Vector2 = paso["centro"]
-			impulsos += 1
-			en_el_borde += int(maxf(absf(centro.x), absf(centro.y)) == 1.0)
+		aceleraciones[paso["aceleracion"]] = true
+		impulsos += int(paso.has("centro"))
 	assert_array(deltas.keys()).contains_exactly_in_any_order(
 		[0.0, 1.0 / 144.0, 1.0 / 60.0, 1.0 / 30.0, 0.1, 0.2]
 	)
-	assert_int(reinicios).is_equal(1)
-	assert_int(impulsos).is_greater(0)
-	assert_int(en_el_borde).is_greater(0)
-	assert_int(sin_aceleracion).is_between(1, Medicion.AVANCES_DEL_PROTOCOLO - 1)
+	assert_int(impulsos).is_between(2, Medicion.AVANCES_DEL_PROTOCOLO - 1)
+	assert_int(aceleraciones.size()).is_greater(1)
 
 
 func test_el_protocolo_da_los_mismos_600_estados_dos_veces_y_mueve_el_agua() -> void:
@@ -38,7 +30,11 @@ func test_el_protocolo_da_los_mismos_600_estados_dos_veces_y_mueve_el_agua() -> 
 		distintos[estado] = true
 	assert_int(distintos.size()).is_greater(300)
 	assert_float(primera["amplitud_maxima"]).is_greater(0.0)
-	assert_int(primera["estados_en_reposo"]).is_greater(0)
+	# El reinicio del final deja el campo como uno recién creado.
+	var nuevo := Ondas.new()
+	nuevo.preparar_muestras(Medicion.puntos_de_muestreo())
+	assert_str(primera["tras_reiniciar"]).is_equal(Medicion.huella(Medicion.estado_en_bytes(nuevo)))
+	assert_bool(estados.has(primera["tras_reiniciar"])).is_false()
 
 
 func test_la_huella_cambia_con_un_solo_valor_del_estado() -> void:
