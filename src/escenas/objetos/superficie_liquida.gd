@@ -32,10 +32,13 @@ var _tiempo := 0.0
 var _onda := 0.0
 var _espera := 0.0
 var _vertices := PackedVector3Array()
+var _normales := PackedVector3Array()
 var _puntos := PackedVector2Array()
 var _coordenadas := PackedVector2Array()
 var _indices := PackedInt32Array()
 var _superficie := ArrayMesh.new()
+# El renderizador sin pantalla no implementa las escrituras de buffers.
+var _recrea_la_superficie := DisplayServer.get_name() == "headless"
 var _normales_empaquetadas := PackedInt32Array()
 var _inicio_de_normales := 0
 var _paso_de_normales := 0
@@ -401,6 +404,7 @@ func _radio_del_borde(angulo: float) -> float:
 
 func _crear_topologia() -> void:
 	_vertices.resize(1 + ANILLOS * SEGMENTOS)
+	_normales.resize(_vertices.size())
 	_puntos.resize(_vertices.size())
 	var fase := 0.0 if en_balde else float(get_parent().get("lugar")) * 1.7
 	for anillo: int in range(1, ANILLOS + 1):
@@ -464,10 +468,8 @@ func _dibujar() -> void:
 			_vertices[1 + (anillo - 1) * SEGMENTOS + segmento] = Vector3(
 				punto.x, clampf(altura, -0.1, 0.105), punto.y
 			)
-	var normales := PackedVector3Array()
-	normales.resize(_vertices.size())
 	# Dos tangentes por vértice evitan acumular cada triángulo de la superficie.
-	normales[0] = (
+	_normales[0] = (
 		(_vertices[1 + SEGMENTOS / 4] - _vertices[1 + SEGMENTOS * 3 / 4])
 		. cross(_vertices[1] - _vertices[1 + SEGMENTOS / 2])
 		. normalized()
@@ -480,21 +482,20 @@ func _dibujar() -> void:
 			var siguiente := inicio + (segmento + 1) % SEGMENTOS
 			var interior := indice - SEGMENTOS if anillo > 0 else 0
 			var exterior := indice + SEGMENTOS if anillo < ANILLOS - 1 else indice
-			normales[indice] = (
+			_normales[indice] = (
 				(_vertices[siguiente] - _vertices[anterior])
 				. cross(_vertices[exterior] - _vertices[interior])
 				. normalized()
 			)
-	var arrays: Array = []
-	arrays.resize(Mesh.ARRAY_MAX)
-	arrays[Mesh.ARRAY_VERTEX] = _vertices
-	arrays[Mesh.ARRAY_NORMAL] = normales
-	arrays[Mesh.ARRAY_TEX_UV] = _coordenadas
-	arrays[Mesh.ARRAY_INDEX] = _indices
-	# El renderizador sin pantalla no implementa las escrituras de buffers.
-	if DisplayServer.get_name() == "headless":
+	if _recrea_la_superficie:
 		_superficie.clear_surfaces()
 	if _superficie.get_surface_count() == 0:
+		var arrays: Array = []
+		arrays.resize(Mesh.ARRAY_MAX)
+		arrays[Mesh.ARRAY_VERTEX] = _vertices
+		arrays[Mesh.ARRAY_NORMAL] = _normales
+		arrays[Mesh.ARRAY_TEX_UV] = _coordenadas
+		arrays[Mesh.ARRAY_INDEX] = _indices
 		_superficie.add_surface_from_arrays(
 			Mesh.PRIMITIVE_TRIANGLES, arrays, [], {}, Mesh.ARRAY_FLAG_USE_DYNAMIC_UPDATE
 		)
@@ -511,8 +512,8 @@ func _dibujar() -> void:
 		)
 		_normales_empaquetadas.resize(_vertices.size() * _paso_de_normales)
 	else:
-		for indice: int in normales.size():
-			var normal := normales[indice].octahedron_encode() * 65535.0
+		for indice: int in _normales.size():
+			var normal := _normales[indice].octahedron_encode() * 65535.0
 			_normales_empaquetadas[indice * _paso_de_normales] = (
 				int(normal.x) | (int(normal.y) << 16)
 			)
