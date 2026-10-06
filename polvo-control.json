@@ -1,0 +1,343 @@
+{
+ "fecha": "2026-10-06T23:39:41.877Z",
+ "base": "http://localhost:8060/318-base/web/",
+ "propuesta": "http://localhost:8060/318-base/web/",
+ "casos": [
+  {
+   "nombre": "polvo"
+  },
+  {
+   "nombre": "polvo_acuoso"
+  },
+  {
+   "nombre": "polvo_sin_color"
+  },
+  {
+   "nombre": "moho",
+   "aparte": true,
+   "tolerancia": {
+    "pixeles": 1,
+    "niveles": 1
+   }
+  },
+  {
+   "nombre": "caca",
+   "aparte": true
+  }
+ ],
+ "condiciones": {
+  "navegador": "154.0.8037.92",
+  "cpu": "AMD Ryzen 7 7435HS                             ",
+  "vista": "1536x760",
+  "cuadrosDeEspera": 25,
+  "cuadrosMedidos": 60,
+  "calentamientoMs": 2000,
+  "sinVentana": true,
+  "sinLimiteDeCuadros": true,
+  "renderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 4050 Laptop GPU (0x000028E1) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+  "lienzo": "1536x760"
+ },
+ "rondas": [
+  {
+   "orden": [
+    "base",
+    "propuesta"
+   ],
+   "casos": {
+    "polvo": {
+     "base": {
+      "medianaMs": 0.123904,
+      "validas": 60,
+      "captura": "reports/polvo-control-ronda1-base-polvo.png"
+     },
+     "propuesta": {
+      "medianaMs": 0.154624,
+      "validas": 60,
+      "captura": "reports/polvo-control-ronda1-propuesta-polvo.png"
+     },
+     "imagen": {
+      "pixeles": 0,
+      "niveles": 0,
+      "igual": true
+     }
+    },
+    "polvo_acuoso": {
+     "base": {
+      "medianaMs": 0.123904,
+      "validas": 60,
+      "captura": "reports/polvo-control-ronda1-base-polvo_acuoso.png"
+     },
+     "propuesta": {
+      "medianaMs": 0.154624,
+      "validas": 60,
+      "captura": "reports/polvo-control-ronda1-propuesta-polvo_acuoso.png"
+     },
+     "imagen": {
+      "pixeles": 0,
+      "niveles": 0,
+      "igual": true
+     }
+    },
+    "polvo_sin_color": {
+     "base": {
+      "medianaMs": 0.12288,
+      "validas": 60,
+      "captura": "reports/polvo-control-ronda1-base-polvo_sin_color.png"
+     },
+     "propuesta": {
+      "medianaMs": 0.154624,
+      "validas": 60,
+      "captura": "reports/polvo-control-ronda1-propuesta-polvo_sin_color.png"
+     },
+     "imagen": {
+      "pixeles": 0,
+      "niveles": 0,
+      "igual": true
+     }
+    },
+    "moho": {
+     "base": {
+      "medianaMs": 0.146176,
+      "validas": 60,
+      "captura": "reports/polvo-control-ronda1-base-moho.png"
+     },
+     "propuesta": {
+      "medianaMs": 0.182736,
+      "validas": 60,
+      "captura": "reports/polvo-control-ronda1-propuesta-moho.png"
+     },
+     "imagen": {
+      "pixeles": 0,
+      "niveles": 0,
+      "igual": true
+     }
+    },
+    "caca": {
+     "base": {
+      "medianaMs": 0.185312,
+      "validas": 60,
+      "captura": "reports/polvo-control-ronda1-base-caca.png"
+     },
+     "propuesta": {
+      "medianaMs": 0.223232,
+      "validas": 60,
+      "captura": "reports/polvo-control-ronda1-propuesta-caca.png"
+     },
+     "imagen": {
+      "pixeles": 0,
+      "niveles": 0,
+      "igual": true
+     }
+    }
+   }
+  },
+  {
+   "orden": [
+    "propuesta",
+    "base"
+   ],
+   "casos": {
+    "polvo": {
+     "base": {
+      "medianaMs": 0.155648,
+      "validas": 60,
+      "captura": "reports/polvo-control-ronda2-base-polvo.png"
+     },
+     "propuesta": {
+      "medianaMs": 0.152576,
+      "validas": 60,
+      "captura": "reports/polvo-control-ronda2-propuesta-polvo.png"
+     },
+     "imagen": {
+      "pixeles": 0,
+      "niveles": 0,
+      "igual": true
+     }
+    },
+    "polvo_acuoso": {
+     "base": {
+      "medianaMs": 0.155648,
+      "validas": 60,
+      "captura": "reports/polvo-control-ronda2-base-polvo_acuoso.png"
+     },
+     "propuesta": {
+      "medianaMs": 0.1536,
+      "validas": 60,
+      "captura": "reports/polvo-control-ronda2-propuesta-polvo_acuoso.png"
+     },
+     "imagen": {
+      "pixeles": 0,
+      "niveles": 0,
+      "igual": true
+     }
+    },
+    "polvo_sin_color": {
+     "base": {
+      "medianaMs": 0.155648,
+      "validas": 60,
+      "captura": "reports/polvo-control-ronda2-base-polvo_sin_color.png"
+     },
+     "propuesta": {
+      "medianaMs": 0.152576,
+      "validas": 60,
+      "captura": "reports/polvo-control-ronda2-propuesta-polvo_sin_color.png"
+     },
+     "imagen": {
+      "pixeles": 0,
+      "niveles": 0,
+      "igual": true
+     }
+    },
+    "moho": {
+     "base": {
+      "medianaMs": 0.180672,
+      "validas": 60,
+      "captura": "reports/polvo-control-ronda2-base-moho.png"
+     },
+     "propuesta": {
+      "medianaMs": 0.181248,
+      "validas": 60,
+      "captura": "reports/polvo-control-ronda2-propuesta-moho.png"
+     },
+     "imagen": {
+      "pixeles": 0,
+      "niveles": 0,
+      "igual": true
+     }
+    },
+    "caca": {
+     "base": {
+      "medianaMs": 0.207872,
+      "validas": 60,
+      "captura": "reports/polvo-control-ronda2-base-caca.png"
+     },
+     "propuesta": {
+      "medianaMs": 0.221184,
+      "validas": 60,
+      "captura": "reports/polvo-control-ronda2-propuesta-caca.png"
+     },
+     "imagen": {
+      "pixeles": 0,
+      "niveles": 0,
+      "igual": true
+     }
+    }
+   }
+  },
+  {
+   "orden": [
+    "base",
+    "propuesta"
+   ],
+   "casos": {
+    "polvo": {
+     "base": {
+      "medianaMs": 0.157696,
+      "validas": 60,
+      "captura": "reports/polvo-control-ronda3-base-polvo.png"
+     },
+     "propuesta": {
+      "medianaMs": 0.169984,
+      "validas": 60,
+      "captura": "reports/polvo-control-ronda3-propuesta-polvo.png"
+     },
+     "imagen": {
+      "pixeles": 0,
+      "niveles": 0,
+      "igual": true
+     }
+    },
+    "polvo_acuoso": {
+     "base": {
+      "medianaMs": 0.161792,
+      "validas": 60,
+      "captura": "reports/polvo-control-ronda3-base-polvo_acuoso.png"
+     },
+     "propuesta": {
+      "medianaMs": 0.16896,
+      "validas": 60,
+      "captura": "reports/polvo-control-ronda3-propuesta-polvo_acuoso.png"
+     },
+     "imagen": {
+      "pixeles": 0,
+      "niveles": 0,
+      "igual": true
+     }
+    },
+    "polvo_sin_color": {
+     "base": {
+      "medianaMs": 0.161792,
+      "validas": 60,
+      "captura": "reports/polvo-control-ronda3-base-polvo_sin_color.png"
+     },
+     "propuesta": {
+      "medianaMs": 0.16896,
+      "validas": 60,
+      "captura": "reports/polvo-control-ronda3-propuesta-polvo_sin_color.png"
+     },
+     "imagen": {
+      "pixeles": 0,
+      "niveles": 0,
+      "igual": true
+     }
+    },
+    "moho": {
+     "base": {
+      "medianaMs": 0.190944,
+      "validas": 60,
+      "captura": "reports/polvo-control-ronda3-base-moho.png"
+     },
+     "propuesta": {
+      "medianaMs": 0.200704,
+      "validas": 60,
+      "captura": "reports/polvo-control-ronda3-propuesta-moho.png"
+     },
+     "imagen": {
+      "pixeles": 0,
+      "niveles": 0,
+      "igual": true
+     }
+    },
+    "caca": {
+     "base": {
+      "medianaMs": 0.241664,
+      "validas": 60,
+      "captura": "reports/polvo-control-ronda3-base-caca.png"
+     },
+     "propuesta": {
+      "medianaMs": 0.237568,
+      "validas": 60,
+      "captura": "reports/polvo-control-ronda3-propuesta-caca.png"
+     },
+     "imagen": {
+      "pixeles": 0,
+      "niveles": 0,
+      "igual": true
+     }
+    }
+   }
+  }
+ ],
+ "medianas": {
+  "polvo": {
+   "base": 0.155648,
+   "propuesta": 0.154624
+  },
+  "polvo_acuoso": {
+   "base": 0.155648,
+   "propuesta": 0.154624
+  },
+  "polvo_sin_color": {
+   "base": 0.155648,
+   "propuesta": 0.154624
+  },
+  "moho": {
+   "base": 0.180672,
+   "propuesta": 0.182736
+  },
+  "caca": {
+   "base": 0.207872,
+   "propuesta": 0.223232
+  }
+ }
+}

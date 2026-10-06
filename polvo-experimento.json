@@ -1,0 +1,757 @@
+{
+ "copias": [
+  [
+   "base",
+   "http://localhost:8060/318-base/web/"
+  ],
+  [
+   "propuesta",
+   "http://localhost:8060/318-propuesta/web/"
+  ]
+ ],
+ "casos": [
+  "polvo",
+  "polvo_acuoso",
+  "polvo_sin_color",
+  "moho",
+  "caca"
+ ],
+ "rondas": [
+  {
+   "orden": [
+    "base",
+    "propuesta"
+   ],
+   "medidos": {
+    "base": {
+     "polvo": {
+      "cuadros": 60,
+      "suma": 0.161792,
+      "dibujos": [
+       0.137216,
+       0.024576
+      ]
+     },
+     "polvo_acuoso": {
+      "cuadros": 60,
+      "suma": 0.161792,
+      "dibujos": [
+       0.137216,
+       0.023552
+      ]
+     },
+     "polvo_sin_color": {
+      "cuadros": 60,
+      "suma": 0.160768,
+      "dibujos": [
+       0.137216,
+       0.023552
+      ]
+     },
+     "moho": {
+      "cuadros": 60,
+      "suma": 0.19096,
+      "dibujos": [
+       0.166912,
+       0.024576
+      ]
+     },
+     "caca": {
+      "cuadros": 60,
+      "suma": 0.239616,
+      "dibujos": [
+       0.215552,
+       0.023552
+      ]
+     }
+    },
+    "propuesta": {
+     "polvo": {
+      "cuadros": 60,
+      "suma": 0.106496,
+      "dibujos": [
+       0.083968,
+       0.022528
+      ]
+     },
+     "polvo_acuoso": {
+      "cuadros": 60,
+      "suma": 0.106496,
+      "dibujos": [
+       0.083968,
+       0.022528
+      ]
+     },
+     "polvo_sin_color": {
+      "cuadros": 60,
+      "suma": 0.106496,
+      "dibujos": [
+       0.083968,
+       0.022528
+      ]
+     },
+     "moho": {
+      "cuadros": 60,
+      "suma": 0.178176,
+      "dibujos": [
+       0.155648,
+       0.022528
+      ]
+     },
+     "caca": {
+      "cuadros": 60,
+      "suma": 0.22528,
+      "dibujos": [
+       0.202752,
+       0.022528
+      ]
+     }
+    }
+   }
+  },
+  {
+   "orden": [
+    "propuesta",
+    "base"
+   ],
+   "medidos": {
+    "propuesta": {
+     "polvo": {
+      "cuadros": 60,
+      "suma": 0.088064,
+      "dibujos": [
+       0.069632,
+       0.018432
+      ]
+     },
+     "polvo_acuoso": {
+      "cuadros": 60,
+      "suma": 0.08704,
+      "dibujos": [
+       0.068608,
+       0.018432
+      ]
+     },
+     "polvo_sin_color": {
+      "cuadros": 60,
+      "suma": 0.08704,
+      "dibujos": [
+       0.068608,
+       0.018432
+      ]
+     },
+     "moho": {
+      "cuadros": 60,
+      "suma": 0.146432,
+      "dibujos": [
+       0.128,
+       0.018432
+      ]
+     },
+     "caca": {
+      "cuadros": 60,
+      "suma": 0.18432,
+      "dibujos": [
+       0.165888,
+       0.018432
+      ]
+     }
+    },
+    "base": {
+     "polvo": {
+      "cuadros": 60,
+      "suma": 0.129024,
+      "dibujos": [
+       0.109568,
+       0.019456
+      ]
+     },
+     "polvo_acuoso": {
+      "cuadros": 60,
+      "suma": 0.129024,
+      "dibujos": [
+       0.109568,
+       0.019456
+      ]
+     },
+     "polvo_sin_color": {
+      "cuadros": 60,
+      "suma": 0.129024,
+      "dibujos": [
+       0.109568,
+       0.019456
+      ]
+     },
+     "moho": {
+      "cuadros": 60,
+      "suma": 0.152576,
+      "dibujos": [
+       0.13312,
+       0.019456
+      ]
+     },
+     "caca": {
+      "cuadros": 60,
+      "suma": 0.192512,
+      "dibujos": [
+       0.173056,
+       0.019456
+      ]
+     }
+    }
+   }
+  },
+  {
+   "orden": [
+    "base",
+    "propuesta"
+   ],
+   "medidos": {
+    "base": {
+     "polvo": {
+      "cuadros": 60,
+      "suma": 0.157152,
+      "dibujos": [
+       0.134144,
+       0.023552
+      ]
+     },
+     "polvo_acuoso": {
+      "cuadros": 60,
+      "suma": 0.157648,
+      "dibujos": [
+       0.134144,
+       0.023552
+      ]
+     },
+     "polvo_sin_color": {
+      "cuadros": 60,
+      "suma": 0.156672,
+      "dibujos": [
+       0.13312,
+       0.023552
+      ]
+     },
+     "moho": {
+      "cuadros": 60,
+      "suma": 0.186304,
+      "dibujos": [
+       0.162816,
+       0.023552
+      ]
+     },
+     "caca": {
+      "cuadros": 60,
+      "suma": 0.23552,
+      "dibujos": [
+       0.211968,
+       0.023552
+      ]
+     }
+    },
+    "propuesta": {
+     "polvo": {
+      "cuadros": 60,
+      "suma": 0.087904,
+      "dibujos": [
+       0.069632,
+       0.018432
+      ]
+     },
+     "polvo_acuoso": {
+      "cuadros": 60,
+      "suma": 0.087808,
+      "dibujos": [
+       0.069632,
+       0.018432
+      ]
+     },
+     "polvo_sin_color": {
+      "cuadros": 60,
+      "suma": 0.08704,
+      "dibujos": [
+       0.068608,
+       0.018432
+      ]
+     },
+     "moho": {
+      "cuadros": 60,
+      "suma": 0.146432,
+      "dibujos": [
+       0.128,
+       0.018432
+      ]
+     },
+     "caca": {
+      "cuadros": 60,
+      "suma": 0.18432,
+      "dibujos": [
+       0.165888,
+       0.018432
+      ]
+     }
+    }
+   }
+  },
+  {
+   "orden": [
+    "propuesta",
+    "base"
+   ],
+   "medidos": {
+    "propuesta": {
+     "polvo": {
+      "cuadros": 60,
+      "suma": 0.124928,
+      "dibujos": [
+       0.099328,
+       0.026608
+      ]
+     },
+     "polvo_acuoso": {
+      "cuadros": 60,
+      "suma": 0.124928,
+      "dibujos": [
+       0.099328,
+       0.0256
+      ]
+     },
+     "polvo_sin_color": {
+      "cuadros": 60,
+      "suma": 0.128,
+      "dibujos": [
+       0.101376,
+       0.026624
+      ]
+     },
+     "moho": {
+      "cuadros": 60,
+      "suma": 0.217088,
+      "dibujos": [
+       0.190464,
+       0.026624
+      ]
+     },
+     "caca": {
+      "cuadros": 60,
+      "suma": 0.274432,
+      "dibujos": [
+       0.246784,
+       0.026624
+      ]
+     }
+    },
+    "base": {
+     "polvo": {
+      "cuadros": 60,
+      "suma": 0.167936,
+      "dibujos": [
+       0.14336,
+       0.024576
+      ]
+     },
+     "polvo_acuoso": {
+      "cuadros": 60,
+      "suma": 0.168928,
+      "dibujos": [
+       0.14336,
+       0.024576
+      ]
+     },
+     "polvo_sin_color": {
+      "cuadros": 60,
+      "suma": 0.167936,
+      "dibujos": [
+       0.14336,
+       0.024576
+      ]
+     },
+     "moho": {
+      "cuadros": 60,
+      "suma": 0.198656,
+      "dibujos": [
+       0.17408,
+       0.024576
+      ]
+     },
+     "caca": {
+      "cuadros": 60,
+      "suma": 0.25088,
+      "dibujos": [
+       0.226304,
+       0.024576
+      ]
+     }
+    }
+   }
+  },
+  {
+   "orden": [
+    "base",
+    "propuesta"
+   ],
+   "medidos": {
+    "base": {
+     "polvo": {
+      "cuadros": 60,
+      "suma": 0.1792,
+      "dibujos": [
+       0.152576,
+       0.026624
+      ]
+     },
+     "polvo_acuoso": {
+      "cuadros": 60,
+      "suma": 0.178176,
+      "dibujos": [
+       0.151552,
+       0.026624
+      ]
+     },
+     "polvo_sin_color": {
+      "cuadros": 60,
+      "suma": 0.178176,
+      "dibujos": [
+       0.151552,
+       0.026624
+      ]
+     },
+     "moho": {
+      "cuadros": 60,
+      "suma": 0.210944,
+      "dibujos": [
+       0.18432,
+       0.026624
+      ]
+     },
+     "caca": {
+      "cuadros": 60,
+      "suma": 0.268288,
+      "dibujos": [
+       0.241664,
+       0.026624
+      ]
+     }
+    },
+    "propuesta": {
+     "polvo": {
+      "cuadros": 60,
+      "suma": 0.113664,
+      "dibujos": [
+       0.090112,
+       0.023552
+      ]
+     },
+     "polvo_acuoso": {
+      "cuadros": 60,
+      "suma": 0.113664,
+      "dibujos": [
+       0.090112,
+       0.023552
+      ]
+     },
+     "polvo_sin_color": {
+      "cuadros": 60,
+      "suma": 0.113632,
+      "dibujos": [
+       0.089088,
+       0.023552
+      ]
+     },
+     "moho": {
+      "cuadros": 60,
+      "suma": 0.190464,
+      "dibujos": [
+       0.166912,
+       0.023552
+      ]
+     },
+     "caca": {
+      "cuadros": 60,
+      "suma": 0.24064,
+      "dibujos": [
+       0.217088,
+       0.023552
+      ]
+     }
+    }
+   }
+  },
+  {
+   "orden": [
+    "propuesta",
+    "base"
+   ],
+   "medidos": {
+    "propuesta": {
+     "polvo": {
+      "cuadros": 60,
+      "suma": 0.116736,
+      "dibujos": [
+       0.09216,
+       0.024576
+      ]
+     },
+     "polvo_acuoso": {
+      "cuadros": 60,
+      "suma": 0.115712,
+      "dibujos": [
+       0.09216,
+       0.024576
+      ]
+     },
+     "polvo_sin_color": {
+      "cuadros": 60,
+      "suma": 0.115712,
+      "dibujos": [
+       0.091136,
+       0.024576
+      ]
+     },
+     "moho": {
+      "cuadros": 60,
+      "suma": 0.196608,
+      "dibujos": [
+       0.172032,
+       0.024576
+      ]
+     },
+     "caca": {
+      "cuadros": 60,
+      "suma": 0.247808,
+      "dibujos": [
+       0.223232,
+       0.024576
+      ]
+     }
+    },
+    "base": {
+     "polvo": {
+      "cuadros": 60,
+      "suma": 0.141312,
+      "dibujos": [
+       0.120832,
+       0.02144
+      ]
+     },
+     "polvo_acuoso": {
+      "cuadros": 60,
+      "suma": 0.141312,
+      "dibujos": [
+       0.120832,
+       0.021504
+      ]
+     },
+     "polvo_sin_color": {
+      "cuadros": 60,
+      "suma": 0.141312,
+      "dibujos": [
+       0.119808,
+       0.021472
+      ]
+     },
+     "moho": {
+      "cuadros": 60,
+      "suma": 0.167936,
+      "dibujos": [
+       0.146432,
+       0.021504
+      ]
+     },
+     "caca": {
+      "cuadros": 60,
+      "suma": 0.211968,
+      "dibujos": [
+       0.190464,
+       0.021472
+      ]
+     }
+    }
+   }
+  },
+  {
+   "orden": [
+    "base",
+    "propuesta"
+   ],
+   "medidos": {
+    "base": {
+     "polvo": {
+      "cuadros": 60,
+      "suma": 0.123904,
+      "dibujos": [
+       0.105472,
+       0.018432
+      ]
+     },
+     "polvo_acuoso": {
+      "cuadros": 60,
+      "suma": 0.12288,
+      "dibujos": [
+       0.104448,
+       0.018432
+      ]
+     },
+     "polvo_sin_color": {
+      "cuadros": 60,
+      "suma": 0.123232,
+      "dibujos": [
+       0.104448,
+       0.018432
+      ]
+     },
+     "moho": {
+      "cuadros": 60,
+      "suma": 0.14624,
+      "dibujos": [
+       0.126976,
+       0.018432
+      ]
+     },
+     "caca": {
+      "cuadros": 60,
+      "suma": 0.18432,
+      "dibujos": [
+       0.165888,
+       0.018432
+      ]
+     }
+    },
+    "propuesta": {
+     "polvo": {
+      "cuadros": 60,
+      "suma": 0.119792,
+      "dibujos": [
+       0.094208,
+       0.024576
+      ]
+     },
+     "polvo_acuoso": {
+      "cuadros": 60,
+      "suma": 0.118784,
+      "dibujos": [
+       0.094208,
+       0.024576
+      ]
+     },
+     "polvo_sin_color": {
+      "cuadros": 60,
+      "suma": 0.118784,
+      "dibujos": [
+       0.094208,
+       0.025584
+      ]
+     },
+     "moho": {
+      "cuadros": 60,
+      "suma": 0.200704,
+      "dibujos": [
+       0.175104,
+       0.0256
+      ]
+     },
+     "caca": {
+      "cuadros": 60,
+      "suma": 0.252928,
+      "dibujos": [
+       0.227328,
+       0.024576
+      ]
+     }
+    }
+   }
+  },
+  {
+   "orden": [
+    "propuesta",
+    "base"
+   ],
+   "medidos": {
+    "propuesta": {
+     "polvo": {
+      "cuadros": 60,
+      "suma": 0.101376,
+      "dibujos": [
+       0.080384,
+       0.021504
+      ]
+     },
+     "polvo_acuoso": {
+      "cuadros": 60,
+      "suma": 0.110592,
+      "dibujos": [
+       0.08704,
+       0.023552
+      ]
+     },
+     "polvo_sin_color": {
+      "cuadros": 60,
+      "suma": 0.110592,
+      "dibujos": [
+       0.08704,
+       0.023552
+      ]
+     },
+     "moho": {
+      "cuadros": 60,
+      "suma": 0.186368,
+      "dibujos": [
+       0.162816,
+       0.023552
+      ]
+     },
+     "caca": {
+      "cuadros": 60,
+      "suma": 0.24064,
+      "dibujos": [
+       0.217088,
+       0.023552
+      ]
+     }
+    },
+    "base": {
+     "polvo": {
+      "cuadros": 60,
+      "suma": 0.123904,
+      "dibujos": [
+       0.105472,
+       0.018432
+      ]
+     },
+     "polvo_acuoso": {
+      "cuadros": 60,
+      "suma": 0.123696,
+      "dibujos": [
+       0.105472,
+       0.018432
+      ]
+     },
+     "polvo_sin_color": {
+      "cuadros": 60,
+      "suma": 0.123264,
+      "dibujos": [
+       0.10496,
+       0.018432
+      ]
+     },
+     "moho": {
+      "cuadros": 60,
+      "suma": 0.146384,
+      "dibujos": [
+       0.128,
+       0.018432
+      ]
+     },
+     "caca": {
+      "cuadros": 60,
+      "suma": 0.18432,
+      "dibujos": [
+       0.165888,
+       0.018432
+      ]
+     }
+    }
+   }
+  }
+ ]
+}
