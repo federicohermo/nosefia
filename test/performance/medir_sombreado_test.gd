@@ -92,3 +92,47 @@ func test_el_agua_lee_las_ondas_solo_sin_normales_de_malla() -> void:
 			)
 			. is_equal(fuente.count(calculo))
 		)
+
+
+func test_los_casos_de_manchas_cubren_polvo_seco_acuoso_alfa_cero_y_los_controles() -> void:
+	var casos := Medicion.casos()
+	var tipos := {
+		"polvo": ReglasDeLaLimpieza.TipoDeMancha.POLVO,
+		"polvo_acuoso": ReglasDeLaLimpieza.TipoDeMancha.POLVO,
+		"polvo_sin_color": ReglasDeLaLimpieza.TipoDeMancha.POLVO,
+		"moho": ReglasDeLaLimpieza.TipoDeMancha.MOHO,
+		"caca": ReglasDeLaLimpieza.TipoDeMancha.CACA,
+	}
+	for nombre: String in tipos:
+		var mancha: Dictionary = casos[nombre]
+		assert_bool(mancha["es_mancha"]).is_true()
+		assert_int(mancha["tipo_de_suciedad"]).is_equal(tipos[nombre])
+		assert_object(mancha["guia_de_manchas"]).is_not_null()
+	assert_bool(casos["polvo"]["acuosa"]).is_false()
+	assert_bool(casos["polvo_acuoso"]["acuosa"]).is_true()
+	assert_float(casos["polvo_acuoso"]["transparencia"]).is_less(casos["polvo"]["transparencia"])
+	assert_float((casos["polvo"]["color_del_agua"] as Color).a).is_greater(0.0)
+	assert_float((casos["polvo_sin_color"]["color_del_agua"] as Color).a).is_equal(0.0)
+
+
+func test_el_polvo_no_calcula_el_ruido_que_usan_el_moho_y_la_caca() -> void:
+	var fuente := _fuente("aspecto_de_la_mancha.gdshaderinc")
+	var cortes: Array[int] = [fuente.find("void pintar_mancha(")]
+	for rama: String in [
+		"if (tipo_de_suciedad == 0) {", "} else if (tipo_de_suciedad == 1) {", "} else {"
+	]:
+		cortes.append(fuente.find(rama, cortes[-1]))
+		assert_int(cortes[-1]).is_greater(cortes[-2])
+	var antes_de_elegir := fuente.substr(cortes[0], cortes[1] - cortes[0])
+	var moho := fuente.substr(cortes[1], cortes[2] - cortes[1])
+	var caca := fuente.substr(cortes[2], cortes[3] - cortes[2])
+	var polvo := fuente.substr(cortes[3])
+	for tramo: String in [antes_de_elegir, polvo]:
+		(
+			assert_int(tramo.count("ruido("))
+			. override_failure_message("el polvo calcula ruido que no usa:\n" + tramo)
+			. is_equal(0)
+		)
+	for tramo: String in [moho, caca]:
+		assert_int(tramo.count("ruido(uv * 12.0)")).is_equal(1)
+		assert_int(tramo.count("ruido(uv * 57.0)")).is_equal(1)

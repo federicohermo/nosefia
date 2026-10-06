@@ -63,6 +63,15 @@ const CASOS = {
     { nombre: 'agua_sin_color' },
     { nombre: 'agua_del_bano', aparte: true },
   ],
+  manchas: [
+    { nombre: 'polvo' },
+    { nombre: 'polvo_acuoso' },
+    { nombre: 'polvo_sin_color' },
+    // Mover el ruido adentro de la rama del moho cambió un píxel en un nivel al medir el
+    // issue. Más que eso es otra imagen.
+    { nombre: 'moho', aparte: true, tolerancia: { pixeles: 1, niveles: 1 } },
+    { nombre: 'caca', aparte: true },
+  ],
 };
 
 const { values: opciones } = parseArgs({
