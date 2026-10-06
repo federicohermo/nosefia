@@ -372,16 +372,19 @@ export function esRenderizadoPorSoftware(renderer) {
   return !renderer || /swiftshader|llvmpipe|software|basic render driver|warp/i.test(renderer);
 }
 
-/** Por qué una corrida no sirve como informe. Vacío si sirve. */
-export function motivosDeRechazo({ motor, renderer, errores, fases }) {
+/**
+ * Por qué una corrida no sirve como informe. Vacío si sirve.
+ *
+ * `corte` es el motivo por el que la corrida paró antes de terminar. Ahí lo que no llegó a
+ * medirse no se juzga: sería repetir el corte con otras palabras.
+ */
+export function motivosDeRechazo({ corte = null, motor, errores, fases }) {
+  const delJuego = errores.map((error) => `error del juego: ${error}`);
+  if (corte) return [corte, ...delJuego];
   const motivos = [];
-  if (esRenderizadoPorSoftware(renderer)) {
-    motivos.push(`renderizado por software o GPU sin identificar: ${renderer}`);
-  }
   if (!motor) motivos.push('el juego no anunció la versión del motor');
   for (const fase of FASES) {
     if (!fases[fase]) motivos.push(`falta la fase «${fase}»`);
   }
-  for (const error of errores) motivos.push(`error del juego: ${error}`);
-  return motivos;
+  return [...motivos, ...delJuego];
 }

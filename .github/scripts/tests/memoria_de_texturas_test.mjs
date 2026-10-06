@@ -12,6 +12,7 @@ import {
   aplicar,
   bytesDeImagen,
   crearRegistro,
+  esRenderizadoPorSoftware,
   inventario,
   motivosDeRechazo,
   perderContexto,
@@ -435,20 +436,31 @@ test('el informe declara que un renderbuffer no entra', () => {
 // --- rechazos ---
 
 const FASES_COMPLETAS = { menu: inventario(crearRegistro()), almacen: inventario(crearRegistro()) };
-const CORRIDA_SANA = { motor: '4.7.2.stable', renderer: GPU, errores: [], fases: FASES_COMPLETAS };
+const CORRIDA_SANA = { motor: '4.7.2.stable', errores: [], fases: FASES_COMPLETAS };
 
 test('una corrida sana no tiene motivos de rechazo', () => {
   assert.deepEqual(motivosDeRechazo(CORRIDA_SANA), []);
 });
 
-test('se rechaza el renderizado por software y la GPU sin identificar', () => {
+test('se reconoce el renderizado por software y la GPU sin identificar', () => {
   const swiftshader =
     'ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)';
   for (const renderer of [swiftshader, 'Microsoft Basic Render Driver', 'llvmpipe', null]) {
-    const motivos = motivosDeRechazo({ ...CORRIDA_SANA, renderer });
-    assert.equal(motivos.length, 1, String(renderer));
-    assert.match(motivos[0], /software/);
+    assert.equal(esRenderizadoPorSoftware(renderer), true, String(renderer));
   }
+  assert.equal(esRenderizadoPorSoftware(GPU), false);
+});
+
+test('una corrida cortada informa el corte y lo que dijo el juego, y nada más', () => {
+  const motivos = motivosDeRechazo({
+    corte: 'no llegó el aviso del menú en 180 s',
+    motor: null,
+    errores: ['SCRIPT ERROR: se rompió'],
+    fases: {},
+  });
+  assert.equal(motivos.length, 2);
+  assert.match(motivos[0], /aviso del menú/);
+  assert.match(motivos[1], /se rompió/);
 });
 
 test('se rechaza una fase faltante, y se dice cuál', () => {

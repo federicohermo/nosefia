@@ -200,14 +200,16 @@ async function medir() {
   const almacen = aviso(pagina, AVISO_DEL_ALMACEN);
   // El cursor se coloca antes de cargar el motor: moverlo al clic puede girar la cámara.
   await pagina.mouse.move(VISTA.width / 2, VISTA.height * ALTURA_DE_NUEVO_JUEGO);
-  await pagina.goto(url, { waitUntil: 'load', timeout: ESPERA });
+  const respuesta = await pagina.goto(url, { waitUntil: 'load', timeout: ESPERA });
+  if (!respuesta?.ok()) throw new Error(`la URL contestó ${respuesta?.status() ?? 'nada'}`);
   condiciones.renderer = await pagina.evaluate(() => {
     const gl = document.createElement('canvas').getContext('webgl2');
     const info = gl?.getExtension('WEBGL_debug_renderer_info');
     return info ? gl.getParameter(info.UNMASKED_RENDERER_WEBGL) : null;
   });
-  // Sin GPU real no vale la pena esperar al juego. El motivo lo arma `motivosDeRechazo`.
-  if (esRenderizadoPorSoftware(condiciones.renderer)) return;
+  if (esRenderizadoPorSoftware(condiciones.renderer)) {
+    throw new Error(`renderizado por software o GPU sin identificar: ${condiciones.renderer}`);
+  }
 
   await dentroDe(menu, 'el aviso del menú');
   fases.menu = await fotografiar(pagina);
@@ -226,15 +228,15 @@ async function medir() {
   exportEnDisco = { pck: await huella(pedidos.pck), wasm: await huella(pedidos.wasm) };
 }
 
-const motivos = [];
+let corte = null;
 try {
   await medir();
 } catch (error) {
-  motivos.push(error.message);
+  corte = error.message;
 } finally {
   await navegador.close();
 }
-motivos.push(...motivosDeRechazo({ ...condiciones, errores, fases }));
+const motivos = motivosDeRechazo({ corte, motor: condiciones.motor, errores, fases });
 if (motivos.length) {
   console.error('no hay informe:');
   for (const motivo of motivos) console.error(`  - ${motivo}`);
