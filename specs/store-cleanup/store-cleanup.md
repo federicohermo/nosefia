@@ -141,13 +141,13 @@ sigue perdiendo su carga por el tiempo transcurrido, incluso apoyada o examinada
 ### BR-CLN-022 — La carga de la mopa tiene duración y recorrido limitados
 
 MIENTRAS dura la jornada, el sistema DEBE descontar la carga de la mopa por tiempo real y,
-cuando se lleva en la mano, por distancia recorrida. Los límites están en
-`ReglasDeLaLimpieza.DURACION_DE_LA_CARGA` y `RECORRIDO_DE_LA_CARGA`. CUANDO se agota,
-ENTONCES DEBE quedar seca y rechazar la limpieza. Remojarla en un balde con agua recupera
-la carga completa. La punta DEBE perder intensidad de color y gotear durante el desgaste,
-sin generar nuevas manchas ni reservar partículas sin límite. La pausa detiene el desgaste.
-El alcance al caminar DEBE ser menor que el anterior, manteniendo la duración máxima en reposo.
-Los charcos temporales producidos por una pasada intencional de agua no son manchas nuevas.
+cuando se lleva en la mano, por distancia recorrida. Los dos límites —una duración en reposo
+y un recorrido— los declara el dominio. CUANDO se agota, ENTONCES DEBE quedar seca y
+rechazar la limpieza. Remojarla en un balde con agua recupera la carga completa. La punta
+DEBE perder intensidad de color y gotear durante el desgaste, sin generar nuevas manchas ni
+reservar partículas sin límite. La pausa detiene el desgaste. Caminar DEBE agotarla antes
+que esperar quieta el mismo tiempo, sin acortar la duración máxima en reposo. Los charcos
+temporales producidos por una pasada intencional de agua no son manchas nuevas.
 
 ### BR-CLN-023 — Enjuagar la mopa
 
@@ -305,9 +305,10 @@ a la zona de limpieza ENTONCES hay carga suficiente para caminar unos pasos y li
 
 ### AC-CLN-028 — Menor alcance en movimiento *(verifica BR-CLN-022)*
 
-DADO una mopa recién mojada CUANDO se compara el desgaste por el mismo tiempo y recorrido con
-el balance anterior ENTONCES se agota antes al caminar, pero conserva la duración máxima de
-reposo. Dividir el trayecto entre cuadros no modifica el resultado ni permite recuperar carga.
+DADO dos mopas recién mojadas CUANDO una recorre metros en el mismo tiempo en que la otra
+espera quieta ENTONCES la que caminó tiene menos carga y se agota antes. DADO la mopa quieta
+CUANDO transcurre menos que la duración en reposo ENTONCES sigue mojada, y al cumplirla queda
+seca. Dividir el trayecto entre cuadros no modifica el resultado ni permite recuperar carga.
 
 ### AC-CLN-029 — Enjuague sin cambiar el resto del local *(verifica BR-CLN-023)*
 
