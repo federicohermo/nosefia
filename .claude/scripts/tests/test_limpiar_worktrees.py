@@ -15,16 +15,18 @@ LOTE = RAIZ / ".claude" / "worktrees"
 
 class DelLote(unittest.TestCase):
     def test_un_worktree_bajo_la_carpeta_es_del_lote(self) -> None:
-        self.assertTrue(limpiar_worktrees.del_lote(LOTE / "agent-abc"))
+        self.assertTrue(limpiar_worktrees.del_lote(LOTE / "agent-abc", RAIZ))
 
     def test_el_checkout_principal_no_es_del_lote(self) -> None:
-        self.assertFalse(limpiar_worktrees.del_lote(RAIZ))
+        self.assertFalse(limpiar_worktrees.del_lote(RAIZ, RAIZ))
 
     def test_un_worktree_al_lado_del_repo_no_es_del_lote(self) -> None:
-        self.assertFalse(limpiar_worktrees.del_lote(RAIZ.parent / f"{RAIZ.name}-42"))
+        self.assertFalse(limpiar_worktrees.del_lote(RAIZ.parent / f"{RAIZ.name}-42", RAIZ))
 
     def test_una_carpeta_de_nombre_parecido_no_es_del_lote(self) -> None:
-        self.assertFalse(limpiar_worktrees.del_lote(RAIZ / ".claude" / "worktrees-otro" / "x"))
+        self.assertFalse(
+            limpiar_worktrees.del_lote(RAIZ / ".claude" / "worktrees-otro" / "x", RAIZ)
+        )
 
 
 class SinCommitear(unittest.TestCase):
@@ -68,17 +70,30 @@ class NoBorraTrabajoAjeno(unittest.TestCase):
             ["git", *args], cwd=self.repo, check=True, capture_output=True, encoding="utf-8"
         )
 
-    def _limpiar(self) -> subprocess.CompletedProcess:
+    def _limpiar(self, desde: Path | None = None) -> subprocess.CompletedProcess:
+        desde = desde or self.repo
         return subprocess.run(
-            [sys.executable, str(self.repo / ".claude" / "scripts" / "limpiar_worktrees.py"),
+            [sys.executable, str(desde / ".claude" / "scripts" / "limpiar_worktrees.py"),
              str(self.wt)],
-            cwd=self.repo, capture_output=True, text=True, encoding="utf-8", errors="replace",
+            cwd=desde, capture_output=True, text=True, encoding="utf-8", errors="replace",
         )
 
     def test_un_worktree_limpio_se_borra(self) -> None:
         hecho = self._limpiar()
         self.assertEqual(hecho.returncode, 0, hecho.stderr)
         self.assertFalse(self.wt.exists())
+
+    def test_desde_un_worktree_secundario_se_borra_igual(self) -> None:
+        # El padre de un lote puede correr en un worktree que no es el checkout principal. El
+        # script y `lib/` se copian ahí porque `.claude/` no está trackeado en el repo de juguete.
+        otro = self.repo / ".claude" / "worktrees" / "otro"
+        self._git("worktree", "add", "-q", "-b", "otro", str(otro))
+        shutil.copytree(self.repo / ".claude" / "scripts", otro / ".claude" / "scripts")
+        hecho = self._limpiar(desde=otro)
+        self.assertEqual(hecho.returncode, 0, hecho.stderr)
+        self.assertNotIn("RECHAZADO", hecho.stderr)
+        self.assertFalse(self.wt.exists())
+        self.assertTrue(otro.exists())
 
     def test_un_worktree_con_cambios_sin_commitear_queda_y_el_script_falla(self) -> None:
         (self.wt / "x.txt").write_text("trabajo\n", encoding="utf-8")
