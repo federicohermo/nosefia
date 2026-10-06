@@ -215,9 +215,7 @@ async function cargar(url, prefijo) {
         window.mostrar_caso(caso);
         return window.caso_mostrado;
       }, nombre);
-      if (mostrado !== nombre) {
-        throw new Error(`el escenario no mostró «${nombre}»: ${errores.join('\n')}`);
-      }
+      if (mostrado !== nombre) throw new Error(`el escenario no mostró «${nombre}»`);
       const consultas = await pagina.evaluate(
         ([espera, cuadros]) => window.__medirGpu(espera, cuadros),
         [CUADROS_DE_ESPERA, CUADROS_MEDIDOS]
@@ -227,8 +225,10 @@ async function cargar(url, prefijo) {
       const imagen = decodificarPng(await pagina.screenshot({ path: captura }));
       medidos[nombre] = { medianaMs: mediana(tiempos), validas: tiempos.length, captura, imagen };
     }
-    if (errores.length) throw new Error(`el juego informó errores:\n${errores.join('\n')}`);
+    if (errores.length) throw new Error('el juego informó errores');
     return medidos;
+  } catch (error) {
+    throw new Error([`${url}: ${error.message}`, ...errores].join('\n'));
   } finally {
     await contexto.close();
   }
