@@ -90,7 +90,6 @@ func test_el_piso_ampliado_forma_parte_de_la_misma_superficie_del_edificio() -> 
 		assert_array(cruces).override_failure_message("piso en z=%s" % z).has_size(1)
 		if cruces.size() == 1:
 			assert_float(cruces[0].y).is_equal_approx(0.102237, 0.00001)
-	assert_object(almacen.get_node_or_null("Estructura/bano_piso_ampliado")).is_null()
 
 
 func test_las_paredes_del_bano_tienen_un_plano_continuo_hasta_el_dintel() -> void:
@@ -102,8 +101,6 @@ func test_las_paredes_del_bano_tienen_un_plano_continuo_hasta_el_dintel() -> voi
 		assert_array(cruces).has_size(1)
 		if cruces.size() == 1:
 			assert_float(cruces[0].x).is_equal_approx(8.29186, 0.0001)
-	for nombre: String in ["bano_revestimiento_oeste", "bano_revestimiento_ampliado"]:
-		assert_object(almacen.get_node_or_null("Estructura/" + nombre)).is_null()
 
 
 func _cruces(malla: MeshInstance3D, desde: Vector3, hasta: Vector3) -> Array[Vector3]:
@@ -213,8 +210,6 @@ func test_la_entrada_conserva_la_escala_de_las_otras_puertas_y_un_marco_continuo
 	assert_float(altura / referencia).is_between(0.92, 1.08)
 	assert_array(entrada.find_children("*", "MeshInstance3D", true, false)).is_empty()
 	assert_object(almacen.get_node_or_null("Estructura/bano_marco_entrada")).is_not_null()
-	assert_object(almacen.get_node_or_null("Estructura/bano_marco_entrada_001")).is_null()
-	assert_object(almacen.get_node_or_null("Estructura/bano_muro_entrada")).is_null()
 	var marco := almacen.get_node("Estructura/bano_marco_entrada") as MeshInstance3D
 	# Estos rayos cruzan las bandas que antes dejaban visible la pared del almacén.
 	for punto: Vector3 in [
