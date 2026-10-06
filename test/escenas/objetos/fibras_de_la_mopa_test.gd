@@ -1,6 +1,7 @@
 extends GdUnitTestSuite
 
 const ALMACEN := preload("res://src/escenas/almacen.tscn")
+const BAJO_EL_CIELORRASO := Vector3(10.86, 2.0, -4.58)
 
 
 func test_agrandar_la_mopa_apoyada_no_cambia_la_gravedad_de_sus_fibras() -> void:
@@ -91,3 +92,39 @@ func test_las_fibras_se_mueven_llevando_la_mopa_y_el_agua_tine_sus_puntas() -> v
 	mopa.call("mostrar_la_carga", false, agua)
 	for pintura: ShaderMaterial in pinturas:
 		assert_float(pintura.get_shader_parameter("humedad")).is_equal(0.0)
+
+
+func test_el_cielorraso_sobre_la_cabeza_no_es_el_apoyo_de_las_fibras() -> void:
+	var almacen: Node3D = auto_free(ALMACEN.instantiate())
+	add_child(almacen)
+	await get_tree().physics_frame
+	await get_tree().physics_frame
+	var mopa: RigidBody3D = almacen.get_node("Objetos/Mopa")
+	mopa.freeze = true
+	mopa.top_level = true
+	var fibras: MeshInstance3D = mopa.get_node("Malla")
+	fibras.set_physics_process(false)
+	var pinturas: Array = fibras.get("_pinturas")
+	assert_array(pinturas).is_not_empty()
+	var espacio := almacen.get_world_3d().direct_space_state
+	var techo: Dictionary = espacio.intersect_ray(
+		PhysicsRayQueryParameters3D.create(
+			BAJO_EL_CIELORRASO, BAJO_EL_CIELORRASO + Vector3.UP * 3.0
+		)
+	)
+	assert_str(str((techo.collider as Node).get_parent().name)).is_equal("bano_cielorraso")
+	var cielorraso: float = (techo.position as Vector3).y
+	assert_float(cielorraso).is_equal_approx(3.14, 0.001)
+	for grados: float in [105.0, 135.0, 180.0]:
+		mopa.global_basis = Basis(Vector3.RIGHT, deg_to_rad(grados))
+		for luz: float in [0.2, 0.1, 0.02]:
+			var cabeza := Vector3(BAJO_EL_CIELORRASO.x, cielorraso - luz, BAJO_EL_CIELORRASO.z)
+			mopa.global_position += cabeza - fibras.to_global(Vector3(0.0, -0.83, 0.0))
+			fibras.call("_physics_process", 1.0 / 60.0)
+			var raices := fibras.to_global(Vector3(0.0, -0.774, 0.0)).y
+			for pintura: ShaderMaterial in pinturas:
+				(
+					assert_float(float(pintura.get_shader_parameter("suelo_y")))
+					. override_failure_message("a %s° y a %s m del cielorraso" % [grados, luz])
+					. is_less(raices)
+				)
