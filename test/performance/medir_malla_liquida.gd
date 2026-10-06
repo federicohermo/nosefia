@@ -63,7 +63,7 @@ static func huella(superficie: Superficie) -> Dictionary:
 		"normales_sha256": _sha256(normales.to_byte_array()),
 		"uv_sha256": _sha256(coordenadas.to_byte_array()),
 		"indices_sha256": _sha256(indices.to_byte_array()),
-		"aabb": str(malla.get_aabb()),
+		"aabb": str(malla.custom_aabb),
 	}
 
 
