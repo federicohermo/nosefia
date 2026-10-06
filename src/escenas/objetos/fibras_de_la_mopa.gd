@@ -115,8 +115,11 @@ func _physics_process(delta: float) -> void:
 
 func _pintar(paso: float) -> void:
 	var cabeza := to_global(Vector3(0.0, -0.83, 0.0))
+	# El rayo nace a la altura del mango, nunca por encima de la mopa: con la cabeza hacia
+	# arriba, lo que tiene encima no es su apoyo.
+	var subida := 0.25 * maxf(global_basis.y.normalized().y, 0.0)
 	var consulta := PhysicsRayQueryParameters3D.create(
-		cabeza + Vector3.UP * 0.25, cabeza + Vector3.DOWN * 0.8, 9
+		cabeza + Vector3.UP * subida, cabeza + Vector3.DOWN * 0.8, 9
 	)
 	var excluidos: Array[RID] = [(get_parent() as CollisionObject3D).get_rid()]
 	if is_instance_valid(_apoyo_ignorado):
