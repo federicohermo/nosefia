@@ -117,7 +117,10 @@ func avanzar(delta: float, aceleracion: Vector2) -> void:
 			_velocidades[indice] += (laplaciano * PROPAGACION + fuerza) * paso
 			_velocidades[indice] *= amortiguacion
 			_siguientes[indice] = clampf(altura + _velocidades[indice] * paso, -0.028, 0.028)
-		_alturas = _siguientes.duplicate()
+		# El subpaso escribió todo el interior: lo anterior queda de reserva, sin copiarlo.
+		var anteriores := _alturas
+		_alturas = _siguientes
+		_siguientes = anteriores
 		restante -= paso
 	var suma := 0.0
 	for indice: int in _celdas:
@@ -128,7 +131,6 @@ func avanzar(delta: float, aceleracion: Vector2) -> void:
 		_alturas[indice] -= media
 		# Se conserva el máximo del campo al recorrerlo; el dibujo lo consulta varias veces.
 		_amplitud = maxf(_amplitud, absf(_alturas[indice]))
-	_siguientes = _alturas.duplicate()
 	if amplitud() < 0.000001 and aceleracion.length_squared() < 0.0001:
 		var rapidez := 0.0
 		for velocidad: float in _velocidades:
