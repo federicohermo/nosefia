@@ -44,3 +44,13 @@ paths:
    Los lados de cada grupo y la tabla de carpetas viven en `.claude/scripts/lib/blender.py`.
    Una etiqueta de producto guardada en otra carpeta viaja con el lado de un mueble, y ningún
    test lo ve. Por eso las cinco etiquetas de `textures/props/` van nombradas en esa tabla.
+
+8. **Los scripts del baño de `blender/` son ediciones de un solo paso sobre el `.blend` del
+   repo, y no parte de la cadena.** `acomodar.py` no los corre: lo que hicieron ya está en el
+   binario, y `--aplicar` escribe sobre la fuente. Entraron en este orden: `renovar_bano.py`
+   —que ya llama a `refinar_artefactos.py` y `ajustar_marco_bano.py`—,
+   `colisiones_de_artefactos.py`, `texturizar_piso_bano.py`, `zocalos_del_bano.py`,
+   `ajustar_umbral_bano.py`, `reparar_cabinas_bano.py`, `terminar_cabinas_bano.py` y
+   `texturizar_rejilla_bano.py`. Después hubo ajustes a mano del riel y las cabinas que ningún
+   script reproduce. Un `.blend` del artista que entre como base nueva pide repetirlos en ese
+   orden y rehacer esos ajustes.
