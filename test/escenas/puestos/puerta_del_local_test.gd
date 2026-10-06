@@ -1,6 +1,7 @@
 extends GdUnitTestSuite
 
 const ALMACEN := preload("res://src/escenas/almacen.tscn")
+const PuertaDelLocal := preload("res://src/escenas/puestos/puerta_del_local.gd")
 
 ## Las dos hojas, con el tramo de 4,5 m que va desde piso libre del local hasta adentro del
 ## cuarto. La altura y el largo están medidos:
@@ -14,7 +15,7 @@ const ALMACEN := preload("res://src/escenas/almacen.tscn")
 ## el arranque está libre.
 const VANOS := {
 	"Estructura/puerta": [Vector3(5.494, 1.05, -5.0), Vector3(5.494, 1.05, -9.5)],
-	"Estructura/puerta2": [Vector3(5.0, 1.05, -4.658), Vector3(9.5, 1.05, -4.658)],
+	"Estructura/puerta2": [Vector3(5.0, 1.05, -6.82), Vector3(9.5, 1.05, -6.82)],
 }
 
 const TRABADAS := {
@@ -82,6 +83,35 @@ func test_la_hoja_gira_sobre_su_borde_y_no_sobre_su_centro() -> void:
 				movidos += 1
 		assert_int(quietos).override_failure_message(hoja).is_equal(1)
 		assert_int(movidos).override_failure_message(hoja).is_equal(1)
+
+
+func test_un_herraje_que_amplia_la_malla_no_cambia_el_eje_indicado() -> void:
+	var conjunto: Node3D = auto_free(Node3D.new())
+	conjunto.position = Vector3(1.0, 0.0, 2.0)
+	var hoja := MeshInstance3D.new()
+	var malla := BoxMesh.new()
+	malla.size = Vector3(2.0, 0.10, 0.10)
+	hoja.mesh = malla
+	hoja.position = Vector3(3.0, 2.0, -4.0)
+	conjunto.add_child(hoja)
+	var eje := Marker3D.new()
+	eje.position = Vector3(-0.5, 0.0, 0.0)
+	hoja.add_child(eje)
+	var cuerpo := PuertaDelLocal.new()
+	cuerpo.hoja = hoja
+	cuerpo.eje_de_la_bisagra = eje
+	hoja.add_child(cuerpo)
+	assert_float(eje.position.x).is_greater(hoja.get_aabb().position.x)
+	add_child(conjunto)
+	await get_tree().physics_frame
+	await get_tree().physics_frame
+	var ancla := eje.global_position
+	cuerpo.interactuar()
+	for cuadro in 60:
+		await get_tree().physics_frame
+	assert_float(cuerpo.puerta().angulo()).is_equal_approx(Puerta.ANGULO_ABIERTA, 0.001)
+	assert_float(eje.global_position.distance_to(ancla)).is_less(0.0001)
+	assert_bool(cuerpo.global_transform.is_equal_approx(hoja.global_transform)).is_true()
 
 
 func test_la_hoja_abierta_entra_al_cuarto_y_no_al_local() -> void:

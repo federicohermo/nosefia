@@ -70,6 +70,7 @@ func _limpiador(presupuesto: float = Reglas.DURACION_DEL_TURNO) -> Limpiador:
 	limpiador.mopa_mojada.connect(
 		func(agua: ReglasDeLaLimpieza.Agua) -> void: _emitidas.append(["mopa_mojada", agua])
 	)
+	limpiador.piso_humedecido.connect(func() -> void: _emitidas.append(["piso_humedecido", null]))
 	limpiador.pasada_dada.connect(
 		func(lugar: PisoDelLocal.Lugar) -> void: _emitidas.append(["pasada_dada", lugar])
 	)
@@ -220,3 +221,103 @@ func test_ningun_archivo_de_este_spec_nombra_consumir() -> void:
 			. override_failure_message("`%s` nombra `consumir`: es un segundo cobro" % ruta)
 			. is_false()
 		)
+
+
+func test_desgastar_la_mopa_rechaza_la_pasada_sin_cobrar_tiempo() -> void:  # AC-CLN-026
+	var limpiador := _limpiador()
+	_preparar(limpiador, &"jabon_amarillo")
+	var tiempo := _turno.tiempo_restante()
+	limpiador.desgastar_mopa(MOPA, ReglasDeLaLimpieza.DURACION_DE_LA_CARGA, 0.0)
+	assert_int(limpiador.pasar(MOPA, PisoDelLocal.Lugar.ENTRADA)).is_equal(
+		ReglasDeLaLimpieza.Resultado.MOPA_SECA
+	)
+	assert_bool(limpiador.piso().mancha_de(PisoDelLocal.Lugar.ENTRADA).esta_limpia()).is_false()
+	assert_float(_turno.tiempo_restante()).is_equal(tiempo)
+
+
+func test_remojar_cerca_recupera_la_limpieza_despues_del_viaje() -> void:  # AC-CLN-027
+	var limpiador := _limpiador()
+	_preparar(limpiador, &"jabon_amarillo")
+	limpiador.desgastar_mopa(MOPA, 3.0, ReglasDeLaLimpieza.RECORRIDO_DE_LA_CARGA)
+	assert_int(limpiador.pasar(MOPA, PisoDelLocal.Lugar.ENTRADA)).is_equal(
+		ReglasDeLaLimpieza.Resultado.MOPA_SECA
+	)
+	limpiador.usar(MOPA, BALDE)
+	limpiador.desgastar_mopa(MOPA, 0.5, 0.5)
+	assert_int(limpiador.pasar(MOPA, PisoDelLocal.Lugar.ENTRADA)).is_equal(
+		ReglasDeLaLimpieza.Resultado.MANCHA_BORRADA
+	)
+
+
+func test_enjuagar_en_inodoro_publica_agua_limpia_sin_contar_tarea() -> void:  # AC-CLN-029
+	var limpiador := _limpiador()
+	_preparar(limpiador, &"jabon_rosa")
+	limpiador.desgastar_mopa(MOPA, 2.0, 1.0)
+	_emitidas.clear()
+	var tiempo := _turno.tiempo_restante()
+	assert_int(limpiador.usar(MOPA, INODORO)).is_equal(ReglasDeLaLimpieza.Resultado.MOPA_MOJADA)
+	assert_array(_emitidas).is_equal([["mopa_mojada", ReglasDeLaLimpieza.Agua.LIMPIA]])
+	assert_int(limpiador.piso().balde().agua()).is_equal(ReglasDeLaLimpieza.Agua.ROSA)
+	assert_float(limpiador.piso().mopa().carga_restante()).is_equal(1.0)
+	assert_int(_avisos_de_tarea).is_zero()
+	assert_float(_turno.tiempo_restante()).is_equal(tiempo)
+
+
+func test_charco_aceptado_emite_una_senal_sin_tarea_ni_desgaste() -> void:  # AC-CLN-030
+	var limpiador := _limpiador()
+	limpiador.usar(BALDE, LAVATORIO)
+	limpiador.usar(MOPA, BALDE)
+	limpiador.desgastar_mopa(MOPA, 1.0, 0.5)
+	var carga := limpiador.piso().mopa().carga_restante()
+	var tiempo := _turno.tiempo_restante()
+	_emitidas.clear()
+	assert_int(limpiador.humedecer_piso(MOPA, true)).is_equal(
+		ReglasDeLaLimpieza.Resultado.CHARCO_DEJADO
+	)
+	assert_array(_emitidas).is_equal([["piso_humedecido", null]])
+	assert_float(limpiador.piso().mopa().carga_restante()).is_equal(carga)
+	assert_int(_avisos_de_tarea).is_zero()
+	assert_int(_turno.tareas_cumplidas()).is_zero()
+	assert_float(_turno.tiempo_restante()).is_equal(tiempo)
+
+
+func test_charco_rechazado_emite_solo_motivo_y_conserva_carga() -> void:  # AC-CLN-031
+	var limpiador := _limpiador()
+	limpiador.usar(BALDE, LAVATORIO)
+	limpiador.usar(MOPA, BALDE)
+	var carga := limpiador.piso().mopa().carga_restante()
+	_emitidas.clear()
+	assert_int(limpiador.humedecer_piso(MOPA, false)).is_equal(
+		ReglasDeLaLimpieza.Resultado.SIN_EFECTO
+	)
+	assert_array(_emitidas).is_equal([["uso_rechazado", ReglasDeLaLimpieza.Resultado.SIN_EFECTO]])
+	assert_float(limpiador.piso().mopa().carga_restante()).is_equal(carga)
+	assert_int(_avisos_de_tarea).is_zero()
+
+
+func test_charco_con_mano_vacia_seca_o_jabon_no_emite_agua() -> void:  # AC-CLN-030
+	var limpiador := _limpiador()
+	assert_int(limpiador.humedecer_piso(MOPA, true)).is_equal(
+		ReglasDeLaLimpieza.Resultado.MOPA_SECA
+	)
+	assert_array(_emitidas).is_equal([["uso_rechazado", ReglasDeLaLimpieza.Resultado.MOPA_SECA]])
+	_preparar(limpiador, &"jabon_azul")
+	var carga := limpiador.piso().mopa().carga_restante()
+	_emitidas.clear()
+	assert_int(limpiador.humedecer_piso(MOPA, true)).is_equal(
+		ReglasDeLaLimpieza.Resultado.SIN_EFECTO
+	)
+	assert_int(limpiador.humedecer_piso(ObjetoDelAlmacen.SIN_ID, true)).is_equal(
+		ReglasDeLaLimpieza.Resultado.SIN_EFECTO
+	)
+	(
+		assert_array(_emitidas)
+		. is_equal(
+			[
+				["uso_rechazado", ReglasDeLaLimpieza.Resultado.SIN_EFECTO],
+				["uso_rechazado", ReglasDeLaLimpieza.Resultado.SIN_EFECTO],
+			]
+		)
+	)
+	assert_float(limpiador.piso().mopa().carga_restante()).is_equal(carga)
+	assert_int(_avisos_de_tarea).is_zero()

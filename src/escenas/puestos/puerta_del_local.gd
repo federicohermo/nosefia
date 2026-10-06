@@ -30,6 +30,10 @@ enum Traba { NINGUNA, PUERTA, PORTON }
 ## `get_parent()` para que el `.tscn` diga qué se mueve en vez de que lo suponga el script.
 @export var hoja: MeshInstance3D
 
+## Un herraje puede sobresalir del canto de la hoja. El eje explícito evita que ese detalle
+## cambie el punto de giro; las puertas sin anclaje conservan el borde de su malla.
+@export var eje_de_la_bisagra: Marker3D
+
 ## Las mallas que el marco del objetivo pinta al enfocar. Sin esto iría a buscar
 ## `MeshInstance3D` hijos de este cuerpo, que no tiene ninguno: la puerta se vería sin contorno.
 @export var mallas: Array[MeshInstance3D] = []
@@ -61,11 +65,10 @@ var _desde_la_hoja: Transform3D
 
 func _ready() -> void:
 	_cerrada = hoja.transform
-	# La bisagra es el borde de menor X de la hoja, y la hoja gira hacia adentro del cuarto. La
-	# escena no elige ninguna de las dos cosas. El sentido está fijo porque así la hoja se aleja
-	# del que la abre en vez de barrerlo. El muro no lo limita: las cuatro combinaciones de
-	# borde y sentido dejan libre el barrido.
-	_bisagra = _cerrada * Vector3(hoja.get_aabb().position.x, 0.0, 0.0)
+	var punto := Vector3(hoja.get_aabb().position.x, 0.0, 0.0)
+	if eje_de_la_bisagra != null:
+		punto = hoja.to_local(eje_de_la_bisagra.global_position)
+	_bisagra = _cerrada * punto
 	_desde_la_hoja = hoja.global_transform.affine_inverse() * global_transform
 	top_level = true
 

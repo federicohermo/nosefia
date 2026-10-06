@@ -25,6 +25,8 @@ const LimpiezaDelLocal := preload("res://src/escenas/puestos/limpieza_del_almace
 const AudioDelLocal := preload("res://src/escenas/puestos/audio_del_almacen.gd")
 const ReposicionManual := preload("res://src/escenas/puestos/reposicion_manual.gd")
 const PuertaDelLocal := preload("res://src/escenas/puestos/puerta_del_local.gd")
+const UtilDeLimpieza := preload("res://src/escenas/objetos/util_de_limpieza.gd")
+const ManijaDelBalde := preload("res://src/escenas/objetos/manija_del_balde.gd")
 
 ## El jugador tampoco declara un `class_name` —es cáscara, como este archivo—, así que el
 ## `@export` de abajo no lo puede nombrar sin traerlo por `preload`.
@@ -57,6 +59,7 @@ const ESCENA_DEL_MENU := "res://src/escenas/menu_de_inicio.tscn"
 
 ## La mopa, el balde y los tres jabones, que arrancan cada noche en el baño.
 @export var _utiles_de_limpieza: Array[Node3D]
+@export var _manija_del_balde: ManijaDelBalde
 
 @export var _puertas: Array[Node3D]
 
@@ -128,6 +131,8 @@ func _ready() -> void:
 				$Interfaz/PantallaDeComputadora,
 				$Estructura/puerta/CuerpoDeLaHoja,
 				$Estructura/puerta2/CuerpoDeLaHoja,
+				$Estructura/bano_puerta_1/CuerpoDeLaHoja,
+				$Estructura/bano_puerta_2/CuerpoDeLaHoja,
 				$Estructura/puertaentrada/CuerpoDeLaHoja,
 				$Estructura/porton/CuerpoDeLaHoja,
 				$Estructura/puertajefe/CuerpoDeLaHoja,
@@ -148,6 +153,9 @@ func _ready() -> void:
 			_hud.mostrar_subtitulo(_reposicion_manual.texto_del_examen(nodo))
 	)
 	_jugador.examen.examen_terminado.connect(_hud.vaciar_subtitulo)
+	for util: UtilDeLimpieza in _utiles_de_limpieza:
+		util.examen = _jugador.examen
+	_manija_del_balde.observador = _jugador
 	# El motor no despierta lo que está sobre una caja empujada. Lo hace el puesto.
 	for caja: CajaDeProductosDelDeposito in _cajas_de_productos:
 		caja.empujada.connect(_reposicion_manual.despertar_lo_de_arriba)
@@ -213,7 +221,7 @@ func _al_abrir_la_jornada(jornada: int) -> void:
 	for puerta: PuertaDelLocal in _puertas:
 		puerta.cerrar_de_golpe()
 	_audio.arrancar_el_ambiente()
-	_limpieza.repintar()
+	_limpieza.reiniciar()
 	_estante.mostrar(0)
 
 

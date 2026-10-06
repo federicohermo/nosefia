@@ -74,12 +74,6 @@ light_size = 0.874
 light_bake_mode = 1
 area_size = Vector2(2.0353312, 1)
 
-[node name="AreaLight3D5" type="AreaLight3D" parent="." unique_id=1115635436]
-transform = Transform3D(1, 0, 0, 0, 0.023678668, 0.9997196, 0, -0.9997196, 0.023678668, 9.725164, 4.044125, -6.653817)
-light_energy = 0.988
-light_size = 0.874
-light_bake_mode = 1
-area_size = Vector2(0.9148388, 1)
 
 [node name="AreaLight3D6" type="AreaLight3D" parent="." unique_id=581634060]
 transform = Transform3D(1, 0, 0, 0, 0.023678668, 0.9997196, 0, -0.9997196, 0.023678668, 4.7662916, 3.1091843, 6.4416533)
@@ -90,3 +84,107 @@ light_bake_mode = 1
 area_size = Vector2(0.9148388, 1)
 
 [node name="AguaDelBano" parent="." instance=ExtResource("1_agua")]
+
+[node name="AguaDelBanoSegunda" parent="." instance=ExtResource("1_agua")]
+
+[node name="Lavatorio" parent="AguaDelBanoSegunda"]
+position = Vector3(13.159, 1.023, -6.72)
+
+[node name="Inodoro" parent="AguaDelBanoSegunda"]
+position = Vector3(12.558092, 0.549, -1.790065)
+
+[node name="Gota" parent="AguaDelBanoSegunda"]
+position = Vector3(13.159, 1.162, -6.72)
+
+[node name="LuzDelBano1" type="SpotLight3D" parent="."]
+position = Vector3(9.1, 3.07, -4.7)
+rotation = Vector3(-1.5707963, 0, 0)
+light_color = Color(0.93, 0.98, 1.0, 1.0)
+light_energy = 1.35
+light_bake_mode = 1
+spot_range = 4.0
+spot_angle = 63.0
+spot_attenuation = 0.7
+
+
+[node name="LuzDelBano2" type="SpotLight3D" parent="."]
+position = Vector3(9.1, 3.07, -6.9)
+rotation = Vector3(-1.5707963, 0, 0)
+light_color = Color(0.93, 0.98, 1.0, 1.0)
+light_energy = 1.35
+light_bake_mode = 1
+spot_range = 4.0
+spot_angle = 63.0
+spot_attenuation = 0.7
+
+[node name="LuzDelBano3" type="SpotLight3D" parent="."]
+position = Vector3(11.0, 3.07, -4.7)
+rotation = Vector3(-1.5707963, 0, 0)
+light_color = Color(0.93, 0.98, 1.0, 1.0)
+light_energy = 1.35
+light_bake_mode = 1
+spot_range = 4.0
+spot_angle = 63.0
+spot_attenuation = 0.7
+
+[node name="LuzDelBano4" type="SpotLight3D" parent="."]
+position = Vector3(11.0, 3.07, -6.9)
+rotation = Vector3(-1.5707963, 0, 0)
+light_color = Color(0.93, 0.98, 1.0, 1.0)
+light_energy = 1.35
+light_bake_mode = 1
+spot_range = 4.0
+spot_angle = 63.0
+spot_attenuation = 0.7
+
+[node name="LuzDelBano5" type="SpotLight3D" parent="."]
+position = Vector3(12.8, 3.07, -4.7)
+rotation = Vector3(-1.5707963, 0, 0)
+light_color = Color(0.93, 0.98, 1.0, 1.0)
+light_energy = 1.35
+light_bake_mode = 1
+spot_range = 4.0
+spot_angle = 63.0
+spot_attenuation = 0.7
+
+[node name="LuzDelBano6" type="SpotLight3D" parent="."]
+position = Vector3(12.8, 3.07, -6.9)
+rotation = Vector3(-1.5707963, 0, 0)
+light_color = Color(0.93, 0.98, 1.0, 1.0)
+light_energy = 1.35
+light_bake_mode = 1
+spot_range = 4.0
+spot_angle = 63.0
+spot_attenuation = 0.7
+
+[node name="LuzDelBano7" type="SpotLight3D" parent="."]
+position = Vector3(10.945, 3.07, -2.35)
+rotation = Vector3(-1.5707963, 0, 0)
+light_color = Color(0.93, 0.98, 1.0, 1.0)
+light_energy = 1.35
+light_bake_mode = 1
+spot_range = 4.0
+spot_angle = 63.0
+spot_attenuation = 0.7
+
+[node name="LuzDelBano8" type="SpotLight3D" parent="."]
+position = Vector3(12.555, 3.07, -2.35)
+rotation = Vector3(-1.5707963, 0, 0)
+light_color = Color(0.93, 0.98, 1.0, 1.0)
+light_energy = 1.35
+light_bake_mode = 1
+spot_range = 4.0
+spot_angle = 63.0
+spot_attenuation = 0.7
+
+[node name="LuzDelBano9" type="SpotLight3D" parent="."]
+position = Vector3(9.1, 3.07, -2.35)
+rotation = Vector3(-1.5707963, 0, 0)
+light_color = Color(0.93, 0.98, 1.0, 1.0)
+light_energy = 1.35
+light_bake_mode = 1
+spot_range = 4.0
+spot_angle = 63.0
+spot_attenuation = 0.7
+
+[editable path="AguaDelBanoSegunda"]

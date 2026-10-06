@@ -1,5 +1,9 @@
 [gd_scene format=3]
 
+[ext_resource type="Script" path="res://src/escenas/objetos/superficie_liquida.gd" id="liquido"]
+[ext_resource type="Script" path="res://src/escenas/objetos/fibras_de_la_mopa.gd" id="fibras"]
+[ext_resource type="Script" path="res://src/escenas/objetos/manija_del_balde.gd" id="manija"]
+
 [ext_resource type="PackedScene" path="res://src/escenas/objetos/caja_de_productos.tscn" id="11_caja_de_productos"]
 [ext_resource type="PackedScene" path="res://src/escenas/objetos/objeto_agarrable.tscn" id="22_agarrable"]
 [ext_resource type="PackedScene" path="res://src/escenas/puestos/zona_de_descarte.tscn" id="25_descarte"]
@@ -14,10 +18,14 @@
 [ext_resource type="Resource" path="res://src/dominio/almacen/jabon_amarillo.tres" id="35_jabon_amarillo"]
 
 [sub_resource type="ConvexPolygonShape3D" id="forma_de_la_mopa"]
-points = PackedVector3Array(-0.08456, -0.8477633, -0.2511637, 0.083623, -0.8477633, -0.2511637, -0.08456, -0.8477633, 0.2511637, 0.083623, -0.8477633, 0.2511637, -0.08456, -0.6940926, -0.2511637, 0.083623, -0.6940926, -0.2511637, -0.08456, -0.6940926, 0.2511637, 0.083623, -0.6940926, 0.2511637, -0.02297, 0.3979809, -0.02643, 0.02297, 0.3979809, -0.02643, -0.02297, 0.3979809, 0.02643, 0.02297, 0.3979809, 0.02643)
+margin = 0.005
+points = PackedVector3Array(0.1300000, -0.8518224, 0.0000000, 0.1125833, -0.8518224, 0.0650000, 0.0650000, -0.8518224, 0.1125833, 0.0000000, -0.8518224, 0.1300000, -0.0650000, -0.8518224, 0.1125833, -0.1125833, -0.8518224, 0.0650000, -0.1300000, -0.8518224, 0.0000000, -0.1125833, -0.8518224, -0.0650000, -0.0650000, -0.8518224, -0.1125833, -0.0000000, -0.8518224, -0.1300000, 0.0650000, -0.8518224, -0.1125833, 0.1125833, -0.8518224, -0.0650000, 0.1300000, -0.7560000, 0.0000000, 0.1125833, -0.7560000, 0.0650000, 0.0650000, -0.7560000, 0.1125833, 0.0000000, -0.7560000, 0.1300000, -0.0650000, -0.7560000, 0.1125833, -0.1125833, -0.7560000, 0.0650000, -0.1300000, -0.7560000, 0.0000000, -0.1125833, -0.7560000, -0.0650000, -0.0650000, -0.7560000, -0.1125833, -0.0000000, -0.7560000, -0.1300000, 0.0650000, -0.7560000, -0.1125833, 0.1125833, -0.7560000, -0.0650000, 0.0230000, 0.3979809, 0.0000000, 0.0162635, 0.3979809, 0.0162635, 0.0000000, 0.3979809, 0.0230000, -0.0162635, 0.3979809, 0.0162635, -0.0230000, 0.3979809, 0.0000000, -0.0162635, 0.3979809, -0.0162635, -0.0000000, 0.3979809, -0.0230000, 0.0162635, 0.3979809, -0.0162635)
 
-[sub_resource type="BoxMesh" id="punta_de_la_mopa"]
-size = Vector3(0.172183, 0.108542, 0.506327)
+[sub_resource type="CylinderMesh" id="punta_de_la_mopa"]
+top_radius = 0.060
+bottom_radius = 0.075
+height = 0.066822447
+radial_segments = 18
 
 [sub_resource type="StandardMaterial3D" id="tinte_de_la_mopa"]
 resource_local_to_scene = true
@@ -26,7 +34,7 @@ shading_mode = 0
 albedo_color = Color(0.74, 0.89, 0.98, 1)
 
 [sub_resource type="CylinderShape3D" id="forma_del_balde"]
-height = 0.350985
+height = 0.3314925
 radius = 0.195
 
 [sub_resource type="CylinderMesh" id="agua_del_balde"]
@@ -42,18 +50,19 @@ albedo_color = Color(0.74, 0.89, 0.98, 1)
 roughness = 0.2
 
 [sub_resource type="CylinderShape3D" id="forma_del_bidon"]
-height = 0.70162
-radius = 0.229
+height = 0.66
+radius = 0.1689
 
 [node name="Objetos" type="Node3D"]
 
 [node name="Mopa" type="RigidBody3D" parent="." node_paths=PackedStringArray("malla", "carga", "mallas") groups=["interactuable"]]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8.37642, 0.95, -6.6543927)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12.75, 0.9540592, -4.3)
 collision_mask = 9
 script = ExtResource("30_util")
 datos = ExtResource("31_mopa")
 orientacion_en_mano = Basis(1, 0, 0, 0, 0.258819, -0.965926, 0, 0.965926, 0.258819)
 nodo_del_modelo = &"mopa"
+escala_apoyada = 1.12
 malla = NodePath("Malla")
 carga = NodePath("Punta")
 mallas = [NodePath("Malla")]
@@ -62,11 +71,11 @@ mallas = [NodePath("Malla")]
 shape = SubResource("forma_de_la_mopa")
 
 [node name="Malla" type="MeshInstance3D" parent="Mopa"]
-transform = Transform3D(0, 0, -0.17668723, -0.024567725, 0, 0, 0, 0.22025196, 0, 0.102476, -0.7186603, 0)
+script = ExtResource("fibras")
 gi_mode = 2
 
 [node name="Punta" type="MeshInstance3D" parent="Mopa"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0004685, -0.7955, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.818411224, 0)
 visible = false
 material_override = SubResource("tinte_de_la_mopa")
 cast_shadow = 0
@@ -77,15 +86,15 @@ gi_mode = 2
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3, 0.103, -13.5)
 
 [node name="BolsaDeBasura1" parent="." instance=ExtResource("22_agarrable")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 11.0, 0.5, -4.4)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.8, 0.5, -11.5)
 datos = ExtResource("26_bolsa1")
 
 [node name="BolsaDeBasura2" parent="." instance=ExtResource("22_agarrable")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10.4, 0.5, -4.4)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.2, 0.5, -11.5)
 datos = ExtResource("27_bolsa2")
 
 [node name="BolsaDeBasura3" parent="." instance=ExtResource("22_agarrable")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10.7, 0.5, -4.95)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.5, 0.5, -12.1)
 datos = ExtResource("28_bolsa3")
 
 [node name="CajaDeActroncito" parent="." instance=ExtResource("11_caja_de_productos")]
@@ -213,7 +222,7 @@ position = Vector3(-6.45, 0.406445, -11.05)
 producto = 30
 
 [node name="Balde" type="RigidBody3D" parent="." node_paths=PackedStringArray("malla", "carga", "mallas") groups=["interactuable"]]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12.456797, 0.2777296, -7.1073775)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12.456797, 0.2582371, -7.1073775)
 collision_mask = 9
 script = ExtResource("30_util")
 datos = ExtResource("32_balde")
@@ -223,13 +232,16 @@ carga = NodePath("Agua")
 mallas = [NodePath("Malla")]
 
 [node name="Forma" type="CollisionShape3D" parent="Balde"]
+position = Vector3(0, 0.00974625, 0)
 shape = SubResource("forma_del_balde")
 
 [node name="Malla" type="MeshInstance3D" parent="Balde"]
-transform = Transform3D(0.17549245, 0, 0, 0, 0, 0.17549248, 0, -0.17549248, 0, 0, 0, 0)
+script = ExtResource("manija")
 gi_mode = 2
 
 [node name="Agua" type="MeshInstance3D" parent="Balde"]
+script = ExtResource("liquido")
+en_balde = true
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.07, 0)
 visible = false
 material_override = SubResource("color_del_agua")
@@ -237,7 +249,7 @@ mesh = SubResource("agua_del_balde")
 gi_mode = 2
 
 [node name="JabonAzul" type="RigidBody3D" parent="." node_paths=PackedStringArray("malla", "mallas") groups=["interactuable"]]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10.501369, 0.3964323, -7.6729193)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10.501369, 0.432, -7.6729193)
 collision_mask = 9
 script = ExtResource("30_util")
 datos = ExtResource("33_jabon_azul")
@@ -246,15 +258,13 @@ malla = NodePath("Malla")
 mallas = [NodePath("Malla")]
 
 [node name="Forma" type="CollisionShape3D" parent="JabonAzul"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.056615, 0)
 shape = SubResource("forma_del_bidon")
 
 [node name="Malla" type="MeshInstance3D" parent="JabonAzul"]
-transform = Transform3D(0.2290317, 0, 0, 0, 0.2290317, 0, 0, 0, 0.2290317, 0, 0, 0)
 gi_mode = 2
 
 [node name="JabonRosa" type="RigidBody3D" parent="." node_paths=PackedStringArray("malla", "mallas") groups=["interactuable"]]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9.9666195, 0.3964323, -7.6729193)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9.9666195, 0.432, -7.6729193)
 collision_mask = 9
 script = ExtResource("30_util")
 datos = ExtResource("34_jabon_rosa")
@@ -263,15 +273,13 @@ malla = NodePath("Malla")
 mallas = [NodePath("Malla")]
 
 [node name="Forma" type="CollisionShape3D" parent="JabonRosa"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.056615, 0)
 shape = SubResource("forma_del_bidon")
 
 [node name="Malla" type="MeshInstance3D" parent="JabonRosa"]
-transform = Transform3D(0.2290317, 0, 0, 0, 0.2290317, 0, 0, 0, 0.2290317, 0, 0, 0)
 gi_mode = 2
 
 [node name="JabonAmarillo" type="RigidBody3D" parent="." node_paths=PackedStringArray("malla", "mallas") groups=["interactuable"]]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 11.03491, 0.3964323, -7.6729193)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 11.03491, 0.432, -7.6729193)
 collision_mask = 9
 script = ExtResource("30_util")
 datos = ExtResource("35_jabon_amarillo")
@@ -280,9 +288,7 @@ malla = NodePath("Malla")
 mallas = [NodePath("Malla")]
 
 [node name="Forma" type="CollisionShape3D" parent="JabonAmarillo"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.056615, 0)
 shape = SubResource("forma_del_bidon")
 
 [node name="Malla" type="MeshInstance3D" parent="JabonAmarillo"]
-transform = Transform3D(0.2290317, 0, 0, 0, 0.2290317, 0, 0, 0, 0.2290317, 0, 0, 0)
 gi_mode = 2

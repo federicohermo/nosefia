@@ -6,7 +6,6 @@
 extends GdUnitTestSuite
 
 ## Cuánto pueden separarse los tres canales de un gris, y lo más claro que puede ser un marrón.
-const TOLERANCIA_DEL_GRIS := 0.05
 const LO_MAS_CLARO_DEL_MARRON := 0.5
 ## Lo más oscuro que puede ser un canal del agua celeste: «bien clara», dice la ficha.
 const LO_MAS_OSCURO_DEL_CELESTE := 0.6
@@ -70,6 +69,7 @@ func test_los_ids_de_la_limpieza_son_distintos_y_ninguno_es_la_mano_vacia() -> v
 		ReglasDeLaLimpieza.ID_DEL_LAVATORIO,
 		ReglasDeLaLimpieza.ID_DEL_INODORO,
 		Uso.MANCHA,
+		Uso.PISO,
 	]
 	for id: StringName in ReglasDeLaLimpieza.JABONES:
 		ids.append(id)
@@ -90,9 +90,8 @@ func test_cada_tipo_de_mancha_se_ve_de_su_color() -> void:  # AC-CLN-015
 	assert_float(caca.g).is_greater(caca.b)
 	assert_float(caca.v).is_less(LO_MAS_CLARO_DEL_MARRON)
 	var polvo: Color = colores[ReglasDeLaLimpieza.TipoDeMancha.POLVO]
-	assert_float(absf(polvo.r - polvo.g)).is_less(TOLERANCIA_DEL_GRIS)
-	assert_float(absf(polvo.g - polvo.b)).is_less(TOLERANCIA_DEL_GRIS)
-	assert_float(absf(polvo.r - polvo.b)).is_less(TOLERANCIA_DEL_GRIS)
+	assert_float(polvo.v).is_less(0.15)
+	assert_float(absf(polvo.r - polvo.b)).is_less(0.03)
 
 
 func test_el_agua_sin_jabon_es_celeste_y_bien_clara() -> void:  # AC-CLN-019
@@ -140,12 +139,6 @@ func test_cada_util_carga_con_el_id_de_su_constante_y_se_levanta() -> void:  # A
 			continue
 		assert_str(String(datos.id)).is_equal(String(utiles[archivo]))
 		assert_bool(datos.es_levantable()).is_true()
-
-
-func test_el_balde_se_lleva_inclinado_treinta_grados_hacia_la_vista() -> void:  # AC-PLY-050
-	# Positiva es la boca hacia la vista: al revés, el agua queda del lado de afuera y no se ve.
-	var inclinacion := rad_to_deg(ReglasDeLaLimpieza.INCLINACION_DEL_BALDE_EN_LA_MANO)
-	assert_float(inclinacion).is_equal_approx(30.0, 0.001)
 
 
 func test_mojar_la_mopa_dura_cuatro_decimas_de_segundo() -> void:

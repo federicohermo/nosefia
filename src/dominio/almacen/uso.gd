@@ -2,15 +2,15 @@
 class_name Uso
 extends RefCounted
 
-enum Efecto { NINGUNO, LIMPIAR, LLENAR, TENIR, MOJAR, VACIAR }
+enum Efecto { NINGUNO, LIMPIAR, LLENAR, TENIR, MOJAR, VACIAR, ENJUAGAR, HUMEDECER }
 
 const MANCHA: StringName = &"mancha"
+const PISO: StringName = &"piso"
 
 var _combinaciones: Dictionary[Array, Efecto] = {}
 
 
-## Los gestos de limpiar, uno por cada paso de la ficha: el balde se llena en el lavatorio, cada
-## jabón lo tiñe, la mopa se moja en él, el balde se vacía en el inodoro y la mopa borra.
+## El balde se llena, se tiñe y se vacía; la mopa se moja, borra, se enjuaga y deja agua temporal.
 static func para_el_almacen() -> Uso:
 	var uso := Uso.new()
 	var balde := ReglasDeLaLimpieza.ID_DEL_BALDE
@@ -21,6 +21,8 @@ static func para_el_almacen() -> Uso:
 	uso.registrar(mopa, balde, Efecto.MOJAR)
 	uso.registrar(balde, ReglasDeLaLimpieza.ID_DEL_INODORO, Efecto.VACIAR)
 	uso.registrar(mopa, MANCHA, Efecto.LIMPIAR)
+	uso.registrar(mopa, ReglasDeLaLimpieza.ID_DEL_INODORO, Efecto.ENJUAGAR)
+	uso.registrar(mopa, PISO, Efecto.HUMEDECER)
 	return uso
 
 

@@ -21,6 +21,7 @@ func test_cada_mancha_se_enfoca_desde_un_apoyo_caminable_a_un_metro() -> void:
 			pie.y = apoyo.position.y + 0.01
 			var consulta := PhysicsShapeQueryParameters3D.new()
 			consulta.shape = forma.shape
+			consulta.collision_mask = jugador.collision_mask
 			consulta.transform = Transform3D(Basis.IDENTITY, pie + forma.position)
 			consulta.exclude = [jugador.get_rid()]
 			if not jugador.get_world_3d().direct_space_state.intersect_shape(consulta).is_empty():
@@ -99,6 +100,9 @@ func test_las_manchas_superan_el_alcance_entre_si() -> void:
 func _abrir() -> Node3D:
 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
 	add_child(almacen)
+	await get_tree().physics_frame
+	for numero: int in [1, 2]:
+		almacen.get_node("Estructura/bano_puerta_%d/CuerpoDeLaHoja" % numero).call("interactuar")
 	for cuadro in 60:
 		await get_tree().physics_frame
 	return almacen

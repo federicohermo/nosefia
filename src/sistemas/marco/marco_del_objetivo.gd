@@ -37,12 +37,20 @@ func enfocar(objetivo: Node3D, _distancia: float = 0.0) -> void:
 	for malla in mallas:
 		if is_instance_valid(malla) and not _previos.has(malla):
 			_previos[malla] = malla.material_overlay
-			malla.material_overlay = material
+			_mostrar_contorno(malla, material)
 
 
 func apagar() -> void:
 	for malla in _previos:
 		if is_instance_valid(malla):
-			malla.material_overlay = _previos[malla]
+			_mostrar_contorno(malla, _previos[malla])
 	_previos.clear()
 	_objetivo = null
+
+
+## Las mallas animadas conocen su deformación y dibujan el contorno con ella.
+func _mostrar_contorno(malla: MeshInstance3D, material: Material) -> void:
+	if malla.has_method("mostrar_contorno"):
+		malla.call("mostrar_contorno", material)
+	else:
+		malla.material_overlay = material

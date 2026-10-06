@@ -18,6 +18,8 @@ func test_el_campo_real_resalta_la_computadora() -> void:
 	jugador.set_physics_process(false)
 	var hud: Hud = almacen.get("_hud")
 	var computadora: Node3D = almacen.get_node("Estructura/base compu/StaticBody3D")
+	# Fibras y asa preparan sus mallas de forma diferida, antes de probar el foco.
+	await get_tree().process_frame
 	var mallas := almacen.find_children("*", "MeshInstance3D", true, false)
 	var previos := _overlays(mallas)
 	var geometria: Dictionary[MeshInstance3D, Mesh] = {}

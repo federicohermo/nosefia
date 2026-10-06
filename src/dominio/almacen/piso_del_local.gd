@@ -95,6 +95,8 @@ func usar(en_la_mano: StringName, objetivo: StringName) -> ReglasDeLaLimpieza.Re
 			return _balde.vaciar()
 		Uso.Efecto.MOJAR:
 			return _mopa.mojar_en(_balde)
+		Uso.Efecto.ENJUAGAR:
+			return _mopa.enjuagar()
 	return ReglasDeLaLimpieza.Resultado.SIN_EFECTO
 
 
@@ -104,3 +106,20 @@ func pasar(en_la_mano: StringName, lugar: Lugar) -> ReglasDeLaLimpieza.Resultado
 	if mancha == null or _uso.resolver(en_la_mano, Uso.MANCHA) != Uso.Efecto.LIMPIAR:
 		return ReglasDeLaLimpieza.Resultado.SIN_EFECTO
 	return mancha.borrar_con(_mopa)
+
+
+## El tiempo gasta la mopa esté donde esté; los metros, sólo si es lo que se lleva en la mano.
+func desgastar_mopa(en_la_mano: StringName, segundos: float, metros: float) -> void:
+	var recorrido := metros if en_la_mano == ReglasDeLaLimpieza.ID_DE_LA_MOPA else 0.0
+	_mopa.desgastar(segundos, recorrido)
+
+
+## La escena mide alcance, obstáculos y sectores reservados; el dominio sólo recibe el permiso.
+func humedecer_piso(en_la_mano: StringName, habilitado: bool) -> ReglasDeLaLimpieza.Resultado:
+	if _uso.resolver(en_la_mano, Uso.PISO) != Uso.Efecto.HUMEDECER:
+		return ReglasDeLaLimpieza.Resultado.SIN_EFECTO
+	if not _mopa.esta_mojada():
+		return ReglasDeLaLimpieza.Resultado.MOPA_SECA
+	if _mopa.agua() != ReglasDeLaLimpieza.Agua.LIMPIA or not habilitado:
+		return ReglasDeLaLimpieza.Resultado.SIN_EFECTO
+	return ReglasDeLaLimpieza.Resultado.CHARCO_DEJADO

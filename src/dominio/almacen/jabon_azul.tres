@@ -10,6 +10,6 @@ texto = "El azul es el que saca el moho."
 [resource]
 script = ExtResource("1_objeto")
 id = &"jabon_azul"
-nombre = "Jabón azul"
+nombre = "Poético (jabón azul)"
 sonoridad = 5
 revelacion = SubResource("Resource_revelacion")

@@ -1,5 +1,5 @@
 ## Dónde arranca la noche cada cosa suelta: las cajas de reposición en el depósito y las bolsas
-## de basura en el baño.
+## de basura también en el depósito.
 ##
 ## Las dos habitaciones las abre el 043, y antes de él no se podía poner nada adentro: la puerta
 ## las dejaba inalcanzables.
@@ -7,18 +7,8 @@ extends GdUnitTestSuite
 
 const ALMACEN := preload("res://src/escenas/almacen.tscn")
 
-## Justo adentro de la puerta del baño, del lado del cuarto.
-##
-## **De acá sale el criterio de «está en el baño», y la primera versión lo tenía mal.** Medía si
-## la bolsa caía adentro de la caja del piso que declara `estructura_del_almacen.tscn`, y esa
-## caja **abarca dos cuartos separados por una pared**: las tres bolsas daban verde tiradas en el
-## de arriba, que está tapiado y al que no se entra por ningún lado. Una caja de colisión dice
-## dónde hay piso, no dónde hay cuarto. Lo que sí lo dice es si se llega caminando, y es lo que
-## este caso mide.
-const ENTRADA_DEL_BANO := Vector3(8.8, 1.05, -4.658)
-
-## A cuánto del inodoro tienen que quedar, en metros. Ancla el cuarto sin escribir sus paredes.
-const CERCA_DEL_INODORO := 4.0
+## Punto libre del depósito desde donde se comprueba el acceso a las bolsas.
+const ENTRADA_DEL_DEPOSITO := Vector3(5.5, 1.05, -8.7)
 
 ## Adonde se corre una caja para probar que la apertura la devuelve. Es el aire en el medio del
 ## local, lejos del depósito y de cualquier apoyo.
@@ -116,14 +106,14 @@ func test_cada_caja_le_muestra_su_etiqueta_al_cuarto() -> void:
 		)
 
 
-func test_las_tres_bolsas_arrancan_en_el_bano_y_lejos_del_descarte() -> void:
-	# El baño es el otro cuarto que el 043 abre. Las bolsas estaban desparramadas por el local y
-	# el pedido fue juntarlas ahí; el descarte sigue en el fondo, así que el viaje no se acorta.
+func test_las_tres_bolsas_arrancan_en_el_deposito_y_lejos_del_descarte() -> void:
 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
 	add_child(almacen)
 	await get_tree().physics_frame
 	var descarte: Node3D = almacen.get_node("Objetos/ZonaDeDescarte")
-	var inodoro: Node3D = almacen.get_node("Estructura/inodoro")
+	var piso := almacen.get_node("Estructura/SueloSolido/Fondo") as CollisionShape3D
+	var tamano := (piso.shape as BoxShape3D).size
+	var limites := piso.global_transform * AABB(-tamano / 2.0, tamano)
 	var bolsas: Array = almacen.get("_bolsas")
 	assert_int(bolsas.size()).is_equal(ReglasDeLaBasura.BOLSAS_DE_LA_JORNADA)
 	var sin_las_bolsas: Array[RID] = []
@@ -131,16 +121,12 @@ func test_las_tres_bolsas_arrancan_en_el_bano_y_lejos_del_descarte() -> void:
 		sin_las_bolsas.append(cuerpo.get_rid())
 	for bolsa: Node3D in bolsas:
 		var lugar := bolsa.global_position
-		(
-			assert_float(lugar.distance_to(inodoro.global_position))
-			. override_failure_message(
-				"`%s` arranca en %v, lejos del inodoro" % [bolsa.name, lugar]
-			)
-			. is_less(CERCA_DEL_INODORO)
-		)
+		assert_bool(limites.has_point(Vector3(lugar.x, piso.global_position.y, lugar.z))).is_true()
 		(
 			assert_float(_camino_desde_la_puerta(almacen, lugar, sin_las_bolsas))
-			. override_failure_message("`%s` no se alcanza desde la puerta del baño" % bolsa.name)
+			. override_failure_message(
+				"`%s` no se alcanza desde la puerta del depósito" % bolsa.name
+			)
 			. is_equal(1.0)
 		)
 		var distancia := lugar.distance_to(descarte.global_position)
@@ -151,7 +137,7 @@ func test_las_tres_bolsas_arrancan_en_el_bano_y_lejos_del_descarte() -> void:
 		)
 
 
-## Qué fracción del camino recto entre la puerta del baño y un punto recorre el jugador.
+## El recorrido rodea la góndola central por su extremo posterior.
 ##
 ## Las tres bolsas se excluyen para que no se tapen entre sí: se levantan de a una.
 func _camino_desde_la_puerta(almacen: Node3D, hasta: Vector3, excluidas: Array[RID]) -> float:
@@ -160,12 +146,16 @@ func _camino_desde_la_puerta(almacen: Node3D, hasta: Vector3, excluidas: Array[R
 	forma.height = 1.8
 	var consulta := PhysicsShapeQueryParameters3D.new()
 	consulta.shape = forma
-	consulta.transform = Transform3D(Basis(), ENTRADA_DEL_BANO)
+	consulta.transform = Transform3D(Basis(), ENTRADA_DEL_DEPOSITO)
 	consulta.exclude = excluidas
 	var espacio := almacen.get_world_3d().direct_space_state
 	assert_array(espacio.intersect_shape(consulta, 4)).is_empty()
-	consulta.motion = Vector3(hasta.x, ENTRADA_DEL_BANO.y, hasta.z) - ENTRADA_DEL_BANO
-	return espacio.cast_motion(consulta)[1]
+	var esquina := Vector3(4.3, ENTRADA_DEL_DEPOSITO.y, -11.5)
+	consulta.motion = esquina - ENTRADA_DEL_DEPOSITO
+	var primer_tramo: float = espacio.cast_motion(consulta)[1]
+	consulta.transform.origin = esquina
+	consulta.motion = Vector3(hasta.x, esquina.y, hasta.z) - esquina
+	return minf(primer_tramo, espacio.cast_motion(consulta)[1])
 
 
 ## Con qué se superpone un cuerpo, sin contar aquello sobre lo que se apoya.

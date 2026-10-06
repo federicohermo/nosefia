@@ -3,6 +3,35 @@ extends GdUnitTestSuite
 const ALMACEN := preload("res://src/escenas/almacen.tscn")
 
 
+func test_la_mopa_en_la_mano_no_atraviesa_un_pote_de_jabon() -> void:
+	var almacen: Node3D = auto_free(ALMACEN.instantiate())
+	add_child(almacen)
+	var jugador: Node3D = almacen.get("_jugador")
+	jugador.set_physics_process(false)
+	jugador.set_process(false)
+	jugador.global_position = Vector3(0, 10, 0)
+	var mopa: RigidBody3D = almacen.get_node("Objetos/Mopa")
+	var jabon: RigidBody3D = almacen.get_node("Objetos/JabonRosa")
+	var agarre: Agarre = almacen.get("_agarre")
+	assert_bool(agarre.pedir_agarrar(mopa.get("datos"), mopa)).is_true()
+	for cuadro in 2:
+		await get_tree().physics_frame
+	jabon.freeze = true
+	jabon.global_position = mopa.to_global(Vector3(0, -0.83, 0))
+	for cuadro in 2:
+		await get_tree().physics_frame
+	var forma: CollisionShape3D = mopa.get_node("Forma")
+	var consulta := PhysicsShapeQueryParameters3D.new()
+	consulta.shape = forma.shape
+	consulta.transform = forma.global_transform
+	consulta.exclude = [mopa.get_rid(), (jugador as CollisionObject3D).get_rid()]
+	var espacio := almacen.get_world_3d().direct_space_state
+	assert_array(espacio.intersect_shape(consulta)).is_not_empty()
+	jugador.call("_acomodar_las_manos", 1.0 / 60.0)
+	consulta.transform = forma.global_transform
+	assert_array(espacio.intersect_shape(consulta)).is_empty()
+
+
 func test_la_mopa_en_la_mano_no_atraviesa_una_pared_delante() -> void:
 	assert_int(await _comprobar_pared(Vector3(0, 0, -0.7), Vector3.ZERO)).is_zero()
 

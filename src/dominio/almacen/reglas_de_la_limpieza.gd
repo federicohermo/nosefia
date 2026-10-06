@@ -18,8 +18,8 @@ enum Agua { NINGUNA, LIMPIA, AZUL, ROSA, AMARILLO }
 ## Los tres tipos de mancha. Cada uno lo borra un solo jabón: ver `AGUA_QUE_BORRA`.
 enum TipoDeMancha { MOHO, CACA, POLVO }
 
-## Cómo salió un uso. Los cinco primeros después de `SIN_EFECTO` cambian algo; los demás son
-## rechazos, y ninguno cambia el estado.
+## Cómo salió un uso. Los resultados nuevos se agregan al final para conservar los números
+## anteriores de los gestos aceptados y los rechazos.
 ##
 ## **Son distintos a propósito**: adelante del jugador, «el balde está vacío» y «ese jabón no es»
 ## son dos cosas que resuelve distinto, y aplanarlas daría un solo cartel para las dos.
@@ -37,7 +37,17 @@ enum Resultado {
 	SIN_JABON,
 	JABON_EQUIVOCADO,
 	YA_ESTABA_LIMPIA,
+	CHARCO_DEJADO,
 }
+
+## Tiempo real y recorrido adicionales: la caminata combina ambas pérdidas.
+const DURACION_DE_LA_CARGA := 12.0
+const RECORRIDO_DE_LA_CARGA := 7.5
+
+## Agua temporal sobre suelo despejado: sólo presentación, sin convertirla en una mancha.
+const DURACION_DEL_CHARCO := 4.0
+const RADIO_DEL_CHARCO := 0.25
+const MAXIMO_DE_CHARCOS := 8
 
 ## Los `id` de lo que interviene en limpiar. Los dos útiles son los mismos `StringName` que
 ## declaran sus `.tres`, y los dos artefactos del baño los declara la estructura del local: hay
@@ -47,10 +57,6 @@ const ID_DE_LA_MOPA := &"mopa"
 const ID_DEL_BALDE := &"balde"
 const ID_DEL_LAVATORIO := &"lavatorio"
 const ID_DEL_INODORO := &"inodoro"
-
-## Cuánto se inclina el balde en la mano, en radianes: lo justo para ver el agua desde arriba.
-## Positiva es la boca hacia la vista.
-const INCLINACION_DEL_BALDE_EN_LA_MANO := PI / 6.0
 
 ## Lo que dura el gesto visible de mojar la mopa, en segundos.
 const DURACION_DE_LA_MOJADA := 0.4
@@ -88,7 +94,7 @@ const COLOR_DEL_AGUA: Dictionary[Agua, Color] = {
 const COLOR_DE_LA_MANCHA: Dictionary[TipoDeMancha, Color] = {
 	TipoDeMancha.MOHO: Color(0.3, 0.46, 0.16),
 	TipoDeMancha.CACA: Color(0.38, 0.24, 0.1),
-	TipoDeMancha.POLVO: Color(0.33, 0.33, 0.33),
+	TipoDeMancha.POLVO: Color(0.07, 0.075, 0.07),
 }
 
 
