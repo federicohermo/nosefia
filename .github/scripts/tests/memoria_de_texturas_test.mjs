@@ -8,7 +8,7 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
 import {
-  NO_MIDE,
+  LIMITES,
   aplicar,
   bytesDeImagen,
   crearRegistro,
@@ -429,8 +429,13 @@ test('un contexto perdido deja la cobertura incompleta y sus texturas afuera', (
   assert.equal(fase.cobertura_completa, false);
 });
 
-test('el informe declara que un renderbuffer no entra', () => {
-  assert.ok(NO_MIDE.includes('renderbuffers'));
+test('los límites declaran que un renderbuffer no entra y que una textura de renderizado sí', () => {
+  assert.ok(LIMITES.some((limite) => /^Excluye .*renderbuffers/.test(limite)));
+  assert.ok(LIMITES.some((limite) => /^Incluye .*destino de renderizado/.test(limite)));
+});
+
+test('los límites declaran que los bytes lógicos no son VRAM física', () => {
+  assert.ok(LIMITES.some((limite) => /lógicos no prueban menos VRAM física/.test(limite)));
 });
 
 // --- rechazos ---

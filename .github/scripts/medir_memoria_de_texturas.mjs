@@ -17,11 +17,16 @@
 //
 // ## Qué no mide
 //
-// - La VRAM física, la memoria del driver y las copias en CPU. El número es el tamaño nominal
-//   de cada formato: el driver puede alinear, convertir o duplicar.
-// - Los renderbuffers y el framebuffer del lienzo.
-// - Los contextos que no son WebGL2. El motor sólo usa WebGL2.
-// - Si WebGL aceptó la llamada. Una definición que el navegador rechaza se cuenta igual.
+// El número es el almacenamiento lógico que el juego le declara a WebGL. No es la VRAM física.
+//
+// - Los renderbuffers, las copias en CPU y la memoria del driver quedan afuera.
+// - El driver puede guardar un formato en otro más grande: ANGLE con Direct3D 11 puede guardar
+//   RGB8 como RGBA8. Menos bytes lógicos no prueban menos VRAM física.
+//
+// Esos límites viajan en el JSON, en `limites`. Y dos más, propios de cómo se anota:
+//
+// - Los contextos que no son WebGL2 no se miran. El motor sólo usa WebGL2.
+// - No se mira si WebGL aceptó la llamada. Una definición rechazada se cuenta igual.
 //
 // Un formato que no está en las tablas queda sin bytes, y la fase sale con
 // `cobertura_completa` en falso. Lo mismo con un contexto perdido.
@@ -43,9 +48,9 @@ import { chromium } from 'playwright';
 import {
   ENLACE_POR_DESTINO,
   FASES,
+  LIMITES,
   METODOS,
   NIVELES_DE_MIPS,
-  NO_MIDE,
   aplicar,
   crearRegistro,
   esRenderizadoPorSoftware,
@@ -267,7 +272,7 @@ writeFileSync(
       fecha: new Date().toISOString(),
       condiciones,
       export_en_disco: exportEnDisco,
-      no_mide: NO_MIDE,
+      limites: LIMITES,
       fases,
     },
     null,

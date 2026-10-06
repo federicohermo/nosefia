@@ -102,10 +102,12 @@ y da el total en bytes y en MiB. El PCK y el WASM van aparte, en `export_en_disc
 bytes y su SHA-256: son tamaño en disco, no memoria de texturas. El JSON registra también el
 motor, el navegador, el renderer y la resolución.
 
-- **Es una estimación, no una lectura de la VRAM.** Suma el tamaño nominal de cada nivel, capa
-  y cara que el juego le pide a WebGL. Incluye las texturas que se usan como destino de
-  renderizado.
-- **No mide** la VRAM física, los renderbuffers, la memoria del driver ni las copias en CPU.
+- **Es el almacenamiento lógico que el juego le declara a WebGL.** Suma cada nivel, capa y
+  cara. Incluye las texturas que se usan como destino de renderizado.
+- **Excluye** los renderbuffers, las copias en CPU y la memoria del driver.
+- **Menos bytes lógicos no prueban menos VRAM física.** El driver puede guardar un formato en
+  otro más grande: ANGLE con Direct3D 11 puede guardar RGB8 como RGBA8, según su
+  [tabla de formatos](https://chromium.googlesource.com/angle/angle/+/d9c1710779d15239f3882b2bdbd5e65db369b04e/src/libANGLE/renderer/d3d/d3d11/texture_format_table_autogen.cpp).
 - **Un formato que el script no conoce queda sin bytes**, y no se suma como cero. La fase sale
   con `cobertura_completa` en falso. Lo mismo pasa con un contexto WebGL perdido.
 - **Rechaza la corrida** si falta un aviso, si el juego escribe un error o si Chrome dibuja por

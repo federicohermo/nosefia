@@ -5,10 +5,18 @@
 // lleva la cuenta de qué imágenes siguen vivas.
 //
 // Una imagen es un nivel de una cara de una textura. El total cuenta cada una una sola vez.
-// El tamaño es el nominal del formato: el driver puede alinear, convertir o guardar copias, y
-// eso no se ve desde las llamadas.
+// El tamaño es el lógico del formato: lo que el driver alinea, convierte o copia no se ve
+// desde las llamadas. `LIMITES` lo declara en el informe.
 
-export const NO_MIDE = ['VRAM física', 'renderbuffers', 'memoria del driver', 'copias en CPU'];
+/** Lo que la estimación es y lo que no. Viaja en el informe, al lado de los totales. */
+export const LIMITES = [
+  'Es el almacenamiento lógico que el juego le declara a WebGL.',
+  'Incluye las texturas que se usan como destino de renderizado.',
+  'Excluye los renderbuffers, las copias en CPU y la memoria del driver.',
+  'El driver puede guardar un formato en otro más grande: ANGLE con Direct3D 11 puede ' +
+    'guardar RGB8 como RGBA8.',
+  'Menos bytes lógicos no prueban menos VRAM física.',
+];
 
 export const FASES = ['menu', 'almacen'];
 
