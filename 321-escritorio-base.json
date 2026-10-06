@@ -1,0 +1,570 @@
+{
+	"balde": {
+		"bytes_transitorios_por_dibujo": 16820,
+		"subidas_con_agua_quieta": 0,
+		"subidas_por_tanda": [
+			0,
+			0,
+			0
+		],
+		"us_por_dibujo": [
+			382.01,
+			414.476666666667,
+			384.48
+		]
+	},
+	"commit": "",
+	"compilacion_debug": true,
+	"cpu": "AMD Ryzen 7 7435HS",
+	"dibujos": 600,
+	"fecha_utc": "2026-10-06T22:51:25",
+	"godot": "4.7.2-stable (official)",
+	"gpu": "NVIDIA GeForce RTX 4050 Laptop GPU",
+	"mancha": {
+		"bytes_transitorios_por_dibujo": 14480,
+		"subidas_con_agua_quieta": 0,
+		"subidas_por_tanda": [
+			0,
+			0,
+			0
+		],
+		"us_por_dibujo": [
+			364.635,
+			348.101666666667,
+			362.736666666667
+		]
+	},
+	"poses": [
+		{
+			"aabb": "[P: (-0.5, -0.1, -0.5), S: (1.0, 0.205, 1.0)]",
+			"fase": 0.0,
+			"indices_sha256": "820777d2bddc3beb25bcbdd1854738d7e1775564f336c93e9f91dbab18625d04",
+			"nivel": 0.0,
+			"normales_sha256": "784e39ea23d0870299cb04e0f46c11887aa1b6abbfa190de33777d99785967f7",
+			"reconstruida": {
+				"aabb": "[P: (-0.5, -0.1, -0.5), S: (1.0, 0.205, 1.0)]",
+				"indices_sha256": "820777d2bddc3beb25bcbdd1854738d7e1775564f336c93e9f91dbab18625d04",
+				"normales_sha256": "784e39ea23d0870299cb04e0f46c11887aa1b6abbfa190de33777d99785967f7",
+				"superficies": 1,
+				"uv_sha256": "03a2a1201e9f2bbcf455ae3210e9969e05aef80035624c7a2589e5d3c5e49c55",
+				"vertices": 577,
+				"vertices_sha256": "60422b5a573c06d69fe20c251338a18cd3fdd76eb8f62a4cc00356dccf3b8b19"
+			},
+			"subidas": 0,
+			"superficie": "balde",
+			"superficies": 1,
+			"uv_sha256": "03a2a1201e9f2bbcf455ae3210e9969e05aef80035624c7a2589e5d3c5e49c55",
+			"vertices": 577,
+			"vertices_sha256": "60422b5a573c06d69fe20c251338a18cd3fdd76eb8f62a4cc00356dccf3b8b19"
+		},
+		{
+			"aabb": "[P: (-0.5, -0.1, -0.5), S: (1.0, 0.205, 1.0)]",
+			"fase": 1.0,
+			"indices_sha256": "820777d2bddc3beb25bcbdd1854738d7e1775564f336c93e9f91dbab18625d04",
+			"nivel": 0.0,
+			"normales_sha256": "784e39ea23d0870299cb04e0f46c11887aa1b6abbfa190de33777d99785967f7",
+			"reconstruida": {
+				"aabb": "[P: (-0.5, -0.1, -0.5), S: (1.0, 0.205, 1.0)]",
+				"indices_sha256": "820777d2bddc3beb25bcbdd1854738d7e1775564f336c93e9f91dbab18625d04",
+				"normales_sha256": "784e39ea23d0870299cb04e0f46c11887aa1b6abbfa190de33777d99785967f7",
+				"superficies": 1,
+				"uv_sha256": "03a2a1201e9f2bbcf455ae3210e9969e05aef80035624c7a2589e5d3c5e49c55",
+				"vertices": 577,
+				"vertices_sha256": "60422b5a573c06d69fe20c251338a18cd3fdd76eb8f62a4cc00356dccf3b8b19"
+			},
+			"subidas": 0,
+			"superficie": "balde",
+			"superficies": 1,
+			"uv_sha256": "03a2a1201e9f2bbcf455ae3210e9969e05aef80035624c7a2589e5d3c5e49c55",
+			"vertices": 577,
+			"vertices_sha256": "60422b5a573c06d69fe20c251338a18cd3fdd76eb8f62a4cc00356dccf3b8b19"
+		},
+		{
+			"aabb": "[P: (-0.5, -0.1, -0.5), S: (1.0, 0.205, 1.0)]",
+			"fase": 7.0,
+			"indices_sha256": "820777d2bddc3beb25bcbdd1854738d7e1775564f336c93e9f91dbab18625d04",
+			"nivel": 0.0,
+			"normales_sha256": "784e39ea23d0870299cb04e0f46c11887aa1b6abbfa190de33777d99785967f7",
+			"reconstruida": {
+				"aabb": "[P: (-0.5, -0.1, -0.5), S: (1.0, 0.205, 1.0)]",
+				"indices_sha256": "820777d2bddc3beb25bcbdd1854738d7e1775564f336c93e9f91dbab18625d04",
+				"normales_sha256": "784e39ea23d0870299cb04e0f46c11887aa1b6abbfa190de33777d99785967f7",
+				"superficies": 1,
+				"uv_sha256": "03a2a1201e9f2bbcf455ae3210e9969e05aef80035624c7a2589e5d3c5e49c55",
+				"vertices": 577,
+				"vertices_sha256": "60422b5a573c06d69fe20c251338a18cd3fdd76eb8f62a4cc00356dccf3b8b19"
+			},
+			"subidas": 0,
+			"superficie": "balde",
+			"superficies": 1,
+			"uv_sha256": "03a2a1201e9f2bbcf455ae3210e9969e05aef80035624c7a2589e5d3c5e49c55",
+			"vertices": 577,
+			"vertices_sha256": "60422b5a573c06d69fe20c251338a18cd3fdd76eb8f62a4cc00356dccf3b8b19"
+		},
+		{
+			"aabb": "[P: (-0.5, -0.1, -0.5), S: (1.0, 0.205, 1.0)]",
+			"fase": 0.0,
+			"indices_sha256": "820777d2bddc3beb25bcbdd1854738d7e1775564f336c93e9f91dbab18625d04",
+			"nivel": 0.2,
+			"normales_sha256": "b40ad48840553b004b24e47279caf5c1d91d1f3156766529e2dd27d5cac4963f",
+			"reconstruida": {
+				"aabb": "[P: (-0.5, -0.1, -0.5), S: (1.0, 0.205, 1.0)]",
+				"indices_sha256": "820777d2bddc3beb25bcbdd1854738d7e1775564f336c93e9f91dbab18625d04",
+				"normales_sha256": "b40ad48840553b004b24e47279caf5c1d91d1f3156766529e2dd27d5cac4963f",
+				"superficies": 1,
+				"uv_sha256": "03a2a1201e9f2bbcf455ae3210e9969e05aef80035624c7a2589e5d3c5e49c55",
+				"vertices": 577,
+				"vertices_sha256": "f812e6a5c03d62673ebbee6189ff17a5699f4c73d15524e2c3707be673dd96b9"
+			},
+			"subidas": 0,
+			"superficie": "balde",
+			"superficies": 1,
+			"uv_sha256": "03a2a1201e9f2bbcf455ae3210e9969e05aef80035624c7a2589e5d3c5e49c55",
+			"vertices": 577,
+			"vertices_sha256": "f812e6a5c03d62673ebbee6189ff17a5699f4c73d15524e2c3707be673dd96b9"
+		},
+		{
+			"aabb": "[P: (-0.5, -0.1, -0.5), S: (1.0, 0.205, 1.0)]",
+			"fase": 1.0,
+			"indices_sha256": "820777d2bddc3beb25bcbdd1854738d7e1775564f336c93e9f91dbab18625d04",
+			"nivel": 0.2,
+			"normales_sha256": "b40ad48840553b004b24e47279caf5c1d91d1f3156766529e2dd27d5cac4963f",
+			"reconstruida": {
+				"aabb": "[P: (-0.5, -0.1, -0.5), S: (1.0, 0.205, 1.0)]",
+				"indices_sha256": "820777d2bddc3beb25bcbdd1854738d7e1775564f336c93e9f91dbab18625d04",
+				"normales_sha256": "b40ad48840553b004b24e47279caf5c1d91d1f3156766529e2dd27d5cac4963f",
+				"superficies": 1,
+				"uv_sha256": "03a2a1201e9f2bbcf455ae3210e9969e05aef80035624c7a2589e5d3c5e49c55",
+				"vertices": 577,
+				"vertices_sha256": "f812e6a5c03d62673ebbee6189ff17a5699f4c73d15524e2c3707be673dd96b9"
+			},
+			"subidas": 0,
+			"superficie": "balde",
+			"superficies": 1,
+			"uv_sha256": "03a2a1201e9f2bbcf455ae3210e9969e05aef80035624c7a2589e5d3c5e49c55",
+			"vertices": 577,
+			"vertices_sha256": "f812e6a5c03d62673ebbee6189ff17a5699f4c73d15524e2c3707be673dd96b9"
+		},
+		{
+			"aabb": "[P: (-0.5, -0.1, -0.5), S: (1.0, 0.205, 1.0)]",
+			"fase": 7.0,
+			"indices_sha256": "820777d2bddc3beb25bcbdd1854738d7e1775564f336c93e9f91dbab18625d04",
+			"nivel": 0.2,
+			"normales_sha256": "b40ad48840553b004b24e47279caf5c1d91d1f3156766529e2dd27d5cac4963f",
+			"reconstruida": {
+				"aabb": "[P: (-0.5, -0.1, -0.5), S: (1.0, 0.205, 1.0)]",
+				"indices_sha256": "820777d2bddc3beb25bcbdd1854738d7e1775564f336c93e9f91dbab18625d04",
+				"normales_sha256": "b40ad48840553b004b24e47279caf5c1d91d1f3156766529e2dd27d5cac4963f",
+				"superficies": 1,
+				"uv_sha256": "03a2a1201e9f2bbcf455ae3210e9969e05aef80035624c7a2589e5d3c5e49c55",
+				"vertices": 577,
+				"vertices_sha256": "f812e6a5c03d62673ebbee6189ff17a5699f4c73d15524e2c3707be673dd96b9"
+			},
+			"subidas": 0,
+			"superficie": "balde",
+			"superficies": 1,
+			"uv_sha256": "03a2a1201e9f2bbcf455ae3210e9969e05aef80035624c7a2589e5d3c5e49c55",
+			"vertices": 577,
+			"vertices_sha256": "f812e6a5c03d62673ebbee6189ff17a5699f4c73d15524e2c3707be673dd96b9"
+		},
+		{
+			"aabb": "[P: (-0.5, -0.1, -0.5), S: (1.0, 0.205, 1.0)]",
+			"fase": 0.0,
+			"indices_sha256": "820777d2bddc3beb25bcbdd1854738d7e1775564f336c93e9f91dbab18625d04",
+			"nivel": 0.7,
+			"normales_sha256": "315995adba245923b32cf0922c1e3a5c7113bcd29172502ba8544316eacc1cea",
+			"reconstruida": {
+				"aabb": "[P: (-0.5, -0.1, -0.5), S: (1.0, 0.205, 1.0)]",
+				"indices_sha256": "820777d2bddc3beb25bcbdd1854738d7e1775564f336c93e9f91dbab18625d04",
+				"normales_sha256": "315995adba245923b32cf0922c1e3a5c7113bcd29172502ba8544316eacc1cea",
+				"superficies": 1,
+				"uv_sha256": "03a2a1201e9f2bbcf455ae3210e9969e05aef80035624c7a2589e5d3c5e49c55",
+				"vertices": 577,
+				"vertices_sha256": "fad6929f233f29a994c3ec0f82a709b7375ed40538c678e734d443e4ffd0770f"
+			},
+			"subidas": 0,
+			"superficie": "balde",
+			"superficies": 1,
+			"uv_sha256": "03a2a1201e9f2bbcf455ae3210e9969e05aef80035624c7a2589e5d3c5e49c55",
+			"vertices": 577,
+			"vertices_sha256": "fad6929f233f29a994c3ec0f82a709b7375ed40538c678e734d443e4ffd0770f"
+		},
+		{
+			"aabb": "[P: (-0.5, -0.1, -0.5), S: (1.0, 0.205, 1.0)]",
+			"fase": 1.0,
+			"indices_sha256": "820777d2bddc3beb25bcbdd1854738d7e1775564f336c93e9f91dbab18625d04",
+			"nivel": 0.7,
+			"normales_sha256": "315995adba245923b32cf0922c1e3a5c7113bcd29172502ba8544316eacc1cea",
+			"reconstruida": {
+				"aabb": "[P: (-0.5, -0.1, -0.5), S: (1.0, 0.205, 1.0)]",
+				"indices_sha256": "820777d2bddc3beb25bcbdd1854738d7e1775564f336c93e9f91dbab18625d04",
+				"normales_sha256": "315995adba245923b32cf0922c1e3a5c7113bcd29172502ba8544316eacc1cea",
+				"superficies": 1,
+				"uv_sha256": "03a2a1201e9f2bbcf455ae3210e9969e05aef80035624c7a2589e5d3c5e49c55",
+				"vertices": 577,
+				"vertices_sha256": "fad6929f233f29a994c3ec0f82a709b7375ed40538c678e734d443e4ffd0770f"
+			},
+			"subidas": 0,
+			"superficie": "balde",
+			"superficies": 1,
+			"uv_sha256": "03a2a1201e9f2bbcf455ae3210e9969e05aef80035624c7a2589e5d3c5e49c55",
+			"vertices": 577,
+			"vertices_sha256": "fad6929f233f29a994c3ec0f82a709b7375ed40538c678e734d443e4ffd0770f"
+		},
+		{
+			"aabb": "[P: (-0.5, -0.1, -0.5), S: (1.0, 0.205, 1.0)]",
+			"fase": 7.0,
+			"indices_sha256": "820777d2bddc3beb25bcbdd1854738d7e1775564f336c93e9f91dbab18625d04",
+			"nivel": 0.7,
+			"normales_sha256": "315995adba245923b32cf0922c1e3a5c7113bcd29172502ba8544316eacc1cea",
+			"reconstruida": {
+				"aabb": "[P: (-0.5, -0.1, -0.5), S: (1.0, 0.205, 1.0)]",
+				"indices_sha256": "820777d2bddc3beb25bcbdd1854738d7e1775564f336c93e9f91dbab18625d04",
+				"normales_sha256": "315995adba245923b32cf0922c1e3a5c7113bcd29172502ba8544316eacc1cea",
+				"superficies": 1,
+				"uv_sha256": "03a2a1201e9f2bbcf455ae3210e9969e05aef80035624c7a2589e5d3c5e49c55",
+				"vertices": 577,
+				"vertices_sha256": "fad6929f233f29a994c3ec0f82a709b7375ed40538c678e734d443e4ffd0770f"
+			},
+			"subidas": 0,
+			"superficie": "balde",
+			"superficies": 1,
+			"uv_sha256": "03a2a1201e9f2bbcf455ae3210e9969e05aef80035624c7a2589e5d3c5e49c55",
+			"vertices": 577,
+			"vertices_sha256": "fad6929f233f29a994c3ec0f82a709b7375ed40538c678e734d443e4ffd0770f"
+		},
+		{
+			"aabb": "[P: (-0.5, -0.1, -0.5), S: (1.0, 0.205, 1.0)]",
+			"fase": 0.0,
+			"indices_sha256": "820777d2bddc3beb25bcbdd1854738d7e1775564f336c93e9f91dbab18625d04",
+			"nivel": 1.0,
+			"normales_sha256": "53f5d9789e6be9c09be9b16dc9358071a3874e088c91992b184141bd36556ac0",
+			"reconstruida": {
+				"aabb": "[P: (-0.5, -0.1, -0.5), S: (1.0, 0.205, 1.0)]",
+				"indices_sha256": "820777d2bddc3beb25bcbdd1854738d7e1775564f336c93e9f91dbab18625d04",
+				"normales_sha256": "53f5d9789e6be9c09be9b16dc9358071a3874e088c91992b184141bd36556ac0",
+				"superficies": 1,
+				"uv_sha256": "03a2a1201e9f2bbcf455ae3210e9969e05aef80035624c7a2589e5d3c5e49c55",
+				"vertices": 577,
+				"vertices_sha256": "2257f6342d1b65ef738d1ff1873b48802545847f0d473b52e7e2c48e881570df"
+			},
+			"subidas": 0,
+			"superficie": "balde",
+			"superficies": 1,
+			"uv_sha256": "03a2a1201e9f2bbcf455ae3210e9969e05aef80035624c7a2589e5d3c5e49c55",
+			"vertices": 577,
+			"vertices_sha256": "2257f6342d1b65ef738d1ff1873b48802545847f0d473b52e7e2c48e881570df"
+		},
+		{
+			"aabb": "[P: (-0.5, -0.1, -0.5), S: (1.0, 0.205, 1.0)]",
+			"fase": 1.0,
+			"indices_sha256": "820777d2bddc3beb25bcbdd1854738d7e1775564f336c93e9f91dbab18625d04",
+			"nivel": 1.0,
+			"normales_sha256": "53f5d9789e6be9c09be9b16dc9358071a3874e088c91992b184141bd36556ac0",
+			"reconstruida": {
+				"aabb": "[P: (-0.5, -0.1, -0.5), S: (1.0, 0.205, 1.0)]",
+				"indices_sha256": "820777d2bddc3beb25bcbdd1854738d7e1775564f336c93e9f91dbab18625d04",
+				"normales_sha256": "53f5d9789e6be9c09be9b16dc9358071a3874e088c91992b184141bd36556ac0",
+				"superficies": 1,
+				"uv_sha256": "03a2a1201e9f2bbcf455ae3210e9969e05aef80035624c7a2589e5d3c5e49c55",
+				"vertices": 577,
+				"vertices_sha256": "2257f6342d1b65ef738d1ff1873b48802545847f0d473b52e7e2c48e881570df"
+			},
+			"subidas": 0,
+			"superficie": "balde",
+			"superficies": 1,
+			"uv_sha256": "03a2a1201e9f2bbcf455ae3210e9969e05aef80035624c7a2589e5d3c5e49c55",
+			"vertices": 577,
+			"vertices_sha256": "2257f6342d1b65ef738d1ff1873b48802545847f0d473b52e7e2c48e881570df"
+		},
+		{
+			"aabb": "[P: (-0.5, -0.1, -0.5), S: (1.0, 0.205, 1.0)]",
+			"fase": 7.0,
+			"indices_sha256": "820777d2bddc3beb25bcbdd1854738d7e1775564f336c93e9f91dbab18625d04",
+			"nivel": 1.0,
+			"normales_sha256": "53f5d9789e6be9c09be9b16dc9358071a3874e088c91992b184141bd36556ac0",
+			"reconstruida": {
+				"aabb": "[P: (-0.5, -0.1, -0.5), S: (1.0, 0.205, 1.0)]",
+				"indices_sha256": "820777d2bddc3beb25bcbdd1854738d7e1775564f336c93e9f91dbab18625d04",
+				"normales_sha256": "53f5d9789e6be9c09be9b16dc9358071a3874e088c91992b184141bd36556ac0",
+				"superficies": 1,
+				"uv_sha256": "03a2a1201e9f2bbcf455ae3210e9969e05aef80035624c7a2589e5d3c5e49c55",
+				"vertices": 577,
+				"vertices_sha256": "2257f6342d1b65ef738d1ff1873b48802545847f0d473b52e7e2c48e881570df"
+			},
+			"subidas": 0,
+			"superficie": "balde",
+			"superficies": 1,
+			"uv_sha256": "03a2a1201e9f2bbcf455ae3210e9969e05aef80035624c7a2589e5d3c5e49c55",
+			"vertices": 577,
+			"vertices_sha256": "2257f6342d1b65ef738d1ff1873b48802545847f0d473b52e7e2c48e881570df"
+		},
+		{
+			"aabb": "[P: (-0.5, -0.1, -0.5), S: (1.0, 0.205, 1.0)]",
+			"fase": 0.0,
+			"indices_sha256": "820777d2bddc3beb25bcbdd1854738d7e1775564f336c93e9f91dbab18625d04",
+			"nivel": 0.0,
+			"normales_sha256": "8c10d84c29e6fea1c3552e17e3a383f0fb1f911d793ca9f811552d832b77b2c4",
+			"reconstruida": {
+				"aabb": "[P: (-0.5, -0.1, -0.5), S: (1.0, 0.205, 1.0)]",
+				"indices_sha256": "820777d2bddc3beb25bcbdd1854738d7e1775564f336c93e9f91dbab18625d04",
+				"normales_sha256": "8c10d84c29e6fea1c3552e17e3a383f0fb1f911d793ca9f811552d832b77b2c4",
+				"superficies": 1,
+				"uv_sha256": "ece7bd4e3471a28d8853646383fd5533e100f538a1dd98068002319fdcaab312",
+				"vertices": 577,
+				"vertices_sha256": "0a8397ab7c9cc48ed758699afe35b175ab9633ea458218a9c4729eeee5a78578"
+			},
+			"subidas": 0,
+			"superficie": "mancha",
+			"superficies": 1,
+			"uv_sha256": "ece7bd4e3471a28d8853646383fd5533e100f538a1dd98068002319fdcaab312",
+			"vertices": 577,
+			"vertices_sha256": "0a8397ab7c9cc48ed758699afe35b175ab9633ea458218a9c4729eeee5a78578"
+		},
+		{
+			"aabb": "[P: (-0.5, -0.1, -0.5), S: (1.0, 0.205, 1.0)]",
+			"fase": 1.0,
+			"indices_sha256": "820777d2bddc3beb25bcbdd1854738d7e1775564f336c93e9f91dbab18625d04",
+			"nivel": 0.0,
+			"normales_sha256": "32270ccedf57f97a78dd8c29eb7d85455e4978df2dbcd01ff2eb91f0c8fc5f75",
+			"reconstruida": {
+				"aabb": "[P: (-0.5, -0.1, -0.5), S: (1.0, 0.205, 1.0)]",
+				"indices_sha256": "820777d2bddc3beb25bcbdd1854738d7e1775564f336c93e9f91dbab18625d04",
+				"normales_sha256": "32270ccedf57f97a78dd8c29eb7d85455e4978df2dbcd01ff2eb91f0c8fc5f75",
+				"superficies": 1,
+				"uv_sha256": "ece7bd4e3471a28d8853646383fd5533e100f538a1dd98068002319fdcaab312",
+				"vertices": 577,
+				"vertices_sha256": "8fc0d223160fccb68441c08bd530f104b57a6e2c00a4355c24931cf67400bbf9"
+			},
+			"subidas": 0,
+			"superficie": "mancha",
+			"superficies": 1,
+			"uv_sha256": "ece7bd4e3471a28d8853646383fd5533e100f538a1dd98068002319fdcaab312",
+			"vertices": 577,
+			"vertices_sha256": "8fc0d223160fccb68441c08bd530f104b57a6e2c00a4355c24931cf67400bbf9"
+		},
+		{
+			"aabb": "[P: (-0.5, -0.1, -0.5), S: (1.0, 0.205, 1.0)]",
+			"fase": 7.0,
+			"indices_sha256": "820777d2bddc3beb25bcbdd1854738d7e1775564f336c93e9f91dbab18625d04",
+			"nivel": 0.0,
+			"normales_sha256": "bc3a0daff306351322d13699e4484e7e5acbc43bbeb1c26918e9f0dc37181a09",
+			"reconstruida": {
+				"aabb": "[P: (-0.5, -0.1, -0.5), S: (1.0, 0.205, 1.0)]",
+				"indices_sha256": "820777d2bddc3beb25bcbdd1854738d7e1775564f336c93e9f91dbab18625d04",
+				"normales_sha256": "bc3a0daff306351322d13699e4484e7e5acbc43bbeb1c26918e9f0dc37181a09",
+				"superficies": 1,
+				"uv_sha256": "ece7bd4e3471a28d8853646383fd5533e100f538a1dd98068002319fdcaab312",
+				"vertices": 577,
+				"vertices_sha256": "c50b35e96be62180a9cee0cd3d4035934f7b0b43aec66b4cae90d436d3e37e5b"
+			},
+			"subidas": 0,
+			"superficie": "mancha",
+			"superficies": 1,
+			"uv_sha256": "ece7bd4e3471a28d8853646383fd5533e100f538a1dd98068002319fdcaab312",
+			"vertices": 577,
+			"vertices_sha256": "c50b35e96be62180a9cee0cd3d4035934f7b0b43aec66b4cae90d436d3e37e5b"
+		},
+		{
+			"aabb": "[P: (-0.5, -0.1, -0.5), S: (1.0, 0.205, 1.0)]",
+			"fase": 0.0,
+			"indices_sha256": "820777d2bddc3beb25bcbdd1854738d7e1775564f336c93e9f91dbab18625d04",
+			"nivel": 0.2,
+			"normales_sha256": "8c10d84c29e6fea1c3552e17e3a383f0fb1f911d793ca9f811552d832b77b2c4",
+			"reconstruida": {
+				"aabb": "[P: (-0.5, -0.1, -0.5), S: (1.0, 0.205, 1.0)]",
+				"indices_sha256": "820777d2bddc3beb25bcbdd1854738d7e1775564f336c93e9f91dbab18625d04",
+				"normales_sha256": "8c10d84c29e6fea1c3552e17e3a383f0fb1f911d793ca9f811552d832b77b2c4",
+				"superficies": 1,
+				"uv_sha256": "ece7bd4e3471a28d8853646383fd5533e100f538a1dd98068002319fdcaab312",
+				"vertices": 577,
+				"vertices_sha256": "0a8397ab7c9cc48ed758699afe35b175ab9633ea458218a9c4729eeee5a78578"
+			},
+			"subidas": 0,
+			"superficie": "mancha",
+			"superficies": 1,
+			"uv_sha256": "ece7bd4e3471a28d8853646383fd5533e100f538a1dd98068002319fdcaab312",
+			"vertices": 577,
+			"vertices_sha256": "0a8397ab7c9cc48ed758699afe35b175ab9633ea458218a9c4729eeee5a78578"
+		},
+		{
+			"aabb": "[P: (-0.5, -0.1, -0.5), S: (1.0, 0.205, 1.0)]",
+			"fase": 1.0,
+			"indices_sha256": "820777d2bddc3beb25bcbdd1854738d7e1775564f336c93e9f91dbab18625d04",
+			"nivel": 0.2,
+			"normales_sha256": "32270ccedf57f97a78dd8c29eb7d85455e4978df2dbcd01ff2eb91f0c8fc5f75",
+			"reconstruida": {
+				"aabb": "[P: (-0.5, -0.1, -0.5), S: (1.0, 0.205, 1.0)]",
+				"indices_sha256": "820777d2bddc3beb25bcbdd1854738d7e1775564f336c93e9f91dbab18625d04",
+				"normales_sha256": "32270ccedf57f97a78dd8c29eb7d85455e4978df2dbcd01ff2eb91f0c8fc5f75",
+				"superficies": 1,
+				"uv_sha256": "ece7bd4e3471a28d8853646383fd5533e100f538a1dd98068002319fdcaab312",
+				"vertices": 577,
+				"vertices_sha256": "8fc0d223160fccb68441c08bd530f104b57a6e2c00a4355c24931cf67400bbf9"
+			},
+			"subidas": 0,
+			"superficie": "mancha",
+			"superficies": 1,
+			"uv_sha256": "ece7bd4e3471a28d8853646383fd5533e100f538a1dd98068002319fdcaab312",
+			"vertices": 577,
+			"vertices_sha256": "8fc0d223160fccb68441c08bd530f104b57a6e2c00a4355c24931cf67400bbf9"
+		},
+		{
+			"aabb": "[P: (-0.5, -0.1, -0.5), S: (1.0, 0.205, 1.0)]",
+			"fase": 7.0,
+			"indices_sha256": "820777d2bddc3beb25bcbdd1854738d7e1775564f336c93e9f91dbab18625d04",
+			"nivel": 0.2,
+			"normales_sha256": "bc3a0daff306351322d13699e4484e7e5acbc43bbeb1c26918e9f0dc37181a09",
+			"reconstruida": {
+				"aabb": "[P: (-0.5, -0.1, -0.5), S: (1.0, 0.205, 1.0)]",
+				"indices_sha256": "820777d2bddc3beb25bcbdd1854738d7e1775564f336c93e9f91dbab18625d04",
+				"normales_sha256": "bc3a0daff306351322d13699e4484e7e5acbc43bbeb1c26918e9f0dc37181a09",
+				"superficies": 1,
+				"uv_sha256": "ece7bd4e3471a28d8853646383fd5533e100f538a1dd98068002319fdcaab312",
+				"vertices": 577,
+				"vertices_sha256": "c50b35e96be62180a9cee0cd3d4035934f7b0b43aec66b4cae90d436d3e37e5b"
+			},
+			"subidas": 0,
+			"superficie": "mancha",
+			"superficies": 1,
+			"uv_sha256": "ece7bd4e3471a28d8853646383fd5533e100f538a1dd98068002319fdcaab312",
+			"vertices": 577,
+			"vertices_sha256": "c50b35e96be62180a9cee0cd3d4035934f7b0b43aec66b4cae90d436d3e37e5b"
+		},
+		{
+			"aabb": "[P: (-0.5, -0.1, -0.5), S: (1.0, 0.205, 1.0)]",
+			"fase": 0.0,
+			"indices_sha256": "820777d2bddc3beb25bcbdd1854738d7e1775564f336c93e9f91dbab18625d04",
+			"nivel": 0.7,
+			"normales_sha256": "8c10d84c29e6fea1c3552e17e3a383f0fb1f911d793ca9f811552d832b77b2c4",
+			"reconstruida": {
+				"aabb": "[P: (-0.5, -0.1, -0.5), S: (1.0, 0.205, 1.0)]",
+				"indices_sha256": "820777d2bddc3beb25bcbdd1854738d7e1775564f336c93e9f91dbab18625d04",
+				"normales_sha256": "8c10d84c29e6fea1c3552e17e3a383f0fb1f911d793ca9f811552d832b77b2c4",
+				"superficies": 1,
+				"uv_sha256": "ece7bd4e3471a28d8853646383fd5533e100f538a1dd98068002319fdcaab312",
+				"vertices": 577,
+				"vertices_sha256": "0a8397ab7c9cc48ed758699afe35b175ab9633ea458218a9c4729eeee5a78578"
+			},
+			"subidas": 0,
+			"superficie": "mancha",
+			"superficies": 1,
+			"uv_sha256": "ece7bd4e3471a28d8853646383fd5533e100f538a1dd98068002319fdcaab312",
+			"vertices": 577,
+			"vertices_sha256": "0a8397ab7c9cc48ed758699afe35b175ab9633ea458218a9c4729eeee5a78578"
+		},
+		{
+			"aabb": "[P: (-0.5, -0.1, -0.5), S: (1.0, 0.205, 1.0)]",
+			"fase": 1.0,
+			"indices_sha256": "820777d2bddc3beb25bcbdd1854738d7e1775564f336c93e9f91dbab18625d04",
+			"nivel": 0.7,
+			"normales_sha256": "32270ccedf57f97a78dd8c29eb7d85455e4978df2dbcd01ff2eb91f0c8fc5f75",
+			"reconstruida": {
+				"aabb": "[P: (-0.5, -0.1, -0.5), S: (1.0, 0.205, 1.0)]",
+				"indices_sha256": "820777d2bddc3beb25bcbdd1854738d7e1775564f336c93e9f91dbab18625d04",
+				"normales_sha256": "32270ccedf57f97a78dd8c29eb7d85455e4978df2dbcd01ff2eb91f0c8fc5f75",
+				"superficies": 1,
+				"uv_sha256": "ece7bd4e3471a28d8853646383fd5533e100f538a1dd98068002319fdcaab312",
+				"vertices": 577,
+				"vertices_sha256": "8fc0d223160fccb68441c08bd530f104b57a6e2c00a4355c24931cf67400bbf9"
+			},
+			"subidas": 0,
+			"superficie": "mancha",
+			"superficies": 1,
+			"uv_sha256": "ece7bd4e3471a28d8853646383fd5533e100f538a1dd98068002319fdcaab312",
+			"vertices": 577,
+			"vertices_sha256": "8fc0d223160fccb68441c08bd530f104b57a6e2c00a4355c24931cf67400bbf9"
+		},
+		{
+			"aabb": "[P: (-0.5, -0.1, -0.5), S: (1.0, 0.205, 1.0)]",
+			"fase": 7.0,
+			"indices_sha256": "820777d2bddc3beb25bcbdd1854738d7e1775564f336c93e9f91dbab18625d04",
+			"nivel": 0.7,
+			"normales_sha256": "bc3a0daff306351322d13699e4484e7e5acbc43bbeb1c26918e9f0dc37181a09",
+			"reconstruida": {
+				"aabb": "[P: (-0.5, -0.1, -0.5), S: (1.0, 0.205, 1.0)]",
+				"indices_sha256": "820777d2bddc3beb25bcbdd1854738d7e1775564f336c93e9f91dbab18625d04",
+				"normales_sha256": "bc3a0daff306351322d13699e4484e7e5acbc43bbeb1c26918e9f0dc37181a09",
+				"superficies": 1,
+				"uv_sha256": "ece7bd4e3471a28d8853646383fd5533e100f538a1dd98068002319fdcaab312",
+				"vertices": 577,
+				"vertices_sha256": "c50b35e96be62180a9cee0cd3d4035934f7b0b43aec66b4cae90d436d3e37e5b"
+			},
+			"subidas": 0,
+			"superficie": "mancha",
+			"superficies": 1,
+			"uv_sha256": "ece7bd4e3471a28d8853646383fd5533e100f538a1dd98068002319fdcaab312",
+			"vertices": 577,
+			"vertices_sha256": "c50b35e96be62180a9cee0cd3d4035934f7b0b43aec66b4cae90d436d3e37e5b"
+		},
+		{
+			"aabb": "[P: (-0.5, -0.1, -0.5), S: (1.0, 0.205, 1.0)]",
+			"fase": 0.0,
+			"indices_sha256": "820777d2bddc3beb25bcbdd1854738d7e1775564f336c93e9f91dbab18625d04",
+			"nivel": 1.0,
+			"normales_sha256": "8c10d84c29e6fea1c3552e17e3a383f0fb1f911d793ca9f811552d832b77b2c4",
+			"reconstruida": {
+				"aabb": "[P: (-0.5, -0.1, -0.5), S: (1.0, 0.205, 1.0)]",
+				"indices_sha256": "820777d2bddc3beb25bcbdd1854738d7e1775564f336c93e9f91dbab18625d04",
+				"normales_sha256": "8c10d84c29e6fea1c3552e17e3a383f0fb1f911d793ca9f811552d832b77b2c4",
+				"superficies": 1,
+				"uv_sha256": "ece7bd4e3471a28d8853646383fd5533e100f538a1dd98068002319fdcaab312",
+				"vertices": 577,
+				"vertices_sha256": "0a8397ab7c9cc48ed758699afe35b175ab9633ea458218a9c4729eeee5a78578"
+			},
+			"subidas": 0,
+			"superficie": "mancha",
+			"superficies": 1,
+			"uv_sha256": "ece7bd4e3471a28d8853646383fd5533e100f538a1dd98068002319fdcaab312",
+			"vertices": 577,
+			"vertices_sha256": "0a8397ab7c9cc48ed758699afe35b175ab9633ea458218a9c4729eeee5a78578"
+		},
+		{
+			"aabb": "[P: (-0.5, -0.1, -0.5), S: (1.0, 0.205, 1.0)]",
+			"fase": 1.0,
+			"indices_sha256": "820777d2bddc3beb25bcbdd1854738d7e1775564f336c93e9f91dbab18625d04",
+			"nivel": 1.0,
+			"normales_sha256": "32270ccedf57f97a78dd8c29eb7d85455e4978df2dbcd01ff2eb91f0c8fc5f75",
+			"reconstruida": {
+				"aabb": "[P: (-0.5, -0.1, -0.5), S: (1.0, 0.205, 1.0)]",
+				"indices_sha256": "820777d2bddc3beb25bcbdd1854738d7e1775564f336c93e9f91dbab18625d04",
+				"normales_sha256": "32270ccedf57f97a78dd8c29eb7d85455e4978df2dbcd01ff2eb91f0c8fc5f75",
+				"superficies": 1,
+				"uv_sha256": "ece7bd4e3471a28d8853646383fd5533e100f538a1dd98068002319fdcaab312",
+				"vertices": 577,
+				"vertices_sha256": "8fc0d223160fccb68441c08bd530f104b57a6e2c00a4355c24931cf67400bbf9"
+			},
+			"subidas": 0,
+			"superficie": "mancha",
+			"superficies": 1,
+			"uv_sha256": "ece7bd4e3471a28d8853646383fd5533e100f538a1dd98068002319fdcaab312",
+			"vertices": 577,
+			"vertices_sha256": "8fc0d223160fccb68441c08bd530f104b57a6e2c00a4355c24931cf67400bbf9"
+		},
+		{
+			"aabb": "[P: (-0.5, -0.1, -0.5), S: (1.0, 0.205, 1.0)]",
+			"fase": 7.0,
+			"indices_sha256": "820777d2bddc3beb25bcbdd1854738d7e1775564f336c93e9f91dbab18625d04",
+			"nivel": 1.0,
+			"normales_sha256": "bc3a0daff306351322d13699e4484e7e5acbc43bbeb1c26918e9f0dc37181a09",
+			"reconstruida": {
+				"aabb": "[P: (-0.5, -0.1, -0.5), S: (1.0, 0.205, 1.0)]",
+				"indices_sha256": "820777d2bddc3beb25bcbdd1854738d7e1775564f336c93e9f91dbab18625d04",
+				"normales_sha256": "bc3a0daff306351322d13699e4484e7e5acbc43bbeb1c26918e9f0dc37181a09",
+				"superficies": 1,
+				"uv_sha256": "ece7bd4e3471a28d8853646383fd5533e100f538a1dd98068002319fdcaab312",
+				"vertices": 577,
+				"vertices_sha256": "c50b35e96be62180a9cee0cd3d4035934f7b0b43aec66b4cae90d436d3e37e5b"
+			},
+			"subidas": 0,
+			"superficie": "mancha",
+			"superficies": 1,
+			"uv_sha256": "ece7bd4e3471a28d8853646383fd5533e100f538a1dd98068002319fdcaab312",
+			"vertices": 577,
+			"vertices_sha256": "c50b35e96be62180a9cee0cd3d4035934f7b0b43aec66b4cae90d436d3e37e5b"
+		}
+	],
+	"renderizador": "gl_compatibility",
+	"resolucion": "(1920.0, 991.0)",
+	"sistema": "Windows"
+}

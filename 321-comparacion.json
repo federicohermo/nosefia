@@ -1,0 +1,195 @@
+{
+ "condiciones": {
+  "navegador": "154.0.8037.92",
+  "renderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 4050 Laptop GPU (0x000028E1) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+  "viewport": "1536x760",
+  "lienzo": "1536x760",
+  "sinVentana": true,
+  "sinLimiteDeCuadros": false
+ },
+ "rondas": [
+  {
+   "poses": 24,
+   "iguales": {
+    "superficies": 24,
+    "vertices": 24,
+    "vertices_sha256": 24,
+    "normales_sha256": 24,
+    "uv_sha256": 24,
+    "indices_sha256": 24,
+    "aabb": 24
+   },
+   "reconstruidas_iguales": {
+    "superficies": 24,
+    "vertices": 24,
+    "vertices_sha256": 24,
+    "normales_sha256": 24,
+    "uv_sha256": 24,
+    "indices_sha256": 24,
+    "aabb": 24
+   }
+  },
+  {
+   "poses": 24,
+   "iguales": {
+    "superficies": 24,
+    "vertices": 24,
+    "vertices_sha256": 24,
+    "normales_sha256": 24,
+    "uv_sha256": 24,
+    "indices_sha256": 24,
+    "aabb": 24
+   },
+   "reconstruidas_iguales": {
+    "superficies": 24,
+    "vertices": 24,
+    "vertices_sha256": 24,
+    "normales_sha256": 24,
+    "uv_sha256": 24,
+    "indices_sha256": 24,
+    "aabb": 24
+   }
+  },
+  {
+   "poses": 24,
+   "iguales": {
+    "superficies": 24,
+    "vertices": 24,
+    "vertices_sha256": 24,
+    "normales_sha256": 24,
+    "uv_sha256": 24,
+    "indices_sha256": 24,
+    "aabb": 24
+   },
+   "reconstruidas_iguales": {
+    "superficies": 24,
+    "vertices": 24,
+    "vertices_sha256": 24,
+    "normales_sha256": 24,
+    "uv_sha256": 24,
+    "indices_sha256": 24,
+    "aabb": 24
+   }
+  }
+ ],
+ "medianas": {
+  "balde": {
+   "base_us": 658.69,
+   "propuesta_us": 635.423333333333,
+   "por_ronda": {
+    "base": [
+     667.658333333333,
+     658.068333333333,
+     658.69
+    ],
+    "propuesta": [
+     623.691666666667,
+     635.423333333333,
+     671.891666666667
+    ]
+   }
+  },
+  "mancha": {
+   "base_us": 536.618333333333,
+   "propuesta_us": 503.348333333333,
+   "por_ronda": {
+    "base": [
+     526.115,
+     539.441666666667,
+     536.618333333333
+    ],
+    "propuesta": [
+     503.348333333333,
+     493.316666666667,
+     510.383333333333
+    ]
+   }
+  }
+ },
+ "escritorio": {
+  "comparacion": {
+   "poses": 24,
+   "iguales": {
+    "superficies": 24,
+    "vertices": 24,
+    "vertices_sha256": 24,
+    "normales_sha256": 24,
+    "uv_sha256": 24,
+    "indices_sha256": 24,
+    "aabb": 24
+   },
+   "reconstruidas_iguales": {
+    "superficies": 24,
+    "vertices": 24,
+    "vertices_sha256": 24,
+    "normales_sha256": 24,
+    "uv_sha256": 24,
+    "indices_sha256": 24,
+    "aabb": 24
+   }
+  },
+  "renderizador": "gl_compatibility",
+  "gpu": "NVIDIA GeForce RTX 4050 Laptop GPU",
+  "compilacion_debug": true,
+  "base": {
+   "balde": {
+    "bytes_transitorios_por_dibujo": 16820,
+    "subidas_con_agua_quieta": 0,
+    "subidas_por_tanda": [
+     0,
+     0,
+     0
+    ],
+    "us_por_dibujo": [
+     382.01,
+     414.476666666667,
+     384.48
+    ]
+   },
+   "mancha": {
+    "bytes_transitorios_por_dibujo": 14480,
+    "subidas_con_agua_quieta": 0,
+    "subidas_por_tanda": [
+     0,
+     0,
+     0
+    ],
+    "us_por_dibujo": [
+     364.635,
+     348.101666666667,
+     362.736666666667
+    ]
+   }
+  },
+  "propuesta": {
+   "balde": {
+    "bytes_transitorios_por_dibujo": 9360,
+    "subidas_con_agua_quieta": 0,
+    "subidas_por_tanda": [
+     0,
+     0,
+     0
+    ],
+    "us_por_dibujo": [
+     398.02,
+     377.718333333333,
+     374.076666666667
+    ]
+   },
+   "mancha": {
+    "bytes_transitorios_por_dibujo": 7020,
+    "subidas_con_agua_quieta": 0,
+    "subidas_por_tanda": [
+     0,
+     0,
+     0
+    ],
+    "us_por_dibujo": [
+     358.728333333333,
+     364.541666666667,
+     353.278333333333
+    ]
+   }
+  }
+ }
+}

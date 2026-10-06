@@ -1,0 +1,8 @@
+{
+ "commit": "cdf63c99654026f18188a0ef3a971f5e5e468178",
+ "escena": "res://test/performance/medir_malla_liquida.tscn",
+ "pck_bytes": 44552120,
+ "pck_sha256": "edf8c41b2d0e242896f917d54a497ad8b065d1c33fb8cb0624e81e87819ab1de",
+ "wasm_bytes": 38849809,
+ "wasm_sha256": "46d9bcb1df7a640d20c753b3608c8734ebbe22c3b01f2d2912c926051ce5a4ec"
+}
