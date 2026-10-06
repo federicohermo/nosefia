@@ -639,6 +639,38 @@ func test_la_unidad_soltada_contra_una_pared_no_queda_adentro() -> void:  # AC-P
 	assert_int(soltadas).override_failure_message("casi ninguna se soltó").is_greater(6)
 
 
+func test_la_unidad_soltada_mirando_arriba_cae_sin_golpear_la_fachada() -> void:  # AC-PLY-019
+	var almacen: Node3D = await _almacen()
+	var jugador: CharacterBody3D = almacen.get("_jugador")
+	var agarre: Agarre = almacen.get("_agarre")
+	var unidad := _unidad_en_la_mano(almacen) as RigidBody3D
+	assert_object(unidad).is_not_null()
+	var derecho := _parar_frente_a(almacen, PARED_DE_LA_FACHADA, PARADO_DEL_SOLIDO)
+	await get_tree().physics_frame
+	_mirar(jugador, derecho, deg_to_rad(30.0))
+	var contactos: Array[Node] = []
+	unidad.body_entered.connect(func(otro: Node) -> void: contactos.append(otro))
+	_accion(jugador, unidad, ReglasDeLosObjetos.ACCION_AGARRAR)
+	assert_object(agarre.manos().sostenido()).is_null()
+	for cuadro in 32:
+		await get_tree().physics_frame
+	var base := INF
+	for punto in _puntos_del_volumen(unidad):
+		base = minf(base, punto.y)
+	var suelo: CollisionShape3D = almacen.get_node("Estructura/SueloSolido/Local")
+	var piso := suelo.global_position.y + (suelo.shape as BoxShape3D).size.y / 2.0
+	(
+		assert_float(base)
+		. override_failure_message("todavía debe estar cayendo sobre el piso")
+		. is_greater(piso + ReglasDeLosObjetos.ROCE)
+	)
+	(
+		assert_array(contactos)
+		. override_failure_message("antes de llegar al piso golpeó la fachada y empezó a girar")
+		. is_empty()
+	)
+
+
 func test_la_unidad_soltada_contra_el_mostrador_no_queda_adentro() -> void:  # AC-PLY-020
 	var almacen: Node3D = await _almacen()
 	var unidad := _unidad_en_la_mano(almacen)

@@ -663,13 +663,15 @@ func _ajustar_la_caida(cuerpo: RigidBody3D) -> void:
 	var espacio := get_world_3d().direct_space_state
 	for forma in _formas_de(cuerpo):
 		var consulta := _consulta_de(forma, cuerpo, -recorrido)
+		# Jolt genera contactos antes de tocar la pared. Soltar dentro de esa banda hacía
+		# girar la unidad durante la caída, aunque su volumen todavía estuviera afuera.
+		consulta.margin += ProjectSettings.get_setting(
+			"physics/jolt_physics_3d/simulation/speculative_contact_distance", 0.0
+		)
 		consulta.motion = recorrido
 		avance = minf(avance, espacio.cast_motion(consulta)[0])
 	cuerpo.global_position = inicio + recorrido * avance
-	# Lo que el barrido frenó contra algo queda a un centímetro, y no pegado. Cayendo pegada a una
-	# pared, una unidad se enganchaba en una arista del modelo, giraba y se hundía 3 cm en el
-	# rincón con el piso. Medido el 2026-09-30 al pie de la fachada: pasaba según qué suites
-	# hubieran corrido antes, y con el centímetro no pasa en ningún orden.
+	# La holgura se conserva después del barrido, por fuera de la banda de contactos.
 	if avance < 1.0:
 		cuerpo.global_position -= recorrido.normalized() * HOLGURA_DE_LA_CAIDA
 	# Si al lado tampoco entra, queda donde lo dejó el barrido: lo que ya no tiene lugar lo resuelve
