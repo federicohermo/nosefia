@@ -1,0 +1,280 @@
+{
+ "fecha": "2026-10-06T22:39:26.595Z",
+ "base": "http://localhost:8060/317-base/web/",
+ "propuesta": "http://localhost:8060/317-base/web/",
+ "casos": [
+  {
+   "nombre": "agua_de_malla"
+  },
+  {
+   "nombre": "agua_en_mezcla"
+  },
+  {
+   "nombre": "agua_sin_color"
+  },
+  {
+   "nombre": "agua_del_bano",
+   "aparte": true
+  }
+ ],
+ "condiciones": {
+  "navegador": "154.0.8037.92",
+  "cpu": "AMD Ryzen 7 7435HS                             ",
+  "vista": "1536x760",
+  "cuadrosDeEspera": 25,
+  "cuadrosMedidos": 60,
+  "calentamientoMs": 2000,
+  "sinVentana": true,
+  "sinLimiteDeCuadros": true,
+  "renderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 4050 Laptop GPU (0x000028E1) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+  "lienzo": "1536x760"
+ },
+ "rondas": [
+  {
+   "orden": [
+    "base",
+    "propuesta"
+   ],
+   "casos": {
+    "agua_de_malla": {
+     "base": {
+      "medianaMs": 0.10752,
+      "validas": 60,
+      "captura": "reports/agua-control-ronda1-base-agua_de_malla.png"
+     },
+     "propuesta": {
+      "medianaMs": 0.101376,
+      "validas": 60,
+      "captura": "reports/agua-control-ronda1-propuesta-agua_de_malla.png"
+     },
+     "imagen": {
+      "pixeles": 0,
+      "niveles": 0,
+      "igual": true
+     }
+    },
+    "agua_en_mezcla": {
+     "base": {
+      "medianaMs": 0.13824,
+      "validas": 60,
+      "captura": "reports/agua-control-ronda1-base-agua_en_mezcla.png"
+     },
+     "propuesta": {
+      "medianaMs": 0.130048,
+      "validas": 60,
+      "captura": "reports/agua-control-ronda1-propuesta-agua_en_mezcla.png"
+     },
+     "imagen": {
+      "pixeles": 0,
+      "niveles": 0,
+      "igual": true
+     }
+    },
+    "agua_sin_color": {
+     "base": {
+      "medianaMs": 0.10686399999999999,
+      "validas": 60,
+      "captura": "reports/agua-control-ronda1-base-agua_sin_color.png"
+     },
+     "propuesta": {
+      "medianaMs": 0.100352,
+      "validas": 60,
+      "captura": "reports/agua-control-ronda1-propuesta-agua_sin_color.png"
+     },
+     "imagen": {
+      "pixeles": 0,
+      "niveles": 0,
+      "igual": true
+     }
+    },
+    "agua_del_bano": {
+     "base": {
+      "medianaMs": 0.10728,
+      "validas": 60,
+      "captura": "reports/agua-control-ronda1-base-agua_del_bano.png"
+     },
+     "propuesta": {
+      "medianaMs": 0.101328,
+      "validas": 60,
+      "captura": "reports/agua-control-ronda1-propuesta-agua_del_bano.png"
+     },
+     "imagen": {
+      "pixeles": 0,
+      "niveles": 0,
+      "igual": true
+     }
+    }
+   }
+  },
+  {
+   "orden": [
+    "propuesta",
+    "base"
+   ],
+   "casos": {
+    "agua_de_malla": {
+     "base": {
+      "medianaMs": 0.106496,
+      "validas": 60,
+      "captura": "reports/agua-control-ronda2-base-agua_de_malla.png"
+     },
+     "propuesta": {
+      "medianaMs": 0.105472,
+      "validas": 60,
+      "captura": "reports/agua-control-ronda2-propuesta-agua_de_malla.png"
+     },
+     "imagen": {
+      "pixeles": 0,
+      "niveles": 0,
+      "igual": true
+     }
+    },
+    "agua_en_mezcla": {
+     "base": {
+      "medianaMs": 0.136192,
+      "validas": 60,
+      "captura": "reports/agua-control-ronda2-base-agua_en_mezcla.png"
+     },
+     "propuesta": {
+      "medianaMs": 0.135168,
+      "validas": 60,
+      "captura": "reports/agua-control-ronda2-propuesta-agua_en_mezcla.png"
+     },
+     "imagen": {
+      "pixeles": 0,
+      "niveles": 0,
+      "igual": true
+     }
+    },
+    "agua_sin_color": {
+     "base": {
+      "medianaMs": 0.10647999999999999,
+      "validas": 60,
+      "captura": "reports/agua-control-ronda2-base-agua_sin_color.png"
+     },
+     "propuesta": {
+      "medianaMs": 0.105472,
+      "validas": 60,
+      "captura": "reports/agua-control-ronda2-propuesta-agua_sin_color.png"
+     },
+     "imagen": {
+      "pixeles": 0,
+      "niveles": 0,
+      "igual": true
+     }
+    },
+    "agua_del_bano": {
+     "base": {
+      "medianaMs": 0.106496,
+      "validas": 60,
+      "captura": "reports/agua-control-ronda2-base-agua_del_bano.png"
+     },
+     "propuesta": {
+      "medianaMs": 0.10536,
+      "validas": 60,
+      "captura": "reports/agua-control-ronda2-propuesta-agua_del_bano.png"
+     },
+     "imagen": {
+      "pixeles": 0,
+      "niveles": 0,
+      "igual": true
+     }
+    }
+   }
+  },
+  {
+   "orden": [
+    "base",
+    "propuesta"
+   ],
+   "casos": {
+    "agua_de_malla": {
+     "base": {
+      "medianaMs": 0.104448,
+      "validas": 60,
+      "captura": "reports/agua-control-ronda3-base-agua_de_malla.png"
+     },
+     "propuesta": {
+      "medianaMs": 0.116736,
+      "validas": 60,
+      "captura": "reports/agua-control-ronda3-propuesta-agua_de_malla.png"
+     },
+     "imagen": {
+      "pixeles": 0,
+      "niveles": 0,
+      "igual": true
+     }
+    },
+    "agua_en_mezcla": {
+     "base": {
+      "medianaMs": 0.134144,
+      "validas": 60,
+      "captura": "reports/agua-control-ronda3-base-agua_en_mezcla.png"
+     },
+     "propuesta": {
+      "medianaMs": 0.150496,
+      "validas": 60,
+      "captura": "reports/agua-control-ronda3-propuesta-agua_en_mezcla.png"
+     },
+     "imagen": {
+      "pixeles": 0,
+      "niveles": 0,
+      "igual": true
+     }
+    },
+    "agua_sin_color": {
+     "base": {
+      "medianaMs": 0.104448,
+      "validas": 60,
+      "captura": "reports/agua-control-ronda3-base-agua_sin_color.png"
+     },
+     "propuesta": {
+      "medianaMs": 0.116736,
+      "validas": 60,
+      "captura": "reports/agua-control-ronda3-propuesta-agua_sin_color.png"
+     },
+     "imagen": {
+      "pixeles": 0,
+      "niveles": 0,
+      "igual": true
+     }
+    },
+    "agua_del_bano": {
+     "base": {
+      "medianaMs": 0.104448,
+      "validas": 60,
+      "captura": "reports/agua-control-ronda3-base-agua_del_bano.png"
+     },
+     "propuesta": {
+      "medianaMs": 0.115712,
+      "validas": 60,
+      "captura": "reports/agua-control-ronda3-propuesta-agua_del_bano.png"
+     },
+     "imagen": {
+      "pixeles": 0,
+      "niveles": 0,
+      "igual": true
+     }
+    }
+   }
+  }
+ ],
+ "medianas": {
+  "agua_de_malla": {
+   "base": 0.106496,
+   "propuesta": 0.105472
+  },
+  "agua_en_mezcla": {
+   "base": 0.136192,
+   "propuesta": 0.135168
+  },
+  "agua_sin_color": {
+   "base": 0.10647999999999999,
+   "propuesta": 0.105472
+  },
+  "agua_del_bano": {
+   "base": 0.106496,
+   "propuesta": 0.10536
+  }
+ }
+}

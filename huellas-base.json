@@ -1,0 +1,8 @@
+{
+ "commit": "d474ade163adb64ba1ed2177ad49112874c382b9",
+ "escena": "res://test/performance/medir_sombreado.tscn",
+ "pck_bytes": 44549684,
+ "pck_sha256": "a4d57aca25c74f97bd458ebd55e4eb88fe3589cb5be10baa83fd8c2d29fde9d9",
+ "wasm_bytes": 38849809,
+ "wasm_sha256": "46d9bcb1df7a640d20c753b3608c8734ebbe22c3b01f2d2912c926051ce5a4ec"
+}
