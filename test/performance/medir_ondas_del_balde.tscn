@@ -1,0 +1,6 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://test/performance/medir_ondas_del_balde.gd" id="medicion"]
+
+[node name="MedicionDeOndasDelBalde" type="Node"]
+script = ExtResource("medicion")
