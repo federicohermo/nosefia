@@ -129,30 +129,23 @@ Cada corrida informa también dos conteos, tomados entre el clic y el aviso del 
 - **`fuentes_distintas`:** los pares distintos de fuentes de vértices y de fragmentos entre
   esos programas.
 
-Dos programas con el mismo par cuestan una sola compilación: Chrome reutiliza la primera. La
-resta de los dos campos son enlaces repetidos. Las tres corridas informan los mismos conteos:
-el juego pide los mismos programas con la caché de Chrome llena.
+La resta de los dos campos cuenta enlaces con pares de fuentes ya registrados.
+Los conteos describen qué solicita el juego. No miden cuánto tarda cada compilación.
+El aviso del almacén cierra el contador antes de que Playwright lea los resultados.
 
-Medido el 2026-10-07 sobre `staging`, sin ventana y con un perfil nuevo por llamada. Usa
-Chrome 154 y una RTX 4050 mediante ANGLE D3D11, a 1536×760. El importador del modelo deja a los
-seis materiales con relieve del depósito con dos caras y con la rugosidad en el canal verde.
-Antes repartían tres combinaciones de caras y de canal, y ahora comparten una:
+El importador unifica caras y canal de rugosidad de los materiales con relieve y prefijo
+`deposito_`. Conserva sus mapas de normales, escala, filtro y texturas.
 
-| Export | `programas` | `fuentes_distintas` |
-|---|---|---|
-| `staging` | 68 | 66 |
-| Con los materiales del depósito unificados | 64 | 60 |
+El [PR de los materiales del depósito](https://github.com/federicohermo/nosefia/pull/335)
+registra los conteos, los tiempos y las capturas comparadas. Alternar base y rama con perfiles
+nuevos para comparar `corridas[0].desdeElClic`. Informar aparte las siguientes entradas del
+mismo Chrome, que puede compartir su caché de shaders.
 
-`desdeElClic` de la primera corrida, en tres pares alternados:
+Los casos del contador se corren a mano:
 
-| Par | `staging` | Unificados |
-|---|---|---|
-| 1 | 34,781 s | 31,002 s |
-| 2 | 32,968 s | 29,881 s |
-| 3 | 33,334 s | 32,163 s |
-
-La menor diferencia de un par es 1,171 s. La dispersión de cada export es mayor: 1,813 y
-2,282 s. Los pares no demuestran una mejora de tiempo: el cambio baja programas.
+```powershell
+node --test .github/scripts/tests/enlaces_de_shaders_test.mjs
+```
 
 ## La memoria de texturas en la web
 
