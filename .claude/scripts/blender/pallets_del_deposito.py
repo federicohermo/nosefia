@@ -315,8 +315,8 @@ def aplicar():
         tipo = "piso" if soporte["modulo"] == "piso" else "estante"
         if tipo not in modelos:
             piezas = _piezas(soporte["largo_m"], soporte["ancho_m"])
-            modelos[tipo] = (_malla("Pallet " + tipo, piezas, material), piezas)
-        malla, piezas = modelos[tipo]
+            modelos[tipo] = _malla("Pallet " + tipo, piezas, material)
+        malla = modelos[tipo]
         objeto = bpy.data.objects.get(soporte["nombre"])
         if objeto is None:
             objeto = bpy.data.objects.new(soporte["nombre"], malla)
@@ -326,7 +326,6 @@ def aplicar():
         objeto.location = soporte["position_blender"]
         objeto.rotation_euler.z = soporte["rotacion_z"]
         objeto[MARCA] = True
-        soporte["colisiones_local_blender"] = piezas
     bpy.context.view_layer.update()
     assert all(_huella(bpy.data.objects[n]) == huella for n, huella in ajenos.items())
     assert imagenes == [(i.name, i.filepath) for i in bpy.data.images]
@@ -338,7 +337,8 @@ def aplicar():
             "alturas_apoyos": ALTURAS, "altura_pallet_m": ALTO,
             "largo_util_estanterias_m": LARGO_ESTANTE, "pallet_piso_vacio": True,
             "pallet_piso_modelo_conservado": huella_piso is not None,
-            "colision": "20 cajas por pallet; conservar abiertos los huecos de horquilla."}
+            "colision": "una caja por pallet, de su tamaño: por una ranura entre tablas se "
+                        "cuela el rayo que busca un apoyo."}
 
 
 def main():
