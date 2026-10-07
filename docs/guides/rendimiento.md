@@ -100,7 +100,7 @@ node .github/scripts/medir_memoria_de_texturas.mjs http://localhost:8060 reports
 Cada fase del JSON lista sus texturas con dimensiones, formato, mips, capas y bytes estimados,
 y da el total en bytes y en MiB. El PCK y el WASM van aparte, en `export_en_disco`, con sus
 bytes y su SHA-256: son tamaño en disco, no memoria de texturas. El JSON registra también el
-motor, el navegador, el renderer y la resolución.
+motor, el navegador, el renderizador y la resolución.
 
 - **Es el almacenamiento lógico que el juego le declara a WebGL.** Suma cada nivel, capa y
   cara. Incluye las texturas que se usan como destino de renderizado.

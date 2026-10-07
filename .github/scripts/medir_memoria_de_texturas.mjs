@@ -251,7 +251,9 @@ if (motivos.length) {
 for (const fase of FASES) {
   const { cantidad, bytes_estimados, MiB_estimados, formatos_desconocidos, contextos_perdidos } =
     fases[fase];
-  console.log(`${fase}: ${cantidad} texturas, ${bytes_estimados} bytes (${MiB_estimados} MiB)`);
+  console.log(
+    `${fase}: ${cantidad} texturas, ${bytes_estimados} bytes estimados (${MiB_estimados} MiB)`
+  );
   for (const { formato, imagenes } of formatos_desconocidos) {
     console.error(`  cobertura incompleta: ${imagenes} imágenes de formato ${formato} sin medir`);
   }
