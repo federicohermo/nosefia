@@ -303,8 +303,7 @@ def _acabado_del_plastico(objeto, material, etiqueta, rotulo=False):
         altura = operar("ADD", operar("MULTIPLY", altura, .08), nervadura)
     pbr = next(n for n in nodos if n.type == "BSDF_PRINCIPLED")
     normal_existente = pbr.inputs["Normal"].links[0].from_socket if pbr.inputs["Normal"].links else None
-    color_horneado = _hornear_acabado(objeto, material, color, PREFIJO + etiqueta + "_color",
-                                     512 if rotulo else 256)
+    color_horneado = _hornear_acabado(objeto, material, color, PREFIJO + etiqueta + "_color", 256)
     rugosidad_horneada = _hornear_acabado(objeto, material, rugosidad,
                                          PREFIJO + etiqueta + "_roughness", 128)
     relieve = nodo("Bump")
@@ -464,7 +463,7 @@ def aplicar():
     padre["zona_de_descarte_godot"] = (CENTRO[0], CENTRO[2], -CENTRO[1])
     return {"objetos": [o.name for o in (cuerpo, tapa, ruedas, herrajes)],
             "triangulos": triangulos, "materiales": 4, "normales": [256, 256, 128],
-            "albedos": [512, 256], "rugosidades": [128, 128],
+            "albedos": [256, 256], "rugosidades": [128, 128],
             "boca_interior_m": [.604, .684], "altura_boca_m": 1.075,
             "apertura_grados": APERTURA, "centro_blender": CENTRO,
             "mallas_ajenas_conservadas": len(antes)}
