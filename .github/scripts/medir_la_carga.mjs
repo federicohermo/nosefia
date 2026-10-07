@@ -28,8 +28,8 @@
 // Usa la sincronización de cuadros habitual del navegador; quitarla para medir FPS puede
 // aumentar la contención durante la lectura de recursos y falsear la espera de carga.
 //
-// `cuadro_mas_largo_ms` es el mayor tiempo entre dos `requestAnimationFrame` seguidos, desde el
-// clic hasta el aviso del almacén: cuánto llega a congelarse la página durante la carga.
+// `cuadro_mas_largo_ms` es el mayor intervalo sin un callback de `requestAnimationFrame`, desde
+// el clic hasta el aviso del almacén. Incluye el tramo final que termina en ese aviso.
 //
 // --sin-enlace-en-paralelo le niega `KHR_parallel_shader_compile` a la página. La plantilla
 // enlaza entonces cada programa al pedirlo, como en un navegador sin la extensión.
@@ -94,7 +94,13 @@ function vigilarLaPagina({ avisoDelAlmacen, sinEnlaceEnParalelo }) {
   const cuadros = (window.__cuadros = { anterior: null, masLargo: 0, cerrado: false });
   const registrar = console.log;
   console.log = (...args) => {
-    if (String(args[0]).includes(avisoDelAlmacen)) cuadros.cerrado = true;
+    if (!cuadros.cerrado && String(args[0]).includes(avisoDelAlmacen)) {
+      // El aviso puede llegar durante el bloqueo, antes del próximo callback de cuadro.
+      if (cuadros.anterior !== null) {
+        cuadros.masLargo = Math.max(cuadros.masLargo, performance.now() - cuadros.anterior);
+      }
+      cuadros.cerrado = true;
+    }
     registrar.apply(console, args);
   };
   const cuadro = (ahora) => {
@@ -167,7 +173,10 @@ async function corrida() {
       () => new Promise((listo) => requestAnimationFrame(() => requestAnimationFrame(listo)))
     );
     const lienzo = await pagina.locator('canvas').boundingBox();
-    await pagina.evaluate(() => { window.__cuadros.masLargo = 0; });
+    await pagina.evaluate(() => {
+      window.__cuadros.masLargo = 0;
+      window.__cuadros.anterior = performance.now();
+    });
     await pagina.evaluate(() => {
       window.__enlaces.programas = 0;
       window.__enlaces.fuentes.clear();

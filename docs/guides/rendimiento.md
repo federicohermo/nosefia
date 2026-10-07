@@ -264,7 +264,7 @@ primer uso. El camino nativo queda intacto. La referencia es
 [`shader_gles3.cpp` del commit fijado](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/drivers/gles3/shader_gles3.cpp).
 
 Ese parche no enlazaba en paralelo: lo que se mide en esta sección es anterior. Hoy la plantilla
-enlaza los shaders de escena con `KHR_parallel_shader_compile`. Está medido en
+enlaza los shaders de escena con `KHR_parallel_shader_compile`. El método está en
 [el enlace en paralelo](#el-enlace-en-paralelo).
 
 Se comparan la plantilla base y la modificada con el mismo PCK de 43.589.692 bytes.
@@ -348,55 +348,27 @@ no se dibuja ese cuadro.
 El calentamiento lee esa cola. Cada pasada destapa todos sus objetos en un cuadro, y las tres
 pasadas se enlazan a la vez. El aviso del almacén espera a que la cola quede vacía.
 
-**Entrar con la cola ocupada frena el juego.** Lo que compila al primer uso espera detrás de la
-cola. En una sonda sin esa espera, dos consultas de `getShaderParameter` tardaron 1.094 y 955 ms
-al entrar, con 35 programas en cola. En la base, las dos consultas de ese momento suman 4 ms.
+Entrar con la cola ocupada puede frenar el juego. Lo que compila al primer uso espera detrás de
+la cola. Por eso el calentamiento espera también los programas pedidos en su última pasada.
 
-`medir_la_carga.mjs` informa `cuadro_mas_largo_ms` en cada corrida. Es el mayor tiempo entre dos
-`requestAnimationFrame` seguidos, desde el clic hasta el aviso del almacén. Con
+`medir_la_carga.mjs` informa `cuadro_mas_largo_ms` en cada corrida. Es el mayor intervalo sin un
+callback de `requestAnimationFrame`, desde el clic hasta el aviso del almacén. Con
 `--sin-enlace-en-paralelo`, la página niega la extensión y la plantilla compila como antes:
 
 ```powershell
 node .github/scripts/medir_la_carga.mjs http://localhost:8060 reports/carga.json --sin-ventana --sin-enlace-en-paralelo
 ```
 
-### Medición del 2026-10-07
+La comparación y sus resultados quedan en el [PR #336](https://github.com/federicohermo/nosefia/pull/336).
+Para repetirla, alternar base y rama, rama y base, base y rama.
+Mantener el mismo equipo y las condiciones del navegador. Identificar cada export y revisión por su SHA en la evidencia.
+Cada llamada abre Chrome con un perfil nuevo. Comparar `desdeElClic` y `cuadro_mas_largo_ms` de
+la primera corrida. Informar por separado la segunda y la tercera, que pueden compartir caché.
 
-La base es `staging` en `1ab2a058`, con la plantilla anterior. La rama cambia la plantilla y el
-calentamiento. Las dos usan Godot 4.7.2, Chrome 154 sin ventana y una RTX 4050 mediante ANGLE
-D3D11, a 1536×760. El procesador es un Ryzen 7 7435HS de 16 hilos.
+El medidor incluye el tramo entre el último callback de cuadro y el aviso del almacén.
+Así registra también un bloqueo que termina antes del callback siguiente, sin medir después del aviso.
+Sus pruebas se corren con `node --test .github/scripts/tests/carga_de_cuadros_test.mjs`.
 
-Se midieron tres pares alternados: base y rama, rama y base, base y rama. Cada medición abre
-Chrome con un perfil nuevo y compara su primera corrida. No se limpió la caché del driver. La
-máquina estaba en uso: la CPU marcaba entre el 4 y el 37 % antes de cada medición.
-
-| Par | Base, desde el clic | Rama, desde el clic | Base, cuadro más largo | Rama, cuadro más largo |
-|---|---|---|---|---|
-| 1 | 33,145 s | 12,393 s | 2.292 ms | 1.188 ms |
-| 2 | 42,985 s | 11,875 s | 6.715 ms | 1.153 ms |
-| 3 | 32,194 s | 11,599 s | 2.340 ms | 1.090 ms |
-
-- **La segunda y la tercera corrida** comparten la caché de Chrome. Tardan entre 5,164 y 5,513 s
-  en la base, y entre 2,735 y 3,068 s en la rama.
-- **Una tanda anterior del mismo día** midió 43,395, 39,425 y 40,181 s en la base. En la rama
-  midió 12,372, 10,502 y 10,709 s. En esa tanda no se registró el uso de la CPU.
-- **El cuadro más largo de la rama es el que instancia el almacén.** Dura alrededor de un segundo
-  también con la caché llena, en la base y en la rama. El enlace no lo cambia.
-- **Con `--sin-enlace-en-paralelo`**, la primera corrida de la rama tarda 37,073 s desde el clic.
-  Su cuadro más largo dura 2.771 ms.
-
-Una sonda cronometró cada llamada de WebGL2 entre el clic y el aviso. La base y la rama enlazan
-68 programas. En la base, las 68 consultas de `LINK_STATUS` suman 26,9 s. En la rama no llegan a
-1 ms, y 5.995 consultas de `COMPLETION_STATUS_KHR` suman 21 ms. La sonda agrega su propio costo:
-sus tiempos totales no se comparan con los de la tabla.
-
-Lo que esta medición no cubre:
-
-- **Otro equipo.** El enlace en paralelo usa los hilos libres: una máquina con menos hilos gana
-  menos.
-- **El primer dibujo de cada programa.** Las pasadas no esperan entre sí, y un programa puede
-  terminar con su objeto ya tapado. Una sonda que sí esperaba dibujó los 68 programas apenas
-  terminaron. Después del pedido, ningún cuadro pasó de 105 ms. Esa sonda tardó 11,0 s, contra
-  9,7 s sin esperar.
-- **Una variante que el calentamiento no dibuja.** En la partida se pide en paralelo, y su objeto
-  aparece cuando el programa termina.
+La comparación no prueba el primer dibujo de cada programa ni todas las variantes de la partida.
+Un programa puede terminar con su objeto ya tapado. Una variante nueva aparece cuando termina su enlace.
+El resultado depende de los hilos libres del equipo y de la caché del driver.
