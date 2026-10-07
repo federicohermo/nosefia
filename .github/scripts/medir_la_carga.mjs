@@ -17,10 +17,22 @@
 //   apenas ve el aviso del menú. El clic va a la altura del botón con la ventana de 1536×760
 //   que abre el script: con otro tamaño, el botón queda en otro lado.
 //
+// Y dos conteos, entre el clic y el aviso del almacén:
+//
+// - **programas:** las llamadas a `linkProgram` de WebGL2.
+// - **fuentes_distintas:** los pares distintos de fuentes de vértices y de fragmentos entre
+//   esos programas.
+//
 // Hace tres corridas con contextos HTTP nuevos dentro del mismo Chrome. El navegador puede
 // conservar su caché de shaders entre corridas: la primera y las siguientes se informan aparte.
 // Usa la sincronización de cuadros habitual del navegador; quitarla para medir FPS puede
 // aumentar la contención durante la lectura de recursos y falsear la espera de carga.
+//
+// `cuadro_mas_largo_ms` es el mayor intervalo sin un callback de `requestAnimationFrame`, desde
+// el clic hasta el aviso del almacén. Incluye el tramo final que termina en ese aviso.
+//
+// --sin-enlace-en-paralelo le niega `KHR_parallel_shader_compile` a la página. La plantilla
+// enlaza entonces cada programa al pedirlo, como en un navegador sin la extensión.
 //
 // **Abre una ventana y tiene que quedar a la vista**: un Chrome tapado casi no pide cuadros.
 // --sin-ventana evita esa pausa para medir la carga mientras se usa otra aplicación. Registra
@@ -39,7 +51,7 @@ const AVISO_DEL_MENU = '[carga] menú visible';
 const AVISO_DEL_ALMACEN = '[carga] almacén en pantalla';
 const ALTURA_DE_NUEVO_JUEGO = 0.56;
 
-const argumentos = process.argv.slice(2).filter((argumento) => argumento !== '--sin-ventana');
+const argumentos = process.argv.slice(2).filter((argumento) => !argumento.startsWith('--'));
 const url = argumentos[0];
 if (!url) {
   console.error('uso: node .github/scripts/medir_la_carga.mjs <URL> [salida.json]');
@@ -47,6 +59,7 @@ if (!url) {
 }
 const salida = argumentos[1];
 const sinVentana = process.argv.includes('--sin-ventana');
+const sinEnlaceEnParalelo = process.argv.includes('--sin-enlace-en-paralelo');
 
 const navegador = await chromium.launch({
   channel: 'chrome',
@@ -76,9 +89,73 @@ function dentroDe(promesa, que) {
   return Promise.race([promesa, plazo]).finally(() => clearTimeout(temporizador));
 }
 
+// Corre adentro de la página, antes que el juego.
+function vigilarLaPagina({ avisoDelAlmacen, sinEnlaceEnParalelo }) {
+  const cuadros = (window.__cuadros = { anterior: null, masLargo: 0, cerrado: false });
+  const registrar = console.log;
+  console.log = (...args) => {
+    if (!cuadros.cerrado && String(args[0]).includes(avisoDelAlmacen)) {
+      // El aviso puede llegar durante el bloqueo, antes del próximo callback de cuadro.
+      if (cuadros.anterior !== null) {
+        cuadros.masLargo = Math.max(cuadros.masLargo, performance.now() - cuadros.anterior);
+      }
+      cuadros.cerrado = true;
+    }
+    registrar.apply(console, args);
+  };
+  const cuadro = (ahora) => {
+    if (cuadros.cerrado) return;
+    if (cuadros.anterior !== null) {
+      cuadros.masLargo = Math.max(cuadros.masLargo, ahora - cuadros.anterior);
+    }
+    cuadros.anterior = ahora;
+    requestAnimationFrame(cuadro);
+  };
+  requestAnimationFrame(cuadro);
+  if (sinEnlaceEnParalelo) {
+    const extension = 'KHR_parallel_shader_compile';
+    const webgl = WebGL2RenderingContext.prototype;
+    const pedir = webgl.getExtension;
+    const listar = webgl.getSupportedExtensions;
+    webgl.getExtension = function (nombre) {
+      return nombre === extension ? null : pedir.call(this, nombre);
+    };
+    webgl.getSupportedExtensions = function () {
+      return listar.call(this)?.filter((nombre) => nombre !== extension) ?? null;
+    };
+  }
+}
+
+// Corre en la página, antes que el juego. Dos programas con el mismo par de fuentes cuestan
+// una sola compilación: Chrome reutiliza la primera.
+function contarEnlaces(avisoDelAlmacen) {
+  const enlaces = (window.__enlaces = { programas: 0, fuentes: new Set() });
+  let cerrado = false;
+  const registrar = console.log;
+  console.log = (...args) => {
+    if (String(args[0]).includes(avisoDelAlmacen)) cerrado = true;
+    registrar.apply(console, args);
+  };
+  const enlazar = WebGL2RenderingContext.prototype.linkProgram;
+  WebGL2RenderingContext.prototype.linkProgram = function (programa) {
+    // El juego puede enlazar otros programas antes de que Playwright lea el conteo.
+    if (cerrado) return enlazar.call(this, programa);
+    enlaces.programas++;
+    const fuentes = this.getAttachedShaders(programa).map(
+      (shader) => `${this.getShaderParameter(shader, this.SHADER_TYPE)}\n${this.getShaderSource(shader)}`
+    );
+    enlaces.fuentes.add(fuentes.sort().join('\0'));
+    return enlazar.call(this, programa);
+  };
+}
+
 async function corrida() {
   const contexto = await navegador.newContext({ viewport: { width: 1536, height: 760 } });
   const pagina = await contexto.newPage();
+  await pagina.addInitScript(vigilarLaPagina, {
+    avisoDelAlmacen: AVISO_DEL_ALMACEN, sinEnlaceEnParalelo,
+  });
+  await pagina.addInitScript(contarEnlaces, AVISO_DEL_ALMACEN);
   try {
     await pagina.mouse.move(768, 760 * ALTURA_DE_NUEVO_JUEGO);
     const menu = aviso(pagina, AVISO_DEL_MENU);
@@ -102,13 +179,29 @@ async function corrida() {
       () => new Promise((listo) => requestAnimationFrame(() => requestAnimationFrame(listo)))
     );
     const lienzo = await pagina.locator('canvas').boundingBox();
+    await pagina.evaluate(() => {
+      window.__cuadros.masLargo = 0;
+      window.__cuadros.anterior = performance.now();
+    });
+    await pagina.evaluate(() => {
+      window.__enlaces.programas = 0;
+      window.__enlaces.fuentes.clear();
+    });
     const clic = Date.now() - desde;
     await pagina.mouse.click(
       lienzo.x + lienzo.width / 2,
       lienzo.y + lienzo.height * ALTURA_DE_NUEVO_JUEGO
     );
     const entro = (await dentroDe(almacen, 'el aviso del almacén')) - desde;
-    return { overlay, menu: vioElMenu, clic, almacen: entro, desdeElClic: entro - clic, gpu };
+    const cuadroMasLargo = await pagina.evaluate(() => Math.round(window.__cuadros.masLargo));
+    const enlaces = await pagina.evaluate(() => ({
+      programas: window.__enlaces.programas,
+      fuentes_distintas: window.__enlaces.fuentes.size,
+    }));
+    return {
+      overlay, menu: vioElMenu, clic, almacen: entro, desdeElClic: entro - clic,
+      cuadro_mas_largo_ms: cuadroMasLargo, gpu, ...enlaces,
+    };
   } finally {
     await contexto.close();
   }
@@ -144,12 +237,15 @@ console.log(
   `desde el clic: primera ${corridas[0].desdeElClic} ms; ` +
     `siguientes ${corridas.slice(1).map((c) => c.desdeElClic + ' ms').join(', ')}`
 );
+console.log(
+  `programas y fuentes distintas: ${corridas.map((c) => `${c.programas} y ${c.fuentes_distintas}`).join('; ')}`
+);
 
 if (salida) {
   writeFileSync(salida, JSON.stringify({ url, fecha: new Date().toISOString(), corridas, medianas,
     condiciones: { navegador: navegador.version(), viewport: { ancho: 1536, alto: 760 },
       sincronizacionHabitual: true, cpuLimitada: false, contextosHTTPNuevos: true,
-      sinVentana,
+      sinVentana, sinEnlaceEnParalelo,
       cacheDeShadersCompartida: 'posible dentro del mismo navegador' } }, null, 1));
   console.log(`guardado en ${salida}`);
 }

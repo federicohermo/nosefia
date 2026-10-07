@@ -144,10 +144,12 @@ func _unhandled_input(evento: InputEvent) -> void:
 			_interactuar()
 	elif evento.is_action_pressed(ReglasDelJugador.ACCION_USAR):
 		if not _control.esta_suspendido():
-			if _enfocado != null:
-				uso_pedido.emit(_enfocado)
-			else:
+			if _enfocado == null:
 				_usar_la_superficie_mirada()
+			elif _enfocado.has_method(ReglasDeLosObjetos.METODO_USAR):
+				_enfocado.call(ReglasDeLosObjetos.METODO_USAR)
+			else:
+				uso_pedido.emit(_enfocado)
 	elif evento.is_action_pressed(ReglasDeLosObjetos.ACCION_EXAMINAR):
 		# Con otra pantalla encima, la E no abre un examen: al cerrarlo reanudaría al jugador.
 		if examen.esta_examinando() or not _control.esta_suspendido():

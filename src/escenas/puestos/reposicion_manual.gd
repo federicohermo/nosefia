@@ -384,9 +384,10 @@ func _le_queda_encima_al_jugador(caja: CajaDelDeposito) -> bool:
 ## Sobre qué superficie quiere el jugador apoyar la caja. Vacío cuando ahí no hay ninguna.
 ##
 ## Cuatro casos, y son distintos entre sí. **Una tapa** es el lugar, derecho. **El aire** no
-## señala una superficie equivocada: no señala ninguna, y entonces el lugar es el piso que haya
-## debajo del cursor. **El costado de otra caja** es apilar: con una caja justo enfrente el cursor
-## cae ahí y no en su tapa. **Cualquier otra cara vertical** la resuelve `_apoyo_debajo()`.
+## señala una superficie equivocada: no señala ninguna, y entonces el lugar es el apoyo que haya
+## debajo del cursor, que resuelve `_apoyo_sobrevolado()`. **El costado de otra caja** es apilar:
+## con una caja justo enfrente el cursor cae ahí y no en su tapa. **Cualquier otra cara vertical**
+## la resuelve `_apoyo_debajo()`.
 func _apoyo_apuntado(caja: CajaDelDeposito) -> Dictionary:
 	var ojo := jugador.mira()
 	var lejos := ojo.origin - ojo.basis.z * ReglasDelJugador.ALCANCE_DE_LA_MIRA
@@ -397,10 +398,7 @@ func _apoyo_apuntado(caja: CajaDelDeposito) -> Dictionary:
 	if rozada != null:
 		golpe = _tapa_de_la_pila(caja, rozada)
 	elif golpe.is_empty():
-		# Media caja hacia atrás: el rayo que baja no puede arrancar adentro de lo que la caja
-		# va a ocupar.
-		var punto := lejos + (ojo.origin - lejos).normalized() * _media_caja(caja).length()
-		golpe = _rayo(caja, punto, punto + Vector3.DOWN * ReglasDeLosObjetos.CAIDA_HASTA_EL_PISO)
+		golpe = _apoyo_sobrevolado(caja, ojo.origin, lejos)
 	elif not ReglasDeLosObjetos.se_puede_apoyar_en(golpe["normal"].y):
 		var enfrente := golpe["collider"] as CajaDelDeposito
 		if enfrente != null:
@@ -415,6 +413,38 @@ func _apoyo_apuntado(caja: CajaDelDeposito) -> Dictionary:
 	if golpe.is_empty() or not ReglasDeLosObjetos.se_puede_apoyar_en(golpe["normal"].y):
 		return {}
 	return golpe
+
+
+## El apoyo más alto que la mira sobrevuela cuando termina en el aire.
+##
+## **Un rack sin fondo no frena la mira.** El rayo cruza el hueco y sale por atrás, y el piso
+## debajo de su punta queda detrás del rack: la caja iba a parar ahí, fuera de la vista. Medido a
+## 0,7 y 1,1 m del rack del medio del depósito: entre +3 y -7 grados terminaba en el piso de atrás.
+##
+## Se camina la mira desde la punta hacia el jugador, y en cada paso se baja derecho. Entre dos
+## apoyos a la misma altura queda el más lejano: en piso abierto, el que hay debajo de la punta.
+##
+## **Media caja antes de la punta y media caja después del ojo.** El rayo que baja no puede
+## arrancar adentro de lo que la caja va a ocupar, y donde está parado el jugador no hay lugar.
+func _apoyo_sobrevolado(caja: CajaDelDeposito, desde: Vector3, hasta: Vector3) -> Dictionary:
+	var margen := _media_caja(caja).length()
+	var recorrido := desde.distance_to(hasta) - margen
+	var mejor := {}
+	while recorrido > margen:
+		var punto := desde.move_toward(hasta, recorrido)
+		var golpe := _rayo(
+			caja, punto, punto + Vector3.DOWN * ReglasDeLosObjetos.CAIDA_HASTA_EL_PISO
+		)
+		if (
+			not golpe.is_empty()
+			and ReglasDeLosObjetos.se_puede_apoyar_en(golpe["normal"].y)
+			and (
+				mejor.is_empty() or golpe["position"].y > mejor["position"].y + TOLERANCIA_DEL_APOYO
+			)
+		):
+			mejor = golpe
+		recorrido -= HOLGURA_DE_LA_MIRA
+	return mejor
 
 
 ## La caja que la mira pasó rozando, cuando lo que el rayo tocó queda detrás de ella.

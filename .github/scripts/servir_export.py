@@ -34,6 +34,16 @@ class ConHeaders(SimpleHTTPRequestHandler):
         pass
 
 
+class Servidor(ThreadingHTTPServer):
+    """Un puerto ocupado falla al abrir, también en Windows.
+
+    Ahí `SO_REUSEADDR` deja que dos procesos escuchen el mismo puerto. El segundo arrancaba sin
+    avisar, y el navegador medía el export del primero.
+    """
+
+    allow_reuse_address = sys.platform != "win32"
+
+
 def main() -> None:
     if len(sys.argv) != 3:
         print("uso: python .github/scripts/servir_export.py <carpeta> <puerto>", file=sys.stderr)
@@ -44,7 +54,7 @@ def main() -> None:
         sys.exit(1)
     ConHeaders.headers_extra = headers_de_vercel()
     manejador = functools.partial(ConHeaders, directory=str(carpeta))
-    servidor = ThreadingHTTPServer(("127.0.0.1", int(sys.argv[2])), manejador)
+    servidor = Servidor(("127.0.0.1", int(sys.argv[2])), manejador)
     print(f"sirviendo {carpeta} en http://localhost:{sys.argv[2]}", flush=True)
     servidor.serve_forever()
 

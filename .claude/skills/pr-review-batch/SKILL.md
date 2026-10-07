@@ -181,6 +181,12 @@ insumos, y los cinco van **destilados**, no como rutas a leer:
   lista caliente medida** y **las escenas compartidas**. Las cuatro cosas son del padre y ninguna
   la puede derivar el agente.
 - **Las trampas de `CLAUDE.md`** que aplican al lote.
+- **Las dos trampas del worktree que un lote ya pisó**, medidas el 2026-10-07:
+  - `git show <ref>:<ruta>` falla en Git Bash, que reescribe el argumento como una ruta. Va con
+    `MSYS_NO_PATHCONV=1` adelante.
+  - Un arreglo de prosa en `CLAUDE.md`, `docs/` o `.claude/rules/` tiene un techo de palabras por
+    oración, que cobra `test_largo_de_oracion.py`. Se corre `verificar.py --solo harness` antes
+    de la corrida entera: un carril perdió una de once minutos por dos oraciones largas.
 
 Escribilo **a un archivo** y pasá la ruta absoluta, en vez de inlinearlo N veces: los worktrees no
 lo comparten pero sí leen rutas absolutas. Y **escribilo con `Write`, nunca con un heredoc** — los
@@ -197,8 +203,11 @@ vez, dos checkouts de la misma rama no pueden coexistir, y cada uno hace `git ad
 
 **El ancho lo manda `verificar.py`, no el review.** Son siete nodos concurrentes cada uno, y el de
 `tests` levanta Godot headless. N PRs son 7N procesos, N de ellos un motor entero. Hasta cuatro es
-razonable; más que eso, tandas. **No hay medición propia todavía**: es una cota prudente, y la
-primera corrida que la contradiga la mueve.
+razonable; más que eso, tandas.
+
+**Con cuatro a la vez, cada `verificar.py` tarda entre 11 y 11,5 minutos.** Medido el 2026-10-07
+sobre nueve PR. Pasa el tope de diez minutos de un comando en primer plano: cada agente lo corre
+en segundo plano y espera el aviso. Va en el preámbulo.
 
 ## Paso 3 — El contrato de cada agente
 

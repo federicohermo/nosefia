@@ -6,9 +6,13 @@ y su medición final.
 
 ## Dónde queda el resultado
 
-Cada `test/performance/medir_*.gd` escribe su JSON en `reports/`, que está en `.gitignore`. Una
-corrida reemplaza el archivo de la anterior: copiarlo antes de repetir. El JSON registra el
-commit, el motor, el equipo y el renderizador de la corrida.
+Un escenario de `test/performance/` que corre en escritorio escribe su JSON en `reports/`, que
+está en `.gitignore`. Una corrida reemplaza el archivo de la anterior: copiarlo antes de repetir.
+El JSON registra el commit, el motor y el equipo de la corrida. El escenario que dibuja registra
+también el renderizador.
+
+En la web no existe `res://reports/`. Ahí el escenario imprime su informe, y lo guarda el script
+de `.github/scripts/` que abre el export.
 
 ## Cómo se corre una medición de escritorio
 
@@ -38,6 +42,37 @@ Las métricas del motor se describen en la
 Cada escena de medición tiene su `*_test.gd` al lado. Comprueba cantidades, uso de colisiones y
 cálculo de percentiles. No corre la medición de GPU ni exige tiempos iguales en equipos
 distintos.
+
+## Comparar dos revisiones de un escenario en la web
+
+`.github/scripts/exportar_escenario.py` exporta una revisión con un escenario como escena
+principal, en una copia aislada. Cómo arma la copia está en su encabezado. La plantilla web
+tiene que estar preparada.
+
+```powershell
+python .github/scripts/exportar_escenario.py <base> res://test/performance/<escenario>.tscn <carpeta>/base
+python .github/scripts/exportar_escenario.py <propuesta> res://test/performance/<escenario>.tscn <carpeta>/propuesta
+python .github/scripts/servir_export.py <carpeta>/base/web 8060
+node .github/scripts/recoger_informe.mjs http://localhost:8060 reports/base-1.json
+```
+
+`recoger_informe.mjs` guarda el informe que el escenario imprime. El protocolo entre los dos
+está en su encabezado. Un escenario con runner propio usa ese runner.
+
+- **La copia lleva sólo lo commiteado.** Commitear primero el escenario y después el cambio: son
+  las dos revisiones que se comparan.
+- **Dos cargas del mismo export no miden igual.** Medir primero la base contra sí misma. Esa
+  diferencia es el ruido entre cargas, y un cambio menor que ella no se demostró.
+- **Un caso de control en la misma carga cancela ese ruido.** Dividir cada caso por el control
+  de su carga, y comparar los cocientes.
+- **Alternar el orden en cada ronda:** base y propuesta, después propuesta y base.
+- **Medir el tiempo de GPU con `--sin-limite-de-cuadros`.** Con la sincronización puesta, el
+  mismo export mide varias veces más en unas cargas que en otras.
+- **Mirar que el puerto esté libre antes de servir.** Windows deja a dos servidores escuchar el
+  mismo puerto, y el navegador cae en cualquiera de los dos.
+- **Playwright se instala en el checkout principal, no en un worktree.** Node lo encuentra
+  subiendo. Con `node_modules/` adentro de un árbol sin caché de importación, Godot se cayó al
+  importar.
 
 ## Medición en la web, con la CPU frenada
 
@@ -85,6 +120,67 @@ de una ventana ni los FPS durante la partida. Comparar corridas con el mismo mod
 **El aviso del almacén sale cuando el jugador lo ve**, al final del calentamiento de shaders.
 Los tiempos de carga de `medir_en_navegador.mjs` usan cuadros sin límite para medir FPS.
 No compararlos con las esperas de `medir_la_carga.mjs`.
+
+### Los programas que enlaza la carga
+
+Cada corrida informa también dos conteos, tomados entre el clic y el aviso del almacén:
+
+- **`programas`:** las llamadas a `linkProgram` de WebGL2.
+- **`fuentes_distintas`:** los pares distintos de fuentes de vértices y de fragmentos entre
+  esos programas.
+
+La resta de los dos campos cuenta enlaces con pares de fuentes ya registrados.
+Los conteos describen qué solicita el juego. No miden cuánto tarda cada compilación.
+El aviso del almacén cierra el contador antes de que Playwright lea los resultados.
+
+El importador unifica caras y canal de rugosidad de los materiales con relieve y prefijo
+`deposito_`. Conserva sus mapas de normales, escala, filtro y texturas.
+
+El [PR de los materiales del depósito](https://github.com/federicohermo/nosefia/pull/335)
+registra los conteos, los tiempos y las capturas comparadas. Alternar base y rama con perfiles
+nuevos para comparar `corridas[0].desdeElClic`. Informar aparte las siguientes entradas del
+mismo Chrome, que puede compartir su caché de shaders.
+
+Los casos del contador se corren a mano:
+
+```powershell
+node --test .github/scripts/tests/enlaces_de_shaders_test.mjs
+```
+
+## La memoria de texturas en la web
+
+`.github/scripts/medir_memoria_de_texturas.mjs` hace el inventario de las texturas de WebGL que
+el juego tiene vivas en dos momentos: al aviso `[carga] menú visible` y al aviso
+`[carga] almacén en pantalla`. Usa el mismo export local que la medición de carga:
+
+```powershell
+python .github/scripts/servir_export.py export/web 8060
+node .github/scripts/medir_memoria_de_texturas.mjs http://localhost:8060 reports/memoria-texturas.json --sin-ventana
+```
+
+Cada fase del JSON lista sus texturas con dimensiones, formato, mips, capas y bytes estimados,
+y da el total en bytes y en MiB. El PCK y el WASM van aparte, en `export_en_disco`, con sus
+bytes y su SHA-256: son tamaño en disco, no memoria de texturas. El JSON registra también el
+motor, el navegador, el renderizador y la resolución.
+
+- **Es el almacenamiento lógico que el juego le declara a WebGL.** Suma cada nivel, capa y
+  cara. Incluye las texturas que se usan como destino de renderizado.
+- **Excluye** los renderbuffers, las copias en CPU y la memoria del driver.
+- **Menos bytes lógicos no prueban menos VRAM física.** El driver puede guardar un formato en
+  otro más grande: ANGLE con Direct3D 11 puede guardar RGB8 como RGBA8, según su
+  [tabla de formatos](https://chromium.googlesource.com/angle/angle/+/d9c1710779d15239f3882b2bdbd5e65db369b04e/src/libANGLE/renderer/d3d/d3d11/texture_format_table_autogen.cpp).
+- **Un formato que el script no conoce queda sin bytes**, y no se suma como cero. La fase sale
+  con `cobertura_completa` en falso. Lo mismo pasa con un contexto WebGL perdido.
+- **Rechaza la corrida** si falta un aviso, si el juego escribe un error o si Chrome dibuja por
+  software. Sale con código distinto de cero y no escribe el JSON.
+- **No es un gate.** Los totales cambian con el arte. Sirven para comparar un export con otro.
+
+Lo que decide vive en `.github/scripts/lib/memoria_de_texturas.mjs`. Sus casos no corren en
+`verificar.py` ni en la CI. Se corren a mano:
+
+```powershell
+node --test .github/scripts/tests/memoria_de_texturas_test.mjs
+```
 
 ## Los shaders en la web
 
@@ -160,10 +256,9 @@ Modifica `_initialize_version` sólo bajo `WEB_ENABLED`. Conserva la compilació
 primer uso. El camino nativo queda intacto. La referencia es
 [`shader_gles3.cpp` del commit fijado](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/drivers/gles3/shader_gles3.cpp).
 
-El parche no implementa compilación asíncrona. La extensión
-[`KHR_parallel_shader_compile`](https://registry.khronos.org/webgl/extensions/KHR_parallel_shader_compile/)
-permite consultar cuándo termina un programa sin bloquear la consulta. Incorporarla exige otro
-cambio del motor. El calentamiento prepara las variantes usadas antes de mostrar el almacén.
+Ese parche no enlazaba en paralelo: lo que se mide en esta sección es anterior. Hoy la plantilla
+enlaza los shaders de escena con `KHR_parallel_shader_compile`. El método está en
+[el enlace en paralelo](#el-enlace-en-paralelo).
 
 Se comparan la plantilla base y la modificada con el mismo PCK de 43.589.692 bytes.
 Los exports conservan los recursos, la iluminación y las texturas. Se usa Chrome 154,
@@ -226,3 +321,47 @@ Los datos crudos quedan en `reports/plantilla-integrada-base-carga.json` y
 - Ningún recurso agrupa luces como `MultiMesh` agrupa mallas. El agrupado de luces es de
   Forward+, que no corre en la web. Lo que saca el costo es hornear la luz:
   [iluminación](./iluminacion.md).
+
+## El enlace en paralelo
+
+La plantilla web enlaza los programas de los shaders de escena con la extensión
+[`KHR_parallel_shader_compile`](https://registry.khronos.org/webgl/extensions/KHR_parallel_shader_compile/).
+El motor pide el programa y no consulta su estado: esa consulta es la que frena el cuadro. Al
+empezar cada cuadro pregunta qué programas terminaron. Una superficie con su programa en cola
+no se dibuja ese cuadro.
+
+- **Sólo cambian los shaders de escena.** El lienzo, el cielo, las copias y los efectos compilan
+  al primer uso, como antes.
+- **Sin la extensión, el motor compila como antes**, y el calentamiento destapa como antes.
+- **La plantilla publica la cola** en `window.godot_programas_en_cola`. Sin la extensión, queda
+  sin definir.
+- **Un programa que falla sale de la cola.** El motor lo compila otra vez en el momento, e
+  informa el error con su fuente.
+
+El calentamiento lee esa cola. Cada pasada destapa todos sus objetos en un cuadro, y las tres
+pasadas se enlazan a la vez. El aviso del almacén espera a que la cola quede vacía.
+
+Entrar con la cola ocupada puede frenar el juego. Lo que compila al primer uso espera detrás de
+la cola. Por eso el calentamiento espera también los programas pedidos en su última pasada.
+
+`medir_la_carga.mjs` informa `cuadro_mas_largo_ms` en cada corrida. Es el mayor intervalo sin un
+callback de `requestAnimationFrame`, desde el clic hasta el aviso del almacén. Con
+`--sin-enlace-en-paralelo`, la página niega la extensión y la plantilla compila como antes:
+
+```powershell
+node .github/scripts/medir_la_carga.mjs http://localhost:8060 reports/carga.json --sin-ventana --sin-enlace-en-paralelo
+```
+
+La comparación y sus resultados quedan en el [PR #336](https://github.com/federicohermo/nosefia/pull/336).
+Para repetirla, alternar base y rama, rama y base, base y rama.
+Mantener el mismo equipo y las condiciones del navegador. Identificar cada export y revisión por su SHA en la evidencia.
+Cada llamada abre Chrome con un perfil nuevo. Comparar `desdeElClic` y `cuadro_mas_largo_ms` de
+la primera corrida. Informar por separado la segunda y la tercera, que pueden compartir caché.
+
+El medidor incluye el tramo entre el último callback de cuadro y el aviso del almacén.
+Así registra también un bloqueo que termina antes del callback siguiente, sin medir después del aviso.
+Sus pruebas se corren con `node --test .github/scripts/tests/carga_de_cuadros_test.mjs`.
+
+La comparación no prueba el primer dibujo de cada programa ni todas las variantes de la partida.
+Un programa puede terminar con su objeto ya tapado. Una variante nueva aparece cuando termina su enlace.
+El resultado depende de los hilos libres del equipo y de la caché del driver.

@@ -70,8 +70,14 @@ func test_la_pared_del_modelo_tapa_un_objeto_dentro_del_alcance() -> void:
 	var bolsa: RigidBody3D = auto_free(BOLSA.instantiate())
 	bolsa.freeze = true
 	add_child(bolsa)
-	bolsa.global_position = Vector3(0, 1.8, 7.5)
-	var ojo := Vector3(0, 1.8, 8.7)
+	# La pared frontal tiene dos colisiones coincidentes. Este tramo del modelo
+	# queda antes del portón y se mide desde el piso, aunque cambie el depósito.
+	var piso: CollisionShape3D = almacen.get_node("Estructura/SueloSolido/Fondo")
+	var volumen: BoxShape3D = piso.shape
+	var pared := piso.to_global(Vector3(-volumen.size.x / 2, 0, volumen.size.z / 2 - 0.8))
+	pared.y = 1.8
+	bolsa.global_position = pared + Vector3.LEFT * 0.6
+	var ojo := pared + Vector3.RIGHT * 0.6
 	_mirar(jugador, ojo, bolsa.global_position)
 	await _actualizar(jugador)
 	assert_bool(jugador.get_node("Giro/Camara/CampoDeInteraccion").overlaps_body(bolsa)).is_true()
@@ -81,6 +87,7 @@ func test_la_pared_del_modelo_tapa_un_objeto_dentro_del_alcance() -> void:
 	assert_object(golpe.get("collider")).is_same(
 		almacen.get_node("Estructura/almacen/StaticBody3D")
 	)
+	assert_vector(golpe.get("position")).is_equal_approx(pared, Vector3.ONE * 0.001)
 	assert_float(ojo.distance_to(bolsa.global_position)).is_less(
 		ReglasDelJugador.ALCANCE_DE_LA_MIRA
 	)

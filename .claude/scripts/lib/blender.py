@@ -101,10 +101,11 @@ COLECCION_DE_GUIA = "guia"
 #: la placa de video más grande que esto.
 LADO_TOPE = 1024
 
-#: Los tres grupos en los que se reparten las texturas del modelo.
+#: Los grupos en los que se reparten las texturas del modelo.
 PRODUCTOS = "productos"
 MUEBLES = "muebles"
 EDIFICIO = "edificio"
+SUPERFICIE = "superficie"
 
 #: El lado máximo, en píxeles, con el que viaja en el `.glb` cada textura de cada grupo.
 #:
@@ -112,7 +113,9 @@ EDIFICIO = "edificio"
 #: píxeles en pantalla y filtra pixelado, así que se prueba a 512. Un mueble o una pared se ven
 #: de cerca, y quedan en 1024: Godot ya los importaba con ese límite, así que en pantalla no
 #: cambian.
-LADO_MAXIMO = {PRODUCTOS: 512, MUEBLES: 1024, EDIFICIO: 1024}
+# Los mapas de relieve, rugosidad y metal del depósito van a 512. Su color sigue a 1024:
+# conserva la escala de los bloques y el detalle visible, con menos memoria de texturas.
+LADO_MAXIMO = {PRODUCTOS: 512, MUEBLES: 1024, EDIFICIO: 1024, SUPERFICIE: 512}
 
 #: Donde vive el arte de origen del artista. Las rutas del `.blend` apuntan acá.
 FUENTES = RAIZ / "assets" / "source"
@@ -136,6 +139,19 @@ ORIGEN_DE_CADA_GRUPO = {
     "textures/props/jorgillata.png": PRODUCTOS,
     "textures/props/progres.png": PRODUCTOS,
     "third-party/128x128/Bricks": EDIFICIO,
+    "textures/warehouse": EDIFICIO,
+    "textures/warehouse/final/deposito_concreto_normal.png": SUPERFICIE,
+    "textures/warehouse/final/concrete_floor_worn_001_rough_1k.png": SUPERFICIE,
+    "textures/warehouse/ambientcg/bricks-066/Bricks066_1K-JPG_NormalGL.jpg": SUPERFICIE,
+    "textures/warehouse/ambientcg/bricks-066/Bricks066_1K-JPG_Roughness.jpg": SUPERFICIE,
+    "textures/warehouse/polyhaven/concrete-floor-worn-001/1K/"
+    "concrete_floor_worn_001_rough_1k.jpg": SUPERFICIE,
+    "textures/warehouse/polyhaven/corrugated-iron-02/1K/"
+    "corrugated_iron_02_nor_gl_1k.png": SUPERFICIE,
+    "textures/warehouse/polyhaven/corrugated-iron-02/1K/"
+    "corrugated_iron_02_rough_1k.jpg": SUPERFICIE,
+    "textures/warehouse/polyhaven/corrugated-iron-02/1K/"
+    "corrugated_iron_02_metal_1k.jpg": SUPERFICIE,
 }
 
 

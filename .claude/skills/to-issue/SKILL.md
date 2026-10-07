@@ -100,6 +100,14 @@ Lo que más se rompe:
   agrega.** Lo que no está en pantalla puede no costar nada. En el #181, el p95 se medía desde
   donde arranca el jugador, el agua del baño no se veía desde ahí, y su simulación estaba en
   pausa: el criterio salía verde sin medir el agua.
+- **Un criterio de medición pide el protocolo con que se midió, y lo trae escrito.** Si el
+  prototipo alternó las dos variantes adentro de una página, el criterio no pide dos exports:
+  entre dos cargas del mismo export hay hasta un 26 % de ruido, que una sola página no tiene.
+  En el lote del 2026-10-06, #317 y #318 pedían tres rondas entre dos exports, y ese ruido
+  tapaba el efecto: hizo falta un control de la base contra sí misma y ocho rondas más. Y los
+  parámetros van en el issue, no en el scratch de quien midió: «los 600 estados del protocolo»
+  de #320 no se podían reproducir sin el prototipo. Lo que el contrato da por hecho para medir
+  —la copia que se exporta, quién recoge el informe— va en «Se escribe» o ya existe en el repo.
 - **Una tabla de ejemplos cierra consigo misma.** Cada fila se recalcula desde la regla antes de
   escribirla, y una hora de cierre es apertura más duración, no un número copiado de la ficha.
 - **Un objetivo numérico se mide con la propuesta del issue antes de publicarlo**, y un criterio
@@ -153,6 +161,12 @@ Lo que más se rompe:
   una línea en el scratch, se corren las suites que ejercen la regla, y los casos que salen rojos
   van a «Se escribe». En el #276, tres casos de `reposicion_manual_test.gd` afirmaban el corte
   sin nombrarlo, y aparecieron recién en la corrida del carril.
+- **Un criterio con «siempre», «nunca» o «ninguno» se prueba igual, aunque el issue no invierta
+  ninguna regla.** El parche es la lectura literal del criterio. Si un caso de «Sólo lectura»
+  sale rojo y afirma algo que los bordes del issue conservan, se acota el criterio: el caso no
+  se escribe. En el #314, «el apoyo es siempre una superficie por debajo de la cabeza» chocaba
+  con un caso de `enjuague_de_la_mopa_test.gd`, que apoya la mopa vertical en un asiento 0,17 m
+  más alto. El criterio valía sólo con la cabeza hacia arriba.
 - **Y busca a cada lector del valor que se mueve, en `src/` y en `test/`.** El contrato sigue a
   todos, no al primero. En el #263 el cupo dejaba de ser `.umbral`, pero `faltantes()` y
   `vendibles()` también lo leían. Además, 20 tests armaban con `retirar(` la góndola vacía que el

@@ -7,7 +7,8 @@
 Godot no expone el horneado a ningún script: es un botón del editor, y sin editor no hay
 horneador. Este script abre el editor con el plugin `addons/hornear` prendido; el plugin aprieta
 el botón, guarda y cierra; acá se lee el veredicto. Se corre cada vez que cambia el modelo o una
-luz, y lo que deja —el `.lmbake` y el `.exr` al lado de `almacen.tscn`— se commitea.
+luz, y lo que deja —el `.lmbake`, el `.exr` y su `.import`, al lado de `almacen.tscn`— se
+commitea.
 
 ## Cómo se prende el plugin
 
@@ -19,8 +20,9 @@ Dejar el plugin en `project.godot` haría que cada apertura del editor horneara 
 
 El plugin guarda la escena para escribir el horneado, y el editor re-serializa de paso lo que
 no le pidieron: `almacen.tscn` con overrides de los volúmenes de la estructura, y recursos que
-cargó. Al terminar, todo archivo rastreado que se escribió durante la corrida y no es una salida
-vuelve a lo que tenía antes. El detalle y la medición, en `lib/horneado.reescritos_de_mas()`.
+cargó. Al terminar, todo archivo rastreado que se escribió durante la corrida vuelve a lo que
+tenía antes, salvo las salidas y el `.import` del atlas. El detalle y la medición, en
+`lib/horneado.reescritos_de_mas()`.
 
 ## Qué hace falta
 

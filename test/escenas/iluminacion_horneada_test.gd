@@ -5,6 +5,7 @@
 extends GdUnitTestSuite
 
 const ALMACEN := preload("res://src/escenas/almacen.tscn")
+const PuertaDelLocal := preload("res://src/escenas/puestos/puerta_del_local.gd")
 
 
 func test_el_local_tiene_su_luz_horneada() -> void:
@@ -32,6 +33,26 @@ func test_toda_malla_con_gi_estatico_entro_al_horneado() -> void:
 		. override_failure_message("quedan negras al lado del lightmap: %s" % ", ".join(negras))
 		. is_empty()
 	)
+
+
+func test_las_hojas_que_abren_no_llevan_sombras_de_la_posicion_cerrada() -> void:
+	var almacen: Node3D = auto_free(ALMACEN.instantiate())
+	var horno := almacen.get_node("LightmapGI") as LightmapGI
+	var horneadas: Array[NodePath] = []
+	for indice: int in horno.light_data.get_user_count():
+		horneadas.append(horno.light_data.get_user_path(indice))
+	var moviles: Array[MeshInstance3D] = []
+	for cuerpo: Node in almacen.find_children("*", "AnimatableBody3D", true, false):
+		if cuerpo is PuertaDelLocal and cuerpo.traba == PuertaDelLocal.Traba.NINGUNA:
+			moviles.append(cuerpo.hoja)
+	assert_array(moviles).is_not_empty()
+	for hoja: MeshInstance3D in moviles:
+		(
+			assert_int(hoja.gi_mode)
+			. override_failure_message("La hoja móvil %s no puede hornearse cerrada" % hoja.name)
+			. is_equal(GeometryInstance3D.GI_MODE_DYNAMIC)
+		)
+		assert_bool(horneadas.has(horno.get_path_to(hoja))).is_false()
 
 
 func _con_uv2(geometria: GeometryInstance3D) -> bool:

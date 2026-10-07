@@ -1,0 +1,6 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://test/performance/medir_agua_fuera_de_camara.gd" id="medicion"]
+
+[node name="MedicionDelAguaFueraDeCamara" type="Node3D"]
+script = ExtResource("medicion")

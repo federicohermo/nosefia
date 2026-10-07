@@ -30,10 +30,12 @@ float onda_de_mezcla(vec2 uv) {
 
 void pintar_agua(vec2 uv, mat4 vista, mat4 modelo, vec3 mirada, inout vec3 normal,
 	out vec3 albedo, out float alpha, out float rugosidad, out vec3 emision) {
-	float dx = texture(ondas, uv + vec2(texel.x, 0.0)).r - texture(ondas, uv - vec2(texel.x, 0.0)).r;
-	float dz = texture(ondas, uv + vec2(0.0, texel.y)).r - texture(ondas, uv - vec2(0.0, texel.y)).r;
-	vec3 normal_local = normalize(vec3(-dx * relieve, 1.0, -dz * relieve));
 	if (!normal_de_la_malla) {
+		float dx = texture(ondas, uv + vec2(texel.x, 0.0)).r
+			- texture(ondas, uv - vec2(texel.x, 0.0)).r;
+		float dz = texture(ondas, uv + vec2(0.0, texel.y)).r
+			- texture(ondas, uv - vec2(0.0, texel.y)).r;
+		vec3 normal_local = normalize(vec3(-dx * relieve, 1.0, -dz * relieve));
 		normal = normalize((vista * modelo * vec4(normal_local, 0.0)).xyz);
 	}
 	vec4 color_visible = color_del_agua;

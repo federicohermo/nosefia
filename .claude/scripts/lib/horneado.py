@@ -12,6 +12,10 @@ PLUGIN = "res://addons/hornear/plugin.cfg"
 #: luz por sonda y el índice; el `.exr`, el atlas con la luz de cada malla.
 SALIDAS = ("src/escenas/almacen.lmbake", "src/escenas/almacen.exr")
 
+# El atlas cambia de número de capas al variar la densidad o activar luz direccional.
+# Restaurar su .import deja una caché válida acá, pero otra máquina corta mal el EXR.
+METADATOS_DEL_ATLAS = tuple(ruta + ".import" for ruta in SALIDAS if ruta.endswith(".exr"))
+
 _LISTA = re.compile(r"^enabled=PackedStringArray\(.*\)$", re.MULTILINE)
 
 
@@ -58,7 +62,11 @@ def reescritos_de_mas(escritos: list[str]) -> list[str]:
     `project.godot` no va: lo devuelve `hornear.py` byte por byte con lo que tenía antes, que
     puede incluir cambios sin commitear.
     """
-    return sorted(ruta for ruta in escritos if ruta not in SALIDAS and ruta != "project.godot")
+    return sorted(
+        ruta
+        for ruta in escritos
+        if ruta not in (*SALIDAS, *METADATOS_DEL_ATLAS) and ruta != "project.godot"
+    )
 
 
 #: Con GPU, el local se hornea en segundos: si el editor pasa de esto, se quedó esperando algo.

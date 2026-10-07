@@ -19,6 +19,7 @@ from lib.blender import (
     ORIGEN_DE_CADA_GRUPO,
     PRODUCTOS,
     SERIE,
+    SUPERFICIE,
     VARIABLE,
     achicada,
     como_declararlo,
@@ -120,6 +121,31 @@ class ElGrupoDeCadaImagen(unittest.TestCase):
 
     def test_las_paredes_los_pisos_y_los_techos_son_edificio(self):
         self.assertEqual(grupo_de("third-party/128x128/Bricks/piso_baseColor.png"), EDIFICIO)
+
+    def test_el_deposito_conserva_el_color_y_achica_solo_los_mapas_de_superficie(self):
+        # Clasificar toda la carpeta a 512 también borraría detalle de los bloques del muro.
+        for nombre, grupo, lado in (
+            ("final/deposito_concreto_color.png", EDIFICIO, 1024),
+            ("final/deposito_concreto_normal.png", SUPERFICIE, 512),
+            ("final/concrete_floor_worn_001_rough_1k.png", SUPERFICIE, 512),
+            ("ambientcg/bricks-066/Bricks066_1K-JPG_Color.jpg", EDIFICIO, 1024),
+            ("ambientcg/bricks-066/Bricks066_1K-JPG_NormalGL.jpg", SUPERFICIE, 512),
+            ("ambientcg/bricks-066/Bricks066_1K-JPG_Roughness.jpg", SUPERFICIE, 512),
+            ("polyhaven/corrugated-iron-02/1K/corrugated_iron_02_diff_1k.jpg",
+             EDIFICIO, 1024),
+            ("polyhaven/corrugated-iron-02/1K/corrugated_iron_02_nor_gl_1k.png",
+             SUPERFICIE, 512),
+            ("polyhaven/corrugated-iron-02/1K/corrugated_iron_02_rough_1k.jpg",
+             SUPERFICIE, 512),
+            ("polyhaven/corrugated-iron-02/1K/corrugated_iron_02_metal_1k.jpg",
+             SUPERFICIE, 512),
+            ("polyhaven/concrete-floor-worn-001/1K/concrete_floor_worn_001_rough_1k.jpg",
+             SUPERFICIE, 512),
+        ):
+            with self.subTest(nombre=nombre):
+                elegido = grupo_de("textures/warehouse/" + nombre)
+                self.assertEqual(elegido, grupo)
+                self.assertEqual(LADO_MAXIMO[elegido], lado)
 
     def test_lo_demas_es_mueble(self):
         for ruta in (

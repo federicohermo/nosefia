@@ -1,0 +1,75 @@
+{
+  "title": "Bricks 066",
+  "author": "Lennart Demes / ambientCG",
+  "source_url": "https://ambientcg.com/view?id=Bricks066",
+  "download_url": "https://ambientcg.com/get?file=Bricks066_1K-JPG.zip",
+  "resolved_download_url": "https://f003.backblazeb2.com/file/ambientCG-Web/download/Bricks066_5kcY1Aer/Bricks066_1K-JPG.zip",
+  "license": "CC0-1.0",
+  "license_url": "https://docs.ambientcg.com/license/",
+  "license_legalcode_url": "https://creativecommons.org/publicdomain/zero/1.0/legalcode",
+  "tile_m": [
+    2.4,
+    2.4
+  ],
+  "downloaded_on": "2026-10-06",
+  "creation_method": "Existing library material, procedural authoring by ambientCG",
+  "archive_sha256": "88d35b7a9cd0e2085918e68a31e79a0a71420749bf1bde07a7ede001f6572cdb",
+  "files": [
+    {
+      "file": "Bricks066_1K-JPG_AmbientOcclusion.jpg",
+      "size": [
+        1024,
+        1024
+      ],
+      "sha256": "eeadf60c6900d6d150d824ec93b2f722fddb14582aba258631f2525d6a26d7c9"
+    },
+    {
+      "file": "Bricks066_1K-JPG_Color.jpg",
+      "size": [
+        1024,
+        1024
+      ],
+      "sha256": "3a5b51dce8b672cbe022537d51c3cabf7af116d8e2e258e5da45b734fe02eca9"
+    },
+    {
+      "file": "Bricks066_1K-JPG_Displacement.jpg",
+      "size": [
+        1024,
+        1024
+      ],
+      "sha256": "fcade7ea3695a1c022cb07a81d809fcea39d09e80d8c16a3d2874c9d9dd3bbe4"
+    },
+    {
+      "file": "Bricks066_1K-JPG_NormalDX.jpg",
+      "size": [
+        1024,
+        1024
+      ],
+      "sha256": "8058adb92d0648e0c091636e7a13837b6ed2a230dd31545e55db23097ea0e2a6"
+    },
+    {
+      "file": "Bricks066_1K-JPG_NormalGL.jpg",
+      "size": [
+        1024,
+        1024
+      ],
+      "sha256": "2c6fede28d4f5a5fd6228b3114ad6363da766e154389e442573bed9e860c0e54"
+    },
+    {
+      "file": "Bricks066_1K-JPG_Roughness.jpg",
+      "size": [
+        1024,
+        1024
+      ],
+      "sha256": "aba34eacf347961cb3a606f80a52260c5b978b27451df8df6d99a57f6787be50"
+    },
+    {
+      "file": "Bricks066.png",
+      "size": [
+        512,
+        512
+      ],
+      "sha256": "5875bdc3bad6c50ba0ab68eca94185bd11b3a1d28670aacb050fe12c6f4f555b"
+    }
+  ]
+}

@@ -9,7 +9,7 @@ const UtilDeLimpieza := preload("res://src/escenas/objetos/util_de_limpieza.gd")
 
 const LAVATORIO := "Estructura/vanitory/StaticBody3D"
 const MOSTRADOR := "Estructura/EscritorioComputadora"
-const ESTANTE_DEL_DEPOSITO := "Estructura/gondola_deposito03_001/StaticBody3D/Volumen3"
+const ESTANTE_DEL_DEPOSITO := "Estructura/deposito_pallet_fondo_0_0"
 
 ## Hacia dónde mira quien suelta, en grados: 40° abajo inclinaba el balde, y se volcaba.
 const MIRANDO_ABAJO := -40.0
@@ -239,7 +239,7 @@ func test_el_balde_se_mantiene_vertical_al_mirar_en_la_mano() -> void:  # AC-PLY
 
 
 ## Los cuatro apoyos: el punto que se mira, hacia dónde mira el jugador y cuánto baja la vista.
-func _apoyos(almacen: Node3D) -> Dictionary[String, Array]:
+func _apoyos(almacen: Node3D, balde: UtilDeLimpieza) -> Dictionary[String, Array]:
 	var piso := _piso(almacen)
 	# Una caja chica sobre una grande: la tapa que se mira es la de una caja en una pila.
 	var cajas: Array = almacen.get("_cajas_de_productos")
@@ -254,8 +254,26 @@ func _apoyos(almacen: Node3D) -> Dictionary[String, Array]:
 	arriba.global_position = pila + Vector3.UP * (2.0 * media_de_abajo + media_de_arriba)
 	abajo.call("quedarse_quieta")
 	arriba.call("quedarse_quieta")
-	var tabla: CollisionShape3D = almacen.get_node(ESTANTE_DEL_DEPOSITO)
-	var estante := tabla.global_transform * tabla.shape.get_debug_mesh().get_aabb()
+	await get_tree().physics_frame
+	var tabla: MeshInstance3D = almacen.get_node(ESTANTE_DEL_DEPOSITO)
+	var estante := tabla.global_transform * tabla.get_aabb()
+	var forma := balde.get_node("Forma").shape as CylinderShape3D
+	# Arvejas deja libre el extremo al pasar a la pila. El centro del estante ampliado
+	# ahora tiene cajas: este caso necesita lugar para todo el balde, además de para la mira.
+	var libre := Vector3(
+		estante.position.x + forma.radius + 0.05, estante.end.y, estante.get_center().z
+	)
+	var consulta := PhysicsShapeQueryParameters3D.new()
+	consulta.shape = forma
+	consulta.transform = Transform3D(
+		Basis.IDENTITY, libre + Vector3.UP * (forma.height / 2 + 0.005)
+	)
+	consulta.exclude = [balde.get_rid()]
+	(
+		assert_array(almacen.get_world_3d().direct_space_state.intersect_shape(consulta))
+		. override_failure_message("el caso necesita un hueco libre para el balde sobre el estante")
+		. is_empty()
+	)
 	var mostrador: MeshInstance3D = almacen.get_node(MOSTRADOR)
 	var limites := mostrador.global_transform * mostrador.get_aabb()
 	var brazo: CollisionShape3D = almacen.get_node(MOSTRADOR + "/StaticBody3D/Volumen")
@@ -269,12 +287,7 @@ func _apoyos(almacen: Node3D) -> Dictionary[String, Array]:
 			Vector3.FORWARD,
 			MIRANDO_ABAJO
 		],
-		"un estante del depósito":
-		[
-			Vector3(estante.position.x + 0.4, estante.end.y, estante.get_center().z),
-			Vector3.FORWARD,
-			MIRANDO_ABAJO
-		],
+		"un estante del depósito": [libre, Vector3.FORWARD, MIRANDO_ABAJO],
 		"el mostrador":
 		[
 			Vector3(limites.get_center().x + limites.size.x / 4.0, tapa, brazo.global_position.z),
@@ -302,7 +315,7 @@ func test_el_balde_se_apoya_derecho_donde_se_mira() -> void:  # AC-PLY-051
 	jugador.call("_unhandled_input", uso)
 	assert_bool(balde.carga.visible).is_true()
 	var agua: Color = balde.color_de_la_carga()
-	var apoyos := _apoyos(almacen)
+	var apoyos := await _apoyos(almacen, balde)
 	for donde: String in apoyos:
 		var punto: Vector3 = apoyos[donde][0]
 		await _mirar_a(jugador, punto, apoyos[donde][1], apoyos[donde][2])

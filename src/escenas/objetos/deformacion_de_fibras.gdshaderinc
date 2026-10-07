@@ -21,6 +21,10 @@ vec3 posicion_de_fibra(vec3 original, vec2 ancla) {
 	vertice.xz += cambio;
 	vertice += caida * peso;
 	vec3 raiz = vec3(ancla.x, -0.774, ancla.y);
+	// La base tapa lo que pasa de la raíz hacia el mango: ese sobrante abre la fibra hacia afuera.
+	float sobrante = max(vertice.y - raiz.y, 0.0);
+	vertice.y -= sobrante;
+	vertice.xz += ancla / max(length(ancla), 0.000001) * sobrante;
 	vec3 hacia_punta = vertice - raiz;
 	float largo_original = length(original - raiz);
 	float largo = length(hacia_punta);
