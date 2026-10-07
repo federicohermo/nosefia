@@ -161,6 +161,12 @@ Lo que más se rompe:
   una línea en el scratch, se corren las suites que ejercen la regla, y los casos que salen rojos
   van a «Se escribe». En el #276, tres casos de `reposicion_manual_test.gd` afirmaban el corte
   sin nombrarlo, y aparecieron recién en la corrida del carril.
+- **Un criterio con «siempre», «nunca» o «ninguno» se prueba igual, aunque el issue no invierta
+  ninguna regla.** El parche es la lectura literal del criterio. Si un caso de «Sólo lectura»
+  sale rojo y afirma algo que los bordes del issue conservan, se acota el criterio: el caso no
+  se escribe. En el #314, «el apoyo es siempre una superficie por debajo de la cabeza» chocaba
+  con un caso de `enjuague_de_la_mopa_test.gd`, que apoya la mopa vertical en un asiento 0,17 m
+  más alto. El criterio valía sólo con la cabeza hacia arriba.
 - **Y busca a cada lector del valor que se mueve, en `src/` y en `test/`.** El contrato sigue a
   todos, no al primero. En el #263 el cupo dejaba de ser `.umbral`, pero `faltantes()` y
   `vendibles()` también lo leían. Además, 20 tests armaban con `retirar(` la góndola vacía que el

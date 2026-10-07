@@ -183,6 +183,7 @@ entregable más caro y el único que hace que el hallazgo no vuelva.
 | una suite que el issue manda a crecer **y ya está en el tope de `gdlint`** | `to-issue` — se contaron los `test_` y no los métodos públicos |
 | una regla de tests que describe **una versión vieja de la herramienta** | la regla de tests — se escribió midiendo gdUnit4 antes de 6.2.1, y nadie la volvió a medir al actualizarlo |
 | un caso que **afirma la regla que el issue invierte** sin decirla en prosa | `to-issue` — los límites salieron de un `rg`, y la inversión no se probó con un parche antes de publicar |
+| un criterio con «siempre», «nunca» o «ninguno» que **pone en rojo un caso de «Sólo lectura»** | `to-issue` — el issue no invertía ninguna regla, y el criterio no se probó con su lectura literal antes de publicar |
 | un criterio de medición que pide **otro protocolo que el medido**, o que cita uno que no trae escrito | `to-issue` — el prototipo alternaba en una página y el criterio pidió dos exports; los parámetros quedaron en el scratch de quien midió |
 | varios issues que **dan por hecha una herramienta de medición** que ninguno entrega | `to-issue` — «Se escribe» nombró el escenario y no la copia que se exporta ni quién recoge su informe |
 | un turno entre carriles que **no respeta el orden de llegada** | `implement-batch` — el turno era un cerrojo que cada carril reintentaba, y no una cola |
