@@ -5,8 +5,12 @@
 extends Node3D
 
 const ASPECTO := preload("res://src/escenas/objetos/agua_y_manchas.gdshader")
+const GUIA_DE_MANCHAS := preload(
+	"res://assets/models/SEPT_JUEGOS_PROTOTIPO_Guía de jabones y manchas copy.png"
+)
 const LADO_DE_LAS_ONDAS := 64
 const HACIA_LA_LUZ := Vector3(-0.41, 0.88, 0.23)
+const OPACIDAD_DE_LA_MANCHA := 0.85
 
 ## El navegador llama a esta referencia: si se suelta, el pedido no llega.
 var _al_pedir_un_caso: JavaScriptObject
@@ -52,6 +56,26 @@ static func casos() -> Dictionary[String, Dictionary]:
 		"agua_en_mezcla": balde.merged(mezcla),
 		"agua_sin_color": balde.merged(sin_color, true),
 		"agua_del_bano": bano,
+		"polvo": _mancha(ReglasDeLaLimpieza.TipoDeMancha.POLVO),
+		"polvo_acuoso": _mancha(ReglasDeLaLimpieza.TipoDeMancha.POLVO, true),
+		"polvo_sin_color": _mancha(ReglasDeLaLimpieza.TipoDeMancha.POLVO, false, 0.0),
+		"moho": _mancha(ReglasDeLaLimpieza.TipoDeMancha.MOHO),
+		"caca": _mancha(ReglasDeLaLimpieza.TipoDeMancha.CACA),
+	}
+
+
+static func _mancha(
+	tipo: ReglasDeLaLimpieza.TipoDeMancha,
+	acuosa: bool = false,
+	opacidad: float = OPACIDAD_DE_LA_MANCHA
+) -> Dictionary:
+	return {
+		"es_mancha": true,
+		"guia_de_manchas": GUIA_DE_MANCHAS,
+		"tipo_de_suciedad": tipo,
+		"acuosa": acuosa,
+		"transparencia": 0.55 if acuosa else 1.0,
+		"color_del_agua": Color(ReglasDeLaLimpieza.COLOR_DE_LA_MANCHA[tipo], opacidad),
 	}
 
 

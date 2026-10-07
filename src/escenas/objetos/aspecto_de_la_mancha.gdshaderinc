@@ -29,13 +29,13 @@ void pintar_mancha(vec2 uv, out vec3 albedo, out float alpha, out float rugosida
 	out float especular) {
 	vec2 punto = (uv - 0.5) * 2.0;
 	float distancia = length(punto);
-	float grueso = ruido(uv * 12.0);
-	float fino = ruido(uv * 57.0);
 	float mascara = 1.0 - smoothstep(0.80, 0.98, distancia);
 	vec3 pintura = color_del_agua.rgb;
 	float opacidad = transparencia;
 	if (tipo_de_suciedad == 0) {
 		// Colonias de moho, con moteado y esporas alrededor del centro.
+		float grueso = ruido(uv * 12.0);
+		float fino = ruido(uv * 57.0);
 		float colonia = smoothstep(0.30, 0.72, grueso * 0.7 + fino * 0.3);
 		float nucleo = 1.0 - smoothstep(0.45, 0.88, distancia);
 		mascara *= max(nucleo * colonia, granos(uv * 30.0) * 0.65);
@@ -43,6 +43,8 @@ void pintar_mancha(vec2 uv, out vec3 albedo, out float alpha, out float rugosida
 		rugosidad = 0.94;
 	} else if (tipo_de_suciedad == 1) {
 		// Suciedad marrón salpicada: borde roto y pequeños grumos.
+		float grueso = ruido(uv * 12.0);
+		float fino = ruido(uv * 57.0);
 		float borde = 0.40 + 0.19 * ruido(uv * 13.0) + 0.085 * ruido(uv * 31.0);
 		float cuerpo = 1.0 - smoothstep(borde - 0.015, borde + 0.025, distancia);
 		mascara *= max(cuerpo, granos(uv * 19.0) * 0.65);
