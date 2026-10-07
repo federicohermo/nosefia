@@ -58,6 +58,11 @@ def validar_zip(ruta: Path) -> dict[str, str]:
         raise ValueError(f"ZIP inválido: {error}") from error
 
 
+def archivos_del_parche(parche: Path) -> set[str]:
+    lineas = parche.read_text(encoding="utf-8").splitlines()
+    return {linea.removeprefix("+++ b/") for linea in lineas if linea.startswith("+++ b/")}
+
+
 def _identidad(metadata: Path, raiz: Path) -> tuple[dict, Path, dict]:
     datos = json.loads(metadata.read_text(encoding="utf-8"))
     version = (raiz / ".godot-version").read_text(encoding="utf-8").strip()
@@ -67,19 +72,24 @@ def _identidad(metadata: Path, raiz: Path) -> tuple[dict, Path, dict]:
         raise ValueError("Opciones de compilación distintas de la plantilla validada")
     if not re.fullmatch(r"[0-9a-f]{40}", datos["commit_del_motor"]):
         raise ValueError("Commit del motor inválido")
-    campos_sha = (
-        "fuente_zip_sha256", "emsdk_zip_sha256", "cpp_original_sha256",
-        "cpp_modificado_sha256",
-    )
-    for campo in campos_sha:
-        if not re.fullmatch(r"[0-9a-f]{64}", datos[campo]):
+    campos_sha = ("fuente_zip_sha256", "emsdk_zip_sha256")
+    huellas = {campo: datos[campo] for campo in campos_sha}
+    for ruta, del_archivo in datos["archivos"].items():
+        for campo in ("original_sha256", "modificado_sha256"):
+            huellas[f"{ruta}: {campo}"] = del_archivo[campo]
+    for campo, huella in huellas.items():
+        if not re.fullmatch(r"[0-9a-f]{64}", huella):
             raise ValueError(f"SHA256 inválido: {campo}")
     for campo in ("emscripten", "scons"):
         if not re.fullmatch(r"[0-9]+\.[0-9]+\.[0-9]+", datos[campo]):
             raise ValueError(f"Versión inválida: {campo}")
     parche = (metadata.parent / datos["parche"]).resolve()
+    # Un archivo del parche sin huella en la receta se compilaría sin comprobar.
+    sin_par = sorted(archivos_del_parche(parche) ^ set(datos["archivos"]))
+    if sin_par:
+        raise ValueError(f"El parche y las huellas de metadata difieren en: {sin_par}")
     claves = ("version_del_motor", "commit_del_motor", "emscripten", "scons", "opciones")
-    identidad = {clave: datos[clave] for clave in (*claves, *campos_sha)}
+    identidad = {clave: datos[clave] for clave in (*claves, *campos_sha, "archivos")}
     identidad["parche_sha256"] = sha256(parche.read_bytes().replace(b"\r\n", b"\n"))
     identidad["preparador_sha256"] = sha256(
         Path(__file__).read_bytes().replace(b"\r\n", b"\n")
@@ -295,19 +305,22 @@ def _entorno_sdk(sdk: Path, jobs: int) -> dict:
     return entorno
 
 
+def _comprobar_huellas(motor: Path, archivos: dict, estado: str) -> None:
+    for ruta, huellas in archivos.items():
+        if sha256((motor / ruta).read_bytes()) != huellas[f"{estado}_sha256"]:
+            raise ValueError(f"SHA256 del archivo {estado} no coincide: {ruta}")
+
+
 def _aplicar_parche(datos: dict, parche: Path, motor: Path, log: Path) -> None:
-    cpp = motor / "drivers/gles3/shader_gles3.cpp"
-    if sha256(cpp.read_bytes()) != datos["cpp_original_sha256"]:
-        raise ValueError("SHA256 del CPP original no coincide")
+    _comprobar_huellas(motor, datos["archivos"], "original")
     entorno_git = os.environ.copy()
     # Los ZIP no traen .git: impedir que git descubra el repositorio padre del juego.
     entorno_git["GIT_CEILING_DIRECTORIES"] = str(motor.parent.resolve())
-    # Un core.autocrlf global de Windows no debe reescribir el CPP extraído del ZIP.
+    # Un core.autocrlf global de Windows no debe reescribir las fuentes extraídas del ZIP.
     comando = ["git", "-c", "core.autocrlf=false", "apply"]
     _ejecutar([*comando, "--check", str(parche)], motor, log, entorno_git)
     _ejecutar([*comando, str(parche)], motor, log, entorno_git)
-    if sha256(cpp.read_bytes()) != datos["cpp_modificado_sha256"]:
-        raise ValueError("SHA256 del CPP modificado no coincide")
+    _comprobar_huellas(motor, datos["archivos"], "modificado")
 
 
 def construir(datos: dict, parche: Path, trabajo: Path, jobs: int) -> Path:

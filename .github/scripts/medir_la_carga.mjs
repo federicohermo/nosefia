@@ -22,6 +22,12 @@
 // Usa la sincronización de cuadros habitual del navegador; quitarla para medir FPS puede
 // aumentar la contención durante la lectura de recursos y falsear la espera de carga.
 //
+// `cuadro_mas_largo_ms` es el mayor tiempo entre dos `requestAnimationFrame` seguidos, desde el
+// clic hasta el aviso del almacén: cuánto llega a congelarse la página durante la carga.
+//
+// --sin-enlace-en-paralelo le niega `KHR_parallel_shader_compile` a la página. La plantilla
+// enlaza entonces cada programa al pedirlo, como en un navegador sin la extensión.
+//
 // **Abre una ventana y tiene que quedar a la vista**: un Chrome tapado casi no pide cuadros.
 // --sin-ventana evita esa pausa para medir la carga mientras se usa otra aplicación. Registra
 // el renderer real y falla si Chrome usa renderizado por software. No mide la presentación
@@ -39,7 +45,7 @@ const AVISO_DEL_MENU = '[carga] menú visible';
 const AVISO_DEL_ALMACEN = '[carga] almacén en pantalla';
 const ALTURA_DE_NUEVO_JUEGO = 0.56;
 
-const argumentos = process.argv.slice(2).filter((argumento) => argumento !== '--sin-ventana');
+const argumentos = process.argv.slice(2).filter((argumento) => !argumento.startsWith('--'));
 const url = argumentos[0];
 if (!url) {
   console.error('uso: node .github/scripts/medir_la_carga.mjs <URL> [salida.json]');
@@ -47,6 +53,7 @@ if (!url) {
 }
 const salida = argumentos[1];
 const sinVentana = process.argv.includes('--sin-ventana');
+const sinEnlaceEnParalelo = process.argv.includes('--sin-enlace-en-paralelo');
 
 const navegador = await chromium.launch({
   channel: 'chrome',
@@ -76,9 +83,43 @@ function dentroDe(promesa, que) {
   return Promise.race([promesa, plazo]).finally(() => clearTimeout(temporizador));
 }
 
+// Corre adentro de la página, antes que el juego.
+function vigilarLaPagina({ avisoDelAlmacen, sinEnlaceEnParalelo }) {
+  const cuadros = (window.__cuadros = { anterior: null, masLargo: 0, cerrado: false });
+  const registrar = console.log;
+  console.log = (...args) => {
+    if (String(args[0]).includes(avisoDelAlmacen)) cuadros.cerrado = true;
+    registrar.apply(console, args);
+  };
+  const cuadro = (ahora) => {
+    if (cuadros.cerrado) return;
+    if (cuadros.anterior !== null) {
+      cuadros.masLargo = Math.max(cuadros.masLargo, ahora - cuadros.anterior);
+    }
+    cuadros.anterior = ahora;
+    requestAnimationFrame(cuadro);
+  };
+  requestAnimationFrame(cuadro);
+  if (sinEnlaceEnParalelo) {
+    const extension = 'KHR_parallel_shader_compile';
+    const webgl = WebGL2RenderingContext.prototype;
+    const pedir = webgl.getExtension;
+    const listar = webgl.getSupportedExtensions;
+    webgl.getExtension = function (nombre) {
+      return nombre === extension ? null : pedir.call(this, nombre);
+    };
+    webgl.getSupportedExtensions = function () {
+      return listar.call(this)?.filter((nombre) => nombre !== extension) ?? null;
+    };
+  }
+}
+
 async function corrida() {
   const contexto = await navegador.newContext({ viewport: { width: 1536, height: 760 } });
   const pagina = await contexto.newPage();
+  await pagina.addInitScript(vigilarLaPagina, {
+    avisoDelAlmacen: AVISO_DEL_ALMACEN, sinEnlaceEnParalelo,
+  });
   try {
     await pagina.mouse.move(768, 760 * ALTURA_DE_NUEVO_JUEGO);
     const menu = aviso(pagina, AVISO_DEL_MENU);
@@ -102,13 +143,18 @@ async function corrida() {
       () => new Promise((listo) => requestAnimationFrame(() => requestAnimationFrame(listo)))
     );
     const lienzo = await pagina.locator('canvas').boundingBox();
+    await pagina.evaluate(() => { window.__cuadros.masLargo = 0; });
     const clic = Date.now() - desde;
     await pagina.mouse.click(
       lienzo.x + lienzo.width / 2,
       lienzo.y + lienzo.height * ALTURA_DE_NUEVO_JUEGO
     );
     const entro = (await dentroDe(almacen, 'el aviso del almacén')) - desde;
-    return { overlay, menu: vioElMenu, clic, almacen: entro, desdeElClic: entro - clic, gpu };
+    const cuadroMasLargo = await pagina.evaluate(() => Math.round(window.__cuadros.masLargo));
+    return {
+      overlay, menu: vioElMenu, clic, almacen: entro, desdeElClic: entro - clic,
+      cuadro_mas_largo_ms: cuadroMasLargo, gpu,
+    };
   } finally {
     await contexto.close();
   }
@@ -149,7 +195,7 @@ if (salida) {
   writeFileSync(salida, JSON.stringify({ url, fecha: new Date().toISOString(), corridas, medianas,
     condiciones: { navegador: navegador.version(), viewport: { ancho: 1536, alto: 760 },
       sincronizacionHabitual: true, cpuLimitada: false, contextosHTTPNuevos: true,
-      sinVentana,
+      sinVentana, sinEnlaceEnParalelo,
       cacheDeShadersCompartida: 'posible dentro del mismo navegador' } }, null, 1));
   console.log(`guardado en ${salida}`);
 }

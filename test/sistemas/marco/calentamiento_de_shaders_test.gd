@@ -346,3 +346,88 @@ func test_cancelar_el_calentamiento_restaura_luces_y_gotas_y_libera_muestras() -
 	assert_object(get_viewport().get_camera_3d()).is_same(camara)
 	for muestra in muestras:
 		assert_bool(is_instance_valid(muestra)).is_false()
+
+
+## La cola la maneja el caso: es lo que la plantilla web le publica a la página.
+func _calentamiento_con_cola(cola: Array[int]) -> CalentamientoDeShaders:
+	var calentamiento := _calentamiento()
+	calentamiento.programas_en_cola = func() -> int: return cola[0]
+	return calentamiento
+
+
+func test_fuera_de_la_web_la_plantilla_no_enlaza_en_paralelo() -> void:
+	assert_int(_calentamiento().programas_en_cola.call()).is_equal(-1)
+
+
+func test_con_cola_la_pasada_destapa_todos_sus_objetos_en_un_cuadro() -> void:
+	var escena := _escena(3)
+	var cola: Array[int] = [0]
+	var calentamiento := _calentamiento_con_cola(cola)
+	calentamiento.calentar(escena)
+	assert_int(_visibles(escena)).is_zero()
+	await calentamiento.avanzo
+	assert_int(_visibles(escena)).is_equal(CUANTOS)
+	await assert_signal(calentamiento).wait_until(ESPERA_MS).is_emitted("terminado")
+	assert_int(_visibles(escena)).is_equal(CUANTOS)
+	assert_float(calentamiento.progreso()).is_equal(1.0)
+
+
+func test_no_termina_mientras_quedan_programas_en_cola() -> void:
+	var escena := _escena()
+	var cola: Array[int] = [0]
+	var calentamiento := _calentamiento_con_cola(cola)
+	var termino := [false]
+	calentamiento.terminado.connect(func() -> void: termino[0] = true)
+	calentamiento.calentar(escena)
+	await calentamiento.avanzo
+	cola[0] = 5
+	for _cuadro: int in 10:
+		await get_tree().process_frame
+	assert_bool(termino[0]).is_false()
+	cola[0] = 0
+	await assert_signal(calentamiento).wait_until(ESPERA_MS).is_emitted("terminado")
+	assert_float(calentamiento.progreso()).is_equal(1.0)
+
+
+func test_las_pasadas_no_esperan_la_cola_y_el_final_espera_la_de_la_ultima() -> void:
+	var escena := _escena()
+	(escena.get_child(0) as MeshInstance3D).gi_mode = GeometryInstance3D.GI_MODE_DYNAMIC
+	var foco := SpotLight3D.new()
+	escena.add_child(foco)
+	var cola: Array[int] = [1]
+	var calentamiento := _calentamiento_con_cola(cola)
+	var termino := [false]
+	calentamiento.terminado.connect(func() -> void: termino[0] = true)
+	calentamiento.calentar(escena)
+	for _cuadro: int in 10:
+		await get_tree().process_frame
+	# La pasada sin focos es la última: llegó con la cola de la primera todavía ocupada.
+	assert_bool(foco.visible).is_false()
+	assert_bool(termino[0]).is_false()
+	cola[0] = 0
+	await assert_signal(calentamiento).wait_until(ESPERA_MS).is_emitted("terminado")
+	assert_bool(foco.visible).is_true()
+
+
+func test_con_cola_el_progreso_sale_de_los_programas_que_terminaron() -> void:
+	var escena := _escena()
+	var cola: Array[int] = [0]
+	var calentamiento := _calentamiento_con_cola(cola)
+	var progresos: Array[float] = []
+	calentamiento.avanzo.connect(func(progreso: float) -> void: progresos.append(progreso))
+	calentamiento.calentar(escena)
+	await calentamiento.avanzo
+	assert_float(progresos[-1]).is_zero()
+	cola[0] = 4
+	await calentamiento.avanzo
+	assert_float(progresos[-1]).is_zero()
+	cola[0] = 1
+	await calentamiento.avanzo
+	assert_float(progresos[-1]).is_equal_approx(0.75, 0.001)
+	# Una variante que entra tarde a la cola no hace retroceder la barra.
+	cola[0] = 3
+	await calentamiento.avanzo
+	assert_float(progresos[-1]).is_equal_approx(0.75, 0.001)
+	cola[0] = 0
+	await assert_signal(calentamiento).wait_until(ESPERA_MS).is_emitted("terminado")
+	assert_float(calentamiento.progreso()).is_equal(1.0)

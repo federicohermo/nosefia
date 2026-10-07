@@ -15,6 +15,10 @@ signal terminado
 const ALTURA_EXTRA := 10.0
 const CONTORNO := preload("res://src/sistemas/marco/contorno.gdshader")
 
+## Cuántos programas pidió la plantilla web y todavía no puede dibujar. Devuelve −1 si la
+## plantilla no enlaza en paralelo: ahí cada programa nuevo frena el cuadro que lo pide.
+var programas_en_cola: Callable = _cola_de_la_plantilla
+
 var _pendientes: Array[GeometryInstance3D] = []
 var _sin_focos: Array[GeometryInstance3D] = []
 var _con_area: Array[GeometryInstance3D] = []
@@ -28,6 +32,9 @@ var _alcance_ampliado := 0.0
 var _ocultos: Array[GeometryInstance3D] = []
 var _vistos: Dictionary = {}
 var _total := 0
+## Con cola, destapar no alcanza: la barra descuenta la parte de la cola que todavía se enlaza.
+var _pico_de_la_cola := 0
+var _por_enlazar := 0.0
 var _camara: Camera3D
 var _anterior: Camera3D
 var _contornos_listos := false
@@ -139,17 +146,35 @@ func _muestras_con_omni(escena: Node3D) -> Array[MultiMeshInstance3D]:
 
 
 func progreso() -> float:
-	return 1.0 - float(_pendientes.size() + _sin_focos.size() + _con_area.size()) / maxi(_total, 1)
+	var faltan := _pendientes.size() + _sin_focos.size() + _con_area.size()
+	return (1.0 - float(faltan) / maxi(_total, 1)) * (1.0 - _por_enlazar)
 
 
-## Cada cuadro destapa objetos hasta el primero que trae un material sin dibujar: el costo está
-## en el material nuevo, no en la cantidad de objetos. Termina un cuadro después del último, que
-## es el cuadro en que se dibuja.
+static func _cola_de_la_plantilla() -> int:
+	if not OS.has_feature("web"):
+		return -1
+	return int(JavaScriptBridge.eval("window.godot_programas_en_cola ?? -1"))
+
+
+## Sin cola, cada cuadro destapa objetos hasta el primero que trae un material sin dibujar: el
+## costo está en el material nuevo, no en la cantidad de objetos. Termina un cuadro después del
+## último, que es el cuadro en que se dibuja.
+##
+## Con cola, pedir un programa no frena el cuadro: cada pasada destapa todo junto, y las tres se
+## enlazan a la vez. Entrar con la cola ocupada sí lo frena: lo que todavía compila al usarse
+## espera detrás de ella. Por eso el final espera a que se vacíe.
 func _process(_delta: float) -> void:
 	if not _contornos_listos:
 		return
+	var cola: int = programas_en_cola.call()
 	if _pendientes.is_empty():
 		if _sin_focos.is_empty() and _con_area.is_empty():
+			if cola > 0:
+				_pico_de_la_cola = maxi(_pico_de_la_cola, cola)
+				_por_enlazar = minf(_por_enlazar, float(cola) / _pico_de_la_cola)
+				avanzo.emit(progreso())
+				return
+			_por_enlazar = 0.0
 			_terminar()
 			return
 		# Al salir del baño, un útil puede recibir sus focos y las luces de área del local,
@@ -166,8 +191,10 @@ func _process(_delta: float) -> void:
 			_pendientes.assign(_sin_focos)
 			_sin_focos.clear()
 		_vistos.clear()
+	if cola >= 0:
+		_por_enlazar = 1.0
 	var nuevo := false
-	while not nuevo and not _pendientes.is_empty():
+	while not _pendientes.is_empty() and (cola >= 0 or not nuevo):
 		var objeto: GeometryInstance3D = _pendientes.pop_back()
 		objeto.visible = true
 		for material: Variant in _materiales_de(objeto):
