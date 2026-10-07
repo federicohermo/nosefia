@@ -437,10 +437,32 @@ func _crear_topologia() -> void:
 			_indices.append_array(PackedInt32Array([a, c, b, b, c, d]))
 
 
+## La caja entera de la malla contra el encuadre de la cámara de su viewport. Sin cámara, se ve.
+func _esta_en_cuadro() -> bool:
+	var camara := get_viewport().get_camera_3d()
+	if camara == null:
+		return true
+	var caja := global_transform * _superficie.custom_aabb
+	for plano: Plane in camara.get_frustum():
+		# Alcanza con que la esquina más metida toque el plano: una caja que cruza se ve.
+		if plano.distance_to(caja.get_support(-plano.normal)) > 0.0:
+			return false
+	return true
+
+
 func _dibujar() -> void:
 	var inclinacion := _inclinacion() if en_balde else Vector2.ZERO
 	var quieta := _onda < 0.0001 and (not en_balde or _ondas.amplitud() < 0.0001)
 	if quieta and _estaba_quieta and inclinacion.is_equal_approx(_ultima_inclinacion):
+		return
+	# Fuera de cuadro el dibujo queda pendiente: no se anota como hecho, y el primero que
+	# caiga adentro recalcula la malla con el estado de ese momento.
+	if (
+		en_balde
+		and not _recrea_la_superficie
+		and _superficie.get_surface_count() > 0
+		and not _esta_en_cuadro()
+	):
 		return
 	_estaba_quieta = quieta
 	_ultima_inclinacion = inclinacion
