@@ -5,6 +5,8 @@ levantar Godot ni un navegador.
 """
 
 import importlib.util
+import subprocess
+import sys
 import tempfile
 import unittest
 from pathlib import Path
@@ -58,6 +60,16 @@ class ElTurnoEsUnaCola(unittest.TestCase):
             self.assertEqual(turno._primero(cola), primero.name)
             primero.unlink()
             self.assertEqual(turno._primero(cola), segundo.name)
+
+    def test_el_boleto_de_un_proceso_que_termino_sale_de_la_cola(self):
+        with tempfile.TemporaryDirectory() as carpeta:
+            cola = Path(carpeta)
+            muerto = subprocess.Popen([sys.executable, "-c", "pass"])
+            muerto.wait()
+            huerfano = cola / f"{1:020d}-{muerto.pid}.json"
+            huerfano.write_text("{}", encoding="utf-8")
+            self.assertIsNone(turno._primero(cola))
+            self.assertFalse(huerfano.exists())
 
 
 class ElConteoSaleDelReporte(unittest.TestCase):
