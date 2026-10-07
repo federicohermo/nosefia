@@ -121,6 +121,39 @@ de una ventana ni los FPS durante la partida. Comparar corridas con el mismo mod
 Los tiempos de carga de `medir_en_navegador.mjs` usan cuadros sin límite para medir FPS.
 No compararlos con las esperas de `medir_la_carga.mjs`.
 
+### Los programas que enlaza la carga
+
+Cada corrida informa también dos conteos, tomados entre el clic y el aviso del almacén:
+
+- **`programas`:** las llamadas a `linkProgram` de WebGL2.
+- **`fuentes_distintas`:** los pares distintos de fuentes de vértices y de fragmentos entre
+  esos programas.
+
+Dos programas con el mismo par cuestan una sola compilación: Chrome reutiliza la primera. La
+resta de los dos campos son enlaces repetidos. Las tres corridas informan los mismos conteos:
+el juego pide los mismos programas con la caché de Chrome llena.
+
+Medido el 2026-10-07 sobre `staging`, sin ventana y con un perfil nuevo por llamada. Usa
+Chrome 154 y una RTX 4050 mediante ANGLE D3D11, a 1536×760. El importador del modelo deja a los
+seis materiales con relieve del depósito con dos caras y con la rugosidad en el canal verde.
+Antes repartían tres combinaciones de caras y de canal, y ahora comparten una:
+
+| Export | `programas` | `fuentes_distintas` |
+|---|---|---|
+| `staging` | 68 | 66 |
+| Con los materiales del depósito unificados | 64 | 60 |
+
+`desdeElClic` de la primera corrida, en tres pares alternados:
+
+| Par | `staging` | Unificados |
+|---|---|---|
+| 1 | 34,781 s | 31,002 s |
+| 2 | 32,968 s | 29,881 s |
+| 3 | 33,334 s | 32,163 s |
+
+La menor diferencia de un par es 1,171 s. La dispersión de cada export es mayor: 1,813 y
+2,282 s. Los pares no demuestran una mejora de tiempo: el cambio baja programas.
+
 ## La memoria de texturas en la web
 
 `.github/scripts/medir_memoria_de_texturas.mjs` hace el inventario de las texturas de WebGL que
