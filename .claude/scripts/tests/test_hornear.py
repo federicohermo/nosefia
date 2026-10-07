@@ -23,7 +23,13 @@ class DevolverLoReescrito(unittest.TestCase):
     def setUp(self) -> None:
         self.repo = Path(tempfile.mkdtemp(prefix="hornear_")).resolve()
         self.addCleanup(shutil.rmtree, self.repo, True)
-        for ruta in (*SALIDAS, "src/escenas/almacen.tscn", "sucio.tres", CON_ACENTO):
+        for ruta in (
+            *SALIDAS,
+            "src/escenas/almacen.exr.import",
+            "src/escenas/almacen.tscn",
+            "sucio.tres",
+            CON_ACENTO,
+        ):
             self._escribir(ruta, "de git\n")
         self._git("init", "-q")
         self._git("add", ".")
@@ -69,6 +75,13 @@ class DevolverLoReescrito(unittest.TestCase):
         hornear.devolver_lo_reescrito(self.repo, self.desde, self.previos)
         for salida in SALIDAS:
             self.assertEqual(self._leer(salida), "re-serializado\n")
+
+    def test_el_numero_de_capas_del_atlas_no_vuelve_al_horneado_anterior(self) -> None:
+        ruta = "src/escenas/almacen.exr.import"
+        self._escribir(ruta, "slices/vertical=16\n")
+        os.utime(self.repo / ruta, (self.desde + 60, self.desde + 60))
+        hornear.devolver_lo_reescrito(self.repo, self.desde, self.previos)
+        self.assertEqual(self._leer(ruta), "slices/vertical=16\n")
 
     def test_lo_que_no_se_escribio_durante_la_corrida_no_se_toca(self) -> None:
         devueltos = hornear.devolver_lo_reescrito(self.repo, self.desde, self.previos)

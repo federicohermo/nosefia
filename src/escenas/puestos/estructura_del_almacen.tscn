@@ -29,7 +29,7 @@ size = Vector3(16.15515, 0.206508, 16.15515)
 size = Vector3(5.1428, 0.206508, 6.608355)
 
 [sub_resource type="BoxShape3D" id="suelo_fondo"]
-size = Vector3(14.7293, 0.206508, 6.21277)
+size = Vector3(12.519912314, 0.206508000, 7.144681644)
 
 [sub_resource type="BoxShape3D" id="suelo_paso_deposito"]
 size = Vector3(0.420795, 0.206508, 1.682868)
@@ -38,16 +38,16 @@ size = Vector3(0.420795, 0.206508, 1.682868)
 size = Vector3(1.703925, 0.206508, 0.382225)
 
 [sub_resource type="BoxShape3D" id="volumen_1"]
-size = Vector3(9.79794, 6.97386, 0.20038)
+size = Vector3(8.567709163, 6.973860000, 0.200380564)
 
 [sub_resource type="BoxShape3D" id="volumen_2"]
-size = Vector3(0.15167, 7.17986, 6.37274)
+size = Vector3(0.151670000, 7.179860000, 7.302358922)
 
 [sub_resource type="BoxShape3D" id="volumen_3"]
-size = Vector3(6.37622, 6.97386, 0.17528)
+size = Vector3(5.145989163, 6.973860000, 0.175280000)
 
 [sub_resource type="BoxShape3D" id="volumen_4"]
-size = Vector3(1.57032, 7.17986, 0.17528)
+size = Vector3(1.570320000, 7.179860000, 0.175280000)
 
 [sub_resource type="BoxShape3D" id="volumen_5"]
 size = Vector3(5.55188, 7.17986, 0.19107)
@@ -119,7 +119,7 @@ size = Vector3(5.13014, 2.21844, 0.22652)
 size = Vector3(16.11536, 0.27747, 0.24704)
 
 [sub_resource type="BoxShape3D" id="volumen_30"]
-size = Vector3(9.64627, 2.21518, 6.19746)
+size = Vector3(8.416039163, 2.215180000, 7.127078922)
 
 [sub_resource type="BoxShape3D" id="volumen_31"]
 size = Vector3(0.27747, 1.94097, 0.24704)
@@ -248,10 +248,10 @@ points = PackedVector3Array(-0.837342, -0.623798, 3.649684, -0.837342, -0.548426
 points = PackedVector3Array(-0.877018, -1.435558, 3.665554, -0.877018, -1.435558, 3.689359, -0.877018, -0.836462, 3.665554, -0.877018, -0.836462, 3.689359, -0.873051, -1.435036, 3.693327, -0.873051, -0.836985, 3.693327, -0.862664, -1.489120, 3.665554, -0.862664, -1.489120, 3.689359, -0.862664, -0.782901, 3.665554, -0.862664, -0.782901, 3.689359, -0.859106, -0.784955, 3.693327, -0.859106, -1.487066, 3.693327, -0.823452, -0.743691, 3.665554, -0.823452, -0.743691, 3.689359, -0.823452, -1.528330, 3.665554, -0.823452, -1.528330, 3.689359, -0.821399, -1.524773, 3.693327, -0.821399, -0.747248, 3.693327, -0.819620, -0.742664, 3.661587, -0.819620, -1.529357, 3.661587, -0.769890, -0.729339, 3.661587, -0.769890, -0.729339, 3.689359, -0.769890, -1.542682, 3.661587, -0.769890, -1.542682, 3.689359, -0.769368, -0.733307, 3.693327, -0.769368, -1.538714, 3.693327, -0.748320, -1.362324, 1.923801, -0.748320, -0.909697, 1.923801, -0.744102, -1.361637, 1.919843, -0.744102, -0.910384, 1.919843, -0.738748, -1.398062, 1.923801, -0.738748, -0.873959, 1.923801, -0.734949, -1.395813, 1.919843, -0.734949, -0.876207, 1.919843, -0.712584, -1.424224, 1.923801, -0.712584, -0.847797, 1.923801, -0.710311, -1.420450, 1.919843, -0.710311, -0.851571, 1.919843, -0.676845, -1.433800, 1.923801, -0.676845, -0.838221, 1.923801, -0.676133, -1.429607, 1.919843, -0.676133, -0.842414, 1.919843, 0.647976, -1.429607, 1.919843, 0.647976, -0.842413, 1.919843, 0.648688, -1.433799, 1.923801, 0.648688, -0.838221, 1.923801, 0.682154, -0.851571, 1.919843, 0.682154, -1.420449, 1.919843, 0.684428, -1.424224, 1.923801, 0.684428, -0.847797, 1.923801, 0.706785, -1.395813, 1.919843, 0.706785, -0.876207, 1.919843, 0.710584, -1.398061, 1.923801, 0.710584, -0.873959, 1.923801, 0.715946, -1.361637, 1.919843, 0.715946, -0.910384, 1.919843, 0.720163, -1.362324, 1.923801, 0.720163, -0.909696, 1.923801, 0.741211, -0.733307, 3.693327, 0.741211, -1.538714, 3.693327, 0.741733, -0.729339, 3.661587, 0.741733, -0.729339, 3.689359, 0.741733, -1.542682, 3.661587, 0.741733, -1.542682, 3.689359, 0.791463, -0.742664, 3.661587, 0.791463, -1.529357, 3.661587, 0.793242, -0.747248, 3.693327, 0.793242, -1.524773, 3.693327, 0.795295, -0.743691, 3.665554, 0.795295, -0.743691, 3.689359, 0.795295, -1.528330, 3.665554, 0.795295, -1.528330, 3.689359, 0.830950, -1.487066, 3.693327, 0.830950, -0.784955, 3.693327, 0.834507, -1.489120, 3.665554, 0.834507, -1.489120, 3.689359, 0.834507, -0.782901, 3.665554, 0.834507, -0.782901, 3.689359, 0.844890, -1.435036, 3.693327, 0.844890, -0.836984, 3.693327, 0.848858, -1.435558, 3.665554, 0.848858, -1.435558, 3.689359, 0.848858, -0.836462, 3.665554, 0.848858, -0.836462, 3.689359)
 
 [sub_resource type="BoxShape3D" id="volumen_93"]
-size = Vector3(7.60774, 0.206, 0.20038)
+size = Vector3(6.800087463, 0.206000000, 0.200380564)
 
 [sub_resource type="BoxShape3D" id="volumen_94"]
-size = Vector3(4.18602, 0.206, 0.17528)
+size = Vector3(3.378367463, 0.206000000, 0.175280000)
 
 [sub_resource type="BoxShape3D" id="volumen_95"]
 size = Vector3(5.13014, 0.206, 0.15812)
@@ -275,88 +275,70 @@ points = PackedVector3Array(-2.817846, -19.587069, 21.073584, 8.219631, -18.0033
 points = PackedVector3Array(-2.817846, -19.587069, 21.073584, 8.219631, -18.003384, 21.073584, -12.959572, -14.958723, 21.073584, -2.802664, -19.487370, 19.939322, 16.645767, -10.698497, 21.073584, 8.174086, -17.907520, 19.939322, 16.558468, -10.644813, 19.939322, -18.986916, -5.575489, 21.073584, -18.888231, -5.548647, 19.939322, -12.891253, -14.878197, 19.939322, -10.181225, -11.749174, -21.063227, -2.214352, -15.388197, -21.063227, 6.454699, -14.141955, -21.063227, 19.788486, 0.000000, 21.073584, 13.074146, -8.405414, -21.063227, 15.541260, 0.000000, -21.063227, 19.682213, 0.000000, 19.939322, -18.986916, 5.571653, 21.073584, -14.918079, -4.382933, -21.063227, -18.888231, 5.544811, 19.939322, 16.645767, 10.694662, 21.073584, 16.558468, 10.640978, 19.939322, 13.074146, 8.401579, -21.063227, -12.959572, 14.954889, 21.073584, -14.918079, 4.379097, -21.063227, -12.891253, 14.874361, 19.939322, 8.219631, 17.999548, 21.073584, 6.454699, 14.138121, -21.063227, 8.174086, 17.903685, 19.939322, -2.817846, 19.587069, 21.073584, -2.802664, 19.483534, 19.939322, -10.181225, 11.745338, -21.063227, -2.214352, 15.384359, -21.063227)
 
 [sub_resource type="BoxShape3D" id="volumen_norte_oeste"]
-size = Vector3(11.532565, 4.755019, 0.199976)
+size = Vector3(9.328727283, 4.755019000, 0.199976000)
 
 [sub_resource type="BoxShape3D" id="volumen_sur_oeste"]
-size = Vector3(11.532565, 4.755019, 0.174884)
+size = Vector3(9.328727283, 4.755019000, 0.174884000)
 
 [sub_resource type="BoxShape3D" id="volumen_pared_oeste"]
-size = Vector3(0.109994, 4.755019, 6.197069)
+size = Vector3(0.109994000, 4.755019000, 7.126629350)
 
 [sub_resource type="BoxShape3D" id="volumen_entretecho_oeste"]
-size = Vector3(1.809532, 2.214784, 6.572728)
+size = Vector3(1.460399978, 2.214784000, 7.502347487)
 
 [sub_resource type="ConvexPolygonShape3D" id="volumen_faldon_oeste"]
-points = PackedVector3Array(-6.897210, 4.755617, -14.630607, 4.635355, 4.755617, -14.630607, 4.635355, 6.973663, -14.630607, -3.545247, 6.973663, -14.630607, -6.897210, 4.755617, -8.057879, 4.635355, 4.755617, -8.057879, 4.635355, 6.973663, -8.057879, -3.545247, 6.973663, -8.057879)
+points = PackedVector3Array(-4.693255936, 4.755617000, -15.560226487, 4.635471444, 4.755617000, -15.560226487, 4.635471444, 6.973663000, -15.560226487, -1.966761056, 6.973663000, -15.560226487, -4.693255936, 4.755617000, -8.057879000, 4.635471444, 4.755617000, -8.057879000, 4.635471444, 6.973663000, -8.057879000, -1.966761056, 6.973663000, -8.057879000)
 
 [sub_resource type="ConvexPolygonShape3D" id="volumen_zocalo_norte"]
-points = PackedVector3Array(-6.897210, 0.000200, -14.630607, 0.449889, -0.205800, -14.630607, 4.635355, -0.205800, -14.630607, 4.635355, 0.000200, -14.630607, -6.897210, 0.000200, -14.430631, 0.449889, -0.205800, -14.430631, 4.635355, -0.205800, -14.430631, 4.635355, 0.000200, -14.430631)
+points = PackedVector3Array(-4.693255936, 0.000200000, -15.560226487, 1.257551377, -0.205800000, -15.560226487, 4.635471444, -0.205800000, -15.560226487, 4.635471444, 0.000200000, -15.560226487, -4.693255936, 0.000200000, -15.360250487, 1.257551377, -0.205800000, -15.360250487, 4.635471444, -0.205800000, -15.360250487, 4.635471444, 0.000200000, -15.360250487)
 
 [sub_resource type="ConvexPolygonShape3D" id="volumen_zocalo_sur"]
 points = PackedVector3Array(-6.897210, 0.000200, -8.232763, 0.449889, -0.205800, -8.232763, 4.635355, -0.205800, -8.232763, 4.635355, 0.000200, -8.232763, -6.897210, 0.000200, -8.057879, 0.449889, -0.205800, -8.057879, 4.635355, -0.205800, -8.057879, 4.635355, 0.000200, -8.057879)
 
-[sub_resource type="BoxShape3D" id="estante_o03_1"]
-size = Vector3(2, 0.0587, 0.7732)
-
-[sub_resource type="BoxShape3D" id="estante_o03_2"]
-size = Vector3(2, 0.0587, 0.7732)
-
-[sub_resource type="BoxShape3D" id="estante_o03_3"]
-size = Vector3(2, 0.0495, 0.7732)
-
 [sub_resource type="BoxShape3D" id="estante_o03_4"]
-size = Vector3(0.0566, 2.0301, 0.068)
+size = Vector3(0.056551993, 2.030167341, 0.067954302)
 
 [sub_resource type="BoxShape3D" id="estante_o03_5"]
-size = Vector3(0.0566, 2.0301, 0.068)
+size = Vector3(0.056551933, 2.030167341, 0.067954302)
 
 [sub_resource type="BoxShape3D" id="estante_o03_6"]
-size = Vector3(0.0566, 2.0301, 0.068)
+size = Vector3(0.056551993, 2.030167341, 0.067954302)
 
 [sub_resource type="BoxShape3D" id="estante_o03_7"]
-size = Vector3(0.0566, 2.0301, 0.068)
+size = Vector3(0.056551933, 2.030167341, 0.067954302)
 
 [sub_resource type="BoxShape3D" id="estante_o03_8"]
-size = Vector3(2, 0.0587, 0.7731)
+size = Vector3(2.3656804, 0.0587, 0.7731)
 
 [sub_resource type="BoxShape3D" id="estante_o03_9"]
-size = Vector3(2, 0.0587, 0.7731)
+size = Vector3(2.3656804, 0.0587, 0.7731)
 
 [sub_resource type="BoxShape3D" id="estante_o03_10"]
-size = Vector3(2, 0.0495, 0.7731)
+size = Vector3(2.3656804, 0.0495, 0.7731)
 
 [sub_resource type="BoxShape3D" id="estante_o03_11"]
-size = Vector3(0.0566, 2.0301, 0.068)
+size = Vector3(0.056551993, 2.030167341, 0.067954302)
 
 [sub_resource type="BoxShape3D" id="estante_o03_12"]
-size = Vector3(0.0566, 2.0301, 0.068)
+size = Vector3(0.056551933, 2.030167341, 0.067954302)
 
 [sub_resource type="BoxShape3D" id="estante_o03_13"]
-size = Vector3(0.0566, 2.0301, 0.0679)
+size = Vector3(0.056551993, 2.030167341, 0.067954302)
 
 [sub_resource type="BoxShape3D" id="estante_o03_14"]
-size = Vector3(0.0566, 2.0301, 0.0679)
-
-[sub_resource type="BoxShape3D" id="estante_001_1"]
-size = Vector3(2, 0.0587, 0.7732)
-
-[sub_resource type="BoxShape3D" id="estante_001_2"]
-size = Vector3(2, 0.0587, 0.7732)
-
-[sub_resource type="BoxShape3D" id="estante_001_3"]
-size = Vector3(2, 0.0495, 0.7732)
+size = Vector3(0.056551933, 2.030167341, 0.067954302)
 
 [sub_resource type="BoxShape3D" id="estante_001_4"]
-size = Vector3(0.0566, 2.0301, 0.068)
+size = Vector3(0.056551993, 2.030167341, 0.067954302)
 
 [sub_resource type="BoxShape3D" id="estante_001_5"]
-size = Vector3(0.0566, 2.0301, 0.068)
+size = Vector3(0.056551695, 2.030167341, 0.067954302)
 
 [sub_resource type="BoxShape3D" id="estante_001_6"]
-size = Vector3(0.0566, 2.0301, 0.068)
+size = Vector3(0.056551993, 2.030167341, 0.067954302)
 
 [sub_resource type="BoxShape3D" id="estante_001_7"]
-size = Vector3(0.0566, 2.0301, 0.068)
+size = Vector3(0.056551695, 2.030167341, 0.067954302)
 
 [sub_resource type="BoxShape3D" id="puerta_de_cabina"]
 size = Vector3(1.0, 1.9, 0.048)
@@ -382,6 +364,216 @@ size = Vector3(0.421, 2.75, 0.4195)
 [sub_resource type="BoxShape3D" id="acceso_bano_superior"]
 size = Vector3(0.421, 4.244, 6.9586)
 
+[sub_resource type="BoxShape3D" id="deposito_pallet_rack_patin_0"]
+size = Vector3(1.640000000, 0.020000000, 0.120000000)
+
+[sub_resource type="BoxShape3D" id="deposito_pallet_rack_taco_0_0"]
+size = Vector3(0.120000000, 0.060000000, 0.120000000)
+
+[sub_resource type="BoxShape3D" id="deposito_pallet_rack_taco_1_0"]
+size = Vector3(0.120000000, 0.060000000, 0.120000000)
+
+[sub_resource type="BoxShape3D" id="deposito_pallet_rack_taco_2_0"]
+size = Vector3(0.120000000, 0.060000000, 0.120000000)
+
+[sub_resource type="BoxShape3D" id="deposito_pallet_rack_patin_1"]
+size = Vector3(1.640000000, 0.020000000, 0.120000000)
+
+[sub_resource type="BoxShape3D" id="deposito_pallet_rack_taco_0_1"]
+size = Vector3(0.120000000, 0.060000000, 0.120000000)
+
+[sub_resource type="BoxShape3D" id="deposito_pallet_rack_taco_1_1"]
+size = Vector3(0.120000000, 0.060000000, 0.120000000)
+
+[sub_resource type="BoxShape3D" id="deposito_pallet_rack_taco_2_1"]
+size = Vector3(0.120000000, 0.060000000, 0.120000000)
+
+[sub_resource type="BoxShape3D" id="deposito_pallet_rack_patin_2"]
+size = Vector3(1.640000000, 0.020000000, 0.120000000)
+
+[sub_resource type="BoxShape3D" id="deposito_pallet_rack_taco_0_2"]
+size = Vector3(0.120000000, 0.060000000, 0.120000000)
+
+[sub_resource type="BoxShape3D" id="deposito_pallet_rack_taco_1_2"]
+size = Vector3(0.120000000, 0.060000000, 0.120000000)
+
+[sub_resource type="BoxShape3D" id="deposito_pallet_rack_taco_2_2"]
+size = Vector3(0.120000000, 0.060000000, 0.120000000)
+
+[sub_resource type="BoxShape3D" id="deposito_pallet_rack_travesano_0"]
+size = Vector3(0.120000000, 0.020000000, 0.820000000)
+
+[sub_resource type="BoxShape3D" id="deposito_pallet_rack_travesano_1"]
+size = Vector3(0.120000000, 0.020000000, 0.820000000)
+
+[sub_resource type="BoxShape3D" id="deposito_pallet_rack_travesano_2"]
+size = Vector3(0.120000000, 0.020000000, 0.820000000)
+
+[sub_resource type="BoxShape3D" id="deposito_pallet_rack_tabla_0"]
+size = Vector3(1.640000000, 0.020000000, 0.154400000)
+
+[sub_resource type="BoxShape3D" id="deposito_pallet_rack_tabla_1"]
+size = Vector3(1.640000000, 0.020000000, 0.154400000)
+
+[sub_resource type="BoxShape3D" id="deposito_pallet_rack_tabla_2"]
+size = Vector3(1.640000000, 0.020000000, 0.154400000)
+
+[sub_resource type="BoxShape3D" id="deposito_pallet_rack_tabla_3"]
+size = Vector3(1.640000000, 0.020000000, 0.154400000)
+
+[sub_resource type="BoxShape3D" id="deposito_pallet_rack_tabla_4"]
+size = Vector3(1.640000000, 0.020000000, 0.154400000)
+
+[sub_resource type="BoxShape3D" id="deposito_pallet_piso_patin_0"]
+size = Vector3(1.200000000, 0.020000000, 0.120000000)
+
+[sub_resource type="BoxShape3D" id="deposito_pallet_piso_taco_0_0"]
+size = Vector3(0.120000000, 0.060000000, 0.120000000)
+
+[sub_resource type="BoxShape3D" id="deposito_pallet_piso_taco_1_0"]
+size = Vector3(0.120000000, 0.060000000, 0.120000000)
+
+[sub_resource type="BoxShape3D" id="deposito_pallet_piso_taco_2_0"]
+size = Vector3(0.120000000, 0.060000000, 0.120000000)
+
+[sub_resource type="BoxShape3D" id="deposito_pallet_piso_patin_1"]
+size = Vector3(1.200000000, 0.020000000, 0.120000000)
+
+[sub_resource type="BoxShape3D" id="deposito_pallet_piso_taco_0_1"]
+size = Vector3(0.120000000, 0.060000000, 0.120000000)
+
+[sub_resource type="BoxShape3D" id="deposito_pallet_piso_taco_1_1"]
+size = Vector3(0.120000000, 0.060000000, 0.120000000)
+
+[sub_resource type="BoxShape3D" id="deposito_pallet_piso_taco_2_1"]
+size = Vector3(0.120000000, 0.060000000, 0.120000000)
+
+[sub_resource type="BoxShape3D" id="deposito_pallet_piso_patin_2"]
+size = Vector3(1.200000000, 0.020000000, 0.120000000)
+
+[sub_resource type="BoxShape3D" id="deposito_pallet_piso_taco_0_2"]
+size = Vector3(0.120000000, 0.060000000, 0.120000000)
+
+[sub_resource type="BoxShape3D" id="deposito_pallet_piso_taco_1_2"]
+size = Vector3(0.120000000, 0.060000000, 0.120000000)
+
+[sub_resource type="BoxShape3D" id="deposito_pallet_piso_taco_2_2"]
+size = Vector3(0.120000000, 0.060000000, 0.120000000)
+
+[sub_resource type="BoxShape3D" id="deposito_pallet_piso_travesano_0"]
+size = Vector3(0.120000000, 0.020000000, 0.800000000)
+
+[sub_resource type="BoxShape3D" id="deposito_pallet_piso_travesano_1"]
+size = Vector3(0.120000000, 0.020000000, 0.800000000)
+
+[sub_resource type="BoxShape3D" id="deposito_pallet_piso_travesano_2"]
+size = Vector3(0.120000000, 0.020000000, 0.800000000)
+
+[sub_resource type="BoxShape3D" id="deposito_pallet_piso_tabla_0"]
+size = Vector3(1.200000000, 0.020000000, 0.150400000)
+
+[sub_resource type="BoxShape3D" id="deposito_pallet_piso_tabla_1"]
+size = Vector3(1.200000000, 0.020000000, 0.150400000)
+
+[sub_resource type="BoxShape3D" id="deposito_pallet_piso_tabla_2"]
+size = Vector3(1.200000000, 0.020000000, 0.150400000)
+
+[sub_resource type="BoxShape3D" id="deposito_pallet_piso_tabla_3"]
+size = Vector3(1.200000000, 0.020000000, 0.150400000)
+
+[sub_resource type="BoxShape3D" id="deposito_pallet_piso_tabla_4"]
+size = Vector3(1.200000000, 0.020000000, 0.150400000)
+
+[sub_resource type="BoxShape3D" id="deposito_acero_o03_2_0"]
+size = Vector3(3.061469436, 0.035534441, 0.029686987)
+
+[sub_resource type="BoxShape3D" id="deposito_acero_o03_2_1"]
+size = Vector3(3.061469436, 0.035534441, 0.029686987)
+
+[sub_resource type="BoxShape3D" id="deposito_acero_o03_2_2"]
+size = Vector3(0.029686987, 0.035534441, 0.713741034)
+
+[sub_resource type="BoxShape3D" id="deposito_acero_o03_2_3"]
+size = Vector3(0.029686987, 0.035534441, 0.713741034)
+
+[sub_resource type="BoxShape3D" id="deposito_acero_o03_2_4"]
+size = Vector3(0.029687166, 0.035534441, 0.713741034)
+
+[sub_resource type="BoxShape3D" id="deposito_acero_o03_1_0"]
+size = Vector3(3.061469436, 0.035534305, 0.029686987)
+
+[sub_resource type="BoxShape3D" id="deposito_acero_o03_1_1"]
+size = Vector3(3.061469436, 0.035534305, 0.029686987)
+
+[sub_resource type="BoxShape3D" id="deposito_acero_o03_1_2"]
+size = Vector3(0.029686987, 0.035534305, 0.713741034)
+
+[sub_resource type="BoxShape3D" id="deposito_acero_o03_1_3"]
+size = Vector3(0.029686987, 0.035534305, 0.713741034)
+
+[sub_resource type="BoxShape3D" id="deposito_acero_o03_1_4"]
+size = Vector3(0.029687166, 0.035534305, 0.713741034)
+
+[sub_resource type="BoxShape3D" id="deposito_acero_o03_0_0"]
+size = Vector3(3.061469436, 0.026256979, 0.029686987)
+
+[sub_resource type="BoxShape3D" id="deposito_acero_o03_0_1"]
+size = Vector3(3.061469436, 0.026256979, 0.029686987)
+
+[sub_resource type="BoxShape3D" id="deposito_acero_o03_0_2"]
+size = Vector3(0.029686987, 0.026256979, 0.713741034)
+
+[sub_resource type="BoxShape3D" id="deposito_acero_o03_0_3"]
+size = Vector3(0.029686987, 0.026256979, 0.713741034)
+
+[sub_resource type="BoxShape3D" id="deposito_acero_o03_0_4"]
+size = Vector3(0.029687166, 0.026256979, 0.713741034)
+
+[sub_resource type="BoxShape3D" id="deposito_acero_001_2_0"]
+size = Vector3(3.061469376, 0.035534441, 0.029686987)
+
+[sub_resource type="BoxShape3D" id="deposito_acero_001_2_1"]
+size = Vector3(3.061469376, 0.035534441, 0.029686987)
+
+[sub_resource type="BoxShape3D" id="deposito_acero_001_2_2"]
+size = Vector3(0.029686987, 0.035534441, 0.713740885)
+
+[sub_resource type="BoxShape3D" id="deposito_acero_001_2_3"]
+size = Vector3(0.029686987, 0.035534441, 0.713740885)
+
+[sub_resource type="BoxShape3D" id="deposito_acero_001_2_4"]
+size = Vector3(0.029686928, 0.035534441, 0.713740885)
+
+[sub_resource type="BoxShape3D" id="deposito_acero_001_1_0"]
+size = Vector3(3.061469376, 0.035534305, 0.029686987)
+
+[sub_resource type="BoxShape3D" id="deposito_acero_001_1_1"]
+size = Vector3(3.061469376, 0.035534305, 0.029686987)
+
+[sub_resource type="BoxShape3D" id="deposito_acero_001_1_2"]
+size = Vector3(0.029686987, 0.035534305, 0.713740885)
+
+[sub_resource type="BoxShape3D" id="deposito_acero_001_1_3"]
+size = Vector3(0.029686987, 0.035534305, 0.713740885)
+
+[sub_resource type="BoxShape3D" id="deposito_acero_001_1_4"]
+size = Vector3(0.029686928, 0.035534305, 0.713740885)
+
+[sub_resource type="BoxShape3D" id="deposito_acero_001_0_0"]
+size = Vector3(3.061469376, 0.026256979, 0.029686987)
+
+[sub_resource type="BoxShape3D" id="deposito_acero_001_0_1"]
+size = Vector3(3.061469376, 0.026256979, 0.029686987)
+
+[sub_resource type="BoxShape3D" id="deposito_acero_001_0_2"]
+size = Vector3(0.029686987, 0.026256979, 0.713740885)
+
+[sub_resource type="BoxShape3D" id="deposito_acero_001_0_3"]
+size = Vector3(0.029686987, 0.026256979, 0.713740885)
+
+[sub_resource type="BoxShape3D" id="deposito_acero_001_0_4"]
+size = Vector3(0.029686928, 0.026256979, 0.713740885)
+
 [node name="Estructura" instance=ExtResource("modelo")]
 
 [node name="SueloSolido" type="StaticBody3D" parent="."]
@@ -396,7 +588,7 @@ position = Vector3(10.86326, 0, -4.5818585)
 shape = SubResource("suelo_deposito")
 
 [node name="Fondo" type="CollisionShape3D" parent="SueloSolido"]
-position = Vector3(0.56085, 0.0005, -11.359675)
+position = Vector3(1.665579522, 0.000500000, -11.825630999)
 shape = SubResource("suelo_fondo")
 
 [node name="PasoAlDeposito" type="CollisionShape3D" parent="SueloSolido"]
@@ -454,7 +646,6 @@ editor_description = "El jugador choca con esta caja y no con la malla del muebl
 [node name="Forma" type="CollisionShape3D" parent="gondolanueva2/Contorno"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.04424, -0.056863, 0.045102)
 shape = SubResource("contorno_de_gondola2")
-
 
 [node name="Contorno" type="StaticBody3D" parent="gondolanueva_001"]
 collision_layer = 8
@@ -713,19 +904,19 @@ collision_layer = 8
 collision_mask = 0
 
 [node name="Volumen" type="CollisionShape3D" parent="almacen/Volumen"]
-position = Vector3(3.15871, 3.48693, -14.53061)
+position = Vector3(3.773825418, 3.486930000, -15.460229205)
 shape = SubResource("volumen_1")
 
 [node name="Volumen2" type="CollisionShape3D" parent="almacen/Volumen"]
-position = Vector3(7.981845, 3.38393, -11.24405)
+position = Vector3(7.981845000, 3.383930000, -11.708859461)
 shape = SubResource("volumen_2")
 
 [node name="Volumen3" type="CollisionShape3D" parent="almacen/Volumen"]
-position = Vector3(1.44785, 3.48693, -8.14532)
+position = Vector3(2.062965418, 3.486930000, -8.145320000)
 shape = SubResource("volumen_3")
 
 [node name="Volumen4" type="CollisionShape3D" parent="almacen/Volumen"]
-position = Vector3(7.12085, 3.38393, -8.14532)
+position = Vector3(7.120850000, 3.383930000, -8.145320000)
 shape = SubResource("volumen_4")
 
 [node name="Volumen5" type="CollisionShape3D" parent="almacen/Volumen"]
@@ -823,7 +1014,7 @@ position = Vector3(0, 4.894155, 8.1812)
 shape = SubResource("volumen_29")
 
 [node name="Volumen30" type="CollisionShape3D" parent="almacen/Volumen"]
-position = Vector3(3.082875, 5.86627, -11.33169)
+position = Vector3(3.697990418, 5.866270000, -11.796499461)
 shape = SubResource("volumen_30")
 
 [node name="Volumen31" type="CollisionShape3D" parent="almacen/Volumen"]
@@ -839,11 +1030,11 @@ position = Vector3(0, 6.835125, 8.1812)
 shape = SubResource("volumen_33")
 
 [node name="Volumen34" type="CollisionShape3D" parent="almacen/Volumen"]
-position = Vector3(4.25381, -0.103, -14.53061)
+position = Vector3(4.657636269, -0.103000000, -15.460229205)
 shape = SubResource("volumen_93")
 
 [node name="Volumen35" type="CollisionShape3D" parent="almacen/Volumen"]
-position = Vector3(2.54295, -0.103, -8.14532)
+position = Vector3(2.946776269, -0.103000000, -8.145320000)
 shape = SubResource("volumen_94")
 
 [node name="Volumen36" type="CollisionShape3D" parent="almacen/Volumen"]
@@ -851,19 +1042,19 @@ position = Vector3(10.8365, -0.103, -1.19526)
 shape = SubResource("volumen_95")
 
 [node name="Volumen_norte_oeste" type="CollisionShape3D" parent="almacen/Volumen"]
-position = Vector3(-1.130927, 2.377709, -14.530619)
+position = Vector3(-0.028891794, 2.377709000, -15.460238487)
 shape = SubResource("volumen_norte_oeste")
 
 [node name="Volumen_sur_oeste" type="CollisionShape3D" parent="almacen/Volumen"]
-position = Vector3(-1.130927, 2.377709, -8.145321)
+position = Vector3(-0.028891794, 2.377709000, -8.145321000)
 shape = SubResource("volumen_sur_oeste")
 
 [node name="Volumen_pared_oeste" type="CollisionShape3D" parent="almacen/Volumen"]
-position = Vector3(-6.842213, 2.377709, -11.331697)
+position = Vector3(-4.638258936, 2.377709000, -11.796507472)
 shape = SubResource("volumen_pared_oeste")
 
 [node name="Volumen_entretecho_oeste" type="CollisionShape3D" parent="almacen/Volumen"]
-position = Vector3(-2.640481, 5.866271, -11.344243)
+position = Vector3(-1.236561067, 5.866271000, -11.809052743)
 shape = SubResource("volumen_entretecho_oeste")
 
 [node name="Volumen_faldon_oeste" type="CollisionShape3D" parent="almacen/Volumen"]
@@ -993,6 +1184,15 @@ shape = SubResource("volumen_85")
 position = Vector3(-0.109281, -0.125055, -0.144418)
 shape = SubResource("volumen_86")
 
+[node name="bano_marco_entrada" parent="."]
+gi_lightmap_texel_scale = 4.0
+
+[node name="deposito_pallet_piso" parent="."]
+gi_lightmap_texel_scale = 4.0
+
+[node name="puerta" parent="."]
+gi_mode = 2
+
 [node name="CuerpoDeLaHoja" type="AnimatableBody3D" parent="puerta" node_paths=PackedStringArray("hoja", "mallas") groups=["interactuable"]]
 transform = Transform3D(1.159924, 0, 0, 0, 1, 0, 0, 0, 8.611961, 0, 0, 0)
 script = ExtResource("puerta")
@@ -1002,6 +1202,9 @@ mallas = [NodePath("..")]
 [node name="Volumen" type="CollisionShape3D" parent="puerta/CuerpoDeLaHoja"]
 position = Vector3(0, 0.39183, 0)
 shape = SubResource("volumen_de_la_puerta")
+
+[node name="puerta2" parent="."]
+gi_mode = 2
 
 [node name="CuerpoDeLaHoja" type="AnimatableBody3D" parent="puerta2" node_paths=PackedStringArray("hoja", "mallas") groups=["interactuable"]]
 script = ExtResource("puerta")
@@ -1135,88 +1338,52 @@ shape = SubResource("casco_25")
 [node name="Volumen" type="CollisionShape3D" parent="tachitobasura_002/StaticBody3D"]
 shape = SubResource("casco_26")
 
-[node name="Volumen" type="CollisionShape3D" parent="gondola_deposito03/StaticBody3D"]
-position = Vector3(0, 0.82585, 0)
-shape = SubResource("estante_o03_1")
-
-[node name="Volumen2" type="CollisionShape3D" parent="gondola_deposito03/StaticBody3D"]
-position = Vector3(0, 0.18875, 0)
-shape = SubResource("estante_o03_2")
-
-[node name="Volumen3" type="CollisionShape3D" parent="gondola_deposito03/StaticBody3D"]
-position = Vector3(0, -0.45295, 0)
-shape = SubResource("estante_o03_3")
-
 [node name="Volumen4" type="CollisionShape3D" parent="gondola_deposito03/StaticBody3D"]
-position = Vector3(-1.0283, -0.04765, 0.3526)
+position = Vector3(-1.028275937, -0.047652483, 0.352579951)
 shape = SubResource("estante_o03_4")
 
 [node name="Volumen5" type="CollisionShape3D" parent="gondola_deposito03/StaticBody3D"]
-position = Vector3(1.0283, -0.04765, 0.3526)
+position = Vector3(2.089744568, -0.047652721, 0.352579951)
 shape = SubResource("estante_o03_5")
 
 [node name="Volumen6" type="CollisionShape3D" parent="gondola_deposito03/StaticBody3D"]
-position = Vector3(-1.0283, -0.04765, -0.3526)
+position = Vector3(-1.028275937, -0.047652483, -0.352580190)
 shape = SubResource("estante_o03_6")
 
 [node name="Volumen7" type="CollisionShape3D" parent="gondola_deposito03/StaticBody3D"]
-position = Vector3(1.0283, -0.04765, -0.3526)
+position = Vector3(2.089744568, -0.047652721, -0.352580190)
 shape = SubResource("estante_o03_7")
 
-[node name="Volumen8" type="CollisionShape3D" parent="gondola_deposito03/StaticBody3D"]
-position = Vector3(0, 0.82585, -3.34755)
-shape = SubResource("estante_o03_8")
-
-[node name="Volumen9" type="CollisionShape3D" parent="gondola_deposito03/StaticBody3D"]
-position = Vector3(0, 0.18875, -3.34755)
-shape = SubResource("estante_o03_9")
-
-[node name="Volumen10" type="CollisionShape3D" parent="gondola_deposito03/StaticBody3D"]
-position = Vector3(0, -0.45295, -3.34755)
-shape = SubResource("estante_o03_10")
-
 [node name="Volumen11" type="CollisionShape3D" parent="gondola_deposito03/StaticBody3D"]
-position = Vector3(-1.0283, -0.04765, -2.995)
+position = Vector3(-1.028275937, -0.047652483, -2.995008111)
 shape = SubResource("estante_o03_11")
 
 [node name="Volumen12" type="CollisionShape3D" parent="gondola_deposito03/StaticBody3D"]
-position = Vector3(1.0283, -0.04765, -2.995)
+position = Vector3(2.089744568, -0.047652721, -2.995008111)
 shape = SubResource("estante_o03_12")
 
 [node name="Volumen13" type="CollisionShape3D" parent="gondola_deposito03/StaticBody3D"]
-position = Vector3(-1.0283, -0.04765, -3.70015)
+position = Vector3(-1.028275937, -0.047652483, -3.700168252)
 shape = SubResource("estante_o03_13")
 
 [node name="Volumen14" type="CollisionShape3D" parent="gondola_deposito03/StaticBody3D"]
-position = Vector3(1.0283, -0.04765, -3.70015)
+position = Vector3(2.089744568, -0.047652721, -3.700168252)
 shape = SubResource("estante_o03_14")
 
-[node name="Volumen" type="CollisionShape3D" parent="gondola_deposito03_001/StaticBody3D"]
-position = Vector3(0, 0.82585, 0)
-shape = SubResource("estante_001_1")
-
-[node name="Volumen2" type="CollisionShape3D" parent="gondola_deposito03_001/StaticBody3D"]
-position = Vector3(0, 0.18875, 0)
-shape = SubResource("estante_001_2")
-
-[node name="Volumen3" type="CollisionShape3D" parent="gondola_deposito03_001/StaticBody3D"]
-position = Vector3(0, -0.45295, 0)
-shape = SubResource("estante_001_3")
-
 [node name="Volumen4" type="CollisionShape3D" parent="gondola_deposito03_001/StaticBody3D"]
-position = Vector3(-1.0283, -0.04765, 0.3526)
+position = Vector3(-1.028275937, -0.047652483, 0.352579951)
 shape = SubResource("estante_001_4")
 
 [node name="Volumen5" type="CollisionShape3D" parent="gondola_deposito03_001/StaticBody3D"]
-position = Vector3(1.0283, -0.04765, 0.3526)
+position = Vector3(2.089745164, -0.047652721, 0.352579951)
 shape = SubResource("estante_001_5")
 
 [node name="Volumen6" type="CollisionShape3D" parent="gondola_deposito03_001/StaticBody3D"]
-position = Vector3(-1.0283, -0.04765, -0.3526)
+position = Vector3(-1.028275937, -0.047652483, -0.352580190)
 shape = SubResource("estante_001_6")
 
 [node name="Volumen7" type="CollisionShape3D" parent="gondola_deposito03_001/StaticBody3D"]
-position = Vector3(1.0283, -0.04765, -0.3526)
+position = Vector3(2.089745164, -0.047652721, -0.352580190)
 shape = SubResource("estante_001_7")
 
 [node name="bano_puerta_1" parent="."]
@@ -1302,3 +1469,1779 @@ shape = SubResource("volumen_91")
 
 [node name="Volumen3" type="CollisionShape3D" parent="bano_inodoro_2/StaticBody3D"]
 shape = SubResource("volumen_92")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="deposito_pallet_central_derecho_0_0"]
+collision_layer = 8
+collision_mask = 0
+
+[node name="Volumen_patin_0" type="CollisionShape3D" parent="deposito_pallet_central_derecho_0_0/StaticBody3D"]
+position = Vector3(0.000000000, 0.010000000, 0.350000000)
+shape = SubResource("deposito_pallet_rack_patin_0")
+
+[node name="Volumen_taco_0_0" type="CollisionShape3D" parent="deposito_pallet_central_derecho_0_0/StaticBody3D"]
+position = Vector3(-0.760000000, 0.050000000, 0.350000000)
+shape = SubResource("deposito_pallet_rack_taco_0_0")
+
+[node name="Volumen_taco_1_0" type="CollisionShape3D" parent="deposito_pallet_central_derecho_0_0/StaticBody3D"]
+position = Vector3(0.000000000, 0.050000000, 0.350000000)
+shape = SubResource("deposito_pallet_rack_taco_1_0")
+
+[node name="Volumen_taco_2_0" type="CollisionShape3D" parent="deposito_pallet_central_derecho_0_0/StaticBody3D"]
+position = Vector3(0.760000000, 0.050000000, 0.350000000)
+shape = SubResource("deposito_pallet_rack_taco_2_0")
+
+[node name="Volumen_patin_1" type="CollisionShape3D" parent="deposito_pallet_central_derecho_0_0/StaticBody3D"]
+position = Vector3(0.000000000, 0.010000000, -0.000000000)
+shape = SubResource("deposito_pallet_rack_patin_1")
+
+[node name="Volumen_taco_0_1" type="CollisionShape3D" parent="deposito_pallet_central_derecho_0_0/StaticBody3D"]
+position = Vector3(-0.760000000, 0.050000000, -0.000000000)
+shape = SubResource("deposito_pallet_rack_taco_0_1")
+
+[node name="Volumen_taco_1_1" type="CollisionShape3D" parent="deposito_pallet_central_derecho_0_0/StaticBody3D"]
+position = Vector3(0.000000000, 0.050000000, -0.000000000)
+shape = SubResource("deposito_pallet_rack_taco_1_1")
+
+[node name="Volumen_taco_2_1" type="CollisionShape3D" parent="deposito_pallet_central_derecho_0_0/StaticBody3D"]
+position = Vector3(0.760000000, 0.050000000, -0.000000000)
+shape = SubResource("deposito_pallet_rack_taco_2_1")
+
+[node name="Volumen_patin_2" type="CollisionShape3D" parent="deposito_pallet_central_derecho_0_0/StaticBody3D"]
+position = Vector3(0.000000000, 0.010000000, -0.350000000)
+shape = SubResource("deposito_pallet_rack_patin_2")
+
+[node name="Volumen_taco_0_2" type="CollisionShape3D" parent="deposito_pallet_central_derecho_0_0/StaticBody3D"]
+position = Vector3(-0.760000000, 0.050000000, -0.350000000)
+shape = SubResource("deposito_pallet_rack_taco_0_2")
+
+[node name="Volumen_taco_1_2" type="CollisionShape3D" parent="deposito_pallet_central_derecho_0_0/StaticBody3D"]
+position = Vector3(0.000000000, 0.050000000, -0.350000000)
+shape = SubResource("deposito_pallet_rack_taco_1_2")
+
+[node name="Volumen_taco_2_2" type="CollisionShape3D" parent="deposito_pallet_central_derecho_0_0/StaticBody3D"]
+position = Vector3(0.760000000, 0.050000000, -0.350000000)
+shape = SubResource("deposito_pallet_rack_taco_2_2")
+
+[node name="Volumen_travesano_0" type="CollisionShape3D" parent="deposito_pallet_central_derecho_0_0/StaticBody3D"]
+position = Vector3(-0.760000000, 0.090000000, -0.000000000)
+shape = SubResource("deposito_pallet_rack_travesano_0")
+
+[node name="Volumen_travesano_1" type="CollisionShape3D" parent="deposito_pallet_central_derecho_0_0/StaticBody3D"]
+position = Vector3(0.000000000, 0.090000000, -0.000000000)
+shape = SubResource("deposito_pallet_rack_travesano_1")
+
+[node name="Volumen_travesano_2" type="CollisionShape3D" parent="deposito_pallet_central_derecho_0_0/StaticBody3D"]
+position = Vector3(0.760000000, 0.090000000, -0.000000000)
+shape = SubResource("deposito_pallet_rack_travesano_2")
+
+[node name="Volumen_tabla_0" type="CollisionShape3D" parent="deposito_pallet_central_derecho_0_0/StaticBody3D"]
+position = Vector3(0.000000000, 0.110000000, 0.332800000)
+shape = SubResource("deposito_pallet_rack_tabla_0")
+
+[node name="Volumen_tabla_1" type="CollisionShape3D" parent="deposito_pallet_central_derecho_0_0/StaticBody3D"]
+position = Vector3(0.000000000, 0.110000000, 0.166400000)
+shape = SubResource("deposito_pallet_rack_tabla_1")
+
+[node name="Volumen_tabla_2" type="CollisionShape3D" parent="deposito_pallet_central_derecho_0_0/StaticBody3D"]
+position = Vector3(0.000000000, 0.110000000, -0.000000000)
+shape = SubResource("deposito_pallet_rack_tabla_2")
+
+[node name="Volumen_tabla_3" type="CollisionShape3D" parent="deposito_pallet_central_derecho_0_0/StaticBody3D"]
+position = Vector3(0.000000000, 0.110000000, -0.166400000)
+shape = SubResource("deposito_pallet_rack_tabla_3")
+
+[node name="Volumen_tabla_4" type="CollisionShape3D" parent="deposito_pallet_central_derecho_0_0/StaticBody3D"]
+position = Vector3(0.000000000, 0.110000000, -0.332800000)
+shape = SubResource("deposito_pallet_rack_tabla_4")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="deposito_pallet_central_derecho_0_1"]
+collision_layer = 8
+collision_mask = 0
+
+[node name="Volumen_patin_0" type="CollisionShape3D" parent="deposito_pallet_central_derecho_0_1/StaticBody3D"]
+position = Vector3(0.000000000, 0.010000000, 0.350000000)
+shape = SubResource("deposito_pallet_rack_patin_0")
+
+[node name="Volumen_taco_0_0" type="CollisionShape3D" parent="deposito_pallet_central_derecho_0_1/StaticBody3D"]
+position = Vector3(-0.760000000, 0.050000000, 0.350000000)
+shape = SubResource("deposito_pallet_rack_taco_0_0")
+
+[node name="Volumen_taco_1_0" type="CollisionShape3D" parent="deposito_pallet_central_derecho_0_1/StaticBody3D"]
+position = Vector3(0.000000000, 0.050000000, 0.350000000)
+shape = SubResource("deposito_pallet_rack_taco_1_0")
+
+[node name="Volumen_taco_2_0" type="CollisionShape3D" parent="deposito_pallet_central_derecho_0_1/StaticBody3D"]
+position = Vector3(0.760000000, 0.050000000, 0.350000000)
+shape = SubResource("deposito_pallet_rack_taco_2_0")
+
+[node name="Volumen_patin_1" type="CollisionShape3D" parent="deposito_pallet_central_derecho_0_1/StaticBody3D"]
+position = Vector3(0.000000000, 0.010000000, -0.000000000)
+shape = SubResource("deposito_pallet_rack_patin_1")
+
+[node name="Volumen_taco_0_1" type="CollisionShape3D" parent="deposito_pallet_central_derecho_0_1/StaticBody3D"]
+position = Vector3(-0.760000000, 0.050000000, -0.000000000)
+shape = SubResource("deposito_pallet_rack_taco_0_1")
+
+[node name="Volumen_taco_1_1" type="CollisionShape3D" parent="deposito_pallet_central_derecho_0_1/StaticBody3D"]
+position = Vector3(0.000000000, 0.050000000, -0.000000000)
+shape = SubResource("deposito_pallet_rack_taco_1_1")
+
+[node name="Volumen_taco_2_1" type="CollisionShape3D" parent="deposito_pallet_central_derecho_0_1/StaticBody3D"]
+position = Vector3(0.760000000, 0.050000000, -0.000000000)
+shape = SubResource("deposito_pallet_rack_taco_2_1")
+
+[node name="Volumen_patin_2" type="CollisionShape3D" parent="deposito_pallet_central_derecho_0_1/StaticBody3D"]
+position = Vector3(0.000000000, 0.010000000, -0.350000000)
+shape = SubResource("deposito_pallet_rack_patin_2")
+
+[node name="Volumen_taco_0_2" type="CollisionShape3D" parent="deposito_pallet_central_derecho_0_1/StaticBody3D"]
+position = Vector3(-0.760000000, 0.050000000, -0.350000000)
+shape = SubResource("deposito_pallet_rack_taco_0_2")
+
+[node name="Volumen_taco_1_2" type="CollisionShape3D" parent="deposito_pallet_central_derecho_0_1/StaticBody3D"]
+position = Vector3(0.000000000, 0.050000000, -0.350000000)
+shape = SubResource("deposito_pallet_rack_taco_1_2")
+
+[node name="Volumen_taco_2_2" type="CollisionShape3D" parent="deposito_pallet_central_derecho_0_1/StaticBody3D"]
+position = Vector3(0.760000000, 0.050000000, -0.350000000)
+shape = SubResource("deposito_pallet_rack_taco_2_2")
+
+[node name="Volumen_travesano_0" type="CollisionShape3D" parent="deposito_pallet_central_derecho_0_1/StaticBody3D"]
+position = Vector3(-0.760000000, 0.090000000, -0.000000000)
+shape = SubResource("deposito_pallet_rack_travesano_0")
+
+[node name="Volumen_travesano_1" type="CollisionShape3D" parent="deposito_pallet_central_derecho_0_1/StaticBody3D"]
+position = Vector3(0.000000000, 0.090000000, -0.000000000)
+shape = SubResource("deposito_pallet_rack_travesano_1")
+
+[node name="Volumen_travesano_2" type="CollisionShape3D" parent="deposito_pallet_central_derecho_0_1/StaticBody3D"]
+position = Vector3(0.760000000, 0.090000000, -0.000000000)
+shape = SubResource("deposito_pallet_rack_travesano_2")
+
+[node name="Volumen_tabla_0" type="CollisionShape3D" parent="deposito_pallet_central_derecho_0_1/StaticBody3D"]
+position = Vector3(0.000000000, 0.110000000, 0.332800000)
+shape = SubResource("deposito_pallet_rack_tabla_0")
+
+[node name="Volumen_tabla_1" type="CollisionShape3D" parent="deposito_pallet_central_derecho_0_1/StaticBody3D"]
+position = Vector3(0.000000000, 0.110000000, 0.166400000)
+shape = SubResource("deposito_pallet_rack_tabla_1")
+
+[node name="Volumen_tabla_2" type="CollisionShape3D" parent="deposito_pallet_central_derecho_0_1/StaticBody3D"]
+position = Vector3(0.000000000, 0.110000000, -0.000000000)
+shape = SubResource("deposito_pallet_rack_tabla_2")
+
+[node name="Volumen_tabla_3" type="CollisionShape3D" parent="deposito_pallet_central_derecho_0_1/StaticBody3D"]
+position = Vector3(0.000000000, 0.110000000, -0.166400000)
+shape = SubResource("deposito_pallet_rack_tabla_3")
+
+[node name="Volumen_tabla_4" type="CollisionShape3D" parent="deposito_pallet_central_derecho_0_1/StaticBody3D"]
+position = Vector3(0.000000000, 0.110000000, -0.332800000)
+shape = SubResource("deposito_pallet_rack_tabla_4")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="deposito_pallet_central_derecho_1_0"]
+collision_layer = 8
+collision_mask = 0
+
+[node name="Volumen_patin_0" type="CollisionShape3D" parent="deposito_pallet_central_derecho_1_0/StaticBody3D"]
+position = Vector3(0.000000000, 0.010000000, 0.350000000)
+shape = SubResource("deposito_pallet_rack_patin_0")
+
+[node name="Volumen_taco_0_0" type="CollisionShape3D" parent="deposito_pallet_central_derecho_1_0/StaticBody3D"]
+position = Vector3(-0.760000000, 0.050000000, 0.350000000)
+shape = SubResource("deposito_pallet_rack_taco_0_0")
+
+[node name="Volumen_taco_1_0" type="CollisionShape3D" parent="deposito_pallet_central_derecho_1_0/StaticBody3D"]
+position = Vector3(0.000000000, 0.050000000, 0.350000000)
+shape = SubResource("deposito_pallet_rack_taco_1_0")
+
+[node name="Volumen_taco_2_0" type="CollisionShape3D" parent="deposito_pallet_central_derecho_1_0/StaticBody3D"]
+position = Vector3(0.760000000, 0.050000000, 0.350000000)
+shape = SubResource("deposito_pallet_rack_taco_2_0")
+
+[node name="Volumen_patin_1" type="CollisionShape3D" parent="deposito_pallet_central_derecho_1_0/StaticBody3D"]
+position = Vector3(0.000000000, 0.010000000, -0.000000000)
+shape = SubResource("deposito_pallet_rack_patin_1")
+
+[node name="Volumen_taco_0_1" type="CollisionShape3D" parent="deposito_pallet_central_derecho_1_0/StaticBody3D"]
+position = Vector3(-0.760000000, 0.050000000, -0.000000000)
+shape = SubResource("deposito_pallet_rack_taco_0_1")
+
+[node name="Volumen_taco_1_1" type="CollisionShape3D" parent="deposito_pallet_central_derecho_1_0/StaticBody3D"]
+position = Vector3(0.000000000, 0.050000000, -0.000000000)
+shape = SubResource("deposito_pallet_rack_taco_1_1")
+
+[node name="Volumen_taco_2_1" type="CollisionShape3D" parent="deposito_pallet_central_derecho_1_0/StaticBody3D"]
+position = Vector3(0.760000000, 0.050000000, -0.000000000)
+shape = SubResource("deposito_pallet_rack_taco_2_1")
+
+[node name="Volumen_patin_2" type="CollisionShape3D" parent="deposito_pallet_central_derecho_1_0/StaticBody3D"]
+position = Vector3(0.000000000, 0.010000000, -0.350000000)
+shape = SubResource("deposito_pallet_rack_patin_2")
+
+[node name="Volumen_taco_0_2" type="CollisionShape3D" parent="deposito_pallet_central_derecho_1_0/StaticBody3D"]
+position = Vector3(-0.760000000, 0.050000000, -0.350000000)
+shape = SubResource("deposito_pallet_rack_taco_0_2")
+
+[node name="Volumen_taco_1_2" type="CollisionShape3D" parent="deposito_pallet_central_derecho_1_0/StaticBody3D"]
+position = Vector3(0.000000000, 0.050000000, -0.350000000)
+shape = SubResource("deposito_pallet_rack_taco_1_2")
+
+[node name="Volumen_taco_2_2" type="CollisionShape3D" parent="deposito_pallet_central_derecho_1_0/StaticBody3D"]
+position = Vector3(0.760000000, 0.050000000, -0.350000000)
+shape = SubResource("deposito_pallet_rack_taco_2_2")
+
+[node name="Volumen_travesano_0" type="CollisionShape3D" parent="deposito_pallet_central_derecho_1_0/StaticBody3D"]
+position = Vector3(-0.760000000, 0.090000000, -0.000000000)
+shape = SubResource("deposito_pallet_rack_travesano_0")
+
+[node name="Volumen_travesano_1" type="CollisionShape3D" parent="deposito_pallet_central_derecho_1_0/StaticBody3D"]
+position = Vector3(0.000000000, 0.090000000, -0.000000000)
+shape = SubResource("deposito_pallet_rack_travesano_1")
+
+[node name="Volumen_travesano_2" type="CollisionShape3D" parent="deposito_pallet_central_derecho_1_0/StaticBody3D"]
+position = Vector3(0.760000000, 0.090000000, -0.000000000)
+shape = SubResource("deposito_pallet_rack_travesano_2")
+
+[node name="Volumen_tabla_0" type="CollisionShape3D" parent="deposito_pallet_central_derecho_1_0/StaticBody3D"]
+position = Vector3(0.000000000, 0.110000000, 0.332800000)
+shape = SubResource("deposito_pallet_rack_tabla_0")
+
+[node name="Volumen_tabla_1" type="CollisionShape3D" parent="deposito_pallet_central_derecho_1_0/StaticBody3D"]
+position = Vector3(0.000000000, 0.110000000, 0.166400000)
+shape = SubResource("deposito_pallet_rack_tabla_1")
+
+[node name="Volumen_tabla_2" type="CollisionShape3D" parent="deposito_pallet_central_derecho_1_0/StaticBody3D"]
+position = Vector3(0.000000000, 0.110000000, -0.000000000)
+shape = SubResource("deposito_pallet_rack_tabla_2")
+
+[node name="Volumen_tabla_3" type="CollisionShape3D" parent="deposito_pallet_central_derecho_1_0/StaticBody3D"]
+position = Vector3(0.000000000, 0.110000000, -0.166400000)
+shape = SubResource("deposito_pallet_rack_tabla_3")
+
+[node name="Volumen_tabla_4" type="CollisionShape3D" parent="deposito_pallet_central_derecho_1_0/StaticBody3D"]
+position = Vector3(0.000000000, 0.110000000, -0.332800000)
+shape = SubResource("deposito_pallet_rack_tabla_4")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="deposito_pallet_central_derecho_1_1"]
+collision_layer = 8
+collision_mask = 0
+
+[node name="Volumen_patin_0" type="CollisionShape3D" parent="deposito_pallet_central_derecho_1_1/StaticBody3D"]
+position = Vector3(0.000000000, 0.010000000, 0.350000000)
+shape = SubResource("deposito_pallet_rack_patin_0")
+
+[node name="Volumen_taco_0_0" type="CollisionShape3D" parent="deposito_pallet_central_derecho_1_1/StaticBody3D"]
+position = Vector3(-0.760000000, 0.050000000, 0.350000000)
+shape = SubResource("deposito_pallet_rack_taco_0_0")
+
+[node name="Volumen_taco_1_0" type="CollisionShape3D" parent="deposito_pallet_central_derecho_1_1/StaticBody3D"]
+position = Vector3(0.000000000, 0.050000000, 0.350000000)
+shape = SubResource("deposito_pallet_rack_taco_1_0")
+
+[node name="Volumen_taco_2_0" type="CollisionShape3D" parent="deposito_pallet_central_derecho_1_1/StaticBody3D"]
+position = Vector3(0.760000000, 0.050000000, 0.350000000)
+shape = SubResource("deposito_pallet_rack_taco_2_0")
+
+[node name="Volumen_patin_1" type="CollisionShape3D" parent="deposito_pallet_central_derecho_1_1/StaticBody3D"]
+position = Vector3(0.000000000, 0.010000000, -0.000000000)
+shape = SubResource("deposito_pallet_rack_patin_1")
+
+[node name="Volumen_taco_0_1" type="CollisionShape3D" parent="deposito_pallet_central_derecho_1_1/StaticBody3D"]
+position = Vector3(-0.760000000, 0.050000000, -0.000000000)
+shape = SubResource("deposito_pallet_rack_taco_0_1")
+
+[node name="Volumen_taco_1_1" type="CollisionShape3D" parent="deposito_pallet_central_derecho_1_1/StaticBody3D"]
+position = Vector3(0.000000000, 0.050000000, -0.000000000)
+shape = SubResource("deposito_pallet_rack_taco_1_1")
+
+[node name="Volumen_taco_2_1" type="CollisionShape3D" parent="deposito_pallet_central_derecho_1_1/StaticBody3D"]
+position = Vector3(0.760000000, 0.050000000, -0.000000000)
+shape = SubResource("deposito_pallet_rack_taco_2_1")
+
+[node name="Volumen_patin_2" type="CollisionShape3D" parent="deposito_pallet_central_derecho_1_1/StaticBody3D"]
+position = Vector3(0.000000000, 0.010000000, -0.350000000)
+shape = SubResource("deposito_pallet_rack_patin_2")
+
+[node name="Volumen_taco_0_2" type="CollisionShape3D" parent="deposito_pallet_central_derecho_1_1/StaticBody3D"]
+position = Vector3(-0.760000000, 0.050000000, -0.350000000)
+shape = SubResource("deposito_pallet_rack_taco_0_2")
+
+[node name="Volumen_taco_1_2" type="CollisionShape3D" parent="deposito_pallet_central_derecho_1_1/StaticBody3D"]
+position = Vector3(0.000000000, 0.050000000, -0.350000000)
+shape = SubResource("deposito_pallet_rack_taco_1_2")
+
+[node name="Volumen_taco_2_2" type="CollisionShape3D" parent="deposito_pallet_central_derecho_1_1/StaticBody3D"]
+position = Vector3(0.760000000, 0.050000000, -0.350000000)
+shape = SubResource("deposito_pallet_rack_taco_2_2")
+
+[node name="Volumen_travesano_0" type="CollisionShape3D" parent="deposito_pallet_central_derecho_1_1/StaticBody3D"]
+position = Vector3(-0.760000000, 0.090000000, -0.000000000)
+shape = SubResource("deposito_pallet_rack_travesano_0")
+
+[node name="Volumen_travesano_1" type="CollisionShape3D" parent="deposito_pallet_central_derecho_1_1/StaticBody3D"]
+position = Vector3(0.000000000, 0.090000000, -0.000000000)
+shape = SubResource("deposito_pallet_rack_travesano_1")
+
+[node name="Volumen_travesano_2" type="CollisionShape3D" parent="deposito_pallet_central_derecho_1_1/StaticBody3D"]
+position = Vector3(0.760000000, 0.090000000, -0.000000000)
+shape = SubResource("deposito_pallet_rack_travesano_2")
+
+[node name="Volumen_tabla_0" type="CollisionShape3D" parent="deposito_pallet_central_derecho_1_1/StaticBody3D"]
+position = Vector3(0.000000000, 0.110000000, 0.332800000)
+shape = SubResource("deposito_pallet_rack_tabla_0")
+
+[node name="Volumen_tabla_1" type="CollisionShape3D" parent="deposito_pallet_central_derecho_1_1/StaticBody3D"]
+position = Vector3(0.000000000, 0.110000000, 0.166400000)
+shape = SubResource("deposito_pallet_rack_tabla_1")
+
+[node name="Volumen_tabla_2" type="CollisionShape3D" parent="deposito_pallet_central_derecho_1_1/StaticBody3D"]
+position = Vector3(0.000000000, 0.110000000, -0.000000000)
+shape = SubResource("deposito_pallet_rack_tabla_2")
+
+[node name="Volumen_tabla_3" type="CollisionShape3D" parent="deposito_pallet_central_derecho_1_1/StaticBody3D"]
+position = Vector3(0.000000000, 0.110000000, -0.166400000)
+shape = SubResource("deposito_pallet_rack_tabla_3")
+
+[node name="Volumen_tabla_4" type="CollisionShape3D" parent="deposito_pallet_central_derecho_1_1/StaticBody3D"]
+position = Vector3(0.000000000, 0.110000000, -0.332800000)
+shape = SubResource("deposito_pallet_rack_tabla_4")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="deposito_pallet_central_derecho_2_0"]
+collision_layer = 8
+collision_mask = 0
+
+[node name="Volumen_patin_0" type="CollisionShape3D" parent="deposito_pallet_central_derecho_2_0/StaticBody3D"]
+position = Vector3(0.000000000, 0.010000000, 0.350000000)
+shape = SubResource("deposito_pallet_rack_patin_0")
+
+[node name="Volumen_taco_0_0" type="CollisionShape3D" parent="deposito_pallet_central_derecho_2_0/StaticBody3D"]
+position = Vector3(-0.760000000, 0.050000000, 0.350000000)
+shape = SubResource("deposito_pallet_rack_taco_0_0")
+
+[node name="Volumen_taco_1_0" type="CollisionShape3D" parent="deposito_pallet_central_derecho_2_0/StaticBody3D"]
+position = Vector3(0.000000000, 0.050000000, 0.350000000)
+shape = SubResource("deposito_pallet_rack_taco_1_0")
+
+[node name="Volumen_taco_2_0" type="CollisionShape3D" parent="deposito_pallet_central_derecho_2_0/StaticBody3D"]
+position = Vector3(0.760000000, 0.050000000, 0.350000000)
+shape = SubResource("deposito_pallet_rack_taco_2_0")
+
+[node name="Volumen_patin_1" type="CollisionShape3D" parent="deposito_pallet_central_derecho_2_0/StaticBody3D"]
+position = Vector3(0.000000000, 0.010000000, -0.000000000)
+shape = SubResource("deposito_pallet_rack_patin_1")
+
+[node name="Volumen_taco_0_1" type="CollisionShape3D" parent="deposito_pallet_central_derecho_2_0/StaticBody3D"]
+position = Vector3(-0.760000000, 0.050000000, -0.000000000)
+shape = SubResource("deposito_pallet_rack_taco_0_1")
+
+[node name="Volumen_taco_1_1" type="CollisionShape3D" parent="deposito_pallet_central_derecho_2_0/StaticBody3D"]
+position = Vector3(0.000000000, 0.050000000, -0.000000000)
+shape = SubResource("deposito_pallet_rack_taco_1_1")
+
+[node name="Volumen_taco_2_1" type="CollisionShape3D" parent="deposito_pallet_central_derecho_2_0/StaticBody3D"]
+position = Vector3(0.760000000, 0.050000000, -0.000000000)
+shape = SubResource("deposito_pallet_rack_taco_2_1")
+
+[node name="Volumen_patin_2" type="CollisionShape3D" parent="deposito_pallet_central_derecho_2_0/StaticBody3D"]
+position = Vector3(0.000000000, 0.010000000, -0.350000000)
+shape = SubResource("deposito_pallet_rack_patin_2")
+
+[node name="Volumen_taco_0_2" type="CollisionShape3D" parent="deposito_pallet_central_derecho_2_0/StaticBody3D"]
+position = Vector3(-0.760000000, 0.050000000, -0.350000000)
+shape = SubResource("deposito_pallet_rack_taco_0_2")
+
+[node name="Volumen_taco_1_2" type="CollisionShape3D" parent="deposito_pallet_central_derecho_2_0/StaticBody3D"]
+position = Vector3(0.000000000, 0.050000000, -0.350000000)
+shape = SubResource("deposito_pallet_rack_taco_1_2")
+
+[node name="Volumen_taco_2_2" type="CollisionShape3D" parent="deposito_pallet_central_derecho_2_0/StaticBody3D"]
+position = Vector3(0.760000000, 0.050000000, -0.350000000)
+shape = SubResource("deposito_pallet_rack_taco_2_2")
+
+[node name="Volumen_travesano_0" type="CollisionShape3D" parent="deposito_pallet_central_derecho_2_0/StaticBody3D"]
+position = Vector3(-0.760000000, 0.090000000, -0.000000000)
+shape = SubResource("deposito_pallet_rack_travesano_0")
+
+[node name="Volumen_travesano_1" type="CollisionShape3D" parent="deposito_pallet_central_derecho_2_0/StaticBody3D"]
+position = Vector3(0.000000000, 0.090000000, -0.000000000)
+shape = SubResource("deposito_pallet_rack_travesano_1")
+
+[node name="Volumen_travesano_2" type="CollisionShape3D" parent="deposito_pallet_central_derecho_2_0/StaticBody3D"]
+position = Vector3(0.760000000, 0.090000000, -0.000000000)
+shape = SubResource("deposito_pallet_rack_travesano_2")
+
+[node name="Volumen_tabla_0" type="CollisionShape3D" parent="deposito_pallet_central_derecho_2_0/StaticBody3D"]
+position = Vector3(0.000000000, 0.110000000, 0.332800000)
+shape = SubResource("deposito_pallet_rack_tabla_0")
+
+[node name="Volumen_tabla_1" type="CollisionShape3D" parent="deposito_pallet_central_derecho_2_0/StaticBody3D"]
+position = Vector3(0.000000000, 0.110000000, 0.166400000)
+shape = SubResource("deposito_pallet_rack_tabla_1")
+
+[node name="Volumen_tabla_2" type="CollisionShape3D" parent="deposito_pallet_central_derecho_2_0/StaticBody3D"]
+position = Vector3(0.000000000, 0.110000000, -0.000000000)
+shape = SubResource("deposito_pallet_rack_tabla_2")
+
+[node name="Volumen_tabla_3" type="CollisionShape3D" parent="deposito_pallet_central_derecho_2_0/StaticBody3D"]
+position = Vector3(0.000000000, 0.110000000, -0.166400000)
+shape = SubResource("deposito_pallet_rack_tabla_3")
+
+[node name="Volumen_tabla_4" type="CollisionShape3D" parent="deposito_pallet_central_derecho_2_0/StaticBody3D"]
+position = Vector3(0.000000000, 0.110000000, -0.332800000)
+shape = SubResource("deposito_pallet_rack_tabla_4")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="deposito_pallet_central_derecho_2_1"]
+collision_layer = 8
+collision_mask = 0
+
+[node name="Volumen_patin_0" type="CollisionShape3D" parent="deposito_pallet_central_derecho_2_1/StaticBody3D"]
+position = Vector3(0.000000000, 0.010000000, 0.350000000)
+shape = SubResource("deposito_pallet_rack_patin_0")
+
+[node name="Volumen_taco_0_0" type="CollisionShape3D" parent="deposito_pallet_central_derecho_2_1/StaticBody3D"]
+position = Vector3(-0.760000000, 0.050000000, 0.350000000)
+shape = SubResource("deposito_pallet_rack_taco_0_0")
+
+[node name="Volumen_taco_1_0" type="CollisionShape3D" parent="deposito_pallet_central_derecho_2_1/StaticBody3D"]
+position = Vector3(0.000000000, 0.050000000, 0.350000000)
+shape = SubResource("deposito_pallet_rack_taco_1_0")
+
+[node name="Volumen_taco_2_0" type="CollisionShape3D" parent="deposito_pallet_central_derecho_2_1/StaticBody3D"]
+position = Vector3(0.760000000, 0.050000000, 0.350000000)
+shape = SubResource("deposito_pallet_rack_taco_2_0")
+
+[node name="Volumen_patin_1" type="CollisionShape3D" parent="deposito_pallet_central_derecho_2_1/StaticBody3D"]
+position = Vector3(0.000000000, 0.010000000, -0.000000000)
+shape = SubResource("deposito_pallet_rack_patin_1")
+
+[node name="Volumen_taco_0_1" type="CollisionShape3D" parent="deposito_pallet_central_derecho_2_1/StaticBody3D"]
+position = Vector3(-0.760000000, 0.050000000, -0.000000000)
+shape = SubResource("deposito_pallet_rack_taco_0_1")
+
+[node name="Volumen_taco_1_1" type="CollisionShape3D" parent="deposito_pallet_central_derecho_2_1/StaticBody3D"]
+position = Vector3(0.000000000, 0.050000000, -0.000000000)
+shape = SubResource("deposito_pallet_rack_taco_1_1")
+
+[node name="Volumen_taco_2_1" type="CollisionShape3D" parent="deposito_pallet_central_derecho_2_1/StaticBody3D"]
+position = Vector3(0.760000000, 0.050000000, -0.000000000)
+shape = SubResource("deposito_pallet_rack_taco_2_1")
+
+[node name="Volumen_patin_2" type="CollisionShape3D" parent="deposito_pallet_central_derecho_2_1/StaticBody3D"]
+position = Vector3(0.000000000, 0.010000000, -0.350000000)
+shape = SubResource("deposito_pallet_rack_patin_2")
+
+[node name="Volumen_taco_0_2" type="CollisionShape3D" parent="deposito_pallet_central_derecho_2_1/StaticBody3D"]
+position = Vector3(-0.760000000, 0.050000000, -0.350000000)
+shape = SubResource("deposito_pallet_rack_taco_0_2")
+
+[node name="Volumen_taco_1_2" type="CollisionShape3D" parent="deposito_pallet_central_derecho_2_1/StaticBody3D"]
+position = Vector3(0.000000000, 0.050000000, -0.350000000)
+shape = SubResource("deposito_pallet_rack_taco_1_2")
+
+[node name="Volumen_taco_2_2" type="CollisionShape3D" parent="deposito_pallet_central_derecho_2_1/StaticBody3D"]
+position = Vector3(0.760000000, 0.050000000, -0.350000000)
+shape = SubResource("deposito_pallet_rack_taco_2_2")
+
+[node name="Volumen_travesano_0" type="CollisionShape3D" parent="deposito_pallet_central_derecho_2_1/StaticBody3D"]
+position = Vector3(-0.760000000, 0.090000000, -0.000000000)
+shape = SubResource("deposito_pallet_rack_travesano_0")
+
+[node name="Volumen_travesano_1" type="CollisionShape3D" parent="deposito_pallet_central_derecho_2_1/StaticBody3D"]
+position = Vector3(0.000000000, 0.090000000, -0.000000000)
+shape = SubResource("deposito_pallet_rack_travesano_1")
+
+[node name="Volumen_travesano_2" type="CollisionShape3D" parent="deposito_pallet_central_derecho_2_1/StaticBody3D"]
+position = Vector3(0.760000000, 0.090000000, -0.000000000)
+shape = SubResource("deposito_pallet_rack_travesano_2")
+
+[node name="Volumen_tabla_0" type="CollisionShape3D" parent="deposito_pallet_central_derecho_2_1/StaticBody3D"]
+position = Vector3(0.000000000, 0.110000000, 0.332800000)
+shape = SubResource("deposito_pallet_rack_tabla_0")
+
+[node name="Volumen_tabla_1" type="CollisionShape3D" parent="deposito_pallet_central_derecho_2_1/StaticBody3D"]
+position = Vector3(0.000000000, 0.110000000, 0.166400000)
+shape = SubResource("deposito_pallet_rack_tabla_1")
+
+[node name="Volumen_tabla_2" type="CollisionShape3D" parent="deposito_pallet_central_derecho_2_1/StaticBody3D"]
+position = Vector3(0.000000000, 0.110000000, -0.000000000)
+shape = SubResource("deposito_pallet_rack_tabla_2")
+
+[node name="Volumen_tabla_3" type="CollisionShape3D" parent="deposito_pallet_central_derecho_2_1/StaticBody3D"]
+position = Vector3(0.000000000, 0.110000000, -0.166400000)
+shape = SubResource("deposito_pallet_rack_tabla_3")
+
+[node name="Volumen_tabla_4" type="CollisionShape3D" parent="deposito_pallet_central_derecho_2_1/StaticBody3D"]
+position = Vector3(0.000000000, 0.110000000, -0.332800000)
+shape = SubResource("deposito_pallet_rack_tabla_4")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="deposito_pallet_central_izquierdo_0_0"]
+collision_layer = 8
+collision_mask = 0
+
+[node name="Volumen_patin_0" type="CollisionShape3D" parent="deposito_pallet_central_izquierdo_0_0/StaticBody3D"]
+position = Vector3(0.000000000, 0.010000000, 0.350000000)
+shape = SubResource("deposito_pallet_rack_patin_0")
+
+[node name="Volumen_taco_0_0" type="CollisionShape3D" parent="deposito_pallet_central_izquierdo_0_0/StaticBody3D"]
+position = Vector3(-0.760000000, 0.050000000, 0.350000000)
+shape = SubResource("deposito_pallet_rack_taco_0_0")
+
+[node name="Volumen_taco_1_0" type="CollisionShape3D" parent="deposito_pallet_central_izquierdo_0_0/StaticBody3D"]
+position = Vector3(0.000000000, 0.050000000, 0.350000000)
+shape = SubResource("deposito_pallet_rack_taco_1_0")
+
+[node name="Volumen_taco_2_0" type="CollisionShape3D" parent="deposito_pallet_central_izquierdo_0_0/StaticBody3D"]
+position = Vector3(0.760000000, 0.050000000, 0.350000000)
+shape = SubResource("deposito_pallet_rack_taco_2_0")
+
+[node name="Volumen_patin_1" type="CollisionShape3D" parent="deposito_pallet_central_izquierdo_0_0/StaticBody3D"]
+position = Vector3(0.000000000, 0.010000000, -0.000000000)
+shape = SubResource("deposito_pallet_rack_patin_1")
+
+[node name="Volumen_taco_0_1" type="CollisionShape3D" parent="deposito_pallet_central_izquierdo_0_0/StaticBody3D"]
+position = Vector3(-0.760000000, 0.050000000, -0.000000000)
+shape = SubResource("deposito_pallet_rack_taco_0_1")
+
+[node name="Volumen_taco_1_1" type="CollisionShape3D" parent="deposito_pallet_central_izquierdo_0_0/StaticBody3D"]
+position = Vector3(0.000000000, 0.050000000, -0.000000000)
+shape = SubResource("deposito_pallet_rack_taco_1_1")
+
+[node name="Volumen_taco_2_1" type="CollisionShape3D" parent="deposito_pallet_central_izquierdo_0_0/StaticBody3D"]
+position = Vector3(0.760000000, 0.050000000, -0.000000000)
+shape = SubResource("deposito_pallet_rack_taco_2_1")
+
+[node name="Volumen_patin_2" type="CollisionShape3D" parent="deposito_pallet_central_izquierdo_0_0/StaticBody3D"]
+position = Vector3(0.000000000, 0.010000000, -0.350000000)
+shape = SubResource("deposito_pallet_rack_patin_2")
+
+[node name="Volumen_taco_0_2" type="CollisionShape3D" parent="deposito_pallet_central_izquierdo_0_0/StaticBody3D"]
+position = Vector3(-0.760000000, 0.050000000, -0.350000000)
+shape = SubResource("deposito_pallet_rack_taco_0_2")
+
+[node name="Volumen_taco_1_2" type="CollisionShape3D" parent="deposito_pallet_central_izquierdo_0_0/StaticBody3D"]
+position = Vector3(0.000000000, 0.050000000, -0.350000000)
+shape = SubResource("deposito_pallet_rack_taco_1_2")
+
+[node name="Volumen_taco_2_2" type="CollisionShape3D" parent="deposito_pallet_central_izquierdo_0_0/StaticBody3D"]
+position = Vector3(0.760000000, 0.050000000, -0.350000000)
+shape = SubResource("deposito_pallet_rack_taco_2_2")
+
+[node name="Volumen_travesano_0" type="CollisionShape3D" parent="deposito_pallet_central_izquierdo_0_0/StaticBody3D"]
+position = Vector3(-0.760000000, 0.090000000, -0.000000000)
+shape = SubResource("deposito_pallet_rack_travesano_0")
+
+[node name="Volumen_travesano_1" type="CollisionShape3D" parent="deposito_pallet_central_izquierdo_0_0/StaticBody3D"]
+position = Vector3(0.000000000, 0.090000000, -0.000000000)
+shape = SubResource("deposito_pallet_rack_travesano_1")
+
+[node name="Volumen_travesano_2" type="CollisionShape3D" parent="deposito_pallet_central_izquierdo_0_0/StaticBody3D"]
+position = Vector3(0.760000000, 0.090000000, -0.000000000)
+shape = SubResource("deposito_pallet_rack_travesano_2")
+
+[node name="Volumen_tabla_0" type="CollisionShape3D" parent="deposito_pallet_central_izquierdo_0_0/StaticBody3D"]
+position = Vector3(0.000000000, 0.110000000, 0.332800000)
+shape = SubResource("deposito_pallet_rack_tabla_0")
+
+[node name="Volumen_tabla_1" type="CollisionShape3D" parent="deposito_pallet_central_izquierdo_0_0/StaticBody3D"]
+position = Vector3(0.000000000, 0.110000000, 0.166400000)
+shape = SubResource("deposito_pallet_rack_tabla_1")
+
+[node name="Volumen_tabla_2" type="CollisionShape3D" parent="deposito_pallet_central_izquierdo_0_0/StaticBody3D"]
+position = Vector3(0.000000000, 0.110000000, -0.000000000)
+shape = SubResource("deposito_pallet_rack_tabla_2")
+
+[node name="Volumen_tabla_3" type="CollisionShape3D" parent="deposito_pallet_central_izquierdo_0_0/StaticBody3D"]
+position = Vector3(0.000000000, 0.110000000, -0.166400000)
+shape = SubResource("deposito_pallet_rack_tabla_3")
+
+[node name="Volumen_tabla_4" type="CollisionShape3D" parent="deposito_pallet_central_izquierdo_0_0/StaticBody3D"]
+position = Vector3(0.000000000, 0.110000000, -0.332800000)
+shape = SubResource("deposito_pallet_rack_tabla_4")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="deposito_pallet_central_izquierdo_0_1"]
+collision_layer = 8
+collision_mask = 0
+
+[node name="Volumen_patin_0" type="CollisionShape3D" parent="deposito_pallet_central_izquierdo_0_1/StaticBody3D"]
+position = Vector3(0.000000000, 0.010000000, 0.350000000)
+shape = SubResource("deposito_pallet_rack_patin_0")
+
+[node name="Volumen_taco_0_0" type="CollisionShape3D" parent="deposito_pallet_central_izquierdo_0_1/StaticBody3D"]
+position = Vector3(-0.760000000, 0.050000000, 0.350000000)
+shape = SubResource("deposito_pallet_rack_taco_0_0")
+
+[node name="Volumen_taco_1_0" type="CollisionShape3D" parent="deposito_pallet_central_izquierdo_0_1/StaticBody3D"]
+position = Vector3(0.000000000, 0.050000000, 0.350000000)
+shape = SubResource("deposito_pallet_rack_taco_1_0")
+
+[node name="Volumen_taco_2_0" type="CollisionShape3D" parent="deposito_pallet_central_izquierdo_0_1/StaticBody3D"]
+position = Vector3(0.760000000, 0.050000000, 0.350000000)
+shape = SubResource("deposito_pallet_rack_taco_2_0")
+
+[node name="Volumen_patin_1" type="CollisionShape3D" parent="deposito_pallet_central_izquierdo_0_1/StaticBody3D"]
+position = Vector3(0.000000000, 0.010000000, -0.000000000)
+shape = SubResource("deposito_pallet_rack_patin_1")
+
+[node name="Volumen_taco_0_1" type="CollisionShape3D" parent="deposito_pallet_central_izquierdo_0_1/StaticBody3D"]
+position = Vector3(-0.760000000, 0.050000000, -0.000000000)
+shape = SubResource("deposito_pallet_rack_taco_0_1")
+
+[node name="Volumen_taco_1_1" type="CollisionShape3D" parent="deposito_pallet_central_izquierdo_0_1/StaticBody3D"]
+position = Vector3(0.000000000, 0.050000000, -0.000000000)
+shape = SubResource("deposito_pallet_rack_taco_1_1")
+
+[node name="Volumen_taco_2_1" type="CollisionShape3D" parent="deposito_pallet_central_izquierdo_0_1/StaticBody3D"]
+position = Vector3(0.760000000, 0.050000000, -0.000000000)
+shape = SubResource("deposito_pallet_rack_taco_2_1")
+
+[node name="Volumen_patin_2" type="CollisionShape3D" parent="deposito_pallet_central_izquierdo_0_1/StaticBody3D"]
+position = Vector3(0.000000000, 0.010000000, -0.350000000)
+shape = SubResource("deposito_pallet_rack_patin_2")
+
+[node name="Volumen_taco_0_2" type="CollisionShape3D" parent="deposito_pallet_central_izquierdo_0_1/StaticBody3D"]
+position = Vector3(-0.760000000, 0.050000000, -0.350000000)
+shape = SubResource("deposito_pallet_rack_taco_0_2")
+
+[node name="Volumen_taco_1_2" type="CollisionShape3D" parent="deposito_pallet_central_izquierdo_0_1/StaticBody3D"]
+position = Vector3(0.000000000, 0.050000000, -0.350000000)
+shape = SubResource("deposito_pallet_rack_taco_1_2")
+
+[node name="Volumen_taco_2_2" type="CollisionShape3D" parent="deposito_pallet_central_izquierdo_0_1/StaticBody3D"]
+position = Vector3(0.760000000, 0.050000000, -0.350000000)
+shape = SubResource("deposito_pallet_rack_taco_2_2")
+
+[node name="Volumen_travesano_0" type="CollisionShape3D" parent="deposito_pallet_central_izquierdo_0_1/StaticBody3D"]
+position = Vector3(-0.760000000, 0.090000000, -0.000000000)
+shape = SubResource("deposito_pallet_rack_travesano_0")
+
+[node name="Volumen_travesano_1" type="CollisionShape3D" parent="deposito_pallet_central_izquierdo_0_1/StaticBody3D"]
+position = Vector3(0.000000000, 0.090000000, -0.000000000)
+shape = SubResource("deposito_pallet_rack_travesano_1")
+
+[node name="Volumen_travesano_2" type="CollisionShape3D" parent="deposito_pallet_central_izquierdo_0_1/StaticBody3D"]
+position = Vector3(0.760000000, 0.090000000, -0.000000000)
+shape = SubResource("deposito_pallet_rack_travesano_2")
+
+[node name="Volumen_tabla_0" type="CollisionShape3D" parent="deposito_pallet_central_izquierdo_0_1/StaticBody3D"]
+position = Vector3(0.000000000, 0.110000000, 0.332800000)
+shape = SubResource("deposito_pallet_rack_tabla_0")
+
+[node name="Volumen_tabla_1" type="CollisionShape3D" parent="deposito_pallet_central_izquierdo_0_1/StaticBody3D"]
+position = Vector3(0.000000000, 0.110000000, 0.166400000)
+shape = SubResource("deposito_pallet_rack_tabla_1")
+
+[node name="Volumen_tabla_2" type="CollisionShape3D" parent="deposito_pallet_central_izquierdo_0_1/StaticBody3D"]
+position = Vector3(0.000000000, 0.110000000, -0.000000000)
+shape = SubResource("deposito_pallet_rack_tabla_2")
+
+[node name="Volumen_tabla_3" type="CollisionShape3D" parent="deposito_pallet_central_izquierdo_0_1/StaticBody3D"]
+position = Vector3(0.000000000, 0.110000000, -0.166400000)
+shape = SubResource("deposito_pallet_rack_tabla_3")
+
+[node name="Volumen_tabla_4" type="CollisionShape3D" parent="deposito_pallet_central_izquierdo_0_1/StaticBody3D"]
+position = Vector3(0.000000000, 0.110000000, -0.332800000)
+shape = SubResource("deposito_pallet_rack_tabla_4")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="deposito_pallet_central_izquierdo_1_0"]
+collision_layer = 8
+collision_mask = 0
+
+[node name="Volumen_patin_0" type="CollisionShape3D" parent="deposito_pallet_central_izquierdo_1_0/StaticBody3D"]
+position = Vector3(0.000000000, 0.010000000, 0.350000000)
+shape = SubResource("deposito_pallet_rack_patin_0")
+
+[node name="Volumen_taco_0_0" type="CollisionShape3D" parent="deposito_pallet_central_izquierdo_1_0/StaticBody3D"]
+position = Vector3(-0.760000000, 0.050000000, 0.350000000)
+shape = SubResource("deposito_pallet_rack_taco_0_0")
+
+[node name="Volumen_taco_1_0" type="CollisionShape3D" parent="deposito_pallet_central_izquierdo_1_0/StaticBody3D"]
+position = Vector3(0.000000000, 0.050000000, 0.350000000)
+shape = SubResource("deposito_pallet_rack_taco_1_0")
+
+[node name="Volumen_taco_2_0" type="CollisionShape3D" parent="deposito_pallet_central_izquierdo_1_0/StaticBody3D"]
+position = Vector3(0.760000000, 0.050000000, 0.350000000)
+shape = SubResource("deposito_pallet_rack_taco_2_0")
+
+[node name="Volumen_patin_1" type="CollisionShape3D" parent="deposito_pallet_central_izquierdo_1_0/StaticBody3D"]
+position = Vector3(0.000000000, 0.010000000, -0.000000000)
+shape = SubResource("deposito_pallet_rack_patin_1")
+
+[node name="Volumen_taco_0_1" type="CollisionShape3D" parent="deposito_pallet_central_izquierdo_1_0/StaticBody3D"]
+position = Vector3(-0.760000000, 0.050000000, -0.000000000)
+shape = SubResource("deposito_pallet_rack_taco_0_1")
+
+[node name="Volumen_taco_1_1" type="CollisionShape3D" parent="deposito_pallet_central_izquierdo_1_0/StaticBody3D"]
+position = Vector3(0.000000000, 0.050000000, -0.000000000)
+shape = SubResource("deposito_pallet_rack_taco_1_1")
+
+[node name="Volumen_taco_2_1" type="CollisionShape3D" parent="deposito_pallet_central_izquierdo_1_0/StaticBody3D"]
+position = Vector3(0.760000000, 0.050000000, -0.000000000)
+shape = SubResource("deposito_pallet_rack_taco_2_1")
+
+[node name="Volumen_patin_2" type="CollisionShape3D" parent="deposito_pallet_central_izquierdo_1_0/StaticBody3D"]
+position = Vector3(0.000000000, 0.010000000, -0.350000000)
+shape = SubResource("deposito_pallet_rack_patin_2")
+
+[node name="Volumen_taco_0_2" type="CollisionShape3D" parent="deposito_pallet_central_izquierdo_1_0/StaticBody3D"]
+position = Vector3(-0.760000000, 0.050000000, -0.350000000)
+shape = SubResource("deposito_pallet_rack_taco_0_2")
+
+[node name="Volumen_taco_1_2" type="CollisionShape3D" parent="deposito_pallet_central_izquierdo_1_0/StaticBody3D"]
+position = Vector3(0.000000000, 0.050000000, -0.350000000)
+shape = SubResource("deposito_pallet_rack_taco_1_2")
+
+[node name="Volumen_taco_2_2" type="CollisionShape3D" parent="deposito_pallet_central_izquierdo_1_0/StaticBody3D"]
+position = Vector3(0.760000000, 0.050000000, -0.350000000)
+shape = SubResource("deposito_pallet_rack_taco_2_2")
+
+[node name="Volumen_travesano_0" type="CollisionShape3D" parent="deposito_pallet_central_izquierdo_1_0/StaticBody3D"]
+position = Vector3(-0.760000000, 0.090000000, -0.000000000)
+shape = SubResource("deposito_pallet_rack_travesano_0")
+
+[node name="Volumen_travesano_1" type="CollisionShape3D" parent="deposito_pallet_central_izquierdo_1_0/StaticBody3D"]
+position = Vector3(0.000000000, 0.090000000, -0.000000000)
+shape = SubResource("deposito_pallet_rack_travesano_1")
+
+[node name="Volumen_travesano_2" type="CollisionShape3D" parent="deposito_pallet_central_izquierdo_1_0/StaticBody3D"]
+position = Vector3(0.760000000, 0.090000000, -0.000000000)
+shape = SubResource("deposito_pallet_rack_travesano_2")
+
+[node name="Volumen_tabla_0" type="CollisionShape3D" parent="deposito_pallet_central_izquierdo_1_0/StaticBody3D"]
+position = Vector3(0.000000000, 0.110000000, 0.332800000)
+shape = SubResource("deposito_pallet_rack_tabla_0")
+
+[node name="Volumen_tabla_1" type="CollisionShape3D" parent="deposito_pallet_central_izquierdo_1_0/StaticBody3D"]
+position = Vector3(0.000000000, 0.110000000, 0.166400000)
+shape = SubResource("deposito_pallet_rack_tabla_1")
+
+[node name="Volumen_tabla_2" type="CollisionShape3D" parent="deposito_pallet_central_izquierdo_1_0/StaticBody3D"]
+position = Vector3(0.000000000, 0.110000000, -0.000000000)
+shape = SubResource("deposito_pallet_rack_tabla_2")
+
+[node name="Volumen_tabla_3" type="CollisionShape3D" parent="deposito_pallet_central_izquierdo_1_0/StaticBody3D"]
+position = Vector3(0.000000000, 0.110000000, -0.166400000)
+shape = SubResource("deposito_pallet_rack_tabla_3")
+
+[node name="Volumen_tabla_4" type="CollisionShape3D" parent="deposito_pallet_central_izquierdo_1_0/StaticBody3D"]
+position = Vector3(0.000000000, 0.110000000, -0.332800000)
+shape = SubResource("deposito_pallet_rack_tabla_4")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="deposito_pallet_central_izquierdo_1_1"]
+collision_layer = 8
+collision_mask = 0
+
+[node name="Volumen_patin_0" type="CollisionShape3D" parent="deposito_pallet_central_izquierdo_1_1/StaticBody3D"]
+position = Vector3(0.000000000, 0.010000000, 0.350000000)
+shape = SubResource("deposito_pallet_rack_patin_0")
+
+[node name="Volumen_taco_0_0" type="CollisionShape3D" parent="deposito_pallet_central_izquierdo_1_1/StaticBody3D"]
+position = Vector3(-0.760000000, 0.050000000, 0.350000000)
+shape = SubResource("deposito_pallet_rack_taco_0_0")
+
+[node name="Volumen_taco_1_0" type="CollisionShape3D" parent="deposito_pallet_central_izquierdo_1_1/StaticBody3D"]
+position = Vector3(0.000000000, 0.050000000, 0.350000000)
+shape = SubResource("deposito_pallet_rack_taco_1_0")
+
+[node name="Volumen_taco_2_0" type="CollisionShape3D" parent="deposito_pallet_central_izquierdo_1_1/StaticBody3D"]
+position = Vector3(0.760000000, 0.050000000, 0.350000000)
+shape = SubResource("deposito_pallet_rack_taco_2_0")
+
+[node name="Volumen_patin_1" type="CollisionShape3D" parent="deposito_pallet_central_izquierdo_1_1/StaticBody3D"]
+position = Vector3(0.000000000, 0.010000000, -0.000000000)
+shape = SubResource("deposito_pallet_rack_patin_1")
+
+[node name="Volumen_taco_0_1" type="CollisionShape3D" parent="deposito_pallet_central_izquierdo_1_1/StaticBody3D"]
+position = Vector3(-0.760000000, 0.050000000, -0.000000000)
+shape = SubResource("deposito_pallet_rack_taco_0_1")
+
+[node name="Volumen_taco_1_1" type="CollisionShape3D" parent="deposito_pallet_central_izquierdo_1_1/StaticBody3D"]
+position = Vector3(0.000000000, 0.050000000, -0.000000000)
+shape = SubResource("deposito_pallet_rack_taco_1_1")
+
+[node name="Volumen_taco_2_1" type="CollisionShape3D" parent="deposito_pallet_central_izquierdo_1_1/StaticBody3D"]
+position = Vector3(0.760000000, 0.050000000, -0.000000000)
+shape = SubResource("deposito_pallet_rack_taco_2_1")
+
+[node name="Volumen_patin_2" type="CollisionShape3D" parent="deposito_pallet_central_izquierdo_1_1/StaticBody3D"]
+position = Vector3(0.000000000, 0.010000000, -0.350000000)
+shape = SubResource("deposito_pallet_rack_patin_2")
+
+[node name="Volumen_taco_0_2" type="CollisionShape3D" parent="deposito_pallet_central_izquierdo_1_1/StaticBody3D"]
+position = Vector3(-0.760000000, 0.050000000, -0.350000000)
+shape = SubResource("deposito_pallet_rack_taco_0_2")
+
+[node name="Volumen_taco_1_2" type="CollisionShape3D" parent="deposito_pallet_central_izquierdo_1_1/StaticBody3D"]
+position = Vector3(0.000000000, 0.050000000, -0.350000000)
+shape = SubResource("deposito_pallet_rack_taco_1_2")
+
+[node name="Volumen_taco_2_2" type="CollisionShape3D" parent="deposito_pallet_central_izquierdo_1_1/StaticBody3D"]
+position = Vector3(0.760000000, 0.050000000, -0.350000000)
+shape = SubResource("deposito_pallet_rack_taco_2_2")
+
+[node name="Volumen_travesano_0" type="CollisionShape3D" parent="deposito_pallet_central_izquierdo_1_1/StaticBody3D"]
+position = Vector3(-0.760000000, 0.090000000, -0.000000000)
+shape = SubResource("deposito_pallet_rack_travesano_0")
+
+[node name="Volumen_travesano_1" type="CollisionShape3D" parent="deposito_pallet_central_izquierdo_1_1/StaticBody3D"]
+position = Vector3(0.000000000, 0.090000000, -0.000000000)
+shape = SubResource("deposito_pallet_rack_travesano_1")
+
+[node name="Volumen_travesano_2" type="CollisionShape3D" parent="deposito_pallet_central_izquierdo_1_1/StaticBody3D"]
+position = Vector3(0.760000000, 0.090000000, -0.000000000)
+shape = SubResource("deposito_pallet_rack_travesano_2")
+
+[node name="Volumen_tabla_0" type="CollisionShape3D" parent="deposito_pallet_central_izquierdo_1_1/StaticBody3D"]
+position = Vector3(0.000000000, 0.110000000, 0.332800000)
+shape = SubResource("deposito_pallet_rack_tabla_0")
+
+[node name="Volumen_tabla_1" type="CollisionShape3D" parent="deposito_pallet_central_izquierdo_1_1/StaticBody3D"]
+position = Vector3(0.000000000, 0.110000000, 0.166400000)
+shape = SubResource("deposito_pallet_rack_tabla_1")
+
+[node name="Volumen_tabla_2" type="CollisionShape3D" parent="deposito_pallet_central_izquierdo_1_1/StaticBody3D"]
+position = Vector3(0.000000000, 0.110000000, -0.000000000)
+shape = SubResource("deposito_pallet_rack_tabla_2")
+
+[node name="Volumen_tabla_3" type="CollisionShape3D" parent="deposito_pallet_central_izquierdo_1_1/StaticBody3D"]
+position = Vector3(0.000000000, 0.110000000, -0.166400000)
+shape = SubResource("deposito_pallet_rack_tabla_3")
+
+[node name="Volumen_tabla_4" type="CollisionShape3D" parent="deposito_pallet_central_izquierdo_1_1/StaticBody3D"]
+position = Vector3(0.000000000, 0.110000000, -0.332800000)
+shape = SubResource("deposito_pallet_rack_tabla_4")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="deposito_pallet_central_izquierdo_2_0"]
+collision_layer = 8
+collision_mask = 0
+
+[node name="Volumen_patin_0" type="CollisionShape3D" parent="deposito_pallet_central_izquierdo_2_0/StaticBody3D"]
+position = Vector3(0.000000000, 0.010000000, 0.350000000)
+shape = SubResource("deposito_pallet_rack_patin_0")
+
+[node name="Volumen_taco_0_0" type="CollisionShape3D" parent="deposito_pallet_central_izquierdo_2_0/StaticBody3D"]
+position = Vector3(-0.760000000, 0.050000000, 0.350000000)
+shape = SubResource("deposito_pallet_rack_taco_0_0")
+
+[node name="Volumen_taco_1_0" type="CollisionShape3D" parent="deposito_pallet_central_izquierdo_2_0/StaticBody3D"]
+position = Vector3(0.000000000, 0.050000000, 0.350000000)
+shape = SubResource("deposito_pallet_rack_taco_1_0")
+
+[node name="Volumen_taco_2_0" type="CollisionShape3D" parent="deposito_pallet_central_izquierdo_2_0/StaticBody3D"]
+position = Vector3(0.760000000, 0.050000000, 0.350000000)
+shape = SubResource("deposito_pallet_rack_taco_2_0")
+
+[node name="Volumen_patin_1" type="CollisionShape3D" parent="deposito_pallet_central_izquierdo_2_0/StaticBody3D"]
+position = Vector3(0.000000000, 0.010000000, -0.000000000)
+shape = SubResource("deposito_pallet_rack_patin_1")
+
+[node name="Volumen_taco_0_1" type="CollisionShape3D" parent="deposito_pallet_central_izquierdo_2_0/StaticBody3D"]
+position = Vector3(-0.760000000, 0.050000000, -0.000000000)
+shape = SubResource("deposito_pallet_rack_taco_0_1")
+
+[node name="Volumen_taco_1_1" type="CollisionShape3D" parent="deposito_pallet_central_izquierdo_2_0/StaticBody3D"]
+position = Vector3(0.000000000, 0.050000000, -0.000000000)
+shape = SubResource("deposito_pallet_rack_taco_1_1")
+
+[node name="Volumen_taco_2_1" type="CollisionShape3D" parent="deposito_pallet_central_izquierdo_2_0/StaticBody3D"]
+position = Vector3(0.760000000, 0.050000000, -0.000000000)
+shape = SubResource("deposito_pallet_rack_taco_2_1")
+
+[node name="Volumen_patin_2" type="CollisionShape3D" parent="deposito_pallet_central_izquierdo_2_0/StaticBody3D"]
+position = Vector3(0.000000000, 0.010000000, -0.350000000)
+shape = SubResource("deposito_pallet_rack_patin_2")
+
+[node name="Volumen_taco_0_2" type="CollisionShape3D" parent="deposito_pallet_central_izquierdo_2_0/StaticBody3D"]
+position = Vector3(-0.760000000, 0.050000000, -0.350000000)
+shape = SubResource("deposito_pallet_rack_taco_0_2")
+
+[node name="Volumen_taco_1_2" type="CollisionShape3D" parent="deposito_pallet_central_izquierdo_2_0/StaticBody3D"]
+position = Vector3(0.000000000, 0.050000000, -0.350000000)
+shape = SubResource("deposito_pallet_rack_taco_1_2")
+
+[node name="Volumen_taco_2_2" type="CollisionShape3D" parent="deposito_pallet_central_izquierdo_2_0/StaticBody3D"]
+position = Vector3(0.760000000, 0.050000000, -0.350000000)
+shape = SubResource("deposito_pallet_rack_taco_2_2")
+
+[node name="Volumen_travesano_0" type="CollisionShape3D" parent="deposito_pallet_central_izquierdo_2_0/StaticBody3D"]
+position = Vector3(-0.760000000, 0.090000000, -0.000000000)
+shape = SubResource("deposito_pallet_rack_travesano_0")
+
+[node name="Volumen_travesano_1" type="CollisionShape3D" parent="deposito_pallet_central_izquierdo_2_0/StaticBody3D"]
+position = Vector3(0.000000000, 0.090000000, -0.000000000)
+shape = SubResource("deposito_pallet_rack_travesano_1")
+
+[node name="Volumen_travesano_2" type="CollisionShape3D" parent="deposito_pallet_central_izquierdo_2_0/StaticBody3D"]
+position = Vector3(0.760000000, 0.090000000, -0.000000000)
+shape = SubResource("deposito_pallet_rack_travesano_2")
+
+[node name="Volumen_tabla_0" type="CollisionShape3D" parent="deposito_pallet_central_izquierdo_2_0/StaticBody3D"]
+position = Vector3(0.000000000, 0.110000000, 0.332800000)
+shape = SubResource("deposito_pallet_rack_tabla_0")
+
+[node name="Volumen_tabla_1" type="CollisionShape3D" parent="deposito_pallet_central_izquierdo_2_0/StaticBody3D"]
+position = Vector3(0.000000000, 0.110000000, 0.166400000)
+shape = SubResource("deposito_pallet_rack_tabla_1")
+
+[node name="Volumen_tabla_2" type="CollisionShape3D" parent="deposito_pallet_central_izquierdo_2_0/StaticBody3D"]
+position = Vector3(0.000000000, 0.110000000, -0.000000000)
+shape = SubResource("deposito_pallet_rack_tabla_2")
+
+[node name="Volumen_tabla_3" type="CollisionShape3D" parent="deposito_pallet_central_izquierdo_2_0/StaticBody3D"]
+position = Vector3(0.000000000, 0.110000000, -0.166400000)
+shape = SubResource("deposito_pallet_rack_tabla_3")
+
+[node name="Volumen_tabla_4" type="CollisionShape3D" parent="deposito_pallet_central_izquierdo_2_0/StaticBody3D"]
+position = Vector3(0.000000000, 0.110000000, -0.332800000)
+shape = SubResource("deposito_pallet_rack_tabla_4")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="deposito_pallet_central_izquierdo_2_1"]
+collision_layer = 8
+collision_mask = 0
+
+[node name="Volumen_patin_0" type="CollisionShape3D" parent="deposito_pallet_central_izquierdo_2_1/StaticBody3D"]
+position = Vector3(0.000000000, 0.010000000, 0.350000000)
+shape = SubResource("deposito_pallet_rack_patin_0")
+
+[node name="Volumen_taco_0_0" type="CollisionShape3D" parent="deposito_pallet_central_izquierdo_2_1/StaticBody3D"]
+position = Vector3(-0.760000000, 0.050000000, 0.350000000)
+shape = SubResource("deposito_pallet_rack_taco_0_0")
+
+[node name="Volumen_taco_1_0" type="CollisionShape3D" parent="deposito_pallet_central_izquierdo_2_1/StaticBody3D"]
+position = Vector3(0.000000000, 0.050000000, 0.350000000)
+shape = SubResource("deposito_pallet_rack_taco_1_0")
+
+[node name="Volumen_taco_2_0" type="CollisionShape3D" parent="deposito_pallet_central_izquierdo_2_1/StaticBody3D"]
+position = Vector3(0.760000000, 0.050000000, 0.350000000)
+shape = SubResource("deposito_pallet_rack_taco_2_0")
+
+[node name="Volumen_patin_1" type="CollisionShape3D" parent="deposito_pallet_central_izquierdo_2_1/StaticBody3D"]
+position = Vector3(0.000000000, 0.010000000, -0.000000000)
+shape = SubResource("deposito_pallet_rack_patin_1")
+
+[node name="Volumen_taco_0_1" type="CollisionShape3D" parent="deposito_pallet_central_izquierdo_2_1/StaticBody3D"]
+position = Vector3(-0.760000000, 0.050000000, -0.000000000)
+shape = SubResource("deposito_pallet_rack_taco_0_1")
+
+[node name="Volumen_taco_1_1" type="CollisionShape3D" parent="deposito_pallet_central_izquierdo_2_1/StaticBody3D"]
+position = Vector3(0.000000000, 0.050000000, -0.000000000)
+shape = SubResource("deposito_pallet_rack_taco_1_1")
+
+[node name="Volumen_taco_2_1" type="CollisionShape3D" parent="deposito_pallet_central_izquierdo_2_1/StaticBody3D"]
+position = Vector3(0.760000000, 0.050000000, -0.000000000)
+shape = SubResource("deposito_pallet_rack_taco_2_1")
+
+[node name="Volumen_patin_2" type="CollisionShape3D" parent="deposito_pallet_central_izquierdo_2_1/StaticBody3D"]
+position = Vector3(0.000000000, 0.010000000, -0.350000000)
+shape = SubResource("deposito_pallet_rack_patin_2")
+
+[node name="Volumen_taco_0_2" type="CollisionShape3D" parent="deposito_pallet_central_izquierdo_2_1/StaticBody3D"]
+position = Vector3(-0.760000000, 0.050000000, -0.350000000)
+shape = SubResource("deposito_pallet_rack_taco_0_2")
+
+[node name="Volumen_taco_1_2" type="CollisionShape3D" parent="deposito_pallet_central_izquierdo_2_1/StaticBody3D"]
+position = Vector3(0.000000000, 0.050000000, -0.350000000)
+shape = SubResource("deposito_pallet_rack_taco_1_2")
+
+[node name="Volumen_taco_2_2" type="CollisionShape3D" parent="deposito_pallet_central_izquierdo_2_1/StaticBody3D"]
+position = Vector3(0.760000000, 0.050000000, -0.350000000)
+shape = SubResource("deposito_pallet_rack_taco_2_2")
+
+[node name="Volumen_travesano_0" type="CollisionShape3D" parent="deposito_pallet_central_izquierdo_2_1/StaticBody3D"]
+position = Vector3(-0.760000000, 0.090000000, -0.000000000)
+shape = SubResource("deposito_pallet_rack_travesano_0")
+
+[node name="Volumen_travesano_1" type="CollisionShape3D" parent="deposito_pallet_central_izquierdo_2_1/StaticBody3D"]
+position = Vector3(0.000000000, 0.090000000, -0.000000000)
+shape = SubResource("deposito_pallet_rack_travesano_1")
+
+[node name="Volumen_travesano_2" type="CollisionShape3D" parent="deposito_pallet_central_izquierdo_2_1/StaticBody3D"]
+position = Vector3(0.760000000, 0.090000000, -0.000000000)
+shape = SubResource("deposito_pallet_rack_travesano_2")
+
+[node name="Volumen_tabla_0" type="CollisionShape3D" parent="deposito_pallet_central_izquierdo_2_1/StaticBody3D"]
+position = Vector3(0.000000000, 0.110000000, 0.332800000)
+shape = SubResource("deposito_pallet_rack_tabla_0")
+
+[node name="Volumen_tabla_1" type="CollisionShape3D" parent="deposito_pallet_central_izquierdo_2_1/StaticBody3D"]
+position = Vector3(0.000000000, 0.110000000, 0.166400000)
+shape = SubResource("deposito_pallet_rack_tabla_1")
+
+[node name="Volumen_tabla_2" type="CollisionShape3D" parent="deposito_pallet_central_izquierdo_2_1/StaticBody3D"]
+position = Vector3(0.000000000, 0.110000000, -0.000000000)
+shape = SubResource("deposito_pallet_rack_tabla_2")
+
+[node name="Volumen_tabla_3" type="CollisionShape3D" parent="deposito_pallet_central_izquierdo_2_1/StaticBody3D"]
+position = Vector3(0.000000000, 0.110000000, -0.166400000)
+shape = SubResource("deposito_pallet_rack_tabla_3")
+
+[node name="Volumen_tabla_4" type="CollisionShape3D" parent="deposito_pallet_central_izquierdo_2_1/StaticBody3D"]
+position = Vector3(0.000000000, 0.110000000, -0.332800000)
+shape = SubResource("deposito_pallet_rack_tabla_4")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="deposito_pallet_fondo_0_0"]
+collision_layer = 8
+collision_mask = 0
+
+[node name="Volumen_patin_0" type="CollisionShape3D" parent="deposito_pallet_fondo_0_0/StaticBody3D"]
+position = Vector3(0.000000000, 0.010000000, 0.350000000)
+shape = SubResource("deposito_pallet_rack_patin_0")
+
+[node name="Volumen_taco_0_0" type="CollisionShape3D" parent="deposito_pallet_fondo_0_0/StaticBody3D"]
+position = Vector3(-0.760000000, 0.050000000, 0.350000000)
+shape = SubResource("deposito_pallet_rack_taco_0_0")
+
+[node name="Volumen_taco_1_0" type="CollisionShape3D" parent="deposito_pallet_fondo_0_0/StaticBody3D"]
+position = Vector3(0.000000000, 0.050000000, 0.350000000)
+shape = SubResource("deposito_pallet_rack_taco_1_0")
+
+[node name="Volumen_taco_2_0" type="CollisionShape3D" parent="deposito_pallet_fondo_0_0/StaticBody3D"]
+position = Vector3(0.760000000, 0.050000000, 0.350000000)
+shape = SubResource("deposito_pallet_rack_taco_2_0")
+
+[node name="Volumen_patin_1" type="CollisionShape3D" parent="deposito_pallet_fondo_0_0/StaticBody3D"]
+position = Vector3(0.000000000, 0.010000000, -0.000000000)
+shape = SubResource("deposito_pallet_rack_patin_1")
+
+[node name="Volumen_taco_0_1" type="CollisionShape3D" parent="deposito_pallet_fondo_0_0/StaticBody3D"]
+position = Vector3(-0.760000000, 0.050000000, -0.000000000)
+shape = SubResource("deposito_pallet_rack_taco_0_1")
+
+[node name="Volumen_taco_1_1" type="CollisionShape3D" parent="deposito_pallet_fondo_0_0/StaticBody3D"]
+position = Vector3(0.000000000, 0.050000000, -0.000000000)
+shape = SubResource("deposito_pallet_rack_taco_1_1")
+
+[node name="Volumen_taco_2_1" type="CollisionShape3D" parent="deposito_pallet_fondo_0_0/StaticBody3D"]
+position = Vector3(0.760000000, 0.050000000, -0.000000000)
+shape = SubResource("deposito_pallet_rack_taco_2_1")
+
+[node name="Volumen_patin_2" type="CollisionShape3D" parent="deposito_pallet_fondo_0_0/StaticBody3D"]
+position = Vector3(0.000000000, 0.010000000, -0.350000000)
+shape = SubResource("deposito_pallet_rack_patin_2")
+
+[node name="Volumen_taco_0_2" type="CollisionShape3D" parent="deposito_pallet_fondo_0_0/StaticBody3D"]
+position = Vector3(-0.760000000, 0.050000000, -0.350000000)
+shape = SubResource("deposito_pallet_rack_taco_0_2")
+
+[node name="Volumen_taco_1_2" type="CollisionShape3D" parent="deposito_pallet_fondo_0_0/StaticBody3D"]
+position = Vector3(0.000000000, 0.050000000, -0.350000000)
+shape = SubResource("deposito_pallet_rack_taco_1_2")
+
+[node name="Volumen_taco_2_2" type="CollisionShape3D" parent="deposito_pallet_fondo_0_0/StaticBody3D"]
+position = Vector3(0.760000000, 0.050000000, -0.350000000)
+shape = SubResource("deposito_pallet_rack_taco_2_2")
+
+[node name="Volumen_travesano_0" type="CollisionShape3D" parent="deposito_pallet_fondo_0_0/StaticBody3D"]
+position = Vector3(-0.760000000, 0.090000000, -0.000000000)
+shape = SubResource("deposito_pallet_rack_travesano_0")
+
+[node name="Volumen_travesano_1" type="CollisionShape3D" parent="deposito_pallet_fondo_0_0/StaticBody3D"]
+position = Vector3(0.000000000, 0.090000000, -0.000000000)
+shape = SubResource("deposito_pallet_rack_travesano_1")
+
+[node name="Volumen_travesano_2" type="CollisionShape3D" parent="deposito_pallet_fondo_0_0/StaticBody3D"]
+position = Vector3(0.760000000, 0.090000000, -0.000000000)
+shape = SubResource("deposito_pallet_rack_travesano_2")
+
+[node name="Volumen_tabla_0" type="CollisionShape3D" parent="deposito_pallet_fondo_0_0/StaticBody3D"]
+position = Vector3(0.000000000, 0.110000000, 0.332800000)
+shape = SubResource("deposito_pallet_rack_tabla_0")
+
+[node name="Volumen_tabla_1" type="CollisionShape3D" parent="deposito_pallet_fondo_0_0/StaticBody3D"]
+position = Vector3(0.000000000, 0.110000000, 0.166400000)
+shape = SubResource("deposito_pallet_rack_tabla_1")
+
+[node name="Volumen_tabla_2" type="CollisionShape3D" parent="deposito_pallet_fondo_0_0/StaticBody3D"]
+position = Vector3(0.000000000, 0.110000000, -0.000000000)
+shape = SubResource("deposito_pallet_rack_tabla_2")
+
+[node name="Volumen_tabla_3" type="CollisionShape3D" parent="deposito_pallet_fondo_0_0/StaticBody3D"]
+position = Vector3(0.000000000, 0.110000000, -0.166400000)
+shape = SubResource("deposito_pallet_rack_tabla_3")
+
+[node name="Volumen_tabla_4" type="CollisionShape3D" parent="deposito_pallet_fondo_0_0/StaticBody3D"]
+position = Vector3(0.000000000, 0.110000000, -0.332800000)
+shape = SubResource("deposito_pallet_rack_tabla_4")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="deposito_pallet_fondo_0_1"]
+collision_layer = 8
+collision_mask = 0
+
+[node name="Volumen_patin_0" type="CollisionShape3D" parent="deposito_pallet_fondo_0_1/StaticBody3D"]
+position = Vector3(0.000000000, 0.010000000, 0.350000000)
+shape = SubResource("deposito_pallet_rack_patin_0")
+
+[node name="Volumen_taco_0_0" type="CollisionShape3D" parent="deposito_pallet_fondo_0_1/StaticBody3D"]
+position = Vector3(-0.760000000, 0.050000000, 0.350000000)
+shape = SubResource("deposito_pallet_rack_taco_0_0")
+
+[node name="Volumen_taco_1_0" type="CollisionShape3D" parent="deposito_pallet_fondo_0_1/StaticBody3D"]
+position = Vector3(0.000000000, 0.050000000, 0.350000000)
+shape = SubResource("deposito_pallet_rack_taco_1_0")
+
+[node name="Volumen_taco_2_0" type="CollisionShape3D" parent="deposito_pallet_fondo_0_1/StaticBody3D"]
+position = Vector3(0.760000000, 0.050000000, 0.350000000)
+shape = SubResource("deposito_pallet_rack_taco_2_0")
+
+[node name="Volumen_patin_1" type="CollisionShape3D" parent="deposito_pallet_fondo_0_1/StaticBody3D"]
+position = Vector3(0.000000000, 0.010000000, -0.000000000)
+shape = SubResource("deposito_pallet_rack_patin_1")
+
+[node name="Volumen_taco_0_1" type="CollisionShape3D" parent="deposito_pallet_fondo_0_1/StaticBody3D"]
+position = Vector3(-0.760000000, 0.050000000, -0.000000000)
+shape = SubResource("deposito_pallet_rack_taco_0_1")
+
+[node name="Volumen_taco_1_1" type="CollisionShape3D" parent="deposito_pallet_fondo_0_1/StaticBody3D"]
+position = Vector3(0.000000000, 0.050000000, -0.000000000)
+shape = SubResource("deposito_pallet_rack_taco_1_1")
+
+[node name="Volumen_taco_2_1" type="CollisionShape3D" parent="deposito_pallet_fondo_0_1/StaticBody3D"]
+position = Vector3(0.760000000, 0.050000000, -0.000000000)
+shape = SubResource("deposito_pallet_rack_taco_2_1")
+
+[node name="Volumen_patin_2" type="CollisionShape3D" parent="deposito_pallet_fondo_0_1/StaticBody3D"]
+position = Vector3(0.000000000, 0.010000000, -0.350000000)
+shape = SubResource("deposito_pallet_rack_patin_2")
+
+[node name="Volumen_taco_0_2" type="CollisionShape3D" parent="deposito_pallet_fondo_0_1/StaticBody3D"]
+position = Vector3(-0.760000000, 0.050000000, -0.350000000)
+shape = SubResource("deposito_pallet_rack_taco_0_2")
+
+[node name="Volumen_taco_1_2" type="CollisionShape3D" parent="deposito_pallet_fondo_0_1/StaticBody3D"]
+position = Vector3(0.000000000, 0.050000000, -0.350000000)
+shape = SubResource("deposito_pallet_rack_taco_1_2")
+
+[node name="Volumen_taco_2_2" type="CollisionShape3D" parent="deposito_pallet_fondo_0_1/StaticBody3D"]
+position = Vector3(0.760000000, 0.050000000, -0.350000000)
+shape = SubResource("deposito_pallet_rack_taco_2_2")
+
+[node name="Volumen_travesano_0" type="CollisionShape3D" parent="deposito_pallet_fondo_0_1/StaticBody3D"]
+position = Vector3(-0.760000000, 0.090000000, -0.000000000)
+shape = SubResource("deposito_pallet_rack_travesano_0")
+
+[node name="Volumen_travesano_1" type="CollisionShape3D" parent="deposito_pallet_fondo_0_1/StaticBody3D"]
+position = Vector3(0.000000000, 0.090000000, -0.000000000)
+shape = SubResource("deposito_pallet_rack_travesano_1")
+
+[node name="Volumen_travesano_2" type="CollisionShape3D" parent="deposito_pallet_fondo_0_1/StaticBody3D"]
+position = Vector3(0.760000000, 0.090000000, -0.000000000)
+shape = SubResource("deposito_pallet_rack_travesano_2")
+
+[node name="Volumen_tabla_0" type="CollisionShape3D" parent="deposito_pallet_fondo_0_1/StaticBody3D"]
+position = Vector3(0.000000000, 0.110000000, 0.332800000)
+shape = SubResource("deposito_pallet_rack_tabla_0")
+
+[node name="Volumen_tabla_1" type="CollisionShape3D" parent="deposito_pallet_fondo_0_1/StaticBody3D"]
+position = Vector3(0.000000000, 0.110000000, 0.166400000)
+shape = SubResource("deposito_pallet_rack_tabla_1")
+
+[node name="Volumen_tabla_2" type="CollisionShape3D" parent="deposito_pallet_fondo_0_1/StaticBody3D"]
+position = Vector3(0.000000000, 0.110000000, -0.000000000)
+shape = SubResource("deposito_pallet_rack_tabla_2")
+
+[node name="Volumen_tabla_3" type="CollisionShape3D" parent="deposito_pallet_fondo_0_1/StaticBody3D"]
+position = Vector3(0.000000000, 0.110000000, -0.166400000)
+shape = SubResource("deposito_pallet_rack_tabla_3")
+
+[node name="Volumen_tabla_4" type="CollisionShape3D" parent="deposito_pallet_fondo_0_1/StaticBody3D"]
+position = Vector3(0.000000000, 0.110000000, -0.332800000)
+shape = SubResource("deposito_pallet_rack_tabla_4")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="deposito_pallet_fondo_1_0"]
+collision_layer = 8
+collision_mask = 0
+
+[node name="Volumen_patin_0" type="CollisionShape3D" parent="deposito_pallet_fondo_1_0/StaticBody3D"]
+position = Vector3(0.000000000, 0.010000000, 0.350000000)
+shape = SubResource("deposito_pallet_rack_patin_0")
+
+[node name="Volumen_taco_0_0" type="CollisionShape3D" parent="deposito_pallet_fondo_1_0/StaticBody3D"]
+position = Vector3(-0.760000000, 0.050000000, 0.350000000)
+shape = SubResource("deposito_pallet_rack_taco_0_0")
+
+[node name="Volumen_taco_1_0" type="CollisionShape3D" parent="deposito_pallet_fondo_1_0/StaticBody3D"]
+position = Vector3(0.000000000, 0.050000000, 0.350000000)
+shape = SubResource("deposito_pallet_rack_taco_1_0")
+
+[node name="Volumen_taco_2_0" type="CollisionShape3D" parent="deposito_pallet_fondo_1_0/StaticBody3D"]
+position = Vector3(0.760000000, 0.050000000, 0.350000000)
+shape = SubResource("deposito_pallet_rack_taco_2_0")
+
+[node name="Volumen_patin_1" type="CollisionShape3D" parent="deposito_pallet_fondo_1_0/StaticBody3D"]
+position = Vector3(0.000000000, 0.010000000, -0.000000000)
+shape = SubResource("deposito_pallet_rack_patin_1")
+
+[node name="Volumen_taco_0_1" type="CollisionShape3D" parent="deposito_pallet_fondo_1_0/StaticBody3D"]
+position = Vector3(-0.760000000, 0.050000000, -0.000000000)
+shape = SubResource("deposito_pallet_rack_taco_0_1")
+
+[node name="Volumen_taco_1_1" type="CollisionShape3D" parent="deposito_pallet_fondo_1_0/StaticBody3D"]
+position = Vector3(0.000000000, 0.050000000, -0.000000000)
+shape = SubResource("deposito_pallet_rack_taco_1_1")
+
+[node name="Volumen_taco_2_1" type="CollisionShape3D" parent="deposito_pallet_fondo_1_0/StaticBody3D"]
+position = Vector3(0.760000000, 0.050000000, -0.000000000)
+shape = SubResource("deposito_pallet_rack_taco_2_1")
+
+[node name="Volumen_patin_2" type="CollisionShape3D" parent="deposito_pallet_fondo_1_0/StaticBody3D"]
+position = Vector3(0.000000000, 0.010000000, -0.350000000)
+shape = SubResource("deposito_pallet_rack_patin_2")
+
+[node name="Volumen_taco_0_2" type="CollisionShape3D" parent="deposito_pallet_fondo_1_0/StaticBody3D"]
+position = Vector3(-0.760000000, 0.050000000, -0.350000000)
+shape = SubResource("deposito_pallet_rack_taco_0_2")
+
+[node name="Volumen_taco_1_2" type="CollisionShape3D" parent="deposito_pallet_fondo_1_0/StaticBody3D"]
+position = Vector3(0.000000000, 0.050000000, -0.350000000)
+shape = SubResource("deposito_pallet_rack_taco_1_2")
+
+[node name="Volumen_taco_2_2" type="CollisionShape3D" parent="deposito_pallet_fondo_1_0/StaticBody3D"]
+position = Vector3(0.760000000, 0.050000000, -0.350000000)
+shape = SubResource("deposito_pallet_rack_taco_2_2")
+
+[node name="Volumen_travesano_0" type="CollisionShape3D" parent="deposito_pallet_fondo_1_0/StaticBody3D"]
+position = Vector3(-0.760000000, 0.090000000, -0.000000000)
+shape = SubResource("deposito_pallet_rack_travesano_0")
+
+[node name="Volumen_travesano_1" type="CollisionShape3D" parent="deposito_pallet_fondo_1_0/StaticBody3D"]
+position = Vector3(0.000000000, 0.090000000, -0.000000000)
+shape = SubResource("deposito_pallet_rack_travesano_1")
+
+[node name="Volumen_travesano_2" type="CollisionShape3D" parent="deposito_pallet_fondo_1_0/StaticBody3D"]
+position = Vector3(0.760000000, 0.090000000, -0.000000000)
+shape = SubResource("deposito_pallet_rack_travesano_2")
+
+[node name="Volumen_tabla_0" type="CollisionShape3D" parent="deposito_pallet_fondo_1_0/StaticBody3D"]
+position = Vector3(0.000000000, 0.110000000, 0.332800000)
+shape = SubResource("deposito_pallet_rack_tabla_0")
+
+[node name="Volumen_tabla_1" type="CollisionShape3D" parent="deposito_pallet_fondo_1_0/StaticBody3D"]
+position = Vector3(0.000000000, 0.110000000, 0.166400000)
+shape = SubResource("deposito_pallet_rack_tabla_1")
+
+[node name="Volumen_tabla_2" type="CollisionShape3D" parent="deposito_pallet_fondo_1_0/StaticBody3D"]
+position = Vector3(0.000000000, 0.110000000, -0.000000000)
+shape = SubResource("deposito_pallet_rack_tabla_2")
+
+[node name="Volumen_tabla_3" type="CollisionShape3D" parent="deposito_pallet_fondo_1_0/StaticBody3D"]
+position = Vector3(0.000000000, 0.110000000, -0.166400000)
+shape = SubResource("deposito_pallet_rack_tabla_3")
+
+[node name="Volumen_tabla_4" type="CollisionShape3D" parent="deposito_pallet_fondo_1_0/StaticBody3D"]
+position = Vector3(0.000000000, 0.110000000, -0.332800000)
+shape = SubResource("deposito_pallet_rack_tabla_4")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="deposito_pallet_fondo_1_1"]
+collision_layer = 8
+collision_mask = 0
+
+[node name="Volumen_patin_0" type="CollisionShape3D" parent="deposito_pallet_fondo_1_1/StaticBody3D"]
+position = Vector3(0.000000000, 0.010000000, 0.350000000)
+shape = SubResource("deposito_pallet_rack_patin_0")
+
+[node name="Volumen_taco_0_0" type="CollisionShape3D" parent="deposito_pallet_fondo_1_1/StaticBody3D"]
+position = Vector3(-0.760000000, 0.050000000, 0.350000000)
+shape = SubResource("deposito_pallet_rack_taco_0_0")
+
+[node name="Volumen_taco_1_0" type="CollisionShape3D" parent="deposito_pallet_fondo_1_1/StaticBody3D"]
+position = Vector3(0.000000000, 0.050000000, 0.350000000)
+shape = SubResource("deposito_pallet_rack_taco_1_0")
+
+[node name="Volumen_taco_2_0" type="CollisionShape3D" parent="deposito_pallet_fondo_1_1/StaticBody3D"]
+position = Vector3(0.760000000, 0.050000000, 0.350000000)
+shape = SubResource("deposito_pallet_rack_taco_2_0")
+
+[node name="Volumen_patin_1" type="CollisionShape3D" parent="deposito_pallet_fondo_1_1/StaticBody3D"]
+position = Vector3(0.000000000, 0.010000000, -0.000000000)
+shape = SubResource("deposito_pallet_rack_patin_1")
+
+[node name="Volumen_taco_0_1" type="CollisionShape3D" parent="deposito_pallet_fondo_1_1/StaticBody3D"]
+position = Vector3(-0.760000000, 0.050000000, -0.000000000)
+shape = SubResource("deposito_pallet_rack_taco_0_1")
+
+[node name="Volumen_taco_1_1" type="CollisionShape3D" parent="deposito_pallet_fondo_1_1/StaticBody3D"]
+position = Vector3(0.000000000, 0.050000000, -0.000000000)
+shape = SubResource("deposito_pallet_rack_taco_1_1")
+
+[node name="Volumen_taco_2_1" type="CollisionShape3D" parent="deposito_pallet_fondo_1_1/StaticBody3D"]
+position = Vector3(0.760000000, 0.050000000, -0.000000000)
+shape = SubResource("deposito_pallet_rack_taco_2_1")
+
+[node name="Volumen_patin_2" type="CollisionShape3D" parent="deposito_pallet_fondo_1_1/StaticBody3D"]
+position = Vector3(0.000000000, 0.010000000, -0.350000000)
+shape = SubResource("deposito_pallet_rack_patin_2")
+
+[node name="Volumen_taco_0_2" type="CollisionShape3D" parent="deposito_pallet_fondo_1_1/StaticBody3D"]
+position = Vector3(-0.760000000, 0.050000000, -0.350000000)
+shape = SubResource("deposito_pallet_rack_taco_0_2")
+
+[node name="Volumen_taco_1_2" type="CollisionShape3D" parent="deposito_pallet_fondo_1_1/StaticBody3D"]
+position = Vector3(0.000000000, 0.050000000, -0.350000000)
+shape = SubResource("deposito_pallet_rack_taco_1_2")
+
+[node name="Volumen_taco_2_2" type="CollisionShape3D" parent="deposito_pallet_fondo_1_1/StaticBody3D"]
+position = Vector3(0.760000000, 0.050000000, -0.350000000)
+shape = SubResource("deposito_pallet_rack_taco_2_2")
+
+[node name="Volumen_travesano_0" type="CollisionShape3D" parent="deposito_pallet_fondo_1_1/StaticBody3D"]
+position = Vector3(-0.760000000, 0.090000000, -0.000000000)
+shape = SubResource("deposito_pallet_rack_travesano_0")
+
+[node name="Volumen_travesano_1" type="CollisionShape3D" parent="deposito_pallet_fondo_1_1/StaticBody3D"]
+position = Vector3(0.000000000, 0.090000000, -0.000000000)
+shape = SubResource("deposito_pallet_rack_travesano_1")
+
+[node name="Volumen_travesano_2" type="CollisionShape3D" parent="deposito_pallet_fondo_1_1/StaticBody3D"]
+position = Vector3(0.760000000, 0.090000000, -0.000000000)
+shape = SubResource("deposito_pallet_rack_travesano_2")
+
+[node name="Volumen_tabla_0" type="CollisionShape3D" parent="deposito_pallet_fondo_1_1/StaticBody3D"]
+position = Vector3(0.000000000, 0.110000000, 0.332800000)
+shape = SubResource("deposito_pallet_rack_tabla_0")
+
+[node name="Volumen_tabla_1" type="CollisionShape3D" parent="deposito_pallet_fondo_1_1/StaticBody3D"]
+position = Vector3(0.000000000, 0.110000000, 0.166400000)
+shape = SubResource("deposito_pallet_rack_tabla_1")
+
+[node name="Volumen_tabla_2" type="CollisionShape3D" parent="deposito_pallet_fondo_1_1/StaticBody3D"]
+position = Vector3(0.000000000, 0.110000000, -0.000000000)
+shape = SubResource("deposito_pallet_rack_tabla_2")
+
+[node name="Volumen_tabla_3" type="CollisionShape3D" parent="deposito_pallet_fondo_1_1/StaticBody3D"]
+position = Vector3(0.000000000, 0.110000000, -0.166400000)
+shape = SubResource("deposito_pallet_rack_tabla_3")
+
+[node name="Volumen_tabla_4" type="CollisionShape3D" parent="deposito_pallet_fondo_1_1/StaticBody3D"]
+position = Vector3(0.000000000, 0.110000000, -0.332800000)
+shape = SubResource("deposito_pallet_rack_tabla_4")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="deposito_pallet_fondo_2_0"]
+collision_layer = 8
+collision_mask = 0
+
+[node name="Volumen_patin_0" type="CollisionShape3D" parent="deposito_pallet_fondo_2_0/StaticBody3D"]
+position = Vector3(0.000000000, 0.010000000, 0.350000000)
+shape = SubResource("deposito_pallet_rack_patin_0")
+
+[node name="Volumen_taco_0_0" type="CollisionShape3D" parent="deposito_pallet_fondo_2_0/StaticBody3D"]
+position = Vector3(-0.760000000, 0.050000000, 0.350000000)
+shape = SubResource("deposito_pallet_rack_taco_0_0")
+
+[node name="Volumen_taco_1_0" type="CollisionShape3D" parent="deposito_pallet_fondo_2_0/StaticBody3D"]
+position = Vector3(0.000000000, 0.050000000, 0.350000000)
+shape = SubResource("deposito_pallet_rack_taco_1_0")
+
+[node name="Volumen_taco_2_0" type="CollisionShape3D" parent="deposito_pallet_fondo_2_0/StaticBody3D"]
+position = Vector3(0.760000000, 0.050000000, 0.350000000)
+shape = SubResource("deposito_pallet_rack_taco_2_0")
+
+[node name="Volumen_patin_1" type="CollisionShape3D" parent="deposito_pallet_fondo_2_0/StaticBody3D"]
+position = Vector3(0.000000000, 0.010000000, -0.000000000)
+shape = SubResource("deposito_pallet_rack_patin_1")
+
+[node name="Volumen_taco_0_1" type="CollisionShape3D" parent="deposito_pallet_fondo_2_0/StaticBody3D"]
+position = Vector3(-0.760000000, 0.050000000, -0.000000000)
+shape = SubResource("deposito_pallet_rack_taco_0_1")
+
+[node name="Volumen_taco_1_1" type="CollisionShape3D" parent="deposito_pallet_fondo_2_0/StaticBody3D"]
+position = Vector3(0.000000000, 0.050000000, -0.000000000)
+shape = SubResource("deposito_pallet_rack_taco_1_1")
+
+[node name="Volumen_taco_2_1" type="CollisionShape3D" parent="deposito_pallet_fondo_2_0/StaticBody3D"]
+position = Vector3(0.760000000, 0.050000000, -0.000000000)
+shape = SubResource("deposito_pallet_rack_taco_2_1")
+
+[node name="Volumen_patin_2" type="CollisionShape3D" parent="deposito_pallet_fondo_2_0/StaticBody3D"]
+position = Vector3(0.000000000, 0.010000000, -0.350000000)
+shape = SubResource("deposito_pallet_rack_patin_2")
+
+[node name="Volumen_taco_0_2" type="CollisionShape3D" parent="deposito_pallet_fondo_2_0/StaticBody3D"]
+position = Vector3(-0.760000000, 0.050000000, -0.350000000)
+shape = SubResource("deposito_pallet_rack_taco_0_2")
+
+[node name="Volumen_taco_1_2" type="CollisionShape3D" parent="deposito_pallet_fondo_2_0/StaticBody3D"]
+position = Vector3(0.000000000, 0.050000000, -0.350000000)
+shape = SubResource("deposito_pallet_rack_taco_1_2")
+
+[node name="Volumen_taco_2_2" type="CollisionShape3D" parent="deposito_pallet_fondo_2_0/StaticBody3D"]
+position = Vector3(0.760000000, 0.050000000, -0.350000000)
+shape = SubResource("deposito_pallet_rack_taco_2_2")
+
+[node name="Volumen_travesano_0" type="CollisionShape3D" parent="deposito_pallet_fondo_2_0/StaticBody3D"]
+position = Vector3(-0.760000000, 0.090000000, -0.000000000)
+shape = SubResource("deposito_pallet_rack_travesano_0")
+
+[node name="Volumen_travesano_1" type="CollisionShape3D" parent="deposito_pallet_fondo_2_0/StaticBody3D"]
+position = Vector3(0.000000000, 0.090000000, -0.000000000)
+shape = SubResource("deposito_pallet_rack_travesano_1")
+
+[node name="Volumen_travesano_2" type="CollisionShape3D" parent="deposito_pallet_fondo_2_0/StaticBody3D"]
+position = Vector3(0.760000000, 0.090000000, -0.000000000)
+shape = SubResource("deposito_pallet_rack_travesano_2")
+
+[node name="Volumen_tabla_0" type="CollisionShape3D" parent="deposito_pallet_fondo_2_0/StaticBody3D"]
+position = Vector3(0.000000000, 0.110000000, 0.332800000)
+shape = SubResource("deposito_pallet_rack_tabla_0")
+
+[node name="Volumen_tabla_1" type="CollisionShape3D" parent="deposito_pallet_fondo_2_0/StaticBody3D"]
+position = Vector3(0.000000000, 0.110000000, 0.166400000)
+shape = SubResource("deposito_pallet_rack_tabla_1")
+
+[node name="Volumen_tabla_2" type="CollisionShape3D" parent="deposito_pallet_fondo_2_0/StaticBody3D"]
+position = Vector3(0.000000000, 0.110000000, -0.000000000)
+shape = SubResource("deposito_pallet_rack_tabla_2")
+
+[node name="Volumen_tabla_3" type="CollisionShape3D" parent="deposito_pallet_fondo_2_0/StaticBody3D"]
+position = Vector3(0.000000000, 0.110000000, -0.166400000)
+shape = SubResource("deposito_pallet_rack_tabla_3")
+
+[node name="Volumen_tabla_4" type="CollisionShape3D" parent="deposito_pallet_fondo_2_0/StaticBody3D"]
+position = Vector3(0.000000000, 0.110000000, -0.332800000)
+shape = SubResource("deposito_pallet_rack_tabla_4")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="deposito_pallet_fondo_2_1"]
+collision_layer = 8
+collision_mask = 0
+
+[node name="Volumen_patin_0" type="CollisionShape3D" parent="deposito_pallet_fondo_2_1/StaticBody3D"]
+position = Vector3(0.000000000, 0.010000000, 0.350000000)
+shape = SubResource("deposito_pallet_rack_patin_0")
+
+[node name="Volumen_taco_0_0" type="CollisionShape3D" parent="deposito_pallet_fondo_2_1/StaticBody3D"]
+position = Vector3(-0.760000000, 0.050000000, 0.350000000)
+shape = SubResource("deposito_pallet_rack_taco_0_0")
+
+[node name="Volumen_taco_1_0" type="CollisionShape3D" parent="deposito_pallet_fondo_2_1/StaticBody3D"]
+position = Vector3(0.000000000, 0.050000000, 0.350000000)
+shape = SubResource("deposito_pallet_rack_taco_1_0")
+
+[node name="Volumen_taco_2_0" type="CollisionShape3D" parent="deposito_pallet_fondo_2_1/StaticBody3D"]
+position = Vector3(0.760000000, 0.050000000, 0.350000000)
+shape = SubResource("deposito_pallet_rack_taco_2_0")
+
+[node name="Volumen_patin_1" type="CollisionShape3D" parent="deposito_pallet_fondo_2_1/StaticBody3D"]
+position = Vector3(0.000000000, 0.010000000, -0.000000000)
+shape = SubResource("deposito_pallet_rack_patin_1")
+
+[node name="Volumen_taco_0_1" type="CollisionShape3D" parent="deposito_pallet_fondo_2_1/StaticBody3D"]
+position = Vector3(-0.760000000, 0.050000000, -0.000000000)
+shape = SubResource("deposito_pallet_rack_taco_0_1")
+
+[node name="Volumen_taco_1_1" type="CollisionShape3D" parent="deposito_pallet_fondo_2_1/StaticBody3D"]
+position = Vector3(0.000000000, 0.050000000, -0.000000000)
+shape = SubResource("deposito_pallet_rack_taco_1_1")
+
+[node name="Volumen_taco_2_1" type="CollisionShape3D" parent="deposito_pallet_fondo_2_1/StaticBody3D"]
+position = Vector3(0.760000000, 0.050000000, -0.000000000)
+shape = SubResource("deposito_pallet_rack_taco_2_1")
+
+[node name="Volumen_patin_2" type="CollisionShape3D" parent="deposito_pallet_fondo_2_1/StaticBody3D"]
+position = Vector3(0.000000000, 0.010000000, -0.350000000)
+shape = SubResource("deposito_pallet_rack_patin_2")
+
+[node name="Volumen_taco_0_2" type="CollisionShape3D" parent="deposito_pallet_fondo_2_1/StaticBody3D"]
+position = Vector3(-0.760000000, 0.050000000, -0.350000000)
+shape = SubResource("deposito_pallet_rack_taco_0_2")
+
+[node name="Volumen_taco_1_2" type="CollisionShape3D" parent="deposito_pallet_fondo_2_1/StaticBody3D"]
+position = Vector3(0.000000000, 0.050000000, -0.350000000)
+shape = SubResource("deposito_pallet_rack_taco_1_2")
+
+[node name="Volumen_taco_2_2" type="CollisionShape3D" parent="deposito_pallet_fondo_2_1/StaticBody3D"]
+position = Vector3(0.760000000, 0.050000000, -0.350000000)
+shape = SubResource("deposito_pallet_rack_taco_2_2")
+
+[node name="Volumen_travesano_0" type="CollisionShape3D" parent="deposito_pallet_fondo_2_1/StaticBody3D"]
+position = Vector3(-0.760000000, 0.090000000, -0.000000000)
+shape = SubResource("deposito_pallet_rack_travesano_0")
+
+[node name="Volumen_travesano_1" type="CollisionShape3D" parent="deposito_pallet_fondo_2_1/StaticBody3D"]
+position = Vector3(0.000000000, 0.090000000, -0.000000000)
+shape = SubResource("deposito_pallet_rack_travesano_1")
+
+[node name="Volumen_travesano_2" type="CollisionShape3D" parent="deposito_pallet_fondo_2_1/StaticBody3D"]
+position = Vector3(0.760000000, 0.090000000, -0.000000000)
+shape = SubResource("deposito_pallet_rack_travesano_2")
+
+[node name="Volumen_tabla_0" type="CollisionShape3D" parent="deposito_pallet_fondo_2_1/StaticBody3D"]
+position = Vector3(0.000000000, 0.110000000, 0.332800000)
+shape = SubResource("deposito_pallet_rack_tabla_0")
+
+[node name="Volumen_tabla_1" type="CollisionShape3D" parent="deposito_pallet_fondo_2_1/StaticBody3D"]
+position = Vector3(0.000000000, 0.110000000, 0.166400000)
+shape = SubResource("deposito_pallet_rack_tabla_1")
+
+[node name="Volumen_tabla_2" type="CollisionShape3D" parent="deposito_pallet_fondo_2_1/StaticBody3D"]
+position = Vector3(0.000000000, 0.110000000, -0.000000000)
+shape = SubResource("deposito_pallet_rack_tabla_2")
+
+[node name="Volumen_tabla_3" type="CollisionShape3D" parent="deposito_pallet_fondo_2_1/StaticBody3D"]
+position = Vector3(0.000000000, 0.110000000, -0.166400000)
+shape = SubResource("deposito_pallet_rack_tabla_3")
+
+[node name="Volumen_tabla_4" type="CollisionShape3D" parent="deposito_pallet_fondo_2_1/StaticBody3D"]
+position = Vector3(0.000000000, 0.110000000, -0.332800000)
+shape = SubResource("deposito_pallet_rack_tabla_4")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="deposito_pallet_piso"]
+collision_layer = 8
+collision_mask = 0
+
+[node name="Volumen_patin_0" type="CollisionShape3D" parent="deposito_pallet_piso/StaticBody3D"]
+position = Vector3(0.000000000, 0.010000000, 0.340000000)
+shape = SubResource("deposito_pallet_piso_patin_0")
+
+[node name="Volumen_taco_0_0" type="CollisionShape3D" parent="deposito_pallet_piso/StaticBody3D"]
+position = Vector3(-0.540000000, 0.050000000, 0.340000000)
+shape = SubResource("deposito_pallet_piso_taco_0_0")
+
+[node name="Volumen_taco_1_0" type="CollisionShape3D" parent="deposito_pallet_piso/StaticBody3D"]
+position = Vector3(0.000000000, 0.050000000, 0.340000000)
+shape = SubResource("deposito_pallet_piso_taco_1_0")
+
+[node name="Volumen_taco_2_0" type="CollisionShape3D" parent="deposito_pallet_piso/StaticBody3D"]
+position = Vector3(0.540000000, 0.050000000, 0.340000000)
+shape = SubResource("deposito_pallet_piso_taco_2_0")
+
+[node name="Volumen_patin_1" type="CollisionShape3D" parent="deposito_pallet_piso/StaticBody3D"]
+position = Vector3(0.000000000, 0.010000000, -0.000000000)
+shape = SubResource("deposito_pallet_piso_patin_1")
+
+[node name="Volumen_taco_0_1" type="CollisionShape3D" parent="deposito_pallet_piso/StaticBody3D"]
+position = Vector3(-0.540000000, 0.050000000, -0.000000000)
+shape = SubResource("deposito_pallet_piso_taco_0_1")
+
+[node name="Volumen_taco_1_1" type="CollisionShape3D" parent="deposito_pallet_piso/StaticBody3D"]
+position = Vector3(0.000000000, 0.050000000, -0.000000000)
+shape = SubResource("deposito_pallet_piso_taco_1_1")
+
+[node name="Volumen_taco_2_1" type="CollisionShape3D" parent="deposito_pallet_piso/StaticBody3D"]
+position = Vector3(0.540000000, 0.050000000, -0.000000000)
+shape = SubResource("deposito_pallet_piso_taco_2_1")
+
+[node name="Volumen_patin_2" type="CollisionShape3D" parent="deposito_pallet_piso/StaticBody3D"]
+position = Vector3(0.000000000, 0.010000000, -0.340000000)
+shape = SubResource("deposito_pallet_piso_patin_2")
+
+[node name="Volumen_taco_0_2" type="CollisionShape3D" parent="deposito_pallet_piso/StaticBody3D"]
+position = Vector3(-0.540000000, 0.050000000, -0.340000000)
+shape = SubResource("deposito_pallet_piso_taco_0_2")
+
+[node name="Volumen_taco_1_2" type="CollisionShape3D" parent="deposito_pallet_piso/StaticBody3D"]
+position = Vector3(0.000000000, 0.050000000, -0.340000000)
+shape = SubResource("deposito_pallet_piso_taco_1_2")
+
+[node name="Volumen_taco_2_2" type="CollisionShape3D" parent="deposito_pallet_piso/StaticBody3D"]
+position = Vector3(0.540000000, 0.050000000, -0.340000000)
+shape = SubResource("deposito_pallet_piso_taco_2_2")
+
+[node name="Volumen_travesano_0" type="CollisionShape3D" parent="deposito_pallet_piso/StaticBody3D"]
+position = Vector3(-0.540000000, 0.090000000, -0.000000000)
+shape = SubResource("deposito_pallet_piso_travesano_0")
+
+[node name="Volumen_travesano_1" type="CollisionShape3D" parent="deposito_pallet_piso/StaticBody3D"]
+position = Vector3(0.000000000, 0.090000000, -0.000000000)
+shape = SubResource("deposito_pallet_piso_travesano_1")
+
+[node name="Volumen_travesano_2" type="CollisionShape3D" parent="deposito_pallet_piso/StaticBody3D"]
+position = Vector3(0.540000000, 0.090000000, -0.000000000)
+shape = SubResource("deposito_pallet_piso_travesano_2")
+
+[node name="Volumen_tabla_0" type="CollisionShape3D" parent="deposito_pallet_piso/StaticBody3D"]
+position = Vector3(0.000000000, 0.110000000, 0.324800000)
+shape = SubResource("deposito_pallet_piso_tabla_0")
+
+[node name="Volumen_tabla_1" type="CollisionShape3D" parent="deposito_pallet_piso/StaticBody3D"]
+position = Vector3(0.000000000, 0.110000000, 0.162400000)
+shape = SubResource("deposito_pallet_piso_tabla_1")
+
+[node name="Volumen_tabla_2" type="CollisionShape3D" parent="deposito_pallet_piso/StaticBody3D"]
+position = Vector3(0.000000000, 0.110000000, -0.000000000)
+shape = SubResource("deposito_pallet_piso_tabla_2")
+
+[node name="Volumen_tabla_3" type="CollisionShape3D" parent="deposito_pallet_piso/StaticBody3D"]
+position = Vector3(0.000000000, 0.110000000, -0.162400000)
+shape = SubResource("deposito_pallet_piso_tabla_3")
+
+[node name="Volumen_tabla_4" type="CollisionShape3D" parent="deposito_pallet_piso/StaticBody3D"]
+position = Vector3(0.000000000, 0.110000000, -0.324800000)
+shape = SubResource("deposito_pallet_piso_tabla_4")
+
+[node name="VolumenAcero_0_2_0" type="CollisionShape3D" parent="gondola_deposito03/StaticBody3D"]
+position = Vector3(0.530734122, 0.726147085, 0.371713787)
+shape = SubResource("deposito_acero_o03_2_0")
+
+[node name="VolumenAcero_1_2_0" type="CollisionShape3D" parent="gondola_deposito03/StaticBody3D"]
+position = Vector3(0.530734122, 0.726147085, -2.975874275)
+shape = SubResource("deposito_acero_o03_2_0")
+
+[node name="VolumenAcero_0_2_1" type="CollisionShape3D" parent="gondola_deposito03/StaticBody3D"]
+position = Vector3(0.530734122, 0.726147085, -0.371714234)
+shape = SubResource("deposito_acero_o03_2_1")
+
+[node name="VolumenAcero_1_2_1" type="CollisionShape3D" parent="gondola_deposito03/StaticBody3D"]
+position = Vector3(0.530734122, 0.726147085, -3.719302297)
+shape = SubResource("deposito_acero_o03_2_1")
+
+[node name="VolumenAcero_0_2_2" type="CollisionShape3D" parent="gondola_deposito03/StaticBody3D"]
+position = Vector3(-0.985157102, 0.726147085, -0.000000224)
+shape = SubResource("deposito_acero_o03_2_2")
+
+[node name="VolumenAcero_1_2_2" type="CollisionShape3D" parent="gondola_deposito03/StaticBody3D"]
+position = Vector3(-0.985157102, 0.726147085, -3.347588286)
+shape = SubResource("deposito_acero_o03_2_2")
+
+[node name="VolumenAcero_0_2_3" type="CollisionShape3D" parent="gondola_deposito03/StaticBody3D"]
+position = Vector3(0.530734092, 0.726147085, -0.000000224)
+shape = SubResource("deposito_acero_o03_2_3")
+
+[node name="VolumenAcero_1_2_3" type="CollisionShape3D" parent="gondola_deposito03/StaticBody3D"]
+position = Vector3(0.530734092, 0.726147085, -3.347588286)
+shape = SubResource("deposito_acero_o03_2_3")
+
+[node name="VolumenAcero_0_2_4" type="CollisionShape3D" parent="gondola_deposito03/StaticBody3D"]
+position = Vector3(2.046625257, 0.726147085, -0.000000224)
+shape = SubResource("deposito_acero_o03_2_4")
+
+[node name="VolumenAcero_1_2_4" type="CollisionShape3D" parent="gondola_deposito03/StaticBody3D"]
+position = Vector3(2.046625257, 0.726147085, -3.347588286)
+shape = SubResource("deposito_acero_o03_2_4")
+
+[node name="VolumenAcero_0_1_0" type="CollisionShape3D" parent="gondola_deposito03/StaticBody3D"]
+position = Vector3(0.530734122, -0.024980349, 0.371713787)
+shape = SubResource("deposito_acero_o03_1_0")
+
+[node name="VolumenAcero_1_1_0" type="CollisionShape3D" parent="gondola_deposito03/StaticBody3D"]
+position = Vector3(0.530734122, -0.024980349, -2.975874275)
+shape = SubResource("deposito_acero_o03_1_0")
+
+[node name="VolumenAcero_0_1_1" type="CollisionShape3D" parent="gondola_deposito03/StaticBody3D"]
+position = Vector3(0.530734122, -0.024980349, -0.371714234)
+shape = SubResource("deposito_acero_o03_1_1")
+
+[node name="VolumenAcero_1_1_1" type="CollisionShape3D" parent="gondola_deposito03/StaticBody3D"]
+position = Vector3(0.530734122, -0.024980349, -3.719302297)
+shape = SubResource("deposito_acero_o03_1_1")
+
+[node name="VolumenAcero_0_1_2" type="CollisionShape3D" parent="gondola_deposito03/StaticBody3D"]
+position = Vector3(-0.985157102, -0.024980349, -0.000000224)
+shape = SubResource("deposito_acero_o03_1_2")
+
+[node name="VolumenAcero_1_1_2" type="CollisionShape3D" parent="gondola_deposito03/StaticBody3D"]
+position = Vector3(-0.985157102, -0.024980349, -3.347588286)
+shape = SubResource("deposito_acero_o03_1_2")
+
+[node name="VolumenAcero_0_1_3" type="CollisionShape3D" parent="gondola_deposito03/StaticBody3D"]
+position = Vector3(0.530734092, -0.024980349, -0.000000224)
+shape = SubResource("deposito_acero_o03_1_3")
+
+[node name="VolumenAcero_1_1_3" type="CollisionShape3D" parent="gondola_deposito03/StaticBody3D"]
+position = Vector3(0.530734092, -0.024980349, -3.347588286)
+shape = SubResource("deposito_acero_o03_1_3")
+
+[node name="VolumenAcero_0_1_4" type="CollisionShape3D" parent="gondola_deposito03/StaticBody3D"]
+position = Vector3(2.046625257, -0.024980349, -0.000000224)
+shape = SubResource("deposito_acero_o03_1_4")
+
+[node name="VolumenAcero_1_1_4" type="CollisionShape3D" parent="gondola_deposito03/StaticBody3D"]
+position = Vector3(2.046625257, -0.024980349, -3.347588286)
+shape = SubResource("deposito_acero_o03_1_4")
+
+[node name="VolumenAcero_0_0_0" type="CollisionShape3D" parent="gondola_deposito03/StaticBody3D"]
+position = Vector3(0.530734122, -0.771793216, 0.371713787)
+shape = SubResource("deposito_acero_o03_0_0")
+
+[node name="VolumenAcero_1_0_0" type="CollisionShape3D" parent="gondola_deposito03/StaticBody3D"]
+position = Vector3(0.530734122, -0.771793216, -2.975874275)
+shape = SubResource("deposito_acero_o03_0_0")
+
+[node name="VolumenAcero_0_0_1" type="CollisionShape3D" parent="gondola_deposito03/StaticBody3D"]
+position = Vector3(0.530734122, -0.771793216, -0.371714234)
+shape = SubResource("deposito_acero_o03_0_1")
+
+[node name="VolumenAcero_1_0_1" type="CollisionShape3D" parent="gondola_deposito03/StaticBody3D"]
+position = Vector3(0.530734122, -0.771793216, -3.719302297)
+shape = SubResource("deposito_acero_o03_0_1")
+
+[node name="VolumenAcero_0_0_2" type="CollisionShape3D" parent="gondola_deposito03/StaticBody3D"]
+position = Vector3(-0.985157102, -0.771793216, -0.000000224)
+shape = SubResource("deposito_acero_o03_0_2")
+
+[node name="VolumenAcero_1_0_2" type="CollisionShape3D" parent="gondola_deposito03/StaticBody3D"]
+position = Vector3(-0.985157102, -0.771793216, -3.347588286)
+shape = SubResource("deposito_acero_o03_0_2")
+
+[node name="VolumenAcero_0_0_3" type="CollisionShape3D" parent="gondola_deposito03/StaticBody3D"]
+position = Vector3(0.530734092, -0.771793216, -0.000000224)
+shape = SubResource("deposito_acero_o03_0_3")
+
+[node name="VolumenAcero_1_0_3" type="CollisionShape3D" parent="gondola_deposito03/StaticBody3D"]
+position = Vector3(0.530734092, -0.771793216, -3.347588286)
+shape = SubResource("deposito_acero_o03_0_3")
+
+[node name="VolumenAcero_0_0_4" type="CollisionShape3D" parent="gondola_deposito03/StaticBody3D"]
+position = Vector3(2.046625257, -0.771793216, -0.000000224)
+shape = SubResource("deposito_acero_o03_0_4")
+
+[node name="VolumenAcero_1_0_4" type="CollisionShape3D" parent="gondola_deposito03/StaticBody3D"]
+position = Vector3(2.046625257, -0.771793216, -3.347588286)
+shape = SubResource("deposito_acero_o03_0_4")
+
+[node name="VolumenAcero_0_2_0" type="CollisionShape3D" parent="gondola_deposito03_001/StaticBody3D"]
+position = Vector3(0.530734867, 0.726147085, 0.371714264)
+shape = SubResource("deposito_acero_001_2_0")
+
+[node name="VolumenAcero_0_2_1" type="CollisionShape3D" parent="gondola_deposito03_001/StaticBody3D"]
+position = Vector3(0.530734867, 0.726147085, -0.371713609)
+shape = SubResource("deposito_acero_001_2_1")
+
+[node name="VolumenAcero_0_2_2" type="CollisionShape3D" parent="gondola_deposito03_001/StaticBody3D"]
+position = Vector3(-0.985156327, 0.726147085, 0.000000328)
+shape = SubResource("deposito_acero_001_2_2")
+
+[node name="VolumenAcero_0_2_3" type="CollisionShape3D" parent="gondola_deposito03_001/StaticBody3D"]
+position = Vector3(0.530734867, 0.726147085, 0.000000328)
+shape = SubResource("deposito_acero_001_2_3")
+
+[node name="VolumenAcero_0_2_4" type="CollisionShape3D" parent="gondola_deposito03_001/StaticBody3D"]
+position = Vector3(2.046626091, 0.726147085, 0.000000328)
+shape = SubResource("deposito_acero_001_2_4")
+
+[node name="VolumenAcero_0_1_0" type="CollisionShape3D" parent="gondola_deposito03_001/StaticBody3D"]
+position = Vector3(0.530734867, -0.024980349, 0.371714264)
+shape = SubResource("deposito_acero_001_1_0")
+
+[node name="VolumenAcero_0_1_1" type="CollisionShape3D" parent="gondola_deposito03_001/StaticBody3D"]
+position = Vector3(0.530734867, -0.024980349, -0.371713609)
+shape = SubResource("deposito_acero_001_1_1")
+
+[node name="VolumenAcero_0_1_2" type="CollisionShape3D" parent="gondola_deposito03_001/StaticBody3D"]
+position = Vector3(-0.985156327, -0.024980349, 0.000000328)
+shape = SubResource("deposito_acero_001_1_2")
+
+[node name="VolumenAcero_0_1_3" type="CollisionShape3D" parent="gondola_deposito03_001/StaticBody3D"]
+position = Vector3(0.530734867, -0.024980349, 0.000000328)
+shape = SubResource("deposito_acero_001_1_3")
+
+[node name="VolumenAcero_0_1_4" type="CollisionShape3D" parent="gondola_deposito03_001/StaticBody3D"]
+position = Vector3(2.046626091, -0.024980349, 0.000000328)
+shape = SubResource("deposito_acero_001_1_4")
+
+[node name="VolumenAcero_0_0_0" type="CollisionShape3D" parent="gondola_deposito03_001/StaticBody3D"]
+position = Vector3(0.530734867, -0.771793216, 0.371714264)
+shape = SubResource("deposito_acero_001_0_0")
+
+[node name="VolumenAcero_0_0_1" type="CollisionShape3D" parent="gondola_deposito03_001/StaticBody3D"]
+position = Vector3(0.530734867, -0.771793216, -0.371713609)
+shape = SubResource("deposito_acero_001_0_1")
+
+[node name="VolumenAcero_0_0_2" type="CollisionShape3D" parent="gondola_deposito03_001/StaticBody3D"]
+position = Vector3(-0.985156327, -0.771793216, 0.000000328)
+shape = SubResource("deposito_acero_001_0_2")
+
+[node name="VolumenAcero_0_0_3" type="CollisionShape3D" parent="gondola_deposito03_001/StaticBody3D"]
+position = Vector3(0.530734867, -0.771793216, 0.000000328)
+shape = SubResource("deposito_acero_001_0_3")
+
+[node name="VolumenAcero_0_0_4" type="CollisionShape3D" parent="gondola_deposito03_001/StaticBody3D"]
+position = Vector3(2.046626091, -0.771793216, 0.000000328)
+shape = SubResource("deposito_acero_001_0_4")

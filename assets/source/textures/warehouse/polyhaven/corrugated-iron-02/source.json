@@ -1,0 +1,41 @@
+{
+  "asset": "corrugated_iron_02",
+  "title": "Corrugated Iron 02",
+  "source": "https://polyhaven.com/a/corrugated_iron_02",
+  "license": "CC0-1.0",
+  "license_url": "https://polyhaven.com/license",
+  "authors": {
+    "Jenelle van Heerden": "Processing",
+    "Sergej Majboroda": "Photography"
+  },
+  "dimensions_mm": [
+    2700.000047683716,
+    2700.000047683716
+  ],
+  "files": {
+    "corrugated_iron_02_diff_1k.jpg": {
+      "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/corrugated_iron_02/corrugated_iron_02_diff_1k.jpg",
+      "md5": "0437ba7acc3a60e9a00245580ae7e10b",
+      "sha256": "7a7b43099d015c1b08ebb175da5965caeae44b86de65a727b3fffa20a7c69a93",
+      "size": 568492
+    },
+    "corrugated_iron_02_rough_1k.jpg": {
+      "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/corrugated_iron_02/corrugated_iron_02_rough_1k.jpg",
+      "md5": "b9805d0c5bb683b03ba14c0b4217e2a4",
+      "sha256": "56ec8d8b04bac56b5d85ee2f35256b7b00d8c7a0ef13e6791cdabc5c05ed2f4b",
+      "size": 793854
+    },
+    "corrugated_iron_02_nor_gl_1k.png": {
+      "url": "https://dl.polyhaven.org/file/ph-assets/Textures/png/1k/corrugated_iron_02/corrugated_iron_02_nor_gl_1k.png",
+      "md5": "5e201ae141d338b825396f372c3c421d",
+      "sha256": "1a26c763d78297fe738d9ba350c03c252a6f6fb4a3c497d97f057028e61a8a11",
+      "size": 4913812
+    },
+    "corrugated_iron_02_metal_1k.jpg": {
+      "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/corrugated_iron_02/corrugated_iron_02_metal_1k.jpg",
+      "md5": "0badc8053820d83d9696250243418405",
+      "sha256": "1fa893891c41df69b2ef1864b0640c9ffa23aa7b33cb98800fd2b97217afd8dc",
+      "size": 137627
+    }
+  }
+}

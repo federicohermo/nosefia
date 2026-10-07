@@ -69,9 +69,6 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.001017, 0)
 [node name="Deposito" parent="Estructura/SueloSolido" index="1"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10.86326, 0, -4.5818586)
 
-[node name="Fondo" parent="Estructura/SueloSolido" index="2"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.56085, 0.0005, -11.359675)
-
 [node name="PasoAlDeposito" parent="Estructura/SueloSolido" index="3"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8.081463, 0, -6.82)
 
@@ -112,6 +109,8 @@ editor_description = "Donde el jugador arranca cada noche: frente a la puerta de
 
 [node name="LightmapGI" type="LightmapGI" parent="." unique_id=2127617826]
 quality = 2
+texel_scale = 1.0
+directional = true
 generate_probes_subdiv = 3
 light_data = ExtResource("lightmap")
 

@@ -14,9 +14,8 @@ const ENTRADA_DEL_DEPOSITO := Vector3(5.5, 1.05, -8.7)
 ## local, lejos del depósito y de cualquier apoyo.
 const LEJOS_DE_SU_LUGAR := Vector3(0.0, 2.0, 0.0)
 
-## A cuántos metros de una caja se para el jugador para leer su etiqueta. Entre dos cajas de la
-## misma fila quedan 14 cm: desde ahí, la de al lado tapa la etiqueta.
-const DONDE_SE_PARA_EL_JUGADOR := 2.0
+## Distancias desde la cara rotulada que se prueban dentro del alcance real de la mira.
+const DISTANCIAS_EN_EL_PASILLO: Array[float] = [0.8, 1.3, 2.0]
 
 
 ## Cuánto separa el centro de una caja apoyada de la superficie que la sostiene: la escala que
@@ -59,7 +58,9 @@ func test_las_cajas_de_reposicion_estan_apoyadas_en_el_deposito() -> void:
 		)
 		var apoyo: String = str(almacen.get_path_to(golpe["collider"]))
 		(
-			assert_bool(apoyo.contains("gondola_deposito") or apoyo.contains("Suelo"))
+			assert_bool(
+				apoyo.contains("deposito_pallet_") and not apoyo.contains("deposito_pallet_piso")
+			)
 			. override_failure_message("`%s` se apoya en `%s`" % [caja.name, apoyo])
 			. is_true()
 		)
@@ -80,10 +81,12 @@ func test_cada_caja_le_muestra_su_etiqueta_al_cuarto() -> void:
 	var espacio := almacen.get_world_3d().direct_space_state
 	var cajas: Array = almacen.get("_cajas_de_productos")
 	assert_int(cajas.size()).is_equal(Catalogo.todos().size())
-	# El piso del depósito es donde apoyan las cajas más bajas.
-	var suelo := INF
-	for caja: Node3D in cajas:
-		suelo = minf(suelo, caja.global_position.y - _media_caja(caja))
+	# La altura de los ojos sale del piso real, independientemente de los apoyos de las cajas.
+	var piso: CollisionShape3D = almacen.get_node("Estructura/SueloSolido/Fondo")
+	var forma: BoxShape3D = piso.shape
+	var suelo := (piso.global_transform * (Vector3.UP * forma.size.y / 2.0)).y
+	var jugador: CharacterBody3D = almacen.get("_jugador")
+	var cuerpo: CollisionShape3D = jugador.get_node("Cuerpo")
 	for caja: Node3D in cajas:
 		var orientacion: Basis = caja.get("orientacion_en_mano")
 		var rotulada := orientacion.inverse() * Vector3.BACK
@@ -91,12 +94,33 @@ func test_cada_caja_le_muestra_su_etiqueta_al_cuarto() -> void:
 		for cara: Vector3 in [rotulada, -rotulada]:
 			var normal := (caja.global_basis * cara).normalized()
 			var etiqueta := caja.global_position + normal * (_media_caja(caja) + 0.01)
-			var ojos := etiqueta + normal * DONDE_SE_PARA_EL_JUGADOR
-			ojos.y = suelo + ReglasDelJugador.ALTURA_DE_LA_CAMARA
-			var consulta := PhysicsRayQueryParameters3D.create(etiqueta, ojos)
-			consulta.exclude = [(caja as PhysicsBody3D).get_rid()]
-			if espacio.intersect_ray(consulta).is_empty():
-				vistas.append(normal)
+			for distancia in DISTANCIAS_EN_EL_PASILLO:
+				var pies := etiqueta + normal * distancia
+				pies.y = suelo + 0.01
+				var al_piso := PhysicsRayQueryParameters3D.create(
+					Vector3(pies.x, 3.0, pies.z), Vector3(pies.x, -1.0, pies.z)
+				)
+				al_piso.collision_mask = jugador.collision_mask
+				al_piso.exclude = [jugador.get_rid()]
+				var apoyo := espacio.intersect_ray(al_piso)
+				if apoyo.is_empty() or apoyo["collider"] != piso.get_parent():
+					continue
+				var capsula := PhysicsShapeQueryParameters3D.new()
+				capsula.shape = cuerpo.shape
+				capsula.transform = Transform3D(Basis.IDENTITY, pies) * cuerpo.transform
+				capsula.collision_mask = jugador.collision_mask
+				capsula.exclude = [jugador.get_rid()]
+				capsula.margin = 0.0
+				if not espacio.intersect_shape(capsula, 8).is_empty():
+					continue
+				var ojos := pies + Vector3.UP * ReglasDelJugador.ALTURA_DE_LA_CAMARA
+				if ojos.distance_to(etiqueta) > ReglasDelJugador.ALCANCE_DE_LA_MIRA:
+					continue
+				var consulta := PhysicsRayQueryParameters3D.create(etiqueta, ojos)
+				consulta.exclude = [(caja as PhysicsBody3D).get_rid(), jugador.get_rid()]
+				if espacio.intersect_ray(consulta).is_empty():
+					vistas.append(normal)
+					break
 		(
 			assert_array(vistas)
 			. override_failure_message(
@@ -150,12 +174,23 @@ func _camino_desde_la_puerta(almacen: Node3D, hasta: Vector3, excluidas: Array[R
 	consulta.exclude = excluidas
 	var espacio := almacen.get_world_3d().direct_space_state
 	assert_array(espacio.intersect_shape(consulta, 4)).is_empty()
-	var esquina := Vector3(4.3, ENTRADA_DEL_DEPOSITO.y, -11.5)
-	consulta.motion = esquina - ENTRADA_DEL_DEPOSITO
-	var primer_tramo: float = espacio.cast_motion(consulta)[1]
-	consulta.transform.origin = esquina
-	consulta.motion = Vector3(hasta.x, esquina.y, hasta.z) - esquina
-	return minf(primer_tramo, espacio.cast_motion(consulta)[1])
+	var pallet: MeshInstance3D = almacen.get_node(
+		"Estructura/deposito_pallet_central_izquierdo_0_1"
+	)
+	var limites := pallet.global_transform * pallet.get_aabb()
+	var atras := limites.position.z - forma.radius - 0.125
+	var izquierdo := limites.position.x - forma.radius - 0.125
+	var puntos: Array[Vector3] = [
+		Vector3(4.3, ENTRADA_DEL_DEPOSITO.y, atras),
+		Vector3(izquierdo, ENTRADA_DEL_DEPOSITO.y, atras),
+		Vector3(hasta.x, ENTRADA_DEL_DEPOSITO.y, hasta.z),
+	]
+	var libre := 1.0
+	for punto in puntos:
+		consulta.motion = punto - consulta.transform.origin
+		libre = minf(libre, espacio.cast_motion(consulta)[1])
+		consulta.transform.origin = punto
+	return libre
 
 
 ## Con qué se superpone un cuerpo, sin contar aquello sobre lo que se apoya.

@@ -934,7 +934,7 @@ func test_la_caja_se_sigue_apoyando_en_un_estante_del_deposito() -> void:  # AC-
 	await _soltar_la_caja_sobre(
 		almacen, caja, GONDOLA_DEL_DEPOSITO, lugar + Vector3.DOWN * MEDIA_CAJA
 	)
-	assert_str(_apoyo_de(almacen, caja)).contains("gondola_deposito03_001")
+	assert_str(_apoyo_de(almacen, caja)).contains("deposito_pallet_fondo_0_1")
 	assert_array(_solidos_pisados(caja)).is_empty()
 	_comprobar_sin_rescates(almacen, "lo legal")
 

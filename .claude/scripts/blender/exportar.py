@@ -132,6 +132,11 @@ def achicar_las_imagenes() -> list[tuple["bpy.types.Image", "bpy.types.Image"]]:
                 f"{imagen.name}: la copia achicada no quedó marcada como modificada, y el "
                 "exportador copiaría el archivo original entero."
             )
+        # Los mapas combinados toman el nombre de los datablocks. El sufijo .001 de la copia
+        # cambiaba su nombre en el GLB y Godot extraía otra textura, dejando la vieja en la web.
+        nombre = imagen.name
+        imagen.name = "__fuente_de_exportacion"
+        copia.name = nombre
         imagen.user_remap(copia)
         pares.append((imagen, copia))
     return pares
@@ -140,8 +145,10 @@ def achicar_las_imagenes() -> list[tuple["bpy.types.Image", "bpy.types.Image"]]:
 def restaurar_las_imagenes(pares: list[tuple["bpy.types.Image", "bpy.types.Image"]]) -> None:
     """Vuelve a poner cada original en su lugar y borra las copias."""
     for imagen, copia in pares:
+        nombre = copia.name
         copia.user_remap(imagen)
         bpy.data.images.remove(copia)
+        imagen.name = nombre
 
 
 def restaurar(apagados: list[tuple[str, str]]) -> None:
