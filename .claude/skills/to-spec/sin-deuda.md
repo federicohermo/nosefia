@@ -184,6 +184,12 @@ entregable más caro y el único que hace que el hallazgo no vuelva.
 | una regla de tests que describe **una versión vieja de la herramienta** | la regla de tests — se escribió midiendo gdUnit4 antes de 6.2.1, y nadie la volvió a medir al actualizarlo |
 | un caso que **afirma la regla que el issue invierte** sin decirla en prosa | `to-issue` — los límites salieron de un `rg`, y la inversión no se probó con un parche antes de publicar |
 | un criterio con «siempre», «nunca» o «ninguno» que **pone en rojo un caso de «Sólo lectura»** | `to-issue` — el issue no invertía ninguna regla, y el criterio no se probó con su lectura literal antes de publicar |
+| un criterio de medición que pide **otro protocolo que el medido**, o que cita uno que no trae escrito | `to-issue` — el prototipo alternaba en una página y el criterio pidió dos exports; los parámetros quedaron en el scratch de quien midió |
+| varios issues que **dan por hecha una herramienta de medición** que ninguno entrega | `to-issue` — «Se escribe» nombró el escenario y no la copia que se exporta ni quién recoge su informe |
+| un turno entre carriles que **no respeta el orden de llegada** | `implement-batch` — el turno era un cerrojo que cada carril reintentaba, y no una cola |
+| una pista del padre sobre el motor **que resultó falsa** | `implement-batch` — se repartió de memoria, sin la sonda que se le exige a un comando |
+| un puerto repartido **que ya escuchaba otro proceso** | `implement-batch` — se asignó sin mirar qué puertos estaban libres |
+| una dependencia instalada **adentro del worktree** que tira la importación de Godot | `implement-batch` — el preámbulo no dijo que Playwright se resuelve desde el checkout principal |
 
 **Si el problema no entra en ninguna fila, agregá la fila.** Esa tabla es el registro de lo que
 esta doctrina ya aprendió, y está incompleta a propósito.
