@@ -8,7 +8,8 @@ y su medición final.
 
 Un escenario de `test/performance/` que corre en escritorio escribe su JSON en `reports/`, que
 está en `.gitignore`. Una corrida reemplaza el archivo de la anterior: copiarlo antes de repetir.
-El JSON registra el commit, el motor, el equipo y el renderizador de la corrida.
+El JSON registra el commit, el motor y el equipo de la corrida. El escenario que dibuja registra
+también el renderizador.
 
 En la web no existe `res://reports/`. Ahí el escenario imprime su informe, y lo guarda el script
 de `.github/scripts/` que abre el export.
@@ -69,8 +70,9 @@ está en su encabezado. Un escenario con runner propio usa ese runner.
   mismo export mide varias veces más en unas cargas que en otras.
 - **Mirar que el puerto esté libre antes de servir.** Windows deja a dos servidores escuchar el
   mismo puerto, y el navegador cae en cualquiera de los dos.
-- **Playwright se instala en la carpeta que contiene al repo.** Node lo encuentra subiendo. Con
-  `node_modules/` adentro de un árbol sin caché de importación, Godot se cayó al importar.
+- **Playwright se instala en el checkout principal, no en un worktree.** Node lo encuentra
+  subiendo. Con `node_modules/` adentro de un árbol sin caché de importación, Godot se cayó al
+  importar.
 
 ## Medición en la web, con la CPU frenada
 
