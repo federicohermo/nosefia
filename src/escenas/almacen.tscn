@@ -11,7 +11,7 @@
 [ext_resource type="LightmapGIData" uid="uid://i8kc61len5kv" path="res://src/escenas/almacen.lmbake" id="lightmap"]
 [ext_resource type="PackedScene" path="res://src/escenas/puestos/reposicion_manual.tscn" id="reposicion_manual"]
 
-[node name="Almacen" type="Node3D" unique_id=999617316 node_paths=PackedStringArray("_hud", "_reloj", "_ciclo", "_pantalla", "_reloj_de_mesa", "_repositor", "_estante", "_cajas_de_productos", "_jugador", "_atenciones", "_computadora", "_limpiador", "_limpieza", "_recolector", "_audio", "_reposicion_manual", "_agarre", "_bolsas", "_muebles_con_contorno", "_puertas", "_utiles_de_limpieza", "_manija_del_balde")]
+[node name="Almacen" type="Node3D" unique_id=999617316 node_paths=PackedStringArray("_hud", "_reloj", "_ciclo", "_pantalla", "_reloj_de_mesa", "_repositor", "_estante", "_cajas_de_productos", "_jugador", "_atenciones", "_computadora", "_limpiador", "_limpieza", "_recolector", "_audio", "_reposicion_manual", "_agarre", "_bolsas", "_muebles_con_contorno", "_puertas", "_utiles_de_limpieza", "_manija_del_balde", "_tapa_del_contenedor")]
 script = ExtResource("4_almacen")
 _hud = NodePath("Interfaz/Hud")
 _reloj = NodePath("Servicios/RelojDelTurno")
@@ -28,6 +28,7 @@ _limpiador = NodePath("Servicios/Limpiador")
 _limpieza = NodePath("LimpiezaDelAlmacen")
 _recolector = NodePath("Servicios/Recolector")
 _audio = NodePath("Servicios/AudioDelAlmacen")
+_tapa_del_contenedor = NodePath("Estructura/deposito_contenedor_soporte/deposito_contenedor_bisagra_tapa/CuerpoDeLaTapa")
 _reposicion_manual = NodePath("ReposicionManual")
 _agarre = NodePath("Jugador/Agarre")
 _bolsas = [NodePath("Objetos/BolsaDeBasura1"), NodePath("Objetos/BolsaDeBasura2"), NodePath("Objetos/BolsaDeBasura3")]
@@ -89,6 +90,9 @@ jugador = NodePath("../../Jugador")
 puertas = [NodePath("../../Estructura/puerta/CuerpoDeLaHoja"), NodePath("../../Estructura/puerta2/CuerpoDeLaHoja"), NodePath("../../Estructura/bano_puerta_1/CuerpoDeLaHoja"), NodePath("../../Estructura/bano_puerta_2/CuerpoDeLaHoja")]
 
 [node name="Interfaz" parent="." unique_id=363714406 instance=ExtResource("grupo_Interfaz")]
+
+[node name="CuerpoDeLaTapa" parent="Estructura/deposito_contenedor_soporte/deposito_contenedor_bisagra_tapa" node_paths=PackedStringArray("zona")]
+zona = NodePath("../../../../Objetos/ZonaDeDescarte")
 
 [node name="Objetos" parent="." unique_id=412597675 instance=ExtResource("grupo_Objetos")]
 

@@ -7,11 +7,67 @@
 [ext_resource type="Script" path="res://src/escenas/puestos/escritorio.gd" id="escritorio"]
 [ext_resource type="Script" path="res://src/escenas/puestos/estante.gd" id="estante"]
 [ext_resource type="Script" path="res://src/escenas/puestos/puerta_del_local.gd" id="puerta"]
+[ext_resource type="Script" path="res://src/escenas/puestos/tapa_del_contenedor.gd" id="tapa_contenedor"]
+[ext_resource type="Script" path="res://src/escenas/puestos/contenedor_de_basura.gd" id="contenedor"]
 [ext_resource type="Script" path="res://src/escenas/puestos/artefacto_del_bano.gd" id="artefacto"]
 [ext_resource type="PackedScene" path="res://src/escenas/puestos/contenido_del_estante.tscn" id="contenido"]
 
 [sub_resource type="BoxShape3D" id="contorno_de_gondola"]
 size = Vector3(1.800454, 2.292613, 4.978426)
+
+[sub_resource type="ConvexPolygonShape3D" id="contenedor_pared_0"]
+points = PackedVector3Array(0.240000000, 0.045000000, -0.245000000, 0.205000000, 0.045000000, -0.280000000, 0.320000000, 1.025000000, -0.310000000, 0.270000000, 1.025000000, -0.360000000, 0.262000000, 1.005000000, -0.260000000, 0.220000000, 1.005000000, -0.302000000, 0.186500000, 0.130000000, -0.199500000, 0.159500000, 0.130000000, -0.226500000)
+
+[sub_resource type="ConvexPolygonShape3D" id="contenedor_pared_1"]
+points = PackedVector3Array(0.205000000, 0.045000000, -0.280000000, -0.205000000, 0.045000000, -0.280000000, 0.270000000, 1.025000000, -0.360000000, -0.270000000, 1.025000000, -0.360000000, 0.220000000, 1.005000000, -0.302000000, -0.220000000, 1.005000000, -0.302000000, 0.159500000, 0.130000000, -0.226500000, -0.159500000, 0.130000000, -0.226500000)
+
+[sub_resource type="ConvexPolygonShape3D" id="contenedor_pared_2"]
+points = PackedVector3Array(-0.205000000, 0.045000000, -0.280000000, -0.240000000, 0.045000000, -0.245000000, -0.270000000, 1.025000000, -0.360000000, -0.320000000, 1.025000000, -0.310000000, -0.220000000, 1.005000000, -0.302000000, -0.262000000, 1.005000000, -0.260000000, -0.159500000, 0.130000000, -0.226500000, -0.186500000, 0.130000000, -0.199500000)
+
+[sub_resource type="ConvexPolygonShape3D" id="contenedor_pared_3"]
+points = PackedVector3Array(-0.240000000, 0.045000000, -0.245000000, -0.240000000, 0.045000000, 0.245000000, -0.320000000, 1.025000000, -0.310000000, -0.320000000, 1.025000000, 0.310000000, -0.262000000, 1.005000000, -0.260000000, -0.262000000, 1.005000000, 0.260000000, -0.186500000, 0.130000000, -0.199500000, -0.186500000, 0.130000000, 0.199500000)
+
+[sub_resource type="ConvexPolygonShape3D" id="contenedor_pared_4"]
+points = PackedVector3Array(-0.240000000, 0.045000000, 0.245000000, -0.205000000, 0.045000000, 0.280000000, -0.320000000, 1.025000000, 0.310000000, -0.270000000, 1.025000000, 0.360000000, -0.262000000, 1.005000000, 0.260000000, -0.220000000, 1.005000000, 0.302000000, -0.186500000, 0.130000000, 0.199500000, -0.159500000, 0.130000000, 0.226500000)
+
+[sub_resource type="ConvexPolygonShape3D" id="contenedor_pared_5"]
+points = PackedVector3Array(-0.205000000, 0.045000000, 0.280000000, 0.205000000, 0.045000000, 0.280000000, -0.270000000, 1.025000000, 0.360000000, 0.270000000, 1.025000000, 0.360000000, -0.220000000, 1.005000000, 0.302000000, 0.220000000, 1.005000000, 0.302000000, -0.159500000, 0.130000000, 0.226500000, 0.159500000, 0.130000000, 0.226500000)
+
+[sub_resource type="ConvexPolygonShape3D" id="contenedor_pared_6"]
+points = PackedVector3Array(0.205000000, 0.045000000, 0.280000000, 0.240000000, 0.045000000, 0.245000000, 0.270000000, 1.025000000, 0.360000000, 0.320000000, 1.025000000, 0.310000000, 0.220000000, 1.005000000, 0.302000000, 0.262000000, 1.005000000, 0.260000000, 0.159500000, 0.130000000, 0.226500000, 0.186500000, 0.130000000, 0.199500000)
+
+[sub_resource type="ConvexPolygonShape3D" id="contenedor_pared_7"]
+points = PackedVector3Array(0.240000000, 0.045000000, 0.245000000, 0.240000000, 0.045000000, -0.245000000, 0.320000000, 1.025000000, 0.310000000, 0.320000000, 1.025000000, -0.310000000, 0.262000000, 1.005000000, 0.260000000, 0.262000000, 1.005000000, -0.260000000, 0.186500000, 0.130000000, 0.199500000, 0.186500000, 0.130000000, -0.199500000)
+
+[sub_resource type="ConvexPolygonShape3D" id="contenedor_borde_0"]
+points = PackedVector3Array(0.320000000, 1.025000000, -0.310000000, 0.270000000, 1.025000000, -0.360000000, 0.345000000, 1.025000000, -0.330000000, 0.290000000, 1.025000000, -0.385000000, 0.345000000, 1.065000000, -0.330000000, 0.290000000, 1.065000000, -0.385000000, 0.337000000, 1.075000000, -0.327000000, 0.287000000, 1.075000000, -0.377000000, 0.262000000, 1.075000000, -0.260000000, 0.220000000, 1.075000000, -0.302000000, 0.262000000, 1.005000000, -0.260000000, 0.220000000, 1.005000000, -0.302000000)
+
+[sub_resource type="ConvexPolygonShape3D" id="contenedor_borde_1"]
+points = PackedVector3Array(0.270000000, 1.025000000, -0.360000000, -0.270000000, 1.025000000, -0.360000000, 0.290000000, 1.025000000, -0.385000000, -0.290000000, 1.025000000, -0.385000000, 0.290000000, 1.065000000, -0.385000000, -0.290000000, 1.065000000, -0.385000000, 0.287000000, 1.075000000, -0.377000000, -0.287000000, 1.075000000, -0.377000000, 0.220000000, 1.075000000, -0.302000000, -0.220000000, 1.075000000, -0.302000000, 0.220000000, 1.005000000, -0.302000000, -0.220000000, 1.005000000, -0.302000000)
+
+[sub_resource type="ConvexPolygonShape3D" id="contenedor_borde_2"]
+points = PackedVector3Array(-0.270000000, 1.025000000, -0.360000000, -0.320000000, 1.025000000, -0.310000000, -0.290000000, 1.025000000, -0.385000000, -0.345000000, 1.025000000, -0.330000000, -0.290000000, 1.065000000, -0.385000000, -0.345000000, 1.065000000, -0.330000000, -0.287000000, 1.075000000, -0.377000000, -0.337000000, 1.075000000, -0.327000000, -0.220000000, 1.075000000, -0.302000000, -0.262000000, 1.075000000, -0.260000000, -0.220000000, 1.005000000, -0.302000000, -0.262000000, 1.005000000, -0.260000000)
+
+[sub_resource type="ConvexPolygonShape3D" id="contenedor_borde_3"]
+points = PackedVector3Array(-0.320000000, 1.025000000, -0.310000000, -0.320000000, 1.025000000, 0.310000000, -0.345000000, 1.025000000, -0.330000000, -0.345000000, 1.025000000, 0.330000000, -0.345000000, 1.065000000, -0.330000000, -0.345000000, 1.065000000, 0.330000000, -0.337000000, 1.075000000, -0.327000000, -0.337000000, 1.075000000, 0.327000000, -0.262000000, 1.075000000, -0.260000000, -0.262000000, 1.075000000, 0.260000000, -0.262000000, 1.005000000, -0.260000000, -0.262000000, 1.005000000, 0.260000000)
+
+[sub_resource type="ConvexPolygonShape3D" id="contenedor_borde_4"]
+points = PackedVector3Array(-0.320000000, 1.025000000, 0.310000000, -0.270000000, 1.025000000, 0.360000000, -0.345000000, 1.025000000, 0.330000000, -0.290000000, 1.025000000, 0.385000000, -0.345000000, 1.065000000, 0.330000000, -0.290000000, 1.065000000, 0.385000000, -0.337000000, 1.075000000, 0.327000000, -0.287000000, 1.075000000, 0.377000000, -0.262000000, 1.075000000, 0.260000000, -0.220000000, 1.075000000, 0.302000000, -0.262000000, 1.005000000, 0.260000000, -0.220000000, 1.005000000, 0.302000000)
+
+[sub_resource type="ConvexPolygonShape3D" id="contenedor_borde_5"]
+points = PackedVector3Array(-0.270000000, 1.025000000, 0.360000000, 0.270000000, 1.025000000, 0.360000000, -0.290000000, 1.025000000, 0.385000000, 0.290000000, 1.025000000, 0.385000000, -0.290000000, 1.065000000, 0.385000000, 0.290000000, 1.065000000, 0.385000000, -0.287000000, 1.075000000, 0.377000000, 0.287000000, 1.075000000, 0.377000000, -0.220000000, 1.075000000, 0.302000000, 0.220000000, 1.075000000, 0.302000000, -0.220000000, 1.005000000, 0.302000000, 0.220000000, 1.005000000, 0.302000000)
+
+[sub_resource type="ConvexPolygonShape3D" id="contenedor_borde_6"]
+points = PackedVector3Array(0.270000000, 1.025000000, 0.360000000, 0.320000000, 1.025000000, 0.310000000, 0.290000000, 1.025000000, 0.385000000, 0.345000000, 1.025000000, 0.330000000, 0.290000000, 1.065000000, 0.385000000, 0.345000000, 1.065000000, 0.330000000, 0.287000000, 1.075000000, 0.377000000, 0.337000000, 1.075000000, 0.327000000, 0.220000000, 1.075000000, 0.302000000, 0.262000000, 1.075000000, 0.260000000, 0.220000000, 1.005000000, 0.302000000, 0.262000000, 1.005000000, 0.260000000)
+
+[sub_resource type="ConvexPolygonShape3D" id="contenedor_borde_7"]
+points = PackedVector3Array(0.320000000, 1.025000000, 0.310000000, 0.320000000, 1.025000000, -0.310000000, 0.345000000, 1.025000000, 0.330000000, 0.345000000, 1.025000000, -0.330000000, 0.345000000, 1.065000000, 0.330000000, 0.345000000, 1.065000000, -0.330000000, 0.337000000, 1.075000000, 0.327000000, 0.337000000, 1.075000000, -0.327000000, 0.262000000, 1.075000000, 0.260000000, 0.262000000, 1.075000000, -0.260000000, 0.262000000, 1.005000000, 0.260000000, 0.262000000, 1.005000000, -0.260000000)
+
+[sub_resource type="ConvexPolygonShape3D" id="contenedor_fondo"]
+points = PackedVector3Array(0.240000000, 0.045000000, -0.245000000, 0.205000000, 0.045000000, -0.280000000, -0.205000000, 0.045000000, -0.280000000, -0.240000000, 0.045000000, -0.245000000, -0.240000000, 0.045000000, 0.245000000, -0.205000000, 0.045000000, 0.280000000, 0.205000000, 0.045000000, 0.280000000, 0.240000000, 0.045000000, 0.245000000, 0.186500000, 0.130000000, -0.199500000, 0.159500000, 0.130000000, -0.226500000, -0.159500000, 0.130000000, -0.226500000, -0.186500000, 0.130000000, -0.199500000, -0.186500000, 0.130000000, 0.199500000, -0.159500000, 0.130000000, 0.226500000, 0.159500000, 0.130000000, 0.226500000, 0.186500000, 0.130000000, 0.199500000)
+
+[sub_resource type="BoxShape3D" id="volumen_tapa_contenedor"]
+size = Vector3(0.682, 0.025, 0.762)
 
 [sub_resource type="BoxShape3D" id="contorno_de_gondola2"]
 size = Vector3(1.800454, 2.292613, 4.870332)
@@ -1075,6 +1131,94 @@ gi_lightmap_texel_scale = 4.0
 
 [node name="deposito_pallet_piso" parent="."]
 gi_lightmap_texel_scale = 4.0
+
+[node name="deposito_contenedor_cuerpo" parent="deposito_contenedor_soporte"]
+gi_lightmap_texel_scale = 4.0
+
+[node name="StaticBody3D" parent="deposito_contenedor_soporte/deposito_contenedor_cuerpo" node_paths=PackedStringArray("tapa", "mallas") groups=["interactuable"]]
+script = ExtResource("contenedor")
+tapa = NodePath("../../deposito_contenedor_bisagra_tapa/CuerpoDeLaTapa")
+mallas = [NodePath("..")]
+
+[node name="CollisionShape3D" parent="deposito_contenedor_soporte/deposito_contenedor_cuerpo/StaticBody3D"]
+disabled = true
+
+# La cara exterior coincide con el modelo. El espesor crece 4 cm hacia la cavidad
+# para contener los 2 cm de penetracion que tolera Jolt, sin cerrar la boca.
+
+[node name="Volumen_contenedor_pared_0" type="CollisionShape3D" parent="deposito_contenedor_soporte/deposito_contenedor_cuerpo/StaticBody3D"]
+shape = SubResource("contenedor_pared_0")
+
+[node name="Volumen_contenedor_pared_1" type="CollisionShape3D" parent="deposito_contenedor_soporte/deposito_contenedor_cuerpo/StaticBody3D"]
+shape = SubResource("contenedor_pared_1")
+
+[node name="Volumen_contenedor_pared_2" type="CollisionShape3D" parent="deposito_contenedor_soporte/deposito_contenedor_cuerpo/StaticBody3D"]
+shape = SubResource("contenedor_pared_2")
+
+[node name="Volumen_contenedor_pared_3" type="CollisionShape3D" parent="deposito_contenedor_soporte/deposito_contenedor_cuerpo/StaticBody3D"]
+shape = SubResource("contenedor_pared_3")
+
+[node name="Volumen_contenedor_pared_4" type="CollisionShape3D" parent="deposito_contenedor_soporte/deposito_contenedor_cuerpo/StaticBody3D"]
+shape = SubResource("contenedor_pared_4")
+
+[node name="Volumen_contenedor_pared_5" type="CollisionShape3D" parent="deposito_contenedor_soporte/deposito_contenedor_cuerpo/StaticBody3D"]
+shape = SubResource("contenedor_pared_5")
+
+[node name="Volumen_contenedor_pared_6" type="CollisionShape3D" parent="deposito_contenedor_soporte/deposito_contenedor_cuerpo/StaticBody3D"]
+shape = SubResource("contenedor_pared_6")
+
+[node name="Volumen_contenedor_pared_7" type="CollisionShape3D" parent="deposito_contenedor_soporte/deposito_contenedor_cuerpo/StaticBody3D"]
+shape = SubResource("contenedor_pared_7")
+
+[node name="Volumen_contenedor_borde_0" type="CollisionShape3D" parent="deposito_contenedor_soporte/deposito_contenedor_cuerpo/StaticBody3D"]
+shape = SubResource("contenedor_borde_0")
+
+[node name="Volumen_contenedor_borde_1" type="CollisionShape3D" parent="deposito_contenedor_soporte/deposito_contenedor_cuerpo/StaticBody3D"]
+shape = SubResource("contenedor_borde_1")
+
+[node name="Volumen_contenedor_borde_2" type="CollisionShape3D" parent="deposito_contenedor_soporte/deposito_contenedor_cuerpo/StaticBody3D"]
+shape = SubResource("contenedor_borde_2")
+
+[node name="Volumen_contenedor_borde_3" type="CollisionShape3D" parent="deposito_contenedor_soporte/deposito_contenedor_cuerpo/StaticBody3D"]
+shape = SubResource("contenedor_borde_3")
+
+[node name="Volumen_contenedor_borde_4" type="CollisionShape3D" parent="deposito_contenedor_soporte/deposito_contenedor_cuerpo/StaticBody3D"]
+shape = SubResource("contenedor_borde_4")
+
+[node name="Volumen_contenedor_borde_5" type="CollisionShape3D" parent="deposito_contenedor_soporte/deposito_contenedor_cuerpo/StaticBody3D"]
+shape = SubResource("contenedor_borde_5")
+
+[node name="Volumen_contenedor_borde_6" type="CollisionShape3D" parent="deposito_contenedor_soporte/deposito_contenedor_cuerpo/StaticBody3D"]
+shape = SubResource("contenedor_borde_6")
+
+[node name="Volumen_contenedor_borde_7" type="CollisionShape3D" parent="deposito_contenedor_soporte/deposito_contenedor_cuerpo/StaticBody3D"]
+shape = SubResource("contenedor_borde_7")
+
+[node name="Volumen_contenedor_fondo" type="CollisionShape3D" parent="deposito_contenedor_soporte/deposito_contenedor_cuerpo/StaticBody3D"]
+shape = SubResource("contenedor_fondo")
+
+[node name="deposito_contenedor_ruedas" parent="deposito_contenedor_soporte"]
+gi_lightmap_texel_scale = 4.0
+
+[node name="deposito_contenedor_herrajes" parent="deposito_contenedor_soporte"]
+gi_lightmap_texel_scale = 4.0
+
+[node name="deposito_contenedor_tapa" parent="deposito_contenedor_soporte/deposito_contenedor_bisagra_tapa"]
+gi_mode = 2
+
+[node name="CollisionShape3D" parent="deposito_contenedor_soporte/deposito_contenedor_bisagra_tapa/deposito_contenedor_tapa/StaticBody3D"]
+disabled = true
+
+[node name="CuerpoDeLaTapa" type="AnimatableBody3D" parent="deposito_contenedor_soporte/deposito_contenedor_bisagra_tapa" node_paths=PackedStringArray("bisagra", "mallas", "forma", "soporte") groups=["interactuable"]]
+script = ExtResource("tapa_contenedor")
+bisagra = NodePath("..")
+mallas = [NodePath("../deposito_contenedor_tapa")]
+forma = NodePath("Volumen")
+soporte = NodePath("../../deposito_contenedor_cuerpo/StaticBody3D")
+
+[node name="Volumen" type="CollisionShape3D" parent="deposito_contenedor_soporte/deposito_contenedor_bisagra_tapa/CuerpoDeLaTapa"]
+position = Vector3(0, -0.0015, 0.352)
+shape = SubResource("volumen_tapa_contenedor")
 
 [node name="puerta" parent="."]
 gi_mode = 2

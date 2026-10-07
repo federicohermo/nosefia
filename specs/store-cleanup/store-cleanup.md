@@ -173,6 +173,16 @@ detener su evaporación durante la pausa y desaparecer al abrir otra jornada. La
 simultánea DEBE estar acotada; repetir pasadas no reserva nodos sin límite. Los charcos no
 obstruyen el movimiento ni la mira.
 
+### BR-CLN-025 — Tapa del contenedor de basura
+
+El contenedor del descarte DEBE empezar cada jornada con la tapa abierta. El clic derecho sobre
+el cuerpo o la tapa DEBE alternar entre abrirla y cerrarla, mediante un giro breve que se puede invertir
+sin saltar de posición. MIENTRAS está cerrada o girando, el descarte NO DEBE recibir bolsas.
+Una bolsa no depositada DEBE conservarse para poder llevarla después con la tapa abierta.
+La tapa DEBE acompañarse de una colisión que siga su posición.
+Si un objeto obstruye el cierre, la tapa DEBE detenerse antes de atravesarlo y continuar
+cuando el recorrido quede libre. Otro clic derecho permite volver a abrirla.
+
 ## Criterios de aceptación
 
 ### AC-CLN-007 — Tres bolsas son más que las manos *(verifica BR-CLN-007)*
@@ -343,6 +353,23 @@ DADO agua sin jabón CUANDO se acepta un jabón ENTONCES la mezcla empieza con e
 muestra ambos líquidos durante la transición y termina con el color del jabón; el estado del
 agua acepta inmediatamente mojar la mopa de ese jabón. Una actualización repetida no reinicia
 la transición; un uso rechazado no la dispara. Vaciar o abrir otra jornada cancela la mezcla.
+
+### AC-CLN-034 — Tapa que se abre y se cierra *(verifica BR-CLN-025)*
+
+DADO el contenedor al empezar una jornada ENTONCES tiene la tapa abierta. CUANDO se interactúa
+con el cuerpo o la tapa mediante clic derecho ENTONCES gira hasta cerrarse; otro clic derecho invierte el
+giro hasta abrirse. El clic izquierdo conserva el gesto de soltar lo que se lleva en la mano.
+La tapa y su colisión conservan la bisagra en ambos estados y durante el movimiento.
+Abrir otra jornada restaura la tapa abierta. Dividir el tiempo entre cuadros conserva el giro.
+Con un objeto en el recorrido de cierre, la tapa se detiene sin atravesarlo ni comprimirlo
+contra el contenedor; al retirarlo continúa cerrándose.
+
+### AC-CLN-035 — Descarte disponible con la tapa abierta *(verifica BR-CLN-025)*
+
+DADO una bolsa válida ENTONCES sólo se deposita con la tapa completamente abierta. Cerrarla
+desactiva el descarte desde el inicio del giro. Soltar una bolsa con la tapa cerrada no la
+destruye ni cuenta la tarea; abrirla permite volver a depositar esa misma bolsa.
+El radio del descarte y el resto de sus rechazos conservan sus reglas anteriores.
 
 ## No objetivos
 
