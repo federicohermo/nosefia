@@ -110,17 +110,40 @@ func test_lo_soltado_adentro_va_al_piso_al_lado_del_jugador() -> void:  # AC-PLY
 
 func test_encima_de_la_caja_que_ocupa_el_origen() -> void:  # AC-PLY-027
 	var almacen: Node3D = await _almacen()
-	var caja := _caja(almacen, Producto.Id.ARVEJAS)
-	var ocupante := _caja(almacen, Producto.Id.CHISITOS)
-	var origen: Transform3D = caja.call(ReglasDeLosObjetos.METODO_LUGAR_DE_ORIGEN)
+	var caja := _caja(almacen, Producto.Id.ARVEJAS) as RigidBody3D
+	var ocupante := _caja(almacen, Producto.Id.CHISITOS) as RigidBody3D
+	var red := _red(almacen)
+	# Arvejas ahora nace en el estante inferior: una caja grande puesta en su centro se
+	# hunde en el tablero, y el estante siguiente impide apilar. Este caso necesita piso
+	# libre y un origen ocupado con espacio encima, independientemente de la distribucion.
+	var origen := Transform3D(
+		caja.global_basis, PISO_LIBRE + Vector3.UP * (_piso(almacen) + _media(caja))
+	)
+	caja.set("_origen_en_el_mundo", origen)
 	caja.global_position = ENTRETECHO
-	ocupante.global_position = origen.origin
+	ocupante.global_position = PISO_LIBRE + Vector3.UP * (_piso(almacen) + _media(ocupante))
 	ocupante.call("quedarse_quieta")
 	await get_tree().physics_frame
-	_red(almacen).revisar(caja)
-	assert_int(_red(almacen).rescates[0]["clase"]).is_equal(Rescate.Clase.ENCIMA_DEL_ORIGEN)
+	assert_float(red.call("_hundido", ocupante, ocupante.global_transform)).is_less_equal(
+		ReglasDeLosObjetos.ROCE
+	)
+	assert_bool(red.call("_apoyado", ocupante, ocupante.global_transform)).is_true()
+	var consulta := PhysicsRayQueryParameters3D.create(
+		origen.origin + Vector3.UP, origen.origin, caja.collision_mask
+	)
+	consulta.exclude = [caja.get_rid()]
+	var golpe := caja.get_world_3d().direct_space_state.intersect_ray(consulta)
+	assert_dict(golpe).is_not_empty()
+	assert_object(golpe.get("collider")).is_same(ocupante)
 	# Media caja de cada una, que no son del mismo tamaño: Arvejas va en caja chica.
 	var alto := _media(caja) + _media(ocupante)
+	var encima := origen
+	encima.origin.y = ocupante.global_position.y + alto + ReglasDeLosObjetos.ROCE
+	assert_float(red.call("_hundido", caja, encima)).is_less_equal(ReglasDeLosObjetos.ROCE)
+	assert_bool(red.call("_apoyado", caja, encima)).is_true()
+	red.revisar(caja)
+	assert_int(red.rescates.size()).is_equal(1)
+	assert_int(red.rescates[0]["clase"]).is_equal(Rescate.Clase.ENCIMA_DEL_ORIGEN)
 	assert_float(caja.global_position.y - ocupante.global_position.y).is_equal_approx(alto, 0.01)
 
 

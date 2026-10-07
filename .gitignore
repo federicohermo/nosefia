@@ -38,3 +38,4 @@ __pycache__/
 
 # Playwright se instala en el momento para los scripts de `.github/scripts/`, sin `package.json`.
 /node_modules/
+.aider*

@@ -25,6 +25,7 @@ const LimpiezaDelLocal := preload("res://src/escenas/puestos/limpieza_del_almace
 const AudioDelLocal := preload("res://src/escenas/puestos/audio_del_almacen.gd")
 const ReposicionManual := preload("res://src/escenas/puestos/reposicion_manual.gd")
 const PuertaDelLocal := preload("res://src/escenas/puestos/puerta_del_local.gd")
+const TapaDelLocal := preload("res://src/escenas/puestos/tapa_del_contenedor.gd")
 const UtilDeLimpieza := preload("res://src/escenas/objetos/util_de_limpieza.gd")
 const ManijaDelBalde := preload("res://src/escenas/objetos/manija_del_balde.gd")
 
@@ -62,6 +63,7 @@ const ESCENA_DEL_MENU := "res://src/escenas/menu_de_inicio.tscn"
 @export var _manija_del_balde: ManijaDelBalde
 
 @export var _puertas: Array[Node3D]
+@export var _tapa_del_contenedor: TapaDelLocal
 
 ## Los muebles con los que el jugador choca por su contorno y no por su malla.
 @export var _muebles_con_contorno: Array[PhysicsBody3D]
@@ -220,6 +222,7 @@ func _al_abrir_la_jornada(jornada: int) -> void:
 		util.volver_a_su_lugar()
 	for puerta: PuertaDelLocal in _puertas:
 		puerta.cerrar_de_golpe()
+	_tapa_del_contenedor.reiniciar()
 	_audio.arrancar_el_ambiente()
 	_limpieza.reiniciar()
 	_estante.mostrar(0)

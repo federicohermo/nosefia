@@ -1,0 +1,15 @@
+{
+  "source": "https://polyhaven.com/a/concrete_floor_worn_001",
+  "license": "CC0-1.0",
+  "recipe": ".claude/scripts/blender/texturizar_piso_deposito.py",
+  "editable_material": "deposito_concreto_variaciones_receta",
+  "bake": "Original CC0 maps; copied without blending or color gain",
+  "detail_coverage_m": 1.75,
+  "atlas_coverage_m": 1.75,
+  "variants": 1,
+  "seed": 20261006,
+  "albedo_gain_linear": 1.0,
+  "export_resolution": {"color": 1024, "normal": 512, "roughness": 512},
+  "runtime": "Standard PBR; three textures; linear mipmaps and anisotropic filter; normal strength 0.45",
+  "alternative_recipe": "Use --variaciones to rebuild the previous 16-patch blend"
+}

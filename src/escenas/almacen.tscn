@@ -11,7 +11,7 @@
 [ext_resource type="LightmapGIData" uid="uid://i8kc61len5kv" path="res://src/escenas/almacen.lmbake" id="lightmap"]
 [ext_resource type="PackedScene" path="res://src/escenas/puestos/reposicion_manual.tscn" id="reposicion_manual"]
 
-[node name="Almacen" type="Node3D" unique_id=999617316 node_paths=PackedStringArray("_hud", "_reloj", "_ciclo", "_pantalla", "_reloj_de_mesa", "_repositor", "_estante", "_cajas_de_productos", "_jugador", "_atenciones", "_computadora", "_limpiador", "_limpieza", "_recolector", "_audio", "_reposicion_manual", "_agarre", "_bolsas", "_muebles_con_contorno", "_puertas", "_utiles_de_limpieza", "_manija_del_balde")]
+[node name="Almacen" type="Node3D" unique_id=999617316 node_paths=PackedStringArray("_hud", "_reloj", "_ciclo", "_pantalla", "_reloj_de_mesa", "_repositor", "_estante", "_cajas_de_productos", "_jugador", "_atenciones", "_computadora", "_limpiador", "_limpieza", "_recolector", "_audio", "_reposicion_manual", "_agarre", "_bolsas", "_muebles_con_contorno", "_puertas", "_utiles_de_limpieza", "_manija_del_balde", "_tapa_del_contenedor")]
 script = ExtResource("4_almacen")
 _hud = NodePath("Interfaz/Hud")
 _reloj = NodePath("Servicios/RelojDelTurno")
@@ -28,6 +28,7 @@ _limpiador = NodePath("Servicios/Limpiador")
 _limpieza = NodePath("LimpiezaDelAlmacen")
 _recolector = NodePath("Servicios/Recolector")
 _audio = NodePath("Servicios/AudioDelAlmacen")
+_tapa_del_contenedor = NodePath("Estructura/deposito_contenedor_soporte/deposito_contenedor_bisagra_tapa/CuerpoDeLaTapa")
 _reposicion_manual = NodePath("ReposicionManual")
 _agarre = NodePath("Jugador/Agarre")
 _bolsas = [NodePath("Objetos/BolsaDeBasura1"), NodePath("Objetos/BolsaDeBasura2"), NodePath("Objetos/BolsaDeBasura3")]
@@ -69,9 +70,6 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.001017, 0)
 [node name="Deposito" parent="Estructura/SueloSolido" index="1"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10.86326, 0, -4.5818586)
 
-[node name="Fondo" parent="Estructura/SueloSolido" index="2"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.56085, 0.0005, -11.359675)
-
 [node name="PasoAlDeposito" parent="Estructura/SueloSolido" index="3"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8.081463, 0, -6.82)
 
@@ -93,6 +91,9 @@ puertas = [NodePath("../../Estructura/puerta/CuerpoDeLaHoja"), NodePath("../../E
 
 [node name="Interfaz" parent="." unique_id=363714406 instance=ExtResource("grupo_Interfaz")]
 
+[node name="CuerpoDeLaTapa" parent="Estructura/deposito_contenedor_soporte/deposito_contenedor_bisagra_tapa" node_paths=PackedStringArray("zona")]
+zona = NodePath("../../../../Objetos/ZonaDeDescarte")
+
 [node name="Objetos" parent="." unique_id=412597675 instance=ExtResource("grupo_Objetos")]
 
 [node name="ZonaDeDescarte" parent="Objetos" index="2" node_paths=PackedStringArray("recolector")]
@@ -112,6 +113,8 @@ editor_description = "Donde el jugador arranca cada noche: frente a la puerta de
 
 [node name="LightmapGI" type="LightmapGI" parent="." unique_id=2127617826]
 quality = 2
+texel_scale = 1.0
+directional = true
 generate_probes_subdiv = 3
 light_data = ExtResource("lightmap")
 

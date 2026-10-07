@@ -1,8 +1,8 @@
 ## Corre al importar el modelo del almacén.
 ##
-## Todo el arte filtra pixelado, también los materiales sin textura: a esos el importador les
-## pone filtro lineal, y Godot compila un shader aparte por cada filtro. En la web cada shader
-## cuesta segundos de la primera carga.
+## El arte conserva su filtro pixelado. El concreto y el revestimiento del depósito usan
+## mipmaps con filtro lineal y anisotropía para conservar detalle en superficies oblicuas.
+## Esta excepción comparte un filtro y evita añadir variantes por cada material.
 @tool
 extends EditorScenePostImport
 
@@ -13,4 +13,16 @@ func _post_import(escena: Node) -> Object:
 			var material := malla.mesh.surface_get_material(i) as BaseMaterial3D
 			if material != null:
 				material.texture_filter = BaseMaterial3D.TEXTURE_FILTER_NEAREST_WITH_MIPMAPS
+				if (
+					material.resource_name == "deposito_concreto"
+					or material.resource_name.begins_with("deposito_revestimiento_")
+				):
+					material.texture_filter = (
+						BaseMaterial3D.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS_ANISOTROPIC
+					)
+					# Ajuste para la iluminación horneada del juego, sin aumentar los mapas.
+					if material.resource_name == "deposito_concreto":
+						material.normal_scale = 0.8
+					elif material.resource_name == "deposito_revestimiento_bloques":
+						material.normal_scale = 1.0
 	return escena

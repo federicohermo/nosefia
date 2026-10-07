@@ -51,6 +51,7 @@ const ACCION_EXAMINAR := "examinar"
 ## son las dos mitades de la misma cosa: el grupo dice que se puede mirar, el método que
 ## contesta algo.
 const METODO_INTERACTUAR := "interactuar"
+const METODO_USAR := ReglasDelJugador.ACCION_USAR
 
 ## Y «esto se corre de un empujón» es otro nombre de método, por la misma razón: el jugador no
 ## puede nombrar la caja sin cruzar la dirección de las capas.
