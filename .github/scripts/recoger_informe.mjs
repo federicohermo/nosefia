@@ -113,7 +113,7 @@ try {
   let temporizador;
   const plazo = new Promise((_, falla) => {
     temporizador = setTimeout(
-      () => falla(new Error(`no llegó el informe en ${espera} s`)),
+      () => falla(new Error([`no llegó el informe en ${espera} s`, ...errores].join('\n'))),
       espera * 1000
     );
   });
