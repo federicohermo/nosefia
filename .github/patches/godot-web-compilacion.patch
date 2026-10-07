@@ -1,6 +1,144 @@
+--- a/drivers/gles3/rasterizer_gles3.cpp
++++ b/drivers/gles3/rasterizer_gles3.cpp
+@@ -113,6 +113,11 @@ void RasterizerGLES3::begin_frame(double frame_step) {
+ 	GLES3::Utilities *utils = GLES3::Utilities::get_singleton();
+ 	utils->_capture_timestamps_begin();
+ 
++#ifdef WEB_ENABLED
++	// Only the scene shader links in parallel: its draw skips a surface whose program is not ready.
++	GLES3::MaterialStorage::get_singleton()->shaders.scene_shader.poll_link_queue();
++#endif
++
+ 	//scene->iteration();
+ }
+ 
 --- a/drivers/gles3/shader_gles3.cpp
 +++ b/drivers/gles3/shader_gles3.cpp
-@@ -702,6 +702,14 @@
+@@ -41,6 +41,13 @@
+ #include "core/io/file_access.h"
+ #endif
+ 
++#ifdef WEB_ENABLED
++#include <emscripten.h>
++#include <emscripten/html5.h>
++
++#define _GL_COMPLETION_STATUS_KHR 0x91B1
++#endif
++
+ static String _mkid(const String &p_id) {
+ 	String id = "m_" + p_id.replace("__", "_dus_");
+ 	return id.replace("__", "_dus_"); //doubleunderscore is reserved in glsl
+@@ -469,6 +476,90 @@ void ShaderGLES3::_compile_specialization(Version::Specialization &spec, uint32_
+ 	spec.ok = true;
+ }
+ 
++#ifdef WEB_ENABLED
++void ShaderGLES3::_publish_link_queue() {
++	EM_ASM({ window.godot_programas_en_cola = $0; }, int(link_queue.size()));
++}
++
++// Asks for the program and returns without reading any status: a status query blocks
++// until the browser finishes the link. Transform feedback is not set up, so this only
++// serves shaders without feedback.
++void ShaderGLES3::_queue_specialization(Version *p_version, int p_variant, uint64_t p_specialization) {
++	Version::Specialization spec;
++	spec.id = glCreateProgram();
++	spec.vert_id = glCreateShader(GL_VERTEX_SHADER);
++	spec.frag_id = glCreateShader(GL_FRAGMENT_SHADER);
++
++	const GLuint stage_ids[STAGE_TYPE_MAX] = { spec.vert_id, spec.frag_id };
++	for (int i = 0; i < STAGE_TYPE_MAX; i++) {
++		StringBuilder builder;
++		_build_variant_code(builder, p_variant, p_version, StageType(i), p_specialization);
++		CharString cs = builder.as_string().utf8();
++		const char *cstr = cs.ptr();
++		GLint cstr_len = cs.length();
++		glShaderSource(stage_ids[i], 1, &cstr, &cstr_len);
++		glCompileShader(stage_ids[i]);
++	}
++
++	glAttachShader(spec.id, spec.frag_id);
++	glAttachShader(spec.id, spec.vert_id);
++	glLinkProgram(spec.id);
++
++	spec.build_queued = true;
++	p_version->variants[p_variant].insert(p_specialization, spec);
++
++	QueuedSpecialization queued;
++	queued.version = p_version;
++	queued.variant = p_variant;
++	queued.specialization = p_specialization;
++	link_queue.push_back(queued);
++	_publish_link_queue();
++}
++
++void ShaderGLES3::poll_link_queue() {
++	if (!parallel_link_checked) {
++		parallel_link_checked = true;
++		parallel_link = emscripten_webgl_enable_extension(emscripten_webgl_get_current_context(), "KHR_parallel_shader_compile");
++		if (parallel_link) {
++			_publish_link_queue();
++		}
++	}
++
++	const uint32_t queued_count = link_queue.size();
++	for (uint32_t i = 0; i < link_queue.size();) {
++		const QueuedSpecialization queued = link_queue[i];
++		Version::Specialization *spec = queued.version->variants[queued.variant].getptr(queued.specialization);
++
++		// A lost context answers true, so the queue always empties.
++		GLint status = GL_FALSE;
++		glGetProgramiv(spec->id, _GL_COMPLETION_STATUS_KHR, &status);
++		if (status == GL_FALSE) {
++			i++;
++			continue;
++		}
++
++		glGetProgramiv(spec->id, GL_LINK_STATUS, &status);
++		if (status == GL_FALSE) {
++			// Compile again on the spot: that path reports the error with its source.
++			glDeleteShader(spec->vert_id);
++			glDeleteShader(spec->frag_id);
++			glDeleteProgram(spec->id);
++			*spec = Version::Specialization();
++			_compile_specialization(*spec, queued.variant, queued.version, queued.specialization);
++		} else {
++			_get_uniform_locations(*spec, queued.version);
++			spec->ok = true;
++			spec->build_queued = false;
++		}
++		link_queue.remove_at_unordered(i);
++	}
++
++	if (link_queue.size() != queued_count) {
++		_publish_link_queue();
++	}
++}
++#endif // WEB_ENABLED
++
+ RenderingServerTypes::ShaderNativeSourceCode ShaderGLES3::version_get_native_source_code(RID p_version) {
+ 	Version *version = version_owner.get_or_null(p_version);
+ 	RenderingServerTypes::ShaderNativeSourceCode source_code;
+@@ -697,11 +788,33 @@ void ShaderGLES3::_clear_version(Version *p_version) {
+ 		}
+ 	}
+ 
++#ifdef WEB_ENABLED
++	const uint32_t queued_count = link_queue.size();
++	for (uint32_t i = 0; i < link_queue.size();) {
++		if (link_queue[i].version == p_version) {
++			link_queue.remove_at_unordered(i);
++		} else {
++			i++;
++		}
++	}
++	if (link_queue.size() != queued_count) {
++		_publish_link_queue();
++	}
++#endif
++
+ 	p_version->variants.clear();
+ }
  
  void ShaderGLES3::_initialize_version(Version *p_version) {
  	ERR_FAIL_COND(p_version->variants.size() > 0);
@@ -15,7 +153,7 @@
  	bool use_cache = shader_cache_dir_valid && !(feedback_count > 0 && GLES3::Config::get_singleton()->disable_transform_feedback_shader_cache);
  	if (use_cache && _load_from_cache(p_version)) {
  		return;
-@@ -716,6 +724,7 @@
+@@ -716,6 +829,7 @@ void ShaderGLES3::_initialize_version(Version *p_version) {
  	if (use_cache) {
  		_save_to_cache(p_version);
  	}
@@ -23,3 +161,59 @@
  }
  
  void ShaderGLES3::version_set_code(RID p_version, const HashMap<String, String> &p_code, const String &p_uniforms, const String &p_vertex_globals, const String &p_fragment_globals, const Vector<String> &p_custom_defines, const LocalVector<ShaderGLES3::TextureUniformData> &p_texture_uniforms, bool p_initialize) {
+--- a/drivers/gles3/shader_gles3.h
++++ b/drivers/gles3/shader_gles3.h
+@@ -111,6 +111,22 @@ private:
+ 	void _clear_version(Version *p_version);
+ 	void _initialize_version(Version *p_version);
+ 
++#ifdef WEB_ENABLED
++	// Programs requested with KHR_parallel_shader_compile that no draw can bind yet.
++	struct QueuedSpecialization {
++		Version *version = nullptr;
++		int variant = 0;
++		uint64_t specialization = 0;
++	};
++
++	LocalVector<QueuedSpecialization> link_queue;
++	bool parallel_link = false;
++	bool parallel_link_checked = false;
++
++	void _queue_specialization(Version *p_version, int p_variant, uint64_t p_specialization);
++	void _publish_link_queue();
++#endif
++
+ 	RID_Owner<Version, true> version_owner;
+ 
+ 	struct StageTemplate {
+@@ -191,6 +207,17 @@ protected:
+ 		}
+ 
+ 		Version::Specialization *spec = version->variants[p_variant].getptr(p_specialization);
++#ifdef WEB_ENABLED
++		// The caller skips the draw until poll_link_queue() finishes the program.
++		// The default specialization is not compiled on the web, so nothing replaces it.
++		if (!spec && parallel_link) {
++			_queue_specialization(version, p_variant, p_specialization);
++			return false;
++		}
++		if (spec && spec->build_queued) {
++			return false;
++		}
++#endif
+ 		if (!spec) {
+ 			if (false) {
+ 				// Queue load this specialization and use defaults in the meantime (TODO)
+@@ -243,6 +270,12 @@ public:
+ 
+ 	bool version_free(RID p_version);
+ 
++#ifdef WEB_ENABLED
++	// Call once per frame, outside of any draw. Queuing starts with the first call:
++	// a shader that nobody polls would never leave the queue.
++	void poll_link_queue();
++#endif
++
+ 	static void set_shader_cache_dir(const String &p_dir);
+ 	static void set_shader_cache_save_compressed(bool p_enable);
+ 	static void set_shader_cache_save_compressed_zstd(bool p_enable);

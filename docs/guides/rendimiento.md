@@ -256,10 +256,9 @@ Modifica `_initialize_version` sólo bajo `WEB_ENABLED`. Conserva la compilació
 primer uso. El camino nativo queda intacto. La referencia es
 [`shader_gles3.cpp` del commit fijado](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/drivers/gles3/shader_gles3.cpp).
 
-El parche no implementa compilación asíncrona. La extensión
-[`KHR_parallel_shader_compile`](https://registry.khronos.org/webgl/extensions/KHR_parallel_shader_compile/)
-permite consultar cuándo termina un programa sin bloquear la consulta. Incorporarla exige otro
-cambio del motor. El calentamiento prepara las variantes usadas antes de mostrar el almacén.
+Ese parche no enlazaba en paralelo: lo que se mide en esta sección es anterior. Hoy la plantilla
+enlaza los shaders de escena con `KHR_parallel_shader_compile`. El método está en
+[el enlace en paralelo](#el-enlace-en-paralelo).
 
 Se comparan la plantilla base y la modificada con el mismo PCK de 43.589.692 bytes.
 Los exports conservan los recursos, la iluminación y las texturas. Se usa Chrome 154,
@@ -322,3 +321,47 @@ Los datos crudos quedan en `reports/plantilla-integrada-base-carga.json` y
 - Ningún recurso agrupa luces como `MultiMesh` agrupa mallas. El agrupado de luces es de
   Forward+, que no corre en la web. Lo que saca el costo es hornear la luz:
   [iluminación](./iluminacion.md).
+
+## El enlace en paralelo
+
+La plantilla web enlaza los programas de los shaders de escena con la extensión
+[`KHR_parallel_shader_compile`](https://registry.khronos.org/webgl/extensions/KHR_parallel_shader_compile/).
+El motor pide el programa y no consulta su estado: esa consulta es la que frena el cuadro. Al
+empezar cada cuadro pregunta qué programas terminaron. Una superficie con su programa en cola
+no se dibuja ese cuadro.
+
+- **Sólo cambian los shaders de escena.** El lienzo, el cielo, las copias y los efectos compilan
+  al primer uso, como antes.
+- **Sin la extensión, el motor compila como antes**, y el calentamiento destapa como antes.
+- **La plantilla publica la cola** en `window.godot_programas_en_cola`. Sin la extensión, queda
+  sin definir.
+- **Un programa que falla sale de la cola.** El motor lo compila otra vez en el momento, e
+  informa el error con su fuente.
+
+El calentamiento lee esa cola. Cada pasada destapa todos sus objetos en un cuadro, y las tres
+pasadas se enlazan a la vez. El aviso del almacén espera a que la cola quede vacía.
+
+Entrar con la cola ocupada puede frenar el juego. Lo que compila al primer uso espera detrás de
+la cola. Por eso el calentamiento espera también los programas pedidos en su última pasada.
+
+`medir_la_carga.mjs` informa `cuadro_mas_largo_ms` en cada corrida. Es el mayor intervalo sin un
+callback de `requestAnimationFrame`, desde el clic hasta el aviso del almacén. Con
+`--sin-enlace-en-paralelo`, la página niega la extensión y la plantilla compila como antes:
+
+```powershell
+node .github/scripts/medir_la_carga.mjs http://localhost:8060 reports/carga.json --sin-ventana --sin-enlace-en-paralelo
+```
+
+La comparación y sus resultados quedan en el [PR #336](https://github.com/federicohermo/nosefia/pull/336).
+Para repetirla, alternar base y rama, rama y base, base y rama.
+Mantener el mismo equipo y las condiciones del navegador. Identificar cada export y revisión por su SHA en la evidencia.
+Cada llamada abre Chrome con un perfil nuevo. Comparar `desdeElClic` y `cuadro_mas_largo_ms` de
+la primera corrida. Informar por separado la segunda y la tercera, que pueden compartir caché.
+
+El medidor incluye el tramo entre el último callback de cuadro y el aviso del almacén.
+Así registra también un bloqueo que termina antes del callback siguiente, sin medir después del aviso.
+Sus pruebas se corren con `node --test .github/scripts/tests/carga_de_cuadros_test.mjs`.
+
+La comparación no prueba el primer dibujo de cada programa ni todas las variantes de la partida.
+Un programa puede terminar con su objeto ya tapado. Una variante nueva aparece cuando termina su enlace.
+El resultado depende de los hilos libres del equipo y de la caché del driver.

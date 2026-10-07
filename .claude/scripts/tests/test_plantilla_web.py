@@ -30,7 +30,7 @@ class PlantillaWebTest(unittest.TestCase):
         (self.raiz / ".godot-version").write_text("4.7.2-stable\n", encoding="utf-8")
         self.destino = self.raiz / "build/templates/web_release.zip"
         self.parche = self.raiz / "motor.patch"
-        self.parche.write_text("parche medido\n", encoding="utf-8")
+        self._parche("parche medido")
         self.archivo = self.raiz / "motor.json"
         self.local = self.raiz / "local.zip"
         self.wasm = b"\0asm\x01\0\0\0"
@@ -48,8 +48,9 @@ class PlantillaWebTest(unittest.TestCase):
                 "platform=web", "target=template_release", "threads=yes",
                 "optimize=size", "lto=thin",
             ],
-            "cpp_original_sha256": "c" * 64,
-            "cpp_modificado_sha256": "d" * 64,
+            "archivos": {
+                "motor.cpp": {"original_sha256": "c" * 64, "modificado_sha256": "d" * 64},
+            },
             "plantilla_local": {
                 "zip_sha256": sha(self.local.read_bytes()), "wasm_sha256": sha(self.wasm),
             },
@@ -69,6 +70,12 @@ class PlantillaWebTest(unittest.TestCase):
                 "godot.service.worker.js", "godot.offline.html",
             ):
                 archivo.writestr(nombre, "contenido")
+
+    def _parche(self, cambio, rutas=("motor.cpp",)):
+        # En binario: en Windows, el modo texto escribe CRLF y `git apply` rechaza el parche.
+        self.parche.write_bytes("".join(
+            f"--- a/{ruta}\n+++ b/{ruta}\n@@ -1 +1 @@\n-antes\n+{cambio}\n" for ruta in rutas
+        ).encode("utf-8"))
 
     def _metadata(self):
         self.archivo.write_text(json.dumps(self.datos), encoding="utf-8")
@@ -113,20 +120,24 @@ class PlantillaWebTest(unittest.TestCase):
 
     def test_parche_cambiado_invalida_cache_aunque_zip_siga_sano(self):
         self._importar()
-        self.parche.write_text("otro parche\n", encoding="utf-8")
+        self._parche("otro parche")
         with self.assertRaisesRegex(ValueError, "identidad|coincide"):
             self._preparar(comprobar=True)
 
     def test_metadata_fuente_sdk_o_opciones_cambiadas_invalidan_cache(self):
         self._importar()
-        for campo in ("fuente_zip_sha256", "emsdk_zip_sha256", "cpp_modificado_sha256"):
+        huellas = self.datos["archivos"]["motor.cpp"]
+        for donde, campo in (
+            (self.datos, "fuente_zip_sha256"), (self.datos, "emsdk_zip_sha256"),
+            (huellas, "original_sha256"), (huellas, "modificado_sha256"),
+        ):
             with self.subTest(campo=campo):
-                original = self.datos[campo]
-                self.datos[campo] = "f" * 64
+                original = donde[campo]
+                donde[campo] = "f" * 64
                 self._metadata()
                 with self.assertRaisesRegex(ValueError, "identidad|coincide"):
                     self._preparar(comprobar=True)
-                self.datos[campo] = original
+                donde[campo] = original
         self.datos["opciones"][-1] = "lto=none"
         self._metadata()
         with self.assertRaises(ValueError):
@@ -162,7 +173,7 @@ class PlantillaWebTest(unittest.TestCase):
     def test_importar_zip_viejo_no_lo_reetiqueta_con_otra_receta(self):
         self._importar()
         original = self.destino.read_bytes()
-        self.parche.write_text("parche nuevo\n", encoding="utf-8")
+        self._parche("parche nuevo")
         with self.assertRaisesRegex(ValueError, "receta"):
             self._preparar(desde=self.local)
         self.assertEqual(self.destino.read_bytes(), original)
@@ -207,12 +218,71 @@ class PlantillaWebTest(unittest.TestCase):
             b"+++ b/drivers/gles3/shader_gles3.cpp\n"
             b"@@ -1 +1 @@\n-antes\n+despues\n"
         )
-        datos = {"cpp_original_sha256": sha(b"antes\n"),
-                 "cpp_modificado_sha256": sha(b"despues\n")}
+        datos = {"archivos": {"drivers/gles3/shader_gles3.cpp": {
+            "original_sha256": sha(b"antes\n"), "modificado_sha256": sha(b"despues\n"),
+        }}}
         with patch.dict(os.environ, {"GIT_CONFIG_GLOBAL": str(config)}):
             plantilla._aplicar_parche(datos, self.parche, motor, self.raiz / "parche.log")
         self.assertEqual(cpp.read_bytes(), b"despues\n")
         self.assertEqual(padre.read_bytes(), b"padre\n")
+
+    def _motor_con_dos_archivos(self):
+        motor = self.raiz / "build/engine"
+        motor.mkdir(parents=True)
+        for nombre in ("uno.cpp", "dos.h"):
+            (motor / nombre).write_bytes(b"antes\n")
+        self._parche("despues", ("uno.cpp", "dos.h"))
+        huellas = {"original_sha256": sha(b"antes\n"), "modificado_sha256": sha(b"despues\n")}
+        return motor, {"archivos": {"uno.cpp": dict(huellas), "dos.h": dict(huellas)}}
+
+    def test_el_parche_comprueba_la_huella_de_cada_archivo_antes_y_despues(self):
+        motor, datos = self._motor_con_dos_archivos()
+        plantilla._aplicar_parche(datos, self.parche, motor, self.raiz / "parche.log")
+        self.assertEqual((motor / "uno.cpp").read_bytes(), b"despues\n")
+        self.assertEqual((motor / "dos.h").read_bytes(), b"despues\n")
+
+    def test_un_archivo_distinto_del_medido_frena_el_parche_sin_aplicarlo(self):
+        motor, datos = self._motor_con_dos_archivos()
+        datos["archivos"]["dos.h"]["original_sha256"] = "f" * 64
+        with self.assertRaisesRegex(ValueError, "original.*dos.h"):
+            plantilla._aplicar_parche(datos, self.parche, motor, self.raiz / "parche.log")
+        self.assertEqual((motor / "uno.cpp").read_bytes(), b"antes\n")
+
+    def test_un_resultado_distinto_del_medido_falla_despues_de_aplicar(self):
+        motor, datos = self._motor_con_dos_archivos()
+        datos["archivos"]["dos.h"]["modificado_sha256"] = "f" * 64
+        with self.assertRaisesRegex(ValueError, "modificado.*dos.h"):
+            plantilla._aplicar_parche(datos, self.parche, motor, self.raiz / "parche.log")
+
+    def test_la_receta_tiene_que_nombrar_cada_archivo_que_el_parche_toca(self):
+        self._parche("parche medido", ("motor.cpp", "otro.h"))
+        with self.assertRaisesRegex(ValueError, "otro.h"):
+            self._preparar(comprobar=True)
+        self._parche("parche medido", ())
+        with self.assertRaisesRegex(ValueError, "motor.cpp"):
+            self._preparar(comprobar=True)
+
+    def test_la_receta_del_repo_cubre_el_parche_del_repo(self):
+        datos, parche, _ = plantilla._identidad(plantilla.METADATA, plantilla.RAIZ)
+        self.assertEqual(set(datos["archivos"]), plantilla.archivos_del_parche(parche))
+        self.assertGreater(len(datos["archivos"]), 1)
+
+    def test_cada_linea_que_el_parche_del_repo_agrega_queda_bajo_web_enabled(self):
+        """El editor y la plantilla de debug compilan la misma fuente sin el parche activo."""
+        parche = plantilla._identidad(plantilla.METADATA, plantilla.RAIZ)[1]
+        bajo_web = False
+        for numero, linea in enumerate(parche.read_text(encoding="utf-8").splitlines(), 1):
+            if linea.startswith("@@"):
+                bajo_web = False
+            if not linea.startswith("+") or linea.startswith("+++"):
+                continue
+            agregado = linea[1:].strip()
+            if agregado == "#ifdef WEB_ENABLED":
+                bajo_web = True
+            elif agregado.startswith(("#else", "#endif")):
+                bajo_web = False
+            elif agregado:
+                self.assertTrue(bajo_web, f"línea {numero} fuera de WEB_ENABLED: {linea}")
 
     def test_comprobar_rechaza_template_oficial_hilos_o_extensiones(self):
         self._importar()

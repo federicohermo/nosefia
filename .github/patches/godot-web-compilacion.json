@@ -7,13 +7,25 @@
   "emsdk_zip_sha256": "1e0e53bb21fd9308079991eb222efa6216ca8fdb53f742f9c98b6156c13e5ac4",
   "scons": "4.9.1",
   "opciones": ["platform=web", "target=template_release", "threads=yes", "optimize=size", "lto=thin"],
-  "cpp_original_sha256": "17c01277dc3468a1d53081f01a6f7665f5d0f82e7882a8198e1f486ee344d5d8",
-  "cpp_modificado_sha256": "6f388ca767e0f05c08de265d5ba4a5c475365f189fdb54633cd8960edc82ec1d",
-  "plantilla_local": {
-    "receta_sha256": "8ba51c08755ee1f1b4f0a68bb0b21f53148e67d793f416b1f17bd291399c27af",
-    "zip_sha256": "4e051c924e3ef3b8c848180318b6df87da8f3488f7555292054343607dab2660",
-    "wasm_sha256": "46d9bcb1df7a640d20c753b3608c8734ebbe22c3b01f2d2912c926051ce5a4ec"
+  "archivos": {
+    "drivers/gles3/rasterizer_gles3.cpp": {
+      "original_sha256": "7906073ee78a23816dfa0a0a21ec5879980f10f4eb5119ffa39051aba957311e",
+      "modificado_sha256": "0b6a9c661c8e9b9f88f5d490e2675ed146ac4c2747295062fec3fbefe4988a81"
+    },
+    "drivers/gles3/shader_gles3.cpp": {
+      "original_sha256": "17c01277dc3468a1d53081f01a6f7665f5d0f82e7882a8198e1f486ee344d5d8",
+      "modificado_sha256": "0a01d118ed6dcc8974a2560870a77e4c698a2098be2665e6b9b210f2607c6d42"
+    },
+    "drivers/gles3/shader_gles3.h": {
+      "original_sha256": "d17a9858ac8f7d55c34bb4d65f6dcd7eac467108b6c09cd12680d42c2d4e6c43",
+      "modificado_sha256": "b708a79df32a1162e3b6ec9871f9756ca3408c13ab42eacc0557fb475632c380"
+    }
   },
-  "uso": "Aplicar con git apply --check antes de compilar la plantilla web; comprobar el commit y ambos SHA256. Conserva el camino nativo.",
+  "plantilla_local": {
+    "receta_sha256": "78f8b5f7e51f6af8f0b76de5a798f5e2f8f796822c3ef9bb756bc9fb76eaf495",
+    "zip_sha256": "257ba2b4340f966141378f65e2595ed786c1ca8f3b113b45ca778e0d9e0bd13b",
+    "wasm_sha256": "1708110fe8bdd7b7894fe4dcb175c2c28cc242b06f51924e71fc5c9a5c83dbf0"
+  },
+  "uso": "Aplicar con git apply --check antes de compilar la plantilla web; comprobar el commit y las huellas de cada archivo, antes y después. Todo el cambio queda bajo WEB_ENABLED: conserva el camino nativo.",
   "estado": "Plantilla release validada localmente e integrada al preset Web y al flujo de despliegue. El editor y la plantilla debug siguen usando el motor oficial."
 }

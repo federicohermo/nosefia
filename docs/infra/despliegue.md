@@ -113,20 +113,32 @@ incluye el parche de compilación de shaders medido en [rendimiento](../guides/r
 El editor usa Godot oficial. El export de debug usa la plantilla oficial. El motor nativo
 conserva su código.
 
+El parche hace dos cosas, las dos bajo `WEB_ENABLED`:
+
+- **No compila las variantes predeterminadas** de un shader. Compila sólo la que pide un dibujo.
+- **Enlaza los shaders de escena en paralelo**, con `KHR_parallel_shader_compile`. Publica la
+  cola de programas en `window.godot_programas_en_cola`, y el calentamiento la espera. Sin la
+  extensión, compila al primer uso.
+
+`test_plantilla_web.py` falla si el parche agrega una línea fuera de `WEB_ENABLED`.
+
 `preparar_plantilla_web.py` lee la receta del repo. Comprueba la versión del motor y las
-huellas de la fuente y del parche. Sin argumentos, valida la plantilla guardada en
-`build/templates` y compila cuando falta o quedó desactualizada. La receta fija el SDK y las
-opciones de compilación. Los ZIP generados quedan fuera de Git.
+huellas de la fuente y del parche. La receta trae la huella de cada archivo que el parche toca,
+sin tocar y modificado. El preparador las comprueba antes y después de aplicarlo. Un archivo
+del parche sin huella en la receta frena la preparación. Sin argumentos, valida la plantilla
+guardada en `build/templates` y compila cuando falta o quedó desactualizada. La receta fija el
+SDK y las opciones de compilación. Los ZIP generados quedan fuera de Git.
 
 La primera compilación local medida tarda unos 30 minutos. Las siguientes preparaciones
 reutilizan la plantilla validada. Actions guarda `build/templates` en caché. Su clave incluye
 la versión, el parche, la receta y el script. Restaurar la caché no reemplaza las comprobaciones.
 El workflow prepara la plantilla con `--jobs 2` para limitar la memoria de compilación.
 
-Para importar una plantilla local ya compilada, correr:
+Para importar una plantilla local ya compilada, correr el comando de abajo. El ZIP tiene que
+ser el que la receta declara en `plantilla_local`:
 
 ```bash
-python .github/scripts/preparar_plantilla_web.py --desde tmp/godot-web/web-sin-defaults.zip
+python .github/scripts/preparar_plantilla_web.py --desde tmp/godot-web/web-enlace-en-paralelo.zip
 ```
 
 Para comprobar la plantilla guardada sin compilar, correr:
