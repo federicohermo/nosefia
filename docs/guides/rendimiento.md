@@ -6,9 +6,12 @@ y su medición final.
 
 ## Dónde queda el resultado
 
-Cada `test/performance/medir_*.gd` escribe su JSON en `reports/`, que está en `.gitignore`. Una
-corrida reemplaza el archivo de la anterior: copiarlo antes de repetir. El JSON registra el
-commit, el motor, el equipo y el renderizador de la corrida.
+Un escenario de `test/performance/` que corre en escritorio escribe su JSON en `reports/`, que
+está en `.gitignore`. Una corrida reemplaza el archivo de la anterior: copiarlo antes de repetir.
+El JSON registra el commit, el motor, el equipo y el renderizador de la corrida.
+
+En la web no existe `res://reports/`. Ahí el escenario imprime su informe, y lo guarda el script
+de `.github/scripts/` que abre el export.
 
 ## Cómo se corre una medición de escritorio
 
@@ -38,6 +41,36 @@ Las métricas del motor se describen en la
 Cada escena de medición tiene su `*_test.gd` al lado. Comprueba cantidades, uso de colisiones y
 cálculo de percentiles. No corre la medición de GPU ni exige tiempos iguales en equipos
 distintos.
+
+## Comparar dos revisiones de un escenario en la web
+
+`.github/scripts/exportar_escenario.py` exporta una revisión con un escenario como escena
+principal, en una copia aislada. Cómo arma la copia está en su encabezado. La plantilla web
+tiene que estar preparada.
+
+```powershell
+python .github/scripts/exportar_escenario.py <base> res://test/performance/<escenario>.tscn <carpeta>/base
+python .github/scripts/exportar_escenario.py <propuesta> res://test/performance/<escenario>.tscn <carpeta>/propuesta
+python .github/scripts/servir_export.py <carpeta>/base/web 8060
+node .github/scripts/recoger_informe.mjs http://localhost:8060 reports/base-1.json
+```
+
+`recoger_informe.mjs` guarda el informe que el escenario imprime. El protocolo entre los dos
+está en su encabezado. Un escenario con runner propio usa ese runner.
+
+- **La copia lleva sólo lo commiteado.** Commitear primero el escenario y después el cambio: son
+  las dos revisiones que se comparan.
+- **Dos cargas del mismo export no miden igual.** Medir primero la base contra sí misma. Esa
+  diferencia es el ruido entre cargas, y un cambio menor que ella no se demostró.
+- **Un caso de control en la misma carga cancela ese ruido.** Dividir cada caso por el control
+  de su carga, y comparar los cocientes.
+- **Alternar el orden en cada ronda:** base y propuesta, después propuesta y base.
+- **Medir el tiempo de GPU con `--sin-limite-de-cuadros`.** Con la sincronización puesta, el
+  mismo export mide varias veces más en unas cargas que en otras.
+- **Mirar que el puerto esté libre antes de servir.** Windows deja a dos servidores escuchar el
+  mismo puerto, y el navegador cae en cualquiera de los dos.
+- **Playwright se instala en la carpeta que contiene al repo.** Node lo encuentra subiendo. Con
+  `node_modules/` adentro de un árbol sin caché de importación, Godot se cayó al importar.
 
 ## Medición en la web, con la CPU frenada
 

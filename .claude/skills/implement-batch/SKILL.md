@@ -33,6 +33,12 @@ fila **«Se escribe»**, y a quién declara depender.
 entre que se escribió y hoy. Lo que se mide es el árbol de hoy, no lo que el issue dice del árbol
 de ayer.
 
+**Si el issue cita un prototipo o un protocolo que no trae escrito, conseguilo antes de
+repartir.** «Los 600 estados del protocolo» o «las 24 poses medidas» no se pueden reproducir
+sin sus parámetros. Se le pide al usuario dónde está, y va al preámbulo. En el lote del
+2026-10-06 el prototipo apareció con los carriles en vuelo: el de #320 rehízo su escenario,
+dos exports y una ronda de mediciones.
+
 ## Paso 1 — Repartir en carriles
 
 **Un carril es una cadena de dependencias**, y los carriles corren concurrentes. Tres cosas
@@ -165,16 +171,10 @@ Cada agente recibe, literal:
   "X" not declared` **con el archivo ya escrito en disco**. Se lee como un error del código y no
   de la caché. **Medido el 2026-09-01: lo pisaron los dos carriles que crearon clases.**
 - **Dale al carril el comando del conteo crudo, no sólo la orden de mirarlo.** `verificar.py` **no
-  imprime** el `Executed test suites: (N/N)`. **La primera línea importa**: `verificar.py` lo
-  hace solo, pero este comando no, y en un worktree nuevo sin ella sale
-  `Could not find type "GdUnitTestCIRunner"`. Medido el 2026-09-23: lo pisaron los dos carriles.
-
-  ```powershell
-  & $env:GODOT_BIN --path . --headless --import 2>$null | Out-Null
-  & $env:GODOT_BIN --path . --headless -s -d --remote-debug tcp://127.0.0.1:0 `
-    res://addons/gdUnit4/bin/GdUnitCmdTool.gd -a test --continue --ignoreHeadlessMode `
-    -rd reports 2>$null | Select-String "Executed test suites"
-  ```
+  imprime** el `Executed test suites: (N/N)`. `python .claude/skills/implement-batch/scripts/conteo.py`
+  lo saca del `results.xml` de la corrida que `verificar.py` acaba de hacer, y sale con 1 si una
+  suite no corrió. Va justo después de `verificar.py`: una suite suelta en el medio deja otro
+  reporte último. Hasta el 2026-10-06 el conteo pedía otra corrida entera del motor.
 
 - **El carril no corrige un skill: reporta la falla, y la regla la escribe el padre.**
   `implement-feature` le pide cerrar el lazo, y en un lote eso da N copias de la misma lección.
@@ -198,6 +198,37 @@ Cada agente recibe, literal:
   en sus worktrees mientras otro verifica. Ante un fallo, conservá el log, comprobá el caso
   aislado y repetí la convergencia con la carga controlada. No cambies el umbral del test para
   esconder el fallo ni declares verde la primera corrida.
+- **El turno lo da `scripts/turno.py`, y es una cola.** Todo lo que levanta el motor entero,
+  exporta o mide va adentro: `python .claude/skills/implement-batch/scripts/turno.py <cola>
+  <etiqueta> <log> -- <comando>`. `<cola>` es una carpeta del scratch del lote, la misma para
+  todos los carriles. Va con `run_in_background`: la espera pasa los 10 minutos. Un servidor
+  levantado no carga la máquina y queda afuera. En el lote del 2026-10-06 el turno era un cerrojo
+  que cada carril reintentaba: una prueba de 30 s esperó 55 minutos, y los carriles pasaron a
+  encadenar sus pasos adentro de un solo turno.
+- **La carga que no es del lote se mide y se dice, porque no se apaga.** El usuario usa la
+  máquina. El 2026-10-06, con Slack y Chrome en el 70 % de la CPU, el nodo `tests` tardó entre
+  11 y 43 minutos en vez de 3, y la base sobre `staging` dio dos rojos en `giro_parejo_test.gd`
+  que aislados pasaron. Corré `verificar.py` sobre la base antes de repartir, y poné su
+  resultado en el preámbulo: el carril sabe así qué rojo es suyo.
+- **`node_modules/` adentro de un worktree tira la importación de Godot.** Godot importa los
+  SVG de `playwright-core`, y el nodo `tests` sale con `exit 3221225477`. Medido el 2026-10-06,
+  dos veces. Playwright no se instala en el worktree: Node sube hasta el `node_modules/` del
+  checkout principal, del que el worktree cuelga.
+- **Un puerto se asigna después de mirar que esté libre**, con `Get-NetTCPConnection -State
+  Listen`. Windows deja a dos servidores escuchar el mismo puerto, y Chrome cae en cualquiera
+  de los dos. El 2026-10-06 el 8061 era de otra sesión, y la primera medición del carril de
+  #317 murió por tiempo sin decir por qué.
+- **Una afirmación sobre el motor se prueba con una sonda antes de repartirla**, igual que un
+  comando. El 2026-10-06 el padre repartió que un alias de un `PackedArray` copia al escribir.
+  En Godot 4 no copia: lo que copia es un `duplicate()` vivo. Dos carriles gastaron una sonda
+  cada uno en desmentirlo.
+- **Bash rechaza `python "$VAR/script.py"`**, con «runs python with a script computed at
+  runtime». La ruta del script va literal. Medido el 2026-10-06 en el carril de #321.
+- **Comparar dos exports de un escenario ya tiene herramienta.**
+  `.github/scripts/exportar_escenario.py` exporta una revisión con el escenario como escena
+  principal, y `.github/scripts/recoger_informe.mjs` guarda el informe que el escenario imprime.
+  El método está en `docs/guides/rendimiento.md`. Como la copia sale de `git archive`, el carril
+  commitea primero el escenario y después el cambio: son las dos revisiones que se comparan.
 
 ### La condición de terminado del carril — no se negocia
 
