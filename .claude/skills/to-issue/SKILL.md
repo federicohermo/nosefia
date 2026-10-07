@@ -102,7 +102,7 @@ Lo que más se rompe:
   pausa: el criterio salía verde sin medir el agua.
 - **Un criterio de medición pide el protocolo con que se midió, y lo trae escrito.** Si el
   prototipo alternó las dos variantes adentro de una página, el criterio no pide dos exports:
-  entre dos cargas del mismo export hay hasta un 12 % de ruido, que una sola página no tiene.
+  entre dos cargas del mismo export hay hasta un 26 % de ruido, que una sola página no tiene.
   En el lote del 2026-10-06, #317 y #318 pedían tres rondas entre dos exports, y ese ruido
   tapaba el efecto: hizo falta un control de la base contra sí misma y ocho rondas más. Y los
   parámetros van en el issue, no en el scratch de quien midió: «los 600 estados del protocolo»
