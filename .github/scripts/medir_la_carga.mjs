@@ -128,12 +128,18 @@ function vigilarLaPagina({ avisoDelAlmacen, sinEnlaceEnParalelo }) {
 
 // Corre en la página, antes que el juego. Dos programas con el mismo par de fuentes cuestan
 // una sola compilación: Chrome reutiliza la primera.
-function contarEnlaces() {
+function contarEnlaces(avisoDelAlmacen) {
   const enlaces = (window.__enlaces = { programas: 0, fuentes: new Set() });
+  let cerrado = false;
+  const registrar = console.log;
+  console.log = (...args) => {
+    if (String(args[0]).includes(avisoDelAlmacen)) cerrado = true;
+    registrar.apply(console, args);
+  };
   const enlazar = WebGL2RenderingContext.prototype.linkProgram;
   WebGL2RenderingContext.prototype.linkProgram = function (programa) {
-    // El almacén ya corre cuando el script lee el conteo: lo que enlaza después del aviso no entra.
-    if (window.__cuadros.cerrado) return enlazar.call(this, programa);
+    // El juego puede enlazar otros programas antes de que Playwright lea el conteo.
+    if (cerrado) return enlazar.call(this, programa);
     enlaces.programas++;
     const fuentes = this.getAttachedShaders(programa).map(
       (shader) => `${this.getShaderParameter(shader, this.SHADER_TYPE)}\n${this.getShaderSource(shader)}`
@@ -149,7 +155,7 @@ async function corrida() {
   await pagina.addInitScript(vigilarLaPagina, {
     avisoDelAlmacen: AVISO_DEL_ALMACEN, sinEnlaceEnParalelo,
   });
-  await pagina.addInitScript(contarEnlaces);
+  await pagina.addInitScript(contarEnlaces, AVISO_DEL_ALMACEN);
   try {
     await pagina.mouse.move(768, 760 * ALTURA_DE_NUEVO_JUEGO);
     const menu = aviso(pagina, AVISO_DEL_MENU);
