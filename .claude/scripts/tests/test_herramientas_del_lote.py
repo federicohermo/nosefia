@@ -71,6 +71,17 @@ class ElTurnoEsUnaCola(unittest.TestCase):
             self.assertIsNone(turno._primero(cola))
             self.assertFalse(huerfano.exists())
 
+    def test_un_archivo_ajeno_en_la_cola_ni_se_borra_ni_la_frena(self):
+        with tempfile.TemporaryDirectory() as carpeta:
+            cola = Path(carpeta)
+            ajenos = [cola / "base-1.json", cola / "informe.json"]
+            for ajeno in ajenos:
+                ajeno.write_text("{}", encoding="utf-8")
+            boleto = turno.esperar(cola, "unico")
+            self.assertEqual(turno._primero(cola), boleto.name)
+            for ajeno in ajenos:
+                self.assertTrue(ajeno.exists(), ajeno.name)
+
 
 class ElConteoSaleDelReporte(unittest.TestCase):
     def test_cuenta_las_suites_y_no_los_casos(self):

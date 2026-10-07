@@ -24,6 +24,7 @@ boleto con la hora, y pasa el boleto más viejo cuyo dueño sigue vivo.
 import ctypes
 import json
 import os
+import re
 import subprocess
 import sys
 import time
@@ -60,7 +61,7 @@ def _pid(boleto: str) -> int:
 
 
 def _primero(cola: Path) -> str | None:
-    boletos = [p.name for p in cola.glob("*.json")]
+    boletos = [p.name for p in cola.glob("*.json") if re.fullmatch(r"\d{20}-\d+\.json", p.name)]
     vivos = {b for b in boletos if vivo(_pid(b))}
     for huerfano in set(boletos) - vivos:
         (cola / huerfano).unlink(missing_ok=True)
