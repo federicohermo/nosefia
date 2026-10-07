@@ -121,6 +121,32 @@ de una ventana ni los FPS durante la partida. Comparar corridas con el mismo mod
 Los tiempos de carga de `medir_en_navegador.mjs` usan cuadros sin límite para medir FPS.
 No compararlos con las esperas de `medir_la_carga.mjs`.
 
+### Los programas que enlaza la carga
+
+Cada corrida informa también dos conteos, tomados entre el clic y el aviso del almacén:
+
+- **`programas`:** las llamadas a `linkProgram` de WebGL2.
+- **`fuentes_distintas`:** los pares distintos de fuentes de vértices y de fragmentos entre
+  esos programas.
+
+La resta de los dos campos cuenta enlaces con pares de fuentes ya registrados.
+Los conteos describen qué solicita el juego. No miden cuánto tarda cada compilación.
+El aviso del almacén cierra el contador antes de que Playwright lea los resultados.
+
+El importador unifica caras y canal de rugosidad de los materiales con relieve y prefijo
+`deposito_`. Conserva sus mapas de normales, escala, filtro y texturas.
+
+El [PR de los materiales del depósito](https://github.com/federicohermo/nosefia/pull/335)
+registra los conteos, los tiempos y las capturas comparadas. Alternar base y rama con perfiles
+nuevos para comparar `corridas[0].desdeElClic`. Informar aparte las siguientes entradas del
+mismo Chrome, que puede compartir su caché de shaders.
+
+Los casos del contador se corren a mano:
+
+```powershell
+node --test .github/scripts/tests/enlaces_de_shaders_test.mjs
+```
+
 ## La memoria de texturas en la web
 
 `.github/scripts/medir_memoria_de_texturas.mjs` hace el inventario de las texturas de WebGL que
