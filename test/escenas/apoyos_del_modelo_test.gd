@@ -2,6 +2,9 @@ extends GdUnitTestSuite
 
 const ALMACEN := preload("res://src/escenas/almacen.tscn")
 
+## Cada cuánto se baja un rayo sobre el tablero de un pallet, en metros: menos que una ranura.
+const PASO_SOBRE_EL_TABLERO := 0.002
+
 
 func test_cada_mancha_se_enfoca_desde_un_apoyo_caminable_a_un_metro() -> void:
 	var almacen := await _abrir()
@@ -95,6 +98,47 @@ func test_las_manchas_superan_el_alcance_entre_si() -> void:
 			assert_float(Vector2(a.x, a.z).distance_to(Vector2(b.x, b.z))).is_greater(
 				ReglasDelJugador.ALCANCE_DE_LA_MIRA
 			)
+
+
+func test_el_tablero_de_cada_pallet_no_deja_pasar_un_rayo() -> void:
+	# Quien busca un apoyo baja un rayo. Por la ranura entre dos tablas el rayo cruzaba el pallet
+	# y daba con lo de abajo: la caja apuntada a un estante terminaba al lado del jugador.
+	var almacen := await _abrir()
+	var espacio := almacen.get_world_3d().direct_space_state
+	var pallets := almacen.get_node("Estructura").find_children(
+		"deposito_pallet_*", "MeshInstance3D", true, false
+	)
+	assert_array(pallets).is_not_empty()
+	for pallet: MeshInstance3D in pallets:
+		var cuerpo: StaticBody3D = pallet.get_node("StaticBody3D")
+		var limites := pallet.get_aabb()
+		var ranuras: Array[String] = []
+		for eje: Vector3 in [Vector3.RIGHT, Vector3.BACK]:
+			var largo := (limites.size * eje).length()
+			var recorrido := PASO_SOBRE_EL_TABLERO
+			while recorrido < largo:
+				var tapa := limites.get_center() + eje * (recorrido - largo / 2.0)
+				tapa.y = limites.end.y
+				var arriba := pallet.to_global(tapa)
+				var consulta := PhysicsRayQueryParameters3D.create(
+					arriba + Vector3.UP * 0.01,
+					arriba + Vector3.DOWN * limites.size.y,
+					cuerpo.collision_layer
+				)
+				var golpe := espacio.intersect_ray(consulta)
+				if (
+					golpe.get("collider") != cuerpo
+					or absf((golpe["position"] as Vector3).y - arriba.y) > 0.001
+				):
+					ranuras.append("%v" % tapa)
+				recorrido += PASO_SOBRE_EL_TABLERO
+		(
+			assert_array(ranuras)
+			. override_failure_message(
+				"`%s` deja pasar el rayo en %s" % [pallet.name, ", ".join(ranuras)]
+			)
+			. is_empty()
+		)
 
 
 func _abrir() -> Node3D:

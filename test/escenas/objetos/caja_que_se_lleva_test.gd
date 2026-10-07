@@ -493,10 +493,40 @@ func _comprobar_la_media_tabla_libre(
 	assert_array(almacen.get_world_3d().direct_space_state.intersect_shape(consulta)).is_empty()
 
 
-func test_la_mira_que_cruza_un_rack_abierto_deja_la_caja_en_su_pallet() -> void:
+func test_frente_a_un_rack_abierto_la_caja_queda_en_el_pallet_que_se_mira() -> void:
 	# El rack del medio no tiene fondo: la mira cruza el hueco y termina en el aire. La caja iba
 	# al piso de atrás del rack, fuera de la vista. El lugar es el pallet que la mira sobrevuela.
 	var almacen: Node3D = await _almacen_con_jugador_quieto()
+	var al_aire: Array[Vector2] = []
+	for distancia: float in [0.7, 1.1]:
+		for alto: float in [3.0, -2.0, -7.0]:
+			al_aire.append(Vector2(distancia, alto))
+	var fuera := await _soltar_frente_al_rack_abierto(almacen, al_aire, false)
+	# Para quien busca un apoyo, el pallet es un bloque. Pieza por pieza no lo era: la mira daba
+	# en el patín de adentro, donde la caja no entra, y un rayo se colaba entre dos tablas hasta
+	# la caja del nivel de abajo. En los dos casos la caja caía al piso al lado del jugador.
+	var al_pallet: Array[Vector2] = [
+		Vector2(0.7, -35.0),
+		Vector2(1.1, -25.0),
+		Vector2(0.7, -25.0),
+		Vector2(0.7, -20.0),
+		Vector2(1.1, -15.0),
+	]
+	fuera.append_array(await _soltar_frente_al_rack_abierto(almacen, al_pallet, true))
+	(
+		assert_array(fuera)
+		. override_failure_message("la caja no quedó en el pallet %s" % ", ".join(fuera))
+		. is_empty()
+	)
+
+
+## Suelta una caja frente al pallet del rack abierto en cada gesto: a cuántos metros del pallet
+## se para el jugador, y cuántos grados sube la vista. Devuelve los gestos que no la dejaron en él.
+##
+## La premisa de cada gesto se comprueba: la mira da en el pallet, o termina en el aire.
+func _soltar_frente_al_rack_abierto(
+	almacen: Node3D, gestos: Array[Vector2], en_el_pallet: bool
+) -> Array[String]:
 	var jugador: CharacterBody3D = almacen.get("_jugador")
 	var mano: Node3D = jugador.get_node("Giro/PuntoDeCaja")
 	var caja: Node3D = almacen.get("_cajas_de_productos")[Producto.Id.MALBARDO]
@@ -505,37 +535,33 @@ func test_la_mira_que_cruza_un_rack_abierto_deja_la_caja_en_su_pallet() -> void:
 	var encima := AABB(tablero.position, tablero.size + Vector3.UP * MEDIA_CAJA * 2.0)
 	_apartar_las_cajas_del_estante(almacen, encima, caja)
 	await get_tree().physics_frame
-	_accion(jugador, caja, ReglasDeLosObjetos.ACCION_AGARRAR)
 	var fuera: Array[String] = []
-	for distancia: float in [0.7, 1.1]:
-		await _parar_al_jugador_en(
-			jugador, Vector3(tablero.end.x + distancia, 0.112, tablero.get_center().z)
-		)
-		for alto: float in [3.0, -2.0, -7.0]:
-			if caja.get_parent() != mano:
-				_accion(jugador, caja, ReglasDeLosObjetos.ACCION_AGARRAR)
-			_comprobar_parada_en_el_pasillo(almacen, jugador)
-			_mirar_sin_retraso(jugador, PI / 2.0, deg_to_rad(alto))
-			jugador.force_update_transform()
-			var gesto := "a %.1f m, mirando %.0f grados" % [distancia, alto]
-			(
-				assert_dict(_lo_apuntado(almacen, jugador, caja))
-				. override_failure_message("premisa, %s: la mira no termina en el aire" % gesto)
-				. is_empty()
-			)
+	for gesto: Vector2 in gestos:
+		if caja.get_parent() != mano:
 			_accion(jugador, caja, ReglasDeLosObjetos.ACCION_AGARRAR)
-			if (
-				caja.get_parent() == mano
-				or absf(_limites_de(caja).position.y - tablero.end.y) > HOLGURA_DEL_APOYO
-			):
-				fuera.append(gesto)
-			else:
-				_comprobar_apoyo_entero(almacen, caja, gesto)
-	(
-		assert_array(fuera)
-		. override_failure_message("la caja no quedó en el pallet %s" % ", ".join(fuera))
-		. is_empty()
-	)
+		await _parar_al_jugador_en(
+			jugador, Vector3(tablero.end.x + gesto.x, 0.112, tablero.get_center().z)
+		)
+		_comprobar_parada_en_el_pasillo(almacen, jugador)
+		_mirar_sin_retraso(jugador, PI / 2.0, deg_to_rad(gesto.y))
+		jugador.force_update_transform()
+		var donde := "a %.1f m, mirando %.0f grados" % [gesto.x, gesto.y]
+		var apuntado: Object = _lo_apuntado(almacen, jugador, caja).get("collider")
+		var esperado: Object = pallet.get_node("StaticBody3D") if en_el_pallet else null
+		(
+			assert_object(apuntado)
+			. override_failure_message("premisa, %s: la mira da en `%s`" % [donde, apuntado])
+			. is_same(esperado)
+		)
+		_accion(jugador, caja, ReglasDeLosObjetos.ACCION_AGARRAR)
+		if (
+			caja.get_parent() == mano
+			or absf(_limites_de(caja).position.y - tablero.end.y) > HOLGURA_DEL_APOYO
+		):
+			fuera.append(donde)
+		else:
+			_comprobar_apoyo_entero(almacen, caja, donde)
+	return fuera
 
 
 func test_la_mira_que_pasa_por_encima_de_la_caja_de_enfrente_la_apila() -> void:
@@ -717,7 +743,6 @@ func test_la_caja_va_donde_apunta_la_mira() -> void:
 	_accion(jugador, caja, ReglasDeLosObjetos.ACCION_AGARRAR)
 	var pallet: MeshInstance3D = almacen.get_node(PALLET_DEL_MEDIO)
 	await _caminar_hasta(almacen, pallet.global_transform * pallet.get_aabb(), Vector3.FORWARD)
-	# Las tablillas dejan huecos reales. Se mide desde una parada alineada con madera del pallet.
 	await _parar_al_jugador_en(jugador, Vector3(5.15, 0.112, -13.3))
 	var contadas := _contrastar_la_mira(almacen, caja, "delante del pallet")
 	# Pegado al estante no hay piso libre donde dejarla: entre el cuerpo y la madera no entra
@@ -791,9 +816,10 @@ func _contrastar_la_mira(almacen: Node3D, caja: Node3D, donde: String) -> Array[
 		var base := caja.global_position.y - MEDIA_CAJA
 		var mirado: float = (apuntado["position"] as Vector3).y
 		# **El costado de otra caja es apilar**, así que lo apuntado es su tapa y no el punto del
-		# costado donde cayó el cursor.
+		# costado donde cayó el cursor. El canto de un pallet es su tablero, por lo mismo.
 		var enfrente := apuntado["collider"] as Node3D
-		if enfrente is RigidBody3D and absf((apuntado["normal"] as Vector3).y) < 0.5:
+		var es_pallet := str(enfrente.get_parent().name).begins_with("deposito_pallet_")
+		if (enfrente is RigidBody3D or es_pallet) and absf((apuntado["normal"] as Vector3).y) < 0.5:
 			mirado = _limites_de(enfrente).end.y
 		(
 			assert_float(base)
