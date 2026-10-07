@@ -11,8 +11,9 @@ el 2026-09-29: de las sesenta texturas de `assets/models/`, la del techo tenía 
 import json
 import struct
 import unittest
+from pathlib import PurePosixPath
 
-from lib.blender import LADO_MAXIMO, LADO_TOPE, SUPERFICIE
+from lib.blender import LADO_MAXIMO, LADO_TOPE, ORIGEN_DE_CADA_GRUPO, SUPERFICIE
 from lib.repo import RAIZ
 
 MODELOS = RAIZ / "assets/models"
@@ -97,33 +98,20 @@ class LoQueGodotExtrae(unittest.TestCase):
 
 
 class LoQueViajaEnElGlb(unittest.TestCase):
-    def test_los_mapas_auxiliares_del_deposito_viajan_a_512_y_el_color_a_1024(self) -> None:
+    def test_cada_mapa_de_superficie_viaja_con_el_lado_de_su_grupo(self) -> None:
         # Mira el resultado del exportador, además de su tabla: una copia sin is_dirty puede
         # dejar pasar el archivo original aunque la clasificación conteste correctamente.
-        auxiliares = {
-            "deposito_concreto_normal",
-            "concrete_floor_worn_001_rough_1k",
-            "Bricks066_1K-JPG_NormalGL",
-            "Bricks066_1K-JPG_Roughness",
-            "corrugated_iron_02_nor_gl_1k",
-            "corrugated_iron_02_metal_1k-corrugated_iron_02_rough_1k",
-        }
-        colores = {
-            "deposito_concreto_color",
-            "Bricks066_1K-JPG_Color",
-            "corrugated_iron_02_diff_1k",
-        }
-        imagenes = dict(imagenes_del_glb(GLB.read_bytes()))
-        self.assertTrue(auxiliares | colores <= imagenes.keys())
-        for nombre in auxiliares:
-            with self.subTest(imagen=nombre):
-                self.assertEqual(
-                    lado_de_la_imagen(imagenes[nombre]),
-                    (LADO_MAXIMO[SUPERFICIE], LADO_MAXIMO[SUPERFICIE]),
-                )
-        for nombre in colores:
-            with self.subTest(imagen=nombre):
-                self.assertEqual(lado_de_la_imagen(imagenes[nombre]), (1024, 1024))
+        # Los mapas salen de la tabla. Uno combinado lleva en su nombre el de cada archivo.
+        imagenes = imagenes_del_glb(GLB.read_bytes())
+        for origen, grupo in ORIGEN_DE_CADA_GRUPO.items():
+            if grupo != SUPERFICIE:
+                continue
+            archivo = PurePosixPath(origen).stem
+            with self.subTest(origen=origen):
+                suyas = [datos for nombre, datos in imagenes if archivo in nombre]
+                self.assertGreater(len(suyas), 0, "no viaja en el `.glb`")
+                for datos in suyas:
+                    self.assertLessEqual(max(lado_de_la_imagen(datos)), LADO_MAXIMO[SUPERFICIE])
 
     def test_ninguna_imagen_del_glb_pasa_del_tope(self) -> None:
         imagenes = imagenes_del_glb(GLB.read_bytes())
