@@ -86,6 +86,41 @@ de una ventana ni los FPS durante la partida. Comparar corridas con el mismo mod
 Los tiempos de carga de `medir_en_navegador.mjs` usan cuadros sin límite para medir FPS.
 No compararlos con las esperas de `medir_la_carga.mjs`.
 
+## La memoria de texturas en la web
+
+`.github/scripts/medir_memoria_de_texturas.mjs` hace el inventario de las texturas de WebGL que
+el juego tiene vivas en dos momentos: al aviso `[carga] menú visible` y al aviso
+`[carga] almacén en pantalla`. Usa el mismo export local que la medición de carga:
+
+```powershell
+python .github/scripts/servir_export.py export/web 8060
+node .github/scripts/medir_memoria_de_texturas.mjs http://localhost:8060 reports/memoria-texturas.json --sin-ventana
+```
+
+Cada fase del JSON lista sus texturas con dimensiones, formato, mips, capas y bytes estimados,
+y da el total en bytes y en MiB. El PCK y el WASM van aparte, en `export_en_disco`, con sus
+bytes y su SHA-256: son tamaño en disco, no memoria de texturas. El JSON registra también el
+motor, el navegador, el renderizador y la resolución.
+
+- **Es el almacenamiento lógico que el juego le declara a WebGL.** Suma cada nivel, capa y
+  cara. Incluye las texturas que se usan como destino de renderizado.
+- **Excluye** los renderbuffers, las copias en CPU y la memoria del driver.
+- **Menos bytes lógicos no prueban menos VRAM física.** El driver puede guardar un formato en
+  otro más grande: ANGLE con Direct3D 11 puede guardar RGB8 como RGBA8, según su
+  [tabla de formatos](https://chromium.googlesource.com/angle/angle/+/d9c1710779d15239f3882b2bdbd5e65db369b04e/src/libANGLE/renderer/d3d/d3d11/texture_format_table_autogen.cpp).
+- **Un formato que el script no conoce queda sin bytes**, y no se suma como cero. La fase sale
+  con `cobertura_completa` en falso. Lo mismo pasa con un contexto WebGL perdido.
+- **Rechaza la corrida** si falta un aviso, si el juego escribe un error o si Chrome dibuja por
+  software. Sale con código distinto de cero y no escribe el JSON.
+- **No es un gate.** Los totales cambian con el arte. Sirven para comparar un export con otro.
+
+Lo que decide vive en `.github/scripts/lib/memoria_de_texturas.mjs`. Sus casos no corren en
+`verificar.py` ni en la CI. Se corren a mano:
+
+```powershell
+node --test .github/scripts/tests/memoria_de_texturas_test.mjs
+```
+
 ## Los shaders en la web
 
 Compatibility compila programas GL al usar los shaders y sus variantes. En la web, esa
