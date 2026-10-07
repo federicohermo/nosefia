@@ -126,6 +126,8 @@ function contarEnlaces() {
   const enlaces = (window.__enlaces = { programas: 0, fuentes: new Set() });
   const enlazar = WebGL2RenderingContext.prototype.linkProgram;
   WebGL2RenderingContext.prototype.linkProgram = function (programa) {
+    // El almacén ya corre cuando el script lee el conteo: lo que enlaza después del aviso no entra.
+    if (window.__cuadros.cerrado) return enlazar.call(this, programa);
     enlaces.programas++;
     const fuentes = this.getAttachedShaders(programa).map(
       (shader) => `${this.getShaderParameter(shader, this.SHADER_TYPE)}\n${this.getShaderSource(shader)}`
