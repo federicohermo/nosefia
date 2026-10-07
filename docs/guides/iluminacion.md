@@ -20,11 +20,15 @@ Cómo se mide el costo de las luces, en [rendimiento](./rendimiento.md).
   tiempo real sobre lo que no tiene lightmap. No van en `almacen.tscn`: esa escena sólo cablea,
   y su test lo cobra.
 - **El `LightmapGI` cuelga de la raíz de `almacen.tscn`.** Hornea el subárbol de su padre. Sus
-  datos viven al lado: `almacen.lmbake` y `almacen.exr`. Los dos se commitean.
+  datos viven al lado: `almacen.lmbake`, `almacen.exr` y `almacen.exr.import`. Los tres se
+  commitean. El `.import` dice en cuántas capas se corta el atlas: sin él, otra máquina lo corta
+  mal.
 - **El modelo se importa con `Static Lightmaps`.** Eso le da a cada malla el segundo juego de UV
   que pide el horneado. El tamaño del texel está en la misma importación.
 - **Todo lo que no viene del modelo lleva GI `Dynamic`.** Sin UV2 no se hornea, y con GI
   estático queda negro. Lo dinámico toma la luz de las sondas.
+- **Lo que gira también lleva GI `Dynamic`, aunque venga del modelo:** las hojas que abren y la
+  tapa del contenedor. Horneadas, dejarían su sombra en la posición en la que se hornearon.
 - **Un grupo de productos toma esa luz en un solo punto: el centro de su caja.** El horneador
   reparte las sondas por los bordes de las mallas, y muchas caen adentro de una pared o de un
   mueble. Ahí salen negras, y apagan lo que toma la luz cerca. Por eso el horneador rellena cada
@@ -38,9 +42,10 @@ python .claude/scripts/hornear.py
 ```
 
 Qué hace y qué necesita lo dice el encabezado del script. Se corre cada vez que cambia el
-modelo, una luz o el `LightmapGI`, y se commitea lo que deja: el `.lmbake` y el `.exr`. **Lo
-demás que el editor re-serializa al guardar, el script lo devuelve.** Sin eso, `almacen.tscn`
-quedaba con un override por cada volumen de la estructura, y el override congela su posición.
+modelo, una luz o el `LightmapGI`. Se commitea lo que deja: el `.lmbake`, el `.exr` y el
+`.exr.import`. **Lo demás que el editor re-serializa al guardar, el script lo devuelve.** Sin
+eso, `almacen.tscn` quedaba con un override por cada volumen de la estructura, y el override
+congela su posición.
 En Linux sin pantalla ni GPU anda con Xvfb y el Vulkan por software de Mesa; el comando está en
 el encabezado. El error de OpenGL que obliga a hornear con Vulkan es el
 [reporte 94407 de Godot](https://github.com/godotengine/godot/issues/94407).
@@ -50,10 +55,12 @@ Los mandos:
 - la energía de cada luz, en su escena;
 - `generate_probes_subdiv`, en el `LightmapGI`;
 - el tamaño del texel, en la importación del modelo;
+- la escala del texel de una malla chica (`gi_lightmap_texel_scale`), en
+  `estructura_del_almacen.tscn`;
 - el umbral de sonda negra, en `sondas.gd`.
 
 ## Qué lo verifica
 
 `test/escenas/iluminacion_horneada_test.gd`: que el `LightmapGI` tenga datos, y que ninguna
-malla con GI estático se haya quedado afuera del horneado. Las sondas no se pueden verificar en
-headless: el `.lmbake` se carga sin ellas.
+malla con GI estático se haya quedado afuera del horneado. También que ninguna hoja que abre
+haya entrado. Las sondas no se pueden verificar en headless: el `.lmbake` se carga sin ellas.
