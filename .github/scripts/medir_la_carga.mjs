@@ -17,6 +17,12 @@
 //   apenas ve el aviso del menú. El clic va a la altura del botón con la ventana de 1536×760
 //   que abre el script: con otro tamaño, el botón queda en otro lado.
 //
+// Y dos conteos, entre el clic y el aviso del almacén:
+//
+// - **programas:** las llamadas a `linkProgram` de WebGL2.
+// - **fuentes_distintas:** los pares distintos de fuentes de vértices y de fragmentos entre
+//   esos programas.
+//
 // Hace tres corridas con contextos HTTP nuevos dentro del mismo Chrome. El navegador puede
 // conservar su caché de shaders entre corridas: la primera y las siguientes se informan aparte.
 // Usa la sincronización de cuadros habitual del navegador; quitarla para medir FPS puede
@@ -76,9 +82,25 @@ function dentroDe(promesa, que) {
   return Promise.race([promesa, plazo]).finally(() => clearTimeout(temporizador));
 }
 
+// Corre en la página, antes que el juego. Dos programas con el mismo par de fuentes cuestan
+// una sola compilación: Chrome reutiliza la primera.
+function contarEnlaces() {
+  const enlaces = (window.__enlaces = { programas: 0, fuentes: new Set() });
+  const enlazar = WebGL2RenderingContext.prototype.linkProgram;
+  WebGL2RenderingContext.prototype.linkProgram = function (programa) {
+    enlaces.programas++;
+    const fuentes = this.getAttachedShaders(programa).map(
+      (shader) => `${this.getShaderParameter(shader, this.SHADER_TYPE)}\n${this.getShaderSource(shader)}`
+    );
+    enlaces.fuentes.add(fuentes.sort().join('\0'));
+    return enlazar.call(this, programa);
+  };
+}
+
 async function corrida() {
   const contexto = await navegador.newContext({ viewport: { width: 1536, height: 760 } });
   const pagina = await contexto.newPage();
+  await pagina.addInitScript(contarEnlaces);
   try {
     await pagina.mouse.move(768, 760 * ALTURA_DE_NUEVO_JUEGO);
     const menu = aviso(pagina, AVISO_DEL_MENU);
@@ -102,13 +124,21 @@ async function corrida() {
       () => new Promise((listo) => requestAnimationFrame(() => requestAnimationFrame(listo)))
     );
     const lienzo = await pagina.locator('canvas').boundingBox();
+    await pagina.evaluate(() => {
+      window.__enlaces.programas = 0;
+      window.__enlaces.fuentes.clear();
+    });
     const clic = Date.now() - desde;
     await pagina.mouse.click(
       lienzo.x + lienzo.width / 2,
       lienzo.y + lienzo.height * ALTURA_DE_NUEVO_JUEGO
     );
     const entro = (await dentroDe(almacen, 'el aviso del almacén')) - desde;
-    return { overlay, menu: vioElMenu, clic, almacen: entro, desdeElClic: entro - clic, gpu };
+    const enlaces = await pagina.evaluate(() => ({
+      programas: window.__enlaces.programas,
+      fuentes_distintas: window.__enlaces.fuentes.size,
+    }));
+    return { overlay, menu: vioElMenu, clic, almacen: entro, desdeElClic: entro - clic, gpu, ...enlaces };
   } finally {
     await contexto.close();
   }
@@ -143,6 +173,9 @@ console.log(
 console.log(
   `desde el clic: primera ${corridas[0].desdeElClic} ms; ` +
     `siguientes ${corridas.slice(1).map((c) => c.desdeElClic + ' ms').join(', ')}`
+);
+console.log(
+  `programas y fuentes distintas: ${corridas.map((c) => `${c.programas} y ${c.fuentes_distintas}`).join('; ')}`
 );
 
 if (salida) {

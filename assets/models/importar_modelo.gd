@@ -13,6 +13,11 @@ func _post_import(escena: Node) -> Object:
 			var material := malla.mesh.surface_get_material(i) as BaseMaterial3D
 			if material != null:
 				material.texture_filter = BaseMaterial3D.TEXTURE_FILTER_NEAREST_WITH_MIPMAPS
+				# El motor genera un shader por cada combinación de caras y de canal de rugosidad.
+				# Con una sola, los materiales con relieve del depósito comparten sus programas.
+				if material.normal_enabled and material.resource_name.begins_with("deposito_"):
+					material.cull_mode = BaseMaterial3D.CULL_DISABLED
+					material.roughness_texture_channel = BaseMaterial3D.TEXTURE_CHANNEL_GREEN
 				if (
 					material.resource_name == "deposito_concreto"
 					or material.resource_name.begins_with("deposito_revestimiento_")
