@@ -59,9 +59,8 @@ EXCLUIDOS = [
 PROSA = re.compile(r"\.(md|txt)$")
 ESCENA = re.compile(r"\.(tscn|tres)$")
 
-# En GDScript y en Python el comentario es `#`. La segunda alternativa es la línea de docstring
-# de los scripts del harness, que es prosa igual aunque no lleve `#`.
-COMENTARIO = re.compile(r"^[ \t]*#")
+# En GDScript y en Python el comentario es `#`. En JavaScript y en los shaders es `//`.
+COMENTARIO = re.compile(r"^[ \t]*(#|//)")
 
 # La numeración ESTRUCTURAL de este repo, que nunca es una afirmación falsable sobre el árbol:
 # el ID de una tarea, el número de un issue, el de un spec, el de un paso de un skill, y el
