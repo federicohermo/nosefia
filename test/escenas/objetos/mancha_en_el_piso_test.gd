@@ -76,6 +76,7 @@ func test_la_mancha_borrada_deja_de_verse_y_de_enfocarse() -> void:
 	# Esconder un nodo **no apaga su cuerpo**: con el cuerpo prendido, una mancha ya borrada sigue
 	# frenando el rayo de la mira y se sigue enfocando, con la escena cargando sin un solo error.
 	var mancha: ManchaQueSeVe = auto_free(ESCENA.instantiate())
+	add_child(mancha)
 	var cuerpo := mancha.get_node("Cuerpo") as CollisionShape3D
 	mancha.mostrar(false, Color.GREEN)
 	assert_bool(mancha.visible).is_false()
@@ -94,6 +95,8 @@ func test_cada_mancha_lleva_su_propia_pintura() -> void:
 	# Con el material compartido entre las instancias, pintar el moho de verde pintaría las cuatro.
 	var una: ManchaQueSeVe = auto_free(ESCENA.instantiate())
 	var otra: ManchaQueSeVe = auto_free(ESCENA.instantiate())
+	add_child(una)
+	add_child(otra)
 	una.mostrar(true, Color.GREEN)
 	otra.mostrar(true, Color.RED)
 	assert_that(Color(una.color(), 1.0)).is_equal(Color.GREEN)

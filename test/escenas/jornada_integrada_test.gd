@@ -339,22 +339,19 @@ func _soltar_lejos(agarre: Agarre) -> void:
 
 func _sacar_la_basura(almacen: Node3D) -> void:
 	var agarre: Agarre = almacen.get("_agarre")
-	var zona: Area3D = almacen.get_node("Objetos/ZonaDeDescarte")
+	var contenedor: Node3D = almacen.get_node(
+		"Estructura/deposito_contenedor_soporte/deposito_contenedor_cuerpo/StaticBody3D"
+	)
 	var jugador: Node3D = almacen.get("_jugador")
-	jugador.global_position = zona.global_position + Vector3.BACK
-	var camara := jugador.get_node("Giro/Camara") as Camera3D
-	camara.look_at(zona.global_position + Vector3.UP * 0.4)
 	var recolector: RecolectorDeBasura = almacen.get("_recolector")
-	for bolsa: Node3D in almacen.get("_bolsas"):
-		var datos: ObjetoDelAlmacen = bolsa.call("interactuar")
-		assert_bool(agarre.pedir_agarrar(datos, bolsa)).is_true()
-		# El área debe registrar que la bolsa dejó el mundo antes de recibirla otra vez.
-		await get_tree().physics_frame
-		agarre.punto_de_soltado.global_position = zona.global_position + Vector3.UP * 0.3
-		assert_object(agarre.soltar(true)).is_same(bolsa)
-		for cuadro in 5:
-			await get_tree().physics_frame
-		assert_bool(recolector.tarea().esta_depositada(datos.id)).is_true()
+	for bolsa: ObjetoAgarrable in almacen.get("_bolsas"):
+		assert_bool(agarre.pedir_agarrar(bolsa.datos, bolsa)).is_true()
+		jugador.set("_enfocado", contenedor)
+		var clic := InputEventMouseButton.new()
+		clic.button_index = MOUSE_BUTTON_LEFT
+		clic.pressed = true
+		jugador.call("_unhandled_input", clic)
+		assert_bool(recolector.tarea().esta_depositada(bolsa.datos.id)).is_true()
 	var reloj: RelojDelTurno = almacen.get("_reloj")
 	assert_bool(reloj.obligatoria(Tarea.Tipo.SACAR_LA_BASURA).completada()).is_true()
 

@@ -13,4 +13,5 @@ id = &"caja_de_reposicion"
 nombre = "Caja de reposición"
 sonoridad = 3
 admite_encima = true
+entra_en_el_contenedor = false
 revelacion = SubResource("Resource_revelacion")

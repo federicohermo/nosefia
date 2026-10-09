@@ -3,20 +3,20 @@ extends GdUnitTestSuite
 const Tapa := preload("res://src/dominio/almacen/tapa_del_contenedor.gd")
 
 
-func test_arranca_abierta_y_recibe_bolsas() -> void:  # AC-CLN-034
+func test_arranca_abierta_y_recibe_objetos() -> void:  # AC-CLN-034
 	var tapa := Tapa.new()
 	assert_float(tapa.angulo()).is_equal(Tapa.ANGULO_ABIERTA)
-	assert_bool(tapa.recibe_bolsas()).is_true()
+	assert_bool(tapa.recibe_objetos()).is_true()
 
 
 func test_cerrar_corta_el_descarte_antes_de_terminar_el_giro() -> void:  # AC-CLN-035
 	var tapa := Tapa.new()
 	tapa.alternar()
-	assert_bool(tapa.recibe_bolsas()).is_false()
+	assert_bool(tapa.recibe_objetos()).is_false()
 	assert_float(tapa.angulo()).is_equal(Tapa.ANGULO_ABIERTA)
 	assert_float(tapa.avanzar(0.1)).is_between(0.0, Tapa.ANGULO_ABIERTA - 0.01)
 	assert_float(tapa.avanzar(10.0)).is_equal(0.0)
-	assert_bool(tapa.recibe_bolsas()).is_false()
+	assert_bool(tapa.recibe_objetos()).is_false()
 
 
 func test_abrir_recupera_el_descarte_al_terminar_el_giro() -> void:  # AC-CLN-035
@@ -25,9 +25,9 @@ func test_abrir_recupera_el_descarte_al_terminar_el_giro() -> void:  # AC-CLN-03
 	tapa.avanzar(1.0)
 	tapa.alternar()
 	assert_float(tapa.avanzar(0.1)).is_between(0.01, Tapa.ANGULO_ABIERTA - 0.01)
-	assert_bool(tapa.recibe_bolsas()).is_false()
+	assert_bool(tapa.recibe_objetos()).is_false()
 	assert_float(tapa.avanzar(1.0)).is_equal(Tapa.ANGULO_ABIERTA)
-	assert_bool(tapa.recibe_bolsas()).is_true()
+	assert_bool(tapa.recibe_objetos()).is_true()
 
 
 func test_se_puede_invertir_el_giro_sin_saltar_al_otro_tope() -> void:  # AC-CLN-034
@@ -63,7 +63,7 @@ func test_reiniciar_la_jornada_la_deja_abierta() -> void:  # AC-CLN-034
 	tapa.avanzar(1.0)
 	tapa.reiniciar()
 	assert_float(tapa.angulo()).is_equal(Tapa.ANGULO_ABIERTA)
-	assert_bool(tapa.recibe_bolsas()).is_true()
+	assert_bool(tapa.recibe_objetos()).is_true()
 
 
 func test_un_paso_obstruido_no_mueve_la_tapa_y_se_puede_invertir() -> void:  # AC-CLN-034
@@ -73,8 +73,8 @@ func test_un_paso_obstruido_no_mueve_la_tapa_y_se_puede_invertir() -> void:  # A
 	assert_float(tapa.angulo_siguiente(0.1)).is_less(antes)
 	assert_float(tapa.angulo()).is_equal(antes)
 	assert_float(tapa.avanzar(0.1, false)).is_equal(antes)
-	assert_bool(tapa.recibe_bolsas()).is_false()
+	assert_bool(tapa.recibe_objetos()).is_false()
 	tapa.alternar()
 	assert_float(tapa.avanzar(0.1)).is_greater(antes)
 	tapa.avanzar(1.0)
-	assert_bool(tapa.recibe_bolsas()).is_true()
+	assert_bool(tapa.recibe_objetos()).is_true()

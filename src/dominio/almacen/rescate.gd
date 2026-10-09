@@ -1,7 +1,7 @@
 ## Adónde va lo que igual quedó adentro de un sólido fijo, y cuándo se lo mira.
 ##
-## Mandarlo derecho a su origen deshace trabajo o lo regala: una bolsa ya contada que vuelve al
-## baño queda a la vista con la tarea cumplida. Por eso el origen es el último recurso.
+## Mandarlo derecho al origen deshace el recorrido del jugador. Por eso se busca primero
+## cerca de donde quedó y el origen es el último recurso.
 class_name Rescate
 extends RefCounted
 

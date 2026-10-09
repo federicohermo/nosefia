@@ -1,7 +1,7 @@
 ---
 schema_version: 1
 capability_id: CAP-CLN
-status: draft
+status: ratified
 owner: por definir
 provenance: GDD «Limpiar» y «Sacar la basura»; ficha «9. Tarea: Limpieza»; migración de los specs 010, 015, 043; ajustes del dueño sobre duración de la mopa, mezcla, enjuague y agua temporal
 ---
@@ -397,6 +397,9 @@ DADO mopa mojada, balde teñido y bolsa tirados CUANDO abre otra noche ENTONCES 
 padres y lugares originales, visibles, físicos y recogibles; mopa seca, balde vacío y bolsa
 sin depositar. DADO un ticket y una unidad tirados ENTONCES se retiran junto con los demás
 creados en la noche anterior, sin dejar entradas inválidas en la lista de tirados.
+La vuelta conserva el estado físico original: un útil móvil elevado 0,5 m vuelve a caer
+y apoyarse. Consultar los descartados entrega una copia independiente y la noche nueva
+vacía ese registro, sin leer cuerpos ya liberados.
 
 ### AC-CLN-039 — La suspensión bloquea ambos gestos *(verifica BR-CLN-026)*
 

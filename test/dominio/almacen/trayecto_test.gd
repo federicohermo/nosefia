@@ -1,4 +1,4 @@
-## La aritmética del trayecto: viajes y si un punto entra en la zona.
+## La aritmética del trayecto: los viajes de las bolsas.
 ##
 ## **Ningún caso levanta una escena**: si alguno la necesitara, la regla estaría en el lugar
 ## equivocado.
@@ -24,11 +24,3 @@ func test_sin_manos_o_sin_bolsas_no_hay_viajes() -> void:
 	# lleve puesta la corrida entera.
 	assert_int(Trayecto.viajes(3, 0)).is_equal(0)
 	assert_int(Trayecto.viajes(0, 1)).is_equal(0)
-
-
-func test_el_borde_de_la_zona_entra() -> void:  # AC-CLN-009
-	# Es un `<=`: con un `<`, la bolsa apoyada justo en el límite no contaría y el jugador no
-	# tendría cómo distinguir eso de haberla dejado mal.
-	assert_bool(Trayecto.dentro_del_descarte(1.5, 1.5)).is_true()
-	assert_bool(Trayecto.dentro_del_descarte(1.4999, 1.5)).is_true()
-	assert_bool(Trayecto.dentro_del_descarte(1.5001, 1.5)).is_false()

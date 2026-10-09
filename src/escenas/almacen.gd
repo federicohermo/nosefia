@@ -26,6 +26,7 @@ const AudioDelLocal := preload("res://src/escenas/puestos/audio_del_almacen.gd")
 const ReposicionManual := preload("res://src/escenas/puestos/reposicion_manual.gd")
 const PuertaDelLocal := preload("res://src/escenas/puestos/puerta_del_local.gd")
 const PuestoDeLaCaja := preload("res://src/escenas/puestos/caja_registradora.gd")
+const ContenedorDelLocal := preload("res://src/escenas/puestos/contenedor_de_basura.gd")
 const TapaDelLocal := preload("res://src/escenas/puestos/tapa_del_contenedor.gd")
 const UtilDeLimpieza := preload("res://src/escenas/objetos/util_de_limpieza.gd")
 const ManijaDelBalde := preload("res://src/escenas/objetos/manija_del_balde.gd")
@@ -64,6 +65,7 @@ const ESCENA_DEL_MENU := "res://src/escenas/menu_de_inicio.tscn"
 @export var _manija_del_balde: ManijaDelBalde
 
 @export var _puertas: Array[Node3D]
+@export var _contenedor: ContenedorDelLocal
 @export var _tapa_del_contenedor: TapaDelLocal
 @export var _caja: CajaRegistradora
 @export var _puesto_de_la_caja: PuestoDeLaCaja
@@ -154,6 +156,9 @@ func _ready() -> void:
 	# en la góndola. Quien atiende ese clic es `ReposicionManual`, que se conecta solo. La unidad
 	# viaja en la mano y sigue contada en el depósito, así que el inventario recién cambia cuando
 	# el estante la acepta: soltarla en el piso no repone nada, y devolverla no mueve nada.
+	_recolector.agarre = _agarre
+	_recolector.repositor = _repositor
+	_recolector.objeto_tirado.connect(_contenedor.recibir)
 	_repositor.agarre = _agarre
 	_repositor.unidad_colocada.connect(_reposicion_manual.depositar)
 	# El subtítulo del examen: lo que dice la caja examinada, y nada cuando termina. El texto lo
@@ -210,6 +215,7 @@ func _al_abrir_la_jornada(jornada: int) -> void:
 	var inventario := Apertura.inventario_de_la_jornada(jornada, _reposicion_manual.casilleros())
 	_repositor.arrancar(Estante.new(inventario, Catalogo.todos()))
 	_reposicion_manual.limpiar()
+	_contenedor.reiniciar()
 	var atender := TareaDeAtender.new(Compradores.de_la_jornada(), inventario)
 	_atenciones.arrancar(atender)
 	_computadora.arrancar(RegistroDeVentas.new(Catalogo.todos(), atender))
@@ -217,8 +223,8 @@ func _al_abrir_la_jornada(jornada: int) -> void:
 	# sola instancia dejaría el local limpio de anoche y la obligatoria cumplida sola.
 	_limpiador.arrancar(PisoDelLocal.de_la_jornada())
 	_recolector.arrancar(TareaDeLaBasura.de_la_jornada())
-	# El dominio se resetea y los nodos no: sin esto las tres bolsas siguen adentro del `Area3D`
-	# del fondo, y desde la jornada 2 la obligatoria está hecha antes de que el jugador dé un
+	# El dominio se resetea y los cuerpos tirados vuelven: la noche siguiente conserva el
+	# viaje de las bolsas. Sin esa vuelta, la obligatoria se resolvería sin que el jugador dé un
 	# paso. Las cajas van por lo mismo: se trasladan, así que la noche siguiente arrancaría con
 	# la mercadería donde la dejó la anterior. Van todas, siempre, sin preguntar dónde
 	# quedaron: dónde está cada una es del motor y decidirlo acá sería una regla del juego

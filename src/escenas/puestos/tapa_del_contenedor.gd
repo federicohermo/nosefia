@@ -7,7 +7,7 @@ const HOLGURA_DEL_GIRO := 0.005
 
 @export var bisagra: Node3D
 @export var mallas: Array[MeshInstance3D] = []
-@export var zona: Area3D
+@export var recolector: RecolectorDeBasura
 @export var forma: CollisionShape3D
 @export var soporte: StaticBody3D
 
@@ -27,7 +27,6 @@ func _ready() -> void:
 
 func usar() -> void:
 	_tapa.alternar()
-	_actualizar_la_zona()
 
 
 func reiniciar() -> void:
@@ -42,14 +41,12 @@ func reiniciar() -> void:
 	)
 	PhysicsServer3D.body_set_mode(get_rid(), PhysicsServer3D.BODY_MODE_KINEMATIC)
 	bisagra.reset_physics_interpolation()
-	_actualizar_la_zona()
 
 
 func _physics_process(delta: float) -> void:
 	var siguiente := _tapa.angulo_siguiente(delta)
 	_tapa.avanzar(delta, _paso_libre(siguiente))
 	_dibujar()
-	_actualizar_la_zona()
 
 
 func _dibujar() -> void:
@@ -85,8 +82,10 @@ func _paso_libre(siguiente: float) -> bool:
 	return true
 
 
-func _actualizar_la_zona() -> void:
-	# El dominio decide cuándo recibe bolsas. La escena traduce ese permiso al sensor físico.
-	var recibe := _tapa.recibe_bolsas()
-	if zona.monitoring != recibe:
-		zona.set_deferred("monitoring", recibe)
+func recibe_objetos() -> bool:
+	return _tapa.recibe_objetos()
+
+
+func interactuar() -> ObjetoDelAlmacen:
+	recolector.pedir_tirar(recibe_objetos())
+	return null

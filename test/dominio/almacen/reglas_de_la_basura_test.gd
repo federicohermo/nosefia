@@ -6,6 +6,17 @@
 extends GdUnitTestSuite
 
 
+func test_el_tiro_distingue_mano_caja_y_tapa_en_orden() -> void:  # AC-CLN-037
+	assert_int(ReglasDeLaBasura.tiro(null, false)).is_equal(ReglasDeLaBasura.Tiro.MANO_VACIA)
+	var caja := ObjetoDelAlmacen.new()
+	caja.entra_en_el_contenedor = false
+	for recibe: bool in [false, true]:
+		assert_int(ReglasDeLaBasura.tiro(caja, recibe)).is_equal(ReglasDeLaBasura.Tiro.NO_ENTRA)
+	var bolsa := ObjetoDelAlmacen.new()
+	assert_int(ReglasDeLaBasura.tiro(bolsa, false)).is_equal(ReglasDeLaBasura.Tiro.TAPA_NO_ABIERTA)
+	assert_int(ReglasDeLaBasura.tiro(bolsa, true)).is_equal(ReglasDeLaBasura.Tiro.TIRADO)
+
+
 func test_la_tarea_no_se_puede_resolver_en_un_solo_viaje() -> void:  # AC-CLN-007
 	(
 		assert_int(ReglasDeLaBasura.BOLSAS_DE_LA_JORNADA)
@@ -29,25 +40,17 @@ func test_la_tarea_no_se_puede_resolver_en_un_solo_viaje() -> void:  # AC-CLN-00
 
 func test_el_fondo_no_se_ve_desde_donde_se_hace_otra_tarea() -> void:  # AC-CLN-008
 	(
-		assert_float(ReglasDeLaBasura.DISTANCIA_MINIMA_AL_DESCARTE)
+		assert_float(ReglasDeLaBasura.DISTANCIA_MINIMA_AL_CONTENEDOR)
 		. override_failure_message(
 			(
-				"el descarte está a %.2f m y la mira alcanza %.2f m"
+				"el contenedor está a %.2f m y la mira alcanza %.2f m"
 				% [
-					ReglasDeLaBasura.DISTANCIA_MINIMA_AL_DESCARTE,
+					ReglasDeLaBasura.DISTANCIA_MINIMA_AL_CONTENEDOR,
 					ReglasDelJugador.ALCANCE_DE_LA_MIRA
 				]
 			)
 		)
 		. is_greater(ReglasDelJugador.ALCANCE_DE_LA_MIRA)
-	)
-
-
-func test_la_zona_de_descarte_es_mas_chica_que_el_viaje_que_hay_que_hacer() -> void:
-	# Con un radio del tamaño del recorrido, «llegar al fondo» sería «tirarla más o menos para
-	# allá»: exactamente el modo de falla que este spec vino a cerrar.
-	assert_float(ReglasDeLaBasura.RADIO_DEL_DESCARTE).is_less(
-		ReglasDeLaBasura.DISTANCIA_MINIMA_AL_DESCARTE
 	)
 
 

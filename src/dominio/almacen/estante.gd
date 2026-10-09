@@ -229,6 +229,11 @@ func reservadas(producto: Producto) -> int:
 	return _inventario.afuera(producto)
 
 
+## Retira una unidad afuera y descuenta su existencia del depósito sin llenar su casillero.
+func desechar(unidad: UnidadDeProducto) -> bool:
+	return _inventario.desechar(unidad)
+
+
 ## Anula la reserva de una unidad que salió de la caja y no se colocó, y devuelve si la anuló.
 ##
 ## No mueve mercadería: la unidad nunca dejó el depósito. Una que no está afuera —porque ya se
