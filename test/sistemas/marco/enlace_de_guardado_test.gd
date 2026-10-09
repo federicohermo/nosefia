@@ -120,3 +120,18 @@ func test_el_enlace_no_decide() -> void:
 	var texto := FileAccess.get_file_as_string(ENLACE)
 	for nombre: String in ["Legajo", "Consecuencias", "Final", "terminada", "ReglasDeLaPartida"]:
 		assert_str(texto).not_contains(nombre)
+
+
+func test_el_checkpoint_ya_contiene_los_siete_medios_del_cierre() -> void:  # AC-EMP-020, AC-CLN-046
+	var guardado := _guardado()
+	var partida := Partida.new(Legajo.con_medios(6))
+	_arrancar(partida, guardado)
+	_ciclo.turno_agotado.connect(
+		func(_jornada: int) -> void: partida.anotar_llamado(Partida.Llamado.OBJETO_AFUERA)
+	)
+	_jugar_la_noche_impecable()
+	var archivo: Variant = str_to_var(FileAccess.get_file_as_string(guardado.ruta))
+	assert_bool(archivo is Dictionary).is_true()
+	assert_int(typeof(archivo.get("medios"))).is_equal(TYPE_INT)
+	assert_int(archivo.get("medios", -1)).is_equal(7)
+	assert_int(Partida.desde(guardado.cargar()).medios()).is_equal(7)

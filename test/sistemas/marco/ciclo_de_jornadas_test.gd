@@ -86,6 +86,29 @@ func test_el_ciclo_no_decide_como_pesa_una_jornada() -> void:
 		)
 
 
+func test_agotar_avisa_una_vez_antes_del_registro_y_del_cierre() -> void:  # AC-CLN-046
+	var partida := Partida.nueva()
+	var reloj: RelojDelTurno = auto_free(RelojDelTurno.new())
+	var ciclo: CicloDeJornadas = auto_free(CicloDeJornadas.new())
+	var orden: Array[String] = []
+	ciclo.turno_agotado.connect(
+		func(jornada: int) -> void:
+			assert_int(jornada).is_equal(1)
+			assert_int(partida.medios()).is_zero()
+			partida.anotar_llamado(Partida.Llamado.OBJETO_AFUERA)
+			orden.append("foto")
+	)
+	ciclo.jornada_cerrada.connect(
+		func(_jornada: int, _cumplidas: int) -> void:
+			assert_int(partida.medios()).is_equal(5)
+			orden.append("cierre")
+	)
+	ciclo.arrancar(partida, reloj)
+	_agotar_la_noche(reloj)
+	_agotar_la_noche(reloj)
+	assert_array(orden).contains_exactly(["foto", "cierre"])
+
+
 ## Un ciclo ya arrancado sobre esa partida y ese reloj, con sus dos señales anotadas.
 func _ciclo_arrancado(partida: Partida, reloj: RelojDelTurno) -> CicloDeJornadas:
 	var ciclo: CicloDeJornadas = auto_free(CicloDeJornadas.new())

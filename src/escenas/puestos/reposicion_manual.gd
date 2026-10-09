@@ -77,6 +77,13 @@ var _disponible: ObjetoAgarrable = null
 var _aristas := ShaderMaterial.new()
 
 
+func unidades_sueltas() -> Array[Node3D]:
+	var cuerpos: Array[Node3D] = []
+	for grupo: GrupoDelPiso in _sueltos:
+		cuerpos.append_array(grupo.cuerpos)
+	return cuerpos
+
+
 ## Cuántos casilleros tiene la fila de adelante de cada producto: su cupo, medido del modelo.
 ##
 ## Es lo que la apertura de cada jornada le pasa al inventario. **Sale de la disposición, y no

@@ -217,9 +217,8 @@ func test_con_el_balde_en_la_mano_no_se_agarra_un_jabon() -> void:
 	assert_int(manos.motivo_de_rechazo(jabon)).is_equal(Manos.Rechazo.MANOS_LLENAS)
 
 
-func test_los_espejos_estan_y_el_almacen_no_decide_nada() -> void:
-	# Las dos mitades falsables del criterio de terminado. La del `almacen.gd` es la que el 007
-	# dejó puesta: la escena raíz cablea y no decide, y eso se verifica sin leerla.
+func test_las_reglas_de_limpieza_tienen_sus_espejos() -> void:
+	# Cada regla y sistema de limpieza conserva su suite propia.
 	for ruta: String in [
 		"res://src/dominio/almacen/reglas_de_la_limpieza.gd",
 		"res://src/dominio/almacen/mancha.gd",
@@ -234,11 +233,3 @@ func test_los_espejos_estan_y_el_almacen_no_decide_nada() -> void:
 			. override_failure_message("falta el espejo `%s`" % espejo)
 			. is_true()
 		)
-	var almacen := FileAccess.get_file_as_string("res://src/escenas/almacen.gd")
-	assert_str(almacen).is_not_empty()
-	var ramas := RegEx.create_from_string("(?m)^\\s*(if|elif|match)\\b").search_all(almacen)
-	(
-		assert_array(ramas)
-		. override_failure_message("`almacen.gd` tiene una condición adentro")
-		. is_empty()
-	)

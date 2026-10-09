@@ -38,6 +38,10 @@ var _capa_original: int = 0
 var _mascara_original: int = 0
 
 
+func cuerpo_sostenido() -> Node3D:
+	return _nodo
+
+
 ## Las manos, para que quien las necesite pregunte en vez de que este sistema le copie el estado.
 func manos() -> Manos:
 	return _manos

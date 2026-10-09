@@ -20,15 +20,20 @@ func test_una_partida_nueva_arranca_en_la_primera_jornada() -> void:
 func test_la_partida_guarda_el_legajo_que_recibio_y_no_una_copia() -> void:  # AC-EMP-012
 	# Una copia dejaría al legajo restaurado sin efecto: la partida acumularía sobre
 	# otro objeto y la historia guardada no despediría a nadie, en verde.
-	var legajo := Legajo.con_apercibimientos(Reglas.APERCIBIMIENTOS_POR_AVISO)
+	var legajo := Legajo.con_medios(
+		(Reglas.APERCIBIMIENTOS_POR_AVISO) * Reglas.MEDIOS_POR_APERCIBIMIENTO
+	)
 	var partida := Partida.new(legajo)
 	assert_object(partida.legajo()).is_same(legajo)
 	assert_int(partida.apercibimientos()).is_equal(Reglas.APERCIBIMIENTOS_POR_AVISO)
 
 
 func test_una_partida_restaurada_a_un_aviso_del_tope_despide_con_un_aviso() -> void:  # AC-EMP-012
-	var restaurado := Legajo.con_apercibimientos(
-		Reglas.APERCIBIMIENTOS_HASTA_EL_DESPIDO - Reglas.APERCIBIMIENTOS_POR_AVISO
+	var restaurado := Legajo.con_medios(
+		(
+			(Reglas.APERCIBIMIENTOS_HASTA_EL_DESPIDO - Reglas.APERCIBIMIENTOS_POR_AVISO)
+			* Reglas.MEDIOS_POR_APERCIBIMIENTO
+		)
 	)
 	var partida := Partida.new(restaurado)
 	_jugar(partida, Consecuencias.CUMPLIDAS_MINIMAS_PARA_AVISO)
@@ -42,8 +47,8 @@ func test_una_partida_guardada_sigue_en_su_jornada_y_con_su_legajo() -> void:
 			{
 				PartidaSerializada.clave(PartidaSerializada.Campo.JORNADA):
 				ReglasDeLaPartida.PRIMERA_JORNADA + 2,
-				PartidaSerializada.clave(PartidaSerializada.Campo.APERCIBIMIENTOS):
-				Reglas.APERCIBIMIENTOS_POR_AVISO,
+				PartidaSerializada.clave(PartidaSerializada.Campo.MEDIOS):
+				Reglas.APERCIBIMIENTOS_POR_AVISO * Reglas.MEDIOS_POR_APERCIBIMIENTO,
 			}
 		)
 	)

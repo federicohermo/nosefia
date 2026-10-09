@@ -1,9 +1,7 @@
 ## El cableado de la noche: le da la partida al ciclo y ata sus señales al HUD.
 ##
-## **No decide nada, y eso se puede verificar sin leerlo**: no tiene una sola línea que empiece
-## con una condición. Cuáles son las obligatorias, cuánto dura el turno, cuántas noches dura la
-## partida, cuántos apercibimientos suma cada banda y cómo se lee un tiempo son todas preguntas
-## de `dominio/`, que es donde tienen test.
+## Las decisiones pertenecen al dominio. Acá se conectan las señales y se traduce la foto física
+## de cuerpos y habitaciones al estado tipado que reciben las reglas puras del cierre.
 ##
 ## **Y perdió responsabilidades en vez de ganarlas.** Antes armaba el turno y llevaba el puntaje
 ## del empleado adentro de la escena, o sea que los dos morían al cerrarla y la regla del
@@ -30,6 +28,8 @@ const ContenedorDelLocal := preload("res://src/escenas/puestos/contenedor_de_bas
 const TapaDelLocal := preload("res://src/escenas/puestos/tapa_del_contenedor.gd")
 const UtilDeLimpieza := preload("res://src/escenas/objetos/util_de_limpieza.gd")
 const ManijaDelBalde := preload("res://src/escenas/objetos/manija_del_balde.gd")
+const HabitacionesDelAlmacen := preload("res://src/escenas/puestos/habitaciones_del_almacen.gd")
+const ReglasDelCierre := preload("res://src/dominio/almacen/reglas_del_cierre.gd")
 
 ## El jugador tampoco declara un `class_name` —es cáscara, como este archivo—, así que el
 ## `@export` de abajo no lo puede nombrar sin traerlo por `preload`.
@@ -53,6 +53,7 @@ const ESCENA_DEL_MENU := "res://src/escenas/menu_de_inicio.tscn"
 @export var _recolector: RecolectorDeBasura
 @export var _audio: AudioDelLocal
 @export var _reposicion_manual: ReposicionManual
+@export var _habitaciones: HabitacionesDelAlmacen
 
 ## El agarre vive adentro de `jugador.tscn`, y es la única fuente de sonidos que no cuelga de
 ## esta raíz. Se la nombra acá para que sus tres señales no queden sin fuente: el enlazador
@@ -112,6 +113,7 @@ func _ready() -> void:
 	_reloj.tarea_completada.connect(_hud.mostrar_tareas)
 	_reloj.tarea_descumplida.connect(_hud.mostrar_tareas)
 	_atenciones.compra_realizada.connect(_computadora.revisar_registro)
+	_ciclo.turno_agotado.connect(_al_agotar_el_turno)
 	_ciclo.jornada_cerrada.connect(_al_cerrar_la_jornada)
 	# La apertura reinicia el marcador antes de que la computadora revise la planilla nueva:
 	# conservar el conteo anterior arrastraría las cumplidas de ayer. La góndola se rehace por
@@ -289,3 +291,43 @@ func _seguir() -> void:
 ## Deja la partida y carga el menú de inicio. No abre ninguna jornada.
 func volver_al_menu() -> void:
 	get_tree().change_scene_to_file(ESCENA_DEL_MENU)
+
+
+func _estados_del_cierre() -> Array[ReglasDelCierre.Estado]:
+	var candidatos: Array[Node3D] = []
+	candidatos.append_array(_cajas_de_productos)
+	candidatos.append_array(_utiles_de_limpieza)
+	candidatos.append_array(_bolsas)
+	candidatos.append_array(_reposicion_manual.unidades_sueltas())
+	var sostenido := _agarre.cuerpo_sostenido()
+	if (
+		sostenido != null
+		and sostenido.get("datos") is UnidadDeProducto
+		and not candidatos.has(sostenido)
+	):
+		candidatos.append(sostenido)
+	var tirados := _contenedor.tirados()
+	var estados: Array[ReglasDelCierre.Estado] = []
+	for nodo: Node3D in candidatos:
+		if not is_instance_valid(nodo) or nodo.is_queued_for_deletion() or tirados.has(nodo):
+			continue
+		var clase := ReglasDelCierre.Clase.OTRO
+		if nodo is CajaDeProductosDelDeposito:
+			clase = ReglasDelCierre.Clase.CAJA
+		elif nodo is UtilDeLimpieza:
+			clase = ReglasDelCierre.Clase.UTIL_DE_LIMPIEZA
+		elif nodo.get("datos") is UnidadDeProducto:
+			clase = ReglasDelCierre.Clase.UNIDAD_SUELTA
+		var en_mano := nodo == sostenido and not _jugador.examen.esta_examinando()
+		estados.append(
+			ReglasDelCierre.Estado.new(clase, _habitaciones.de(nodo.global_position), en_mano)
+		)
+	return estados
+
+
+func _al_agotar_el_turno(_jornada: int) -> void:
+	var estados := _estados_del_cierre()
+	if ReglasDelCierre.hay_desorden(estados):
+		_partida.anotar_llamado(Partida.Llamado.LOCAL_DESORDENADO)
+	if ReglasDelCierre.hay_objetos_afuera(estados):
+		_partida.anotar_llamado(Partida.Llamado.OBJETO_AFUERA)

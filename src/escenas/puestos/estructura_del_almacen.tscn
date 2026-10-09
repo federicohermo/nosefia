@@ -1,5 +1,7 @@
 [gd_scene format=3]
 
+[ext_resource type="Script" path="res://src/escenas/puestos/habitaciones_del_almacen.gd" id="habitaciones"]
+
 [ext_resource type="PackedScene" path="res://src/escenas/puestos/reloj_de_mesa.tscn" id="8_reloj_de_mesa"]
 [ext_resource type="PackedScene" path="res://src/escenas/puestos/ventanilla.tscn" id="15_ventanilla"]
 
@@ -2219,3 +2221,9 @@ rotation_degrees = Vector3(0, 90, 0)
 
 [node name="Lector" parent="." instance=ExtResource("lector")]
 position = Vector3(1.469662, 1.047918, 4.883701)
+
+[node name="HabitacionesDelAlmacen" type="Node3D" parent="."]
+script = ExtResource("habitaciones")
+local = Array[AABB]([AABB(-2.480001, 0.10223747, -7.870002, 10.350003, 4.26776453, 14.150004)])
+deposito = Array[AABB]([AABB(-4.594377, 0.10273747, -15.397972, 9.24129482, 4.76686044, 7.144682), AABB(4.64691782, 0.10273747, -15.397972, 3.27861418, 4.76993053, 7.144682), AABB(5.882002, 0.10223747, -8.25329, 1.724, 2.78376353, 0.383288)])
+bano = Array[AABB]([AABB(8.291861, 0.10223747, -0.311377, 0.050147, 3.12770453, 6.589699), AABB(8.342008, 0.10223747, -0.311377, 5.092652, 4.62253553, 4.065173), AABB(8.342008, 0.10223747, 3.753796, 5.092652, 4.76716353, 0.041553), AABB(8.342008, 0.10223747, 3.795349, 5.092652, 3.13772953, 2.482973), AABB(7.870002, 0.10223747, -0.104, 0.21, 2.74776353, 1.680001), AABB(8.080002, 0.10223747, -0.10535, 0.211859, 2.74974353, 1.682871)])

@@ -49,7 +49,8 @@ const PUNTO_DEL_MURO_SIN_HUECO := Vector3(0.8, 1.2, 6.28)
 const DISTANCIA_DE_AFUERA := 20.0
 
 ## Cuánto por encima del antepecho se mira para ver el hueco, y cuánto por debajo para ver que el
-## antepecho está. El hueco medido va de 1,04 a 2,84 m, así que los dos caen bien adentro.
+## antepecho está. El hueco vigente va de 1,04 a 2,44 m: arriba del vidrio empieza el dintel.
+## La lectura superior prueba el vano de la cáscara sin interpretar una abertura sobre el vidrio.
 const SOBRE_EL_ANTEPECHO := 0.4
 const BAJO_EL_ANTEPECHO := 0.3
 
@@ -337,8 +338,7 @@ func test_el_almacen_arranca_desde_el_guardado() -> void:  # AC-SAV-017
 	var guardada := {
 		PartidaSerializada.clave(PartidaSerializada.Campo.JORNADA):
 		ReglasDeLaPartida.PRIMERA_JORNADA + 2,
-		PartidaSerializada.clave(PartidaSerializada.Campo.APERCIBIMIENTOS):
-		Reglas.APERCIBIMIENTOS_POR_AVISO,
+		PartidaSerializada.clave(PartidaSerializada.Campo.MEDIOS): Reglas.APERCIBIMIENTOS_POR_AVISO,
 	}
 	assert_bool(Guardado.new().escribir(guardada)).is_true()
 	var retomada: Partida = _almacen().get("_partida")
@@ -487,7 +487,7 @@ func test_abrir_la_jornada_deja_al_jugador_en_el_arranque() -> void:  # AC-PLY-0
 func test_con_el_despido_la_placa_vuelve_al_menu_y_no_abre_otra_noche() -> void:  # AC-EMP-016
 	var almacen: Node3D = auto_free(load(ESCENA_DEL_ALMACEN).instantiate())
 	# Tres apercibimientos y una noche sin tareas: salta de 3 a 5 sin pisar el 4.
-	almacen.set("_partida", Partida.new(Legajo.con_apercibimientos(3)))
+	almacen.set("_partida", Partida.new(Legajo.con_medios((3) * Reglas.MEDIOS_POR_APERCIBIMIENTO)))
 	add_child(almacen)
 	await get_tree().process_frame
 	var menus := [0]

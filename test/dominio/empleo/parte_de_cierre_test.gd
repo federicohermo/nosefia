@@ -119,7 +119,7 @@ func test_la_partida_en_curso_ofrece_seguir_y_volver_al_menu() -> void:  # AC-EM
 
 func test_el_parte_de_la_partida_real_despedida_no_ofrece_seguir() -> void:  # AC-EMP-016
 	# El salto del tope: de 3 a 5 con una noche grave, sin pisar el 4.
-	var partida := Partida.new(Legajo.con_apercibimientos(3))
+	var partida := Partida.new(Legajo.con_medios((3) * Reglas.MEDIOS_POR_APERCIBIMIENTO))
 	partida.abrir_la_jornada()
 	partida.cerrar_la_jornada(0)
 	var parte := ParteDeCierre.new(
@@ -127,3 +127,18 @@ func test_el_parte_de_la_partida_real_despedida_no_ofrece_seguir() -> void:  # A
 	)
 	assert_array(parte.opciones()).not_contains([ParteDeCierre.Opcion.SEGUIR])
 	assert_str(parte.comentario()).is_equal(CatalogoDeReacciones.del_comentario(5).texto)
+
+
+func test_siete_medios_tienen_el_mismo_comentario_que_seis() -> void:  # AC-EMP-021
+	var comentarios: Array[String] = []
+	for medios: int in [6, 7]:
+		var partida := Partida.new(Legajo.con_medios(medios))
+		partida.abrir_la_jornada()
+		partida.cerrar_la_jornada(5)
+		var parte := ParteDeCierre.new(
+			1, partida.obligatorias(), partida.apercibimientos(), partida.final()
+		)
+		comentarios.append(parte.comentario())
+		assert_int(parte.apercibimientos()).is_equal(3)
+	assert_str(comentarios[1]).is_equal(comentarios[0])
+	assert_str(comentarios[1]).is_not_empty()
