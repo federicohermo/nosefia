@@ -288,7 +288,18 @@ func test_los_eventos_reales_piden_escaneo_error_impresion_y_botones() -> void:
 		]
 	)
 	sonidos.clear()
-	(almacen.get("_atenciones") as Ventanilla).cobro_rechazado.emit([])
+	var atenciones: Ventanilla = almacen.get("_atenciones")
+	atenciones.pedir_atender()
+	assert_object(atenciones.atencion()).is_not_null()
+	if atenciones.atencion() == null:
+		return
+	var panel: PanelDeLaVentanilla = almacen.get_node("Interfaz/PanelDeLaVentanilla")
+	var aviso: Label = panel.get("_aviso")
+	aviso.text = "Sin repintar"
+	sonidos.clear()
+	var faltantes: Array[Producto] = []
+	atenciones.cobro_rechazado.emit(faltantes)
+	assert_str(aviso.text).is_equal(atenciones.atencion().aviso())
 	assert_array(sonidos).is_empty()
 	var tabla := TablaDeSonidos.desde_disco()
 	for evento: EntradaSonora.Evento in [
