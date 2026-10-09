@@ -219,6 +219,10 @@ Cada agente recibe, literal:
   copia para eludir ese control.
 - **Un comando que este skill entrega se vuelve a correr antes de repartirlo**, nunca se copia de
   la corrida anterior: un comando roto se reparte N veces.
+  Antes de explorar opciones, leer su parser: `verificar.py` ignora `--help` y arranca todos
+  los nodos. En #306 del 2026-10-09 se abortó esa invocación accidental fuera de la cola.
+  Su log se conserva como incidente, nunca como prueba; la verificación formal empieza dentro
+  del turno y con el árbol congelado.
 
 - **Coordiná las corridas del motor y las capturas entre carriles.** Una suite que mide tiempos
   por cuadro puede fallar bajo carga aunque el código no cambie. En el lote 282–285 del
