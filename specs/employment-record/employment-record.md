@@ -81,6 +81,10 @@ cuántos apercibimientos enteros lleva, descartando sólo para el comentario el 
 Con 7 medios dice lo mismo que con 6. Ese comentario satura en el tope: con 5 apercibimientos dice lo
 mismo que con 4.
 
+El parte DEBE mostrar también una línea por cada motivo de llamado de esa jornada, con su
+penalización adicional, después de las obligatorias. Esas líneas no cambian el criterio del
+comentario general ni agregan un contador de motivos durante la noche.
+
 ### BR-EMP-011 — Lo que ofrece el parte depende del final
 
 CUANDO se arma el parte, el sistema DEBE decir qué puede elegir el jugador. Con la partida en
@@ -205,6 +209,13 @@ DADO un legajo con 7 medios CUANDO se arma el parte ENTONCES su comentario es el
 
 DADO la quinta jornada con 7 medios CUANDO cierra impecable sin motivos ENTONCES conserva 7
 y termina con contrato cumplido. DADO un motivo adicional ENTONCES llega a 8 y termina despedido.
+
+### AC-EMP-023 — Los llamados se ven al cerrar *(verifica BR-EMP-009, BR-EMP-012)*
+
+DADO un producto que quedó tirado dentro del local al terminar la jornada CUANDO aparece el
+parte ENTONCES muestra el llamado por local desordenado y su penalización adicional. DADO varios
+motivos distintos ENTONCES aparece una línea por cada uno, sin repetirlos ni arrastrarlos a la
+noche siguiente. El comentario general conserva su criterio de apercibimientos enteros.
 
 ## No objetivos
 
