@@ -776,8 +776,9 @@ DADO la caja con productos cargados, CUANDO se imprime ENTONCES se cierra el pro
 el ticket sale animado de la ranura. Al terminar se puede enfocar y agarrar desde piso
 transitable, sin atravesar sólidos. Caja, lector y papel tienen foco y contorno.
 CUANDO se imprime otra vez ENTONCES el primero cae
-y el segundo queda en la ranura. DADO el primero en la mano ENTONCES otra impresión conserva
-ese papel congelado en su lugar en la mano.
+y el segundo queda en la ranura. DADO el papel agarrado mientras sale CUANDO pasa el tiempo de
+la salida ENTONCES sigue en el mismo lugar de la mano. DADO el primero en la mano ENTONCES otra
+impresión conserva ese papel congelado en su lugar en la mano.
 
 ### AC-PLY-077 — La jornada limpia incluso el papel examinado *(verifica BR-PLY-033)*
 

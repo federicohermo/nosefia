@@ -15,7 +15,8 @@ func _post_import(escena: Node) -> Object:
 	var guardado := ResourceSaver.save(malla.mesh, "res://assets/models/" + nombre + ".res")
 	assert(guardado == OK, "No se pudo guardar la malla de " + nombre)
 	if nombre != "ticket_impreso":
-		var forma := malla.mesh.create_trimesh_shape()
+		# Un casco convexo tiene volumen: un objeto soltado encima no queda adentro del mueble.
+		var forma := malla.mesh.create_convex_shape(true, false)
 		guardado = ResourceSaver.save(forma, "res://assets/models/" + nombre + "_colision.res")
 		assert(guardado == OK, "No se pudo guardar la colisión de " + nombre)
 	return escena

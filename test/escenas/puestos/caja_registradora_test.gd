@@ -246,6 +246,10 @@ func test_imprimir_otro_con_el_anterior_en_mano_no_lo_descongela() -> void:
 	_accion(jugador, primero, ReglasDeLosObjetos.ACCION_AGARRAR)
 	var agarre: Agarre = almacen.get("_agarre")
 	assert_object(agarre.manos().sostenido()).is_same(primero.datos)
+	# Se agarró mientras salía: la animación no lo sigue moviendo en la mano.
+	var en_la_mano := primero.position
+	await get_tree().create_timer(1.0).timeout
+	assert_vector(primero.position).is_equal(en_la_mano)
 	var padre := primero.get_parent()
 	_emitir_papel(almacen)
 	assert_bool(primero.freeze).is_true()

@@ -8,22 +8,8 @@ const OBJETO_SUELTO := preload("res://src/escenas/objetos/objeto_agarrable.tscn"
 ## origen, adonde la red de seguridad lo puede devolver.
 const LIBRE_EN_EL_LOCAL := Vector3(2.7, 0.2, 2.7)
 
-var _escala_anterior: float
 
-
-func before_test() -> void:
-	_escala_anterior = Engine.time_scale
-
-
-func after_test() -> void:
-	Engine.time_scale = _escala_anterior
-
-
-# El límite usa tiempo del motor, que este caso acelera hasta el cierre.
-@warning_ignore("unused_parameter")
-func test_los_puestos_completan_la_jornada_y_permiten_abrir_la_siguiente(
-	timeout: int = 6000000  # gdlint:ignore=unused-argument
-) -> void:
+func test_los_puestos_completan_la_jornada_y_permiten_abrir_la_siguiente() -> void:
 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
 	add_child(almacen)
 	var reloj: RelojDelTurno = almacen.get("_reloj")
@@ -32,7 +18,7 @@ func test_los_puestos_completan_la_jornada_y_permiten_abrir_la_siguiente(
 	await get_tree().process_frame
 	await get_tree().process_frame
 	assert_bool(reloj.corriendo()).is_true()
-	_comprobar_registrar_al_abrir(almacen)
+	_comprobar_ninguna_cumplida_al_abrir(almacen)
 	_comprobar_huecos(almacen, _completos_al_abrir(ReglasDeLaPartida.PRIMERA_JORNADA))
 	await _reponer(almacen)
 	_comprobar_huecos(almacen, Catalogo.todos().size())
@@ -45,13 +31,8 @@ func test_los_puestos_completan_la_jornada_y_permiten_abrir_la_siguiente(
 	assert_bool(reloj.corriendo()).is_true()
 	assert_float(tiempos.back()).is_less(tiempos.front())
 	var pantalla: PantallaDeCierre = almacen.get("_pantalla")
-	# Acelera el motor para ejercer el cierre sin llamar al reloj por dentro.
-	Engine.time_scale = 2000.0
-	for cuadro in 120:
-		await get_tree().process_frame
-		if pantalla.visible:
-			break
-	Engine.time_scale = _escala_anterior
+	reloj.avanzar(Reglas.DURACION_DEL_TURNO / Ritmo.SEGUNDOS_DE_TURNO_POR_SEGUNDO_REAL)
+	await get_tree().process_frame
 	assert_bool(pantalla.visible).is_true()
 	var continuar: Button = pantalla.get_node("Fondo/Panel/Continuar")
 	continuar.pressed.emit()
@@ -59,9 +40,7 @@ func test_los_puestos_completan_la_jornada_y_permiten_abrir_la_siguiente(
 	assert_int(ciclo.partida().jornada()).is_equal(ReglasDeLaPartida.PRIMERA_JORNADA + 1)
 	assert_bool(pantalla.visible).is_false()
 	assert_bool(reloj.corriendo()).is_true()
-	for tipo: Tarea.Tipo in Tarea.Tipo.values():
-		assert_bool(reloj.obligatoria(tipo).completada()).is_equal(tipo == Tarea.Tipo.REGISTRAR)
-	_comprobar_registrar_al_abrir(almacen)
+	_comprobar_ninguna_cumplida_al_abrir(almacen)
 	var recolector: RecolectorDeBasura = almacen.get("_recolector")
 	assert_int(recolector.tarea().depositadas()).is_zero()
 	_comprobar_huecos(almacen, _completos_al_abrir(ReglasDeLaPartida.PRIMERA_JORNADA + 1))
@@ -80,16 +59,17 @@ func _comprobar_planilla_en_cero(almacen: Node3D) -> void:
 	for producto in Catalogo.todos():
 		assert_int(registro.unidades_de(producto)).is_zero()
 	var reloj: RelojDelTurno = almacen.get("_reloj")
-	assert_bool(reloj.obligatoria(Tarea.Tipo.REGISTRAR).completada()).is_true()
+	assert_bool(reloj.obligatoria(Tarea.Tipo.REGISTRAR).completada()).is_false()
 
 
-func _comprobar_registrar_al_abrir(almacen: Node3D) -> void:
+# AC-STK-024
+func _comprobar_ninguna_cumplida_al_abrir(almacen: Node3D) -> void:
 	var reloj: RelojDelTurno = almacen.get("_reloj")
 	for tipo: Tarea.Tipo in Tarea.Tipo.values():
-		assert_bool(reloj.obligatoria(tipo).completada()).is_equal(tipo == Tarea.Tipo.REGISTRAR)
+		assert_bool(reloj.obligatoria(tipo).completada()).is_false()
 	var contador: Label = almacen.get("_hud").get("_tareas")
 	assert_str(contador.text).is_equal(
-		Hud.TEXTO_DE_LAS_TAREAS % Marcador.tareas(1, Apertura.cantidad_de_obligatorias())
+		Hud.TEXTO_DE_LAS_TAREAS % Marcador.tareas(0, Apertura.cantidad_de_obligatorias())
 	)
 
 

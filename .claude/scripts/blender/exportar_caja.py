@@ -1,4 +1,4 @@
-﻿"""Exporta las tres piezas de assets/source/puestos/caja_registradora.blend.
+"""Exporta las tres piezas de assets/source/puestos/caja_registradora.blend.
 
 blender fuente.blend --background --python exportar_caja.py -- assets/models
 """

@@ -3,7 +3,7 @@
 [ext_resource type="Script" path="res://src/escenas/puestos/lector.gd" id="script"]
 
 [ext_resource type="ArrayMesh" path="res://assets/models/lector_de_productos.res" id="modelo"]
-[ext_resource type="ConcavePolygonShape3D" path="res://assets/models/lector_de_productos_colision.res" id="colision"]
+[ext_resource type="ConvexPolygonShape3D" path="res://assets/models/lector_de_productos_colision.res" id="colision"]
 
 [sub_resource type="ConvexPolygonShape3D" id="forma_del_hueco"]
 points = PackedVector3Array(0.28, -0.013749, -0.135369, 0.28, 0.011251, -0.135369, -0.07361, -0.013749, -0.135369, -0.07361, 0.011251, -0.135369, 0.28, -0.013749, 0.135369, 0.28, 0.011251, 0.135369, -0.07361, -0.013749, 0.135369, -0.07361, 0.011251, 0.135369)

@@ -151,11 +151,12 @@ cumplida: dos planillas distintas pueden sumar lo mismo.
 
 ### BR-STK-022 — Registrar se cumple cuando lo anotado coincide con lo vendido
 
-MIENTRAS, para cada producto, lo anotado sea igual a lo vendido esa noche, el sistema DEBE dar
-registrar por cumplida. CUANDO no coincidan, el sistema DEBE descumplirla. El sistema DEBE
-revisarla al abrir la jornada, con cada «+» o «−» que cambia una fila y con cada venta cobrada.
-El cierre DEBE contar el estado de ese instante (BR-SHF-007 de
-[`shift-cycle`](../shift-cycle/shift-cycle.md)).
+MIENTRAS esa noche haya al menos una venta y, para cada producto, lo anotado sea igual a lo
+vendido, el sistema DEBE dar registrar por cumplida. CUANDO no coincidan, el sistema DEBE
+descumplirla. La jornada DEBE abrir con registrar sin cumplir. El sistema DEBE revisarla con
+cada «+» o «−» que cambia una fila y con cada venta cobrada. El cierre DEBE contar el estado de
+ese instante (BR-SHF-007 de [`shift-cycle`](../shift-cycle/shift-cycle.md)): una noche sin
+ventas con la planilla en cero cuenta como cumplida recién ahí.
 
 ### BR-STK-023 — Cada producto declara su sonoridad
 
@@ -408,9 +409,9 @@ total ENTONCES es 6200; con un «−» en el primero, 3700. DADO una noche que v
 producto de precio 1200 CUANDO se anota 1 unidad de otro producto del mismo precio ENTONCES el
 total es igual al de lo vendido y registrar no se cumple.
 
-### AC-STK-024 — Registrar arranca cumplida y sigue a la planilla *(verifica BR-STK-022)*
+### AC-STK-024 — Registrar arranca sin cumplir y sigue a la planilla *(verifica BR-STK-022)*
 
-DADO una jornada que se abre ENTONCES registrar arranca cumplida. DADO una noche
+DADO una jornada que se abre ENTONCES registrar arranca sin cumplir. DADO una noche
 que cobró 2 unidades de un producto y 1 de otro CUANDO se anotan esas 3 unidades ENTONCES
 registrar se cumple con el último gesto, y no antes.
 
@@ -423,7 +424,7 @@ ENTONCES se descumple, y un «−» en esa fila la vuelve a cumplir.
 ### AC-STK-026 — Lo anotado no pasa a la noche siguiente *(verifica BR-STK-019, BR-STK-022)*
 
 DADO una jornada con 3 unidades anotadas CUANDO se abre la jornada siguiente ENTONCES todas las
-filas están en 0 y registrar está cumplida.
+filas están en 0 y registrar está sin cumplir.
 
 ### AC-STK-027 — Ningún producto queda sin sonoridad *(verifica BR-STK-023)*
 

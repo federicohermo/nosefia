@@ -28,3 +28,7 @@ func test_el_cursor_que_sigue_igual_no_pausa() -> void:  # AC-SAV-018
 func test_perder_el_cursor_en_pausa_o_con_la_placa_no_hace_nada() -> void:  # AC-SAV-018
 	assert_int(Pausa.ante_el_cursor(true, false, true, false)).is_equal(Pausa.Accion.NADA)
 	assert_int(Pausa.ante_el_cursor(false, true, true, false)).is_equal(Pausa.Accion.NADA)
+
+
+func test_perder_el_cursor_con_la_ventana_inactiva_no_pausa() -> void:  # AC-SAV-018
+	assert_int(Pausa.ante_el_cursor(false, false, true, false, false)).is_equal(Pausa.Accion.NADA)

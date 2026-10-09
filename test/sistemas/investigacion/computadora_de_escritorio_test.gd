@@ -155,7 +155,8 @@ func test_lo_leido_y_lo_anotado_sobreviven_a_cambiar_de_app_y_a_cerrar() -> void
 	assert_int(escritorio.cuaderno().cuantas()).is_equal(1)
 
 
-func test_la_planilla_sin_ventas_no_cumple_registrar_al_arrancar() -> void:  # AC-STK-052
+# AC-STK-024, AC-STK-052
+func test_la_planilla_sin_ventas_no_cumple_registrar_al_arrancar() -> void:
 	var escritorio := _escritorio()
 	assert_bool(escritorio.registro().coincide()).is_true()
 	assert_int(_turno.tareas_cumplidas()).is_zero()
