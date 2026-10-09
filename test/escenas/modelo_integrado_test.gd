@@ -150,3 +150,44 @@ func test_el_surtido_fijo_no_muestra_stock_que_el_dominio_no_tiene() -> void:
 	for ruta: String in ["base compu", "gondolanueva"]:
 		var malla: MeshInstance3D = estructura.get_node(ruta)
 		assert_object(malla.mesh).is_instanceof(ArrayMesh)
+
+
+func test_las_hojas_con_lectura_conservan_el_modelo_del_artista() -> void:  # AC-PLY-071
+	var almacen: Node3D = auto_free(ALMACEN.instantiate())
+	var original: Node3D = auto_free(
+		load("res://assets/models/SEPT_JUEGOS_PROTOTIPO.glb").instantiate()
+	)
+	add_child(almacen)
+	add_child(original)
+	var rutas: Array[String] = ["nota baño inodoro", "nota instrucciones", "nota productos"]
+	for indice in range(1, 6):
+		rutas.append("board tareas/board de tareas_%03d" % indice)
+	for ruta in rutas:
+		var hoja: MeshInstance3D = almacen.get_node("Estructura/" + ruta)
+		var referencia: MeshInstance3D = original.get_node(ruta)
+		assert_bool(hoja.is_visible_in_tree()).is_true()
+		assert_that(hoja.transform).is_equal(referencia.transform)
+		assert_object(hoja.mesh).is_same(referencia.mesh)
+		assert_int(hoja.gi_mode).is_equal(referencia.gi_mode)
+		assert_object(hoja.material_override).is_same(referencia.material_override)
+		for superficie in hoja.mesh.get_surface_count():
+			assert_object(hoja.get_surface_override_material(superficie)).is_same(
+				referencia.get_surface_override_material(superficie)
+			)
+			assert_object(hoja.get_active_material(superficie)).is_same(
+				referencia.get_active_material(superficie)
+			)
+		var cuerpos := referencia.find_children("*", "StaticBody3D", true, false)
+		assert_int(cuerpos.size()).is_greater(0)
+		for cuerpo: StaticBody3D in cuerpos:
+			var actual: StaticBody3D = hoja.get_node(referencia.get_path_to(cuerpo))
+			assert_that(actual.transform).is_equal(cuerpo.transform)
+			assert_int(actual.collision_layer).is_equal(cuerpo.collision_layer)
+			assert_int(actual.collision_mask).is_equal(cuerpo.collision_mask)
+			for forma: CollisionShape3D in cuerpo.find_children(
+				"*", "CollisionShape3D", true, false
+			):
+				var choque: CollisionShape3D = actual.get_node(cuerpo.get_path_to(forma))
+				assert_that(choque.transform).is_equal(forma.transform)
+				assert_bool(choque.disabled).is_equal(forma.disabled)
+				assert_object(choque.shape).is_same(forma.shape)

@@ -14,6 +14,10 @@
 
 [ext_resource type="Script" path="res://src/escenas/puestos/puerta_de_la_heladera.gd" id="puerta_de_heladera"]
 
+[ext_resource type="Script" path="res://src/escenas/objetos/nota_pegada.gd" id="nota_pegada"]
+[ext_resource type="PackedScene" path="res://src/escenas/objetos/nota_pegada.tscn" id="texto_nota"]
+[ext_resource type="PackedScene" path="res://src/escenas/puestos/notas_del_almacen.tscn" id="notas"]
+
 [sub_resource type="BoxShape3D" id="contorno_de_gondola"]
 size = Vector3(1.800454, 2.292613, 4.978426)
 
@@ -2163,3 +2167,39 @@ shape = SubResource("hoja_de_heladera")
 position = Vector3(10.833626775, 3.383932600, 6.342011573)
 scale = Vector3(0.997537081, 0.997537081, 0.997537081)
 shape = SubResource("frente_exterior_bano")
+
+[node name="StaticBody3D" parent="board tareas/board de tareas_002" node_paths=PackedStringArray("mallas", "titulo_del_papel", "renglones_del_papel") groups=["interactuable"]]
+script = ExtResource("nota_pegada")
+id = 0
+mallas = [NodePath("..")]
+titulo_del_papel = NodePath("../TextoDeLaNota/Titulo")
+renglones_del_papel = NodePath("../TextoDeLaNota/Renglones")
+
+[node name="TextoDeLaNota" parent="board tareas/board de tareas_002" instance=ExtResource("texto_nota")]
+
+[node name="StaticBody3D" parent="board tareas/board de tareas_001" node_paths=PackedStringArray("mallas", "titulo_del_papel", "renglones_del_papel") groups=["interactuable"]]
+script = ExtResource("nota_pegada")
+id = 1
+mallas = [NodePath("..")]
+titulo_del_papel = NodePath("../TextoDeLaNota/Titulo")
+renglones_del_papel = NodePath("../TextoDeLaNota/Renglones")
+
+[node name="TextoDeLaNota" parent="board tareas/board de tareas_001" instance=ExtResource("texto_nota")]
+
+[node name="StaticBody3D" parent="nota productos" node_paths=PackedStringArray("mallas") groups=["interactuable"]]
+script = ExtResource("nota_pegada")
+id = 2
+mallas = [NodePath("..")]
+
+[node name="StaticBody3D" parent="nota instrucciones" node_paths=PackedStringArray("mallas") groups=["interactuable"]]
+script = ExtResource("nota_pegada")
+id = 3
+mallas = [NodePath("..")]
+
+[node name="StaticBody3D" parent="nota baño inodoro" node_paths=PackedStringArray("mallas") groups=["interactuable"]]
+script = ExtResource("nota_pegada")
+id = 4
+mallas = [NodePath("..")]
+
+[node name="NotasDelAlmacen" parent="." node_paths=PackedStringArray("notas") instance=ExtResource("notas")]
+notas = [NodePath("../board tareas/board de tareas_002/StaticBody3D"), NodePath("../board tareas/board de tareas_001/StaticBody3D"), NodePath("../nota productos/StaticBody3D"), NodePath("../nota instrucciones/StaticBody3D"), NodePath("../nota baño inodoro/StaticBody3D")]

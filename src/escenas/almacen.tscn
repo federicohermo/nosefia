@@ -85,6 +85,11 @@ reloj = NodePath("../../Servicios/RelojDelTurno")
 atenciones = NodePath("../../Servicios/Atenciones")
 panel = NodePath("../../Interfaz/PanelDeLaVentanilla")
 
+[node name="NotasDelAlmacen" parent="Estructura" node_paths=PackedStringArray("jugador", "reloj", "vista")]
+jugador = NodePath("../../Jugador")
+reloj = NodePath("../../Servicios/RelojDelTurno")
+vista = NodePath("../../Interfaz/NotaEncuadrada")
+
 [node name="Servicios" parent="." unique_id=1035790477 instance=ExtResource("grupo_Servicios")]
 
 [node name="RedDeSeguridad" parent="Servicios" index="8" node_paths=PackedStringArray("agarre", "jugador", "puertas")]

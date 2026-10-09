@@ -7,6 +7,8 @@
 [ext_resource type="PackedScene" path="res://src/ui/interrupciones/menu_de_pausa.tscn" id="20_menu_de_pausa"]
 [ext_resource type="Script" path="res://src/sistemas/marco/control_de_pausa.gd" id="21_control_de_pausa"]
 
+[ext_resource type="PackedScene" path="res://src/ui/diegetica/nota_encuadrada.tscn" id="nota"]
+
 [node name="Interfaz" type="Node3D"]
 
 [node name="Hud" parent="." instance=ExtResource("2_hud")]
@@ -16,6 +18,8 @@
 [node name="PantallaDeComputadora" parent="." instance=ExtResource("19_pantalla")]
 
 [node name="PantallaDeCierre" parent="." instance=ExtResource("7_cierre")]
+
+[node name="NotaEncuadrada" parent="." instance=ExtResource("nota")]
 
 [node name="MenuDePausa" parent="." instance=ExtResource("20_menu_de_pausa")]
 

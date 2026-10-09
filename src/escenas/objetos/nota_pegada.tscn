@@ -1,0 +1,32 @@
+[gd_scene format=3]
+
+[ext_resource type="FontFile" path="res://assets/ui/manada/unscii-16.ttf" id="letra"]
+
+[node name="TextoDeLaNota" type="Node3D"]
+
+[node name="Titulo" type="Label3D" parent="."]
+rotation = Vector3(-1.5707963, 0, 0)
+position = Vector3(0, 0.002, -0.62)
+pixel_size = 0.0024
+gi_mode = 2
+font = ExtResource("letra")
+font_size = 60
+outline_size = 0
+modulate = Color(0.63, 0.035, 0.01, 1)
+width = 650.0
+autowrap_mode = 3
+no_depth_test = false
+
+[node name="Renglones" type="Label3D" parent="."]
+rotation = Vector3(-1.5707963, 0, 0)
+position = Vector3(-0.84, 0.002, 0.24)
+pixel_size = 0.0024
+gi_mode = 2
+font = ExtResource("letra")
+font_size = 44
+outline_size = 0
+modulate = Color(0.13, 0.10, 0.015, 1)
+width = 720.0
+autowrap_mode = 3
+horizontal_alignment = 0
+no_depth_test = false
