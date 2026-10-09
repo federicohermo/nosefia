@@ -3,15 +3,16 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://bbr8gtyrhevoq"
-path="res://.godot/imported/fondo_ventanilla.png-6926cd22557a29a89908c5bf810fa9b2.ctex"
+path.s3tc="res://.godot/imported/fondo_ventanilla.png-6926cd22557a29a89908c5bf810fa9b2.s3tc.ctex"
 metadata={
-"vram_texture": false
+"imported_formats": ["s3tc_bptc"],
+"vram_texture": true
 }
 
 [deps]
 
 source_file="res://assets/ui/manada/fondo_ventanilla.png"
-dest_files=["res://.godot/imported/fondo_ventanilla.png-6926cd22557a29a89908c5bf810fa9b2.ctex"]
+dest_files=["res://.godot/imported/fondo_ventanilla.png-6926cd22557a29a89908c5bf810fa9b2.s3tc.ctex"]
 
 [params]
 
