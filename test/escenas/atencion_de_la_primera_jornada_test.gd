@@ -126,6 +126,7 @@ func test_las_dos_compras_fisicas_registran_una_vez_y_se_van_tras_despedirse() -
 			if atenciones.puede_abandonar():
 				break
 			var texto: RichTextLabel = _panel(almacen).get_node("Fisico/Dialogo/Texto")
+			assert_bool(texto.is_visible_in_tree()).is_true()
 			assert_str(texto.text).is_equal(despedida.entrada_actual())
 			textos.append(texto.text)
 			_pulsar(almacen)

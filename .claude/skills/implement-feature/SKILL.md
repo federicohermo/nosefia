@@ -243,6 +243,10 @@ se corrige el código.
   esas suites sueltas antes de `verificar.py`. En el #176, dos clics seguidos sobre la misma caja
   pasaron de «no hace nada» a «devuelve la unidad», y un caso de `reposicion_manual_test.gd` que
   afirmaba lo viejo costó una corrida entera en 6/7.
+- **Si una llegada pasa de abrir una interfaz a depender del reloj, revisá también los
+  fixtures de notificaciones, sonido y caja que piden atender.** En #339 seguían esperando
+  un comprador inmediato. La primera jornada debe ejercerse avanzando su reloj; las pruebas
+  del recorrido anterior deben declarar una jornada que lo conserve.
 - **Lo que aparece implementando se hace, no se anota.** Un issue incompleto no se cierra abriendo
   otro issue: se completa.
 - **Un reparto nuevo exige revisar los supuestos de los tests que leen el modelo.** Buscá

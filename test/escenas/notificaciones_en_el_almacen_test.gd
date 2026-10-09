@@ -5,6 +5,7 @@ const ALMACEN := preload("res://src/escenas/almacen.tscn")
 
 func _local() -> Node3D:
 	var local: Node3D = auto_free(ALMACEN.instantiate())
+	local.set("_partida", Partida.nueva())
 	add_child(local)
 	local.get("_jugador").set_physics_process(false)
 	local.get("_reloj").set_process(false)
@@ -20,11 +21,15 @@ func _textos(local: Node3D) -> Array[String]:
 	return textos
 
 
-func test_la_ventanilla_abierta_avisa_una_vez_y_el_cierre_vacia() -> void:  # AC-NTF-001, AC-NTF-006
+# AC-NTF-001, AC-NTF-006, AC-NTF-012
+func test_la_llegada_avisa_hasta_conversar_y_el_cierre_vacia() -> void:
 	var local := _local()
 	var ventanilla: Node3D = local.get_node("Estructura/Ventanilla")
 	assert_bool(ventanilla.has_method("abrir")).is_true()
 	ventanilla.abrir()
+	assert_array(_textos(local)).is_empty()
+	var reloj: RelojDelTurno = local.get("_reloj")
+	reloj.avanzar(120.0)
 	assert_array(_textos(local)).is_equal(["¡HAY UN CLIENTE!"])
 	var panel: PanelDeLaVentanilla = local.get_node("Interfaz/PanelDeLaVentanilla")
 	assert_bool(panel.visible).is_true()
@@ -33,12 +38,13 @@ func test_la_ventanilla_abierta_avisa_una_vez_y_el_cierre_vacia() -> void:  # AC
 	ventanilla.cerrar()
 	ventanilla.abrir()
 	assert_array(_textos(local)).is_equal(["¡HAY UN CLIENTE!"])
-	pila._process(1.0)
+	pila._process(20.0)
+	assert_array(_textos(local)).is_equal(["¡HAY UN CLIENTE!"])
+	panel.comprador_pulsado.emit()
 	assert_array(_textos(local)).is_empty()
 	var caja: CajaRegistradora = local.get_node("Servicios/CajaRegistradora")
 	caja.lectura_rechazada.emit(GeneradorDeTickets.Resultado.LLENO)
 	assert_array(_textos(local)).is_equal(["NO SE PUDO LEER"])
-	var reloj: RelojDelTurno = local.get("_reloj")
 	reloj.avanzar(Reglas.DURACION_DEL_TURNO / Ritmo.SEGUNDOS_DE_TURNO_POR_SEGUNDO_REAL)
 	assert_array(_textos(local)).is_empty()
 
