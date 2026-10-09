@@ -18,5 +18,5 @@ func mostrar(entrada: String) -> void:
 
 
 func ocultar() -> void:
-	_entrada.clear()
+	_entrada.text = ""
 	hide()
