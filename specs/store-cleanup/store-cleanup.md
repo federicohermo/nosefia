@@ -1,7 +1,7 @@
 ---
 schema_version: 1
 capability_id: CAP-CLN
-status: ratified
+status: draft
 owner: por definir
 provenance: GDD «Limpiar» y «Sacar la basura»; ficha «9. Tarea: Limpieza»; migración de los specs 010, 015, 043; ajustes del dueño sobre duración de la mopa, mezcla, enjuague y agua temporal
 ---
@@ -206,7 +206,7 @@ CUANDO termina la jornada, el sistema DEBE anotar un llamado por desorden si que
 unidad suelta dentro de cualquier habitación, una caja dentro y fuera del depósito o un útil
 dentro y fuera del baño. El cuerpo sostenido DEBE excluirse por identidad, salvo mientras se
 examina: entonces cuenta en su posición física. Lo ya tirado al contenedor DEBE excluirse.
-Una bolsa adentro no DEBE producir desorden. Varios cuerpos desordenados DEBEN producir un
+Una bolsa o un ticket adentro no DEBE producir desorden. Varios cuerpos desordenados DEBEN producir un
 único motivo. La foto DEBE tomarse antes de registrar el legajo, armar el parte y guardar.
 
 ### BR-CLN-029 — Lo que queda afuera conserva su cuerpo
@@ -218,6 +218,15 @@ DEBE eliminar ese motivo; una unidad recuperada y suelta adentro puede producir 
 Las superficies existentes de pavimento exterior DEBEN sostener los cuerpos soltados por el
 hueco real de ventanilla, conservándolos recogibles dentro del alcance vigente, sin extender
 soporte sobre huecos que el pavimento no ocupa ni duplicar su dibujo.
+
+### BR-CLN-030 — Papel en el inodoro
+
+CUANDO se acepta tirar al menos un ticket al inodoro durante una jornada abierta, el sistema
+DEBE anotar un único llamado por papel en el inodoro, aunque se tiren varios. Este motivo
+DEBE sumar un medio apercibimiento al cierre, además de la banda y de los otros motivos.
+Vaciar el balde o enjuagar la mopa NO DEBE anotarlo. Un evento sin jornada abierta o con
+partida terminada NO DEBE sumar ni quedar pendiente para otra noche.
+
 
 ## Criterios de aceptación
 
@@ -482,6 +491,33 @@ DADO caja desordenada y unidad afuera CUANDO agota la jornada con GRAVE ENTONCES
 lleva 6 medios desde cero antes de armar el parte y escribir el checkpoint. DADO esos cuerpos
 tirados al contenedor ENTONCES no generan motivos; abrir otra noche vacía el registro de tirados
 y restaura los persistentes, sin consultar unidades o tickets ya retirados.
+
+### AC-CLN-047 — El papel aceptado cuenta una vez *(verifica BR-CLN-030)*
+
+DADO una noche impecable CUANDO se aceptan uno o dos tickets propios en el inodoro ENTONCES
+el cierre suma un medio. Vaciar el balde o enjuagar la mopa no lo suma. DADO un evento antes
+de abrir, después del cierre o con partida terminada ENTONCES no cambia la deuda ni contamina
+la siguiente noche. Abrir otra noche permite anotar de nuevo el mismo motivo.
+
+### AC-CLN-048 — Tickets activos, mano, examen y destinos *(verifica BR-CLN-027, BR-CLN-028, BR-CLN-029, BR-CLN-030)*
+
+DADO tickets propios activos ENTONCES la consulta entrega una copia independiente y omite
+cuerpos liberados o pendientes de liberar; conserva los válidos de ranura, mundo, mano, examen
+y contenedor. DADO tickets dentro de local, depósito o baño CUANDO cierra ENTONCES no producen
+desorden ni afuera; uno o varios afuera producen un único motivo de afuera. Recuperarlos al
+interior o sostenerlos sin examen elimina ese motivo. DADO dos cuerpos con los mismos datos
+ENTONCES sólo se excluye el sostenido; un examen real lo hace contar por su posición física
+y terminarlo vuelve a excluirlo. Un ticket aceptado por el inodoro se libera sin volver a
+consultarlo al cerrar; uno tirado al contenedor sigue vivo y queda excluido por ese destino,
+sin anotar papel en el inodoro. Abrir otra noche retira ambos del registro activo.
+
+### AC-CLN-049 — Tres motivos son siete con GRAVE *(verifica BR-CLN-028, BR-CLN-029, BR-CLN-030)*
+
+DADO deuda cero, un ticket aceptado en el inodoro, una caja desordenada y una unidad afuera
+CUANDO termina la jornada con GRAVE ENTONCES el cierre registra siete medios antes del parte
+y checkpoint y no despide. CUANDO la noche siguiente termina impecable y sin motivos ENTONCES
+conserva siete. Un evento durante la placa no contamina esa noche siguiente y repetir el
+cierre no suma otra vez.
 
 ## No objetivos
 
