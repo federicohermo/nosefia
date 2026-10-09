@@ -112,6 +112,13 @@ una partida nueva en el navegador, observando la consola también después de sa
 El humo de arranque termina antes de ese recorrido. Un build local no exige publicar en Vercel:
 el límite de tamaño de publicación no justifica quitar arte necesario.
 
+**Los recursos de diálogo se verifican también dentro del paquete exportado.** En #339, los
+tests y las capturas del checkout mostraban las nueve entradas, pero el recurso binario del
+PCK conservaba sólo los recordatorios: las conversaciones quedaban vacías. Ejecutá el chequeo
+externo `.github/scripts/verificar_dialogos_exportados.gd` con `--main-pack` desde la carpeta
+del export, además del recorrido de interacción. No des por resuelto un reporte del build
+porque la misma conversación funcione desde el checkout.
+
 ## Cuando lo que escribís es un gate sobre prosa
 
 Una parte de lo que este repo verifica no es código: es que un `.md` diga algo. Tres cosas se

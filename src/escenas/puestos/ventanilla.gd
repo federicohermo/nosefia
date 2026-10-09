@@ -78,8 +78,8 @@ func _ubicar_blanco() -> void:
 	var area := Rect2(camara.unproject_position(centro), Vector2.ZERO)
 	for x: float in [-1.0, 1.0]:
 		for y: float in [-1.0, 1.0]:
-			var esquina := centro + camara.global_basis.x * mitad.x * x
-			esquina += camara.global_basis.y * mitad.y * y
+			var esquina := centro + comprador_visible.global_basis.x * mitad.x * x
+			esquina += Vector3.UP * mitad.y * y
 			area = area.expand(camara.unproject_position(esquina))
 	panel.ubicar_comprador(area)
 

@@ -4,10 +4,10 @@ extends Resource
 
 enum Personaje { NINGUNO, MARTIN, TIAGO }
 
-@export var martin: PackedStringArray = []
-@export var tiago: PackedStringArray = []
-@export var despedida_martin: PackedStringArray = []
-@export var despedida_tiago: PackedStringArray = []
+@export var martin := PackedStringArray()
+@export var tiago := PackedStringArray()
+@export var despedida_martin := PackedStringArray()
+@export var despedida_tiago := PackedStringArray()
 @export var recordatorio_martin: String = ""
 @export var recordatorio_tiago: String = ""
 

@@ -119,7 +119,7 @@ func test_esperan_en_el_mundo_con_la_interfaz_cerrada() -> void:  # AC-CTR-042
 		reloj.avanzar(intervalo)
 		assert_bool(panel.visible).is_false()
 		assert_bool(sprite.is_visible_in_tree()).is_true()
-		assert_int(sprite.billboard).is_equal(BaseMaterial3D.BILLBOARD_ENABLED)
+		assert_int(sprite.billboard).is_equal(BaseMaterial3D.BILLBOARD_DISABLED)
 		assert_bool(sprite.no_depth_test).is_false()
 		assert_bool(sprite.fixed_size).is_false()
 		sprite.set_frame_and_progress(0, 0.99)

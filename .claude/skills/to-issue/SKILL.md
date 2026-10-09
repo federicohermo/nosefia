@@ -332,5 +332,8 @@ Reportá el número del issue, el tipo, y el paso siguiente:
   `src/` se nombra por lo que toca: `harness/<N>-<kebab>` o `docs/<N>-<kebab>`.
 
 Para personajes 2D en un mundo 3D, declarar si existen en el mundo o en el lienzo, su visibilidad
-con interfaces cerradas, orientación hacia la cámara y oclusión. Para avisos, distinguir
+con interfaces cerradas, orientación fija o seguimiento de cámara con su eje permitido, y
+oclusión. En un busto,
+definir qué geometría oculta su corte inferior y revisar los laterales desde las posiciones
+accesibles: un billboard que también se inclina revela el recorte. Para avisos, distinguir
 duración temporal de persistencia hasta una interacción y nombrar el gesto que los retira.

@@ -28,5 +28,6 @@ completo usando el texto «Quiero» de los rechazos; el rechazo conserva «Yo no
 Los productos llevan además negrita, como exige #339.
 
 Los personajes se dibujan detrás de la ventanilla dentro del mundo, también con la interfaz
-cerrada. El billboard apunta a la cámara; la profundidad conserva la oclusión del local.
+cerrada. Mantienen posición y orientación fijas hacia el interior del local, sin seguir al
+jugador ni girar con su cámara, por decisión del usuario. La profundidad conserva la oclusión.
 La interfaz sólo muestra el diálogo de Figma y proyecta el blanco de clic desde el sprite.

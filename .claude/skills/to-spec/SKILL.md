@@ -178,5 +178,6 @@ Es el caso que este método existe para hacer visible, y tiene una sola salida:
   `.claude/rules/` y `CLAUDE.md`.
 
 Los criterios de personajes en un mundo 3D ejercen su presencia con la interfaz cerrada,
-orientación hacia la cámara y oclusión. Los avisos persistentes nombran el gesto exacto que
+la orientación fija o el eje permitido de seguimiento de cámara y la oclusión, incluido el corte inferior de los bustos
+desde los laterales accesibles. Los avisos persistentes nombran el gesto exacto que
 los retira; no heredan por defecto el temporizador de otros tipos.
