@@ -3,7 +3,7 @@ schema_version: 1
 capability_id: CAP-EMP
 status: ratified
 owner: por definir
-provenance: GDD «Consecuencias» y «Finales»; migración de los specs 002, 016, 017
+provenance: GDD «Consecuencias» y «Finales»; ficha «1. Ciclo de jornadas y sistema de puntos»; migración de los specs 002, 016, 017
 ---
 
 # Capacidad: el legajo del empleado
@@ -12,7 +12,7 @@ provenance: GDD «Consecuencias» y «Finales»; migración de los specs 002, 01
 
 Llevar la cuenta de lo que el empleado debe y decidir cuándo lo echan. Lo único que tiene que
 hacer bien es que las tres bandas **pesen distinto**: dos noches graves seguidas despiden y una
-noche impecable borra la deuda entera.
+noche impecable suma cero y conserva la deuda acumulada.
 
 ## Lenguaje de la capacidad
 
@@ -35,8 +35,7 @@ de 3** es `GRAVE`. El corte es en tareas y no en porcentaje: no se reescala con 
 ### BR-EMP-002 — Las bandas pesan distinto
 
 CUANDO se anota una banda, el sistema DEBE sumar **1** apercibimiento por `AVISO`, **2** por
-`GRAVE`, y DEBE **reiniciar el contador a cero** con `NINGUNA`. Un día bueno borra la deuda
-entera.
+`GRAVE`, y DEBE sumar **0** con `NINGUNA`, conservando los apercibimientos que había.
 
 ### BR-EMP-003 — A los cuatro lo echan
 
@@ -58,8 +57,7 @@ alguien recién echado es la lectura equivocada de las dos condiciones a la vez.
 ### BR-EMP-006 — Una partida terminada no sigue
 
 SI la partida terminó, ENTONCES el sistema DEBE rechazar abrir otra jornada y DEBE ignorar un
-cierre nuevo. Sin eso, una noche jugada después del despido le pasa una banda al legajo, y una
-noche impecable lo reinicia a cero.
+cierre nuevo. Una partida terminada no DEBE anotar otra noche ni avanzar su jornada.
 
 ### BR-EMP-007 — Cerrar dos veces no anota dos veces
 
@@ -77,11 +75,6 @@ CUANDO cierra la jornada, el sistema DEBE dejar un parte con: qué jornada de cu
 línea por obligatoria en el orden en que se declararon**, y un comentario general elegido por
 cuántos apercibimientos lleva. Ese comentario satura en el tope: con 5 apercibimientos dice lo
 mismo que con 4.
-
-### BR-EMP-010 — El aviso de riesgo aparece con deuda
-
-SI el legajo tiene **más de cero** apercibimientos, ENTONCES el parte DEBE avisar cuántos lleva
-sobre el tope. Con cero no hay nada que avisar: una placa que avisa siempre no avisa nunca.
 
 ### BR-EMP-011 — Lo que ofrece el parte depende del final
 
@@ -109,10 +102,11 @@ un legajo limpio CUANDO cierra una de `GRAVE` ENTONCES lleva 2.
 
 DADO un legajo limpio CUANDO cierran dos noches de `GRAVE` seguidas ENTONCES está despedido.
 
-### AC-EMP-005 — Una noche impecable borra la deuda *(verifica BR-EMP-002)*
+### AC-EMP-005 — Una noche impecable conserva la deuda *(verifica BR-EMP-002, BR-EMP-003)*
 
 DADO un legajo con 3 apercibimientos CUANDO cierra una noche con todas cumplidas ENTONCES el
-legajo vuelve a cero y no está despedido.
+legajo sigue con 3 y no está despedido. CUANDO cierra después una noche de `AVISO` ENTONCES
+lleva 4 y está despedido.
 
 ### AC-EMP-006 — El umbral se pasa sin pisarlo *(verifica BR-EMP-003)*
 
@@ -160,10 +154,6 @@ tarea.
 DADO 5 apercibimientos CUANDO se pide el comentario general ENTONCES es el mismo que con 4, y no
 queda vacío.
 
-### AC-EMP-015 — El aviso aparece con deuda *(verifica BR-EMP-010)*
-
-DADO 0 apercibimientos ENTONCES el parte no avisa; con 1, avisa y nombra el tope.
-
 ### AC-EMP-016 — La partida terminada no ofrece seguir *(verifica BR-EMP-011)*
 
 DADO una partida que termina al cerrar la noche, despedido o contrato cumplido, CUANDO se arma
@@ -198,9 +188,4 @@ arma el parte ENTONCES ofrece seguir y volver al menú.
 
 ## Preguntas abiertas
 
-- **OQ-EMP-001 — ¿El prototipo despide a las dos noches graves o a las tres?**
-  - Por qué sigue abierta: el GDD dice «más de dos días seguidos» y el formulario de la primera
-    entrega dice «tres jornadas consecutivas»; el prototipo eligió dos para que los tres caminos
-    queden a la misma distancia.
-  - Decide: el dueño del repo, con la cátedra.
-  - Bloquea: nada. Mueve el tope de `BR-EMP-003` y los tres caminos de `AC-EMP-007`.
+- Ninguna.
