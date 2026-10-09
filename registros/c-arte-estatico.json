@@ -1,0 +1,20 @@
+{
+  "base": "f17948fe",
+  "png": "assets/ui/manada/fondo_ventanilla.png",
+  "sha256": "191c1ee6d6652b14542aebe1de5611e10aee0aeb86449ab94f12e95a213dd9ce",
+  "bytes": 1219757,
+  "dimensions": [
+    1920,
+    1080
+  ],
+  "alpha": [
+    255,
+    255
+  ],
+  "uid": "uid://bbr8gtyrhevoq",
+  "base_format": "RGBA8",
+  "base_logical_bytes": 8294400,
+  "proposed_format": "DXT1",
+  "proposed_logical_bytes": 1036800,
+  "source_unchanged_from_accepted_capture": true
+}

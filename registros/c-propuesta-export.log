@@ -1,0 +1,1034 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+[   0% ] [90m[1mfirst_scan_filesystem[22m | Started Inicialización del proyecto (5 steps)[39m[0m
+[   0% ] [90m[1mfirst_scan_filesystem[22m | Escaneando la estructura del archivo...[39m[0m
+[  16% ] [90m[1mfirst_scan_filesystem[22m | Cargando nombres de clases globales...[39m[0m
+[  33% ] [90m[1mfirst_scan_filesystem[22m | Verificando GDExtensions...[39m[0m
+[  50% ] [90m[1mfirst_scan_filesystem[22m | Creando scripts de carga automática...[39m[0m
+[  66% ] [90m[1mfirst_scan_filesystem[22m | Inicializando plugins...[39m[0m
+[38;2;218;165;32mIt was recognized that GdUnit4 is running in a test environment, therefore the GdUnit4 plugin will not be executed![0m
+[MCP] Connecting to ports 6505-6514
+[MCP] Godot MCP Pro v1.16.0 started (ports 6505-6514)
+[MCP] Registered 177 commands
+[  83% ] [90m[1mfirst_scan_filesystem[22m | Iniciando escaneo de archivos...[39m[0m
+[92m[ DONE ][39m [1mfirst_scan_filesystem[22m
+[0m
+[   0% ] [90m[1mreimport[22m | Started (Re)Importación de Assets (1 steps)[39m[0m
+[   0% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+[   0% ] [90m[1mreimport[22m | Ejecutando operaciones de pre-reimportación...[39m[0m
+[   0% ] [90m[1mreimport[22m | fondo_ventanilla.png[39m[0m
+[  50% ] [90m[1mreimport[22m | Finalizando la importación de recursos...[39m[0m
+[92m[ DONE ][39m [1mreimport[22m
+[0m
+[   0% ] [90m[1mreimport[22m | Started (Re)Importación de Assets (1 steps)[39m[0m
+[   0% ] [90m[1mreimport[22m | Ejecutando operaciones post-reimportación...[39m[0m
+[92m[ DONE ][39m [1mreimport[22m
+[0m
+[   0% ] [90m[1mloading_editor_layout[22m | Started Cargando editor (5 steps)[39m[0m
+[   0% ] [90m[1mloading_editor_layout[22m | Cargando diseño del editor...[39m[0m
+[  16% ] [90m[1mloading_editor_layout[22m | Cargando docks...[39m[0m
+[92m[ DONE ][39m [1mloading_editor_layout[22m
+[0m
+[MCP] WebSocket client stopped
+[MCP] Godot MCP Pro stopped
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+[   0% ] [90m[1mfirst_scan_filesystem[22m | Started Inicialización del proyecto (5 steps)[39m[0m
+[   0% ] [90m[1mfirst_scan_filesystem[22m | Escaneando la estructura del archivo...[39m[0m
+[  16% ] [90m[1mfirst_scan_filesystem[22m | Cargando nombres de clases globales...[39m[0m
+[  33% ] [90m[1mfirst_scan_filesystem[22m | Verificando GDExtensions...[39m[0m
+[  50% ] [90m[1mfirst_scan_filesystem[22m | Creando scripts de carga automática...[39m[0m
+[  66% ] [90m[1mfirst_scan_filesystem[22m | Inicializando plugins...[39m[0m
+[38;2;218;165;32mIt was recognized that GdUnit4 is running in a test environment, therefore the GdUnit4 plugin will not be executed![0m
+[MCP] Connecting to ports 6505-6514
+[MCP] Godot MCP Pro v1.16.0 started (ports 6505-6514)
+[MCP] Registered 177 commands
+[  83% ] [90m[1mfirst_scan_filesystem[22m | Iniciando escaneo de archivos...[39m[0m
+[92m[ DONE ][39m [1mfirst_scan_filesystem[22m
+[0m
+[   0% ] [90m[1msavepack[22m | Started Empaquetando (102 steps)[39m[0m
+[   1% ] [90m[1msavepack[22m | Almacenando Archivo: res://.godot/imported/icon.svg-218a8f2b3041327d8a5756f3a245f83b.ctex[39m[0m
+[   1% ] [90m[1msavepack[22m | Almacenando Archivo: res://icon.svg.import[39m[0m
+[   1% ] [90m[1msavepack[22m | Almacenando Archivo: res://.godot/exported/133200997/export-19246414aa9fb561ced4b8dce477acec-default_bus_layout.res[39m[0m
+[   1% ] [90m[1msavepack[22m | Almacenando Archivo: res://.godot/imported/feel_ricky_fort.png-1336fd0a6e13b876afb4ba2a087d1ae3.ctex[39m[0m
+[   1% ] [90m[1msavepack[22m | Almacenando Archivo: res://assets/ui/manada/feel_ricky_fort.png.import[39m[0m
+[   1% ] [90m[1msavepack[22m | Almacenando Archivo: res://.godot/imported/fernet_god.png-051401283ee03fa8fb8eb7d292a2886d.ctex[39m[0m
+[   1% ] [90m[1msavepack[22m | Almacenando Archivo: res://assets/ui/manada/fernet_god.png.import[39m[0m
+[   1% ] [90m[1msavepack[22m | Almacenando Archivo: res://.godot/imported/flinpuf.png-f5eb33654741b176b12b6f2f5a3ab81f.ctex[39m[0m
+[   1% ] [90m[1msavepack[22m | Almacenando Archivo: res://assets/ui/manada/flinpuf.png.import[39m[0m
+[   1% ] [90m[1msavepack[22m | Almacenando Archivo: res://.godot/imported/fondo.png-f2de541a97e697ea2b481714829d8efc.ctex[39m[0m
+[   1% ] [90m[1msavepack[22m | Almacenando Archivo: res://assets/ui/manada/fondo.png.import[39m[0m
+[   2% ] [90m[1msavepack[22m | Almacenando Archivo: res://.godot/imported/fondo_inicio.png-caeeae01aa7c0933705058ccdaf27bc9.ctex[39m[0m
+[   2% ] [90m[1msavepack[22m | Almacenando Archivo: res://assets/ui/manada/fondo_inicio.png.import[39m[0m
+[   2% ] [90m[1msavepack[22m | Almacenando Archivo: res://.godot/imported/fondo_ventanilla.png-6926cd22557a29a89908c5bf810fa9b2.s3tc.ctex[39m[0m
+[   2% ] [90m[1msavepack[22m | Almacenando Archivo: res://assets/ui/manada/fondo_ventanilla.png.import[39m[0m
+[   2% ] [90m[1msavepack[22m | Almacenando Archivo: res://.godot/imported/frotlups.png-4bc1d0f574cf542f6f1098bc83575b1b.ctex[39m[0m
+[   2% ] [90m[1msavepack[22m | Almacenando Archivo: res://assets/ui/manada/frotlups.png.import[39m[0m
+[   2% ] [90m[1msavepack[22m | Almacenando Archivo: res://.godot/imported/jorgillo.png-511cc7465fa14420994c1ee3a41d84ba.ctex[39m[0m
+[   2% ] [90m[1msavepack[22m | Almacenando Archivo: res://assets/ui/manada/jorgillo.png.import[39m[0m
+[   2% ] [90m[1msavepack[22m | Almacenando Archivo: res://.godot/imported/laysntt.png-c8fa8c0bd057142d1eb45cfdb6232871.ctex[39m[0m
+[   2% ] [90m[1msavepack[22m | Almacenando Archivo: res://assets/ui/manada/laysntt.png.import[39m[0m
+[   3% ] [90m[1msavepack[22m | Almacenando Archivo: res://.godot/imported/linea_detalle.svg-3e6d32ff94116a127e2bc7e72bd701b3.ctex[39m[0m
+[   3% ] [90m[1msavepack[22m | Almacenando Archivo: res://assets/ui/manada/linea_detalle.svg.import[39m[0m
+[   3% ] [90m[1msavepack[22m | Almacenando Archivo: res://.godot/imported/macumbas.png-1fdc33eb1208ea3ed713e085b45f888c.ctex[39m[0m
+[   3% ] [90m[1msavepack[22m | Almacenando Archivo: res://assets/ui/manada/macumbas.png.import[39m[0m
+[   3% ] [90m[1msavepack[22m | Almacenando Archivo: res://.godot/imported/malbardo.png-34379e65fa4e4c2c91cb6454fe2ca30b.ctex[39m[0m
+[   3% ] [90m[1msavepack[22m | Almacenando Archivo: res://assets/ui/manada/malbardo.png.import[39m[0m
+[   3% ] [90m[1msavepack[22m | Almacenando Archivo: res://.godot/imported/marolini.png-5facea20b93c9176d4ec4019d7ca8493.ctex[39m[0m
+[   3% ] [90m[1msavepack[22m | Almacenando Archivo: res://assets/ui/manada/marolini.png.import[39m[0m
+[   3% ] [90m[1msavepack[22m | Almacenando Archivo: res://.godot/imported/marranos.png-28babdddd76d3e97c58851b83502a9f2.ctex[39m[0m
+[   3% ] [90m[1msavepack[22m | Almacenando Archivo: res://assets/ui/manada/marranos.png.import[39m[0m
+[   4% ] [90m[1msavepack[22m | Almacenando Archivo: res://.godot/imported/mayonchis.png-5409c2c01612bb02412fe937a88d6d2b.ctex[39m[0m
+[   4% ] [90m[1msavepack[22m | Almacenando Archivo: res://assets/ui/manada/mayonchis.png.import[39m[0m
+[   4% ] [90m[1msavepack[22m | Almacenando Archivo: res://.godot/imported/oaaaa.png-c70d7ed123c2fc5b89666cc21b0389ae.ctex[39m[0m
+[   4% ] [90m[1msavepack[22m | Almacenando Archivo: res://assets/ui/manada/oaaaa.png.import[39m[0m
+[   4% ] [90m[1msavepack[22m | Almacenando Archivo: res://.godot/imported/oremos.png-c147471ed27925a24a97adc79da1a4aa.ctex[39m[0m
+[   4% ] [90m[1msavepack[22m | Almacenando Archivo: res://assets/ui/manada/oremos.png.import[39m[0m
+[   4% ] [90m[1msavepack[22m | Almacenando Archivo: res://.godot/imported/pepitos.png-7b74afb172f4f6c84a28027300078f7f.ctex[39m[0m
+[   4% ] [90m[1msavepack[22m | Almacenando Archivo: res://assets/ui/manada/pepitos.png.import[39m[0m
+[   4% ] [90m[1msavepack[22m | Almacenando Archivo: res://.godot/imported/petisas.png-396043ddd957e90312ebaeb5de918c7d.ctex[39m[0m
+[   4% ] [90m[1msavepack[22m | Almacenando Archivo: res://assets/ui/manada/petisas.png.import[39m[0m
+[   5% ] [90m[1msavepack[22m | Almacenando Archivo: res://.godot/imported/prongles.png-0050246db31c2f1afdb07fe23d25691d.ctex[39m[0m
+[   5% ] [90m[1msavepack[22m | Almacenando Archivo: res://assets/ui/manada/prongles.png.import[39m[0m
+[   5% ] [90m[1msavepack[22m | Almacenando Archivo: res://.godot/imported/puntos_de_carga.svg-800474211bb95a59af15cade369729bc.ctex[39m[0m
+[   5% ] [90m[1msavepack[22m | Almacenando Archivo: res://assets/ui/manada/puntos_de_carga.svg.import[39m[0m
+[   5% ] [90m[1msavepack[22m | Almacenando Archivo: res://.godot/imported/registro.svg-5c033532d4f9f8195cab7ce72ff03753.ctex[39m[0m
+[   5% ] [90m[1msavepack[22m | Almacenando Archivo: res://assets/ui/manada/registro.svg.import[39m[0m
+[   5% ] [90m[1msavepack[22m | Almacenando Archivo: res://.godot/imported/saladik.png-9325d1d8fbb5feaf7237f90982520841.ctex[39m[0m
+[   5% ] [90m[1msavepack[22m | Almacenando Archivo: res://assets/ui/manada/saladik.png.import[39m[0m
+[   5% ] [90m[1msavepack[22m | Almacenando Archivo: res://.godot/imported/solapa.svg-77cfb5038ac99be3ab11ffa12021c025.ctex[39m[0m
+[   5% ] [90m[1msavepack[22m | Almacenando Archivo: res://assets/ui/manada/solapa.svg.import[39m[0m
+[   6% ] [90m[1msavepack[22m | Almacenando Archivo: res://.godot/exported/133200997/export-5b1247d8fadb756c6cfb74aa30546ace-tema.res[39m[0m
+[   6% ] [90m[1msavepack[22m | Almacenando Archivo: res://.godot/imported/terminator.png-6d47b51b2df994dd5d0f67d583262d7e.ctex[39m[0m
+[   6% ] [90m[1msavepack[22m | Almacenando Archivo: res://assets/ui/manada/terminator.png.import[39m[0m
+[   6% ] [90m[1msavepack[22m | Almacenando Archivo: res://.godot/exported/133200997/export-d9e5b05580e536e96e8ed58346f50448-conversacion_con_el_jefe.res[39m[0m
+[   6% ] [90m[1msavepack[22m | Almacenando Archivo: res://.godot/exported/133200997/export-925fc3dcf4e1c3edc539b1bf4b3bc501-conversacion_con_el_proveedor.res[39m[0m
+[   6% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/dominio/investigacion/cuaderno.gdc[39m[0m
+[   7% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/dominio/investigacion/hallazgos.gdc[39m[0m
+[   7% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/dominio/investigacion/mensaje.gdc[39m[0m
+[   7% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/dominio/investigacion/nota.gdc[39m[0m
+[   7% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/dominio/investigacion/revelacion.gdc[39m[0m
+[   7% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/dominio/jornada/apertura.gdc[39m[0m
+[   8% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/dominio/jornada/marcador.gdc[39m[0m
+[   8% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/dominio/jornada/pausa.gdc[39m[0m
+[   8% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/dominio/jornada/reloj_de_mesa.gdc[39m[0m
+[   8% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/dominio/jornada/ritmo.gdc[39m[0m
+[   8% ] [90m[1msavepack[22m | Almacenando Archivo: res://.godot/imported/zucarachas.png-202efe5aa13666d8f5bdd7739113ce9f.ctex[39m[0m
+[   8% ] [90m[1msavepack[22m | Almacenando Archivo: res://assets/ui/manada/zucarachas.png.import[39m[0m
+[   9% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/dominio/almacen/atencion.gdc[39m[0m
+[   9% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/dominio/almacen/balde.gdc[39m[0m
+[   9% ] [90m[1msavepack[22m | Almacenando Archivo: res://.godot/exported/133200997/export-0727d10855e794257040301699395780-balde.res[39m[0m
+[   9% ] [90m[1msavepack[22m | Almacenando Archivo: res://.godot/exported/133200997/export-11d4ce0dfb38f7ae483bf5b6fdedf10a-bolsa_de_basura_1.res[39m[0m
+[   9% ] [90m[1msavepack[22m | Almacenando Archivo: res://.godot/exported/133200997/export-a06cb684852af90c781c8379ebe4694a-bolsa_de_basura_2.res[39m[0m
+[  10% ] [90m[1msavepack[22m | Almacenando Archivo: res://.godot/exported/133200997/export-dfc6cc3782be9d4a283835fd4555f226-bolsa_de_basura_3.res[39m[0m
+[  10% ] [90m[1msavepack[22m | Almacenando Archivo: res://.godot/exported/133200997/export-15c01d873eac40238aa4d5f16b6e05a3-caja_de_fideos.res[39m[0m
+[  10% ] [90m[1msavepack[22m | Almacenando Archivo: res://.godot/exported/133200997/export-1008796a490f9212832ae7b205c84c4e-caja_de_reposicion.res[39m[0m
+[  10% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/dominio/almacen/catalogo.gdc[39m[0m
+[  10% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/dominio/almacen/comprador.gdc[39m[0m
+[  11% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/dominio/almacen/compradores.gdc[39m[0m
+[  11% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/dominio/almacen/contenido_de_la_caja.gdc[39m[0m
+[  11% ] [90m[1msavepack[22m | Almacenando Archivo: res://.godot/exported/133200997/export-aee5cec691d48ff045421cafae8ab91e-cuaderno_del_deposito.res[39m[0m
+[  11% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/dominio/almacen/estante.gdc[39m[0m
+[  11% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/dominio/almacen/inventario.gdc[39m[0m
+[  12% ] [90m[1msavepack[22m | Almacenando Archivo: res://.godot/exported/133200997/export-eec15de7b52cd897f4d6042f38e50526-jabon_amarillo.res[39m[0m
+[  12% ] [90m[1msavepack[22m | Almacenando Archivo: res://.godot/exported/133200997/export-233ab4f172adf228a6b160f5de5c93c6-jabon_azul.res[39m[0m
+[  12% ] [90m[1msavepack[22m | Almacenando Archivo: res://.godot/exported/133200997/export-a8d0fd1fc173f332c7f6e2f8b7cf607b-jabon_rosa.res[39m[0m
+[  12% ] [90m[1msavepack[22m | Almacenando Archivo: res://.godot/exported/133200997/export-8ed05288e6d0df2e7519c38f29dc70ce-lata_de_tomate.res[39m[0m
+[  12% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/dominio/almacen/reglas_de_la_ventanilla.gdc[39m[0m
+[  13% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/dominio/almacen/reglas_de_los_objetos.gdc[39m[0m
+[  13% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/dominio/almacen/rescate.gdc[39m[0m
+[  13% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/dominio/almacen/tapa_del_contenedor.gdc[39m[0m
+[  13% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/dominio/almacen/piso_del_local.gdc[39m[0m
+[  13% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/dominio/almacen/producto.gdc[39m[0m
+[  13% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/dominio/almacen/puerta.gdc[39m[0m
+[  14% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/dominio/almacen/registro_de_ventas.gdc[39m[0m
+[  14% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/dominio/almacen/reglas_del_estante.gdc[39m[0m
+[  14% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/dominio/almacen/reglas_de_la_basura.gdc[39m[0m
+[  14% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/dominio/almacen/reglas_de_la_limpieza.gdc[39m[0m
+[  14% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/dominio/almacen/mancha.gdc[39m[0m
+[  15% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/dominio/almacen/manos.gdc[39m[0m
+[  15% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/dominio/almacen/mopa.gdc[39m[0m
+[  15% ] [90m[1msavepack[22m | Almacenando Archivo: res://.godot/exported/133200997/export-de8ad3a57523f892e380d7f44e26a064-mopa.res[39m[0m
+[  15% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/dominio/almacen/objeto_del_almacen.gdc[39m[0m
+[  15% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/dominio/almacen/tarea_de_atender.gdc[39m[0m
+[  16% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/dominio/almacen/tarea_de_la_basura.gdc[39m[0m
+[  16% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/dominio/almacen/trayecto.gdc[39m[0m
+[  16% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/dominio/almacen/unidad_de_producto.gdc[39m[0m
+[  16% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/dominio/almacen/uso.gdc[39m[0m
+[  16% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/dominio/almacen/venta.gdc[39m[0m
+[  17% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/dominio/ambiente/apagado_por_obstaculos.gdc[39m[0m
+[  17% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/dominio/ambiente/contador_de_golpes.gdc[39m[0m
+[  17% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/dominio/ambiente/eleccion_de_variante.gdc[39m[0m
+[  17% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/dominio/ambiente/emisores_del_ambiente.gdc[39m[0m
+[  17% ] [90m[1msavepack[22m | Almacenando Archivo: res://.godot/exported/133200997/export-e4ef47f9a0d1095577fa08b1b48634fd-ventanilla.scn[39m[0m
+[  18% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/dominio/jornada/tarea.gdc[39m[0m
+[  18% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/dominio/jornada/turno.gdc[39m[0m
+[  18% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/dominio/jugador/cadencia_de_pasos.gdc[39m[0m
+[  18% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/dominio/jugador/caminata.gdc[39m[0m
+[  18% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/dominio/jugador/campo_de_interaccion.gdc[39m[0m
+[  19% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/dominio/jugador/control_del_jugador.gdc[39m[0m
+[  19% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/dominio/jugador/foco.gdc[39m[0m
+[  19% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/dominio/jugador/mirada.gdc[39m[0m
+[  19% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/dominio/jugador/reglas_del_jugador.gdc[39m[0m
+[  19% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/dominio/jugador/retorno_de_la_mano.gdc[39m[0m
+[  20% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/dominio/jugador/suavizado_del_giro.gdc[39m[0m
+[  20% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/dominio/reglas.gdc[39m[0m
+[  20% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/escenas/objetos/agua_y_manchas.gdshader[39m[0m
+[  20% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/escenas/objetos/articulacion_de_cabeza.gdshaderinc[39m[0m
+[  20% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/escenas/objetos/aspecto_del_agua.gdshaderinc[39m[0m
+[  21% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/escenas/objetos/aspecto_de_la_mancha.gdshaderinc[39m[0m
+[  21% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/escenas/objetos/cabeza_de_la_mopa.gdshader[39m[0m
+[  21% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/escenas/objetos/caja_de_productos.gdc[39m[0m
+[  21% ] [90m[1msavepack[22m | Almacenando Archivo: res://.godot/exported/133200997/export-45f1b7a96afe064f951c187946554b82-caja_de_productos.scn[39m[0m
+[  21% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/escenas/objetos/charcos_temporales.gdc[39m[0m
+[  22% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/escenas/objetos/charcos_temporales.gdshader[39m[0m
+[  22% ] [90m[1msavepack[22m | Almacenando Archivo: res://.godot/exported/133200997/export-7b760db1d3bb45301403f30986ce3fe7-conversacion_con_el_desconocido.res[39m[0m
+[  22% ] [90m[1msavepack[22m | Almacenando Archivo: res://.godot/imported/titulo_inicio.png-10a2a622cc4002b5c10d3576f698fc1a.ctex[39m[0m
+[  22% ] [90m[1msavepack[22m | Almacenando Archivo: res://assets/ui/manada/titulo_inicio.png.import[39m[0m
+[  22% ] [90m[1msavepack[22m | Almacenando Archivo: res://.godot/imported/uakas.png-7d42c6b38f20bb7ba46c3b9da4c0d6ba.ctex[39m[0m
+[  22% ] [90m[1msavepack[22m | Almacenando Archivo: res://assets/ui/manada/uakas.png.import[39m[0m
+[  22% ] [90m[1msavepack[22m | Almacenando Archivo: res://.godot/imported/unscii-16.ttf-3c372feb461602c8a9750b9f1696fd88.fontdata[39m[0m
+[  22% ] [90m[1msavepack[22m | Almacenando Archivo: res://assets/ui/manada/unscii-16.ttf.import[39m[0m
+[  23% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/dominio/ambiente/entrada_sonora.gdc[39m[0m
+[  23% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/dominio/ambiente/indicacion_del_foco.gdc[39m[0m
+[  23% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/dominio/ambiente/ronda_de_voces.gdc[39m[0m
+[  23% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/dominio/ambiente/tabla_de_sonidos.gdc[39m[0m
+[  23% ] [90m[1msavepack[22m | Almacenando Archivo: res://.godot/exported/133200997/export-56120b91674358979904afad8309259a-tabla_de_sonidos.res[39m[0m
+[  24% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/dominio/empleo/catalogo_de_reacciones.gdc[39m[0m
+[  24% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/dominio/empleo/consecuencia.gdc[39m[0m
+[  24% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/dominio/empleo/espera_de_la_carga.gdc[39m[0m
+[  24% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/dominio/empleo/legajo.gdc[39m[0m
+[  24% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/dominio/empleo/menu_de_inicio.gdc[39m[0m
+[  25% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/dominio/empleo/parte_de_cierre.gdc[39m[0m
+[  25% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/dominio/empleo/partida.gdc[39m[0m
+[  25% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/dominio/empleo/partida_serializada.gdc[39m[0m
+[  25% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/dominio/empleo/politica_de_guardado.gdc[39m[0m
+[  25% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/dominio/empleo/reaccion.gdc[39m[0m
+[  26% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/dominio/empleo/reglas_de_la_partida.gdc[39m[0m
+[  26% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/dominio/investigacion/bandeja.gdc[39m[0m
+[  26% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/dominio/investigacion/computadora.gdc[39m[0m
+[  26% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/dominio/investigacion/conversacion.gdc[39m[0m
+[  26% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/escenas/objetos/contorno_del_util.gdshader[39m[0m
+[  26% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/escenas/objetos/deformacion_de_fibras.gdshaderinc[39m[0m
+[  27% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/escenas/objetos/fibras_de_la_mopa.gdc[39m[0m
+[  27% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/escenas/objetos/fibras_de_la_mopa.gdshader[39m[0m
+[  27% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/escenas/objetos/giro_de_manija.gdshaderinc[39m[0m
+[  27% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/escenas/objetos/gotas_del_balde.gdc[39m[0m
+[  27% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/escenas/objetos/grupo_del_piso.gdc[39m[0m
+[  28% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/escenas/objetos/mancha_en_el_piso.gdc[39m[0m
+[  28% ] [90m[1msavepack[22m | Almacenando Archivo: res://.godot/exported/133200997/export-d4a8c37fdaffb511b14ba5ca8a0b6b99-mancha_en_el_piso.scn[39m[0m
+[  28% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/escenas/objetos/manija_del_balde.gdc[39m[0m
+[  28% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/escenas/objetos/manija_del_balde.gdshader[39m[0m
+[  28% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/escenas/objetos/objeto_agarrable.gdc[39m[0m
+[  29% ] [90m[1msavepack[22m | Almacenando Archivo: res://.godot/exported/133200997/export-ae6f7c2306c20c88b2fd431413ba7f58-objeto_agarrable.scn[39m[0m
+[  29% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/escenas/objetos/ondas_del_balde.gdc[39m[0m
+[  29% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/escenas/objetos/partes_de_manija.gdc[39m[0m
+[  29% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/escenas/objetos/piso_para_agua.gdc[39m[0m
+[  29% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/escenas/objetos/raices_de_fibras.gdc[39m[0m
+[  30% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/escenas/objetos/superficie_liquida.gdc[39m[0m
+[  30% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/escenas/objetos/util_de_limpieza.gdc[39m[0m
+[  30% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/escenas/puestos/agua_del_bano.gdc[39m[0m
+[  30% ] [90m[1msavepack[22m | Almacenando Archivo: res://.godot/exported/133200997/export-1673dcb41f4e64d89c782096343bc33b-agua_del_bano.scn[39m[0m
+[  30% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/escenas/puestos/agua_del_bano_ondas.gdshader[39m[0m
+[  31% ] [90m[1msavepack[22m | Almacenando Archivo: res://.godot/exported/133200997/export-5b514cab54f263480de7d1f6f9e20568-ambiente_del_almacen.scn[39m[0m
+[  31% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/escenas/puestos/artefacto_del_bano.gdc[39m[0m
+[  31% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/escenas/puestos/audio_del_almacen.gdc[39m[0m
+[  31% ] [90m[1msavepack[22m | Almacenando Archivo: res://.godot/exported/133200997/export-2bcff81eb653f0ad173da9f8c57ead68-audio_del_almacen.scn[39m[0m
+[  31% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/escenas/puestos/casillero_sin_superficie.gdshader[39m[0m
+[  32% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/escenas/puestos/contenedor_de_basura.gdc[39m[0m
+[  32% ] [90m[1msavepack[22m | Almacenando Archivo: res://.godot/exported/133200997/export-d59fd1365a2181e4dfc04c6c27988f66-contenido_del_estante.scn[39m[0m
+[  32% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/escenas/puestos/disposicion_de_la_gondola.gdc[39m[0m
+[  32% ] [90m[1msavepack[22m | Almacenando Archivo: res://.godot/exported/133200997/export-ec618217b2c283d203d5e54541390f44-disposicion_de_la_gondola.res[39m[0m
+[  32% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/escenas/puestos/escritorio.gdc[39m[0m
+[  33% ] [90m[1msavepack[22m | Almacenando Archivo: res://.godot/exported/133200997/export-ce2b24e4396f38f64b8ab8892836b2ca-interfaz_del_almacen.scn[39m[0m
+[  33% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/escenas/puestos/limpieza_del_almacen.gdc[39m[0m
+[  33% ] [90m[1msavepack[22m | Almacenando Archivo: res://.godot/exported/133200997/export-ff912a721c3ddedee430b5648f49aee1-limpieza_del_almacen.scn[39m[0m
+[  33% ] [90m[1msavepack[22m | Almacenando Archivo: res://.godot/exported/133200997/export-10a62aaea67fee28cfa36415e7eed296-objetos_del_almacen.scn[39m[0m
+[  33% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/escenas/puestos/pavimento_del_exterior.gdshader[39m[0m
+[  33% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/escenas/puestos/estante.gdc[39m[0m
+[  33% ] [90m[1msavepack[22m | Almacenando Archivo: res://.godot/exported/133200997/export-297c38fac6fe1ed2c9a45ec198f37985-estructura_del_almacen.scn[39m[0m
+[  33% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/escenas/puestos/exterior_del_almacen.gdc[39m[0m
+[  33% ] [90m[1msavepack[22m | Almacenando Archivo: res://.godot/exported/133200997/export-c8109e70311423732a2bbfc65de1b1a5-exterior_del_almacen.scn[39m[0m
+[  33% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/escenas/puestos/exterior_fotografico.gdshader[39m[0m
+[  34% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/escenas/puestos/exterior_proyeccion.gdshaderinc[39m[0m
+[  34% ] [90m[1msavepack[22m | Almacenando Archivo: res://.godot/exported/133200997/export-60c1343f85c7e9158f3bd037300d4c24-guia_del_estante.scn[39m[0m
+[  34% ] [90m[1msavepack[22m | Almacenando Archivo: res://.godot/exported/133200997/export-ca9e8c025a5e0146884368252a04c443-reposicion_manual.scn[39m[0m
+[  34% ] [90m[1msavepack[22m | Almacenando Archivo: res://.godot/exported/133200997/export-63933c0d4421b45cc7b5c9fd7dde30b3-servicios_del_almacen.scn[39m[0m
+[  34% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/escenas/puestos/tapa_del_contenedor.gdc[39m[0m
+[  35% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/escenas/puestos/ventanilla.gdc[39m[0m
+[  35% ] [90m[1msavepack[22m | Almacenando Archivo: res://.godot/exported/133200997/export-1d431d5f9459864d32289bd401df7717-hud.scn[39m[0m
+[  35% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/ui/hud.gdc[39m[0m
+[  35% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/ui/aristas_del_producto.gdc[39m[0m
+[  35% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/escenas/puestos/puerta_del_local.gdc[39m[0m
+[  36% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/escenas/puestos/puerta_de_la_heladera.gdc[39m[0m
+[  36% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/escenas/puestos/reloj_de_mesa.gdc[39m[0m
+[  36% ] [90m[1msavepack[22m | Almacenando Archivo: res://.godot/exported/133200997/export-12a57c3c15513cc38e8856510c7fe13e-reloj_de_mesa.scn[39m[0m
+[  36% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/escenas/puestos/reposicion_manual.gdc[39m[0m
+[  36% ] [90m[1msavepack[22m | Almacenando Archivo: res://.godot/exported/133200997/export-dfa67762e06d00aaec8e574621649c83-pantalla_de_cierre.scn[39m[0m
+[  37% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/ui/interrupciones/pantalla_de_cierre.gdc[39m[0m
+[  37% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/ui/diegetica/lienzo_de_manada.gdc[39m[0m
+[  37% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/ui/diegetica/fondo_de_computadora.gdshader[39m[0m
+[  37% ] [90m[1msavepack[22m | Almacenando Archivo: res://.godot/exported/133200997/export-da90d1a450cccc3525df06985f50f959-app_notas.scn[39m[0m
+[  37% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/ui/diegetica/app_notas.gdc[39m[0m
+[  37% ] [90m[1msavepack[22m | Almacenando Archivo: res://.godot/exported/133200997/export-bfcf07f4350df79f89142d47103ab223-app_chats.scn[39m[0m
+[  38% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/ui/diegetica/app_chats.gdc[39m[0m
+[  38% ] [90m[1msavepack[22m | Almacenando Archivo: res://.godot/exported/133200997/export-c6a6b8e2ef137069d085175714f56774-app_caja.scn[39m[0m
+[  38% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/ui/diegetica/app_caja.gdc[39m[0m
+[  38% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/sistemas/tareas/ventanilla.gdc[39m[0m
+[  38% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/sistemas/tareas/repositor.gdc[39m[0m
+[  39% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/sistemas/tareas/recolector_de_basura.gdc[39m[0m
+[  39% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/sistemas/tareas/limpiador.gdc[39m[0m
+[  39% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/sistemas/marco/reproductor_de_sonidos.gdc[39m[0m
+[  39% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/sistemas/marco/reloj_del_turno.gdc[39m[0m
+[  39% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/sistemas/marco/red_de_seguridad.gdc[39m[0m
+[  40% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/sistemas/marco/pedidos_del_menu.gdc[39m[0m
+[  40% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/sistemas/marco/marco_del_objetivo.gdc[39m[0m
+[  40% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/sistemas/marco/lugares_del_piso.gdc[39m[0m
+[  40% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/sistemas/marco/guardado.gdc[39m[0m
+[  40% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/sistemas/marco/enlace_de_guardado.gdc[39m[0m
+[  41% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/sistemas/marco/enlace_de_audio.gdc[39m[0m
+[  41% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/sistemas/marco/control_de_pausa.gdc[39m[0m
+[  41% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/sistemas/marco/contorno.gdshader[39m[0m
+[  41% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/sistemas/marco/ciclo_de_jornadas.gdc[39m[0m
+[  41% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/sistemas/marco/carga_en_segundo_plano.gdc[39m[0m
+[  42% ] [90m[1msavepack[22m | Almacenando Archivo: res://.godot/exported/133200997/export-5a1d4ef03ab0284b9de7623bf7ff9f17-pantalla_de_carga.scn[39m[0m
+[  42% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/ui/interrupciones/pantalla_de_carga.gdc[39m[0m
+[  42% ] [90m[1msavepack[22m | Almacenando Archivo: res://.godot/exported/133200997/export-6fdfa65eabfc915a320e732416119706-menu_de_pausa.scn[39m[0m
+[  42% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/ui/interrupciones/menu_de_pausa.gdc[39m[0m
+[  42% ] [90m[1msavepack[22m | Almacenando Archivo: res://.godot/exported/133200997/export-4ce891b533114ceff099b9926cff3c1a-pantalla_de_computadora.scn[39m[0m
+[  43% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/ui/diegetica/pantalla_de_computadora.gdc[39m[0m
+[  43% ] [90m[1msavepack[22m | Almacenando Archivo: res://.godot/exported/133200997/export-00ecd0d0e3eb9daac60d9cfc343ec727-panel_de_la_ventanilla.scn[39m[0m
+[  43% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/ui/diegetica/panel_de_la_ventanilla.gdc[39m[0m
+[  43% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/escenas/jugador.gdc[39m[0m
+[  43% ] [90m[1msavepack[22m | Almacenando Archivo: res://.godot/exported/133200997/export-bcb79274c18a46fd77a810cf068059fe-almacen.scn[39m[0m
+[  44% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/escenas/almacen.lmbake[39m[0m
+[  44% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/escenas/almacen.gdc[39m[0m
+[  44% ] [90m[1msavepack[22m | Almacenando Archivo: res://.godot/imported/almacen.exr-2ec568f98401c7d9014a6fe268109d57.bptc.ctexarray[39m[0m
+[  44% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/escenas/almacen.exr.import[39m[0m
+[  44% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/escenas/puestos/zona_de_reposicion.gdc[39m[0m
+[  44% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/sistemas/marco/calentamiento_de_shaders.gdc[39m[0m
+[  45% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/sistemas/marco/aristas_del_foco.gdshader[39m[0m
+[  45% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/sistemas/marco/agarre.gdc[39m[0m
+[  45% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/sistemas/investigacion/examen.gdc[39m[0m
+[  45% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/sistemas/investigacion/computadora_de_escritorio.gdc[39m[0m
+[  45% ] [90m[1msavepack[22m | Almacenando Archivo: res://.godot/exported/133200997/export-70b835fd0f7dd2f8ef1b8c7d41cdb78f-menu_de_inicio.scn[39m[0m
+[  46% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/escenas/menu_de_inicio.gdc[39m[0m
+[  46% ] [90m[1msavepack[22m | Almacenando Archivo: res://.godot/exported/133200997/export-c2528c4a3eb6bf25fef54ed7102af165-jugador.scn[39m[0m
+[  46% ] [90m[1msavepack[22m | Almacenando Archivo: res://.mcp.json[39m[0m
+[  46% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/escenas/puestos/vereda_del_exterior.gdshader[39m[0m
+[  46% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/escenas/puestos/vidrio_del_local.gdshader[39m[0m
+[  47% ] [90m[1msavepack[22m | Almacenando Archivo: res://.godot/exported/133200997/export-a74861534adbebd34eb50a319c443c17-vidrio_del_local.res[39m[0m
+[  47% ] [90m[1msavepack[22m | Almacenando Archivo: res://.godot/exported/133200997/export-328fa39286140b243350c12fe468098f-registrar_pendiente.res[39m[0m
+[  47% ] [90m[1msavepack[22m | Almacenando Archivo: res://.godot/exported/133200997/export-27fc848033598dbcdb2d866a76be5e82-reponer_cumplida.res[39m[0m
+[  47% ] [90m[1msavepack[22m | Almacenando Archivo: res://.godot/exported/133200997/export-f293d924660acba99f91795969428351-reponer_pendiente.res[39m[0m
+[  47% ] [90m[1msavepack[22m | Almacenando Archivo: res://.godot/exported/133200997/export-35472d6d1c579828b1e78c7a007a13e6-limpiar_cumplida.res[39m[0m
+[  48% ] [90m[1msavepack[22m | Almacenando Archivo: res://.godot/exported/133200997/export-9ac046bcc1acf2c45d4bedb4f03c0986-limpiar_pendiente.res[39m[0m
+[  48% ] [90m[1msavepack[22m | Almacenando Archivo: res://.godot/exported/133200997/export-bc024200358def2c7ce1110250618418-registrar_cumplida.res[39m[0m
+[  48% ] [90m[1msavepack[22m | Almacenando Archivo: res://.godot/imported/actroncito.png-09b143c0baa280b1569d9124d2565c35.ctex[39m[0m
+[  48% ] [90m[1msavepack[22m | Almacenando Archivo: res://assets/ui/manada/actroncito.png.import[39m[0m
+[  48% ] [90m[1msavepack[22m | Almacenando Archivo: res://.godot/imported/amargadito.png-d29c747c830f7d9126d22834eb48fff4.ctex[39m[0m
+[  48% ] [90m[1msavepack[22m | Almacenando Archivo: res://assets/ui/manada/amargadito.png.import[39m[0m
+[  48% ] [90m[1msavepack[22m | Almacenando Archivo: res://.godot/imported/arvejas.png-ca91918f76b451d2883baace4dc5bd04.ctex[39m[0m
+[  48% ] [90m[1msavepack[22m | Almacenando Archivo: res://assets/ui/manada/arvejas.png.import[39m[0m
+[  49% ] [90m[1msavepack[22m | Almacenando Archivo: res://.godot/imported/burbaloo.png-7feada9ba36da3920e62c6c67e075f0d.ctex[39m[0m
+[  49% ] [90m[1msavepack[22m | Almacenando Archivo: res://assets/ui/manada/burbaloo.png.import[39m[0m
+[  49% ] [90m[1msavepack[22m | Almacenando Archivo: res://.godot/imported/cabecera.svg-28bd8b6dabcd9aaefdfb782c69a95659.ctex[39m[0m
+[  49% ] [90m[1msavepack[22m | Almacenando Archivo: res://assets/ui/manada/cabecera.svg.import[39m[0m
+[  49% ] [90m[1msavepack[22m | Almacenando Archivo: res://.godot/imported/chisitos.png-b4d07fc6c1808e70e4f5b3e4c2a379a6.ctex[39m[0m
+[  49% ] [90m[1msavepack[22m | Almacenando Archivo: res://assets/ui/manada/chisitos.png.import[39m[0m
+[  49% ] [90m[1msavepack[22m | Almacenando Archivo: res://.godot/imported/cindolor.png-1bd6b0e9b1201271b43e82e7d322b95e.ctex[39m[0m
+[  49% ] [90m[1msavepack[22m | Almacenando Archivo: res://assets/ui/manada/cindolor.png.import[39m[0m
+[  49% ] [90m[1msavepack[22m | Almacenando Archivo: res://.godot/imported/computadora.svg-bd4328e3ada92c8e79c51e1d2e506fe0.ctex[39m[0m
+[  49% ] [90m[1msavepack[22m | Almacenando Archivo: res://assets/ui/manada/computadora.svg.import[39m[0m
+[  50% ] [90m[1msavepack[22m | Almacenando Archivo: res://.godot/imported/coracola.png-a9afe89a3f55b661ede7ef305b159946.ctex[39m[0m
+[  50% ] [90m[1msavepack[22m | Almacenando Archivo: res://assets/ui/manada/coracola.png.import[39m[0m
+[  50% ] [90m[1msavepack[22m | Almacenando Archivo: res://.godot/imported/cosa_de_mani.png-5ff5e620729fd6355ae0f59e27521f46.ctex[39m[0m
+[  50% ] [90m[1msavepack[22m | Almacenando Archivo: res://assets/ui/manada/cosa_de_mani.png.import[39m[0m
+[  50% ] [90m[1msavepack[22m | Almacenando Archivo: res://.godot/imported/donsaturados.png-cf4fc05760c68094e97122ff1c904d33.ctex[39m[0m
+[  50% ] [90m[1msavepack[22m | Almacenando Archivo: res://assets/ui/manada/donsaturados.png.import[39m[0m
+[  50% ] [90m[1msavepack[22m | Almacenando Archivo: res://.godot/imported/durextra.png-faee96bc70ce18dd276bfb6446748153.ctex[39m[0m
+[  50% ] [90m[1msavepack[22m | Almacenando Archivo: res://assets/ui/manada/durextra.png.import[39m[0m
+[  50% ] [90m[1msavepack[22m | Almacenando Archivo: res://.godot/imported/duronga.png-2e0c15e7a5e6f01b66c4146cb3a7d757.ctex[39m[0m
+[  50% ] [90m[1msavepack[22m | Almacenando Archivo: res://assets/ui/manada/duronga.png.import[39m[0m
+[  50% ] [90m[1msavepack[22m | Almacenando Archivo: res://vercel.json[39m[0m
+[  51% ] [90m[1msavepack[22m | Almacenando Archivo: res://addons/godot_mcp/commands/analysis_commands.gdc[39m[0m
+[  51% ] [90m[1msavepack[22m | Almacenando Archivo: res://addons/godot_mcp/commands/android_commands.gdc[39m[0m
+[  51% ] [90m[1msavepack[22m | Almacenando Archivo: res://addons/godot_mcp/commands/animation_commands.gdc[39m[0m
+[  51% ] [90m[1msavepack[22m | Almacenando Archivo: res://addons/godot_mcp/commands/animation_tree_commands.gdc[39m[0m
+[  51% ] [90m[1msavepack[22m | Almacenando Archivo: res://addons/godot_mcp/commands/audio_commands.gdc[39m[0m
+[  52% ] [90m[1msavepack[22m | Almacenando Archivo: res://addons/godot_mcp/commands/base_command.gdc[39m[0m
+[  52% ] [90m[1msavepack[22m | Almacenando Archivo: res://addons/godot_mcp/commands/batch_commands.gdc[39m[0m
+[  52% ] [90m[1msavepack[22m | Almacenando Archivo: res://addons/godot_mcp/commands/editor_commands.gdc[39m[0m
+[  52% ] [90m[1msavepack[22m | Almacenando Archivo: res://addons/godot_mcp/commands/export_commands.gdc[39m[0m
+[  52% ] [90m[1msavepack[22m | Almacenando Archivo: res://addons/godot_mcp/commands/headless_commands.gdc[39m[0m
+[  53% ] [90m[1msavepack[22m | Almacenando Archivo: res://addons/godot_mcp/commands/input_commands.gdc[39m[0m
+[  53% ] [90m[1msavepack[22m | Almacenando Archivo: res://addons/godot_mcp/commands/input_map_commands.gdc[39m[0m
+[  53% ] [90m[1msavepack[22m | Almacenando Archivo: res://addons/godot_mcp/commands/navigation_commands.gdc[39m[0m
+[  53% ] [90m[1msavepack[22m | Almacenando Archivo: res://addons/godot_mcp/commands/node_commands.gdc[39m[0m
+[  53% ] [90m[1msavepack[22m | Almacenando Archivo: res://addons/godot_mcp/commands/particle_commands.gdc[39m[0m
+[  54% ] [90m[1msavepack[22m | Almacenando Archivo: res://addons/godot_mcp/commands/physics_commands.gdc[39m[0m
+[  54% ] [90m[1msavepack[22m | Almacenando Archivo: res://addons/godot_mcp/commands/profiling_commands.gdc[39m[0m
+[  54% ] [90m[1msavepack[22m | Almacenando Archivo: res://addons/godot_mcp/commands/project_commands.gdc[39m[0m
+[  54% ] [90m[1msavepack[22m | Almacenando Archivo: res://addons/godot_mcp/commands/resource_commands.gdc[39m[0m
+[  54% ] [90m[1msavepack[22m | Almacenando Archivo: res://addons/godot_mcp/commands/runtime_commands.gdc[39m[0m
+[  55% ] [90m[1msavepack[22m | Almacenando Archivo: res://addons/godot_mcp/commands/scene_3d_commands.gdc[39m[0m
+[  55% ] [90m[1msavepack[22m | Almacenando Archivo: res://addons/godot_mcp/commands/scene_commands.gdc[39m[0m
+[  55% ] [90m[1msavepack[22m | Almacenando Archivo: res://addons/godot_mcp/commands/script_commands.gdc[39m[0m
+[  55% ] [90m[1msavepack[22m | Almacenando Archivo: res://addons/godot_mcp/commands/shader_commands.gdc[39m[0m
+[  55% ] [90m[1msavepack[22m | Almacenando Archivo: res://addons/godot_mcp/commands/test_commands.gdc[39m[0m
+[  56% ] [90m[1msavepack[22m | Almacenando Archivo: res://addons/godot_mcp/commands/theme_commands.gdc[39m[0m
+[  56% ] [90m[1msavepack[22m | Almacenando Archivo: res://addons/godot_mcp/commands/tilemap_commands.gdc[39m[0m
+[  56% ] [90m[1msavepack[22m | Almacenando Archivo: res://addons/godot_mcp/ui/status_panel.gdc[39m[0m
+[  56% ] [90m[1msavepack[22m | Almacenando Archivo: res://.godot/exported/133200997/export-3323b02c48410db7117ab2e325a55959-status_panel.scn[39m[0m
+[  56% ] [90m[1msavepack[22m | Almacenando Archivo: res://addons/godot_mcp/utils/node_utils.gdc[39m[0m
+[  57% ] [90m[1msavepack[22m | Almacenando Archivo: res://addons/godot_mcp/utils/property_parser.gdc[39m[0m
+[  57% ] [90m[1msavepack[22m | Almacenando Archivo: res://addons/godot_mcp/command_router.gdc[39m[0m
+[  57% ] [90m[1msavepack[22m | Almacenando Archivo: res://addons/godot_mcp/mcp_game_inspector_service.gdc[39m[0m
+[  57% ] [90m[1msavepack[22m | Almacenando Archivo: res://addons/godot_mcp/mcp_input_service.gdc[39m[0m
+[  57% ] [90m[1msavepack[22m | Almacenando Archivo: res://addons/godot_mcp/mcp_screenshot_service.gdc[39m[0m
+[  58% ] [90m[1msavepack[22m | Almacenando Archivo: res://addons/godot_mcp/plugin.gdc[39m[0m
+[  58% ] [90m[1msavepack[22m | Almacenando Archivo: res://addons/godot_mcp/websocket_server.gdc[39m[0m
+[  58% ] [90m[1msavepack[22m | Almacenando Archivo: res://.godot/exported/133200997/export-aa14b111e5b25f9cabe2cb8f94d9fb5b-zona_de_descarte.scn[39m[0m
+[  58% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/escenas/puestos/zona_de_descarte.gdc[39m[0m
+[  58% ] [90m[1msavepack[22m | Almacenando Archivo: res://.godot/imported/AMB_PROXIMIDAD_Neon.ogg-8133b38e22480de0ff22e90e85fe498f.oggvorbisstr[39m[0m
+[  58% ] [90m[1msavepack[22m | Almacenando Archivo: res://assets/audio/AMB_PROXIMIDAD_Neon.ogg.import[39m[0m
+[  59% ] [90m[1msavepack[22m | Almacenando Archivo: res://.godot/imported/MUS_Tema1.ogg-6572d84d9d7b09a718243291eaef69b6.oggvorbisstr[39m[0m
+[  59% ] [90m[1msavepack[22m | Almacenando Archivo: res://assets/audio/MUS_Tema1.ogg.import[39m[0m
+[  59% ] [90m[1msavepack[22m | Almacenando Archivo: res://.godot/imported/SFX_EVENTO_CompraRealizada.wav-a4b3b719e66dca0f43b84632599ea0d7.sample[39m[0m
+[  59% ] [90m[1msavepack[22m | Almacenando Archivo: res://assets/audio/SFX_EVENTO_CompraRealizada.wav.import[39m[0m
+[  59% ] [90m[1msavepack[22m | Almacenando Archivo: res://.godot/imported/SFX_EVENTO_FinJornada.wav-db6d1123883d46262ae5a3fba3496ea3.sample[39m[0m
+[  59% ] [90m[1msavepack[22m | Almacenando Archivo: res://assets/audio/SFX_EVENTO_FinJornada.wav.import[39m[0m
+[  59% ] [90m[1msavepack[22m | Almacenando Archivo: res://.godot/imported/SFX_EVENTO_Timbre.wav-da87177eb8504b3211f711da63cd4111.sample[39m[0m
+[  59% ] [90m[1msavepack[22m | Almacenando Archivo: res://assets/audio/SFX_EVENTO_Timbre.wav.import[39m[0m
+[  59% ] [90m[1msavepack[22m | Almacenando Archivo: res://.godot/imported/SFX_INTERFAZ_Celular_Mensaje_A.wav-c64ae3e4b6d777b4d893b8f049e67c90.sample[39m[0m
+[  59% ] [90m[1msavepack[22m | Almacenando Archivo: res://assets/audio/SFX_INTERFAZ_Celular_Mensaje_A.wav.import[39m[0m
+[  60% ] [90m[1msavepack[22m | Almacenando Archivo: res://.godot/imported/SFX_INTERFAZ_Celular_Mensaje_B.wav-bfdca9986dea7d3e5d015b7894c7e938.sample[39m[0m
+[  60% ] [90m[1msavepack[22m | Almacenando Archivo: res://assets/audio/SFX_INTERFAZ_Celular_Mensaje_B.wav.import[39m[0m
+[  60% ] [90m[1msavepack[22m | Almacenando Archivo: res://.godot/imported/SFX_INTERFAZ_Computadora_Boton.wav-67a7dbe2b89d6e525048b574c2975a58.sample[39m[0m
+[  60% ] [90m[1msavepack[22m | Almacenando Archivo: res://assets/audio/SFX_INTERFAZ_Computadora_Boton.wav.import[39m[0m
+[  60% ] [90m[1msavepack[22m | Almacenando Archivo: res://.godot/imported/SFX_INTERFAZ_Computadora_Imprimir.wav-ecd749ca5f241c6993bacb73cc5670c0.sample[39m[0m
+[  60% ] [90m[1msavepack[22m | Almacenando Archivo: res://assets/audio/SFX_INTERFAZ_Computadora_Imprimir.wav.import[39m[0m
+[  60% ] [90m[1msavepack[22m | Almacenando Archivo: res://.godot/imported/SFX_NOLEV_Basura_SacarBolsa.wav-fdc17f80024bdcaeca9624ccfdc6d86c.sample[39m[0m
+[  60% ] [90m[1msavepack[22m | Almacenando Archivo: res://assets/audio/SFX_NOLEV_Basura_SacarBolsa.wav.import[39m[0m
+[  60% ] [90m[1msavepack[22m | Almacenando Archivo: res://.godot/imported/SFX_NOLEV_Lector_Error.wav-4fa458a1f80c1b0db782bf613d7d4351.sample[39m[0m
+[  60% ] [90m[1msavepack[22m | Almacenando Archivo: res://assets/audio/SFX_NOLEV_Lector_Error.wav.import[39m[0m
+[  61% ] [90m[1msavepack[22m | Almacenando Archivo: res://.godot/imported/SFX_NOLEV_Lector_Escanear.wav-b8f9dc285d41692fb07c8bde53d87e63.sample[39m[0m
+[  61% ] [90m[1msavepack[22m | Almacenando Archivo: res://assets/audio/SFX_NOLEV_Lector_Escanear.wav.import[39m[0m
+[  61% ] [90m[1msavepack[22m | Almacenando Archivo: res://.godot/imported/SFX_NOLEV_Puerta_Abrir.wav-39620dcd7665e71eca2e0348191d503c.sample[39m[0m
+[  61% ] [90m[1msavepack[22m | Almacenando Archivo: res://assets/audio/SFX_NOLEV_Puerta_Abrir.wav.import[39m[0m
+[  61% ] [90m[1msavepack[22m | Almacenando Archivo: res://.godot/imported/SFX_NOLEV_Puerta_Cerrar.wav-93d0b3208f94dc5c64cce0e2071abb60.sample[39m[0m
+[  61% ] [90m[1msavepack[22m | Almacenando Archivo: res://assets/audio/SFX_NOLEV_Puerta_Cerrar.wav.import[39m[0m
+[  61% ] [90m[1msavepack[22m | Almacenando Archivo: res://.godot/imported/SFX_NOLEV_Puerta_Garage.wav-ee1591d9e842d157a5a1395570b55d0f.sample[39m[0m
+[  61% ] [90m[1msavepack[22m | Almacenando Archivo: res://assets/audio/SFX_NOLEV_Puerta_Garage.wav.import[39m[0m
+[  61% ] [90m[1msavepack[22m | Almacenando Archivo: res://.godot/imported/SFX_NOLEV_Puerta_NoAbre.wav-9fc80597e9e12f81b8f7995846c307a8.sample[39m[0m
+[  61% ] [90m[1msavepack[22m | Almacenando Archivo: res://assets/audio/SFX_NOLEV_Puerta_NoAbre.wav.import[39m[0m
+[  62% ] [90m[1msavepack[22m | Almacenando Archivo: res://.godot/imported/SFX_OBJETO_Balde_Alzar.wav-2922f1ec6896f3daff5bb2c873e2edcd.sample[39m[0m
+[  62% ] [90m[1msavepack[22m | Almacenando Archivo: res://assets/audio/SFX_OBJETO_Balde_Alzar.wav.import[39m[0m
+[  62% ] [90m[1msavepack[22m | Almacenando Archivo: res://.godot/imported/SFX_OBJETO_Balde_Dejar.wav-51253f0de86029857177407240f5baa8.sample[39m[0m
+[  62% ] [90m[1msavepack[22m | Almacenando Archivo: res://assets/audio/SFX_OBJETO_Balde_Dejar.wav.import[39m[0m
+[  62% ] [90m[1msavepack[22m | Almacenando Archivo: res://.godot/imported/SFX_OBJETO_Balde_Llenar.wav-4d291063c7c7eec9f7aa9386aa60fc11.sample[39m[0m
+[  62% ] [90m[1msavepack[22m | Almacenando Archivo: res://assets/audio/SFX_OBJETO_Balde_Llenar.wav.import[39m[0m
+[  62% ] [90m[1msavepack[22m | Almacenando Archivo: res://.godot/imported/SFX_OBJETO_Balde_Vaciar.wav-2eb9a05ca2cfc7049afdcd8cc51a599c.sample[39m[0m
+[  62% ] [90m[1msavepack[22m | Almacenando Archivo: res://assets/audio/SFX_OBJETO_Balde_Vaciar.wav.import[39m[0m
+[  62% ] [90m[1msavepack[22m | Almacenando Archivo: res://.godot/imported/SFX_OBJETO_Bolsa_Alzar.wav-193fb2edd3e791be5d42becd95d29fe4.sample[39m[0m
+[  62% ] [90m[1msavepack[22m | Almacenando Archivo: res://assets/audio/SFX_OBJETO_Bolsa_Alzar.wav.import[39m[0m
+[  62% ] [90m[1msavepack[22m | Almacenando Archivo: res://.godot/imported/SFX_OBJETO_BotellaPlastica_Alzar.wav-38650844cbdb5195f4fc3cc2ad90963a.sample[39m[0m
+[  62% ] [90m[1msavepack[22m | Almacenando Archivo: res://assets/audio/SFX_OBJETO_BotellaPlastica_Alzar.wav.import[39m[0m
+[  63% ] [90m[1msavepack[22m | Almacenando Archivo: res://.godot/imported/SFX_OBJETO_BotellaPlastica_Dejar.wav-30c140c7a58d4e47d0d1d11293dc4d9b.sample[39m[0m
+[  63% ] [90m[1msavepack[22m | Almacenando Archivo: res://assets/audio/SFX_OBJETO_BotellaPlastica_Dejar.wav.import[39m[0m
+[  63% ] [90m[1msavepack[22m | Almacenando Archivo: res://.godot/imported/SFX_OBJETO_Cajita_Alzar.wav-22662111cd5ce1b3b96d34eabefeb4ca.sample[39m[0m
+[  63% ] [90m[1msavepack[22m | Almacenando Archivo: res://assets/audio/SFX_OBJETO_Cajita_Alzar.wav.import[39m[0m
+[  63% ] [90m[1msavepack[22m | Almacenando Archivo: res://.godot/imported/SFX_OBJETO_Cajita_Dejar.wav-9504524795e1f8bb0a3c625a13fffa44.sample[39m[0m
+[  63% ] [90m[1msavepack[22m | Almacenando Archivo: res://assets/audio/SFX_OBJETO_Cajita_Dejar.wav.import[39m[0m
+[  63% ] [90m[1msavepack[22m | Almacenando Archivo: res://.godot/imported/SFX_OBJETO_EnvoltorioPlastico_Alzar.wav-bb175e1426c5e2b602b1ab169fdcec79.sample[39m[0m
+[  63% ] [90m[1msavepack[22m | Almacenando Archivo: res://assets/audio/SFX_OBJETO_EnvoltorioPlastico_Alzar.wav.import[39m[0m
+[  63% ] [90m[1msavepack[22m | Almacenando Archivo: res://.godot/imported/SFX_OBJETO_EnvoltorioPlastico_Dejar.wav-ba422354695c6ce6d774cf37eea92901.sample[39m[0m
+[  63% ] [90m[1msavepack[22m | Almacenando Archivo: res://assets/audio/SFX_OBJETO_EnvoltorioPlastico_Dejar.wav.import[39m[0m
+[  64% ] [90m[1msavepack[22m | Almacenando Archivo: res://.godot/imported/SFX_OBJETO_Jabon_VertirEnBalde.wav-2b48f5da0126e373f69e6d3b5ce2f6c2.sample[39m[0m
+[  64% ] [90m[1msavepack[22m | Almacenando Archivo: res://assets/audio/SFX_OBJETO_Jabon_VertirEnBalde.wav.import[39m[0m
+[  64% ] [90m[1msavepack[22m | Almacenando Archivo: res://.godot/imported/SFX_OBJETO_Lata_Alzar.wav-892cd1bc67a07c486d7f02ff773efd5e.sample[39m[0m
+[  64% ] [90m[1msavepack[22m | Almacenando Archivo: res://assets/audio/SFX_OBJETO_Lata_Alzar.wav.import[39m[0m
+[  64% ] [90m[1msavepack[22m | Almacenando Archivo: res://.godot/imported/SFX_OBJETO_Lata_Dejar.wav-ca28ea1cd480e5e5391a066efd01c1fa.sample[39m[0m
+[  64% ] [90m[1msavepack[22m | Almacenando Archivo: res://assets/audio/SFX_OBJETO_Lata_Dejar.wav.import[39m[0m
+[  64% ] [90m[1msavepack[22m | Almacenando Archivo: res://.godot/imported/SFX_OBJETO_Mopa_Alzar.wav-a8af596d169db9d9b104f8dcfedf9bf8.sample[39m[0m
+[  64% ] [90m[1msavepack[22m | Almacenando Archivo: res://assets/audio/SFX_OBJETO_Mopa_Alzar.wav.import[39m[0m
+[  64% ] [90m[1msavepack[22m | Almacenando Archivo: res://.godot/imported/SFX_OBJETO_Mopa_DejarYLimpiar.wav-29c9e670bc9cc24b4d7ab4ba20f0748a.sample[39m[0m
+[  64% ] [90m[1msavepack[22m | Almacenando Archivo: res://assets/audio/SFX_OBJETO_Mopa_DejarYLimpiar.wav.import[39m[0m
+[  65% ] [90m[1msavepack[22m | Almacenando Archivo: res://.godot/imported/SFX_OBJETO_Mopa_MojarEnBalde.wav-51a6fb908e1378087f967058c14996b8.sample[39m[0m
+[  65% ] [90m[1msavepack[22m | Almacenando Archivo: res://assets/audio/SFX_OBJETO_Mopa_MojarEnBalde.wav.import[39m[0m
+[  65% ] [90m[1msavepack[22m | Almacenando Archivo: res://.godot/imported/SFX_OBJETO_Papel_Alzar.wav-2693c86e6adf00004e4218bbacedc9b2.sample[39m[0m
+[  65% ] [90m[1msavepack[22m | Almacenando Archivo: res://assets/audio/SFX_OBJETO_Papel_Alzar.wav.import[39m[0m
+[  65% ] [90m[1msavepack[22m | Almacenando Archivo: res://.godot/imported/SFX_OBJETO_Papel_Dejar.wav-4f17100c09392488290b6b2a5f5586aa.sample[39m[0m
+[  65% ] [90m[1msavepack[22m | Almacenando Archivo: res://assets/audio/SFX_OBJETO_Papel_Dejar.wav.import[39m[0m
+[  65% ] [90m[1msavepack[22m | Almacenando Archivo: res://.godot/imported/SFX_PERSONAJE_Paso1.wav-b72700b2b54e5c5f70ade07e7794aa01.sample[39m[0m
+[  65% ] [90m[1msavepack[22m | Almacenando Archivo: res://assets/audio/SFX_PERSONAJE_Paso1.wav.import[39m[0m
+[  65% ] [90m[1msavepack[22m | Almacenando Archivo: res://.godot/imported/SFX_PERSONAJE_Paso2.wav-aab8e32df4a7075cba31197e41b42712.sample[39m[0m
+[  65% ] [90m[1msavepack[22m | Almacenando Archivo: res://assets/audio/SFX_PERSONAJE_Paso2.wav.import[39m[0m
+[  66% ] [90m[1msavepack[22m | Almacenando Archivo: res://.godot/imported/SFX_PERSONAJE_Paso3.wav-77f1fe1ede3a93653a683dd55fdfb64a.sample[39m[0m
+[  66% ] [90m[1msavepack[22m | Almacenando Archivo: res://assets/audio/SFX_PERSONAJE_Paso3.wav.import[39m[0m
+[  66% ] [90m[1msavepack[22m | Almacenando Archivo: res://.godot/imported/SFX_PERSONAJE_Paso4.wav-3d5314c7db17339a1341d74c6a67fa68.sample[39m[0m
+[  66% ] [90m[1msavepack[22m | Almacenando Archivo: res://assets/audio/SFX_PERSONAJE_Paso4.wav.import[39m[0m
+[  66% ] [90m[1msavepack[22m | Almacenando Archivo: res://.godot/imported/SFX_PERSONAJE_Pasos.wav-6403109bdea489fd804edeeb2ec99c35.sample[39m[0m
+[  66% ] [90m[1msavepack[22m | Almacenando Archivo: res://assets/audio/SFX_PERSONAJE_Pasos.wav.import[39m[0m
+[  66% ] [90m[1msavepack[22m | Almacenando Archivo: res://.godot/imported/actroncito.png-f47410e53911aa1e41b5b0de6cee81a1.s3tc.ctex[39m[0m
+[  66% ] [90m[1msavepack[22m | Almacenando Archivo: res://assets/boxes/actroncito.png.import[39m[0m
+[  66% ] [90m[1msavepack[22m | Almacenando Archivo: res://.godot/imported/amargadito.png-b9ad1fcf2626fa36a6dd294db2cafb30.s3tc.ctex[39m[0m
+[  66% ] [90m[1msavepack[22m | Almacenando Archivo: res://assets/boxes/amargadito.png.import[39m[0m
+[  66% ] [90m[1msavepack[22m | Almacenando Archivo: res://.godot/imported/burbaloo.png-dadb38f651621cb0a7caf7b0e8f514bd.s3tc.ctex[39m[0m
+[  66% ] [90m[1msavepack[22m | Almacenando Archivo: res://assets/boxes/burbaloo.png.import[39m[0m
+[  66% ] [90m[1msavepack[22m | Almacenando Archivo: res://.godot/imported/cindolor.png-0214e16e2765d0418ce370dca05f3bfb.s3tc.ctex[39m[0m
+[  66% ] [90m[1msavepack[22m | Almacenando Archivo: res://assets/boxes/cindolor.png.import[39m[0m
+[  66% ] [90m[1msavepack[22m | Almacenando Archivo: res://.godot/imported/cosa_de_mani.png-2f9c9d5678fa8343e86045a2fe82203b.s3tc.ctex[39m[0m
+[  66% ] [90m[1msavepack[22m | Almacenando Archivo: res://assets/boxes/cosa_de_mani.png.import[39m[0m
+[  66% ] [90m[1msavepack[22m | Almacenando Archivo: res://.godot/imported/donsaturados.png-0bf25d8011448f3754d15a66b62dedd7.s3tc.ctex[39m[0m
+[  66% ] [90m[1msavepack[22m | Almacenando Archivo: res://assets/boxes/donsaturados.png.import[39m[0m
+[  66% ] [90m[1msavepack[22m | Almacenando Archivo: res://.godot/imported/durextra.png-fa19a39df8f6a205112458ae8eeb47b8.s3tc.ctex[39m[0m
+[  66% ] [90m[1msavepack[22m | Almacenando Archivo: res://assets/boxes/durextra.png.import[39m[0m
+[  67% ] [90m[1msavepack[22m | Almacenando Archivo: res://.godot/imported/duronga.png-fc2b3f48303727ce1bc6ca5a396396f9.s3tc.ctex[39m[0m
+[  67% ] [90m[1msavepack[22m | Almacenando Archivo: res://assets/boxes/duronga.png.import[39m[0m
+[  67% ] [90m[1msavepack[22m | Almacenando Archivo: res://.godot/imported/fernet_god.png-8c4e3a808b5f9d887dde744b589a37f4.s3tc.ctex[39m[0m
+[  67% ] [90m[1msavepack[22m | Almacenando Archivo: res://assets/boxes/fernet_god.png.import[39m[0m
+[  67% ] [90m[1msavepack[22m | Almacenando Archivo: res://.godot/imported/flinpuf.png-08223b969133db2f1748a5533665cfcf.s3tc.ctex[39m[0m
+[  67% ] [90m[1msavepack[22m | Almacenando Archivo: res://assets/boxes/flinpuf.png.import[39m[0m
+[  67% ] [90m[1msavepack[22m | Almacenando Archivo: res://.godot/imported/frotlups.png-70b13cbe5c7ff61f3a3ad7f1ad139430.s3tc.ctex[39m[0m
+[  67% ] [90m[1msavepack[22m | Almacenando Archivo: res://assets/boxes/frotlups.png.import[39m[0m
+[  67% ] [90m[1msavepack[22m | Almacenando Archivo: res://.godot/imported/jorgillo.png-7118ecae82eddc74433db674f9854639.s3tc.ctex[39m[0m
+[  67% ] [90m[1msavepack[22m | Almacenando Archivo: res://assets/boxes/jorgillo.png.import[39m[0m
+[  68% ] [90m[1msavepack[22m | Almacenando Archivo: res://.godot/imported/laysntt.png-36f7de87881003cde8abb47c38ba5ddb.s3tc.ctex[39m[0m
+[  68% ] [90m[1msavepack[22m | Almacenando Archivo: res://assets/boxes/laysntt.png.import[39m[0m
+[  68% ] [90m[1msavepack[22m | Almacenando Archivo: res://.godot/imported/macumbas.png-066f0fa3ee15ad04fde6b54887d7eeb2.s3tc.ctex[39m[0m
+[  68% ] [90m[1msavepack[22m | Almacenando Archivo: res://assets/boxes/macumbas.png.import[39m[0m
+[  68% ] [90m[1msavepack[22m | Almacenando Archivo: res://.godot/imported/mayonchis.png-d842e010d5b3016d5b76c999fb13a71b.s3tc.ctex[39m[0m
+[  68% ] [90m[1msavepack[22m | Almacenando Archivo: res://assets/boxes/mayonchis.png.import[39m[0m
+[  68% ] [90m[1msavepack[22m | Almacenando Archivo: res://.godot/imported/oaaaa.png-1908993e4f04843c6dcffcc8d4e572c8.s3tc.ctex[39m[0m
+[  68% ] [90m[1msavepack[22m | Almacenando Archivo: res://assets/boxes/oaaaa.png.import[39m[0m
+[  68% ] [90m[1msavepack[22m | Almacenando Archivo: res://.godot/imported/petisas.png-d953329233893b900c8935d9f4432c2b.s3tc.ctex[39m[0m
+[  68% ] [90m[1msavepack[22m | Almacenando Archivo: res://assets/boxes/petisas.png.import[39m[0m
+[  69% ] [90m[1msavepack[22m | Almacenando Archivo: res://.godot/imported/terminator.png-ec0fe55964fa8670c84f4401cbbdde8a.s3tc.ctex[39m[0m
+[  69% ] [90m[1msavepack[22m | Almacenando Archivo: res://assets/boxes/terminator.png.import[39m[0m
+[  69% ] [90m[1msavepack[22m | Almacenando Archivo: res://.godot/imported/zucarachas.png-8eb79a1d16b374d65ba2ebfdde10106c.s3tc.ctex[39m[0m
+[  69% ] [90m[1msavepack[22m | Almacenando Archivo: res://assets/boxes/zucarachas.png.import[39m[0m
+[  69% ] [90m[1msavepack[22m | Almacenando Archivo: res://.godot/imported/canopy_without_lamp.png-f6a9ce01e86b19cec9f93aa2f61c77bf.s3tc.ctex[39m[0m
+[  69% ] [90m[1msavepack[22m | Almacenando Archivo: res://assets/environments/canopy_without_lamp.png.import[39m[0m
+[  69% ] [90m[1msavepack[22m | Almacenando Archivo: res://assets/environments/canopy_without_lamp.provenance.json[39m[0m
+[  69% ] [90m[1msavepack[22m | Almacenando Archivo: res://.godot/imported/estacion_fondo_sin_objetos.png-ea641f7b3ce66f1bd69569bfa0995490.s3tc.ctex[39m[0m
+[  69% ] [90m[1msavepack[22m | Almacenando Archivo: res://assets/environments/estacion_fondo_sin_objetos.png.import[39m[0m
+[  70% ] [90m[1msavepack[22m | Almacenando Archivo: res://assets/environments/estacion_fondo_sin_objetos.provenance.json[39m[0m
+[  70% ] [90m[1msavepack[22m | Almacenando Archivo: res://.godot/imported/estacion_panoramica_gemini.jpg-75cbdeda76b820f75a4510635434c41e.s3tc.ctex[39m[0m
+[  70% ] [90m[1msavepack[22m | Almacenando Archivo: res://assets/environments/estacion_panoramica_gemini.jpg.import[39m[0m
+[  70% ] [90m[1msavepack[22m | Almacenando Archivo: res://.godot/imported/vidrio_marcas.png-45c71ed4505971f4184a21ab7f0aa666.s3tc.ctex[39m[0m
+[  70% ] [90m[1msavepack[22m | Almacenando Archivo: res://assets/environments/vidrio_marcas.png.import[39m[0m
+[  70% ] [90m[1msavepack[22m | Almacenando Archivo: res://.godot/exported/133200997/export-4508ea6b038b61314f1bd803830af8f9-caja_colision.res[39m[0m
+[  70% ] [90m[1msavepack[22m | Almacenando Archivo: res://assets/models/caja_de_productos.res[39m[0m
+[  71% ] [90m[1msavepack[22m | Almacenando Archivo: res://assets/models/extraer_mallas.gdc[39m[0m
+[  71% ] [90m[1msavepack[22m | Almacenando Archivo: res://assets/models/generar_miniaturas.gdc[39m[0m
+[  71% ] [90m[1msavepack[22m | Almacenando Archivo: res://assets/models/importar_modelo.gdc[39m[0m
+[  71% ] [90m[1msavepack[22m | Almacenando Archivo: res://assets/models/producto_actroncito.res[39m[0m
+[  71% ] [90m[1msavepack[22m | Almacenando Archivo: res://assets/models/producto_amargadito.res[39m[0m
+[  72% ] [90m[1msavepack[22m | Almacenando Archivo: res://assets/models/producto_arvejas.res[39m[0m
+[  72% ] [90m[1msavepack[22m | Almacenando Archivo: res://assets/models/producto_burbaloo.res[39m[0m
+[  72% ] [90m[1msavepack[22m | Almacenando Archivo: res://assets/models/producto_chisitos.res[39m[0m
+[  72% ] [90m[1msavepack[22m | Almacenando Archivo: res://assets/models/producto_cindolor.res[39m[0m
+[  72% ] [90m[1msavepack[22m | Almacenando Archivo: res://assets/models/producto_coracola.res[39m[0m
+[  73% ] [90m[1msavepack[22m | Almacenando Archivo: res://assets/models/producto_cosa_de_mani.res[39m[0m
+[  73% ] [90m[1msavepack[22m | Almacenando Archivo: res://assets/models/producto_donsaturados.res[39m[0m
+[  73% ] [90m[1msavepack[22m | Almacenando Archivo: res://assets/models/producto_durextra.res[39m[0m
+[  73% ] [90m[1msavepack[22m | Almacenando Archivo: res://assets/models/producto_duronga.res[39m[0m
+[  73% ] [90m[1msavepack[22m | Almacenando Archivo: res://assets/models/producto_feel_ricky_fort.res[39m[0m
+[  74% ] [90m[1msavepack[22m | Almacenando Archivo: res://assets/models/producto_fernet_god.res[39m[0m
+[  74% ] [90m[1msavepack[22m | Almacenando Archivo: res://assets/models/producto_flinpuf.res[39m[0m
+[  74% ] [90m[1msavepack[22m | Almacenando Archivo: res://assets/models/producto_frotlups.res[39m[0m
+[  74% ] [90m[1msavepack[22m | Almacenando Archivo: res://assets/models/producto_jorgillo.res[39m[0m
+[  74% ] [90m[1msavepack[22m | Almacenando Archivo: res://assets/models/producto_laysntt.res[39m[0m
+[  74% ] [90m[1msavepack[22m | Almacenando Archivo: res://assets/models/producto_macumbas.res[39m[0m
+[  75% ] [90m[1msavepack[22m | Almacenando Archivo: res://assets/models/producto_malbardo.res[39m[0m
+[  75% ] [90m[1msavepack[22m | Almacenando Archivo: res://assets/models/producto_marolini.res[39m[0m
+[  75% ] [90m[1msavepack[22m | Almacenando Archivo: res://assets/models/producto_marranos.res[39m[0m
+[  75% ] [90m[1msavepack[22m | Almacenando Archivo: res://assets/models/producto_mayonchis.res[39m[0m
+[  75% ] [90m[1msavepack[22m | Almacenando Archivo: res://assets/models/producto_oaaaa.res[39m[0m
+[  76% ] [90m[1msavepack[22m | Almacenando Archivo: res://assets/models/producto_oremos.res[39m[0m
+[  76% ] [90m[1msavepack[22m | Almacenando Archivo: res://assets/models/producto_pepitos.res[39m[0m
+[  76% ] [90m[1msavepack[22m | Almacenando Archivo: res://assets/models/producto_petisas.res[39m[0m
+[  76% ] [90m[1msavepack[22m | Almacenando Archivo: res://assets/models/producto_prongles.res[39m[0m
+[  76% ] [90m[1msavepack[22m | Almacenando Archivo: res://assets/models/producto_saladik.res[39m[0m
+[  77% ] [90m[1msavepack[22m | Almacenando Archivo: res://assets/models/producto_terminator.res[39m[0m
+[  77% ] [90m[1msavepack[22m | Almacenando Archivo: res://assets/models/producto_uakas.res[39m[0m
+[  77% ] [90m[1msavepack[22m | Almacenando Archivo: res://assets/models/producto_zucarachas.res[39m[0m
+[  77% ] [90m[1msavepack[22m | Almacenando Archivo: res://.godot/imported/SEPT_JUEGOS_PROTOTIPO.glb-afefb34b67ea7f5ddf02551ba2ec6504.scn[39m[0m
+[  77% ] [90m[1msavepack[22m | Almacenando Archivo: res://assets/models/SEPT_JUEGOS_PROTOTIPO.glb.import[39m[0m
+[  77% ] [90m[1msavepack[22m | Almacenando Archivo: res://.godot/imported/SEPT_JUEGOS_PROTOTIPO_Actroncito completo.png-34e04df94a958416d8fc0ffbeded8b46.s3tc.ctex[39m[0m
+[  77% ] [90m[1msavepack[22m | Almacenando Archivo: res://assets/models/SEPT_JUEGOS_PROTOTIPO_Actroncito completo.png.import[39m[0m
+[  78% ] [90m[1msavepack[22m | Almacenando Archivo: res://.godot/imported/SEPT_JUEGOS_PROTOTIPO_amargadito completo.png-476ab7846eeb555d9bdd5e2d5b9b3d1f.s3tc.ctex[39m[0m
+[  78% ] [90m[1msavepack[22m | Almacenando Archivo: res://assets/models/SEPT_JUEGOS_PROTOTIPO_amargadito completo.png.import[39m[0m
+[  78% ] [90m[1msavepack[22m | Almacenando Archivo: res://.godot/imported/SEPT_JUEGOS_PROTOTIPO_arvecor.png-c85963554ec13a423747556bc325003d.s3tc.ctex[39m[0m
+[  78% ] [90m[1msavepack[22m | Almacenando Archivo: res://assets/models/SEPT_JUEGOS_PROTOTIPO_arvecor.png.import[39m[0m
+[  78% ] [90m[1msavepack[22m | Almacenando Archivo: res://.godot/imported/SEPT_JUEGOS_PROTOTIPO_atun marranos.png-88961b93e3dd8206718be37a8bbbd684.s3tc.ctex[39m[0m
+[  78% ] [90m[1msavepack[22m | Almacenando Archivo: res://assets/models/SEPT_JUEGOS_PROTOTIPO_atun marranos.png.import[39m[0m
+[  78% ] [90m[1msavepack[22m | Almacenando Archivo: res://.godot/imported/SEPT_JUEGOS_PROTOTIPO_bano_ivory_oscuro_color.png-282ff635e1559d0fd5cb983147c08bab.s3tc.ctex[39m[0m
+[  78% ] [90m[1msavepack[22m | Almacenando Archivo: res://assets/models/SEPT_JUEGOS_PROTOTIPO_bano_ivory_oscuro_color.png.import[39m[0m
+[  78% ] [90m[1msavepack[22m | Almacenando Archivo: res://.godot/imported/SEPT_JUEGOS_PROTOTIPO_bano_ivory_oscuro_normal.png-b1cdf96cec589ca54e461aea5ce1c01e.s3tc.ctex[39m[0m
+[  78% ] [90m[1msavepack[22m | Almacenando Archivo: res://assets/models/SEPT_JUEGOS_PROTOTIPO_bano_ivory_oscuro_normal.png.import[39m[0m
+[  79% ] [90m[1msavepack[22m | Almacenando Archivo: res://.godot/imported/SEPT_JUEGOS_PROTOTIPO_bano_ivory_oscuro_orm.png-7986019fdb92ce8b08cfe30cd58805fb.s3tc.ctex[39m[0m
+[  79% ] [90m[1msavepack[22m | Almacenando Archivo: res://assets/models/SEPT_JUEGOS_PROTOTIPO_bano_ivory_oscuro_orm.png.import[39m[0m
+[  79% ] [90m[1msavepack[22m | Almacenando Archivo: res://.godot/imported/SEPT_JUEGOS_PROTOTIPO_bano_piso_gris.png-5b48ab6bac512f88a68b91a7d3e89ea4.s3tc.ctex[39m[0m
+[  79% ] [90m[1msavepack[22m | Almacenando Archivo: res://assets/models/SEPT_JUEGOS_PROTOTIPO_bano_piso_gris.png.import[39m[0m
+[  79% ] [90m[1msavepack[22m | Almacenando Archivo: res://.godot/imported/SEPT_JUEGOS_PROTOTIPO_Bricks066_1K-JPG_Color.jpg-b8d8c2d02d5e334fcd5a886522cb2a6e.s3tc.ctex[39m[0m
+[  79% ] [90m[1msavepack[22m | Almacenando Archivo: res://assets/models/SEPT_JUEGOS_PROTOTIPO_Bricks066_1K-JPG_Color.jpg.import[39m[0m
+[  79% ] [90m[1msavepack[22m | Almacenando Archivo: res://.godot/imported/SEPT_JUEGOS_PROTOTIPO_Bricks066_1K-JPG_NormalGL.jpg-b450a220ce2d03b9ab6b1e35c7a56e20.s3tc.ctex[39m[0m
+[  79% ] [90m[1msavepack[22m | Almacenando Archivo: res://assets/models/SEPT_JUEGOS_PROTOTIPO_Bricks066_1K-JPG_NormalGL.jpg.import[39m[0m
+[  79% ] [90m[1msavepack[22m | Almacenando Archivo: res://.godot/imported/SEPT_JUEGOS_PROTOTIPO_Bricks066_1K-JPG_Roughness.png-64f539609dda2a2d507fd1a18501d657.s3tc.ctex[39m[0m
+[  79% ] [90m[1msavepack[22m | Almacenando Archivo: res://assets/models/SEPT_JUEGOS_PROTOTIPO_Bricks066_1K-JPG_Roughness.png.import[39m[0m
+[  80% ] [90m[1msavepack[22m | Almacenando Archivo: res://.godot/imported/SEPT_JUEGOS_PROTOTIPO_Burbaloo completo_1.png-531833c34f883c2c03f65b284abec6fa.s3tc.ctex[39m[0m
+[  80% ] [90m[1msavepack[22m | Almacenando Archivo: res://assets/models/SEPT_JUEGOS_PROTOTIPO_Burbaloo completo_1.png.import[39m[0m
+[  80% ] [90m[1msavepack[22m | Almacenando Archivo: res://.godot/imported/SEPT_JUEGOS_PROTOTIPO_caja luz exterior.png-1e4d5cab1215368feec99d846dce37df.s3tc.ctex[39m[0m
+[  80% ] [90m[1msavepack[22m | Almacenando Archivo: res://assets/models/SEPT_JUEGOS_PROTOTIPO_caja luz exterior.png.import[39m[0m
+[  80% ] [90m[1msavepack[22m | Almacenando Archivo: res://.godot/imported/SEPT_JUEGOS_PROTOTIPO_caja luz interior.png-dd4dff25a855d61c1088ce34d76b9df0.s3tc.ctex[39m[0m
+[  80% ] [90m[1msavepack[22m | Almacenando Archivo: res://assets/models/SEPT_JUEGOS_PROTOTIPO_caja luz interior.png.import[39m[0m
+[  80% ] [90m[1msavepack[22m | Almacenando Archivo: res://.godot/imported/SEPT_JUEGOS_PROTOTIPO_caja.png-da41b129827ed76cb358606ed7a7f148.s3tc.ctex[39m[0m
+[  80% ] [90m[1msavepack[22m | Almacenando Archivo: res://assets/models/SEPT_JUEGOS_PROTOTIPO_caja.png.import[39m[0m
+[  80% ] [90m[1msavepack[22m | Almacenando Archivo: res://.godot/imported/SEPT_JUEGOS_PROTOTIPO_cereal textura.png-f2cdedc47eaf91dd1f2c7cf97d1916ea.s3tc.ctex[39m[0m
+[  80% ] [90m[1msavepack[22m | Almacenando Archivo: res://assets/models/SEPT_JUEGOS_PROTOTIPO_cereal textura.png.import[39m[0m
+[  81% ] [90m[1msavepack[22m | Almacenando Archivo: res://.godot/imported/SEPT_JUEGOS_PROTOTIPO_chisito.png-054091881230ddaec73bf23f7cd8475c.s3tc.ctex[39m[0m
+[  81% ] [90m[1msavepack[22m | Almacenando Archivo: res://assets/models/SEPT_JUEGOS_PROTOTIPO_chisito.png.import[39m[0m
+[  81% ] [90m[1msavepack[22m | Almacenando Archivo: res://.godot/imported/SEPT_JUEGOS_PROTOTIPO_cielorraso_emision.png-99cceb9ba08895226d1e373ac49ca575.s3tc.ctex[39m[0m
+[  81% ] [90m[1msavepack[22m | Almacenando Archivo: res://assets/models/SEPT_JUEGOS_PROTOTIPO_cielorraso_emision.png.import[39m[0m
+[  81% ] [90m[1msavepack[22m | Almacenando Archivo: res://.godot/imported/SEPT_JUEGOS_PROTOTIPO_cielorraso_placas.png-d421cc7c796fc85542a0ff6b092fad9e.s3tc.ctex[39m[0m
+[  81% ] [90m[1msavepack[22m | Almacenando Archivo: res://assets/models/SEPT_JUEGOS_PROTOTIPO_cielorraso_placas.png.import[39m[0m
+[  81% ] [90m[1msavepack[22m | Almacenando Archivo: res://.godot/imported/SEPT_JUEGOS_PROTOTIPO_cielorraso_sin_luces.png-b82fdb7f3b81453422744c88e3d8d2ca.s3tc.ctex[39m[0m
+[  81% ] [90m[1msavepack[22m | Almacenando Archivo: res://assets/models/SEPT_JUEGOS_PROTOTIPO_cielorraso_sin_luces.png.import[39m[0m
+[  81% ] [90m[1msavepack[22m | Almacenando Archivo: res://.godot/imported/SEPT_JUEGOS_PROTOTIPO_cindolor completo.png-b625a498865ef98eb9d45ca21f0096e8.s3tc.ctex[39m[0m
+[  81% ] [90m[1msavepack[22m | Almacenando Archivo: res://assets/models/SEPT_JUEGOS_PROTOTIPO_cindolor completo.png.import[39m[0m
+[  82% ] [90m[1msavepack[22m | Almacenando Archivo: res://.godot/imported/SEPT_JUEGOS_PROTOTIPO_compu normals.png-b5a6b49a7e63da793ef2c6c310335dce.s3tc.ctex[39m[0m
+[  82% ] [90m[1msavepack[22m | Almacenando Archivo: res://assets/models/SEPT_JUEGOS_PROTOTIPO_compu normals.png.import[39m[0m
+[  82% ] [90m[1msavepack[22m | Almacenando Archivo: res://.godot/imported/SEPT_JUEGOS_PROTOTIPO_concrete_floor_worn_001_rough_1k.png-d3ae53072b61da706ed220900c94ef48.s3tc.ctex[39m[0m
+[  82% ] [90m[1msavepack[22m | Almacenando Archivo: res://assets/models/SEPT_JUEGOS_PROTOTIPO_concrete_floor_worn_001_rough_1k.png.import[39m[0m
+[  82% ] [90m[1msavepack[22m | Almacenando Archivo: res://.godot/imported/SEPT_JUEGOS_PROTOTIPO_concreto2_baseColor.png-321d3f8eeb02235403529c7feaa10619.s3tc.ctex[39m[0m
+[  82% ] [90m[1msavepack[22m | Almacenando Archivo: res://assets/models/SEPT_JUEGOS_PROTOTIPO_concreto2_baseColor.png.import[39m[0m
+[  82% ] [90m[1msavepack[22m | Almacenando Archivo: res://.godot/imported/SEPT_JUEGOS_PROTOTIPO_cora cola.png-6d9e2c89e06470bed90870d1b8249d3d.s3tc.ctex[39m[0m
+[  82% ] [90m[1msavepack[22m | Almacenando Archivo: res://assets/models/SEPT_JUEGOS_PROTOTIPO_cora cola.png.import[39m[0m
+[  82% ] [90m[1msavepack[22m | Almacenando Archivo: res://.godot/imported/SEPT_JUEGOS_PROTOTIPO_corrugated_iron_02_diff_1k.jpg-c6e4c9ece5d91b2a09a6775aec167810.s3tc.ctex[39m[0m
+[  82% ] [90m[1msavepack[22m | Almacenando Archivo: res://assets/models/SEPT_JUEGOS_PROTOTIPO_corrugated_iron_02_diff_1k.jpg.import[39m[0m
+[  83% ] [90m[1msavepack[22m | Almacenando Archivo: res://.godot/imported/SEPT_JUEGOS_PROTOTIPO_corrugated_iron_02_metal_1k-corrugated_iron_02_rough_1k.png-600914697cd9749f864f42d0eef1588a.s3tc.ctex[39m[0m
+[  83% ] [90m[1msavepack[22m | Almacenando Archivo: res://assets/models/SEPT_JUEGOS_PROTOTIPO_corrugated_iron_02_metal_1k-corrugated_iron_02_rough_1k.png.import[39m[0m
+[  83% ] [90m[1msavepack[22m | Almacenando Archivo: res://.godot/imported/SEPT_JUEGOS_PROTOTIPO_corrugated_iron_02_nor_gl_1k.png-7c2f760b49afc136e5e348ac1e757a89.s3tc.ctex[39m[0m
+[  83% ] [90m[1msavepack[22m | Almacenando Archivo: res://assets/models/SEPT_JUEGOS_PROTOTIPO_corrugated_iron_02_nor_gl_1k.png.import[39m[0m
+[  83% ] [90m[1msavepack[22m | Almacenando Archivo: res://.godot/imported/SEPT_JUEGOS_PROTOTIPO_cosa de mani interno.png-8e43312b6c09bc0b5a6574721d44c519.s3tc.ctex[39m[0m
+[  83% ] [90m[1msavepack[22m | Almacenando Archivo: res://assets/models/SEPT_JUEGOS_PROTOTIPO_cosa de mani interno.png.import[39m[0m
+[  83% ] [90m[1msavepack[22m | Almacenando Archivo: res://.godot/imported/SEPT_JUEGOS_PROTOTIPO_deposito_concreto_color.png-ad23432a5a1ed9ed46ced927218d5b51.s3tc.ctex[39m[0m
+[  83% ] [90m[1msavepack[22m | Almacenando Archivo: res://assets/models/SEPT_JUEGOS_PROTOTIPO_deposito_concreto_color.png.import[39m[0m
+[  83% ] [90m[1msavepack[22m | Almacenando Archivo: res://.godot/imported/SEPT_JUEGOS_PROTOTIPO_deposito_concreto_normal.png-43fa12a4ec89357bc2cc908e13213f9c.s3tc.ctex[39m[0m
+[  83% ] [90m[1msavepack[22m | Almacenando Archivo: res://assets/models/SEPT_JUEGOS_PROTOTIPO_deposito_concreto_normal.png.import[39m[0m
+[  84% ] [90m[1msavepack[22m | Almacenando Archivo: res://.godot/imported/SEPT_JUEGOS_PROTOTIPO_deposito_contenedor_cuerpo_color.png-5a04910b01015b42c2c0c15b38fb4ecb.s3tc.ctex[39m[0m
+[  84% ] [90m[1msavepack[22m | Almacenando Archivo: res://assets/models/SEPT_JUEGOS_PROTOTIPO_deposito_contenedor_cuerpo_color.png.import[39m[0m
+[  84% ] [90m[1msavepack[22m | Almacenando Archivo: res://.godot/imported/SEPT_JUEGOS_PROTOTIPO_deposito_contenedor_cuerpo_normal.png-6acecd13bedef07bbb4a4635ea7db95a.s3tc.ctex[39m[0m
+[  84% ] [90m[1msavepack[22m | Almacenando Archivo: res://assets/models/SEPT_JUEGOS_PROTOTIPO_deposito_contenedor_cuerpo_normal.png.import[39m[0m
+[  84% ] [90m[1msavepack[22m | Almacenando Archivo: res://.godot/imported/SEPT_JUEGOS_PROTOTIPO_deposito_contenedor_cuerpo_roughness.png-8635b5f0b6f33e3954883d87ca6ef631.s3tc.ctex[39m[0m
+[  84% ] [90m[1msavepack[22m | Almacenando Archivo: res://assets/models/SEPT_JUEGOS_PROTOTIPO_deposito_contenedor_cuerpo_roughness.png.import[39m[0m
+[  84% ] [90m[1msavepack[22m | Almacenando Archivo: res://.godot/imported/SEPT_JUEGOS_PROTOTIPO_deposito_contenedor_ruedas_normal.png-843b7a0058c57e6fa05a43c92f65c965.s3tc.ctex[39m[0m
+[  84% ] [90m[1msavepack[22m | Almacenando Archivo: res://assets/models/SEPT_JUEGOS_PROTOTIPO_deposito_contenedor_ruedas_normal.png.import[39m[0m
+[  84% ] [90m[1msavepack[22m | Almacenando Archivo: res://.godot/imported/SEPT_JUEGOS_PROTOTIPO_deposito_contenedor_tapa_color.png-eb895b732a621b9ae408e8150c0cd77a.s3tc.ctex[39m[0m
+[  84% ] [90m[1msavepack[22m | Almacenando Archivo: res://assets/models/SEPT_JUEGOS_PROTOTIPO_deposito_contenedor_tapa_color.png.import[39m[0m
+[  85% ] [90m[1msavepack[22m | Almacenando Archivo: res://.godot/imported/SEPT_JUEGOS_PROTOTIPO_deposito_contenedor_tapa_normal.png-e5d2fda56f6f4d66126710e3fbbd5cf7.s3tc.ctex[39m[0m
+[  85% ] [90m[1msavepack[22m | Almacenando Archivo: res://assets/models/SEPT_JUEGOS_PROTOTIPO_deposito_contenedor_tapa_normal.png.import[39m[0m
+[  85% ] [90m[1msavepack[22m | Almacenando Archivo: res://.godot/imported/SEPT_JUEGOS_PROTOTIPO_deposito_contenedor_tapa_roughness.png-79de58070ee12a77fbf2156b056d62bc.s3tc.ctex[39m[0m
+[  85% ] [90m[1msavepack[22m | Almacenando Archivo: res://assets/models/SEPT_JUEGOS_PROTOTIPO_deposito_contenedor_tapa_roughness.png.import[39m[0m
+[  85% ] [90m[1msavepack[22m | Almacenando Archivo: res://.godot/imported/SEPT_JUEGOS_PROTOTIPO_Don Saturados completo.png-1999b6616907b5eae18252403ddcd3e7.s3tc.ctex[39m[0m
+[  85% ] [90m[1msavepack[22m | Almacenando Archivo: res://assets/models/SEPT_JUEGOS_PROTOTIPO_Don Saturados completo.png.import[39m[0m
+[  85% ] [90m[1msavepack[22m | Almacenando Archivo: res://.godot/imported/SEPT_JUEGOS_PROTOTIPO_Durextra completo_1.png-1fb81fbca3bc1b93f763574b02850ce4.s3tc.ctex[39m[0m
+[  85% ] [90m[1msavepack[22m | Almacenando Archivo: res://assets/models/SEPT_JUEGOS_PROTOTIPO_Durextra completo_1.png.import[39m[0m
+[  85% ] [90m[1msavepack[22m | Almacenando Archivo: res://.godot/imported/SEPT_JUEGOS_PROTOTIPO_duronga.png-f2dc5c1e19737890234bd759804e2ba9.s3tc.ctex[39m[0m
+[  85% ] [90m[1msavepack[22m | Almacenando Archivo: res://assets/models/SEPT_JUEGOS_PROTOTIPO_duronga.png.import[39m[0m
+[  86% ] [90m[1msavepack[22m | Almacenando Archivo: res://.godot/imported/SEPT_JUEGOS_PROTOTIPO_exterior_nocturno.png-f6059205247ed45ffa58b3691af8ddec.s3tc.ctex[39m[0m
+[  86% ] [90m[1msavepack[22m | Almacenando Archivo: res://assets/models/SEPT_JUEGOS_PROTOTIPO_exterior_nocturno.png.import[39m[0m
+[  86% ] [90m[1msavepack[22m | Almacenando Archivo: res://.godot/imported/SEPT_JUEGOS_PROTOTIPO_fernetgod textura.png-2147238e5b63b941a77034b92224576b.s3tc.ctex[39m[0m
+[  86% ] [90m[1msavepack[22m | Almacenando Archivo: res://assets/models/SEPT_JUEGOS_PROTOTIPO_fernetgod textura.png.import[39m[0m
+[  86% ] [90m[1msavepack[22m | Almacenando Archivo: res://.godot/imported/SEPT_JUEGOS_PROTOTIPO_fideos marolini.png-f5c5f86661f89bccbbe6dad10a8287f5.s3tc.ctex[39m[0m
+[  86% ] [90m[1msavepack[22m | Almacenando Archivo: res://assets/models/SEPT_JUEGOS_PROTOTIPO_fideos marolini.png.import[39m[0m
+[  86% ] [90m[1msavepack[22m | Almacenando Archivo: res://.godot/imported/SEPT_JUEGOS_PROTOTIPO_flim pof completo.png-59c5a922b6f7f87f828e8d5033e58416.s3tc.ctex[39m[0m
+[  86% ] [90m[1msavepack[22m | Almacenando Archivo: res://assets/models/SEPT_JUEGOS_PROTOTIPO_flim pof completo.png.import[39m[0m
+[  86% ] [90m[1msavepack[22m | Almacenando Archivo: res://.godot/imported/SEPT_JUEGOS_PROTOTIPO_frot lups.png-748a7f0a6067a96ef76bfab7f54e91c4.s3tc.ctex[39m[0m
+[  86% ] [90m[1msavepack[22m | Almacenando Archivo: res://assets/models/SEPT_JUEGOS_PROTOTIPO_frot lups.png.import[39m[0m
+[  86% ] [90m[1msavepack[22m | Almacenando Archivo: res://.godot/imported/SEPT_JUEGOS_PROTOTIPO_gondola_chapa_blanca_512_basecolor.png-d05610e7cf9652a7c6ca4f8acd60c77f.s3tc.ctex[39m[0m
+[  86% ] [90m[1msavepack[22m | Almacenando Archivo: res://assets/models/SEPT_JUEGOS_PROTOTIPO_gondola_chapa_blanca_512_basecolor.png.import[39m[0m
+[  87% ] [90m[1msavepack[22m | Almacenando Archivo: res://.godot/imported/SEPT_JUEGOS_PROTOTIPO_gondola_panel_blanca_1024_basecolor.png-64184928ddd6a358bcb54e2fce8543a7.s3tc.ctex[39m[0m
+[  87% ] [90m[1msavepack[22m | Almacenando Archivo: res://assets/models/SEPT_JUEGOS_PROTOTIPO_gondola_panel_blanca_1024_basecolor.png.import[39m[0m
+[  87% ] [90m[1msavepack[22m | Almacenando Archivo: res://.godot/imported/SEPT_JUEGOS_PROTOTIPO_gondola_portaprecio_basecolor.png-6e8cf6c4ca23eedf8bf9678fd1a38052.s3tc.ctex[39m[0m
+[  87% ] [90m[1msavepack[22m | Almacenando Archivo: res://assets/models/SEPT_JUEGOS_PROTOTIPO_gondola_portaprecio_basecolor.png.import[39m[0m
+[  87% ] [90m[1msavepack[22m | Almacenando Archivo: res://.godot/imported/SEPT_JUEGOS_PROTOTIPO_Guía de jabones y manchas copy.png-b755c8b45d7da019f17d5844368ac0e9.s3tc.ctex[39m[0m
+[  87% ] [90m[1msavepack[22m | Almacenando Archivo: res://assets/models/SEPT_JUEGOS_PROTOTIPO_Guía de jabones y manchas copy.png.import[39m[0m
+[  87% ] [90m[1msavepack[22m | Almacenando Archivo: res://.godot/imported/SEPT_JUEGOS_PROTOTIPO_interior_tiles_diff_1k.jpg-fd28efcf497f41e2602283ee1da41ec3.s3tc.ctex[39m[0m
+[  87% ] [90m[1msavepack[22m | Almacenando Archivo: res://assets/models/SEPT_JUEGOS_PROTOTIPO_interior_tiles_diff_1k.jpg.import[39m[0m
+[  87% ] [90m[1msavepack[22m | Almacenando Archivo: res://.godot/imported/SEPT_JUEGOS_PROTOTIPO_jabón liquido.png-969af500628c1e09963405c8caf74704.s3tc.ctex[39m[0m
+[  87% ] [90m[1msavepack[22m | Almacenando Archivo: res://assets/models/SEPT_JUEGOS_PROTOTIPO_jabón liquido.png.import[39m[0m
+[  88% ] [90m[1msavepack[22m | Almacenando Archivo: res://.godot/imported/SEPT_JUEGOS_PROTOTIPO_jorgillata.png-3b41f8ed34a8916449be7532458b4e4b.s3tc.ctex[39m[0m
+[  88% ] [90m[1msavepack[22m | Almacenando Archivo: res://assets/models/SEPT_JUEGOS_PROTOTIPO_jorgillata.png.import[39m[0m
+[  88% ] [90m[1msavepack[22m | Almacenando Archivo: res://.godot/imported/SEPT_JUEGOS_PROTOTIPO_Lay´snt´t completo_1.png-cc782202514a0290de2dfa1f5a6718cc.s3tc.ctex[39m[0m
+[  88% ] [90m[1msavepack[22m | Almacenando Archivo: res://assets/models/SEPT_JUEGOS_PROTOTIPO_Lay´snt´t completo_1.png.import[39m[0m
+[  88% ] [90m[1msavepack[22m | Almacenando Archivo: res://.godot/imported/SEPT_JUEGOS_PROTOTIPO_LIMPIEZA ETIQUETA (1).png-989d98cd76e79a7e903fd1dd311d01df.s3tc.ctex[39m[0m
+[  88% ] [90m[1msavepack[22m | Almacenando Archivo: res://assets/models/SEPT_JUEGOS_PROTOTIPO_LIMPIEZA ETIQUETA (1).png.import[39m[0m
+[  88% ] [90m[1msavepack[22m | Almacenando Archivo: res://.godot/imported/SEPT_JUEGOS_PROTOTIPO_LIMPIEZA ETIQUETA (2).png-ebbb25c6ad1a24097664bdbffbaf1868.s3tc.ctex[39m[0m
+[  88% ] [90m[1msavepack[22m | Almacenando Archivo: res://assets/models/SEPT_JUEGOS_PROTOTIPO_LIMPIEZA ETIQUETA (2).png.import[39m[0m
+[  88% ] [90m[1msavepack[22m | Almacenando Archivo: res://.godot/imported/SEPT_JUEGOS_PROTOTIPO_LIMPIEZA ETIQUETA (3).png-21469d724b15837bb2f78741d7810460.s3tc.ctex[39m[0m
+[  88% ] [90m[1msavepack[22m | Almacenando Archivo: res://assets/models/SEPT_JUEGOS_PROTOTIPO_LIMPIEZA ETIQUETA (3).png.import[39m[0m
+[  89% ] [90m[1msavepack[22m | Almacenando Archivo: res://.godot/imported/SEPT_JUEGOS_PROTOTIPO_macumbas completo.png-63f3c25bca2fd28feeb035a4f3ae1e62.s3tc.ctex[39m[0m
+[  89% ] [90m[1msavepack[22m | Almacenando Archivo: res://assets/models/SEPT_JUEGOS_PROTOTIPO_macumbas completo.png.import[39m[0m
+[  89% ] [90m[1msavepack[22m | Almacenando Archivo: res://.godot/imported/SEPT_JUEGOS_PROTOTIPO_Material.png-1a16dc7d3466dd783ed26cc2c0410cdd.s3tc.ctex[39m[0m
+[  89% ] [90m[1msavepack[22m | Almacenando Archivo: res://assets/models/SEPT_JUEGOS_PROTOTIPO_Material.png.import[39m[0m
+[  89% ] [90m[1msavepack[22m | Almacenando Archivo: res://.godot/imported/SEPT_JUEGOS_PROTOTIPO_Material_6.png-e2a7c500614d753ec20d144821364de1.s3tc.ctex[39m[0m
+[  89% ] [90m[1msavepack[22m | Almacenando Archivo: res://assets/models/SEPT_JUEGOS_PROTOTIPO_Material_6.png.import[39m[0m
+[  89% ] [90m[1msavepack[22m | Almacenando Archivo: res://.godot/imported/SEPT_JUEGOS_PROTOTIPO_Material_54.png-f88da0f56d60409fdf0c1889efc99400.s3tc.ctex[39m[0m
+[  89% ] [90m[1msavepack[22m | Almacenando Archivo: res://assets/models/SEPT_JUEGOS_PROTOTIPO_Material_54.png.import[39m[0m
+[  89% ] [90m[1msavepack[22m | Almacenando Archivo: res://.godot/imported/SEPT_JUEGOS_PROTOTIPO_Material_55.png-05ad7afd75ad151fce500264eba79d50.s3tc.ctex[39m[0m
+[  89% ] [90m[1msavepack[22m | Almacenando Archivo: res://assets/models/SEPT_JUEGOS_PROTOTIPO_Material_55.png.import[39m[0m
+[  90% ] [90m[1msavepack[22m | Almacenando Archivo: res://.godot/imported/SEPT_JUEGOS_PROTOTIPO_Material_56.png-e7f1535eece8287c67b59865f554e212.s3tc.ctex[39m[0m
+[  90% ] [90m[1msavepack[22m | Almacenando Archivo: res://assets/models/SEPT_JUEGOS_PROTOTIPO_Material_56.png.import[39m[0m
+[  90% ] [90m[1msavepack[22m | Almacenando Archivo: res://.godot/imported/SEPT_JUEGOS_PROTOTIPO_Material_57.png-0fa7437208f1caec8e96d23b12169b0c.s3tc.ctex[39m[0m
+[  90% ] [90m[1msavepack[22m | Almacenando Archivo: res://assets/models/SEPT_JUEGOS_PROTOTIPO_Material_57.png.import[39m[0m
+[  90% ] [90m[1msavepack[22m | Almacenando Archivo: res://.godot/imported/SEPT_JUEGOS_PROTOTIPO_Material_58.png-96ee091d974f3b445c54d640563f3dda.s3tc.ctex[39m[0m
+[  90% ] [90m[1msavepack[22m | Almacenando Archivo: res://assets/models/SEPT_JUEGOS_PROTOTIPO_Material_58.png.import[39m[0m
+[  90% ] [90m[1msavepack[22m | Almacenando Archivo: res://.godot/imported/SEPT_JUEGOS_PROTOTIPO_Material_59.png-5ac73f61dd9767be0aea3ec035293bfe.s3tc.ctex[39m[0m
+[  90% ] [90m[1msavepack[22m | Almacenando Archivo: res://assets/models/SEPT_JUEGOS_PROTOTIPO_Material_59.png.import[39m[0m
+[  90% ] [90m[1msavepack[22m | Almacenando Archivo: res://.godot/imported/SEPT_JUEGOS_PROTOTIPO_mayonchis@300x.png-16a084669fb83d70ca06be5871f1b9c0.s3tc.ctex[39m[0m
+[  90% ] [90m[1msavepack[22m | Almacenando Archivo: res://assets/models/SEPT_JUEGOS_PROTOTIPO_mayonchis@300x.png.import[39m[0m
+[  91% ] [90m[1msavepack[22m | Almacenando Archivo: res://.godot/imported/SEPT_JUEGOS_PROTOTIPO_normal nuevo.png-7ea18b1d699710b70bf59a25e1253bec.s3tc.ctex[39m[0m
+[  91% ] [90m[1msavepack[22m | Almacenando Archivo: res://assets/models/SEPT_JUEGOS_PROTOTIPO_normal nuevo.png.import[39m[0m
+[  91% ] [90m[1msavepack[22m | Almacenando Archivo: res://.godot/imported/SEPT_JUEGOS_PROTOTIPO_nota baja resolución.png-1a21629b5a85af776ace3307f4a05751.s3tc.ctex[39m[0m
+[  91% ] [90m[1msavepack[22m | Almacenando Archivo: res://assets/models/SEPT_JUEGOS_PROTOTIPO_nota baja resolución.png.import[39m[0m
+[  91% ] [90m[1msavepack[22m | Almacenando Archivo: res://.godot/imported/SEPT_JUEGOS_PROTOTIPO_nota sin texto.png-e3decc161c448f3ea6f418f794c6bcf5.s3tc.ctex[39m[0m
+[  91% ] [90m[1msavepack[22m | Almacenando Archivo: res://assets/models/SEPT_JUEGOS_PROTOTIPO_nota sin texto.png.import[39m[0m
+[  91% ] [90m[1msavepack[22m | Almacenando Archivo: res://.godot/imported/SEPT_JUEGOS_PROTOTIPO_oaaaa completo.png-22b42a7ee0402a96a166653981a4ba33.s3tc.ctex[39m[0m
+[  91% ] [90m[1msavepack[22m | Almacenando Archivo: res://assets/models/SEPT_JUEGOS_PROTOTIPO_oaaaa completo.png.import[39m[0m
+[  91% ] [90m[1msavepack[22m | Almacenando Archivo: res://.godot/imported/SEPT_JUEGOS_PROTOTIPO_oremos.png-3847915e1e63fe5db27dfd22a4092ec7.s3tc.ctex[39m[0m
+[  91% ] [90m[1msavepack[22m | Almacenando Archivo: res://assets/models/SEPT_JUEGOS_PROTOTIPO_oremos.png.import[39m[0m
+[  92% ] [90m[1msavepack[22m | Almacenando Archivo: res://.godot/imported/SEPT_JUEGOS_PROTOTIPO_painted_plaster_wall_diff_1k.jpg-8d0ce084a70700c3113186c9c6b5356c.s3tc.ctex[39m[0m
+[  92% ] [90m[1msavepack[22m | Almacenando Archivo: res://assets/models/SEPT_JUEGOS_PROTOTIPO_painted_plaster_wall_diff_1k.jpg.import[39m[0m
+[  92% ] [90m[1msavepack[22m | Almacenando Archivo: res://.godot/imported/SEPT_JUEGOS_PROTOTIPO_pepito.png-27f8c2213d0c645735ab31b196728ae9.s3tc.ctex[39m[0m
+[  92% ] [90m[1msavepack[22m | Almacenando Archivo: res://assets/models/SEPT_JUEGOS_PROTOTIPO_pepito.png.import[39m[0m
+[  92% ] [90m[1msavepack[22m | Almacenando Archivo: res://.godot/imported/SEPT_JUEGOS_PROTOTIPO_petisas completo.png-db2cedc45c7f8010694d6e6c4358efaa.s3tc.ctex[39m[0m
+[  92% ] [90m[1msavepack[22m | Almacenando Archivo: res://assets/models/SEPT_JUEGOS_PROTOTIPO_petisas completo.png.import[39m[0m
+[  92% ] [90m[1msavepack[22m | Almacenando Archivo: res://.godot/imported/SEPT_JUEGOS_PROTOTIPO_piso_baseColor.png-efb42e38ed770159caa5180302160d28.s3tc.ctex[39m[0m
+[  92% ] [90m[1msavepack[22m | Almacenando Archivo: res://assets/models/SEPT_JUEGOS_PROTOTIPO_piso_baseColor.png.import[39m[0m
+[  92% ] [90m[1msavepack[22m | Almacenando Archivo: res://.godot/imported/SEPT_JUEGOS_PROTOTIPO_placa_acustica_basecolor.png-26759769ad1c0d7acd368906189e74d8.s3tc.ctex[39m[0m
+[  92% ] [90m[1msavepack[22m | Almacenando Archivo: res://assets/models/SEPT_JUEGOS_PROTOTIPO_placa_acustica_basecolor.png.import[39m[0m
+[  93% ] [90m[1msavepack[22m | Almacenando Archivo: res://.godot/imported/SEPT_JUEGOS_PROTOTIPO_porcelana_atlas.png-b589ab4815c26179efdb2e1314b1c6b7.s3tc.ctex[39m[0m
+[  93% ] [90m[1msavepack[22m | Almacenando Archivo: res://assets/models/SEPT_JUEGOS_PROTOTIPO_porcelana_atlas.png.import[39m[0m
+[  93% ] [90m[1msavepack[22m | Almacenando Archivo: res://.godot/imported/SEPT_JUEGOS_PROTOTIPO_progres.png-7ebee7380478f6e9fada5c2886a820ca.s3tc.ctex[39m[0m
+[  93% ] [90m[1msavepack[22m | Almacenando Archivo: res://assets/models/SEPT_JUEGOS_PROTOTIPO_progres.png.import[39m[0m
+[  93% ] [90m[1msavepack[22m | Almacenando Archivo: res://.godot/imported/SEPT_JUEGOS_PROTOTIPO_puchos.png-74e2a8b5f3dfaa943b91aff3f0a149b5.s3tc.ctex[39m[0m
+[  93% ] [90m[1msavepack[22m | Almacenando Archivo: res://assets/models/SEPT_JUEGOS_PROTOTIPO_puchos.png.import[39m[0m
+[  93% ] [90m[1msavepack[22m | Almacenando Archivo: res://.godot/imported/SEPT_JUEGOS_PROTOTIPO_puerta textura.png-b9e06099d1f3bed5e03b1683862da4c2.s3tc.ctex[39m[0m
+[  93% ] [90m[1msavepack[22m | Almacenando Archivo: res://assets/models/SEPT_JUEGOS_PROTOTIPO_puerta textura.png.import[39m[0m
+[  93% ] [90m[1msavepack[22m | Almacenando Archivo: res://.godot/imported/SEPT_JUEGOS_PROTOTIPO_rejilla_bano.png-022ef606087ab1182eada7d6173b0834.s3tc.ctex[39m[0m
+[  93% ] [90m[1msavepack[22m | Almacenando Archivo: res://assets/models/SEPT_JUEGOS_PROTOTIPO_rejilla_bano.png.import[39m[0m
+[  94% ] [90m[1msavepack[22m | Almacenando Archivo: res://.godot/imported/SEPT_JUEGOS_PROTOTIPO_reloj.png-baf3e5c9dbd449a17975312038b08952.s3tc.ctex[39m[0m
+[  94% ] [90m[1msavepack[22m | Almacenando Archivo: res://assets/models/SEPT_JUEGOS_PROTOTIPO_reloj.png.import[39m[0m
+[  94% ] [90m[1msavepack[22m | Almacenando Archivo: res://.godot/imported/SEPT_JUEGOS_PROTOTIPO_saladick.png-b20270d9b4ec15ec3dc33a6858da5974.s3tc.ctex[39m[0m
+[  94% ] [90m[1msavepack[22m | Almacenando Archivo: res://assets/models/SEPT_JUEGOS_PROTOTIPO_saladick.png.import[39m[0m
+[  94% ] [90m[1msavepack[22m | Almacenando Archivo: res://.godot/imported/SEPT_JUEGOS_PROTOTIPO_techo1_baseColor.jpg-693ab209dbe8e5f5d55252376f575118.s3tc.ctex[39m[0m
+[  94% ] [90m[1msavepack[22m | Almacenando Archivo: res://assets/models/SEPT_JUEGOS_PROTOTIPO_techo1_baseColor.jpg.import[39m[0m
+[  94% ] [90m[1msavepack[22m | Almacenando Archivo: res://.godot/imported/SEPT_JUEGOS_PROTOTIPO_Terminator completo.png-e02bf96699446e84c45a0fc793756bcd.s3tc.ctex[39m[0m
+[  94% ] [90m[1msavepack[22m | Almacenando Archivo: res://assets/models/SEPT_JUEGOS_PROTOTIPO_Terminator completo.png.import[39m[0m
+[  94% ] [90m[1msavepack[22m | Almacenando Archivo: res://.godot/imported/SEPT_JUEGOS_PROTOTIPO_texto instrucciones limpieza.png-9911dcd53d18f80ac12bd3636504366b.s3tc.ctex[39m[0m
+[  94% ] [90m[1msavepack[22m | Almacenando Archivo: res://assets/models/SEPT_JUEGOS_PROTOTIPO_texto instrucciones limpieza.png.import[39m[0m
+[  95% ] [90m[1msavepack[22m | Almacenando Archivo: res://.godot/imported/SEPT_JUEGOS_PROTOTIPO_textura balde.png-c4e222c65420a93b91fe38fccf6ebab5.s3tc.ctex[39m[0m
+[  95% ] [90m[1msavepack[22m | Almacenando Archivo: res://assets/models/SEPT_JUEGOS_PROTOTIPO_textura balde.png.import[39m[0m
+[  95% ] [90m[1msavepack[22m | Almacenando Archivo: res://.godot/imported/SEPT_JUEGOS_PROTOTIPO_textura caja.png-aa7d91af1609767f6d46d389defa312c.s3tc.ctex[39m[0m
+[  95% ] [90m[1msavepack[22m | Almacenando Archivo: res://assets/models/SEPT_JUEGOS_PROTOTIPO_textura caja.png.import[39m[0m
+[  95% ] [90m[1msavepack[22m | Almacenando Archivo: res://.godot/imported/SEPT_JUEGOS_PROTOTIPO_textura mopa.png-82353193b76d1b974d49209c5efe9b89.s3tc.ctex[39m[0m
+[  95% ] [90m[1msavepack[22m | Almacenando Archivo: res://assets/models/SEPT_JUEGOS_PROTOTIPO_textura mopa.png.import[39m[0m
+[  95% ] [90m[1msavepack[22m | Almacenando Archivo: res://.godot/imported/SEPT_JUEGOS_PROTOTIPO_textura portón.png-5613118269b52535f50e7647d6eb5884.s3tc.ctex[39m[0m
+[  95% ] [90m[1msavepack[22m | Almacenando Archivo: res://assets/models/SEPT_JUEGOS_PROTOTIPO_textura portón.png.import[39m[0m
+[  95% ] [90m[1msavepack[22m | Almacenando Archivo: res://.godot/imported/SEPT_JUEGOS_PROTOTIPO_textura poético.png-fc31a2941f320b5d47eae72d179f4115.s3tc.ctex[39m[0m
+[  95% ] [90m[1msavepack[22m | Almacenando Archivo: res://assets/models/SEPT_JUEGOS_PROTOTIPO_textura poético.png.import[39m[0m
+[  96% ] [90m[1msavepack[22m | Almacenando Archivo: res://.godot/imported/SEPT_JUEGOS_PROTOTIPO_textura.png-b2e77545f6d1a15f3e70b02286f88231.s3tc.ctex[39m[0m
+[  96% ] [90m[1msavepack[22m | Almacenando Archivo: res://assets/models/SEPT_JUEGOS_PROTOTIPO_textura.png.import[39m[0m
+[  96% ] [90m[1msavepack[22m | Almacenando Archivo: res://.godot/imported/SEPT_JUEGOS_PROTOTIPO_wakasfideos.png-06067157a1966f78df8e2bcbba447778.s3tc.ctex[39m[0m
+[  96% ] [90m[1msavepack[22m | Almacenando Archivo: res://assets/models/SEPT_JUEGOS_PROTOTIPO_wakasfideos.png.import[39m[0m
+[  96% ] [90m[1msavepack[22m | Almacenando Archivo: res://.godot/imported/SEPT_JUEGOS_PROTOTIPO_Wood_02-128x128.png-feac41131048ac300fd3dd501b03bf03.s3tc.ctex[39m[0m
+[  96% ] [90m[1msavepack[22m | Almacenando Archivo: res://assets/models/SEPT_JUEGOS_PROTOTIPO_Wood_02-128x128.png.import[39m[0m
+[  96% ] [90m[1msavepack[22m | Almacenando Archivo: res://.godot/imported/SEPT_JUEGOS_PROTOTIPO_Wood_09-128x128.png-97ea986d73dbd1abe48816f4124e35f8.s3tc.ctex[39m[0m
+[  96% ] [90m[1msavepack[22m | Almacenando Archivo: res://assets/models/SEPT_JUEGOS_PROTOTIPO_Wood_09-128x128.png.import[39m[0m
+[  96% ] [90m[1msavepack[22m | Almacenando Archivo: res://.godot/imported/SEPT_JUEGOS_PROTOTIPO_Wood_10-128x128.png-de72c2eed4110c6c68634059535f501e.s3tc.ctex[39m[0m
+[  96% ] [90m[1msavepack[22m | Almacenando Archivo: res://assets/models/SEPT_JUEGOS_PROTOTIPO_Wood_10-128x128.png.import[39m[0m
+[  97% ] [90m[1msavepack[22m | Almacenando Archivo: res://.godot/imported/SEPT_JUEGOS_PROTOTIPO_Zucarachas completo_1.png-e5179cd52f289380692240a7c34b29db.s3tc.ctex[39m[0m
+[  97% ] [90m[1msavepack[22m | Almacenando Archivo: res://assets/models/SEPT_JUEGOS_PROTOTIPO_Zucarachas completo_1.png.import[39m[0m
+[  97% ] [90m[1msavepack[22m | Almacenando Archivo: res://.godot/exported/133200997/export-231170304a3dcdd34b99dd8ef46476f9-apercibimientos_0.res[39m[0m
+[  97% ] [90m[1msavepack[22m | Almacenando Archivo: res://.godot/exported/133200997/export-3af82bfdc421a3ef279bcd9505c15abf-apercibimientos_1.res[39m[0m
+[  97% ] [90m[1msavepack[22m | Almacenando Archivo: res://.godot/exported/133200997/export-f8952377cd2bd0fee5d13f54a87ca03c-apercibimientos_2.res[39m[0m
+[  97% ] [90m[1msavepack[22m | Almacenando Archivo: res://.godot/exported/133200997/export-9ae008131210f0dc4d1f05c20d215317-apercibimientos_3.res[39m[0m
+[  98% ] [90m[1msavepack[22m | Almacenando Archivo: res://.godot/exported/133200997/export-6b2b0acd3c9899dce705ff580c1e6938-apercibimientos_4.res[39m[0m
+[  98% ] [90m[1msavepack[22m | Almacenando Archivo: res://.godot/exported/133200997/export-9ee45e8e55784bc9995b79da0f2add34-basura_cumplida.res[39m[0m
+[  98% ] [90m[1msavepack[22m | Almacenando Archivo: res://.godot/exported/133200997/export-8714983c2694480bddce3f3e1e70e6fb-basura_pendiente.res[39m[0m
+[  98% ] [90m[1msavepack[22m | Almacenando Archivo: res://.godot/exported/133200997/export-10546827f91545719657b0e36049b579-caja_cumplida.res[39m[0m
+[  98% ] [90m[1msavepack[22m | Almacenando Archivo: res://.godot/exported/133200997/export-3cb9de791e2d8b3727bb2d3de47531a0-caja_pendiente.res[39m[0m
+[  98% ] [90m[1msavepack[22m | Almacenando Archivo: res://default_bus_layout.tres.remap[39m[0m
+[  98% ] [90m[1msavepack[22m | Almacenando Archivo: res://assets/ui/manada/tema.tres.remap[39m[0m
+[  98% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/dominio/investigacion/conversacion_con_el_jefe.tres.remap[39m[0m
+[  98% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/dominio/investigacion/conversacion_con_el_proveedor.tres.remap[39m[0m
+[  98% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/dominio/investigacion/cuaderno.gd.remap[39m[0m
+[  98% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/dominio/investigacion/hallazgos.gd.remap[39m[0m
+[  98% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/dominio/investigacion/mensaje.gd.remap[39m[0m
+[  98% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/dominio/investigacion/nota.gd.remap[39m[0m
+[  98% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/dominio/investigacion/revelacion.gd.remap[39m[0m
+[  98% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/dominio/jornada/apertura.gd.remap[39m[0m
+[  98% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/dominio/jornada/marcador.gd.remap[39m[0m
+[  98% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/dominio/jornada/pausa.gd.remap[39m[0m
+[  98% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/dominio/jornada/reloj_de_mesa.gd.remap[39m[0m
+[  98% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/dominio/jornada/ritmo.gd.remap[39m[0m
+[  98% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/dominio/almacen/atencion.gd.remap[39m[0m
+[  98% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/dominio/almacen/balde.gd.remap[39m[0m
+[  98% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/dominio/almacen/balde.tres.remap[39m[0m
+[  98% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/dominio/almacen/bolsa_de_basura_1.tres.remap[39m[0m
+[  98% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/dominio/almacen/bolsa_de_basura_2.tres.remap[39m[0m
+[  98% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/dominio/almacen/bolsa_de_basura_3.tres.remap[39m[0m
+[  98% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/dominio/almacen/caja_de_fideos.tres.remap[39m[0m
+[  98% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/dominio/almacen/caja_de_reposicion.tres.remap[39m[0m
+[  98% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/dominio/almacen/catalogo.gd.remap[39m[0m
+[  98% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/dominio/almacen/comprador.gd.remap[39m[0m
+[  98% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/dominio/almacen/compradores.gd.remap[39m[0m
+[  98% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/dominio/almacen/contenido_de_la_caja.gd.remap[39m[0m
+[  98% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/dominio/almacen/cuaderno_del_deposito.tres.remap[39m[0m
+[  98% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/dominio/almacen/estante.gd.remap[39m[0m
+[  98% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/dominio/almacen/inventario.gd.remap[39m[0m
+[  98% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/dominio/almacen/jabon_amarillo.tres.remap[39m[0m
+[  98% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/dominio/almacen/jabon_azul.tres.remap[39m[0m
+[  98% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/dominio/almacen/jabon_rosa.tres.remap[39m[0m
+[  98% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/dominio/almacen/lata_de_tomate.tres.remap[39m[0m
+[  98% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/dominio/almacen/reglas_de_la_ventanilla.gd.remap[39m[0m
+[  98% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/dominio/almacen/reglas_de_los_objetos.gd.remap[39m[0m
+[  98% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/dominio/almacen/rescate.gd.remap[39m[0m
+[  98% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/dominio/almacen/tapa_del_contenedor.gd.remap[39m[0m
+[  98% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/dominio/almacen/piso_del_local.gd.remap[39m[0m
+[  98% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/dominio/almacen/producto.gd.remap[39m[0m
+[  98% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/dominio/almacen/puerta.gd.remap[39m[0m
+[  98% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/dominio/almacen/registro_de_ventas.gd.remap[39m[0m
+[  98% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/dominio/almacen/reglas_del_estante.gd.remap[39m[0m
+[  98% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/dominio/almacen/reglas_de_la_basura.gd.remap[39m[0m
+[  98% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/dominio/almacen/reglas_de_la_limpieza.gd.remap[39m[0m
+[  98% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/dominio/almacen/mancha.gd.remap[39m[0m
+[  98% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/dominio/almacen/manos.gd.remap[39m[0m
+[  98% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/dominio/almacen/mopa.gd.remap[39m[0m
+[  98% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/dominio/almacen/mopa.tres.remap[39m[0m
+[  98% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/dominio/almacen/objeto_del_almacen.gd.remap[39m[0m
+[  98% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/dominio/almacen/tarea_de_atender.gd.remap[39m[0m
+[  98% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/dominio/almacen/tarea_de_la_basura.gd.remap[39m[0m
+[  98% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/dominio/almacen/trayecto.gd.remap[39m[0m
+[  98% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/dominio/almacen/unidad_de_producto.gd.remap[39m[0m
+[  98% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/dominio/almacen/uso.gd.remap[39m[0m
+[  98% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/dominio/almacen/venta.gd.remap[39m[0m
+[  98% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/dominio/ambiente/apagado_por_obstaculos.gd.remap[39m[0m
+[  98% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/dominio/ambiente/contador_de_golpes.gd.remap[39m[0m
+[  98% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/dominio/ambiente/eleccion_de_variante.gd.remap[39m[0m
+[  98% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/dominio/ambiente/emisores_del_ambiente.gd.remap[39m[0m
+[  98% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/escenas/puestos/ventanilla.tscn.remap[39m[0m
+[  98% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/dominio/jornada/tarea.gd.remap[39m[0m
+[  98% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/dominio/jornada/turno.gd.remap[39m[0m
+[  98% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/dominio/jugador/cadencia_de_pasos.gd.remap[39m[0m
+[  98% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/dominio/jugador/caminata.gd.remap[39m[0m
+[  98% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/dominio/jugador/campo_de_interaccion.gd.remap[39m[0m
+[  98% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/dominio/jugador/control_del_jugador.gd.remap[39m[0m
+[  98% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/dominio/jugador/foco.gd.remap[39m[0m
+[  98% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/dominio/jugador/mirada.gd.remap[39m[0m
+[  98% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/dominio/jugador/reglas_del_jugador.gd.remap[39m[0m
+[  98% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/dominio/jugador/retorno_de_la_mano.gd.remap[39m[0m
+[  98% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/dominio/jugador/suavizado_del_giro.gd.remap[39m[0m
+[  98% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/dominio/reglas.gd.remap[39m[0m
+[  98% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/escenas/objetos/caja_de_productos.gd.remap[39m[0m
+[  98% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/escenas/objetos/caja_de_productos.tscn.remap[39m[0m
+[  98% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/escenas/objetos/charcos_temporales.gd.remap[39m[0m
+[  98% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/dominio/investigacion/conversacion_con_el_desconocido.tres.remap[39m[0m
+[  98% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/dominio/ambiente/entrada_sonora.gd.remap[39m[0m
+[  98% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/dominio/ambiente/indicacion_del_foco.gd.remap[39m[0m
+[  98% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/dominio/ambiente/ronda_de_voces.gd.remap[39m[0m
+[  98% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/dominio/ambiente/tabla_de_sonidos.gd.remap[39m[0m
+[  98% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/dominio/ambiente/tabla_de_sonidos.tres.remap[39m[0m
+[  98% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/dominio/empleo/catalogo_de_reacciones.gd.remap[39m[0m
+[  98% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/dominio/empleo/consecuencia.gd.remap[39m[0m
+[  98% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/dominio/empleo/espera_de_la_carga.gd.remap[39m[0m
+[  98% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/dominio/empleo/legajo.gd.remap[39m[0m
+[  98% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/dominio/empleo/menu_de_inicio.gd.remap[39m[0m
+[  98% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/dominio/empleo/parte_de_cierre.gd.remap[39m[0m
+[  98% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/dominio/empleo/partida.gd.remap[39m[0m
+[  98% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/dominio/empleo/partida_serializada.gd.remap[39m[0m
+[  98% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/dominio/empleo/politica_de_guardado.gd.remap[39m[0m
+[  98% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/dominio/empleo/reaccion.gd.remap[39m[0m
+[  98% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/dominio/empleo/reglas_de_la_partida.gd.remap[39m[0m
+[  98% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/dominio/investigacion/bandeja.gd.remap[39m[0m
+[  98% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/dominio/investigacion/computadora.gd.remap[39m[0m
+[  98% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/dominio/investigacion/conversacion.gd.remap[39m[0m
+[  98% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/escenas/objetos/fibras_de_la_mopa.gd.remap[39m[0m
+[  98% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/escenas/objetos/gotas_del_balde.gd.remap[39m[0m
+[  98% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/escenas/objetos/grupo_del_piso.gd.remap[39m[0m
+[  98% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/escenas/objetos/mancha_en_el_piso.gd.remap[39m[0m
+[  98% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/escenas/objetos/mancha_en_el_piso.tscn.remap[39m[0m
+[  98% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/escenas/objetos/manija_del_balde.gd.remap[39m[0m
+[  98% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/escenas/objetos/objeto_agarrable.gd.remap[39m[0m
+[  98% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/escenas/objetos/objeto_agarrable.tscn.remap[39m[0m
+[  98% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/escenas/objetos/ondas_del_balde.gd.remap[39m[0m
+[  98% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/escenas/objetos/partes_de_manija.gd.remap[39m[0m
+[  98% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/escenas/objetos/piso_para_agua.gd.remap[39m[0m
+[  98% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/escenas/objetos/raices_de_fibras.gd.remap[39m[0m
+[  98% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/escenas/objetos/superficie_liquida.gd.remap[39m[0m
+[  98% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/escenas/objetos/util_de_limpieza.gd.remap[39m[0m
+[  98% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/escenas/puestos/agua_del_bano.gd.remap[39m[0m
+[  98% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/escenas/puestos/agua_del_bano.tscn.remap[39m[0m
+[  98% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/escenas/puestos/ambiente_del_almacen.tscn.remap[39m[0m
+[  98% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/escenas/puestos/artefacto_del_bano.gd.remap[39m[0m
+[  98% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/escenas/puestos/audio_del_almacen.gd.remap[39m[0m
+[  98% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/escenas/puestos/audio_del_almacen.tscn.remap[39m[0m
+[  98% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/escenas/puestos/contenedor_de_basura.gd.remap[39m[0m
+[  98% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/escenas/puestos/contenido_del_estante.tscn.remap[39m[0m
+[  98% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/escenas/puestos/disposicion_de_la_gondola.gd.remap[39m[0m
+[  98% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/escenas/puestos/disposicion_de_la_gondola.tres.remap[39m[0m
+[  98% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/escenas/puestos/escritorio.gd.remap[39m[0m
+[  98% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/escenas/puestos/interfaz_del_almacen.tscn.remap[39m[0m
+[  98% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/escenas/puestos/limpieza_del_almacen.gd.remap[39m[0m
+[  98% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/escenas/puestos/limpieza_del_almacen.tscn.remap[39m[0m
+[  98% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/escenas/puestos/objetos_del_almacen.tscn.remap[39m[0m
+[  98% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/escenas/puestos/estante.gd.remap[39m[0m
+[  98% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/escenas/puestos/estructura_del_almacen.tscn.remap[39m[0m
+[  98% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/escenas/puestos/exterior_del_almacen.gd.remap[39m[0m
+[  98% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/escenas/puestos/exterior_del_almacen.tscn.remap[39m[0m
+[  98% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/escenas/puestos/guia_del_estante.tscn.remap[39m[0m
+[  98% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/escenas/puestos/reposicion_manual.tscn.remap[39m[0m
+[  98% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/escenas/puestos/servicios_del_almacen.tscn.remap[39m[0m
+[  98% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/escenas/puestos/tapa_del_contenedor.gd.remap[39m[0m
+[  98% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/escenas/puestos/ventanilla.gd.remap[39m[0m
+[  98% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/ui/hud.tscn.remap[39m[0m
+[  98% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/ui/hud.gd.remap[39m[0m
+[  98% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/ui/aristas_del_producto.gd.remap[39m[0m
+[  98% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/escenas/puestos/puerta_del_local.gd.remap[39m[0m
+[  98% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/escenas/puestos/puerta_de_la_heladera.gd.remap[39m[0m
+[  98% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/escenas/puestos/reloj_de_mesa.gd.remap[39m[0m
+[  98% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/escenas/puestos/reloj_de_mesa.tscn.remap[39m[0m
+[  98% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/escenas/puestos/reposicion_manual.gd.remap[39m[0m
+[  98% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/ui/interrupciones/pantalla_de_cierre.tscn.remap[39m[0m
+[  98% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/ui/interrupciones/pantalla_de_cierre.gd.remap[39m[0m
+[  98% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/ui/diegetica/lienzo_de_manada.gd.remap[39m[0m
+[  98% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/ui/diegetica/app_notas.tscn.remap[39m[0m
+[  98% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/ui/diegetica/app_notas.gd.remap[39m[0m
+[  98% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/ui/diegetica/app_chats.tscn.remap[39m[0m
+[  98% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/ui/diegetica/app_chats.gd.remap[39m[0m
+[  98% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/ui/diegetica/app_caja.tscn.remap[39m[0m
+[  98% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/ui/diegetica/app_caja.gd.remap[39m[0m
+[  98% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/sistemas/tareas/ventanilla.gd.remap[39m[0m
+[  98% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/sistemas/tareas/repositor.gd.remap[39m[0m
+[  98% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/sistemas/tareas/recolector_de_basura.gd.remap[39m[0m
+[  98% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/sistemas/tareas/limpiador.gd.remap[39m[0m
+[  98% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/sistemas/marco/reproductor_de_sonidos.gd.remap[39m[0m
+[  98% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/sistemas/marco/reloj_del_turno.gd.remap[39m[0m
+[  98% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/sistemas/marco/red_de_seguridad.gd.remap[39m[0m
+[  98% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/sistemas/marco/pedidos_del_menu.gd.remap[39m[0m
+[  98% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/sistemas/marco/marco_del_objetivo.gd.remap[39m[0m
+[  98% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/sistemas/marco/lugares_del_piso.gd.remap[39m[0m
+[  98% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/sistemas/marco/guardado.gd.remap[39m[0m
+[  98% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/sistemas/marco/enlace_de_guardado.gd.remap[39m[0m
+[  98% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/sistemas/marco/enlace_de_audio.gd.remap[39m[0m
+[  98% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/sistemas/marco/control_de_pausa.gd.remap[39m[0m
+[  98% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/sistemas/marco/ciclo_de_jornadas.gd.remap[39m[0m
+[  98% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/sistemas/marco/carga_en_segundo_plano.gd.remap[39m[0m
+[  98% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/ui/interrupciones/pantalla_de_carga.tscn.remap[39m[0m
+[  98% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/ui/interrupciones/pantalla_de_carga.gd.remap[39m[0m
+[  98% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/ui/interrupciones/menu_de_pausa.tscn.remap[39m[0m
+[  98% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/ui/interrupciones/menu_de_pausa.gd.remap[39m[0m
+[  98% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/ui/diegetica/pantalla_de_computadora.tscn.remap[39m[0m
+[  98% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/ui/diegetica/pantalla_de_computadora.gd.remap[39m[0m
+[  98% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/ui/diegetica/panel_de_la_ventanilla.tscn.remap[39m[0m
+[  98% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/ui/diegetica/panel_de_la_ventanilla.gd.remap[39m[0m
+[  98% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/escenas/jugador.gd.remap[39m[0m
+[  98% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/escenas/almacen.tscn.remap[39m[0m
+[  98% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/escenas/almacen.gd.remap[39m[0m
+[  98% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/escenas/puestos/zona_de_reposicion.gd.remap[39m[0m
+[  98% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/sistemas/marco/calentamiento_de_shaders.gd.remap[39m[0m
+[  98% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/sistemas/marco/agarre.gd.remap[39m[0m
+[  98% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/sistemas/investigacion/examen.gd.remap[39m[0m
+[  98% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/sistemas/investigacion/computadora_de_escritorio.gd.remap[39m[0m
+[  98% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/escenas/menu_de_inicio.tscn.remap[39m[0m
+[  98% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/escenas/menu_de_inicio.gd.remap[39m[0m
+[  98% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/escenas/jugador.tscn.remap[39m[0m
+[  98% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/escenas/puestos/vidrio_del_local.tres.remap[39m[0m
+[  98% ] [90m[1msavepack[22m | Almacenando Archivo: res://assets/reactions/registrar_pendiente.tres.remap[39m[0m
+[  98% ] [90m[1msavepack[22m | Almacenando Archivo: res://assets/reactions/reponer_cumplida.tres.remap[39m[0m
+[  98% ] [90m[1msavepack[22m | Almacenando Archivo: res://assets/reactions/reponer_pendiente.tres.remap[39m[0m
+[  98% ] [90m[1msavepack[22m | Almacenando Archivo: res://assets/reactions/limpiar_cumplida.tres.remap[39m[0m
+[  98% ] [90m[1msavepack[22m | Almacenando Archivo: res://assets/reactions/limpiar_pendiente.tres.remap[39m[0m
+[  98% ] [90m[1msavepack[22m | Almacenando Archivo: res://assets/reactions/registrar_cumplida.tres.remap[39m[0m
+[  98% ] [90m[1msavepack[22m | Almacenando Archivo: res://addons/godot_mcp/commands/analysis_commands.gd.remap[39m[0m
+[  98% ] [90m[1msavepack[22m | Almacenando Archivo: res://addons/godot_mcp/commands/android_commands.gd.remap[39m[0m
+[  98% ] [90m[1msavepack[22m | Almacenando Archivo: res://addons/godot_mcp/commands/animation_commands.gd.remap[39m[0m
+[  98% ] [90m[1msavepack[22m | Almacenando Archivo: res://addons/godot_mcp/commands/animation_tree_commands.gd.remap[39m[0m
+[  98% ] [90m[1msavepack[22m | Almacenando Archivo: res://addons/godot_mcp/commands/audio_commands.gd.remap[39m[0m
+[  98% ] [90m[1msavepack[22m | Almacenando Archivo: res://addons/godot_mcp/commands/base_command.gd.remap[39m[0m
+[  98% ] [90m[1msavepack[22m | Almacenando Archivo: res://addons/godot_mcp/commands/batch_commands.gd.remap[39m[0m
+[  98% ] [90m[1msavepack[22m | Almacenando Archivo: res://addons/godot_mcp/commands/editor_commands.gd.remap[39m[0m
+[  98% ] [90m[1msavepack[22m | Almacenando Archivo: res://addons/godot_mcp/commands/export_commands.gd.remap[39m[0m
+[  98% ] [90m[1msavepack[22m | Almacenando Archivo: res://addons/godot_mcp/commands/headless_commands.gd.remap[39m[0m
+[  98% ] [90m[1msavepack[22m | Almacenando Archivo: res://addons/godot_mcp/commands/input_commands.gd.remap[39m[0m
+[  98% ] [90m[1msavepack[22m | Almacenando Archivo: res://addons/godot_mcp/commands/input_map_commands.gd.remap[39m[0m
+[  98% ] [90m[1msavepack[22m | Almacenando Archivo: res://addons/godot_mcp/commands/navigation_commands.gd.remap[39m[0m
+[  98% ] [90m[1msavepack[22m | Almacenando Archivo: res://addons/godot_mcp/commands/node_commands.gd.remap[39m[0m
+[  98% ] [90m[1msavepack[22m | Almacenando Archivo: res://addons/godot_mcp/commands/particle_commands.gd.remap[39m[0m
+[  98% ] [90m[1msavepack[22m | Almacenando Archivo: res://addons/godot_mcp/commands/physics_commands.gd.remap[39m[0m
+[  98% ] [90m[1msavepack[22m | Almacenando Archivo: res://addons/godot_mcp/commands/profiling_commands.gd.remap[39m[0m
+[  98% ] [90m[1msavepack[22m | Almacenando Archivo: res://addons/godot_mcp/commands/project_commands.gd.remap[39m[0m
+[  98% ] [90m[1msavepack[22m | Almacenando Archivo: res://addons/godot_mcp/commands/resource_commands.gd.remap[39m[0m
+[  98% ] [90m[1msavepack[22m | Almacenando Archivo: res://addons/godot_mcp/commands/runtime_commands.gd.remap[39m[0m
+[  98% ] [90m[1msavepack[22m | Almacenando Archivo: res://addons/godot_mcp/commands/scene_3d_commands.gd.remap[39m[0m
+[  98% ] [90m[1msavepack[22m | Almacenando Archivo: res://addons/godot_mcp/commands/scene_commands.gd.remap[39m[0m
+[  98% ] [90m[1msavepack[22m | Almacenando Archivo: res://addons/godot_mcp/commands/script_commands.gd.remap[39m[0m
+[  98% ] [90m[1msavepack[22m | Almacenando Archivo: res://addons/godot_mcp/commands/shader_commands.gd.remap[39m[0m
+[  98% ] [90m[1msavepack[22m | Almacenando Archivo: res://addons/godot_mcp/commands/test_commands.gd.remap[39m[0m
+[  98% ] [90m[1msavepack[22m | Almacenando Archivo: res://addons/godot_mcp/commands/theme_commands.gd.remap[39m[0m
+[  98% ] [90m[1msavepack[22m | Almacenando Archivo: res://addons/godot_mcp/commands/tilemap_commands.gd.remap[39m[0m
+[  98% ] [90m[1msavepack[22m | Almacenando Archivo: res://addons/godot_mcp/ui/status_panel.gd.remap[39m[0m
+[  98% ] [90m[1msavepack[22m | Almacenando Archivo: res://addons/godot_mcp/ui/status_panel.tscn.remap[39m[0m
+[  98% ] [90m[1msavepack[22m | Almacenando Archivo: res://addons/godot_mcp/utils/node_utils.gd.remap[39m[0m
+[  98% ] [90m[1msavepack[22m | Almacenando Archivo: res://addons/godot_mcp/utils/property_parser.gd.remap[39m[0m
+[  98% ] [90m[1msavepack[22m | Almacenando Archivo: res://addons/godot_mcp/command_router.gd.remap[39m[0m
+[  98% ] [90m[1msavepack[22m | Almacenando Archivo: res://addons/godot_mcp/mcp_game_inspector_service.gd.remap[39m[0m
+[  98% ] [90m[1msavepack[22m | Almacenando Archivo: res://addons/godot_mcp/mcp_input_service.gd.remap[39m[0m
+[  98% ] [90m[1msavepack[22m | Almacenando Archivo: res://addons/godot_mcp/mcp_screenshot_service.gd.remap[39m[0m
+[  98% ] [90m[1msavepack[22m | Almacenando Archivo: res://addons/godot_mcp/plugin.gd.remap[39m[0m
+[  98% ] [90m[1msavepack[22m | Almacenando Archivo: res://addons/godot_mcp/websocket_server.gd.remap[39m[0m
+[  98% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/escenas/puestos/zona_de_descarte.tscn.remap[39m[0m
+[  98% ] [90m[1msavepack[22m | Almacenando Archivo: res://src/escenas/puestos/zona_de_descarte.gd.remap[39m[0m
+[  98% ] [90m[1msavepack[22m | Almacenando Archivo: res://assets/models/caja_colision.tres.remap[39m[0m
+[  98% ] [90m[1msavepack[22m | Almacenando Archivo: res://assets/models/extraer_mallas.gd.remap[39m[0m
+[  98% ] [90m[1msavepack[22m | Almacenando Archivo: res://assets/models/generar_miniaturas.gd.remap[39m[0m
+[  98% ] [90m[1msavepack[22m | Almacenando Archivo: res://assets/models/importar_modelo.gd.remap[39m[0m
+[  98% ] [90m[1msavepack[22m | Almacenando Archivo: res://assets/reactions/apercibimientos_0.tres.remap[39m[0m
+[  98% ] [90m[1msavepack[22m | Almacenando Archivo: res://assets/reactions/apercibimientos_1.tres.remap[39m[0m
+[  98% ] [90m[1msavepack[22m | Almacenando Archivo: res://assets/reactions/apercibimientos_2.tres.remap[39m[0m
+[  98% ] [90m[1msavepack[22m | Almacenando Archivo: res://assets/reactions/apercibimientos_3.tres.remap[39m[0m
+[  98% ] [90m[1msavepack[22m | Almacenando Archivo: res://assets/reactions/apercibimientos_4.tres.remap[39m[0m
+[  98% ] [90m[1msavepack[22m | Almacenando Archivo: res://assets/reactions/basura_cumplida.tres.remap[39m[0m
+[  98% ] [90m[1msavepack[22m | Almacenando Archivo: res://assets/reactions/basura_pendiente.tres.remap[39m[0m
+[  98% ] [90m[1msavepack[22m | Almacenando Archivo: res://assets/reactions/caja_cumplida.tres.remap[39m[0m
+[  98% ] [90m[1msavepack[22m | Almacenando Archivo: res://assets/reactions/caja_pendiente.tres.remap[39m[0m
+[  98% ] [90m[1msavepack[22m | Almacenando Archivo: res://.godot/global_script_class_cache.cfg[39m[0m
+[  98% ] [90m[1msavepack[22m | Almacenando Archivo: res://icon.svg[39m[0m
+[  98% ] [90m[1msavepack[22m | Almacenando Archivo: res://.godot/uid_cache.bin[39m[0m
+[  98% ] [90m[1msavepack[22m | Almacenando Archivo: res://project.binary[39m[0m
+[92m[ DONE ][39m [1msavepack[22m
+[0m
+[MCP] WebSocket client stopped
+[MCP] Godot MCP Pro stopped
+Plantilla verificada: D:\Usuarios\fede\Documentos\Catedra Videojuegos FADU\manada\repo\nosefia\.claude\worktrees\batch-64-309-c\build\templates\web_release.zip
+Motor de la exportación verificado: C:\Users\fede_\AppData\Local\Temp\nosefia-batch-64-309\c-mediciones-f17948fe\propuesta\web
+el directorio exportado pesa 94.0 MB y el techo son 90: algo se está publicando que no es el juego.
+
+1 motivo para no publicar esto. El código de salida del export no los ve: devuelve 0 igual.
+cach� de ventanilla retirada antes de importar: fondo_ventanilla.png-6926cd22557a29a89908c5bf810fa9b2.ctex
+cach� de ventanilla retirada antes de importar: fondo_ventanilla.png-6926cd22557a29a89908c5bf810fa9b2.md5
+{"index.pck": {"bytes": 59368340, "sha256": "76eb02711402e3f6fbb9deaa76d133f0b180d8e220c098c91b7d17ecfce8faf7"}, "index.wasm": {"bytes": 38850612, "sha256": "1708110fe8bdd7b7894fe4dcb175c2c28cc242b06f51924e71fc5c9a5c83dbf0"}, "index.js": {"bytes": 320319, "sha256": "0919abc3567464f80131ebf28f4187beebeadb41b56e78f18b58e102bbd88483"}}
+Traceback (most recent call last):
+  File "C:\Users\fede_\orca\workspaces\nosefia\darter\.claude\scratch\batch-64-309\c_export.py", line 66, in <module>
+    run([sys.executable,str(work/'.claude/scripts/verificar_export.py'),str(web)])
+    ~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\fede_\orca\workspaces\nosefia\darter\.claude\scratch\batch-64-309\c_export.py", line 10, in run
+    subprocess.run(args, cwd=cwd, check=True)
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\fede_\AppData\Local\Programs\Python\Python313\Lib\subprocess.py", line 577, in run
+    raise CalledProcessError(retcode, process.args,
+                             output=stdout, stderr=stderr)
+subprocess.CalledProcessError: Command '['C:\\Users\\fede_\\AppData\\Local\\Programs\\Python\\Python313\\python.exe', 'D:\\Usuarios\\fede\\Documentos\\Catedra Videojuegos FADU\\manada\\repo\\nosefia\\.claude\\worktrees\\batch-64-309-c\\.claude\\scripts\\verificar_export.py', 'C:\\Users\\fede_\\AppData\\Local\\Temp\\nosefia-batch-64-309\\c-mediciones-f17948fe\\propuesta\\web']' returned non-zero exit status 1.

@@ -1,0 +1,376 @@
+{
+  "base": "444d05db",
+  "pre_fix_base": "f17948fe",
+  "preset_sha256": "1bfab823c2f7051b3091bec6b73508ef7a8a7a0ad43942bae1aa4a0fe46fa4b9",
+  "excluded_files_preserved": {
+    "assets/ui/manada/fondo.png": {
+      "sha256": "1b175ea3aa2cda48f82126c6c2d966b4860df701a4512e794156ad489bcee3c8",
+      "import_sha256": "f52f706c687f24d75f9436bd1c743d58b6a68ff87cce674138f41e09c0d87d9a"
+    },
+    "assets/models/SEPT_JUEGOS_PROTOTIPO_techo1_baseColor.jpg": {
+      "sha256": "baad8be9b401ac04b8d20dd5dc98dbfbe24093a8bf99c1bd83dc4be037dea67f",
+      "import_sha256": "1d4f873b1b642dd4fafa3d599ba6dd5c73784624111050b2b86fa13654ce245f"
+    },
+    "assets/models/SEPT_JUEGOS_PROTOTIPO_cielorraso_sin_luces.png": {
+      "sha256": "53e2bb20aafb1a656eea651098baca2238eed2248d93a6b7178ee69cbe0fe9fe",
+      "import_sha256": "1cb71888c8644e49699d1f4341a4e727331e3e0e9b75b81d4668a0b210d53f88"
+    },
+    "assets/models/SEPT_JUEGOS_PROTOTIPO_painted_plaster_wall_diff_1k.jpg": {
+      "sha256": "440310f05af089f2c93353167573403cbc3f805948203237b5d26431eeb9e19c",
+      "import_sha256": "9a8742a5107ff8c2b9b13c9c3cdfc86cf3409d18605a77ab027695132d4a289f"
+    },
+    "assets/models/SEPT_JUEGOS_PROTOTIPO_piso_baseColor.png": {
+      "sha256": "4d099accb6310dfc55f40341952cc4d30b744f07859a1b8e3e19eb0e069c94a1",
+      "import_sha256": "c2d21301906f37f03a9625bd8b87fb6c14f9c308989b6b20f07eed17f3df07b3"
+    },
+    "assets/models/SEPT_JUEGOS_PROTOTIPO_textura mopa.png": {
+      "sha256": "4103712cee331c36bebe2ebac14a4b393990c6cee3583444b231ae961fc7649a",
+      "import_sha256": "10e3411572aeff95a43a0b80ef9b7169b4e3108365d92807ae2b69c6ee3a3b63"
+    },
+    "assets/models/SEPT_JUEGOS_PROTOTIPO_textura balde.png": {
+      "sha256": "ec9de30553cef2b8219a8c3d77db6f230785872964b9e319e08a966a7004cb28",
+      "import_sha256": "6f02af644c97639552ae045a1f8ea63effeb28c307bacf5baa0fc19128b695ed"
+    }
+  },
+  "comparisons": {
+    "fix_base": {
+      "removed": [
+        {
+          "path": ".godot/imported/fondo.png-f2de541a97e697ea2b481714829d8efc.ctex",
+          "bytes": 1561850,
+          "md5": "cac5e40e639b08fcea9f03014451206d",
+          "flags": 0
+        },
+        {
+          "path": ".godot/imported/SEPT_JUEGOS_PROTOTIPO_piso_baseColor.png-efb42e38ed770159caa5180302160d28.s3tc.ctex",
+          "bytes": 699116,
+          "md5": "2d165d0def4f91df67cfed9795487a52",
+          "flags": 0
+        },
+        {
+          "path": ".godot/imported/SEPT_JUEGOS_PROTOTIPO_textura balde.png-c4e222c65420a93b91fe38fccf6ebab5.s3tc.ctex",
+          "bytes": 699116,
+          "md5": "fda7015d379f558dcd3b937350138eac",
+          "flags": 0
+        },
+        {
+          "path": ".godot/imported/SEPT_JUEGOS_PROTOTIPO_painted_plaster_wall_diff_1k.jpg-8d0ce084a70700c3113186c9c6b5356c.s3tc.ctex",
+          "bytes": 699116,
+          "md5": "5843591eb824d8d3fdc436e2579d7670",
+          "flags": 0
+        },
+        {
+          "path": ".godot/imported/SEPT_JUEGOS_PROTOTIPO_textura mopa.png-82353193b76d1b974d49209c5efe9b89.s3tc.ctex",
+          "bytes": 699116,
+          "md5": "2396bfd7528b01169a7bd9b4df259126",
+          "flags": 0
+        },
+        {
+          "path": ".godot/imported/SEPT_JUEGOS_PROTOTIPO_cielorraso_sin_luces.png-b82fdb7f3b81453422744c88e3d8d2ca.s3tc.ctex",
+          "bytes": 699116,
+          "md5": "50c0c188a7c414e88614d774c4405b17",
+          "flags": 0
+        },
+        {
+          "path": ".godot/imported/SEPT_JUEGOS_PROTOTIPO_techo1_baseColor.jpg-693ab209dbe8e5f5d55252376f575118.s3tc.ctex",
+          "bytes": 699116,
+          "md5": "fbc1233a13738a312cd1cf05dfe1c0e1",
+          "flags": 0
+        },
+        {
+          "path": "assets/models/SEPT_JUEGOS_PROTOTIPO_painted_plaster_wall_diff_1k.jpg.import",
+          "bytes": 349,
+          "md5": "b5dfee53273661c61d46936535afccea",
+          "flags": 0
+        },
+        {
+          "path": "assets/models/SEPT_JUEGOS_PROTOTIPO_cielorraso_sin_luces.png.import",
+          "bytes": 342,
+          "md5": "b293e326aac2d1d068ffd61010e95c89",
+          "flags": 0
+        },
+        {
+          "path": "assets/models/SEPT_JUEGOS_PROTOTIPO_techo1_baseColor.jpg.import",
+          "bytes": 338,
+          "md5": "473733a2d1aab9164b0b9eff47af8ac3",
+          "flags": 0
+        },
+        {
+          "path": "assets/models/SEPT_JUEGOS_PROTOTIPO_piso_baseColor.png.import",
+          "bytes": 336,
+          "md5": "41796657a232c3de04256913eb2c5a82",
+          "flags": 0
+        },
+        {
+          "path": "assets/models/SEPT_JUEGOS_PROTOTIPO_textura balde.png.import",
+          "bytes": 335,
+          "md5": "47b79b7efe454c8f8052bed6058843e0",
+          "flags": 0
+        },
+        {
+          "path": "assets/models/SEPT_JUEGOS_PROTOTIPO_textura mopa.png.import",
+          "bytes": 334,
+          "md5": "b2d14058127aaf79d343b497686fa0d6",
+          "flags": 0
+        },
+        {
+          "path": "assets/ui/manada/fondo.png.import",
+          "bytes": 194,
+          "md5": "5059ecb93a086171f5ef7c6ee3215583",
+          "flags": 0
+        }
+      ],
+      "added": [],
+      "modified": [
+        {
+          "path": ".godot/exported/133200997/export-3323b02c48410db7117ab2e325a55959-status_panel.scn",
+          "before": {
+            "path": ".godot/exported/133200997/export-3323b02c48410db7117ab2e325a55959-status_panel.scn",
+            "bytes": 781,
+            "md5": "e2b596c88d061ec919327c375ad0e73d",
+            "flags": 0
+          },
+          "after": {
+            "path": ".godot/exported/133200997/export-3323b02c48410db7117ab2e325a55959-status_panel.scn",
+            "bytes": 781,
+            "md5": "23ef3da60f126d85b67e3724875ab540",
+            "flags": 0
+          },
+          "semantic_check": {
+            "field": "_bundled.node_ids[0]",
+            "before": [
+              1959958784
+            ],
+            "after": [
+              1309253593
+            ],
+            "all_other_bytes_identical": true,
+            "source_has_authored_unique_id": false
+          }
+        },
+        {
+          "path": ".godot/global_script_class_cache.cfg",
+          "before": {
+            "path": ".godot/global_script_class_cache.cfg",
+            "bytes": 19440,
+            "md5": "48630d4b5e3f1ab1e3754a44e24c9482",
+            "flags": 0
+          },
+          "after": {
+            "path": ".godot/global_script_class_cache.cfg",
+            "bytes": 19440,
+            "md5": "44aed7acfe93e9f4226298aaa45d9607",
+            "flags": 0
+          },
+          "semantic_check": "mismos106 mapeos de clases; cambia únicamente orden"
+        },
+        {
+          "path": ".godot/uid_cache.bin",
+          "before": {
+            "path": ".godot/uid_cache.bin",
+            "bytes": 24866,
+            "md5": "2a2eb9a5d23bcaa4745baa8153c91b39",
+            "flags": 0
+          },
+          "after": {
+            "path": ".godot/uid_cache.bin",
+            "bytes": 24371,
+            "md5": "ca50a750ceb23e72b46321df61bcfaf9",
+            "flags": 0
+          },
+          "semantic_check": "414→407: sólo siete mappings UID de recursos excluidos, sin otros cambios"
+        }
+      ],
+      "pck_delta_bytes": -5761024
+    },
+    "fix_candidate": {
+      "removed": [
+        {
+          "path": ".godot/imported/fondo.png-f2de541a97e697ea2b481714829d8efc.ctex",
+          "bytes": 1561850,
+          "md5": "cac5e40e639b08fcea9f03014451206d",
+          "flags": 0
+        },
+        {
+          "path": ".godot/imported/SEPT_JUEGOS_PROTOTIPO_piso_baseColor.png-efb42e38ed770159caa5180302160d28.s3tc.ctex",
+          "bytes": 699116,
+          "md5": "2d165d0def4f91df67cfed9795487a52",
+          "flags": 0
+        },
+        {
+          "path": ".godot/imported/SEPT_JUEGOS_PROTOTIPO_textura balde.png-c4e222c65420a93b91fe38fccf6ebab5.s3tc.ctex",
+          "bytes": 699116,
+          "md5": "fda7015d379f558dcd3b937350138eac",
+          "flags": 0
+        },
+        {
+          "path": ".godot/imported/SEPT_JUEGOS_PROTOTIPO_painted_plaster_wall_diff_1k.jpg-8d0ce084a70700c3113186c9c6b5356c.s3tc.ctex",
+          "bytes": 699116,
+          "md5": "5843591eb824d8d3fdc436e2579d7670",
+          "flags": 0
+        },
+        {
+          "path": ".godot/imported/SEPT_JUEGOS_PROTOTIPO_textura mopa.png-82353193b76d1b974d49209c5efe9b89.s3tc.ctex",
+          "bytes": 699116,
+          "md5": "2396bfd7528b01169a7bd9b4df259126",
+          "flags": 0
+        },
+        {
+          "path": ".godot/imported/SEPT_JUEGOS_PROTOTIPO_cielorraso_sin_luces.png-b82fdb7f3b81453422744c88e3d8d2ca.s3tc.ctex",
+          "bytes": 699116,
+          "md5": "50c0c188a7c414e88614d774c4405b17",
+          "flags": 0
+        },
+        {
+          "path": ".godot/imported/SEPT_JUEGOS_PROTOTIPO_techo1_baseColor.jpg-693ab209dbe8e5f5d55252376f575118.s3tc.ctex",
+          "bytes": 699116,
+          "md5": "fbc1233a13738a312cd1cf05dfe1c0e1",
+          "flags": 0
+        },
+        {
+          "path": "assets/models/SEPT_JUEGOS_PROTOTIPO_painted_plaster_wall_diff_1k.jpg.import",
+          "bytes": 349,
+          "md5": "b5dfee53273661c61d46936535afccea",
+          "flags": 0
+        },
+        {
+          "path": "assets/models/SEPT_JUEGOS_PROTOTIPO_cielorraso_sin_luces.png.import",
+          "bytes": 342,
+          "md5": "b293e326aac2d1d068ffd61010e95c89",
+          "flags": 0
+        },
+        {
+          "path": "assets/models/SEPT_JUEGOS_PROTOTIPO_techo1_baseColor.jpg.import",
+          "bytes": 338,
+          "md5": "473733a2d1aab9164b0b9eff47af8ac3",
+          "flags": 0
+        },
+        {
+          "path": "assets/models/SEPT_JUEGOS_PROTOTIPO_piso_baseColor.png.import",
+          "bytes": 336,
+          "md5": "41796657a232c3de04256913eb2c5a82",
+          "flags": 0
+        },
+        {
+          "path": "assets/models/SEPT_JUEGOS_PROTOTIPO_textura balde.png.import",
+          "bytes": 335,
+          "md5": "47b79b7efe454c8f8052bed6058843e0",
+          "flags": 0
+        },
+        {
+          "path": "assets/models/SEPT_JUEGOS_PROTOTIPO_textura mopa.png.import",
+          "bytes": 334,
+          "md5": "b2d14058127aaf79d343b497686fa0d6",
+          "flags": 0
+        },
+        {
+          "path": "assets/ui/manada/fondo.png.import",
+          "bytes": 194,
+          "md5": "5059ecb93a086171f5ef7c6ee3215583",
+          "flags": 0
+        }
+      ],
+      "added": [],
+      "modified": [
+        {
+          "path": ".godot/exported/133200997/export-3323b02c48410db7117ab2e325a55959-status_panel.scn",
+          "before": {
+            "path": ".godot/exported/133200997/export-3323b02c48410db7117ab2e325a55959-status_panel.scn",
+            "bytes": 781,
+            "md5": "e2b596c88d061ec919327c375ad0e73d",
+            "flags": 0
+          },
+          "after": {
+            "path": ".godot/exported/133200997/export-3323b02c48410db7117ab2e325a55959-status_panel.scn",
+            "bytes": 781,
+            "md5": "23ef3da60f126d85b67e3724875ab540",
+            "flags": 0
+          },
+          "semantic_check": {
+            "field": "_bundled.node_ids[0]",
+            "before": [
+              1959958784
+            ],
+            "after": [
+              1309253593
+            ],
+            "all_other_bytes_identical": true,
+            "source_has_authored_unique_id": false
+          }
+        },
+        {
+          "path": ".godot/global_script_class_cache.cfg",
+          "before": {
+            "path": ".godot/global_script_class_cache.cfg",
+            "bytes": 19440,
+            "md5": "48630d4b5e3f1ab1e3754a44e24c9482",
+            "flags": 0
+          },
+          "after": {
+            "path": ".godot/global_script_class_cache.cfg",
+            "bytes": 19440,
+            "md5": "44aed7acfe93e9f4226298aaa45d9607",
+            "flags": 0
+          },
+          "semantic_check": "mismos106 mapeos de clases; cambia únicamente orden"
+        },
+        {
+          "path": ".godot/uid_cache.bin",
+          "before": {
+            "path": ".godot/uid_cache.bin",
+            "bytes": 24866,
+            "md5": "2a2eb9a5d23bcaa4745baa8153c91b39",
+            "flags": 0
+          },
+          "after": {
+            "path": ".godot/uid_cache.bin",
+            "bytes": 24371,
+            "md5": "ca50a750ceb23e72b46321df61bcfaf9",
+            "flags": 0
+          },
+          "semantic_check": "414→407: sólo siete mappings UID de recursos excluidos, sin otros cambios"
+        }
+      ],
+      "pck_delta_bytes": -5761024
+    },
+    "compression_same_preset": {
+      "removed": [
+        {
+          "path": ".godot/imported/fondo_ventanilla.png-6926cd22557a29a89908c5bf810fa9b2.ctex",
+          "bytes": 822428,
+          "md5": "0ece0aab9c95c1bf30bf441a2917f59d",
+          "flags": 0
+        }
+      ],
+      "added": [
+        {
+          "path": ".godot/imported/fondo_ventanilla.png-6926cd22557a29a89908c5bf810fa9b2.s3tc.ctex",
+          "bytes": 1036852,
+          "md5": "3c97900a01f3419cf05e4aa55c6ee990",
+          "flags": 0
+        }
+      ],
+      "modified": [
+        {
+          "path": "assets/ui/manada/fondo_ventanilla.png.import",
+          "before": {
+            "path": "assets/ui/manada/fondo_ventanilla.png.import",
+            "bytes": 205,
+            "md5": "700c667d61da58bf97e49180be8eb199",
+            "flags": 0
+          },
+          "after": {
+            "path": "assets/ui/manada/fondo_ventanilla.png.import",
+            "bytes": 249,
+            "md5": "c647327cc724bc5fe8b3f4eb92ee342a",
+            "flags": 0
+          }
+        }
+      ],
+      "pck_delta_bytes": 214484
+    }
+  },
+  "all_other_pck_resources_identical": true,
+  "metadata_semantically_verified": true,
+  "status_panel_generated_id_source": "https://raw.githubusercontent.com/godotengine/godot/master/scene/resources/packed_scene.cpp"
+}

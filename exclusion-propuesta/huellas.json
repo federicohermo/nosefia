@@ -1,0 +1,21 @@
+{
+  "index.pck": {
+    "bytes": 53607316,
+    "sha256": "0890c534c248a23f1d0556e2509f4f57f2fde98dcb6a3345e825413688d4d9a3"
+  },
+  "index.wasm": {
+    "bytes": 38850612,
+    "sha256": "1708110fe8bdd7b7894fe4dcb175c2c28cc242b06f51924e71fc5c9a5c83dbf0"
+  },
+  "index.js": {
+    "bytes": 320319,
+    "sha256": "0919abc3567464f80131ebf28f4187beebeadb41b56e78f18b58e102bbd88483"
+  },
+  "source": {
+    "base": "444d05db",
+    "geometry": "f17948fe",
+    "candidate_head": "c8990685dc3a9aa0608b7ae0640f90327cadeef8",
+    "preset_sha256": "0272eb9683cec5190808e7564242ca29ed8008b58a383465cc892ad9d5e85504",
+    "ventanilla_png_sha256": "191c1ee6d6652b14542aebe1de5611e10aee0aeb86449ab94f12e95a213dd9ce"
+  }
+}

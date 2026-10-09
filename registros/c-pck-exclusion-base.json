@@ -1,0 +1,5937 @@
+{
+  "file": "C:\\Users\\fede_\\AppData\\Local\\Temp\\nosefia-batch-64-309\\c-mediciones-f17948fe\\exclusion-base\\web\\index.pck",
+  "bytes": 53392832,
+  "count": 948,
+  "top": [
+    {
+      "path": ".godot/imported/almacen.exr-2ec568f98401c7d9014a6fe268109d57.bptc.ctexarray",
+      "bytes": 3145956,
+      "md5": "8affea2ca7bb08da01c2a27e3b6b8352",
+      "flags": 0
+    },
+    {
+      "path": ".godot/imported/estacion_panoramica_gemini.jpg-75cbdeda76b820f75a4510635434c41e.s3tc.ctex",
+      "bytes": 2796124,
+      "md5": "a4f9ef1a13877bb1a8ff81f6cae04e2e",
+      "flags": 0
+    },
+    {
+      "path": ".godot/imported/MUS_Tema1.ogg-6572d84d9d7b09a718243291eaef69b6.oggvorbisstr",
+      "bytes": 2715690,
+      "md5": "49da412346ecaada347c9cb16526273f",
+      "flags": 0
+    },
+    {
+      "path": ".godot/imported/SEPT_JUEGOS_PROTOTIPO.glb-afefb34b67ea7f5ddf02551ba2ec6504.scn",
+      "bytes": 1970926,
+      "md5": "871d37c857c8c2b78fe38585932e6c18",
+      "flags": 0
+    },
+    {
+      "path": ".godot/imported/SEPT_JUEGOS_PROTOTIPO_bano_ivory_oscuro_normal.png-b1cdf96cec589ca54e461aea5ce1c01e.s3tc.ctex",
+      "bytes": 1398180,
+      "md5": "907bd7de2d0db8665abf5ffb75f7bb37",
+      "flags": 0
+    },
+    {
+      "path": ".godot/imported/fondo_inicio.png-caeeae01aa7c0933705058ccdaf27bc9.ctex",
+      "bytes": 1291960,
+      "md5": "8ab78e0b292896de96fdf1ca1f2707c8",
+      "flags": 0
+    },
+    {
+      "path": ".godot/imported/canopy_without_lamp.png-f6a9ce01e86b19cec9f93aa2f61c77bf.s3tc.ctex",
+      "bytes": 1053676,
+      "md5": "040c8de8f121e7018bea77c0703b5ade",
+      "flags": 0
+    },
+    {
+      "path": ".godot/imported/estacion_fondo_sin_objetos.png-ea641f7b3ce66f1bd69569bfa0995490.s3tc.ctex",
+      "bytes": 1053564,
+      "md5": "e9118ee4cc1bf87df929a491c766b4e4",
+      "flags": 0
+    },
+    {
+      "path": ".godot/imported/vidrio_marcas.png-45c71ed4505971f4184a21ab7f0aa666.s3tc.ctex",
+      "bytes": 1053036,
+      "md5": "6a747694a785196b133c8af41ea76f29",
+      "flags": 0
+    },
+    {
+      "path": ".godot/imported/fondo_ventanilla.png-6926cd22557a29a89908c5bf810fa9b2.ctex",
+      "bytes": 822428,
+      "md5": "0ece0aab9c95c1bf30bf441a2917f59d",
+      "flags": 0
+    },
+    {
+      "path": ".godot/imported/SEPT_JUEGOS_PROTOTIPO_Bricks066_1K-JPG_Color.jpg-b8d8c2d02d5e334fcd5a886522cb2a6e.s3tc.ctex",
+      "bytes": 699116,
+      "md5": "32fe0f304b44fa1abcd525b2d79be1da",
+      "flags": 0
+    },
+    {
+      "path": ".godot/imported/SEPT_JUEGOS_PROTOTIPO_bano_ivory_oscuro_color.png-282ff635e1559d0fd5cb983147c08bab.s3tc.ctex",
+      "bytes": 699116,
+      "md5": "80b89dccb8cb2f4395f138582bd3eabe",
+      "flags": 0
+    },
+    {
+      "path": ".godot/imported/SEPT_JUEGOS_PROTOTIPO_bano_ivory_oscuro_orm.png-7986019fdb92ce8b08cfe30cd58805fb.s3tc.ctex",
+      "bytes": 699116,
+      "md5": "ae130264d8ef7bc2b3335f50a28fbecf",
+      "flags": 0
+    },
+    {
+      "path": ".godot/imported/SEPT_JUEGOS_PROTOTIPO_caja luz exterior.png-1e4d5cab1215368feec99d846dce37df.s3tc.ctex",
+      "bytes": 699116,
+      "md5": "eed87e4c83d22961aa0803a1432d3aca",
+      "flags": 0
+    },
+    {
+      "path": ".godot/imported/SEPT_JUEGOS_PROTOTIPO_caja luz interior.png-dd4dff25a855d61c1088ce34d76b9df0.s3tc.ctex",
+      "bytes": 699116,
+      "md5": "de93edf338ba7e72cda0488f90cd3e4e",
+      "flags": 0
+    },
+    {
+      "path": ".godot/imported/SEPT_JUEGOS_PROTOTIPO_caja.png-da41b129827ed76cb358606ed7a7f148.s3tc.ctex",
+      "bytes": 699116,
+      "md5": "78eb83a42ea3c77158dd63a7a2647db7",
+      "flags": 0
+    },
+    {
+      "path": ".godot/imported/SEPT_JUEGOS_PROTOTIPO_cielorraso_placas.png-d421cc7c796fc85542a0ff6b092fad9e.s3tc.ctex",
+      "bytes": 699116,
+      "md5": "595cd9e1ea9470228d757757da4e8de1",
+      "flags": 0
+    },
+    {
+      "path": ".godot/imported/SEPT_JUEGOS_PROTOTIPO_compu normals.png-b5a6b49a7e63da793ef2c6c310335dce.s3tc.ctex",
+      "bytes": 699116,
+      "md5": "c1f66d036e7d52e5c90306f6059aa202",
+      "flags": 0
+    },
+    {
+      "path": ".godot/imported/SEPT_JUEGOS_PROTOTIPO_corrugated_iron_02_diff_1k.jpg-c6e4c9ece5d91b2a09a6775aec167810.s3tc.ctex",
+      "bytes": 699116,
+      "md5": "a56440343d7a0474d7c249c4407fc3e0",
+      "flags": 0
+    },
+    {
+      "path": ".godot/imported/SEPT_JUEGOS_PROTOTIPO_deposito_concreto_color.png-ad23432a5a1ed9ed46ced927218d5b51.s3tc.ctex",
+      "bytes": 699116,
+      "md5": "fa5eaad034aacd7cf8ad065123afd5ee",
+      "flags": 0
+    },
+    {
+      "path": ".godot/imported/SEPT_JUEGOS_PROTOTIPO_gondola_panel_blanca_1024_basecolor.png-64184928ddd6a358bcb54e2fce8543a7.s3tc.ctex",
+      "bytes": 699116,
+      "md5": "56de709b1ac427b227a689ebfb0ef190",
+      "flags": 0
+    },
+    {
+      "path": ".godot/imported/SEPT_JUEGOS_PROTOTIPO_interior_tiles_diff_1k.jpg-fd28efcf497f41e2602283ee1da41ec3.s3tc.ctex",
+      "bytes": 699116,
+      "md5": "adf13437ebf79d859e717b175ae6710d",
+      "flags": 0
+    },
+    {
+      "path": ".godot/imported/SEPT_JUEGOS_PROTOTIPO_normal nuevo.png-7ea18b1d699710b70bf59a25e1253bec.s3tc.ctex",
+      "bytes": 699116,
+      "md5": "1ac645a876922b6333876559ec22f62b",
+      "flags": 0
+    },
+    {
+      "path": ".godot/imported/SEPT_JUEGOS_PROTOTIPO_nota sin texto.png-e3decc161c448f3ea6f418f794c6bcf5.s3tc.ctex",
+      "bytes": 699116,
+      "md5": "e87a664a59f1f79dbdce0c4b3aec5bdb",
+      "flags": 0
+    },
+    {
+      "path": ".godot/imported/SEPT_JUEGOS_PROTOTIPO_placa_acustica_basecolor.png-26759769ad1c0d7acd368906189e74d8.s3tc.ctex",
+      "bytes": 699116,
+      "md5": "996c199df08e96bad68b352d692b72e4",
+      "flags": 0
+    },
+    {
+      "path": ".godot/imported/SEPT_JUEGOS_PROTOTIPO_reloj.png-baf3e5c9dbd449a17975312038b08952.s3tc.ctex",
+      "bytes": 699116,
+      "md5": "558c021bc0b4cd4e8044e7620266a868",
+      "flags": 0
+    },
+    {
+      "path": ".godot/imported/SEPT_JUEGOS_PROTOTIPO_textura caja.png-aa7d91af1609767f6d46d389defa312c.s3tc.ctex",
+      "bytes": 699116,
+      "md5": "8d184bb17f9457f27237726f23d87b2c",
+      "flags": 0
+    },
+    {
+      "path": ".godot/imported/SEPT_JUEGOS_PROTOTIPO_textura po\u00e9tico.png-fc31a2941f320b5d47eae72d179f4115.s3tc.ctex",
+      "bytes": 699116,
+      "md5": "815a9cf37ef0cdc63162fd01993652c6",
+      "flags": 0
+    },
+    {
+      "path": ".godot/imported/SEPT_JUEGOS_PROTOTIPO_Gu\u00eda de jabones y manchas copy.png-b755c8b45d7da019f17d5844368ac0e9.s3tc.ctex",
+      "bytes": 524364,
+      "md5": "c6060ba9c2b9eaea49e75dbd7733fc73",
+      "flags": 0
+    },
+    {
+      "path": ".godot/imported/SEPT_JUEGOS_PROTOTIPO_texto instrucciones limpieza.png-9911dcd53d18f80ac12bd3636504366b.s3tc.ctex",
+      "bytes": 524364,
+      "md5": "88dc8c49384cb34bd2122769c44c74e2",
+      "flags": 0
+    },
+    {
+      "path": ".godot/imported/SEPT_JUEGOS_PROTOTIPO_textura port\u00f3n.png-5613118269b52535f50e7647d6eb5884.s3tc.ctex",
+      "bytes": 524364,
+      "md5": "b9a2b2a9dabc5a434cb7281a444ca328",
+      "flags": 0
+    },
+    {
+      "path": "src/escenas/almacen.lmbake",
+      "bytes": 473316,
+      "md5": "41d4856a8e30698fea61aeafed9e756c",
+      "flags": 0
+    },
+    {
+      "path": ".godot/imported/SEPT_JUEGOS_PROTOTIPO_puerta textura.png-b9e06099d1f3bed5e03b1683862da4c2.s3tc.ctex",
+      "bytes": 467916,
+      "md5": "bf5aaebe0ba11ae1ff3e86aa5e1f4366",
+      "flags": 0
+    },
+    {
+      "path": ".godot/imported/SEPT_JUEGOS_PROTOTIPO_textura.png-b2e77545f6d1a15f3e70b02286f88231.s3tc.ctex",
+      "bytes": 467916,
+      "md5": "98062d58b897a88a73047bf5c3abe783",
+      "flags": 0
+    },
+    {
+      "path": ".godot/imported/SEPT_JUEGOS_PROTOTIPO_Material.png-1a16dc7d3466dd783ed26cc2c0410cdd.s3tc.ctex",
+      "bytes": 349636,
+      "md5": "3554d048f1c0008717b53201cb64f5a4",
+      "flags": 0
+    },
+    {
+      "path": ".godot/imported/SEPT_JUEGOS_PROTOTIPO_Material_56.png-e7f1535eece8287c67b59865f554e212.s3tc.ctex",
+      "bytes": 349636,
+      "md5": "3554d048f1c0008717b53201cb64f5a4",
+      "flags": 0
+    },
+    {
+      "path": ".godot/imported/SEPT_JUEGOS_PROTOTIPO_Material_57.png-0fa7437208f1caec8e96d23b12169b0c.s3tc.ctex",
+      "bytes": 349636,
+      "md5": "3554d048f1c0008717b53201cb64f5a4",
+      "flags": 0
+    },
+    {
+      "path": ".godot/imported/SEPT_JUEGOS_PROTOTIPO_Material_59.png-5ac73f61dd9767be0aea3ec035293bfe.s3tc.ctex",
+      "bytes": 349636,
+      "md5": "3554d048f1c0008717b53201cb64f5a4",
+      "flags": 0
+    },
+    {
+      "path": ".godot/imported/SEPT_JUEGOS_PROTOTIPO_Bricks066_1K-JPG_NormalGL.jpg-b450a220ce2d03b9ab6b1e35c7a56e20.s3tc.ctex",
+      "bytes": 349604,
+      "md5": "af4b4d3e22a3d5294262a2de41abec5e",
+      "flags": 0
+    },
+    {
+      "path": ".godot/imported/SEPT_JUEGOS_PROTOTIPO_corrugated_iron_02_nor_gl_1k.png-7c2f760b49afc136e5e348ac1e757a89.s3tc.ctex",
+      "bytes": 349604,
+      "md5": "6271644a51d6e6cd4283fb7d53dfa346",
+      "flags": 0
+    }
+  ],
+  "entries": [
+    {
+      "path": ".godot/exported/133200997/export-00ecd0d0e3eb9daac60d9cfc343ec727-panel_de_la_ventanilla.scn",
+      "bytes": 5004,
+      "md5": "ada4b16845fd39ec84f868bd68e35215",
+      "flags": 0
+    },
+    {
+      "path": ".godot/exported/133200997/export-0727d10855e794257040301699395780-balde.res",
+      "bytes": 766,
+      "md5": "f473290be963f14727073138498a512d",
+      "flags": 0
+    },
+    {
+      "path": ".godot/exported/133200997/export-1008796a490f9212832ae7b205c84c4e-caja_de_reposicion.res",
+      "bytes": 794,
+      "md5": "d1984e3f1c2e9366e5224c8374d5a336",
+      "flags": 0
+    },
+    {
+      "path": ".godot/exported/133200997/export-10546827f91545719657b0e36049b579-caja_cumplida.res",
+      "bytes": 414,
+      "md5": "5237583eb28c93f81ef3567912fdcc7a",
+      "flags": 0
+    },
+    {
+      "path": ".godot/exported/133200997/export-10a62aaea67fee28cfa36415e7eed296-objetos_del_almacen.scn",
+      "bytes": 12586,
+      "md5": "b40de28d1035f8847864b6d2193092cb",
+      "flags": 0
+    },
+    {
+      "path": ".godot/exported/133200997/export-11d4ce0dfb38f7ae483bf5b6fdedf10a-bolsa_de_basura_1.res",
+      "bytes": 771,
+      "md5": "42add684a5357298e7c4ffb04e885d63",
+      "flags": 0
+    },
+    {
+      "path": ".godot/exported/133200997/export-12a57c3c15513cc38e8856510c7fe13e-reloj_de_mesa.scn",
+      "bytes": 841,
+      "md5": "41189063920ca469c066c1a361273c58",
+      "flags": 0
+    },
+    {
+      "path": ".godot/exported/133200997/export-15c01d873eac40238aa4d5f16b6e05a3-caja_de_fideos.res",
+      "bytes": 773,
+      "md5": "82b148884241fe223ddaec19bcd910a1",
+      "flags": 0
+    },
+    {
+      "path": ".godot/exported/133200997/export-1673dcb41f4e64d89c782096343bc33b-agua_del_bano.scn",
+      "bytes": 6106,
+      "md5": "66ce653e1cdcc9c880b490e40c9e8919",
+      "flags": 0
+    },
+    {
+      "path": ".godot/exported/133200997/export-19246414aa9fb561ced4b8dce477acec-default_bus_layout.res",
+      "bytes": 1102,
+      "md5": "fe8368af97281b3c3f488b187fd550a8",
+      "flags": 0
+    },
+    {
+      "path": ".godot/exported/133200997/export-1d431d5f9459864d32289bd401df7717-hud.scn",
+      "bytes": 1870,
+      "md5": "be92e043865ba79c4b145203512dd4d1",
+      "flags": 0
+    },
+    {
+      "path": ".godot/exported/133200997/export-231170304a3dcdd34b99dd8ef46476f9-apercibimientos_0.res",
+      "bytes": 420,
+      "md5": "373f830a71264a2092ccfd5501c21f20",
+      "flags": 0
+    },
+    {
+      "path": ".godot/exported/133200997/export-233ab4f172adf228a6b160f5de5c93c6-jabon_azul.res",
+      "bytes": 749,
+      "md5": "bcd684d1fc065f8aecf4516118777bae",
+      "flags": 0
+    },
+    {
+      "path": ".godot/exported/133200997/export-27fc848033598dbcdb2d866a76be5e82-reponer_cumplida.res",
+      "bytes": 435,
+      "md5": "a97c4c2ca8f583aebd904f2a0af53f5b",
+      "flags": 0
+    },
+    {
+      "path": ".godot/exported/133200997/export-297c38fac6fe1ed2c9a45ec198f37985-estructura_del_almacen.scn",
+      "bytes": 70400,
+      "md5": "910c7ad7522173c5ec8aae91b96e46f9",
+      "flags": 0
+    },
+    {
+      "path": ".godot/exported/133200997/export-2bcff81eb653f0ad173da9f8c57ead68-audio_del_almacen.scn",
+      "bytes": 2523,
+      "md5": "267f4b7ecd77dda78a72e29b03aab7f9",
+      "flags": 0
+    },
+    {
+      "path": ".godot/exported/133200997/export-328fa39286140b243350c12fe468098f-registrar_pendiente.res",
+      "bytes": 430,
+      "md5": "2e3e73ce61c254ff4eca050cb48d04d3",
+      "flags": 0
+    },
+    {
+      "path": ".godot/exported/133200997/export-3323b02c48410db7117ab2e325a55959-status_panel.scn",
+      "bytes": 781,
+      "md5": "23ef3da60f126d85b67e3724875ab540",
+      "flags": 0
+    },
+    {
+      "path": ".godot/exported/133200997/export-35472d6d1c579828b1e78c7a007a13e6-limpiar_cumplida.res",
+      "bytes": 430,
+      "md5": "a4707d286bb675b3cc9dcbfebd691ab0",
+      "flags": 0
+    },
+    {
+      "path": ".godot/exported/133200997/export-3af82bfdc421a3ef279bcd9505c15abf-apercibimientos_1.res",
+      "bytes": 445,
+      "md5": "3b6a4dff4a61f65c2d7152afcf3f2367",
+      "flags": 0
+    },
+    {
+      "path": ".godot/exported/133200997/export-3cb9de791e2d8b3727bb2d3de47531a0-caja_pendiente.res",
+      "bytes": 405,
+      "md5": "f42ca41abb1bfad634d24a66532a9659",
+      "flags": 0
+    },
+    {
+      "path": ".godot/exported/133200997/export-4508ea6b038b61314f1bd803830af8f9-caja_colision.res",
+      "bytes": 317,
+      "md5": "615f0ee024ce0698af07352a7bc73e0c",
+      "flags": 0
+    },
+    {
+      "path": ".godot/exported/133200997/export-45f1b7a96afe064f951c187946554b82-caja_de_productos.scn",
+      "bytes": 1453,
+      "md5": "bdd248421c17bc4d63a908b25f136663",
+      "flags": 0
+    },
+    {
+      "path": ".godot/exported/133200997/export-4ce891b533114ceff099b9926cff3c1a-pantalla_de_computadora.scn",
+      "bytes": 3420,
+      "md5": "bb7b3b0ea95461e22caf96801617930f",
+      "flags": 0
+    },
+    {
+      "path": ".godot/exported/133200997/export-56120b91674358979904afad8309259a-tabla_de_sonidos.res",
+      "bytes": 12692,
+      "md5": "cc67955740d46b6b7e7ce85eadd369cf",
+      "flags": 0
+    },
+    {
+      "path": ".godot/exported/133200997/export-5a1d4ef03ab0284b9de7623bf7ff9f17-pantalla_de_carga.scn",
+      "bytes": 2768,
+      "md5": "b0b7a7d1a33717834584ab51ff01acd1",
+      "flags": 0
+    },
+    {
+      "path": ".godot/exported/133200997/export-5b1247d8fadb756c6cfb74aa30546ace-tema.res",
+      "bytes": 8127,
+      "md5": "4fb05d858b618234de0bf930541edd6b",
+      "flags": 0
+    },
+    {
+      "path": ".godot/exported/133200997/export-5b514cab54f263480de7d1f6f9e20568-ambiente_del_almacen.scn",
+      "bytes": 8672,
+      "md5": "ef1483b926c015bb458aecfb5f393039",
+      "flags": 0
+    },
+    {
+      "path": ".godot/exported/133200997/export-60c1343f85c7e9158f3bd037300d4c24-guia_del_estante.scn",
+      "bytes": 6456,
+      "md5": "0ad13fdd5b9c709a26ca91a9f768791c",
+      "flags": 0
+    },
+    {
+      "path": ".godot/exported/133200997/export-63933c0d4421b45cc7b5c9fd7dde30b3-servicios_del_almacen.scn",
+      "bytes": 1954,
+      "md5": "5be92ed25b9006ee72eed29d6cd1e4aa",
+      "flags": 0
+    },
+    {
+      "path": ".godot/exported/133200997/export-6b2b0acd3c9899dce705ff580c1e6938-apercibimientos_4.res",
+      "bytes": 439,
+      "md5": "8fe928cc488d9c945036b49ab95b3137",
+      "flags": 0
+    },
+    {
+      "path": ".godot/exported/133200997/export-6fdfa65eabfc915a320e732416119706-menu_de_pausa.scn",
+      "bytes": 2804,
+      "md5": "63704940ca1fae0d4d577114a6669e21",
+      "flags": 0
+    },
+    {
+      "path": ".godot/exported/133200997/export-70b835fd0f7dd2f8ef1b8c7d41cdb78f-menu_de_inicio.scn",
+      "bytes": 3074,
+      "md5": "b99167b9f3bdc124bed828af97e857e7",
+      "flags": 0
+    },
+    {
+      "path": ".godot/exported/133200997/export-7b760db1d3bb45301403f30986ce3fe7-conversacion_con_el_desconocido.res",
+      "bytes": 1064,
+      "md5": "e409cf3cb1e5bf00e82c7178da7a49d5",
+      "flags": 0
+    },
+    {
+      "path": ".godot/exported/133200997/export-8714983c2694480bddce3f3e1e70e6fb-basura_pendiente.res",
+      "bytes": 417,
+      "md5": "297d3ff7491bcf9e422e8bb51f18f593",
+      "flags": 0
+    },
+    {
+      "path": ".godot/exported/133200997/export-8ed05288e6d0df2e7519c38f29dc70ce-lata_de_tomate.res",
+      "bytes": 797,
+      "md5": "188e1054d95f803a118ac66a6a07f663",
+      "flags": 0
+    },
+    {
+      "path": ".godot/exported/133200997/export-925fc3dcf4e1c3edc539b1bf4b3bc501-conversacion_con_el_proveedor.res",
+      "bytes": 1130,
+      "md5": "d21878471951fab18545ffefe6122cbb",
+      "flags": 0
+    },
+    {
+      "path": ".godot/exported/133200997/export-9ac046bcc1acf2c45d4bedb4f03c0986-limpiar_pendiente.res",
+      "bytes": 424,
+      "md5": "7f12d26ceb12625e1fa47d7a16a03cd1",
+      "flags": 0
+    },
+    {
+      "path": ".godot/exported/133200997/export-9ae008131210f0dc4d1f05c20d215317-apercibimientos_3.res",
+      "bytes": 446,
+      "md5": "de2bb2c6bf0ce5e801c42f311f949c8e",
+      "flags": 0
+    },
+    {
+      "path": ".godot/exported/133200997/export-9ee45e8e55784bc9995b79da0f2add34-basura_cumplida.res",
+      "bytes": 430,
+      "md5": "cfc9d6a3cd7bd176b1f3ff28f8af0c38",
+      "flags": 0
+    },
+    {
+      "path": ".godot/exported/133200997/export-a06cb684852af90c781c8379ebe4694a-bolsa_de_basura_2.res",
+      "bytes": 775,
+      "md5": "031e7826591b119d25f48a4b16237ff5",
+      "flags": 0
+    },
+    {
+      "path": ".godot/exported/133200997/export-a74861534adbebd34eb50a319c443c17-vidrio_del_local.res",
+      "bytes": 737,
+      "md5": "1c1812d3fbfe27fb83ca389844c3c1da",
+      "flags": 0
+    },
+    {
+      "path": ".godot/exported/133200997/export-a8d0fd1fc173f332c7f6e2f8b7cf607b-jabon_rosa.res",
+      "bytes": 738,
+      "md5": "c19fd355a8ff8d2d141c023d081dd4ac",
+      "flags": 0
+    },
+    {
+      "path": ".godot/exported/133200997/export-aa14b111e5b25f9cabe2cb8f94d9fb5b-zona_de_descarte.scn",
+      "bytes": 1048,
+      "md5": "8abbdd586da3a164d0569f6d8dc47cee",
+      "flags": 0
+    },
+    {
+      "path": ".godot/exported/133200997/export-ae6f7c2306c20c88b2fd431413ba7f58-objeto_agarrable.scn",
+      "bytes": 1449,
+      "md5": "40565291a9f64fa9edc6ea74d3277794",
+      "flags": 0
+    },
+    {
+      "path": ".godot/exported/133200997/export-aee5cec691d48ff045421cafae8ab91e-cuaderno_del_deposito.res",
+      "bytes": 808,
+      "md5": "5bb7804ec0de706378b96557bdc12127",
+      "flags": 0
+    },
+    {
+      "path": ".godot/exported/133200997/export-bc024200358def2c7ce1110250618418-registrar_cumplida.res",
+      "bytes": 434,
+      "md5": "c8d25fb4cfb9f4f79c99e5ad954d3a7a",
+      "flags": 0
+    },
+    {
+      "path": ".godot/exported/133200997/export-bcb79274c18a46fd77a810cf068059fe-almacen.scn",
+      "bytes": 38642,
+      "md5": "e60dfa92defffe9cb90e155553b55453",
+      "flags": 0
+    },
+    {
+      "path": ".godot/exported/133200997/export-bfcf07f4350df79f89142d47103ab223-app_chats.scn",
+      "bytes": 1386,
+      "md5": "a923ebe2f877ec001dfad853ee337c7b",
+      "flags": 0
+    },
+    {
+      "path": ".godot/exported/133200997/export-c2528c4a3eb6bf25fef54ed7102af165-jugador.scn",
+      "bytes": 3722,
+      "md5": "171b3310c84447c9672e373e7f7cb487",
+      "flags": 0
+    },
+    {
+      "path": ".godot/exported/133200997/export-c6a6b8e2ef137069d085175714f56774-app_caja.scn",
+      "bytes": 3301,
+      "md5": "1cf5b6b922d92b6411ff4f72680291e3",
+      "flags": 0
+    },
+    {
+      "path": ".godot/exported/133200997/export-c8109e70311423732a2bbfc65de1b1a5-exterior_del_almacen.scn",
+      "bytes": 709,
+      "md5": "bd7d0e0de4840fd219a630455dc449e4",
+      "flags": 0
+    },
+    {
+      "path": ".godot/exported/133200997/export-ca9e8c025a5e0146884368252a04c443-reposicion_manual.scn",
+      "bytes": 961,
+      "md5": "28b01aedd485916eac4919f0265998c8",
+      "flags": 0
+    },
+    {
+      "path": ".godot/exported/133200997/export-ce2b24e4396f38f64b8ab8892836b2ca-interfaz_del_almacen.scn",
+      "bytes": 1751,
+      "md5": "c6f70147d1a7a8d4e18cc616055ea6f1",
+      "flags": 0
+    },
+    {
+      "path": ".godot/exported/133200997/export-d4a8c37fdaffb511b14ba5ca8a0b6b99-mancha_en_el_piso.scn",
+      "bytes": 4583,
+      "md5": "034d4e36bcc705b49ea0d35aad2e1fa5",
+      "flags": 0
+    },
+    {
+      "path": ".godot/exported/133200997/export-d59fd1365a2181e4dfc04c6c27988f66-contenido_del_estante.scn",
+      "bytes": 7190,
+      "md5": "5ab6ba57bec772b2ddcc8bfb07c482e2",
+      "flags": 0
+    },
+    {
+      "path": ".godot/exported/133200997/export-d9e5b05580e536e96e8ed58346f50448-conversacion_con_el_jefe.res",
+      "bytes": 1087,
+      "md5": "16441e64afa9709ea084b7643cab65a3",
+      "flags": 0
+    },
+    {
+      "path": ".godot/exported/133200997/export-da90d1a450cccc3525df06985f50f959-app_notas.scn",
+      "bytes": 3527,
+      "md5": "dca4a97574a04720638c143a4fc2367d",
+      "flags": 0
+    },
+    {
+      "path": ".godot/exported/133200997/export-de8ad3a57523f892e380d7f44e26a064-mopa.res",
+      "bytes": 762,
+      "md5": "0f5da5fae9477595ec78062041e64fbe",
+      "flags": 0
+    },
+    {
+      "path": ".godot/exported/133200997/export-dfa67762e06d00aaec8e574621649c83-pantalla_de_cierre.scn",
+      "bytes": 2389,
+      "md5": "3e9acf9789a59d9e77514844ec4d148f",
+      "flags": 0
+    },
+    {
+      "path": ".godot/exported/133200997/export-dfc6cc3782be9d4a283835fd4555f226-bolsa_de_basura_3.res",
+      "bytes": 798,
+      "md5": "f66f7f3f554281531c900e89a1e9c780",
+      "flags": 0
+    },
+    {
+      "path": ".godot/exported/133200997/export-e4ef47f9a0d1095577fa08b1b48634fd-ventanilla.scn",
+      "bytes": 1385,
+      "md5": "99f7fd543a2a9739d11b175c026747f2",
+      "flags": 0
+    },
+    {
+      "path": ".godot/exported/133200997/export-ec618217b2c283d203d5e54541390f44-disposicion_de_la_gondola.res",
+      "bytes": 31229,
+      "md5": "2c3d1378c43da3a5cbc00af96c4a1a9c",
+      "flags": 0
+    },
+    {
+      "path": ".godot/exported/133200997/export-eec15de7b52cd897f4d6042f38e50526-jabon_amarillo.res",
+      "bytes": 755,
+      "md5": "6c57aee4e677871e7e3e72c47822085f",
+      "flags": 0
+    },
+    {
+      "path": ".godot/exported/133200997/export-f293d924660acba99f91795969428351-reponer_pendiente.res",
+      "bytes": 427,
+      "md5": "e80987c52e1f801e4ae8b8b395911d1b",
+      "flags": 0
+    },
+    {
+      "path": ".godot/exported/133200997/export-f8952377cd2bd0fee5d13f54a87ca03c-apercibimientos_2.res",
+      "bytes": 455,
+      "md5": "35dbb4b5e159333d5da988c9558380b7",
+      "flags": 0
+    },
+    {
+      "path": ".godot/exported/133200997/export-ff912a721c3ddedee430b5648f49aee1-limpieza_del_almacen.scn",
+      "bytes": 1842,
+      "md5": "5feb49060bd6cab7697d632dc92f14df",
+      "flags": 0
+    },
+    {
+      "path": ".godot/global_script_class_cache.cfg",
+      "bytes": 19440,
+      "md5": "44aed7acfe93e9f4226298aaa45d9607",
+      "flags": 0
+    },
+    {
+      "path": ".godot/imported/AMB_PROXIMIDAD_Neon.ogg-8133b38e22480de0ff22e90e85fe498f.oggvorbisstr",
+      "bytes": 235850,
+      "md5": "d1112704466a682e92b4d252a08d5e5f",
+      "flags": 0
+    },
+    {
+      "path": ".godot/imported/MUS_Tema1.ogg-6572d84d9d7b09a718243291eaef69b6.oggvorbisstr",
+      "bytes": 2715690,
+      "md5": "49da412346ecaada347c9cb16526273f",
+      "flags": 0
+    },
+    {
+      "path": ".godot/imported/SEPT_JUEGOS_PROTOTIPO.glb-afefb34b67ea7f5ddf02551ba2ec6504.scn",
+      "bytes": 1970926,
+      "md5": "871d37c857c8c2b78fe38585932e6c18",
+      "flags": 0
+    },
+    {
+      "path": ".godot/imported/SEPT_JUEGOS_PROTOTIPO_Actroncito completo.png-34e04df94a958416d8fc0ffbeded8b46.s3tc.ctex",
+      "bytes": 185988,
+      "md5": "672b64a465bb324b91b8d113bd289c2d",
+      "flags": 0
+    },
+    {
+      "path": ".godot/imported/SEPT_JUEGOS_PROTOTIPO_Bricks066_1K-JPG_Color.jpg-b8d8c2d02d5e334fcd5a886522cb2a6e.s3tc.ctex",
+      "bytes": 699116,
+      "md5": "32fe0f304b44fa1abcd525b2d79be1da",
+      "flags": 0
+    },
+    {
+      "path": ".godot/imported/SEPT_JUEGOS_PROTOTIPO_Bricks066_1K-JPG_NormalGL.jpg-b450a220ce2d03b9ab6b1e35c7a56e20.s3tc.ctex",
+      "bytes": 349604,
+      "md5": "af4b4d3e22a3d5294262a2de41abec5e",
+      "flags": 0
+    },
+    {
+      "path": ".godot/imported/SEPT_JUEGOS_PROTOTIPO_Bricks066_1K-JPG_Roughness.png-64f539609dda2a2d507fd1a18501d657.s3tc.ctex",
+      "bytes": 174828,
+      "md5": "9694cdbe3230d094546470f265a25ad5",
+      "flags": 0
+    },
+    {
+      "path": ".godot/imported/SEPT_JUEGOS_PROTOTIPO_Burbaloo completo_1.png-531833c34f883c2c03f65b284abec6fa.s3tc.ctex",
+      "bytes": 257124,
+      "md5": "3b2fb215fde7239a5d3eb47c332db7b5",
+      "flags": 0
+    },
+    {
+      "path": ".godot/imported/SEPT_JUEGOS_PROTOTIPO_Don Saturados completo.png-1999b6616907b5eae18252403ddcd3e7.s3tc.ctex",
+      "bytes": 207812,
+      "md5": "712d0da23f22e0a64fec319ed83b31c0",
+      "flags": 0
+    },
+    {
+      "path": ".godot/imported/SEPT_JUEGOS_PROTOTIPO_Durextra completo_1.png-1fb81fbca3bc1b93f763574b02850ce4.s3tc.ctex",
+      "bytes": 255076,
+      "md5": "9814e98a9e957e59c40e1b533fe56e31",
+      "flags": 0
+    },
+    {
+      "path": ".godot/imported/SEPT_JUEGOS_PROTOTIPO_Gu\u00eda de jabones y manchas copy.png-b755c8b45d7da019f17d5844368ac0e9.s3tc.ctex",
+      "bytes": 524364,
+      "md5": "c6060ba9c2b9eaea49e75dbd7733fc73",
+      "flags": 0
+    },
+    {
+      "path": ".godot/imported/SEPT_JUEGOS_PROTOTIPO_LIMPIEZA ETIQUETA (1).png-989d98cd76e79a7e903fd1dd311d01df.s3tc.ctex",
+      "bytes": 146604,
+      "md5": "8c2030df2a05383798443db71bc0bdc9",
+      "flags": 0
+    },
+    {
+      "path": ".godot/imported/SEPT_JUEGOS_PROTOTIPO_LIMPIEZA ETIQUETA (2).png-ebbb25c6ad1a24097664bdbffbaf1868.s3tc.ctex",
+      "bytes": 146604,
+      "md5": "7ed6e697bf8e291b7f1641f4b7b09c83",
+      "flags": 0
+    },
+    {
+      "path": ".godot/imported/SEPT_JUEGOS_PROTOTIPO_LIMPIEZA ETIQUETA (3).png-21469d724b15837bb2f78741d7810460.s3tc.ctex",
+      "bytes": 293156,
+      "md5": "d6b7981d597da159176b7e5eb24f965c",
+      "flags": 0
+    },
+    {
+      "path": ".godot/imported/SEPT_JUEGOS_PROTOTIPO_Lay\u00b4snt\u00b4t completo_1.png-cc782202514a0290de2dfa1f5a6718cc.s3tc.ctex",
+      "bytes": 249444,
+      "md5": "cb09f84ef98826ffd095be125b1a954e",
+      "flags": 0
+    },
+    {
+      "path": ".godot/imported/SEPT_JUEGOS_PROTOTIPO_Material.png-1a16dc7d3466dd783ed26cc2c0410cdd.s3tc.ctex",
+      "bytes": 349636,
+      "md5": "3554d048f1c0008717b53201cb64f5a4",
+      "flags": 0
+    },
+    {
+      "path": ".godot/imported/SEPT_JUEGOS_PROTOTIPO_Material_54.png-f88da0f56d60409fdf0c1889efc99400.s3tc.ctex",
+      "bytes": 21956,
+      "md5": "f83f901f4c9465cd11bdf40e2b74c20f",
+      "flags": 0
+    },
+    {
+      "path": ".godot/imported/SEPT_JUEGOS_PROTOTIPO_Material_55.png-05ad7afd75ad151fce500264eba79d50.s3tc.ctex",
+      "bytes": 10988,
+      "md5": "0f93cbd9eef1938b3847184bdeac6b99",
+      "flags": 0
+    },
+    {
+      "path": ".godot/imported/SEPT_JUEGOS_PROTOTIPO_Material_56.png-e7f1535eece8287c67b59865f554e212.s3tc.ctex",
+      "bytes": 349636,
+      "md5": "3554d048f1c0008717b53201cb64f5a4",
+      "flags": 0
+    },
+    {
+      "path": ".godot/imported/SEPT_JUEGOS_PROTOTIPO_Material_57.png-0fa7437208f1caec8e96d23b12169b0c.s3tc.ctex",
+      "bytes": 349636,
+      "md5": "3554d048f1c0008717b53201cb64f5a4",
+      "flags": 0
+    },
+    {
+      "path": ".godot/imported/SEPT_JUEGOS_PROTOTIPO_Material_58.png-96ee091d974f3b445c54d640563f3dda.s3tc.ctex",
+      "bytes": 10988,
+      "md5": "0f93cbd9eef1938b3847184bdeac6b99",
+      "flags": 0
+    },
+    {
+      "path": ".godot/imported/SEPT_JUEGOS_PROTOTIPO_Material_59.png-5ac73f61dd9767be0aea3ec035293bfe.s3tc.ctex",
+      "bytes": 349636,
+      "md5": "3554d048f1c0008717b53201cb64f5a4",
+      "flags": 0
+    },
+    {
+      "path": ".godot/imported/SEPT_JUEGOS_PROTOTIPO_Material_6.png-e2a7c500614d753ec20d144821364de1.s3tc.ctex",
+      "bytes": 10988,
+      "md5": "0f93cbd9eef1938b3847184bdeac6b99",
+      "flags": 0
+    },
+    {
+      "path": ".godot/imported/SEPT_JUEGOS_PROTOTIPO_Terminator completo.png-e02bf96699446e84c45a0fc793756bcd.s3tc.ctex",
+      "bytes": 305956,
+      "md5": "faa247c6cb1c658c7c13107616d26213",
+      "flags": 0
+    },
+    {
+      "path": ".godot/imported/SEPT_JUEGOS_PROTOTIPO_Wood_02-128x128.png-feac41131048ac300fd3dd501b03bf03.s3tc.ctex",
+      "bytes": 10988,
+      "md5": "0db1e02127597bba136f6894f282ed15",
+      "flags": 0
+    },
+    {
+      "path": ".godot/imported/SEPT_JUEGOS_PROTOTIPO_Wood_09-128x128.png-97ea986d73dbd1abe48816f4124e35f8.s3tc.ctex",
+      "bytes": 10988,
+      "md5": "a76b3c988b076fe20136d0f0c9487481",
+      "flags": 0
+    },
+    {
+      "path": ".godot/imported/SEPT_JUEGOS_PROTOTIPO_Wood_10-128x128.png-de72c2eed4110c6c68634059535f501e.s3tc.ctex",
+      "bytes": 10988,
+      "md5": "200c724e8b94ab24bd53ed190716a4ff",
+      "flags": 0
+    },
+    {
+      "path": ".godot/imported/SEPT_JUEGOS_PROTOTIPO_Zucarachas completo_1.png-e5179cd52f289380692240a7c34b29db.s3tc.ctex",
+      "bytes": 279012,
+      "md5": "919ad224f15791ffae12b3ed7e9bb4c7",
+      "flags": 0
+    },
+    {
+      "path": ".godot/imported/SEPT_JUEGOS_PROTOTIPO_amargadito completo.png-476ab7846eeb555d9bdd5e2d5b9b3d1f.s3tc.ctex",
+      "bytes": 338852,
+      "md5": "7ae49066492e13ecca9d60eb4c98ccd8",
+      "flags": 0
+    },
+    {
+      "path": ".godot/imported/SEPT_JUEGOS_PROTOTIPO_arvecor.png-c85963554ec13a423747556bc325003d.s3tc.ctex",
+      "bytes": 174828,
+      "md5": "75c71e2928997a34786454dca8b3772b",
+      "flags": 0
+    },
+    {
+      "path": ".godot/imported/SEPT_JUEGOS_PROTOTIPO_atun marranos.png-88961b93e3dd8206718be37a8bbbd684.s3tc.ctex",
+      "bytes": 174828,
+      "md5": "e5fe1cd6b23cc6b76cc467cf925db566",
+      "flags": 0
+    },
+    {
+      "path": ".godot/imported/SEPT_JUEGOS_PROTOTIPO_bano_ivory_oscuro_color.png-282ff635e1559d0fd5cb983147c08bab.s3tc.ctex",
+      "bytes": 699116,
+      "md5": "80b89dccb8cb2f4395f138582bd3eabe",
+      "flags": 0
+    },
+    {
+      "path": ".godot/imported/SEPT_JUEGOS_PROTOTIPO_bano_ivory_oscuro_normal.png-b1cdf96cec589ca54e461aea5ce1c01e.s3tc.ctex",
+      "bytes": 1398180,
+      "md5": "907bd7de2d0db8665abf5ffb75f7bb37",
+      "flags": 0
+    },
+    {
+      "path": ".godot/imported/SEPT_JUEGOS_PROTOTIPO_bano_ivory_oscuro_orm.png-7986019fdb92ce8b08cfe30cd58805fb.s3tc.ctex",
+      "bytes": 699116,
+      "md5": "ae130264d8ef7bc2b3335f50a28fbecf",
+      "flags": 0
+    },
+    {
+      "path": ".godot/imported/SEPT_JUEGOS_PROTOTIPO_bano_piso_gris.png-5b48ab6bac512f88a68b91a7d3e89ea4.s3tc.ctex",
+      "bytes": 43756,
+      "md5": "5090cc694b99318d94ef719d44180778",
+      "flags": 0
+    },
+    {
+      "path": ".godot/imported/SEPT_JUEGOS_PROTOTIPO_caja luz exterior.png-1e4d5cab1215368feec99d846dce37df.s3tc.ctex",
+      "bytes": 699116,
+      "md5": "eed87e4c83d22961aa0803a1432d3aca",
+      "flags": 0
+    },
+    {
+      "path": ".godot/imported/SEPT_JUEGOS_PROTOTIPO_caja luz interior.png-dd4dff25a855d61c1088ce34d76b9df0.s3tc.ctex",
+      "bytes": 699116,
+      "md5": "de93edf338ba7e72cda0488f90cd3e4e",
+      "flags": 0
+    },
+    {
+      "path": ".godot/imported/SEPT_JUEGOS_PROTOTIPO_caja.png-da41b129827ed76cb358606ed7a7f148.s3tc.ctex",
+      "bytes": 699116,
+      "md5": "78eb83a42ea3c77158dd63a7a2647db7",
+      "flags": 0
+    },
+    {
+      "path": ".godot/imported/SEPT_JUEGOS_PROTOTIPO_cereal textura.png-f2cdedc47eaf91dd1f2c7cf97d1916ea.s3tc.ctex",
+      "bytes": 174828,
+      "md5": "cd3d130dab12c5e5c751b8f5405f9f0c",
+      "flags": 0
+    },
+    {
+      "path": ".godot/imported/SEPT_JUEGOS_PROTOTIPO_chisito.png-054091881230ddaec73bf23f7cd8475c.s3tc.ctex",
+      "bytes": 174828,
+      "md5": "226b19d9eda29892f1807399adfbf06b",
+      "flags": 0
+    },
+    {
+      "path": ".godot/imported/SEPT_JUEGOS_PROTOTIPO_cielorraso_emision.png-99cceb9ba08895226d1e373ac49ca575.s3tc.ctex",
+      "bytes": 174828,
+      "md5": "2baf1bbae5b6b3c9e2a2284f93bfd3a3",
+      "flags": 0
+    },
+    {
+      "path": ".godot/imported/SEPT_JUEGOS_PROTOTIPO_cielorraso_placas.png-d421cc7c796fc85542a0ff6b092fad9e.s3tc.ctex",
+      "bytes": 699116,
+      "md5": "595cd9e1ea9470228d757757da4e8de1",
+      "flags": 0
+    },
+    {
+      "path": ".godot/imported/SEPT_JUEGOS_PROTOTIPO_cindolor completo.png-b625a498865ef98eb9d45ca21f0096e8.s3tc.ctex",
+      "bytes": 279012,
+      "md5": "6b2e07941d491e28ba88dc9093924152",
+      "flags": 0
+    },
+    {
+      "path": ".godot/imported/SEPT_JUEGOS_PROTOTIPO_compu normals.png-b5a6b49a7e63da793ef2c6c310335dce.s3tc.ctex",
+      "bytes": 699116,
+      "md5": "c1f66d036e7d52e5c90306f6059aa202",
+      "flags": 0
+    },
+    {
+      "path": ".godot/imported/SEPT_JUEGOS_PROTOTIPO_concrete_floor_worn_001_rough_1k.png-d3ae53072b61da706ed220900c94ef48.s3tc.ctex",
+      "bytes": 174828,
+      "md5": "31e6645bd8f5966f11f5e31fb203a79b",
+      "flags": 0
+    },
+    {
+      "path": ".godot/imported/SEPT_JUEGOS_PROTOTIPO_concreto2_baseColor.png-321d3f8eeb02235403529c7feaa10619.s3tc.ctex",
+      "bytes": 174828,
+      "md5": "7e67f7b1ca04a2581d036dec2ce44373",
+      "flags": 0
+    },
+    {
+      "path": ".godot/imported/SEPT_JUEGOS_PROTOTIPO_cora cola.png-6d9e2c89e06470bed90870d1b8249d3d.s3tc.ctex",
+      "bytes": 174828,
+      "md5": "2bbc728043484bfef7b992ccc5f16ede",
+      "flags": 0
+    },
+    {
+      "path": ".godot/imported/SEPT_JUEGOS_PROTOTIPO_corrugated_iron_02_diff_1k.jpg-c6e4c9ece5d91b2a09a6775aec167810.s3tc.ctex",
+      "bytes": 699116,
+      "md5": "a56440343d7a0474d7c249c4407fc3e0",
+      "flags": 0
+    },
+    {
+      "path": ".godot/imported/SEPT_JUEGOS_PROTOTIPO_corrugated_iron_02_metal_1k-corrugated_iron_02_rough_1k.png-600914697cd9749f864f42d0eef1588a.s3tc.ctex",
+      "bytes": 174828,
+      "md5": "6e2436fb7cbdec6ab4ec925447d46041",
+      "flags": 0
+    },
+    {
+      "path": ".godot/imported/SEPT_JUEGOS_PROTOTIPO_corrugated_iron_02_nor_gl_1k.png-7c2f760b49afc136e5e348ac1e757a89.s3tc.ctex",
+      "bytes": 349604,
+      "md5": "6271644a51d6e6cd4283fb7d53dfa346",
+      "flags": 0
+    },
+    {
+      "path": ".godot/imported/SEPT_JUEGOS_PROTOTIPO_cosa de mani interno.png-8e43312b6c09bc0b5a6574721d44c519.s3tc.ctex",
+      "bytes": 174828,
+      "md5": "b7177c0b917aee219752abb672b9f5a8",
+      "flags": 0
+    },
+    {
+      "path": ".godot/imported/SEPT_JUEGOS_PROTOTIPO_deposito_concreto_color.png-ad23432a5a1ed9ed46ced927218d5b51.s3tc.ctex",
+      "bytes": 699116,
+      "md5": "fa5eaad034aacd7cf8ad065123afd5ee",
+      "flags": 0
+    },
+    {
+      "path": ".godot/imported/SEPT_JUEGOS_PROTOTIPO_deposito_concreto_normal.png-43fa12a4ec89357bc2cc908e13213f9c.s3tc.ctex",
+      "bytes": 349604,
+      "md5": "315f811e01002ea63b2430185cae336e",
+      "flags": 0
+    },
+    {
+      "path": ".godot/imported/SEPT_JUEGOS_PROTOTIPO_deposito_contenedor_cuerpo_color.png-5a04910b01015b42c2c0c15b38fb4ecb.s3tc.ctex",
+      "bytes": 43756,
+      "md5": "86028a05a912b662df27d88798998abf",
+      "flags": 0
+    },
+    {
+      "path": ".godot/imported/SEPT_JUEGOS_PROTOTIPO_deposito_contenedor_cuerpo_normal.png-6acecd13bedef07bbb4a4635ea7db95a.s3tc.ctex",
+      "bytes": 87460,
+      "md5": "a3cc0971a786bbb8e9631d53517a4e3b",
+      "flags": 0
+    },
+    {
+      "path": ".godot/imported/SEPT_JUEGOS_PROTOTIPO_deposito_contenedor_cuerpo_roughness.png-8635b5f0b6f33e3954883d87ca6ef631.s3tc.ctex",
+      "bytes": 10988,
+      "md5": "e8ba95b2445383c3a875d69a4ca3147b",
+      "flags": 0
+    },
+    {
+      "path": ".godot/imported/SEPT_JUEGOS_PROTOTIPO_deposito_contenedor_ruedas_normal.png-843b7a0058c57e6fa05a43c92f65c965.s3tc.ctex",
+      "bytes": 21924,
+      "md5": "d55a3c5b1ac838b96747bc64a1e6de99",
+      "flags": 0
+    },
+    {
+      "path": ".godot/imported/SEPT_JUEGOS_PROTOTIPO_deposito_contenedor_tapa_color.png-eb895b732a621b9ae408e8150c0cd77a.s3tc.ctex",
+      "bytes": 43756,
+      "md5": "b30b583580e4e85e34f8246b3a365ca0",
+      "flags": 0
+    },
+    {
+      "path": ".godot/imported/SEPT_JUEGOS_PROTOTIPO_deposito_contenedor_tapa_normal.png-e5d2fda56f6f4d66126710e3fbbd5cf7.s3tc.ctex",
+      "bytes": 87460,
+      "md5": "0de6d1f163c3fa8994e554397573ac0c",
+      "flags": 0
+    },
+    {
+      "path": ".godot/imported/SEPT_JUEGOS_PROTOTIPO_deposito_contenedor_tapa_roughness.png-79de58070ee12a77fbf2156b056d62bc.s3tc.ctex",
+      "bytes": 10988,
+      "md5": "0af7f9d3f8f249fb68d07e3659d45e03",
+      "flags": 0
+    },
+    {
+      "path": ".godot/imported/SEPT_JUEGOS_PROTOTIPO_duronga.png-f2dc5c1e19737890234bd759804e2ba9.s3tc.ctex",
+      "bytes": 174828,
+      "md5": "7807540b41d1f609f519d8e3b53b463c",
+      "flags": 0
+    },
+    {
+      "path": ".godot/imported/SEPT_JUEGOS_PROTOTIPO_exterior_nocturno.png-f6059205247ed45ffa58b3691af8ddec.s3tc.ctex",
+      "bytes": 349596,
+      "md5": "7f08837fcf74960d48f7d4bf32070c51",
+      "flags": 0
+    },
+    {
+      "path": ".godot/imported/SEPT_JUEGOS_PROTOTIPO_fernetgod textura.png-2147238e5b63b941a77034b92224576b.s3tc.ctex",
+      "bytes": 174828,
+      "md5": "c95ca55b509715814dfbb02531aca297",
+      "flags": 0
+    },
+    {
+      "path": ".godot/imported/SEPT_JUEGOS_PROTOTIPO_fideos marolini.png-f5c5f86661f89bccbbe6dad10a8287f5.s3tc.ctex",
+      "bytes": 174828,
+      "md5": "caeb877f117008a3f6908cdf219fde37",
+      "flags": 0
+    },
+    {
+      "path": ".godot/imported/SEPT_JUEGOS_PROTOTIPO_flim pof completo.png-59c5a922b6f7f87f828e8d5033e58416.s3tc.ctex",
+      "bytes": 257124,
+      "md5": "615fb11b0cf5cf375d076462352801dd",
+      "flags": 0
+    },
+    {
+      "path": ".godot/imported/SEPT_JUEGOS_PROTOTIPO_frot lups.png-748a7f0a6067a96ef76bfab7f54e91c4.s3tc.ctex",
+      "bytes": 174828,
+      "md5": "c3986217304caa390a8c6c1cb0af1495",
+      "flags": 0
+    },
+    {
+      "path": ".godot/imported/SEPT_JUEGOS_PROTOTIPO_gondola_chapa_blanca_512_basecolor.png-d05610e7cf9652a7c6ca4f8acd60c77f.s3tc.ctex",
+      "bytes": 174828,
+      "md5": "2555b494a6426228967543ff3076b544",
+      "flags": 0
+    },
+    {
+      "path": ".godot/imported/SEPT_JUEGOS_PROTOTIPO_gondola_panel_blanca_1024_basecolor.png-64184928ddd6a358bcb54e2fce8543a7.s3tc.ctex",
+      "bytes": 699116,
+      "md5": "56de709b1ac427b227a689ebfb0ef190",
+      "flags": 0
+    },
+    {
+      "path": ".godot/imported/SEPT_JUEGOS_PROTOTIPO_gondola_portaprecio_basecolor.png-6e8cf6c4ca23eedf8bf9678fd1a38052.s3tc.ctex",
+      "bytes": 87484,
+      "md5": "47de49f31e32deb31b23fd55b733364f",
+      "flags": 0
+    },
+    {
+      "path": ".godot/imported/SEPT_JUEGOS_PROTOTIPO_interior_tiles_diff_1k.jpg-fd28efcf497f41e2602283ee1da41ec3.s3tc.ctex",
+      "bytes": 699116,
+      "md5": "adf13437ebf79d859e717b175ae6710d",
+      "flags": 0
+    },
+    {
+      "path": ".godot/imported/SEPT_JUEGOS_PROTOTIPO_jab\u00f3n liquido.png-969af500628c1e09963405c8caf74704.s3tc.ctex",
+      "bytes": 174828,
+      "md5": "1daf066760fb43a4b5d1f12b53b1ab45",
+      "flags": 0
+    },
+    {
+      "path": ".godot/imported/SEPT_JUEGOS_PROTOTIPO_jorgillata.png-3b41f8ed34a8916449be7532458b4e4b.s3tc.ctex",
+      "bytes": 174828,
+      "md5": "5f25332a8ee19e6043660e7ff57cd0c2",
+      "flags": 0
+    },
+    {
+      "path": ".godot/imported/SEPT_JUEGOS_PROTOTIPO_macumbas completo.png-63f3c25bca2fd28feeb035a4f3ae1e62.s3tc.ctex",
+      "bytes": 167684,
+      "md5": "ee53852f4277512da3405b4bb4ce9a72",
+      "flags": 0
+    },
+    {
+      "path": ".godot/imported/SEPT_JUEGOS_PROTOTIPO_mayonchis@300x.png-16a084669fb83d70ca06be5871f1b9c0.s3tc.ctex",
+      "bytes": 227556,
+      "md5": "698be8e686865a1f908a6b2a7130a3ad",
+      "flags": 0
+    },
+    {
+      "path": ".godot/imported/SEPT_JUEGOS_PROTOTIPO_normal nuevo.png-7ea18b1d699710b70bf59a25e1253bec.s3tc.ctex",
+      "bytes": 699116,
+      "md5": "1ac645a876922b6333876559ec22f62b",
+      "flags": 0
+    },
+    {
+      "path": ".godot/imported/SEPT_JUEGOS_PROTOTIPO_nota baja resoluci\u00f3n.png-1a21629b5a85af776ace3307f4a05751.s3tc.ctex",
+      "bytes": 10988,
+      "md5": "44b1e9cc984f6d3dd4b5060ab78ca988",
+      "flags": 0
+    },
+    {
+      "path": ".godot/imported/SEPT_JUEGOS_PROTOTIPO_nota sin texto.png-e3decc161c448f3ea6f418f794c6bcf5.s3tc.ctex",
+      "bytes": 699116,
+      "md5": "e87a664a59f1f79dbdce0c4b3aec5bdb",
+      "flags": 0
+    },
+    {
+      "path": ".godot/imported/SEPT_JUEGOS_PROTOTIPO_oaaaa completo.png-22b42a7ee0402a96a166653981a4ba33.s3tc.ctex",
+      "bytes": 325796,
+      "md5": "6afe839e26a517b58e3132cce1b1b485",
+      "flags": 0
+    },
+    {
+      "path": ".godot/imported/SEPT_JUEGOS_PROTOTIPO_oremos.png-3847915e1e63fe5db27dfd22a4092ec7.s3tc.ctex",
+      "bytes": 174828,
+      "md5": "5b68a93d789e6cfe00b6294d8bdba490",
+      "flags": 0
+    },
+    {
+      "path": ".godot/imported/SEPT_JUEGOS_PROTOTIPO_pepito.png-27f8c2213d0c645735ab31b196728ae9.s3tc.ctex",
+      "bytes": 174828,
+      "md5": "9632c78cbe424775ebdac7efaedfbbeb",
+      "flags": 0
+    },
+    {
+      "path": ".godot/imported/SEPT_JUEGOS_PROTOTIPO_petisas completo.png-db2cedc45c7f8010694d6e6c4358efaa.s3tc.ctex",
+      "bytes": 194692,
+      "md5": "27d13a126a90ccd92538cb5b9ee9bd23",
+      "flags": 0
+    },
+    {
+      "path": ".godot/imported/SEPT_JUEGOS_PROTOTIPO_placa_acustica_basecolor.png-26759769ad1c0d7acd368906189e74d8.s3tc.ctex",
+      "bytes": 699116,
+      "md5": "996c199df08e96bad68b352d692b72e4",
+      "flags": 0
+    },
+    {
+      "path": ".godot/imported/SEPT_JUEGOS_PROTOTIPO_porcelana_atlas.png-b589ab4815c26179efdb2e1314b1c6b7.s3tc.ctex",
+      "bytes": 43756,
+      "md5": "ee639352b232de4d8fefd8eca7315f6d",
+      "flags": 0
+    },
+    {
+      "path": ".godot/imported/SEPT_JUEGOS_PROTOTIPO_progres.png-7ebee7380478f6e9fada5c2886a820ca.s3tc.ctex",
+      "bytes": 169452,
+      "md5": "7172e4c83f97ec409ec59ccedcdd6b5b",
+      "flags": 0
+    },
+    {
+      "path": ".godot/imported/SEPT_JUEGOS_PROTOTIPO_puchos.png-74e2a8b5f3dfaa943b91aff3f0a149b5.s3tc.ctex",
+      "bytes": 174828,
+      "md5": "62d9ed229fa2b570d03623740576503c",
+      "flags": 0
+    },
+    {
+      "path": ".godot/imported/SEPT_JUEGOS_PROTOTIPO_puerta textura.png-b9e06099d1f3bed5e03b1683862da4c2.s3tc.ctex",
+      "bytes": 467916,
+      "md5": "bf5aaebe0ba11ae1ff3e86aa5e1f4366",
+      "flags": 0
+    },
+    {
+      "path": ".godot/imported/SEPT_JUEGOS_PROTOTIPO_rejilla_bano.png-022ef606087ab1182eada7d6173b0834.s3tc.ctex",
+      "bytes": 87452,
+      "md5": "ba9ddc3c65f7dd30c36392d4cd61d477",
+      "flags": 0
+    },
+    {
+      "path": ".godot/imported/SEPT_JUEGOS_PROTOTIPO_reloj.png-baf3e5c9dbd449a17975312038b08952.s3tc.ctex",
+      "bytes": 699116,
+      "md5": "558c021bc0b4cd4e8044e7620266a868",
+      "flags": 0
+    },
+    {
+      "path": ".godot/imported/SEPT_JUEGOS_PROTOTIPO_saladick.png-b20270d9b4ec15ec3dc33a6858da5974.s3tc.ctex",
+      "bytes": 174828,
+      "md5": "566268c0d67e4f02adeec070018d6ee1",
+      "flags": 0
+    },
+    {
+      "path": ".godot/imported/SEPT_JUEGOS_PROTOTIPO_texto instrucciones limpieza.png-9911dcd53d18f80ac12bd3636504366b.s3tc.ctex",
+      "bytes": 524364,
+      "md5": "88dc8c49384cb34bd2122769c44c74e2",
+      "flags": 0
+    },
+    {
+      "path": ".godot/imported/SEPT_JUEGOS_PROTOTIPO_textura caja.png-aa7d91af1609767f6d46d389defa312c.s3tc.ctex",
+      "bytes": 699116,
+      "md5": "8d184bb17f9457f27237726f23d87b2c",
+      "flags": 0
+    },
+    {
+      "path": ".godot/imported/SEPT_JUEGOS_PROTOTIPO_textura port\u00f3n.png-5613118269b52535f50e7647d6eb5884.s3tc.ctex",
+      "bytes": 524364,
+      "md5": "b9a2b2a9dabc5a434cb7281a444ca328",
+      "flags": 0
+    },
+    {
+      "path": ".godot/imported/SEPT_JUEGOS_PROTOTIPO_textura po\u00e9tico.png-fc31a2941f320b5d47eae72d179f4115.s3tc.ctex",
+      "bytes": 699116,
+      "md5": "815a9cf37ef0cdc63162fd01993652c6",
+      "flags": 0
+    },
+    {
+      "path": ".godot/imported/SEPT_JUEGOS_PROTOTIPO_textura.png-b2e77545f6d1a15f3e70b02286f88231.s3tc.ctex",
+      "bytes": 467916,
+      "md5": "98062d58b897a88a73047bf5c3abe783",
+      "flags": 0
+    },
+    {
+      "path": ".godot/imported/SEPT_JUEGOS_PROTOTIPO_wakasfideos.png-06067157a1966f78df8e2bcbba447778.s3tc.ctex",
+      "bytes": 174828,
+      "md5": "07643eaa788dcdf94a56b6f53c2a7ed5",
+      "flags": 0
+    },
+    {
+      "path": ".godot/imported/SFX_EVENTO_CompraRealizada.wav-a4b3b719e66dca0f43b84632599ea0d7.sample",
+      "bytes": 12895,
+      "md5": "5ee6219b417d809d517aed63b23546e4",
+      "flags": 0
+    },
+    {
+      "path": ".godot/imported/SFX_EVENTO_FinJornada.wav-db6d1123883d46262ae5a3fba3496ea3.sample",
+      "bytes": 55543,
+      "md5": "22849bc55bbcfadbd0b87af13c3d54e9",
+      "flags": 0
+    },
+    {
+      "path": ".godot/imported/SFX_EVENTO_Timbre.wav-da87177eb8504b3211f711da63cd4111.sample",
+      "bytes": 40167,
+      "md5": "a5ba55057671c6d613468a6a0dce41e0",
+      "flags": 0
+    },
+    {
+      "path": ".godot/imported/SFX_INTERFAZ_Celular_Mensaje_A.wav-c64ae3e4b6d777b4d893b8f049e67c90.sample",
+      "bytes": 2815,
+      "md5": "e86725d6abf1ccfca3935dd9a67b9579",
+      "flags": 0
+    },
+    {
+      "path": ".godot/imported/SFX_INTERFAZ_Celular_Mensaje_B.wav-bfdca9986dea7d3e5d015b7894c7e938.sample",
+      "bytes": 1695,
+      "md5": "1fb982da620c9b2d2ace44d729f842cd",
+      "flags": 0
+    },
+    {
+      "path": ".godot/imported/SFX_INTERFAZ_Computadora_Boton.wav-67a7dbe2b89d6e525048b574c2975a58.sample",
+      "bytes": 3631,
+      "md5": "3c42bd1406382dbad3542452b87c5d5f",
+      "flags": 0
+    },
+    {
+      "path": ".godot/imported/SFX_INTERFAZ_Computadora_Imprimir.wav-ecd749ca5f241c6993bacb73cc5670c0.sample",
+      "bytes": 10543,
+      "md5": "5809950e307569044ec96b3822976620",
+      "flags": 0
+    },
+    {
+      "path": ".godot/imported/SFX_NOLEV_Basura_SacarBolsa.wav-fdc17f80024bdcaeca9624ccfdc6d86c.sample",
+      "bytes": 3967,
+      "md5": "09ce0eb2b9102fb6e768d16d7ca0f088",
+      "flags": 0
+    },
+    {
+      "path": ".godot/imported/SFX_NOLEV_Lector_Error.wav-4fa458a1f80c1b0db782bf613d7d4351.sample",
+      "bytes": 4847,
+      "md5": "8472057fa0c47365c18ac6bca93d1c59",
+      "flags": 0
+    },
+    {
+      "path": ".godot/imported/SFX_NOLEV_Lector_Escanear.wav-b8f9dc285d41692fb07c8bde53d87e63.sample",
+      "bytes": 8391,
+      "md5": "df2828c886800427b6350de07c9a15ee",
+      "flags": 0
+    },
+    {
+      "path": ".godot/imported/SFX_NOLEV_Puerta_Abrir.wav-39620dcd7665e71eca2e0348191d503c.sample",
+      "bytes": 7079,
+      "md5": "7f2f4acde4a85eda007b48eb6045e8ab",
+      "flags": 0
+    },
+    {
+      "path": ".godot/imported/SFX_NOLEV_Puerta_Cerrar.wav-93d0b3208f94dc5c64cce0e2071abb60.sample",
+      "bytes": 8871,
+      "md5": "c119cd23b1d692781dadd2c3ebd3e0a5",
+      "flags": 0
+    },
+    {
+      "path": ".godot/imported/SFX_NOLEV_Puerta_Garage.wav-ee1591d9e842d157a5a1395570b55d0f.sample",
+      "bytes": 9727,
+      "md5": "bbb535f21346c636547808b605e61ee3",
+      "flags": 0
+    },
+    {
+      "path": ".godot/imported/SFX_NOLEV_Puerta_NoAbre.wav-9fc80597e9e12f81b8f7995846c307a8.sample",
+      "bytes": 7175,
+      "md5": "2f3628729efc1a19e49d228ba21b254d",
+      "flags": 0
+    },
+    {
+      "path": ".godot/imported/SFX_OBJETO_Balde_Alzar.wav-2922f1ec6896f3daff5bb2c873e2edcd.sample",
+      "bytes": 5663,
+      "md5": "fa3bb96112d28784fc208e3f1856cdff",
+      "flags": 0
+    },
+    {
+      "path": ".godot/imported/SFX_OBJETO_Balde_Dejar.wav-51253f0de86029857177407240f5baa8.sample",
+      "bytes": 4967,
+      "md5": "6d114a2f0c8f29bfdafd08bc1c86c7cc",
+      "flags": 0
+    },
+    {
+      "path": ".godot/imported/SFX_OBJETO_Balde_Llenar.wav-4d291063c7c7eec9f7aa9386aa60fc11.sample",
+      "bytes": 20111,
+      "md5": "2c87b147ba863bdb3d16a7741a57d030",
+      "flags": 0
+    },
+    {
+      "path": ".godot/imported/SFX_OBJETO_Balde_Vaciar.wav-2eb9a05ca2cfc7049afdcd8cc51a599c.sample",
+      "bytes": 8935,
+      "md5": "6d468e1c323895bad855a2a0d710a949",
+      "flags": 0
+    },
+    {
+      "path": ".godot/imported/SFX_OBJETO_Bolsa_Alzar.wav-193fb2edd3e791be5d42becd95d29fe4.sample",
+      "bytes": 4575,
+      "md5": "86019f46e185c276a0ddf8c6e9dd6b9b",
+      "flags": 0
+    },
+    {
+      "path": ".godot/imported/SFX_OBJETO_BotellaPlastica_Alzar.wav-38650844cbdb5195f4fc3cc2ad90963a.sample",
+      "bytes": 3911,
+      "md5": "1c6eeda1c830c8954275faf597baa58f",
+      "flags": 0
+    },
+    {
+      "path": ".godot/imported/SFX_OBJETO_BotellaPlastica_Dejar.wav-30c140c7a58d4e47d0d1d11293dc4d9b.sample",
+      "bytes": 1831,
+      "md5": "03ad1b3d9df08a6cef6a806c07ebbd81",
+      "flags": 0
+    },
+    {
+      "path": ".godot/imported/SFX_OBJETO_Cajita_Alzar.wav-22662111cd5ce1b3b96d34eabefeb4ca.sample",
+      "bytes": 3559,
+      "md5": "4fab8bde0b25632b732368108cdfe481",
+      "flags": 0
+    },
+    {
+      "path": ".godot/imported/SFX_OBJETO_Cajita_Dejar.wav-9504524795e1f8bb0a3c625a13fffa44.sample",
+      "bytes": 3791,
+      "md5": "5bf982ef7a0c53b8ec2473cdc2c7300a",
+      "flags": 0
+    },
+    {
+      "path": ".godot/imported/SFX_OBJETO_EnvoltorioPlastico_Alzar.wav-bb175e1426c5e2b602b1ab169fdcec79.sample",
+      "bytes": 2639,
+      "md5": "89184e8bd0027f3bb0a983734159b230",
+      "flags": 0
+    },
+    {
+      "path": ".godot/imported/SFX_OBJETO_EnvoltorioPlastico_Dejar.wav-ba422354695c6ce6d774cf37eea92901.sample",
+      "bytes": 3335,
+      "md5": "d90a33ab19777a4a453338d54eead3e6",
+      "flags": 0
+    },
+    {
+      "path": ".godot/imported/SFX_OBJETO_Jabon_VertirEnBalde.wav-2b48f5da0126e373f69e6d3b5ce2f6c2.sample",
+      "bytes": 5271,
+      "md5": "441abe6ff4b04422ffde3f11d61da049",
+      "flags": 0
+    },
+    {
+      "path": ".godot/imported/SFX_OBJETO_Lata_Alzar.wav-892cd1bc67a07c486d7f02ff773efd5e.sample",
+      "bytes": 4735,
+      "md5": "915da2d79c030bb4a152077a37fef3a4",
+      "flags": 0
+    },
+    {
+      "path": ".godot/imported/SFX_OBJETO_Lata_Dejar.wav-ca28ea1cd480e5e5391a066efd01c1fa.sample",
+      "bytes": 4071,
+      "md5": "bba7896b8e8596f4ff43cdc2532afd42",
+      "flags": 0
+    },
+    {
+      "path": ".godot/imported/SFX_OBJETO_Mopa_Alzar.wav-a8af596d169db9d9b104f8dcfedf9bf8.sample",
+      "bytes": 6351,
+      "md5": "c450b3556322d79cc608f0a83a58be06",
+      "flags": 0
+    },
+    {
+      "path": ".godot/imported/SFX_OBJETO_Mopa_DejarYLimpiar.wav-29c9e670bc9cc24b4d7ab4ba20f0748a.sample",
+      "bytes": 8679,
+      "md5": "643c95b937c82fa676a5436ce709348a",
+      "flags": 0
+    },
+    {
+      "path": ".godot/imported/SFX_OBJETO_Mopa_MojarEnBalde.wav-51a6fb908e1378087f967058c14996b8.sample",
+      "bytes": 9391,
+      "md5": "743f559a9d357423d2d41b1f7819789c",
+      "flags": 0
+    },
+    {
+      "path": ".godot/imported/SFX_OBJETO_Papel_Alzar.wav-2693c86e6adf00004e4218bbacedc9b2.sample",
+      "bytes": 4967,
+      "md5": "ab355f3ce18d4423c05ebab9f8bbc59e",
+      "flags": 0
+    },
+    {
+      "path": ".godot/imported/SFX_OBJETO_Papel_Dejar.wav-4f17100c09392488290b6b2a5f5586aa.sample",
+      "bytes": 4023,
+      "md5": "b6f6909079dac17075492562f99b1e0f",
+      "flags": 0
+    },
+    {
+      "path": ".godot/imported/SFX_PERSONAJE_Paso1.wav-b72700b2b54e5c5f70ade07e7794aa01.sample",
+      "bytes": 5767,
+      "md5": "7f242153e5a85c26c98eaca08661390b",
+      "flags": 0
+    },
+    {
+      "path": ".godot/imported/SFX_PERSONAJE_Paso2.wav-aab8e32df4a7075cba31197e41b42712.sample",
+      "bytes": 7415,
+      "md5": "84808b0c0c176d9ccaff7f644e976cd3",
+      "flags": 0
+    },
+    {
+      "path": ".godot/imported/SFX_PERSONAJE_Paso3.wav-77f1fe1ede3a93653a683dd55fdfb64a.sample",
+      "bytes": 6135,
+      "md5": "7a1c1b1f79e37fdd52b7fb6592efbd70",
+      "flags": 0
+    },
+    {
+      "path": ".godot/imported/SFX_PERSONAJE_Paso4.wav-3d5314c7db17339a1341d74c6a67fa68.sample",
+      "bytes": 5559,
+      "md5": "48c3381645d5bc9d76adaab3c1e910dc",
+      "flags": 0
+    },
+    {
+      "path": ".godot/imported/SFX_PERSONAJE_Pasos.wav-6403109bdea489fd804edeeb2ec99c35.sample",
+      "bytes": 23383,
+      "md5": "5868aa314672832e24a725a9e1ac2e52",
+      "flags": 0
+    },
+    {
+      "path": ".godot/imported/actroncito.png-09b143c0baa280b1569d9124d2565c35.ctex",
+      "bytes": 70196,
+      "md5": "33a7faacc1a5f12077e760f4f6550a73",
+      "flags": 0
+    },
+    {
+      "path": ".godot/imported/actroncito.png-f47410e53911aa1e41b5b0de6cee81a1.s3tc.ctex",
+      "bytes": 174828,
+      "md5": "c8fd8b79b983818f0d548fb27a2ebce2",
+      "flags": 0
+    },
+    {
+      "path": ".godot/imported/almacen.exr-2ec568f98401c7d9014a6fe268109d57.bptc.ctexarray",
+      "bytes": 3145956,
+      "md5": "8affea2ca7bb08da01c2a27e3b6b8352",
+      "flags": 0
+    },
+    {
+      "path": ".godot/imported/amargadito.png-b9ad1fcf2626fa36a6dd294db2cafb30.s3tc.ctex",
+      "bytes": 174828,
+      "md5": "dd41a51c70616a9787eeea6e7de33548",
+      "flags": 0
+    },
+    {
+      "path": ".godot/imported/amargadito.png-d29c747c830f7d9126d22834eb48fff4.ctex",
+      "bytes": 86330,
+      "md5": "7dcb1ef18f45353935ebcc231ddea79b",
+      "flags": 0
+    },
+    {
+      "path": ".godot/imported/arvejas.png-ca91918f76b451d2883baace4dc5bd04.ctex",
+      "bytes": 123440,
+      "md5": "69e0303c4b2851c67ec72cf67fc12067",
+      "flags": 0
+    },
+    {
+      "path": ".godot/imported/burbaloo.png-7feada9ba36da3920e62c6c67e075f0d.ctex",
+      "bytes": 59554,
+      "md5": "aabe788844cb7452ad4007077055d283",
+      "flags": 0
+    },
+    {
+      "path": ".godot/imported/burbaloo.png-dadb38f651621cb0a7caf7b0e8f514bd.s3tc.ctex",
+      "bytes": 174828,
+      "md5": "81060d4e88894b3a8e1089d9130a91c5",
+      "flags": 0
+    },
+    {
+      "path": ".godot/imported/cabecera.svg-28bd8b6dabcd9aaefdfb782c69a95659.ctex",
+      "bytes": 1396,
+      "md5": "b286a49176b4e213d3fd666b16e49bc1",
+      "flags": 0
+    },
+    {
+      "path": ".godot/imported/canopy_without_lamp.png-f6a9ce01e86b19cec9f93aa2f61c77bf.s3tc.ctex",
+      "bytes": 1053676,
+      "md5": "040c8de8f121e7018bea77c0703b5ade",
+      "flags": 0
+    },
+    {
+      "path": ".godot/imported/chisitos.png-b4d07fc6c1808e70e4f5b3e4c2a379a6.ctex",
+      "bytes": 138158,
+      "md5": "f70242dc2779df61cc2ad9f15f4c38e1",
+      "flags": 0
+    },
+    {
+      "path": ".godot/imported/cindolor.png-0214e16e2765d0418ce370dca05f3bfb.s3tc.ctex",
+      "bytes": 174828,
+      "md5": "5209e72b943bda89b7f085bc512b9cef",
+      "flags": 0
+    },
+    {
+      "path": ".godot/imported/cindolor.png-1bd6b0e9b1201271b43e82e7d322b95e.ctex",
+      "bytes": 106100,
+      "md5": "be2ffd7c08cd161cb4fb1ac1955a167b",
+      "flags": 0
+    },
+    {
+      "path": ".godot/imported/computadora.svg-bd4328e3ada92c8e79c51e1d2e506fe0.ctex",
+      "bytes": 326,
+      "md5": "8cb21ee1139fd62bc578690369f2a967",
+      "flags": 0
+    },
+    {
+      "path": ".godot/imported/coracola.png-a9afe89a3f55b661ede7ef305b159946.ctex",
+      "bytes": 95306,
+      "md5": "919b7b30d9cc1d3472ddff79b590bf68",
+      "flags": 0
+    },
+    {
+      "path": ".godot/imported/cosa_de_mani.png-2f9c9d5678fa8343e86045a2fe82203b.s3tc.ctex",
+      "bytes": 174828,
+      "md5": "966ff3f9fd2f83b7edb91e1d6ae51c32",
+      "flags": 0
+    },
+    {
+      "path": ".godot/imported/cosa_de_mani.png-5ff5e620729fd6355ae0f59e27521f46.ctex",
+      "bytes": 81072,
+      "md5": "059dca76e5942496b4a36f7304313e2a",
+      "flags": 0
+    },
+    {
+      "path": ".godot/imported/donsaturados.png-0bf25d8011448f3754d15a66b62dedd7.s3tc.ctex",
+      "bytes": 174828,
+      "md5": "a1336547a0042b26d5a5c6cfb1db688c",
+      "flags": 0
+    },
+    {
+      "path": ".godot/imported/donsaturados.png-cf4fc05760c68094e97122ff1c904d33.ctex",
+      "bytes": 143796,
+      "md5": "2111365aef1bec75048c14aaba77c30e",
+      "flags": 0
+    },
+    {
+      "path": ".godot/imported/durextra.png-fa19a39df8f6a205112458ae8eeb47b8.s3tc.ctex",
+      "bytes": 174828,
+      "md5": "ac97742686c4ed7426f069c988b65f8b",
+      "flags": 0
+    },
+    {
+      "path": ".godot/imported/durextra.png-faee96bc70ce18dd276bfb6446748153.ctex",
+      "bytes": 72182,
+      "md5": "cc6cd05ce526fbb47f8994dc0a613aba",
+      "flags": 0
+    },
+    {
+      "path": ".godot/imported/duronga.png-2e0c15e7a5e6f01b66c4146cb3a7d757.ctex",
+      "bytes": 119312,
+      "md5": "1866a64a2ba5bab679bffeb7491e9402",
+      "flags": 0
+    },
+    {
+      "path": ".godot/imported/duronga.png-fc2b3f48303727ce1bc6ca5a396396f9.s3tc.ctex",
+      "bytes": 174828,
+      "md5": "801ec167b1465bb3a06c5485c922c90f",
+      "flags": 0
+    },
+    {
+      "path": ".godot/imported/estacion_fondo_sin_objetos.png-ea641f7b3ce66f1bd69569bfa0995490.s3tc.ctex",
+      "bytes": 1053564,
+      "md5": "e9118ee4cc1bf87df929a491c766b4e4",
+      "flags": 0
+    },
+    {
+      "path": ".godot/imported/estacion_panoramica_gemini.jpg-75cbdeda76b820f75a4510635434c41e.s3tc.ctex",
+      "bytes": 2796124,
+      "md5": "a4f9ef1a13877bb1a8ff81f6cae04e2e",
+      "flags": 0
+    },
+    {
+      "path": ".godot/imported/feel_ricky_fort.png-1336fd0a6e13b876afb4ba2a087d1ae3.ctex",
+      "bytes": 132884,
+      "md5": "0632030de29f4756dfc88619498e3262",
+      "flags": 0
+    },
+    {
+      "path": ".godot/imported/fernet_god.png-051401283ee03fa8fb8eb7d292a2886d.ctex",
+      "bytes": 60436,
+      "md5": "9d5241f23e41a6e8570de7ca14ee363e",
+      "flags": 0
+    },
+    {
+      "path": ".godot/imported/fernet_god.png-8c4e3a808b5f9d887dde744b589a37f4.s3tc.ctex",
+      "bytes": 174828,
+      "md5": "0c0cce46cb6e80090f45083673c4350d",
+      "flags": 0
+    },
+    {
+      "path": ".godot/imported/flinpuf.png-08223b969133db2f1748a5533665cfcf.s3tc.ctex",
+      "bytes": 174828,
+      "md5": "d93ed3a5b01301e6b1e28c82f4b8fb49",
+      "flags": 0
+    },
+    {
+      "path": ".godot/imported/flinpuf.png-f5eb33654741b176b12b6f2f5a3ab81f.ctex",
+      "bytes": 72520,
+      "md5": "fa2d97a8584b41a29badf56c5da30f5f",
+      "flags": 0
+    },
+    {
+      "path": ".godot/imported/fondo_inicio.png-caeeae01aa7c0933705058ccdaf27bc9.ctex",
+      "bytes": 1291960,
+      "md5": "8ab78e0b292896de96fdf1ca1f2707c8",
+      "flags": 0
+    },
+    {
+      "path": ".godot/imported/fondo_ventanilla.png-6926cd22557a29a89908c5bf810fa9b2.ctex",
+      "bytes": 822428,
+      "md5": "0ece0aab9c95c1bf30bf441a2917f59d",
+      "flags": 0
+    },
+    {
+      "path": ".godot/imported/frotlups.png-4bc1d0f574cf542f6f1098bc83575b1b.ctex",
+      "bytes": 171584,
+      "md5": "c4328b3849340c2476ba0087a5be9d42",
+      "flags": 0
+    },
+    {
+      "path": ".godot/imported/frotlups.png-70b13cbe5c7ff61f3a3ad7f1ad139430.s3tc.ctex",
+      "bytes": 174828,
+      "md5": "7a415005e110b5cac781f2ece5f8cccc",
+      "flags": 0
+    },
+    {
+      "path": ".godot/imported/icon.svg-218a8f2b3041327d8a5756f3a245f83b.ctex",
+      "bytes": 3426,
+      "md5": "02daa5cff5f2ea0b7af8ea1e9903d5b7",
+      "flags": 0
+    },
+    {
+      "path": ".godot/imported/jorgillo.png-511cc7465fa14420994c1ee3a41d84ba.ctex",
+      "bytes": 115674,
+      "md5": "a6baf3149aa50b953002e53b6fd97f44",
+      "flags": 0
+    },
+    {
+      "path": ".godot/imported/jorgillo.png-7118ecae82eddc74433db674f9854639.s3tc.ctex",
+      "bytes": 174828,
+      "md5": "a2c7567e8b432b27b71b961d26a61fa5",
+      "flags": 0
+    },
+    {
+      "path": ".godot/imported/laysntt.png-36f7de87881003cde8abb47c38ba5ddb.s3tc.ctex",
+      "bytes": 174828,
+      "md5": "4b770032d9399d0fe92a1e3487d4a4b6",
+      "flags": 0
+    },
+    {
+      "path": ".godot/imported/laysntt.png-c8fa8c0bd057142d1eb45cfdb6232871.ctex",
+      "bytes": 54148,
+      "md5": "290969859b1588cc6cc4d75273495aa5",
+      "flags": 0
+    },
+    {
+      "path": ".godot/imported/linea_detalle.svg-3e6d32ff94116a127e2bc7e72bd701b3.ctex",
+      "bytes": 94,
+      "md5": "940ba07f7a57bf9eb03d222fd96aa1bc",
+      "flags": 0
+    },
+    {
+      "path": ".godot/imported/macumbas.png-066f0fa3ee15ad04fde6b54887d7eeb2.s3tc.ctex",
+      "bytes": 174828,
+      "md5": "b83f8de510b292bfc6eae9791ff0ebd5",
+      "flags": 0
+    },
+    {
+      "path": ".godot/imported/macumbas.png-1fdc33eb1208ea3ed713e085b45f888c.ctex",
+      "bytes": 58962,
+      "md5": "6ed4733090828629b61cc54c094523c9",
+      "flags": 0
+    },
+    {
+      "path": ".godot/imported/malbardo.png-34379e65fa4e4c2c91cb6454fe2ca30b.ctex",
+      "bytes": 144208,
+      "md5": "c30fd126afc4889cae5ae3f9ce33745b",
+      "flags": 0
+    },
+    {
+      "path": ".godot/imported/marolini.png-5facea20b93c9176d4ec4019d7ca8493.ctex",
+      "bytes": 151778,
+      "md5": "ae072f7fe0e803bcb60fa45ae76e880f",
+      "flags": 0
+    },
+    {
+      "path": ".godot/imported/marranos.png-28babdddd76d3e97c58851b83502a9f2.ctex",
+      "bytes": 33644,
+      "md5": "238fd640a6aa8106f19b24ab77ba7d4b",
+      "flags": 0
+    },
+    {
+      "path": ".godot/imported/mayonchis.png-5409c2c01612bb02412fe937a88d6d2b.ctex",
+      "bytes": 85518,
+      "md5": "adf10304c4d0fe1a2627c1b27eddc8ff",
+      "flags": 0
+    },
+    {
+      "path": ".godot/imported/mayonchis.png-d842e010d5b3016d5b76c999fb13a71b.s3tc.ctex",
+      "bytes": 174828,
+      "md5": "05f4b88905509eb02ce77287da5937bf",
+      "flags": 0
+    },
+    {
+      "path": ".godot/imported/oaaaa.png-1908993e4f04843c6dcffcc8d4e572c8.s3tc.ctex",
+      "bytes": 174828,
+      "md5": "df81c7628daa68194fa8573aa05c9c54",
+      "flags": 0
+    },
+    {
+      "path": ".godot/imported/oaaaa.png-c70d7ed123c2fc5b89666cc21b0389ae.ctex",
+      "bytes": 86494,
+      "md5": "d6536b58fe1fac13ee0b9250e1411944",
+      "flags": 0
+    },
+    {
+      "path": ".godot/imported/oremos.png-c147471ed27925a24a97adc79da1a4aa.ctex",
+      "bytes": 134612,
+      "md5": "3e630ff93bf16b349c02df2b8e29c00f",
+      "flags": 0
+    },
+    {
+      "path": ".godot/imported/pepitos.png-7b74afb172f4f6c84a28027300078f7f.ctex",
+      "bytes": 156074,
+      "md5": "cab11e319eec8b45879599f6282912c6",
+      "flags": 0
+    },
+    {
+      "path": ".godot/imported/petisas.png-396043ddd957e90312ebaeb5de918c7d.ctex",
+      "bytes": 112516,
+      "md5": "8b72f03f1aa9639b74ee7bfed75d6a5c",
+      "flags": 0
+    },
+    {
+      "path": ".godot/imported/petisas.png-d953329233893b900c8935d9f4432c2b.s3tc.ctex",
+      "bytes": 174828,
+      "md5": "d48094b5bf97917b91529e92d79f12f9",
+      "flags": 0
+    },
+    {
+      "path": ".godot/imported/prongles.png-0050246db31c2f1afdb07fe23d25691d.ctex",
+      "bytes": 88014,
+      "md5": "2d0533bbfa991bfd88b7d0088e5cee02",
+      "flags": 0
+    },
+    {
+      "path": ".godot/imported/puntos_de_carga.svg-800474211bb95a59af15cade369729bc.ctex",
+      "bytes": 1720,
+      "md5": "b58142db21589bdd9e488c7b6f06a19a",
+      "flags": 0
+    },
+    {
+      "path": ".godot/imported/registro.svg-5c033532d4f9f8195cab7ce72ff03753.ctex",
+      "bytes": 388,
+      "md5": "1103f27c7b55d897f48b2d020c46bb4e",
+      "flags": 0
+    },
+    {
+      "path": ".godot/imported/saladik.png-9325d1d8fbb5feaf7237f90982520841.ctex",
+      "bytes": 162054,
+      "md5": "4c91ce925eb2d282ae188fcbd1df556d",
+      "flags": 0
+    },
+    {
+      "path": ".godot/imported/solapa.svg-77cfb5038ac99be3ab11ffa12021c025.ctex",
+      "bytes": 432,
+      "md5": "a593525114c566714eb3b225d295ed68",
+      "flags": 0
+    },
+    {
+      "path": ".godot/imported/terminator.png-6d47b51b2df994dd5d0f67d583262d7e.ctex",
+      "bytes": 70924,
+      "md5": "f1e88562e371b129f7725b87218bcf45",
+      "flags": 0
+    },
+    {
+      "path": ".godot/imported/terminator.png-ec0fe55964fa8670c84f4401cbbdde8a.s3tc.ctex",
+      "bytes": 174828,
+      "md5": "180adb8f5605b1a88aa4c6e5ab9af8e9",
+      "flags": 0
+    },
+    {
+      "path": ".godot/imported/titulo_inicio.png-10a2a622cc4002b5c10d3576f698fc1a.ctex",
+      "bytes": 564,
+      "md5": "d67e04d47ef1581bfad52963363c382f",
+      "flags": 0
+    },
+    {
+      "path": ".godot/imported/uakas.png-7d42c6b38f20bb7ba46c3b9da4c0d6ba.ctex",
+      "bytes": 162772,
+      "md5": "d36084838a3b049b9d50033b8d8b7f8f",
+      "flags": 0
+    },
+    {
+      "path": ".godot/imported/unscii-16.ttf-3c372feb461602c8a9750b9f1696fd88.fontdata",
+      "bytes": 93109,
+      "md5": "b464b4314ab61830d38247bf9c03edf4",
+      "flags": 0
+    },
+    {
+      "path": ".godot/imported/vidrio_marcas.png-45c71ed4505971f4184a21ab7f0aa666.s3tc.ctex",
+      "bytes": 1053036,
+      "md5": "6a747694a785196b133c8af41ea76f29",
+      "flags": 0
+    },
+    {
+      "path": ".godot/imported/zucarachas.png-202efe5aa13666d8f5bdd7739113ce9f.ctex",
+      "bytes": 128594,
+      "md5": "07a2bcc00c2c5a31d6fb8d03beabe318",
+      "flags": 0
+    },
+    {
+      "path": ".godot/imported/zucarachas.png-8eb79a1d16b374d65ba2ebfdde10106c.s3tc.ctex",
+      "bytes": 174828,
+      "md5": "21e1b0f82675c785fcb8dcfc84fdf95d",
+      "flags": 0
+    },
+    {
+      "path": ".godot/uid_cache.bin",
+      "bytes": 24371,
+      "md5": "ca50a750ceb23e72b46321df61bcfaf9",
+      "flags": 0
+    },
+    {
+      "path": ".mcp.json",
+      "bytes": 123,
+      "md5": "6057ca452a12c8822924e070129e870d",
+      "flags": 0
+    },
+    {
+      "path": "addons/godot_mcp/command_router.gd.remap",
+      "bytes": 58,
+      "md5": "49ab9eaf22b44cbaa7bdd1f25f662ca7",
+      "flags": 0
+    },
+    {
+      "path": "addons/godot_mcp/command_router.gdc",
+      "bytes": 2946,
+      "md5": "b225861969f650fd881b1737de150ec8",
+      "flags": 0
+    },
+    {
+      "path": "addons/godot_mcp/commands/analysis_commands.gd.remap",
+      "bytes": 70,
+      "md5": "fe0d6ca25ba91188b102ec9ea5aa5e49",
+      "flags": 0
+    },
+    {
+      "path": "addons/godot_mcp/commands/analysis_commands.gdc",
+      "bytes": 12642,
+      "md5": "34d3ff5e6468bce384b9157272276f03",
+      "flags": 0
+    },
+    {
+      "path": "addons/godot_mcp/commands/android_commands.gd.remap",
+      "bytes": 69,
+      "md5": "ac0b8178c933c57001425e5a85e8d776",
+      "flags": 0
+    },
+    {
+      "path": "addons/godot_mcp/commands/android_commands.gdc",
+      "bytes": 5644,
+      "md5": "910d10a66e9d412e7e53a5f98a823749",
+      "flags": 0
+    },
+    {
+      "path": "addons/godot_mcp/commands/animation_commands.gd.remap",
+      "bytes": 71,
+      "md5": "714058f1c5ba75bad338c5e837d96e0c",
+      "flags": 0
+    },
+    {
+      "path": "addons/godot_mcp/commands/animation_commands.gdc",
+      "bytes": 7512,
+      "md5": "bc1b04370c4226fe6441c59af2d22aeb",
+      "flags": 0
+    },
+    {
+      "path": "addons/godot_mcp/commands/animation_tree_commands.gd.remap",
+      "bytes": 76,
+      "md5": "1b7079d28e393c1d6a4d66284810e782",
+      "flags": 0
+    },
+    {
+      "path": "addons/godot_mcp/commands/animation_tree_commands.gdc",
+      "bytes": 13926,
+      "md5": "51e70561440e92a72f0c9d4663d609d8",
+      "flags": 0
+    },
+    {
+      "path": "addons/godot_mcp/commands/audio_commands.gd.remap",
+      "bytes": 67,
+      "md5": "2120ad57341f89dc1f631f87335da5ab",
+      "flags": 0
+    },
+    {
+      "path": "addons/godot_mcp/commands/audio_commands.gdc",
+      "bytes": 11759,
+      "md5": "6734bda856cbda493fd89c80fdc04320",
+      "flags": 0
+    },
+    {
+      "path": "addons/godot_mcp/commands/base_command.gd.remap",
+      "bytes": 65,
+      "md5": "ba7311969fbc71d8fea8fde5319673b9",
+      "flags": 0
+    },
+    {
+      "path": "addons/godot_mcp/commands/base_command.gdc",
+      "bytes": 14627,
+      "md5": "94481f6898dd009722b174b2a2786dd2",
+      "flags": 0
+    },
+    {
+      "path": "addons/godot_mcp/commands/batch_commands.gd.remap",
+      "bytes": 67,
+      "md5": "b0a1dcea27342c34e60f4bb30c6991d1",
+      "flags": 0
+    },
+    {
+      "path": "addons/godot_mcp/commands/batch_commands.gdc",
+      "bytes": 11577,
+      "md5": "9e5fe47fdcc3415f6ce435a825351b34",
+      "flags": 0
+    },
+    {
+      "path": "addons/godot_mcp/commands/editor_commands.gd.remap",
+      "bytes": 68,
+      "md5": "22a77802500e1daeb7ff83d7b3ce9fde",
+      "flags": 0
+    },
+    {
+      "path": "addons/godot_mcp/commands/editor_commands.gdc",
+      "bytes": 19108,
+      "md5": "26985d5738979264c519a8989bb2767d",
+      "flags": 0
+    },
+    {
+      "path": "addons/godot_mcp/commands/export_commands.gd.remap",
+      "bytes": 68,
+      "md5": "dd46867663e785473005a33aae33fcf2",
+      "flags": 0
+    },
+    {
+      "path": "addons/godot_mcp/commands/export_commands.gdc",
+      "bytes": 2966,
+      "md5": "0f613680720bc890e5298b6534d7b383",
+      "flags": 0
+    },
+    {
+      "path": "addons/godot_mcp/commands/headless_commands.gd.remap",
+      "bytes": 70,
+      "md5": "71f6557cbe130d1d37dd0bc57b70bf5e",
+      "flags": 0
+    },
+    {
+      "path": "addons/godot_mcp/commands/headless_commands.gdc",
+      "bytes": 7860,
+      "md5": "cbf58042e6d104d84aa7e1b7d3cda934",
+      "flags": 0
+    },
+    {
+      "path": "addons/godot_mcp/commands/input_commands.gd.remap",
+      "bytes": 67,
+      "md5": "2a6e2a4ef453134cbdee582ea23ac22a",
+      "flags": 0
+    },
+    {
+      "path": "addons/godot_mcp/commands/input_commands.gdc",
+      "bytes": 4000,
+      "md5": "e3fe08656a863ab5e28efdbf64f58965",
+      "flags": 0
+    },
+    {
+      "path": "addons/godot_mcp/commands/input_map_commands.gd.remap",
+      "bytes": 71,
+      "md5": "66901c1718d258027542754a53fa53ae",
+      "flags": 0
+    },
+    {
+      "path": "addons/godot_mcp/commands/input_map_commands.gdc",
+      "bytes": 3914,
+      "md5": "709101c28a3c6948e37b546cbb983c7e",
+      "flags": 0
+    },
+    {
+      "path": "addons/godot_mcp/commands/navigation_commands.gd.remap",
+      "bytes": 72,
+      "md5": "b97f379f20a953b39ad089b7212c3f30",
+      "flags": 0
+    },
+    {
+      "path": "addons/godot_mcp/commands/navigation_commands.gdc",
+      "bytes": 10982,
+      "md5": "1da541600fbb3190c91d41eccc1377b4",
+      "flags": 0
+    },
+    {
+      "path": "addons/godot_mcp/commands/node_commands.gd.remap",
+      "bytes": 66,
+      "md5": "e58e0be9273e7d1a30d12e8bd948b368",
+      "flags": 0
+    },
+    {
+      "path": "addons/godot_mcp/commands/node_commands.gdc",
+      "bytes": 20669,
+      "md5": "5055945f84b3219d8a5e77da6760fe65",
+      "flags": 0
+    },
+    {
+      "path": "addons/godot_mcp/commands/particle_commands.gd.remap",
+      "bytes": 70,
+      "md5": "10f0ab7376d9ba4b3da85f08ed1cf0e6",
+      "flags": 0
+    },
+    {
+      "path": "addons/godot_mcp/commands/particle_commands.gdc",
+      "bytes": 15916,
+      "md5": "f39d3752cc8e3ce2a2ff2d01a6103b9e",
+      "flags": 0
+    },
+    {
+      "path": "addons/godot_mcp/commands/physics_commands.gd.remap",
+      "bytes": 69,
+      "md5": "20ca5ea0e9a9ad0ee38f7037e79d6555",
+      "flags": 0
+    },
+    {
+      "path": "addons/godot_mcp/commands/physics_commands.gdc",
+      "bytes": 18438,
+      "md5": "970508a1a28d695cad1d65666ce4483d",
+      "flags": 0
+    },
+    {
+      "path": "addons/godot_mcp/commands/profiling_commands.gd.remap",
+      "bytes": 71,
+      "md5": "9025101f1f9d6e7cd8d2d976a11bde29",
+      "flags": 0
+    },
+    {
+      "path": "addons/godot_mcp/commands/profiling_commands.gdc",
+      "bytes": 3796,
+      "md5": "5842b5fce1e8f720e28ff2a93da2ed02",
+      "flags": 0
+    },
+    {
+      "path": "addons/godot_mcp/commands/project_commands.gd.remap",
+      "bytes": 69,
+      "md5": "6a89ece8efafc1e56b3c329d7be9f3c4",
+      "flags": 0
+    },
+    {
+      "path": "addons/godot_mcp/commands/project_commands.gdc",
+      "bytes": 19420,
+      "md5": "e56800fe37d15bb660e8a2dc0eb47c08",
+      "flags": 0
+    },
+    {
+      "path": "addons/godot_mcp/commands/resource_commands.gd.remap",
+      "bytes": 70,
+      "md5": "f113ce37fc36cfc17f0e2ee3e91ae3d7",
+      "flags": 0
+    },
+    {
+      "path": "addons/godot_mcp/commands/resource_commands.gdc",
+      "bytes": 5733,
+      "md5": "b49061d8888cfb700395e20120713f49",
+      "flags": 0
+    },
+    {
+      "path": "addons/godot_mcp/commands/runtime_commands.gd.remap",
+      "bytes": 69,
+      "md5": "644dd5fdce15a23f990273b281b04f5e",
+      "flags": 0
+    },
+    {
+      "path": "addons/godot_mcp/commands/runtime_commands.gdc",
+      "bytes": 9095,
+      "md5": "d5575d18a8b85ddcfb532bb53ee53ed4",
+      "flags": 0
+    },
+    {
+      "path": "addons/godot_mcp/commands/scene_3d_commands.gd.remap",
+      "bytes": 70,
+      "md5": "0d978aa264695ce9fcac757793819440",
+      "flags": 0
+    },
+    {
+      "path": "addons/godot_mcp/commands/scene_3d_commands.gdc",
+      "bytes": 18499,
+      "md5": "dccb7ba42c5b28a8d9bcb3f0878b83a5",
+      "flags": 0
+    },
+    {
+      "path": "addons/godot_mcp/commands/scene_commands.gd.remap",
+      "bytes": 67,
+      "md5": "6f32775a3d3ebf15183c042015deeec4",
+      "flags": 0
+    },
+    {
+      "path": "addons/godot_mcp/commands/scene_commands.gdc",
+      "bytes": 9357,
+      "md5": "f3bc5c0fd6cd0cd842ce33c640307b7d",
+      "flags": 0
+    },
+    {
+      "path": "addons/godot_mcp/commands/script_commands.gd.remap",
+      "bytes": 68,
+      "md5": "607e4faa458d84dbaa9c1e9e1e7ebf68",
+      "flags": 0
+    },
+    {
+      "path": "addons/godot_mcp/commands/script_commands.gdc",
+      "bytes": 12528,
+      "md5": "001fe22c3397b26d44999314753bffa5",
+      "flags": 0
+    },
+    {
+      "path": "addons/godot_mcp/commands/shader_commands.gd.remap",
+      "bytes": 68,
+      "md5": "8f604efc0b87a23ff0a88ca21b20635d",
+      "flags": 0
+    },
+    {
+      "path": "addons/godot_mcp/commands/shader_commands.gdc",
+      "bytes": 6070,
+      "md5": "d9be57dc2422586631d3ddb8234f365d",
+      "flags": 0
+    },
+    {
+      "path": "addons/godot_mcp/commands/test_commands.gd.remap",
+      "bytes": 66,
+      "md5": "ac353bc7b452d82daa805c75c8ddcccf",
+      "flags": 0
+    },
+    {
+      "path": "addons/godot_mcp/commands/test_commands.gdc",
+      "bytes": 13049,
+      "md5": "83662e55c528a535464931c8edbaa790",
+      "flags": 0
+    },
+    {
+      "path": "addons/godot_mcp/commands/theme_commands.gd.remap",
+      "bytes": 67,
+      "md5": "8ab9b9bf3dfc026230e00226c776738e",
+      "flags": 0
+    },
+    {
+      "path": "addons/godot_mcp/commands/theme_commands.gdc",
+      "bytes": 11853,
+      "md5": "d5c061cf8822370ef0b4fa57d3ca4cf8",
+      "flags": 0
+    },
+    {
+      "path": "addons/godot_mcp/commands/tilemap_commands.gd.remap",
+      "bytes": 69,
+      "md5": "61b2ce0a20f664da386e5b7c561837ec",
+      "flags": 0
+    },
+    {
+      "path": "addons/godot_mcp/commands/tilemap_commands.gdc",
+      "bytes": 9317,
+      "md5": "1e3127ccfae643a835b411db48e98f15",
+      "flags": 0
+    },
+    {
+      "path": "addons/godot_mcp/mcp_game_inspector_service.gd.remap",
+      "bytes": 70,
+      "md5": "49a082897b5d02af0c16de0f83dc776e",
+      "flags": 0
+    },
+    {
+      "path": "addons/godot_mcp/mcp_game_inspector_service.gdc",
+      "bytes": 37357,
+      "md5": "c86d2e7c2bfadc82914a24c5f853e0cc",
+      "flags": 0
+    },
+    {
+      "path": "addons/godot_mcp/mcp_input_service.gd.remap",
+      "bytes": 61,
+      "md5": "02736d8cdcd7922dae2636a6a5683010",
+      "flags": 0
+    },
+    {
+      "path": "addons/godot_mcp/mcp_input_service.gdc",
+      "bytes": 4620,
+      "md5": "80c7c1476b3c047df98bb7b8bda677f1",
+      "flags": 0
+    },
+    {
+      "path": "addons/godot_mcp/mcp_screenshot_service.gd.remap",
+      "bytes": 66,
+      "md5": "91eafb5b58c8267dd3590e15d66bfce3",
+      "flags": 0
+    },
+    {
+      "path": "addons/godot_mcp/mcp_screenshot_service.gdc",
+      "bytes": 978,
+      "md5": "f2bb6d6368ff50dff6f960331d031cfb",
+      "flags": 0
+    },
+    {
+      "path": "addons/godot_mcp/plugin.gd.remap",
+      "bytes": 50,
+      "md5": "33d299c80897f3e0309533ffbce6268d",
+      "flags": 0
+    },
+    {
+      "path": "addons/godot_mcp/plugin.gdc",
+      "bytes": 5703,
+      "md5": "224787ea40310a05e48a0ae7a4267481",
+      "flags": 0
+    },
+    {
+      "path": "addons/godot_mcp/ui/status_panel.gd.remap",
+      "bytes": 59,
+      "md5": "ce15d6bbd41a63224a0bb3f666fc454f",
+      "flags": 0
+    },
+    {
+      "path": "addons/godot_mcp/ui/status_panel.gdc",
+      "bytes": 9217,
+      "md5": "22e105e7021eea5e4cf8d57e55db1719",
+      "flags": 0
+    },
+    {
+      "path": "addons/godot_mcp/ui/status_panel.tscn.remap",
+      "bytes": 105,
+      "md5": "e5afc6d24f7cd8b6c92dceecd51e0c00",
+      "flags": 0
+    },
+    {
+      "path": "addons/godot_mcp/utils/node_utils.gd.remap",
+      "bytes": 60,
+      "md5": "df6ab80c7e01808a57ac0fab33a6b241",
+      "flags": 0
+    },
+    {
+      "path": "addons/godot_mcp/utils/node_utils.gdc",
+      "bytes": 2022,
+      "md5": "903803a7baa8d429b1ccfb4f986c7545",
+      "flags": 0
+    },
+    {
+      "path": "addons/godot_mcp/utils/property_parser.gd.remap",
+      "bytes": 65,
+      "md5": "557a6ab18223f02a6ccaacfa480d133d",
+      "flags": 0
+    },
+    {
+      "path": "addons/godot_mcp/utils/property_parser.gdc",
+      "bytes": 5945,
+      "md5": "7e276677378a373847b79991cfc5ffb9",
+      "flags": 0
+    },
+    {
+      "path": "addons/godot_mcp/websocket_server.gd.remap",
+      "bytes": 60,
+      "md5": "db753cdbd5e471c413103f79745c3710",
+      "flags": 0
+    },
+    {
+      "path": "addons/godot_mcp/websocket_server.gdc",
+      "bytes": 9611,
+      "md5": "fa332440ce963ca88c29e5df39268f3b",
+      "flags": 0
+    },
+    {
+      "path": "assets/audio/AMB_PROXIMIDAD_Neon.ogg.import",
+      "bytes": 187,
+      "md5": "28670c2b445d66dfa1eb6c6046add02b",
+      "flags": 0
+    },
+    {
+      "path": "assets/audio/MUS_Tema1.ogg.import",
+      "bytes": 177,
+      "md5": "896fa0b5b1e25490dd04680f33c4c454",
+      "flags": 0
+    },
+    {
+      "path": "assets/audio/SFX_EVENTO_CompraRealizada.wav.import",
+      "bytes": 172,
+      "md5": "2824ea7c6640c5fdb8aecb199cd45b50",
+      "flags": 0
+    },
+    {
+      "path": "assets/audio/SFX_EVENTO_FinJornada.wav.import",
+      "bytes": 168,
+      "md5": "d256f75dc9f2a236fd4ec3e94e23297d",
+      "flags": 0
+    },
+    {
+      "path": "assets/audio/SFX_EVENTO_Timbre.wav.import",
+      "bytes": 164,
+      "md5": "a7d15e876ea0d47d40132cc7ad03e5f2",
+      "flags": 0
+    },
+    {
+      "path": "assets/audio/SFX_INTERFAZ_Celular_Mensaje_A.wav.import",
+      "bytes": 176,
+      "md5": "13f818980619dd6b87e3819664704e47",
+      "flags": 0
+    },
+    {
+      "path": "assets/audio/SFX_INTERFAZ_Celular_Mensaje_B.wav.import",
+      "bytes": 177,
+      "md5": "0fbb95bf97997091a90e0376ed07ebd5",
+      "flags": 0
+    },
+    {
+      "path": "assets/audio/SFX_INTERFAZ_Computadora_Boton.wav.import",
+      "bytes": 177,
+      "md5": "32a69908d8a475a85da58997054d83c6",
+      "flags": 0
+    },
+    {
+      "path": "assets/audio/SFX_INTERFAZ_Computadora_Imprimir.wav.import",
+      "bytes": 180,
+      "md5": "3a4ce6d1cf3ba98f53499138b33b96b4",
+      "flags": 0
+    },
+    {
+      "path": "assets/audio/SFX_NOLEV_Basura_SacarBolsa.wav.import",
+      "bytes": 174,
+      "md5": "1341bb527f9674094cf57f00c3de8925",
+      "flags": 0
+    },
+    {
+      "path": "assets/audio/SFX_NOLEV_Lector_Error.wav.import",
+      "bytes": 168,
+      "md5": "7cae4eced877452f8fcd3979bab60a27",
+      "flags": 0
+    },
+    {
+      "path": "assets/audio/SFX_NOLEV_Lector_Escanear.wav.import",
+      "bytes": 172,
+      "md5": "964ed627869f700f3aa07977346ea1e8",
+      "flags": 0
+    },
+    {
+      "path": "assets/audio/SFX_NOLEV_Puerta_Abrir.wav.import",
+      "bytes": 169,
+      "md5": "eae604033f715b3292eed95cdb10abde",
+      "flags": 0
+    },
+    {
+      "path": "assets/audio/SFX_NOLEV_Puerta_Cerrar.wav.import",
+      "bytes": 169,
+      "md5": "2a238798f6d7ab06233f2c71072e25a5",
+      "flags": 0
+    },
+    {
+      "path": "assets/audio/SFX_NOLEV_Puerta_Garage.wav.import",
+      "bytes": 170,
+      "md5": "7892ec8dee5ea49d84070eae60e05b9b",
+      "flags": 0
+    },
+    {
+      "path": "assets/audio/SFX_NOLEV_Puerta_NoAbre.wav.import",
+      "bytes": 170,
+      "md5": "7a9e7663cb9d8cc1dd6d918c89661a39",
+      "flags": 0
+    },
+    {
+      "path": "assets/audio/SFX_OBJETO_Balde_Alzar.wav.import",
+      "bytes": 168,
+      "md5": "eee5ac41ecf167d6d890ebff727c8d63",
+      "flags": 0
+    },
+    {
+      "path": "assets/audio/SFX_OBJETO_Balde_Dejar.wav.import",
+      "bytes": 169,
+      "md5": "e93546c5c3e51cadadb210a784cae624",
+      "flags": 0
+    },
+    {
+      "path": "assets/audio/SFX_OBJETO_Balde_Llenar.wav.import",
+      "bytes": 170,
+      "md5": "71ba57a443f0fbc167a682fd50492eee",
+      "flags": 0
+    },
+    {
+      "path": "assets/audio/SFX_OBJETO_Balde_Vaciar.wav.import",
+      "bytes": 170,
+      "md5": "a682b4a883b015bbf3360127d6e7f217",
+      "flags": 0
+    },
+    {
+      "path": "assets/audio/SFX_OBJETO_Bolsa_Alzar.wav.import",
+      "bytes": 168,
+      "md5": "edaaffb92f1e22a4eab25d9b56d145f2",
+      "flags": 0
+    },
+    {
+      "path": "assets/audio/SFX_OBJETO_BotellaPlastica_Alzar.wav.import",
+      "bytes": 179,
+      "md5": "88e6eba12c34a0efd94f29515b1ede4e",
+      "flags": 0
+    },
+    {
+      "path": "assets/audio/SFX_OBJETO_BotellaPlastica_Dejar.wav.import",
+      "bytes": 178,
+      "md5": "cb661e4c05c8043c99bb7e3147994caa",
+      "flags": 0
+    },
+    {
+      "path": "assets/audio/SFX_OBJETO_Cajita_Alzar.wav.import",
+      "bytes": 170,
+      "md5": "54e6f5255f44a6b10149da5e6d917717",
+      "flags": 0
+    },
+    {
+      "path": "assets/audio/SFX_OBJETO_Cajita_Dejar.wav.import",
+      "bytes": 170,
+      "md5": "f2135ce89831f61ab3f4c742cc7a987b",
+      "flags": 0
+    },
+    {
+      "path": "assets/audio/SFX_OBJETO_EnvoltorioPlastico_Alzar.wav.import",
+      "bytes": 182,
+      "md5": "1f9c1fdb43b5e3760f4eaae6ac70dcbc",
+      "flags": 0
+    },
+    {
+      "path": "assets/audio/SFX_OBJETO_EnvoltorioPlastico_Dejar.wav.import",
+      "bytes": 181,
+      "md5": "bc1260a1f04acf6b5a5c362d3d3c8c98",
+      "flags": 0
+    },
+    {
+      "path": "assets/audio/SFX_OBJETO_Jabon_VertirEnBalde.wav.import",
+      "bytes": 176,
+      "md5": "d0de89580eeca423ecdbf6dafb4448c9",
+      "flags": 0
+    },
+    {
+      "path": "assets/audio/SFX_OBJETO_Lata_Alzar.wav.import",
+      "bytes": 168,
+      "md5": "976422545044632723181d2e45ce2f86",
+      "flags": 0
+    },
+    {
+      "path": "assets/audio/SFX_OBJETO_Lata_Dejar.wav.import",
+      "bytes": 167,
+      "md5": "21a22692a97e244f5b118c9d443f0d2d",
+      "flags": 0
+    },
+    {
+      "path": "assets/audio/SFX_OBJETO_Mopa_Alzar.wav.import",
+      "bytes": 168,
+      "md5": "017d204f1b9952276b2b3dccef353724",
+      "flags": 0
+    },
+    {
+      "path": "assets/audio/SFX_OBJETO_Mopa_DejarYLimpiar.wav.import",
+      "bytes": 176,
+      "md5": "4e39b14dbd4011b5ca0b9d20a154b8bb",
+      "flags": 0
+    },
+    {
+      "path": "assets/audio/SFX_OBJETO_Mopa_MojarEnBalde.wav.import",
+      "bytes": 175,
+      "md5": "b5aecb5e97997b9cd9b7166dd9a08077",
+      "flags": 0
+    },
+    {
+      "path": "assets/audio/SFX_OBJETO_Papel_Alzar.wav.import",
+      "bytes": 169,
+      "md5": "fc992c0cc89032394824551988c4e3d2",
+      "flags": 0
+    },
+    {
+      "path": "assets/audio/SFX_OBJETO_Papel_Dejar.wav.import",
+      "bytes": 169,
+      "md5": "4885040f8cbb99e438f331f3694174c8",
+      "flags": 0
+    },
+    {
+      "path": "assets/audio/SFX_PERSONAJE_Paso1.wav.import",
+      "bytes": 166,
+      "md5": "73f5ce26dc5bef7489ebef01072efceb",
+      "flags": 0
+    },
+    {
+      "path": "assets/audio/SFX_PERSONAJE_Paso2.wav.import",
+      "bytes": 166,
+      "md5": "a8ec0109ad0136e184cd8cc14415f824",
+      "flags": 0
+    },
+    {
+      "path": "assets/audio/SFX_PERSONAJE_Paso3.wav.import",
+      "bytes": 166,
+      "md5": "c83a363c0648bbdfd182c25dc552aed9",
+      "flags": 0
+    },
+    {
+      "path": "assets/audio/SFX_PERSONAJE_Paso4.wav.import",
+      "bytes": 164,
+      "md5": "bee4ac99a89f8a3e7c5c0a1ec3d48d03",
+      "flags": 0
+    },
+    {
+      "path": "assets/audio/SFX_PERSONAJE_Pasos.wav.import",
+      "bytes": 166,
+      "md5": "bc4640b6dc078986f622e72b0d22a8a3",
+      "flags": 0
+    },
+    {
+      "path": "assets/boxes/actroncito.png.import",
+      "bytes": 242,
+      "md5": "8b8c8e4cf5d11716615aaa664efc567f",
+      "flags": 0
+    },
+    {
+      "path": "assets/boxes/amargadito.png.import",
+      "bytes": 243,
+      "md5": "13dc20d160ed4421954faf706cdf13fc",
+      "flags": 0
+    },
+    {
+      "path": "assets/boxes/burbaloo.png.import",
+      "bytes": 241,
+      "md5": "2acb797c793be10820fef80bd9554671",
+      "flags": 0
+    },
+    {
+      "path": "assets/boxes/cindolor.png.import",
+      "bytes": 241,
+      "md5": "318b30e6b63507d335c396c52042f4d9",
+      "flags": 0
+    },
+    {
+      "path": "assets/boxes/cosa_de_mani.png.import",
+      "bytes": 245,
+      "md5": "70630789915e8335b0a73616b87f8df5",
+      "flags": 0
+    },
+    {
+      "path": "assets/boxes/donsaturados.png.import",
+      "bytes": 245,
+      "md5": "e785717cc18467ab8e5992126f3741ef",
+      "flags": 0
+    },
+    {
+      "path": "assets/boxes/durextra.png.import",
+      "bytes": 241,
+      "md5": "3e0463846656e91adb26b9ca29c3dc32",
+      "flags": 0
+    },
+    {
+      "path": "assets/boxes/duronga.png.import",
+      "bytes": 240,
+      "md5": "e1c7fa924897f1a6254c38f96f415ffe",
+      "flags": 0
+    },
+    {
+      "path": "assets/boxes/fernet_god.png.import",
+      "bytes": 243,
+      "md5": "cfa797f1cba496427ff9b8b448a7206c",
+      "flags": 0
+    },
+    {
+      "path": "assets/boxes/flinpuf.png.import",
+      "bytes": 240,
+      "md5": "3bf1490b9a593cf1bda523db461ecbae",
+      "flags": 0
+    },
+    {
+      "path": "assets/boxes/frotlups.png.import",
+      "bytes": 241,
+      "md5": "2e19f2fc6fa42dbbbb551469cdf39de9",
+      "flags": 0
+    },
+    {
+      "path": "assets/boxes/jorgillo.png.import",
+      "bytes": 241,
+      "md5": "a81397d6f7815673ad65a47bcf51f70a",
+      "flags": 0
+    },
+    {
+      "path": "assets/boxes/laysntt.png.import",
+      "bytes": 240,
+      "md5": "7c1156f913e1a4e6f73129df4de2229d",
+      "flags": 0
+    },
+    {
+      "path": "assets/boxes/macumbas.png.import",
+      "bytes": 241,
+      "md5": "dd0875ced9f8e4b944235a5d95f2508a",
+      "flags": 0
+    },
+    {
+      "path": "assets/boxes/mayonchis.png.import",
+      "bytes": 242,
+      "md5": "ba53442a41aac0e20a74e765d976fbad",
+      "flags": 0
+    },
+    {
+      "path": "assets/boxes/oaaaa.png.import",
+      "bytes": 238,
+      "md5": "ece7c9b1e0499622be72df28b0c158b1",
+      "flags": 0
+    },
+    {
+      "path": "assets/boxes/petisas.png.import",
+      "bytes": 239,
+      "md5": "93b9a0f349d5872f609e746dbb9d0c86",
+      "flags": 0
+    },
+    {
+      "path": "assets/boxes/terminator.png.import",
+      "bytes": 243,
+      "md5": "967a53eb8bb9cb3f19b92a4094e234e4",
+      "flags": 0
+    },
+    {
+      "path": "assets/boxes/zucarachas.png.import",
+      "bytes": 243,
+      "md5": "41916bd9bcc3b729cd6c1b9069ce6391",
+      "flags": 0
+    },
+    {
+      "path": "assets/environments/canopy_without_lamp.png.import",
+      "bytes": 252,
+      "md5": "5aa49deb6dbdbec2c4f3d094dc9d7bbf",
+      "flags": 0
+    },
+    {
+      "path": "assets/environments/canopy_without_lamp.provenance.json",
+      "bytes": 1409,
+      "md5": "61f079b38e186c2cc9c865c07f600470",
+      "flags": 0
+    },
+    {
+      "path": "assets/environments/estacion_fondo_sin_objetos.png.import",
+      "bytes": 259,
+      "md5": "63b70eb42cc9cd62d647c8213d8abe9d",
+      "flags": 0
+    },
+    {
+      "path": "assets/environments/estacion_fondo_sin_objetos.provenance.json",
+      "bytes": 2028,
+      "md5": "df14929b576ea6e8d4b3ecdf40820776",
+      "flags": 0
+    },
+    {
+      "path": "assets/environments/estacion_panoramica_gemini.jpg.import",
+      "bytes": 259,
+      "md5": "ce9ce044f5822d09a68534ae1efc5bfb",
+      "flags": 0
+    },
+    {
+      "path": "assets/environments/vidrio_marcas.png.import",
+      "bytes": 246,
+      "md5": "118199b2fdedb27bebbf749262cb338b",
+      "flags": 0
+    },
+    {
+      "path": "assets/models/SEPT_JUEGOS_PROTOTIPO.glb.import",
+      "bytes": 183,
+      "md5": "b5659a4077999185886c01faf2ea1e63",
+      "flags": 0
+    },
+    {
+      "path": "assets/models/SEPT_JUEGOS_PROTOTIPO_Actroncito completo.png.import",
+      "bytes": 340,
+      "md5": "b8abf25da208cb7c3f4af6d4b8945f23",
+      "flags": 0
+    },
+    {
+      "path": "assets/models/SEPT_JUEGOS_PROTOTIPO_Bricks066_1K-JPG_Color.jpg.import",
+      "bytes": 343,
+      "md5": "c6fae41c8774b1b8e0ae8126dcfe0448",
+      "flags": 0
+    },
+    {
+      "path": "assets/models/SEPT_JUEGOS_PROTOTIPO_Bricks066_1K-JPG_NormalGL.jpg.import",
+      "bytes": 347,
+      "md5": "2140c8b1d65c6c006463d637b8d437e7",
+      "flags": 0
+    },
+    {
+      "path": "assets/models/SEPT_JUEGOS_PROTOTIPO_Bricks066_1K-JPG_Roughness.png.import",
+      "bytes": 348,
+      "md5": "6565167fc278081a840722b075670335",
+      "flags": 0
+    },
+    {
+      "path": "assets/models/SEPT_JUEGOS_PROTOTIPO_Burbaloo completo_1.png.import",
+      "bytes": 341,
+      "md5": "f0d010a37dfeebee60d4533de2a6f491",
+      "flags": 0
+    },
+    {
+      "path": "assets/models/SEPT_JUEGOS_PROTOTIPO_Don Saturados completo.png.import",
+      "bytes": 344,
+      "md5": "40eefc91297974a2d46aed38621bfb9c",
+      "flags": 0
+    },
+    {
+      "path": "assets/models/SEPT_JUEGOS_PROTOTIPO_Durextra completo_1.png.import",
+      "bytes": 341,
+      "md5": "e75601a289ff4cc0642806cb669596b9",
+      "flags": 0
+    },
+    {
+      "path": "assets/models/SEPT_JUEGOS_PROTOTIPO_Gu\u00eda de jabones y manchas copy.png.import",
+      "bytes": 353,
+      "md5": "71c2ed5b64b556e81a07f49581c85aae",
+      "flags": 0
+    },
+    {
+      "path": "assets/models/SEPT_JUEGOS_PROTOTIPO_LIMPIEZA ETIQUETA (1).png.import",
+      "bytes": 343,
+      "md5": "3f9d689606984781de005336b0b77fe4",
+      "flags": 0
+    },
+    {
+      "path": "assets/models/SEPT_JUEGOS_PROTOTIPO_LIMPIEZA ETIQUETA (2).png.import",
+      "bytes": 342,
+      "md5": "2c5e0739b8d1b6ff5291118f81e16fd6",
+      "flags": 0
+    },
+    {
+      "path": "assets/models/SEPT_JUEGOS_PROTOTIPO_LIMPIEZA ETIQUETA (3).png.import",
+      "bytes": 343,
+      "md5": "5e2feab0126eac8c2b843b241ec2de79",
+      "flags": 0
+    },
+    {
+      "path": "assets/models/SEPT_JUEGOS_PROTOTIPO_Lay\u00b4snt\u00b4t completo_1.png.import",
+      "bytes": 344,
+      "md5": "2f232b36ff5f2aa5e940777313a374df",
+      "flags": 0
+    },
+    {
+      "path": "assets/models/SEPT_JUEGOS_PROTOTIPO_Material.png.import",
+      "bytes": 330,
+      "md5": "5460589ea944f4b282f25987f4b1cfb4",
+      "flags": 0
+    },
+    {
+      "path": "assets/models/SEPT_JUEGOS_PROTOTIPO_Material_54.png.import",
+      "bytes": 333,
+      "md5": "2544e7fa7aeaf7fa17fd53271232bf83",
+      "flags": 0
+    },
+    {
+      "path": "assets/models/SEPT_JUEGOS_PROTOTIPO_Material_55.png.import",
+      "bytes": 333,
+      "md5": "e3da1e5d2695693f471d4158eb183e28",
+      "flags": 0
+    },
+    {
+      "path": "assets/models/SEPT_JUEGOS_PROTOTIPO_Material_56.png.import",
+      "bytes": 333,
+      "md5": "9049511404c297d5ea40e53989a0e725",
+      "flags": 0
+    },
+    {
+      "path": "assets/models/SEPT_JUEGOS_PROTOTIPO_Material_57.png.import",
+      "bytes": 333,
+      "md5": "aeb0436c66ad256d9de035d8591a465d",
+      "flags": 0
+    },
+    {
+      "path": "assets/models/SEPT_JUEGOS_PROTOTIPO_Material_58.png.import",
+      "bytes": 333,
+      "md5": "a2b01898cd4a734ca6f7747114227fa6",
+      "flags": 0
+    },
+    {
+      "path": "assets/models/SEPT_JUEGOS_PROTOTIPO_Material_59.png.import",
+      "bytes": 333,
+      "md5": "2104694a2b5589fae13ba16a2b62cb7c",
+      "flags": 0
+    },
+    {
+      "path": "assets/models/SEPT_JUEGOS_PROTOTIPO_Material_6.png.import",
+      "bytes": 332,
+      "md5": "a2c0c3be8f89b81a9237d3b424c9ed1d",
+      "flags": 0
+    },
+    {
+      "path": "assets/models/SEPT_JUEGOS_PROTOTIPO_Terminator completo.png.import",
+      "bytes": 341,
+      "md5": "ee00dd2e528b3a67673e0a428cea1d40",
+      "flags": 0
+    },
+    {
+      "path": "assets/models/SEPT_JUEGOS_PROTOTIPO_Wood_02-128x128.png.import",
+      "bytes": 337,
+      "md5": "c83fc4cbbed129b33baf002224230abd",
+      "flags": 0
+    },
+    {
+      "path": "assets/models/SEPT_JUEGOS_PROTOTIPO_Wood_09-128x128.png.import",
+      "bytes": 336,
+      "md5": "574135a2ba7706aced957a657cfe0923",
+      "flags": 0
+    },
+    {
+      "path": "assets/models/SEPT_JUEGOS_PROTOTIPO_Wood_10-128x128.png.import",
+      "bytes": 337,
+      "md5": "19a208f670b59c75b5cde6276f14003e",
+      "flags": 0
+    },
+    {
+      "path": "assets/models/SEPT_JUEGOS_PROTOTIPO_Zucarachas completo_1.png.import",
+      "bytes": 342,
+      "md5": "1c66a99817dff9ab6e67b88df5822541",
+      "flags": 0
+    },
+    {
+      "path": "assets/models/SEPT_JUEGOS_PROTOTIPO_amargadito completo.png.import",
+      "bytes": 341,
+      "md5": "ddeb9a8fdcb0547cb0ada874ebfc1261",
+      "flags": 0
+    },
+    {
+      "path": "assets/models/SEPT_JUEGOS_PROTOTIPO_arvecor.png.import",
+      "bytes": 328,
+      "md5": "9a89f2ef43899bb1c351f04a4357c03d",
+      "flags": 0
+    },
+    {
+      "path": "assets/models/SEPT_JUEGOS_PROTOTIPO_atun marranos.png.import",
+      "bytes": 334,
+      "md5": "719b7300bb8aa7e81a56e7188bf7c6ad",
+      "flags": 0
+    },
+    {
+      "path": "assets/models/SEPT_JUEGOS_PROTOTIPO_bano_ivory_oscuro_color.png.import",
+      "bytes": 345,
+      "md5": "5a96a7a94487144b3780a3fc0fe01ea9",
+      "flags": 0
+    },
+    {
+      "path": "assets/models/SEPT_JUEGOS_PROTOTIPO_bano_ivory_oscuro_normal.png.import",
+      "bytes": 346,
+      "md5": "b2a1ac67ef22e403e42f6c49493d850f",
+      "flags": 0
+    },
+    {
+      "path": "assets/models/SEPT_JUEGOS_PROTOTIPO_bano_ivory_oscuro_orm.png.import",
+      "bytes": 342,
+      "md5": "887668013f42bd51e8bfcae43184e3e1",
+      "flags": 0
+    },
+    {
+      "path": "assets/models/SEPT_JUEGOS_PROTOTIPO_bano_piso_gris.png.import",
+      "bytes": 336,
+      "md5": "a8d38e22ea8fc75d650eca9012a02ed6",
+      "flags": 0
+    },
+    {
+      "path": "assets/models/SEPT_JUEGOS_PROTOTIPO_caja luz exterior.png.import",
+      "bytes": 339,
+      "md5": "1f5a0fd8c627680ee6d2daeaf354e4d1",
+      "flags": 0
+    },
+    {
+      "path": "assets/models/SEPT_JUEGOS_PROTOTIPO_caja luz interior.png.import",
+      "bytes": 339,
+      "md5": "c0f832a555575195e487e7f3c462bf35",
+      "flags": 0
+    },
+    {
+      "path": "assets/models/SEPT_JUEGOS_PROTOTIPO_caja.png.import",
+      "bytes": 325,
+      "md5": "7043a08cc970f79f1b14d626c8e97ae0",
+      "flags": 0
+    },
+    {
+      "path": "assets/models/SEPT_JUEGOS_PROTOTIPO_cereal textura.png.import",
+      "bytes": 336,
+      "md5": "6d6c6f4e94706c92bf9220195ef33dac",
+      "flags": 0
+    },
+    {
+      "path": "assets/models/SEPT_JUEGOS_PROTOTIPO_chisito.png.import",
+      "bytes": 329,
+      "md5": "828532891a7601232c6cc49847e7ac93",
+      "flags": 0
+    },
+    {
+      "path": "assets/models/SEPT_JUEGOS_PROTOTIPO_cielorraso_emision.png.import",
+      "bytes": 339,
+      "md5": "6ff08257b6e8faa03c9aecd78144a6cc",
+      "flags": 0
+    },
+    {
+      "path": "assets/models/SEPT_JUEGOS_PROTOTIPO_cielorraso_placas.png.import",
+      "bytes": 339,
+      "md5": "b5ace29d4260786977c2211f014b8822",
+      "flags": 0
+    },
+    {
+      "path": "assets/models/SEPT_JUEGOS_PROTOTIPO_cindolor completo.png.import",
+      "bytes": 339,
+      "md5": "0a52b104bfda76bed2cc29ba5a502f96",
+      "flags": 0
+    },
+    {
+      "path": "assets/models/SEPT_JUEGOS_PROTOTIPO_compu normals.png.import",
+      "bytes": 334,
+      "md5": "cd767100e41a08bd87647febb8c8f624",
+      "flags": 0
+    },
+    {
+      "path": "assets/models/SEPT_JUEGOS_PROTOTIPO_concrete_floor_worn_001_rough_1k.png.import",
+      "bytes": 354,
+      "md5": "df55d6a3de8c8d14387108d4064f6424",
+      "flags": 0
+    },
+    {
+      "path": "assets/models/SEPT_JUEGOS_PROTOTIPO_concreto2_baseColor.png.import",
+      "bytes": 340,
+      "md5": "5c1e29cfa5b62b23d00db78c586e9343",
+      "flags": 0
+    },
+    {
+      "path": "assets/models/SEPT_JUEGOS_PROTOTIPO_cora cola.png.import",
+      "bytes": 330,
+      "md5": "2df3e4be51c8f90f84f88a7b76d648d7",
+      "flags": 0
+    },
+    {
+      "path": "assets/models/SEPT_JUEGOS_PROTOTIPO_corrugated_iron_02_diff_1k.jpg.import",
+      "bytes": 347,
+      "md5": "be0206760bbe0a465673aeaa587516f8",
+      "flags": 0
+    },
+    {
+      "path": "assets/models/SEPT_JUEGOS_PROTOTIPO_corrugated_iron_02_metal_1k-corrugated_iron_02_rough_1k.png.import",
+      "bytes": 376,
+      "md5": "6d2f9760ec05fbcc3f9d1069d639a05a",
+      "flags": 0
+    },
+    {
+      "path": "assets/models/SEPT_JUEGOS_PROTOTIPO_corrugated_iron_02_nor_gl_1k.png.import",
+      "bytes": 350,
+      "md5": "e155b64971675aec5c113c083e72b01d",
+      "flags": 0
+    },
+    {
+      "path": "assets/models/SEPT_JUEGOS_PROTOTIPO_cosa de mani interno.png.import",
+      "bytes": 342,
+      "md5": "e0049864517f75b0242d15f470adc612",
+      "flags": 0
+    },
+    {
+      "path": "assets/models/SEPT_JUEGOS_PROTOTIPO_deposito_concreto_color.png.import",
+      "bytes": 345,
+      "md5": "e634c4e15be4334f20fed5571b7a6d01",
+      "flags": 0
+    },
+    {
+      "path": "assets/models/SEPT_JUEGOS_PROTOTIPO_deposito_concreto_normal.png.import",
+      "bytes": 345,
+      "md5": "3a5b4d9a625a21d3d50036cfa003e584",
+      "flags": 0
+    },
+    {
+      "path": "assets/models/SEPT_JUEGOS_PROTOTIPO_deposito_contenedor_cuerpo_color.png.import",
+      "bytes": 354,
+      "md5": "4d91188819380c16d547888f3a2ad8a5",
+      "flags": 0
+    },
+    {
+      "path": "assets/models/SEPT_JUEGOS_PROTOTIPO_deposito_contenedor_cuerpo_normal.png.import",
+      "bytes": 355,
+      "md5": "acb2f79fc8d9d15872b0580e8d1fccbf",
+      "flags": 0
+    },
+    {
+      "path": "assets/models/SEPT_JUEGOS_PROTOTIPO_deposito_contenedor_cuerpo_roughness.png.import",
+      "bytes": 358,
+      "md5": "98c7af50b6719f2ed2bdca1b13f333d9",
+      "flags": 0
+    },
+    {
+      "path": "assets/models/SEPT_JUEGOS_PROTOTIPO_deposito_contenedor_ruedas_normal.png.import",
+      "bytes": 355,
+      "md5": "f4e125e03dd8d160c5df40ff75c07dfb",
+      "flags": 0
+    },
+    {
+      "path": "assets/models/SEPT_JUEGOS_PROTOTIPO_deposito_contenedor_tapa_color.png.import",
+      "bytes": 352,
+      "md5": "af0d85b9d4240f29d53b9428680755fd",
+      "flags": 0
+    },
+    {
+      "path": "assets/models/SEPT_JUEGOS_PROTOTIPO_deposito_contenedor_tapa_normal.png.import",
+      "bytes": 353,
+      "md5": "dd3a64ae4791ac77b72625f4c087f3b9",
+      "flags": 0
+    },
+    {
+      "path": "assets/models/SEPT_JUEGOS_PROTOTIPO_deposito_contenedor_tapa_roughness.png.import",
+      "bytes": 355,
+      "md5": "8f53884e2a870f71158626f3346082ae",
+      "flags": 0
+    },
+    {
+      "path": "assets/models/SEPT_JUEGOS_PROTOTIPO_duronga.png.import",
+      "bytes": 329,
+      "md5": "d76c1427a9adde00987f3a7190f9185f",
+      "flags": 0
+    },
+    {
+      "path": "assets/models/SEPT_JUEGOS_PROTOTIPO_exterior_nocturno.png.import",
+      "bytes": 339,
+      "md5": "44f3363f5956c6aa2239d6f0be8839bb",
+      "flags": 0
+    },
+    {
+      "path": "assets/models/SEPT_JUEGOS_PROTOTIPO_fernetgod textura.png.import",
+      "bytes": 339,
+      "md5": "54356ccafd32a723c6d483d9751ca687",
+      "flags": 0
+    },
+    {
+      "path": "assets/models/SEPT_JUEGOS_PROTOTIPO_fideos marolini.png.import",
+      "bytes": 337,
+      "md5": "4cb1398daa5bc1a1af511f0229d6d786",
+      "flags": 0
+    },
+    {
+      "path": "assets/models/SEPT_JUEGOS_PROTOTIPO_flim pof completo.png.import",
+      "bytes": 339,
+      "md5": "e8c840efff94e097653ff878f20ce01d",
+      "flags": 0
+    },
+    {
+      "path": "assets/models/SEPT_JUEGOS_PROTOTIPO_frot lups.png.import",
+      "bytes": 330,
+      "md5": "36e1e3ff7327bc2556cd462774ba7aba",
+      "flags": 0
+    },
+    {
+      "path": "assets/models/SEPT_JUEGOS_PROTOTIPO_gondola_chapa_blanca_512_basecolor.png.import",
+      "bytes": 356,
+      "md5": "1b639c478fedbaebdd69e278ba0c427e",
+      "flags": 0
+    },
+    {
+      "path": "assets/models/SEPT_JUEGOS_PROTOTIPO_gondola_panel_blanca_1024_basecolor.png.import",
+      "bytes": 357,
+      "md5": "a0d2691c5070c6d4b3ac478968853bdd",
+      "flags": 0
+    },
+    {
+      "path": "assets/models/SEPT_JUEGOS_PROTOTIPO_gondola_portaprecio_basecolor.png.import",
+      "bytes": 351,
+      "md5": "606117dfbc25ec4a7181b607c92ac0e4",
+      "flags": 0
+    },
+    {
+      "path": "assets/models/SEPT_JUEGOS_PROTOTIPO_interior_tiles_diff_1k.jpg.import",
+      "bytes": 344,
+      "md5": "efc744e4e46c71347cffa7e00ac920d8",
+      "flags": 0
+    },
+    {
+      "path": "assets/models/SEPT_JUEGOS_PROTOTIPO_jab\u00f3n liquido.png.import",
+      "bytes": 335,
+      "md5": "320210084c0d49b28ab683c17485e112",
+      "flags": 0
+    },
+    {
+      "path": "assets/models/SEPT_JUEGOS_PROTOTIPO_jorgillata.png.import",
+      "bytes": 332,
+      "md5": "1b191d4426470827c6fd4e007f7ccf6f",
+      "flags": 0
+    },
+    {
+      "path": "assets/models/SEPT_JUEGOS_PROTOTIPO_macumbas completo.png.import",
+      "bytes": 339,
+      "md5": "2f1e32843be28a587d5976e1531d3dd3",
+      "flags": 0
+    },
+    {
+      "path": "assets/models/SEPT_JUEGOS_PROTOTIPO_mayonchis@300x.png.import",
+      "bytes": 335,
+      "md5": "c992524a6e36944c26af479858dbad9d",
+      "flags": 0
+    },
+    {
+      "path": "assets/models/SEPT_JUEGOS_PROTOTIPO_normal nuevo.png.import",
+      "bytes": 333,
+      "md5": "b50849ce8bd7d76f0067e42e6ad18807",
+      "flags": 0
+    },
+    {
+      "path": "assets/models/SEPT_JUEGOS_PROTOTIPO_nota baja resoluci\u00f3n.png.import",
+      "bytes": 343,
+      "md5": "d477b7297a69692dd470bedc93975531",
+      "flags": 0
+    },
+    {
+      "path": "assets/models/SEPT_JUEGOS_PROTOTIPO_nota sin texto.png.import",
+      "bytes": 336,
+      "md5": "9d28aa1375efb367704862be23518626",
+      "flags": 0
+    },
+    {
+      "path": "assets/models/SEPT_JUEGOS_PROTOTIPO_oaaaa completo.png.import",
+      "bytes": 335,
+      "md5": "d6bc542cd8136fa005f0ec804a225003",
+      "flags": 0
+    },
+    {
+      "path": "assets/models/SEPT_JUEGOS_PROTOTIPO_oremos.png.import",
+      "bytes": 328,
+      "md5": "a51f0f373d7b3c7d34877bfdb066e7d4",
+      "flags": 0
+    },
+    {
+      "path": "assets/models/SEPT_JUEGOS_PROTOTIPO_pepito.png.import",
+      "bytes": 327,
+      "md5": "c3fbd84095089838019290b99f500448",
+      "flags": 0
+    },
+    {
+      "path": "assets/models/SEPT_JUEGOS_PROTOTIPO_petisas completo.png.import",
+      "bytes": 338,
+      "md5": "8b9c178b6c58f9fe3ef98b163e4f292e",
+      "flags": 0
+    },
+    {
+      "path": "assets/models/SEPT_JUEGOS_PROTOTIPO_placa_acustica_basecolor.png.import",
+      "bytes": 345,
+      "md5": "5d68c70739d1897bad47d8ed6e398d57",
+      "flags": 0
+    },
+    {
+      "path": "assets/models/SEPT_JUEGOS_PROTOTIPO_porcelana_atlas.png.import",
+      "bytes": 337,
+      "md5": "dfc62d2508616c48f4968050a92c07f1",
+      "flags": 0
+    },
+    {
+      "path": "assets/models/SEPT_JUEGOS_PROTOTIPO_progres.png.import",
+      "bytes": 329,
+      "md5": "391ca73dfc6b21ada9a136de054a2b50",
+      "flags": 0
+    },
+    {
+      "path": "assets/models/SEPT_JUEGOS_PROTOTIPO_puchos.png.import",
+      "bytes": 328,
+      "md5": "b43b2b725624a4485bb3a777516bcb15",
+      "flags": 0
+    },
+    {
+      "path": "assets/models/SEPT_JUEGOS_PROTOTIPO_puerta textura.png.import",
+      "bytes": 336,
+      "md5": "3a9199c23f571d7991d9fa877213354a",
+      "flags": 0
+    },
+    {
+      "path": "assets/models/SEPT_JUEGOS_PROTOTIPO_rejilla_bano.png.import",
+      "bytes": 334,
+      "md5": "c82205ccfa84f3dc26fb18a3db0e3f61",
+      "flags": 0
+    },
+    {
+      "path": "assets/models/SEPT_JUEGOS_PROTOTIPO_reloj.png.import",
+      "bytes": 327,
+      "md5": "f24cd560f448c17b25c787f4087e6e17",
+      "flags": 0
+    },
+    {
+      "path": "assets/models/SEPT_JUEGOS_PROTOTIPO_saladick.png.import",
+      "bytes": 330,
+      "md5": "d51059155187988bc56c58d0fddaf783",
+      "flags": 0
+    },
+    {
+      "path": "assets/models/SEPT_JUEGOS_PROTOTIPO_texto instrucciones limpieza.png.import",
+      "bytes": 349,
+      "md5": "ec4000edec7a5fce389ac8e00a03d1be",
+      "flags": 0
+    },
+    {
+      "path": "assets/models/SEPT_JUEGOS_PROTOTIPO_textura caja.png.import",
+      "bytes": 334,
+      "md5": "bc5eebca23a82d039acf90272b6393ed",
+      "flags": 0
+    },
+    {
+      "path": "assets/models/SEPT_JUEGOS_PROTOTIPO_textura port\u00f3n.png.import",
+      "bytes": 336,
+      "md5": "8bd1312f5e74183aecaa42cbe2df1a98",
+      "flags": 0
+    },
+    {
+      "path": "assets/models/SEPT_JUEGOS_PROTOTIPO_textura po\u00e9tico.png.import",
+      "bytes": 271,
+      "md5": "d74497733d02633ea079a42bf64258f3",
+      "flags": 0
+    },
+    {
+      "path": "assets/models/SEPT_JUEGOS_PROTOTIPO_textura.png.import",
+      "bytes": 328,
+      "md5": "fb8de5c092591fb91f1182e7cd7301d2",
+      "flags": 0
+    },
+    {
+      "path": "assets/models/SEPT_JUEGOS_PROTOTIPO_wakasfideos.png.import",
+      "bytes": 333,
+      "md5": "7a18c086ce95d73db5a7995e09cc06f9",
+      "flags": 0
+    },
+    {
+      "path": "assets/models/caja_colision.tres.remap",
+      "bytes": 106,
+      "md5": "caaa3ed13210e96ecd844f99ac17869f",
+      "flags": 0
+    },
+    {
+      "path": "assets/models/caja_de_productos.res",
+      "bytes": 4365,
+      "md5": "0ef35190f601da0963625594e5c370f1",
+      "flags": 0
+    },
+    {
+      "path": "assets/models/extraer_mallas.gd.remap",
+      "bytes": 55,
+      "md5": "4750bf746e981a27421ef1dab2c48ba5",
+      "flags": 0
+    },
+    {
+      "path": "assets/models/extraer_mallas.gdc",
+      "bytes": 2093,
+      "md5": "ab859573bb3f1e21d0a139cb6dd33a46",
+      "flags": 0
+    },
+    {
+      "path": "assets/models/generar_miniaturas.gd.remap",
+      "bytes": 59,
+      "md5": "2a9651f51028ecb0a1a838e88eec2a79",
+      "flags": 0
+    },
+    {
+      "path": "assets/models/generar_miniaturas.gdc",
+      "bytes": 4080,
+      "md5": "58a91849880cc99fca025a4793b71f71",
+      "flags": 0
+    },
+    {
+      "path": "assets/models/importar_modelo.gd.remap",
+      "bytes": 56,
+      "md5": "32f7893ee08b444ede423577652672dd",
+      "flags": 0
+    },
+    {
+      "path": "assets/models/importar_modelo.gdc",
+      "bytes": 1586,
+      "md5": "4430a6890753abc7fc588a60ae0d80fc",
+      "flags": 0
+    },
+    {
+      "path": "assets/models/producto_actroncito.res",
+      "bytes": 5214,
+      "md5": "2dc01ef3558431936cd8e3efd6ba3578",
+      "flags": 0
+    },
+    {
+      "path": "assets/models/producto_amargadito.res",
+      "bytes": 5218,
+      "md5": "0ed7e15a14c54852adc9246b7dd4fe72",
+      "flags": 0
+    },
+    {
+      "path": "assets/models/producto_arvejas.res",
+      "bytes": 33520,
+      "md5": "421b527f34b340264bddc84a767d31c8",
+      "flags": 0
+    },
+    {
+      "path": "assets/models/producto_burbaloo.res",
+      "bytes": 6366,
+      "md5": "f7dee5b09e0a9229d38a2ea91d0fab34",
+      "flags": 0
+    },
+    {
+      "path": "assets/models/producto_chisitos.res",
+      "bytes": 8948,
+      "md5": "285b5e9931ae1437c571805e8b277ef8",
+      "flags": 0
+    },
+    {
+      "path": "assets/models/producto_cindolor.res",
+      "bytes": 5208,
+      "md5": "0cfc8109e01091fabc88d6bd05130a46",
+      "flags": 0
+    },
+    {
+      "path": "assets/models/producto_coracola.res",
+      "bytes": 25614,
+      "md5": "53ccb9a9e1ea8532ef789a7cfb9e5c85",
+      "flags": 0
+    },
+    {
+      "path": "assets/models/producto_cosa_de_mani.res",
+      "bytes": 6666,
+      "md5": "c8d8bca905bc169da352cdface574295",
+      "flags": 0
+    },
+    {
+      "path": "assets/models/producto_donsaturados.res",
+      "bytes": 6023,
+      "md5": "f3c639d50cdbe7811b129d85a4c4bed6",
+      "flags": 0
+    },
+    {
+      "path": "assets/models/producto_durextra.res",
+      "bytes": 5214,
+      "md5": "663de1c663830aaf927864ab39d7a6fc",
+      "flags": 0
+    },
+    {
+      "path": "assets/models/producto_duronga.res",
+      "bytes": 5187,
+      "md5": "7f5b85c4c926f8c87dfa6fe1cce2b0c9",
+      "flags": 0
+    },
+    {
+      "path": "assets/models/producto_feel_ricky_fort.res",
+      "bytes": 5188,
+      "md5": "96698a7a3e3a06f003fc03f06976a17b",
+      "flags": 0
+    },
+    {
+      "path": "assets/models/producto_fernet_god.res",
+      "bytes": 10018,
+      "md5": "0318ef6bc019daf67339e730d1dc1231",
+      "flags": 0
+    },
+    {
+      "path": "assets/models/producto_flinpuf.res",
+      "bytes": 6644,
+      "md5": "9d32f23ce62bea3f09030af3eb997314",
+      "flags": 0
+    },
+    {
+      "path": "assets/models/producto_frotlups.res",
+      "bytes": 5204,
+      "md5": "e18e3ec4ffd28564408f0b87951ab94a",
+      "flags": 0
+    },
+    {
+      "path": "assets/models/producto_jorgillo.res",
+      "bytes": 5205,
+      "md5": "e818ae6dbcde2586f1c938dd7057b339",
+      "flags": 0
+    },
+    {
+      "path": "assets/models/producto_laysntt.res",
+      "bytes": 8963,
+      "md5": "81ec21c952adbcddb8bc0b2306a81cfa",
+      "flags": 0
+    },
+    {
+      "path": "assets/models/producto_macumbas.res",
+      "bytes": 14778,
+      "md5": "2b60edd149a50269dcf12258286af801",
+      "flags": 0
+    },
+    {
+      "path": "assets/models/producto_malbardo.res",
+      "bytes": 8059,
+      "md5": "67ec0c4b86edfc28a54eaf5386731d0d",
+      "flags": 0
+    },
+    {
+      "path": "assets/models/producto_marolini.res",
+      "bytes": 5198,
+      "md5": "49101af3474d7f231c6c697adc7bbdb1",
+      "flags": 0
+    },
+    {
+      "path": "assets/models/producto_marranos.res",
+      "bytes": 12118,
+      "md5": "3e1e85a9b84b71054ee83c3255e9dda0",
+      "flags": 0
+    },
+    {
+      "path": "assets/models/producto_mayonchis.res",
+      "bytes": 5212,
+      "md5": "a57800dcccff8decb2eb564619938bbb",
+      "flags": 0
+    },
+    {
+      "path": "assets/models/producto_oaaaa.res",
+      "bytes": 5218,
+      "md5": "c9b92c479f45ee363af7d1752359bd92",
+      "flags": 0
+    },
+    {
+      "path": "assets/models/producto_oremos.res",
+      "bytes": 5179,
+      "md5": "7d12cf40e4aec9d63fede4176bf9a599",
+      "flags": 0
+    },
+    {
+      "path": "assets/models/producto_pepitos.res",
+      "bytes": 5183,
+      "md5": "a9ebf845cceabff2a1710d11ee9e4662",
+      "flags": 0
+    },
+    {
+      "path": "assets/models/producto_petisas.res",
+      "bytes": 5997,
+      "md5": "e4ebba171598211bfd7398f861ba4e00",
+      "flags": 0
+    },
+    {
+      "path": "assets/models/producto_prongles.res",
+      "bytes": 12955,
+      "md5": "e51c5e6a4151268bea07da5dbff4ff93",
+      "flags": 0
+    },
+    {
+      "path": "assets/models/producto_saladik.res",
+      "bytes": 5188,
+      "md5": "bd082343c5936cca04f0b97d7ed006a7",
+      "flags": 0
+    },
+    {
+      "path": "assets/models/producto_terminator.res",
+      "bytes": 5220,
+      "md5": "5a48c360fef2af5b45f8b3b9e78033d2",
+      "flags": 0
+    },
+    {
+      "path": "assets/models/producto_uakas.res",
+      "bytes": 5185,
+      "md5": "66664b0fb7e87bcd7686e1a051839418",
+      "flags": 0
+    },
+    {
+      "path": "assets/models/producto_zucarachas.res",
+      "bytes": 5204,
+      "md5": "2ce845ccd887760672ec7539dd96f3ee",
+      "flags": 0
+    },
+    {
+      "path": "assets/reactions/apercibimientos_0.tres.remap",
+      "bytes": 110,
+      "md5": "364313f318268cbf8ebe37f9284f9811",
+      "flags": 0
+    },
+    {
+      "path": "assets/reactions/apercibimientos_1.tres.remap",
+      "bytes": 110,
+      "md5": "7b663f4b819d6409139bb3743f0afded",
+      "flags": 0
+    },
+    {
+      "path": "assets/reactions/apercibimientos_2.tres.remap",
+      "bytes": 110,
+      "md5": "dc0d0ac1267da70bd45cebc7c361da1e",
+      "flags": 0
+    },
+    {
+      "path": "assets/reactions/apercibimientos_3.tres.remap",
+      "bytes": 110,
+      "md5": "99f39f6e487e1f211254bb0febb76a79",
+      "flags": 0
+    },
+    {
+      "path": "assets/reactions/apercibimientos_4.tres.remap",
+      "bytes": 110,
+      "md5": "85be5ef4b3a777be12c63408ae0c08a0",
+      "flags": 0
+    },
+    {
+      "path": "assets/reactions/basura_cumplida.tres.remap",
+      "bytes": 108,
+      "md5": "ae6015ee93a1f04212219f21717b6922",
+      "flags": 0
+    },
+    {
+      "path": "assets/reactions/basura_pendiente.tres.remap",
+      "bytes": 109,
+      "md5": "0108c35642282c94e0f9ad761ce5e624",
+      "flags": 0
+    },
+    {
+      "path": "assets/reactions/caja_cumplida.tres.remap",
+      "bytes": 106,
+      "md5": "8ff6166d28afe3b2159e58cdf63b32eb",
+      "flags": 0
+    },
+    {
+      "path": "assets/reactions/caja_pendiente.tres.remap",
+      "bytes": 107,
+      "md5": "f8a8a379399ac3738ec95bce38762498",
+      "flags": 0
+    },
+    {
+      "path": "assets/reactions/limpiar_cumplida.tres.remap",
+      "bytes": 109,
+      "md5": "f52b7fd6acf89ca42b63d018f712f600",
+      "flags": 0
+    },
+    {
+      "path": "assets/reactions/limpiar_pendiente.tres.remap",
+      "bytes": 110,
+      "md5": "85af02b83a6062892ca3b7120076b227",
+      "flags": 0
+    },
+    {
+      "path": "assets/reactions/registrar_cumplida.tres.remap",
+      "bytes": 111,
+      "md5": "e6b9b34269ae0462a35ef4f56a336247",
+      "flags": 0
+    },
+    {
+      "path": "assets/reactions/registrar_pendiente.tres.remap",
+      "bytes": 112,
+      "md5": "400ab433dafee037d4143fec52860c9c",
+      "flags": 0
+    },
+    {
+      "path": "assets/reactions/reponer_cumplida.tres.remap",
+      "bytes": 109,
+      "md5": "1a8c0d939574bbe82a04ea523cc2309f",
+      "flags": 0
+    },
+    {
+      "path": "assets/reactions/reponer_pendiente.tres.remap",
+      "bytes": 110,
+      "md5": "adc2e549586f03f1dc0356ed9558aaf5",
+      "flags": 0
+    },
+    {
+      "path": "assets/ui/manada/actroncito.png.import",
+      "bytes": 198,
+      "md5": "724f0f40953acf1212cf27b1d0ecea03",
+      "flags": 0
+    },
+    {
+      "path": "assets/ui/manada/amargadito.png.import",
+      "bytes": 199,
+      "md5": "4a14f6acb8a90777f62635f4edda1db1",
+      "flags": 0
+    },
+    {
+      "path": "assets/ui/manada/arvejas.png.import",
+      "bytes": 195,
+      "md5": "7aa3329e94351b23497e323d92f6e1ea",
+      "flags": 0
+    },
+    {
+      "path": "assets/ui/manada/burbaloo.png.import",
+      "bytes": 197,
+      "md5": "02928d66fa0df1247026621d01843b87",
+      "flags": 0
+    },
+    {
+      "path": "assets/ui/manada/cabecera.svg.import",
+      "bytes": 196,
+      "md5": "5ca857aa025f4bf352a0a3f1a07a48e9",
+      "flags": 0
+    },
+    {
+      "path": "assets/ui/manada/chisitos.png.import",
+      "bytes": 197,
+      "md5": "cc6f1e630b7eb2220d3734ffbccef9e6",
+      "flags": 0
+    },
+    {
+      "path": "assets/ui/manada/cindolor.png.import",
+      "bytes": 197,
+      "md5": "d75c69319c2039252b73e4aaa0ebe240",
+      "flags": 0
+    },
+    {
+      "path": "assets/ui/manada/computadora.svg.import",
+      "bytes": 199,
+      "md5": "420b07af18b581ea836d2cb9fb88eea9",
+      "flags": 0
+    },
+    {
+      "path": "assets/ui/manada/coracola.png.import",
+      "bytes": 197,
+      "md5": "3496a781f8847e9d666691ba8f7032fe",
+      "flags": 0
+    },
+    {
+      "path": "assets/ui/manada/cosa_de_mani.png.import",
+      "bytes": 201,
+      "md5": "88fb6f0d1cd972ee0c903a92eb0b9049",
+      "flags": 0
+    },
+    {
+      "path": "assets/ui/manada/donsaturados.png.import",
+      "bytes": 201,
+      "md5": "f0ec9f71fb1b65b55494dd717cfbbeb2",
+      "flags": 0
+    },
+    {
+      "path": "assets/ui/manada/durextra.png.import",
+      "bytes": 197,
+      "md5": "0131e72160459691b76377804d34c323",
+      "flags": 0
+    },
+    {
+      "path": "assets/ui/manada/duronga.png.import",
+      "bytes": 196,
+      "md5": "e572553d878625d8a874e41a0bbd164a",
+      "flags": 0
+    },
+    {
+      "path": "assets/ui/manada/feel_ricky_fort.png.import",
+      "bytes": 203,
+      "md5": "91003324d494021115fd567a3d224097",
+      "flags": 0
+    },
+    {
+      "path": "assets/ui/manada/fernet_god.png.import",
+      "bytes": 199,
+      "md5": "fee6ca132e64204116b52e452fcc4704",
+      "flags": 0
+    },
+    {
+      "path": "assets/ui/manada/flinpuf.png.import",
+      "bytes": 196,
+      "md5": "71ccbc3ea4945a661db4a00fe422cb15",
+      "flags": 0
+    },
+    {
+      "path": "assets/ui/manada/fondo_inicio.png.import",
+      "bytes": 201,
+      "md5": "29bad609f0c8f40249ed5bf341b54d60",
+      "flags": 0
+    },
+    {
+      "path": "assets/ui/manada/fondo_ventanilla.png.import",
+      "bytes": 205,
+      "md5": "700c667d61da58bf97e49180be8eb199",
+      "flags": 0
+    },
+    {
+      "path": "assets/ui/manada/frotlups.png.import",
+      "bytes": 197,
+      "md5": "fca9985a6929289941e0f6c88967f321",
+      "flags": 0
+    },
+    {
+      "path": "assets/ui/manada/jorgillo.png.import",
+      "bytes": 197,
+      "md5": "8289da2aac22fc2b5d4ae925d92ba022",
+      "flags": 0
+    },
+    {
+      "path": "assets/ui/manada/laysntt.png.import",
+      "bytes": 195,
+      "md5": "6ae3a8494bcd57bab79c52d059338a2f",
+      "flags": 0
+    },
+    {
+      "path": "assets/ui/manada/linea_detalle.svg.import",
+      "bytes": 201,
+      "md5": "114ce55af0879b23c20c4b0291df4358",
+      "flags": 0
+    },
+    {
+      "path": "assets/ui/manada/macumbas.png.import",
+      "bytes": 197,
+      "md5": "b5b677385a80c86a70359beb4946e483",
+      "flags": 0
+    },
+    {
+      "path": "assets/ui/manada/malbardo.png.import",
+      "bytes": 197,
+      "md5": "a031d37a50e16a8035c856a982ae4632",
+      "flags": 0
+    },
+    {
+      "path": "assets/ui/manada/marolini.png.import",
+      "bytes": 197,
+      "md5": "e59f85123880fd9332a83e6c4015a940",
+      "flags": 0
+    },
+    {
+      "path": "assets/ui/manada/marranos.png.import",
+      "bytes": 197,
+      "md5": "17aae37f30d6b0a8071928c324852ceb",
+      "flags": 0
+    },
+    {
+      "path": "assets/ui/manada/mayonchis.png.import",
+      "bytes": 198,
+      "md5": "de57c8cb341aabc56310602ad0e58633",
+      "flags": 0
+    },
+    {
+      "path": "assets/ui/manada/oaaaa.png.import",
+      "bytes": 194,
+      "md5": "755da0241108d2c25701c32f3a943aa5",
+      "flags": 0
+    },
+    {
+      "path": "assets/ui/manada/oremos.png.import",
+      "bytes": 195,
+      "md5": "59538962708d65983036e15aa9d0febf",
+      "flags": 0
+    },
+    {
+      "path": "assets/ui/manada/pepitos.png.import",
+      "bytes": 196,
+      "md5": "aba84ae9ad152cb2797c08809bb5cb9d",
+      "flags": 0
+    },
+    {
+      "path": "assets/ui/manada/petisas.png.import",
+      "bytes": 196,
+      "md5": "fe19a02bdd4b7d190e8c63c191ed8bce",
+      "flags": 0
+    },
+    {
+      "path": "assets/ui/manada/prongles.png.import",
+      "bytes": 197,
+      "md5": "5ea90a52c1d54be872d5ba41c528bcc1",
+      "flags": 0
+    },
+    {
+      "path": "assets/ui/manada/puntos_de_carga.svg.import",
+      "bytes": 203,
+      "md5": "f1836e356444e17f60d10ac56018ff95",
+      "flags": 0
+    },
+    {
+      "path": "assets/ui/manada/registro.svg.import",
+      "bytes": 197,
+      "md5": "f5f012c9e4579c0d3e29de7d625e3bee",
+      "flags": 0
+    },
+    {
+      "path": "assets/ui/manada/saladik.png.import",
+      "bytes": 196,
+      "md5": "052c672d087c5036e6d4b2052f4f637a",
+      "flags": 0
+    },
+    {
+      "path": "assets/ui/manada/solapa.svg.import",
+      "bytes": 194,
+      "md5": "67b1678ba1abf760c639f568d7a80874",
+      "flags": 0
+    },
+    {
+      "path": "assets/ui/manada/tema.tres.remap",
+      "bytes": 97,
+      "md5": "04005b7a776e77a432cc0d646c8434cc",
+      "flags": 0
+    },
+    {
+      "path": "assets/ui/manada/terminator.png.import",
+      "bytes": 199,
+      "md5": "7daa058e6ba181b2eb84db61df1566bb",
+      "flags": 0
+    },
+    {
+      "path": "assets/ui/manada/titulo_inicio.png.import",
+      "bytes": 201,
+      "md5": "335050528cdf804b19058ad3d95d6434",
+      "flags": 0
+    },
+    {
+      "path": "assets/ui/manada/uakas.png.import",
+      "bytes": 194,
+      "md5": "d796bbafdf296da8e9f6323fc19eb166",
+      "flags": 0
+    },
+    {
+      "path": "assets/ui/manada/unscii-16.ttf.import",
+      "bytes": 165,
+      "md5": "27d83d70a5ba1d3e9fd5d0d0ce1e0a0c",
+      "flags": 0
+    },
+    {
+      "path": "assets/ui/manada/zucarachas.png.import",
+      "bytes": 199,
+      "md5": "df99fc29ce857a9ff971e78a468f953a",
+      "flags": 0
+    },
+    {
+      "path": "default_bus_layout.tres.remap",
+      "bytes": 111,
+      "md5": "caa69edbcd9c267d88b28eef335d0f5e",
+      "flags": 0
+    },
+    {
+      "path": "icon.svg",
+      "bytes": 994,
+      "md5": "0eed98577cbbf02f0bdc0f5c9f70465b",
+      "flags": 0
+    },
+    {
+      "path": "icon.svg.import",
+      "bytes": 193,
+      "md5": "308aaf39241790bbe3fb45f934ca5950",
+      "flags": 0
+    },
+    {
+      "path": "project.binary",
+      "bytes": 6589,
+      "md5": "8781fa0bdc95281ea72234a8e28ee227",
+      "flags": 0
+    },
+    {
+      "path": "src/dominio/almacen/atencion.gd.remap",
+      "bytes": 55,
+      "md5": "06dc94baf739c656050f448ec3e9b49f",
+      "flags": 0
+    },
+    {
+      "path": "src/dominio/almacen/atencion.gdc",
+      "bytes": 1899,
+      "md5": "9ee06eef55c947ccdfa41cc8be723a88",
+      "flags": 0
+    },
+    {
+      "path": "src/dominio/almacen/balde.gd.remap",
+      "bytes": 52,
+      "md5": "cd583917ba0ff52bfaef81ffc3029750",
+      "flags": 0
+    },
+    {
+      "path": "src/dominio/almacen/balde.gdc",
+      "bytes": 933,
+      "md5": "87b0c6d8a647695e62c10d03fc5d2d6d",
+      "flags": 0
+    },
+    {
+      "path": "src/dominio/almacen/balde.tres.remap",
+      "bytes": 98,
+      "md5": "1caf0287c7de5b31525ae7e14526a159",
+      "flags": 0
+    },
+    {
+      "path": "src/dominio/almacen/bolsa_de_basura_1.tres.remap",
+      "bytes": 110,
+      "md5": "8283982fad160b11696a8a7fa1764e0d",
+      "flags": 0
+    },
+    {
+      "path": "src/dominio/almacen/bolsa_de_basura_2.tres.remap",
+      "bytes": 110,
+      "md5": "1a01b1a7255302a4a4916435acbb1d0a",
+      "flags": 0
+    },
+    {
+      "path": "src/dominio/almacen/bolsa_de_basura_3.tres.remap",
+      "bytes": 110,
+      "md5": "81fb5fec9a2b19729ca6e50e84ec8124",
+      "flags": 0
+    },
+    {
+      "path": "src/dominio/almacen/caja_de_fideos.tres.remap",
+      "bytes": 107,
+      "md5": "f50ded64cd12909ff1a52ece1f946574",
+      "flags": 0
+    },
+    {
+      "path": "src/dominio/almacen/caja_de_reposicion.tres.remap",
+      "bytes": 111,
+      "md5": "601491ca10937efd69093af027128cd8",
+      "flags": 0
+    },
+    {
+      "path": "src/dominio/almacen/catalogo.gd.remap",
+      "bytes": 55,
+      "md5": "7baf5da6d98d5a2b88b3d84b292ad6b6",
+      "flags": 0
+    },
+    {
+      "path": "src/dominio/almacen/catalogo.gdc",
+      "bytes": 4007,
+      "md5": "86dc76069f495667088952037d624e3b",
+      "flags": 0
+    },
+    {
+      "path": "src/dominio/almacen/comprador.gd.remap",
+      "bytes": 56,
+      "md5": "3f14916a7b5e30db960af163861c5124",
+      "flags": 0
+    },
+    {
+      "path": "src/dominio/almacen/comprador.gdc",
+      "bytes": 458,
+      "md5": "dcd99857ebf991d5370c2ca06475a3d3",
+      "flags": 0
+    },
+    {
+      "path": "src/dominio/almacen/compradores.gd.remap",
+      "bytes": 58,
+      "md5": "7d95f36fc09141408860264a33903764",
+      "flags": 0
+    },
+    {
+      "path": "src/dominio/almacen/compradores.gdc",
+      "bytes": 1301,
+      "md5": "51e5b66d0f2d5ee9105dc7f52bdbb808",
+      "flags": 0
+    },
+    {
+      "path": "src/dominio/almacen/contenido_de_la_caja.gd.remap",
+      "bytes": 67,
+      "md5": "ced68771aa42b69c30b95a67f3fb11a4",
+      "flags": 0
+    },
+    {
+      "path": "src/dominio/almacen/contenido_de_la_caja.gdc",
+      "bytes": 1965,
+      "md5": "aa3e84a10552737396365f84155bb02b",
+      "flags": 0
+    },
+    {
+      "path": "src/dominio/almacen/cuaderno_del_deposito.tres.remap",
+      "bytes": 114,
+      "md5": "43dd17a4a38c7534c9e2717155c85990",
+      "flags": 0
+    },
+    {
+      "path": "src/dominio/almacen/estante.gd.remap",
+      "bytes": 54,
+      "md5": "6f67814bc9004a87a4dcab33a3515948",
+      "flags": 0
+    },
+    {
+      "path": "src/dominio/almacen/estante.gdc",
+      "bytes": 4812,
+      "md5": "965ce0aa3d3371f1ad7c8ccbfed4a74b",
+      "flags": 0
+    },
+    {
+      "path": "src/dominio/almacen/inventario.gd.remap",
+      "bytes": 57,
+      "md5": "902cb4ab5e95b77f6a4a42f38f2af10d",
+      "flags": 0
+    },
+    {
+      "path": "src/dominio/almacen/inventario.gdc",
+      "bytes": 2385,
+      "md5": "b8f3930ba78d7e95c2ed48bc02de8e52",
+      "flags": 0
+    },
+    {
+      "path": "src/dominio/almacen/jabon_amarillo.tres.remap",
+      "bytes": 107,
+      "md5": "75bb5d28b1d466ba5a4ad1a50685b11e",
+      "flags": 0
+    },
+    {
+      "path": "src/dominio/almacen/jabon_azul.tres.remap",
+      "bytes": 103,
+      "md5": "2abf30ecf07fa9bda0cc4a874357cbbf",
+      "flags": 0
+    },
+    {
+      "path": "src/dominio/almacen/jabon_rosa.tres.remap",
+      "bytes": 103,
+      "md5": "1623347bf0b70da08efcfb57740d76de",
+      "flags": 0
+    },
+    {
+      "path": "src/dominio/almacen/lata_de_tomate.tres.remap",
+      "bytes": 107,
+      "md5": "657c5ad39cdcaca4993874c244b984f1",
+      "flags": 0
+    },
+    {
+      "path": "src/dominio/almacen/mancha.gd.remap",
+      "bytes": 53,
+      "md5": "9d64c1aab740f6785feb05adb226db10",
+      "flags": 0
+    },
+    {
+      "path": "src/dominio/almacen/mancha.gdc",
+      "bytes": 849,
+      "md5": "6a048fbc0395b96351c0249491a1bda1",
+      "flags": 0
+    },
+    {
+      "path": "src/dominio/almacen/manos.gd.remap",
+      "bytes": 52,
+      "md5": "fb53844710f793e743c23599fe015605",
+      "flags": 0
+    },
+    {
+      "path": "src/dominio/almacen/manos.gdc",
+      "bytes": 889,
+      "md5": "861777c7d3dbc2aa73b222cc09616044",
+      "flags": 0
+    },
+    {
+      "path": "src/dominio/almacen/mopa.gd.remap",
+      "bytes": 51,
+      "md5": "105ed57caada49caf1fbdb5d6fd6bf4a",
+      "flags": 0
+    },
+    {
+      "path": "src/dominio/almacen/mopa.gdc",
+      "bytes": 1080,
+      "md5": "47afd40d601e2598f118413d5cde2cb2",
+      "flags": 0
+    },
+    {
+      "path": "src/dominio/almacen/mopa.tres.remap",
+      "bytes": 97,
+      "md5": "7dad695b2ccc8217bbe207db8698f8ff",
+      "flags": 0
+    },
+    {
+      "path": "src/dominio/almacen/objeto_del_almacen.gd.remap",
+      "bytes": 65,
+      "md5": "688571a287c5f9a83687af7389a748ee",
+      "flags": 0
+    },
+    {
+      "path": "src/dominio/almacen/objeto_del_almacen.gdc",
+      "bytes": 808,
+      "md5": "f89e7c53cb4f16953c80b8f5cf2b447b",
+      "flags": 0
+    },
+    {
+      "path": "src/dominio/almacen/piso_del_local.gd.remap",
+      "bytes": 61,
+      "md5": "6c1e899c38db3c1ce55bca1139c54aee",
+      "flags": 0
+    },
+    {
+      "path": "src/dominio/almacen/piso_del_local.gdc",
+      "bytes": 2348,
+      "md5": "e01fe5ca991c1886acc507464b387607",
+      "flags": 0
+    },
+    {
+      "path": "src/dominio/almacen/producto.gd.remap",
+      "bytes": 55,
+      "md5": "6d7cde33bbe77dd3056d1d8eb1db9ff4",
+      "flags": 0
+    },
+    {
+      "path": "src/dominio/almacen/producto.gdc",
+      "bytes": 1024,
+      "md5": "d4964a9f01b3e46db8a3b4fd4dab1dcf",
+      "flags": 0
+    },
+    {
+      "path": "src/dominio/almacen/puerta.gd.remap",
+      "bytes": 53,
+      "md5": "bfc02b29ecef405bbca010f7dfe7b40a",
+      "flags": 0
+    },
+    {
+      "path": "src/dominio/almacen/puerta.gdc",
+      "bytes": 936,
+      "md5": "10138d66d036542964b6428b954bfffa",
+      "flags": 0
+    },
+    {
+      "path": "src/dominio/almacen/registro_de_ventas.gd.remap",
+      "bytes": 65,
+      "md5": "4653de8972d95b3e38b30ba249a4dc9e",
+      "flags": 0
+    },
+    {
+      "path": "src/dominio/almacen/registro_de_ventas.gdc",
+      "bytes": 1257,
+      "md5": "eff38f8094f4d9974a7f2137aa851be7",
+      "flags": 0
+    },
+    {
+      "path": "src/dominio/almacen/reglas_de_la_basura.gd.remap",
+      "bytes": 66,
+      "md5": "3cf5beaad7c1c21e823c56be80baeb19",
+      "flags": 0
+    },
+    {
+      "path": "src/dominio/almacen/reglas_de_la_basura.gdc",
+      "bytes": 645,
+      "md5": "5b53939f5f3aa7b3f905cc6b8b45c68b",
+      "flags": 0
+    },
+    {
+      "path": "src/dominio/almacen/reglas_de_la_limpieza.gd.remap",
+      "bytes": 68,
+      "md5": "32675ab6ca1e24039401f9834baaab62",
+      "flags": 0
+    },
+    {
+      "path": "src/dominio/almacen/reglas_de_la_limpieza.gdc",
+      "bytes": 1935,
+      "md5": "43f702cd758c3912d7c7bb6ac88b935f",
+      "flags": 0
+    },
+    {
+      "path": "src/dominio/almacen/reglas_de_la_ventanilla.gd.remap",
+      "bytes": 70,
+      "md5": "4151054526caa866ce322df6e954949e",
+      "flags": 0
+    },
+    {
+      "path": "src/dominio/almacen/reglas_de_la_ventanilla.gdc",
+      "bytes": 202,
+      "md5": "3450cf565dadf32cbc82da7226a078c1",
+      "flags": 0
+    },
+    {
+      "path": "src/dominio/almacen/reglas_de_los_objetos.gd.remap",
+      "bytes": 68,
+      "md5": "fcb1d27a36f4bfe7cca9e3801de0ffe7",
+      "flags": 0
+    },
+    {
+      "path": "src/dominio/almacen/reglas_de_los_objetos.gdc",
+      "bytes": 1447,
+      "md5": "b45e1f8ee5129db5e3b179e67831009f",
+      "flags": 0
+    },
+    {
+      "path": "src/dominio/almacen/reglas_del_estante.gd.remap",
+      "bytes": 65,
+      "md5": "48321a52771cd27e7917b386d6c4c432",
+      "flags": 0
+    },
+    {
+      "path": "src/dominio/almacen/reglas_del_estante.gdc",
+      "bytes": 187,
+      "md5": "91eda10605aa7ccdabf0b27a7392ed7a",
+      "flags": 0
+    },
+    {
+      "path": "src/dominio/almacen/rescate.gd.remap",
+      "bytes": 54,
+      "md5": "c05367140d62558ea07fdd4f9a18aba3",
+      "flags": 0
+    },
+    {
+      "path": "src/dominio/almacen/rescate.gdc",
+      "bytes": 542,
+      "md5": "9829bdf86093877f6ce02ae634b16417",
+      "flags": 0
+    },
+    {
+      "path": "src/dominio/almacen/tapa_del_contenedor.gd.remap",
+      "bytes": 66,
+      "md5": "1932de843cc57f47064168a2230ae6fe",
+      "flags": 0
+    },
+    {
+      "path": "src/dominio/almacen/tapa_del_contenedor.gdc",
+      "bytes": 807,
+      "md5": "73b46b95ad54636d8d103aef6feb940d",
+      "flags": 0
+    },
+    {
+      "path": "src/dominio/almacen/tarea_de_atender.gd.remap",
+      "bytes": 63,
+      "md5": "ca8245b13c162d0971c60a140f35d345",
+      "flags": 0
+    },
+    {
+      "path": "src/dominio/almacen/tarea_de_atender.gdc",
+      "bytes": 1263,
+      "md5": "44899195f19cb2a3e594221a59f689fd",
+      "flags": 0
+    },
+    {
+      "path": "src/dominio/almacen/tarea_de_la_basura.gd.remap",
+      "bytes": 65,
+      "md5": "856179b8afe147aa3f50697b18088489",
+      "flags": 0
+    },
+    {
+      "path": "src/dominio/almacen/tarea_de_la_basura.gdc",
+      "bytes": 1113,
+      "md5": "f1a4ea699fb1571b1bea762e5e05ebc4",
+      "flags": 0
+    },
+    {
+      "path": "src/dominio/almacen/trayecto.gd.remap",
+      "bytes": 55,
+      "md5": "2d4a20797eb6d528cb55f81ab45bcc0e",
+      "flags": 0
+    },
+    {
+      "path": "src/dominio/almacen/trayecto.gdc",
+      "bytes": 378,
+      "md5": "40c0e5ca7d875b31abd452a70dcf0a00",
+      "flags": 0
+    },
+    {
+      "path": "src/dominio/almacen/unidad_de_producto.gd.remap",
+      "bytes": 65,
+      "md5": "4bea3b8fda6987dd1f7db2cdcd5a516f",
+      "flags": 0
+    },
+    {
+      "path": "src/dominio/almacen/unidad_de_producto.gdc",
+      "bytes": 415,
+      "md5": "3db924ce1744a6f38ce7487335fdfee0",
+      "flags": 0
+    },
+    {
+      "path": "src/dominio/almacen/uso.gd.remap",
+      "bytes": 50,
+      "md5": "e90c8c6a4324a44799d05e3192c4c11d",
+      "flags": 0
+    },
+    {
+      "path": "src/dominio/almacen/uso.gdc",
+      "bytes": 1336,
+      "md5": "1adb90fcd4d4a9999b9594416d00c27e",
+      "flags": 0
+    },
+    {
+      "path": "src/dominio/almacen/venta.gd.remap",
+      "bytes": 52,
+      "md5": "b18ba5540ccd21248095dbc4f427f004",
+      "flags": 0
+    },
+    {
+      "path": "src/dominio/almacen/venta.gdc",
+      "bytes": 713,
+      "md5": "0daea093ed1ad4d0e83cec5b8205dd65",
+      "flags": 0
+    },
+    {
+      "path": "src/dominio/ambiente/apagado_por_obstaculos.gd.remap",
+      "bytes": 70,
+      "md5": "ba1e77a67f7c353acab6ba6af1e8cbb6",
+      "flags": 0
+    },
+    {
+      "path": "src/dominio/ambiente/apagado_por_obstaculos.gdc",
+      "bytes": 1139,
+      "md5": "9bda0de72a4cc73ae03001cd1edd9f5f",
+      "flags": 0
+    },
+    {
+      "path": "src/dominio/ambiente/contador_de_golpes.gd.remap",
+      "bytes": 66,
+      "md5": "8aa2ccccb1354230e71c73bb2852424a",
+      "flags": 0
+    },
+    {
+      "path": "src/dominio/ambiente/contador_de_golpes.gdc",
+      "bytes": 1148,
+      "md5": "c16890b0e385b9c3b0f79dda79f74300",
+      "flags": 0
+    },
+    {
+      "path": "src/dominio/ambiente/eleccion_de_variante.gd.remap",
+      "bytes": 68,
+      "md5": "53d7fd1f8f16a91e7d844a259c0ba773",
+      "flags": 0
+    },
+    {
+      "path": "src/dominio/ambiente/eleccion_de_variante.gdc",
+      "bytes": 444,
+      "md5": "569a99da99fd24947412e1d996117c2a",
+      "flags": 0
+    },
+    {
+      "path": "src/dominio/ambiente/emisores_del_ambiente.gd.remap",
+      "bytes": 69,
+      "md5": "fbe725673243303656f49d29700c9360",
+      "flags": 0
+    },
+    {
+      "path": "src/dominio/ambiente/emisores_del_ambiente.gdc",
+      "bytes": 720,
+      "md5": "4f521ba79adcbc0a5232e62b27cb784b",
+      "flags": 0
+    },
+    {
+      "path": "src/dominio/ambiente/entrada_sonora.gd.remap",
+      "bytes": 62,
+      "md5": "e1a1cc110bd6730b9fb4a7d99aba75d5",
+      "flags": 0
+    },
+    {
+      "path": "src/dominio/ambiente/entrada_sonora.gdc",
+      "bytes": 2219,
+      "md5": "d2ab9ff6435299993426db692ca32637",
+      "flags": 0
+    },
+    {
+      "path": "src/dominio/ambiente/indicacion_del_foco.gd.remap",
+      "bytes": 67,
+      "md5": "07c974bf5b37f2e0c9f908f29a6e80cb",
+      "flags": 0
+    },
+    {
+      "path": "src/dominio/ambiente/indicacion_del_foco.gdc",
+      "bytes": 355,
+      "md5": "2f38d5e5c6dc26fbd8391a8e7eae7807",
+      "flags": 0
+    },
+    {
+      "path": "src/dominio/ambiente/ronda_de_voces.gd.remap",
+      "bytes": 62,
+      "md5": "aef09fdb3312a7f3015d6a7412ad44e3",
+      "flags": 0
+    },
+    {
+      "path": "src/dominio/ambiente/ronda_de_voces.gdc",
+      "bytes": 471,
+      "md5": "4f5dd050ef0b1d76c3641d8d96c05d16",
+      "flags": 0
+    },
+    {
+      "path": "src/dominio/ambiente/tabla_de_sonidos.gd.remap",
+      "bytes": 64,
+      "md5": "00495d4e4f07d94699fd38375a84b026",
+      "flags": 0
+    },
+    {
+      "path": "src/dominio/ambiente/tabla_de_sonidos.gdc",
+      "bytes": 1313,
+      "md5": "e485e68e01db5c69968d7d46d1c2aff3",
+      "flags": 0
+    },
+    {
+      "path": "src/dominio/ambiente/tabla_de_sonidos.tres.remap",
+      "bytes": 109,
+      "md5": "c44ef0df90d87cbefca8fbf856bdd65e",
+      "flags": 0
+    },
+    {
+      "path": "src/dominio/empleo/catalogo_de_reacciones.gd.remap",
+      "bytes": 68,
+      "md5": "5db02c7c98033559e7d7c243ebc5a6df",
+      "flags": 0
+    },
+    {
+      "path": "src/dominio/empleo/catalogo_de_reacciones.gdc",
+      "bytes": 1136,
+      "md5": "2c9f635754a114e5faf7f424ee03f8c9",
+      "flags": 0
+    },
+    {
+      "path": "src/dominio/empleo/consecuencia.gd.remap",
+      "bytes": 58,
+      "md5": "cf2165e1f57d66d4131eddb0a6837c11",
+      "flags": 0
+    },
+    {
+      "path": "src/dominio/empleo/consecuencia.gdc",
+      "bytes": 422,
+      "md5": "11d57dc786b11f3af965c92d89fe33e4",
+      "flags": 0
+    },
+    {
+      "path": "src/dominio/empleo/espera_de_la_carga.gd.remap",
+      "bytes": 64,
+      "md5": "09edfb6b8adf4b107a2e4a66eb8fd137",
+      "flags": 0
+    },
+    {
+      "path": "src/dominio/empleo/espera_de_la_carga.gdc",
+      "bytes": 423,
+      "md5": "5e465f77fb0c62f2f4f6364280e6432e",
+      "flags": 0
+    },
+    {
+      "path": "src/dominio/empleo/legajo.gd.remap",
+      "bytes": 52,
+      "md5": "610a198356a64f2fee857b7ec33b701d",
+      "flags": 0
+    },
+    {
+      "path": "src/dominio/empleo/legajo.gdc",
+      "bytes": 769,
+      "md5": "d94c1699c0b30de0bd73be164efe791b",
+      "flags": 0
+    },
+    {
+      "path": "src/dominio/empleo/menu_de_inicio.gd.remap",
+      "bytes": 60,
+      "md5": "232c2fcd8557284915c2d4c2e15a64a4",
+      "flags": 0
+    },
+    {
+      "path": "src/dominio/empleo/menu_de_inicio.gdc",
+      "bytes": 837,
+      "md5": "ec169e61281a38c27d241a9c28ddc3ac",
+      "flags": 0
+    },
+    {
+      "path": "src/dominio/empleo/parte_de_cierre.gd.remap",
+      "bytes": 61,
+      "md5": "e5b6cb3e050af53e0e408a8ec04d1b60",
+      "flags": 0
+    },
+    {
+      "path": "src/dominio/empleo/parte_de_cierre.gdc",
+      "bytes": 1719,
+      "md5": "7b9db918cdb7a91fba7c4ba8cfe9e0e6",
+      "flags": 0
+    },
+    {
+      "path": "src/dominio/empleo/partida.gd.remap",
+      "bytes": 53,
+      "md5": "ed9b7cb6ad39069a0170419cfc673a41",
+      "flags": 0
+    },
+    {
+      "path": "src/dominio/empleo/partida.gdc",
+      "bytes": 1676,
+      "md5": "df70ddb314f9294d7426b0ad29ce0407",
+      "flags": 0
+    },
+    {
+      "path": "src/dominio/empleo/partida_serializada.gd.remap",
+      "bytes": 65,
+      "md5": "e06ff0107b33f865f5a9c54b5e7844ce",
+      "flags": 0
+    },
+    {
+      "path": "src/dominio/empleo/partida_serializada.gdc",
+      "bytes": 943,
+      "md5": "4532b0668ef36b4774bb33dfb3486465",
+      "flags": 0
+    },
+    {
+      "path": "src/dominio/empleo/politica_de_guardado.gd.remap",
+      "bytes": 66,
+      "md5": "d4f883ddc5333ee14cb1d7d82eefc7e2",
+      "flags": 0
+    },
+    {
+      "path": "src/dominio/empleo/politica_de_guardado.gdc",
+      "bytes": 610,
+      "md5": "fccb84aa75b1392df75ff78169a0d3f5",
+      "flags": 0
+    },
+    {
+      "path": "src/dominio/empleo/reaccion.gd.remap",
+      "bytes": 54,
+      "md5": "8779408f65576aacb433798de152e2a8",
+      "flags": 0
+    },
+    {
+      "path": "src/dominio/empleo/reaccion.gdc",
+      "bytes": 341,
+      "md5": "405f34df31cc9f6f03fe0264c5a8109d",
+      "flags": 0
+    },
+    {
+      "path": "src/dominio/empleo/reglas_de_la_partida.gd.remap",
+      "bytes": 66,
+      "md5": "1f3038f76b10167dbb4b530c11d6b33a",
+      "flags": 0
+    },
+    {
+      "path": "src/dominio/empleo/reglas_de_la_partida.gdc",
+      "bytes": 239,
+      "md5": "219e92421c78d3d6652917125f4940c2",
+      "flags": 0
+    },
+    {
+      "path": "src/dominio/investigacion/bandeja.gd.remap",
+      "bytes": 60,
+      "md5": "c73036e52791a6b9c383fcdd39b703c9",
+      "flags": 0
+    },
+    {
+      "path": "src/dominio/investigacion/bandeja.gdc",
+      "bytes": 1045,
+      "md5": "a4d34f69232900d24823a76ea3414c9a",
+      "flags": 0
+    },
+    {
+      "path": "src/dominio/investigacion/computadora.gd.remap",
+      "bytes": 64,
+      "md5": "aeeb7022639a968c5d17a9e2da0d1f24",
+      "flags": 0
+    },
+    {
+      "path": "src/dominio/investigacion/computadora.gdc",
+      "bytes": 583,
+      "md5": "8eebd022be66962958590443cc3d4e57",
+      "flags": 0
+    },
+    {
+      "path": "src/dominio/investigacion/conversacion.gd.remap",
+      "bytes": 65,
+      "md5": "04dd8a7a24ad8b084fa2d54963a6c839",
+      "flags": 0
+    },
+    {
+      "path": "src/dominio/investigacion/conversacion.gdc",
+      "bytes": 950,
+      "md5": "12450c3815216da51c3eed2203902e61",
+      "flags": 0
+    },
+    {
+      "path": "src/dominio/investigacion/conversacion_con_el_desconocido.tres.remap",
+      "bytes": 124,
+      "md5": "0b1f1f7a7c2f92b1f1283c909920d485",
+      "flags": 0
+    },
+    {
+      "path": "src/dominio/investigacion/conversacion_con_el_jefe.tres.remap",
+      "bytes": 117,
+      "md5": "78d0fa331dcd8ed11157e9f1f39f7f7d",
+      "flags": 0
+    },
+    {
+      "path": "src/dominio/investigacion/conversacion_con_el_proveedor.tres.remap",
+      "bytes": 122,
+      "md5": "e9672b5e28fc4f73a7e80676d4bab349",
+      "flags": 0
+    },
+    {
+      "path": "src/dominio/investigacion/cuaderno.gd.remap",
+      "bytes": 61,
+      "md5": "d3c5644b51d8a027804c953cc8719196",
+      "flags": 0
+    },
+    {
+      "path": "src/dominio/investigacion/cuaderno.gdc",
+      "bytes": 526,
+      "md5": "a14958af71576068acef7c489701b464",
+      "flags": 0
+    },
+    {
+      "path": "src/dominio/investigacion/hallazgos.gd.remap",
+      "bytes": 62,
+      "md5": "df32b536f800b03e06e527b702b5bbd7",
+      "flags": 0
+    },
+    {
+      "path": "src/dominio/investigacion/hallazgos.gdc",
+      "bytes": 546,
+      "md5": "91e0f11c2185b3b1207b83bd27b79bfe",
+      "flags": 0
+    },
+    {
+      "path": "src/dominio/investigacion/mensaje.gd.remap",
+      "bytes": 60,
+      "md5": "f0347874c846eefb5881ac3798fc15c7",
+      "flags": 0
+    },
+    {
+      "path": "src/dominio/investigacion/mensaje.gdc",
+      "bytes": 319,
+      "md5": "6cc1ef343210afc4c3d8e1eab092a61b",
+      "flags": 0
+    },
+    {
+      "path": "src/dominio/investigacion/nota.gd.remap",
+      "bytes": 57,
+      "md5": "be4c74b072a4d9b22da65e255a969ed0",
+      "flags": 0
+    },
+    {
+      "path": "src/dominio/investigacion/nota.gdc",
+      "bytes": 315,
+      "md5": "a560b4b445d17f3d8a85ec4c332820fe",
+      "flags": 0
+    },
+    {
+      "path": "src/dominio/investigacion/revelacion.gd.remap",
+      "bytes": 63,
+      "md5": "23dbf952396afa15358b94c5292d409e",
+      "flags": 0
+    },
+    {
+      "path": "src/dominio/investigacion/revelacion.gdc",
+      "bytes": 286,
+      "md5": "986f3f843d8938ee10022232ab3e5bb5",
+      "flags": 0
+    },
+    {
+      "path": "src/dominio/jornada/apertura.gd.remap",
+      "bytes": 55,
+      "md5": "19cef32627f9e499c6a5b9d77deb9705",
+      "flags": 0
+    },
+    {
+      "path": "src/dominio/jornada/apertura.gdc",
+      "bytes": 1636,
+      "md5": "38d7af6bbb2ce23bc3142f55fb9e234f",
+      "flags": 0
+    },
+    {
+      "path": "src/dominio/jornada/marcador.gd.remap",
+      "bytes": 55,
+      "md5": "1dfe47d2b32ec3550b27735638bc9a4d",
+      "flags": 0
+    },
+    {
+      "path": "src/dominio/jornada/marcador.gdc",
+      "bytes": 755,
+      "md5": "fb69284f7d4c10fbb6e8a31abf509b6d",
+      "flags": 0
+    },
+    {
+      "path": "src/dominio/jornada/pausa.gd.remap",
+      "bytes": 52,
+      "md5": "faa2a33eceabfdbefc0be36311d51d8a",
+      "flags": 0
+    },
+    {
+      "path": "src/dominio/jornada/pausa.gdc",
+      "bytes": 509,
+      "md5": "6a356b1467f15b95c399c0799e1a93f4",
+      "flags": 0
+    },
+    {
+      "path": "src/dominio/jornada/reloj_de_mesa.gd.remap",
+      "bytes": 60,
+      "md5": "016b6d2b343a9e3d6abda1f0a6bb26d5",
+      "flags": 0
+    },
+    {
+      "path": "src/dominio/jornada/reloj_de_mesa.gdc",
+      "bytes": 576,
+      "md5": "3b3560ba7be4b551957613b2db09d039",
+      "flags": 0
+    },
+    {
+      "path": "src/dominio/jornada/ritmo.gd.remap",
+      "bytes": 52,
+      "md5": "062fd7bf071f04d75459a3d3f39b3282",
+      "flags": 0
+    },
+    {
+      "path": "src/dominio/jornada/ritmo.gdc",
+      "bytes": 287,
+      "md5": "16c2a8f4ad0404cb30d01f2b10a631a1",
+      "flags": 0
+    },
+    {
+      "path": "src/dominio/jornada/tarea.gd.remap",
+      "bytes": 52,
+      "md5": "777cf11e085a926c25201c5234b60441",
+      "flags": 0
+    },
+    {
+      "path": "src/dominio/jornada/tarea.gdc",
+      "bytes": 588,
+      "md5": "da45d2fee98d56c1f8df01711dc3a716",
+      "flags": 0
+    },
+    {
+      "path": "src/dominio/jornada/turno.gd.remap",
+      "bytes": 52,
+      "md5": "3bc9304ceae605600d11631177af0b37",
+      "flags": 0
+    },
+    {
+      "path": "src/dominio/jornada/turno.gdc",
+      "bytes": 894,
+      "md5": "54f70166b265b2bd21a31340817727c3",
+      "flags": 0
+    },
+    {
+      "path": "src/dominio/jugador/cadencia_de_pasos.gd.remap",
+      "bytes": 64,
+      "md5": "d1f3069793cd7a7856505d8e632cdd60",
+      "flags": 0
+    },
+    {
+      "path": "src/dominio/jugador/cadencia_de_pasos.gdc",
+      "bytes": 406,
+      "md5": "bfeef688f9c533d6efe9db1b209e5b3d",
+      "flags": 0
+    },
+    {
+      "path": "src/dominio/jugador/caminata.gd.remap",
+      "bytes": 55,
+      "md5": "304f0d576d39d10eef8661dffd41318f",
+      "flags": 0
+    },
+    {
+      "path": "src/dominio/jugador/caminata.gdc",
+      "bytes": 405,
+      "md5": "30ecf9971556721e4ae8bfcb1209b8ab",
+      "flags": 0
+    },
+    {
+      "path": "src/dominio/jugador/campo_de_interaccion.gd.remap",
+      "bytes": 67,
+      "md5": "2a6eb1f60cf4057d4f5193e2ab9b7095",
+      "flags": 0
+    },
+    {
+      "path": "src/dominio/jugador/campo_de_interaccion.gdc",
+      "bytes": 1171,
+      "md5": "0e056474c59a23451cfd31d881bc1f18",
+      "flags": 0
+    },
+    {
+      "path": "src/dominio/jugador/control_del_jugador.gd.remap",
+      "bytes": 66,
+      "md5": "9c08bc794a400da6661e52da645b3e3e",
+      "flags": 0
+    },
+    {
+      "path": "src/dominio/jugador/control_del_jugador.gdc",
+      "bytes": 1777,
+      "md5": "e41ea87d5724a9b9f2de96f72f91cb49",
+      "flags": 0
+    },
+    {
+      "path": "src/dominio/jugador/foco.gd.remap",
+      "bytes": 51,
+      "md5": "a5f666455d1a5bf394d5c5d9c85e3e02",
+      "flags": 0
+    },
+    {
+      "path": "src/dominio/jugador/foco.gdc",
+      "bytes": 590,
+      "md5": "ef72ba70a5c7829ce4ce1be887590712",
+      "flags": 0
+    },
+    {
+      "path": "src/dominio/jugador/mirada.gd.remap",
+      "bytes": 53,
+      "md5": "f7ab85738260ab43dc890c9f1ec5c895",
+      "flags": 0
+    },
+    {
+      "path": "src/dominio/jugador/mirada.gdc",
+      "bytes": 707,
+      "md5": "a0e662e62998c14f2d8f07de0b2b6542",
+      "flags": 0
+    },
+    {
+      "path": "src/dominio/jugador/reglas_del_jugador.gd.remap",
+      "bytes": 65,
+      "md5": "bc00205ac1f3146d026e23745fe5f4b9",
+      "flags": 0
+    },
+    {
+      "path": "src/dominio/jugador/reglas_del_jugador.gdc",
+      "bytes": 827,
+      "md5": "b4796e0b819020b924e71a18333f911b",
+      "flags": 0
+    },
+    {
+      "path": "src/dominio/jugador/retorno_de_la_mano.gd.remap",
+      "bytes": 65,
+      "md5": "f7a0e9e54f451211483d215d9f22c608",
+      "flags": 0
+    },
+    {
+      "path": "src/dominio/jugador/retorno_de_la_mano.gdc",
+      "bytes": 415,
+      "md5": "fe10261354cf9c87af5d48beb5b63f7d",
+      "flags": 0
+    },
+    {
+      "path": "src/dominio/jugador/suavizado_del_giro.gd.remap",
+      "bytes": 65,
+      "md5": "8a034f5b7cfd90d1fdb63b4d395a9c41",
+      "flags": 0
+    },
+    {
+      "path": "src/dominio/jugador/suavizado_del_giro.gdc",
+      "bytes": 1369,
+      "md5": "26ee073b37b281763d9f9ae82d647942",
+      "flags": 0
+    },
+    {
+      "path": "src/dominio/reglas.gd.remap",
+      "bytes": 45,
+      "md5": "939a1f096cc991b11ebda74febbf0e96",
+      "flags": 0
+    },
+    {
+      "path": "src/dominio/reglas.gdc",
+      "bytes": 400,
+      "md5": "d12e8135ea14aa2e5a614bfcb6887949",
+      "flags": 0
+    },
+    {
+      "path": "src/escenas/almacen.exr.import",
+      "bytes": 259,
+      "md5": "e846b404050724276140cf78e17d137c",
+      "flags": 0
+    },
+    {
+      "path": "src/escenas/almacen.gd.remap",
+      "bytes": 46,
+      "md5": "facde520dadefcd9f9f1cc0703c63963",
+      "flags": 0
+    },
+    {
+      "path": "src/escenas/almacen.gdc",
+      "bytes": 5676,
+      "md5": "a750a1bd7fc7b89b50c5dd4bd88548eb",
+      "flags": 0
+    },
+    {
+      "path": "src/escenas/almacen.lmbake",
+      "bytes": 473316,
+      "md5": "41d4856a8e30698fea61aeafed9e756c",
+      "flags": 0
+    },
+    {
+      "path": "src/escenas/almacen.tscn.remap",
+      "bytes": 100,
+      "md5": "7cfbd479afff6c19a5aa5e5e94dc35c8",
+      "flags": 0
+    },
+    {
+      "path": "src/escenas/jugador.gd.remap",
+      "bytes": 46,
+      "md5": "0167c81d551bc8580c6006504beffd4d",
+      "flags": 0
+    },
+    {
+      "path": "src/escenas/jugador.gdc",
+      "bytes": 19259,
+      "md5": "829c1bea50763dbeec8cc49442c42e33",
+      "flags": 0
+    },
+    {
+      "path": "src/escenas/jugador.tscn.remap",
+      "bytes": 100,
+      "md5": "bfe41a1dd51ef4c6b9d62d6570ffd02d",
+      "flags": 0
+    },
+    {
+      "path": "src/escenas/menu_de_inicio.gd.remap",
+      "bytes": 53,
+      "md5": "6825b2cb554a17448c1d38e05edb5c1d",
+      "flags": 0
+    },
+    {
+      "path": "src/escenas/menu_de_inicio.gdc",
+      "bytes": 3571,
+      "md5": "f4887a5e1f777ae89c07af3964e6de3a",
+      "flags": 0
+    },
+    {
+      "path": "src/escenas/menu_de_inicio.tscn.remap",
+      "bytes": 107,
+      "md5": "3fce6ddce3afe556b5a0dd8e208e99e7",
+      "flags": 0
+    },
+    {
+      "path": "src/escenas/objetos/agua_y_manchas.gdshader",
+      "bytes": 599,
+      "md5": "10d0b97e5e4fed6a138937681266fcf4",
+      "flags": 0
+    },
+    {
+      "path": "src/escenas/objetos/articulacion_de_cabeza.gdshaderinc",
+      "bytes": 307,
+      "md5": "29c71261e9557f21ea7f6d4a6950fa25",
+      "flags": 0
+    },
+    {
+      "path": "src/escenas/objetos/aspecto_de_la_mancha.gdshaderinc",
+      "bytes": 2576,
+      "md5": "2e1df7b134b98aa73ad8347e181606ca",
+      "flags": 0
+    },
+    {
+      "path": "src/escenas/objetos/aspecto_del_agua.gdshaderinc",
+      "bytes": 3287,
+      "md5": "f874b02ea8c14611578a2d70caea23a9",
+      "flags": 0
+    },
+    {
+      "path": "src/escenas/objetos/cabeza_de_la_mopa.gdshader",
+      "bytes": 327,
+      "md5": "764d8dcc2dc3e23ef65a48b5c22c6d5d",
+      "flags": 0
+    },
+    {
+      "path": "src/escenas/objetos/caja_de_productos.gd.remap",
+      "bytes": 64,
+      "md5": "56b3b25c855ac542aaca78128bdd06fc",
+      "flags": 0
+    },
+    {
+      "path": "src/escenas/objetos/caja_de_productos.gdc",
+      "bytes": 3098,
+      "md5": "9e88f5e360b5196fbf7d477d41badf8f",
+      "flags": 0
+    },
+    {
+      "path": "src/escenas/objetos/caja_de_productos.tscn.remap",
+      "bytes": 110,
+      "md5": "d9b1ded0e3a2234699d39c2c6f6ee7bd",
+      "flags": 0
+    },
+    {
+      "path": "src/escenas/objetos/charcos_temporales.gd.remap",
+      "bytes": 65,
+      "md5": "5959a14134595804b4ba6d91843ca9f9",
+      "flags": 0
+    },
+    {
+      "path": "src/escenas/objetos/charcos_temporales.gdc",
+      "bytes": 2454,
+      "md5": "914412874c0776260048f5598c6b422c",
+      "flags": 0
+    },
+    {
+      "path": "src/escenas/objetos/charcos_temporales.gdshader",
+      "bytes": 760,
+      "md5": "28fff18341dd9a63ce2e9eeb859311d6",
+      "flags": 0
+    },
+    {
+      "path": "src/escenas/objetos/contorno_del_util.gdshader",
+      "bytes": 864,
+      "md5": "4b2c9443fa9074b40a8d2e374d1bd074",
+      "flags": 0
+    },
+    {
+      "path": "src/escenas/objetos/deformacion_de_fibras.gdshaderinc",
+      "bytes": 2654,
+      "md5": "b0a65cb45196dd527a969ce6392db209",
+      "flags": 0
+    },
+    {
+      "path": "src/escenas/objetos/fibras_de_la_mopa.gd.remap",
+      "bytes": 64,
+      "md5": "cd5ff34bd7118c62e855cbefb7704c23",
+      "flags": 0
+    },
+    {
+      "path": "src/escenas/objetos/fibras_de_la_mopa.gdc",
+      "bytes": 6143,
+      "md5": "8fec7d155244468f75a7eb682a60bd72",
+      "flags": 0
+    },
+    {
+      "path": "src/escenas/objetos/fibras_de_la_mopa.gdshader",
+      "bytes": 519,
+      "md5": "3d83e1f224efb47eb43fac2a7b35517c",
+      "flags": 0
+    },
+    {
+      "path": "src/escenas/objetos/giro_de_manija.gdshaderinc",
+      "bytes": 1269,
+      "md5": "b9c3b044790979a6c89ea972cf65c6a6",
+      "flags": 0
+    },
+    {
+      "path": "src/escenas/objetos/gotas_del_balde.gd.remap",
+      "bytes": 62,
+      "md5": "3951e4c583886eca8609da7bea244635",
+      "flags": 0
+    },
+    {
+      "path": "src/escenas/objetos/gotas_del_balde.gdc",
+      "bytes": 2934,
+      "md5": "4a11f5d908b51f2fb577e88051e21e99",
+      "flags": 0
+    },
+    {
+      "path": "src/escenas/objetos/grupo_del_piso.gd.remap",
+      "bytes": 61,
+      "md5": "906fa18fa49c066581a4190babbfa672",
+      "flags": 0
+    },
+    {
+      "path": "src/escenas/objetos/grupo_del_piso.gdc",
+      "bytes": 2645,
+      "md5": "fc78b1eb1ee955736d2c4acc731aa8dd",
+      "flags": 0
+    },
+    {
+      "path": "src/escenas/objetos/mancha_en_el_piso.gd.remap",
+      "bytes": 64,
+      "md5": "35867747952fee4df208548e39dedd7c",
+      "flags": 0
+    },
+    {
+      "path": "src/escenas/objetos/mancha_en_el_piso.gdc",
+      "bytes": 1512,
+      "md5": "7b7dafa12ea70b34f55f4bf4ea9c91b2",
+      "flags": 0
+    },
+    {
+      "path": "src/escenas/objetos/mancha_en_el_piso.tscn.remap",
+      "bytes": 110,
+      "md5": "7af806b08236dbdbf36a0aa0bc669c6c",
+      "flags": 0
+    },
+    {
+      "path": "src/escenas/objetos/manija_del_balde.gd.remap",
+      "bytes": 63,
+      "md5": "989abf74f5607a68cf074a982e7fb257",
+      "flags": 0
+    },
+    {
+      "path": "src/escenas/objetos/manija_del_balde.gdc",
+      "bytes": 2835,
+      "md5": "e71088b95413ea6a0b20c3730ae03f05",
+      "flags": 0
+    },
+    {
+      "path": "src/escenas/objetos/manija_del_balde.gdshader",
+      "bytes": 348,
+      "md5": "6bbc86d1daf8f8185e6dfbf6015c68cd",
+      "flags": 0
+    },
+    {
+      "path": "src/escenas/objetos/objeto_agarrable.gd.remap",
+      "bytes": 63,
+      "md5": "b7a45b4437fd6d5c50816e80d75299c1",
+      "flags": 0
+    },
+    {
+      "path": "src/escenas/objetos/objeto_agarrable.gdc",
+      "bytes": 1294,
+      "md5": "08ff7b5a0e0a0d3debdd17bcff52e6df",
+      "flags": 0
+    },
+    {
+      "path": "src/escenas/objetos/objeto_agarrable.tscn.remap",
+      "bytes": 109,
+      "md5": "28040b35f57296bb7e28da341b5e3d2c",
+      "flags": 0
+    },
+    {
+      "path": "src/escenas/objetos/ondas_del_balde.gd.remap",
+      "bytes": 62,
+      "md5": "aaad7594095bd34a80cf1670500eb915",
+      "flags": 0
+    },
+    {
+      "path": "src/escenas/objetos/ondas_del_balde.gdc",
+      "bytes": 4794,
+      "md5": "2b0a2113665f2bd602f17b3133fbe296",
+      "flags": 0
+    },
+    {
+      "path": "src/escenas/objetos/partes_de_manija.gd.remap",
+      "bytes": 63,
+      "md5": "896417debd3bf438d8f1d3dd62b21e4b",
+      "flags": 0
+    },
+    {
+      "path": "src/escenas/objetos/partes_de_manija.gdc",
+      "bytes": 2784,
+      "md5": "618ee6f3c02d386ac087c3a744dc1ae0",
+      "flags": 0
+    },
+    {
+      "path": "src/escenas/objetos/piso_para_agua.gd.remap",
+      "bytes": 61,
+      "md5": "c3bd69050e41fddabcecefb5f4e23d10",
+      "flags": 0
+    },
+    {
+      "path": "src/escenas/objetos/piso_para_agua.gdc",
+      "bytes": 4069,
+      "md5": "f487099b427c1823dd2b8e781f0972c2",
+      "flags": 0
+    },
+    {
+      "path": "src/escenas/objetos/raices_de_fibras.gd.remap",
+      "bytes": 63,
+      "md5": "9e9c0d24ad5aac64e6a47cee1574c512",
+      "flags": 0
+    },
+    {
+      "path": "src/escenas/objetos/raices_de_fibras.gdc",
+      "bytes": 2892,
+      "md5": "4cf7f5116bc29cf6a8d36b2f3fb52d2b",
+      "flags": 0
+    },
+    {
+      "path": "src/escenas/objetos/superficie_liquida.gd.remap",
+      "bytes": 65,
+      "md5": "ee629b5e3742eb288dda60081740f24c",
+      "flags": 0
+    },
+    {
+      "path": "src/escenas/objetos/superficie_liquida.gdc",
+      "bytes": 14402,
+      "md5": "c18609380cb6d4a6dc672b5426c65fca",
+      "flags": 0
+    },
+    {
+      "path": "src/escenas/objetos/util_de_limpieza.gd.remap",
+      "bytes": 63,
+      "md5": "0e254086653e74b86caa159108893ade",
+      "flags": 0
+    },
+    {
+      "path": "src/escenas/objetos/util_de_limpieza.gdc",
+      "bytes": 5741,
+      "md5": "6b077c41d30779644a96e3a0b995ccd7",
+      "flags": 0
+    },
+    {
+      "path": "src/escenas/puestos/agua_del_bano.gd.remap",
+      "bytes": 60,
+      "md5": "d44527dc4e737446afa4964b8e8b6618",
+      "flags": 0
+    },
+    {
+      "path": "src/escenas/puestos/agua_del_bano.gdc",
+      "bytes": 5616,
+      "md5": "ef0b1487d2e67f8206b6d38ff655fd5c",
+      "flags": 0
+    },
+    {
+      "path": "src/escenas/puestos/agua_del_bano.tscn.remap",
+      "bytes": 106,
+      "md5": "003be1a99c27aca1e5f5347081690638",
+      "flags": 0
+    },
+    {
+      "path": "src/escenas/puestos/agua_del_bano_ondas.gdshader",
+      "bytes": 1633,
+      "md5": "f47a3d0b640c4206c292137bae70ac4c",
+      "flags": 0
+    },
+    {
+      "path": "src/escenas/puestos/ambiente_del_almacen.tscn.remap",
+      "bytes": 113,
+      "md5": "f53f360f7b1a49dffdc0976e9858ed0e",
+      "flags": 0
+    },
+    {
+      "path": "src/escenas/puestos/artefacto_del_bano.gd.remap",
+      "bytes": 65,
+      "md5": "1c196c5a550290c2550c32fab71cb5a3",
+      "flags": 0
+    },
+    {
+      "path": "src/escenas/puestos/artefacto_del_bano.gdc",
+      "bytes": 447,
+      "md5": "9a80296acf976c88f5b2d5d2e9f486cd",
+      "flags": 0
+    },
+    {
+      "path": "src/escenas/puestos/audio_del_almacen.gd.remap",
+      "bytes": 64,
+      "md5": "dcc8d531ef298437ef3691b457afed92",
+      "flags": 0
+    },
+    {
+      "path": "src/escenas/puestos/audio_del_almacen.gdc",
+      "bytes": 736,
+      "md5": "9026522bd1105185df07d70816d85e2f",
+      "flags": 0
+    },
+    {
+      "path": "src/escenas/puestos/audio_del_almacen.tscn.remap",
+      "bytes": 110,
+      "md5": "911b9d0ea2ef4fbf787b1ded28ad8b3f",
+      "flags": 0
+    },
+    {
+      "path": "src/escenas/puestos/casillero_sin_superficie.gdshader",
+      "bytes": 308,
+      "md5": "e6d6edba261c6c94e97213471ca5934e",
+      "flags": 0
+    },
+    {
+      "path": "src/escenas/puestos/contenedor_de_basura.gd.remap",
+      "bytes": 67,
+      "md5": "baa16af2726a564e7b584b1e2fc29deb",
+      "flags": 0
+    },
+    {
+      "path": "src/escenas/puestos/contenedor_de_basura.gdc",
+      "bytes": 352,
+      "md5": "c3128190b9c0f5e0774eef53f8cf3b43",
+      "flags": 0
+    },
+    {
+      "path": "src/escenas/puestos/contenido_del_estante.tscn.remap",
+      "bytes": 114,
+      "md5": "09ccd5588468fea9f1c9cd016b73e243",
+      "flags": 0
+    },
+    {
+      "path": "src/escenas/puestos/disposicion_de_la_gondola.gd.remap",
+      "bytes": 72,
+      "md5": "96e1557dcc4be2f7839d411d81928f8b",
+      "flags": 0
+    },
+    {
+      "path": "src/escenas/puestos/disposicion_de_la_gondola.gdc",
+      "bytes": 2011,
+      "md5": "f46f8ce5152c8f9ed04c54004d85a4c4",
+      "flags": 0
+    },
+    {
+      "path": "src/escenas/puestos/disposicion_de_la_gondola.tres.remap",
+      "bytes": 118,
+      "md5": "c022e2e2c0972cf3dd820ad66f4ced5b",
+      "flags": 0
+    },
+    {
+      "path": "src/escenas/puestos/escritorio.gd.remap",
+      "bytes": 57,
+      "md5": "a6bb6bd4397abd6b776ee34c59b0710d",
+      "flags": 0
+    },
+    {
+      "path": "src/escenas/puestos/escritorio.gdc",
+      "bytes": 2326,
+      "md5": "86312d214e491cdd5d08cc67678e22ae",
+      "flags": 0
+    },
+    {
+      "path": "src/escenas/puestos/estante.gd.remap",
+      "bytes": 54,
+      "md5": "c7ce40ad46ac488a23bb6ce50e87d4d1",
+      "flags": 0
+    },
+    {
+      "path": "src/escenas/puestos/estante.gdc",
+      "bytes": 585,
+      "md5": "ba78125ebd2e1159aec4bb3ca76ff0ed",
+      "flags": 0
+    },
+    {
+      "path": "src/escenas/puestos/estructura_del_almacen.tscn.remap",
+      "bytes": 115,
+      "md5": "932e88fa2c039112f6859c8d03fbb20b",
+      "flags": 0
+    },
+    {
+      "path": "src/escenas/puestos/exterior_del_almacen.gd.remap",
+      "bytes": 67,
+      "md5": "c3415303ac36b60a80cc935da387194d",
+      "flags": 0
+    },
+    {
+      "path": "src/escenas/puestos/exterior_del_almacen.gdc",
+      "bytes": 12153,
+      "md5": "0e079f44e6a5c7e49c69ab56f3a7d89e",
+      "flags": 0
+    },
+    {
+      "path": "src/escenas/puestos/exterior_del_almacen.tscn.remap",
+      "bytes": 113,
+      "md5": "545765dd6cf22ea04acaa2e24602447c",
+      "flags": 0
+    },
+    {
+      "path": "src/escenas/puestos/exterior_fotografico.gdshader",
+      "bytes": 2475,
+      "md5": "5132b2566a8d47f0d106c1214ffee95c",
+      "flags": 0
+    },
+    {
+      "path": "src/escenas/puestos/exterior_proyeccion.gdshaderinc",
+      "bytes": 1516,
+      "md5": "d591b6c69c9696b639dfae1f1b1684fd",
+      "flags": 0
+    },
+    {
+      "path": "src/escenas/puestos/guia_del_estante.tscn.remap",
+      "bytes": 109,
+      "md5": "1b958d8458840bec0ac1a09c6a45bd35",
+      "flags": 0
+    },
+    {
+      "path": "src/escenas/puestos/interfaz_del_almacen.tscn.remap",
+      "bytes": 113,
+      "md5": "c7fb789a45e67d355483d7c0fd657cb1",
+      "flags": 0
+    },
+    {
+      "path": "src/escenas/puestos/limpieza_del_almacen.gd.remap",
+      "bytes": 67,
+      "md5": "4f4efd5d538ea4994002e809411af7e3",
+      "flags": 0
+    },
+    {
+      "path": "src/escenas/puestos/limpieza_del_almacen.gdc",
+      "bytes": 4431,
+      "md5": "9850b4a655873054a9b91dc076beec80",
+      "flags": 0
+    },
+    {
+      "path": "src/escenas/puestos/limpieza_del_almacen.tscn.remap",
+      "bytes": 113,
+      "md5": "3e1b42adba166e2da1d4c12883c7f491",
+      "flags": 0
+    },
+    {
+      "path": "src/escenas/puestos/objetos_del_almacen.tscn.remap",
+      "bytes": 112,
+      "md5": "04925130befd5d041d132e1322664626",
+      "flags": 0
+    },
+    {
+      "path": "src/escenas/puestos/pavimento_del_exterior.gdshader",
+      "bytes": 1264,
+      "md5": "080133455d55a3651a34e61340c027a4",
+      "flags": 0
+    },
+    {
+      "path": "src/escenas/puestos/puerta_de_la_heladera.gd.remap",
+      "bytes": 68,
+      "md5": "3f2a1705b32f87d7e44ab388ff0bdba2",
+      "flags": 0
+    },
+    {
+      "path": "src/escenas/puestos/puerta_de_la_heladera.gdc",
+      "bytes": 266,
+      "md5": "a214393051336c295c3712422c3afc51",
+      "flags": 0
+    },
+    {
+      "path": "src/escenas/puestos/puerta_del_local.gd.remap",
+      "bytes": 63,
+      "md5": "f8d9c3c56d41e6e77a3a39721ffec171",
+      "flags": 0
+    },
+    {
+      "path": "src/escenas/puestos/puerta_del_local.gdc",
+      "bytes": 2074,
+      "md5": "9e45de574e7383ae36e80e27ccd0e5c8",
+      "flags": 0
+    },
+    {
+      "path": "src/escenas/puestos/reloj_de_mesa.gd.remap",
+      "bytes": 60,
+      "md5": "fe7c479f3f62821c63e9458ccf00f33e",
+      "flags": 0
+    },
+    {
+      "path": "src/escenas/puestos/reloj_de_mesa.gdc",
+      "bytes": 367,
+      "md5": "7ff0c1c6209fcf12e619df0ec91569cd",
+      "flags": 0
+    },
+    {
+      "path": "src/escenas/puestos/reloj_de_mesa.tscn.remap",
+      "bytes": 106,
+      "md5": "69cf8f3943ac438bf551d8b4eb9df80c",
+      "flags": 0
+    },
+    {
+      "path": "src/escenas/puestos/reposicion_manual.gd.remap",
+      "bytes": 64,
+      "md5": "b2033fcfacf0e3976bfc03d70caee744",
+      "flags": 0
+    },
+    {
+      "path": "src/escenas/puestos/reposicion_manual.gdc",
+      "bytes": 26993,
+      "md5": "d72a13db7612c1e4fbdc46b5fb79fac7",
+      "flags": 0
+    },
+    {
+      "path": "src/escenas/puestos/reposicion_manual.tscn.remap",
+      "bytes": 110,
+      "md5": "432a2d98940f780d67e467cd088f0d93",
+      "flags": 0
+    },
+    {
+      "path": "src/escenas/puestos/servicios_del_almacen.tscn.remap",
+      "bytes": 114,
+      "md5": "1746d4223f9883c54b9985a8bb4aa434",
+      "flags": 0
+    },
+    {
+      "path": "src/escenas/puestos/tapa_del_contenedor.gd.remap",
+      "bytes": 66,
+      "md5": "c8005dda5692340bbb0c10bf2565e784",
+      "flags": 0
+    },
+    {
+      "path": "src/escenas/puestos/tapa_del_contenedor.gdc",
+      "bytes": 2515,
+      "md5": "0d138d99cefd64d77f84e4501b5b853e",
+      "flags": 0
+    },
+    {
+      "path": "src/escenas/puestos/ventanilla.gd.remap",
+      "bytes": 57,
+      "md5": "b1a9f213cb3a0eab28f5a63c8423bbf2",
+      "flags": 0
+    },
+    {
+      "path": "src/escenas/puestos/ventanilla.gdc",
+      "bytes": 1562,
+      "md5": "bb7da0ad992a65eed794565dd6bd3f97",
+      "flags": 0
+    },
+    {
+      "path": "src/escenas/puestos/ventanilla.tscn.remap",
+      "bytes": 103,
+      "md5": "b7708ffb3ca1e48ff0629544856e7a41",
+      "flags": 0
+    },
+    {
+      "path": "src/escenas/puestos/vereda_del_exterior.gdshader",
+      "bytes": 1169,
+      "md5": "d2104cbf5ab19767f44dfa77cb4c3618",
+      "flags": 0
+    },
+    {
+      "path": "src/escenas/puestos/vidrio_del_local.gdshader",
+      "bytes": 1663,
+      "md5": "5ce82529673ff5df1f50af9cba9ed77f",
+      "flags": 0
+    },
+    {
+      "path": "src/escenas/puestos/vidrio_del_local.tres.remap",
+      "bytes": 109,
+      "md5": "4b016a77f9947fd9181c5937fe16daaf",
+      "flags": 0
+    },
+    {
+      "path": "src/escenas/puestos/zona_de_descarte.gd.remap",
+      "bytes": 63,
+      "md5": "835945067c45b5b3096da410b23d90c8",
+      "flags": 0
+    },
+    {
+      "path": "src/escenas/puestos/zona_de_descarte.gdc",
+      "bytes": 819,
+      "md5": "2a8389fd06cba90adc94c4a615ae02df",
+      "flags": 0
+    },
+    {
+      "path": "src/escenas/puestos/zona_de_descarte.tscn.remap",
+      "bytes": 109,
+      "md5": "7f1ca6b9a25eb797289cf411de3d1c0c",
+      "flags": 0
+    },
+    {
+      "path": "src/escenas/puestos/zona_de_reposicion.gd.remap",
+      "bytes": 65,
+      "md5": "b75911965a973e6da21dcfb10922971f",
+      "flags": 0
+    },
+    {
+      "path": "src/escenas/puestos/zona_de_reposicion.gdc",
+      "bytes": 984,
+      "md5": "589e278ac39dc268982538efc3b449b0",
+      "flags": 0
+    },
+    {
+      "path": "src/sistemas/investigacion/computadora_de_escritorio.gd.remap",
+      "bytes": 79,
+      "md5": "17e3b292d95e37ebb2a581757a98900f",
+      "flags": 0
+    },
+    {
+      "path": "src/sistemas/investigacion/computadora_de_escritorio.gdc",
+      "bytes": 2042,
+      "md5": "ac3037d3de5f6d6dc50024ab439171c4",
+      "flags": 0
+    },
+    {
+      "path": "src/sistemas/investigacion/examen.gd.remap",
+      "bytes": 60,
+      "md5": "4f62be73d4180ba6c64797fc79c9ec9c",
+      "flags": 0
+    },
+    {
+      "path": "src/sistemas/investigacion/examen.gdc",
+      "bytes": 2836,
+      "md5": "6dae0390ec99fe5c0eaddaf90081800e",
+      "flags": 0
+    },
+    {
+      "path": "src/sistemas/marco/agarre.gd.remap",
+      "bytes": 52,
+      "md5": "b55112db32ff9da346bcb66ed1ef0347",
+      "flags": 0
+    },
+    {
+      "path": "src/sistemas/marco/agarre.gdc",
+      "bytes": 4446,
+      "md5": "4ac71582884667968a616f405bb060a2",
+      "flags": 0
+    },
+    {
+      "path": "src/sistemas/marco/aristas_del_foco.gdshader",
+      "bytes": 1018,
+      "md5": "d7b63057772366e5f266ff2d79e0151c",
+      "flags": 0
+    },
+    {
+      "path": "src/sistemas/marco/calentamiento_de_shaders.gd.remap",
+      "bytes": 70,
+      "md5": "dcc2cfe59550fb09d52911803cae47e9",
+      "flags": 0
+    },
+    {
+      "path": "src/sistemas/marco/calentamiento_de_shaders.gdc",
+      "bytes": 7522,
+      "md5": "b516c7a15ce5dd8feafd25450362d917",
+      "flags": 0
+    },
+    {
+      "path": "src/sistemas/marco/carga_en_segundo_plano.gd.remap",
+      "bytes": 68,
+      "md5": "25298578699645c018d5e7dc871ba83b",
+      "flags": 0
+    },
+    {
+      "path": "src/sistemas/marco/carga_en_segundo_plano.gdc",
+      "bytes": 1565,
+      "md5": "06b4f3f0ec1af13b45da3576a078b7b2",
+      "flags": 0
+    },
+    {
+      "path": "src/sistemas/marco/ciclo_de_jornadas.gd.remap",
+      "bytes": 63,
+      "md5": "b3778b6218869388c0cc7084809d9447",
+      "flags": 0
+    },
+    {
+      "path": "src/sistemas/marco/ciclo_de_jornadas.gdc",
+      "bytes": 811,
+      "md5": "ea3208e9b47771d15538ed286d0161b0",
+      "flags": 0
+    },
+    {
+      "path": "src/sistemas/marco/contorno.gdshader",
+      "bytes": 424,
+      "md5": "8c1dfdc0883fd06424aafffd979364cf",
+      "flags": 0
+    },
+    {
+      "path": "src/sistemas/marco/control_de_pausa.gd.remap",
+      "bytes": 62,
+      "md5": "54aeca870dab7eb9e8a7a417696742c1",
+      "flags": 0
+    },
+    {
+      "path": "src/sistemas/marco/control_de_pausa.gdc",
+      "bytes": 1814,
+      "md5": "205037e8dfb935f19ea303d79dea1a8f",
+      "flags": 0
+    },
+    {
+      "path": "src/sistemas/marco/enlace_de_audio.gd.remap",
+      "bytes": 61,
+      "md5": "2660f92872cfce42fe4777010e5d49b2",
+      "flags": 0
+    },
+    {
+      "path": "src/sistemas/marco/enlace_de_audio.gdc",
+      "bytes": 2199,
+      "md5": "b671a9e4ae25b853da24765f9d3b257a",
+      "flags": 0
+    },
+    {
+      "path": "src/sistemas/marco/enlace_de_guardado.gd.remap",
+      "bytes": 64,
+      "md5": "eb00004999d0165401c04d8837ea8efb",
+      "flags": 0
+    },
+    {
+      "path": "src/sistemas/marco/enlace_de_guardado.gdc",
+      "bytes": 629,
+      "md5": "7c56d4019d45c54d3fbd70d3dfb0e56e",
+      "flags": 0
+    },
+    {
+      "path": "src/sistemas/marco/guardado.gd.remap",
+      "bytes": 54,
+      "md5": "70d1075d79fee1d60a828e9c173455ab",
+      "flags": 0
+    },
+    {
+      "path": "src/sistemas/marco/guardado.gdc",
+      "bytes": 997,
+      "md5": "50e2f10642781b0fc68a2af9a0409c51",
+      "flags": 0
+    },
+    {
+      "path": "src/sistemas/marco/lugares_del_piso.gd.remap",
+      "bytes": 62,
+      "md5": "e031e620571089b3f758ebf546d76671",
+      "flags": 0
+    },
+    {
+      "path": "src/sistemas/marco/lugares_del_piso.gdc",
+      "bytes": 1041,
+      "md5": "33ce274b4b80063f7decdf197862398f",
+      "flags": 0
+    },
+    {
+      "path": "src/sistemas/marco/marco_del_objetivo.gd.remap",
+      "bytes": 64,
+      "md5": "07950e84a028f6126dee9bf9d3e74b32",
+      "flags": 0
+    },
+    {
+      "path": "src/sistemas/marco/marco_del_objetivo.gdc",
+      "bytes": 1543,
+      "md5": "d712d3ff90666e40ef1d35d4cb2f80a2",
+      "flags": 0
+    },
+    {
+      "path": "src/sistemas/marco/pedidos_del_menu.gd.remap",
+      "bytes": 62,
+      "md5": "02a0f7dc85af5e22a5318a8e344d836a",
+      "flags": 0
+    },
+    {
+      "path": "src/sistemas/marco/pedidos_del_menu.gdc",
+      "bytes": 1045,
+      "md5": "339303c5f2139e1b3bc8ff3fd6cd2962",
+      "flags": 0
+    },
+    {
+      "path": "src/sistemas/marco/red_de_seguridad.gd.remap",
+      "bytes": 62,
+      "md5": "7cd99c6122e3840f8e7d61d89dd11010",
+      "flags": 0
+    },
+    {
+      "path": "src/sistemas/marco/red_de_seguridad.gdc",
+      "bytes": 9810,
+      "md5": "e46e5c4d050e7163cb1cd2edefd689a3",
+      "flags": 0
+    },
+    {
+      "path": "src/sistemas/marco/reloj_del_turno.gd.remap",
+      "bytes": 61,
+      "md5": "b54cb7582567e44ecf11b0f35cad11e6",
+      "flags": 0
+    },
+    {
+      "path": "src/sistemas/marco/reloj_del_turno.gdc",
+      "bytes": 1183,
+      "md5": "9169dd2aa373a6ae5a946f6743f395a8",
+      "flags": 0
+    },
+    {
+      "path": "src/sistemas/marco/reproductor_de_sonidos.gd.remap",
+      "bytes": 68,
+      "md5": "cc19454615586e250c8630d981812245",
+      "flags": 0
+    },
+    {
+      "path": "src/sistemas/marco/reproductor_de_sonidos.gdc",
+      "bytes": 10609,
+      "md5": "4718256ff345ea7f9b6db9187657858c",
+      "flags": 0
+    },
+    {
+      "path": "src/sistemas/tareas/limpiador.gd.remap",
+      "bytes": 56,
+      "md5": "3530a601a725985ede46d50fd253a3a2",
+      "flags": 0
+    },
+    {
+      "path": "src/sistemas/tareas/limpiador.gdc",
+      "bytes": 1962,
+      "md5": "c86a399277be874dea22f5eed1f18868",
+      "flags": 0
+    },
+    {
+      "path": "src/sistemas/tareas/recolector_de_basura.gd.remap",
+      "bytes": 67,
+      "md5": "ef20657dfb8e1185807cb5194bb68186",
+      "flags": 0
+    },
+    {
+      "path": "src/sistemas/tareas/recolector_de_basura.gdc",
+      "bytes": 989,
+      "md5": "c32e3d96717258c1202263420283c294",
+      "flags": 0
+    },
+    {
+      "path": "src/sistemas/tareas/repositor.gd.remap",
+      "bytes": 56,
+      "md5": "5cf90ed7ab4930d33bee3fc10d456d1b",
+      "flags": 0
+    },
+    {
+      "path": "src/sistemas/tareas/repositor.gdc",
+      "bytes": 2182,
+      "md5": "fb0df616274fa0f65c842675c45c8797",
+      "flags": 0
+    },
+    {
+      "path": "src/sistemas/tareas/ventanilla.gd.remap",
+      "bytes": 57,
+      "md5": "f79bfc158af3bc6e9b4cb3593d952b7d",
+      "flags": 0
+    },
+    {
+      "path": "src/sistemas/tareas/ventanilla.gdc",
+      "bytes": 1751,
+      "md5": "77879d88449c52ed99314077e6002328",
+      "flags": 0
+    },
+    {
+      "path": "src/ui/aristas_del_producto.gd.remap",
+      "bytes": 54,
+      "md5": "170efbc65f1b01b085dca0459ebbd9bb",
+      "flags": 0
+    },
+    {
+      "path": "src/ui/aristas_del_producto.gdc",
+      "bytes": 2941,
+      "md5": "9f886cd3d56f54b9b39b410d0d0b651a",
+      "flags": 0
+    },
+    {
+      "path": "src/ui/diegetica/app_caja.gd.remap",
+      "bytes": 52,
+      "md5": "727c7c77e22bfa27595247fa87938cd6",
+      "flags": 0
+    },
+    {
+      "path": "src/ui/diegetica/app_caja.gdc",
+      "bytes": 5044,
+      "md5": "71a7ede42511ed1094d313427b66a510",
+      "flags": 0
+    },
+    {
+      "path": "src/ui/diegetica/app_caja.tscn.remap",
+      "bytes": 101,
+      "md5": "e07571050f63c1ad1676d421ed59c5cc",
+      "flags": 0
+    },
+    {
+      "path": "src/ui/diegetica/app_chats.gd.remap",
+      "bytes": 53,
+      "md5": "14474fd4ef40948eac30b3d3f8b723f6",
+      "flags": 0
+    },
+    {
+      "path": "src/ui/diegetica/app_chats.gdc",
+      "bytes": 1765,
+      "md5": "8bc715b565d74763a5909330f3d8fa10",
+      "flags": 0
+    },
+    {
+      "path": "src/ui/diegetica/app_chats.tscn.remap",
+      "bytes": 102,
+      "md5": "60802298f7e2da861683fd24f5ecd82d",
+      "flags": 0
+    },
+    {
+      "path": "src/ui/diegetica/app_notas.gd.remap",
+      "bytes": 53,
+      "md5": "a43f22c3ae97f3ad3d69022eed8b042a",
+      "flags": 0
+    },
+    {
+      "path": "src/ui/diegetica/app_notas.gdc",
+      "bytes": 2460,
+      "md5": "5178a9e53740b6d1edf777554dff1aa4",
+      "flags": 0
+    },
+    {
+      "path": "src/ui/diegetica/app_notas.tscn.remap",
+      "bytes": 102,
+      "md5": "e71db1af237a8c8e7c8b697fcef4a9d8",
+      "flags": 0
+    },
+    {
+      "path": "src/ui/diegetica/fondo_de_computadora.gdshader",
+      "bytes": 327,
+      "md5": "655beb2a1113b54eaec337f5a0ee363a",
+      "flags": 0
+    },
+    {
+      "path": "src/ui/diegetica/lienzo_de_manada.gd.remap",
+      "bytes": 60,
+      "md5": "37d9b5520c797099a7eb7f245f26a8dd",
+      "flags": 0
+    },
+    {
+      "path": "src/ui/diegetica/lienzo_de_manada.gdc",
+      "bytes": 531,
+      "md5": "8afdb6fa0aed7d7f811e910eb9e22a83",
+      "flags": 0
+    },
+    {
+      "path": "src/ui/diegetica/panel_de_la_ventanilla.gd.remap",
+      "bytes": 66,
+      "md5": "ee6ee8ef0d89d82777ebf9fa8eaf8a31",
+      "flags": 0
+    },
+    {
+      "path": "src/ui/diegetica/panel_de_la_ventanilla.gdc",
+      "bytes": 2124,
+      "md5": "24d6fa46fc042ee6d14dda32c4556919",
+      "flags": 0
+    },
+    {
+      "path": "src/ui/diegetica/panel_de_la_ventanilla.tscn.remap",
+      "bytes": 115,
+      "md5": "0df66f552bac57cb4b194f626fdbb67e",
+      "flags": 0
+    },
+    {
+      "path": "src/ui/diegetica/pantalla_de_computadora.gd.remap",
+      "bytes": 67,
+      "md5": "22e4d395d239fca1d7d9f2ab9880f17b",
+      "flags": 0
+    },
+    {
+      "path": "src/ui/diegetica/pantalla_de_computadora.gdc",
+      "bytes": 2710,
+      "md5": "d56d7c5035724fef9d956479f464ca68",
+      "flags": 0
+    },
+    {
+      "path": "src/ui/diegetica/pantalla_de_computadora.tscn.remap",
+      "bytes": 116,
+      "md5": "e107598078894fe70e59d1df1ccd462f",
+      "flags": 0
+    },
+    {
+      "path": "src/ui/hud.gd.remap",
+      "bytes": 37,
+      "md5": "6137067a335d91f502598235d7c0deda",
+      "flags": 0
+    },
+    {
+      "path": "src/ui/hud.gdc",
+      "bytes": 1415,
+      "md5": "d78382f437cb05f429ddc55e47e621ec",
+      "flags": 0
+    },
+    {
+      "path": "src/ui/hud.tscn.remap",
+      "bytes": 96,
+      "md5": "7cdf0d255fbce4d3eea979ed895e90be",
+      "flags": 0
+    },
+    {
+      "path": "src/ui/interrupciones/menu_de_pausa.gd.remap",
+      "bytes": 62,
+      "md5": "a6e23f5fe3e97618641713753401b938",
+      "flags": 0
+    },
+    {
+      "path": "src/ui/interrupciones/menu_de_pausa.gdc",
+      "bytes": 1202,
+      "md5": "2a1960c0153ddb486d52a2a2aee9429c",
+      "flags": 0
+    },
+    {
+      "path": "src/ui/interrupciones/menu_de_pausa.tscn.remap",
+      "bytes": 106,
+      "md5": "944b89b0f6f52b82a11db5dbbcbc15f4",
+      "flags": 0
+    },
+    {
+      "path": "src/ui/interrupciones/pantalla_de_carga.gd.remap",
+      "bytes": 66,
+      "md5": "5fc7441caddaa5fb4ddffc3e17059afc",
+      "flags": 0
+    },
+    {
+      "path": "src/ui/interrupciones/pantalla_de_carga.gdc",
+      "bytes": 695,
+      "md5": "32f3ba6172f781bf04dd719cd46c31f9",
+      "flags": 0
+    },
+    {
+      "path": "src/ui/interrupciones/pantalla_de_carga.tscn.remap",
+      "bytes": 110,
+      "md5": "ed77362108feb91e75835113e9e0ce90",
+      "flags": 0
+    },
+    {
+      "path": "src/ui/interrupciones/pantalla_de_cierre.gd.remap",
+      "bytes": 67,
+      "md5": "650af4988f9cdddc3c85fdd36920437c",
+      "flags": 0
+    },
+    {
+      "path": "src/ui/interrupciones/pantalla_de_cierre.gdc",
+      "bytes": 1861,
+      "md5": "e2b2c0c27eece111f08d562b1cda51e3",
+      "flags": 0
+    },
+    {
+      "path": "src/ui/interrupciones/pantalla_de_cierre.tscn.remap",
+      "bytes": 111,
+      "md5": "ed92611249fda95fcd9c98b1dffde1f4",
+      "flags": 0
+    },
+    {
+      "path": "vercel.json",
+      "bytes": 413,
+      "md5": "62cdf5ddde07d78cef95ab1548b8c126",
+      "flags": 0
+    }
+  ]
+}

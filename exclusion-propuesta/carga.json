@@ -1,0 +1,57 @@
+{
+ "url": "http://localhost:8060",
+ "fecha": "2026-10-09T02:04:31.018Z",
+ "corridas": [
+  {
+   "overlay": 2613,
+   "menu": 2536,
+   "clic": 2665,
+   "almacen": 13675,
+   "desdeElClic": 11010,
+   "cuadro_mas_largo_ms": 2188,
+   "gpu": "ANGLE (NVIDIA, NVIDIA GeForce RTX 4050 Laptop GPU (0x000028E1) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+   "programas": 100,
+   "fuentes_distintas": 96
+  },
+  {
+   "overlay": 1078,
+   "menu": 1042,
+   "clic": 1124,
+   "almacen": 4009,
+   "desdeElClic": 2885,
+   "cuadro_mas_largo_ms": 972,
+   "gpu": "ANGLE (NVIDIA, NVIDIA GeForce RTX 4050 Laptop GPU (0x000028E1) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+   "programas": 100,
+   "fuentes_distintas": 96
+  },
+  {
+   "overlay": 1070,
+   "menu": 1034,
+   "clic": 1145,
+   "almacen": 3928,
+   "desdeElClic": 2783,
+   "cuadro_mas_largo_ms": 944,
+   "gpu": "ANGLE (NVIDIA, NVIDIA GeForce RTX 4050 Laptop GPU (0x000028E1) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+   "programas": 100,
+   "fuentes_distintas": 96
+  }
+ ],
+ "medianas": {
+  "overlay": 1078,
+  "menu": 1042,
+  "almacen": 4009
+ },
+ "condiciones": {
+  "navegador": "154.0.8037.92",
+  "viewport": {
+   "ancho": 1536,
+   "alto": 760
+  },
+  "sincronizacionHabitual": true,
+  "cpuLimitada": false,
+  "contextosHTTPNuevos": true,
+  "sinVentana": true,
+  "sinEnlaceEnParalelo": false,
+  "cacheDeShadersCompartida": "posible dentro del mismo navegador"
+ }
+}

@@ -1,0 +1,27 @@
+{
+  "url": "http://localhost:8060",
+  "browser": "154.0.8037.92",
+  "viewport": "1280x720",
+  "errors": [],
+  "captures": [
+    {
+      "name": "inicio",
+      "frames": 145
+    },
+    {
+      "name": "computadora",
+      "frames": 145
+    },
+    {
+      "name": "ventanilla",
+      "frames": 145
+    }
+  ],
+  "apertura_cierre": [
+    "[apertura-cierre] computadora OK",
+    "[apertura-cierre] ventanilla OK"
+  ],
+  "renderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 4050 Laptop GPU (0x000028E1) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+  "recursos": "[recursos] 356 recursos cargados OK",
+  "dinamicos": "[dinamicos] audio y tres conversaciones OK"
+}

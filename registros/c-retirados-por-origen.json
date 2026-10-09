@@ -1,0 +1,1216 @@
+{
+  "entries": [
+    {
+      "path": ".godot/imported/estacion_panoramica_gemini.jpg-75cbdeda76b820f75a4510635434c41e.s3tc.ctex",
+      "bytes": 2796124,
+      "md5": "a4f9ef1a13877bb1a8ff81f6cae04e2e",
+      "flags": 0,
+      "source": "res://assets/environments/estacion_panoramica_gemini.jpg",
+      "literal_references": [
+        "src/escenas/puestos/exterior_del_almacen.gd"
+      ]
+    },
+    {
+      "path": ".godot/imported/fondo.png-f2de541a97e697ea2b481714829d8efc.ctex",
+      "bytes": 1561850,
+      "md5": "cac5e40e639b08fcea9f03014451206d",
+      "flags": 0,
+      "source": "res://assets/ui/manada/fondo.png",
+      "literal_references": []
+    },
+    {
+      "path": ".godot/imported/canopy_without_lamp.png-f6a9ce01e86b19cec9f93aa2f61c77bf.s3tc.ctex",
+      "bytes": 1053676,
+      "md5": "040c8de8f121e7018bea77c0703b5ade",
+      "flags": 0,
+      "source": "res://assets/environments/canopy_without_lamp.png",
+      "literal_references": [
+        "src/escenas/puestos/exterior_del_almacen.gd"
+      ]
+    },
+    {
+      "path": ".godot/imported/estacion_fondo_sin_objetos.png-ea641f7b3ce66f1bd69569bfa0995490.s3tc.ctex",
+      "bytes": 1053564,
+      "md5": "e9118ee4cc1bf87df929a491c766b4e4",
+      "flags": 0,
+      "source": "res://assets/environments/estacion_fondo_sin_objetos.png",
+      "literal_references": [
+        "src/escenas/puestos/exterior_del_almacen.gd"
+      ]
+    },
+    {
+      "path": ".godot/imported/SEPT_JUEGOS_PROTOTIPO_techo1_baseColor.jpg-693ab209dbe8e5f5d55252376f575118.s3tc.ctex",
+      "bytes": 699116,
+      "md5": "fbc1233a13738a312cd1cf05dfe1c0e1",
+      "flags": 0,
+      "source": "res://assets/models/SEPT_JUEGOS_PROTOTIPO_techo1_baseColor.jpg",
+      "literal_references": []
+    },
+    {
+      "path": ".godot/imported/SEPT_JUEGOS_PROTOTIPO_cielorraso_sin_luces.png-b82fdb7f3b81453422744c88e3d8d2ca.s3tc.ctex",
+      "bytes": 699116,
+      "md5": "50c0c188a7c414e88614d774c4405b17",
+      "flags": 0,
+      "source": "res://assets/models/SEPT_JUEGOS_PROTOTIPO_cielorraso_sin_luces.png",
+      "literal_references": []
+    },
+    {
+      "path": ".godot/imported/SEPT_JUEGOS_PROTOTIPO_painted_plaster_wall_diff_1k.jpg-8d0ce084a70700c3113186c9c6b5356c.s3tc.ctex",
+      "bytes": 699116,
+      "md5": "5843591eb824d8d3fdc436e2579d7670",
+      "flags": 0,
+      "source": "res://assets/models/SEPT_JUEGOS_PROTOTIPO_painted_plaster_wall_diff_1k.jpg",
+      "literal_references": []
+    },
+    {
+      "path": ".godot/imported/SEPT_JUEGOS_PROTOTIPO_piso_baseColor.png-efb42e38ed770159caa5180302160d28.s3tc.ctex",
+      "bytes": 699116,
+      "md5": "2d165d0def4f91df67cfed9795487a52",
+      "flags": 0,
+      "source": "res://assets/models/SEPT_JUEGOS_PROTOTIPO_piso_baseColor.png",
+      "literal_references": []
+    },
+    {
+      "path": ".godot/imported/SEPT_JUEGOS_PROTOTIPO_textura mopa.png-82353193b76d1b974d49209c5efe9b89.s3tc.ctex",
+      "bytes": 699116,
+      "md5": "2396bfd7528b01169a7bd9b4df259126",
+      "flags": 0,
+      "source": "res://assets/models/SEPT_JUEGOS_PROTOTIPO_textura mopa.png",
+      "literal_references": []
+    },
+    {
+      "path": ".godot/imported/SEPT_JUEGOS_PROTOTIPO_textura balde.png-c4e222c65420a93b91fe38fccf6ebab5.s3tc.ctex",
+      "bytes": 699116,
+      "md5": "fda7015d379f558dcd3b937350138eac",
+      "flags": 0,
+      "source": "res://assets/models/SEPT_JUEGOS_PROTOTIPO_textura balde.png",
+      "literal_references": []
+    },
+    {
+      "path": ".godot/imported/SEPT_JUEGOS_PROTOTIPO_Material_59.png-5ac73f61dd9767be0aea3ec035293bfe.s3tc.ctex",
+      "bytes": 349636,
+      "md5": "3554d048f1c0008717b53201cb64f5a4",
+      "flags": 0,
+      "source": "res://assets/models/SEPT_JUEGOS_PROTOTIPO_Material_59.png",
+      "literal_references": []
+    },
+    {
+      "path": ".godot/imported/SEPT_JUEGOS_PROTOTIPO_Material_56.png-e7f1535eece8287c67b59865f554e212.s3tc.ctex",
+      "bytes": 349636,
+      "md5": "3554d048f1c0008717b53201cb64f5a4",
+      "flags": 0,
+      "source": "res://assets/models/SEPT_JUEGOS_PROTOTIPO_Material_56.png",
+      "literal_references": []
+    },
+    {
+      "path": ".godot/imported/SEPT_JUEGOS_PROTOTIPO_Material_57.png-0fa7437208f1caec8e96d23b12169b0c.s3tc.ctex",
+      "bytes": 349636,
+      "md5": "3554d048f1c0008717b53201cb64f5a4",
+      "flags": 0,
+      "source": "res://assets/models/SEPT_JUEGOS_PROTOTIPO_Material_57.png",
+      "literal_references": []
+    },
+    {
+      "path": ".godot/imported/SEPT_JUEGOS_PROTOTIPO_exterior_nocturno.png-f6059205247ed45ffa58b3691af8ddec.s3tc.ctex",
+      "bytes": 349596,
+      "md5": "7f08837fcf74960d48f7d4bf32070c51",
+      "flags": 0,
+      "source": "res://assets/models/SEPT_JUEGOS_PROTOTIPO_exterior_nocturno.png",
+      "literal_references": []
+    },
+    {
+      "path": ".godot/imported/SEPT_JUEGOS_PROTOTIPO_LIMPIEZA ETIQUETA (3).png-21469d724b15837bb2f78741d7810460.s3tc.ctex",
+      "bytes": 293156,
+      "md5": "d6b7981d597da159176b7e5eb24f965c",
+      "flags": 0,
+      "source": "res://assets/models/SEPT_JUEGOS_PROTOTIPO_LIMPIEZA ETIQUETA (3).png",
+      "literal_references": []
+    },
+    {
+      "path": ".godot/imported/durextra.png-fa19a39df8f6a205112458ae8eeb47b8.s3tc.ctex",
+      "bytes": 174828,
+      "md5": "ac97742686c4ed7426f069c988b65f8b",
+      "flags": 0,
+      "source": "res://assets/boxes/durextra.png",
+      "literal_references": [
+        "src/escenas/objetos/caja_de_productos.gd"
+      ]
+    },
+    {
+      "path": ".godot/imported/actroncito.png-f47410e53911aa1e41b5b0de6cee81a1.s3tc.ctex",
+      "bytes": 174828,
+      "md5": "c8fd8b79b983818f0d548fb27a2ebce2",
+      "flags": 0,
+      "source": "res://assets/boxes/actroncito.png",
+      "literal_references": [
+        "src/escenas/objetos/caja_de_productos.gd"
+      ]
+    },
+    {
+      "path": ".godot/imported/burbaloo.png-dadb38f651621cb0a7caf7b0e8f514bd.s3tc.ctex",
+      "bytes": 174828,
+      "md5": "81060d4e88894b3a8e1089d9130a91c5",
+      "flags": 0,
+      "source": "res://assets/boxes/burbaloo.png",
+      "literal_references": [
+        "src/escenas/objetos/caja_de_productos.gd"
+      ]
+    },
+    {
+      "path": ".godot/imported/macumbas.png-066f0fa3ee15ad04fde6b54887d7eeb2.s3tc.ctex",
+      "bytes": 174828,
+      "md5": "b83f8de510b292bfc6eae9791ff0ebd5",
+      "flags": 0,
+      "source": "res://assets/boxes/macumbas.png",
+      "literal_references": [
+        "src/escenas/objetos/caja_de_productos.gd"
+      ]
+    },
+    {
+      "path": ".godot/imported/frotlups.png-70b13cbe5c7ff61f3a3ad7f1ad139430.s3tc.ctex",
+      "bytes": 174828,
+      "md5": "7a415005e110b5cac781f2ece5f8cccc",
+      "flags": 0,
+      "source": "res://assets/boxes/frotlups.png",
+      "literal_references": [
+        "src/escenas/objetos/caja_de_productos.gd"
+      ]
+    },
+    {
+      "path": ".godot/imported/oaaaa.png-1908993e4f04843c6dcffcc8d4e572c8.s3tc.ctex",
+      "bytes": 174828,
+      "md5": "df81c7628daa68194fa8573aa05c9c54",
+      "flags": 0,
+      "source": "res://assets/boxes/oaaaa.png",
+      "literal_references": [
+        "src/escenas/objetos/caja_de_productos.gd"
+      ]
+    },
+    {
+      "path": ".godot/imported/SEPT_JUEGOS_PROTOTIPO_jabón liquido.png-969af500628c1e09963405c8caf74704.s3tc.ctex",
+      "bytes": 174828,
+      "md5": "1daf066760fb43a4b5d1f12b53b1ab45",
+      "flags": 0,
+      "source": "res://assets/models/SEPT_JUEGOS_PROTOTIPO_jabón liquido.png",
+      "literal_references": []
+    },
+    {
+      "path": ".godot/imported/donsaturados.png-0bf25d8011448f3754d15a66b62dedd7.s3tc.ctex",
+      "bytes": 174828,
+      "md5": "a1336547a0042b26d5a5c6cfb1db688c",
+      "flags": 0,
+      "source": "res://assets/boxes/donsaturados.png",
+      "literal_references": [
+        "src/escenas/objetos/caja_de_productos.gd"
+      ]
+    },
+    {
+      "path": ".godot/imported/zucarachas.png-8eb79a1d16b374d65ba2ebfdde10106c.s3tc.ctex",
+      "bytes": 174828,
+      "md5": "21e1b0f82675c785fcb8dcfc84fdf95d",
+      "flags": 0,
+      "source": "res://assets/boxes/zucarachas.png",
+      "literal_references": [
+        "src/escenas/objetos/caja_de_productos.gd"
+      ]
+    },
+    {
+      "path": ".godot/imported/duronga.png-fc2b3f48303727ce1bc6ca5a396396f9.s3tc.ctex",
+      "bytes": 174828,
+      "md5": "801ec167b1465bb3a06c5485c922c90f",
+      "flags": 0,
+      "source": "res://assets/boxes/duronga.png",
+      "literal_references": [
+        "src/escenas/objetos/caja_de_productos.gd"
+      ]
+    },
+    {
+      "path": ".godot/imported/jorgillo.png-7118ecae82eddc74433db674f9854639.s3tc.ctex",
+      "bytes": 174828,
+      "md5": "a2c7567e8b432b27b71b961d26a61fa5",
+      "flags": 0,
+      "source": "res://assets/boxes/jorgillo.png",
+      "literal_references": [
+        "src/escenas/objetos/caja_de_productos.gd"
+      ]
+    },
+    {
+      "path": ".godot/imported/flinpuf.png-08223b969133db2f1748a5533665cfcf.s3tc.ctex",
+      "bytes": 174828,
+      "md5": "d93ed3a5b01301e6b1e28c82f4b8fb49",
+      "flags": 0,
+      "source": "res://assets/boxes/flinpuf.png",
+      "literal_references": [
+        "src/escenas/objetos/caja_de_productos.gd"
+      ]
+    },
+    {
+      "path": ".godot/imported/terminator.png-ec0fe55964fa8670c84f4401cbbdde8a.s3tc.ctex",
+      "bytes": 174828,
+      "md5": "180adb8f5605b1a88aa4c6e5ab9af8e9",
+      "flags": 0,
+      "source": "res://assets/boxes/terminator.png",
+      "literal_references": [
+        "src/escenas/objetos/caja_de_productos.gd"
+      ]
+    },
+    {
+      "path": ".godot/imported/mayonchis.png-d842e010d5b3016d5b76c999fb13a71b.s3tc.ctex",
+      "bytes": 174828,
+      "md5": "05f4b88905509eb02ce77287da5937bf",
+      "flags": 0,
+      "source": "res://assets/boxes/mayonchis.png",
+      "literal_references": [
+        "src/escenas/objetos/caja_de_productos.gd"
+      ]
+    },
+    {
+      "path": ".godot/imported/petisas.png-d953329233893b900c8935d9f4432c2b.s3tc.ctex",
+      "bytes": 174828,
+      "md5": "d48094b5bf97917b91529e92d79f12f9",
+      "flags": 0,
+      "source": "res://assets/boxes/petisas.png",
+      "literal_references": [
+        "src/escenas/objetos/caja_de_productos.gd"
+      ]
+    },
+    {
+      "path": ".godot/imported/cosa_de_mani.png-2f9c9d5678fa8343e86045a2fe82203b.s3tc.ctex",
+      "bytes": 174828,
+      "md5": "966ff3f9fd2f83b7edb91e1d6ae51c32",
+      "flags": 0,
+      "source": "res://assets/boxes/cosa_de_mani.png",
+      "literal_references": [
+        "src/escenas/objetos/caja_de_productos.gd"
+      ]
+    },
+    {
+      "path": ".godot/imported/amargadito.png-b9ad1fcf2626fa36a6dd294db2cafb30.s3tc.ctex",
+      "bytes": 174828,
+      "md5": "dd41a51c70616a9787eeea6e7de33548",
+      "flags": 0,
+      "source": "res://assets/boxes/amargadito.png",
+      "literal_references": [
+        "src/escenas/objetos/caja_de_productos.gd"
+      ]
+    },
+    {
+      "path": ".godot/imported/fernet_god.png-8c4e3a808b5f9d887dde744b589a37f4.s3tc.ctex",
+      "bytes": 174828,
+      "md5": "0c0cce46cb6e80090f45083673c4350d",
+      "flags": 0,
+      "source": "res://assets/boxes/fernet_god.png",
+      "literal_references": [
+        "src/escenas/objetos/caja_de_productos.gd"
+      ]
+    },
+    {
+      "path": ".godot/imported/cindolor.png-0214e16e2765d0418ce370dca05f3bfb.s3tc.ctex",
+      "bytes": 174828,
+      "md5": "5209e72b943bda89b7f085bc512b9cef",
+      "flags": 0,
+      "source": "res://assets/boxes/cindolor.png",
+      "literal_references": [
+        "src/escenas/objetos/caja_de_productos.gd"
+      ]
+    },
+    {
+      "path": ".godot/imported/laysntt.png-36f7de87881003cde8abb47c38ba5ddb.s3tc.ctex",
+      "bytes": 174828,
+      "md5": "4b770032d9399d0fe92a1e3487d4a4b6",
+      "flags": 0,
+      "source": "res://assets/boxes/laysntt.png",
+      "literal_references": [
+        "src/escenas/objetos/caja_de_productos.gd"
+      ]
+    },
+    {
+      "path": ".godot/imported/frotlups.png-4bc1d0f574cf542f6f1098bc83575b1b.ctex",
+      "bytes": 171584,
+      "md5": "c4328b3849340c2476ba0087a5be9d42",
+      "flags": 0,
+      "source": "res://assets/ui/manada/frotlups.png",
+      "literal_references": [
+        "src/ui/diegetica/app_caja.gd"
+      ]
+    },
+    {
+      "path": ".godot/imported/uakas.png-7d42c6b38f20bb7ba46c3b9da4c0d6ba.ctex",
+      "bytes": 162772,
+      "md5": "d36084838a3b049b9d50033b8d8b7f8f",
+      "flags": 0,
+      "source": "res://assets/ui/manada/uakas.png",
+      "literal_references": [
+        "src/ui/diegetica/app_caja.gd"
+      ]
+    },
+    {
+      "path": ".godot/imported/saladik.png-9325d1d8fbb5feaf7237f90982520841.ctex",
+      "bytes": 162054,
+      "md5": "4c91ce925eb2d282ae188fcbd1df556d",
+      "flags": 0,
+      "source": "res://assets/ui/manada/saladik.png",
+      "literal_references": [
+        "src/ui/diegetica/app_caja.gd"
+      ]
+    },
+    {
+      "path": ".godot/imported/pepitos.png-7b74afb172f4f6c84a28027300078f7f.ctex",
+      "bytes": 156074,
+      "md5": "cab11e319eec8b45879599f6282912c6",
+      "flags": 0,
+      "source": "res://assets/ui/manada/pepitos.png",
+      "literal_references": [
+        "src/ui/diegetica/app_caja.gd"
+      ]
+    },
+    {
+      "path": ".godot/imported/marolini.png-5facea20b93c9176d4ec4019d7ca8493.ctex",
+      "bytes": 151778,
+      "md5": "ae072f7fe0e803bcb60fa45ae76e880f",
+      "flags": 0,
+      "source": "res://assets/ui/manada/marolini.png",
+      "literal_references": [
+        "src/ui/diegetica/app_caja.gd"
+      ]
+    },
+    {
+      "path": ".godot/imported/malbardo.png-34379e65fa4e4c2c91cb6454fe2ca30b.ctex",
+      "bytes": 144208,
+      "md5": "c30fd126afc4889cae5ae3f9ce33745b",
+      "flags": 0,
+      "source": "res://assets/ui/manada/malbardo.png",
+      "literal_references": [
+        "src/ui/diegetica/app_caja.gd"
+      ]
+    },
+    {
+      "path": ".godot/imported/donsaturados.png-cf4fc05760c68094e97122ff1c904d33.ctex",
+      "bytes": 143796,
+      "md5": "2111365aef1bec75048c14aaba77c30e",
+      "flags": 0,
+      "source": "res://assets/ui/manada/donsaturados.png",
+      "literal_references": [
+        "src/ui/diegetica/app_caja.gd"
+      ]
+    },
+    {
+      "path": ".godot/imported/chisitos.png-b4d07fc6c1808e70e4f5b3e4c2a379a6.ctex",
+      "bytes": 138158,
+      "md5": "f70242dc2779df61cc2ad9f15f4c38e1",
+      "flags": 0,
+      "source": "res://assets/ui/manada/chisitos.png",
+      "literal_references": [
+        "src/ui/diegetica/app_caja.gd"
+      ]
+    },
+    {
+      "path": ".godot/imported/oremos.png-c147471ed27925a24a97adc79da1a4aa.ctex",
+      "bytes": 134612,
+      "md5": "3e630ff93bf16b349c02df2b8e29c00f",
+      "flags": 0,
+      "source": "res://assets/ui/manada/oremos.png",
+      "literal_references": [
+        "src/ui/diegetica/app_caja.gd"
+      ]
+    },
+    {
+      "path": ".godot/imported/feel_ricky_fort.png-1336fd0a6e13b876afb4ba2a087d1ae3.ctex",
+      "bytes": 132884,
+      "md5": "0632030de29f4756dfc88619498e3262",
+      "flags": 0,
+      "source": "res://assets/ui/manada/feel_ricky_fort.png",
+      "literal_references": [
+        "src/ui/diegetica/app_caja.gd"
+      ]
+    },
+    {
+      "path": ".godot/imported/zucarachas.png-202efe5aa13666d8f5bdd7739113ce9f.ctex",
+      "bytes": 128594,
+      "md5": "07a2bcc00c2c5a31d6fb8d03beabe318",
+      "flags": 0,
+      "source": "res://assets/ui/manada/zucarachas.png",
+      "literal_references": [
+        "src/ui/diegetica/app_caja.gd"
+      ]
+    },
+    {
+      "path": ".godot/imported/arvejas.png-ca91918f76b451d2883baace4dc5bd04.ctex",
+      "bytes": 123440,
+      "md5": "69e0303c4b2851c67ec72cf67fc12067",
+      "flags": 0,
+      "source": "res://assets/ui/manada/arvejas.png",
+      "literal_references": [
+        "src/ui/diegetica/app_caja.gd"
+      ]
+    },
+    {
+      "path": ".godot/imported/duronga.png-2e0c15e7a5e6f01b66c4146cb3a7d757.ctex",
+      "bytes": 119312,
+      "md5": "1866a64a2ba5bab679bffeb7491e9402",
+      "flags": 0,
+      "source": "res://assets/ui/manada/duronga.png",
+      "literal_references": [
+        "src/ui/diegetica/app_caja.gd"
+      ]
+    },
+    {
+      "path": ".godot/imported/jorgillo.png-511cc7465fa14420994c1ee3a41d84ba.ctex",
+      "bytes": 115674,
+      "md5": "a6baf3149aa50b953002e53b6fd97f44",
+      "flags": 0,
+      "source": "res://assets/ui/manada/jorgillo.png",
+      "literal_references": [
+        "src/ui/diegetica/app_caja.gd"
+      ]
+    },
+    {
+      "path": ".godot/imported/petisas.png-396043ddd957e90312ebaeb5de918c7d.ctex",
+      "bytes": 112516,
+      "md5": "8b72f03f1aa9639b74ee7bfed75d6a5c",
+      "flags": 0,
+      "source": "res://assets/ui/manada/petisas.png",
+      "literal_references": [
+        "src/ui/diegetica/app_caja.gd"
+      ]
+    },
+    {
+      "path": ".godot/imported/cindolor.png-1bd6b0e9b1201271b43e82e7d322b95e.ctex",
+      "bytes": 106100,
+      "md5": "be2ffd7c08cd161cb4fb1ac1955a167b",
+      "flags": 0,
+      "source": "res://assets/ui/manada/cindolor.png",
+      "literal_references": [
+        "src/ui/diegetica/app_caja.gd"
+      ]
+    },
+    {
+      "path": ".godot/imported/coracola.png-a9afe89a3f55b661ede7ef305b159946.ctex",
+      "bytes": 95306,
+      "md5": "919b7b30d9cc1d3472ddff79b590bf68",
+      "flags": 0,
+      "source": "res://assets/ui/manada/coracola.png",
+      "literal_references": [
+        "src/ui/diegetica/app_caja.gd"
+      ]
+    },
+    {
+      "path": ".godot/imported/prongles.png-0050246db31c2f1afdb07fe23d25691d.ctex",
+      "bytes": 88014,
+      "md5": "2d0533bbfa991bfd88b7d0088e5cee02",
+      "flags": 0,
+      "source": "res://assets/ui/manada/prongles.png",
+      "literal_references": [
+        "src/ui/diegetica/app_caja.gd"
+      ]
+    },
+    {
+      "path": ".godot/imported/oaaaa.png-c70d7ed123c2fc5b89666cc21b0389ae.ctex",
+      "bytes": 86494,
+      "md5": "d6536b58fe1fac13ee0b9250e1411944",
+      "flags": 0,
+      "source": "res://assets/ui/manada/oaaaa.png",
+      "literal_references": [
+        "src/ui/diegetica/app_caja.gd"
+      ]
+    },
+    {
+      "path": ".godot/imported/amargadito.png-d29c747c830f7d9126d22834eb48fff4.ctex",
+      "bytes": 86330,
+      "md5": "7dcb1ef18f45353935ebcc231ddea79b",
+      "flags": 0,
+      "source": "res://assets/ui/manada/amargadito.png",
+      "literal_references": [
+        "src/ui/diegetica/app_caja.gd"
+      ]
+    },
+    {
+      "path": ".godot/imported/mayonchis.png-5409c2c01612bb02412fe937a88d6d2b.ctex",
+      "bytes": 85518,
+      "md5": "adf10304c4d0fe1a2627c1b27eddc8ff",
+      "flags": 0,
+      "source": "res://assets/ui/manada/mayonchis.png",
+      "literal_references": [
+        "src/ui/diegetica/app_caja.gd"
+      ]
+    },
+    {
+      "path": ".godot/imported/cosa_de_mani.png-5ff5e620729fd6355ae0f59e27521f46.ctex",
+      "bytes": 81072,
+      "md5": "059dca76e5942496b4a36f7304313e2a",
+      "flags": 0,
+      "source": "res://assets/ui/manada/cosa_de_mani.png",
+      "literal_references": [
+        "src/ui/diegetica/app_caja.gd"
+      ]
+    },
+    {
+      "path": ".godot/imported/flinpuf.png-f5eb33654741b176b12b6f2f5a3ab81f.ctex",
+      "bytes": 72520,
+      "md5": "fa2d97a8584b41a29badf56c5da30f5f",
+      "flags": 0,
+      "source": "res://assets/ui/manada/flinpuf.png",
+      "literal_references": [
+        "src/ui/diegetica/app_caja.gd"
+      ]
+    },
+    {
+      "path": ".godot/imported/durextra.png-faee96bc70ce18dd276bfb6446748153.ctex",
+      "bytes": 72182,
+      "md5": "cc6cd05ce526fbb47f8994dc0a613aba",
+      "flags": 0,
+      "source": "res://assets/ui/manada/durextra.png",
+      "literal_references": [
+        "src/ui/diegetica/app_caja.gd"
+      ]
+    },
+    {
+      "path": ".godot/imported/terminator.png-6d47b51b2df994dd5d0f67d583262d7e.ctex",
+      "bytes": 70924,
+      "md5": "f1e88562e371b129f7725b87218bcf45",
+      "flags": 0,
+      "source": "res://assets/ui/manada/terminator.png",
+      "literal_references": [
+        "src/ui/diegetica/app_caja.gd"
+      ]
+    },
+    {
+      "path": ".godot/imported/actroncito.png-09b143c0baa280b1569d9124d2565c35.ctex",
+      "bytes": 70196,
+      "md5": "33a7faacc1a5f12077e760f4f6550a73",
+      "flags": 0,
+      "source": "res://assets/ui/manada/actroncito.png",
+      "literal_references": [
+        "src/ui/diegetica/app_caja.gd"
+      ]
+    },
+    {
+      "path": ".godot/imported/fernet_god.png-051401283ee03fa8fb8eb7d292a2886d.ctex",
+      "bytes": 60436,
+      "md5": "9d5241f23e41a6e8570de7ca14ee363e",
+      "flags": 0,
+      "source": "res://assets/ui/manada/fernet_god.png",
+      "literal_references": [
+        "src/ui/diegetica/app_caja.gd"
+      ]
+    },
+    {
+      "path": ".godot/imported/burbaloo.png-7feada9ba36da3920e62c6c67e075f0d.ctex",
+      "bytes": 59554,
+      "md5": "aabe788844cb7452ad4007077055d283",
+      "flags": 0,
+      "source": "res://assets/ui/manada/burbaloo.png",
+      "literal_references": [
+        "src/ui/diegetica/app_caja.gd"
+      ]
+    },
+    {
+      "path": ".godot/imported/macumbas.png-1fdc33eb1208ea3ed713e085b45f888c.ctex",
+      "bytes": 58962,
+      "md5": "6ed4733090828629b61cc54c094523c9",
+      "flags": 0,
+      "source": "res://assets/ui/manada/macumbas.png",
+      "literal_references": [
+        "src/ui/diegetica/app_caja.gd"
+      ]
+    },
+    {
+      "path": ".godot/imported/laysntt.png-c8fa8c0bd057142d1eb45cfdb6232871.ctex",
+      "bytes": 54148,
+      "md5": "290969859b1588cc6cc4d75273495aa5",
+      "flags": 0,
+      "source": "res://assets/ui/manada/laysntt.png",
+      "literal_references": [
+        "src/ui/diegetica/app_caja.gd"
+      ]
+    },
+    {
+      "path": ".godot/imported/SEPT_JUEGOS_PROTOTIPO_bano_piso_gris.png-5b48ab6bac512f88a68b91a7d3e89ea4.s3tc.ctex",
+      "bytes": 43756,
+      "md5": "5090cc694b99318d94ef719d44180778",
+      "flags": 0,
+      "source": "res://assets/models/SEPT_JUEGOS_PROTOTIPO_bano_piso_gris.png",
+      "literal_references": []
+    },
+    {
+      "path": ".godot/imported/marranos.png-28babdddd76d3e97c58851b83502a9f2.ctex",
+      "bytes": 33644,
+      "md5": "238fd640a6aa8106f19b24ab77ba7d4b",
+      "flags": 0,
+      "source": "res://assets/ui/manada/marranos.png",
+      "literal_references": [
+        "src/ui/diegetica/app_caja.gd"
+      ]
+    },
+    {
+      "path": ".godot/imported/SFX_PERSONAJE_Pasos.wav-6403109bdea489fd804edeeb2ec99c35.sample",
+      "bytes": 23383,
+      "md5": "5868aa314672832e24a725a9e1ac2e52",
+      "flags": 0,
+      "source": "res://assets/audio/SFX_PERSONAJE_Pasos.wav",
+      "literal_references": []
+    },
+    {
+      "path": ".godot/imported/SEPT_JUEGOS_PROTOTIPO_Material_54.png-f88da0f56d60409fdf0c1889efc99400.s3tc.ctex",
+      "bytes": 21956,
+      "md5": "f83f901f4c9465cd11bdf40e2b74c20f",
+      "flags": 0,
+      "source": "res://assets/models/SEPT_JUEGOS_PROTOTIPO_Material_54.png",
+      "literal_references": []
+    },
+    {
+      "path": "addons/godot_mcp/commands/node_commands.gdc",
+      "bytes": 20669,
+      "md5": "5055945f84b3219d8a5e77da6760fe65",
+      "flags": 0,
+      "source": null,
+      "literal_references": []
+    },
+    {
+      "path": "addons/godot_mcp/commands/project_commands.gdc",
+      "bytes": 19420,
+      "md5": "e56800fe37d15bb660e8a2dc0eb47c08",
+      "flags": 0,
+      "source": null,
+      "literal_references": []
+    },
+    {
+      "path": "addons/godot_mcp/commands/editor_commands.gdc",
+      "bytes": 19108,
+      "md5": "26985d5738979264c519a8989bb2767d",
+      "flags": 0,
+      "source": null,
+      "literal_references": []
+    },
+    {
+      "path": "addons/godot_mcp/commands/scene_3d_commands.gdc",
+      "bytes": 18499,
+      "md5": "dccb7ba42c5b28a8d9bcb3f0878b83a5",
+      "flags": 0,
+      "source": null,
+      "literal_references": []
+    },
+    {
+      "path": "addons/godot_mcp/commands/physics_commands.gdc",
+      "bytes": 18438,
+      "md5": "970508a1a28d695cad1d65666ce4483d",
+      "flags": 0,
+      "source": null,
+      "literal_references": []
+    },
+    {
+      "path": "addons/godot_mcp/commands/particle_commands.gdc",
+      "bytes": 15916,
+      "md5": "f39d3752cc8e3ce2a2ff2d01a6103b9e",
+      "flags": 0,
+      "source": null,
+      "literal_references": []
+    },
+    {
+      "path": "addons/godot_mcp/commands/base_command.gdc",
+      "bytes": 14627,
+      "md5": "94481f6898dd009722b174b2a2786dd2",
+      "flags": 0,
+      "source": null,
+      "literal_references": []
+    },
+    {
+      "path": "addons/godot_mcp/commands/animation_tree_commands.gdc",
+      "bytes": 13926,
+      "md5": "51e70561440e92a72f0c9d4663d609d8",
+      "flags": 0,
+      "source": null,
+      "literal_references": []
+    },
+    {
+      "path": "addons/godot_mcp/commands/test_commands.gdc",
+      "bytes": 13049,
+      "md5": "83662e55c528a535464931c8edbaa790",
+      "flags": 0,
+      "source": null,
+      "literal_references": []
+    },
+    {
+      "path": "addons/godot_mcp/commands/analysis_commands.gdc",
+      "bytes": 12642,
+      "md5": "34d3ff5e6468bce384b9157272276f03",
+      "flags": 0,
+      "source": null,
+      "literal_references": []
+    },
+    {
+      "path": "addons/godot_mcp/commands/script_commands.gdc",
+      "bytes": 12528,
+      "md5": "001fe22c3397b26d44999314753bffa5",
+      "flags": 0,
+      "source": null,
+      "literal_references": []
+    },
+    {
+      "path": "addons/godot_mcp/commands/theme_commands.gdc",
+      "bytes": 11853,
+      "md5": "d5c061cf8822370ef0b4fa57d3ca4cf8",
+      "flags": 0,
+      "source": null,
+      "literal_references": []
+    },
+    {
+      "path": "addons/godot_mcp/commands/audio_commands.gdc",
+      "bytes": 11759,
+      "md5": "6734bda856cbda493fd89c80fdc04320",
+      "flags": 0,
+      "source": null,
+      "literal_references": []
+    },
+    {
+      "path": "addons/godot_mcp/commands/batch_commands.gdc",
+      "bytes": 11577,
+      "md5": "9e5fe47fdcc3415f6ce435a825351b34",
+      "flags": 0,
+      "source": null,
+      "literal_references": []
+    },
+    {
+      "path": ".godot/imported/SEPT_JUEGOS_PROTOTIPO_Material_55.png-05ad7afd75ad151fce500264eba79d50.s3tc.ctex",
+      "bytes": 10988,
+      "md5": "0f93cbd9eef1938b3847184bdeac6b99",
+      "flags": 0,
+      "source": "res://assets/models/SEPT_JUEGOS_PROTOTIPO_Material_55.png",
+      "literal_references": []
+    },
+    {
+      "path": ".godot/imported/SEPT_JUEGOS_PROTOTIPO_Material_58.png-96ee091d974f3b445c54d640563f3dda.s3tc.ctex",
+      "bytes": 10988,
+      "md5": "0f93cbd9eef1938b3847184bdeac6b99",
+      "flags": 0,
+      "source": "res://assets/models/SEPT_JUEGOS_PROTOTIPO_Material_58.png",
+      "literal_references": []
+    },
+    {
+      "path": ".godot/imported/SEPT_JUEGOS_PROTOTIPO_Material_6.png-e2a7c500614d753ec20d144821364de1.s3tc.ctex",
+      "bytes": 10988,
+      "md5": "0f93cbd9eef1938b3847184bdeac6b99",
+      "flags": 0,
+      "source": "res://assets/models/SEPT_JUEGOS_PROTOTIPO_Material_6.png",
+      "literal_references": []
+    },
+    {
+      "path": "addons/godot_mcp/commands/navigation_commands.gdc",
+      "bytes": 10982,
+      "md5": "1da541600fbb3190c91d41eccc1377b4",
+      "flags": 0,
+      "source": null,
+      "literal_references": []
+    },
+    {
+      "path": ".godot/imported/SFX_INTERFAZ_Computadora_Imprimir.wav-ecd749ca5f241c6993bacb73cc5670c0.sample",
+      "bytes": 10543,
+      "md5": "5809950e307569044ec96b3822976620",
+      "flags": 0,
+      "source": "res://assets/audio/SFX_INTERFAZ_Computadora_Imprimir.wav",
+      "literal_references": []
+    }
+  ],
+  "model_images": [
+    {
+      "name": "concreto2_baseColor",
+      "uri": null,
+      "bufferView": 8
+    },
+    {
+      "name": "placa_acustica_basecolor",
+      "uri": null,
+      "bufferView": 13
+    },
+    {
+      "name": "bano_ivory_oscuro_normal",
+      "uri": null,
+      "bufferView": 18
+    },
+    {
+      "name": "bano_ivory_oscuro_orm",
+      "uri": null,
+      "bufferView": 19
+    },
+    {
+      "name": "bano_ivory_oscuro_color",
+      "uri": null,
+      "bufferView": 20
+    },
+    {
+      "name": "deposito_concreto_normal",
+      "uri": null,
+      "bufferView": 29
+    },
+    {
+      "name": "deposito_concreto_color",
+      "uri": null,
+      "bufferView": 30
+    },
+    {
+      "name": "concrete_floor_worn_001_rough_1k",
+      "uri": null,
+      "bufferView": 31
+    },
+    {
+      "name": "Bricks066_1K-JPG_NormalGL",
+      "uri": null,
+      "bufferView": 36
+    },
+    {
+      "name": "Bricks066_1K-JPG_Color",
+      "uri": null,
+      "bufferView": 37
+    },
+    {
+      "name": "Bricks066_1K-JPG_Roughness",
+      "uri": null,
+      "bufferView": 38
+    },
+    {
+      "name": "corrugated_iron_02_nor_gl_1k",
+      "uri": null,
+      "bufferView": 43
+    },
+    {
+      "name": "corrugated_iron_02_diff_1k",
+      "uri": null,
+      "bufferView": 44
+    },
+    {
+      "name": "corrugated_iron_02_metal_1k-corrugated_iron_02_rough_1k",
+      "uri": null,
+      "bufferView": 45
+    },
+    {
+      "name": "cielorraso_emision",
+      "uri": null,
+      "bufferView": 50
+    },
+    {
+      "name": "cielorraso_placas",
+      "uri": null,
+      "bufferView": 51
+    },
+    {
+      "name": "interior_tiles_diff_1k",
+      "uri": null,
+      "bufferView": 60
+    },
+    {
+      "name": "porcelana_atlas",
+      "uri": null,
+      "bufferView": 113
+    },
+    {
+      "name": "compu normals",
+      "uri": null,
+      "bufferView": 219
+    },
+    {
+      "name": "LIMPIEZA ETIQUETA (2)",
+      "uri": null,
+      "bufferView": 228
+    },
+    {
+      "name": "textura poético",
+      "uri": null,
+      "bufferView": 237
+    },
+    {
+      "name": "LIMPIEZA ETIQUETA (1)",
+      "uri": null,
+      "bufferView": 250
+    },
+    {
+      "name": "Wood_10-128x128",
+      "uri": null,
+      "bufferView": 281
+    },
+    {
+      "name": "textura caja",
+      "uri": null,
+      "bufferView": 286
+    },
+    {
+      "name": "deposito_contenedor_tapa_normal",
+      "uri": null,
+      "bufferView": 302
+    },
+    {
+      "name": "deposito_contenedor_tapa_color",
+      "uri": null,
+      "bufferView": 303
+    },
+    {
+      "name": "deposito_contenedor_tapa_roughness",
+      "uri": null,
+      "bufferView": 304
+    },
+    {
+      "name": "deposito_contenedor_cuerpo_normal",
+      "uri": null,
+      "bufferView": 309
+    },
+    {
+      "name": "deposito_contenedor_cuerpo_color",
+      "uri": null,
+      "bufferView": 310
+    },
+    {
+      "name": "deposito_contenedor_cuerpo_roughness",
+      "uri": null,
+      "bufferView": 311
+    },
+    {
+      "name": "deposito_contenedor_ruedas_normal",
+      "uri": null,
+      "bufferView": 320
+    },
+    {
+      "name": "Wood_02-128x128",
+      "uri": null,
+      "bufferView": 393
+    },
+    {
+      "name": "Wood_09-128x128",
+      "uri": null,
+      "bufferView": 563
+    },
+    {
+      "name": "Actroncito completo",
+      "uri": null,
+      "bufferView": 579
+    },
+    {
+      "name": "jorgillata",
+      "uri": null,
+      "bufferView": 583
+    },
+    {
+      "name": "Burbaloo completo_1",
+      "uri": null,
+      "bufferView": 588
+    },
+    {
+      "name": "cindolor completo",
+      "uri": null,
+      "bufferView": 593
+    },
+    {
+      "name": "Don Saturados completo",
+      "uri": null,
+      "bufferView": 598
+    },
+    {
+      "name": "Durextra completo_1",
+      "uri": null,
+      "bufferView": 602
+    },
+    {
+      "name": "duronga",
+      "uri": null,
+      "bufferView": 606
+    },
+    {
+      "name": "cereal textura",
+      "uri": null,
+      "bufferView": 610
+    },
+    {
+      "name": "fideos marolini",
+      "uri": null,
+      "bufferView": 614
+    },
+    {
+      "name": "oremos",
+      "uri": null,
+      "bufferView": 618
+    },
+    {
+      "name": "gondola_chapa_blanca_512_basecolor",
+      "uri": null,
+      "bufferView": 624
+    },
+    {
+      "name": "gondola_panel_blanca_1024_basecolor",
+      "uri": null,
+      "bufferView": 630
+    },
+    {
+      "name": "gondola_portaprecio_basecolor",
+      "uri": null,
+      "bufferView": 641
+    },
+    {
+      "name": "frot lups",
+      "uri": null,
+      "bufferView": 645
+    },
+    {
+      "name": "chisito",
+      "uri": null,
+      "bufferView": 650
+    },
+    {
+      "name": "macumbas completo",
+      "uri": null,
+      "bufferView": 655
+    },
+    {
+      "name": "puchos",
+      "uri": null,
+      "bufferView": 660
+    },
+    {
+      "name": "pepito",
+      "uri": null,
+      "bufferView": 664
+    },
+    {
+      "name": "progres",
+      "uri": null,
+      "bufferView": 669
+    },
+    {
+      "name": "saladick",
+      "uri": null,
+      "bufferView": 673
+    },
+    {
+      "name": "Lay´snt´t completo_1",
+      "uri": null,
+      "bufferView": 678
+    },
+    {
+      "name": "wakasfideos",
+      "uri": null,
+      "bufferView": 682
+    },
+    {
+      "name": "Zucarachas completo_1",
+      "uri": null,
+      "bufferView": 686
+    },
+    {
+      "name": "flim pof completo",
+      "uri": null,
+      "bufferView": 710
+    },
+    {
+      "name": "arvecor",
+      "uri": null,
+      "bufferView": 715
+    },
+    {
+      "name": "petisas completo",
+      "uri": null,
+      "bufferView": 719
+    },
+    {
+      "name": "amargadito completo",
+      "uri": null,
+      "bufferView": 743
+    },
+    {
+      "name": "atun marranos",
+      "uri": null,
+      "bufferView": 748
+    },
+    {
+      "name": "cosa de mani interno",
+      "uri": null,
+      "bufferView": 753
+    },
+    {
+      "name": "normal nuevo",
+      "uri": null,
+      "bufferView": 787
+    },
+    {
+      "name": "cora cola",
+      "uri": null,
+      "bufferView": 792
+    },
+    {
+      "name": "fernetgod textura",
+      "uri": null,
+      "bufferView": 797
+    },
+    {
+      "name": "Terminator completo",
+      "uri": null,
+      "bufferView": 807
+    },
+    {
+      "name": "mayonchis@300x",
+      "uri": null,
+      "bufferView": 814
+    },
+    {
+      "name": "oaaaa completo",
+      "uri": null,
+      "bufferView": 818
+    },
+    {
+      "name": "nota sin texto",
+      "uri": null,
+      "bufferView": 939
+    },
+    {
+      "name": "nota baja resolución",
+      "uri": null,
+      "bufferView": 944
+    },
+    {
+      "name": "texto instrucciones limpieza",
+      "uri": null,
+      "bufferView": 952
+    },
+    {
+      "name": "Guía de jabones y manchas copy",
+      "uri": null,
+      "bufferView": 959
+    },
+    {
+      "name": "textura portón",
+      "uri": null,
+      "bufferView": 964
+    },
+    {
+      "name": "rejilla_bano",
+      "uri": null,
+      "bufferView": 976
+    },
+    {
+      "name": "puerta textura",
+      "uri": null,
+      "bufferView": 981
+    },
+    {
+      "name": "textura",
+      "uri": null,
+      "bufferView": 998
+    },
+    {
+      "name": "reloj",
+      "uri": null,
+      "bufferView": 1006
+    },
+    {
+      "name": "caja luz interior",
+      "uri": null,
+      "bufferView": 1011
+    },
+    {
+      "name": "caja luz exterior",
+      "uri": null,
+      "bufferView": 1016
+    },
+    {
+      "name": "Material.001_baseColor",
+      "uri": null,
+      "bufferView": 1021
+    }
+  ]
+}

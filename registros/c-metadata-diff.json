@@ -1,0 +1,139 @@
+{
+  "class_count": 106,
+  "class_mappings_identical": true,
+  "uid_count_before": 414,
+  "uid_count_after": 407,
+  "uid_removed": {
+    "8161805842285004319": "res://assets/models/SEPT_JUEGOS_PROTOTIPO_piso_baseColor.png",
+    "1649913162129956674": "res://assets/models/SEPT_JUEGOS_PROTOTIPO_painted_plaster_wall_diff_1k.jpg",
+    "2831406525948220789": "res://assets/models/SEPT_JUEGOS_PROTOTIPO_textura mopa.png",
+    "6664495618808592120": "res://assets/models/SEPT_JUEGOS_PROTOTIPO_textura balde.png",
+    "5662982989302523898": "res://assets/models/SEPT_JUEGOS_PROTOTIPO_techo1_baseColor.jpg",
+    "7820327814429516762": "res://assets/ui/manada/fondo.png",
+    "8886018181627922295": "res://assets/models/SEPT_JUEGOS_PROTOTIPO_cielorraso_sin_luces.png"
+  },
+  "uid_added": {},
+  "uid_changed": {},
+  "status_panel_byte_diffs": [
+    {
+      "offset": 605,
+      "before": 0,
+      "after": 217
+    },
+    {
+      "offset": 606,
+      "before": 153,
+      "after": 159
+    },
+    {
+      "offset": 607,
+      "before": 210,
+      "after": 9
+    },
+    {
+      "offset": 608,
+      "before": 116,
+      "after": 78
+    }
+  ],
+  "status_panel_decoded_except_node_ids": {
+    "version": [
+      4,
+      7,
+      6
+    ],
+    "type": "PackedScene",
+    "flags": 3,
+    "uid": 18446744073709551615,
+    "reserved": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "strings": [
+      "resource_local_to_scene",
+      "resource_name",
+      "_bundled",
+      "script"
+    ],
+    "external": [
+      {
+        "type": "Script",
+        "path": "res://addons/godot_mcp/ui/status_panel.gd",
+        "uid": 2120550433981915314
+      }
+    ],
+    "internal": [
+      {
+        "path": "local://PackedScene_tfc62",
+        "offset": 289
+      }
+    ],
+    "resources": [
+      {
+        "type": "PackedScene",
+        "properties": {
+          "_bundled": {
+            "names": [
+              "MCPStatusPanel",
+              "offset_right",
+              "offset_bottom",
+              "script",
+              "VBoxContainer"
+            ],
+            "variants": [
+              600.0,
+              300.0,
+              {
+                "external_index": 0
+              }
+            ],
+            "node_count": 1,
+            "nodes": [
+              -1,
+              -1,
+              4,
+              0,
+              -1,
+              3,
+              1,
+              0,
+              2,
+              1,
+              3,
+              2,
+              0
+            ],
+            "conn_count": 0,
+            "conns": [],
+            "node_paths": [],
+            "id_paths": [],
+            "editable_instances": [],
+            "version": 3
+          },
+          "script": null
+        }
+      }
+    ]
+  },
+  "status_panel_node_ids_before": [
+    1959958784
+  ],
+  "status_panel_node_ids_after": [
+    1309253593
+  ],
+  "status_panel_properties_identical_except_node_ids": true,
+  "engine_sources": [
+    "https://raw.githubusercontent.com/godotengine/godot/master/core/io/resource_format_binary.cpp",
+    "https://raw.githubusercontent.com/godotengine/godot/master/scene/resources/packed_scene.cpp",
+    "https://raw.githubusercontent.com/godotengine/godot/master/scene/resources/resource_format_text.cpp"
+  ]
+}

@@ -1,0 +1,233 @@
+{
+  "base_commit": "444d05db",
+  "preset": "all_resources + exclusion de siete archivos sin referencias, changeset independiente",
+  "preserved_sha256": {
+    "assets/ui/manada/fondo.png": "1b175ea3aa2cda48f82126c6c2d966b4860df701a4512e794156ad489bcee3c8",
+    "assets/ui/manada/fondo.png.import": "f52f706c687f24d75f9436bd1c743d58b6a68ff87cce674138f41e09c0d87d9a",
+    "assets/ui/manada/fondo_ventanilla.png": "191c1ee6d6652b14542aebe1de5611e10aee0aeb86449ab94f12e95a213dd9ce",
+    "assets/ui/manada/fondo_inicio.png": "3c1da1b0f603ef7c07a0b7cca7852fbaf966b11f54bbd74ade443328dfab34c0",
+    "assets/ui/manada/fondo_inicio.png.import": "b0bb6c9c63c2428d6a10ff9bb58a727c4a89f5f8c6c4fee829946c03288f78c2",
+    "assets/ui/manada/titulo_inicio.png": "8433919fae468659b1e7533b783387e6b206e6c057809abbabe3a943d2c80b07",
+    "assets/ui/manada/titulo_inicio.png.import": "f832a9aeb38df0905c8e2730e4426aa6855deabc8b497e946149c99fb6c6b655",
+    "src/ui/diegetica/fondo_de_computadora.gdshader": "7c954c924ff4a9b2bd9d9a42ce5ca6a9c8b245e7a890fd83d4ab49346632cefc",
+    "src/ui/diegetica/pantalla_de_computadora.tscn": "5abc0f7fb47d5f4756077f600d77f1ad44c60c7ae4004d44110a8304124bb387",
+    "src/ui/diegetica/panel_de_la_ventanilla.tscn": "5ef5b7b9aafa60916642de09046cc9c8cf54edf1fb9324747642d195a525d6de",
+    "assets/models/SEPT_JUEGOS_PROTOTIPO.glb": "2640cc93dc5cef518c26b63debcbba3ac55dbfc9092c197cdbc6100f754e8250"
+  },
+  "all_preserved": true,
+  "dxt1_ventanilla": {
+    "contexto": 1,
+    "textura": 166,
+    "tipo": "2D",
+    "ancho": 1920,
+    "alto": 1080,
+    "formato": "COMPRESSED_RGB_S3TC_DXT1_EXT",
+    "mips": 1,
+    "capas": 1,
+    "caras": 1,
+    "bytes_estimados": 1036800
+  },
+  "base": {
+    "conditions": {
+      "motor": "4.7.2.stable.custom_build",
+      "navegador": "154.0.8037.92",
+      "renderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 4050 Laptop GPU (0x000028E1) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "vista": "1536x760",
+      "lienzo": "1536x760",
+      "sin_ventana": true
+    },
+    "textures": 191,
+    "logical_bytes": 114343071,
+    "pck": {
+      "archivo": "index.pck",
+      "bytes": 53392832,
+      "sha256": "4c7095adb18725aad75ff97cfd366978257a8b959f4c8b502812133dcc4d9bb6"
+    }
+  },
+  "propuesta": {
+    "conditions": {
+      "motor": "4.7.2.stable.custom_build",
+      "navegador": "154.0.8037.92",
+      "renderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 4050 Laptop GPU (0x000028E1) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "vista": "1536x760",
+      "lienzo": "1536x760",
+      "sin_ventana": true
+    },
+    "textures": 191,
+    "logical_bytes": 107085471,
+    "pck": {
+      "archivo": "index.pck",
+      "bytes": 53607316,
+      "sha256": "0890c534c248a23f1d0556e2509f4f57f2fde98dcb6a3345e825413688d4d9a3"
+    }
+  },
+  "logical_savings_bytes": 7257600,
+  "pck_savings_bytes": -214484,
+  "capture_comparisons": {
+    "inicio": {
+      "dimensions": [
+        1920,
+        1080
+      ],
+      "mae_rgb_255": 0.0,
+      "p99_difference_channel_255": 0,
+      "max_difference_channel_255": 0,
+      "pixels_equal": true
+    },
+    "computadora": {
+      "dimensions": [
+        1920,
+        1080
+      ],
+      "mae_rgb_255": 0.0,
+      "p99_difference_channel_255": 0,
+      "max_difference_channel_255": 0,
+      "pixels_equal": true
+    },
+    "ventanilla": {
+      "dimensions": [
+        1920,
+        1080
+      ],
+      "mae_rgb_255": 0.3922694830246914,
+      "p99_difference_channel_255": 2,
+      "max_difference_channel_255": 6,
+      "pixels_equal": false
+    }
+  },
+  "historical_capture_comparisons": {
+    "base": {
+      "dimensions": [
+        1920,
+        1080
+      ],
+      "mae_rgb_255": 0.0,
+      "p99_difference_channel_255": 0,
+      "max_difference_channel_255": 0,
+      "pixels_equal": true
+    },
+    "propuesta": {
+      "dimensions": [
+        1920,
+        1080
+      ],
+      "mae_rgb_255": 0.0,
+      "p99_difference_channel_255": 0,
+      "max_difference_channel_255": 0,
+      "pixels_equal": true
+    }
+  },
+  "ui_runs": {
+    "base": {
+      "url": "http://localhost:8060",
+      "browser": "154.0.8037.92",
+      "viewport": "1920x1080",
+      "errors": [],
+      "captures": [
+        {
+          "name": "inicio",
+          "frames": 145
+        },
+        {
+          "name": "computadora",
+          "frames": 145
+        },
+        {
+          "name": "ventanilla",
+          "frames": 145
+        }
+      ],
+      "apertura_cierre": [
+        "[apertura-cierre] computadora OK",
+        "[apertura-cierre] ventanilla OK"
+      ],
+      "renderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 4050 Laptop GPU (0x000028E1) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "recursos": "[recursos] 356 recursos cargados OK",
+      "dinamicos": "[dinamicos] audio y tres conversaciones OK"
+    },
+    "propuesta": {
+      "url": "http://localhost:8060",
+      "browser": "154.0.8037.92",
+      "viewport": "1920x1080",
+      "errors": [],
+      "captures": [
+        {
+          "name": "inicio",
+          "frames": 145
+        },
+        {
+          "name": "computadora",
+          "frames": 145
+        },
+        {
+          "name": "ventanilla",
+          "frames": 145
+        }
+      ],
+      "apertura_cierre": [
+        "[apertura-cierre] computadora OK",
+        "[apertura-cierre] ventanilla OK"
+      ],
+      "renderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 4050 Laptop GPU (0x000028E1) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "recursos": "[recursos] 356 recursos cargados OK",
+      "dinamicos": "[dinamicos] audio y tres conversaciones OK"
+    }
+  },
+  "ui_runs_1280": {
+    "base": {
+      "url": "http://localhost:8060",
+      "browser": "154.0.8037.92",
+      "viewport": "1280x720",
+      "errors": [],
+      "captures": [
+        {
+          "name": "inicio",
+          "frames": 145
+        },
+        {
+          "name": "computadora",
+          "frames": 145
+        },
+        {
+          "name": "ventanilla",
+          "frames": 145
+        }
+      ],
+      "apertura_cierre": [
+        "[apertura-cierre] computadora OK",
+        "[apertura-cierre] ventanilla OK"
+      ],
+      "renderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 4050 Laptop GPU (0x000028E1) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "recursos": "[recursos] 356 recursos cargados OK",
+      "dinamicos": "[dinamicos] audio y tres conversaciones OK"
+    },
+    "propuesta": {
+      "url": "http://localhost:8060",
+      "browser": "154.0.8037.92",
+      "viewport": "1280x720",
+      "errors": [],
+      "captures": [
+        {
+          "name": "inicio",
+          "frames": 145
+        },
+        {
+          "name": "computadora",
+          "frames": 145
+        },
+        {
+          "name": "ventanilla",
+          "frames": 145
+        }
+      ],
+      "apertura_cierre": [
+        "[apertura-cierre] computadora OK",
+        "[apertura-cierre] ventanilla OK"
+      ],
+      "renderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 4050 Laptop GPU (0x000028E1) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "recursos": "[recursos] 356 recursos cargados OK",
+      "dinamicos": "[dinamicos] audio y tres conversaciones OK"
+    }
+  },
+  "geometry_commit": "f17948fe"
+}

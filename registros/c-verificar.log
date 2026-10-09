@@ -1,0 +1,9 @@
+  ok        capas       1.6s
+  ok        formato    11.4s
+  ok        harness    77.2s
+  ok        lint       12.1s
+  ok        specs       0.9s
+  ok        tdd         0.9s
+  ok        tests     704.2s
+
+7/7 nodos en verde, en 729.3s.
