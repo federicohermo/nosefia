@@ -1,0 +1,10 @@
+{
+  "suites": 7,
+  "cases": "111",
+  "errors": 0,
+  "failures": "0",
+  "skipped": "0",
+  "xml_sha256": "c4b0ed088f0335f32e1d25ffadfc578a8a19ec06a07cc79fff3e05ec10fbedb0",
+  "raw": "C:\\Users\\fede_\\orca\\workspaces\\nosefia\\darter\\.claude\\scratch\\batch-64-309\\b-305-verde2-1.log",
+  "xml": "C:\\Users\\fede_\\orca\\workspaces\\nosefia\\darter\\.claude\\scratch\\batch-64-309\\b-305-verde2-results.xml"
+}

@@ -1,0 +1,239 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<testsuites id="2026-10-09" name="report_1" tests="111" failures="0" skipped="0" flaky="0" time="0.000">
+	<testsuite id="0" name="mancha_en_el_piso_test" package="test/escenas/objetos" timestamp="2026-10-09T09:17:41" hostname="localhost" tests="11" failures="0" errors="0" skipped="0" flaky="0" time="0.684">
+		<testcase name="test_la_mancha_no_decide_nada" classname="mancha_en_el_piso_test" time="0.006">
+		</testcase>
+		<testcase name="test_la_mancha_esta_en_el_grupo_que_la_mira_puede_enfocar" classname="mancha_en_el_piso_test" time="0.008">
+		</testcase>
+		<testcase name="test_la_mancha_borrada_deja_de_verse_y_de_enfocarse" classname="mancha_en_el_piso_test" time="0.009">
+		</testcase>
+		<testcase name="test_cada_mancha_lleva_su_propia_pintura" classname="mancha_en_el_piso_test" time="0.013">
+		</testcase>
+		<testcase name="test_el_uso_entra_por_el_pedido_del_jugador" classname="mancha_en_el_piso_test" time="0.006">
+		</testcase>
+		<testcase name="test_el_almacen_trae_una_mancha_por_lugar" classname="mancha_en_el_piso_test" time="0.164">
+		</testcase>
+		<testcase name="test_ninguna_mancha_arranca_debajo_de_un_mueble" classname="mancha_en_el_piso_test" time="0.118">
+		</testcase>
+		<testcase name="test_la_mira_enfoca_cada_mancha" classname="mancha_en_el_piso_test" time="0.170">
+		</testcase>
+		<testcase name="test_cada_mancha_se_ve_del_color_de_su_tipo" classname="mancha_en_el_piso_test" time="0.117">
+		</testcase>
+		<testcase name="test_con_el_balde_en_la_mano_no_se_agarra_un_jabon" classname="mancha_en_el_piso_test" time="0.005">
+		</testcase>
+		<testcase name="test_los_espejos_estan_y_el_almacen_no_decide_nada" classname="mancha_en_el_piso_test" time="0.007">
+		</testcase>
+	</testsuite>
+	<testsuite id="1" name="agarre_fisico_test" package="test/escenas" timestamp="2026-10-09T09:17:41" hostname="localhost" tests="3" failures="0" errors="0" skipped="0" flaky="0" time="142.021">
+		<testcase name="test_soltar_hacia_la_gondola_deja_el_producto_visible_y_recuperable" classname="agarre_fisico_test" time="139.558">
+		</testcase>
+		<testcase name="test_la_bolsa_sostenida_no_desplaza_al_jugador" classname="agarre_fisico_test" time="2.322">
+		</testcase>
+		<testcase name="test_el_izquierdo_en_el_contenedor_entrega_la_bolsa_al_recolector" classname="agarre_fisico_test" time="0.116">
+		</testcase>
+	</testsuite>
+	<testsuite id="2" name="reposicion_manual_test" package="test/escenas" timestamp="2026-10-09T09:20:03" hostname="localhost" tests="20" failures="0" errors="0" skipped="0" flaky="0" time="64.755">
+		<testcase name="test_vender_no_cambia_lo_que_la_gondola_dibuja" classname="reposicion_manual_test" time="0.199">
+		</testcase>
+		<testcase name="test_recoger_del_grupo_del_piso_conserva_foco_identidad_y_reposicion" classname="reposicion_manual_test" time="2.015">
+		</testcase>
+		<testcase name="test_laysntt_no_atraviesa_el_suelo_al_caer_plana_y_recibir_otras_cajas" classname="reposicion_manual_test" time="54.018">
+		</testcase>
+		<testcase name="test_el_burbaloo_del_piso_no_bloquea_al_jugador" classname="reposicion_manual_test" time="0.124">
+		</testcase>
+		<testcase name="test_laysntt_y_jorgillo_quedan_sobre_el_suelo_al_mover_la_camara" classname="reposicion_manual_test" time="4.934">
+		</testcase>
+		<testcase name="test_los_estantes_agrupan_las_unidades_sin_cuerpos_por_producto" classname="reposicion_manual_test" time="0.371">
+		</testcase>
+		<testcase name="test_reutiliza_el_cuerpo_al_depositar_y_cambia_de_producto" classname="reposicion_manual_test" time="0.121">
+		</testcase>
+		<testcase name="test_las_unidades_sueltas_caen_y_se_recuperan_sin_perder_su_reserva" classname="reposicion_manual_test" time="0.213">
+		</testcase>
+		<testcase name="test_otra_jornada_vacia_grupos_mano_y_productos_sueltos" classname="reposicion_manual_test" time="0.130">
+		</testcase>
+		<testcase name="test_el_frente_se_conserva_al_examinar_y_volver_a_agarrar" classname="reposicion_manual_test" time="0.206">
+		</testcase>
+		<testcase name="test_actroncito_durextra_y_oremos_se_reponen_con_foco_y_clic_reales" classname="reposicion_manual_test" time="0.642">
+		</testcase>
+		<testcase name="test_no_hay_productos_3d_iniciales_fuera_del_inventario" classname="reposicion_manual_test" time="0.116">
+		</testcase>
+		<testcase name="test_cada_unidad_ocupa_un_lugar_distinto_y_la_marca_indica_su_base" classname="reposicion_manual_test" time="0.624">
+		</testcase>
+		<testcase name="test_el_clic_saca_una_unidad_visible_y_el_estante_la_recibe" classname="reposicion_manual_test" time="0.125">
+		</testcase>
+		<testcase name="test_con_el_estante_lleno_la_caja_entrega_y_la_gondola_la_rechaza" classname="reposicion_manual_test" time="0.131">
+		</testcase>
+		<testcase name="test_examinar_no_retira_ni_deposita_y_devuelve_la_unidad_a_la_mira" classname="reposicion_manual_test" time="0.126">
+		</testcase>
+		<testcase name="test_las_dos_cajas_se_examinan_enteras_y_vuelven_a_la_cintura" classname="reposicion_manual_test" time="0.134">
+		</testcase>
+		<testcase name="test_solo_la_zona_del_producto_recibe_el_foco_y_el_resto_del_mueble_no_coloca" classname="reposicion_manual_test" time="0.135">
+		</testcase>
+		<testcase name="test_lo_soltado_queda_sobre_el_piso_o_la_tapa_que_se_mira" classname="reposicion_manual_test" time="0.127">
+		</testcase>
+		<testcase name="test_sin_superficie_que_valga_se_suelta_como_siempre" classname="reposicion_manual_test" time="0.134">
+		</testcase>
+	</testsuite>
+	<testsuite id="3" name="objeto_agarrable_test" package="test/escenas/objetos" timestamp="2026-10-09T09:21:08" hostname="localhost" tests="8" failures="0" errors="0" skipped="0" flaky="0" time="0.164">
+		<testcase name="test_el_objeto_esta_en_el_grupo_que_la_mira_busca" classname="objeto_agarrable_test" time="0.006">
+		</testcase>
+		<testcase name="test_el_objeto_responde_al_metodo_que_es_el_contrato" classname="objeto_agarrable_test" time="0.005">
+		</testcase>
+		<testcase name="test_interactuar_devuelve_los_datos_de_dominio_del_objeto" classname="objeto_agarrable_test" time="0.007">
+		</testcase>
+		<testcase name="test_el_objeto_simula_fisica_y_tiene_con_que_chocar" classname="objeto_agarrable_test" time="0.008">
+		</testcase>
+		<testcase name="test_volver_a_su_lugar_no_dibuja_el_objeto_cruzando_el_almacen" classname="objeto_agarrable_test" time="0.065">
+		</testcase>
+		<testcase name="test_cada_contacto_avisa_el_objeto_y_su_rapidez" classname="objeto_agarrable_test" time="0.008">
+		</testcase>
+		<testcase name="test_las_dos_acciones_del_006_estan_declaradas_en_el_proyecto" classname="objeto_agarrable_test" time="0.006">
+		</testcase>
+		<testcase name="test_volver_restaura_padre_visibilidad_y_fisica_originales" classname="objeto_agarrable_test" time="0.007">
+		</testcase>
+	</testsuite>
+	<testsuite id="4" name="almacen_test" package="test/escenas" timestamp="2026-10-09T09:21:08" hostname="localhost" tests="29" failures="0" errors="0" skipped="0" flaky="0" time="2.476">
+		<testcase name="test_el_almacen_carga_y_su_raiz_es_un_nodo_tridimensional" classname="almacen_test" time="0.035">
+		</testcase>
+		<testcase name="test_los_muebles_y_el_anclaje_de_la_ventanilla_estan_por_nombre" classname="almacen_test" time="0.033">
+		</testcase>
+		<testcase name="test_el_almacen_instancia_al_jugador_en_vez_de_duplicar_el_cuerpo" classname="almacen_test" time="0.034">
+		</testcase>
+		<testcase name="test_la_escena_trae_luz_propia" classname="almacen_test" time="0.035">
+		</testcase>
+		<testcase name="test_la_estructura_entra_instanciada_y_no_vino_corrida" classname="almacen_test" time="0.037">
+		</testcase>
+		<testcase name="test_el_hueco_de_la_ventanilla_cae_en_la_ventanilla_del_modelo" classname="almacen_test" time="0.145">
+		</testcase>
+		<testcase name="test_la_regla_del_hueco_rechaza_un_punto_del_muro" classname="almacen_test" time="0.133">
+		</testcase>
+		<testcase name="test_el_jugador_arranca_adentro_del_almacen_y_apoyado_en_el_piso" classname="almacen_test" time="0.419">
+		</testcase>
+		<testcase name="test_todo_nodo_propio_del_almacen_cuelga_de_la_raiz" classname="almacen_test" time="0.032">
+		</testcase>
+		<testcase name="test_la_regla_de_cableado_sabe_ver_un_nodo_colgado_de_otro" classname="almacen_test" time="0.006">
+		</testcase>
+		<testcase name="test_el_cableado_dejo_de_armar_el_turno_y_de_llevar_el_puntaje" classname="almacen_test" time="0.006">
+		</testcase>
+		<testcase name="test_el_almacen_arranca_desde_el_guardado" classname="almacen_test" time="0.062">
+		</testcase>
+		<testcase name="test_la_escena_trae_el_ciclo_de_jornadas_en_servicios" classname="almacen_test" time="0.033">
+		</testcase>
+		<testcase name="test_los_cableados_de_la_raiz_llegan_asignados" classname="almacen_test" time="0.032">
+		</testcase>
+		<testcase name="test_el_cableado_arma_el_parte_una_sola_vez_y_no_decide" classname="almacen_test" time="0.012">
+		</testcase>
+		<testcase name="test_la_escena_instancia_la_pantalla_de_cierre" classname="almacen_test" time="0.032">
+		</testcase>
+		<testcase name="test_despachar_la_placa_abre_la_noche_siguiente_con_registrar_cumplida" classname="almacen_test" time="0.125">
+		</testcase>
+		<testcase name="test_el_arranque_esta_frente_a_la_entrada_del_lado_de_adentro" classname="almacen_test" time="0.119">
+		</testcase>
+		<testcase name="test_abrir_la_jornada_deja_al_jugador_en_el_arranque" classname="almacen_test" time="0.130">
+		</testcase>
+		<testcase name="test_con_el_despido_la_placa_vuelve_al_menu_y_no_abre_otra_noche" classname="almacen_test" time="0.127">
+		</testcase>
+		<testcase name="test_con_la_partida_en_curso_volver_al_menu_no_abre_la_noche_siguiente" classname="almacen_test" time="0.125">
+		</testcase>
+		<testcase name="test_volver_al_menu_desde_la_pausa_sale_de_la_pausa_y_va_al_menu" classname="almacen_test" time="0.128">
+		</testcase>
+		<testcase name="test_con_la_placa_en_pantalla_esc_no_pausa" classname="almacen_test" time="0.127">
+		</testcase>
+		<testcase name="test_volver_al_menu_carga_el_menu_de_inicio" classname="almacen_test" time="0.008">
+		</testcase>
+		<testcase name="test_la_hora_se_lee_en_un_solo_lugar_y_es_el_reloj_de_mesa" classname="almacen_test" time="0.037">
+		</testcase>
+		<testcase name="test_el_reloj_de_mesa_queda_sobre_el_vidrio_del_reloj_del_modelo" classname="almacen_test" time="0.126">
+		</testcase>
+		<testcase name="test_el_cableado_le_da_la_hora_al_reloj_de_mesa_y_no_al_hud" classname="almacen_test" time="0.007">
+		</testcase>
+		<testcase name="test_el_cableado_de_reponer_llega_entero_hasta_los_huecos" classname="almacen_test" time="0.033">
+		</testcase>
+		<testcase name="test_el_marco_para_asomarse_coincide_con_los_bordes_del_hueco" classname="almacen_test" time="0.125">
+		</testcase>
+	</testsuite>
+	<testsuite id="5" name="inventario_test" package="test/dominio/almacen" timestamp="2026-10-09T09:21:11" hostname="localhost" tests="21" failures="0" errors="0" skipped="0" flaky="0" time="0.236">
+		<testcase name="test_un_inventario_recien_construido_no_tiene_nada_en_ningun_lado" classname="inventario_test" time="0.006">
+		</testcase>
+		<testcase name="test_el_mismo_producto_repetido_en_la_construccion_entra_una_sola_vez" classname="inventario_test" time="0.006">
+		</testcase>
+		<testcase name="test_ingresar_al_deposito_no_toca_la_gondola" classname="inventario_test" time="0.007">
+		</testcase>
+		<testcase name="test_ingresar_una_cantidad_negativa_no_deja_la_gondola_bajo_cero" classname="inventario_test" time="0.005">
+		</testcase>
+		<testcase name="test_mover_una_unidad_la_saca_del_deposito_y_la_pone_en_la_gondola" classname="inventario_test" time="0.006">
+		</testcase>
+		<testcase name="test_pedir_mas_de_lo_que_hay_mueve_lo_que_hay_y_nunca_deja_un_negativo" classname="inventario_test" time="0.005">
+		</testcase>
+		<testcase name="test_mover_desde_un_deposito_vacio_no_mueve_nada_y_no_cambia_nada" classname="inventario_test" time="0.006">
+		</testcase>
+		<testcase name="test_consultar_con_otra_instancia_del_mismo_producto_encuentra_lo_guardado" classname="inventario_test" time="0.005">
+		</testcase>
+		<testcase name="test_el_inventario_solo_conoce_los_productos_que_recibio" classname="inventario_test" time="0.004">
+		</testcase>
+		<testcase name="test_con_un_casillero_vacio_falta_aunque_la_gondola_tenga_algo" classname="inventario_test" time="0.006">
+		</testcase>
+		<testcase name="test_con_la_fila_completa_no_falta" classname="inventario_test" time="0.006">
+		</testcase>
+		<testcase name="test_el_deposito_lleno_no_salva_a_la_gondola_vacia" classname="inventario_test" time="0.005">
+		</testcase>
+		<testcase name="test_sin_casilleros_la_gondola_no_pide_nada" classname="inventario_test" time="0.005">
+		</testcase>
+		<testcase name="test_una_fila_negativa_es_una_fila_sin_casilleros" classname="inventario_test" time="0.005">
+		</testcase>
+		<testcase name="test_faltantes_devuelve_los_que_faltan_y_solo_esos_en_el_orden_de_construccion" classname="inventario_test" time="0.007">
+		</testcase>
+		<testcase name="test_los_vendibles_descuentan_el_mayor_entre_vacios_y_afuera" classname="inventario_test" time="0.006">
+		</testcase>
+		<testcase name="test_lo_de_afuera_se_anota_una_vez_y_no_sale_del_deposito" classname="inventario_test" time="0.005">
+		</testcase>
+		<testcase name="test_un_producto_que_el_inventario_no_conoce_no_tiene_vendibles" classname="inventario_test" time="0.008">
+		</testcase>
+		<testcase name="test_la_venta_sale_del_deposito_y_no_toca_la_gondola" classname="inventario_test" time="0.008">
+		</testcase>
+		<testcase name="test_un_cobro_que_supera_los_vendibles_no_mueve_una_sola_unidad" classname="inventario_test" time="0.006">
+		</testcase>
+		<testcase name="test_cobrar_un_producto_que_el_inventario_no_conoce_no_vende_ni_toca_nada" classname="inventario_test" time="0.007">
+		</testcase>
+	</testsuite>
+	<testsuite id="6" name="repositor_test" package="test/sistemas/tareas" timestamp="2026-10-09T09:21:11" hostname="localhost" tests="19" failures="0" errors="0" skipped="0" flaky="0" time="0.225">
+		<testcase name="test_al_llenar_el_estante_las_tareas_cumplidas_suben_exactamente_en_uno" classname="repositor_test" time="0.007">
+		</testcase>
+		<testcase name="test_colocar_de_mas_no_vuelve_a_contar_la_tarea" classname="repositor_test" time="0.005">
+		</testcase>
+		<testcase name="test_llenar_el_estante_no_mueve_el_turno" classname="repositor_test" time="0.005">
+		</testcase>
+		<testcase name="test_llenar_el_estante_con_un_segundo_restante_cumple_reponer" classname="repositor_test" time="0.006">
+		</testcase>
+		<testcase name="test_ningun_archivo_de_este_spec_nombra_consumir" classname="repositor_test" time="0.007">
+		</testcase>
+		<testcase name="test_sin_tiempo_para_reponer_la_tarea_no_se_cuenta_ni_descuenta" classname="repositor_test" time="0.005">
+		</testcase>
+		<testcase name="test_el_repositor_no_lleva_estado_propio_de_la_tarea" classname="repositor_test" time="0.006">
+		</testcase>
+		<testcase name="test_depositar_desde_la_mano_entrega_el_cuerpo_una_sola_vez" classname="repositor_test" time="0.005">
+		</testcase>
+		<testcase name="test_con_la_mano_llena_no_reserva_otra_unidad" classname="repositor_test" time="0.006">
+		</testcase>
+		<testcase name="test_devolver_saca_la_unidad_de_la_mano_y_la_mete_en_su_caja" classname="repositor_test" time="0.007">
+		</testcase>
+		<testcase name="test_si_la_caja_no_la_recibe_la_unidad_sigue_en_la_mano" classname="repositor_test" time="0.006">
+		</testcase>
+		<testcase name="test_devolver_con_otra_cosa_en_la_mano_no_saca_nada" classname="repositor_test" time="0.008">
+		</testcase>
+		<testcase name="test_con_la_caja_vacia_no_retira_aunque_la_gondola_tenga_lugar" classname="repositor_test" time="0.010">
+		</testcase>
+		<testcase name="test_la_caja_es_la_del_estante_de_la_noche" classname="repositor_test" time="0.007">
+		</testcase>
+		<testcase name="test_agarrar_de_la_gondola_pone_la_unidad_en_la_mano" classname="repositor_test" time="0.007">
+		</testcase>
+		<testcase name="test_con_algo_en_la_mano_no_se_agarra_de_la_gondola" classname="repositor_test" time="0.006">
+		</testcase>
+		<testcase name="test_agarrar_de_la_gondola_descumple_reponer_y_colocarla_la_cumple" classname="repositor_test" time="0.007">
+		</testcase>
+		<testcase name="test_la_unidad_se_coloca_en_el_casillero_que_se_pide" classname="repositor_test" time="0.006">
+		</testcase>
+		<testcase name="test_la_unidad_de_la_gondola_no_entra_en_la_caja_llena" classname="repositor_test" time="0.007">
+		</testcase>
+	</testsuite>
+</testsuites>

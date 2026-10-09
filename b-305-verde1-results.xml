@@ -1,0 +1,279 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<testsuites id="2026-10-09" name="report_1" tests="121" failures="0" skipped="0" flaky="0" time="0.000">
+	<testsuite id="0" name="reglas_de_la_basura_test" package="test/dominio/almacen" timestamp="2026-10-09T09:15:38" hostname="localhost" tests="4" failures="0" errors="0" skipped="0" flaky="0" time="0.043">
+		<testcase name="test_el_tiro_distingue_mano_caja_y_tapa_en_orden" classname="reglas_de_la_basura_test" time="0.005">
+		</testcase>
+		<testcase name="test_la_tarea_no_se_puede_resolver_en_un_solo_viaje" classname="reglas_de_la_basura_test" time="0.004">
+		</testcase>
+		<testcase name="test_el_fondo_no_se_ve_desde_donde_se_hace_otra_tarea" classname="reglas_de_la_basura_test" time="0.005">
+		</testcase>
+		<testcase name="test_hay_un_id_distinto_por_bolsa_y_los_gobierna_el_balance" classname="reglas_de_la_basura_test" time="0.005">
+		</testcase>
+	</testsuite>
+	<testsuite id="1" name="objeto_del_almacen_test" package="test/dominio/almacen" timestamp="2026-10-09T09:15:38" hostname="localhost" tests="9" failures="0" errors="0" skipped="0" flaky="0" time="0.101">
+		<testcase name="test_la_caja_no_entra_y_los_otros_levantables_si" classname="objeto_del_almacen_test" time="0.007">
+		</testcase>
+		<testcase name="test_un_objeto_sin_revelacion_muestra_lo_mismo_examinado_que_sin_examinar" classname="objeto_del_almacen_test" time="0.004">
+		</testcase>
+		<testcase name="test_lo_fijo_no_se_levanta_y_lo_demas_si" classname="objeto_del_almacen_test" time="0.006">
+		</testcase>
+		<testcase name="test_los_objetos_del_almacen_cargan_y_todos_tienen_algo_que_revelar" classname="objeto_del_almacen_test" time="0.007">
+		</testcase>
+		<testcase name="test_la_revelacion_solo_se_ve_despues_de_examinar" classname="objeto_del_almacen_test" time="0.006">
+		</testcase>
+		<testcase name="test_cada_objeto_del_almacen_declara_su_sonoridad" classname="objeto_del_almacen_test" time="0.007">
+		</testcase>
+		<testcase name="test_solo_la_caja_del_deposito_admite_otro_objeto_encima" classname="objeto_del_almacen_test" time="0.006">
+		</testcase>
+		<testcase name="test_solo_el_balde_se_apoya_derecho" classname="objeto_del_almacen_test" time="0.006">
+		</testcase>
+		<testcase name="test_solo_la_mopa_es_larga" classname="objeto_del_almacen_test" time="0.007">
+		</testcase>
+	</testsuite>
+	<testsuite id="2" name="estante_test" package="test/dominio/almacen" timestamp="2026-10-09T09:15:38" hostname="localhost" tests="20" failures="0" errors="0" skipped="0" flaky="0" time="0.202">
+		<testcase name="test_tirar_la_unidad_de_gondola_conserva_la_caja_y_el_hueco" classname="estante_test" time="0.005">
+		</testcase>
+		<testcase name="test_tirar_la_unidad_de_caja_descuenta_sin_devolverla" classname="estante_test" time="0.005">
+		</testcase>
+		<testcase name="test_lo_que_el_estante_no_acepta_se_rechaza_sin_mover_una_unidad" classname="estante_test" time="0.005">
+		</testcase>
+		<testcase name="test_con_el_estante_lleno_se_rechaza_sin_mover_una_unidad" classname="estante_test" time="0.005">
+		</testcase>
+		<testcase name="test_sin_unidades_en_el_deposito_se_rechaza_sin_mover_una_unidad" classname="estante_test" time="0.005">
+		</testcase>
+		<testcase name="test_con_los_tres_rechazos_a_la_vez_gana_el_primero_del_orden" classname="estante_test" time="0.005">
+		</testcase>
+		<testcase name="test_colocar_mueve_la_unidad_en_vez_de_crearla" classname="estante_test" time="0.005">
+		</testcase>
+		<testcase name="test_las_unidades_en_gondola_salen_del_inventario_y_no_de_un_contador_propio" classname="estante_test" time="0.005">
+		</testcase>
+		<testcase name="test_a_mitad_del_cupo_el_estante_no_esta_completo" classname="estante_test" time="0.006">
+		</testcase>
+		<testcase name="test_al_llegar_al_cupo_de_todos_los_aceptados_el_estante_esta_completo" classname="estante_test" time="0.005">
+		</testcase>
+		<testcase name="test_con_menos_unidades_que_el_cupo_colocarlas_todas_no_completa" classname="estante_test" time="0.006">
+		</testcase>
+		<testcase name="test_acepta_compara_por_id_y_no_por_instancia" classname="estante_test" time="0.006">
+		</testcase>
+		<testcase name="test_un_producto_nulo_o_desconocido_se_rechaza_en_vez_de_reventar" classname="estante_test" time="0.006">
+		</testcase>
+		<testcase name="test_el_cupo_de_cada_producto_son_los_casilleros_de_su_fila" classname="estante_test" time="0.005">
+		</testcase>
+		<testcase name="test_el_estante_no_lleva_el_cupo_ni_el_stock_escritos_adentro" classname="estante_test" time="0.005">
+		</testcase>
+		<testcase name="test_retirar_reserva_la_unidad_sin_duplicar_el_stock" classname="estante_test" time="0.005">
+		</testcase>
+		<testcase name="test_el_estante_lleno_conserva_la_unidad_rechazada" classname="estante_test" time="0.004">
+		</testcase>
+		<testcase name="test_con_la_fila_completa_la_caja_entrega_hasta_vaciarse" classname="estante_test" time="0.006">
+		</testcase>
+		<testcase name="test_devolver_anula_la_reserva_y_no_mueve_mercaderia" classname="estante_test" time="0.005">
+		</testcase>
+		<testcase name="test_las_reservadas_son_las_que_salieron_y_no_se_colocaron" classname="estante_test" time="0.004">
+		</testcase>
+	</testsuite>
+	<testsuite id="3" name="tarea_de_la_basura_test" package="test/dominio/almacen" timestamp="2026-10-09T09:15:38" hostname="localhost" tests="6" failures="0" errors="0" skipped="0" flaky="0" time="0.060">
+		<testcase name="test_la_jornada_arranca_con_las_bolsas_del_balance_y_ninguna_depositada" classname="tarea_de_la_basura_test" time="0.005">
+		</testcase>
+		<testcase name="test_la_misma_bolsa_dos_veces_no_cuenta_dos" classname="tarea_de_la_basura_test" time="0.005">
+		</testcase>
+		<testcase name="test_un_objeto_ajeno_no_es_basura" classname="tarea_de_la_basura_test" time="0.005">
+		</testcase>
+		<testcase name="test_la_tarea_se_completa_recien_con_la_ultima_bolsa" classname="tarea_de_la_basura_test" time="0.004">
+		</testcase>
+		<testcase name="test_cada_jornada_arranca_con_la_basura_adentro" classname="tarea_de_la_basura_test" time="0.006">
+		</testcase>
+		<testcase name="test_un_id_repetido_en_la_lista_no_agranda_la_tarea" classname="tarea_de_la_basura_test" time="0.004">
+		</testcase>
+	</testsuite>
+	<testsuite id="4" name="trayecto_test" package="test/dominio/almacen" timestamp="2026-10-09T09:15:38" hostname="localhost" tests="4" failures="0" errors="0" skipped="0" flaky="0" time="0.045">
+		<testcase name="test_con_una_mano_cada_bolsa_es_un_viaje" classname="trayecto_test" time="0.006">
+		</testcase>
+		<testcase name="test_con_tantas_manos_como_bolsas_alcanza_un_viaje" classname="trayecto_test" time="0.006">
+		</testcase>
+		<testcase name="test_los_viajes_redondean_para_arriba" classname="trayecto_test" time="0.006">
+		</testcase>
+		<testcase name="test_sin_manos_o_sin_bolsas_no_hay_viajes" classname="trayecto_test" time="0.005">
+		</testcase>
+	</testsuite>
+	<testsuite id="5" name="tapa_del_contenedor_test" package="test/dominio/almacen" timestamp="2026-10-09T09:15:38" hostname="localhost" tests="8" failures="0" errors="0" skipped="0" flaky="0" time="0.084">
+		<testcase name="test_arranca_abierta_y_recibe_objetos" classname="tapa_del_contenedor_test" time="0.005">
+		</testcase>
+		<testcase name="test_cerrar_corta_el_descarte_antes_de_terminar_el_giro" classname="tapa_del_contenedor_test" time="0.005">
+		</testcase>
+		<testcase name="test_abrir_recupera_el_descarte_al_terminar_el_giro" classname="tapa_del_contenedor_test" time="0.006">
+		</testcase>
+		<testcase name="test_se_puede_invertir_el_giro_sin_saltar_al_otro_tope" classname="tapa_del_contenedor_test" time="0.005">
+		</testcase>
+		<testcase name="test_dividir_los_cuadros_da_el_mismo_angulo" classname="tapa_del_contenedor_test" time="0.004">
+		</testcase>
+		<testcase name="test_el_tiempo_negativo_no_mueve_la_tapa" classname="tapa_del_contenedor_test" time="0.007">
+		</testcase>
+		<testcase name="test_reiniciar_la_jornada_la_deja_abierta" classname="tapa_del_contenedor_test" time="0.006">
+		</testcase>
+		<testcase name="test_un_paso_obstruido_no_mueve_la_tapa_y_se_puede_invertir" classname="tapa_del_contenedor_test" time="0.006">
+		</testcase>
+	</testsuite>
+	<testsuite id="6" name="recolector_de_basura_test" package="test/sistemas/tareas" timestamp="2026-10-09T09:15:38" hostname="localhost" tests="6" failures="0" errors="0" skipped="0" flaky="0" time="0.074">
+		<testcase name="test_el_tiro_aceptado_entrega_el_mismo_cuerpo_sin_soltar" classname="recolector_de_basura_test" time="0.005">
+		</testcase>
+		<testcase name="test_mano_vacia_caja_y_tapa_no_abierta_conservan_todo" classname="recolector_de_basura_test" time="0.005">
+		</testcase>
+		<testcase name="test_la_ultima_bolsa_completa_una_vez_sin_mover_el_turno" classname="recolector_de_basura_test" time="0.006">
+		</testcase>
+		<testcase name="test_el_util_tirado_no_cuenta_como_bolsa" classname="recolector_de_basura_test" time="0.005">
+		</testcase>
+		<testcase name="test_la_unidad_tirada_sale_del_inventario_antes_del_aviso" classname="recolector_de_basura_test" time="0.004">
+		</testcase>
+		<testcase name="test_sin_cableado_no_entrega_ni_publica" classname="recolector_de_basura_test" time="0.010">
+		</testcase>
+	</testsuite>
+	<testsuite id="7" name="tiro_al_contenedor_test" package="test/escenas/puestos" timestamp="2026-10-09T09:15:38" hostname="localhost" tests="6" failures="0" errors="0" skipped="0" flaky="0" time="2.427">
+		<testcase name="test_tirar_cada_aceptado_lo_oculta_y_solo_la_bolsa_cuenta" classname="tiro_al_contenedor_test" time="0.181">
+		</testcase>
+		<testcase name="test_ambos_destinos_conservan_caja_y_carga_durante_giro" classname="tiro_al_contenedor_test" time="0.127">
+		</testcase>
+		<testcase name="test_el_lector_es_copia_y_la_noche_lo_vacia_sin_leer_papel_liberado" classname="tiro_al_contenedor_test" time="0.132">
+		</testcase>
+		<testcase name="test_los_persistentes_vuelven_y_el_util_simula_fisica_otra_vez" classname="tiro_al_contenedor_test" time="1.698">
+		</testcase>
+		<testcase name="test_examen_y_cierre_bloquean_ambos_clics" classname="tiro_al_contenedor_test" time="0.124">
+		</testcase>
+		<testcase name="test_la_pausa_no_entrega_eventos_y_reanudar_recupera_el_tiro" classname="tiro_al_contenedor_test" time="0.125">
+		</testcase>
+	</testsuite>
+	<testsuite id="8" name="tapa_del_contenedor_test" package="test/escenas/puestos" timestamp="2026-10-09T09:15:41" hostname="localhost" tests="1" failures="0" errors="0" skipped="0" flaky="0" time="0.146">
+		<testcase name="test_el_izquierdo_en_la_hoja_tira_solo_al_terminar_de_abrir" classname="tapa_del_contenedor_test" time="0.133">
+		</testcase>
+	</testsuite>
+	<testsuite id="9" name="objeto_agarrable_test" package="test/escenas/objetos" timestamp="2026-10-09T09:15:41" hostname="localhost" tests="8" failures="0" errors="0" skipped="0" flaky="0" time="0.145">
+		<testcase name="test_el_objeto_esta_en_el_grupo_que_la_mira_busca" classname="objeto_agarrable_test" time="0.006">
+		</testcase>
+		<testcase name="test_el_objeto_responde_al_metodo_que_es_el_contrato" classname="objeto_agarrable_test" time="0.006">
+		</testcase>
+		<testcase name="test_interactuar_devuelve_los_datos_de_dominio_del_objeto" classname="objeto_agarrable_test" time="0.004">
+		</testcase>
+		<testcase name="test_el_objeto_simula_fisica_y_tiene_con_que_chocar" classname="objeto_agarrable_test" time="0.005">
+		</testcase>
+		<testcase name="test_volver_a_su_lugar_no_dibuja_el_objeto_cruzando_el_almacen" classname="objeto_agarrable_test" time="0.056">
+		</testcase>
+		<testcase name="test_cada_contacto_avisa_el_objeto_y_su_rapidez" classname="objeto_agarrable_test" time="0.007">
+		</testcase>
+		<testcase name="test_las_dos_acciones_del_006_estan_declaradas_en_el_proyecto" classname="objeto_agarrable_test" time="0.007">
+		</testcase>
+		<testcase name="test_volver_restaura_padre_visibilidad_y_fisica_originales" classname="objeto_agarrable_test" time="0.005">
+		</testcase>
+	</testsuite>
+	<testsuite id="10" name="contenedor_de_basura_test" package="test/escenas/puestos" timestamp="2026-10-09T09:15:41" hostname="localhost" tests="11" failures="0" errors="0" skipped="0" flaky="0" time="24.778">
+		<testcase name="test_la_boca_abierta_no_tiene_una_tapa_de_colision_invisible" classname="contenedor_de_basura_test" time="0.131">
+		</testcase>
+		<testcase name="test_el_cuerpo_del_contenedor_frena_un_rayo_desde_el_pasillo" classname="contenedor_de_basura_test" time="0.120">
+		</testcase>
+		<testcase name="test_una_bolsa_soltada_por_la_boca_se_recoge_y_se_tira_despues" classname="contenedor_de_basura_test" time="0.132">
+		</testcase>
+		<testcase name="test_cerrar_tapa_bloquea_la_boca_y_abrir_la_deja_libre" classname="contenedor_de_basura_test" time="0.129">
+		</testcase>
+		<testcase name="test_clic_derecho_sobre_el_cuerpo_tambien_alterna_la_tapa" classname="contenedor_de_basura_test" time="0.125">
+		</testcase>
+		<testcase name="test_bolsa_con_tapa_cerrada_se_conserva_hasta_el_clic_abierta" classname="contenedor_de_basura_test" time="0.129">
+		</testcase>
+		<testcase name="test_reiniciar_restaura_tapa_abierta" classname="contenedor_de_basura_test" time="0.124">
+		</testcase>
+		<testcase name="test_la_tapa_se_detiene_ante_un_objeto_y_continua_cuando_se_retira" classname="contenedor_de_basura_test" time="3.311">
+		</testcase>
+		<testcase name="test_las_paredes_contienen_la_tolerancia_de_penetracion_del_motor" classname="contenedor_de_basura_test" time="0.119">
+		</testcase>
+		<testcase name="test_llenarlo_con_productos_no_los_comprime_a_traves_del_cuerpo_o_la_tapa" classname="contenedor_de_basura_test" time="20.271">
+		</testcase>
+		<testcase name="test_el_contenedor_fijo_conserva_los_viajes_del_local_y_las_bolsas" classname="contenedor_de_basura_test" time="0.121">
+		</testcase>
+	</testsuite>
+	<testsuite id="11" name="red_de_seguridad_integrada_test" package="test/escenas" timestamp="2026-10-09T09:16:06" hostname="localhost" tests="7" failures="0" errors="0" skipped="0" flaky="0" time="0.921">
+		<testcase name="test_el_empujon_que_termino_adentro_se_deshace" classname="red_de_seguridad_integrada_test" time="0.124">
+		</testcase>
+		<testcase name="test_lo_soltado_adentro_va_al_piso_al_lado_del_jugador" classname="red_de_seguridad_integrada_test" time="0.123">
+		</testcase>
+		<testcase name="test_encima_de_la_caja_que_ocupa_el_origen" classname="red_de_seguridad_integrada_test" time="0.124">
+		</testcase>
+		<testcase name="test_el_origen_es_el_ultimo_recurso" classname="red_de_seguridad_integrada_test" time="0.124">
+		</testcase>
+		<testcase name="test_sin_ningun_candidato_la_red_no_devuelve_a_la_mano" classname="red_de_seguridad_integrada_test" time="0.126">
+		</testcase>
+		<testcase name="test_rescatar_una_caja_y_una_unidad_no_mueve_la_mercaderia" classname="red_de_seguridad_integrada_test" time="0.128">
+		</testcase>
+		<testcase name="test_rescatar_las_bolsas_no_las_cuenta_ni_las_descuenta" classname="red_de_seguridad_integrada_test" time="0.126">
+		</testcase>
+	</testsuite>
+	<testsuite id="12" name="jornada_integrada_test" package="test/escenas" timestamp="2026-10-09T09:16:07" hostname="localhost" tests="6" failures="0" errors="0" skipped="0" flaky="0" time="7.020">
+		<testcase name="test_los_puestos_completan_la_jornada_y_permiten_abrir_la_siguiente" classname="jornada_integrada_test" time="4.443">
+		</testcase>
+		<testcase name="test_abrir_la_jornada_termina_el_examen_en_curso" classname="jornada_integrada_test" time="0.126">
+		</testcase>
+		<testcase name="test_con_otra_pantalla_encima_la_e_no_abre_un_examen" classname="jornada_integrada_test" time="0.127">
+		</testcase>
+		<testcase name="test_la_puerta_abierta_anoche_arranca_cerrada" classname="jornada_integrada_test" time="2.012">
+		</testcase>
+		<testcase name="test_la_puerta_a_medio_giro_arranca_cerrada" classname="jornada_integrada_test" time="0.130">
+		</testcase>
+		<testcase name="test_la_noche_siguiente_abre_con_cada_caja_llena_y_nada_afuera" classname="jornada_integrada_test" time="0.139">
+		</testcase>
+	</testsuite>
+	<testsuite id="13" name="ubicacion_en_el_deposito_test" package="test/escenas/objetos" timestamp="2026-10-09T09:16:14" hostname="localhost" tests="4" failures="0" errors="0" skipped="0" flaky="0" time="0.526">
+		<testcase name="test_las_cajas_de_reposicion_estan_apoyadas_en_el_deposito" classname="ubicacion_en_el_deposito_test" time="0.124">
+		</testcase>
+		<testcase name="test_cada_caja_le_muestra_su_etiqueta_al_cuarto" classname="ubicacion_en_el_deposito_test" time="0.123">
+		</testcase>
+		<testcase name="test_las_tres_bolsas_arrancan_en_el_deposito_y_lejos_del_contenedor" classname="ubicacion_en_el_deposito_test" time="0.123">
+		</testcase>
+		<testcase name="test_abrir_la_jornada_devuelve_cada_caja_a_su_lugar" classname="ubicacion_en_el_deposito_test" time="0.127">
+		</testcase>
+	</testsuite>
+	<testsuite id="14" name="mancha_en_el_piso_test" package="test/escenas/objetos" timestamp="2026-10-09T09:16:14" hostname="localhost" tests="11" failures="0" errors="0" skipped="0" flaky="0" time="0.644">
+		<testcase name="test_la_mancha_no_decide_nada" classname="mancha_en_el_piso_test" time="0.008">
+		</testcase>
+		<testcase name="test_la_mancha_esta_en_el_grupo_que_la_mira_puede_enfocar" classname="mancha_en_el_piso_test" time="0.009">
+		</testcase>
+		<testcase name="test_la_mancha_borrada_deja_de_verse_y_de_enfocarse" classname="mancha_en_el_piso_test" time="0.009">
+		</testcase>
+		<testcase name="test_cada_mancha_lleva_su_propia_pintura" classname="mancha_en_el_piso_test" time="0.010">
+		</testcase>
+		<testcase name="test_el_uso_entra_por_el_pedido_del_jugador" classname="mancha_en_el_piso_test" time="0.006">
+		</testcase>
+		<testcase name="test_el_almacen_trae_una_mancha_por_lugar" classname="mancha_en_el_piso_test" time="0.121">
+		</testcase>
+		<testcase name="test_ninguna_mancha_arranca_debajo_de_un_mueble" classname="mancha_en_el_piso_test" time="0.121">
+		</testcase>
+		<testcase name="test_la_mira_enfoca_cada_mancha" classname="mancha_en_el_piso_test" time="0.162">
+		</testcase>
+		<testcase name="test_cada_mancha_se_ve_del_color_de_su_tipo" classname="mancha_en_el_piso_test" time="0.121">
+		</testcase>
+		<testcase name="test_con_el_balde_en_la_mano_no_se_agarra_un_jabon" classname="mancha_en_el_piso_test" time="0.007">
+		</testcase>
+		<testcase name="test_los_espejos_estan_y_el_almacen_no_decide_nada" classname="mancha_en_el_piso_test" time="0.007">
+		</testcase>
+	</testsuite>
+	<testsuite id="15" name="notificaciones_en_el_almacen_test" package="test/escenas" timestamp="2026-10-09T09:16:15" hostname="localhost" tests="4" failures="0" errors="0" skipped="0" flaky="0" time="0.519">
+		<testcase name="test_la_ventanilla_abierta_avisa_una_vez_y_el_cierre_vacia" classname="notificaciones_en_el_almacen_test" time="0.124">
+		</testcase>
+		<testcase name="test_la_caja_publica_el_motivo_y_solo_lleno_avisa" classname="notificaciones_en_el_almacen_test" time="0.122">
+		</testcase>
+		<testcase name="test_el_programa_manual_no_publica_rechazo_ni_aviso" classname="notificaciones_en_el_almacen_test" time="0.119">
+		</testcase>
+		<testcase name="test_la_pila_se_dibuja_sobre_las_interfaces_y_debajo_de_pausa" classname="notificaciones_en_el_almacen_test" time="0.126">
+		</testcase>
+	</testsuite>
+	<testsuite id="16" name="pila_de_notificaciones_test" package="test/ui" timestamp="2026-10-09T09:16:15" hostname="localhost" tests="6" failures="0" errors="0" skipped="0" flaky="0" time="0.141">
+		<testcase name="test_los_textos_se_pintan_en_el_orden_del_dominio" classname="pila_de_notificaciones_test" time="0.008">
+		</testcase>
+		<testcase name="test_los_dos_carteles_entran_en_la_esquina_en_dos_resoluciones" classname="pila_de_notificaciones_test" time="0.021">
+		</testcase>
+		<testcase name="test_vaciar_retira_los_carteles_del_arbol" classname="pila_de_notificaciones_test" time="0.007">
+		</testcase>
+		<testcase name="test_pausar_suspende_el_procesamiento_sin_borrar_el_aviso" classname="pila_de_notificaciones_test" time="0.006">
+		</testcase>
+		<testcase name="test_ningun_control_de_la_pila_intercepta_el_mouse" classname="pila_de_notificaciones_test" time="0.007">
+		</testcase>
+		<testcase name="test_el_clic_sobre_el_cartel_llega_al_boton_de_notas" classname="pila_de_notificaciones_test" time="0.053">
+		</testcase>
+	</testsuite>
+</testsuites>

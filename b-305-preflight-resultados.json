@@ -1,0 +1,37 @@
+{
+  "head": "fe620b92a38b556f27fff721d162c466c1e784fb",
+  "pid": 85676,
+  "appdata": "D:\\Usuarios\\fede\\Documentos\\Catedra Videojuegos FADU\\manada\\repo\\nosefia\\.claude\\worktrees\\batch-64-309-d\\.godot\\usuario_de_los_tests",
+  "ids_maximos_historicos": {
+    "BR-CLN": 25,
+    "AC-CLN": 35,
+    "BR-STK": 35,
+    "AC-STK": 52
+  },
+  "import": {
+    "cmd": [
+      "D:\\Program Files\\Godot\\Godot_v4.7.2-stable_win64_console.exe",
+      "--headless",
+      "--path",
+      "D:\\Usuarios\\fede\\Documentos\\Catedra Videojuegos FADU\\manada\\repo\\nosefia\\.claude\\worktrees\\batch-64-309-d",
+      "--import",
+      "--quit"
+    ],
+    "code": 0,
+    "raw": "C:\\Users\\fede_\\orca\\workspaces\\nosefia\\darter\\.claude\\scratch\\batch-64-309\\b-305-preflight-import.log",
+    "sha256": "2da80138ea236a17c8559c9572b7de97f0c6320372114d0ac408f89a2a7aa2ac"
+  },
+  "medir": {
+    "cmd": [
+      "D:\\Program Files\\Godot\\Godot_v4.7.2-stable_win64_console.exe",
+      "--headless",
+      "--path",
+      "D:\\Usuarios\\fede\\Documentos\\Catedra Videojuegos FADU\\manada\\repo\\nosefia\\.claude\\worktrees\\batch-64-309-d",
+      "--script",
+      "C:\\Users\\fede_\\orca\\workspaces\\nosefia\\darter\\.claude\\scratch\\batch-64-309\\b-305-medir.gd"
+    ],
+    "code": 0,
+    "raw": "C:\\Users\\fede_\\orca\\workspaces\\nosefia\\darter\\.claude\\scratch\\batch-64-309\\b-305-preflight-medir.log",
+    "sha256": "74320f0f95150a0ae43844fa8172b85534798e070efed134c723581af63ac2eb"
+  }
+}

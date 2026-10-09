@@ -1,0 +1,17 @@
+specs\counter-service\counter-service.md:168:dejar la mano vacía y publicar una vez su descarte. Ningún otro levantable DEBE desaparecer por
+specs\counter-service\counter-service.md:344:### AC-CTR-031 — Dos papeles producen dos descartes *(verifica BR-CTR-025)*
+specs\counter-service\counter-service.md:348:con mano vacía ENTONCES no se publica otro descarte. En automático o manual los renglones del
+specs\counter-service\counter-service.md:354:inodoros ENTONCES el levantable permanece en la mano y no hay aviso de descarte; el balde
+specs\counter-service\counter-service.md:356:lavatorios ENTONCES el papel sigue en la mano y no se publica descarte. Un objeto del mismo
+specs\counter-service\counter-service.md:363:vacíos y no se publica un nuevo aviso de descarte ni se intenta liberar nuevamente el ya
+specs\counter-service\counter-service.md:383:  no produce descarte.
+specs\counter-service\counter-service.md:388:  los renglones cambiados, el ticket impreso y el descarte de un ticket.
+specs\player-actions\player-actions.md:789:suelta y sigue existiendo, sin aviso de descarte. Examinar conserva el ticket y, mientras el
+specs\player-actions\player-actions.md:820:  usarlo sobre el inodoro publica su descarte.
+test\sistemas\tareas\caja_registradora_test.gd:163:	caja.ticket_desechado.connect(func() -> void: eventos.append("descarte"))
+test\sistemas\tareas\caja_registradora_test.gd:178:		assert_array(eventos).contains_exactly(["descarte"])
+test\escenas\puestos\caja_registradora_test.gd:573:func test_balde_vacia_y_mopa_enjuaga_en_ambos_inodoros_sin_descarte() -> void:
+test\dominio\almacen\tapa_del_contenedor_test.gd:12:func test_cerrar_corta_el_descarte_antes_de_terminar_el_giro() -> void:  # AC-CLN-035
+test\dominio\almacen\tapa_del_contenedor_test.gd:22:func test_abrir_recupera_el_descarte_al_terminar_el_giro() -> void:  # AC-CLN-035
+src\escenas\puestos\caja_registradora.gd:121:		push_error("Descarte sin cuerpo propio sostenido: revisar caja registradora")
+src\dominio\almacen\tapa_del_contenedor.gd:1:## La apertura y el permiso de descarte se ejercen sin levantar una escena.

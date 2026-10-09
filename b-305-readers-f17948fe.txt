@@ -1,0 +1,90 @@
+﻿specs\store-cleanup\store-cleanup.md:31:| **Bolsa** | una unidad de basura que hay que llevar al descarte | residuo |
+specs\store-cleanup\store-cleanup.md:41:### BR-CLN-008 — El descarte está lejos
+specs\store-cleanup\store-cleanup.md:43:El descarte DEBE estar a **6 metros o más** de las tareas del local y de donde arrancan las
+specs\store-cleanup\store-cleanup.md:48:SI la bolsa se suelta fuera del radio del descarte —**1,5 metros**—, ENTONCES el sistema DEBE
+specs\store-cleanup\store-cleanup.md:178:El contenedor del descarte DEBE empezar cada jornada con la tapa abierta. El clic derecho sobre
+specs\store-cleanup\store-cleanup.md:180:sin saltar de posición. MIENTRAS está cerrada o girando, el descarte NO DEBE recibir bolsas.
+specs\store-cleanup\store-cleanup.md:195:DADO las posiciones del descarte, de las tareas del local y de las bolsas en la escena ENTONCES
+specs\store-cleanup\store-cleanup.md:196:ninguna está a menos de 6 metros del descarte, y 6 es mayor al alcance de la mira.
+specs\store-cleanup\store-cleanup.md:205:DADO la zona de descarte de la escena ENTONCES su radio es el mismo número que declara la regla.
+specs\store-cleanup\store-cleanup.md:215:bolsas en el descarte ENTONCES la basura está cumplida; con una sola pendiente en cada caso, no.
+specs\store-cleanup\store-cleanup.md:370:desactiva el descarte desde el inicio del giro. Soltar una bolsa con la tapa cerrada no la
+specs\store-cleanup\store-cleanup.md:372:El radio del descarte y el resto de sus rechazos conservan sus reglas anteriores.
+specs\store-cleanup\store-cleanup.md:386:  descarte se soltó la bolsa.
+specs\player-actions\player-actions.md:443:área de descarte.
+test\escenas\red_de_seguridad_integrada_test.gd:203:	var descarte: Node3D = almacen.get_node("Objetos/ZonaDeDescarte")
+test\escenas\red_de_seguridad_integrada_test.gd:214:		assert_float(bolsa.global_position.distance_to(descarte.global_position)).is_greater(
+test\escenas\red_de_seguridad_integrada_test.gd:215:			descarte.call("radio")
+test\escenas\puestos\zona_de_descarte_test.gd:10:const ESCENA := "res://src/escenas/puestos/zona_de_descarte.tscn"
+test\escenas\puestos\zona_de_descarte_test.gd:11:const SCRIPT := "res://src/escenas/puestos/zona_de_descarte.gd"
+test\escenas\puestos\zona_de_descarte_test.gd:17:const ZonaQueSeVe := preload("res://src/escenas/puestos/zona_de_descarte.gd")
+test\escenas\puestos\zona_de_descarte_test.gd:19:## Los anclajes de las obligatorias que se hacen en el local. El descarte tiene que estar lejos
+test\escenas\puestos\zona_de_descarte_test.gd:24:## hoy, las ocho quedan entre 3,19 y 5,48 m del descarte, y exigirles los 6 m sería exigir que el
+test\escenas\puestos\zona_de_descarte_test.gd:79:## Todo lo que el descarte tiene que tener lejos: los anclajes de las otras tareas, las manchas
+test\escenas\puestos\zona_de_descarte_test.gd:102:		. override_failure_message("`zona_de_descarte.gd` lleva una regla o un nombre global")
+test\escenas\puestos\zona_de_descarte_test.gd:133:func test_el_almacen_trae_el_descarte_y_una_bolsa_por_cada_una_del_balance() -> void:
+test\escenas\puestos\zona_de_descarte_test.gd:135:	assert_bool(almacen.has_node("Objetos/ZonaDeDescarte")).is_true()
+test\escenas\puestos\zona_de_descarte_test.gd:144:	# **No se cierra mirando: se cierra con un número.** Si el descarte estuviera al lado de otra
+test\escenas\puestos\zona_de_descarte_test.gd:148:	var descarte := _posicion_en(almacen, almacen.get_node("Objetos/ZonaDeDescarte"))
+test\escenas\puestos\zona_de_descarte_test.gd:159:		var distancia: float = descarte.distance_to(puntos[nombre])
+test\escenas\puestos\zona_de_descarte_test.gd:164:					"`%s` está a %.2f m del descarte y el mínimo es %.2f m"
+test\escenas\puestos\zona_de_descarte_test.gd:195:	var zona: ZonaQueSeVe = almacen.get_node("Objetos/ZonaDeDescarte")
+test\escenas\puestos\zona_de_descarte_test.gd:211:	# **Un `id` que no coincide no rompe nada**: la bolsa entra al descarte, el dominio contesta
+test\escenas\objetos\ubicacion_en_el_deposito_test.gd:133:func test_las_tres_bolsas_arrancan_en_el_deposito_y_lejos_del_descarte() -> void:
+test\escenas\objetos\ubicacion_en_el_deposito_test.gd:137:	var descarte: Node3D = almacen.get_node("Objetos/ZonaDeDescarte")
+test\escenas\objetos\ubicacion_en_el_deposito_test.gd:156:		var distancia := lugar.distance_to(descarte.global_position)
+test\escenas\objetos\ubicacion_en_el_deposito_test.gd:159:			. override_failure_message("`%s` está a %.2f m del descarte" % [bolsa.name, distancia])
+test\escenas\jornada_integrada_test.gd:355:	var zona: Area3D = almacen.get_node("Objetos/ZonaDeDescarte")
+test\escenas\agarre_fisico_test.gd:99:func test_soltar_en_el_descarte_entrega_el_id_al_recolector() -> void:
+test\escenas\agarre_fisico_test.gd:105:	var zona: Area3D = almacen.get_node("Objetos/ZonaDeDescarte")
+test\sistemas\tareas\recolector_de_basura_test.gd:15:	"res://src/escenas/puestos/zona_de_descarte.gd",
+src\sistemas\tareas\recolector_de_basura.gd:33:## Intenta dejar una bolsa en el descarte, y **devuelve el `Resultado` del dominio tal cual**.
+test\escenas\puestos\contenedor_de_basura_test.gd:1:## La boca permite entrar hasta el fondo; las paredes frenan el paso y el descarte sigue activo.
+test\escenas\puestos\contenedor_de_basura_test.gd:14:	var zona: Area3D = almacen.get_node("Objetos/ZonaDeDescarte")
+test\escenas\puestos\contenedor_de_basura_test.gd:29:	var zona: Area3D = almacen.get_node("Objetos/ZonaDeDescarte")
+test\escenas\puestos\contenedor_de_basura_test.gd:42:	var zona: Area3D = almacen.get_node("Objetos/ZonaDeDescarte")
+test\escenas\puestos\contenedor_de_basura_test.gd:70:	var zona: Area3D = almacen.get_node("Objetos/ZonaDeDescarte")
+test\escenas\puestos\contenedor_de_basura_test.gd:97:	var zona: Area3D = almacen.get_node("Objetos/ZonaDeDescarte")
+test\escenas\puestos\contenedor_de_basura_test.gd:130:	var zona: Area3D = almacen.get_node("Objetos/ZonaDeDescarte")
+test\escenas\puestos\contenedor_de_basura_test.gd:164:	var zona: Area3D = almacen.get_node("Objetos/ZonaDeDescarte")
+test\escenas\puestos\contenedor_de_basura_test.gd:177:	var zona: Area3D = almacen.get_node("Objetos/ZonaDeDescarte")
+test\escenas\puestos\contenedor_de_basura_test.gd:241:	var zona: Area3D = almacen.get_node("Objetos/ZonaDeDescarte")
+src\escenas\puestos\zona_de_descarte.tscn:3:[ext_resource type="Script" path="res://src/escenas/puestos/zona_de_descarte.gd" id="1_descarte"]
+src\escenas\puestos\zona_de_descarte.tscn:5:[sub_resource type="SphereShape3D" id="SphereShape3D_descarte"]
+src\escenas\puestos\zona_de_descarte.tscn:8:[node name="ZonaDeDescarte" type="Area3D" node_paths=PackedStringArray("forma")]
+src\escenas\puestos\zona_de_descarte.tscn:9:script = ExtResource("1_descarte")
+src\escenas\puestos\zona_de_descarte.tscn:14:shape = SubResource("SphereShape3D_descarte")
+test\dominio\almacen\trayecto_test.gd:32:	assert_bool(Trayecto.dentro_del_descarte(1.5, 1.5)).is_true()
+test\dominio\almacen\trayecto_test.gd:33:	assert_bool(Trayecto.dentro_del_descarte(1.4999, 1.5)).is_true()
+test\dominio\almacen\trayecto_test.gd:34:	assert_bool(Trayecto.dentro_del_descarte(1.5001, 1.5)).is_false()
+test\dominio\almacen\reglas_de_la_basura_test.gd:35:				"el descarte está a %.2f m y la mira alcanza %.2f m"
+test\dominio\almacen\reglas_de_la_basura_test.gd:46:func test_la_zona_de_descarte_es_mas_chica_que_el_viaje_que_hay_que_hacer() -> void:
+test\dominio\almacen\tarea_de_la_basura_test.gd:31:func test_lejos_del_descarte_no_cuenta() -> void:  # AC-CLN-009
+test\dominio\almacen\tapa_del_contenedor_test.gd:6:func test_arranca_abierta_y_recibe_bolsas() -> void:  # AC-CLN-034
+test\dominio\almacen\tapa_del_contenedor_test.gd:9:	assert_bool(tapa.recibe_bolsas()).is_true()
+test\dominio\almacen\tapa_del_contenedor_test.gd:12:func test_cerrar_corta_el_descarte_antes_de_terminar_el_giro() -> void:  # AC-CLN-035
+test\dominio\almacen\tapa_del_contenedor_test.gd:15:	assert_bool(tapa.recibe_bolsas()).is_false()
+test\dominio\almacen\tapa_del_contenedor_test.gd:19:	assert_bool(tapa.recibe_bolsas()).is_false()
+test\dominio\almacen\tapa_del_contenedor_test.gd:22:func test_abrir_recupera_el_descarte_al_terminar_el_giro() -> void:  # AC-CLN-035
+test\dominio\almacen\tapa_del_contenedor_test.gd:28:	assert_bool(tapa.recibe_bolsas()).is_false()
+test\dominio\almacen\tapa_del_contenedor_test.gd:30:	assert_bool(tapa.recibe_bolsas()).is_true()
+test\dominio\almacen\tapa_del_contenedor_test.gd:66:	assert_bool(tapa.recibe_bolsas()).is_true()
+test\dominio\almacen\tapa_del_contenedor_test.gd:76:	assert_bool(tapa.recibe_bolsas()).is_false()
+test\dominio\almacen\tapa_del_contenedor_test.gd:80:	assert_bool(tapa.recibe_bolsas()).is_true()
+src\escenas\puestos\tapa_del_contenedor.gd:90:	var recibe := _tapa.recibe_bolsas()
+src\escenas\almacen.tscn:98:zona = NodePath("../../../../Objetos/ZonaDeDescarte")
+src\escenas\almacen.tscn:102:[node name="ZonaDeDescarte" parent="Objetos" index="2" node_paths=PackedStringArray("recolector")]
+src\escenas\puestos\objetos_del_almacen.tscn:9:[ext_resource type="PackedScene" path="res://src/escenas/puestos/zona_de_descarte.tscn" id="25_descarte"]
+src\escenas\puestos\objetos_del_almacen.tscn:85:[node name="ZonaDeDescarte" parent="." instance=ExtResource("25_descarte")]
+src\dominio\almacen\tarea_de_la_basura.gd:1:## La obligatoria de sacar la basura: qué bolsas hay y cuáles llegaron al descarte.
+src\dominio\almacen\tarea_de_la_basura.gd:60:## Deja una bolsa en el descarte, y devuelve cómo salió.
+src\dominio\almacen\tarea_de_la_basura.gd:66:func depositar(id: StringName, distancia_al_descarte: float) -> Resultado:
+src\dominio\almacen\tarea_de_la_basura.gd:71:	if not Trayecto.dentro_del_descarte(distancia_al_descarte, ReglasDeLaBasura.RADIO_DEL_DESCARTE):
+src\dominio\almacen\trayecto.gd:6:## vivo; el `Area3D` del descarte es un **reflejo** del radio y no su fuente.
+src\dominio\almacen\trayecto.gd:29:static func dentro_del_descarte(distancia: float, radio: float) -> bool:
+src\dominio\almacen\tapa_del_contenedor.gd:1:## La apertura y el permiso de descarte se ejercen sin levantar una escena.
+src\dominio\almacen\tapa_del_contenedor.gd:31:func recibe_bolsas() -> bool:
+src\dominio\almacen\reglas_de_la_basura.gd:1:## Los valores fijos de sacar la basura: cuántas bolsas hay, cuán lejos está el descarte y cuánto
+src\dominio\almacen\reglas_de_la_basura.gd:10:## descarte está lejos de donde arrancan las bolsas y de las tareas del local, y esa distancia no
+src\dominio\almacen\reglas_de_la_basura.gd:15:## depósito: el descarte ya no está lejos de **todas** las obligatorias, sólo de las del local y
+src\dominio\almacen\reglas_de_la_basura.gd:27:## A cuánto está el descarte de todo lo demás, en metros.

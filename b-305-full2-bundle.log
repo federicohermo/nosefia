@@ -1,0 +1,12 @@
+  ok        capas       1.5s
+  ok        formato    10.1s
+  ok        harness    75.0s
+  ok        lint       11.1s
+  ok        specs       0.1s
+  ok        tdd         0.2s
+  ok        tests     713.4s
+
+7/7 nodos en verde, en 718.8s.
+reports/report_8: 208 suites corridas, 208 archivos `*_test.gd`
+
+{"head": "11301e9df6fd2510b4fa2ff1c0fd6db9d25fe963", "code": 0, "count_code": 0, "count": "reports/report_8: 208 suites corridas, 208 archivos `*_test.gd`\n", "elapsed": 718.9867672920227, "raw": "C:\\Users\\fede_\\orca\\workspaces\\nosefia\\darter\\.claude\\scratch\\batch-64-309\\b-305-full2-tests-crudo.log", "xml": "C:\\Users\\fede_\\orca\\workspaces\\nosefia\\darter\\.claude\\scratch\\batch-64-309\\b-305-full2-results.xml", "xml_sha256": "4374c41190d191eff3cc52e1028eb6530c0ffa28a7a4e0cc8a9290bc63c9c611", "suites": 208, "cases": 1629, "errors": 0, "failures": 0, "skipped": 0}

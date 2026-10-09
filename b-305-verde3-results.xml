@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<testsuites id="2026-10-09" name="report_1" tests="6" failures="0" skipped="0" flaky="0" time="0.000">
+	<testsuite id="0" name="tiro_al_contenedor_test" package="test/escenas/puestos" timestamp="2026-10-09T09:37:59" hostname="localhost" tests="6" failures="0" errors="0" skipped="0" flaky="0" time="2.426">
+		<testcase name="test_tirar_cada_aceptado_lo_oculta_y_solo_la_bolsa_cuenta" classname="tiro_al_contenedor_test" time="0.181">
+		</testcase>
+		<testcase name="test_ambos_destinos_conservan_caja_y_carga_durante_giro" classname="tiro_al_contenedor_test" time="0.125">
+		</testcase>
+		<testcase name="test_el_lector_es_copia_y_la_noche_lo_vacia_sin_leer_papel_liberado" classname="tiro_al_contenedor_test" time="0.130">
+		</testcase>
+		<testcase name="test_los_persistentes_vuelven_y_el_util_simula_fisica_otra_vez" classname="tiro_al_contenedor_test" time="1.706">
+		</testcase>
+		<testcase name="test_examen_y_cierre_bloquean_ambos_clics" classname="tiro_al_contenedor_test" time="0.123">
+		</testcase>
+		<testcase name="test_la_pausa_no_entrega_eventos_y_reanudar_recupera_el_tiro" classname="tiro_al_contenedor_test" time="0.123">
+		</testcase>
+	</testsuite>
+</testsuites>

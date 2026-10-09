@@ -1,0 +1,694 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<testsuites id="2026-10-09" name="report_1" tests="15" failures="77" skipped="0" flaky="0" time="0.000">
+	<testsuite id="0" name="tiro_al_contenedor_test" package="test/escenas/puestos" timestamp="2026-10-09T09:05:57" hostname="localhost" tests="6" failures="70" errors="1" skipped="0" flaky="0" time="2.624">
+		<testcase name="test_tirar_cada_aceptado_lo_oculta_y_solo_la_bolsa_cuenta" classname="tiro_al_contenedor_test" time="0.336">
+			<failure message="FAILED: res://test/escenas/puestos/tiro_al_contenedor_test.gd:81" type="FAILURE">
+<![CDATA[
+Expecting: '<null>' but was <Resource>
+	at 'test_tirar_cada_aceptado_lo_oculta_y_solo_la_bolsa_cuenta' in res://test/escenas/puestos/tiro_al_contenedor_test.gd:81
+	at '_abrir' in res://test/escenas/puestos/tiro_al_contenedor_test.gd:32
+]]>
+			</failure>
+			<failure message="FAILED: res://test/escenas/puestos/tiro_al_contenedor_test.gd:45" type="FAILURE">
+<![CDATA[
+Expecting: 'true' but is 'false'
+	at '_agarrar' in res://test/escenas/puestos/tiro_al_contenedor_test.gd:45
+	at 'test_tirar_cada_aceptado_lo_oculta_y_solo_la_bolsa_cuenta' in res://test/escenas/puestos/tiro_al_contenedor_test.gd:87
+	at '_abrir' in res://test/escenas/puestos/tiro_al_contenedor_test.gd:32
+]]>
+			</failure>
+			<failure message="FAILED: res://test/escenas/puestos/tiro_al_contenedor_test.gd:46" type="FAILURE">
+<![CDATA[
+Expecting:
+ <Resource>
+ to refer to the same object
+ <Resource>
+	at '_agarrar' in res://test/escenas/puestos/tiro_al_contenedor_test.gd:46
+	at 'test_tirar_cada_aceptado_lo_oculta_y_solo_la_bolsa_cuenta' in res://test/escenas/puestos/tiro_al_contenedor_test.gd:87
+	at '_abrir' in res://test/escenas/puestos/tiro_al_contenedor_test.gd:32
+]]>
+			</failure>
+			<failure message="FAILED: res://test/escenas/puestos/tiro_al_contenedor_test.gd:89" type="FAILURE">
+<![CDATA[
+Expecting: '<null>' but was <Resource>
+	at 'test_tirar_cada_aceptado_lo_oculta_y_solo_la_bolsa_cuenta' in res://test/escenas/puestos/tiro_al_contenedor_test.gd:89
+	at '_abrir' in res://test/escenas/puestos/tiro_al_contenedor_test.gd:32
+]]>
+			</failure>
+			<failure message="FAILED: res://test/escenas/puestos/tiro_al_contenedor_test.gd:90" type="FAILURE">
+<![CDATA[
+Expecting: 'false' but is 'true'
+	at 'test_tirar_cada_aceptado_lo_oculta_y_solo_la_bolsa_cuenta' in res://test/escenas/puestos/tiro_al_contenedor_test.gd:90
+	at '_abrir' in res://test/escenas/puestos/tiro_al_contenedor_test.gd:32
+]]>
+			</failure>
+			<failure message="FAILED: res://test/escenas/puestos/tiro_al_contenedor_test.gd:91" type="FAILURE">
+<![CDATA[
+Expecting: 'true' but is 'false'
+	at 'test_tirar_cada_aceptado_lo_oculta_y_solo_la_bolsa_cuenta' in res://test/escenas/puestos/tiro_al_contenedor_test.gd:91
+	at '_abrir' in res://test/escenas/puestos/tiro_al_contenedor_test.gd:32
+]]>
+			</failure>
+			<failure message="FAILED: res://test/escenas/puestos/tiro_al_contenedor_test.gd:92" type="FAILURE">
+<![CDATA[
+Expecting:
+ equal to 0 but is 1
+	at 'test_tirar_cada_aceptado_lo_oculta_y_solo_la_bolsa_cuenta' in res://test/escenas/puestos/tiro_al_contenedor_test.gd:92
+	at '_abrir' in res://test/escenas/puestos/tiro_al_contenedor_test.gd:32
+]]>
+			</failure>
+			<failure message="FAILED: res://test/escenas/puestos/tiro_al_contenedor_test.gd:93" type="FAILURE">
+<![CDATA[
+Expecting:
+ equal to 0 but is 9
+	at 'test_tirar_cada_aceptado_lo_oculta_y_solo_la_bolsa_cuenta' in res://test/escenas/puestos/tiro_al_contenedor_test.gd:93
+	at '_abrir' in res://test/escenas/puestos/tiro_al_contenedor_test.gd:32
+]]>
+			</failure>
+			<failure message="FAILED: res://test/escenas/puestos/tiro_al_contenedor_test.gd:94" type="FAILURE">
+<![CDATA[
+Expecting:
+ <StaticBody3D>
+ to refer to the same object
+ <Node3D>
+	at 'test_tirar_cada_aceptado_lo_oculta_y_solo_la_bolsa_cuenta' in res://test/escenas/puestos/tiro_al_contenedor_test.gd:94
+	at '_abrir' in res://test/escenas/puestos/tiro_al_contenedor_test.gd:32
+]]>
+			</failure>
+			<failure message="FAILED: res://test/escenas/puestos/tiro_al_contenedor_test.gd:45" type="FAILURE">
+<![CDATA[
+Expecting: 'true' but is 'false'
+	at '_agarrar' in res://test/escenas/puestos/tiro_al_contenedor_test.gd:45
+	at 'test_tirar_cada_aceptado_lo_oculta_y_solo_la_bolsa_cuenta' in res://test/escenas/puestos/tiro_al_contenedor_test.gd:87
+	at '_abrir' in res://test/escenas/puestos/tiro_al_contenedor_test.gd:32
+]]>
+			</failure>
+			<failure message="FAILED: res://test/escenas/puestos/tiro_al_contenedor_test.gd:46" type="FAILURE">
+<![CDATA[
+Expecting:
+ <Resource>
+ to refer to the same object
+ <Resource>
+	at '_agarrar' in res://test/escenas/puestos/tiro_al_contenedor_test.gd:46
+	at 'test_tirar_cada_aceptado_lo_oculta_y_solo_la_bolsa_cuenta' in res://test/escenas/puestos/tiro_al_contenedor_test.gd:87
+	at '_abrir' in res://test/escenas/puestos/tiro_al_contenedor_test.gd:32
+]]>
+			</failure>
+			<failure message="FAILED: res://test/escenas/puestos/tiro_al_contenedor_test.gd:89" type="FAILURE">
+<![CDATA[
+Expecting: '<null>' but was <Resource>
+	at 'test_tirar_cada_aceptado_lo_oculta_y_solo_la_bolsa_cuenta' in res://test/escenas/puestos/tiro_al_contenedor_test.gd:89
+	at '_abrir' in res://test/escenas/puestos/tiro_al_contenedor_test.gd:32
+]]>
+			</failure>
+			<failure message="FAILED: res://test/escenas/puestos/tiro_al_contenedor_test.gd:90" type="FAILURE">
+<![CDATA[
+Expecting: 'false' but is 'true'
+	at 'test_tirar_cada_aceptado_lo_oculta_y_solo_la_bolsa_cuenta' in res://test/escenas/puestos/tiro_al_contenedor_test.gd:90
+	at '_abrir' in res://test/escenas/puestos/tiro_al_contenedor_test.gd:32
+]]>
+			</failure>
+			<failure message="FAILED: res://test/escenas/puestos/tiro_al_contenedor_test.gd:91" type="FAILURE">
+<![CDATA[
+Expecting: 'true' but is 'false'
+	at 'test_tirar_cada_aceptado_lo_oculta_y_solo_la_bolsa_cuenta' in res://test/escenas/puestos/tiro_al_contenedor_test.gd:91
+	at '_abrir' in res://test/escenas/puestos/tiro_al_contenedor_test.gd:32
+]]>
+			</failure>
+			<failure message="FAILED: res://test/escenas/puestos/tiro_al_contenedor_test.gd:92" type="FAILURE">
+<![CDATA[
+Expecting:
+ equal to 0 but is 1
+	at 'test_tirar_cada_aceptado_lo_oculta_y_solo_la_bolsa_cuenta' in res://test/escenas/puestos/tiro_al_contenedor_test.gd:92
+	at '_abrir' in res://test/escenas/puestos/tiro_al_contenedor_test.gd:32
+]]>
+			</failure>
+			<failure message="FAILED: res://test/escenas/puestos/tiro_al_contenedor_test.gd:93" type="FAILURE">
+<![CDATA[
+Expecting:
+ equal to 0 but is 9
+	at 'test_tirar_cada_aceptado_lo_oculta_y_solo_la_bolsa_cuenta' in res://test/escenas/puestos/tiro_al_contenedor_test.gd:93
+	at '_abrir' in res://test/escenas/puestos/tiro_al_contenedor_test.gd:32
+]]>
+			</failure>
+			<failure message="FAILED: res://test/escenas/puestos/tiro_al_contenedor_test.gd:94" type="FAILURE">
+<![CDATA[
+Expecting:
+ <StaticBody3D>
+ to refer to the same object
+ <Node3D>
+	at 'test_tirar_cada_aceptado_lo_oculta_y_solo_la_bolsa_cuenta' in res://test/escenas/puestos/tiro_al_contenedor_test.gd:94
+	at '_abrir' in res://test/escenas/puestos/tiro_al_contenedor_test.gd:32
+]]>
+			</failure>
+			<failure message="FAILED: res://test/escenas/puestos/tiro_al_contenedor_test.gd:45" type="FAILURE">
+<![CDATA[
+Expecting: 'true' but is 'false'
+	at '_agarrar' in res://test/escenas/puestos/tiro_al_contenedor_test.gd:45
+	at 'test_tirar_cada_aceptado_lo_oculta_y_solo_la_bolsa_cuenta' in res://test/escenas/puestos/tiro_al_contenedor_test.gd:87
+	at '_abrir' in res://test/escenas/puestos/tiro_al_contenedor_test.gd:32
+]]>
+			</failure>
+			<failure message="FAILED: res://test/escenas/puestos/tiro_al_contenedor_test.gd:46" type="FAILURE">
+<![CDATA[
+Expecting:
+ <Resource>
+ to refer to the same object
+ <Resource>
+	at '_agarrar' in res://test/escenas/puestos/tiro_al_contenedor_test.gd:46
+	at 'test_tirar_cada_aceptado_lo_oculta_y_solo_la_bolsa_cuenta' in res://test/escenas/puestos/tiro_al_contenedor_test.gd:87
+	at '_abrir' in res://test/escenas/puestos/tiro_al_contenedor_test.gd:32
+]]>
+			</failure>
+			<failure message="FAILED: res://test/escenas/puestos/tiro_al_contenedor_test.gd:89" type="FAILURE">
+<![CDATA[
+Expecting: '<null>' but was <Resource>
+	at 'test_tirar_cada_aceptado_lo_oculta_y_solo_la_bolsa_cuenta' in res://test/escenas/puestos/tiro_al_contenedor_test.gd:89
+	at '_abrir' in res://test/escenas/puestos/tiro_al_contenedor_test.gd:32
+]]>
+			</failure>
+			<failure message="FAILED: res://test/escenas/puestos/tiro_al_contenedor_test.gd:90" type="FAILURE">
+<![CDATA[
+Expecting: 'false' but is 'true'
+	at 'test_tirar_cada_aceptado_lo_oculta_y_solo_la_bolsa_cuenta' in res://test/escenas/puestos/tiro_al_contenedor_test.gd:90
+	at '_abrir' in res://test/escenas/puestos/tiro_al_contenedor_test.gd:32
+]]>
+			</failure>
+			<failure message="FAILED: res://test/escenas/puestos/tiro_al_contenedor_test.gd:91" type="FAILURE">
+<![CDATA[
+Expecting: 'true' but is 'false'
+	at 'test_tirar_cada_aceptado_lo_oculta_y_solo_la_bolsa_cuenta' in res://test/escenas/puestos/tiro_al_contenedor_test.gd:91
+	at '_abrir' in res://test/escenas/puestos/tiro_al_contenedor_test.gd:32
+]]>
+			</failure>
+			<failure message="FAILED: res://test/escenas/puestos/tiro_al_contenedor_test.gd:92" type="FAILURE">
+<![CDATA[
+Expecting:
+ equal to 0 but is 1
+	at 'test_tirar_cada_aceptado_lo_oculta_y_solo_la_bolsa_cuenta' in res://test/escenas/puestos/tiro_al_contenedor_test.gd:92
+	at '_abrir' in res://test/escenas/puestos/tiro_al_contenedor_test.gd:32
+]]>
+			</failure>
+			<failure message="FAILED: res://test/escenas/puestos/tiro_al_contenedor_test.gd:93" type="FAILURE">
+<![CDATA[
+Expecting:
+ equal to 0 but is 9
+	at 'test_tirar_cada_aceptado_lo_oculta_y_solo_la_bolsa_cuenta' in res://test/escenas/puestos/tiro_al_contenedor_test.gd:93
+	at '_abrir' in res://test/escenas/puestos/tiro_al_contenedor_test.gd:32
+]]>
+			</failure>
+			<failure message="FAILED: res://test/escenas/puestos/tiro_al_contenedor_test.gd:94" type="FAILURE">
+<![CDATA[
+Expecting:
+ <StaticBody3D>
+ to refer to the same object
+ <Node3D>
+	at 'test_tirar_cada_aceptado_lo_oculta_y_solo_la_bolsa_cuenta' in res://test/escenas/puestos/tiro_al_contenedor_test.gd:94
+	at '_abrir' in res://test/escenas/puestos/tiro_al_contenedor_test.gd:32
+]]>
+			</failure>
+			<failure message="FAILED: res://test/escenas/puestos/tiro_al_contenedor_test.gd:45" type="FAILURE">
+<![CDATA[
+Expecting: 'true' but is 'false'
+	at '_agarrar' in res://test/escenas/puestos/tiro_al_contenedor_test.gd:45
+	at 'test_tirar_cada_aceptado_lo_oculta_y_solo_la_bolsa_cuenta' in res://test/escenas/puestos/tiro_al_contenedor_test.gd:87
+	at '_abrir' in res://test/escenas/puestos/tiro_al_contenedor_test.gd:32
+]]>
+			</failure>
+			<failure message="FAILED: res://test/escenas/puestos/tiro_al_contenedor_test.gd:46" type="FAILURE">
+<![CDATA[
+Expecting:
+ <Resource>
+ to refer to the same object
+ <Resource>
+	at '_agarrar' in res://test/escenas/puestos/tiro_al_contenedor_test.gd:46
+	at 'test_tirar_cada_aceptado_lo_oculta_y_solo_la_bolsa_cuenta' in res://test/escenas/puestos/tiro_al_contenedor_test.gd:87
+	at '_abrir' in res://test/escenas/puestos/tiro_al_contenedor_test.gd:32
+]]>
+			</failure>
+			<failure message="FAILED: res://test/escenas/puestos/tiro_al_contenedor_test.gd:89" type="FAILURE">
+<![CDATA[
+Expecting: '<null>' but was <Resource>
+	at 'test_tirar_cada_aceptado_lo_oculta_y_solo_la_bolsa_cuenta' in res://test/escenas/puestos/tiro_al_contenedor_test.gd:89
+	at '_abrir' in res://test/escenas/puestos/tiro_al_contenedor_test.gd:32
+]]>
+			</failure>
+			<failure message="FAILED: res://test/escenas/puestos/tiro_al_contenedor_test.gd:90" type="FAILURE">
+<![CDATA[
+Expecting: 'false' but is 'true'
+	at 'test_tirar_cada_aceptado_lo_oculta_y_solo_la_bolsa_cuenta' in res://test/escenas/puestos/tiro_al_contenedor_test.gd:90
+	at '_abrir' in res://test/escenas/puestos/tiro_al_contenedor_test.gd:32
+]]>
+			</failure>
+			<failure message="FAILED: res://test/escenas/puestos/tiro_al_contenedor_test.gd:91" type="FAILURE">
+<![CDATA[
+Expecting: 'true' but is 'false'
+	at 'test_tirar_cada_aceptado_lo_oculta_y_solo_la_bolsa_cuenta' in res://test/escenas/puestos/tiro_al_contenedor_test.gd:91
+	at '_abrir' in res://test/escenas/puestos/tiro_al_contenedor_test.gd:32
+]]>
+			</failure>
+			<failure message="FAILED: res://test/escenas/puestos/tiro_al_contenedor_test.gd:92" type="FAILURE">
+<![CDATA[
+Expecting:
+ equal to 0 but is 1
+	at 'test_tirar_cada_aceptado_lo_oculta_y_solo_la_bolsa_cuenta' in res://test/escenas/puestos/tiro_al_contenedor_test.gd:92
+	at '_abrir' in res://test/escenas/puestos/tiro_al_contenedor_test.gd:32
+]]>
+			</failure>
+			<failure message="FAILED: res://test/escenas/puestos/tiro_al_contenedor_test.gd:93" type="FAILURE">
+<![CDATA[
+Expecting:
+ equal to 0 but is 9
+	at 'test_tirar_cada_aceptado_lo_oculta_y_solo_la_bolsa_cuenta' in res://test/escenas/puestos/tiro_al_contenedor_test.gd:93
+	at '_abrir' in res://test/escenas/puestos/tiro_al_contenedor_test.gd:32
+]]>
+			</failure>
+			<failure message="FAILED: res://test/escenas/puestos/tiro_al_contenedor_test.gd:94" type="FAILURE">
+<![CDATA[
+Expecting:
+ <StaticBody3D>
+ to refer to the same object
+ <Node3D>
+	at 'test_tirar_cada_aceptado_lo_oculta_y_solo_la_bolsa_cuenta' in res://test/escenas/puestos/tiro_al_contenedor_test.gd:94
+	at '_abrir' in res://test/escenas/puestos/tiro_al_contenedor_test.gd:32
+]]>
+			</failure>
+			<failure message="FAILED: res://test/escenas/puestos/tiro_al_contenedor_test.gd:45" type="FAILURE">
+<![CDATA[
+Expecting: 'true' but is 'false'
+	at '_agarrar' in res://test/escenas/puestos/tiro_al_contenedor_test.gd:45
+	at 'test_tirar_cada_aceptado_lo_oculta_y_solo_la_bolsa_cuenta' in res://test/escenas/puestos/tiro_al_contenedor_test.gd:87
+	at '_abrir' in res://test/escenas/puestos/tiro_al_contenedor_test.gd:32
+]]>
+			</failure>
+			<failure message="FAILED: res://test/escenas/puestos/tiro_al_contenedor_test.gd:46" type="FAILURE">
+<![CDATA[
+Expecting:
+ <Resource>
+ to refer to the same object
+ <Resource>
+	at '_agarrar' in res://test/escenas/puestos/tiro_al_contenedor_test.gd:46
+	at 'test_tirar_cada_aceptado_lo_oculta_y_solo_la_bolsa_cuenta' in res://test/escenas/puestos/tiro_al_contenedor_test.gd:87
+	at '_abrir' in res://test/escenas/puestos/tiro_al_contenedor_test.gd:32
+]]>
+			</failure>
+			<failure message="FAILED: res://test/escenas/puestos/tiro_al_contenedor_test.gd:89" type="FAILURE">
+<![CDATA[
+Expecting: '<null>' but was <Resource>
+	at 'test_tirar_cada_aceptado_lo_oculta_y_solo_la_bolsa_cuenta' in res://test/escenas/puestos/tiro_al_contenedor_test.gd:89
+	at '_abrir' in res://test/escenas/puestos/tiro_al_contenedor_test.gd:32
+]]>
+			</failure>
+			<failure message="FAILED: res://test/escenas/puestos/tiro_al_contenedor_test.gd:90" type="FAILURE">
+<![CDATA[
+Expecting: 'false' but is 'true'
+	at 'test_tirar_cada_aceptado_lo_oculta_y_solo_la_bolsa_cuenta' in res://test/escenas/puestos/tiro_al_contenedor_test.gd:90
+	at '_abrir' in res://test/escenas/puestos/tiro_al_contenedor_test.gd:32
+]]>
+			</failure>
+			<failure message="FAILED: res://test/escenas/puestos/tiro_al_contenedor_test.gd:91" type="FAILURE">
+<![CDATA[
+Expecting: 'true' but is 'false'
+	at 'test_tirar_cada_aceptado_lo_oculta_y_solo_la_bolsa_cuenta' in res://test/escenas/puestos/tiro_al_contenedor_test.gd:91
+	at '_abrir' in res://test/escenas/puestos/tiro_al_contenedor_test.gd:32
+]]>
+			</failure>
+			<failure message="FAILED: res://test/escenas/puestos/tiro_al_contenedor_test.gd:92" type="FAILURE">
+<![CDATA[
+Expecting:
+ equal to 0 but is 1
+	at 'test_tirar_cada_aceptado_lo_oculta_y_solo_la_bolsa_cuenta' in res://test/escenas/puestos/tiro_al_contenedor_test.gd:92
+	at '_abrir' in res://test/escenas/puestos/tiro_al_contenedor_test.gd:32
+]]>
+			</failure>
+			<failure message="FAILED: res://test/escenas/puestos/tiro_al_contenedor_test.gd:93" type="FAILURE">
+<![CDATA[
+Expecting:
+ equal to 0 but is 9
+	at 'test_tirar_cada_aceptado_lo_oculta_y_solo_la_bolsa_cuenta' in res://test/escenas/puestos/tiro_al_contenedor_test.gd:93
+	at '_abrir' in res://test/escenas/puestos/tiro_al_contenedor_test.gd:32
+]]>
+			</failure>
+			<failure message="FAILED: res://test/escenas/puestos/tiro_al_contenedor_test.gd:94" type="FAILURE">
+<![CDATA[
+Expecting:
+ <StaticBody3D>
+ to refer to the same object
+ <Node3D>
+	at 'test_tirar_cada_aceptado_lo_oculta_y_solo_la_bolsa_cuenta' in res://test/escenas/puestos/tiro_al_contenedor_test.gd:94
+	at '_abrir' in res://test/escenas/puestos/tiro_al_contenedor_test.gd:32
+]]>
+			</failure>
+			<failure message="FAILED: res://test/escenas/puestos/tiro_al_contenedor_test.gd:45" type="FAILURE">
+<![CDATA[
+Expecting: 'true' but is 'false'
+	at '_agarrar' in res://test/escenas/puestos/tiro_al_contenedor_test.gd:45
+	at 'test_tirar_cada_aceptado_lo_oculta_y_solo_la_bolsa_cuenta' in res://test/escenas/puestos/tiro_al_contenedor_test.gd:87
+	at '_abrir' in res://test/escenas/puestos/tiro_al_contenedor_test.gd:32
+]]>
+			</failure>
+			<failure message="FAILED: res://test/escenas/puestos/tiro_al_contenedor_test.gd:46" type="FAILURE">
+<![CDATA[
+Expecting:
+ <Resource>
+ to refer to the same object
+ <Resource>
+	at '_agarrar' in res://test/escenas/puestos/tiro_al_contenedor_test.gd:46
+	at 'test_tirar_cada_aceptado_lo_oculta_y_solo_la_bolsa_cuenta' in res://test/escenas/puestos/tiro_al_contenedor_test.gd:87
+	at '_abrir' in res://test/escenas/puestos/tiro_al_contenedor_test.gd:32
+]]>
+			</failure>
+			<failure message="FAILED: res://test/escenas/puestos/tiro_al_contenedor_test.gd:89" type="FAILURE">
+<![CDATA[
+Expecting: '<null>' but was <Resource>
+	at 'test_tirar_cada_aceptado_lo_oculta_y_solo_la_bolsa_cuenta' in res://test/escenas/puestos/tiro_al_contenedor_test.gd:89
+	at '_abrir' in res://test/escenas/puestos/tiro_al_contenedor_test.gd:32
+]]>
+			</failure>
+			<failure message="FAILED: res://test/escenas/puestos/tiro_al_contenedor_test.gd:90" type="FAILURE">
+<![CDATA[
+Expecting: 'false' but is 'true'
+	at 'test_tirar_cada_aceptado_lo_oculta_y_solo_la_bolsa_cuenta' in res://test/escenas/puestos/tiro_al_contenedor_test.gd:90
+	at '_abrir' in res://test/escenas/puestos/tiro_al_contenedor_test.gd:32
+]]>
+			</failure>
+			<failure message="FAILED: res://test/escenas/puestos/tiro_al_contenedor_test.gd:91" type="FAILURE">
+<![CDATA[
+Expecting: 'true' but is 'false'
+	at 'test_tirar_cada_aceptado_lo_oculta_y_solo_la_bolsa_cuenta' in res://test/escenas/puestos/tiro_al_contenedor_test.gd:91
+	at '_abrir' in res://test/escenas/puestos/tiro_al_contenedor_test.gd:32
+]]>
+			</failure>
+			<failure message="FAILED: res://test/escenas/puestos/tiro_al_contenedor_test.gd:92" type="FAILURE">
+<![CDATA[
+Expecting:
+ equal to 0 but is 1
+	at 'test_tirar_cada_aceptado_lo_oculta_y_solo_la_bolsa_cuenta' in res://test/escenas/puestos/tiro_al_contenedor_test.gd:92
+	at '_abrir' in res://test/escenas/puestos/tiro_al_contenedor_test.gd:32
+]]>
+			</failure>
+			<failure message="FAILED: res://test/escenas/puestos/tiro_al_contenedor_test.gd:93" type="FAILURE">
+<![CDATA[
+Expecting:
+ equal to 0 but is 9
+	at 'test_tirar_cada_aceptado_lo_oculta_y_solo_la_bolsa_cuenta' in res://test/escenas/puestos/tiro_al_contenedor_test.gd:93
+	at '_abrir' in res://test/escenas/puestos/tiro_al_contenedor_test.gd:32
+]]>
+			</failure>
+			<failure message="FAILED: res://test/escenas/puestos/tiro_al_contenedor_test.gd:94" type="FAILURE">
+<![CDATA[
+Expecting:
+ <StaticBody3D>
+ to refer to the same object
+ <Node3D>
+	at 'test_tirar_cada_aceptado_lo_oculta_y_solo_la_bolsa_cuenta' in res://test/escenas/puestos/tiro_al_contenedor_test.gd:94
+	at '_abrir' in res://test/escenas/puestos/tiro_al_contenedor_test.gd:32
+]]>
+			</failure>
+			<failure message="FAILED: res://test/escenas/puestos/tiro_al_contenedor_test.gd:89" type="FAILURE">
+<![CDATA[
+Expecting: '<null>' but was <Resource>
+	at 'test_tirar_cada_aceptado_lo_oculta_y_solo_la_bolsa_cuenta' in res://test/escenas/puestos/tiro_al_contenedor_test.gd:89
+	at '_abrir' in res://test/escenas/puestos/tiro_al_contenedor_test.gd:32
+]]>
+			</failure>
+			<failure message="FAILED: res://test/escenas/puestos/tiro_al_contenedor_test.gd:90" type="FAILURE">
+<![CDATA[
+Expecting: 'false' but is 'true'
+	at 'test_tirar_cada_aceptado_lo_oculta_y_solo_la_bolsa_cuenta' in res://test/escenas/puestos/tiro_al_contenedor_test.gd:90
+	at '_abrir' in res://test/escenas/puestos/tiro_al_contenedor_test.gd:32
+]]>
+			</failure>
+			<failure message="FAILED: res://test/escenas/puestos/tiro_al_contenedor_test.gd:94" type="FAILURE">
+<![CDATA[
+Expecting:
+ <StaticBody3D>
+ to refer to the same object
+ <Node3D>
+	at 'test_tirar_cada_aceptado_lo_oculta_y_solo_la_bolsa_cuenta' in res://test/escenas/puestos/tiro_al_contenedor_test.gd:94
+	at '_abrir' in res://test/escenas/puestos/tiro_al_contenedor_test.gd:32
+]]>
+			</failure>
+			<failure message="FAILED: res://test/escenas/puestos/tiro_al_contenedor_test.gd:45" type="FAILURE">
+<![CDATA[
+Expecting: 'true' but is 'false'
+	at '_agarrar' in res://test/escenas/puestos/tiro_al_contenedor_test.gd:45
+	at 'test_tirar_cada_aceptado_lo_oculta_y_solo_la_bolsa_cuenta' in res://test/escenas/puestos/tiro_al_contenedor_test.gd:87
+	at '_abrir' in res://test/escenas/puestos/tiro_al_contenedor_test.gd:32
+]]>
+			</failure>
+			<failure message="FAILED: res://test/escenas/puestos/tiro_al_contenedor_test.gd:46" type="FAILURE">
+<![CDATA[
+Expecting:
+ <Resource>
+ to refer to the same object
+ <Resource>
+	at '_agarrar' in res://test/escenas/puestos/tiro_al_contenedor_test.gd:46
+	at 'test_tirar_cada_aceptado_lo_oculta_y_solo_la_bolsa_cuenta' in res://test/escenas/puestos/tiro_al_contenedor_test.gd:87
+	at '_abrir' in res://test/escenas/puestos/tiro_al_contenedor_test.gd:32
+]]>
+			</failure>
+			<failure message="FAILED: res://test/escenas/puestos/tiro_al_contenedor_test.gd:89" type="FAILURE">
+<![CDATA[
+Expecting: '<null>' but was <Resource>
+	at 'test_tirar_cada_aceptado_lo_oculta_y_solo_la_bolsa_cuenta' in res://test/escenas/puestos/tiro_al_contenedor_test.gd:89
+	at '_abrir' in res://test/escenas/puestos/tiro_al_contenedor_test.gd:32
+]]>
+			</failure>
+			<failure message="FAILED: res://test/escenas/puestos/tiro_al_contenedor_test.gd:90" type="FAILURE">
+<![CDATA[
+Expecting: 'false' but is 'true'
+	at 'test_tirar_cada_aceptado_lo_oculta_y_solo_la_bolsa_cuenta' in res://test/escenas/puestos/tiro_al_contenedor_test.gd:90
+	at '_abrir' in res://test/escenas/puestos/tiro_al_contenedor_test.gd:32
+]]>
+			</failure>
+			<failure message="FAILED: res://test/escenas/puestos/tiro_al_contenedor_test.gd:92" type="FAILURE">
+<![CDATA[
+Expecting:
+ equal to 0 but is 1
+	at 'test_tirar_cada_aceptado_lo_oculta_y_solo_la_bolsa_cuenta' in res://test/escenas/puestos/tiro_al_contenedor_test.gd:92
+	at '_abrir' in res://test/escenas/puestos/tiro_al_contenedor_test.gd:32
+]]>
+			</failure>
+			<failure message="FAILED: res://test/escenas/puestos/tiro_al_contenedor_test.gd:93" type="FAILURE">
+<![CDATA[
+Expecting:
+ equal to 0 but is 9
+	at 'test_tirar_cada_aceptado_lo_oculta_y_solo_la_bolsa_cuenta' in res://test/escenas/puestos/tiro_al_contenedor_test.gd:93
+	at '_abrir' in res://test/escenas/puestos/tiro_al_contenedor_test.gd:32
+]]>
+			</failure>
+			<failure message="FAILED: res://test/escenas/puestos/tiro_al_contenedor_test.gd:94" type="FAILURE">
+<![CDATA[
+Expecting:
+ <StaticBody3D>
+ to refer to the same object
+ <Node3D>
+	at 'test_tirar_cada_aceptado_lo_oculta_y_solo_la_bolsa_cuenta' in res://test/escenas/puestos/tiro_al_contenedor_test.gd:94
+	at '_abrir' in res://test/escenas/puestos/tiro_al_contenedor_test.gd:32
+]]>
+			</failure>
+			<failure message="FAILED: res://test/escenas/puestos/tiro_al_contenedor_test.gd:97" type="FAILURE">
+<![CDATA[
+Expecting:
+ 1
+ but was
+ 0
+	at 'test_tirar_cada_aceptado_lo_oculta_y_solo_la_bolsa_cuenta' in res://test/escenas/puestos/tiro_al_contenedor_test.gd:97
+	at '_abrir' in res://test/escenas/puestos/tiro_al_contenedor_test.gd:32
+]]>
+			</failure>
+			<failure message="FAILED: res://test/escenas/puestos/tiro_al_contenedor_test.gd:98" type="FAILURE">
+<![CDATA[
+Expecting size:
+ 8
+ but was
+ 0
+	at 'test_tirar_cada_aceptado_lo_oculta_y_solo_la_bolsa_cuenta' in res://test/escenas/puestos/tiro_al_contenedor_test.gd:98
+	at '_abrir' in res://test/escenas/puestos/tiro_al_contenedor_test.gd:32
+]]>
+			</failure>
+		</testcase>
+		<testcase name="test_ambos_destinos_conservan_caja_y_carga_durante_giro" classname="tiro_al_contenedor_test" time="0.120">
+			<error message="ERROR: res://test/escenas/puestos/tiro_al_contenedor_test.gd:107" type="ABORT">
+<![CDATA[
+Godot Runtime Error !
+  'Trying to assign value of type 'caja_de_productos.gd' to a variable of type 'objeto_agarrable.gd'.'
+	at 'test_ambos_destinos_conservan_caja_y_carga_durante_giro' in res://test/escenas/puestos/tiro_al_contenedor_test.gd:107
+	at '_abrir' in res://test/escenas/puestos/tiro_al_contenedor_test.gd:32
+]]>
+			</error>
+		</testcase>
+		<testcase name="test_el_lector_es_copia_y_la_noche_lo_vacia_sin_leer_papel_liberado" classname="tiro_al_contenedor_test" time="0.128">
+			<failure message="FAILED: res://test/escenas/puestos/tiro_al_contenedor_test.gd:142" type="FAILURE">
+<![CDATA[
+Expecting contains exactly elements:
+ '<empty>'
+ do contains (in same order)
+ '[Ticket:<RigidBody3D#516151056598>]'
+but could not find elements:
+ '[Ticket:<RigidBody3D#516151056598>]'
+	at 'test_el_lector_es_copia_y_la_noche_lo_vacia_sin_leer_papel_liberado' in res://test/escenas/puestos/tiro_al_contenedor_test.gd:142
+	at '_abrir' in res://test/escenas/puestos/tiro_al_contenedor_test.gd:32
+]]>
+			</failure>
+			<failure message="FAILED: res://test/escenas/puestos/tiro_al_contenedor_test.gd:144" type="FAILURE">
+<![CDATA[
+Expecting size:
+ 1
+ but was
+ 0
+	at 'test_el_lector_es_copia_y_la_noche_lo_vacia_sin_leer_papel_liberado' in res://test/escenas/puestos/tiro_al_contenedor_test.gd:144
+	at '_abrir' in res://test/escenas/puestos/tiro_al_contenedor_test.gd:32
+]]>
+			</failure>
+		</testcase>
+		<testcase name="test_los_persistentes_vuelven_y_el_util_simula_fisica_otra_vez" classname="tiro_al_contenedor_test" time="1.702">
+			<failure message="FAILED: res://test/escenas/puestos/tiro_al_contenedor_test.gd:45" type="FAILURE">
+<![CDATA[
+Expecting: 'true' but is 'false'
+	at '_agarrar' in res://test/escenas/puestos/tiro_al_contenedor_test.gd:45
+	at 'test_los_persistentes_vuelven_y_el_util_simula_fisica_otra_vez' in res://test/escenas/puestos/tiro_al_contenedor_test.gd:174
+	at '_abrir' in res://test/escenas/puestos/tiro_al_contenedor_test.gd:32
+]]>
+			</failure>
+			<failure message="FAILED: res://test/escenas/puestos/tiro_al_contenedor_test.gd:46" type="FAILURE">
+<![CDATA[
+Expecting:
+ <Resource>
+ to refer to the same object
+ <Resource>
+	at '_agarrar' in res://test/escenas/puestos/tiro_al_contenedor_test.gd:46
+	at 'test_los_persistentes_vuelven_y_el_util_simula_fisica_otra_vez' in res://test/escenas/puestos/tiro_al_contenedor_test.gd:174
+	at '_abrir' in res://test/escenas/puestos/tiro_al_contenedor_test.gd:32
+]]>
+			</failure>
+			<failure message="FAILED: res://test/escenas/puestos/tiro_al_contenedor_test.gd:45" type="FAILURE">
+<![CDATA[
+Expecting: 'true' but is 'false'
+	at '_agarrar' in res://test/escenas/puestos/tiro_al_contenedor_test.gd:45
+	at 'test_los_persistentes_vuelven_y_el_util_simula_fisica_otra_vez' in res://test/escenas/puestos/tiro_al_contenedor_test.gd:174
+	at '_abrir' in res://test/escenas/puestos/tiro_al_contenedor_test.gd:32
+]]>
+			</failure>
+			<failure message="FAILED: res://test/escenas/puestos/tiro_al_contenedor_test.gd:46" type="FAILURE">
+<![CDATA[
+Expecting:
+ <Resource>
+ to refer to the same object
+ <Resource>
+	at '_agarrar' in res://test/escenas/puestos/tiro_al_contenedor_test.gd:46
+	at 'test_los_persistentes_vuelven_y_el_util_simula_fisica_otra_vez' in res://test/escenas/puestos/tiro_al_contenedor_test.gd:174
+	at '_abrir' in res://test/escenas/puestos/tiro_al_contenedor_test.gd:32
+]]>
+			</failure>
+			<failure message="FAILED: res://test/escenas/puestos/tiro_al_contenedor_test.gd:179" type="FAILURE">
+<![CDATA[
+Expecting:
+ <Node3D>
+ to refer to the same object
+ <Node3D>
+	at 'test_los_persistentes_vuelven_y_el_util_simula_fisica_otra_vez' in res://test/escenas/puestos/tiro_al_contenedor_test.gd:179
+	at '_abrir' in res://test/escenas/puestos/tiro_al_contenedor_test.gd:32
+]]>
+			</failure>
+		</testcase>
+		<testcase name="test_examen_y_cierre_bloquean_ambos_clics" classname="tiro_al_contenedor_test" time="0.122">
+		</testcase>
+		<testcase name="test_la_pausa_no_entrega_eventos_y_reanudar_recupera_el_tiro" classname="tiro_al_contenedor_test" time="0.119">
+			<failure message="FAILED: res://test/escenas/puestos/tiro_al_contenedor_test.gd:246" type="FAILURE">
+<![CDATA[
+Expecting: '<null>' but was <Resource>
+	at 'test_la_pausa_no_entrega_eventos_y_reanudar_recupera_el_tiro' in res://test/escenas/puestos/tiro_al_contenedor_test.gd:246
+	at '_abrir' in res://test/escenas/puestos/tiro_al_contenedor_test.gd:32
+]]>
+			</failure>
+			<failure message="FAILED: res://test/escenas/puestos/tiro_al_contenedor_test.gd:247" type="FAILURE">
+<![CDATA[
+Expecting:
+ 1
+ but was
+ 0
+	at 'test_la_pausa_no_entrega_eventos_y_reanudar_recupera_el_tiro' in res://test/escenas/puestos/tiro_al_contenedor_test.gd:247
+	at '_abrir' in res://test/escenas/puestos/tiro_al_contenedor_test.gd:32
+]]>
+			</failure>
+		</testcase>
+	</testsuite>
+	<testsuite id="1" name="tapa_del_contenedor_test" package="test/escenas/puestos" timestamp="2026-10-09T09:05:59" hostname="localhost" tests="1" failures="2" errors="0" skipped="0" flaky="0" time="0.136">
+		<testcase name="test_el_izquierdo_en_la_hoja_tira_solo_al_terminar_de_abrir" classname="tapa_del_contenedor_test" time="0.117">
+			<failure message="FAILED: res://test/escenas/puestos/tapa_del_contenedor_test.gd:33" type="FAILURE">
+<![CDATA[
+Expecting: '<null>' but was <Resource>
+	at 'test_el_izquierdo_en_la_hoja_tira_solo_al_terminar_de_abrir' in res://test/escenas/puestos/tapa_del_contenedor_test.gd:33
+]]>
+			</failure>
+			<failure message="FAILED: res://test/escenas/puestos/tapa_del_contenedor_test.gd:34" type="FAILURE">
+<![CDATA[
+Expecting:
+ 1
+ but was
+ 0
+	at 'test_el_izquierdo_en_la_hoja_tira_solo_al_terminar_de_abrir' in res://test/escenas/puestos/tapa_del_contenedor_test.gd:34
+]]>
+			</failure>
+		</testcase>
+	</testsuite>
+	<testsuite id="2" name="objeto_agarrable_test" package="test/escenas/objetos" timestamp="2026-10-09T09:06:00" hostname="localhost" tests="8" failures="5" errors="0" skipped="0" flaky="0" time="0.148">
+		<testcase name="test_el_objeto_esta_en_el_grupo_que_la_mira_busca" classname="objeto_agarrable_test" time="0.006">
+		</testcase>
+		<testcase name="test_el_objeto_responde_al_metodo_que_es_el_contrato" classname="objeto_agarrable_test" time="0.004">
+		</testcase>
+		<testcase name="test_interactuar_devuelve_los_datos_de_dominio_del_objeto" classname="objeto_agarrable_test" time="0.006">
+		</testcase>
+		<testcase name="test_el_objeto_simula_fisica_y_tiene_con_que_chocar" classname="objeto_agarrable_test" time="0.005">
+		</testcase>
+		<testcase name="test_volver_a_su_lugar_no_dibuja_el_objeto_cruzando_el_almacen" classname="objeto_agarrable_test" time="0.060">
+		</testcase>
+		<testcase name="test_cada_contacto_avisa_el_objeto_y_su_rapidez" classname="objeto_agarrable_test" time="0.006">
+		</testcase>
+		<testcase name="test_las_dos_acciones_del_006_estan_declaradas_en_el_proyecto" classname="objeto_agarrable_test" time="0.006">
+		</testcase>
+		<testcase name="test_volver_restaura_padre_visibilidad_y_fisica_originales" classname="objeto_agarrable_test" time="0.006">
+			<failure message="FAILED: res://test/escenas/objetos/objeto_agarrable_test.gd:132" type="FAILURE">
+<![CDATA[
+Expecting:
+ <Node3D>
+ to refer to the same object
+ <Node3D>
+	at 'test_volver_restaura_padre_visibilidad_y_fisica_originales' in res://test/escenas/objetos/objeto_agarrable_test.gd:132
+]]>
+			</failure>
+			<failure message="FAILED: res://test/escenas/objetos/objeto_agarrable_test.gd:133" type="FAILURE">
+<![CDATA[
+Expecting: 'true' but is 'false'
+	at 'test_volver_restaura_padre_visibilidad_y_fisica_originales' in res://test/escenas/objetos/objeto_agarrable_test.gd:133
+]]>
+			</failure>
+			<failure message="FAILED: res://test/escenas/objetos/objeto_agarrable_test.gd:134" type="FAILURE">
+<![CDATA[
+Expecting: 'false' but is 'true'
+	at 'test_volver_restaura_padre_visibilidad_y_fisica_originales' in res://test/escenas/objetos/objeto_agarrable_test.gd:134
+]]>
+			</failure>
+			<failure message="FAILED: res://test/escenas/objetos/objeto_agarrable_test.gd:136" type="FAILURE">
+<![CDATA[
+Expecting:
+ 5
+ but was
+ 0
+	at 'test_volver_restaura_padre_visibilidad_y_fisica_originales' in res://test/escenas/objetos/objeto_agarrable_test.gd:136
+]]>
+			</failure>
+			<failure message="FAILED: res://test/escenas/objetos/objeto_agarrable_test.gd:137" type="FAILURE">
+<![CDATA[
+Expecting:
+ 9
+ but was
+ 0
+	at 'test_volver_restaura_padre_visibilidad_y_fisica_originales' in res://test/escenas/objetos/objeto_agarrable_test.gd:137
+]]>
+			</failure>
+		</testcase>
+	</testsuite>
+</testsuites>

@@ -1,0 +1,363 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<testsuites id="2026-10-09" name="report_1" tests="40" failures="33" skipped="0" flaky="0" time="0.000">
+	<testsuite id="0" name="reglas_de_la_basura_test" package="test/dominio/almacen" timestamp="2026-10-09T08:55:55" hostname="localhost" tests="5" failures="3" errors="0" skipped="0" flaky="0" time="0.055">
+		<testcase name="test_el_tiro_distingue_mano_caja_y_tapa_en_orden" classname="reglas_de_la_basura_test" time="0.005">
+			<failure message="FAILED: res://test/dominio/almacen/reglas_de_la_basura_test.gd:10" type="FAILURE">
+<![CDATA[
+Expecting:
+ 1
+ but was
+ 2
+	at 'test_el_tiro_distingue_mano_caja_y_tapa_en_orden' in res://test/dominio/almacen/reglas_de_la_basura_test.gd:10
+]]>
+			</failure>
+			<failure message="FAILED: res://test/dominio/almacen/reglas_de_la_basura_test.gd:16" type="FAILURE">
+<![CDATA[
+Expecting:
+ 3
+ but was
+ 2
+	at 'test_el_tiro_distingue_mano_caja_y_tapa_en_orden' in res://test/dominio/almacen/reglas_de_la_basura_test.gd:16
+]]>
+			</failure>
+			<failure message="FAILED: res://test/dominio/almacen/reglas_de_la_basura_test.gd:17" type="FAILURE">
+<![CDATA[
+Expecting:
+ 0
+ but was
+ 2
+	at 'test_el_tiro_distingue_mano_caja_y_tapa_en_orden' in res://test/dominio/almacen/reglas_de_la_basura_test.gd:17
+]]>
+			</failure>
+		</testcase>
+		<testcase name="test_la_tarea_no_se_puede_resolver_en_un_solo_viaje" classname="reglas_de_la_basura_test" time="0.004">
+		</testcase>
+		<testcase name="test_el_fondo_no_se_ve_desde_donde_se_hace_otra_tarea" classname="reglas_de_la_basura_test" time="0.006">
+		</testcase>
+		<testcase name="test_la_zona_de_descarte_es_mas_chica_que_el_viaje_que_hay_que_hacer" classname="reglas_de_la_basura_test" time="0.004">
+		</testcase>
+		<testcase name="test_hay_un_id_distinto_por_bolsa_y_los_gobierna_el_balance" classname="reglas_de_la_basura_test" time="0.005">
+		</testcase>
+	</testsuite>
+	<testsuite id="1" name="objeto_del_almacen_test" package="test/dominio/almacen" timestamp="2026-10-09T08:55:55" hostname="localhost" tests="9" failures="1" errors="0" skipped="0" flaky="0" time="0.134">
+		<testcase name="test_la_caja_no_entra_y_los_otros_levantables_si" classname="objeto_del_almacen_test" time="0.011">
+			<failure message="FAILED: res://test/dominio/almacen/objeto_del_almacen_test.gd:19" type="FAILURE">
+<![CDATA[
+caja_de_reposicion
+	at 'test_la_caja_no_entra_y_los_otros_levantables_si' in res://test/dominio/almacen/objeto_del_almacen_test.gd:19
+]]>
+			</failure>
+		</testcase>
+		<testcase name="test_un_objeto_sin_revelacion_muestra_lo_mismo_examinado_que_sin_examinar" classname="objeto_del_almacen_test" time="0.005">
+		</testcase>
+		<testcase name="test_lo_fijo_no_se_levanta_y_lo_demas_si" classname="objeto_del_almacen_test" time="0.004">
+		</testcase>
+		<testcase name="test_los_objetos_del_almacen_cargan_y_todos_tienen_algo_que_revelar" classname="objeto_del_almacen_test" time="0.011">
+		</testcase>
+		<testcase name="test_la_revelacion_solo_se_ve_despues_de_examinar" classname="objeto_del_almacen_test" time="0.011">
+		</testcase>
+		<testcase name="test_cada_objeto_del_almacen_declara_su_sonoridad" classname="objeto_del_almacen_test" time="0.011">
+		</testcase>
+		<testcase name="test_solo_la_caja_del_deposito_admite_otro_objeto_encima" classname="objeto_del_almacen_test" time="0.011">
+		</testcase>
+		<testcase name="test_solo_el_balde_se_apoya_derecho" classname="objeto_del_almacen_test" time="0.011">
+		</testcase>
+		<testcase name="test_solo_la_mopa_es_larga" classname="objeto_del_almacen_test" time="0.011">
+		</testcase>
+	</testsuite>
+	<testsuite id="2" name="estante_test" package="test/dominio/almacen" timestamp="2026-10-09T08:55:55" hostname="localhost" tests="20" failures="8" errors="0" skipped="0" flaky="0" time="0.213">
+		<testcase name="test_tirar_la_unidad_de_gondola_conserva_la_caja_y_el_hueco" classname="estante_test" time="0.006">
+			<failure message="FAILED: res://test/dominio/almacen/estante_test.gd:28" type="FAILURE">
+<![CDATA[
+Expecting: 'true' but is 'false'
+	at 'test_tirar_la_unidad_de_gondola_conserva_la_caja_y_el_hueco' in res://test/dominio/almacen/estante_test.gd:28
+]]>
+			</failure>
+			<failure message="FAILED: res://test/dominio/almacen/estante_test.gd:30" type="FAILURE">
+<![CDATA[
+Expecting:
+ 8
+ but was
+ 9
+	at 'test_tirar_la_unidad_de_gondola_conserva_la_caja_y_el_hueco' in res://test/dominio/almacen/estante_test.gd:30
+]]>
+			</failure>
+			<failure message="FAILED: res://test/dominio/almacen/estante_test.gd:33" type="FAILURE">
+<![CDATA[
+Expecting: 'false' but is 'true'
+	at 'test_tirar_la_unidad_de_gondola_conserva_la_caja_y_el_hueco' in res://test/dominio/almacen/estante_test.gd:33
+]]>
+			</failure>
+			<failure message="FAILED: res://test/dominio/almacen/estante_test.gd:34" type="FAILURE">
+<![CDATA[
+Expecting: 'false' but is 'true'
+	at 'test_tirar_la_unidad_de_gondola_conserva_la_caja_y_el_hueco' in res://test/dominio/almacen/estante_test.gd:34
+]]>
+			</failure>
+		</testcase>
+		<testcase name="test_tirar_la_unidad_de_caja_descuenta_sin_devolverla" classname="estante_test" time="0.005">
+			<failure message="FAILED: res://test/dominio/almacen/estante_test.gd:43" type="FAILURE">
+<![CDATA[
+Expecting: 'true' but is 'false'
+	at 'test_tirar_la_unidad_de_caja_descuenta_sin_devolverla' in res://test/dominio/almacen/estante_test.gd:43
+]]>
+			</failure>
+			<failure message="FAILED: res://test/dominio/almacen/estante_test.gd:45" type="FAILURE">
+<![CDATA[
+Expecting:
+ 7
+ but was
+ 8
+	at 'test_tirar_la_unidad_de_caja_descuenta_sin_devolverla' in res://test/dominio/almacen/estante_test.gd:45
+]]>
+			</failure>
+			<failure message="FAILED: res://test/dominio/almacen/estante_test.gd:46" type="FAILURE">
+<![CDATA[
+Expecting:
+ equal to 0 but is 1
+	at 'test_tirar_la_unidad_de_caja_descuenta_sin_devolverla' in res://test/dominio/almacen/estante_test.gd:46
+]]>
+			</failure>
+			<failure message="FAILED: res://test/dominio/almacen/estante_test.gd:49" type="FAILURE">
+<![CDATA[
+Expecting:
+ 7
+ but was
+ 8
+	at 'test_tirar_la_unidad_de_caja_descuenta_sin_devolverla' in res://test/dominio/almacen/estante_test.gd:49
+]]>
+			</failure>
+		</testcase>
+		<testcase name="test_lo_que_el_estante_no_acepta_se_rechaza_sin_mover_una_unidad" classname="estante_test" time="0.004">
+		</testcase>
+		<testcase name="test_con_el_estante_lleno_se_rechaza_sin_mover_una_unidad" classname="estante_test" time="0.006">
+		</testcase>
+		<testcase name="test_sin_unidades_en_el_deposito_se_rechaza_sin_mover_una_unidad" classname="estante_test" time="0.004">
+		</testcase>
+		<testcase name="test_con_los_tres_rechazos_a_la_vez_gana_el_primero_del_orden" classname="estante_test" time="0.006">
+		</testcase>
+		<testcase name="test_colocar_mueve_la_unidad_en_vez_de_crearla" classname="estante_test" time="0.005">
+		</testcase>
+		<testcase name="test_las_unidades_en_gondola_salen_del_inventario_y_no_de_un_contador_propio" classname="estante_test" time="0.004">
+		</testcase>
+		<testcase name="test_a_mitad_del_cupo_el_estante_no_esta_completo" classname="estante_test" time="0.005">
+		</testcase>
+		<testcase name="test_al_llegar_al_cupo_de_todos_los_aceptados_el_estante_esta_completo" classname="estante_test" time="0.006">
+		</testcase>
+		<testcase name="test_con_menos_unidades_que_el_cupo_colocarlas_todas_no_completa" classname="estante_test" time="0.005">
+		</testcase>
+		<testcase name="test_acepta_compara_por_id_y_no_por_instancia" classname="estante_test" time="0.005">
+		</testcase>
+		<testcase name="test_un_producto_nulo_o_desconocido_se_rechaza_en_vez_de_reventar" classname="estante_test" time="0.005">
+		</testcase>
+		<testcase name="test_el_cupo_de_cada_producto_son_los_casilleros_de_su_fila" classname="estante_test" time="0.005">
+		</testcase>
+		<testcase name="test_el_estante_no_lleva_el_cupo_ni_el_stock_escritos_adentro" classname="estante_test" time="0.006">
+		</testcase>
+		<testcase name="test_retirar_reserva_la_unidad_sin_duplicar_el_stock" classname="estante_test" time="0.005">
+		</testcase>
+		<testcase name="test_el_estante_lleno_conserva_la_unidad_rechazada" classname="estante_test" time="0.005">
+		</testcase>
+		<testcase name="test_con_la_fila_completa_la_caja_entrega_hasta_vaciarse" classname="estante_test" time="0.006">
+		</testcase>
+		<testcase name="test_devolver_anula_la_reserva_y_no_mueve_mercaderia" classname="estante_test" time="0.004">
+		</testcase>
+		<testcase name="test_las_reservadas_son_las_que_salieron_y_no_se_colocaron" classname="estante_test" time="0.006">
+		</testcase>
+	</testsuite>
+	<testsuite id="3" name="recolector_de_basura_test" package="test/sistemas/tareas" timestamp="2026-10-09T08:55:55" hostname="localhost" tests="6" failures="21" errors="0" skipped="0" flaky="0" time="0.100">
+		<testcase name="test_el_tiro_aceptado_entrega_el_mismo_cuerpo_sin_soltar" classname="recolector_de_basura_test" time="0.006">
+			<failure message="FAILED: res://test/sistemas/tareas/recolector_de_basura_test.gd:54" type="FAILURE">
+<![CDATA[
+Expecting:
+ 0
+ but was
+ 2
+	at 'test_el_tiro_aceptado_entrega_el_mismo_cuerpo_sin_soltar' in res://test/sistemas/tareas/recolector_de_basura_test.gd:54
+]]>
+			</failure>
+			<failure message="FAILED: res://test/sistemas/tareas/recolector_de_basura_test.gd:55" type="FAILURE">
+<![CDATA[
+Expecting: '<null>' but was <Resource>
+	at 'test_el_tiro_aceptado_entrega_el_mismo_cuerpo_sin_soltar' in res://test/sistemas/tareas/recolector_de_basura_test.gd:55
+]]>
+			</failure>
+			<failure message="FAILED: res://test/sistemas/tareas/recolector_de_basura_test.gd:56" type="FAILURE">
+<![CDATA[
+Expecting contains exactly elements:
+ '<empty>'
+ do contains (in same order)
+ '[@Node3D@38:<Node3D#373142063488>]'
+but could not find elements:
+ '[@Node3D@38:<Node3D#373142063488>]'
+	at 'test_el_tiro_aceptado_entrega_el_mismo_cuerpo_sin_soltar' in res://test/sistemas/tareas/recolector_de_basura_test.gd:56
+]]>
+			</failure>
+			<failure message="FAILED: res://test/sistemas/tareas/recolector_de_basura_test.gd:58" type="FAILURE">
+<![CDATA[
+Expecting:
+ 1
+ but was
+ 0
+	at 'test_el_tiro_aceptado_entrega_el_mismo_cuerpo_sin_soltar' in res://test/sistemas/tareas/recolector_de_basura_test.gd:58
+]]>
+			</failure>
+		</testcase>
+		<testcase name="test_mano_vacia_caja_y_tapa_no_abierta_conservan_todo" classname="recolector_de_basura_test" time="0.006">
+			<failure message="FAILED: res://test/sistemas/tareas/recolector_de_basura_test.gd:64" type="FAILURE">
+<![CDATA[
+Expecting:
+ 1
+ but was
+ 2
+	at 'test_mano_vacia_caja_y_tapa_no_abierta_conservan_todo' in res://test/sistemas/tareas/recolector_de_basura_test.gd:64
+]]>
+			</failure>
+			<failure message="FAILED: res://test/sistemas/tareas/recolector_de_basura_test.gd:76" type="FAILURE">
+<![CDATA[
+Expecting:
+ 3
+ but was
+ 2
+	at 'test_mano_vacia_caja_y_tapa_no_abierta_conservan_todo' in res://test/sistemas/tareas/recolector_de_basura_test.gd:76
+]]>
+			</failure>
+		</testcase>
+		<testcase name="test_la_ultima_bolsa_completa_una_vez_sin_mover_el_turno" classname="recolector_de_basura_test" time="0.005">
+			<failure message="FAILED: res://test/sistemas/tareas/recolector_de_basura_test.gd:43" type="FAILURE">
+<![CDATA[
+Expecting: 'true' but is 'false'
+	at '_sostener' in res://test/sistemas/tareas/recolector_de_basura_test.gd:43
+	at 'test_la_ultima_bolsa_completa_una_vez_sin_mover_el_turno' in res://test/sistemas/tareas/recolector_de_basura_test.gd:89
+]]>
+			</failure>
+			<failure message="FAILED: res://test/sistemas/tareas/recolector_de_basura_test.gd:43" type="FAILURE">
+<![CDATA[
+Expecting: 'true' but is 'false'
+	at '_sostener' in res://test/sistemas/tareas/recolector_de_basura_test.gd:43
+	at 'test_la_ultima_bolsa_completa_una_vez_sin_mover_el_turno' in res://test/sistemas/tareas/recolector_de_basura_test.gd:89
+]]>
+			</failure>
+			<failure message="FAILED: res://test/sistemas/tareas/recolector_de_basura_test.gd:91" type="FAILURE">
+<![CDATA[
+Expecting: 'true' but is 'false'
+	at 'test_la_ultima_bolsa_completa_una_vez_sin_mover_el_turno' in res://test/sistemas/tareas/recolector_de_basura_test.gd:91
+]]>
+			</failure>
+			<failure message="FAILED: res://test/sistemas/tareas/recolector_de_basura_test.gd:92" type="FAILURE">
+<![CDATA[
+Expecting:
+ 1
+ but was
+ 0
+	at 'test_la_ultima_bolsa_completa_una_vez_sin_mover_el_turno' in res://test/sistemas/tareas/recolector_de_basura_test.gd:92
+]]>
+			</failure>
+			<failure message="FAILED: res://test/sistemas/tareas/recolector_de_basura_test.gd:43" type="FAILURE">
+<![CDATA[
+Expecting: 'true' but is 'false'
+	at '_sostener' in res://test/sistemas/tareas/recolector_de_basura_test.gd:43
+	at 'test_la_ultima_bolsa_completa_una_vez_sin_mover_el_turno' in res://test/sistemas/tareas/recolector_de_basura_test.gd:95
+]]>
+			</failure>
+			<failure message="FAILED: res://test/sistemas/tareas/recolector_de_basura_test.gd:97" type="FAILURE">
+<![CDATA[
+Expecting:
+ 3
+ but was
+ 0
+	at 'test_la_ultima_bolsa_completa_una_vez_sin_mover_el_turno' in res://test/sistemas/tareas/recolector_de_basura_test.gd:97
+]]>
+			</failure>
+			<failure message="FAILED: res://test/sistemas/tareas/recolector_de_basura_test.gd:98" type="FAILURE">
+<![CDATA[
+Expecting:
+ 1
+ but was
+ 0
+	at 'test_la_ultima_bolsa_completa_una_vez_sin_mover_el_turno' in res://test/sistemas/tareas/recolector_de_basura_test.gd:98
+]]>
+			</failure>
+		</testcase>
+		<testcase name="test_el_util_tirado_no_cuenta_como_bolsa" classname="recolector_de_basura_test" time="0.006">
+			<failure message="FAILED: res://test/sistemas/tareas/recolector_de_basura_test.gd:106" type="FAILURE">
+<![CDATA[
+Expecting:
+ 0
+ but was
+ 2
+	at 'test_el_util_tirado_no_cuenta_como_bolsa' in res://test/sistemas/tareas/recolector_de_basura_test.gd:106
+]]>
+			</failure>
+			<failure message="FAILED: res://test/sistemas/tareas/recolector_de_basura_test.gd:107" type="FAILURE">
+<![CDATA[
+Expecting:
+ 1
+ but was
+ 0
+	at 'test_el_util_tirado_no_cuenta_como_bolsa' in res://test/sistemas/tareas/recolector_de_basura_test.gd:107
+]]>
+			</failure>
+		</testcase>
+		<testcase name="test_la_unidad_tirada_sale_del_inventario_antes_del_aviso" classname="recolector_de_basura_test" time="0.006">
+			<failure message="FAILED: res://test/sistemas/tareas/recolector_de_basura_test.gd:123" type="FAILURE">
+<![CDATA[
+Expecting:
+ 0
+ but was
+ 2
+	at 'test_la_unidad_tirada_sale_del_inventario_antes_del_aviso' in res://test/sistemas/tareas/recolector_de_basura_test.gd:123
+]]>
+			</failure>
+			<failure message="FAILED: res://test/sistemas/tareas/recolector_de_basura_test.gd:124" type="FAILURE">
+<![CDATA[
+Expecting contains exactly elements:
+ '<empty>'
+ do contains (in same order)
+ '[0]'
+but could not find elements:
+ '[0]'
+	at 'test_la_unidad_tirada_sale_del_inventario_antes_del_aviso' in res://test/sistemas/tareas/recolector_de_basura_test.gd:124
+]]>
+			</failure>
+			<failure message="FAILED: res://test/sistemas/tareas/recolector_de_basura_test.gd:125" type="FAILURE">
+<![CDATA[
+Expecting:
+ 7
+ but was
+ 8
+	at 'test_la_unidad_tirada_sale_del_inventario_antes_del_aviso' in res://test/sistemas/tareas/recolector_de_basura_test.gd:125
+]]>
+			</failure>
+		</testcase>
+		<testcase name="test_sin_cableado_no_entrega_ni_publica" classname="recolector_de_basura_test" time="0.006">
+			<failure message="FAILED: res://test/sistemas/tareas/recolector_de_basura_test.gd:138" type="FAILURE">
+<![CDATA[
+Expecting: push_error() is called.
+	expected: 'Recolector sin cablear: revisar almacen.tscn y almacen.gd'
+	current: 'no errors'
+
+	at 'test_sin_cableado_no_entrega_ni_publica' in res://test/sistemas/tareas/recolector_de_basura_test.gd:138
+]]>
+			</failure>
+			<failure message="FAILED: res://test/sistemas/tareas/recolector_de_basura_test.gd:138" type="FAILURE">
+<![CDATA[
+Expecting: push_error() is called.
+	expected: 'Recolector sin cablear: revisar almacen.tscn y almacen.gd'
+	current: 'no errors'
+
+	at 'test_sin_cableado_no_entrega_ni_publica' in res://test/sistemas/tareas/recolector_de_basura_test.gd:138
+]]>
+			</failure>
+			<failure message="FAILED: res://test/sistemas/tareas/recolector_de_basura_test.gd:138" type="FAILURE">
+<![CDATA[
+Expecting: push_error() is called.
+	expected: 'Recolector sin cablear: revisar almacen.tscn y almacen.gd'
+	current: 'no errors'
+
+	at 'test_sin_cableado_no_entrega_ni_publica' in res://test/sistemas/tareas/recolector_de_basura_test.gd:138
+]]>
+			</failure>
+		</testcase>
+	</testsuite>
+</testsuites>
