@@ -82,7 +82,7 @@ func _ready() -> void:
 		Rect2(-2.48, -24, 16.98, 7.5),
 	]:
 		var esquina := Vector3(limites.position.x, ALTURA_DEL_SUELO, limites.position.y)
-		_malla(
+		var pavimento := _malla(
 			"Pavimento",
 			PackedVector3Array(
 				[
@@ -95,6 +95,11 @@ func _ready() -> void:
 			PackedInt32Array([0, 2, 1, 0, 3, 2]),
 			suelo
 		)
+		pavimento.create_trimesh_collision()
+		var cuerpo := pavimento.get_child(0) as StaticBody3D
+		var forma := cuerpo.get_child(0) as CollisionShape3D
+		# El dibujo usa ambas caras: el soporte conserva sus triángulos y recibe desde arriba.
+		(forma.shape as ConcavePolygonShape3D).backface_collision = true
 	var fondo := _material(PROYECCION, FONDO)
 	_tarjeta(
 		"Fondo",
@@ -293,7 +298,7 @@ func _tarjeta(
 
 func _malla(
 	nombre: String, puntos: PackedVector3Array, indices: PackedInt32Array, material: ShaderMaterial
-) -> void:
+) -> MeshInstance3D:
 	var datos: Array = []
 	datos.resize(Mesh.ARRAY_MAX)
 	datos[Mesh.ARRAY_VERTEX] = puntos
@@ -307,6 +312,7 @@ func _malla(
 	instancia.gi_mode = GeometryInstance3D.GI_MODE_DYNAMIC
 	instancia.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 	add_child(instancia, true)
+	return instancia
 
 
 func _periferia(material: ShaderMaterial) -> void:

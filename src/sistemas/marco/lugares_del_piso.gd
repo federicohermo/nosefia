@@ -25,5 +25,12 @@ static func alrededor(
 		var golpe := espacio.intersect_ray(consulta)
 		if golpe.is_empty() or not ReglasDeLosObjetos.se_puede_apoyar_en(golpe["normal"].y):
 			continue
+		# El piso del otro lado de una pared no es un apoyo accesible desde este centro.
+		var recorrido := PhysicsRayQueryParameters3D.create(
+			centro + Vector3.UP * alto, costado + Vector3.UP * alto, mascara
+		)
+		recorrido.exclude = excluidos
+		if not espacio.intersect_ray(recorrido).is_empty():
+			continue
 		lugares.append(golpe["position"])
 	return lugares

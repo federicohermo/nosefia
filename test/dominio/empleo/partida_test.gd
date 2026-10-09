@@ -20,15 +20,20 @@ func test_una_partida_nueva_arranca_en_la_primera_jornada() -> void:
 func test_la_partida_guarda_el_legajo_que_recibio_y_no_una_copia() -> void:  # AC-EMP-012
 	# Una copia dejaría al legajo restaurado sin efecto: la partida acumularía sobre
 	# otro objeto y la historia guardada no despediría a nadie, en verde.
-	var legajo := Legajo.con_apercibimientos(Reglas.APERCIBIMIENTOS_POR_AVISO)
+	var legajo := Legajo.con_medios(
+		(Reglas.APERCIBIMIENTOS_POR_AVISO) * Reglas.MEDIOS_POR_APERCIBIMIENTO
+	)
 	var partida := Partida.new(legajo)
 	assert_object(partida.legajo()).is_same(legajo)
 	assert_int(partida.apercibimientos()).is_equal(Reglas.APERCIBIMIENTOS_POR_AVISO)
 
 
 func test_una_partida_restaurada_a_un_aviso_del_tope_despide_con_un_aviso() -> void:  # AC-EMP-012
-	var restaurado := Legajo.con_apercibimientos(
-		Reglas.APERCIBIMIENTOS_HASTA_EL_DESPIDO - Reglas.APERCIBIMIENTOS_POR_AVISO
+	var restaurado := Legajo.con_medios(
+		(
+			(Reglas.APERCIBIMIENTOS_HASTA_EL_DESPIDO - Reglas.APERCIBIMIENTOS_POR_AVISO)
+			* Reglas.MEDIOS_POR_APERCIBIMIENTO
+		)
 	)
 	var partida := Partida.new(restaurado)
 	_jugar(partida, Consecuencias.CUMPLIDAS_MINIMAS_PARA_AVISO)
@@ -42,8 +47,8 @@ func test_una_partida_guardada_sigue_en_su_jornada_y_con_su_legajo() -> void:
 			{
 				PartidaSerializada.clave(PartidaSerializada.Campo.JORNADA):
 				ReglasDeLaPartida.PRIMERA_JORNADA + 2,
-				PartidaSerializada.clave(PartidaSerializada.Campo.APERCIBIMIENTOS):
-				Reglas.APERCIBIMIENTOS_POR_AVISO,
+				PartidaSerializada.clave(PartidaSerializada.Campo.MEDIOS):
+				Reglas.APERCIBIMIENTOS_POR_AVISO * Reglas.MEDIOS_POR_APERCIBIMIENTO,
 			}
 		)
 	)
@@ -115,9 +120,7 @@ func test_cada_jornada_abre_un_turno_nuevo_y_tareas_nuevas() -> void:
 
 func test_una_partida_que_termino_no_vuelve_a_abrir_una_jornada() -> void:  # AC-EMP-010
 	# El ciclo ya guarda esto antes de llamar, pero la puerta es pública y el 017 la toca desde
-	# una pantalla. Sin el guard acá, la noche de regalo **le borra el legajo al despedido**:
-	# cerrarla impecable lo reinicia a cero y la partida avanza de jornada con el final ya
-	# escrito. Nada de eso emite un error, y el reporte del cierre diría dos cosas distintas.
+	# una pantalla. Sin el guard, una noche de regalo avanzaría una partida ya terminada.
 	var partida := Partida.nueva()
 	_jugar(partida, 0)
 	_jugar(partida, 0)

@@ -76,6 +76,9 @@ func test_la_mancha_borrada_deja_de_verse_y_de_enfocarse() -> void:
 	# Esconder un nodo **no apaga su cuerpo**: con el cuerpo prendido, una mancha ya borrada sigue
 	# frenando el rayo de la mira y se sigue enfocando, con la escena cargando sin un solo error.
 	var mancha: ManchaQueSeVe = auto_free(ESCENA.instantiate())
+	# Volver a mostrarla perturba el agua según su orientación en el mundo.
+	add_child(mancha)
+	assert_bool(mancha.is_inside_tree()).is_true()
 	var cuerpo := mancha.get_node("Cuerpo") as CollisionShape3D
 	mancha.mostrar(false, Color.GREEN)
 	assert_bool(mancha.visible).is_false()
@@ -94,6 +97,8 @@ func test_cada_mancha_lleva_su_propia_pintura() -> void:
 	# Con el material compartido entre las instancias, pintar el moho de verde pintaría las cuatro.
 	var una: ManchaQueSeVe = auto_free(ESCENA.instantiate())
 	var otra: ManchaQueSeVe = auto_free(ESCENA.instantiate())
+	add_child(una)
+	add_child(otra)
 	una.mostrar(true, Color.GREEN)
 	otra.mostrar(true, Color.RED)
 	assert_that(Color(una.color(), 1.0)).is_equal(Color.GREEN)
@@ -214,9 +219,8 @@ func test_con_el_balde_en_la_mano_no_se_agarra_un_jabon() -> void:
 	assert_int(manos.motivo_de_rechazo(jabon)).is_equal(Manos.Rechazo.MANOS_LLENAS)
 
 
-func test_los_espejos_estan_y_el_almacen_no_decide_nada() -> void:
-	# Las dos mitades falsables del criterio de terminado. La del `almacen.gd` es la que el 007
-	# dejó puesta: la escena raíz cablea y no decide, y eso se verifica sin leerla.
+func test_las_reglas_de_limpieza_tienen_sus_espejos() -> void:
+	# Cada regla y sistema de limpieza conserva su suite propia.
 	for ruta: String in [
 		"res://src/dominio/almacen/reglas_de_la_limpieza.gd",
 		"res://src/dominio/almacen/mancha.gd",
@@ -231,11 +235,3 @@ func test_los_espejos_estan_y_el_almacen_no_decide_nada() -> void:
 			. override_failure_message("falta el espejo `%s`" % espejo)
 			. is_true()
 		)
-	var almacen := FileAccess.get_file_as_string("res://src/escenas/almacen.gd")
-	assert_str(almacen).is_not_empty()
-	var ramas := RegEx.create_from_string("(?m)^\\s*(if|elif|match)\\b").search_all(almacen)
-	(
-		assert_array(ramas)
-		. override_failure_message("`almacen.gd` tiene una condición adentro")
-		. is_empty()
-	)

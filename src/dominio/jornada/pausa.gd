@@ -17,7 +17,11 @@ static func ante_esc(en_pausa: bool, placa_en_pantalla: bool) -> Accion:
 ## mide los dos estados a los dos lados de la escritura del juego, así que lo que cambia en el
 ## medio lo cambió el navegador.
 static func ante_el_cursor(
-	en_pausa: bool, placa_en_pantalla: bool, tomado_antes: bool, tomado_ahora: bool
+	en_pausa: bool,
+	placa_en_pantalla: bool,
+	tomado_antes: bool,
+	tomado_ahora: bool,
+	ventana_activa: bool = true
 ) -> Accion:
-	var perdido := tomado_antes and not tomado_ahora
+	var perdido := ventana_activa and tomado_antes and not tomado_ahora
 	return Accion.PAUSAR if perdido and not en_pausa and not placa_en_pantalla else Accion.NADA

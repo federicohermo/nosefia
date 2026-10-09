@@ -36,6 +36,14 @@ var _casilleros: Dictionary[Producto.Id, int] = {}
 var _afuera: Array[UnidadDeProducto] = []
 
 
+## Retira una unidad registrada afuera sin devolverla a su caja.
+func desechar(unidad: UnidadDeProducto) -> bool:
+	if not quitar_de_afuera(unidad):
+		return false
+	_sumar(unidad.producto, Ubicacion.DEPOSITO, -1)
+	return true
+
+
 ## Recibe los productos y sus casilleros en vez de ir a buscarlos, y ésa es la decisión que hace
 ## que rebalancear el catálogo o mover una fila en el modelo no ponga en rojo un solo test de
 ## este archivo.

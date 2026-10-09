@@ -104,8 +104,10 @@ partida nueva.
 CUANDO el jugador aprieta Esc durante la jornada, el sistema DEBE pausarla y mostrar el menú de
 pausa. Un segundo Esc DEBE reanudarla, igual que «reanudar». SI la placa del cierre está en
 pantalla, ENTONCES Esc NO DEBE hacer nada: la placa ya ofrece volver al menú. SI el cursor pasa
-de tomado a suelto sin que el juego lo suelte, ENTONCES el sistema DEBE pausar: en la web el
-navegador consume Esc para soltar el cursor. Soltarlo el propio juego NO DEBE pausar.
+de tomado a suelto con la ventana activa y sin que el juego lo suelte, ENTONCES el sistema DEBE
+pausar: en la web el navegador consume Esc para soltar el cursor. Soltarlo el propio juego NO
+DEBE pausar. Cambiar de pestaña, minimizar o pasar a otra ventana NO DEBE pausar la jornada ni
+mostrar el menú de pausa; volver tampoco DEBE abrirlo.
 
 ### BR-SAV-017 — El menú de pausa muestra cuatro opciones
 
@@ -209,8 +211,10 @@ apercibimientos.
 
 DADO la jornada en curso CUANDO llega Esc ENTONCES el juego queda en pausa; CUANDO llega otro Esc
 ENTONCES se reanuda. DADO la placa del cierre en pantalla CUANDO llega Esc ENTONCES no pasa nada.
-DADO el cursor tomado CUANDO queda suelto sin que el juego lo suelte ENTONCES el juego queda en
-pausa; CUANDO lo suelta el propio juego ENTONCES no.
+DADO el cursor tomado y la ventana activa CUANDO queda suelto sin que el juego lo suelte
+ENTONCES el juego queda en pausa; CUANDO lo suelta el propio juego ENTONCES no. DADO una jornada
+en curso CUANDO se cambia de pestaña o ventana y se vuelve ENTONCES sigue sin pausa; Esc sigue
+abriendo y cerrando la pausa manual.
 
 ### AC-SAV-019 — Los cuatro botones de la pausa *(verifica BR-SAV-017)*
 

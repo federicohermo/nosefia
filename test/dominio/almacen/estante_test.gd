@@ -16,6 +16,40 @@ const CUPO_DE_PRUEBA := 2
 const EN_DEPOSITO := 5
 
 
+func test_tirar_la_unidad_de_gondola_conserva_la_caja_y_el_hueco() -> void:  # AC-STK-053
+	var producto := _producto(Producto.Id.ACTRONCITO)
+	var inventario := Inventario.new([producto], {producto.id: 2})
+	inventario.ingresar(producto, Inventario.Ubicacion.DEPOSITO, 8)
+	inventario.ingresar(producto, Inventario.Ubicacion.GONDOLA, 2)
+	var estante := Estante.new(inventario, [producto])
+	var unidad := estante.agarrar(producto, 1)
+	assert_object(unidad).is_not_null()
+	assert_int(estante.disponibles_para_retirar(producto)).is_equal(8)
+	assert_bool(estante.desechar(unidad)).is_true()
+	assert_int(estante.disponibles_para_retirar(producto)).is_equal(8)
+	assert_int(estante.unidades_en_deposito(producto)).is_equal(8)
+	assert_array(estante.casilleros_vacios(producto)).contains_exactly([1])
+	assert_bool(estante.completada()).is_false()
+	assert_bool(inventario.esta_afuera(unidad)).is_false()
+	assert_bool(estante.devolver(unidad)).is_false()
+	assert_int(estante.colocar_unidad(unidad)).is_equal(Estante.Rechazo.PRODUCTO_NO_ACEPTADO)
+
+
+func test_tirar_la_unidad_de_caja_descuenta_sin_devolverla() -> void:  # AC-STK-053
+	var producto := _producto(Producto.Id.ACTRONCITO)
+	var estante := _estante([producto], 8)
+	var unidad := estante.retirar(producto)
+	assert_int(estante.disponibles_para_retirar(producto)).is_equal(7)
+	assert_bool(estante.desechar(unidad)).is_true()
+	assert_int(estante.disponibles_para_retirar(producto)).is_equal(7)
+	assert_int(estante.unidades_en_deposito(producto)).is_equal(7)
+	assert_int(estante.reservadas(producto)).is_zero()
+	for desconocida: UnidadDeProducto in [unidad, null, UnidadDeProducto.new(producto)]:
+		assert_bool(estante.desechar(desconocida)).is_false()
+	assert_int(estante.unidades_en_deposito(producto)).is_equal(7)
+	assert_int(estante.unidades_en_gondola(producto)).is_zero()
+
+
 ## Un producto con el `id` que el caso necesita, sin pasar por el catálogo.
 func _producto(id: Producto.Id) -> Producto:
 	return Producto.new(id, "de prueba", 100)

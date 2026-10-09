@@ -100,7 +100,7 @@ func test_agarrar_y_soltar_anima_el_asa_sin_mover_el_cuerpo_ni_su_carga() -> voi
 	marco.apagar()
 
 
-func test_examinar_levanta_el_asa_y_devuelve_el_balde_a_su_estado_real() -> void:
+func test_examinar_levanta_el_asa_y_devuelve_el_balde_a_la_mano() -> void:  # AC-INV-020
 	var almacen := await _almacen()
 	var balde := almacen.get_node("Objetos/Balde") as Util
 	var malla := balde.malla
@@ -108,20 +108,20 @@ func test_examinar_levanta_el_asa_y_devuelve_el_balde_a_su_estado_real() -> void
 	if not malla.has_method("mostrar_contorno"):
 		return
 	malla.set_process(false)
+	var agarre: Agarre = almacen.get("_agarre")
+	assert_bool(agarre.pedir_agarrar(balde.datos, balde)).is_true()
 	_avanzar(malla, 0.5)
-	var reposo := _angulo(malla)
 	var padre := balde.get_parent()
 	var lugar := balde.transform
 	var congelado := balde.freeze
 	var suelto := balde.top_level
 	var capa := balde.collision_layer
 	var mascara := balde.collision_mask
-	var agarre: Agarre = almacen.get("_agarre")
 	var jugador: Node3D = almacen.get("_jugador")
 	var examen: Examen = jugador.get("examen")
 	_examinar(jugador, balde)
 	assert_bool(examen.esta_examinando()).is_true()
-	assert_object(agarre.manos().sostenido()).is_null()
+	assert_object(agarre.manos().sostenido()).is_same(balde.datos)
 	assert_bool(balde.freeze).is_true()
 	assert_bool(balde.top_level).is_false()
 	_avanzar(malla, 0.5)
@@ -140,9 +140,7 @@ func test_examinar_levanta_el_asa_y_devuelve_el_balde_a_su_estado_real() -> void
 	assert_int(balde.collision_layer).is_equal(capa)
 	assert_int(balde.collision_mask).is_equal(mascara)
 	_avanzar(malla, 0.5)
-	assert_float(absf(_angulo(malla))).is_equal_approx(absf(reposo), 0.00001)
-	assert_bool(agarre.pedir_agarrar(balde.datos, balde)).is_true()
-	_avanzar(malla, 0.5)
+	assert_float(_angulo(malla)).is_equal_approx(0.0, 0.00001)
 	_examinar(jugador, balde)
 	assert_bool(examen.esta_examinando()).is_true()
 	_avanzar(malla, 0.5)

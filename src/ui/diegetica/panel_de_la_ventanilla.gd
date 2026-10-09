@@ -83,7 +83,7 @@ func ocultar() -> void:
 ## Reemplaza los renglones de la atención anterior.
 ##
 ## Se sacan del árbol **antes** de liberarlos: `queue_free()` no los desprende hasta el final del
-## cuadro, así que sin el `remove_child` el segundo comprador tendría el ticket del primero
+## cuadro, así que sin el `remove_child` el segundo comprador tendría el pedido del primero
 ## apilado encima.
 func _pintar(lineas: Array[String]) -> void:
 	for viejo in _renglones.get_children():

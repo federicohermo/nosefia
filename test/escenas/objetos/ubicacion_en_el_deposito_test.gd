@@ -130,11 +130,13 @@ func test_cada_caja_le_muestra_su_etiqueta_al_cuarto() -> void:
 		)
 
 
-func test_las_tres_bolsas_arrancan_en_el_deposito_y_lejos_del_descarte() -> void:
+func test_las_tres_bolsas_arrancan_en_el_deposito_y_lejos_del_contenedor() -> void:
 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
 	add_child(almacen)
 	await get_tree().physics_frame
-	var descarte: Node3D = almacen.get_node("Objetos/ZonaDeDescarte")
+	var contenedor: Node3D = almacen.get_node(
+		"Estructura/deposito_contenedor_soporte/deposito_contenedor_cuerpo/StaticBody3D"
+	)
 	var piso := almacen.get_node("Estructura/SueloSolido/Fondo") as CollisionShape3D
 	var tamano := (piso.shape as BoxShape3D).size
 	var limites := piso.global_transform * AABB(-tamano / 2.0, tamano)
@@ -153,11 +155,13 @@ func test_las_tres_bolsas_arrancan_en_el_deposito_y_lejos_del_descarte() -> void
 			)
 			. is_equal(1.0)
 		)
-		var distancia := lugar.distance_to(descarte.global_position)
+		var distancia := lugar.distance_to(contenedor.global_position)
 		(
 			assert_float(distancia)
-			. override_failure_message("`%s` está a %.2f m del descarte" % [bolsa.name, distancia])
-			. is_greater(ReglasDeLaBasura.DISTANCIA_MINIMA_AL_DESCARTE)
+			. override_failure_message(
+				"`%s` está a %.2f m del contenedor" % [bolsa.name, distancia]
+			)
+			. is_greater(ReglasDeLaBasura.DISTANCIA_MINIMA_AL_CONTENEDOR)
 		)
 
 

@@ -77,6 +77,13 @@ var _disponible: ObjetoAgarrable = null
 var _aristas := ShaderMaterial.new()
 
 
+func unidades_sueltas() -> Array[Node3D]:
+	var cuerpos: Array[Node3D] = []
+	for grupo: GrupoDelPiso in _sueltos:
+		cuerpos.append_array(grupo.cuerpos)
+	return cuerpos
+
+
 ## Cuántos casilleros tiene la fila de adelante de cada producto: su cupo, medido del modelo.
 ##
 ## Es lo que la apertura de cada jornada le pasa al inventario. **Sale de la disposición, y no
@@ -101,6 +108,7 @@ func preparar() -> void:
 	jugador.objetivo_perdido.connect(_al_perder_el_foco)
 	repositor.agarre.objeto_agarrado.connect(_actualizar_zonas)
 	repositor.agarre.objeto_soltado.connect(_actualizar_zonas)
+	repositor.agarre.objeto_entregado.connect(_actualizar_zonas)
 	repositor.agarre.objeto_soltado.connect(_desatascar_lo_soltado)
 	repositor.agarre.objeto_soltado.connect(_agrupar_suelto)
 	repositor.agarre.objeto_agarrado.connect(_retirar_del_grupo)
@@ -188,7 +196,7 @@ func devolver(id: Producto.Id) -> void:
 ## Lo que dice la caja examinada, o nada si lo examinado no es una caja.
 ##
 ## El texto lo arma la caja en `dominio/`, donde tiene test, y contado sobre el estante de esta
-## noche: la misma caja dice lo mismo apoyada que en la mano.
+## noche: se muestra mientras la caja se examina en la mano.
 func texto_del_examen(nodo: Node3D) -> String:
 	var caja := nodo as CajaDelDeposito
 	if caja == null:

@@ -30,15 +30,20 @@ flowchart TD
   STK["store-stock<br/><i>la mercadería</i>"]
   CLN["store-cleanup<br/><i>el local en orden</i>"]
   AMB["ambience<br/><i>qué suena</i>"]
+  NTF["notifications<br/><i>qué se avisa</i>"]
 
   CTR -- "obligatoria cumplida" --> SHF
   STK -- "obligatorias cumplidas y descumplidas" --> SHF
   CLN -- "obligatorias cumplidas" --> SHF
+  CLN -- "motivos únicos de la noche" --> EMP
+  STK -- "unidades sueltas" --> CLN
+  SHF -- "obligatorias declaradas" --> PLY
   SHF -- "cuántas se cumplieron" --> EMP
   EMP -- "jornada, legajo y final" --> SAV
   STK -- "unidades en góndola" --> CTR
   CTR -- "lo vendido" --> STK
-  PLY -- "qué se lleva, a qué distancia" --> CLN
+  PLY -- "qué se lleva y qué se tira" --> CLN
+  CLN -- "la unidad tirada" --> STK
   PLY -- "la unidad viaja en la mano" --> STK
   STK -- "qué casilleros están vacíos y cuáles ocupados" --> PLY
   PLY -- "qué objeto se examina" --> INV
@@ -50,11 +55,14 @@ flowchart TD
   CLN -.-> AMB
   PLY -.-> AMB
   INV -.-> AMB
+  CTR -.-> NTF
+  SHF -.-> NTF
 ```
 
-La línea punteada es la única relación que no es un dato: `ambience` **escucha** las señales de
-las demás y no le contesta a nadie. Por eso su tabla es un archivo y no un `match`: agregar un
-sonido no toca a quien lo emite.
+La línea punteada expresa escucha sin respuesta. `ambience` escucha las señales de las demás.
+`notifications` escucha la llegada, el rechazo del lector y el cierre del turno. Ninguna
+contesta a quien publica el suceso. Por eso la tabla de sonidos es un archivo y no un `match`:
+agregar un sonido no toca a quien lo emite.
 
 ## Las dos mitades de la resta
 

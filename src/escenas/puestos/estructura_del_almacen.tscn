@@ -1,5 +1,7 @@
 [gd_scene format=3]
 
+[ext_resource type="Script" path="res://src/escenas/puestos/habitaciones_del_almacen.gd" id="habitaciones"]
+
 [ext_resource type="PackedScene" path="res://src/escenas/puestos/reloj_de_mesa.tscn" id="8_reloj_de_mesa"]
 [ext_resource type="PackedScene" path="res://src/escenas/puestos/ventanilla.tscn" id="15_ventanilla"]
 
@@ -13,6 +15,15 @@
 [ext_resource type="PackedScene" path="res://src/escenas/puestos/contenido_del_estante.tscn" id="contenido"]
 
 [ext_resource type="Script" path="res://src/escenas/puestos/puerta_de_la_heladera.gd" id="puerta_de_heladera"]
+
+[ext_resource type="Script" path="res://src/escenas/objetos/nota_pegada.gd" id="nota_pegada"]
+[ext_resource type="PackedScene" path="res://src/escenas/objetos/nota_pegada.tscn" id="texto_nota"]
+[ext_resource type="PackedScene" path="res://src/escenas/puestos/notas_del_almacen.tscn" id="notas"]
+
+[ext_resource type="Script" path="res://src/escenas/puestos/caja_registradora.gd" id="caja_registradora"]
+[ext_resource type="PackedScene" path="res://src/escenas/puestos/lector.tscn" id="lector"]
+[ext_resource type="ArrayMesh" path="res://assets/models/caja_registradora.res" id="modelo_caja_nueva"]
+[ext_resource type="ConvexPolygonShape3D" path="res://assets/models/caja_registradora_colision.res" id="colision_caja_nueva"]
 
 [sub_resource type="BoxShape3D" id="contorno_de_gondola"]
 size = Vector3(1.800454, 2.292613, 4.978426)
@@ -1455,8 +1466,15 @@ editor_description = "Lo dibuja la mopa que se levanta, en los objetos del almac
 [node name="CollisionShape3D" parent="mopa/StaticBody3D"]
 disabled = true
 
+[node name="cajaregistradora" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.145735435, 1.113056183, 4.883701389)
+mesh = ExtResource("modelo_caja_nueva")
+
 [node name="Volumen" type="CollisionShape3D" parent="cajaregistradora/StaticBody3D"]
-shape = SubResource("casco_17")
+shape = ExtResource("colision_caja_nueva")
+
+[node name="CollisionShape3D" parent="cajaregistradora/StaticBody3D"]
+disabled = true
 
 [node name="Volumen" type="CollisionShape3D" parent="tachitobasura/StaticBody3D"]
 shape = SubResource("casco_24")
@@ -2163,3 +2181,76 @@ shape = SubResource("hoja_de_heladera")
 position = Vector3(10.833626775, 3.383932600, 6.342011573)
 scale = Vector3(0.997537081, 0.997537081, 0.997537081)
 shape = SubResource("frente_exterior_bano")
+
+[node name="board de tareas_002" parent="board tareas"]
+transform = Transform3D(0.318228, 0, 0, 0, 0.285204, 0, 0, 0, 0.640884, -0.446582, 0.008555, 0)
+
+[node name="board de tareas_001" parent="board tareas"]
+transform = Transform3D(0.318228, 0, 0, 0, 0.285204, 0, 0, 0, 0.640884, 0.559394, 0.008555, 0)
+
+[node name="board de tareas_003" parent="board tareas"]
+visible = false
+
+[node name="board de tareas_004" parent="board tareas"]
+visible = false
+
+[node name="board de tareas_005" parent="board tareas"]
+visible = false
+
+[node name="StaticBody3D" parent="board tareas/board de tareas_002" node_paths=PackedStringArray("mallas", "titulo_del_papel", "renglones_del_papel", "grafica_de_tareas", "grafica_de_orden") groups=["interactuable"]]
+script = ExtResource("nota_pegada")
+id = 0
+mallas = [NodePath("..")]
+titulo_del_papel = NodePath("../TextoDeLaNota/Titulo")
+renglones_del_papel = NodePath("../TextoDeLaNota/Renglones")
+grafica_de_tareas = NodePath("../TextoDeLaNota/Tareas")
+grafica_de_orden = NodePath("../TextoDeLaNota/Orden")
+
+[node name="TextoDeLaNota" parent="board tareas/board de tareas_002" instance=ExtResource("texto_nota")]
+
+[node name="StaticBody3D" parent="board tareas/board de tareas_001" node_paths=PackedStringArray("mallas", "titulo_del_papel", "renglones_del_papel", "grafica_de_tareas", "grafica_de_orden") groups=["interactuable"]]
+script = ExtResource("nota_pegada")
+id = 1
+mallas = [NodePath("..")]
+titulo_del_papel = NodePath("../TextoDeLaNota/Titulo")
+renglones_del_papel = NodePath("../TextoDeLaNota/Renglones")
+grafica_de_tareas = NodePath("../TextoDeLaNota/Tareas")
+grafica_de_orden = NodePath("../TextoDeLaNota/Orden")
+
+[node name="TextoDeLaNota" parent="board tareas/board de tareas_001" instance=ExtResource("texto_nota")]
+
+[node name="StaticBody3D" parent="nota productos" node_paths=PackedStringArray("mallas") groups=["interactuable"]]
+script = ExtResource("nota_pegada")
+id = 2
+mallas = [NodePath("..")]
+
+[node name="StaticBody3D" parent="nota instrucciones" node_paths=PackedStringArray("mallas") groups=["interactuable"]]
+script = ExtResource("nota_pegada")
+id = 3
+mallas = [NodePath("..")]
+
+[node name="StaticBody3D" parent="nota baño inodoro" node_paths=PackedStringArray("mallas") groups=["interactuable"]]
+script = ExtResource("nota_pegada")
+id = 4
+mallas = [NodePath("..")]
+
+[node name="NotasDelAlmacen" parent="." node_paths=PackedStringArray("notas") instance=ExtResource("notas")]
+notas = [NodePath("../board tareas/board de tareas_002/StaticBody3D"), NodePath("../board tareas/board de tareas_001/StaticBody3D"), NodePath("../nota productos/StaticBody3D"), NodePath("../nota instrucciones/StaticBody3D"), NodePath("../nota baño inodoro/StaticBody3D")]
+
+[node name="StaticBody3D" parent="cajaregistradora" node_paths=PackedStringArray("ranura", "destino_de_los_tickets", "mallas") groups=["interactuable"]]
+script = ExtResource("caja_registradora")
+ranura = NodePath("../Ranura")
+destino_de_los_tickets = NodePath("../..")
+mallas = [NodePath("..")]
+
+[node name="Ranura" type="Marker3D" parent="cajaregistradora"]
+position = Vector3(0.135307312, 0.130666852, -0.004085541)
+
+[node name="Lector" parent="." instance=ExtResource("lector")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.112113647, 1.036667109, 5.361603802)
+
+[node name="HabitacionesDelAlmacen" type="Node3D" parent="."]
+script = ExtResource("habitaciones")
+local = Array[AABB]([AABB(-2.480001, 0.10223747, -7.870002, 10.350003, 4.26776453, 14.150004)])
+deposito = Array[AABB]([AABB(-4.594377, 0.10273747, -15.397972, 9.24129482, 4.76686044, 7.144682), AABB(4.64691782, 0.10273747, -15.397972, 3.27861418, 4.76993053, 7.144682), AABB(5.882002, 0.10223747, -8.25329, 1.724, 2.78376353, 0.383288)])
+bano = Array[AABB]([AABB(8.291861, 0.10223747, -0.311377, 0.050147, 3.12770453, 6.589699), AABB(8.342008, 0.10223747, -0.311377, 5.092652, 4.62253553, 4.065173), AABB(8.342008, 0.10223747, 3.753796, 5.092652, 4.76716353, 0.041553), AABB(8.342008, 0.10223747, 3.795349, 5.092652, 3.13772953, 2.482973), AABB(7.870002, 0.10223747, -0.104, 0.21, 2.74776353, 1.680001), AABB(8.080002, 0.10223747, -0.10535, 0.211859, 2.74974353, 1.682871)])

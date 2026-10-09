@@ -52,3 +52,6 @@ transform = Transform3D(1,  0,  0,  0,  1,  0,  0,  0,  1, 2.7, 3.9, 5.1)
 
 [node name="Ventanilla" type="Marker3D" parent="Emisores"]
 transform = Transform3D(1,  0,  0,  0,  1,  0,  0,  0,  1, -0.8, 1.4, 6.38)
+
+[node name="Caja" type="Marker3D" parent="Emisores"]
+position = Vector3(1.469662, 1.047918, 4.883701)

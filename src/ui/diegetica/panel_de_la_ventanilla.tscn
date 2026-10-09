@@ -1,7 +1,6 @@
 [gd_scene format=3]
 [ext_resource type="Script" path="res://src/ui/diegetica/panel_de_la_ventanilla.gd" id="1"]
 [ext_resource type="Theme" path="res://assets/ui/manada/tema.tres" id="2"]
-[ext_resource type="Texture2D" path="res://assets/ui/manada/fondo_ventanilla.png" id="3"]
 [ext_resource type="Texture2D" path="res://assets/ui/manada/cabecera.svg" id="4"]
 [ext_resource type="Texture2D" path="res://assets/ui/manada/linea_detalle.svg" id="5"]
 [ext_resource type="Texture2D" path="res://assets/ui/manada/solapa.svg" id="6"]
@@ -29,17 +28,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-color = Color(0.015, 0.025, 0.025, 1)
-
-[node name="Imagen" type="TextureRect" parent="Fondo"]
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-texture = ExtResource("3")
-expand_mode = 1
-stretch_mode = 6
+color = Color(0, 0, 0, 0)
 mouse_filter = 2
 
 [node name="Velo" type="ColorRect" parent="Fondo"]

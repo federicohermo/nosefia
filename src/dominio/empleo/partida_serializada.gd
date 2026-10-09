@@ -4,7 +4,7 @@
 class_name PartidaSerializada
 extends RefCounted
 
-enum Campo { JORNADA, APERCIBIMIENTOS }
+enum Campo { JORNADA, MEDIOS }
 
 const VERSION: int = 1
 const CLAVE_DE_VERSION := "version"
@@ -12,7 +12,7 @@ const CLAVE_DE_VERSION := "version"
 ## El tipo de cada campo es el de su defecto.
 const DEFECTOS: Dictionary[Campo, Variant] = {
 	Campo.JORNADA: ReglasDeLaPartida.PRIMERA_JORNADA,
-	Campo.APERCIBIMIENTOS: 0,
+	Campo.MEDIOS: 0,
 }
 
 

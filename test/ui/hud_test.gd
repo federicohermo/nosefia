@@ -67,7 +67,6 @@ func test_el_hud_sigue_pintando_lo_que_si_es_suyo() -> void:
 	# El par del caso de arriba: sin esto, borrar el archivo entero lo dejaría en verde.
 	var texto := FileAccess.get_file_as_string(HUD)
 	assert_str(texto).contains("func mostrar_tareas")
-	assert_str(texto).contains("func mostrar_apercibimientos")
 
 
 func test_la_hora_se_fue_del_hud_con_todo_lo_que_traia() -> void:
@@ -83,7 +82,7 @@ func test_la_hora_se_fue_del_hud_con_todo_lo_que_traia() -> void:
 		)
 
 
-func test_la_escena_del_hud_perdio_el_reloj_y_conserva_los_otros_dos() -> void:
+func test_la_escena_del_hud_conserva_el_contador_de_tareas() -> void:
 	# **El `node_paths` de la raíz pierde `"_reloj"` además del `Label`.** Si el nombre quedara
 	# declarado apuntando a un nodo que ya no está, la escena carga sin un solo error y el juego
 	# muere en el primer cuadro con un mensaje que no nombra al `.tscn`.
@@ -94,7 +93,6 @@ func test_la_escena_del_hud_perdio_el_reloj_y_conserva_los_otros_dos() -> void:
 		. is_false()
 	)
 	assert_bool(hud.has_node("Tareas")).is_true()
-	assert_bool(hud.has_node("Apercibimientos")).is_true()
 	assert_str(FileAccess.get_file_as_string(ESCENA_DEL_HUD)).not_contains("_reloj")
 
 

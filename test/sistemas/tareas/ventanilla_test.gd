@@ -1,7 +1,7 @@
 ## El nodo que atiende adentro del motor: pide el comprador siguiente, cobra y publica.
 ##
 ## **Ningún caso entra el nodo al árbol.** Se instancia con `auto_free(Ventanilla.new())` y se le
-## llama a mano; el único `_process()` que corre en esta suite es el del reloj, y se lo llama
+## llama a mano; el único `avanzar()` que corre en esta suite es el del reloj, y se lo llama
 ## explícitamente porque el caso del tiempo mide justamente que nadie lo haya pausado.
 extends GdUnitTestSuite
 
@@ -155,7 +155,7 @@ func test_el_turno_sigue_corriendo_con_la_ventanilla_abierta() -> void:
 	var ventanilla := _ventanilla(2)
 	ventanilla.pedir_atender()
 	var antes := _turno.tiempo_restante()
-	ventanilla.reloj._process(SEGUNDOS_REALES_ABIERTA)
+	ventanilla.reloj.avanzar(SEGUNDOS_REALES_ABIERTA)
 	var gastado := antes - _turno.tiempo_restante()
 	assert_float(gastado).is_equal(Ritmo.escalar(SEGUNDOS_REALES_ABIERTA))
 
@@ -262,10 +262,15 @@ func test_la_ventanilla_sin_cablear_no_hace_nada_y_lo_dice() -> void:
 	ventanilla.comprador_llegado.connect(_anotar_llegado)
 	ventanilla.cobro_rechazado.connect(_anotar_rechazo)
 	ventanilla.ventanilla_vacia.connect(_anotar_vacia)
-	ventanilla.pedir_abrir()
-	ventanilla.pedir_atender()
-	ventanilla.pedir_cobrar()
-	ventanilla.pedir_despachar_sin_vender()
+	for pedir: Callable in [
+		ventanilla.pedir_abrir,
+		ventanilla.pedir_atender,
+		ventanilla.pedir_cobrar,
+		ventanilla.pedir_despachar_sin_vender,
+	]:
+		await (assert_error(pedir).is_push_error(
+			"Ventanilla sin cablear: revisar almacen.tscn y almacen.gd"
+		))
 	assert_int(_llegados).is_equal(0)
 	assert_int(_rechazos).is_equal(0)
 	assert_int(_vacia).is_equal(0)

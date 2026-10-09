@@ -23,7 +23,7 @@ func test_cerrar_una_noche_no_toca_la_partida_del_usuario() -> void:
 	add_child(almacen)
 	await get_tree().process_frame
 	var reloj: RelojDelTurno = almacen.get("_reloj")
-	reloj._process(SEGUNDOS_REALES_DE_UN_TURNO)
+	reloj.avanzar(SEGUNDOS_REALES_DE_UN_TURNO)
 	await get_tree().process_frame
 	assert_bool((almacen.get("_pantalla") as PantallaDeCierre).visible).is_true()
 	assert_str(_huella_del_usuario()).is_equal(antes)

@@ -18,8 +18,7 @@ static func datos(partida: Partida) -> Dictionary:
 		. sanear(
 			{
 				PartidaSerializada.clave(PartidaSerializada.Campo.JORNADA): partida.jornada(),
-				PartidaSerializada.clave(PartidaSerializada.Campo.APERCIBIMIENTOS):
-				partida.apercibimientos(),
+				PartidaSerializada.clave(PartidaSerializada.Campo.MEDIOS): partida.medios(),
 			}
 		)
 	)

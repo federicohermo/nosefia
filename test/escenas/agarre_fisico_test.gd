@@ -96,20 +96,23 @@ func test_la_bolsa_sostenida_no_desplaza_al_jugador() -> void:
 		)
 
 
-func test_soltar_en_el_descarte_entrega_el_id_al_recolector() -> void:
+func test_el_izquierdo_en_el_contenedor_entrega_la_bolsa_al_recolector() -> void:  # AC-CLN-036
 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
 	add_child(almacen)
 	var jugador: CharacterBody3D = almacen.get_node("Jugador")
-	var bolsa: RigidBody3D = almacen.get_node("Objetos/BolsaDeBasura1")
+	jugador.set_physics_process(false)
+	var bolsa: ObjetoAgarrable = almacen.get_node("Objetos/BolsaDeBasura1")
 	var agarre: Agarre = jugador.get("agarre")
-	var zona: Area3D = almacen.get_node("Objetos/ZonaDeDescarte")
-	var recolector: RecolectorDeBasura = almacen.get_node("Servicios/Recolector")
-	var datos: ObjetoDelAlmacen = bolsa.get("datos")
-	jugador.global_position = zona.global_position + Vector3.BACK
-	assert_bool(agarre.pedir_agarrar(datos, bolsa)).is_true()
-	agarre.punto_de_soltado.global_position = zona.global_position + Vector3.UP * 0.3
-	assert_object(agarre.soltar(true)).is_same(bolsa)
-	for cuadro in 5:
-		await get_tree().physics_frame
-	assert_bool(recolector.tarea().esta_depositada(datos.id)).is_true()
+	var contenedor: Node3D = almacen.get_node(
+		"Estructura/deposito_contenedor_soporte/deposito_contenedor_cuerpo/StaticBody3D"
+	)
+	assert_bool(agarre.pedir_agarrar(bolsa.datos, bolsa)).is_true()
+	jugador.set("_enfocado", contenedor)
+	var clic := InputEventMouseButton.new()
+	clic.button_index = MOUSE_BUTTON_LEFT
+	clic.pressed = true
+	jugador.call("_unhandled_input", clic)
+	var recolector: RecolectorDeBasura = almacen.get("_recolector")
+	assert_bool(recolector.tarea().esta_depositada(bolsa.datos.id)).is_true()
 	assert_int(recolector.tarea().depositadas()).is_equal(1)
+	assert_object(agarre.manos().sostenido()).is_null()

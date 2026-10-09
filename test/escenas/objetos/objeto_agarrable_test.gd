@@ -110,3 +110,28 @@ func test_las_dos_acciones_del_006_estan_declaradas_en_el_proyecto() -> void:
 			)
 			. is_true()
 		)
+
+
+func test_volver_restaura_padre_visibilidad_y_fisica_originales() -> void:  # AC-CLN-038
+	var mundo: Node3D = auto_free(Node3D.new())
+	add_child(mundo)
+	var otro: Node3D = auto_free(Node3D.new())
+	mundo.add_child(otro)
+	var objeto := _objeto() as ObjetoAgarrable
+	objeto.collision_layer = 5
+	objeto.collision_mask = 9
+	mundo.add_child(objeto)
+	var pose := objeto.transform
+	objeto.reparent(otro)
+	objeto.position = Vector3(8, 4, 9)
+	objeto.hide()
+	objeto.freeze = true
+	objeto.collision_layer = 0
+	objeto.collision_mask = 0
+	objeto.volver_a_su_lugar()
+	assert_object(objeto.get_parent()).is_same(mundo)
+	assert_bool(objeto.visible).is_true()
+	assert_bool(objeto.freeze).is_false()
+	assert_bool(objeto.transform.is_equal_approx(pose)).is_true()
+	assert_int(objeto.collision_layer).is_equal(5)
+	assert_int(objeto.collision_mask).is_equal(9)

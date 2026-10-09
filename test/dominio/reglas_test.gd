@@ -37,3 +37,5 @@ func test_una_jornada_grave_pesa_el_doble_que_un_aviso() -> void:
 	# Es de acá que sale que dos jornadas graves seguidas despidan y tres de aviso todavía no.
 	assert_int(Reglas.APERCIBIMIENTOS_POR_AVISO).is_equal(1)
 	assert_int(Reglas.APERCIBIMIENTOS_POR_BANDA_GRAVE).is_equal(2)
+	assert_int(Reglas.MEDIOS_POR_APERCIBIMIENTO).is_equal(2)
+	assert_int(Reglas.MEDIOS_POR_LLAMADO).is_equal(1)

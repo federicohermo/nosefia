@@ -23,6 +23,11 @@ var material_de_foco: Material = null
 
 ## Dónde lo dejó la escena. Se guarda en `_ready()` y no en la declaración porque el `transform`
 ## que importa es el que le puso el `.tscn`, y ése recién existe cuando el nodo entró al árbol.
+var _padre_de_origen: Node
+var _capa_de_origen: int
+var _mascara_de_origen: int
+var _congelado_de_origen: bool
+var _visible_de_origen: bool
 var _lugar_de_origen: Transform3D
 var _origen_en_el_mundo: Transform3D
 var _rapidez := 0.0
@@ -30,6 +35,11 @@ var _rapidez_previa := 0.0
 
 
 func _ready() -> void:
+	_padre_de_origen = get_parent()
+	_capa_de_origen = collision_layer
+	_mascara_de_origen = collision_mask
+	_congelado_de_origen = freeze
+	_visible_de_origen = visible
 	_lugar_de_origen = transform
 	_origen_en_el_mundo = global_transform
 	contact_monitor = true
@@ -46,28 +56,19 @@ func _integrate_forces(estado: PhysicsDirectBodyState3D) -> void:
 	_rapidez = estado.linear_velocity.length()
 
 
-## Lo devuelve a donde empezó la noche.
-##
-## **El dominio se resetea y los nodos no**: al abrir la jornada el recolector vuelve a
-## `depositadas() == 0`, pero las bolsas siguen físicamente adentro del `Area3D` del fondo, así
-## que desde la jornada 2 sacar la basura no cuesta un paso — está hecha antes de empezar.
-##
-## Las velocidades van a cero además del `transform` porque un `RigidBody3D` teletransportado
-## conserva su impulso y se va solo del lugar al que lo acaban de mandar. El `freeze` alrededor
-## es lo que evita que el servidor de física pise la escritura en el mismo cuadro, y se restaura
-## al valor que tenía en vez de apagarse: el objeto puede estar congelado porque lo están
-## llevando, y despertarlo acá lo dejaría caer.
-##
-## El reseteo de la interpolación cierra lo mismo del lado del dibujo. El motor dibuja entre el
-## paso anterior y el actual. Sin el reseteo, el cuerpo se dibuja cruzando el almacén en un
-## cuadro.
+## Devuelve padre, pose y cuerpo físico de arranque, incluso después de un tiro al contenedor.
 func volver_a_su_lugar() -> void:
-	var estaba_congelado := freeze
 	freeze = true
+	if get_parent() != _padre_de_origen:
+		reparent(_padre_de_origen)
+	top_level = false
 	transform = _lugar_de_origen
 	linear_velocity = Vector3.ZERO
 	angular_velocity = Vector3.ZERO
-	freeze = estaba_congelado
+	collision_layer = _capa_de_origen
+	collision_mask = _mascara_de_origen
+	visible = _visible_de_origen
+	freeze = _congelado_de_origen
 	reset_physics_interpolation()
 
 

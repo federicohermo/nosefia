@@ -1,8 +1,8 @@
 ## La memoria entre jornadas: cuántos apercibimientos lleva acumulados y si ya lo echaron.
 ##
 ## Lo que este archivo fija no es código, son las dos lecturas ambiguas del GDD que el equipo
-## cerró: las tres bandas pesan distinto sobre el despido, y una jornada completa **reinicia**
-## el contador en vez de descontarle uno.
+## cerró: las tres bandas pesan distinto sobre el despido, y una jornada completa conserva
+## los apercibimientos acumulados.
 extends GdUnitTestSuite
 
 ## Lo justo para caer en cada banda, sacado del corte y no escrito a mano.
@@ -17,9 +17,10 @@ func test_un_legajo_nuevo_no_tiene_apercibimientos_ni_despido() -> void:
 
 
 func test_una_jornada_completa_no_suma_apercibimientos() -> void:  # AC-EMP-005
-	var legajo := Legajo.new()
+	var legajo := Legajo.con_medios((3) * Reglas.MEDIOS_POR_APERCIBIMIENTO)
 	legajo.registrar(5, 5)
-	assert_int(legajo.apercibimientos()).is_equal(0)
+	assert_int(legajo.apercibimientos()).is_equal(3)
+	assert_bool(legajo.despedido()).is_false()
 
 
 func test_el_aviso_suma_uno_y_la_banda_grave_suma_dos() -> void:  # AC-EMP-003
@@ -57,17 +58,14 @@ func test_dos_jornadas_graves_seguidas_alcanzan_para_el_despido() -> void:  # AC
 	assert_bool(legajo.despedido()).is_true()
 
 
-# AC-EMP-005
-func test_una_jornada_completa_reinicia_el_contador_en_vez_de_descontarle_uno() -> void:
-	# Sin el reinicio, la cuarta jornada de esta secuencia cerraría en 6 y despediría.
-	var legajo := Legajo.new()
-	legajo.registrar(2, 5)
-	legajo.registrar(2, 5)
+func test_una_jornada_completa_con_deuda_deja_el_aviso_siguiente_en_despido() -> void:  # AC-EMP-005
+	var legajo := Legajo.con_medios((3) * Reglas.MEDIOS_POR_APERCIBIMIENTO)
 	legajo.registrar(5, 5)
-	assert_int(legajo.apercibimientos()).is_equal(0)
-	legajo.registrar(2, 5)
-	assert_int(legajo.apercibimientos()).is_equal(2)
+	assert_int(legajo.apercibimientos()).is_equal(3)
 	assert_bool(legajo.despedido()).is_false()
+	legajo.registrar(AVISO, 5)
+	assert_int(legajo.apercibimientos()).is_equal(4)
+	assert_bool(legajo.despedido()).is_true()
 
 
 # AC-EMP-007
@@ -112,9 +110,9 @@ func test_el_contador_puede_pasar_de_largo_el_umbral_sin_pisarlo() -> void:  # A
 func test_la_jornada_completa_se_mide_contra_las_obligatorias_y_no_contra_un_cinco() -> void:
 	# Con 3 obligatorias, cumplir 3 es cumplir todas. Una implementación que compare contra un
 	# 5 escrito a mano cuenta esto como banda grave y suma apercibimientos.
-	var cumplidor := Legajo.new()
+	var cumplidor := Legajo.con_medios((3) * Reglas.MEDIOS_POR_APERCIBIMIENTO)
 	cumplidor.registrar(3, 3)
-	assert_int(cumplidor.apercibimientos()).is_equal(0)
+	assert_int(cumplidor.apercibimientos()).is_equal(3)
 
 	var incumplidor := Legajo.new()
 	incumplidor.registrar(2, 3)
@@ -127,7 +125,7 @@ func test_un_legajo_restaurado_sigue_contando_desde_donde_quedo() -> void:  # AC
 	# vacío, y una historia de jornadas graves repartida entre dos sesiones no despide a nadie
 	# —un bug que pasa en verde, porque todo test construye el legajo en la misma corrida en
 	# que lo ejerce.
-	var legajo := Legajo.con_apercibimientos(2)
+	var legajo := Legajo.con_medios((2) * Reglas.MEDIOS_POR_APERCIBIMIENTO)
 	assert_int(legajo.apercibimientos()).is_equal(2)
 	assert_bool(legajo.despedido()).is_false()
 	legajo.registrar(0, 5)
@@ -136,6 +134,33 @@ func test_un_legajo_restaurado_sigue_contando_desde_donde_quedo() -> void:  # AC
 
 
 func test_restaurar_un_legajo_en_cero_es_lo_mismo_que_uno_nuevo() -> void:  # AC-EMP-012
-	var restaurado := Legajo.con_apercibimientos(0)
+	var restaurado := Legajo.con_medios((0) * Reglas.MEDIOS_POR_APERCIBIMIENTO)
 	assert_int(restaurado.apercibimientos()).is_equal(Legajo.new().apercibimientos())
 	assert_bool(restaurado.despedido()).is_false()
+
+
+func test_una_jornada_impecable_con_legajo_limpio_lo_conserva_en_cero() -> void:
+	var legajo := Legajo.new()
+	legajo.registrar(5, 5)
+	assert_int(legajo.apercibimientos()).is_zero()
+
+
+func test_dos_graves_con_una_impecable_en_el_medio_despiden() -> void:  # AC-EMP-004
+	var legajo := Legajo.new()
+	legajo.registrar(0, 5)
+	assert_int(legajo.apercibimientos()).is_equal(2)
+	legajo.registrar(5, 5)
+	assert_int(legajo.apercibimientos()).is_equal(2)
+	legajo.registrar(0, 5)
+	assert_int(legajo.apercibimientos()).is_equal(4)
+	assert_bool(legajo.despedido()).is_true()
+
+
+func test_la_quinta_impecable_con_deuda_cumple_el_contrato() -> void:  # AC-EMP-008
+	var legajo := Legajo.con_medios((3) * Reglas.MEDIOS_POR_APERCIBIMIENTO)
+	var partida := Partida.new(legajo)
+	for _jornada in ReglasDeLaPartida.JORNADAS_DE_LA_PARTIDA:
+		partida.abrir_la_jornada()
+		partida.cerrar_la_jornada(Apertura.cantidad_de_obligatorias())
+	assert_int(partida.final()).is_equal(Partida.Final.CONTRATO_CUMPLIDO)
+	assert_int(legajo.apercibimientos()).is_equal(3)

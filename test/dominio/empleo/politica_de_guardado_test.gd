@@ -20,13 +20,13 @@ func test_las_acciones_son_escribir_y_borrar_y_ninguna_mas() -> void:  # AC-SAV-
 	assert_int(PoliticaDeGuardado.accion(despedido)).is_equal(PoliticaDeGuardado.Accion.BORRAR)
 
 
-func test_los_datos_llevan_la_jornada_y_los_apercibimientos_de_la_partida() -> void:
+func test_los_datos_llevan_la_jornada_y_los_medios_de_la_partida() -> void:
 	var partida := Partida.nueva()
 	_cerrar_grave(partida)
 	var datos := PoliticaDeGuardado.datos(partida)
 	var retomada := Partida.desde(datos)
 	assert_int(retomada.jornada()).is_equal(partida.jornada())
-	assert_int(retomada.apercibimientos()).is_equal(partida.apercibimientos())
+	assert_int(retomada.medios()).is_equal(partida.medios())
 	assert_int(datos[PartidaSerializada.CLAVE_DE_VERSION]).is_equal(PartidaSerializada.VERSION)
 
 

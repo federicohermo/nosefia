@@ -1,7 +1,7 @@
 ---
 schema_version: 1
 capability_id: CAP-CTR
-status: draft
+status: ratified
 owner: por definir
 provenance: GDD «Atención por ventanilla»; migración de los specs 013, 035
 ---
@@ -24,6 +24,10 @@ jugador**: es el único lugar donde el juego puede mentir en vivo.
 | **Despachar** | dar por terminada la atención, se le haya vendido o no | atender, cerrar |
 | **Ventanilla** | la única ventana por la que se atiende. Nadie entra al local | mostrador, caja |
 | **Vendibles** | las unidades de un producto que se pueden vender: lo que queda en la caja y el estante no necesita | stock, disponible |
+| **Lector** | aparato fijo que anota la unidad sostenida en el programa | caja, escáner de inventario |
+| **Programa de tickets** | tres renglones de productos que se borran o imprimen | pedido del comprador |
+| **Renglón** | un producto anotado; puede repetirse | cantidad, precio |
+| **Ticket** | papel que conserva los productos anotados al imprimir | pedido de la ventanilla |
 
 ## Comportamiento normativo
 
@@ -77,9 +81,9 @@ diferencia no es plata que falte.
 ### BR-CTR-011 — La ventanilla dice qué falta
 
 SI el pedido tiene productos que superan sus vendibles, ENTONCES el sistema DEBE nombrarlos, en
-el orden del ticket. Es la explicación de por qué el cobro va a fallar.
+el orden del pedido. Es la explicación de por qué el cobro va a fallar.
 
-### BR-CTR-012 — El ticket no da la cuenta hecha
+### BR-CTR-012 — El pedido no da la cuenta hecha
 
 El sistema DEBE mostrar las líneas del pedido **sin el precio de cada una**, y mostrar aparte el
 total, lo que paga y la diferencia. Repartir el precio por renglón le daría al jugador la cuenta
@@ -102,6 +106,68 @@ repuesto, y nada se lo avisa al jugador.
 CUANDO se pregunta cuántas unidades de un producto se vendieron en la noche, el sistema DEBE
 sumar sus unidades en los pedidos **cobrados**. Un comprador despachado sin vender y un cobro
 rechazado no suman nada, y un producto que nadie compró contesta 0.
+
+### BR-CTR-016 — Tres renglones en orden
+
+MIENTRAS el programa es automático, CUANDO se lee una unidad de producto válida, el sistema DEBE anotar su producto en el primer
+renglón vacío de los 3 disponibles, esté abierto o cerrado el programa. DEBE admitir repetir
+el producto y DEBE avisar una lectura correcta sólo cuando se anotó.
+
+### BR-CTR-017 — Los rechazos se distinguen y no escriben
+
+MIENTRAS el programa es automático, SI lo leído no es una unidad de producto válida, ENTONCES el sistema DEBE rechazar por tipo
+antes de comprobar si está lleno. SI ya están llenos los 3 renglones y la unidad es válida,
+ENTONCES DEBE rechazar por lleno. Ambos rechazos DEBEN avisarse, sin cambiar los renglones.
+
+### BR-CTR-018 — Borrar vacía los tres
+
+CUANDO se pide borrar, el sistema DEBE dejar los 3 renglones vacíos, incluso si ya lo estaban.
+
+### BR-CTR-019 — Imprimir no borra el programa
+
+CUANDO se imprime con al menos un renglón lleno, el sistema DEBE crear un ticket y avisar su
+impresión, conservando los renglones del programa. SI están vacíos, ENTONCES NO DEBE crear
+papel ni avisar impresión.
+
+### BR-CTR-020 — El papel conserva una copia independiente
+
+El ticket DEBE conservar los productos de los renglones llenos, en su orden, sin cambiar al
+borrar o modificar el programa. Dos impresiones DEBEN ser dos papeles independientes.
+Consultar los renglones NO DEBE permitir cambiar el programa ni el ticket.
+
+### BR-CTR-021 — Cada jornada empieza vacía
+
+CUANDO abre una jornada, el sistema DEBE iniciar el programa vacío y DEBE retirar los tickets
+de la noche anterior, estén en la mano, en la ranura o sueltos.
+
+### BR-CTR-022 — Desde la tercera noche se escribe a mano
+
+DESDE la jornada 3 y hasta el fin de la partida, el programa DEBE ser manual. Antes DEBE ser
+automático. El modo DEBE salir del número de jornada: retomar una partida en la 4 no recupera
+el lector, y una partida nueva vuelve al automático.
+
+### BR-CTR-023 — Cada elección conserva su renglón
+
+MIENTRAS el programa es manual, cada uno de los 3 renglones DEBE permitir elegir vacío o
+cualquier producto del catálogo, incluidos productos repetidos. Elegir vacío DEBE vaciar
+sólo ese renglón. La pantalla DEBE conservar cada posición al repintar, abrir o imprimir,
+aunque los anteriores estén vacíos; el papel DEBE llevar sólo los llenos en su orden.
+SI el programa es automático o el renglón está fuera de los 3, ENTONCES elegir NO DEBE
+cambiar nada. Los menús DEBEN ofrecer primero vacío y después el catálogo en su orden.
+
+### BR-CTR-024 — El hueco no lee ni avisa
+
+MIENTRAS el programa es manual, el lector NO DEBE estar: su lugar DEBE quedar ocupado por
+un hueco fijo, no levantable. Usarlo NO DEBE cambiar renglones ni producir avisos o sonidos,
+con manos vacías o con cualquier objeto, esté vacío o lleno el programa. Este silencio
+DEBE preceder a los rechazos por tipo o por lleno del modo automático.
+
+### BR-CTR-025 — El ticket se desecha en el inodoro
+
+CUANDO se usa el inodoro con un ticket en la mano, el sistema DEBE quitar ese ticket del mundo,
+dejar la mano vacía y publicar una vez su descarte. Ningún otro levantable DEBE desaparecer por
+usar el inodoro. Las herramientas DEBEN conservar los efectos de limpieza vigentes. Usar el
+lavatorio con un ticket NO DEBE desecharlo.
 
 ## Criterios de aceptación
 
@@ -160,7 +226,7 @@ DADO un pedido de dos productos, uno que supera sus vendibles y otro que no, CUA
 aviso ENTONCES nombra sólo al primero; con los dos dentro de sus vendibles, el aviso es la cadena
 vacía.
 
-### AC-CTR-013 — El ticket no lleva precios por línea *(verifica BR-CTR-012)*
+### AC-CTR-013 — El pedido no lleva precios por línea *(verifica BR-CTR-012)*
 
 DADO un pedido CUANDO se leen sus renglones ENTONCES cada línea lleva unidades y nombre, ningún
 precio unitario, y al final están el total, lo que paga y la diferencia.
@@ -208,6 +274,95 @@ rechaza ENTONCES lo vendido sigue en 0.
 DADO dos ventas cobradas CUANDO se pregunta por un producto que no estaba en ningún pedido
 ENTONCES lo vendido es 0.
 
+### AC-CTR-021 — Duplicados y cuarto intento *(verifica BR-CTR-016, BR-CTR-017)*
+
+DADO el programa automático vacío, CUANDO se lee una unidad de Marolini, otra de Marolini y una de
+Coracola ENTONCES los renglones son Marolini, Marolini y Coracola, en ese orden, y se avisan
+3 lecturas. CUANDO se lee una cuarta unidad válida ENTONCES se rechaza por lleno y nada cambia.
+
+### AC-CTR-022 — El tipo se comprueba primero *(verifica BR-CTR-017)*
+
+DADO un programa automático con un renglón lleno, CUANDO se lee una caja, mopa, balde, jabón, bolsa o ticket ENTONCES se
+rechaza por no ser un producto y nada cambia. DADO los 3 llenos, ENTONCES ese rechazo sigue
+siendo por tipo. DADO ningún dato o una unidad sin producto ENTONCES tampoco se anota.
+
+### AC-CTR-023 — Copia, borrado y nueva impresión *(verifica BR-CTR-018, BR-CTR-019, BR-CTR-020)*
+
+DADO Marolini y Coracola anotados, CUANDO se imprime dos veces ENTONCES hay dos tickets
+distintos con esos productos en su orden y el programa sigue igual. CUANDO se borra y se
+modifica una copia consultada ENTONCES el programa queda vacío y ambos tickets conservan
+Marolini y Coracola. Modificar el arreglo recibido o devuelto por un ticket no lo cambia.
+
+### AC-CTR-024 — Vacío no imprime *(verifica BR-CTR-018, BR-CTR-019)*
+
+DADO el programa vacío, CUANDO se imprime, se borra y se imprime de nuevo ENTONCES no hay
+ticket ni aviso de impresión, y los renglones siguen vacíos.
+
+### AC-CTR-025 — La próxima noche retira los papeles *(verifica BR-CTR-021)*
+
+DADO un ticket en la mano, otro suelto y el programa con un producto, CUANDO abre otra jornada
+ENTONCES el programa está vacío, las manos están vacías y ninguno de esos papeles existe.
+
+### AC-CTR-026 — El corte es la jornada tres *(verifica BR-CTR-022)*
+
+DADO jornadas 1, 2, 3, 4 y 5, CUANDO abre cada una ENTONCES las 1 y 2 son automáticas y
+las 3, 4 y 5 manuales. DADO una partida retomada en la 4 ENTONCES abre manual; CUANDO
+se abre una partida nueva ENTONCES vuelve al automático. Abrir la 3 tras escribir en la 2
+deja los 3 renglones vacíos.
+
+### AC-CTR-027 — Elegir y vaciar conserva los otros *(verifica BR-CTR-023)*
+
+DADO el modo manual, CUANDO se elige cada producto del catálogo en cada renglón ENTONCES
+ese renglón conserva el producto. DADO Marolini en los 3 CUANDO se vacía el segundo ENTONCES
+el primero y el tercero siguen en Marolini. DADO un índice -1 o 3 ENTONCES elegir se rechaza
+y consultar devuelve vacío. DADO el modo automático ENTONCES ninguna elección lo modifica.
+
+### AC-CTR-028 — Los huecos de la pantalla no se compactan *(verifica BR-CTR-023, BR-CTR-020)*
+
+DADO Marolini sólo en el segundo o sólo en el tercero, CUANDO se repinta, imprime, cierra
+y abre el programa ENTONCES la pantalla conserva ese renglón y el papel lleva sólo Marolini.
+DADO el primero vacío, Marolini en el segundo y Coracola en el tercero ENTONCES imprimir
+conserva esas posiciones y el papel lleva Marolini y Coracola, en ese orden. Borrar vacía
+los 3 sin cambiar el papel, y los 3 vacíos no imprimen.
+
+### AC-CTR-029 — Usar el hueco no se confunde con rechazar *(verifica BR-CTR-024)*
+
+DADO una jornada manual, con el programa vacío o lleno, CUANDO se usa el hueco con unidad,
+caja o manos vacías ENTONCES no se escribe ni se publica lectura, rechazo o sonido, y la
+mano se conserva. El cuerpo mantiene alcance, colisión y foco real; su malla queda visible
+y representa el hueco. DADO una nueva jornada automática ENTONCES vuelve la malla del lector
+y una unidad vuelve a anotarse.
+
+### AC-CTR-030 — Los menús conservan la selección durante la pausa *(verifica BR-CTR-023)*
+
+DADO el programa manual, CUANDO se abren sus menús ENTONCES cada uno ofrece vacío primero
+y el catálogo ordenado, y muestra la selección del mismo renglón; repintar no publica otra
+elección ni sonidos. DADO una lista desplegada CUANDO se pulsa derecho ENTONCES se cierra
+el programa conservando la mano. CUANDO se pulsa Esc ENTONCES la lista se oculta y se abre
+la pausa vigente; reanudar conserva selecciones, mano y programa abierto, con control suspendido.
+
+### AC-CTR-031 — Dos papeles producen dos descartes *(verifica BR-CTR-025)*
+
+DADO dos tickets impresos CUANDO se llevan uno por vez a cada uno de los dos inodoros ENTONCES
+cada ticket deja de existir y la mano queda vacía, con un aviso por ticket. CUANDO se repite ya
+con mano vacía ENTONCES no se publica otro descarte. En automático o manual los renglones del
+programa permanecen iguales.
+
+### AC-CTR-032 — Descartar no sustituye la limpieza *(verifica BR-CTR-025)*
+
+DADO una unidad, caja, mopa, balde, jabón o bolsa en la mano CUANDO se usa cualquiera de los
+inodoros ENTONCES el levantable permanece en la mano y no hay aviso de descarte; el balde
+conserva su vaciado y la mopa su enjuague. DADO un ticket CUANDO se usa cualquiera de los dos
+lavatorios ENTONCES el papel sigue en la mano y no se publica descarte. Un objeto del mismo
+nombre o identificador que un ticket conserva su tipo y no se desecha.
+
+### AC-CTR-033 — La próxima jornada no vuelve a descartar *(verifica BR-CTR-025, BR-CTR-021)*
+
+DADO un ticket desechado y otro ticket impreso todavía en el mundo CUANDO abre la próxima
+jornada ENTONCES se retira el restante, los dos dejan de existir, la mano y el programa quedan
+vacíos y no se publica un nuevo aviso de descarte ni se intenta liberar nuevamente el ya
+desechado.
+
 ## No objetivos
 
 - Esta capacidad NO decide cuántas unidades hay ni dónde están: se lo pregunta a
@@ -217,14 +372,20 @@ ENTONCES lo vendido es 0.
 
 ## Contratos
 
-- **Entrada:** el padrón de la noche y los vendibles de cada producto.
-- **Salida:** quién está en la ventanilla, el ticket, el total, la diferencia, el aviso de
-  faltantes, cuántos van despachados, el desvío de la noche y lo vendido de cada producto.
+- **Entrada:** el padrón de la noche, los vendibles de cada producto, el objeto leído y los
+  pedidos de borrar o imprimir, el número de jornada, las elecciones por renglón y el objeto
+  sostenido con su destino de uso.
+- **Salida:** quién está en la ventanilla, el pedido, el total, la diferencia, el aviso de
+  faltantes, cuántos van despachados, el desvío de la noche, lo vendido de cada producto y el
+  papel impreso o desechado.
 - **Falla:** un pedido que supera sus vendibles se rechaza entero; una atención despachada
-  rechaza todo lo demás.
+  rechaza todo lo demás. Usar un objeto que no sea ticket, o un destino distinto del inodoro,
+  no produce descarte.
 
 ## Señales
 
+- El modo con el que arranca el programa, la lectura correcta o rechazada con su motivo,
+  los renglones cambiados, el ticket impreso y el descarte de un ticket.
 - El comprador que llega, la entrada de diálogo mostrada, el diálogo cerrado y la atención
   despachada.
 
@@ -232,8 +393,12 @@ ENTONCES lo vendido es 0.
 
 - [`store-stock`](../store-stock/store-stock.md) (consume y alimenta): los vendibles y el cobro;
   y lo vendido de cada producto, contra lo que se compara la planilla de registrar.
-- [`shift-cycle`](../shift-cycle/shift-cycle.md) (alimenta): avisa cuándo la obligatoria quedó
-  cumplida.
+- [`player-actions`](../player-actions/player-actions.md) (consume y alimenta): lo sostenido
+  llega al lector; imprimir produce un papel levantable que se retira en otra jornada.
+- [`shift-cycle`](../shift-cycle/shift-cycle.md) (consume y alimenta): el número de jornada
+  decide el modo del programa; se avisa cuándo la obligatoria quedó cumplida.
+- [`store-cleanup`](../store-cleanup/store-cleanup.md) (consume): distingue inodoro y lavatorio;
+  desechar papel conserva los efectos de limpieza de las herramientas.
 
 ## Preguntas abiertas
 

@@ -19,6 +19,7 @@ signal volver_al_menu_pedido
 
 var _cursor_antes := false
 var _menu_pedido := false
+var _ventana_activa := true
 
 
 func _ready() -> void:
@@ -48,9 +49,19 @@ func _physics_process(_delta: float) -> void:
 	_cursor_antes = _cursor_tomado()
 
 
+## Cambiar de pestaña también suelta el cursor; no equivale a pedir la pausa con Esc.
+func _notification(aviso: int) -> void:
+	if aviso == NOTIFICATION_WM_WINDOW_FOCUS_OUT:
+		_ventana_activa = false
+		_cursor_antes = false
+	elif aviso == NOTIFICATION_WM_WINDOW_FOCUS_IN:
+		_ventana_activa = true
+		_cursor_antes = false
+
+
 func _mirar_el_cursor() -> void:
 	var accion := Pausa.ante_el_cursor(
-		get_tree().paused, _placa_en_pantalla(), _cursor_antes, _cursor_tomado()
+		get_tree().paused, _placa_en_pantalla(), _cursor_antes, _cursor_tomado(), _ventana_activa
 	)
 	_hacer(accion)
 

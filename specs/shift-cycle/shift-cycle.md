@@ -43,7 +43,9 @@ reales cubran el turno entero**: un minuto real por hora de ficción. El factor 
 CUANDO pasa tiempo real de juego, el sistema DEBE recibir cuántos segundos pasaron y descontarlos
 del turno. El turno nunca lee un reloj propio. Un valor que no es positivo no descuenta nada. El
 tiempo real es lo único que descuenta del turno: cumplir una obligatoria no lo mueve. El tiempo
-en pausa no es tiempo de juego y NO DEBE descontar.
+en pausa no es tiempo de juego y NO DEBE descontar. Cambiar de pestaña, minimizar o pasar a otra
+ventana no es una pausa: ese tiempo DEBE descontarse, también si el navegador suspendió los
+cuadros y sólo permite actualizar la jornada al volver.
 
 ### BR-SHF-004 — El turno no baja de cero
 
@@ -182,6 +184,14 @@ rechaza y sigue contando.
 
 DADO un turno abierto CUANDO el juego está en pausa y pasan cuadros ENTONCES el tiempo restante
 no cambia. CUANDO se reanuda ENTONCES el turno sigue descontando desde ese mismo valor.
+
+### AC-SHF-021 — Cambiar de pestaña no regala tiempo *(verifica BR-SHF-003)*
+
+DADO un turno abierto sin pausa manual CUANDO pasan 10 segundos reales sin cuadros por cambiar
+de pestaña ENTONCES al volver se descuentan esos 10 segundos, sin repetirlos en el cuadro
+siguiente. DADO el mismo turno en pausa manual CUANDO pasan 10 segundos y se reanuda ENTONCES
+esos 10 segundos no se descuentan. DADO menos tiempo restante que la ausencia CUANDO se vuelve
+ENTONCES el turno cierra una sola vez y el tiempo restante es cero.
 
 ## No objetivos
 

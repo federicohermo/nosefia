@@ -10,6 +10,7 @@
 [ext_resource type="PackedScene" path="res://src/escenas/puestos/audio_del_almacen.tscn" id="29_audio"]
 [ext_resource type="Script" path="res://src/sistemas/marco/red_de_seguridad.gd" id="30_red"]
 
+[ext_resource type="Script" path="res://src/sistemas/tareas/caja_registradora.gd" id="caja"]
 [node name="Servicios" type="Node3D"]
 
 [node name="RelojDelTurno" type="Node" parent="."]
@@ -42,3 +43,6 @@ reloj = NodePath("../RelojDelTurno")
 
 [node name="RedDeSeguridad" type="Node" parent="."]
 script = ExtResource("30_red")
+
+[node name="CajaRegistradora" type="Node" parent="."]
+script = ExtResource("caja")

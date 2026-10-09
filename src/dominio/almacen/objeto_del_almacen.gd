@@ -23,6 +23,9 @@ const SIN_ID := &""
 ## sueltas: el que se olvide de declararlo va a estar bien más veces de las que no.
 @export var levantable: bool = true
 
+## Si el objeto sostenido entra por la boca del contenedor.
+@export var entra_en_el_contenedor: bool = true
+
 ## Si sobre este objeto se puede soltar otro.
 @export var admite_encima: bool = false
 
