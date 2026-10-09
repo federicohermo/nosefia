@@ -1,7 +1,7 @@
 ---
 schema_version: 1
 capability_id: CAP-PLY
-status: ratified
+status: draft
 owner: por definir
 provenance: GDD «Controles»; ficha «8. Tarea: Reposición»; migración de los specs 003, 004, 006, 014, 034, 043
 ---
@@ -93,7 +93,9 @@ Abierta, la hoja queda a **un cuarto de vuelta** y deja pasar.
 ### BR-PLY-012 — Una herramienta sirve para algo o para nada
 
 CUANDO se usa lo que se lleva sobre algo, el sistema DEBE contestar el efecto declarado para ese
-par, y **ningún efecto** para cualquier otro par o con las manos vacías.
+par, y **ningún efecto** para cualquier otro par o con las manos vacías. El uso de un ticket
+sobre el inodoro DEBE desecharlo según [`counter-service`](../counter-service/counter-service.md);
+las herramientas DEBEN conservar los efectos de [`store-cleanup`](../store-cleanup/store-cleanup.md).
 
 SI la mira enfoca una puerta, la computadora, la ventanilla o la caja registradora, ENTONCES usar DEBE abrir o
 alternar eso antes que usar lo que se lleva: la herramienta NO DEBE tener efecto y lo que se
@@ -370,8 +372,9 @@ no baja.
 ### AC-PLY-014 — El uso declarado y los demás *(verifica BR-PLY-012)*
 
 DADO la mopa sobre una mancha ENTONCES el efecto es limpiar; el balde sobre el lavatorio, llenar;
-cualquiera de los tres jabones sobre el balde, teñir; la mopa sobre el balde, mojar; y el balde
-sobre el inodoro, vaciar. Con cualquier otro par —uno de ésos al revés, u otro objeto— o con las
+cualquiera de los tres jabones sobre el balde, teñir; la mopa sobre el balde, mojar; el balde
+sobre el inodoro, vaciar; la mopa sobre el inodoro, enjuagar; y el ticket sobre el inodoro,
+desechar. Con cualquier par no declarado —uno de ésos al revés, u otro objeto— o con las
 manos vacías, no hay efecto.
 
 ### AC-PLY-015 — Lo soltado se duerme *(verifica BR-PLY-013)*
@@ -778,6 +781,14 @@ ese papel congelado en su lugar en la mano.
 DADO un ticket examinado en la mano y otro suelto, CUANDO abre la jornada siguiente ENTONCES
 termina el examen, las manos quedan vacías y ambos papeles dejan de existir.
 
+### AC-PLY-078 — El derecho desecha y el izquierdo suelta *(verifica BR-PLY-012, BR-PLY-004, BR-PLY-006, BR-PLY-010)*
+
+DADO un ticket en la mano y cada inodoro dentro del alcance desde piso transitable sin
+superposición de la cápsula CUANDO la mira lo enfoca y se pulsa derecho ENTONCES el ticket
+desaparece y la mano queda vacía. DADO el mismo papel CUANDO se pulsa izquierdo ENTONCES se
+suelta y sigue existiendo, sin aviso de descarte. Examinar conserva el ticket y, mientras el
+control esté suspendido, derecho no lo desecha.
+
 ## No objetivos
 
 - Esta capacidad NO decide qué esconde un objeto: eso es de
@@ -805,7 +816,8 @@ termina el examen, las manos quedan vacías y ambos papeles dejan de existir.
 ## Dependencias
 
 - [`counter-service`](../counter-service/counter-service.md) (consume y alimenta): el lector
-  recibe lo sostenido y contesta lectura o rechazo; imprimir entrega un papel levantable.
+  recibe lo sostenido y contesta lectura o rechazo; imprimir entrega un papel levantable y
+  usarlo sobre el inodoro publica su descarte.
 - [`shift-cycle`](../shift-cycle/shift-cycle.md) (consume): las obligatorias declaradas que
   enumera la nota de tareas.
 

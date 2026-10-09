@@ -1,7 +1,7 @@
 ---
 schema_version: 1
 capability_id: CAP-CTR
-status: ratified
+status: draft
 owner: por definir
 provenance: GDD «Atención por ventanilla»; migración de los specs 013, 035
 ---
@@ -161,6 +161,13 @@ MIENTRAS el programa es manual, el lector NO DEBE estar: su lugar DEBE quedar oc
 un hueco fijo, no levantable. Usarlo NO DEBE cambiar renglones ni producir avisos o sonidos,
 con manos vacías o con cualquier objeto, esté vacío o lleno el programa. Este silencio
 DEBE preceder a los rechazos por tipo o por lleno del modo automático.
+
+### BR-CTR-025 — El ticket se desecha en el inodoro
+
+CUANDO se usa el inodoro con un ticket en la mano, el sistema DEBE quitar ese ticket del mundo,
+dejar la mano vacía y publicar una vez su descarte. Ningún otro levantable DEBE desaparecer por
+usar el inodoro. Las herramientas DEBEN conservar los efectos de limpieza vigentes. Usar el
+lavatorio con un ticket NO DEBE desecharlo.
 
 ## Criterios de aceptación
 
@@ -334,6 +341,28 @@ elección ni sonidos. DADO una lista desplegada CUANDO se pulsa derecho ENTONCES
 el programa conservando la mano. CUANDO se pulsa Esc ENTONCES la lista se oculta y se abre
 la pausa vigente; reanudar conserva selecciones, mano y programa abierto, con control suspendido.
 
+### AC-CTR-031 — Dos papeles producen dos descartes *(verifica BR-CTR-025)*
+
+DADO dos tickets impresos CUANDO se llevan uno por vez a cada uno de los dos inodoros ENTONCES
+cada ticket deja de existir y la mano queda vacía, con un aviso por ticket. CUANDO se repite ya
+con mano vacía ENTONCES no se publica otro descarte. En automático o manual los renglones del
+programa permanecen iguales.
+
+### AC-CTR-032 — Descartar no sustituye la limpieza *(verifica BR-CTR-025)*
+
+DADO una unidad, caja, mopa, balde, jabón o bolsa en la mano CUANDO se usa cualquiera de los
+inodoros ENTONCES el levantable permanece en la mano y no hay aviso de descarte; el balde
+conserva su vaciado y la mopa su enjuague. DADO un ticket CUANDO se usa cualquiera de los dos
+lavatorios ENTONCES el papel sigue en la mano y no se publica descarte. Un objeto del mismo
+nombre o identificador que un ticket conserva su tipo y no se desecha.
+
+### AC-CTR-033 — La próxima jornada no vuelve a descartar *(verifica BR-CTR-025, BR-CTR-021)*
+
+DADO un ticket desechado y otro ticket impreso todavía en el mundo CUANDO abre la próxima
+jornada ENTONCES se retira el restante, los dos dejan de existir, la mano y el programa quedan
+vacíos y no se publica un nuevo aviso de descarte ni se intenta liberar nuevamente el ya
+desechado.
+
 ## No objetivos
 
 - Esta capacidad NO decide cuántas unidades hay ni dónde están: se lo pregunta a
@@ -344,16 +373,19 @@ la pausa vigente; reanudar conserva selecciones, mano y programa abierto, con co
 ## Contratos
 
 - **Entrada:** el padrón de la noche, los vendibles de cada producto, el objeto leído y los
-  pedidos de borrar o imprimir, el número de jornada y las elecciones por renglón.
+  pedidos de borrar o imprimir, el número de jornada, las elecciones por renglón y el objeto
+  sostenido con su destino de uso.
 - **Salida:** quién está en la ventanilla, el pedido, el total, la diferencia, el aviso de
-  faltantes, cuántos van despachados, el desvío de la noche y lo vendido de cada producto.
+  faltantes, cuántos van despachados, el desvío de la noche, lo vendido de cada producto y el
+  papel impreso o desechado.
 - **Falla:** un pedido que supera sus vendibles se rechaza entero; una atención despachada
-  rechaza todo lo demás.
+  rechaza todo lo demás. Usar un objeto que no sea ticket, o un destino distinto del inodoro,
+  no produce descarte.
 
 ## Señales
 
 - El modo con el que arranca el programa, la lectura correcta o rechazada con su motivo,
-  los renglones cambiados y el ticket impreso.
+  los renglones cambiados, el ticket impreso y el descarte de un ticket.
 - El comprador que llega, la entrada de diálogo mostrada, el diálogo cerrado y la atención
   despachada.
 
@@ -365,6 +397,8 @@ la pausa vigente; reanudar conserva selecciones, mano y programa abierto, con co
   llega al lector; imprimir produce un papel levantable que se retira en otra jornada.
 - [`shift-cycle`](../shift-cycle/shift-cycle.md) (consume y alimenta): el número de jornada
   decide el modo del programa; se avisa cuándo la obligatoria quedó cumplida.
+- [`store-cleanup`](../store-cleanup/store-cleanup.md) (consume): distingue inodoro y lavatorio;
+  desechar papel conserva los efectos de limpieza de las herramientas.
 
 ## Preguntas abiertas
 
