@@ -1,0 +1,560 @@
+ERROR: The remote port number must be between 1 and 65535 (inclusive).
+   at: connect_to_host (core/io/stream_peer_tcp.cpp:69)
+ERROR: Remote Debugger: Unable to connect to host '127.0.0.1:0'.
+   at: create_tcp (core/debugger/remote_debugger_peer.cpp:247)
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+[2J[H[38;2;233;150;122m
+--------------------------------------------------------------------------------------------------
+GdUnit4 Comandline Tool
+--------------------------------------------------------------------------------------------------[0m
+[38;2;0;191;255mDisabled fail fast![0m
+[38;2;0;191;255mSet write reports to reports[0m
+[38;2;218;165;32m
+Headless mode is ignored by option '--ignoreHeadlessMode'"
+
+Please note that tests that use UI interaction do not work correctly in headless mode.
+Godot 'InputEvents' are not transported by the Godot engine in headless mode and therefore
+have no effect in the test!
+[0m
+[38;2;100;149;237mInstalling GdUnit4 session system hooks.[0m
+[38;2;100;149;237mSession hook 'GdUnitHtmlTestReporter' installed.[0m
+[38;2;100;149;237mSession hook 'GdUnitXMLTestReporter' installed.[0m
+[38;2;100;149;237mInstalling GdUnit4 session hooks.[0m
+[38;2;100;149;237mSession hook 'Guardado de la sesión' installed.[0m
+ERROR: Couldn't open directory at path "user://guardado_de_los_tests_69848".
+   at: get_files_at (core/io/dir_access.cpp:578)
+   GDScript backtrace (most recent call first):
+       [0] _borrar_la_carpeta (res://test/guardado_de_la_sesion.gd:40)
+       [1] startup (res://test/guardado_de_la_sesion.gd:22)
+       [2] execute (res://addons/gdUnit4/src/core/hooks/GdUnitTestSessionHookService.gd:125)
+       [3] execute_startup (res://addons/gdUnit4/src/core/hooks/GdUnitTestSessionHookService.gd:108)
+       [4] _process (res://addons/gdUnit4/src/core/runners/GdUnitTestSessionRunner.gd:127)
+[38;2;0;206;209mRun Test Suite: [0m[38;2;250;235;215mres://test/dominio/almacen/generador_de_tickets_test.gd[0m
+  [38;2;250;235;215mres://test/dominio/almacen/generador_de_tickets_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_se_llena_en_orden_y_repite_productos[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/almacen/generador_de_tickets_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_se_llena_en_orden_y_repite_productos[0m[38;2;178;34;34m[1m FAILED[0m[38;2;100;149;237m 6ms[0m
+  [38;2;0;206;209m[1m[4mReport:[0m
+  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ [38;2;30;144;255m0[0m
+ but was
+ [38;2;30;144;255m1[0m[0m[38;2;173;216;230m	at 'test_se_llena_en_orden_y_repite_productos' in res://test/dominio/almacen/generador_de_tickets_test.gd:9[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ [38;2;30;144;255m0[0m
+ but was
+ [38;2;30;144;255m1[0m[0m[38;2;173;216;230m	at 'test_se_llena_en_orden_y_repite_productos' in res://test/dominio/almacen/generador_de_tickets_test.gd:9[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ [38;2;30;144;255m0[0m
+ but was
+ [38;2;30;144;255m1[0m[0m[38;2;173;216;230m	at 'test_se_llena_en_orden_y_repite_productos' in res://test/dominio/almacen/generador_de_tickets_test.gd:9[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting contains exactly elements:[0m
+ '[38;2;30;144;255m<empty>[0m'
+ do contains (in same order)
+ '[38;2;30;144;255m[<RefCounted#-9223371641851998827>, <RefCounted#-9223371641851998827>, <RefCounted#-9223371641835221610>][0m'
+but could not find elements:
+ '[38;2;30;144;255m[<RefCounted#-9223371641851998827>, <RefCounted#-9223371641851998827>, <RefCounted#-9223371641835221610>][0m'[0m[38;2;173;216;230m	at 'test_se_llena_en_orden_y_repite_productos' in res://test/dominio/almacen/generador_de_tickets_test.gd:12[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ [38;2;30;144;255m2[0m
+ but was
+ [38;2;30;144;255m1[0m[0m[38;2;173;216;230m	at 'test_se_llena_en_orden_y_repite_productos' in res://test/dominio/almacen/generador_de_tickets_test.gd:14[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting contains exactly elements:[0m
+ '[38;2;30;144;255m<empty>[0m'
+ do contains (in same order)
+ '[38;2;30;144;255m[<RefCounted#-9223371641851998827>, <RefCounted#-9223371641851998827>, <RefCounted#-9223371641835221610>][0m'
+but could not find elements:
+ '[38;2;30;144;255m[<RefCounted#-9223371641851998827>, <RefCounted#-9223371641851998827>, <RefCounted#-9223371641835221610>][0m'[0m[38;2;173;216;230m	at 'test_se_llena_en_orden_y_repite_productos' in res://test/dominio/almacen/generador_de_tickets_test.gd:17[0m[38;2;128;128;128m[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/almacen/generador_de_tickets_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_una_caja_no_se_confunde_con_su_producto[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/almacen/generador_de_tickets_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_una_caja_no_se_confunde_con_su_producto[0m[38;2;178;34;34m[1m FAILED[0m[38;2;100;149;237m 7ms[0m
+  [38;2;0;206;209m[1m[4mReport:[0m
+  [38;2;128;128;128m[38;2;255;69;0mExpecting contains exactly elements:[0m
+ '[38;2;30;144;255m<empty>[0m'
+ do contains (in same order)
+ '[38;2;30;144;255m[<RefCounted#-9223371639368970807>][0m'
+but could not find elements:
+ '[38;2;30;144;255m[<RefCounted#-9223371639368970807>][0m'[0m[38;2;173;216;230m	at 'test_una_caja_no_se_confunde_con_su_producto' in res://test/dominio/almacen/generador_de_tickets_test.gd:28[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting contains exactly elements:[0m
+ '[38;2;30;144;255m<empty>[0m'
+ do contains (in same order)
+ '[38;2;30;144;255m[<RefCounted#-9223371639368970807>][0m'
+but could not find elements:
+ '[38;2;30;144;255m[<RefCounted#-9223371639368970807>][0m'[0m[38;2;173;216;230m	at 'test_una_caja_no_se_confunde_con_su_producto' in res://test/dominio/almacen/generador_de_tickets_test.gd:28[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting contains exactly elements:[0m
+ '[38;2;30;144;255m<empty>[0m'
+ do contains (in same order)
+ '[38;2;30;144;255m[<RefCounted#-9223371639368970807>][0m'
+but could not find elements:
+ '[38;2;30;144;255m[<RefCounted#-9223371639368970807>][0m'[0m[38;2;173;216;230m	at 'test_una_caja_no_se_confunde_con_su_producto' in res://test/dominio/almacen/generador_de_tickets_test.gd:28[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting contains exactly elements:[0m
+ '[38;2;30;144;255m<empty>[0m'
+ do contains (in same order)
+ '[38;2;30;144;255m[<RefCounted#-9223371639368970807>][0m'
+but could not find elements:
+ '[38;2;30;144;255m[<RefCounted#-9223371639368970807>][0m'[0m[38;2;173;216;230m	at 'test_una_caja_no_se_confunde_con_su_producto' in res://test/dominio/almacen/generador_de_tickets_test.gd:28[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting contains exactly elements:[0m
+ '[38;2;30;144;255m<empty>[0m'
+ do contains (in same order)
+ '[38;2;30;144;255m[<RefCounted#-9223371639368970807>][0m'
+but could not find elements:
+ '[38;2;30;144;255m[<RefCounted#-9223371639368970807>][0m'[0m[38;2;173;216;230m	at 'test_una_caja_no_se_confunde_con_su_producto' in res://test/dominio/almacen/generador_de_tickets_test.gd:28[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting contains exactly elements:[0m
+ '[38;2;30;144;255m<empty>[0m'
+ do contains (in same order)
+ '[38;2;30;144;255m[<RefCounted#-9223371639368970807>][0m'
+but could not find elements:
+ '[38;2;30;144;255m[<RefCounted#-9223371639368970807>][0m'[0m[38;2;173;216;230m	at 'test_una_caja_no_se_confunde_con_su_producto' in res://test/dominio/almacen/generador_de_tickets_test.gd:32[0m[38;2;128;128;128m[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/almacen/generador_de_tickets_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_sin_unidad_valida_no_se_anota_nada[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/almacen/generador_de_tickets_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_sin_unidad_valida_no_se_anota_nada[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 7ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/almacen/generador_de_tickets_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_el_rechazo_por_tipo_precede_al_programa_lleno[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/almacen/generador_de_tickets_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_el_rechazo_por_tipo_precede_al_programa_lleno[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 7ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/almacen/generador_de_tickets_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_imprimir_y_borrar_preserva_el_papel[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/almacen/generador_de_tickets_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_imprimir_y_borrar_preserva_el_papel[0m[38;2;178;34;34m[1m FAILED[0m[38;2;100;149;237m 8ms[0m
+  [38;2;0;206;209m[1m[4mReport:[0m
+  [38;2;128;128;128m[38;2;255;69;0mExpecting contains exactly elements:[0m
+ '[38;2;30;144;255m<empty>[0m'
+ do contains (in same order)
+ '[38;2;30;144;255m[<RefCounted#-9223371634553909737>, <RefCounted#-9223371634537132520>][0m'
+but could not find elements:
+ '[38;2;30;144;255m[<RefCounted#-9223371634553909737>, <RefCounted#-9223371634537132520>][0m'[0m[38;2;173;216;230m	at 'test_imprimir_y_borrar_preserva_el_papel' in res://test/dominio/almacen/generador_de_tickets_test.gd:59[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting contains exactly elements:[0m
+ '[38;2;30;144;255m<empty>[0m'
+ do contains (in same order)
+ '[38;2;30;144;255m[<RefCounted#-9223371634553909737>, <RefCounted#-9223371634537132520>][0m'
+but could not find elements:
+ '[38;2;30;144;255m[<RefCounted#-9223371634553909737>, <RefCounted#-9223371634537132520>][0m'[0m[38;2;173;216;230m	at 'test_imprimir_y_borrar_preserva_el_papel' in res://test/dominio/almacen/generador_de_tickets_test.gd:60[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting contains exactly elements:[0m
+ '[38;2;30;144;255m<empty>[0m'
+ do contains (in same order)
+ '[38;2;30;144;255m[<RefCounted#-9223371634553909737>, <RefCounted#-9223371634537132520>][0m'
+but could not find elements:
+ '[38;2;30;144;255m[<RefCounted#-9223371634553909737>, <RefCounted#-9223371634537132520>][0m'[0m[38;2;173;216;230m	at 'test_imprimir_y_borrar_preserva_el_papel' in res://test/dominio/almacen/generador_de_tickets_test.gd:63[0m[38;2;128;128;128m[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/almacen/generador_de_tickets_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_los_tres_vacios_no_imprimen[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/almacen/generador_de_tickets_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_los_tres_vacios_no_imprimen[0m[38;2;178;34;34m[1m FAILED[0m[38;2;100;149;237m 8ms[0m
+  [38;2;0;206;209m[1m[4mReport:[0m
+  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m '[38;2;30;144;255m<null>[0m' but was [38;2;30;144;255m<Resource>[0m[0m[38;2;173;216;230m	at 'test_los_tres_vacios_no_imprimen' in res://test/dominio/almacen/generador_de_tickets_test.gd:68[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m '[38;2;30;144;255m<null>[0m' but was [38;2;30;144;255m<Resource>[0m[0m[38;2;173;216;230m	at 'test_los_tres_vacios_no_imprimen' in res://test/dominio/almacen/generador_de_tickets_test.gd:70[0m[38;2;128;128;128m[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/almacen/generador_de_tickets_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_la_lectura_de_renglones_no_permite_borrarlos[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/almacen/generador_de_tickets_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_la_lectura_de_renglones_no_permite_borrarlos[0m[38;2;178;34;34m[1m FAILED[0m[38;2;100;149;237m 8ms[0m
+  [38;2;0;206;209m[1m[4mReport:[0m
+  [38;2;128;128;128m[38;2;255;69;0mExpecting contains exactly elements:[0m
+ '[38;2;30;144;255m<empty>[0m'
+ do contains (in same order)
+ '[38;2;30;144;255m[<RefCounted#-9223371631433347505>][0m'
+but could not find elements:
+ '[38;2;30;144;255m[<RefCounted#-9223371631433347505>][0m'[0m[38;2;173;216;230m	at 'test_la_lectura_de_renglones_no_permite_borrarlos' in res://test/dominio/almacen/generador_de_tickets_test.gd:79[0m[38;2;128;128;128m[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/almacen/generador_de_tickets_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_dos_impresiones_son_dos_papeles_independientes[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/almacen/generador_de_tickets_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_dos_impresiones_son_dos_papeles_independientes[0m[38;2;178;34;34m[1m FAILED[0m[38;2;100;149;237m 6ms[0m
+  [38;2;0;206;209m[1m[4mReport:[0m
+  [38;2;128;128;128m[38;2;255;69;0mExpecting contains exactly elements:[0m
+ '[38;2;30;144;255m<empty>[0m'
+ do contains (in same order)
+ '[38;2;30;144;255m[<RefCounted#-9223371630359605659>][0m'
+but could not find elements:
+ '[38;2;30;144;255m[<RefCounted#-9223371630359605659>][0m'[0m[38;2;173;216;230m	at 'test_dos_impresiones_son_dos_papeles_independientes' in res://test/dominio/almacen/generador_de_tickets_test.gd:89[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting contains exactly elements:[0m
+ '[38;2;30;144;255m<empty>[0m'
+ do contains (in same order)
+ '[38;2;30;144;255m[<RefCounted#-9223371630359605659>][0m'
+but could not find elements:
+ '[38;2;30;144;255m[<RefCounted#-9223371630359605659>][0m'[0m[38;2;173;216;230m	at 'test_dos_impresiones_son_dos_papeles_independientes' in res://test/dominio/almacen/generador_de_tickets_test.gd:90[0m[38;2;128;128;128m[0m
+[38;2;128;128;128m[0m
+[38;2;30;144;255mStatistics:[0m[38;2;128;128;128m 8 test cases | 0 errors | 20 failures | 0 flaky | 0 skipped | 0 orphans |[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 132ms[0m
+[38;2;128;128;128m[0m
+[38;2;128;128;128m[0m
+[38;2;0;206;209mRun Test Suite: [0m[38;2;250;235;215mres://test/dominio/almacen/ticket_test.gd[0m
+  [38;2;250;235;215mres://test/dominio/almacen/ticket_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_el_papel_se_levanta_y_suena_como_papel[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/almacen/ticket_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_el_papel_se_levanta_y_suena_como_papel[0m[38;2;178;34;34m[1m FAILED[0m[38;2;100;149;237m 8ms[0m
+  [38;2;0;206;209m[1m[4mReport:[0m
+  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ '[38;2;30;144;255mticket[0m'
+ but was
+ '[38;2;30;144;255m[48;2;38;0;0m[38;2;255;255;255mticket[0m[38;2;30;144;255m[48;2;38;0;0m[0m[38;2;30;144;255m[0m'[0m[38;2;173;216;230m	at 'test_el_papel_se_levanta_y_suena_como_papel' in res://test/dominio/almacen/ticket_test.gd:6[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ '[38;2;30;144;255mTicket[0m'
+ but was
+ '[38;2;30;144;255m[48;2;38;0;0m[38;2;255;255;255mTicket[0m[38;2;30;144;255m[48;2;38;0;0m[0m[38;2;30;144;255m[0m'[0m[38;2;173;216;230m	at 'test_el_papel_se_levanta_y_suena_como_papel' in res://test/dominio/almacen/ticket_test.gd:7[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ [38;2;30;144;255m6[0m
+ but was
+ [38;2;30;144;255m0[0m[0m[38;2;173;216;230m	at 'test_el_papel_se_levanta_y_suena_como_papel' in res://test/dominio/almacen/ticket_test.gd:9[0m[38;2;128;128;128m[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/almacen/ticket_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_el_papel_copia_los_productos_recibidos[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/almacen/ticket_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_el_papel_copia_los_productos_recibidos[0m[38;2;178;34;34m[1m FAILED[0m[38;2;100;149;237m 6ms[0m
+  [38;2;0;206;209m[1m[4mReport:[0m
+  [38;2;128;128;128m[38;2;255;69;0mExpecting contains exactly elements:[0m
+ '[38;2;30;144;255m<empty>[0m'
+ do contains (in same order)
+ '[38;2;30;144;255m[<RefCounted#-9223371621081805312>][0m'
+but could not find elements:
+ '[38;2;30;144;255m[<RefCounted#-9223371621081805312>][0m'[0m[38;2;173;216;230m	at 'test_el_papel_copia_los_productos_recibidos' in res://test/dominio/almacen/ticket_test.gd:17[0m[38;2;128;128;128m[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/almacen/ticket_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_leer_el_papel_no_permite_reescribirlo[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/almacen/ticket_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_leer_el_papel_no_permite_reescribirlo[0m[38;2;178;34;34m[1m FAILED[0m[38;2;100;149;237m 6ms[0m
+  [38;2;0;206;209m[1m[4mReport:[0m
+  [38;2;128;128;128m[38;2;255;69;0mExpecting contains exactly elements:[0m
+ '[38;2;30;144;255m<empty>[0m'
+ do contains (in same order)
+ '[38;2;30;144;255m[<RefCounted#-9223371620024840720>][0m'
+but could not find elements:
+ '[38;2;30;144;255m[<RefCounted#-9223371620024840720>][0m'[0m[38;2;173;216;230m	at 'test_leer_el_papel_no_permite_reescribirlo' in res://test/dominio/almacen/ticket_test.gd:25[0m[38;2;128;128;128m[0m
+[38;2;128;128;128m[0m
+[38;2;30;144;255mStatistics:[0m[38;2;128;128;128m 3 test cases | 0 errors | 5 failures | 0 flaky | 0 skipped | 0 orphans |[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 48ms[0m
+[38;2;128;128;128m[0m
+[38;2;128;128;128m[0m
+[38;2;0;206;209mRun Test Suite: [0m[38;2;250;235;215mres://test/sistemas/tareas/caja_registradora_test.gd[0m
+  [38;2;250;235;215mres://test/sistemas/tareas/caja_registradora_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_publica_lectura_y_cambio_solo_cuando_anota[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/sistemas/tareas/caja_registradora_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_publica_lectura_y_cambio_solo_cuando_anota[0m[38;2;178;34;34m[1m FAILED[0m[38;2;100;149;237m 8ms[0m
+  [38;2;0;206;209m[1m[4mReport:[0m
+  [38;2;128;128;128m[38;2;255;69;0mExpecting contains exactly elements:[0m
+ '[38;2;30;144;255m<empty>[0m'
+ do contains (in same order)
+ '[38;2;30;144;255m["leido", "cambiado", "leido", "cambiado", "leido", "cambiado"][0m'
+but could not find elements:
+ '[38;2;30;144;255m["leido", "cambiado", "leido", "cambiado", "leido", "cambiado"][0m'[0m[38;2;173;216;230m	at 'test_publica_lectura_y_cambio_solo_cuando_anota' in res://test/sistemas/tareas/caja_registradora_test.gd:15[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting contains exactly elements:[0m
+ '[38;2;30;144;255m<empty>[0m'
+ do contains (in same order)
+ '[38;2;30;144;255m[2, 1][0m'
+but could not find elements:
+ '[38;2;30;144;255m[2, 1][0m'[0m[38;2;173;216;230m	at 'test_publica_lectura_y_cambio_solo_cuando_anota' in res://test/sistemas/tareas/caja_registradora_test.gd:20[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ [38;2;30;144;255m6[0m
+ but was
+ [38;2;30;144;255m0[0m[0m[38;2;173;216;230m	at 'test_publica_lectura_y_cambio_solo_cuando_anota' in res://test/sistemas/tareas/caja_registradora_test.gd:23[0m[38;2;128;128;128m[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/sistemas/tareas/caja_registradora_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_borrar_publica_la_vista_vacia[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/sistemas/tareas/caja_registradora_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_borrar_publica_la_vista_vacia[0m[38;2;178;34;34m[1m FAILED[0m[38;2;100;149;237m 6ms[0m
+  [38;2;0;206;209m[1m[4mReport:[0m
+  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ [38;2;30;144;255m1[0m
+ but was
+ [38;2;30;144;255m0[0m[0m[38;2;173;216;230m	at 'test_borrar_publica_la_vista_vacia' in res://test/sistemas/tareas/caja_registradora_test.gd:35[0m[38;2;128;128;128m[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/sistemas/tareas/caja_registradora_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_imprimir_publica_el_papel_y_no_un_cambio_del_programa[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/sistemas/tareas/caja_registradora_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_imprimir_publica_el_papel_y_no_un_cambio_del_programa[0m[38;2;178;34;34m[1m FAILED[0m[38;2;100;149;237m 8ms[0m
+  [38;2;0;206;209m[1m[4mReport:[0m
+  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ [38;2;30;144;255m1[0m
+ but was
+ [38;2;30;144;255m0[0m[0m[38;2;173;216;230m	at 'test_imprimir_publica_el_papel_y_no_un_cambio_del_programa' in res://test/sistemas/tareas/caja_registradora_test.gd:51[0m[38;2;128;128;128m[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/sistemas/tareas/caja_registradora_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_otra_jornada_reemplaza_el_programa_y_avisa_la_vista[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/sistemas/tareas/caja_registradora_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_otra_jornada_reemplaza_el_programa_y_avisa_la_vista[0m[38;2;178;34;34m[1m FAILED[0m[38;2;100;149;237m 6ms[0m
+  [38;2;0;206;209m[1m[4mReport:[0m
+  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ [38;2;30;144;255m1[0m
+ but was
+ [38;2;30;144;255m0[0m[0m[38;2;173;216;230m	at 'test_otra_jornada_reemplaza_el_programa_y_avisa_la_vista' in res://test/sistemas/tareas/caja_registradora_test.gd:70[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ [38;2;30;144;255m1[0m
+ but was
+ [38;2;30;144;255m0[0m[0m[38;2;173;216;230m	at 'test_otra_jornada_reemplaza_el_programa_y_avisa_la_vista' in res://test/sistemas/tareas/caja_registradora_test.gd:71[0m[38;2;128;128;128m[0m
+[38;2;128;128;128m[0m
+[38;2;30;144;255mStatistics:[0m[38;2;128;128;128m 4 test cases | 0 errors | 7 failures | 0 flaky | 0 skipped | 0 orphans |[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 69ms[0m
+[38;2;128;128;128m[0m
+[38;2;128;128;128m[0m
+[38;2;0;206;209mRun Test Suite: [0m[38;2;250;235;215mres://test/ui/diegetica/programa_de_tickets_test.gd[0m
+  [38;2;250;235;215mres://test/ui/diegetica/programa_de_tickets_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_siempre_presenta_tres_filas_y_repinta_sin_restos[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/ui/diegetica/programa_de_tickets_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_siempre_presenta_tres_filas_y_repinta_sin_restos[0m[38;2;178;34;34m[1m FAILED[0m[38;2;100;149;237m 14ms[0m
+  [38;2;0;206;209m[1m[4mReport:[0m
+  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m '[38;2;30;144;255mtrue[0m' but is '[38;2;30;144;255mfalse[0m'[0m[38;2;173;216;230m	at 'test_siempre_presenta_tres_filas_y_repinta_sin_restos' in res://test/ui/diegetica/programa_de_tickets_test.gd:13[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ '[38;2;30;144;255mMarolini[0m'
+ but was
+ '[38;2;30;144;255m[48;2;38;0;0m[38;2;255;255;255mMarolini[0m[38;2;30;144;255m[48;2;38;0;0m[0m[38;2;30;144;255m[0m'[0m[38;2;173;216;230m	at 'test_siempre_presenta_tres_filas_y_repinta_sin_restos' in res://test/ui/diegetica/programa_de_tickets_test.gd:16[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m '[38;2;30;144;255mtrue[0m' but is '[38;2;30;144;255mfalse[0m'[0m[38;2;173;216;230m	at 'test_siempre_presenta_tres_filas_y_repinta_sin_restos' in res://test/ui/diegetica/programa_de_tickets_test.gd:19[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ '[38;2;30;144;255mMarolini[0m'
+ but was
+ '[38;2;30;144;255m[48;2;38;0;0m[38;2;255;255;255mMarolini[0m[38;2;30;144;255m[48;2;38;0;0m[0m[38;2;30;144;255m[0m'[0m[38;2;173;216;230m	at 'test_siempre_presenta_tres_filas_y_repinta_sin_restos' in res://test/ui/diegetica/programa_de_tickets_test.gd:16[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m '[38;2;30;144;255mtrue[0m' but is '[38;2;30;144;255mfalse[0m'[0m[38;2;173;216;230m	at 'test_siempre_presenta_tres_filas_y_repinta_sin_restos' in res://test/ui/diegetica/programa_de_tickets_test.gd:19[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ '[38;2;30;144;255mCoracola[0m'
+ but was
+ '[38;2;30;144;255m[48;2;38;0;0m[38;2;255;255;255mCoracola[0m[38;2;30;144;255m[48;2;38;0;0m[0m[38;2;30;144;255m[0m'[0m[38;2;173;216;230m	at 'test_siempre_presenta_tres_filas_y_repinta_sin_restos' in res://test/ui/diegetica/programa_de_tickets_test.gd:16[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m '[38;2;30;144;255mtrue[0m' but is '[38;2;30;144;255mfalse[0m'[0m[38;2;173;216;230m	at 'test_siempre_presenta_tres_filas_y_repinta_sin_restos' in res://test/ui/diegetica/programa_de_tickets_test.gd:19[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ '[38;2;30;144;255mCoracola[0m'
+ but was
+ '[38;2;30;144;255m[48;2;38;0;0m[38;2;255;255;255mCoracola[0m[38;2;30;144;255m[48;2;38;0;0m[0m[38;2;30;144;255m[0m'[0m[38;2;173;216;230m	at 'test_siempre_presenta_tres_filas_y_repinta_sin_restos' in res://test/ui/diegetica/programa_de_tickets_test.gd:21[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m '[38;2;30;144;255mtrue[0m' but is '[38;2;30;144;255mfalse[0m'[0m[38;2;173;216;230m	at 'test_siempre_presenta_tres_filas_y_repinta_sin_restos' in res://test/ui/diegetica/programa_de_tickets_test.gd:24[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m '[38;2;30;144;255mtrue[0m' but is '[38;2;30;144;255mfalse[0m'[0m[38;2;173;216;230m	at 'test_siempre_presenta_tres_filas_y_repinta_sin_restos' in res://test/ui/diegetica/programa_de_tickets_test.gd:24[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ '[38;2;30;144;255mCLIC DERECHO / VOLVER AL LOCAL[0m'
+ but was
+ '[38;2;30;144;255m[48;2;38;0;0m[38;2;255;255;255mCLIC DERECHO / VOLVER AL LOCAL[0m[38;2;30;144;255m[48;2;38;0;0m[0m[38;2;30;144;255m[0m'[0m[38;2;173;216;230m	at 'test_siempre_presenta_tres_filas_y_repinta_sin_restos' in res://test/ui/diegetica/programa_de_tickets_test.gd:28[0m[38;2;128;128;128m[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/ui/diegetica/programa_de_tickets_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_cada_boton_publica_su_pedido_y_un_sonido[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/ui/diegetica/programa_de_tickets_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_cada_boton_publica_su_pedido_y_un_sonido[0m[38;2;178;34;34m[1m FAILED[0m[38;2;100;149;237m 9ms[0m
+  [38;2;0;206;209m[1m[4mReport:[0m
+  [38;2;128;128;128m[38;2;255;69;0mExpecting contains exactly elements:[0m
+ '[38;2;30;144;255m<empty>[0m'
+ do contains (in same order)
+ '[38;2;30;144;255m["boton", "borrar", "boton", "imprimir"][0m'
+but could not find elements:
+ '[38;2;30;144;255m["boton", "borrar", "boton", "imprimir"][0m'[0m[38;2;173;216;230m	at 'test_cada_boton_publica_su_pedido_y_un_sonido' in res://test/ui/diegetica/programa_de_tickets_test.gd:43[0m[38;2;128;128;128m[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/ui/diegetica/programa_de_tickets_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_el_lienzo_mantiene_los_tres_renglones_y_botones_al_redimensionar[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/ui/diegetica/programa_de_tickets_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_el_lienzo_mantiene_los_tres_renglones_y_botones_al_redimensionar[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 7ms[0m
+[38;2;128;128;128m[0m
+[38;2;30;144;255mStatistics:[0m[38;2;128;128;128m 3 test cases | 0 errors | 12 failures | 0 flaky | 0 skipped | 0 orphans |[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 63ms[0m
+[38;2;128;128;128m[0m
+[38;2;128;128;128m[0m
+[38;2;0;206;209mRun Test Suite: [0m[38;2;250;235;215mres://test/escenas/puestos/caja_registradora_test.gd[0m
+  [38;2;250;235;215mres://test/escenas/puestos/caja_registradora_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_el_derecho_abre_y_cierra_con_los_ocho_estados_de_la_mano[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/puestos/caja_registradora_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_el_derecho_abre_y_cierra_con_los_ocho_estados_de_la_mano[0m[38;2;178;34;34m[1m FAILED[0m[38;2;100;149;237m 253ms[0m
+  [38;2;0;206;209m[1m[4mReport:[0m
+  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m '[38;2;30;144;255mtrue[0m' but is '[38;2;30;144;255mfalse[0m'[0m[38;2;173;216;230m	at 'test_el_derecho_abre_y_cierra_con_los_ocho_estados_de_la_mano' in res://test/escenas/puestos/caja_registradora_test.gd:95
+	at '_abrir' in res://test/escenas/puestos/caja_registradora_test.gd:18[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m '[38;2;30;144;255mtrue[0m' but is '[38;2;30;144;255mfalse[0m'[0m[38;2;173;216;230m	at 'test_el_derecho_abre_y_cierra_con_los_ocho_estados_de_la_mano' in res://test/escenas/puestos/caja_registradora_test.gd:96
+	at '_abrir' in res://test/escenas/puestos/caja_registradora_test.gd:18[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m '[38;2;30;144;255mtrue[0m' but is '[38;2;30;144;255mfalse[0m'[0m[38;2;173;216;230m	at 'test_el_derecho_abre_y_cierra_con_los_ocho_estados_de_la_mano' in res://test/escenas/puestos/caja_registradora_test.gd:95
+	at '_derecho' in res://test/escenas/puestos/caja_registradora_test.gd:36[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m '[38;2;30;144;255mtrue[0m' but is '[38;2;30;144;255mfalse[0m'[0m[38;2;173;216;230m	at 'test_el_derecho_abre_y_cierra_con_los_ocho_estados_de_la_mano' in res://test/escenas/puestos/caja_registradora_test.gd:96
+	at '_derecho' in res://test/escenas/puestos/caja_registradora_test.gd:36[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ [38;2;30;144;255m<Resource>[0m
+ to refer to the same object
+ '[38;2;30;144;255m<null>[0m'[0m[38;2;173;216;230m	at 'test_el_derecho_abre_y_cierra_con_los_ocho_estados_de_la_mano' in res://test/escenas/puestos/caja_registradora_test.gd:108
+	at '_derecho' in res://test/escenas/puestos/caja_registradora_test.gd:36[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ [38;2;30;144;255m<Node3D>[0m
+ to refer to the same object
+ [38;2;30;144;255m<Node3D>[0m[0m[38;2;173;216;230m	at 'test_el_derecho_abre_y_cierra_con_los_ocho_estados_de_la_mano' in res://test/escenas/puestos/caja_registradora_test.gd:109
+	at '_derecho' in res://test/escenas/puestos/caja_registradora_test.gd:36[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m '[38;2;30;144;255mtrue[0m' but is '[38;2;30;144;255mfalse[0m'[0m[38;2;173;216;230m	at 'test_el_derecho_abre_y_cierra_con_los_ocho_estados_de_la_mano' in res://test/escenas/puestos/caja_registradora_test.gd:110
+	at '_derecho' in res://test/escenas/puestos/caja_registradora_test.gd:36[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m '[38;2;30;144;255mtrue[0m' but is '[38;2;30;144;255mfalse[0m'[0m[38;2;173;216;230m	at 'test_el_derecho_abre_y_cierra_con_los_ocho_estados_de_la_mano' in res://test/escenas/puestos/caja_registradora_test.gd:95
+	at '_derecho' in res://test/escenas/puestos/caja_registradora_test.gd:36[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m '[38;2;30;144;255mtrue[0m' but is '[38;2;30;144;255mfalse[0m'[0m[38;2;173;216;230m	at 'test_el_derecho_abre_y_cierra_con_los_ocho_estados_de_la_mano' in res://test/escenas/puestos/caja_registradora_test.gd:96
+	at '_derecho' in res://test/escenas/puestos/caja_registradora_test.gd:36[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ [38;2;30;144;255m<Resource>[0m
+ to refer to the same object
+ '[38;2;30;144;255m<null>[0m'[0m[38;2;173;216;230m	at 'test_el_derecho_abre_y_cierra_con_los_ocho_estados_de_la_mano' in res://test/escenas/puestos/caja_registradora_test.gd:108
+	at '_derecho' in res://test/escenas/puestos/caja_registradora_test.gd:36[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ [38;2;30;144;255m<Node3D>[0m
+ to refer to the same object
+ [38;2;30;144;255m<Node3D>[0m[0m[38;2;173;216;230m	at 'test_el_derecho_abre_y_cierra_con_los_ocho_estados_de_la_mano' in res://test/escenas/puestos/caja_registradora_test.gd:109
+	at '_derecho' in res://test/escenas/puestos/caja_registradora_test.gd:36[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m '[38;2;30;144;255mtrue[0m' but is '[38;2;30;144;255mfalse[0m'[0m[38;2;173;216;230m	at 'test_el_derecho_abre_y_cierra_con_los_ocho_estados_de_la_mano' in res://test/escenas/puestos/caja_registradora_test.gd:110
+	at '_derecho' in res://test/escenas/puestos/caja_registradora_test.gd:36[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m '[38;2;30;144;255mtrue[0m' but is '[38;2;30;144;255mfalse[0m'[0m[38;2;173;216;230m	at 'test_el_derecho_abre_y_cierra_con_los_ocho_estados_de_la_mano' in res://test/escenas/puestos/caja_registradora_test.gd:95
+	at '_derecho' in res://test/escenas/puestos/caja_registradora_test.gd:36[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m '[38;2;30;144;255mtrue[0m' but is '[38;2;30;144;255mfalse[0m'[0m[38;2;173;216;230m	at 'test_el_derecho_abre_y_cierra_con_los_ocho_estados_de_la_mano' in res://test/escenas/puestos/caja_registradora_test.gd:96
+	at '_derecho' in res://test/escenas/puestos/caja_registradora_test.gd:36[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ [38;2;30;144;255m<Resource>[0m
+ to refer to the same object
+ '[38;2;30;144;255m<null>[0m'[0m[38;2;173;216;230m	at 'test_el_derecho_abre_y_cierra_con_los_ocho_estados_de_la_mano' in res://test/escenas/puestos/caja_registradora_test.gd:108
+	at '_derecho' in res://test/escenas/puestos/caja_registradora_test.gd:36[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ [38;2;30;144;255m<Node3D>[0m
+ to refer to the same object
+ [38;2;30;144;255m<Node3D>[0m[0m[38;2;173;216;230m	at 'test_el_derecho_abre_y_cierra_con_los_ocho_estados_de_la_mano' in res://test/escenas/puestos/caja_registradora_test.gd:109
+	at '_derecho' in res://test/escenas/puestos/caja_registradora_test.gd:36[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m '[38;2;30;144;255mtrue[0m' but is '[38;2;30;144;255mfalse[0m'[0m[38;2;173;216;230m	at 'test_el_derecho_abre_y_cierra_con_los_ocho_estados_de_la_mano' in res://test/escenas/puestos/caja_registradora_test.gd:110
+	at '_derecho' in res://test/escenas/puestos/caja_registradora_test.gd:36[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m '[38;2;30;144;255mtrue[0m' but is '[38;2;30;144;255mfalse[0m'[0m[38;2;173;216;230m	at 'test_el_derecho_abre_y_cierra_con_los_ocho_estados_de_la_mano' in res://test/escenas/puestos/caja_registradora_test.gd:95
+	at '_derecho' in res://test/escenas/puestos/caja_registradora_test.gd:36[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m '[38;2;30;144;255mtrue[0m' but is '[38;2;30;144;255mfalse[0m'[0m[38;2;173;216;230m	at 'test_el_derecho_abre_y_cierra_con_los_ocho_estados_de_la_mano' in res://test/escenas/puestos/caja_registradora_test.gd:96
+	at '_derecho' in res://test/escenas/puestos/caja_registradora_test.gd:36[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ [38;2;30;144;255m<Resource>[0m
+ to refer to the same object
+ '[38;2;30;144;255m<null>[0m'[0m[38;2;173;216;230m	at 'test_el_derecho_abre_y_cierra_con_los_ocho_estados_de_la_mano' in res://test/escenas/puestos/caja_registradora_test.gd:108
+	at '_derecho' in res://test/escenas/puestos/caja_registradora_test.gd:36[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ [38;2;30;144;255m<Node3D>[0m
+ to refer to the same object
+ [38;2;30;144;255m<Node3D>[0m[0m[38;2;173;216;230m	at 'test_el_derecho_abre_y_cierra_con_los_ocho_estados_de_la_mano' in res://test/escenas/puestos/caja_registradora_test.gd:109
+	at '_derecho' in res://test/escenas/puestos/caja_registradora_test.gd:36[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m '[38;2;30;144;255mtrue[0m' but is '[38;2;30;144;255mfalse[0m'[0m[38;2;173;216;230m	at 'test_el_derecho_abre_y_cierra_con_los_ocho_estados_de_la_mano' in res://test/escenas/puestos/caja_registradora_test.gd:110
+	at '_derecho' in res://test/escenas/puestos/caja_registradora_test.gd:36[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m '[38;2;30;144;255mtrue[0m' but is '[38;2;30;144;255mfalse[0m'[0m[38;2;173;216;230m	at 'test_el_derecho_abre_y_cierra_con_los_ocho_estados_de_la_mano' in res://test/escenas/puestos/caja_registradora_test.gd:95
+	at '_derecho' in res://test/escenas/puestos/caja_registradora_test.gd:36[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m '[38;2;30;144;255mtrue[0m' but is '[38;2;30;144;255mfalse[0m'[0m[38;2;173;216;230m	at 'test_el_derecho_abre_y_cierra_con_los_ocho_estados_de_la_mano' in res://test/escenas/puestos/caja_registradora_test.gd:96
+	at '_derecho' in res://test/escenas/puestos/caja_registradora_test.gd:36[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ [38;2;30;144;255m<Resource>[0m
+ to refer to the same object
+ '[38;2;30;144;255m<null>[0m'[0m[38;2;173;216;230m	at 'test_el_derecho_abre_y_cierra_con_los_ocho_estados_de_la_mano' in res://test/escenas/puestos/caja_registradora_test.gd:108
+	at '_derecho' in res://test/escenas/puestos/caja_registradora_test.gd:36[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ [38;2;30;144;255m<Node3D>[0m
+ to refer to the same object
+ [38;2;30;144;255m<Node3D>[0m[0m[38;2;173;216;230m	at 'test_el_derecho_abre_y_cierra_con_los_ocho_estados_de_la_mano' in res://test/escenas/puestos/caja_registradora_test.gd:109
+	at '_derecho' in res://test/escenas/puestos/caja_registradora_test.gd:36[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m '[38;2;30;144;255mtrue[0m' but is '[38;2;30;144;255mfalse[0m'[0m[38;2;173;216;230m	at 'test_el_derecho_abre_y_cierra_con_los_ocho_estados_de_la_mano' in res://test/escenas/puestos/caja_registradora_test.gd:110
+	at '_derecho' in res://test/escenas/puestos/caja_registradora_test.gd:36[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m '[38;2;30;144;255mtrue[0m' but is '[38;2;30;144;255mfalse[0m'[0m[38;2;173;216;230m	at 'test_el_derecho_abre_y_cierra_con_los_ocho_estados_de_la_mano' in res://test/escenas/puestos/caja_registradora_test.gd:95
+	at '_derecho' in res://test/escenas/puestos/caja_registradora_test.gd:36[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m '[38;2;30;144;255mtrue[0m' but is '[38;2;30;144;255mfalse[0m'[0m[38;2;173;216;230m	at 'test_el_derecho_abre_y_cierra_con_los_ocho_estados_de_la_mano' in res://test/escenas/puestos/caja_registradora_test.gd:96
+	at '_derecho' in res://test/escenas/puestos/caja_registradora_test.gd:36[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ [38;2;30;144;255m<Resource>[0m
+ to refer to the same object
+ '[38;2;30;144;255m<null>[0m'[0m[38;2;173;216;230m	at 'test_el_derecho_abre_y_cierra_con_los_ocho_estados_de_la_mano' in res://test/escenas/puestos/caja_registradora_test.gd:108
+	at '_derecho' in res://test/escenas/puestos/caja_registradora_test.gd:36[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ [38;2;30;144;255m<Node3D>[0m
+ to refer to the same object
+ [38;2;30;144;255m<Node3D>[0m[0m[38;2;173;216;230m	at 'test_el_derecho_abre_y_cierra_con_los_ocho_estados_de_la_mano' in res://test/escenas/puestos/caja_registradora_test.gd:109
+	at '_derecho' in res://test/escenas/puestos/caja_registradora_test.gd:36[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m '[38;2;30;144;255mtrue[0m' but is '[38;2;30;144;255mfalse[0m'[0m[38;2;173;216;230m	at 'test_el_derecho_abre_y_cierra_con_los_ocho_estados_de_la_mano' in res://test/escenas/puestos/caja_registradora_test.gd:110
+	at '_derecho' in res://test/escenas/puestos/caja_registradora_test.gd:36[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m '[38;2;30;144;255mtrue[0m' but is '[38;2;30;144;255mfalse[0m'[0m[38;2;173;216;230m	at 'test_el_derecho_abre_y_cierra_con_los_ocho_estados_de_la_mano' in res://test/escenas/puestos/caja_registradora_test.gd:95
+	at '_derecho' in res://test/escenas/puestos/caja_registradora_test.gd:36[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m '[38;2;30;144;255mtrue[0m' but is '[38;2;30;144;255mfalse[0m'[0m[38;2;173;216;230m	at 'test_el_derecho_abre_y_cierra_con_los_ocho_estados_de_la_mano' in res://test/escenas/puestos/caja_registradora_test.gd:96
+	at '_derecho' in res://test/escenas/puestos/caja_registradora_test.gd:36[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ [38;2;30;144;255m<Resource>[0m
+ to refer to the same object
+ '[38;2;30;144;255m<null>[0m'[0m[38;2;173;216;230m	at 'test_el_derecho_abre_y_cierra_con_los_ocho_estados_de_la_mano' in res://test/escenas/puestos/caja_registradora_test.gd:108
+	at '_derecho' in res://test/escenas/puestos/caja_registradora_test.gd:36[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ [38;2;30;144;255m<Node3D>[0m
+ to refer to the same object
+ [38;2;30;144;255m<Node3D>[0m[0m[38;2;173;216;230m	at 'test_el_derecho_abre_y_cierra_con_los_ocho_estados_de_la_mano' in res://test/escenas/puestos/caja_registradora_test.gd:109
+	at '_derecho' in res://test/escenas/puestos/caja_registradora_test.gd:36[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m '[38;2;30;144;255mtrue[0m' but is '[38;2;30;144;255mfalse[0m'[0m[38;2;173;216;230m	at 'test_el_derecho_abre_y_cierra_con_los_ocho_estados_de_la_mano' in res://test/escenas/puestos/caja_registradora_test.gd:110
+	at '_derecho' in res://test/escenas/puestos/caja_registradora_test.gd:36[0m[38;2;128;128;128m[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/puestos/caja_registradora_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_izquierdo_y_examen_vacios_no_abren_y_otras_pantallas_bloquean[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/puestos/caja_registradora_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_izquierdo_y_examen_vacios_no_abren_y_otras_pantallas_bloquean[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 146ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/puestos/caja_registradora_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_el_reloj_corre_la_pausa_real_va_encima_y_el_turno_cierra[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/puestos/caja_registradora_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_el_reloj_corre_la_pausa_real_va_encima_y_el_turno_cierra[0m[38;2;178;34;34m[1m FAILED[0m[38;2;100;149;237m 173ms[0m
+  [38;2;0;206;209m[1m[4mReport:[0m
+  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m '[38;2;30;144;255mtrue[0m' but is '[38;2;30;144;255mfalse[0m'[0m[38;2;173;216;230m	at 'test_el_reloj_corre_la_pausa_real_va_encima_y_el_turno_cierra' in res://test/escenas/puestos/caja_registradora_test.gd:161[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m '[38;2;30;144;255mtrue[0m' but is '[38;2;30;144;255mfalse[0m'[0m[38;2;173;216;230m	at 'test_el_reloj_corre_la_pausa_real_va_encima_y_el_turno_cierra' in res://test/escenas/puestos/caja_registradora_test.gd:169[0m[38;2;128;128;128m[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/puestos/caja_registradora_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_los_botones_imprimen_copia_y_borrar_repinta_tres_vacios[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/puestos/caja_registradora_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_los_botones_imprimen_copia_y_borrar_repinta_tres_vacios[0m[38;2;178;34;34m[1m FAILED[0m[38;2;100;149;237m 117ms[0m
+  [38;2;0;206;209m[1m[4mReport:[0m
+  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ [38;2;30;144;255m1[0m
+ but was
+ [38;2;30;144;255m0[0m[0m[38;2;173;216;230m	at 'test_los_botones_imprimen_copia_y_borrar_repinta_tres_vacios' in res://test/escenas/puestos/caja_registradora_test.gd:189
+	at '_abrir' in res://test/escenas/puestos/caja_registradora_test.gd:18[0m[38;2;128;128;128m[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/puestos/caja_registradora_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_imprimir_otra_vez_suelta_el_anterior_y_el_nuevo_queda_quieto[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/puestos/caja_registradora_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_imprimir_otra_vez_suelta_el_anterior_y_el_nuevo_queda_quieto[0m[38;2;178;34;34m[1m FAILED[0m[38;2;100;149;237m 113ms[0m
+  [38;2;0;206;209m[1m[4mReport:[0m
+  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ [38;2;30;144;255m1[0m
+ but was
+ [38;2;30;144;255m0[0m[0m[38;2;173;216;230m	at 'test_imprimir_otra_vez_suelta_el_anterior_y_el_nuevo_queda_quieto' in res://test/escenas/puestos/caja_registradora_test.gd:205
+	at '_abrir' in res://test/escenas/puestos/caja_registradora_test.gd:18[0m[38;2;128;128;128m[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/puestos/caja_registradora_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_imprimir_otro_con_el_anterior_en_mano_no_lo_descongela[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/puestos/caja_registradora_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_imprimir_otro_con_el_anterior_en_mano_no_lo_descongela[0m[38;2;178;34;34m[1m FAILED[0m[38;2;100;149;237m 116ms[0m
+  [38;2;0;206;209m[1m[4mReport:[0m
+  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ [38;2;30;144;255m1[0m
+ but was
+ [38;2;30;144;255m0[0m[0m[38;2;173;216;230m	at 'test_imprimir_otro_con_el_anterior_en_mano_no_lo_descongela' in res://test/escenas/puestos/caja_registradora_test.gd:233
+	at '_abrir' in res://test/escenas/puestos/caja_registradora_test.gd:18[0m[38;2;128;128;128m[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/puestos/caja_registradora_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_otra_jornada_quita_papeles_del_piso_y_del_examen_y_vacia_el_programa[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/puestos/caja_registradora_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_otra_jornada_quita_papeles_del_piso_y_del_examen_y_vacia_el_programa[0m[38;2;178;34;34m[1m FAILED[0m[38;2;100;149;237m 114ms[0m
+  [38;2;0;206;209m[1m[4mReport:[0m
+  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ [38;2;30;144;255m2[0m
+ but was
+ [38;2;30;144;255m0[0m[0m[38;2;173;216;230m	at 'test_otra_jornada_quita_papeles_del_piso_y_del_examen_y_vacia_el_programa' in res://test/escenas/puestos/caja_registradora_test.gd:267
+	at '_abrir' in res://test/escenas/puestos/caja_registradora_test.gd:18[0m[38;2;128;128;128m[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/puestos/caja_registradora_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_caja_y_papel_tienen_foco_y_contorno_y_la_ranura_no_deforma_el_papel[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/puestos/caja_registradora_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_caja_y_papel_tienen_foco_y_contorno_y_la_ranura_no_deforma_el_papel[0m[38;2;178;34;34m[1m FAILED[0m[38;2;100;149;237m 119ms[0m
+  [38;2;0;206;209m[1m[4mReport:[0m
+  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ [38;2;30;144;255m1[0m
+ but was
+ [38;2;30;144;255m0[0m[0m[38;2;173;216;230m	at 'test_caja_y_papel_tienen_foco_y_contorno_y_la_ranura_no_deforma_el_papel' in res://test/escenas/puestos/caja_registradora_test.gd:366
+	at '_enfocar' in res://test/escenas/puestos/caja_registradora_test.gd:348[0m[38;2;128;128;128m[0m
+[38;2;128;128;128m[0m
+[38;2;30;144;255mStatistics:[0m[38;2;128;128;128m 8 test cases | 0 errors | 44 failures | 0 flaky | 0 skipped | 0 orphans |[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 1s 247ms[0m
+[38;2;128;128;128m[0m
+[38;2;128;128;128m[0m
+[38;2;0;206;209mRun Test Suite: [0m[38;2;250;235;215mres://test/escenas/puestos/lector_test.gd[0m
+  [38;2;250;235;215mres://test/escenas/puestos/lector_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_el_lector_anota_la_unidad_con_el_programa_cerrado_y_conserva_la_mano[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/puestos/lector_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_el_lector_anota_la_unidad_con_el_programa_cerrado_y_conserva_la_mano[0m[38;2;178;34;34m[1m FAILED[0m[38;2;100;149;237m 117ms[0m
+  [38;2;0;206;209m[1m[4mReport:[0m
+  [38;2;128;128;128m[38;2;255;69;0mExpecting contains exactly elements:[0m
+ '[38;2;30;144;255m<empty>[0m'
+ do contains (in same order)
+ '[38;2;30;144;255m[<RefCounted#-9223370940698584398>, <RefCounted#-9223370940698584398>, <RefCounted#-9223370940698584398>][0m'
+but could not find elements:
+ '[38;2;30;144;255m[<RefCounted#-9223370940698584398>, <RefCounted#-9223370940698584398>, <RefCounted#-9223370940698584398>][0m'[0m[38;2;173;216;230m	at 'test_el_lector_anota_la_unidad_con_el_programa_cerrado_y_conserva_la_mano' in res://test/escenas/puestos/lector_test.gd:91
+	at '_abrir' in res://test/escenas/puestos/lector_test.gd:18[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ '[38;2;30;144;255mMarolini[0m'
+ but was
+ '[38;2;30;144;255m[48;2;38;0;0m[38;2;255;255;255mMarolini[0m[38;2;30;144;255m[48;2;38;0;0m[0m[38;2;30;144;255m[0m'[0m[38;2;173;216;230m	at 'test_el_lector_anota_la_unidad_con_el_programa_cerrado_y_conserva_la_mano' in res://test/escenas/puestos/lector_test.gd:104
+	at '_abrir' in res://test/escenas/puestos/lector_test.gd:18[0m[38;2;128;128;128m[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/puestos/lector_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_los_seis_objetos_se_rechazan_y_siguen_en_la_mano[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/puestos/lector_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_los_seis_objetos_se_rechazan_y_siguen_en_la_mano[0m[38;2;178;34;34m[1m FAILED[0m[38;2;100;149;237m 119ms[0m
+  [38;2;0;206;209m[1m[4mReport:[0m
+  [38;2;128;128;128m[38;2;255;69;0mExpecting contains exactly elements:[0m
+ '[38;2;30;144;255m<empty>[0m'
+ do contains (in same order)
+ '[38;2;30;144;255m[1, 1, 1, 1, 1, 1][0m'
+but could not find elements:
+ '[38;2;30;144;255m[1, 1, 1, 1, 1, 1][0m'[0m[38;2;173;216;230m	at 'test_los_seis_objetos_se_rechazan_y_siguen_en_la_mano' in res://test/escenas/puestos/lector_test.gd:137
+	at '_abrir' in res://test/escenas/puestos/lector_test.gd:18[0m[38;2;128;128;128m[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/puestos/lector_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_las_manos_vacias_y_los_otros_gestos_no_leen[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/puestos/lector_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_las_manos_vacias_y_los_otros_gestos_no_leen[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 107ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/puestos/lector_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_el_lector_apoya_en_el_mostrador_y_tiene_foco_y_contorno[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/puestos/lector_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_el_lector_apoya_en_el_mostrador_y_tiene_foco_y_contorno[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 121ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/puestos/lector_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_los_eventos_reales_piden_escaneo_error_impresion_y_botones[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+ERROR: Error calling from signal 'cobro_rechazado' to callable: 'StaticBody3D(ventanilla.gd)::_al_rechazarse_el_cobro': Cannot convert argument 1 from Array to Array.
+   at: emit_signalp (core/object/object.cpp:1311)
+   GDScript backtrace (most recent call first):
+       [0] test_los_eventos_reales_piden_escaneo_error_impresion_y_botones (res://test/escenas/puestos/lector_test.gd:291)
+       [1] _abrir (res://test/escenas/puestos/lector_test.gd:18)
+  [38;2;250;235;215mres://test/escenas/puestos/lector_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_los_eventos_reales_piden_escaneo_error_impresion_y_botones[0m[38;2;178;34;34m[1m FAILED[0m[38;2;100;149;237m 117ms[0m
+  [38;2;0;206;209m[1m[4mReport:[0m
+  [38;2;128;128;128m[38;2;255;69;0mExpecting contains exactly elements:[0m
+ '[38;2;30;144;255m<empty>[0m'
+ do contains (in same order)
+ '[38;2;30;144;255m[28, 28, 28, 17, 17, 29, 13, 13][0m'
+but could not find elements:
+ '[38;2;30;144;255m[28, 28, 28, 17, 17, 29, 13, 13][0m'[0m[38;2;173;216;230m	at 'test_los_eventos_reales_piden_escaneo_error_impresion_y_botones' in res://test/escenas/puestos/lector_test.gd:278
+	at '_abrir' in res://test/escenas/puestos/lector_test.gd:18[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ must be empty but was
+ '[38;2;30;144;255m[17][0m'[0m[38;2;173;216;230m	at 'test_los_eventos_reales_piden_escaneo_error_impresion_y_botones' in res://test/escenas/puestos/lector_test.gd:292
+	at '_abrir' in res://test/escenas/puestos/lector_test.gd:18[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting: not to be[0m '[38;2;30;144;255m<null>[0m'[0m[38;2;173;216;230m	at 'test_los_eventos_reales_piden_escaneo_error_impresion_y_botones' in res://test/escenas/puestos/lector_test.gd:300
+	at '_abrir' in res://test/escenas/puestos/lector_test.gd:18[0m[38;2;128;128;128m[0m
+[38;2;128;128;128m[0m
+[38;2;30;144;255mStatistics:[0m[38;2;128;128;128m 5 test cases | 0 errors | 6 failures | 0 flaky | 0 skipped | 0 orphans |[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 626ms[0m
+[38;2;128;128;128m[0m
+[38;2;128;128;128m[0m
+[38;2;0;206;209mRun Test Suite: [0m[38;2;250;235;215mres://test/dominio/ambiente/tabla_de_sonidos_test.gd[0m
+  [38;2;250;235;215mres://test/dominio/ambiente/tabla_de_sonidos_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_la_tabla_del_disco_carga[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/ambiente/tabla_de_sonidos_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_la_tabla_del_disco_carga[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 20ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/ambiente/tabla_de_sonidos_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_la_tabla_cubre_todos_los_eventos[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/ambiente/tabla_de_sonidos_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_la_tabla_cubre_todos_los_eventos[0m[38;2;178;34;34m[1m FAILED[0m[38;2;100;149;237m 21ms[0m
+  [38;2;0;206;209m[1m[4mReport:[0m
+  [38;2;128;128;128mla tabla no cubre los eventos [28, 29][0m[38;2;173;216;230m	at 'test_la_tabla_cubre_todos_los_eventos' in res://test/dominio/ambiente/tabla_de_sonidos_test.gd:31[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m '[38;2;30;144;255mtrue[0m' but is '[38;2;30;144;255mfalse[0m'[0m[38;2;173;216;230m	at 'test_la_tabla_cubre_todos_los_eventos' in res://test/dominio/ambiente/tabla_de_sonidos_test.gd:37[0m[38;2;128;128;128m[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/ambiente/tabla_de_sonidos_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_cinco_eventos_suenan_con_su_audio_y_su_bus[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/ambiente/tabla_de_sonidos_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_cinco_eventos_suenan_con_su_audio_y_su_bus[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 20ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/ambiente/tabla_de_sonidos_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_el_boton_de_la_computadora_lo_dispara_boton_pulsado[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/ambiente/tabla_de_sonidos_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_el_boton_de_la_computadora_lo_dispara_boton_pulsado[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 21ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/ambiente/tabla_de_sonidos_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_cerrar_la_jornada_y_abrir_la_computadora_quedan_mudos[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/ambiente/tabla_de_sonidos_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_cerrar_la_jornada_y_abrir_la_computadora_quedan_mudos[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 20ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/ambiente/tabla_de_sonidos_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_ninguna_fila_del_disco_sale_por_un_bus_que_no_existe[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/ambiente/tabla_de_sonidos_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_ninguna_fila_del_disco_sale_por_un_bus_que_no_existe[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 21ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/ambiente/tabla_de_sonidos_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_un_evento_sin_fila_contesta_null_en_vez_de_reventar[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/ambiente/tabla_de_sonidos_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_un_evento_sin_fila_contesta_null_en_vez_de_reventar[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 5ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/ambiente/tabla_de_sonidos_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_una_tabla_con_una_fila_invalida_la_nombra[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/ambiente/tabla_de_sonidos_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_una_tabla_con_una_fila_invalida_la_nombra[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 6ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/ambiente/tabla_de_sonidos_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_la_fila_de_un_evento_de_objeto_sale_de_su_sonoridad[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/ambiente/tabla_de_sonidos_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_la_fila_de_un_evento_de_objeto_sale_de_su_sonoridad[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 20ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/ambiente/tabla_de_sonidos_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_un_par_sin_fila_contesta_null[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/ambiente/tabla_de_sonidos_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_un_par_sin_fila_contesta_null[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 6ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/ambiente/tabla_de_sonidos_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_la_tabla_nombra_el_par_que_falta[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/ambiente/tabla_de_sonidos_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_la_tabla_nombra_el_par_que_falta[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 20ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/ambiente/tabla_de_sonidos_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_cada_sonoridad_con_audio_suena_su_propio_archivo[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/ambiente/tabla_de_sonidos_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_cada_sonoridad_con_audio_suena_su_propio_archivo[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 21ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/ambiente/tabla_de_sonidos_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_la_musica_y_el_ambiente_van_en_bucle_por_su_bus[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/ambiente/tabla_de_sonidos_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_la_musica_y_el_ambiente_van_en_bucle_por_su_bus[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 22ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/ambiente/tabla_de_sonidos_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_lo_que_pasa_en_un_lugar_suena_del_espacio_y_lo_demas_plano[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/ambiente/tabla_de_sonidos_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_lo_que_pasa_en_un_lugar_suena_del_espacio_y_lo_demas_plano[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 21ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/ambiente/tabla_de_sonidos_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_los_pasos_alternan_pisadas_planas[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/ambiente/tabla_de_sonidos_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_los_pasos_alternan_pisadas_planas[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 20ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/ambiente/tabla_de_sonidos_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_la_toma_larga_de_pasos_no_se_usa[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/ambiente/tabla_de_sonidos_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_la_toma_larga_de_pasos_no_se_usa[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 6ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/ambiente/tabla_de_sonidos_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_la_compra_el_lector_y_el_celular_suenan_con_su_audio[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/ambiente/tabla_de_sonidos_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_la_compra_el_lector_y_el_celular_suenan_con_su_audio[0m[38;2;178;34;34m[1m FAILED[0m[38;2;100;149;237m 20ms[0m
+  [38;2;0;206;209m[1m[4mReport:[0m
+  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ '[38;2;30;144;255mlectura_rechazada[0m'
+ but was
+ '[38;2;30;144;255m[48;2;38;0;0m[38;2;255;255;255mle[0m[38;2;30;144;255m[48;2;38;0;0m[0m[38;2;30;144;255mc[48;2;38;0;0m[38;2;255;255;255mtu[0m[38;2;30;144;255m[48;2;38;0;0m[0m[38;2;30;144;255m[48;2;0;38;0m[38;2;255;255;255mob[0m[38;2;30;144;255m[48;2;0;38;0m[0m[38;2;30;144;255mr[48;2;38;0;0m[38;2;255;255;255ma[0m[38;2;30;144;255m[48;2;38;0;0m[0m[38;2;30;144;255m[48;2;0;38;0m[38;2;255;255;255mo[0m[38;2;30;144;255m[48;2;0;38;0m[0m[38;2;30;144;255m_rechazad[48;2;38;0;0m[38;2;255;255;255ma[0m[38;2;30;144;255m[48;2;38;0;0m[0m[38;2;30;144;255m[48;2;0;38;0m[38;2;255;255;255mo[0m[38;2;30;144;255m[48;2;0;38;0m[0m[38;2;30;144;255m[0m'[0m[38;2;173;216;230m	at 'test_la_compra_el_lector_y_el_celular_suenan_con_su_audio' in res://test/dominio/ambiente/tabla_de_sonidos_test.gd:253[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting: not to be[0m '[38;2;30;144;255m<null>[0m'[0m[38;2;173;216;230m	at 'test_la_compra_el_lector_y_el_celular_suenan_con_su_audio' in res://test/dominio/ambiente/tabla_de_sonidos_test.gd:250[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting: not to be[0m '[38;2;30;144;255m<null>[0m'[0m[38;2;173;216;230m	at 'test_la_compra_el_lector_y_el_celular_suenan_con_su_audio' in res://test/dominio/ambiente/tabla_de_sonidos_test.gd:250[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ '[38;2;30;144;255mCaja[0m'
+ but was
+ '[38;2;30;144;255m[48;2;38;0;0m[38;2;255;255;255mC[0m[38;2;30;144;255m[48;2;38;0;0m[0m[38;2;30;144;255m[48;2;0;38;0m[38;2;255;255;255mVent[0m[38;2;30;144;255m[48;2;0;38;0m[0m[38;2;30;144;255ma[48;2;38;0;0m[38;2;255;255;255mj[0m[38;2;30;144;255m[48;2;38;0;0m[0m[38;2;30;144;255m[48;2;0;38;0m[38;2;255;255;255mnill[0m[38;2;30;144;255m[48;2;0;38;0m[0m[38;2;30;144;255ma[0m'[0m[38;2;173;216;230m	at 'test_la_compra_el_lector_y_el_celular_suenan_con_su_audio' in res://test/dominio/ambiente/tabla_de_sonidos_test.gd:262[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ '[38;2;30;144;255mVentanilla[0m'
+ not equal to
+ '[38;2;30;144;255mVentanilla[0m'[0m[38;2;173;216;230m	at 'test_la_compra_el_lector_y_el_celular_suenan_con_su_audio' in res://test/dominio/ambiente/tabla_de_sonidos_test.gd:263[0m[38;2;128;128;128m[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/ambiente/tabla_de_sonidos_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_las_tres_senales_llegan_de_una_fuente_del_audio[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/ambiente/tabla_de_sonidos_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_las_tres_senales_llegan_de_una_fuente_del_audio[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 7ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/ambiente/tabla_de_sonidos_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_la_ronda_reparte_por_turno_y_vuelve_al_principio[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/ambiente/tabla_de_sonidos_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_la_ronda_reparte_por_turno_y_vuelve_al_principio[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 5ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/ambiente/tabla_de_sonidos_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_una_ronda_sin_voces_queda_vacia_y_no_falla[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/ambiente/tabla_de_sonidos_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_una_ronda_sin_voces_queda_vacia_y_no_falla[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 5ms[0m
+[38;2;128;128;128m[0m
+[38;2;30;144;255mStatistics:[0m[38;2;128;128;128m 20 test cases | 0 errors | 7 failures | 0 flaky | 0 skipped | 0 orphans |[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 427ms[0m
+[38;2;128;128;128m[0m
+[38;2;128;128;128m[0m
+[38;2;30;144;255mOverall Summary:[0m[38;2;255;255;255m 51 test cases | 0 errors | 101 failures | 0 flaky | 0 skipped | 0 orphans |[0m
+[38;2;233;150;122mExecuted test suites: (7/7)[0m
+[38;2;233;150;122mExecuted test cases : (51/51)[0m
+[38;2;233;150;122mTotal execution time: 2s 612ms[0m
+[38;2;255;255;255m [0m[38;2;100;149;237mOpen XML Report at: file://reports/report_12/results.xml[0m
+[38;2;100;149;237mOpen HTML Report at: file://reports/report_12/index.html[0m
+[38;2;178;34;34mExit code: 100[0m
+Run dispose test resources

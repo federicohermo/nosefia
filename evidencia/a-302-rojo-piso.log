@@ -1,0 +1,72 @@
+ERROR: The remote port number must be between 1 and 65535 (inclusive).
+   at: connect_to_host (core/io/stream_peer_tcp.cpp:69)
+ERROR: Remote Debugger: Unable to connect to host '127.0.0.1:0'.
+   at: create_tcp (core/debugger/remote_debugger_peer.cpp:247)
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+[2J[H[38;2;233;150;122m
+--------------------------------------------------------------------------------------------------
+GdUnit4 Comandline Tool
+--------------------------------------------------------------------------------------------------[0m
+[38;2;0;191;255mDisabled fail fast![0m
+[38;2;0;191;255mSet write reports to reports[0m
+[38;2;218;165;32m
+Headless mode is ignored by option '--ignoreHeadlessMode'"
+
+Please note that tests that use UI interaction do not work correctly in headless mode.
+Godot 'InputEvents' are not transported by the Godot engine in headless mode and therefore
+have no effect in the test!
+[0m
+[38;2;100;149;237mInstalling GdUnit4 session system hooks.[0m
+[38;2;100;149;237mSession hook 'GdUnitHtmlTestReporter' installed.[0m
+[38;2;100;149;237mSession hook 'GdUnitXMLTestReporter' installed.[0m
+[38;2;100;149;237mInstalling GdUnit4 session hooks.[0m
+[38;2;100;149;237mSession hook 'Guardado de la sesión' installed.[0m
+ERROR: Couldn't open directory at path "user://guardado_de_los_tests_57400".
+   at: get_files_at (core/io/dir_access.cpp:578)
+   GDScript backtrace (most recent call first):
+       [0] _borrar_la_carpeta (res://test/guardado_de_la_sesion.gd:40)
+       [1] startup (res://test/guardado_de_la_sesion.gd:22)
+       [2] execute (res://addons/gdUnit4/src/core/hooks/GdUnitTestSessionHookService.gd:125)
+       [3] execute_startup (res://addons/gdUnit4/src/core/hooks/GdUnitTestSessionHookService.gd:108)
+       [4] _process (res://addons/gdUnit4/src/core/runners/GdUnitTestSessionRunner.gd:127)
+[38;2;0;206;209mRun Test Suite: [0m[38;2;250;235;215mres://test/escenas/puestos/caja_registradora_test.gd[0m
+  [38;2;250;235;215mres://test/escenas/puestos/caja_registradora_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_el_derecho_abre_y_cierra_con_los_ocho_estados_de_la_mano[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/puestos/caja_registradora_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_el_derecho_abre_y_cierra_con_los_ocho_estados_de_la_mano[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 257ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/puestos/caja_registradora_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_izquierdo_y_examen_vacios_no_abren_y_otras_pantallas_bloquean[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/puestos/caja_registradora_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_izquierdo_y_examen_vacios_no_abren_y_otras_pantallas_bloquean[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 142ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/puestos/caja_registradora_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_el_reloj_corre_la_pausa_real_va_encima_y_el_turno_cierra[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/puestos/caja_registradora_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_el_reloj_corre_la_pausa_real_va_encima_y_el_turno_cierra[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 170ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/puestos/caja_registradora_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_los_botones_imprimen_copia_y_borrar_repinta_tres_vacios[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/puestos/caja_registradora_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_los_botones_imprimen_copia_y_borrar_repinta_tres_vacios[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 117ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/puestos/caja_registradora_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_imprimir_otra_vez_suelta_el_anterior_y_el_nuevo_queda_quieto[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/puestos/caja_registradora_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_imprimir_otra_vez_suelta_el_anterior_y_el_nuevo_queda_quieto[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 278ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/puestos/caja_registradora_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_imprimir_otro_con_el_anterior_en_mano_no_lo_descongela[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/puestos/caja_registradora_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_imprimir_otro_con_el_anterior_en_mano_no_lo_descongela[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 115ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/puestos/caja_registradora_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_otra_jornada_quita_papeles_del_piso_y_del_examen_y_vacia_el_programa[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/puestos/caja_registradora_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_otra_jornada_quita_papeles_del_piso_y_del_examen_y_vacia_el_programa[0m[38;2;178;34;34m[1m FAILED[0m[38;2;100;149;237m 1s 59ms[0m
+  [38;2;0;206;209m[1m[4mReport:[0m
+  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ must be empty but was
+ '[38;2;30;144;255m[Ticket:<RigidBody3D#740445655697>, @RigidBody3D@3202:<RigidBody3D#763011011273>][0m'[0m[38;2;173;216;230m	at 'test_otra_jornada_quita_papeles_del_piso_y_del_examen_y_vacia_el_programa' in res://test/escenas/puestos/caja_registradora_test.gd:309[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m '[38;2;30;144;255mfalse[0m' but is '[38;2;30;144;255mtrue[0m'[0m[38;2;173;216;230m	at 'test_otra_jornada_quita_papeles_del_piso_y_del_examen_y_vacia_el_programa' in res://test/escenas/puestos/caja_registradora_test.gd:314[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m '[38;2;30;144;255mfalse[0m' but is '[38;2;30;144;255mtrue[0m'[0m[38;2;173;216;230m	at 'test_otra_jornada_quita_papeles_del_piso_y_del_examen_y_vacia_el_programa' in res://test/escenas/puestos/caja_registradora_test.gd:314[0m[38;2;128;128;128m[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/puestos/caja_registradora_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_caja_y_papel_tienen_foco_y_contorno_y_la_ranura_no_deforma_el_papel[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/puestos/caja_registradora_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_caja_y_papel_tienen_foco_y_contorno_y_la_ranura_no_deforma_el_papel[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 201ms[0m
+[38;2;128;128;128m[0m
+[38;2;30;144;255mStatistics:[0m[38;2;128;128;128m 8 test cases | 0 errors | 3 failures | 0 flaky | 0 skipped | 0 orphans |[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 2s 397ms[0m
+[38;2;128;128;128m[0m
+[38;2;128;128;128m[0m
+[38;2;30;144;255mOverall Summary:[0m[38;2;255;255;255m 8 test cases | 0 errors | 3 failures | 0 flaky | 0 skipped | 0 orphans |[0m
+[38;2;233;150;122mExecuted test suites: (1/1)[0m
+[38;2;233;150;122mExecuted test cases : (8/8)[0m
+[38;2;233;150;122mTotal execution time: 2s 397ms[0m
+[38;2;255;255;255m [0m[38;2;100;149;237mOpen XML Report at: file://reports/report_16/results.xml[0m
+[38;2;100;149;237mOpen HTML Report at: file://reports/report_16/index.html[0m
+[38;2;178;34;34mExit code: 100[0m
+Run dispose test resources

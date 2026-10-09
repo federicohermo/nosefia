@@ -1,0 +1,42 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+OpenGL API 3.3.0 NVIDIA 591.66 - Compatibility - Using Device: NVIDIA - NVIDIA GeForce RTX 4050 Laptop GPU
+
+CAPTURAS302_MONTAJE_LIBERADO
+ERROR: Attempted to next an invalid (previously freed?) object instance into a 'TypedDictionary.Key'.
+   at: _internal_validate_object (./core/variant/container_type_validate.h:97)
+   GDScript backtrace (most recent call first):
+       [0] apagar (res://src/sistemas/marco/marco_del_objetivo.gd:45)
+       [1] enfocar (res://src/sistemas/marco/marco_del_objetivo.gd:24)
+       [2] _leer_la_mira (res://src/escenas/jugador.gd:490)
+       [3] _montar (C:/Users/fede_/orca/workspaces/nosefia/darter/.claude/scratch/batch-64-309/a-302-capturas.gd:37)
+ERROR: Condition "!_p->typed_key.validate(key, "next")" is true. Returning: nullptr
+   at: next (core/variant/dictionary.cpp:575)
+   GDScript backtrace (most recent call first):
+       [0] apagar (res://src/sistemas/marco/marco_del_objetivo.gd:45)
+       [1] enfocar (res://src/sistemas/marco/marco_del_objetivo.gd:24)
+       [2] _leer_la_mira (res://src/escenas/jugador.gd:490)
+       [3] _montar (C:/Users/fede_/orca/workspaces/nosefia/darter/.claude/scratch/batch-64-309/a-302-capturas.gd:37)
+SCRIPT ERROR: Invalid type in function '_repintar' in base 'Node3D (reposicion_manual.gd)'. The Object-derived class of argument 1 (previously freed) is not a subclass of the expected argument class.
+   at: _al_enfocar (res://src/escenas/puestos/reposicion_manual.gd:856)
+   GDScript backtrace (most recent call first):
+       [0] _al_enfocar (res://src/escenas/puestos/reposicion_manual.gd:856)
+       [1] _leer_la_mira (res://src/escenas/jugador.gd:490)
+       [2] _montar (C:/Users/fede_/orca/workspaces/nosefia/darter/.claude/scratch/batch-64-309/a-302-capturas.gd:37)
+ERROR: Attempted to next an invalid (previously freed?) object instance into a 'TypedDictionary.Key'.
+   at: _internal_validate_object (./core/variant/container_type_validate.h:97)
+   GDScript backtrace (most recent call first):
+       [0] apagar (res://src/sistemas/marco/marco_del_objetivo.gd:45)
+       [1] suspender (res://src/escenas/jugador.gd:415)
+       [2] _montar (C:/Users/fede_/orca/workspaces/nosefia/darter/.claude/scratch/batch-64-309/a-302-capturas.gd:60)
+ERROR: Condition "!_p->typed_key.validate(key, "next")" is true. Returning: nullptr
+   at: next (core/variant/dictionary.cpp:575)
+   GDScript backtrace (most recent call first):
+       [0] apagar (res://src/sistemas/marco/marco_del_objetivo.gd:45)
+       [1] suspender (res://src/escenas/jugador.gd:415)
+       [2] _montar (C:/Users/fede_/orca/workspaces/nosefia/darter/.claude/scratch/batch-64-309/a-302-capturas.gd:60)
+SCRIPT ERROR: Invalid type in function '_repintar' in base 'Node3D (reposicion_manual.gd)'. The Object-derived class of argument 1 (previously freed) is not a subclass of the expected argument class.
+   at: _al_perder_el_foco (res://src/escenas/puestos/reposicion_manual.gd:863)
+   GDScript backtrace (most recent call first):
+       [0] _al_perder_el_foco (res://src/escenas/puestos/reposicion_manual.gd:863)
+       [1] suspender (res://src/escenas/jugador.gd:415)
+       [2] _montar (C:/Users/fede_/orca/workspaces/nosefia/darter/.claude/scratch/batch-64-309/a-302-capturas.gd:60)

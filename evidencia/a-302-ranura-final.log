@@ -1,0 +1,17 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+OpenGL API 3.3.0 NVIDIA 591.66 - Compatibility - Using Device: NVIDIA - NVIDIA GeForce RTX 4050 Laptop GPU
+
+PAPEL302 pose=[X: (-0.0, -0.0, -1.0), Y: (-0.056516, 0.998402, 0.0), Z: (0.998402, 0.056516, -0.0), O: (1.054341, 1.197247, 4.955625)] origen=[X: (-0.0, -0.0, -1.0), Y: (-0.056516, 0.998402, 0.0), Z: (0.998402, 0.056516, -0.0), O: (1.054341, 1.197247, 4.955625)] escala=(1.0, 1.0, 1.0) tamano=(0.06, 0.1, 0.005)
+PAPEL302 cruces=[]
+POSE302 global=(1.145735, 1.113056, 4.883701) centro=(1.161059, 1.112443, 4.883701)
+SITIOS302 objetivo=/root/Almacen/Estructura/cajaregistradora/StaticBody3D encontrados=22
+FOCO302 objetivo=StaticBody3D actor=(2.161059, 0.122237, 4.883701) ojo=(2.161059, 1.822237, 4.883701) centro=(1.161059, 1.112443, 4.883701)
+RANURA302 golpe={ "position": (1.340154, 1.185297, 4.806996), "normal": (0.998402, 0.056516, 0.0), "face_index": -1, "collider_id": 145693346782, "collider": StaticBody3D:<StaticBody3D#145693346782>, "shape": 1, "rid": RID(5896990097428) } local=(1.08846, 0.335763, -0.421261)
+POSE302 global=(1.469662, 1.047918, 4.883701) centro=(1.469662, 1.047918, 4.883701)
+SITIOS302 objetivo=/root/Almacen/LectorTemporal encontrados=22
+FOCO302 objetivo=LectorTemporal actor=(2.269662, 0.122237, 4.883701) ojo=(2.269662, 1.822237, 4.883701) centro=(1.469662, 1.047918, 4.883701)
+POSE302 global=(1.054341, 1.197247, 4.955625) centro=(1.054341, 1.197247, 4.955625)
+SITIOS302 objetivo=/root/Almacen/Estructura/PapelTemporal encontrados=28
+FOCO302 objetivo=PapelTemporal actor=(0.500013, 0.122237, 5.185235) ojo=(0.500013, 1.822237, 5.185235) centro=(1.054341, 1.197247, 4.955625)
+FISICA302_MONTAJE_LIBERADO
+FISICA302_FINAL_LIMPIA

@@ -1,0 +1,7 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+OpenGL API 3.3.0 NVIDIA 591.66 - Compatibility - Using Device: NVIDIA - NVIDIA GeForce RTX 4050 Laptop GPU
+
+SCRIPT ERROR: Parse Error: Cannot infer the type of "valida" variable because the value doesn't have a set type.
+   at: GDScript::reload (C:/Users/fede_/orca/workspaces/nosefia/darter/.claude/scratch/batch-64-309/a-302-capturas.gd:128)
+ERROR: Failed to load script "C:/Users/fede_/orca/workspaces/nosefia/darter/.claude/scratch/batch-64-309/a-302-capturas.gd" with error "Parse error".
+   at: load (modules/gdscript/gdscript_resource_format.cpp:46)
