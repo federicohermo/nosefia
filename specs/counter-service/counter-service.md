@@ -259,14 +259,13 @@ reiniciar ni detener su animación. El diálogo conserva el diseño de Figma en 
 
 ### BR-CTR-033 — Salida visible de los compradores
 
-EN la primera noche, CUANDO termina una despedida después de vender, el comprador DEBE
-permanecer quieto y animado mientras cualquier parte de su dibujo esté en el campo de visión.
-CUANDO queda completamente fuera de la vista, su imagen DEBE retirarse definitivamente;
-volver a mirar NO DEBE hacerlo reaparecer. Ya despachado NO DEBE recibir objetos ni reiniciar
-conversaciones, y su presencia NO DEBE retrasar la venta, el registro ni las tareas.
-CUANDO una compra incompleta vence, el comprador DEBE deslizarse hacia la derecha, vista desde
-el interior frente a la ventanilla, hasta quedar detrás de la pared. NO DEBE girar, inclinarse
-ni cambiar de altura o profundidad. La pausa DEBE detener el movimiento y la animación.
+EN la primera noche, CUANDO termina una despedida después de vender o una compra incompleta
+vence, el comprador DEBE deslizarse hacia la derecha, vista desde el interior frente a la
+ventanilla, hasta quedar detrás de la pared. DEBE permanecer animado mientras sale del hueco
+y retirarse definitivamente después de quedar oculto; volver a mirar NO DEBE hacerlo reaparecer.
+Ya despachado NO DEBE recibir objetos ni reiniciar conversaciones, y su presencia NO DEBE
+retrasar la venta, el registro ni las tareas. NO DEBE girar, inclinarse ni cambiar de altura
+o profundidad. La pausa DEBE detener el movimiento y la animación.
 Cerrar o reiniciar la jornada DEBE retirar también las imágenes pendientes de salida.
 
 ## Criterios de aceptación
@@ -524,12 +523,13 @@ detrás del hueco, con posición y orientación fijas hacia el interior del loca
 oculta y no hay una copia en la interfaz. Al desplazarse el jugador o girar su cámara, el
 comprador no gira ni se inclina; el corte inferior queda detrás del antepecho.
 
-### AC-CTR-043 — Permanecer hasta dejar de verse *(verifica BR-CTR-030, BR-CTR-033)*
+### AC-CTR-043 — La venta también sale por la derecha *(verifica BR-CTR-030, BR-CTR-033)*
 
-DADO una compra y despedida completas CUANDO el jugador sigue mirando, incluso con sólo una
-parte del comprador en pantalla, ENTONCES permanece quieto y animado sin recibir más objetos.
-La compra y las tareas conservan su resultado. CUANDO mira hacia otro lado ENTONCES el
-comprador desaparece; volver a mirar no lo recupera. Cerrar la interfaz no lo retira.
+DADO una compra completa CUANDO todavía habla ENTONCES el comprador permanece en su sitio.
+CUANDO termina la despedida ENTONCES se desliza hacia la derecha, conservando animación,
+altura, profundidad y orientación hasta quedar detrás de la pared; después no reaparece.
+No recibe más objetos. Cerrar la interfaz no interrumpe su salida y las ventas y tareas
+conservan su resultado.
 
 ### AC-CTR-044 — El cansancio sale por la derecha *(verifica BR-CTR-027, BR-CTR-032, BR-CTR-033)*
 
