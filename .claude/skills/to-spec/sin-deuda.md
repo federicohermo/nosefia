@@ -192,6 +192,9 @@ entregable más caro y el único que hace que el hallazgo no vuelva.
 | una base integrada durante una pausa **que deja obsoleto un borrador en scratch** | `implement-batch` — al reanudar se actualizó la rama pero no se midieron otra vez los recursos, lectores y geometría |
 | una copia temporal de un proyecto **dentro del checkout que contamina un gate** | `implement-batch` — las copias para exportar o medir viven fuera del checkout; `.gdignore` no limita los barridos Python |
 | un issue que **recrea arte que ya existe para agregarle interacción** | `to-issue` — se buscó la funcionalidad faltante sin inspeccionar los soportes del artista ni la decisión vigente del usuario |
+| un método retirado que **sigue llamado por un helper de integración** | `to-issue` — el barrido de lectores incluye `src/`, `test/`, `call()` y `Callable`, no sólo la declaración |
+| un barrido que **confunde una palabra compartida con la regla retirada** | `to-issue` — se acota el patrón al enunciado retirado y se conserva el código ajeno que no cambió de contrato |
+| un contrato que **exporta al editor un dato `RefCounted`** | `to-issue` — una sonda verifica el tipo exportable antes de repartir el contrato |
 | una dependencia instalada **adentro del worktree** que tira la importación de Godot | `implement-batch` — el preámbulo no dijo que Playwright se resuelve desde el checkout principal |
 
 **Si el problema no entra en ninguna fila, agregá la fila.** Esa tabla es el registro de lo que

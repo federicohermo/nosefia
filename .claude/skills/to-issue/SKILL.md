@@ -178,6 +178,19 @@ Lo que más se rompe:
   todos, no al primero. En el #263 el cupo dejaba de ser `.umbral`, pero `faltantes()` y
   `vendibles()` también lo leían. Además, 20 tests armaban con `retirar(` la góndola vacía que el
   issue llenaba. La primera corrida dio 37 casos rojos en 11 archivos fuera de «Se escribe».
+- **Al retirar un método, el barrido incluye llamadas por nombre y helpers de integración.**
+  Buscar el nombre en `src/` y `test/`, también en `call()` y `Callable`; no sólo la declaración
+  o sus lectores directos. En el #294, los casos del gesto nuevo pasaban, pero dos helpers de
+  `jornada_integrada_test.gd` seguían llamando a `interactuar` y fallaron al correr el flujo.
+- **Un barrido de una regla retirada distingue usos ajenos de la misma palabra.** Si el patrón
+  da un falso positivo, acotarlo al enunciado que se retira y comprobar que todavía lo detecta.
+  No cambiar el código ajeno para satisfacer el patrón. En el #295, `recuperarse` nombraba tanto
+  la deuda de apercibimientos como el rescate físico de una mopa; se acotó a la frase de la deuda.
+- **Un contrato que propone `@export` prueba que el tipo se puede exportar.** Un dato de dominio
+  que extiende `RefCounted` puede pasarse por una propiedad tipada, pero no exportarse al editor.
+  Usar un identificador exportable y entregar el dato desde el cableado, o un `Resource` si el
+  contrato necesita persistirlo como recurso. La sonda de #298 dio el error de parseo antes de
+  implementar las notas y se corrigió el contrato completo.
 - **Un criterio que conserva un enunciado se lee contra lo que el issue retira.** En el #263,
   «`BR-STK-013` sin cambiar su enunciado» nombraba el umbral que el mismo issue sacaba.
 - **Si el issue saca una regla, busca qué otra contaba con ella sin decirlo.** Un corte suele
