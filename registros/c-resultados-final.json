@@ -1,0 +1,17 @@
+{
+  "head": "c8990685dc3a9aa0608b7ae0640f90327cadeef8",
+  "base": "444d05db",
+  "full": 2,
+  "nodos": "7/7",
+  "segundos": 712.5,
+  "suites": 190,
+  "archivos": 190,
+  "casos": 1494,
+  "errores": 0,
+  "fallos": 0,
+  "flaky": 0,
+  "salteados": 0,
+  "huerfanos": 0,
+  "conteo_inmediato": true,
+  "reporte": "reports/report_2"
+}

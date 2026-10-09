@@ -1,0 +1,10 @@
+  ok        capas       3.2s
+  ok        formato    12.2s
+  ok        harness    78.4s
+  ok        lint       13.1s
+  ok        specs       1.4s
+  ok        tdd         1.7s
+  ok        tests     698.2s
+
+7/7 nodos en verde, en 731.4s.
+reports/report_1: 190 suites corridas, 190 archivos `*_test.gd`
