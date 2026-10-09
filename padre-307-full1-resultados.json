@@ -1,0 +1,15 @@
+{
+  "head": "9f07a335036116dabd0b9758edfa8a7a08bdbf9e",
+  "code": 1,
+  "count_code": 1,
+  "elapsed": 42.72605538368225,
+  "raw": "D:\\temporales\\nosefia-batch-64-309\\empleo-307\\padre-307-full1-tests-crudo.log",
+  "xml": "D:\\temporales\\nosefia-batch-64-309\\empleo-307\\padre-307-full1-results.xml",
+  "xml_sha256": "327f1f0a2429b51039db2f8b7fce10b72893044aee35a7f4903f2847a266ec40",
+  "suites": 214,
+  "cases": 1671,
+  "errors": 0,
+  "failures": 0,
+  "skipped": 0,
+  "flaky": 0
+}

@@ -1,0 +1,12 @@
+  ok        capas       1.7s
+  ok        formato    14.5s
+  ok        harness    97.1s
+  ok        lint       15.6s
+  ok        specs       0.1s
+  ok        tdd         0.2s
+  ok        tests     761.6s
+
+7/7 nodos en verde, en 768.4s.
+reports/report_12: 215 suites corridas, 215 archivos `*_test.gd`
+
+{"head": "fc0e2042625d9a3c197e46375efc37e4f5e8a614", "code": 0, "count_code": 0, "elapsed": 768.5149030685425, "raw": "D:\\temporales\\nosefia-batch-64-309\\empleo-307\\padre-307-full2-tests-crudo.log", "xml": "D:\\temporales\\nosefia-batch-64-309\\empleo-307\\padre-307-full2-results.xml", "xml_sha256": "0bff8266664c153da4b7f7950f57c181fd65b2831d8f7ea3246219a0ee56c5e2", "suites": 215, "cases": 1678, "errors": 0, "failures": 0, "skipped": 0, "flaky": 0}

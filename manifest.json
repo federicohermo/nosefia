@@ -1,0 +1,211 @@
+{
+  "issue": 307,
+  "head": "8fb59f001529a9b8d945deb1eeb653804d9d57a2",
+  "base": "366064a288469fc420a6a1c737197fac0279566c",
+  "native_head": "fc0e2042625d9a3c197e46375efc37e4f5e8a614",
+  "rebase": "La corrida local corresponde a `fc0e2042625d9a3c197e46375efc37e4f5e8a614`. El rebase conserva los tres commits propios idénticos según range-diff. La única diferencia de árbol es retirar el estrés redundante del contenedor heredado de #306. La CI verifica la cabeza actual y su conteo reducido.",
+  "result": {
+    "head": "fc0e2042625d9a3c197e46375efc37e4f5e8a614",
+    "code": 0,
+    "count_code": 0,
+    "elapsed": 768.5149030685425,
+    "raw": "D:\\temporales\\nosefia-batch-64-309\\empleo-307\\padre-307-full2-tests-crudo.log",
+    "xml": "D:\\temporales\\nosefia-batch-64-309\\empleo-307\\padre-307-full2-results.xml",
+    "xml_sha256": "0bff8266664c153da4b7f7950f57c181fd65b2831d8f7ea3246219a0ee56c5e2",
+    "suites": 215,
+    "cases": 1678,
+    "errors": 0,
+    "failures": 0,
+    "skipped": 0,
+    "flaky": 0
+  },
+  "files": [
+    {
+      "path": "307-issue-cumplido.md",
+      "bytes": 13068,
+      "sha256": "8a398d28c87b494306a842a645af7ca2c562d01b41b84213a56d52e582e235a3",
+      "local_sha256": "8a398d28c87b494306a842a645af7ca2c562d01b41b84213a56d52e582e235a3"
+    },
+    {
+      "path": "307-snapshot-rebase.json",
+      "bytes": 13017,
+      "sha256": "f8f62913a81b692e2ecb507f5587f8640147afb64ea9cd80b468cb668611ed77",
+      "local_sha256": "f8f62913a81b692e2ecb507f5587f8640147afb64ea9cd80b468cb668611ed77"
+    },
+    {
+      "path": "307-whole-native-historico.md",
+      "bytes": 12751,
+      "sha256": "6599355e89a708a30c9a0f51ae992bfe0e8e6f3e7a28bf99c4330c3497ce56e1",
+      "local_sha256": "6599355e89a708a30c9a0f51ae992bfe0e8e6f3e7a28bf99c4330c3497ce56e1"
+    },
+    {
+      "path": "307-whole-rebase.md",
+      "bytes": 13068,
+      "sha256": "8fe7befd974c8f58862cf42a315fee387e8fb28a410db3086f47b8ec640c9536",
+      "local_sha256": "8fe7befd974c8f58862cf42a315fee387e8fb28a410db3086f47b8ec640c9536"
+    },
+    {
+      "path": "307-whole-rebase.publicar.md",
+      "bytes": 13068,
+      "sha256": "8fe7befd974c8f58862cf42a315fee387e8fb28a410db3086f47b8ec640c9536",
+      "local_sha256": "8fe7befd974c8f58862cf42a315fee387e8fb28a410db3086f47b8ec640c9536"
+    },
+    {
+      "path": "307-whole-rebase.publicar.proof.json",
+      "bytes": 420,
+      "sha256": "8c7a2e938aad1b2a6b60fccd837c20acf9a12d9bf4472a30b0555df33ba4a1da",
+      "local_sha256": "d09fdf23e86e694ecd14f02dc9c7a1bcf09d315ffd835b9ed048b68807bd5a57"
+    },
+    {
+      "path": "padre-307-full1-bundle.log",
+      "bytes": 523,
+      "sha256": "7148694144fee18e0403ff2f6755fc87d0d198d5ffb13c545148177fde1de81c",
+      "local_sha256": "6ff8b2644b16cfb8f5ae19aff0b744c91856fec5e35ab91d404c6ccce1693224"
+    },
+    {
+      "path": "padre-307-full1-conteo.log",
+      "bytes": 65,
+      "sha256": "22e51c9daf944e714bab6a986818a7d6fdc2e77a77318fa00e9244132bbc17de",
+      "local_sha256": "22e51c9daf944e714bab6a986818a7d6fdc2e77a77318fa00e9244132bbc17de"
+    },
+    {
+      "path": "padre-307-full1-resultados.json",
+      "bytes": 485,
+      "sha256": "fd28103d6698e1ccd42c402fb74f3e42dc039d29b63ae60a1c554b99398ec8e2",
+      "local_sha256": "fd28103d6698e1ccd42c402fb74f3e42dc039d29b63ae60a1c554b99398ec8e2"
+    },
+    {
+      "path": "padre-307-full1-results.xml",
+      "bytes": 271288,
+      "sha256": "327f1f0a2429b51039db2f8b7fce10b72893044aee35a7f4903f2847a266ec40",
+      "local_sha256": "327f1f0a2429b51039db2f8b7fce10b72893044aee35a7f4903f2847a266ec40"
+    },
+    {
+      "path": "padre-307-full1-tests-crudo.log",
+      "bytes": 2776,
+      "sha256": "3d319afa5446c1164aae5dbc42cc98ccc02a7a15dcf4476ab1e9aab035b80372",
+      "local_sha256": "77473e71cee2c63eab5d668744aabc7ed09806770c5fb8dc5c3e52c29e3942a9"
+    },
+    {
+      "path": "padre-307-full2-bundle.log",
+      "bytes": 758,
+      "sha256": "b1528a9e3d05a15bc8914930214ea732936ac0634e1fe8f5e40ef188ef183f28",
+      "local_sha256": "4cf0326a73a6b55c2f3e1d4a5dbd5c25fddfbb0dc358a7e9c492c9c2361ef6cf"
+    },
+    {
+      "path": "padre-307-full2-conteo.log",
+      "bytes": 65,
+      "sha256": "efe08443287928177905c238531b481c5e41a01ed78a26fb6f9f1e40d099df7e",
+      "local_sha256": "efe08443287928177905c238531b481c5e41a01ed78a26fb6f9f1e40d099df7e"
+    },
+    {
+      "path": "padre-307-full2-resultados.json",
+      "bytes": 485,
+      "sha256": "8d866a5bdbb4d83809ac9f1765aebbf74f1813ac0b9325079e7bd4f5c478cc83",
+      "local_sha256": "8d866a5bdbb4d83809ac9f1765aebbf74f1813ac0b9325079e7bd4f5c478cc83"
+    },
+    {
+      "path": "padre-307-full2-results.xml",
+      "bytes": 272500,
+      "sha256": "0bff8266664c153da4b7f7950f57c181fd65b2831d8f7ea3246219a0ee56c5e2",
+      "local_sha256": "0bff8266664c153da4b7f7950f57c181fd65b2831d8f7ea3246219a0ee56c5e2"
+    },
+    {
+      "path": "padre-307-full2-revisado.json",
+      "bytes": 1111,
+      "sha256": "a8b60433dad69f2e7005d7053b0a4a7111af884937f1eac3b471bd06e53cf6b3",
+      "local_sha256": "a8b60433dad69f2e7005d7053b0a4a7111af884937f1eac3b471bd06e53cf6b3"
+    },
+    {
+      "path": "padre-307-full2-revisado.xml",
+      "bytes": 272500,
+      "sha256": "0bff8266664c153da4b7f7950f57c181fd65b2831d8f7ea3246219a0ee56c5e2",
+      "local_sha256": "0bff8266664c153da4b7f7950f57c181fd65b2831d8f7ea3246219a0ee56c5e2"
+    },
+    {
+      "path": "padre-307-full2-tests-crudo.log",
+      "bytes": 1038798,
+      "sha256": "05ea0c656b1a9a27e836bb4d6a14c66f1aaa23f32b37e3ddac10f0143ae13f5e",
+      "local_sha256": "75888d392e3fee8d345e4caeefdb7773f94e9da58c5cfc07ee17184b5aa5bfd0"
+    },
+    {
+      "path": "padre-307-rojo1-import.log",
+      "bytes": 2401,
+      "sha256": "63ced3d4e82e70e31138694b955b6079b7d4ab4262d131338d96a8ed3f39137a",
+      "local_sha256": "3e2347dc54930139082a9dc04f035a976da4610b1bb0c48599cb56b2dafc4ecf"
+    },
+    {
+      "path": "padre-307-rojo1-raw.log",
+      "bytes": 29209,
+      "sha256": "4e1acf6b363eb6cecaba16a09bb8a4dce44447d57827dcf4d98fd5c9d2d98332",
+      "local_sha256": "095b6bc583fc53efc38472ffbad58178d47d078f62b8c1e647c67f2dc191ffef"
+    },
+    {
+      "path": "padre-307-rojo1-resultados.json",
+      "bytes": 4353,
+      "sha256": "6c8f57781eac376528408605b51ee7eacd57f9b341b8f2fc3c867813d906da99",
+      "local_sha256": "6e64f2ef291ab436ab66038926409e16a75c869a66e1ab3ce34792164dcba700"
+    },
+    {
+      "path": "padre-307-rojo1-results.xml",
+      "bytes": 4907,
+      "sha256": "2186438c68c4a76740abc83d5cd799760054d5329e1d0dd732cdc58741f4724c",
+      "local_sha256": "2186438c68c4a76740abc83d5cd799760054d5329e1d0dd732cdc58741f4724c"
+    },
+    {
+      "path": "padre-307-verde1-raw.log",
+      "bytes": 25466,
+      "sha256": "36cebcc7fd785ca9e8e1051ff29d2f080614dd0c334314eb6c32b96c57131f10",
+      "local_sha256": "d544fdf57c54e5a6a24ce9a322cf25287be32f08eda5f7ce7859c69811c23a24"
+    },
+    {
+      "path": "padre-307-verde1-resultados.json",
+      "bytes": 937,
+      "sha256": "eb378d291c339acac01b53e8b06e865e71557a5dc92fca33a31135ad6484ce4d",
+      "local_sha256": "def028cf5bb3fd2f1ecee13d273737eb47d9e971b86629eaa831d2b282258809"
+    },
+    {
+      "path": "padre-307-verde1-results.xml",
+      "bytes": 1367,
+      "sha256": "c794ef07b6b685d10ec02af675b7700630cbb2aa7dd4c36717ca4d68d32d0567",
+      "local_sha256": "c794ef07b6b685d10ec02af675b7700630cbb2aa7dd4c36717ca4d68d32d0567"
+    },
+    {
+      "path": "padre-307-verde2-raw.log",
+      "bytes": 6572,
+      "sha256": "9072cbac053cc7f89111d2fbfc704e5fde1d1b708ed37db273a74a8cccc9a139",
+      "local_sha256": "94a0050334ee9b851bbfeea3cf318348cb78fec4fd870155eca8d20ebc728343"
+    },
+    {
+      "path": "padre-307-verde2-resultados.json",
+      "bytes": 937,
+      "sha256": "8026c49fe248b0ce8fb1595c7d0ada85574e693c3882fffb51e32ced5b39c01c",
+      "local_sha256": "f643e6741ab31e57609819083d3d71c367f54313b15d39afae280bddd640e0f5"
+    },
+    {
+      "path": "padre-307-verde2-results.xml",
+      "bytes": 1367,
+      "sha256": "8234687cb4b63988dee109eda380ec02fb88df5dd723a14c5a7f3590dedcd8c6",
+      "local_sha256": "8234687cb4b63988dee109eda380ec02fb88df5dd723a14c5a7f3590dedcd8c6"
+    },
+    {
+      "path": "307-whole-final.md",
+      "bytes": 13068,
+      "sha256": "8fe7befd974c8f58862cf42a315fee387e8fb28a410db3086f47b8ec640c9536",
+      "local_sha256": "8fe7befd974c8f58862cf42a315fee387e8fb28a410db3086f47b8ec640c9536"
+    },
+    {
+      "path": "padre-full-issue.py",
+      "bytes": 1926,
+      "sha256": "e9a4d2dbfea798ee2c0747ae43c15e2f945c9926c378c78558a1675a1cff9ad0",
+      "local_sha256": "e9a4d2dbfea798ee2c0747ae43c15e2f945c9926c378c78558a1675a1cff9ad0"
+    },
+    {
+      "path": "padre-307-focal.py",
+      "bytes": 2707,
+      "sha256": "3382a66aa4aa957d753084483748647d56bd5197556d1ba3a261e880cf836116",
+      "local_sha256": "3382a66aa4aa957d753084483748647d56bd5197556d1ba3a261e880cf836116"
+    }
+  ],
+  "history": "307 full1 fue abortado; copió el XML anterior por falta de reporte nuevo, no es evidencia de esta cabeza. Full2 es la corrida completa final."
+}

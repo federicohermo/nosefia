@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<testsuites id="2026-10-09" name="report_1" tests="7" failures="0" skipped="0" flaky="0" time="0.000">
+	<testsuite id="0" name="tickets_del_cierre_test" package="test/escenas" timestamp="2026-10-09T12:43:05" hostname="localhost" tests="7" failures="0" errors="0" skipped="0" flaky="0" time="1.165">
+		<testcase name="test_un_ticket_y_dos_en_otra_noche_suman_un_medio_cada_vez" classname="tickets_del_cierre_test" time="0.204">
+		</testcase>
+		<testcase name="test_balde_y_mopa_en_el_inodoro_no_anotan_papel" classname="tickets_del_cierre_test" time="0.132">
+		</testcase>
+		<testcase name="test_tickets_adentro_afuera_y_recuperados_al_cerrar" classname="tickets_del_cierre_test" time="0.166">
+		</testcase>
+		<testcase name="test_sostener_y_examinar_tickets_cambia_el_llamado_al_cerrar" classname="tickets_del_cierre_test" time="0.176">
+		</testcase>
+		<testcase name="test_tirar_el_ticket_al_contenedor_no_agrega_un_llamado" classname="tickets_del_cierre_test" time="0.149">
+		</testcase>
+		<testcase name="test_tres_motivos_con_grave_son_siete_y_la_noche_nueva_conserva_deuda" classname="tickets_del_cierre_test" time="0.145">
+		</testcase>
+		<testcase name="test_eventos_en_placa_no_contaminan_la_noche_siguiente_ni_repiten_cierre" classname="tickets_del_cierre_test" time="0.130">
+		</testcase>
+	</testsuite>
+</testsuites>

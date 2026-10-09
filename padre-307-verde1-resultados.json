@@ -1,0 +1,30 @@
+{
+  "head": "4eda5cde9bafad7a87c173329944e324ef1c2bb0",
+  "diff_sha256": "44302c24891be5de012bed0f00b23ee385d6e0d826d21e16e6a3cfc2d0285782",
+  "code": 0,
+  "raw": "D:\\temporales\\nosefia-batch-64-309\\empleo-307\\padre-307-verde1-raw.log",
+  "command": [
+    "D:\\Program Files\\Godot\\Godot_v4.7.2-stable_win64_console.exe",
+    "--headless",
+    "--path",
+    "D:\\Usuarios\\fede\\Documentos\\Catedra Videojuegos FADU\\manada\\repo\\nosefia\\.claude\\worktrees\\batch-64-309-d",
+    "-s",
+    "-d",
+    "--remote-debug",
+    "tcp://127.0.0.1:0",
+    "res://addons/gdUnit4/bin/GdUnitCmdTool.gd",
+    "-a",
+    "test/escenas/tickets_del_cierre_test.gd",
+    "--continue",
+    "--ignoreHeadlessMode",
+    "-rd",
+    "res://reports/padre-307-verde1"
+  ],
+  "suites": 1,
+  "cases": 7,
+  "failures": 0,
+  "errors": 0,
+  "skipped": 0,
+  "xml_sha256": "c794ef07b6b685d10ec02af675b7700630cbb2aa7dd4c36717ca4d68d32d0567",
+  "failed_cases": []
+}

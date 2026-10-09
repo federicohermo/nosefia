@@ -1,0 +1,77 @@
+{
+  "head": "4eda5cde9bafad7a87c173329944e324ef1c2bb0",
+  "diff_sha256": "b9b74e8e2e2bcfbee0420dae97fad3ce7b47f4056dea14d5b49762e5d14e2ef0",
+  "code": 100,
+  "raw": "D:\\temporales\\nosefia-batch-64-309\\empleo-307\\padre-307-rojo1-raw.log",
+  "command": [
+    "D:\\Program Files\\Godot\\Godot_v4.7.2-stable_win64_console.exe",
+    "--headless",
+    "--path",
+    "D:\\Usuarios\\fede\\Documentos\\Catedra Videojuegos FADU\\manada\\repo\\nosefia\\.claude\\worktrees\\batch-64-309-d",
+    "-s",
+    "-d",
+    "--remote-debug",
+    "tcp://127.0.0.1:0",
+    "res://addons/gdUnit4/bin/GdUnitCmdTool.gd",
+    "-a",
+    "test/escenas/tickets_del_cierre_test.gd",
+    "--continue",
+    "--ignoreHeadlessMode",
+    "-rd",
+    "res://reports/padre-307-rojo1"
+  ],
+  "suites": 1,
+  "cases": 7,
+  "failures": 11,
+  "errors": 0,
+  "skipped": 0,
+  "xml_sha256": "2186438c68c4a76740abc83d5cd799760054d5329e1d0dd732cdc58741f4724c",
+  "failed_cases": [
+    {
+      "suite": "tickets_del_cierre_test",
+      "case": "test_un_ticket_y_dos_en_otra_noche_suman_un_medio_cada_vez",
+      "failures": [
+        "\n\nExpecting:\n 1\n but was\n 0\n\tat 'test_un_ticket_y_dos_en_otra_noche_suman_un_medio_cada_vez' in res://test/escenas/tickets_del_cierre_test.gd:80\n\n\t\t\t",
+        "\n\nExpecting:\n 2\n but was\n 0\n\tat 'test_un_ticket_y_dos_en_otra_noche_suman_un_medio_cada_vez' in res://test/escenas/tickets_del_cierre_test.gd:80\n\n\t\t\t"
+      ],
+      "errors": []
+    },
+    {
+      "suite": "tickets_del_cierre_test",
+      "case": "test_tickets_adentro_afuera_y_recuperados_al_cerrar",
+      "failures": [
+        "\n\nExpecting:\n 1\n but was\n 0\n\tat 'test_tickets_adentro_afuera_y_recuperados_al_cerrar' in res://test/escenas/tickets_del_cierre_test.gd:113\n\tat 'after_test' in res://test/escenas/tickets_del_cierre_test.gd:19\n\n\t\t\t",
+        "\n\nExpecting:\n 1\n but was\n 0\n\tat 'test_tickets_adentro_afuera_y_recuperados_al_cerrar' in res://test/escenas/tickets_del_cierre_test.gd:120\n\tat 'after_test' in res://test/escenas/tickets_del_cierre_test.gd:19\n\n\t\t\t"
+      ],
+      "errors": []
+    },
+    {
+      "suite": "tickets_del_cierre_test",
+      "case": "test_sostener_y_examinar_tickets_cambia_el_llamado_al_cerrar",
+      "failures": [
+        "\n\nExpecting:\n 1\n but was\n 0\n\tat 'test_sostener_y_examinar_tickets_cambia_el_llamado_al_cerrar' in res://test/escenas/tickets_del_cierre_test.gd:144\n\tat 'after_test' in res://test/escenas/tickets_del_cierre_test.gd:19\n\n\t\t\t",
+        "\n\nExpecting:\n 2\n but was\n 0\n\tat 'test_sostener_y_examinar_tickets_cambia_el_llamado_al_cerrar' in res://test/escenas/tickets_del_cierre_test.gd:144\n\tat 'after_test' in res://test/escenas/tickets_del_cierre_test.gd:19\n\n\t\t\t",
+        "\n\nExpecting:\n 2\n but was\n 0\n\tat 'test_sostener_y_examinar_tickets_cambia_el_llamado_al_cerrar' in res://test/escenas/tickets_del_cierre_test.gd:144\n\tat 'after_test' in res://test/escenas/tickets_del_cierre_test.gd:19\n\n\t\t\t"
+      ],
+      "errors": []
+    },
+    {
+      "suite": "tickets_del_cierre_test",
+      "case": "test_tirar_el_ticket_al_contenedor_no_agrega_un_llamado",
+      "failures": [
+        "\n\nExpecting contains exactly elements:\n '<empty>'\n do contains (in same order)\n '[Ticket:<RigidBody3D#685080842883>]'\nbut could not find elements:\n '[Ticket:<RigidBody3D#685080842883>]'\n\tat 'test_tirar_el_ticket_al_contenedor_no_agrega_un_llamado' in res://test/escenas/tickets_del_cierre_test.gd:156\n\tat 'after_test' in res://test/escenas/tickets_del_cierre_test.gd:19\n\n\t\t\t"
+      ],
+      "errors": []
+    },
+    {
+      "suite": "tickets_del_cierre_test",
+      "case": "test_tres_motivos_con_grave_son_siete_y_la_noche_nueva_conserva_deuda",
+      "failures": [
+        "\n\nExpecting:\n 7\n but was\n 6\n\tat 'test_tres_motivos_con_grave_son_siete_y_la_noche_nueva_conserva_deuda' in res://test/escenas/tickets_del_cierre_test.gd:181\n\n\t\t\t",
+        "\n\nExpecting:\n 7\n but was\n 6\n\tat 'test_tres_motivos_con_grave_son_siete_y_la_noche_nueva_conserva_deuda' in res://test/escenas/tickets_del_cierre_test.gd:183\n\n\t\t\t",
+        "\n\nExpecting:\n 7\n but was\n 6\n\tat 'test_tres_motivos_con_grave_son_siete_y_la_noche_nueva_conserva_deuda' in res://test/escenas/tickets_del_cierre_test.gd:186\n\n\t\t\t"
+      ],
+      "errors": []
+    }
+  ]
+}
