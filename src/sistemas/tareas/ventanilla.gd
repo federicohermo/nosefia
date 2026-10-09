@@ -18,6 +18,7 @@ class_name Ventanilla
 extends Node
 
 signal comprador_llegado(comprador: Comprador)
+signal conversacion_iniciada(comprador: Comprador)
 signal atencion_despachada(despachados: int)
 ## Sólo cuando se cobró: despachar sin vender también despacha, y no es una compra.
 signal compra_realizada
@@ -37,7 +38,10 @@ func pedir_interaccion(objeto: ObjetoDelAlmacen) -> RecepcionDeCompra.Resultado:
 	var en_curso := atencion()
 	if en_curso == null:
 		return RecepcionDeCompra.Resultado.BLOQUEADA
+	var iniciada := en_curso.conversacion_iniciada()
 	var resultado := en_curso.interactuar(objeto)
+	if not iniciada and en_curso.conversacion_iniciada():
+		conversacion_iniciada.emit(en_curso.comprador())
 	if resultado == RecepcionDeCompra.Resultado.COMPLETA:
 		compra_realizada.emit()
 		_al_despachar()

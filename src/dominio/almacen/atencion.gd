@@ -40,6 +40,10 @@ var _presentado: bool = false
 var _inicial_terminada: bool = false
 
 
+func conversacion_iniciada() -> bool:
+	return _presentado
+
+
 func interactuar(objeto: ObjetoDelAlmacen) -> RecepcionDeCompra.Resultado:
 	if not fisica() or _despachada:
 		return RecepcionDeCompra.Resultado.BLOQUEADA

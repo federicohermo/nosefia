@@ -176,3 +176,7 @@ Es el caso que este método existe para hacer visible, y tiene una sola salida:
 - El paso siguiente es `implement-feature`, en la misma rama.
 - Si el spec falsificó algo que la documentación afirma en presente, actualizá `docs/`,
   `.claude/rules/` y `CLAUDE.md`.
+
+Los criterios de personajes en un mundo 3D ejercen su presencia con la interfaz cerrada,
+orientación hacia la cámara y oclusión. Los avisos persistentes nombran el gesto exacto que
+los retira; no heredan por defecto el temporizador de otros tipos.

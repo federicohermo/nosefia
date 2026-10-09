@@ -43,14 +43,18 @@ func test_ambas_animaciones_conservan_ocho_png_ordenados_y_exposiciones() -> voi
 # AC-CTR-036, AC-PLY-079
 func test_muestra_ambos_compradores_dialogo_y_clic_izquierdo_sin_botones() -> void:
 	var panel := _panel()
-	var sprite := panel.get_node_or_null("Fisico/Comprador") as AnimatedSprite2D
+	assert_object(panel.get_node_or_null("Fisico/Comprador")).is_null()
+	var sprite := _almacenes.back().get_node("Estructura/Ventanilla/Comprador") as AnimatedSprite3D
 	assert_object(sprite).is_not_null()
 	if sprite == null:
 		return
 	var clicks: Array[bool] = []
 	panel.comprador_pulsado.connect(func() -> void: clicks.append(true))
-	for comprador in Compradores.de_la_jornada(1):
-		var atencion := Atencion.new(comprador, Inventario.new([]))
+	for intervalo: float in [120.0, 360.0]:
+		var almacen: Node3D = _almacenes.back()
+		(almacen.get("_reloj") as RelojDelTurno).avanzar(intervalo)
+		var atencion: Atencion = almacen.get("_atenciones").atencion()
+		var comprador := atencion.comprador()
 		atencion.interactuar(null)
 		panel.mostrar(atencion)
 		assert_bool(sprite.is_visible_in_tree()).is_true()
@@ -73,18 +77,20 @@ func test_muestra_ambos_compradores_dialogo_y_clic_izquierdo_sin_botones() -> vo
 		assert_array(clicks).has_size(1)
 		clicks.clear()
 		panel.mostrar_sin_nadie()
-		assert_bool(sprite.is_visible_in_tree()).is_false()
+		assert_bool(sprite.is_visible_in_tree()).is_true()
 		assert_bool(texto.is_visible_in_tree()).is_false()
 
 
 func test_animan_los_dos_y_la_pausa_conserva_el_cuadro() -> void:  # AC-CTR-042
 	var panel := _panel()
-	var sprite := panel.get_node_or_null("Fisico/Comprador") as AnimatedSprite2D
+	var sprite := _almacenes.back().get_node("Estructura/Ventanilla/Comprador") as AnimatedSprite3D
 	assert_object(sprite).is_not_null()
 	if sprite == null:
 		return
-	for comprador in Compradores.de_la_jornada(1):
-		panel.mostrar(Atencion.new(comprador, Inventario.new([])))
+	for intervalo: float in [120.0, 360.0]:
+		var almacen: Node3D = _almacenes.back()
+		(almacen.get("_reloj") as RelojDelTurno).avanzar(intervalo)
+		panel.mostrar(almacen.get("_atenciones").atencion())
 		sprite.set_frame_and_progress(0, 0.99)
 		await get_tree().create_timer(0.1).timeout
 		assert_int(sprite.frame).is_not_equal(0)
@@ -96,4 +102,29 @@ func test_animan_los_dos_y_la_pausa_conserva_el_cuadro() -> void:  # AC-CTR-042
 		assert_float(sprite.frame_progress).is_equal(progreso)
 		get_tree().paused = false
 		panel.ocultar()
-		assert_bool(sprite.is_visible_in_tree()).is_false()
+		assert_bool(sprite.is_visible_in_tree()).is_true()
+
+
+func test_esperan_en_el_mundo_con_la_interfaz_cerrada() -> void:  # AC-CTR-042
+	var panel := _panel()
+	var almacen: Node3D = _almacenes.back()
+	var puesto: Node3D = almacen.get_node("Estructura/Ventanilla")
+	var sprite := puesto.get_node_or_null("Comprador") as AnimatedSprite3D
+	assert_object(sprite).is_not_null()
+	if sprite == null:
+		return
+	var reloj: RelojDelTurno = almacen.get("_reloj")
+	assert_bool(sprite.visible).is_false()
+	for intervalo: float in [120.0, 240.0]:
+		reloj.avanzar(intervalo)
+		assert_bool(panel.visible).is_false()
+		assert_bool(sprite.is_visible_in_tree()).is_true()
+		assert_bool(sprite.is_playing()).is_true()
+		assert_int(sprite.billboard).is_equal(BaseMaterial3D.BILLBOARD_ENABLED)
+		assert_bool(sprite.no_depth_test).is_false()
+		assert_bool(sprite.fixed_size).is_false()
+		sprite.set_frame_and_progress(0, 0.99)
+		await get_tree().create_timer(0.1).timeout
+		assert_int(sprite.frame).is_not_equal(0)
+		reloj.avanzar(120.0)
+		assert_bool(sprite.visible).is_false()

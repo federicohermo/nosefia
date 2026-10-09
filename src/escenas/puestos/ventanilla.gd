@@ -20,6 +20,10 @@ extends StaticBody3D
 ## no declaran `class_name`, así que sin esto el tipo estático sería `CharacterBody3D` y llamarle
 ## `suspender()` no compilaría.
 const JugadorDelLocal := preload("res://src/escenas/jugador.gd")
+const ANIMACIONES := {
+	DialogosDeCompradores.Personaje.MARTIN: preload("res://assets/characters/martin/idle.tres"),
+	DialogosDeCompradores.Personaje.TIAGO: preload("res://assets/characters/tiago/idle.tres"),
+}
 
 @export var jugador: JugadorDelLocal
 @export var reloj: RelojDelTurno
@@ -27,6 +31,7 @@ const JugadorDelLocal := preload("res://src/escenas/jugador.gd")
 @export var panel: PanelDeLaVentanilla
 @export var borde_superior: Marker3D
 @export var antepecho: MeshInstance3D
+@export var comprador_visible: AnimatedSprite3D
 
 ## Si el vidrio está abierto ahora mismo. Es estado de cáscara —qué ventana hay arriba— y no una
 ## regla del juego: a quién hay que atender lo sigue contestando el dominio.
@@ -53,7 +58,30 @@ func _al_preparar() -> void:
 		_descartar_recibidos(comprador)
 	_recibidos.clear()
 	panel.preparar(atenciones.tarea().fisica())
+	comprador_visible.hide()
+	comprador_visible.stop()
 	cerrar()
+
+
+func _process(_delta: float) -> void:
+	if _abierta and comprador_visible.visible:
+		_ubicar_blanco()
+
+
+func _ubicar_blanco() -> void:
+	var camara := get_viewport().get_camera_3d()
+	if camara == null:
+		return
+	var centro := comprador_visible.global_position
+	var textura := comprador_visible.sprite_frames.get_frame_texture(&"idle", 0)
+	var mitad := textura.get_size() * comprador_visible.pixel_size / 2.0
+	var area := Rect2(camara.unproject_position(centro), Vector2.ZERO)
+	for x: float in [-1.0, 1.0]:
+		for y: float in [-1.0, 1.0]:
+			var esquina := centro + camara.global_basis.x * mitad.x * x
+			esquina += camara.global_basis.y * mitad.y * y
+			area = area.expand(camara.unproject_position(esquina))
+	panel.ubicar_comprador(area)
 
 
 func _al_pulsar() -> void:
@@ -75,6 +103,7 @@ func _al_pulsar() -> void:
 
 func _repintar() -> void:
 	var atendida := atenciones.atencion()
+	_mostrar_personaje(atendida)
 	if atendida != null and atendida.vendida() and atendida.despachada():
 		_descartar_recibidos(atendida.comprador())
 	if not _abierta:
@@ -83,6 +112,20 @@ func _repintar() -> void:
 		panel.mostrar_sin_nadie()
 	else:
 		panel.mostrar(atendida)
+		_ubicar_blanco()
+
+
+func _mostrar_personaje(atendida: Atencion) -> void:
+	if atendida == null or not atendida.fisica() or atendida.despachada():
+		comprador_visible.hide()
+		comprador_visible.stop()
+		return
+	var cuadros: SpriteFrames = ANIMACIONES[atendida.comprador().personaje]
+	if comprador_visible.sprite_frames != cuadros:
+		comprador_visible.sprite_frames = cuadros
+		comprador_visible.set_frame_and_progress(0, 0.0)
+	comprador_visible.show()
+	comprador_visible.play(&"idle")
 
 
 func _descartar_recibidos(comprador: Comprador) -> void:
@@ -153,4 +196,6 @@ func _al_despacharse(_despachados: int) -> void:
 
 
 func _al_cerrar_el_turno(_cumplidas: int) -> void:
+	comprador_visible.hide()
+	comprador_visible.stop()
 	cerrar()

@@ -248,6 +248,10 @@ El sistema DEBE mostrar a cada comprador con sus ocho dibujos en orden numérico
 con transparencia y proporción conservadas, con una duración uniforme de 0,5 segundos por dibujo.
 Martín DEBE usar su animación nueva. La pausa DEBE detener la animación.
 Al irse el comprador, su imagen DEBE dejar de mostrarse.
+MIENTRAS espera, DEBE verse detrás de la ventanilla dentro del mundo aunque la interfaz esté
+cerrada. Su dibujo DEBE mirar siempre hacia la cámara del jugador, cambiar de tamaño aparente
+con la distancia y quedar oculto por la geometría del local. Abrir o cerrar la interfaz NO DEBE
+reiniciar ni detener su animación. El diálogo conserva el diseño de Figma en pantalla.
 
 ## Criterios de aceptación
 
@@ -498,6 +502,8 @@ sin entregas ni ventas. Las jornadas 2–5 conservan el recorrido anterior.
 DADO cada comprador presente CUANDO se abre la ventanilla ENTONCES su animación tiene ocho
 dibujos en orden y bucle, cada uno durante 0,5 segundos. Al transcurrir cuadros cambia la pose.
 La pausa conserva pose y progreso; al reanudar continúa. Al irse deja de verse.
+DADO la interfaz cerrada y el jugador recorriendo el local ENTONCES el comprador sigue animado
+detrás del hueco, mirando hacia la cámara; la pared lo oculta y no hay una copia en la interfaz.
 
 ## No objetivos
 

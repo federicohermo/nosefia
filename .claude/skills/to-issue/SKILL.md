@@ -330,3 +330,7 @@ Reportá el número del issue, el tipo, y el paso siguiente:
   `<tipo>/<N>-<kebab>`: `feature/`, o `bugfix/` si el bug era una regla sin escribir.
 - **Spec: ninguno** → `implement-feature`, en la rama `<tipo>/<N>-<kebab>`. Un issue que no toca
   `src/` se nombra por lo que toca: `harness/<N>-<kebab>` o `docs/<N>-<kebab>`.
+
+Para personajes 2D en un mundo 3D, declarar si existen en el mundo o en el lienzo, su visibilidad
+con interfaces cerradas, orientación hacia la cámara y oclusión. Para avisos, distinguir
+duración temporal de persistencia hasta una interacción y nombrar el gesto que los retira.

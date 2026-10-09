@@ -19,7 +19,7 @@ content_margin_bottom = 15.0
 base_font = ExtResource("7")
 variation_embolden = 1.0
 
-[node name="PanelDeLaVentanilla" type="CanvasLayer" node_paths=PackedStringArray("_fondo", "_marco", "_titulo", "_cliente", "_pedido", "_cobro", "_salida", "_nombre", "_renglones", "_aviso", "_cobrar", "_despachar", "_fisico", "_sprite", "_blanco", "_burbuja", "_texto")]
+[node name="PanelDeLaVentanilla" type="CanvasLayer" node_paths=PackedStringArray("_fondo", "_marco", "_titulo", "_cliente", "_pedido", "_cobro", "_salida", "_nombre", "_renglones", "_aviso", "_cobrar", "_despachar", "_fisico", "_blanco", "_burbuja", "_texto")]
 layer = 3
 script = ExtResource("1")
 _fondo = NodePath("Fondo")
@@ -35,7 +35,6 @@ _aviso = NodePath("Fondo/Panel/Estado/Aviso")
 _cobrar = NodePath("Fondo/Panel/Cobrar")
 _despachar = NodePath("Fondo/Panel/Despachar")
 _fisico = NodePath("Fisico")
-_sprite = NodePath("Fisico/Comprador")
 _blanco = NodePath("Fisico/Blanco")
 _burbuja = NodePath("Fisico/Dialogo")
 _texto = NodePath("Fisico/Dialogo/Texto")
@@ -226,10 +225,6 @@ visible = false
 offset_right = 1920.0
 offset_bottom = 1080.0
 mouse_filter = 2
-
-[node name="Comprador" type="AnimatedSprite2D" parent="Fisico"]
-position = Vector2(960, 540)
-texture_filter = 1
 
 [node name="Blanco" type="Control" parent="Fisico"]
 mouse_default_cursor_shape = 2

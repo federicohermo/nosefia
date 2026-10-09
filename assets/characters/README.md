@@ -26,3 +26,7 @@ Marolini, una Coracola y un Malbardo para Martín; dos Zucarachas y un Pepito pa
 Pura-Cola se normaliza a Coracola por decisión del usuario. El recordatorio reúne el pedido
 completo usando el texto «Quiero» de los rechazos; el rechazo conserva «Yo no pedí esto.».
 Los productos llevan además negrita, como exige #339.
+
+Los personajes se dibujan detrás de la ventanilla dentro del mundo, también con la interfaz
+cerrada. El billboard apunta a la cámara; la profundidad conserva la oclusión del local.
+La interfaz sólo muestra el diálogo de Figma y proyecta el blanco de clic desde el sprite.

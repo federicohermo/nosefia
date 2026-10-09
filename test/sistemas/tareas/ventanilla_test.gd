@@ -32,6 +32,25 @@ var _avisos_de_tarea: int = 0
 var _cumplidas_avisadas: int = 0
 
 
+func test_solo_el_primer_clic_publica_el_inicio_de_la_conversacion() -> void:  # AC-NTF-012
+	var ventanilla := _ventanilla(0)
+	ventanilla.arrancar(TareaDeAtender.new(Compradores.de_la_jornada(1), _inventario()))
+	var avisados: Array[Comprador] = []
+	ventanilla.conversacion_iniciada.connect(
+		func(comprador: Comprador) -> void: avisados.append(comprador)
+	)
+	ventanilla.reloj.avanzar(120.0)
+	ventanilla.pedir_abrir()
+	assert_array(avisados).is_empty()
+	assert_bool(ventanilla.atencion().conversacion_iniciada()).is_false()
+	ventanilla.pedir_interaccion(null)
+	assert_bool(ventanilla.atencion().conversacion_iniciada()).is_true()
+	assert_array(avisados).is_equal([ventanilla.atencion().comprador()])
+	ventanilla.pedir_interaccion(null)
+	ventanilla.pedir_abrir()
+	assert_array(avisados).has_size(1)
+
+
 func test_el_reloj_publica_llegada_y_vencimiento_con_la_ventana_cerrada() -> void:  # AC-CTR-035
 	var ventanilla := _ventanilla(0)
 	ventanilla.arrancar(TareaDeAtender.new(Compradores.de_la_jornada(1), _inventario()))

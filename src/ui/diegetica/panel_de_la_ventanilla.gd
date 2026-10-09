@@ -19,14 +19,6 @@ signal cobro_pedido
 signal despacho_pedido
 signal comprador_pulsado
 
-const ANIMACIONES := {
-	DialogosDeCompradores.Personaje.MARTIN: preload("res://assets/characters/martin/idle.tres"),
-	DialogosDeCompradores.Personaje.TIAGO: preload("res://assets/characters/tiago/idle.tres"),
-}
-const ESCALAS := {
-	DialogosDeCompradores.Personaje.MARTIN: 0.758, DialogosDeCompradores.Personaje.TIAGO: 0.784
-}
-
 ## Lo único propio de esta capa son las palabras de los botones y el cartel de la ventanilla
 ## vacía. Viven acá y **no** además en el `.tscn`: un texto en los dos lados se cambia en uno solo
 ## el día que haya que cambiarlo.
@@ -47,7 +39,6 @@ const TEXTO_SIN_NADIE := "No hay nadie en la ventanilla."
 @export var _cobrar: Button
 @export var _despachar: Button
 @export var _fisico: Control
-@export var _sprite: AnimatedSprite2D
 @export var _blanco: Control
 @export var _burbuja: PanelContainer
 @export var _texto: RichTextLabel
@@ -97,8 +88,6 @@ func mostrar(atencion: Atencion) -> void:
 ## Es un método aparte y no un `mostrar(null)` para que acá no haya que decidir nada: dos
 ## situaciones distintas y dos llamadas de presentación.
 func mostrar_sin_nadie() -> void:
-	_sprite.hide()
-	_sprite.pause()
 	_blanco.hide()
 	_burbuja.hide()
 	_nombre.text = TEXTO_SIN_NADIE
@@ -110,26 +99,18 @@ func mostrar_sin_nadie() -> void:
 
 func ocultar() -> void:
 	visible = false
-	_sprite.pause()
+
+
+func ubicar_comprador(area: Rect2) -> void:
+	var local := _fisico.get_global_transform_with_canvas().affine_inverse() * area
+	_blanco.position = local.position
+	_blanco.size = local.size
 
 
 func _mostrar_comprador(atencion: Atencion) -> void:
 	if atencion.despachada():
 		mostrar_sin_nadie()
 		return
-	var personaje := atencion.comprador().personaje
-	var cuadros: SpriteFrames = ANIMACIONES[personaje]
-	if _sprite.sprite_frames != cuadros:
-		_sprite.sprite_frames = cuadros
-		_sprite.set_frame_and_progress(0, 0.0)
-	_sprite.scale = Vector2.ONE * float(ESCALAS[personaje])
-	_sprite.show()
-	_sprite.play(&"idle")
-	_blanco.position = (
-		_sprite.position
-		- _sprite.sprite_frames.get_frame_texture(&"idle", 0).get_size() * _sprite.scale / 2.0
-	)
-	_blanco.size = _sprite.sprite_frames.get_frame_texture(&"idle", 0).get_size() * _sprite.scale
 	_blanco.show()
 	var dialogo := atencion.dialogo()
 	_burbuja.visible = dialogo != null and not dialogo.terminado()

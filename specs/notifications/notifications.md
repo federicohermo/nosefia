@@ -39,6 +39,7 @@ notificaciones. Con el lector ausente en el programa manual tampoco avisa.
 ### BR-NTF-003 — Tres segundos en ejecución
 
 El sistema DEBE mantener cada notificación durante tres segundos de juego en ejecución.
+La llegada de un comprador con horario usa la excepción de BR-NTF-009.
 MIENTRAS el juego está en pausa, el sistema NO DEBE consumir su tiempo. CUANDO el tiempo
 alcanza la duración, el sistema DEBE retirar el tipo, también si un solo avance supera el
 límite. Un avance de cero o negativo no cambia el estado.
@@ -47,7 +48,7 @@ límite. Un avance de cero o negativo no cambia el estado.
 
 CUANDO se avisa un tipo ya visible, el sistema DEBE dejarlo una sola vez, primero, con sus tres
 segundos completos, sin renovar los otros tipos. La llegada del mismo comprador sigue la excepción
-de BR-NTF-001.
+de BR-NTF-001 y la persistencia de BR-NTF-009.
 
 ### BR-NTF-005 — Los tipos conviven en orden
 
@@ -74,6 +75,16 @@ de pausa DEBE dibujarse por encima del cartel.
 CUANDO una compra vence, el sistema DEBE mostrar «El cliente se cansó de esperar» una vez por
 identidad y jornada. DEBE usar la duración, pausa, orden y deduplicación de los demás avisos.
 Una compra completa NO DEBE producirlo. El cierre DEBE olvidar las identidades de salida.
+
+### BR-NTF-009 — La llegada espera a la conversación
+
+EN la primera jornada, el aviso de llegada DEBE permanecer hasta iniciar la conversación con
+ese comprador, sin vencer por tiempo. Abrir o cerrar la ventanilla NO DEBE retirarlo.
+El primer clic que inicia la conversación DEBE retirarlo una sola vez; reabrir o volver a
+hablar NO DEBE recrearlo. Si el comprador vence antes, su salida DEBE retirar la llegada.
+Un evento de otra identidad NO DEBE retirar el aviso del comprador que está esperando.
+Los avisos de lectura y de cansancio DEBEN conservar su duración. Las jornadas posteriores
+conservan el recorrido y duración anteriores hasta que tengan diálogos diseñados.
 
 ## Criterios de aceptación
 
@@ -147,6 +158,13 @@ DADO una compra vencida CUANDO se avisa la salida ENTONCES aparece su texto y s�
 Repetir esa identidad no renueva. A los 2,9 segundos sigue; a los 3,0 desaparece.
 La pausa conserva el resto. Otra identidad renueva el tipo sin duplicarlo ni renovar los otros.
 Cerrar y comenzar otra jornada permite avisar otra vez la misma identidad.
+
+### AC-NTF-012 — Espera y primer clic *(verifica BR-NTF-009, BR-NTF-001, BR-NTF-006)*
+
+DADO un comprador de la primera noche CUANDO pasan más de tres segundos, se abre o se cierra
+la ventanilla ENTONCES la llegada sigue visible. CUANDO el primer clic inicia su conversación
+ENTONCES desaparece; avanzar diálogo y reabrir no la repiten. La salida antes de conversar y el
+cierre del turno la retiran. Una identidad distinta no puede ocultarla.
 
 ## No objetivos
 

@@ -87,9 +87,17 @@ func test_las_dos_compras_fisicas_registran_una_vez_y_se_van_tras_despedirse() -
 		puesto.abrir()
 		var atendida := atenciones.atencion()
 		assert_object(atendida).is_not_null()
-		var sprite := _panel(almacen).get_node("Fisico/Comprador") as AnimatedSprite2D
+		var sprite := puesto.get_node("Comprador") as AnimatedSprite3D
 		assert_bool(sprite.is_visible_in_tree()).is_true()
+		var avisos: PilaDeNotificaciones = almacen.get_node("Interfaz/PilaDeNotificaciones")
+		avisos._process(20.0)
+		assert_array((avisos.get("_estado") as Notificaciones).visibles()).contains(
+			Notificaciones.Tipo.CLIENTE
+		)
 		_conversar(almacen)
+		assert_array((avisos.get("_estado") as Notificaciones).visibles()).not_contains(
+			Notificaciones.Tipo.CLIENTE
+		)
 		puesto.cerrar()
 		puesto.abrir()
 		assert_object(atenciones.atencion()).is_same(atendida)
@@ -112,10 +120,20 @@ func test_las_dos_compras_fisicas_registran_una_vez_y_se_van_tras_despedirse() -
 		assert_object(agarre.manos().sostenido()).is_null()
 		assert_bool(atendida.vendida()).is_true()
 		assert_bool(atendida.despachada()).is_false()
+		var despedida := atendida.dialogo()
+		var textos: Array[String] = []
 		for _entrada in 4:
 			if atenciones.puede_abandonar():
 				break
+			var texto: RichTextLabel = _panel(almacen).get_node("Fisico/Dialogo/Texto")
+			assert_str(texto.text).is_equal(despedida.entrada_actual())
+			textos.append(texto.text)
 			_pulsar(almacen)
+		if atendida.comprador().personaje == DialogosDeCompradores.Personaje.TIAGO:
+			assert_array(textos).has_size(4)
+			assert_str(textos[1]).contains("investigador criminal")
+			assert_str(textos[2]).contains("Enrique Peldaño")
+			assert_str(textos[3]).contains("11 ****-****")
 		assert_bool(atendida.despachada()).is_true()
 		assert_bool(sprite.is_visible_in_tree()).is_false()
 		assert_object(atenciones.tarea().en_ventanilla()).is_null()

@@ -95,6 +95,7 @@ func _ready() -> void:
 	var avisos: PilaDeNotificaciones = get_node("Interfaz/PilaDeNotificaciones")
 	_atenciones.comprador_llegado.connect(avisos.avisar_llegada)
 	_atenciones.comprador_vencido.connect(avisos.avisar_salida)
+	_atenciones.conversacion_iniciada.connect(avisos.iniciar_conversacion)
 	_caja.lectura_rechazada.connect(avisos.avisar_lectura_rechazada)
 	_caja.ticket_desechado.connect(_al_desechar_un_ticket)
 	_reloj.turno_cerrado.connect(avisos.vaciar.unbind(1))

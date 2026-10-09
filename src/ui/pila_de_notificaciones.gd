@@ -41,6 +41,11 @@ func avisar_salida(comprador: Comprador) -> void:
 	_pintar()
 
 
+func iniciar_conversacion(comprador: Comprador) -> void:
+	_estado.atendido(comprador)
+	_pintar()
+
+
 func avisar_lectura_rechazada(motivo: GeneradorDeTickets.Resultado) -> void:
 	_estado.lectura_rechazada(motivo)
 	_pintar()
