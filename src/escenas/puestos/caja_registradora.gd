@@ -35,10 +35,6 @@ func _ready() -> void:
 
 
 func accionar() -> void:
-	var objeto := agarre.manos().sostenido()
-	if objeto != null and not caja.generador().es_manual():
-		caja.pedir_anotar(objeto)
-		return
 	abrir()
 
 
@@ -91,7 +87,7 @@ func _al_imprimir(dato: Ticket) -> void:
 	_tickets.append(papel)
 	_en_ranura = papel
 	_fin_de_salida = papel.global_position
-	papel.global_position -= ranura.global_basis.orthonormalized().y * 0.11
+	papel.global_position -= ranura.global_basis.orthonormalized().y * 0.18
 	_salida = create_tween().set_process_mode(Tween.TWEEN_PROCESS_PHYSICS)
 	_salida.tween_property(papel, "global_position", _fin_de_salida, 0.8)
 

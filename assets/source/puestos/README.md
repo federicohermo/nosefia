@@ -24,8 +24,9 @@ y las colisiones estáticas que usan las escenas. El ticket recibe una colisión
 y se dibuja por ambas caras. Las posiciones en el juego se ajustan al escritorio vigente;
 el papel aparece sólo al imprimir y su salida se anima desde la caja.
 
-La integración usa únicamente la pieza `lector de productos-col` como equipo de caja,
-orientada hacia la ventanilla, por indicación del usuario. La antigua registradora no se
-instancia a su lado. Con producto sostenido, el clic derecho registra sin abrir la interfaz;
-después de dejarlo, el clic derecho con la mano vacía abre el generador en ese mismo equipo.
-Desde la tercera jornada conserva el acceso al programa manual sin lectura automática.
+La escena conserva la disposicion relativa de registradora y lector de la fuente del artista.
+Ambas piezas comparten un giro hacia la ventanilla y una ampliacion uniforme del 25 %.
+El ticket se amplia un 50 %, conserva su textura y sale por la ranura de la registradora.
+Clic derecho en el lector registra el producto sostenido sin abrir una pantalla. Clic derecho
+en la registradora abre el generador. Desde la tercera jornada el lector se reemplaza por
+su hueco y el programa pasa a modo manual.

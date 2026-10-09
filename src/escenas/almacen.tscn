@@ -139,5 +139,9 @@ reloj = NodePath("../../../Servicios/RelojDelTurno")
 caja = NodePath("../../../Servicios/CajaRegistradora")
 programa = NodePath("../../../Interfaz/ProgramaDeTickets")
 
+[node name="Lector" parent="Estructura" node_paths=PackedStringArray("jugador", "caja")]
+jugador = NodePath("../../Jugador")
+caja = NodePath("../../Servicios/CajaRegistradora")
+
 [editable path="Estructura"]
 [editable path="Objetos"]
