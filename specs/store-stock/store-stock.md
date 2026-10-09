@@ -613,7 +613,8 @@ inferior no está más hacia el pasillo que el frente de los estantes superiores
 ### AC-STK-052 — El cierre cuenta la planilla de ese instante *(verifica BR-STK-022)*
 
 DADO una noche sin ventas y sin gestos en la planilla CUANDO cierra ENTONCES registrar cuenta
-como cumplida. DADO una noche con la planilla igual a lo vendido CUANDO se cobra una venta más
+como cumplida. Antes del cierre, una planilla en cero sin ventas NO completa la tarea ni suma
+una tarea al contador. DADO una noche con la planilla igual a lo vendido CUANDO se cobra una venta más
 y la noche cierra sin anotarla ENTONCES registrar no cuenta.
 
 ### AC-STK-053 — Tirar conserva caja y góndola *(verifica BR-STK-036)*
