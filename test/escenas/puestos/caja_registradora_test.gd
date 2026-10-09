@@ -262,12 +262,44 @@ func test_otra_jornada_quita_papeles_del_piso_y_del_examen_y_vacia_el_programa()
 	var almacen := await _abrir()
 	_caja(almacen).pedir_anotar(UnidadDeProducto.new(Catalogo.de(Producto.Id.MAROLINI)))
 	_emitir_papel(almacen)
-	_emitir_papel(almacen)
 	var papeles := _papeles(almacen)
+	assert_int(papeles.size()).is_equal(1)
+	if papeles.is_empty():
+		return
+	var malla: MeshInstance3D = almacen.get_node("Estructura/cajaregistradora")
+	var sitios := _sitios(
+		almacen, _puesto(almacen), malla.to_global(malla.mesh.get_aabb().get_center())
+	)
+	assert_array(sitios).is_not_empty()
+	if sitios.is_empty():
+		return
+	var jugador: CharacterBody3D = almacen.get_node("Jugador")
+	var rayo := PhysicsRayQueryParameters3D.create(
+		sitios[0] + Vector3.UP, sitios[0] + Vector3.DOWN, 1
+	)
+	rayo.exclude = [jugador.get_rid(), papeles[0].get_rid()]
+	var espacio := almacen.get_world_3d().direct_space_state
+	var piso := espacio.intersect_ray(rayo)
+	assert_bool(piso.is_empty()).is_false()
+	if piso.is_empty():
+		return
+	assert_float(piso.normal.y).is_greater(0.95)
+	var suelto := papeles[0]
+	suelto.global_transform = Transform3D(Basis.IDENTITY, piso.position + Vector3.UP * 0.06)
+	suelto.freeze = false
+	suelto.sleeping = false
+	for _cuadro in 60:
+		await get_tree().physics_frame
+	var forma: CollisionShape3D = suelto.get_node("Forma")
+	var base := (forma.global_transform * forma.shape.get_debug_mesh().get_aabb()).position.y
+	assert_float(base).is_equal_approx(piso.position.y, 0.02)
+	assert_bool(suelto.freeze).is_false()
+	assert_object(suelto.get_parent()).is_same(almacen.get_node("Estructura"))
+	_emitir_papel(almacen)
+	papeles = _papeles(almacen)
 	assert_int(papeles.size()).is_equal(2)
 	if papeles.size() != 2:
 		return
-	var jugador: Node3D = almacen.get_node("Jugador")
 	_accion(jugador, papeles[1], ReglasDeLosObjetos.ACCION_AGARRAR)
 	_accion(jugador, papeles[1], ReglasDeLosObjetos.ACCION_EXAMINAR)
 	assert_bool((jugador.get("examen") as Examen).esta_examinando()).is_true()
