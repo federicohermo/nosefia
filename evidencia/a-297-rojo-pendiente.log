@@ -1,0 +1,481 @@
+ERROR: The remote port number must be between 1 and 65535 (inclusive).
+   at: connect_to_host (core/io/stream_peer_tcp.cpp:69)
+ERROR: Remote Debugger: Unable to connect to host '127.0.0.1:0'.
+   at: create_tcp (core/debugger/remote_debugger_peer.cpp:247)
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+[2J[H[38;2;233;150;122m
+--------------------------------------------------------------------------------------------------
+GdUnit4 Comandline Tool
+--------------------------------------------------------------------------------------------------[0m
+[38;2;0;191;255mDisabled fail fast![0m
+[38;2;0;191;255mSet write reports to reports[0m
+[38;2;218;165;32m
+Headless mode is ignored by option '--ignoreHeadlessMode'"
+
+Please note that tests that use UI interaction do not work correctly in headless mode.
+Godot 'InputEvents' are not transported by the Godot engine in headless mode and therefore
+have no effect in the test!
+[0m
+[38;2;100;149;237mInstalling GdUnit4 session system hooks.[0m
+[38;2;100;149;237mSession hook 'GdUnitHtmlTestReporter' installed.[0m
+[38;2;100;149;237mSession hook 'GdUnitXMLTestReporter' installed.[0m
+[38;2;100;149;237mInstalling GdUnit4 session hooks.[0m
+[38;2;100;149;237mSession hook 'Guardado de la sesión' installed.[0m
+ERROR: Couldn't open directory at path "user://guardado_de_los_tests_56720".
+   at: get_files_at (core/io/dir_access.cpp:578)
+   GDScript backtrace (most recent call first):
+       [0] _borrar_la_carpeta (res://test/guardado_de_la_sesion.gd:40)
+       [1] startup (res://test/guardado_de_la_sesion.gd:22)
+       [2] execute (res://addons/gdUnit4/src/core/hooks/GdUnitTestSessionHookService.gd:125)
+       [3] execute_startup (res://addons/gdUnit4/src/core/hooks/GdUnitTestSessionHookService.gd:108)
+       [4] _process (res://addons/gdUnit4/src/core/runners/GdUnitTestSessionRunner.gd:127)
+[38;2;0;206;209mRun Test Suite: [0m[38;2;250;235;215mres://test/dominio/jugador/encuadre_de_la_ventanilla_test.gd[0m
+  [38;2;250;235;215mres://test/dominio/jugador/encuadre_de_la_ventanilla_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_los_tres_aspectos_encuadran_el_marco_visible[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/jugador/encuadre_de_la_ventanilla_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_los_tres_aspectos_encuadran_el_marco_visible[0m[38;2;178;34;34m[1m FAILED[0m[38;2;100;149;237m 6ms[0m
+  [38;2;0;206;209m[1m[4mReport:[0m
+  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ [38;2;30;144;255m0.000000[0m
+ in range between
+ [38;2;30;144;255m0.886183[0m <> [38;2;30;144;255m0.886203[0m[0m[38;2;173;216;230m	at 'test_los_tres_aspectos_encuadran_el_marco_visible' in res://test/dominio/jugador/encuadre_de_la_ventanilla_test.gd:9[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ [38;2;30;144;255m0.000000[0m
+ in range between
+ [38;2;30;144;255m0.069049[0m <> [38;2;30;144;255m0.069069[0m[0m[38;2;173;216;230m	at 'test_los_tres_aspectos_encuadran_el_marco_visible' in res://test/dominio/jugador/encuadre_de_la_ventanilla_test.gd:10[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ [38;2;30;144;255m0.000000[0m
+ in range between
+ [38;2;30;144;255m0.886183[0m <> [38;2;30;144;255m0.886203[0m[0m[38;2;173;216;230m	at 'test_los_tres_aspectos_encuadran_el_marco_visible' in res://test/dominio/jugador/encuadre_de_la_ventanilla_test.gd:9[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ [38;2;30;144;255m0.000000[0m
+ in range between
+ [38;2;30;144;255m0.069049[0m <> [38;2;30;144;255m0.069069[0m[0m[38;2;173;216;230m	at 'test_los_tres_aspectos_encuadran_el_marco_visible' in res://test/dominio/jugador/encuadre_de_la_ventanilla_test.gd:10[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ [38;2;30;144;255m0.000000[0m
+ in range between
+ [38;2;30;144;255m0.886183[0m <> [38;2;30;144;255m0.886203[0m[0m[38;2;173;216;230m	at 'test_los_tres_aspectos_encuadran_el_marco_visible' in res://test/dominio/jugador/encuadre_de_la_ventanilla_test.gd:9[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ [38;2;30;144;255m0.000000[0m
+ in range between
+ [38;2;30;144;255m0.069049[0m <> [38;2;30;144;255m0.069069[0m[0m[38;2;173;216;230m	at 'test_los_tres_aspectos_encuadran_el_marco_visible' in res://test/dominio/jugador/encuadre_de_la_ventanilla_test.gd:10[0m[38;2;128;128;128m[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/jugador/encuadre_de_la_ventanilla_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_el_alto_del_hueco_cuadrado_limita_en_pantallas_apaisadas[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/jugador/encuadre_de_la_ventanilla_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_el_alto_del_hueco_cuadrado_limita_en_pantallas_apaisadas[0m[38;2;178;34;34m[1m FAILED[0m[38;2;100;149;237m 6ms[0m
+  [38;2;0;206;209m[1m[4mReport:[0m
+  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ [38;2;30;144;255m0.000000[0m
+ in range between
+ [38;2;30;144;255m0.912257[0m <> [38;2;30;144;255m0.912259[0m[0m[38;2;173;216;230m	at 'test_el_alto_del_hueco_cuadrado_limita_en_pantallas_apaisadas' in res://test/dominio/jugador/encuadre_de_la_ventanilla_test.gd:18[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ [38;2;30;144;255m0.000000[0m
+ in range between
+ [38;2;30;144;255m0.912257[0m <> [38;2;30;144;255m0.912259[0m[0m[38;2;173;216;230m	at 'test_el_alto_del_hueco_cuadrado_limita_en_pantallas_apaisadas' in res://test/dominio/jugador/encuadre_de_la_ventanilla_test.gd:18[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ [38;2;30;144;255m0.000000[0m
+ in range between
+ [38;2;30;144;255m0.912257[0m <> [38;2;30;144;255m0.912259[0m[0m[38;2;173;216;230m	at 'test_el_alto_del_hueco_cuadrado_limita_en_pantallas_apaisadas' in res://test/dominio/jugador/encuadre_de_la_ventanilla_test.gd:18[0m[38;2;128;128;128m[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/jugador/encuadre_de_la_ventanilla_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_el_ancho_de_un_hueco_ancho_limita_la_distancia[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/jugador/encuadre_de_la_ventanilla_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_el_ancho_de_un_hueco_ancho_limita_la_distancia[0m[38;2;178;34;34m[1m FAILED[0m[38;2;100;149;237m 6ms[0m
+  [38;2;0;206;209m[1m[4mReport:[0m
+  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ [38;2;30;144;255m0.000000[0m
+ in range between
+ [38;2;30;144;255m1.124999[0m <> [38;2;30;144;255m1.125001[0m[0m[38;2;173;216;230m	at 'test_el_ancho_de_un_hueco_ancho_limita_la_distancia' in res://test/dominio/jugador/encuadre_de_la_ventanilla_test.gd:25[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ [38;2;30;144;255m0.000000[0m
+ in range between
+ [38;2;30;144;255m1.999999[0m <> [38;2;30;144;255m2.000001[0m[0m[38;2;173;216;230m	at 'test_el_ancho_de_un_hueco_ancho_limita_la_distancia' in res://test/dominio/jugador/encuadre_de_la_ventanilla_test.gd:29[0m[38;2;128;128;128m[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/jugador/encuadre_de_la_ventanilla_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_los_bordes_a_distinta_profundidad_se_encuadran_juntos[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/jugador/encuadre_de_la_ventanilla_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_los_bordes_a_distinta_profundidad_se_encuadran_juntos[0m[38;2;178;34;34m[1m FAILED[0m[38;2;100;149;237m 5ms[0m
+  [38;2;0;206;209m[1m[4mReport:[0m
+  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ [38;2;30;144;255m0.000000[0m
+ in range between
+ [38;2;30;144;255m1.999999[0m <> [38;2;30;144;255m2.000001[0m[0m[38;2;173;216;230m	at 'test_los_bordes_a_distinta_profundidad_se_encuadran_juntos' in res://test/dominio/jugador/encuadre_de_la_ventanilla_test.gd:38[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ [38;2;30;144;255m0.000000[0m
+ in range between
+ [38;2;30;144;255m0.499999[0m <> [38;2;30;144;255m0.500001[0m[0m[38;2;173;216;230m	at 'test_los_bordes_a_distinta_profundidad_se_encuadran_juntos' in res://test/dominio/jugador/encuadre_de_la_ventanilla_test.gd:39[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ [38;2;30;144;255m0.000000[0m
+ in range between
+ [38;2;30;144;255m4.499999[0m <> [38;2;30;144;255m4.500001[0m[0m[38;2;173;216;230m	at 'test_los_bordes_a_distinta_profundidad_se_encuadran_juntos' in res://test/dominio/jugador/encuadre_de_la_ventanilla_test.gd:44[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ [38;2;30;144;255m0.000000[0m
+ in range between
+ [38;2;30;144;255m0.222221[0m <> [38;2;30;144;255m0.222223[0m[0m[38;2;173;216;230m	at 'test_los_bordes_a_distinta_profundidad_se_encuadran_juntos' in res://test/dominio/jugador/encuadre_de_la_ventanilla_test.gd:45[0m[38;2;128;128;128m[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/jugador/encuadre_de_la_ventanilla_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_un_dato_no_positivo_no_pide_mover_la_camara[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/jugador/encuadre_de_la_ventanilla_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_un_dato_no_positivo_no_pide_mover_la_camara[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 5ms[0m
+[38;2;128;128;128m[0m
+[38;2;30;144;255mStatistics:[0m[38;2;128;128;128m 5 test cases | 0 errors | 15 failures | 0 flaky | 0 skipped | 0 orphans |[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 75ms[0m
+[38;2;128;128;128m[0m
+[38;2;128;128;128m[0m
+[38;2;0;206;209mRun Test Suite: [0m[38;2;250;235;215mres://test/escenas/puestos/ventanilla_test.gd[0m
+  [38;2;250;235;215mres://test/escenas/puestos/ventanilla_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_la_ventanilla_esta_en_el_grupo_que_la_mira_puede_enfocar[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/puestos/ventanilla_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_la_ventanilla_esta_en_el_grupo_que_la_mira_puede_enfocar[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 6ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/puestos/ventanilla_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_la_ventanilla_recibe_al_jugador_y_al_reloj_por_export[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/puestos/ventanilla_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_la_ventanilla_recibe_al_jugador_y_al_reloj_por_export[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 5ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/puestos/ventanilla_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_la_ventanilla_sale_con_la_accion_compartida[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/puestos/ventanilla_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_la_ventanilla_sale_con_la_accion_compartida[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 6ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/puestos/ventanilla_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_la_ventanilla_no_le_escribe_el_transform_al_jugador[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/puestos/ventanilla_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_la_ventanilla_no_le_escribe_el_transform_al_jugador[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 5ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/puestos/ventanilla_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_el_almacen_instancia_la_ventanilla_exactamente_una_vez[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/puestos/ventanilla_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_el_almacen_instancia_la_ventanilla_exactamente_una_vez[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 5ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/puestos/ventanilla_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_tocar_la_ventanilla_clava_al_jugador_y_no_entrega_nada_para_levantar[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/puestos/ventanilla_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_tocar_la_ventanilla_clava_al_jugador_y_no_entrega_nada_para_levantar[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 829ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/puestos/ventanilla_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_el_cableado_de_atender_llega_entero_desde_el_almacen[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/puestos/ventanilla_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_el_cableado_de_atender_llega_entero_desde_el_almacen[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 84ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/puestos/ventanilla_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_el_panel_de_la_ventanilla_llega_con_sus_seis_nodos[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/puestos/ventanilla_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_el_panel_de_la_ventanilla_llega_con_sus_seis_nodos[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 15ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/puestos/ventanilla_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_cancelar_con_el_vidrio_cerrado_no_le_devuelve_la_caminata_al_jugador[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/puestos/ventanilla_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_cancelar_con_el_vidrio_cerrado_no_le_devuelve_la_caminata_al_jugador[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 9ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/puestos/ventanilla_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_abrir_y_cerrar_la_ventanilla_suspende_y_devuelve_el_control[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/puestos/ventanilla_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_abrir_y_cerrar_la_ventanilla_suspende_y_devuelve_el_control[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 167ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/puestos/ventanilla_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_encuadra_y_vuelve_en_dos_aspectos[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/puestos/ventanilla_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_encuadra_y_vuelve_en_dos_aspectos[0m[38;2;178;34;34m[1m FAILED[0m[38;2;100;149;237m 379ms[0m
+  [38;2;0;206;209m[1m[4mReport:[0m
+  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m '[38;2;30;144;255mfalse[0m' but is '[38;2;30;144;255mtrue[0m'[0m[38;2;173;216;230m	at '_afirmar_encuadre' in res://test/escenas/puestos/ventanilla_test.gd:213
+	at 'test_encuadra_y_vuelve_en_dos_aspectos' in res://test/escenas/puestos/ventanilla_test.gd:269[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ [38;2;30;144;255m1399.350952[0m
+ in range between
+ [38;2;30;144;255m-0.500000[0m <> [38;2;30;144;255m1280.500000[0m[0m[38;2;173;216;230m	at '_afirmar_encuadre' in res://test/escenas/puestos/ventanilla_test.gd:215
+	at 'test_encuadra_y_vuelve_en_dos_aspectos' in res://test/escenas/puestos/ventanilla_test.gd:269[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting to be greater than or equal:[0m
+ [38;2;30;144;255m5.944468[0m but was [38;2;30;144;255m5.297740[0m[0m[38;2;173;216;230m	at '_afirmar_encuadre' in res://test/escenas/puestos/ventanilla_test.gd:225
+	at 'test_encuadra_y_vuelve_en_dos_aspectos' in res://test/escenas/puestos/ventanilla_test.gd:269[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m '[38;2;30;144;255mfalse[0m' but is '[38;2;30;144;255mtrue[0m'[0m[38;2;173;216;230m	at '_afirmar_encuadre' in res://test/escenas/puestos/ventanilla_test.gd:231
+	at 'test_encuadra_y_vuelve_en_dos_aspectos' in res://test/escenas/puestos/ventanilla_test.gd:269[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m '[38;2;30;144;255mfalse[0m' but is '[38;2;30;144;255mtrue[0m'[0m[38;2;173;216;230m	at '_afirmar_encuadre' in res://test/escenas/puestos/ventanilla_test.gd:213
+	at 'test_encuadra_y_vuelve_en_dos_aspectos' in res://test/escenas/puestos/ventanilla_test.gd:269[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ [38;2;30;144;255m1300.945313[0m
+ in range between
+ [38;2;30;144;255m-0.500000[0m <> [38;2;30;144;255m1280.500000[0m[0m[38;2;173;216;230m	at '_afirmar_encuadre' in res://test/escenas/puestos/ventanilla_test.gd:215
+	at 'test_encuadra_y_vuelve_en_dos_aspectos' in res://test/escenas/puestos/ventanilla_test.gd:269[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting to be greater than or equal:[0m
+ [38;2;30;144;255m5.992191[0m but was [38;2;30;144;255m4.589284[0m[0m[38;2;173;216;230m	at '_afirmar_encuadre' in res://test/escenas/puestos/ventanilla_test.gd:225
+	at 'test_encuadra_y_vuelve_en_dos_aspectos' in res://test/escenas/puestos/ventanilla_test.gd:269[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m '[38;2;30;144;255mfalse[0m' but is '[38;2;30;144;255mtrue[0m'[0m[38;2;173;216;230m	at '_afirmar_encuadre' in res://test/escenas/puestos/ventanilla_test.gd:231
+	at 'test_encuadra_y_vuelve_en_dos_aspectos' in res://test/escenas/puestos/ventanilla_test.gd:269[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m '[38;2;30;144;255mfalse[0m' but is '[38;2;30;144;255mtrue[0m'[0m[38;2;173;216;230m	at '_afirmar_encuadre' in res://test/escenas/puestos/ventanilla_test.gd:213
+	at 'test_encuadra_y_vuelve_en_dos_aspectos' in res://test/escenas/puestos/ventanilla_test.gd:269[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ [38;2;30;144;255m1457.882446[0m
+ in range between
+ [38;2;30;144;255m-0.500000[0m <> [38;2;30;144;255m1280.500000[0m[0m[38;2;173;216;230m	at '_afirmar_encuadre' in res://test/escenas/puestos/ventanilla_test.gd:215
+	at 'test_encuadra_y_vuelve_en_dos_aspectos' in res://test/escenas/puestos/ventanilla_test.gd:269[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m '[38;2;30;144;255mfalse[0m' but is '[38;2;30;144;255mtrue[0m'[0m[38;2;173;216;230m	at '_afirmar_encuadre' in res://test/escenas/puestos/ventanilla_test.gd:213
+	at 'test_encuadra_y_vuelve_en_dos_aspectos' in res://test/escenas/puestos/ventanilla_test.gd:269[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ [38;2;30;144;255m1366.412598[0m
+ in range between
+ [38;2;30;144;255m-0.500000[0m <> [38;2;30;144;255m1280.500000[0m[0m[38;2;173;216;230m	at '_afirmar_encuadre' in res://test/escenas/puestos/ventanilla_test.gd:215
+	at 'test_encuadra_y_vuelve_en_dos_aspectos' in res://test/escenas/puestos/ventanilla_test.gd:269[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting to be greater than or equal:[0m
+ [38;2;30;144;255m7.357234[0m but was [38;2;30;144;255m5.634389[0m[0m[38;2;173;216;230m	at '_afirmar_encuadre' in res://test/escenas/puestos/ventanilla_test.gd:225
+	at 'test_encuadra_y_vuelve_en_dos_aspectos' in res://test/escenas/puestos/ventanilla_test.gd:269[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m '[38;2;30;144;255mfalse[0m' but is '[38;2;30;144;255mtrue[0m'[0m[38;2;173;216;230m	at '_afirmar_encuadre' in res://test/escenas/puestos/ventanilla_test.gd:231
+	at 'test_encuadra_y_vuelve_en_dos_aspectos' in res://test/escenas/puestos/ventanilla_test.gd:269[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m '[38;2;30;144;255mtrue[0m' but is '[38;2;30;144;255mfalse[0m'[0m[38;2;173;216;230m	at '_afirmar_encuadre' in res://test/escenas/puestos/ventanilla_test.gd:234
+	at 'test_encuadra_y_vuelve_en_dos_aspectos' in res://test/escenas/puestos/ventanilla_test.gd:269[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m '[38;2;30;144;255mfalse[0m' but is '[38;2;30;144;255mtrue[0m'[0m[38;2;173;216;230m	at '_afirmar_encuadre' in res://test/escenas/puestos/ventanilla_test.gd:213
+	at 'test_encuadra_y_vuelve_en_dos_aspectos' in res://test/escenas/puestos/ventanilla_test.gd:269[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ [38;2;30;144;255m1239.350952[0m
+ in range between
+ [38;2;30;144;255m-0.500000[0m <> [38;2;30;144;255m960.500000[0m[0m[38;2;173;216;230m	at '_afirmar_encuadre' in res://test/escenas/puestos/ventanilla_test.gd:215
+	at 'test_encuadra_y_vuelve_en_dos_aspectos' in res://test/escenas/puestos/ventanilla_test.gd:269[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting to be greater than or equal:[0m
+ [38;2;30;144;255m5.944468[0m but was [38;2;30;144;255m5.297740[0m[0m[38;2;173;216;230m	at '_afirmar_encuadre' in res://test/escenas/puestos/ventanilla_test.gd:225
+	at 'test_encuadra_y_vuelve_en_dos_aspectos' in res://test/escenas/puestos/ventanilla_test.gd:269[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m '[38;2;30;144;255mfalse[0m' but is '[38;2;30;144;255mtrue[0m'[0m[38;2;173;216;230m	at '_afirmar_encuadre' in res://test/escenas/puestos/ventanilla_test.gd:231
+	at 'test_encuadra_y_vuelve_en_dos_aspectos' in res://test/escenas/puestos/ventanilla_test.gd:269[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m '[38;2;30;144;255mfalse[0m' but is '[38;2;30;144;255mtrue[0m'[0m[38;2;173;216;230m	at '_afirmar_encuadre' in res://test/escenas/puestos/ventanilla_test.gd:213
+	at 'test_encuadra_y_vuelve_en_dos_aspectos' in res://test/escenas/puestos/ventanilla_test.gd:269[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ [38;2;30;144;255m1140.945313[0m
+ in range between
+ [38;2;30;144;255m-0.500000[0m <> [38;2;30;144;255m960.500000[0m[0m[38;2;173;216;230m	at '_afirmar_encuadre' in res://test/escenas/puestos/ventanilla_test.gd:215
+	at 'test_encuadra_y_vuelve_en_dos_aspectos' in res://test/escenas/puestos/ventanilla_test.gd:269[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting to be greater than or equal:[0m
+ [38;2;30;144;255m5.992191[0m but was [38;2;30;144;255m4.589284[0m[0m[38;2;173;216;230m	at '_afirmar_encuadre' in res://test/escenas/puestos/ventanilla_test.gd:225
+	at 'test_encuadra_y_vuelve_en_dos_aspectos' in res://test/escenas/puestos/ventanilla_test.gd:269[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m '[38;2;30;144;255mfalse[0m' but is '[38;2;30;144;255mtrue[0m'[0m[38;2;173;216;230m	at '_afirmar_encuadre' in res://test/escenas/puestos/ventanilla_test.gd:231
+	at 'test_encuadra_y_vuelve_en_dos_aspectos' in res://test/escenas/puestos/ventanilla_test.gd:269[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m '[38;2;30;144;255mfalse[0m' but is '[38;2;30;144;255mtrue[0m'[0m[38;2;173;216;230m	at '_afirmar_encuadre' in res://test/escenas/puestos/ventanilla_test.gd:213
+	at 'test_encuadra_y_vuelve_en_dos_aspectos' in res://test/escenas/puestos/ventanilla_test.gd:269[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ [38;2;30;144;255m1297.882324[0m
+ in range between
+ [38;2;30;144;255m-0.500000[0m <> [38;2;30;144;255m960.500000[0m[0m[38;2;173;216;230m	at '_afirmar_encuadre' in res://test/escenas/puestos/ventanilla_test.gd:215
+	at 'test_encuadra_y_vuelve_en_dos_aspectos' in res://test/escenas/puestos/ventanilla_test.gd:269[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m '[38;2;30;144;255mfalse[0m' but is '[38;2;30;144;255mtrue[0m'[0m[38;2;173;216;230m	at '_afirmar_encuadre' in res://test/escenas/puestos/ventanilla_test.gd:213
+	at 'test_encuadra_y_vuelve_en_dos_aspectos' in res://test/escenas/puestos/ventanilla_test.gd:269[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ [38;2;30;144;255m1206.412598[0m
+ in range between
+ [38;2;30;144;255m-0.500000[0m <> [38;2;30;144;255m960.500000[0m[0m[38;2;173;216;230m	at '_afirmar_encuadre' in res://test/escenas/puestos/ventanilla_test.gd:215
+	at 'test_encuadra_y_vuelve_en_dos_aspectos' in res://test/escenas/puestos/ventanilla_test.gd:269[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting to be greater than or equal:[0m
+ [38;2;30;144;255m7.357234[0m but was [38;2;30;144;255m5.634389[0m[0m[38;2;173;216;230m	at '_afirmar_encuadre' in res://test/escenas/puestos/ventanilla_test.gd:225
+	at 'test_encuadra_y_vuelve_en_dos_aspectos' in res://test/escenas/puestos/ventanilla_test.gd:269[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m '[38;2;30;144;255mfalse[0m' but is '[38;2;30;144;255mtrue[0m'[0m[38;2;173;216;230m	at '_afirmar_encuadre' in res://test/escenas/puestos/ventanilla_test.gd:231
+	at 'test_encuadra_y_vuelve_en_dos_aspectos' in res://test/escenas/puestos/ventanilla_test.gd:269[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m '[38;2;30;144;255mtrue[0m' but is '[38;2;30;144;255mfalse[0m'[0m[38;2;173;216;230m	at '_afirmar_encuadre' in res://test/escenas/puestos/ventanilla_test.gd:234
+	at 'test_encuadra_y_vuelve_en_dos_aspectos' in res://test/escenas/puestos/ventanilla_test.gd:269[0m[38;2;128;128;128m[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/puestos/ventanilla_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_el_izquierdo_suspendido_no_suelta_ni_agarra[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/puestos/ventanilla_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_el_izquierdo_suspendido_no_suelta_ni_agarra[0m[38;2;178;34;34m[1m FAILED[0m[38;2;100;149;237m 198ms[0m
+  [38;2;0;206;209m[1m[4mReport:[0m
+  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m '[38;2;30;144;255m<null>[0m' but was [38;2;30;144;255m<Resource>[0m[0m[38;2;173;216;230m	at 'test_el_izquierdo_suspendido_no_suelta_ni_agarra' in res://test/escenas/puestos/ventanilla_test.gd:291
+	at '_almacen_en' in res://test/escenas/puestos/ventanilla_test.gd:172[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m '[38;2;30;144;255mtrue[0m' but is '[38;2;30;144;255mfalse[0m'[0m[38;2;173;216;230m	at 'test_el_izquierdo_suspendido_no_suelta_ni_agarra' in res://test/escenas/puestos/ventanilla_test.gd:293
+	at '_almacen_en' in res://test/escenas/puestos/ventanilla_test.gd:172[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ [38;2;30;144;255m<Resource>[0m
+ to refer to the same object
+ '[38;2;30;144;255m<null>[0m'[0m[38;2;173;216;230m	at 'test_el_izquierdo_suspendido_no_suelta_ni_agarra' in res://test/escenas/puestos/ventanilla_test.gd:297
+	at '_almacen_en' in res://test/escenas/puestos/ventanilla_test.gd:172[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ [38;2;30;144;255m<Node3D>[0m
+ to refer to the same object
+ [38;2;30;144;255m<Node3D>[0m[0m[38;2;173;216;230m	at 'test_el_izquierdo_suspendido_no_suelta_ni_agarra' in res://test/escenas/puestos/ventanilla_test.gd:298
+	at '_almacen_en' in res://test/escenas/puestos/ventanilla_test.gd:172[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ [38;2;30;144;255m<Resource>[0m
+ to refer to the same object
+ '[38;2;30;144;255m<null>[0m'[0m[38;2;173;216;230m	at 'test_el_izquierdo_suspendido_no_suelta_ni_agarra' in res://test/escenas/puestos/ventanilla_test.gd:300
+	at '_almacen_en' in res://test/escenas/puestos/ventanilla_test.gd:172[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m '[38;2;30;144;255m<null>[0m' but was [38;2;30;144;255m<Resource>[0m[0m[38;2;173;216;230m	at 'test_el_izquierdo_suspendido_no_suelta_ni_agarra' in res://test/escenas/puestos/ventanilla_test.gd:291
+	at '_almacen_en' in res://test/escenas/puestos/ventanilla_test.gd:172[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m '[38;2;30;144;255mtrue[0m' but is '[38;2;30;144;255mfalse[0m'[0m[38;2;173;216;230m	at 'test_el_izquierdo_suspendido_no_suelta_ni_agarra' in res://test/escenas/puestos/ventanilla_test.gd:293
+	at '_almacen_en' in res://test/escenas/puestos/ventanilla_test.gd:172[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ [38;2;30;144;255m<Resource>[0m
+ to refer to the same object
+ '[38;2;30;144;255m<null>[0m'[0m[38;2;173;216;230m	at 'test_el_izquierdo_suspendido_no_suelta_ni_agarra' in res://test/escenas/puestos/ventanilla_test.gd:297
+	at '_almacen_en' in res://test/escenas/puestos/ventanilla_test.gd:172[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ [38;2;30;144;255m<Node3D>[0m
+ to refer to the same object
+ [38;2;30;144;255m<Node3D>[0m[0m[38;2;173;216;230m	at 'test_el_izquierdo_suspendido_no_suelta_ni_agarra' in res://test/escenas/puestos/ventanilla_test.gd:298
+	at '_almacen_en' in res://test/escenas/puestos/ventanilla_test.gd:172[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ [38;2;30;144;255m<Resource>[0m
+ to refer to the same object
+ '[38;2;30;144;255m<null>[0m'[0m[38;2;173;216;230m	at 'test_el_izquierdo_suspendido_no_suelta_ni_agarra' in res://test/escenas/puestos/ventanilla_test.gd:300
+	at '_almacen_en' in res://test/escenas/puestos/ventanilla_test.gd:172[0m[38;2;128;128;128m[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/puestos/ventanilla_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_abrir_dos_veces_y_cerrar_el_turno_devuelve_la_primera_pose[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/puestos/ventanilla_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_abrir_dos_veces_y_cerrar_el_turno_devuelve_la_primera_pose[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 170ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/puestos/ventanilla_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_giro_atrasado_preserva_el_encuadre[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/puestos/ventanilla_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_giro_atrasado_preserva_el_encuadre[0m[38;2;178;34;34m[1m FAILED[0m[38;2;100;149;237m 167ms[0m
+  [38;2;0;206;209m[1m[4mReport:[0m
+  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ '[38;2;30;144;255m(0.921283, 0.0, 0.388892)[0m'
+ in range between
+ '[38;2;30;144;255m(0.99999, -0.00001, -0.00001)[0m' <> '[38;2;30;144;255m(1.00001, 0.00001, 0.00001)[0m'[0m[38;2;173;216;230m	at '_afirmar_pose' in res://test/escenas/puestos/ventanilla_test.gd:241
+	at 'test_giro_atrasado_preserva_el_encuadre' in res://test/escenas/puestos/ventanilla_test.gd:332
+	at '_almacen_en' in res://test/escenas/puestos/ventanilla_test.gd:172[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ '[38;2;30;144;255m(-0.053992, 0.990315, 0.127907)[0m'
+ in range between
+ '[38;2;30;144;255m(-0.00001, 0.99999, -0.00001)[0m' <> '[38;2;30;144;255m(0.00001, 1.00001, 0.00001)[0m'[0m[38;2;173;216;230m	at '_afirmar_pose' in res://test/escenas/puestos/ventanilla_test.gd:241
+	at 'test_giro_atrasado_preserva_el_encuadre' in res://test/escenas/puestos/ventanilla_test.gd:332
+	at '_almacen_en' in res://test/escenas/puestos/ventanilla_test.gd:172[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ '[38;2;30;144;255m(-0.385126, -0.138836, 0.912361)[0m'
+ in range between
+ '[38;2;30;144;255m(-0.00001, -0.00001, 0.99999)[0m' <> '[38;2;30;144;255m(0.00001, 0.00001, 1.00001)[0m'[0m[38;2;173;216;230m	at '_afirmar_pose' in res://test/escenas/puestos/ventanilla_test.gd:241
+	at 'test_giro_atrasado_preserva_el_encuadre' in res://test/escenas/puestos/ventanilla_test.gd:332
+	at '_almacen_en' in res://test/escenas/puestos/ventanilla_test.gd:172[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ '[38;2;30;144;255m(0.75124, 0.0, 0.660029)[0m'
+ in range between
+ '[38;2;30;144;255m(0.99999, -0.00001, -0.00001)[0m' <> '[38;2;30;144;255m(1.00001, 0.00001, 0.00001)[0m'[0m[38;2;173;216;230m	at '_afirmar_pose' in res://test/escenas/puestos/ventanilla_test.gd:241
+	at 'test_giro_atrasado_preserva_el_encuadre' in res://test/escenas/puestos/ventanilla_test.gd:332
+	at '_almacen_en' in res://test/escenas/puestos/ventanilla_test.gd:172[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ '[38;2;30;144;255m(-0.181496, 0.961449, 0.206578)[0m'
+ in range between
+ '[38;2;30;144;255m(-0.00001, 0.99999, -0.00001)[0m' <> '[38;2;30;144;255m(0.00001, 1.00001, 0.00001)[0m'[0m[38;2;173;216;230m	at '_afirmar_pose' in res://test/escenas/puestos/ventanilla_test.gd:241
+	at 'test_giro_atrasado_preserva_el_encuadre' in res://test/escenas/puestos/ventanilla_test.gd:332
+	at '_almacen_en' in res://test/escenas/puestos/ventanilla_test.gd:172[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ '[38;2;30;144;255m(-0.634584, -0.274982, 0.722279)[0m'
+ in range between
+ '[38;2;30;144;255m(-0.00001, -0.00001, 0.99999)[0m' <> '[38;2;30;144;255m(0.00001, 0.00001, 1.00001)[0m'[0m[38;2;173;216;230m	at '_afirmar_pose' in res://test/escenas/puestos/ventanilla_test.gd:241
+	at 'test_giro_atrasado_preserva_el_encuadre' in res://test/escenas/puestos/ventanilla_test.gd:332
+	at '_almacen_en' in res://test/escenas/puestos/ventanilla_test.gd:172[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ '[38;2;30;144;255m(0.558682, 0.0, 0.829382)[0m'
+ in range between
+ '[38;2;30;144;255m(0.99999, -0.00001, -0.00001)[0m' <> '[38;2;30;144;255m(1.00001, 0.00001, 0.00001)[0m'[0m[38;2;173;216;230m	at '_afirmar_pose' in res://test/escenas/puestos/ventanilla_test.gd:241
+	at 'test_giro_atrasado_preserva_el_encuadre' in res://test/escenas/puestos/ventanilla_test.gd:332
+	at '_almacen_en' in res://test/escenas/puestos/ventanilla_test.gd:172[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ '[38;2;30;144;255m(-0.315321, 0.924909, 0.212405)[0m'
+ in range between
+ '[38;2;30;144;255m(-0.00001, 0.99999, -0.00001)[0m' <> '[38;2;30;144;255m(0.00001, 1.00001, 0.00001)[0m'[0m[38;2;173;216;230m	at '_afirmar_pose' in res://test/escenas/puestos/ventanilla_test.gd:241
+	at 'test_giro_atrasado_preserva_el_encuadre' in res://test/escenas/puestos/ventanilla_test.gd:332
+	at '_almacen_en' in res://test/escenas/puestos/ventanilla_test.gd:172[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ '[38;2;30;144;255m(-0.767103, -0.380188, 0.51673)[0m'
+ in range between
+ '[38;2;30;144;255m(-0.00001, -0.00001, 0.99999)[0m' <> '[38;2;30;144;255m(0.00001, 0.00001, 1.00001)[0m'[0m[38;2;173;216;230m	at '_afirmar_pose' in res://test/escenas/puestos/ventanilla_test.gd:241
+	at 'test_giro_atrasado_preserva_el_encuadre' in res://test/escenas/puestos/ventanilla_test.gd:332
+	at '_almacen_en' in res://test/escenas/puestos/ventanilla_test.gd:172[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ '[38;2;30;144;255m(0.558682, 0.0, 0.829382)[0m'
+ in range between
+ '[38;2;30;144;255m(0.99999, -0.00001, -0.00001)[0m' <> '[38;2;30;144;255m(1.00001, 0.00001, 0.00001)[0m'[0m[38;2;173;216;230m	at '_afirmar_pose' in res://test/escenas/puestos/ventanilla_test.gd:241
+	at 'test_giro_atrasado_preserva_el_encuadre' in res://test/escenas/puestos/ventanilla_test.gd:332
+	at '_almacen_en' in res://test/escenas/puestos/ventanilla_test.gd:172[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ '[38;2;30;144;255m(-0.315321, 0.924909, 0.212405)[0m'
+ in range between
+ '[38;2;30;144;255m(-0.00001, 0.99999, -0.00001)[0m' <> '[38;2;30;144;255m(0.00001, 1.00001, 0.00001)[0m'[0m[38;2;173;216;230m	at '_afirmar_pose' in res://test/escenas/puestos/ventanilla_test.gd:241
+	at 'test_giro_atrasado_preserva_el_encuadre' in res://test/escenas/puestos/ventanilla_test.gd:332
+	at '_almacen_en' in res://test/escenas/puestos/ventanilla_test.gd:172[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ '[38;2;30;144;255m(-0.767103, -0.380188, 0.51673)[0m'
+ in range between
+ '[38;2;30;144;255m(-0.00001, -0.00001, 0.99999)[0m' <> '[38;2;30;144;255m(0.00001, 0.00001, 1.00001)[0m'[0m[38;2;173;216;230m	at '_afirmar_pose' in res://test/escenas/puestos/ventanilla_test.gd:241
+	at 'test_giro_atrasado_preserva_el_encuadre' in res://test/escenas/puestos/ventanilla_test.gd:332
+	at '_almacen_en' in res://test/escenas/puestos/ventanilla_test.gd:172[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ '[38;2;30;144;255m(0.558682, 0.0, 0.829382)[0m'
+ in range between
+ '[38;2;30;144;255m(0.99999, -0.00001, -0.00001)[0m' <> '[38;2;30;144;255m(1.00001, 0.00001, 0.00001)[0m'[0m[38;2;173;216;230m	at '_afirmar_pose' in res://test/escenas/puestos/ventanilla_test.gd:241
+	at 'test_giro_atrasado_preserva_el_encuadre' in res://test/escenas/puestos/ventanilla_test.gd:332
+	at '_almacen_en' in res://test/escenas/puestos/ventanilla_test.gd:172[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ '[38;2;30;144;255m(-0.315321, 0.924909, 0.212405)[0m'
+ in range between
+ '[38;2;30;144;255m(-0.00001, 0.99999, -0.00001)[0m' <> '[38;2;30;144;255m(0.00001, 1.00001, 0.00001)[0m'[0m[38;2;173;216;230m	at '_afirmar_pose' in res://test/escenas/puestos/ventanilla_test.gd:241
+	at 'test_giro_atrasado_preserva_el_encuadre' in res://test/escenas/puestos/ventanilla_test.gd:332
+	at '_almacen_en' in res://test/escenas/puestos/ventanilla_test.gd:172[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ '[38;2;30;144;255m(-0.767103, -0.380188, 0.51673)[0m'
+ in range between
+ '[38;2;30;144;255m(-0.00001, -0.00001, 0.99999)[0m' <> '[38;2;30;144;255m(0.00001, 0.00001, 1.00001)[0m'[0m[38;2;173;216;230m	at '_afirmar_pose' in res://test/escenas/puestos/ventanilla_test.gd:241
+	at 'test_giro_atrasado_preserva_el_encuadre' in res://test/escenas/puestos/ventanilla_test.gd:332
+	at '_almacen_en' in res://test/escenas/puestos/ventanilla_test.gd:172[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ '[38;2;30;144;255m(0.558682, 0.0, 0.829382)[0m'
+ in range between
+ '[38;2;30;144;255m(0.99999, -0.00001, -0.00001)[0m' <> '[38;2;30;144;255m(1.00001, 0.00001, 0.00001)[0m'[0m[38;2;173;216;230m	at '_afirmar_pose' in res://test/escenas/puestos/ventanilla_test.gd:241
+	at 'test_giro_atrasado_preserva_el_encuadre' in res://test/escenas/puestos/ventanilla_test.gd:332
+	at '_almacen_en' in res://test/escenas/puestos/ventanilla_test.gd:172[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ '[38;2;30;144;255m(-0.315321, 0.924909, 0.212405)[0m'
+ in range between
+ '[38;2;30;144;255m(-0.00001, 0.99999, -0.00001)[0m' <> '[38;2;30;144;255m(0.00001, 1.00001, 0.00001)[0m'[0m[38;2;173;216;230m	at '_afirmar_pose' in res://test/escenas/puestos/ventanilla_test.gd:241
+	at 'test_giro_atrasado_preserva_el_encuadre' in res://test/escenas/puestos/ventanilla_test.gd:332
+	at '_almacen_en' in res://test/escenas/puestos/ventanilla_test.gd:172[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ '[38;2;30;144;255m(-0.767103, -0.380188, 0.51673)[0m'
+ in range between
+ '[38;2;30;144;255m(-0.00001, -0.00001, 0.99999)[0m' <> '[38;2;30;144;255m(0.00001, 0.00001, 1.00001)[0m'[0m[38;2;173;216;230m	at '_afirmar_pose' in res://test/escenas/puestos/ventanilla_test.gd:241
+	at 'test_giro_atrasado_preserva_el_encuadre' in res://test/escenas/puestos/ventanilla_test.gd:332
+	at '_almacen_en' in res://test/escenas/puestos/ventanilla_test.gd:172[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ '[38;2;30;144;255m(0.558682, 0.0, 0.829382)[0m'
+ in range between
+ '[38;2;30;144;255m(0.99999, -0.00001, -0.00001)[0m' <> '[38;2;30;144;255m(1.00001, 0.00001, 0.00001)[0m'[0m[38;2;173;216;230m	at '_afirmar_pose' in res://test/escenas/puestos/ventanilla_test.gd:241
+	at 'test_giro_atrasado_preserva_el_encuadre' in res://test/escenas/puestos/ventanilla_test.gd:332
+	at '_almacen_en' in res://test/escenas/puestos/ventanilla_test.gd:172[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ '[38;2;30;144;255m(-0.315321, 0.924909, 0.212405)[0m'
+ in range between
+ '[38;2;30;144;255m(-0.00001, 0.99999, -0.00001)[0m' <> '[38;2;30;144;255m(0.00001, 1.00001, 0.00001)[0m'[0m[38;2;173;216;230m	at '_afirmar_pose' in res://test/escenas/puestos/ventanilla_test.gd:241
+	at 'test_giro_atrasado_preserva_el_encuadre' in res://test/escenas/puestos/ventanilla_test.gd:332
+	at '_almacen_en' in res://test/escenas/puestos/ventanilla_test.gd:172[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ '[38;2;30;144;255m(-0.767103, -0.380188, 0.51673)[0m'
+ in range between
+ '[38;2;30;144;255m(-0.00001, -0.00001, 0.99999)[0m' <> '[38;2;30;144;255m(0.00001, 0.00001, 1.00001)[0m'[0m[38;2;173;216;230m	at '_afirmar_pose' in res://test/escenas/puestos/ventanilla_test.gd:241
+	at 'test_giro_atrasado_preserva_el_encuadre' in res://test/escenas/puestos/ventanilla_test.gd:332
+	at '_almacen_en' in res://test/escenas/puestos/ventanilla_test.gd:172[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ '[38;2;30;144;255m(0.558682, 0.0, 0.829382)[0m'
+ in range between
+ '[38;2;30;144;255m(0.99999, -0.00001, -0.00001)[0m' <> '[38;2;30;144;255m(1.00001, 0.00001, 0.00001)[0m'[0m[38;2;173;216;230m	at '_afirmar_pose' in res://test/escenas/puestos/ventanilla_test.gd:241
+	at 'test_giro_atrasado_preserva_el_encuadre' in res://test/escenas/puestos/ventanilla_test.gd:332
+	at '_almacen_en' in res://test/escenas/puestos/ventanilla_test.gd:172[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ '[38;2;30;144;255m(-0.315321, 0.924909, 0.212405)[0m'
+ in range between
+ '[38;2;30;144;255m(-0.00001, 0.99999, -0.00001)[0m' <> '[38;2;30;144;255m(0.00001, 1.00001, 0.00001)[0m'[0m[38;2;173;216;230m	at '_afirmar_pose' in res://test/escenas/puestos/ventanilla_test.gd:241
+	at 'test_giro_atrasado_preserva_el_encuadre' in res://test/escenas/puestos/ventanilla_test.gd:332
+	at '_almacen_en' in res://test/escenas/puestos/ventanilla_test.gd:172[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ '[38;2;30;144;255m(-0.767103, -0.380188, 0.51673)[0m'
+ in range between
+ '[38;2;30;144;255m(-0.00001, -0.00001, 0.99999)[0m' <> '[38;2;30;144;255m(0.00001, 0.00001, 1.00001)[0m'[0m[38;2;173;216;230m	at '_afirmar_pose' in res://test/escenas/puestos/ventanilla_test.gd:241
+	at 'test_giro_atrasado_preserva_el_encuadre' in res://test/escenas/puestos/ventanilla_test.gd:332
+	at '_almacen_en' in res://test/escenas/puestos/ventanilla_test.gd:172[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ '[38;2;30;144;255m(0.558682, 0.0, 0.829382)[0m'
+ in range between
+ '[38;2;30;144;255m(0.99999, -0.00001, -0.00001)[0m' <> '[38;2;30;144;255m(1.00001, 0.00001, 0.00001)[0m'[0m[38;2;173;216;230m	at '_afirmar_pose' in res://test/escenas/puestos/ventanilla_test.gd:241
+	at 'test_giro_atrasado_preserva_el_encuadre' in res://test/escenas/puestos/ventanilla_test.gd:332
+	at '_almacen_en' in res://test/escenas/puestos/ventanilla_test.gd:172[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ '[38;2;30;144;255m(-0.315321, 0.924909, 0.212405)[0m'
+ in range between
+ '[38;2;30;144;255m(-0.00001, 0.99999, -0.00001)[0m' <> '[38;2;30;144;255m(0.00001, 1.00001, 0.00001)[0m'[0m[38;2;173;216;230m	at '_afirmar_pose' in res://test/escenas/puestos/ventanilla_test.gd:241
+	at 'test_giro_atrasado_preserva_el_encuadre' in res://test/escenas/puestos/ventanilla_test.gd:332
+	at '_almacen_en' in res://test/escenas/puestos/ventanilla_test.gd:172[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ '[38;2;30;144;255m(-0.767103, -0.380188, 0.51673)[0m'
+ in range between
+ '[38;2;30;144;255m(-0.00001, -0.00001, 0.99999)[0m' <> '[38;2;30;144;255m(0.00001, 0.00001, 1.00001)[0m'[0m[38;2;173;216;230m	at '_afirmar_pose' in res://test/escenas/puestos/ventanilla_test.gd:241
+	at 'test_giro_atrasado_preserva_el_encuadre' in res://test/escenas/puestos/ventanilla_test.gd:332
+	at '_almacen_en' in res://test/escenas/puestos/ventanilla_test.gd:172[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ '[38;2;30;144;255m(0.558682, 0.0, 0.829382)[0m'
+ in range between
+ '[38;2;30;144;255m(0.99999, -0.00001, -0.00001)[0m' <> '[38;2;30;144;255m(1.00001, 0.00001, 0.00001)[0m'[0m[38;2;173;216;230m	at '_afirmar_pose' in res://test/escenas/puestos/ventanilla_test.gd:241
+	at 'test_giro_atrasado_preserva_el_encuadre' in res://test/escenas/puestos/ventanilla_test.gd:332
+	at '_almacen_en' in res://test/escenas/puestos/ventanilla_test.gd:172[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ '[38;2;30;144;255m(-0.315321, 0.924909, 0.212405)[0m'
+ in range between
+ '[38;2;30;144;255m(-0.00001, 0.99999, -0.00001)[0m' <> '[38;2;30;144;255m(0.00001, 1.00001, 0.00001)[0m'[0m[38;2;173;216;230m	at '_afirmar_pose' in res://test/escenas/puestos/ventanilla_test.gd:241
+	at 'test_giro_atrasado_preserva_el_encuadre' in res://test/escenas/puestos/ventanilla_test.gd:332
+	at '_almacen_en' in res://test/escenas/puestos/ventanilla_test.gd:172[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ '[38;2;30;144;255m(-0.767103, -0.380188, 0.51673)[0m'
+ in range between
+ '[38;2;30;144;255m(-0.00001, -0.00001, 0.99999)[0m' <> '[38;2;30;144;255m(0.00001, 0.00001, 1.00001)[0m'[0m[38;2;173;216;230m	at '_afirmar_pose' in res://test/escenas/puestos/ventanilla_test.gd:241
+	at 'test_giro_atrasado_preserva_el_encuadre' in res://test/escenas/puestos/ventanilla_test.gd:332
+	at '_almacen_en' in res://test/escenas/puestos/ventanilla_test.gd:172[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m '[38;2;30;144;255mfalse[0m' but is '[38;2;30;144;255mtrue[0m'[0m[38;2;173;216;230m	at '_afirmar_encuadre' in res://test/escenas/puestos/ventanilla_test.gd:213
+	at 'test_giro_atrasado_preserva_el_encuadre' in res://test/escenas/puestos/ventanilla_test.gd:333
+	at '_almacen_en' in res://test/escenas/puestos/ventanilla_test.gd:172[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting to be greater than or equal:[0m
+ [38;2;30;144;255m5.944468[0m but was [38;2;30;144;255m5.297740[0m[0m[38;2;173;216;230m	at '_afirmar_encuadre' in res://test/escenas/puestos/ventanilla_test.gd:225
+	at 'test_giro_atrasado_preserva_el_encuadre' in res://test/escenas/puestos/ventanilla_test.gd:333
+	at '_almacen_en' in res://test/escenas/puestos/ventanilla_test.gd:172[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m '[38;2;30;144;255mfalse[0m' but is '[38;2;30;144;255mtrue[0m'[0m[38;2;173;216;230m	at '_afirmar_encuadre' in res://test/escenas/puestos/ventanilla_test.gd:231
+	at 'test_giro_atrasado_preserva_el_encuadre' in res://test/escenas/puestos/ventanilla_test.gd:333
+	at '_almacen_en' in res://test/escenas/puestos/ventanilla_test.gd:172[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m '[38;2;30;144;255mfalse[0m' but is '[38;2;30;144;255mtrue[0m'[0m[38;2;173;216;230m	at '_afirmar_encuadre' in res://test/escenas/puestos/ventanilla_test.gd:213
+	at 'test_giro_atrasado_preserva_el_encuadre' in res://test/escenas/puestos/ventanilla_test.gd:333
+	at '_almacen_en' in res://test/escenas/puestos/ventanilla_test.gd:172[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting to be greater than or equal:[0m
+ [38;2;30;144;255m5.992191[0m but was [38;2;30;144;255m4.589284[0m[0m[38;2;173;216;230m	at '_afirmar_encuadre' in res://test/escenas/puestos/ventanilla_test.gd:225
+	at 'test_giro_atrasado_preserva_el_encuadre' in res://test/escenas/puestos/ventanilla_test.gd:333
+	at '_almacen_en' in res://test/escenas/puestos/ventanilla_test.gd:172[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m '[38;2;30;144;255mfalse[0m' but is '[38;2;30;144;255mtrue[0m'[0m[38;2;173;216;230m	at '_afirmar_encuadre' in res://test/escenas/puestos/ventanilla_test.gd:231
+	at 'test_giro_atrasado_preserva_el_encuadre' in res://test/escenas/puestos/ventanilla_test.gd:333
+	at '_almacen_en' in res://test/escenas/puestos/ventanilla_test.gd:172[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m '[38;2;30;144;255mfalse[0m' but is '[38;2;30;144;255mtrue[0m'[0m[38;2;173;216;230m	at '_afirmar_encuadre' in res://test/escenas/puestos/ventanilla_test.gd:213
+	at 'test_giro_atrasado_preserva_el_encuadre' in res://test/escenas/puestos/ventanilla_test.gd:333
+	at '_almacen_en' in res://test/escenas/puestos/ventanilla_test.gd:172[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m '[38;2;30;144;255mfalse[0m' but is '[38;2;30;144;255mtrue[0m'[0m[38;2;173;216;230m	at '_afirmar_encuadre' in res://test/escenas/puestos/ventanilla_test.gd:213
+	at 'test_giro_atrasado_preserva_el_encuadre' in res://test/escenas/puestos/ventanilla_test.gd:333
+	at '_almacen_en' in res://test/escenas/puestos/ventanilla_test.gd:172[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting to be greater than or equal:[0m
+ [38;2;30;144;255m7.357234[0m but was [38;2;30;144;255m5.634389[0m[0m[38;2;173;216;230m	at '_afirmar_encuadre' in res://test/escenas/puestos/ventanilla_test.gd:225
+	at 'test_giro_atrasado_preserva_el_encuadre' in res://test/escenas/puestos/ventanilla_test.gd:333
+	at '_almacen_en' in res://test/escenas/puestos/ventanilla_test.gd:172[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m '[38;2;30;144;255mfalse[0m' but is '[38;2;30;144;255mtrue[0m'[0m[38;2;173;216;230m	at '_afirmar_encuadre' in res://test/escenas/puestos/ventanilla_test.gd:231
+	at 'test_giro_atrasado_preserva_el_encuadre' in res://test/escenas/puestos/ventanilla_test.gd:333
+	at '_almacen_en' in res://test/escenas/puestos/ventanilla_test.gd:172[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m '[38;2;30;144;255mtrue[0m' but is '[38;2;30;144;255mfalse[0m'[0m[38;2;173;216;230m	at '_afirmar_encuadre' in res://test/escenas/puestos/ventanilla_test.gd:234
+	at 'test_giro_atrasado_preserva_el_encuadre' in res://test/escenas/puestos/ventanilla_test.gd:333
+	at '_almacen_en' in res://test/escenas/puestos/ventanilla_test.gd:172[0m[38;2;128;128;128m[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/puestos/ventanilla_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_el_aspecto_nuevo_se_usa_al_abrir_otra_vez[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/puestos/ventanilla_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_el_aspecto_nuevo_se_usa_al_abrir_otra_vez[0m[38;2;178;34;34m[1m FAILED[0m[38;2;100;149;237m 170ms[0m
+  [38;2;0;206;209m[1m[4mReport:[0m
+  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m '[38;2;30;144;255mfalse[0m' but is '[38;2;30;144;255mtrue[0m'[0m[38;2;173;216;230m	at '_afirmar_encuadre' in res://test/escenas/puestos/ventanilla_test.gd:213
+	at 'test_el_aspecto_nuevo_se_usa_al_abrir_otra_vez' in res://test/escenas/puestos/ventanilla_test.gd:360
+	at '_almacen_en' in res://test/escenas/puestos/ventanilla_test.gd:172[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ [38;2;30;144;255m2748.023926[0m
+ in range between
+ [38;2;30;144;255m-0.500000[0m <> [38;2;30;144;255m540.500000[0m[0m[38;2;173;216;230m	at '_afirmar_encuadre' in res://test/escenas/puestos/ventanilla_test.gd:215
+	at 'test_el_aspecto_nuevo_se_usa_al_abrir_otra_vez' in res://test/escenas/puestos/ventanilla_test.gd:360
+	at '_almacen_en' in res://test/escenas/puestos/ventanilla_test.gd:172[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting to be greater than or equal:[0m
+ [38;2;30;144;255m5.944468[0m but was [38;2;30;144;255m5.297740[0m[0m[38;2;173;216;230m	at '_afirmar_encuadre' in res://test/escenas/puestos/ventanilla_test.gd:225
+	at 'test_el_aspecto_nuevo_se_usa_al_abrir_otra_vez' in res://test/escenas/puestos/ventanilla_test.gd:360
+	at '_almacen_en' in res://test/escenas/puestos/ventanilla_test.gd:172[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m '[38;2;30;144;255mfalse[0m' but is '[38;2;30;144;255mtrue[0m'[0m[38;2;173;216;230m	at '_afirmar_encuadre' in res://test/escenas/puestos/ventanilla_test.gd:231
+	at 'test_el_aspecto_nuevo_se_usa_al_abrir_otra_vez' in res://test/escenas/puestos/ventanilla_test.gd:360
+	at '_almacen_en' in res://test/escenas/puestos/ventanilla_test.gd:172[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m '[38;2;30;144;255mfalse[0m' but is '[38;2;30;144;255mtrue[0m'[0m[38;2;173;216;230m	at '_afirmar_encuadre' in res://test/escenas/puestos/ventanilla_test.gd:213
+	at 'test_el_aspecto_nuevo_se_usa_al_abrir_otra_vez' in res://test/escenas/puestos/ventanilla_test.gd:360
+	at '_almacen_en' in res://test/escenas/puestos/ventanilla_test.gd:172[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ [38;2;30;144;255m2399.552002[0m
+ in range between
+ [38;2;30;144;255m-0.500000[0m <> [38;2;30;144;255m540.500000[0m[0m[38;2;173;216;230m	at '_afirmar_encuadre' in res://test/escenas/puestos/ventanilla_test.gd:215
+	at 'test_el_aspecto_nuevo_se_usa_al_abrir_otra_vez' in res://test/escenas/puestos/ventanilla_test.gd:360
+	at '_almacen_en' in res://test/escenas/puestos/ventanilla_test.gd:172[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting to be greater than or equal:[0m
+ [38;2;30;144;255m5.992191[0m but was [38;2;30;144;255m4.589284[0m[0m[38;2;173;216;230m	at '_afirmar_encuadre' in res://test/escenas/puestos/ventanilla_test.gd:225
+	at 'test_el_aspecto_nuevo_se_usa_al_abrir_otra_vez' in res://test/escenas/puestos/ventanilla_test.gd:360
+	at '_almacen_en' in res://test/escenas/puestos/ventanilla_test.gd:172[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m '[38;2;30;144;255mfalse[0m' but is '[38;2;30;144;255mtrue[0m'[0m[38;2;173;216;230m	at '_afirmar_encuadre' in res://test/escenas/puestos/ventanilla_test.gd:231
+	at 'test_el_aspecto_nuevo_se_usa_al_abrir_otra_vez' in res://test/escenas/puestos/ventanilla_test.gd:360
+	at '_almacen_en' in res://test/escenas/puestos/ventanilla_test.gd:172[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m '[38;2;30;144;255mfalse[0m' but is '[38;2;30;144;255mtrue[0m'[0m[38;2;173;216;230m	at '_afirmar_encuadre' in res://test/escenas/puestos/ventanilla_test.gd:213
+	at 'test_el_aspecto_nuevo_se_usa_al_abrir_otra_vez' in res://test/escenas/puestos/ventanilla_test.gd:360
+	at '_almacen_en' in res://test/escenas/puestos/ventanilla_test.gd:172[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ [38;2;30;144;255m3345.138184[0m
+ in range between
+ [38;2;30;144;255m-0.500000[0m <> [38;2;30;144;255m540.500000[0m[0m[38;2;173;216;230m	at '_afirmar_encuadre' in res://test/escenas/puestos/ventanilla_test.gd:215
+	at 'test_el_aspecto_nuevo_se_usa_al_abrir_otra_vez' in res://test/escenas/puestos/ventanilla_test.gd:360
+	at '_almacen_en' in res://test/escenas/puestos/ventanilla_test.gd:172[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m '[38;2;30;144;255mfalse[0m' but is '[38;2;30;144;255mtrue[0m'[0m[38;2;173;216;230m	at '_afirmar_encuadre' in res://test/escenas/puestos/ventanilla_test.gd:213
+	at 'test_el_aspecto_nuevo_se_usa_al_abrir_otra_vez' in res://test/escenas/puestos/ventanilla_test.gd:360
+	at '_almacen_en' in res://test/escenas/puestos/ventanilla_test.gd:172[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ [38;2;30;144;255m2912.696289[0m
+ in range between
+ [38;2;30;144;255m-0.500000[0m <> [38;2;30;144;255m540.500000[0m[0m[38;2;173;216;230m	at '_afirmar_encuadre' in res://test/escenas/puestos/ventanilla_test.gd:215
+	at 'test_el_aspecto_nuevo_se_usa_al_abrir_otra_vez' in res://test/escenas/puestos/ventanilla_test.gd:360
+	at '_almacen_en' in res://test/escenas/puestos/ventanilla_test.gd:172[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting to be greater than or equal:[0m
+ [38;2;30;144;255m7.357234[0m but was [38;2;30;144;255m5.634389[0m[0m[38;2;173;216;230m	at '_afirmar_encuadre' in res://test/escenas/puestos/ventanilla_test.gd:225
+	at 'test_el_aspecto_nuevo_se_usa_al_abrir_otra_vez' in res://test/escenas/puestos/ventanilla_test.gd:360
+	at '_almacen_en' in res://test/escenas/puestos/ventanilla_test.gd:172[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m '[38;2;30;144;255mfalse[0m' but is '[38;2;30;144;255mtrue[0m'[0m[38;2;173;216;230m	at '_afirmar_encuadre' in res://test/escenas/puestos/ventanilla_test.gd:231
+	at 'test_el_aspecto_nuevo_se_usa_al_abrir_otra_vez' in res://test/escenas/puestos/ventanilla_test.gd:360
+	at '_almacen_en' in res://test/escenas/puestos/ventanilla_test.gd:172[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m '[38;2;30;144;255mtrue[0m' but is '[38;2;30;144;255mfalse[0m'[0m[38;2;173;216;230m	at '_afirmar_encuadre' in res://test/escenas/puestos/ventanilla_test.gd:234
+	at 'test_el_aspecto_nuevo_se_usa_al_abrir_otra_vez' in res://test/escenas/puestos/ventanilla_test.gd:360
+	at '_almacen_en' in res://test/escenas/puestos/ventanilla_test.gd:172[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m '[38;2;30;144;255mfalse[0m' but is '[38;2;30;144;255mtrue[0m'[0m[38;2;173;216;230m	at 'test_el_aspecto_nuevo_se_usa_al_abrir_otra_vez' in res://test/escenas/puestos/ventanilla_test.gd:361
+	at '_almacen_en' in res://test/escenas/puestos/ventanilla_test.gd:172[0m[38;2;128;128;128m[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/puestos/ventanilla_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_datos_invalidos_no_mueven_la_camara[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/puestos/ventanilla_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_datos_invalidos_no_mueven_la_camara[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 167ms[0m
+[38;2;128;128;128m[0m
+[38;2;30;144;255mStatistics:[0m[38;2;128;128;128m 16 test cases | 0 errors | 97 failures | 0 flaky | 0 skipped | 0 orphans |[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 2s 584ms[0m
+[38;2;128;128;128m[0m
+[38;2;128;128;128m[0m
+[38;2;30;144;255mOverall Summary:[0m[38;2;255;255;255m 21 test cases | 0 errors | 112 failures | 0 flaky | 0 skipped | 0 orphans |[0m
+[38;2;233;150;122mExecuted test suites: (2/2)[0m
+[38;2;233;150;122mExecuted test cases : (21/21)[0m
+[38;2;233;150;122mTotal execution time: 2s 659ms[0m
+[38;2;255;255;255m [0m[38;2;100;149;237mOpen XML Report at: file://reports/report_4/results.xml[0m
+[38;2;100;149;237mOpen HTML Report at: file://reports/report_4/index.html[0m
+[38;2;178;34;34mExit code: 100[0m
+Run dispose test resources
