@@ -15,10 +15,13 @@ func _almacen() -> Node3D:
 	return almacen
 
 
-func test_examinar_el_balde_con_gotas_lo_mantiene_delante_de_la_camara() -> void:
+func test_examinar_el_balde_con_gotas_lo_mantiene_delante_de_la_camara() -> void:  # AC-INV-020
 	var almacen := await _almacen()
 	var jugador: Node3D = almacen.get("_jugador")
 	var balde: Node3D = almacen.get_node("Objetos/Balde")
+	var agarre: Agarre = almacen.get("_agarre")
+	assert_bool(agarre.pedir_agarrar(balde.get("datos"), balde)).is_true()
+	var punto_de_la_mano := balde.get_parent()
 	var examen: Examen = jugador.get("examen")
 	jugador.set("_enfocado", balde)
 	var tecla := InputEventAction.new()
@@ -36,7 +39,9 @@ func test_examinar_el_balde_con_gotas_lo_mantiene_delante_de_la_camara() -> void
 	assert_float(balde.global_basis.y.dot(Vector3.UP)).is_less(0.99)
 	jugador.call("_unhandled_input", tecla)
 	assert_bool(examen.esta_examinando()).is_false()
-	assert_object(balde.get_parent()).is_same(almacen.get_node("Objetos"))
+	assert_object(balde.get_parent()).is_same(punto_de_la_mano)
+	assert_object(agarre.manos().sostenido()).is_same(balde.get("datos"))
+	agarre.soltar(true)
 
 
 func test_el_viaje_seca_la_mopa_y_el_balde_cercano_permite_limpiar() -> void:  # AC-CLN-027

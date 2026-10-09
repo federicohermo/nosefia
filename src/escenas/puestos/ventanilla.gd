@@ -42,7 +42,7 @@ func _ready() -> void:
 	atenciones.ventanilla_vacia.connect(panel.mostrar_sin_nadie)
 
 
-## El clic derecho abre lo fijo sin consumir el gesto de agarrar.
+## El clic derecho abre lo fijo.
 func accionar() -> void:
 	abrir()
 
