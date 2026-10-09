@@ -69,6 +69,14 @@ foco después del dibujo, y el padre abre el PNG. En #302 la primera foto de la 
 la puerta y cortaba la caja, aunque la prueba física de foco pasara. Se corrigió el montaje
 externo y se repitió la captura, sin mover arte ni cambiar la producción.
 
+**Una entrada nativa en Windows verifica su escala DPI y el destino real.** El driver declara
+`PER_MONITOR_AWARE_V2` antes de consultar ventanas. Cruza el rectángulo de cliente con el
+viewport, convierte las coordenadas con `ClientToScreen` y afirma la opción seleccionada.
+`PostMessage` no basta si el motor consulta el cursor real; la sonda lo ubica y lo restaura.
+Sólo opera el HWND de su proceso, validando descendencia, ejecutable y proyecto. En #303,
+el driver sin consciencia DPI medía 1536 píxeles donde Godot dibujaba 1920 y elegía otra fila.
+La selección pasó en ambas resoluciones al corregir el driver, sin tocar producción.
+
 ```bash
 rg -n "<lo que el issue va a tocar>" src/ test/ docs/   # una guía también describe la regla
 gh issue list --state open --limit 50      # si ya hay uno igual, no se abre otro

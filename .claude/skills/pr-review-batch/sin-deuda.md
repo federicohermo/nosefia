@@ -202,6 +202,7 @@ entregable más caro y el único que hace que el hallazgo no vuelva.
 | una captura **que ya no muestra el foco y la pose preparados** | `to-issue` — el fixture comprueba foco y pose dibujada al guardar, y el padre abre el PNG; un rayo anterior no certifica el cuadro final |
 | un historial de reportes **que falla sólo al superar veinte corridas** | `implement-batch` — se usa `res://reports` para que gdUnit4 globalice la ruta antes de retirarlos, sin modificar addon ni retención |
 | un XML sin errores **que oculta un callback abortado o una fuga al desmontar** | `implement-feature` — se conserva la salida cruda también en verde y el fixture afirma la entrega válida y la ejecución del receptor |
+| una entrada nativa **que selecciona otra fila por la escala DPI** | `to-issue` — el driver declara consciencia DPI antes de consultar ventanas, cruza cliente y viewport y afirma la selección real sobre el HWND propio |
 | una dependencia instalada **adentro del worktree** que tira la importación de Godot | `implement-batch` — el preámbulo no dijo que Playwright se resuelve desde el checkout principal |
 
 **Si el problema no entra en ninguna fila, agregá la fila.** Esa tabla es el registro de lo que
