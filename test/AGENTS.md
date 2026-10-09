@@ -11,6 +11,18 @@ paths:
 
 # Tests con gdUnit4
 
+## Qué merece una prueba
+
+Probar funcionalidades, flujos completos y rendimiento medible. Una prueba debe detectar una
+falla que afecte al jugador o al funcionamiento del proyecto. Las decisiones visuales se revisan
+jugando: no fijar coordenadas de manchas, distancias decorativas, tamaños de alfombras ni valores
+de materiales. Reubicar un elemento por diseño no debe obligar a cambiar una prueba.
+
+Comprobar colisiones o alcance cuando afectan una función. Por ejemplo: limpiar una mancha,
+abrir una puerta o recoger un producto sin atravesar sólidos. Derivar sus
+puntos de prueba de la escena cuando sea posible; no convertir su ubicación actual en contrato.
+No ajustar reglas de jugabilidad para satisfacer una aproximación geométrica de un test.
+
 `test/` es el **espejo** de `src/`: `src/dominio/jornada/turno.gd` se prueba en
 `test/dominio/jornada/turno_test.gd`. El espejo es lo que permite que un gate conteste «esto no
 tiene test» sin que nadie mantenga una lista.

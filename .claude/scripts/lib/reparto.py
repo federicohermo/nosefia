@@ -183,27 +183,27 @@ ESTANTES: dict[str, tuple[Tanda, ...]] = {
     "B.norte.1": (_p("DURONGA"),),
     "B.norte.0": (_p("JORGILLO"),),
     # Las dos góndolas contra la pared del oeste.
-    "N.este.3": (_f("CINDOLOR"), _f("AMARGADITO")),
-    "N.este.2": (_p("FLINPUF"),),
-    "N.este.1": (_p("PETISAS"), _p("ARVEJAS")),
+    "N.sur.3": (_f("CINDOLOR"), _f("AMARGADITO")),
+    "N.sur.2": (_p("FLINPUF"),),
+    "N.sur.1": (_p("PETISAS"), _p("ARVEJAS")),
     # Marranos es una lata chata: en el zócalo el portaprecio le tapa la etiqueta —sube 6,5 cm y
     # la lata mide 8,6, medido el 2026-09-29—. Ahí va sólo su tanda fija.
-    "N.este.0": (_f("JORGILLO"), _f("MARRANOS")),
-    "S.este.3": (_f("FLINPUF"), _f("CINDOLOR")),
-    "S.este.2": (_p("AMARGADITO"), _p("MARRANOS")),
-    "S.este.1": (_p("COSA_DE_MANI"),),
-    "S.este.0": (_f("ARVEJAS"), _f("FLINPUF")),
+    "N.sur.0": (_f("JORGILLO"), _f("MARRANOS")),
+    "S.sur.3": (_f("FLINPUF"), _f("CINDOLOR")),
+    "S.sur.2": (_p("AMARGADITO"), _p("MARRANOS")),
+    "S.sur.1": (_p("COSA_DE_MANI"),),
+    "S.sur.0": (_f("ARVEJAS"), _f("FLINPUF")),
     # Las heladeras. Lo frío es menos que las bandejas: cada uno va una vez con casilleros, y las
     # bandejas que sobran llevan repetidos fijos de lo frío. Decidido por el usuario el
     # 2026-09-29, igual que los estantes de góndola que no se completan sin repetir.
-    "H1.este.0": (_f("OAAAA"),),
-    "H1.este.1": (_p("CORACOLA"),),
-    "H1.este.2": (_p("TERMINATOR"),),
-    "H1.este.3": (_p("FERNET_GOD"),),
-    "H2.este.0": (_f("CORACOLA"),),
-    "H2.este.1": (_p("MAYONCHIS"),),
-    "H2.este.2": (_p("OAAAA"),),
-    "H2.este.3": (_f("FERNET_GOD"),),
+    "H1.sur.0": (_f("OAAAA"),),
+    "H1.sur.1": (_p("CORACOLA"),),
+    "H1.sur.2": (_p("TERMINATOR"),),
+    "H1.sur.3": (_p("FERNET_GOD"),),
+    "H2.sur.0": (_f("CORACOLA"),),
+    "H2.sur.1": (_p("MAYONCHIS"),),
+    "H2.sur.2": (_p("OAAAA"),),
+    "H2.sur.3": (_f("FERNET_GOD"),),
 }
 
 
@@ -225,4 +225,5 @@ def es_heladera(estante: str) -> bool:
 
 
 def es_cabecera(estante: str) -> bool:
-    return partes(estante)[1] in CABECERAS
+    mueble, cara, _ = partes(estante)
+    return mueble in ("A", "B") and cara in CABECERAS

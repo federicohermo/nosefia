@@ -42,7 +42,7 @@ const CASCARA_DEL_EDIFICIO := "almacen"
 ## que el caso que ejerce la regla tenga un punto que **no** es un hueco, y que sea uno real en vez
 ## de inventado: el marcador estuvo cuatro commits en esta posición —aire en un pasillo entre las
 ## góndolas y los estantes— con las 23 suites en verde.
-const PUNTO_DEL_HUECO_EN_EL_BLOCKOUT := Vector3(-5, 1.2, 0)
+const PUNTO_DEL_MURO_SIN_HUECO := Vector3(0.8, 1.2, 6.28)
 
 ## Alcanza para arrancar afuera del edificio desde cualquier punto de adentro: la planta mide
 ## 21,72 × 22,74 m.
@@ -223,11 +223,11 @@ func test_el_hueco_de_la_ventanilla_cae_en_la_ventanilla_del_modelo() -> void:
 	)
 
 
-func test_la_regla_del_hueco_rechaza_la_posicion_que_tenia_en_el_blockout() -> void:
+func test_la_regla_del_hueco_rechaza_un_punto_del_muro() -> void:
 	# El caso de arriba corre sobre un marcador que ya está bien, así que pasaría igual con una
 	# regla rota. Éste le pasa el punto que el marcador tuvo de verdad y afirma que lo rechaza.
 	var espacio: PhysicsDirectSpaceState3D = await _espacio_de_la_estructura(_almacen())
-	var punto := PUNTO_DEL_HUECO_EN_EL_BLOCKOUT + Vector3.UP * SOBRE_EL_ANTEPECHO
+	var punto := PUNTO_DEL_MURO_SIN_HUECO + Vector3.UP * SOBRE_EL_ANTEPECHO
 	(
 		assert_bool(_se_llega_desde_afuera(espacio, punto))
 		. override_failure_message(
@@ -614,9 +614,9 @@ func test_el_reloj_de_mesa_queda_sobre_el_vidrio_del_reloj_del_modelo() -> void:
 	assert_bool(global.is_conformal()).is_true()
 	assert_float(global.get_scale().x).is_equal_approx(1.0, 0.001)
 	assert_float(global.get_scale().y).is_equal_approx(1.0, 0.001)
-	# El frente del label —su `+Z`— mira al `+X` de la malla, que es la cara del display.
+	# El frente del label —su `+Z`— mira al `-X` de la malla reflejada, que es la cara del display.
 	var frente := global.z.normalized()
-	var cara := reloj.global_transform.basis.x.normalized()
+	var cara := -reloj.global_transform.basis.x.normalized()
 	assert_float(frente.dot(cara)).is_equal_approx(1.0, 0.001)
 	# Y está pegado al vidrio: adentro de la caja de la malla estirada dos centímetros, que es
 	# lo que separa «sobre el display» de «flotando en el pasillo».

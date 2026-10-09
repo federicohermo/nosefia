@@ -6,7 +6,7 @@ const OBJETO_SUELTO := preload("res://src/escenas/objetos/objeto_agarrable.tscn"
 
 ## Dónde nace el objeto suelto que crea un caso: un punto libre del piso del local. Es su lugar de
 ## origen, adonde la red de seguridad lo puede devolver.
-const LIBRE_EN_EL_LOCAL := Vector3(0.0, 0.2, 3.0)
+const LIBRE_EN_EL_LOCAL := Vector3(2.7, 0.2, 2.7)
 
 var _escala_anterior: float
 
@@ -237,7 +237,7 @@ func _atender(almacen: Node3D) -> void:
 func _limpiar(almacen: Node3D) -> void:
 	# Se accede al inodoro y a su mancha abriendo la cabina, como en la partida.
 	for numero: int in [1, 2]:
-		almacen.get_node("Estructura/bano_puerta_%d/CuerpoDeLaHoja" % numero).call("interactuar")
+		almacen.get_node("Estructura/bano_puerta_%d/CuerpoDeLaHoja" % numero).call("usar")
 	for cuadro in 60:
 		await get_tree().physics_frame
 	var jugador: Node3D = almacen.get("_jugador")
@@ -392,12 +392,15 @@ func _abrir_con_las_puertas_giradas(cuadros: int) -> Array[float]:
 	var cerradas: Array[Transform3D] = []
 	for puerta: Node3D in puertas:
 		cerradas.append(puerta.get_parent().transform)
-		puerta.call("interactuar")
+		puerta.call("usar" if puerta.has_method("usar") else "interactuar")
 	for cuadro in cuadros:
 		await get_tree().physics_frame
 	var antes: Array[float] = []
 	for puerta: Node3D in puertas:
-		antes.append(puerta.call("puerta").angulo())
+		if puerta.get("traba") == 0:
+			antes.append(puerta.call("puerta").angulo())
+		else:
+			assert_float(puerta.call("puerta").angulo()).is_equal(0.0)
 	almacen.call("_al_abrir_la_jornada", ReglasDeLaPartida.PRIMERA_JORNADA + 1)
 	for indice in puertas.size():
 		var puerta: Node3D = puertas[indice]

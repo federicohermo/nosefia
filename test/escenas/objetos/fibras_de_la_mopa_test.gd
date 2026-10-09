@@ -1,7 +1,7 @@
 extends GdUnitTestSuite
 
 const ALMACEN := preload("res://src/escenas/almacen.tscn")
-const BAJO_EL_CIELORRASO := Vector3(10.86, 2.0, -4.58)
+const BAJO_EL_CIELORRASO := Vector3(10.86, 2.0, 2.976)
 
 
 func test_agrandar_la_mopa_apoyada_no_cambia_la_gravedad_de_sus_fibras() -> void:

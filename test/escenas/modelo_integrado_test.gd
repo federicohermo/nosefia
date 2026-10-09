@@ -51,7 +51,8 @@ func test_solo_las_mallas_reemplazadas_son_geometria_de_referencia() -> void:
 
 func test_la_raiz_agrupa_por_rol_y_conserva_sus_enlaces() -> void:
 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
-	assert_int(almacen.get_child_count()).is_less(10)
+	# El exterior es el décimo rol, instanciado directamente en la raíz como los demás.
+	assert_int(almacen.get_child_count()).is_less(11)
 	for propiedad in almacen.get_property_list():
 		if propiedad.usage & PROPERTY_USAGE_SCRIPT_VARIABLE and propiedad.name.begins_with("_"):
 			var valor: Variant = almacen.get(propiedad.name)

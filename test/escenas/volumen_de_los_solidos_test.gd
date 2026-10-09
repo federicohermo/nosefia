@@ -237,6 +237,7 @@ static func _cajas_de_volumen(malla: MeshInstance3D) -> Array[CollisionShape3D]:
 		for forma in cuerpo.get_children():
 			if (
 				forma is CollisionShape3D
+				and not forma.disabled
 				and forma.shape is BoxShape3D
 				and str(forma.name).begins_with("Volumen")
 			):

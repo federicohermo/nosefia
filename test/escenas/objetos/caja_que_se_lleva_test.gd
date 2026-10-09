@@ -17,7 +17,7 @@ const GONDOLA_DEL_PASILLO := "Estructura/gondolanueva/StaticBody3D"
 const MEDIA_CAJA := 0.3037
 
 ## Desde dónde se camina hacia la pared del depósito.
-const RINCON_CERRADO := Vector2(10.4, -4.0)
+const RINCON_CERRADO := Vector2(10.4, 3.556)
 
 ## Cuadros de física caminando. A 60 Hz son cuatro segundos, de sobra para cruzar el depósito.
 const CUADROS_CAMINANDO := 240

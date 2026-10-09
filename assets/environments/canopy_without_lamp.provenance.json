@@ -1,0 +1,14 @@
+{
+  "tool": "image_gen.imagegen",
+  "mode": "built-in",
+  "generated_file": "C:\\Users\\fede_\\.codex\\generated_images\\01a11c58-8415-7a02-a69d-1a8659cbe173\\exec-b1e1e6b2-67f3-4608-b6bd-3321f7d4082f.png",
+  "source": "assets/environments/estacion_panoramica_gemini.jpg",
+  "source_region_pixels": {
+    "x": 1190,
+    "y": 550,
+    "width": 200,
+    "height": 110
+  },
+  "mask": "Ellipse centered at (1293,593), radii (45,30) photo pixels, feather from 0.6 to 1 radius; shader applies patch without altering original photograph.",
+  "prompt": "Use case: precise-object-edit. Edit target: the attached 200 by 110 pixel crop of a gas station canopy. Remove ONLY the single white oval lamp in the upper middle (center around x102,y43 of the original crop) and its local glow halo. Inpaint the empty space with the adjoining dark teal weathered canopy underside, continuing the exact existing ceiling panel perspective and edges. Preserve the original composition, framing, aspect ratio, canopy silhouette, vertical pale column at x60 to 84, dark sky beneath the roof, subdued nocturnal colors and original soft photo resolution. Do not add objects, lamps, text or brighter areas. Keep the vertical column, roof beams and all unchanged parts at exactly the same positions. This is a tiny registered texture patch for an existing game photograph; avoid redesigning, sharpening or changing lighting elsewhere."
+}

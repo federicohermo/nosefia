@@ -156,21 +156,6 @@ func test_laysntt_y_jorgillo_quedan_sobre_el_suelo_al_mover_la_camara() -> void:
 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
 	add_child(almacen)
 	await get_tree().physics_frame
-	var manchas: Array = almacen.get_node("LimpiezaDelAlmacen").manchas()
-	assert_array(manchas).is_not_empty()
-	for mancha: Node3D in manchas:
-		# Las del piso: la del moho va en una pared, y su apoyo lo mide `apoyos_del_modelo_test`.
-		if mancha.global_basis.y.dot(Vector3.UP) < 0.99:
-			continue
-		var consulta := PhysicsRayQueryParameters3D.create(
-			mancha.global_position + Vector3.UP, mancha.global_position + Vector3.DOWN, 1
-		)
-		var suelo := almacen.get_world_3d().direct_space_state.intersect_ray(consulta)
-		assert_dict(suelo).is_not_empty()
-		var vista: MeshInstance3D = mancha.get_node("Malla")
-		var limites := vista.global_transform * vista.mesh.get_aabb()
-		assert_float(limites.position.y).is_greater(suelo.position.y)
-		assert_float(limites.end.y).is_less(suelo.position.y + 0.005)
 	var jugador: CharacterBody3D = almacen.get("_jugador")
 	jugador.set_physics_process(false)
 	var camara: Camera3D = jugador.get_node("Giro/Camara")
@@ -352,44 +337,44 @@ func test_el_frente_se_conserva_al_examinar_y_volver_a_agarrar() -> void:
 	# exhibe, medida del `.blend` con el eje del frente de cada producto —el de su etiqueta— y
 	# no con las filas de su tanda, que es de donde el puesto saca el giro. Está acá para que la
 	# mano tenga contra qué medirse. Lo que se afirma es que **la mano lo gira hasta la cámara**,
-	# sea cual sea esa cara. Medido el 2026-10-02 sobre el reparto aprobado, con el eje de la
-	# etiqueta y la matriz del producto en Blender, sin inferirlo de las filas.
+	# sea cual sea esa cara. Medido el 2026-10-07 después de girar los muebles del fondo,
+	# con el eje de la etiqueta y la matriz del producto en Blender.
 	#
 	# Los doce estuvieron mal hasta el 2026-09-19: los de +X figuraban en -X y los de +Z en -Z,
 	# o sea 180° girados. Con el giro de la mano también al revés, las dos mitades se cancelaban
 	# y este caso pasaba en verde mientras el jugador agarraba los productos dados vuelta.
 	var frentes := [
-		Vector3.LEFT,  # Actroncito
-		Vector3.BACK,  # Durextra
-		Vector3.RIGHT,  # Burbaloo
-		Vector3.LEFT,  # Zucarachas
-		Vector3.FORWARD,  # Laysntt
-		Vector3.BACK,  # Malbardo
-		Vector3.LEFT,  # Prongles
-		Vector3.FORWARD,  # Jorgillo
-		Vector3.RIGHT,  # Arvejas
-		Vector3.FORWARD,  # Chisitos
-		Vector3.LEFT,  # Oremos
-		Vector3.RIGHT,  # Pepitos
-		Vector3.RIGHT,  # Saladik
-		Vector3.RIGHT,  # Uakas
-		Vector3.RIGHT,  # Coracola
-		Vector3.LEFT,  # Frotlups
-		Vector3.RIGHT,  # Marolini
-		Vector3.RIGHT,  # Amargadito
-		Vector3.BACK,  # Cindolor
-		Vector3.RIGHT,  # Flinpuf
-		Vector3.LEFT,  # Donsaturados
-		Vector3.RIGHT,  # Petisas
-		Vector3.BACK,  # Macumbas
-		Vector3.RIGHT,  # Cosa de Maní
-		Vector3.FORWARD,  # Duronga
-		Vector3.RIGHT,  # Fernet God
-		Vector3.RIGHT,  # Mayonchis
-		Vector3.RIGHT,  # Oaaaa
-		Vector3.RIGHT,  # Terminator
-		Vector3.RIGHT,  # Marranos
-		Vector3.RIGHT  # Feel Ricky Fort
+		Vector3(-1.0, -0.0, -0.0),  # Actroncito,
+		Vector3(0.0, 0.190135, 0.981758),  # Durextra,
+		Vector3(1.0, 0.0, -0.0),  # Burbaloo,
+		Vector3(-1.0, 0.0, -0.0),  # Zucarachas,
+		Vector3(0.0, 0.190135, -0.981758),  # Laysntt,
+		Vector3(0.0, 0.190135, 0.981758),  # Malbardo,
+		Vector3(-1.0, 0.0, -0.0),  # Prongles,
+		Vector3(-0.0, 0.190135, -0.981758),  # Jorgillo,
+		Vector3(0.0, 0.0, 1.0),  # Arvejas,
+		Vector3(0.0, 0.190135, -0.981758),  # Chisitos,
+		Vector3(-1.0, 0.0, 0.0),  # Oremos,
+		Vector3(1.0, 0.0, -0.0),  # Pepitos,
+		Vector3(1.0, 0.0, -0.0),  # Saladik,
+		Vector3(1.0, 0.0, -0.0),  # Uakas,
+		Vector3(-0.0, 0.0, 1.0),  # Coracola,
+		Vector3(-1.0, 0.0, -0.0),  # Frotlups,
+		Vector3(1.0, 0.0, -0.0),  # Marolini,
+		Vector3(0.0, 0.0, 1.0),  # Amargadito,
+		Vector3(-0.0, 0.190135, 0.981758),  # Cindolor,
+		Vector3(0.0, 0.0, 1.0),  # Flinpuf,
+		Vector3(-1.0, 0.0, -0.0),  # Donsaturados,
+		Vector3(0.0, 0.0, 1.0),  # Petisas,
+		Vector3(-0.0, 0.190135, 0.981758),  # Macumbas,
+		Vector3(0.0, 0.0, 1.0),  # Cosa de Maní,
+		Vector3(-0.0, 0.190135, -0.981758),  # Duronga,
+		Vector3(0.0, 0.0, 1.0),  # Fernet God,
+		Vector3(0.0, 0.0, 1.0),  # Mayonchis,
+		Vector3(0.0, 0.0, 1.0),  # Oaaaa,
+		Vector3(0.0, 0.0, 1.0),  # Terminator,
+		Vector3(-0.0, 0.0, 1.0),  # Marranos,
+		Vector3(1.0, 0.0, -0.0),  # Feel Ricky Fort
 	]
 	assert_int(frentes.size()).is_equal(Catalogo.todos().size())
 	for producto in Catalogo.todos():

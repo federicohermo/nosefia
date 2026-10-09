@@ -1,0 +1,20 @@
+[
+  {
+    "asset": "interior_tiles",
+    "source": "https://polyhaven.com/a/interior_tiles",
+    "license": "CC0",
+    "author": {
+      "Charlotte Baglioni": "All"
+    },
+    "uso": "Cerámicas del salón, con UV alineadas a los ejes del edificio"
+  },
+  {
+    "asset": "painted_plaster_wall",
+    "source": "https://polyhaven.com/a/painted_plaster_wall",
+    "license": "CC0",
+    "author": {
+      "Amal Kumar": "All"
+    },
+    "uso": "Variante descartada tras la revisión del usuario; la pared final es pintura mate"
+  }
+]

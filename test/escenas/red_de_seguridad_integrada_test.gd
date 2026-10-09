@@ -1,20 +1,20 @@
 ## La red de seguridad en el almacén entero: adónde va lo que quedó adentro, y qué no cambia.
 ##
 ## **El lugar adentro de un sólido es el entretecho:** el volumen macizo entre el cielorraso del
-## local y el techo. Mide casi tres metros de alto, así que ningún anillo alrededor de un objeto
+## depósito y el techo. Mide casi tres metros de alto, así que ningún anillo alrededor de un objeto
 ## sale de él, y ningún piso queda debajo a menos de la caída que se busca.
 extends GdUnitTestSuite
 
 const ALMACEN := preload("res://src/escenas/almacen.tscn")
 const AperturaConLugar := preload("res://test/escenas/apertura_con_lugar.gd")
 
-const ENTRETECHO := Vector3(0.0, 5.5, 0.0)
+const ENTRETECHO := Vector3(2.0, 5.9, -11.0)
 
 ## Media caja grande, en metros.
 const MEDIA_CAJA := 0.3037
 
-## Un tramo de la pared de la fachada lejos de todo, y cuánto se mete la bolsa en ella.
-const PARED_LIBRE := Vector3(-3.0, 0.0, 7.871)
+## Un tramo opaco de la fachada, fuera de la ventanilla y del mostrador.
+const PARED_LIBRE := Vector3(-1.9, 0.0, 6.28)
 const METIDA_EN_LA_PARED := 0.05
 
 ## Dónde se arma la racha de empujones: piso libre del fondo.

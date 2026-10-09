@@ -37,7 +37,7 @@ NIVELES_DE_CABECERA = 3
 BANDEJAS_DE_HELADERA = 4
 
 #: Las caras de lado del local: las dos de cada góndola del medio y la única de las de pared.
-CARAS_DE_LADO = ("A.oeste", "A.este", "B.oeste", "B.este", "N.este", "S.este")
+CARAS_DE_LADO = ("A.oeste", "A.este", "B.oeste", "B.este", "N.sur", "S.sur")
 
 
 def _es_de_reposicion(estante: str) -> bool:
@@ -154,15 +154,17 @@ class ElReparto(unittest.TestCase):
         # fijos de lo frío, como los estantes de góndola que no se completan sin repetir.
         for letra in HELADERAS:
             for nivel in range(BANDEJAS_DE_HELADERA):
-                self.assertIn(f"{letra}.este.{nivel}", ESTANTES)
+                self.assertIn(f"{letra}.sur.{nivel}", ESTANTES)
 
     def test_ningun_estante_de_gondola_queda_vacio(self):
         for letra in MUEBLES:
             if letra in HELADERAS:
                 continue
-            caras = ["este"] if letra in ("N", "S") else ["oeste", "este", *CABECERAS]
+            caras = ["sur"] if letra in ("N", "S") else ["oeste", "este", *CABECERAS]
             for cara in caras:
-                niveles = NIVELES_DE_CABECERA if cara in CABECERAS else NIVELES_DE_LADO
+                niveles = (
+                    NIVELES_DE_CABECERA if es_cabecera(f"{letra}.{cara}.0") else NIVELES_DE_LADO
+                )
                 for nivel in range(niveles):
                     self.assertIn(f"{letra}.{cara}.{nivel}", ESTANTES)
 

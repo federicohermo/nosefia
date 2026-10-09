@@ -138,6 +138,9 @@ func _ready() -> void:
 				$Estructura/puertaentrada/CuerpoDeLaHoja,
 				$Estructura/porton/CuerpoDeLaHoja,
 				$Estructura/puertajefe/CuerpoDeLaHoja,
+				$Estructura/heladeranueva/puerta_heladera_0/CuerpoDeLaHoja,
+				$Estructura/heladeranueva_001/puerta_heladera_1/CuerpoDeLaHoja,
+				$Estructura/heladera_fuera_de_servicio/puerta_heladera_2/CuerpoDeLaHoja,
 			]
 		)
 	)
