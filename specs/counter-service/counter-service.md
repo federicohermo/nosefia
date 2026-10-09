@@ -233,7 +233,8 @@ SÓLO al recibir todos los productos y el ticket, el sistema DEBE registrar la c
 y comenzar su despedida. Los botones de cobro y despacho NO DEBEN ofrecerse en la primera jornada.
 Las entregas parciales NO DEBEN contar como ventas. La recepción DEBE usar las unidades físicas,
 sin ejecutar además el descuento automático del pedido. Completar la compra antes del límite
-DEBE conservar el resultado aunque la despedida continúe. Al terminarla, el comprador DEBE irse.
+DEBE conservar el resultado aunque la despedida continúe. Al terminarla, la atención DEBE
+quedar despachada; la imagen del comprador DEBE retirarse según BR-CTR-033.
 
 ### BR-CTR-031 — La primera jornada exige ambas compras
 
@@ -255,6 +256,18 @@ y quedar oculto por la geometría del local. El antepecho DEBE ocultar
 siempre el corte inferior del dibujo desde las posiciones accesibles del local.
 Abrir o cerrar la interfaz NO DEBE
 reiniciar ni detener su animación. El diálogo conserva el diseño de Figma en pantalla.
+
+### BR-CTR-033 — Salida visible de los compradores
+
+EN la primera noche, CUANDO termina una despedida después de vender, el comprador DEBE
+permanecer quieto y animado mientras cualquier parte de su dibujo esté en el campo de visión.
+CUANDO queda completamente fuera de la vista, su imagen DEBE retirarse definitivamente;
+volver a mirar NO DEBE hacerlo reaparecer. Ya despachado NO DEBE recibir objetos ni reiniciar
+conversaciones, y su presencia NO DEBE retrasar la venta, el registro ni las tareas.
+CUANDO una compra incompleta vence, el comprador DEBE deslizarse hacia la derecha, vista desde
+el interior frente a la ventanilla, hasta quedar detrás de la pared. NO DEBE girar, inclinarse
+ni cambiar de altura o profundidad. La pausa DEBE detener el movimiento y la animación.
+Cerrar o reiniciar la jornada DEBE retirar también las imágenes pendientes de salida.
 
 ## Criterios de aceptación
 
@@ -485,7 +498,8 @@ Sólo ticket o sólo productos dejan la compra incompleta y las ventas en cero.
 
 DADO todos los elementos salvo uno CUANDO se recibe el último ENTONCES se registra una compra
 y comienza la despedida. Repetir la recepción no registra otra compra. Completar antes del
-límite conserva la venta durante la despedida; al terminarla se oculta al comprador.
+límite conserva la venta durante la despedida; al terminarla la atención queda despachada
+y su imagen conserva la salida de BR-CTR-033.
 
 ### AC-CTR-040 — Perder una compra parcial *(verifica BR-CTR-027, BR-CTR-030, BR-CTR-031)*
 
@@ -509,6 +523,21 @@ DADO la interfaz cerrada y el jugador recorriendo el local ENTONCES el comprador
 detrás del hueco, con posición y orientación fijas hacia el interior del local; la pared lo
 oculta y no hay una copia en la interfaz. Al desplazarse el jugador o girar su cámara, el
 comprador no gira ni se inclina; el corte inferior queda detrás del antepecho.
+
+### AC-CTR-043 — Permanecer hasta dejar de verse *(verifica BR-CTR-030, BR-CTR-033)*
+
+DADO una compra y despedida completas CUANDO el jugador sigue mirando, incluso con sólo una
+parte del comprador en pantalla, ENTONCES permanece quieto y animado sin recibir más objetos.
+La compra y las tareas conservan su resultado. CUANDO mira hacia otro lado ENTONCES el
+comprador desaparece; volver a mirar no lo recupera. Cerrar la interfaz no lo retira.
+
+### AC-CTR-044 — El cansancio sale por la derecha *(verifica BR-CTR-027, BR-CTR-032, BR-CTR-033)*
+
+DADO un comprador que espera, incluso con entregas parciales, CUANDO vence ENTONCES empieza
+a deslizarse hacia la derecha de la ventanilla y sigue visible mientras sale del hueco.
+Conserva altura, profundidad y orientación; la pared oculta su dibujo antes de retirarlo.
+Pausar detiene pose y desplazamiento; reanudar los continúa. Las ventas siguen en cero.
+Cerrar o reiniciar la jornada retira cualquier imagen pendiente, también la de una venta completa.
 
 ## No objetivos
 
