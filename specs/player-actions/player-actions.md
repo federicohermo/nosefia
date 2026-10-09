@@ -263,7 +263,9 @@ encima de la nota; al reanudar, la nota DEBE continuar abierta y el control susp
 El sistema DEBE permitir leer las notas de tareas a realizar, mantener el local ordenado,
 jabones y manchas, instrucciones de limpieza y no tirar papel. La hoja y la lectura DEBEN
 compartir su contenido: texto para las dos del corcho, imagen original completa para las tres
-del baño. Todas las hojas DEBEN conservar su forma, posición e imagen artística.
+del baño. Las dos hojas del corcho DEBEN tener formato y tamaño equivalente a A4, con el
+contenido visible en el mundo; NO DEBEN presentarse como post its ni como una hoja por tarea.
+Las hojas del baño DEBEN conservar sus imágenes artísticas.
 
 La nota de tareas DEBE enumerar sólo las obligatorias que declara la jornada, en el orden
 atención al cliente, registro de productos vendidos, limpieza, reposición y sacar la basura.
@@ -732,12 +734,12 @@ y los títulos y renglones son iguales en la hoja y su lectura.
 DADO cada nota de jabones y manchas, instrucciones de limpieza y no tirar papel, ENTONCES
 su lectura amplía la misma imagen frontal original completa y no agrega renglones.
 
-### AC-PLY-071 — Todas las hojas conservan arte y las cinco lecturas tienen acceso *(verifica BR-PLY-030, BR-PLY-004)*
+### AC-PLY-071 — Las notas del corcho y del baño se pueden leer *(verifica BR-PLY-030, BR-PLY-004)*
 
 DADO cada una de las cinco notas funcionales, ENTONCES tiene foco y contorno sobre su propia
-hoja desde un lugar transitable al alcance. Todos los papeles del corcho siguen visibles;
-dos se leen y los otros tres permanecen decorativos. La forma, posición e imagen de las
-hojas no cambian al agregar lectura.
+hoja desde un lugar transitable al alcance. El corcho presenta dos hojas: tareas a realizar y
+mantener el local ordenado. No aparecen papeles vacíos ni una hoja por tarea. Las imágenes
+originales del baño se conservan al agregar lectura.
 
 ### AC-PLY-072 — La caja abre con cada mano y la conserva *(verifica BR-PLY-031, BR-PLY-026, BR-PLY-006, BR-PLY-028)*
 
