@@ -1,0 +1,14 @@
+[
+  {
+    "label": "b-306-carga-geometrica1-carga",
+    "code": 100,
+    "suites": 1,
+    "cases": 1,
+    "names": [
+      "test_llenarlo_con_productos_no_los_comprime_a_traves_del_cuerpo_o_la_tapa"
+    ],
+    "failures": 12,
+    "errors": 0,
+    "raw": "D:\\temporales\\nosefia-batch-64-309\\empleo-306\\b-306-carga-geometrica1-carga-raw.log"
+  }
+]

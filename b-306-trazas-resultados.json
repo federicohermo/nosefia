@@ -1,0 +1,38 @@
+[
+  {
+    "label": "b-306-trazas-soltado",
+    "code": 100,
+    "suites": 1,
+    "cases": 1,
+    "names": [
+      "test_lo_que_no_toca_el_cuerpo_se_sigue_soltando_adelante"
+    ],
+    "failures": 1,
+    "errors": 0,
+    "raw": "C:\\Users\\fede_\\orca\\workspaces\\nosefia\\darter\\.claude\\scratch\\batch-64-309\\b-306-trazas-soltado-raw.log"
+  },
+  {
+    "label": "b-306-trazas-charco",
+    "code": 100,
+    "suites": 1,
+    "cases": 1,
+    "names": [
+      "test_la_caja_se_suelta_con_la_mira_sobre_un_charco"
+    ],
+    "failures": 1,
+    "errors": 0,
+    "raw": "C:\\Users\\fede_\\orca\\workspaces\\nosefia\\darter\\.claude\\scratch\\batch-64-309\\b-306-trazas-charco-raw.log"
+  },
+  {
+    "label": "b-306-trazas-notas",
+    "code": 100,
+    "suites": 1,
+    "cases": 1,
+    "names": [
+      "test_cada_hoja_se_enfoca_desde_un_lugar_transitable_y_se_lee"
+    ],
+    "failures": 1,
+    "errors": 0,
+    "raw": "C:\\Users\\fede_\\orca\\workspaces\\nosefia\\darter\\.claude\\scratch\\batch-64-309\\b-306-trazas-notas-raw.log"
+  }
+]

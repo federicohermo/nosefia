@@ -1,0 +1,118 @@
+--- 
++++ 
+@@ -127,6 +127,7 @@
+ func _almacen_con_jugador_quieto() -> Node3D:
+ 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
+ 	add_child(almacen)
++	_b306_sin_soporte(almacen)
+ 	await get_tree().physics_frame
+ 	almacen.get("_jugador").set_physics_process(false)
+ 	return almacen
+@@ -182,6 +183,7 @@
+ 	# sólo se ejerce con `move_and_slide` corriendo.
+ 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
+ 	add_child(almacen)
++	_b306_sin_soporte(almacen)
+ 	await get_tree().physics_frame
+ 	var jugador: CharacterBody3D = almacen.get("_jugador")
+ 	var caja: Node3D = almacen.get("_cajas_de_productos")[Producto.Id.LAYSNTT]
+@@ -358,6 +360,7 @@
+ 	# lo mismo que la caja y las dos cuentas del margen se cruzan.
+ 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
+ 	add_child(almacen)
++	_b306_sin_soporte(almacen)
+ 	await get_tree().physics_frame
+ 	var jugador: CharacterBody3D = almacen.get("_jugador")
+ 	var caja: Node3D = almacen.get("_cajas_de_productos")[Producto.Id.LAYSNTT]
+@@ -385,6 +388,7 @@
+ 	# caja al piso de adelante, y apilar pedía subir la mira hasta la tapa.
+ 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
+ 	add_child(almacen)
++	_b306_sin_soporte(almacen)
+ 	await get_tree().physics_frame
+ 	var jugador: CharacterBody3D = almacen.get("_jugador")
+ 	var caja: Node3D = almacen.get("_cajas_de_productos")[Producto.Id.LAYSNTT]
+@@ -733,6 +737,7 @@
+ 	# estante la mira llega a la madera, y un paso atrás ya no, así que el apoyo es el piso.
+ 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
+ 	add_child(almacen)
++	_b306_sin_soporte(almacen)
+ 	await get_tree().physics_frame
+ 	var jugador: CharacterBody3D = almacen.get("_jugador")
+ 	var estante: Node3D = almacen.get_node(ESTANTE_DEL_DEPOSITO)
+@@ -858,6 +863,7 @@
+ 	# arranca ya tocando algo. De 256 soltadas alrededor de esa góndola, 20 quedaban adentro de ella.
+ 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
+ 	add_child(almacen)
++	_b306_sin_soporte(almacen)
+ 	await get_tree().physics_frame
+ 	var soltadas := 0
+ 	for ruta_del_mueble: String in [ESTANTE_DEL_DEPOSITO, GONDOLA_DEL_PASILLO]:
+@@ -912,6 +918,7 @@
+ 	# cosa enfocada que contestara `null` —que para una mancha es siempre—.
+ 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
+ 	add_child(almacen)
++	_b306_sin_soporte(almacen)
+ 	await get_tree().physics_frame
+ 	almacen.get("_ciclo").abrir_la_jornada()
+ 	await get_tree().physics_frame
+@@ -961,6 +968,7 @@
+ 	# escena sería peor que una que no se desarma nunca.
+ 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
+ 	add_child(almacen)
++	_b306_sin_soporte(almacen)
+ 	await get_tree().physics_frame
+ 	var jugador: CharacterBody3D = almacen.get("_jugador")
+ 	var grandes := _las_grandes(almacen.get("_cajas_de_productos"))
+@@ -1037,6 +1045,7 @@
+ 	# nadie. Antes nacía 0,8 m adelante: agarrando de cerca el jugador se subía al estante.
+ 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
+ 	add_child(almacen)
++	_b306_sin_soporte(almacen)
+ 	await get_tree().physics_frame
+ 	var jugador: CharacterBody3D = almacen.get("_jugador")
+ 	var caja: Node3D = almacen.get("_cajas_de_productos")[Producto.Id.ACTRONCITO]
+@@ -1061,6 +1070,7 @@
+ 	# tumbarse ni levantarse del piso: se arrastra.
+ 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
+ 	add_child(almacen)
++	_b306_sin_soporte(almacen)
+ 	await get_tree().physics_frame
+ 	var jugador: CharacterBody3D = almacen.get("_jugador")
+ 	# **Se empuja en el piso libre del depósito y no delante de donde el jugador aparece.** Ahí
+@@ -1200,6 +1210,7 @@
+ 	# producto del piso, a un metro, no estaba encima de nada.
+ 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
+ 	add_child(almacen)
++	_b306_sin_soporte(almacen)
+ 	AperturaConLugar.abrir_con_todo_el_lugar(almacen)
+ 	await get_tree().physics_frame
+ 	var jugador: CharacterBody3D = almacen.get("_jugador")
+@@ -1228,6 +1239,7 @@
+ 	# doble que el caso del arrastre, porque tiene que salir entera y no sólo moverse.
+ 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
+ 	add_child(almacen)
++	_b306_sin_soporte(almacen)
+ 	AperturaConLugar.abrir_con_todo_el_lugar(almacen)
+ 	await get_tree().physics_frame
+ 	var jugador: CharacterBody3D = almacen.get("_jugador")
+@@ -1269,6 +1281,7 @@
+ 	# sacada la de abajo, la del medio cae, y el producto cae con ella.
+ 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
+ 	add_child(almacen)
++	_b306_sin_soporte(almacen)
+ 	AperturaConLugar.abrir_con_todo_el_lugar(almacen)
+ 	await get_tree().physics_frame
+ 	var jugador: CharacterBody3D = almacen.get("_jugador")
+@@ -1316,3 +1329,11 @@
+ 		var lugares := LugaresDelPiso.alrededor(espacio, jugador.global_position, jugador.call("frente"), capsula.radius + ancho + ReglasDeLosObjetos.ROCE, limites.size.y, ReglasDeLosObjetos.CAIDA_HASTA_EL_PISO, ReglasDeLosObjetos.LADOS_ALREDEDOR, cuerpo.collision_mask, exclusiones)
+ 		datos["lugares"] = str(lugares)
+ 	print("B306TRAZA ", JSON.stringify(datos))
++
++
++func _b306_sin_soporte(almacen: Node3D) -> void:
++	var cuerpos := almacen.get_node("Exterior").find_children("*", "StaticBody3D", true, false)
++	assert_int(cuerpos.size()).is_equal(6)
++	for cuerpo: StaticBody3D in cuerpos:
++		cuerpo.collision_layer = 0
++	print("B306SINSOPORTE cuerpos_desactivados=", cuerpos.size())

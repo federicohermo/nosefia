@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<testsuites id="2026-10-09" name="report_1" tests="1" failures="7" skipped="0" flaky="0" time="0.000">
+	<testsuite id="0" name="carga_geometrica2_test" package=".godot/b306-diagnostico" timestamp="2026-10-09T12:13:19" hostname="localhost" tests="1" failures="7" errors="0" skipped="0" flaky="0" time="20.551">
+		<testcase name="test_llenarlo_con_productos_no_los_comprime_a_traves_del_cuerpo_o_la_tapa" classname="carga_geometrica2_test" time="20.525">
+			<failure message="FAILED: res://.godot/b306-diagnostico/carga_geometrica2_test.gd:433" type="FAILURE">
+<![CDATA[
+no hay caída libre por la boca para esta forma
+	at '_dejar_caer_en_la_boca' in res://.godot/b306-diagnostico/carga_geometrica2_test.gd:433
+	at 'test_llenarlo_con_productos_no_los_comprime_a_traves_del_cuerpo_o_la_tapa' in res://.godot/b306-diagnostico/carga_geometrica2_test.gd:277
+	at '_abrir' in res://.godot/b306-diagnostico/carga_geometrica2_test.gd:78
+]]>
+			</failure>
+			<failure message="FAILED: res://.godot/b306-diagnostico/carga_geometrica2_test.gd:433" type="FAILURE">
+<![CDATA[
+no hay caída libre por la boca para esta forma
+	at '_dejar_caer_en_la_boca' in res://.godot/b306-diagnostico/carga_geometrica2_test.gd:433
+	at 'test_llenarlo_con_productos_no_los_comprime_a_traves_del_cuerpo_o_la_tapa' in res://.godot/b306-diagnostico/carga_geometrica2_test.gd:277
+]]>
+			</failure>
+			<failure message="FAILED: res://.godot/b306-diagnostico/carga_geometrica2_test.gd:433" type="FAILURE">
+<![CDATA[
+no hay caída libre por la boca para esta forma
+	at '_dejar_caer_en_la_boca' in res://.godot/b306-diagnostico/carga_geometrica2_test.gd:433
+	at 'test_llenarlo_con_productos_no_los_comprime_a_traves_del_cuerpo_o_la_tapa' in res://.godot/b306-diagnostico/carga_geometrica2_test.gd:277
+]]>
+			</failure>
+			<failure message="FAILED: res://.godot/b306-diagnostico/carga_geometrica2_test.gd:433" type="FAILURE">
+<![CDATA[
+no hay caída libre por la boca para esta forma
+	at '_dejar_caer_en_la_boca' in res://.godot/b306-diagnostico/carga_geometrica2_test.gd:433
+	at 'test_llenarlo_con_productos_no_los_comprime_a_traves_del_cuerpo_o_la_tapa' in res://.godot/b306-diagnostico/carga_geometrica2_test.gd:277
+]]>
+			</failure>
+			<failure message="FAILED: res://.godot/b306-diagnostico/carga_geometrica2_test.gd:433" type="FAILURE">
+<![CDATA[
+no hay caída libre por la boca para esta forma
+	at '_dejar_caer_en_la_boca' in res://.godot/b306-diagnostico/carga_geometrica2_test.gd:433
+	at 'test_llenarlo_con_productos_no_los_comprime_a_traves_del_cuerpo_o_la_tapa' in res://.godot/b306-diagnostico/carga_geometrica2_test.gd:277
+]]>
+			</failure>
+			<failure message="FAILED: res://.godot/b306-diagnostico/carga_geometrica2_test.gd:433" type="FAILURE">
+<![CDATA[
+no hay caída libre por la boca para esta forma
+	at '_dejar_caer_en_la_boca' in res://.godot/b306-diagnostico/carga_geometrica2_test.gd:433
+	at 'test_llenarlo_con_productos_no_los_comprime_a_traves_del_cuerpo_o_la_tapa' in res://.godot/b306-diagnostico/carga_geometrica2_test.gd:277
+]]>
+			</failure>
+			<failure message="FAILED: res://.godot/b306-diagnostico/carga_geometrica2_test.gd:433" type="FAILURE">
+<![CDATA[
+no hay caída libre por la boca para esta forma
+	at '_dejar_caer_en_la_boca' in res://.godot/b306-diagnostico/carga_geometrica2_test.gd:433
+	at 'test_llenarlo_con_productos_no_los_comprime_a_traves_del_cuerpo_o_la_tapa' in res://.godot/b306-diagnostico/carga_geometrica2_test.gd:277
+]]>
+			</failure>
+		</testcase>
+	</testsuite>
+</testsuites>

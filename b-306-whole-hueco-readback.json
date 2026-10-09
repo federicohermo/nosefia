@@ -1,0 +1,6 @@
+{
+  "whole_readback_exact": true,
+  "sha256_normalized": "8f011238a4fcc88918a77047808f35fdedacd354ba959fe70bb4c86681e210f4",
+  "lateral_drops": 2,
+  "upper_gap_is_numeric_only": true
+}

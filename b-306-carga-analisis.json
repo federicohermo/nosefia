@@ -1,0 +1,1691 @@
+{
+  "diagnostico_no_final": true,
+  "count": [
+    "7"
+  ],
+  "rows": [
+    {
+      "angular_velocity": "(0.0, 0.0, 0.0)",
+      "basis": "[X: (0.327076, -0.781529, -0.531258), Y: (0.099997, 0.587645, -0.802916), Z: (0.939693, 0.20949, 0.270355)]",
+      "derecho": false,
+      "etapa": "soltado",
+      "forma": "ConvexPolygonShape3D",
+      "id": "producto_0",
+      "indice": 0,
+      "jugador": "(3.0, 0.103, -13.75)",
+      "layer": 1,
+      "limites_forma": "[P: (-0.197255, -0.133667, -0.155248), S: (0.394509, 0.267334, 0.310496)]",
+      "mask": 9,
+      "mira": {
+        "collider": "/root/carga_test/Almacen/Estructura/deposito_contenedor_soporte/deposito_contenedor_cuerpo/StaticBody3D",
+        "normal": "(0.0, 1.0, 0.0)",
+        "position": "(3.0, 1.177237, -14.55757)"
+      },
+      "ojo": "(3.0, 1.803, -13.75)",
+      "previsto": "(2.93, 1.452238, -14.94747)",
+      "real": "(3.0, 1.446469, -14.55757)",
+      "relativo": "(0.0, 1.344232, 0.354898)",
+      "velocity": "(0.0, 0.0, 0.0)"
+    },
+    {
+      "angular_velocity": "(0.0, 0.0, 0.0)",
+      "basis": "[X: (0.961017, 0.0, 0.27649), Y: (0.0, 1.0, 0.0), Z: (-0.27649, 0.0, 0.961017)]",
+      "derecho": false,
+      "etapa": "soltado",
+      "forma": "ConvexPolygonShape3D",
+      "id": "producto_1",
+      "indice": 1,
+      "jugador": "(3.0, 0.103, -13.75)",
+      "layer": 1,
+      "limites_forma": "[P: (-0.117388, -0.121159, -0.061908), S: (0.234776, 0.242317, 0.123816)]",
+      "mask": 9,
+      "mira": {
+        "collider": "/root/carga_test/Almacen/ObjetoAgarrable",
+        "normal": "(0.012341, 0.370708, 0.928667)",
+        "position": "(3.0, 1.445986, -14.21074)"
+      },
+      "ojo": "(3.0, 1.803, -13.75)",
+      "previsto": "(3.0, 1.452238, -14.87747)",
+      "real": "(3.0, 0.227895, -14.31317)",
+      "relativo": "(0.0, 0.125658, 0.599296)",
+      "velocity": "(0.0, 0.0, 0.0)"
+    },
+    {
+      "angular_velocity": "(0.0, 0.0, 0.0)",
+      "basis": "[X: (-0.327075, 0.781529, 0.531258), Y: (0.099997, 0.587645, -0.802916), Z: (-0.939693, -0.20949, -0.270355)]",
+      "derecho": false,
+      "etapa": "soltado",
+      "forma": "ConvexPolygonShape3D",
+      "id": "producto_2",
+      "indice": 2,
+      "jugador": "(3.0, 0.103, -13.75)",
+      "layer": 1,
+      "limites_forma": "[P: (-0.133501, -0.133501, -0.133501), S: (0.267002, 0.267002, 0.267002)]",
+      "mask": 9,
+      "mira": {
+        "collider": "/root/carga_test/Almacen/Estructura/deposito_contenedor_soporte/deposito_contenedor_cuerpo/StaticBody3D",
+        "normal": "(0.0, 1.0, 0.0)",
+        "position": "(3.0, 1.177237, -14.55757)"
+      },
+      "ojo": "(3.0, 1.803, -13.75)",
+      "previsto": "(3.07, 1.452238, -14.94747)",
+      "real": "(3.0, 1.39199, -14.55757)",
+      "relativo": "(0.0, 1.289753, 0.354898)",
+      "velocity": "(0.0, 0.0, 0.0)"
+    },
+    {
+      "angular_velocity": "(0.0, 0.0, 0.0)",
+      "basis": "[X: (0.327076, -0.781529, -0.531258), Y: (0.099997, 0.587645, -0.802916), Z: (0.939693, 0.20949, 0.270355)]",
+      "derecho": false,
+      "etapa": "soltado",
+      "forma": "ConvexPolygonShape3D",
+      "id": "producto_3",
+      "indice": 3,
+      "jugador": "(3.0, 0.103, -13.75)",
+      "layer": 1,
+      "limites_forma": "[P: (-0.052131, -0.202839, -0.140833), S: (0.104262, 0.405678, 0.281666)]",
+      "mask": 9,
+      "mira": {
+        "collider": "/root/carga_test/Almacen/Estructura/deposito_contenedor_soporte/deposito_contenedor_cuerpo/StaticBody3D",
+        "normal": "(0.0, 1.0, 0.0)",
+        "position": "(3.0, 1.177237, -14.55757)"
+      },
+      "ojo": "(3.0, 1.803, -13.75)",
+      "previsto": "(2.93, 1.452238, -14.87747)",
+      "real": "(2.944913, 1.526966, -14.63727)",
+      "relativo": "(-0.055087, 1.424729, 0.275201)",
+      "velocity": "(0.0, 0.0, 0.0)"
+    },
+    {
+      "angular_velocity": "(0.0, 0.0, 0.0)",
+      "basis": "[X: (-0.939693, -0.20949, -0.270355), Y: (0.035985, 0.72552, -0.68726), Z: (0.340122, -0.655542, -0.674227)]",
+      "derecho": false,
+      "etapa": "soltado",
+      "forma": "ConvexPolygonShape3D",
+      "id": "producto_4",
+      "indice": 4,
+      "jugador": "(3.0, 0.103, -13.75)",
+      "layer": 1,
+      "limites_forma": "[P: (-0.149825, -0.212836, -0.068863), S: (0.299649, 0.425672, 0.137727)]",
+      "mask": 9,
+      "mira": {
+        "collider": "/root/carga_test/Almacen/Estructura/deposito_contenedor_soporte/deposito_contenedor_cuerpo/StaticBody3D",
+        "normal": "(0.0, 1.0, 0.0)",
+        "position": "(3.0, 1.177237, -14.55757)"
+      },
+      "ojo": "(3.0, 1.803, -13.75)",
+      "previsto": "(3.0, 1.452238, -14.94747)",
+      "real": "(3.0, 1.412183, -14.55757)",
+      "relativo": "(0.0, 1.309946, 0.354898)",
+      "velocity": "(0.0, 0.0, 0.0)"
+    },
+    {
+      "angular_velocity": "(0.0, 0.0, 0.0)",
+      "basis": "[X: (0.939693, 0.20949, 0.270355), Y: (0.035984, 0.725521, -0.687258), Z: (-0.340122, 0.65554, 0.674229)]",
+      "derecho": false,
+      "etapa": "soltado",
+      "forma": "ConvexPolygonShape3D",
+      "id": "producto_5",
+      "indice": 5,
+      "jugador": "(3.0, 0.103, -13.75)",
+      "layer": 1,
+      "limites_forma": "[P: (-0.067102, -0.08816, -0.046812), S: (0.134205, 0.176303, 0.093625)]",
+      "mask": 9,
+      "mira": {
+        "collider": "/root/carga_test/Almacen/Estructura/deposito_contenedor_soporte/deposito_contenedor_cuerpo/StaticBody3D",
+        "normal": "(0.0, 1.0, 0.0)",
+        "position": "(3.0, 1.177237, -14.55757)"
+      },
+      "ojo": "(3.0, 1.803, -13.75)",
+      "previsto": "(3.07, 1.452238, -14.87747)",
+      "real": "(3.07, 1.452238, -14.87747)",
+      "relativo": "(0.07, 1.350001, 0.035)",
+      "velocity": "(0.0, 0.0, 0.0)"
+    },
+    {
+      "angular_velocity": "(0.0, 0.0, 0.0)",
+      "basis": "[X: (0.327076, -0.781529, -0.531258), Y: (0.099997, 0.587645, -0.802916), Z: (0.939693, 0.20949, 0.270355)]",
+      "derecho": false,
+      "etapa": "soltado",
+      "forma": "ConvexPolygonShape3D",
+      "id": "producto_6",
+      "indice": 6,
+      "jugador": "(3.0, 0.103, -13.75)",
+      "layer": 1,
+      "limites_forma": "[P: (-0.096007, -0.227184, -0.09512), S: (0.192013, 0.454369, 0.19024)]",
+      "mask": 9,
+      "mira": {
+        "collider": "/root/carga_test/Almacen/Estructura/deposito_contenedor_soporte/deposito_contenedor_cuerpo/StaticBody3D",
+        "normal": "(0.0, 1.0, 0.0)",
+        "position": "(3.0, 1.177237, -14.55757)"
+      },
+      "ojo": "(3.0, 1.803, -13.75)",
+      "previsto": "(2.93, 1.452238, -14.94747)",
+      "real": "(3.0, 1.409699, -14.55757)",
+      "relativo": "(0.0, 1.307462, 0.354898)",
+      "velocity": "(0.0, 0.0, 0.0)"
+    },
+    {
+      "angular_velocity": "(0.0, 0.0, 0.0)",
+      "basis": "[X: (-0.939693, -0.20949, -0.270355), Y: (0.035983, 0.725524, -0.687255), Z: (0.340122, -0.655537, -0.674232)]",
+      "derecho": false,
+      "etapa": "soltado",
+      "forma": "ConvexPolygonShape3D",
+      "id": "producto_7",
+      "indice": 7,
+      "jugador": "(3.0, 0.103, -13.75)",
+      "layer": 1,
+      "limites_forma": "[P: (-0.146099, -0.098405, -0.07157), S: (0.292198, 0.196791, 0.143126)]",
+      "mask": 9,
+      "mira": {
+        "collider": "/root/carga_test/Almacen/Estructura/deposito_contenedor_soporte/deposito_contenedor_cuerpo/StaticBody3D",
+        "normal": "(0.0, 1.0, 0.0)",
+        "position": "(3.0, 1.177237, -14.55757)"
+      },
+      "ojo": "(3.0, 1.803, -13.75)",
+      "previsto": "(3.0, 1.452238, -14.87747)",
+      "real": "(3.0, 1.539816, -14.59596)",
+      "relativo": "(0.0, 1.437579, 0.316506)",
+      "velocity": "(0.0, 0.0, 0.0)"
+    },
+    {
+      "angular_velocity": "(0.0, 0.0, 0.0)",
+      "basis": "[X: (0.939693, 0.20949, 0.270355), Y: (0.099997, 0.587645, -0.802916), Z: (-0.327075, 0.781529, 0.531258)]",
+      "derecho": false,
+      "etapa": "soltado",
+      "forma": "ConvexPolygonShape3D",
+      "id": "producto_8",
+      "indice": 8,
+      "jugador": "(3.0, 0.103, -13.75)",
+      "layer": 1,
+      "limites_forma": "[P: (-0.111099, -0.145548, -0.110664), S: (0.222197, 0.291095, 0.221284)]",
+      "mask": 9,
+      "mira": {
+        "collider": "/root/carga_test/Almacen/Estructura/deposito_contenedor_soporte/deposito_contenedor_cuerpo/StaticBody3D",
+        "normal": "(0.0, 1.0, 0.0)",
+        "position": "(3.0, 1.177237, -14.55757)"
+      },
+      "ojo": "(3.0, 1.803, -13.75)",
+      "previsto": "(3.07, 1.452238, -14.94747)",
+      "real": "(3.043669, 1.584183, -14.49702)",
+      "relativo": "(0.043669, 1.481946, 0.415447)",
+      "velocity": "(0.0, 0.0, 0.0)"
+    },
+    {
+      "angular_velocity": "(0.0, 0.0, 0.0)",
+      "basis": "[X: (-0.939693, -0.20949, -0.270355), Y: (0.035985, 0.72552, -0.687259), Z: (0.340122, -0.655541, -0.674228)]",
+      "derecho": false,
+      "etapa": "soltado",
+      "forma": "ConvexPolygonShape3D",
+      "id": "producto_9",
+      "indice": 9,
+      "jugador": "(3.0, 0.103, -13.75)",
+      "layer": 1,
+      "limites_forma": "[P: (-0.145005, -0.205988, -0.066648), S: (0.290009, 0.411976, 0.133296)]",
+      "mask": 9,
+      "mira": {
+        "collider": "/root/carga_test/Almacen/Estructura/deposito_contenedor_soporte/deposito_contenedor_cuerpo/StaticBody3D",
+        "normal": "(0.0, 1.0, 0.0)",
+        "position": "(3.0, 1.177237, -14.55757)"
+      },
+      "ojo": "(3.0, 1.803, -13.75)",
+      "previsto": "(2.93, 1.452238, -14.87747)",
+      "real": "(3.0, 1.404753, -14.55757)",
+      "relativo": "(0.0, 1.302516, 0.354898)",
+      "velocity": "(0.0, 0.0, 0.0)"
+    },
+    {
+      "angular_velocity": "(0.0, 0.0, 0.0)",
+      "basis": "[X: (0.327076, -0.781529, -0.531258), Y: (0.099997, 0.587645, -0.802916), Z: (0.939693, 0.20949, 0.270355)]",
+      "derecho": false,
+      "etapa": "soltado",
+      "forma": "ConvexPolygonShape3D",
+      "id": "producto_10",
+      "indice": 10,
+      "jugador": "(3.0, 0.103, -13.75)",
+      "layer": 1,
+      "limites_forma": "[P: (-0.043899, -0.157506, -0.152174), S: (0.087798, 0.315012, 0.304348)]",
+      "mask": 9,
+      "mira": {
+        "collider": "/root/carga_test/Almacen/@RigidBody3D@465",
+        "normal": "(0.384332, 0.393385, 0.835187)",
+        "position": "(3.0, 1.287012, -14.4159)"
+      },
+      "ojo": "(3.0, 1.803, -13.75)",
+      "previsto": "(3.0, 1.452238, -14.94747)",
+      "real": "(3.0, 1.553016, -14.60342)",
+      "relativo": "(0.0, 1.450779, 0.309047)",
+      "velocity": "(0.0, 0.0, 0.0)"
+    },
+    {
+      "angular_velocity": "(0.0, 0.0, 0.0)",
+      "basis": "[X: (-0.327075, 0.781529, 0.531258), Y: (0.099997, 0.587645, -0.802916), Z: (-0.939693, -0.20949, -0.270355)]",
+      "derecho": false,
+      "etapa": "soltado",
+      "forma": "ConvexPolygonShape3D",
+      "id": "producto_11",
+      "indice": 11,
+      "jugador": "(3.0, 0.103, -13.75)",
+      "layer": 1,
+      "limites_forma": "[P: (-0.043899, -0.157506, -0.152174), S: (0.087798, 0.315012, 0.304348)]",
+      "mask": 9,
+      "mira": {
+        "collider": "/root/carga_test/Almacen/Estructura/deposito_contenedor_soporte/deposito_contenedor_cuerpo/StaticBody3D",
+        "normal": "(0.0, 1.0, 0.0)",
+        "position": "(3.0, 1.177237, -14.55757)"
+      },
+      "ojo": "(3.0, 1.803, -13.75)",
+      "previsto": "(3.07, 1.452238, -14.87747)",
+      "real": "(3.043568, 1.584684, -14.45174)",
+      "relativo": "(0.043568, 1.482447, 0.460727)",
+      "velocity": "(0.0, 0.0, 0.0)"
+    },
+    {
+      "angular_velocity": "(0.0, 0.0, 0.0)",
+      "basis": "[X: (-0.327075, 0.781529, 0.531258), Y: (0.099997, 0.587645, -0.802916), Z: (-0.939693, -0.20949, -0.270355)]",
+      "derecho": false,
+      "etapa": "soltado",
+      "forma": "ConvexPolygonShape3D",
+      "id": "producto_12",
+      "indice": 12,
+      "jugador": "(3.0, 0.103, -13.75)",
+      "layer": 1,
+      "limites_forma": "[P: (-0.057178, -0.222479, -0.154469), S: (0.114356, 0.444914, 0.308938)]",
+      "mask": 9,
+      "mira": {
+        "collider": "/root/carga_test/Almacen/@RigidBody3D@467",
+        "normal": "(0.270859, 0.909436, -0.315535)",
+        "position": "(3.0, 1.296119, -14.40415)"
+      },
+      "ojo": "(3.0, 1.803, -13.75)",
+      "previsto": "(2.93, 1.452238, -14.94747)",
+      "real": "(2.952845, 1.566713, -14.55666)",
+      "relativo": "(-0.047155, 1.464476, 0.355807)",
+      "velocity": "(0.0, 0.0, 0.0)"
+    },
+    {
+      "angular_velocity": "(0.0, 0.0, 0.0)",
+      "basis": "[X: (-0.327075, 0.781529, 0.531258), Y: (0.099997, 0.587645, -0.802916), Z: (-0.939693, -0.20949, -0.270355)]",
+      "derecho": false,
+      "etapa": "soltado",
+      "forma": "ConvexPolygonShape3D",
+      "id": "producto_13",
+      "indice": 13,
+      "jugador": "(3.0, 0.103, -13.75)",
+      "layer": 1,
+      "limites_forma": "[P: (-0.057178, -0.222479, -0.154469), S: (0.114356, 0.444914, 0.308938)]",
+      "mask": 9,
+      "mira": {
+        "collider": "/root/carga_test/Almacen/@RigidBody3D@468",
+        "normal": "(-0.158781, -0.544039, 0.8239)",
+        "position": "(3.0, 1.345085, -14.34096)"
+      },
+      "ojo": "(3.0, 1.803, -13.75)",
+      "previsto": "(3.0, 1.452238, -14.87747)",
+      "real": "(3.0, 1.5888, -14.43851)",
+      "relativo": "(0.0, 1.486563, 0.473955)",
+      "velocity": "(0.0, 0.0, 0.0)"
+    },
+    {
+      "angular_velocity": "(0.0, 0.0, 0.0)",
+      "basis": "[X: (0.961017, 0.0, 0.27649), Y: (0.0, 1.0, 0.0), Z: (-0.27649, 0.0, 0.961017)]",
+      "derecho": false,
+      "etapa": "soltado",
+      "forma": "ConvexPolygonShape3D",
+      "id": "producto_14",
+      "indice": 14,
+      "jugador": "(3.0, 0.103, -13.75)",
+      "layer": 1,
+      "limites_forma": "[P: (-0.087912, -0.115725, -0.088225), S: (0.175825, 0.231451, 0.17645)]",
+      "mask": 9,
+      "mira": {
+        "collider": "/root/carga_test/Almacen/@RigidBody3D@469",
+        "normal": "(-0.235253, 0.454329, 0.859209)",
+        "position": "(3.0, 1.406891, -14.26119)"
+      },
+      "ojo": "(3.0, 1.803, -13.75)",
+      "previsto": "(3.07, 1.452238, -14.94747)",
+      "real": "(2.441871, 0.222462, -13.75)",
+      "relativo": "(-0.558129, 0.120225, 1.16247)",
+      "velocity": "(0.0, 0.0, 0.0)"
+    },
+    {
+      "angular_velocity": "(0.0, 0.0, 0.0)",
+      "basis": "[X: (0.327076, -0.781529, -0.531258), Y: (0.099997, 0.587645, -0.802916), Z: (0.939693, 0.20949, 0.270355)]",
+      "derecho": false,
+      "etapa": "soltado",
+      "forma": "ConvexPolygonShape3D",
+      "id": "producto_15",
+      "indice": 15,
+      "jugador": "(3.0, 0.103, -13.75)",
+      "layer": 1,
+      "limites_forma": "[P: (-0.052131, -0.202839, -0.140833), S: (0.104262, 0.405678, 0.281666)]",
+      "mask": 9,
+      "mira": {
+        "collider": "/root/carga_test/Almacen/Estructura/deposito_contenedor_soporte/deposito_contenedor_cuerpo/StaticBody3D",
+        "normal": "(0.0, 1.0, 0.0)",
+        "position": "(3.0, 1.177237, -14.55757)"
+      },
+      "ojo": "(3.0, 1.803, -13.75)",
+      "previsto": "(2.93, 1.452238, -14.87747)",
+      "real": "(2.952467, 1.564817, -14.5156)",
+      "relativo": "(-0.047533, 1.46258, 0.396866)",
+      "velocity": "(0.0, 0.0, 0.0)"
+    },
+    {
+      "angular_velocity": "(0.0, 0.0, 0.0)",
+      "basis": "[X: (-0.327075, 0.781529, 0.531258), Y: (0.099997, 0.587645, -0.802916), Z: (-0.939693, -0.20949, -0.270355)]",
+      "derecho": false,
+      "etapa": "soltado",
+      "forma": "ConvexPolygonShape3D",
+      "id": "producto_16",
+      "indice": 16,
+      "jugador": "(3.0, 0.103, -13.75)",
+      "layer": 1,
+      "limites_forma": "[P: (-0.057178, -0.222479, -0.154469), S: (0.114356, 0.444914, 0.308938)]",
+      "mask": 9,
+      "mira": {
+        "collider": "/root/carga_test/Almacen/@RigidBody3D@465",
+        "normal": "(-0.000031, 0.394354, 0.918958)",
+        "position": "(3.0, 1.247545, -14.46684)"
+      },
+      "ojo": "(3.0, 1.803, -13.75)",
+      "previsto": "(3.0, 1.452238, -14.94747)",
+      "real": "(3.0, 1.560209, -14.57887)",
+      "relativo": "(0.0, 1.457972, 0.333604)",
+      "velocity": "(0.0, 0.0, 0.0)"
+    },
+    {
+      "angular_velocity": "(0.0, 0.0, 0.0)",
+      "basis": "[X: (0.939693, 0.20949, 0.270355), Y: (0.099997, 0.587645, -0.802916), Z: (-0.327075, 0.781529, 0.531258)]",
+      "derecho": false,
+      "etapa": "soltado",
+      "forma": "ConvexPolygonShape3D",
+      "id": "producto_17",
+      "indice": 17,
+      "jugador": "(3.0, 0.103, -13.75)",
+      "layer": 1,
+      "limites_forma": "[P: (-0.125, -0.23445, -0.069752), S: (0.25, 0.4689, 0.139504)]",
+      "mask": 9,
+      "mira": {
+        "collider": "/root/carga_test/Almacen/@RigidBody3D@472",
+        "normal": "(0.011652, 0.904088, 0.427187)",
+        "position": "(3.0, 1.261328, -14.44905)"
+      },
+      "ojo": "(3.0, 1.803, -13.75)",
+      "previsto": "(3.07, 1.452238, -14.87747)",
+      "real": "(3.053856, 1.533131, -14.61745)",
+      "relativo": "(0.053856, 1.430894, 0.295019)",
+      "velocity": "(0.0, 0.0, 0.0)"
+    },
+    {
+      "angular_velocity": "(0.0, 0.0, 0.0)",
+      "basis": "[X: (0.939693, 0.20949, 0.270355), Y: (0.035984, 0.725521, -0.687258), Z: (-0.340122, 0.65554, 0.674229)]",
+      "derecho": false,
+      "etapa": "soltado",
+      "forma": "ConvexPolygonShape3D",
+      "id": "producto_18",
+      "indice": 18,
+      "jugador": "(3.0, 0.103, -13.75)",
+      "layer": 1,
+      "limites_forma": "[P: (-0.11875, -0.171234, -0.094581), S: (0.237454, 0.342468, 0.189163)]",
+      "mask": 9,
+      "mira": {
+        "collider": "/root/carga_test/Almacen/@RigidBody3D@472",
+        "normal": "(-0.411997, 0.180093, 0.893211)",
+        "position": "(3.0, 1.308473, -14.38821)"
+      },
+      "ojo": "(3.0, 1.803, -13.75)",
+      "previsto": "(2.93, 1.452238, -14.94747)",
+      "real": "(2.955921, 1.582127, -14.50404)",
+      "relativo": "(-0.044079, 1.47989, 0.408431)",
+      "velocity": "(0.0, 0.0, 0.0)"
+    },
+    {
+      "angular_velocity": "(0.0, 0.0, 0.0)",
+      "basis": "[X: (0.939693, 0.20949, 0.270355), Y: (0.099997, 0.587645, -0.802916), Z: (-0.327075, 0.781529, 0.531258)]",
+      "derecho": false,
+      "etapa": "soltado",
+      "forma": "ConvexPolygonShape3D",
+      "id": "producto_19",
+      "indice": 19,
+      "jugador": "(3.0, 0.103, -13.75)",
+      "layer": 1,
+      "limites_forma": "[P: (-0.15625, -0.152224, -0.155621), S: (0.3125, 0.304448, 0.311211)]",
+      "mask": 9,
+      "mira": {
+        "collider": "/root/carga_test/Almacen/@RigidBody3D@472",
+        "normal": "(-0.00278, 0.901788, 0.43217)",
+        "position": "(3.0, 1.261736, -14.44852)"
+      },
+      "ojo": "(3.0, 1.803, -13.75)",
+      "previsto": "(3.0, 1.452238, -14.87747)",
+      "real": "(3.0, 1.617573, -14.34603)",
+      "relativo": "(0.0, 1.515336, 0.566443)",
+      "velocity": "(0.0, 0.0, 0.0)"
+    },
+    {
+      "angular_velocity": "(0.0, 0.0, 0.0)",
+      "basis": "[X: (0.327076, -0.781529, -0.531258), Y: (0.099997, 0.587645, -0.802916), Z: (0.939693, 0.20949, 0.270355)]",
+      "derecho": false,
+      "etapa": "soltado",
+      "forma": "ConvexPolygonShape3D",
+      "id": "producto_20",
+      "indice": 20,
+      "jugador": "(3.0, 0.103, -13.75)",
+      "layer": 1,
+      "limites_forma": "[P: (-0.034375, -0.176729, -0.15), S: (0.06875, 0.353458, 0.3)]",
+      "mask": 9,
+      "mira": {
+        "collider": "/root/carga_test/Almacen/@RigidBody3D@472",
+        "normal": "(0.001191, 0.872559, 0.488507)",
+        "position": "(3.0, 1.260378, -14.45028)"
+      },
+      "ojo": "(3.0, 1.803, -13.75)",
+      "previsto": "(3.07, 1.452238, -14.94747)",
+      "real": "(3.045651, 1.574249, -14.53094)",
+      "relativo": "(0.045651, 1.472012, 0.381535)",
+      "velocity": "(0.0, 0.0, 0.0)"
+    },
+    {
+      "angular_velocity": "(0.0, 0.0, 0.0)",
+      "basis": "[X: (0.939693, 0.20949, 0.270355), Y: (0.099997, 0.587645, -0.802916), Z: (-0.327075, 0.781529, 0.531258)]",
+      "derecho": false,
+      "etapa": "soltado",
+      "forma": "ConvexPolygonShape3D",
+      "id": "producto_21",
+      "indice": 21,
+      "jugador": "(3.0, 0.103, -13.75)",
+      "layer": 1,
+      "limites_forma": "[P: (-0.1375, -0.152297, -0.034375), S: (0.275, 0.304595, 0.06875)]",
+      "mask": 9,
+      "mira": {
+        "collider": "/root/carga_test/Almacen/@RigidBody3D@472",
+        "normal": "(-0.422756, 0.031598, 0.905693)",
+        "position": "(3.0, 1.317724, -14.37627)"
+      },
+      "ojo": "(3.0, 1.803, -13.75)",
+      "previsto": "(2.93, 1.452238, -14.87747)",
+      "real": "(2.956774, 1.586397, -14.44624)",
+      "relativo": "(-0.043226, 1.48416, 0.466232)",
+      "velocity": "(0.0, 0.0, 0.0)"
+    },
+    {
+      "angular_velocity": "(0.0, 0.0, 0.0)",
+      "basis": "[X: (0.939693, 0.20949, 0.270355), Y: (0.035984, 0.725521, -0.687258), Z: (-0.340122, 0.65554, 0.674229)]",
+      "derecho": false,
+      "etapa": "soltado",
+      "forma": "ConvexPolygonShape3D",
+      "id": "producto_22",
+      "indice": 22,
+      "jugador": "(3.0, 0.103, -13.75)",
+      "layer": 1,
+      "limites_forma": "[P: (-0.0775, -0.184706, -0.109004), S: (0.155, 0.369377, 0.218008)]",
+      "mask": 9,
+      "mira": {
+        "collider": "/root/carga_test/Almacen/@RigidBody3D@472",
+        "normal": "(-0.001347, 0.910317, 0.413911)",
+        "position": "(3.0, 1.262175, -14.44796)"
+      },
+      "ojo": "(3.0, 1.803, -13.75)",
+      "previsto": "(3.0, 1.452238, -14.94747)",
+      "real": "(3.0, 1.600629, -14.44088)",
+      "relativo": "(0.0, 1.498392, 0.471594)",
+      "velocity": "(0.0, 0.0, 0.0)"
+    },
+    {
+      "angular_velocity": "(0.0, 0.0, 0.0)",
+      "basis": "[X: (0.961017, 0.0, 0.27649), Y: (0.0, 1.0, 0.0), Z: (-0.27649, 0.0, 0.961017)]",
+      "derecho": false,
+      "etapa": "soltado",
+      "forma": "ConvexPolygonShape3D",
+      "id": "producto_23",
+      "indice": 23,
+      "jugador": "(3.0, 0.103, -13.75)",
+      "layer": 1,
+      "limites_forma": "[P: (-0.135044, -0.131564, -0.170004), S: (0.270087, 0.263129, 0.340009)]",
+      "mask": 9,
+      "mira": {
+        "collider": "/root/carga_test/Almacen/@RigidBody3D@472",
+        "normal": "(-0.004625, 0.940114, 0.34083)",
+        "position": "(3.0, 1.264527, -14.44492)"
+      },
+      "ojo": "(3.0, 1.803, -13.75)",
+      "previsto": "(3.07, 1.452238, -14.87747)",
+      "real": "(2.5252, 0.238301, -13.2752)",
+      "relativo": "(-0.4748, 0.136064, 1.637269)",
+      "velocity": "(0.0, 0.0, 0.0)"
+    },
+    {
+      "angular_velocity": "(0.0, 0.0, 0.0)",
+      "basis": "[X: (-0.939693, -0.20949, -0.270355), Y: (0.035985, 0.725519, -0.687261), Z: (0.340122, -0.655543, -0.674226)]",
+      "derecho": false,
+      "etapa": "soltado",
+      "forma": "ConvexPolygonShape3D",
+      "id": "producto_24",
+      "indice": 24,
+      "jugador": "(3.0, 0.103, -13.75)",
+      "layer": 1,
+      "limites_forma": "[P: (-0.117388, -0.121159, -0.061908), S: (0.234776, 0.242317, 0.123816)]",
+      "mask": 9,
+      "mira": {
+        "collider": "/root/carga_test/Almacen/@RigidBody3D@472",
+        "normal": "(-0.001573, 0.945215, 0.326446)",
+        "position": "(3.0, 1.265412, -14.44378)"
+      },
+      "ojo": "(3.0, 1.803, -13.75)",
+      "previsto": "(2.93, 1.452238, -14.94747)",
+      "real": "(2.967201, 1.638647, -14.31109)",
+      "relativo": "(-0.032799, 1.53641, 0.601382)",
+      "velocity": "(0.0, 0.0, 0.0)"
+    },
+    {
+      "angular_velocity": "(0.0, 0.0, 0.0)",
+      "basis": "[X: (0.961017, 0.0, 0.27649), Y: (0.0, 1.0, 0.0), Z: (-0.27649, 0.0, 0.961017)]",
+      "derecho": false,
+      "etapa": "soltado",
+      "forma": "ConvexPolygonShape3D",
+      "id": "producto_25",
+      "indice": 25,
+      "jugador": "(3.0, 0.103, -13.75)",
+      "layer": 1,
+      "limites_forma": "[P: (-0.091893, -0.216178, -0.091893), S: (0.183786, 0.432356, 0.183786)]",
+      "mask": 9,
+      "mira": {
+        "collider": "/root/carga_test/Almacen/@RigidBody3D@478",
+        "normal": "(0.976089, 0.100382, 0.192806)",
+        "position": "(3.0, 1.434859, -14.2251)"
+      },
+      "ojo": "(3.0, 1.803, -13.75)",
+      "previsto": "(3.0, 1.452238, -14.87747)",
+      "real": "(2.60061, 0.586043, -13.35061)",
+      "relativo": "(-0.39939, 0.483806, 1.561859)",
+      "velocity": "(0.0, 0.0, 0.0)"
+    },
+    {
+      "angular_velocity": "(0.0, 0.0, 0.0)",
+      "basis": "[X: (0.939693, 0.20949, 0.270355), Y: (0.099997, 0.587645, -0.802916), Z: (-0.327076, 0.781529, 0.531257)]",
+      "derecho": false,
+      "etapa": "soltado",
+      "forma": "ConvexPolygonShape3D",
+      "id": "producto_26",
+      "indice": 26,
+      "jugador": "(3.0, 0.103, -13.75)",
+      "layer": 1,
+      "limites_forma": "[P: (-0.11875, -0.161828, -0.064998), S: (0.237454, 0.323656, 0.129996)]",
+      "mask": 9,
+      "mira": {
+        "collider": "/root/carga_test/Almacen/Estructura/deposito_contenedor_soporte/deposito_contenedor_cuerpo/StaticBody3D",
+        "normal": "(0.0, 1.0, 0.0)",
+        "position": "(3.0, 1.177237, -14.55757)"
+      },
+      "ojo": "(3.0, 1.803, -13.75)",
+      "previsto": "(3.07, 1.452238, -14.94747)",
+      "real": "(3.0, 1.352009, -14.55757)",
+      "relativo": "(0.0, 1.249772, 0.354898)",
+      "velocity": "(0.0, 0.0, 0.0)"
+    },
+    {
+      "angular_velocity": "(0.0, 0.0, 0.0)",
+      "basis": "[X: (0.939693, 0.20949, 0.270355), Y: (0.099997, 0.587645, -0.802916), Z: (-0.327076, 0.781529, 0.531257)]",
+      "derecho": false,
+      "etapa": "soltado",
+      "forma": "ConvexPolygonShape3D",
+      "id": "producto_27",
+      "indice": 27,
+      "jugador": "(3.0, 0.103, -13.75)",
+      "layer": 1,
+      "limites_forma": "[P: (-0.11875, -0.161828, -0.064998), S: (0.237454, 0.323656, 0.129996)]",
+      "mask": 9,
+      "mira": {
+        "collider": "/root/carga_test/Almacen/@RigidBody3D@482",
+        "normal": "(0.000028, 0.860966, 0.508663)",
+        "position": "(3.0, 1.270313, -14.43745)"
+      },
+      "ojo": "(3.0, 1.803, -13.75)",
+      "previsto": "(2.93, 1.452238, -14.87747)",
+      "real": "(2.944811, 1.526452, -14.63892)",
+      "relativo": "(-0.055189, 1.424215, 0.273549)",
+      "velocity": "(0.0, 0.0, 0.0)"
+    },
+    {
+      "angular_velocity": "(0.0, 0.0, 0.0)",
+      "basis": "[X: (-0.026543, -0.015503, 0.999527), Y: (0.003777, -0.999874, -0.015408), Z: (0.999641, 0.003366, 0.026598)]",
+      "derecho": false,
+      "etapa": "estable",
+      "forma": "ConvexPolygonShape3D",
+      "id": "producto_0",
+      "indice": 0,
+      "jugador": "(3.0, 0.103, -13.75)",
+      "layer": 1,
+      "limites_forma": "[P: (-0.197255, -0.133667, -0.155248), S: (0.394509, 0.267334, 0.310496)]",
+      "mask": 9,
+      "mira": {
+        "collider": "/root/carga_test/Almacen/Estructura/deposito_contenedor_soporte/deposito_contenedor_cuerpo/StaticBody3D",
+        "normal": "(0.0, 1.0, 0.0)",
+        "position": "(3.0, 1.177237, -14.55757)"
+      },
+      "ojo": "(3.0, 1.803, -13.75)",
+      "previsto": "(0.0, 0.0, 0.0)",
+      "real": "(3.113204, 0.233721, -13.69958)",
+      "relativo": "(0.113204, 0.131484, 1.212889)",
+      "velocity": "(0.0, 0.0, 0.0)"
+    },
+    {
+      "angular_velocity": "(0.0, 0.0, 0.0)",
+      "basis": "[X: (0.981565, -0.000181, 0.191129), Y: (-0.036132, 0.981792, 0.186489), Z: (-0.187682, -0.189957, 0.963687)]",
+      "derecho": false,
+      "etapa": "estable",
+      "forma": "ConvexPolygonShape3D",
+      "id": "producto_1",
+      "indice": 1,
+      "jugador": "(3.0, 0.103, -13.75)",
+      "layer": 1,
+      "limites_forma": "[P: (-0.117388, -0.121159, -0.061908), S: (0.234776, 0.242317, 0.123816)]",
+      "mask": 9,
+      "mira": {
+        "collider": "/root/carga_test/Almacen/Estructura/deposito_contenedor_soporte/deposito_contenedor_cuerpo/StaticBody3D",
+        "normal": "(0.0, 1.0, 0.0)",
+        "position": "(3.0, 1.177237, -14.55757)"
+      },
+      "ojo": "(3.0, 1.803, -13.75)",
+      "previsto": "(0.0, 0.0, 0.0)",
+      "real": "(2.982272, 0.218244, -14.31017)",
+      "relativo": "(-0.017728, 0.116007, 0.602303)",
+      "velocity": "(0.0, 0.0, 0.0)"
+    },
+    {
+      "angular_velocity": "(0.0, 0.0, 0.0)",
+      "basis": "[X: (0.119032, -0.020713, -0.992674), Y: (0.822166, -0.558472, 0.110239), Z: (-0.556664, -0.829265, -0.049447)]",
+      "derecho": false,
+      "etapa": "estable",
+      "forma": "ConvexPolygonShape3D",
+      "id": "producto_2",
+      "indice": 2,
+      "jugador": "(3.0, 0.103, -13.75)",
+      "layer": 1,
+      "limites_forma": "[P: (-0.133501, -0.133501, -0.133501), S: (0.267002, 0.267002, 0.267002)]",
+      "mask": 9,
+      "mira": {
+        "collider": "/root/carga_test/Almacen/Estructura/deposito_contenedor_soporte/deposito_contenedor_cuerpo/StaticBody3D",
+        "normal": "(0.0, 1.0, 0.0)",
+        "position": "(3.0, 1.177237, -14.55757)"
+      },
+      "ojo": "(3.0, 1.803, -13.75)",
+      "previsto": "(0.0, 0.0, 0.0)",
+      "real": "(2.999757, 0.411987, -14.88521)",
+      "relativo": "(-0.000243, 0.309749, 0.027258)",
+      "velocity": "(0.0, 0.0, 0.0)"
+    },
+    {
+      "angular_velocity": "(0.0, 0.0, 0.0)",
+      "basis": "[X: (0.63526, 0.759467, 0.140193), Y: (0.64243, -0.620406, 0.449867), Z: (0.428636, -0.195719, -0.882024)]",
+      "derecho": false,
+      "etapa": "estable",
+      "forma": "ConvexPolygonShape3D",
+      "id": "producto_3",
+      "indice": 3,
+      "jugador": "(3.0, 0.103, -13.75)",
+      "layer": 1,
+      "limites_forma": "[P: (-0.052131, -0.202839, -0.140833), S: (0.104262, 0.405678, 0.281666)]",
+      "mask": 9,
+      "mira": {
+        "collider": "/root/carga_test/Almacen/Estructura/deposito_contenedor_soporte/deposito_contenedor_cuerpo/StaticBody3D",
+        "normal": "(0.0, 1.0, 0.0)",
+        "position": "(3.0, 1.177237, -14.55757)"
+      },
+      "ojo": "(3.0, 1.803, -13.75)",
+      "previsto": "(0.0, 0.0, 0.0)",
+      "real": "(2.990455, 0.66085, -14.95864)",
+      "relativo": "(-0.009545, 0.558613, -0.046171)",
+      "velocity": "(0.0, 0.0, 0.0)"
+    },
+    {
+      "angular_velocity": "(0.0, 0.0, 0.0)",
+      "basis": "[X: (-0.967397, 0.157065, 0.198681), Y: (-0.023596, -0.836958, 0.546759), Z: (0.252164, 0.524245, 0.813376)]",
+      "derecho": false,
+      "etapa": "estable",
+      "forma": "ConvexPolygonShape3D",
+      "id": "producto_4",
+      "indice": 4,
+      "jugador": "(3.0, 0.103, -13.75)",
+      "layer": 1,
+      "limites_forma": "[P: (-0.149825, -0.212836, -0.068863), S: (0.299649, 0.425672, 0.137727)]",
+      "mask": 9,
+      "mira": {
+        "collider": "/root/carga_test/Almacen/Estructura/deposito_contenedor_soporte/deposito_contenedor_cuerpo/StaticBody3D",
+        "normal": "(0.0, 1.0, 0.0)",
+        "position": "(3.0, 1.177237, -14.55757)"
+      },
+      "ojo": "(3.0, 1.803, -13.75)",
+      "previsto": "(0.0, 0.0, 0.0)",
+      "real": "(3.036271, 0.747316, -14.81321)",
+      "relativo": "(0.036271, 0.645079, 0.09926)",
+      "velocity": "(0.0, 0.0, 0.0)"
+    },
+    {
+      "angular_velocity": "(0.0, 0.0, 0.0)",
+      "basis": "[X: (0.972713, -0.231978, 0.003976), Y: (0.135834, 0.555512, -0.820339), Z: (0.188092, 0.798494, 0.571864)]",
+      "derecho": false,
+      "etapa": "estable",
+      "forma": "ConvexPolygonShape3D",
+      "id": "producto_5",
+      "indice": 5,
+      "jugador": "(3.0, 0.103, -13.75)",
+      "layer": 1,
+      "limites_forma": "[P: (-0.067102, -0.08816, -0.046812), S: (0.134205, 0.176303, 0.093625)]",
+      "mask": 9,
+      "mira": {
+        "collider": "/root/carga_test/Almacen/Estructura/deposito_contenedor_soporte/deposito_contenedor_cuerpo/StaticBody3D",
+        "normal": "(0.0, 1.0, 0.0)",
+        "position": "(3.0, 1.177237, -14.55757)"
+      },
+      "ojo": "(3.0, 1.803, -13.75)",
+      "previsto": "(0.0, 0.0, 0.0)",
+      "real": "(3.131272, 0.89629, -14.92721)",
+      "relativo": "(0.131272, 0.794053, -0.01474)",
+      "velocity": "(0.0, 0.0, 0.0)"
+    },
+    {
+      "angular_velocity": "(0.0, 0.0, 0.0)",
+      "basis": "[X: (0.459496, 0.0381, 0.887362), Y: (0.611749, -0.737892, -0.285095), Z: (0.643915, 0.673842, -0.362366)]",
+      "derecho": false,
+      "etapa": "estable",
+      "forma": "ConvexPolygonShape3D",
+      "id": "producto_6",
+      "indice": 6,
+      "jugador": "(3.0, 0.103, -13.75)",
+      "layer": 1,
+      "limites_forma": "[P: (-0.096007, -0.227184, -0.09512), S: (0.192013, 0.454369, 0.19024)]",
+      "mask": 9,
+      "mira": {
+        "collider": "/root/carga_test/Almacen/Estructura/deposito_contenedor_soporte/deposito_contenedor_cuerpo/StaticBody3D",
+        "normal": "(0.0, 1.0, 0.0)",
+        "position": "(3.0, 1.177237, -14.55757)"
+      },
+      "ojo": "(3.0, 1.803, -13.75)",
+      "previsto": "(0.0, 0.0, 0.0)",
+      "real": "(2.943954, 1.080593, -14.74916)",
+      "relativo": "(-0.056046, 0.978356, 0.163307)",
+      "velocity": "(0.0, 0.0, 0.0)"
+    },
+    {
+      "angular_velocity": "(0.0, 0.0, 0.0)",
+      "basis": "[X: (-0.000929, 0.999999, 0.001376), Y: (-0.748806, 0.000216, -0.662789), Z: (-0.662788, -0.001646, 0.748805)]",
+      "derecho": false,
+      "etapa": "estable",
+      "forma": "ConvexPolygonShape3D",
+      "id": "producto_7",
+      "indice": 7,
+      "jugador": "(3.0, 0.103, -13.75)",
+      "layer": 1,
+      "limites_forma": "[P: (-0.146099, -0.098405, -0.07157), S: (0.292198, 0.196791, 0.143126)]",
+      "mask": 9,
+      "mira": {
+        "collider": "/root/carga_test/Almacen/Estructura/deposito_contenedor_soporte/deposito_contenedor_cuerpo/StaticBody3D",
+        "normal": "(0.0, 1.0, 0.0)",
+        "position": "(3.0, 1.177237, -14.55757)"
+      },
+      "ojo": "(3.0, 1.803, -13.75)",
+      "previsto": "(0.0, 0.0, 0.0)",
+      "real": "(3.227849, 0.248734, -14.15633)",
+      "relativo": "(0.227849, 0.146497, 0.756144)",
+      "velocity": "(0.0, 0.0, 0.0)"
+    },
+    {
+      "angular_velocity": "(0.0, 0.0, 0.0)",
+      "basis": "[X: (0.996847, -0.001186, -0.07934), Y: (-0.000801, -0.999988, 0.004885), Z: (-0.079345, -0.004806, -0.996836)]",
+      "derecho": false,
+      "etapa": "estable",
+      "forma": "ConvexPolygonShape3D",
+      "id": "producto_8",
+      "indice": 8,
+      "jugador": "(3.0, 0.103, -13.75)",
+      "layer": 1,
+      "limites_forma": "[P: (-0.111099, -0.145548, -0.110664), S: (0.222197, 0.291095, 0.221284)]",
+      "mask": 9,
+      "mira": {
+        "collider": "/root/carga_test/Almacen/Estructura/deposito_contenedor_soporte/deposito_contenedor_cuerpo/StaticBody3D",
+        "normal": "(0.0, 1.0, 0.0)",
+        "position": "(3.0, 1.177237, -14.55757)"
+      },
+      "ojo": "(3.0, 1.803, -13.75)",
+      "previsto": "(0.0, 0.0, 0.0)",
+      "real": "(3.012765, 0.248192, -14.1026)",
+      "relativo": "(0.012765, 0.145955, 0.809866)",
+      "velocity": "(0.0, 0.0, 0.0)"
+    },
+    {
+      "angular_velocity": "(0.0, 0.0, 0.0)",
+      "basis": "[X: (0.304729, 0.300375, -0.903833), Y: (0.912048, 0.181397, 0.367783), Z: (0.274426, -0.936413, -0.21868)]",
+      "derecho": false,
+      "etapa": "estable",
+      "forma": "ConvexPolygonShape3D",
+      "id": "producto_9",
+      "indice": 9,
+      "jugador": "(3.0, 0.103, -13.75)",
+      "layer": 1,
+      "limites_forma": "[P: (-0.145005, -0.205988, -0.066648), S: (0.290009, 0.411976, 0.133296)]",
+      "mask": 9,
+      "mira": {
+        "collider": "/root/carga_test/Almacen/Estructura/deposito_contenedor_soporte/deposito_contenedor_cuerpo/StaticBody3D",
+        "normal": "(0.0, 1.0, 0.0)",
+        "position": "(3.0, 1.177237, -14.55757)"
+      },
+      "ojo": "(3.0, 1.803, -13.75)",
+      "previsto": "(0.0, 0.0, 0.0)",
+      "real": "(3.23689, 0.179508, -14.42891)",
+      "relativo": "(0.23689, 0.077271, 0.483556)",
+      "velocity": "(0.0, 0.0, 0.0)"
+    },
+    {
+      "angular_velocity": "(0.0, 0.0, 0.0)",
+      "basis": "[X: (-0.76413, 0.644047, 0.036176), Y: (-0.489828, -0.61582, 0.617118), Z: (0.419731, 0.453838, 0.786039)]",
+      "derecho": false,
+      "etapa": "estable",
+      "forma": "ConvexPolygonShape3D",
+      "id": "producto_10",
+      "indice": 10,
+      "jugador": "(3.0, 0.103, -13.75)",
+      "layer": 1,
+      "limites_forma": "[P: (-0.043899, -0.157506, -0.152174), S: (0.087798, 0.315012, 0.304348)]",
+      "mask": 9,
+      "mira": {
+        "collider": "/root/carga_test/Almacen/Estructura/deposito_contenedor_soporte/deposito_contenedor_cuerpo/StaticBody3D",
+        "normal": "(0.0, 1.0, 0.0)",
+        "position": "(3.0, 1.177237, -14.55757)"
+      },
+      "ojo": "(3.0, 1.803, -13.75)",
+      "previsto": "(0.0, 0.0, 0.0)",
+      "real": "(3.135017, 1.099192, -14.99534)",
+      "relativo": "(0.135017, 0.996955, -0.082873)",
+      "velocity": "(0.0, 0.0, 0.0)"
+    },
+    {
+      "angular_velocity": "(0.0, 0.0, 0.0)",
+      "basis": "[X: (0.023059, -0.999303, -0.029353), Y: (0.475832, -0.014852, 0.879411), Z: (-0.879234, -0.034245, 0.475158)]",
+      "derecho": false,
+      "etapa": "estable",
+      "forma": "ConvexPolygonShape3D",
+      "id": "producto_11",
+      "indice": 11,
+      "jugador": "(3.0, 0.103, -13.75)",
+      "layer": 1,
+      "limites_forma": "[P: (-0.043899, -0.157506, -0.152174), S: (0.087798, 0.315012, 0.304348)]",
+      "mask": 9,
+      "mira": {
+        "collider": "/root/carga_test/Almacen/Estructura/deposito_contenedor_soporte/deposito_contenedor_cuerpo/StaticBody3D",
+        "normal": "(0.0, 1.0, 0.0)",
+        "position": "(3.0, 1.177237, -14.55757)"
+      },
+      "ojo": "(3.0, 1.803, -13.75)",
+      "previsto": "(0.0, 0.0, 0.0)",
+      "real": "(2.685378, 0.13918, -14.13961)",
+      "relativo": "(-0.314622, 0.036943, 0.772862)",
+      "velocity": "(0.0, 0.0, 0.0)"
+    },
+    {
+      "angular_velocity": "(0.0, 0.0, 0.0)",
+      "basis": "[X: (0.147617, -0.975169, 0.165091), Y: (-0.537301, -0.219209, -0.814405), Z: (0.830372, 0.031516, -0.556318)]",
+      "derecho": false,
+      "etapa": "estable",
+      "forma": "ConvexPolygonShape3D",
+      "id": "producto_12",
+      "indice": 12,
+      "jugador": "(3.0, 0.103, -13.75)",
+      "layer": 1,
+      "limites_forma": "[P: (-0.057178, -0.222479, -0.154469), S: (0.114356, 0.444914, 0.308938)]",
+      "mask": 9,
+      "mira": {
+        "collider": "/root/carga_test/Almacen/Estructura/deposito_contenedor_soporte/deposito_contenedor_cuerpo/StaticBody3D",
+        "normal": "(0.0, 1.0, 0.0)",
+        "position": "(3.0, 1.177237, -14.55757)"
+      },
+      "ojo": "(3.0, 1.803, -13.75)",
+      "previsto": "(0.0, 0.0, 0.0)",
+      "real": "(2.362466, 0.202361, -14.31257)",
+      "relativo": "(-0.637534, 0.100124, 0.599895)",
+      "velocity": "(0.0, 0.0, 0.0)"
+    },
+    {
+      "angular_velocity": "(0.0, 0.0, 0.0)",
+      "basis": "[X: (0.263543, -0.641303, 0.720608), Y: (-0.220253, -0.767288, -0.602294), Z: (0.939167, 0.000014, -0.343462)]",
+      "derecho": false,
+      "etapa": "estable",
+      "forma": "ConvexPolygonShape3D",
+      "id": "producto_13",
+      "indice": 13,
+      "jugador": "(3.0, 0.103, -13.75)",
+      "layer": 1,
+      "limites_forma": "[P: (-0.057178, -0.222479, -0.154469), S: (0.114356, 0.444914, 0.308938)]",
+      "mask": 9,
+      "mira": {
+        "collider": "/root/carga_test/Almacen/Estructura/deposito_contenedor_soporte/deposito_contenedor_cuerpo/StaticBody3D",
+        "normal": "(0.0, 1.0, 0.0)",
+        "position": "(3.0, 1.177237, -14.55757)"
+      },
+      "ojo": "(3.0, 1.803, -13.75)",
+      "previsto": "(0.0, 0.0, 0.0)",
+      "real": "(2.197935, 0.310033, -13.8528)",
+      "relativo": "(-0.802065, 0.207796, 1.059667)",
+      "velocity": "(0.0, 0.0, 0.0)"
+    },
+    {
+      "angular_velocity": "(0.0, 0.0, 0.0)",
+      "basis": "[X: (-0.626516, 0.187013, -0.75664), Y: (0.06097, 0.979572, 0.191629), Z: (0.77702, 0.073927, -0.62512)]",
+      "derecho": false,
+      "etapa": "estable",
+      "forma": "ConvexPolygonShape3D",
+      "id": "producto_14",
+      "indice": 14,
+      "jugador": "(3.0, 0.103, -13.75)",
+      "layer": 1,
+      "limites_forma": "[P: (-0.087912, -0.115725, -0.088225), S: (0.175825, 0.231451, 0.17645)]",
+      "mask": 9,
+      "mira": {
+        "collider": "/root/carga_test/Almacen/Estructura/deposito_contenedor_soporte/deposito_contenedor_cuerpo/StaticBody3D",
+        "normal": "(0.0, 1.0, 0.0)",
+        "position": "(3.0, 1.177237, -14.55757)"
+      },
+      "ojo": "(3.0, 1.803, -13.75)",
+      "previsto": "(0.0, 0.0, 0.0)",
+      "real": "(2.269482, 0.224227, -13.71909)",
+      "relativo": "(-0.730518, 0.12199, 1.193381)",
+      "velocity": "(0.0, 0.0, 0.0)"
+    },
+    {
+      "angular_velocity": "(0.0, 0.0, 0.0)",
+      "basis": "[X: (-0.926385, -0.03633, 0.37482), Y: (0.375856, -0.027627, 0.926266), Z: (-0.023296, 0.998958, 0.039248)]",
+      "derecho": false,
+      "etapa": "estable",
+      "forma": "ConvexPolygonShape3D",
+      "id": "producto_15",
+      "indice": 15,
+      "jugador": "(3.0, 0.103, -13.75)",
+      "layer": 1,
+      "limites_forma": "[P: (-0.052131, -0.202839, -0.140833), S: (0.104262, 0.405678, 0.281666)]",
+      "mask": 9,
+      "mira": {
+        "collider": "/root/carga_test/Almacen/Estructura/deposito_contenedor_soporte/deposito_contenedor_cuerpo/StaticBody3D",
+        "normal": "(0.0, 1.0, 0.0)",
+        "position": "(3.0, 1.177237, -14.55757)"
+      },
+      "ojo": "(3.0, 1.803, -13.75)",
+      "previsto": "(0.0, 0.0, 0.0)",
+      "real": "(2.739153, 0.322892, -14.1309)",
+      "relativo": "(-0.260847, 0.220655, 0.781568)",
+      "velocity": "(0.0, 0.0, 0.0)"
+    },
+    {
+      "angular_velocity": "(0.0, 0.0, 0.0)",
+      "basis": "[X: (-0.478918, -0.391577, 0.785687), Y: (0.866051, -0.064447, 0.495784), Z: (-0.143503, 0.917885, 0.369991)]",
+      "derecho": false,
+      "etapa": "estable",
+      "forma": "ConvexPolygonShape3D",
+      "id": "producto_16",
+      "indice": 16,
+      "jugador": "(3.0, 0.103, -13.75)",
+      "layer": 1,
+      "limites_forma": "[P: (-0.057178, -0.222479, -0.154469), S: (0.114356, 0.444914, 0.308938)]",
+      "mask": 9,
+      "mira": {
+        "collider": "/root/carga_test/Almacen/Estructura/deposito_contenedor_soporte/deposito_contenedor_cuerpo/StaticBody3D",
+        "normal": "(0.0, 1.0, 0.0)",
+        "position": "(3.0, 1.177237, -14.55757)"
+      },
+      "ojo": "(3.0, 1.803, -13.75)",
+      "previsto": "(0.0, 0.0, 0.0)",
+      "real": "(3.217424, 0.351629, -14.3233)",
+      "relativo": "(0.217424, 0.249392, 0.589172)",
+      "velocity": "(0.0, 0.0, 0.0)"
+    },
+    {
+      "angular_velocity": "(0.0, 0.0, 0.0)",
+      "basis": "[X: (-0.00011, 1.0, 0.000087), Y: (-0.522952, 0.000016, -0.852362), Z: (-0.852362, -0.000139, 0.522952)]",
+      "derecho": false,
+      "etapa": "estable",
+      "forma": "ConvexPolygonShape3D",
+      "id": "producto_17",
+      "indice": 17,
+      "jugador": "(3.0, 0.103, -13.75)",
+      "layer": 1,
+      "limites_forma": "[P: (-0.125, -0.23445, -0.069752), S: (0.25, 0.4689, 0.139504)]",
+      "mask": 9,
+      "mira": {
+        "collider": "/root/carga_test/Almacen/Estructura/deposito_contenedor_soporte/deposito_contenedor_cuerpo/StaticBody3D",
+        "normal": "(0.0, 1.0, 0.0)",
+        "position": "(3.0, 1.177237, -14.55757)"
+      },
+      "ojo": "(3.0, 1.803, -13.75)",
+      "previsto": "(0.0, 0.0, 0.0)",
+      "real": "(3.747428, 0.227724, -13.75644)",
+      "relativo": "(0.747428, 0.125487, 1.156025)",
+      "velocity": "(0.0, 0.0, 0.0)"
+    },
+    {
+      "angular_velocity": "(0.0, 0.0, 0.0)",
+      "basis": "[X: (-0.049256, -0.997576, -0.049151), Y: (0.825386, -0.012945, -0.564421), Z: (0.562416, -0.06837, 0.824023)]",
+      "derecho": false,
+      "etapa": "estable",
+      "forma": "ConvexPolygonShape3D",
+      "id": "producto_18",
+      "indice": 18,
+      "jugador": "(3.0, 0.103, -13.75)",
+      "layer": 1,
+      "limites_forma": "[P: (-0.11875, -0.171234, -0.094581), S: (0.237454, 0.342468, 0.189163)]",
+      "mask": 9,
+      "mira": {
+        "collider": "/root/carga_test/Almacen/Estructura/deposito_contenedor_soporte/deposito_contenedor_cuerpo/StaticBody3D",
+        "normal": "(0.0, 1.0, 0.0)",
+        "position": "(3.0, 1.177237, -14.55757)"
+      },
+      "ojo": "(3.0, 1.803, -13.75)",
+      "previsto": "(0.0, 0.0, 0.0)",
+      "real": "(2.615304, 0.225641, -13.67544)",
+      "relativo": "(-0.384696, 0.123404, 1.237026)",
+      "velocity": "(0.0, 0.0, 0.0)"
+    },
+    {
+      "angular_velocity": "(0.0, 0.0, 0.0)",
+      "basis": "[X: (0.89265, -0.04946, -0.448029), Y: (0.412731, -0.309858, 0.856529), Z: (-0.181189, -0.949496, -0.256181)]",
+      "derecho": false,
+      "etapa": "estable",
+      "forma": "ConvexPolygonShape3D",
+      "id": "producto_19",
+      "indice": 19,
+      "jugador": "(3.0, 0.103, -13.75)",
+      "layer": 1,
+      "limites_forma": "[P: (-0.15625, -0.152224, -0.155621), S: (0.3125, 0.304448, 0.311211)]",
+      "mask": 9,
+      "mira": {
+        "collider": "/root/carga_test/Almacen/Estructura/deposito_contenedor_soporte/deposito_contenedor_cuerpo/StaticBody3D",
+        "normal": "(0.0, 1.0, 0.0)",
+        "position": "(3.0, 1.177237, -14.55757)"
+      },
+      "ojo": "(3.0, 1.803, -13.75)",
+      "previsto": "(0.0, 0.0, 0.0)",
+      "real": "(3.027337, 0.555618, -13.83933)",
+      "relativo": "(0.027337, 0.453381, 1.073137)",
+      "velocity": "(0.0, 0.0, 0.0)"
+    },
+    {
+      "angular_velocity": "(0.0, 0.0, 0.0)",
+      "basis": "[X: (0.701891, 0.707038, 0.08629), Y: (0.660327, -0.600479, -0.450991), Z: (-0.267053, 0.373526, -0.888347)]",
+      "derecho": false,
+      "etapa": "estable",
+      "forma": "ConvexPolygonShape3D",
+      "id": "producto_20",
+      "indice": 20,
+      "jugador": "(3.0, 0.103, -13.75)",
+      "layer": 1,
+      "limites_forma": "[P: (-0.034375, -0.176729, -0.15), S: (0.06875, 0.353458, 0.3)]",
+      "mask": 9,
+      "mira": {
+        "collider": "/root/carga_test/Almacen/Estructura/deposito_contenedor_soporte/deposito_contenedor_cuerpo/StaticBody3D",
+        "normal": "(0.0, 1.0, 0.0)",
+        "position": "(3.0, 1.177237, -14.55757)"
+      },
+      "ojo": "(3.0, 1.803, -13.75)",
+      "previsto": "(0.0, 0.0, 0.0)",
+      "real": "(3.392713, 0.272978, -13.8384)",
+      "relativo": "(0.392713, 0.170741, 1.074074)",
+      "velocity": "(0.0, 0.0, 0.0)"
+    },
+    {
+      "angular_velocity": "(0.0, 0.0, 0.0)",
+      "basis": "[X: (0.435809, -0.069489, 0.897353), Y: (-0.813914, 0.395176, 0.425887), Z: (-0.384207, -0.915973, 0.115663)]",
+      "derecho": false,
+      "etapa": "estable",
+      "forma": "ConvexPolygonShape3D",
+      "id": "producto_21",
+      "indice": 21,
+      "jugador": "(3.0, 0.103, -13.75)",
+      "layer": 1,
+      "limites_forma": "[P: (-0.1375, -0.152297, -0.034375), S: (0.275, 0.304595, 0.06875)]",
+      "mask": 9,
+      "mira": {
+        "collider": "/root/carga_test/Almacen/Estructura/deposito_contenedor_soporte/deposito_contenedor_cuerpo/StaticBody3D",
+        "normal": "(0.0, 1.0, 0.0)",
+        "position": "(3.0, 1.177237, -14.55757)"
+      },
+      "ojo": "(3.0, 1.803, -13.75)",
+      "previsto": "(0.0, 0.0, 0.0)",
+      "real": "(2.815039, 0.473714, -14.20901)",
+      "relativo": "(-0.184961, 0.371477, 0.703465)",
+      "velocity": "(0.0, 0.0, 0.0)"
+    },
+    {
+      "angular_velocity": "(0.0, 0.0, 0.0)",
+      "basis": "[X: (0.599508, -0.349968, 0.7198), Y: (0.730991, -0.126834, -0.670496), Z: (0.325947, 0.928136, 0.179785)]",
+      "derecho": false,
+      "etapa": "estable",
+      "forma": "ConvexPolygonShape3D",
+      "id": "producto_22",
+      "indice": 22,
+      "jugador": "(3.0, 0.103, -13.75)",
+      "layer": 1,
+      "limites_forma": "[P: (-0.0775, -0.184706, -0.109004), S: (0.155, 0.369377, 0.218008)]",
+      "mask": 9,
+      "mira": {
+        "collider": "/root/carga_test/Almacen/Estructura/deposito_contenedor_soporte/deposito_contenedor_cuerpo/StaticBody3D",
+        "normal": "(0.0, 1.0, 0.0)",
+        "position": "(3.0, 1.177237, -14.55757)"
+      },
+      "ojo": "(3.0, 1.803, -13.75)",
+      "previsto": "(0.0, 0.0, 0.0)",
+      "real": "(2.529125, 0.228606, -13.79069)",
+      "relativo": "(-0.470875, 0.126369, 1.121779)",
+      "velocity": "(0.0, 0.0, 0.0)"
+    },
+    {
+      "angular_velocity": "(0.0, 0.0, 0.0)",
+      "basis": "[X: (0.96104, 0.000124, 0.276408), Y: (-0.000134, 1.0, 0.000019), Z: (-0.276408, -0.000055, 0.96104)]",
+      "derecho": false,
+      "etapa": "estable",
+      "forma": "ConvexPolygonShape3D",
+      "id": "producto_23",
+      "indice": 23,
+      "jugador": "(3.0, 0.103, -13.75)",
+      "layer": 1,
+      "limites_forma": "[P: (-0.135044, -0.131564, -0.170004), S: (0.270087, 0.263129, 0.340009)]",
+      "mask": 9,
+      "mira": {
+        "collider": "/root/carga_test/Almacen/Estructura/deposito_contenedor_soporte/deposito_contenedor_cuerpo/StaticBody3D",
+        "normal": "(0.0, 1.0, 0.0)",
+        "position": "(3.0, 1.177237, -14.55757)"
+      },
+      "ojo": "(3.0, 1.803, -13.75)",
+      "previsto": "(0.0, 0.0, 0.0)",
+      "real": "(2.525185, 0.234252, -13.27522)",
+      "relativo": "(-0.474815, 0.132015, 1.637248)",
+      "velocity": "(0.0, 0.0, 0.0)"
+    },
+    {
+      "angular_velocity": "(0.0, 0.0, 0.0)",
+      "basis": "[X: (0.000068, 1.0, 0.00013), Y: (0.777992, 0.000029, -0.628274), Z: (-0.628274, 0.000144, -0.777992)]",
+      "derecho": false,
+      "etapa": "estable",
+      "forma": "ConvexPolygonShape3D",
+      "id": "producto_24",
+      "indice": 24,
+      "jugador": "(3.0, 0.103, -13.75)",
+      "layer": 1,
+      "limites_forma": "[P: (-0.117388, -0.121159, -0.061908), S: (0.234776, 0.242317, 0.123816)]",
+      "mask": 9,
+      "mira": {
+        "collider": "/root/carga_test/Almacen/Estructura/deposito_contenedor_soporte/deposito_contenedor_cuerpo/StaticBody3D",
+        "normal": "(0.0, 1.0, 0.0)",
+        "position": "(3.0, 1.177237, -14.55757)"
+      },
+      "ojo": "(3.0, 1.803, -13.75)",
+      "previsto": "(0.0, 0.0, 0.0)",
+      "real": "(2.464538, 0.220113, -13.94222)",
+      "relativo": "(-0.535462, 0.117876, 0.970253)",
+      "velocity": "(0.0, 0.0, 0.0)"
+    },
+    {
+      "angular_velocity": "(0.0, 0.0, 0.0)",
+      "basis": "[X: (0.961027, 0.000091, 0.276455), Y: (-0.000129, 1.0, 0.000121), Z: (-0.276455, -0.000152, 0.961027)]",
+      "derecho": false,
+      "etapa": "estable",
+      "forma": "ConvexPolygonShape3D",
+      "id": "producto_25",
+      "indice": 25,
+      "jugador": "(3.0, 0.103, -13.75)",
+      "layer": 1,
+      "limites_forma": "[P: (-0.091893, -0.216178, -0.091893), S: (0.183786, 0.432356, 0.183786)]",
+      "mask": 9,
+      "mira": {
+        "collider": "/root/carga_test/Almacen/Estructura/deposito_contenedor_soporte/deposito_contenedor_cuerpo/StaticBody3D",
+        "normal": "(0.0, 1.0, 0.0)",
+        "position": "(3.0, 1.177237, -14.55757)"
+      },
+      "ojo": "(3.0, 1.803, -13.75)",
+      "previsto": "(0.0, 0.0, 0.0)",
+      "real": "(2.600531, 0.581999, -13.3506)",
+      "relativo": "(-0.399469, 0.479762, 1.561872)",
+      "velocity": "(0.0, 0.0, 0.0)"
+    },
+    {
+      "angular_velocity": "(0.0, 0.0, 0.0)",
+      "basis": "[X: (0.504881, -0.726977, 0.465402), Y: (-0.675641, -0.668382, -0.311086), Z: (0.537219, -0.157383, -0.828629)]",
+      "derecho": false,
+      "etapa": "estable",
+      "forma": "ConvexPolygonShape3D",
+      "id": "producto_26",
+      "indice": 26,
+      "jugador": "(3.0, 0.103, -13.75)",
+      "layer": 1,
+      "limites_forma": "[P: (-0.11875, -0.161828, -0.064998), S: (0.237454, 0.323656, 0.129996)]",
+      "mask": 9,
+      "mira": {
+        "collider": "/root/carga_test/Almacen/Estructura/deposito_contenedor_soporte/deposito_contenedor_cuerpo/StaticBody3D",
+        "normal": "(0.0, 1.0, 0.0)",
+        "position": "(3.0, 1.177237, -14.55757)"
+      },
+      "ojo": "(3.0, 1.803, -13.75)",
+      "previsto": "(0.0, 0.0, 0.0)",
+      "real": "(3.161344, 1.267843, -14.71282)",
+      "relativo": "(0.161344, 1.165606, 0.199645)",
+      "velocity": "(0.0, 0.0, 0.0)"
+    },
+    {
+      "angular_velocity": "(0.0, 0.0, 0.0)",
+      "basis": "[X: (0.840826, 0.125971, -0.526444), Y: (0.339159, -0.880579, 0.330987), Z: (-0.421881, -0.456851, -0.783137)]",
+      "derecho": false,
+      "etapa": "estable",
+      "forma": "ConvexPolygonShape3D",
+      "id": "producto_27",
+      "indice": 27,
+      "jugador": "(3.0, 0.103, -13.75)",
+      "layer": 1,
+      "limites_forma": "[P: (-0.11875, -0.161828, -0.064998), S: (0.237454, 0.323656, 0.129996)]",
+      "mask": 9,
+      "mira": {
+        "collider": "/root/carga_test/Almacen/Estructura/deposito_contenedor_soporte/deposito_contenedor_cuerpo/StaticBody3D",
+        "normal": "(0.0, 1.0, 0.0)",
+        "position": "(3.0, 1.177237, -14.55757)"
+      },
+      "ojo": "(3.0, 1.803, -13.75)",
+      "previsto": "(0.0, 0.0, 0.0)",
+      "real": "(2.882021, 1.178357, -14.98916)",
+      "relativo": "(-0.117979, 1.07612, -0.076694)",
+      "velocity": "(0.0, 0.0, 0.0)"
+    }
+  ],
+  "after_release": [
+    {
+      "indice": 0,
+      "id": "producto_0",
+      "distance_from_requested": 0.39617583389323385,
+      "requested": "(2.93, 1.452238, -14.94747)",
+      "actual": "(3.0, 1.446469, -14.55757)",
+      "relative": "(0.0, 1.344232, 0.354898)",
+      "upright": false,
+      "ray": {
+        "collider": "/root/carga_test/Almacen/Estructura/deposito_contenedor_soporte/deposito_contenedor_cuerpo/StaticBody3D",
+        "normal": "(0.0, 1.0, 0.0)",
+        "position": "(3.0, 1.177237, -14.55757)"
+      }
+    },
+    {
+      "indice": 1,
+      "id": "producto_1",
+      "distance_from_requested": 1.348128432920618,
+      "requested": "(3.0, 1.452238, -14.87747)",
+      "actual": "(3.0, 0.227895, -14.31317)",
+      "relative": "(0.0, 0.125658, 0.599296)",
+      "upright": false,
+      "ray": {
+        "collider": "/root/carga_test/Almacen/ObjetoAgarrable",
+        "normal": "(0.012341, 0.370708, 0.928667)",
+        "position": "(3.0, 1.445986, -14.21074)"
+      }
+    },
+    {
+      "indice": 2,
+      "id": "producto_2",
+      "distance_from_requested": 0.4006891956417083,
+      "requested": "(3.07, 1.452238, -14.94747)",
+      "actual": "(3.0, 1.39199, -14.55757)",
+      "relative": "(0.0, 1.289753, 0.354898)",
+      "upright": false,
+      "ray": {
+        "collider": "/root/carga_test/Almacen/Estructura/deposito_contenedor_soporte/deposito_contenedor_cuerpo/StaticBody3D",
+        "normal": "(0.0, 1.0, 0.0)",
+        "position": "(3.0, 1.177237, -14.55757)"
+      }
+    },
+    {
+      "indice": 3,
+      "id": "producto_3",
+      "distance_from_requested": 0.251997443544574,
+      "requested": "(2.93, 1.452238, -14.87747)",
+      "actual": "(2.944913, 1.526966, -14.63727)",
+      "relative": "(-0.055087, 1.424729, 0.275201)",
+      "upright": false,
+      "ray": {
+        "collider": "/root/carga_test/Almacen/Estructura/deposito_contenedor_soporte/deposito_contenedor_cuerpo/StaticBody3D",
+        "normal": "(0.0, 1.0, 0.0)",
+        "position": "(3.0, 1.177237, -14.55757)"
+      }
+    },
+    {
+      "indice": 4,
+      "id": "producto_4",
+      "distance_from_requested": 0.39195205449773984,
+      "requested": "(3.0, 1.452238, -14.94747)",
+      "actual": "(3.0, 1.412183, -14.55757)",
+      "relative": "(0.0, 1.309946, 0.354898)",
+      "upright": false,
+      "ray": {
+        "collider": "/root/carga_test/Almacen/Estructura/deposito_contenedor_soporte/deposito_contenedor_cuerpo/StaticBody3D",
+        "normal": "(0.0, 1.0, 0.0)",
+        "position": "(3.0, 1.177237, -14.55757)"
+      }
+    },
+    {
+      "indice": 5,
+      "id": "producto_5",
+      "distance_from_requested": 0.0,
+      "requested": "(3.07, 1.452238, -14.87747)",
+      "actual": "(3.07, 1.452238, -14.87747)",
+      "relative": "(0.07, 1.350001, 0.035)",
+      "upright": false,
+      "ray": {
+        "collider": "/root/carga_test/Almacen/Estructura/deposito_contenedor_soporte/deposito_contenedor_cuerpo/StaticBody3D",
+        "normal": "(0.0, 1.0, 0.0)",
+        "position": "(3.0, 1.177237, -14.55757)"
+      }
+    },
+    {
+      "indice": 6,
+      "id": "producto_6",
+      "distance_from_requested": 0.39841131575420796,
+      "requested": "(2.93, 1.452238, -14.94747)",
+      "actual": "(3.0, 1.409699, -14.55757)",
+      "relative": "(0.0, 1.307462, 0.354898)",
+      "upright": false,
+      "ray": {
+        "collider": "/root/carga_test/Almacen/Estructura/deposito_contenedor_soporte/deposito_contenedor_cuerpo/StaticBody3D",
+        "normal": "(0.0, 1.0, 0.0)",
+        "position": "(3.0, 1.177237, -14.55757)"
+      }
+    },
+    {
+      "indice": 7,
+      "id": "producto_7",
+      "distance_from_requested": 0.2948182256645618,
+      "requested": "(3.0, 1.452238, -14.87747)",
+      "actual": "(3.0, 1.539816, -14.59596)",
+      "relative": "(0.0, 1.437579, 0.316506)",
+      "upright": false,
+      "ray": {
+        "collider": "/root/carga_test/Almacen/Estructura/deposito_contenedor_soporte/deposito_contenedor_cuerpo/StaticBody3D",
+        "normal": "(0.0, 1.0, 0.0)",
+        "position": "(3.0, 1.177237, -14.55757)"
+      }
+    },
+    {
+      "indice": 8,
+      "id": "producto_8",
+      "distance_from_requested": 0.47011488711377775,
+      "requested": "(3.07, 1.452238, -14.94747)",
+      "actual": "(3.043669, 1.584183, -14.49702)",
+      "relative": "(0.043669, 1.481946, 0.415447)",
+      "upright": false,
+      "ray": {
+        "collider": "/root/carga_test/Almacen/Estructura/deposito_contenedor_soporte/deposito_contenedor_cuerpo/StaticBody3D",
+        "normal": "(0.0, 1.0, 0.0)",
+        "position": "(3.0, 1.177237, -14.55757)"
+      }
+    },
+    {
+      "indice": 9,
+      "id": "producto_9",
+      "distance_from_requested": 0.3308939939391471,
+      "requested": "(2.93, 1.452238, -14.87747)",
+      "actual": "(3.0, 1.404753, -14.55757)",
+      "relative": "(0.0, 1.302516, 0.354898)",
+      "upright": false,
+      "ray": {
+        "collider": "/root/carga_test/Almacen/Estructura/deposito_contenedor_soporte/deposito_contenedor_cuerpo/StaticBody3D",
+        "normal": "(0.0, 1.0, 0.0)",
+        "position": "(3.0, 1.177237, -14.55757)"
+      }
+    },
+    {
+      "indice": 10,
+      "id": "producto_10",
+      "distance_from_requested": 0.358506077750433,
+      "requested": "(3.0, 1.452238, -14.94747)",
+      "actual": "(3.0, 1.553016, -14.60342)",
+      "relative": "(0.0, 1.450779, 0.309047)",
+      "upright": false,
+      "ray": {
+        "collider": "/root/carga_test/Almacen/@RigidBody3D@465",
+        "normal": "(0.384332, 0.393385, 0.835187)",
+        "position": "(3.0, 1.287012, -14.4159)"
+      }
+    },
+    {
+      "indice": 11,
+      "id": "producto_11",
+      "distance_from_requested": 0.4466392576117792,
+      "requested": "(3.07, 1.452238, -14.87747)",
+      "actual": "(3.043568, 1.584684, -14.45174)",
+      "relative": "(0.043568, 1.482447, 0.460727)",
+      "upright": false,
+      "ray": {
+        "collider": "/root/carga_test/Almacen/Estructura/deposito_contenedor_soporte/deposito_contenedor_cuerpo/StaticBody3D",
+        "normal": "(0.0, 1.0, 0.0)",
+        "position": "(3.0, 1.177237, -14.55757)"
+      }
+    },
+    {
+      "indice": 12,
+      "id": "producto_12",
+      "distance_from_requested": 0.4078711509165593,
+      "requested": "(2.93, 1.452238, -14.94747)",
+      "actual": "(2.952845, 1.566713, -14.55666)",
+      "relative": "(-0.047155, 1.464476, 0.355807)",
+      "upright": false,
+      "ray": {
+        "collider": "/root/carga_test/Almacen/@RigidBody3D@467",
+        "normal": "(0.270859, 0.909436, -0.315535)",
+        "position": "(3.0, 1.296119, -14.40415)"
+      }
+    },
+    {
+      "indice": 13,
+      "id": "producto_13",
+      "distance_from_requested": 0.4597119331102901,
+      "requested": "(3.0, 1.452238, -14.87747)",
+      "actual": "(3.0, 1.5888, -14.43851)",
+      "relative": "(0.0, 1.486563, 0.473955)",
+      "upright": false,
+      "ray": {
+        "collider": "/root/carga_test/Almacen/@RigidBody3D@468",
+        "normal": "(-0.158781, -0.544039, 0.8239)",
+        "position": "(3.0, 1.345085, -14.34096)"
+      }
+    },
+    {
+      "indice": 14,
+      "id": "producto_14",
+      "distance_from_requested": 1.8277936020560412,
+      "requested": "(3.07, 1.452238, -14.94747)",
+      "actual": "(2.441871, 0.222462, -13.75)",
+      "relative": "(-0.558129, 0.120225, 1.16247)",
+      "upright": false,
+      "ray": {
+        "collider": "/root/carga_test/Almacen/@RigidBody3D@469",
+        "normal": "(-0.235253, 0.454329, 0.859209)",
+        "position": "(3.0, 1.406891, -14.26119)"
+      }
+    },
+    {
+      "indice": 15,
+      "id": "producto_15",
+      "distance_from_requested": 0.3796428508875164,
+      "requested": "(2.93, 1.452238, -14.87747)",
+      "actual": "(2.952467, 1.564817, -14.5156)",
+      "relative": "(-0.047533, 1.46258, 0.396866)",
+      "upright": false,
+      "ray": {
+        "collider": "/root/carga_test/Almacen/Estructura/deposito_contenedor_soporte/deposito_contenedor_cuerpo/StaticBody3D",
+        "normal": "(0.0, 1.0, 0.0)",
+        "position": "(3.0, 1.177237, -14.55757)"
+      }
+    },
+    {
+      "indice": 16,
+      "id": "producto_16",
+      "distance_from_requested": 0.38408813681367354,
+      "requested": "(3.0, 1.452238, -14.94747)",
+      "actual": "(3.0, 1.560209, -14.57887)",
+      "relative": "(0.0, 1.457972, 0.333604)",
+      "upright": false,
+      "ray": {
+        "collider": "/root/carga_test/Almacen/@RigidBody3D@465",
+        "normal": "(-0.000031, 0.394354, 0.918958)",
+        "position": "(3.0, 1.247545, -14.46684)"
+      }
+    },
+    {
+      "indice": 17,
+      "id": "producto_17",
+      "distance_from_requested": 0.27279059108591047,
+      "requested": "(3.07, 1.452238, -14.87747)",
+      "actual": "(3.053856, 1.533131, -14.61745)",
+      "relative": "(0.053856, 1.430894, 0.295019)",
+      "upright": false,
+      "ray": {
+        "collider": "/root/carga_test/Almacen/@RigidBody3D@472",
+        "normal": "(0.011652, 0.904088, 0.427187)",
+        "position": "(3.0, 1.261328, -14.44905)"
+      }
+    },
+    {
+      "indice": 18,
+      "id": "producto_18",
+      "distance_from_requested": 0.46278852131616166,
+      "requested": "(2.93, 1.452238, -14.94747)",
+      "actual": "(2.955921, 1.582127, -14.50404)",
+      "relative": "(-0.044079, 1.47989, 0.408431)",
+      "upright": false,
+      "ray": {
+        "collider": "/root/carga_test/Almacen/@RigidBody3D@472",
+        "normal": "(-0.411997, 0.180093, 0.893211)",
+        "position": "(3.0, 1.308473, -14.38821)"
+      }
+    },
+    {
+      "indice": 19,
+      "id": "producto_19",
+      "distance_from_requested": 0.5565645836962678,
+      "requested": "(3.0, 1.452238, -14.87747)",
+      "actual": "(3.0, 1.617573, -14.34603)",
+      "relative": "(0.0, 1.515336, 0.566443)",
+      "upright": false,
+      "ray": {
+        "collider": "/root/carga_test/Almacen/@RigidBody3D@472",
+        "normal": "(-0.00278, 0.901788, 0.43217)",
+        "position": "(3.0, 1.261736, -14.44852)"
+      }
+    },
+    {
+      "indice": 20,
+      "id": "producto_20",
+      "distance_from_requested": 0.43471461767693054,
+      "requested": "(3.07, 1.452238, -14.94747)",
+      "actual": "(3.045651, 1.574249, -14.53094)",
+      "relative": "(0.045651, 1.472012, 0.381535)",
+      "upright": false,
+      "ray": {
+        "collider": "/root/carga_test/Almacen/@RigidBody3D@472",
+        "normal": "(0.001191, 0.872559, 0.488507)",
+        "position": "(3.0, 1.260378, -14.45028)"
+      }
+    },
+    {
+      "indice": 21,
+      "id": "producto_21",
+      "distance_from_requested": 0.452409988016402,
+      "requested": "(2.93, 1.452238, -14.87747)",
+      "actual": "(2.956774, 1.586397, -14.44624)",
+      "relative": "(-0.043226, 1.48416, 0.466232)",
+      "upright": false,
+      "ray": {
+        "collider": "/root/carga_test/Almacen/@RigidBody3D@472",
+        "normal": "(-0.422756, 0.031598, 0.905693)",
+        "position": "(3.0, 1.317724, -14.37627)"
+      }
+    },
+    {
+      "indice": 22,
+      "id": "producto_22",
+      "distance_from_requested": 0.5278762326350744,
+      "requested": "(3.0, 1.452238, -14.94747)",
+      "actual": "(3.0, 1.600629, -14.44088)",
+      "relative": "(0.0, 1.498392, 0.471594)",
+      "upright": false,
+      "ray": {
+        "collider": "/root/carga_test/Almacen/@RigidBody3D@472",
+        "normal": "(-0.001347, 0.910317, 0.413911)",
+        "position": "(3.0, 1.262175, -14.44796)"
+      }
+    },
+    {
+      "indice": 23,
+      "id": "producto_23",
+      "distance_from_requested": 2.082719192034539,
+      "requested": "(3.07, 1.452238, -14.87747)",
+      "actual": "(2.5252, 0.238301, -13.2752)",
+      "relative": "(-0.4748, 0.136064, 1.637269)",
+      "upright": false,
+      "ray": {
+        "collider": "/root/carga_test/Almacen/@RigidBody3D@472",
+        "normal": "(-0.004625, 0.940114, 0.34083)",
+        "position": "(3.0, 1.264527, -14.44492)"
+      }
+    },
+    {
+      "indice": 24,
+      "id": "producto_24",
+      "distance_from_requested": 0.6641624304957325,
+      "requested": "(2.93, 1.452238, -14.94747)",
+      "actual": "(2.967201, 1.638647, -14.31109)",
+      "relative": "(-0.032799, 1.53641, 0.601382)",
+      "upright": false,
+      "ray": {
+        "collider": "/root/carga_test/Almacen/@RigidBody3D@472",
+        "normal": "(-0.001573, 0.945215, 0.326446)",
+        "position": "(3.0, 1.265412, -14.44378)"
+      }
+    },
+    {
+      "indice": 25,
+      "id": "producto_25",
+      "distance_from_requested": 1.8003076430779832,
+      "requested": "(3.0, 1.452238, -14.87747)",
+      "actual": "(2.60061, 0.586043, -13.35061)",
+      "relative": "(-0.39939, 0.483806, 1.561859)",
+      "upright": false,
+      "ray": {
+        "collider": "/root/carga_test/Almacen/@RigidBody3D@478",
+        "normal": "(0.976089, 0.100382, 0.192806)",
+        "position": "(3.0, 1.434859, -14.2251)"
+      }
+    },
+    {
+      "indice": 26,
+      "id": "producto_26",
+      "distance_from_requested": 0.4086170119329336,
+      "requested": "(3.07, 1.452238, -14.94747)",
+      "actual": "(3.0, 1.352009, -14.55757)",
+      "relative": "(0.0, 1.249772, 0.354898)",
+      "upright": false,
+      "ray": {
+        "collider": "/root/carga_test/Almacen/Estructura/deposito_contenedor_soporte/deposito_contenedor_cuerpo/StaticBody3D",
+        "normal": "(0.0, 1.0, 0.0)",
+        "position": "(3.0, 1.177237, -14.55757)"
+      }
+    },
+    {
+      "indice": 27,
+      "id": "producto_27",
+      "distance_from_requested": 0.2502662302768794,
+      "requested": "(2.93, 1.452238, -14.87747)",
+      "actual": "(2.944811, 1.526452, -14.63892)",
+      "relative": "(-0.055189, 1.424215, 0.273549)",
+      "upright": false,
+      "ray": {
+        "collider": "/root/carga_test/Almacen/@RigidBody3D@482",
+        "normal": "(0.000028, 0.860966, 0.508663)",
+        "position": "(3.0, 1.270313, -14.43745)"
+      }
+    }
+  ],
+  "raw_sha256": "071441732cb8d3594e21d7b2e0211c63613beab4aebc63dbadf96b2cc4a22147"
+}

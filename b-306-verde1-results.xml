@@ -1,0 +1,235 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<testsuites id="2026-10-09" name="report_1" tests="105" failures="0" skipped="0" flaky="0" time="0.000">
+	<testsuite id="0" name="reglas_del_cierre_test" package="test/dominio/almacen" timestamp="2026-10-09T10:21:12" hostname="localhost" tests="10" failures="0" errors="0" skipped="0" flaky="0" time="0.104">
+		<testcase name="test_una_lista_vacia_no_produce_motivos" classname="reglas_del_cierre_test" time="0.005">
+		</testcase>
+		<testcase name="test_una_unidad_suelta_desordena_cualquier_habitacion" classname="reglas_del_cierre_test" time="0.005">
+		</testcase>
+		<testcase name="test_una_caja_solo_queda_ordenada_en_el_deposito" classname="reglas_del_cierre_test" time="0.005">
+		</testcase>
+		<testcase name="test_un_util_solo_queda_ordenado_en_el_bano" classname="reglas_del_cierre_test" time="0.006">
+		</testcase>
+		<testcase name="test_los_otros_objetos_adentro_no_producen_desorden" classname="reglas_del_cierre_test" time="0.005">
+		</testcase>
+		<testcase name="test_un_mismo_cierre_puede_tener_desorden_y_objetos_afuera" classname="reglas_del_cierre_test" time="0.005">
+		</testcase>
+		<testcase name="test_la_pertenencia_sale_del_punto_y_de_las_tres_regiones" classname="reglas_del_cierre_test" time="0.005">
+		</testcase>
+		<testcase name="test_sin_regiones_declaradas_el_punto_queda_afuera" classname="reglas_del_cierre_test" time="0.004">
+		</testcase>
+		<testcase name="test_dos_partes_separadas_no_incluyen_el_hueco_entre_ellas" classname="reglas_del_cierre_test" time="0.005">
+		</testcase>
+		<testcase name="test_el_techo_alto_y_el_paso_no_agrandan_el_resto_del_bano" classname="reglas_del_cierre_test" time="0.005">
+		</testcase>
+	</testsuite>
+	<testsuite id="1" name="llamados_de_la_partida_test" package="test/dominio/empleo" timestamp="2026-10-09T10:21:12" hostname="localhost" tests="8" failures="0" errors="0" skipped="0" flaky="0" time="0.085">
+		<testcase name="test_las_bandas_suman_medios_y_no_sustituyen_llamados" classname="llamados_de_la_partida_test" time="0.005">
+		</testcase>
+		<testcase name="test_motivos_repetidos_y_distintos_se_cuentan_por_noche" classname="llamados_de_la_partida_test" time="0.006">
+		</testcase>
+		<testcase name="test_fuera_de_la_jornada_abierta_no_guarda_motivos" classname="llamados_de_la_partida_test" time="0.005">
+		</testcase>
+		<testcase name="test_siete_medios_no_despiden_y_ocho_si" classname="llamados_de_la_partida_test" time="0.005">
+		</testcase>
+		<testcase name="test_restaurado_siete_con_impecable_conserva_siete" classname="llamados_de_la_partida_test" time="0.005">
+		</testcase>
+		<testcase name="test_reanudar_sanea_medios_sin_migrar_la_clave_antigua" classname="llamados_de_la_partida_test" time="0.005">
+		</testcase>
+		<testcase name="test_la_lectura_entera_del_comentario_descarta_solo_el_medio" classname="llamados_de_la_partida_test" time="0.005">
+		</testcase>
+		<testcase name="test_la_quinta_con_siete_cumple_y_con_un_motivo_despide" classname="llamados_de_la_partida_test" time="0.005">
+		</testcase>
+	</testsuite>
+	<testsuite id="2" name="habitaciones_del_almacen_test" package="test/escenas/puestos" timestamp="2026-10-09T10:21:12" hostname="localhost" tests="4" failures="0" errors="0" skipped="0" flaky="0" time="0.045">
+		<testcase name="test_clasifica_las_tres_habitaciones_con_lector_trasladado" classname="habitaciones_del_almacen_test" time="0.006">
+		</testcase>
+		<testcase name="test_la_envolvente_mundial_no_agranda_una_habitacion_rotada" classname="habitaciones_del_almacen_test" time="0.006">
+		</testcase>
+		<testcase name="test_compone_traslacion_y_rotacion_de_un_padre_real" classname="habitaciones_del_almacen_test" time="0.004">
+		</testcase>
+		<testcase name="test_la_union_compuesta_conserva_techo_y_ancho_del_paso_bajo_un_padre" classname="habitaciones_del_almacen_test" time="0.005">
+		</testcase>
+	</testsuite>
+	<testsuite id="3" name="agarre_test" package="test/sistemas/marco" timestamp="2026-10-09T10:21:12" hostname="localhost" tests="19" failures="0" errors="0" skipped="0" flaky="0" time="0.199">
+		<testcase name="test_agarrar_cuelga_el_objeto_del_punto_de_carga" classname="agarre_test" time="0.005">
+		</testcase>
+		<testcase name="test_agarrar_congela_la_fisica_de_lo_que_se_lleva" classname="agarre_test" time="0.005">
+		</testcase>
+		<testcase name="test_soltar_conserva_la_orientacion_mundial_de_la_mano" classname="agarre_test" time="0.006">
+		</testcase>
+		<testcase name="test_lo_suelto_no_se_mueve_con_la_camara_y_vuelve_a_seguir_la_mano" classname="agarre_test" time="0.006">
+		</testcase>
+		<testcase name="test_con_las_manos_llenas_se_rechaza_y_no_se_mueve_nada" classname="agarre_test" time="0.004">
+		</testcase>
+		<testcase name="test_lo_sostenido_se_puede_mover_a_otro_punto_sin_soltarlo" classname="agarre_test" time="0.005">
+		</testcase>
+		<testcase name="test_devolver_a_la_mano_vuelve_al_punto_de_donde_salio" classname="agarre_test" time="0.004">
+		</testcase>
+		<testcase name="test_despues_de_soltar_devolver_no_usa_el_punto_de_lo_anterior" classname="agarre_test" time="0.005">
+		</testcase>
+		<testcase name="test_con_las_manos_vacias_no_hay_nada_que_mover" classname="agarre_test" time="0.005">
+		</testcase>
+		<testcase name="test_soltar_al_frente_lleva_el_objeto_al_punto_de_soltado" classname="agarre_test" time="0.005">
+		</testcase>
+		<testcase name="test_soltar_sin_lugar_adelante_lo_deja_en_el_respaldo" classname="agarre_test" time="0.005">
+		</testcase>
+		<testcase name="test_vaciar_las_manos_vacias_no_avisa_nada" classname="agarre_test" time="0.004">
+		</testcase>
+		<testcase name="test_vaciar_las_manos_llenas_deja_lo_que_habia_en_el_respaldo" classname="agarre_test" time="0.006">
+		</testcase>
+		<testcase name="test_el_clic_agarra_y_despues_suelta" classname="agarre_test" time="0.007">
+		</testcase>
+		<testcase name="test_agarrar_suspende_y_soltar_restaura_colisiones" classname="agarre_test" time="0.006">
+		</testcase>
+		<testcase name="test_dos_agarres_con_examen_restauran_sus_colisiones" classname="agarre_test" time="0.007">
+		</testcase>
+		<testcase name="test_vaciar_restaura_colisiones" classname="agarre_test" time="0.005">
+		</testcase>
+		<testcase name="test_agarrar_y_soltar_un_nodo_sin_colisiones" classname="agarre_test" time="0.006">
+		</testcase>
+		<testcase name="test_el_lector_conserva_identidad_sin_mutar_y_se_vacia_al_salir" classname="agarre_test" time="0.006">
+		</testcase>
+	</testsuite>
+	<testsuite id="4" name="legajo_test" package="test/dominio/empleo" timestamp="2026-10-09T10:21:12" hostname="localhost" tests="15" failures="0" errors="0" skipped="0" flaky="0" time="0.155">
+		<testcase name="test_un_legajo_nuevo_no_tiene_apercibimientos_ni_despido" classname="legajo_test" time="0.006">
+		</testcase>
+		<testcase name="test_una_jornada_completa_no_suma_apercibimientos" classname="legajo_test" time="0.005">
+		</testcase>
+		<testcase name="test_el_aviso_suma_uno_y_la_banda_grave_suma_dos" classname="legajo_test" time="0.005">
+		</testcase>
+		<testcase name="test_hacen_falta_cuatro_jornadas_de_aviso_para_que_lo_echen" classname="legajo_test" time="0.005">
+		</testcase>
+		<testcase name="test_dos_jornadas_graves_seguidas_alcanzan_para_el_despido" classname="legajo_test" time="0.006">
+		</testcase>
+		<testcase name="test_una_jornada_completa_con_deuda_deja_el_aviso_siguiente_en_despido" classname="legajo_test" time="0.004">
+		</testcase>
+		<testcase name="test_a_la_banda_grave_le_alcanza_con_una_jornada_menos_que_a_la_de_aviso" classname="legajo_test" time="0.005">
+		</testcase>
+		<testcase name="test_una_grave_y_dos_avisos_despiden_y_no_antes" classname="legajo_test" time="0.005">
+		</testcase>
+		<testcase name="test_el_contador_puede_pasar_de_largo_el_umbral_sin_pisarlo" classname="legajo_test" time="0.004">
+		</testcase>
+		<testcase name="test_la_jornada_completa_se_mide_contra_las_obligatorias_y_no_contra_un_cinco" classname="legajo_test" time="0.006">
+		</testcase>
+		<testcase name="test_un_legajo_restaurado_sigue_contando_desde_donde_quedo" classname="legajo_test" time="0.006">
+		</testcase>
+		<testcase name="test_restaurar_un_legajo_en_cero_es_lo_mismo_que_uno_nuevo" classname="legajo_test" time="0.006">
+		</testcase>
+		<testcase name="test_una_jornada_impecable_con_legajo_limpio_lo_conserva_en_cero" classname="legajo_test" time="0.006">
+		</testcase>
+		<testcase name="test_dos_graves_con_una_impecable_en_el_medio_despiden" classname="legajo_test" time="0.005">
+		</testcase>
+		<testcase name="test_la_quinta_impecable_con_deuda_cumple_el_contrato" classname="legajo_test" time="0.005">
+		</testcase>
+	</testsuite>
+	<testsuite id="5" name="partida_test" package="test/dominio/empleo" timestamp="2026-10-09T10:21:12" hostname="localhost" tests="17" failures="0" errors="0" skipped="0" flaky="0" time="0.209">
+		<testcase name="test_una_partida_nueva_arranca_en_la_primera_jornada" classname="partida_test" time="0.006">
+		</testcase>
+		<testcase name="test_la_partida_guarda_el_legajo_que_recibio_y_no_una_copia" classname="partida_test" time="0.006">
+		</testcase>
+		<testcase name="test_una_partida_restaurada_a_un_aviso_del_tope_despide_con_un_aviso" classname="partida_test" time="0.005">
+		</testcase>
+		<testcase name="test_una_partida_guardada_sigue_en_su_jornada_y_con_su_legajo" classname="partida_test" time="0.005">
+		</testcase>
+		<testcase name="test_un_diccionario_vacio_da_una_partida_nueva" classname="partida_test" time="0.009">
+		</testcase>
+		<testcase name="test_cerrar_una_jornada_avanza_y_anota_la_banda_en_el_legajo" classname="partida_test" time="0.008">
+		</testcase>
+		<testcase name="test_dos_cierres_sin_abrir_en_el_medio_no_avanzan_dos_veces" classname="partida_test" time="0.008">
+		</testcase>
+		<testcase name="test_cerrar_sin_haber_abierto_no_hace_nada" classname="partida_test" time="0.006">
+		</testcase>
+		<testcase name="test_abrir_la_jornada_entrega_el_turno_del_001_con_sus_obligatorias" classname="partida_test" time="0.006">
+		</testcase>
+		<testcase name="test_cada_jornada_abre_un_turno_nuevo_y_tareas_nuevas" classname="partida_test" time="0.006">
+		</testcase>
+		<testcase name="test_una_partida_que_termino_no_vuelve_a_abrir_una_jornada" classname="partida_test" time="0.006">
+		</testcase>
+		<testcase name="test_cinco_jornadas_impecables_terminan_la_partida_sin_despido" classname="partida_test" time="0.007">
+		</testcase>
+		<testcase name="test_dos_jornadas_graves_seguidas_terminan_la_partida_con_despido" classname="partida_test" time="0.007">
+		</testcase>
+		<testcase name="test_con_el_despido_en_la_ultima_jornada_gana_el_despido" classname="partida_test" time="0.007">
+		</testcase>
+		<testcase name="test_la_partida_tiene_tres_finales" classname="partida_test" time="0.008">
+		</testcase>
+		<testcase name="test_solo_la_ultima_jornada_es_la_ultima" classname="partida_test" time="0.006">
+		</testcase>
+		<testcase name="test_la_partida_es_pura_y_no_pide_una_escena" classname="partida_test" time="0.007">
+		</testcase>
+	</testsuite>
+	<testsuite id="6" name="partida_serializada_test" package="test/dominio/empleo" timestamp="2026-10-09T10:21:13" hostname="localhost" tests="5" failures="0" errors="0" skipped="0" flaky="0" time="0.066">
+		<testcase name="test_cada_campo_tiene_su_clave" classname="partida_serializada_test" time="0.007">
+		</testcase>
+		<testcase name="test_un_guardado_completo_vuelve_igual" classname="partida_serializada_test" time="0.007">
+		</testcase>
+		<testcase name="test_el_campo_que_falta_vuelve_con_su_defecto" classname="partida_serializada_test" time="0.007">
+		</testcase>
+		<testcase name="test_el_tipo_equivocado_vuelve_con_su_defecto" classname="partida_serializada_test" time="0.007">
+		</testcase>
+		<testcase name="test_la_actual_una_anterior_y_sin_version_son_legibles" classname="partida_serializada_test" time="0.006">
+		</testcase>
+	</testsuite>
+	<testsuite id="7" name="parte_de_cierre_test" package="test/dominio/empleo" timestamp="2026-10-09T10:21:13" hostname="localhost" tests="9" failures="0" errors="0" skipped="0" flaky="0" time="0.105">
+		<testcase name="test_el_parte_trae_una_linea_por_obligatoria_en_el_orden_declarado" classname="parte_de_cierre_test" time="0.006">
+		</testcase>
+		<testcase name="test_la_misma_tarea_cumplida_y_sin_cumplir_dice_cosas_distintas" classname="parte_de_cierre_test" time="0.005">
+		</testcase>
+		<testcase name="test_el_saludo_y_el_comentario_salen_del_parte_ya_escritos" classname="parte_de_cierre_test" time="0.005">
+		</testcase>
+		<testcase name="test_el_parte_devuelve_lo_que_recibio_sin_recalcular_nada" classname="parte_de_cierre_test" time="0.004">
+		</testcase>
+		<testcase name="test_los_tres_archivos_del_dominio_son_puros" classname="parte_de_cierre_test" time="0.007">
+		</testcase>
+		<testcase name="test_los_tres_espejos_de_este_spec_estan_escritos" classname="parte_de_cierre_test" time="0.006">
+		</testcase>
+		<testcase name="test_la_partida_que_termino_ofrece_volver_al_menu_y_no_seguir" classname="parte_de_cierre_test" time="0.007">
+		</testcase>
+		<testcase name="test_la_partida_en_curso_ofrece_seguir_y_volver_al_menu" classname="parte_de_cierre_test" time="0.006">
+		</testcase>
+		<testcase name="test_el_parte_de_la_partida_real_despedida_no_ofrece_seguir" classname="parte_de_cierre_test" time="0.008">
+		</testcase>
+	</testsuite>
+	<testsuite id="8" name="politica_de_guardado_test" package="test/dominio/empleo" timestamp="2026-10-09T10:21:13" hostname="localhost" tests="3" failures="0" errors="0" skipped="0" flaky="0" time="0.042">
+		<testcase name="test_las_acciones_son_escribir_y_borrar_y_ninguna_mas" classname="politica_de_guardado_test" time="0.008">
+		</testcase>
+		<testcase name="test_los_datos_llevan_la_jornada_y_los_apercibimientos_de_la_partida" classname="politica_de_guardado_test" time="0.007">
+		</testcase>
+		<testcase name="test_la_politica_es_pura" classname="politica_de_guardado_test" time="0.005">
+		</testcase>
+	</testsuite>
+	<testsuite id="9" name="guardado_test" package="test/sistemas/marco" timestamp="2026-10-09T10:21:13" hostname="localhost" tests="10" failures="0" errors="0" skipped="0" flaky="0" time="0.177">
+		<testcase name="test_ida_y_vuelta_por_disco_con_los_tipos_intactos" classname="guardado_test" time="0.014">
+		</testcase>
+		<testcase name="test_lo_que_falta_o_esta_mal_tipado_en_disco_vuelve_con_su_defecto" classname="guardado_test" time="0.014">
+		</testcase>
+		<testcase name="test_una_version_futura_no_carga_y_no_se_borra" classname="guardado_test" time="0.016">
+		</testcase>
+		<testcase name="test_un_guardado_sin_version_carga" classname="guardado_test" time="0.015">
+		</testcase>
+		<testcase name="test_sin_archivo_cargar_da_vacio" classname="guardado_test" time="0.009">
+		</testcase>
+		<testcase name="test_un_archivo_corrupto_da_vacio_y_se_borra" classname="guardado_test" time="0.016">
+		</testcase>
+		<testcase name="test_un_archivo_que_no_es_un_diccionario_tambien_es_corrupto" classname="guardado_test" time="0.008">
+		</testcase>
+		<testcase name="test_borrar_saca_el_archivo" classname="guardado_test" time="0.009">
+		</testcase>
+		<testcase name="test_retomar_arranca_donde_quedo" classname="guardado_test" time="0.010">
+		</testcase>
+		<testcase name="test_un_guardado_nuevo_toma_la_ruta_por_defecto" classname="guardado_test" time="0.007">
+		</testcase>
+	</testsuite>
+	<testsuite id="10" name="reglas_test" package="test/dominio" timestamp="2026-10-09T10:21:13" hostname="localhost" tests="5" failures="0" errors="0" skipped="0" flaky="0" time="0.066">
+		<testcase name="test_los_tipos_de_tarea_son_las_cinco_obligatorias" classname="reglas_test" time="0.006">
+		</testcase>
+		<testcase name="test_al_cuarto_apercibimiento_lo_echan" classname="reglas_test" time="0.008">
+		</testcase>
+		<testcase name="test_el_reloj_de_mesa_falla_adentro_de_la_partida" classname="reglas_test" time="0.007">
+		</testcase>
+		<testcase name="test_la_noche_arranca_a_una_hora_del_dia" classname="reglas_test" time="0.008">
+		</testcase>
+		<testcase name="test_una_jornada_grave_pesa_el_doble_que_un_aviso" classname="reglas_test" time="0.008">
+		</testcase>
+	</testsuite>
+</testsuites>

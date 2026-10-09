@@ -1,0 +1,12 @@
+{
+  "command": "python .claude/scripts/verificar.py --help",
+  "result": "aborted; unknown flag ran nodes; no verification evidence accepted",
+  "pids_stopped": [
+    108604,
+    106160,
+    91488,
+    37996
+  ],
+  "scope": "only own processes; no source edit while active",
+  "correction": "read CLI source; explicit --solo or final full through FIFO"
+}

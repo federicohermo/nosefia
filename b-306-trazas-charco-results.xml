@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<testsuites id="2026-10-09" name="report_1" tests="1" failures="1" skipped="0" flaky="0" time="0.000">
+	<testsuite id="0" name="charco_test" package=".godot/b306-diagnostico" timestamp="2026-10-09T11:15:54" hostname="localhost" tests="1" failures="1" errors="0" skipped="0" flaky="0" time="0.216">
+		<testcase name="test_la_caja_se_suelta_con_la_mira_sobre_un_charco" classname="charco_test" time="0.196">
+			<failure message="FAILED: res://.godot/b306-diagnostico/charco_test.gd:714" type="FAILURE">
+<![CDATA[
+con la mira sobre `ManchaDelDeposito`: la caja en (4.629093, 2.695692, -7.390810) tiene esquinas en el aire: -0.30 -0.30, +0.30 -0.30
+	at '_comprobar_apoyo_entero' in res://.godot/b306-diagnostico/charco_test.gd:714
+	at 'test_la_caja_se_suelta_con_la_mira_sobre_un_charco' in res://.godot/b306-diagnostico/charco_test.gd:948
+]]>
+			</failure>
+		</testcase>
+	</testsuite>
+</testsuites>

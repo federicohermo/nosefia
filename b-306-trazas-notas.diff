@@ -1,0 +1,67 @@
+--- test/escenas/puestos/notas_del_almacen_test.gd
++++ res://.godot/b306-diagnostico/notas_test.gd
+@@ -162,11 +162,13 @@
+ 			)
+ 			piso.exclude = [jugador.get_rid()]
+ 			var golpe := espacio.intersect_ray(piso)
++			print("B306NOTA ", hoja.get_path(), " candidato=", punto, " piso=", JSON.stringify(_b306_golpe(golpe)))
+ 			if golpe.is_empty():
+ 				continue
+ 			var apoyo := golpe.collider as CollisionObject3D
+ 			var dueno := apoyo.shape_owner_get_owner(apoyo.shape_find_owner(golpe.shape)) as Node
+ 			if apoyo.name != "SueloSolido" and dueno.name != "VolumenDelPisoDelBano":
++				print("B306NOTA rechazo_nombre")
+ 				continue
+ 			var posicion: Vector3 = golpe.position + Vector3.UP * 0.02
+ 			var volumen := PhysicsShapeQueryParameters3D.new()
+@@ -174,12 +176,16 @@
+ 			volumen.transform = Transform3D(Basis.IDENTITY, posicion) * forma.transform
+ 			volumen.collision_mask = jugador.collision_mask
+ 			volumen.exclude = [jugador.get_rid()]
+-			if not espacio.intersect_shape(volumen).is_empty():
++			var obstaculos := espacio.intersect_shape(volumen)
++			if not obstaculos.is_empty():
++				for obstaculo: Dictionary in obstaculos:
++					print("B306NOTA rechazo_capsula ", obstaculo.collider.get_path())
+ 				continue
+ 			var ojo := posicion + Vector3.UP * ReglasDelJugador.ALTURA_DE_LA_CAMARA
+ 			var consulta := PhysicsRayQueryParameters3D.create(ojo, centro, 3)
+ 			consulta.exclude = [jugador.get_rid()]
+ 			var impacto := espacio.intersect_ray(consulta)
++			print("B306NOTA ojo=", ojo, " hoja=", centro, " impacto=", JSON.stringify(_b306_golpe(impacto)))
+ 			if (
+ 				impacto.get("collider") == hoja
+ 				and ojo.distance_to(impacto.position) <= ReglasDelJugador.ALCANCE_DE_LA_MIRA
+@@ -305,3 +311,32 @@
+ 		if cuerpo.is_in_group(ReglasDelJugador.GRUPO_INTERACTUABLE):
+ 			funcionales += 1
+ 	assert_int(funcionales).is_equal(2)
++
++
++func _b306_golpe(golpe: Dictionary) -> Dictionary:
++	if golpe.is_empty():
++		return {}
++	var cuerpo := golpe.collider as CollisionObject3D
++	var dueno := cuerpo.shape_owner_get_owner(cuerpo.shape_find_owner(golpe.shape)) as Node
++	return {"cuerpo": str(cuerpo.get_path()), "dueno": str(dueno.get_path()), "pos": str(golpe.position), "normal": str(golpe.normal), "rid": str(golpe.rid)}
++
++func _b306_traza(almacen: Node3D, jugador: CharacterBody3D, objeto: Node3D, etapa: String) -> void:
++	var espacio := almacen.get_world_3d().direct_space_state
++	var exclusiones: Array[RID] = [jugador.get_rid(), (objeto as CollisionObject3D).get_rid()]
++	var ray := PhysicsRayQueryParameters3D.create(jugador.global_position + Vector3.UP * 0.5, Vector3(objeto.global_position.x, jugador.global_position.y + 0.5, objeto.global_position.z))
++	ray.exclude = exclusiones
++	var piso := PhysicsRayQueryParameters3D.create(jugador.global_position + Vector3.UP * 0.1, jugador.global_position + Vector3.DOWN * 5.0)
++	piso.exclude = exclusiones
++	var ojo: Transform3D = jugador.call("mira")
++	var mira := PhysicsRayQueryParameters3D.create(ojo.origin, ojo.origin - ojo.basis.z * ReglasDelJugador.ALCANCE_DE_LA_MIRA)
++	mira.exclude = exclusiones
++	var datos := {"etapa": etapa, "objeto": str(objeto.name), "pos": str(objeto.global_position), "jugador": str(jugador.global_position), "velocidad": str(jugador.velocity), "en_piso": jugador.is_on_floor(), "padre": str(objeto.get_parent().get_path()), "segmento": _b306_golpe(espacio.intersect_ray(ray)), "piso_jugador": _b306_golpe(espacio.intersect_ray(piso)), "mira": _b306_golpe(espacio.intersect_ray(mira))}
++	if objeto is RigidBody3D:
++		var cuerpo := objeto as RigidBody3D
++		var formas: Array[CollisionShape3D] = jugador.call("_formas_de", cuerpo)
++		var limites: AABB = jugador.call("_limites_de", cuerpo, formas)
++		var capsula := (jugador.get_node("Cuerpo") as CollisionShape3D).shape as CapsuleShape3D
++		var ancho := Vector2(limites.size.x, limites.size.z).length() / 2.0
++		var lugares := LugaresDelPiso.alrededor(espacio, jugador.global_position, jugador.call("frente"), capsula.radius + ancho + ReglasDeLosObjetos.ROCE, limites.size.y, ReglasDeLosObjetos.CAIDA_HASTA_EL_PISO, ReglasDeLosObjetos.LADOS_ALREDEDOR, cuerpo.collision_mask, exclusiones)
++		datos["lugares"] = str(lugares)
++	print("B306TRAZA ", JSON.stringify(datos))

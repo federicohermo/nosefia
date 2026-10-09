@@ -1,0 +1,36 @@
+{
+  "head": "01bda52fac0e92b191e7c367086c9a7798e0d895",
+  "tracked_diff_sha256": "9088c0b843ab15e7511a06cd1b34b0e757a72441c4a159afaf6b5ae916859ee9",
+  "suites": [
+    {
+      "label": "carga",
+      "copy": "D:\\Usuarios\\fede\\Documentos\\Catedra Videojuegos FADU\\manada\\repo\\nosefia\\.claude\\worktrees\\batch-64-309-d\\.godot\\b306-diagnostico\\carga_geometrica2_test.gd",
+      "copy_sha256": "ee5a51134695566a4b0939c2c703c4f1493d8748431e8df2fd856a47707ea00d",
+      "case": "test_llenarlo_con_productos_no_los_comprime_a_traves_del_cuerpo_o_la_tapa",
+      "args": [
+        "-a",
+        ".godot/b306-diagnostico/carga_geometrica2_test.gd",
+        "-i",
+        ".godot/b306-diagnostico/carga_geometrica2_test.gd:test_la_boca_abierta_no_tiene_una_tapa_de_colision_invisible",
+        "-i",
+        ".godot/b306-diagnostico/carga_geometrica2_test.gd:test_el_cuerpo_del_contenedor_frena_un_rayo_desde_el_pasillo",
+        "-i",
+        ".godot/b306-diagnostico/carga_geometrica2_test.gd:test_una_bolsa_soltada_por_la_boca_se_recoge_y_se_tira_despues",
+        "-i",
+        ".godot/b306-diagnostico/carga_geometrica2_test.gd:test_cerrar_tapa_bloquea_la_boca_y_abrir_la_deja_libre",
+        "-i",
+        ".godot/b306-diagnostico/carga_geometrica2_test.gd:test_clic_derecho_sobre_el_cuerpo_tambien_alterna_la_tapa",
+        "-i",
+        ".godot/b306-diagnostico/carga_geometrica2_test.gd:test_bolsa_con_tapa_cerrada_se_conserva_hasta_el_clic_abierta",
+        "-i",
+        ".godot/b306-diagnostico/carga_geometrica2_test.gd:test_reiniciar_restaura_tapa_abierta",
+        "-i",
+        ".godot/b306-diagnostico/carga_geometrica2_test.gd:test_la_tapa_se_detiene_ante_un_objeto_y_continua_cuando_se_retira",
+        "-i",
+        ".godot/b306-diagnostico/carga_geometrica2_test.gd:test_las_paredes_contienen_la_tolerancia_de_penetracion_del_motor",
+        "-i",
+        ".godot/b306-diagnostico/carga_geometrica2_test.gd:test_el_contenedor_fijo_conserva_los_viajes_del_local_y_las_bolsas"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,430 @@
+ERROR: The remote port number must be between 1 and 65535 (inclusive).
+   at: connect_to_host (core/io/stream_peer_tcp.cpp:69)
+ERROR: Remote Debugger: Unable to connect to host '127.0.0.1:0'.
+   at: create_tcp (core/debugger/remote_debugger_peer.cpp:247)
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+[2J[H[38;2;233;150;122m
+--------------------------------------------------------------------------------------------------
+GdUnit4 Comandline Tool
+--------------------------------------------------------------------------------------------------[0m
+[38;2;0;191;255mDisabled fail fast![0m
+[38;2;0;191;255mSet write reports to D:/Usuarios/fede/Documentos/Catedra Videojuegos FADU/manada/repo/nosefia/.claude/worktrees/batch-64-309-d/reports/b-306-rojo1[0m
+[38;2;218;165;32m
+Headless mode is ignored by option '--ignoreHeadlessMode'"
+
+Please note that tests that use UI interaction do not work correctly in headless mode.
+Godot 'InputEvents' are not transported by the Godot engine in headless mode and therefore
+have no effect in the test!
+[0m
+[38;2;100;149;237mInstalling GdUnit4 session system hooks.[0m
+[38;2;100;149;237mSession hook 'GdUnitHtmlTestReporter' installed.[0m
+[38;2;100;149;237mSession hook 'GdUnitXMLTestReporter' installed.[0m
+[38;2;100;149;237mInstalling GdUnit4 session hooks.[0m
+[38;2;100;149;237mSession hook 'Guardado de la sesión' installed.[0m
+ERROR: Couldn't open directory at path "user://guardado_de_los_tests_119060".
+   at: get_files_at (core/io/dir_access.cpp:578)
+   GDScript backtrace (most recent call first):
+       [0] _borrar_la_carpeta (res://test/guardado_de_la_sesion.gd:40)
+       [1] startup (res://test/guardado_de_la_sesion.gd:22)
+       [2] execute (res://addons/gdUnit4/src/core/hooks/GdUnitTestSessionHookService.gd:125)
+       [3] execute_startup (res://addons/gdUnit4/src/core/hooks/GdUnitTestSessionHookService.gd:108)
+       [4] _process (res://addons/gdUnit4/src/core/runners/GdUnitTestSessionRunner.gd:127)
+[38;2;0;206;209mRun Test Suite: [0m[38;2;250;235;215mres://test/dominio/almacen/reglas_del_cierre_test.gd[0m
+  [38;2;250;235;215mres://test/dominio/almacen/reglas_del_cierre_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_una_lista_vacia_no_produce_motivos[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/almacen/reglas_del_cierre_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_una_lista_vacia_no_produce_motivos[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 8ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/almacen/reglas_del_cierre_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_una_unidad_suelta_desordena_cualquier_habitacion[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/almacen/reglas_del_cierre_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_una_unidad_suelta_desordena_cualquier_habitacion[0m[38;2;178;34;34m[1m FAILED[0m[38;2;100;149;237m 9ms[0m
+  [38;2;0;206;209m[1m[4mReport:[0m
+  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ '[38;2;30;144;255mtrue[0m'
+ but was
+ '[38;2;30;144;255mfalse[0m'[0m[38;2;173;216;230m	at '_afirmar_estado' in res://test/dominio/almacen/reglas_del_cierre_test.gd:130
+	at 'test_una_unidad_suelta_desordena_cualquier_habitacion' in res://test/dominio/almacen/reglas_del_cierre_test.gd:15[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ '[38;2;30;144;255mtrue[0m'
+ but was
+ '[38;2;30;144;255mfalse[0m'[0m[38;2;173;216;230m	at '_afirmar_estado' in res://test/dominio/almacen/reglas_del_cierre_test.gd:130
+	at 'test_una_unidad_suelta_desordena_cualquier_habitacion' in res://test/dominio/almacen/reglas_del_cierre_test.gd:16[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ '[38;2;30;144;255mtrue[0m'
+ but was
+ '[38;2;30;144;255mfalse[0m'[0m[38;2;173;216;230m	at '_afirmar_estado' in res://test/dominio/almacen/reglas_del_cierre_test.gd:130
+	at 'test_una_unidad_suelta_desordena_cualquier_habitacion' in res://test/dominio/almacen/reglas_del_cierre_test.gd:17[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ '[38;2;30;144;255mtrue[0m'
+ but was
+ '[38;2;30;144;255mfalse[0m'[0m[38;2;173;216;230m	at '_afirmar_estado' in res://test/dominio/almacen/reglas_del_cierre_test.gd:131
+	at 'test_una_unidad_suelta_desordena_cualquier_habitacion' in res://test/dominio/almacen/reglas_del_cierre_test.gd:18[0m[38;2;128;128;128m[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/almacen/reglas_del_cierre_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_una_caja_solo_queda_ordenada_en_el_deposito[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/almacen/reglas_del_cierre_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_una_caja_solo_queda_ordenada_en_el_deposito[0m[38;2;178;34;34m[1m FAILED[0m[38;2;100;149;237m 8ms[0m
+  [38;2;0;206;209m[1m[4mReport:[0m
+  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ '[38;2;30;144;255mtrue[0m'
+ but was
+ '[38;2;30;144;255mfalse[0m'[0m[38;2;173;216;230m	at '_afirmar_estado' in res://test/dominio/almacen/reglas_del_cierre_test.gd:130
+	at 'test_una_caja_solo_queda_ordenada_en_el_deposito' in res://test/dominio/almacen/reglas_del_cierre_test.gd:22[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ '[38;2;30;144;255mtrue[0m'
+ but was
+ '[38;2;30;144;255mfalse[0m'[0m[38;2;173;216;230m	at '_afirmar_estado' in res://test/dominio/almacen/reglas_del_cierre_test.gd:130
+	at 'test_una_caja_solo_queda_ordenada_en_el_deposito' in res://test/dominio/almacen/reglas_del_cierre_test.gd:24[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ '[38;2;30;144;255mtrue[0m'
+ but was
+ '[38;2;30;144;255mfalse[0m'[0m[38;2;173;216;230m	at '_afirmar_estado' in res://test/dominio/almacen/reglas_del_cierre_test.gd:131
+	at 'test_una_caja_solo_queda_ordenada_en_el_deposito' in res://test/dominio/almacen/reglas_del_cierre_test.gd:25[0m[38;2;128;128;128m[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/almacen/reglas_del_cierre_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_un_util_solo_queda_ordenado_en_el_bano[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/almacen/reglas_del_cierre_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_un_util_solo_queda_ordenado_en_el_bano[0m[38;2;178;34;34m[1m FAILED[0m[38;2;100;149;237m 7ms[0m
+  [38;2;0;206;209m[1m[4mReport:[0m
+  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ '[38;2;30;144;255mtrue[0m'
+ but was
+ '[38;2;30;144;255mfalse[0m'[0m[38;2;173;216;230m	at '_afirmar_estado' in res://test/dominio/almacen/reglas_del_cierre_test.gd:130
+	at 'test_un_util_solo_queda_ordenado_en_el_bano' in res://test/dominio/almacen/reglas_del_cierre_test.gd:29[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ '[38;2;30;144;255mtrue[0m'
+ but was
+ '[38;2;30;144;255mfalse[0m'[0m[38;2;173;216;230m	at '_afirmar_estado' in res://test/dominio/almacen/reglas_del_cierre_test.gd:130
+	at 'test_un_util_solo_queda_ordenado_en_el_bano' in res://test/dominio/almacen/reglas_del_cierre_test.gd:30[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ '[38;2;30;144;255mtrue[0m'
+ but was
+ '[38;2;30;144;255mfalse[0m'[0m[38;2;173;216;230m	at '_afirmar_estado' in res://test/dominio/almacen/reglas_del_cierre_test.gd:131
+	at 'test_un_util_solo_queda_ordenado_en_el_bano' in res://test/dominio/almacen/reglas_del_cierre_test.gd:32[0m[38;2;128;128;128m[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/almacen/reglas_del_cierre_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_los_otros_objetos_adentro_no_producen_desorden[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/almacen/reglas_del_cierre_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_los_otros_objetos_adentro_no_producen_desorden[0m[38;2;178;34;34m[1m FAILED[0m[38;2;100;149;237m 7ms[0m
+  [38;2;0;206;209m[1m[4mReport:[0m
+  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ '[38;2;30;144;255mtrue[0m'
+ but was
+ '[38;2;30;144;255mfalse[0m'[0m[38;2;173;216;230m	at '_afirmar_estado' in res://test/dominio/almacen/reglas_del_cierre_test.gd:131
+	at 'test_los_otros_objetos_adentro_no_producen_desorden' in res://test/dominio/almacen/reglas_del_cierre_test.gd:39[0m[38;2;128;128;128m[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/almacen/reglas_del_cierre_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_un_mismo_cierre_puede_tener_desorden_y_objetos_afuera[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/almacen/reglas_del_cierre_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_un_mismo_cierre_puede_tener_desorden_y_objetos_afuera[0m[38;2;178;34;34m[1m FAILED[0m[38;2;100;149;237m 9ms[0m
+  [38;2;0;206;209m[1m[4mReport:[0m
+  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m '[38;2;30;144;255mtrue[0m' but is '[38;2;30;144;255mfalse[0m'[0m[38;2;173;216;230m	at 'test_un_mismo_cierre_puede_tener_desorden_y_objetos_afuera' in res://test/dominio/almacen/reglas_del_cierre_test.gd:47[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m '[38;2;30;144;255mtrue[0m' but is '[38;2;30;144;255mfalse[0m'[0m[38;2;173;216;230m	at 'test_un_mismo_cierre_puede_tener_desorden_y_objetos_afuera' in res://test/dominio/almacen/reglas_del_cierre_test.gd:48[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m '[38;2;30;144;255mtrue[0m' but is '[38;2;30;144;255mfalse[0m'[0m[38;2;173;216;230m	at 'test_un_mismo_cierre_puede_tener_desorden_y_objetos_afuera' in res://test/dominio/almacen/reglas_del_cierre_test.gd:50[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m '[38;2;30;144;255mtrue[0m' but is '[38;2;30;144;255mfalse[0m'[0m[38;2;173;216;230m	at 'test_un_mismo_cierre_puede_tener_desorden_y_objetos_afuera' in res://test/dominio/almacen/reglas_del_cierre_test.gd:51[0m[38;2;128;128;128m[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/almacen/reglas_del_cierre_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_la_pertenencia_sale_del_punto_y_de_las_tres_regiones[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/almacen/reglas_del_cierre_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_la_pertenencia_sale_del_punto_y_de_las_tres_regiones[0m[38;2;178;34;34m[1m FAILED[0m[38;2;100;149;237m 7ms[0m
+  [38;2;0;206;209m[1m[4mReport:[0m
+  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ [38;2;30;144;255m0[0m
+ but was
+ [38;2;30;144;255m3[0m[0m[38;2;173;216;230m	at 'test_la_pertenencia_sale_del_punto_y_de_las_tres_regiones' in res://test/dominio/almacen/reglas_del_cierre_test.gd:58[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ [38;2;30;144;255m1[0m
+ but was
+ [38;2;30;144;255m3[0m[0m[38;2;173;216;230m	at 'test_la_pertenencia_sale_del_punto_y_de_las_tres_regiones' in res://test/dominio/almacen/reglas_del_cierre_test.gd:61[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ [38;2;30;144;255m2[0m
+ but was
+ [38;2;30;144;255m3[0m[0m[38;2;173;216;230m	at 'test_la_pertenencia_sale_del_punto_y_de_las_tres_regiones' in res://test/dominio/almacen/reglas_del_cierre_test.gd:64[0m[38;2;128;128;128m[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/almacen/reglas_del_cierre_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_sin_regiones_declaradas_el_punto_queda_afuera[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/almacen/reglas_del_cierre_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_sin_regiones_declaradas_el_punto_queda_afuera[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 8ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/almacen/reglas_del_cierre_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_dos_partes_separadas_no_incluyen_el_hueco_entre_ellas[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/almacen/reglas_del_cierre_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_dos_partes_separadas_no_incluyen_el_hueco_entre_ellas[0m[38;2;178;34;34m[1m FAILED[0m[38;2;100;149;237m 8ms[0m
+  [38;2;0;206;209m[1m[4mReport:[0m
+  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ [38;2;30;144;255m2[0m
+ but was
+ [38;2;30;144;255m3[0m[0m[38;2;173;216;230m	at 'test_dos_partes_separadas_no_incluyen_el_hueco_entre_ellas' in res://test/dominio/almacen/reglas_del_cierre_test.gd:87[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ [38;2;30;144;255m2[0m
+ but was
+ [38;2;30;144;255m3[0m[0m[38;2;173;216;230m	at 'test_dos_partes_separadas_no_incluyen_el_hueco_entre_ellas' in res://test/dominio/almacen/reglas_del_cierre_test.gd:87[0m[38;2;128;128;128m[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/almacen/reglas_del_cierre_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_el_techo_alto_y_el_paso_no_agrandan_el_resto_del_bano[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/almacen/reglas_del_cierre_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_el_techo_alto_y_el_paso_no_agrandan_el_resto_del_bano[0m[38;2;178;34;34m[1m FAILED[0m[38;2;100;149;237m 8ms[0m
+  [38;2;0;206;209m[1m[4mReport:[0m
+  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ [38;2;30;144;255m2[0m
+ but was
+ [38;2;30;144;255m3[0m[0m[38;2;173;216;230m	at 'test_el_techo_alto_y_el_paso_no_agrandan_el_resto_del_bano' in res://test/dominio/almacen/reglas_del_cierre_test.gd:105[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ [38;2;30;144;255m2[0m
+ but was
+ [38;2;30;144;255m3[0m[0m[38;2;173;216;230m	at 'test_el_techo_alto_y_el_paso_no_agrandan_el_resto_del_bano' in res://test/dominio/almacen/reglas_del_cierre_test.gd:105[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ [38;2;30;144;255m2[0m
+ but was
+ [38;2;30;144;255m3[0m[0m[38;2;173;216;230m	at 'test_el_techo_alto_y_el_paso_no_agrandan_el_resto_del_bano' in res://test/dominio/almacen/reglas_del_cierre_test.gd:105[0m[38;2;128;128;128m[0m
+[38;2;128;128;128m[0m
+[38;2;30;144;255mStatistics:[0m[38;2;128;128;128m 10 test cases | 0 errors | 23 failures | 0 flaky | 0 skipped | 0 orphans |[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 164ms[0m
+[38;2;128;128;128m[0m
+[38;2;128;128;128m[0m
+[38;2;0;206;209mRun Test Suite: [0m[38;2;250;235;215mres://test/dominio/empleo/llamados_de_la_partida_test.gd[0m
+  [38;2;250;235;215mres://test/dominio/empleo/llamados_de_la_partida_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_las_bandas_suman_medios_y_no_sustituyen_llamados[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/empleo/llamados_de_la_partida_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_las_bandas_suman_medios_y_no_sustituyen_llamados[0m[38;2;178;34;34m[1m FAILED[0m[38;2;100;149;237m 6ms[0m
+  [38;2;0;206;209m[1m[4mReport:[0m
+  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ [38;2;30;144;255m6[0m
+ but was
+ [38;2;30;144;255m0[0m[0m[38;2;173;216;230m	at 'test_las_bandas_suman_medios_y_no_sustituyen_llamados' in res://test/dominio/empleo/llamados_de_la_partida_test.gd:10[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ [38;2;30;144;255m4[0m
+ but was
+ [38;2;30;144;255m0[0m[0m[38;2;173;216;230m	at 'test_las_bandas_suman_medios_y_no_sustituyen_llamados' in res://test/dominio/empleo/llamados_de_la_partida_test.gd:10[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ [38;2;30;144;255m2[0m
+ but was
+ [38;2;30;144;255m0[0m[0m[38;2;173;216;230m	at 'test_las_bandas_suman_medios_y_no_sustituyen_llamados' in res://test/dominio/empleo/llamados_de_la_partida_test.gd:10[0m[38;2;128;128;128m[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/empleo/llamados_de_la_partida_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_motivos_repetidos_y_distintos_se_cuentan_por_noche[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/empleo/llamados_de_la_partida_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_motivos_repetidos_y_distintos_se_cuentan_por_noche[0m[38;2;178;34;34m[1m FAILED[0m[38;2;100;149;237m 9ms[0m
+  [38;2;0;206;209m[1m[4mReport:[0m
+  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ [38;2;30;144;255m1[0m
+ but was
+ [38;2;30;144;255m0[0m[0m[38;2;173;216;230m	at 'test_motivos_repetidos_y_distintos_se_cuentan_por_noche' in res://test/dominio/empleo/llamados_de_la_partida_test.gd:19[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ [38;2;30;144;255m3[0m
+ but was
+ [38;2;30;144;255m0[0m[0m[38;2;173;216;230m	at 'test_motivos_repetidos_y_distintos_se_cuentan_por_noche' in res://test/dominio/empleo/llamados_de_la_partida_test.gd:24[0m[38;2;128;128;128m[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/empleo/llamados_de_la_partida_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_fuera_de_la_jornada_abierta_no_guarda_motivos[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/empleo/llamados_de_la_partida_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_fuera_de_la_jornada_abierta_no_guarda_motivos[0m[38;2;178;34;34m[1m FAILED[0m[38;2;100;149;237m 8ms[0m
+  [38;2;0;206;209m[1m[4mReport:[0m
+  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ [38;2;30;144;255m1[0m
+ but was
+ [38;2;30;144;255m0[0m[0m[38;2;173;216;230m	at 'test_fuera_de_la_jornada_abierta_no_guarda_motivos' in res://test/dominio/empleo/llamados_de_la_partida_test.gd:38[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ [38;2;30;144;255m1[0m
+ but was
+ [38;2;30;144;255m0[0m[0m[38;2;173;216;230m	at 'test_fuera_de_la_jornada_abierta_no_guarda_motivos' in res://test/dominio/empleo/llamados_de_la_partida_test.gd:41[0m[38;2;128;128;128m[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/empleo/llamados_de_la_partida_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_siete_medios_no_despiden_y_ocho_si[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/empleo/llamados_de_la_partida_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_siete_medios_no_despiden_y_ocho_si[0m[38;2;178;34;34m[1m FAILED[0m[38;2;100;149;237m 7ms[0m
+  [38;2;0;206;209m[1m[4mReport:[0m
+  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ [38;2;30;144;255m7[0m
+ but was
+ [38;2;30;144;255m0[0m[0m[38;2;173;216;230m	at 'test_siete_medios_no_despiden_y_ocho_si' in res://test/dominio/empleo/llamados_de_la_partida_test.gd:48[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ [38;2;30;144;255m8[0m
+ but was
+ [38;2;30;144;255m0[0m[0m[38;2;173;216;230m	at 'test_siete_medios_no_despiden_y_ocho_si' in res://test/dominio/empleo/llamados_de_la_partida_test.gd:48[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ '[38;2;30;144;255mtrue[0m'
+ but was
+ '[38;2;30;144;255mfalse[0m'[0m[38;2;173;216;230m	at 'test_siete_medios_no_despiden_y_ocho_si' in res://test/dominio/empleo/llamados_de_la_partida_test.gd:49[0m[38;2;128;128;128m[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/empleo/llamados_de_la_partida_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_restaurado_siete_con_impecable_conserva_siete[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/empleo/llamados_de_la_partida_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_restaurado_siete_con_impecable_conserva_siete[0m[38;2;178;34;34m[1m FAILED[0m[38;2;100;149;237m 7ms[0m
+  [38;2;0;206;209m[1m[4mReport:[0m
+  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ [38;2;30;144;255m7[0m
+ but was
+ [38;2;30;144;255m0[0m[0m[38;2;173;216;230m	at 'test_restaurado_siete_con_impecable_conserva_siete' in res://test/dominio/empleo/llamados_de_la_partida_test.gd:55[0m[38;2;128;128;128m[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/empleo/llamados_de_la_partida_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_reanudar_sanea_medios_sin_migrar_la_clave_antigua[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/empleo/llamados_de_la_partida_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_reanudar_sanea_medios_sin_migrar_la_clave_antigua[0m[38;2;178;34;34m[1m FAILED[0m[38;2;100;149;237m 7ms[0m
+  [38;2;0;206;209m[1m[4mReport:[0m
+  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ [38;2;30;144;255m7[0m
+ but was
+ [38;2;30;144;255m0[0m[0m[38;2;173;216;230m	at 'test_reanudar_sanea_medios_sin_migrar_la_clave_antigua' in res://test/dominio/empleo/llamados_de_la_partida_test.gd:63[0m[38;2;128;128;128m[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/empleo/llamados_de_la_partida_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_la_lectura_entera_del_comentario_descarta_solo_el_medio[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/empleo/llamados_de_la_partida_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_la_lectura_entera_del_comentario_descarta_solo_el_medio[0m[38;2;178;34;34m[1m FAILED[0m[38;2;100;149;237m 5ms[0m
+  [38;2;0;206;209m[1m[4mReport:[0m
+  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ [38;2;30;144;255m3[0m
+ but was
+ [38;2;30;144;255m0[0m[0m[38;2;173;216;230m	at 'test_la_lectura_entera_del_comentario_descarta_solo_el_medio' in res://test/dominio/empleo/llamados_de_la_partida_test.gd:67[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ [38;2;30;144;255m3[0m
+ but was
+ [38;2;30;144;255m0[0m[0m[38;2;173;216;230m	at 'test_la_lectura_entera_del_comentario_descarta_solo_el_medio' in res://test/dominio/empleo/llamados_de_la_partida_test.gd:68[0m[38;2;128;128;128m[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/empleo/llamados_de_la_partida_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_la_quinta_con_siete_cumple_y_con_un_motivo_despide[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/empleo/llamados_de_la_partida_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_la_quinta_con_siete_cumple_y_con_un_motivo_despide[0m[38;2;178;34;34m[1m FAILED[0m[38;2;100;149;237m 7ms[0m
+  [38;2;0;206;209m[1m[4mReport:[0m
+  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ [38;2;30;144;255m7[0m
+ but was
+ [38;2;30;144;255m0[0m[0m[38;2;173;216;230m	at 'test_la_quinta_con_siete_cumple_y_con_un_motivo_despide' in res://test/dominio/empleo/llamados_de_la_partida_test.gd:81[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ [38;2;30;144;255m7[0m
+ but was
+ [38;2;30;144;255m0[0m[0m[38;2;173;216;230m	at 'test_la_quinta_con_siete_cumple_y_con_un_motivo_despide' in res://test/dominio/empleo/llamados_de_la_partida_test.gd:85[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ [38;2;30;144;255m2[0m
+ but was
+ [38;2;30;144;255m1[0m[0m[38;2;173;216;230m	at 'test_la_quinta_con_siete_cumple_y_con_un_motivo_despide' in res://test/dominio/empleo/llamados_de_la_partida_test.gd:80[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ [38;2;30;144;255m8[0m
+ but was
+ [38;2;30;144;255m0[0m[0m[38;2;173;216;230m	at 'test_la_quinta_con_siete_cumple_y_con_un_motivo_despide' in res://test/dominio/empleo/llamados_de_la_partida_test.gd:81[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ [38;2;30;144;255m8[0m
+ but was
+ [38;2;30;144;255m0[0m[0m[38;2;173;216;230m	at 'test_la_quinta_con_siete_cumple_y_con_un_motivo_despide' in res://test/dominio/empleo/llamados_de_la_partida_test.gd:85[0m[38;2;128;128;128m[0m
+[38;2;128;128;128m[0m
+[38;2;30;144;255mStatistics:[0m[38;2;128;128;128m 8 test cases | 0 errors | 19 failures | 0 flaky | 0 skipped | 0 orphans |[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 133ms[0m
+[38;2;128;128;128m[0m
+[38;2;128;128;128m[0m
+[38;2;0;206;209mRun Test Suite: [0m[38;2;250;235;215mres://test/escenas/puestos/habitaciones_del_almacen_test.gd[0m
+  [38;2;250;235;215mres://test/escenas/puestos/habitaciones_del_almacen_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_clasifica_las_tres_habitaciones_con_lector_trasladado[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/puestos/habitaciones_del_almacen_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_clasifica_las_tres_habitaciones_con_lector_trasladado[0m[38;2;178;34;34m[1m FAILED[0m[38;2;100;149;237m 7ms[0m
+  [38;2;0;206;209m[1m[4mReport:[0m
+  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ [38;2;30;144;255m0[0m
+ but was
+ [38;2;30;144;255m3[0m[0m[38;2;173;216;230m	at '_afirmar_centros' in res://test/escenas/puestos/habitaciones_del_almacen_test.gd:92
+	at 'test_clasifica_las_tres_habitaciones_con_lector_trasladado' in res://test/escenas/puestos/habitaciones_del_almacen_test.gd:13[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ [38;2;30;144;255m1[0m
+ but was
+ [38;2;30;144;255m3[0m[0m[38;2;173;216;230m	at '_afirmar_centros' in res://test/escenas/puestos/habitaciones_del_almacen_test.gd:95
+	at 'test_clasifica_las_tres_habitaciones_con_lector_trasladado' in res://test/escenas/puestos/habitaciones_del_almacen_test.gd:13[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ [38;2;30;144;255m2[0m
+ but was
+ [38;2;30;144;255m3[0m[0m[38;2;173;216;230m	at '_afirmar_centros' in res://test/escenas/puestos/habitaciones_del_almacen_test.gd:98
+	at 'test_clasifica_las_tres_habitaciones_con_lector_trasladado' in res://test/escenas/puestos/habitaciones_del_almacen_test.gd:13[0m[38;2;128;128;128m[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/puestos/habitaciones_del_almacen_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_la_envolvente_mundial_no_agranda_una_habitacion_rotada[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/puestos/habitaciones_del_almacen_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_la_envolvente_mundial_no_agranda_una_habitacion_rotada[0m[38;2;178;34;34m[1m FAILED[0m[38;2;100;149;237m 8ms[0m
+  [38;2;0;206;209m[1m[4mReport:[0m
+  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ [38;2;30;144;255m0[0m
+ but was
+ [38;2;30;144;255m3[0m[0m[38;2;173;216;230m	at '_afirmar_centros' in res://test/escenas/puestos/habitaciones_del_almacen_test.gd:92
+	at 'test_la_envolvente_mundial_no_agranda_una_habitacion_rotada' in res://test/escenas/puestos/habitaciones_del_almacen_test.gd:22[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ [38;2;30;144;255m1[0m
+ but was
+ [38;2;30;144;255m3[0m[0m[38;2;173;216;230m	at '_afirmar_centros' in res://test/escenas/puestos/habitaciones_del_almacen_test.gd:95
+	at 'test_la_envolvente_mundial_no_agranda_una_habitacion_rotada' in res://test/escenas/puestos/habitaciones_del_almacen_test.gd:22[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ [38;2;30;144;255m2[0m
+ but was
+ [38;2;30;144;255m3[0m[0m[38;2;173;216;230m	at '_afirmar_centros' in res://test/escenas/puestos/habitaciones_del_almacen_test.gd:98
+	at 'test_la_envolvente_mundial_no_agranda_una_habitacion_rotada' in res://test/escenas/puestos/habitaciones_del_almacen_test.gd:22[0m[38;2;128;128;128m[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/puestos/habitaciones_del_almacen_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_compone_traslacion_y_rotacion_de_un_padre_real[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/puestos/habitaciones_del_almacen_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_compone_traslacion_y_rotacion_de_un_padre_real[0m[38;2;178;34;34m[1m FAILED[0m[38;2;100;149;237m 7ms[0m
+  [38;2;0;206;209m[1m[4mReport:[0m
+  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ [38;2;30;144;255m0[0m
+ but was
+ [38;2;30;144;255m3[0m[0m[38;2;173;216;230m	at '_afirmar_centros' in res://test/escenas/puestos/habitaciones_del_almacen_test.gd:92
+	at 'test_compone_traslacion_y_rotacion_de_un_padre_real' in res://test/escenas/puestos/habitaciones_del_almacen_test.gd:35[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ [38;2;30;144;255m1[0m
+ but was
+ [38;2;30;144;255m3[0m[0m[38;2;173;216;230m	at '_afirmar_centros' in res://test/escenas/puestos/habitaciones_del_almacen_test.gd:95
+	at 'test_compone_traslacion_y_rotacion_de_un_padre_real' in res://test/escenas/puestos/habitaciones_del_almacen_test.gd:35[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ [38;2;30;144;255m2[0m
+ but was
+ [38;2;30;144;255m3[0m[0m[38;2;173;216;230m	at '_afirmar_centros' in res://test/escenas/puestos/habitaciones_del_almacen_test.gd:98
+	at 'test_compone_traslacion_y_rotacion_de_un_padre_real' in res://test/escenas/puestos/habitaciones_del_almacen_test.gd:35[0m[38;2;128;128;128m[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/puestos/habitaciones_del_almacen_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_la_union_compuesta_conserva_techo_y_ancho_del_paso_bajo_un_padre[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/puestos/habitaciones_del_almacen_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_la_union_compuesta_conserva_techo_y_ancho_del_paso_bajo_un_padre[0m[38;2;178;34;34m[1m FAILED[0m[38;2;100;149;237m 9ms[0m
+  [38;2;0;206;209m[1m[4mReport:[0m
+  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ [38;2;30;144;255m2[0m
+ but was
+ [38;2;30;144;255m3[0m[0m[38;2;173;216;230m	at 'test_la_union_compuesta_conserva_techo_y_ancho_del_paso_bajo_un_padre' in res://test/escenas/puestos/habitaciones_del_almacen_test.gd:64[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ [38;2;30;144;255m2[0m
+ but was
+ [38;2;30;144;255m3[0m[0m[38;2;173;216;230m	at 'test_la_union_compuesta_conserva_techo_y_ancho_del_paso_bajo_un_padre' in res://test/escenas/puestos/habitaciones_del_almacen_test.gd:64[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ [38;2;30;144;255m2[0m
+ but was
+ [38;2;30;144;255m3[0m[0m[38;2;173;216;230m	at 'test_la_union_compuesta_conserva_techo_y_ancho_del_paso_bajo_un_padre' in res://test/escenas/puestos/habitaciones_del_almacen_test.gd:64[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ [38;2;30;144;255m2[0m
+ but was
+ [38;2;30;144;255m3[0m[0m[38;2;173;216;230m	at 'test_la_union_compuesta_conserva_techo_y_ancho_del_paso_bajo_un_padre' in res://test/escenas/puestos/habitaciones_del_almacen_test.gd:64[0m[38;2;128;128;128m[0m
+[38;2;128;128;128m[0m
+[38;2;30;144;255mStatistics:[0m[38;2;128;128;128m 4 test cases | 0 errors | 13 failures | 0 flaky | 0 skipped | 0 orphans |[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 75ms[0m
+[38;2;128;128;128m[0m
+[38;2;128;128;128m[0m
+[38;2;0;206;209mRun Test Suite: [0m[38;2;250;235;215mres://test/sistemas/marco/agarre_test.gd[0m
+  [38;2;250;235;215mres://test/sistemas/marco/agarre_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_agarrar_cuelga_el_objeto_del_punto_de_carga[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/sistemas/marco/agarre_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_agarrar_cuelga_el_objeto_del_punto_de_carga[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 9ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/sistemas/marco/agarre_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_agarrar_congela_la_fisica_de_lo_que_se_lleva[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/sistemas/marco/agarre_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_agarrar_congela_la_fisica_de_lo_que_se_lleva[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 8ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/sistemas/marco/agarre_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_soltar_conserva_la_orientacion_mundial_de_la_mano[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/sistemas/marco/agarre_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_soltar_conserva_la_orientacion_mundial_de_la_mano[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 10ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/sistemas/marco/agarre_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_lo_suelto_no_se_mueve_con_la_camara_y_vuelve_a_seguir_la_mano[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/sistemas/marco/agarre_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_lo_suelto_no_se_mueve_con_la_camara_y_vuelve_a_seguir_la_mano[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 8ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/sistemas/marco/agarre_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_con_las_manos_llenas_se_rechaza_y_no_se_mueve_nada[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/sistemas/marco/agarre_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_con_las_manos_llenas_se_rechaza_y_no_se_mueve_nada[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 8ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/sistemas/marco/agarre_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_lo_sostenido_se_puede_mover_a_otro_punto_sin_soltarlo[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/sistemas/marco/agarre_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_lo_sostenido_se_puede_mover_a_otro_punto_sin_soltarlo[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 6ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/sistemas/marco/agarre_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_devolver_a_la_mano_vuelve_al_punto_de_donde_salio[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/sistemas/marco/agarre_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_devolver_a_la_mano_vuelve_al_punto_de_donde_salio[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 7ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/sistemas/marco/agarre_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_despues_de_soltar_devolver_no_usa_el_punto_de_lo_anterior[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/sistemas/marco/agarre_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_despues_de_soltar_devolver_no_usa_el_punto_de_lo_anterior[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 7ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/sistemas/marco/agarre_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_con_las_manos_vacias_no_hay_nada_que_mover[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/sistemas/marco/agarre_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_con_las_manos_vacias_no_hay_nada_que_mover[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 5ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/sistemas/marco/agarre_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_soltar_al_frente_lleva_el_objeto_al_punto_de_soltado[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/sistemas/marco/agarre_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_soltar_al_frente_lleva_el_objeto_al_punto_de_soltado[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 7ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/sistemas/marco/agarre_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_soltar_sin_lugar_adelante_lo_deja_en_el_respaldo[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/sistemas/marco/agarre_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_soltar_sin_lugar_adelante_lo_deja_en_el_respaldo[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 7ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/sistemas/marco/agarre_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_vaciar_las_manos_vacias_no_avisa_nada[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/sistemas/marco/agarre_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_vaciar_las_manos_vacias_no_avisa_nada[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 7ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/sistemas/marco/agarre_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_vaciar_las_manos_llenas_deja_lo_que_habia_en_el_respaldo[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/sistemas/marco/agarre_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_vaciar_las_manos_llenas_deja_lo_que_habia_en_el_respaldo[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 7ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/sistemas/marco/agarre_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_el_clic_agarra_y_despues_suelta[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/sistemas/marco/agarre_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_el_clic_agarra_y_despues_suelta[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 7ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/sistemas/marco/agarre_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_agarrar_suspende_y_soltar_restaura_colisiones[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/sistemas/marco/agarre_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_agarrar_suspende_y_soltar_restaura_colisiones[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 7ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/sistemas/marco/agarre_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_dos_agarres_con_examen_restauran_sus_colisiones[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/sistemas/marco/agarre_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_dos_agarres_con_examen_restauran_sus_colisiones[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 7ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/sistemas/marco/agarre_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_vaciar_restaura_colisiones[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/sistemas/marco/agarre_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_vaciar_restaura_colisiones[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 7ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/sistemas/marco/agarre_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_agarrar_y_soltar_un_nodo_sin_colisiones[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/sistemas/marco/agarre_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_agarrar_y_soltar_un_nodo_sin_colisiones[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 7ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/sistemas/marco/agarre_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_el_lector_conserva_identidad_sin_mutar_y_se_vacia_al_salir[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/sistemas/marco/agarre_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_el_lector_conserva_identidad_sin_mutar_y_se_vacia_al_salir[0m[38;2;178;34;34m[1m FAILED[0m[38;2;100;149;237m 8ms[0m
+  [38;2;0;206;209m[1m[4mReport:[0m
+  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ [38;2;30;144;255m<RigidBody3D>[0m
+ to refer to the same object
+ '[38;2;30;144;255m<null>[0m'[0m[38;2;173;216;230m	at 'test_el_lector_conserva_identidad_sin_mutar_y_se_vacia_al_salir' in res://test/sistemas/marco/agarre_test.gd:285[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ [38;2;30;144;255m<RigidBody3D>[0m
+ to refer to the same object
+ '[38;2;30;144;255m<null>[0m'[0m[38;2;173;216;230m	at 'test_el_lector_conserva_identidad_sin_mutar_y_se_vacia_al_salir' in res://test/sistemas/marco/agarre_test.gd:286[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ [38;2;30;144;255m<RigidBody3D>[0m
+ to refer to the same object
+ '[38;2;30;144;255m<null>[0m'[0m[38;2;173;216;230m	at 'test_el_lector_conserva_identidad_sin_mutar_y_se_vacia_al_salir' in res://test/sistemas/marco/agarre_test.gd:291[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ [38;2;30;144;255m<RigidBody3D>[0m
+ to refer to the same object
+ '[38;2;30;144;255m<null>[0m'[0m[38;2;173;216;230m	at 'test_el_lector_conserva_identidad_sin_mutar_y_se_vacia_al_salir' in res://test/sistemas/marco/agarre_test.gd:293[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ [38;2;30;144;255m<RigidBody3D>[0m
+ to refer to the same object
+ '[38;2;30;144;255m<null>[0m'[0m[38;2;173;216;230m	at 'test_el_lector_conserva_identidad_sin_mutar_y_se_vacia_al_salir' in res://test/sistemas/marco/agarre_test.gd:285[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ [38;2;30;144;255m<RigidBody3D>[0m
+ to refer to the same object
+ '[38;2;30;144;255m<null>[0m'[0m[38;2;173;216;230m	at 'test_el_lector_conserva_identidad_sin_mutar_y_se_vacia_al_salir' in res://test/sistemas/marco/agarre_test.gd:286[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ [38;2;30;144;255m<RigidBody3D>[0m
+ to refer to the same object
+ '[38;2;30;144;255m<null>[0m'[0m[38;2;173;216;230m	at 'test_el_lector_conserva_identidad_sin_mutar_y_se_vacia_al_salir' in res://test/sistemas/marco/agarre_test.gd:291[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ [38;2;30;144;255m<RigidBody3D>[0m
+ to refer to the same object
+ '[38;2;30;144;255m<null>[0m'[0m[38;2;173;216;230m	at 'test_el_lector_conserva_identidad_sin_mutar_y_se_vacia_al_salir' in res://test/sistemas/marco/agarre_test.gd:293[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ [38;2;30;144;255m<RigidBody3D>[0m
+ to refer to the same object
+ '[38;2;30;144;255m<null>[0m'[0m[38;2;173;216;230m	at 'test_el_lector_conserva_identidad_sin_mutar_y_se_vacia_al_salir' in res://test/sistemas/marco/agarre_test.gd:285[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ [38;2;30;144;255m<RigidBody3D>[0m
+ to refer to the same object
+ '[38;2;30;144;255m<null>[0m'[0m[38;2;173;216;230m	at 'test_el_lector_conserva_identidad_sin_mutar_y_se_vacia_al_salir' in res://test/sistemas/marco/agarre_test.gd:286[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ [38;2;30;144;255m<RigidBody3D>[0m
+ to refer to the same object
+ '[38;2;30;144;255m<null>[0m'[0m[38;2;173;216;230m	at 'test_el_lector_conserva_identidad_sin_mutar_y_se_vacia_al_salir' in res://test/sistemas/marco/agarre_test.gd:291[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ [38;2;30;144;255m<RigidBody3D>[0m
+ to refer to the same object
+ '[38;2;30;144;255m<null>[0m'[0m[38;2;173;216;230m	at 'test_el_lector_conserva_identidad_sin_mutar_y_se_vacia_al_salir' in res://test/sistemas/marco/agarre_test.gd:293[0m[38;2;128;128;128m[0m
+[38;2;128;128;128m[0m
+[38;2;30;144;255mStatistics:[0m[38;2;128;128;128m 19 test cases | 0 errors | 12 failures | 0 flaky | 0 skipped | 0 orphans |[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 249ms[0m
+[38;2;128;128;128m[0m
+[38;2;128;128;128m[0m
+[38;2;30;144;255mOverall Summary:[0m[38;2;255;255;255m 41 test cases | 0 errors | 67 failures | 0 flaky | 0 skipped | 0 orphans |[0m
+[38;2;233;150;122mExecuted test suites: (4/4)[0m
+[38;2;233;150;122mExecuted test cases : (41/41)[0m
+[38;2;233;150;122mTotal execution time: 621ms[0m
+[38;2;255;255;255m [0m[38;2;100;149;237mOpen XML Report at: file://D:/Usuarios/fede/Documentos/Catedra Videojuegos FADU/manada/repo/nosefia/.claude/worktrees/batch-64-309-d/reports/b-306-rojo1/report_1/results.xml[0m
+[38;2;100;149;237mOpen HTML Report at: file://D:/Usuarios/fede/Documentos/Catedra Videojuegos FADU/manada/repo/nosefia/.claude/worktrees/batch-64-309-d/reports/b-306-rojo1/report_1/index.html[0m
+[38;2;178;34;34mExit code: 100[0m
+Run dispose test resources

@@ -1,0 +1,25 @@
+{
+  "head": "01bda52fac0e92b191e7c367086c9a7798e0d895",
+  "code": 100,
+  "suites": 1,
+  "cases": 11,
+  "failures": 6,
+  "errors": 0,
+  "skipped": 0,
+  "failed_cases": [
+    {
+      "suite": "contenedor_de_basura_test",
+      "case": "test_llenarlo_con_productos_no_los_comprime_a_traves_del_cuerpo_o_la_tapa",
+      "failures": [
+        "\n\nExpecting:\n must be empty but was\n '[{ \"rid\": RID(106695577567508), \"collider_id\": 1045925206264, \"collider\": CuerpoDeLaTapa:<AnimatableBody3D#1045925206264>, \"shape\": 0 }]'\n\tat '_dejar_caer_en_la_boca' in res://test/escenas/puestos/contenedor_de_basura_test.gd:392\n\tat 'test_llenarlo_con_productos_no_los_comprime_a_traves_del_cuerpo_o_la_tapa' in res://test/escenas/puestos/contenedor_de_basura_test.gd:271\n\n\t\t\t",
+        "\n\nExpecting:\n must be empty but was\n '[{ \"rid\": RID(106695577567508), \"collider_id\": 1045925206264, \"collider\": CuerpoDeLaTapa:<AnimatableBody3D#1045925206264>, \"shape\": 0 }]'\n\tat '_dejar_caer_en_la_boca' in res://test/escenas/puestos/contenedor_de_basura_test.gd:392\n\tat 'test_llenarlo_con_productos_no_los_comprime_a_traves_del_cuerpo_o_la_tapa' in res://test/escenas/puestos/contenedor_de_basura_test.gd:271\n\n\t\t\t",
+        "\n\nExpecting:\n must be empty but was\n '[{ \"rid\": RID(106695577567508), \"collider_id\": 1045925206264, \"collider\": CuerpoDeLaTapa:<AnimatableBody3D#1045925206264>, \"shape\": 0 }]'\n\tat '_dejar_caer_en_la_boca' in res://test/escenas/puestos/contenedor_de_basura_test.gd:392\n\tat 'test_llenarlo_con_productos_no_los_comprime_a_traves_del_cuerpo_o_la_tapa' in res://test/escenas/puestos/contenedor_de_basura_test.gd:271\n\n\t\t\t",
+        "\n\nExpecting:\n must be empty but was\n '[{ \"rid\": RID(106695577567508), \"collider_id\": 1045925206264, \"collider\": CuerpoDeLaTapa:<AnimatableBody3D#1045925206264>, \"shape\": 0 }]'\n\tat '_dejar_caer_en_la_boca' in res://test/escenas/puestos/contenedor_de_basura_test.gd:392\n\tat 'test_llenarlo_con_productos_no_los_comprime_a_traves_del_cuerpo_o_la_tapa' in res://test/escenas/puestos/contenedor_de_basura_test.gd:271\n\n\t\t\t",
+        "\n\nExpecting:\n must be empty but was\n '[{ \"rid\": RID(106695577567508), \"collider_id\": 1045925206264, \"collider\": CuerpoDeLaTapa:<AnimatableBody3D#1045925206264>, \"shape\": 0 }]'\n\tat '_dejar_caer_en_la_boca' in res://test/escenas/puestos/contenedor_de_basura_test.gd:392\n\tat 'test_llenarlo_con_productos_no_los_comprime_a_traves_del_cuerpo_o_la_tapa' in res://test/escenas/puestos/contenedor_de_basura_test.gd:271\n\n\t\t\t",
+        "\n\nla carga no llegó al tacho\n\tat 'test_llenarlo_con_productos_no_los_comprime_a_traves_del_cuerpo_o_la_tapa' in res://test/escenas/puestos/contenedor_de_basura_test.gd:282\n\n\t\t\t"
+      ]
+    }
+  ],
+  "raw": "D:\\temporales\\nosefia-batch-64-309\\empleo-306\\b-306-verde4-raw.log",
+  "xml_sha256": "a7436bb77a6e097c9f8c3685c053e2373a28d3a02d84cc2a2999c6c44549f38c"
+}

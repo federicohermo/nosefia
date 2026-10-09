@@ -1,0 +1,94 @@
+ERROR: The remote port number must be between 1 and 65535 (inclusive).
+   at: connect_to_host (core/io/stream_peer_tcp.cpp:69)
+ERROR: Remote Debugger: Unable to connect to host '127.0.0.1:0'.
+   at: create_tcp (core/debugger/remote_debugger_peer.cpp:247)
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+[2J[H[38;2;233;150;122m
+--------------------------------------------------------------------------------------------------
+GdUnit4 Comandline Tool
+--------------------------------------------------------------------------------------------------[0m
+[38;2;0;191;255mDisabled fail fast![0m
+[38;2;0;191;255mSet write reports to D:/Usuarios/fede/Documentos/Catedra Videojuegos FADU/manada/repo/nosefia/.claude/worktrees/batch-64-309-d/reports/b-306-carga-geometrica1-carga[0m
+[38;2;218;165;32m
+Headless mode is ignored by option '--ignoreHeadlessMode'"
+
+Please note that tests that use UI interaction do not work correctly in headless mode.
+Godot 'InputEvents' are not transported by the Godot engine in headless mode and therefore
+have no effect in the test!
+[0m
+[38;2;100;149;237mInstalling GdUnit4 session system hooks.[0m
+[38;2;100;149;237mSession hook 'GdUnitHtmlTestReporter' installed.[0m
+[38;2;100;149;237mSession hook 'GdUnitXMLTestReporter' installed.[0m
+[38;2;100;149;237mInstalling GdUnit4 session hooks.[0m
+[38;2;100;149;237mSession hook 'Guardado de la sesión' installed.[0m
+ERROR: Couldn't open directory at path "user://guardado_de_los_tests_43052".
+   at: get_files_at (core/io/dir_access.cpp:578)
+   GDScript backtrace (most recent call first):
+       [0] _borrar_la_carpeta (res://test/guardado_de_la_sesion.gd:40)
+       [1] startup (res://test/guardado_de_la_sesion.gd:22)
+       [2] execute (res://addons/gdUnit4/src/core/hooks/GdUnitTestSessionHookService.gd:125)
+       [3] execute_startup (res://addons/gdUnit4/src/core/hooks/GdUnitTestSessionHookService.gd:108)
+       [4] _process (res://addons/gdUnit4/src/core/runners/GdUnitTestSessionRunner.gd:127)
+[38;2;0;206;209mRun Test Suite: [0m[38;2;250;235;215mres://.godot/b306-diagnostico/carga_geometrica_test.gd[0m
+  [38;2;250;235;215mres://.godot/b306-diagnostico/carga_geometrica_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_llenarlo_con_productos_no_los_comprime_a_traves_del_cuerpo_o_la_tapa[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+CARGA_GEOMETRICA {"apoyo":1.17723703384399,"boca":"[P: (2.778339, 0.102237, -15.17413), S: (0.443323, 1.075, 0.523322)]","indice":0,"libre":false,"posicion":"(3.0, 1.446469, -14.55757)","tapa":"[P: (2.659, 1.15596, -15.28126), S: (0.682, 0.750546, 0.182882)]"}
+CARGA_GEOMETRICA {"apoyo":1.6264705657959,"boca":"[P: (2.778339, 0.102237, -15.17413), S: (0.443323, 1.075, 0.523322)]","indice":1,"libre":true,"posicion":"(3.0, 2.031665, -14.91247)","tapa":"[P: (2.659, 1.15596, -15.28126), S: (0.682, 0.750546, 0.182882)]"}
+CARGA_GEOMETRICA {"apoyo":1.17723703384399,"boca":"[P: (2.778339, 0.102237, -15.17413), S: (0.443323, 1.075, 0.523322)]","indice":2,"libre":true,"posicion":"(3.0, 2.121259, -14.89074)","tapa":"[P: (2.659, 1.15596, -15.28126), S: (0.682, 0.750546, 0.182882)]"}
+CARGA_GEOMETRICA {"apoyo":1.17723703384399,"boca":"[P: (2.778339, 0.102237, -15.17413), S: (0.443323, 1.075, 0.523322)]","indice":3,"libre":false,"posicion":"(3.0, 1.370679, -14.55757)","tapa":"[P: (2.659, 1.15596, -15.28126), S: (0.682, 0.750546, 0.182882)]"}
+CARGA_GEOMETRICA {"apoyo":1.42301940917969,"boca":"[P: (2.778339, 0.102237, -15.17413), S: (0.443323, 1.075, 0.523322)]","indice":4,"libre":true,"posicion":"(3.0, 2.141453, -14.88802)","tapa":"[P: (2.659, 1.15596, -15.28126), S: (0.682, 0.750546, 0.182882)]"}
+CARGA_GEOMETRICA {"apoyo":1.28887474536896,"boca":"[P: (2.778339, 0.102237, -15.17413), S: (0.443323, 1.075, 0.523322)]","indice":5,"libre":true,"posicion":"(3.0, 2.019213, -14.91248)","tapa":"[P: (2.659, 1.15596, -15.28126), S: (0.682, 0.750546, 0.182882)]"}
+CARGA_GEOMETRICA {"apoyo":1.18620145320892,"boca":"[P: (2.778339, 0.102237, -15.17413), S: (0.443323, 1.075, 0.523322)]","indice":6,"libre":false,"posicion":"(3.0, 1.409699, -14.55757)","tapa":"[P: (2.659, 1.15596, -15.28126), S: (0.682, 0.750546, 0.182882)]"}
+CARGA_GEOMETRICA {"apoyo":1.43497276306152,"boca":"[P: (2.778339, 0.102237, -15.17413), S: (0.443323, 1.075, 0.523322)]","indice":7,"libre":true,"posicion":"(3.000003, 2.059415, -14.91248)","tapa":"[P: (2.659, 1.15596, -15.28126), S: (0.682, 0.750546, 0.182882)]"}
+CARGA_GEOMETRICA {"apoyo":1.45637536048889,"boca":"[P: (2.778339, 0.102237, -15.17413), S: (0.443323, 1.075, 0.523322)]","indice":8,"libre":true,"posicion":"(2.999993, 2.105798, -14.91246)","tapa":"[P: (2.659, 1.15596, -15.28126), S: (0.682, 0.750546, 0.182882)]"}
+CARGA_GEOMETRICA {"apoyo":1.47810137271881,"boca":"[P: (2.778339, 0.102237, -15.17413), S: (0.443323, 1.075, 0.523322)]","indice":9,"libre":true,"posicion":"(3.0, 2.134022, -14.89649)","tapa":"[P: (2.659, 1.15596, -15.28126), S: (0.682, 0.750546, 0.182882)]"}
+CARGA_GEOMETRICA {"apoyo":1.54653668403625,"boca":"[P: (2.778339, 0.102237, -15.17413), S: (0.443323, 1.075, 0.523322)]","indice":10,"libre":true,"posicion":"(3.0, 2.069251, -14.8791)","tapa":"[P: (2.659, 1.15596, -15.28126), S: (0.682, 0.750546, 0.182882)]"}
+CARGA_GEOMETRICA {"apoyo":1.40215826034546,"boca":"[P: (2.778339, 0.102237, -15.17413), S: (0.443323, 1.075, 0.523322)]","indice":11,"libre":true,"posicion":"(3.0, 2.069251, -14.8791)","tapa":"[P: (2.659, 1.15596, -15.28126), S: (0.682, 0.750546, 0.182882)]"}
+CARGA_GEOMETRICA {"apoyo":1.4232029914856,"boca":"[P: (2.778339, 0.102237, -15.17413), S: (0.443323, 1.075, 0.523322)]","indice":12,"libre":false,"posicion":"(3.0, 1.389022, -14.55757)","tapa":"[P: (2.659, 1.15596, -15.28126), S: (0.682, 0.750546, 0.182882)]"}
+CARGA_GEOMETRICA {"apoyo":1.4231071472168,"boca":"[P: (2.778339, 0.102237, -15.17413), S: (0.443323, 1.075, 0.523322)]","indice":13,"libre":false,"posicion":"(3.0, 1.389022, -14.55757)","tapa":"[P: (2.659, 1.15596, -15.28126), S: (0.682, 0.750546, 0.182882)]"}
+CARGA_GEOMETRICA {"apoyo":1.41904509067535,"boca":"[P: (2.778339, 0.102237, -15.17413), S: (0.443323, 1.075, 0.523322)]","indice":14,"libre":true,"posicion":"(3.0, 2.065879, -14.91247)","tapa":"[P: (2.659, 1.15596, -15.28126), S: (0.682, 0.750546, 0.182882)]"}
+CARGA_GEOMETRICA {"apoyo":1.59246385097504,"boca":"[P: (2.778339, 0.102237, -15.17413), S: (0.443323, 1.075, 0.523322)]","indice":15,"libre":false,"posicion":"(3.0, 1.370679, -14.55757)","tapa":"[P: (2.659, 1.15596, -15.28126), S: (0.682, 0.750546, 0.182882)]"}
+CARGA_GEOMETRICA {"apoyo":1.61656141281128,"boca":"[P: (2.778339, 0.102237, -15.17413), S: (0.443323, 1.075, 0.523322)]","indice":16,"libre":false,"posicion":"(3.0, 1.584872, -14.49467)","tapa":"[P: (2.659, 1.15596, -15.28126), S: (0.682, 0.750546, 0.182882)]"}
+CARGA_GEOMETRICA {"apoyo":1.60344207286835,"boca":"[P: (2.778339, 0.102237, -15.17413), S: (0.443323, 1.075, 0.523322)]","indice":17,"libre":false,"posicion":"(3.0, 1.39971, -14.55757)","tapa":"[P: (2.659, 1.15596, -15.28126), S: (0.682, 0.750546, 0.182882)]"}
+CARGA_GEOMETRICA {"apoyo":1.52392065525055,"boca":"[P: (2.778339, 0.102237, -15.17413), S: (0.443323, 1.075, 0.523322)]","indice":18,"libre":true,"posicion":"(3.000022, 2.121619, -14.89041)","tapa":"[P: (2.659, 1.15596, -15.28126), S: (0.682, 0.750546, 0.182882)]"}
+CARGA_GEOMETRICA {"apoyo":1.60028445720673,"boca":"[P: (2.778339, 0.102237, -15.17413), S: (0.443323, 1.075, 0.523322)]","indice":19,"libre":false,"posicion":"(3.0, 1.55112, -14.55963)","tapa":"[P: (2.659, 1.15596, -15.28126), S: (0.682, 0.750546, 0.182882)]"}
+CARGA_GEOMETRICA {"apoyo":1.60521912574768,"boca":"[P: (2.778339, 0.102237, -15.17413), S: (0.443323, 1.075, 0.523322)]","indice":20,"libre":true,"posicion":"(3.0, 2.072649, -14.884)","tapa":"[P: (2.659, 1.15596, -15.28126), S: (0.682, 0.750546, 0.182882)]"}
+CARGA_GEOMETRICA {"apoyo":1.60561287403107,"boca":"[P: (2.778339, 0.102237, -15.17413), S: (0.443323, 1.075, 0.523322)]","indice":21,"libre":true,"posicion":"(3.0, 2.055673, -14.91247)","tapa":"[P: (2.659, 1.15596, -15.28126), S: (0.682, 0.750546, 0.182882)]"}
+CARGA_GEOMETRICA {"apoyo":1.67343175411224,"boca":"[P: (2.778339, 0.102237, -15.17413), S: (0.443323, 1.075, 0.523322)]","indice":22,"libre":true,"posicion":"(3.000001, 2.132207, -14.91248)","tapa":"[P: (2.659, 1.15596, -15.28126), S: (0.682, 0.750546, 0.182882)]"}
+CARGA_GEOMETRICA {"apoyo":1.84560513496399,"boca":"[P: (2.778339, 0.102237, -15.17413), S: (0.443323, 1.075, 0.523322)]","indice":23,"libre":true,"posicion":"(3.0, 2.148973, -14.91247)","tapa":"[P: (2.659, 1.15596, -15.28126), S: (0.682, 0.750546, 0.182882)]"}
+CARGA_GEOMETRICA {"apoyo":1.84240686893463,"boca":"[P: (2.778339, 0.102237, -15.17413), S: (0.443323, 1.075, 0.523322)]","indice":24,"libre":true,"posicion":"(3.0, 2.031665, -14.91247)","tapa":"[P: (2.659, 1.15596, -15.28126), S: (0.682, 0.750546, 0.182882)]"}
+CARGA_GEOMETRICA {"apoyo":1.83032083511353,"boca":"[P: (2.778339, 0.102237, -15.17413), S: (0.443323, 1.075, 0.523322)]","indice":25,"libre":true,"posicion":"(3.0, 2.12861, -14.91247)","tapa":"[P: (2.659, 1.15596, -15.28126), S: (0.682, 0.750546, 0.182882)]"}
+CARGA_GEOMETRICA {"apoyo":1.94505167007446,"boca":"[P: (2.778339, 0.102237, -15.17413), S: (0.443323, 1.075, 0.523322)]","indice":26,"libre":true,"posicion":"(3.000022, 2.119824, -14.91246)","tapa":"[P: (2.659, 1.15596, -15.28126), S: (0.682, 0.750546, 0.182882)]"}
+CARGA_GEOMETRICA {"apoyo":1.94516682624817,"boca":"[P: (2.778339, 0.102237, -15.17413), S: (0.443323, 1.075, 0.523322)]","indice":27,"libre":true,"posicion":"(3.000022, 2.119939, -14.91246)","tapa":"[P: (2.659, 1.15596, -15.28126), S: (0.682, 0.750546, 0.182882)]"}
+  [38;2;250;235;215mres://.godot/b306-diagnostico/carga_geometrica_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_llenarlo_con_productos_no_los_comprime_a_traves_del_cuerpo_o_la_tapa[0m[38;2;178;34;34m[1m FAILED[0m[38;2;100;149;237m 20s 418ms[0m
+  [38;2;0;206;209m[1m[4mReport:[0m
+  [38;2;128;128;128mno hay caída libre por la boca para esta forma[0m[38;2;173;216;230m	at '_dejar_caer_en_la_boca' in res://.godot/b306-diagnostico/carga_geometrica_test.gd:431
+	at 'test_llenarlo_con_productos_no_los_comprime_a_traves_del_cuerpo_o_la_tapa' in res://.godot/b306-diagnostico/carga_geometrica_test.gd:277
+	at '_abrir' in res://.godot/b306-diagnostico/carga_geometrica_test.gd:78[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting to be greater than:[0m
+ [38;2;30;144;255m0.000000[0m but was [38;2;30;144;255m-0.012215[0m[0m[38;2;173;216;230m	at '_dejar_caer_en_la_boca' in res://.godot/b306-diagnostico/carga_geometrica_test.gd:435
+	at 'test_llenarlo_con_productos_no_los_comprime_a_traves_del_cuerpo_o_la_tapa' in res://.godot/b306-diagnostico/carga_geometrica_test.gd:277
+	at '_abrir' in res://.godot/b306-diagnostico/carga_geometrica_test.gd:78[0m  [38;2;128;128;128mno hay caída libre por la boca para esta forma[0m[38;2;173;216;230m	at '_dejar_caer_en_la_boca' in res://.godot/b306-diagnostico/carga_geometrica_test.gd:431
+	at 'test_llenarlo_con_productos_no_los_comprime_a_traves_del_cuerpo_o_la_tapa' in res://.godot/b306-diagnostico/carga_geometrica_test.gd:277[0m  [38;2;128;128;128mno hay caída libre por la boca para esta forma[0m[38;2;173;216;230m	at '_dejar_caer_en_la_boca' in res://.godot/b306-diagnostico/carga_geometrica_test.gd:431
+	at 'test_llenarlo_con_productos_no_los_comprime_a_traves_del_cuerpo_o_la_tapa' in res://.godot/b306-diagnostico/carga_geometrica_test.gd:277[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting to be greater than:[0m
+ [38;2;30;144;255m0.000000[0m but was [38;2;30;144;255m-0.002938[0m[0m[38;2;173;216;230m	at '_dejar_caer_en_la_boca' in res://.godot/b306-diagnostico/carga_geometrica_test.gd:436
+	at 'test_llenarlo_con_productos_no_los_comprime_a_traves_del_cuerpo_o_la_tapa' in res://.godot/b306-diagnostico/carga_geometrica_test.gd:277[0m  [38;2;128;128;128mno hay caída libre por la boca para esta forma[0m[38;2;173;216;230m	at '_dejar_caer_en_la_boca' in res://.godot/b306-diagnostico/carga_geometrica_test.gd:431
+	at 'test_llenarlo_con_productos_no_los_comprime_a_traves_del_cuerpo_o_la_tapa' in res://.godot/b306-diagnostico/carga_geometrica_test.gd:277[0m  [38;2;128;128;128mno hay caída libre por la boca para esta forma[0m[38;2;173;216;230m	at '_dejar_caer_en_la_boca' in res://.godot/b306-diagnostico/carga_geometrica_test.gd:431
+	at 'test_llenarlo_con_productos_no_los_comprime_a_traves_del_cuerpo_o_la_tapa' in res://.godot/b306-diagnostico/carga_geometrica_test.gd:277[0m  [38;2;128;128;128mno hay caída libre por la boca para esta forma[0m[38;2;173;216;230m	at '_dejar_caer_en_la_boca' in res://.godot/b306-diagnostico/carga_geometrica_test.gd:431
+	at 'test_llenarlo_con_productos_no_los_comprime_a_traves_del_cuerpo_o_la_tapa' in res://.godot/b306-diagnostico/carga_geometrica_test.gd:277[0m  [38;2;128;128;128mno hay caída libre por la boca para esta forma[0m[38;2;173;216;230m	at '_dejar_caer_en_la_boca' in res://.godot/b306-diagnostico/carga_geometrica_test.gd:431
+	at 'test_llenarlo_con_productos_no_los_comprime_a_traves_del_cuerpo_o_la_tapa' in res://.godot/b306-diagnostico/carga_geometrica_test.gd:277[0m  [38;2;128;128;128mno hay caída libre por la boca para esta forma[0m[38;2;173;216;230m	at '_dejar_caer_en_la_boca' in res://.godot/b306-diagnostico/carga_geometrica_test.gd:431
+	at 'test_llenarlo_con_productos_no_los_comprime_a_traves_del_cuerpo_o_la_tapa' in res://.godot/b306-diagnostico/carga_geometrica_test.gd:277[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting to be greater than:[0m
+ [38;2;30;144;255m0.000000[0m but was [38;2;30;144;255m-0.002866[0m[0m[38;2;173;216;230m	at '_dejar_caer_en_la_boca' in res://.godot/b306-diagnostico/carga_geometrica_test.gd:436
+	at 'test_llenarlo_con_productos_no_los_comprime_a_traves_del_cuerpo_o_la_tapa' in res://.godot/b306-diagnostico/carga_geometrica_test.gd:277[0m  [38;2;128;128;128mno hay caída libre por la boca para esta forma[0m[38;2;173;216;230m	at '_dejar_caer_en_la_boca' in res://.godot/b306-diagnostico/carga_geometrica_test.gd:431
+	at 'test_llenarlo_con_productos_no_los_comprime_a_traves_del_cuerpo_o_la_tapa' in res://.godot/b306-diagnostico/carga_geometrica_test.gd:277[0m[38;2;128;128;128m[0m
+[38;2;128;128;128m[0m
+[38;2;30;144;255mStatistics:[0m[38;2;128;128;128m 1 test cases | 0 errors | 12 failures | 0 flaky | 0 skipped | 0 orphans |[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 20s 450ms[0m
+[38;2;128;128;128m[0m
+[38;2;128;128;128m[0m
+[38;2;30;144;255mOverall Summary:[0m[38;2;255;255;255m 1 test cases | 0 errors | 12 failures | 0 flaky | 0 skipped | 0 orphans |[0m
+[38;2;233;150;122mExecuted test suites: (1/1)[0m
+[38;2;233;150;122mExecuted test cases : (1/1)[0m
+[38;2;233;150;122mTotal execution time: 20s 450ms[0m
+[38;2;255;255;255m [0m[38;2;100;149;237mOpen XML Report at: file://D:/Usuarios/fede/Documentos/Catedra Videojuegos FADU/manada/repo/nosefia/.claude/worktrees/batch-64-309-d/reports/b-306-carga-geometrica1-carga/report_1/results.xml[0m
+[38;2;100;149;237mOpen HTML Report at: file://D:/Usuarios/fede/Documentos/Catedra Videojuegos FADU/manada/repo/nosefia/.claude/worktrees/batch-64-309-d/reports/b-306-carga-geometrica1-carga/report_1/index.html[0m
+[38;2;178;34;34mExit code: 100[0m
+Run dispose test resources

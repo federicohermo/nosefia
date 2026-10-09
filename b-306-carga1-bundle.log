@@ -1,0 +1,1 @@
+{"label": "b-306-carga1-carga", "code": 0, "suites": 1, "cases": 1, "names": ["test_llenarlo_con_productos_no_los_comprime_a_traves_del_cuerpo_o_la_tapa"], "failures": 0, "errors": 0, "raw": "D:\\temporales\\nosefia-batch-64-309\\empleo-306\\b-306-carga1-carga-raw.log"}

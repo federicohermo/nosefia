@@ -1,0 +1,47 @@
+--- test/escenas/objetos/caja_que_se_lleva_test.gd
++++ res://.godot/b306-diagnostico/charco_test.gd
+@@ -932,9 +932,11 @@
+ 			mancha.global_position + desde.normalized() * PARADO_DEL_CHARCO + Vector3.UP * 0.112
+ 		)
+ 		await get_tree().physics_frame
++		_b306_traza(almacen, jugador, caja, "antes_" + str(mancha.name))
+ 		_apuntar_a(jugador, mancha)
+ 		# El clic con el foco que el juego calcula solo, que acá es la mancha y no la caja.
+ 		_accion(jugador, mancha, ReglasDeLosObjetos.ACCION_AGARRAR)
++		_b306_traza(almacen, jugador, caja, "despues_" + str(mancha.name))
+ 		(
+ 			assert_object(caja.get_parent())
+ 			. override_failure_message(
+@@ -1285,3 +1287,32 @@
+ 		await get_tree().physics_frame
+ 	_comprobar_que_cayo(almacen, arriba, altura_de_arriba, "al sacar la caja de abajo")
+ 	_comprobar_que_cayo(almacen, encima, altura, "al sacar la caja de abajo de la pila")
++
++
++func _b306_golpe(golpe: Dictionary) -> Dictionary:
++	if golpe.is_empty():
++		return {}
++	var cuerpo := golpe.collider as CollisionObject3D
++	var dueno := cuerpo.shape_owner_get_owner(cuerpo.shape_find_owner(golpe.shape)) as Node
++	return {"cuerpo": str(cuerpo.get_path()), "dueno": str(dueno.get_path()), "pos": str(golpe.position), "normal": str(golpe.normal), "rid": str(golpe.rid)}
++
++func _b306_traza(almacen: Node3D, jugador: CharacterBody3D, objeto: Node3D, etapa: String) -> void:
++	var espacio := almacen.get_world_3d().direct_space_state
++	var exclusiones: Array[RID] = [jugador.get_rid(), (objeto as CollisionObject3D).get_rid()]
++	var ray := PhysicsRayQueryParameters3D.create(jugador.global_position + Vector3.UP * 0.5, Vector3(objeto.global_position.x, jugador.global_position.y + 0.5, objeto.global_position.z))
++	ray.exclude = exclusiones
++	var piso := PhysicsRayQueryParameters3D.create(jugador.global_position + Vector3.UP * 0.1, jugador.global_position + Vector3.DOWN * 5.0)
++	piso.exclude = exclusiones
++	var ojo: Transform3D = jugador.call("mira")
++	var mira := PhysicsRayQueryParameters3D.create(ojo.origin, ojo.origin - ojo.basis.z * ReglasDelJugador.ALCANCE_DE_LA_MIRA)
++	mira.exclude = exclusiones
++	var datos := {"etapa": etapa, "objeto": str(objeto.name), "pos": str(objeto.global_position), "jugador": str(jugador.global_position), "velocidad": str(jugador.velocity), "en_piso": jugador.is_on_floor(), "padre": str(objeto.get_parent().get_path()), "segmento": _b306_golpe(espacio.intersect_ray(ray)), "piso_jugador": _b306_golpe(espacio.intersect_ray(piso)), "mira": _b306_golpe(espacio.intersect_ray(mira))}
++	if objeto is RigidBody3D:
++		var cuerpo := objeto as RigidBody3D
++		var formas: Array[CollisionShape3D] = jugador.call("_formas_de", cuerpo)
++		var limites: AABB = jugador.call("_limites_de", cuerpo, formas)
++		var capsula := (jugador.get_node("Cuerpo") as CollisionShape3D).shape as CapsuleShape3D
++		var ancho := Vector2(limites.size.x, limites.size.z).length() / 2.0
++		var lugares := LugaresDelPiso.alrededor(espacio, jugador.global_position, jugador.call("frente"), capsula.radius + ancho + ReglasDeLosObjetos.ROCE, limites.size.y, ReglasDeLosObjetos.CAIDA_HASTA_EL_PISO, ReglasDeLosObjetos.LADOS_ALREDEDOR, cuerpo.collision_mask, exclusiones)
++		datos["lugares"] = str(lugares)
++	print("B306TRAZA ", JSON.stringify(datos))

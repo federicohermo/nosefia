@@ -1,0 +1,75 @@
+ERROR: The remote port number must be between 1 and 65535 (inclusive).
+   at: connect_to_host (core/io/stream_peer_tcp.cpp:69)
+ERROR: Remote Debugger: Unable to connect to host '127.0.0.1:0'.
+   at: create_tcp (core/debugger/remote_debugger_peer.cpp:247)
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+[2J[H[38;2;233;150;122m
+--------------------------------------------------------------------------------------------------
+GdUnit4 Comandline Tool
+--------------------------------------------------------------------------------------------------[0m
+[38;2;0;191;255mDisabled fail fast![0m
+[38;2;0;191;255mSet write reports to D:/Usuarios/fede/Documentos/Catedra Videojuegos FADU/manada/repo/nosefia/.claude/worktrees/batch-64-309-d/reports/b-306-carga-geometrica3-carga[0m
+[38;2;218;165;32m
+Headless mode is ignored by option '--ignoreHeadlessMode'"
+
+Please note that tests that use UI interaction do not work correctly in headless mode.
+Godot 'InputEvents' are not transported by the Godot engine in headless mode and therefore
+have no effect in the test!
+[0m
+[38;2;100;149;237mInstalling GdUnit4 session system hooks.[0m
+[38;2;100;149;237mSession hook 'GdUnitHtmlTestReporter' installed.[0m
+[38;2;100;149;237mSession hook 'GdUnitXMLTestReporter' installed.[0m
+[38;2;100;149;237mInstalling GdUnit4 session hooks.[0m
+[38;2;100;149;237mSession hook 'Guardado de la sesión' installed.[0m
+ERROR: Couldn't open directory at path "user://guardado_de_los_tests_129892".
+   at: get_files_at (core/io/dir_access.cpp:578)
+   GDScript backtrace (most recent call first):
+       [0] _borrar_la_carpeta (res://test/guardado_de_la_sesion.gd:40)
+       [1] startup (res://test/guardado_de_la_sesion.gd:22)
+       [2] execute (res://addons/gdUnit4/src/core/hooks/GdUnitTestSessionHookService.gd:125)
+       [3] execute_startup (res://addons/gdUnit4/src/core/hooks/GdUnitTestSessionHookService.gd:108)
+       [4] _process (res://addons/gdUnit4/src/core/runners/GdUnitTestSessionRunner.gd:127)
+[38;2;0;206;209mRun Test Suite: [0m[38;2;250;235;215mres://.godot/b306-diagnostico/carga_geometrica3_test.gd[0m
+  [38;2;250;235;215mres://.godot/b306-diagnostico/carga_geometrica3_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_llenarlo_con_productos_no_los_comprime_a_traves_del_cuerpo_o_la_tapa[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+CARGA_GEOMETRICA {"apoyo":1.17723703384399,"boca":"[P: (2.738, 0.102237, -15.21447), S: (0.524, 1.075, 0.603999)]","indice":0,"libre":true,"posicion":"(3.0, 1.450469, -14.91247)","tapa":"[P: (2.659, 1.15596, -15.28126), S: (0.682, 0.750546, 0.182882)]"}
+CARGA_GEOMETRICA {"apoyo":1.17723703384399,"boca":"[P: (2.738, 0.102237, -15.21447), S: (0.524, 1.075, 0.603999)]","indice":1,"libre":true,"posicion":"(3.0, 1.338315, -14.91247)","tapa":"[P: (2.659, 1.15596, -15.28126), S: (0.682, 0.750546, 0.182882)]"}
+CARGA_GEOMETRICA {"apoyo":1.17723703384399,"boca":"[P: (2.738, 0.102237, -15.21447), S: (0.524, 1.075, 0.603999)]","indice":2,"libre":true,"posicion":"(3.0, 1.39599, -14.91247)","tapa":"[P: (2.659, 1.15596, -15.28126), S: (0.682, 0.750546, 0.182882)]"}
+CARGA_GEOMETRICA {"apoyo":1.17723703384399,"boca":"[P: (2.738, 0.102237, -15.21447), S: (0.524, 1.075, 0.603999)]","indice":3,"libre":true,"posicion":"(3.0, 1.374679, -14.91247)","tapa":"[P: (2.659, 1.15596, -15.28126), S: (0.682, 0.750546, 0.182882)]"}
+CARGA_GEOMETRICA {"apoyo":1.22047328948975,"boca":"[P: (2.738, 0.102237, -15.21447), S: (0.524, 1.075, 0.603999)]","indice":4,"libre":true,"posicion":"(3.0, 1.459419, -14.91247)","tapa":"[P: (2.659, 1.15596, -15.28126), S: (0.682, 0.750546, 0.182882)]"}
+CARGA_GEOMETRICA {"apoyo":1.17836618423462,"boca":"[P: (2.738, 0.102237, -15.21447), S: (0.524, 1.075, 0.603999)]","indice":5,"libre":true,"posicion":"(3.0, 1.295073, -14.91248)","tapa":"[P: (2.659, 1.15596, -15.28126), S: (0.682, 0.750546, 0.182882)]"}
+CARGA_GEOMETRICA {"apoyo":1.18562984466553,"boca":"[P: (2.738, 0.102237, -15.21447), S: (0.524, 1.075, 0.603999)]","indice":6,"libre":true,"posicion":"(3.0, 1.422092, -14.91247)","tapa":"[P: (2.659, 1.15596, -15.28126), S: (0.682, 0.750546, 0.182882)]"}
+CARGA_GEOMETRICA {"apoyo":1.36954188346863,"boca":"[P: (2.738, 0.102237, -15.21447), S: (0.524, 1.075, 0.603999)]","indice":7,"libre":true,"posicion":"(3.000003, 1.526451, -14.91248)","tapa":"[P: (2.659, 1.15596, -15.28126), S: (0.682, 0.750546, 0.182882)]"}
+CARGA_GEOMETRICA {"apoyo":1.49602687358856,"boca":"[P: (2.738, 0.102237, -15.21447), S: (0.524, 1.075, 0.603999)]","indice":8,"libre":true,"posicion":"(2.999993, 1.699318, -14.91246)","tapa":"[P: (2.659, 1.15596, -15.28126), S: (0.682, 0.750546, 0.182882)]"}
+CARGA_GEOMETRICA {"apoyo":1.70866990089417,"boca":"[P: (2.738, 0.102237, -15.21447), S: (0.524, 1.075, 0.603999)]","indice":9,"libre":true,"posicion":"(3.0, 1.940186, -14.91247)","tapa":"[P: (2.659, 1.15596, -15.28126), S: (0.682, 0.750546, 0.182882)]"}
+CARGA_GEOMETRICA {"apoyo":1.59172511100769,"boca":"[P: (2.738, 0.102237, -15.21447), S: (0.524, 1.075, 0.603999)]","indice":10,"libre":true,"posicion":"(3.0, 1.75847, -14.91247)","tapa":"[P: (2.659, 1.15596, -15.28126), S: (0.682, 0.750546, 0.182882)]"}
+CARGA_GEOMETRICA {"apoyo":1.59354376792908,"boca":"[P: (2.738, 0.102237, -15.21447), S: (0.524, 1.075, 0.603999)]","indice":11,"libre":true,"posicion":"(3.0, 1.760288, -14.91247)","tapa":"[P: (2.659, 1.15596, -15.28126), S: (0.682, 0.750546, 0.182882)]"}
+CARGA_GEOMETRICA {"apoyo":1.64830219745636,"boca":"[P: (2.738, 0.102237, -15.21447), S: (0.524, 1.075, 0.603999)]","indice":12,"libre":true,"posicion":"(3.000002, 1.864087, -14.86524)","tapa":"[P: (2.659, 1.15596, -15.28126), S: (0.682, 0.750546, 0.182882)]"}
+CARGA_GEOMETRICA {"apoyo":1.82521414756775,"boca":"[P: (2.738, 0.102237, -15.21447), S: (0.524, 1.075, 0.603999)]","indice":13,"libre":true,"posicion":"(3.0, 2.055693, -14.91247)","tapa":"[P: (2.659, 1.15596, -15.28126), S: (0.682, 0.750546, 0.182882)]"}
+CARGA_GEOMETRICA {"apoyo":1.90308892726898,"boca":"[P: (2.738, 0.102237, -15.21447), S: (0.524, 1.075, 0.603999)]","indice":14,"libre":true,"posicion":"(3.0, 2.066461, -14.91247)","tapa":"[P: (2.659, 1.15596, -15.28126), S: (0.682, 0.750546, 0.182882)]"}
+CARGA_GEOMETRICA {"apoyo":1.81303668022156,"boca":"[P: (2.738, 0.102237, -15.21447), S: (0.524, 1.075, 0.603999)]","indice":15,"libre":true,"posicion":"(3.0, 2.010479, -14.91247)","tapa":"[P: (2.659, 1.15596, -15.28126), S: (0.682, 0.750546, 0.182882)]"}
+CARGA_GEOMETRICA {"apoyo":2.01579809188843,"boca":"[P: (2.738, 0.102237, -15.21447), S: (0.524, 1.075, 0.603999)]","indice":16,"libre":true,"posicion":"(3.0, 2.246277, -14.91247)","tapa":"[P: (2.659, 1.15596, -15.28126), S: (0.682, 0.750546, 0.182882)]"}
+CARGA_GEOMETRICA {"apoyo":2.01710414886475,"boca":"[P: (2.738, 0.102237, -15.21447), S: (0.524, 1.075, 0.603999)]","indice":17,"libre":true,"posicion":"(3.0, 2.259554, -14.91247)","tapa":"[P: (2.659, 1.15596, -15.28126), S: (0.682, 0.750546, 0.182882)]"}
+CARGA_GEOMETRICA {"apoyo":2.15170454978943,"boca":"[P: (2.738, 0.102237, -15.21447), S: (0.524, 1.075, 0.603999)]","indice":18,"libre":true,"posicion":"(3.000022, 2.370817, -14.91246)","tapa":"[P: (2.659, 1.15596, -15.28126), S: (0.682, 0.750546, 0.182882)]"}
+CARGA_GEOMETRICA {"apoyo":1.9998095035553,"boca":"[P: (2.738, 0.102237, -15.21447), S: (0.524, 1.075, 0.603999)]","indice":19,"libre":true,"posicion":"(2.999996, 2.160034, -14.91246)","tapa":"[P: (2.659, 1.15596, -15.28126), S: (0.682, 0.750546, 0.182882)]"}
+CARGA_GEOMETRICA {"apoyo":1.78566026687622,"boca":"[P: (2.738, 0.102237, -15.21447), S: (0.524, 1.075, 0.603999)]","indice":20,"libre":true,"posicion":"(3.0, 1.955803, -14.91247)","tapa":"[P: (2.659, 1.15596, -15.28126), S: (0.682, 0.750546, 0.182882)]"}
+CARGA_GEOMETRICA {"apoyo":1.55810821056366,"boca":"[P: (2.738, 0.102237, -15.21447), S: (0.524, 1.075, 0.603999)]","indice":21,"libre":true,"posicion":"(3.0, 1.711275, -14.91247)","tapa":"[P: (2.659, 1.15596, -15.28126), S: (0.682, 0.750546, 0.182882)]"}
+CARGA_GEOMETRICA {"apoyo":1.61988258361816,"boca":"[P: (2.738, 0.102237, -15.21447), S: (0.524, 1.075, 0.603999)]","indice":22,"libre":true,"posicion":"(3.000001, 1.849583, -14.91248)","tapa":"[P: (2.659, 1.15596, -15.28126), S: (0.682, 0.750546, 0.182882)]"}
+CARGA_GEOMETRICA {"apoyo":1.82566237449646,"boca":"[P: (2.738, 0.102237, -15.21447), S: (0.524, 1.075, 0.603999)]","indice":23,"libre":true,"posicion":"(3.0, 2.072129, -14.91247)","tapa":"[P: (2.659, 1.15596, -15.28126), S: (0.682, 0.750546, 0.182882)]"}
+CARGA_GEOMETRICA {"apoyo":1.81800150871277,"boca":"[P: (2.738, 0.102237, -15.21447), S: (0.524, 1.075, 0.603999)]","indice":24,"libre":true,"posicion":"(3.0, 1.979079, -14.91247)","tapa":"[P: (2.659, 1.15596, -15.28126), S: (0.682, 0.750546, 0.182882)]"}
+CARGA_GEOMETRICA {"apoyo":1.6783047914505,"boca":"[P: (2.738, 0.102237, -15.21447), S: (0.524, 1.075, 0.603999)]","indice":25,"libre":true,"posicion":"(3.0, 1.904409, -14.91247)","tapa":"[P: (2.659, 1.15596, -15.28126), S: (0.682, 0.750546, 0.182882)]"}
+CARGA_GEOMETRICA {"apoyo":1.90461874008179,"boca":"[P: (2.738, 0.102237, -15.21447), S: (0.524, 1.075, 0.603999)]","indice":26,"libre":true,"posicion":"(3.000022, 2.083391, -14.91246)","tapa":"[P: (2.659, 1.15596, -15.28126), S: (0.682, 0.750546, 0.182882)]"}
+CARGA_GEOMETRICA {"apoyo":2.0319881439209,"boca":"[P: (2.738, 0.102237, -15.21447), S: (0.524, 1.075, 0.603999)]","indice":27,"libre":true,"posicion":"(3.000022, 2.21076, -14.91246)","tapa":"[P: (2.659, 1.15596, -15.28126), S: (0.682, 0.750546, 0.182882)]"}
+  [38;2;250;235;215mres://.godot/b306-diagnostico/carga_geometrica3_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_llenarlo_con_productos_no_los_comprime_a_traves_del_cuerpo_o_la_tapa[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 20s 428ms[0m
+[38;2;128;128;128m[0m
+[38;2;30;144;255mStatistics:[0m[38;2;128;128;128m 1 test cases | 0 errors | 0 failures | 0 flaky | 0 skipped | 0 orphans |[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 20s 450ms[0m
+[38;2;128;128;128m[0m
+[38;2;128;128;128m[0m
+[38;2;30;144;255mOverall Summary:[0m[38;2;255;255;255m 1 test cases | 0 errors | 0 failures | 0 flaky | 0 skipped | 0 orphans |[0m
+[38;2;233;150;122mExecuted test suites: (1/1)[0m
+[38;2;233;150;122mExecuted test cases : (1/1)[0m
+[38;2;233;150;122mTotal execution time: 20s 450ms[0m
+[38;2;255;255;255m [0m[38;2;100;149;237mOpen XML Report at: file://D:/Usuarios/fede/Documentos/Catedra Videojuegos FADU/manada/repo/nosefia/.claude/worktrees/batch-64-309-d/reports/b-306-carga-geometrica3-carga/report_1/results.xml[0m
+[38;2;100;149;237mOpen HTML Report at: file://D:/Usuarios/fede/Documentos/Catedra Videojuegos FADU/manada/repo/nosefia/.claude/worktrees/batch-64-309-d/reports/b-306-carga-geometrica3-carga/report_1/index.html[0m
+[38;2;233;150;122mExit code: 0[0m
+Run dispose test resources

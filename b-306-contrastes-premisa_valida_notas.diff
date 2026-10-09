@@ -1,0 +1,11 @@
+--- 
++++ 
+@@ -167,7 +167,7 @@
+ 				continue
+ 			var apoyo := golpe.collider as CollisionObject3D
+ 			var dueno := apoyo.shape_owner_get_owner(apoyo.shape_find_owner(golpe.shape)) as Node
+-			if apoyo.name != "SueloSolido" and dueno.name != "VolumenDelPisoDelBano":
++			if not ReglasDeLosObjetos.se_puede_apoyar_en(golpe.normal.y):
+ 				print("B306NOTA rechazo_nombre")
+ 				continue
+ 			var posicion: Vector3 = golpe.position + Vector3.UP * 0.02

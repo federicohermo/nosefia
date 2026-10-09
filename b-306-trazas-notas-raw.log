@@ -1,0 +1,114 @@
+ERROR: The remote port number must be between 1 and 65535 (inclusive).
+   at: connect_to_host (core/io/stream_peer_tcp.cpp:69)
+ERROR: Remote Debugger: Unable to connect to host '127.0.0.1:0'.
+   at: create_tcp (core/debugger/remote_debugger_peer.cpp:247)
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+[2J[H[38;2;233;150;122m
+--------------------------------------------------------------------------------------------------
+GdUnit4 Comandline Tool
+--------------------------------------------------------------------------------------------------[0m
+[38;2;0;191;255mDisabled fail fast![0m
+[38;2;0;191;255mSet write reports to D:/Usuarios/fede/Documentos/Catedra Videojuegos FADU/manada/repo/nosefia/.claude/worktrees/batch-64-309-d/reports/b-306-trazas-notas[0m
+[38;2;218;165;32m
+Headless mode is ignored by option '--ignoreHeadlessMode'"
+
+Please note that tests that use UI interaction do not work correctly in headless mode.
+Godot 'InputEvents' are not transported by the Godot engine in headless mode and therefore
+have no effect in the test!
+[0m
+[38;2;100;149;237mInstalling GdUnit4 session system hooks.[0m
+[38;2;100;149;237mSession hook 'GdUnitHtmlTestReporter' installed.[0m
+[38;2;100;149;237mSession hook 'GdUnitXMLTestReporter' installed.[0m
+[38;2;100;149;237mInstalling GdUnit4 session hooks.[0m
+[38;2;100;149;237mSession hook 'Guardado de la sesión' installed.[0m
+ERROR: Couldn't open directory at path "user://guardado_de_los_tests_46188".
+   at: get_files_at (core/io/dir_access.cpp:578)
+   GDScript backtrace (most recent call first):
+       [0] _borrar_la_carpeta (res://test/guardado_de_la_sesion.gd:40)
+       [1] startup (res://test/guardado_de_la_sesion.gd:22)
+       [2] execute (res://addons/gdUnit4/src/core/hooks/GdUnitTestSessionHookService.gd:125)
+       [3] execute_startup (res://addons/gdUnit4/src/core/hooks/GdUnitTestSessionHookService.gd:108)
+       [4] _process (res://addons/gdUnit4/src/core/runners/GdUnitTestSessionRunner.gd:127)
+[38;2;0;206;209mRun Test Suite: [0m[38;2;250;235;215mres://.godot/b306-diagnostico/notas_test.gd[0m
+  [38;2;250;235;215mres://.godot/b306-diagnostico/notas_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_cada_hoja_se_enfoca_desde_un_lugar_transitable_y_se_lee[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+B306NOTA /root/notas_test/Almacen/Estructura/board tareas/board de tareas_002/StaticBody3D candidato=(-1.810825, 1.682598, 4.403641) piso={"cuerpo":"/root/notas_test/Almacen/Estructura/almacen/StaticBody3D","dueno":"/root/notas_test/Almacen/Estructura/almacen/StaticBody3D/CollisionShape3D","normal":"(0.0, 1.0, 0.0)","pos":"(-1.810825, 0.102237, 4.403641)","rid":"RID(5132485918720)"}
+B306NOTA rechazo_nombre
+B306NOTA /root/notas_test/Almacen/Estructura/board tareas/board de tareas_002/StaticBody3D candidato=(-1.810825, 1.682598, 4.203641) piso={"cuerpo":"/root/notas_test/Almacen/Estructura/almacen/StaticBody3D","dueno":"/root/notas_test/Almacen/Estructura/almacen/StaticBody3D/CollisionShape3D","normal":"(0.0, 1.0, 0.0)","pos":"(-1.810825, 0.102237, 4.203641)","rid":"RID(5132485918720)"}
+B306NOTA rechazo_nombre
+B306NOTA /root/notas_test/Almacen/Estructura/board tareas/board de tareas_002/StaticBody3D candidato=(-1.810825, 1.682598, 4.603641) piso={"cuerpo":"/root/notas_test/Almacen/Estructura/almacen/StaticBody3D","dueno":"/root/notas_test/Almacen/Estructura/almacen/StaticBody3D/CollisionShape3D","normal":"(0.0, 1.0, 0.0)","pos":"(-1.810825, 0.102237, 4.603641)","rid":"RID(5132485918720)"}
+B306NOTA rechazo_nombre
+B306NOTA /root/notas_test/Almacen/Estructura/board tareas/board de tareas_002/StaticBody3D candidato=(-1.810825, 1.682598, 4.003641) piso={"cuerpo":"/root/notas_test/Almacen/Estructura/almacen/StaticBody3D","dueno":"/root/notas_test/Almacen/Estructura/almacen/StaticBody3D/CollisionShape3D","normal":"(0.0, 1.0, 0.0)","pos":"(-1.810825, 0.102237, 4.003641)","rid":"RID(5132485918720)"}
+B306NOTA rechazo_nombre
+B306NOTA /root/notas_test/Almacen/Estructura/board tareas/board de tareas_002/StaticBody3D candidato=(-1.810825, 1.682598, 4.803641) piso={"cuerpo":"/root/notas_test/Almacen/Estructura/almacen/StaticBody3D","dueno":"/root/notas_test/Almacen/Estructura/almacen/StaticBody3D/CollisionShape3D","normal":"(0.0, 1.0, 0.0)","pos":"(-1.810825, 0.102237, 4.803641)","rid":"RID(5132485918720)"}
+B306NOTA rechazo_nombre
+B306NOTA /root/notas_test/Almacen/Estructura/board tareas/board de tareas_002/StaticBody3D candidato=(-1.610825, 1.682598, 4.403641) piso={"cuerpo":"/root/notas_test/Almacen/Estructura/almacen/StaticBody3D","dueno":"/root/notas_test/Almacen/Estructura/almacen/StaticBody3D/CollisionShape3D","normal":"(0.0, 1.0, 0.0)","pos":"(-1.610825, 0.102237, 4.403641)","rid":"RID(5132485918720)"}
+B306NOTA rechazo_nombre
+B306NOTA /root/notas_test/Almacen/Estructura/board tareas/board de tareas_002/StaticBody3D candidato=(-1.610825, 1.682598, 4.203641) piso={"cuerpo":"/root/notas_test/Almacen/Estructura/almacen/StaticBody3D","dueno":"/root/notas_test/Almacen/Estructura/almacen/StaticBody3D/CollisionShape3D","normal":"(0.0, 1.0, 0.0)","pos":"(-1.610825, 0.102237, 4.203641)","rid":"RID(5132485918720)"}
+B306NOTA rechazo_nombre
+B306NOTA /root/notas_test/Almacen/Estructura/board tareas/board de tareas_002/StaticBody3D candidato=(-1.610825, 1.682598, 4.603641) piso={"cuerpo":"/root/notas_test/Almacen/Estructura/almacen/StaticBody3D","dueno":"/root/notas_test/Almacen/Estructura/almacen/StaticBody3D/CollisionShape3D","normal":"(0.0, 1.0, 0.0)","pos":"(-1.610825, 0.102237, 4.603641)","rid":"RID(5132485918720)"}
+B306NOTA rechazo_nombre
+B306NOTA /root/notas_test/Almacen/Estructura/board tareas/board de tareas_002/StaticBody3D candidato=(-1.610825, 1.682598, 4.003641) piso={"cuerpo":"/root/notas_test/Almacen/Estructura/almacen/StaticBody3D","dueno":"/root/notas_test/Almacen/Estructura/almacen/StaticBody3D/CollisionShape3D","normal":"(0.0, 1.0, 0.0)","pos":"(-1.610825, 0.102237, 4.003641)","rid":"RID(5132485918720)"}
+B306NOTA rechazo_nombre
+B306NOTA /root/notas_test/Almacen/Estructura/board tareas/board de tareas_002/StaticBody3D candidato=(-1.610825, 1.682598, 4.803641) piso={"cuerpo":"/root/notas_test/Almacen/Estructura/almacen/StaticBody3D","dueno":"/root/notas_test/Almacen/Estructura/almacen/StaticBody3D/CollisionShape3D","normal":"(0.0, 1.0, 0.0)","pos":"(-1.610825, 0.102237, 4.803641)","rid":"RID(5132485918720)"}
+B306NOTA rechazo_nombre
+B306NOTA /root/notas_test/Almacen/Estructura/board tareas/board de tareas_002/StaticBody3D candidato=(-1.410825, 1.682598, 4.403641) piso={"cuerpo":"/root/notas_test/Almacen/Estructura/almacen/StaticBody3D","dueno":"/root/notas_test/Almacen/Estructura/almacen/StaticBody3D/CollisionShape3D","normal":"(0.0, 1.0, 0.0)","pos":"(-1.410825, 0.102237, 4.403641)","rid":"RID(5132485918720)"}
+B306NOTA rechazo_nombre
+B306NOTA /root/notas_test/Almacen/Estructura/board tareas/board de tareas_002/StaticBody3D candidato=(-1.410825, 1.682598, 4.203641) piso={"cuerpo":"/root/notas_test/Almacen/Estructura/almacen/StaticBody3D","dueno":"/root/notas_test/Almacen/Estructura/almacen/StaticBody3D/CollisionShape3D","normal":"(0.0, 1.0, 0.0)","pos":"(-1.410825, 0.102237, 4.203641)","rid":"RID(5132485918720)"}
+B306NOTA rechazo_nombre
+B306NOTA /root/notas_test/Almacen/Estructura/board tareas/board de tareas_002/StaticBody3D candidato=(-1.410825, 1.682598, 4.603641) piso={"cuerpo":"/root/notas_test/Almacen/Estructura/almacen/StaticBody3D","dueno":"/root/notas_test/Almacen/Estructura/almacen/StaticBody3D/CollisionShape3D","normal":"(0.0, 1.0, 0.0)","pos":"(-1.410825, 0.102237, 4.603641)","rid":"RID(5132485918720)"}
+B306NOTA rechazo_nombre
+B306NOTA /root/notas_test/Almacen/Estructura/board tareas/board de tareas_002/StaticBody3D candidato=(-1.410825, 1.682598, 4.003641) piso={"cuerpo":"/root/notas_test/Almacen/Estructura/almacen/StaticBody3D","dueno":"/root/notas_test/Almacen/Estructura/almacen/StaticBody3D/CollisionShape3D","normal":"(0.0, 1.0, 0.0)","pos":"(-1.410825, 0.102237, 4.003641)","rid":"RID(5132485918720)"}
+B306NOTA rechazo_nombre
+B306NOTA /root/notas_test/Almacen/Estructura/board tareas/board de tareas_002/StaticBody3D candidato=(-1.410825, 1.682598, 4.803641) piso={"cuerpo":"/root/notas_test/Almacen/Estructura/almacen/StaticBody3D","dueno":"/root/notas_test/Almacen/Estructura/almacen/StaticBody3D/CollisionShape3D","normal":"(0.0, 1.0, 0.0)","pos":"(-1.410825, 0.102237, 4.803641)","rid":"RID(5132485918720)"}
+B306NOTA rechazo_nombre
+B306NOTA /root/notas_test/Almacen/Estructura/board tareas/board de tareas_002/StaticBody3D candidato=(-1.210825, 1.682598, 4.403641) piso={"cuerpo":"/root/notas_test/Almacen/Estructura/almacen/StaticBody3D","dueno":"/root/notas_test/Almacen/Estructura/almacen/StaticBody3D/CollisionShape3D","normal":"(0.0, 1.0, 0.0)","pos":"(-1.210825, 0.102237, 4.403641)","rid":"RID(5132485918720)"}
+B306NOTA rechazo_nombre
+B306NOTA /root/notas_test/Almacen/Estructura/board tareas/board de tareas_002/StaticBody3D candidato=(-1.210825, 1.682598, 4.203641) piso={"cuerpo":"/root/notas_test/Almacen/Estructura/almacen/StaticBody3D","dueno":"/root/notas_test/Almacen/Estructura/almacen/StaticBody3D/CollisionShape3D","normal":"(0.0, 1.0, 0.0)","pos":"(-1.210825, 0.102237, 4.203641)","rid":"RID(5132485918720)"}
+B306NOTA rechazo_nombre
+B306NOTA /root/notas_test/Almacen/Estructura/board tareas/board de tareas_002/StaticBody3D candidato=(-1.210825, 1.682598, 4.603641) piso={"cuerpo":"/root/notas_test/Almacen/Estructura/almacen/StaticBody3D","dueno":"/root/notas_test/Almacen/Estructura/almacen/StaticBody3D/CollisionShape3D","normal":"(0.0, 1.0, 0.0)","pos":"(-1.210825, 0.102237, 4.603641)","rid":"RID(5132485918720)"}
+B306NOTA rechazo_nombre
+B306NOTA /root/notas_test/Almacen/Estructura/board tareas/board de tareas_002/StaticBody3D candidato=(-1.210825, 1.682598, 4.003641) piso={"cuerpo":"/root/notas_test/Almacen/Estructura/almacen/StaticBody3D","dueno":"/root/notas_test/Almacen/Estructura/almacen/StaticBody3D/CollisionShape3D","normal":"(0.0, 1.0, 0.0)","pos":"(-1.210825, 0.102237, 4.003641)","rid":"RID(5132485918720)"}
+B306NOTA rechazo_nombre
+B306NOTA /root/notas_test/Almacen/Estructura/board tareas/board de tareas_002/StaticBody3D candidato=(-1.210825, 1.682598, 4.803641) piso={"cuerpo":"/root/notas_test/Almacen/Estructura/almacen/StaticBody3D","dueno":"/root/notas_test/Almacen/Estructura/almacen/StaticBody3D/CollisionShape3D","normal":"(0.0, 1.0, 0.0)","pos":"(-1.210825, 0.102237, 4.803641)","rid":"RID(5132485918720)"}
+B306NOTA rechazo_nombre
+B306NOTA /root/notas_test/Almacen/Estructura/board tareas/board de tareas_002/StaticBody3D candidato=(-0.910825, 1.682598, 4.403641) piso={"cuerpo":"/root/notas_test/Almacen/Estructura/almacen/StaticBody3D","dueno":"/root/notas_test/Almacen/Estructura/almacen/StaticBody3D/CollisionShape3D","normal":"(0.0, 1.0, 0.0)","pos":"(-0.910825, 0.102237, 4.403641)","rid":"RID(5132485918720)"}
+B306NOTA rechazo_nombre
+B306NOTA /root/notas_test/Almacen/Estructura/board tareas/board de tareas_002/StaticBody3D candidato=(-0.910825, 1.682598, 4.203641) piso={"cuerpo":"/root/notas_test/Almacen/Estructura/almacen/StaticBody3D","dueno":"/root/notas_test/Almacen/Estructura/almacen/StaticBody3D/CollisionShape3D","normal":"(0.0, 1.0, 0.0)","pos":"(-0.910825, 0.102237, 4.203641)","rid":"RID(5132485918720)"}
+B306NOTA rechazo_nombre
+B306NOTA /root/notas_test/Almacen/Estructura/board tareas/board de tareas_002/StaticBody3D candidato=(-0.910825, 1.682598, 4.603641) piso={"cuerpo":"/root/notas_test/Almacen/Estructura/almacen/StaticBody3D","dueno":"/root/notas_test/Almacen/Estructura/almacen/StaticBody3D/CollisionShape3D","normal":"(0.0, 1.0, 0.0)","pos":"(-0.910825, 0.102237, 4.603641)","rid":"RID(5132485918720)"}
+B306NOTA rechazo_nombre
+B306NOTA /root/notas_test/Almacen/Estructura/board tareas/board de tareas_002/StaticBody3D candidato=(-0.910825, 1.682598, 4.003641) piso={"cuerpo":"/root/notas_test/Almacen/Estructura/almacen/StaticBody3D","dueno":"/root/notas_test/Almacen/Estructura/almacen/StaticBody3D/CollisionShape3D","normal":"(0.0, 1.0, 0.0)","pos":"(-0.910825, 0.102237, 4.003641)","rid":"RID(5132485918720)"}
+B306NOTA rechazo_nombre
+B306NOTA /root/notas_test/Almacen/Estructura/board tareas/board de tareas_002/StaticBody3D candidato=(-0.910825, 1.682598, 4.803641) piso={"cuerpo":"/root/notas_test/Almacen/Estructura/almacen/StaticBody3D","dueno":"/root/notas_test/Almacen/Estructura/almacen/StaticBody3D/CollisionShape3D","normal":"(0.0, 1.0, 0.0)","pos":"(-0.910825, 0.102237, 4.803641)","rid":"RID(5132485918720)"}
+B306NOTA rechazo_nombre
+B306NOTA /root/notas_test/Almacen/Estructura/board tareas/board de tareas_002/StaticBody3D candidato=(-0.410825, 1.682598, 4.403641) piso={"cuerpo":"/root/notas_test/Almacen/Estructura/almacen/StaticBody3D","dueno":"/root/notas_test/Almacen/Estructura/almacen/StaticBody3D/CollisionShape3D","normal":"(0.0, 1.0, 0.0)","pos":"(-0.410825, 0.102237, 4.403641)","rid":"RID(5132485918720)"}
+B306NOTA rechazo_nombre
+B306NOTA /root/notas_test/Almacen/Estructura/board tareas/board de tareas_002/StaticBody3D candidato=(-0.410825, 1.682598, 4.203641) piso={"cuerpo":"/root/notas_test/Almacen/Estructura/almacen/StaticBody3D","dueno":"/root/notas_test/Almacen/Estructura/almacen/StaticBody3D/CollisionShape3D","normal":"(0.0, 1.0, 0.0)","pos":"(-0.410825, 0.102237, 4.203641)","rid":"RID(5132485918720)"}
+B306NOTA rechazo_nombre
+B306NOTA /root/notas_test/Almacen/Estructura/board tareas/board de tareas_002/StaticBody3D candidato=(-0.410825, 1.682598, 4.603641) piso={"cuerpo":"/root/notas_test/Almacen/Estructura/almacen/StaticBody3D","dueno":"/root/notas_test/Almacen/Estructura/almacen/StaticBody3D/CollisionShape3D","normal":"(0.0, 1.0, 0.0)","pos":"(-0.410825, 0.102237, 4.603641)","rid":"RID(5132485918720)"}
+B306NOTA rechazo_nombre
+B306NOTA /root/notas_test/Almacen/Estructura/board tareas/board de tareas_002/StaticBody3D candidato=(-0.410825, 1.682598, 4.003641) piso={"cuerpo":"/root/notas_test/Almacen/Estructura/almacen/StaticBody3D","dueno":"/root/notas_test/Almacen/Estructura/almacen/StaticBody3D/CollisionShape3D","normal":"(0.0, 1.0, 0.0)","pos":"(-0.410825, 0.102237, 4.003641)","rid":"RID(5132485918720)"}
+B306NOTA rechazo_nombre
+B306NOTA /root/notas_test/Almacen/Estructura/board tareas/board de tareas_002/StaticBody3D candidato=(-0.410825, 1.682598, 4.803641) piso={"cuerpo":"/root/notas_test/Almacen/Estructura/almacen/StaticBody3D","dueno":"/root/notas_test/Almacen/Estructura/almacen/StaticBody3D/CollisionShape3D","normal":"(0.0, 1.0, 0.0)","pos":"(-0.410825, 0.102237, 4.803641)","rid":"RID(5132485918720)"}
+B306NOTA rechazo_nombre
+  [38;2;250;235;215mres://.godot/b306-diagnostico/notas_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_cada_hoja_se_enfoca_desde_un_lugar_transitable_y_se_lee[0m[38;2;178;34;34m[1m FAILED[0m[38;2;100;149;237m 191ms[0m
+  [38;2;0;206;209m[1m[4mReport:[0m
+  [38;2;128;128;128mSin lugar transitable para /root/notas_test/Almacen/Estructura/board tareas/board de tareas_002/StaticBody3D[0m[38;2;173;216;230m	at 'test_cada_hoja_se_enfoca_desde_un_lugar_transitable_y_se_lee' in res://.godot/b306-diagnostico/notas_test.gd:207
+	at '_abrir' in res://.godot/b306-diagnostico/notas_test.gd:18[0m[38;2;128;128;128m[0m
+[38;2;128;128;128m[0m
+[38;2;30;144;255mStatistics:[0m[38;2;128;128;128m 1 test cases | 0 errors | 1 failures | 0 flaky | 0 skipped | 0 orphans |[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 205ms[0m
+[38;2;128;128;128m[0m
+[38;2;128;128;128m[0m
+[38;2;30;144;255mOverall Summary:[0m[38;2;255;255;255m 1 test cases | 0 errors | 1 failures | 0 flaky | 0 skipped | 0 orphans |[0m
+[38;2;233;150;122mExecuted test suites: (1/1)[0m
+[38;2;233;150;122mExecuted test cases : (1/1)[0m
+[38;2;233;150;122mTotal execution time: 205ms[0m
+[38;2;255;255;255m [0m[38;2;100;149;237mOpen XML Report at: file://D:/Usuarios/fede/Documentos/Catedra Videojuegos FADU/manada/repo/nosefia/.claude/worktrees/batch-64-309-d/reports/b-306-trazas-notas/report_1/results.xml[0m
+[38;2;100;149;237mOpen HTML Report at: file://D:/Usuarios/fede/Documentos/Catedra Videojuegos FADU/manada/repo/nosefia/.claude/worktrees/batch-64-309-d/reports/b-306-trazas-notas/report_1/index.html[0m
+[38;2;178;34;34mExit code: 100[0m
+Run dispose test resources
+WARNING: 24 ObjectDB instances were leaked at exit (run with `--verbose` for details).
+   at: cleanup (core/object/object.cpp:2536)
+ERROR: 4 resources still in use at exit (run with --verbose for details).
+   at: clear (core/io/resource.cpp:822)

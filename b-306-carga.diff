@@ -1,0 +1,80 @@
+--- test/escenas/puestos/contenedor_de_basura_test.gd
++++ res://.godot/b306-diagnostico/carga_test.gd
+@@ -265,7 +265,10 @@
+ 		agarre.punto_de_soltado.global_position = (
+ 			centro + Vector3((indice % 3 - 1) * 0.07, 1.35, (indice % 2 - 0.5) * 0.07)
+ 		)
++		var previsto := agarre.punto_de_soltado.global_position
+ 		var unidad := agarre.soltar(true) as ObjetoAgarrable
++		if unidad != null:
++			_b306_carga(jugador, unidad, centro, previsto, indice, "soltado")
+ 		assert_object(unidad).is_not_null()
+ 		if unidad != null:
+ 			unidades.append(unidad)
+@@ -273,11 +276,14 @@
+ 			await get_tree().physics_frame
+ 	for cuadro in 120:
+ 		await get_tree().physics_frame
++	for indice: int in unidades.size():
++		_b306_carga(jugador, unidades[indice], centro, Vector3.ZERO, indice, "estable")
+ 	var dentro := 0
+ 	for unidad in unidades:
+ 		var desde := unidad.global_position - centro
+ 		if absf(desde.x) < 0.34 and absf(desde.z) < 0.38 and desde.y < 1.1:
+ 			dentro += 1
++	print("B306CARGA_TOTAL ", dentro)
+ 	assert_int(dentro).override_failure_message("la carga no llegó al tacho").is_greater(6)
+ 	var tapa: TapaDelLocal = almacen.get_node(RUTA_DE_LA_TAPA)
+ 	tapa.usar()
+@@ -348,3 +354,51 @@
+ 		assert_float(nodo.global_position.distance_to(contenedor.global_position)).is_greater_equal(
+ 			ReglasDeLaBasura.DISTANCIA_MINIMA_AL_CONTENEDOR
+ 		)
++
++
++func _b306_carga(
++	jugador: CharacterBody3D,
++	unidad: ObjetoAgarrable,
++	centro: Vector3,
++	previsto: Vector3,
++	indice: int,
++	etapa: String
++) -> void:
++	var forma: CollisionShape3D = unidad.get_node("Forma")
++	var ojo: Transform3D = jugador.call("mira")
++	var rayo := PhysicsRayQueryParameters3D.create(
++		ojo.origin, ojo.origin - ojo.basis.z * ReglasDelJugador.ALCANCE_DE_LA_MIRA
++	)
++	rayo.exclude = [jugador.get_rid(), unidad.get_rid()]
++	var golpe := jugador.get_world_3d().direct_space_state.intersect_ray(rayo)
++	var mira: Dictionary = {}
++	if not golpe.is_empty():
++		mira = {
++			"collider": str(golpe.collider.get_path()),
++			"position": str(golpe.position),
++			"normal": str(golpe.normal)
++		}
++	print(
++		"B306CARGA ",
++		JSON.stringify(
++			{
++				"indice": indice,
++				"etapa": etapa,
++				"id": str(unidad.datos.id),
++				"previsto": str(previsto),
++				"real": str(unidad.global_position),
++				"relativo": str(unidad.global_position - centro),
++				"jugador": str(jugador.global_position),
++				"ojo": str(ojo.origin),
++				"forma": forma.shape.get_class(),
++				"limites_forma": str(forma.shape.get_debug_mesh().get_aabb()),
++				"basis": str(unidad.global_basis),
++				"layer": unidad.collision_layer,
++				"mask": unidad.collision_mask,
++				"velocity": str(unidad.linear_velocity),
++				"angular_velocity": str(unidad.angular_velocity),
++				"derecho": unidad.datos.se_apoya_derecho,
++				"mira": mira
++			}
++		)
++	)

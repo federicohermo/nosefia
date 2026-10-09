@@ -1,0 +1,72 @@
+La invocación verificar.py --help se detuvo antes de que el proceso Python emitiera su resumen; stdout/stderr de nodos estaban capturados internamente y no hay raw de Godot conservado. La salida siguiente es sólo la continuación de PowerShell tras detener los PID propios y no es prueba de verificación.
+warning: in the working copy of 'docs/architecture/capacidades.md', CRLF will be replaced by LF the next time Git touches it
+warning: in the working copy of 'src/dominio/empleo/legajo.gd', CRLF will be replaced by LF the next time Git touches it
+warning: in the working copy of 'src/dominio/empleo/partida.gd', CRLF will be replaced by LF the next time Git touches it
+warning: in the working copy of 'src/dominio/empleo/partida_serializada.gd', CRLF will be replaced by LF the next time Git touches it
+warning: in the working copy of 'src/dominio/empleo/politica_de_guardado.gd', CRLF will be replaced by LF the next time Git touches it
+warning: in the working copy of 'src/escenas/almacen.gd', CRLF will be replaced by LF the next time Git touches it
+warning: in the working copy of 'src/escenas/almacen.tscn', CRLF will be replaced by LF the next time Git touches it
+warning: in the working copy of 'src/escenas/puestos/estructura_del_almacen.tscn', CRLF will be replaced by LF the next time Git touches it
+warning: in the working copy of 'src/escenas/puestos/exterior_del_almacen.gd', CRLF will be replaced by LF the next time Git touches it
+warning: in the working copy of 'test/dominio/empleo/legajo_test.gd', CRLF will be replaced by LF the next time Git touches it
+warning: in the working copy of 'test/dominio/empleo/parte_de_cierre_test.gd', CRLF will be replaced by LF the next time Git touches it
+warning: in the working copy of 'test/dominio/empleo/partida_serializada_test.gd', CRLF will be replaced by LF the next time Git touches it
+warning: in the working copy of 'test/dominio/empleo/partida_test.gd', CRLF will be replaced by LF the next time Git touches it
+warning: in the working copy of 'test/escenas/almacen_test.gd', CRLF will be replaced by LF the next time Git touches it
+warning: in the working copy of 'test/escenas/objetos/mancha_en_el_piso_test.gd', CRLF will be replaced by LF the next time Git touches it
+warning: in the working copy of 'test/sistemas/marco/guardado_test.gd', CRLF will be replaced by LF the next time Git touches it
+ docs/architecture/capacidades.md                 |  2 +
+ src/dominio/empleo/legajo.gd                     | 29 ++++++++------
+ src/dominio/empleo/partida.gd                    | 23 ++++++++---
+ src/dominio/empleo/partida_serializada.gd        |  4 +-
+ src/dominio/empleo/politica_de_guardado.gd       |  3 +-
+ src/dominio/reglas.gd                            |  3 ++
+ src/escenas/almacen.gd                           | 50 ++++++++++++++++++++++--
+ src/escenas/almacen.tscn                         |  3 +-
+ src/escenas/puestos/estructura_del_almacen.tscn  |  8 ++++
+ src/escenas/puestos/exterior_del_almacen.gd      | 10 ++++-
+ src/escenas/puestos/reposicion_manual.gd         |  7 ++++
+ src/sistemas/marco/agarre.gd                     |  4 ++
+ src/sistemas/marco/ciclo_de_jornadas.gd          |  2 +
+ test/dominio/empleo/legajo_test.gd               | 12 +++---
+ test/dominio/empleo/parte_de_cierre_test.gd      | 17 +++++++-
+ test/dominio/empleo/partida_serializada_test.gd  | 22 +++++------
+ test/dominio/empleo/partida_test.gd              | 15 ++++---
+ test/dominio/empleo/politica_de_guardado_test.gd |  4 +-
+ test/dominio/reglas_test.gd                      |  2 +
+ test/escenas/almacen_test.gd                     |  8 ++--
+ test/escenas/objetos/mancha_en_el_piso_test.gd   | 13 +-----
+ test/sistemas/marco/agarre_test.gd               | 25 ++++++++++++
+ test/sistemas/marco/ciclo_de_jornadas_test.gd    | 23 +++++++++++
+ test/sistemas/marco/enlace_de_guardado_test.gd   | 15 +++++++
+ test/sistemas/marco/guardado_test.gd             | 24 ++++++++++--
+ 25 files changed, 254 insertions(+), 74 deletions(-)
+---
+schema_version: 1
+capability_id: CAP-EMP
+status: draft
+owner: por definir
+provenance: GDD Â«ConsecuenciasÂ» y Â«FinalesÂ»; ficha Â«1. Ciclo de jornadas y sistema de puntosÂ»; migraciÃ³n de los specs 002, 016, 017
+---
+
+# Capacidad: el legajo del empleado
+
+## PropÃ³sito
+
+Llevar la cuenta de lo que el empleado debe y decidir cuÃ¡ndo lo echan. Lo Ãºnico que tiene que
+hacer bien es que las tres bandas **pesen distinto**: dos noches graves seguidas despiden y una
+---
+schema_version: 1
+capability_id: CAP-CLN
+status: draft
+owner: por definir
+provenance: GDD Â«LimpiarÂ» y Â«Sacar la basuraÂ»; ficha Â«9. Tarea: LimpiezaÂ»; migraciÃ³n de los specs 010, 015, 043; ajustes del dueÃ±o sobre duraciÃ³n de la mopa, mezcla, enjuague y agua temporal
+---
+
+# Capacidad: dejar el local en orden
+
+## PropÃ³sito
+
+Las dos obligatorias que se pagan caminando: borrar las manchas de la jornada y llevar las bolsas
+al fondo. Lo Ãºnico que tienen que hacer bien es **costar recorrido**: una tarea que se cierra con
+

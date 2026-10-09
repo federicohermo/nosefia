@@ -1,0 +1,457 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<testsuites id="2026-10-09" name="report_1" tests="35" failures="43" skipped="0" flaky="0" time="0.000">
+	<testsuite id="0" name="cierre_del_almacen_test" package="test/escenas" timestamp="2026-10-09T10:28:14" hostname="localhost" tests="7" failures="14" errors="1" skipped="0" flaky="0" time="1.038">
+		<testcase name="test_el_arranque_cabe_en_sus_habitaciones_y_no_produce_motivos" classname="cierre_del_almacen_test" time="0.221">
+			<failure message="FAILED: res://test/escenas/cierre_del_almacen_test.gd:55" type="FAILURE">
+<![CDATA[
+Expecting size:
+ 39
+ but was
+ 0
+	at 'test_el_arranque_cabe_en_sus_habitaciones_y_no_produce_motivos' in res://test/escenas/cierre_del_almacen_test.gd:55
+]]>
+			</failure>
+		</testcase>
+		<testcase name="test_cajas_utiles_y_bolsas_siguen_su_habitacion_y_los_pasos" classname="cierre_del_almacen_test" time="0.119">
+			<failure message="FAILED: res://test/escenas/cierre_del_almacen_test.gd:69" type="FAILURE">
+<![CDATA[
+Expecting:
+ 'true'
+ but was
+ 'false'
+	at 'test_cajas_utiles_y_bolsas_siguen_su_habitacion_y_los_pasos' in res://test/escenas/cierre_del_almacen_test.gd:69
+	at 'after_test' in res://test/escenas/cierre_del_almacen_test.gd:20
+]]>
+			</failure>
+			<failure message="FAILED: res://test/escenas/cierre_del_almacen_test.gd:72" type="FAILURE">
+<![CDATA[
+Expecting:
+ 'true'
+ but was
+ 'false'
+	at 'test_cajas_utiles_y_bolsas_siguen_su_habitacion_y_los_pasos' in res://test/escenas/cierre_del_almacen_test.gd:72
+	at 'after_test' in res://test/escenas/cierre_del_almacen_test.gd:20
+]]>
+			</failure>
+			<failure message="FAILED: res://test/escenas/cierre_del_almacen_test.gd:72" type="FAILURE">
+<![CDATA[
+Expecting:
+ 'true'
+ but was
+ 'false'
+	at 'test_cajas_utiles_y_bolsas_siguen_su_habitacion_y_los_pasos' in res://test/escenas/cierre_del_almacen_test.gd:72
+	at 'after_test' in res://test/escenas/cierre_del_almacen_test.gd:20
+]]>
+			</failure>
+			<failure message="FAILED: res://test/escenas/cierre_del_almacen_test.gd:69" type="FAILURE">
+<![CDATA[
+Expecting:
+ 'true'
+ but was
+ 'false'
+	at 'test_cajas_utiles_y_bolsas_siguen_su_habitacion_y_los_pasos' in res://test/escenas/cierre_del_almacen_test.gd:69
+	at 'after_test' in res://test/escenas/cierre_del_almacen_test.gd:20
+]]>
+			</failure>
+		</testcase>
+		<testcase name="test_dos_cajas_con_los_mismos_datos_no_comparten_la_exclusion_de_mano" classname="cierre_del_almacen_test" time="0.129">
+			<failure message="FAILED: res://test/escenas/cierre_del_almacen_test.gd:90" type="FAILURE">
+<![CDATA[
+Expecting: 'true' but is 'false'
+	at 'test_dos_cajas_con_los_mismos_datos_no_comparten_la_exclusion_de_mano' in res://test/escenas/cierre_del_almacen_test.gd:90
+	at 'after_test' in res://test/escenas/cierre_del_almacen_test.gd:20
+]]>
+			</failure>
+			<failure message="FAILED: res://test/escenas/cierre_del_almacen_test.gd:93" type="FAILURE">
+<![CDATA[
+Expecting: 'true' but is 'false'
+	at 'test_dos_cajas_con_los_mismos_datos_no_comparten_la_exclusion_de_mano' in res://test/escenas/cierre_del_almacen_test.gd:93
+	at 'after_test' in res://test/escenas/cierre_del_almacen_test.gd:20
+]]>
+			</failure>
+		</testcase>
+		<testcase name="test_examen_real_cuenta_el_cuerpo_y_terminar_vuelve_a_excluirlo" classname="cierre_del_almacen_test" time="0.119">
+			<failure message="FAILED: res://test/escenas/cierre_del_almacen_test.gd:107" type="FAILURE">
+<![CDATA[
+Expecting: 'true' but is 'false'
+	at 'test_examen_real_cuenta_el_cuerpo_y_terminar_vuelve_a_excluirlo' in res://test/escenas/cierre_del_almacen_test.gd:107
+	at 'after_test' in res://test/escenas/cierre_del_almacen_test.gd:20
+]]>
+			</failure>
+		</testcase>
+		<testcase name="test_bolsa_afuera_recuperada_o_tirada_sale_del_motivo" classname="cierre_del_almacen_test" time="0.124">
+			<error message="ERROR: res://test/escenas/cierre_del_almacen_test.gd:122" type="ABORT">
+<![CDATA[
+Godot Runtime Error !
+  'Invalid call to function 'interactuar (via call)' in base 'StaticBody3D (contenedor_de_basura.gd)'. Expected 0 argument(s).'
+	at 'test_bolsa_afuera_recuperada_o_tirada_sale_del_motivo' in res://test/escenas/cierre_del_almacen_test.gd:122
+	at 'after_test' in res://test/escenas/cierre_del_almacen_test.gd:20
+]]>
+			</error>
+			<failure message="FAILED: res://test/escenas/cierre_del_almacen_test.gd:118" type="FAILURE">
+<![CDATA[
+Expecting: 'true' but is 'false'
+	at 'test_bolsa_afuera_recuperada_o_tirada_sale_del_motivo' in res://test/escenas/cierre_del_almacen_test.gd:118
+	at 'after_test' in res://test/escenas/cierre_del_almacen_test.gd:20
+]]>
+			</failure>
+		</testcase>
+		<testcase name="test_dos_motivos_entregan_seis_medios_antes_del_parte_y_guardado" classname="cierre_del_almacen_test" time="0.130">
+			<failure message="FAILED: res://test/escenas/cierre_del_almacen_test.gd:145" type="FAILURE">
+<![CDATA[
+Expecting: 'true' but is 'false'
+	at 'test_dos_motivos_entregan_seis_medios_antes_del_parte_y_guardado' in res://test/escenas/cierre_del_almacen_test.gd:145
+	at 'after_test' in res://test/escenas/cierre_del_almacen_test.gd:20
+]]>
+			</failure>
+			<failure message="FAILED: res://test/escenas/cierre_del_almacen_test.gd:146" type="FAILURE">
+<![CDATA[
+Expecting: 'true' but is 'false'
+	at 'test_dos_motivos_entregan_seis_medios_antes_del_parte_y_guardado' in res://test/escenas/cierre_del_almacen_test.gd:146
+	at 'after_test' in res://test/escenas/cierre_del_almacen_test.gd:20
+]]>
+			</failure>
+			<failure message="FAILED: res://test/escenas/cierre_del_almacen_test.gd:153" type="FAILURE">
+<![CDATA[
+Expecting:
+ 6
+ but was
+ 4
+	at 'test_dos_motivos_entregan_seis_medios_antes_del_parte_y_guardado' in res://test/escenas/cierre_del_almacen_test.gd:153
+	at 'after_test' in res://test/escenas/cierre_del_almacen_test.gd:20
+]]>
+			</failure>
+			<failure message="FAILED: res://test/escenas/cierre_del_almacen_test.gd:154" type="FAILURE">
+<![CDATA[
+Expecting contains exactly elements:
+ '[4]'
+ do contains (in same order)
+ '[6]'
+but some elements where not expected:
+ '[4]'
+and could not find elements:
+ '[6]'
+	at 'test_dos_motivos_entregan_seis_medios_antes_del_parte_y_guardado' in res://test/escenas/cierre_del_almacen_test.gd:154
+	at 'after_test' in res://test/escenas/cierre_del_almacen_test.gd:20
+]]>
+			</failure>
+			<failure message="FAILED: res://test/escenas/cierre_del_almacen_test.gd:155" type="FAILURE">
+<![CDATA[
+Expecting:
+ 6
+ but was
+ 4
+	at 'test_dos_motivos_entregan_seis_medios_antes_del_parte_y_guardado' in res://test/escenas/cierre_del_almacen_test.gd:155
+	at 'after_test' in res://test/escenas/cierre_del_almacen_test.gd:20
+]]>
+			</failure>
+		</testcase>
+		<testcase name="test_las_partes_reales_respetan_techo_y_laterales_de_los_pasos" classname="cierre_del_almacen_test" time="0.125">
+		</testcase>
+	</testsuite>
+	<testsuite id="1" name="unidades_sueltas_del_cierre_test" package="test/escenas" timestamp="2026-10-09T10:28:15" hostname="localhost" tests="4" failures="9" errors="0" skipped="0" flaky="0" time="0.531">
+		<testcase name="test_suelta_en_cada_habitacion_cuenta_aunque_el_grupo_oculte_su_malla" classname="unidades_sueltas_del_cierre_test" time="0.120">
+			<failure message="FAILED: res://test/escenas/unidades_sueltas_del_cierre_test.gd:46" type="FAILURE">
+<![CDATA[
+Expecting: 'true' but is 'false'
+	at 'test_suelta_en_cada_habitacion_cuenta_aunque_el_grupo_oculte_su_malla' in res://test/escenas/unidades_sueltas_del_cierre_test.gd:46
+]]>
+			</failure>
+			<failure message="FAILED: res://test/escenas/unidades_sueltas_del_cierre_test.gd:46" type="FAILURE">
+<![CDATA[
+Expecting: 'true' but is 'false'
+	at 'test_suelta_en_cada_habitacion_cuenta_aunque_el_grupo_oculte_su_malla' in res://test/escenas/unidades_sueltas_del_cierre_test.gd:46
+]]>
+			</failure>
+			<failure message="FAILED: res://test/escenas/unidades_sueltas_del_cierre_test.gd:46" type="FAILURE">
+<![CDATA[
+Expecting: 'true' but is 'false'
+	at 'test_suelta_en_cada_habitacion_cuenta_aunque_el_grupo_oculte_su_malla' in res://test/escenas/unidades_sueltas_del_cierre_test.gd:46
+]]>
+			</failure>
+			<failure message="FAILED: res://test/escenas/unidades_sueltas_del_cierre_test.gd:48" type="FAILURE">
+<![CDATA[
+Expecting contains exactly elements:
+ '<empty>'
+ do contains (in same order)
+ '[ObjetoAgarrable:<RigidBody3D#958230696645>]'
+but could not find elements:
+ '[ObjetoAgarrable:<RigidBody3D#958230696645>]'
+	at 'test_suelta_en_cada_habitacion_cuenta_aunque_el_grupo_oculte_su_malla' in res://test/escenas/unidades_sueltas_del_cierre_test.gd:48
+]]>
+			</failure>
+			<failure message="FAILED: res://test/escenas/unidades_sueltas_del_cierre_test.gd:50" type="FAILURE">
+<![CDATA[
+Expecting size:
+ 1
+ but was
+ 0
+	at 'test_suelta_en_cada_habitacion_cuenta_aunque_el_grupo_oculte_su_malla' in res://test/escenas/unidades_sueltas_del_cierre_test.gd:50
+]]>
+			</failure>
+		</testcase>
+		<testcase name="test_devolver_o_colocar_retira_suelta_y_no_cuenta_el_repuesto" classname="unidades_sueltas_del_cierre_test" time="0.124">
+			<failure message="FAILED: res://test/escenas/unidades_sueltas_del_cierre_test.gd:59" type="FAILURE">
+<![CDATA[
+Expecting: 'true' but is 'false'
+	at 'test_devolver_o_colocar_retira_suelta_y_no_cuenta_el_repuesto' in res://test/escenas/unidades_sueltas_del_cierre_test.gd:59
+	at 'after_test' in res://test/escenas/unidades_sueltas_del_cierre_test.gd:19
+]]>
+			</failure>
+		</testcase>
+		<testcase name="test_la_unidad_en_examen_vuelve_a_la_foto_sin_reingresar_al_grupo" classname="unidades_sueltas_del_cierre_test" time="0.119">
+			<failure message="FAILED: res://test/escenas/unidades_sueltas_del_cierre_test.gd:78" type="FAILURE">
+<![CDATA[
+Expecting: 'true' but is 'false'
+	at 'test_la_unidad_en_examen_vuelve_a_la_foto_sin_reingresar_al_grupo' in res://test/escenas/unidades_sueltas_del_cierre_test.gd:78
+	at 'after_test' in res://test/escenas/unidades_sueltas_del_cierre_test.gd:19
+]]>
+			</failure>
+		</testcase>
+		<testcase name="test_recuperar_la_unidad_de_afuera_y_soltar_adentro_cambia_el_motivo" classname="unidades_sueltas_del_cierre_test" time="0.123">
+			<failure message="FAILED: res://test/escenas/unidades_sueltas_del_cierre_test.gd:94" type="FAILURE">
+<![CDATA[
+Expecting: 'true' but is 'false'
+	at 'test_recuperar_la_unidad_de_afuera_y_soltar_adentro_cambia_el_motivo' in res://test/escenas/unidades_sueltas_del_cierre_test.gd:94
+	at 'after_test' in res://test/escenas/unidades_sueltas_del_cierre_test.gd:19
+]]>
+			</failure>
+			<failure message="FAILED: res://test/escenas/unidades_sueltas_del_cierre_test.gd:100" type="FAILURE">
+<![CDATA[
+Expecting: 'true' but is 'false'
+	at 'test_recuperar_la_unidad_de_afuera_y_soltar_adentro_cambia_el_motivo' in res://test/escenas/unidades_sueltas_del_cierre_test.gd:100
+	at 'after_test' in res://test/escenas/unidades_sueltas_del_cierre_test.gd:19
+]]>
+			</failure>
+		</testcase>
+	</testsuite>
+	<testsuite id="2" name="soporte_del_exterior_test" package="test/escenas" timestamp="2026-10-09T10:28:15" hostname="localhost" tests="2" failures="16" errors="0" skipped="0" flaky="0" time="4.710">
+		<testcase name="test_cada_pavimento_tiene_soporte_con_sus_mismos_triangulos" classname="soporte_del_exterior_test" time="0.007">
+			<failure message="FAILED: res://test/escenas/soporte_del_exterior_test.gd:30" type="FAILURE">
+<![CDATA[
+Expecting size:
+ 1
+ but was
+ 0
+	at 'test_cada_pavimento_tiene_soporte_con_sus_mismos_triangulos' in res://test/escenas/soporte_del_exterior_test.gd:30
+]]>
+			</failure>
+			<failure message="FAILED: res://test/escenas/soporte_del_exterior_test.gd:30" type="FAILURE">
+<![CDATA[
+Expecting size:
+ 1
+ but was
+ 0
+	at 'test_cada_pavimento_tiene_soporte_con_sus_mismos_triangulos' in res://test/escenas/soporte_del_exterior_test.gd:30
+]]>
+			</failure>
+			<failure message="FAILED: res://test/escenas/soporte_del_exterior_test.gd:30" type="FAILURE">
+<![CDATA[
+Expecting size:
+ 1
+ but was
+ 0
+	at 'test_cada_pavimento_tiene_soporte_con_sus_mismos_triangulos' in res://test/escenas/soporte_del_exterior_test.gd:30
+]]>
+			</failure>
+			<failure message="FAILED: res://test/escenas/soporte_del_exterior_test.gd:30" type="FAILURE">
+<![CDATA[
+Expecting size:
+ 1
+ but was
+ 0
+	at 'test_cada_pavimento_tiene_soporte_con_sus_mismos_triangulos' in res://test/escenas/soporte_del_exterior_test.gd:30
+]]>
+			</failure>
+			<failure message="FAILED: res://test/escenas/soporte_del_exterior_test.gd:30" type="FAILURE">
+<![CDATA[
+Expecting size:
+ 1
+ but was
+ 0
+	at 'test_cada_pavimento_tiene_soporte_con_sus_mismos_triangulos' in res://test/escenas/soporte_del_exterior_test.gd:30
+]]>
+			</failure>
+			<failure message="FAILED: res://test/escenas/soporte_del_exterior_test.gd:30" type="FAILURE">
+<![CDATA[
+Expecting size:
+ 1
+ but was
+ 0
+	at 'test_cada_pavimento_tiene_soporte_con_sus_mismos_triangulos' in res://test/escenas/soporte_del_exterior_test.gd:30
+]]>
+			</failure>
+		</testcase>
+		<testcase name="test_los_dos_laterales_reales_dejan_caer_apoyar_y_recoger_una_unidad" classname="soporte_del_exterior_test" time="4.667">
+			<failure message="FAILED: res://test/escenas/soporte_del_exterior_test.gd:70" type="FAILURE">
+<![CDATA[
+Expecting to be less than:
+ 0.100000 but was 0.267334
+	at 'test_los_dos_laterales_reales_dejan_caer_apoyar_y_recoger_una_unidad' in res://test/escenas/soporte_del_exterior_test.gd:70
+	at 'after_test' in res://test/escenas/soporte_del_exterior_test.gd:18
+]]>
+			</failure>
+			<failure message="FAILED: res://test/escenas/soporte_del_exterior_test.gd:74" type="FAILURE">
+<![CDATA[
+Expecting to be greater than:
+ -1.500000 but was -1.583667
+	at 'test_los_dos_laterales_reales_dejan_caer_apoyar_y_recoger_una_unidad' in res://test/escenas/soporte_del_exterior_test.gd:74
+	at 'after_test' in res://test/escenas/soporte_del_exterior_test.gd:18
+]]>
+			</failure>
+			<failure message="FAILED: res://test/escenas/soporte_del_exterior_test.gd:75" type="FAILURE">
+<![CDATA[
+Expecting to be less than:
+ -1.400000 but was -1.316333
+	at 'test_los_dos_laterales_reales_dejan_caer_apoyar_y_recoger_una_unidad' in res://test/escenas/soporte_del_exterior_test.gd:75
+	at 'after_test' in res://test/escenas/soporte_del_exterior_test.gd:18
+]]>
+			</failure>
+			<failure message="FAILED: res://test/escenas/soporte_del_exterior_test.gd:86" type="FAILURE">
+<![CDATA[
+Expecting to be greater than:
+ -0.037763 but was -16.482271
+	at 'test_los_dos_laterales_reales_dejan_caer_apoyar_y_recoger_una_unidad' in res://test/escenas/soporte_del_exterior_test.gd:86
+]]>
+			</failure>
+			<failure message="FAILED: res://test/escenas/soporte_del_exterior_test.gd:90" type="FAILURE">
+<![CDATA[
+Expecting:
+ '(-1.45, -22.82739, 6.615248)'
+ in range between
+ '(-1.48, -16.51227, 6.585248)' <> '(-1.42, -16.45227, 6.645248)'
+	at 'test_los_dos_laterales_reales_dejan_caer_apoyar_y_recoger_una_unidad' in res://test/escenas/soporte_del_exterior_test.gd:90
+]]>
+			</failure>
+			<failure message="FAILED: res://test/escenas/soporte_del_exterior_test.gd:70" type="FAILURE">
+<![CDATA[
+Expecting to be less than:
+ 0.100000 but was 0.267334
+	at 'test_los_dos_laterales_reales_dejan_caer_apoyar_y_recoger_una_unidad' in res://test/escenas/soporte_del_exterior_test.gd:70
+]]>
+			</failure>
+			<failure message="FAILED: res://test/escenas/soporte_del_exterior_test.gd:74" type="FAILURE">
+<![CDATA[
+Expecting to be greater than:
+ -0.200000 but was -0.283667
+	at 'test_los_dos_laterales_reales_dejan_caer_apoyar_y_recoger_una_unidad' in res://test/escenas/soporte_del_exterior_test.gd:74
+]]>
+			</failure>
+			<failure message="FAILED: res://test/escenas/soporte_del_exterior_test.gd:75" type="FAILURE">
+<![CDATA[
+Expecting to be less than:
+ -0.100000 but was -0.016333
+	at 'test_los_dos_laterales_reales_dejan_caer_apoyar_y_recoger_una_unidad' in res://test/escenas/soporte_del_exterior_test.gd:75
+]]>
+			</failure>
+			<failure message="FAILED: res://test/escenas/soporte_del_exterior_test.gd:86" type="FAILURE">
+<![CDATA[
+Expecting to be greater than:
+ -0.037763 but was -16.778568
+	at 'test_los_dos_laterales_reales_dejan_caer_apoyar_y_recoger_una_unidad' in res://test/escenas/soporte_del_exterior_test.gd:86
+]]>
+			</failure>
+			<failure message="FAILED: res://test/escenas/soporte_del_exterior_test.gd:90" type="FAILURE">
+<![CDATA[
+Expecting:
+ '(-0.15, -23.16756, 6.615248)'
+ in range between
+ '(-0.18, -16.80857, 6.585248)' <> '(-0.12, -16.74857, 6.645248)'
+	at 'test_los_dos_laterales_reales_dejan_caer_apoyar_y_recoger_una_unidad' in res://test/escenas/soporte_del_exterior_test.gd:90
+]]>
+			</failure>
+		</testcase>
+	</testsuite>
+	<testsuite id="3" name="ciclo_de_jornadas_test" package="test/sistemas/marco" timestamp="2026-10-09T10:28:20" hostname="localhost" tests="5" failures="2" errors="0" skipped="0" flaky="0" time="0.063">
+		<testcase name="test_arrancar_deja_el_reloj_corriendo_con_las_tareas_alcanzables" classname="ciclo_de_jornadas_test" time="0.006">
+		</testcase>
+		<testcase name="test_la_partida_entera_cierra_cada_jornada_incluida_la_ultima" classname="ciclo_de_jornadas_test" time="0.006">
+		</testcase>
+		<testcase name="test_sobre_una_partida_que_termino_no_se_abre_nada_ni_se_emite_nada" classname="ciclo_de_jornadas_test" time="0.004">
+		</testcase>
+		<testcase name="test_el_ciclo_no_decide_como_pesa_una_jornada" classname="ciclo_de_jornadas_test" time="0.006">
+		</testcase>
+		<testcase name="test_agotar_avisa_una_vez_antes_del_registro_y_del_cierre" classname="ciclo_de_jornadas_test" time="0.006">
+			<failure message="FAILED: res://test/sistemas/marco/ciclo_de_jornadas_test.gd:103" type="FAILURE">
+<![CDATA[
+Expecting:
+ 5
+ but was
+ 4
+	at '<anonymous lambda>' in res://test/sistemas/marco/ciclo_de_jornadas_test.gd:103
+	at '_al_cerrar_el_turno' in res://src/sistemas/marco/ciclo_de_jornadas.gd:58
+	at '_process' in res://src/sistemas/marco/reloj_del_turno.gd:40
+	at '_agotar_la_noche' in res://test/sistemas/marco/ciclo_de_jornadas_test.gd:126
+	at 'test_agotar_avisa_una_vez_antes_del_registro_y_del_cierre' in res://test/sistemas/marco/ciclo_de_jornadas_test.gd:107
+]]>
+			</failure>
+			<failure message="FAILED: res://test/sistemas/marco/ciclo_de_jornadas_test.gd:109" type="FAILURE">
+<![CDATA[
+Expecting contains exactly elements:
+ '["cierre"]'
+ do contains (in same order)
+ '["foto", "cierre"]'
+but could not find elements:
+ '["foto"]'
+	at 'test_agotar_avisa_una_vez_antes_del_registro_y_del_cierre' in res://test/sistemas/marco/ciclo_de_jornadas_test.gd:109
+]]>
+			</failure>
+		</testcase>
+	</testsuite>
+	<testsuite id="4" name="enlace_de_guardado_test" package="test/sistemas/marco" timestamp="2026-10-09T10:28:20" hostname="localhost" tests="6" failures="2" errors="0" skipped="0" flaky="0" time="0.094">
+		<testcase name="test_el_cierre_de_una_jornada_intermedia_guarda_una_vez" classname="enlace_de_guardado_test" time="0.012">
+		</testcase>
+		<testcase name="test_el_ultimo_cierre_borra_con_una_sola_llamada" classname="enlace_de_guardado_test" time="0.008">
+		</testcase>
+		<testcase name="test_dos_noches_graves_seguidas_borran_el_guardado" classname="enlace_de_guardado_test" time="0.007">
+		</testcase>
+		<testcase name="test_un_disco_que_falla_no_frena_la_partida" classname="enlace_de_guardado_test" time="0.006">
+		</testcase>
+		<testcase name="test_el_enlace_no_decide" classname="enlace_de_guardado_test" time="0.005">
+		</testcase>
+		<testcase name="test_el_checkpoint_ya_contiene_los_siete_medios_del_cierre" classname="enlace_de_guardado_test" time="0.014">
+			<failure message="FAILED: res://test/sistemas/marco/enlace_de_guardado_test.gd:136" type="FAILURE">
+<![CDATA[
+Expecting:
+ 7
+ but was
+ 6
+	at 'test_el_checkpoint_ya_contiene_los_siete_medios_del_cierre' in res://test/sistemas/marco/enlace_de_guardado_test.gd:136
+]]>
+			</failure>
+			<failure message="FAILED: res://test/sistemas/marco/enlace_de_guardado_test.gd:137" type="FAILURE">
+<![CDATA[
+Expecting:
+ 7
+ but was
+ 6
+	at 'test_el_checkpoint_ya_contiene_los_siete_medios_del_cierre' in res://test/sistemas/marco/enlace_de_guardado_test.gd:137
+]]>
+			</failure>
+		</testcase>
+	</testsuite>
+	<testsuite id="5" name="guardado_test" package="test/sistemas/marco" timestamp="2026-10-09T10:28:20" hostname="localhost" tests="11" failures="0" errors="0" skipped="0" flaky="0" time="0.171">
+		<testcase name="test_ida_y_vuelta_por_disco_con_los_tipos_intactos" classname="guardado_test" time="0.009">
+		</testcase>
+		<testcase name="test_lo_que_falta_o_esta_mal_tipado_en_disco_vuelve_con_su_defecto" classname="guardado_test" time="0.008">
+		</testcase>
+		<testcase name="test_una_version_futura_no_carga_y_no_se_borra" classname="guardado_test" time="0.008">
+		</testcase>
+		<testcase name="test_un_guardado_sin_version_carga" classname="guardado_test" time="0.008">
+		</testcase>
+		<testcase name="test_sin_archivo_cargar_da_vacio" classname="guardado_test" time="0.005">
+		</testcase>
+		<testcase name="test_un_archivo_corrupto_da_vacio_y_se_borra" classname="guardado_test" time="0.008">
+		</testcase>
+		<testcase name="test_un_archivo_que_no_es_un_diccionario_tambien_es_corrupto" classname="guardado_test" time="0.007">
+		</testcase>
+		<testcase name="test_borrar_saca_el_archivo" classname="guardado_test" time="0.008">
+		</testcase>
+		<testcase name="test_retomar_arranca_donde_quedo" classname="guardado_test" time="0.008">
+		</testcase>
+		<testcase name="test_un_guardado_nuevo_toma_la_ruta_por_defecto" classname="guardado_test" time="0.007">
+		</testcase>
+		<testcase name="test_archivo_real_con_medios_antiguo_y_mal_tipo" classname="guardado_test" time="0.030">
+		</testcase>
+	</testsuite>
+</testsuites>

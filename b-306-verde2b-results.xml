@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<testsuites id="2026-10-09" name="report_1" tests="35" failures="0" skipped="0" flaky="0" time="0.000">
+	<testsuite id="0" name="cierre_del_almacen_test" package="test/escenas" timestamp="2026-10-09T10:36:09" hostname="localhost" tests="7" failures="0" errors="0" skipped="0" flaky="0" time="1.003">
+		<testcase name="test_el_arranque_cabe_en_sus_habitaciones_y_no_produce_motivos" classname="cierre_del_almacen_test" time="0.173">
+		</testcase>
+		<testcase name="test_cajas_utiles_y_bolsas_siguen_su_habitacion_y_los_pasos" classname="cierre_del_almacen_test" time="0.128">
+		</testcase>
+		<testcase name="test_dos_cajas_con_los_mismos_datos_no_comparten_la_exclusion_de_mano" classname="cierre_del_almacen_test" time="0.124">
+		</testcase>
+		<testcase name="test_examen_real_cuenta_el_cuerpo_y_terminar_vuelve_a_excluirlo" classname="cierre_del_almacen_test" time="0.125">
+		</testcase>
+		<testcase name="test_bolsa_afuera_recuperada_o_tirada_sale_del_motivo" classname="cierre_del_almacen_test" time="0.126">
+		</testcase>
+		<testcase name="test_dos_motivos_entregan_seis_medios_antes_del_parte_y_guardado" classname="cierre_del_almacen_test" time="0.137">
+		</testcase>
+		<testcase name="test_las_partes_reales_respetan_techo_y_laterales_de_los_pasos" classname="cierre_del_almacen_test" time="0.141">
+		</testcase>
+	</testsuite>
+	<testsuite id="1" name="unidades_sueltas_del_cierre_test" package="test/escenas" timestamp="2026-10-09T10:36:10" hostname="localhost" tests="4" failures="0" errors="0" skipped="0" flaky="0" time="0.548">
+		<testcase name="test_suelta_en_cada_habitacion_cuenta_aunque_el_grupo_oculte_su_malla" classname="unidades_sueltas_del_cierre_test" time="0.137">
+		</testcase>
+		<testcase name="test_devolver_o_colocar_retira_suelta_y_no_cuenta_el_repuesto" classname="unidades_sueltas_del_cierre_test" time="0.131">
+		</testcase>
+		<testcase name="test_la_unidad_en_examen_vuelve_a_la_foto_sin_reingresar_al_grupo" classname="unidades_sueltas_del_cierre_test" time="0.122">
+		</testcase>
+		<testcase name="test_recuperar_la_unidad_de_afuera_y_soltar_adentro_cambia_el_motivo" classname="unidades_sueltas_del_cierre_test" time="0.127">
+		</testcase>
+	</testsuite>
+	<testsuite id="2" name="soporte_del_exterior_test" package="test/escenas" timestamp="2026-10-09T10:36:11" hostname="localhost" tests="2" failures="0" errors="1" skipped="0" flaky="0" time="4.841">
+		<testcase name="test_cada_pavimento_tiene_soporte_con_sus_mismos_triangulos" classname="soporte_del_exterior_test" time="0.009">
+		</testcase>
+		<testcase name="test_los_dos_laterales_reales_dejan_caer_apoyar_y_recoger_un_cuerpo" classname="soporte_del_exterior_test" time="4.811">
+			<error message="ERROR: res://test/escenas/soporte_del_exterior_test.gd:863" type="ABORT">
+<![CDATA[
+Godot Runtime Error !
+  'Invalid type in function '_repintar' in base 'Node3D (reposicion_manual.gd)'. The Object-derived class of argument 1 (previously freed) is not a subclass of the expected argument class.'
+	at '_al_enfocar' in res://src/escenas/puestos/reposicion_manual.gd:863
+	at '_leer_la_mira' in res://src/escenas/jugador.gd:490
+	at 'test_los_dos_laterales_reales_dejan_caer_apoyar_y_recoger_un_cuerpo' in res://test/escenas/soporte_del_exterior_test.gd:101
+]]>
+			</error>
+		</testcase>
+	</testsuite>
+	<testsuite id="3" name="ciclo_de_jornadas_test" package="test/sistemas/marco" timestamp="2026-10-09T10:36:16" hostname="localhost" tests="5" failures="0" errors="0" skipped="0" flaky="0" time="0.055">
+		<testcase name="test_arrancar_deja_el_reloj_corriendo_con_las_tareas_alcanzables" classname="ciclo_de_jornadas_test" time="0.005">
+		</testcase>
+		<testcase name="test_la_partida_entera_cierra_cada_jornada_incluida_la_ultima" classname="ciclo_de_jornadas_test" time="0.005">
+		</testcase>
+		<testcase name="test_sobre_una_partida_que_termino_no_se_abre_nada_ni_se_emite_nada" classname="ciclo_de_jornadas_test" time="0.005">
+		</testcase>
+		<testcase name="test_el_ciclo_no_decide_como_pesa_una_jornada" classname="ciclo_de_jornadas_test" time="0.005">
+		</testcase>
+		<testcase name="test_agotar_avisa_una_vez_antes_del_registro_y_del_cierre" classname="ciclo_de_jornadas_test" time="0.005">
+		</testcase>
+	</testsuite>
+	<testsuite id="4" name="enlace_de_guardado_test" package="test/sistemas/marco" timestamp="2026-10-09T10:36:16" hostname="localhost" tests="6" failures="0" errors="0" skipped="0" flaky="0" time="0.082">
+		<testcase name="test_el_cierre_de_una_jornada_intermedia_guarda_una_vez" classname="enlace_de_guardado_test" time="0.007">
+		</testcase>
+		<testcase name="test_el_ultimo_cierre_borra_con_una_sola_llamada" classname="enlace_de_guardado_test" time="0.007">
+		</testcase>
+		<testcase name="test_dos_noches_graves_seguidas_borran_el_guardado" classname="enlace_de_guardado_test" time="0.008">
+		</testcase>
+		<testcase name="test_un_disco_que_falla_no_frena_la_partida" classname="enlace_de_guardado_test" time="0.007">
+		</testcase>
+		<testcase name="test_el_enlace_no_decide" classname="enlace_de_guardado_test" time="0.006">
+		</testcase>
+		<testcase name="test_el_checkpoint_ya_contiene_los_siete_medios_del_cierre" classname="enlace_de_guardado_test" time="0.008">
+		</testcase>
+	</testsuite>
+	<testsuite id="5" name="guardado_test" package="test/sistemas/marco" timestamp="2026-10-09T10:36:16" hostname="localhost" tests="11" failures="0" errors="0" skipped="0" flaky="0" time="0.150">
+		<testcase name="test_ida_y_vuelta_por_disco_con_los_tipos_intactos" classname="guardado_test" time="0.009">
+		</testcase>
+		<testcase name="test_lo_que_falta_o_esta_mal_tipado_en_disco_vuelve_con_su_defecto" classname="guardado_test" time="0.008">
+		</testcase>
+		<testcase name="test_una_version_futura_no_carga_y_no_se_borra" classname="guardado_test" time="0.008">
+		</testcase>
+		<testcase name="test_un_guardado_sin_version_carga" classname="guardado_test" time="0.008">
+		</testcase>
+		<testcase name="test_sin_archivo_cargar_da_vacio" classname="guardado_test" time="0.007">
+		</testcase>
+		<testcase name="test_un_archivo_corrupto_da_vacio_y_se_borra" classname="guardado_test" time="0.009">
+		</testcase>
+		<testcase name="test_un_archivo_que_no_es_un_diccionario_tambien_es_corrupto" classname="guardado_test" time="0.007">
+		</testcase>
+		<testcase name="test_borrar_saca_el_archivo" classname="guardado_test" time="0.008">
+		</testcase>
+		<testcase name="test_retomar_arranca_donde_quedo" classname="guardado_test" time="0.008">
+		</testcase>
+		<testcase name="test_un_guardado_nuevo_toma_la_ruta_por_defecto" classname="guardado_test" time="0.007">
+		</testcase>
+		<testcase name="test_archivo_real_con_medios_antiguo_y_mal_tipo" classname="guardado_test" time="0.013">
+		</testcase>
+	</testsuite>
+</testsuites>

@@ -1,0 +1,15 @@
+{
+  "head": "789ce08184f9bbf7ba5df765a2cffe72609d0070",
+  "code": 0,
+  "count_code": 0,
+  "count": "reports/report_11: 214 suites corridas, 214 archivos `*_test.gd`\n",
+  "elapsed": 758.7989304065704,
+  "raw": "D:\\temporales\\nosefia-batch-64-309\\empleo-306\\b-306-full3-tests-crudo.log",
+  "xml": "D:\\temporales\\nosefia-batch-64-309\\empleo-306\\b-306-full3-results.xml",
+  "xml_sha256": "327f1f0a2429b51039db2f8b7fce10b72893044aee35a7f4903f2847a266ec40",
+  "suites": 214,
+  "cases": 1671,
+  "errors": 0,
+  "failures": 0,
+  "skipped": 0
+}

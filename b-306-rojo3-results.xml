@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<testsuites id="2026-10-09" name="report_1" tests="3" failures="3" skipped="0" flaky="0" time="0.000">
+	<testsuite id="0" name="lugares_del_piso_test" package="test/sistemas/marco" timestamp="2026-10-09T11:23:38" hostname="localhost" tests="3" failures="3" errors="0" skipped="0" flaky="0" time="0.087">
+		<testcase name="test_los_lugares_arrancan_por_adelante_y_saltean_donde_no_hay_piso" classname="lugares_del_piso_test" time="0.006">
+		</testcase>
+		<testcase name="test_sin_piso_no_hay_lugar" classname="lugares_del_piso_test" time="0.013">
+		</testcase>
+		<testcase name="test_el_piso_del_otro_lado_de_una_pared_no_es_un_lugar_cercano" classname="lugares_del_piso_test" time="0.045">
+			<failure message="FAILED: res://test/sistemas/marco/lugares_del_piso_test.gd:93" type="FAILURE">
+<![CDATA[
+Expecting to be greater than:
+ -0.500000 but was -2.500000
+	at 'test_el_piso_del_otro_lado_de_una_pared_no_es_un_lugar_cercano' in res://test/sistemas/marco/lugares_del_piso_test.gd:93
+]]>
+			</failure>
+			<failure message="FAILED: res://test/sistemas/marco/lugares_del_piso_test.gd:93" type="FAILURE">
+<![CDATA[
+Expecting to be greater than:
+ -0.500000 but was -1.767767
+	at 'test_el_piso_del_otro_lado_de_una_pared_no_es_un_lugar_cercano' in res://test/sistemas/marco/lugares_del_piso_test.gd:93
+]]>
+			</failure>
+			<failure message="FAILED: res://test/sistemas/marco/lugares_del_piso_test.gd:93" type="FAILURE">
+<![CDATA[
+Expecting to be greater than:
+ -0.500000 but was -1.767767
+	at 'test_el_piso_del_otro_lado_de_una_pared_no_es_un_lugar_cercano' in res://test/sistemas/marco/lugares_del_piso_test.gd:93
+]]>
+			</failure>
+		</testcase>
+	</testsuite>
+</testsuites>

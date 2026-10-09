@@ -1,0 +1,9 @@
+{
+  "head": "11301e9df6fd2510b4fa2ff1c0fd6db9d25fe963",
+  "whole_readback_exact": true,
+  "sha256_normalized": "61b278c1ed6a7b09f4ee4f38467880e3d435d999a9e3bf1e4b871102c78e3e33",
+  "criteria": 19,
+  "parts": 10,
+  "write_paths": 43,
+  "read_paths": 28
+}

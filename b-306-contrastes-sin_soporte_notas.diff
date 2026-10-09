@@ -1,0 +1,22 @@
+--- 
++++ 
+@@ -11,6 +11,7 @@
+ func _abrir() -> Node3D:
+ 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
+ 	add_child(almacen)
++	_b306_sin_soporte(almacen)
+ 	var jugador: Node3D = almacen.get_node("Jugador")
+ 	jugador.set_physics_process(false)
+ 	for _cuadro in 4:
+@@ -340,3 +341,11 @@
+ 		var lugares := LugaresDelPiso.alrededor(espacio, jugador.global_position, jugador.call("frente"), capsula.radius + ancho + ReglasDeLosObjetos.ROCE, limites.size.y, ReglasDeLosObjetos.CAIDA_HASTA_EL_PISO, ReglasDeLosObjetos.LADOS_ALREDEDOR, cuerpo.collision_mask, exclusiones)
+ 		datos["lugares"] = str(lugares)
+ 	print("B306TRAZA ", JSON.stringify(datos))
++
++
++func _b306_sin_soporte(almacen: Node3D) -> void:
++	var cuerpos := almacen.get_node("Exterior").find_children("*", "StaticBody3D", true, false)
++	assert_int(cuerpos.size()).is_equal(6)
++	for cuerpo: StaticBody3D in cuerpos:
++		cuerpo.collision_layer = 0
++	print("B306SINSOPORTE cuerpos_desactivados=", cuerpos.size())

@@ -1,0 +1,36 @@
+--- 
++++ 
+@@ -928,10 +928,29 @@
+ 			_accion(jugador, caja, ReglasDeLosObjetos.ACCION_AGARRAR)
+ 		var desde := jugador.global_position - mancha.global_position
+ 		desde.y = 0.0
+-		jugador.global_position = (
+-			mancha.global_position + desde.normalized() * PARADO_DEL_CHARCO + Vector3.UP * 0.112
+-		)
+-		await get_tree().physics_frame
++		var local: CollisionShape3D = almacen.get_node("Estructura/SueloSolido/Local")
++		var limites_del_piso := local.global_transform * local.shape.get_debug_mesh().get_aabb()
++		var parada := mancha.global_position + desde.normalized() * PARADO_DEL_CHARCO
++		parada.y = limites_del_piso.end.y + 0.02
++		jugador.velocity = Vector3.ZERO
++		await _parar_al_jugador_en(jugador, parada)
++		var espacio := almacen.get_world_3d().direct_space_state
++		var consulta := PhysicsRayQueryParameters3D.create(jugador.global_position + Vector3.UP * 0.05, jugador.global_position + Vector3.DOWN * 0.15)
++		consulta.exclude = [jugador.get_rid(), (caja as CollisionObject3D).get_rid()]
++		var apoyo := espacio.intersect_ray(consulta)
++		print("B306PREMISA suelo=", JSON.stringify(_b306_golpe(apoyo)), " jugador=", jugador.global_position)
++		assert_bool(apoyo.is_empty()).is_false()
++		if apoyo.is_empty():
++			return
++		assert_bool(ReglasDeLosObjetos.se_puede_apoyar_en(apoyo.normal.y)).is_true()
++		var cuerpo: CollisionShape3D = jugador.get_node("Cuerpo")
++		var capsula := PhysicsShapeQueryParameters3D.new()
++		capsula.shape = cuerpo.shape
++		capsula.transform = cuerpo.global_transform
++		capsula.collision_mask = jugador.collision_mask
++		capsula.exclude = [jugador.get_rid(), (caja as CollisionObject3D).get_rid()]
++		capsula.margin = 0.0
++		assert_array(espacio.intersect_shape(capsula)).is_empty()
+ 		_b306_traza(almacen, jugador, caja, "antes_" + str(mancha.name))
+ 		_apuntar_a(jugador, mancha)
+ 		# El clic con el foco que el juego calcula solo, que acá es la mancha y no la caja.

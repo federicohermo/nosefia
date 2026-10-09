@@ -1,0 +1,15 @@
+{
+  "head": "2390328d55e414f09dc9ba681d00d37f104abf29",
+  "code": 1,
+  "count_code": 0,
+  "count": "reports/report_9: 214 suites corridas, 214 archivos `*_test.gd`\n",
+  "elapsed": 725.6496148109436,
+  "raw": "C:\\Users\\fede_\\orca\\workspaces\\nosefia\\darter\\.claude\\scratch\\batch-64-309\\b-306-full1-tests-crudo.log",
+  "xml": "C:\\Users\\fede_\\orca\\workspaces\\nosefia\\darter\\.claude\\scratch\\batch-64-309\\b-306-full1-results.xml",
+  "xml_sha256": "fc24262a22c324309828c1fb8309a64987757d9b4d50ec7705ed832d3e886ce1",
+  "suites": 214,
+  "cases": 1670,
+  "errors": 0,
+  "failures": 12,
+  "skipped": 0
+}

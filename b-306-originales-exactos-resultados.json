@@ -1,0 +1,18 @@
+{
+  "code": 100,
+  "diagnostico_filtrado_no_final": true,
+  "suites": 3,
+  "cases": 5,
+  "failures": 2,
+  "errors": 0,
+  "failed_cases": [
+    {
+      "suite": "caja_que_se_lleva_test",
+      "case": "test_la_caja_se_suelta_con_la_mira_sobre_un_charco",
+      "failures": [
+        "\n\nExpecting:\n <StaticBody3D>\n to refer to the same object\n '<null>'\n\tat 'test_la_caja_se_suelta_con_la_mira_sobre_un_charco' in res://test/escenas/objetos/caja_que_se_lleva_test.gd:964\n\tat '_parar_frente_a_la_mancha' in res://test/escenas/objetos/caja_que_se_lleva_test.gd:935\n\tat '_parar_al_jugador_en' in res://test/escenas/objetos/caja_que_se_lleva_test.gd:620\n\n\t\t\t",
+        "\n\nExpecting:\n <StaticBody3D>\n to refer to the same object\n <AnimatableBody3D>\n\tat 'test_la_caja_se_suelta_con_la_mira_sobre_un_charco' in res://test/escenas/objetos/caja_que_se_lleva_test.gd:964\n\tat '_parar_frente_a_la_mancha' in res://test/escenas/objetos/caja_que_se_lleva_test.gd:935\n\tat '_parar_al_jugador_en' in res://test/escenas/objetos/caja_que_se_lleva_test.gd:620\n\n\t\t\t"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,65 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+[   0% ] [90m[1mfirst_scan_filesystem[22m | Started Inicialización del proyecto (5 steps)[39m[0m
+[   0% ] [90m[1mfirst_scan_filesystem[22m | Escaneando la estructura del archivo...[39m[0m
+[  16% ] [90m[1mfirst_scan_filesystem[22m | Cargando nombres de clases globales...[39m[0m
+[  33% ] [90m[1mfirst_scan_filesystem[22m | Verificando GDExtensions...[39m[0m
+[  50% ] [90m[1mfirst_scan_filesystem[22m | Creando scripts de carga automática...[39m[0m
+[  66% ] [90m[1mfirst_scan_filesystem[22m | Inicializando plugins...[39m[0m
+[38;2;218;165;32mIt was recognized that GdUnit4 is running in a test environment, therefore the GdUnit4 plugin will not be executed![0m
+[MCP] Connecting to ports 6505-6514
+[MCP] Godot MCP Pro v1.16.0 started (ports 6505-6514)
+[MCP] Registered 177 commands
+[  83% ] [90m[1mfirst_scan_filesystem[22m | Iniciando escaneo de archivos...[39m[0m
+[92m[ DONE ][39m [1mfirst_scan_filesystem[22m
+[0m
+[   0% ] [90m[1mupdate_scripts_classes[22m | Started Registrando clases globales... (22 steps)[39m[0m
+[   0% ] [90m[1mupdate_scripts_classes[22m | Legajo[39m[0m
+[   4% ] [90m[1mupdate_scripts_classes[22m | Partida[39m[0m
+[   8% ] [90m[1mupdate_scripts_classes[22m | PartidaSerializada[39m[0m
+[  13% ] [90m[1mupdate_scripts_classes[22m | PoliticaDeGuardado[39m[0m
+[  17% ] [90m[1mupdate_scripts_classes[22m | Reglas[39m[0m
+[  21% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  26% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  30% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  34% ] [90m[1mupdate_scripts_classes[22m | Agarre[39m[0m
+[  39% ] [90m[1mupdate_scripts_classes[22m | CicloDeJornadas[39m[0m
+[  43% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  47% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  52% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  56% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  60% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  65% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  69% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  73% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  78% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  82% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  86% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  91% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[92m[ DONE ][39m [1mupdate_scripts_classes[22m
+[0m
+[   0% ] [90m[1m_update_scan_actions[22m | Started Escaneando acciones... (2 steps)[39m[0m
+[   0% ] [90m[1m_update_scan_actions[22m | logo.png[39m[0m
+[  33% ] [90m[1m_update_scan_actions[22m | logo.png[39m[0m
+[92m[ DONE ][39m [1m_update_scan_actions[22m
+[0m
+[   0% ] [90m[1mreimport[22m | Started (Re)Importación de Assets (2 steps)[39m[0m
+[   0% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+[  33% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+[   0% ] [90m[1mreimport[22m | Ejecutando operaciones de pre-reimportación...[39m[0m
+[   0% ] [90m[1mreimport[22m | logo.png[39m[0m
+[  33% ] [90m[1mreimport[22m | logo.png[39m[0m
+[  66% ] [90m[1mreimport[22m | Finalizando la importación de recursos...[39m[0m
+[92m[ DONE ][39m [1mreimport[22m
+[0m
+[   0% ] [90m[1mreimport[22m | Started (Re)Importación de Assets (2 steps)[39m[0m
+[   0% ] [90m[1mreimport[22m | Ejecutando operaciones post-reimportación...[39m[0m
+[92m[ DONE ][39m [1mreimport[22m
+[0m
+[   0% ] [90m[1mloading_editor_layout[22m | Started Cargando editor (5 steps)[39m[0m
+[   0% ] [90m[1mloading_editor_layout[22m | Cargando diseño del editor...[39m[0m
+[  16% ] [90m[1mloading_editor_layout[22m | Cargando docks...[39m[0m
+[92m[ DONE ][39m [1mloading_editor_layout[22m
+[0m
+[MCP] WebSocket client stopped
+[MCP] Godot MCP Pro stopped

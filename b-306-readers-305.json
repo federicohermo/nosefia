@@ -1,0 +1,118 @@
+{
+  "head": "11301e9df6fd2510b4fa2ff1c0fd6db9d25fe963",
+  "readers": [
+    {
+      "path": "src/dominio/empleo/legajo.gd",
+      "line": 23,
+      "text": "static func con_apercibimientos(apercibimientos: int) -> Legajo:"
+    },
+    {
+      "path": "src/dominio/empleo/partida.gd",
+      "line": 40,
+      "text": "\t\tPartidaSerializada.Campo.APERCIBIMIENTOS"
+    },
+    {
+      "path": "src/dominio/empleo/partida.gd",
+      "line": 42,
+      "text": "\tvar partida := Partida.new(Legajo.con_apercibimientos(apercibimientos))"
+    },
+    {
+      "path": "src/dominio/empleo/partida_serializada.gd",
+      "line": 15,
+      "text": "\tCampo.APERCIBIMIENTOS: 0,"
+    },
+    {
+      "path": "src/dominio/empleo/politica_de_guardado.gd",
+      "line": 21,
+      "text": "\t\t\t\tPartidaSerializada.clave(PartidaSerializada.Campo.APERCIBIMIENTOS):"
+    },
+    {
+      "path": "test/escenas/almacen_test.gd",
+      "line": 340,
+      "text": "\t\tPartidaSerializada.clave(PartidaSerializada.Campo.APERCIBIMIENTOS):"
+    },
+    {
+      "path": "test/escenas/almacen_test.gd",
+      "line": 490,
+      "text": "\talmacen.set(\"_partida\", Partida.new(Legajo.con_apercibimientos(3)))"
+    },
+    {
+      "path": "test/sistemas/marco/guardado_test.gd",
+      "line": 6,
+      "text": "const APERCIBIMIENTOS := \"apercibimientos\""
+    },
+    {
+      "path": "test/dominio/empleo/legajo_test.gd",
+      "line": 20,
+      "text": "\tvar legajo := Legajo.con_apercibimientos(3)"
+    },
+    {
+      "path": "test/dominio/empleo/legajo_test.gd",
+      "line": 62,
+      "text": "\tvar legajo := Legajo.con_apercibimientos(3)"
+    },
+    {
+      "path": "test/dominio/empleo/legajo_test.gd",
+      "line": 113,
+      "text": "\tvar cumplidor := Legajo.con_apercibimientos(3)"
+    },
+    {
+      "path": "test/dominio/empleo/legajo_test.gd",
+      "line": 128,
+      "text": "\tvar legajo := Legajo.con_apercibimientos(2)"
+    },
+    {
+      "path": "test/dominio/empleo/legajo_test.gd",
+      "line": 137,
+      "text": "\tvar restaurado := Legajo.con_apercibimientos(0)"
+    },
+    {
+      "path": "test/dominio/empleo/legajo_test.gd",
+      "line": 160,
+      "text": "\tvar legajo := Legajo.con_apercibimientos(3)"
+    },
+    {
+      "path": "test/dominio/empleo/parte_de_cierre_test.gd",
+      "line": 122,
+      "text": "\tvar partida := Partida.new(Legajo.con_apercibimientos(3))"
+    },
+    {
+      "path": "test/dominio/empleo/partida_serializada_test.gd",
+      "line": 5,
+      "text": "const APERCIBIMIENTOS := \"apercibimientos\""
+    },
+    {
+      "path": "test/dominio/empleo/partida_serializada_test.gd",
+      "line": 19,
+      "text": "\tassert_str(PartidaSerializada.clave(PartidaSerializada.Campo.APERCIBIMIENTOS)).is_equal("
+    },
+    {
+      "path": "test/dominio/empleo/partida_test.gd",
+      "line": 23,
+      "text": "\tvar legajo := Legajo.con_apercibimientos(Reglas.APERCIBIMIENTOS_POR_AVISO)"
+    },
+    {
+      "path": "test/dominio/empleo/partida_test.gd",
+      "line": 30,
+      "text": "\tvar restaurado := Legajo.con_apercibimientos("
+    },
+    {
+      "path": "test/dominio/empleo/partida_test.gd",
+      "line": 45,
+      "text": "\t\t\t\tPartidaSerializada.clave(PartidaSerializada.Campo.APERCIBIMIENTOS):"
+    }
+  ],
+  "counts": {
+    "test/dominio/empleo/catalogo_de_reacciones_test.gd": 6,
+    "test/dominio/empleo/consecuencia_test.gd": 7,
+    "test/dominio/empleo/espera_de_la_carga_test.gd": 5,
+    "test/dominio/empleo/legajo_test.gd": 15,
+    "test/dominio/empleo/menu_de_inicio_test.gd": 6,
+    "test/dominio/empleo/parte_de_cierre_test.gd": 9,
+    "test/dominio/empleo/partida_serializada_test.gd": 5,
+    "test/dominio/empleo/partida_test.gd": 17,
+    "test/dominio/empleo/politica_de_guardado_test.gd": 3,
+    "test/dominio/empleo/reaccion_test.gd": 3,
+    "test/dominio/empleo/reglas_de_la_partida_test.gd": 5
+  }
+}

@@ -1,0 +1,72 @@
+ERROR: The remote port number must be between 1 and 65535 (inclusive).
+   at: connect_to_host (core/io/stream_peer_tcp.cpp:69)
+ERROR: Remote Debugger: Unable to connect to host '127.0.0.1:0'.
+   at: create_tcp (core/debugger/remote_debugger_peer.cpp:247)
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+[2J[H[38;2;233;150;122m
+--------------------------------------------------------------------------------------------------
+GdUnit4 Comandline Tool
+--------------------------------------------------------------------------------------------------[0m
+[38;2;0;191;255mDisabled fail fast![0m
+[38;2;0;191;255mSet write reports to D:/Usuarios/fede/Documentos/Catedra Videojuegos FADU/manada/repo/nosefia/.claude/worktrees/batch-64-309-d/reports/b-306-contrastes-sin_soporte_charco[0m
+[38;2;218;165;32m
+Headless mode is ignored by option '--ignoreHeadlessMode'"
+
+Please note that tests that use UI interaction do not work correctly in headless mode.
+Godot 'InputEvents' are not transported by the Godot engine in headless mode and therefore
+have no effect in the test!
+[0m
+[38;2;100;149;237mInstalling GdUnit4 session system hooks.[0m
+[38;2;100;149;237mSession hook 'GdUnitHtmlTestReporter' installed.[0m
+[38;2;100;149;237mSession hook 'GdUnitXMLTestReporter' installed.[0m
+[38;2;100;149;237mInstalling GdUnit4 session hooks.[0m
+[38;2;100;149;237mSession hook 'Guardado de la sesión' installed.[0m
+ERROR: Couldn't open directory at path "user://guardado_de_los_tests_92916".
+   at: get_files_at (core/io/dir_access.cpp:578)
+   GDScript backtrace (most recent call first):
+       [0] _borrar_la_carpeta (res://test/guardado_de_la_sesion.gd:40)
+       [1] startup (res://test/guardado_de_la_sesion.gd:22)
+       [2] execute (res://addons/gdUnit4/src/core/hooks/GdUnitTestSessionHookService.gd:125)
+       [3] execute_startup (res://addons/gdUnit4/src/core/hooks/GdUnitTestSessionHookService.gd:108)
+       [4] _process (res://addons/gdUnit4/src/core/runners/GdUnitTestSessionRunner.gd:127)
+[38;2;0;206;209mRun Test Suite: [0m[38;2;250;235;215mres://.godot/b306-diagnostico/sin_soporte_charco_test.gd[0m
+  [38;2;250;235;215mres://.godot/b306-diagnostico/sin_soporte_charco_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_la_caja_se_suelta_con_la_mira_sobre_un_charco[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+B306SINSOPORTE cuerpos_desactivados=6
+B306TRAZA {"en_piso":false,"etapa":"antes_ManchaDeLaEntrada","jugador":"(5.284591, 0.215556, 4.736545)","lugares":"[]","mira":{},"objeto":"CajaDeLaysntt","padre":"/root/sin_soporte_charco_test/Almacen/Jugador/Giro/PuntoDeCaja","piso_jugador":{"cuerpo":"/root/sin_soporte_charco_test/Almacen/Estructura/SueloSolido","dueno":"/root/sin_soporte_charco_test/Almacen/Estructura/SueloSolido/Local","normal":"(0.0, 1.0, 0.0)","pos":"(5.284591, 0.102237, 4.736545)","rid":"RID(6558415061092)"},"pos":"(5.284591, 1.356556, 3.937545)","segmento":{},"velocidad":"(0.0, -0.326667, 0.0)"}
+B306TRAZA {"en_piso":false,"etapa":"despues_ManchaDeLaEntrada","jugador":"(5.284591, 0.215556, 4.736545)","lugares":"[(4.782361, 0.102237, 4.071339), (4.459089, 0.102237, 4.621304), (4.619385, 0.102237, 5.238775), (5.16935, 0.107238, 5.562047), (5.786822, 0.107237, 5.401751), (6.110094, 0.102237, 4.851786), (5.949797, 0.102237, 4.234314), (5.399832, 0.102237, 3.911042)]","mira":{},"objeto":"CajaDeLaysntt","padre":"/root/sin_soporte_charco_test/Almacen","piso_jugador":{"cuerpo":"/root/sin_soporte_charco_test/Almacen/Estructura/SueloSolido","dueno":"/root/sin_soporte_charco_test/Almacen/Estructura/SueloSolido/Local","normal":"(0.0, 1.0, 0.0)","pos":"(5.284591, 0.102237, 4.736545)","rid":"RID(6558415061092)"},"pos":"(4.430972, 0.405945, 3.605924)","segmento":{},"velocidad":"(0.0, -0.326667, 0.0)"}
+B306TRAZA {"en_piso":false,"etapa":"antes_ManchaEntreLasGondolas","jugador":"(3.340861, 0.207833, -0.319862)","lugares":"[]","mira":{},"objeto":"CajaDeLaysntt","padre":"/root/sin_soporte_charco_test/Almacen/Jugador/Giro/PuntoDeCaja","piso_jugador":{"cuerpo":"/root/sin_soporte_charco_test/Almacen/Estructura/SueloSolido","dueno":"/root/sin_soporte_charco_test/Almacen/Estructura/SueloSolido/Local","normal":"(0.0, 1.0, 0.0)","pos":"(3.340861, 0.102237, -0.319862)","rid":"RID(6558415061092)"},"pos":"(2.859423, 1.348833, -0.957528)","segmento":{},"velocidad":"(0.0, -0.49, 0.0)"}
+B306TRAZA {"en_piso":false,"etapa":"despues_ManchaEntreLasGondolas","jugador":"(3.340861, 0.207833, -0.319862)","lugares":"[(3.041789, 0.102237, -1.097866), (2.579253, 0.102237, -0.658518), (2.562857, 0.102237, -0.02079), (3.002205, 0.102237, 0.441746), (3.639933, 0.102237, 0.458142), (4.102469, 0.760537, 0.018794), (4.118865, 0.792141, -0.618934), (3.679517, 0.102237, -1.08147)]","mira":{},"objeto":"CajaDeLaysntt","padre":"/root/sin_soporte_charco_test/Almacen","piso_jugador":{"cuerpo":"/root/sin_soporte_charco_test/Almacen/Estructura/SueloSolido","dueno":"/root/sin_soporte_charco_test/Almacen/Estructura/SueloSolido/Local","normal":"(0.0, 1.0, 0.0)","pos":"(3.340861, 0.102237, -0.319862)","rid":"RID(6558415061092)"},"pos":"(2.832157, 0.405945, -1.643201)","segmento":{},"velocidad":"(0.0, -0.49, 0.0)"}
+B306TRAZA {"en_piso":true,"etapa":"antes_ManchaDelDeposito","jugador":"(4.529022, 1.527446, -6.430436)","lugares":"[]","mira":{"cuerpo":"/root/sin_soporte_charco_test/Almacen/Estructura/gondolanueva_002/Contorno","dueno":"/root/sin_soporte_charco_test/Almacen/Estructura/gondolanueva_002/Contorno/Forma","normal":"(0.0, 1.0, 0.0)","pos":"(4.219594, 2.391984, -7.235381)","rid":"RID(6730213752937)"},"objeto":"CajaDeLaysntt","padre":"/root/sin_soporte_charco_test/Almacen/Jugador/Giro/PuntoDeCaja","piso_jugador":{"cuerpo":"/root/sin_soporte_charco_test/Almacen/Estructura/almacen/StaticBody3D","dueno":"/root/sin_soporte_charco_test/Almacen/Estructura/almacen/StaticBody3D/CollisionShape3D","normal":"(0.0, 1.0, 0.0)","pos":"(4.529022, 0.102237, -6.430436)","rid":"RID(5132485918720)"},"pos":"(4.523703, 2.668446, -6.444273)","segmento":{},"velocidad":"(0.0, 0.0, 0.0)"}
+B306TRAZA {"en_piso":true,"etapa":"despues_ManchaDelDeposito","jugador":"(4.529022, 1.527446, -6.430436)","lugares":"[(4.605541, 1.993283, -7.260424), (3.996239, 1.993283, -7.071433), (3.699034, 0.102237, -6.506955), (3.888025, 0.102237, -5.897653), (4.452503, 0.102237, -5.600448), (5.061805, 0.102237, -5.789439), (5.35901, 0.102237, -6.353917), (5.170019, 1.993283, -6.963219)]","mira":{"cuerpo":"/root/sin_soporte_charco_test/Almacen/Estructura/gondolanueva_002/Contorno","dueno":"/root/sin_soporte_charco_test/Almacen/Estructura/gondolanueva_002/Contorno/Forma","normal":"(0.0, 1.0, 0.0)","pos":"(4.629093, 2.391984, -7.515882)","rid":"RID(6730213752937)"},"objeto":"CajaDeLaysntt","padre":"/root/sin_soporte_charco_test/Almacen","piso_jugador":{"cuerpo":"/root/sin_soporte_charco_test/Almacen/Estructura/almacen/StaticBody3D","dueno":"/root/sin_soporte_charco_test/Almacen/Estructura/almacen/StaticBody3D/CollisionShape3D","normal":"(0.0, 1.0, 0.0)","pos":"(4.529022, 0.102237, -6.430436)","rid":"RID(5132485918720)"},"pos":"(4.629093, 2.695692, -7.39081)","segmento":{"cuerpo":"/root/sin_soporte_charco_test/Almacen/Estructura/gondolanueva_002/Contorno","dueno":"/root/sin_soporte_charco_test/Almacen/Estructura/gondolanueva_002/Contorno/Forma","normal":"(0.0, 0.0, 1.0)","pos":"(4.570024, 2.027446, -6.823931)","rid":"RID(6730213752937)"},"velocidad":"(0.0, 0.0, 0.0)"}
+B306TRAZA {"en_piso":false,"etapa":"antes_ManchaDelBano","jugador":"(10.0643, 0.216, 3.436167)","lugares":"[]","mira":{},"objeto":"CajaDeLaysntt","padre":"/root/sin_soporte_charco_test/Almacen/Jugador/Giro/PuntoDeCaja","piso_jugador":{"cuerpo":"/root/sin_soporte_charco_test/Almacen/Estructura/almacen/Volumen","dueno":"/root/sin_soporte_charco_test/Almacen/Estructura/almacen/Volumen/VolumenDelPisoDelBano","normal":"(0.0, 1.0, 0.0)","pos":"(10.0643, 0.102238, 3.436167)","rid":"RID(6743098654826)"},"pos":"(10.13766, 1.357, 2.640541)","segmento":{},"velocidad":"(0.0, 0.0, 0.0)"}
+B306TRAZA {"en_piso":false,"etapa":"despues_ManchaDelBano","jugador":"(10.0643, 0.216, 3.436167)","lugares":"[(10.47212, 0.102238, 4.163094), (10.86669, 0.102238, 3.661813), (10.79123, 0.102238, 3.028353), (10.28995, 0.102238, 2.633784), (9.656489, 0.102238, 2.709241), (9.261921, 0.102238, 3.210521), (9.337378, 0.102238, 3.843982), (9.838658, 0.102238, 4.23855)]","mira":{"cuerpo":"/root/sin_soporte_charco_test/Almacen/Estructura/bano_puerta_1/CuerpoDeLaHoja","dueno":"/root/sin_soporte_charco_test/Almacen/Estructura/bano_puerta_1/CuerpoDeLaHoja/Volumen","normal":"(-0.0, 0.0, -1.0)","pos":"(10.48273, 1.083619, 4.182)","rid":"RID(6773163425905)"},"objeto":"CajaDeLaysntt","padre":"/root/sin_soporte_charco_test/Almacen","piso_jugador":{"cuerpo":"/root/sin_soporte_charco_test/Almacen/Estructura/almacen/Volumen","dueno":"/root/sin_soporte_charco_test/Almacen/Estructura/almacen/Volumen/VolumenDelPisoDelBano","normal":"(0.0, 1.0, 0.0)","pos":"(10.0643, 0.102238, 3.436167)","rid":"RID(6743098654826)"},"pos":"(10.78643, 0.405946, 3.655963)","segmento":{},"velocidad":"(0.0, 0.0, 0.0)"}
+ERROR: Parameter "material" is null.
+   at: material_get_instance_shader_parameters (servers/rendering/dummy/storage/material_storage.cpp:264)
+   GDScript backtrace (most recent call first):
+       [0] free_instance (res://addons/gdUnit4/src/core/GdUnitTools.gd:85)
+       [1] gc (res://addons/gdUnit4/src/core/execution/GdUnitMemoryObserver.gd:126)
+       [2] gc (res://addons/gdUnit4/src/core/execution/GdUnitExecutionContext.gd:277)
+       [3] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestCaseAfterStage.gd:23)
+       [4] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [5] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleExecutionStage.gd:18)
+       [6] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [7] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleTestStage.gd:10)
+       [8] execute (res://addons/gdUnit4/src/core/_TestCase.gd:41)
+       [9] test_completed (res://addons/gdUnit4/src/core/_TestCase.gd:86)
+  [38;2;250;235;215mres://.godot/b306-diagnostico/sin_soporte_charco_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_la_caja_se_suelta_con_la_mira_sobre_un_charco[0m[38;2;178;34;34m[1m FAILED[0m[38;2;100;149;237m 197ms[0m
+  [38;2;0;206;209m[1m[4mReport:[0m
+  [38;2;128;128;128mcon la mira sobre `ManchaDelDeposito`: la caja en (4.629093, 2.695692, -7.390810) tiene esquinas en el aire: -0.30 -0.30, +0.30 -0.30[0m[38;2;173;216;230m	at '_comprobar_apoyo_entero' in res://.godot/b306-diagnostico/sin_soporte_charco_test.gd:718
+	at 'test_la_caja_se_suelta_con_la_mira_sobre_un_charco' in res://.godot/b306-diagnostico/sin_soporte_charco_test.gd:955[0m[38;2;128;128;128m[0m
+[38;2;128;128;128m[0m
+[38;2;30;144;255mStatistics:[0m[38;2;128;128;128m 1 test cases | 0 errors | 1 failures | 0 flaky | 0 skipped | 0 orphans |[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 217ms[0m
+[38;2;128;128;128m[0m
+[38;2;128;128;128m[0m
+[38;2;30;144;255mOverall Summary:[0m[38;2;255;255;255m 1 test cases | 0 errors | 1 failures | 0 flaky | 0 skipped | 0 orphans |[0m
+[38;2;233;150;122mExecuted test suites: (1/1)[0m
+[38;2;233;150;122mExecuted test cases : (1/1)[0m
+[38;2;233;150;122mTotal execution time: 217ms[0m
+[38;2;255;255;255m [0m[38;2;100;149;237mOpen XML Report at: file://D:/Usuarios/fede/Documentos/Catedra Videojuegos FADU/manada/repo/nosefia/.claude/worktrees/batch-64-309-d/reports/b-306-contrastes-sin_soporte_charco/report_1/results.xml[0m
+[38;2;100;149;237mOpen HTML Report at: file://D:/Usuarios/fede/Documentos/Catedra Videojuegos FADU/manada/repo/nosefia/.claude/worktrees/batch-64-309-d/reports/b-306-contrastes-sin_soporte_charco/report_1/index.html[0m
+[38;2;178;34;34mExit code: 100[0m
+Run dispose test resources
