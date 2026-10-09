@@ -23,3 +23,9 @@ Al reimportar los tres GLB en Godot, `assets/models/importar_caja.gd` guarda las
 y las colisiones estáticas que usan las escenas. El ticket recibe una colisión fina propia
 y se dibuja por ambas caras. Las posiciones en el juego se ajustan al escritorio vigente;
 el papel aparece sólo al imprimir y su salida se anima desde la caja.
+
+La integración usa únicamente la pieza `lector de productos-col` como equipo de caja,
+orientada hacia la ventanilla, por indicación del usuario. La antigua registradora no se
+instancia a su lado. Con producto sostenido, el clic derecho registra sin abrir la interfaz;
+después de dejarlo, el clic derecho con la mano vacía abre el generador en ese mismo equipo.
+Desde la tercera jornada conserva el acceso al programa manual sin lectura automática.

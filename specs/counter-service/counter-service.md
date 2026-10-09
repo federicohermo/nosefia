@@ -155,11 +155,11 @@ aunque los anteriores estén vacíos; el papel DEBE llevar sólo los llenos en s
 SI el programa es automático o el renglón está fuera de los 3, ENTONCES elegir NO DEBE
 cambiar nada. Los menús DEBEN ofrecer primero vacío y después el catálogo en su orden.
 
-### BR-CTR-024 — El hueco no lee ni avisa
+### BR-CTR-024 — El modo manual no lee ni avisa
 
-MIENTRAS el programa es manual, el lector NO DEBE estar: su lugar DEBE quedar ocupado por
-un hueco fijo, no levantable. Usarlo NO DEBE cambiar renglones ni producir avisos o sonidos,
-con manos vacías o con cualquier objeto, esté vacío o lleno el programa. Este silencio
+MIENTRAS el programa es manual, la lectura automática NO DEBE funcionar. El único equipo
+de caja DEBE seguir permitiendo abrir el programa. Usarlo NO DEBE cambiar renglones ni
+producir avisos o sonidos de lectura, con manos vacías o con cualquier objeto. Este silencio
 DEBE preceder a los rechazos por tipo o por lleno del modo automático.
 
 ### BR-CTR-025 — El ticket se desecha en el inodoro
@@ -325,13 +325,12 @@ DADO el primero vacío, Marolini en el segundo y Coracola en el tercero ENTONCES
 conserva esas posiciones y el papel lleva Marolini y Coracola, en ese orden. Borrar vacía
 los 3 sin cambiar el papel, y los 3 vacíos no imprimen.
 
-### AC-CTR-029 — Usar el hueco no se confunde con rechazar *(verifica BR-CTR-024)*
+### AC-CTR-029 — Consultar en manual no se confunde con rechazar *(verifica BR-CTR-024)*
 
-DADO una jornada manual, con el programa vacío o lleno, CUANDO se usa el hueco con unidad,
+DADO una jornada manual, con el programa vacío o lleno, CUANDO se usa la caja con unidad,
 caja o manos vacías ENTONCES no se escribe ni se publica lectura, rechazo o sonido, y la
-mano se conserva. El cuerpo mantiene alcance, colisión y foco real; su malla queda visible
-y representa el hueco. DADO una nueva jornada automática ENTONCES vuelve la malla del lector
-y una unidad vuelve a anotarse.
+mano se conserva y se abre el programa. DADO una nueva jornada automática ENTONCES una
+unidad vuelve a anotarse en el mismo equipo.
 
 ### AC-CTR-030 — Los menús conservan la selección durante la pausa *(verifica BR-CTR-023)*
 

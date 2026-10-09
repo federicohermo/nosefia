@@ -96,7 +96,7 @@ func test_el_lector_anota_la_unidad_con_el_programa_cerrado_y_conserva_la_mano()
 	var agarre: Agarre = almacen.get("_agarre")
 	assert_bool(agarre.pedir_agarrar(unidad.datos, unidad)).is_true()
 	var padre := unidad.get_parent()
-	var lector: Node3D = almacen.get_node("Estructura/Lector")
+	var lector: Node3D = _puesto(almacen)
 	for _renglon in GeneradorDeTickets.RENGLONES:
 		_accion(jugador, lector, ReglasDelJugador.ACCION_USAR)
 	assert_array(_caja(almacen).generador().renglones()).contains_exactly(
@@ -110,6 +110,7 @@ func test_el_lector_anota_la_unidad_con_el_programa_cerrado_y_conserva_la_mano()
 	assert_object(unidad.get_parent()).is_same(padre)
 	assert_bool(unidad.freeze).is_true()
 	assert_bool(_vista(almacen).visible).is_false()
+	agarre.entregar()
 	_accion(jugador, _puesto(almacen), ReglasDelJugador.ACCION_USAR)
 	assert_str(_vista(almacen).filas[0].text).is_equal(
 		(unidad.datos as UnidadDeProducto).producto.nombre
@@ -137,7 +138,7 @@ func test_los_seis_objetos_se_rechazan_y_siguen_en_la_mano() -> void:  # AC-PLY-
 		var dato: ObjetoDelAlmacen = objeto.get("datos")
 		assert_bool(agarre.pedir_agarrar(dato, objeto)).is_true()
 		var padre := objeto.get_parent()
-		_accion(jugador, almacen.get_node("Estructura/Lector"), ReglasDelJugador.ACCION_USAR)
+		_accion(jugador, _puesto(almacen), ReglasDelJugador.ACCION_USAR)
 		assert_object(agarre.manos().sostenido()).is_same(dato)
 		assert_object(objeto.get_parent()).is_same(padre)
 		assert_array(_caja(almacen).generador().renglones()).is_empty()
@@ -158,17 +159,19 @@ func test_las_manos_vacias_y_los_otros_gestos_no_leen() -> void:  # AC-PLY-073
 	var almacen := await _abrir()
 	var jugador: Node3D = almacen.get_node("Jugador")
 	var caja: CajaContadora = auto_free(CajaContadora.new())
-	var lector: Node3D = almacen.get_node("Estructura/Lector")
+	caja.arrancar(GeneradorDeTickets.para_la_jornada(1))
+	var lector: Node3D = _puesto(almacen)
 	lector.set("caja", caja)
 	for accion: StringName in [
-		ReglasDelJugador.ACCION_USAR,
-		ReglasDeLosObjetos.ACCION_AGARRAR,
-		ReglasDeLosObjetos.ACCION_EXAMINAR
+		ReglasDeLosObjetos.ACCION_AGARRAR, ReglasDeLosObjetos.ACCION_EXAMINAR
 	]:
 		_accion(jugador, lector, accion)
 	assert_array(caja.pedidos).is_empty()
 	assert_array(_caja(almacen).generador().renglones()).is_empty()
 	assert_bool(_vista(almacen).visible).is_false()
+	_accion(jugador, lector, ReglasDelJugador.ACCION_USAR)
+	assert_bool(_vista(almacen).visible).is_true()
+	assert_array(caja.pedidos).is_empty()
 	assert_bool((jugador.get("examen") as Examen).esta_examinando()).is_false()
 
 
@@ -244,7 +247,7 @@ func test_escaneo_con_foco_real_carga_la_caja_y_permite_imprimir() -> void:  # A
 	var unidad := _unidad(almacen)
 	var agarre: Agarre = almacen.get("_agarre")
 	assert_bool(agarre.pedir_agarrar(unidad.datos, unidad)).is_true()
-	var lector: StaticBody3D = almacen.get_node("Estructura/Lector")
+	var lector: StaticBody3D = _puesto(almacen)
 	assert_bool(await _enfocar(almacen, lector, lector.global_position)).is_true()
 	var evento := InputEventMouseButton.new()
 	evento.button_index = MOUSE_BUTTON_RIGHT
@@ -257,6 +260,7 @@ func test_escaneo_con_foco_real_carga_la_caja_y_permite_imprimir() -> void:  # A
 	assert_array(_caja(almacen).generador().renglones()).contains_exactly(
 		[(unidad.datos as UnidadDeProducto).producto]
 	)
+	agarre.entregar()
 	var puesto := _puesto(almacen)
 	assert_bool(await _enfocar(almacen, puesto, puesto.global_position)).is_true()
 	evento.pressed = true
@@ -267,7 +271,7 @@ func test_escaneo_con_foco_real_carga_la_caja_y_permite_imprimir() -> void:  # A
 	assert_bool(_vista(almacen).visible).is_true()
 	_vista(almacen).imprimir.pressed.emit()
 	assert_array(_papeles(almacen)).has_size(1)
-	assert_object(agarre.manos().sostenido()).is_same(unidad.datos)
+	assert_object(agarre.manos().sostenido()).is_null()
 
 
 # AC-CTR-021, AC-CTR-022, AC-CTR-024
@@ -279,8 +283,9 @@ func test_los_eventos_reales_piden_escaneo_error_impresion_y_botones() -> void:
 	var sonidos: Array[int] = []
 	reproductor.sonido_pedido.connect(func(evento: int) -> void: sonidos.append(evento))
 	var jugador: Node3D = almacen.get_node("Jugador")
-	var lector: Node3D = almacen.get_node("Estructura/Lector")
+	var lector: Node3D = _puesto(almacen)
 	_accion(jugador, lector, ReglasDelJugador.ACCION_USAR)
+	_puesto(almacen).call("cerrar")
 	_caja(almacen).pedir_imprimir()
 	assert_array(sonidos).is_empty()
 	var unidad := _unidad(almacen)
@@ -337,8 +342,8 @@ func test_los_eventos_reales_piden_escaneo_error_impresion_y_botones() -> void:
 
 func test_la_tres_vacia_y_la_uno_recupera_la_lectura() -> void:  # AC-CTR-026, AC-CTR-029
 	var almacen := await _abrir()
-	var lector: StaticBody3D = almacen.get_node("Estructura/Lector")
-	var malla: MeshInstance3D = lector.get_node("Malla")
+	var lector: StaticBody3D = _puesto(almacen)
+	var malla: MeshInstance3D = lector.get_parent()
 	almacen.call("_al_abrir_la_jornada", 2)
 	_caja(almacen).pedir_anotar(UnidadDeProducto.new(Catalogo.de(Producto.Id.MAROLINI)))
 	assert_int(_caja(almacen).generador().renglones().size()).is_equal(1)
@@ -359,11 +364,11 @@ func test_la_tres_vacia_y_la_uno_recupera_la_lectura() -> void:  # AC-CTR-026, A
 	assert_int(_caja(almacen).generador().renglones().size()).is_equal(1)
 
 
-func test_el_hueco_con_unidad_caja_y_mano_vacia_no_avisa_ni_anota() -> void:  # AC-CTR-029
+func test_la_caja_manual_abre_sin_lectura_ni_error() -> void:  # AC-CTR-029
 	var almacen := await _abrir()
 	almacen.call("_al_abrir_la_jornada", 3)
 	var jugador: Node3D = almacen.get_node("Jugador")
-	var lector: Node3D = almacen.get_node("Estructura/Lector")
+	var lector: Node3D = _puesto(almacen)
 	var agarre: Agarre = almacen.get("_agarre")
 	var eventos: Array[String] = []
 	_caja(almacen).producto_leido.connect(func() -> void: eventos.append("lectura"))
@@ -386,6 +391,8 @@ func test_el_hueco_con_unidad_caja_y_mano_vacia_no_avisa_ni_anota() -> void:  # 
 		assert_array(_caja(almacen).generador().renglones()).is_empty()
 		assert_array(eventos).is_empty()
 		assert_array(sonidos).is_empty()
+		assert_bool(_vista(almacen).visible).is_true()
+		_puesto(almacen).call("cerrar")
 		if objeto == null:
 			assert_object(agarre.manos().sostenido()).is_null()
 		else:

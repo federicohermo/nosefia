@@ -36,8 +36,9 @@ func _ready() -> void:
 
 func accionar() -> void:
 	var objeto := agarre.manos().sostenido()
-	if objeto is UnidadDeProducto:
+	if objeto != null and not caja.generador().es_manual():
 		caja.pedir_anotar(objeto)
+		return
 	abrir()
 
 

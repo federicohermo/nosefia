@@ -83,6 +83,7 @@ func _emitir_papel(almacen: Node3D) -> void:
 
 func test_el_derecho_abre_y_cierra_con_los_ocho_estados_de_la_mano() -> void:  # AC-PLY-072
 	var almacen := await _abrir()
+	almacen.call("_al_abrir_la_jornada", 3)
 	var jugador: Node3D = almacen.get_node("Jugador")
 	var agarre: Agarre = almacen.get("_agarre")
 	var papel: ObjetoAgarrable = PAPEL.instantiate()
@@ -400,10 +401,20 @@ func test_caja_lee_imprime_y_entrega_el_ticket_desde_el_mismo_puesto() -> void:
 		. is_true()
 	)
 	await _derecho()
-	assert_bool(_vista(almacen).visible).is_true()
+	assert_bool(_vista(almacen).visible).is_false()
 	assert_array(_caja(almacen).generador().renglones()).contains_exactly(
 		[(unidad.datos as UnidadDeProducto).producto]
 	)
+	_accion(almacen.get_node("Jugador"), unidad, ReglasDeLosObjetos.ACCION_AGARRAR)
+	assert_object(agarre.manos().sostenido()).is_null()
+	(
+		assert_bool(
+			await _enfocar(almacen, puesto, malla.to_global(malla.mesh.get_aabb().get_center()))
+		)
+		. is_true()
+	)
+	await _derecho()
+	assert_bool(_vista(almacen).visible).is_true()
 	_vista(almacen).imprimir.pressed.emit()
 	assert_bool(_vista(almacen).visible).is_false()
 	var papeles := _papeles(almacen)
@@ -413,7 +424,6 @@ func test_caja_lee_imprime_y_entrega_el_ticket_desde_el_mismo_puesto() -> void:
 	var papel := papeles[0]
 	await get_tree().create_timer(1.0).timeout
 	var jugador: Node3D = almacen.get_node("Jugador")
-	_accion(jugador, unidad, ReglasDeLosObjetos.ACCION_AGARRAR)
 	assert_object(agarre.manos().sostenido()).is_null()
 	assert_bool(await _enfocar(almacen, papel, papel.global_position)).is_true()
 	_accion(jugador, papel, ReglasDeLosObjetos.ACCION_AGARRAR)
