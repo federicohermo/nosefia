@@ -312,7 +312,10 @@ func test_sin_punto_de_examen_la_e_no_se_pasa_a_revelar_lo_enfocado() -> void:
 	examen.objeto_revelado.connect(
 		func(datos: Resource, _es_nuevo: bool) -> void: revelados.append(datos)
 	)
-	assert_bool(examen.iniciar(_puerta())).is_false()
+	await (
+		assert_error(func() -> void: assert_bool(examen.iniciar(_puerta())).is_false())
+		. is_push_error("Examen sin punto de examen cableado: revisar jugador.tscn")
+	)
 	assert_array(revelados).is_empty()
 	assert_bool(examen.esta_examinando()).is_false()
 

@@ -56,7 +56,7 @@ func _process(_delta: float) -> void:
 		return
 	var escena := (
 		ResourceLoader.load_threaded_get(_ruta) as PackedScene
-		if estado == ResourceLoader.THREAD_LOAD_LOADED
+		if estado in [ResourceLoader.THREAD_LOAD_LOADED, ResourceLoader.THREAD_LOAD_FAILED]
 		else null
 	)
 	var ruta := _ruta

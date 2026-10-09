@@ -91,7 +91,7 @@ static func _cabe(pieza: PackedVector3Array, corte: float) -> bool:
 
 static func _exento(forma: CollisionShape3D) -> bool:
 	for nodo: Node in [forma, forma.get_parent()]:
-		if _exime(nodo.get_meta(CLAVE_DE_EXENCION, null)):
+		if _exime(nodo.get_meta(CLAVE_DE_EXENCION, "")):
 			return true
 	return false
 

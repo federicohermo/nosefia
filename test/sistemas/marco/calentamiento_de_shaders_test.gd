@@ -74,6 +74,9 @@ func test_el_material_de_un_multimesh_cuenta_como_nuevo() -> void:
 		var instancias := MultiMeshInstance3D.new()
 		instancias.multimesh = MultiMesh.new()
 		instancias.multimesh.mesh = malla
+		instancias.multimesh.transform_format = MultiMesh.TRANSFORM_3D
+		instancias.multimesh.instance_count = 1
+		instancias.multimesh.set_instance_transform(0, Transform3D.IDENTITY)
 		escena.add_child(instancias)
 	add_child(escena)
 	var calentamiento := _calentamiento()
@@ -86,6 +89,9 @@ func test_el_material_de_un_multimesh_cuenta_como_nuevo() -> void:
 func test_el_material_reemplazado_en_una_superficie_cuenta_como_nuevo() -> void:
 	var escena: Node3D = auto_free(Node3D.new())
 	var comun := BoxMesh.new()
+	# Un ancho válido menor que el encuadre inicial no se ensancha al calentar.
+	comun.size = Vector3(0.2, 0.1, 0.1)
+	assert_float(comun.size.x).is_greater(maxf(comun.size.y, comun.size.z))
 	comun.material = StandardMaterial3D.new()
 	for _i: int in 3:
 		var malla := MeshInstance3D.new()
@@ -95,6 +101,7 @@ func test_el_material_reemplazado_en_una_superficie_cuenta_como_nuevo() -> void:
 	add_child(escena)
 	var calentamiento := _calentamiento()
 	calentamiento.calentar(escena)
+	assert_float(get_viewport().get_camera_3d().size).is_equal(comun.size.x)
 	await calentamiento.avanzo
 	await calentamiento.avanzo
 	assert_int(_visibles(escena)).is_equal(2)
@@ -156,7 +163,7 @@ func test_una_escena_sin_objetos_termina_igual() -> void:
 	var escena: Node3D = auto_free(Node3D.new())
 	add_child(escena)
 	var calentamiento := _calentamiento()
-	calentamiento.calentar(escena)
+	await assert_error(func() -> void: calentamiento.calentar(escena)).is_success()
 	await assert_signal(calentamiento).wait_until(ESPERA_MS).is_emitted("terminado")
 	assert_float(calentamiento.progreso()).is_equal(1.0)
 

@@ -145,12 +145,17 @@ func _avisos(jugador: CharacterBody3D) -> Array[Node3D]:
 
 func test_las_senales_del_doble_llegan_al_marco_y_al_hud() -> void:
 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
-	var jugador: JugadorDoble = auto_free(JugadorDoble.new())
-	almacen.get("_jugador").set_physics_process(false)
-	# Abrir la jornada termina el examen del jugador: el doble usa el de la escena.
-	jugador.examen = almacen.get("_jugador").examen
-	almacen.set("_jugador", jugador)
+	# El cableado lee transforms globales: el doble necesita la escena real montada.
+	var jugador: Jugador = almacen.get("_jugador")
+	var agarre := jugador.agarre
+	var examen := jugador.examen
+	jugador.set_script(JugadorDoble)
+	jugador.agarre = agarre
+	jugador.examen = examen
+	jugador.set_physics_process(false)
 	add_child(almacen)
+	assert_object(jugador.get_script()).is_same(JugadorDoble)
+	assert_bool(jugador.is_inside_tree()).is_true()
 	var hud: Hud = almacen.get("_hud")
 	var objetivo: Node3D = almacen.get("_estante")
 	var malla: MeshInstance3D = objetivo.get("mallas")[0]
