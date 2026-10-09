@@ -67,6 +67,14 @@ Para cada cosa que toca `src/dominio/` o `src/sistemas/`:
 func test_dos_jornadas_graves_seguidas_despiden() -> void:  # AC-EMP-004
 ```
 
+**Una prueba de arquitectura no prohíbe toda condición en una cáscara.** En #306 del
+2026-10-09, un test heredado rechazaba cualquier `if`, `elif` o `match` en la raíz: también
+impedía excluir cuerpos ya entregados o comprobar una referencia antes de leerla. La cáscara
+traduce esos hechos; el dominio decide sus consecuencias. Antes de editar, declará en el issue
+el reemplazo del test textual, conservá sus comprobaciones útiles y ejercé los resultados en
+pruebas funcionales y puras. No eludas la expresión regular con otra sintaxis ni afirmes que
+una cita de método demuestra la delegación: eso también requiere revisar la fuente.
+
 **Un test que compara dos lecturas del mismo cuadro tiene que forzar la escritura antes de leer.**
 `await get_tree().process_frame` sigue **antes** del `_process` de los nodos. Leer justo después
 del `await` compara la escritura del cuadro anterior contra el instante de éste. Medido el

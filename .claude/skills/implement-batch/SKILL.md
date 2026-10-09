@@ -192,6 +192,12 @@ Cada agente recibe, literal:
   `implement-feature` le pide cerrar el lazo, y en un lote eso da N copias de la misma lección.
   Medido el 2026-09-23: los dos carriles escribieron la misma regla en `to-issue` y en las siete
   copias de `sin-deuda.md`, y los dos PR chocaban en ocho archivos.
+- **Un test heredado puede prohibir una traducción mecánica válida.** En #306 del
+  2026-10-09, una expresión regular impedía cualquier condición en la raíz, incluso excluir
+  cuerpos ya entregados antes de evaluar el cierre. Se declara su reemplazo en el issue entero,
+  se conservan sus comprobaciones útiles y se prueba el comportamiento; la regla del juego
+  permanece en dominio. No se cambia la sintaxis para esquivar el test. El método lo detalla
+  `implement-feature`.
 - **Godot con `--script` lleva siempre `--path .`, y el script termina con `quit()`.** Sin
   `--path`, `res://` es el directorio actual, y fuera de la raíz del repo cada `load` falla. Si
   el script aborta antes de `quit()`, Godot imprime el error y no sale nunca. Medido el
