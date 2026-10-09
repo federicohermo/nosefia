@@ -4,13 +4,25 @@ const ALMACEN := preload("res://src/escenas/almacen.tscn")
 const UNIDAD := preload("res://src/escenas/objetos/objeto_agarrable.tscn")
 const PAPEL := preload("res://src/escenas/objetos/ticket.tscn")
 
+var _almacenes: Array[Node3D] = []
+
 
 func after_test() -> void:
 	get_tree().paused = false
+	for almacen: Node3D in _almacenes:
+		var reproductor: ReproductorDeSonidos = almacen.get_node(
+			"Servicios/AudioDelAlmacen/Reproductor"
+		)
+		reproductor.silenciar()
+		almacen.queue_free()
+	_almacenes.clear()
+	for _cuadro in 4:
+		await get_tree().process_frame
 
 
 func _abrir() -> Node3D:
 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
+	_almacenes.append(almacen)
 	add_child(almacen)
 	almacen.get_node("Jugador").set_physics_process(false)
 	for _cuadro in 4:
