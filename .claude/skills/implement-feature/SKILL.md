@@ -67,6 +67,14 @@ Para cada cosa que toca `src/dominio/` o `src/sistemas/`:
 func test_dos_jornadas_graves_seguidas_despiden() -> void:  # AC-EMP-004
 ```
 
+**Una prueba de arquitectura no prohíbe toda condición en una cáscara.** En #306 del
+2026-10-09, un test heredado rechazaba cualquier `if`, `elif` o `match` en la raíz: también
+impedía excluir cuerpos ya entregados o comprobar una referencia antes de leerla. La cáscara
+traduce esos hechos; el dominio decide sus consecuencias. Antes de editar, declará en el issue
+el reemplazo del test textual, conservá sus comprobaciones útiles y ejercé los resultados en
+pruebas funcionales y puras. No eludas la expresión regular con otra sintaxis ni afirmes que
+una cita de método demuestra la delegación: eso también requiere revisar la fuente.
+
 **Un test que compara dos lecturas del mismo cuadro tiene que forzar la escritura antes de leer.**
 `await get_tree().process_frame` sigue **antes** del `_process` de los nodos. Leer justo después
 del `await` compara la escritura del cuadro anterior contra el instante de éste. Medido el
@@ -138,6 +146,13 @@ lo que en este motor nadie más cuida.
 **Guardá su salida en un archivo.** El nodo `tests` rojo imprime la corrida entera, y la
 herramienta la corta antes del test que falló. Medido el 2026-09-26.
 
+**El XML sin errores no certifica los callbacks ni el desmontaje.** Conservá también la salida
+cruda del motor en verde. En #302, emitir un array sin tipo abortaba un callback fuera del
+contador de errores del caso y la ausencia de audio pasaba por accidente. El fixture entrega
+los tipos de la señal y afirma que su receptor se ejecutó, además del resultado. Un error nuevo
+o una fuga se corrige aunque el XML diga cero; los diagnósticos deliberados del debugger o de
+un `assert_error` se identifican por su causa, sin descartar otras líneas `ERROR`.
+
 **Un nodo salteado no es un nodo verde**, y el reporte lo distingue. Pero `tests` sin `GODOT_BIN`
 **no se saltea: sale rojo** — ese salteo vale sólo mientras no exista un solo `*_test.gd`, y hay
 muchos.
@@ -150,12 +165,15 @@ crudo sigue siendo el control, y `verificar.py` **no lo imprime**:
 ```powershell
 & $env:GODOT_BIN --path . --headless -s -d --remote-debug tcp://127.0.0.1:0 `
   res://addons/gdUnit4/bin/GdUnitCmdTool.gd -a test --continue --ignoreHeadlessMode `
-  -rd reports 2>$null | Select-String "Executed test suites"
+  -rd res://reports 2>$null | Select-String "Executed test suites"
 ```
 
 **Va en PowerShell y no en Bash**, porque en un worktree aislado Bash rechaza cualquier forma de
 invocar Godot como comando. **Y el `2>$null` no se saca**: PowerShell no pasa el stderr de Godot
 por `Select-String`, y sin él la corrida devuelve 4,5 MB. Medido el 2026-09-24.
+
+Esta vista filtrada sólo presenta el conteo; no reemplaza el archivo crudo de la corrida ni
+su veredicto. Los errores fuera del contador se revisan en ese archivo completo.
 
 Ese `(N/N)` tiene que dar igual que `find test -name '*_test.gd' | wc -l`. Si da menos, hay una
 suite que no corrió.

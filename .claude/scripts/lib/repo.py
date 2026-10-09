@@ -140,5 +140,7 @@ TESTS = "test"
 #: no tenerlos, porque además mienten.
 CAPAS_CON_TEST_OBLIGATORIO = ("src/dominio", "src/sistemas")
 
-#: El directorio donde gdUnit4 deja sus reportes. Está en el `.gitignore`.
-REPORTES = "reports"
+#: La URI permite que gdUnit4 globalice la ruta antes de limpiar su historial. Una ruta
+#: relativa se repite contra el DirAccess abierto y deja errores al superar veinte reportes.
+#: El directorio sigue siendo `reports/`, que está en el `.gitignore`.
+REPORTES = "res://reports"

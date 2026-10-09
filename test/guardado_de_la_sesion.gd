@@ -37,6 +37,8 @@ func _al_llegar_un_evento(evento: GdUnitEvent) -> void:
 
 
 func _borrar_la_carpeta() -> void:
+	if not DirAccess.dir_exists_absolute(carpeta):
+		return
 	for archivo: String in DirAccess.get_files_at(carpeta):
 		DirAccess.remove_absolute(carpeta.path_join(archivo))
 	DirAccess.remove_absolute(carpeta)

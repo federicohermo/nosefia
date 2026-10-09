@@ -48,6 +48,35 @@ Si el tipo no está claro, preguntá. Es la decisión que define la rama y el re
 
 **Los límites de archivo y los criterios salen del árbol de hoy, no de la memoria.**
 
+**Agregar interacción no implica que falte arte.** Antes de pedir generar, reemplazar u ocultar
+un soporte visual, inspeccionar sus mallas, cuerpos, materiales e imágenes, y cruzarlos con las
+decisiones vigentes del usuario. Si el soporte ya existe, declarar qué lectura o dato le falta
+y reutilizarlo. El tamaño decorativo de un prototipo no se convierte en contrato de juego. En
+el lote del 2026-10-08, las tres hojas del baño ya tenían imagen y colisión; el trabajo faltante
+era poder leerlas, y recrearlas como A4 habría reemplazado lo que acababa de hacer el artista.
+
+**Un encuadre se mide contra las mallas visibles y sus profundidades, además de las colisiones.**
+Un rayo libre no prueba que un punto se vea si la malla que lo tapa no tiene collider. Separar
+los bordes del hueco físico de los que la cámara tiene que encuadrar, y cruzar la proyección con
+capturas del modelo vigente antes de fijar sus criterios. En #297 el antepecho ocultaba unos
+120 píxeles inferiores de 1080 aunque los rayos al hueco pasaran; sus bordes y los del dintel
+estaban a distinta profundidad. El encuadre se define con esos bordes, conservando el modelo.
+
+**La captura verifica el foco y la pose dibujada en el cuadro que guarda.** Preparar la cámara
+y comprobar un rayo unos cuadros antes no basta: entradas o interpolación pueden cambiar el
+encuadre. El fixture conserva la pose preparada, comprueba también la pose interpolada y el
+foco después del dibujo, y el padre abre el PNG. En #302 la primera foto de la caja mostraba
+la puerta y cortaba la caja, aunque la prueba física de foco pasara. Se corrigió el montaje
+externo y se repitió la captura, sin mover arte ni cambiar la producción.
+
+**Una entrada nativa en Windows verifica su escala DPI y el destino real.** El driver declara
+`PER_MONITOR_AWARE_V2` antes de consultar ventanas. Cruza el rectángulo de cliente con el
+viewport, convierte las coordenadas con `ClientToScreen` y afirma la opción seleccionada.
+`PostMessage` no basta si el motor consulta el cursor real; la sonda lo ubica y lo restaura.
+Sólo opera el HWND de su proceso, validando descendencia, ejecutable y proyecto. En #303,
+el driver sin consciencia DPI medía 1536 píxeles donde Godot dibujaba 1920 y elegía otra fila.
+La selección pasó en ambas resoluciones al corregir el driver, sin tocar producción.
+
 ```bash
 rg -n "<lo que el issue va a tocar>" src/ test/ docs/   # una guía también describe la regla
 gh issue list --state open --limit 50      # si ya hay uno igual, no se abre otro
@@ -85,6 +114,10 @@ Lo que más se rompe:
   `Depende de #N`.
 - **El primer comando de verificación es siempre `python .claude/scripts/verificar.py`.** El
   veredicto sale del código de salida, nunca de un grep.
+- **Un diff de un issue apilado se compara contra su base explícita.** Registrar la rama y la
+  cabeza medidas y usar esa base en los comandos que excluyen rutas ajenas. Comparar contra
+  `staging` también cobra cambios heredados. En #300 esa comparación incluía dominio y UI de
+  #295, aunque #300 no los tocara; se corrigió el comando contra su base `9664069f`.
 - **Un comando que prueba una ausencia se corre hoy, y devuelve todo lo que el criterio saca.**
   Si deja casos afuera, se amplía. Si no se puede, el criterio nombra el test que los cubre. En
   el #140, el `rg` de la verificación no veía los productos de la raíz del modelo.
@@ -171,6 +204,19 @@ Lo que más se rompe:
   todos, no al primero. En el #263 el cupo dejaba de ser `.umbral`, pero `faltantes()` y
   `vendibles()` también lo leían. Además, 20 tests armaban con `retirar(` la góndola vacía que el
   issue llenaba. La primera corrida dio 37 casos rojos en 11 archivos fuera de «Se escribe».
+- **Al retirar un método, el barrido incluye llamadas por nombre y helpers de integración.**
+  Buscar el nombre en `src/` y `test/`, también en `call()` y `Callable`; no sólo la declaración
+  o sus lectores directos. En el #294, los casos del gesto nuevo pasaban, pero dos helpers de
+  `jornada_integrada_test.gd` seguían llamando a `interactuar` y fallaron al correr el flujo.
+- **Un barrido de una regla retirada distingue usos ajenos de la misma palabra.** Si el patrón
+  da un falso positivo, acotarlo al enunciado que se retira y comprobar que todavía lo detecta.
+  No cambiar el código ajeno para satisfacer el patrón. En el #295, `recuperarse` nombraba tanto
+  la deuda de apercibimientos como el rescate físico de una mopa; se acotó a la frase de la deuda.
+- **Un contrato que propone `@export` prueba que el tipo se puede exportar.** Un dato de dominio
+  que extiende `RefCounted` puede pasarse por una propiedad tipada, pero no exportarse al editor.
+  Usar un identificador exportable y entregar el dato desde el cableado, o un `Resource` si el
+  contrato necesita persistirlo como recurso. La sonda de #298 dio el error de parseo antes de
+  implementar las notas y se corrigió el contrato completo.
 - **Un criterio que conserva un enunciado se lee contra lo que el issue retira.** En el #263,
   «`BR-STK-013` sin cambiar su enunciado» nombraba el umbral que el mismo issue sacaba.
 - **Si el issue saca una regla, busca qué otra contaba con ella sin decirlo.** Un corte suele
