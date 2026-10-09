@@ -1,0 +1,126 @@
+ERROR: The remote port number must be between 1 and 65535 (inclusive).
+   at: connect_to_host (core/io/stream_peer_tcp.cpp:69)
+ERROR: Remote Debugger: Unable to connect to host '127.0.0.1:0'.
+   at: create_tcp (core/debugger/remote_debugger_peer.cpp:247)
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+[2J[H[38;2;233;150;122m
+--------------------------------------------------------------------------------------------------
+GdUnit4 Comandline Tool
+--------------------------------------------------------------------------------------------------[0m
+[38;2;0;191;255mDisabled fail fast![0m
+[38;2;0;191;255mSet write reports to D:/Usuarios/fede/Documentos/Catedra Videojuegos FADU/manada/repo/nosefia/.claude/worktrees/batch-64-309-a-siguiente/reports/304-focal[0m
+[38;2;218;165;32m
+Headless mode is ignored by option '--ignoreHeadlessMode'"
+
+Please note that tests that use UI interaction do not work correctly in headless mode.
+Godot 'InputEvents' are not transported by the Godot engine in headless mode and therefore
+have no effect in the test!
+[0m
+[38;2;100;149;237mInstalling GdUnit4 session system hooks.[0m
+[38;2;100;149;237mSession hook 'GdUnitHtmlTestReporter' installed.[0m
+[38;2;100;149;237mSession hook 'GdUnitXMLTestReporter' installed.[0m
+[38;2;100;149;237mInstalling GdUnit4 session hooks.[0m
+[38;2;100;149;237mSession hook 'Guardado de la sesión' installed.[0m
+ERROR: Couldn't open directory at path "user://guardado_de_los_tests_143936".
+   at: get_files_at (core/io/dir_access.cpp:578)
+   GDScript backtrace (most recent call first):
+       [0] _borrar_la_carpeta (res://test/guardado_de_la_sesion.gd:40)
+       [1] startup (res://test/guardado_de_la_sesion.gd:22)
+       [2] execute (res://addons/gdUnit4/src/core/hooks/GdUnitTestSessionHookService.gd:125)
+       [3] execute_startup (res://addons/gdUnit4/src/core/hooks/GdUnitTestSessionHookService.gd:108)
+       [4] _process (res://addons/gdUnit4/src/core/runners/GdUnitTestSessionRunner.gd:127)
+[38;2;0;206;209mRun Test Suite: [0m[38;2;250;235;215mres://test/escenas/puestos/caja_registradora_test.gd[0m
+  [38;2;250;235;215mres://test/escenas/puestos/caja_registradora_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_el_derecho_abre_y_cierra_con_los_ocho_estados_de_la_mano[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+ERROR: Attempted to use 'has' an object into a TypedArray, that does not inherit from 'GDScript'.
+   at: _internal_validate_object (./core/variant/container_type_validate.h:137)
+   GDScript backtrace (most recent call first):
+       [0] _al_agarrar (res://src/escenas/puestos/caja_registradora.gd:88)
+       [1] pedir_agarrar (res://src/sistemas/marco/agarre.gd:71)
+       [2] test_el_derecho_abre_y_cierra_con_los_ocho_estados_de_la_mano (res://test/escenas/puestos/caja_registradora_test.gd:104)
+       [3] _derecho (res://test/escenas/puestos/caja_registradora_test.gd:49)
+ERROR: Condition "!_p->typed.validate(value, "use 'has'")" is true. Returning: false
+   at: has (core/variant/array.cpp:499)
+   GDScript backtrace (most recent call first):
+       [0] _al_agarrar (res://src/escenas/puestos/caja_registradora.gd:88)
+       [1] pedir_agarrar (res://src/sistemas/marco/agarre.gd:71)
+       [2] test_el_derecho_abre_y_cierra_con_los_ocho_estados_de_la_mano (res://test/escenas/puestos/caja_registradora_test.gd:104)
+       [3] _derecho (res://test/escenas/puestos/caja_registradora_test.gd:49)
+  [38;2;250;235;215mres://test/escenas/puestos/caja_registradora_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_el_derecho_abre_y_cierra_con_los_ocho_estados_de_la_mano[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 286ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/puestos/caja_registradora_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_izquierdo_y_examen_vacios_no_abren_y_otras_pantallas_bloquean[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/puestos/caja_registradora_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_izquierdo_y_examen_vacios_no_abren_y_otras_pantallas_bloquean[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 167ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/puestos/caja_registradora_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_el_reloj_corre_la_pausa_real_va_encima_y_el_turno_cierra[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/puestos/caja_registradora_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_el_reloj_corre_la_pausa_real_va_encima_y_el_turno_cierra[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 194ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/puestos/caja_registradora_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_los_botones_imprimen_copia_y_borrar_repinta_tres_vacios[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/puestos/caja_registradora_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_los_botones_imprimen_copia_y_borrar_repinta_tres_vacios[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 153ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/puestos/caja_registradora_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_imprimir_otra_vez_suelta_el_anterior_y_el_nuevo_queda_quieto[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/puestos/caja_registradora_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_imprimir_otra_vez_suelta_el_anterior_y_el_nuevo_queda_quieto[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 366ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/puestos/caja_registradora_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_imprimir_otro_con_el_anterior_en_mano_no_lo_descongela[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/puestos/caja_registradora_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_imprimir_otro_con_el_anterior_en_mano_no_lo_descongela[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 140ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/puestos/caja_registradora_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_otra_jornada_quita_papeles_del_piso_y_del_examen_y_vacia_el_programa[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/puestos/caja_registradora_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_otra_jornada_quita_papeles_del_piso_y_del_examen_y_vacia_el_programa[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 1s 120ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/puestos/caja_registradora_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_caja_y_papel_tienen_foco_y_contorno_y_la_ranura_no_deforma_el_papel[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/puestos/caja_registradora_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_caja_y_papel_tienen_foco_y_contorno_y_la_ranura_no_deforma_el_papel[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 225ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/puestos/caja_registradora_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_cada_inodoro_desecha_una_vez_su_ticket_con_foco_real[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/puestos/caja_registradora_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_cada_inodoro_desecha_una_vez_su_ticket_con_foco_real[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 1s 203ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/puestos/caja_registradora_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_lavatorios_otros_objetos_y_papel_ajeno_no_se_desechan[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+ERROR: Attempted to use 'has' an object into a TypedArray, that does not inherit from 'GDScript'.
+   at: _internal_validate_object (./core/variant/container_type_validate.h:137)
+   GDScript backtrace (most recent call first):
+       [0] _al_agarrar (res://src/escenas/puestos/caja_registradora.gd:88)
+       [1] pedir_agarrar (res://src/sistemas/marco/agarre.gd:71)
+       [2] <anonymous lambda> (res://test/escenas/puestos/caja_registradora_test.gd:554)
+       [3] _execute (res://addons/gdUnit4/src/asserts/GdUnitGodotErrorAssertImpl.gd:17)
+       [4] is_success (res://addons/gdUnit4/src/asserts/GdUnitGodotErrorAssertImpl.gd:82)
+       [5] test_lavatorios_otros_objetos_y_papel_ajeno_no_se_desechan (res://test/escenas/puestos/caja_registradora_test.gd:552)
+       [6] _enfocar_artefacto (res://test/escenas/puestos/caja_registradora_test.gd:477)
+       [7] _enfocar (res://test/escenas/puestos/caja_registradora_test.gd:394)
+ERROR: Condition "!_p->typed.validate(value, "use 'has'")" is true. Returning: false
+   at: has (core/variant/array.cpp:499)
+   GDScript backtrace (most recent call first):
+       [0] _al_agarrar (res://src/escenas/puestos/caja_registradora.gd:88)
+       [1] pedir_agarrar (res://src/sistemas/marco/agarre.gd:71)
+       [2] <anonymous lambda> (res://test/escenas/puestos/caja_registradora_test.gd:554)
+       [3] _execute (res://addons/gdUnit4/src/asserts/GdUnitGodotErrorAssertImpl.gd:17)
+       [4] is_success (res://addons/gdUnit4/src/asserts/GdUnitGodotErrorAssertImpl.gd:82)
+       [5] test_lavatorios_otros_objetos_y_papel_ajeno_no_se_desechan (res://test/escenas/puestos/caja_registradora_test.gd:552)
+       [6] _enfocar_artefacto (res://test/escenas/puestos/caja_registradora_test.gd:477)
+       [7] _enfocar (res://test/escenas/puestos/caja_registradora_test.gd:394)
+  [38;2;250;235;215mres://test/escenas/puestos/caja_registradora_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_lavatorios_otros_objetos_y_papel_ajeno_no_se_desechan[0m[38;2;178;34;34m[1m FAILED[0m[38;2;100;149;237m 1s 569ms[0m
+  [38;2;0;206;209m[1m[4mReport:[0m
+  [38;2;128;128;128mExpecting: no error's are ocured.
+	but found: 'Method/function failed. Returning: false
+Condition "!_p->typed.validate(value, "use 'has'")" is true. Returning: false'
+[0m[38;2;173;216;230m	at 'test_lavatorios_otros_objetos_y_papel_ajeno_no_se_desechan' in res://test/escenas/puestos/caja_registradora_test.gd:552
+	at '_enfocar_artefacto' in res://test/escenas/puestos/caja_registradora_test.gd:477
+	at '_enfocar' in res://test/escenas/puestos/caja_registradora_test.gd:394[0m[38;2;128;128;128m[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/puestos/caja_registradora_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_balde_vacia_y_mopa_enjuaga_en_ambos_inodoros_sin_descarte[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/puestos/caja_registradora_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_balde_vacia_y_mopa_enjuaga_en_ambos_inodoros_sin_descarte[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 1s 278ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/puestos/caja_registradora_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_izquierdo_suelta_y_examen_suspende_sin_desechar[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/puestos/caja_registradora_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_izquierdo_suelta_y_examen_suspende_sin_desechar[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 1s 196ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/puestos/caja_registradora_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_proxima_jornada_limpia_restantes_sin_repetir_ticket_desechado[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/puestos/caja_registradora_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_proxima_jornada_limpia_restantes_sin_repetir_ticket_desechado[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 1s 181ms[0m
+[38;2;128;128;128m[0m
+[38;2;30;144;255mStatistics:[0m[38;2;128;128;128m 13 test cases | 0 errors | 1 failures | 0 flaky | 0 skipped | 0 orphans |[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 9s 165ms[0m
+[38;2;128;128;128m[0m
+[38;2;128;128;128m[0m
+[38;2;30;144;255mOverall Summary:[0m[38;2;255;255;255m 13 test cases | 0 errors | 1 failures | 0 flaky | 0 skipped | 0 orphans |[0m
+[38;2;233;150;122mExecuted test suites: (1/1)[0m
+[38;2;233;150;122mExecuted test cases : (13/13)[0m
+[38;2;233;150;122mTotal execution time: 9s 165ms[0m
+[38;2;255;255;255m [0m[38;2;100;149;237mOpen XML Report at: file://D:/Usuarios/fede/Documentos/Catedra Videojuegos FADU/manada/repo/nosefia/.claude/worktrees/batch-64-309-a-siguiente/reports/304-focal/report_3/results.xml[0m
+[38;2;100;149;237mOpen HTML Report at: file://D:/Usuarios/fede/Documentos/Catedra Videojuegos FADU/manada/repo/nosefia/.claude/worktrees/batch-64-309-a-siguiente/reports/304-focal/report_3/index.html[0m
+[38;2;178;34;34mExit code: 100[0m
+Run dispose test resources

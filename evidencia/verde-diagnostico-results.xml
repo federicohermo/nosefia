@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<testsuites id="2026-10-09" name="report_2" tests="27" failures="0" skipped="0" flaky="0" time="0.000">
+	<testsuite id="0" name="ticket_test" package="test/dominio/almacen" timestamp="2026-10-09T07:30:03" hostname="localhost" tests="4" failures="0" errors="0" skipped="0" flaky="0" time="0.043">
+		<testcase name="test_el_papel_se_levanta_y_suena_como_papel" classname="ticket_test" time="0.005">
+		</testcase>
+		<testcase name="test_el_papel_copia_los_productos_recibidos" classname="ticket_test" time="0.005">
+		</testcase>
+		<testcase name="test_leer_el_papel_no_permite_reescribirlo" classname="ticket_test" time="0.005">
+		</testcase>
+		<testcase name="test_solo_el_tipo_ticket_se_desecha_en_inodoro" classname="ticket_test" time="0.005">
+		</testcase>
+	</testsuite>
+	<testsuite id="1" name="caja_registradora_test" package="test/sistemas/tareas" timestamp="2026-10-09T07:30:03" hostname="localhost" tests="10" failures="0" errors="0" skipped="0" flaky="0" time="0.115">
+		<testcase name="test_publica_lectura_y_cambio_solo_cuando_anota" classname="caja_registradora_test" time="0.005">
+		</testcase>
+		<testcase name="test_borrar_publica_la_vista_vacia" classname="caja_registradora_test" time="0.006">
+		</testcase>
+		<testcase name="test_imprimir_publica_el_papel_y_no_un_cambio_del_programa" classname="caja_registradora_test" time="0.005">
+		</testcase>
+		<testcase name="test_otra_jornada_reemplaza_el_programa_y_avisa_la_vista" classname="caja_registradora_test" time="0.005">
+		</testcase>
+		<testcase name="test_sin_generador_el_cableado_avisa_y_no_publica_eventos" classname="caja_registradora_test" time="0.012">
+		</testcase>
+		<testcase name="test_arrancar_publica_el_modo_de_cada_jornada_y_la_vista_vacia" classname="caja_registradora_test" time="0.005">
+		</testcase>
+		<testcase name="test_elegir_publica_solo_un_cambio_aceptado_y_no_una_lectura" classname="caja_registradora_test" time="0.005">
+		</testcase>
+		<testcase name="test_usar_el_hueco_es_silencioso_tanto_vacio_como_lleno" classname="caja_registradora_test" time="0.005">
+		</testcase>
+		<testcase name="test_desechar_avisa_solo_el_papel_y_conserva_el_programa" classname="caja_registradora_test" time="0.006">
+		</testcase>
+		<testcase name="test_desechar_no_requiere_un_programa_de_renglones" classname="caja_registradora_test" time="0.005">
+		</testcase>
+	</testsuite>
+	<testsuite id="2" name="caja_registradora_test" package="test/escenas/puestos" timestamp="2026-10-09T07:30:03" hostname="localhost" tests="13" failures="0" errors="0" skipped="0" flaky="0" time="9.189">
+		<testcase name="test_el_derecho_abre_y_cierra_con_los_ocho_estados_de_la_mano" classname="caja_registradora_test" time="0.289">
+		</testcase>
+		<testcase name="test_izquierdo_y_examen_vacios_no_abren_y_otras_pantallas_bloquean" classname="caja_registradora_test" time="0.166">
+		</testcase>
+		<testcase name="test_el_reloj_corre_la_pausa_real_va_encima_y_el_turno_cierra" classname="caja_registradora_test" time="0.198">
+		</testcase>
+		<testcase name="test_los_botones_imprimen_copia_y_borrar_repinta_tres_vacios" classname="caja_registradora_test" time="0.156">
+		</testcase>
+		<testcase name="test_imprimir_otra_vez_suelta_el_anterior_y_el_nuevo_queda_quieto" classname="caja_registradora_test" time="0.357">
+		</testcase>
+		<testcase name="test_imprimir_otro_con_el_anterior_en_mano_no_lo_descongela" classname="caja_registradora_test" time="0.133">
+		</testcase>
+		<testcase name="test_otra_jornada_quita_papeles_del_piso_y_del_examen_y_vacia_el_programa" classname="caja_registradora_test" time="1.119">
+		</testcase>
+		<testcase name="test_caja_y_papel_tienen_foco_y_contorno_y_la_ranura_no_deforma_el_papel" classname="caja_registradora_test" time="0.229">
+		</testcase>
+		<testcase name="test_cada_inodoro_desecha_una_vez_su_ticket_con_foco_real" classname="caja_registradora_test" time="1.222">
+		</testcase>
+		<testcase name="test_lavatorios_otros_objetos_y_papel_ajeno_no_se_desechan" classname="caja_registradora_test" time="1.571">
+		</testcase>
+		<testcase name="test_balde_vacia_y_mopa_enjuaga_en_ambos_inodoros_sin_descarte" classname="caja_registradora_test" time="1.279">
+		</testcase>
+		<testcase name="test_izquierdo_suelta_y_examen_suspende_sin_desechar" classname="caja_registradora_test" time="1.196">
+		</testcase>
+		<testcase name="test_proxima_jornada_limpia_restantes_sin_repetir_ticket_desechado" classname="caja_registradora_test" time="1.190">
+		</testcase>
+	</testsuite>
+</testsuites>

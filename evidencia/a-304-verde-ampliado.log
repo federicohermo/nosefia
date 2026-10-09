@@ -1,0 +1,364 @@
+ERROR: The remote port number must be between 1 and 65535 (inclusive).
+   at: connect_to_host (core/io/stream_peer_tcp.cpp:69)
+ERROR: Remote Debugger: Unable to connect to host '127.0.0.1:0'.
+   at: create_tcp (core/debugger/remote_debugger_peer.cpp:247)
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+[2J[H[38;2;233;150;122m
+--------------------------------------------------------------------------------------------------
+GdUnit4 Comandline Tool
+--------------------------------------------------------------------------------------------------[0m
+[38;2;0;191;255mDisabled fail fast![0m
+[38;2;0;191;255mSet write reports to D:/Usuarios/fede/Documentos/Catedra Videojuegos FADU/manada/repo/nosefia/.claude/worktrees/batch-64-309-a-siguiente/reports/304-focal[0m
+[38;2;218;165;32m
+Headless mode is ignored by option '--ignoreHeadlessMode'"
+
+Please note that tests that use UI interaction do not work correctly in headless mode.
+Godot 'InputEvents' are not transported by the Godot engine in headless mode and therefore
+have no effect in the test!
+[0m
+[38;2;100;149;237mInstalling GdUnit4 session system hooks.[0m
+[38;2;100;149;237mSession hook 'GdUnitHtmlTestReporter' installed.[0m
+[38;2;100;149;237mSession hook 'GdUnitXMLTestReporter' installed.[0m
+[38;2;100;149;237mInstalling GdUnit4 session hooks.[0m
+[38;2;100;149;237mSession hook 'Guardado de la sesión' installed.[0m
+ERROR: Couldn't open directory at path "user://guardado_de_los_tests_43624".
+   at: get_files_at (core/io/dir_access.cpp:578)
+   GDScript backtrace (most recent call first):
+       [0] _borrar_la_carpeta (res://test/guardado_de_la_sesion.gd:40)
+       [1] startup (res://test/guardado_de_la_sesion.gd:22)
+       [2] execute (res://addons/gdUnit4/src/core/hooks/GdUnitTestSessionHookService.gd:125)
+       [3] execute_startup (res://addons/gdUnit4/src/core/hooks/GdUnitTestSessionHookService.gd:108)
+       [4] _process (res://addons/gdUnit4/src/core/runners/GdUnitTestSessionRunner.gd:127)
+[38;2;0;206;209mRun Test Suite: [0m[38;2;250;235;215mres://test/dominio/almacen/ticket_test.gd[0m
+  [38;2;250;235;215mres://test/dominio/almacen/ticket_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_el_papel_se_levanta_y_suena_como_papel[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/almacen/ticket_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_el_papel_se_levanta_y_suena_como_papel[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 10ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/almacen/ticket_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_el_papel_copia_los_productos_recibidos[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/almacen/ticket_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_el_papel_copia_los_productos_recibidos[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 9ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/almacen/ticket_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_leer_el_papel_no_permite_reescribirlo[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/almacen/ticket_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_leer_el_papel_no_permite_reescribirlo[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 8ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/almacen/ticket_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_solo_el_tipo_ticket_se_desecha_en_inodoro[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/almacen/ticket_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_solo_el_tipo_ticket_se_desecha_en_inodoro[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 9ms[0m
+[38;2;128;128;128m[0m
+[38;2;30;144;255mStatistics:[0m[38;2;128;128;128m 4 test cases | 0 errors | 0 failures | 0 flaky | 0 skipped | 0 orphans |[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 66ms[0m
+[38;2;128;128;128m[0m
+[38;2;128;128;128m[0m
+[38;2;0;206;209mRun Test Suite: [0m[38;2;250;235;215mres://test/sistemas/tareas/caja_registradora_test.gd[0m
+  [38;2;250;235;215mres://test/sistemas/tareas/caja_registradora_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_publica_lectura_y_cambio_solo_cuando_anota[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/sistemas/tareas/caja_registradora_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_publica_lectura_y_cambio_solo_cuando_anota[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 7ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/sistemas/tareas/caja_registradora_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_borrar_publica_la_vista_vacia[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/sistemas/tareas/caja_registradora_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_borrar_publica_la_vista_vacia[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 6ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/sistemas/tareas/caja_registradora_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_imprimir_publica_el_papel_y_no_un_cambio_del_programa[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/sistemas/tareas/caja_registradora_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_imprimir_publica_el_papel_y_no_un_cambio_del_programa[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 9ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/sistemas/tareas/caja_registradora_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_otra_jornada_reemplaza_el_programa_y_avisa_la_vista[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/sistemas/tareas/caja_registradora_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_otra_jornada_reemplaza_el_programa_y_avisa_la_vista[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 9ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/sistemas/tareas/caja_registradora_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_sin_generador_el_cableado_avisa_y_no_publica_eventos[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+ERROR: Caja registradora sin generador: revisar almacen.gd
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _sin_cablear (res://src/sistemas/tareas/caja_registradora.gd:57)
+       [1] pedir_borrar (res://src/sistemas/tareas/caja_registradora.gd:40)
+       [2] _execute (res://addons/gdUnit4/src/asserts/GdUnitGodotErrorAssertImpl.gd:17)
+       [3] is_push_error (res://addons/gdUnit4/src/asserts/GdUnitGodotErrorAssertImpl.gd:132)
+       [4] test_sin_generador_el_cableado_avisa_y_no_publica_eventos (res://test/sistemas/tareas/caja_registradora_test.gd:81)
+       [5] _execute_test_case (res://addons/gdUnit4/src/core/_TestCase.gd:79)
+       [6] execute (res://addons/gdUnit4/src/core/_TestCase.gd:40)
+       [7] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleTestStage.gd:10)
+       [8] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [9] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleExecutionStage.gd:17)
+       [10] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [11] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestCaseExecutionStage.gd:26)
+       [12] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [13] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestSuiteExecutionStage.gd:36)
+       [14] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [15] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestCaseExecutionStage.gd:35)
+       [16] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [17] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleExecutionStage.gd:28)
+       [18] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [19] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleTestStage.gd:10)
+       [20] execute (res://addons/gdUnit4/src/core/_TestCase.gd:41)
+       [21] test_completed (res://addons/gdUnit4/src/core/_TestCase.gd:86)
+ERROR: Caja registradora sin generador: revisar almacen.gd
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _sin_cablear (res://src/sistemas/tareas/caja_registradora.gd:57)
+       [1] pedir_imprimir (res://src/sistemas/tareas/caja_registradora.gd:47)
+       [2] _execute (res://addons/gdUnit4/src/asserts/GdUnitGodotErrorAssertImpl.gd:17)
+       [3] is_push_error (res://addons/gdUnit4/src/asserts/GdUnitGodotErrorAssertImpl.gd:132)
+       [4] test_sin_generador_el_cableado_avisa_y_no_publica_eventos (res://test/sistemas/tareas/caja_registradora_test.gd:84)
+       [5] _execute_test_case (res://addons/gdUnit4/src/core/_TestCase.gd:79)
+       [6] execute (res://addons/gdUnit4/src/core/_TestCase.gd:40)
+       [7] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleTestStage.gd:10)
+       [8] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [9] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleExecutionStage.gd:17)
+       [10] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [11] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestCaseExecutionStage.gd:26)
+       [12] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [13] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestSuiteExecutionStage.gd:36)
+       [14] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [15] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestCaseExecutionStage.gd:35)
+       [16] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [17] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleExecutionStage.gd:28)
+       [18] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [19] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleTestStage.gd:10)
+       [20] execute (res://addons/gdUnit4/src/core/_TestCase.gd:41)
+       [21] test_completed (res://addons/gdUnit4/src/core/_TestCase.gd:86)
+ERROR: Caja registradora sin generador: revisar almacen.gd
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _sin_cablear (res://src/sistemas/tareas/caja_registradora.gd:57)
+       [1] pedir_anotar (res://src/sistemas/tareas/caja_registradora.gd:27)
+       [2] <anonymous lambda> (res://test/sistemas/tareas/caja_registradora_test.gd:88)
+       [3] _execute (res://addons/gdUnit4/src/asserts/GdUnitGodotErrorAssertImpl.gd:17)
+       [4] is_push_error (res://addons/gdUnit4/src/asserts/GdUnitGodotErrorAssertImpl.gd:132)
+       [5] test_sin_generador_el_cableado_avisa_y_no_publica_eventos (res://test/sistemas/tareas/caja_registradora_test.gd:87)
+       [6] _execute_test_case (res://addons/gdUnit4/src/core/_TestCase.gd:79)
+       [7] execute (res://addons/gdUnit4/src/core/_TestCase.gd:40)
+       [8] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleTestStage.gd:10)
+       [9] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [10] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleExecutionStage.gd:17)
+       [11] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [12] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestCaseExecutionStage.gd:26)
+       [13] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [14] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestSuiteExecutionStage.gd:36)
+       [15] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [16] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestCaseExecutionStage.gd:35)
+       [17] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [18] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleExecutionStage.gd:28)
+       [19] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [20] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleTestStage.gd:10)
+       [21] execute (res://addons/gdUnit4/src/core/_TestCase.gd:41)
+       [22] test_completed (res://addons/gdUnit4/src/core/_TestCase.gd:86)
+ERROR: Caja registradora sin generador: revisar almacen.gd
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _sin_cablear (res://src/sistemas/tareas/caja_registradora.gd:57)
+       [1] pedir_elegir (res://src/sistemas/tareas/caja_registradora.gd:62)
+       [2] <anonymous lambda> (res://test/sistemas/tareas/caja_registradora_test.gd:92)
+       [3] _execute (res://addons/gdUnit4/src/asserts/GdUnitGodotErrorAssertImpl.gd:17)
+       [4] is_push_error (res://addons/gdUnit4/src/asserts/GdUnitGodotErrorAssertImpl.gd:132)
+       [5] test_sin_generador_el_cableado_avisa_y_no_publica_eventos (res://test/sistemas/tareas/caja_registradora_test.gd:91)
+       [6] _execute_test_case (res://addons/gdUnit4/src/core/_TestCase.gd:79)
+       [7] execute (res://addons/gdUnit4/src/core/_TestCase.gd:40)
+       [8] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleTestStage.gd:10)
+       [9] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [10] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleExecutionStage.gd:17)
+       [11] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [12] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestCaseExecutionStage.gd:26)
+       [13] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [14] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestSuiteExecutionStage.gd:36)
+       [15] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [16] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestCaseExecutionStage.gd:35)
+       [17] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [18] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleExecutionStage.gd:28)
+       [19] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [20] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleTestStage.gd:10)
+       [21] execute (res://addons/gdUnit4/src/core/_TestCase.gd:41)
+       [22] test_completed (res://addons/gdUnit4/src/core/_TestCase.gd:86)
+  [38;2;250;235;215mres://test/sistemas/tareas/caja_registradora_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_sin_generador_el_cableado_avisa_y_no_publica_eventos[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 17ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/sistemas/tareas/caja_registradora_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_arrancar_publica_el_modo_de_cada_jornada_y_la_vista_vacia[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/sistemas/tareas/caja_registradora_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_arrancar_publica_el_modo_de_cada_jornada_y_la_vista_vacia[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 9ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/sistemas/tareas/caja_registradora_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_elegir_publica_solo_un_cambio_aceptado_y_no_una_lectura[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/sistemas/tareas/caja_registradora_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_elegir_publica_solo_un_cambio_aceptado_y_no_una_lectura[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 9ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/sistemas/tareas/caja_registradora_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_usar_el_hueco_es_silencioso_tanto_vacio_como_lleno[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/sistemas/tareas/caja_registradora_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_usar_el_hueco_es_silencioso_tanto_vacio_como_lleno[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 11ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/sistemas/tareas/caja_registradora_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_desechar_avisa_solo_el_papel_y_conserva_el_programa[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/sistemas/tareas/caja_registradora_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_desechar_avisa_solo_el_papel_y_conserva_el_programa[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 13ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/sistemas/tareas/caja_registradora_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_desechar_no_requiere_un_programa_de_renglones[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/sistemas/tareas/caja_registradora_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_desechar_no_requiere_un_programa_de_renglones[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 12ms[0m
+[38;2;128;128;128m[0m
+[38;2;30;144;255mStatistics:[0m[38;2;128;128;128m 10 test cases | 0 errors | 0 failures | 0 flaky | 0 skipped | 0 orphans |[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 176ms[0m
+[38;2;128;128;128m[0m
+[38;2;128;128;128m[0m
+[38;2;0;206;209mRun Test Suite: [0m[38;2;250;235;215mres://test/escenas/puestos/caja_registradora_test.gd[0m
+  [38;2;250;235;215mres://test/escenas/puestos/caja_registradora_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_el_derecho_abre_y_cierra_con_los_ocho_estados_de_la_mano[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/puestos/caja_registradora_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_el_derecho_abre_y_cierra_con_los_ocho_estados_de_la_mano[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 324ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/puestos/caja_registradora_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_izquierdo_y_examen_vacios_no_abren_y_otras_pantallas_bloquean[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/puestos/caja_registradora_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_izquierdo_y_examen_vacios_no_abren_y_otras_pantallas_bloquean[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 177ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/puestos/caja_registradora_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_el_reloj_corre_la_pausa_real_va_encima_y_el_turno_cierra[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/puestos/caja_registradora_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_el_reloj_corre_la_pausa_real_va_encima_y_el_turno_cierra[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 207ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/puestos/caja_registradora_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_los_botones_imprimen_copia_y_borrar_repinta_tres_vacios[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/puestos/caja_registradora_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_los_botones_imprimen_copia_y_borrar_repinta_tres_vacios[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 171ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/puestos/caja_registradora_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_imprimir_otra_vez_suelta_el_anterior_y_el_nuevo_queda_quieto[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/puestos/caja_registradora_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_imprimir_otra_vez_suelta_el_anterior_y_el_nuevo_queda_quieto[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 353ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/puestos/caja_registradora_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_imprimir_otro_con_el_anterior_en_mano_no_lo_descongela[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/puestos/caja_registradora_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_imprimir_otro_con_el_anterior_en_mano_no_lo_descongela[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 133ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/puestos/caja_registradora_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_otra_jornada_quita_papeles_del_piso_y_del_examen_y_vacia_el_programa[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/puestos/caja_registradora_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_otra_jornada_quita_papeles_del_piso_y_del_examen_y_vacia_el_programa[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 1s 126ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/puestos/caja_registradora_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_caja_y_papel_tienen_foco_y_contorno_y_la_ranura_no_deforma_el_papel[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/puestos/caja_registradora_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_caja_y_papel_tienen_foco_y_contorno_y_la_ranura_no_deforma_el_papel[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 224ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/puestos/caja_registradora_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_cada_inodoro_desecha_una_vez_su_ticket_con_foco_real[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/puestos/caja_registradora_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_cada_inodoro_desecha_una_vez_su_ticket_con_foco_real[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 1s 200ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/puestos/caja_registradora_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_lavatorios_otros_objetos_y_papel_ajeno_no_se_desechan[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/puestos/caja_registradora_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_lavatorios_otros_objetos_y_papel_ajeno_no_se_desechan[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 1s 569ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/puestos/caja_registradora_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_balde_vacia_y_mopa_enjuaga_en_ambos_inodoros_sin_descarte[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/puestos/caja_registradora_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_balde_vacia_y_mopa_enjuaga_en_ambos_inodoros_sin_descarte[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 1s 279ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/puestos/caja_registradora_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_izquierdo_suelta_y_examen_suspende_sin_desechar[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/puestos/caja_registradora_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_izquierdo_suelta_y_examen_suspende_sin_desechar[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 1s 196ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/puestos/caja_registradora_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_proxima_jornada_limpia_restantes_sin_repetir_ticket_desechado[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/puestos/caja_registradora_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_proxima_jornada_limpia_restantes_sin_repetir_ticket_desechado[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 1s 177ms[0m
+[38;2;128;128;128m[0m
+[38;2;30;144;255mStatistics:[0m[38;2;128;128;128m 13 test cases | 0 errors | 0 failures | 0 flaky | 0 skipped | 0 orphans |[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 9s 225ms[0m
+[38;2;128;128;128m[0m
+[38;2;128;128;128m[0m
+[38;2;0;206;209mRun Test Suite: [0m[38;2;250;235;215mres://test/escenas/puestos/bano_publico_test.gd[0m
+  [38;2;250;235;215mres://test/escenas/puestos/bano_publico_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_el_agua_de_ambos_lavatorios_llega_hasta_la_pared_de_la_cubeta[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/puestos/bano_publico_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_el_agua_de_ambos_lavatorios_llega_hasta_la_pared_de_la_cubeta[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 137ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/puestos/bano_publico_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_los_volumenes_de_los_tanques_coinciden_con_sus_tapas_visibles[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/puestos/bano_publico_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_los_volumenes_de_los_tanques_coinciden_con_sus_tapas_visibles[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 127ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/puestos/bano_publico_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_los_lavatorios_y_los_inodoros_tienen_porcelana_clara[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/puestos/bano_publico_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_los_lavatorios_y_los_inodoros_tienen_porcelana_clara[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 122ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/puestos/bano_publico_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_el_piso_ampliado_forma_parte_de_la_misma_superficie_del_edificio[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/puestos/bano_publico_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_el_piso_ampliado_forma_parte_de_la_misma_superficie_del_edificio[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 127ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/puestos/bano_publico_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_las_paredes_del_bano_tienen_un_plano_continuo_hasta_el_dintel[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/puestos/bano_publico_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_las_paredes_del_bano_tienen_un_plano_continuo_hasta_el_dintel[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 126ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/puestos/bano_publico_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_cada_cabina_tiene_una_luminaria_encima_del_inodoro[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/puestos/bano_publico_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_cada_cabina_tiene_una_luminaria_encima_del_inodoro[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 133ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/puestos/bano_publico_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_los_lavatorios_dejan_espacio_entre_sus_bordes[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/puestos/bano_publico_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_los_lavatorios_dejan_espacio_entre_sus_bordes[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 132ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/puestos/bano_publico_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_la_pared_del_sector_ampliado_no_tiene_caras_superpuestas[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/puestos/bano_publico_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_la_pared_del_sector_ampliado_no_tiene_caras_superpuestas[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 129ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/puestos/bano_publico_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_la_pared_ampliada_y_el_hueco_tienen_el_acabado_del_bano[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/puestos/bano_publico_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_la_pared_ampliada_y_el_hueco_tienen_el_acabado_del_bano[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 135ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/puestos/bano_publico_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_la_entrada_conserva_la_escala_de_las_otras_puertas_y_un_marco_continuo[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/puestos/bano_publico_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_la_entrada_conserva_la_escala_de_las_otras_puertas_y_un_marco_continuo[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 139ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/puestos/bano_publico_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_las_cabinas_tienen_puertas_que_liberan_el_acceso_al_abrirse[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/puestos/bano_publico_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_las_cabinas_tienen_puertas_que_liberan_el_acceso_al_abrirse[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 2s 48ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/puestos/bano_publico_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_el_sector_abierto_deja_lugar_para_caminar_y_llevar_el_balde[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/puestos/bano_publico_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_el_sector_abierto_deja_lugar_para_caminar_y_llevar_el_balde[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 135ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/puestos/bano_publico_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_los_dos_inodoros_y_lavatorios_se_pueden_usar_para_la_limpieza[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/puestos/bano_publico_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_los_dos_inodoros_y_lavatorios_se_pueden_usar_para_la_limpieza[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 127ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/puestos/bano_publico_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_el_sector_antes_cerrado_es_accesible_desde_el_bano[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/puestos/bano_publico_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_el_sector_antes_cerrado_es_accesible_desde_el_bano[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 132ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/puestos/bano_publico_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_la_puerta_del_bano_abierta_no_corta_el_recorrido_hacia_las_cabinas[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/puestos/bano_publico_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_la_puerta_del_bano_abierta_no_corta_el_recorrido_hacia_las_cabinas[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 1s 32ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/puestos/bano_publico_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_la_entrada_cerrada_no_deja_ver_el_bano_por_los_bordes_de_la_hoja[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/puestos/bano_publico_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_la_entrada_cerrada_no_deja_ver_el_bano_por_los_bordes_de_la_hoja[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 121ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/puestos/bano_publico_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_el_acabado_del_bano_no_sobresale_delante_de_la_hoja_cerrada[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/puestos/bano_publico_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_el_acabado_del_bano_no_sobresale_delante_de_la_hoja_cerrada[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 240ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/puestos/bano_publico_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_las_hojas_de_cabina_giran_unidas_a_un_soporte_fijo[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/puestos/bano_publico_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_las_hojas_de_cabina_giran_unidas_a_un_soporte_fijo[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 2s 210ms[0m
+[38;2;128;128;128m[0m
+[38;2;30;144;255mStatistics:[0m[38;2;128;128;128m 18 test cases | 0 errors | 0 failures | 0 flaky | 0 skipped | 0 orphans |[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 7s 460ms[0m
+[38;2;128;128;128m[0m
+[38;2;128;128;128m[0m
+[38;2;0;206;209mRun Test Suite: [0m[38;2;250;235;215mres://test/escenas/jornada_integrada_test.gd[0m
+  [38;2;250;235;215mres://test/escenas/jornada_integrada_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_los_puestos_completan_la_jornada_y_permiten_abrir_la_siguiente[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+WARNING: Rescate: `Balde` estaba adentro de `SueloSolido` en (5.000001, 0.200189, 4.299999); va a DESHACER
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] revisar (res://src/sistemas/marco/red_de_seguridad.gd:101)
+       [1] _al_soltar (res://src/sistemas/marco/red_de_seguridad.gd:127)
+WARNING: Rescate: `Balde` estaba adentro de `SueloSolido` en (3.495001, 0.198718, -1.000001); va a DESHACER
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] revisar (res://src/sistemas/marco/red_de_seguridad.gd:101)
+       [1] _al_soltar (res://src/sistemas/marco/red_de_seguridad.gd:127)
+WARNING: Rescate: `Balde` estaba adentro de `StaticBody3D` en (11.745, 0.216795, 6.006); va a DESHACER
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] revisar (res://src/sistemas/marco/red_de_seguridad.gd:101)
+       [1] _al_soltar (res://src/sistemas/marco/red_de_seguridad.gd:127)
+  [38;2;250;235;215mres://test/escenas/jornada_integrada_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_los_puestos_completan_la_jornada_y_permiten_abrir_la_siguiente[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 4s 759ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/jornada_integrada_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_abrir_la_jornada_termina_el_examen_en_curso[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/jornada_integrada_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_abrir_la_jornada_termina_el_examen_en_curso[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 134ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/jornada_integrada_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_con_otra_pantalla_encima_la_e_no_abre_un_examen[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/jornada_integrada_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_con_otra_pantalla_encima_la_e_no_abre_un_examen[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 129ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/jornada_integrada_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_la_puerta_abierta_anoche_arranca_cerrada[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/jornada_integrada_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_la_puerta_abierta_anoche_arranca_cerrada[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 2s 6ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/jornada_integrada_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_la_puerta_a_medio_giro_arranca_cerrada[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/jornada_integrada_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_la_puerta_a_medio_giro_arranca_cerrada[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 129ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/jornada_integrada_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_la_noche_siguiente_abre_con_cada_caja_llena_y_nada_afuera[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/jornada_integrada_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_la_noche_siguiente_abre_con_cada_caja_llena_y_nada_afuera[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 140ms[0m
+[38;2;128;128;128m[0m
+[38;2;30;144;255mStatistics:[0m[38;2;128;128;128m 6 test cases | 0 errors | 0 failures | 0 flaky | 0 skipped | 0 orphans |[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 7s 339ms[0m
+[38;2;128;128;128m[0m
+[38;2;128;128;128m[0m
+[38;2;0;206;209mRun Test Suite: [0m[38;2;250;235;215mres://test/escenas/agua_sobre_el_piso_test.gd[0m
+  [38;2;250;235;215mres://test/escenas/agua_sobre_el_piso_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_instanciar_y_descartar_el_almacen_sin_abrirlo_no_deja_nodos_huerfanos[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/agua_sobre_el_piso_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_instanciar_y_descartar_el_almacen_sin_abrirlo_no_deja_nodos_huerfanos[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 32ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/agua_sobre_el_piso_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_el_uso_sobre_piso_libre_llega_sin_convertir_el_suelo_en_interactuable[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/agua_sobre_el_piso_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_el_uso_sobre_piso_libre_llega_sin_convertir_el_suelo_en_interactuable[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 137ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/agua_sobre_el_piso_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_el_disco_completo_de_agua_se_reserva_fuera_de_las_manchas[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/agua_sobre_el_piso_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_el_disco_completo_de_agua_se_reserva_fuera_de_las_manchas[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 125ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/agua_sobre_el_piso_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_una_superficie_horizontal_de_un_mueble_no_es_piso[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/agua_sobre_el_piso_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_una_superficie_horizontal_de_un_mueble_no_es_piso[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 124ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/agua_sobre_el_piso_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_agua_limpia_deja_charco_sin_cambiar_las_manchas_y_la_jornada_lo_borra[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/agua_sobre_el_piso_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_agua_limpia_deja_charco_sin_cambiar_las_manchas_y_la_jornada_lo_borra[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 128ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/agua_sobre_el_piso_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_enjuagar_en_el_inodoro_anima_hacia_ese_inodoro_y_no_hacia_el_balde[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/agua_sobre_el_piso_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_enjuagar_en_el_inodoro_anima_hacia_ese_inodoro_y_no_hacia_el_balde[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 121ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/agua_sobre_el_piso_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_rechaza_una_concavidad_entre_las_muestras_del_borde[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/agua_sobre_el_piso_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_rechaza_una_concavidad_entre_las_muestras_del_borde[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 8ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/agua_sobre_el_piso_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_la_mira_no_deja_agua_fuera_de_alcance_ni_detras_de_un_obstaculo[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/agua_sobre_el_piso_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_la_mira_no_deja_agua_fuera_de_alcance_ni_detras_de_un_obstaculo[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 123ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/agua_sobre_el_piso_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_el_producto_aceptado_mezcla_el_balde_y_repintar_no_corta_la_transicion[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/agua_sobre_el_piso_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_el_producto_aceptado_mezcla_el_balde_y_repintar_no_corta_la_transicion[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 121ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/agua_sobre_el_piso_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_las_senales_llenan_y_vacian_con_nivel_gradual_sin_reiniciar_al_repintar[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/agua_sobre_el_piso_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_las_senales_llenan_y_vacian_con_nivel_gradual_sin_reiniciar_al_repintar[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 123ms[0m
+[38;2;128;128;128m[0m
+[38;2;30;144;255mStatistics:[0m[38;2;128;128;128m 10 test cases | 0 errors | 0 failures | 0 flaky | 0 skipped | 0 orphans |[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 1s 103ms[0m
+[38;2;128;128;128m[0m
+[38;2;128;128;128m[0m
+[38;2;30;144;255mOverall Summary:[0m[38;2;255;255;255m 61 test cases | 0 errors | 0 failures | 0 flaky | 0 skipped | 0 orphans |[0m
+[38;2;233;150;122mExecuted test suites: (6/6)[0m
+[38;2;233;150;122mExecuted test cases : (61/61)[0m
+[38;2;233;150;122mTotal execution time: 25s 369ms[0m
+[38;2;255;255;255m [0m[38;2;100;149;237mOpen XML Report at: file://D:/Usuarios/fede/Documentos/Catedra Videojuegos FADU/manada/repo/nosefia/.claude/worktrees/batch-64-309-a-siguiente/reports/304-focal/report_4/results.xml[0m
+[38;2;100;149;237mOpen HTML Report at: file://D:/Usuarios/fede/Documentos/Catedra Videojuegos FADU/manada/repo/nosefia/.claude/worktrees/batch-64-309-a-siguiente/reports/304-focal/report_4/index.html[0m
+[38;2;233;150;122mExit code: 0[0m
+Run dispose test resources

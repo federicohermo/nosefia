@@ -1,0 +1,9 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+OpenGL API 3.3.0 NVIDIA 591.66 - Compatibility - Using Device: NVIDIA - NVIDIA GeForce RTX 4050 Laptop GPU
+
+SONDA304_SITIOS inodoro=0 centro=(10.945, 0.595, 5.811)
+ERROR: Artefacto no visible/alcanzable: inodoro
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _medir (C:/Users/fede_/orca/workspaces/nosefia/darter/.claude/scratch/batch-64-309/a-304-fisica-base.gd:54)
+SONDA304_SCOPE_LIBERADO

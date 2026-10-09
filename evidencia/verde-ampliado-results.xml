@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<testsuites id="2026-10-09" name="report_4" tests="61" failures="0" skipped="0" flaky="0" time="0.000">
+	<testsuite id="0" name="ticket_test" package="test/dominio/almacen" timestamp="2026-10-09T07:32:08" hostname="localhost" tests="4" failures="0" errors="0" skipped="0" flaky="0" time="0.066">
+		<testcase name="test_el_papel_se_levanta_y_suena_como_papel" classname="ticket_test" time="0.010">
+		</testcase>
+		<testcase name="test_el_papel_copia_los_productos_recibidos" classname="ticket_test" time="0.009">
+		</testcase>
+		<testcase name="test_leer_el_papel_no_permite_reescribirlo" classname="ticket_test" time="0.008">
+		</testcase>
+		<testcase name="test_solo_el_tipo_ticket_se_desecha_en_inodoro" classname="ticket_test" time="0.009">
+		</testcase>
+	</testsuite>
+	<testsuite id="1" name="caja_registradora_test" package="test/sistemas/tareas" timestamp="2026-10-09T07:32:08" hostname="localhost" tests="10" failures="0" errors="0" skipped="0" flaky="0" time="0.176">
+		<testcase name="test_publica_lectura_y_cambio_solo_cuando_anota" classname="caja_registradora_test" time="0.007">
+		</testcase>
+		<testcase name="test_borrar_publica_la_vista_vacia" classname="caja_registradora_test" time="0.006">
+		</testcase>
+		<testcase name="test_imprimir_publica_el_papel_y_no_un_cambio_del_programa" classname="caja_registradora_test" time="0.009">
+		</testcase>
+		<testcase name="test_otra_jornada_reemplaza_el_programa_y_avisa_la_vista" classname="caja_registradora_test" time="0.009">
+		</testcase>
+		<testcase name="test_sin_generador_el_cableado_avisa_y_no_publica_eventos" classname="caja_registradora_test" time="0.017">
+		</testcase>
+		<testcase name="test_arrancar_publica_el_modo_de_cada_jornada_y_la_vista_vacia" classname="caja_registradora_test" time="0.009">
+		</testcase>
+		<testcase name="test_elegir_publica_solo_un_cambio_aceptado_y_no_una_lectura" classname="caja_registradora_test" time="0.009">
+		</testcase>
+		<testcase name="test_usar_el_hueco_es_silencioso_tanto_vacio_como_lleno" classname="caja_registradora_test" time="0.011">
+		</testcase>
+		<testcase name="test_desechar_avisa_solo_el_papel_y_conserva_el_programa" classname="caja_registradora_test" time="0.013">
+		</testcase>
+		<testcase name="test_desechar_no_requiere_un_programa_de_renglones" classname="caja_registradora_test" time="0.012">
+		</testcase>
+	</testsuite>
+	<testsuite id="2" name="caja_registradora_test" package="test/escenas/puestos" timestamp="2026-10-09T07:32:08" hostname="localhost" tests="13" failures="0" errors="0" skipped="0" flaky="0" time="9.225">
+		<testcase name="test_el_derecho_abre_y_cierra_con_los_ocho_estados_de_la_mano" classname="caja_registradora_test" time="0.324">
+		</testcase>
+		<testcase name="test_izquierdo_y_examen_vacios_no_abren_y_otras_pantallas_bloquean" classname="caja_registradora_test" time="0.177">
+		</testcase>
+		<testcase name="test_el_reloj_corre_la_pausa_real_va_encima_y_el_turno_cierra" classname="caja_registradora_test" time="0.207">
+		</testcase>
+		<testcase name="test_los_botones_imprimen_copia_y_borrar_repinta_tres_vacios" classname="caja_registradora_test" time="0.171">
+		</testcase>
+		<testcase name="test_imprimir_otra_vez_suelta_el_anterior_y_el_nuevo_queda_quieto" classname="caja_registradora_test" time="0.353">
+		</testcase>
+		<testcase name="test_imprimir_otro_con_el_anterior_en_mano_no_lo_descongela" classname="caja_registradora_test" time="0.133">
+		</testcase>
+		<testcase name="test_otra_jornada_quita_papeles_del_piso_y_del_examen_y_vacia_el_programa" classname="caja_registradora_test" time="1.126">
+		</testcase>
+		<testcase name="test_caja_y_papel_tienen_foco_y_contorno_y_la_ranura_no_deforma_el_papel" classname="caja_registradora_test" time="0.224">
+		</testcase>
+		<testcase name="test_cada_inodoro_desecha_una_vez_su_ticket_con_foco_real" classname="caja_registradora_test" time="1.200">
+		</testcase>
+		<testcase name="test_lavatorios_otros_objetos_y_papel_ajeno_no_se_desechan" classname="caja_registradora_test" time="1.569">
+		</testcase>
+		<testcase name="test_balde_vacia_y_mopa_enjuaga_en_ambos_inodoros_sin_descarte" classname="caja_registradora_test" time="1.279">
+		</testcase>
+		<testcase name="test_izquierdo_suelta_y_examen_suspende_sin_desechar" classname="caja_registradora_test" time="1.196">
+		</testcase>
+		<testcase name="test_proxima_jornada_limpia_restantes_sin_repetir_ticket_desechado" classname="caja_registradora_test" time="1.177">
+		</testcase>
+	</testsuite>
+	<testsuite id="3" name="bano_publico_test" package="test/escenas/puestos" timestamp="2026-10-09T07:32:18" hostname="localhost" tests="18" failures="0" errors="0" skipped="0" flaky="0" time="7.460">
+		<testcase name="test_el_agua_de_ambos_lavatorios_llega_hasta_la_pared_de_la_cubeta" classname="bano_publico_test" time="0.137">
+		</testcase>
+		<testcase name="test_los_volumenes_de_los_tanques_coinciden_con_sus_tapas_visibles" classname="bano_publico_test" time="0.127">
+		</testcase>
+		<testcase name="test_los_lavatorios_y_los_inodoros_tienen_porcelana_clara" classname="bano_publico_test" time="0.122">
+		</testcase>
+		<testcase name="test_el_piso_ampliado_forma_parte_de_la_misma_superficie_del_edificio" classname="bano_publico_test" time="0.127">
+		</testcase>
+		<testcase name="test_las_paredes_del_bano_tienen_un_plano_continuo_hasta_el_dintel" classname="bano_publico_test" time="0.126">
+		</testcase>
+		<testcase name="test_cada_cabina_tiene_una_luminaria_encima_del_inodoro" classname="bano_publico_test" time="0.133">
+		</testcase>
+		<testcase name="test_los_lavatorios_dejan_espacio_entre_sus_bordes" classname="bano_publico_test" time="0.132">
+		</testcase>
+		<testcase name="test_la_pared_del_sector_ampliado_no_tiene_caras_superpuestas" classname="bano_publico_test" time="0.129">
+		</testcase>
+		<testcase name="test_la_pared_ampliada_y_el_hueco_tienen_el_acabado_del_bano" classname="bano_publico_test" time="0.135">
+		</testcase>
+		<testcase name="test_la_entrada_conserva_la_escala_de_las_otras_puertas_y_un_marco_continuo" classname="bano_publico_test" time="0.139">
+		</testcase>
+		<testcase name="test_las_cabinas_tienen_puertas_que_liberan_el_acceso_al_abrirse" classname="bano_publico_test" time="2.048">
+		</testcase>
+		<testcase name="test_el_sector_abierto_deja_lugar_para_caminar_y_llevar_el_balde" classname="bano_publico_test" time="0.135">
+		</testcase>
+		<testcase name="test_los_dos_inodoros_y_lavatorios_se_pueden_usar_para_la_limpieza" classname="bano_publico_test" time="0.127">
+		</testcase>
+		<testcase name="test_el_sector_antes_cerrado_es_accesible_desde_el_bano" classname="bano_publico_test" time="0.132">
+		</testcase>
+		<testcase name="test_la_puerta_del_bano_abierta_no_corta_el_recorrido_hacia_las_cabinas" classname="bano_publico_test" time="1.032">
+		</testcase>
+		<testcase name="test_la_entrada_cerrada_no_deja_ver_el_bano_por_los_bordes_de_la_hoja" classname="bano_publico_test" time="0.121">
+		</testcase>
+		<testcase name="test_el_acabado_del_bano_no_sobresale_delante_de_la_hoja_cerrada" classname="bano_publico_test" time="0.240">
+		</testcase>
+		<testcase name="test_las_hojas_de_cabina_giran_unidas_a_un_soporte_fijo" classname="bano_publico_test" time="2.210">
+		</testcase>
+	</testsuite>
+	<testsuite id="4" name="jornada_integrada_test" package="test/escenas" timestamp="2026-10-09T07:32:25" hostname="localhost" tests="6" failures="0" errors="0" skipped="0" flaky="0" time="7.339">
+		<testcase name="test_los_puestos_completan_la_jornada_y_permiten_abrir_la_siguiente" classname="jornada_integrada_test" time="4.759">
+		</testcase>
+		<testcase name="test_abrir_la_jornada_termina_el_examen_en_curso" classname="jornada_integrada_test" time="0.134">
+		</testcase>
+		<testcase name="test_con_otra_pantalla_encima_la_e_no_abre_un_examen" classname="jornada_integrada_test" time="0.129">
+		</testcase>
+		<testcase name="test_la_puerta_abierta_anoche_arranca_cerrada" classname="jornada_integrada_test" time="2.006">
+		</testcase>
+		<testcase name="test_la_puerta_a_medio_giro_arranca_cerrada" classname="jornada_integrada_test" time="0.129">
+		</testcase>
+		<testcase name="test_la_noche_siguiente_abre_con_cada_caja_llena_y_nada_afuera" classname="jornada_integrada_test" time="0.140">
+		</testcase>
+	</testsuite>
+	<testsuite id="5" name="agua_sobre_el_piso_test" package="test/escenas" timestamp="2026-10-09T07:32:32" hostname="localhost" tests="10" failures="0" errors="0" skipped="0" flaky="0" time="1.103">
+		<testcase name="test_instanciar_y_descartar_el_almacen_sin_abrirlo_no_deja_nodos_huerfanos" classname="agua_sobre_el_piso_test" time="0.032">
+		</testcase>
+		<testcase name="test_el_uso_sobre_piso_libre_llega_sin_convertir_el_suelo_en_interactuable" classname="agua_sobre_el_piso_test" time="0.137">
+		</testcase>
+		<testcase name="test_el_disco_completo_de_agua_se_reserva_fuera_de_las_manchas" classname="agua_sobre_el_piso_test" time="0.125">
+		</testcase>
+		<testcase name="test_una_superficie_horizontal_de_un_mueble_no_es_piso" classname="agua_sobre_el_piso_test" time="0.124">
+		</testcase>
+		<testcase name="test_agua_limpia_deja_charco_sin_cambiar_las_manchas_y_la_jornada_lo_borra" classname="agua_sobre_el_piso_test" time="0.128">
+		</testcase>
+		<testcase name="test_enjuagar_en_el_inodoro_anima_hacia_ese_inodoro_y_no_hacia_el_balde" classname="agua_sobre_el_piso_test" time="0.121">
+		</testcase>
+		<testcase name="test_rechaza_una_concavidad_entre_las_muestras_del_borde" classname="agua_sobre_el_piso_test" time="0.008">
+		</testcase>
+		<testcase name="test_la_mira_no_deja_agua_fuera_de_alcance_ni_detras_de_un_obstaculo" classname="agua_sobre_el_piso_test" time="0.123">
+		</testcase>
+		<testcase name="test_el_producto_aceptado_mezcla_el_balde_y_repintar_no_corta_la_transicion" classname="agua_sobre_el_piso_test" time="0.121">
+		</testcase>
+		<testcase name="test_las_senales_llenan_y_vacian_con_nivel_gradual_sin_reiniciar_al_repintar" classname="agua_sobre_el_piso_test" time="0.123">
+		</testcase>
+	</testsuite>
+</testsuites>
