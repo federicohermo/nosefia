@@ -241,8 +241,10 @@ func test_la_pausa_no_entrega_eventos_y_reanudar_recupera_el_tiro() -> void:  # 
 		evento.pressed = true
 		Input.parse_input_event(evento)
 		Input.flush_buffered_events()
-		evento.pressed = false
-		Input.parse_input_event(evento)
+		var liberacion := InputEventMouseButton.new()
+		liberacion.button_index = boton
+		liberacion.pressed = false
+		Input.parse_input_event(liberacion)
 		Input.flush_buffered_events()
 	assert_object(almacen.get("_agarre").manos().sostenido()).is_same(bolsa.datos)
 	assert_bool(almacen.get_node(TAPA).call("recibe_objetos")).is_true()
