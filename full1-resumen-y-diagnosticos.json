@@ -1,0 +1,448 @@
+{
+  "head": "fe620b92a38b556f27fff721d162c466c1e784fb",
+  "full_ordinal": 1,
+  "xml": "reports\\report_3\\results.xml",
+  "xml_sha256": "156d3de5981150326aed54dc951c6450647fc7b6e7dce803d978d381d2bdc156",
+  "stats": {
+    "suites": 207,
+    "casos": 1632,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "flaky": 0
+  },
+  "full_exit": [
+    "0"
+  ],
+  "count_exit": [
+    "0"
+  ],
+  "base_evidence_commit": "ba1af9dfad0c9d5eb17e8cec9e1b6bd071360ae6",
+  "base_raw_sha256": "db9925fcd5d5a5fc4047b625e2f5612b6ed651305a95f8eb0504adbb52d2ab57",
+  "base_raw_url": "https://raw.githubusercontent.com/federicohermo/nosefia/ba1af9dfad0c9d5eb17e8cec9e1b6bd071360ae6/evidencia/a-304-full-primera-godot-crudo.log",
+  "base_diagnostic_url": "https://raw.githubusercontent.com/federicohermo/nosefia/ba1af9dfad0c9d5eb17e8cec9e1b6bd071360ae6/evidencia/a-304-full-raw-diagnosticos.json",
+  "categorias": [
+    {
+      "diagnostico": "ERROR: Caja registradora sin generador: revisar almacen.gd",
+      "conteo_309": 4,
+      "conteo_base304": 4,
+      "presente_en_base304": true,
+      "primer_contexto": {
+        "linea": 7242,
+        "contexto": [
+          "       [0] revisar (res://src/sistemas/marco/red_de_seguridad.gd:101)",
+          "       [1] test_va_encima_de_lo_que_ocupa_el_origen_aunque_este_de_costado (res://test/sistemas/marco/red_de_seguridad_test.gd:274)",
+          "ERROR: Caja registradora sin generador: revisar almacen.gd",
+          "   at: push_error (core/variant/variant_utility.cpp:1023)",
+          "   GDScript backtrace (most recent call first):",
+          "       [0] _sin_cablear (res://src/sistemas/tareas/caja_registradora.gd:57)",
+          "       [1] pedir_borrar (res://src/sistemas/tareas/caja_registradora.gd:40)",
+          "       [2] _execute (res://addons/gdUnit4/src/asserts/GdUnitGodotErrorAssertImpl.gd:17)",
+          "       [3] is_push_error (res://addons/gdUnit4/src/asserts/GdUnitGodotErrorAssertImpl.gd:132)",
+          "       [4] test_sin_generador_el_cableado_avisa_y_no_publica_eventos (res://test/sistemas/tareas/caja_registradora_test.gd:81)",
+          "       [5] _execute_test_case (res://addons/gdUnit4/src/core/_TestCase.gd:79)",
+          "       [6] execute (res://addons/gdUnit4/src/core/_TestCase.gd:40)",
+          "       [7] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleTestStage.gd:10)",
+          "       [8] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)",
+          "       [9] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleExecutionStage.gd:17)",
+          "       [10] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)"
+        ]
+      }
+    },
+    {
+      "diagnostico": "ERROR: Cannot open file 'res://no_existe.tscn'.",
+      "conteo_309": 1,
+      "conteo_base304": 1,
+      "presente_en_base304": true,
+      "primer_contexto": {
+        "linea": 7157,
+        "contexto": [
+          "       [18] execute (res://addons/gdUnit4/src/core/_TestCase.gd:41)",
+          "       [19] test_completed (res://addons/gdUnit4/src/core/_TestCase.gd:86)",
+          "ERROR: Cannot open file 'res://no_existe.tscn'.",
+          "   at: load (scene/resources/resource_format_text.cpp:1442)",
+          "ERROR: Failed loading resource: res://no_existe.tscn.",
+          "   at: _load (core/io/resource_loader.cpp:317)",
+          "WARNING: Rescate: `ObjetoAgarrable` estaba adentro de `@StaticBody3D@165926` en (4.000026, 1.100338, -0.000002); va a DESHACER",
+          "   at: push_warning (core/variant/variant_utility.cpp:1033)",
+          "   GDScript backtrace (most recent call first):",
+          "       [0] revisar (res://src/sistemas/marco/red_de_seguridad.gd:101)",
+          "       [1] _al_soltar (res://src/sistemas/marco/red_de_seguridad.gd:127)",
+          "WARNING: Rescate: `ObjetoAgarrable` estaba adentro de `@StaticBody3D@165936` en (4.0, 1.0, 0.0); queda donde está: ningún lugar libre",
+          "   at: push_warning (core/variant/variant_utility.cpp:1033)",
+          "   GDScript backtrace (most recent call first):",
+          "       [0] revisar (res://src/sistemas/marco/red_de_seguridad.gd:101)",
+          "       [1] test_sin_ningun_lugar_libre_queda_donde_esta_y_se_registra (res://test/sistemas/marco/red_de_seguridad_test.gd:87)"
+        ]
+      }
+    },
+    {
+      "diagnostico": "ERROR: Computadora sin cablear: revisar almacen.tscn y almacen.gd",
+      "conteo_309": 3,
+      "conteo_base304": 3,
+      "presente_en_base304": true,
+      "primer_contexto": {
+        "linea": 7014,
+        "contexto": [
+          "       [1] _sin_volumen (res://test/escenas/volumen_de_los_solidos_test.gd:126)",
+          "       [2] test_una_pieza_nueva_sin_volumen_se_nombra_y_una_exencion_vacia_no_la_salva (res://test/escenas/volumen_de_los_solidos_test.gd:199)",
+          "ERROR: Computadora sin cablear: revisar almacen.tscn y almacen.gd",
+          "   at: push_error (core/variant/variant_utility.cpp:1023)",
+          "   GDScript backtrace (most recent call first):",
+          "       [0] _cableada (res://src/sistemas/investigacion/computadora_de_escritorio.gd:128)",
+          "       [1] revisar_registro (res://src/sistemas/investigacion/computadora_de_escritorio.gd:110)",
+          "       [2] _execute (res://addons/gdUnit4/src/asserts/GdUnitGodotErrorAssertImpl.gd:17)",
+          "       [3] is_push_error (res://addons/gdUnit4/src/asserts/GdUnitGodotErrorAssertImpl.gd:132)",
+          "       [4] test_revisar_registro_sin_cableado_avisa_el_error (res://test/sistemas/investigacion/computadora_de_escritorio_test.gd:309)",
+          "       [5] _execute_test_case (res://addons/gdUnit4/src/core/_TestCase.gd:79)",
+          "       [6] execute (res://addons/gdUnit4/src/core/_TestCase.gd:40)",
+          "       [7] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleTestStage.gd:10)",
+          "       [8] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)",
+          "       [9] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleExecutionStage.gd:17)",
+          "       [10] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)"
+        ]
+      }
+    },
+    {
+      "diagnostico": "ERROR: Condition \"!is_inside_tree()\" is true. Returning: Transform3D()",
+      "conteo_309": 3,
+      "conteo_base304": 3,
+      "presente_en_base304": true,
+      "primer_contexto": {
+        "linea": 5872,
+        "contexto": [
+          "       [3] _al_abrir_la_jornada (res://src/escenas/almacen.gd:236)",
+          "       [4] test_la_hoja_cerrada_de_golpe_no_deja_nada_adentro (res://test/escenas/hoja_que_arrastra_test.gd:293)",
+          "ERROR: Condition \"!is_inside_tree()\" is true. Returning: Transform3D()",
+          "   at: get_global_transform (scene/3d/node_3d.cpp:649)",
+          "   GDScript backtrace (most recent call first):",
+          "       [0] _ready (res://src/escenas/almacen.gd:177)",
+          "       [1] test_las_senales_del_doble_llegan_al_marco_y_al_hud (res://test/escenas/indicacion_del_foco_test.gd:153)",
+          "       [2] _execute_test_case (res://addons/gdUnit4/src/core/_TestCase.gd:79)",
+          "       [3] execute (res://addons/gdUnit4/src/core/_TestCase.gd:40)",
+          "       [4] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleTestStage.gd:10)",
+          "       [5] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)",
+          "       [6] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleExecutionStage.gd:17)",
+          "       [7] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)",
+          "       [8] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestCaseExecutionStage.gd:26)",
+          "       [9] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)",
+          "       [10] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestSuiteExecutionStage.gd:36)"
+        ]
+      }
+    },
+    {
+      "diagnostico": "ERROR: Condition \"p_size <= 0.00001\" is true.",
+      "conteo_309": 2,
+      "conteo_base304": 2,
+      "presente_en_base304": true,
+      "primer_contexto": {
+        "linea": 7111,
+        "contexto": [
+          "       [17] execute (res://addons/gdUnit4/src/core/_TestCase.gd:41)",
+          "       [18] test_completed (res://addons/gdUnit4/src/core/_TestCase.gd:86)",
+          "ERROR: Condition \"p_size <= 0.00001\" is true.",
+          "   at: set_size (scene/3d/camera_3d.cpp:744)",
+          "   GDScript backtrace (most recent call first):",
+          "       [0] _encuadrar (res://src/sistemas/marco/calentamiento_de_shaders.gd:271)",
+          "       [1] calentar (res://src/sistemas/marco/calentamiento_de_shaders.gd:92)",
+          "       [2] test_el_material_de_un_multimesh_cuenta_como_nuevo (res://test/sistemas/marco/calentamiento_de_shaders_test.gd:80)",
+          "       [3] _execute_test_case (res://addons/gdUnit4/src/core/_TestCase.gd:79)",
+          "       [4] execute (res://addons/gdUnit4/src/core/_TestCase.gd:40)",
+          "       [5] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleTestStage.gd:10)",
+          "       [6] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)",
+          "       [7] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleExecutionStage.gd:17)",
+          "       [8] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)",
+          "       [9] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestCaseExecutionStage.gd:26)",
+          "       [10] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)"
+        ]
+      }
+    },
+    {
+      "diagnostico": "ERROR: Couldn't open directory at path \"user://guardado_de_los_tests_PID\".",
+      "conteo_309": 1,
+      "conteo_base304": 1,
+      "presente_en_base304": true,
+      "primer_contexto": {
+        "linea": 5819,
+        "contexto": [
+          "ERROR: Remote Debugger: Unable to connect to host '127.0.0.1:0'.",
+          "   at: create_tcp (core/debugger/remote_debugger_peer.cpp:247)",
+          "ERROR: Couldn't open directory at path \"user://guardado_de_los_tests_72128\".",
+          "   at: get_files_at (core/io/dir_access.cpp:578)",
+          "   GDScript backtrace (most recent call first):",
+          "       [0] _borrar_la_carpeta (res://test/guardado_de_la_sesion.gd:40)",
+          "       [1] startup (res://test/guardado_de_la_sesion.gd:22)",
+          "       [2] execute (res://addons/gdUnit4/src/core/hooks/GdUnitTestSessionHookService.gd:125)",
+          "       [3] execute_startup (res://addons/gdUnit4/src/core/hooks/GdUnitTestSessionHookService.gd:108)",
+          "       [4] _process (res://addons/gdUnit4/src/core/runners/GdUnitTestSessionRunner.gd:127)",
+          "ERROR: Parameter \"material\" is null.",
+          "   at: material_get_instance_shader_parameters (servers/rendering/dummy/storage/material_storage.cpp:264)",
+          "   GDScript backtrace (most recent call first):",
+          "       [0] free_instance (res://addons/gdUnit4/src/core/GdUnitTools.gd:85)",
+          "       [1] gc (res://addons/gdUnit4/src/core/execution/GdUnitMemoryObserver.gd:126)",
+          "       [2] gc (res://addons/gdUnit4/src/core/execution/GdUnitExecutionContext.gd:277)"
+        ]
+      }
+    },
+    {
+      "diagnostico": "ERROR: DisposicionDeLaGondola disposicion_erronea: el bloque 0 tiene 3 copias para 2 casilleros",
+      "conteo_309": 1,
+      "conteo_base304": 1,
+      "presente_en_base304": true,
+      "primer_contexto": {
+        "linea": 6232,
+        "contexto": [
+          "       [19] execute (res://addons/gdUnit4/src/core/_TestCase.gd:41)",
+          "       [20] test_completed (res://addons/gdUnit4/src/core/_TestCase.gd:86)",
+          "ERROR: DisposicionDeLaGondola disposicion_erronea: el bloque 0 tiene 3 copias para 2 casilleros",
+          "   at: push_error (core/variant/variant_utility.cpp:1023)",
+          "   GDScript backtrace (most recent call first):",
+          "       [0] primera_reponible (res://src/escenas/puestos/disposicion_de_la_gondola.gd:48)",
+          "       [1] <anonymous lambda> (res://test/escenas/puestos/disposicion_de_la_gondola_test.gd:29)",
+          "       [2] _execute (res://addons/gdUnit4/src/asserts/GdUnitGodotErrorAssertImpl.gd:17)",
+          "       [3] is_push_error (res://addons/gdUnit4/src/asserts/GdUnitGodotErrorAssertImpl.gd:132)",
+          "       [4] test_un_bloque_que_no_tiene_una_o_dos_filas_nombra_el_recurso (res://test/escenas/puestos/disposicion_de_la_gondola_test.gd:28)",
+          "       [5] _execute_test_case (res://addons/gdUnit4/src/core/_TestCase.gd:79)",
+          "       [6] execute (res://addons/gdUnit4/src/core/_TestCase.gd:40)",
+          "       [7] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleTestStage.gd:10)",
+          "       [8] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)",
+          "       [9] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleExecutionStage.gd:17)",
+          "       [10] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)"
+        ]
+      }
+    },
+    {
+      "diagnostico": "ERROR: Examen sin punto de examen cableado: revisar jugador.tscn",
+      "conteo_309": 1,
+      "conteo_base304": 1,
+      "presente_en_base304": true,
+      "primer_contexto": {
+        "linea": 7089,
+        "contexto": [
+          "       [20] execute (res://addons/gdUnit4/src/core/_TestCase.gd:41)",
+          "       [21] test_completed (res://addons/gdUnit4/src/core/_TestCase.gd:86)",
+          "ERROR: Examen sin punto de examen cableado: revisar jugador.tscn",
+          "   at: push_error (core/variant/variant_utility.cpp:1023)",
+          "   GDScript backtrace (most recent call first):",
+          "       [0] iniciar (res://src/sistemas/investigacion/examen.gd:53)",
+          "       [1] test_sin_punto_de_examen_la_e_no_se_pasa_a_revelar_lo_enfocado (res://test/sistemas/investigacion/examen_test.gd:315)",
+          "       [2] _execute_test_case (res://addons/gdUnit4/src/core/_TestCase.gd:79)",
+          "       [3] execute (res://addons/gdUnit4/src/core/_TestCase.gd:40)",
+          "       [4] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleTestStage.gd:10)",
+          "       [5] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)",
+          "       [6] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleExecutionStage.gd:17)",
+          "       [7] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)",
+          "       [8] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestCaseExecutionStage.gd:26)",
+          "       [9] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)",
+          "       [10] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestSuiteExecutionStage.gd:36)"
+        ]
+      }
+    },
+    {
+      "diagnostico": "ERROR: Failed loading resource: res://no_existe.tscn.",
+      "conteo_309": 1,
+      "conteo_base304": 1,
+      "presente_en_base304": true,
+      "primer_contexto": {
+        "linea": 7159,
+        "contexto": [
+          "ERROR: Cannot open file 'res://no_existe.tscn'.",
+          "   at: load (scene/resources/resource_format_text.cpp:1442)",
+          "ERROR: Failed loading resource: res://no_existe.tscn.",
+          "   at: _load (core/io/resource_loader.cpp:317)",
+          "WARNING: Rescate: `ObjetoAgarrable` estaba adentro de `@StaticBody3D@165926` en (4.000026, 1.100338, -0.000002); va a DESHACER",
+          "   at: push_warning (core/variant/variant_utility.cpp:1033)",
+          "   GDScript backtrace (most recent call first):",
+          "       [0] revisar (res://src/sistemas/marco/red_de_seguridad.gd:101)",
+          "       [1] _al_soltar (res://src/sistemas/marco/red_de_seguridad.gd:127)",
+          "WARNING: Rescate: `ObjetoAgarrable` estaba adentro de `@StaticBody3D@165936` en (4.0, 1.0, 0.0); queda donde está: ningún lugar libre",
+          "   at: push_warning (core/variant/variant_utility.cpp:1033)",
+          "   GDScript backtrace (most recent call first):",
+          "       [0] revisar (res://src/sistemas/marco/red_de_seguridad.gd:101)",
+          "       [1] test_sin_ningun_lugar_libre_queda_donde_esta_y_se_registra (res://test/sistemas/marco/red_de_seguridad_test.gd:87)",
+          "       [2] _mundo (res://test/sistemas/marco/red_de_seguridad_test.gd:51)",
+          "WARNING: Rescate: `ObjetoAgarrable` estaba adentro de `@StaticBody3D@165946` en (4.0, 1.0, 0.0); queda donde está: ningún lugar libre"
+        ]
+      }
+    },
+    {
+      "diagnostico": "ERROR: Parameter \"material\" is null.",
+      "conteo_309": 24,
+      "conteo_base304": 24,
+      "presente_en_base304": true,
+      "primer_contexto": {
+        "linea": 5827,
+        "contexto": [
+          "       [3] execute_startup (res://addons/gdUnit4/src/core/hooks/GdUnitTestSessionHookService.gd:108)",
+          "       [4] _process (res://addons/gdUnit4/src/core/runners/GdUnitTestSessionRunner.gd:127)",
+          "ERROR: Parameter \"material\" is null.",
+          "   at: material_get_instance_shader_parameters (servers/rendering/dummy/storage/material_storage.cpp:264)",
+          "   GDScript backtrace (most recent call first):",
+          "       [0] free_instance (res://addons/gdUnit4/src/core/GdUnitTools.gd:85)",
+          "       [1] gc (res://addons/gdUnit4/src/core/execution/GdUnitMemoryObserver.gd:126)",
+          "       [2] gc (res://addons/gdUnit4/src/core/execution/GdUnitExecutionContext.gd:277)",
+          "       [3] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestCaseAfterStage.gd:23)",
+          "       [4] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)",
+          "       [5] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleExecutionStage.gd:18)",
+          "       [6] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)",
+          "       [7] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleTestStage.gd:10)",
+          "       [8] execute (res://addons/gdUnit4/src/core/_TestCase.gd:41)",
+          "       [9] test_completed (res://addons/gdUnit4/src/core/_TestCase.gd:86)",
+          "ERROR: Parameter \"material\" is null."
+        ]
+      }
+    },
+    {
+      "diagnostico": "ERROR: Remote Debugger: Unable to connect to host '127.0.0.1:0'.",
+      "conteo_309": 1,
+      "conteo_base304": 1,
+      "presente_en_base304": true,
+      "primer_contexto": {
+        "linea": 5817,
+        "contexto": [
+          "ERROR: The remote port number must be between 1 and 65535 (inclusive).",
+          "   at: connect_to_host (core/io/stream_peer_tcp.cpp:69)",
+          "ERROR: Remote Debugger: Unable to connect to host '127.0.0.1:0'.",
+          "   at: create_tcp (core/debugger/remote_debugger_peer.cpp:247)",
+          "ERROR: Couldn't open directory at path \"user://guardado_de_los_tests_72128\".",
+          "   at: get_files_at (core/io/dir_access.cpp:578)",
+          "   GDScript backtrace (most recent call first):",
+          "       [0] _borrar_la_carpeta (res://test/guardado_de_la_sesion.gd:40)",
+          "       [1] startup (res://test/guardado_de_la_sesion.gd:22)",
+          "       [2] execute (res://addons/gdUnit4/src/core/hooks/GdUnitTestSessionHookService.gd:125)",
+          "       [3] execute_startup (res://addons/gdUnit4/src/core/hooks/GdUnitTestSessionHookService.gd:108)",
+          "       [4] _process (res://addons/gdUnit4/src/core/runners/GdUnitTestSessionRunner.gd:127)",
+          "ERROR: Parameter \"material\" is null.",
+          "   at: material_get_instance_shader_parameters (servers/rendering/dummy/storage/material_storage.cpp:264)",
+          "   GDScript backtrace (most recent call first):",
+          "       [0] free_instance (res://addons/gdUnit4/src/core/GdUnitTools.gd:85)"
+        ]
+      }
+    },
+    {
+      "diagnostico": "ERROR: The object does not have any 'meta' values with the key 'sin_volumen'.",
+      "conteo_309": 98,
+      "conteo_base304": 98,
+      "presente_en_base304": true,
+      "primer_contexto": {
+        "linea": 6333,
+        "contexto": [
+          "       [8] execute (res://addons/gdUnit4/src/core/_TestCase.gd:41)",
+          "       [9] test_completed (res://addons/gdUnit4/src/core/_TestCase.gd:86)",
+          "ERROR: The object does not have any 'meta' values with the key 'sin_volumen'.",
+          "   at: get_meta (core/object/object.cpp:1053)",
+          "   GDScript backtrace (most recent call first):",
+          "       [0] _exento (res://test/escenas/volumen_de_los_solidos_test.gd:94)",
+          "       [1] _sin_volumen (res://test/escenas/volumen_de_los_solidos_test.gd:126)",
+          "       [2] test_cada_pieza_donde_cabe_un_objeto_tiene_volumen (res://test/escenas/volumen_de_los_solidos_test.gd:163)",
+          "       [3] _almacen (res://test/escenas/volumen_de_los_solidos_test.gd:24)",
+          "ERROR: The object does not have any 'meta' values with the key 'sin_volumen'.",
+          "   at: get_meta (core/object/object.cpp:1053)",
+          "   GDScript backtrace (most recent call first):",
+          "       [0] _exento (res://test/escenas/volumen_de_los_solidos_test.gd:94)",
+          "       [1] _sin_volumen (res://test/escenas/volumen_de_los_solidos_test.gd:126)",
+          "       [2] test_cada_pieza_donde_cabe_un_objeto_tiene_volumen (res://test/escenas/volumen_de_los_solidos_test.gd:163)",
+          "       [3] _almacen (res://test/escenas/volumen_de_los_solidos_test.gd:24)"
+        ]
+      }
+    },
+    {
+      "diagnostico": "ERROR: The remote port number must be between 1 and 65535 (inclusive).",
+      "conteo_309": 1,
+      "conteo_base304": 1,
+      "presente_en_base304": true,
+      "primer_contexto": {
+        "linea": 5815,
+        "contexto": [
+          "Exit code: 0",
+          "Run dispose test resources",
+          "ERROR: The remote port number must be between 1 and 65535 (inclusive).",
+          "   at: connect_to_host (core/io/stream_peer_tcp.cpp:69)",
+          "ERROR: Remote Debugger: Unable to connect to host '127.0.0.1:0'.",
+          "   at: create_tcp (core/debugger/remote_debugger_peer.cpp:247)",
+          "ERROR: Couldn't open directory at path \"user://guardado_de_los_tests_72128\".",
+          "   at: get_files_at (core/io/dir_access.cpp:578)",
+          "   GDScript backtrace (most recent call first):",
+          "       [0] _borrar_la_carpeta (res://test/guardado_de_la_sesion.gd:40)",
+          "       [1] startup (res://test/guardado_de_la_sesion.gd:22)",
+          "       [2] execute (res://addons/gdUnit4/src/core/hooks/GdUnitTestSessionHookService.gd:125)",
+          "       [3] execute_startup (res://addons/gdUnit4/src/core/hooks/GdUnitTestSessionHookService.gd:108)",
+          "       [4] _process (res://addons/gdUnit4/src/core/runners/GdUnitTestSessionRunner.gd:127)",
+          "ERROR: Parameter \"material\" is null.",
+          "   at: material_get_instance_shader_parameters (servers/rendering/dummy/storage/material_storage.cpp:264)"
+        ]
+      }
+    },
+    {
+      "diagnostico": "ERROR: Ventanilla sin cablear: revisar almacen.tscn y almacen.gd",
+      "conteo_309": 4,
+      "conteo_base304": 4,
+      "presente_en_base304": true,
+      "primer_contexto": {
+        "linea": 7344,
+        "contexto": [
+          "       [21] execute (res://addons/gdUnit4/src/core/_TestCase.gd:41)",
+          "       [22] test_completed (res://addons/gdUnit4/src/core/_TestCase.gd:86)",
+          "ERROR: Ventanilla sin cablear: revisar almacen.tscn y almacen.gd",
+          "   at: push_error (core/variant/variant_utility.cpp:1023)",
+          "   GDScript backtrace (most recent call first):",
+          "       [0] _sin_cablear (res://src/sistemas/tareas/ventanilla.gd:125)",
+          "       [1] pedir_abrir (res://src/sistemas/tareas/ventanilla.gd:60)",
+          "       [2] test_la_ventanilla_sin_cablear_no_hace_nada_y_lo_dice (res://test/sistemas/tareas/ventanilla_test.gd:265)",
+          "       [3] _execute_test_case (res://addons/gdUnit4/src/core/_TestCase.gd:79)",
+          "       [4] execute (res://addons/gdUnit4/src/core/_TestCase.gd:40)",
+          "       [5] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleTestStage.gd:10)",
+          "       [6] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)",
+          "       [7] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleExecutionStage.gd:17)",
+          "       [8] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)",
+          "       [9] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestCaseExecutionStage.gd:26)",
+          "       [10] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)"
+        ]
+      }
+    },
+    {
+      "diagnostico": "WARNING: 1 ObjectDB instance was leaked at exit (run with `--verbose` for details).",
+      "conteo_309": 1,
+      "conteo_base304": 1,
+      "presente_en_base304": true,
+      "primer_contexto": {
+        "linea": 7436,
+        "contexto": [
+          "       [18] execute (res://addons/gdUnit4/src/core/_TestCase.gd:41)",
+          "       [19] test_completed (res://addons/gdUnit4/src/core/_TestCase.gd:86)",
+          "WARNING: 1 ObjectDB instance was leaked at exit (run with `--verbose` for details).",
+          "   at: cleanup (core/object/object.cpp:2536)"
+        ]
+      }
+    },
+    {
+      "diagnostico": "WARNING: Rescate (red_de_seguridad; identifiers and coordinates vary)",
+      "conteo_309": 31,
+      "conteo_base304": 30,
+      "presente_en_base304": true,
+      "primer_contexto": {
+        "linea": 5853,
+        "contexto": [
+          "       [8] execute (res://addons/gdUnit4/src/core/_TestCase.gd:41)",
+          "       [9] test_completed (res://addons/gdUnit4/src/core/_TestCase.gd:86)",
+          "WARNING: Rescate: `ObjetoAgarrable` estaba adentro de `CuerpoDeLaHoja` en (5.882046, 0.202237, -9.028996); va a ORIGEN",
+          "   at: push_warning (core/variant/variant_utility.cpp:1033)",
+          "   GDScript backtrace (most recent call first):",
+          "       [0] revisar (res://src/sistemas/marco/red_de_seguridad.gd:101)",
+          "       [1] _al_quedar_quieta (res://src/sistemas/marco/red_de_seguridad.gd:149)",
+          "       [2] _physics_process (res://src/escenas/puestos/puerta_del_local.gd:123)",
+          "WARNING: Rescate: `ObjetoAgarrable` estaba adentro de `CuerpoDeLaHoja` en (6.041321, 0.249515, -9.016684); va a DESHACER",
+          "   at: push_warning (core/variant/variant_utility.cpp:1033)",
+          "   GDScript backtrace (most recent call first):",
+          "       [0] revisar (res://src/sistemas/marco/red_de_seguridad.gd:101)",
+          "       [1] _al_soltar (res://src/sistemas/marco/red_de_seguridad.gd:127)",
+          "WARNING: Rescate: `ObjetoAgarrable` estaba adentro de `CuerpoDeLaHoja` en (6.882046, 0.202237, -8.028996); va a ORIGEN",
+          "   at: push_warning (core/variant/variant_utility.cpp:1033)",
+          "   GDScript backtrace (most recent call first):"
+        ]
+      }
+    }
+  ],
+  "categorias_nuevas": [],
+  "nota": "Heredado significa observado en la cabeza base certificada, no correcto ni salida limpia. HARN/fixtures fixes independientes no se duplican."
+}

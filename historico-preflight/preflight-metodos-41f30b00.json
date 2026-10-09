@@ -1,0 +1,10 @@
+{
+  "base": "41f30b0040aa843f45a89c7cee02fbfa08ad8929",
+  "public_methods_including_hooks": {
+    "test\\escenas\\notificaciones_en_el_almacen_test.gd": 3,
+    "test\\ui\\pila_de_notificaciones_test.gd": 7,
+    "test\\dominio\\ambiente\\notificaciones_test.gd": 12
+  },
+  "new_capability_id_absent_in_base": true,
+  "engine_run": false
+}

@@ -1,0 +1,41 @@
+{
+  "base_certificada": "41f30b0040aa843f45a89c7cee02fbfa08ad8929",
+  "head": "c315ccd5a4db47963c1df2d939f183b37728af84",
+  "proyecto": "D:\\Usuarios\\fede\\Documentos\\Catedra Videojuegos FADU\\manada\\repo\\nosefia\\.claude\\worktrees\\batch-64-309-c",
+  "pid_launcher": 103784,
+  "pid_godot": 84624,
+  "gestos_enviados": [
+    [
+      1920,
+      "ESC"
+    ],
+    [
+      1920,
+      "RIGHT"
+    ],
+    [
+      1280,
+      "ESC"
+    ],
+    [
+      1280,
+      "RIGHT"
+    ]
+  ],
+  "appdata_aislado": "C:\\Users\\fede_\\AppData\\Local\\Temp\\nosefia-batch-64-309\\c-preparacion-309\\nativa-2\\usuario-aislado",
+  "resultado": {
+    "fallo": false,
+    "fotos": [
+      "C:\\Users\\fede_\\AppData\\Local\\Temp\\nosefia-batch-64-309\\c-preparacion-309\\nativa-2/309-ventanilla-1920.png",
+      "C:\\Users\\fede_\\AppData\\Local\\Temp\\nosefia-batch-64-309\\c-preparacion-309\\nativa-2/309-computadora-1920.png",
+      "C:\\Users\\fede_\\AppData\\Local\\Temp\\nosefia-batch-64-309\\c-preparacion-309\\nativa-2/309-ventanilla-1280.png",
+      "C:\\Users\\fede_\\AppData\\Local\\Temp\\nosefia-batch-64-309\\c-preparacion-309\\nativa-2/309-computadora-1280.png",
+      "C:\\Users\\fede_\\AppData\\Local\\Temp\\nosefia-batch-64-309\\c-preparacion-309\\nativa-2/309-aviso-popup-1920.png",
+      "C:\\Users\\fede_\\AppData\\Local\\Temp\\nosefia-batch-64-309\\c-preparacion-309\\nativa-2/309-aviso-pausa-1920.png",
+      "C:\\Users\\fede_\\AppData\\Local\\Temp\\nosefia-batch-64-309\\c-preparacion-309\\nativa-2/309-aviso-popup-1280.png",
+      "C:\\Users\\fede_\\AppData\\Local\\Temp\\nosefia-batch-64-309\\c-preparacion-309\\nativa-2/309-aviso-pausa-1280.png"
+    ],
+    "validaciones": 70
+  },
+  "cancelacion_propia": false
+}

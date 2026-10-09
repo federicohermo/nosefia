@@ -1,0 +1,101 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+OpenGL API 3.3.0 NVIDIA 591.66 - Compatibility - Using Device: NVIDIA - NVIDIA GeForce RTX 4050 Laptop GPU
+
+SONDA309_PROPIA {"pid":128268,"proyecto":"D:/Usuarios/fede/Documentos/Catedra Videojuegos FADU/manada/repo/nosefia/.claude/worktrees/batch-64-309-c/"}
+SONDA309_VALIDACION Lector real presente en jornada 1 = true
+SONDA309_VALIDACION Objeto ajeno a productos no avisa = true
+SONDA309_VALIDACION Tres lecturas anotadas no avisan = true
+SONDA309_VALIDACION Lector lleno real publica su aviso = true
+SONDA309_VALIDACION Llegada real convive primero con rechazo anterior = true
+SONDA309_VALIDACION Símbolo local dentro del viewport = true
+SONDA309_VALIDACION Símbolo local dentro del viewport = true
+SONDA309_VALIDACION Ambos símbolos originales presentes = true
+SONDA309_VALIDACION Captura guardada: 309-ventanilla-1920 = true
+SONDA309_ESTADO_FOTO {"nombre":"309-ventanilla-1920","resolucion":[1920,1080],"simbolos":[{"rect":[1339.19995117188,36.0,62.0,72.0],"rect_dibujado":[1339.19995117188,36.7999992370605,62.0,70.4000015258789],"recurso":"res://assets/ui/manada/notificacion_cliente.svg","textura":[155,176]},{"rect":[1339.19995117188,148.0,56.0,72.0],"rect_dibujado":[1339.19995117188,155.391296386719,56.0,57.2173919677734],"recurso":"res://assets/ui/manada/notificacion_lectura.svg","textura":[138,141]}],"textos":["¡HAY UN CLIENTE!","NO SE PUDO LEER"]}
+SONDA309_VALIDACION Computadora real abierta con ambos avisos = true
+SONDA309_VALIDACION Símbolo local dentro del viewport = true
+SONDA309_VALIDACION Símbolo local dentro del viewport = true
+SONDA309_VALIDACION Ambos símbolos originales presentes = true
+SONDA309_VALIDACION Captura guardada: 309-computadora-1920 = true
+SONDA309_ESTADO_FOTO {"nombre":"309-computadora-1920","resolucion":[1920,1080],"simbolos":[{"rect":[1339.19995117188,36.0,62.0,72.0],"rect_dibujado":[1339.19995117188,36.7999992370605,62.0,70.4000015258789],"recurso":"res://assets/ui/manada/notificacion_cliente.svg","textura":[155,176]},{"rect":[1339.19995117188,148.0,56.0,72.0],"rect_dibujado":[1339.19995117188,155.391296386719,56.0,57.2173919677734],"recurso":"res://assets/ui/manada/notificacion_lectura.svg","textura":[138,141]}],"textos":["¡HAY UN CLIENTE!","NO SE PUDO LEER"]}
+SONDA309_VALIDACION Lector real presente en jornada 1 = true
+SONDA309_VALIDACION Objeto ajeno a productos no avisa = true
+SONDA309_VALIDACION Tres lecturas anotadas no avisan = true
+SONDA309_VALIDACION Lector lleno real publica su aviso = true
+SONDA309_VALIDACION Llegada real convive primero con rechazo anterior = true
+SONDA309_VALIDACION Símbolo local dentro del viewport = true
+SONDA309_VALIDACION Símbolo local dentro del viewport = true
+SONDA309_VALIDACION Ambos símbolos originales presentes = true
+SONDA309_VALIDACION Captura guardada: 309-ventanilla-1280 = true
+SONDA309_ESTADO_FOTO {"nombre":"309-ventanilla-1280","resolucion":[1280,720],"simbolos":[{"rect":[884.799987792969,32.0,41.3333358764648,48.0],"rect_dibujado":[884.799987792969,32.533332824707,41.3333358764648,46.9333343505859],"recurso":"res://assets/ui/manada/notificacion_cliente.svg","textura":[155,176]},{"rect":[884.799987792969,106.66667175293,37.3333358764648,48.0],"rect_dibujado":[884.799987792969,111.594207763672,37.3333358764648,38.1449279785156],"recurso":"res://assets/ui/manada/notificacion_lectura.svg","textura":[138,141]}],"textos":["¡HAY UN CLIENTE!","NO SE PUDO LEER"]}
+SONDA309_VALIDACION Computadora real abierta con ambos avisos = true
+SONDA309_VALIDACION Símbolo local dentro del viewport = true
+SONDA309_VALIDACION Símbolo local dentro del viewport = true
+SONDA309_VALIDACION Ambos símbolos originales presentes = true
+SONDA309_VALIDACION Captura guardada: 309-computadora-1280 = true
+SONDA309_ESTADO_FOTO {"nombre":"309-computadora-1280","resolucion":[1280,720],"simbolos":[{"rect":[884.799987792969,32.0,41.3333358764648,48.0],"rect_dibujado":[884.799987792969,32.533332824707,41.3333358764648,46.9333343505859],"recurso":"res://assets/ui/manada/notificacion_cliente.svg","textura":[155,176]},{"rect":[884.799987792969,106.66667175293,37.3333358764648,48.0],"rect_dibujado":[884.799987792969,111.594207763672,37.3333358764648,38.1449279785156],"recurso":"res://assets/ui/manada/notificacion_lectura.svg","textura":[138,141]}],"textos":["¡HAY UN CLIENTE!","NO SE PUDO LEER"]}
+SONDA309_VALIDACION Se conserva una unidad en la mano = true
+SCRIPT ERROR: Invalid call. Nonexistent function 'comprador' in base 'Nil'.
+   at: PanelDeLaVentanilla.mostrar (res://src/ui/diegetica/panel_de_la_ventanilla.gd:60)
+   GDScript backtrace (most recent call first):
+       [0] mostrar (res://src/ui/diegetica/panel_de_la_ventanilla.gd:60)
+       [1] _al_llegar_un_comprador (res://src/escenas/puestos/ventanilla.gd:85)
+       [2] _ejercer (C:/Users/fede_/AppData/Local/Temp/nosefia-batch-64-309/c-preparacion-309/nativa/avisos_popup.gd:71)
+SONDA309_VALIDACION La señal real de llegada dibuja el aviso = true
+SONDA309_VALIDACION PopupMenu real abierto antes de Esc = true
+SONDA309_VALIDACION Fila primera vacía = true
+SONDA309_VALIDACION Captura guardada: 309-aviso-popup-1920 = true
+SONDA309_ESTADO_FOTO {"aviso":true,"nombre":"309-aviso-popup-1920","pausa":false,"popup_abierto":true,"resolucion":[1920,1080]}
+SONDA309_POPUP_LISTO {"accion":"ESC","ancho":1920,"embebido":true,"factor":1.0,"max_size":[380,429],"popup":29230750,"raiz":29230750,"x":776,"y":486}
+SONDA309_VALIDACION Esc abre la pausa real = true
+SONDA309_VALIDACION La pausa cierra todas las listas reales = true
+SONDA309_VALIDACION Programa y aviso se conservan = true
+SONDA309_VALIDACION Pausa conserva la mano = true
+SONDA309_VALIDACION La pausa suspende el procesamiento del aviso = true
+SONDA309_VALIDACION Más de tres segundos pausado conservan el aviso = true
+SONDA309_VALIDACION Captura guardada: 309-aviso-pausa-1920 = true
+SONDA309_ESTADO_FOTO {"aviso":true,"nombre":"309-aviso-pausa-1920","pausa":true,"popup_abierto":false,"resolucion":[1920,1080]}
+SONDA309_VALIDACION Reanudar conserva programa = true
+SONDA309_VALIDACION Reanudar no reabre automáticamente las listas = true
+SONDA309_VALIDACION El programa todavía suspende el control del jugador = true
+SONDA309_VALIDACION Reanudar conserva las selecciones físicas = true
+SONDA309_VALIDACION Reanudar conserva los 2,9 segundos del aviso = true
+SONDA309_VALIDACION Completar tres segundos retira el aviso = true
+SONDA309_POPUP_LISTO {"accion":"RIGHT","ancho":1920,"embebido":true,"factor":1.0,"max_size":[380,429],"popup":29230750,"raiz":29230750,"x":776,"y":486}
+SONDA309_VALIDACION RIGHT cierra programa y listas = true
+SONDA309_VALIDACION RIGHT devuelve el control = true
+SONDA309_VALIDACION RIGHT conserva la mano = true
+SCRIPT ERROR: Invalid call. Nonexistent function 'comprador' in base 'Nil'.
+   at: PanelDeLaVentanilla.mostrar (res://src/ui/diegetica/panel_de_la_ventanilla.gd:60)
+   GDScript backtrace (most recent call first):
+       [0] mostrar (res://src/ui/diegetica/panel_de_la_ventanilla.gd:60)
+       [1] _al_llegar_un_comprador (res://src/escenas/puestos/ventanilla.gd:85)
+       [2] _ejercer (C:/Users/fede_/AppData/Local/Temp/nosefia-batch-64-309/c-preparacion-309/nativa/avisos_popup.gd:71)
+SONDA309_VALIDACION La señal real de llegada dibuja el aviso = true
+SONDA309_VALIDACION PopupMenu real abierto antes de Esc = true
+SONDA309_VALIDACION Fila primera vacía = true
+SONDA309_VALIDACION Captura guardada: 309-aviso-popup-1280 = true
+SONDA309_ESTADO_FOTO {"aviso":true,"nombre":"309-aviso-popup-1280","pausa":false,"popup_abierto":true,"resolucion":[1280,720]}
+SONDA309_POPUP_LISTO {"accion":"ESC","ancho":1280,"embebido":true,"factor":0.666666686534882,"max_size":[253,286],"popup":29230750,"raiz":29230750,"x":517,"y":324}
+SONDA309_VALIDACION Esc abre la pausa real = true
+SONDA309_VALIDACION La pausa cierra todas las listas reales = true
+SONDA309_VALIDACION Programa y aviso se conservan = true
+SONDA309_VALIDACION Pausa conserva la mano = true
+SONDA309_VALIDACION La pausa suspende el procesamiento del aviso = true
+SONDA309_VALIDACION Más de tres segundos pausado conservan el aviso = true
+SONDA309_VALIDACION Captura guardada: 309-aviso-pausa-1280 = true
+SONDA309_ESTADO_FOTO {"aviso":true,"nombre":"309-aviso-pausa-1280","pausa":true,"popup_abierto":false,"resolucion":[1280,720]}
+SONDA309_VALIDACION Reanudar conserva programa = true
+SONDA309_VALIDACION Reanudar no reabre automáticamente las listas = true
+SONDA309_VALIDACION El programa todavía suspende el control del jugador = true
+SONDA309_VALIDACION Reanudar conserva las selecciones físicas = true
+SONDA309_VALIDACION Reanudar conserva los 2,9 segundos del aviso = true
+SONDA309_VALIDACION Completar tres segundos retira el aviso = true
+SONDA309_POPUP_LISTO {"accion":"RIGHT","ancho":1280,"embebido":true,"factor":0.666666686534882,"max_size":[253,286],"popup":29230750,"raiz":29230750,"x":517,"y":324}
+SONDA309_VALIDACION RIGHT cierra programa y listas = true
+SONDA309_VALIDACION RIGHT devuelve el control = true
+SONDA309_VALIDACION RIGHT conserva la mano = true
+SONDA309_VALIDACION Dos resoluciones recibieron la secuencia nativa exacta = true
+SONDA309_EVENTOS ["popup-esc","popup-right","popup-esc","popup-right"]
+SONDA309_RESULTADO {"fallo":false,"fotos":["C:\\Users\\fede_\\AppData\\Local\\Temp\\nosefia-batch-64-309\\c-preparacion-309\\nativa-1/309-ventanilla-1920.png","C:\\Users\\fede_\\AppData\\Local\\Temp\\nosefia-batch-64-309\\c-preparacion-309\\nativa-1/309-computadora-1920.png","C:\\Users\\fede_\\AppData\\Local\\Temp\\nosefia-batch-64-309\\c-preparacion-309\\nativa-1/309-ventanilla-1280.png","C:\\Users\\fede_\\AppData\\Local\\Temp\\nosefia-batch-64-309\\c-preparacion-309\\nativa-1/309-computadora-1280.png","C:\\Users\\fede_\\AppData\\Local\\Temp\\nosefia-batch-64-309\\c-preparacion-309\\nativa-1/309-aviso-popup-1920.png","C:\\Users\\fede_\\AppData\\Local\\Temp\\nosefia-batch-64-309\\c-preparacion-309\\nativa-1/309-aviso-pausa-1920.png","C:\\Users\\fede_\\AppData\\Local\\Temp\\nosefia-batch-64-309\\c-preparacion-309\\nativa-1/309-aviso-popup-1280.png","C:\\Users\\fede_\\AppData\\Local\\Temp\\nosefia-batch-64-309\\c-preparacion-309\\nativa-1/309-aviso-pausa-1280.png"],"validaciones":70}
+SONDA309_MONTAJE_LIBERADO

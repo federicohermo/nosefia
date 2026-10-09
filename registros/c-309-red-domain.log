@@ -1,0 +1,4 @@
+FOCAL309_START red-domain import
+FOCAL309_EXIT 0 C:\Users\fede_\AppData\Local\Temp\nosefia-batch-64-309\c-preparacion-309\red-domain-import.log
+FOCAL309_START red-domain notificaciones_test
+FOCAL309_EXIT 100 C:\Users\fede_\AppData\Local\Temp\nosefia-batch-64-309\c-preparacion-309\red-domain-notificaciones_test.log

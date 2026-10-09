@@ -1,0 +1,171 @@
+ERROR: The remote port number must be between 1 and 65535 (inclusive).
+   at: connect_to_host (core/io/stream_peer_tcp.cpp:69)
+ERROR: Remote Debugger: Unable to connect to host '127.0.0.1:0'.
+   at: create_tcp (core/debugger/remote_debugger_peer.cpp:247)
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+[2J[H[38;2;233;150;122m
+--------------------------------------------------------------------------------------------------
+GdUnit4 Comandline Tool
+--------------------------------------------------------------------------------------------------[0m
+[38;2;0;191;255mDisabled fail fast![0m
+[38;2;0;191;255mSet write reports to D:/Usuarios/fede/Documentos/Catedra Videojuegos FADU/manada/repo/nosefia/.claude/worktrees/batch-64-309-c/reports/309-focales[0m
+[38;2;218;165;32m
+Headless mode is ignored by option '--ignoreHeadlessMode'"
+
+Please note that tests that use UI interaction do not work correctly in headless mode.
+Godot 'InputEvents' are not transported by the Godot engine in headless mode and therefore
+have no effect in the test!
+[0m
+[38;2;100;149;237mInstalling GdUnit4 session system hooks.[0m
+[38;2;100;149;237mSession hook 'GdUnitHtmlTestReporter' installed.[0m
+[38;2;100;149;237mSession hook 'GdUnitXMLTestReporter' installed.[0m
+[38;2;100;149;237mInstalling GdUnit4 session hooks.[0m
+[38;2;100;149;237mSession hook 'Guardado de la sesión' installed.[0m
+ERROR: Couldn't open directory at path "user://guardado_de_los_tests_116372".
+   at: get_files_at (core/io/dir_access.cpp:578)
+   GDScript backtrace (most recent call first):
+       [0] _borrar_la_carpeta (res://test/guardado_de_la_sesion.gd:40)
+       [1] startup (res://test/guardado_de_la_sesion.gd:22)
+       [2] execute (res://addons/gdUnit4/src/core/hooks/GdUnitTestSessionHookService.gd:125)
+       [3] execute_startup (res://addons/gdUnit4/src/core/hooks/GdUnitTestSessionHookService.gd:108)
+       [4] _process (res://addons/gdUnit4/src/core/runners/GdUnitTestSessionRunner.gd:127)
+[38;2;0;206;209mRun Test Suite: [0m[38;2;250;235;215mres://test/dominio/ambiente/notificaciones_test.gd[0m
+  [38;2;250;235;215mres://test/dominio/ambiente/notificaciones_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_reabrir_con_el_mismo_comprador_no_reinicia_el_aviso[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/ambiente/notificaciones_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_reabrir_con_el_mismo_comprador_no_reinicia_el_aviso[0m[38;2;178;34;34m[1m FAILED[0m[38;2;100;149;237m 5ms[0m
+  [38;2;0;206;209m[1m[4mReport:[0m
+  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ '[38;2;30;144;255m[[48;2;38;0;0m[38;2;255;255;255m0[0m[38;2;30;144;255m[48;2;38;0;0m[0m[38;2;30;144;255m][0m'
+ but was
+ '[38;2;30;144;255m<empty>[0m'
+
+[38;2;255;69;0mDifferences found:[0m
+[table=3][cell][right][1mIndex[0m[/right]	[/cell][cell][right][1mCurrent[0m[/right]	[/cell][cell][right][1mExpected[0m[/right]	[/cell][cell][right]0[/right]	[/cell][cell][right]<N/A>[/right]	[/cell][cell][right]0[/right]	[/cell][/table][0m[38;2;173;216;230m	at 'test_reabrir_con_el_mismo_comprador_no_reinicia_el_aviso' in res://test/dominio/ambiente/notificaciones_test.gd:14[0m[38;2;128;128;128m[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/ambiente/notificaciones_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_otro_comprador_renueva_el_tipo_sin_duplicarlo[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/ambiente/notificaciones_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_otro_comprador_renueva_el_tipo_sin_duplicarlo[0m[38;2;178;34;34m[1m FAILED[0m[38;2;100;149;237m 5ms[0m
+  [38;2;0;206;209m[1m[4mReport:[0m
+  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ '[38;2;30;144;255m[[48;2;38;0;0m[38;2;255;255;255m0[0m[38;2;30;144;255m[48;2;38;0;0m[0m[38;2;30;144;255m][0m'
+ but was
+ '[38;2;30;144;255m<empty>[0m'
+
+[38;2;255;69;0mDifferences found:[0m
+[table=3][cell][right][1mIndex[0m[/right]	[/cell][cell][right][1mCurrent[0m[/right]	[/cell][cell][right][1mExpected[0m[/right]	[/cell][cell][right]0[/right]	[/cell][cell][right]<N/A>[/right]	[/cell][cell][right]0[/right]	[/cell][/table][0m[38;2;173;216;230m	at 'test_otro_comprador_renueva_el_tipo_sin_duplicarlo' in res://test/dominio/ambiente/notificaciones_test.gd:25[0m[38;2;128;128;128m[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/ambiente/notificaciones_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_un_comprador_ya_avisado_tampoco_avisa_despues_de_vencer[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/ambiente/notificaciones_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_un_comprador_ya_avisado_tampoco_avisa_despues_de_vencer[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 5ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/ambiente/notificaciones_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_el_lector_avisa_solo_por_renglones_llenos[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/ambiente/notificaciones_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_el_lector_avisa_solo_por_renglones_llenos[0m[38;2;178;34;34m[1m FAILED[0m[38;2;100;149;237m 6ms[0m
+  [38;2;0;206;209m[1m[4mReport:[0m
+  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ '[38;2;30;144;255m[[48;2;38;0;0m[38;2;255;255;255m1[0m[38;2;30;144;255m[48;2;38;0;0m[0m[38;2;30;144;255m][0m'
+ but was
+ '[38;2;30;144;255m<empty>[0m'
+
+[38;2;255;69;0mDifferences found:[0m
+[table=3][cell][right][1mIndex[0m[/right]	[/cell][cell][right][1mCurrent[0m[/right]	[/cell][cell][right][1mExpected[0m[/right]	[/cell][cell][right]0[/right]	[/cell][cell][right]<N/A>[/right]	[/cell][cell][right]1[/right]	[/cell][/table][0m[38;2;173;216;230m	at 'test_el_lector_avisa_solo_por_renglones_llenos' in res://test/dominio/ambiente/notificaciones_test.gd:46[0m[38;2;128;128;128m[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/ambiente/notificaciones_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_el_aviso_sigue_a_2_9_y_sale_a_3_0[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/ambiente/notificaciones_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_el_aviso_sigue_a_2_9_y_sale_a_3_0[0m[38;2;178;34;34m[1m FAILED[0m[38;2;100;149;237m 4ms[0m
+  [38;2;0;206;209m[1m[4mReport:[0m
+  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ '[38;2;30;144;255m[[48;2;38;0;0m[38;2;255;255;255m0[0m[38;2;30;144;255m[48;2;38;0;0m[0m[38;2;30;144;255m][0m'
+ but was
+ '[38;2;30;144;255m<empty>[0m'
+
+[38;2;255;69;0mDifferences found:[0m
+[table=3][cell][right][1mIndex[0m[/right]	[/cell][cell][right][1mCurrent[0m[/right]	[/cell][cell][right][1mExpected[0m[/right]	[/cell][cell][right]0[/right]	[/cell][cell][right]<N/A>[/right]	[/cell][cell][right]0[/right]	[/cell][/table][0m[38;2;173;216;230m	at 'test_el_aviso_sigue_a_2_9_y_sale_a_3_0' in res://test/dominio/ambiente/notificaciones_test.gd:53[0m[38;2;128;128;128m[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/ambiente/notificaciones_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_un_cuadro_largo_saca_todos_los_avisos[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/ambiente/notificaciones_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_un_cuadro_largo_saca_todos_los_avisos[0m[38;2;178;34;34m[1m FAILED[0m[38;2;100;149;237m 5ms[0m
+  [38;2;0;206;209m[1m[4mReport:[0m
+  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ '[38;2;30;144;255m[[48;2;38;0;0m[38;2;255;255;255m0[0m[38;2;30;144;255m[48;2;38;0;0m[0m[38;2;30;144;255m][0m'
+ but was
+ '[38;2;30;144;255m<empty>[0m'
+
+[38;2;255;69;0mDifferences found:[0m
+[table=3][cell][right][1mIndex[0m[/right]	[/cell][cell][right][1mCurrent[0m[/right]	[/cell][cell][right][1mExpected[0m[/right]	[/cell][cell][right]0[/right]	[/cell][cell][right]<N/A>[/right]	[/cell][cell][right]0[/right]	[/cell][/table][0m[38;2;173;216;230m	at 'test_un_cuadro_largo_saca_todos_los_avisos' in res://test/dominio/ambiente/notificaciones_test.gd:66[0m[38;2;128;128;128m[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/ambiente/notificaciones_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_repetir_el_tipo_lo_pone_primero_y_reinicia_solo_su_tiempo[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/ambiente/notificaciones_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_repetir_el_tipo_lo_pone_primero_y_reinicia_solo_su_tiempo[0m[38;2;178;34;34m[1m FAILED[0m[38;2;100;149;237m 5ms[0m
+  [38;2;0;206;209m[1m[4mReport:[0m
+  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ '[38;2;30;144;255m[[48;2;38;0;0m[38;2;255;255;255m1[0m[38;2;30;144;255m[48;2;38;0;0m[0m[38;2;30;144;255m, [48;2;38;0;0m[38;2;255;255;255m0[0m[38;2;30;144;255m[48;2;38;0;0m[0m[38;2;30;144;255m][0m'
+ but was
+ '[38;2;30;144;255m<empty>[0m'
+
+[38;2;255;69;0mDifferences found:[0m
+[table=3][cell][right][1mIndex[0m[/right]	[/cell][cell][right][1mCurrent[0m[/right]	[/cell][cell][right][1mExpected[0m[/right]	[/cell][cell][right]0[/right]	[/cell][cell][right]<N/A>[/right]	[/cell][cell][right]1[/right]	[/cell][cell][right]1[/right]	[/cell][cell][right]<N/A>[/right]	[/cell][cell][right]0[/right]	[/cell][/table][0m[38;2;173;216;230m	at 'test_repetir_el_tipo_lo_pone_primero_y_reinicia_solo_su_tiempo' in res://test/dominio/ambiente/notificaciones_test.gd:75[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ [38;2;30;144;255m2[0m
+ but was
+ [38;2;30;144;255m0[0m[0m[38;2;173;216;230m	at 'test_repetir_el_tipo_lo_pone_primero_y_reinicia_solo_su_tiempo' in res://test/dominio/ambiente/notificaciones_test.gd:79[0m[38;2;128;128;128m[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/ambiente/notificaciones_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_repetir_un_tipo_no_renueva_el_otro[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/ambiente/notificaciones_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_repetir_un_tipo_no_renueva_el_otro[0m[38;2;178;34;34m[1m FAILED[0m[38;2;100;149;237m 4ms[0m
+  [38;2;0;206;209m[1m[4mReport:[0m
+  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ '[38;2;30;144;255m[[48;2;38;0;0m[38;2;255;255;255m1[0m[38;2;30;144;255m[48;2;38;0;0m[0m[38;2;30;144;255m][0m'
+ but was
+ '[38;2;30;144;255m<empty>[0m'
+
+[38;2;255;69;0mDifferences found:[0m
+[table=3][cell][right][1mIndex[0m[/right]	[/cell][cell][right][1mCurrent[0m[/right]	[/cell][cell][right][1mExpected[0m[/right]	[/cell][cell][right]0[/right]	[/cell][cell][right]<N/A>[/right]	[/cell][cell][right]1[/right]	[/cell][/table][0m[38;2;173;216;230m	at 'test_repetir_un_tipo_no_renueva_el_otro' in res://test/dominio/ambiente/notificaciones_test.gd:91[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ [38;2;30;144;255m1[0m
+ but was
+ [38;2;30;144;255m0[0m[0m[38;2;173;216;230m	at 'test_repetir_un_tipo_no_renueva_el_otro' in res://test/dominio/ambiente/notificaciones_test.gd:93[0m[38;2;128;128;128m[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/ambiente/notificaciones_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_los_tipos_se_ordenan_del_mas_nuevo_al_mas_viejo[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/ambiente/notificaciones_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_los_tipos_se_ordenan_del_mas_nuevo_al_mas_viejo[0m[38;2;178;34;34m[1m FAILED[0m[38;2;100;149;237m 6ms[0m
+  [38;2;0;206;209m[1m[4mReport:[0m
+  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ '[38;2;30;144;255m[[48;2;38;0;0m[38;2;255;255;255m1[0m[38;2;30;144;255m[48;2;38;0;0m[0m[38;2;30;144;255m, [48;2;38;0;0m[38;2;255;255;255m0[0m[38;2;30;144;255m[48;2;38;0;0m[0m[38;2;30;144;255m][0m'
+ but was
+ '[38;2;30;144;255m<empty>[0m'
+
+[38;2;255;69;0mDifferences found:[0m
+[table=3][cell][right][1mIndex[0m[/right]	[/cell][cell][right][1mCurrent[0m[/right]	[/cell][cell][right][1mExpected[0m[/right]	[/cell][cell][right]0[/right]	[/cell][cell][right]<N/A>[/right]	[/cell][cell][right]1[/right]	[/cell][cell][right]1[/right]	[/cell][cell][right]<N/A>[/right]	[/cell][cell][right]0[/right]	[/cell][/table][0m[38;2;173;216;230m	at 'test_los_tipos_se_ordenan_del_mas_nuevo_al_mas_viejo' in res://test/dominio/ambiente/notificaciones_test.gd:102[0m[38;2;128;128;128m[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/ambiente/notificaciones_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_vaciar_borra_ambos_tipos_y_olvida_compradores[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/ambiente/notificaciones_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_vaciar_borra_ambos_tipos_y_olvida_compradores[0m[38;2;178;34;34m[1m FAILED[0m[38;2;100;149;237m 6ms[0m
+  [38;2;0;206;209m[1m[4mReport:[0m
+  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ '[38;2;30;144;255m[[48;2;38;0;0m[38;2;255;255;255m0[0m[38;2;30;144;255m[48;2;38;0;0m[0m[38;2;30;144;255m][0m'
+ but was
+ '[38;2;30;144;255m<empty>[0m'
+
+[38;2;255;69;0mDifferences found:[0m
+[table=3][cell][right][1mIndex[0m[/right]	[/cell][cell][right][1mCurrent[0m[/right]	[/cell][cell][right][1mExpected[0m[/right]	[/cell][cell][right]0[/right]	[/cell][cell][right]<N/A>[/right]	[/cell][cell][right]0[/right]	[/cell][/table][0m[38;2;173;216;230m	at 'test_vaciar_borra_ambos_tipos_y_olvida_compradores' in res://test/dominio/ambiente/notificaciones_test.gd:115[0m[38;2;128;128;128m[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/ambiente/notificaciones_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_null_y_avances_no_positivos_no_cambian_el_estado[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/ambiente/notificaciones_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_null_y_avances_no_positivos_no_cambian_el_estado[0m[38;2;178;34;34m[1m FAILED[0m[38;2;100;149;237m 5ms[0m
+  [38;2;0;206;209m[1m[4mReport:[0m
+  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ [38;2;30;144;255m1[0m
+ but was
+ [38;2;30;144;255m0[0m[0m[38;2;173;216;230m	at 'test_null_y_avances_no_positivos_no_cambian_el_estado' in res://test/dominio/ambiente/notificaciones_test.gd:126[0m[38;2;128;128;128m[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/ambiente/notificaciones_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_modificar_la_lista_devuelta_no_borra_lo_visible[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/ambiente/notificaciones_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_modificar_la_lista_devuelta_no_borra_lo_visible[0m[38;2;178;34;34m[1m FAILED[0m[38;2;100;149;237m 4ms[0m
+  [38;2;0;206;209m[1m[4mReport:[0m
+  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ '[38;2;30;144;255m[[48;2;38;0;0m[38;2;255;255;255m1[0m[38;2;30;144;255m[48;2;38;0;0m[0m[38;2;30;144;255m, [48;2;38;0;0m[38;2;255;255;255m0[0m[38;2;30;144;255m[48;2;38;0;0m[0m[38;2;30;144;255m][0m'
+ but was
+ '[38;2;30;144;255m<empty>[0m'
+
+[38;2;255;69;0mDifferences found:[0m
+[table=3][cell][right][1mIndex[0m[/right]	[/cell][cell][right][1mCurrent[0m[/right]	[/cell][cell][right][1mExpected[0m[/right]	[/cell][cell][right]0[/right]	[/cell][cell][right]<N/A>[/right]	[/cell][cell][right]1[/right]	[/cell][cell][right]1[/right]	[/cell][cell][right]<N/A>[/right]	[/cell][cell][right]0[/right]	[/cell][/table][0m[38;2;173;216;230m	at 'test_modificar_la_lista_devuelta_no_borra_lo_visible' in res://test/dominio/ambiente/notificaciones_test.gd:137[0m[38;2;128;128;128m[0m
+[38;2;128;128;128m[0m
+[38;2;30;144;255mStatistics:[0m[38;2;128;128;128m 12 test cases | 0 errors | 13 failures | 0 flaky | 0 skipped | 0 orphans |[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 144ms[0m
+[38;2;128;128;128m[0m
+[38;2;128;128;128m[0m
+[38;2;30;144;255mOverall Summary:[0m[38;2;255;255;255m 12 test cases | 0 errors | 13 failures | 0 flaky | 0 skipped | 0 orphans |[0m
+[38;2;233;150;122mExecuted test suites: (1/1)[0m
+[38;2;233;150;122mExecuted test cases : (12/12)[0m
+[38;2;233;150;122mTotal execution time: 144ms[0m
+[38;2;255;255;255m [0m[38;2;100;149;237mOpen XML Report at: file://D:/Usuarios/fede/Documentos/Catedra Videojuegos FADU/manada/repo/nosefia/.claude/worktrees/batch-64-309-c/reports/309-focales/report_1/results.xml[0m
+[38;2;100;149;237mOpen HTML Report at: file://D:/Usuarios/fede/Documentos/Catedra Videojuegos FADU/manada/repo/nosefia/.claude/worktrees/batch-64-309-c/reports/309-focales/report_1/index.html[0m
+[38;2;178;34;34mExit code: 100[0m
+Run dispose test resources

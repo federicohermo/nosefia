@@ -1,0 +1,88 @@
+{
+  "base_certificada": "41f30b0040aa843f45a89c7cee02fbfa08ad8929",
+  "head_full": "fe620b92a38b556f27fff721d162c466c1e784fb",
+  "head_native_y_focales": "c315ccd5a4db47963c1df2d939f183b37728af84",
+  "diferencia_desde_nativa": "specs/notifications/notifications.md | 2 +-\n 1 file changed, 1 insertion(+), 1 deletion(-)",
+  "assets_finales": [
+    {
+      "runtime": "assets/ui/manada/notificacion_cliente.svg",
+      "export_original": "figma/live_cliente.svg",
+      "figma_file": "SQEAfczyRvyOHokmzPOee7",
+      "frame": "243:150",
+      "grupo": "213:191",
+      "url_export": "https://www.figma.com/api/mcp/asset/8a0e9128-9d36-4b5b-b174-b8f129c85937/232cb.svg",
+      "bytes": 580,
+      "sha256": "79fd6c1fde10475cdcb5d98f67afdc1c82499a6706f5828c85075ccf6503b8ae"
+    },
+    {
+      "runtime": "assets/ui/manada/notificacion_lectura.svg",
+      "export_original": "figma/live_lectura.svg",
+      "figma_file": "SQEAfczyRvyOHokmzPOee7",
+      "frame": "477:243",
+      "grupo": "480:319",
+      "url_export": "https://www.figma.com/api/mcp/asset/17e0f09d-310c-4ab8-8e32-33e2c9382449/f4bf6.svg",
+      "bytes": 371,
+      "sha256": "55376ab11eba930cf0a915fbf3d56c135a56a44dff92ceea5e3faec1ed42b4af"
+    }
+  ],
+  "rutas_cambiadas": [
+    "assets/ui/manada/README.md",
+    "assets/ui/manada/notificacion_cliente.svg",
+    "assets/ui/manada/notificacion_cliente.svg.import",
+    "assets/ui/manada/notificacion_lectura.svg",
+    "assets/ui/manada/notificacion_lectura.svg.import",
+    "docs/architecture/capacidades.md",
+    "specs/notifications/notifications.md",
+    "src/dominio/ambiente/notificaciones.gd",
+    "src/dominio/ambiente/notificaciones.gd.uid",
+    "src/escenas/almacen.gd",
+    "src/escenas/puestos/interfaz_del_almacen.tscn",
+    "src/ui/pila_de_notificaciones.gd",
+    "src/ui/pila_de_notificaciones.gd.uid",
+    "src/ui/pila_de_notificaciones.tscn",
+    "test/dominio/ambiente/notificaciones_test.gd",
+    "test/dominio/ambiente/notificaciones_test.gd.uid",
+    "test/escenas/notificaciones_en_el_almacen_test.gd",
+    "test/escenas/notificaciones_en_el_almacen_test.gd.uid",
+    "test/ui/pila_de_notificaciones_test.gd",
+    "test/ui/pila_de_notificaciones_test.gd.uid"
+  ],
+  "hashes_fuentes_finales": {
+    "assets/ui/manada/README.md": "d47b52184412e39a46fae5f824aa05807948094a71e56a8df5d7794e5baf88b4",
+    "assets/ui/manada/notificacion_cliente.svg": "79fd6c1fde10475cdcb5d98f67afdc1c82499a6706f5828c85075ccf6503b8ae",
+    "assets/ui/manada/notificacion_cliente.svg.import": "a6230d922328d4116be60e0d1dac524d132c0453186b9200167e6c7909749d39",
+    "assets/ui/manada/notificacion_lectura.svg": "55376ab11eba930cf0a915fbf3d56c135a56a44dff92ceea5e3faec1ed42b4af",
+    "assets/ui/manada/notificacion_lectura.svg.import": "88c9663cee120c836d9a0702f2ca14f1268eece337570f84d5868663fe3915e0",
+    "docs/architecture/capacidades.md": "8a91d951ad2bd71bb673ab314bde0e0c653d50284a81515e105f81068ac689f8",
+    "specs/notifications/notifications.md": "eb8ac87f32a3c772c6d86ae57c5247a88ec0f74c7c81f615a34b26fe0890051e",
+    "src/dominio/ambiente/notificaciones.gd": "50c08a552fa4a47fe1d3353b214268d4fe32b28d6432758b5ca16c6f57192ae6",
+    "src/dominio/ambiente/notificaciones.gd.uid": "f975916ed5733410e7e3ed403c6904c4940156487a4ebd9f5380610c7447d43b",
+    "src/escenas/almacen.gd": "6de920dffd1ea54247052a24ea4196ccca0845a052c520e61cbb9c1f20404cdc",
+    "src/escenas/puestos/interfaz_del_almacen.tscn": "5abb50f731052b7422f03a267585263ea10d08d3aff94769f99b4887dc32c8a8",
+    "src/ui/pila_de_notificaciones.gd": "2fb1c202e2461b56a49e36c36df9864da0a5fc6721eb9fa8ff182aaca9b58c0f",
+    "src/ui/pila_de_notificaciones.gd.uid": "a4b8d99921d7a539c4299f6769db6dbe7419c61663cd1575d07afb3e336a9ef0",
+    "src/ui/pila_de_notificaciones.tscn": "573f795412cc8309d05865631d63e3a3ad6a9ebf8d4a9dd8e262624268aeec0c",
+    "test/dominio/ambiente/notificaciones_test.gd": "268e115fcba1e0bc7a2bc52c548489d50bc7b4f6a7ded4449f42a2990d3ac91c",
+    "test/dominio/ambiente/notificaciones_test.gd.uid": "f87505122314db8a19ed22e64890bdacf75622d4371655848b76272e75838689",
+    "test/escenas/notificaciones_en_el_almacen_test.gd": "66e53a9262276ed9fdce51c1005e76c4ed8754172e7783b9c0b0baa33958947e",
+    "test/escenas/notificaciones_en_el_almacen_test.gd.uid": "0d0de658d29b767a588e44f14bb18be32162d9d44c98656e9a9650473e991b94",
+    "test/ui/pila_de_notificaciones_test.gd": "921e7e44402937c22b05029c7d027537040aed2540a6549b836a7dbfff32664a",
+    "test/ui/pila_de_notificaciones_test.gd.uid": "e32fd87bcdfd77428fcbfcc9431501299f0cad6cb4c75ac489e56b9b94f22aa8"
+  },
+  "suites_propias": {
+    "test/dominio/ambiente/notificaciones_test.gd": {
+      "casos": 12,
+      "publicos_incluyendo_hooks": 12
+    },
+    "test/ui/pila_de_notificaciones_test.gd": {
+      "casos": 6,
+      "publicos_incluyendo_hooks": 7
+    },
+    "test/escenas/notificaciones_en_el_almacen_test.gd": {
+      "casos": 4,
+      "publicos_incluyendo_hooks": 4
+    }
+  },
+  "alcance": "Todas las rutas revisadas contra el cuerpo completo de issue309; sin cambios fuera del alcance.",
+  "xml_full_origen": "reports/report_3/results.xml"
+}

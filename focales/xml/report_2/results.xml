@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<testsuites id="2026-10-09" name="report_2" tests="12" failures="0" skipped="0" flaky="0" time="0.000">
+	<testsuite id="0" name="notificaciones_test" package="test/dominio/ambiente" timestamp="2026-10-09T08:07:05" hostname="localhost" tests="12" failures="0" errors="0" skipped="0" flaky="0" time="0.117">
+		<testcase name="test_reabrir_con_el_mismo_comprador_no_reinicia_el_aviso" classname="notificaciones_test" time="0.005">
+		</testcase>
+		<testcase name="test_otro_comprador_renueva_el_tipo_sin_duplicarlo" classname="notificaciones_test" time="0.006">
+		</testcase>
+		<testcase name="test_un_comprador_ya_avisado_tampoco_avisa_despues_de_vencer" classname="notificaciones_test" time="0.005">
+		</testcase>
+		<testcase name="test_el_lector_avisa_solo_por_renglones_llenos" classname="notificaciones_test" time="0.004">
+		</testcase>
+		<testcase name="test_el_aviso_sigue_a_2_9_y_sale_a_3_0" classname="notificaciones_test" time="0.005">
+		</testcase>
+		<testcase name="test_un_cuadro_largo_saca_todos_los_avisos" classname="notificaciones_test" time="0.005">
+		</testcase>
+		<testcase name="test_repetir_el_tipo_lo_pone_primero_y_reinicia_solo_su_tiempo" classname="notificaciones_test" time="0.004">
+		</testcase>
+		<testcase name="test_repetir_un_tipo_no_renueva_el_otro" classname="notificaciones_test" time="0.005">
+		</testcase>
+		<testcase name="test_los_tipos_se_ordenan_del_mas_nuevo_al_mas_viejo" classname="notificaciones_test" time="0.005">
+		</testcase>
+		<testcase name="test_vaciar_borra_ambos_tipos_y_olvida_compradores" classname="notificaciones_test" time="0.004">
+		</testcase>
+		<testcase name="test_null_y_avances_no_positivos_no_cambian_el_estado" classname="notificaciones_test" time="0.007">
+		</testcase>
+		<testcase name="test_modificar_la_lista_devuelta_no_borra_lo_visible" classname="notificaciones_test" time="0.004">
+		</testcase>
+	</testsuite>
+</testsuites>

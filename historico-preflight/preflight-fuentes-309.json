@@ -1,0 +1,63 @@
+{
+  "base_certificada": "41f30b0040aa843f45a89c7cee02fbfa08ad8929",
+  "forbidden_and_shared_resources": {
+    "src/escenas/almacen.tscn": {
+      "sha256_worktree": "fc2fa321ac95426bea80f29445dcad6029c6ee0f57b5738adcb51bf7f7d86a8c",
+      "unchanged_from_base": true
+    },
+    "src/ui/hud.gd": {
+      "sha256_worktree": "97817f2113092d7e7a14361a1bbad0cdc99bf0de9fdae70fbd70367e458ebb8c",
+      "unchanged_from_base": true
+    },
+    "src/ui/hud.tscn": {
+      "sha256_worktree": "36371d598c8fa3c0804c994caabee57baf93179eb9338ad38cd53a3c544c7080",
+      "unchanged_from_base": true
+    },
+    "src/ui/interrupciones/menu_de_pausa.tscn": {
+      "sha256_worktree": "a154bab7740c6d06be702774b1d8ef0bc0c2661188a208432e24afc560415afd",
+      "unchanged_from_base": true
+    },
+    "src/ui/diegetica/pantalla_de_computadora.tscn": {
+      "sha256_worktree": "5abc0f7fb47d5f4756077f600d77f1ad44c60c7ae4004d44110a8304124bb387",
+      "unchanged_from_base": true
+    },
+    "src/sistemas/tareas/ventanilla.gd": {
+      "sha256_worktree": "07d8a2a343d65d2048baa91354f8f3eef35b9284177510ac38ccca1a164cef25",
+      "unchanged_from_base": true
+    },
+    "src/escenas/puestos/ventanilla.gd": {
+      "sha256_worktree": "5e48de4833a006454e08a1dd85dcaee900d3c82644b9c814230f7de8b0cf60ad",
+      "unchanged_from_base": true
+    },
+    "src/ui/diegetica/panel_de_la_ventanilla.tscn": {
+      "sha256_worktree": "970ee5c5119ece507493219cc433e89386221b8a3d00c3741dd6bb4773c8c518",
+      "unchanged_from_base": true
+    },
+    "assets/ui/manada/tema.tres": {
+      "sha256_worktree": "9588464ffae1cf69f5fbcdf1a752422d24b4f403c2bc6ee4d2a3b78d77c298fc",
+      "unchanged_from_base": true
+    },
+    "project.godot": {
+      "sha256_worktree": "39e2bc53f3cce0dfaa089904047825a93421c742ebdc3d50230d1bb2bb2bb279",
+      "unchanged_from_base": true
+    }
+  },
+  "assets": {
+    "notificacion_cliente.svg": {
+      "sha256": "f7be5dfeceac38558ee5725712e6d85ce29d373a97efa9871b759a313f216d17",
+      "bytes": 572,
+      "exact_original": true
+    },
+    "notificacion_lectura.svg": {
+      "sha256": "73ff8c9fd1eebf2e23ec759fadcc236f8427b25d3be311310c0bdac6862142f4",
+      "bytes": 365,
+      "exact_original": true
+    }
+  },
+  "new_test_public_methods": {
+    "test/dominio/ambiente/notificaciones_test.gd": 12,
+    "test/ui/pila_de_notificaciones_test.gd": 7,
+    "test/escenas/notificaciones_en_el_almacen_test.gd": 4
+  },
+  "pending_full": true
+}

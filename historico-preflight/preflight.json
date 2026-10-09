@@ -1,0 +1,62 @@
+{
+  "notificacion_cliente.svg": {
+    "bytes": 572,
+    "sha256": "f7be5dfeceac38558ee5725712e6d85ce29d373a97efa9871b759a313f216d17",
+    "width": "155",
+    "height": "176",
+    "viewBox": "0 0 155 176"
+  },
+  "notificacion_lectura.svg": {
+    "bytes": 365,
+    "sha256": "73ff8c9fd1eebf2e23ec759fadcc236f8427b25d3be311310c0bdac6862142f4",
+    "width": "138",
+    "height": "141",
+    "viewBox": "0 0 138 141"
+  },
+  "contrato302": [
+    "- **Objetivo:** que el lector, la caja registradora, el programa generador de tickets y los tickets sigan la ficha 🟩 «Objetos de caja» y la sección «Programa generador de Tickets» de la ficha 🟩 «Interfaces virtuales durante la jornada». Hoy el lector no existe: sólo existe su sonido de error, que suena cuando la ventanilla rechaza un cobro (#202). La caja registradora es una malla del modelo sin script, y no hay programa ni tickets.",
+    "- **Diseño en Figma:** [panel de tickets](https://www.figma.com/design/SQEAfczyRvyOHokmzPOee7/Manada---UI?node-id=421-205) —«/ Tickets:», tres renglones con su X, BORRAR e IMPRIMIR— y [el ticket](https://www.figma.com/design/SQEAfczyRvyOHokmzPOee7/Manada---UI?node-id=216-521). La ficha manda sobre el frame. El frame pone el panel al lado de la planilla, en la pantalla de la computadora: acá se abre desde la caja registradora, como dice la ficha. El frame muestra una X en cada renglón y la ficha no la nombra: queda afuera, y sólo Borrar vacía renglones.",
+    "- La notificación de los renglones llenos es de #309. Este issue le deja la señal `lectura_rechazada` con su motivo.",
+    "**«Ticket» pasa a ser el papel impreso.** Hoy el spec y seis archivos llaman «ticket» a la lista",
+    "- [ ] El spec agrega al lenguaje **Lector**, **Programa de tickets**, **Renglón** y **Ticket** (el papel impreso), y `BR-CTR-011`, `BR-CTR-012` y `AC-CTR-013` dicen «pedido» donde hoy dicen «ticket».",
+    "- **`dominio/almacen` — `GeneradorDeTickets` (`RefCounted`):** `const RENGLONES := 3`;",
+    "  `enum Resultado { ANOTADO, NO_ES_PRODUCTO, LLENO }`;",
+    "  `imprimir() -> Ticket` (`null` con los 3 vacíos).",
+    "- **`dominio/almacen` — `Ticket extends ObjetoDelAlmacen`:** `const ID := &\"ticket\"`;",
+    "  `_init(productos: Array[Producto] = [])` con `nombre` «Ticket», levantable y sonoridad",
+    "- **`sistemas/tareas` — `CajaRegistradora` (`Node`):** `arrancar(generador: GeneradorDeTickets)`,",
+    "  `generador() -> GeneradorDeTickets`, `pedir_anotar(objeto: ObjetoDelAlmacen)`,",
+    "  `lectura_rechazada(motivo: GeneradorDeTickets.Resultado)`, `renglones_cambiados` y",
+    "  `ticket_impreso(ticket: Ticket)`. Sin generador, `push_error` y nada más, como `Ventanilla`.",
+    "- **`ui/diegetica` — `ProgramaDeTickets` (`CanvasLayer`):** arranca invisible;",
+    "  un `GeneradorDeTickets` nuevo y llama a `limpiar()` del puesto. La lista de fuentes del audio",
+    "- **Examinar un ticket en la mano:** dice «Ticket». El subtítulo con su contenido no es de este issue."
+  ],
+  "borrador": {
+    "BR": [
+      "BR-NTF-001",
+      "BR-NTF-002",
+      "BR-NTF-003",
+      "BR-NTF-004",
+      "BR-NTF-005",
+      "BR-NTF-006",
+      "BR-NTF-007"
+    ],
+    "AC": [
+      "AC-NTF-001",
+      "AC-NTF-002",
+      "AC-NTF-003",
+      "AC-NTF-004",
+      "AC-NTF-005",
+      "AC-NTF-006",
+      "AC-NTF-007",
+      "AC-NTF-008",
+      "AC-NTF-009",
+      "AC-NTF-010"
+    ],
+    "forma_oficial_aceptada": true,
+    "todos_citados_en_borradores": true,
+    "pruebas_ejecutadas": false,
+    "depende_de_cabeza_A304": true
+  }
+}

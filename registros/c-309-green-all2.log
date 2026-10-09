@@ -1,0 +1,8 @@
+FOCAL309_START green-all2 import
+FOCAL309_EXIT 0 C:\Users\fede_\AppData\Local\Temp\nosefia-batch-64-309\c-preparacion-309\green-all2-import.log
+FOCAL309_START green-all2 notificaciones_test
+FOCAL309_EXIT 0 C:\Users\fede_\AppData\Local\Temp\nosefia-batch-64-309\c-preparacion-309\green-all2-notificaciones_test.log
+FOCAL309_START green-all2 pila_de_notificaciones_test
+FOCAL309_EXIT 0 C:\Users\fede_\AppData\Local\Temp\nosefia-batch-64-309\c-preparacion-309\green-all2-pila_de_notificaciones_test.log
+FOCAL309_START green-all2 notificaciones_en_el_almacen_test
+FOCAL309_EXIT 0 C:\Users\fede_\AppData\Local\Temp\nosefia-batch-64-309\c-preparacion-309\green-all2-notificaciones_en_el_almacen_test.log
