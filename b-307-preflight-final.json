@@ -1,0 +1,18 @@
+{
+  "base": "789ce08184f9bbf7ba5df765a2cffe72609d0070",
+  "revisions": 18,
+  "distinct_blobs": 18,
+  "history_max": {
+    "BR": 29,
+    "AC": 46,
+    "OQ": 3
+  },
+  "public_methods": {
+    "src/dominio/empleo/partida.gd": 13,
+    "src/escenas/almacen.gd": 1,
+    "src/escenas/puestos/caja_registradora.gd": 4,
+    "test/dominio/empleo/llamados_de_la_partida_test.gd": 8,
+    "test/escenas/puestos/caja_registradora_test.gd": 14
+  },
+  "body_sha256": "6599355e89a708a30c9a0f51ae992bfe0e8e6f3e7a28bf99c4330c3497ce56e1"
+}

@@ -1,0 +1,40 @@
+{
+  "head": "366064a288469fc420a6a1c737197fac0279566c",
+  "recorded_head": "366064a288469fc420a6a1c737197fac0279566c",
+  "native_code": 0,
+  "count_code": 0,
+  "seven_node_summaries": [
+    "756.6"
+  ],
+  "node_summary": [
+    [
+      "7",
+      "756.6"
+    ]
+  ],
+  "suites": 214,
+  "committed_suite_files": 214,
+  "case_elements": 1670,
+  "tests": 1670,
+  "failures": 0,
+  "errors": 0,
+  "skipped": 0,
+  "flaky": 0,
+  "xml_sha256": "6cf77b62148479ee90bb70634802d0c78d88eadbae16a7d468ec2de012f369c7",
+  "raw_sha256": "2df1ded952d5a69908404a9456800b1aa7570cd91b504f4a552fa779d8f69bfe",
+  "raw_categories": {
+    "script_parse": 0,
+    "objectdb": 1,
+    "resources": 0,
+    "material": 24,
+    "metadata": 110,
+    "transform": 2,
+    "size": 0,
+    "input_reuse": 0
+  },
+  "raw": "D:\\temporales\\nosefia-batch-64-309\\empleo-306\\padre-306-full4-tests-crudo.log",
+  "bundle": "D:\\temporales\\nosefia-batch-64-309\\empleo-306\\padre-306-full4-bundle.log",
+  "count": "D:\\temporales\\nosefia-batch-64-309\\empleo-306\\padre-306-full4-conteo.log",
+  "root_reviewed": true,
+  "verdict": "GREEN_NATIVE_REVIEW"
+}
