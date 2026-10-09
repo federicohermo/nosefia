@@ -1,0 +1,15 @@
+{
+  "head": "48a5fa9f7217997ebd215fce52943d4ec15443eb",
+  "files": [
+    {
+      "path": "reporte-final.md",
+      "bytes": 19599,
+      "sha256": "9419533709b7a5607f6d7bfb72a33e4e60d8cc5266e1cef7967541a85e02fbb6"
+    },
+    {
+      "path": "reporte-final.proof.json",
+      "bytes": 1682,
+      "sha256": "6a570c20d06652d5197e251210f00b51fb603d0c1c348291fc6d0133f84b8a80"
+    }
+  ]
+}

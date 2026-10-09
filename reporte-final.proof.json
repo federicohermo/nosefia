@@ -1,0 +1,49 @@
+{
+  "estado": "FINAL_EMITIDO",
+  "head": "48a5fa9f7217997ebd215fce52943d4ec15443eb",
+  "issues": [
+    64,
+    294,
+    295,
+    327,
+    297,
+    298,
+    302,
+    300,
+    303,
+    304,
+    305,
+    306,
+    307,
+    308,
+    309
+  ],
+  "entradas": {
+    "entregas": {
+      "ruta": "C:\\Users\\fede_\\orca\\workspaces\\nosefia\\darter\\.claude\\scratch\\batch-64-309\\entregas.json",
+      "sha256": "00448960f1458793c8e6ebad4f02442e04746397177c38bf2f6866343dd0e260"
+    },
+    "auditoria": {
+      "ruta": "D:\\temporales\\nosefia-batch-64-309\\auditoria-final.json",
+      "sha256": "baff34ac613f07c99a9946cf7244a731d8e73cddf1508e65bec4dba082ef637d"
+    },
+    "integracion": {
+      "ruta": "D:\\temporales\\nosefia-batch-64-309\\integracion-final1\\manifest.json",
+      "sha256": "2e184a13f99fec064954a8dda485950776dcd17a082febd549f663593794d84e"
+    },
+    "outside": {
+      "ruta": "D:\\temporales\\nosefia-batch-64-309\\outside-final\\index.json",
+      "sha256": "45cda55687ba327062349b8a9cc90f611eb33dcc04c951565cc490a612967194"
+    },
+    "cleanup": {
+      "ruta": "C:\\Users\\fede_\\orca\\workspaces\\nosefia\\darter\\.claude\\scratch\\batch-64-309\\padre-limpieza-antes.json",
+      "sha256": "00168d274276b2fcebc8bdc622fbc83fa3152bd9b8f1d7d2709e082524cb752b"
+    },
+    "limpieza_log": {
+      "ruta": "C:\\Users\\fede_\\orca\\workspaces\\nosefia\\darter\\.claude\\scratch\\batch-64-309\\padre-limpieza.log",
+      "sha256": "a0bc5f00071c72ffe7af059cfc9fc2c8b160f973ccbfa0c200b9d0b1ba6a9bc1"
+    }
+  },
+  "reporte": "D:\\temporales\\nosefia-batch-64-309\\reporte-final.md",
+  "reporte_sha256": "9419533709b7a5607f6d7bfb72a33e4e60d8cc5266e1cef7967541a85e02fbb6"
+}
