@@ -20,6 +20,8 @@ extends Node
 signal objeto_agarrado(nodo: Node3D)
 signal agarre_rechazado(motivo: Manos.Rechazo)
 signal objeto_soltado(nodo: Node3D)
+## La mano queda libre sin soltar el cuerpo al mundo: lo recibe un destino.
+signal objeto_entregado(nodo: Node3D)
 
 ## Los tres puntos entran por `@export` y no como autoload ni por `get_node()` hacia arriba:
 ## está medido que `gate_de_capas.py` no ve un autoload nombrado por su nombre global, así que
@@ -145,6 +147,8 @@ func entregar() -> Node3D:
 	var nodo := _nodo
 	_nodo = null
 	_ancla_de_vuelta = null
+	if nodo != null:
+		objeto_entregado.emit(nodo)
 	return nodo
 
 

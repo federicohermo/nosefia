@@ -108,6 +108,7 @@ func preparar() -> void:
 	jugador.objetivo_perdido.connect(_al_perder_el_foco)
 	repositor.agarre.objeto_agarrado.connect(_actualizar_zonas)
 	repositor.agarre.objeto_soltado.connect(_actualizar_zonas)
+	repositor.agarre.objeto_entregado.connect(_actualizar_zonas)
 	repositor.agarre.objeto_soltado.connect(_desatascar_lo_soltado)
 	repositor.agarre.objeto_soltado.connect(_agrupar_suelto)
 	repositor.agarre.objeto_agarrado.connect(_retirar_del_grupo)
