@@ -22,6 +22,8 @@ func _ready() -> void:
 	caja.ticket_impreso.connect(_al_imprimir)
 	programa.borrado_pedido.connect(caja.pedir_borrar)
 	programa.impresion_pedida.connect(caja.pedir_imprimir)
+	programa.eleccion_pedida.connect(caja.pedir_elegir)
+	programa.cierre_pedido.connect(cerrar)
 	reloj.turno_cerrado.connect(_al_cerrar_el_turno)
 	jugador.agarre.objeto_agarrado.connect(_al_agarrar)
 
@@ -32,7 +34,7 @@ func accionar() -> void:
 
 func abrir() -> void:
 	_abierta = true
-	programa.mostrar(caja.generador().renglones())
+	programa.mostrar(caja.generador())
 	jugador.suspender()
 
 
@@ -52,7 +54,7 @@ func _input(evento: InputEvent) -> void:
 
 func _repintar() -> void:
 	if _abierta:
-		programa.mostrar(caja.generador().renglones())
+		programa.mostrar(caja.generador())
 
 
 func _al_cerrar_el_turno(_cumplidas: int) -> void:

@@ -326,3 +326,155 @@ func test_los_eventos_reales_piden_escaneo_error_impresion_y_botones() -> void:
 		assert_bool(fila.posicional).is_true()
 		assert_str(fila.emisor).is_equal("Caja")
 		assert_str(fila.bus).is_equal(EntradaSonora.BUS_DE_EFECTOS)
+
+
+func test_la_tres_vacia_y_cambia_solo_la_malla() -> void:  # AC-CTR-026, AC-CTR-029
+	var almacen := await _abrir()
+	var lector: StaticBody3D = almacen.get_node("Estructura/Lector")
+	var malla: MeshInstance3D = lector.get_node("Malla")
+	var original := malla.mesh
+	var forma: CollisionShape3D = lector.get_node("Forma")
+	var colision := forma.shape
+	var pose := lector.global_transform
+	var mascara := lector.collision_mask
+	var capa := lector.collision_layer
+	var cantidad := get_tree().get_nodes_in_group("interactuable").size()
+	almacen.call("_al_abrir_la_jornada", 2)
+	_caja(almacen).pedir_anotar(UnidadDeProducto.new(Catalogo.de(Producto.Id.MAROLINI)))
+	assert_int(_caja(almacen).generador().renglones().size()).is_equal(1)
+	almacen.call("_al_abrir_la_jornada", 3)
+	assert_bool(_caja(almacen).generador().es_manual()).is_true()
+	assert_array(_caja(almacen).generador().renglones()).is_empty()
+	assert_object(malla.mesh).is_not_same(original)
+	assert_bool(malla.mesh.get_aabb().size.is_equal_approx(original.get_aabb().size)).is_true()
+	assert_bool(malla.is_visible_in_tree()).is_true()
+	assert_int(malla.gi_mode).is_equal(GeometryInstance3D.GI_MODE_DYNAMIC)
+	assert_object(forma.shape).is_same(colision)
+	assert_bool(lector.global_transform.is_equal_approx(pose)).is_true()
+	assert_int(lector.collision_mask).is_equal(mascara)
+	assert_int(lector.collision_layer).is_equal(capa)
+	assert_bool(lector.is_in_group("interactuable")).is_true()
+	assert_int(get_tree().get_nodes_in_group("interactuable").size()).is_equal(cantidad)
+	var centro := malla.to_global(malla.mesh.get_aabb().get_center())
+	assert_bool(await _enfocar(almacen, lector, centro)).is_true()
+	assert_bool(malla.material_overlay is ShaderMaterial).is_true()
+	almacen.call("_al_abrir_la_jornada", 5)
+	assert_bool(_caja(almacen).generador().es_manual()).is_true()
+	assert_object(malla.mesh).is_not_same(original)
+	almacen.call("_al_abrir_la_jornada", 1)
+	assert_bool(_caja(almacen).generador().es_manual()).is_false()
+	assert_object(malla.mesh).is_same(original)
+	var jugador: Node3D = almacen.get_node("Jugador")
+	var unidad := _unidad(almacen)
+	assert_bool((almacen.get("_agarre") as Agarre).pedir_agarrar(unidad.datos, unidad)).is_true()
+	_accion(jugador, lector, ReglasDelJugador.ACCION_USAR)
+	assert_int(_caja(almacen).generador().renglones().size()).is_equal(1)
+
+
+func test_el_hueco_con_unidad_caja_y_mano_vacia_no_avisa_ni_anota() -> void:  # AC-CTR-029
+	var almacen := await _abrir()
+	almacen.call("_al_abrir_la_jornada", 3)
+	var jugador: Node3D = almacen.get_node("Jugador")
+	var lector: Node3D = almacen.get_node("Estructura/Lector")
+	var agarre: Agarre = almacen.get("_agarre")
+	var eventos: Array[String] = []
+	_caja(almacen).producto_leido.connect(func() -> void: eventos.append("lectura"))
+	_caja(almacen).lectura_rechazada.connect(func(_motivo: int) -> void: eventos.append("rechazo"))
+	_caja(almacen).renglones_cambiados.connect(func() -> void: eventos.append("cambio"))
+	var sonidos: Array[int] = []
+	var reproductor: ReproductorDeSonidos = almacen.get_node(
+		"Servicios/AudioDelAlmacen/Reproductor"
+	)
+	reproductor.sonido_pedido.connect(func(sonido: int) -> void: sonidos.append(sonido))
+	var objetos: Array[Node3D] = [null, _unidad(almacen), almacen.get("_cajas_de_productos")[0]]
+	for objeto in objetos:
+		var dato: ObjetoDelAlmacen = null if objeto == null else objeto.get("datos")
+		if objeto != null:
+			assert_bool(agarre.pedir_agarrar(dato, objeto)).is_true()
+		var padre: Node = null if objeto == null else objeto.get_parent()
+		var pose := Transform3D.IDENTITY if objeto == null else objeto.transform
+		eventos.clear()
+		sonidos.clear()
+		_accion(jugador, lector, ReglasDelJugador.ACCION_USAR)
+		assert_array(_caja(almacen).generador().renglones()).is_empty()
+		assert_array(eventos).is_empty()
+		assert_array(sonidos).is_empty()
+		if objeto == null:
+			assert_object(agarre.manos().sostenido()).is_null()
+		else:
+			assert_object(agarre.manos().sostenido()).is_same(dato)
+			assert_object(objeto.get_parent()).is_same(padre)
+			assert_bool(objeto.transform.is_equal_approx(pose)).is_true()
+			agarre.entregar()
+
+
+func test_la_partida_retomada_en_cuatro_es_manual_y_una_nueva_es_automatica() -> void:  # AC-CTR-026
+	var datos := {PartidaSerializada.clave(PartidaSerializada.Campo.JORNADA): 4}
+	var almacen: Node3D = auto_free(ALMACEN.instantiate())
+	almacen.set("_partida", Partida.desde(datos))
+	add_child(almacen)
+	almacen.get_node("Jugador").set_physics_process(false)
+	for _cuadro in 4:
+		await get_tree().physics_frame
+	assert_int((almacen.get("_partida") as Partida).jornada()).is_equal(4)
+	assert_bool(_caja(almacen).generador().es_manual()).is_true()
+	var nueva: Node3D = auto_free(ALMACEN.instantiate())
+	nueva.set("_partida", Partida.nueva())
+	add_child(nueva)
+	nueva.get_node("Jugador").set_physics_process(false)
+	for _cuadro in 4:
+		await get_tree().physics_frame
+	assert_int((nueva.get("_partida") as Partida).jornada()).is_equal(1)
+	assert_bool(_caja(nueva).generador().es_manual()).is_false()
+
+
+func test_el_popup_pausa_y_reanuda_programa_y_mano() -> void:  # AC-CTR-030, AC-PLY-074
+	var almacen := await _abrir()
+	almacen.call("_al_abrir_la_jornada", 3)
+	var jugador: Node3D = almacen.get_node("Jugador")
+	var agarre: Agarre = almacen.get("_agarre")
+	var unidad := _unidad(almacen)
+	assert_bool(agarre.pedir_agarrar(unidad.datos, unidad)).is_true()
+	var marolini := Catalogo.de(Producto.Id.MAROLINI)
+	_caja(almacen).pedir_elegir(2, marolini)
+	_puesto(almacen).call("abrir")
+	var selector := _vista(almacen).selectores[2]
+	selector.show_popup()
+	assert_bool(selector.get_popup().visible).is_true()
+	var evento := InputEventKey.new()
+	evento.keycode = KEY_ESCAPE
+	evento.pressed = true
+	selector.get_popup().window_input.emit(evento)
+	for _cuadro in 4:
+		await get_tree().process_frame
+	assert_bool(get_tree().paused).is_true()
+	assert_bool((almacen.get_node("Interfaz/MenuDePausa") as CanvasLayer).visible).is_true()
+	assert_bool(selector.get_popup().visible).is_false()
+	assert_bool(_vista(almacen).visible).is_true()
+	assert_object(agarre.manos().sostenido()).is_same(unidad.datos)
+	var pausa: ControlDePausa = almacen.get_node("Interfaz/ControlDePausa")
+	pausa.reanudar()
+	assert_bool(get_tree().paused).is_false()
+	assert_bool(_vista(almacen).visible).is_true()
+	assert_object(_caja(almacen).generador().en_el_renglon(2)).is_same(marolini)
+	assert_int(selector.selected).is_equal(_opcion_de(marolini))
+	assert_bool((jugador.get("_control") as ControlDelJugador).esta_suspendido()).is_true()
+	selector.show_popup()
+	var derecho := InputEventMouseButton.new()
+	derecho.button_index = MOUSE_BUTTON_RIGHT
+	derecho.pressed = true
+	selector.get_popup().window_input.emit(derecho)
+	for _cuadro in 2:
+		await get_tree().process_frame
+	assert_bool(_vista(almacen).visible).is_false()
+	assert_bool(selector.get_popup().visible).is_false()
+	assert_bool((jugador.get("_control") as ControlDelJugador).esta_suspendido()).is_false()
+	assert_object(agarre.manos().sostenido()).is_same(unidad.datos)
+
+
+func _opcion_de(producto: Producto) -> int:
+	var catalogo := Catalogo.todos()
+	for indice in catalogo.size():
+		if catalogo[indice].id == producto.id:
+			return indice + 1
+	return -1

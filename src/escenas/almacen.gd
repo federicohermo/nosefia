@@ -167,6 +167,8 @@ func _ready() -> void:
 		caja.empujada.connect(_reposicion_manual.despertar_lo_de_arriba)
 	# «Volver al menú» de la pausa sale por el mismo camino que el de la placa.
 	var pausa: ControlDePausa = get_node("Interfaz/ControlDePausa")
+	_programa_de_tickets.pausa_pedida.connect(pausa.pausar)
+	pausa.pausado.connect(_programa_de_tickets.cerrar_las_listas)
 	pausa.volver_al_menu_pedido.connect(func() -> void: _ir_al_menu.call())
 	_arranque = _jugador.global_transform
 	add_child(EnlaceDeGuardado.new(_ciclo, Guardado.new()))
@@ -193,7 +195,7 @@ func _al_abrir_la_jornada(jornada: int) -> void:
 	# está ahí.
 	_jugador.examen.terminar()
 	_agarre.vaciar_las_manos()
-	_caja.arrancar(GeneradorDeTickets.new())
+	_caja.arrancar(GeneradorDeTickets.para_la_jornada(jornada))
 	_puesto_de_la_caja.limpiar()
 	_jugador.ubicar(_arranque)
 	_hud.declarar_obligatorias(Apertura.cantidad_de_obligatorias())

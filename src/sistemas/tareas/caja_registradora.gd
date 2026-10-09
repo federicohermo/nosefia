@@ -2,6 +2,8 @@
 class_name CajaRegistradora
 extends Node
 
+signal programa_arrancado(manual: bool)
+
 signal producto_leido
 signal lectura_rechazada(motivo: GeneradorDeTickets.Resultado)
 signal renglones_cambiados
@@ -12,6 +14,7 @@ var _generador: GeneradorDeTickets
 
 func arrancar(generador_de_la_jornada: GeneradorDeTickets) -> void:
 	_generador = generador_de_la_jornada
+	programa_arrancado.emit(_generador.es_manual())
 	renglones_cambiados.emit()
 
 
@@ -23,6 +26,8 @@ func pedir_anotar(objeto: ObjetoDelAlmacen) -> void:
 	if _sin_cablear():
 		return
 	var resultado := _generador.anotar(objeto)
+	if resultado == GeneradorDeTickets.Resultado.SIN_LECTOR:
+		return
 	if resultado != GeneradorDeTickets.Resultado.ANOTADO:
 		lectura_rechazada.emit(resultado)
 		return
@@ -50,3 +55,10 @@ func _sin_cablear() -> bool:
 		return false
 	push_error("Caja registradora sin generador: revisar almacen.gd")
 	return true
+
+
+func pedir_elegir(renglon: int, producto: Producto) -> void:
+	if _sin_cablear():
+		return
+	if _generador.elegir(renglon, producto):
+		renglones_cambiados.emit()

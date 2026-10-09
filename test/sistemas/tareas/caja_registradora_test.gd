@@ -88,4 +88,70 @@ func test_sin_generador_el_cableado_avisa_y_no_publica_eventos() -> void:
 		assert_error(func() -> void: caja.pedir_anotar(ObjetoDelAlmacen.new()))
 		. is_push_error("Caja registradora sin generador: revisar almacen.gd")
 	)
+	await (
+		assert_error(func() -> void: caja.pedir_elegir(0, null))
+		. is_push_error("Caja registradora sin generador: revisar almacen.gd")
+	)
 	assert_array(avisos).is_empty()
+
+
+func test_arrancar_publica_el_modo_de_cada_jornada_y_la_vista_vacia() -> void:  # AC-CTR-026
+	var caja: CajaRegistradora = auto_free(CajaRegistradora.new())
+	var modos: Array[bool] = []
+	var cambios: Array[int] = [0]
+	caja.programa_arrancado.connect(func(manual: bool) -> void: modos.append(manual))
+	caja.renglones_cambiados.connect(func() -> void: cambios[0] += 1)
+	for jornada: int in [2, 3, 4, 5, 1]:
+		var generador := GeneradorDeTickets.para_la_jornada(jornada)
+		caja.arrancar(generador)
+		assert_object(caja.generador()).is_same(generador)
+	assert_array(modos).contains_exactly([false, true, true, true, false])
+	assert_int(cambios[0]).is_equal(5)
+
+
+func test_elegir_publica_solo_un_cambio_aceptado_y_no_una_lectura() -> void:  # AC-CTR-027
+	var caja: CajaRegistradora = auto_free(CajaRegistradora.new())
+	var cambios: Array[int] = [0]
+	var sonidos: Array[String] = []
+	caja.renglones_cambiados.connect(func() -> void: cambios[0] += 1)
+	caja.producto_leido.connect(func() -> void: sonidos.append("leido"))
+	caja.lectura_rechazada.connect(func(_motivo: int) -> void: sonidos.append("rechazo"))
+	var marolini := Catalogo.de(Producto.Id.MAROLINI)
+	caja.arrancar(GeneradorDeTickets.para_la_jornada(2))
+	caja.pedir_elegir(1, marolini)
+	assert_int(cambios[0]).is_equal(1)
+	assert_array(caja.generador().renglones()).is_empty()
+	caja.arrancar(GeneradorDeTickets.para_la_jornada(3))
+	for indice: int in [-1, 3]:
+		caja.pedir_elegir(indice, marolini)
+	assert_int(cambios[0]).is_equal(2)
+	caja.pedir_elegir(1, marolini)
+	assert_int(cambios[0]).is_equal(3)
+	assert_object(caja.generador().en_el_renglon(1)).is_same(marolini)
+	assert_object(caja.generador().en_el_renglon(0)).is_null()
+	caja.pedir_elegir(1, null)
+	assert_int(cambios[0]).is_equal(4)
+	assert_object(caja.generador().en_el_renglon(1)).is_null()
+	assert_array(sonidos).is_empty()
+
+
+func test_usar_el_hueco_es_silencioso_tanto_vacio_como_lleno() -> void:  # AC-CTR-029
+	var caja: CajaRegistradora = auto_free(CajaRegistradora.new())
+	caja.arrancar(GeneradorDeTickets.para_la_jornada(3))
+	var avisos: Array[String] = []
+	caja.producto_leido.connect(func() -> void: avisos.append("leido"))
+	caja.lectura_rechazada.connect(func(_motivo: int) -> void: avisos.append("rechazo"))
+	caja.renglones_cambiados.connect(func() -> void: avisos.append("cambio"))
+	var marolini := Catalogo.de(Producto.Id.MAROLINI)
+	for lleno: bool in [false, true]:
+		if lleno:
+			for indice in GeneradorDeTickets.RENGLONES:
+				caja.pedir_elegir(indice, marolini)
+		avisos.clear()
+		var antes := caja.generador().renglones()
+		for objeto: ObjetoDelAlmacen in [
+			null, UnidadDeProducto.new(marolini), ObjetoDelAlmacen.new()
+		]:
+			caja.pedir_anotar(objeto)
+		assert_array(avisos).is_empty()
+		assert_array(caja.generador().renglones()).contains_exactly(antes)
