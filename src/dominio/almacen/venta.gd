@@ -10,19 +10,19 @@ extends RefCounted
 ## inventario: dos llamadas al catálogo dan objetos distintos del mismo producto.
 var _unidades_por_id: Dictionary = {}
 
-## En el orden en que entraron a la venta, que es el orden en que se lee el ticket.
+## En el orden en que entraron a la venta, que es el orden en que se lee el pedido.
 var _productos: Array[Producto] = []
 
 
 ## Sobre un producto que ya está en la venta **acumula**. Una línea por llamada haría que el
-## mismo producto apareciera dos veces en el ticket: un bug de pantalla nacido acá.
+## mismo producto apareciera dos veces en el pedido: un bug de pantalla nacido acá.
 ##
 ## Una cantidad que no es positiva se ignora en silencio, como los segundos negativos de
 ## `Turno.consumir()`: el dominio no tiene con quién hablar. No es prolijidad — sin el corte, un
 ## `agregar(p, -3)` pasa el control de vendibles de `Inventario.cobrar()` y el cobro termina
 ## **sumando** tres unidades al depósito. Una pantalla que implemente «sacar una
-## unidad del ticket» como un `agregar` negativo fabricaría mercadería. Y un `agregar(p, 0)`
-## dejaría una línea vacía en el ticket.
+## unidad del pedido» como un `agregar` negativo fabricaría mercadería. Y un `agregar(p, 0)`
+## dejaría una línea vacía en el pedido.
 func agregar(producto: Producto, cuantas: int) -> void:
 	if cuantas <= 0:
 		return
@@ -38,7 +38,7 @@ func unidades_de(producto: Producto) -> int:
 
 
 ## Devuelve los productos y no el diccionario para que `Inventario` pueda recorrer la venta sin
-## conocer su representación, y para que la pantalla liste el ticket sin destriparla. La copia
+## conocer su representación, y para que la pantalla liste el pedido sin destriparla. La copia
 ## es para que quien la recorra no pueda agregarle una línea por la puerta de atrás.
 func productos() -> Array[Producto]:
 	return _productos.duplicate()

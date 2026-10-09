@@ -23,7 +23,7 @@ func test_el_total_multiplica_el_precio_por_las_unidades_de_cada_linea() -> void
 
 
 func test_agregar_dos_veces_el_mismo_producto_acumula_en_una_sola_linea() -> void:
-	# Una línea por llamada haría que el mismo producto apareciera dos veces en el ticket: un
+	# Una línea por llamada haría que el mismo producto apareciera dos veces en el pedido: un
 	# bug de pantalla nacido en el dominio.
 	var laysntt := Producto.new(Producto.Id.LAYSNTT, "Laysntt", 900)
 	var venta := Venta.new()
@@ -48,7 +48,7 @@ func test_dos_instancias_del_mismo_producto_son_una_sola_linea() -> void:
 
 
 func test_preguntar_por_un_producto_que_no_esta_en_la_venta_devuelve_cero() -> void:
-	# Es la rama de la que depende `Inventario.cobrar()` para no reventar con un ticket flaco.
+	# Es la rama de la que depende `Inventario.cobrar()` para no reventar con un pedido flaco.
 	var laysntt := Producto.new(Producto.Id.LAYSNTT, "Laysntt", 900)
 	var venta := Venta.new()
 	assert_int(venta.unidades_de(laysntt)).is_equal(0)
@@ -57,7 +57,7 @@ func test_preguntar_por_un_producto_que_no_esta_en_la_venta_devuelve_cero() -> v
 func test_agregar_una_cantidad_que_no_es_positiva_no_deja_linea_ni_resta() -> void:
 	# Un `agregar` negativo pasaba el control de stock de `cobrar()` —`-3 > 0` es falso— y el
 	# cobro terminaba **sumando** tres unidades a la góndola: mercadería fabricada por la caja.
-	# Y un `agregar(p, 0)` dejaba una línea vacía en el ticket.
+	# Y un `agregar(p, 0)` dejaba una línea vacía en el pedido.
 	var laysntt := Producto.new(Producto.Id.LAYSNTT, "Laysntt", 900)
 	var venta := Venta.new()
 	venta.agregar(laysntt, -3)

@@ -9,6 +9,7 @@
 
 [ext_resource type="PackedScene" path="res://src/ui/diegetica/nota_encuadrada.tscn" id="nota"]
 
+[ext_resource type="PackedScene" path="res://src/ui/diegetica/programa_de_tickets.tscn" id="tickets"]
 [node name="Interfaz" type="Node3D"]
 
 [node name="Hud" parent="." instance=ExtResource("2_hud")]
@@ -20,6 +21,8 @@
 [node name="PantallaDeCierre" parent="." instance=ExtResource("7_cierre")]
 
 [node name="NotaEncuadrada" parent="." instance=ExtResource("nota")]
+
+[node name="ProgramaDeTickets" parent="." instance=ExtResource("tickets")]
 
 [node name="MenuDePausa" parent="." instance=ExtResource("20_menu_de_pausa")]
 

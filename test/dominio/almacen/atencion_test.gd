@@ -220,7 +220,7 @@ func test_la_venta_no_se_lleva_lo_que_esta_afuera_de_la_caja() -> void:  # AC-ST
 	assert_int(caja.unidades()).is_equal(3)
 
 
-func test_el_ticket_dice_las_lineas_el_total_lo_que_paga_y_la_diferencia() -> void:  # AC-CTR-013
+func test_el_pedido_dice_las_lineas_el_total_lo_que_paga_y_la_diferencia() -> void:  # AC-CTR-013
 	# Los textos viven en `dominio/` justamente para que este caso exista: escritos en el panel
 	# serían una regla en `ui/`, que ni `gate_de_tests.py` ni `gate_de_capas.py` miran.
 	#
@@ -234,11 +234,11 @@ func test_el_ticket_dice_las_lineas_el_total_lo_que_paga_y_la_diferencia() -> vo
 	assert_str(renglones[0]).is_equal(Atencion.TEXTO_DE_LA_LINEA % [2, actroncito.nombre])
 	assert_str(renglones[-3]).is_equal(Atencion.TEXTO_DEL_TOTAL % pedido.total())
 	assert_str(renglones[-2]).is_equal(Atencion.TEXTO_DE_LO_QUE_PAGA % (pedido.total() + 700))
-	# El signo se lee en el ticket y no sólo en el `int`: es lo único que el jugador ve.
+	# El signo se lee en el pedido y no sólo en el `int`: es lo único que el jugador ve.
 	assert_str(renglones[-1]).contains("+700")
 
 
-func test_el_ticket_muestra_la_diferencia_negativa_con_su_signo() -> void:  # AC-CTR-013
+func test_el_pedido_muestra_la_diferencia_negativa_con_su_signo() -> void:  # AC-CTR-013
 	# Con un `%d` en vez de `%+d`, el que paga de más y el que paga justo se leerían igual y el
 	# único lugar donde el juego miente en vivo dejaría de mentir.
 	var atencion := _atencion(_pedido().total() - 700)

@@ -54,7 +54,7 @@ func diferencia() -> int:
 	return _comprador.paga() - total_de_la_caja()
 
 
-## Los productos del pedido que superan sus vendibles, en el orden del ticket.
+## Los productos del pedido que superan sus vendibles, en el orden del pedido.
 ##
 ## Mira `Inventario.vendibles()` y no la góndola: es la misma frontera que usa
 ## `Inventario.cobrar()`, y por eso esta lista explica exactamente por qué ese cobro va a fallar.
@@ -103,7 +103,7 @@ func despachar_sin_vender() -> bool:
 	return true
 
 
-## Lo que se lee en la ventanilla: el ticket, el total, lo que puso y la diferencia.
+## Lo que se lee en la ventanilla: el pedido, el total, lo que puso y la diferencia.
 ##
 ## Las líneas no llevan cuánto sale cada cosa a propósito: el número que importa es el total, y
 ## repartirlo por renglón le daría al jugador la cuenta hecha justo donde el juego puede mentir.

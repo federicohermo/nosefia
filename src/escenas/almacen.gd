@@ -25,6 +25,7 @@ const LimpiezaDelLocal := preload("res://src/escenas/puestos/limpieza_del_almace
 const AudioDelLocal := preload("res://src/escenas/puestos/audio_del_almacen.gd")
 const ReposicionManual := preload("res://src/escenas/puestos/reposicion_manual.gd")
 const PuertaDelLocal := preload("res://src/escenas/puestos/puerta_del_local.gd")
+const PuestoDeLaCaja := preload("res://src/escenas/puestos/caja_registradora.gd")
 const TapaDelLocal := preload("res://src/escenas/puestos/tapa_del_contenedor.gd")
 const UtilDeLimpieza := preload("res://src/escenas/objetos/util_de_limpieza.gd")
 const ManijaDelBalde := preload("res://src/escenas/objetos/manija_del_balde.gd")
@@ -64,6 +65,9 @@ const ESCENA_DEL_MENU := "res://src/escenas/menu_de_inicio.tscn"
 
 @export var _puertas: Array[Node3D]
 @export var _tapa_del_contenedor: TapaDelLocal
+@export var _caja: CajaRegistradora
+@export var _puesto_de_la_caja: PuestoDeLaCaja
+@export var _programa_de_tickets: ProgramaDeTickets
 
 ## Los muebles con los que el jugador choca por su contorno y no por su malla.
 @export var _muebles_con_contorno: Array[PhysicsBody3D]
@@ -121,6 +125,8 @@ func _ready() -> void:
 				_repositor,
 				_atenciones,
 				_computadora,
+				_caja,
+				_programa_de_tickets,
 				_limpiador,
 				_recolector,
 				_agarre,
@@ -187,6 +193,8 @@ func _al_abrir_la_jornada(jornada: int) -> void:
 	# está ahí.
 	_jugador.examen.terminar()
 	_agarre.vaciar_las_manos()
+	_caja.arrancar(GeneradorDeTickets.new())
+	_puesto_de_la_caja.limpiar()
 	_jugador.ubicar(_arranque)
 	_hud.declarar_obligatorias(Apertura.cantidad_de_obligatorias())
 	# **Un solo inventario para las dos obligatorias**: reponer lo llena y la ventanilla lo

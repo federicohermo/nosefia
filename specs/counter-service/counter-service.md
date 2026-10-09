@@ -1,7 +1,7 @@
 ---
 schema_version: 1
 capability_id: CAP-CTR
-status: draft
+status: ratified
 owner: por definir
 provenance: GDD «Atención por ventanilla»; migración de los specs 013, 035
 ---
@@ -24,7 +24,6 @@ jugador**: es el único lugar donde el juego puede mentir en vivo.
 | **Despachar** | dar por terminada la atención, se le haya vendido o no | atender, cerrar |
 | **Ventanilla** | la única ventana por la que se atiende. Nadie entra al local | mostrador, caja |
 | **Vendibles** | las unidades de un producto que se pueden vender: lo que queda en la caja y el estante no necesita | stock, disponible |
-
 | **Lector** | aparato fijo que anota la unidad sostenida en el programa | caja, escáner de inventario |
 | **Programa de tickets** | tres renglones de productos que se borran o imprimen | pedido del comprador |
 | **Renglón** | un producto anotado; puede repetirse | cantidad, precio |

@@ -12,7 +12,7 @@
 [ext_resource type="PackedScene" path="res://src/escenas/puestos/reposicion_manual.tscn" id="reposicion_manual"]
 [ext_resource type="PackedScene" path="res://src/escenas/puestos/exterior_del_almacen.tscn" id="exterior"]
 
-[node name="Almacen" type="Node3D" unique_id=999617316 node_paths=PackedStringArray("_hud", "_reloj", "_ciclo", "_pantalla", "_reloj_de_mesa", "_repositor", "_estante", "_cajas_de_productos", "_jugador", "_atenciones", "_computadora", "_limpiador", "_limpieza", "_recolector", "_audio", "_reposicion_manual", "_agarre", "_bolsas", "_muebles_con_contorno", "_puertas", "_utiles_de_limpieza", "_manija_del_balde", "_tapa_del_contenedor")]
+[node name="Almacen" type="Node3D" unique_id=999617316 node_paths=PackedStringArray("_hud", "_reloj", "_ciclo", "_pantalla", "_reloj_de_mesa", "_repositor", "_estante", "_cajas_de_productos", "_jugador", "_atenciones", "_computadora", "_limpiador", "_limpieza", "_recolector", "_audio", "_reposicion_manual", "_agarre", "_bolsas", "_muebles_con_contorno", "_puertas", "_utiles_de_limpieza", "_manija_del_balde", "_tapa_del_contenedor", "_caja", "_puesto_de_la_caja", "_programa_de_tickets")]
 script = ExtResource("4_almacen")
 _hud = NodePath("Interfaz/Hud")
 _reloj = NodePath("Servicios/RelojDelTurno")
@@ -37,6 +37,9 @@ _muebles_con_contorno = [NodePath("Estructura/gondolanueva/StaticBody3D"), NodeP
 _puertas = [NodePath("Estructura/puerta/CuerpoDeLaHoja"), NodePath("Estructura/puerta2/CuerpoDeLaHoja"), NodePath("Estructura/bano_puerta_1/CuerpoDeLaHoja"), NodePath("Estructura/bano_puerta_2/CuerpoDeLaHoja"), NodePath("Estructura/heladeranueva/puerta_heladera_0/CuerpoDeLaHoja"), NodePath("Estructura/heladeranueva_001/puerta_heladera_1/CuerpoDeLaHoja"), NodePath("Estructura/heladera_fuera_de_servicio/puerta_heladera_2/CuerpoDeLaHoja")]
 _utiles_de_limpieza = [NodePath("Objetos/Mopa"), NodePath("Objetos/Balde"), NodePath("Objetos/JabonAzul"), NodePath("Objetos/JabonRosa"), NodePath("Objetos/JabonAmarillo")]
 _manija_del_balde = NodePath("Objetos/Balde/Malla")
+_caja = NodePath("Servicios/CajaRegistradora")
+_puesto_de_la_caja = NodePath("Estructura/cajaregistradora/StaticBody3D")
+_programa_de_tickets = NodePath("Interfaz/ProgramaDeTickets")
 
 [node name="ReposicionManual" parent="." unique_id=916700246 node_paths=PackedStringArray("repositor", "jugador", "estante", "contenido", "punto_de_la_caja") instance=ExtResource("reposicion_manual")]
 repositor = NodePath("../Servicios/Repositor")
@@ -125,6 +128,16 @@ texel_scale = 1.0
 directional = true
 generate_probes_subdiv = 3
 light_data = ExtResource("lightmap")
+
+[node name="StaticBody3D" parent="Estructura/cajaregistradora" node_paths=PackedStringArray("jugador", "reloj", "caja", "programa")]
+jugador = NodePath("../../../Jugador")
+reloj = NodePath("../../../Servicios/RelojDelTurno")
+caja = NodePath("../../../Servicios/CajaRegistradora")
+programa = NodePath("../../../Interfaz/ProgramaDeTickets")
+
+[node name="Lector" parent="Estructura" node_paths=PackedStringArray("jugador", "caja")]
+jugador = NodePath("../../Jugador")
+caja = NodePath("../../Servicios/CajaRegistradora")
 
 [editable path="Estructura"]
 [editable path="Objetos"]
