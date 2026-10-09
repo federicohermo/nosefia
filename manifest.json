@@ -1,0 +1,36 @@
+{
+  "head": "48a5fa9f7217997ebd215fce52943d4ec15443eb",
+  "parents": [
+    "92634ad42e264f2c05ee87c27b5b0ecea693326e",
+    "cd9947317ae5489e61b39b795795e059fc4e8f1c"
+  ],
+  "tree": "97d2e74e3377cbb4b5218d587681e109b9f68e2b",
+  "diff_parent1": [
+    "src/escenas/objetos/caja_de_productos.gd",
+    "src/sistemas/marco/calentamiento_de_shaders.gd",
+    "src/sistemas/marco/carga_en_segundo_plano.gd",
+    "test/escenas/indicacion_del_foco_test.gd",
+    "test/escenas/objetos/caja_de_productos_test.gd",
+    "test/escenas/objetos/mancha_en_el_piso_test.gd",
+    "test/escenas/volumen_de_los_solidos_test.gd",
+    "test/sistemas/investigacion/examen_test.gd",
+    "test/sistemas/marco/calentamiento_de_shaders_test.gd",
+    "test/sistemas/marco/carga_en_segundo_plano_test.gd",
+    "test/sistemas/tareas/ventanilla_test.gd"
+  ],
+  "verify_exit": 0,
+  "count_exit": 0,
+  "report": "reports\\report_5",
+  "suites": 217,
+  "files": 217,
+  "committed_suite_files": 217,
+  "seven_node_summaries": [
+    "755.0"
+  ],
+  "tests": 1687,
+  "failures": 0,
+  "errors": 0,
+  "skipped": 0,
+  "flaky": 0,
+  "xml_sha256": "50f159c63015420369b741695c67f5858c796cc0533211cf689bd29beb40a836"
+}

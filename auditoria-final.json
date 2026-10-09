@@ -1,0 +1,2125 @@
+{
+  "tipo": "auditoría estática; no modifica specs ni certifica ejecución de criterios",
+  "fecha_utc": "2026-10-09T13:16:33.492245+00:00",
+  "repo": "C:\\Users\\fede_\\orca\\workspaces\\nosefia\\darter",
+  "head": "48a5fa9f7217997ebd215fce52943d4ec15443eb",
+  "base": "f17948fe630571b688dd0c761d3daa71d0b5c326",
+  "tracked_clean_pre": true,
+  "tracked_clean_post": true,
+  "parser": {
+    "ruta": "C:\\Users\\fede_\\orca\\workspaces\\nosefia\\darter\\.claude\\scripts\\lib\\specs.py",
+    "sha256": "0a8f5721b42b12bd7690fc1d8460ceebba7baf96e9f7af22b0e2be67a9583d9f",
+    "apis": [
+      "leer_spec",
+      "ids_citados"
+    ]
+  },
+  "arboles_de_citas": [
+    "test",
+    ".claude\\scripts\\tests"
+  ],
+  "totales": {
+    "capacidades": 10,
+    "capacidades_activas": 10,
+    "criterios_activos": 312,
+    "activos_citados": 312,
+    "activos_faltantes": 0,
+    "draft_ratificables": 0
+  },
+  "specs": [
+    {
+      "ruta": "specs/ambience/ambience.md",
+      "codigo": "AMB",
+      "estado": "ratified",
+      "activo": true,
+      "reglas": [
+        "BR-AMB-001",
+        "BR-AMB-002",
+        "BR-AMB-003",
+        "BR-AMB-004",
+        "BR-AMB-005",
+        "BR-AMB-006",
+        "BR-AMB-007",
+        "BR-AMB-008",
+        "BR-AMB-009",
+        "BR-AMB-010",
+        "BR-AMB-011",
+        "BR-AMB-012",
+        "BR-AMB-013",
+        "BR-AMB-014",
+        "BR-AMB-015",
+        "BR-AMB-016",
+        "BR-AMB-017",
+        "BR-AMB-018",
+        "BR-AMB-019",
+        "BR-AMB-020",
+        "BR-AMB-021"
+      ],
+      "criterios": {
+        "AC-AMB-001": [
+          "BR-AMB-001",
+          "BR-AMB-005"
+        ],
+        "AC-AMB-002": [
+          "BR-AMB-002"
+        ],
+        "AC-AMB-003": [
+          "BR-AMB-003"
+        ],
+        "AC-AMB-004": [
+          "BR-AMB-004"
+        ],
+        "AC-AMB-005": [
+          "BR-AMB-006"
+        ],
+        "AC-AMB-006": [
+          "BR-AMB-007"
+        ],
+        "AC-AMB-007": [
+          "BR-AMB-009"
+        ],
+        "AC-AMB-008": [
+          "BR-AMB-010"
+        ],
+        "AC-AMB-009": [
+          "BR-AMB-011"
+        ],
+        "AC-AMB-010": [
+          "BR-AMB-012"
+        ],
+        "AC-AMB-011": [
+          "BR-AMB-013"
+        ],
+        "AC-AMB-012": [
+          "BR-AMB-013"
+        ],
+        "AC-AMB-013": [
+          "BR-AMB-010",
+          "BR-AMB-014"
+        ],
+        "AC-AMB-014": [
+          "BR-AMB-008"
+        ],
+        "AC-AMB-015": [
+          "BR-AMB-015"
+        ],
+        "AC-AMB-016": [
+          "BR-AMB-016"
+        ],
+        "AC-AMB-017": [
+          "BR-AMB-017"
+        ],
+        "AC-AMB-018": [
+          "BR-AMB-018"
+        ],
+        "AC-AMB-019": [
+          "BR-AMB-019"
+        ],
+        "AC-AMB-020": [
+          "BR-AMB-020"
+        ],
+        "AC-AMB-021": [
+          "BR-AMB-020"
+        ],
+        "AC-AMB-022": [
+          "BR-AMB-020"
+        ],
+        "AC-AMB-023": [
+          "BR-AMB-020"
+        ],
+        "AC-AMB-024": [
+          "BR-AMB-010",
+          "BR-AMB-011",
+          "BR-AMB-013"
+        ],
+        "AC-AMB-025": [
+          "BR-AMB-021"
+        ],
+        "AC-AMB-026": [
+          "BR-AMB-010",
+          "BR-AMB-014",
+          "BR-AMB-016"
+        ],
+        "AC-AMB-027": [
+          "BR-AMB-014"
+        ]
+      },
+      "citados": [
+        "AC-AMB-001",
+        "AC-AMB-002",
+        "AC-AMB-003",
+        "AC-AMB-004",
+        "AC-AMB-005",
+        "AC-AMB-006",
+        "AC-AMB-007",
+        "AC-AMB-008",
+        "AC-AMB-009",
+        "AC-AMB-010",
+        "AC-AMB-011",
+        "AC-AMB-012",
+        "AC-AMB-013",
+        "AC-AMB-014",
+        "AC-AMB-015",
+        "AC-AMB-016",
+        "AC-AMB-017",
+        "AC-AMB-018",
+        "AC-AMB-019",
+        "AC-AMB-020",
+        "AC-AMB-021",
+        "AC-AMB-022",
+        "AC-AMB-023",
+        "AC-AMB-024",
+        "AC-AMB-025",
+        "AC-AMB-026",
+        "AC-AMB-027"
+      ],
+      "faltantes": [],
+      "problemas": [],
+      "ancla_completa": true,
+      "ratificable_por_forma_y_citas": true,
+      "sha256": "8c76d4ef01e2ae5b5db11a07c0a9b6d5b0dd6dcfc098689c5831195b6efc81dc"
+    },
+    {
+      "ruta": "specs/counter-service/counter-service.md",
+      "codigo": "CTR",
+      "estado": "ratified",
+      "activo": true,
+      "reglas": [
+        "BR-CTR-001",
+        "BR-CTR-002",
+        "BR-CTR-003",
+        "BR-CTR-004",
+        "BR-CTR-006",
+        "BR-CTR-007",
+        "BR-CTR-008",
+        "BR-CTR-009",
+        "BR-CTR-010",
+        "BR-CTR-011",
+        "BR-CTR-012",
+        "BR-CTR-013",
+        "BR-CTR-014",
+        "BR-CTR-015",
+        "BR-CTR-016",
+        "BR-CTR-017",
+        "BR-CTR-018",
+        "BR-CTR-019",
+        "BR-CTR-020",
+        "BR-CTR-021",
+        "BR-CTR-022",
+        "BR-CTR-023",
+        "BR-CTR-024",
+        "BR-CTR-025"
+      ],
+      "criterios": {
+        "AC-CTR-001": [
+          "BR-CTR-001"
+        ],
+        "AC-CTR-002": [
+          "BR-CTR-002"
+        ],
+        "AC-CTR-003": [
+          "BR-CTR-003"
+        ],
+        "AC-CTR-004": [
+          "BR-CTR-004"
+        ],
+        "AC-CTR-006": [
+          "BR-CTR-006"
+        ],
+        "AC-CTR-007": [
+          "BR-CTR-007"
+        ],
+        "AC-CTR-008": [
+          "BR-CTR-008"
+        ],
+        "AC-CTR-009": [
+          "BR-CTR-009"
+        ],
+        "AC-CTR-010": [
+          "BR-CTR-010"
+        ],
+        "AC-CTR-011": [
+          "BR-CTR-010"
+        ],
+        "AC-CTR-012": [
+          "BR-CTR-011"
+        ],
+        "AC-CTR-013": [
+          "BR-CTR-012"
+        ],
+        "AC-CTR-014": [
+          "BR-CTR-013"
+        ],
+        "AC-CTR-015": [
+          "BR-CTR-014"
+        ],
+        "AC-CTR-016": [
+          "BR-CTR-014"
+        ],
+        "AC-CTR-017": [
+          "BR-CTR-014"
+        ],
+        "AC-CTR-018": [
+          "BR-CTR-015"
+        ],
+        "AC-CTR-019": [
+          "BR-CTR-015"
+        ],
+        "AC-CTR-020": [
+          "BR-CTR-015"
+        ],
+        "AC-CTR-021": [
+          "BR-CTR-016",
+          "BR-CTR-017"
+        ],
+        "AC-CTR-022": [
+          "BR-CTR-017"
+        ],
+        "AC-CTR-023": [
+          "BR-CTR-018",
+          "BR-CTR-019",
+          "BR-CTR-020"
+        ],
+        "AC-CTR-024": [
+          "BR-CTR-018",
+          "BR-CTR-019"
+        ],
+        "AC-CTR-025": [
+          "BR-CTR-021"
+        ],
+        "AC-CTR-026": [
+          "BR-CTR-022"
+        ],
+        "AC-CTR-027": [
+          "BR-CTR-023"
+        ],
+        "AC-CTR-028": [
+          "BR-CTR-023",
+          "BR-CTR-020"
+        ],
+        "AC-CTR-029": [
+          "BR-CTR-024"
+        ],
+        "AC-CTR-030": [
+          "BR-CTR-023"
+        ],
+        "AC-CTR-031": [
+          "BR-CTR-025"
+        ],
+        "AC-CTR-032": [
+          "BR-CTR-025"
+        ],
+        "AC-CTR-033": [
+          "BR-CTR-025",
+          "BR-CTR-021"
+        ]
+      },
+      "citados": [
+        "AC-CTR-001",
+        "AC-CTR-002",
+        "AC-CTR-003",
+        "AC-CTR-004",
+        "AC-CTR-006",
+        "AC-CTR-007",
+        "AC-CTR-008",
+        "AC-CTR-009",
+        "AC-CTR-010",
+        "AC-CTR-011",
+        "AC-CTR-012",
+        "AC-CTR-013",
+        "AC-CTR-014",
+        "AC-CTR-015",
+        "AC-CTR-016",
+        "AC-CTR-017",
+        "AC-CTR-018",
+        "AC-CTR-019",
+        "AC-CTR-020",
+        "AC-CTR-021",
+        "AC-CTR-022",
+        "AC-CTR-023",
+        "AC-CTR-024",
+        "AC-CTR-025",
+        "AC-CTR-026",
+        "AC-CTR-027",
+        "AC-CTR-028",
+        "AC-CTR-029",
+        "AC-CTR-030",
+        "AC-CTR-031",
+        "AC-CTR-032",
+        "AC-CTR-033"
+      ],
+      "faltantes": [],
+      "problemas": [],
+      "ancla_completa": true,
+      "ratificable_por_forma_y_citas": true,
+      "sha256": "58807c2032d1dd9a1196c9840297a8391a1f6220908b4c5891e85d5ba351a863"
+    },
+    {
+      "ruta": "specs/employment-record/employment-record.md",
+      "codigo": "EMP",
+      "estado": "ratified",
+      "activo": true,
+      "reglas": [
+        "BR-EMP-001",
+        "BR-EMP-002",
+        "BR-EMP-003",
+        "BR-EMP-004",
+        "BR-EMP-005",
+        "BR-EMP-006",
+        "BR-EMP-007",
+        "BR-EMP-008",
+        "BR-EMP-009",
+        "BR-EMP-011",
+        "BR-EMP-012"
+      ],
+      "criterios": {
+        "AC-EMP-001": [
+          "BR-EMP-001"
+        ],
+        "AC-EMP-002": [
+          "BR-EMP-001"
+        ],
+        "AC-EMP-003": [
+          "BR-EMP-002"
+        ],
+        "AC-EMP-004": [
+          "BR-EMP-002",
+          "BR-EMP-003"
+        ],
+        "AC-EMP-005": [
+          "BR-EMP-002",
+          "BR-EMP-003"
+        ],
+        "AC-EMP-006": [
+          "BR-EMP-003"
+        ],
+        "AC-EMP-007": [
+          "BR-EMP-002",
+          "BR-EMP-003"
+        ],
+        "AC-EMP-008": [
+          "BR-EMP-004"
+        ],
+        "AC-EMP-009": [
+          "BR-EMP-005"
+        ],
+        "AC-EMP-010": [
+          "BR-EMP-006"
+        ],
+        "AC-EMP-011": [
+          "BR-EMP-007"
+        ],
+        "AC-EMP-012": [
+          "BR-EMP-008"
+        ],
+        "AC-EMP-013": [
+          "BR-EMP-009"
+        ],
+        "AC-EMP-014": [
+          "BR-EMP-009"
+        ],
+        "AC-EMP-016": [
+          "BR-EMP-011"
+        ],
+        "AC-EMP-017": [
+          "BR-EMP-002",
+          "BR-EMP-012"
+        ],
+        "AC-EMP-018": [
+          "BR-EMP-006",
+          "BR-EMP-007",
+          "BR-EMP-012"
+        ],
+        "AC-EMP-019": [
+          "BR-EMP-003",
+          "BR-EMP-012"
+        ],
+        "AC-EMP-020": [
+          "BR-EMP-008"
+        ],
+        "AC-EMP-021": [
+          "BR-EMP-009"
+        ],
+        "AC-EMP-022": [
+          "BR-EMP-004",
+          "BR-EMP-005",
+          "BR-EMP-008"
+        ]
+      },
+      "citados": [
+        "AC-EMP-001",
+        "AC-EMP-002",
+        "AC-EMP-003",
+        "AC-EMP-004",
+        "AC-EMP-005",
+        "AC-EMP-006",
+        "AC-EMP-007",
+        "AC-EMP-008",
+        "AC-EMP-009",
+        "AC-EMP-010",
+        "AC-EMP-011",
+        "AC-EMP-012",
+        "AC-EMP-013",
+        "AC-EMP-014",
+        "AC-EMP-016",
+        "AC-EMP-017",
+        "AC-EMP-018",
+        "AC-EMP-019",
+        "AC-EMP-020",
+        "AC-EMP-021",
+        "AC-EMP-022"
+      ],
+      "faltantes": [],
+      "problemas": [],
+      "ancla_completa": true,
+      "ratificable_por_forma_y_citas": true,
+      "sha256": "7fa3faba7f3740dc973a5b4270b1274c989f9d1a1480a9c8def42458be7fa640"
+    },
+    {
+      "ruta": "specs/investigation/investigation.md",
+      "codigo": "INV",
+      "estado": "ratified",
+      "activo": true,
+      "reglas": [
+        "BR-INV-001",
+        "BR-INV-002",
+        "BR-INV-003",
+        "BR-INV-004",
+        "BR-INV-005",
+        "BR-INV-006",
+        "BR-INV-007",
+        "BR-INV-008",
+        "BR-INV-009",
+        "BR-INV-010",
+        "BR-INV-011",
+        "BR-INV-017",
+        "BR-INV-018",
+        "BR-INV-019",
+        "BR-INV-020"
+      ],
+      "criterios": {
+        "AC-INV-001": [
+          "BR-INV-001"
+        ],
+        "AC-INV-002": [
+          "BR-INV-002"
+        ],
+        "AC-INV-003": [
+          "BR-INV-003"
+        ],
+        "AC-INV-004": [
+          "BR-INV-003"
+        ],
+        "AC-INV-005": [
+          "BR-INV-004"
+        ],
+        "AC-INV-006": [
+          "BR-INV-005"
+        ],
+        "AC-INV-007": [
+          "BR-INV-006"
+        ],
+        "AC-INV-008": [
+          "BR-INV-007"
+        ],
+        "AC-INV-009": [
+          "BR-INV-008"
+        ],
+        "AC-INV-010": [
+          "BR-INV-009"
+        ],
+        "AC-INV-011": [
+          "BR-INV-010"
+        ],
+        "AC-INV-012": [
+          "BR-INV-011"
+        ],
+        "AC-INV-019": [
+          "BR-INV-017"
+        ],
+        "AC-INV-020": [
+          "BR-INV-018",
+          "BR-INV-001"
+        ],
+        "AC-INV-022": [
+          "BR-INV-019"
+        ],
+        "AC-INV-023": [
+          "BR-INV-019"
+        ],
+        "AC-INV-024": [
+          "BR-INV-019"
+        ],
+        "AC-INV-025": [
+          "BR-INV-020"
+        ]
+      },
+      "citados": [
+        "AC-INV-001",
+        "AC-INV-002",
+        "AC-INV-003",
+        "AC-INV-004",
+        "AC-INV-005",
+        "AC-INV-006",
+        "AC-INV-007",
+        "AC-INV-008",
+        "AC-INV-009",
+        "AC-INV-010",
+        "AC-INV-011",
+        "AC-INV-012",
+        "AC-INV-019",
+        "AC-INV-020",
+        "AC-INV-022",
+        "AC-INV-023",
+        "AC-INV-024",
+        "AC-INV-025"
+      ],
+      "faltantes": [],
+      "problemas": [],
+      "ancla_completa": true,
+      "ratificable_por_forma_y_citas": true,
+      "sha256": "d3b631eb44662fbba967766e27de1a87b0dcc992012eca092ee50f8498aeb67f"
+    },
+    {
+      "ruta": "specs/notifications/notifications.md",
+      "codigo": "NTF",
+      "estado": "ratified",
+      "activo": true,
+      "reglas": [
+        "BR-NTF-001",
+        "BR-NTF-002",
+        "BR-NTF-003",
+        "BR-NTF-004",
+        "BR-NTF-005",
+        "BR-NTF-006",
+        "BR-NTF-007"
+      ],
+      "criterios": {
+        "AC-NTF-001": [
+          "BR-NTF-001",
+          "BR-NTF-004"
+        ],
+        "AC-NTF-002": [
+          "BR-NTF-002"
+        ],
+        "AC-NTF-003": [
+          "BR-NTF-003"
+        ],
+        "AC-NTF-004": [
+          "BR-NTF-004",
+          "BR-NTF-005"
+        ],
+        "AC-NTF-005": [
+          "BR-NTF-005"
+        ],
+        "AC-NTF-006": [
+          "BR-NTF-006",
+          "BR-NTF-001"
+        ],
+        "AC-NTF-007": [
+          "BR-NTF-001",
+          "BR-NTF-003"
+        ],
+        "AC-NTF-008": [
+          "BR-NTF-003"
+        ],
+        "AC-NTF-009": [
+          "BR-NTF-007"
+        ],
+        "AC-NTF-010": [
+          "BR-NTF-007"
+        ]
+      },
+      "citados": [
+        "AC-NTF-001",
+        "AC-NTF-002",
+        "AC-NTF-003",
+        "AC-NTF-004",
+        "AC-NTF-005",
+        "AC-NTF-006",
+        "AC-NTF-007",
+        "AC-NTF-008",
+        "AC-NTF-009",
+        "AC-NTF-010"
+      ],
+      "faltantes": [],
+      "problemas": [],
+      "ancla_completa": true,
+      "ratificable_por_forma_y_citas": true,
+      "sha256": "321ce2b463bca18019c8f03d57328f4d227f791f70e7c1794774230dd6646d50"
+    },
+    {
+      "ruta": "specs/player-actions/player-actions.md",
+      "codigo": "PLY",
+      "estado": "ratified",
+      "activo": true,
+      "reglas": [
+        "BR-PLY-001",
+        "BR-PLY-002",
+        "BR-PLY-003",
+        "BR-PLY-004",
+        "BR-PLY-005",
+        "BR-PLY-006",
+        "BR-PLY-007",
+        "BR-PLY-008",
+        "BR-PLY-009",
+        "BR-PLY-010",
+        "BR-PLY-011",
+        "BR-PLY-012",
+        "BR-PLY-013",
+        "BR-PLY-014",
+        "BR-PLY-015",
+        "BR-PLY-016",
+        "BR-PLY-017",
+        "BR-PLY-018",
+        "BR-PLY-019",
+        "BR-PLY-020",
+        "BR-PLY-021",
+        "BR-PLY-022",
+        "BR-PLY-023",
+        "BR-PLY-024",
+        "BR-PLY-025",
+        "BR-PLY-026",
+        "BR-PLY-027",
+        "BR-PLY-028",
+        "BR-PLY-029",
+        "BR-PLY-030",
+        "BR-PLY-031",
+        "BR-PLY-032",
+        "BR-PLY-033"
+      ],
+      "criterios": {
+        "AC-PLY-001": [
+          "BR-PLY-001"
+        ],
+        "AC-PLY-002": [
+          "BR-PLY-002"
+        ],
+        "AC-PLY-003": [
+          "BR-PLY-003"
+        ],
+        "AC-PLY-004": [
+          "BR-PLY-004"
+        ],
+        "AC-PLY-005": [
+          "BR-PLY-004"
+        ],
+        "AC-PLY-006": [
+          "BR-PLY-005"
+        ],
+        "AC-PLY-007": [
+          "BR-PLY-006"
+        ],
+        "AC-PLY-008": [
+          "BR-PLY-007"
+        ],
+        "AC-PLY-009": [
+          "BR-PLY-008"
+        ],
+        "AC-PLY-010": [
+          "BR-PLY-009"
+        ],
+        "AC-PLY-011": [
+          "BR-PLY-010"
+        ],
+        "AC-PLY-012": [
+          "BR-PLY-011"
+        ],
+        "AC-PLY-013": [
+          "BR-PLY-011"
+        ],
+        "AC-PLY-014": [
+          "BR-PLY-012"
+        ],
+        "AC-PLY-015": [
+          "BR-PLY-013"
+        ],
+        "AC-PLY-016": [
+          "BR-PLY-014"
+        ],
+        "AC-PLY-017": [
+          "BR-PLY-015"
+        ],
+        "AC-PLY-018": [
+          "BR-PLY-015"
+        ],
+        "AC-PLY-019": [
+          "BR-PLY-015"
+        ],
+        "AC-PLY-020": [
+          "BR-PLY-015"
+        ],
+        "AC-PLY-021": [
+          "BR-PLY-015"
+        ],
+        "AC-PLY-022": [
+          "BR-PLY-015"
+        ],
+        "AC-PLY-023": [
+          "BR-PLY-015"
+        ],
+        "AC-PLY-024": [
+          "BR-PLY-015"
+        ],
+        "AC-PLY-025": [
+          "BR-PLY-016"
+        ],
+        "AC-PLY-026": [
+          "BR-PLY-016"
+        ],
+        "AC-PLY-027": [
+          "BR-PLY-016"
+        ],
+        "AC-PLY-028": [
+          "BR-PLY-016"
+        ],
+        "AC-PLY-029": [
+          "BR-PLY-016"
+        ],
+        "AC-PLY-030": [
+          "BR-PLY-017"
+        ],
+        "AC-PLY-031": [
+          "BR-PLY-017"
+        ],
+        "AC-PLY-032": [
+          "BR-PLY-017"
+        ],
+        "AC-PLY-033": [
+          "BR-PLY-018"
+        ],
+        "AC-PLY-034": [
+          "BR-PLY-018"
+        ],
+        "AC-PLY-035": [
+          "BR-PLY-018"
+        ],
+        "AC-PLY-036": [
+          "BR-PLY-019"
+        ],
+        "AC-PLY-037": [
+          "BR-PLY-019"
+        ],
+        "AC-PLY-038": [
+          "BR-PLY-020"
+        ],
+        "AC-PLY-039": [
+          "BR-PLY-011",
+          "BR-PLY-020"
+        ],
+        "AC-PLY-040": [
+          "BR-PLY-020"
+        ],
+        "AC-PLY-041": [
+          "BR-PLY-020"
+        ],
+        "AC-PLY-042": [
+          "BR-PLY-016"
+        ],
+        "AC-PLY-043": [
+          "BR-PLY-016"
+        ],
+        "AC-PLY-044": [
+          "BR-PLY-021"
+        ],
+        "AC-PLY-045": [
+          "BR-PLY-022"
+        ],
+        "AC-PLY-047": [
+          "BR-PLY-023"
+        ],
+        "AC-PLY-048": [
+          "BR-PLY-023"
+        ],
+        "AC-PLY-049": [
+          "BR-PLY-024"
+        ],
+        "AC-PLY-050": [
+          "BR-PLY-025"
+        ],
+        "AC-PLY-051": [
+          "BR-PLY-018"
+        ],
+        "AC-PLY-052": [
+          "BR-PLY-018"
+        ],
+        "AC-PLY-053": [
+          "BR-PLY-018"
+        ],
+        "AC-PLY-054": [
+          "BR-PLY-026",
+          "BR-PLY-011"
+        ],
+        "AC-PLY-055": [
+          "BR-PLY-026"
+        ],
+        "AC-PLY-056": [
+          "BR-PLY-026",
+          "BR-PLY-006"
+        ],
+        "AC-PLY-057": [
+          "BR-PLY-026",
+          "BR-PLY-012",
+          "BR-PLY-020"
+        ],
+        "AC-PLY-058": [
+          "BR-PLY-027"
+        ],
+        "AC-PLY-059": [
+          "BR-PLY-027"
+        ],
+        "AC-PLY-060": [
+          "BR-PLY-027"
+        ],
+        "AC-PLY-061": [
+          "BR-PLY-028"
+        ],
+        "AC-PLY-062": [
+          "BR-PLY-028"
+        ],
+        "AC-PLY-063": [
+          "BR-PLY-029",
+          "BR-PLY-006"
+        ],
+        "AC-PLY-064": [
+          "BR-PLY-029",
+          "BR-PLY-026"
+        ],
+        "AC-PLY-065": [
+          "BR-PLY-029",
+          "BR-PLY-028"
+        ],
+        "AC-PLY-066": [
+          "BR-PLY-029"
+        ],
+        "AC-PLY-067": [
+          "BR-PLY-029"
+        ],
+        "AC-PLY-068": [
+          "BR-PLY-030"
+        ],
+        "AC-PLY-069": [
+          "BR-PLY-030"
+        ],
+        "AC-PLY-070": [
+          "BR-PLY-030"
+        ],
+        "AC-PLY-071": [
+          "BR-PLY-030",
+          "BR-PLY-004"
+        ],
+        "AC-PLY-072": [
+          "BR-PLY-031",
+          "BR-PLY-026",
+          "BR-PLY-006",
+          "BR-PLY-028"
+        ],
+        "AC-PLY-073": [
+          "BR-PLY-032",
+          "BR-PLY-012"
+        ],
+        "AC-PLY-074": [
+          "BR-PLY-031"
+        ],
+        "AC-PLY-075": [
+          "BR-PLY-033"
+        ],
+        "AC-PLY-076": [
+          "BR-PLY-033",
+          "BR-PLY-004"
+        ],
+        "AC-PLY-077": [
+          "BR-PLY-033"
+        ],
+        "AC-PLY-078": [
+          "BR-PLY-012",
+          "BR-PLY-004",
+          "BR-PLY-006",
+          "BR-PLY-010"
+        ]
+      },
+      "citados": [
+        "AC-PLY-001",
+        "AC-PLY-002",
+        "AC-PLY-003",
+        "AC-PLY-004",
+        "AC-PLY-005",
+        "AC-PLY-006",
+        "AC-PLY-007",
+        "AC-PLY-008",
+        "AC-PLY-009",
+        "AC-PLY-010",
+        "AC-PLY-011",
+        "AC-PLY-012",
+        "AC-PLY-013",
+        "AC-PLY-014",
+        "AC-PLY-015",
+        "AC-PLY-016",
+        "AC-PLY-017",
+        "AC-PLY-018",
+        "AC-PLY-019",
+        "AC-PLY-020",
+        "AC-PLY-021",
+        "AC-PLY-022",
+        "AC-PLY-023",
+        "AC-PLY-024",
+        "AC-PLY-025",
+        "AC-PLY-026",
+        "AC-PLY-027",
+        "AC-PLY-028",
+        "AC-PLY-029",
+        "AC-PLY-030",
+        "AC-PLY-031",
+        "AC-PLY-032",
+        "AC-PLY-033",
+        "AC-PLY-034",
+        "AC-PLY-035",
+        "AC-PLY-036",
+        "AC-PLY-037",
+        "AC-PLY-038",
+        "AC-PLY-039",
+        "AC-PLY-040",
+        "AC-PLY-041",
+        "AC-PLY-042",
+        "AC-PLY-043",
+        "AC-PLY-044",
+        "AC-PLY-045",
+        "AC-PLY-047",
+        "AC-PLY-048",
+        "AC-PLY-049",
+        "AC-PLY-050",
+        "AC-PLY-051",
+        "AC-PLY-052",
+        "AC-PLY-053",
+        "AC-PLY-054",
+        "AC-PLY-055",
+        "AC-PLY-056",
+        "AC-PLY-057",
+        "AC-PLY-058",
+        "AC-PLY-059",
+        "AC-PLY-060",
+        "AC-PLY-061",
+        "AC-PLY-062",
+        "AC-PLY-063",
+        "AC-PLY-064",
+        "AC-PLY-065",
+        "AC-PLY-066",
+        "AC-PLY-067",
+        "AC-PLY-068",
+        "AC-PLY-069",
+        "AC-PLY-070",
+        "AC-PLY-071",
+        "AC-PLY-072",
+        "AC-PLY-073",
+        "AC-PLY-074",
+        "AC-PLY-075",
+        "AC-PLY-076",
+        "AC-PLY-077",
+        "AC-PLY-078"
+      ],
+      "faltantes": [],
+      "problemas": [],
+      "ancla_completa": true,
+      "ratificable_por_forma_y_citas": true,
+      "sha256": "d69b966259c33ce15bf4061fdebd419624801a910f9c3fff22595da952612493"
+    },
+    {
+      "ruta": "specs/save-and-resume/save-and-resume.md",
+      "codigo": "SAV",
+      "estado": "ratified",
+      "activo": true,
+      "reglas": [
+        "BR-SAV-001",
+        "BR-SAV-002",
+        "BR-SAV-003",
+        "BR-SAV-004",
+        "BR-SAV-005",
+        "BR-SAV-006",
+        "BR-SAV-007",
+        "BR-SAV-008",
+        "BR-SAV-009",
+        "BR-SAV-010",
+        "BR-SAV-011",
+        "BR-SAV-012",
+        "BR-SAV-013",
+        "BR-SAV-014",
+        "BR-SAV-015",
+        "BR-SAV-016",
+        "BR-SAV-017",
+        "BR-SAV-018"
+      ],
+      "criterios": {
+        "AC-SAV-001": [
+          "BR-SAV-001"
+        ],
+        "AC-SAV-002": [
+          "BR-SAV-002"
+        ],
+        "AC-SAV-003": [
+          "BR-SAV-002"
+        ],
+        "AC-SAV-004": [
+          "BR-SAV-003"
+        ],
+        "AC-SAV-005": [
+          "BR-SAV-004"
+        ],
+        "AC-SAV-006": [
+          "BR-SAV-005"
+        ],
+        "AC-SAV-007": [
+          "BR-SAV-006"
+        ],
+        "AC-SAV-008": [
+          "BR-SAV-006"
+        ],
+        "AC-SAV-009": [
+          "BR-SAV-007"
+        ],
+        "AC-SAV-010": [
+          "BR-SAV-008"
+        ],
+        "AC-SAV-011": [
+          "BR-SAV-009"
+        ],
+        "AC-SAV-012": [
+          "BR-SAV-010"
+        ],
+        "AC-SAV-013": [
+          "BR-SAV-011"
+        ],
+        "AC-SAV-014": [
+          "BR-SAV-012"
+        ],
+        "AC-SAV-015": [
+          "BR-SAV-013"
+        ],
+        "AC-SAV-016": [
+          "BR-SAV-014"
+        ],
+        "AC-SAV-017": [
+          "BR-SAV-015"
+        ],
+        "AC-SAV-018": [
+          "BR-SAV-016"
+        ],
+        "AC-SAV-019": [
+          "BR-SAV-017"
+        ],
+        "AC-SAV-020": [
+          "BR-SAV-018"
+        ]
+      },
+      "citados": [
+        "AC-SAV-001",
+        "AC-SAV-002",
+        "AC-SAV-003",
+        "AC-SAV-004",
+        "AC-SAV-005",
+        "AC-SAV-006",
+        "AC-SAV-007",
+        "AC-SAV-008",
+        "AC-SAV-009",
+        "AC-SAV-010",
+        "AC-SAV-011",
+        "AC-SAV-012",
+        "AC-SAV-013",
+        "AC-SAV-014",
+        "AC-SAV-015",
+        "AC-SAV-016",
+        "AC-SAV-017",
+        "AC-SAV-018",
+        "AC-SAV-019",
+        "AC-SAV-020"
+      ],
+      "faltantes": [],
+      "problemas": [],
+      "ancla_completa": true,
+      "ratificable_por_forma_y_citas": true,
+      "sha256": "22135782e1029c636fec9cce6c66cb1518cbcae0a93e4f936c7d96c2f4085cb5"
+    },
+    {
+      "ruta": "specs/shift-cycle/shift-cycle.md",
+      "codigo": "SHF",
+      "estado": "ratified",
+      "activo": true,
+      "reglas": [
+        "BR-SHF-001",
+        "BR-SHF-002",
+        "BR-SHF-003",
+        "BR-SHF-004",
+        "BR-SHF-005",
+        "BR-SHF-007",
+        "BR-SHF-008",
+        "BR-SHF-011",
+        "BR-SHF-012",
+        "BR-SHF-014"
+      ],
+      "criterios": {
+        "AC-SHF-001": [
+          "BR-SHF-001"
+        ],
+        "AC-SHF-002": [
+          "BR-SHF-002"
+        ],
+        "AC-SHF-003": [
+          "BR-SHF-003"
+        ],
+        "AC-SHF-004": [
+          "BR-SHF-004"
+        ],
+        "AC-SHF-005": [
+          "BR-SHF-005"
+        ],
+        "AC-SHF-007": [
+          "BR-SHF-007"
+        ],
+        "AC-SHF-008": [
+          "BR-SHF-007"
+        ],
+        "AC-SHF-009": [
+          "BR-SHF-008"
+        ],
+        "AC-SHF-012": [
+          "BR-SHF-011"
+        ],
+        "AC-SHF-013": [
+          "BR-SHF-011"
+        ],
+        "AC-SHF-014": [
+          "BR-SHF-012"
+        ],
+        "AC-SHF-016": [
+          "BR-SHF-014"
+        ],
+        "AC-SHF-017": [
+          "BR-SHF-011"
+        ],
+        "AC-SHF-018": [
+          "BR-SHF-003"
+        ],
+        "AC-SHF-019": [
+          "BR-SHF-007"
+        ],
+        "AC-SHF-020": [
+          "BR-SHF-003"
+        ]
+      },
+      "citados": [
+        "AC-SHF-001",
+        "AC-SHF-002",
+        "AC-SHF-003",
+        "AC-SHF-004",
+        "AC-SHF-005",
+        "AC-SHF-007",
+        "AC-SHF-008",
+        "AC-SHF-009",
+        "AC-SHF-012",
+        "AC-SHF-013",
+        "AC-SHF-014",
+        "AC-SHF-016",
+        "AC-SHF-017",
+        "AC-SHF-018",
+        "AC-SHF-019",
+        "AC-SHF-020"
+      ],
+      "faltantes": [],
+      "problemas": [],
+      "ancla_completa": true,
+      "ratificable_por_forma_y_citas": true,
+      "sha256": "9bbb34c89a4e0b14f27ae04d4684714866b59742a4fa5400a1a4d4d1413cf15c"
+    },
+    {
+      "ruta": "specs/store-cleanup/store-cleanup.md",
+      "codigo": "CLN",
+      "estado": "ratified",
+      "activo": true,
+      "reglas": [
+        "BR-CLN-007",
+        "BR-CLN-008",
+        "BR-CLN-009",
+        "BR-CLN-010",
+        "BR-CLN-011",
+        "BR-CLN-012",
+        "BR-CLN-013",
+        "BR-CLN-014",
+        "BR-CLN-015",
+        "BR-CLN-016",
+        "BR-CLN-017",
+        "BR-CLN-018",
+        "BR-CLN-019",
+        "BR-CLN-020",
+        "BR-CLN-021",
+        "BR-CLN-022",
+        "BR-CLN-023",
+        "BR-CLN-024",
+        "BR-CLN-025",
+        "BR-CLN-026",
+        "BR-CLN-027",
+        "BR-CLN-028",
+        "BR-CLN-029",
+        "BR-CLN-030",
+        "BR-CLN-031"
+      ],
+      "criterios": {
+        "AC-CLN-007": [
+          "BR-CLN-007"
+        ],
+        "AC-CLN-008": [
+          "BR-CLN-008"
+        ],
+        "AC-CLN-009": [
+          "BR-CLN-009"
+        ],
+        "AC-CLN-011": [
+          "BR-CLN-010"
+        ],
+        "AC-CLN-012": [
+          "BR-CLN-011"
+        ],
+        "AC-CLN-014": [
+          "BR-CLN-012"
+        ],
+        "AC-CLN-015": [
+          "BR-CLN-012"
+        ],
+        "AC-CLN-016": [
+          "BR-CLN-013"
+        ],
+        "AC-CLN-017": [
+          "BR-CLN-013"
+        ],
+        "AC-CLN-018": [
+          "BR-CLN-014"
+        ],
+        "AC-CLN-019": [
+          "BR-CLN-015"
+        ],
+        "AC-CLN-020": [
+          "BR-CLN-016"
+        ],
+        "AC-CLN-021": [
+          "BR-CLN-017"
+        ],
+        "AC-CLN-022": [
+          "BR-CLN-018"
+        ],
+        "AC-CLN-023": [
+          "BR-CLN-019"
+        ],
+        "AC-CLN-024": [
+          "BR-CLN-020"
+        ],
+        "AC-CLN-025": [
+          "BR-CLN-021"
+        ],
+        "AC-CLN-026": [
+          "BR-CLN-022"
+        ],
+        "AC-CLN-027": [
+          "BR-CLN-022"
+        ],
+        "AC-CLN-028": [
+          "BR-CLN-022"
+        ],
+        "AC-CLN-029": [
+          "BR-CLN-023"
+        ],
+        "AC-CLN-030": [
+          "BR-CLN-024"
+        ],
+        "AC-CLN-031": [
+          "BR-CLN-024"
+        ],
+        "AC-CLN-032": [
+          "BR-CLN-024"
+        ],
+        "AC-CLN-033": [
+          "BR-CLN-016"
+        ],
+        "AC-CLN-034": [
+          "BR-CLN-025"
+        ],
+        "AC-CLN-035": [
+          "BR-CLN-025",
+          "BR-CLN-026"
+        ],
+        "AC-CLN-036": [
+          "BR-CLN-026",
+          "BR-CLN-009"
+        ],
+        "AC-CLN-037": [
+          "BR-CLN-026"
+        ],
+        "AC-CLN-038": [
+          "BR-CLN-026",
+          "BR-CLN-014"
+        ],
+        "AC-CLN-039": [
+          "BR-CLN-026"
+        ],
+        "AC-CLN-040": [
+          "BR-CLN-027"
+        ],
+        "AC-CLN-041": [
+          "BR-CLN-028"
+        ],
+        "AC-CLN-042": [
+          "BR-CLN-027",
+          "BR-CLN-028"
+        ],
+        "AC-CLN-043": [
+          "BR-CLN-028",
+          "BR-CLN-029"
+        ],
+        "AC-CLN-044": [
+          "BR-CLN-028",
+          "BR-CLN-029"
+        ],
+        "AC-CLN-045": [
+          "BR-CLN-029"
+        ],
+        "AC-CLN-046": [
+          "BR-CLN-028",
+          "BR-CLN-029"
+        ],
+        "AC-CLN-047": [
+          "BR-CLN-030"
+        ],
+        "AC-CLN-048": [
+          "BR-CLN-027",
+          "BR-CLN-028",
+          "BR-CLN-029",
+          "BR-CLN-030"
+        ],
+        "AC-CLN-049": [
+          "BR-CLN-028",
+          "BR-CLN-029",
+          "BR-CLN-030"
+        ],
+        "AC-CLN-050": [
+          "BR-CLN-031"
+        ],
+        "AC-CLN-051": [
+          "BR-CLN-026",
+          "BR-CLN-031"
+        ],
+        "AC-CLN-052": [
+          "BR-CLN-028",
+          "BR-CLN-029",
+          "BR-CLN-030",
+          "BR-CLN-031"
+        ]
+      },
+      "citados": [
+        "AC-CLN-007",
+        "AC-CLN-008",
+        "AC-CLN-009",
+        "AC-CLN-011",
+        "AC-CLN-012",
+        "AC-CLN-014",
+        "AC-CLN-015",
+        "AC-CLN-016",
+        "AC-CLN-017",
+        "AC-CLN-018",
+        "AC-CLN-019",
+        "AC-CLN-020",
+        "AC-CLN-021",
+        "AC-CLN-022",
+        "AC-CLN-023",
+        "AC-CLN-024",
+        "AC-CLN-025",
+        "AC-CLN-026",
+        "AC-CLN-027",
+        "AC-CLN-028",
+        "AC-CLN-029",
+        "AC-CLN-030",
+        "AC-CLN-031",
+        "AC-CLN-032",
+        "AC-CLN-033",
+        "AC-CLN-034",
+        "AC-CLN-035",
+        "AC-CLN-036",
+        "AC-CLN-037",
+        "AC-CLN-038",
+        "AC-CLN-039",
+        "AC-CLN-040",
+        "AC-CLN-041",
+        "AC-CLN-042",
+        "AC-CLN-043",
+        "AC-CLN-044",
+        "AC-CLN-045",
+        "AC-CLN-046",
+        "AC-CLN-047",
+        "AC-CLN-048",
+        "AC-CLN-049",
+        "AC-CLN-050",
+        "AC-CLN-051",
+        "AC-CLN-052"
+      ],
+      "faltantes": [],
+      "problemas": [],
+      "ancla_completa": true,
+      "ratificable_por_forma_y_citas": true,
+      "sha256": "72f0533cb39d3b914edbc06384ce15b5402bfe26d2ca66120337e544a880ed11"
+    },
+    {
+      "ruta": "specs/store-stock/store-stock.md",
+      "codigo": "STK",
+      "estado": "ratified",
+      "activo": true,
+      "reglas": [
+        "BR-STK-001",
+        "BR-STK-002",
+        "BR-STK-003",
+        "BR-STK-004",
+        "BR-STK-005",
+        "BR-STK-006",
+        "BR-STK-007",
+        "BR-STK-008",
+        "BR-STK-009",
+        "BR-STK-013",
+        "BR-STK-016",
+        "BR-STK-017",
+        "BR-STK-018",
+        "BR-STK-019",
+        "BR-STK-020",
+        "BR-STK-021",
+        "BR-STK-022",
+        "BR-STK-023",
+        "BR-STK-024",
+        "BR-STK-025",
+        "BR-STK-026",
+        "BR-STK-027",
+        "BR-STK-028",
+        "BR-STK-029",
+        "BR-STK-030",
+        "BR-STK-031",
+        "BR-STK-032",
+        "BR-STK-033",
+        "BR-STK-034",
+        "BR-STK-035",
+        "BR-STK-036"
+      ],
+      "criterios": {
+        "AC-STK-001": [
+          "BR-STK-001"
+        ],
+        "AC-STK-002": [
+          "BR-STK-002"
+        ],
+        "AC-STK-003": [
+          "BR-STK-003"
+        ],
+        "AC-STK-004": [
+          "BR-STK-004"
+        ],
+        "AC-STK-005": [
+          "BR-STK-005"
+        ],
+        "AC-STK-006": [
+          "BR-STK-006"
+        ],
+        "AC-STK-007": [
+          "BR-STK-007"
+        ],
+        "AC-STK-008": [
+          "BR-STK-008"
+        ],
+        "AC-STK-009": [
+          "BR-STK-009"
+        ],
+        "AC-STK-013": [
+          "BR-STK-013"
+        ],
+        "AC-STK-016": [
+          "BR-STK-016"
+        ],
+        "AC-STK-017": [
+          "BR-STK-017"
+        ],
+        "AC-STK-018": [
+          "BR-STK-018"
+        ],
+        "AC-STK-020": [
+          "BR-STK-019"
+        ],
+        "AC-STK-021": [
+          "BR-STK-020"
+        ],
+        "AC-STK-022": [
+          "BR-STK-020"
+        ],
+        "AC-STK-023": [
+          "BR-STK-021"
+        ],
+        "AC-STK-024": [
+          "BR-STK-022"
+        ],
+        "AC-STK-025": [
+          "BR-STK-022"
+        ],
+        "AC-STK-026": [
+          "BR-STK-019",
+          "BR-STK-022"
+        ],
+        "AC-STK-027": [
+          "BR-STK-023"
+        ],
+        "AC-STK-028": [
+          "BR-STK-024"
+        ],
+        "AC-STK-029": [
+          "BR-STK-024"
+        ],
+        "AC-STK-030": [
+          "BR-STK-025"
+        ],
+        "AC-STK-031": [
+          "BR-STK-025"
+        ],
+        "AC-STK-032": [
+          "BR-STK-004"
+        ],
+        "AC-STK-033": [
+          "BR-STK-004"
+        ],
+        "AC-STK-034": [
+          "BR-STK-026"
+        ],
+        "AC-STK-035": [
+          "BR-STK-027"
+        ],
+        "AC-STK-036": [
+          "BR-STK-028"
+        ],
+        "AC-STK-037": [
+          "BR-STK-028"
+        ],
+        "AC-STK-038": [
+          "BR-STK-029"
+        ],
+        "AC-STK-039": [
+          "BR-STK-030"
+        ],
+        "AC-STK-040": [
+          "BR-STK-030"
+        ],
+        "AC-STK-041": [
+          "BR-STK-031"
+        ],
+        "AC-STK-042": [
+          "BR-STK-031"
+        ],
+        "AC-STK-043": [
+          "BR-STK-009",
+          "BR-STK-032"
+        ],
+        "AC-STK-044": [
+          "BR-STK-032",
+          "BR-STK-033"
+        ],
+        "AC-STK-045": [
+          "BR-STK-033"
+        ],
+        "AC-STK-046": [
+          "BR-STK-034",
+          "BR-STK-018"
+        ],
+        "AC-STK-047": [
+          "BR-STK-034"
+        ],
+        "AC-STK-048": [
+          "BR-STK-033"
+        ],
+        "AC-STK-049": [
+          "BR-STK-018",
+          "BR-STK-030"
+        ],
+        "AC-STK-050": [
+          "BR-STK-024",
+          "BR-STK-033"
+        ],
+        "AC-STK-051": [
+          "BR-STK-035"
+        ],
+        "AC-STK-052": [
+          "BR-STK-022"
+        ],
+        "AC-STK-053": [
+          "BR-STK-036"
+        ]
+      },
+      "citados": [
+        "AC-STK-001",
+        "AC-STK-002",
+        "AC-STK-003",
+        "AC-STK-004",
+        "AC-STK-005",
+        "AC-STK-006",
+        "AC-STK-007",
+        "AC-STK-008",
+        "AC-STK-009",
+        "AC-STK-013",
+        "AC-STK-016",
+        "AC-STK-017",
+        "AC-STK-018",
+        "AC-STK-020",
+        "AC-STK-021",
+        "AC-STK-022",
+        "AC-STK-023",
+        "AC-STK-024",
+        "AC-STK-025",
+        "AC-STK-026",
+        "AC-STK-027",
+        "AC-STK-028",
+        "AC-STK-029",
+        "AC-STK-030",
+        "AC-STK-031",
+        "AC-STK-032",
+        "AC-STK-033",
+        "AC-STK-034",
+        "AC-STK-035",
+        "AC-STK-036",
+        "AC-STK-037",
+        "AC-STK-038",
+        "AC-STK-039",
+        "AC-STK-040",
+        "AC-STK-041",
+        "AC-STK-042",
+        "AC-STK-043",
+        "AC-STK-044",
+        "AC-STK-045",
+        "AC-STK-046",
+        "AC-STK-047",
+        "AC-STK-048",
+        "AC-STK-049",
+        "AC-STK-050",
+        "AC-STK-051",
+        "AC-STK-052",
+        "AC-STK-053"
+      ],
+      "faltantes": [],
+      "problemas": [],
+      "ancla_completa": true,
+      "ratificable_por_forma_y_citas": true,
+      "sha256": "c326293fe666a6af84a0a160f0461f31bff78918dd46a38e7a4edb21a42f8afa"
+    }
+  ],
+  "problemas_globales": [],
+  "citas_sin_criterio_actual": [
+    "AC-DEM-001",
+    "AC-DEM-002",
+    "AC-XXX-001",
+    "AC-XXX-002",
+    "AC-ZZZ-999"
+  ],
+  "escenas": {
+    "comando": "git diff --name-status f17948fe..HEAD -- '*.tscn'",
+    "cambios": [
+      {
+        "estado": "M",
+        "rutas": [
+          "src/escenas/almacen.tscn"
+        ]
+      },
+      {
+        "estado": "A",
+        "rutas": [
+          "src/escenas/objetos/nota_pegada.tscn"
+        ]
+      },
+      {
+        "estado": "A",
+        "rutas": [
+          "src/escenas/objetos/ticket.tscn"
+        ]
+      },
+      {
+        "estado": "M",
+        "rutas": [
+          "src/escenas/puestos/audio_del_almacen.tscn"
+        ]
+      },
+      {
+        "estado": "M",
+        "rutas": [
+          "src/escenas/puestos/estructura_del_almacen.tscn"
+        ]
+      },
+      {
+        "estado": "M",
+        "rutas": [
+          "src/escenas/puestos/interfaz_del_almacen.tscn"
+        ]
+      },
+      {
+        "estado": "A",
+        "rutas": [
+          "src/escenas/puestos/lector.tscn"
+        ]
+      },
+      {
+        "estado": "A",
+        "rutas": [
+          "src/escenas/puestos/notas_del_almacen.tscn"
+        ]
+      },
+      {
+        "estado": "M",
+        "rutas": [
+          "src/escenas/puestos/objetos_del_almacen.tscn"
+        ]
+      },
+      {
+        "estado": "M",
+        "rutas": [
+          "src/escenas/puestos/servicios_del_almacen.tscn"
+        ]
+      },
+      {
+        "estado": "M",
+        "rutas": [
+          "src/escenas/puestos/ventanilla.tscn"
+        ]
+      },
+      {
+        "estado": "D",
+        "rutas": [
+          "src/escenas/puestos/zona_de_descarte.tscn"
+        ]
+      },
+      {
+        "estado": "A",
+        "rutas": [
+          "src/ui/diegetica/capa_de_dialogo.tscn"
+        ]
+      },
+      {
+        "estado": "A",
+        "rutas": [
+          "src/ui/diegetica/nota_encuadrada.tscn"
+        ]
+      },
+      {
+        "estado": "M",
+        "rutas": [
+          "src/ui/diegetica/panel_de_la_ventanilla.tscn"
+        ]
+      },
+      {
+        "estado": "A",
+        "rutas": [
+          "src/ui/diegetica/programa_de_tickets.tscn"
+        ]
+      },
+      {
+        "estado": "M",
+        "rutas": [
+          "src/ui/hud.tscn"
+        ]
+      },
+      {
+        "estado": "M",
+        "rutas": [
+          "src/ui/interrupciones/pantalla_de_cierre.tscn"
+        ]
+      },
+      {
+        "estado": "A",
+        "rutas": [
+          "src/ui/pila_de_notificaciones.tscn"
+        ]
+      }
+    ],
+    "agregadas": [
+      "src/escenas/objetos/nota_pegada.tscn",
+      "src/escenas/objetos/ticket.tscn",
+      "src/escenas/puestos/lector.tscn",
+      "src/escenas/puestos/notas_del_almacen.tscn",
+      "src/ui/diegetica/capa_de_dialogo.tscn",
+      "src/ui/diegetica/nota_encuadrada.tscn",
+      "src/ui/diegetica/programa_de_tickets.tscn",
+      "src/ui/pila_de_notificaciones.tscn"
+    ],
+    "retiradas": [
+      "src/escenas/puestos/zona_de_descarte.tscn"
+    ],
+    "merges": [
+      {
+        "commit": "92634ad42e264f2c05ee87c27b5b0ecea693326e",
+        "asunto": "Integrar el harness actualizado con las quince features",
+        "padres": [
+          "ea047c540ae0dedea9305e1fdbc24e6456b88262",
+          "5ce72b8ac17c1a2a9c216947f7005f3bd8b82d29"
+        ],
+        "deltas_por_padre": [
+          {
+            "padre": "ea047c540ae0dedea9305e1fdbc24e6456b88262",
+            "cambios_tscn": []
+          },
+          {
+            "padre": "5ce72b8ac17c1a2a9c216947f7005f3bd8b82d29",
+            "cambios_tscn": [
+              {
+                "estado": "M",
+                "rutas": [
+                  "src/escenas/almacen.tscn"
+                ]
+              },
+              {
+                "estado": "A",
+                "rutas": [
+                  "src/escenas/objetos/nota_pegada.tscn"
+                ]
+              },
+              {
+                "estado": "A",
+                "rutas": [
+                  "src/escenas/objetos/ticket.tscn"
+                ]
+              },
+              {
+                "estado": "M",
+                "rutas": [
+                  "src/escenas/puestos/audio_del_almacen.tscn"
+                ]
+              },
+              {
+                "estado": "M",
+                "rutas": [
+                  "src/escenas/puestos/estructura_del_almacen.tscn"
+                ]
+              },
+              {
+                "estado": "M",
+                "rutas": [
+                  "src/escenas/puestos/interfaz_del_almacen.tscn"
+                ]
+              },
+              {
+                "estado": "A",
+                "rutas": [
+                  "src/escenas/puestos/lector.tscn"
+                ]
+              },
+              {
+                "estado": "A",
+                "rutas": [
+                  "src/escenas/puestos/notas_del_almacen.tscn"
+                ]
+              },
+              {
+                "estado": "M",
+                "rutas": [
+                  "src/escenas/puestos/objetos_del_almacen.tscn"
+                ]
+              },
+              {
+                "estado": "M",
+                "rutas": [
+                  "src/escenas/puestos/servicios_del_almacen.tscn"
+                ]
+              },
+              {
+                "estado": "M",
+                "rutas": [
+                  "src/escenas/puestos/ventanilla.tscn"
+                ]
+              },
+              {
+                "estado": "D",
+                "rutas": [
+                  "src/escenas/puestos/zona_de_descarte.tscn"
+                ]
+              },
+              {
+                "estado": "A",
+                "rutas": [
+                  "src/ui/diegetica/capa_de_dialogo.tscn"
+                ]
+              },
+              {
+                "estado": "A",
+                "rutas": [
+                  "src/ui/diegetica/nota_encuadrada.tscn"
+                ]
+              },
+              {
+                "estado": "M",
+                "rutas": [
+                  "src/ui/diegetica/panel_de_la_ventanilla.tscn"
+                ]
+              },
+              {
+                "estado": "A",
+                "rutas": [
+                  "src/ui/diegetica/programa_de_tickets.tscn"
+                ]
+              },
+              {
+                "estado": "M",
+                "rutas": [
+                  "src/ui/hud.tscn"
+                ]
+              },
+              {
+                "estado": "M",
+                "rutas": [
+                  "src/ui/interrupciones/pantalla_de_cierre.tscn"
+                ]
+              },
+              {
+                "estado": "A",
+                "rutas": [
+                  "src/ui/pila_de_notificaciones.tscn"
+                ]
+              }
+            ]
+          }
+        ],
+        "introducidas_primer_padre": [],
+        "resultados_heredados": [],
+        "resultados_no_heredados_revisar": []
+      },
+      {
+        "commit": "48a5fa9f7217997ebd215fce52943d4ec15443eb",
+        "asunto": "Integrar las correcciones de fixtures del lote",
+        "padres": [
+          "92634ad42e264f2c05ee87c27b5b0ecea693326e",
+          "cd9947317ae5489e61b39b795795e059fc4e8f1c"
+        ],
+        "deltas_por_padre": [
+          {
+            "padre": "92634ad42e264f2c05ee87c27b5b0ecea693326e",
+            "cambios_tscn": []
+          },
+          {
+            "padre": "cd9947317ae5489e61b39b795795e059fc4e8f1c",
+            "cambios_tscn": [
+              {
+                "estado": "M",
+                "rutas": [
+                  "src/escenas/almacen.tscn"
+                ]
+              },
+              {
+                "estado": "A",
+                "rutas": [
+                  "src/escenas/objetos/nota_pegada.tscn"
+                ]
+              },
+              {
+                "estado": "A",
+                "rutas": [
+                  "src/escenas/objetos/ticket.tscn"
+                ]
+              },
+              {
+                "estado": "M",
+                "rutas": [
+                  "src/escenas/puestos/audio_del_almacen.tscn"
+                ]
+              },
+              {
+                "estado": "M",
+                "rutas": [
+                  "src/escenas/puestos/estructura_del_almacen.tscn"
+                ]
+              },
+              {
+                "estado": "M",
+                "rutas": [
+                  "src/escenas/puestos/interfaz_del_almacen.tscn"
+                ]
+              },
+              {
+                "estado": "A",
+                "rutas": [
+                  "src/escenas/puestos/lector.tscn"
+                ]
+              },
+              {
+                "estado": "A",
+                "rutas": [
+                  "src/escenas/puestos/notas_del_almacen.tscn"
+                ]
+              },
+              {
+                "estado": "M",
+                "rutas": [
+                  "src/escenas/puestos/objetos_del_almacen.tscn"
+                ]
+              },
+              {
+                "estado": "M",
+                "rutas": [
+                  "src/escenas/puestos/servicios_del_almacen.tscn"
+                ]
+              },
+              {
+                "estado": "M",
+                "rutas": [
+                  "src/escenas/puestos/ventanilla.tscn"
+                ]
+              },
+              {
+                "estado": "D",
+                "rutas": [
+                  "src/escenas/puestos/zona_de_descarte.tscn"
+                ]
+              },
+              {
+                "estado": "A",
+                "rutas": [
+                  "src/ui/diegetica/capa_de_dialogo.tscn"
+                ]
+              },
+              {
+                "estado": "A",
+                "rutas": [
+                  "src/ui/diegetica/nota_encuadrada.tscn"
+                ]
+              },
+              {
+                "estado": "M",
+                "rutas": [
+                  "src/ui/diegetica/panel_de_la_ventanilla.tscn"
+                ]
+              },
+              {
+                "estado": "A",
+                "rutas": [
+                  "src/ui/diegetica/programa_de_tickets.tscn"
+                ]
+              },
+              {
+                "estado": "M",
+                "rutas": [
+                  "src/ui/hud.tscn"
+                ]
+              },
+              {
+                "estado": "M",
+                "rutas": [
+                  "src/ui/interrupciones/pantalla_de_cierre.tscn"
+                ]
+              },
+              {
+                "estado": "A",
+                "rutas": [
+                  "src/ui/pila_de_notificaciones.tscn"
+                ]
+              }
+            ]
+          }
+        ],
+        "introducidas_primer_padre": [],
+        "resultados_heredados": [],
+        "resultados_no_heredados_revisar": []
+      }
+    ],
+    "merges_con_resultados_no_heredados": [],
+    "limite": "Blobs heredados acreditan procedencia; Git no conserva el mecanismo exacto de resolución. No afirmar ausencia de merge de tres vías sólo por igualdad. Revisar evidencia de integración para ese requisito."
+  }
+}

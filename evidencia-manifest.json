@@ -1,0 +1,167 @@
+{
+  "head": "48a5fa9f7217997ebd215fce52943d4ec15443eb",
+  "tree": "97d2e74e3377cbb4b5218d587681e109b9f68e2b",
+  "parents": [
+    "92634ad42e264f2c05ee87c27b5b0ecea693326e",
+    "cd9947317ae5489e61b39b795795e059fc4e8f1c"
+  ],
+  "result": {
+    "head": "48a5fa9f7217997ebd215fce52943d4ec15443eb",
+    "parents": [
+      "92634ad42e264f2c05ee87c27b5b0ecea693326e",
+      "cd9947317ae5489e61b39b795795e059fc4e8f1c"
+    ],
+    "tree": "97d2e74e3377cbb4b5218d587681e109b9f68e2b",
+    "diff_parent1": [
+      "src/escenas/objetos/caja_de_productos.gd",
+      "src/sistemas/marco/calentamiento_de_shaders.gd",
+      "src/sistemas/marco/carga_en_segundo_plano.gd",
+      "test/escenas/indicacion_del_foco_test.gd",
+      "test/escenas/objetos/caja_de_productos_test.gd",
+      "test/escenas/objetos/mancha_en_el_piso_test.gd",
+      "test/escenas/volumen_de_los_solidos_test.gd",
+      "test/sistemas/investigacion/examen_test.gd",
+      "test/sistemas/marco/calentamiento_de_shaders_test.gd",
+      "test/sistemas/marco/carga_en_segundo_plano_test.gd",
+      "test/sistemas/tareas/ventanilla_test.gd"
+    ],
+    "verify_exit": 0,
+    "count_exit": 0,
+    "report": "reports\\report_5",
+    "suites": 217,
+    "files": 217,
+    "committed_suite_files": 217,
+    "seven_node_summaries": [
+      "755.0"
+    ],
+    "tests": 1687,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "flaky": 0,
+    "xml_sha256": "50f159c63015420369b741695c67f5858c796cc0533211cf689bd29beb40a836"
+  },
+  "files": [
+    {
+      "path": "manifest.json",
+      "bytes": 1171,
+      "sha256": "32c4d9d83db6a363d4357780689c328e363363c12a801c40512060f50275f0c9"
+    },
+    {
+      "path": "results.xml",
+      "bytes": 274245,
+      "sha256": "50f159c63015420369b741695c67f5858c796cc0533211cf689bd29beb40a836"
+    },
+    {
+      "path": "tests-crudo.log",
+      "bytes": 966388,
+      "sha256": "d1ad1e409764492fef7a779a3524280ade0fc895708413ccac9ee474c67d5986"
+    },
+    {
+      "path": "verificar.log",
+      "bytes": 235,
+      "sha256": "8d3a75d1ec2fa99b05e0e31d8845bc8e268b511f9c5bb2628a418eba4d7f7936"
+    },
+    {
+      "path": "conteo.log",
+      "bytes": 64,
+      "sha256": "e06deb6983bdd4e3d0954b8641ce4a05dbbac024e5e809280d3cf9da40f17e48"
+    },
+    {
+      "path": "raw-revisado.json",
+      "bytes": 5685,
+      "sha256": "87fc7d7b39b5a522ebf0cbb1d4a9e233c85d6a0fe8d7b28ecab5e379273d7357"
+    },
+    {
+      "path": "353-body-historico.md",
+      "bytes": 4839,
+      "sha256": "0926a8edef54dd7d68635190978d00edbc44cd6b4d7467888ee5c4cacbe40aa1"
+    },
+    {
+      "path": "auditoria-final.json",
+      "bytes": 47072,
+      "sha256": "6c3e06f23f0e8a34bf59c06d5da674929dde5aae79d0fde78045bd10ff6369f8"
+    },
+    {
+      "path": "index.json",
+      "bytes": 2522,
+      "sha256": "45cda55687ba327062349b8a9cc90f611eb33dcc04c951565cc490a612967194"
+    },
+    {
+      "path": "padre-verificar-integracion.py",
+      "bytes": 3398,
+      "sha256": "272dde559f6b658e2ecc93f4c6856e4e4ec7a76bc264f6febe372d0808160929"
+    }
+  ],
+  "raw_review": {
+    "head": "48a5fa9f7217997ebd215fce52943d4ec15443eb",
+    "raw_sha256": "755877336cb5417882e2082253b3bcd50425120f3f22dd2e54fbc6b225c04967",
+    "categories": {
+      "script_parse": 0,
+      "objectdb": 0,
+      "resources": 0,
+      "material": 0,
+      "metadata": 0,
+      "transform": 0,
+      "input_reuse": 0
+    },
+    "errors": [
+      "ERROR: The remote port number must be between 1 and 65535 (inclusive).",
+      "ERROR: Remote Debugger: Unable to connect to host '127.0.0.1:0'.",
+      "ERROR: DisposicionDeLaGondola disposicion_erronea: el bloque 0 tiene 3 copias para 2 casilleros",
+      "ERROR: Computadora sin cablear: revisar almacen.tscn y almacen.gd",
+      "ERROR: Computadora sin cablear: revisar almacen.tscn y almacen.gd",
+      "ERROR: Computadora sin cablear: revisar almacen.tscn y almacen.gd",
+      "ERROR: Examen sin punto de examen cableado: revisar jugador.tscn",
+      "ERROR: Cannot open file 'res://no_existe.tscn'.",
+      "ERROR: Failed loading resource: res://no_existe.tscn.",
+      "ERROR: Cannot open file 'res://no_existe.tscn'.",
+      "ERROR: Failed loading resource: res://no_existe.tscn.",
+      "ERROR: Cannot open file 'res://no_existe.tscn'.",
+      "ERROR: Failed loading resource: res://no_existe.tscn.",
+      "ERROR: Caja registradora sin generador: revisar almacen.gd",
+      "ERROR: Caja registradora sin generador: revisar almacen.gd",
+      "ERROR: Caja registradora sin generador: revisar almacen.gd",
+      "ERROR: Caja registradora sin generador: revisar almacen.gd",
+      "ERROR: Recolector sin cablear: revisar almacen.tscn y almacen.gd",
+      "ERROR: Recolector sin cablear: revisar almacen.tscn y almacen.gd",
+      "ERROR: Recolector sin cablear: revisar almacen.tscn y almacen.gd",
+      "ERROR: Recolector sin cablear: revisar almacen.tscn y almacen.gd",
+      "ERROR: Ventanilla sin cablear: revisar almacen.tscn y almacen.gd",
+      "ERROR: Ventanilla sin cablear: revisar almacen.tscn y almacen.gd",
+      "ERROR: Ventanilla sin cablear: revisar almacen.tscn y almacen.gd",
+      "ERROR: Ventanilla sin cablear: revisar almacen.tscn y almacen.gd"
+    ],
+    "warnings": [
+      "WARNING: Rescate: `ObjetoAgarrable` estaba adentro de `CuerpoDeLaHoja` en (5.882046, 0.202237, -9.028996); va a ORIGEN",
+      "WARNING: Rescate: `ObjetoAgarrable` estaba adentro de `CuerpoDeLaHoja` en (6.041321, 0.249515, -9.016684); va a DESHACER",
+      "WARNING: Rescate: `ObjetoAgarrable` estaba adentro de `CuerpoDeLaHoja` en (6.882046, 0.202237, -8.028996); va a ORIGEN",
+      "WARNING: Rescate: `Balde` estaba adentro de `SueloSolido` en (5.000002, 0.200189, 4.300001); va a DESHACER",
+      "WARNING: Rescate: `Balde` estaba adentro de `SueloSolido` en (3.495001, 0.198718, -1.000001); va a DESHACER",
+      "WARNING: Rescate: `Balde` estaba adentro de `StaticBody3D` en (11.745, 0.216795, 6.006); va a DESHACER",
+      "WARNING: Rescate: `ObjetoAgarrable` estaba adentro de `CuerpoDeLaHoja` en (-1.87956, 1.290243, -6.623733); va a ALREDEDOR",
+      "WARNING: Rescate: `CajaDeChisitos` estaba adentro de `Volumen` en (2.0, 5.9, -11.0); va a DESHACER",
+      "WARNING: Rescate: `ObjetoAgarrable` estaba adentro de `Volumen` en (2.000003, 5.726033, -11.00001); va a DESHACER",
+      "WARNING: Rescate: `CajaDeArvejas` estaba adentro de `Volumen` en (2.0, 5.9, -11.0); va a ENCIMA_DEL_ORIGEN",
+      "WARNING: Rescate: `CajaDeArvejas` estaba adentro de `Volumen` en (2.0, 5.9, -11.0); va a ORIGEN",
+      "WARNING: Rescate: `ObjetoAgarrable` estaba adentro de `Volumen` en (2.0, 5.9, -11.0); queda donde está: ningún lugar libre",
+      "WARNING: Rescate: `CajaDeArvejas` estaba adentro de `Volumen` en (2.0, 5.9, -11.0); va a ORIGEN",
+      "WARNING: Rescate: `ObjetoAgarrable` estaba adentro de `Volumen` en (2.0, 5.9, -11.0); va a ORIGEN",
+      "WARNING: Rescate: `BolsaDeBasura2` estaba adentro de `StaticBody3D` en (-1.9, 0.202237, 6.33); va a ALREDEDOR",
+      "WARNING: Rescate: `ObjetoAgarrable` estaba adentro de `@StaticBody3D@180844` en (4.000026, 1.100338, -0.000002); va a DESHACER",
+      "WARNING: Rescate: `ObjetoAgarrable` estaba adentro de `@StaticBody3D@180854` en (4.0, 1.0, 0.0); queda donde está: ningún lugar libre",
+      "WARNING: Rescate: `ObjetoAgarrable` estaba adentro de `@StaticBody3D@180864` en (4.0, 1.0, 0.0); queda donde está: ningún lugar libre",
+      "WARNING: Rescate: `ObjetoAgarrable` estaba adentro de `@AnimatableBody3D@180880` en (0.0, 0.08, 3.0); queda donde está: ningún lugar libre",
+      "WARNING: Rescate: `ObjetoAgarrable` estaba adentro de `@StaticBody3D@180886` en (1.99, 0.08, 0.0); va a DESHACER",
+      "WARNING: Rescate: `ObjetoAgarrable` estaba adentro de `@StaticBody3D@180897` en (1.99, 0.08, 0.0); queda donde está: ningún lugar libre",
+      "WARNING: Rescate: `ObjetoAgarrable` estaba adentro de `@StaticBody3D@180909` en (1.99, 0.08, 0.0); va a ALREDEDOR",
+      "WARNING: Rescate: `ObjetoAgarrable` estaba adentro de `@StaticBody3D@180919` en (1.946, 0.08, 0.0); va a ALREDEDOR",
+      "WARNING: Rescate: `ObjetoAgarrable` estaba adentro de `@StaticBody3D@180919` en (1.96, 0.08, 0.0); va a ALREDEDOR",
+      "WARNING: Rescate: `ObjetoAgarrable` estaba adentro de `@StaticBody3D@180929` en (2.06, 0.08, 0.0); va a ALREDEDOR",
+      "WARNING: Rescate: `@RigidBody3D@180944` estaba adentro de `@StaticBody3D@180939` en (4.0, 1.0, 0.0); queda donde está: ningún lugar libre",
+      "WARNING: Rescate: `ObjetoAgarrable` estaba adentro de `@StaticBody3D@180950` en (4.0, 1.0, 0.0); va a ENCIMA_DEL_ORIGEN",
+      "WARNING: Rescate: `ObjetoAgarrable` estaba adentro de `@StaticBody3D@180961` en (4.0, 1.0, 0.0); queda donde está: ningún lugar libre",
+      "WARNING: Rescate: `ObjetoAgarrable` estaba adentro de `@StaticBody3D@180972` en (4.0, 1.0, 0.0); va a ENCIMA_DEL_ORIGEN"
+    ]
+  }
+}

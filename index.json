@@ -1,0 +1,51 @@
+{
+  "head": "48a5fa9f7217997ebd215fce52943d4ec15443eb",
+  "estado": "PUBLICADO",
+  "issues": [
+    {
+      "number": 296,
+      "url": "https://github.com/federicohermo/nosefia/issues/296",
+      "updatedAt": "2026-10-09T11:10:28Z",
+      "body_sha256": "2caa955e9253a89cb0d40ed7832cba196508f1a6b6dab4d6530390419bd3372b",
+      "snapshot": "C:\\Users\\fede_\\AppData\\Local\\Temp\\nosefia-batch-64-309\\c-whole-296-219\\issue-296-live.json",
+      "reviewed_body": "C:\\Users\\fede_\\AppData\\Local\\Temp\\nosefia-batch-64-309\\c-whole-296-219\\296-whole-preparado.md",
+      "readback_matches": true
+    },
+    {
+      "number": 219,
+      "url": "https://github.com/federicohermo/nosefia/issues/219",
+      "updatedAt": "2026-10-09T11:10:28Z",
+      "body_sha256": "b0289f825e200af7c286525691521cfa95cbf62c2f81fa5111ec77450397dfdb",
+      "snapshot": "C:\\Users\\fede_\\AppData\\Local\\Temp\\nosefia-batch-64-309\\c-whole-296-219\\issue-219-live.json",
+      "reviewed_body": "C:\\Users\\fede_\\AppData\\Local\\Temp\\nosefia-batch-64-309\\c-whole-296-219\\219-whole-preparado-v2.md",
+      "readback_matches": true
+    },
+    {
+      "number": 299,
+      "url": "https://github.com/federicohermo/nosefia/issues/299",
+      "updatedAt": "2026-10-09T13:17:45Z",
+      "body_sha256": "8d61acff45302dfcc799fd399604f13a47fb8d43167231adbb8c23cfdc83f329",
+      "snapshot": "D:\\temporales\\nosefia-batch-64-309\\outside-final\\299\\299-snapshot.json",
+      "reviewed_body": "D:\\temporales\\nosefia-batch-64-309\\outside-final\\299\\299-revisado.md",
+      "readback_matches": true
+    },
+    {
+      "number": 301,
+      "url": "https://github.com/federicohermo/nosefia/issues/301",
+      "updatedAt": "2026-10-09T13:17:49Z",
+      "body_sha256": "8bf63cde4e541e907d2ff15739b9dde108940d5914501163fca3e1f0daad59dd",
+      "snapshot": "D:\\temporales\\nosefia-batch-64-309\\outside-final\\medidas\\issue-301-vigente.json",
+      "reviewed_body": "D:\\temporales\\nosefia-batch-64-309\\outside-final\\301-revisado.md",
+      "readback_matches": true
+    },
+    {
+      "number": 218,
+      "url": "https://github.com/federicohermo/nosefia/issues/218",
+      "updatedAt": "2026-10-09T13:17:52Z",
+      "body_sha256": "2e34fc334b4dd72740a64a2dd81e27a1cf3523e396dc7077e17daaf4a6bb8d5d",
+      "snapshot": "D:\\temporales\\nosefia-batch-64-309\\outside-final\\medidas\\issue-218-vigente.json",
+      "reviewed_body": "D:\\temporales\\nosefia-batch-64-309\\outside-final\\218-revisado.md",
+      "readback_matches": true
+    }
+  ]
+}
