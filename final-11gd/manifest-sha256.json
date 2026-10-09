@@ -35,6 +35,11 @@
     "sha256": "303d7785e2826091cbba12b153c94a5c2a48baa85f91f37934b92e3db2a22a60"
   },
   {
+    "path": "b-e-pr-final.md",
+    "bytes": 4473,
+    "sha256": "8dcea2aa28f0c9b374072ff7734de6e269163c815c76e6090adcc4272e69419a"
+  },
+  {
     "path": "b-e-rebase-nueve-proof.json",
     "bytes": 3600,
     "sha256": "a3ae955c57000d847ebc76306ed306f4630a0bdee43c52a3e3681db2cb6c9a92"
@@ -136,8 +141,8 @@
   },
   {
     "path": "brief-final-11gd.md",
-    "bytes": 6068,
-    "sha256": "cd54aa9c62fc70a7d2c1fcac41c21610a6c711805545cd875895ed1a7ee89b04"
+    "bytes": 6351,
+    "sha256": "272a6ce33eef1fa9af7756cb4a2fddf0f36d142d21369fbf3914dc552cab416e"
   },
   {
     "path": "brief-fix-completo-v4.md",

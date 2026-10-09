@@ -87,4 +87,7 @@ comparando raw completo; no se atribuyen los cinco a una suite sin haberlos obse
 Todas las corridas usan FIFO absoluto, árbol congelado desde encolar hasta terminar, APPDATA
 de tests y logs nuevos. Commit y push preceden FULL3. El wrapper externo conserva la salida de
 los nodos Godot y ejecuta el main original con sus siete controles; no sustituye sus checks.
-Resultado final de FULL3 y CI: pendiente de finalizar, se agregará antes del PR certificado.
+FULL3 final:7/7 en697.0s,191/191 suites y1496 casos, cero fallos/errores/skips, conteo inmediato
+exit0. Raw completo:24→0 materialNULL, cero ObjectDB, recursos en uso y ScriptError. Conserva
+sólo diagnósticos deliberados de debugger, guardas, carga inexistente y rescates. PR353 abierto;
+la CI remota se verificará por separado sin confundirla con este certificado local.
