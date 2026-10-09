@@ -3,7 +3,7 @@ schema_version: 1
 capability_id: CAP-STK
 status: ratified
 owner: por definir
-provenance: GDD «Reponer» y «Registrar»; fichas «6) Tarea: Registro de productos vendidos», «8. Tarea: Reposición» y «5. Formas de interacción con objetos»; base «Productos y cajas contenedoras»; migración de los specs 005, 008, 033, 042, 047
+provenance: GDD «Reponer» y «Registrar»; fichas «7. Tarea: Registro de productos vendidos», «8. Tarea: Reposición» y «5. Formas de interacción con objetos»; base «Productos y cajas contenedoras»; migración de los specs 005, 008, 033, 042, 047
 ---
 
 # Capacidad: la mercadería del almacén
@@ -151,11 +151,11 @@ cumplida: dos planillas distintas pueden sumar lo mismo.
 
 ### BR-STK-022 — Registrar se cumple cuando lo anotado coincide con lo vendido
 
-CUANDO un «+» o un «−» del jugador deja, para cada producto, lo anotado igual a lo vendido esa
-noche, el sistema DEBE dar la obligatoria de registrar por cumplida. CUANDO otro «+» u otro
-«−» deja la planilla distinta de lo vendido, el sistema DEBE descumplirla. La obligatoria NO
-DEBE arrancar cumplida, aunque la planilla en 0 coincida con una noche sin ventas. Una venta
-NO DEBE cumplirla ni descumplirla: sólo el gesto del jugador la cambia.
+MIENTRAS, para cada producto, lo anotado sea igual a lo vendido esa noche, el sistema DEBE dar
+registrar por cumplida. CUANDO no coincidan, el sistema DEBE descumplirla. El sistema DEBE
+revisarla al abrir la jornada, con cada «+» o «−» que cambia una fila y con cada venta cobrada.
+El cierre DEBE contar el estado de ese instante (BR-SHF-007 de
+[`shift-cycle`](../shift-cycle/shift-cycle.md)).
 
 ### BR-STK-023 — Cada producto declara su sonoridad
 
@@ -401,22 +401,22 @@ total ENTONCES es 6200; con un «−» en el primero, 3700. DADO una noche que v
 producto de precio 1200 CUANDO se anota 1 unidad de otro producto del mismo precio ENTONCES el
 total es igual al de lo vendido y registrar no se cumple.
 
-### AC-STK-024 — Registrar se cumple con el gesto que iguala *(verifica BR-STK-022)*
+### AC-STK-024 — Registrar arranca cumplida y sigue a la planilla *(verifica BR-STK-022)*
 
-DADO una jornada que se abre sin ventas ENTONCES registrar arranca sin cumplir. DADO una noche
-que vendió 2 unidades de un producto y 1 de otro CUANDO se anotan esas 3 unidades ENTONCES
+DADO una jornada que se abre ENTONCES registrar arranca cumplida. DADO una noche
+que cobró 2 unidades de un producto y 1 de otro CUANDO se anotan esas 3 unidades ENTONCES
 registrar se cumple con el último gesto, y no antes.
 
-### AC-STK-025 — Sólo el jugador la deshace *(verifica BR-STK-022)*
+### AC-STK-025 — Una venta o una unidad de más la deshacen *(verifica BR-STK-022)*
 
-DADO registrar cumplida CUANDO se aprieta «+» en cualquier fila ENTONCES se descumple, y un «−»
-en esa fila la vuelve a cumplir. DADO registrar cumplida CUANDO se cobra una venta nueva
-ENTONCES sigue cumplida.
+DADO registrar cumplida CUANDO se cobra una venta nueva ENTONCES se descumple, y anotar esa
+venta la vuelve a cumplir. DADO registrar cumplida CUANDO se aprieta «+» en cualquier fila
+ENTONCES se descumple, y un «−» en esa fila la vuelve a cumplir.
 
-### AC-STK-026 — Lo anotado no pasa a la noche siguiente *(verifica BR-STK-019)*
+### AC-STK-026 — Lo anotado no pasa a la noche siguiente *(verifica BR-STK-019, BR-STK-022)*
 
 DADO una jornada con 3 unidades anotadas CUANDO se abre la jornada siguiente ENTONCES todas las
-filas están en 0 y registrar, sin cumplir.
+filas están en 0 y registrar está cumplida.
 
 ### AC-STK-027 — Ningún producto queda sin sonoridad *(verifica BR-STK-023)*
 
@@ -603,6 +603,12 @@ de punta a punta. DADO los dos muebles de estantes del medio del local ENTONCES 
 ancho, con 1 centímetro de tolerancia. DADO cada cara de lado ENTONCES el borde del estante
 inferior no está más hacia el pasillo que el frente de los estantes superiores.
 
+### AC-STK-052 — El cierre cuenta la planilla de ese instante *(verifica BR-STK-022)*
+
+DADO una noche sin ventas y sin gestos en la planilla CUANDO cierra ENTONCES registrar cuenta
+como cumplida. DADO una noche con la planilla igual a lo vendido CUANDO se cobra una venta más
+y la noche cierra sin anotarla ENTONCES registrar no cuenta.
+
 ## No objetivos
 
 - Esta capacidad NO cobra ni atiende: eso es de
@@ -634,7 +640,7 @@ inferior no está más hacia el pasillo que el frente de los estantes superiores
 
 - [`counter-service`](../counter-service/counter-service.md) (alimenta y consume): el cobro
   descuenta del depósito, hasta los vendibles; lo vendido de cada producto es contra qué se
-  compara la planilla; y lo que piden los compradores de cada jornada entra en lo que la
+  compara la planilla, y cada cobro vuelve a compararla; lo que piden los compradores de cada jornada entra en lo que la
   reposición deja (BR-STK-027).
 - [`player-actions`](../player-actions/player-actions.md) (consume y alimenta): la unidad viaja
   en la mano, y lo que la mano lleva decide qué hace el clic sobre la caja y sobre cada casillero;
