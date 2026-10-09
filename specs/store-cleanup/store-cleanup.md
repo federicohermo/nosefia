@@ -472,8 +472,9 @@ devuelven ENTONCES no hay ese motivo; una unidad recuperada y suelta adentro pro
 
 DADO las seis superficies existentes del pavimento ENTONCES su soporte coincide con sus
 triángulos y no cubre los huecos ajenos. CUANDO se suelta un cuerpo por los bordes libres del
-hueco real de ventanilla, a ambos lados y arriba del vidrio, ENTONCES cae, se apoya estable en
-el pavimento y puede recogerse dentro del alcance vigente.
+hueco real de ventanilla por ambos laterales libres, derivados del vidrio, las jambas y la
+forma del cuerpo, ENTONCES cae, se apoya estable en el pavimento y puede recogerse dentro del
+alcance vigente. El espacio numérico entre vidrio y dintel no constituye un paso superior.
 
 ### AC-CLN-046 — Dos motivos antes del registro *(verifica BR-CLN-028, BR-CLN-029)*
 
