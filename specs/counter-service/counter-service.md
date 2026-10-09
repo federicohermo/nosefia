@@ -1,7 +1,7 @@
 ---
 schema_version: 1
 capability_id: CAP-CTR
-status: ratified
+status: draft
 owner: por definir
 provenance: GDD «Atención por ventanilla»; migración de los specs 013, 035
 ---
@@ -24,6 +24,11 @@ jugador**: es el único lugar donde el juego puede mentir en vivo.
 | **Despachar** | dar por terminada la atención, se le haya vendido o no | atender, cerrar |
 | **Ventanilla** | la única ventana por la que se atiende. Nadie entra al local | mostrador, caja |
 | **Vendibles** | las unidades de un producto que se pueden vender: lo que queda en la caja y el estante no necesita | stock, disponible |
+
+| **Lector** | aparato fijo que anota la unidad sostenida en el programa | caja, escáner de inventario |
+| **Programa de tickets** | tres renglones de productos que se borran o imprimen | pedido del comprador |
+| **Renglón** | un producto anotado; puede repetirse | cantidad, precio |
+| **Ticket** | papel que conserva los productos anotados al imprimir | pedido de la ventanilla |
 
 ## Comportamiento normativo
 
@@ -77,9 +82,9 @@ diferencia no es plata que falte.
 ### BR-CTR-011 — La ventanilla dice qué falta
 
 SI el pedido tiene productos que superan sus vendibles, ENTONCES el sistema DEBE nombrarlos, en
-el orden del ticket. Es la explicación de por qué el cobro va a fallar.
+el orden del pedido. Es la explicación de por qué el cobro va a fallar.
 
-### BR-CTR-012 — El ticket no da la cuenta hecha
+### BR-CTR-012 — El pedido no da la cuenta hecha
 
 El sistema DEBE mostrar las líneas del pedido **sin el precio de cada una**, y mostrar aparte el
 total, lo que paga y la diferencia. Repartir el precio por renglón le daría al jugador la cuenta
@@ -102,6 +107,39 @@ repuesto, y nada se lo avisa al jugador.
 CUANDO se pregunta cuántas unidades de un producto se vendieron en la noche, el sistema DEBE
 sumar sus unidades en los pedidos **cobrados**. Un comprador despachado sin vender y un cobro
 rechazado no suman nada, y un producto que nadie compró contesta 0.
+
+### BR-CTR-016 — Tres renglones en orden
+
+CUANDO se lee una unidad de producto válida, el sistema DEBE anotar su producto en el primer
+renglón vacío de los 3 disponibles, esté abierto o cerrado el programa. DEBE admitir repetir
+el producto y DEBE avisar una lectura correcta sólo cuando se anotó.
+
+### BR-CTR-017 — Los rechazos se distinguen y no escriben
+
+SI lo leído no es una unidad de producto válida, ENTONCES el sistema DEBE rechazar por tipo
+antes de comprobar si está lleno. SI ya están llenos los 3 renglones y la unidad es válida,
+ENTONCES DEBE rechazar por lleno. Ambos rechazos DEBEN avisarse, sin cambiar los renglones.
+
+### BR-CTR-018 — Borrar vacía los tres
+
+CUANDO se pide borrar, el sistema DEBE dejar los 3 renglones vacíos, incluso si ya lo estaban.
+
+### BR-CTR-019 — Imprimir no borra el programa
+
+CUANDO se imprime con al menos un renglón lleno, el sistema DEBE crear un ticket y avisar su
+impresión, conservando los renglones del programa. SI están vacíos, ENTONCES NO DEBE crear
+papel ni avisar impresión.
+
+### BR-CTR-020 — El papel conserva una copia independiente
+
+El ticket DEBE conservar los productos de los renglones llenos, en su orden, sin cambiar al
+borrar o modificar el programa. Dos impresiones DEBEN ser dos papeles independientes.
+Consultar los renglones NO DEBE permitir cambiar el programa ni el ticket.
+
+### BR-CTR-021 — Cada jornada empieza vacía
+
+CUANDO abre una jornada, el sistema DEBE iniciar el programa vacío y DEBE retirar los tickets
+de la noche anterior, estén en la mano, en la ranura o sueltos.
 
 ## Criterios de aceptación
 
@@ -160,7 +198,7 @@ DADO un pedido de dos productos, uno que supera sus vendibles y otro que no, CUA
 aviso ENTONCES nombra sólo al primero; con los dos dentro de sus vendibles, el aviso es la cadena
 vacía.
 
-### AC-CTR-013 — El ticket no lleva precios por línea *(verifica BR-CTR-012)*
+### AC-CTR-013 — El pedido no lleva precios por línea *(verifica BR-CTR-012)*
 
 DADO un pedido CUANDO se leen sus renglones ENTONCES cada línea lleva unidades y nombre, ningún
 precio unitario, y al final están el total, lo que paga y la diferencia.
@@ -208,6 +246,35 @@ rechaza ENTONCES lo vendido sigue en 0.
 DADO dos ventas cobradas CUANDO se pregunta por un producto que no estaba en ningún pedido
 ENTONCES lo vendido es 0.
 
+### AC-CTR-021 — Duplicados y cuarto intento *(verifica BR-CTR-016, BR-CTR-017)*
+
+DADO el programa vacío, CUANDO se lee una unidad de Marolini, otra de Marolini y una de
+Coracola ENTONCES los renglones son Marolini, Marolini y Coracola, en ese orden, y se avisan
+3 lecturas. CUANDO se lee una cuarta unidad válida ENTONCES se rechaza por lleno y nada cambia.
+
+### AC-CTR-022 — El tipo se comprueba primero *(verifica BR-CTR-017)*
+
+DADO un renglón lleno, CUANDO se lee una caja, mopa, balde, jabón, bolsa o ticket ENTONCES se
+rechaza por no ser un producto y nada cambia. DADO los 3 llenos, ENTONCES ese rechazo sigue
+siendo por tipo. DADO ningún dato o una unidad sin producto ENTONCES tampoco se anota.
+
+### AC-CTR-023 — Copia, borrado y nueva impresión *(verifica BR-CTR-018, BR-CTR-019, BR-CTR-020)*
+
+DADO Marolini y Coracola anotados, CUANDO se imprime dos veces ENTONCES hay dos tickets
+distintos con esos productos en su orden y el programa sigue igual. CUANDO se borra y se
+modifica una copia consultada ENTONCES el programa queda vacío y ambos tickets conservan
+Marolini y Coracola. Modificar el arreglo recibido o devuelto por un ticket no lo cambia.
+
+### AC-CTR-024 — Vacío no imprime *(verifica BR-CTR-018, BR-CTR-019)*
+
+DADO el programa vacío, CUANDO se imprime, se borra y se imprime de nuevo ENTONCES no hay
+ticket ni aviso de impresión, y los renglones siguen vacíos.
+
+### AC-CTR-025 — La próxima noche retira los papeles *(verifica BR-CTR-021)*
+
+DADO un ticket en la mano, otro suelto y el programa con un producto, CUANDO abre otra jornada
+ENTONCES el programa está vacío, las manos están vacías y ninguno de esos papeles existe.
+
 ## No objetivos
 
 - Esta capacidad NO decide cuántas unidades hay ni dónde están: se lo pregunta a
@@ -217,14 +284,16 @@ ENTONCES lo vendido es 0.
 
 ## Contratos
 
-- **Entrada:** el padrón de la noche y los vendibles de cada producto.
-- **Salida:** quién está en la ventanilla, el ticket, el total, la diferencia, el aviso de
+- **Entrada:** el padrón de la noche, los vendibles de cada producto, el objeto leído y los
+  pedidos de borrar o imprimir.
+- **Salida:** quién está en la ventanilla, el pedido, el total, la diferencia, el aviso de
   faltantes, cuántos van despachados, el desvío de la noche y lo vendido de cada producto.
 - **Falla:** un pedido que supera sus vendibles se rechaza entero; una atención despachada
   rechaza todo lo demás.
 
 ## Señales
 
+- La lectura correcta o rechazada con su motivo, los renglones cambiados y el ticket impreso.
 - El comprador que llega, la entrada de diálogo mostrada, el diálogo cerrado y la atención
   despachada.
 
@@ -232,6 +301,8 @@ ENTONCES lo vendido es 0.
 
 - [`store-stock`](../store-stock/store-stock.md) (consume y alimenta): los vendibles y el cobro;
   y lo vendido de cada producto, contra lo que se compara la planilla de registrar.
+- [`player-actions`](../player-actions/player-actions.md) (consume y alimenta): lo sostenido
+  llega al lector; imprimir produce un papel levantable que se retira en otra jornada.
 - [`shift-cycle`](../shift-cycle/shift-cycle.md) (alimenta): avisa cuándo la obligatoria quedó
   cumplida.
 

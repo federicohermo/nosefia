@@ -1,7 +1,7 @@
 ---
 schema_version: 1
 capability_id: CAP-PLY
-status: ratified
+status: draft
 owner: por definir
 provenance: GDD «Controles»; ficha «8. Tarea: Reposición»; migración de los specs 003, 004, 006, 014, 034, 043
 ---
@@ -59,7 +59,7 @@ sesenta veces por segundo.
 
 ### BR-PLY-006 — Suspender es una sola llamada
 
-CUANDO otra cosa toma el control —la ventanilla, la computadora, una nota pegada, el cierre—, el sistema DEBE
+CUANDO otra cosa toma el control —la ventanilla, la computadora, una nota pegada, el programa de tickets, el cierre—, el sistema DEBE
 apagar **juntos** la caminata, la mirada y el foco, y DEBE soltar lo enfocado. Con interruptores
 sueltos, cada pantalla tiene que acordarse de todos.
 
@@ -95,7 +95,7 @@ Abierta, la hoja queda a **un cuarto de vuelta** y deja pasar.
 CUANDO se usa lo que se lleva sobre algo, el sistema DEBE contestar el efecto declarado para ese
 par, y **ningún efecto** para cualquier otro par o con las manos vacías.
 
-SI la mira enfoca una puerta, la computadora o la ventanilla, ENTONCES usar DEBE abrir o
+SI la mira enfoca una puerta, la computadora, la ventanilla o la caja registradora, ENTONCES usar DEBE abrir o
 alternar eso antes que usar lo que se lleva: la herramienta NO DEBE tener efecto y lo que se
 lleva DEBE permanecer en la mano (BR-PLY-026).
 
@@ -210,7 +210,7 @@ CUANDO se lo suelta, queda derecho sobre el apoyo (BR-PLY-018).
 
 ### BR-PLY-026 — El clic derecho abre lo fijo y conserva la mano
 
-CUANDO se usa —clic derecho— una puerta, la computadora o la ventanilla, el sistema DEBE
+CUANDO se usa —clic derecho— una puerta, la computadora, la ventanilla o la caja registradora, el sistema DEBE
 abrirla o alternarla con las manos vacías y con cualquier cosa en la mano: una unidad, una
 caja, la mopa, el balde, un jabón o una bolsa. Lo que se lleva DEBE seguir en la mano. El uso
 de lo fijo NO DEBE pedir el uso de la herramienta ni la reposición.
@@ -242,7 +242,7 @@ recalcular la vista hasta la próxima apertura.
 
 ### BR-PLY-028 — Suspendido, el izquierdo no agarra ni suelta
 
-MIENTRAS el control está suspendido por la computadora, la ventanilla o una nota pegada, el gesto de agarrar
+MIENTRAS el control está suspendido por la computadora, la ventanilla, una nota pegada o el programa de tickets, el gesto de agarrar
 NO DEBE agarrar lo enfocado ni soltar lo que se lleva. Examinar DEBE conservar su propio
 ruteo del gesto. Al salir, lo que se llevaba DEBE seguir en la mano.
 
@@ -267,6 +267,35 @@ La nota de tareas DEBE enumerar sólo las obligatorias que declara la jornada, e
 atención al cliente, registro de productos vendidos, limpieza, reposición y sacar la basura.
 Cada tipo declarado DEBE tener nombre. Una lista vacía DEBE conservar el título sin agregar
 renglones. La nota de ordenado DEBE presentar las tres viñetas de su criterio, sin reescribirlas.
+
+### BR-PLY-031 — El programa abre sin soltar la mano
+
+CUANDO se usa la caja registradora con clic derecho, el sistema DEBE abrir su programa y
+suspender el control, conservando lo que se lleva y su lugar en la mano. Otro clic derecho
+DEBE cerrar y reanudar. Una pantalla o examen abiertos NO DEBEN permitir abrir el programa.
+Leerlo NO DEBE detener el turno. La pausa DEBE dibujarse por encima y, al reanudar, DEBE
+continuar abierto y suspendido. El cierre del turno DEBE cerrarlo antes de mostrar su placa.
+
+### BR-PLY-032 — El lector usa la unidad sostenida
+
+CUANDO se usa el lector con clic derecho y algo en la mano, el sistema DEBE pedir su lectura
+sin agarrarlo, soltarlo ni usarlo como herramienta. Con la mano vacía NO DEBE pedir lectura
+ni avisar rechazo. Los rechazos y sus motivos los decide
+[`counter-service`](../counter-service/counter-service.md).
+
+### BR-PLY-033 — El ticket es un papel que se lleva
+
+CUANDO se imprime, el sistema DEBE dejar el papel parado y quieto en la ranura, de tamaño
+físico 0,06 × 0,10 × 0,005 metros, sin superponerse con sólidos. SI el anterior todavía ocupa
+la ranura, ENTONCES DEBE soltarlo y dejarlo caer. Agarrarlo DEBE desocupar la ranura, de modo
+que imprimir después NO DEBE soltar el papel de la mano. El ticket DEBE poder agarrarse,
+soltarse y examinarse como otro levantable, llamarse «Ticket» y sonar como papel.
+
+La caja, el lector y el papel DEBEN poder enfocarse desde un piso transitable, con el cuerpo
+del jugador libre y dentro del alcance. El lector DEBE apoyar sobre el mostrador. El origen
+de rescate del papel DEBE ser su pose real al imprimirse, conservando su tamaño pese a la
+escala de la caja. La apertura de otra jornada DEBE retirar todos los tickets después de
+terminar el examen y vaciar las manos.
 
 ## Criterios de aceptación
 
@@ -707,6 +736,48 @@ hoja desde un lugar transitable al alcance. Todos los papeles del corcho siguen 
 dos se leen y los otros tres permanecen decorativos. La forma, posición e imagen de las
 hojas no cambian al agregar lectura.
 
+### AC-PLY-072 — La caja abre con cada mano y la conserva *(verifica BR-PLY-031, BR-PLY-026, BR-PLY-006, BR-PLY-028)*
+
+DADO la caja cerrada y, por turno, manos vacías, unidad, caja, mopa, balde, jabón, bolsa y
+ticket, CUANDO se hace clic derecho ENTONCES abre el programa y suspende el control sin
+cambiar lo sostenido ni su padre o pose. CUANDO se hace otro derecho ENTONCES cierra y la
+mano sigue igual. El izquierdo y E con mano vacía no abren; abierto, no agarran ni examinan.
+DADO otra pantalla o examen abiertos ENTONCES no abre el programa encima.
+
+### AC-PLY-073 — El lector lee sólo el derecho y conserva la mano *(verifica BR-PLY-032, BR-PLY-012)*
+
+DADO una unidad sostenida y el programa cerrado, CUANDO se usa el lector ENTONCES se anota
+su producto y sigue en la mano; al abrir el programa aparece. DADO cada objeto que no es
+unidad ENTONCES se avisa su rechazo sin cambiar la mano. DADO manos vacías ENTONCES no se
+pide lectura ni aviso. DADO clic izquierdo o E con mano vacía ENTONCES no se lee ni se abre.
+
+### AC-PLY-074 — Reloj, pausa y cierre del programa *(verifica BR-PLY-031)*
+
+DADO el programa abierto, CUANDO pasan cuadros ENTONCES el tiempo disminuye; al pausar,
+la pausa visible tiene una capa superior al programa. Al reanudar sigue abierto y el control
+suspendido. Al terminar el turno queda sólo la placa de cierre y el control suspendido.
+
+### AC-PLY-075 — El papel se lleva y examina *(verifica BR-PLY-033)*
+
+DADO un ticket impreso enfocado, CUANDO se agarra ENTONCES pasa a la mano; al examinar dice
+«Ticket», sin perder sus productos. CUANDO se termina el examen y se suelta ENTONCES la mano
+queda vacía y el mismo papel vuelve al mundo. Su sonoridad es papel.
+
+### AC-PLY-076 — Ranura real y segunda impresión *(verifica BR-PLY-033, BR-PLY-004)*
+
+DADO la caja con su escala artística, CUANDO se imprime ENTONCES el papel tiene tamaño
+0,06 × 0,10 × 0,005 metros con tolerancia de 0,00001 metros, pose de origen idéntica a la
+actual y volumen sin superposición. Permanece quieto tras varios pasos de física. Caja,
+lector y papel tienen foco y contorno desde piso transitable y cápsula libre; la base del
+lector coincide con la tapa de su apoyo. CUANDO se imprime otra vez ENTONCES el primero cae
+y el segundo queda en la ranura. DADO el primero en la mano ENTONCES otra impresión conserva
+ese papel congelado en su lugar en la mano.
+
+### AC-PLY-077 — La jornada limpia incluso el papel examinado *(verifica BR-PLY-033)*
+
+DADO un ticket examinado en la mano y otro suelto, CUANDO abre la jornada siguiente ENTONCES
+termina el examen, las manos quedan vacías y ambos papeles dejan de existir.
+
 ## No objetivos
 
 - Esta capacidad NO decide qué esconde un objeto: eso es de
@@ -733,6 +804,8 @@ hojas no cambian al agregar lectura.
 
 ## Dependencias
 
+- [`counter-service`](../counter-service/counter-service.md) (consume y alimenta): el lector
+  recibe lo sostenido y contesta lectura o rechazo; imprimir entrega un papel levantable.
 - [`shift-cycle`](../shift-cycle/shift-cycle.md) (consume): las obligatorias declaradas que
   enumera la nota de tareas.
 
