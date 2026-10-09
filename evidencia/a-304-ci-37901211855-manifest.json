@@ -1,0 +1,15 @@
+{
+  "conclusion": "success",
+  "headSha": "41f30b0040aa843f45a89c7cee02fbfa08ad8929",
+  "status": "completed",
+  "url": "https://github.com/federicohermo/nosefia/actions/runs/37901211855",
+  "segundos": "696.4",
+  "xml": "C:\\Users\\fede_\\orca\\workspaces\\nosefia\\darter\\.claude\\scratch\\batch-64-309\\a-304-ci-37901211855\\report_1\\results.xml",
+  "sha256": "c18e93aec07946b6a40ee7b994f298e8a9b368e41804a853dc652666ca6e1d0d",
+  "suites": 204,
+  "casos": 1610,
+  "failures": 0,
+  "errors": 0,
+  "skipped": 0,
+  "flaky": 0
+}
