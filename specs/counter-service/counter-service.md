@@ -1,7 +1,7 @@
 ---
 schema_version: 1
 capability_id: CAP-CTR
-status: ratified
+status: draft
 owner: por definir
 provenance: GDD «Atención por ventanilla»; migración de los specs 013, 035
 ---
@@ -109,13 +109,13 @@ rechazado no suman nada, y un producto que nadie compró contesta 0.
 
 ### BR-CTR-016 — Tres renglones en orden
 
-CUANDO se lee una unidad de producto válida, el sistema DEBE anotar su producto en el primer
+MIENTRAS el programa es automático, CUANDO se lee una unidad de producto válida, el sistema DEBE anotar su producto en el primer
 renglón vacío de los 3 disponibles, esté abierto o cerrado el programa. DEBE admitir repetir
 el producto y DEBE avisar una lectura correcta sólo cuando se anotó.
 
 ### BR-CTR-017 — Los rechazos se distinguen y no escriben
 
-SI lo leído no es una unidad de producto válida, ENTONCES el sistema DEBE rechazar por tipo
+MIENTRAS el programa es automático, SI lo leído no es una unidad de producto válida, ENTONCES el sistema DEBE rechazar por tipo
 antes de comprobar si está lleno. SI ya están llenos los 3 renglones y la unidad es válida,
 ENTONCES DEBE rechazar por lleno. Ambos rechazos DEBEN avisarse, sin cambiar los renglones.
 
@@ -139,6 +139,28 @@ Consultar los renglones NO DEBE permitir cambiar el programa ni el ticket.
 
 CUANDO abre una jornada, el sistema DEBE iniciar el programa vacío y DEBE retirar los tickets
 de la noche anterior, estén en la mano, en la ranura o sueltos.
+
+### BR-CTR-022 — Desde la tercera noche se escribe a mano
+
+DESDE la jornada 3 y hasta el fin de la partida, el programa DEBE ser manual. Antes DEBE ser
+automático. El modo DEBE salir del número de jornada: retomar una partida en la 4 no recupera
+el lector, y una partida nueva vuelve al automático.
+
+### BR-CTR-023 — Cada elección conserva su renglón
+
+MIENTRAS el programa es manual, cada uno de los 3 renglones DEBE permitir elegir vacío o
+cualquier producto del catálogo, incluidos productos repetidos. Elegir vacío DEBE vaciar
+sólo ese renglón. La pantalla DEBE conservar cada posición al repintar, abrir o imprimir,
+aunque los anteriores estén vacíos; el papel DEBE llevar sólo los llenos en su orden.
+SI el programa es automático o el renglón está fuera de los 3, ENTONCES elegir NO DEBE
+cambiar nada. Los menús DEBEN ofrecer primero vacío y después el catálogo en su orden.
+
+### BR-CTR-024 — El hueco no lee ni avisa
+
+MIENTRAS el programa es manual, el lector NO DEBE estar: su lugar DEBE quedar ocupado por
+un hueco fijo, no levantable. Usarlo NO DEBE cambiar renglones ni producir avisos o sonidos,
+con manos vacías o con cualquier objeto, esté vacío o lleno el programa. Este silencio
+DEBE preceder a los rechazos por tipo o por lleno del modo automático.
 
 ## Criterios de aceptación
 
@@ -247,13 +269,13 @@ ENTONCES lo vendido es 0.
 
 ### AC-CTR-021 — Duplicados y cuarto intento *(verifica BR-CTR-016, BR-CTR-017)*
 
-DADO el programa vacío, CUANDO se lee una unidad de Marolini, otra de Marolini y una de
+DADO el programa automático vacío, CUANDO se lee una unidad de Marolini, otra de Marolini y una de
 Coracola ENTONCES los renglones son Marolini, Marolini y Coracola, en ese orden, y se avisan
 3 lecturas. CUANDO se lee una cuarta unidad válida ENTONCES se rechaza por lleno y nada cambia.
 
 ### AC-CTR-022 — El tipo se comprueba primero *(verifica BR-CTR-017)*
 
-DADO un renglón lleno, CUANDO se lee una caja, mopa, balde, jabón, bolsa o ticket ENTONCES se
+DADO un programa automático con un renglón lleno, CUANDO se lee una caja, mopa, balde, jabón, bolsa o ticket ENTONCES se
 rechaza por no ser un producto y nada cambia. DADO los 3 llenos, ENTONCES ese rechazo sigue
 siendo por tipo. DADO ningún dato o una unidad sin producto ENTONCES tampoco se anota.
 
@@ -274,6 +296,44 @@ ticket ni aviso de impresión, y los renglones siguen vacíos.
 DADO un ticket en la mano, otro suelto y el programa con un producto, CUANDO abre otra jornada
 ENTONCES el programa está vacío, las manos están vacías y ninguno de esos papeles existe.
 
+### AC-CTR-026 — El corte es la jornada tres *(verifica BR-CTR-022)*
+
+DADO jornadas 1, 2, 3, 4 y 5, CUANDO abre cada una ENTONCES las 1 y 2 son automáticas y
+las 3, 4 y 5 manuales. DADO una partida retomada en la 4 ENTONCES abre manual; CUANDO
+se abre una partida nueva ENTONCES vuelve al automático. Abrir la 3 tras escribir en la 2
+deja los 3 renglones vacíos.
+
+### AC-CTR-027 — Elegir y vaciar conserva los otros *(verifica BR-CTR-023)*
+
+DADO el modo manual, CUANDO se elige cada producto del catálogo en cada renglón ENTONCES
+ese renglón conserva el producto. DADO Marolini en los 3 CUANDO se vacía el segundo ENTONCES
+el primero y el tercero siguen en Marolini. DADO un índice -1 o 3 ENTONCES elegir se rechaza
+y consultar devuelve vacío. DADO el modo automático ENTONCES ninguna elección lo modifica.
+
+### AC-CTR-028 — Los huecos de la pantalla no se compactan *(verifica BR-CTR-023, BR-CTR-020)*
+
+DADO Marolini sólo en el segundo o sólo en el tercero, CUANDO se repinta, imprime, cierra
+y abre el programa ENTONCES la pantalla conserva ese renglón y el papel lleva sólo Marolini.
+DADO el primero vacío, Marolini en el segundo y Coracola en el tercero ENTONCES imprimir
+conserva esas posiciones y el papel lleva Marolini y Coracola, en ese orden. Borrar vacía
+los 3 sin cambiar el papel, y los 3 vacíos no imprimen.
+
+### AC-CTR-029 — Usar el hueco no se confunde con rechazar *(verifica BR-CTR-024)*
+
+DADO una jornada manual, con el programa vacío o lleno, CUANDO se usa el hueco con unidad,
+caja o manos vacías ENTONCES no se escribe ni se publica lectura, rechazo o sonido, y la
+mano se conserva. El cuerpo mantiene alcance, colisión y foco real; su malla queda visible
+y representa el hueco. DADO una nueva jornada automática ENTONCES vuelve la malla del lector
+y una unidad vuelve a anotarse.
+
+### AC-CTR-030 — Los menús conservan la selección durante la pausa *(verifica BR-CTR-023)*
+
+DADO el programa manual, CUANDO se abren sus menús ENTONCES cada uno ofrece vacío primero
+y el catálogo ordenado, y muestra la selección del mismo renglón; repintar no publica otra
+elección ni sonidos. DADO una lista desplegada CUANDO se pulsa derecho ENTONCES se cierra
+el programa conservando la mano. CUANDO se pulsa Esc ENTONCES la lista se oculta y se abre
+la pausa vigente; reanudar conserva selecciones, mano y programa abierto, con control suspendido.
+
 ## No objetivos
 
 - Esta capacidad NO decide cuántas unidades hay ni dónde están: se lo pregunta a
@@ -284,7 +344,7 @@ ENTONCES el programa está vacío, las manos están vacías y ninguno de esos pa
 ## Contratos
 
 - **Entrada:** el padrón de la noche, los vendibles de cada producto, el objeto leído y los
-  pedidos de borrar o imprimir.
+  pedidos de borrar o imprimir, el número de jornada y las elecciones por renglón.
 - **Salida:** quién está en la ventanilla, el pedido, el total, la diferencia, el aviso de
   faltantes, cuántos van despachados, el desvío de la noche y lo vendido de cada producto.
 - **Falla:** un pedido que supera sus vendibles se rechaza entero; una atención despachada
@@ -292,7 +352,8 @@ ENTONCES el programa está vacío, las manos están vacías y ninguno de esos pa
 
 ## Señales
 
-- La lectura correcta o rechazada con su motivo, los renglones cambiados y el ticket impreso.
+- El modo con el que arranca el programa, la lectura correcta o rechazada con su motivo,
+  los renglones cambiados y el ticket impreso.
 - El comprador que llega, la entrada de diálogo mostrada, el diálogo cerrado y la atención
   despachada.
 
@@ -302,8 +363,8 @@ ENTONCES el programa está vacío, las manos están vacías y ninguno de esos pa
   y lo vendido de cada producto, contra lo que se compara la planilla de registrar.
 - [`player-actions`](../player-actions/player-actions.md) (consume y alimenta): lo sostenido
   llega al lector; imprimir produce un papel levantable que se retira en otra jornada.
-- [`shift-cycle`](../shift-cycle/shift-cycle.md) (alimenta): avisa cuándo la obligatoria quedó
-  cumplida.
+- [`shift-cycle`](../shift-cycle/shift-cycle.md) (consume y alimenta): el número de jornada
+  decide el modo del programa; se avisa cuándo la obligatoria quedó cumplida.
 
 ## Preguntas abiertas
 
