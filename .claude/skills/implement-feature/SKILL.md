@@ -254,6 +254,10 @@ se corrige el código.
   fixtures de notificaciones, sonido y caja que piden atender.** En #339 seguían esperando
   un comprador inmediato. La primera jornada debe ejercerse avanzando su reloj; las pruebas
   del recorrido anterior deben declarar una jornada que lo conserve.
+- **Si completar una tarea pasa a exigir ventas, revisá los fixtures de cierre que marcan
+  tareas a mano.** En #339, los casos de descarte y tickets fingían una noche impecable sin
+  vender. Deben aislar el reparto anterior o realizar las compras; no debilitar la regla nueva
+  ni cambiar los apercibimientos esperados para absorber una tarea que quedó pendiente.
 - **Lo que aparece implementando se hace, no se anota.** Un issue incompleto no se cierra abriendo
   otro issue: se completa.
 - **Un reparto nuevo exige revisar los supuestos de los tests que leen el modelo.** Buscá
