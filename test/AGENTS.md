@@ -117,7 +117,7 @@ de la salida cruda, contra la cantidad de `*_test.gd`. `verificar.py` no lo impr
 
 **También se lee la salida cruda cuando el XML da cero errores.** Un callback de señal o el
 desmontaje puede fallar fuera del contador del caso. El fixture usa el tipo de la señal y afirma
-que su receptor se ejecutó: la ausencia de una reacción no prueba nada si la entrega abortó.
+que su receptor se ejecutó. La ausencia de una reacción no prueba nada si la entrega abortó.
 Los errores nuevos y las fugas se corrigen; se distinguen los diagnósticos esperados de
 `assert_error` y del debugger remoto deliberadamente inaccesible.
 
