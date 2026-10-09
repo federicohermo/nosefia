@@ -40,9 +40,12 @@ var _abierta := false
 var _recibidos: Dictionary[Comprador, Array] = {}
 var _imagen_de: Atencion = null
 var _retiradas: Array[CompradorEnRetirada] = []
+var _entrada: Tween
+var _posicion_de_espera: Vector3
 
 
 func _ready() -> void:
+	_posicion_de_espera = comprador_visible.position
 	reloj.turno_cerrado.connect(_al_cerrar_el_turno)
 	panel.cobro_pedido.connect(atenciones.pedir_cobrar)
 	panel.despacho_pedido.connect(atenciones.pedir_despachar_sin_vender)
@@ -57,6 +60,8 @@ func _ready() -> void:
 
 
 func _al_preparar() -> void:
+	_detener_entrada()
+	comprador_visible.position = _posicion_de_espera
 	_limpiar_retiradas()
 	_imagen_de = null
 	for comprador: Comprador in _recibidos:
@@ -125,6 +130,8 @@ func _mostrar_personaje(atendida: Atencion) -> void:
 		if atendida != null and atendida == _imagen_de and comprador_visible.visible:
 			_conservar_imagen()
 		_imagen_de = null
+		_detener_entrada()
+		comprador_visible.position = _posicion_de_espera
 		comprador_visible.hide()
 		comprador_visible.stop()
 		return
@@ -134,15 +141,39 @@ func _mostrar_personaje(atendida: Atencion) -> void:
 		comprador_visible.set_frame_and_progress(0, 0.0)
 	comprador_visible.show()
 	comprador_visible.play(&"idle")
+	if _imagen_de != atendida:
+		_iniciar_entrada()
 	_imagen_de = atendida
 
 
+func _iniciar_entrada() -> void:
+	_detener_entrada()
+	var recorrido := _distancia_hasta_la_pared()
+	comprador_visible.position = _posicion_de_espera - comprador_visible.basis.x * recorrido
+	_entrada = create_tween()
+	_entrada.tween_property(comprador_visible, "position", _posicion_de_espera, recorrido)
+
+
+func _detener_entrada() -> void:
+	if _entrada != null:
+		_entrada.kill()
+		_entrada = null
+
+
+func _distancia_hasta_la_pared() -> float:
+	var textura := comprador_visible.sprite_frames.get_frame_texture(&"idle", 0)
+	return (
+		antepecho.get_aabb().size.x / 2.0 + textura.get_width() * comprador_visible.pixel_size / 2.0
+	)
+
+
 func _conservar_imagen() -> void:
+	_detener_entrada()
 	var imagen := comprador_visible.duplicate(0) as AnimatedSprite3D
 	imagen.set_script(CompradorEnRetirada)
 	var retirada := imagen as CompradorEnRetirada
-	var textura := imagen.sprite_frames.get_frame_texture(&"idle", 0)
-	var limite := antepecho.get_aabb().size.x / 2.0 + textura.get_width() * imagen.pixel_size / 2.0
+	var recorrido := (imagen.position - _posicion_de_espera).dot(imagen.basis.x)
+	var limite := _distancia_hasta_la_pared() - recorrido
 	retirada.preparar(limite)
 	add_child(retirada)
 	retirada.set_frame_and_progress(comprador_visible.frame, comprador_visible.frame_progress)
@@ -226,6 +257,8 @@ func _al_despacharse(_despachados: int) -> void:
 
 
 func _al_cerrar_el_turno(_cumplidas: int) -> void:
+	_detener_entrada()
+	comprador_visible.position = _posicion_de_espera
 	_limpiar_retiradas()
 	_imagen_de = null
 	comprador_visible.hide()

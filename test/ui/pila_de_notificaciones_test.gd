@@ -33,7 +33,7 @@ func test_la_salida_tiene_el_texto_y_simbolo_de_figma_y_respeta_pausa() -> void:
 func _textos(pila: PilaDeNotificaciones) -> Array[String]:
 	var textos: Array[String] = []
 	for label: Label in pila.find_children("*", "Label", true, false):
-		textos.append(label.text.replace("\n", " "))
+		textos.append(label.text)
 	return textos
 
 
@@ -150,3 +150,42 @@ func test_el_clic_sobre_el_cartel_llega_al_boton_de_notas() -> void:  # AC-NTF-0
 			viewport.push_input(clic)
 			await get_tree().process_frame
 	assert_array(pedidos).is_equal([Computadora.App.NOTAS, Computadora.App.NOTAS])
+
+
+func test_todos_los_avisos_usan_una_linea_y_el_ancho_de_su_contenido() -> void:  # AC-NTF-013
+	var viewport: SubViewport = auto_free(SubViewport.new())
+	viewport.size = Vector2i(1920, 1080)
+	add_child(viewport)
+	var pila: PilaDeNotificaciones = load(ESCENA).instantiate()
+	viewport.add_child(pila)
+	pila.set_process(false)
+	pila.avisar_llegada(Comprador.new("Comprador", Venta.new(), 0))
+	pila.avisar_lectura_rechazada(GeneradorDeTickets.Resultado.LLENO)
+	pila.avisar_salida(Comprador.new("Otro", Venta.new(), 0))
+	for tamano: Vector2i in [Vector2i(1920, 1080), Vector2i(1280, 720)]:
+		viewport.size = tamano
+		await get_tree().process_frame
+		await get_tree().process_frame
+		var carteles := pila.get_node("Marco/Pila").get_children()
+		assert_int(carteles.size()).is_equal(3)
+		var derecha: float = carteles[0].get_global_rect().end.x
+		for cartel: PanelContainer in carteles:
+			var fila: HBoxContainer = cartel.get_child(0)
+			var simbolo: TextureRect = fila.get_child(0)
+			var texto: Label = fila.get_child(1)
+			assert_int(texto.get_line_count()).is_equal(1)
+			assert_int(texto.get_theme_font_size("font_size")).is_equal(
+				texto.get_theme_default_font_size()
+			)
+			assert_float(cartel.size.x).is_equal_approx(
+				fila.get_combined_minimum_size().x + pila._estilo.get_minimum_size().x, 1.0
+			)
+			assert_float(cartel.get_global_rect().end.x).is_equal_approx(derecha, 0.1)
+			(
+				assert_bool(Rect2(Vector2.ZERO, Vector2(tamano)).encloses(cartel.get_global_rect()))
+				. is_true()
+			)
+			assert_float(simbolo.get_global_rect().get_center().y).is_equal_approx(
+				texto.get_global_rect().get_center().y, 1.0
+			)
+		assert_float((carteles[0] as Control).size.x).is_greater((carteles[2] as Control).size.x)

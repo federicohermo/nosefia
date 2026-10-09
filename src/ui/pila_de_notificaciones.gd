@@ -2,9 +2,9 @@ class_name PilaDeNotificaciones
 extends CanvasLayer
 
 const TEXTOS := {
-	Notificaciones.Tipo.CLIENTE: "¡HAY UN\nCLIENTE!",
-	Notificaciones.Tipo.LECTURA_FALLIDA: "NO SE PUDO\nLEER",
-	Notificaciones.Tipo.CLIENTE_CANSADO: "EL CLIENTE SE CANSÓ\nDE ESPERAR.",
+	Notificaciones.Tipo.CLIENTE: "¡HAY UN CLIENTE!",
+	Notificaciones.Tipo.LECTURA_FALLIDA: "NO SE PUDO LEER",
+	Notificaciones.Tipo.CLIENTE_CANSADO: "EL CLIENTE SE CANSÓ DE ESPERAR.",
 }
 const SIMBOLOS := {
 	Notificaciones.Tipo.CLIENTE: preload("res://assets/ui/manada/notificacion_cliente.svg"),
@@ -71,7 +71,7 @@ func _pintar() -> void:
 func _cartel(tipo: Notificaciones.Tipo) -> PanelContainer:
 	var cartel := PanelContainer.new()
 	cartel.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	cartel.custom_minimum_size = Vector2(572.4, 96)
+	cartel.size_flags_horizontal = Control.SIZE_SHRINK_END
 	cartel.add_theme_stylebox_override("panel", _estilo)
 	var fila := HBoxContainer.new()
 	fila.mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -89,7 +89,6 @@ func _cartel(tipo: Notificaciones.Tipo) -> PanelContainer:
 	texto.text = TEXTOS[tipo]
 	texto.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	texto.add_theme_color_override("font_color", Color("04060c"))
-	texto.add_theme_font_size_override("font_size", 27)
 	fila.add_child(texto)
 	return cartel
 

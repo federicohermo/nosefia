@@ -15,7 +15,7 @@ func after_test() -> void:
 		await get_tree().process_frame
 
 
-func _abrir() -> Node3D:
+func _abrir(recibir: bool = true) -> Node3D:
 	_almacen = ALMACEN.instantiate()
 	_almacen.set("_partida", Partida.nueva())
 	add_child(_almacen)
@@ -27,8 +27,9 @@ func _abrir() -> Node3D:
 	_camara.global_position = puesto.global_position + Vector3(0.0, 0.7, -2.0)
 	_camara.look_at(puesto.get_node("Comprador").global_position)
 	_camara.make_current()
-	_almacen.get("_reloj").avanzar(120.0)
-	assert_array(_visibles(puesto)).has_size(1)
+	if recibir:
+		_almacen.get("_reloj").avanzar(120.0)
+		assert_array(_visibles(puesto)).has_size(1)
 	return puesto
 
 
@@ -156,6 +157,7 @@ func test_reiniciar_retira_las_imagenes_de_ventas_y_de_cansancio() -> void:  # A
 	assert_array(_visibles(puesto)).has_size(1)
 	_almacen.call("_al_abrir_la_jornada", 1)
 	assert_array(_visibles(puesto)).is_empty()
+
 	var obligatorias: Array[Tarea] = (_almacen.get("_partida") as Partida).obligatorias()
 	(_almacen.get("_reloj") as RelojDelTurno).arrancar(
 		Apertura.turno_de_la_jornada(obligatorias), obligatorias
@@ -165,3 +167,47 @@ func test_reiniciar_retira_las_imagenes_de_ventas_y_de_cansancio() -> void:  # A
 	assert_array(_visibles(puesto)).has_size(1)
 	(_almacen.get("_reloj") as RelojDelTurno).turno_cerrado.emit(0)
 	assert_array(_visibles(puesto)).is_empty()
+
+
+func test_ambos_entran_por_la_izquierda_y_la_pausa_conserva_su_entrada() -> void:  # AC-CTR-045
+	var puesto := _abrir(false)
+	var sprite: AnimatedSprite3D = puesto.get_node("Comprador")
+	var espera := sprite.global_transform
+	var reloj: RelojDelTurno = _almacen.get("_reloj")
+	for intervalo: float in [120.0, 240.0]:
+		reloj.avanzar(intervalo)
+		assert_bool(sprite.visible).is_true()
+		var comienzo := sprite.global_position
+		assert_float((comienzo - espera.origin).dot(_camara.global_basis.x)).is_less(0.0)
+		await get_tree().create_timer(0.1).timeout
+		assert_float((sprite.global_position - comienzo).dot(_camara.global_basis.x)).is_greater(
+			0.0
+		)
+		assert_float(sprite.global_position.y).is_equal(espera.origin.y)
+		assert_float(sprite.global_position.z).is_equal_approx(espera.origin.z, 0.00001)
+		assert_that(sprite.global_basis).is_equal(espera.basis)
+		var antes := sprite.global_transform
+		puesto.call("abrir")
+		puesto.call("cerrar")
+		_almacen.get("_atenciones").presentacion_cambiada.emit()
+		assert_that(sprite.global_transform).is_equal(antes)
+		get_tree().paused = true
+		var cuadro := sprite.frame
+		await get_tree().create_timer(0.1, true).timeout
+		assert_that(sprite.global_transform).is_equal(antes)
+		assert_int(sprite.frame).is_equal(cuadro)
+		get_tree().paused = false
+		await get_tree().create_timer(1.5).timeout
+		assert_bool(sprite.global_position.is_equal_approx(espera.origin)).is_true()
+		reloj.avanzar(120.0)
+	for cerrar_turno: bool in [false, true]:
+		assert_bool((_almacen.get("_ciclo") as CicloDeJornadas).abrir_la_jornada()).is_true()
+		reloj.avanzar(120.0)
+		assert_bool(sprite.visible).is_true()
+		if cerrar_turno:
+			reloj.turno_cerrado.emit(0)
+		else:
+			_almacen.call("_al_abrir_la_jornada", 1)
+		await get_tree().create_timer(0.1).timeout
+		assert_array(_visibles(puesto)).is_empty()
+		assert_bool(sprite.global_position.is_equal_approx(espera.origin)).is_true()
