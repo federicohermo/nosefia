@@ -75,8 +75,16 @@ if reports and full_finished:
     copy(latest, "registros/full1-results.xml")
     metadata["xml_full_origen"] = latest.relative_to(repo).as_posix()
     (out / "metadatos-finales.json").write_text(json.dumps(metadata, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
-manifest = [{"ruta": p.relative_to(out).as_posix(), "bytes": p.stat().st_size,
-             "sha256": hashlib.sha256(p.read_bytes()).hexdigest()}
-            for p in sorted(out.rglob("*")) if p.is_file() and p.name != "manifest-sha256.json"]
+manifest = []
+for p in sorted(out.rglob("*")):
+    if not p.is_file() or p.name == "manifest-sha256.json":
+        continue
+    original = p.read_bytes()
+    blob = git("hash-object", "-w", str(p))
+    published = subprocess.check_output(["git", "cat-file", "blob", blob], cwd=repo)
+    manifest.append({"ruta": p.relative_to(out).as_posix(), "bytes": len(published),
+                     "sha256": hashlib.sha256(published).hexdigest(),
+                     "bytes_copia_original": len(original), "sha256_copia_original": hashlib.sha256(original).hexdigest(),
+                     "nota": "bytes/sha256 del blob publicado; Git normaliza CRLF a LF en archivos de texto"})
 (out / "manifest-sha256.json").write_text(json.dumps(manifest, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
 print(json.dumps({"head": head, "files": len(manifest), "assets": assets}, ensure_ascii=False))

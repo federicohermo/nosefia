@@ -89,7 +89,11 @@ que sea una copia byte a byte del protocolo defectuoso de la primera nativa.
 
 `focales/xml/` conserva los once reportes focales en orden. `registros/` reúne la salida de
 la cola y FULL1 con RAW completo y XML; el conteo corre inmediatamente después de verificar
-en el mismo proceso FIFO. `manifest-sha256.json` permite comprobar cada archivo publicado.
+en el mismo proceso FIFO. `manifest-sha256.json` permite comprobar cada blob publicado;
+también conserva tamaño/hash de la copia original antes de la normalización CRLF → LF que
+Git aplica a los archivos de texto. La primera publicación tenía hashes de esas copias en
+la columna de blobs; la revisión de los blobs detectó y corrigió esa diferencia de finales
+de línea. Los PNG y SVG conservan sus bytes originales.
 
 ## AC → test → resultado
 
