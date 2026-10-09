@@ -75,6 +75,14 @@ func _ready() -> void:
 	sleeping_state_changed.connect(_al_cambiar_el_reposo)
 
 
+## Suelta la etiqueta al destruir la caja; reparentarla conserva el material y la textura.
+func _notification(que: int) -> void:
+	if que == NOTIFICATION_PREDELETE:
+		var malla := get_node_or_null("Malla") as MeshInstance3D
+		if malla != null:
+			malla.set_surface_override_material(0, null)
+
+
 ## Viste la malla con la etiqueta de su producto: el material de la caja genérica con otra
 ## textura. Así filtra pixelado igual, y en la web usa el mismo shader, que ya está compilado.
 ##
