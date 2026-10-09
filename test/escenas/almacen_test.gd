@@ -690,3 +690,35 @@ func test_el_cableado_de_reponer_llega_entero_hasta_los_huecos() -> void:
 	assert_bool(estante.has_node("Contenido")).is_true()
 	estante.mostrar(1)
 	assert_bool((estante.get_node("Contenido").get_child(0) as Node3D).visible).is_true()
+
+
+func test_el_marco_para_asomarse_coincide_con_los_bordes_del_hueco() -> void:  # AC-PLY-059
+	var almacen := _almacen()
+	var espacio: PhysicsDirectSpaceState3D = await _espacio_de_la_estructura(almacen)
+	var ventanilla: Node3D = almacen.get_node("Estructura/Ventanilla")
+	var borde: Marker3D = ventanilla.get("borde_superior")
+	var antepecho: MeshInstance3D = ventanilla.get("antepecho")
+	var soporte: AABB = (
+		borde.global_transform.affine_inverse() * antepecho.global_transform * antepecho.get_aabb()
+	)
+	var altura := (borde.global_position - ventanilla.global_position).dot(borde.global_basis.y)
+	var marco := Transform3D(
+		borde.global_basis, ventanilla.global_position + borde.global_basis.y * altura / 2
+	)
+	var tamano := Vector2(soporte.size.x, altura)
+	assert_object(borde).is_not_null()
+	assert_float(tamano.x).is_greater(0.0)
+	assert_float(tamano.y).is_greater(0.0)
+	var normal := marco.basis.z.normalized()
+	# Se cruza cada borde desde el centro, sin convertir la posición artística en constante.
+	for lado: Vector2 in [Vector2.LEFT, Vector2.RIGHT, Vector2.UP, Vector2.DOWN]:
+		var extremo := Vector3(lado.x * tamano.x / 2.0, lado.y * tamano.y / 2.0, 0.0)
+		for adentro: bool in [true, false]:
+			var margen := -0.02 if adentro else 0.02
+			var local := extremo + Vector3(lado.x, lado.y, 0.0) * margen
+			var punto := marco * local
+			var consulta := PhysicsRayQueryParameters3D.create(
+				punto + normal * 0.5, punto - normal * 0.5
+			)
+			var golpe := espacio.intersect_ray(consulta)
+			assert_bool(golpe.is_empty()).is_equal(adentro)

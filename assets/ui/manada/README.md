@@ -7,7 +7,6 @@ durante la ejecución.
 | Recurso | Origen | Uso |
 |---|---|---|
 | `fondo.png` | Captura histórica de `almacen.tscn` | Recurso conservado; la computadora actual usa un shader |
-| `fondo_ventanilla.png` | Captura de la ventanilla desde el interior del local | Fondo exclusivo de atención al cliente |
 | `fondo_inicio.png` | Figma, `217:533` («FONDO 4 1»), la estación de servicio de luz cálida | Fondo del menú de inicio |
 | `titulo_inicio.png` | Figma, grupo `112:388` del frame «UI INICIO» (`13:1075`) | Título del menú de inicio |
 | `cabecera.svg` | Figma, `3:911` / `3:814`; `13:1090` / `13:1092` es el mismo trazo | Cabecera de 1712 × 70,3 sobre el lienzo de 1920 × 1080, y las barras del menú de inicio: la de abajo, girada |
@@ -47,16 +46,6 @@ panel central y aviso y acciones de cobro a la derecha. Usa los datos y las señ
 existentes, sin agregar conversaciones, retratos, contactos ni reglas de venta. El pedido y sus
 importes se muestran tal como los entrega `Atencion`; el turno sigue corriendo.
 
-Su fondo se capturó a 1920 × 1080, sin HUD, desde `(5.35, 1.74, 6.174)`, mirando hacia
-`(5.35, 1.74, 7.974)`. Muestra el hueco y el antepecho de la ventanilla desde el lugar del empleado.
-
-`fondo_ventanilla.png` usa compresión de GPU de calidad normal, sin mips ni límite de tamaño.
-Es una imagen opaca; en el export web Compatibility con S3TC se importa como DXT1. Conserva
-los bytes del PNG, su UID, su ruta y sus 1920 × 1080 píxeles. La compresión tiene pérdida: se
-revisó su apariencia con el velo azul oscuro, los textos y los controles de la escena.
-
-DXT1 declara 1.036.800 bytes lógicos para este fondo, frente a los 8.294.400 de RGBA8. Es
-almacenamiento lógico de textura, no una medición de VRAM física: excluye las copias de CPU
-y la memoria interna del driver. El peso del PCK se compara por separado y no es memoria de
-texturas. El fondo y el título del inicio conservan su importación actual; la prueba comprimida
-del fondo de inicio mostró artefactos visibles y no fue la variante aceptada.
+La ventanilla muestra el marco 3D real del local. Al abrir, la cámara encuadra los bordes
+visibles del dintel y del antepecho a sus profundidades reales; al salir recupera su reposo.
+El velo, los textos y los controles siguen delante de esa vista. No carga una imagen del local.

@@ -4,10 +4,9 @@
 ## obligatoria queda cumplida son preguntas del dominio; qué señal va con qué método es lo único
 ## que se decide acá.
 ##
-## **Suspender es clavar la cámara, y alcanza.** El 004 dejó `suspender()` y `reanudar()` en el
-## jugador, y su `ControlDelJugador` deja de girar y de caminar con eso solo. **No se le escribe
-## el `transform`**: el 004 aplica su yaw por cuadro desde el dominio, así que escribirlo desde
-## afuera lo desincroniza y al reanudar la cámara salta al yaw viejo — sin un solo error.
+## El jugador encuadra sólo su cámara por una puerta propia, sin escribir el cuerpo desde acá.
+## El control conserva sus ángulos; al salir la vista recupera su reposo y su orientación efectiva.
+## Dintel y antepecho se leen a su profundidad real; la base enterrada no es visible.
 ##
 ## **El reloj está acá para cerrar el panel cuando la noche termina**, no para pausarlo: si la
 ## ventanilla se quedara abierta encima de la placa de cierre, el jugador vería las dos y no
@@ -26,6 +25,8 @@ const JugadorDelLocal := preload("res://src/escenas/jugador.gd")
 @export var reloj: RelojDelTurno
 @export var atenciones: Ventanilla
 @export var panel: PanelDeLaVentanilla
+@export var borde_superior: Marker3D
+@export var antepecho: MeshInstance3D
 
 ## Si el vidrio está abierto ahora mismo. Es estado de cáscara —qué ventana hay arriba— y no una
 ## regla del juego: a quién hay que atender lo sigue contestando el dominio.
@@ -50,6 +51,15 @@ func accionar() -> void:
 ## Clava al jugador delante del vidrio y pide a quien corresponda.
 func abrir() -> void:
 	_abierta = true
+	var referencia := borde_superior.global_transform
+	var soporte: AABB = (
+		referencia.affine_inverse() * antepecho.global_transform * antepecho.get_aabb()
+	)
+	var tamano := Vector2(soporte.size.x, -soporte.end.y)
+	var profundidad := -soporte.position.z
+	var marco := referencia
+	marco.origin = referencia * Vector3(soporte.get_center().x, -tamano.y / 2.0, -profundidad / 2.0)
+	jugador.asomarse(marco, tamano, profundidad)
 	jugador.suspender()
 	atenciones.pedir_abrir()
 
@@ -60,6 +70,7 @@ func cerrar() -> void:
 		return
 	_abierta = false
 	panel.ocultar()
+	jugador.dejar_de_asomarse()
 	jugador.reanudar()
 
 
