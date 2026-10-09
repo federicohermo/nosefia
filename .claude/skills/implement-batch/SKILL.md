@@ -219,6 +219,11 @@ Cada agente recibe, literal:
   levantado no carga la máquina y queda afuera. En el lote del 2026-10-06 el turno era un cerrojo
   que cada carril reintentaba: una prueba de 30 s esperó 55 minutos, y los carriles pasaron a
   encadenar sus pasos adentro de un solo turno.
+- **El árbol queda congelado desde que se encola hasta recibir el resultado.** Vale también para
+  la espera, la importación y los rojos y verdes cortos: no se edita, formatea ni cambia de rama
+  mientras el motor puede leerlo. Los borradores externos pueden avanzar. En #300 se agregó un
+  caso mientras el loader ya había leído la suite anterior: corrieron 17 casos y el archivo tenía
+  18. Ese caso nuevo no tenía testigo rojo; hubo que repetir contra el árbol congelado.
 - **La carga que no es del lote se mide y se dice, porque no se apaga.** El usuario usa la
   máquina. El 2026-10-06, con Slack y Chrome en el 70 % de la CPU, el nodo `tests` tardó entre
   11 y 43 minutos en vez de 3, y la base sobre `staging` dio dos rojos en `giro_parejo_test.gd`
@@ -236,6 +241,12 @@ Cada agente recibe, literal:
   comando. El 2026-10-06 el padre repartió que un alias de un `PackedArray` copia al escribir.
   En Godot 4 no copia: lo que copia es un `duplicate()` vivo. Dos carriles gastaron una sonda
   cada uno en desmentirlo.
+- **Cargar un recurso no prueba que su script haya parseado.** Una sonda de paquete inicia el
+  motor con `--main-pack`, con su directorio y `--path` en el export, fuera del proyecto fuente.
+  Exige un marcador final y falla ante `SCRIPT ERROR`, `Parse Error` o `ERROR`, aunque el motor
+  salga con 0 y `ResourceLoader.load()` devuelva un recurso. Ejercita las escenas, audio y datos
+  que el juego usa. En #327 la primera sonda anunció 63 cargas mientras había errores de parseo;
+  se invalidó. La sonda corregida cargó 356 recursos del paquete real sin errores.
 - **Bash rechaza `python "$VAR/script.py"`**, con «runs python with a script computed at
   runtime». La ruta del script va literal. Medido el 2026-10-06 en el carril de #321.
 - **Comparar dos exports de un escenario ya tiene herramienta.**

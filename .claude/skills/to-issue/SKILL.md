@@ -55,6 +55,13 @@ y reutilizarlo. El tamaño decorativo de un prototipo no se convierte en contrat
 el lote del 2026-10-08, las tres hojas del baño ya tenían imagen y colisión; el trabajo faltante
 era poder leerlas, y recrearlas como A4 habría reemplazado lo que acababa de hacer el artista.
 
+**Un encuadre se mide contra las mallas visibles y sus profundidades, además de las colisiones.**
+Un rayo libre no prueba que un punto se vea si la malla que lo tapa no tiene collider. Separar
+los bordes del hueco físico de los que la cámara tiene que encuadrar, y cruzar la proyección con
+capturas del modelo vigente antes de fijar sus criterios. En #297 el antepecho ocultaba unos
+120 píxeles inferiores de 1080 aunque los rayos al hueco pasaran; sus bordes y los del dintel
+estaban a distinta profundidad. El encuadre se define con esos bordes, conservando el modelo.
+
 ```bash
 rg -n "<lo que el issue va a tocar>" src/ test/ docs/   # una guía también describe la regla
 gh issue list --state open --limit 50      # si ya hay uno igual, no se abre otro
@@ -92,6 +99,10 @@ Lo que más se rompe:
   `Depende de #N`.
 - **El primer comando de verificación es siempre `python .claude/scripts/verificar.py`.** El
   veredicto sale del código de salida, nunca de un grep.
+- **Un diff de un issue apilado se compara contra su base explícita.** Registrar la rama y la
+  cabeza medidas y usar esa base en los comandos que excluyen rutas ajenas. Comparar contra
+  `staging` también cobra cambios heredados. En #300 esa comparación incluía dominio y UI de
+  #295, aunque #300 no los tocara; se corrigió el comando contra su base `9664069f`.
 - **Un comando que prueba una ausencia se corre hoy, y devuelve todo lo que el criterio saca.**
   Si deja casos afuera, se amplía. Si no se puede, el criterio nombra el test que los cubre. En
   el #140, el `rg` de la verificación no veía los productos de la raíz del modelo.

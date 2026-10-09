@@ -195,6 +195,10 @@ entregable más caro y el único que hace que el hallazgo no vuelva.
 | un método retirado que **sigue llamado por un helper de integración** | `to-issue` — el barrido de lectores incluye `src/`, `test/`, `call()` y `Callable`, no sólo la declaración |
 | un barrido que **confunde una palabra compartida con la regla retirada** | `to-issue` — se acota el patrón al enunciado retirado y se conserva el código ajeno que no cambió de contrato |
 | un contrato que **exporta al editor un dato `RefCounted`** | `to-issue` — una sonda verifica el tipo exportable antes de repartir el contrato |
+| una sonda de paquete **en verde con scripts que no parsearon** | `implement-batch` — cargar un recurso no basta; el paquete real se ejerce fuera de la fuente, con marcador final y sin errores del motor |
+| una corrida que **leyó una versión distinta de la fuente actual** | `implement-batch` — el árbol se congela desde encolar hasta el resultado, incluida la espera y los rojos y verdes cortos |
+| un comando de un issue apilado **que cobra rutas de sus ancestros** | `to-issue` — el diff se compara contra la base explícita medida, no contra `staging` |
+| un hueco libre por rayos **que una malla sin collider tapa en pantalla** | `to-issue` — el encuadre cruza mallas, profundidades, proyección y capturas; los bordes físicos y los visibles se prueban aparte |
 | una dependencia instalada **adentro del worktree** que tira la importación de Godot | `implement-batch` — el preámbulo no dijo que Playwright se resuelve desde el checkout principal |
 
 **Si el problema no entra en ninguna fila, agregá la fila.** Esa tabla es el registro de lo que
