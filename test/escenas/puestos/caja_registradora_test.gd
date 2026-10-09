@@ -4,14 +4,27 @@ const ALMACEN := preload("res://src/escenas/almacen.tscn")
 const UNIDAD := preload("res://src/escenas/objetos/objeto_agarrable.tscn")
 const PAPEL := preload("res://src/escenas/objetos/ticket.tscn")
 
+var _almacenes: Array[Node3D] = []
+
 
 func after_test() -> void:
 	get_tree().paused = false
+	for almacen in _almacenes:
+		var reproductor: ReproductorDeSonidos = almacen.get_node(
+			"Servicios/AudioDelAlmacen/Reproductor"
+		)
+		reproductor.silenciar()
+		almacen.queue_free()
+	_almacenes.clear()
+	for _cuadro in 4:
+		await get_tree().process_frame
 
 
 func _abrir() -> Node3D:
 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
+	_almacenes.append(almacen)
 	add_child(almacen)
+	assert_object(_puesto(almacen).get("agarre")).is_same(almacen.get_node("Jugador").get("agarre"))
 	almacen.get_node("Jugador").set_physics_process(false)
 	for _cuadro in 4:
 		await get_tree().physics_frame
@@ -331,12 +344,13 @@ func _sitios(almacen: Node3D, objetivo: PhysicsBody3D, centro: Vector3) -> Array
 			if golpe.is_empty() or golpe.normal.y < 0.95:
 				continue
 			var apoyo := golpe.collider as StaticBody3D
-			if (
-				apoyo == null
-				or not (
-					apoyo.name == "SueloSolido"
-					or str(apoyo.get_path()).ends_with("/almacen/StaticBody3D")
-				)
+			if apoyo == null:
+				continue
+			var dueno := apoyo.shape_owner_get_owner(apoyo.shape_find_owner(golpe.shape)) as Node
+			if not (
+				apoyo.name == "SueloSolido"
+				or str(apoyo.get_path()).ends_with("/almacen/StaticBody3D")
+				or dueno.name == "VolumenDelPisoDelBano"
 			):
 				continue
 			var posicion: Vector3 = golpe.position + Vector3.UP * 0.02
@@ -423,3 +437,234 @@ func test_caja_y_papel_tienen_foco_y_contorno_y_la_ranura_no_deforma_el_papel() 
 		assert_bool((papel.get_node("Malla") as MeshInstance3D).material_overlay is ShaderMaterial)
 		. is_true()
 	)
+
+
+func _abrir_bano() -> Node3D:
+	var almacen := await _abrir()
+	for numero: int in [1, 2]:
+		var puerta: Node3D = almacen.get_node("Estructura/bano_puerta_%d/CuerpoDeLaHoja" % numero)
+		puerta.call("usar")
+	for _cuadro in 60:
+		await get_tree().physics_frame
+	for numero: int in [1, 2]:
+		var puerta: Node3D = almacen.get_node("Estructura/bano_puerta_%d/CuerpoDeLaHoja" % numero)
+		assert_bool((puerta.call("puerta") as Puerta).abierta()).is_true()
+	return almacen
+
+
+func _nuevo_ticket(almacen: Node3D) -> ObjetoAgarrable:
+	_emitir_papel(almacen)
+	var papel: ObjetoAgarrable = _puesto(almacen).get("_en_ranura")
+	assert_object(papel).is_not_null()
+	return papel
+
+
+func _enfocar_artefacto(almacen: Node3D, nombre: String) -> PhysicsBody3D:
+	var objetivo: PhysicsBody3D = almacen.get_node("Estructura/" + nombre + "/StaticBody3D")
+	var mallas: Array[MeshInstance3D] = []
+	mallas.assign(objetivo.get("mallas"))
+	assert_array(mallas).is_not_empty()
+	if mallas.is_empty():
+		return null
+	assert_bool(mallas[0].is_visible_in_tree()).is_true()
+	var centro := mallas[0].to_global(mallas[0].mesh.get_aabb().get_center())
+	var enfocado := await _enfocar(almacen, objetivo, centro)
+	assert_bool(enfocado).override_failure_message(nombre).is_true()
+	if not enfocado:
+		return null
+	assert_object((almacen.get_node("Jugador") as Node3D).get("_enfocado")).is_same(objetivo)
+	assert_bool(mallas[0].material_overlay is ShaderMaterial).is_true()
+	return objetivo
+
+
+func _derecho_sobre(jugador: Node3D, objetivo: PhysicsBody3D) -> void:
+	assert_object(jugador.get("_enfocado")).is_same(objetivo)
+	var evento := InputEventAction.new()
+	evento.action = ReglasDelJugador.ACCION_USAR
+	evento.pressed = true
+	jugador.call("_unhandled_input", evento)
+
+
+# AC-CTR-031, AC-PLY-078, AC-PLY-014
+func test_cada_inodoro_desecha_una_vez_su_ticket_con_foco_real() -> void:
+	var almacen := await _abrir_bano()
+	var jugador: Node3D = almacen.get_node("Jugador")
+	var agarre: Agarre = almacen.get("_agarre")
+	var avisos: Array[int] = []
+	_caja(almacen).ticket_desechado.connect(func() -> void: avisos.append(1))
+	for nombre: String in ["inodoro", "bano_inodoro_2"]:
+		var papel := _nuevo_ticket(almacen)
+		if papel == null:
+			return
+		assert_bool(agarre.pedir_agarrar(papel.datos, papel)).is_true()
+		var objetivo := await _enfocar_artefacto(almacen, nombre)
+		if objetivo == null:
+			return
+		var antes := avisos.size()
+		_derecho_sobre(jugador, objetivo)
+		assert_object(agarre.manos().sostenido()).is_null()
+		_derecho_sobre(jugador, objetivo)
+		for _cuadro in 3:
+			await get_tree().process_frame
+		assert_bool(is_instance_valid(papel)).is_false()
+		assert_array(_puesto(almacen).get("_tickets")).is_empty()
+		assert_int(avisos.size()).is_equal(antes + 1)
+	assert_int(avisos.size()).is_equal(2)
+
+
+func test_lavatorios_otros_objetos_y_papel_ajeno_no_se_desechan() -> void:  # AC-CTR-032
+	var almacen := await _abrir_bano()
+	var jugador: Node3D = almacen.get_node("Jugador")
+	var agarre: Agarre = almacen.get("_agarre")
+	var avisos: Array[int] = []
+	_caja(almacen).ticket_desechado.connect(func() -> void: avisos.append(1))
+	var papel := _nuevo_ticket(almacen)
+	if papel == null:
+		return
+	assert_bool(agarre.pedir_agarrar(papel.datos, papel)).is_true()
+	for nombre: String in ["vanitory", "bano_lavatorio_2"]:
+		var objetivo := await _enfocar_artefacto(almacen, nombre)
+		if objetivo == null:
+			return
+		_derecho_sobre(jugador, objetivo)
+		assert_object(agarre.manos().sostenido()).is_same(papel.datos)
+		assert_bool(is_instance_valid(papel)).is_true()
+		agarre.entregar()
+		assert_bool(agarre.pedir_agarrar(papel.datos, papel)).is_true()
+	var entregado := agarre.entregar()
+	assert_object(entregado).is_same(papel)
+	var ajeno: ObjetoAgarrable = PAPEL.instantiate()
+	ajeno.datos = papel.datos
+	almacen.add_child(ajeno)
+	var objetos: Array[Node3D] = [
+		null,
+		_unidad(almacen),
+		almacen.get("_cajas_de_productos")[0],
+		almacen.get_node("Objetos/Mopa"),
+		almacen.get_node("Objetos/Balde"),
+		almacen.get_node("Objetos/JabonAmarillo"),
+		almacen.get_node("Objetos/BolsaDeBasura1"),
+		ajeno
+	]
+	for objeto in objetos:
+		var dato: ObjetoDelAlmacen = null if objeto == null else objeto.get("datos")
+		if objeto != null:
+			await (
+				assert_error(
+					func() -> void: assert_bool(agarre.pedir_agarrar(dato, objeto)).is_true()
+				)
+				. is_success()
+			)
+		var objetivo := await _enfocar_artefacto(almacen, "inodoro")
+		if objetivo == null:
+			return
+		_derecho_sobre(jugador, objetivo)
+		if dato == null:
+			assert_object(agarre.manos().sostenido()).is_null()
+		else:
+			assert_object(agarre.manos().sostenido()).is_same(dato)
+		if objeto != null:
+			assert_bool(is_instance_valid(objeto)).is_true()
+			agarre.entregar()
+	assert_array(avisos).is_empty()
+
+
+# AC-CTR-032, AC-PLY-014
+func test_balde_vacia_y_mopa_enjuaga_en_ambos_inodoros_sin_descarte() -> void:
+	var almacen := await _abrir_bano()
+	var jugador: Node3D = almacen.get_node("Jugador")
+	var agarre: Agarre = almacen.get("_agarre")
+	var limpiador: Limpiador = almacen.get("_limpiador")
+	var piso := limpiador.piso()
+	var avisos: Array[int] = []
+	_caja(almacen).ticket_desechado.connect(func() -> void: avisos.append(1))
+	var balde: Node3D = almacen.get_node("Objetos/Balde")
+	var mopa: Node3D = almacen.get_node("Objetos/Mopa")
+	for nombre: String in ["inodoro", "bano_inodoro_2"]:
+		limpiador.usar(ReglasDeLaLimpieza.ID_DEL_BALDE, ReglasDeLaLimpieza.ID_DEL_LAVATORIO)
+		assert_bool(piso.balde().tiene_agua()).is_true()
+		assert_bool(agarre.pedir_agarrar(balde.get("datos"), balde)).is_true()
+		var objetivo := await _enfocar_artefacto(almacen, nombre)
+		if objetivo == null:
+			return
+		_derecho_sobre(jugador, objetivo)
+		assert_bool(piso.balde().tiene_agua()).is_false()
+		assert_object(agarre.manos().sostenido()).is_same(balde.get("datos"))
+		agarre.entregar()
+		limpiador.usar(ReglasDeLaLimpieza.ID_DEL_BALDE, ReglasDeLaLimpieza.ID_DEL_LAVATORIO)
+		limpiador.usar(&"jabon_amarillo", ReglasDeLaLimpieza.ID_DEL_BALDE)
+		limpiador.usar(ReglasDeLaLimpieza.ID_DE_LA_MOPA, ReglasDeLaLimpieza.ID_DEL_BALDE)
+		assert_int(piso.mopa().agua()).is_equal(ReglasDeLaLimpieza.Agua.AMARILLO)
+		assert_bool(agarre.pedir_agarrar(mopa.get("datos"), mopa)).is_true()
+		objetivo = await _enfocar_artefacto(almacen, nombre)
+		if objetivo == null:
+			return
+		_derecho_sobre(jugador, objetivo)
+		assert_int(piso.mopa().agua()).is_equal(ReglasDeLaLimpieza.Agua.LIMPIA)
+		assert_object(agarre.manos().sostenido()).is_same(mopa.get("datos"))
+		agarre.entregar()
+	assert_array(avisos).is_empty()
+
+
+func test_izquierdo_suelta_y_examen_suspende_sin_desechar() -> void:  # AC-PLY-078
+	var almacen := await _abrir_bano()
+	var jugador: Node3D = almacen.get_node("Jugador")
+	var agarre: Agarre = almacen.get("_agarre")
+	var avisos: Array[int] = []
+	_caja(almacen).ticket_desechado.connect(func() -> void: avisos.append(1))
+	var papel := _nuevo_ticket(almacen)
+	if papel == null:
+		return
+	assert_bool(agarre.pedir_agarrar(papel.datos, papel)).is_true()
+	var objetivo := await _enfocar_artefacto(almacen, "inodoro")
+	if objetivo == null:
+		return
+	_accion(jugador, objetivo, ReglasDeLosObjetos.ACCION_AGARRAR)
+	for _cuadro in 4:
+		await get_tree().physics_frame
+	assert_object(agarre.manos().sostenido()).is_null()
+	assert_bool(is_instance_valid(papel)).is_true()
+	assert_array(avisos).is_empty()
+	assert_bool(agarre.pedir_agarrar(papel.datos, papel)).is_true()
+	_accion(jugador, papel, ReglasDeLosObjetos.ACCION_EXAMINAR)
+	var examen: Examen = jugador.get("examen")
+	assert_bool(examen.esta_examinando()).is_true()
+	_accion(jugador, objetivo, ReglasDelJugador.ACCION_USAR)
+	assert_bool(is_instance_valid(papel)).is_true()
+	assert_object(agarre.manos().sostenido()).is_same(papel.datos)
+	assert_array(avisos).is_empty()
+	examen.terminar()
+
+
+func test_proxima_jornada_limpia_restantes_sin_repetir_ticket_desechado() -> void:  # AC-CTR-033
+	var almacen := await _abrir_bano()
+	var jugador: Node3D = almacen.get_node("Jugador")
+	var agarre: Agarre = almacen.get("_agarre")
+	var avisos: Array[int] = []
+	_caja(almacen).ticket_desechado.connect(func() -> void: avisos.append(1))
+	var primero := _nuevo_ticket(almacen)
+	if primero == null:
+		return
+	assert_bool(agarre.pedir_agarrar(primero.datos, primero)).is_true()
+	var segundo := _nuevo_ticket(almacen)
+	if segundo == null:
+		return
+	var objetivo := await _enfocar_artefacto(almacen, "inodoro")
+	if objetivo == null:
+		return
+	_derecho_sobre(jugador, objetivo)
+	for _cuadro in 3:
+		await get_tree().process_frame
+	assert_bool(is_instance_valid(primero)).is_false()
+	assert_bool(is_instance_valid(segundo)).is_true()
+	assert_int(avisos.size()).is_equal(1)
+	assert_int((_puesto(almacen).get("_tickets") as Array).size()).is_equal(1)
+	almacen.call("_al_abrir_la_jornada", 2)
+	for _cuadro in 3:
+		await get_tree().physics_frame
+	assert_bool(is_instance_valid(segundo)).is_false()
+	assert_array(_puesto(almacen).get("_tickets")).is_empty()
+	assert_object(_puesto(almacen).get("_en_ranura")).is_null()
+	assert_object(agarre.manos().sostenido()).is_null()
+	assert_array(_caja(almacen).generador().renglones()).is_empty()
+	assert_int(avisos.size()).is_equal(1)

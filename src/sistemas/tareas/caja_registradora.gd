@@ -8,6 +8,7 @@ signal producto_leido
 signal lectura_rechazada(motivo: GeneradorDeTickets.Resultado)
 signal renglones_cambiados
 signal ticket_impreso(ticket: Ticket)
+signal ticket_desechado
 
 var _generador: GeneradorDeTickets
 
@@ -62,3 +63,10 @@ func pedir_elegir(renglon: int, producto: Producto) -> void:
 		return
 	if _generador.elegir(renglon, producto):
 		renglones_cambiados.emit()
+
+
+func pedir_desechar(objeto: ObjetoDelAlmacen, destino: StringName) -> bool:
+	if not Ticket.se_desecha_en(objeto, destino):
+		return false
+	ticket_desechado.emit()
+	return true

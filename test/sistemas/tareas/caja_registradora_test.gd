@@ -155,3 +155,45 @@ func test_usar_el_hueco_es_silencioso_tanto_vacio_como_lleno() -> void:  # AC-CT
 			caja.pedir_anotar(objeto)
 		assert_array(avisos).is_empty()
 		assert_array(caja.generador().renglones()).contains_exactly(antes)
+
+
+func test_desechar_avisa_solo_el_papel_y_conserva_el_programa() -> void:  # AC-CTR-031, AC-CTR-032
+	var caja: CajaRegistradora = auto_free(CajaRegistradora.new())
+	var eventos: Array[String] = []
+	caja.ticket_desechado.connect(func() -> void: eventos.append("descarte"))
+	caja.producto_leido.connect(func() -> void: eventos.append("lectura"))
+	caja.lectura_rechazada.connect(func(_motivo: int) -> void: eventos.append("rechazo"))
+	caja.renglones_cambiados.connect(func() -> void: eventos.append("cambio"))
+	for jornada: int in [1, 3, 5]:
+		var generador := GeneradorDeTickets.para_la_jornada(jornada)
+		var producto := Catalogo.de(Producto.Id.MAROLINI)
+		if generador.es_manual():
+			generador.elegir(2, producto)
+		else:
+			generador.anotar(UnidadDeProducto.new(producto))
+		caja.arrancar(generador)
+		eventos.clear()
+		var papel := Ticket.new([producto])
+		assert_bool(caja.pedir_desechar(papel, ReglasDeLaLimpieza.ID_DEL_INODORO)).is_true()
+		assert_array(eventos).contains_exactly(["descarte"])
+		assert_array(generador.renglones()).contains_exactly([producto])
+		assert_object(generador.en_el_renglon(2 if generador.es_manual() else 0)).is_same(producto)
+		eventos.clear()
+		assert_bool(caja.pedir_desechar(papel, ReglasDeLaLimpieza.ID_DEL_LAVATORIO)).is_false()
+		assert_bool(caja.pedir_desechar(null, ReglasDeLaLimpieza.ID_DEL_INODORO)).is_false()
+		(
+			assert_bool(
+				caja.pedir_desechar(ObjetoDelAlmacen.new(), ReglasDeLaLimpieza.ID_DEL_INODORO)
+			)
+			. is_false()
+		)
+		assert_array(eventos).is_empty()
+		assert_array(generador.renglones()).contains_exactly([producto])
+
+
+func test_desechar_no_requiere_un_programa_de_renglones() -> void:  # AC-CTR-031
+	var caja: CajaRegistradora = auto_free(CajaRegistradora.new())
+	var eventos: Array[int] = []
+	caja.ticket_desechado.connect(func() -> void: eventos.append(1))
+	assert_bool(caja.pedir_desechar(Ticket.new(), ReglasDeLaLimpieza.ID_DEL_INODORO)).is_true()
+	assert_array(eventos).contains_exactly([1])

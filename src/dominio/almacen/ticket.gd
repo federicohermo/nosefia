@@ -17,3 +17,7 @@ func _init(productos: Array[Producto] = []) -> void:
 
 func renglones() -> Array[Producto]:
 	return _renglones.duplicate()
+
+
+static func se_desecha_en(objeto: ObjetoDelAlmacen, destino: StringName) -> bool:
+	return objeto is Ticket and destino == ReglasDeLaLimpieza.ID_DEL_INODORO

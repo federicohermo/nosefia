@@ -129,8 +129,9 @@ directional = true
 generate_probes_subdiv = 3
 light_data = ExtResource("lightmap")
 
-[node name="StaticBody3D" parent="Estructura/cajaregistradora" node_paths=PackedStringArray("jugador", "reloj", "caja", "programa")]
+[node name="StaticBody3D" parent="Estructura/cajaregistradora" node_paths=PackedStringArray("jugador", "agarre", "reloj", "caja", "programa")]
 jugador = NodePath("../../../Jugador")
+agarre = NodePath("../../../Jugador/Agarre")
 reloj = NodePath("../../../Servicios/RelojDelTurno")
 caja = NodePath("../../../Servicios/CajaRegistradora")
 programa = NodePath("../../../Interfaz/ProgramaDeTickets")
