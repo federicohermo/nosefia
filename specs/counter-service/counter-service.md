@@ -212,8 +212,9 @@ Cerrar la ventanilla NO DEBE detener el horario; la pausa DEBE detenerlo.
 CUANDO se hace clic izquierdo sobre el comprador por primera vez, el sistema DEBE iniciar su
 conversación inicial. Cada clic siguiente DEBE avanzar una entrada. MIENTRAS habla, los objetos
 NO DEBEN recibirse ni rechazarse. Terminada esa conversación, un clic con manos vacías DEBE
-mostrar un recordatorio de una entrada. Con objeto sostenido DEBE intentar recibirlo sin avanzar
-diálogo en el mismo clic. Reabrir DEBE conservar conversaciones y entregas.
+mostrar un recordatorio de una entrada. Mientras una entrada esté activa, el clic DEBE avanzar
+el diálogo, también con un objeto rechazado en la mano. Terminada la entrada, con objeto sostenido
+DEBE intentar recibirlo sin avanzar diálogo en el mismo clic. Reabrir DEBE conservar el estado.
 Los textos DEBEN corresponder al diseño de Figma, con las cantidades del pedido de la ficha:
 una Marolini para Martín, Coracola en lugar de Pura-Cola y dos Zucarachas para Tiago.
 Los productos pedidos DEBEN distinguirse con negrita y color.

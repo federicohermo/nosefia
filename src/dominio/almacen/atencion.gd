@@ -43,11 +43,7 @@ var _inicial_terminada: bool = false
 func interactuar(objeto: ObjetoDelAlmacen) -> RecepcionDeCompra.Resultado:
 	if not fisica() or _despachada:
 		return RecepcionDeCompra.Resultado.BLOQUEADA
-	if (
-		_dialogo != null
-		and not _dialogo.terminado()
-		and (not _inicial_terminada or _vendida or objeto == null)
-	):
+	if _dialogo != null and not _dialogo.terminado():
 		_dialogo.avanzar()
 		if _dialogo.terminado():
 			_inicial_terminada = true

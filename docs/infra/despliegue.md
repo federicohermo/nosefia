@@ -113,6 +113,11 @@ incluye el parche de compilación de shaders medido en [rendimiento](../guides/r
 El editor usa Godot oficial. El export de debug usa la plantilla oficial. El motor nativo
 conserva su código.
 
+El export excluye las copias sueltas de normales, base color, texturas y baño del modelo que
+ya viajan embebidas en el GLB. Ningún recurso del juego las referencia por fuera del modelo.
+La guía de jabones y la emisión del cielorraso sí tienen referencias directas y se conservan.
+Los PNG originales de los compradores se empaquetan con su transparencia y resolución completas.
+
 El parche hace dos cosas, las dos bajo `WEB_ENABLED`:
 
 - **No compila las variantes predeterminadas** de un shader. Compila sólo la que pide un dibujo.
