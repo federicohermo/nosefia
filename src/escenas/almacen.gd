@@ -162,6 +162,7 @@ func _ready() -> void:
 	_recolector.agarre = _agarre
 	_recolector.repositor = _repositor
 	_recolector.objeto_tirado.connect(_contenedor.recibir)
+	_recolector.objeto_tirado.connect(_al_tirar_un_objeto)
 	_repositor.agarre = _agarre
 	_repositor.unidad_colocada.connect(_reposicion_manual.depositar)
 	# El subtítulo del examen: lo que dice la caja examinada, y nada cuando termina. El texto lo
@@ -337,3 +338,9 @@ func _al_agotar_el_turno(_jornada: int) -> void:
 
 func _al_desechar_un_ticket() -> void:
 	_partida.anotar_llamado(Partida.Llamado.PAPEL_EN_EL_INODORO)
+
+
+func _al_tirar_un_objeto(nodo: Node3D) -> void:
+	var datos: ObjetoDelAlmacen = nodo.get("datos")
+	if not ReglasDelCierre.se_tira_sin_llamado(datos):
+		_partida.anotar_llamado(Partida.Llamado.OBJETO_TIRADO)

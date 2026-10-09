@@ -54,3 +54,9 @@ static func hay_objetos_afuera(estados: Array[Estado]) -> bool:
 		if not estado.en_mano and estado.habitacion == Habitacion.AFUERA:
 			return true
 	return false
+
+
+static func se_tira_sin_llamado(objeto: ObjetoDelAlmacen) -> bool:
+	return (
+		objeto != null and (objeto is Ticket or ReglasDeLaBasura.ids_de_las_bolsas().has(objeto.id))
+	)

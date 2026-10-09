@@ -17,7 +17,7 @@ extends RefCounted
 ## Los tres estados en los que puede estar una partida. Es un conjunto cerrado y por eso es un
 ## `enum`: un `String` suelto dejaría al `if` del menú sin entrar nunca, sin decir una palabra.
 enum Final { EN_CURSO, CONTRATO_CUMPLIDO, DESPEDIDO }
-enum Llamado { LOCAL_DESORDENADO, OBJETO_AFUERA, PAPEL_EN_EL_INODORO }
+enum Llamado { LOCAL_DESORDENADO, OBJETO_AFUERA, PAPEL_EN_EL_INODORO, OBJETO_TIRADO }
 
 var _legajo: Legajo
 var _jornada: int = ReglasDeLaPartida.PRIMERA_JORNADA
