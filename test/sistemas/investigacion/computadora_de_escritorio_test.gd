@@ -91,6 +91,7 @@ func test_la_secuencia_entera_no_descuenta_un_solo_segundo() -> void:  # AC-INV-
 	# **Es la decisión entera del spec al revés**: usar la computadora no cuesta por usarla,
 	# cuesta porque el reloj no se detuvo. Un descuento por acción cobraría dos veces lo mismo.
 	var escritorio := _escritorio()
+	var avisos_al_abrir := _avisos_de_tarea
 	var antes := _turno.tiempo_restante()
 	escritorio.pedir_abrir()
 	escritorio.pedir_cambiar_a(Computadora.App.CHATS)
@@ -99,7 +100,7 @@ func test_la_secuencia_entera_no_descuenta_un_solo_segundo() -> void:  # AC-INV-
 	escritorio.pedir_escribir("Puerta del fondo", "Estaba abierta.")
 	escritorio.pedir_cerrar()
 	assert_float(_turno.tiempo_restante()).is_equal(antes)
-	assert_int(_avisos_de_tarea).is_equal(0)
+	assert_int(_avisos_de_tarea).is_equal(avisos_al_abrir)
 
 
 # AC-INV-007
@@ -154,14 +155,17 @@ func test_lo_leido_y_lo_anotado_sobreviven_a_cambiar_de_app_y_a_cerrar() -> void
 	assert_int(escritorio.cuaderno().cuantas()).is_equal(1)
 
 
-func test_la_planilla_en_cero_de_una_noche_sin_ventas_no_cumple_registrar() -> void:  # AC-STK-024
+func test_la_planilla_en_cero_de_una_noche_sin_ventas_cumple_registrar() -> void:  # AC-STK-024
 	var escritorio := _escritorio()
 	assert_bool(escritorio.registro().coincide()).is_true()
-	assert_int(_turno.tareas_cumplidas()).is_equal(0)
+	assert_int(_turno.tareas_cumplidas()).is_equal(1)
+	assert_bool(escritorio.reloj.obligatoria(Tarea.Tipo.REGISTRAR).completada()).is_true()
+	var avisos_al_abrir := _avisos_de_tarea
 	# Un «−» sobre la fila en 0 no cambia la fila, así que tampoco revisa.
 	escritorio.pedir_restar(Catalogo.de(Producto.Id.ACTRONCITO))
-	assert_int(_turno.tareas_cumplidas()).is_equal(0)
-	assert_int(_avisos_de_tarea).is_equal(0)
+	assert_int(_turno.tareas_cumplidas()).is_equal(1)
+	assert_int(_avisos_de_tarea).is_equal(avisos_al_abrir)
+	assert_int(_descumplidas).is_zero()
 
 
 func test_anotar_lo_vendido_cumple_registrar_con_el_ultimo_gesto() -> void:  # AC-STK-024
@@ -196,40 +200,125 @@ func test_una_unidad_de_mas_descumple_y_restarla_vuelve_a_cumplir() -> void:  # 
 	assert_int(_avisos_de_tarea).is_equal(2)
 
 
-func test_una_venta_nueva_no_descumple_registrar() -> void:  # AC-STK-025
+func test_una_venta_nueva_descumple_registrar_y_anotarla_la_cumple() -> void:  # AC-STK-025
 	var pedidos: Array[Venta] = [_venta(Producto.Id.ACTRONCITO, 1), _venta(Producto.Id.BURBALOO, 1)]
 	var atender := _atender(pedidos)
 	_cobrar_el_siguiente(atender)
 	var escritorio := _escritorio(atender)
+	var ventanilla := _ventanilla(atender, escritorio)
 	escritorio.pedir_sumar(Catalogo.de(Producto.Id.ACTRONCITO))
 	assert_int(_turno.tareas_cumplidas()).is_equal(1)
-	_cobrar_el_siguiente(atender)
+	ventanilla.pedir_atender()
+	ventanilla.pedir_cobrar()
 	assert_bool(escritorio.registro().coincide()).is_false()
+	assert_bool(escritorio.reloj.obligatoria(Tarea.Tipo.REGISTRAR).completada()).is_false()
+	assert_int(_descumplidas).is_equal(1)
+	escritorio.pedir_sumar(Catalogo.de(Producto.Id.BURBALOO))
+	assert_bool(escritorio.reloj.obligatoria(Tarea.Tipo.REGISTRAR).completada()).is_true()
+
+
+func test_otra_noche_reinicia_las_tres_anotadas_y_cumple_registrar() -> void:  # AC-STK-026
+	var pedidos: Array[Venta] = [_venta(Producto.Id.ACTRONCITO, 2), _venta(Producto.Id.DUREXTRA, 1)]
+	var atender := _atender(pedidos)
+	_cobrar_el_siguiente(atender)
+	_cobrar_el_siguiente(atender)
+	var escritorio := _escritorio(atender)
+	escritorio.pedir_sumar(Catalogo.de(Producto.Id.ACTRONCITO))
+	escritorio.pedir_sumar(Catalogo.de(Producto.Id.ACTRONCITO))
+	escritorio.pedir_sumar(Catalogo.de(Producto.Id.DUREXTRA))
+	assert_bool(escritorio.reloj.obligatoria(Tarea.Tipo.REGISTRAR).completada()).is_true()
+	escritorio.reloj = _reloj()
+	escritorio.arrancar(RegistroDeVentas.new(Catalogo.todos(), _atender()))
+	for producto in Catalogo.todos():
+		assert_int(escritorio.registro().unidades_de(producto)).is_zero()
+	assert_bool(escritorio.reloj.obligatoria(Tarea.Tipo.REGISTRAR).completada()).is_true()
 	assert_int(_turno.tareas_cumplidas()).is_equal(1)
-	assert_int(_descumplidas).is_equal(0)
 
 
-func test_el_cierre_cuenta_la_planilla_de_ese_instante() -> void:
-	var pedidos: Array[Venta] = [_venta(Producto.Id.ACTRONCITO, 1), _venta(Producto.Id.DUREXTRA, 2)]
+func test_el_cierre_cuenta_la_planilla_de_ese_instante() -> void:  # AC-STK-052
+	var pedidos: Array[Venta] = [
+		_venta(Producto.Id.ACTRONCITO, 1),
+		_venta(Producto.Id.DUREXTRA, 2),
+		_venta(Producto.Id.FLINPUF, 1),
+	]
 	for de_mas: int in [0, 1]:
 		var atender := _atender(pedidos)
 		_cobrar_el_siguiente(atender)
-		_cobrar_el_siguiente(atender)
 		var escritorio := _escritorio(atender)
+		var ventanilla := _ventanilla(atender, escritorio)
 		var cierres: Array[int] = []
 		escritorio.reloj.turno_cerrado.connect(
 			func(cumplidas: int) -> void: cierres.append(cumplidas)
 		)
 		escritorio.pedir_sumar(Catalogo.de(Producto.Id.ACTRONCITO))
-		escritorio.pedir_sumar(Catalogo.de(Producto.Id.DUREXTRA))
-		escritorio.pedir_sumar(Catalogo.de(Producto.Id.DUREXTRA))
-		for _vez in de_mas:
-			escritorio.pedir_sumar(Catalogo.de(Producto.Id.FLINPUF))
+		assert_bool(escritorio.reloj.obligatoria(Tarea.Tipo.REGISTRAR).completada()).is_true()
+		_turno.consumir(_turno.tiempo_restante() - 1.0)
+		if de_mas == 1:
+			ventanilla.pedir_atender()
+			ventanilla.pedir_cobrar()
 		escritorio.reloj._process(Reglas.DURACION_DEL_TURNO)
 		assert_array(cierres).is_equal([1 - de_mas])
 		# Con el turno cerrado, un gesto ya no cumple ni descumple.
 		escritorio.pedir_sumar(Catalogo.de(Producto.Id.FLINPUF))
 		assert_int(_turno.tareas_cumplidas()).is_equal(1 - de_mas)
+		# Un cobro posterior tampoco modifica el cierre ya contado.
+		ventanilla.pedir_atender()
+		ventanilla.pedir_cobrar()
+		assert_int(_turno.tareas_cumplidas()).is_equal(1 - de_mas)
+		assert_array(cierres).is_equal([1 - de_mas])
+
+
+func test_una_noche_sin_ventas_cierra_con_registrar_cumplida() -> void:  # AC-STK-052
+	var escritorio := _escritorio()
+	var cierres: Array[int] = []
+	escritorio.reloj.turno_cerrado.connect(func(cumplidas: int) -> void: cierres.append(cumplidas))
+	escritorio.reloj._process(Reglas.DURACION_DEL_TURNO)
+	assert_array(cierres).is_equal([1])
+
+
+func test_anotar_antes_de_vender_se_cumple_con_el_cobro() -> void:  # AC-STK-025
+	var atender := _atender([_venta(Producto.Id.ACTRONCITO, 1)])
+	var escritorio := _escritorio(atender)
+	var ventanilla := _ventanilla(atender, escritorio)
+	escritorio.pedir_sumar(Catalogo.de(Producto.Id.ACTRONCITO))
+	assert_bool(escritorio.reloj.obligatoria(Tarea.Tipo.REGISTRAR).completada()).is_false()
+	ventanilla.pedir_atender()
+	ventanilla.pedir_cobrar()
+	assert_bool(escritorio.reloj.obligatoria(Tarea.Tipo.REGISTRAR).completada()).is_true()
+
+
+func test_rechazar_un_cobro_y_despachar_sin_vender_conservan_registrar() -> void:
+	var atender := _atender([_venta(Producto.Id.ACTRONCITO, 99)])
+	var escritorio := _escritorio(atender)
+	var ventanilla := _ventanilla(atender, escritorio)
+	var registrar := escritorio.reloj.obligatoria(Tarea.Tipo.REGISTRAR)
+	var avisos_al_abrir := _avisos_de_tarea
+	ventanilla.pedir_atender()
+	ventanilla.pedir_cobrar()
+	assert_bool(registrar.completada()).is_true()
+	assert_int(_avisos_de_tarea).is_equal(avisos_al_abrir)
+	assert_int(_descumplidas).is_zero()
+	ventanilla.pedir_despachar_sin_vender()
+	assert_bool(registrar.completada()).is_true()
+	assert_int(_descumplidas).is_zero()
+	assert_int(atender.vendidas_de(Catalogo.de(Producto.Id.ACTRONCITO))).is_zero()
+
+
+func test_revisar_registro_sin_cableado_avisa_el_error() -> void:
+	var escritorio: ComputadoraDeEscritorio = auto_free(ComputadoraDeEscritorio.new())
+	await assert_error(escritorio.revisar_registro).is_push_error(
+		"Computadora sin cablear: revisar almacen.tscn y almacen.gd"
+	)
+	escritorio.reloj = _reloj()
+	await assert_error(escritorio.revisar_registro).is_push_error(
+		"Computadora sin cablear: revisar almacen.tscn y almacen.gd"
+	)
+	assert_int(_turno.tareas_cumplidas()).is_zero()
+	escritorio.set("_registro", RegistroDeVentas.new(Catalogo.todos(), _atender()))
+	escritorio.reloj = null
+	await assert_error(escritorio.revisar_registro).is_push_error(
+		"Computadora sin cablear: revisar almacen.tscn y almacen.gd"
+	)
 
 
 func test_cada_gesto_que_cambia_una_fila_avisa_a_la_pantalla() -> void:
@@ -287,3 +376,11 @@ func _anotar_tarea(cumplidas: int) -> void:
 
 func _anotar_descumplida(_cumplidas: int) -> void:
 	_descumplidas += 1
+
+
+func _ventanilla(atender: TareaDeAtender, escritorio: ComputadoraDeEscritorio) -> Ventanilla:
+	var ventanilla: Ventanilla = auto_free(Ventanilla.new())
+	ventanilla.reloj = escritorio.reloj
+	ventanilla.arrancar(atender)
+	ventanilla.compra_realizada.connect(escritorio.revisar_registro)
+	return ventanilla

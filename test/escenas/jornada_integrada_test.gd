@@ -32,6 +32,7 @@ func test_los_puestos_completan_la_jornada_y_permiten_abrir_la_siguiente(
 	await get_tree().process_frame
 	await get_tree().process_frame
 	assert_bool(reloj.corriendo()).is_true()
+	_comprobar_registrar_al_abrir(almacen)
 	_comprobar_huecos(almacen, _completos_al_abrir(ReglasDeLaPartida.PRIMERA_JORNADA))
 	await _reponer(almacen)
 	_comprobar_huecos(almacen, Catalogo.todos().size())
@@ -59,7 +60,8 @@ func test_los_puestos_completan_la_jornada_y_permiten_abrir_la_siguiente(
 	assert_bool(pantalla.visible).is_false()
 	assert_bool(reloj.corriendo()).is_true()
 	for tipo: Tarea.Tipo in Tarea.Tipo.values():
-		assert_bool(reloj.obligatoria(tipo).completada()).is_false()
+		assert_bool(reloj.obligatoria(tipo).completada()).is_equal(tipo == Tarea.Tipo.REGISTRAR)
+	_comprobar_registrar_al_abrir(almacen)
 	var recolector: RecolectorDeBasura = almacen.get("_recolector")
 	assert_int(recolector.tarea().depositadas()).is_zero()
 	_comprobar_huecos(almacen, _completos_al_abrir(ReglasDeLaPartida.PRIMERA_JORNADA + 1))
@@ -77,6 +79,18 @@ func _comprobar_planilla_en_cero(almacen: Node3D) -> void:
 	var registro: RegistroDeVentas = almacen.get("_computadora").registro()
 	for producto in Catalogo.todos():
 		assert_int(registro.unidades_de(producto)).is_zero()
+	var reloj: RelojDelTurno = almacen.get("_reloj")
+	assert_bool(reloj.obligatoria(Tarea.Tipo.REGISTRAR).completada()).is_true()
+
+
+func _comprobar_registrar_al_abrir(almacen: Node3D) -> void:
+	var reloj: RelojDelTurno = almacen.get("_reloj")
+	for tipo: Tarea.Tipo in Tarea.Tipo.values():
+		assert_bool(reloj.obligatoria(tipo).completada()).is_equal(tipo == Tarea.Tipo.REGISTRAR)
+	var contador: Label = almacen.get("_hud").get("_tareas")
+	assert_str(contador.text).is_equal(
+		Hud.TEXTO_DE_LAS_TAREAS % Marcador.tareas(1, Apertura.cantidad_de_obligatorias())
+	)
 
 
 func test_abrir_la_jornada_termina_el_examen_en_curso() -> void:  # AC-INV-025
@@ -206,16 +220,34 @@ func _atender(almacen: Node3D) -> void:
 	var ventanilla: Node3D = almacen.get_node("Estructura/Ventanilla")
 	var panel: PanelDeLaVentanilla = ventanilla.get("panel")
 	var cobrar: Button = panel.get_node("Fondo/Panel/Cobrar")
+	var reloj: RelojDelTurno = almacen.get("_reloj")
+	var contador: Label = almacen.get("_hud").get("_tareas")
 	for comprador in Compradores.de_la_jornada():
 		ventanilla.call(ReglasDeLosObjetos.METODO_ACCIONAR)
 		assert_bool(panel.visible).is_true()
 		await _comprobar_reloj(almacen)
+		var registrar_estaba_cumplida := reloj.obligatoria(Tarea.Tipo.REGISTRAR).completada()
+		var cumplidas_antes := _cumplidas(reloj)
 		cobrar.pressed.emit()
+		if registrar_estaba_cumplida:
+			assert_bool(reloj.obligatoria(Tarea.Tipo.REGISTRAR).completada()).is_false()
+			assert_str(contador.text).is_equal(
+				(
+					Hud.TEXTO_DE_LAS_TAREAS
+					% Marcador.tareas(cumplidas_antes - 1, Apertura.cantidad_de_obligatorias())
+				)
+			)
 	await get_tree().process_frame
-	var reloj: RelojDelTurno = almacen.get("_reloj")
 	assert_bool(reloj.corriendo()).is_true()
 	assert_bool(reloj.obligatoria(Tarea.Tipo.CAJA).completada()).is_true()
 	ventanilla.call("cerrar")
+
+
+func _cumplidas(reloj: RelojDelTurno) -> int:
+	var cumplidas := 0
+	for tipo: Tarea.Tipo in Tarea.Tipo.values():
+		cumplidas += int(reloj.obligatoria(tipo).completada())
+	return cumplidas
 
 
 ## Borra las cuatro manchas como en el juego: por cada jabón, el balde se vacía en el inodoro, se

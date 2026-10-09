@@ -42,6 +42,7 @@ var _registro: RegistroDeVentas = null
 ## son las de la ventanilla: una segunda atención daría otra noche sin ventas.
 func arrancar(registro: RegistroDeVentas) -> void:
 	_registro = registro
+	revisar_registro()
 
 
 func computadora() -> Computadora:
@@ -105,12 +106,9 @@ func pedir_restar(producto: Producto) -> void:
 		_al_cambiar_el_registro()
 
 
-## Cumple o descumple registrar según lo anotado. Sólo la llama un gesto que cambió una fila: ni
-## `arrancar()` ni una venta la llaman, así que la noche no arranca con la tarea hecha.
-##
-## La `Tarea` sale de `RelojDelTurno.obligatoria()` y nunca de una construida acá: una copia
-## devuelve `true` y deja el contador del HUD sin subir, sin error y en verde.
-func _revisar_registro() -> void:
+func revisar_registro() -> void:
+	if not _cableada():
+		return
 	var registrar := reloj.obligatoria(Tarea.Tipo.REGISTRAR)
 	if _registro.coincide():
 		reloj.completar(registrar)
@@ -120,7 +118,7 @@ func _revisar_registro() -> void:
 
 func _al_cambiar_el_registro() -> void:
 	registro_actualizado.emit()
-	_revisar_registro()
+	revisar_registro()
 
 
 func _cableada() -> bool:

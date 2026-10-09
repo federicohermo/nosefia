@@ -101,13 +101,11 @@ func _ready() -> void:
 	_ciclo.jornada_abierta.connect(_reloj_de_mesa.declarar_jornada)
 	_reloj.tarea_completada.connect(_hud.mostrar_tareas)
 	_reloj.tarea_descumplida.connect(_hud.mostrar_tareas)
+	_atenciones.compra_realizada.connect(_computadora.revisar_registro)
 	_ciclo.jornada_cerrada.connect(_al_cerrar_la_jornada)
-	# El marcador de obligatorias no se reinicia solo: `mostrar_tareas()` se vuelve a llamar
-	# recién cuando el jugador completa una, así que sin esto la noche 2 arranca mostrando las
-	# que se cumplieron en la 1 hasta que se cumpla la primera de la 2. Y la góndola de cada
-	# noche arranca con lo que dice su jornada, así que el estante se rehace en la misma
-	# apertura: uno compartido dejaría lo repuesto anoche puesto, y reponer se cumpliría sola a
-	# partir de la segunda.
+	# La apertura reinicia el marcador antes de que la computadora revise la planilla nueva:
+	# conservar el conteo anterior arrastraría las cumplidas de ayer. La góndola se rehace por
+	# lo mismo: compartirla dejaría lo repuesto anoche y reponer se cumpliría sola desde la 2.
 	# **Una sola conexión**: el 017 y el 008 llegaron por separado al mismo `jornada_abierta`, y
 	# conectarlo dos veces es un error de Godot, no dos llamadas.
 	_ciclo.jornada_abierta.connect(_al_abrir_la_jornada)
@@ -170,7 +168,7 @@ func _ready() -> void:
 	_reposicion_manual.preparar()
 
 
-## Cada noche arranca con el marcador en cero, cada caja del depósito llena y la góndola
+## Cada noche arranca con registrar cumplida, cada caja del depósito llena y la góndola
 ## completa salvo lo que esa jornada hace faltar.
 ##
 ## El marcador lo dice la apertura y no el cierre de la anterior: entre las dos hay una placa que

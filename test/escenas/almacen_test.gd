@@ -402,7 +402,7 @@ func test_la_escena_instancia_la_pantalla_de_cierre() -> void:
 	assert_object(almacen.get_node("Interfaz/PantallaDeCierre")).is_instanceof(PantallaDeCierre)
 
 
-func test_despachar_la_placa_abre_la_noche_siguiente_en_cero() -> void:
+func test_despachar_la_placa_abre_la_noche_siguiente_con_registrar_cumplida() -> void:
 	# **El segundo caso de la suite que entra `almacen.tscn` entera al árbol.** El lazo que este
 	# spec cierra —la noche termina, la placa aparece, el jugador la despacha y la siguiente
 	# abre— vive entero en señales conectadas: leído como texto no dice si funciona, y es lo
@@ -414,9 +414,9 @@ func test_despachar_la_placa_abre_la_noche_siguiente_en_cero() -> void:
 	var ciclo: CicloDeJornadas = almacen.get_node("Servicios/CicloDeJornadas")
 	var pantalla: PantallaDeCierre = almacen.get_node("Interfaz/PantallaDeCierre")
 	var tareas: Label = almacen.get_node("Interfaz/Hud/Tareas")
+	assert_bool(reloj.obligatoria(Tarea.Tipo.REGISTRAR).completada()).is_true()
 
-	# Una obligatoria hecha antes de cerrar: con cero, el marcador de la noche 2 y el de la 1
-	# dirían lo mismo y el caso pasaría sin distinguir nada.
+	# Una obligatoria adicional distingue el marcador del cierre del de la apertura siguiente.
 	assert_bool(reloj.completar(reloj.obligatoria(Tarea.Tipo.CAJA))).is_true()
 	reloj._process(SEGUNDOS_REALES_DE_UN_TURNO)
 	(
@@ -437,9 +437,11 @@ func test_despachar_la_placa_abre_la_noche_siguiente_en_cero() -> void:
 		assert_str(tareas.text)
 		. override_failure_message("el HUD arrastró el marcador de la noche anterior")
 		. is_equal(
-			Hud.TEXTO_DE_LAS_TAREAS % Marcador.tareas(0, Apertura.cantidad_de_obligatorias())
+			Hud.TEXTO_DE_LAS_TAREAS % Marcador.tareas(1, Apertura.cantidad_de_obligatorias())
 		)
 	)
+	for tipo: Tarea.Tipo in Tarea.Tipo.values():
+		assert_bool(reloj.obligatoria(tipo).completada()).is_equal(tipo == Tarea.Tipo.REGISTRAR)
 
 
 func test_el_arranque_esta_frente_a_la_entrada_del_lado_de_adentro() -> void:

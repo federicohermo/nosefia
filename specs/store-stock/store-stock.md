@@ -640,8 +640,8 @@ y la noche cierra sin anotarla ENTONCES registrar no cuenta.
 
 - [`counter-service`](../counter-service/counter-service.md) (alimenta y consume): el cobro
   descuenta del depósito, hasta los vendibles; lo vendido de cada producto es contra qué se
-  compara la planilla, y cada cobro vuelve a compararla; lo que piden los compradores de cada jornada entra en lo que la
-  reposición deja (BR-STK-027).
+  compara la planilla, y cada cobro vuelve a compararla; lo que piden los compradores de cada
+  jornada entra en lo que la reposición deja (BR-STK-027).
 - [`player-actions`](../player-actions/player-actions.md) (consume y alimenta): la unidad viaja
   en la mano, y lo que la mano lleva decide qué hace el clic sobre la caja y sobre cada casillero;
   qué casilleros están vacíos y cuáles ocupados decide cuáles se muestran y cuáles se agarran.
