@@ -62,6 +62,13 @@ capturas del modelo vigente antes de fijar sus criterios. En #297 el antepecho o
 120 píxeles inferiores de 1080 aunque los rayos al hueco pasaran; sus bordes y los del dintel
 estaban a distinta profundidad. El encuadre se define con esos bordes, conservando el modelo.
 
+**La captura verifica el foco y la pose dibujada en el cuadro que guarda.** Preparar la cámara
+y comprobar un rayo unos cuadros antes no basta: entradas o interpolación pueden cambiar el
+encuadre. El fixture conserva la pose preparada, comprueba también la pose interpolada y el
+foco después del dibujo, y el padre abre el PNG. En #302 la primera foto de la caja mostraba
+la puerta y cortaba la caja, aunque la prueba física de foco pasara. Se corrigió el montaje
+externo y se repitió la captura, sin mover arte ni cambiar la producción.
+
 ```bash
 rg -n "<lo que el issue va a tocar>" src/ test/ docs/   # una guía también describe la regla
 gh issue list --state open --limit 50      # si ya hay uno igual, no se abre otro

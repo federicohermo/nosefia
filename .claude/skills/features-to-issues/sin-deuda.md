@@ -199,6 +199,7 @@ entregable más caro y el único que hace que el hallazgo no vuelva.
 | una corrida que **leyó una versión distinta de la fuente actual** | `implement-batch` — el árbol se congela desde encolar hasta el resultado, incluida la espera y los rojos y verdes cortos |
 | un comando de un issue apilado **que cobra rutas de sus ancestros** | `to-issue` — el diff se compara contra la base explícita medida, no contra `staging` |
 | un hueco libre por rayos **que una malla sin collider tapa en pantalla** | `to-issue` — el encuadre cruza mallas, profundidades, proyección y capturas; los bordes físicos y los visibles se prueban aparte |
+| una captura **que ya no muestra el foco y la pose preparados** | `to-issue` — el fixture comprueba foco y pose dibujada al guardar, y el padre abre el PNG; un rayo anterior no certifica el cuadro final |
 | una dependencia instalada **adentro del worktree** que tira la importación de Godot | `implement-batch` — el preámbulo no dijo que Playwright se resuelve desde el checkout principal |
 
 **Si el problema no entra en ninguna fila, agregá la fila.** Esa tabla es el registro de lo que
