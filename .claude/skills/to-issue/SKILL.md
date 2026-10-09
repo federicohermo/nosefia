@@ -48,6 +48,13 @@ Si el tipo no está claro, preguntá. Es la decisión que define la rama y el re
 
 **Los límites de archivo y los criterios salen del árbol de hoy, no de la memoria.**
 
+**Agregar interacción no implica que falte arte.** Antes de pedir generar, reemplazar u ocultar
+un soporte visual, inspeccionar sus mallas, cuerpos, materiales e imágenes, y cruzarlos con las
+decisiones vigentes del usuario. Si el soporte ya existe, declarar qué lectura o dato le falta
+y reutilizarlo. El tamaño decorativo de un prototipo no se convierte en contrato de juego. En
+el lote del 2026-10-08, las tres hojas del baño ya tenían imagen y colisión; el trabajo faltante
+era poder leerlas, y recrearlas como A4 habría reemplazado lo que acababa de hacer el artista.
+
 ```bash
 rg -n "<lo que el issue va a tocar>" src/ test/ docs/   # una guía también describe la regla
 gh issue list --state open --limit 50      # si ya hay uno igual, no se abre otro

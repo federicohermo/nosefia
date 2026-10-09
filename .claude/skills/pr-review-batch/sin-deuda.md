@@ -189,6 +189,9 @@ entregable más caro y el único que hace que el hallazgo no vuelva.
 | un turno entre carriles que **no respeta el orden de llegada** | `implement-batch` — el turno era un cerrojo que cada carril reintentaba, y no una cola |
 | una pista del padre sobre el motor **que resultó falsa** | `implement-batch` — se repartió de memoria, sin la sonda que se le exige a un comando |
 | un puerto repartido **que ya escuchaba otro proceso** | `implement-batch` — se asignó sin mirar qué puertos estaban libres |
+| una base integrada durante una pausa **que deja obsoleto un borrador en scratch** | `implement-batch` — al reanudar se actualizó la rama pero no se midieron otra vez los recursos, lectores y geometría |
+| una copia temporal de un proyecto **dentro del checkout que contamina un gate** | `implement-batch` — las copias para exportar o medir viven fuera del checkout; `.gdignore` no limita los barridos Python |
+| un issue que **recrea arte que ya existe para agregarle interacción** | `to-issue` — se buscó la funcionalidad faltante sin inspeccionar los soportes del artista ni la decisión vigente del usuario |
 | una dependencia instalada **adentro del worktree** que tira la importación de Godot | `implement-batch` — el preámbulo no dijo que Playwright se resuelve desde el checkout principal |
 
 **Si el problema no entra en ninguna fila, agregá la fila.** Esa tabla es el registro de lo que

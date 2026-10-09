@@ -33,6 +33,13 @@ fila **«Se escribe»**, y a quién declara depender.
 entre que se escribió y hoy. Lo que se mide es el árbol de hoy, no lo que el issue dice del árbol
 de ayer.
 
+**Una pausa para integrar otra base invalida el preflight anterior.** Al reanudar, actualizar los
+worktrees limpios a una cabeza explícita y volver a cruzar recursos, lectores y geometría. Los
+borradores preparados sobre la base anterior no se ejecutan sin esa revisión. Si cambió la
+premisa, actualizar el issue entero antes de implementar. En el lote del 2026-10-08, la nueva
+base reemplazó el fondo de computadora por un shader y ya traía las hojas del baño: comprimir
+la imagen vieja o crear hojas A4 habría trabajado sobre recursos que el juego ya no necesitaba.
+
 **Si el issue cita un prototipo o un protocolo que no trae escrito, conseguilo antes de
 repartir.** «Los 600 estados del protocolo» o «las 24 poses medidas» no se pueden reproducir
 sin sus parámetros. Se le pide al usuario dónde está, y va al preámbulo. En el lote del
@@ -186,6 +193,13 @@ Cada agente recibe, literal:
   2026-09-27: lo pisó el carril que cargaba todos los scripts con el motor.
 - **Un nombre propio para cada archivo de scratch.** Dos carriles que escriben el mismo archivo
   temporal se pisan sin conflicto visible. **Y se escribe con `Write`.**
+- **Una copia completa del proyecto para exportar o medir vive fuera de cualquier checkout o
+  worktree.** El scratch interno guarda scripts, logs, JSON y capturas; no otro árbol del
+  proyecto. `.gdignore` limita Godot, pero no los barridos Python del harness. En el lote del
+  2026-10-08, una copia vieja bajo scratch hizo que el gate de `AGENTS.md` comparara sus reglas
+  con las de la base nueva: Godot pasó 190 suites y el harness salió rojo. Se movió la copia a
+  una carpeta propia bajo `Temp` y pasó el nodo afectado. No se borran los `AGENTS.md` de una
+  copia para eludir ese control.
 - **Un comando que este skill entrega se vuelve a correr antes de repartirlo**, nunca se copia de
   la corrida anterior: un comando roto se reparte N veces.
 
