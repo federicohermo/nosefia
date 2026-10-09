@@ -128,11 +128,11 @@ del texto. Los dos usan la fuente del tema de Manada y el fondo claro del diseñ
 
 DADO un cartel visible y la computadora abierta CUANDO se hace clic en la esquina que
 ocupa el cartel ENTONCES el clic llega a la computadora. La pila se dibuja encima de
-computadora, ventanilla, diálogos y programa manual; con el PopupMenu real abierto el aviso
+computadora, ventanilla, diálogos y programa manual; con el lista desplegable real abierto el aviso
 sigue visible. Al hacer Esc en ese popup se abre la pausa, sus listas quedan cerradas y el
 menú de pausa se dibuja encima de la pila. Reanudar conserva programa, selección y aviso;
 no reabre las listas automáticamente. Se comprueba con capturas anteriores a Esc y durante
-pausa, a ambas resoluciones; comparar sólo los índices CanvasLayer no prueba el orden de ventanas.
+pausa, a ambas resoluciones; comparar sólo los índices de dibujo no prueba el orden de las ventanas.
 
 ## No objetivos
 
