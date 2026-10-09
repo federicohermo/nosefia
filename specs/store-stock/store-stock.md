@@ -1,7 +1,7 @@
 ---
 schema_version: 1
 capability_id: CAP-STK
-status: draft
+status: ratified
 owner: por definir
 provenance: GDD «Reponer» y «Registrar»; fichas «7. Tarea: Registro de productos vendidos», «8. Tarea: Reposición» y «5. Formas de interacción con objetos»; base «Productos y cajas contenedoras»; migración de los specs 005, 008, 033, 042, 047
 ---
@@ -127,7 +127,7 @@ sigue en la mano; vuelve a la caja si el jugador se la devuelve (BR-STK-030).
 El sistema DEBE contestar los vendibles de un producto como su depósito menos el mayor entre los
 casilleros vacíos de su fila de adelante y sus unidades afuera, y nunca menos de cero. Es lo que
 queda en la caja menos lo que a la góndola todavía le falta de ella: un casillero vacío que ya
-espera una unidad afuera no se descuenta dos veces. El sistema NO DEBE vender una unidad afuera:
+espera una unidad afuera no se descuenta dos veces. El cobro automático NO DEBE vender una unidad afuera:
 ninguna venta deja el depósito por debajo de las unidades afuera. Un producto que el inventario
 no conoce tiene cero vendibles.
 
@@ -301,8 +301,9 @@ inventario. La jornada siguiente DEBE abrir con el inventario de esa noche (BR-S
 
 CUANDO se completa una compra física, el sistema DEBE retirar definitivamente sus unidades
 registradas afuera, una sola vez por identidad. NO DEBE volver a descontar el pedido completo.
-Una recepción parcial NO DEBE retirarlas del inventario: al recuperarlas se DEBEN poder devolver
-o colocar. Una unidad vendida NO DEBE poder registrarse afuera otra vez.
+Una recepción parcial DEBE conservarlas hasta la salida del comprador. SI vence la atención,
+ENTONCES sus unidades recibidas DEBEN retirarse del inventario una vez, sin contar como venta.
+Una unidad vendida NO DEBE poder registrarse afuera otra vez.
 Vender una unidad retirada de góndola NO DEBE rellenar su casillero ni cumplir reponer.
 
 ## Criterios de aceptación
@@ -641,10 +642,10 @@ DADO una caja con ocho unidades CUANDO se retira una y completa su compra físic
 la caja conserva siete, el depósito baja una y esa identidad ya no está afuera.
 Repetir la venta o intentar registrar esa identidad afuera no cambia cantidades.
 
-### AC-STK-055 — Recuperar y reponer *(verifica BR-STK-037, BR-STK-033, BR-STK-030)*
+### AC-STK-055 — Salida y reposición *(verifica BR-STK-037, BR-STK-033, BR-STK-030)*
 
 DADO una unidad retirada de góndola CUANDO se entrega en una compra parcial y ésta vence
-ENTONCES conserva su identidad y sigue registrada afuera. Se puede devolver o colocar.
+ENTONCES deja de estar registrada afuera y sale del inventario una sola vez, sin sumar una venta.
 DADO esa unidad en una compra completa ENTONCES el casillero sigue vacío y reponer incompleta
 hasta rellenarlo. La planilla cuenta sólo compras completas, nunca entregas parciales.
 

@@ -4,10 +4,12 @@ extends CanvasLayer
 const TEXTOS := {
 	Notificaciones.Tipo.CLIENTE: "¡HAY UN\nCLIENTE!",
 	Notificaciones.Tipo.LECTURA_FALLIDA: "NO SE PUDO\nLEER",
+	Notificaciones.Tipo.CLIENTE_CANSADO: "EL CLIENTE SE CANSÓ\nDE ESPERAR.",
 }
 const SIMBOLOS := {
 	Notificaciones.Tipo.CLIENTE: preload("res://assets/ui/manada/notificacion_cliente.svg"),
 	Notificaciones.Tipo.LECTURA_FALLIDA: preload("res://assets/ui/manada/notificacion_lectura.svg"),
+	Notificaciones.Tipo.CLIENTE_CANSADO: preload("res://assets/ui/manada/notificacion_salida.svg"),
 }
 const ESCALA_DEL_CARTEL := 0.4
 
@@ -31,6 +33,11 @@ func _process(delta: float) -> void:
 
 func avisar_llegada(comprador: Comprador) -> void:
 	_estado.llego(comprador)
+	_pintar()
+
+
+func avisar_salida(comprador: Comprador) -> void:
+	_estado.se_fue(comprador)
 	_pintar()
 
 

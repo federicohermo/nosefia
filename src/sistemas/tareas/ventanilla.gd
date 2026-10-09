@@ -23,12 +23,30 @@ signal atencion_despachada(despachados: int)
 signal compra_realizada
 signal cobro_rechazado(faltantes: Array[Producto])
 signal ventanilla_vacia
+signal comprador_vencido(comprador: Comprador)
+signal presentacion_cambiada
+signal jornada_preparada
 
-## Entra por `@export` y no como autoload ni por `get_node()` hacia arriba: está medido que
-## `gate_de_capas.py` no ve un autoload nombrado por su nombre global.
+## El reloj se recibe por cableado y conserva la autoridad sobre el tiempo del turno.
 @export var reloj: RelojDelTurno
 
 var _tarea: TareaDeAtender = null
+
+
+func pedir_interaccion(objeto: ObjetoDelAlmacen) -> RecepcionDeCompra.Resultado:
+	var en_curso := atencion()
+	if en_curso == null:
+		return RecepcionDeCompra.Resultado.BLOQUEADA
+	var resultado := en_curso.interactuar(objeto)
+	if resultado == RecepcionDeCompra.Resultado.COMPLETA:
+		compra_realizada.emit()
+		_al_despachar()
+	presentacion_cambiada.emit()
+	return resultado
+
+
+func puede_abandonar() -> bool:
+	return atencion() == null or atencion().puede_abandonar()
 
 
 ## Le entrega a la ventanilla la tarea de la noche.
@@ -38,6 +56,18 @@ var _tarea: TareaDeAtender = null
 ## ventanas dirían números distintos del mismo producto.
 func arrancar(tarea: TareaDeAtender) -> void:
 	_tarea = tarea
+	if reloj != null and not reloj.tiempo_consumido.is_connected(_al_pasar_el_tiempo):
+		reloj.tiempo_consumido.connect(_al_pasar_el_tiempo)
+	jornada_preparada.emit()
+
+
+func _al_pasar_el_tiempo(restante: float) -> void:
+	for evento in _tarea.avanzar(Reglas.DURACION_DEL_TURNO - restante):
+		if evento.tipo == AgendaDeCompradores.Tipo.LLEGO:
+			comprador_llegado.emit(evento.comprador)
+		else:
+			comprador_vencido.emit(evento.comprador)
+	presentacion_cambiada.emit()
 
 
 func tarea() -> TareaDeAtender:
@@ -59,6 +89,9 @@ func atencion() -> Atencion:
 func pedir_abrir() -> void:
 	if _sin_cablear():
 		return
+	if _tarea.fisica():
+		presentacion_cambiada.emit()
+		return
 	var esperando := _tarea.en_ventanilla()
 	if esperando == null:
 		pedir_atender()
@@ -69,6 +102,9 @@ func pedir_abrir() -> void:
 ## Llama al siguiente comprador y avisa quién llegó, o que no queda nadie.
 func pedir_atender() -> void:
 	if _sin_cablear():
+		return
+	if _tarea.fisica():
+		presentacion_cambiada.emit()
 		return
 	var comprador := _tarea.atender()
 	if comprador == null:

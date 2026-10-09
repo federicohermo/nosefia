@@ -1,0 +1,12 @@
+[gd_resource type="Resource" script_class="DialogosDeCompradores" format=3]
+
+[ext_resource type="Script" path="res://src/dominio/almacen/dialogos_de_compradores.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+martin = PackedStringArray("\"Hola... ¿Cómo andás?... Mmm, eee... Me parece que hoy me toca cocinar [color=#e4f850]huevos con arvejas[/color]... Pará, pará... Hoy como en lo de mi vieja, entonces..¿No tenés un paquete de [b][color=#e4f850]Marolinis[/color][/b] y una [b][color=#e4f850]Coracola[/color][/b] , de onda?...\"", "Gracias, che... uh, me olvidé, me quedé sin [b][color=#e4f850]Malbardo[/color][/b].. ¿de casualidad no te un puchito?...", "Es un chiste, hermano... dale, pasame una caja... ¿cuánto sería todo?...")
+tiago = PackedStringArray("Hola! Quiero dos paquetes de [b][color=#cbdc48]zucarachas[/color][/b]  y un paquete de [b][color=#e4f850]Pepito argento[/color][/b], por favor!")
+despedida_martin = PackedStringArray("Gracias, che... sos lo más, en serio...")
+despedida_tiago = PackedStringArray("Gracias, tenía mucha hambre.", "Me presento: soy el Sr.T ¡mucho gusto! Soy investigador criminal. La última vez que estuve por acá ocurrió una tragedia. ¿No te enteraste lo que pasó con el empleado anterior?", "Con mi equipo de investigación seguimos analizando los movimientos de Enrique Peldaño dueño de esta estación de servicio", "En fin…. voy a disfrutar de las zucarachas. Te dejo mi número de teléfono por si acaso..\n11 ****-**** ¡Anotalo! Hasta pronto!!")
+recordatorio_martin = "Quiero [b][color=#e4f850]Coracola[/color][/b], un paquete de [b][color=#e4f850]Marolini[/color][/b] y [b][color=#e4f850]Malbardo[/color][/b]"
+recordatorio_tiago = "Quiero dos paquetes de [b][color=#e4f850]Zucarachas[/color][/b] y un [b][color=#e4f850]pepito argento[/color][/b]"

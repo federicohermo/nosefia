@@ -91,6 +91,18 @@ El `node-id` se copia de la URL del frame, nunca se escribe de memoria. Si la pa
 frame, el campo lo dice. Si el frame y la ficha se contradicen, manda la ficha, y la diferencia
 se nombra en el campo.
 
+**La entrega física define el destino de cada objeto al salir, también sin completar la compra.**
+Nombrar productos y ticket por separado, y distinguir salida por venta de salida por vencimiento.
+Un silencio de la ficha se resuelve con el usuario; no implica devolver al piso. En #339 el usuario
+decidió que el cliente se lleva los productos recibidos aun si se cansa y descarta el ticket.
+
+**Una referencia de animación no fija por sí sola los tiempos de sus PNG.** Separar la tasa del
+video, los dibujos disponibles y su duración. Verificar los ocho originales y registrar la decisión
+de ritmo; en #339 hubo dibujos ausentes del video, pero estaban los ocho PNG de cada comprador.
+
+**Un marco vacío no prueba que falten diálogos en Figma.** Revisar las capas hermanas que se
+superponen a sus coordenadas en la página. En #339 los textos de Martín estaban fuera del marco.
+
 ## Paso 3 — Escribir el issue
 
 **El borrador sale del template, nunca de memoria.** Arrancalo con el script y llená el archivo

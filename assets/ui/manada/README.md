@@ -20,6 +20,7 @@ comercial. La incorporación al build local no acredita una licencia comercial.
 
 | Recurso | Origen | Uso |
 |---|---|---|
+| `notificacion_salida.svg` | Símbolo `480:341`, aviso `477:216` de Figma, descargado sin editar el 2026-10-09 | Cliente cansado de esperar |
 | `notificacion_cliente.svg` | Figma, grupo `213:191` del frame `243:150` | Símbolo original del aviso «¡HAY UN CLIENTE!» |
 | `notificacion_lectura.svg` | Figma, grupo `480:319` del frame `477:243` | Cruz original del aviso «NO SE PUDO LEER» |
 | `fondo.png` | Captura histórica de `almacen.tscn` | Recurso conservado; la computadora actual usa un shader |

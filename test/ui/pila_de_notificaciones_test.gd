@@ -13,6 +13,23 @@ func _pila() -> PilaDeNotificaciones:
 	return pila
 
 
+func test_la_salida_tiene_el_texto_y_simbolo_de_figma_y_respeta_pausa() -> void:  # AC-NTF-011
+	var pila := _pila()
+	pila.avisar_salida(Compradores.de_la_jornada(1)[0])
+	assert_array(_textos(pila)).is_equal(["EL CLIENTE SE CANSÓ DE ESPERAR."])
+	var simbolo := pila.find_children("*", "TextureRect", true, false)[0] as TextureRect
+	assert_str(simbolo.texture.resource_path).ends_with("/notificacion_salida.svg")
+	pila._process(2.9)
+	get_tree().paused = true
+	await get_tree().process_frame
+	await get_tree().process_frame
+	assert_bool(pila.can_process()).is_false()
+	assert_array(_textos(pila)).has_size(1)
+	get_tree().paused = false
+	pila._process(0.1)
+	assert_array(_textos(pila)).is_empty()
+
+
 func _textos(pila: PilaDeNotificaciones) -> Array[String]:
 	var textos: Array[String] = []
 	for label: Label in pila.find_children("*", "Label", true, false):

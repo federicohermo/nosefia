@@ -1,7 +1,7 @@
 ---
 schema_version: 1
 capability_id: CAP-CTR
-status: draft
+status: ratified
 owner: por definir
 provenance: GDD «Atención por ventanilla»; migración de los specs 013, 035
 ---
@@ -202,7 +202,8 @@ Las jornadas siguientes DEBEN conservar el padrón y recorrido anteriores, sin c
 CUANDO se cruza una llegada, el sistema DEBE publicar una sola llegada aunque la ventanilla esté
 cerrada. Repetir un instante o reabrir NO DEBE llamar ni repetir al comprador.
 CUANDO se cruza el límite con una compra incompleta, el sistema DEBE publicar una sola salida,
-cerrar su conversación y devolver sus productos recibidos al piso frente a la ventanilla.
+cerrar su conversación y retirar con él los productos recibidos y el ticket aceptado.
+Esos productos DEBEN salir del inventario sin contar como venta. El ticket DEBE descartarse.
 Un salto DEBE procesar todos los cruces en orden. Una compra completa NO DEBE vencer.
 Cerrar la ventanilla NO DEBE detener el horario; la pausa DEBE detenerlo.
 
@@ -213,7 +214,8 @@ conversación inicial. Cada clic siguiente DEBE avanzar una entrada. MIENTRAS ha
 NO DEBEN recibirse ni rechazarse. Terminada esa conversación, un clic con manos vacías DEBE
 mostrar un recordatorio de una entrada. Con objeto sostenido DEBE intentar recibirlo sin avanzar
 diálogo en el mismo clic. Reabrir DEBE conservar conversaciones y entregas.
-Los textos DEBEN corresponder a la ficha de diálogos, con Coracola y dos Zucarachas.
+Los textos DEBEN corresponder al diseño de Figma, con las cantidades del pedido de la ficha:
+una Marolini para Martín, Coracola en lugar de Pura-Cola y dos Zucarachas para Tiago.
 Los productos pedidos DEBEN distinguirse con negrita y color.
 
 ### BR-CTR-029 — Productos pendientes y ticket exacto
@@ -242,7 +244,7 @@ Una nueva jornada DEBE empezar sin agenda, conversación, entregas, cuerpos ni v
 ### BR-CTR-032 — Compradores animados
 
 El sistema DEBE mostrar a cada comprador con sus ocho dibujos en orden numérico, en bucle,
-con transparencia, proporción y exposiciones del video de referencia conservadas.
+con transparencia y proporción conservadas, con una duración uniforme de 0,5 segundos por dibujo.
 Martín DEBE usar su animación nueva. La pausa DEBE detener la animación.
 Al irse el comprador, su imagen DEBE dejar de mostrarse.
 
@@ -480,7 +482,7 @@ límite conserva la venta durante la despedida; al terminarla se oculta al compr
 ### AC-CTR-040 — Perder una compra parcial *(verifica BR-CTR-027, BR-CTR-030, BR-CTR-031)*
 
 DADO una compra parcial, incluso hablando, CUANDO llega el límite ENTONCES sale una vez,
-se cierra el diálogo y sus productos quedan recuperables con la misma identidad.
+se cierra el diálogo y sus productos y ticket dejan el mundo con él.
 Las ventas de esa compra siguen en cero. Completar la otra no cumple atención.
 
 ### AC-CTR-041 — Ambas compras y reinicio *(verifica BR-CTR-026, BR-CTR-031)*
@@ -493,7 +495,7 @@ sin entregas ni ventas. Las jornadas 2–5 conservan el recorrido anterior.
 ### AC-CTR-042 — Dos animaciones y pausa *(verifica BR-CTR-032)*
 
 DADO cada comprador presente CUANDO se abre la ventanilla ENTONCES su animación tiene ocho
-dibujos en orden, bucle y duraciones del video. Al transcurrir cuadros cambia la pose.
+dibujos en orden y bucle, cada uno durante 0,5 segundos. Al transcurrir cuadros cambia la pose.
 La pausa conserva pose y progreso; al reanudar continúa. Al irse deja de verse.
 
 ## No objetivos
@@ -512,8 +514,8 @@ La pausa conserva pose y progreso; al reanudar continúa. Al irse deja de verse.
   faltantes, cuántos van despachados, el desvío de la noche, lo vendido de cada producto y el
   papel impreso o desechado.
 - **Falla:** un pedido que supera sus vendibles se rechaza entero; una atención despachada
-  rechaza todo lo demás. Usar un objeto que no sea ticket, o un destino distinto del inodoro,
-  no produce descarte.
+  rechaza todo lo demás. Fuera de la entrega al comprador, usar un objeto que no sea ticket,
+  o un destino distinto del inodoro, no produce descarte.
 
 ## Señales
 

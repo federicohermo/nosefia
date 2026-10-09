@@ -1,7 +1,7 @@
 ---
 schema_version: 1
 capability_id: CAP-NTF
-status: draft
+status: ratified
 owner: por definir
 provenance: GDD «Notificaciones»; decisiones del issue 309
 ---
@@ -10,7 +10,7 @@ provenance: GDD «Notificaciones»; decisiones del issue 309
 
 ## Propósito
 
-Hacer visibles la llegada de un comprador y el rechazo del lector lleno mientras el jugador
+Hacer visibles la llegada y salida por cansancio de un comprador y el rechazo del lector lleno mientras el jugador
 reparte su atención entre las tareas. Los avisos acompañan esos sucesos sin cambiar su resultado.
 
 ## Lenguaje de la capacidad
@@ -18,7 +18,7 @@ reparte su atención entre las tareas. Los avisos acompañan esos sucesos sin ca
 | Término | Significado acá | Evitar |
 |---|---|---|
 | **Notificación** | cartel breve con texto y símbolo de un suceso | ventana, diálogo |
-| **Tipo** | llegada de comprador o lectura fallida por renglones llenos | prioridad |
+| **Tipo** | llegada, salida por cansancio o lectura fallida por renglones llenos | prioridad |
 | **Visible** | tipo cuyo tiempo todavía no se agotó | historial |
 | **Comprador avisado** | la misma identidad que ya disparó su llegada durante el turno | mismo nombre |
 
@@ -62,7 +62,8 @@ avisadas. La siguiente noche empieza sin avisos de la anterior.
 ### BR-NTF-007 — El cartel comunica sin tomar el control
 
 El sistema DEBE dibujar los carteles claros en la esquina superior derecha, con el símbolo
-del tipo a la izquierda y su texto en mayúsculas a la derecha, sin punto final. El comprador
+del tipo a la izquierda y su texto en mayúsculas a la derecha. Llegada y lectura van sin punto
+final; la salida conserva el punto final de su diseño. El comprador
 usa la figura con exclamación y el lector usa la cruz del diseño. MIENTRAS computadora,
 ventanilla u otra interfaz de la jornada están abiertas, incluyendo los diálogos, el cartel
 DEBE verse encima y DEBE dejar pasar el clic. El menú
@@ -155,20 +156,20 @@ Cerrar y comenzar otra jornada permite avisar otra vez la misma identidad.
 
 ## Contratos
 
-- **Entrada:** identidad de quien llega, motivo de lectura, tiempo en ejecución y cierre.
+- **Entrada:** identidad de quien llega o vence, motivo de lectura, tiempo en ejecución y cierre.
 - **Salida:** tipos visibles ordenados, texto y símbolo correspondientes.
 - **Falla:** identidad nula, motivo que no es lector lleno y tiempo no positivo no cambian nada.
 
 ## Señales
 
-- Escucha llegada, rechazo y cierre. No emite decisiones a las capacidades que los publican.
+- Escucha llegada, vencimiento, rechazo y cierre. No emite decisiones a las capacidades que los publican.
 
 ## Dependencias
 
-- `counter-service` (consume): comprador llegado y motivo del rechazo del lector.
+- `counter-service` (consume): comprador llegado o vencido y motivo del rechazo del lector.
 - `shift-cycle` (consume): cierre del turno.
 - `player-actions` (consume): suspensión del procesamiento durante la pausa.
 
 ## Preguntas abiertas
 
-Ninguna para los dos tipos de esta entrega. Los demás disparadores están fuera de sus objetivos.
+Ninguna para estos tres tipos. Los demás disparadores están fuera de sus objetivos.

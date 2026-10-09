@@ -1,13 +1,21 @@
 class_name Notificaciones
 extends RefCounted
 
-enum Tipo { CLIENTE, LECTURA_FALLIDA }
+enum Tipo { CLIENTE, LECTURA_FALLIDA, CLIENTE_CANSADO }
 
 const DURACION := 3.0
 
 var _compradores: Array[Comprador] = []
+var _salidos: Array[Comprador] = []
 var _orden: Array[Tipo] = []
 var _transcurrido: Dictionary[Tipo, float] = {}
+
+
+func se_fue(comprador: Comprador) -> void:
+	if comprador == null or _salidos.has(comprador):
+		return
+	_salidos.append(comprador)
+	_avisar(Tipo.CLIENTE_CANSADO)
 
 
 func llego(comprador: Comprador) -> void:
@@ -40,6 +48,7 @@ func vaciar() -> void:
 	_orden.clear()
 	_transcurrido.clear()
 	_compradores.clear()
+	_salidos.clear()
 
 
 func _avisar(tipo: Tipo) -> void:
