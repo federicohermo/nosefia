@@ -109,10 +109,16 @@ dominio entero sin correr con la CI en verde.
 **El conteo crudo sigue siendo el control, y no cuesta nada**: el `Executed test suites: (N/N)`
 de la salida cruda, contra la cantidad de `*_test.gd`. `verificar.py` no lo imprime.
 
+**También se lee la salida cruda cuando el XML da cero errores.** Un callback de señal o el
+desmontaje puede fallar fuera del contador del caso. El fixture usa el tipo de la señal y afirma
+que su receptor se ejecutó: la ausencia de una reacción no prueba nada si la entrega abortó.
+Los errores nuevos y las fugas se corrigen; se distinguen los diagnósticos esperados de
+`assert_error` y del debugger remoto deliberadamente inaccesible.
+
 ```bash
 "$GODOT_BIN" --path . --headless -s -d --remote-debug tcp://127.0.0.1:0 \
   res://addons/gdUnit4/bin/GdUnitCmdTool.gd -a test --continue --ignoreHeadlessMode \
-  -rd reports 2>&1 | grep "Executed test suites"
+  -rd res://reports 2>&1 | grep "Executed test suites"
 ```
 
 **Re-importá después de crear cada archivo con `class_name` nuevo**, no una vez por worktree. Sin

@@ -200,6 +200,8 @@ entregable más caro y el único que hace que el hallazgo no vuelva.
 | un comando de un issue apilado **que cobra rutas de sus ancestros** | `to-issue` — el diff se compara contra la base explícita medida, no contra `staging` |
 | un hueco libre por rayos **que una malla sin collider tapa en pantalla** | `to-issue` — el encuadre cruza mallas, profundidades, proyección y capturas; los bordes físicos y los visibles se prueban aparte |
 | una captura **que ya no muestra el foco y la pose preparados** | `to-issue` — el fixture comprueba foco y pose dibujada al guardar, y el padre abre el PNG; un rayo anterior no certifica el cuadro final |
+| un historial de reportes **que falla sólo al superar veinte corridas** | `implement-batch` — se usa `res://reports` para que gdUnit4 globalice la ruta antes de retirarlos, sin modificar addon ni retención |
+| un XML sin errores **que oculta un callback abortado o una fuga al desmontar** | `implement-feature` — se conserva la salida cruda también en verde y el fixture afirma la entrega válida y la ejecución del receptor |
 | una dependencia instalada **adentro del worktree** que tira la importación de Godot | `implement-batch` — el preámbulo no dijo que Playwright se resuelve desde el checkout principal |
 
 **Si el problema no entra en ninguna fila, agregá la fila.** Esa tabla es el registro de lo que
