@@ -4,7 +4,7 @@
 ## esconder el panel al cambiar de app tiraría lo leído y lo anotado — sin un solo error, y con
 ## los nodos en verde.
 ##
-## Ningún caso entra el nodo al árbol. El único `_process()` que corre es el del reloj, llamado a
+## Ningún caso entra el nodo al árbol. El único `avanzar()` que corre es el del reloj, llamado a
 ## mano, y justamente porque el criterio mide que nadie lo haya pausado.
 extends GdUnitTestSuite
 
@@ -111,13 +111,13 @@ func test_treinta_segundos_con_la_computadora_abierta_cuestan_lo_mismo_que_sin_e
 	abierto.pedir_abrir()
 	var turno_abierto := _turno
 	var antes_abierto := turno_abierto.tiempo_restante()
-	abierto.reloj._process(SEGUNDOS_REALES_ABIERTA)
+	abierto.reloj.avanzar(SEGUNDOS_REALES_ABIERTA)
 	var gastado_abierto := antes_abierto - turno_abierto.tiempo_restante()
 
 	var cerrado := _escritorio()
 	var turno_cerrado := _turno
 	var antes_cerrado := turno_cerrado.tiempo_restante()
-	cerrado.reloj._process(SEGUNDOS_REALES_ABIERTA)
+	cerrado.reloj.avanzar(SEGUNDOS_REALES_ABIERTA)
 	var gastado_cerrado := antes_cerrado - turno_cerrado.tiempo_restante()
 
 	assert_float(gastado_abierto).is_equal(Ritmo.escalar(SEGUNDOS_REALES_ABIERTA))
@@ -256,7 +256,7 @@ func test_el_cierre_cuenta_la_planilla_de_ese_instante() -> void:  # AC-STK-052
 		if de_mas == 1:
 			ventanilla.pedir_atender()
 			ventanilla.pedir_cobrar()
-		escritorio.reloj._process(Reglas.DURACION_DEL_TURNO)
+		escritorio.reloj.avanzar(Reglas.DURACION_DEL_TURNO)
 		assert_array(cierres).is_equal([1 - de_mas])
 		# Con el turno cerrado, un gesto ya no cumple ni descumple.
 		escritorio.pedir_sumar(Catalogo.de(Producto.Id.FLINPUF))
@@ -273,7 +273,7 @@ func test_una_noche_sin_ventas_cierra_con_registrar_cumplida() -> void:  # AC-ST
 	assert_int(_turno.tareas_cumplidas()).is_zero()
 	var cierres: Array[int] = []
 	escritorio.reloj.turno_cerrado.connect(func(cumplidas: int) -> void: cierres.append(cumplidas))
-	escritorio.reloj._process(Reglas.DURACION_DEL_TURNO)
+	escritorio.reloj.avanzar(Reglas.DURACION_DEL_TURNO)
 	assert_array(cierres).is_equal([1])
 
 

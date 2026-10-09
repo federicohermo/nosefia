@@ -410,7 +410,7 @@ func test_despachar_la_placa_abre_la_noche_siguiente_sin_tareas_cumplidas() -> v
 
 	# Una obligatoria adicional distingue el marcador del cierre del de la apertura siguiente.
 	assert_bool(reloj.completar(reloj.obligatoria(Tarea.Tipo.CAJA))).is_true()
-	reloj._process(SEGUNDOS_REALES_DE_UN_TURNO)
+	reloj.avanzar(SEGUNDOS_REALES_DE_UN_TURNO)
 	(
 		assert_bool(pantalla.visible)
 		. override_failure_message("la noche cerró y la placa no apareció")
@@ -464,7 +464,7 @@ func test_abrir_la_jornada_deja_al_jugador_en_el_arranque() -> void:  # AC-PLY-0
 	jugador.global_position = Vector3(5.0, 0.2, -3.0)
 	jugador.velocity = Vector3(2.0, 0.0, 1.0)
 	control.girar(Vector2(170.0, -90.0))
-	reloj._process(SEGUNDOS_REALES_DE_UN_TURNO)
+	reloj.avanzar(SEGUNDOS_REALES_DE_UN_TURNO)
 	(pantalla.get_node("Fondo/Panel/Continuar") as Button).pressed.emit()
 	assert_vector(jugador.global_position).is_equal_approx(arranque.origin, Vector3.ONE * 1e-4)
 	assert_vector(jugador.velocity).is_equal(Vector3.ZERO)
@@ -489,7 +489,7 @@ func test_con_el_despido_la_placa_vuelve_al_menu_y_no_abre_otra_noche() -> void:
 	var pantalla: PantallaDeCierre = almacen.get_node("Interfaz/PantallaDeCierre")
 	var aperturas := [0]
 	ciclo.jornada_abierta.connect(func(_jornada: int) -> void: aperturas[0] += 1)
-	reloj._process(SEGUNDOS_REALES_DE_UN_TURNO)
+	reloj.avanzar(SEGUNDOS_REALES_DE_UN_TURNO)
 	assert_int(ciclo.partida().final()).is_equal(Partida.Final.DESPEDIDO)
 	assert_bool(pantalla.visible).is_true()
 	assert_bool((pantalla.get_node("Fondo/Panel/Continuar") as Button).visible).is_false()
@@ -511,7 +511,7 @@ func test_con_la_partida_en_curso_volver_al_menu_no_abre_la_noche_siguiente() ->
 	var reloj: RelojDelTurno = almacen.get_node("Servicios/RelojDelTurno")
 	var ciclo: CicloDeJornadas = almacen.get_node("Servicios/CicloDeJornadas")
 	var pantalla: PantallaDeCierre = almacen.get_node("Interfaz/PantallaDeCierre")
-	reloj._process(SEGUNDOS_REALES_DE_UN_TURNO)
+	reloj.avanzar(SEGUNDOS_REALES_DE_UN_TURNO)
 	assert_bool(ciclo.partida().terminada()).is_false()
 	(pantalla.get_node("Fondo/Panel/VolverAlMenu") as Button).pressed.emit()
 	assert_int(menus[0]).is_equal(1)
@@ -541,7 +541,7 @@ func test_con_la_placa_en_pantalla_esc_no_pausa() -> void:  # AC-SAV-018
 	add_child(almacen)
 	await get_tree().process_frame
 	var reloj: RelojDelTurno = almacen.get_node("Servicios/RelojDelTurno")
-	reloj._process(SEGUNDOS_REALES_DE_UN_TURNO)
+	reloj.avanzar(SEGUNDOS_REALES_DE_UN_TURNO)
 	var esc := InputEventAction.new()
 	esc.action = &"ui_cancel"
 	esc.pressed = true

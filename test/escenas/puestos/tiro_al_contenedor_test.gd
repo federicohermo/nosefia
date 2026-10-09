@@ -217,7 +217,7 @@ func test_examen_y_cierre_bloquean_ambos_clics() -> void:  # AC-CLN-039
 		assert_bool(almacen.get_node(TAPA).call("recibe_objetos")).is_true()
 	examen.terminar()
 	var reloj: RelojDelTurno = almacen.get("_reloj")
-	reloj.call("_process", Reglas.DURACION_DEL_TURNO + 1.0)
+	reloj.call("avanzar", Reglas.DURACION_DEL_TURNO + 1.0)
 	for ruta: String in [CUERPO, TAPA]:
 		_clic(jugador, almacen.get_node(ruta), MOUSE_BUTTON_LEFT)
 		_clic(jugador, almacen.get_node(ruta), MOUSE_BUTTON_RIGHT)

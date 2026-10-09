@@ -160,7 +160,7 @@ func test_dos_motivos_entregan_seis_medios_antes_del_parte_y_guardado() -> void:
 		func(_jornada: int, _cumplidas: int) -> void: observado.append(partida.medios())
 	)
 	# Sin ventas, registrar se cumple al cierre: las otras cuatro dejan la banda GRAVE.
-	reloj.call("_process", Reglas.DURACION_DEL_TURNO / Ritmo.SEGUNDOS_DE_TURNO_POR_SEGUNDO_REAL)
+	reloj.call("avanzar", Reglas.DURACION_DEL_TURNO / Ritmo.SEGUNDOS_DE_TURNO_POR_SEGUNDO_REAL)
 	assert_int(partida.medios()).is_equal(6)
 	assert_array(observado).contains_exactly([6])
 	assert_int(Partida.desde(Guardado.new().cargar()).medios()).is_equal(6)
@@ -175,7 +175,7 @@ func test_un_producto_en_el_piso_muestra_el_llamado_al_terminar() -> void:  # AC
 	assert_bool(CIERRE.hay_desorden(_foto())).is_true()
 	assert_object(unidad).is_not_null()
 	var reloj: RelojDelTurno = _almacen.get("_reloj")
-	reloj.call("_process", Reglas.DURACION_DEL_TURNO / Ritmo.SEGUNDOS_DE_TURNO_POR_SEGUNDO_REAL)
+	reloj.call("avanzar", Reglas.DURACION_DEL_TURNO / Ritmo.SEGUNDOS_DE_TURNO_POR_SEGUNDO_REAL)
 	var partida: Partida = _almacen.get("_partida")
 	assert_int(partida.medios()).is_equal(5)
 	var lineas: VBoxContainer = _almacen.get_node("Interfaz/PantallaDeCierre/Fondo/Panel/Lineas")

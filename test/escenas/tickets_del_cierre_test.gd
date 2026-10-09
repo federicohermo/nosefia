@@ -64,7 +64,7 @@ func _cerrar(impecable: bool) -> void:
 	if impecable:
 		for tarea: Tarea in partida.obligatorias():
 			reloj.completar(tarea)
-	reloj.call("_process", Reglas.DURACION_DEL_TURNO / Ritmo.SEGUNDOS_DE_TURNO_POR_SEGUNDO_REAL)
+	reloj.call("avanzar", Reglas.DURACION_DEL_TURNO / Ritmo.SEGUNDOS_DE_TURNO_POR_SEGUNDO_REAL)
 
 
 func _seguir() -> void:

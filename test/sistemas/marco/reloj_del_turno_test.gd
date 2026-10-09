@@ -1,7 +1,7 @@
 ## El reloj de la escena, ejercido sin levantar ninguna escena.
 ##
 ## Ningún caso de acá usa `scene_runner` ni entra el nodo al árbol: se instancia con
-## `auto_free(RelojDelTurno.new())` y se le llama `_process()` a mano con el `delta` que se
+## `auto_free(RelojDelTurno.new())` y se le llama `avanzar()` a mano con el `delta` que se
 ## quiera. Eso no es un truco del test: es la prueba de que adentro del reloj no quedó ninguna
 ## regla del juego, porque una regla habría necesitado un frame de verdad para ejercerse.
 ##
@@ -50,7 +50,7 @@ func after_test() -> void:
 	get_tree().paused = false
 
 
-## El único caso que entra el reloj al árbol: la pausa es del árbol, y un `_process()` llamado a
+## El único caso que entra el reloj al árbol: la pausa es del árbol, y un `avanzar()` llamado a
 ## mano no la ve. Lo que se afirma es que el reloj no tiene un `if` propio para la pausa: se
 ## detiene porque el motor deja de llamarlo.
 func test_con_el_arbol_en_pausa_el_turno_no_descuenta() -> void:  # AC-SHF-020
@@ -93,14 +93,14 @@ func test_un_cuadro_consume_el_delta_ya_escalado_por_el_ritmo() -> void:
 	# Medio segundo real son treinta de turno. Que dé 70 y no 99.5 es lo que verifica que el reloj
 	# escala; que no dé 40 es lo que verifica que llama a `consumir()` una vez y no dos.
 	var reloj := _reloj_arrancado(100.0, _sin_obligatorias())
-	reloj._process(0.5)
+	reloj.avanzar(0.5)
 	assert_float(_turno.tiempo_restante()).is_equal(70.0)
 
 
 func test_dos_cuadros_consumen_el_doble() -> void:
 	var reloj := _reloj_arrancado(100.0, _sin_obligatorias())
-	reloj._process(0.5)
-	reloj._process(0.5)
+	reloj.avanzar(0.5)
+	reloj.avanzar(0.5)
 	assert_float(_turno.tiempo_restante()).is_equal(40.0)
 
 
@@ -114,20 +114,20 @@ func test_un_reloj_sin_arrancar_aguanta_un_cuadro_sin_romperse() -> void:
 	# igual. Sin el guard, el modo de falla es un error de nulo en el arranque del juego.
 	var reloj: RelojDelTurno = auto_free(RelojDelTurno.new())
 	reloj.tiempo_consumido.connect(_anotar_consumo)
-	reloj._process(0.5)
+	reloj.avanzar(0.5)
 	assert_int(_consumos).is_equal(0)
 
 
 func test_cada_cuadro_que_consume_publica_lo_que_queda() -> void:
 	var reloj := _reloj_arrancado(100.0, _sin_obligatorias())
-	reloj._process(0.5)
+	reloj.avanzar(0.5)
 	assert_int(_consumos).is_equal(1)
 	assert_float(_restante_publicado).is_equal(_turno.tiempo_restante())
 
 
 func test_al_agotarse_el_presupuesto_el_turno_cierra_una_sola_vez() -> void:
 	var reloj := _reloj_arrancado(12.0, _sin_obligatorias())
-	reloj._process(1.0)
+	reloj.avanzar(1.0)
 	assert_float(_turno.tiempo_restante()).is_equal(0.0)
 	assert_bool(reloj.corriendo()).is_false()
 	assert_int(_cierres).is_equal(1)
@@ -138,8 +138,8 @@ func test_despues_de_cerrar_el_reloj_deja_de_consumir_y_no_vuelve_a_avisar() -> 
 	# Sin el guard, el cierre se emitiría una vez por cuadro y quien lo escucha registraría la
 	# jornada sesenta veces por segundo.
 	var reloj := _reloj_arrancado(12.0, _sin_obligatorias())
-	reloj._process(1.0)
-	reloj._process(1.0)
+	reloj.avanzar(1.0)
+	reloj.avanzar(1.0)
 	assert_int(_cierres).is_equal(1)
 	assert_float(_turno.tiempo_restante()).is_equal(0.0)
 
@@ -191,7 +191,7 @@ func test_completar_lo_que_obligatoria_no_encontro_contesta_que_no_y_no_revienta
 
 
 func test_un_reloj_sin_arrancar_no_completa_nada_en_vez_de_romperse() -> void:
-	# Mismo estado nulo que guarda `_process()`: la escena existe antes de que alguien le pase un
+	# Mismo estado nulo que guarda `avanzar()`: la escena existe antes de que alguien le pase un
 	# turno, y `completar()` es una puerta pública que se puede tocar antes que `arrancar()`.
 	var reloj: RelojDelTurno = auto_free(RelojDelTurno.new())
 	assert_bool(reloj.completar(Tarea.new(Tarea.Tipo.LIMPIAR))).is_false()

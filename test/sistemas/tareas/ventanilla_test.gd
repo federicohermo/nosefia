@@ -1,7 +1,7 @@
 ## El nodo que atiende adentro del motor: pide el comprador siguiente, cobra y publica.
 ##
 ## **Ningún caso entra el nodo al árbol.** Se instancia con `auto_free(Ventanilla.new())` y se le
-## llama a mano; el único `_process()` que corre en esta suite es el del reloj, y se lo llama
+## llama a mano; el único `avanzar()` que corre en esta suite es el del reloj, y se lo llama
 ## explícitamente porque el caso del tiempo mide justamente que nadie lo haya pausado.
 extends GdUnitTestSuite
 
@@ -155,7 +155,7 @@ func test_el_turno_sigue_corriendo_con_la_ventanilla_abierta() -> void:
 	var ventanilla := _ventanilla(2)
 	ventanilla.pedir_atender()
 	var antes := _turno.tiempo_restante()
-	ventanilla.reloj._process(SEGUNDOS_REALES_ABIERTA)
+	ventanilla.reloj.avanzar(SEGUNDOS_REALES_ABIERTA)
 	var gastado := antes - _turno.tiempo_restante()
 	assert_float(gastado).is_equal(Ritmo.escalar(SEGUNDOS_REALES_ABIERTA))
 

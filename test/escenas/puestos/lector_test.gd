@@ -243,6 +243,37 @@ func _enfocar(almacen: Node3D, objetivo: PhysicsBody3D, centro: Vector3) -> bool
 	return false
 
 
+func test_escaneo_con_foco_real_carga_la_caja_y_permite_imprimir() -> void:  # AC-CTR-021
+	var almacen := await _abrir()
+	var unidad := _unidad(almacen)
+	var agarre: Agarre = almacen.get("_agarre")
+	assert_bool(agarre.pedir_agarrar(unidad.datos, unidad)).is_true()
+	var lector: StaticBody3D = almacen.get_node("Estructura/Lector")
+	assert_bool(await _enfocar(almacen, lector, lector.global_position)).is_true()
+	var evento := InputEventMouseButton.new()
+	evento.button_index = MOUSE_BUTTON_RIGHT
+	evento.pressed = true
+	get_viewport().push_input(evento)
+	evento = evento.duplicate()
+	evento.pressed = false
+	get_viewport().push_input(evento)
+	assert_bool(_vista(almacen).visible).is_false()
+	assert_array(_caja(almacen).generador().renglones()).contains_exactly(
+		[(unidad.datos as UnidadDeProducto).producto]
+	)
+	var puesto := _puesto(almacen)
+	assert_bool(await _enfocar(almacen, puesto, puesto.global_position)).is_true()
+	evento.pressed = true
+	get_viewport().push_input(evento)
+	evento = evento.duplicate()
+	evento.pressed = false
+	get_viewport().push_input(evento)
+	assert_bool(_vista(almacen).visible).is_true()
+	_vista(almacen).imprimir.pressed.emit()
+	assert_array(_papeles(almacen)).has_size(1)
+	assert_object(agarre.manos().sostenido()).is_same(unidad.datos)
+
+
 func test_el_lector_apoya_en_el_mostrador_y_tiene_foco_y_contorno() -> void:  # AC-PLY-076
 	var almacen := await _abrir()
 	var lector: StaticBody3D = almacen.get_node("Estructura/Lector")

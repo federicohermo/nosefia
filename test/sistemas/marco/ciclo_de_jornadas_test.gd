@@ -1,7 +1,7 @@
 ## El ciclo, ejercido sin levantar ninguna escena.
 ##
 ## Ningún caso de acá usa `scene_runner` ni entra el nodo al árbol: se instancia con
-## `auto_free(CicloDeJornadas.new())` y las noches se agotan llamándole `_process()` al reloj a
+## `auto_free(CicloDeJornadas.new())` y las noches se agotan llamándole `avanzar()` al reloj a
 ## mano. Eso no es un truco del test: es la prueba de que adentro del ciclo no quedó ninguna
 ## regla del juego, porque una regla habría necesitado un frame de verdad para ejercerse.
 ##
@@ -123,7 +123,7 @@ func _ciclo_arrancado(partida: Partida, reloj: RelojDelTurno) -> CicloDeJornadas
 ##
 ## Sin completar nada, o sea la banda grave: es el camino corto al despido.
 func _agotar_la_noche(reloj: RelojDelTurno) -> void:
-	reloj._process(Reglas.DURACION_DEL_TURNO / Ritmo.SEGUNDOS_DE_TURNO_POR_SEGUNDO_REAL)
+	reloj.avanzar(Reglas.DURACION_DEL_TURNO / Ritmo.SEGUNDOS_DE_TURNO_POR_SEGUNDO_REAL)
 
 
 ## Las cinco obligatorias cumplidas y después la noche agotada.

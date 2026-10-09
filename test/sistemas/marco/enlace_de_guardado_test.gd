@@ -51,7 +51,7 @@ func _en_la_jornada(jornada: int) -> Partida:
 
 
 func _agotar_la_noche() -> void:
-	_reloj._process(Reglas.DURACION_DEL_TURNO / Ritmo.SEGUNDOS_DE_TURNO_POR_SEGUNDO_REAL)
+	_reloj.avanzar(Reglas.DURACION_DEL_TURNO / Ritmo.SEGUNDOS_DE_TURNO_POR_SEGUNDO_REAL)
 
 
 func _jugar_la_noche_impecable() -> void:

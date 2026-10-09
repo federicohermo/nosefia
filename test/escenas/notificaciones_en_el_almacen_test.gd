@@ -39,7 +39,7 @@ func test_la_ventanilla_abierta_avisa_una_vez_y_el_cierre_vacia() -> void:  # AC
 	caja.lectura_rechazada.emit(GeneradorDeTickets.Resultado.LLENO)
 	assert_array(_textos(local)).is_equal(["NO SE PUDO LEER"])
 	var reloj: RelojDelTurno = local.get("_reloj")
-	reloj._process(Reglas.DURACION_DEL_TURNO / Ritmo.SEGUNDOS_DE_TURNO_POR_SEGUNDO_REAL)
+	reloj.avanzar(Reglas.DURACION_DEL_TURNO / Ritmo.SEGUNDOS_DE_TURNO_POR_SEGUNDO_REAL)
 	assert_array(_textos(local)).is_empty()
 
 
