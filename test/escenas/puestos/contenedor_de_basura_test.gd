@@ -258,6 +258,9 @@ func test_llenarlo_con_productos_no_los_comprime_a_traves_del_cuerpo_o_la_tapa()
 	var camara: Camera3D = jugador.get("_camara")
 	camara.look_at(centro + Vector3.UP * 0.8)
 	var unidades: Array[ObjetoAgarrable] = []
+	var boca := _boca_interior(almacen, contenedor)
+	var tapa: TapaDelLocal = almacen.get_node(RUTA_DE_LA_TAPA)
+	assert_bool(tapa.recibe_objetos()).is_true()
 	var agarre: Agarre = almacen.get("_agarre")
 	for indice in 28:
 		var producto: Producto = Catalogo.todos()[indice % Catalogo.todos().size()]
@@ -268,6 +271,7 @@ func test_llenarlo_con_productos_no_los_comprime_a_traves_del_cuerpo_o_la_tapa()
 		var unidad := agarre.soltar(true) as ObjetoAgarrable
 		assert_object(unidad).is_not_null()
 		if unidad != null:
+			_dejar_caer_en_la_boca(almacen, unidad, unidades, boca)
 			unidades.append(unidad)
 		for cuadro in 35:
 			await get_tree().physics_frame
@@ -279,7 +283,6 @@ func test_llenarlo_con_productos_no_los_comprime_a_traves_del_cuerpo_o_la_tapa()
 		if absf(desde.x) < 0.34 and absf(desde.z) < 0.38 and desde.y < 1.1:
 			dentro += 1
 	assert_int(dentro).override_failure_message("la carga no llegó al tacho").is_greater(6)
-	var tapa: TapaDelLocal = almacen.get_node(RUTA_DE_LA_TAPA)
 	tapa.usar()
 	for cuadro in 120:
 		await get_tree().physics_frame
@@ -348,3 +351,72 @@ func test_el_contenedor_fijo_conserva_los_viajes_del_local_y_las_bolsas() -> voi
 		assert_float(nodo.global_position.distance_to(contenedor.global_position)).is_greater_equal(
 			ReglasDeLaBasura.DISTANCIA_MINIMA_AL_CONTENEDOR
 		)
+
+
+func _limites_fisicos(unidad: ObjetoAgarrable) -> AABB:
+	var forma: CollisionShape3D = unidad.get_node("Forma")
+	return forma.global_transform * forma.shape.get_debug_mesh().get_aabb()
+
+
+func _boca_interior(almacen: Node3D, contenedor: StaticBody3D) -> AABB:
+	var malla := contenedor.get_parent() as MeshInstance3D
+	var borde: AABB = malla.global_transform * malla.get_aabb()
+	var centro := Vector3(
+		contenedor.global_position.x,
+		borde.end.y - 2.0 * ReglasDeLosObjetos.ROCE,
+		contenedor.global_position.z
+	)
+	var limites: Array[Vector3] = []
+	for direccion: Vector3 in [Vector3.LEFT, Vector3.RIGHT, Vector3.FORWARD, Vector3.BACK]:
+		var golpe := _rayo(almacen, centro, centro + direccion * borde.size.length())
+		assert_object(golpe.get("collider")).is_same(contenedor)
+		limites.append(golpe.position)
+	var minimo := Vector3(limites[0].x, borde.position.y, limites[2].z)
+	var maximo := Vector3(limites[1].x, borde.end.y, limites[3].z)
+	return AABB(minimo, maximo - minimo)
+
+
+func _dejar_caer_en_la_boca(
+	almacen: Node3D, unidad: ObjetoAgarrable, cargadas: Array[ObjetoAgarrable], boca: AABB
+) -> void:
+	var apoyo := boca.end.y
+	for anterior: ObjetoAgarrable in cargadas:
+		apoyo = maxf(apoyo, _limites_fisicos(anterior).end.y)
+	var limites := _limites_fisicos(unidad)
+	var base := limites.position - unidad.global_position
+	var fin := limites.end - unidad.global_position
+	var desde := boca.position - base + Vector3.ONE * ReglasDeLosObjetos.ROCE
+	var hasta := boca.end - fin - Vector3.ONE * ReglasDeLosObjetos.ROCE
+	var altura := apoyo - base.y + 2.0 * ReglasDeLosObjetos.ROCE
+	var forma: CollisionShape3D = unidad.get_node("Forma")
+	var consulta := PhysicsShapeQueryParameters3D.new()
+	consulta.shape = forma.shape
+	consulta.collision_mask = unidad.collision_mask
+	consulta.exclude = [unidad.get_rid()]
+	var espacio := almacen.get_world_3d().direct_space_state
+	var encontrada := false
+	# El gesto recoloca sobre el borde mirado: montar una caída real por la boca prueba
+	# la contención sin depender de ese ajuste ni cambiar orientación, gravedad o colisiones.
+	for fraccion_z: float in [0.5, 0.75, 1.0, 0.25, 0.0]:
+		for fraccion_x: float in [0.5, 0.25, 0.75, 0.0, 1.0]:
+			var destino := Vector3(
+				lerpf(desde.x, hasta.x, fraccion_x), altura, lerpf(desde.z, hasta.z, fraccion_z)
+			)
+			consulta.transform = forma.global_transform
+			consulta.transform.origin += destino - unidad.global_position
+			consulta.motion = Vector3.ZERO
+			if not espacio.intersect_shape(consulta, 32).is_empty():
+				continue
+			unidad.global_position = destino
+			encontrada = true
+			break
+		if encontrada:
+			break
+	(
+		assert_bool(encontrada)
+		. override_failure_message("no hay caída libre por la boca para esta forma")
+		. is_true()
+	)
+	unidad.linear_velocity = Vector3.ZERO
+	unidad.angular_velocity = Vector3.ZERO
+	unidad.reset_physics_interpolation()
