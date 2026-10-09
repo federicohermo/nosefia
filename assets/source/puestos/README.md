@@ -15,18 +15,21 @@ Para exportar estas piezas con Blender 5.2.1, desde la raíz del repositorio:
 blender assets/source/puestos/caja_registradora.blend --background --python-exit-code 1 --python .claude/scripts/blender/exportar_caja.py -- assets/models
 ```
 
-El exportador aplica la transformación de cada pieza en metros, corrige el sentido de las
-caras al aplicar la escala negativa del lector y centra el papel para levantarlo. Conserva
-las UV y limita las imágenes exportadas a 1024 píxeles. No guarda cambios en la fuente.
+El exportador evalúa la malla antes de aplicar la transformación original en metros,
+conserva las UV y limita las imágenes exportadas a 1024 píxeles. Refleja X para usar
+el mismo espacio que el escritorio vigente y corrige el sentido de las caras. Centra
+el papel para levantarlo. No guarda cambios en la fuente.
 
 Al reimportar los tres GLB en Godot, `assets/models/importar_caja.gd` guarda las mallas `.res`
 y las colisiones estáticas que usan las escenas. El ticket recibe una colisión fina propia
-y se dibuja por ambas caras. Las posiciones en el juego se ajustan al escritorio vigente;
-el papel aparece sólo al imprimir y su salida se anima desde la caja.
+y se dibuja por ambas caras.
 
-La escena conserva la disposicion relativa de registradora y lector de la fuente del artista.
-Ambas piezas comparten un giro hacia la ventanilla y una ampliacion uniforme del 25 %.
-El ticket se amplia un 50 %, conserva su textura y sale por la ranura de la registradora.
+La registradora, el lector y el ticket conservan el tamaño y la disposición del artista,
+sin ampliaciones ni giros adicionales. La correspondencia con el escritorio del juego es
+`(x, y, z) = (4.43 - x_blender, z_blender, -y_blender - 1.532)`. El escritorio, el reloj
+y la computadora comparten esa correspondencia. El papel aparece sólo al imprimir y
+su salida se anima hasta la posición original del ticket del artista.
+
 Clic derecho en el lector registra el producto sostenido sin abrir una pantalla. Clic derecho
 en la registradora abre el generador. Desde la tercera jornada el lector se reemplaza por
 su hueco y el programa pasa a modo manual.

@@ -1467,7 +1467,7 @@ editor_description = "Lo dibuja la mopa que se levanta, en los objetos del almac
 disabled = true
 
 [node name="cajaregistradora" parent="."]
-transform = Transform3D(-1.053852118, 0, 0.672231889, 0, 1.25, 0, -0.672231889, 0, -1.053852118, 1.545735000, 1.135590286, 4.883701000)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.145735435, 1.113056183, 4.883701389)
 mesh = ExtResource("modelo_caja_nueva")
 
 [node name="Volumen" type="CollisionShape3D" parent="cajaregistradora/StaticBody3D"]
@@ -2240,10 +2240,10 @@ destino_de_los_tickets = NodePath("../..")
 mallas = [NodePath("..")]
 
 [node name="Ranura" type="Marker3D" parent="cajaregistradora"]
-position = Vector3(-0.135307, 0.163, -0.004086)
+position = Vector3(0.135307312, 0.130666852, -0.004085541)
 
 [node name="Lector" parent="." instance=ExtResource("lector")]
-transform = Transform3D(-1.053852118, 0, 0.672231889, 0, 1.25, 0, -0.672231889, 0, -1.053852118, 1.189041366, 1.040103943, 4.402664169)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.112113647, 1.036667109, 5.361603802)
 
 [node name="HabitacionesDelAlmacen" type="Node3D" parent="."]
 script = ExtResource("habitaciones")

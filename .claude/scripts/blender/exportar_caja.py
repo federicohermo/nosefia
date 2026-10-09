@@ -12,6 +12,7 @@ from mathutils import Matrix, Vector
 
 salida = Path(sys.argv[sys.argv.index("--") + 1]).resolve()
 datos = {}
+reflejo = Matrix.Diagonal((-1, 1, 1, 1))
 for nombre, destino in (
     ("cajaregistradora-col", "caja_registradora"),
     ("lector de productos-col", "lector_de_productos"),
@@ -20,10 +21,19 @@ for nombre, destino in (
     objeto = bpy.data.objects[nombre]
     posicion = objeto.matrix_world.translation.copy()
     matriz = objeto.matrix_world.copy()
-    objeto.data.transform(Matrix.Translation(-posicion) @ matriz)
-    # Al hornear una escala negativa, la orientacion de las caras tambien cambia.
-    if matriz.determinant() < 0:
+    # Evaluar antes de quitar la escala: los modificadores trabajan en el espacio del artista.
+    grafo = bpy.context.evaluated_depsgraph_get()
+    malla = bpy.data.meshes.new_from_object(
+        objeto.evaluated_get(grafo), preserve_all_data_layers=True, depsgraph=grafo
+    )
+    objeto.modifiers.clear()
+    objeto.data = malla
+    transformacion = reflejo @ Matrix.Translation(-posicion) @ matriz
+    objeto.data.transform(transformacion)
+    # El local vigente refleja X respecto de la fuente del artista.
+    if transformacion.determinant() < 0:
         objeto.data.flip_normals()
+    posicion = reflejo @ posicion
     objeto.matrix_world = Matrix.Identity(4)
     objeto.name = destino
     if destino == "ticket_impreso":

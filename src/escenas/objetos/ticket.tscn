@@ -5,7 +5,7 @@
 [ext_resource type="ArrayMesh" path="res://assets/models/ticket_impreso.res" id="modelo"]
 
 [sub_resource type="BoxShape3D" id="forma"]
-size = Vector3(0.0045, 0.182322, 0.1124925)
+size = Vector3(0.003, 0.121548, 0.074995)
 
 [node name="Ticket" type="RigidBody3D" groups=["interactuable"]]
 collision_mask = 9
@@ -17,6 +17,5 @@ orientacion_en_mano = Basis(0, 0, -1, 0, 1, 0, 1, 0, 0)
 shape = SubResource("forma")
 
 [node name="Malla" type="MeshInstance3D" parent="."]
-scale = Vector3(1.5, 1.5, 1.5)
 mesh = ExtResource("modelo")
 gi_mode = 2

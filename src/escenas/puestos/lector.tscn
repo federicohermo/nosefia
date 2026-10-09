@@ -6,7 +6,7 @@
 [ext_resource type="ConcavePolygonShape3D" path="res://assets/models/lector_de_productos_colision.res" id="colision"]
 
 [sub_resource type="ConvexPolygonShape3D" id="forma_del_hueco"]
-points = PackedVector3Array(-0.28, -0.013749, -0.135369, -0.28, 0.011251, -0.135369, 0.07361, -0.013749, -0.135369, 0.07361, 0.011251, -0.135369, -0.28, -0.013749, 0.135369, -0.28, 0.011251, 0.135369, 0.07361, -0.013749, 0.135369, 0.07361, 0.011251, 0.135369)
+points = PackedVector3Array(0.28, -0.013749, -0.135369, 0.28, 0.011251, -0.135369, -0.07361, -0.013749, -0.135369, -0.07361, 0.011251, -0.135369, 0.28, -0.013749, 0.135369, 0.28, 0.011251, 0.135369, -0.07361, -0.013749, 0.135369, -0.07361, 0.011251, 0.135369)
 
 [sub_resource type="StandardMaterial3D" id="oscuro"]
 albedo_color = Color(0.025, 0.025, 0.025, 1)
@@ -20,7 +20,7 @@ script = ExtResource("script")
 malla_del_hueco = SubResource("hueco")
 forma_del_hueco = SubResource("forma_del_hueco")
 forma = NodePath("Forma")
-posicion_del_hueco = Vector3(-0.103195, -0.001249, 0)
+posicion_del_hueco = Vector3(0.103195, -0.001249, 0)
 mallas = [NodePath("Malla")]
 
 [node name="Forma" type="CollisionShape3D" parent="."]
