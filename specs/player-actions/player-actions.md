@@ -85,7 +85,7 @@ examinar, llevar y soltar van de la más cerca a la más lejos, y ninguna llega 
 
 ### BR-PLY-011 — La puerta es una intención y una hoja
 
-CUANDO se interactúa con una puerta que no está trabada, el sistema DEBE alternar entre abierta
+CUANDO se usa una puerta que no está trabada, el sistema DEBE alternar entre abierta
 y cerrada de inmediato, y DEBE mover la hoja hacia su tope sin pasarse y sin saltar en un cuadro.
 Abierta, la hoja queda a **un cuarto de vuelta** y deja pasar.
 
@@ -93,6 +93,10 @@ Abierta, la hoja queda a **un cuarto de vuelta** y deja pasar.
 
 CUANDO se usa lo que se lleva sobre algo, el sistema DEBE contestar el efecto declarado para ese
 par, y **ningún efecto** para cualquier otro par o con las manos vacías.
+
+SI la mira enfoca una puerta, la computadora o la ventanilla, ENTONCES usar DEBE abrir o
+alternar eso antes que usar lo que se lleva: la herramienta NO DEBE tener efecto y lo que se
+lleva DEBE permanecer en la mano (BR-PLY-026).
 
 ### BR-PLY-013 — Lo que se suelta queda quieto
 
@@ -154,11 +158,11 @@ su lugar y sin girar hasta él, aunque la noche anterior hayan quedado abiertas 
 
 ### BR-PLY-020 — Tres puertas no abren, y cada gesto sobre una puerta avisa
 
-SI una puerta está trabada, ENTONCES interactuar con ella NO DEBE abrirla ni girar la hoja, y
+SI una puerta está trabada, ENTONCES usarla NO DEBE abrirla ni girar la hoja, y
 DEBE contestar que está trabada, todas las veces. La entrada al local, el portón del depósito y
 la oficina del jefe están trabadas; las dos puertas interiores no.
 
-CUANDO se interactúa con una puerta, el sistema DEBE avisar una vez qué pasó: se abrió, se cerró
+CUANDO se usa una puerta, el sistema DEBE avisar una vez qué pasó: se abrió, se cerró
 o está trabada. El aviso de trabada del portón es distinto del de las otras dos. Cerrar las
 puertas al abrir la jornada NO DEBE avisar: no es un gesto del jugador.
 
@@ -202,6 +206,17 @@ MIENTRAS el jugador lleva el balde en la mano, el sistema DEBE sostenerlo en el 
 de carga que las cajas, sin rotación adicional hacia la cara. Su eje DEBE permanecer vertical
 respecto del piso al mirar arriba o abajo, y DEBE acompañar el giro horizontal del jugador.
 CUANDO se lo suelta, queda derecho sobre el apoyo (BR-PLY-018).
+
+### BR-PLY-026 — El clic derecho abre lo fijo y conserva la mano
+
+CUANDO se usa —clic derecho— una puerta, la computadora o la ventanilla, el sistema DEBE
+abrirla o alternarla con las manos vacías y con cualquier cosa en la mano: una unidad, una
+caja, la mopa, el balde, un jabón o una bolsa. Lo que se lleva DEBE seguir en la mano. El uso
+de lo fijo NO DEBE pedir el uso de la herramienta ni la reposición.
+
+CUANDO se hace el gesto de agarrar —clic izquierdo— sobre ellas, el sistema NO DEBE abrirlas:
+con las manos vacías no pasa nada; con algo en la mano, DEBE soltarlo como sin mira
+(BR-PLY-018). SI el control está suspendido, ENTONCES usar NO DEBE abrir ni alternar lo fijo.
 
 ## Criterios de aceptación
 
@@ -421,13 +436,13 @@ está trabada y queda abierta.
 ### AC-PLY-040 — Qué puertas están trabadas *(verifica BR-PLY-020)*
 
 DADO el almacén armado ENTONCES la entrada, el portón del depósito y la oficina del jefe están
-trabadas y contestan a la interacción, y las dos puertas interiores no están trabadas.
+trabadas y contestan al uso, y las dos puertas interiores no están trabadas.
 
 ### AC-PLY-041 — Un aviso por gesto *(verifica BR-PLY-020)*
 
-DADO una puerta interior cerrada CUANDO se la toca dos veces seguidas, con la hoja todavía
+DADO una puerta interior cerrada CUANDO se la usa dos veces seguidas, con la hoja todavía
 girando, ENTONCES avisa una vez que se abrió y después una vez que se cerró. DADO una puerta
-trabada CUANDO se la toca diez veces ENTONCES avisa diez veces que está trabada, el portón con su
+trabada CUANDO se la usa diez veces ENTONCES avisa diez veces que está trabada, el portón con su
 propio aviso, y la hoja no gira. DADO la apertura de una jornada ENTONCES ninguna puerta avisa.
 
 ### AC-PLY-042 — Rescatar no mueve la mercadería *(verifica BR-PLY-016)*
@@ -512,6 +527,33 @@ DADO la vista 40 grados hacia abajo a medio metro de una pared CUANDO se lo suel
 derecho y, al pasar dos segundos de física, a menos de 1 centímetro de donde quedó. DADO el
 jugador en un hueco del tamaño de su cuerpo, sin lugar libre al lado, CUANDO se lo suelta
 ENTONCES el balde no vuelve a la mano: la mano queda vacía y el balde, derecho.
+
+### AC-PLY-054 — La puerta abre con cualquier mano y la conserva *(verifica BR-PLY-026, BR-PLY-011)*
+
+DADO una puerta interior cerrada y, por turno, las manos vacías, una unidad, una caja, la
+mopa, el balde, un jabón y una bolsa en la mano CUANDO se usa ENTONCES queda abierta, avisa
+una vez que se abrió y la mano lleva lo mismo que antes. CUANDO se usa otra vez ENTONCES
+queda cerrada y avisa una vez que se cerró, aunque la hoja todavía esté girando.
+
+### AC-PLY-055 — Agarrar no abre lo fijo *(verifica BR-PLY-026)*
+
+DADO una puerta interior, la computadora o la ventanilla cerradas y las manos vacías CUANDO
+se hace el gesto de agarrar ENTONCES siguen cerradas y no avisan. DADO una unidad en la mano
+CUANDO se hace ese gesto sobre ellas ENTONCES se suelta la unidad y siguen cerradas.
+
+### AC-PLY-056 — El panel abre y cierra sin cambiar la mano *(verifica BR-PLY-026, BR-PLY-006)*
+
+DADO la computadora o la ventanilla cerradas y cualquier cosa en la mano CUANDO se usan
+ENTONCES se abren, el jugador queda suspendido y la mano lleva lo mismo. CUANDO se usa otra
+vez ENTONCES se cierran, el jugador se reanuda y la mano sigue igual. DADO el control ya
+suspendido por otra pantalla ENTONCES usar no abre lo fijo.
+
+### AC-PLY-057 — Lo fijo gana a la herramienta y la trabada avisa *(verifica BR-PLY-026, BR-PLY-012, BR-PLY-020)*
+
+DADO una puerta trabada y la mopa en la mano CUANDO se usa diez veces ENTONCES avisa trabada
+diez veces, la hoja no gira, la mopa sigue en la mano y no se pide limpieza ni reposición.
+DADO una puerta interior con la mopa en la mano CUANDO se usa ENTONCES abre y tampoco se pide
+el uso de la mopa.
 
 ## No objetivos
 

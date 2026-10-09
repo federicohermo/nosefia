@@ -230,7 +230,7 @@ nada: la unidad sigue en la mano. Una caja no pasa nunca de las unidades de una 
 
 ### BR-STK-031 — La caja examinada dice cuántas tiene
 
-CUANDO el jugador examina una caja del depósito, apoyada o en la mano, el sistema DEBE mostrar
+CUANDO el jugador examina una caja del depósito en la mano, el sistema DEBE mostrar
 un texto con su contenido y el nombre de su producto en el catálogo. SI la caja no está llena,
 ENTONCES el texto DEBE decir además cuántas le entran: las unidades de una caja menos su
 contenido. El texto NO DEBE decir nada más: la pista de la caja no se muestra. CUANDO termina el
@@ -530,11 +530,12 @@ DADO una caja con tope de 8 CUANDO se la examina ENTONCES el texto es:
 DADO cada producto del catálogo ENTONCES su familia sonora tiene su palabra, en singular y en
 plural.
 
-### AC-STK-042 — El texto dura lo que dura el examen *(verifica BR-STK-031)*
+### AC-STK-042 — El texto dura lo que dura el examen en la mano *(verifica BR-STK-031)*
 
-DADO una caja apoyada CUANDO se la examina ENTONCES se lee su texto y no su pista; CUANDO se la
-examina en la mano ENTONCES se lee el mismo texto. CUANDO termina el examen ENTONCES el texto
-desaparece, y la caja tiene lo mismo que antes de examinarla.
+DADO una caja en la mano CUANDO se la examina ENTONCES se lee su texto y no su pista. CUANDO
+termina el examen ENTONCES el texto desaparece y la caja tiene lo mismo que antes.
+DADO la caja apoyada y las manos vacías CUANDO se pide examinar ENTONCES no hay examen ni
+texto de la caja, y la caja sigue apoyada con el mismo contenido.
 
 ### AC-STK-043 — El casillero ocupado se rechaza *(verifica BR-STK-009, BR-STK-032)*
 
