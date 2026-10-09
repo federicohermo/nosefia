@@ -16,7 +16,7 @@ comprador_visible = NodePath("Comprador")
 
 [node name="Comprador" type="AnimatedSprite3D" parent="."]
 visible = false
-position = Vector3(0, 0.57, 0.24)
+position = Vector3(0, 0.57, 0.30)
 rotation = Vector3(0, 3.1415927, 0)
 pixel_size = 0.001
 texture_filter = 0
