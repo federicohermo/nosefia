@@ -1,7 +1,7 @@
 ---
 schema_version: 1
 capability_id: CAP-NTF
-status: draft
+status: ratified
 owner: por definir
 provenance: GDD «Notificaciones»; decisiones del issue 309
 ---
