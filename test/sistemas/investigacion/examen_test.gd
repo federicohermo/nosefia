@@ -1,4 +1,4 @@
-## Examinar: acercar a la cara lo que se lleva o lo que se mira, revelar lo que tenía abajo, y no
+## Examinar: acercar a la cara lo que se lleva, revelar lo que tenía abajo, y no
 ## revelarlo dos veces.
 ##
 ## Igual que `Agarre`, se ejerce sin árbol de escena. Lo que NO se prueba acá es que el jugador
@@ -255,7 +255,7 @@ func test_lo_que_se_lleva_le_gana_a_lo_enfocado() -> void:  # AC-INV-020
 	assert_bool(examen.iniciar(_puerta())).is_true()
 	assert_array(revelados).contains_exactly([lata])
 	examen.terminar()
-	assert_bool(examen.iniciar(_lata(), otro)).is_true()
+	assert_bool(examen.iniciar(_lata())).is_true()
 	assert_object(otro.get_parent()).is_same(padre)
 
 
@@ -317,62 +317,36 @@ func test_sin_punto_de_examen_la_e_no_se_pasa_a_revelar_lo_enfocado() -> void:
 	assert_bool(examen.esta_examinando()).is_false()
 
 
-## Un cuerpo del mundo con un estado que se nota si no vuelve: movido, girado, suelto del padre,
-## con capa y máscara propias y sin congelar.
-func _del_mundo() -> RigidBody3D:
+func test_la_e_con_manos_vacias_no_examina_ni_revela_un_levantable() -> void:  # AC-INV-020
+	var agarre := _agarre()
+	var examen := _examen(agarre)
 	var cuerpo := _cuerpo()
 	cuerpo.position = Vector3(1.0, 0.5, -2.0)
 	cuerpo.rotation = Vector3(0.0, 0.8, 0.0)
 	cuerpo.collision_layer = 5
 	cuerpo.collision_mask = 7
 	cuerpo.freeze = false
-	return cuerpo
-
-
-func test_la_e_sobre_un_levantable_lo_examina_sin_agarrarlo() -> void:  # AC-INV-020
-	var agarre := _agarre()
-	var examen := _examen(agarre)
-	var cuerpo := _del_mundo()
-	var lata := _lata()
-	var iniciados: Array[Node3D] = []
-	examen.examen_iniciado.connect(func(nodo: Node3D) -> void: iniciados.append(nodo))
-	var revelados: Array[Resource] = []
-	examen.objeto_revelado.connect(
-		func(datos: Resource, _es_nuevo: bool) -> void: revelados.append(datos)
-	)
-	assert_bool(examen.iniciar(lata, cuerpo)).is_true()
-	assert_bool(examen.esta_examinando()).is_true()
-	assert_object(cuerpo.get_parent()).is_same(examen.punto_de_examen)
-	assert_array(iniciados).contains_exactly([cuerpo])
-	assert_array(revelados).contains_exactly([lata])
-	assert_object(agarre.manos().sostenido()).is_null()
-	examen.terminar()
-	assert_bool(agarre.pedir_agarrar(lata, cuerpo)).is_true()
-
-
-func test_la_segunda_e_devuelve_lo_examinado_a_su_lugar() -> void:  # AC-INV-021
-	var agarre := _agarre()
-	var examen := _examen(agarre)
-	var cuerpo := _del_mundo()
 	var padre := cuerpo.get_parent()
 	var lugar := cuerpo.transform
 	var lata := _lata()
-	var nuevos: Array[bool] = []
+	var iniciados: Array[Node3D] = []
+	var terminados := [0]
+	var revelados: Array[Resource] = []
+	examen.examen_iniciado.connect(func(nodo: Node3D) -> void: iniciados.append(nodo))
+	examen.examen_terminado.connect(func() -> void: terminados[0] += 1)
 	examen.objeto_revelado.connect(
-		func(_datos: Resource, es_nuevo: bool) -> void: nuevos.append(es_nuevo)
+		func(datos: Resource, _es_nuevo: bool) -> void: revelados.append(datos)
 	)
-	examen.alternar(lata, cuerpo)
-	assert_bool(cuerpo.freeze).is_true()
-	assert_int(cuerpo.collision_layer).is_zero()
-	examen.girar(Vector2.RIGHT, 0.5)
-	examen.alternar(lata, cuerpo)
+	assert_bool(examen.iniciar(lata)).is_false()
+	examen.alternar(lata)
 	assert_bool(examen.esta_examinando()).is_false()
 	assert_object(cuerpo.get_parent()).is_same(padre)
 	assert_bool(cuerpo.transform.is_equal_approx(lugar)).is_true()
 	assert_int(cuerpo.collision_layer).is_equal(5)
 	assert_int(cuerpo.collision_mask).is_equal(7)
 	assert_bool(cuerpo.freeze).is_false()
+	assert_array(iniciados).is_empty()
+	assert_array(revelados).is_empty()
+	assert_int(terminados[0]).is_zero()
+	assert_int(examen.hallazgos().cantidad()).is_zero()
 	assert_object(agarre.manos().sostenido()).is_null()
-	examen.alternar(lata, cuerpo)
-	assert_bool(examen.esta_examinando()).is_true()
-	assert_array(nuevos).contains_exactly([true, false])

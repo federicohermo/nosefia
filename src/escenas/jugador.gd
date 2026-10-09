@@ -146,6 +146,8 @@ func _unhandled_input(evento: InputEvent) -> void:
 		if not _control.esta_suspendido():
 			if _enfocado == null:
 				_usar_la_superficie_mirada()
+			elif _enfocado.has_method(ReglasDeLosObjetos.METODO_ACCIONAR):
+				_enfocado.call(ReglasDeLosObjetos.METODO_ACCIONAR)
 			elif _enfocado.has_method(ReglasDeLosObjetos.METODO_USAR):
 				_enfocado.call(ReglasDeLosObjetos.METODO_USAR)
 			else:
@@ -153,7 +155,7 @@ func _unhandled_input(evento: InputEvent) -> void:
 	elif evento.is_action_pressed(ReglasDeLosObjetos.ACCION_EXAMINAR):
 		# Con otra pantalla encima, la E no abre un examen: al cerrarlo reanudaría al jugador.
 		if examen.esta_examinando() or not _control.esta_suspendido():
-			examen.alternar(_datos_de(_enfocado), _enfocado)
+			examen.alternar(_datos_de(_enfocado))
 
 
 func _usar_la_superficie_mirada() -> void:
@@ -173,7 +175,7 @@ func _usar_la_superficie_mirada() -> void:
 
 ## **El clic se lo gasta quien hace algo con él, y sólo ése.** Tener `interactuar()` es la
 ## declaración de que el clic izquierdo es suyo: los puestos lo resuelven por señal y contestan
-## `null` —el escritorio abre, el estante coloca—, y soltar además sería un segundo efecto del
+## `null` —el estante coloca—, y soltar además sería un segundo efecto del
 ## mismo clic; las cajas contestan sus datos, y eso es lo que se agarra.
 ##
 ## **Lo que está en el grupo pero no tiene el método no se gasta nada**, y ésa es la diferencia

@@ -69,7 +69,8 @@ func test_los_puestos_reemplazados_usan_mallas_del_modelo() -> void:
 		var cuerpo := almacen.get_node_or_null(ruta)
 		assert_object(cuerpo).is_not_null()
 		assert_bool(cuerpo.is_in_group("interactuable")).is_true()
-		assert_bool(cuerpo.has_method("interactuar")).is_true()
+		var metodo := "accionar" if "compu" in ruta else "interactuar"
+		assert_bool(cuerpo.has_method(metodo)).is_true()
 		var mallas: Variant = cuerpo.get("mallas")
 		assert_bool(mallas is Array and not mallas.is_empty()).is_true()
 	assert_bool(almacen.has_node("Escritorio")).is_false()

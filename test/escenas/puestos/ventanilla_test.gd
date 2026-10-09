@@ -29,7 +29,7 @@ func test_la_ventanilla_esta_en_el_grupo_que_la_mira_puede_enfocar() -> void:
 	# que se puede interactuar, y el jugador no tiene cómo enterarse de que ahí se atiende.
 	var ventanilla := _ventanilla()
 	assert_bool(ventanilla.is_in_group(ReglasDelJugador.GRUPO_INTERACTUABLE)).is_true()
-	assert_bool(ventanilla.has_method(ReglasDeLosObjetos.METODO_INTERACTUAR)).is_true()
+	assert_bool(ventanilla.has_method(ReglasDeLosObjetos.METODO_ACCIONAR)).is_true()
 
 
 func test_la_ventanilla_recibe_al_jugador_y_al_reloj_por_export() -> void:
@@ -91,7 +91,7 @@ func test_tocar_la_ventanilla_clava_al_jugador_y_no_entrega_nada_para_levantar()
 	ventanilla.atenciones = atenciones
 	var pose := jugador.transform
 
-	assert_object(ventanilla.call(ReglasDeLosObjetos.METODO_INTERACTUAR)).is_null()
+	assert_object(ventanilla.call(ReglasDeLosObjetos.METODO_ACCIONAR)).is_null()
 	assert_object(atenciones.atencion()).is_not_null()
 	assert_that(jugador.transform).is_equal(pose)
 

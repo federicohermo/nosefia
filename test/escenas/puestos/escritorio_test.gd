@@ -21,7 +21,7 @@ func _escritorio() -> EscritorioQueSeVe:
 func test_el_escritorio_esta_en_el_grupo_que_la_mira_puede_enfocar() -> void:
 	var escritorio := _escritorio()
 	assert_bool(escritorio.is_in_group(ReglasDelJugador.GRUPO_INTERACTUABLE)).is_true()
-	assert_bool(escritorio.has_method(ReglasDeLosObjetos.METODO_INTERACTUAR)).is_true()
+	assert_bool(escritorio.has_method(ReglasDeLosObjetos.METODO_ACCIONAR)).is_true()
 
 
 func test_el_almacen_instancia_el_escritorio_exactamente_una_vez() -> void:
@@ -116,5 +116,5 @@ func test_tocar_el_escritorio_suspende_al_jugador_y_no_entrega_nada() -> void:
 	escritorio.reloj = reloj
 	escritorio.computadora = computadora
 
-	assert_object(escritorio.call(ReglasDeLosObjetos.METODO_INTERACTUAR)).is_null()
+	assert_object(escritorio.call(ReglasDeLosObjetos.METODO_ACCIONAR)).is_null()
 	assert_bool(computadora.computadora().abierta()).is_true()

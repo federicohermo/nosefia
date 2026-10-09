@@ -647,17 +647,15 @@ func test_examinar_no_retira_ni_deposita_y_devuelve_la_unidad_a_la_mira() -> voi
 	var caja: Node3D = almacen.get("_cajas_de_productos")[0]
 	var estante: Node3D = almacen.get("_estante")
 	var agarre: Agarre = almacen.get("_agarre")
-	# La caja apoyada se examina sin agarrarla, y la segunda E la devuelve a su lugar.
 	var lugar: Transform3D = caja.global_transform
 	_accion(jugador, caja, ReglasDeLosObjetos.ACCION_EXAMINAR)
-	assert_bool(jugador.examen.esta_examinando()).is_true()
+	assert_bool(jugador.examen.esta_examinando()).is_false()
+	assert_bool(jugador.get("_control").esta_suspendido()).is_false()
 	assert_object(agarre.manos().sostenido()).is_null()
-	# Mientras dura el examen la física corre, y la caja no se cae de la cara.
-	for cuadro in 10:
-		await get_tree().physics_frame
-	assert_vector(caja.position).is_equal(Vector3.ZERO)
-	_accion(jugador, caja, ReglasDeLosObjetos.ACCION_EXAMINAR)
 	assert_bool(caja.global_transform.is_equal_approx(lugar)).is_true()
+	assert_bool(jugador.examen.hallazgos().ya_visto(caja.get("datos"))).is_false()
+	_accion(jugador, caja, ReglasDeLosObjetos.ACCION_EXAMINAR)
+	assert_bool(jugador.examen.esta_examinando()).is_false()
 	_sacar_de_la_caja(jugador, caja)
 	var sostenido := agarre.manos().sostenido()
 	_accion(jugador, estante, ReglasDeLosObjetos.ACCION_EXAMINAR)

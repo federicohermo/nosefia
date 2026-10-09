@@ -73,9 +73,9 @@ func _ready() -> void:
 	top_level = true
 
 
-## Consume el clic izquierdo sin mover la hoja ni soltar lo que se lleva en la mano.
-func interactuar() -> ObjetoDelAlmacen:
-	return null
+## El clic derecho de lo fijo comparte la operación con las puertas de heladera.
+func accionar() -> void:
+	usar()
 
 
 ## Abrir, cerrar o intentar una puerta trabada corresponde al clic derecho.

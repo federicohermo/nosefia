@@ -189,3 +189,176 @@ func _scripts(carpeta: String) -> Array[String]:
 	for subcarpeta in DirAccess.get_directories_at(carpeta):
 		encontrados.append_array(_scripts(carpeta.path_join(subcarpeta)))
 	return encontrados
+
+
+func test_el_derecho_abre_las_dos_puertas_con_cualquier_mano() -> void:  # AC-PLY-054
+	var almacen := await _abrir()
+	var jugador: Node3D = almacen.get("_jugador")
+	jugador.set_physics_process(false)
+	var agarre: Agarre = almacen.get("_agarre")
+	var pedidos: Array[Node3D] = []
+	jugador.uso_pedido.connect(func(nodo: Node3D) -> void: pedidos.append(nodo))
+	for objeto: Node3D in _cosas_de_la_mano(almacen):
+		var dato: ObjetoDelAlmacen = null
+		var padre: Node = null
+		if objeto != null:
+			dato = objeto.get("datos")
+			assert_bool(agarre.pedir_agarrar(dato, objeto)).is_true()
+			padre = objeto.get_parent()
+		for ruta: String in ["Estructura/puerta", "Estructura/puerta2"]:
+			var cuerpo: Node3D = almacen.get_node(ruta + "/CuerpoDeLaHoja")
+			var avisos: Array[StringName] = []
+			var abierta := func(_puerta: Node3D) -> void: avisos.append(&"abierta")
+			var cerrada := func(_puerta: Node3D) -> void: avisos.append(&"cerrada")
+			cuerpo.puerta_abierta.connect(abierta)
+			cuerpo.puerta_cerrada.connect(cerrada)
+			assert_bool(cuerpo.call("puerta").abierta()).is_false()
+			_accion_en(jugador, cuerpo, ReglasDelJugador.ACCION_USAR)
+			assert_bool(cuerpo.call("puerta").abierta()).is_true()
+			assert_object(agarre.manos().sostenido()).is_same(dato)
+			_accion_en(jugador, cuerpo, ReglasDelJugador.ACCION_USAR)
+			assert_bool(cuerpo.call("puerta").abierta()).is_false()
+			assert_array(avisos).contains_exactly([&"abierta", &"cerrada"])
+			cuerpo.puerta_abierta.disconnect(abierta)
+			cuerpo.puerta_cerrada.disconnect(cerrada)
+			if objeto != null:
+				assert_object(objeto.get_parent()).is_same(padre)
+		if objeto != null:
+			agarre.entregar()
+	assert_array(pedidos).is_empty()
+
+
+func test_el_izquierdo_no_abre_lo_fijo_y_suelta_la_unidad() -> void:  # AC-PLY-055
+	var almacen := await _abrir()
+	var jugador: Node3D = almacen.get("_jugador")
+	jugador.set_physics_process(false)
+	var agarre: Agarre = almacen.get("_agarre")
+	var unidad := _unidad_para_el_caso(almacen)
+	var soltados: Array[Node3D] = []
+	var avisos := [0]
+	agarre.objeto_soltado.connect(func(nodo: Node3D) -> void: soltados.append(nodo))
+	for ruta: String in [
+		"Estructura/puerta/CuerpoDeLaHoja",
+		"Estructura/base compu/StaticBody3D",
+		"Estructura/Ventanilla"
+	]:
+		var puesto: Node3D = almacen.get_node(ruta)
+		if puesto.has_signal("puerta_abierta"):
+			puesto.connect("puerta_abierta", func(_nodo: Node3D) -> void: avisos[0] += 1)
+		_accion_en(jugador, puesto, ReglasDeLosObjetos.ACCION_AGARRAR)
+		assert_bool(jugador.get("_control").esta_suspendido()).is_false()
+		if puesto.has_method("puerta"):
+			assert_bool(puesto.call("puerta").abierta()).is_false()
+		assert_bool(agarre.pedir_agarrar(unidad.get("datos"), unidad)).is_true()
+		_accion_en(jugador, puesto, ReglasDeLosObjetos.ACCION_AGARRAR)
+		assert_object(agarre.manos().sostenido()).is_null()
+		assert_bool(jugador.get("_control").esta_suspendido()).is_false()
+		if puesto.has_method("puerta"):
+			assert_bool(puesto.call("puerta").abierta()).is_false()
+	assert_array(soltados).contains_exactly([unidad, unidad, unidad])
+	assert_int(avisos[0]).is_zero()
+
+
+func test_el_derecho_abre_y_cierra_paneles_con_cualquier_mano() -> void:  # AC-PLY-056
+	var almacen := await _abrir()
+	var jugador: Node3D = almacen.get("_jugador")
+	jugador.set_physics_process(false)
+	var agarre: Agarre = almacen.get("_agarre")
+	var pedidos: Array[Node3D] = []
+	jugador.uso_pedido.connect(func(nodo: Node3D) -> void: pedidos.append(nodo))
+	for objeto: Node3D in _cosas_de_la_mano(almacen):
+		var dato: ObjetoDelAlmacen = null
+		var padre: Node = null
+		if objeto != null:
+			dato = objeto.get("datos")
+			assert_bool(agarre.pedir_agarrar(dato, objeto)).is_true()
+			padre = objeto.get_parent()
+		for ruta: String in ["Estructura/base compu/StaticBody3D", "Estructura/Ventanilla"]:
+			var puesto: Node3D = almacen.get_node(ruta)
+			var panel: CanvasLayer = (
+				puesto.get("pantalla") if "compu" in ruta else puesto.get("panel")
+			)
+			assert_bool(panel.visible).is_false()
+			_accion_en(jugador, puesto, ReglasDelJugador.ACCION_USAR)
+			assert_bool(panel.visible).is_true()
+			assert_bool(jugador.get("_control").esta_suspendido()).is_true()
+			assert_object(agarre.manos().sostenido()).is_same(dato)
+			await _clic(true)
+			await _clic(false)
+			assert_bool(panel.visible).is_false()
+			assert_bool(jugador.get("_control").esta_suspendido()).is_false()
+			assert_object(agarre.manos().sostenido()).is_same(dato)
+			if objeto != null:
+				assert_object(objeto.get_parent()).is_same(padre)
+		if objeto != null:
+			agarre.entregar()
+	assert_array(pedidos).is_empty()
+
+
+func test_la_trabada_con_mopa_avisa_sin_pedir_limpieza() -> void:  # AC-PLY-057
+	var almacen := await _abrir()
+	var jugador: Node3D = almacen.get("_jugador")
+	jugador.set_physics_process(false)
+	var agarre: Agarre = almacen.get("_agarre")
+	var mopa: Node3D = almacen.get_node("Objetos/Mopa")
+	assert_bool(agarre.pedir_agarrar(mopa.get("datos"), mopa)).is_true()
+	var pedidos: Array[Node3D] = []
+	jugador.uso_pedido.connect(func(nodo: Node3D) -> void: pedidos.append(nodo))
+	var puerta: Node3D = almacen.get_node("Estructura/porton/CuerpoDeLaHoja")
+	var avisos := [0]
+	puerta.connect("porton_trabado", func(_nodo: Node3D) -> void: avisos[0] += 1)
+	var lugar: Transform3D = puerta.get("hoja").global_transform
+	for intento in 10:
+		_accion_en(jugador, puerta, ReglasDelJugador.ACCION_USAR)
+	assert_int(avisos[0]).is_equal(10)
+	assert_array(pedidos).is_empty()
+	assert_object(agarre.manos().sostenido()).is_same(mopa.get("datos"))
+	assert_bool(puerta.get("hoja").global_transform.is_equal_approx(lugar)).is_true()
+
+
+func test_con_otro_control_suspendido_el_derecho_no_abre_lo_fijo() -> void:  # AC-PLY-056
+	var almacen := await _abrir()
+	var jugador: Node3D = almacen.get("_jugador")
+	jugador.set_physics_process(false)
+	jugador.suspender()
+	for ruta: String in [
+		"Estructura/puerta/CuerpoDeLaHoja",
+		"Estructura/base compu/StaticBody3D",
+		"Estructura/Ventanilla"
+	]:
+		var puesto: Node3D = almacen.get_node(ruta)
+		_accion_en(jugador, puesto, ReglasDelJugador.ACCION_USAR)
+		if puesto.has_method("puerta"):
+			assert_bool(puesto.call("puerta").abierta()).is_false()
+		elif "pantalla" in puesto:
+			assert_bool(puesto.get("pantalla").visible).is_false()
+		else:
+			assert_bool(puesto.get("panel").visible).is_false()
+	assert_bool(jugador.get("_control").esta_suspendido()).is_true()
+
+
+func _cosas_de_la_mano(almacen: Node3D) -> Array[Node3D]:
+	return [
+		null,
+		_unidad_para_el_caso(almacen),
+		almacen.get("_cajas_de_productos")[0],
+		almacen.get_node("Objetos/Mopa"),
+		almacen.get_node("Objetos/Balde"),
+		almacen.get_node("Objetos/JabonAmarillo"),
+		almacen.get_node("Objetos/BolsaDeBasura1")
+	]
+
+
+func _unidad_para_el_caso(almacen: Node3D) -> Node3D:
+	var unidad: Node3D = load("res://src/escenas/objetos/objeto_agarrable.tscn").instantiate()
+	unidad.set("datos", UnidadDeProducto.new(Catalogo.de(Producto.Id.ACTRONCITO)))
+	almacen.add_child(unidad)
+	return unidad
+
+
+func _accion_en(jugador: Node3D, objetivo: Node3D, nombre: String) -> void:
+	jugador.set("_enfocado", objetivo)
+	var evento := InputEventAction.new()
+	evento.action = nombre
+	evento.pressed = true
+	jugador.call("_unhandled_input", evento)

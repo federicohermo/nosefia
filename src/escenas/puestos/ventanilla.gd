@@ -42,13 +42,9 @@ func _ready() -> void:
 	atenciones.ventanilla_vacia.connect(panel.mostrar_sin_nadie)
 
 
-## El contrato de «con esto se puede interactuar» es este método más el grupo del `.tscn`.
-##
-## Devuelve `null` porque de la ventanilla no se levanta nada: si contestara un objeto, el clic
-## de agarrar se la llevaría en la mano en vez de abrir la atención.
-func interactuar() -> ObjetoDelAlmacen:
+## El clic derecho abre lo fijo sin consumir el gesto de agarrar.
+func accionar() -> void:
 	abrir()
-	return null
 
 
 ## Clava al jugador delante del vidrio y pide a quien corresponda.
