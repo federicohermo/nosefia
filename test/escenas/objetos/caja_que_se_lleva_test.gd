@@ -904,6 +904,96 @@ func _soltar_en_los_doce_gestos(almacen: Node3D, mueble: Node3D) -> int:
 	return soltadas
 
 
+## La altura de una mancha de pared no es la del piso donde se para el jugador.
+func _paradas_con_vista_a_la_mancha(
+	almacen: Node3D, mancha: Node3D, caja: Node3D
+) -> Array[Vector3]:
+	var jugador: CharacterBody3D = almacen.get("_jugador")
+	var forma: CollisionShape3D = jugador.get_node("Cuerpo")
+	var local: CollisionShape3D = almacen.get_node("Estructura/SueloSolido/Local")
+	var piso := local.global_transform * local.shape.get_debug_mesh().get_aabb()
+	var blanco := _limites_de(mancha).get_center()
+	var frente := mancha.global_basis.y
+	frente.y = 0.0
+	if frente.is_zero_approx():
+		frente = jugador.global_position - blanco
+		frente.y = 0.0
+	frente = frente.normalized()
+	var espacio := almacen.get_world_3d().direct_space_state
+	var paradas: Array[Vector3] = []
+	for radio: float in [PARADO_DEL_CHARCO, PARADO_DEL_CHARCO * 0.75, PARADO_DEL_CHARCO * 1.25]:
+		for lado in 16:
+			var punto := blanco + Basis(Vector3.UP, TAU * lado / 16) * frente * radio
+			punto.y = piso.end.y + HOLGURA_DEL_APOYO
+			var capsula := PhysicsShapeQueryParameters3D.new()
+			capsula.shape = forma.shape
+			capsula.transform = Transform3D(Basis.IDENTITY, punto) * forma.transform
+			capsula.collision_mask = jugador.collision_mask
+			capsula.exclude = [jugador.get_rid(), (caja as CollisionObject3D).get_rid()]
+			capsula.margin = 0.0
+			if not espacio.intersect_shape(capsula).is_empty():
+				continue
+			var ojo := punto + Vector3.UP * ReglasDelJugador.ALTURA_DE_LA_CAMARA
+			var rayo := PhysicsRayQueryParameters3D.create(ojo, blanco)
+			rayo.collision_mask = (jugador.get("_campo") as Area3D).collision_mask
+			rayo.exclude = capsula.exclude
+			var golpe := espacio.intersect_ray(rayo)
+			if (
+				golpe.get("collider") == mancha
+				and ojo.distance_to(golpe.position) <= ReglasDelJugador.ALCANCE_DE_LA_MIRA
+			):
+				paradas.append(punto)
+	return paradas
+
+
+func _parar_frente_a_la_mancha(almacen: Node3D, mancha: Node3D, caja: Node3D) -> void:
+	var jugador: CharacterBody3D = almacen.get("_jugador")
+	var paradas := _paradas_con_vista_a_la_mancha(almacen, mancha, caja)
+	(
+		assert_array(paradas)
+		. override_failure_message("Sin parada con vista a %s" % mancha.name)
+		. is_not_empty()
+	)
+	if paradas.is_empty():
+		return
+	jugador.velocity = Vector3.ZERO
+	await _parar_al_jugador_en(jugador, paradas[0])
+	var espacio := almacen.get_world_3d().direct_space_state
+	var consulta := PhysicsRayQueryParameters3D.create(
+		jugador.global_position + Vector3.UP * 0.05, jugador.global_position + Vector3.DOWN * 0.15
+	)
+	consulta.exclude = [jugador.get_rid(), (caja as CollisionObject3D).get_rid()]
+	var apoyo := espacio.intersect_ray(consulta)
+	assert_bool(apoyo.is_empty()).is_false()
+	if apoyo.is_empty():
+		return
+	assert_bool(ReglasDeLosObjetos.se_puede_apoyar_en(apoyo.normal.y)).is_true()
+	var cuerpo: CollisionShape3D = jugador.get_node("Cuerpo")
+	var capsula := PhysicsShapeQueryParameters3D.new()
+	capsula.shape = cuerpo.shape
+	capsula.transform = cuerpo.global_transform
+	capsula.collision_mask = jugador.collision_mask
+	capsula.exclude = [jugador.get_rid(), (caja as CollisionObject3D).get_rid()]
+	capsula.margin = 0.0
+	assert_array(espacio.intersect_shape(capsula)).is_empty()
+
+
+func _abrir_las_cabinas(almacen: Node3D) -> void:
+	var puertas: Array[Node3D] = []
+	for nombre: String in ["bano_puerta_1", "bano_puerta_2"]:
+		var puerta: Node3D = almacen.get_node("Estructura/" + nombre + "/CuerpoDeLaHoja")
+		puertas.append(puerta)
+		if not (puerta.call("puerta") as Puerta).abierta():
+			puerta.call("usar")
+	for _cuadro in 120:
+		await get_tree().physics_frame
+		if puertas.all(func(puerta: Node3D) -> bool: return puerta.call("puerta").quieta()):
+			break
+	for puerta in puertas:
+		assert_bool((puerta.call("puerta") as Puerta).abierta()).is_true()
+		assert_bool((puerta.call("puerta") as Puerta).quieta()).is_true()
+
+
 func test_la_caja_se_suelta_con_la_mira_sobre_un_charco() -> void:
 	# **Lo enfocado no es la caja, y eso es lo que este caso agrega.** Los demás le escriben
 	# `_enfocado` a mano y le apuntan a la caja, así que ninguno podía ver esto: llevando una
@@ -915,6 +1005,7 @@ func test_la_caja_se_suelta_con_la_mira_sobre_un_charco() -> void:
 	await get_tree().physics_frame
 	almacen.get("_ciclo").abrir_la_jornada()
 	await get_tree().physics_frame
+	await _abrir_las_cabinas(almacen)
 	var jugador: CharacterBody3D = almacen.get("_jugador")
 	var caja: Node3D = almacen.get("_cajas_de_productos")[Producto.Id.LAYSNTT]
 	var mano: Node3D = jugador.get_node("Giro/PuntoDeCaja")
@@ -926,15 +1017,19 @@ func test_la_caja_se_suelta_con_la_mira_sobre_un_charco() -> void:
 			continue
 		if caja.get_parent() != mano:
 			_accion(jugador, caja, ReglasDeLosObjetos.ACCION_AGARRAR)
-		var desde := jugador.global_position - mancha.global_position
-		desde.y = 0.0
-		jugador.global_position = (
-			mancha.global_position + desde.normalized() * PARADO_DEL_CHARCO + Vector3.UP * 0.112
+		await _parar_frente_a_la_mancha(almacen, mancha, caja)
+		var camara: Camera3D = jugador.get_node("Giro/Camara")
+		var hacia := _limites_de(mancha).get_center() - camara.global_position
+		_mirar_sin_retraso(
+			jugador, atan2(-hacia.x, -hacia.z), atan2(hacia.y, Vector2(hacia.x, hacia.z).length())
 		)
-		await get_tree().physics_frame
-		_apuntar_a(jugador, mancha)
 		# El clic con el foco que el juego calcula solo, que acá es la mancha y no la caja.
-		_accion(jugador, mancha, ReglasDeLosObjetos.ACCION_AGARRAR)
+		jugador.call("_leer_la_mira")
+		assert_object(jugador.get("_enfocado")).is_same(mancha)
+		var evento := InputEventAction.new()
+		evento.action = ReglasDeLosObjetos.ACCION_AGARRAR
+		evento.pressed = true
+		jugador.call("_unhandled_input", evento)
 		(
 			assert_object(caja.get_parent())
 			. override_failure_message(

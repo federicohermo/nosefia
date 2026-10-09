@@ -139,6 +139,25 @@ func test_cerrar_el_turno_quita_la_nota_y_deja_la_placa() -> void:  # AC-PLY-067
 	assert_bool((jugador.get("_control") as ControlDelJugador).esta_suspendido()).is_true()
 
 
+## La malla y las cajas de soporte pueden compartir piso: importa la cara real del impacto.
+func _sobre_un_piso_interior(almacen: Node3D, golpe: Dictionary) -> bool:
+	if not ReglasDeLosObjetos.se_puede_apoyar_en(golpe.normal.y):
+		return false
+	for forma: CollisionShape3D in almacen.get_node("Estructura/SueloSolido").get_children():
+		if forma.disabled or not forma.shape is BoxShape3D:
+			continue
+		var caja := forma.shape as BoxShape3D
+		var media := caja.size / 2.0
+		var punto := forma.to_local(golpe.position)
+		if (
+			is_equal_approx(punto.y, media.y)
+			and absf(punto.x) <= media.x
+			and absf(punto.z) <= media.z
+		):
+			return true
+	return false
+
+
 func _posiciones_transitables(almacen: Node3D, hoja: StaticBody3D) -> Array[Vector3]:
 	var malla: MeshInstance3D = hoja.get("mallas")[0]
 	var centro := malla.to_global(malla.mesh.get_aabb().get_center())
@@ -164,9 +183,7 @@ func _posiciones_transitables(almacen: Node3D, hoja: StaticBody3D) -> Array[Vect
 			var golpe := espacio.intersect_ray(piso)
 			if golpe.is_empty():
 				continue
-			var apoyo := golpe.collider as CollisionObject3D
-			var dueno := apoyo.shape_owner_get_owner(apoyo.shape_find_owner(golpe.shape)) as Node
-			if apoyo.name != "SueloSolido" and dueno.name != "VolumenDelPisoDelBano":
+			if not _sobre_un_piso_interior(almacen, golpe):
 				continue
 			var posicion: Vector3 = golpe.position + Vector3.UP * 0.02
 			var volumen := PhysicsShapeQueryParameters3D.new()

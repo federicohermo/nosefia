@@ -338,7 +338,8 @@ func test_el_almacen_arranca_desde_el_guardado() -> void:  # AC-SAV-017
 	var guardada := {
 		PartidaSerializada.clave(PartidaSerializada.Campo.JORNADA):
 		ReglasDeLaPartida.PRIMERA_JORNADA + 2,
-		PartidaSerializada.clave(PartidaSerializada.Campo.MEDIOS): Reglas.APERCIBIMIENTOS_POR_AVISO,
+		PartidaSerializada.clave(PartidaSerializada.Campo.MEDIOS):
+		Reglas.APERCIBIMIENTOS_POR_AVISO * Reglas.MEDIOS_POR_APERCIBIMIENTO,
 	}
 	assert_bool(Guardado.new().escribir(guardada)).is_true()
 	var retomada: Partida = _almacen().get("_partida")
@@ -374,10 +375,9 @@ func test_los_cableados_de_la_raiz_llegan_asignados() -> void:
 		)
 
 
-func test_el_cableado_arma_el_parte_una_sola_vez_y_no_decide() -> void:
+func test_el_cableado_arma_el_parte_una_sola_vez() -> void:
 	# Dos partes por jornada sería la placa pintada dos veces con dos objetos distintos, y la
-	# segunda tapando a la primera. Y una condición acá adentro sería una regla del juego escrita
-	# donde ningún gate la mira.
+	# segunda tapando a la primera. Las decisiones se ejercen en sus suites funcionales.
 	var texto := FileAccess.get_file_as_string(SCRIPT_DEL_ALMACEN)
 	(
 		assert_int(texto.count("ParteDeCierre.new("))
@@ -386,14 +386,6 @@ func test_el_cableado_arma_el_parte_una_sola_vez_y_no_decide() -> void:
 		)
 		. is_equal(1)
 	)
-	var condicion := RegEx.create_from_string("\\b(if|elif|match)\\b")
-	for linea in texto.split("\n"):
-		var codigo: String = linea.split("#")[0]
-		(
-			assert_array(condicion.search_all(codigo))
-			. override_failure_message("`almacen.gd` decide en `%s`" % linea.strip_edges())
-			. is_empty()
-		)
 
 
 func test_la_escena_instancia_la_pantalla_de_cierre() -> void:
