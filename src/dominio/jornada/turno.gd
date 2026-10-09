@@ -23,6 +23,10 @@ func tiempo_restante() -> float:
 	return _tiempo_restante
 
 
+func se_agota_con(segundos: float) -> bool:
+	return segundos > 0.0 and not cerrado() and segundos >= _tiempo_restante
+
+
 ## Los valores negativos se ignoran en silencio: el tiempo del turno sólo avanza, y el dominio
 ## no habla —ni con `push_error`— porque no tiene con quién.
 func consumir(segundos: float) -> void:

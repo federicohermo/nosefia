@@ -189,7 +189,7 @@ func _ready() -> void:
 	_reposicion_manual.preparar()
 
 
-## Cada noche arranca con registrar cumplida, cada caja del depósito llena y la góndola
+## Cada noche arranca sin tareas cumplidas, cada caja del depósito llena y la góndola
 ## completa salvo lo que esa jornada hace faltar.
 ##
 ## El marcador lo dice la apertura y no el cierre de la anterior: entre las dos hay una placa que
@@ -261,7 +261,11 @@ func _al_cerrar_la_jornada(jornada: int, cumplidas: int) -> void:
 	_hud.mostrar_tareas(cumplidas)
 	_pantalla.mostrar(
 		ParteDeCierre.new(
-			jornada, _partida.obligatorias(), _partida.apercibimientos(), _partida.final()
+			jornada,
+			_partida.obligatorias(),
+			_partida.apercibimientos(),
+			_partida.final(),
+			_partida.llamados()
 		)
 	)
 	# Sin esto la placa es inalcanzable jugando: el jugador clava el puntero en el centro cada

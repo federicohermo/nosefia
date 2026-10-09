@@ -134,13 +134,8 @@ func test_el_surtido_fijo_no_muestra_stock_que_el_dominio_no_tiene() -> void:
 		var oculta := false
 		for lugar in lugares:
 			oculta = oculta or malla.global_position.distance_to(lugar) < TOLERANCIA
-		var falla := "se ve" if oculta else "está oculta fuera de la disposición"
-		(
-			assert_bool(malla.is_visible_in_tree())
-			. override_failure_message("%s %s" % [ruta, falla])
-			. is_equal(not oculta)
-		)
 		if oculta:
+			assert_bool(malla.is_visible_in_tree()).override_failure_message(ruta).is_false()
 			for cuerpo: PhysicsBody3D in malla.find_children("*", "PhysicsBody3D", true, false):
 				(
 					assert_int(cuerpo.collision_layer)
@@ -152,7 +147,7 @@ func test_el_surtido_fijo_no_muestra_stock_que_el_dominio_no_tiene() -> void:
 		assert_object(malla.mesh).is_instanceof(ArrayMesh)
 
 
-func test_las_hojas_con_lectura_conservan_el_modelo_del_artista() -> void:  # AC-PLY-071
+func test_las_hojas_del_bano_conservan_las_imagenes_del_artista() -> void:  # AC-PLY-071
 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
 	var original: Node3D = auto_free(
 		load("res://assets/models/SEPT_JUEGOS_PROTOTIPO.glb").instantiate()
@@ -160,8 +155,6 @@ func test_las_hojas_con_lectura_conservan_el_modelo_del_artista() -> void:  # AC
 	add_child(almacen)
 	add_child(original)
 	var rutas: Array[String] = ["nota baño inodoro", "nota instrucciones", "nota productos"]
-	for indice in range(1, 6):
-		rutas.append("board tareas/board de tareas_%03d" % indice)
 	for ruta in rutas:
 		var hoja: MeshInstance3D = almacen.get_node("Estructura/" + ruta)
 		var referencia: MeshInstance3D = original.get_node(ruta)

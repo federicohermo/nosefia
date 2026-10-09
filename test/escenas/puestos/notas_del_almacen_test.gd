@@ -311,13 +311,13 @@ func test_la_hoja_abierta_no_se_reemplaza_por_otro_foco() -> void:  # AC-PLY-066
 	assert_bool(_vista(almacen).visible).is_true()
 
 
-func test_el_corcho_conserva_cinco_hojas_y_solo_dos_ofrecen_lectura() -> void:  # AC-PLY-071
+func test_el_corcho_ofrece_las_dos_notas_con_contenido() -> void:  # AC-PLY-071
 	var almacen := await _abrir()
 	var corcho: Node3D = almacen.get_node("Estructura/board tareas")
 	var funcionales := 0
 	for indice in range(1, 6):
 		var hoja: MeshInstance3D = corcho.get_node("board de tareas_%03d" % indice)
-		assert_bool(hoja.is_visible_in_tree()).is_true()
+		assert_bool(hoja.is_visible_in_tree()).is_equal(indice <= 2)
 		var cuerpo: StaticBody3D = hoja.get_node("StaticBody3D")
 		if cuerpo.is_in_group(ReglasDelJugador.GRUPO_INTERACTUABLE):
 			funcionales += 1

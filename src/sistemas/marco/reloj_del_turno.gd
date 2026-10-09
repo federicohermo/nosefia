@@ -17,6 +17,7 @@ class_name RelojDelTurno
 extends Node
 
 signal tiempo_consumido(restante: float)
+signal cierre_iniciado
 signal tarea_completada(cumplidas: int)
 signal tarea_descumplida(cumplidas: int)
 signal turno_cerrado(cumplidas: int)
@@ -34,7 +35,10 @@ var _obligatorias: Array[Tarea] = []
 func _process(delta: float) -> void:
 	if not corriendo():
 		return
-	_turno.consumir(Ritmo.escalar(delta))
+	var segundos := Ritmo.escalar(delta)
+	if _turno.se_agota_con(segundos):
+		cierre_iniciado.emit()
+	_turno.consumir(segundos)
 	tiempo_consumido.emit(_turno.tiempo_restante())
 	if _turno.cerrado():
 		turno_cerrado.emit(_turno.tareas_cumplidas())

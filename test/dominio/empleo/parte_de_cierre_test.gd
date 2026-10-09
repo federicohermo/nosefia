@@ -142,3 +142,26 @@ func test_siete_medios_tienen_el_mismo_comentario_que_seis() -> void:  # AC-EMP-
 		assert_int(parte.apercibimientos()).is_equal(3)
 	assert_str(comentarios[1]).is_equal(comentarios[0])
 	assert_str(comentarios[1]).is_not_empty()
+
+
+func test_el_parte_agrega_cada_llamado_una_vez_sin_arrastrarlo() -> void:  # AC-EMP-023
+	var parte := (
+		ParteDeCierre
+		. new(
+			1,
+			Apertura.obligatorias(),
+			2,
+			Partida.Final.EN_CURSO,
+			[
+				Partida.Llamado.LOCAL_DESORDENADO,
+				Partida.Llamado.LOCAL_DESORDENADO,
+				Partida.Llamado.OBJETO_TIRADO,
+			]
+		)
+	)
+	assert_int(parte.lineas().size()).is_equal(Apertura.cantidad_de_obligatorias() + 2)
+	assert_array(parte.lineas()).contains(
+		["Local desordenado (+0,5 puntos)", "Objetos importantes en la basura (+0,5 puntos)"]
+	)
+	var siguiente := ParteDeCierre.new(2, Apertura.obligatorias(), 2, Partida.Final.EN_CURSO)
+	assert_int(siguiente.lineas().size()).is_equal(Apertura.cantidad_de_obligatorias())

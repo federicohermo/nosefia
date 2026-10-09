@@ -37,6 +37,10 @@ func medios() -> int:
 	return _legajo.medios()
 
 
+func llamados() -> Array[Llamado]:
+	return _llamados.duplicate()
+
+
 ## La partida del primer día: legajo limpio y la primera jornada por abrir.
 ##
 ## El constructor recibe el legajo en vez de armarlo para que el 019 pueda restaurar uno que

@@ -155,15 +155,15 @@ func test_lo_leido_y_lo_anotado_sobreviven_a_cambiar_de_app_y_a_cerrar() -> void
 	assert_int(escritorio.cuaderno().cuantas()).is_equal(1)
 
 
-func test_la_planilla_en_cero_de_una_noche_sin_ventas_cumple_registrar() -> void:  # AC-STK-024
+func test_la_planilla_sin_ventas_no_cumple_registrar_al_arrancar() -> void:  # AC-STK-052
 	var escritorio := _escritorio()
 	assert_bool(escritorio.registro().coincide()).is_true()
-	assert_int(_turno.tareas_cumplidas()).is_equal(1)
-	assert_bool(escritorio.reloj.obligatoria(Tarea.Tipo.REGISTRAR).completada()).is_true()
+	assert_int(_turno.tareas_cumplidas()).is_zero()
+	assert_bool(escritorio.reloj.obligatoria(Tarea.Tipo.REGISTRAR).completada()).is_false()
 	var avisos_al_abrir := _avisos_de_tarea
 	# Un «−» sobre la fila en 0 no cambia la fila, así que tampoco revisa.
 	escritorio.pedir_restar(Catalogo.de(Producto.Id.ACTRONCITO))
-	assert_int(_turno.tareas_cumplidas()).is_equal(1)
+	assert_int(_turno.tareas_cumplidas()).is_zero()
 	assert_int(_avisos_de_tarea).is_equal(avisos_al_abrir)
 	assert_int(_descumplidas).is_zero()
 
@@ -217,7 +217,7 @@ func test_una_venta_nueva_descumple_registrar_y_anotarla_la_cumple() -> void:  #
 	assert_bool(escritorio.reloj.obligatoria(Tarea.Tipo.REGISTRAR).completada()).is_true()
 
 
-func test_otra_noche_reinicia_las_tres_anotadas_y_cumple_registrar() -> void:  # AC-STK-026
+func test_otra_noche_reinicia_las_tres_anotadas_sin_cumplir_registrar() -> void:  # AC-STK-026
 	var pedidos: Array[Venta] = [_venta(Producto.Id.ACTRONCITO, 2), _venta(Producto.Id.DUREXTRA, 1)]
 	var atender := _atender(pedidos)
 	_cobrar_el_siguiente(atender)
@@ -231,8 +231,8 @@ func test_otra_noche_reinicia_las_tres_anotadas_y_cumple_registrar() -> void:  #
 	escritorio.arrancar(RegistroDeVentas.new(Catalogo.todos(), _atender()))
 	for producto in Catalogo.todos():
 		assert_int(escritorio.registro().unidades_de(producto)).is_zero()
-	assert_bool(escritorio.reloj.obligatoria(Tarea.Tipo.REGISTRAR).completada()).is_true()
-	assert_int(_turno.tareas_cumplidas()).is_equal(1)
+	assert_bool(escritorio.reloj.obligatoria(Tarea.Tipo.REGISTRAR).completada()).is_false()
+	assert_int(_turno.tareas_cumplidas()).is_zero()
 
 
 func test_el_cierre_cuenta_la_planilla_de_ese_instante() -> void:  # AC-STK-052
@@ -270,6 +270,7 @@ func test_el_cierre_cuenta_la_planilla_de_ese_instante() -> void:  # AC-STK-052
 
 func test_una_noche_sin_ventas_cierra_con_registrar_cumplida() -> void:  # AC-STK-052
 	var escritorio := _escritorio()
+	assert_int(_turno.tareas_cumplidas()).is_zero()
 	var cierres: Array[int] = []
 	escritorio.reloj.turno_cerrado.connect(func(cumplidas: int) -> void: cierres.append(cumplidas))
 	escritorio.reloj._process(Reglas.DURACION_DEL_TURNO)
@@ -287,7 +288,7 @@ func test_anotar_antes_de_vender_se_cumple_con_el_cobro() -> void:  # AC-STK-025
 	assert_bool(escritorio.reloj.obligatoria(Tarea.Tipo.REGISTRAR).completada()).is_true()
 
 
-func test_rechazar_un_cobro_y_despachar_sin_vender_conservan_registrar() -> void:
+func test_rechazar_un_cobro_y_despachar_sin_vender_no_completan_registrar() -> void:
 	var atender := _atender([_venta(Producto.Id.ACTRONCITO, 99)])
 	var escritorio := _escritorio(atender)
 	var ventanilla := _ventanilla(atender, escritorio)
@@ -295,11 +296,11 @@ func test_rechazar_un_cobro_y_despachar_sin_vender_conservan_registrar() -> void
 	var avisos_al_abrir := _avisos_de_tarea
 	ventanilla.pedir_atender()
 	ventanilla.pedir_cobrar()
-	assert_bool(registrar.completada()).is_true()
+	assert_bool(registrar.completada()).is_false()
 	assert_int(_avisos_de_tarea).is_equal(avisos_al_abrir)
 	assert_int(_descumplidas).is_zero()
 	ventanilla.pedir_despachar_sin_vender()
-	assert_bool(registrar.completada()).is_true()
+	assert_bool(registrar.completada()).is_false()
 	assert_int(_descumplidas).is_zero()
 	assert_int(atender.vendidas_de(Catalogo.de(Producto.Id.ACTRONCITO))).is_zero()
 

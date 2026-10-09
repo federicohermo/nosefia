@@ -2173,6 +2173,21 @@ position = Vector3(10.833626775, 3.383932600, 6.342011573)
 scale = Vector3(0.997537081, 0.997537081, 0.997537081)
 shape = SubResource("frente_exterior_bano")
 
+[node name="board de tareas_002" parent="board tareas"]
+transform = Transform3D(0.132595, 0, 0, 0, 0.285204, 0, 0, 0, 0.267035, -0.446582, 0.008555, 0)
+
+[node name="board de tareas_001" parent="board tareas"]
+transform = Transform3D(0.132595, 0, 0, 0, 0.285204, 0, 0, 0, 0.267035, 0.559394, 0.008555, 0)
+
+[node name="board de tareas_003" parent="board tareas"]
+visible = false
+
+[node name="board de tareas_004" parent="board tareas"]
+visible = false
+
+[node name="board de tareas_005" parent="board tareas"]
+visible = false
+
 [node name="StaticBody3D" parent="board tareas/board de tareas_002" node_paths=PackedStringArray("mallas", "titulo_del_papel", "renglones_del_papel") groups=["interactuable"]]
 script = ExtResource("nota_pegada")
 id = 0

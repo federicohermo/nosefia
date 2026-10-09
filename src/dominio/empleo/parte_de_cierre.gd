@@ -20,6 +20,13 @@ enum Opcion { SEGUIR, VOLVER_AL_MENU }
 ## un número escrito.
 const SALUDO := "Jornada %d de %d. El jefe dejó una nota."
 
+const MOTIVOS: Dictionary[Partida.Llamado, String] = {
+	Partida.Llamado.LOCAL_DESORDENADO: "Local desordenado",
+	Partida.Llamado.OBJETO_AFUERA: "Objetos fuera del local",
+	Partida.Llamado.PAPEL_EN_EL_INODORO: "Papel en el inodoro",
+	Partida.Llamado.OBJETO_TIRADO: "Objetos importantes en la basura",
+}
+
 ## Lo que el jugador puede elegir según cómo quedó la partida. Con la partida terminada no hay
 ## noche siguiente que abrir.
 const OPCIONES_POR_FINAL: Dictionary[Partida.Final, Array] = {
@@ -32,15 +39,21 @@ var _jornada: int
 var _obligatorias: Array[Tarea]
 var _apercibimientos: int
 var _final: Partida.Final
+var _llamados: Array[Partida.Llamado]
 
 
 func _init(
-	jornada: int, obligatorias: Array[Tarea], apercibimientos: int, final: Partida.Final
+	jornada: int,
+	obligatorias: Array[Tarea],
+	apercibimientos: int,
+	final: Partida.Final,
+	llamados: Array[Partida.Llamado] = []
 ) -> void:
 	_jornada = jornada
 	_obligatorias = obligatorias
 	_apercibimientos = apercibimientos
 	_final = final
+	_llamados = llamados.duplicate()
 
 
 func jornada() -> int:
@@ -63,6 +76,14 @@ func lineas() -> Array[String]:
 	var renglones: Array[String] = []
 	for tarea in _obligatorias:
 		renglones.append(CatalogoDeReacciones.de_la_tarea(tarea.tipo(), tarea.completada()).texto)
+	var penalizacion := (
+		String
+		. num(float(Reglas.MEDIOS_POR_LLAMADO) / Reglas.MEDIOS_POR_APERCIBIMIENTO, 1)
+		. replace(".", ",")
+	)
+	for motivo: Partida.Llamado in MOTIVOS:
+		if _llamados.has(motivo):
+			renglones.append("%s (+%s puntos)" % [MOTIVOS[motivo], penalizacion])
 	return renglones
 
 
