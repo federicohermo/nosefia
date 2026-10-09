@@ -277,17 +277,18 @@ renglones. La nota de ordenado DEBE presentar las tres viñetas de su criterio, 
 CUANDO se usa la caja registradora con clic derecho, el sistema DEBE abrir su programa y
 suspender el control, conservando lo que se lleva y su lugar en la mano. Otro clic derecho
 DEBE cerrar y reanudar. Una pantalla o examen abiertos NO DEBEN permitir abrir el programa.
-SI se sostiene una unidad y el programa es automático, ENTONCES el mismo uso de la caja
-DEBE leerla antes de abrir, sin exigir apuntar a un aparato separado. En modo manual DEBE
-abrir sin leer la unidad. Los rechazos de lectura conservan los renglones y la mano.
+SI se sostiene un objeto y el programa es automático, ENTONCES el mismo uso de la caja
+DEBE pedir su lectura sin abrir el programa. Después de dejar el producto, otro clic derecho
+con la mano vacía DEBE abrirlo. Lectura, consulta e impresión se hacen en un único equipo.
+En modo manual DEBE abrir sin leer. Los rechazos conservan los renglones y la mano.
 Leerlo NO DEBE detener el turno. La pausa DEBE dibujarse por encima y, al reanudar, DEBE
 continuar abierto y suspendido. El cierre del turno DEBE cerrarlo antes de mostrar su placa.
 
 ### BR-PLY-032 — El lector usa la unidad sostenida
 
-CUANDO se usa el lector con clic derecho y algo en la mano, el sistema DEBE pedir su lectura
-sin agarrarlo, soltarlo ni usarlo como herramienta. Con la mano vacía NO DEBE pedir lectura
-ni avisar rechazo. Los rechazos y sus motivos los decide
+CUANDO se usa el lector integrado en la caja con clic derecho y algo en la mano, el sistema DEBE pedir su lectura
+sin agarrarlo, soltarlo ni usarlo como herramienta ni abrir el programa. Con la mano vacía
+DEBE abrir el programa sin pedir lectura ni avisar rechazo. Los rechazos y sus motivos los decide
 [`counter-service`](../counter-service/counter-service.md).
 
 ### BR-PLY-033 — El ticket es un papel que se lleva
@@ -748,9 +749,9 @@ originales del baño se conservan al agregar lectura.
 
 ### AC-PLY-072 — La caja abre con cada mano y la conserva *(verifica BR-PLY-031, BR-PLY-026, BR-PLY-006, BR-PLY-028)*
 
-DADO la caja cerrada y, por turno, manos vacías, unidad, caja, mopa, balde, jabón, bolsa y
-ticket, CUANDO se hace clic derecho ENTONCES abre el programa y suspende el control sin
-cambiar lo sostenido ni su padre o pose. CUANDO se hace otro derecho ENTONCES cierra y la
+DADO la caja automática cerrada con manos vacías, o la caja manual con cualquier objeto,
+CUANDO se hace clic derecho ENTONCES abre el programa y suspende el control sin
+cambiar lo sostenido. CUANDO se hace otro derecho ENTONCES cierra y la
 mano sigue igual. El izquierdo y E con mano vacía no abren; abierto, no agarran ni examinan.
 DADO otra pantalla o examen abiertos ENTONCES no abre el programa encima.
 
@@ -759,7 +760,7 @@ DADO otra pantalla o examen abiertos ENTONCES no abre el programa encima.
 DADO una unidad sostenida y el programa cerrado, CUANDO se usa el lector ENTONCES se anota
 su producto y sigue en la mano; al abrir el programa aparece. DADO cada objeto que no es
 unidad ENTONCES se avisa su rechazo sin cambiar la mano. DADO manos vacías ENTONCES no se
-pide lectura ni aviso. DADO clic izquierdo o E con mano vacía ENTONCES no se lee ni se abre.
+pide lectura ni aviso y se abre el programa. DADO clic izquierdo o E con mano vacía ENTONCES no se lee ni se abre.
 
 ### AC-PLY-074 — Reloj, pausa y cierre del programa *(verifica BR-PLY-031)*
 
