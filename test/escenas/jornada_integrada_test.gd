@@ -168,7 +168,7 @@ func _reponer(almacen: Node3D) -> void:
 
 func _registrar(almacen: Node3D) -> void:
 	var escritorio: Node3D = almacen.get_node("Estructura/base compu/StaticBody3D")
-	escritorio.call("interactuar")
+	escritorio.call(ReglasDeLosObjetos.METODO_ACCIONAR)
 	var pantalla: PantallaDeComputadora = escritorio.get("pantalla")
 	assert_bool(pantalla.visible).is_true()
 	await _comprobar_reloj(almacen)
@@ -207,7 +207,7 @@ func _atender(almacen: Node3D) -> void:
 	var panel: PanelDeLaVentanilla = ventanilla.get("panel")
 	var cobrar: Button = panel.get_node("Fondo/Panel/Cobrar")
 	for comprador in Compradores.de_la_jornada():
-		ventanilla.call("interactuar")
+		ventanilla.call(ReglasDeLosObjetos.METODO_ACCIONAR)
 		assert_bool(panel.visible).is_true()
 		await _comprobar_reloj(almacen)
 		cobrar.pressed.emit()
