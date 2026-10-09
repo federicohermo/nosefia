@@ -1,0 +1,78 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+[   0% ] [90m[1mfirst_scan_filesystem[22m | Started Inicialización del proyecto (5 steps)[39m[0m
+[   0% ] [90m[1mfirst_scan_filesystem[22m | Escaneando la estructura del archivo...[39m[0m
+[  16% ] [90m[1mfirst_scan_filesystem[22m | Cargando nombres de clases globales...[39m[0m
+[  33% ] [90m[1mfirst_scan_filesystem[22m | Verificando GDExtensions...[39m[0m
+[  50% ] [90m[1mfirst_scan_filesystem[22m | Creando scripts de carga automática...[39m[0m
+[  66% ] [90m[1mfirst_scan_filesystem[22m | Inicializando plugins...[39m[0m
+[38;2;218;165;32mIt was recognized that GdUnit4 is running in a test environment, therefore the GdUnit4 plugin will not be executed![0m
+[MCP] Connecting to ports 6505-6514
+[MCP] Godot MCP Pro v1.16.0 started (ports 6505-6514)
+[MCP] Registered 177 commands
+[  83% ] [90m[1mfirst_scan_filesystem[22m | Iniciando escaneo de archivos...[39m[0m
+[92m[ DONE ][39m [1mfirst_scan_filesystem[22m
+[0m
+[   0% ] [90m[1mupdate_scripts_classes[22m | Started Registrando clases globales... (28 steps)[39m[0m
+[   0% ] [90m[1mupdate_scripts_classes[22m | CatalogoDeReacciones[39m[0m
+[   3% ] [90m[1mupdate_scripts_classes[22m | Legajo[39m[0m
+[   6% ] [90m[1mupdate_scripts_classes[22m | ParteDeCierre[39m[0m
+[  10% ] [90m[1mupdate_scripts_classes[22m | Partida[39m[0m
+[  13% ] [90m[1mupdate_scripts_classes[22m | Marcador[39m[0m
+[  17% ] [90m[1mupdate_scripts_classes[22m | EncuadreDeLaVentanilla[39m[0m
+[  20% ] [90m[1mupdate_scripts_classes[22m | Dialogo[39m[0m
+[  24% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  27% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  31% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  34% ] [90m[1mupdate_scripts_classes[22m | ComputadoraDeEscritorio[39m[0m
+[  37% ] [90m[1mupdate_scripts_classes[22m | Locutor[39m[0m
+[  41% ] [90m[1mupdate_scripts_classes[22m | CapaDeDialogo[39m[0m
+[  44% ] [90m[1mupdate_scripts_classes[22m | PantallaDeCierre[39m[0m
+[  48% ] [90m[1mupdate_scripts_classes[22m | Hud[39m[0m
+[  51% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  55% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  58% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  62% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  65% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  68% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  72% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  75% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  79% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  82% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  86% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  89% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  93% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[92m[ DONE ][39m [1mupdate_scripts_classes[22m
+[0m
+[   0% ] [90m[1mreimport[22m | Started (Re)Importación de Assets (1 steps)[39m[0m
+[   0% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+[   0% ] [90m[1mreimport[22m | Ejecutando operaciones de pre-reimportación...[39m[0m
+[   0% ] [90m[1mreimport[22m | logo.png[39m[0m
+[  50% ] [90m[1mreimport[22m | Finalizando la importación de recursos...[39m[0m
+[92m[ DONE ][39m [1mreimport[22m
+[0m
+[   0% ] [90m[1mreimport[22m | Started (Re)Importación de Assets (1 steps)[39m[0m
+[   0% ] [90m[1mreimport[22m | Ejecutando operaciones post-reimportación...[39m[0m
+[92m[ DONE ][39m [1mreimport[22m
+[0m
+[   0% ] [90m[1mloading_editor_layout[22m | Started Cargando editor (5 steps)[39m[0m
+[   0% ] [90m[1mloading_editor_layout[22m | Cargando diseño del editor...[39m[0m
+[  16% ] [90m[1mloading_editor_layout[22m | Cargando docks...[39m[0m
+[92m[ DONE ][39m [1mloading_editor_layout[22m
+[0m
+[MCP] WebSocket client stopped
+[MCP] Godot MCP Pro stopped
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+HOJA nombre=/root/Almacen/Estructura/board tareas/board de tareas_001 aabb_local=[P: (-1.0, -0.03, -1.0), S: (2.0, 0.03, 2.0)] pose=[X: (0.0, 0.0, -0.054806), Y: (0.431647, 0.0, 0.0), Z: (0.0, -0.060349, 0.0), O: (-2.404351, 1.682598, 3.607026)] frente=(-0.033681, 0.963589, 0.265259)
+HOJA nombre=/root/Almacen/Estructura/board tareas/board de tareas_002 aabb_local=[P: (-1.0, -0.03, -1.0), S: (2.0, 0.03, 2.0)] pose=[X: (0.0, 0.0, -0.054806), Y: (0.431647, 0.0, 0.0), Z: (0.0, -0.060349, 0.0), O: (-2.404351, 1.682598, 4.403641)] frente=(-0.033681, 0.963589, 0.265259)
+HOJA nombre=/root/Almacen/Estructura/board tareas/board de tareas_003 aabb_local=[P: (-1.0, -0.03, -1.0), S: (2.0, 0.03, 2.0)] pose=[X: (0.0, 0.0, -0.054806), Y: (0.431647, 0.0, 0.0), Z: (0.0, -0.060349, 0.0), O: (-2.404351, 1.912804, 4.055286)] frente=(-0.033681, 0.963589, 0.265259)
+HOJA nombre=/root/Almacen/Estructura/board tareas/board de tareas_004 aabb_local=[P: (-1.0, -0.03, -1.0), S: (2.0, 0.03, 2.0)] pose=[X: (0.0, 0.0, -0.054806), Y: (0.431647, 0.0, 0.0), Z: (0.0, -0.060349, 0.0), O: (-2.404351, 1.3458, 4.221169)] frente=(-0.033681, 0.963589, 0.265259)
+HOJA nombre=/root/Almacen/Estructura/board tareas/board de tareas_005 aabb_local=[P: (-1.0, -0.03, -1.0), S: (2.0, 0.03, 2.0)] pose=[X: (0.0, 0.0, -0.054806), Y: (0.431647, 0.0, 0.0), Z: (0.0, -0.060349, 0.0), O: (-2.404351, 1.50893, 3.794542)] frente=(-0.033681, 0.963589, 0.265259)
+HOJA nombre=/root/Almacen/Estructura/nota baño inodoro aabb_local=[P: (0.00325, -0.166315, -0.166315), S: (0.002, 0.332629, 0.332629)] pose=[X: (0.0, 0.0, 1.0), Y: (0.0, 1.0, 0.0), Z: (-1.0, 0.0, 0.0), O: (10.945, 1.52, 6.26675)] frente=(0.000015, 0.0, -1.0)
+HOJA nombre=/root/Almacen/Estructura/nota instrucciones aabb_local=[P: (-0.402228, -0.744404, -0.011364), S: (0.8625, 1.15, 0.00201)] pose=[X: (1.0, 0.0, 0.0), Y: (0.0, 1.0, 0.0), Z: (0.0, 0.0, 1.0), O: (12.15603, 1.85, -0.294)] frente=(-0.000015, -0.000015, 1.0)
+HOJA nombre=/root/Almacen/Estructura/nota productos aabb_local=[P: (-0.402228, -0.744404, -0.011364), S: (0.8625, 1.15, 0.00201)] pose=[X: (1.0, 0.0, 0.0), Y: (0.0, 1.0, 0.0), Z: (0.0, 0.0, 1.0), O: (10.34, 1.85, -0.294)] frente=(-0.000015, -0.000015, 1.0)
+PERF_NOTAS lugar=bano unidad=false ojo=(11.27704, 1.680596, 0.695641) frente=(0.0, 0.0, -1.0) candidatos=6 hojas_en_campo=2 media_ms=0.0881175 p95_ms=0.09535 max_lote_ms=0.10158 iteraciones_por_lote=100
+PERF_NOTAS lugar=pasillo unidad=false ojo=(2.646985, 1.680596, -2.046594) frente=(0.0, 0.0, -1.0) candidatos=1 hojas_en_campo=0 media_ms=0.016834 p95_ms=0.01936 max_lote_ms=0.02153 iteraciones_por_lote=100
+PERF_NOTAS lugar=bano unidad=true ojo=(11.27704, 1.680596, 0.695641) frente=(0.0, 0.0, -1.0) candidatos=6 hojas_en_campo=2 media_ms=0.08594025 p95_ms=0.08979 max_lote_ms=0.0934 iteraciones_por_lote=100
+PERF_NOTAS lugar=pasillo unidad=true ojo=(2.646985, 1.680596, -2.046594) frente=(0.0, 0.0, -1.0) candidatos=1 hojas_en_campo=0 media_ms=0.016503 p95_ms=0.01865 max_lote_ms=0.02032 iteraciones_por_lote=100

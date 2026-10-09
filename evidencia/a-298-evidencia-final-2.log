@@ -1,0 +1,50 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+HOJA nombre=/root/Almacen/Estructura/board tareas/board de tareas_001 aabb_local=[P: (-1.0, -0.03, -1.0), S: (2.0, 0.03, 2.0)] pose=[X: (0.0, 0.0, -0.054806), Y: (0.431647, 0.0, 0.0), Z: (0.0, -0.060349, 0.0), O: (-2.404351, 1.682598, 3.607026)] frente=(-0.033681, 0.963589, 0.265259)
+HOJA nombre=/root/Almacen/Estructura/board tareas/board de tareas_002 aabb_local=[P: (-1.0, -0.03, -1.0), S: (2.0, 0.03, 2.0)] pose=[X: (0.0, 0.0, -0.054806), Y: (0.431647, 0.0, 0.0), Z: (0.0, -0.060349, 0.0), O: (-2.404351, 1.682598, 4.403641)] frente=(-0.033681, 0.963589, 0.265259)
+HOJA nombre=/root/Almacen/Estructura/board tareas/board de tareas_003 aabb_local=[P: (-1.0, -0.03, -1.0), S: (2.0, 0.03, 2.0)] pose=[X: (0.0, 0.0, -0.054806), Y: (0.431647, 0.0, 0.0), Z: (0.0, -0.060349, 0.0), O: (-2.404351, 1.912804, 4.055286)] frente=(-0.033681, 0.963589, 0.265259)
+HOJA nombre=/root/Almacen/Estructura/board tareas/board de tareas_004 aabb_local=[P: (-1.0, -0.03, -1.0), S: (2.0, 0.03, 2.0)] pose=[X: (0.0, 0.0, -0.054806), Y: (0.431647, 0.0, 0.0), Z: (0.0, -0.060349, 0.0), O: (-2.404351, 1.3458, 4.221169)] frente=(-0.033681, 0.963589, 0.265259)
+HOJA nombre=/root/Almacen/Estructura/board tareas/board de tareas_005 aabb_local=[P: (-1.0, -0.03, -1.0), S: (2.0, 0.03, 2.0)] pose=[X: (0.0, 0.0, -0.054806), Y: (0.431647, 0.0, 0.0), Z: (0.0, -0.060349, 0.0), O: (-2.404351, 1.50893, 3.794542)] frente=(-0.033681, 0.963589, 0.265259)
+HOJA nombre=/root/Almacen/Estructura/nota baño inodoro aabb_local=[P: (0.00325, -0.166315, -0.166315), S: (0.002, 0.332629, 0.332629)] pose=[X: (0.0, 0.0, 1.0), Y: (0.0, 1.0, 0.0), Z: (-1.0, 0.0, 0.0), O: (10.945, 1.52, 6.26675)] frente=(0.000015, 0.0, -1.0)
+HOJA nombre=/root/Almacen/Estructura/nota instrucciones aabb_local=[P: (-0.402228, -0.744404, -0.011364), S: (0.8625, 1.15, 0.00201)] pose=[X: (1.0, 0.0, 0.0), Y: (0.0, 1.0, 0.0), Z: (0.0, 0.0, 1.0), O: (12.15603, 1.85, -0.294)] frente=(-0.000015, -0.000015, 1.0)
+HOJA nombre=/root/Almacen/Estructura/nota productos aabb_local=[P: (-0.402228, -0.744404, -0.011364), S: (0.8625, 1.15, 0.00201)] pose=[X: (1.0, 0.0, 0.0), Y: (0.0, 1.0, 0.0), Z: (0.0, 0.0, 1.0), O: (10.34, 1.85, -0.294)] frente=(-0.000015, -0.000015, 1.0)
+PERF_NOTAS lugar=bano unidad=false ojo=(11.27704, 1.680596, 0.695641) frente=(0.0, 0.0, -1.0) candidatos=8 hojas_en_campo=2 media_ms=0.111844 p95_ms=0.12275 max_lote_ms=0.12969 iteraciones_por_lote=100
+PERF_NOTAS lugar=pasillo unidad=false ojo=(2.646985, 1.680596, -2.046594) frente=(0.0, 0.0, -1.0) candidatos=1 hojas_en_campo=0 media_ms=0.017071 p95_ms=0.02118 max_lote_ms=0.02279 iteraciones_por_lote=100
+PERF_NOTAS lugar=bano unidad=true ojo=(11.27704, 1.680596, 0.695641) frente=(0.0, 0.0, -1.0) candidatos=8 hojas_en_campo=2 media_ms=0.11753025 p95_ms=0.13167 max_lote_ms=0.19134 iteraciones_por_lote=100
+PERF_NOTAS lugar=pasillo unidad=true ojo=(2.646985, 1.680596, -2.046594) frente=(0.0, 0.0, -1.0) candidatos=1 hojas_en_campo=0 media_ms=0.01733125 p95_ms=0.02079 max_lote_ms=0.02308 iteraciones_por_lote=100
+PERF298_MONTAJE_LIBERADO
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+OpenGL API 3.3.0 NVIDIA 591.66 - Compatibility - Using Device: NVIDIA - NVIDIA GeForce RTX 4050 Laptop GPU
+
+FRENTE298 board de tareas_002 centro=(-2.410825, 1.682598, 4.403641) frente=(1.0, 0.0, 0.0)
+CAPTURA298 C:/Users/fede_/orca/workspaces/nosefia/darter/.claude/scratch/batch-64-309/capturas-298/mundo-0-1920.png
+CAPTURA298 C:/Users/fede_/orca/workspaces/nosefia/darter/.claude/scratch/batch-64-309/capturas-298/nota-0-1920.png
+FRENTE298 board de tareas_001 centro=(-2.410825, 1.682598, 3.607026) frente=(1.0, 0.0, 0.0)
+CAPTURA298 C:/Users/fede_/orca/workspaces/nosefia/darter/.claude/scratch/batch-64-309/capturas-298/mundo-1-1920.png
+CAPTURA298 C:/Users/fede_/orca/workspaces/nosefia/darter/.claude/scratch/batch-64-309/capturas-298/nota-1-1920.png
+FRENTE298 nota productos centro=(10.36902, 1.680596, -0.304359) frente=(-0.000015, -0.000015, 1.0)
+CAPTURA298 C:/Users/fede_/orca/workspaces/nosefia/darter/.claude/scratch/batch-64-309/capturas-298/mundo-2-1920.png
+CAPTURA298 C:/Users/fede_/orca/workspaces/nosefia/darter/.claude/scratch/batch-64-309/capturas-298/nota-2-1920.png
+FRENTE298 nota instrucciones centro=(12.18505, 1.680596, -0.304359) frente=(-0.000015, -0.000015, 1.0)
+CAPTURA298 C:/Users/fede_/orca/workspaces/nosefia/darter/.claude/scratch/batch-64-309/capturas-298/mundo-3-1920.png
+CAPTURA298 C:/Users/fede_/orca/workspaces/nosefia/darter/.claude/scratch/batch-64-309/capturas-298/nota-3-1920.png
+FRENTE298 nota baño inodoro centro=(10.945, 1.52, 6.271) frente=(0.000015, 0.0, -1.0)
+CAPTURA298 C:/Users/fede_/orca/workspaces/nosefia/darter/.claude/scratch/batch-64-309/capturas-298/mundo-4-1920.png
+CAPTURA298 C:/Users/fede_/orca/workspaces/nosefia/darter/.claude/scratch/batch-64-309/capturas-298/nota-4-1920.png
+FRENTE298 board de tareas_002 centro=(-2.410825, 1.682598, 4.403641) frente=(1.0, 0.0, 0.0)
+CAPTURA298 C:/Users/fede_/orca/workspaces/nosefia/darter/.claude/scratch/batch-64-309/capturas-298/mundo-0-1280.png
+CAPTURA298 C:/Users/fede_/orca/workspaces/nosefia/darter/.claude/scratch/batch-64-309/capturas-298/nota-0-1280.png
+FRENTE298 board de tareas_001 centro=(-2.410825, 1.682598, 3.607026) frente=(1.0, 0.0, 0.0)
+CAPTURA298 C:/Users/fede_/orca/workspaces/nosefia/darter/.claude/scratch/batch-64-309/capturas-298/mundo-1-1280.png
+CAPTURA298 C:/Users/fede_/orca/workspaces/nosefia/darter/.claude/scratch/batch-64-309/capturas-298/nota-1-1280.png
+FRENTE298 nota productos centro=(10.36902, 1.680596, -0.304359) frente=(-0.000015, -0.000015, 1.0)
+CAPTURA298 C:/Users/fede_/orca/workspaces/nosefia/darter/.claude/scratch/batch-64-309/capturas-298/mundo-2-1280.png
+CAPTURA298 C:/Users/fede_/orca/workspaces/nosefia/darter/.claude/scratch/batch-64-309/capturas-298/nota-2-1280.png
+FRENTE298 nota instrucciones centro=(12.18505, 1.680596, -0.304359) frente=(-0.000015, -0.000015, 1.0)
+CAPTURA298 C:/Users/fede_/orca/workspaces/nosefia/darter/.claude/scratch/batch-64-309/capturas-298/mundo-3-1280.png
+CAPTURA298 C:/Users/fede_/orca/workspaces/nosefia/darter/.claude/scratch/batch-64-309/capturas-298/nota-3-1280.png
+FRENTE298 nota baño inodoro centro=(10.945, 1.52, 6.271) frente=(0.000015, 0.0, -1.0)
+CAPTURA298 C:/Users/fede_/orca/workspaces/nosefia/darter/.claude/scratch/batch-64-309/capturas-298/mundo-4-1280.png
+CAPTURA298 C:/Users/fede_/orca/workspaces/nosefia/darter/.claude/scratch/batch-64-309/capturas-298/nota-4-1280.png
+CAPTURA298_MONTAJE_LIBERADO
+EVIDENCIA298_FINAL_LIMPIA

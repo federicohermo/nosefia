@@ -1,0 +1,1583 @@
+ERROR: The remote port number must be between 1 and 65535 (inclusive).
+   at: connect_to_host (core/io/stream_peer_tcp.cpp:69)
+ERROR: Remote Debugger: Unable to connect to host '127.0.0.1:0'.
+   at: create_tcp (core/debugger/remote_debugger_peer.cpp:247)
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+[2J[H[38;2;233;150;122m
+--------------------------------------------------------------------------------------------------
+GdUnit4 Comandline Tool
+--------------------------------------------------------------------------------------------------[0m
+[38;2;0;191;255mDisabled fail fast![0m
+[38;2;0;191;255mSet write reports to reports[0m
+[38;2;218;165;32m
+Headless mode is ignored by option '--ignoreHeadlessMode'"
+
+Please note that tests that use UI interaction do not work correctly in headless mode.
+Godot 'InputEvents' are not transported by the Godot engine in headless mode and therefore
+have no effect in the test!
+[0m
+[38;2;100;149;237mInstalling GdUnit4 session system hooks.[0m
+[38;2;100;149;237mSession hook 'GdUnitHtmlTestReporter' installed.[0m
+[38;2;100;149;237mSession hook 'GdUnitXMLTestReporter' installed.[0m
+[38;2;100;149;237mInstalling GdUnit4 session hooks.[0m
+[38;2;100;149;237mSession hook 'Guardado de la sesión' installed.[0m
+ERROR: Couldn't open directory at path "user://guardado_de_los_tests_34308".
+   at: get_files_at (core/io/dir_access.cpp:578)
+   GDScript backtrace (most recent call first):
+       [0] _borrar_la_carpeta (res://test/guardado_de_la_sesion.gd:40)
+       [1] startup (res://test/guardado_de_la_sesion.gd:22)
+       [2] execute (res://addons/gdUnit4/src/core/hooks/GdUnitTestSessionHookService.gd:125)
+       [3] execute_startup (res://addons/gdUnit4/src/core/hooks/GdUnitTestSessionHookService.gd:108)
+       [4] _process (res://addons/gdUnit4/src/core/runners/GdUnitTestSessionRunner.gd:127)
+[38;2;0;206;209mRun Test Suite: [0m[38;2;250;235;215mres://test/dominio/almacen/nota_pegada_test.gd[0m
+  [38;2;250;235;215mres://test/dominio/almacen/nota_pegada_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_las_obligatorias_se_presentan_en_el_orden_de_la_ficha[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/almacen/nota_pegada_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_las_obligatorias_se_presentan_en_el_orden_de_la_ficha[0m[38;2;178;34;34m[1m FAILED[0m[38;2;100;149;237m 6ms[0m
+  [38;2;0;206;209m[1m[4mReport:[0m
+  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ '[38;2;30;144;255mTAREAS A REALIZAR[0m'
+ but was
+ '[38;2;30;144;255m[48;2;38;0;0m[38;2;255;255;255mTAREAS A REALIZAR[0m[38;2;30;144;255m[48;2;38;0;0m[0m[38;2;30;144;255m[0m'[0m[38;2;173;216;230m	at 'test_las_obligatorias_se_presentan_en_el_orden_de_la_ficha' in res://test/dominio/almacen/nota_pegada_test.gd:7[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m '[38;2;30;144;255mtrue[0m' but is '[38;2;30;144;255mfalse[0m'[0m[38;2;173;216;230m	at 'test_las_obligatorias_se_presentan_en_el_orden_de_la_ficha' in res://test/dominio/almacen/nota_pegada_test.gd:8[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting contains exactly elements:[0m
+ '[38;2;30;144;255m<empty>[0m'
+ do contains (in same order)
+ '[38;2;30;144;255m["Atención al cliente", "Registro de productos vendidos", "Limpieza", "Reposición", "Sacar la basura"][0m'
+but could not find elements:
+ '[38;2;30;144;255m["Atención al cliente", "Registro de productos vendidos", "Limpieza", "Reposición", "Sacar la basura"][0m'[0m[38;2;173;216;230m	at 'test_las_obligatorias_se_presentan_en_el_orden_de_la_ficha' in res://test/dominio/almacen/nota_pegada_test.gd:10[0m[38;2;128;128;128m[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/almacen/nota_pegada_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_dos_obligatorias_dan_dos_renglones_en_su_orden[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/almacen/nota_pegada_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_dos_obligatorias_dan_dos_renglones_en_su_orden[0m[38;2;178;34;34m[1m FAILED[0m[38;2;100;149;237m 5ms[0m
+  [38;2;0;206;209m[1m[4mReport:[0m
+  [38;2;128;128;128m[38;2;255;69;0mExpecting contains exactly elements:[0m
+ '[38;2;30;144;255m<empty>[0m'
+ do contains (in same order)
+ '[38;2;30;144;255m["Atención al cliente", "Sacar la basura"][0m'
+but could not find elements:
+ '[38;2;30;144;255m["Atención al cliente", "Sacar la basura"][0m'[0m[38;2;173;216;230m	at 'test_dos_obligatorias_dan_dos_renglones_en_su_orden' in res://test/dominio/almacen/nota_pegada_test.gd:27[0m[38;2;128;128;128m[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/almacen/nota_pegada_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_sin_obligatorias_hay_titulo_y_ningun_renglon[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/almacen/nota_pegada_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_sin_obligatorias_hay_titulo_y_ningun_renglon[0m[38;2;178;34;34m[1m FAILED[0m[38;2;100;149;237m 5ms[0m
+  [38;2;0;206;209m[1m[4mReport:[0m
+  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ '[38;2;30;144;255mTAREAS A REALIZAR[0m'
+ but was
+ '[38;2;30;144;255m[48;2;38;0;0m[38;2;255;255;255mTAREAS A REALIZAR[0m[38;2;30;144;255m[48;2;38;0;0m[0m[38;2;30;144;255m[0m'[0m[38;2;173;216;230m	at 'test_sin_obligatorias_hay_titulo_y_ningun_renglon' in res://test/dominio/almacen/nota_pegada_test.gd:32[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m '[38;2;30;144;255mtrue[0m' but is '[38;2;30;144;255mfalse[0m'[0m[38;2;173;216;230m	at 'test_sin_obligatorias_hay_titulo_y_ningun_renglon' in res://test/dominio/almacen/nota_pegada_test.gd:34[0m[38;2;128;128;128m[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/almacen/nota_pegada_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_cada_tipo_de_tarea_declarado_tiene_nombre[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/almacen/nota_pegada_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_cada_tipo_de_tarea_declarado_tiene_nombre[0m[38;2;178;34;34m[1m FAILED[0m[38;2;100;149;237m 5ms[0m
+  [38;2;0;206;209m[1m[4mReport:[0m
+  [38;2;128;128;128mFalta el nombre de la tarea 0[0m[38;2;173;216;230m	at 'test_cada_tipo_de_tarea_declarado_tiene_nombre' in res://test/dominio/almacen/nota_pegada_test.gd:42[0m  [38;2;128;128;128mFalta el nombre de la tarea 1[0m[38;2;173;216;230m	at 'test_cada_tipo_de_tarea_declarado_tiene_nombre' in res://test/dominio/almacen/nota_pegada_test.gd:42[0m  [38;2;128;128;128mFalta el nombre de la tarea 2[0m[38;2;173;216;230m	at 'test_cada_tipo_de_tarea_declarado_tiene_nombre' in res://test/dominio/almacen/nota_pegada_test.gd:42[0m  [38;2;128;128;128mFalta el nombre de la tarea 3[0m[38;2;173;216;230m	at 'test_cada_tipo_de_tarea_declarado_tiene_nombre' in res://test/dominio/almacen/nota_pegada_test.gd:42[0m  [38;2;128;128;128mFalta el nombre de la tarea 4[0m[38;2;173;216;230m	at 'test_cada_tipo_de_tarea_declarado_tiene_nombre' in res://test/dominio/almacen/nota_pegada_test.gd:42[0m[38;2;128;128;128m[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/almacen/nota_pegada_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_mantener_ordenado_dice_las_tres_indicaciones_de_la_ficha[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/almacen/nota_pegada_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_mantener_ordenado_dice_las_tres_indicaciones_de_la_ficha[0m[38;2;178;34;34m[1m FAILED[0m[38;2;100;149;237m 6ms[0m
+  [38;2;0;206;209m[1m[4mReport:[0m
+  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ '[38;2;30;144;255mMANTENER EL LOCAL ORDENADO[0m'
+ but was
+ '[38;2;30;144;255m[48;2;38;0;0m[38;2;255;255;255mMANTENER EL LOCAL ORDENADO[0m[38;2;30;144;255m[48;2;38;0;0m[0m[38;2;30;144;255m[0m'[0m[38;2;173;216;230m	at 'test_mantener_ordenado_dice_las_tres_indicaciones_de_la_ficha' in res://test/dominio/almacen/nota_pegada_test.gd:53[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting contains exactly elements:[0m
+ '[38;2;30;144;255m<empty>[0m'
+ do contains (in same order)
+ '[38;2;30;144;255m["No dejar productos tirados.", "Dejar las cajas en el depósito.", "Dejar los elementos de limpieza en el baño."][0m'
+but could not find elements:
+ '[38;2;30;144;255m["No dejar productos tirados.", "Dejar las cajas en el depósito.", "Dejar los elementos de limpieza en el baño."][0m'[0m[38;2;173;216;230m	at 'test_mantener_ordenado_dice_las_tres_indicaciones_de_la_ficha' in res://test/dominio/almacen/nota_pegada_test.gd:56[0m[38;2;128;128;128m[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/almacen/nota_pegada_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_las_hojas_del_bano_no_generan_una_transcripcion[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/almacen/nota_pegada_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_las_hojas_del_bano_no_generan_una_transcripcion[0m[38;2;178;34;34m[1m FAILED[0m[38;2;100;149;237m 6ms[0m
+  [38;2;0;206;209m[1m[4mReport:[0m
+  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ must not be empty[0m[38;2;173;216;230m	at 'test_las_hojas_del_bano_no_generan_una_transcripcion' in res://test/dominio/almacen/nota_pegada_test.gd:74[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ must not be empty[0m[38;2;173;216;230m	at 'test_las_hojas_del_bano_no_generan_una_transcripcion' in res://test/dominio/almacen/nota_pegada_test.gd:74[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ must not be empty[0m[38;2;173;216;230m	at 'test_las_hojas_del_bano_no_generan_una_transcripcion' in res://test/dominio/almacen/nota_pegada_test.gd:74[0m[38;2;128;128;128m[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/almacen/nota_pegada_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_cambiar_la_lectura_no_cambia_el_dato_compartido[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/almacen/nota_pegada_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_cambiar_la_lectura_no_cambia_el_dato_compartido[0m[38;2;178;34;34m[1m FAILED[0m[38;2;100;149;237m 5ms[0m
+  [38;2;0;206;209m[1m[4mReport:[0m
+  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ [38;2;30;144;255m3[0m
+ but was
+ [38;2;30;144;255m0[0m[0m[38;2;173;216;230m	at 'test_cambiar_la_lectura_no_cambia_el_dato_compartido' in res://test/dominio/almacen/nota_pegada_test.gd:83[0m[38;2;128;128;128m[0m
+[38;2;128;128;128m[0m
+[38;2;30;144;255mStatistics:[0m[38;2;128;128;128m 7 test cases | 0 errors | 17 failures | 0 flaky | 0 skipped | 0 orphans |[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 104ms[0m
+[38;2;128;128;128m[0m
+[38;2;128;128;128m[0m
+[38;2;0;206;209mRun Test Suite: [0m[38;2;250;235;215mres://test/ui/diegetica/nota_encuadrada_test.gd[0m
+  [38;2;250;235;215mres://test/ui/diegetica/nota_encuadrada_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_el_corcho_muestra_su_dato_y_cambia_de_hoja[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/ui/diegetica/nota_encuadrada_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_el_corcho_muestra_su_dato_y_cambia_de_hoja[0m[38;2;178;34;34m[1m FAILED[0m[38;2;100;149;237m 11ms[0m
+  [38;2;0;206;209m[1m[4mReport:[0m
+  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m '[38;2;30;144;255mtrue[0m' but is '[38;2;30;144;255mfalse[0m'[0m[38;2;173;216;230m	at 'test_el_corcho_muestra_su_dato_y_cambia_de_hoja' in res://test/ui/diegetica/nota_encuadrada_test.gd:12[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m '[38;2;30;144;255mfalse[0m' but is '[38;2;30;144;255mtrue[0m'[0m[38;2;173;216;230m	at 'test_el_corcho_muestra_su_dato_y_cambia_de_hoja' in res://test/ui/diegetica/nota_encuadrada_test.gd:14[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ '[38;2;30;144;255m• No dejar productos tirados.
+• Dejar las cajas en el depósito.
+• Dejar los elementos de limpieza en el baño.[0m'
+ but was
+ '[38;2;30;144;255m[48;2;38;0;0m[38;2;255;255;255m• No dejar productos tirados.<LF>• Dejar las cajas en el depósito.<LF>• Dejar los elementos de limpieza en el baño.[0m[38;2;30;144;255m[48;2;38;0;0m[0m[38;2;30;144;255m[0m'[0m[38;2;173;216;230m	at 'test_el_corcho_muestra_su_dato_y_cambia_de_hoja' in res://test/ui/diegetica/nota_encuadrada_test.gd:16[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ '[38;2;30;144;255m1. Atención al cliente
+2. Reposición[0m'
+ but was
+ '[38;2;30;144;255m[48;2;38;0;0m[38;2;255;255;255m1. Atención al cliente<LF>2. Reposición[0m[38;2;30;144;255m[48;2;38;0;0m[0m[38;2;30;144;255m[0m'[0m[38;2;173;216;230m	at 'test_el_corcho_muestra_su_dato_y_cambia_de_hoja' in res://test/ui/diegetica/nota_encuadrada_test.gd:27[0m[38;2;128;128;128m[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/ui/diegetica/nota_encuadrada_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_el_bano_amplia_la_imagen_original_completa[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/ui/diegetica/nota_encuadrada_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_el_bano_amplia_la_imagen_original_completa[0m[38;2;178;34;34m[1m FAILED[0m[38;2;100;149;237m 6ms[0m
+  [38;2;0;206;209m[1m[4mReport:[0m
+  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m '[38;2;30;144;255mfalse[0m' but is '[38;2;30;144;255mtrue[0m'[0m[38;2;173;216;230m	at 'test_el_bano_amplia_la_imagen_original_completa' in res://test/ui/diegetica/nota_encuadrada_test.gd:46[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ [38;2;30;144;255m<ImageTexture>[0m
+ to refer to the same object
+ '[38;2;30;144;255m<null>[0m'[0m[38;2;173;216;230m	at 'test_el_bano_amplia_la_imagen_original_completa' in res://test/ui/diegetica/nota_encuadrada_test.gd:47[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m '[38;2;30;144;255mfalse[0m' but is '[38;2;30;144;255mtrue[0m'[0m[38;2;173;216;230m	at 'test_el_bano_amplia_la_imagen_original_completa' in res://test/ui/diegetica/nota_encuadrada_test.gd:52[0m[38;2;128;128;128m[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/ui/diegetica/nota_encuadrada_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_lista_vacia_conserva_el_titulo_y_la_salida[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/ui/diegetica/nota_encuadrada_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_lista_vacia_conserva_el_titulo_y_la_salida[0m[38;2;178;34;34m[1m FAILED[0m[38;2;100;149;237m 7ms[0m
+  [38;2;0;206;209m[1m[4mReport:[0m
+  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ '[38;2;30;144;255mTAREAS A REALIZAR[0m'
+ but was
+ '[38;2;30;144;255m[48;2;38;0;0m[38;2;255;255;255mTAREAS A REALIZAR[0m[38;2;30;144;255m[48;2;38;0;0m[0m[38;2;30;144;255m[0m'[0m[38;2;173;216;230m	at 'test_lista_vacia_conserva_el_titulo_y_la_salida' in res://test/ui/diegetica/nota_encuadrada_test.gd:61[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ '[38;2;30;144;255mCLIC DERECHO / VOLVER AL LOCAL[0m'
+ but was
+ '[38;2;30;144;255m[48;2;38;0;0m[38;2;255;255;255mCLIC DERECHO / VOLVER AL LOCAL[0m[38;2;30;144;255m[48;2;38;0;0m[0m[38;2;30;144;255m[0m'[0m[38;2;173;216;230m	at 'test_lista_vacia_conserva_el_titulo_y_la_salida' in res://test/ui/diegetica/nota_encuadrada_test.gd:63[0m[38;2;128;128;128m[0m
+[38;2;128;128;128m[0m
+[38;2;30;144;255mStatistics:[0m[38;2;128;128;128m 3 test cases | 0 errors | 9 failures | 0 flaky | 0 skipped | 0 orphans |[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 61ms[0m
+[38;2;128;128;128m[0m
+[38;2;128;128;128m[0m
+[38;2;0;206;209mRun Test Suite: [0m[38;2;250;235;215mres://test/escenas/objetos/nota_pegada_test.gd[0m
+  [38;2;250;235;215mres://test/escenas/objetos/nota_pegada_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_el_texto_fisico_y_la_vista_presentan_el_mismo_dato[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/objetos/nota_pegada_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_el_texto_fisico_y_la_vista_presentan_el_mismo_dato[0m[38;2;178;34;34m[1m FAILED[0m[38;2;100;149;237m 6ms[0m
+  [38;2;0;206;209m[1m[4mReport:[0m
+  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ '[38;2;30;144;255m1. Limpieza
+2. Sacar la basura[0m'
+ but was
+ '[38;2;30;144;255m[48;2;38;0;0m[38;2;255;255;255m1. Limpieza<LF>2. Sacar la basura[0m[38;2;30;144;255m[48;2;38;0;0m[0m[38;2;30;144;255m[0m'[0m[38;2;173;216;230m	at 'test_el_texto_fisico_y_la_vista_presentan_el_mismo_dato' in res://test/escenas/objetos/nota_pegada_test.gd:18[0m[38;2;128;128;128m[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/objetos/nota_pegada_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_las_tres_imagenes_vienen_del_frente_original[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/objetos/nota_pegada_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_las_tres_imagenes_vienen_del_frente_original[0m[38;2;178;34;34m[1m FAILED[0m[38;2;100;149;237m 8ms[0m
+  [38;2;0;206;209m[1m[4mReport:[0m
+  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ [38;2;30;144;255m<CompressedTexture2D>[0m
+ to refer to the same object
+ '[38;2;30;144;255m<null>[0m'[0m[38;2;173;216;230m	at 'test_las_tres_imagenes_vienen_del_frente_original' in res://test/escenas/objetos/nota_pegada_test.gd:39[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ [38;2;30;144;255m<CompressedTexture2D>[0m
+ to refer to the same object
+ '[38;2;30;144;255m<null>[0m'[0m[38;2;173;216;230m	at 'test_las_tres_imagenes_vienen_del_frente_original' in res://test/escenas/objetos/nota_pegada_test.gd:39[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ [38;2;30;144;255m<CompressedTexture2D>[0m
+ to refer to the same object
+ '[38;2;30;144;255m<null>[0m'[0m[38;2;173;216;230m	at 'test_las_tres_imagenes_vienen_del_frente_original' in res://test/escenas/objetos/nota_pegada_test.gd:39[0m[38;2;128;128;128m[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/objetos/nota_pegada_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_accionar_pide_la_lectura_de_su_hoja[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/objetos/nota_pegada_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_accionar_pide_la_lectura_de_su_hoja[0m[38;2;178;34;34m[1m FAILED[0m[38;2;100;149;237m 6ms[0m
+  [38;2;0;206;209m[1m[4mReport:[0m
+  [38;2;128;128;128m[38;2;255;69;0mExpecting contains exactly elements:[0m
+ '[38;2;30;144;255m<empty>[0m'
+ do contains (in same order)
+ '[38;2;30;144;255m[true][0m'
+but could not find elements:
+ '[38;2;30;144;255m[true][0m'[0m[38;2;173;216;230m	at 'test_accionar_pide_la_lectura_de_su_hoja' in res://test/escenas/objetos/nota_pegada_test.gd:48[0m[38;2;128;128;128m[0m
+[38;2;128;128;128m[0m
+[38;2;30;144;255mStatistics:[0m[38;2;128;128;128m 3 test cases | 0 errors | 5 failures | 0 flaky | 0 skipped | 0 orphans |[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 50ms[0m
+[38;2;128;128;128m[0m
+[38;2;128;128;128m[0m
+[38;2;0;206;209mRun Test Suite: [0m[38;2;250;235;215mres://test/escenas/puestos/notas_del_almacen_test.gd[0m
+  [38;2;250;235;215mres://test/escenas/puestos/notas_del_almacen_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_las_cinco_hojas_abren_su_propio_dato_y_cierran_con_el_derecho[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+WARNING: Parent path './nota ba?o inodoro' for node 'StaticBody3D' has vanished when instantiating: 'res://src/escenas/puestos/estructura_del_almacen.tscn'.
+   at: instantiate (scene/resources/packed_scene.cpp:213)
+   GDScript backtrace (most recent call first):
+       [0] _abrir (res://test/escenas/puestos/notas_del_almacen_test.gd:12)
+       [1] test_las_cinco_hojas_abren_su_propio_dato_y_cierran_con_el_derecho (res://test/escenas/puestos/notas_del_almacen_test.gd:44)
+       [2] _execute_test_case (res://addons/gdUnit4/src/core/_TestCase.gd:79)
+       [3] execute (res://addons/gdUnit4/src/core/_TestCase.gd:40)
+       [4] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleTestStage.gd:10)
+       [5] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [6] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleExecutionStage.gd:17)
+       [7] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [8] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestCaseExecutionStage.gd:26)
+       [9] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [10] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestSuiteExecutionStage.gd:36)
+WARNING: Node './StaticBody3D' was modified from inside an instance, but it has vanished.
+   at: instantiate (scene/resources/packed_scene.cpp:312)
+   GDScript backtrace (most recent call first):
+       [0] _abrir (res://test/escenas/puestos/notas_del_almacen_test.gd:12)
+       [1] test_las_cinco_hojas_abren_su_propio_dato_y_cierran_con_el_derecho (res://test/escenas/puestos/notas_del_almacen_test.gd:44)
+       [2] _execute_test_case (res://addons/gdUnit4/src/core/_TestCase.gd:79)
+       [3] execute (res://addons/gdUnit4/src/core/_TestCase.gd:40)
+       [4] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleTestStage.gd:10)
+       [5] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [6] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleExecutionStage.gd:17)
+       [7] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [8] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestCaseExecutionStage.gd:26)
+       [9] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [10] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestSuiteExecutionStage.gd:36)
+SCRIPT ERROR: Invalid access to property or key 'id' on a base object of type 'null instance'.
+   at: _ready (res://src/escenas/puestos/notas_del_almacen.gd:17)
+   GDScript backtrace (most recent call first):
+       [0] _ready (res://src/escenas/puestos/notas_del_almacen.gd:17)
+       [1] _abrir (res://test/escenas/puestos/notas_del_almacen_test.gd:13)
+       [2] test_las_cinco_hojas_abren_su_propio_dato_y_cierran_con_el_derecho (res://test/escenas/puestos/notas_del_almacen_test.gd:44)
+       [3] _execute_test_case (res://addons/gdUnit4/src/core/_TestCase.gd:79)
+       [4] execute (res://addons/gdUnit4/src/core/_TestCase.gd:40)
+       [5] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleTestStage.gd:10)
+       [6] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [7] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleExecutionStage.gd:17)
+       [8] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [9] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestCaseExecutionStage.gd:26)
+       [10] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [11] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestSuiteExecutionStage.gd:36)
+SCRIPT ERROR: Cannot call method 'get' on a null value.
+   at: test_las_cinco_hojas_abren_su_propio_dato_y_cierran_con_el_derecho (res://test/escenas/puestos/notas_del_almacen_test.gd:50)
+   GDScript backtrace (most recent call first):
+       [0] test_las_cinco_hojas_abren_su_propio_dato_y_cierran_con_el_derecho (res://test/escenas/puestos/notas_del_almacen_test.gd:50)
+       [1] _derecho (res://test/escenas/puestos/notas_del_almacen_test.gd:36)
+  [38;2;250;235;215mres://test/escenas/puestos/notas_del_almacen_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_las_cinco_hojas_abren_su_propio_dato_y_cierran_con_el_derecho[0m[38;2;178;34;34m[1m FAILED[0m[38;2;100;149;237m 197ms[0m
+  [38;2;0;206;209m[1m[4mReport:[0m
+  [38;2;128;128;128m[38;2;255;69;0mGodot Runtime Error ![0m
+  '[38;2;30;144;255mInvalid access to property or key 'id' on a base object of type 'null instance'.[0m'[0m[38;2;173;216;230m	at '_ready' in res://src/escenas/puestos/notas_del_almacen.gd:17
+	at '_abrir' in res://test/escenas/puestos/notas_del_almacen_test.gd:13
+	at 'test_las_cinco_hojas_abren_su_propio_dato_y_cierran_con_el_derecho' in res://test/escenas/puestos/notas_del_almacen_test.gd:44[0m  [38;2;128;128;128m[38;2;255;69;0mGodot Runtime Error ![0m
+  '[38;2;30;144;255mCannot call method 'get' on a null value.[0m'[0m[38;2;173;216;230m	at 'test_las_cinco_hojas_abren_su_propio_dato_y_cierran_con_el_derecho' in res://test/escenas/puestos/notas_del_almacen_test.gd:50
+	at '_derecho' in res://test/escenas/puestos/notas_del_almacen_test.gd:36[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m '[38;2;30;144;255mtrue[0m' but is '[38;2;30;144;255mfalse[0m'[0m[38;2;173;216;230m	at 'test_las_cinco_hojas_abren_su_propio_dato_y_cierran_con_el_derecho' in res://test/escenas/puestos/notas_del_almacen_test.gd:52
+	at '_abrir' in res://test/escenas/puestos/notas_del_almacen_test.gd:18[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m '[38;2;30;144;255mtrue[0m' but is '[38;2;30;144;255mfalse[0m'[0m[38;2;173;216;230m	at 'test_las_cinco_hojas_abren_su_propio_dato_y_cierran_con_el_derecho' in res://test/escenas/puestos/notas_del_almacen_test.gd:53
+	at '_abrir' in res://test/escenas/puestos/notas_del_almacen_test.gd:18[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ '[38;2;30;144;255m<null>[0m'
+ to refer to the same object
+ '[38;2;30;144;255m<null>[0m'[0m[38;2;173;216;230m	at 'test_las_cinco_hojas_abren_su_propio_dato_y_cierran_con_el_derecho' in res://test/escenas/puestos/notas_del_almacen_test.gd:55
+	at '_abrir' in res://test/escenas/puestos/notas_del_almacen_test.gd:18[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m '[38;2;30;144;255mtrue[0m' but is '[38;2;30;144;255mfalse[0m'[0m[38;2;173;216;230m	at 'test_las_cinco_hojas_abren_su_propio_dato_y_cierran_con_el_derecho' in res://test/escenas/puestos/notas_del_almacen_test.gd:52
+	at '_derecho' in res://test/escenas/puestos/notas_del_almacen_test.gd:36[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m '[38;2;30;144;255mtrue[0m' but is '[38;2;30;144;255mfalse[0m'[0m[38;2;173;216;230m	at 'test_las_cinco_hojas_abren_su_propio_dato_y_cierran_con_el_derecho' in res://test/escenas/puestos/notas_del_almacen_test.gd:53
+	at '_derecho' in res://test/escenas/puestos/notas_del_almacen_test.gd:36[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ '[38;2;30;144;255m<null>[0m'
+ to refer to the same object
+ '[38;2;30;144;255m<null>[0m'[0m[38;2;173;216;230m	at 'test_las_cinco_hojas_abren_su_propio_dato_y_cierran_con_el_derecho' in res://test/escenas/puestos/notas_del_almacen_test.gd:55
+	at '_derecho' in res://test/escenas/puestos/notas_del_almacen_test.gd:36[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m '[38;2;30;144;255mtrue[0m' but is '[38;2;30;144;255mfalse[0m'[0m[38;2;173;216;230m	at 'test_las_cinco_hojas_abren_su_propio_dato_y_cierran_con_el_derecho' in res://test/escenas/puestos/notas_del_almacen_test.gd:52
+	at '_derecho' in res://test/escenas/puestos/notas_del_almacen_test.gd:36[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m '[38;2;30;144;255mtrue[0m' but is '[38;2;30;144;255mfalse[0m'[0m[38;2;173;216;230m	at 'test_las_cinco_hojas_abren_su_propio_dato_y_cierran_con_el_derecho' in res://test/escenas/puestos/notas_del_almacen_test.gd:53
+	at '_derecho' in res://test/escenas/puestos/notas_del_almacen_test.gd:36[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ '[38;2;30;144;255m<null>[0m'
+ to refer to the same object
+ '[38;2;30;144;255m<null>[0m'[0m[38;2;173;216;230m	at 'test_las_cinco_hojas_abren_su_propio_dato_y_cierran_con_el_derecho' in res://test/escenas/puestos/notas_del_almacen_test.gd:55
+	at '_derecho' in res://test/escenas/puestos/notas_del_almacen_test.gd:36[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m '[38;2;30;144;255mtrue[0m' but is '[38;2;30;144;255mfalse[0m'[0m[38;2;173;216;230m	at 'test_las_cinco_hojas_abren_su_propio_dato_y_cierran_con_el_derecho' in res://test/escenas/puestos/notas_del_almacen_test.gd:52
+	at '_derecho' in res://test/escenas/puestos/notas_del_almacen_test.gd:36[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m '[38;2;30;144;255mtrue[0m' but is '[38;2;30;144;255mfalse[0m'[0m[38;2;173;216;230m	at 'test_las_cinco_hojas_abren_su_propio_dato_y_cierran_con_el_derecho' in res://test/escenas/puestos/notas_del_almacen_test.gd:53
+	at '_derecho' in res://test/escenas/puestos/notas_del_almacen_test.gd:36[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ '[38;2;30;144;255m<null>[0m'
+ to refer to the same object
+ '[38;2;30;144;255m<null>[0m'[0m[38;2;173;216;230m	at 'test_las_cinco_hojas_abren_su_propio_dato_y_cierran_con_el_derecho' in res://test/escenas/puestos/notas_del_almacen_test.gd:55
+	at '_derecho' in res://test/escenas/puestos/notas_del_almacen_test.gd:36[0m[38;2;128;128;128m[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/puestos/notas_del_almacen_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_cada_objeto_sigue_en_la_mano_al_leer_y_salir[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+WARNING: Parent path './nota ba?o inodoro' for node 'StaticBody3D' has vanished when instantiating: 'res://src/escenas/puestos/estructura_del_almacen.tscn'.
+   at: instantiate (scene/resources/packed_scene.cpp:213)
+   GDScript backtrace (most recent call first):
+       [0] _abrir (res://test/escenas/puestos/notas_del_almacen_test.gd:12)
+       [1] test_cada_objeto_sigue_en_la_mano_al_leer_y_salir (res://test/escenas/puestos/notas_del_almacen_test.gd:63)
+       [2] _execute_test_case (res://addons/gdUnit4/src/core/_TestCase.gd:79)
+       [3] execute (res://addons/gdUnit4/src/core/_TestCase.gd:40)
+       [4] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleTestStage.gd:10)
+       [5] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [6] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleExecutionStage.gd:17)
+       [7] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [8] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestCaseExecutionStage.gd:26)
+       [9] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [10] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestSuiteExecutionStage.gd:36)
+       [11] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [12] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestCaseExecutionStage.gd:35)
+       [13] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [14] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleExecutionStage.gd:28)
+       [15] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [16] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleTestStage.gd:10)
+       [17] execute (res://addons/gdUnit4/src/core/_TestCase.gd:41)
+       [18] test_completed (res://addons/gdUnit4/src/core/_TestCase.gd:86)
+WARNING: Node './StaticBody3D' was modified from inside an instance, but it has vanished.
+   at: instantiate (scene/resources/packed_scene.cpp:312)
+   GDScript backtrace (most recent call first):
+       [0] _abrir (res://test/escenas/puestos/notas_del_almacen_test.gd:12)
+       [1] test_cada_objeto_sigue_en_la_mano_al_leer_y_salir (res://test/escenas/puestos/notas_del_almacen_test.gd:63)
+       [2] _execute_test_case (res://addons/gdUnit4/src/core/_TestCase.gd:79)
+       [3] execute (res://addons/gdUnit4/src/core/_TestCase.gd:40)
+       [4] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleTestStage.gd:10)
+       [5] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [6] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleExecutionStage.gd:17)
+       [7] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [8] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestCaseExecutionStage.gd:26)
+       [9] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [10] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestSuiteExecutionStage.gd:36)
+       [11] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [12] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestCaseExecutionStage.gd:35)
+       [13] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [14] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleExecutionStage.gd:28)
+       [15] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [16] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleTestStage.gd:10)
+       [17] execute (res://addons/gdUnit4/src/core/_TestCase.gd:41)
+       [18] test_completed (res://addons/gdUnit4/src/core/_TestCase.gd:86)
+SCRIPT ERROR: Invalid access to property or key 'id' on a base object of type 'null instance'.
+   at: _ready (res://src/escenas/puestos/notas_del_almacen.gd:17)
+   GDScript backtrace (most recent call first):
+       [0] _ready (res://src/escenas/puestos/notas_del_almacen.gd:17)
+       [1] _abrir (res://test/escenas/puestos/notas_del_almacen_test.gd:13)
+       [2] test_cada_objeto_sigue_en_la_mano_al_leer_y_salir (res://test/escenas/puestos/notas_del_almacen_test.gd:63)
+       [3] _execute_test_case (res://addons/gdUnit4/src/core/_TestCase.gd:79)
+       [4] execute (res://addons/gdUnit4/src/core/_TestCase.gd:40)
+       [5] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleTestStage.gd:10)
+       [6] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [7] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleExecutionStage.gd:17)
+       [8] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [9] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestCaseExecutionStage.gd:26)
+       [10] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [11] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestSuiteExecutionStage.gd:36)
+       [12] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [13] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestCaseExecutionStage.gd:35)
+       [14] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [15] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleExecutionStage.gd:28)
+       [16] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [17] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleTestStage.gd:10)
+       [18] execute (res://addons/gdUnit4/src/core/_TestCase.gd:41)
+       [19] test_completed (res://addons/gdUnit4/src/core/_TestCase.gd:86)
+  [38;2;250;235;215mres://test/escenas/puestos/notas_del_almacen_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_cada_objeto_sigue_en_la_mano_al_leer_y_salir[0m[38;2;178;34;34m[1m FAILED[0m[38;2;100;149;237m 187ms[0m
+  [38;2;0;206;209m[1m[4mReport:[0m
+  [38;2;128;128;128m[38;2;255;69;0mGodot Runtime Error ![0m
+  '[38;2;30;144;255mInvalid access to property or key 'id' on a base object of type 'null instance'.[0m'[0m[38;2;173;216;230m	at '_ready' in res://src/escenas/puestos/notas_del_almacen.gd:17
+	at '_abrir' in res://test/escenas/puestos/notas_del_almacen_test.gd:13
+	at 'test_cada_objeto_sigue_en_la_mano_al_leer_y_salir' in res://test/escenas/puestos/notas_del_almacen_test.gd:63[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m '[38;2;30;144;255mtrue[0m' but is '[38;2;30;144;255mfalse[0m'[0m[38;2;173;216;230m	at 'test_cada_objeto_sigue_en_la_mano_al_leer_y_salir' in res://test/escenas/puestos/notas_del_almacen_test.gd:86
+	at '_abrir' in res://test/escenas/puestos/notas_del_almacen_test.gd:18[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ [38;2;30;144;255m<Resource>[0m
+ to refer to the same object
+ '[38;2;30;144;255m<null>[0m'[0m[38;2;173;216;230m	at 'test_cada_objeto_sigue_en_la_mano_al_leer_y_salir' in res://test/escenas/puestos/notas_del_almacen_test.gd:90
+	at '_abrir' in res://test/escenas/puestos/notas_del_almacen_test.gd:18[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ [38;2;30;144;255m<Node3D>[0m
+ to refer to the same object
+ [38;2;30;144;255m<Node3D>[0m[0m[38;2;173;216;230m	at 'test_cada_objeto_sigue_en_la_mano_al_leer_y_salir' in res://test/escenas/puestos/notas_del_almacen_test.gd:91
+	at '_abrir' in res://test/escenas/puestos/notas_del_almacen_test.gd:18[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m '[38;2;30;144;255mtrue[0m' but is '[38;2;30;144;255mfalse[0m'[0m[38;2;173;216;230m	at 'test_cada_objeto_sigue_en_la_mano_al_leer_y_salir' in res://test/escenas/puestos/notas_del_almacen_test.gd:92
+	at '_abrir' in res://test/escenas/puestos/notas_del_almacen_test.gd:18[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ [38;2;30;144;255m<Resource>[0m
+ to refer to the same object
+ '[38;2;30;144;255m<null>[0m'[0m[38;2;173;216;230m	at 'test_cada_objeto_sigue_en_la_mano_al_leer_y_salir' in res://test/escenas/puestos/notas_del_almacen_test.gd:94
+	at '_derecho' in res://test/escenas/puestos/notas_del_almacen_test.gd:36[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ [38;2;30;144;255m<Node3D>[0m
+ to refer to the same object
+ [38;2;30;144;255m<Node3D>[0m[0m[38;2;173;216;230m	at 'test_cada_objeto_sigue_en_la_mano_al_leer_y_salir' in res://test/escenas/puestos/notas_del_almacen_test.gd:95
+	at '_derecho' in res://test/escenas/puestos/notas_del_almacen_test.gd:36[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m '[38;2;30;144;255mtrue[0m' but is '[38;2;30;144;255mfalse[0m'[0m[38;2;173;216;230m	at 'test_cada_objeto_sigue_en_la_mano_al_leer_y_salir' in res://test/escenas/puestos/notas_del_almacen_test.gd:96
+	at '_derecho' in res://test/escenas/puestos/notas_del_almacen_test.gd:36[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m '[38;2;30;144;255mtrue[0m' but is '[38;2;30;144;255mfalse[0m'[0m[38;2;173;216;230m	at 'test_cada_objeto_sigue_en_la_mano_al_leer_y_salir' in res://test/escenas/puestos/notas_del_almacen_test.gd:86
+	at '_derecho' in res://test/escenas/puestos/notas_del_almacen_test.gd:36[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ [38;2;30;144;255m<Resource>[0m
+ to refer to the same object
+ '[38;2;30;144;255m<null>[0m'[0m[38;2;173;216;230m	at 'test_cada_objeto_sigue_en_la_mano_al_leer_y_salir' in res://test/escenas/puestos/notas_del_almacen_test.gd:90
+	at '_derecho' in res://test/escenas/puestos/notas_del_almacen_test.gd:36[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ [38;2;30;144;255m<Node3D>[0m
+ to refer to the same object
+ [38;2;30;144;255m<Node3D>[0m[0m[38;2;173;216;230m	at 'test_cada_objeto_sigue_en_la_mano_al_leer_y_salir' in res://test/escenas/puestos/notas_del_almacen_test.gd:91
+	at '_derecho' in res://test/escenas/puestos/notas_del_almacen_test.gd:36[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m '[38;2;30;144;255mtrue[0m' but is '[38;2;30;144;255mfalse[0m'[0m[38;2;173;216;230m	at 'test_cada_objeto_sigue_en_la_mano_al_leer_y_salir' in res://test/escenas/puestos/notas_del_almacen_test.gd:92
+	at '_derecho' in res://test/escenas/puestos/notas_del_almacen_test.gd:36[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ [38;2;30;144;255m<Resource>[0m
+ to refer to the same object
+ '[38;2;30;144;255m<null>[0m'[0m[38;2;173;216;230m	at 'test_cada_objeto_sigue_en_la_mano_al_leer_y_salir' in res://test/escenas/puestos/notas_del_almacen_test.gd:94
+	at '_derecho' in res://test/escenas/puestos/notas_del_almacen_test.gd:36[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ [38;2;30;144;255m<Node3D>[0m
+ to refer to the same object
+ [38;2;30;144;255m<Node3D>[0m[0m[38;2;173;216;230m	at 'test_cada_objeto_sigue_en_la_mano_al_leer_y_salir' in res://test/escenas/puestos/notas_del_almacen_test.gd:95
+	at '_derecho' in res://test/escenas/puestos/notas_del_almacen_test.gd:36[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m '[38;2;30;144;255mtrue[0m' but is '[38;2;30;144;255mfalse[0m'[0m[38;2;173;216;230m	at 'test_cada_objeto_sigue_en_la_mano_al_leer_y_salir' in res://test/escenas/puestos/notas_del_almacen_test.gd:96
+	at '_derecho' in res://test/escenas/puestos/notas_del_almacen_test.gd:36[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m '[38;2;30;144;255mtrue[0m' but is '[38;2;30;144;255mfalse[0m'[0m[38;2;173;216;230m	at 'test_cada_objeto_sigue_en_la_mano_al_leer_y_salir' in res://test/escenas/puestos/notas_del_almacen_test.gd:86
+	at '_derecho' in res://test/escenas/puestos/notas_del_almacen_test.gd:36[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ [38;2;30;144;255m<Resource>[0m
+ to refer to the same object
+ '[38;2;30;144;255m<null>[0m'[0m[38;2;173;216;230m	at 'test_cada_objeto_sigue_en_la_mano_al_leer_y_salir' in res://test/escenas/puestos/notas_del_almacen_test.gd:90
+	at '_derecho' in res://test/escenas/puestos/notas_del_almacen_test.gd:36[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ [38;2;30;144;255m<Node3D>[0m
+ to refer to the same object
+ [38;2;30;144;255m<Node3D>[0m[0m[38;2;173;216;230m	at 'test_cada_objeto_sigue_en_la_mano_al_leer_y_salir' in res://test/escenas/puestos/notas_del_almacen_test.gd:91
+	at '_derecho' in res://test/escenas/puestos/notas_del_almacen_test.gd:36[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m '[38;2;30;144;255mtrue[0m' but is '[38;2;30;144;255mfalse[0m'[0m[38;2;173;216;230m	at 'test_cada_objeto_sigue_en_la_mano_al_leer_y_salir' in res://test/escenas/puestos/notas_del_almacen_test.gd:92
+	at '_derecho' in res://test/escenas/puestos/notas_del_almacen_test.gd:36[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ [38;2;30;144;255m<Resource>[0m
+ to refer to the same object
+ '[38;2;30;144;255m<null>[0m'[0m[38;2;173;216;230m	at 'test_cada_objeto_sigue_en_la_mano_al_leer_y_salir' in res://test/escenas/puestos/notas_del_almacen_test.gd:94
+	at '_derecho' in res://test/escenas/puestos/notas_del_almacen_test.gd:36[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ [38;2;30;144;255m<Node3D>[0m
+ to refer to the same object
+ [38;2;30;144;255m<Node3D>[0m[0m[38;2;173;216;230m	at 'test_cada_objeto_sigue_en_la_mano_al_leer_y_salir' in res://test/escenas/puestos/notas_del_almacen_test.gd:95
+	at '_derecho' in res://test/escenas/puestos/notas_del_almacen_test.gd:36[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m '[38;2;30;144;255mtrue[0m' but is '[38;2;30;144;255mfalse[0m'[0m[38;2;173;216;230m	at 'test_cada_objeto_sigue_en_la_mano_al_leer_y_salir' in res://test/escenas/puestos/notas_del_almacen_test.gd:96
+	at '_derecho' in res://test/escenas/puestos/notas_del_almacen_test.gd:36[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m '[38;2;30;144;255mtrue[0m' but is '[38;2;30;144;255mfalse[0m'[0m[38;2;173;216;230m	at 'test_cada_objeto_sigue_en_la_mano_al_leer_y_salir' in res://test/escenas/puestos/notas_del_almacen_test.gd:86
+	at '_derecho' in res://test/escenas/puestos/notas_del_almacen_test.gd:36[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ [38;2;30;144;255m<Resource>[0m
+ to refer to the same object
+ '[38;2;30;144;255m<null>[0m'[0m[38;2;173;216;230m	at 'test_cada_objeto_sigue_en_la_mano_al_leer_y_salir' in res://test/escenas/puestos/notas_del_almacen_test.gd:90
+	at '_derecho' in res://test/escenas/puestos/notas_del_almacen_test.gd:36[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ [38;2;30;144;255m<Node3D>[0m
+ to refer to the same object
+ [38;2;30;144;255m<Node3D>[0m[0m[38;2;173;216;230m	at 'test_cada_objeto_sigue_en_la_mano_al_leer_y_salir' in res://test/escenas/puestos/notas_del_almacen_test.gd:91
+	at '_derecho' in res://test/escenas/puestos/notas_del_almacen_test.gd:36[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m '[38;2;30;144;255mtrue[0m' but is '[38;2;30;144;255mfalse[0m'[0m[38;2;173;216;230m	at 'test_cada_objeto_sigue_en_la_mano_al_leer_y_salir' in res://test/escenas/puestos/notas_del_almacen_test.gd:92
+	at '_derecho' in res://test/escenas/puestos/notas_del_almacen_test.gd:36[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ [38;2;30;144;255m<Resource>[0m
+ to refer to the same object
+ '[38;2;30;144;255m<null>[0m'[0m[38;2;173;216;230m	at 'test_cada_objeto_sigue_en_la_mano_al_leer_y_salir' in res://test/escenas/puestos/notas_del_almacen_test.gd:94
+	at '_derecho' in res://test/escenas/puestos/notas_del_almacen_test.gd:36[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ [38;2;30;144;255m<Node3D>[0m
+ to refer to the same object
+ [38;2;30;144;255m<Node3D>[0m[0m[38;2;173;216;230m	at 'test_cada_objeto_sigue_en_la_mano_al_leer_y_salir' in res://test/escenas/puestos/notas_del_almacen_test.gd:95
+	at '_derecho' in res://test/escenas/puestos/notas_del_almacen_test.gd:36[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m '[38;2;30;144;255mtrue[0m' but is '[38;2;30;144;255mfalse[0m'[0m[38;2;173;216;230m	at 'test_cada_objeto_sigue_en_la_mano_al_leer_y_salir' in res://test/escenas/puestos/notas_del_almacen_test.gd:96
+	at '_derecho' in res://test/escenas/puestos/notas_del_almacen_test.gd:36[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m '[38;2;30;144;255mtrue[0m' but is '[38;2;30;144;255mfalse[0m'[0m[38;2;173;216;230m	at 'test_cada_objeto_sigue_en_la_mano_al_leer_y_salir' in res://test/escenas/puestos/notas_del_almacen_test.gd:86
+	at '_derecho' in res://test/escenas/puestos/notas_del_almacen_test.gd:36[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ [38;2;30;144;255m<Resource>[0m
+ to refer to the same object
+ '[38;2;30;144;255m<null>[0m'[0m[38;2;173;216;230m	at 'test_cada_objeto_sigue_en_la_mano_al_leer_y_salir' in res://test/escenas/puestos/notas_del_almacen_test.gd:90
+	at '_derecho' in res://test/escenas/puestos/notas_del_almacen_test.gd:36[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ [38;2;30;144;255m<Node3D>[0m
+ to refer to the same object
+ [38;2;30;144;255m<Node3D>[0m[0m[38;2;173;216;230m	at 'test_cada_objeto_sigue_en_la_mano_al_leer_y_salir' in res://test/escenas/puestos/notas_del_almacen_test.gd:91
+	at '_derecho' in res://test/escenas/puestos/notas_del_almacen_test.gd:36[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m '[38;2;30;144;255mtrue[0m' but is '[38;2;30;144;255mfalse[0m'[0m[38;2;173;216;230m	at 'test_cada_objeto_sigue_en_la_mano_al_leer_y_salir' in res://test/escenas/puestos/notas_del_almacen_test.gd:92
+	at '_derecho' in res://test/escenas/puestos/notas_del_almacen_test.gd:36[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ [38;2;30;144;255m<Resource>[0m
+ to refer to the same object
+ '[38;2;30;144;255m<null>[0m'[0m[38;2;173;216;230m	at 'test_cada_objeto_sigue_en_la_mano_al_leer_y_salir' in res://test/escenas/puestos/notas_del_almacen_test.gd:94
+	at '_derecho' in res://test/escenas/puestos/notas_del_almacen_test.gd:36[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ [38;2;30;144;255m<Node3D>[0m
+ to refer to the same object
+ [38;2;30;144;255m<Node3D>[0m[0m[38;2;173;216;230m	at 'test_cada_objeto_sigue_en_la_mano_al_leer_y_salir' in res://test/escenas/puestos/notas_del_almacen_test.gd:95
+	at '_derecho' in res://test/escenas/puestos/notas_del_almacen_test.gd:36[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m '[38;2;30;144;255mtrue[0m' but is '[38;2;30;144;255mfalse[0m'[0m[38;2;173;216;230m	at 'test_cada_objeto_sigue_en_la_mano_al_leer_y_salir' in res://test/escenas/puestos/notas_del_almacen_test.gd:96
+	at '_derecho' in res://test/escenas/puestos/notas_del_almacen_test.gd:36[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m '[38;2;30;144;255mtrue[0m' but is '[38;2;30;144;255mfalse[0m'[0m[38;2;173;216;230m	at 'test_cada_objeto_sigue_en_la_mano_al_leer_y_salir' in res://test/escenas/puestos/notas_del_almacen_test.gd:86
+	at '_derecho' in res://test/escenas/puestos/notas_del_almacen_test.gd:36[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ [38;2;30;144;255m<Resource>[0m
+ to refer to the same object
+ '[38;2;30;144;255m<null>[0m'[0m[38;2;173;216;230m	at 'test_cada_objeto_sigue_en_la_mano_al_leer_y_salir' in res://test/escenas/puestos/notas_del_almacen_test.gd:90
+	at '_derecho' in res://test/escenas/puestos/notas_del_almacen_test.gd:36[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ [38;2;30;144;255m<Node3D>[0m
+ to refer to the same object
+ [38;2;30;144;255m<Node3D>[0m[0m[38;2;173;216;230m	at 'test_cada_objeto_sigue_en_la_mano_al_leer_y_salir' in res://test/escenas/puestos/notas_del_almacen_test.gd:91
+	at '_derecho' in res://test/escenas/puestos/notas_del_almacen_test.gd:36[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m '[38;2;30;144;255mtrue[0m' but is '[38;2;30;144;255mfalse[0m'[0m[38;2;173;216;230m	at 'test_cada_objeto_sigue_en_la_mano_al_leer_y_salir' in res://test/escenas/puestos/notas_del_almacen_test.gd:92
+	at '_derecho' in res://test/escenas/puestos/notas_del_almacen_test.gd:36[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ [38;2;30;144;255m<Resource>[0m
+ to refer to the same object
+ '[38;2;30;144;255m<null>[0m'[0m[38;2;173;216;230m	at 'test_cada_objeto_sigue_en_la_mano_al_leer_y_salir' in res://test/escenas/puestos/notas_del_almacen_test.gd:94
+	at '_derecho' in res://test/escenas/puestos/notas_del_almacen_test.gd:36[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ [38;2;30;144;255m<Node3D>[0m
+ to refer to the same object
+ [38;2;30;144;255m<Node3D>[0m[0m[38;2;173;216;230m	at 'test_cada_objeto_sigue_en_la_mano_al_leer_y_salir' in res://test/escenas/puestos/notas_del_almacen_test.gd:95
+	at '_derecho' in res://test/escenas/puestos/notas_del_almacen_test.gd:36[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m '[38;2;30;144;255mtrue[0m' but is '[38;2;30;144;255mfalse[0m'[0m[38;2;173;216;230m	at 'test_cada_objeto_sigue_en_la_mano_al_leer_y_salir' in res://test/escenas/puestos/notas_del_almacen_test.gd:96
+	at '_derecho' in res://test/escenas/puestos/notas_del_almacen_test.gd:36[0m[38;2;128;128;128m[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/puestos/notas_del_almacen_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_otras_pantallas_impiden_abrir_otra_hoja[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+WARNING: Parent path './nota ba?o inodoro' for node 'StaticBody3D' has vanished when instantiating: 'res://src/escenas/puestos/estructura_del_almacen.tscn'.
+   at: instantiate (scene/resources/packed_scene.cpp:213)
+   GDScript backtrace (most recent call first):
+       [0] _abrir (res://test/escenas/puestos/notas_del_almacen_test.gd:12)
+       [1] test_otras_pantallas_impiden_abrir_otra_hoja (res://test/escenas/puestos/notas_del_almacen_test.gd:102)
+       [2] _execute_test_case (res://addons/gdUnit4/src/core/_TestCase.gd:79)
+       [3] execute (res://addons/gdUnit4/src/core/_TestCase.gd:40)
+       [4] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleTestStage.gd:10)
+       [5] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [6] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleExecutionStage.gd:17)
+       [7] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [8] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestCaseExecutionStage.gd:26)
+       [9] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [10] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestSuiteExecutionStage.gd:36)
+       [11] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [12] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestCaseExecutionStage.gd:35)
+       [13] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [14] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleExecutionStage.gd:28)
+       [15] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [16] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleTestStage.gd:10)
+       [17] execute (res://addons/gdUnit4/src/core/_TestCase.gd:41)
+       [18] test_completed (res://addons/gdUnit4/src/core/_TestCase.gd:86)
+WARNING: Node './StaticBody3D' was modified from inside an instance, but it has vanished.
+   at: instantiate (scene/resources/packed_scene.cpp:312)
+   GDScript backtrace (most recent call first):
+       [0] _abrir (res://test/escenas/puestos/notas_del_almacen_test.gd:12)
+       [1] test_otras_pantallas_impiden_abrir_otra_hoja (res://test/escenas/puestos/notas_del_almacen_test.gd:102)
+       [2] _execute_test_case (res://addons/gdUnit4/src/core/_TestCase.gd:79)
+       [3] execute (res://addons/gdUnit4/src/core/_TestCase.gd:40)
+       [4] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleTestStage.gd:10)
+       [5] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [6] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleExecutionStage.gd:17)
+       [7] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [8] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestCaseExecutionStage.gd:26)
+       [9] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [10] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestSuiteExecutionStage.gd:36)
+       [11] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [12] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestCaseExecutionStage.gd:35)
+       [13] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [14] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleExecutionStage.gd:28)
+       [15] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [16] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleTestStage.gd:10)
+       [17] execute (res://addons/gdUnit4/src/core/_TestCase.gd:41)
+       [18] test_completed (res://addons/gdUnit4/src/core/_TestCase.gd:86)
+SCRIPT ERROR: Invalid access to property or key 'id' on a base object of type 'null instance'.
+   at: _ready (res://src/escenas/puestos/notas_del_almacen.gd:17)
+   GDScript backtrace (most recent call first):
+       [0] _ready (res://src/escenas/puestos/notas_del_almacen.gd:17)
+       [1] _abrir (res://test/escenas/puestos/notas_del_almacen_test.gd:13)
+       [2] test_otras_pantallas_impiden_abrir_otra_hoja (res://test/escenas/puestos/notas_del_almacen_test.gd:102)
+       [3] _execute_test_case (res://addons/gdUnit4/src/core/_TestCase.gd:79)
+       [4] execute (res://addons/gdUnit4/src/core/_TestCase.gd:40)
+       [5] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleTestStage.gd:10)
+       [6] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [7] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleExecutionStage.gd:17)
+       [8] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [9] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestCaseExecutionStage.gd:26)
+       [10] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [11] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestSuiteExecutionStage.gd:36)
+       [12] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [13] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestCaseExecutionStage.gd:35)
+       [14] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [15] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleExecutionStage.gd:28)
+       [16] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [17] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleTestStage.gd:10)
+       [18] execute (res://addons/gdUnit4/src/core/_TestCase.gd:41)
+       [19] test_completed (res://addons/gdUnit4/src/core/_TestCase.gd:86)
+  [38;2;250;235;215mres://test/escenas/puestos/notas_del_almacen_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_otras_pantallas_impiden_abrir_otra_hoja[0m[38;2;178;34;34m[1m FAILED[0m[38;2;100;149;237m 137ms[0m
+  [38;2;0;206;209m[1m[4mReport:[0m
+  [38;2;128;128;128m[38;2;255;69;0mGodot Runtime Error ![0m
+  '[38;2;30;144;255mInvalid access to property or key 'id' on a base object of type 'null instance'.[0m'[0m[38;2;173;216;230m	at '_ready' in res://src/escenas/puestos/notas_del_almacen.gd:17
+	at '_abrir' in res://test/escenas/puestos/notas_del_almacen_test.gd:13
+	at 'test_otras_pantallas_impiden_abrir_otra_hoja' in res://test/escenas/puestos/notas_del_almacen_test.gd:102[0m[38;2;128;128;128m[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/puestos/notas_del_almacen_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_cerrar_el_turno_quita_la_nota_y_deja_la_placa[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+WARNING: Parent path './nota ba?o inodoro' for node 'StaticBody3D' has vanished when instantiating: 'res://src/escenas/puestos/estructura_del_almacen.tscn'.
+   at: instantiate (scene/resources/packed_scene.cpp:213)
+   GDScript backtrace (most recent call first):
+       [0] _abrir (res://test/escenas/puestos/notas_del_almacen_test.gd:12)
+       [1] test_cerrar_el_turno_quita_la_nota_y_deja_la_placa (res://test/escenas/puestos/notas_del_almacen_test.gd:126)
+       [2] _execute_test_case (res://addons/gdUnit4/src/core/_TestCase.gd:79)
+       [3] execute (res://addons/gdUnit4/src/core/_TestCase.gd:40)
+       [4] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleTestStage.gd:10)
+       [5] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [6] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleExecutionStage.gd:17)
+       [7] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [8] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestCaseExecutionStage.gd:26)
+       [9] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [10] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestSuiteExecutionStage.gd:36)
+       [11] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [12] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestCaseExecutionStage.gd:35)
+       [13] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [14] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleExecutionStage.gd:28)
+       [15] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [16] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleTestStage.gd:10)
+       [17] execute (res://addons/gdUnit4/src/core/_TestCase.gd:41)
+       [18] test_completed (res://addons/gdUnit4/src/core/_TestCase.gd:86)
+WARNING: Node './StaticBody3D' was modified from inside an instance, but it has vanished.
+   at: instantiate (scene/resources/packed_scene.cpp:312)
+   GDScript backtrace (most recent call first):
+       [0] _abrir (res://test/escenas/puestos/notas_del_almacen_test.gd:12)
+       [1] test_cerrar_el_turno_quita_la_nota_y_deja_la_placa (res://test/escenas/puestos/notas_del_almacen_test.gd:126)
+       [2] _execute_test_case (res://addons/gdUnit4/src/core/_TestCase.gd:79)
+       [3] execute (res://addons/gdUnit4/src/core/_TestCase.gd:40)
+       [4] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleTestStage.gd:10)
+       [5] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [6] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleExecutionStage.gd:17)
+       [7] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [8] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestCaseExecutionStage.gd:26)
+       [9] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [10] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestSuiteExecutionStage.gd:36)
+       [11] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [12] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestCaseExecutionStage.gd:35)
+       [13] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [14] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleExecutionStage.gd:28)
+       [15] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [16] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleTestStage.gd:10)
+       [17] execute (res://addons/gdUnit4/src/core/_TestCase.gd:41)
+       [18] test_completed (res://addons/gdUnit4/src/core/_TestCase.gd:86)
+SCRIPT ERROR: Invalid access to property or key 'id' on a base object of type 'null instance'.
+   at: _ready (res://src/escenas/puestos/notas_del_almacen.gd:17)
+   GDScript backtrace (most recent call first):
+       [0] _ready (res://src/escenas/puestos/notas_del_almacen.gd:17)
+       [1] _abrir (res://test/escenas/puestos/notas_del_almacen_test.gd:13)
+       [2] test_cerrar_el_turno_quita_la_nota_y_deja_la_placa (res://test/escenas/puestos/notas_del_almacen_test.gd:126)
+       [3] _execute_test_case (res://addons/gdUnit4/src/core/_TestCase.gd:79)
+       [4] execute (res://addons/gdUnit4/src/core/_TestCase.gd:40)
+       [5] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleTestStage.gd:10)
+       [6] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [7] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleExecutionStage.gd:17)
+       [8] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [9] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestCaseExecutionStage.gd:26)
+       [10] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [11] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestSuiteExecutionStage.gd:36)
+       [12] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [13] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestCaseExecutionStage.gd:35)
+       [14] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [15] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleExecutionStage.gd:28)
+       [16] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [17] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleTestStage.gd:10)
+       [18] execute (res://addons/gdUnit4/src/core/_TestCase.gd:41)
+       [19] test_completed (res://addons/gdUnit4/src/core/_TestCase.gd:86)
+  [38;2;250;235;215mres://test/escenas/puestos/notas_del_almacen_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_cerrar_el_turno_quita_la_nota_y_deja_la_placa[0m[38;2;178;34;34m[1m FAILED[0m[38;2;100;149;237m 116ms[0m
+  [38;2;0;206;209m[1m[4mReport:[0m
+  [38;2;128;128;128m[38;2;255;69;0mGodot Runtime Error ![0m
+  '[38;2;30;144;255mInvalid access to property or key 'id' on a base object of type 'null instance'.[0m'[0m[38;2;173;216;230m	at '_ready' in res://src/escenas/puestos/notas_del_almacen.gd:17
+	at '_abrir' in res://test/escenas/puestos/notas_del_almacen_test.gd:13
+	at 'test_cerrar_el_turno_quita_la_nota_y_deja_la_placa' in res://test/escenas/puestos/notas_del_almacen_test.gd:126[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m '[38;2;30;144;255mtrue[0m' but is '[38;2;30;144;255mfalse[0m'[0m[38;2;173;216;230m	at 'test_cerrar_el_turno_quita_la_nota_y_deja_la_placa' in res://test/escenas/puestos/notas_del_almacen_test.gd:130
+	at '_abrir' in res://test/escenas/puestos/notas_del_almacen_test.gd:18[0m[38;2;128;128;128m[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/puestos/notas_del_almacen_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_cada_hoja_se_enfoca_desde_un_lugar_transitable_y_se_lee[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+WARNING: Parent path './nota ba?o inodoro' for node 'StaticBody3D' has vanished when instantiating: 'res://src/escenas/puestos/estructura_del_almacen.tscn'.
+   at: instantiate (scene/resources/packed_scene.cpp:213)
+   GDScript backtrace (most recent call first):
+       [0] _abrir (res://test/escenas/puestos/notas_del_almacen_test.gd:12)
+       [1] test_cada_hoja_se_enfoca_desde_un_lugar_transitable_y_se_lee (res://test/escenas/puestos/notas_del_almacen_test.gd:188)
+       [2] _execute_test_case (res://addons/gdUnit4/src/core/_TestCase.gd:79)
+       [3] execute (res://addons/gdUnit4/src/core/_TestCase.gd:40)
+       [4] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleTestStage.gd:10)
+       [5] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [6] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleExecutionStage.gd:17)
+       [7] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [8] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestCaseExecutionStage.gd:26)
+       [9] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [10] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestSuiteExecutionStage.gd:36)
+       [11] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [12] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestCaseExecutionStage.gd:35)
+       [13] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [14] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleExecutionStage.gd:28)
+       [15] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [16] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleTestStage.gd:10)
+       [17] execute (res://addons/gdUnit4/src/core/_TestCase.gd:41)
+       [18] test_completed (res://addons/gdUnit4/src/core/_TestCase.gd:86)
+WARNING: Node './StaticBody3D' was modified from inside an instance, but it has vanished.
+   at: instantiate (scene/resources/packed_scene.cpp:312)
+   GDScript backtrace (most recent call first):
+       [0] _abrir (res://test/escenas/puestos/notas_del_almacen_test.gd:12)
+       [1] test_cada_hoja_se_enfoca_desde_un_lugar_transitable_y_se_lee (res://test/escenas/puestos/notas_del_almacen_test.gd:188)
+       [2] _execute_test_case (res://addons/gdUnit4/src/core/_TestCase.gd:79)
+       [3] execute (res://addons/gdUnit4/src/core/_TestCase.gd:40)
+       [4] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleTestStage.gd:10)
+       [5] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [6] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleExecutionStage.gd:17)
+       [7] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [8] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestCaseExecutionStage.gd:26)
+       [9] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [10] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestSuiteExecutionStage.gd:36)
+       [11] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [12] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestCaseExecutionStage.gd:35)
+       [13] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [14] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleExecutionStage.gd:28)
+       [15] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [16] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleTestStage.gd:10)
+       [17] execute (res://addons/gdUnit4/src/core/_TestCase.gd:41)
+       [18] test_completed (res://addons/gdUnit4/src/core/_TestCase.gd:86)
+SCRIPT ERROR: Invalid access to property or key 'id' on a base object of type 'null instance'.
+   at: _ready (res://src/escenas/puestos/notas_del_almacen.gd:17)
+   GDScript backtrace (most recent call first):
+       [0] _ready (res://src/escenas/puestos/notas_del_almacen.gd:17)
+       [1] _abrir (res://test/escenas/puestos/notas_del_almacen_test.gd:13)
+       [2] test_cada_hoja_se_enfoca_desde_un_lugar_transitable_y_se_lee (res://test/escenas/puestos/notas_del_almacen_test.gd:188)
+       [3] _execute_test_case (res://addons/gdUnit4/src/core/_TestCase.gd:79)
+       [4] execute (res://addons/gdUnit4/src/core/_TestCase.gd:40)
+       [5] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleTestStage.gd:10)
+       [6] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [7] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleExecutionStage.gd:17)
+       [8] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [9] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestCaseExecutionStage.gd:26)
+       [10] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [11] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestSuiteExecutionStage.gd:36)
+       [12] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [13] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestCaseExecutionStage.gd:35)
+       [14] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [15] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleExecutionStage.gd:28)
+       [16] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [17] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleTestStage.gd:10)
+       [18] execute (res://addons/gdUnit4/src/core/_TestCase.gd:41)
+       [19] test_completed (res://addons/gdUnit4/src/core/_TestCase.gd:86)
+SCRIPT ERROR: Cannot call method 'get' on a null value.
+   at: _posiciones_transitables (res://test/escenas/puestos/notas_del_almacen_test.gd:138)
+   GDScript backtrace (most recent call first):
+       [0] _posiciones_transitables (res://test/escenas/puestos/notas_del_almacen_test.gd:138)
+       [1] test_cada_hoja_se_enfoca_desde_un_lugar_transitable_y_se_lee (res://test/escenas/puestos/notas_del_almacen_test.gd:194)
+       [2] _derecho (res://test/escenas/puestos/notas_del_almacen_test.gd:36)
+SCRIPT ERROR: Cannot call method 'get_path' on a null value.
+   at: test_cada_hoja_se_enfoca_desde_un_lugar_transitable_y_se_lee (res://test/escenas/puestos/notas_del_almacen_test.gd:196)
+   GDScript backtrace (most recent call first):
+       [0] test_cada_hoja_se_enfoca_desde_un_lugar_transitable_y_se_lee (res://test/escenas/puestos/notas_del_almacen_test.gd:196)
+       [1] _derecho (res://test/escenas/puestos/notas_del_almacen_test.gd:36)
+  [38;2;250;235;215mres://test/escenas/puestos/notas_del_almacen_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_cada_hoja_se_enfoca_desde_un_lugar_transitable_y_se_lee[0m[38;2;178;34;34m[1m FAILED[0m[38;2;100;149;237m 279ms[0m
+  [38;2;0;206;209m[1m[4mReport:[0m
+  [38;2;128;128;128m[38;2;255;69;0mGodot Runtime Error ![0m
+  '[38;2;30;144;255mInvalid access to property or key 'id' on a base object of type 'null instance'.[0m'[0m[38;2;173;216;230m	at '_ready' in res://src/escenas/puestos/notas_del_almacen.gd:17
+	at '_abrir' in res://test/escenas/puestos/notas_del_almacen_test.gd:13
+	at 'test_cada_hoja_se_enfoca_desde_un_lugar_transitable_y_se_lee' in res://test/escenas/puestos/notas_del_almacen_test.gd:188[0m  [38;2;128;128;128m[38;2;255;69;0mGodot Runtime Error ![0m
+  '[38;2;30;144;255mCannot call method 'get' on a null value.[0m'[0m[38;2;173;216;230m	at '_posiciones_transitables' in res://test/escenas/puestos/notas_del_almacen_test.gd:138
+	at 'test_cada_hoja_se_enfoca_desde_un_lugar_transitable_y_se_lee' in res://test/escenas/puestos/notas_del_almacen_test.gd:194
+	at '_derecho' in res://test/escenas/puestos/notas_del_almacen_test.gd:36[0m  [38;2;128;128;128m[38;2;255;69;0mGodot Runtime Error ![0m
+  '[38;2;30;144;255mCannot call method 'get_path' on a null value.[0m'[0m[38;2;173;216;230m	at 'test_cada_hoja_se_enfoca_desde_un_lugar_transitable_y_se_lee' in res://test/escenas/puestos/notas_del_almacen_test.gd:196
+	at '_derecho' in res://test/escenas/puestos/notas_del_almacen_test.gd:36[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m '[38;2;30;144;255mtrue[0m' but is '[38;2;30;144;255mfalse[0m'[0m[38;2;173;216;230m	at 'test_cada_hoja_se_enfoca_desde_un_lugar_transitable_y_se_lee' in res://test/escenas/puestos/notas_del_almacen_test.gd:219[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ '[38;2;30;144;255m<null>[0m'
+ to refer to the same object
+ [38;2;30;144;255m<ShaderMaterial>[0m[0m[38;2;173;216;230m	at 'test_cada_hoja_se_enfoca_desde_un_lugar_transitable_y_se_lee' in res://test/escenas/puestos/notas_del_almacen_test.gd:223[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m '[38;2;30;144;255mtrue[0m' but is '[38;2;30;144;255mfalse[0m'[0m[38;2;173;216;230m	at 'test_cada_hoja_se_enfoca_desde_un_lugar_transitable_y_se_lee' in res://test/escenas/puestos/notas_del_almacen_test.gd:219[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ '[38;2;30;144;255m<null>[0m'
+ to refer to the same object
+ [38;2;30;144;255m<ShaderMaterial>[0m[0m[38;2;173;216;230m	at 'test_cada_hoja_se_enfoca_desde_un_lugar_transitable_y_se_lee' in res://test/escenas/puestos/notas_del_almacen_test.gd:223[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m '[38;2;30;144;255mtrue[0m' but is '[38;2;30;144;255mfalse[0m'[0m[38;2;173;216;230m	at 'test_cada_hoja_se_enfoca_desde_un_lugar_transitable_y_se_lee' in res://test/escenas/puestos/notas_del_almacen_test.gd:219[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ '[38;2;30;144;255m<null>[0m'
+ to refer to the same object
+ [38;2;30;144;255m<ShaderMaterial>[0m[0m[38;2;173;216;230m	at 'test_cada_hoja_se_enfoca_desde_un_lugar_transitable_y_se_lee' in res://test/escenas/puestos/notas_del_almacen_test.gd:223[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m '[38;2;30;144;255mtrue[0m' but is '[38;2;30;144;255mfalse[0m'[0m[38;2;173;216;230m	at 'test_cada_hoja_se_enfoca_desde_un_lugar_transitable_y_se_lee' in res://test/escenas/puestos/notas_del_almacen_test.gd:219[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ '[38;2;30;144;255m<null>[0m'
+ to refer to the same object
+ [38;2;30;144;255m<ShaderMaterial>[0m[0m[38;2;173;216;230m	at 'test_cada_hoja_se_enfoca_desde_un_lugar_transitable_y_se_lee' in res://test/escenas/puestos/notas_del_almacen_test.gd:223[0m[38;2;128;128;128m[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/puestos/notas_del_almacen_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_leer_continua_el_reloj_y_la_pausa_se_dibuja_encima[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+WARNING: Parent path './nota ba?o inodoro' for node 'StaticBody3D' has vanished when instantiating: 'res://src/escenas/puestos/estructura_del_almacen.tscn'.
+   at: instantiate (scene/resources/packed_scene.cpp:213)
+   GDScript backtrace (most recent call first):
+       [0] _abrir (res://test/escenas/puestos/notas_del_almacen_test.gd:12)
+       [1] test_leer_continua_el_reloj_y_la_pausa_se_dibuja_encima (res://test/escenas/puestos/notas_del_almacen_test.gd:230)
+       [2] _execute_test_case (res://addons/gdUnit4/src/core/_TestCase.gd:79)
+       [3] execute (res://addons/gdUnit4/src/core/_TestCase.gd:40)
+       [4] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleTestStage.gd:10)
+       [5] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [6] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleExecutionStage.gd:17)
+       [7] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [8] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestCaseExecutionStage.gd:26)
+       [9] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [10] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestSuiteExecutionStage.gd:36)
+       [11] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [12] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestCaseExecutionStage.gd:35)
+       [13] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [14] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleExecutionStage.gd:28)
+       [15] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [16] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleTestStage.gd:10)
+       [17] execute (res://addons/gdUnit4/src/core/_TestCase.gd:41)
+       [18] test_completed (res://addons/gdUnit4/src/core/_TestCase.gd:86)
+WARNING: Node './StaticBody3D' was modified from inside an instance, but it has vanished.
+   at: instantiate (scene/resources/packed_scene.cpp:312)
+   GDScript backtrace (most recent call first):
+       [0] _abrir (res://test/escenas/puestos/notas_del_almacen_test.gd:12)
+       [1] test_leer_continua_el_reloj_y_la_pausa_se_dibuja_encima (res://test/escenas/puestos/notas_del_almacen_test.gd:230)
+       [2] _execute_test_case (res://addons/gdUnit4/src/core/_TestCase.gd:79)
+       [3] execute (res://addons/gdUnit4/src/core/_TestCase.gd:40)
+       [4] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleTestStage.gd:10)
+       [5] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [6] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleExecutionStage.gd:17)
+       [7] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [8] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestCaseExecutionStage.gd:26)
+       [9] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [10] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestSuiteExecutionStage.gd:36)
+       [11] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [12] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestCaseExecutionStage.gd:35)
+       [13] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [14] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleExecutionStage.gd:28)
+       [15] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [16] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleTestStage.gd:10)
+       [17] execute (res://addons/gdUnit4/src/core/_TestCase.gd:41)
+       [18] test_completed (res://addons/gdUnit4/src/core/_TestCase.gd:86)
+SCRIPT ERROR: Invalid access to property or key 'id' on a base object of type 'null instance'.
+   at: _ready (res://src/escenas/puestos/notas_del_almacen.gd:17)
+   GDScript backtrace (most recent call first):
+       [0] _ready (res://src/escenas/puestos/notas_del_almacen.gd:17)
+       [1] _abrir (res://test/escenas/puestos/notas_del_almacen_test.gd:13)
+       [2] test_leer_continua_el_reloj_y_la_pausa_se_dibuja_encima (res://test/escenas/puestos/notas_del_almacen_test.gd:230)
+       [3] _execute_test_case (res://addons/gdUnit4/src/core/_TestCase.gd:79)
+       [4] execute (res://addons/gdUnit4/src/core/_TestCase.gd:40)
+       [5] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleTestStage.gd:10)
+       [6] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [7] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleExecutionStage.gd:17)
+       [8] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [9] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestCaseExecutionStage.gd:26)
+       [10] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [11] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestSuiteExecutionStage.gd:36)
+       [12] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [13] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestCaseExecutionStage.gd:35)
+       [14] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [15] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleExecutionStage.gd:28)
+       [16] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [17] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleTestStage.gd:10)
+       [18] execute (res://addons/gdUnit4/src/core/_TestCase.gd:41)
+       [19] test_completed (res://addons/gdUnit4/src/core/_TestCase.gd:86)
+  [38;2;250;235;215mres://test/escenas/puestos/notas_del_almacen_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_leer_continua_el_reloj_y_la_pausa_se_dibuja_encima[0m[38;2;178;34;34m[1m FAILED[0m[38;2;100;149;237m 142ms[0m
+  [38;2;0;206;209m[1m[4mReport:[0m
+  [38;2;128;128;128m[38;2;255;69;0mGodot Runtime Error ![0m
+  '[38;2;30;144;255mInvalid access to property or key 'id' on a base object of type 'null instance'.[0m'[0m[38;2;173;216;230m	at '_ready' in res://src/escenas/puestos/notas_del_almacen.gd:17
+	at '_abrir' in res://test/escenas/puestos/notas_del_almacen_test.gd:13
+	at 'test_leer_continua_el_reloj_y_la_pausa_se_dibuja_encima' in res://test/escenas/puestos/notas_del_almacen_test.gd:230[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m '[38;2;30;144;255mtrue[0m' but is '[38;2;30;144;255mfalse[0m'[0m[38;2;173;216;230m	at 'test_leer_continua_el_reloj_y_la_pausa_se_dibuja_encima' in res://test/escenas/puestos/notas_del_almacen_test.gd:250[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m '[38;2;30;144;255mtrue[0m' but is '[38;2;30;144;255mfalse[0m'[0m[38;2;173;216;230m	at 'test_leer_continua_el_reloj_y_la_pausa_se_dibuja_encima' in res://test/escenas/puestos/notas_del_almacen_test.gd:255[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m '[38;2;30;144;255mtrue[0m' but is '[38;2;30;144;255mfalse[0m'[0m[38;2;173;216;230m	at 'test_leer_continua_el_reloj_y_la_pausa_se_dibuja_encima' in res://test/escenas/puestos/notas_del_almacen_test.gd:256[0m[38;2;128;128;128m[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/puestos/notas_del_almacen_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_izquierdo_y_examen_no_abren_la_hoja_y_la_mano_cargada_suelta[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+WARNING: Parent path './nota ba?o inodoro' for node 'StaticBody3D' has vanished when instantiating: 'res://src/escenas/puestos/estructura_del_almacen.tscn'.
+   at: instantiate (scene/resources/packed_scene.cpp:213)
+   GDScript backtrace (most recent call first):
+       [0] _abrir (res://test/escenas/puestos/notas_del_almacen_test.gd:12)
+       [1] test_izquierdo_y_examen_no_abren_la_hoja_y_la_mano_cargada_suelta (res://test/escenas/puestos/notas_del_almacen_test.gd:260)
+       [2] _execute_test_case (res://addons/gdUnit4/src/core/_TestCase.gd:79)
+       [3] execute (res://addons/gdUnit4/src/core/_TestCase.gd:40)
+       [4] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleTestStage.gd:10)
+       [5] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [6] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleExecutionStage.gd:17)
+       [7] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [8] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestCaseExecutionStage.gd:26)
+       [9] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [10] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestSuiteExecutionStage.gd:36)
+       [11] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [12] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestCaseExecutionStage.gd:35)
+       [13] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [14] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleExecutionStage.gd:28)
+       [15] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [16] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleTestStage.gd:10)
+       [17] execute (res://addons/gdUnit4/src/core/_TestCase.gd:41)
+       [18] test_completed (res://addons/gdUnit4/src/core/_TestCase.gd:86)
+WARNING: Node './StaticBody3D' was modified from inside an instance, but it has vanished.
+   at: instantiate (scene/resources/packed_scene.cpp:312)
+   GDScript backtrace (most recent call first):
+       [0] _abrir (res://test/escenas/puestos/notas_del_almacen_test.gd:12)
+       [1] test_izquierdo_y_examen_no_abren_la_hoja_y_la_mano_cargada_suelta (res://test/escenas/puestos/notas_del_almacen_test.gd:260)
+       [2] _execute_test_case (res://addons/gdUnit4/src/core/_TestCase.gd:79)
+       [3] execute (res://addons/gdUnit4/src/core/_TestCase.gd:40)
+       [4] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleTestStage.gd:10)
+       [5] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [6] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleExecutionStage.gd:17)
+       [7] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [8] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestCaseExecutionStage.gd:26)
+       [9] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [10] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestSuiteExecutionStage.gd:36)
+       [11] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [12] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestCaseExecutionStage.gd:35)
+       [13] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [14] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleExecutionStage.gd:28)
+       [15] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [16] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleTestStage.gd:10)
+       [17] execute (res://addons/gdUnit4/src/core/_TestCase.gd:41)
+       [18] test_completed (res://addons/gdUnit4/src/core/_TestCase.gd:86)
+SCRIPT ERROR: Invalid access to property or key 'id' on a base object of type 'null instance'.
+   at: _ready (res://src/escenas/puestos/notas_del_almacen.gd:17)
+   GDScript backtrace (most recent call first):
+       [0] _ready (res://src/escenas/puestos/notas_del_almacen.gd:17)
+       [1] _abrir (res://test/escenas/puestos/notas_del_almacen_test.gd:13)
+       [2] test_izquierdo_y_examen_no_abren_la_hoja_y_la_mano_cargada_suelta (res://test/escenas/puestos/notas_del_almacen_test.gd:260)
+       [3] _execute_test_case (res://addons/gdUnit4/src/core/_TestCase.gd:79)
+       [4] execute (res://addons/gdUnit4/src/core/_TestCase.gd:40)
+       [5] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleTestStage.gd:10)
+       [6] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [7] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleExecutionStage.gd:17)
+       [8] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [9] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestCaseExecutionStage.gd:26)
+       [10] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [11] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestSuiteExecutionStage.gd:36)
+       [12] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [13] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestCaseExecutionStage.gd:35)
+       [14] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [15] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleExecutionStage.gd:28)
+       [16] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [17] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleTestStage.gd:10)
+       [18] execute (res://addons/gdUnit4/src/core/_TestCase.gd:41)
+       [19] test_completed (res://addons/gdUnit4/src/core/_TestCase.gd:86)
+  [38;2;250;235;215mres://test/escenas/puestos/notas_del_almacen_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_izquierdo_y_examen_no_abren_la_hoja_y_la_mano_cargada_suelta[0m[38;2;178;34;34m[1m FAILED[0m[38;2;100;149;237m 116ms[0m
+  [38;2;0;206;209m[1m[4mReport:[0m
+  [38;2;128;128;128m[38;2;255;69;0mGodot Runtime Error ![0m
+  '[38;2;30;144;255mInvalid access to property or key 'id' on a base object of type 'null instance'.[0m'[0m[38;2;173;216;230m	at '_ready' in res://src/escenas/puestos/notas_del_almacen.gd:17
+	at '_abrir' in res://test/escenas/puestos/notas_del_almacen_test.gd:13
+	at 'test_izquierdo_y_examen_no_abren_la_hoja_y_la_mano_cargada_suelta' in res://test/escenas/puestos/notas_del_almacen_test.gd:260[0m[38;2;128;128;128m[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/puestos/notas_del_almacen_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_la_hoja_abierta_no_se_reemplaza_por_otro_foco[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+WARNING: Parent path './nota ba?o inodoro' for node 'StaticBody3D' has vanished when instantiating: 'res://src/escenas/puestos/estructura_del_almacen.tscn'.
+   at: instantiate (scene/resources/packed_scene.cpp:213)
+   GDScript backtrace (most recent call first):
+       [0] _abrir (res://test/escenas/puestos/notas_del_almacen_test.gd:12)
+       [1] test_la_hoja_abierta_no_se_reemplaza_por_otro_foco (res://test/escenas/puestos/notas_del_almacen_test.gd:281)
+       [2] _execute_test_case (res://addons/gdUnit4/src/core/_TestCase.gd:79)
+       [3] execute (res://addons/gdUnit4/src/core/_TestCase.gd:40)
+       [4] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleTestStage.gd:10)
+       [5] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [6] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleExecutionStage.gd:17)
+       [7] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [8] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestCaseExecutionStage.gd:26)
+       [9] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [10] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestSuiteExecutionStage.gd:36)
+       [11] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [12] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestCaseExecutionStage.gd:35)
+       [13] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [14] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleExecutionStage.gd:28)
+       [15] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [16] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleTestStage.gd:10)
+       [17] execute (res://addons/gdUnit4/src/core/_TestCase.gd:41)
+       [18] test_completed (res://addons/gdUnit4/src/core/_TestCase.gd:86)
+WARNING: Node './StaticBody3D' was modified from inside an instance, but it has vanished.
+   at: instantiate (scene/resources/packed_scene.cpp:312)
+   GDScript backtrace (most recent call first):
+       [0] _abrir (res://test/escenas/puestos/notas_del_almacen_test.gd:12)
+       [1] test_la_hoja_abierta_no_se_reemplaza_por_otro_foco (res://test/escenas/puestos/notas_del_almacen_test.gd:281)
+       [2] _execute_test_case (res://addons/gdUnit4/src/core/_TestCase.gd:79)
+       [3] execute (res://addons/gdUnit4/src/core/_TestCase.gd:40)
+       [4] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleTestStage.gd:10)
+       [5] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [6] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleExecutionStage.gd:17)
+       [7] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [8] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestCaseExecutionStage.gd:26)
+       [9] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [10] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestSuiteExecutionStage.gd:36)
+       [11] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [12] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestCaseExecutionStage.gd:35)
+       [13] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [14] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleExecutionStage.gd:28)
+       [15] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [16] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleTestStage.gd:10)
+       [17] execute (res://addons/gdUnit4/src/core/_TestCase.gd:41)
+       [18] test_completed (res://addons/gdUnit4/src/core/_TestCase.gd:86)
+SCRIPT ERROR: Invalid access to property or key 'id' on a base object of type 'null instance'.
+   at: _ready (res://src/escenas/puestos/notas_del_almacen.gd:17)
+   GDScript backtrace (most recent call first):
+       [0] _ready (res://src/escenas/puestos/notas_del_almacen.gd:17)
+       [1] _abrir (res://test/escenas/puestos/notas_del_almacen_test.gd:13)
+       [2] test_la_hoja_abierta_no_se_reemplaza_por_otro_foco (res://test/escenas/puestos/notas_del_almacen_test.gd:281)
+       [3] _execute_test_case (res://addons/gdUnit4/src/core/_TestCase.gd:79)
+       [4] execute (res://addons/gdUnit4/src/core/_TestCase.gd:40)
+       [5] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleTestStage.gd:10)
+       [6] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [7] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleExecutionStage.gd:17)
+       [8] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [9] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestCaseExecutionStage.gd:26)
+       [10] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [11] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestSuiteExecutionStage.gd:36)
+       [12] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [13] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestCaseExecutionStage.gd:35)
+       [14] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [15] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleExecutionStage.gd:28)
+       [16] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [17] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleTestStage.gd:10)
+       [18] execute (res://addons/gdUnit4/src/core/_TestCase.gd:41)
+       [19] test_completed (res://addons/gdUnit4/src/core/_TestCase.gd:86)
+  [38;2;250;235;215mres://test/escenas/puestos/notas_del_almacen_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_la_hoja_abierta_no_se_reemplaza_por_otro_foco[0m[38;2;178;34;34m[1m FAILED[0m[38;2;100;149;237m 112ms[0m
+  [38;2;0;206;209m[1m[4mReport:[0m
+  [38;2;128;128;128m[38;2;255;69;0mGodot Runtime Error ![0m
+  '[38;2;30;144;255mInvalid access to property or key 'id' on a base object of type 'null instance'.[0m'[0m[38;2;173;216;230m	at '_ready' in res://src/escenas/puestos/notas_del_almacen.gd:17
+	at '_abrir' in res://test/escenas/puestos/notas_del_almacen_test.gd:13
+	at 'test_la_hoja_abierta_no_se_reemplaza_por_otro_foco' in res://test/escenas/puestos/notas_del_almacen_test.gd:281[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m '[38;2;30;144;255mtrue[0m' but is '[38;2;30;144;255mfalse[0m'[0m[38;2;173;216;230m	at 'test_la_hoja_abierta_no_se_reemplaza_por_otro_foco' in res://test/escenas/puestos/notas_del_almacen_test.gd:285
+	at '_abrir' in res://test/escenas/puestos/notas_del_almacen_test.gd:18[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m '[38;2;30;144;255mtrue[0m' but is '[38;2;30;144;255mfalse[0m'[0m[38;2;173;216;230m	at 'test_la_hoja_abierta_no_se_reemplaza_por_otro_foco' in res://test/escenas/puestos/notas_del_almacen_test.gd:289
+	at '_abrir' in res://test/escenas/puestos/notas_del_almacen_test.gd:18[0m[38;2;128;128;128m[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/puestos/notas_del_almacen_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_el_corcho_conserva_cinco_hojas_y_solo_dos_ofrecen_lectura[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+WARNING: Parent path './nota ba?o inodoro' for node 'StaticBody3D' has vanished when instantiating: 'res://src/escenas/puestos/estructura_del_almacen.tscn'.
+   at: instantiate (scene/resources/packed_scene.cpp:213)
+   GDScript backtrace (most recent call first):
+       [0] _abrir (res://test/escenas/puestos/notas_del_almacen_test.gd:12)
+       [1] test_el_corcho_conserva_cinco_hojas_y_solo_dos_ofrecen_lectura (res://test/escenas/puestos/notas_del_almacen_test.gd:293)
+       [2] _execute_test_case (res://addons/gdUnit4/src/core/_TestCase.gd:79)
+       [3] execute (res://addons/gdUnit4/src/core/_TestCase.gd:40)
+       [4] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleTestStage.gd:10)
+       [5] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [6] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleExecutionStage.gd:17)
+       [7] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [8] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestCaseExecutionStage.gd:26)
+       [9] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [10] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestSuiteExecutionStage.gd:36)
+       [11] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [12] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestCaseExecutionStage.gd:35)
+       [13] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [14] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleExecutionStage.gd:28)
+       [15] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [16] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleTestStage.gd:10)
+       [17] execute (res://addons/gdUnit4/src/core/_TestCase.gd:41)
+       [18] test_completed (res://addons/gdUnit4/src/core/_TestCase.gd:86)
+WARNING: Node './StaticBody3D' was modified from inside an instance, but it has vanished.
+   at: instantiate (scene/resources/packed_scene.cpp:312)
+   GDScript backtrace (most recent call first):
+       [0] _abrir (res://test/escenas/puestos/notas_del_almacen_test.gd:12)
+       [1] test_el_corcho_conserva_cinco_hojas_y_solo_dos_ofrecen_lectura (res://test/escenas/puestos/notas_del_almacen_test.gd:293)
+       [2] _execute_test_case (res://addons/gdUnit4/src/core/_TestCase.gd:79)
+       [3] execute (res://addons/gdUnit4/src/core/_TestCase.gd:40)
+       [4] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleTestStage.gd:10)
+       [5] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [6] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleExecutionStage.gd:17)
+       [7] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [8] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestCaseExecutionStage.gd:26)
+       [9] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [10] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestSuiteExecutionStage.gd:36)
+       [11] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [12] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestCaseExecutionStage.gd:35)
+       [13] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [14] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleExecutionStage.gd:28)
+       [15] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [16] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleTestStage.gd:10)
+       [17] execute (res://addons/gdUnit4/src/core/_TestCase.gd:41)
+       [18] test_completed (res://addons/gdUnit4/src/core/_TestCase.gd:86)
+SCRIPT ERROR: Invalid access to property or key 'id' on a base object of type 'null instance'.
+   at: _ready (res://src/escenas/puestos/notas_del_almacen.gd:17)
+   GDScript backtrace (most recent call first):
+       [0] _ready (res://src/escenas/puestos/notas_del_almacen.gd:17)
+       [1] _abrir (res://test/escenas/puestos/notas_del_almacen_test.gd:13)
+       [2] test_el_corcho_conserva_cinco_hojas_y_solo_dos_ofrecen_lectura (res://test/escenas/puestos/notas_del_almacen_test.gd:293)
+       [3] _execute_test_case (res://addons/gdUnit4/src/core/_TestCase.gd:79)
+       [4] execute (res://addons/gdUnit4/src/core/_TestCase.gd:40)
+       [5] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleTestStage.gd:10)
+       [6] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [7] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleExecutionStage.gd:17)
+       [8] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [9] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestCaseExecutionStage.gd:26)
+       [10] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [11] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestSuiteExecutionStage.gd:36)
+       [12] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [13] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestCaseExecutionStage.gd:35)
+       [14] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [15] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleExecutionStage.gd:28)
+       [16] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [17] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleTestStage.gd:10)
+       [18] execute (res://addons/gdUnit4/src/core/_TestCase.gd:41)
+       [19] test_completed (res://addons/gdUnit4/src/core/_TestCase.gd:86)
+  [38;2;250;235;215mres://test/escenas/puestos/notas_del_almacen_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_el_corcho_conserva_cinco_hojas_y_solo_dos_ofrecen_lectura[0m[38;2;178;34;34m[1m FAILED[0m[38;2;100;149;237m 113ms[0m
+  [38;2;0;206;209m[1m[4mReport:[0m
+  [38;2;128;128;128m[38;2;255;69;0mGodot Runtime Error ![0m
+  '[38;2;30;144;255mInvalid access to property or key 'id' on a base object of type 'null instance'.[0m'[0m[38;2;173;216;230m	at '_ready' in res://src/escenas/puestos/notas_del_almacen.gd:17
+	at '_abrir' in res://test/escenas/puestos/notas_del_almacen_test.gd:13
+	at 'test_el_corcho_conserva_cinco_hojas_y_solo_dos_ofrecen_lectura' in res://test/escenas/puestos/notas_del_almacen_test.gd:293[0m[38;2;128;128;128m[0m
+[38;2;128;128;128m[0m
+[38;2;30;144;255mStatistics:[0m[38;2;128;128;128m 9 test cases | 12 errors | 68 failures | 0 flaky | 0 skipped | 0 orphans |[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 1s 538ms[0m
+[38;2;128;128;128m[0m
+[38;2;128;128;128m[0m
+[38;2;0;206;209mRun Test Suite: [0m[38;2;250;235;215mres://test/escenas/modelo_integrado_test.gd[0m
+  [38;2;250;235;215mres://test/escenas/modelo_integrado_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_solo_las_mallas_reemplazadas_son_geometria_de_referencia[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+WARNING: Parent path './nota ba?o inodoro' for node 'StaticBody3D' has vanished when instantiating: 'res://src/escenas/puestos/estructura_del_almacen.tscn'.
+   at: instantiate (scene/resources/packed_scene.cpp:213)
+   GDScript backtrace (most recent call first):
+       [0] test_solo_las_mallas_reemplazadas_son_geometria_de_referencia (res://test/escenas/modelo_integrado_test.gd:10)
+       [1] _execute_test_case (res://addons/gdUnit4/src/core/_TestCase.gd:79)
+       [2] execute (res://addons/gdUnit4/src/core/_TestCase.gd:40)
+       [3] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleTestStage.gd:10)
+       [4] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [5] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleExecutionStage.gd:17)
+       [6] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [7] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestCaseExecutionStage.gd:26)
+       [8] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [9] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestSuiteExecutionStage.gd:36)
+WARNING: Node './StaticBody3D' was modified from inside an instance, but it has vanished.
+   at: instantiate (scene/resources/packed_scene.cpp:312)
+   GDScript backtrace (most recent call first):
+       [0] test_solo_las_mallas_reemplazadas_son_geometria_de_referencia (res://test/escenas/modelo_integrado_test.gd:10)
+       [1] _execute_test_case (res://addons/gdUnit4/src/core/_TestCase.gd:79)
+       [2] execute (res://addons/gdUnit4/src/core/_TestCase.gd:40)
+       [3] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleTestStage.gd:10)
+       [4] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [5] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleExecutionStage.gd:17)
+       [6] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [7] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestCaseExecutionStage.gd:26)
+       [8] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [9] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestSuiteExecutionStage.gd:36)
+SCRIPT ERROR: Invalid access to property or key 'id' on a base object of type 'null instance'.
+   at: _ready (res://src/escenas/puestos/notas_del_almacen.gd:17)
+   GDScript backtrace (most recent call first):
+       [0] _ready (res://src/escenas/puestos/notas_del_almacen.gd:17)
+       [1] test_solo_las_mallas_reemplazadas_son_geometria_de_referencia (res://test/escenas/modelo_integrado_test.gd:11)
+       [2] _execute_test_case (res://addons/gdUnit4/src/core/_TestCase.gd:79)
+       [3] execute (res://addons/gdUnit4/src/core/_TestCase.gd:40)
+       [4] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleTestStage.gd:10)
+       [5] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [6] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleExecutionStage.gd:17)
+       [7] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [8] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestCaseExecutionStage.gd:26)
+       [9] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [10] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestSuiteExecutionStage.gd:36)
+  [38;2;250;235;215mres://test/escenas/modelo_integrado_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_solo_las_mallas_reemplazadas_son_geometria_de_referencia[0m[38;2;178;34;34m[1m FAILED[0m[38;2;100;149;237m 128ms[0m
+  [38;2;0;206;209m[1m[4mReport:[0m
+  [38;2;128;128;128m[38;2;255;69;0mGodot Runtime Error ![0m
+  '[38;2;30;144;255mInvalid access to property or key 'id' on a base object of type 'null instance'.[0m'[0m[38;2;173;216;230m	at '_ready' in res://src/escenas/puestos/notas_del_almacen.gd:17
+	at 'test_solo_las_mallas_reemplazadas_son_geometria_de_referencia' in res://test/escenas/modelo_integrado_test.gd:11[0m[38;2;128;128;128m[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/modelo_integrado_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_la_raiz_agrupa_por_rol_y_conserva_sus_enlaces[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+WARNING: Parent path './nota ba?o inodoro' for node 'StaticBody3D' has vanished when instantiating: 'res://src/escenas/puestos/estructura_del_almacen.tscn'.
+   at: instantiate (scene/resources/packed_scene.cpp:213)
+   GDScript backtrace (most recent call first):
+       [0] test_la_raiz_agrupa_por_rol_y_conserva_sus_enlaces (res://test/escenas/modelo_integrado_test.gd:53)
+       [1] _execute_test_case (res://addons/gdUnit4/src/core/_TestCase.gd:79)
+       [2] execute (res://addons/gdUnit4/src/core/_TestCase.gd:40)
+       [3] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleTestStage.gd:10)
+       [4] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [5] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleExecutionStage.gd:17)
+       [6] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [7] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestCaseExecutionStage.gd:26)
+       [8] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [9] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestSuiteExecutionStage.gd:36)
+       [10] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [11] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestCaseExecutionStage.gd:35)
+       [12] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [13] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleExecutionStage.gd:28)
+       [14] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [15] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleTestStage.gd:10)
+       [16] execute (res://addons/gdUnit4/src/core/_TestCase.gd:41)
+       [17] test_completed (res://addons/gdUnit4/src/core/_TestCase.gd:86)
+WARNING: Node './StaticBody3D' was modified from inside an instance, but it has vanished.
+   at: instantiate (scene/resources/packed_scene.cpp:312)
+   GDScript backtrace (most recent call first):
+       [0] test_la_raiz_agrupa_por_rol_y_conserva_sus_enlaces (res://test/escenas/modelo_integrado_test.gd:53)
+       [1] _execute_test_case (res://addons/gdUnit4/src/core/_TestCase.gd:79)
+       [2] execute (res://addons/gdUnit4/src/core/_TestCase.gd:40)
+       [3] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleTestStage.gd:10)
+       [4] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [5] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleExecutionStage.gd:17)
+       [6] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [7] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestCaseExecutionStage.gd:26)
+       [8] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [9] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestSuiteExecutionStage.gd:36)
+       [10] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [11] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestCaseExecutionStage.gd:35)
+       [12] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [13] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleExecutionStage.gd:28)
+       [14] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [15] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleTestStage.gd:10)
+       [16] execute (res://addons/gdUnit4/src/core/_TestCase.gd:41)
+       [17] test_completed (res://addons/gdUnit4/src/core/_TestCase.gd:86)
+  [38;2;250;235;215mres://test/escenas/modelo_integrado_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_la_raiz_agrupa_por_rol_y_conserva_sus_enlaces[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 33ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/modelo_integrado_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_los_puestos_reemplazados_usan_mallas_del_modelo[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+WARNING: Parent path './nota ba?o inodoro' for node 'StaticBody3D' has vanished when instantiating: 'res://src/escenas/puestos/estructura_del_almacen.tscn'.
+   at: instantiate (scene/resources/packed_scene.cpp:213)
+   GDScript backtrace (most recent call first):
+       [0] test_los_puestos_reemplazados_usan_mallas_del_modelo (res://test/escenas/modelo_integrado_test.gd:65)
+       [1] _execute_test_case (res://addons/gdUnit4/src/core/_TestCase.gd:79)
+       [2] execute (res://addons/gdUnit4/src/core/_TestCase.gd:40)
+       [3] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleTestStage.gd:10)
+       [4] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [5] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleExecutionStage.gd:17)
+       [6] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [7] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestCaseExecutionStage.gd:26)
+       [8] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [9] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestSuiteExecutionStage.gd:36)
+       [10] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [11] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestCaseExecutionStage.gd:35)
+       [12] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [13] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleExecutionStage.gd:28)
+       [14] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [15] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleTestStage.gd:10)
+       [16] execute (res://addons/gdUnit4/src/core/_TestCase.gd:41)
+       [17] test_completed (res://addons/gdUnit4/src/core/_TestCase.gd:86)
+WARNING: Node './StaticBody3D' was modified from inside an instance, but it has vanished.
+   at: instantiate (scene/resources/packed_scene.cpp:312)
+   GDScript backtrace (most recent call first):
+       [0] test_los_puestos_reemplazados_usan_mallas_del_modelo (res://test/escenas/modelo_integrado_test.gd:65)
+       [1] _execute_test_case (res://addons/gdUnit4/src/core/_TestCase.gd:79)
+       [2] execute (res://addons/gdUnit4/src/core/_TestCase.gd:40)
+       [3] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleTestStage.gd:10)
+       [4] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [5] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleExecutionStage.gd:17)
+       [6] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [7] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestCaseExecutionStage.gd:26)
+       [8] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [9] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestSuiteExecutionStage.gd:36)
+       [10] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [11] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestCaseExecutionStage.gd:35)
+       [12] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [13] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleExecutionStage.gd:28)
+       [14] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [15] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleTestStage.gd:10)
+       [16] execute (res://addons/gdUnit4/src/core/_TestCase.gd:41)
+       [17] test_completed (res://addons/gdUnit4/src/core/_TestCase.gd:86)
+  [38;2;250;235;215mres://test/escenas/modelo_integrado_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_los_puestos_reemplazados_usan_mallas_del_modelo[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 32ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/modelo_integrado_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_la_computadora_tiene_apoyo_y_no_queda_tapada_por_otro_cuerpo[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+WARNING: Parent path './nota ba?o inodoro' for node 'StaticBody3D' has vanished when instantiating: 'res://src/escenas/puestos/estructura_del_almacen.tscn'.
+   at: instantiate (scene/resources/packed_scene.cpp:213)
+   GDScript backtrace (most recent call first):
+       [0] test_la_computadora_tiene_apoyo_y_no_queda_tapada_por_otro_cuerpo (res://test/escenas/modelo_integrado_test.gd:81)
+       [1] _execute_test_case (res://addons/gdUnit4/src/core/_TestCase.gd:79)
+       [2] execute (res://addons/gdUnit4/src/core/_TestCase.gd:40)
+       [3] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleTestStage.gd:10)
+       [4] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [5] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleExecutionStage.gd:17)
+       [6] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [7] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestCaseExecutionStage.gd:26)
+       [8] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [9] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestSuiteExecutionStage.gd:36)
+       [10] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [11] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestCaseExecutionStage.gd:35)
+       [12] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [13] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleExecutionStage.gd:28)
+       [14] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [15] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleTestStage.gd:10)
+       [16] execute (res://addons/gdUnit4/src/core/_TestCase.gd:41)
+       [17] test_completed (res://addons/gdUnit4/src/core/_TestCase.gd:86)
+WARNING: Node './StaticBody3D' was modified from inside an instance, but it has vanished.
+   at: instantiate (scene/resources/packed_scene.cpp:312)
+   GDScript backtrace (most recent call first):
+       [0] test_la_computadora_tiene_apoyo_y_no_queda_tapada_por_otro_cuerpo (res://test/escenas/modelo_integrado_test.gd:81)
+       [1] _execute_test_case (res://addons/gdUnit4/src/core/_TestCase.gd:79)
+       [2] execute (res://addons/gdUnit4/src/core/_TestCase.gd:40)
+       [3] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleTestStage.gd:10)
+       [4] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [5] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleExecutionStage.gd:17)
+       [6] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [7] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestCaseExecutionStage.gd:26)
+       [8] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [9] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestSuiteExecutionStage.gd:36)
+       [10] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [11] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestCaseExecutionStage.gd:35)
+       [12] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [13] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleExecutionStage.gd:28)
+       [14] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [15] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleTestStage.gd:10)
+       [16] execute (res://addons/gdUnit4/src/core/_TestCase.gd:41)
+       [17] test_completed (res://addons/gdUnit4/src/core/_TestCase.gd:86)
+SCRIPT ERROR: Invalid access to property or key 'id' on a base object of type 'null instance'.
+   at: _ready (res://src/escenas/puestos/notas_del_almacen.gd:17)
+   GDScript backtrace (most recent call first):
+       [0] _ready (res://src/escenas/puestos/notas_del_almacen.gd:17)
+       [1] test_la_computadora_tiene_apoyo_y_no_queda_tapada_por_otro_cuerpo (res://test/escenas/modelo_integrado_test.gd:82)
+       [2] _execute_test_case (res://addons/gdUnit4/src/core/_TestCase.gd:79)
+       [3] execute (res://addons/gdUnit4/src/core/_TestCase.gd:40)
+       [4] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleTestStage.gd:10)
+       [5] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [6] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleExecutionStage.gd:17)
+       [7] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [8] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestCaseExecutionStage.gd:26)
+       [9] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [10] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestSuiteExecutionStage.gd:36)
+       [11] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [12] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestCaseExecutionStage.gd:35)
+       [13] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [14] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleExecutionStage.gd:28)
+       [15] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [16] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleTestStage.gd:10)
+       [17] execute (res://addons/gdUnit4/src/core/_TestCase.gd:41)
+       [18] test_completed (res://addons/gdUnit4/src/core/_TestCase.gd:86)
+  [38;2;250;235;215mres://test/escenas/modelo_integrado_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_la_computadora_tiene_apoyo_y_no_queda_tapada_por_otro_cuerpo[0m[38;2;178;34;34m[1m FAILED[0m[38;2;100;149;237m 114ms[0m
+  [38;2;0;206;209m[1m[4mReport:[0m
+  [38;2;128;128;128m[38;2;255;69;0mGodot Runtime Error ![0m
+  '[38;2;30;144;255mInvalid access to property or key 'id' on a base object of type 'null instance'.[0m'[0m[38;2;173;216;230m	at '_ready' in res://src/escenas/puestos/notas_del_almacen.gd:17
+	at 'test_la_computadora_tiene_apoyo_y_no_queda_tapada_por_otro_cuerpo' in res://test/escenas/modelo_integrado_test.gd:82[0m[38;2;128;128;128m[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/modelo_integrado_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_el_surtido_fijo_no_muestra_stock_que_el_dominio_no_tiene[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+WARNING: Parent path './nota ba?o inodoro' for node 'StaticBody3D' has vanished when instantiating: 'res://src/escenas/puestos/estructura_del_almacen.tscn'.
+   at: instantiate (scene/resources/packed_scene.cpp:213)
+   GDScript backtrace (most recent call first):
+       [0] test_el_surtido_fijo_no_muestra_stock_que_el_dominio_no_tiene (res://test/escenas/modelo_integrado_test.gd:110)
+       [1] _execute_test_case (res://addons/gdUnit4/src/core/_TestCase.gd:79)
+       [2] execute (res://addons/gdUnit4/src/core/_TestCase.gd:40)
+       [3] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleTestStage.gd:10)
+       [4] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [5] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleExecutionStage.gd:17)
+       [6] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [7] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestCaseExecutionStage.gd:26)
+       [8] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [9] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestSuiteExecutionStage.gd:36)
+       [10] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [11] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestCaseExecutionStage.gd:35)
+       [12] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [13] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleExecutionStage.gd:28)
+       [14] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [15] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleTestStage.gd:10)
+       [16] execute (res://addons/gdUnit4/src/core/_TestCase.gd:41)
+       [17] test_completed (res://addons/gdUnit4/src/core/_TestCase.gd:86)
+WARNING: Node './StaticBody3D' was modified from inside an instance, but it has vanished.
+   at: instantiate (scene/resources/packed_scene.cpp:312)
+   GDScript backtrace (most recent call first):
+       [0] test_el_surtido_fijo_no_muestra_stock_que_el_dominio_no_tiene (res://test/escenas/modelo_integrado_test.gd:110)
+       [1] _execute_test_case (res://addons/gdUnit4/src/core/_TestCase.gd:79)
+       [2] execute (res://addons/gdUnit4/src/core/_TestCase.gd:40)
+       [3] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleTestStage.gd:10)
+       [4] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [5] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleExecutionStage.gd:17)
+       [6] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [7] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestCaseExecutionStage.gd:26)
+       [8] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [9] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestSuiteExecutionStage.gd:36)
+       [10] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [11] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestCaseExecutionStage.gd:35)
+       [12] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [13] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleExecutionStage.gd:28)
+       [14] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [15] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleTestStage.gd:10)
+       [16] execute (res://addons/gdUnit4/src/core/_TestCase.gd:41)
+       [17] test_completed (res://addons/gdUnit4/src/core/_TestCase.gd:86)
+SCRIPT ERROR: Invalid access to property or key 'id' on a base object of type 'null instance'.
+   at: _ready (res://src/escenas/puestos/notas_del_almacen.gd:17)
+   GDScript backtrace (most recent call first):
+       [0] _ready (res://src/escenas/puestos/notas_del_almacen.gd:17)
+       [1] test_el_surtido_fijo_no_muestra_stock_que_el_dominio_no_tiene (res://test/escenas/modelo_integrado_test.gd:111)
+       [2] _execute_test_case (res://addons/gdUnit4/src/core/_TestCase.gd:79)
+       [3] execute (res://addons/gdUnit4/src/core/_TestCase.gd:40)
+       [4] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleTestStage.gd:10)
+       [5] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [6] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleExecutionStage.gd:17)
+       [7] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [8] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestCaseExecutionStage.gd:26)
+       [9] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [10] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestSuiteExecutionStage.gd:36)
+       [11] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [12] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestCaseExecutionStage.gd:35)
+       [13] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [14] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleExecutionStage.gd:28)
+       [15] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [16] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleTestStage.gd:10)
+       [17] execute (res://addons/gdUnit4/src/core/_TestCase.gd:41)
+       [18] test_completed (res://addons/gdUnit4/src/core/_TestCase.gd:86)
+  [38;2;250;235;215mres://test/escenas/modelo_integrado_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_el_surtido_fijo_no_muestra_stock_que_el_dominio_no_tiene[0m[38;2;178;34;34m[1m FAILED[0m[38;2;100;149;237m 129ms[0m
+  [38;2;0;206;209m[1m[4mReport:[0m
+  [38;2;128;128;128m[38;2;255;69;0mGodot Runtime Error ![0m
+  '[38;2;30;144;255mInvalid access to property or key 'id' on a base object of type 'null instance'.[0m'[0m[38;2;173;216;230m	at '_ready' in res://src/escenas/puestos/notas_del_almacen.gd:17
+	at 'test_el_surtido_fijo_no_muestra_stock_que_el_dominio_no_tiene' in res://test/escenas/modelo_integrado_test.gd:111[0m[38;2;128;128;128m[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/modelo_integrado_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_las_hojas_con_lectura_conservan_el_modelo_del_artista[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+WARNING: Parent path './nota ba?o inodoro' for node 'StaticBody3D' has vanished when instantiating: 'res://src/escenas/puestos/estructura_del_almacen.tscn'.
+   at: instantiate (scene/resources/packed_scene.cpp:213)
+   GDScript backtrace (most recent call first):
+       [0] test_las_hojas_con_lectura_conservan_el_modelo_del_artista (res://test/escenas/modelo_integrado_test.gd:156)
+       [1] _execute_test_case (res://addons/gdUnit4/src/core/_TestCase.gd:79)
+       [2] execute (res://addons/gdUnit4/src/core/_TestCase.gd:40)
+       [3] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleTestStage.gd:10)
+       [4] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [5] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleExecutionStage.gd:17)
+       [6] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [7] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestCaseExecutionStage.gd:26)
+       [8] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [9] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestSuiteExecutionStage.gd:36)
+       [10] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [11] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestCaseExecutionStage.gd:35)
+       [12] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [13] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleExecutionStage.gd:28)
+       [14] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [15] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleTestStage.gd:10)
+       [16] execute (res://addons/gdUnit4/src/core/_TestCase.gd:41)
+       [17] test_completed (res://addons/gdUnit4/src/core/_TestCase.gd:86)
+WARNING: Node './StaticBody3D' was modified from inside an instance, but it has vanished.
+   at: instantiate (scene/resources/packed_scene.cpp:312)
+   GDScript backtrace (most recent call first):
+       [0] test_las_hojas_con_lectura_conservan_el_modelo_del_artista (res://test/escenas/modelo_integrado_test.gd:156)
+       [1] _execute_test_case (res://addons/gdUnit4/src/core/_TestCase.gd:79)
+       [2] execute (res://addons/gdUnit4/src/core/_TestCase.gd:40)
+       [3] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleTestStage.gd:10)
+       [4] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [5] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleExecutionStage.gd:17)
+       [6] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [7] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestCaseExecutionStage.gd:26)
+       [8] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [9] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestSuiteExecutionStage.gd:36)
+       [10] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [11] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestCaseExecutionStage.gd:35)
+       [12] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [13] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleExecutionStage.gd:28)
+       [14] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [15] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleTestStage.gd:10)
+       [16] execute (res://addons/gdUnit4/src/core/_TestCase.gd:41)
+       [17] test_completed (res://addons/gdUnit4/src/core/_TestCase.gd:86)
+SCRIPT ERROR: Invalid access to property or key 'id' on a base object of type 'null instance'.
+   at: _ready (res://src/escenas/puestos/notas_del_almacen.gd:17)
+   GDScript backtrace (most recent call first):
+       [0] _ready (res://src/escenas/puestos/notas_del_almacen.gd:17)
+       [1] test_las_hojas_con_lectura_conservan_el_modelo_del_artista (res://test/escenas/modelo_integrado_test.gd:160)
+       [2] _execute_test_case (res://addons/gdUnit4/src/core/_TestCase.gd:79)
+       [3] execute (res://addons/gdUnit4/src/core/_TestCase.gd:40)
+       [4] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleTestStage.gd:10)
+       [5] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [6] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleExecutionStage.gd:17)
+       [7] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [8] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestCaseExecutionStage.gd:26)
+       [9] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [10] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestSuiteExecutionStage.gd:36)
+       [11] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [12] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestCaseExecutionStage.gd:35)
+       [13] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [14] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleExecutionStage.gd:28)
+       [15] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [16] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleTestStage.gd:10)
+       [17] execute (res://addons/gdUnit4/src/core/_TestCase.gd:41)
+       [18] test_completed (res://addons/gdUnit4/src/core/_TestCase.gd:86)
+  [38;2;250;235;215mres://test/escenas/modelo_integrado_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_las_hojas_con_lectura_conservan_el_modelo_del_artista[0m[38;2;178;34;34m[1m FAILED[0m[38;2;100;149;237m 116ms[0m
+  [38;2;0;206;209m[1m[4mReport:[0m
+  [38;2;128;128;128m[38;2;255;69;0mGodot Runtime Error ![0m
+  '[38;2;30;144;255mInvalid access to property or key 'id' on a base object of type 'null instance'.[0m'[0m[38;2;173;216;230m	at '_ready' in res://src/escenas/puestos/notas_del_almacen.gd:17
+	at 'test_las_hojas_con_lectura_conservan_el_modelo_del_artista' in res://test/escenas/modelo_integrado_test.gd:160[0m[38;2;128;128;128m[0m
+[38;2;128;128;128m[0m
+[38;2;30;144;255mStatistics:[0m[38;2;128;128;128m 6 test cases | 4 errors | 0 failures | 0 flaky | 0 skipped | 0 orphans |[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 610ms[0m
+[38;2;128;128;128m[0m
+[38;2;128;128;128m[0m
+[38;2;0;206;209mRun Test Suite: [0m[38;2;250;235;215mres://test/escenas/objetos/jabones_y_notas_del_bano_test.gd[0m
+  [38;2;250;235;215mres://test/escenas/objetos/jabones_y_notas_del_bano_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_las_botellas_entran_en_su_colision_y_conservan_tres_etiquetas[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+WARNING: Parent path './nota ba?o inodoro' for node 'StaticBody3D' has vanished when instantiating: 'res://src/escenas/puestos/estructura_del_almacen.tscn'.
+   at: instantiate (scene/resources/packed_scene.cpp:213)
+   GDScript backtrace (most recent call first):
+       [0] test_las_botellas_entran_en_su_colision_y_conservan_tres_etiquetas (res://test/escenas/objetos/jabones_y_notas_del_bano_test.gd:9)
+       [1] _execute_test_case (res://addons/gdUnit4/src/core/_TestCase.gd:79)
+       [2] execute (res://addons/gdUnit4/src/core/_TestCase.gd:40)
+       [3] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleTestStage.gd:10)
+       [4] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [5] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleExecutionStage.gd:17)
+       [6] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [7] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestCaseExecutionStage.gd:26)
+       [8] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [9] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestSuiteExecutionStage.gd:36)
+WARNING: Node './StaticBody3D' was modified from inside an instance, but it has vanished.
+   at: instantiate (scene/resources/packed_scene.cpp:312)
+   GDScript backtrace (most recent call first):
+       [0] test_las_botellas_entran_en_su_colision_y_conservan_tres_etiquetas (res://test/escenas/objetos/jabones_y_notas_del_bano_test.gd:9)
+       [1] _execute_test_case (res://addons/gdUnit4/src/core/_TestCase.gd:79)
+       [2] execute (res://addons/gdUnit4/src/core/_TestCase.gd:40)
+       [3] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleTestStage.gd:10)
+       [4] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [5] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleExecutionStage.gd:17)
+       [6] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [7] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestCaseExecutionStage.gd:26)
+       [8] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [9] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestSuiteExecutionStage.gd:36)
+SCRIPT ERROR: Invalid access to property or key 'id' on a base object of type 'null instance'.
+   at: _ready (res://src/escenas/puestos/notas_del_almacen.gd:17)
+   GDScript backtrace (most recent call first):
+       [0] _ready (res://src/escenas/puestos/notas_del_almacen.gd:17)
+       [1] test_las_botellas_entran_en_su_colision_y_conservan_tres_etiquetas (res://test/escenas/objetos/jabones_y_notas_del_bano_test.gd:10)
+       [2] _execute_test_case (res://addons/gdUnit4/src/core/_TestCase.gd:79)
+       [3] execute (res://addons/gdUnit4/src/core/_TestCase.gd:40)
+       [4] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleTestStage.gd:10)
+       [5] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [6] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleExecutionStage.gd:17)
+       [7] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [8] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestCaseExecutionStage.gd:26)
+       [9] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [10] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestSuiteExecutionStage.gd:36)
+  [38;2;250;235;215mres://test/escenas/objetos/jabones_y_notas_del_bano_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_las_botellas_entran_en_su_colision_y_conservan_tres_etiquetas[0m[38;2;178;34;34m[1m FAILED[0m[38;2;100;149;237m 119ms[0m
+  [38;2;0;206;209m[1m[4mReport:[0m
+  [38;2;128;128;128m[38;2;255;69;0mGodot Runtime Error ![0m
+  '[38;2;30;144;255mInvalid access to property or key 'id' on a base object of type 'null instance'.[0m'[0m[38;2;173;216;230m	at '_ready' in res://src/escenas/puestos/notas_del_almacen.gd:17
+	at 'test_las_botellas_entran_en_su_colision_y_conservan_tres_etiquetas' in res://test/escenas/objetos/jabones_y_notas_del_bano_test.gd:10[0m[38;2;128;128;128m[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/objetos/jabones_y_notas_del_bano_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_las_tres_notas_se_ven_en_el_bano_con_sus_imagenes[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+WARNING: Parent path './nota ba?o inodoro' for node 'StaticBody3D' has vanished when instantiating: 'res://src/escenas/puestos/estructura_del_almacen.tscn'.
+   at: instantiate (scene/resources/packed_scene.cpp:213)
+   GDScript backtrace (most recent call first):
+       [0] test_las_tres_notas_se_ven_en_el_bano_con_sus_imagenes (res://test/escenas/objetos/jabones_y_notas_del_bano_test.gd:34)
+       [1] _execute_test_case (res://addons/gdUnit4/src/core/_TestCase.gd:79)
+       [2] execute (res://addons/gdUnit4/src/core/_TestCase.gd:40)
+       [3] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleTestStage.gd:10)
+       [4] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [5] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleExecutionStage.gd:17)
+       [6] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [7] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestCaseExecutionStage.gd:26)
+       [8] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [9] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestSuiteExecutionStage.gd:36)
+       [10] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [11] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestCaseExecutionStage.gd:35)
+       [12] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [13] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleExecutionStage.gd:28)
+       [14] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [15] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleTestStage.gd:10)
+       [16] execute (res://addons/gdUnit4/src/core/_TestCase.gd:41)
+       [17] test_completed (res://addons/gdUnit4/src/core/_TestCase.gd:86)
+WARNING: Node './StaticBody3D' was modified from inside an instance, but it has vanished.
+   at: instantiate (scene/resources/packed_scene.cpp:312)
+   GDScript backtrace (most recent call first):
+       [0] test_las_tres_notas_se_ven_en_el_bano_con_sus_imagenes (res://test/escenas/objetos/jabones_y_notas_del_bano_test.gd:34)
+       [1] _execute_test_case (res://addons/gdUnit4/src/core/_TestCase.gd:79)
+       [2] execute (res://addons/gdUnit4/src/core/_TestCase.gd:40)
+       [3] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleTestStage.gd:10)
+       [4] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [5] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleExecutionStage.gd:17)
+       [6] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [7] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestCaseExecutionStage.gd:26)
+       [8] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [9] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestSuiteExecutionStage.gd:36)
+       [10] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [11] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestCaseExecutionStage.gd:35)
+       [12] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [13] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleExecutionStage.gd:28)
+       [14] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [15] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleTestStage.gd:10)
+       [16] execute (res://addons/gdUnit4/src/core/_TestCase.gd:41)
+       [17] test_completed (res://addons/gdUnit4/src/core/_TestCase.gd:86)
+SCRIPT ERROR: Invalid access to property or key 'id' on a base object of type 'null instance'.
+   at: _ready (res://src/escenas/puestos/notas_del_almacen.gd:17)
+   GDScript backtrace (most recent call first):
+       [0] _ready (res://src/escenas/puestos/notas_del_almacen.gd:17)
+       [1] test_las_tres_notas_se_ven_en_el_bano_con_sus_imagenes (res://test/escenas/objetos/jabones_y_notas_del_bano_test.gd:35)
+       [2] _execute_test_case (res://addons/gdUnit4/src/core/_TestCase.gd:79)
+       [3] execute (res://addons/gdUnit4/src/core/_TestCase.gd:40)
+       [4] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleTestStage.gd:10)
+       [5] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [6] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleExecutionStage.gd:17)
+       [7] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [8] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestCaseExecutionStage.gd:26)
+       [9] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [10] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestSuiteExecutionStage.gd:36)
+       [11] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [12] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestCaseExecutionStage.gd:35)
+       [13] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [14] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleExecutionStage.gd:28)
+       [15] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [16] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleTestStage.gd:10)
+       [17] execute (res://addons/gdUnit4/src/core/_TestCase.gd:41)
+       [18] test_completed (res://addons/gdUnit4/src/core/_TestCase.gd:86)
+  [38;2;250;235;215mres://test/escenas/objetos/jabones_y_notas_del_bano_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_las_tres_notas_se_ven_en_el_bano_con_sus_imagenes[0m[38;2;178;34;34m[1m FAILED[0m[38;2;100;149;237m 113ms[0m
+  [38;2;0;206;209m[1m[4mReport:[0m
+  [38;2;128;128;128m[38;2;255;69;0mGodot Runtime Error ![0m
+  '[38;2;30;144;255mInvalid access to property or key 'id' on a base object of type 'null instance'.[0m'[0m[38;2;173;216;230m	at '_ready' in res://src/escenas/puestos/notas_del_almacen.gd:17
+	at 'test_las_tres_notas_se_ven_en_el_bano_con_sus_imagenes' in res://test/escenas/objetos/jabones_y_notas_del_bano_test.gd:35[0m[38;2;128;128;128m[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/objetos/jabones_y_notas_del_bano_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_las_tres_notas_del_bano_comparten_su_imagen_con_la_lectura[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+WARNING: Parent path './nota ba?o inodoro' for node 'StaticBody3D' has vanished when instantiating: 'res://src/escenas/puestos/estructura_del_almacen.tscn'.
+   at: instantiate (scene/resources/packed_scene.cpp:213)
+   GDScript backtrace (most recent call first):
+       [0] test_las_tres_notas_del_bano_comparten_su_imagen_con_la_lectura (res://test/escenas/objetos/jabones_y_notas_del_bano_test.gd:63)
+       [1] _execute_test_case (res://addons/gdUnit4/src/core/_TestCase.gd:79)
+       [2] execute (res://addons/gdUnit4/src/core/_TestCase.gd:40)
+       [3] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleTestStage.gd:10)
+       [4] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [5] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleExecutionStage.gd:17)
+       [6] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [7] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestCaseExecutionStage.gd:26)
+       [8] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [9] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestSuiteExecutionStage.gd:36)
+       [10] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [11] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestCaseExecutionStage.gd:35)
+       [12] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [13] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleExecutionStage.gd:28)
+       [14] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [15] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleTestStage.gd:10)
+       [16] execute (res://addons/gdUnit4/src/core/_TestCase.gd:41)
+       [17] test_completed (res://addons/gdUnit4/src/core/_TestCase.gd:86)
+WARNING: Node './StaticBody3D' was modified from inside an instance, but it has vanished.
+   at: instantiate (scene/resources/packed_scene.cpp:312)
+   GDScript backtrace (most recent call first):
+       [0] test_las_tres_notas_del_bano_comparten_su_imagen_con_la_lectura (res://test/escenas/objetos/jabones_y_notas_del_bano_test.gd:63)
+       [1] _execute_test_case (res://addons/gdUnit4/src/core/_TestCase.gd:79)
+       [2] execute (res://addons/gdUnit4/src/core/_TestCase.gd:40)
+       [3] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleTestStage.gd:10)
+       [4] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [5] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleExecutionStage.gd:17)
+       [6] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [7] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestCaseExecutionStage.gd:26)
+       [8] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [9] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestSuiteExecutionStage.gd:36)
+       [10] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [11] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestCaseExecutionStage.gd:35)
+       [12] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [13] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleExecutionStage.gd:28)
+       [14] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [15] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleTestStage.gd:10)
+       [16] execute (res://addons/gdUnit4/src/core/_TestCase.gd:41)
+       [17] test_completed (res://addons/gdUnit4/src/core/_TestCase.gd:86)
+SCRIPT ERROR: Invalid access to property or key 'id' on a base object of type 'null instance'.
+   at: _ready (res://src/escenas/puestos/notas_del_almacen.gd:17)
+   GDScript backtrace (most recent call first):
+       [0] _ready (res://src/escenas/puestos/notas_del_almacen.gd:17)
+       [1] test_las_tres_notas_del_bano_comparten_su_imagen_con_la_lectura (res://test/escenas/objetos/jabones_y_notas_del_bano_test.gd:64)
+       [2] _execute_test_case (res://addons/gdUnit4/src/core/_TestCase.gd:79)
+       [3] execute (res://addons/gdUnit4/src/core/_TestCase.gd:40)
+       [4] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleTestStage.gd:10)
+       [5] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [6] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleExecutionStage.gd:17)
+       [7] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [8] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestCaseExecutionStage.gd:26)
+       [9] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [10] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestSuiteExecutionStage.gd:36)
+       [11] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [12] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestCaseExecutionStage.gd:35)
+       [13] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [14] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleExecutionStage.gd:28)
+       [15] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [16] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleTestStage.gd:10)
+       [17] execute (res://addons/gdUnit4/src/core/_TestCase.gd:41)
+       [18] test_completed (res://addons/gdUnit4/src/core/_TestCase.gd:86)
+SCRIPT ERROR: Invalid call. Nonexistent function 'imagen (via call)' in base 'StaticBody3D'.
+   at: test_las_tres_notas_del_bano_comparten_su_imagen_con_la_lectura (res://test/escenas/objetos/jabones_y_notas_del_bano_test.gd:73)
+   GDScript backtrace (most recent call first):
+       [0] test_las_tres_notas_del_bano_comparten_su_imagen_con_la_lectura (res://test/escenas/objetos/jabones_y_notas_del_bano_test.gd:73)
+       [1] _execute_test_case (res://addons/gdUnit4/src/core/_TestCase.gd:79)
+       [2] execute (res://addons/gdUnit4/src/core/_TestCase.gd:40)
+       [3] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleTestStage.gd:10)
+       [4] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [5] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleExecutionStage.gd:17)
+       [6] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [7] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestCaseExecutionStage.gd:26)
+       [8] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [9] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestSuiteExecutionStage.gd:36)
+       [10] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [11] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestCaseExecutionStage.gd:35)
+       [12] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [13] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleExecutionStage.gd:28)
+       [14] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [15] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleTestStage.gd:10)
+       [16] execute (res://addons/gdUnit4/src/core/_TestCase.gd:41)
+       [17] test_completed (res://addons/gdUnit4/src/core/_TestCase.gd:86)
+  [38;2;250;235;215mres://test/escenas/objetos/jabones_y_notas_del_bano_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_las_tres_notas_del_bano_comparten_su_imagen_con_la_lectura[0m[38;2;178;34;34m[1m FAILED[0m[38;2;100;149;237m 112ms[0m
+  [38;2;0;206;209m[1m[4mReport:[0m
+  [38;2;128;128;128m[38;2;255;69;0mGodot Runtime Error ![0m
+  '[38;2;30;144;255mInvalid access to property or key 'id' on a base object of type 'null instance'.[0m'[0m[38;2;173;216;230m	at '_ready' in res://src/escenas/puestos/notas_del_almacen.gd:17
+	at 'test_las_tres_notas_del_bano_comparten_su_imagen_con_la_lectura' in res://test/escenas/objetos/jabones_y_notas_del_bano_test.gd:64[0m  [38;2;128;128;128m[38;2;255;69;0mGodot Runtime Error ![0m
+  '[38;2;30;144;255mInvalid call. Nonexistent function 'imagen (via call)' in base 'StaticBody3D'.[0m'[0m[38;2;173;216;230m	at 'test_las_tres_notas_del_bano_comparten_su_imagen_con_la_lectura' in res://test/escenas/objetos/jabones_y_notas_del_bano_test.gd:73[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m '[38;2;30;144;255mtrue[0m' but is '[38;2;30;144;255mfalse[0m'[0m[38;2;173;216;230m	at 'test_las_tres_notas_del_bano_comparten_su_imagen_con_la_lectura' in res://test/escenas/objetos/jabones_y_notas_del_bano_test.gd:71[0m[38;2;128;128;128m[0m
+[38;2;128;128;128m[0m
+[38;2;30;144;255mStatistics:[0m[38;2;128;128;128m 3 test cases | 4 errors | 1 failures | 0 flaky | 0 skipped | 0 orphans |[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 381ms[0m
+[38;2;128;128;128m[0m
+[38;2;128;128;128m[0m
+[38;2;30;144;255mOverall Summary:[0m[38;2;255;255;255m 31 test cases | 20 errors | 100 failures | 0 flaky | 0 skipped | 0 orphans |[0m
+[38;2;233;150;122mExecuted test suites: (6/6)[0m
+[38;2;233;150;122mExecuted test cases : (31/31)[0m
+[38;2;233;150;122mTotal execution time: 2s 744ms[0m
+[38;2;255;255;255m [0m[38;2;100;149;237mOpen XML Report at: file://reports/report_7/results.xml[0m
+[38;2;100;149;237mOpen HTML Report at: file://reports/report_7/index.html[0m
+[38;2;178;34;34mExit code: 100[0m
+Run dispose test resources
