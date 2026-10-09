@@ -1,0 +1,27 @@
+{
+  "head": "b0c36f1fdf20f62038f304e785e23d0c9012008a",
+  "nodos": "6/7",
+  "segundos": 695.3,
+  "xml_sha256": "c761e7b9ff2e988d46c51995a2430c54e11d6103f83a0aeae243ae2b3352daa2",
+  "xml_attrib": {
+    "id": "2026-10-09",
+    "name": "report_2",
+    "tests": "1496",
+    "failures": "1",
+    "skipped": "0",
+    "flaky": "0",
+    "time": "0.000"
+  },
+  "suites": 191,
+  "fallos": [
+    {
+      "suite": "giro_parejo_test",
+      "caso": "test_una_caja_contra_la_pared_se_corre_sin_escalones",
+      "texto": {
+        "message": "FAILED: res://test/escenas/giro_parejo_test.gd:291",
+        "type": "FAILURE",
+        "text": "\n\nla caja qued\u00f3 quieta entre dos cuadros que se mueven 1 veces de 102\n\tat 'test_una_caja_contra_la_pared_se_corre_sin_escalones' in res://test/escenas/giro_parejo_test.gd:291\n\tat '_esperar' in res://test/escenas/giro_parejo_test.gd:447\n\n\t\t\t"
+      }
+    }
+  ]
+}

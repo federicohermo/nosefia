@@ -1,0 +1,41 @@
+[
+  {
+    "caso": "failed-sin-drenar",
+    "pid": 119612,
+    "appdata": "C:\\Users\\fede_\\orca\\workspaces\\nosefia\\darter\\.claude\\scratch\\batch-64-309\\b-obj-appdata-failed-sin-drenar",
+    "cwd": "C:\\Users\\fede_\\orca\\workspaces\\nosefia\\darter",
+    "comando": [
+      "D:\\Program Files\\Godot\\Godot_v4.7.2-stable_win64_console.exe",
+      "--headless",
+      "--verbose",
+      "--path",
+      "C:\\Users\\fede_\\orca\\workspaces\\nosefia\\darter",
+      "-s",
+      "C:\\Users\\fede_\\orca\\workspaces\\nosefia\\darter\\.claude\\scratch\\batch-64-309\\b-obj-carga-fallida.gd",
+      "--"
+    ],
+    "log": "C:\\Users\\fede_\\orca\\workspaces\\nosefia\\darter\\.claude\\scratch\\batch-64-309\\b-obj-failed-sin-drenar.log",
+    "codigo": 0,
+    "segundos": 0.38
+  },
+  {
+    "caso": "failed-drenado",
+    "pid": 110216,
+    "appdata": "C:\\Users\\fede_\\orca\\workspaces\\nosefia\\darter\\.claude\\scratch\\batch-64-309\\b-obj-appdata-failed-drenado",
+    "cwd": "C:\\Users\\fede_\\orca\\workspaces\\nosefia\\darter",
+    "comando": [
+      "D:\\Program Files\\Godot\\Godot_v4.7.2-stable_win64_console.exe",
+      "--headless",
+      "--verbose",
+      "--path",
+      "C:\\Users\\fede_\\orca\\workspaces\\nosefia\\darter",
+      "-s",
+      "C:\\Users\\fede_\\orca\\workspaces\\nosefia\\darter\\.claude\\scratch\\batch-64-309\\b-obj-carga-fallida.gd",
+      "--",
+      "drenar"
+    ],
+    "log": "C:\\Users\\fede_\\orca\\workspaces\\nosefia\\darter\\.claude\\scratch\\batch-64-309\\b-obj-failed-drenado.log",
+    "codigo": 0,
+    "segundos": 0.44
+  }
+]

@@ -1,0 +1,560 @@
+{
+  "head": "02e3562c1acb9dc4c768c9b33da2155b69792fdf",
+  "runtime_matches": "d61094cf6c80f9e425c08a089f8d3a9dc505b0b1",
+  "tracked_changes": "none",
+  "classification": "dummy renderer valid SURFACE override teardown; reproduced without game/addon",
+  "classified_full_messages": 19,
+  "pending_full_messages": 5,
+  "production_workaround_applied": false,
+  "rows": [
+    {
+      "caso": "surface-focal-cajas",
+      "head": "02e3562c1acb9dc4c768c9b33da2155b69792fdf",
+      "pid": 144456,
+      "appdata": "C:\\Users\\fede_\\orca\\workspaces\\nosefia\\darter\\.claude\\scratch\\batch-64-309\\b-obj-appdata-surface-focal-cajas",
+      "comando": [
+        "D:\\Program Files\\Godot\\Godot_v4.7.2-stable_win64_console.exe",
+        "--headless",
+        "--verbose",
+        "-d",
+        "--remote-debug",
+        "tcp://127.0.0.1:0",
+        "--path",
+        "C:\\Users\\fede_\\orca\\workspaces\\nosefia\\darter",
+        "-s",
+        "res://addons/gdUnit4/bin/GdUnitCmdTool.gd",
+        "-a",
+        "test/escenas/objetos/caja_de_productos_test.gd",
+        "--continue",
+        "--ignoreHeadlessMode",
+        "-rd",
+        "res://reports/b-obj-surface-cajas"
+      ],
+      "log": "C:\\Users\\fede_\\orca\\workspaces\\nosefia\\darter\\.claude\\scratch\\batch-64-309\\b-obj-surface-focal-cajas.log",
+      "codigo": 0,
+      "segundos": 2.43,
+      "material_null": 5,
+      "objectdb_leaked_instances": 0,
+      "retained_resources": false,
+      "script_errors": 0,
+      "basal_debug_connection_errors": 2,
+      "sha256_raw": "cd0f59b876368324f00bad5f6c6c181170f7b531655b4cbf6dbbb91de8ed8010"
+    },
+    {
+      "caso": "surface-real-inmediato",
+      "head": "02e3562c1acb9dc4c768c9b33da2155b69792fdf",
+      "pid": 12452,
+      "appdata": "C:\\Users\\fede_\\orca\\workspaces\\nosefia\\darter\\.claude\\scratch\\batch-64-309\\b-obj-appdata-surface-real-inmediato",
+      "comando": [
+        "D:\\Program Files\\Godot\\Godot_v4.7.2-stable_win64_console.exe",
+        "--headless",
+        "--verbose",
+        "-d",
+        "--remote-debug",
+        "tcp://127.0.0.1:0",
+        "--path",
+        "C:\\Users\\fede_\\orca\\workspaces\\nosefia\\darter",
+        "-s",
+        "C:\\Users\\fede_\\orca\\workspaces\\nosefia\\darter\\.claude\\scratch\\batch-64-309\\b-obj-surface.gd",
+        "--",
+        "real-inmediato"
+      ],
+      "log": "C:\\Users\\fede_\\orca\\workspaces\\nosefia\\darter\\.claude\\scratch\\batch-64-309\\b-obj-surface-real-inmediato.log",
+      "codigo": 0,
+      "segundos": 0.49,
+      "material_null": 1,
+      "objectdb_leaked_instances": 0,
+      "retained_resources": false,
+      "script_errors": 0,
+      "basal_debug_connection_errors": 2,
+      "sha256_raw": "1e75156b674ea705d071b84004917cc9e2db4b91ac93ce6a17522b84e355d020"
+    },
+    {
+      "caso": "surface-real-frames",
+      "head": "02e3562c1acb9dc4c768c9b33da2155b69792fdf",
+      "pid": 24124,
+      "appdata": "C:\\Users\\fede_\\orca\\workspaces\\nosefia\\darter\\.claude\\scratch\\batch-64-309\\b-obj-appdata-surface-real-frames",
+      "comando": [
+        "D:\\Program Files\\Godot\\Godot_v4.7.2-stable_win64_console.exe",
+        "--headless",
+        "--verbose",
+        "-d",
+        "--remote-debug",
+        "tcp://127.0.0.1:0",
+        "--path",
+        "C:\\Users\\fede_\\orca\\workspaces\\nosefia\\darter",
+        "-s",
+        "C:\\Users\\fede_\\orca\\workspaces\\nosefia\\darter\\.claude\\scratch\\batch-64-309\\b-obj-surface.gd",
+        "--",
+        "real-frames"
+      ],
+      "log": "C:\\Users\\fede_\\orca\\workspaces\\nosefia\\darter\\.claude\\scratch\\batch-64-309\\b-obj-surface-real-frames.log",
+      "codigo": 0,
+      "segundos": 0.54,
+      "material_null": 1,
+      "objectdb_leaked_instances": 0,
+      "retained_resources": false,
+      "script_errors": 0,
+      "basal_debug_connection_errors": 2,
+      "sha256_raw": "5f0bcf41a7e15367a134472eb6670106c7fb83838af3d581f3efb846abdb2732"
+    },
+    {
+      "caso": "surface-real-clear",
+      "head": "02e3562c1acb9dc4c768c9b33da2155b69792fdf",
+      "pid": 97528,
+      "appdata": "C:\\Users\\fede_\\orca\\workspaces\\nosefia\\darter\\.claude\\scratch\\batch-64-309\\b-obj-appdata-surface-real-clear",
+      "comando": [
+        "D:\\Program Files\\Godot\\Godot_v4.7.2-stable_win64_console.exe",
+        "--headless",
+        "--verbose",
+        "-d",
+        "--remote-debug",
+        "tcp://127.0.0.1:0",
+        "--path",
+        "C:\\Users\\fede_\\orca\\workspaces\\nosefia\\darter",
+        "-s",
+        "C:\\Users\\fede_\\orca\\workspaces\\nosefia\\darter\\.claude\\scratch\\batch-64-309\\b-obj-surface.gd",
+        "--",
+        "real-clear"
+      ],
+      "log": "C:\\Users\\fede_\\orca\\workspaces\\nosefia\\darter\\.claude\\scratch\\batch-64-309\\b-obj-surface-real-clear.log",
+      "codigo": 0,
+      "segundos": 0.48,
+      "material_null": 0,
+      "objectdb_leaked_instances": 0,
+      "retained_resources": false,
+      "script_errors": 0,
+      "basal_debug_connection_errors": 2,
+      "sha256_raw": "aada273b6c7bb83b4562b0e450b022b46f0eccf60d48580dbb34cfcab0fe9ec4"
+    },
+    {
+      "caso": "surface-box-inmediato",
+      "head": "02e3562c1acb9dc4c768c9b33da2155b69792fdf",
+      "pid": 44696,
+      "appdata": "C:\\Users\\fede_\\orca\\workspaces\\nosefia\\darter\\.claude\\scratch\\batch-64-309\\b-obj-appdata-surface-box-inmediato",
+      "comando": [
+        "D:\\Program Files\\Godot\\Godot_v4.7.2-stable_win64_console.exe",
+        "--headless",
+        "--verbose",
+        "-d",
+        "--remote-debug",
+        "tcp://127.0.0.1:0",
+        "--path",
+        "C:\\Users\\fede_\\AppData\\Local\\Temp\\nosefia-batch-64-309\\b-obj-proyecto-vacio",
+        "-s",
+        "C:\\Users\\fede_\\orca\\workspaces\\nosefia\\darter\\.claude\\scratch\\batch-64-309\\b-obj-surface.gd",
+        "--",
+        "box-inmediato"
+      ],
+      "log": "C:\\Users\\fede_\\orca\\workspaces\\nosefia\\darter\\.claude\\scratch\\batch-64-309\\b-obj-surface-box-inmediato.log",
+      "codigo": 0,
+      "segundos": 0.3,
+      "material_null": 1,
+      "objectdb_leaked_instances": 0,
+      "retained_resources": false,
+      "script_errors": 0,
+      "basal_debug_connection_errors": 2,
+      "sha256_raw": "2586620f4f8e4caf61183a5a2f120e05ce6d8ae38a13b23fd123a1ea3a757a57"
+    },
+    {
+      "caso": "surface-box-frames",
+      "head": "02e3562c1acb9dc4c768c9b33da2155b69792fdf",
+      "pid": 95852,
+      "appdata": "C:\\Users\\fede_\\orca\\workspaces\\nosefia\\darter\\.claude\\scratch\\batch-64-309\\b-obj-appdata-surface-box-frames",
+      "comando": [
+        "D:\\Program Files\\Godot\\Godot_v4.7.2-stable_win64_console.exe",
+        "--headless",
+        "--verbose",
+        "-d",
+        "--remote-debug",
+        "tcp://127.0.0.1:0",
+        "--path",
+        "C:\\Users\\fede_\\AppData\\Local\\Temp\\nosefia-batch-64-309\\b-obj-proyecto-vacio",
+        "-s",
+        "C:\\Users\\fede_\\orca\\workspaces\\nosefia\\darter\\.claude\\scratch\\batch-64-309\\b-obj-surface.gd",
+        "--",
+        "box-frames"
+      ],
+      "log": "C:\\Users\\fede_\\orca\\workspaces\\nosefia\\darter\\.claude\\scratch\\batch-64-309\\b-obj-surface-box-frames.log",
+      "codigo": 0,
+      "segundos": 0.3,
+      "material_null": 1,
+      "objectdb_leaked_instances": 0,
+      "retained_resources": false,
+      "script_errors": 0,
+      "basal_debug_connection_errors": 2,
+      "sha256_raw": "338c23a21a079af4078a6e340983139af2b5b43ea251d5ef8b0dfee8734a3b49"
+    },
+    {
+      "caso": "surface-array-inmediato",
+      "head": "02e3562c1acb9dc4c768c9b33da2155b69792fdf",
+      "pid": 47112,
+      "appdata": "C:\\Users\\fede_\\orca\\workspaces\\nosefia\\darter\\.claude\\scratch\\batch-64-309\\b-obj-appdata-surface-array-inmediato",
+      "comando": [
+        "D:\\Program Files\\Godot\\Godot_v4.7.2-stable_win64_console.exe",
+        "--headless",
+        "--verbose",
+        "-d",
+        "--remote-debug",
+        "tcp://127.0.0.1:0",
+        "--path",
+        "C:\\Users\\fede_\\AppData\\Local\\Temp\\nosefia-batch-64-309\\b-obj-proyecto-vacio",
+        "-s",
+        "C:\\Users\\fede_\\orca\\workspaces\\nosefia\\darter\\.claude\\scratch\\batch-64-309\\b-obj-surface.gd",
+        "--",
+        "array-inmediato"
+      ],
+      "log": "C:\\Users\\fede_\\orca\\workspaces\\nosefia\\darter\\.claude\\scratch\\batch-64-309\\b-obj-surface-array-inmediato.log",
+      "codigo": 0,
+      "segundos": 0.3,
+      "material_null": 1,
+      "objectdb_leaked_instances": 0,
+      "retained_resources": false,
+      "script_errors": 0,
+      "basal_debug_connection_errors": 2,
+      "sha256_raw": "a9ff8d4c93e7c57dc7c309213260692120f492718d96eb97817454fe32c21955"
+    },
+    {
+      "caso": "surface-array-frames",
+      "head": "02e3562c1acb9dc4c768c9b33da2155b69792fdf",
+      "pid": 141884,
+      "appdata": "C:\\Users\\fede_\\orca\\workspaces\\nosefia\\darter\\.claude\\scratch\\batch-64-309\\b-obj-appdata-surface-array-frames",
+      "comando": [
+        "D:\\Program Files\\Godot\\Godot_v4.7.2-stable_win64_console.exe",
+        "--headless",
+        "--verbose",
+        "-d",
+        "--remote-debug",
+        "tcp://127.0.0.1:0",
+        "--path",
+        "C:\\Users\\fede_\\AppData\\Local\\Temp\\nosefia-batch-64-309\\b-obj-proyecto-vacio",
+        "-s",
+        "C:\\Users\\fede_\\orca\\workspaces\\nosefia\\darter\\.claude\\scratch\\batch-64-309\\b-obj-surface.gd",
+        "--",
+        "array-frames"
+      ],
+      "log": "C:\\Users\\fede_\\orca\\workspaces\\nosefia\\darter\\.claude\\scratch\\batch-64-309\\b-obj-surface-array-frames.log",
+      "codigo": 0,
+      "segundos": 0.3,
+      "material_null": 1,
+      "objectdb_leaked_instances": 0,
+      "retained_resources": false,
+      "script_errors": 0,
+      "basal_debug_connection_errors": 2,
+      "sha256_raw": "4b9f79da3e73d2d34522c657dda1128194bf11c0a4ce47502b5927db7389656b"
+    },
+    {
+      "caso": "surface-array-clear",
+      "head": "02e3562c1acb9dc4c768c9b33da2155b69792fdf",
+      "pid": 28436,
+      "appdata": "C:\\Users\\fede_\\orca\\workspaces\\nosefia\\darter\\.claude\\scratch\\batch-64-309\\b-obj-appdata-surface-array-clear",
+      "comando": [
+        "D:\\Program Files\\Godot\\Godot_v4.7.2-stable_win64_console.exe",
+        "--headless",
+        "--verbose",
+        "-d",
+        "--remote-debug",
+        "tcp://127.0.0.1:0",
+        "--path",
+        "C:\\Users\\fede_\\AppData\\Local\\Temp\\nosefia-batch-64-309\\b-obj-proyecto-vacio",
+        "-s",
+        "C:\\Users\\fede_\\orca\\workspaces\\nosefia\\darter\\.claude\\scratch\\batch-64-309\\b-obj-surface.gd",
+        "--",
+        "array-clear"
+      ],
+      "log": "C:\\Users\\fede_\\orca\\workspaces\\nosefia\\darter\\.claude\\scratch\\batch-64-309\\b-obj-surface-array-clear.log",
+      "codigo": 0,
+      "segundos": 0.3,
+      "material_null": 0,
+      "objectdb_leaked_instances": 0,
+      "retained_resources": false,
+      "script_errors": 0,
+      "basal_debug_connection_errors": 2,
+      "sha256_raw": "7f79a870152f70e6cd9bb7412a99db1dde1579167105143a83b1c5317867346a"
+    }
+  ],
+  "caja_llevada": {
+    "suite": "test/escenas/objetos/caja_que_se_lleva_test.gd",
+    "suites": "1/1",
+    "casos": "20/20",
+    "tiempo_suite_s": 68.711,
+    "tiempo_proceso_s": 72.06,
+    "material_null": 12,
+    "objectdb_leaked_instances": 0,
+    "retained_resources": false,
+    "script_errors": 0,
+    "sha256_raw": "4b7598f0a149e0825c3a21a29f3b158d98dcf605a5547c547d408b5b05a2dd6c",
+    "raw": "C:\\Users\\fede_\\orca\\workspaces\\nosefia\\darter\\.claude\\scratch\\batch-64-309\\b-obj-caja-llevada.log",
+    "metadata": "C:\\Users\\fede_\\orca\\workspaces\\nosefia\\darter\\.claude\\scratch\\batch-64-309\\b-obj-caja-llevada-resultados.json",
+    "avisos_por_caso": [
+      {
+        "linea_raw": 988,
+        "caso_activo": "test_el_clic_izquierdo_levanta_la_caja_y_no_entrega_producto",
+        "stack": [
+          "   at: material_get_instance_shader_parameters (servers/rendering/dummy/storage/material_storage.cpp:264)",
+          "   GDScript backtrace (most recent call first):",
+          "       [0] free_instance (res://addons/gdUnit4/src/core/GdUnitTools.gd:85)",
+          "       [1] gc (res://addons/gdUnit4/src/core/execution/GdUnitMemoryObserver.gd:126)",
+          "       [2] gc (res://addons/gdUnit4/src/core/execution/GdUnitExecutionContext.gd:277)",
+          "       [3] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestCaseAfterStage.gd:23)"
+        ]
+      },
+      {
+        "linea_raw": 1227,
+        "caso_activo": "test_la_caja_soltada_queda_apoyada_en_el_piso_sin_caer",
+        "stack": [
+          "   at: material_get_instance_shader_parameters (servers/rendering/dummy/storage/material_storage.cpp:264)",
+          "   GDScript backtrace (most recent call first):",
+          "       [0] free_instance (res://addons/gdUnit4/src/core/GdUnitTools.gd:85)",
+          "       [1] gc (res://addons/gdUnit4/src/core/execution/GdUnitMemoryObserver.gd:126)",
+          "       [2] gc (res://addons/gdUnit4/src/core/execution/GdUnitExecutionContext.gd:277)",
+          "       [3] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestCaseAfterStage.gd:23)"
+        ]
+      },
+      {
+        "linea_raw": 1356,
+        "caso_activo": "test_la_caja_soltada_se_acomoda_adentro_de_su_apoyo",
+        "stack": [
+          "   at: material_get_instance_shader_parameters (servers/rendering/dummy/storage/material_storage.cpp:264)",
+          "   GDScript backtrace (most recent call first):",
+          "       [0] free_instance (res://addons/gdUnit4/src/core/GdUnitTools.gd:85)",
+          "       [1] gc (res://addons/gdUnit4/src/core/execution/GdUnitMemoryObserver.gd:126)",
+          "       [2] gc (res://addons/gdUnit4/src/core/execution/GdUnitExecutionContext.gd:277)",
+          "       [3] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestCaseAfterStage.gd:23)"
+        ]
+      },
+      {
+        "linea_raw": 1485,
+        "caso_activo": "test_soltar_mirando_el_costado_de_una_caja_la_apila_encima",
+        "stack": [
+          "   at: material_get_instance_shader_parameters (servers/rendering/dummy/storage/material_storage.cpp:264)",
+          "   GDScript backtrace (most recent call first):",
+          "       [0] free_instance (res://addons/gdUnit4/src/core/GdUnitTools.gd:85)",
+          "       [1] gc (res://addons/gdUnit4/src/core/execution/GdUnitMemoryObserver.gd:126)",
+          "       [2] gc (res://addons/gdUnit4/src/core/execution/GdUnitExecutionContext.gd:277)",
+          "       [3] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestCaseAfterStage.gd:23)"
+        ]
+      },
+      {
+        "linea_raw": 1614,
+        "caso_activo": "test_alrededor_de_un_estante_con_lugar_la_caja_siempre_sube_a_el",
+        "stack": [
+          "   at: material_get_instance_shader_parameters (servers/rendering/dummy/storage/material_storage.cpp:264)",
+          "   GDScript backtrace (most recent call first):",
+          "       [0] free_instance (res://addons/gdUnit4/src/core/GdUnitTools.gd:85)",
+          "       [1] gc (res://addons/gdUnit4/src/core/execution/GdUnitMemoryObserver.gd:126)",
+          "       [2] gc (res://addons/gdUnit4/src/core/execution/GdUnitExecutionContext.gd:277)",
+          "       [3] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestCaseAfterStage.gd:23)"
+        ]
+      },
+      {
+        "linea_raw": 1743,
+        "caso_activo": "test_frente_a_un_rack_abierto_la_caja_queda_en_el_pallet_que_se_mira",
+        "stack": [
+          "   at: material_get_instance_shader_parameters (servers/rendering/dummy/storage/material_storage.cpp:264)",
+          "   GDScript backtrace (most recent call first):",
+          "       [0] free_instance (res://addons/gdUnit4/src/core/GdUnitTools.gd:85)",
+          "       [1] gc (res://addons/gdUnit4/src/core/execution/GdUnitMemoryObserver.gd:126)",
+          "       [2] gc (res://addons/gdUnit4/src/core/execution/GdUnitExecutionContext.gd:277)",
+          "       [3] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestCaseAfterStage.gd:23)"
+        ]
+      },
+      {
+        "linea_raw": 1872,
+        "caso_activo": "test_la_mira_que_pasa_por_encima_de_la_caja_de_enfrente_la_apila",
+        "stack": [
+          "   at: material_get_instance_shader_parameters (servers/rendering/dummy/storage/material_storage.cpp:264)",
+          "   GDScript backtrace (most recent call first):",
+          "       [0] free_instance (res://addons/gdUnit4/src/core/GdUnitTools.gd:85)",
+          "       [1] gc (res://addons/gdUnit4/src/core/execution/GdUnitMemoryObserver.gd:126)",
+          "       [2] gc (res://addons/gdUnit4/src/core/execution/GdUnitExecutionContext.gd:277)",
+          "       [3] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestCaseAfterStage.gd:23)"
+        ]
+      },
+      {
+        "linea_raw": 2001,
+        "caso_activo": "test_una_pila_de_cajas_de_distinto_tamano_se_sigue_apilando",
+        "stack": [
+          "   at: material_get_instance_shader_parameters (servers/rendering/dummy/storage/material_storage.cpp:264)",
+          "   GDScript backtrace (most recent call first):",
+          "       [0] free_instance (res://addons/gdUnit4/src/core/GdUnitTools.gd:85)",
+          "       [1] gc (res://addons/gdUnit4/src/core/execution/GdUnitMemoryObserver.gd:126)",
+          "       [2] gc (res://addons/gdUnit4/src/core/execution/GdUnitExecutionContext.gd:277)",
+          "       [3] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestCaseAfterStage.gd:23)"
+        ]
+      },
+      {
+        "linea_raw": 2246,
+        "caso_activo": "test_la_caja_va_donde_apunta_la_mira",
+        "stack": [
+          "   at: material_get_instance_shader_parameters (servers/rendering/dummy/storage/material_storage.cpp:264)",
+          "   GDScript backtrace (most recent call first):",
+          "       [0] free_instance (res://addons/gdUnit4/src/core/GdUnitTools.gd:85)",
+          "       [1] gc (res://addons/gdUnit4/src/core/execution/GdUnitMemoryObserver.gd:126)",
+          "       [2] gc (res://addons/gdUnit4/src/core/execution/GdUnitExecutionContext.gd:277)",
+          "       [3] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestCaseAfterStage.gd:23)"
+        ]
+      },
+      {
+        "linea_raw": 2372,
+        "caso_activo": "test_la_caja_soltada_nunca_queda_adentro_de_nada",
+        "stack": [
+          "   at: material_get_instance_shader_parameters (servers/rendering/dummy/storage/material_storage.cpp:264)",
+          "   GDScript backtrace (most recent call first):",
+          "       [0] free_instance (res://addons/gdUnit4/src/core/GdUnitTools.gd:85)",
+          "       [1] gc (res://addons/gdUnit4/src/core/execution/GdUnitMemoryObserver.gd:126)",
+          "       [2] gc (res://addons/gdUnit4/src/core/execution/GdUnitExecutionContext.gd:277)",
+          "       [3] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestCaseAfterStage.gd:23)"
+        ]
+      },
+      {
+        "linea_raw": 2498,
+        "caso_activo": "test_la_caja_se_suelta_con_la_mira_sobre_un_charco",
+        "stack": [
+          "   at: material_get_instance_shader_parameters (servers/rendering/dummy/storage/material_storage.cpp:264)",
+          "   GDScript backtrace (most recent call first):",
+          "       [0] free_instance (res://addons/gdUnit4/src/core/GdUnitTools.gd:85)",
+          "       [1] gc (res://addons/gdUnit4/src/core/execution/GdUnitMemoryObserver.gd:126)",
+          "       [2] gc (res://addons/gdUnit4/src/core/execution/GdUnitExecutionContext.gd:277)",
+          "       [3] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestCaseAfterStage.gd:23)"
+        ]
+      },
+      {
+        "linea_raw": 2624,
+        "caso_activo": "test_sacar_una_caja_de_la_pila_hace_caer_las_de_arriba",
+        "stack": [
+          "   at: material_get_instance_shader_parameters (servers/rendering/dummy/storage/material_storage.cpp:264)",
+          "   GDScript backtrace (most recent call first):",
+          "       [0] free_instance (res://addons/gdUnit4/src/core/GdUnitTools.gd:85)",
+          "       [1] gc (res://addons/gdUnit4/src/core/execution/GdUnitMemoryObserver.gd:126)",
+          "       [2] gc (res://addons/gdUnit4/src/core/execution/GdUnitExecutionContext.gd:277)",
+          "       [3] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestCaseAfterStage.gd:23)"
+        ]
+      }
+    ]
+  },
+  "count_note": "Comparaciones focales separadas localizan montajes responsables; no es equivalencia temporal exacta con stderr concatenado del full.",
+  "descartes_resto": [
+    {
+      "caso": "balde",
+      "metadata": {
+        "caso": "balde",
+        "head": "02e3562c1acb9dc4c768c9b33da2155b69792fdf",
+        "pid": 73332,
+        "appdata": "C:\\Users\\fede_\\orca\\workspaces\\nosefia\\darter\\.claude\\scratch\\batch-64-309\\b-obj-appdata-resto-balde",
+        "comando": [
+          "D:\\Program Files\\Godot\\Godot_v4.7.2-stable_win64_console.exe",
+          "--headless",
+          "--verbose",
+          "-d",
+          "--remote-debug",
+          "tcp://127.0.0.1:0",
+          "--path",
+          "C:\\Users\\fede_\\orca\\workspaces\\nosefia\\darter",
+          "-s",
+          "res://addons/gdUnit4/bin/GdUnitCmdTool.gd",
+          "-a",
+          "test/escenas/objetos/balde_que_se_apoya_test.gd",
+          "--continue",
+          "--ignoreHeadlessMode",
+          "-rd",
+          "res://reports/b-obj-resto-balde"
+        ],
+        "log": "C:\\Users\\fede_\\orca\\workspaces\\nosefia\\darter\\.claude\\scratch\\batch-64-309\\b-obj-resto-balde.log",
+        "codigo": 0,
+        "segundos": 24.41
+      },
+      "material_null": 0,
+      "objectdb": 0,
+      "script_errors": 0,
+      "retained_resources": 0,
+      "sha256_raw": "c24b73428e98ac8aff53c1b8b5bcc0e873dbc608a5dc07ef32936ffbccf4d767"
+    },
+    {
+      "caso": "producto",
+      "metadata": {
+        "caso": "producto",
+        "head": "02e3562c1acb9dc4c768c9b33da2155b69792fdf",
+        "pid": 92168,
+        "appdata": "C:\\Users\\fede_\\orca\\workspaces\\nosefia\\darter\\.claude\\scratch\\batch-64-309\\b-obj-appdata-resto-producto",
+        "comando": [
+          "D:\\Program Files\\Godot\\Godot_v4.7.2-stable_win64_console.exe",
+          "--headless",
+          "--verbose",
+          "-d",
+          "--remote-debug",
+          "tcp://127.0.0.1:0",
+          "--path",
+          "C:\\Users\\fede_\\orca\\workspaces\\nosefia\\darter",
+          "-s",
+          "res://addons/gdUnit4/bin/GdUnitCmdTool.gd",
+          "-a",
+          "test/escenas/objetos/producto_soltado_test.gd",
+          "--continue",
+          "--ignoreHeadlessMode",
+          "-rd",
+          "res://reports/b-obj-resto-producto"
+        ],
+        "log": "C:\\Users\\fede_\\orca\\workspaces\\nosefia\\darter\\.claude\\scratch\\batch-64-309\\b-obj-resto-producto.log",
+        "codigo": 0,
+        "segundos": 13.42
+      },
+      "material_null": 0,
+      "objectdb": 0,
+      "script_errors": 0,
+      "retained_resources": 0,
+      "sha256_raw": "f98f4e6b12501a1c2c33a68afdb413f747f2419dd01a32ba4a996327c86bcbbc"
+    }
+  ],
+  "escenas": {
+    "head": "02e3562c1acb9dc4c768c9b33da2155b69792fdf",
+    "suites": "39/39",
+    "casos": "294/294",
+    "tiempo_suite_s": 63.716,
+    "tiempo_proceso_s": 71.13,
+    "material_null": 2,
+    "objectdb_leaked_instances": 0,
+    "retained_resources": false,
+    "script_errors": 0,
+    "outside_tree_errors": 2,
+    "sin_volumen_errors": 98,
+    "sha256_raw": "1d68373ff407a6d5ea67976476d34c3638cfd65cd90798376bbfca4c8a1bf178",
+    "raw": "C:\\Users\\fede_\\orca\\workspaces\\nosefia\\darter\\.claude\\scratch\\batch-64-309\\b-obj-escenas.log",
+    "metadata": "C:\\Users\\fede_\\orca\\workspaces\\nosefia\\darter\\.claude\\scratch\\batch-64-309\\b-obj-escenas-resultados.json",
+    "avisos_por_caso": [
+      {
+        "linea_raw": 4048,
+        "caso_activo": "test_ningun_casillero_vacio_se_dibuja_sin_la_mira_encima",
+        "stack": [
+          "   at: material_get_instance_shader_parameters (servers/rendering/dummy/storage/material_storage.cpp:264)",
+          "   GDScript backtrace (most recent call first):",
+          "       [0] free_instance (res://addons/gdUnit4/src/core/GdUnitTools.gd:85)",
+          "       [1] gc (res://addons/gdUnit4/src/core/execution/GdUnitMemoryObserver.gd:126)",
+          "       [2] gc (res://addons/gdUnit4/src/core/execution/GdUnitExecutionContext.gd:277)",
+          "       [3] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestCaseAfterStage.gd:23)"
+        ]
+      },
+      {
+        "linea_raw": 5451,
+        "caso_activo": "test_una_caja_chica_soltada_hacia_una_bandeja_no_queda_adentro_de_la_gondola",
+        "stack": [
+          "   at: material_get_instance_shader_parameters (servers/rendering/dummy/storage/material_storage.cpp:264)",
+          "   GDScript backtrace (most recent call first):",
+          "       [0] free_instance (res://addons/gdUnit4/src/core/GdUnitTools.gd:85)",
+          "       [1] gc (res://addons/gdUnit4/src/core/execution/GdUnitMemoryObserver.gd:126)",
+          "       [2] gc (res://addons/gdUnit4/src/core/execution/GdUnitExecutionContext.gd:277)",
+          "       [3] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestCaseAfterStage.gd:23)"
+        ]
+      }
+    ]
+  },
+  "remaining_not_run": [
+    "lo_soltado_fuera_de_los_solidos_test",
+    "agarre_fisico_test",
+    "reposicion_manual_test",
+    "hoja_que_arrastra_test",
+    "giro_parejo_test",
+    "contenedor_de_basura_test"
+  ],
+  "next_step_by_parent": "No more heavy diagnostic: C RED3 + GREEN45 + FULL3 complete191 suites, contrast global material/ObjectDB/resources counts, without claiming five unobserved focal origins."
+}

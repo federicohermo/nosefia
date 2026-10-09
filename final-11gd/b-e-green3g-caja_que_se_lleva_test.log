@@ -1,0 +1,96 @@
+ERROR: The remote port number must be between 1 and 65535 (inclusive).
+   at: connect_to_host (core/io/stream_peer_tcp.cpp:69)
+ERROR: Remote Debugger: Unable to connect to host '127.0.0.1:0'.
+   at: create_tcp (core/debugger/remote_debugger_peer.cpp:247)
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+[2J[H[38;2;233;150;122m
+--------------------------------------------------------------------------------------------------
+GdUnit4 Comandline Tool
+--------------------------------------------------------------------------------------------------[0m
+[38;2;0;191;255mDisabled fail fast![0m
+[38;2;0;191;255mSet write reports to D:/Usuarios/fede/Documentos/Catedra Videojuegos FADU/manada/repo/nosefia/.claude/worktrees/batch-64-309-export/reports/b-e-green3g[0m
+[38;2;218;165;32m
+Headless mode is ignored by option '--ignoreHeadlessMode'"
+
+Please note that tests that use UI interaction do not work correctly in headless mode.
+Godot 'InputEvents' are not transported by the Godot engine in headless mode and therefore
+have no effect in the test!
+[0m
+[38;2;100;149;237mInstalling GdUnit4 session system hooks.[0m
+[38;2;100;149;237mSession hook 'GdUnitHtmlTestReporter' installed.[0m
+[38;2;100;149;237mSession hook 'GdUnitXMLTestReporter' installed.[0m
+[38;2;100;149;237mInstalling GdUnit4 session hooks.[0m
+[38;2;100;149;237mSession hook 'Guardado de la sesión' installed.[0m
+[38;2;0;206;209mRun Test Suite: [0m[38;2;250;235;215mres://test/escenas/objetos/caja_que_se_lleva_test.gd[0m
+  [38;2;250;235;215mres://test/escenas/objetos/caja_que_se_lleva_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_la_caja_entrega_apoyada_en_el_estante_y_no_mientras_se_la_lleva[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/objetos/caja_que_se_lleva_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_la_caja_entrega_apoyada_en_el_estante_y_no_mientras_se_la_lleva[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 558ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/objetos/caja_que_se_lleva_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_el_clic_izquierdo_levanta_la_caja_y_no_entrega_producto[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/objetos/caja_que_se_lleva_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_el_clic_izquierdo_levanta_la_caja_y_no_entrega_producto[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 111ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/objetos/caja_que_se_lleva_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_la_caja_llevada_no_tapa_la_mira_ni_atraviesa_la_pared[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/objetos/caja_que_se_lleva_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_la_caja_llevada_no_tapa_la_mira_ni_atraviesa_la_pared[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 3s 912ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/objetos/caja_que_se_lleva_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_la_caja_soltada_queda_apoyada_en_el_piso_sin_caer[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/objetos/caja_que_se_lleva_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_la_caja_soltada_queda_apoyada_en_el_piso_sin_caer[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 126ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/objetos/caja_que_se_lleva_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_la_caja_soltada_se_acomoda_adentro_de_su_apoyo[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/objetos/caja_que_se_lleva_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_la_caja_soltada_se_acomoda_adentro_de_su_apoyo[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 3s 930ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/objetos/caja_que_se_lleva_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_soltar_mirando_el_costado_de_una_caja_la_apila_encima[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/objetos/caja_que_se_lleva_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_soltar_mirando_el_costado_de_una_caja_la_apila_encima[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 4s 33ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/objetos/caja_que_se_lleva_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_alrededor_de_un_estante_con_lugar_la_caja_siempre_sube_a_el[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/objetos/caja_que_se_lleva_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_alrededor_de_un_estante_con_lugar_la_caja_siempre_sube_a_el[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 406ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/objetos/caja_que_se_lleva_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_frente_a_un_rack_abierto_la_caja_queda_en_el_pallet_que_se_mira[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/objetos/caja_que_se_lleva_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_frente_a_un_rack_abierto_la_caja_queda_en_el_pallet_que_se_mira[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 3s 698ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/objetos/caja_que_se_lleva_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_la_mira_que_pasa_por_encima_de_la_caja_de_enfrente_la_apila[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/objetos/caja_que_se_lleva_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_la_mira_que_pasa_por_encima_de_la_caja_de_enfrente_la_apila[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 362ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/objetos/caja_que_se_lleva_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_una_pila_de_cajas_de_distinto_tamano_se_sigue_apilando[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/objetos/caja_que_se_lleva_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_una_pila_de_cajas_de_distinto_tamano_se_sigue_apilando[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 356ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/objetos/caja_que_se_lleva_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_la_caja_vuelta_a_su_lugar_apoya_entera[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/objetos/caja_que_se_lleva_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_la_caja_vuelta_a_su_lugar_apoya_entera[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 116ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/objetos/caja_que_se_lleva_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_la_caja_va_donde_apunta_la_mira[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/objetos/caja_que_se_lleva_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_la_caja_va_donde_apunta_la_mira[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 4s 645ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/objetos/caja_que_se_lleva_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_la_caja_soltada_nunca_queda_adentro_de_nada[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/objetos/caja_que_se_lleva_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_la_caja_soltada_nunca_queda_adentro_de_nada[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 8s 739ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/objetos/caja_que_se_lleva_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_la_caja_se_suelta_con_la_mira_sobre_un_charco[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/objetos/caja_que_se_lleva_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_la_caja_se_suelta_con_la_mira_sobre_un_charco[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 131ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/objetos/caja_que_se_lleva_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_sacar_una_caja_de_la_pila_hace_caer_las_de_arriba[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/objetos/caja_que_se_lleva_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_sacar_una_caja_de_la_pila_hace_caer_las_de_arriba[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 5s 359ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/objetos/caja_que_se_lleva_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_agarrar_la_caja_del_estante_no_mueve_al_jugador[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/objetos/caja_que_se_lleva_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_agarrar_la_caja_del_estante_no_mueve_al_jugador[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 4s 47ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/objetos/caja_que_se_lleva_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_la_caja_del_piso_se_arrastra_en_vez_de_tapar_el_paso[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/objetos/caja_que_se_lleva_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_la_caja_del_piso_se_arrastra_en_vez_de_tapar_el_paso[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 2s 540ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/objetos/caja_que_se_lleva_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_levantar_la_caja_hace_caer_el_producto_apoyado_encima[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/objetos/caja_que_se_lleva_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_levantar_la_caja_hace_caer_el_producto_apoyado_encima[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 7s 533ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/objetos/caja_que_se_lleva_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_empujar_la_caja_hasta_sacarla_de_abajo_hace_caer_el_producto[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/objetos/caja_que_se_lleva_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_empujar_la_caja_hasta_sacarla_de_abajo_hace_caer_el_producto[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 12s 531ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/objetos/caja_que_se_lleva_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_el_producto_sobre_la_pila_cae_cuando_se_saca_la_caja_de_abajo[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/objetos/caja_que_se_lleva_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_el_producto_sobre_la_pila_cae_cuando_se_saca_la_caja_de_abajo[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 5s 21ms[0m
+[38;2;128;128;128m[0m
+[38;2;30;144;255mStatistics:[0m[38;2;128;128;128m 20 test cases | 0 errors | 0 failures | 0 flaky | 0 skipped | 0 orphans |[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 1min 8s 282ms[0m
+[38;2;128;128;128m[0m
+[38;2;128;128;128m[0m
+[38;2;30;144;255mOverall Summary:[0m[38;2;255;255;255m 20 test cases | 0 errors | 0 failures | 0 flaky | 0 skipped | 0 orphans |[0m
+[38;2;233;150;122mExecuted test suites: (1/1)[0m
+[38;2;233;150;122mExecuted test cases : (20/20)[0m
+[38;2;233;150;122mTotal execution time: 1min 8s 282ms[0m
+[38;2;255;255;255m [0m[38;2;100;149;237mOpen XML Report at: file://D:/Usuarios/fede/Documentos/Catedra Videojuegos FADU/manada/repo/nosefia/.claude/worktrees/batch-64-309-export/reports/b-e-green3g/report_2/results.xml[0m
+[38;2;100;149;237mOpen HTML Report at: file://D:/Usuarios/fede/Documentos/Catedra Videojuegos FADU/manada/repo/nosefia/.claude/worktrees/batch-64-309-export/reports/b-e-green3g/report_2/index.html[0m
+[38;2;233;150;122mExit code: 0[0m
+Run dispose test resources

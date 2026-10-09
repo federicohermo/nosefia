@@ -1,0 +1,46 @@
+[
+  {
+    "mode": "original-null",
+    "exit": 0,
+    "errors": [
+      "ERROR: Parameter \"material\" is null."
+    ],
+    "log": "C:\\Users\\fede_\\AppData\\Local\\Temp\\nosefia-batch-64-309\\c-diagnostico-69ee\\lifecycle-refs-original-null.log",
+    "checks": 16,
+    "failed_checks": 0,
+    "leak_warning": false,
+    "valid_premises": true
+  },
+  {
+    "mode": "original-retained",
+    "exit": 0,
+    "errors": [
+      "ERROR: Parameter \"material\" is null."
+    ],
+    "log": "C:\\Users\\fede_\\AppData\\Local\\Temp\\nosefia-batch-64-309\\c-diagnostico-69ee\\lifecycle-refs-original-retained.log",
+    "checks": 18,
+    "failed_checks": 0,
+    "leak_warning": false,
+    "valid_premises": true
+  },
+  {
+    "mode": "predelete-null",
+    "exit": 0,
+    "errors": [],
+    "log": "C:\\Users\\fede_\\AppData\\Local\\Temp\\nosefia-batch-64-309\\c-diagnostico-69ee\\lifecycle-refs-predelete-null.log",
+    "checks": 16,
+    "failed_checks": 0,
+    "leak_warning": false,
+    "valid_premises": true
+  },
+  {
+    "mode": "predelete-retained",
+    "exit": 0,
+    "errors": [],
+    "log": "C:\\Users\\fede_\\AppData\\Local\\Temp\\nosefia-batch-64-309\\c-diagnostico-69ee\\lifecycle-refs-predelete-retained.log",
+    "checks": 18,
+    "failed_checks": 0,
+    "leak_warning": false,
+    "valid_premises": true
+  }
+]

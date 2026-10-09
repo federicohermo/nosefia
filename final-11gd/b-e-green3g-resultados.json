@@ -1,0 +1,59 @@
+[
+  {
+    "xml": "reports\\b-e-green3g\\report_1\\results.xml",
+    "sha256": "6adc3a9184de8687acdba7222e9741f2bb3600ba8814f04a276f7a98a0341938",
+    "suites": [
+      {
+        "id": "0",
+        "name": "caja_de_productos_test",
+        "package": "test/escenas/objetos",
+        "timestamp": "2026-10-09T08:04:40",
+        "hostname": "localhost",
+        "tests": "15",
+        "failures": "0",
+        "errors": "0",
+        "skipped": "0",
+        "flaky": "0",
+        "time": "0.487"
+      }
+    ]
+  },
+  {
+    "xml": "reports\\b-e-green3g\\report_2\\results.xml",
+    "sha256": "a6742c93e9b1319ab624b4f08c018e87e8b5e5dc9261568345b0bcbf30ac520d",
+    "suites": [
+      {
+        "id": "0",
+        "name": "caja_que_se_lleva_test",
+        "package": "test/escenas/objetos",
+        "timestamp": "2026-10-09T08:04:45",
+        "hostname": "localhost",
+        "tests": "20",
+        "failures": "0",
+        "errors": "0",
+        "skipped": "0",
+        "flaky": "0",
+        "time": "68.282"
+      }
+    ]
+  },
+  {
+    "xml": "reports\\b-e-green3g\\report_3\\results.xml",
+    "sha256": "b0cee0c6dd01327600fec1fdf2d6e051012e96a781d82698c5f0e526c6dab876",
+    "suites": [
+      {
+        "id": "0",
+        "name": "caja_que_recibe_y_cuenta_test",
+        "package": "test/escenas/objetos",
+        "timestamp": "2026-10-09T08:05:56",
+        "hostname": "localhost",
+        "tests": "10",
+        "failures": "0",
+        "errors": "0",
+        "skipped": "0",
+        "flaky": "0",
+        "time": "1.223"
+      }
+    ]
+  }
+]

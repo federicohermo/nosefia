@@ -1,0 +1,54 @@
+[
+  {
+    "label": "green2-calentamiento",
+    "xml_source": "D:\\Usuarios\\fede\\Documentos\\Catedra Videojuegos FADU\\manada\\repo\\nosefia\\.claude\\worktrees\\batch-64-309-export\\reports\\fix-fixtures\\report_10\\results.xml",
+    "sha256": "ea2421d6bbdd4c9d3dfc2570afc273a1c4f625b85aba4ec1afd8512fb6b21620",
+    "suites": 1,
+    "suite_names": [
+      "calentamiento_de_shaders_test"
+    ],
+    "tests": 19,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  {
+    "label": "green2-loader",
+    "xml_source": "D:\\Usuarios\\fede\\Documentos\\Catedra Videojuegos FADU\\manada\\repo\\nosefia\\.claude\\worktrees\\batch-64-309-export\\reports\\fix-fixtures\\report_11\\results.xml",
+    "sha256": "dfe9f178d36bccfa45a768fb54c8e5f6eada9f21f109c9d1650181251b91c420",
+    "suites": 1,
+    "suite_names": [
+      "carga_en_segundo_plano_test"
+    ],
+    "tests": 7,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  {
+    "label": "green2-consumidor",
+    "xml_source": "D:\\Usuarios\\fede\\Documentos\\Catedra Videojuegos FADU\\manada\\repo\\nosefia\\.claude\\worktrees\\batch-64-309-export\\reports\\fix-fixtures\\report_12\\results.xml",
+    "sha256": "f746b8cfb863e42f7d82321b3ca652ecde84ca9270ccf0ac478e4a9150cb1913",
+    "suites": 1,
+    "suite_names": [
+      "carga_del_almacen_test"
+    ],
+    "tests": 6,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  {
+    "label": "giro1",
+    "xml_source": "D:\\Usuarios\\fede\\Documentos\\Catedra Videojuegos FADU\\manada\\repo\\nosefia\\.claude\\worktrees\\batch-64-309-export\\reports\\fix-fixtures\\report_13\\results.xml",
+    "sha256": "3ce652b89844baf8187a4c6795161627a1cdabf94600962a0359b2232e71ae26",
+    "suites": 1,
+    "suite_names": [
+      "giro_parejo_test"
+    ],
+    "tests": 8,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  }
+]

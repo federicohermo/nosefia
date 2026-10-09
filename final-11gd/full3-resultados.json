@@ -1,0 +1,68 @@
+{
+  "head": "cd9947317ae5489e61b39b795795e059fc4e8f1c",
+  "status": "",
+  "full_exit": 0,
+  "count_exit": 0,
+  "xml_source": "D:\\Usuarios\\fede\\Documentos\\Catedra Videojuegos FADU\\manada\\repo\\nosefia\\.claude\\worktrees\\batch-64-309-export\\reports\\report_4\\results.xml",
+  "suites": 191,
+  "raw_error_warning_types": {
+    "ERROR: The remote port number must be between 1 and 65535 (inclusive).": 1,
+    "ERROR: Remote Debugger: Unable to connect to host '127.0.0.1:0'.": 1,
+    "WARNING: Rescate: `ObjetoAgarrable` estaba adentro de `CuerpoDeLaHoja` en (5.882046, 0.202237, -9.028996); va a ORIGEN": 1,
+    "WARNING: Rescate: `ObjetoAgarrable` estaba adentro de `CuerpoDeLaHoja` en (6.041321, 0.249515, -9.016684); va a DESHACER": 1,
+    "WARNING: Rescate: `ObjetoAgarrable` estaba adentro de `CuerpoDeLaHoja` en (6.882046, 0.202237, -8.028996); va a ORIGEN": 1,
+    "WARNING: Rescate: `Balde` estaba adentro de `SueloSolido` en (5.000002, 0.200189, 4.300001); va a DESHACER": 1,
+    "WARNING: Rescate: `Balde` estaba adentro de `SueloSolido` en (3.495001, 0.198718, -1.000001); va a DESHACER": 1,
+    "WARNING: Rescate: `Balde` estaba adentro de `StaticBody3D` en (11.745, 0.216795, 6.006); va a DESHACER": 1,
+    "ERROR: DisposicionDeLaGondola disposicion_erronea: el bloque 0 tiene 3 copias para 2 casilleros": 1,
+    "WARNING: Rescate: `ObjetoAgarrable` estaba adentro de `CuerpoDeLaHoja` en (-1.87956, 1.290243, -6.623733); va a ALREDEDOR": 1,
+    "WARNING: Rescate: `CajaDeChisitos` estaba adentro de `Volumen` en (2.0, 5.9, -11.0); va a DESHACER": 1,
+    "WARNING: Rescate: `ObjetoAgarrable` estaba adentro de `Volumen` en (2.000003, 5.726033, -11.00001); va a DESHACER": 1,
+    "WARNING: Rescate: `CajaDeArvejas` estaba adentro de `Volumen` en (2.0, 5.9, -11.0); va a ENCIMA_DEL_ORIGEN": 1,
+    "WARNING: Rescate: `CajaDeArvejas` estaba adentro de `Volumen` en (2.0, 5.9, -11.0); va a ORIGEN": 2,
+    "WARNING: Rescate: `ObjetoAgarrable` estaba adentro de `Volumen` en (2.0, 5.9, -11.0); queda donde est\u00e1: ning\u00fan lugar libre": 1,
+    "WARNING: Rescate: `ObjetoAgarrable` estaba adentro de `Volumen` en (2.0, 5.9, -11.0); va a ORIGEN": 1,
+    "WARNING: Rescate: `BolsaDeBasura1` estaba adentro de `StaticBody3D` en (-1.9, 0.202237, 6.33); va a ALREDEDOR": 1,
+    "WARNING: Rescate: `BolsaDeBasura2` estaba adentro de `StaticBody3D` en (-1.9, 0.202237, 6.33); va a ALREDEDOR": 1,
+    "ERROR: Examen sin punto de examen cableado: revisar jugador.tscn": 1,
+    "ERROR: Cannot open file 'res://no_existe.tscn'.": 3,
+    "ERROR: Failed loading resource: res://no_existe.tscn.": 3,
+    "WARNING: Rescate: `ObjetoAgarrable` estaba adentro de `@StaticBody3D@130825` en (4.000026, 1.100338, -0.000002); va a DESHACER": 1,
+    "WARNING: Rescate: `ObjetoAgarrable` estaba adentro de `@StaticBody3D@130835` en (4.0, 1.0, 0.0); queda donde est\u00e1: ning\u00fan lugar libre": 1,
+    "WARNING: Rescate: `ObjetoAgarrable` estaba adentro de `@StaticBody3D@130845` en (4.0, 1.0, 0.0); queda donde est\u00e1: ning\u00fan lugar libre": 1,
+    "WARNING: Rescate: `ObjetoAgarrable` estaba adentro de `@AnimatableBody3D@130861` en (0.0, 0.08, 3.0); queda donde est\u00e1: ning\u00fan lugar libre": 1,
+    "WARNING: Rescate: `ObjetoAgarrable` estaba adentro de `@StaticBody3D@130867` en (1.99, 0.08, 0.0); va a DESHACER": 1,
+    "WARNING: Rescate: `ObjetoAgarrable` estaba adentro de `@StaticBody3D@130878` en (1.99, 0.08, 0.0); queda donde est\u00e1: ning\u00fan lugar libre": 1,
+    "WARNING: Rescate: `ObjetoAgarrable` estaba adentro de `@StaticBody3D@130890` en (1.99, 0.08, 0.0); va a ALREDEDOR": 1,
+    "WARNING: Rescate: `ObjetoAgarrable` estaba adentro de `@StaticBody3D@130900` en (1.946, 0.08, 0.0); va a ALREDEDOR": 1,
+    "WARNING: Rescate: `ObjetoAgarrable` estaba adentro de `@StaticBody3D@130900` en (1.96, 0.08, 0.0); va a ALREDEDOR": 1,
+    "WARNING: Rescate: `ObjetoAgarrable` estaba adentro de `@StaticBody3D@130910` en (2.06, 0.08, 0.0); va a ALREDEDOR": 1,
+    "WARNING: Rescate: `@RigidBody3D@130925` estaba adentro de `@StaticBody3D@130920` en (4.0, 1.0, 0.0); queda donde est\u00e1: ning\u00fan lugar libre": 1,
+    "WARNING: Rescate: `ObjetoAgarrable` estaba adentro de `@StaticBody3D@130931` en (4.0, 1.0, 0.0); va a ENCIMA_DEL_ORIGEN": 1,
+    "WARNING: Rescate: `ObjetoAgarrable` estaba adentro de `@StaticBody3D@130942` en (4.0, 1.0, 0.0); queda donde est\u00e1: ning\u00fan lugar libre": 1,
+    "WARNING: Rescate: `ObjetoAgarrable` estaba adentro de `@StaticBody3D@130953` en (4.0, 1.0, 0.0); va a ENCIMA_DEL_ORIGEN": 1,
+    "ERROR: Ventanilla sin cablear: revisar almacen.tscn y almacen.gd": 4
+  },
+  "failed_cases": [],
+  "tests": 1496,
+  "failures": 0,
+  "errors": 0,
+  "skipped": 0,
+  "evidence": [
+    {
+      "name": "full3-results.xml",
+      "bytes": 242444,
+      "sha256": "90f8064de5c40d439df50755695f442a6f9db40daf3eec0856e5f53ac4a467b1"
+    },
+    {
+      "name": "full3-tests-crudo.log",
+      "bytes": 832794,
+      "sha256": "a9047ce5ddfbc07c9bcb732dac32891d4ef03ecc474eca54100826f0089afb37"
+    },
+    {
+      "name": "full3-verificar-y-conteo.log",
+      "bytes": 336,
+      "sha256": "1540bb22cd5e6aa927ace7195fee6169e82cf1f9aaec2ef65ddd968892a7069b"
+    }
+  ]
+}

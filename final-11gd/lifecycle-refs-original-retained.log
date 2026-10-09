@@ -1,0 +1,158 @@
+WorkerThreadPool: 16 threads, 4 max low-priority.
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+TextServer: Added interface "Dummy"
+TextServer: Added interface "ICU / HarfBuzz / Graphite (Built-in)"
+Using "default" pen tablet driver...
+
+TextServer: Primary interface set to: "ICU / HarfBuzz / Graphite (Built-in)".
+Loading resource: res://default_bus_layout.tres remapped: res://default_bus_layout.tres
+Completed load for: 'res://default_bus_layout.tres' remapped 'res://default_bus_layout.tres' at thread -1
+CORE API HASH: 2004498165
+EDITOR API HASH: 1696660745
+Loading resource: C:/Users/fede_/AppData/Local/Temp/nosefia-batch-64-309/c-diagnostico-69ee/sonda_lifecycle_refs.gd remapped: C:/Users/fede_/AppData/Local/Temp/nosefia-batch-64-309/c-diagnostico-69ee/sonda_lifecycle_refs.gd
+Loading resource: res://src/escenas/objetos/caja_de_productos.tscn remapped: res://src/escenas/objetos/caja_de_productos.tscn
+Loading resource: res://src/escenas/objetos/caja_de_productos.gd remapped: res://src/escenas/objetos/caja_de_productos.gd
+Loading resource: res://assets/boxes/actroncito.png remapped: res://assets/boxes/actroncito.png
+Loading resource: res://.godot/imported/actroncito.png-f47410e53911aa1e41b5b0de6cee81a1.s3tc.ctex remapped: res://.godot/imported/actroncito.png-f47410e53911aa1e41b5b0de6cee81a1.s3tc.ctex
+Completed load for: 'res://assets/boxes/actroncito.png' remapped 'res://assets/boxes/actroncito.png' at thread -1
+Loading resource: res://assets/boxes/durextra.png remapped: res://assets/boxes/durextra.png
+Loading resource: res://.godot/imported/durextra.png-fa19a39df8f6a205112458ae8eeb47b8.s3tc.ctex remapped: res://.godot/imported/durextra.png-fa19a39df8f6a205112458ae8eeb47b8.s3tc.ctex
+Completed load for: 'res://assets/boxes/durextra.png' remapped 'res://assets/boxes/durextra.png' at thread -1
+Loading resource: res://assets/boxes/burbaloo.png remapped: res://assets/boxes/burbaloo.png
+Loading resource: res://.godot/imported/burbaloo.png-dadb38f651621cb0a7caf7b0e8f514bd.s3tc.ctex remapped: res://.godot/imported/burbaloo.png-dadb38f651621cb0a7caf7b0e8f514bd.s3tc.ctex
+Completed load for: 'res://assets/boxes/burbaloo.png' remapped 'res://assets/boxes/burbaloo.png' at thread -1
+Loading resource: res://assets/boxes/zucarachas.png remapped: res://assets/boxes/zucarachas.png
+Loading resource: res://.godot/imported/zucarachas.png-8eb79a1d16b374d65ba2ebfdde10106c.s3tc.ctex remapped: res://.godot/imported/zucarachas.png-8eb79a1d16b374d65ba2ebfdde10106c.s3tc.ctex
+Completed load for: 'res://assets/boxes/zucarachas.png' remapped 'res://assets/boxes/zucarachas.png' at thread -1
+Loading resource: res://assets/boxes/laysntt.png remapped: res://assets/boxes/laysntt.png
+Loading resource: res://.godot/imported/laysntt.png-36f7de87881003cde8abb47c38ba5ddb.s3tc.ctex remapped: res://.godot/imported/laysntt.png-36f7de87881003cde8abb47c38ba5ddb.s3tc.ctex
+Completed load for: 'res://assets/boxes/laysntt.png' remapped 'res://assets/boxes/laysntt.png' at thread -1
+Loading resource: res://assets/boxes/jorgillo.png remapped: res://assets/boxes/jorgillo.png
+Loading resource: res://.godot/imported/jorgillo.png-7118ecae82eddc74433db674f9854639.s3tc.ctex remapped: res://.godot/imported/jorgillo.png-7118ecae82eddc74433db674f9854639.s3tc.ctex
+Completed load for: 'res://assets/boxes/jorgillo.png' remapped 'res://assets/boxes/jorgillo.png' at thread -1
+Loading resource: res://assets/boxes/frotlups.png remapped: res://assets/boxes/frotlups.png
+Loading resource: res://.godot/imported/frotlups.png-70b13cbe5c7ff61f3a3ad7f1ad139430.s3tc.ctex remapped: res://.godot/imported/frotlups.png-70b13cbe5c7ff61f3a3ad7f1ad139430.s3tc.ctex
+Completed load for: 'res://assets/boxes/frotlups.png' remapped 'res://assets/boxes/frotlups.png' at thread -1
+Loading resource: res://assets/boxes/amargadito.png remapped: res://assets/boxes/amargadito.png
+Loading resource: res://.godot/imported/amargadito.png-b9ad1fcf2626fa36a6dd294db2cafb30.s3tc.ctex remapped: res://.godot/imported/amargadito.png-b9ad1fcf2626fa36a6dd294db2cafb30.s3tc.ctex
+Completed load for: 'res://assets/boxes/amargadito.png' remapped 'res://assets/boxes/amargadito.png' at thread -1
+Loading resource: res://assets/boxes/cindolor.png remapped: res://assets/boxes/cindolor.png
+Loading resource: res://.godot/imported/cindolor.png-0214e16e2765d0418ce370dca05f3bfb.s3tc.ctex remapped: res://.godot/imported/cindolor.png-0214e16e2765d0418ce370dca05f3bfb.s3tc.ctex
+Completed load for: 'res://assets/boxes/cindolor.png' remapped 'res://assets/boxes/cindolor.png' at thread -1
+Loading resource: res://assets/boxes/flinpuf.png remapped: res://assets/boxes/flinpuf.png
+Loading resource: res://.godot/imported/flinpuf.png-08223b969133db2f1748a5533665cfcf.s3tc.ctex remapped: res://.godot/imported/flinpuf.png-08223b969133db2f1748a5533665cfcf.s3tc.ctex
+Completed load for: 'res://assets/boxes/flinpuf.png' remapped 'res://assets/boxes/flinpuf.png' at thread -1
+Loading resource: res://assets/boxes/donsaturados.png remapped: res://assets/boxes/donsaturados.png
+Loading resource: res://.godot/imported/donsaturados.png-0bf25d8011448f3754d15a66b62dedd7.s3tc.ctex remapped: res://.godot/imported/donsaturados.png-0bf25d8011448f3754d15a66b62dedd7.s3tc.ctex
+Completed load for: 'res://assets/boxes/donsaturados.png' remapped 'res://assets/boxes/donsaturados.png' at thread -1
+Loading resource: res://assets/boxes/petisas.png remapped: res://assets/boxes/petisas.png
+Loading resource: res://.godot/imported/petisas.png-d953329233893b900c8935d9f4432c2b.s3tc.ctex remapped: res://.godot/imported/petisas.png-d953329233893b900c8935d9f4432c2b.s3tc.ctex
+Completed load for: 'res://assets/boxes/petisas.png' remapped 'res://assets/boxes/petisas.png' at thread -1
+Loading resource: res://assets/boxes/macumbas.png remapped: res://assets/boxes/macumbas.png
+Loading resource: res://.godot/imported/macumbas.png-066f0fa3ee15ad04fde6b54887d7eeb2.s3tc.ctex remapped: res://.godot/imported/macumbas.png-066f0fa3ee15ad04fde6b54887d7eeb2.s3tc.ctex
+Completed load for: 'res://assets/boxes/macumbas.png' remapped 'res://assets/boxes/macumbas.png' at thread -1
+Loading resource: res://assets/boxes/cosa_de_mani.png remapped: res://assets/boxes/cosa_de_mani.png
+Loading resource: res://.godot/imported/cosa_de_mani.png-2f9c9d5678fa8343e86045a2fe82203b.s3tc.ctex remapped: res://.godot/imported/cosa_de_mani.png-2f9c9d5678fa8343e86045a2fe82203b.s3tc.ctex
+Completed load for: 'res://assets/boxes/cosa_de_mani.png' remapped 'res://assets/boxes/cosa_de_mani.png' at thread -1
+Loading resource: res://assets/boxes/duronga.png remapped: res://assets/boxes/duronga.png
+Loading resource: res://.godot/imported/duronga.png-fc2b3f48303727ce1bc6ca5a396396f9.s3tc.ctex remapped: res://.godot/imported/duronga.png-fc2b3f48303727ce1bc6ca5a396396f9.s3tc.ctex
+Completed load for: 'res://assets/boxes/duronga.png' remapped 'res://assets/boxes/duronga.png' at thread -1
+Loading resource: res://assets/boxes/fernet_god.png remapped: res://assets/boxes/fernet_god.png
+Loading resource: res://.godot/imported/fernet_god.png-8c4e3a808b5f9d887dde744b589a37f4.s3tc.ctex remapped: res://.godot/imported/fernet_god.png-8c4e3a808b5f9d887dde744b589a37f4.s3tc.ctex
+Completed load for: 'res://assets/boxes/fernet_god.png' remapped 'res://assets/boxes/fernet_god.png' at thread -1
+Loading resource: res://assets/boxes/mayonchis.png remapped: res://assets/boxes/mayonchis.png
+Loading resource: res://.godot/imported/mayonchis.png-d842e010d5b3016d5b76c999fb13a71b.s3tc.ctex remapped: res://.godot/imported/mayonchis.png-d842e010d5b3016d5b76c999fb13a71b.s3tc.ctex
+Completed load for: 'res://assets/boxes/mayonchis.png' remapped 'res://assets/boxes/mayonchis.png' at thread -1
+Loading resource: res://assets/boxes/oaaaa.png remapped: res://assets/boxes/oaaaa.png
+Loading resource: res://.godot/imported/oaaaa.png-1908993e4f04843c6dcffcc8d4e572c8.s3tc.ctex remapped: res://.godot/imported/oaaaa.png-1908993e4f04843c6dcffcc8d4e572c8.s3tc.ctex
+Completed load for: 'res://assets/boxes/oaaaa.png' remapped 'res://assets/boxes/oaaaa.png' at thread -1
+Loading resource: res://assets/boxes/terminator.png remapped: res://assets/boxes/terminator.png
+Loading resource: res://.godot/imported/terminator.png-ec0fe55964fa8670c84f4401cbbdde8a.s3tc.ctex remapped: res://.godot/imported/terminator.png-ec0fe55964fa8670c84f4401cbbdde8a.s3tc.ctex
+Completed load for: 'res://assets/boxes/terminator.png' remapped 'res://assets/boxes/terminator.png' at thread -1
+Completed load for: 'res://src/escenas/objetos/caja_de_productos.gd' remapped 'res://src/escenas/objetos/caja_de_productos.gd' at thread -1
+Loading resource: res://assets/models/caja_de_productos.res remapped: res://assets/models/caja_de_productos.res
+Loading resource: res://assets/models/SEPT_JUEGOS_PROTOTIPO_caja.png remapped: res://assets/models/SEPT_JUEGOS_PROTOTIPO_caja.png
+Loading resource: res://.godot/imported/SEPT_JUEGOS_PROTOTIPO_caja.png-da41b129827ed76cb358606ed7a7f148.s3tc.ctex remapped: res://.godot/imported/SEPT_JUEGOS_PROTOTIPO_caja.png-da41b129827ed76cb358606ed7a7f148.s3tc.ctex
+Completed load for: 'res://assets/models/SEPT_JUEGOS_PROTOTIPO_caja.png' remapped 'res://assets/models/SEPT_JUEGOS_PROTOTIPO_caja.png' at thread -1
+Completed load for: 'res://assets/models/caja_de_productos.res' remapped 'res://assets/models/caja_de_productos.res' at thread -1
+Loading resource: res://assets/models/caja_colision.tres remapped: res://assets/models/caja_colision.tres
+Completed load for: 'res://assets/models/caja_colision.tres' remapped 'res://assets/models/caja_colision.tres' at thread -1
+Loading resource: res://src/dominio/almacen/caja_de_reposicion.tres remapped: res://src/dominio/almacen/caja_de_reposicion.tres
+Completed load for: 'res://src/dominio/almacen/caja_de_reposicion.tres' remapped 'res://src/dominio/almacen/caja_de_reposicion.tres' at thread -1
+Completed load for: 'res://src/escenas/objetos/caja_de_productos.tscn' remapped 'res://src/escenas/objetos/caja_de_productos.tscn' at thread -1
+Completed load for: 'C:/Users/fede_/AppData/Local/Temp/nosefia-batch-64-309/c-diagnostico-69ee/sonda_lifecycle_refs.gd' remapped 'C:/Users/fede_/AppData/Local/Temp/nosefia-batch-64-309/c-diagnostico-69ee/sonda_lifecycle_refs.gd' at thread -1
+SceneTreeFTI: traversal method DEFAULT
+Loading resource: res://addons/godot_mcp/mcp_screenshot_service.gd remapped: res://addons/godot_mcp/mcp_screenshot_service.gd
+Completed load for: 'res://addons/godot_mcp/mcp_screenshot_service.gd' remapped 'res://addons/godot_mcp/mcp_screenshot_service.gd' at thread -1
+Loading resource: res://addons/godot_mcp/mcp_input_service.gd remapped: res://addons/godot_mcp/mcp_input_service.gd
+Completed load for: 'res://addons/godot_mcp/mcp_input_service.gd' remapped 'res://addons/godot_mcp/mcp_input_service.gd' at thread -1
+Loading resource: res://addons/godot_mcp/mcp_game_inspector_service.gd remapped: res://addons/godot_mcp/mcp_game_inspector_service.gd
+Completed load for: 'res://addons/godot_mcp/mcp_game_inspector_service.gd' remapped 'res://addons/godot_mcp/mcp_game_inspector_service.gd' at thread -1
+Loaded system CA certificates
+LIFECYCLE OK etiqueta instalada 0
+LIFECYCLE OK padre nuevo 0
+LIFECYCLE OK material conservado 0
+LIFECYCLE OK textura conservada 0
+LIFECYCLE OK datos conservados 0
+LIFECYCLE OK producto conservado 0
+LIFECYCLE OK etiqueta instalada 1
+LIFECYCLE OK malla fuente compartida
+LIFECYCLE OK materiales de etiqueta propios
+LIFECYCLE OK padre nuevo 1
+LIFECYCLE OK material conservado 1
+LIFECYCLE OK textura conservada 1
+LIFECYCLE OK datos conservados 1
+LIFECYCLE OK producto conservado 1
+LIFECYCLE OK generico intacto antes de free
+LIFECYCLE ANTES_FREE original-retained
+ERROR: Parameter "material" is null.
+   at: material_get_instance_shader_parameters (servers/rendering/dummy/storage/material_storage.cpp:264)
+   GDScript backtrace (most recent call first):
+       [0] _probar (C:/Users/fede_/AppData/Local/Temp/nosefia-batch-64-309/c-diagnostico-69ee/sonda_lifecycle_refs.gd:96)
+LIFECYCLE DESPUES_FREE original-retained
+LIFECYCLE OK generico intacto despues de free
+LIFECYCLE OK etiqueta retenida valida despues de free
+LIFECYCLE OK etiqueta retenida utilizable despues de free
+LIFECYCLE FIN fallos=0
+XR: Clearing primary interface
+XR: Removed interface "Native mobile"
+XR: Removed interface "OpenXR"
+Orphan StringName: Vector2 (static: 0, total: 1)
+Orphan StringName: Vector3 (static: 0, total: 1)
+Orphan StringName: Vector4 (static: 0, total: 1)
+Orphan StringName: PackedVector4Array (static: 0, total: 1)
+Orphan StringName: RID (static: 0, total: 1)
+Orphan StringName: Color (static: 0, total: 1)
+Orphan StringName: PackedByteArray (static: 0, total: 1)
+Orphan StringName: Vector2i (static: 0, total: 1)
+Orphan StringName: Callable (static: 0, total: 1)
+Orphan StringName: Vector3i (static: 0, total: 1)
+Orphan StringName: Vector4i (static: 0, total: 1)
+Orphan StringName: PackedStringArray (static: 0, total: 1)
+Orphan StringName: Basis (static: 0, total: 1)
+Orphan StringName: int (static: 0, total: 1)
+Orphan StringName: PackedFloat32Array (static: 0, total: 1)
+Orphan StringName: Plane (static: 0, total: 1)
+Orphan StringName: PackedFloat64Array (static: 0, total: 1)
+Orphan StringName: NodePath (static: 0, total: 1)
+Orphan StringName: Signal (static: 0, total: 1)
+Orphan StringName: StringName (static: 0, total: 1)
+Orphan StringName: String (static: 0, total: 1)
+Orphan StringName: Transform2D (static: 0, total: 1)
+Orphan StringName: Transform3D (static: 0, total: 1)
+Orphan StringName: Array (static: 0, total: 1)
+Orphan StringName: Quaternion (static: 0, total: 1)
+Orphan StringName: bool (static: 0, total: 1)
+Orphan StringName: PackedColorArray (static: 0, total: 1)
+Orphan StringName: PackedVector2Array (static: 0, total: 1)
+Orphan StringName: Object (static: 1, total: 2)
+Orphan StringName: AABB (static: 0, total: 1)
+Orphan StringName: float (static: 0, total: 1)
+Orphan StringName: Dictionary (static: 0, total: 1)
+Orphan StringName: Projection (static: 0, total: 1)
+Orphan StringName: Rect2 (static: 0, total: 1)
+Orphan StringName: PackedVector3Array (static: 0, total: 1)
+Orphan StringName: PackedInt32Array (static: 0, total: 1)
+Orphan StringName: Rect2i (static: 0, total: 1)
+Orphan StringName: PackedInt64Array (static: 0, total: 1)
+StringName: 38 unclaimed string names at exit.

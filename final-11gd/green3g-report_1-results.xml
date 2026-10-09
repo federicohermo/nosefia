@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<testsuites id="2026-10-09" name="report_1" tests="15" failures="0" skipped="0" flaky="0" time="0.000">
+	<testsuite id="0" name="caja_de_productos_test" package="test/escenas/objetos" timestamp="2026-10-09T08:04:40" hostname="localhost" tests="15" failures="0" errors="0" skipped="0" flaky="0" time="0.487">
+		<testcase name="test_la_caja_declara_su_producto_con_un_id_del_catalogo" classname="caja_de_productos_test" time="0.035">
+		</testcase>
+		<testcase name="test_la_caja_tiene_el_tamano_que_le_da_el_catalogo" classname="caja_de_productos_test" time="0.011">
+		</testcase>
+		<testcase name="test_tocar_la_caja_la_entrega_para_levantarla" classname="caja_de_productos_test" time="0.009">
+		</testcase>
+		<testcase name="test_la_caja_contesta_el_contrato_de_interaccion" classname="caja_de_productos_test" time="0.008">
+		</testcase>
+		<testcase name="test_el_cuerpo_de_la_caja_se_puede_llevar" classname="caja_de_productos_test" time="0.008">
+		</testcase>
+		<testcase name="test_reparentar_conserva_las_etiquetas_y_destruir_no_da_error" classname="caja_de_productos_test" time="0.011">
+		</testcase>
+		<testcase name="test_la_caja_ya_no_despacha_por_su_cuenta" classname="caja_de_productos_test" time="0.005">
+		</testcase>
+		<testcase name="test_cada_caja_con_textura_muestra_la_etiqueta_de_su_producto" classname="caja_de_productos_test" time="0.021">
+		</testcase>
+		<testcase name="test_las_cajas_sin_textura_siguen_con_la_generica" classname="caja_de_productos_test" time="0.016">
+		</testcase>
+		<testcase name="test_cada_producto_tiene_decidida_su_caja" classname="caja_de_productos_test" time="0.007">
+		</testcase>
+		<testcase name="test_la_etiqueta_de_cada_producto_es_una_linea_del_script" classname="caja_de_productos_test" time="0.021">
+		</testcase>
+		<testcase name="test_la_etiqueta_filtra_pixelado_como_la_caja_generica" classname="caja_de_productos_test" time="0.095">
+		</testcase>
+		<testcase name="test_cada_etiqueta_es_la_copia_de_la_textura_del_artista" classname="caja_de_productos_test" time="0.129">
+		</testcase>
+		<testcase name="test_las_etiquetas_tienen_nombres_en_ascii" classname="caja_de_productos_test" time="0.008">
+		</testcase>
+		<testcase name="test_la_etiqueta_no_se_estira_en_la_caja_chica_ni_en_la_grande" classname="caja_de_productos_test" time="0.011">
+		</testcase>
+	</testsuite>
+</testsuites>

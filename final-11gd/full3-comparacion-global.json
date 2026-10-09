@@ -1,0 +1,16 @@
+{
+  "head": "cd9947317ae5489e61b39b795795e059fc4e8f1c",
+  "base": "02e3562c1acb9dc4c768c9b33da2155b69792fdf",
+  "full3_seconds": 697.0,
+  "full3_nodes": "7/7",
+  "suites": 191,
+  "tests": 1496,
+  "material_full2": 24,
+  "material_full3": 0,
+  "objectdb_full3": 0,
+  "resources_full3": 0,
+  "script_errors_full3": 0,
+  "focal_origins_localized": 19,
+  "focal_origins_unattributed": 5,
+  "conclusion": "Global material diagnostics removed; five individual focal origins remain unasserted. Expected guard/load/debug/rescue diagnostics retained."
+}

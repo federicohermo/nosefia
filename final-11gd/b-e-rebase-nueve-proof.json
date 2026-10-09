@@ -1,0 +1,65 @@
+[
+  {
+    "path": "src/sistemas/marco/calentamiento_de_shaders.gd",
+    "original_worktree_sha256": "336794B6DC7BF6AA38B3671FBA8517EFD1C3AF17FCD2909FC98DF1B32020CD52",
+    "current_worktree_sha256": "336794b6dc7bf6aa38b3671fba8517efd1c3af17fcd2909fc98df1b32020cd52",
+    "blob_55af_equals_current": true,
+    "blob_sha256": "336794b6dc7bf6aa38b3671fba8517efd1c3af17fcd2909fc98df1b32020cd52"
+  },
+  {
+    "path": "src/sistemas/marco/carga_en_segundo_plano.gd",
+    "original_worktree_sha256": "7FE0838728983E52AEEB02D0A9E0D8CA94C903F65941959DA298377180F003A2",
+    "current_worktree_sha256": "7fe0838728983e52aeeb02d0a9e0d8ca94c903f65941959da298377180f003a2",
+    "blob_55af_equals_current": true,
+    "blob_sha256": "7fe0838728983e52aeeb02d0a9e0d8ca94c903f65941959da298377180f003a2"
+  },
+  {
+    "path": "test/escenas/indicacion_del_foco_test.gd",
+    "original_worktree_sha256": "282457F9007483A9FB0C51B29DC837AF5C493C4A3664DB100405EAF073882B87",
+    "current_worktree_sha256": "282457f9007483a9fb0c51b29dc837af5c493c4a3664db100405eaf073882b87",
+    "blob_55af_equals_current": true,
+    "blob_sha256": "282457f9007483a9fb0c51b29dc837af5c493c4a3664db100405eaf073882b87"
+  },
+  {
+    "path": "test/escenas/objetos/mancha_en_el_piso_test.gd",
+    "original_worktree_sha256": "A22FF0269DF930D2C2D63551B189AF891825D7049EEFDE50FA35552059831A3A",
+    "current_worktree_sha256": "a22ff0269df930d2c2d63551b189af891825d7049eefde50fa35552059831a3a",
+    "blob_55af_equals_current": true,
+    "blob_sha256": "a22ff0269df930d2c2d63551b189af891825d7049eefde50fa35552059831a3a"
+  },
+  {
+    "path": "test/escenas/volumen_de_los_solidos_test.gd",
+    "original_worktree_sha256": "6A08401E833641E5923B7CED3E75CA475F3E4067EFF012867C2F12551D7CAD80",
+    "current_worktree_sha256": "6a08401e833641e5923b7ced3e75ca475f3e4067eff012867c2f12551d7cad80",
+    "blob_55af_equals_current": true,
+    "blob_sha256": "6a08401e833641e5923b7ced3e75ca475f3e4067eff012867c2f12551d7cad80"
+  },
+  {
+    "path": "test/sistemas/investigacion/examen_test.gd",
+    "original_worktree_sha256": "E891E03C5B2D16705FE0D95FACA33BCFF76FA48C9535F993718E4BDA4A17D04F",
+    "current_worktree_sha256": "e891e03c5b2d16705fe0d95faca33bcff76fa48c9535f993718e4bda4a17d04f",
+    "blob_55af_equals_current": true,
+    "blob_sha256": "e891e03c5b2d16705fe0d95faca33bcff76fa48c9535f993718e4bda4a17d04f"
+  },
+  {
+    "path": "test/sistemas/marco/calentamiento_de_shaders_test.gd",
+    "original_worktree_sha256": "23D860D0550870D4A2C39B12F3A4046B9BE82AADE771E83E21EAC7F24BEE132C",
+    "current_worktree_sha256": "23d860d0550870d4a2c39b12f3a4046b9be82aade771e83e21eac7f24bee132c",
+    "blob_55af_equals_current": true,
+    "blob_sha256": "23d860d0550870d4a2c39b12f3a4046b9be82aade771e83e21eac7f24bee132c"
+  },
+  {
+    "path": "test/sistemas/marco/carga_en_segundo_plano_test.gd",
+    "original_worktree_sha256": "D003CA84FDF951A27BA55868165BCAA599956CFFEC29CF4F932AF133EE75BF6E",
+    "current_worktree_sha256": "d003ca84fdf951a27ba55868165bcaa599956cffec29cf4f932af133ee75bf6e",
+    "blob_55af_equals_current": true,
+    "blob_sha256": "d003ca84fdf951a27ba55868165bcaa599956cffec29cf4f932af133ee75bf6e"
+  },
+  {
+    "path": "test/sistemas/tareas/ventanilla_test.gd",
+    "original_worktree_sha256": "27D11B50ECEBEB49D1D3F9448CCFFDBF81B19F84709157DBC7C4F8169A5A8946",
+    "current_worktree_sha256": "ec12723429ad71e3bc72a3d270d7e307a2c5c4a12587d98fb3b50c553713ec4f",
+    "blob_55af_equals_current": true,
+    "blob_sha256": "ec12723429ad71e3bc72a3d270d7e307a2c5c4a12587d98fb3b50c553713ec4f"
+  }
+]

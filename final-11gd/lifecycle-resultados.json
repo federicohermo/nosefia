@@ -1,0 +1,28 @@
+[
+  {
+    "mode": "original",
+    "head": "55af872433ec3d89354205e8e061c87776c659b9",
+    "exit": 0,
+    "log": "C:\\Users\\fede_\\AppData\\Local\\Temp\\nosefia-batch-64-309\\c-diagnostico-69ee\\lifecycle-original.log",
+    "appdata": "C:\\Users\\fede_\\AppData\\Local\\Temp\\nosefia-batch-64-309\\c-diagnostico-69ee\\usuario-lifecycle-original",
+    "errors": [
+      "ERROR: Parameter \"material\" is null."
+    ],
+    "checks": 16,
+    "failed_checks": 0,
+    "leak_warning": false,
+    "valid": true
+  },
+  {
+    "mode": "predelete",
+    "head": "55af872433ec3d89354205e8e061c87776c659b9",
+    "exit": 0,
+    "log": "C:\\Users\\fede_\\AppData\\Local\\Temp\\nosefia-batch-64-309\\c-diagnostico-69ee\\lifecycle-predelete.log",
+    "appdata": "C:\\Users\\fede_\\AppData\\Local\\Temp\\nosefia-batch-64-309\\c-diagnostico-69ee\\usuario-lifecycle-predelete",
+    "errors": [],
+    "checks": 16,
+    "failed_checks": 0,
+    "leak_warning": false,
+    "valid": true
+  }
+]

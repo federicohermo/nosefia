@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<testsuites id="2026-10-09" name="report_10" tests="19" failures="0" skipped="0" flaky="0" time="0.000">
+	<testsuite id="0" name="calentamiento_de_shaders_test" package="test/sistemas/marco" timestamp="2026-10-09T07:14:29" hostname="localhost" tests="19" failures="0" errors="0" skipped="0" flaky="0" time="0.554">
+		<testcase name="test_un_cuadro_por_material_nuevo" classname="calentamiento_de_shaders_test" time="0.015">
+		</testcase>
+		<testcase name="test_el_material_de_un_multimesh_cuenta_como_nuevo" classname="calentamiento_de_shaders_test" time="0.008">
+		</testcase>
+		<testcase name="test_el_material_reemplazado_en_una_superficie_cuenta_como_nuevo" classname="calentamiento_de_shaders_test" time="0.009">
+		</testcase>
+		<testcase name="test_los_que_repiten_material_se_destapan_juntos" classname="calentamiento_de_shaders_test" time="0.010">
+		</testcase>
+		<testcase name="test_termina_con_todo_visible_y_la_camara_de_antes" classname="calentamiento_de_shaders_test" time="0.023">
+		</testcase>
+		<testcase name="test_lo_oculto_se_dibuja_y_vuelve_a_quedar_oculto" classname="calentamiento_de_shaders_test" time="0.016">
+		</testcase>
+		<testcase name="test_el_modelo_reemplazado_no_se_destapa_durante_el_calentamiento" classname="calentamiento_de_shaders_test" time="0.017">
+		</testcase>
+		<testcase name="test_una_escena_sin_objetos_termina_igual" classname="calentamiento_de_shaders_test" time="0.005">
+		</testcase>
+		<testcase name="test_antes_de_calentar_no_hace_nada" classname="calentamiento_de_shaders_test" time="0.006">
+		</testcase>
+		<testcase name="test_los_objetos_movibles_se_dibujan_tambien_sin_los_focos_del_cuarto" classname="calentamiento_de_shaders_test" time="0.031">
+		</testcase>
+		<testcase name="test_el_contorno_se_dibuja_antes_de_jugar_y_se_retira_al_terminar" classname="calentamiento_de_shaders_test" time="0.009">
+		</testcase>
+		<testcase name="test_el_calentamiento_restaura_el_pase_y_los_uniformes_del_foco_previo" classname="calentamiento_de_shaders_test" time="0.009">
+		</testcase>
+		<testcase name="test_las_gotas_se_calientan_con_omni_y_area_sin_mover_el_lote_real" classname="calentamiento_de_shaders_test" time="0.051">
+		</testcase>
+		<testcase name="test_cancelar_el_calentamiento_restaura_luces_y_gotas_y_libera_muestras" classname="calentamiento_de_shaders_test" time="0.037">
+		</testcase>
+		<testcase name="test_fuera_de_la_web_la_plantilla_no_enlaza_en_paralelo" classname="calentamiento_de_shaders_test" time="0.007">
+		</testcase>
+		<testcase name="test_con_cola_la_pasada_destapa_todos_sus_objetos_en_un_cuadro" classname="calentamiento_de_shaders_test" time="0.008">
+		</testcase>
+		<testcase name="test_no_termina_mientras_quedan_programas_en_cola" classname="calentamiento_de_shaders_test" time="0.072">
+		</testcase>
+		<testcase name="test_las_pasadas_no_esperan_la_cola_y_el_final_espera_la_de_la_ultima" classname="calentamiento_de_shaders_test" time="0.070">
+		</testcase>
+		<testcase name="test_con_cola_el_progreso_sale_de_los_programas_que_terminaron" classname="calentamiento_de_shaders_test" time="0.029">
+		</testcase>
+	</testsuite>
+</testsuites>

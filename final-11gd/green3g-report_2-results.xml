@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<testsuites id="2026-10-09" name="report_2" tests="20" failures="0" skipped="0" flaky="0" time="0.000">
+	<testsuite id="0" name="caja_que_se_lleva_test" package="test/escenas/objetos" timestamp="2026-10-09T08:04:45" hostname="localhost" tests="20" failures="0" errors="0" skipped="0" flaky="0" time="68.282">
+		<testcase name="test_la_caja_entrega_apoyada_en_el_estante_y_no_mientras_se_la_lleva" classname="caja_que_se_lleva_test" time="0.558">
+		</testcase>
+		<testcase name="test_el_clic_izquierdo_levanta_la_caja_y_no_entrega_producto" classname="caja_que_se_lleva_test" time="0.111">
+		</testcase>
+		<testcase name="test_la_caja_llevada_no_tapa_la_mira_ni_atraviesa_la_pared" classname="caja_que_se_lleva_test" time="3.912">
+		</testcase>
+		<testcase name="test_la_caja_soltada_queda_apoyada_en_el_piso_sin_caer" classname="caja_que_se_lleva_test" time="0.126">
+		</testcase>
+		<testcase name="test_la_caja_soltada_se_acomoda_adentro_de_su_apoyo" classname="caja_que_se_lleva_test" time="3.930">
+		</testcase>
+		<testcase name="test_soltar_mirando_el_costado_de_una_caja_la_apila_encima" classname="caja_que_se_lleva_test" time="4.033">
+		</testcase>
+		<testcase name="test_alrededor_de_un_estante_con_lugar_la_caja_siempre_sube_a_el" classname="caja_que_se_lleva_test" time="0.406">
+		</testcase>
+		<testcase name="test_frente_a_un_rack_abierto_la_caja_queda_en_el_pallet_que_se_mira" classname="caja_que_se_lleva_test" time="3.698">
+		</testcase>
+		<testcase name="test_la_mira_que_pasa_por_encima_de_la_caja_de_enfrente_la_apila" classname="caja_que_se_lleva_test" time="0.362">
+		</testcase>
+		<testcase name="test_una_pila_de_cajas_de_distinto_tamano_se_sigue_apilando" classname="caja_que_se_lleva_test" time="0.356">
+		</testcase>
+		<testcase name="test_la_caja_vuelta_a_su_lugar_apoya_entera" classname="caja_que_se_lleva_test" time="0.116">
+		</testcase>
+		<testcase name="test_la_caja_va_donde_apunta_la_mira" classname="caja_que_se_lleva_test" time="4.645">
+		</testcase>
+		<testcase name="test_la_caja_soltada_nunca_queda_adentro_de_nada" classname="caja_que_se_lleva_test" time="8.739">
+		</testcase>
+		<testcase name="test_la_caja_se_suelta_con_la_mira_sobre_un_charco" classname="caja_que_se_lleva_test" time="0.131">
+		</testcase>
+		<testcase name="test_sacar_una_caja_de_la_pila_hace_caer_las_de_arriba" classname="caja_que_se_lleva_test" time="5.359">
+		</testcase>
+		<testcase name="test_agarrar_la_caja_del_estante_no_mueve_al_jugador" classname="caja_que_se_lleva_test" time="4.047">
+		</testcase>
+		<testcase name="test_la_caja_del_piso_se_arrastra_en_vez_de_tapar_el_paso" classname="caja_que_se_lleva_test" time="2.540">
+		</testcase>
+		<testcase name="test_levantar_la_caja_hace_caer_el_producto_apoyado_encima" classname="caja_que_se_lleva_test" time="7.533">
+		</testcase>
+		<testcase name="test_empujar_la_caja_hasta_sacarla_de_abajo_hace_caer_el_producto" classname="caja_que_se_lleva_test" time="12.531">
+		</testcase>
+		<testcase name="test_el_producto_sobre_la_pila_cae_cuando_se_saca_la_caja_de_abajo" classname="caja_que_se_lleva_test" time="5.021">
+		</testcase>
+	</testsuite>
+</testsuites>

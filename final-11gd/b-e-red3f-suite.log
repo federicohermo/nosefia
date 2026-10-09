@@ -1,0 +1,550 @@
+WorkerThreadPool: 16 threads, 4 max low-priority.
+ERROR: The remote port number must be between 1 and 65535 (inclusive).
+   at: connect_to_host (core/io/stream_peer_tcp.cpp:69)
+ERROR: Remote Debugger: Unable to connect to host '127.0.0.1:0'.
+   at: create_tcp (core/debugger/remote_debugger_peer.cpp:247)
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+TextServer: Added interface "Dummy"
+TextServer: Added interface "ICU / HarfBuzz / Graphite (Built-in)"
+Using "default" pen tablet driver...
+
+TextServer: Primary interface set to: "ICU / HarfBuzz / Graphite (Built-in)".
+Loading resource: res://default_bus_layout.tres remapped: res://default_bus_layout.tres
+Completed load for: 'res://default_bus_layout.tres' remapped 'res://default_bus_layout.tres' at thread -1
+CORE API HASH: 2004498165
+EDITOR API HASH: 1696660745
+Loading resource: res://addons/gdUnit4/bin/GdUnitCmdTool.gd remapped: res://addons/gdUnit4/bin/GdUnitCmdTool.gd
+Completed load for: 'res://addons/gdUnit4/bin/GdUnitCmdTool.gd' remapped 'res://addons/gdUnit4/bin/GdUnitCmdTool.gd' at thread -1
+SceneTreeFTI: traversal method DEFAULT
+Loading resource: res://addons/godot_mcp/mcp_screenshot_service.gd remapped: res://addons/godot_mcp/mcp_screenshot_service.gd
+Completed load for: 'res://addons/godot_mcp/mcp_screenshot_service.gd' remapped 'res://addons/godot_mcp/mcp_screenshot_service.gd' at thread -1
+Loading resource: res://addons/godot_mcp/mcp_input_service.gd remapped: res://addons/godot_mcp/mcp_input_service.gd
+Completed load for: 'res://addons/godot_mcp/mcp_input_service.gd' remapped 'res://addons/godot_mcp/mcp_input_service.gd' at thread -1
+Loading resource: res://addons/godot_mcp/mcp_game_inspector_service.gd remapped: res://addons/godot_mcp/mcp_game_inspector_service.gd
+Completed load for: 'res://addons/godot_mcp/mcp_game_inspector_service.gd' remapped 'res://addons/godot_mcp/mcp_game_inspector_service.gd' at thread -1
+Loaded system CA certificates
+Loading resource: res://addons/gdUnit4/src/asserts/GdUnitBoolAssertImpl.gd remapped: res://addons/gdUnit4/src/asserts/GdUnitBoolAssertImpl.gd
+Completed load for: 'res://addons/gdUnit4/src/asserts/GdUnitBoolAssertImpl.gd' remapped 'res://addons/gdUnit4/src/asserts/GdUnitBoolAssertImpl.gd' at thread -1
+Loading resource: res://addons/gdUnit4/src/asserts/GdUnitStringAssertImpl.gd remapped: res://addons/gdUnit4/src/asserts/GdUnitStringAssertImpl.gd
+Completed load for: 'res://addons/gdUnit4/src/asserts/GdUnitStringAssertImpl.gd' remapped 'res://addons/gdUnit4/src/asserts/GdUnitStringAssertImpl.gd' at thread -1
+Loading resource: res://addons/gdUnit4/src/asserts/GdUnitIntAssertImpl.gd remapped: res://addons/gdUnit4/src/asserts/GdUnitIntAssertImpl.gd
+Completed load for: 'res://addons/gdUnit4/src/asserts/GdUnitIntAssertImpl.gd' remapped 'res://addons/gdUnit4/src/asserts/GdUnitIntAssertImpl.gd' at thread -1
+Loading resource: res://addons/gdUnit4/src/asserts/GdUnitFloatAssertImpl.gd remapped: res://addons/gdUnit4/src/asserts/GdUnitFloatAssertImpl.gd
+Completed load for: 'res://addons/gdUnit4/src/asserts/GdUnitFloatAssertImpl.gd' remapped 'res://addons/gdUnit4/src/asserts/GdUnitFloatAssertImpl.gd' at thread -1
+Loading resource: res://addons/gdUnit4/src/asserts/GdUnitVectorAssertImpl.gd remapped: res://addons/gdUnit4/src/asserts/GdUnitVectorAssertImpl.gd
+Completed load for: 'res://addons/gdUnit4/src/asserts/GdUnitVectorAssertImpl.gd' remapped 'res://addons/gdUnit4/src/asserts/GdUnitVectorAssertImpl.gd' at thread -1
+Loading resource: res://addons/gdUnit4/src/asserts/GdUnitArrayAssertImpl.gd remapped: res://addons/gdUnit4/src/asserts/GdUnitArrayAssertImpl.gd
+Completed load for: 'res://addons/gdUnit4/src/asserts/GdUnitArrayAssertImpl.gd' remapped 'res://addons/gdUnit4/src/asserts/GdUnitArrayAssertImpl.gd' at thread -1
+Loading resource: res://addons/gdUnit4/src/asserts/GdUnitDictionaryAssertImpl.gd remapped: res://addons/gdUnit4/src/asserts/GdUnitDictionaryAssertImpl.gd
+Completed load for: 'res://addons/gdUnit4/src/asserts/GdUnitDictionaryAssertImpl.gd' remapped 'res://addons/gdUnit4/src/asserts/GdUnitDictionaryAssertImpl.gd' at thread -1
+Loading resource: res://addons/gdUnit4/src/asserts/GdUnitFileAssertImpl.gd remapped: res://addons/gdUnit4/src/asserts/GdUnitFileAssertImpl.gd
+Completed load for: 'res://addons/gdUnit4/src/asserts/GdUnitFileAssertImpl.gd' remapped 'res://addons/gdUnit4/src/asserts/GdUnitFileAssertImpl.gd' at thread -1
+Loading resource: res://addons/gdUnit4/src/asserts/GdUnitObjectAssertImpl.gd remapped: res://addons/gdUnit4/src/asserts/GdUnitObjectAssertImpl.gd
+Completed load for: 'res://addons/gdUnit4/src/asserts/GdUnitObjectAssertImpl.gd' remapped 'res://addons/gdUnit4/src/asserts/GdUnitObjectAssertImpl.gd' at thread -1
+Loading resource: res://addons/gdUnit4/src/asserts/GdUnitResultAssertImpl.gd remapped: res://addons/gdUnit4/src/asserts/GdUnitResultAssertImpl.gd
+Completed load for: 'res://addons/gdUnit4/src/asserts/GdUnitResultAssertImpl.gd' remapped 'res://addons/gdUnit4/src/asserts/GdUnitResultAssertImpl.gd' at thread -1
+Loading resource: res://addons/gdUnit4/src/asserts/GdUnitFuncAssertImpl.gd remapped: res://addons/gdUnit4/src/asserts/GdUnitFuncAssertImpl.gd
+Completed load for: 'res://addons/gdUnit4/src/asserts/GdUnitFuncAssertImpl.gd' remapped 'res://addons/gdUnit4/src/asserts/GdUnitFuncAssertImpl.gd' at thread -1
+Loading resource: res://addons/gdUnit4/src/asserts/GdUnitSignalAssertImpl.gd remapped: res://addons/gdUnit4/src/asserts/GdUnitSignalAssertImpl.gd
+Completed load for: 'res://addons/gdUnit4/src/asserts/GdUnitSignalAssertImpl.gd' remapped 'res://addons/gdUnit4/src/asserts/GdUnitSignalAssertImpl.gd' at thread -1
+Loading resource: res://addons/gdUnit4/src/asserts/GdUnitFailureAssertImpl.gd remapped: res://addons/gdUnit4/src/asserts/GdUnitFailureAssertImpl.gd
+Completed load for: 'res://addons/gdUnit4/src/asserts/GdUnitFailureAssertImpl.gd' remapped 'res://addons/gdUnit4/src/asserts/GdUnitFailureAssertImpl.gd' at thread -1
+Loading resource: res://addons/gdUnit4/src/asserts/GdUnitGodotErrorAssertImpl.gd remapped: res://addons/gdUnit4/src/asserts/GdUnitGodotErrorAssertImpl.gd
+Completed load for: 'res://addons/gdUnit4/src/asserts/GdUnitGodotErrorAssertImpl.gd' remapped 'res://addons/gdUnit4/src/asserts/GdUnitGodotErrorAssertImpl.gd' at thread -1
+[2J[H[38;2;233;150;122m
+--------------------------------------------------------------------------------------------------
+GdUnit4 Comandline Tool
+--------------------------------------------------------------------------------------------------[0m
+[38;2;0;191;255mDisabled fail fast![0m
+[38;2;0;191;255mSet write reports to D:/Usuarios/fede/Documentos/Catedra Videojuegos FADU/manada/repo/nosefia/.claude/worktrees/batch-64-309-export/reports/b-e-red3f-suite[0m
+[38;2;218;165;32m
+Headless mode is ignored by option '--ignoreHeadlessMode'"
+
+Please note that tests that use UI interaction do not work correctly in headless mode.
+Godot 'InputEvents' are not transported by the Godot engine in headless mode and therefore
+have no effect in the test!
+[0m
+Loading resource: res://test/escenas/objetos/caja_de_productos_test.gd remapped: res://test/escenas/objetos/caja_de_productos_test.gd
+Loading resource: res://assets/boxes/actroncito.png remapped: res://assets/boxes/actroncito.png
+Loading resource: res://.godot/imported/actroncito.png-f47410e53911aa1e41b5b0de6cee81a1.s3tc.ctex remapped: res://.godot/imported/actroncito.png-f47410e53911aa1e41b5b0de6cee81a1.s3tc.ctex
+Completed load for: 'res://assets/boxes/actroncito.png' remapped 'res://assets/boxes/actroncito.png' at thread -1
+Loading resource: res://assets/boxes/durextra.png remapped: res://assets/boxes/durextra.png
+Loading resource: res://.godot/imported/durextra.png-fa19a39df8f6a205112458ae8eeb47b8.s3tc.ctex remapped: res://.godot/imported/durextra.png-fa19a39df8f6a205112458ae8eeb47b8.s3tc.ctex
+Completed load for: 'res://assets/boxes/durextra.png' remapped 'res://assets/boxes/durextra.png' at thread -1
+Loading resource: res://assets/boxes/burbaloo.png remapped: res://assets/boxes/burbaloo.png
+Loading resource: res://.godot/imported/burbaloo.png-dadb38f651621cb0a7caf7b0e8f514bd.s3tc.ctex remapped: res://.godot/imported/burbaloo.png-dadb38f651621cb0a7caf7b0e8f514bd.s3tc.ctex
+Completed load for: 'res://assets/boxes/burbaloo.png' remapped 'res://assets/boxes/burbaloo.png' at thread -1
+Loading resource: res://assets/boxes/zucarachas.png remapped: res://assets/boxes/zucarachas.png
+Loading resource: res://.godot/imported/zucarachas.png-8eb79a1d16b374d65ba2ebfdde10106c.s3tc.ctex remapped: res://.godot/imported/zucarachas.png-8eb79a1d16b374d65ba2ebfdde10106c.s3tc.ctex
+Completed load for: 'res://assets/boxes/zucarachas.png' remapped 'res://assets/boxes/zucarachas.png' at thread -1
+Loading resource: res://assets/boxes/laysntt.png remapped: res://assets/boxes/laysntt.png
+Loading resource: res://.godot/imported/laysntt.png-36f7de87881003cde8abb47c38ba5ddb.s3tc.ctex remapped: res://.godot/imported/laysntt.png-36f7de87881003cde8abb47c38ba5ddb.s3tc.ctex
+Completed load for: 'res://assets/boxes/laysntt.png' remapped 'res://assets/boxes/laysntt.png' at thread -1
+Loading resource: res://assets/boxes/jorgillo.png remapped: res://assets/boxes/jorgillo.png
+Loading resource: res://.godot/imported/jorgillo.png-7118ecae82eddc74433db674f9854639.s3tc.ctex remapped: res://.godot/imported/jorgillo.png-7118ecae82eddc74433db674f9854639.s3tc.ctex
+Completed load for: 'res://assets/boxes/jorgillo.png' remapped 'res://assets/boxes/jorgillo.png' at thread -1
+Loading resource: res://assets/boxes/frotlups.png remapped: res://assets/boxes/frotlups.png
+Loading resource: res://.godot/imported/frotlups.png-70b13cbe5c7ff61f3a3ad7f1ad139430.s3tc.ctex remapped: res://.godot/imported/frotlups.png-70b13cbe5c7ff61f3a3ad7f1ad139430.s3tc.ctex
+Completed load for: 'res://assets/boxes/frotlups.png' remapped 'res://assets/boxes/frotlups.png' at thread -1
+Loading resource: res://assets/boxes/amargadito.png remapped: res://assets/boxes/amargadito.png
+Loading resource: res://.godot/imported/amargadito.png-b9ad1fcf2626fa36a6dd294db2cafb30.s3tc.ctex remapped: res://.godot/imported/amargadito.png-b9ad1fcf2626fa36a6dd294db2cafb30.s3tc.ctex
+Completed load for: 'res://assets/boxes/amargadito.png' remapped 'res://assets/boxes/amargadito.png' at thread -1
+Loading resource: res://assets/boxes/cindolor.png remapped: res://assets/boxes/cindolor.png
+Loading resource: res://.godot/imported/cindolor.png-0214e16e2765d0418ce370dca05f3bfb.s3tc.ctex remapped: res://.godot/imported/cindolor.png-0214e16e2765d0418ce370dca05f3bfb.s3tc.ctex
+Completed load for: 'res://assets/boxes/cindolor.png' remapped 'res://assets/boxes/cindolor.png' at thread -1
+Loading resource: res://assets/boxes/flinpuf.png remapped: res://assets/boxes/flinpuf.png
+Loading resource: res://.godot/imported/flinpuf.png-08223b969133db2f1748a5533665cfcf.s3tc.ctex remapped: res://.godot/imported/flinpuf.png-08223b969133db2f1748a5533665cfcf.s3tc.ctex
+Completed load for: 'res://assets/boxes/flinpuf.png' remapped 'res://assets/boxes/flinpuf.png' at thread -1
+Loading resource: res://assets/boxes/donsaturados.png remapped: res://assets/boxes/donsaturados.png
+Loading resource: res://.godot/imported/donsaturados.png-0bf25d8011448f3754d15a66b62dedd7.s3tc.ctex remapped: res://.godot/imported/donsaturados.png-0bf25d8011448f3754d15a66b62dedd7.s3tc.ctex
+Completed load for: 'res://assets/boxes/donsaturados.png' remapped 'res://assets/boxes/donsaturados.png' at thread -1
+Loading resource: res://assets/boxes/petisas.png remapped: res://assets/boxes/petisas.png
+Loading resource: res://.godot/imported/petisas.png-d953329233893b900c8935d9f4432c2b.s3tc.ctex remapped: res://.godot/imported/petisas.png-d953329233893b900c8935d9f4432c2b.s3tc.ctex
+Completed load for: 'res://assets/boxes/petisas.png' remapped 'res://assets/boxes/petisas.png' at thread -1
+Loading resource: res://assets/boxes/macumbas.png remapped: res://assets/boxes/macumbas.png
+Loading resource: res://.godot/imported/macumbas.png-066f0fa3ee15ad04fde6b54887d7eeb2.s3tc.ctex remapped: res://.godot/imported/macumbas.png-066f0fa3ee15ad04fde6b54887d7eeb2.s3tc.ctex
+Completed load for: 'res://assets/boxes/macumbas.png' remapped 'res://assets/boxes/macumbas.png' at thread -1
+Loading resource: res://assets/boxes/cosa_de_mani.png remapped: res://assets/boxes/cosa_de_mani.png
+Loading resource: res://.godot/imported/cosa_de_mani.png-2f9c9d5678fa8343e86045a2fe82203b.s3tc.ctex remapped: res://.godot/imported/cosa_de_mani.png-2f9c9d5678fa8343e86045a2fe82203b.s3tc.ctex
+Completed load for: 'res://assets/boxes/cosa_de_mani.png' remapped 'res://assets/boxes/cosa_de_mani.png' at thread -1
+Loading resource: res://assets/boxes/duronga.png remapped: res://assets/boxes/duronga.png
+Loading resource: res://.godot/imported/duronga.png-fc2b3f48303727ce1bc6ca5a396396f9.s3tc.ctex remapped: res://.godot/imported/duronga.png-fc2b3f48303727ce1bc6ca5a396396f9.s3tc.ctex
+Completed load for: 'res://assets/boxes/duronga.png' remapped 'res://assets/boxes/duronga.png' at thread -1
+Loading resource: res://assets/boxes/fernet_god.png remapped: res://assets/boxes/fernet_god.png
+Loading resource: res://.godot/imported/fernet_god.png-8c4e3a808b5f9d887dde744b589a37f4.s3tc.ctex remapped: res://.godot/imported/fernet_god.png-8c4e3a808b5f9d887dde744b589a37f4.s3tc.ctex
+Completed load for: 'res://assets/boxes/fernet_god.png' remapped 'res://assets/boxes/fernet_god.png' at thread -1
+Loading resource: res://assets/boxes/mayonchis.png remapped: res://assets/boxes/mayonchis.png
+Loading resource: res://.godot/imported/mayonchis.png-d842e010d5b3016d5b76c999fb13a71b.s3tc.ctex remapped: res://.godot/imported/mayonchis.png-d842e010d5b3016d5b76c999fb13a71b.s3tc.ctex
+Completed load for: 'res://assets/boxes/mayonchis.png' remapped 'res://assets/boxes/mayonchis.png' at thread -1
+Loading resource: res://assets/boxes/oaaaa.png remapped: res://assets/boxes/oaaaa.png
+Loading resource: res://.godot/imported/oaaaa.png-1908993e4f04843c6dcffcc8d4e572c8.s3tc.ctex remapped: res://.godot/imported/oaaaa.png-1908993e4f04843c6dcffcc8d4e572c8.s3tc.ctex
+Completed load for: 'res://assets/boxes/oaaaa.png' remapped 'res://assets/boxes/oaaaa.png' at thread -1
+Loading resource: res://assets/boxes/terminator.png remapped: res://assets/boxes/terminator.png
+Loading resource: res://.godot/imported/terminator.png-ec0fe55964fa8670c84f4401cbbdde8a.s3tc.ctex remapped: res://.godot/imported/terminator.png-ec0fe55964fa8670c84f4401cbbdde8a.s3tc.ctex
+Completed load for: 'res://assets/boxes/terminator.png' remapped 'res://assets/boxes/terminator.png' at thread -1
+Completed load for: 'res://test/escenas/objetos/caja_de_productos_test.gd' remapped 'res://test/escenas/objetos/caja_de_productos_test.gd' at thread -1
+[38;2;100;149;237mInstalling GdUnit4 session system hooks.[0m
+[38;2;100;149;237mSession hook 'GdUnitHtmlTestReporter' installed.[0m
+[38;2;100;149;237mSession hook 'GdUnitXMLTestReporter' installed.[0m
+Loading resource: res://test/guardado_de_la_sesion.gd remapped: res://test/guardado_de_la_sesion.gd
+Completed load for: 'res://test/guardado_de_la_sesion.gd' remapped 'res://test/guardado_de_la_sesion.gd' at thread -1
+[38;2;100;149;237mInstalling GdUnit4 session hooks.[0m
+[38;2;100;149;237mSession hook 'Guardado de la sesión' installed.[0m
+Register singleton 'GdUnitTestSessionHookService:<Object#160994166461>'
+[38;2;100;149;237mSession hook 'GdUnitHtmlTestReporter' > startup()[0m
+[38;2;100;149;237mSession hook 'GdUnitXMLTestReporter' > startup()[0m
+[38;2;100;149;237mSession hook 'Guardado de la sesión' > startup()[0m
+Register singleton 'GdUnitThreadManager:<Object#163863070539>'
+[38;2;0;206;209mRun Test Suite: [0m[38;2;250;235;215mres://test/escenas/objetos/caja_de_productos_test.gd[0m
+  [38;2;250;235;215mres://test/escenas/objetos/caja_de_productos_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_la_caja_declara_su_producto_con_un_id_del_catalogo[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+Loading resource: res://src/escenas/objetos/caja_de_productos.tscn remapped: res://src/escenas/objetos/caja_de_productos.tscn
+Loading resource: res://assets/models/caja_de_productos.res remapped: res://assets/models/caja_de_productos.res
+Loading resource: res://assets/models/SEPT_JUEGOS_PROTOTIPO_caja.png remapped: res://assets/models/SEPT_JUEGOS_PROTOTIPO_caja.png
+Loading resource: res://.godot/imported/SEPT_JUEGOS_PROTOTIPO_caja.png-da41b129827ed76cb358606ed7a7f148.s3tc.ctex remapped: res://.godot/imported/SEPT_JUEGOS_PROTOTIPO_caja.png-da41b129827ed76cb358606ed7a7f148.s3tc.ctex
+Completed load for: 'res://assets/models/SEPT_JUEGOS_PROTOTIPO_caja.png' remapped 'res://assets/models/SEPT_JUEGOS_PROTOTIPO_caja.png' at thread -1
+Completed load for: 'res://assets/models/caja_de_productos.res' remapped 'res://assets/models/caja_de_productos.res' at thread -1
+Loading resource: res://assets/models/caja_colision.tres remapped: res://assets/models/caja_colision.tres
+Completed load for: 'res://assets/models/caja_colision.tres' remapped 'res://assets/models/caja_colision.tres' at thread -1
+Loading resource: res://src/dominio/almacen/caja_de_reposicion.tres remapped: res://src/dominio/almacen/caja_de_reposicion.tres
+Completed load for: 'res://src/dominio/almacen/caja_de_reposicion.tres' remapped 'res://src/dominio/almacen/caja_de_reposicion.tres' at thread -1
+Completed load for: 'res://src/escenas/objetos/caja_de_productos.tscn' remapped 'res://src/escenas/objetos/caja_de_productos.tscn' at thread -1
+  [38;2;250;235;215mres://test/escenas/objetos/caja_de_productos_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_la_caja_declara_su_producto_con_un_id_del_catalogo[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 14ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/objetos/caja_de_productos_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_la_caja_tiene_el_tamano_que_le_da_el_catalogo[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+Loading resource: res://src/escenas/objetos/caja_de_productos.tscn remapped: res://src/escenas/objetos/caja_de_productos.tscn
+Loading resource: res://assets/models/caja_de_productos.res remapped: res://assets/models/caja_de_productos.res
+Loading resource: res://assets/models/SEPT_JUEGOS_PROTOTIPO_caja.png remapped: res://assets/models/SEPT_JUEGOS_PROTOTIPO_caja.png
+Loading resource: res://.godot/imported/SEPT_JUEGOS_PROTOTIPO_caja.png-da41b129827ed76cb358606ed7a7f148.s3tc.ctex remapped: res://.godot/imported/SEPT_JUEGOS_PROTOTIPO_caja.png-da41b129827ed76cb358606ed7a7f148.s3tc.ctex
+Completed load for: 'res://assets/models/SEPT_JUEGOS_PROTOTIPO_caja.png' remapped 'res://assets/models/SEPT_JUEGOS_PROTOTIPO_caja.png' at thread -1
+Completed load for: 'res://assets/models/caja_de_productos.res' remapped 'res://assets/models/caja_de_productos.res' at thread -1
+Loading resource: res://assets/models/caja_colision.tres remapped: res://assets/models/caja_colision.tres
+Completed load for: 'res://assets/models/caja_colision.tres' remapped 'res://assets/models/caja_colision.tres' at thread -1
+Loading resource: res://src/dominio/almacen/caja_de_reposicion.tres remapped: res://src/dominio/almacen/caja_de_reposicion.tres
+Completed load for: 'res://src/dominio/almacen/caja_de_reposicion.tres' remapped 'res://src/dominio/almacen/caja_de_reposicion.tres' at thread -1
+Completed load for: 'res://src/escenas/objetos/caja_de_productos.tscn' remapped 'res://src/escenas/objetos/caja_de_productos.tscn' at thread -1
+Loading resource: res://src/escenas/objetos/caja_de_productos.tscn remapped: res://src/escenas/objetos/caja_de_productos.tscn
+Completed load for: 'res://src/escenas/objetos/caja_de_productos.tscn' remapped 'res://src/escenas/objetos/caja_de_productos.tscn' at thread -1
+ERROR: Parameter "material" is null.
+   at: material_get_instance_shader_parameters (servers/rendering/dummy/storage/material_storage.cpp:264)
+   GDScript backtrace (most recent call first):
+       [0] <anonymous lambda> (res://test/escenas/objetos/caja_de_productos_test.gd:112)
+       [1] _execute (res://addons/gdUnit4/src/asserts/GdUnitGodotErrorAssertImpl.gd:17)
+       [2] is_success (res://addons/gdUnit4/src/asserts/GdUnitGodotErrorAssertImpl.gd:82)
+       [3] test_la_caja_tiene_el_tamano_que_le_da_el_catalogo (res://test/escenas/objetos/caja_de_productos_test.gd:113)
+       [4] _execute_test_case (res://addons/gdUnit4/src/core/_TestCase.gd:79)
+       [5] execute (res://addons/gdUnit4/src/core/_TestCase.gd:40)
+       [6] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleTestStage.gd:10)
+       [7] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [8] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleExecutionStage.gd:17)
+       [9] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [10] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestCaseExecutionStage.gd:26)
+       [11] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [12] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestSuiteExecutionStage.gd:36)
+       [13] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [14] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestCaseExecutionStage.gd:35)
+       [15] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [16] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleExecutionStage.gd:28)
+       [17] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [18] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleTestStage.gd:10)
+       [19] execute (res://addons/gdUnit4/src/core/_TestCase.gd:41)
+       [20] test_completed (res://addons/gdUnit4/src/core/_TestCase.gd:86)
+  [38;2;250;235;215mres://test/escenas/objetos/caja_de_productos_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_la_caja_tiene_el_tamano_que_le_da_el_catalogo[0m[38;2;178;34;34m[1m FAILED[0m[38;2;100;149;237m 17ms[0m
+  [38;2;0;206;209m[1m[4mReport:[0m
+  [38;2;128;128;128mExpecting: no error's are ocured.
+	but found: 'Parameter "material" is null.'
+[0m[38;2;173;216;230m	at 'test_la_caja_tiene_el_tamano_que_le_da_el_catalogo' in res://test/escenas/objetos/caja_de_productos_test.gd:113[0m[38;2;128;128;128m[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/objetos/caja_de_productos_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_tocar_la_caja_la_entrega_para_levantarla[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+Loading resource: res://src/escenas/objetos/caja_de_productos.tscn remapped: res://src/escenas/objetos/caja_de_productos.tscn
+Loading resource: res://assets/models/caja_de_productos.res remapped: res://assets/models/caja_de_productos.res
+Loading resource: res://assets/models/SEPT_JUEGOS_PROTOTIPO_caja.png remapped: res://assets/models/SEPT_JUEGOS_PROTOTIPO_caja.png
+Loading resource: res://.godot/imported/SEPT_JUEGOS_PROTOTIPO_caja.png-da41b129827ed76cb358606ed7a7f148.s3tc.ctex remapped: res://.godot/imported/SEPT_JUEGOS_PROTOTIPO_caja.png-da41b129827ed76cb358606ed7a7f148.s3tc.ctex
+Completed load for: 'res://assets/models/SEPT_JUEGOS_PROTOTIPO_caja.png' remapped 'res://assets/models/SEPT_JUEGOS_PROTOTIPO_caja.png' at thread -1
+Completed load for: 'res://assets/models/caja_de_productos.res' remapped 'res://assets/models/caja_de_productos.res' at thread -1
+Loading resource: res://assets/models/caja_colision.tres remapped: res://assets/models/caja_colision.tres
+Completed load for: 'res://assets/models/caja_colision.tres' remapped 'res://assets/models/caja_colision.tres' at thread -1
+Loading resource: res://src/dominio/almacen/caja_de_reposicion.tres remapped: res://src/dominio/almacen/caja_de_reposicion.tres
+Completed load for: 'res://src/dominio/almacen/caja_de_reposicion.tres' remapped 'res://src/dominio/almacen/caja_de_reposicion.tres' at thread -1
+Completed load for: 'res://src/escenas/objetos/caja_de_productos.tscn' remapped 'res://src/escenas/objetos/caja_de_productos.tscn' at thread -1
+  [38;2;250;235;215mres://test/escenas/objetos/caja_de_productos_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_tocar_la_caja_la_entrega_para_levantarla[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 15ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/objetos/caja_de_productos_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_la_caja_contesta_el_contrato_de_interaccion[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+Loading resource: res://src/escenas/objetos/caja_de_productos.tscn remapped: res://src/escenas/objetos/caja_de_productos.tscn
+Loading resource: res://assets/models/caja_de_productos.res remapped: res://assets/models/caja_de_productos.res
+Loading resource: res://assets/models/SEPT_JUEGOS_PROTOTIPO_caja.png remapped: res://assets/models/SEPT_JUEGOS_PROTOTIPO_caja.png
+Loading resource: res://.godot/imported/SEPT_JUEGOS_PROTOTIPO_caja.png-da41b129827ed76cb358606ed7a7f148.s3tc.ctex remapped: res://.godot/imported/SEPT_JUEGOS_PROTOTIPO_caja.png-da41b129827ed76cb358606ed7a7f148.s3tc.ctex
+Completed load for: 'res://assets/models/SEPT_JUEGOS_PROTOTIPO_caja.png' remapped 'res://assets/models/SEPT_JUEGOS_PROTOTIPO_caja.png' at thread -1
+Completed load for: 'res://assets/models/caja_de_productos.res' remapped 'res://assets/models/caja_de_productos.res' at thread -1
+Loading resource: res://assets/models/caja_colision.tres remapped: res://assets/models/caja_colision.tres
+Completed load for: 'res://assets/models/caja_colision.tres' remapped 'res://assets/models/caja_colision.tres' at thread -1
+Loading resource: res://src/dominio/almacen/caja_de_reposicion.tres remapped: res://src/dominio/almacen/caja_de_reposicion.tres
+Completed load for: 'res://src/dominio/almacen/caja_de_reposicion.tres' remapped 'res://src/dominio/almacen/caja_de_reposicion.tres' at thread -1
+Completed load for: 'res://src/escenas/objetos/caja_de_productos.tscn' remapped 'res://src/escenas/objetos/caja_de_productos.tscn' at thread -1
+  [38;2;250;235;215mres://test/escenas/objetos/caja_de_productos_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_la_caja_contesta_el_contrato_de_interaccion[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 14ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/objetos/caja_de_productos_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_el_cuerpo_de_la_caja_se_puede_llevar[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+Loading resource: res://src/escenas/objetos/caja_de_productos.tscn remapped: res://src/escenas/objetos/caja_de_productos.tscn
+Loading resource: res://assets/models/caja_de_productos.res remapped: res://assets/models/caja_de_productos.res
+Loading resource: res://assets/models/SEPT_JUEGOS_PROTOTIPO_caja.png remapped: res://assets/models/SEPT_JUEGOS_PROTOTIPO_caja.png
+Loading resource: res://.godot/imported/SEPT_JUEGOS_PROTOTIPO_caja.png-da41b129827ed76cb358606ed7a7f148.s3tc.ctex remapped: res://.godot/imported/SEPT_JUEGOS_PROTOTIPO_caja.png-da41b129827ed76cb358606ed7a7f148.s3tc.ctex
+Completed load for: 'res://assets/models/SEPT_JUEGOS_PROTOTIPO_caja.png' remapped 'res://assets/models/SEPT_JUEGOS_PROTOTIPO_caja.png' at thread -1
+Completed load for: 'res://assets/models/caja_de_productos.res' remapped 'res://assets/models/caja_de_productos.res' at thread -1
+Loading resource: res://assets/models/caja_colision.tres remapped: res://assets/models/caja_colision.tres
+Completed load for: 'res://assets/models/caja_colision.tres' remapped 'res://assets/models/caja_colision.tres' at thread -1
+Loading resource: res://src/dominio/almacen/caja_de_reposicion.tres remapped: res://src/dominio/almacen/caja_de_reposicion.tres
+Completed load for: 'res://src/dominio/almacen/caja_de_reposicion.tres' remapped 'res://src/dominio/almacen/caja_de_reposicion.tres' at thread -1
+Completed load for: 'res://src/escenas/objetos/caja_de_productos.tscn' remapped 'res://src/escenas/objetos/caja_de_productos.tscn' at thread -1
+  [38;2;250;235;215mres://test/escenas/objetos/caja_de_productos_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_el_cuerpo_de_la_caja_se_puede_llevar[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 16ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/objetos/caja_de_productos_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_reparentar_conserva_las_etiquetas_y_destruir_no_da_error[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+Loading resource: res://src/escenas/objetos/caja_de_productos.tscn remapped: res://src/escenas/objetos/caja_de_productos.tscn
+Loading resource: res://assets/models/caja_de_productos.res remapped: res://assets/models/caja_de_productos.res
+Loading resource: res://assets/models/SEPT_JUEGOS_PROTOTIPO_caja.png remapped: res://assets/models/SEPT_JUEGOS_PROTOTIPO_caja.png
+Loading resource: res://.godot/imported/SEPT_JUEGOS_PROTOTIPO_caja.png-da41b129827ed76cb358606ed7a7f148.s3tc.ctex remapped: res://.godot/imported/SEPT_JUEGOS_PROTOTIPO_caja.png-da41b129827ed76cb358606ed7a7f148.s3tc.ctex
+Completed load for: 'res://assets/models/SEPT_JUEGOS_PROTOTIPO_caja.png' remapped 'res://assets/models/SEPT_JUEGOS_PROTOTIPO_caja.png' at thread -1
+Completed load for: 'res://assets/models/caja_de_productos.res' remapped 'res://assets/models/caja_de_productos.res' at thread -1
+Loading resource: res://assets/models/caja_colision.tres remapped: res://assets/models/caja_colision.tres
+Completed load for: 'res://assets/models/caja_colision.tres' remapped 'res://assets/models/caja_colision.tres' at thread -1
+Loading resource: res://src/dominio/almacen/caja_de_reposicion.tres remapped: res://src/dominio/almacen/caja_de_reposicion.tres
+Completed load for: 'res://src/dominio/almacen/caja_de_reposicion.tres' remapped 'res://src/dominio/almacen/caja_de_reposicion.tres' at thread -1
+Completed load for: 'res://src/escenas/objetos/caja_de_productos.tscn' remapped 'res://src/escenas/objetos/caja_de_productos.tscn' at thread -1
+Loading resource: res://src/escenas/objetos/caja_de_productos.tscn remapped: res://src/escenas/objetos/caja_de_productos.tscn
+Completed load for: 'res://src/escenas/objetos/caja_de_productos.tscn' remapped 'res://src/escenas/objetos/caja_de_productos.tscn' at thread -1
+Loading resource: res://src/escenas/objetos/caja_de_productos.tscn remapped: res://src/escenas/objetos/caja_de_productos.tscn
+Loading resource: res://assets/models/caja_colision.tres remapped: res://assets/models/caja_colision.tres
+Completed load for: 'res://assets/models/caja_colision.tres' remapped 'res://assets/models/caja_colision.tres' at thread -1
+Completed load for: 'res://src/escenas/objetos/caja_de_productos.tscn' remapped 'res://src/escenas/objetos/caja_de_productos.tscn' at thread -1
+  [38;2;250;235;215mres://test/escenas/objetos/caja_de_productos_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_reparentar_conserva_las_etiquetas_y_destruir_no_da_error[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 20ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/objetos/caja_de_productos_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_la_caja_ya_no_despacha_por_su_cuenta[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/objetos/caja_de_productos_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_la_caja_ya_no_despacha_por_su_cuenta[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 9ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/objetos/caja_de_productos_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_cada_caja_con_textura_muestra_la_etiqueta_de_su_producto[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+Loading resource: res://src/escenas/objetos/caja_de_productos.tscn remapped: res://src/escenas/objetos/caja_de_productos.tscn
+Loading resource: res://assets/models/caja_de_productos.res remapped: res://assets/models/caja_de_productos.res
+Loading resource: res://assets/models/SEPT_JUEGOS_PROTOTIPO_caja.png remapped: res://assets/models/SEPT_JUEGOS_PROTOTIPO_caja.png
+Loading resource: res://.godot/imported/SEPT_JUEGOS_PROTOTIPO_caja.png-da41b129827ed76cb358606ed7a7f148.s3tc.ctex remapped: res://.godot/imported/SEPT_JUEGOS_PROTOTIPO_caja.png-da41b129827ed76cb358606ed7a7f148.s3tc.ctex
+Completed load for: 'res://assets/models/SEPT_JUEGOS_PROTOTIPO_caja.png' remapped 'res://assets/models/SEPT_JUEGOS_PROTOTIPO_caja.png' at thread -1
+Completed load for: 'res://assets/models/caja_de_productos.res' remapped 'res://assets/models/caja_de_productos.res' at thread -1
+Loading resource: res://assets/models/caja_colision.tres remapped: res://assets/models/caja_colision.tres
+Completed load for: 'res://assets/models/caja_colision.tres' remapped 'res://assets/models/caja_colision.tres' at thread -1
+Loading resource: res://src/dominio/almacen/caja_de_reposicion.tres remapped: res://src/dominio/almacen/caja_de_reposicion.tres
+Completed load for: 'res://src/dominio/almacen/caja_de_reposicion.tres' remapped 'res://src/dominio/almacen/caja_de_reposicion.tres' at thread -1
+Completed load for: 'res://src/escenas/objetos/caja_de_productos.tscn' remapped 'res://src/escenas/objetos/caja_de_productos.tscn' at thread -1
+Loading resource: res://src/escenas/objetos/caja_de_productos.tscn remapped: res://src/escenas/objetos/caja_de_productos.tscn
+Completed load for: 'res://src/escenas/objetos/caja_de_productos.tscn' remapped 'res://src/escenas/objetos/caja_de_productos.tscn' at thread -1
+Loading resource: res://src/escenas/objetos/caja_de_productos.tscn remapped: res://src/escenas/objetos/caja_de_productos.tscn
+Completed load for: 'res://src/escenas/objetos/caja_de_productos.tscn' remapped 'res://src/escenas/objetos/caja_de_productos.tscn' at thread -1
+Loading resource: res://src/escenas/objetos/caja_de_productos.tscn remapped: res://src/escenas/objetos/caja_de_productos.tscn
+Completed load for: 'res://src/escenas/objetos/caja_de_productos.tscn' remapped 'res://src/escenas/objetos/caja_de_productos.tscn' at thread -1
+Loading resource: res://src/escenas/objetos/caja_de_productos.tscn remapped: res://src/escenas/objetos/caja_de_productos.tscn
+Completed load for: 'res://src/escenas/objetos/caja_de_productos.tscn' remapped 'res://src/escenas/objetos/caja_de_productos.tscn' at thread -1
+Loading resource: res://src/escenas/objetos/caja_de_productos.tscn remapped: res://src/escenas/objetos/caja_de_productos.tscn
+Completed load for: 'res://src/escenas/objetos/caja_de_productos.tscn' remapped 'res://src/escenas/objetos/caja_de_productos.tscn' at thread -1
+Loading resource: res://src/escenas/objetos/caja_de_productos.tscn remapped: res://src/escenas/objetos/caja_de_productos.tscn
+Completed load for: 'res://src/escenas/objetos/caja_de_productos.tscn' remapped 'res://src/escenas/objetos/caja_de_productos.tscn' at thread -1
+Loading resource: res://src/escenas/objetos/caja_de_productos.tscn remapped: res://src/escenas/objetos/caja_de_productos.tscn
+Completed load for: 'res://src/escenas/objetos/caja_de_productos.tscn' remapped 'res://src/escenas/objetos/caja_de_productos.tscn' at thread -1
+Loading resource: res://src/escenas/objetos/caja_de_productos.tscn remapped: res://src/escenas/objetos/caja_de_productos.tscn
+Completed load for: 'res://src/escenas/objetos/caja_de_productos.tscn' remapped 'res://src/escenas/objetos/caja_de_productos.tscn' at thread -1
+Loading resource: res://src/escenas/objetos/caja_de_productos.tscn remapped: res://src/escenas/objetos/caja_de_productos.tscn
+Completed load for: 'res://src/escenas/objetos/caja_de_productos.tscn' remapped 'res://src/escenas/objetos/caja_de_productos.tscn' at thread -1
+Loading resource: res://src/escenas/objetos/caja_de_productos.tscn remapped: res://src/escenas/objetos/caja_de_productos.tscn
+Completed load for: 'res://src/escenas/objetos/caja_de_productos.tscn' remapped 'res://src/escenas/objetos/caja_de_productos.tscn' at thread -1
+Loading resource: res://src/escenas/objetos/caja_de_productos.tscn remapped: res://src/escenas/objetos/caja_de_productos.tscn
+Completed load for: 'res://src/escenas/objetos/caja_de_productos.tscn' remapped 'res://src/escenas/objetos/caja_de_productos.tscn' at thread -1
+Loading resource: res://src/escenas/objetos/caja_de_productos.tscn remapped: res://src/escenas/objetos/caja_de_productos.tscn
+Completed load for: 'res://src/escenas/objetos/caja_de_productos.tscn' remapped 'res://src/escenas/objetos/caja_de_productos.tscn' at thread -1
+Loading resource: res://src/escenas/objetos/caja_de_productos.tscn remapped: res://src/escenas/objetos/caja_de_productos.tscn
+Completed load for: 'res://src/escenas/objetos/caja_de_productos.tscn' remapped 'res://src/escenas/objetos/caja_de_productos.tscn' at thread -1
+Loading resource: res://src/escenas/objetos/caja_de_productos.tscn remapped: res://src/escenas/objetos/caja_de_productos.tscn
+Completed load for: 'res://src/escenas/objetos/caja_de_productos.tscn' remapped 'res://src/escenas/objetos/caja_de_productos.tscn' at thread -1
+Loading resource: res://src/escenas/objetos/caja_de_productos.tscn remapped: res://src/escenas/objetos/caja_de_productos.tscn
+Completed load for: 'res://src/escenas/objetos/caja_de_productos.tscn' remapped 'res://src/escenas/objetos/caja_de_productos.tscn' at thread -1
+Loading resource: res://src/escenas/objetos/caja_de_productos.tscn remapped: res://src/escenas/objetos/caja_de_productos.tscn
+Completed load for: 'res://src/escenas/objetos/caja_de_productos.tscn' remapped 'res://src/escenas/objetos/caja_de_productos.tscn' at thread -1
+Loading resource: res://src/escenas/objetos/caja_de_productos.tscn remapped: res://src/escenas/objetos/caja_de_productos.tscn
+Completed load for: 'res://src/escenas/objetos/caja_de_productos.tscn' remapped 'res://src/escenas/objetos/caja_de_productos.tscn' at thread -1
+Loading resource: res://src/escenas/objetos/caja_de_productos.tscn remapped: res://src/escenas/objetos/caja_de_productos.tscn
+Completed load for: 'res://src/escenas/objetos/caja_de_productos.tscn' remapped 'res://src/escenas/objetos/caja_de_productos.tscn' at thread -1
+ERROR: Parameter "material" is null.
+   at: material_get_instance_shader_parameters (servers/rendering/dummy/storage/material_storage.cpp:264)
+   GDScript backtrace (most recent call first):
+       [0] free_instance (res://addons/gdUnit4/src/core/GdUnitTools.gd:85)
+       [1] gc (res://addons/gdUnit4/src/core/execution/GdUnitMemoryObserver.gd:126)
+       [2] gc (res://addons/gdUnit4/src/core/execution/GdUnitExecutionContext.gd:277)
+       [3] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestCaseAfterStage.gd:23)
+       [4] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [5] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleExecutionStage.gd:18)
+       [6] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [7] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleTestStage.gd:10)
+       [8] execute (res://addons/gdUnit4/src/core/_TestCase.gd:41)
+       [9] test_completed (res://addons/gdUnit4/src/core/_TestCase.gd:86)
+  [38;2;250;235;215mres://test/escenas/objetos/caja_de_productos_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_cada_caja_con_textura_muestra_la_etiqueta_de_su_producto[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 44ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/objetos/caja_de_productos_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_las_cajas_sin_textura_siguen_con_la_generica[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+Loading resource: res://src/escenas/objetos/caja_de_productos.tscn remapped: res://src/escenas/objetos/caja_de_productos.tscn
+Loading resource: res://assets/models/caja_de_productos.res remapped: res://assets/models/caja_de_productos.res
+Loading resource: res://assets/models/SEPT_JUEGOS_PROTOTIPO_caja.png remapped: res://assets/models/SEPT_JUEGOS_PROTOTIPO_caja.png
+Loading resource: res://.godot/imported/SEPT_JUEGOS_PROTOTIPO_caja.png-da41b129827ed76cb358606ed7a7f148.s3tc.ctex remapped: res://.godot/imported/SEPT_JUEGOS_PROTOTIPO_caja.png-da41b129827ed76cb358606ed7a7f148.s3tc.ctex
+Completed load for: 'res://assets/models/SEPT_JUEGOS_PROTOTIPO_caja.png' remapped 'res://assets/models/SEPT_JUEGOS_PROTOTIPO_caja.png' at thread -1
+Completed load for: 'res://assets/models/caja_de_productos.res' remapped 'res://assets/models/caja_de_productos.res' at thread -1
+Loading resource: res://assets/models/caja_colision.tres remapped: res://assets/models/caja_colision.tres
+Completed load for: 'res://assets/models/caja_colision.tres' remapped 'res://assets/models/caja_colision.tres' at thread -1
+Loading resource: res://src/dominio/almacen/caja_de_reposicion.tres remapped: res://src/dominio/almacen/caja_de_reposicion.tres
+Completed load for: 'res://src/dominio/almacen/caja_de_reposicion.tres' remapped 'res://src/dominio/almacen/caja_de_reposicion.tres' at thread -1
+Completed load for: 'res://src/escenas/objetos/caja_de_productos.tscn' remapped 'res://src/escenas/objetos/caja_de_productos.tscn' at thread -1
+Loading resource: res://src/escenas/objetos/caja_de_productos.tscn remapped: res://src/escenas/objetos/caja_de_productos.tscn
+Completed load for: 'res://src/escenas/objetos/caja_de_productos.tscn' remapped 'res://src/escenas/objetos/caja_de_productos.tscn' at thread -1
+Loading resource: res://src/escenas/objetos/caja_de_productos.tscn remapped: res://src/escenas/objetos/caja_de_productos.tscn
+Completed load for: 'res://src/escenas/objetos/caja_de_productos.tscn' remapped 'res://src/escenas/objetos/caja_de_productos.tscn' at thread -1
+Loading resource: res://src/escenas/objetos/caja_de_productos.tscn remapped: res://src/escenas/objetos/caja_de_productos.tscn
+Completed load for: 'res://src/escenas/objetos/caja_de_productos.tscn' remapped 'res://src/escenas/objetos/caja_de_productos.tscn' at thread -1
+Loading resource: res://src/escenas/objetos/caja_de_productos.tscn remapped: res://src/escenas/objetos/caja_de_productos.tscn
+Completed load for: 'res://src/escenas/objetos/caja_de_productos.tscn' remapped 'res://src/escenas/objetos/caja_de_productos.tscn' at thread -1
+Loading resource: res://src/escenas/objetos/caja_de_productos.tscn remapped: res://src/escenas/objetos/caja_de_productos.tscn
+Completed load for: 'res://src/escenas/objetos/caja_de_productos.tscn' remapped 'res://src/escenas/objetos/caja_de_productos.tscn' at thread -1
+Loading resource: res://src/escenas/objetos/caja_de_productos.tscn remapped: res://src/escenas/objetos/caja_de_productos.tscn
+Completed load for: 'res://src/escenas/objetos/caja_de_productos.tscn' remapped 'res://src/escenas/objetos/caja_de_productos.tscn' at thread -1
+Loading resource: res://src/escenas/objetos/caja_de_productos.tscn remapped: res://src/escenas/objetos/caja_de_productos.tscn
+Completed load for: 'res://src/escenas/objetos/caja_de_productos.tscn' remapped 'res://src/escenas/objetos/caja_de_productos.tscn' at thread -1
+Loading resource: res://src/escenas/objetos/caja_de_productos.tscn remapped: res://src/escenas/objetos/caja_de_productos.tscn
+Completed load for: 'res://src/escenas/objetos/caja_de_productos.tscn' remapped 'res://src/escenas/objetos/caja_de_productos.tscn' at thread -1
+Loading resource: res://src/escenas/objetos/caja_de_productos.tscn remapped: res://src/escenas/objetos/caja_de_productos.tscn
+Completed load for: 'res://src/escenas/objetos/caja_de_productos.tscn' remapped 'res://src/escenas/objetos/caja_de_productos.tscn' at thread -1
+Loading resource: res://src/escenas/objetos/caja_de_productos.tscn remapped: res://src/escenas/objetos/caja_de_productos.tscn
+Completed load for: 'res://src/escenas/objetos/caja_de_productos.tscn' remapped 'res://src/escenas/objetos/caja_de_productos.tscn' at thread -1
+Loading resource: res://src/escenas/objetos/caja_de_productos.tscn remapped: res://src/escenas/objetos/caja_de_productos.tscn
+Completed load for: 'res://src/escenas/objetos/caja_de_productos.tscn' remapped 'res://src/escenas/objetos/caja_de_productos.tscn' at thread -1
+ERROR: Parameter "material" is null.
+   at: material_get_instance_shader_parameters (servers/rendering/dummy/storage/material_storage.cpp:264)
+   GDScript backtrace (most recent call first):
+       [0] free_instance (res://addons/gdUnit4/src/core/GdUnitTools.gd:85)
+       [1] gc (res://addons/gdUnit4/src/core/execution/GdUnitMemoryObserver.gd:126)
+       [2] gc (res://addons/gdUnit4/src/core/execution/GdUnitExecutionContext.gd:277)
+       [3] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestCaseAfterStage.gd:23)
+       [4] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [5] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleExecutionStage.gd:18)
+       [6] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [7] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleTestStage.gd:10)
+       [8] execute (res://addons/gdUnit4/src/core/_TestCase.gd:41)
+       [9] test_completed (res://addons/gdUnit4/src/core/_TestCase.gd:86)
+  [38;2;250;235;215mres://test/escenas/objetos/caja_de_productos_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_las_cajas_sin_textura_siguen_con_la_generica[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 35ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/objetos/caja_de_productos_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_cada_producto_tiene_decidida_su_caja[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/objetos/caja_de_productos_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_cada_producto_tiene_decidida_su_caja[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 7ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/objetos/caja_de_productos_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_la_etiqueta_de_cada_producto_es_una_linea_del_script[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/objetos/caja_de_productos_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_la_etiqueta_de_cada_producto_es_una_linea_del_script[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 11ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/objetos/caja_de_productos_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_la_etiqueta_filtra_pixelado_como_la_caja_generica[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+Loading resource: res://assets/models/SEPT_JUEGOS_PROTOTIPO_Actroncito completo.png remapped: res://assets/models/SEPT_JUEGOS_PROTOTIPO_Actroncito completo.png
+Loading resource: res://.godot/imported/SEPT_JUEGOS_PROTOTIPO_Actroncito completo.png-34e04df94a958416d8fc0ffbeded8b46.s3tc.ctex remapped: res://.godot/imported/SEPT_JUEGOS_PROTOTIPO_Actroncito completo.png-34e04df94a958416d8fc0ffbeded8b46.s3tc.ctex
+Completed load for: 'res://assets/models/SEPT_JUEGOS_PROTOTIPO_Actroncito completo.png' remapped 'res://assets/models/SEPT_JUEGOS_PROTOTIPO_Actroncito completo.png' at thread -1
+Loading resource: res://src/escenas/objetos/caja_de_productos.tscn remapped: res://src/escenas/objetos/caja_de_productos.tscn
+Loading resource: res://assets/models/caja_de_productos.res remapped: res://assets/models/caja_de_productos.res
+Loading resource: res://assets/models/SEPT_JUEGOS_PROTOTIPO_caja.png remapped: res://assets/models/SEPT_JUEGOS_PROTOTIPO_caja.png
+Loading resource: res://.godot/imported/SEPT_JUEGOS_PROTOTIPO_caja.png-da41b129827ed76cb358606ed7a7f148.s3tc.ctex remapped: res://.godot/imported/SEPT_JUEGOS_PROTOTIPO_caja.png-da41b129827ed76cb358606ed7a7f148.s3tc.ctex
+Completed load for: 'res://assets/models/SEPT_JUEGOS_PROTOTIPO_caja.png' remapped 'res://assets/models/SEPT_JUEGOS_PROTOTIPO_caja.png' at thread -1
+Completed load for: 'res://assets/models/caja_de_productos.res' remapped 'res://assets/models/caja_de_productos.res' at thread -1
+Loading resource: res://assets/models/caja_colision.tres remapped: res://assets/models/caja_colision.tres
+Completed load for: 'res://assets/models/caja_colision.tres' remapped 'res://assets/models/caja_colision.tres' at thread -1
+Loading resource: res://src/dominio/almacen/caja_de_reposicion.tres remapped: res://src/dominio/almacen/caja_de_reposicion.tres
+Completed load for: 'res://src/dominio/almacen/caja_de_reposicion.tres' remapped 'res://src/dominio/almacen/caja_de_reposicion.tres' at thread -1
+Completed load for: 'res://src/escenas/objetos/caja_de_productos.tscn' remapped 'res://src/escenas/objetos/caja_de_productos.tscn' at thread -1
+Loading resource: res://src/escenas/objetos/caja_de_productos.tscn remapped: res://src/escenas/objetos/caja_de_productos.tscn
+Completed load for: 'res://src/escenas/objetos/caja_de_productos.tscn' remapped 'res://src/escenas/objetos/caja_de_productos.tscn' at thread -1
+Loading resource: res://src/escenas/objetos/caja_de_productos.tscn remapped: res://src/escenas/objetos/caja_de_productos.tscn
+Completed load for: 'res://src/escenas/objetos/caja_de_productos.tscn' remapped 'res://src/escenas/objetos/caja_de_productos.tscn' at thread -1
+Loading resource: res://src/escenas/objetos/caja_de_productos.tscn remapped: res://src/escenas/objetos/caja_de_productos.tscn
+Completed load for: 'res://src/escenas/objetos/caja_de_productos.tscn' remapped 'res://src/escenas/objetos/caja_de_productos.tscn' at thread -1
+Loading resource: res://src/escenas/objetos/caja_de_productos.tscn remapped: res://src/escenas/objetos/caja_de_productos.tscn
+Completed load for: 'res://src/escenas/objetos/caja_de_productos.tscn' remapped 'res://src/escenas/objetos/caja_de_productos.tscn' at thread -1
+Loading resource: res://src/escenas/objetos/caja_de_productos.tscn remapped: res://src/escenas/objetos/caja_de_productos.tscn
+Completed load for: 'res://src/escenas/objetos/caja_de_productos.tscn' remapped 'res://src/escenas/objetos/caja_de_productos.tscn' at thread -1
+Loading resource: res://src/escenas/objetos/caja_de_productos.tscn remapped: res://src/escenas/objetos/caja_de_productos.tscn
+Completed load for: 'res://src/escenas/objetos/caja_de_productos.tscn' remapped 'res://src/escenas/objetos/caja_de_productos.tscn' at thread -1
+Loading resource: res://src/escenas/objetos/caja_de_productos.tscn remapped: res://src/escenas/objetos/caja_de_productos.tscn
+Completed load for: 'res://src/escenas/objetos/caja_de_productos.tscn' remapped 'res://src/escenas/objetos/caja_de_productos.tscn' at thread -1
+Loading resource: res://src/escenas/objetos/caja_de_productos.tscn remapped: res://src/escenas/objetos/caja_de_productos.tscn
+Completed load for: 'res://src/escenas/objetos/caja_de_productos.tscn' remapped 'res://src/escenas/objetos/caja_de_productos.tscn' at thread -1
+Loading resource: res://src/escenas/objetos/caja_de_productos.tscn remapped: res://src/escenas/objetos/caja_de_productos.tscn
+Completed load for: 'res://src/escenas/objetos/caja_de_productos.tscn' remapped 'res://src/escenas/objetos/caja_de_productos.tscn' at thread -1
+Loading resource: res://src/escenas/objetos/caja_de_productos.tscn remapped: res://src/escenas/objetos/caja_de_productos.tscn
+Completed load for: 'res://src/escenas/objetos/caja_de_productos.tscn' remapped 'res://src/escenas/objetos/caja_de_productos.tscn' at thread -1
+Loading resource: res://src/escenas/objetos/caja_de_productos.tscn remapped: res://src/escenas/objetos/caja_de_productos.tscn
+Completed load for: 'res://src/escenas/objetos/caja_de_productos.tscn' remapped 'res://src/escenas/objetos/caja_de_productos.tscn' at thread -1
+Loading resource: res://src/escenas/objetos/caja_de_productos.tscn remapped: res://src/escenas/objetos/caja_de_productos.tscn
+Completed load for: 'res://src/escenas/objetos/caja_de_productos.tscn' remapped 'res://src/escenas/objetos/caja_de_productos.tscn' at thread -1
+Loading resource: res://src/escenas/objetos/caja_de_productos.tscn remapped: res://src/escenas/objetos/caja_de_productos.tscn
+Completed load for: 'res://src/escenas/objetos/caja_de_productos.tscn' remapped 'res://src/escenas/objetos/caja_de_productos.tscn' at thread -1
+Loading resource: res://src/escenas/objetos/caja_de_productos.tscn remapped: res://src/escenas/objetos/caja_de_productos.tscn
+Completed load for: 'res://src/escenas/objetos/caja_de_productos.tscn' remapped 'res://src/escenas/objetos/caja_de_productos.tscn' at thread -1
+Loading resource: res://src/escenas/objetos/caja_de_productos.tscn remapped: res://src/escenas/objetos/caja_de_productos.tscn
+Completed load for: 'res://src/escenas/objetos/caja_de_productos.tscn' remapped 'res://src/escenas/objetos/caja_de_productos.tscn' at thread -1
+Loading resource: res://src/escenas/objetos/caja_de_productos.tscn remapped: res://src/escenas/objetos/caja_de_productos.tscn
+Completed load for: 'res://src/escenas/objetos/caja_de_productos.tscn' remapped 'res://src/escenas/objetos/caja_de_productos.tscn' at thread -1
+Loading resource: res://src/escenas/objetos/caja_de_productos.tscn remapped: res://src/escenas/objetos/caja_de_productos.tscn
+Completed load for: 'res://src/escenas/objetos/caja_de_productos.tscn' remapped 'res://src/escenas/objetos/caja_de_productos.tscn' at thread -1
+Loading resource: res://src/escenas/objetos/caja_de_productos.tscn remapped: res://src/escenas/objetos/caja_de_productos.tscn
+Completed load for: 'res://src/escenas/objetos/caja_de_productos.tscn' remapped 'res://src/escenas/objetos/caja_de_productos.tscn' at thread -1
+ERROR: Parameter "material" is null.
+   at: material_get_instance_shader_parameters (servers/rendering/dummy/storage/material_storage.cpp:264)
+   GDScript backtrace (most recent call first):
+       [0] free_instance (res://addons/gdUnit4/src/core/GdUnitTools.gd:85)
+       [1] gc (res://addons/gdUnit4/src/core/execution/GdUnitMemoryObserver.gd:126)
+       [2] gc (res://addons/gdUnit4/src/core/execution/GdUnitExecutionContext.gd:277)
+       [3] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestCaseAfterStage.gd:23)
+       [4] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [5] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleExecutionStage.gd:18)
+       [6] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [7] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleTestStage.gd:10)
+       [8] execute (res://addons/gdUnit4/src/core/_TestCase.gd:41)
+       [9] test_completed (res://addons/gdUnit4/src/core/_TestCase.gd:86)
+  [38;2;250;235;215mres://test/escenas/objetos/caja_de_productos_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_la_etiqueta_filtra_pixelado_como_la_caja_generica[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 118ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/objetos/caja_de_productos_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_cada_etiqueta_es_la_copia_de_la_textura_del_artista[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/objetos/caja_de_productos_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_cada_etiqueta_es_la_copia_de_la_textura_del_artista[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 33ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/objetos/caja_de_productos_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_las_etiquetas_tienen_nombres_en_ascii[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/objetos/caja_de_productos_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_las_etiquetas_tienen_nombres_en_ascii[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 6ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/objetos/caja_de_productos_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_la_etiqueta_no_se_estira_en_la_caja_chica_ni_en_la_grande[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+Loading resource: res://src/escenas/objetos/caja_de_productos.tscn remapped: res://src/escenas/objetos/caja_de_productos.tscn
+Loading resource: res://assets/models/caja_de_productos.res remapped: res://assets/models/caja_de_productos.res
+Loading resource: res://assets/models/SEPT_JUEGOS_PROTOTIPO_caja.png remapped: res://assets/models/SEPT_JUEGOS_PROTOTIPO_caja.png
+Loading resource: res://.godot/imported/SEPT_JUEGOS_PROTOTIPO_caja.png-da41b129827ed76cb358606ed7a7f148.s3tc.ctex remapped: res://.godot/imported/SEPT_JUEGOS_PROTOTIPO_caja.png-da41b129827ed76cb358606ed7a7f148.s3tc.ctex
+Completed load for: 'res://assets/models/SEPT_JUEGOS_PROTOTIPO_caja.png' remapped 'res://assets/models/SEPT_JUEGOS_PROTOTIPO_caja.png' at thread -1
+Completed load for: 'res://assets/models/caja_de_productos.res' remapped 'res://assets/models/caja_de_productos.res' at thread -1
+Loading resource: res://assets/models/caja_colision.tres remapped: res://assets/models/caja_colision.tres
+Completed load for: 'res://assets/models/caja_colision.tres' remapped 'res://assets/models/caja_colision.tres' at thread -1
+Loading resource: res://src/dominio/almacen/caja_de_reposicion.tres remapped: res://src/dominio/almacen/caja_de_reposicion.tres
+Completed load for: 'res://src/dominio/almacen/caja_de_reposicion.tres' remapped 'res://src/dominio/almacen/caja_de_reposicion.tres' at thread -1
+Completed load for: 'res://src/escenas/objetos/caja_de_productos.tscn' remapped 'res://src/escenas/objetos/caja_de_productos.tscn' at thread -1
+Loading resource: res://src/escenas/objetos/caja_de_productos.tscn remapped: res://src/escenas/objetos/caja_de_productos.tscn
+Completed load for: 'res://src/escenas/objetos/caja_de_productos.tscn' remapped 'res://src/escenas/objetos/caja_de_productos.tscn' at thread -1
+ERROR: Parameter "material" is null.
+   at: material_get_instance_shader_parameters (servers/rendering/dummy/storage/material_storage.cpp:264)
+   GDScript backtrace (most recent call first):
+       [0] free_instance (res://addons/gdUnit4/src/core/GdUnitTools.gd:85)
+       [1] gc (res://addons/gdUnit4/src/core/execution/GdUnitMemoryObserver.gd:126)
+       [2] gc (res://addons/gdUnit4/src/core/execution/GdUnitExecutionContext.gd:277)
+       [3] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestCaseAfterStage.gd:23)
+       [4] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [5] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleExecutionStage.gd:18)
+       [6] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [7] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleTestStage.gd:10)
+       [8] execute (res://addons/gdUnit4/src/core/_TestCase.gd:41)
+       [9] test_completed (res://addons/gdUnit4/src/core/_TestCase.gd:86)
+  [38;2;250;235;215mres://test/escenas/objetos/caja_de_productos_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_la_etiqueta_no_se_estira_en_la_caja_chica_ni_en_la_grande[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 17ms[0m
+[38;2;128;128;128m[0m
+[38;2;30;144;255mStatistics:[0m[38;2;128;128;128m 15 test cases | 0 errors | 1 failures | 0 flaky | 0 skipped | 0 orphans |[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 469ms[0m
+[38;2;128;128;128m[0m
+[38;2;128;128;128m[0m
+[38;2;30;144;255mOverall Summary:[0m[38;2;255;255;255m 15 test cases | 0 errors | 1 failures | 0 flaky | 0 skipped | 0 orphans |[0m
+[38;2;233;150;122mExecuted test suites: (1/1)[0m
+[38;2;233;150;122mExecuted test cases : (15/15)[0m
+[38;2;233;150;122mTotal execution time: 469ms[0m
+[38;2;255;255;255m [0m[38;2;100;149;237mSession hook 'Guardado de la sesión' > shutdown()[0m
+[38;2;100;149;237mSession hook 'GdUnitXMLTestReporter' > shutdown()[0m
+[38;2;100;149;237mOpen XML Report at: file://D:/Usuarios/fede/Documentos/Catedra Videojuegos FADU/manada/repo/nosefia/.claude/worktrees/batch-64-309-export/reports/b-e-red3f-suite/report_1/results.xml[0m
+[38;2;100;149;237mSession hook 'GdUnitHtmlTestReporter' > shutdown()[0m
+[38;2;100;149;237mOpen HTML Report at: file://D:/Usuarios/fede/Documentos/Catedra Videojuegos FADU/manada/repo/nosefia/.claude/worktrees/batch-64-309-export/reports/b-e-red3f-suite/report_1/index.html[0m
+[38;2;178;34;34mExit code: 100[0m
+Run dispose test resources
+----------------------------------------------------------------
+Cleanup singletons ["GdUnitTestSessionHookService", "GdUnitThreadManager"]
+
+	Unregister singleton 'GdUnitTestSessionHookService'
+	Free singleton instance 'GdUnitTestSessionHookService:<Object#160994166461>'
+	Successfully freed 'GdUnitTestSessionHookService'
+
+	Unregister singleton 'GdUnitThreadManager'
+	Free singleton instance 'GdUnitThreadManager:<Object#163863070539>'
+	Successfully freed 'GdUnitThreadManager'
+----------------------------------------------------------------
+Finallize ..
+-Orphan nodes report-----------------------
+Finallize .. done
+XR: Clearing primary interface
+XR: Removed interface "Native mobile"
+XR: Removed interface "OpenXR"
+Orphan StringName: Vector2 (static: 0, total: 1)
+Orphan StringName: Vector3 (static: 0, total: 1)
+Orphan StringName: Vector4 (static: 0, total: 1)
+Orphan StringName: PackedVector4Array (static: 0, total: 1)
+Orphan StringName: RID (static: 0, total: 1)
+Orphan StringName: Color (static: 0, total: 1)
+Orphan StringName: PackedByteArray (static: 0, total: 1)
+Orphan StringName: Vector2i (static: 0, total: 1)
+Orphan StringName: Callable (static: 0, total: 1)
+Orphan StringName: Vector3i (static: 0, total: 1)
+Orphan StringName: Vector4i (static: 0, total: 1)
+Orphan StringName: PackedStringArray (static: 0, total: 1)
+Orphan StringName: Basis (static: 0, total: 1)
+Orphan StringName: int (static: 0, total: 1)
+Orphan StringName: PackedFloat32Array (static: 0, total: 1)
+Orphan StringName: Plane (static: 0, total: 1)
+Orphan StringName: PackedFloat64Array (static: 0, total: 1)
+Orphan StringName: NodePath (static: 0, total: 1)
+Orphan StringName: Signal (static: 0, total: 1)
+Orphan StringName: StringName (static: 0, total: 1)
+Orphan StringName: String (static: 0, total: 1)
+Orphan StringName: Transform2D (static: 0, total: 1)
+Orphan StringName: Transform3D (static: 0, total: 1)
+Orphan StringName: Array (static: 0, total: 1)
+Orphan StringName: Quaternion (static: 0, total: 1)
+Orphan StringName: bool (static: 0, total: 1)
+Orphan StringName: PackedColorArray (static: 0, total: 1)
+Orphan StringName: PackedVector2Array (static: 0, total: 1)
+Orphan StringName: Object (static: 1, total: 2)
+Orphan StringName: AABB (static: 0, total: 1)
+Orphan StringName: float (static: 0, total: 1)
+Orphan StringName: Dictionary (static: 0, total: 1)
+Orphan StringName: Projection (static: 0, total: 1)
+Orphan StringName: Rect2 (static: 0, total: 1)
+Orphan StringName: PackedVector3Array (static: 0, total: 1)
+Orphan StringName: PackedInt32Array (static: 0, total: 1)
+Orphan StringName: Rect2i (static: 0, total: 1)
+Orphan StringName: PackedInt64Array (static: 0, total: 1)
+StringName: 38 unclaimed string names at exit.

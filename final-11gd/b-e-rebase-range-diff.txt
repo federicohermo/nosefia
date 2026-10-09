@@ -1,0 +1,3 @@
+1:  b0c36f1f = 1:  96ef808e Evitar encuadre vacio y montar fixtures antes de transforms globales
+2:  55af8724 = 2:  90862742 Conservar ancho valido y retirar cargas fallidas del motor
+3:  f4862458 = 3:  cd994731 Liberar etiquetas de cajas al destruirlas y comprobar su ciclo de vida

@@ -1,0 +1,51 @@
+ERROR: The remote port number must be between 1 and 65535 (inclusive).
+   at: connect_to_host (core/io/stream_peer_tcp.cpp:69)
+ERROR: Remote Debugger: Unable to connect to host '127.0.0.1:0'.
+   at: create_tcp (core/debugger/remote_debugger_peer.cpp:247)
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+[2J[H[38;2;233;150;122m
+--------------------------------------------------------------------------------------------------
+GdUnit4 Comandline Tool
+--------------------------------------------------------------------------------------------------[0m
+[38;2;0;191;255mDisabled fail fast![0m
+[38;2;0;191;255mSet write reports to D:/Usuarios/fede/Documentos/Catedra Videojuegos FADU/manada/repo/nosefia/.claude/worktrees/batch-64-309-export/reports/fix-fixtures[0m
+[38;2;218;165;32m
+Headless mode is ignored by option '--ignoreHeadlessMode'"
+
+Please note that tests that use UI interaction do not work correctly in headless mode.
+Godot 'InputEvents' are not transported by the Godot engine in headless mode and therefore
+have no effect in the test!
+[0m
+[38;2;100;149;237mInstalling GdUnit4 session system hooks.[0m
+[38;2;100;149;237mSession hook 'GdUnitHtmlTestReporter' installed.[0m
+[38;2;100;149;237mSession hook 'GdUnitXMLTestReporter' installed.[0m
+[38;2;100;149;237mInstalling GdUnit4 session hooks.[0m
+[38;2;100;149;237mSession hook 'Guardado de la sesión' installed.[0m
+[38;2;0;206;209mRun Test Suite: [0m[38;2;250;235;215mres://test/escenas/volumen_de_los_solidos_test.gd[0m
+  [38;2;250;235;215mres://test/escenas/volumen_de_los_solidos_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_el_corte_sale_del_agarrable_mas_chico[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/volumen_de_los_solidos_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_el_corte_sale_del_agarrable_mas_chico[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 424ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/volumen_de_los_solidos_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_cada_pieza_donde_cabe_un_objeto_tiene_volumen[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/volumen_de_los_solidos_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_cada_pieza_donde_cabe_un_objeto_tiene_volumen[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 239ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/volumen_de_los_solidos_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_una_pieza_nueva_sin_volumen_se_nombra_y_una_exencion_vacia_no_la_salva[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/volumen_de_los_solidos_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_una_pieza_nueva_sin_volumen_se_nombra_y_una_exencion_vacia_no_la_salva[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 8ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/volumen_de_los_solidos_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_cada_caja_de_volumen_va_por_dentro_de_la_malla_visible[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/volumen_de_los_solidos_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_cada_caja_de_volumen_va_por_dentro_de_la_malla_visible[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 183ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/volumen_de_los_solidos_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_todo_lo_que_se_suelta_choca_con_la_capa_del_contorno[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/volumen_de_los_solidos_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_todo_lo_que_se_suelta_choca_con_la_capa_del_contorno[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 123ms[0m
+[38;2;128;128;128m[0m
+[38;2;30;144;255mStatistics:[0m[38;2;128;128;128m 5 test cases | 0 errors | 0 failures | 0 flaky | 0 skipped | 0 orphans |[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 1s 10ms[0m
+[38;2;128;128;128m[0m
+[38;2;128;128;128m[0m
+[38;2;30;144;255mOverall Summary:[0m[38;2;255;255;255m 5 test cases | 0 errors | 0 failures | 0 flaky | 0 skipped | 0 orphans |[0m
+[38;2;233;150;122mExecuted test suites: (1/1)[0m
+[38;2;233;150;122mExecuted test cases : (5/5)[0m
+[38;2;233;150;122mTotal execution time: 1s 10ms[0m
+[38;2;255;255;255m [0m[38;2;100;149;237mOpen XML Report at: file://D:/Usuarios/fede/Documentos/Catedra Videojuegos FADU/manada/repo/nosefia/.claude/worktrees/batch-64-309-export/reports/fix-fixtures/report_3/results.xml[0m
+[38;2;100;149;237mOpen HTML Report at: file://D:/Usuarios/fede/Documentos/Catedra Videojuegos FADU/manada/repo/nosefia/.claude/worktrees/batch-64-309-export/reports/fix-fixtures/report_3/index.html[0m
+[38;2;233;150;122mExit code: 0[0m
+Run dispose test resources
