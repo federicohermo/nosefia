@@ -105,6 +105,13 @@ que queda tapado por otra ventana casi no pide cuadros: dos capturas seguidas sa
 `--disable-backgrounding-occluded-windows` y `--disable-renderer-backgrounding`, y antes de leer
 una captura se cuentan los `requestAnimationFrame` de un segundo.
 
+**No excluyas texturas del export por una búsqueda de texto vacía.** Godot extrae las
+imágenes del GLB y el modelo importado las referencia también desde recursos binarios. En #339,
+excluirlas redujo el paquete y dejó el local sin texturas. Conservá esas dependencias y verificá
+una partida nueva en el navegador, observando la consola también después de salir del menú.
+El humo de arranque termina antes de ese recorrido. Un build local no exige publicar en Vercel:
+el límite de tamaño de publicación no justifica quitar arte necesario.
+
 ## Cuando lo que escribís es un gate sobre prosa
 
 Una parte de lo que este repo verifica no es código: es que un `.md` diga algo. Tres cosas se
