@@ -89,6 +89,9 @@ func test_el_material_de_un_multimesh_cuenta_como_nuevo() -> void:
 func test_el_material_reemplazado_en_una_superficie_cuenta_como_nuevo() -> void:
 	var escena: Node3D = auto_free(Node3D.new())
 	var comun := BoxMesh.new()
+	# Un ancho válido menor que el encuadre inicial no se ensancha al calentar.
+	comun.size = Vector3(0.2, 0.1, 0.1)
+	assert_float(comun.size.x).is_greater(maxf(comun.size.y, comun.size.z))
 	comun.material = StandardMaterial3D.new()
 	for _i: int in 3:
 		var malla := MeshInstance3D.new()
@@ -98,6 +101,7 @@ func test_el_material_reemplazado_en_una_superficie_cuenta_como_nuevo() -> void:
 	add_child(escena)
 	var calentamiento := _calentamiento()
 	calentamiento.calentar(escena)
+	assert_float(get_viewport().get_camera_3d().size).is_equal(comun.size.x)
 	await calentamiento.avanzo
 	await calentamiento.avanzo
 	assert_int(_visibles(escena)).is_equal(2)
