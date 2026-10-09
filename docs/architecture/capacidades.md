@@ -40,7 +40,8 @@ flowchart TD
   EMP -- "jornada, legajo y final" --> SAV
   STK -- "unidades en góndola" --> CTR
   CTR -- "lo vendido" --> STK
-  PLY -- "qué se lleva, a qué distancia" --> CLN
+  PLY -- "qué se lleva y qué se tira" --> CLN
+  CLN -- "la unidad tirada" --> STK
   PLY -- "la unidad viaja en la mano" --> STK
   STK -- "qué casilleros están vacíos y cuáles ocupados" --> PLY
   PLY -- "qué objeto se examina" --> INV

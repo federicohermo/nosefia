@@ -1,7 +1,7 @@
 ---
 schema_version: 1
 capability_id: CAP-PLY
-status: ratified
+status: draft
 owner: por definir
 provenance: GDD «Controles»; ficha «8. Tarea: Reposición»; migración de los specs 003, 004, 006, 014, 034, 043
 ---
@@ -535,9 +535,9 @@ siguen iguales.
 
 ### AC-PLY-043 — Rescatar una bolsa no la cuenta ni la descuenta *(verifica BR-PLY-016)*
 
-DADO una bolsa ya depositada, y otra todavía no, cada una superpuesta con un sólido fijo CUANDO
-se las rescata ENTONCES la cantidad de bolsas depositadas no cambia, y ninguna queda adentro del
-área de descarte.
+DADO una bolsa tirada y otra no tirada superpuesta con un sólido fijo CUANDO se rescatan
+ENTONCES la tirada no se mueve ni aparece, la otra se recupera fuera del sólido y la cantidad
+de bolsas depositadas no cambia.
 
 ### AC-PLY-044 — La jornada arranca en la entrada *(verifica BR-PLY-021)*
 

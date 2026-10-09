@@ -1,7 +1,7 @@
 ---
 schema_version: 1
 capability_id: CAP-STK
-status: ratified
+status: draft
 owner: por definir
 provenance: GDD «Reponer» y «Registrar»; fichas «7. Tarea: Registro de productos vendidos», «8. Tarea: Reposición» y «5. Formas de interacción con objetos»; base «Productos y cajas contenedoras»; migración de los specs 005, 008, 033, 042, 047
 ---
@@ -23,7 +23,7 @@ depósito son dos lugares distintos, y mover mercadería del fondo al estante cu
 | **Depósito** | el fondo, con la caja de cada producto: de ahí sale lo que se repone y lo que se vende | almacén, bodega |
 | **Caja del depósito** | la caja de un solo producto, donde está su depósito: se le saca de a una unidad y recibe de vuelta las de su producto, hasta llenarse | cajón, contenedor |
 | **Contenido de la caja** | cuántas unidades tiene la caja: su depósito menos sus unidades afuera | stock, carga |
-| **Unidad afuera** | una unidad que salió de su caja, o que se agarró de la góndola, y todavía no se colocó ni volvió a su caja: en la mano o soltada en el piso. Sigue contada en el depósito | reservada, en tránsito |
+| **Unidad afuera** | una unidad que salió de su caja, o que se agarró de la góndola, y todavía no se colocó, volvió a su caja ni se tiró: en la mano o soltada en el piso. Sigue contada en el depósito | reservada, en tránsito |
 | **Góndola** | el estante del local, el que el jugador repone | vitrina, exhibidor |
 | **Tanda** | las unidades de un mismo producto puestas juntas sobre un estante del local, en dos filas o en una | bloque, exhibición |
 | **Tanda fija** | una tanda sin casilleros: se ve, y no se agarra, no se repone ni se vacía | guía, decorado |
@@ -288,6 +288,13 @@ estante, o un solo producto que lo ocupa entero. NO DEBE llevar tres productos n
 desiguales. Dos muebles de estantes iguales DEBEN medir lo mismo: ningún estante se ensancha para
 un producto (BR-STK-025). En cada cara de lado, el estante inferior NO DEBE sobresalir respecto
 de los estantes superiores.
+
+### BR-STK-036 — Tirar una unidad afuera la retira del inventario
+
+CUANDO se tira al contenedor una unidad registrada afuera, el sistema DEBE retirarla de
+afuera y descontar una del depósito. La caja y la góndola DEBEN seguir como estaban: esa
+unidad ya no se devuelve ni se coloca. Una unidad no registrada afuera NO DEBE cambiar el
+inventario. La jornada siguiente DEBE abrir con el inventario de esa noche (BR-STK-026).
 
 ## Criterios de aceptación
 
@@ -609,6 +616,15 @@ DADO una noche sin ventas y sin gestos en la planilla CUANDO cierra ENTONCES reg
 como cumplida. DADO una noche con la planilla igual a lo vendido CUANDO se cobra una venta más
 y la noche cierra sin anotarla ENTONCES registrar no cuenta.
 
+### AC-STK-053 — Tirar conserva caja y góndola *(verifica BR-STK-036)*
+
+DADO una caja de Actroncito en 8 y una unidad suya agarrada de un casillero CUANDO se tira
+ENTONCES la caja sigue en 8, el depósito tiene una menos, el casillero sigue vacío, reponer no
+se cumple y la unidad ya no está afuera ni se puede colocar o devolver. DADO una unidad
+sacada de su caja CUANDO se tira ENTONCES la caja conserva su contenido anterior al tiro.
+DADO una unidad no registrada afuera CUANDO se intenta desechar ENTONCES devuelve false y
+no cambia el inventario.
+
 ## No objetivos
 
 - Esta capacidad NO cobra ni atiende: eso es de
@@ -621,7 +637,7 @@ y la noche cierra sin anotarla ENTONCES registrar no cuenta.
 - **Entrada:** los productos que existen, los casilleros de la fila de adelante de cada uno, la
   jornada que se abre, lo vendido de cada producto, lo que el jugador lleva en la mano, la caja
   que examina, el casillero que elige, y los pedidos de ingresar, mover, cobrar, sacar y devolver
-  a la caja, colocar y agarrar de la góndola, sumar y restar en la planilla.
+  a la caja, desechar una unidad afuera, colocar y agarrar de la góndola, sumar y restar en la planilla.
 - **Salida:** cuántas unidades hay por ubicación, en cada caja y afuera, qué casilleros de cada
   producto están vacíos y cuáles ocupados, qué falta, qué hace el clic sobre cada caja y sobre
   cada casillero, el texto de la caja examinada, lo anotado y el total de la planilla, si cada
@@ -629,7 +645,8 @@ y la noche cierra sin anotarla ENTONCES registrar no cuenta.
 - **Falla:** las cantidades no positivas se ignoran; el cobro que supera los vendibles no mueve
   nada; el producto inexistente contesta «no existe» en vez de romper; devolver a una caja llena,
   de otro producto o una unidad que ya volvió no cambia nada; colocar en un casillero ocupado no
-  mueve nada, y agarrar de un casillero vacío no da nada. Un faltante de más de una caja o de más
+  mueve nada, agarrar de un casillero vacío no da nada y desechar una unidad no registrada
+  afuera no cambia nada. Un faltante de más de una caja o de más
   que su fila es un error de los datos, que un test detecta: el juego no lo acomoda.
 
 ## Señales
@@ -637,6 +654,9 @@ y la noche cierra sin anotarla ENTONCES registrar no cuenta.
 - El producto colocado en la góndola, la unidad retirada del depósito y la devuelta a su caja.
 
 ## Dependencias
+
+- [`store-cleanup`](../store-cleanup/store-cleanup.md) (consume): la unidad tirada al
+  contenedor deja de estar afuera y se descuenta del depósito.
 
 - [`counter-service`](../counter-service/counter-service.md) (alimenta y consume): el cobro
   descuenta del depósito, hasta los vendibles; lo vendido de cada producto es contra qué se

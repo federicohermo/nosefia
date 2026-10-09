@@ -1,7 +1,7 @@
 ---
 schema_version: 1
 capability_id: CAP-CLN
-status: ratified
+status: draft
 owner: por definir
 provenance: GDD «Limpiar» y «Sacar la basura»; ficha «9. Tarea: Limpieza»; migración de los specs 010, 015, 043; ajustes del dueño sobre duración de la mopa, mezcla, enjuague y agua temporal
 ---
@@ -28,8 +28,8 @@ jabón, el jabón se mezcla en el balde, y cambiar de jabón es vaciar el balde 
 | **Charco temporal** | agua que deja una mopa húmeda sobre piso despejado y se evapora; no es una mancha de la jornada | suciedad, tarea |
 | **Útiles** | la mopa, el balde y los tres jabones: lo que se levanta para limpiar | herramientas |
 | **Pasada** | pasar la mopa por una mancha | — |
-| **Bolsa** | una unidad de basura que hay que llevar al descarte | residuo |
-| **Descarte** | el fondo, y el único lugar donde una bolsa cuenta | contenedor, tacho |
+| **Bolsa** | una unidad de basura que hay que llevar al contenedor | residuo |
+| **Contenedor** | el del depósito, donde se tiran objetos y cuentan las bolsas | zona, esfera |
 
 ## Comportamiento normativo
 
@@ -38,27 +38,26 @@ jabón, el jabón se mezcla en el balde, y cambiar de jabón es vaciar el balde 
 El sistema DEBE poner **3 bolsas por jornada**, y ese número DEBE ser mayor que las manos
 disponibles. Con una sola mano son tres viajes de ida y vuelta, y no hay forma de hacerlo en uno.
 
-### BR-CLN-008 — El descarte está lejos
+### BR-CLN-008 — El contenedor está lejos
 
-El descarte DEBE estar a **6 metros o más** de las tareas del local y de donde arrancan las
-bolsas, y esa distancia DEBE ser mayor al alcance de la mira.
+El contenedor del depósito DEBE ser fijo y estar a **6 metros o más** de las tareas del local
+y de donde arrancan las bolsas. Esa separación DEBE ser mayor al alcance de la mira.
 
-### BR-CLN-009 — La bolsa cuenta sólo adentro de la zona
+### BR-CLN-009 — La bolsa cuenta por el tiro al contenedor
 
-SI la bolsa se suelta fuera del radio del descarte —**1,5 metros**—, ENTONCES el sistema DEBE
-rechazar el depósito y **no quemar la bolsa**: la misma bolsa adentro de la zona sí deposita. El
-borde entra.
+CUANDO una bolsa se tira con clic izquierdo al contenedor completamente abierto, el sistema
+DEBE contarla como depositada. Soltarla en el piso cerca o por la boca física NO DEBE contarla
+ni impedir recogerla y tirarla después.
 
-### BR-CLN-010 — Los tres rechazos de depositar, en orden
+### BR-CLN-010 — Los dos rechazos de depositar, en orden
 
-CUANDO se deposita, el sistema DEBE rechazar por **no es basura** primero, por **ya depositada**
-después, y por **fuera de la zona** al final. Los dos primeros son propiedades de la cosa y del
-estado; el último es el único que depende de dónde está parado el jugador.
+CUANDO se cuenta una bolsa, el sistema DEBE rechazar por **no es basura** primero y por **ya
+depositada** después. Repetir el mismo depósito NO DEBE aumentar la cuenta.
 
 ### BR-CLN-011 — Cada obligatoria cierra con lo suyo
 
 CUANDO no queda una sola mancha, el sistema DEBE dar limpiar por cumplida. CUANDO no queda una
-sola bolsa adentro, DEBE dar la basura por cumplida. Las dos se comparan contra lo que la noche
+sola bolsa sin depositar, DEBE dar la basura por cumplida. Las dos se comparan contra lo que la noche
 declaró y nunca contra un número escrito.
 
 ### BR-CLN-012 — Cada mancha pide su jabón
@@ -175,13 +174,23 @@ obstruyen el movimiento ni la mira.
 
 ### BR-CLN-025 — Tapa del contenedor de basura
 
-El contenedor del descarte DEBE empezar cada jornada con la tapa abierta. El clic derecho sobre
-el cuerpo o la tapa DEBE alternar entre abrirla y cerrarla, mediante un giro breve que se puede invertir
-sin saltar de posición. MIENTRAS está cerrada o girando, el descarte NO DEBE recibir bolsas.
-Una bolsa no depositada DEBE conservarse para poder llevarla después con la tapa abierta.
-La tapa DEBE acompañarse de una colisión que siga su posición.
-Si un objeto obstruye el cierre, la tapa DEBE detenerse antes de atravesarlo y continuar
-cuando el recorrido quede libre. Otro clic derecho permite volver a abrirla.
+CUANDO abre una jornada, el contenedor DEBE tener la tapa completamente abierta. El clic
+derecho sobre el cuerpo o la tapa DEBE alternar abrir y cerrar con cualquier mano, sin cambiar
+lo sostenido. Otro derecho durante el giro DEBE invertirlo. La bisagra y la colisión DEBEN
+acompañar la tapa y el giro DEBE detenerse ante un objeto sin atravesarlo ni comprimirlo.
+Sólo la tapa completamente abierta DEBE permitir recibir objetos; cerrar corta ese permiso
+desde el inicio del giro y abrir lo recupera al alcanzar el tope.
+
+### BR-CLN-026 — Tirar consume el izquierdo y retira lo sostenido
+
+CUANDO se hace clic izquierdo sobre cuerpo o tapa completamente abierta con un objeto que
+entra, el sistema DEBE retirarlo de la mano y de la jornada: oculto, sin colisión ni foco.
+Una caja del depósito NO DEBE entrar. Con mano vacía, caja o tapa cerrada o girando, el gesto
+DEBE conservar manos y tarea sin soltar genéricamente. Abrir NO DEBE tirar automáticamente.
+Con el jugador suspendido por examen, pausa o cierre, ambos clics NO DEBEN tirar ni alternar.
+Al abrir otra noche, los objetos de arranque tirados DEBEN volver a sus padres y poses de
+arranque, visibles, físicos y recogibles, con mopa seca, balde vacío y bolsas sin depositar.
+Las unidades y tickets tirados DEBEN retirarse con los demás creados en la noche anterior.
 
 ## Criterios de aceptación
 
@@ -190,29 +199,29 @@ cuando el recorrido quede libre. Otro clic derecho permite volver a abrirla.
 DADO las bolsas de la jornada ENTONCES son 3, con identidades distintas, y son más que las manos
 disponibles.
 
-### AC-CLN-008 — El fondo está lejos *(verifica BR-CLN-008)*
+### AC-CLN-008 — El viaje llega al contenedor *(verifica BR-CLN-008)*
 
-DADO las posiciones del descarte, de las tareas del local y de las bolsas en la escena ENTONCES
-ninguna está a menos de 6 metros del descarte, y 6 es mayor al alcance de la mira.
+DADO el almacén armado CUANDO se miden los puntos funcionales de las tareas del local y el
+arranque de las tres bolsas ENTONCES el contenedor fijo está en el depósito y a 6 metros o más
+de todos ellos, por encima del alcance de la mira. Las posiciones se derivan del local vigente.
 
-### AC-CLN-009 — El borde de la zona *(verifica BR-CLN-009)*
+### AC-CLN-009 — Soltar no deposita *(verifica BR-CLN-009)*
 
-DADO una bolsa soltada a exactamente 1,5 metros del centro ENTONCES se deposita; a 1,6 metros, el
-resultado es «fuera de la zona» y la misma bolsa se puede depositar después adentro.
+DADO una bolsa soltada en el piso a menos de 1 metro del contenedor o por su boca física
+CUANDO queda suelta ENTONCES no cuenta y se puede recoger. CUANDO después se la tira con clic
+izquierdo sobre cuerpo o tapa completamente abierta ENTONCES sí cuenta.
 
-### AC-CLN-010 — El radio de la escena es el de la regla *(verifica BR-CLN-009)*
 
-DADO la zona de descarte de la escena ENTONCES su radio es el mismo número que declara la regla.
+### AC-CLN-011 — El orden y la idempotencia *(verifica BR-CLN-010)*
 
-### AC-CLN-011 — El orden de los rechazos *(verifica BR-CLN-010)*
-
-DADO algo que no es una bolsa, soltado fuera de la zona ENTONCES el resultado es «no es basura»;
-DADO una bolsa ya depositada, soltada fuera de la zona, es «ya depositada».
+DADO algo que no es bolsa CUANDO se intenta contarlo ENTONCES se rechaza por «no es basura».
+DADO una bolsa ya depositada CUANDO se intenta contar otra vez ENTONCES se rechaza por «ya
+depositada» y la cantidad sigue igual.
 
 ### AC-CLN-012 — Las dos obligatorias cierran *(verifica BR-CLN-011)*
 
 DADO las cuatro manchas de la jornada borradas ENTONCES limpiar está cumplida; DADO las tres
-bolsas en el descarte ENTONCES la basura está cumplida; con una sola pendiente en cada caso, no.
+bolsas depositadas ENTONCES la basura está cumplida; con una sola pendiente en cada caso, no.
 
 ### AC-CLN-014 — Cada jabón borra un solo tipo *(verifica BR-CLN-012)*
 
@@ -356,24 +365,47 @@ la transición; un uso rechazado no la dispara. Vaciar o abrir otra jornada canc
 
 ### AC-CLN-034 — Tapa que se abre y se cierra *(verifica BR-CLN-025)*
 
-DADO el contenedor al empezar una jornada ENTONCES tiene la tapa abierta. CUANDO se interactúa
-con el cuerpo o la tapa mediante clic derecho ENTONCES gira hasta cerrarse; otro clic derecho invierte el
-giro hasta abrirse. El clic izquierdo conserva el gesto de soltar lo que se lleva en la mano.
-La tapa y su colisión conservan la bisagra en ambos estados y durante el movimiento.
-Abrir otra jornada restaura la tapa abierta. Dividir el tiempo entre cuadros conserva el giro.
-Con un objeto en el recorrido de cierre, la tapa se detiene sin atravesarlo ni comprimirlo
-contra el contenedor; al retirarlo continúa cerrándose.
+DADO el contenedor al empezar una jornada ENTONCES tiene la tapa abierta. CUANDO se usa el
+cuerpo o la tapa con clic derecho, con mano vacía o cargada, ENTONCES gira hasta cerrarse sin
+cambiar la mano; otro derecho invierte el giro hasta abrirse. La tapa y su colisión conservan
+la bisagra en ambos estados y durante el movimiento. Abrir otra jornada restaura la tapa
+abierta. Dividir el tiempo entre cuadros conserva el giro. Con un objeto en el recorrido de
+cierre, la tapa se detiene sin atravesarlo ni comprimirlo; al retirarlo continúa cerrándose.
 
-### AC-CLN-035 — Descarte disponible con la tapa abierta *(verifica BR-CLN-025)*
+### AC-CLN-035 — Sólo plenamente abierta recibe *(verifica BR-CLN-025, BR-CLN-026)*
 
-DADO una bolsa válida ENTONCES sólo se deposita con la tapa completamente abierta. Cerrarla
-desactiva el descarte desde el inicio del giro. Soltar una bolsa con la tapa cerrada no la
-destruye ni cuenta la tarea; abrirla permite volver a depositar esa misma bolsa.
-El radio del descarte y el resto de sus rechazos conservan sus reglas anteriores.
+DADO una bolsa sostenida y la tapa cerrada o a mitad de cualquiera de sus giros CUANDO se
+pulsa izquierdo sobre cuerpo o tapa ENTONCES la bolsa sigue en la mano y no cuenta. CUANDO
+termina de abrir ENTONCES sigue sostenida; un izquierdo posterior la tira. Cerrar desactiva
+el permiso desde el inicio del giro.
+
+### AC-CLN-036 — Cada objeto aceptado sale de la jornada *(verifica BR-CLN-026, BR-CLN-009)*
+
+DADO por turno bolsa, mopa, balde, cada jabón, unidad y ticket sostenidos CUANDO se pulsa
+izquierdo sobre el contenedor completamente abierto ENTONCES queda mano vacía y el mismo
+cuerpo oculto, sin colisión ni foco. Sólo la bolsa aumenta lo depositado.
+
+### AC-CLN-037 — Los dos destinos consumen el gesto *(verifica BR-CLN-026)*
+
+DADO cuerpo y tapa, por turno, con mano vacía, caja sostenida o tapa no abierta CUANDO se
+pulsa izquierdo ENTONCES no hay soltar adicional, la carga conserva su padre y la tarea no
+cambia. La caja rechazada sigue disponible y la mano vacía sigue vacía.
+
+### AC-CLN-038 — Los tirados vuelven con la noche nueva *(verifica BR-CLN-026, BR-CLN-014)*
+
+DADO mopa mojada, balde teñido y bolsa tirados CUANDO abre otra noche ENTONCES vuelven a sus
+padres y lugares originales, visibles, físicos y recogibles; mopa seca, balde vacío y bolsa
+sin depositar. DADO un ticket y una unidad tirados ENTONCES se retiran junto con los demás
+creados en la noche anterior, sin dejar entradas inválidas en la lista de tirados.
+
+### AC-CLN-039 — La suspensión bloquea ambos gestos *(verifica BR-CLN-026)*
+
+DADO algo sostenido y el control suspendido por examen, pausa o cierre CUANDO se pulsan
+izquierdo y derecho sobre cuerpo o tapa ENTONCES manos, objetos, tarea y tapa siguen iguales.
+CUANDO se reanuda ENTONCES el derecho alterna y el izquierdo tira sólo completamente abierta.
 
 ## No objetivos
 
-- Esta capacidad NO mide distancias: las recibe ya medidas. El dominio no sabe de física.
 - Esta capacidad NO dibuja: declara de qué color se ven cada mancha, el agua del balde y la punta
   de la mopa, y la escena lo pinta.
 - Esta capacidad NO saca un jabón en la jornada 2 ni lo cambia por otro producto: la ficha lo
@@ -382,24 +414,27 @@ El radio del descarte y el resto de sus rechazos conservan sus reglas anteriores
 ## Contratos
 
 - **Entrada:** qué se lleva en la mano, sobre qué se usa —una mancha, el balde, el lavatorio,
-  el inodoro o piso despejado—, tiempo real y recorrido de la mopa, y a qué distancia del
-  descarte se soltó la bolsa.
+  el inodoro o piso despejado—, tiempo real y recorrido de la mopa, el permiso de la tapa y
+  el pedido de tirar lo sostenido.
 - **Salida:** cómo salió cada uso, qué tiene el balde y la carga restante de la mopa, qué manchas
   quedan, el color de cada cosa, el agua temporal, cuántas bolsas faltan y si cada obligatoria
-  está cumplida.
+  está cumplida y qué objeto se tiró.
 - **Falla:** ocho motivos de rechazo para limpiar —sin efecto, balde vacío, balde ya lleno, balde
-  ya teñido, mopa seca, sin jabón, jabón equivocado y ya limpia (BR-CLN-015 a BR-CLN-020)— y tres
-  para la basura (BR-CLN-009 y BR-CLN-010), cada uno con su motivo. Ninguno cambia el estado.
+  ya teñido, mopa seca, sin jabón, jabón equivocado y ya limpia (BR-CLN-015 a BR-CLN-020)—;
+  mano vacía, no entra y tapa no abierta al tirar; no es basura y ya depositada al contar.
+  Ningún rechazo cambia el estado.
 
 ## Señales
 
 - El balde lleno, teñido y vaciado; la mopa mojada; la pasada que borra una mancha; el uso
-  rechazado, con su motivo; y la bolsa depositada.
+  rechazado, con su motivo; la bolsa depositada y el objeto tirado.
 
 ## Dependencias
 
 - [`player-actions`](../player-actions/player-actions.md) (consume): qué se lleva en la mano,
-  sobre qué se usa y a qué distancia se soltó.
+  sobre qué se usa y qué se tira.
+- [`store-stock`](../store-stock/store-stock.md) (alimenta): la unidad tirada deja de estar
+  afuera y se descuenta del depósito.
 - [`shift-cycle`](../shift-cycle/shift-cycle.md) (alimenta): avisa cuándo cada obligatoria quedó
   cumplida.
 
