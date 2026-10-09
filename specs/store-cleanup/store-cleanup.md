@@ -1,7 +1,7 @@
 ---
 schema_version: 1
 capability_id: CAP-CLN
-status: ratified
+status: draft
 owner: por definir
 provenance: GDD «Limpiar» y «Sacar la basura»; ficha «9. Tarea: Limpieza»; migración de los specs 010, 015, 043; ajustes del dueño sobre duración de la mopa, mezcla, enjuague y agua temporal
 ---
@@ -191,6 +191,33 @@ Con el jugador suspendido por examen, pausa o cierre, ambos clics NO DEBEN tirar
 Al abrir otra noche, los objetos de arranque tirados DEBEN volver a sus padres y poses de
 arranque, visibles, físicos y recogibles, con mopa seca, balde vacío y bolsas sin depositar.
 Las unidades y tickets tirados DEBEN retirarse con los demás creados en la noche anterior.
+
+### BR-CLN-027 — Pertenencia a las habitaciones
+
+El sistema DEBE distinguir el interior del local, del depósito y del baño, incluidos sus pasos
+de acceso, según piso, paredes y techos existentes. Cada habitación DEBE admitir una unión
+finita de volúmenes locales sin rellenar huecos, ensanchar pasos ni elevar techos bajos. Un
+punto fuera de las tres DEBE clasificarse afuera. Trasladar o rotar el conjunto NO DEBE agrandar
+sus interiores ni cambiar la pertenencia de un punto que conserva su posición relativa.
+
+### BR-CLN-028 — El desorden cuenta una vez al cierre
+
+CUANDO termina la jornada, el sistema DEBE anotar un llamado por desorden si queda alguna
+unidad suelta dentro de cualquier habitación, una caja dentro y fuera del depósito o un útil
+dentro y fuera del baño. El cuerpo sostenido DEBE excluirse por identidad, salvo mientras se
+examina: entonces cuenta en su posición física. Lo ya tirado al contenedor DEBE excluirse.
+Una bolsa adentro no DEBE producir desorden. Varios cuerpos desordenados DEBEN producir un
+único motivo. La foto DEBE tomarse antes de registrar el legajo, armar el parte y guardar.
+
+### BR-CLN-029 — Lo que queda afuera conserva su cuerpo
+
+CUANDO termina la jornada, el sistema DEBE anotar un llamado si queda al menos un cuerpo
+levantable afuera, excluyendo el sostenido sin examen y lo tirado al contenedor. Varios cuerpos
+afuera DEBEN producir un único motivo, independiente del desorden. Recuperarlo antes del cierre
+DEBE eliminar ese motivo; una unidad recuperada y suelta adentro puede producir desorden.
+Las superficies existentes de pavimento exterior DEBEN sostener los cuerpos soltados por el
+hueco real de ventanilla, conservándolos recogibles dentro del alcance vigente, sin extender
+soporte sobre huecos que el pavimento no ocupa ni duplicar su dibujo.
 
 ## Criterios de aceptación
 
@@ -407,6 +434,54 @@ DADO algo sostenido y el control suspendido por examen, pausa o cierre CUANDO se
 izquierdo y derecho sobre cuerpo o tapa ENTONCES manos, objetos, tarea y tapa siguen iguales.
 CUANDO se reanuda ENTONCES el derecho alterna y el izquierdo tira sólo completamente abierta.
 
+### AC-CLN-040 — Interiores, techos y pasos exactos *(verifica BR-CLN-027)*
+
+DADO el almacén al abrir ENTONCES todas las cajas están en depósito, los cinco útiles en baño
+y el jugador en local. CUANDO se consultan centros de los pasos ENTONCES pertenecen a su
+habitación destino; un punto junto al lateral o sobre un techo bajo queda afuera. DADO una
+unión disjunta trasladada y girada 45° ENTONCES sus partes conservan pertenencia y sus huecos
+siguen afuera, incluso cuando caen dentro de una envolvente mayor.
+
+### AC-CLN-041 — Suelta no significa visible ni apoyada en el piso *(verifica BR-CLN-028)*
+
+DADO una unidad suelta en local, depósito o baño, incluso agrupada o apoyada en caja o góndola,
+CUANDO cierra ENTONCES hay desorden. DADO la unidad colocada, devuelta o sostenida sin examen
+ENTONCES no lo produce. El cuerpo de repuesto no cuenta como unidad suelta.
+
+### AC-CLN-042 — Cada clase tiene su habitación *(verifica BR-CLN-027, BR-CLN-028)*
+
+DADO una caja en local CUANDO cierra ENTONCES hay desorden; en depósito o su paso, no.
+DADO un útil en local o depósito ENTONCES hay desorden; en baño o su paso, no. DADO una bolsa
+adentro ENTONCES no produce desorden. DADO la lista vacía ENTONCES no hay ninguno de los motivos.
+
+### AC-CLN-043 — La mano excluye sólo su cuerpo *(verifica BR-CLN-028, BR-CLN-029)*
+
+DADO dos cajas distintas con los mismos datos y una sostenida CUANDO la otra queda desordenada
+o afuera ENTONCES conserva su motivo. DADO el cuerpo sostenido CUANDO inicia un examen real
+ENTONCES cuenta por su posición; al terminar vuelve a excluirse. Esto también vale para una
+unidad que salió del grupo de sueltas al agarrarse. Mover y devolver lo sostenido conserva su
+identidad; soltar, entregar y vaciar dejan la mano sin cuerpo.
+
+### AC-CLN-044 — Afuera y recuperación *(verifica BR-CLN-028, BR-CLN-029)*
+
+DADO una bolsa, caja, unidad o útil afuera CUANDO cierra ENTONCES hay un único motivo por
+afuera, aunque haya varios. CUANDO se recuperan antes del cierre y se sostienen, colocan o
+devuelven ENTONCES no hay ese motivo; una unidad recuperada y suelta adentro produce desorden.
+
+### AC-CLN-045 — El pavimento sostiene lo soltado *(verifica BR-CLN-029)*
+
+DADO las seis superficies existentes del pavimento ENTONCES su soporte coincide con sus
+triángulos y no cubre los huecos ajenos. CUANDO se suelta un cuerpo por los bordes libres del
+hueco real de ventanilla, a ambos lados y arriba del vidrio, ENTONCES cae, se apoya estable en
+el pavimento y puede recogerse dentro del alcance vigente.
+
+### AC-CLN-046 — Dos motivos antes del registro *(verifica BR-CLN-028, BR-CLN-029)*
+
+DADO caja desordenada y unidad afuera CUANDO agota la jornada con GRAVE ENTONCES el legajo
+lleva 6 medios desde cero antes de armar el parte y escribir el checkpoint. DADO esos cuerpos
+tirados al contenedor ENTONCES no generan motivos; abrir otra noche vacía el registro de tirados
+y restaura los persistentes, sin consultar unidades o tickets ya retirados.
+
 ## No objetivos
 
 - Esta capacidad NO dibuja: declara de qué color se ven cada mancha, el agua del balde y la punta
@@ -418,10 +493,10 @@ CUANDO se reanuda ENTONCES el derecho alterna y el izquierdo tira sólo completa
 
 - **Entrada:** qué se lleva en la mano, sobre qué se usa —una mancha, el balde, el lavatorio,
   el inodoro o piso despejado—, tiempo real y recorrido de la mopa, el permiso de la tapa y
-  el pedido de tirar lo sostenido.
+  el pedido de tirar lo sostenido y el estado físico de los cuerpos al cerrar.
 - **Salida:** cómo salió cada uso, qué tiene el balde y la carga restante de la mopa, qué manchas
   quedan, el color de cada cosa, el agua temporal, cuántas bolsas faltan y si cada obligatoria
-  está cumplida y qué objeto se tiró.
+  está cumplida, qué objeto se tiró y los motivos únicos del cierre.
 - **Falla:** ocho motivos de rechazo para limpiar —sin efecto, balde vacío, balde ya lleno, balde
   ya teñido, mopa seca, sin jabón, jabón equivocado y ya limpia (BR-CLN-015 a BR-CLN-020)—;
   mano vacía, no entra y tapa no abierta al tirar; no es basura y ya depositada al contar.
