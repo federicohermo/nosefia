@@ -20,6 +20,7 @@ extends StaticBody3D
 ## no declaran `class_name`, así que sin esto el tipo estático sería `CharacterBody3D` y llamarle
 ## `suspender()` no compilaría.
 const JugadorDelLocal := preload("res://src/escenas/jugador.gd")
+const CompradorEnRetirada := preload("res://src/escenas/objetos/comprador_en_retirada.gd")
 const ANIMACIONES := {
 	DialogosDeCompradores.Personaje.MARTIN: preload("res://assets/characters/martin/idle.tres"),
 	DialogosDeCompradores.Personaje.TIAGO: preload("res://assets/characters/tiago/idle.tres"),
@@ -37,6 +38,8 @@ const ANIMACIONES := {
 ## regla del juego: a quién hay que atender lo sigue contestando el dominio.
 var _abierta := false
 var _recibidos: Dictionary[Comprador, Array] = {}
+var _imagen_de: Atencion = null
+var _retiradas: Array[CompradorEnRetirada] = []
 
 
 func _ready() -> void:
@@ -54,6 +57,8 @@ func _ready() -> void:
 
 
 func _al_preparar() -> void:
+	_limpiar_retiradas()
+	_imagen_de = null
 	for comprador: Comprador in _recibidos:
 		_descartar_recibidos(comprador)
 	_recibidos.clear()
@@ -117,6 +122,9 @@ func _repintar() -> void:
 
 func _mostrar_personaje(atendida: Atencion) -> void:
 	if atendida == null or not atendida.fisica() or atendida.despachada():
+		if atendida != null and atendida == _imagen_de and comprador_visible.visible:
+			_conservar_imagen()
+		_imagen_de = null
 		comprador_visible.hide()
 		comprador_visible.stop()
 		return
@@ -126,6 +134,28 @@ func _mostrar_personaje(atendida: Atencion) -> void:
 		comprador_visible.set_frame_and_progress(0, 0.0)
 	comprador_visible.show()
 	comprador_visible.play(&"idle")
+	_imagen_de = atendida
+
+
+func _conservar_imagen() -> void:
+	var imagen := comprador_visible.duplicate(0) as AnimatedSprite3D
+	imagen.set_script(CompradorEnRetirada)
+	var retirada := imagen as CompradorEnRetirada
+	var textura := imagen.sprite_frames.get_frame_texture(&"idle", 0)
+	var limite := antepecho.get_aabb().size.x / 2.0 + textura.get_width() * imagen.pixel_size / 2.0
+	retirada.preparar(limite)
+	add_child(retirada)
+	retirada.set_frame_and_progress(comprador_visible.frame, comprador_visible.frame_progress)
+	retirada.play(&"idle")
+	_retiradas.append(retirada)
+
+
+func _limpiar_retiradas() -> void:
+	for retirada in _retiradas:
+		if is_instance_valid(retirada):
+			retirada.hide()
+			retirada.queue_free()
+	_retiradas.clear()
 
 
 func _descartar_recibidos(comprador: Comprador) -> void:
@@ -196,6 +226,8 @@ func _al_despacharse(_despachados: int) -> void:
 
 
 func _al_cerrar_el_turno(_cumplidas: int) -> void:
+	_limpiar_retiradas()
+	_imagen_de = null
 	comprador_visible.hide()
 	comprador_visible.stop()
 	cerrar()
