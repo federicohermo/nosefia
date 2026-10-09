@@ -1,0 +1,199 @@
+{
+  "issue": 308,
+  "head": "ea047c540ae0dedea9305e1fdbc24e6456b88262",
+  "base": "8fb59f001529a9b8d945deb1eeb653804d9d57a2",
+  "native_head": "ea047c540ae0dedea9305e1fdbc24e6456b88262",
+  "rebase": "",
+  "result": {
+    "head": "ea047c540ae0dedea9305e1fdbc24e6456b88262",
+    "code": 0,
+    "count_code": 0,
+    "elapsed": 740.3975412845612,
+    "raw": "D:\\temporales\\nosefia-batch-64-309\\empleo-308\\padre-308-full1-tests-crudo.log",
+    "xml": "D:\\temporales\\nosefia-batch-64-309\\empleo-308\\padre-308-full1-results.xml",
+    "xml_sha256": "870da2bf4f17d8d33a279f514477eb7155f73611fcfad9fd030982503fdf800c",
+    "suites": 216,
+    "cases": 1685,
+    "errors": 0,
+    "failures": 0,
+    "skipped": 0,
+    "flaky": 0
+  },
+  "files": [
+    {
+      "path": "308-issue-cumplido.md",
+      "bytes": 9226,
+      "sha256": "1f6a446f8eb25f5f993fa5c1b662903ba79fdb237ae8774327d44f0914b8e186",
+      "local_sha256": "1f6a446f8eb25f5f993fa5c1b662903ba79fdb237ae8774327d44f0914b8e186"
+    },
+    {
+      "path": "308-snapshot-guardado.json",
+      "bytes": 9032,
+      "sha256": "260747ee0615e4f6b2fbbe54bba23b92a506bc836d4d6b96cd63751aaf63aa37",
+      "local_sha256": "260747ee0615e4f6b2fbbe54bba23b92a506bc836d4d6b96cd63751aaf63aa37"
+    },
+    {
+      "path": "308-snapshot.json",
+      "bytes": 7588,
+      "sha256": "386b2597f1fb4a9620c5f09b8aa5a6d538947fa1bdd8ca23ec88d441f462aeb4",
+      "local_sha256": "386b2597f1fb4a9620c5f09b8aa5a6d538947fa1bdd8ca23ec88d441f462aeb4"
+    },
+    {
+      "path": "308-whole-antes-guardado.md",
+      "bytes": 8801,
+      "sha256": "85d3545b0f865a2acf331afd9b4a59e84d12c18b593afe8bfe37c9143e780bb0",
+      "local_sha256": "85d3545b0f865a2acf331afd9b4a59e84d12c18b593afe8bfe37c9143e780bb0"
+    },
+    {
+      "path": "308-whole-final.md",
+      "bytes": 9226,
+      "sha256": "add42b450f0e101e49861620f288d267fcac8b398a629460695ae8c5fabfa6bb",
+      "local_sha256": "add42b450f0e101e49861620f288d267fcac8b398a629460695ae8c5fabfa6bb"
+    },
+    {
+      "path": "308-whole-final.publicar.md",
+      "bytes": 9226,
+      "sha256": "add42b450f0e101e49861620f288d267fcac8b398a629460695ae8c5fabfa6bb",
+      "local_sha256": "add42b450f0e101e49861620f288d267fcac8b398a629460695ae8c5fabfa6bb"
+    },
+    {
+      "path": "308-whole-final.publicar.proof.json",
+      "bytes": 421,
+      "sha256": "f06093024de1496eb3d3f65067778ebc878cba2e92b75541e8aaeac9f3bc675b",
+      "local_sha256": "ff8270436f2573aafb1e7e57c58aecfc95dc15c26151b04b1ab6e644ee430cad"
+    },
+    {
+      "path": "padre-308-flujos.gd",
+      "bytes": 5704,
+      "sha256": "3bae159850687c0ff55fe29a3f8866e49f024a2245245cb84606598cc0126c73",
+      "local_sha256": "f822761cdbcbc2fbb08b71b75e5bafef125acc55976bde81a02bf07975d1ae8f"
+    },
+    {
+      "path": "padre-308-full1-bundle.log",
+      "bytes": 758,
+      "sha256": "6dfeb1b5477f8c45bcfd6aef0e598dfaeefb90e4afdd3d4533e33d40c8085157",
+      "local_sha256": "8d686e81d6c93927b4da2a70a91fa95d8d306f8452f8d226b06877803e546059"
+    },
+    {
+      "path": "padre-308-full1-conteo.log",
+      "bytes": 65,
+      "sha256": "1221de29d84bdedd106be7417c615753d9d8599a959f675984b8de75fccc6d51",
+      "local_sha256": "1221de29d84bdedd106be7417c615753d9d8599a959f675984b8de75fccc6d51"
+    },
+    {
+      "path": "padre-308-full1-resultados.json",
+      "bytes": 485,
+      "sha256": "c022f6ab18bffba3128b4d4dc73e7a2ec3d81e678ec1b1fdfe12202b02cc424a",
+      "local_sha256": "c022f6ab18bffba3128b4d4dc73e7a2ec3d81e678ec1b1fdfe12202b02cc424a"
+    },
+    {
+      "path": "padre-308-full1-results.xml",
+      "bytes": 273739,
+      "sha256": "870da2bf4f17d8d33a279f514477eb7155f73611fcfad9fd030982503fdf800c",
+      "local_sha256": "870da2bf4f17d8d33a279f514477eb7155f73611fcfad9fd030982503fdf800c"
+    },
+    {
+      "path": "padre-308-full1-revisado.json",
+      "bytes": 1111,
+      "sha256": "fefcf30141721f5cc4507c606b45a531ace68da7fc82b24a2109094a11789ec1",
+      "local_sha256": "fefcf30141721f5cc4507c606b45a531ace68da7fc82b24a2109094a11789ec1"
+    },
+    {
+      "path": "padre-308-full1-revisado.xml",
+      "bytes": 273739,
+      "sha256": "870da2bf4f17d8d33a279f514477eb7155f73611fcfad9fd030982503fdf800c",
+      "local_sha256": "870da2bf4f17d8d33a279f514477eb7155f73611fcfad9fd030982503fdf800c"
+    },
+    {
+      "path": "padre-308-full1-tests-crudo.log",
+      "bytes": 1043740,
+      "sha256": "fe703f102e265a5a84ba70f2f9e996adc0008359fa4192b5d6e202e46965a932",
+      "local_sha256": "cfafe1f92cdace2ab0b2dbff7f801cd69a70573a0e971a29b96c3522feca6eeb"
+    },
+    {
+      "path": "padre-308-puro.gd",
+      "bytes": 1015,
+      "sha256": "58de0e443dff4b8a39e3133e9dabae7acc6911730b5eaf4144c0676d5d5d7234",
+      "local_sha256": "da8d5896d1b36a5b05f6c732e61a25b7656a2980535a6fd52c1071a0e524b859"
+    },
+    {
+      "path": "padre-308-rojo1-import.log",
+      "bytes": 2691,
+      "sha256": "ae503d36c3b4e3501e55a78b420cbdad59f2c7e8e460b6ae8f63cb3d4a581cd3",
+      "local_sha256": "042cfbc61c4230449a89a93f7ce69b56a99a4b736ae100ac1fdd13232cc0f85e"
+    },
+    {
+      "path": "padre-308-rojo1-raw.log",
+      "bytes": 17780,
+      "sha256": "011443950491e9cd743eff48db1ff4d8ff1dd0cfd6d4daea3922d482af919c67",
+      "local_sha256": "6bd43d5342b6674470591f582d6b97edcf6344fa56f96c8d5f0a1122a49d0ba2"
+    },
+    {
+      "path": "padre-308-rojo1-resultados.json",
+      "bytes": 5366,
+      "sha256": "aa7f713c6711feb3b8f9e4ce9e7ecab667b01769d2eeda21923fca7ca4f3e80e",
+      "local_sha256": "fb677820f5455ca0e472a5e030af264df5fc62b15959d45539f1a9eee83355d2"
+    },
+    {
+      "path": "padre-308-rojo1-results.xml",
+      "bytes": 7901,
+      "sha256": "694085ef0b85b768dd49f4ceced39b3b45163b268ddd0842edd629e96a63794c",
+      "local_sha256": "694085ef0b85b768dd49f4ceced39b3b45163b268ddd0842edd629e96a63794c"
+    },
+    {
+      "path": "padre-308-spec-delta.md",
+      "bytes": 2150,
+      "sha256": "1b6cdfd2c6f9dfebc3a3675a829b0d66a8b7d85e2a020ac92eb14708874c151a",
+      "local_sha256": "1b6cdfd2c6f9dfebc3a3675a829b0d66a8b7d85e2a020ac92eb14708874c151a"
+    },
+    {
+      "path": "padre-308-verde1-raw.log",
+      "bytes": 13261,
+      "sha256": "4f6e5f338e94ed3597a2c30a942295bcd5a1424b3df5e9f766ee7b4df1a9d953",
+      "local_sha256": "5b8988a57ad3df59ce9ba9d8b3c22916fe4be64078e05fcbae7496c2d4ca7e32"
+    },
+    {
+      "path": "padre-308-verde1-resultados.json",
+      "bytes": 1378,
+      "sha256": "974ee34c2b3c26308413a9f24c7de6b5b2032502c436e00ee4c0ad2064b8d2d3",
+      "local_sha256": "b7c1d60c86dfac07f550668208c1b8b02c95936954a15102f83f88d2e6880853"
+    },
+    {
+      "path": "padre-308-verde1-results.xml",
+      "bytes": 3396,
+      "sha256": "e315537b12a49ed5118c504d23a2c6f5ce48179a700c3d0ba3e4c8831c1a9936",
+      "local_sha256": "e315537b12a49ed5118c504d23a2c6f5ce48179a700c3d0ba3e4c8831c1a9936"
+    },
+    {
+      "path": "padre-308-verde2-raw.log",
+      "bytes": 12952,
+      "sha256": "5fc063cd18f1facc14ff524946cbf6f21b0f767d6509a163324c385e6e119d10",
+      "local_sha256": "46c0f8033ae6cc192e321020f9d9c48dea986f3af9bc448eaaaaa2d06530c97f"
+    },
+    {
+      "path": "padre-308-verde2-resultados.json",
+      "bytes": 1012,
+      "sha256": "142a632360487e06ac8d70bee59b71ca0bb6cadd9e6888fafa1a33cf04fd1293",
+      "local_sha256": "74f847532cd7462b145e7dd48729af35ed5146d6ae0e7ac4239cfcba2f58a7db"
+    },
+    {
+      "path": "padre-308-verde2-results.xml",
+      "bytes": 3119,
+      "sha256": "93d868af70f1e170f74c2bd3c07b43521779581cbdbf0064ac16019be76384c8",
+      "local_sha256": "93d868af70f1e170f74c2bd3c07b43521779581cbdbf0064ac16019be76384c8"
+    },
+    {
+      "path": "padre-full-issue.py",
+      "bytes": 1926,
+      "sha256": "e9a4d2dbfea798ee2c0747ae43c15e2f945c9926c378c78558a1675a1cff9ad0",
+      "local_sha256": "e9a4d2dbfea798ee2c0747ae43c15e2f945c9926c378c78558a1675a1cff9ad0"
+    },
+    {
+      "path": "padre-308-focal.py",
+      "bytes": 2767,
+      "sha256": "64711cccea6746f42c91e546c3d8ac89702c90e505c595ba63329899748de70b",
+      "local_sha256": "64711cccea6746f42c91e546c3d8ac89702c90e505c595ba63329899748de70b"
+    }
+  ],
+  "history": "Primera corrida completa."
+}

@@ -1,0 +1,41 @@
+{
+  "head": "7fc5a9299d61d2781039c2b0829524c114697d7e",
+  "diff_sha256": "ec7baf447329092371f0d57380fd91336e03d2f26a04e14042c9fa2bcbb27dbc",
+  "code": 100,
+  "raw": "D:\\temporales\\nosefia-batch-64-309\\empleo-308\\padre-308-verde1-raw.log",
+  "command": [
+    "D:\\Program Files\\Godot\\Godot_v4.7.2-stable_win64_console.exe",
+    "--headless",
+    "--path",
+    "D:\\Usuarios\\fede\\Documentos\\Catedra Videojuegos FADU\\manada\\repo\\nosefia\\.claude\\worktrees\\batch-64-309-d",
+    "-s",
+    "-d",
+    "--remote-debug",
+    "tcp://127.0.0.1:0",
+    "res://addons/gdUnit4/bin/GdUnitCmdTool.gd",
+    "-a",
+    "test/dominio/almacen/reglas_del_cierre_test.gd",
+    "-a",
+    "test/escenas/consecuencias_del_contenedor_test.gd",
+    "--continue",
+    "--ignoreHeadlessMode",
+    "-rd",
+    "res://reports/padre-308-verde1"
+  ],
+  "suites": 2,
+  "cases": 18,
+  "failures": 1,
+  "errors": 0,
+  "skipped": 0,
+  "xml_sha256": "e315537b12a49ed5118c504d23a2c6f5ce48179a700c3d0ba3e4c8831c1a9936",
+  "failed_cases": [
+    {
+      "suite": "consecuencias_del_contenedor_test",
+      "case": "test_cuatro_motivos_con_grave_despiden_y_guardan_ocho",
+      "failures": [
+        "\n\nExpecting:\n 8\n but was\n 0\n\tat 'test_cuatro_motivos_con_grave_despiden_y_guardan_ocho' in res://test/escenas/consecuencias_del_contenedor_test.gd:158\n\n\t\t\t"
+      ],
+      "errors": []
+    }
+  ]
+}

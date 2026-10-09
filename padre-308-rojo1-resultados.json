@@ -1,0 +1,90 @@
+{
+  "head": "7fc5a9299d61d2781039c2b0829524c114697d7e",
+  "diff_sha256": "0ec012c4f6780d84efecd1e051b7eb21d4148c07c254575ea906825572da22ff",
+  "code": 100,
+  "raw": "D:\\temporales\\nosefia-batch-64-309\\empleo-308\\padre-308-rojo1-raw.log",
+  "command": [
+    "D:\\Program Files\\Godot\\Godot_v4.7.2-stable_win64_console.exe",
+    "--headless",
+    "--path",
+    "D:\\Usuarios\\fede\\Documentos\\Catedra Videojuegos FADU\\manada\\repo\\nosefia\\.claude\\worktrees\\batch-64-309-d",
+    "-s",
+    "-d",
+    "--remote-debug",
+    "tcp://127.0.0.1:0",
+    "res://addons/gdUnit4/bin/GdUnitCmdTool.gd",
+    "-a",
+    "test/dominio/almacen/reglas_del_cierre_test.gd",
+    "-a",
+    "test/escenas/consecuencias_del_contenedor_test.gd",
+    "--continue",
+    "--ignoreHeadlessMode",
+    "-rd",
+    "res://reports/padre-308-rojo1"
+  ],
+  "suites": 2,
+  "cases": 18,
+  "failures": 15,
+  "errors": 0,
+  "skipped": 0,
+  "xml_sha256": "694085ef0b85b768dd49f4ceced39b3b45163b268ddd0842edd629e96a63794c",
+  "failed_cases": [
+    {
+      "suite": "reglas_del_cierre_test",
+      "case": "test_solo_las_bolsas_y_los_tickets_se_tiran_sin_llamado",
+      "failures": [
+        "\n\nExpecting: 'true' but is 'false'\n\tat 'test_solo_las_bolsas_y_los_tickets_se_tiran_sin_llamado' in res://test/dominio/almacen/reglas_del_cierre_test.gd:154\n\n\t\t\t",
+        "\n\nExpecting: 'true' but is 'false'\n\tat 'test_solo_las_bolsas_y_los_tickets_se_tiran_sin_llamado' in res://test/dominio/almacen/reglas_del_cierre_test.gd:154\n\n\t\t\t",
+        "\n\nExpecting: 'true' but is 'false'\n\tat 'test_solo_las_bolsas_y_los_tickets_se_tiran_sin_llamado' in res://test/dominio/almacen/reglas_del_cierre_test.gd:154\n\n\t\t\t",
+        "\n\nExpecting: 'true' but is 'false'\n\tat 'test_solo_las_bolsas_y_los_tickets_se_tiran_sin_llamado' in res://test/dominio/almacen/reglas_del_cierre_test.gd:156\n\n\t\t\t"
+      ],
+      "errors": []
+    },
+    {
+      "suite": "consecuencias_del_contenedor_test",
+      "case": "test_tirar_una_unidad_suma_un_medio_y_la_deuda_se_conserva",
+      "failures": [
+        "\n\nExpecting:\n 1\n but was\n 0\n\tat 'test_tirar_una_unidad_suma_un_medio_y_la_deuda_se_conserva' in res://test/escenas/consecuencias_del_contenedor_test.gd:91\n\n\t\t\t",
+        "\n\nExpecting:\n 1\n but was\n 0\n\tat 'test_tirar_una_unidad_suma_un_medio_y_la_deuda_se_conserva' in res://test/escenas/consecuencias_del_contenedor_test.gd:94\n\n\t\t\t"
+      ],
+      "errors": []
+    },
+    {
+      "suite": "consecuencias_del_contenedor_test",
+      "case": "test_tirar_la_mopa_no_agrega_desorden_ni_afuera",
+      "failures": [
+        "\n\nExpecting:\n 1\n but was\n 0\n\tat 'test_tirar_la_mopa_no_agrega_desorden_ni_afuera' in res://test/escenas/consecuencias_del_contenedor_test.gd:101\n\tat 'after_test' in res://test/escenas/consecuencias_del_contenedor_test.gd:20\n\n\t\t\t"
+      ],
+      "errors": []
+    },
+    {
+      "suite": "consecuencias_del_contenedor_test",
+      "case": "test_varios_importantes_cuentan_una_vez_y_otra_noche_pueden_repetir",
+      "failures": [
+        "\n\nExpecting:\n 1\n but was\n 0\n\tat 'test_varios_importantes_cuentan_una_vez_y_otra_noche_pueden_repetir' in res://test/escenas/consecuencias_del_contenedor_test.gd:122\n\tat 'after_test' in res://test/escenas/consecuencias_del_contenedor_test.gd:20\n\n\t\t\t",
+        "\n\nExpecting:\n 2\n but was\n 0\n\tat 'test_varios_importantes_cuentan_una_vez_y_otra_noche_pueden_repetir' in res://test/escenas/consecuencias_del_contenedor_test.gd:126\n\tat 'after_test' in res://test/escenas/consecuencias_del_contenedor_test.gd:20\n\n\t\t\t"
+      ],
+      "errors": []
+    },
+    {
+      "suite": "consecuencias_del_contenedor_test",
+      "case": "test_tres_motivos_con_grave_guardan_siete_y_permiten_continuar",
+      "failures": [
+        "\n\nExpecting:\n 7\n but was\n 6\n\tat 'test_tres_motivos_con_grave_guardan_siete_y_permiten_continuar' in res://test/escenas/consecuencias_del_contenedor_test.gd:135\n\tat 'after_test' in res://test/escenas/consecuencias_del_contenedor_test.gd:20\n\n\t\t\t",
+        "\n\nExpecting:\n 7\n but was\n 6\n\tat 'test_tres_motivos_con_grave_guardan_siete_y_permiten_continuar' in res://test/escenas/consecuencias_del_contenedor_test.gd:137\n\tat 'after_test' in res://test/escenas/consecuencias_del_contenedor_test.gd:20\n\n\t\t\t",
+        "\n\nExpecting:\n 7\n but was\n 6\n\tat 'test_tres_motivos_con_grave_guardan_siete_y_permiten_continuar' in res://test/escenas/consecuencias_del_contenedor_test.gd:142\n\tat 'after_test' in res://test/escenas/consecuencias_del_contenedor_test.gd:20\n\n\t\t\t"
+      ],
+      "errors": []
+    },
+    {
+      "suite": "consecuencias_del_contenedor_test",
+      "case": "test_cuatro_motivos_con_grave_despiden_y_guardan_ocho",
+      "failures": [
+        "\n\nExpecting:\n 8\n but was\n 7\n\tat 'test_cuatro_motivos_con_grave_despiden_y_guardan_ocho' in res://test/escenas/consecuencias_del_contenedor_test.gd:156\n\n\t\t\t",
+        "\n\nExpecting:\n 2\n but was\n 0\n\tat 'test_cuatro_motivos_con_grave_despiden_y_guardan_ocho' in res://test/escenas/consecuencias_del_contenedor_test.gd:157\n\n\t\t\t",
+        "\n\nExpecting:\n 8\n but was\n 7\n\tat 'test_cuatro_motivos_con_grave_despiden_y_guardan_ocho' in res://test/escenas/consecuencias_del_contenedor_test.gd:158\n\n\t\t\t"
+      ],
+      "errors": []
+    }
+  ]
+}

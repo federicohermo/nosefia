@@ -1,0 +1,76 @@
+# Tirar al contenedor un objeto importante suma un llamado de atención
+
+
+## Contexto
+
+- **Objetivo:** tirar al contenedor durante la noche al menos un objeto que no sea bolsa ni ticket suma0,5 al cierre.
+- **Tipo:** `feature`.
+- **Spec:** modifica `specs/store-cleanup/store-cleanup.md`.
+- **Rama:** `feature/308-llamado-del-contenedor`.
+- **Base y dependencias:** `8fb59f001529a9b8d945deb1eeb653804d9d57a2`, rama `feature/307-llamado-del-inodoro`; hereda306 (registro/medios/lista de cierre) y305 (LEFT para tirar, RIGHT para tapa y `objeto_tirado`). #297 aporta guard LEFT suspendido y se conserva.
+
+Sale de la ficha verde [Llamados de atención extras](https://app.notion.com/p/3e486efecd9d80078230fe988b0290d2), que exceptúa bolsas, tickets y productos vencidos. Hoy no existe el tipo producto vencido: pertenece a Particulares 🟨 J3 y queda fuera de este issue. Una unidad ordinaria nunca se considera vencida por intuición, color o jornada.
+
+305 acepta los objetos por el gesto, sin decidir importancia; 308 agrega la excepción pura de bolsa/ticket. 306 ya excluye del cierre los cuerpos tirados. La voz/chat del jefe sigue fuera de alcance.
+
+## Criterios de aceptación
+
+- [ ] `store-cleanup` declara el motivo OBJETO_TIRADO: durante jornada abierta, tirar al contenedor cualquier objeto aceptado que no sea bolsa ni Ticket anota una vez por noche. Dos objetos importantes anotan un motivo.
+- [ ] AC nuevos (AC-CLN-050, AC-CLN-051 y AC-CLN-052) cubren unidad ordinaria tirada + noche impecable =1 medio; mopa tirada =OBJETO_TIRADO y sin Desorden; bolsa tirada =sin este motivo; ticket tirado =sin este motivo; dos importantes tirados =un motivo; balde y cada jabón ordinario son importantes.
+- [ ] La excepción es pura, recibe datos de dominio y se prueba sin escena. Bolsa se identifica por los IDs declarados por ReglasDeLaBasura; ticket por su tipo. Null no es exento.
+- [ ] Un caso integrado tira mopa con LEFT al contenedor completamente abierto, deja caja en local y unidad afuera. Con GRAVE entrega tres motivos distintos y7 medios desde0.
+- [ ] Otro caso integrado suma los cuatro motivos: ticket al inodoro, objeto importante al contenedor, desorden y afuera. GRAVE +4 motivos alcanza8 medios desde0 y despide.
+- [ ] Caja rechazada por305 sigue en mano y no emite objeto_tirado ni anota. LEFT vacío, cerrado/girando y jugador suspendido no producen motivo. RIGHT sólo alterna tapa como declara305 y no tira la carga.
+- [ ] El objeto tirado se excluye del cierre: la unidad no vuelve a sueltas y el útil no se interpreta como desorden/afuera. Al abrir otra noche, el contenedor vacía su registro: bolsas, útiles y cajas persistentes vuelven con su estado original; unidades se limpian y recrean, y tickets se liberan por su puesto. Motivos arrancan vacíos y deuda se conserva.
+
+## Contrato
+
+- `Partida.Llamado` agrega `OBJETO_TIRADO`; reutiliza unicidad y rechazo sin noche abierta de306.
+- `ReglasDelCierre.se_tira_sin_llamado(objeto:ObjetoDelAlmacen)->bool`: true para ID en `ReglasDeLaBasura.ids_de_las_bolsas()` o si es Ticket; false para null, unidad ordinaria y útil. Se agrega al archivo puro creado por306, con espejo.
+- `almacen.gd` escucha `objeto_tirado(nodo:Node3D)` del recolector. Lee los datos de dominio del cuerpo y pide la excepción; con false anota OBJETO_TIRADO. Conserva la conexión de #305 al contenedor y agrega un receptor propio del motivo, una sola vez. El cierre de #306 consulta `Contenedor.tirados()`; no se crea una segunda lista mutable en la raíz ni se lee `_tirados` privado.
+- La decisión del permiso de tirar y entrega de Agarre son de305. `entregar()` no emite objeto_soltado, de modo que una unidad tirada no se vuelve a agrupar como suelta. Este issue no cambia ese gesto.
+
+## Límites de archivos
+
+| Categoría | Rutas |
+|---|---|
+| Se escribe | `specs/store-cleanup/store-cleanup.md`; `src/dominio/empleo/partida.gd`; `src/dominio/almacen/reglas_del_cierre.gd`; `src/escenas/almacen.gd`; `test/dominio/almacen/reglas_del_cierre_test.gd`; `test/escenas/consecuencias_del_contenedor_test.gd`; `test/escenas/consecuencias_del_contenedor_test.gd.uid` |
+| Sólo lectura | `src/sistemas/tareas/recolector_de_basura.gd`; `src/escenas/puestos/contenedor_de_basura.gd`; `src/escenas/puestos/tapa_del_contenedor.gd`; `src/dominio/almacen/reglas_de_la_basura.gd`; `src/dominio/almacen/ticket.gd`; `src/dominio/almacen/objeto_del_almacen.gd`; `src/sistemas/marco/agarre.gd`; `src/escenas/objetos/objeto_agarrable.gd`; `src/escenas/puestos/reposicion_manual.gd`; `src/escenas/jugador.gd`; `src/sistemas/tareas/caja_registradora.gd`; `src/escenas/puestos/caja_registradora.gd`; `src/escenas/puestos/habitaciones_del_almacen.gd`; `src/dominio/empleo/legajo.gd`; `src/dominio/reglas.gd`; `specs/employment-record/employment-record.md`; `test/escenas/puestos/tiro_al_contenedor_test.gd`; `test/escenas/puestos/contenedor_de_basura_test.gd`; `test/escenas/agarre_fisico_test.gd`; `test/escenas/notificaciones_en_el_almacen_test.gd`; `test/ui/pila_de_notificaciones_test.gd` |
+| No se toca | Todo `.tscn`; `src/escenas/puestos/limpieza_del_almacen.gd`; `src/dominio/almacen/*.tres`; `src/dominio/almacen/tarea_de_la_basura.gd`; `src/ui/`; `assets/`; `project.godot`; `.claude/skills/` |
+
+Son siete rutas de escritura exactas. El espejo puro agrega dos casos sobre excepciones de
+descarte y la suite de integración agrega seis flujos sobre penalización, unicidad, continuación,
+guardado y despido. No agrega pruebas de coordenadas ni estados decorativos ni duplica el
+registro de motivos de Partida. Las pruebas físicas de #305 permanecen sólo lectura.
+
+La historia CLN medida sobre `8fb59f001529a9b8d945deb1eeb653804d9d57a2` tiene máximos BR030, AC049 y OQ003. Este cambio
+agrega BR-CLN-031 y AC-CLN-050 a AC-CLN-052. El código y el espejo de ReglasDelCierre tienen
+tres y diez públicos antes del cambio. Agregar una función y dos casos conserva el límite.
+
+| AC | Prueba funcional |
+|---|---|
+| AC-CLN-050 | Excepciones puras de bolsas y tickets, unidad y cinco útiles no exentos; descarte real de tres bolsas y ticket |
+| AC-CLN-051 | Unidad, mopa, varios importantes una vez y repetición en otra noche; deuda conservada |
+| AC-CLN-052 | Tres motivos con GRAVE guardan siete y permiten continuar; cuatro guardan ocho y despiden |
+
+## Verificación
+
+1. Primer commit normativo; tests rojos de aserción; implementación verde. Para firma nueva, skeleton mínimo antes de rojo.
+2. `python .claude/scripts/verificar.py` por FIFO compartida; congelar árbol desde encolar hasta resultado. Exigir 7/7 sin salteos.
+3. Inmediatamente `python .claude/skills/implement-batch/scripts/conteo.py`; conservar XML con todas las suites y sin failure/error/skip.
+4. `python .claude/scripts/verificar.py --solo specs` y comparación de alcance contra head 307 final.
+5. Push seguro antes del full; PR propio con base rama307, tabla AC → caso → resultado y número de corrida.
+
+## Bordes
+
+- Nada tirado no anota. Dos importantes en la misma noche anotan una vez; motivo de noche siguiente vuelve a poder anotarse.
+- Bolsa/ticket se desechan normalmente y no anotan importancia. Bolsa sigue sumando su depositada de305.
+- Mopa/balde/jabones ordinarios y unidad son importantes. Productos vencidos aún no existen y no se simulaban como ordinarios exentos.
+- Caja no entra al contenedor y conserva mano. LEFT sobre tapa o cuerpo cerrado consume el gesto sin caída genérica.
+- LEFT suspendido no llega al gesto; RIGHT abre/cierra tapa durante juego como305, sin tirar.
+- Al abrir, persistentes vuelven a su lugar y estado original; unidades se limpian/recrean y tickets se liberan. El contenedor vacía su registro y los motivos se vacían, conservando medios acumulados.
+- Con307, cuatro motivos y GRAVE suman4 puntos y despiden desde legajo 0.
+
+## Interfaz309 preservada
+
+Base inmediata 8fb59f001529a9b8d945deb1eeb653804d9d57a2, que hereda #306/#305/#309. La base certificada ya incluye #306 y #307. Se conservan en almacen.gd las conexiones comprador_llegado->avisar_llegada, lectura_rechazada->avisar_lectura_rechazada y turno_cerrado->vaciar.unbind(1), sin alterar su orden o crear doble conexion. Pila CanvasLayer5/process_mode1 y MenuDePausa layer6 no se modifican. Permanecen fuera del alcance src/ui/, src/dominio/ambiente/notificaciones.gd, src/escenas/puestos/interfaz_del_almacen.tscn y specs/notifications/notifications.md. Las suites heredadas test/escenas/notificaciones_en_el_almacen_test.gd y test/ui/pila_de_notificaciones_test.gd se ejercen readonly en los full. Jugador/guard297 y gesto/caja304 se conservan. La comparación readonly se hace contra 8fb59f001529a9b8d945deb1eeb653804d9d57a2 explícito, preservando los cambios heredados de las escenas. Los IDs y contratos anteriores se conservan según la lectura certificada.

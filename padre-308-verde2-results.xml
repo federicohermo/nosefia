@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<testsuites id="2026-10-09" name="report_1" tests="18" failures="0" skipped="0" flaky="0" time="0.000">
+	<testsuite id="0" name="reglas_del_cierre_test" package="test/dominio/almacen" timestamp="2026-10-09T13:13:56" hostname="localhost" tests="12" failures="0" errors="0" skipped="0" flaky="0" time="0.207">
+		<testcase name="test_una_lista_vacia_no_produce_motivos" classname="reglas_del_cierre_test" time="0.009">
+		</testcase>
+		<testcase name="test_una_unidad_suelta_desordena_cualquier_habitacion" classname="reglas_del_cierre_test" time="0.010">
+		</testcase>
+		<testcase name="test_una_caja_solo_queda_ordenada_en_el_deposito" classname="reglas_del_cierre_test" time="0.010">
+		</testcase>
+		<testcase name="test_un_util_solo_queda_ordenado_en_el_bano" classname="reglas_del_cierre_test" time="0.008">
+		</testcase>
+		<testcase name="test_los_otros_objetos_adentro_no_producen_desorden" classname="reglas_del_cierre_test" time="0.008">
+		</testcase>
+		<testcase name="test_un_mismo_cierre_puede_tener_desorden_y_objetos_afuera" classname="reglas_del_cierre_test" time="0.008">
+		</testcase>
+		<testcase name="test_la_pertenencia_sale_del_punto_y_de_las_tres_regiones" classname="reglas_del_cierre_test" time="0.009">
+		</testcase>
+		<testcase name="test_sin_regiones_declaradas_el_punto_queda_afuera" classname="reglas_del_cierre_test" time="0.009">
+		</testcase>
+		<testcase name="test_dos_partes_separadas_no_incluyen_el_hueco_entre_ellas" classname="reglas_del_cierre_test" time="0.009">
+		</testcase>
+		<testcase name="test_el_techo_alto_y_el_paso_no_agrandan_el_resto_del_bano" classname="reglas_del_cierre_test" time="0.010">
+		</testcase>
+		<testcase name="test_solo_las_bolsas_y_los_tickets_se_tiran_sin_llamado" classname="reglas_del_cierre_test" time="0.010">
+		</testcase>
+		<testcase name="test_unidad_utiles_y_datos_ausentes_no_son_exentos" classname="reglas_del_cierre_test" time="0.010">
+		</testcase>
+	</testsuite>
+	<testsuite id="1" name="consecuencias_del_contenedor_test" package="test/escenas" timestamp="2026-10-09T13:13:56" hostname="localhost" tests="6" failures="0" errors="0" skipped="0" flaky="0" time="1.220">
+		<testcase name="test_tirar_una_unidad_suma_un_medio_y_la_deuda_se_conserva" classname="consecuencias_del_contenedor_test" time="0.196">
+		</testcase>
+		<testcase name="test_tirar_la_mopa_no_agrega_desorden_ni_afuera" classname="consecuencias_del_contenedor_test" time="0.160">
+		</testcase>
+		<testcase name="test_bolsas_y_ticket_se_descartan_sin_este_llamado" classname="consecuencias_del_contenedor_test" time="0.195">
+		</testcase>
+		<testcase name="test_varios_importantes_cuentan_una_vez_y_otra_noche_pueden_repetir" classname="consecuencias_del_contenedor_test" time="0.205">
+		</testcase>
+		<testcase name="test_tres_motivos_con_grave_guardan_siete_y_permiten_continuar" classname="consecuencias_del_contenedor_test" time="0.172">
+		</testcase>
+		<testcase name="test_cuatro_motivos_con_grave_despiden_y_borran_el_guardado" classname="consecuencias_del_contenedor_test" time="0.232">
+		</testcase>
+	</testsuite>
+</testsuites>
