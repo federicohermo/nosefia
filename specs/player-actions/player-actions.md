@@ -1,7 +1,7 @@
 ---
 schema_version: 1
 capability_id: CAP-PLY
-status: ratified
+status: draft
 owner: por definir
 provenance: GDD «Controles»; ficha «8. Tarea: Reposición»; migración de los specs 003, 004, 006, 014, 034, 043
 ---
@@ -217,6 +217,33 @@ de lo fijo NO DEBE pedir el uso de la herramienta ni la reposición.
 CUANDO se hace el gesto de agarrar —clic izquierdo— sobre ellas, el sistema NO DEBE abrirlas:
 con las manos vacías no pasa nada; con algo en la mano, DEBE soltarlo como sin mira
 (BR-PLY-018). SI el control está suspendido, ENTONCES usar NO DEBE abrir ni alternar lo fijo.
+
+### BR-PLY-027 — Asomarse encuadra los bordes visibles y devuelve la vista
+
+CUANDO se abre la ventanilla, el sistema DEBE situar la vista frente a sus bordes visibles,
+considerando su ancho, alto y diferencia de profundidad, el campo vertical y el aspecto de
+pantalla. Los bordes DEBEN entrar completos y ocupar de borde a borde el eje que limita, sin
+que la cáscara ni el antepecho oculten la abertura. El cuerpo y los ángulos efectivos de la
+mirada NO DEBEN cambiar. MIENTRAS se está asomado, el encuadre DEBE permanecer estable aunque
+el dibujo de la mirada termine de alcanzar su giro.
+
+CUANDO se cierra, el sistema DEBE recuperar la posición de reposo de la vista y su orientación
+efectiva anterior. Con el dibujo ya alcanzado, DEBE recuperar la pose exacta anterior; con un
+giro dibujado pendiente, NO DEBE devolver la vista a los ángulos dibujados atrasados. Abrir de
+nuevo sin cerrar DEBE conservar el reposo de la primera apertura. Cerrar sin abrir NO DEBE
+mover la vista ni devolver el control tomado por otra cosa. El cierre del turno DEBE devolver
+la vista antes de mostrar su placa.
+
+SI el ancho, alto o aspecto no son positivos, la profundidad es negativa o el campo vertical
+no está entre 0 y 180 grados sin incluir los extremos, ENTONCES el sistema NO DEBE mover la
+vista. Una profundidad nula es válida. Cambiar el aspecto mientras se está asomado NO DEBE
+recalcular la vista hasta la próxima apertura.
+
+### BR-PLY-028 — Suspendido, el izquierdo no agarra ni suelta
+
+MIENTRAS el control está suspendido por la computadora o la ventanilla, el gesto de agarrar
+NO DEBE agarrar lo enfocado ni soltar lo que se lleva. Examinar DEBE conservar su propio
+ruteo del gesto. Al salir, lo que se llevaba DEBE seguir en la mano.
 
 ## Criterios de aceptación
 
@@ -555,6 +582,53 @@ diez veces, la hoja no gira, la mopa sigue en la mano y no se pide limpieza ni r
 DADO una puerta interior con la mopa en la mano CUANDO se usa ENTONCES abre y tampoco se pide
 el uso de la mopa.
 
+### AC-PLY-058 — La perspectiva encuadra ambos planos *(verifica BR-PLY-027)*
+
+DADO un marco de 1,40 × 1,36 metros, profundidad 0,18 metros y campo vertical 75 grados
+CUANDO se encuadra en 16:9, 16:10 y 4:3 ENTONCES la distancia es 0,886193 metros y la elevación
+respecto del centro es 0,069059 metros, con 0,00001 metros de tolerancia. DADO un marco plano
+de 3 × 1 metros y campo vertical 90 grados ENTONCES la distancia es 1,125 metros en 4:3 y
+2 metros en 3:4. DADO uno de 2 × 4 metros, profundidad 1 metro y campo vertical 90 grados
+ENTONCES en aspecto 2 la distancia es 2 metros y la elevación 0,5 metros; en aspecto 1:4 son
+4,5 metros y 2/9 metros. DADO cualquiera de los datos inválidos de BR-PLY-027 ENTONCES la
+distancia es 0 y la vista conserva su pose.
+
+DADO la ventanilla abierta en 16:9 y 4:3 CUANDO pasan varios cuadros ENTONCES sus cuatro
+bordes visibles están dentro de la pantalla con medio píxel de tolerancia, y al menos un eje
+ocupa sus dos bordes. DADO un cambio de aspecto mientras está abierta ENTONCES conserva esa
+vista y usa el aspecto nuevo en la siguiente apertura.
+
+### AC-PLY-059 — El marco visible tiene el recorrido libre *(verifica BR-PLY-027)*
+
+DADO el marco visible de la ventanilla CUANDO se observan sus bordes superiores e inferiores
+desde la vista asomada ENTONCES ninguna malla de la cáscara o del antepecho corta el recorrido
+antes de llegar a esos puntos, con 2 milímetros de tolerancia. El propio vidrio transparente
+no cuenta como oclusión. DADO el hueco físico CUANDO se cruza el muro 2 centímetros por dentro
+de cada borde ENTONCES el recorrido está libre; 2 centímetros por fuera, está tapado.
+
+### AC-PLY-060 — Salir recupera el reposo y la orientación efectiva *(verifica BR-PLY-027)*
+
+DADO el dibujo de la mirada ya alcanzado CUANDO se abre y cierra ENTONCES la vista recupera
+exactamente la pose global anterior, con 0,00001 metros de tolerancia, y los ángulos
+efectivos no cambiaron. DADO un giro dibujado pendiente ENTONCES el encuadre permanece estable
+y, al cerrar y pasar más cuadros, la vista conserva su posición de reposo y sigue la
+orientación efectiva del control, sin volver a los ángulos dibujados atrasados.
+
+DADO dos aperturas sin cerrar CUANDO se cierra ENTONCES se vuelve al reposo de la primera.
+DADO el cierre del turno mientras está abierta ENTONCES se devuelve esa vista y desaparece
+el panel. DADO ningún asomarse previo ENTONCES cerrar no mueve la vista.
+
+### AC-PLY-061 — Asomado, la mano no suelta *(verifica BR-PLY-028)*
+
+DADO una unidad en la mano y la computadora o la ventanilla abiertas CUANDO se hace el gesto
+de agarrar ENTONCES se conserva la misma unidad y su padre; al cerrar se la sigue llevando.
+
+### AC-PLY-062 — Suspendido y vacío no agarra *(verifica BR-PLY-028)*
+
+DADO las manos vacías, un levantable enfocado y el control suspendido por la computadora o
+la ventanilla CUANDO se hace el gesto de agarrar ENTONCES las manos siguen vacías y el objeto
+permanece donde estaba.
+
 ## No objetivos
 
 - Esta capacidad NO decide qué esconde un objeto: eso es de
@@ -596,3 +670,9 @@ el uso de la mopa.
   - Decide: el dueño del repo, jugando.
   - Bloquea: nada. Movería `BR-PLY-007` y el tercer criterio de
     [`store-cleanup`](../store-cleanup/store-cleanup.md).
+
+- **OQ-PLY-003 — ¿Cuánto margen deja asomarse alrededor del marco?**
+  - Por qué sigue abierta: la ficha dice «casi completamente» y no fija un margen.
+  - Decide: game design.
+  - Bloquea: nada; mientras se decide, los bordes visibles llegan a ambos límites de pantalla
+    en el eje que limita (BR-PLY-027).
