@@ -32,8 +32,7 @@ const CUMPLIDA := {
 ## estas dos entradas es el que le da sentido a `Reaccion.Sobre`.
 const SEGUN_EL_ESTADO := [SIN_CUMPLIR, CUMPLIDA]
 
-## El comentario general, indexado por apercibimientos. Va de cero al tope inclusive: «cero
-## apercibimientos» y «cumplió las cinco» son el mismo estado, no dos filas.
+## El comentario general, indexado por los apercibimientos acumulados, de cero al tope inclusive.
 const POR_APERCIBIMIENTOS := [
 	preload("res://assets/reactions/apercibimientos_0.tres"),
 	preload("res://assets/reactions/apercibimientos_1.tres"),

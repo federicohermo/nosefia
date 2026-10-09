@@ -27,7 +27,6 @@ const TEXTOS: Dictionary[ParteDeCierre.Opcion, String] = {
 @export var _saludo: Label
 @export var _renglones: VBoxContainer
 @export var _comentario: Label
-@export var _riesgo: Label
 @export var _continuar: Button
 @export var _volver_al_menu: Button
 
@@ -53,8 +52,6 @@ func _ready() -> void:
 func mostrar(parte: ParteDeCierre) -> void:
 	_saludo.text = parte.saludo()
 	_comentario.text = parte.comentario()
-	_riesgo.text = parte.aviso_de_riesgo()
-	_riesgo.visible = parte.en_riesgo()
 	_pintar(parte.lineas())
 	var opciones := parte.opciones()
 	for opcion: ParteDeCierre.Opcion in _botones:

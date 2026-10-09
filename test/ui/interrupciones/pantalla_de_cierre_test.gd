@@ -79,22 +79,6 @@ func test_mostrar_dos_veces_no_acumula_las_lineas_de_la_jornada_anterior() -> vo
 	assert_int(renglones.get_child_count()).is_equal(Apertura.cantidad_de_obligatorias())
 
 
-func test_el_aviso_de_riesgo_sale_del_parte_y_se_esconde_con_el_legajo_limpio() -> void:
-	# Es la única línea de la placa que aparece y desaparece, así que sin los dos estados el
-	# `visible` quedaría escrito y sin ejercer: una placa que avisa siempre no avisa nunca.
-	var pantalla := await _pantalla()
-	var en_riesgo := _parte()
-	pantalla.mostrar(en_riesgo)
-	var riesgo := _etiqueta(pantalla, "Riesgo")
-	assert_str(riesgo.text).is_equal(en_riesgo.aviso_de_riesgo())
-	assert_bool(riesgo.visible).is_true()
-
-	pantalla.mostrar(
-		ParteDeCierre.new(JORNADA_DE_PRUEBA, Apertura.obligatorias(), 0, Partida.Final.EN_CURSO)
-	)
-	assert_bool(riesgo.visible).is_false()
-
-
 func test_mostrar_deja_el_boton_con_el_foco_para_alcanzarlo_sin_el_mouse() -> void:
 	# El cursor del juego sigue tomado cuando la placa aparece —`jugador.gd` lo recaptura en cada
 	# cuadro de física—, así que el puntero queda clavado en el centro de la ventana y «Seguir»

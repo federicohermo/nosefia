@@ -35,9 +35,7 @@ static func con_apercibimientos(apercibimientos: int) -> Legajo:
 func registrar(cumplidas: int, obligatorias: int) -> void:
 	match Consecuencias.consecuencia_de(cumplidas, obligatorias):
 		Consecuencias.Banda.NINGUNA:
-			# Reinicia y no descuenta: es la lectura de «seguidos», y es lo que hace que valga
-			# la pena recuperarse. Un día bueno borra la deuda entera.
-			_apercibimientos = 0
+			pass
 		Consecuencias.Banda.AVISO:
 			_apercibimientos += Reglas.APERCIBIMIENTOS_POR_AVISO
 		Consecuencias.Banda.GRAVE:

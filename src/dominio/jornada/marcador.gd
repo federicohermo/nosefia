@@ -1,7 +1,7 @@
 ## Los números del turno, ya formateados.
 ##
 ## **La frontera con quien dibuja se dice en una línea: acá viven los números, allá las
-## palabras.** `"20:00"` y `"3/4"` son números formateados; «Apercibimientos» es de arriba.
+## palabras.** `"20:00"` y `"3/4"` son números formateados; «Tareas» es de arriba.
 ##
 ## Con la hora fuera del HUD, `hora()` tiene un solo cliente, el reloj de mesa del dominio, que
 ## decide si esta noche se puede leer. La aritmética está acá y no en el nodo que pinta porque es

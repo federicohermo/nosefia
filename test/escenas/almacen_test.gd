@@ -321,7 +321,7 @@ func test_el_cableado_dejo_de_armar_el_turno_y_de_llevar_el_puntaje() -> void:
 		assert_int(texto.count("Partida.desde("))
 		. override_failure_message(
 			(
-				"`almacen.gd` arma %d partidas: con dos, el HUD pinta una y el ciclo corre la otra"
+				"`almacen.gd` arma %d partidas: el parte y el ciclo deben leer la misma"
 				% texto.count("Partida.desde(")
 			)
 		)
@@ -631,14 +631,12 @@ func test_el_reloj_de_mesa_queda_sobre_el_vidrio_del_reloj_del_modelo() -> void:
 
 
 func test_el_cableado_le_da_la_hora_al_reloj_de_mesa_y_no_al_hud() -> void:
-	# La hora se fue de la pantalla, pero los otros dos carteles del HUD siguen: sin la segunda
-	# mitad de este caso, desconectarlos también pasaría en verde.
+	# El contador de tareas sigue conectado al reloj de la jornada.
 	var texto := FileAccess.get_file_as_string(SCRIPT_DEL_ALMACEN)
 	assert_str(texto).is_not_empty()
 	assert_str(texto).not_contains("_hud.mostrar_tiempo")
 	assert_str(texto).contains("tiempo_consumido.connect(_reloj_de_mesa.mostrar_tiempo)")
 	assert_str(texto).contains("tarea_completada.connect(_hud.mostrar_tareas)")
-	assert_str(texto).contains("_hud.mostrar_apercibimientos")
 
 
 func test_el_cableado_de_reponer_llega_entero_hasta_los_huecos() -> void:

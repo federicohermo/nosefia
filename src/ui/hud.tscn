@@ -3,10 +3,9 @@
 [ext_resource type="Script" path="res://src/ui/hud.gd" id="1_hud"]
 [ext_resource type="Theme" path="res://assets/ui/manada/tema.tres" id="2_tema"]
 
-[node name="Hud" type="CanvasLayer" node_paths=PackedStringArray("_tareas", "_apercibimientos", "_subtitulo")]
+[node name="Hud" type="CanvasLayer" node_paths=PackedStringArray("_tareas", "_subtitulo")]
 script = ExtResource("1_hud")
 _tareas = NodePath("Tareas")
-_apercibimientos = NodePath("Apercibimientos")
 _subtitulo = NodePath("Subtitulo")
 
 [node name="Tareas" type="Label" parent="."]
@@ -25,13 +24,6 @@ anchor_bottom = 0.5
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
-
-[node name="Apercibimientos" type="Label" parent="."]
-offset_left = 24.0
-offset_top = 52.0
-offset_right = 424.0
-offset_bottom = 84.0
-theme_override_font_sizes/font_size = 22
 
 [node name="Subtitulo" type="Label" parent="."]
 anchors_preset = 12

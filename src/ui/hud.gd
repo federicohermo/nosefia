@@ -1,5 +1,4 @@
-## La pantalla del turno: cuántas obligatorias van, cuántos apercibimientos hay y lo que dice la
-## caja examinada.
+## La pantalla del turno: cuántas obligatorias van y lo que dice la caja examinada.
 ##
 ## **Recibe todo ya decidido y lo pinta.** No conoce al nodo que le manda los números: se
 ## conecta por señal desde la escena.
@@ -19,15 +18,13 @@
 class_name Hud
 extends CanvasLayer
 
-## Los dos textos viven acá y **no** además en `hud.tscn`, que es lo que pide
+## El texto de tareas vive acá y **no** además en `hud.tscn`, que es lo que pide
 ## `.claude/rules/presentacion.md`: los `Label` de la escena nacen vacíos y el cableado los pinta
 ## en su `_ready()`. Un texto en los dos lados se cambia en uno solo el día que haya que
-## cambiarlo, y el de los apercibimientos se llevaba puesto además el tope de `Reglas`.
+## cambiarlo.
 const TEXTO_DE_LAS_TAREAS := "Tareas %s"
-const TEXTO_DE_LOS_APERCIBIMIENTOS := "Apercibimientos %d de %d"
 
 @export var _tareas: Label
-@export var _apercibimientos: Label
 @export var _subtitulo: Label
 
 var foco_presente: bool = false
@@ -65,15 +62,6 @@ func declarar_obligatorias(cuantas: int) -> void:
 
 func mostrar_tareas(cumplidas: int) -> void:
 	_tareas.text = TEXTO_DE_LAS_TAREAS % Marcador.tareas(cumplidas, _obligatorias)
-
-
-## El puntaje del legajo contra el tope que despide.
-##
-## El tope se lee de `Reglas` y no se escribe acá: es un número de balance, y una copia en la
-## pantalla se desincroniza el día que se rebalancee sin que ningún gate lo note.
-func mostrar_apercibimientos(cuantos: int) -> void:
-	var tope := Reglas.APERCIBIMIENTOS_HASTA_EL_DESPIDO
-	_apercibimientos.text = TEXTO_DE_LOS_APERCIBIMIENTOS % [cuantos, tope]
 
 
 ## Pinta la línea de subtítulo tal como llega. Un texto vacío es no decir nada.

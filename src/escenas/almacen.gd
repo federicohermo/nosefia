@@ -68,7 +68,7 @@ const ESCENA_DEL_MENU := "res://src/escenas/menu_de_inicio.tscn"
 ## Los muebles con los que el jugador choca por su contorno y no por su malla.
 @export var _muebles_con_contorno: Array[PhysicsBody3D]
 
-## La partida es de la escena y no del ciclo porque también la mira el HUD: el ciclo publica lo
+## La partida es de la escena y no del ciclo porque también la lee el parte: el ciclo publica lo
 ## que pasó, y quien quiera un número lo pide acá. Sale del guardado: sin guardado, es nueva.
 var _partida := Partida.desde(Guardado.new().cargar())
 
@@ -83,9 +83,7 @@ var _ir_al_menu: Callable = volver_al_menu
 
 
 ## Los carteles se pintan acá antes de conectar nada, y no con un `text` escrito en `hud.tscn`:
-## una copia del texto en la escena es una copia de los números que lleva adentro —cuántas
-## obligatorias hay y a cuántos apercibimientos echan—, y el de apercibimientos se quedaría en
-## pantalla la jornada entera, porque hasta el cierre nadie lo vuelve a escribir.
+## una copia del texto en la escena duplicaría el número de obligatorias declaradas.
 func _ready() -> void:
 	var marco := MarcoDelObjetivo.new()
 	add_child(marco)
@@ -96,7 +94,6 @@ func _ready() -> void:
 	for mueble in _muebles_con_contorno:
 		_jugador.ignorar_el_detalle(mueble)
 	_hud.declarar_obligatorias(Apertura.cantidad_de_obligatorias())
-	_hud.mostrar_apercibimientos(_partida.apercibimientos())
 	# La hora se lee en el local y no en la pantalla: enterarse cuesta caminar hasta el reloj de
 	# mesa, y la noche en que falla, ni caminar alcanza. La jornada se declara antes de arrancar
 	# porque el ciclo abre la primera adentro de `arrancar()`.
@@ -240,7 +237,6 @@ func _al_abrir_la_jornada(jornada: int) -> void:
 func _al_cerrar_la_jornada(jornada: int, cumplidas: int) -> void:
 	_audio.callar_la_musica()
 	_hud.mostrar_tareas(cumplidas)
-	_hud.mostrar_apercibimientos(_partida.apercibimientos())
 	_pantalla.mostrar(
 		ParteDeCierre.new(
 			jornada, _partida.obligatorias(), _partida.apercibimientos(), _partida.final()
