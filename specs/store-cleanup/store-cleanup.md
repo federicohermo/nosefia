@@ -1,7 +1,7 @@
 ---
 schema_version: 1
 capability_id: CAP-CLN
-status: draft
+status: ratified
 owner: por definir
 provenance: GDD «Limpiar» y «Sacar la basura»; ficha «9. Tarea: Limpieza»; migración de los specs 010, 015, 043; ajustes del dueño sobre duración de la mopa, mezcla, enjuague y agua temporal
 ---
@@ -549,7 +549,7 @@ importante permite anotar de nuevo el motivo; una noche impecable sin motivos co
 DADO deuda cero, un objeto importante tirado al contenedor, desorden y otro objeto afuera
 CUANDO termina la noche con GRAVE ENTONCES registra siete medios, los guarda y permite
 continuar. DADO además un ticket aceptado en el inodoro ENTONCES registra ocho medios,
-despide y guarda ese resultado. Al continuar desde siete, los objetos persistentes vuelven
+despide y borra el guardado de la partida terminada. Al continuar desde siete, los objetos persistentes vuelven
 a poder usarse y una noche impecable sin motivos conserva los siete medios.
 
 ## No objetivos
