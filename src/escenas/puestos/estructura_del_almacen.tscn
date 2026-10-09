@@ -2183,10 +2183,10 @@ scale = Vector3(0.997537081, 0.997537081, 0.997537081)
 shape = SubResource("frente_exterior_bano")
 
 [node name="board de tareas_002" parent="board tareas"]
-transform = Transform3D(0.132595, 0, 0, 0, 0.285204, 0, 0, 0, 0.267035, -0.446582, 0.008555, 0)
+transform = Transform3D(0.318228, 0, 0, 0, 0.285204, 0, 0, 0, 0.640884, -0.446582, 0.008555, 0)
 
 [node name="board de tareas_001" parent="board tareas"]
-transform = Transform3D(0.132595, 0, 0, 0, 0.285204, 0, 0, 0, 0.267035, 0.559394, 0.008555, 0)
+transform = Transform3D(0.318228, 0, 0, 0, 0.285204, 0, 0, 0, 0.640884, 0.559394, 0.008555, 0)
 
 [node name="board de tareas_003" parent="board tareas"]
 visible = false
@@ -2197,21 +2197,25 @@ visible = false
 [node name="board de tareas_005" parent="board tareas"]
 visible = false
 
-[node name="StaticBody3D" parent="board tareas/board de tareas_002" node_paths=PackedStringArray("mallas", "titulo_del_papel", "renglones_del_papel") groups=["interactuable"]]
+[node name="StaticBody3D" parent="board tareas/board de tareas_002" node_paths=PackedStringArray("mallas", "titulo_del_papel", "renglones_del_papel", "grafica_de_tareas", "grafica_de_orden") groups=["interactuable"]]
 script = ExtResource("nota_pegada")
 id = 0
 mallas = [NodePath("..")]
 titulo_del_papel = NodePath("../TextoDeLaNota/Titulo")
 renglones_del_papel = NodePath("../TextoDeLaNota/Renglones")
+grafica_de_tareas = NodePath("../TextoDeLaNota/Tareas")
+grafica_de_orden = NodePath("../TextoDeLaNota/Orden")
 
 [node name="TextoDeLaNota" parent="board tareas/board de tareas_002" instance=ExtResource("texto_nota")]
 
-[node name="StaticBody3D" parent="board tareas/board de tareas_001" node_paths=PackedStringArray("mallas", "titulo_del_papel", "renglones_del_papel") groups=["interactuable"]]
+[node name="StaticBody3D" parent="board tareas/board de tareas_001" node_paths=PackedStringArray("mallas", "titulo_del_papel", "renglones_del_papel", "grafica_de_tareas", "grafica_de_orden") groups=["interactuable"]]
 script = ExtResource("nota_pegada")
 id = 1
 mallas = [NodePath("..")]
 titulo_del_papel = NodePath("../TextoDeLaNota/Titulo")
 renglones_del_papel = NodePath("../TextoDeLaNota/Renglones")
+grafica_de_tareas = NodePath("../TextoDeLaNota/Tareas")
+grafica_de_orden = NodePath("../TextoDeLaNota/Orden")
 
 [node name="TextoDeLaNota" parent="board tareas/board de tareas_001" instance=ExtResource("texto_nota")]
 

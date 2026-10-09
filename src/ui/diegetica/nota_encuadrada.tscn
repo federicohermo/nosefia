@@ -3,7 +3,16 @@
 [ext_resource type="Script" path="res://src/ui/diegetica/nota_encuadrada.gd" id="script"]
 [ext_resource type="Theme" path="res://assets/ui/manada/tema.tres" id="tema"]
 
-[node name="NotaEncuadrada" type="CanvasLayer" node_paths=PackedStringArray("_marco", "_titulo", "_renglones", "_imagen", "_papel", "_salida")]
+[ext_resource type="Texture2D" path="res://assets/ui/manada/notas/papel_tareas.svg" id="papel_tareas"]
+[ext_resource type="Texture2D" path="res://assets/ui/manada/notas/titulo_tareas.svg" id="titulo_tareas"]
+[ext_resource type="Texture2D" path="res://assets/ui/manada/notas/titulo_mantener.svg" id="titulo_mantener"]
+[ext_resource type="Texture2D" path="res://assets/ui/manada/notas/titulo_ordenado.svg" id="titulo_ordenado"]
+[ext_resource type="Texture2D" path="res://assets/ui/manada/notas/subrayado_tareas.svg" id="subrayado_tareas"]
+[ext_resource type="Texture2D" path="res://assets/ui/manada/notas/subrayado_mantener.svg" id="subrayado_mantener"]
+[ext_resource type="Texture2D" path="res://assets/ui/manada/notas/subrayado_ordenado.svg" id="subrayado_ordenado"]
+[ext_resource type="FontFile" path="res://assets/ui/manada/notas/orange_lovely.otf" id="manuscrita"]
+
+[node name="NotaEncuadrada" type="CanvasLayer" node_paths=PackedStringArray("_marco", "_titulo", "_renglones", "_imagen", "_papel", "_salida", "_grafica_de_tareas", "_grafica_de_orden")]
 layer = 2
 script = ExtResource("script")
 _marco = NodePath("Fondo/Marco")
@@ -12,6 +21,8 @@ _renglones = NodePath("Fondo/Marco/Papel/Renglones")
 _imagen = NodePath("Fondo/Marco/Imagen")
 _papel = NodePath("Fondo/Marco/Papel")
 _salida = NodePath("Fondo/Marco/Salida")
+_grafica_de_tareas = NodePath("Fondo/Marco/Papel/Tareas")
+_grafica_de_orden = NodePath("Fondo/Marco/Papel/Orden")
 
 [node name="Fondo" type="ColorRect" parent="."]
 anchors_preset = 15
@@ -27,12 +38,14 @@ offset_bottom = 1080.0
 theme = ExtResource("tema")
 mouse_filter = 2
 
-[node name="Papel" type="ColorRect" parent="Fondo/Marco"]
+[node name="Papel" type="TextureRect" parent="Fondo/Marco"]
 offset_left = 642.0
 offset_top = 90.0
 offset_right = 1278.0
 offset_bottom = 990.0
-color = Color(0.89, 0.86, 0.43, 1)
+texture = ExtResource("papel_tareas")
+expand_mode = 1
+stretch_mode = 0
 mouse_filter = 2
 
 [node name="Titulo" type="Label" parent="Fondo/Marco/Papel"]
@@ -48,13 +61,14 @@ autowrap_mode = 3
 mouse_filter = 2
 
 [node name="Renglones" type="Label" parent="Fondo/Marco/Papel"]
-offset_left = 54.0
-offset_top = 270.0
-offset_right = 582.0
+offset_left = 67.0
+offset_top = 200.0
+offset_right = 614.0
 offset_bottom = 820.0
-theme_override_colors/font_color = Color(0.13, 0.10, 0.015, 1)
-theme_override_font_sizes/font_size = 32
-theme_override_constants/line_spacing = 22
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/font_size = 51
+theme_override_fonts/font = ExtResource("manuscrita")
+theme_override_constants/line_spacing = 0
 autowrap_mode = 3
 mouse_filter = 2
 
@@ -74,4 +88,70 @@ offset_right = 1857.0
 offset_bottom = 1056.0
 theme_type_variation = &"TextoSecundario"
 horizontal_alignment = 2
+mouse_filter = 2
+
+[node name="Tareas" type="Control" parent="Fondo/Marco/Papel"]
+mouse_filter = 2
+
+[node name="titulo_tareas" type="TextureRect" parent="Fondo/Marco/Papel/Tareas"]
+offset_left = 88.266624
+offset_top = 87.424560
+offset_right = 536.346432
+offset_bottom = 160.144800
+texture = ExtResource("titulo_tareas")
+expand_mode = 1
+stretch_mode = 0
+mouse_filter = 2
+
+[node name="subrayado_tareas" type="TextureRect" parent="Fondo/Marco/Papel/Tareas"]
+offset_left = 112.891272
+offset_top = 153.352320
+offset_right = 584.046432
+offset_bottom = 178.988335
+texture = ExtResource("subrayado_tareas")
+expand_mode = 1
+stretch_mode = 0
+mouse_filter = 2
+
+[node name="Orden" type="Control" parent="Fondo/Marco/Papel"]
+mouse_filter = 2
+
+[node name="titulo_mantener" type="TextureRect" parent="Fondo/Marco/Papel/Orden"]
+offset_left = 95.901168
+offset_top = 101.314800
+offset_right = 497.856984
+offset_bottom = 147.208560
+texture = ExtResource("titulo_mantener")
+expand_mode = 1
+stretch_mode = 0
+mouse_filter = 2
+
+[node name="titulo_ordenado" type="TextureRect" parent="Fondo/Marco/Papel/Orden"]
+offset_left = 290.643096
+offset_top = 138.648000
+offset_right = 568.159152
+offset_bottom = 202.133520
+texture = ExtResource("titulo_ordenado")
+expand_mode = 1
+stretch_mode = 0
+mouse_filter = 2
+
+[node name="subrayado_mantener" type="TextureRect" parent="Fondo/Marco/Papel/Orden"]
+offset_left = 88.518480
+offset_top = 155.145840
+offset_right = 292.098264
+offset_bottom = 161.785680
+texture = ExtResource("subrayado_mantener")
+expand_mode = 1
+stretch_mode = 0
+mouse_filter = 2
+
+[node name="subrayado_ordenado" type="TextureRect" parent="Fondo/Marco/Papel/Orden"]
+offset_left = 288.273360
+offset_top = 194.946720
+offset_right = 565.590984
+offset_bottom = 239.984678
+texture = ExtResource("subrayado_ordenado")
+expand_mode = 1
+stretch_mode = 0
 mouse_filter = 2

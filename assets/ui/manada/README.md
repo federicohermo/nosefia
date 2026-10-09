@@ -4,6 +4,20 @@ Recursos de [Manada — UI](https://www.figma.com/design/SQEAfczyRvyOHokmzPOee7/
 extraídos el 22 de septiembre de 2026. Las escenas usan recursos locales; no dependen de Figma
 durante la ejecución.
 
+Las dos notas del corcho usan los SVG originales del frame
+[notas (`482:827`)](https://www.figma.com/design/SQEAfczyRvyOHokmzPOee7/Manada---UI?node-id=482-827),
+descargados el 9 de octubre de 2026 en `notas/`: papeles `482:831` y `482:833`,
+títulos `482:836`, `482:869` y `482:900`, y subrayados `482:938`, `482:994` y `482:1045`.
+Se conservan los archivos vectoriales sin editar. El mundo y la lectura ampliada componen
+esas mismas piezas. Las hojas conservan la proporción A4 y se amplían 2,4 veces en el corcho
+para poder leerlas desde el mostrador. La quinta tarea sigue saliendo de la jornada,
+como pide Notion; no se fija «Ordenar cajas» por el texto de ejemplo del frame.
+
+`notas/orange_lovely.otf` es la tipografía del frame, Orange Lovely de Origin Type,
+obtenida de la distribución del autor en DaFont. Se conservan `LICENCIA.txt` y
+`OriginFonts-EULA.pdf`: esa distribución permite uso personal y exige licencia para uso
+comercial. La incorporación al build local no acredita una licencia comercial.
+
 | Recurso | Origen | Uso |
 |---|---|---|
 | `notificacion_cliente.svg` | Figma, grupo `213:191` del frame `243:150` | Símbolo original del aviso «¡HAY UN CLIENTE!» |

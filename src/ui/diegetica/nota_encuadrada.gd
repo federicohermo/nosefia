@@ -8,6 +8,8 @@ extends CanvasLayer
 @export var _imagen: TextureRect
 @export var _papel: Control
 @export var _salida: Label
+@export var _grafica_de_tareas: Control
+@export var _grafica_de_orden: Control
 
 
 func _ready() -> void:
@@ -23,6 +25,12 @@ func mostrar(nota: NotaPegada, imagen: Texture2D) -> void:
 	_imagen.texture = imagen
 	_imagen.visible = imagen != null
 	_papel.visible = imagen == null
+	if _grafica_de_tareas != null and _grafica_de_orden != null:
+		var es_tareas := nota.numerada()
+		_titulo.visible = false
+		_grafica_de_tareas.visible = es_tareas
+		_grafica_de_orden.visible = not es_tareas
+		_renglones.position.y = 200.0 if es_tareas else 260.0
 	visible = true
 
 
