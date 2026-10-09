@@ -112,3 +112,12 @@ en GREEN all3 y FULL1 confirmó el conjunto completo del proyecto.
 | 008 | test_pausar_suspende_el_procesamiento_sin_borrar_el_aviso; nativa real pausa/reanudar | Verde |
 | 009 | test_los_textos_se_pintan_en_el_orden_del_dominio; test_los_dos_carteles_entran_en_la_esquina_en_dos_resoluciones; ocho PNG finales | Verde |
 | 010 | test_ningun_control_de_la_pila_intercepta_el_mouse; test_el_clic_sobre_el_cartel_llega_al_boton_de_notas; test_la_pila_se_dibuja_sobre_las_interfaces_y_debajo_de_pausa; nativa real Popup/Esc/RIGHT | Verde |
+
+## CI terminal
+
+Actions 37906851144 sobre fe620b92 termino SUCCESS: 7/7 nodos en verde, sin salteos,
+en 699,3 segundos; XML 207 suites y 1632 casos, cero failures/errors/skipped/flaky.
+XML SHA-256: `94249037be337072d39b841d7c1cf7e284acb13ed8e97c146de3aa14528f640e`.
+El log terminal, metadata del job/artefacto y XML estan en `ci/37906851144/`.
+El workflow no conserva RAW completo del motor cuando tests pasa; no se afirma
+salida cruda limpia en CI. El RAW local completo sigue disponible y calificado.

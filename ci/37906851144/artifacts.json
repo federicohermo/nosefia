@@ -1,0 +1,25 @@
+{
+  "total_count": 1,
+  "artifacts": [
+    {
+      "id": 11604974487,
+      "node_id": "MDg6QXJ0aWZhY3QxMTYwNDk3NDQ4Nw==",
+      "name": "reports-gdunit4",
+      "size_in_bytes": 575243,
+      "url": "https://api.github.com/repos/federicohermo/nosefia/actions/artifacts/11604974487",
+      "archive_download_url": "https://api.github.com/repos/federicohermo/nosefia/actions/artifacts/11604974487/zip",
+      "expired": false,
+      "digest": "sha256:4dc219c6b4266521bde8d27161858333ebbd6b0619541b4d430012ab26da4c42",
+      "created_at": "2026-10-09T08:57:15Z",
+      "updated_at": "2026-10-09T08:57:15Z",
+      "expires_at": "2026-10-16T08:57:14Z",
+      "workflow_run": {
+        "id": 37906851144,
+        "repository_id": 1346595806,
+        "head_repository_id": 1346595806,
+        "head_branch": "feature/309-notificaciones-no-invasivas",
+        "head_sha": "fe620b92a38b556f27fff721d162c466c1e784fb"
+      }
+    }
+  ]
+}

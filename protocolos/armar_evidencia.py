@@ -14,7 +14,7 @@ base = "41f30b0040aa843f45a89c7cee02fbfa08ad8929"
 
 
 def git(*args):
-    return subprocess.check_output(["git", *args], cwd=repo).decode("utf-8").strip()
+    return subprocess.check_output(["git", *args], cwd=repo, stderr=subprocess.PIPE).decode("utf-8").strip()
 
 
 def copy(source, target):
@@ -34,7 +34,7 @@ for source in prep.glob("*-results.xml"):
     copy(source, Path("focales") / source.name)
 for source in (repo / "reports/309-focales").glob("report_*/results.xml"):
     copy(source, Path("focales/xml") / source.parent.name / source.name)
-for name in ("focales_309.py", "full_y_conteo_309.py", "armar_evidencia.py", "resumen_full.py"):
+for name in ("focales_309.py", "full_y_conteo_309.py", "armar_evidencia.py", "resumen_full.py", "recoger_ci.py"):
     copy(prep / name, Path("protocolos") / name)
 for name in ("avisos_popup.gd", "avisos_popup.py"):
     copy(prep / "nativa" / name, Path("protocolos/nativa-2") / name)

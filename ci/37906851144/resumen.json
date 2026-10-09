@@ -1,0 +1,19 @@
+{
+  "run": "37906851144",
+  "head": "fe620b92a38b556f27fff721d162c466c1e784fb",
+  "conclusion": "success",
+  "url": "https://github.com/federicohermo/nosefia/actions/runs/37906851144",
+  "stats": {
+    "suites": 207,
+    "casos": 1632,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "flaky": 0
+  },
+  "xml_sha256": "94249037be337072d39b841d7c1cf7e284acb13ed8e97c146de3aa14528f640e",
+  "nota": "CI Linux independiente: XML y salida de verificar; el workflow no conserva RAW completo del motor si tests pasa. No se afirma RAW limpio.",
+  "verificar_segundos": [
+    "699.3"
+  ]
+}

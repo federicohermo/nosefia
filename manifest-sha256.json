@@ -8,6 +8,46 @@
     "nota": "bytes/sha256 del blob publicado; Git normaliza CRLF a LF en archivos de texto"
   },
   {
+    "ruta": "ci/37906851144/artifacts.json",
+    "bytes": 928,
+    "sha256": "ee66681c28473efdc03e928f4913ebdbcb6c29b46c2af3502403934de3bd009d",
+    "bytes_copia_original": 928,
+    "sha256_copia_original": "ee66681c28473efdc03e928f4913ebdbcb6c29b46c2af3502403934de3bd009d",
+    "nota": "bytes/sha256 del blob publicado; Git normaliza CRLF a LF en archivos de texto"
+  },
+  {
+    "ruta": "ci/37906851144/results.xml",
+    "bytes": 264161,
+    "sha256": "94249037be337072d39b841d7c1cf7e284acb13ed8e97c146de3aa14528f640e",
+    "bytes_copia_original": 264161,
+    "sha256_copia_original": "94249037be337072d39b841d7c1cf7e284acb13ed8e97c146de3aa14528f640e",
+    "nota": "bytes/sha256 del blob publicado; Git normaliza CRLF a LF en archivos de texto"
+  },
+  {
+    "ruta": "ci/37906851144/resumen.json",
+    "bytes": 589,
+    "sha256": "ebfd366e97203ddaea9cf3781d458850a325ae1e7478803c0edc7166545c9b74",
+    "bytes_copia_original": 589,
+    "sha256_copia_original": "ebfd366e97203ddaea9cf3781d458850a325ae1e7478803c0edc7166545c9b74",
+    "nota": "bytes/sha256 del blob publicado; Git normaliza CRLF a LF en archivos de texto"
+  },
+  {
+    "ruta": "ci/37906851144/run.json",
+    "bytes": 3689,
+    "sha256": "d17e7aed5d48996617c4dc4305f45ce4b31c75d3d18fc3d708c04847975bd647",
+    "bytes_copia_original": 3689,
+    "sha256_copia_original": "d17e7aed5d48996617c4dc4305f45ce4b31c75d3d18fc3d708c04847975bd647",
+    "nota": "bytes/sha256 del blob publicado; Git normaliza CRLF a LF en archivos de texto"
+  },
+  {
+    "ruta": "ci/37906851144/verify.log",
+    "bytes": 236666,
+    "sha256": "1dd4e4756c0908e31b827b3c0d6b8a5e569884a1347804be1bb23aed32d88b85",
+    "bytes_copia_original": 236666,
+    "sha256_copia_original": "1dd4e4756c0908e31b827b3c0d6b8a5e569884a1347804be1bb23aed32d88b85",
+    "nota": "bytes/sha256 del blob publicado; Git normaliza CRLF a LF en archivos de texto"
+  },
+  {
     "ruta": "figma/live_cliente.svg",
     "bytes": 580,
     "sha256": "79fd6c1fde10475cdcb5d98f67afdc1c82499a6706f5828c85075ccf6503b8ae",
@@ -37,6 +77,14 @@
     "sha256": "73ff8c9fd1eebf2e23ec759fadcc236f8427b25d3be311310c0bdac6862142f4",
     "bytes_copia_original": 365,
     "sha256_copia_original": "73ff8c9fd1eebf2e23ec759fadcc236f8427b25d3be311310c0bdac6862142f4",
+    "nota": "bytes/sha256 del blob publicado; Git normaliza CRLF a LF en archivos de texto"
+  },
+  {
+    "ruta": "focales/ci-watch.log",
+    "bytes": 18974,
+    "sha256": "33116c6b869d974a209223406195156b7ffa2ac67dde7cc7fed5b0591c891081",
+    "bytes_copia_original": 18974,
+    "sha256_copia_original": "33116c6b869d974a209223406195156b7ffa2ac67dde7cc7fed5b0591c891081",
     "nota": "bytes/sha256 del blob publicado; Git normaliza CRLF a LF en archivos de texto"
   },
   {
@@ -329,10 +377,10 @@
   },
   {
     "ruta": "issue-309-final.json",
-    "bytes": 16250,
-    "sha256": "c92e74586d821a88a67d0fd22624abb5a0f1f601e746ad132d41f4d09b7b8bd6",
-    "bytes_copia_original": 16250,
-    "sha256_copia_original": "c92e74586d821a88a67d0fd22624abb5a0f1f601e746ad132d41f4d09b7b8bd6",
+    "bytes": 15512,
+    "sha256": "3a9a2bb0a572fc57691ae47b045268780e65dd7448b551f4dccad639c2df9097",
+    "bytes_copia_original": 15512,
+    "sha256_copia_original": "3a9a2bb0a572fc57691ae47b045268780e65dd7448b551f4dccad639c2df9097",
     "nota": "bytes/sha256 del blob publicado; Git normaliza CRLF a LF en archivos de texto"
   },
   {
@@ -505,10 +553,10 @@
   },
   {
     "ruta": "protocolos/armar_evidencia.py",
-    "bytes": 5545,
-    "sha256": "898718f56412dc095bd7a5bc752628072dbfd9d30cd71e96da9492c94a36c2b9",
-    "bytes_copia_original": 5545,
-    "sha256_copia_original": "898718f56412dc095bd7a5bc752628072dbfd9d30cd71e96da9492c94a36c2b9",
+    "bytes": 5586,
+    "sha256": "83d56142481bc0597dbd5a432b67a69cef4fa97e3fe10dcba3b4269d046ba16d",
+    "bytes_copia_original": 5586,
+    "sha256_copia_original": "83d56142481bc0597dbd5a432b67a69cef4fa97e3fe10dcba3b4269d046ba16d",
     "nota": "bytes/sha256 del blob publicado; Git normaliza CRLF a LF en archivos de texto"
   },
   {
@@ -544,6 +592,14 @@
     "nota": "bytes/sha256 del blob publicado; Git normaliza CRLF a LF en archivos de texto"
   },
   {
+    "ruta": "protocolos/recoger_ci.py",
+    "bytes": 2694,
+    "sha256": "61abc48dc7b74ac87c96874355868925764af04d1f8f4a45d23de704b02de5b5",
+    "bytes_copia_original": 2694,
+    "sha256_copia_original": "61abc48dc7b74ac87c96874355868925764af04d1f8f4a45d23de704b02de5b5",
+    "nota": "bytes/sha256 del blob publicado; Git normaliza CRLF a LF en archivos de texto"
+  },
+  {
     "ruta": "protocolos/resumen_full.py",
     "bytes": 4398,
     "sha256": "27a81974d39bf87621b71015cde63e23ea8d71b10c8cb65936b5ae5826e592dc",
@@ -553,10 +609,10 @@
   },
   {
     "ruta": "README.md",
-    "bytes": 8300,
-    "sha256": "6db0706e16f539e7b46db6f8b3e0156d0143efb1f160e555be7489fa38fb3506",
-    "bytes_copia_original": 8300,
-    "sha256_copia_original": "6db0706e16f539e7b46db6f8b3e0156d0143efb1f160e555be7489fa38fb3506",
+    "bytes": 8804,
+    "sha256": "2862714d89d90b749031e6ccb851e2345a73de7e8d5c99dd646343ac2db76e5c",
+    "bytes_copia_original": 8804,
+    "sha256_copia_original": "2862714d89d90b749031e6ccb851e2345a73de7e8d5c99dd646343ac2db76e5c",
     "nota": "bytes/sha256 del blob publicado; Git normaliza CRLF a LF en archivos de texto"
   },
   {

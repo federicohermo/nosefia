@@ -1,0 +1,117 @@
+{
+  "conclusion": "success",
+  "createdAt": "2026-10-09T08:44:43Z",
+  "headSha": "fe620b92a38b556f27fff721d162c466c1e784fb",
+  "jobs": [
+    {
+      "completedAt": "2026-10-09T08:57:17Z",
+      "conclusion": "success",
+      "databaseId": 113742276515,
+      "name": "verify",
+      "startedAt": "2026-10-09T08:44:46Z",
+      "status": "completed",
+      "steps": [
+        {
+          "completedAt": "2026-10-09T08:44:47Z",
+          "conclusion": "success",
+          "name": "Set up job",
+          "number": 1,
+          "startedAt": "2026-10-09T08:44:46Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-09T08:44:58Z",
+          "conclusion": "success",
+          "name": "Run actions/checkout@v5",
+          "number": 2,
+          "startedAt": "2026-10-09T08:44:47Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-09T08:44:58Z",
+          "conclusion": "success",
+          "name": "La versión del motor, leída de `.godot-version`",
+          "number": 3,
+          "startedAt": "2026-10-09T08:44:58Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-09T08:44:58Z",
+          "conclusion": "success",
+          "name": "Run actions/setup-python@v5",
+          "number": 4,
+          "startedAt": "2026-10-09T08:44:58Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-09T08:45:01Z",
+          "conclusion": "success",
+          "name": "Run pip install \"gdtoolkit==4.*\"",
+          "number": 5,
+          "startedAt": "2026-10-09T08:44:58Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-09T08:45:02Z",
+          "conclusion": "success",
+          "name": "Bajar Godot 4.7.2-stable",
+          "number": 6,
+          "startedAt": "2026-10-09T08:45:01Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-09T08:45:34Z",
+          "conclusion": "success",
+          "name": "Importar los recursos del proyecto",
+          "number": 7,
+          "startedAt": "2026-10-09T08:45:02Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-09T08:57:14Z",
+          "conclusion": "success",
+          "name": "verificar",
+          "number": 8,
+          "startedAt": "2026-10-09T08:45:34Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-09T08:57:15Z",
+          "conclusion": "success",
+          "name": "Run actions/upload-artifact@v4",
+          "number": 9,
+          "startedAt": "2026-10-09T08:57:14Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-09T08:57:15Z",
+          "conclusion": "success",
+          "name": "Post Run actions/setup-python@v5",
+          "number": 17,
+          "startedAt": "2026-10-09T08:57:15Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-09T08:57:15Z",
+          "conclusion": "success",
+          "name": "Post Run actions/checkout@v5",
+          "number": 18,
+          "startedAt": "2026-10-09T08:57:15Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-09T08:57:15Z",
+          "conclusion": "success",
+          "name": "Complete job",
+          "number": 19,
+          "startedAt": "2026-10-09T08:57:15Z",
+          "status": "completed"
+        }
+      ],
+      "url": "https://github.com/federicohermo/nosefia/actions/runs/37906851144/job/113742276515"
+    }
+  ],
+  "status": "completed",
+  "updatedAt": "2026-10-09T08:57:18Z",
+  "url": "https://github.com/federicohermo/nosefia/actions/runs/37906851144"
+}
