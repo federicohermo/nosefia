@@ -1,0 +1,301 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<testsuites id="2026-10-09" name="report_3" tests="137" failures="0" skipped="0" flaky="0" time="0.000">
+	<testsuite id="0" name="generador_de_tickets_test" package="test/dominio/almacen" timestamp="2026-10-09T05:46:33" hostname="localhost" tests="13" failures="0" errors="0" skipped="0" flaky="0" time="0.138">
+		<testcase name="test_se_llena_en_orden_y_repite_productos" classname="generador_de_tickets_test" time="0.006">
+		</testcase>
+		<testcase name="test_una_caja_no_se_confunde_con_su_producto" classname="generador_de_tickets_test" time="0.006">
+		</testcase>
+		<testcase name="test_sin_unidad_valida_no_se_anota_nada" classname="generador_de_tickets_test" time="0.005">
+		</testcase>
+		<testcase name="test_el_rechazo_por_tipo_precede_al_programa_lleno" classname="generador_de_tickets_test" time="0.004">
+		</testcase>
+		<testcase name="test_imprimir_y_borrar_preserva_el_papel" classname="generador_de_tickets_test" time="0.005">
+		</testcase>
+		<testcase name="test_los_tres_vacios_no_imprimen" classname="generador_de_tickets_test" time="0.005">
+		</testcase>
+		<testcase name="test_la_lectura_de_renglones_no_permite_borrarlos" classname="generador_de_tickets_test" time="0.005">
+		</testcase>
+		<testcase name="test_dos_impresiones_son_dos_papeles_independientes" classname="generador_de_tickets_test" time="0.005">
+		</testcase>
+		<testcase name="test_el_modo_sale_de_la_jornada_y_no_del_estado_anterior" classname="generador_de_tickets_test" time="0.005">
+		</testcase>
+		<testcase name="test_cada_posicion_manual_elige_catalogo_y_vacio_sin_mover_otras" classname="generador_de_tickets_test" time="0.007">
+		</testcase>
+		<testcase name="test_un_indice_invalido_y_el_modo_automatico_rechazan_la_eleccion" classname="generador_de_tickets_test" time="0.006">
+		</testcase>
+		<testcase name="test_solo_el_segundo_o_tercero_imprime_sin_mover_su_posicion" classname="generador_de_tickets_test" time="0.006">
+		</testcase>
+		<testcase name="test_sin_lector_precede_al_tipo_y_al_lleno_y_no_toca_el_programa" classname="generador_de_tickets_test" time="0.004">
+		</testcase>
+	</testsuite>
+	<testsuite id="1" name="caja_registradora_test" package="test/sistemas/tareas" timestamp="2026-10-09T05:46:33" hostname="localhost" tests="8" failures="0" errors="0" skipped="0" flaky="0" time="0.090">
+		<testcase name="test_publica_lectura_y_cambio_solo_cuando_anota" classname="caja_registradora_test" time="0.005">
+		</testcase>
+		<testcase name="test_borrar_publica_la_vista_vacia" classname="caja_registradora_test" time="0.005">
+		</testcase>
+		<testcase name="test_imprimir_publica_el_papel_y_no_un_cambio_del_programa" classname="caja_registradora_test" time="0.005">
+		</testcase>
+		<testcase name="test_otra_jornada_reemplaza_el_programa_y_avisa_la_vista" classname="caja_registradora_test" time="0.006">
+		</testcase>
+		<testcase name="test_sin_generador_el_cableado_avisa_y_no_publica_eventos" classname="caja_registradora_test" time="0.010">
+		</testcase>
+		<testcase name="test_arrancar_publica_el_modo_de_cada_jornada_y_la_vista_vacia" classname="caja_registradora_test" time="0.005">
+		</testcase>
+		<testcase name="test_elegir_publica_solo_un_cambio_aceptado_y_no_una_lectura" classname="caja_registradora_test" time="0.005">
+		</testcase>
+		<testcase name="test_usar_el_hueco_es_silencioso_tanto_vacio_como_lleno" classname="caja_registradora_test" time="0.005">
+		</testcase>
+	</testsuite>
+	<testsuite id="2" name="programa_de_tickets_test" package="test/ui/diegetica" timestamp="2026-10-09T05:46:33" hostname="localhost" tests="6" failures="0" errors="0" skipped="0" flaky="0" time="0.230">
+		<testcase name="test_siempre_presenta_tres_filas_y_repinta_sin_restos" classname="programa_de_tickets_test" time="0.035">
+		</testcase>
+		<testcase name="test_cada_boton_publica_su_pedido_y_un_sonido" classname="programa_de_tickets_test" time="0.019">
+		</testcase>
+		<testcase name="test_el_lienzo_mantiene_los_tres_renglones_y_botones_al_redimensionar" classname="programa_de_tickets_test" time="0.020">
+		</testcase>
+		<testcase name="test_los_selectores_manuales_ofrecen_vacio_y_catalogo_ordenado" classname="programa_de_tickets_test" time="0.024">
+		</testcase>
+		<testcase name="test_solo_dos_o_tres_conserva_su_posicion_al_repintar" classname="programa_de_tickets_test" time="0.056">
+		</testcase>
+		<testcase name="test_seleccionar_publica_el_indice_y_producto_y_vacio_publica_null" classname="programa_de_tickets_test" time="0.030">
+		</testcase>
+	</testsuite>
+	<testsuite id="3" name="lector_test" package="test/escenas/puestos" timestamp="2026-10-09T05:46:33" hostname="localhost" tests="9" failures="0" errors="0" skipped="0" flaky="0" time="1.417">
+		<testcase name="test_el_lector_anota_la_unidad_con_el_programa_cerrado_y_conserva_la_mano" classname="lector_test" time="0.175">
+		</testcase>
+		<testcase name="test_los_seis_objetos_se_rechazan_y_siguen_en_la_mano" classname="lector_test" time="0.127">
+		</testcase>
+		<testcase name="test_las_manos_vacias_y_los_otros_gestos_no_leen" classname="lector_test" time="0.121">
+		</testcase>
+		<testcase name="test_el_lector_apoya_en_el_mostrador_y_tiene_foco_y_contorno" classname="lector_test" time="0.125">
+		</testcase>
+		<testcase name="test_los_eventos_reales_piden_escaneo_error_impresion_y_botones" classname="lector_test" time="0.128">
+		</testcase>
+		<testcase name="test_la_tres_vacia_y_cambia_solo_la_malla" classname="lector_test" time="0.141">
+		</testcase>
+		<testcase name="test_el_hueco_con_unidad_caja_y_mano_vacia_no_avisa_ni_anota" classname="lector_test" time="0.137">
+		</testcase>
+		<testcase name="test_la_partida_retomada_en_cuatro_es_manual_y_una_nueva_es_automatica" classname="lector_test" time="0.237">
+		</testcase>
+		<testcase name="test_el_popup_pausa_y_reanuda_programa_y_mano" classname="lector_test" time="0.163">
+		</testcase>
+	</testsuite>
+	<testsuite id="4" name="caja_registradora_test" package="test/escenas/puestos" timestamp="2026-10-09T05:46:35" hostname="localhost" tests="8" failures="0" errors="0" skipped="0" flaky="0" time="2.450">
+		<testcase name="test_el_derecho_abre_y_cierra_con_los_ocho_estados_de_la_mano" classname="caja_registradora_test" time="0.229">
+		</testcase>
+		<testcase name="test_izquierdo_y_examen_vacios_no_abren_y_otras_pantallas_bloquean" classname="caja_registradora_test" time="0.163">
+		</testcase>
+		<testcase name="test_el_reloj_corre_la_pausa_real_va_encima_y_el_turno_cierra" classname="caja_registradora_test" time="0.185">
+		</testcase>
+		<testcase name="test_los_botones_imprimen_copia_y_borrar_repinta_tres_vacios" classname="caja_registradora_test" time="0.154">
+		</testcase>
+		<testcase name="test_imprimir_otra_vez_suelta_el_anterior_y_el_nuevo_queda_quieto" classname="caja_registradora_test" time="0.282">
+		</testcase>
+		<testcase name="test_imprimir_otro_con_el_anterior_en_mano_no_lo_descongela" classname="caja_registradora_test" time="0.140">
+		</testcase>
+		<testcase name="test_otra_jornada_quita_papeles_del_piso_y_del_examen_y_vacia_el_programa" classname="caja_registradora_test" time="1.031">
+		</testcase>
+		<testcase name="test_caja_y_papel_tienen_foco_y_contorno_y_la_ranura_no_deforma_el_papel" classname="caja_registradora_test" time="0.209">
+		</testcase>
+	</testsuite>
+	<testsuite id="5" name="audio_del_almacen_test" package="test/escenas/puestos" timestamp="2026-10-09T05:46:37" hostname="localhost" tests="19" failures="0" errors="0" skipped="0" flaky="0" time="0.919">
+		<testcase name="test_los_cuatro_buses_existen_en_el_motor" classname="audio_del_almacen_test" time="0.005">
+		</testcase>
+		<testcase name="test_cada_bus_manda_a_master" classname="audio_del_almacen_test" time="0.006">
+		</testcase>
+		<testcase name="test_el_layout_de_buses_apunta_a_un_archivo_que_existe" classname="audio_del_almacen_test" time="0.005">
+		</testcase>
+		<testcase name="test_ningun_nombre_de_bus_se_escribe_fuera_del_archivo_que_los_declara" classname="audio_del_almacen_test" time="0.008">
+		</testcase>
+		<testcase name="test_ningun_test_de_este_spec_afirma_sobre_el_estado_de_reproduccion" classname="audio_del_almacen_test" time="0.226">
+		</testcase>
+		<testcase name="test_el_detector_acepta_fin_de_tween_y_rechaza_fin_de_audio" classname="audio_del_almacen_test" time="0.007">
+		</testcase>
+		<testcase name="test_la_cascara_no_tiene_una_sola_regla" classname="audio_del_almacen_test" time="0.007">
+		</testcase>
+		<testcase name="test_el_almacen_instancia_el_audio_exactamente_una_vez" classname="audio_del_almacen_test" time="0.007">
+		</testcase>
+		<testcase name="test_el_dominio_no_nombra_un_solo_nodo_de_audio" classname="audio_del_almacen_test" time="0.009">
+		</testcase>
+		<testcase name="test_la_cascara_carga_con_sus_dos_sistemas_cableados" classname="audio_del_almacen_test" time="0.006">
+		</testcase>
+		<testcase name="test_cada_senal_de_la_tabla_la_declara_alguien_de_verdad" classname="audio_del_almacen_test" time="0.145">
+		</testcase>
+		<testcase name="test_el_almacen_llega_cableado_al_audio_y_al_agarre" classname="audio_del_almacen_test" time="0.034">
+		</testcase>
+		<testcase name="test_el_cableado_enlaza_las_fuentes_y_arranca_el_ambiente" classname="audio_del_almacen_test" time="0.008">
+		</testcase>
+		<testcase name="test_cada_emisor_de_la_tabla_esta_en_la_escena" classname="audio_del_almacen_test" time="0.035">
+		</testcase>
+		<testcase name="test_el_ambiente_tiene_sus_emisores_en_la_heladera_y_los_tubos" classname="audio_del_almacen_test" time="0.038">
+		</testcase>
+		<testcase name="test_el_jugador_es_una_fuente_del_audio" classname="audio_del_almacen_test" time="0.006">
+		</testcase>
+		<testcase name="test_la_jornada_arranca_la_musica_y_el_cierre_la_corta" classname="audio_del_almacen_test" time="0.007">
+		</testcase>
+		<testcase name="test_el_balde_y_sus_gestos_suenan_en_el_local_sin_un_rechazo" classname="audio_del_almacen_test" time="0.132">
+		</testcase>
+		<testcase name="test_devolver_una_unidad_suena_una_vez_desde_la_mano" classname="audio_del_almacen_test" time="0.122">
+		</testcase>
+	</testsuite>
+	<testsuite id="6" name="tabla_de_sonidos_test" package="test/dominio/ambiente" timestamp="2026-10-09T05:46:38" hostname="localhost" tests="20" failures="0" errors="0" skipped="0" flaky="0" time="0.642">
+		<testcase name="test_la_tabla_del_disco_carga" classname="tabla_de_sonidos_test" time="0.034">
+		</testcase>
+		<testcase name="test_la_tabla_cubre_todos_los_eventos" classname="tabla_de_sonidos_test" time="0.034">
+		</testcase>
+		<testcase name="test_cinco_eventos_suenan_con_su_audio_y_su_bus" classname="tabla_de_sonidos_test" time="0.037">
+		</testcase>
+		<testcase name="test_el_boton_de_la_computadora_lo_dispara_boton_pulsado" classname="tabla_de_sonidos_test" time="0.036">
+		</testcase>
+		<testcase name="test_cerrar_la_jornada_y_abrir_la_computadora_quedan_mudos" classname="tabla_de_sonidos_test" time="0.036">
+		</testcase>
+		<testcase name="test_ninguna_fila_del_disco_sale_por_un_bus_que_no_existe" classname="tabla_de_sonidos_test" time="0.037">
+		</testcase>
+		<testcase name="test_un_evento_sin_fila_contesta_null_en_vez_de_reventar" classname="tabla_de_sonidos_test" time="0.007">
+		</testcase>
+		<testcase name="test_una_tabla_con_una_fila_invalida_la_nombra" classname="tabla_de_sonidos_test" time="0.006">
+		</testcase>
+		<testcase name="test_la_fila_de_un_evento_de_objeto_sale_de_su_sonoridad" classname="tabla_de_sonidos_test" time="0.035">
+		</testcase>
+		<testcase name="test_un_par_sin_fila_contesta_null" classname="tabla_de_sonidos_test" time="0.007">
+		</testcase>
+		<testcase name="test_la_tabla_nombra_el_par_que_falta" classname="tabla_de_sonidos_test" time="0.038">
+		</testcase>
+		<testcase name="test_cada_sonoridad_con_audio_suena_su_propio_archivo" classname="tabla_de_sonidos_test" time="0.037">
+		</testcase>
+		<testcase name="test_la_musica_y_el_ambiente_van_en_bucle_por_su_bus" classname="tabla_de_sonidos_test" time="0.036">
+		</testcase>
+		<testcase name="test_lo_que_pasa_en_un_lugar_suena_del_espacio_y_lo_demas_plano" classname="tabla_de_sonidos_test" time="0.037">
+		</testcase>
+		<testcase name="test_los_pasos_alternan_pisadas_planas" classname="tabla_de_sonidos_test" time="0.039">
+		</testcase>
+		<testcase name="test_la_toma_larga_de_pasos_no_se_usa" classname="tabla_de_sonidos_test" time="0.007">
+		</testcase>
+		<testcase name="test_la_compra_el_lector_y_el_celular_suenan_con_su_audio" classname="tabla_de_sonidos_test" time="0.035">
+		</testcase>
+		<testcase name="test_las_tres_senales_llegan_de_una_fuente_del_audio" classname="tabla_de_sonidos_test" time="0.010">
+		</testcase>
+		<testcase name="test_la_ronda_reparte_por_turno_y_vuelve_al_principio" classname="tabla_de_sonidos_test" time="0.006">
+		</testcase>
+		<testcase name="test_una_ronda_sin_voces_queda_vacia_y_no_falla" classname="tabla_de_sonidos_test" time="0.006">
+		</testcase>
+	</testsuite>
+	<testsuite id="7" name="modelo_integrado_test" package="test/escenas" timestamp="2026-10-09T05:46:39" hostname="localhost" tests="6" failures="0" errors="0" skipped="0" flaky="0" time="0.662">
+		<testcase name="test_solo_las_mallas_reemplazadas_son_geometria_de_referencia" classname="modelo_integrado_test" time="0.152">
+		</testcase>
+		<testcase name="test_la_raiz_agrupa_por_rol_y_conserva_sus_enlaces" classname="modelo_integrado_test" time="0.033">
+		</testcase>
+		<testcase name="test_los_puestos_reemplazados_usan_mallas_del_modelo" classname="modelo_integrado_test" time="0.033">
+		</testcase>
+		<testcase name="test_la_computadora_tiene_apoyo_y_no_queda_tapada_por_otro_cuerpo" classname="modelo_integrado_test" time="0.124">
+		</testcase>
+		<testcase name="test_el_surtido_fijo_no_muestra_stock_que_el_dominio_no_tiene" classname="modelo_integrado_test" time="0.138">
+		</testcase>
+		<testcase name="test_las_hojas_con_lectura_conservan_el_modelo_del_artista" classname="modelo_integrado_test" time="0.134">
+		</testcase>
+	</testsuite>
+	<testsuite id="8" name="iluminacion_horneada_test" package="test/escenas" timestamp="2026-10-09T05:46:40" hostname="localhost" tests="3" failures="0" errors="0" skipped="0" flaky="0" time="0.307">
+		<testcase name="test_el_local_tiene_su_luz_horneada" classname="iluminacion_horneada_test" time="0.125">
+		</testcase>
+		<testcase name="test_toda_malla_con_gi_estatico_entro_al_horneado" classname="iluminacion_horneada_test" time="0.124">
+		</testcase>
+		<testcase name="test_las_hojas_que_abren_no_llevan_sombras_de_la_posicion_cerrada" classname="iluminacion_horneada_test" time="0.033">
+		</testcase>
+	</testsuite>
+	<testsuite id="9" name="jornada_integrada_test" package="test/escenas" timestamp="2026-10-09T05:46:40" hostname="localhost" tests="6" failures="0" errors="0" skipped="0" flaky="0" time="7.352">
+		<testcase name="test_los_puestos_completan_la_jornada_y_permiten_abrir_la_siguiente" classname="jornada_integrada_test" time="4.752">
+		</testcase>
+		<testcase name="test_abrir_la_jornada_termina_el_examen_en_curso" classname="jornada_integrada_test" time="0.128">
+		</testcase>
+		<testcase name="test_con_otra_pantalla_encima_la_e_no_abre_un_examen" classname="jornada_integrada_test" time="0.128">
+		</testcase>
+		<testcase name="test_la_puerta_abierta_anoche_arranca_cerrada" classname="jornada_integrada_test" time="2.009">
+		</testcase>
+		<testcase name="test_la_puerta_a_medio_giro_arranca_cerrada" classname="jornada_integrada_test" time="0.136">
+		</testcase>
+		<testcase name="test_la_noche_siguiente_abre_con_cada_caja_llena_y_nada_afuera" classname="jornada_integrada_test" time="0.153">
+		</testcase>
+	</testsuite>
+	<testsuite id="10" name="almacen_test" package="test/escenas" timestamp="2026-10-09T05:46:47" hostname="localhost" tests="29" failures="0" errors="0" skipped="0" flaky="0" time="2.611">
+		<testcase name="test_el_almacen_carga_y_su_raiz_es_un_nodo_tridimensional" classname="almacen_test" time="0.038">
+		</testcase>
+		<testcase name="test_los_muebles_y_el_anclaje_de_la_ventanilla_estan_por_nombre" classname="almacen_test" time="0.034">
+		</testcase>
+		<testcase name="test_el_almacen_instancia_al_jugador_en_vez_de_duplicar_el_cuerpo" classname="almacen_test" time="0.036">
+		</testcase>
+		<testcase name="test_la_escena_trae_luz_propia" classname="almacen_test" time="0.035">
+		</testcase>
+		<testcase name="test_la_estructura_entra_instanciada_y_no_vino_corrida" classname="almacen_test" time="0.034">
+		</testcase>
+		<testcase name="test_el_hueco_de_la_ventanilla_cae_en_la_ventanilla_del_modelo" classname="almacen_test" time="0.135">
+		</testcase>
+		<testcase name="test_la_regla_del_hueco_rechaza_un_punto_del_muro" classname="almacen_test" time="0.131">
+		</testcase>
+		<testcase name="test_el_jugador_arranca_adentro_del_almacen_y_apoyado_en_el_piso" classname="almacen_test" time="0.442">
+		</testcase>
+		<testcase name="test_todo_nodo_propio_del_almacen_cuelga_de_la_raiz" classname="almacen_test" time="0.039">
+		</testcase>
+		<testcase name="test_la_regla_de_cableado_sabe_ver_un_nodo_colgado_de_otro" classname="almacen_test" time="0.009">
+		</testcase>
+		<testcase name="test_el_cableado_dejo_de_armar_el_turno_y_de_llevar_el_puntaje" classname="almacen_test" time="0.008">
+		</testcase>
+		<testcase name="test_el_almacen_arranca_desde_el_guardado" classname="almacen_test" time="0.072">
+		</testcase>
+		<testcase name="test_la_escena_trae_el_ciclo_de_jornadas_en_servicios" classname="almacen_test" time="0.042">
+		</testcase>
+		<testcase name="test_los_cableados_de_la_raiz_llegan_asignados" classname="almacen_test" time="0.038">
+		</testcase>
+		<testcase name="test_el_cableado_arma_el_parte_una_sola_vez_y_no_decide" classname="almacen_test" time="0.014">
+		</testcase>
+		<testcase name="test_la_escena_instancia_la_pantalla_de_cierre" classname="almacen_test" time="0.034">
+		</testcase>
+		<testcase name="test_despachar_la_placa_abre_la_noche_siguiente_con_registrar_cumplida" classname="almacen_test" time="0.134">
+		</testcase>
+		<testcase name="test_el_arranque_esta_frente_a_la_entrada_del_lado_de_adentro" classname="almacen_test" time="0.131">
+		</testcase>
+		<testcase name="test_abrir_la_jornada_deja_al_jugador_en_el_arranque" classname="almacen_test" time="0.142">
+		</testcase>
+		<testcase name="test_con_el_despido_la_placa_vuelve_al_menu_y_no_abre_otra_noche" classname="almacen_test" time="0.135">
+		</testcase>
+		<testcase name="test_con_la_partida_en_curso_volver_al_menu_no_abre_la_noche_siguiente" classname="almacen_test" time="0.134">
+		</testcase>
+		<testcase name="test_volver_al_menu_desde_la_pausa_sale_de_la_pausa_y_va_al_menu" classname="almacen_test" time="0.134">
+		</testcase>
+		<testcase name="test_con_la_placa_en_pantalla_esc_no_pausa" classname="almacen_test" time="0.132">
+		</testcase>
+		<testcase name="test_volver_al_menu_carga_el_menu_de_inicio" classname="almacen_test" time="0.008">
+		</testcase>
+		<testcase name="test_la_hora_se_lee_en_un_solo_lugar_y_es_el_reloj_de_mesa" classname="almacen_test" time="0.040">
+		</testcase>
+		<testcase name="test_el_reloj_de_mesa_queda_sobre_el_vidrio_del_reloj_del_modelo" classname="almacen_test" time="0.130">
+		</testcase>
+		<testcase name="test_el_cableado_le_da_la_hora_al_reloj_de_mesa_y_no_al_hud" classname="almacen_test" time="0.008">
+		</testcase>
+		<testcase name="test_el_cableado_de_reponer_llega_entero_hasta_los_huecos" classname="almacen_test" time="0.035">
+		</testcase>
+		<testcase name="test_el_marco_para_asomarse_coincide_con_los_bordes_del_hueco" classname="almacen_test" time="0.127">
+		</testcase>
+	</testsuite>
+	<testsuite id="11" name="uso_en_el_almacen_test" package="test/escenas" timestamp="2026-10-09T05:46:50" hostname="localhost" tests="10" failures="0" errors="0" skipped="0" flaky="0" time="2.060">
+		<testcase name="test_la_accion_tiene_nombre_unico_y_clic_derecho" classname="uso_en_el_almacen_test" time="0.046">
+		</testcase>
+		<testcase name="test_el_jugador_declara_un_solo_pedido_tipado" classname="uso_en_el_almacen_test" time="0.006">
+		</testcase>
+		<testcase name="test_sin_foco_o_suspendido_no_emite_y_al_reanudar_si" classname="uso_en_el_almacen_test" time="0.007">
+		</testcase>
+		<testcase name="test_el_clic_derecho_limpia_una_mancha_de_punta_a_punta" classname="uso_en_el_almacen_test" time="0.801">
+		</testcase>
+		<testcase name="test_usar_cierra_cada_panel_sin_pasada_ni_pedido_y_el_reloj_avanza" classname="uso_en_el_almacen_test" time="0.285">
+		</testcase>
+		<testcase name="test_el_derecho_abre_las_dos_puertas_con_cualquier_mano" classname="uso_en_el_almacen_test" time="0.136">
+		</testcase>
+		<testcase name="test_el_izquierdo_no_abre_lo_fijo_y_suelta_la_unidad" classname="uso_en_el_almacen_test" time="0.137">
+		</testcase>
+		<testcase name="test_el_derecho_abre_y_cierra_paneles_con_cualquier_mano" classname="uso_en_el_almacen_test" time="0.330">
+		</testcase>
+		<testcase name="test_la_trabada_con_mopa_avisa_sin_pedir_limpieza" classname="uso_en_el_almacen_test" time="0.126">
+		</testcase>
+		<testcase name="test_con_otro_control_suspendido_el_derecho_no_abre_lo_fijo" classname="uso_en_el_almacen_test" time="0.124">
+		</testcase>
+	</testsuite>
+</testsuites>

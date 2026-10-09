@@ -1,0 +1,2089 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<testsuites id="2026-10-09" name="report_19" tests="36" failures="260" skipped="0" flaky="0" time="0.000">
+	<testsuite id="0" name="generador_de_tickets_test" package="test/dominio/almacen" timestamp="2026-10-09T05:25:54" hostname="localhost" tests="13" failures="221" errors="0" skipped="0" flaky="0" time="0.327">
+		<testcase name="test_se_llena_en_orden_y_repite_productos" classname="generador_de_tickets_test" time="0.006">
+		</testcase>
+		<testcase name="test_una_caja_no_se_confunde_con_su_producto" classname="generador_de_tickets_test" time="0.006">
+		</testcase>
+		<testcase name="test_sin_unidad_valida_no_se_anota_nada" classname="generador_de_tickets_test" time="0.004">
+		</testcase>
+		<testcase name="test_el_rechazo_por_tipo_precede_al_programa_lleno" classname="generador_de_tickets_test" time="0.005">
+		</testcase>
+		<testcase name="test_imprimir_y_borrar_preserva_el_papel" classname="generador_de_tickets_test" time="0.005">
+		</testcase>
+		<testcase name="test_los_tres_vacios_no_imprimen" classname="generador_de_tickets_test" time="0.006">
+		</testcase>
+		<testcase name="test_la_lectura_de_renglones_no_permite_borrarlos" classname="generador_de_tickets_test" time="0.005">
+		</testcase>
+		<testcase name="test_dos_impresiones_son_dos_papeles_independientes" classname="generador_de_tickets_test" time="0.004">
+		</testcase>
+		<testcase name="test_el_modo_sale_de_la_jornada_y_no_del_estado_anterior" classname="generador_de_tickets_test" time="0.006">
+			<failure message="FAILED: res://test/dominio/almacen/generador_de_tickets_test.gd:97" type="FAILURE">
+<![CDATA[
+Expecting:
+ 'true'
+ but was
+ 'false'
+	at 'test_el_modo_sale_de_la_jornada_y_no_del_estado_anterior' in res://test/dominio/almacen/generador_de_tickets_test.gd:97
+]]>
+			</failure>
+			<failure message="FAILED: res://test/dominio/almacen/generador_de_tickets_test.gd:97" type="FAILURE">
+<![CDATA[
+Expecting:
+ 'true'
+ but was
+ 'false'
+	at 'test_el_modo_sale_de_la_jornada_y_no_del_estado_anterior' in res://test/dominio/almacen/generador_de_tickets_test.gd:97
+]]>
+			</failure>
+			<failure message="FAILED: res://test/dominio/almacen/generador_de_tickets_test.gd:97" type="FAILURE">
+<![CDATA[
+Expecting:
+ 'true'
+ but was
+ 'false'
+	at 'test_el_modo_sale_de_la_jornada_y_no_del_estado_anterior' in res://test/dominio/almacen/generador_de_tickets_test.gd:97
+]]>
+			</failure>
+			<failure message="FAILED: res://test/dominio/almacen/generador_de_tickets_test.gd:97" type="FAILURE">
+<![CDATA[
+Expecting:
+ 'true'
+ but was
+ 'false'
+	at 'test_el_modo_sale_de_la_jornada_y_no_del_estado_anterior' in res://test/dominio/almacen/generador_de_tickets_test.gd:97
+]]>
+			</failure>
+		</testcase>
+		<testcase name="test_cada_posicion_manual_elige_catalogo_y_vacio_sin_mover_otras" classname="generador_de_tickets_test" time="0.015">
+			<failure message="FAILED: res://test/dominio/almacen/generador_de_tickets_test.gd:109" type="FAILURE">
+<![CDATA[
+Expecting: 'true' but is 'false'
+	at 'test_cada_posicion_manual_elige_catalogo_y_vacio_sin_mover_otras' in res://test/dominio/almacen/generador_de_tickets_test.gd:109
+]]>
+			</failure>
+			<failure message="FAILED: res://test/dominio/almacen/generador_de_tickets_test.gd:110" type="FAILURE">
+<![CDATA[
+Expecting:
+ <RefCounted>
+ to refer to the same object
+ '<null>'
+	at 'test_cada_posicion_manual_elige_catalogo_y_vacio_sin_mover_otras' in res://test/dominio/almacen/generador_de_tickets_test.gd:110
+]]>
+			</failure>
+			<failure message="FAILED: res://test/dominio/almacen/generador_de_tickets_test.gd:109" type="FAILURE">
+<![CDATA[
+Expecting: 'true' but is 'false'
+	at 'test_cada_posicion_manual_elige_catalogo_y_vacio_sin_mover_otras' in res://test/dominio/almacen/generador_de_tickets_test.gd:109
+]]>
+			</failure>
+			<failure message="FAILED: res://test/dominio/almacen/generador_de_tickets_test.gd:110" type="FAILURE">
+<![CDATA[
+Expecting:
+ <RefCounted>
+ to refer to the same object
+ '<null>'
+	at 'test_cada_posicion_manual_elige_catalogo_y_vacio_sin_mover_otras' in res://test/dominio/almacen/generador_de_tickets_test.gd:110
+]]>
+			</failure>
+			<failure message="FAILED: res://test/dominio/almacen/generador_de_tickets_test.gd:109" type="FAILURE">
+<![CDATA[
+Expecting: 'true' but is 'false'
+	at 'test_cada_posicion_manual_elige_catalogo_y_vacio_sin_mover_otras' in res://test/dominio/almacen/generador_de_tickets_test.gd:109
+]]>
+			</failure>
+			<failure message="FAILED: res://test/dominio/almacen/generador_de_tickets_test.gd:110" type="FAILURE">
+<![CDATA[
+Expecting:
+ <RefCounted>
+ to refer to the same object
+ '<null>'
+	at 'test_cada_posicion_manual_elige_catalogo_y_vacio_sin_mover_otras' in res://test/dominio/almacen/generador_de_tickets_test.gd:110
+]]>
+			</failure>
+			<failure message="FAILED: res://test/dominio/almacen/generador_de_tickets_test.gd:109" type="FAILURE">
+<![CDATA[
+Expecting: 'true' but is 'false'
+	at 'test_cada_posicion_manual_elige_catalogo_y_vacio_sin_mover_otras' in res://test/dominio/almacen/generador_de_tickets_test.gd:109
+]]>
+			</failure>
+			<failure message="FAILED: res://test/dominio/almacen/generador_de_tickets_test.gd:110" type="FAILURE">
+<![CDATA[
+Expecting:
+ <RefCounted>
+ to refer to the same object
+ '<null>'
+	at 'test_cada_posicion_manual_elige_catalogo_y_vacio_sin_mover_otras' in res://test/dominio/almacen/generador_de_tickets_test.gd:110
+]]>
+			</failure>
+			<failure message="FAILED: res://test/dominio/almacen/generador_de_tickets_test.gd:109" type="FAILURE">
+<![CDATA[
+Expecting: 'true' but is 'false'
+	at 'test_cada_posicion_manual_elige_catalogo_y_vacio_sin_mover_otras' in res://test/dominio/almacen/generador_de_tickets_test.gd:109
+]]>
+			</failure>
+			<failure message="FAILED: res://test/dominio/almacen/generador_de_tickets_test.gd:110" type="FAILURE">
+<![CDATA[
+Expecting:
+ <RefCounted>
+ to refer to the same object
+ '<null>'
+	at 'test_cada_posicion_manual_elige_catalogo_y_vacio_sin_mover_otras' in res://test/dominio/almacen/generador_de_tickets_test.gd:110
+]]>
+			</failure>
+			<failure message="FAILED: res://test/dominio/almacen/generador_de_tickets_test.gd:109" type="FAILURE">
+<![CDATA[
+Expecting: 'true' but is 'false'
+	at 'test_cada_posicion_manual_elige_catalogo_y_vacio_sin_mover_otras' in res://test/dominio/almacen/generador_de_tickets_test.gd:109
+]]>
+			</failure>
+			<failure message="FAILED: res://test/dominio/almacen/generador_de_tickets_test.gd:110" type="FAILURE">
+<![CDATA[
+Expecting:
+ <RefCounted>
+ to refer to the same object
+ '<null>'
+	at 'test_cada_posicion_manual_elige_catalogo_y_vacio_sin_mover_otras' in res://test/dominio/almacen/generador_de_tickets_test.gd:110
+]]>
+			</failure>
+			<failure message="FAILED: res://test/dominio/almacen/generador_de_tickets_test.gd:109" type="FAILURE">
+<![CDATA[
+Expecting: 'true' but is 'false'
+	at 'test_cada_posicion_manual_elige_catalogo_y_vacio_sin_mover_otras' in res://test/dominio/almacen/generador_de_tickets_test.gd:109
+]]>
+			</failure>
+			<failure message="FAILED: res://test/dominio/almacen/generador_de_tickets_test.gd:110" type="FAILURE">
+<![CDATA[
+Expecting:
+ <RefCounted>
+ to refer to the same object
+ '<null>'
+	at 'test_cada_posicion_manual_elige_catalogo_y_vacio_sin_mover_otras' in res://test/dominio/almacen/generador_de_tickets_test.gd:110
+]]>
+			</failure>
+			<failure message="FAILED: res://test/dominio/almacen/generador_de_tickets_test.gd:109" type="FAILURE">
+<![CDATA[
+Expecting: 'true' but is 'false'
+	at 'test_cada_posicion_manual_elige_catalogo_y_vacio_sin_mover_otras' in res://test/dominio/almacen/generador_de_tickets_test.gd:109
+]]>
+			</failure>
+			<failure message="FAILED: res://test/dominio/almacen/generador_de_tickets_test.gd:110" type="FAILURE">
+<![CDATA[
+Expecting:
+ <RefCounted>
+ to refer to the same object
+ '<null>'
+	at 'test_cada_posicion_manual_elige_catalogo_y_vacio_sin_mover_otras' in res://test/dominio/almacen/generador_de_tickets_test.gd:110
+]]>
+			</failure>
+			<failure message="FAILED: res://test/dominio/almacen/generador_de_tickets_test.gd:109" type="FAILURE">
+<![CDATA[
+Expecting: 'true' but is 'false'
+	at 'test_cada_posicion_manual_elige_catalogo_y_vacio_sin_mover_otras' in res://test/dominio/almacen/generador_de_tickets_test.gd:109
+]]>
+			</failure>
+			<failure message="FAILED: res://test/dominio/almacen/generador_de_tickets_test.gd:110" type="FAILURE">
+<![CDATA[
+Expecting:
+ <RefCounted>
+ to refer to the same object
+ '<null>'
+	at 'test_cada_posicion_manual_elige_catalogo_y_vacio_sin_mover_otras' in res://test/dominio/almacen/generador_de_tickets_test.gd:110
+]]>
+			</failure>
+			<failure message="FAILED: res://test/dominio/almacen/generador_de_tickets_test.gd:109" type="FAILURE">
+<![CDATA[
+Expecting: 'true' but is 'false'
+	at 'test_cada_posicion_manual_elige_catalogo_y_vacio_sin_mover_otras' in res://test/dominio/almacen/generador_de_tickets_test.gd:109
+]]>
+			</failure>
+			<failure message="FAILED: res://test/dominio/almacen/generador_de_tickets_test.gd:110" type="FAILURE">
+<![CDATA[
+Expecting:
+ <RefCounted>
+ to refer to the same object
+ '<null>'
+	at 'test_cada_posicion_manual_elige_catalogo_y_vacio_sin_mover_otras' in res://test/dominio/almacen/generador_de_tickets_test.gd:110
+]]>
+			</failure>
+			<failure message="FAILED: res://test/dominio/almacen/generador_de_tickets_test.gd:109" type="FAILURE">
+<![CDATA[
+Expecting: 'true' but is 'false'
+	at 'test_cada_posicion_manual_elige_catalogo_y_vacio_sin_mover_otras' in res://test/dominio/almacen/generador_de_tickets_test.gd:109
+]]>
+			</failure>
+			<failure message="FAILED: res://test/dominio/almacen/generador_de_tickets_test.gd:110" type="FAILURE">
+<![CDATA[
+Expecting:
+ <RefCounted>
+ to refer to the same object
+ '<null>'
+	at 'test_cada_posicion_manual_elige_catalogo_y_vacio_sin_mover_otras' in res://test/dominio/almacen/generador_de_tickets_test.gd:110
+]]>
+			</failure>
+			<failure message="FAILED: res://test/dominio/almacen/generador_de_tickets_test.gd:109" type="FAILURE">
+<![CDATA[
+Expecting: 'true' but is 'false'
+	at 'test_cada_posicion_manual_elige_catalogo_y_vacio_sin_mover_otras' in res://test/dominio/almacen/generador_de_tickets_test.gd:109
+]]>
+			</failure>
+			<failure message="FAILED: res://test/dominio/almacen/generador_de_tickets_test.gd:110" type="FAILURE">
+<![CDATA[
+Expecting:
+ <RefCounted>
+ to refer to the same object
+ '<null>'
+	at 'test_cada_posicion_manual_elige_catalogo_y_vacio_sin_mover_otras' in res://test/dominio/almacen/generador_de_tickets_test.gd:110
+]]>
+			</failure>
+			<failure message="FAILED: res://test/dominio/almacen/generador_de_tickets_test.gd:109" type="FAILURE">
+<![CDATA[
+Expecting: 'true' but is 'false'
+	at 'test_cada_posicion_manual_elige_catalogo_y_vacio_sin_mover_otras' in res://test/dominio/almacen/generador_de_tickets_test.gd:109
+]]>
+			</failure>
+			<failure message="FAILED: res://test/dominio/almacen/generador_de_tickets_test.gd:110" type="FAILURE">
+<![CDATA[
+Expecting:
+ <RefCounted>
+ to refer to the same object
+ '<null>'
+	at 'test_cada_posicion_manual_elige_catalogo_y_vacio_sin_mover_otras' in res://test/dominio/almacen/generador_de_tickets_test.gd:110
+]]>
+			</failure>
+			<failure message="FAILED: res://test/dominio/almacen/generador_de_tickets_test.gd:109" type="FAILURE">
+<![CDATA[
+Expecting: 'true' but is 'false'
+	at 'test_cada_posicion_manual_elige_catalogo_y_vacio_sin_mover_otras' in res://test/dominio/almacen/generador_de_tickets_test.gd:109
+]]>
+			</failure>
+			<failure message="FAILED: res://test/dominio/almacen/generador_de_tickets_test.gd:110" type="FAILURE">
+<![CDATA[
+Expecting:
+ <RefCounted>
+ to refer to the same object
+ '<null>'
+	at 'test_cada_posicion_manual_elige_catalogo_y_vacio_sin_mover_otras' in res://test/dominio/almacen/generador_de_tickets_test.gd:110
+]]>
+			</failure>
+			<failure message="FAILED: res://test/dominio/almacen/generador_de_tickets_test.gd:109" type="FAILURE">
+<![CDATA[
+Expecting: 'true' but is 'false'
+	at 'test_cada_posicion_manual_elige_catalogo_y_vacio_sin_mover_otras' in res://test/dominio/almacen/generador_de_tickets_test.gd:109
+]]>
+			</failure>
+			<failure message="FAILED: res://test/dominio/almacen/generador_de_tickets_test.gd:110" type="FAILURE">
+<![CDATA[
+Expecting:
+ <RefCounted>
+ to refer to the same object
+ '<null>'
+	at 'test_cada_posicion_manual_elige_catalogo_y_vacio_sin_mover_otras' in res://test/dominio/almacen/generador_de_tickets_test.gd:110
+]]>
+			</failure>
+			<failure message="FAILED: res://test/dominio/almacen/generador_de_tickets_test.gd:109" type="FAILURE">
+<![CDATA[
+Expecting: 'true' but is 'false'
+	at 'test_cada_posicion_manual_elige_catalogo_y_vacio_sin_mover_otras' in res://test/dominio/almacen/generador_de_tickets_test.gd:109
+]]>
+			</failure>
+			<failure message="FAILED: res://test/dominio/almacen/generador_de_tickets_test.gd:110" type="FAILURE">
+<![CDATA[
+Expecting:
+ <RefCounted>
+ to refer to the same object
+ '<null>'
+	at 'test_cada_posicion_manual_elige_catalogo_y_vacio_sin_mover_otras' in res://test/dominio/almacen/generador_de_tickets_test.gd:110
+]]>
+			</failure>
+			<failure message="FAILED: res://test/dominio/almacen/generador_de_tickets_test.gd:109" type="FAILURE">
+<![CDATA[
+Expecting: 'true' but is 'false'
+	at 'test_cada_posicion_manual_elige_catalogo_y_vacio_sin_mover_otras' in res://test/dominio/almacen/generador_de_tickets_test.gd:109
+]]>
+			</failure>
+			<failure message="FAILED: res://test/dominio/almacen/generador_de_tickets_test.gd:110" type="FAILURE">
+<![CDATA[
+Expecting:
+ <RefCounted>
+ to refer to the same object
+ '<null>'
+	at 'test_cada_posicion_manual_elige_catalogo_y_vacio_sin_mover_otras' in res://test/dominio/almacen/generador_de_tickets_test.gd:110
+]]>
+			</failure>
+			<failure message="FAILED: res://test/dominio/almacen/generador_de_tickets_test.gd:109" type="FAILURE">
+<![CDATA[
+Expecting: 'true' but is 'false'
+	at 'test_cada_posicion_manual_elige_catalogo_y_vacio_sin_mover_otras' in res://test/dominio/almacen/generador_de_tickets_test.gd:109
+]]>
+			</failure>
+			<failure message="FAILED: res://test/dominio/almacen/generador_de_tickets_test.gd:110" type="FAILURE">
+<![CDATA[
+Expecting:
+ <RefCounted>
+ to refer to the same object
+ '<null>'
+	at 'test_cada_posicion_manual_elige_catalogo_y_vacio_sin_mover_otras' in res://test/dominio/almacen/generador_de_tickets_test.gd:110
+]]>
+			</failure>
+			<failure message="FAILED: res://test/dominio/almacen/generador_de_tickets_test.gd:109" type="FAILURE">
+<![CDATA[
+Expecting: 'true' but is 'false'
+	at 'test_cada_posicion_manual_elige_catalogo_y_vacio_sin_mover_otras' in res://test/dominio/almacen/generador_de_tickets_test.gd:109
+]]>
+			</failure>
+			<failure message="FAILED: res://test/dominio/almacen/generador_de_tickets_test.gd:110" type="FAILURE">
+<![CDATA[
+Expecting:
+ <RefCounted>
+ to refer to the same object
+ '<null>'
+	at 'test_cada_posicion_manual_elige_catalogo_y_vacio_sin_mover_otras' in res://test/dominio/almacen/generador_de_tickets_test.gd:110
+]]>
+			</failure>
+			<failure message="FAILED: res://test/dominio/almacen/generador_de_tickets_test.gd:109" type="FAILURE">
+<![CDATA[
+Expecting: 'true' but is 'false'
+	at 'test_cada_posicion_manual_elige_catalogo_y_vacio_sin_mover_otras' in res://test/dominio/almacen/generador_de_tickets_test.gd:109
+]]>
+			</failure>
+			<failure message="FAILED: res://test/dominio/almacen/generador_de_tickets_test.gd:110" type="FAILURE">
+<![CDATA[
+Expecting:
+ <RefCounted>
+ to refer to the same object
+ '<null>'
+	at 'test_cada_posicion_manual_elige_catalogo_y_vacio_sin_mover_otras' in res://test/dominio/almacen/generador_de_tickets_test.gd:110
+]]>
+			</failure>
+			<failure message="FAILED: res://test/dominio/almacen/generador_de_tickets_test.gd:109" type="FAILURE">
+<![CDATA[
+Expecting: 'true' but is 'false'
+	at 'test_cada_posicion_manual_elige_catalogo_y_vacio_sin_mover_otras' in res://test/dominio/almacen/generador_de_tickets_test.gd:109
+]]>
+			</failure>
+			<failure message="FAILED: res://test/dominio/almacen/generador_de_tickets_test.gd:110" type="FAILURE">
+<![CDATA[
+Expecting:
+ <RefCounted>
+ to refer to the same object
+ '<null>'
+	at 'test_cada_posicion_manual_elige_catalogo_y_vacio_sin_mover_otras' in res://test/dominio/almacen/generador_de_tickets_test.gd:110
+]]>
+			</failure>
+			<failure message="FAILED: res://test/dominio/almacen/generador_de_tickets_test.gd:109" type="FAILURE">
+<![CDATA[
+Expecting: 'true' but is 'false'
+	at 'test_cada_posicion_manual_elige_catalogo_y_vacio_sin_mover_otras' in res://test/dominio/almacen/generador_de_tickets_test.gd:109
+]]>
+			</failure>
+			<failure message="FAILED: res://test/dominio/almacen/generador_de_tickets_test.gd:110" type="FAILURE">
+<![CDATA[
+Expecting:
+ <RefCounted>
+ to refer to the same object
+ '<null>'
+	at 'test_cada_posicion_manual_elige_catalogo_y_vacio_sin_mover_otras' in res://test/dominio/almacen/generador_de_tickets_test.gd:110
+]]>
+			</failure>
+			<failure message="FAILED: res://test/dominio/almacen/generador_de_tickets_test.gd:109" type="FAILURE">
+<![CDATA[
+Expecting: 'true' but is 'false'
+	at 'test_cada_posicion_manual_elige_catalogo_y_vacio_sin_mover_otras' in res://test/dominio/almacen/generador_de_tickets_test.gd:109
+]]>
+			</failure>
+			<failure message="FAILED: res://test/dominio/almacen/generador_de_tickets_test.gd:110" type="FAILURE">
+<![CDATA[
+Expecting:
+ <RefCounted>
+ to refer to the same object
+ '<null>'
+	at 'test_cada_posicion_manual_elige_catalogo_y_vacio_sin_mover_otras' in res://test/dominio/almacen/generador_de_tickets_test.gd:110
+]]>
+			</failure>
+			<failure message="FAILED: res://test/dominio/almacen/generador_de_tickets_test.gd:109" type="FAILURE">
+<![CDATA[
+Expecting: 'true' but is 'false'
+	at 'test_cada_posicion_manual_elige_catalogo_y_vacio_sin_mover_otras' in res://test/dominio/almacen/generador_de_tickets_test.gd:109
+]]>
+			</failure>
+			<failure message="FAILED: res://test/dominio/almacen/generador_de_tickets_test.gd:110" type="FAILURE">
+<![CDATA[
+Expecting:
+ <RefCounted>
+ to refer to the same object
+ '<null>'
+	at 'test_cada_posicion_manual_elige_catalogo_y_vacio_sin_mover_otras' in res://test/dominio/almacen/generador_de_tickets_test.gd:110
+]]>
+			</failure>
+			<failure message="FAILED: res://test/dominio/almacen/generador_de_tickets_test.gd:109" type="FAILURE">
+<![CDATA[
+Expecting: 'true' but is 'false'
+	at 'test_cada_posicion_manual_elige_catalogo_y_vacio_sin_mover_otras' in res://test/dominio/almacen/generador_de_tickets_test.gd:109
+]]>
+			</failure>
+			<failure message="FAILED: res://test/dominio/almacen/generador_de_tickets_test.gd:110" type="FAILURE">
+<![CDATA[
+Expecting:
+ <RefCounted>
+ to refer to the same object
+ '<null>'
+	at 'test_cada_posicion_manual_elige_catalogo_y_vacio_sin_mover_otras' in res://test/dominio/almacen/generador_de_tickets_test.gd:110
+]]>
+			</failure>
+			<failure message="FAILED: res://test/dominio/almacen/generador_de_tickets_test.gd:109" type="FAILURE">
+<![CDATA[
+Expecting: 'true' but is 'false'
+	at 'test_cada_posicion_manual_elige_catalogo_y_vacio_sin_mover_otras' in res://test/dominio/almacen/generador_de_tickets_test.gd:109
+]]>
+			</failure>
+			<failure message="FAILED: res://test/dominio/almacen/generador_de_tickets_test.gd:110" type="FAILURE">
+<![CDATA[
+Expecting:
+ <RefCounted>
+ to refer to the same object
+ '<null>'
+	at 'test_cada_posicion_manual_elige_catalogo_y_vacio_sin_mover_otras' in res://test/dominio/almacen/generador_de_tickets_test.gd:110
+]]>
+			</failure>
+			<failure message="FAILED: res://test/dominio/almacen/generador_de_tickets_test.gd:109" type="FAILURE">
+<![CDATA[
+Expecting: 'true' but is 'false'
+	at 'test_cada_posicion_manual_elige_catalogo_y_vacio_sin_mover_otras' in res://test/dominio/almacen/generador_de_tickets_test.gd:109
+]]>
+			</failure>
+			<failure message="FAILED: res://test/dominio/almacen/generador_de_tickets_test.gd:110" type="FAILURE">
+<![CDATA[
+Expecting:
+ <RefCounted>
+ to refer to the same object
+ '<null>'
+	at 'test_cada_posicion_manual_elige_catalogo_y_vacio_sin_mover_otras' in res://test/dominio/almacen/generador_de_tickets_test.gd:110
+]]>
+			</failure>
+			<failure message="FAILED: res://test/dominio/almacen/generador_de_tickets_test.gd:109" type="FAILURE">
+<![CDATA[
+Expecting: 'true' but is 'false'
+	at 'test_cada_posicion_manual_elige_catalogo_y_vacio_sin_mover_otras' in res://test/dominio/almacen/generador_de_tickets_test.gd:109
+]]>
+			</failure>
+			<failure message="FAILED: res://test/dominio/almacen/generador_de_tickets_test.gd:110" type="FAILURE">
+<![CDATA[
+Expecting:
+ <RefCounted>
+ to refer to the same object
+ '<null>'
+	at 'test_cada_posicion_manual_elige_catalogo_y_vacio_sin_mover_otras' in res://test/dominio/almacen/generador_de_tickets_test.gd:110
+]]>
+			</failure>
+			<failure message="FAILED: res://test/dominio/almacen/generador_de_tickets_test.gd:109" type="FAILURE">
+<![CDATA[
+Expecting: 'true' but is 'false'
+	at 'test_cada_posicion_manual_elige_catalogo_y_vacio_sin_mover_otras' in res://test/dominio/almacen/generador_de_tickets_test.gd:109
+]]>
+			</failure>
+			<failure message="FAILED: res://test/dominio/almacen/generador_de_tickets_test.gd:110" type="FAILURE">
+<![CDATA[
+Expecting:
+ <RefCounted>
+ to refer to the same object
+ '<null>'
+	at 'test_cada_posicion_manual_elige_catalogo_y_vacio_sin_mover_otras' in res://test/dominio/almacen/generador_de_tickets_test.gd:110
+]]>
+			</failure>
+			<failure message="FAILED: res://test/dominio/almacen/generador_de_tickets_test.gd:109" type="FAILURE">
+<![CDATA[
+Expecting: 'true' but is 'false'
+	at 'test_cada_posicion_manual_elige_catalogo_y_vacio_sin_mover_otras' in res://test/dominio/almacen/generador_de_tickets_test.gd:109
+]]>
+			</failure>
+			<failure message="FAILED: res://test/dominio/almacen/generador_de_tickets_test.gd:110" type="FAILURE">
+<![CDATA[
+Expecting:
+ <RefCounted>
+ to refer to the same object
+ '<null>'
+	at 'test_cada_posicion_manual_elige_catalogo_y_vacio_sin_mover_otras' in res://test/dominio/almacen/generador_de_tickets_test.gd:110
+]]>
+			</failure>
+			<failure message="FAILED: res://test/dominio/almacen/generador_de_tickets_test.gd:109" type="FAILURE">
+<![CDATA[
+Expecting: 'true' but is 'false'
+	at 'test_cada_posicion_manual_elige_catalogo_y_vacio_sin_mover_otras' in res://test/dominio/almacen/generador_de_tickets_test.gd:109
+]]>
+			</failure>
+			<failure message="FAILED: res://test/dominio/almacen/generador_de_tickets_test.gd:110" type="FAILURE">
+<![CDATA[
+Expecting:
+ <RefCounted>
+ to refer to the same object
+ '<null>'
+	at 'test_cada_posicion_manual_elige_catalogo_y_vacio_sin_mover_otras' in res://test/dominio/almacen/generador_de_tickets_test.gd:110
+]]>
+			</failure>
+			<failure message="FAILED: res://test/dominio/almacen/generador_de_tickets_test.gd:109" type="FAILURE">
+<![CDATA[
+Expecting: 'true' but is 'false'
+	at 'test_cada_posicion_manual_elige_catalogo_y_vacio_sin_mover_otras' in res://test/dominio/almacen/generador_de_tickets_test.gd:109
+]]>
+			</failure>
+			<failure message="FAILED: res://test/dominio/almacen/generador_de_tickets_test.gd:110" type="FAILURE">
+<![CDATA[
+Expecting:
+ <RefCounted>
+ to refer to the same object
+ '<null>'
+	at 'test_cada_posicion_manual_elige_catalogo_y_vacio_sin_mover_otras' in res://test/dominio/almacen/generador_de_tickets_test.gd:110
+]]>
+			</failure>
+			<failure message="FAILED: res://test/dominio/almacen/generador_de_tickets_test.gd:109" type="FAILURE">
+<![CDATA[
+Expecting: 'true' but is 'false'
+	at 'test_cada_posicion_manual_elige_catalogo_y_vacio_sin_mover_otras' in res://test/dominio/almacen/generador_de_tickets_test.gd:109
+]]>
+			</failure>
+			<failure message="FAILED: res://test/dominio/almacen/generador_de_tickets_test.gd:110" type="FAILURE">
+<![CDATA[
+Expecting:
+ <RefCounted>
+ to refer to the same object
+ '<null>'
+	at 'test_cada_posicion_manual_elige_catalogo_y_vacio_sin_mover_otras' in res://test/dominio/almacen/generador_de_tickets_test.gd:110
+]]>
+			</failure>
+			<failure message="FAILED: res://test/dominio/almacen/generador_de_tickets_test.gd:109" type="FAILURE">
+<![CDATA[
+Expecting: 'true' but is 'false'
+	at 'test_cada_posicion_manual_elige_catalogo_y_vacio_sin_mover_otras' in res://test/dominio/almacen/generador_de_tickets_test.gd:109
+]]>
+			</failure>
+			<failure message="FAILED: res://test/dominio/almacen/generador_de_tickets_test.gd:110" type="FAILURE">
+<![CDATA[
+Expecting:
+ <RefCounted>
+ to refer to the same object
+ '<null>'
+	at 'test_cada_posicion_manual_elige_catalogo_y_vacio_sin_mover_otras' in res://test/dominio/almacen/generador_de_tickets_test.gd:110
+]]>
+			</failure>
+			<failure message="FAILED: res://test/dominio/almacen/generador_de_tickets_test.gd:109" type="FAILURE">
+<![CDATA[
+Expecting: 'true' but is 'false'
+	at 'test_cada_posicion_manual_elige_catalogo_y_vacio_sin_mover_otras' in res://test/dominio/almacen/generador_de_tickets_test.gd:109
+]]>
+			</failure>
+			<failure message="FAILED: res://test/dominio/almacen/generador_de_tickets_test.gd:110" type="FAILURE">
+<![CDATA[
+Expecting:
+ <RefCounted>
+ to refer to the same object
+ '<null>'
+	at 'test_cada_posicion_manual_elige_catalogo_y_vacio_sin_mover_otras' in res://test/dominio/almacen/generador_de_tickets_test.gd:110
+]]>
+			</failure>
+			<failure message="FAILED: res://test/dominio/almacen/generador_de_tickets_test.gd:109" type="FAILURE">
+<![CDATA[
+Expecting: 'true' but is 'false'
+	at 'test_cada_posicion_manual_elige_catalogo_y_vacio_sin_mover_otras' in res://test/dominio/almacen/generador_de_tickets_test.gd:109
+]]>
+			</failure>
+			<failure message="FAILED: res://test/dominio/almacen/generador_de_tickets_test.gd:110" type="FAILURE">
+<![CDATA[
+Expecting:
+ <RefCounted>
+ to refer to the same object
+ '<null>'
+	at 'test_cada_posicion_manual_elige_catalogo_y_vacio_sin_mover_otras' in res://test/dominio/almacen/generador_de_tickets_test.gd:110
+]]>
+			</failure>
+			<failure message="FAILED: res://test/dominio/almacen/generador_de_tickets_test.gd:109" type="FAILURE">
+<![CDATA[
+Expecting: 'true' but is 'false'
+	at 'test_cada_posicion_manual_elige_catalogo_y_vacio_sin_mover_otras' in res://test/dominio/almacen/generador_de_tickets_test.gd:109
+]]>
+			</failure>
+			<failure message="FAILED: res://test/dominio/almacen/generador_de_tickets_test.gd:110" type="FAILURE">
+<![CDATA[
+Expecting:
+ <RefCounted>
+ to refer to the same object
+ '<null>'
+	at 'test_cada_posicion_manual_elige_catalogo_y_vacio_sin_mover_otras' in res://test/dominio/almacen/generador_de_tickets_test.gd:110
+]]>
+			</failure>
+			<failure message="FAILED: res://test/dominio/almacen/generador_de_tickets_test.gd:109" type="FAILURE">
+<![CDATA[
+Expecting: 'true' but is 'false'
+	at 'test_cada_posicion_manual_elige_catalogo_y_vacio_sin_mover_otras' in res://test/dominio/almacen/generador_de_tickets_test.gd:109
+]]>
+			</failure>
+			<failure message="FAILED: res://test/dominio/almacen/generador_de_tickets_test.gd:110" type="FAILURE">
+<![CDATA[
+Expecting:
+ <RefCounted>
+ to refer to the same object
+ '<null>'
+	at 'test_cada_posicion_manual_elige_catalogo_y_vacio_sin_mover_otras' in res://test/dominio/almacen/generador_de_tickets_test.gd:110
+]]>
+			</failure>
+			<failure message="FAILED: res://test/dominio/almacen/generador_de_tickets_test.gd:109" type="FAILURE">
+<![CDATA[
+Expecting: 'true' but is 'false'
+	at 'test_cada_posicion_manual_elige_catalogo_y_vacio_sin_mover_otras' in res://test/dominio/almacen/generador_de_tickets_test.gd:109
+]]>
+			</failure>
+			<failure message="FAILED: res://test/dominio/almacen/generador_de_tickets_test.gd:110" type="FAILURE">
+<![CDATA[
+Expecting:
+ <RefCounted>
+ to refer to the same object
+ '<null>'
+	at 'test_cada_posicion_manual_elige_catalogo_y_vacio_sin_mover_otras' in res://test/dominio/almacen/generador_de_tickets_test.gd:110
+]]>
+			</failure>
+			<failure message="FAILED: res://test/dominio/almacen/generador_de_tickets_test.gd:109" type="FAILURE">
+<![CDATA[
+Expecting: 'true' but is 'false'
+	at 'test_cada_posicion_manual_elige_catalogo_y_vacio_sin_mover_otras' in res://test/dominio/almacen/generador_de_tickets_test.gd:109
+]]>
+			</failure>
+			<failure message="FAILED: res://test/dominio/almacen/generador_de_tickets_test.gd:110" type="FAILURE">
+<![CDATA[
+Expecting:
+ <RefCounted>
+ to refer to the same object
+ '<null>'
+	at 'test_cada_posicion_manual_elige_catalogo_y_vacio_sin_mover_otras' in res://test/dominio/almacen/generador_de_tickets_test.gd:110
+]]>
+			</failure>
+			<failure message="FAILED: res://test/dominio/almacen/generador_de_tickets_test.gd:109" type="FAILURE">
+<![CDATA[
+Expecting: 'true' but is 'false'
+	at 'test_cada_posicion_manual_elige_catalogo_y_vacio_sin_mover_otras' in res://test/dominio/almacen/generador_de_tickets_test.gd:109
+]]>
+			</failure>
+			<failure message="FAILED: res://test/dominio/almacen/generador_de_tickets_test.gd:110" type="FAILURE">
+<![CDATA[
+Expecting:
+ <RefCounted>
+ to refer to the same object
+ '<null>'
+	at 'test_cada_posicion_manual_elige_catalogo_y_vacio_sin_mover_otras' in res://test/dominio/almacen/generador_de_tickets_test.gd:110
+]]>
+			</failure>
+			<failure message="FAILED: res://test/dominio/almacen/generador_de_tickets_test.gd:109" type="FAILURE">
+<![CDATA[
+Expecting: 'true' but is 'false'
+	at 'test_cada_posicion_manual_elige_catalogo_y_vacio_sin_mover_otras' in res://test/dominio/almacen/generador_de_tickets_test.gd:109
+]]>
+			</failure>
+			<failure message="FAILED: res://test/dominio/almacen/generador_de_tickets_test.gd:110" type="FAILURE">
+<![CDATA[
+Expecting:
+ <RefCounted>
+ to refer to the same object
+ '<null>'
+	at 'test_cada_posicion_manual_elige_catalogo_y_vacio_sin_mover_otras' in res://test/dominio/almacen/generador_de_tickets_test.gd:110
+]]>
+			</failure>
+			<failure message="FAILED: res://test/dominio/almacen/generador_de_tickets_test.gd:109" type="FAILURE">
+<![CDATA[
+Expecting: 'true' but is 'false'
+	at 'test_cada_posicion_manual_elige_catalogo_y_vacio_sin_mover_otras' in res://test/dominio/almacen/generador_de_tickets_test.gd:109
+]]>
+			</failure>
+			<failure message="FAILED: res://test/dominio/almacen/generador_de_tickets_test.gd:110" type="FAILURE">
+<![CDATA[
+Expecting:
+ <RefCounted>
+ to refer to the same object
+ '<null>'
+	at 'test_cada_posicion_manual_elige_catalogo_y_vacio_sin_mover_otras' in res://test/dominio/almacen/generador_de_tickets_test.gd:110
+]]>
+			</failure>
+			<failure message="FAILED: res://test/dominio/almacen/generador_de_tickets_test.gd:109" type="FAILURE">
+<![CDATA[
+Expecting: 'true' but is 'false'
+	at 'test_cada_posicion_manual_elige_catalogo_y_vacio_sin_mover_otras' in res://test/dominio/almacen/generador_de_tickets_test.gd:109
+]]>
+			</failure>
+			<failure message="FAILED: res://test/dominio/almacen/generador_de_tickets_test.gd:110" type="FAILURE">
+<![CDATA[
+Expecting:
+ <RefCounted>
+ to refer to the same object
+ '<null>'
+	at 'test_cada_posicion_manual_elige_catalogo_y_vacio_sin_mover_otras' in res://test/dominio/almacen/generador_de_tickets_test.gd:110
+]]>
+			</failure>
+			<failure message="FAILED: res://test/dominio/almacen/generador_de_tickets_test.gd:109" type="FAILURE">
+<![CDATA[
+Expecting: 'true' but is 'false'
+	at 'test_cada_posicion_manual_elige_catalogo_y_vacio_sin_mover_otras' in res://test/dominio/almacen/generador_de_tickets_test.gd:109
+]]>
+			</failure>
+			<failure message="FAILED: res://test/dominio/almacen/generador_de_tickets_test.gd:110" type="FAILURE">
+<![CDATA[
+Expecting:
+ <RefCounted>
+ to refer to the same object
+ '<null>'
+	at 'test_cada_posicion_manual_elige_catalogo_y_vacio_sin_mover_otras' in res://test/dominio/almacen/generador_de_tickets_test.gd:110
+]]>
+			</failure>
+			<failure message="FAILED: res://test/dominio/almacen/generador_de_tickets_test.gd:109" type="FAILURE">
+<![CDATA[
+Expecting: 'true' but is 'false'
+	at 'test_cada_posicion_manual_elige_catalogo_y_vacio_sin_mover_otras' in res://test/dominio/almacen/generador_de_tickets_test.gd:109
+]]>
+			</failure>
+			<failure message="FAILED: res://test/dominio/almacen/generador_de_tickets_test.gd:110" type="FAILURE">
+<![CDATA[
+Expecting:
+ <RefCounted>
+ to refer to the same object
+ '<null>'
+	at 'test_cada_posicion_manual_elige_catalogo_y_vacio_sin_mover_otras' in res://test/dominio/almacen/generador_de_tickets_test.gd:110
+]]>
+			</failure>
+			<failure message="FAILED: res://test/dominio/almacen/generador_de_tickets_test.gd:109" type="FAILURE">
+<![CDATA[
+Expecting: 'true' but is 'false'
+	at 'test_cada_posicion_manual_elige_catalogo_y_vacio_sin_mover_otras' in res://test/dominio/almacen/generador_de_tickets_test.gd:109
+]]>
+			</failure>
+			<failure message="FAILED: res://test/dominio/almacen/generador_de_tickets_test.gd:110" type="FAILURE">
+<![CDATA[
+Expecting:
+ <RefCounted>
+ to refer to the same object
+ '<null>'
+	at 'test_cada_posicion_manual_elige_catalogo_y_vacio_sin_mover_otras' in res://test/dominio/almacen/generador_de_tickets_test.gd:110
+]]>
+			</failure>
+			<failure message="FAILED: res://test/dominio/almacen/generador_de_tickets_test.gd:109" type="FAILURE">
+<![CDATA[
+Expecting: 'true' but is 'false'
+	at 'test_cada_posicion_manual_elige_catalogo_y_vacio_sin_mover_otras' in res://test/dominio/almacen/generador_de_tickets_test.gd:109
+]]>
+			</failure>
+			<failure message="FAILED: res://test/dominio/almacen/generador_de_tickets_test.gd:110" type="FAILURE">
+<![CDATA[
+Expecting:
+ <RefCounted>
+ to refer to the same object
+ '<null>'
+	at 'test_cada_posicion_manual_elige_catalogo_y_vacio_sin_mover_otras' in res://test/dominio/almacen/generador_de_tickets_test.gd:110
+]]>
+			</failure>
+			<failure message="FAILED: res://test/dominio/almacen/generador_de_tickets_test.gd:109" type="FAILURE">
+<![CDATA[
+Expecting: 'true' but is 'false'
+	at 'test_cada_posicion_manual_elige_catalogo_y_vacio_sin_mover_otras' in res://test/dominio/almacen/generador_de_tickets_test.gd:109
+]]>
+			</failure>
+			<failure message="FAILED: res://test/dominio/almacen/generador_de_tickets_test.gd:110" type="FAILURE">
+<![CDATA[
+Expecting:
+ <RefCounted>
+ to refer to the same object
+ '<null>'
+	at 'test_cada_posicion_manual_elige_catalogo_y_vacio_sin_mover_otras' in res://test/dominio/almacen/generador_de_tickets_test.gd:110
+]]>
+			</failure>
+			<failure message="FAILED: res://test/dominio/almacen/generador_de_tickets_test.gd:109" type="FAILURE">
+<![CDATA[
+Expecting: 'true' but is 'false'
+	at 'test_cada_posicion_manual_elige_catalogo_y_vacio_sin_mover_otras' in res://test/dominio/almacen/generador_de_tickets_test.gd:109
+]]>
+			</failure>
+			<failure message="FAILED: res://test/dominio/almacen/generador_de_tickets_test.gd:110" type="FAILURE">
+<![CDATA[
+Expecting:
+ <RefCounted>
+ to refer to the same object
+ '<null>'
+	at 'test_cada_posicion_manual_elige_catalogo_y_vacio_sin_mover_otras' in res://test/dominio/almacen/generador_de_tickets_test.gd:110
+]]>
+			</failure>
+			<failure message="FAILED: res://test/dominio/almacen/generador_de_tickets_test.gd:109" type="FAILURE">
+<![CDATA[
+Expecting: 'true' but is 'false'
+	at 'test_cada_posicion_manual_elige_catalogo_y_vacio_sin_mover_otras' in res://test/dominio/almacen/generador_de_tickets_test.gd:109
+]]>
+			</failure>
+			<failure message="FAILED: res://test/dominio/almacen/generador_de_tickets_test.gd:110" type="FAILURE">
+<![CDATA[
+Expecting:
+ <RefCounted>
+ to refer to the same object
+ '<null>'
+	at 'test_cada_posicion_manual_elige_catalogo_y_vacio_sin_mover_otras' in res://test/dominio/almacen/generador_de_tickets_test.gd:110
+]]>
+			</failure>
+			<failure message="FAILED: res://test/dominio/almacen/generador_de_tickets_test.gd:109" type="FAILURE">
+<![CDATA[
+Expecting: 'true' but is 'false'
+	at 'test_cada_posicion_manual_elige_catalogo_y_vacio_sin_mover_otras' in res://test/dominio/almacen/generador_de_tickets_test.gd:109
+]]>
+			</failure>
+			<failure message="FAILED: res://test/dominio/almacen/generador_de_tickets_test.gd:110" type="FAILURE">
+<![CDATA[
+Expecting:
+ <RefCounted>
+ to refer to the same object
+ '<null>'
+	at 'test_cada_posicion_manual_elige_catalogo_y_vacio_sin_mover_otras' in res://test/dominio/almacen/generador_de_tickets_test.gd:110
+]]>
+			</failure>
+			<failure message="FAILED: res://test/dominio/almacen/generador_de_tickets_test.gd:109" type="FAILURE">
+<![CDATA[
+Expecting: 'true' but is 'false'
+	at 'test_cada_posicion_manual_elige_catalogo_y_vacio_sin_mover_otras' in res://test/dominio/almacen/generador_de_tickets_test.gd:109
+]]>
+			</failure>
+			<failure message="FAILED: res://test/dominio/almacen/generador_de_tickets_test.gd:110" type="FAILURE">
+<![CDATA[
+Expecting:
+ <RefCounted>
+ to refer to the same object
+ '<null>'
+	at 'test_cada_posicion_manual_elige_catalogo_y_vacio_sin_mover_otras' in res://test/dominio/almacen/generador_de_tickets_test.gd:110
+]]>
+			</failure>
+			<failure message="FAILED: res://test/dominio/almacen/generador_de_tickets_test.gd:109" type="FAILURE">
+<![CDATA[
+Expecting: 'true' but is 'false'
+	at 'test_cada_posicion_manual_elige_catalogo_y_vacio_sin_mover_otras' in res://test/dominio/almacen/generador_de_tickets_test.gd:109
+]]>
+			</failure>
+			<failure message="FAILED: res://test/dominio/almacen/generador_de_tickets_test.gd:110" type="FAILURE">
+<![CDATA[
+Expecting:
+ <RefCounted>
+ to refer to the same object
+ '<null>'
+	at 'test_cada_posicion_manual_elige_catalogo_y_vacio_sin_mover_otras' in res://test/dominio/almacen/generador_de_tickets_test.gd:110
+]]>
+			</failure>
+			<failure message="FAILED: res://test/dominio/almacen/generador_de_tickets_test.gd:109" type="FAILURE">
+<![CDATA[
+Expecting: 'true' but is 'false'
+	at 'test_cada_posicion_manual_elige_catalogo_y_vacio_sin_mover_otras' in res://test/dominio/almacen/generador_de_tickets_test.gd:109
+]]>
+			</failure>
+			<failure message="FAILED: res://test/dominio/almacen/generador_de_tickets_test.gd:110" type="FAILURE">
+<![CDATA[
+Expecting:
+ <RefCounted>
+ to refer to the same object
+ '<null>'
+	at 'test_cada_posicion_manual_elige_catalogo_y_vacio_sin_mover_otras' in res://test/dominio/almacen/generador_de_tickets_test.gd:110
+]]>
+			</failure>
+			<failure message="FAILED: res://test/dominio/almacen/generador_de_tickets_test.gd:109" type="FAILURE">
+<![CDATA[
+Expecting: 'true' but is 'false'
+	at 'test_cada_posicion_manual_elige_catalogo_y_vacio_sin_mover_otras' in res://test/dominio/almacen/generador_de_tickets_test.gd:109
+]]>
+			</failure>
+			<failure message="FAILED: res://test/dominio/almacen/generador_de_tickets_test.gd:110" type="FAILURE">
+<![CDATA[
+Expecting:
+ <RefCounted>
+ to refer to the same object
+ '<null>'
+	at 'test_cada_posicion_manual_elige_catalogo_y_vacio_sin_mover_otras' in res://test/dominio/almacen/generador_de_tickets_test.gd:110
+]]>
+			</failure>
+			<failure message="FAILED: res://test/dominio/almacen/generador_de_tickets_test.gd:109" type="FAILURE">
+<![CDATA[
+Expecting: 'true' but is 'false'
+	at 'test_cada_posicion_manual_elige_catalogo_y_vacio_sin_mover_otras' in res://test/dominio/almacen/generador_de_tickets_test.gd:109
+]]>
+			</failure>
+			<failure message="FAILED: res://test/dominio/almacen/generador_de_tickets_test.gd:110" type="FAILURE">
+<![CDATA[
+Expecting:
+ <RefCounted>
+ to refer to the same object
+ '<null>'
+	at 'test_cada_posicion_manual_elige_catalogo_y_vacio_sin_mover_otras' in res://test/dominio/almacen/generador_de_tickets_test.gd:110
+]]>
+			</failure>
+			<failure message="FAILED: res://test/dominio/almacen/generador_de_tickets_test.gd:109" type="FAILURE">
+<![CDATA[
+Expecting: 'true' but is 'false'
+	at 'test_cada_posicion_manual_elige_catalogo_y_vacio_sin_mover_otras' in res://test/dominio/almacen/generador_de_tickets_test.gd:109
+]]>
+			</failure>
+			<failure message="FAILED: res://test/dominio/almacen/generador_de_tickets_test.gd:110" type="FAILURE">
+<![CDATA[
+Expecting:
+ <RefCounted>
+ to refer to the same object
+ '<null>'
+	at 'test_cada_posicion_manual_elige_catalogo_y_vacio_sin_mover_otras' in res://test/dominio/almacen/generador_de_tickets_test.gd:110
+]]>
+			</failure>
+			<failure message="FAILED: res://test/dominio/almacen/generador_de_tickets_test.gd:109" type="FAILURE">
+<![CDATA[
+Expecting: 'true' but is 'false'
+	at 'test_cada_posicion_manual_elige_catalogo_y_vacio_sin_mover_otras' in res://test/dominio/almacen/generador_de_tickets_test.gd:109
+]]>
+			</failure>
+			<failure message="FAILED: res://test/dominio/almacen/generador_de_tickets_test.gd:110" type="FAILURE">
+<![CDATA[
+Expecting:
+ <RefCounted>
+ to refer to the same object
+ '<null>'
+	at 'test_cada_posicion_manual_elige_catalogo_y_vacio_sin_mover_otras' in res://test/dominio/almacen/generador_de_tickets_test.gd:110
+]]>
+			</failure>
+			<failure message="FAILED: res://test/dominio/almacen/generador_de_tickets_test.gd:109" type="FAILURE">
+<![CDATA[
+Expecting: 'true' but is 'false'
+	at 'test_cada_posicion_manual_elige_catalogo_y_vacio_sin_mover_otras' in res://test/dominio/almacen/generador_de_tickets_test.gd:109
+]]>
+			</failure>
+			<failure message="FAILED: res://test/dominio/almacen/generador_de_tickets_test.gd:110" type="FAILURE">
+<![CDATA[
+Expecting:
+ <RefCounted>
+ to refer to the same object
+ '<null>'
+	at 'test_cada_posicion_manual_elige_catalogo_y_vacio_sin_mover_otras' in res://test/dominio/almacen/generador_de_tickets_test.gd:110
+]]>
+			</failure>
+			<failure message="FAILED: res://test/dominio/almacen/generador_de_tickets_test.gd:109" type="FAILURE">
+<![CDATA[
+Expecting: 'true' but is 'false'
+	at 'test_cada_posicion_manual_elige_catalogo_y_vacio_sin_mover_otras' in res://test/dominio/almacen/generador_de_tickets_test.gd:109
+]]>
+			</failure>
+			<failure message="FAILED: res://test/dominio/almacen/generador_de_tickets_test.gd:110" type="FAILURE">
+<![CDATA[
+Expecting:
+ <RefCounted>
+ to refer to the same object
+ '<null>'
+	at 'test_cada_posicion_manual_elige_catalogo_y_vacio_sin_mover_otras' in res://test/dominio/almacen/generador_de_tickets_test.gd:110
+]]>
+			</failure>
+			<failure message="FAILED: res://test/dominio/almacen/generador_de_tickets_test.gd:109" type="FAILURE">
+<![CDATA[
+Expecting: 'true' but is 'false'
+	at 'test_cada_posicion_manual_elige_catalogo_y_vacio_sin_mover_otras' in res://test/dominio/almacen/generador_de_tickets_test.gd:109
+]]>
+			</failure>
+			<failure message="FAILED: res://test/dominio/almacen/generador_de_tickets_test.gd:110" type="FAILURE">
+<![CDATA[
+Expecting:
+ <RefCounted>
+ to refer to the same object
+ '<null>'
+	at 'test_cada_posicion_manual_elige_catalogo_y_vacio_sin_mover_otras' in res://test/dominio/almacen/generador_de_tickets_test.gd:110
+]]>
+			</failure>
+			<failure message="FAILED: res://test/dominio/almacen/generador_de_tickets_test.gd:109" type="FAILURE">
+<![CDATA[
+Expecting: 'true' but is 'false'
+	at 'test_cada_posicion_manual_elige_catalogo_y_vacio_sin_mover_otras' in res://test/dominio/almacen/generador_de_tickets_test.gd:109
+]]>
+			</failure>
+			<failure message="FAILED: res://test/dominio/almacen/generador_de_tickets_test.gd:110" type="FAILURE">
+<![CDATA[
+Expecting:
+ <RefCounted>
+ to refer to the same object
+ '<null>'
+	at 'test_cada_posicion_manual_elige_catalogo_y_vacio_sin_mover_otras' in res://test/dominio/almacen/generador_de_tickets_test.gd:110
+]]>
+			</failure>
+			<failure message="FAILED: res://test/dominio/almacen/generador_de_tickets_test.gd:109" type="FAILURE">
+<![CDATA[
+Expecting: 'true' but is 'false'
+	at 'test_cada_posicion_manual_elige_catalogo_y_vacio_sin_mover_otras' in res://test/dominio/almacen/generador_de_tickets_test.gd:109
+]]>
+			</failure>
+			<failure message="FAILED: res://test/dominio/almacen/generador_de_tickets_test.gd:110" type="FAILURE">
+<![CDATA[
+Expecting:
+ <RefCounted>
+ to refer to the same object
+ '<null>'
+	at 'test_cada_posicion_manual_elige_catalogo_y_vacio_sin_mover_otras' in res://test/dominio/almacen/generador_de_tickets_test.gd:110
+]]>
+			</failure>
+			<failure message="FAILED: res://test/dominio/almacen/generador_de_tickets_test.gd:109" type="FAILURE">
+<![CDATA[
+Expecting: 'true' but is 'false'
+	at 'test_cada_posicion_manual_elige_catalogo_y_vacio_sin_mover_otras' in res://test/dominio/almacen/generador_de_tickets_test.gd:109
+]]>
+			</failure>
+			<failure message="FAILED: res://test/dominio/almacen/generador_de_tickets_test.gd:110" type="FAILURE">
+<![CDATA[
+Expecting:
+ <RefCounted>
+ to refer to the same object
+ '<null>'
+	at 'test_cada_posicion_manual_elige_catalogo_y_vacio_sin_mover_otras' in res://test/dominio/almacen/generador_de_tickets_test.gd:110
+]]>
+			</failure>
+			<failure message="FAILED: res://test/dominio/almacen/generador_de_tickets_test.gd:109" type="FAILURE">
+<![CDATA[
+Expecting: 'true' but is 'false'
+	at 'test_cada_posicion_manual_elige_catalogo_y_vacio_sin_mover_otras' in res://test/dominio/almacen/generador_de_tickets_test.gd:109
+]]>
+			</failure>
+			<failure message="FAILED: res://test/dominio/almacen/generador_de_tickets_test.gd:110" type="FAILURE">
+<![CDATA[
+Expecting:
+ <RefCounted>
+ to refer to the same object
+ '<null>'
+	at 'test_cada_posicion_manual_elige_catalogo_y_vacio_sin_mover_otras' in res://test/dominio/almacen/generador_de_tickets_test.gd:110
+]]>
+			</failure>
+			<failure message="FAILED: res://test/dominio/almacen/generador_de_tickets_test.gd:109" type="FAILURE">
+<![CDATA[
+Expecting: 'true' but is 'false'
+	at 'test_cada_posicion_manual_elige_catalogo_y_vacio_sin_mover_otras' in res://test/dominio/almacen/generador_de_tickets_test.gd:109
+]]>
+			</failure>
+			<failure message="FAILED: res://test/dominio/almacen/generador_de_tickets_test.gd:110" type="FAILURE">
+<![CDATA[
+Expecting:
+ <RefCounted>
+ to refer to the same object
+ '<null>'
+	at 'test_cada_posicion_manual_elige_catalogo_y_vacio_sin_mover_otras' in res://test/dominio/almacen/generador_de_tickets_test.gd:110
+]]>
+			</failure>
+			<failure message="FAILED: res://test/dominio/almacen/generador_de_tickets_test.gd:109" type="FAILURE">
+<![CDATA[
+Expecting: 'true' but is 'false'
+	at 'test_cada_posicion_manual_elige_catalogo_y_vacio_sin_mover_otras' in res://test/dominio/almacen/generador_de_tickets_test.gd:109
+]]>
+			</failure>
+			<failure message="FAILED: res://test/dominio/almacen/generador_de_tickets_test.gd:110" type="FAILURE">
+<![CDATA[
+Expecting:
+ <RefCounted>
+ to refer to the same object
+ '<null>'
+	at 'test_cada_posicion_manual_elige_catalogo_y_vacio_sin_mover_otras' in res://test/dominio/almacen/generador_de_tickets_test.gd:110
+]]>
+			</failure>
+			<failure message="FAILED: res://test/dominio/almacen/generador_de_tickets_test.gd:109" type="FAILURE">
+<![CDATA[
+Expecting: 'true' but is 'false'
+	at 'test_cada_posicion_manual_elige_catalogo_y_vacio_sin_mover_otras' in res://test/dominio/almacen/generador_de_tickets_test.gd:109
+]]>
+			</failure>
+			<failure message="FAILED: res://test/dominio/almacen/generador_de_tickets_test.gd:110" type="FAILURE">
+<![CDATA[
+Expecting:
+ <RefCounted>
+ to refer to the same object
+ '<null>'
+	at 'test_cada_posicion_manual_elige_catalogo_y_vacio_sin_mover_otras' in res://test/dominio/almacen/generador_de_tickets_test.gd:110
+]]>
+			</failure>
+			<failure message="FAILED: res://test/dominio/almacen/generador_de_tickets_test.gd:109" type="FAILURE">
+<![CDATA[
+Expecting: 'true' but is 'false'
+	at 'test_cada_posicion_manual_elige_catalogo_y_vacio_sin_mover_otras' in res://test/dominio/almacen/generador_de_tickets_test.gd:109
+]]>
+			</failure>
+			<failure message="FAILED: res://test/dominio/almacen/generador_de_tickets_test.gd:110" type="FAILURE">
+<![CDATA[
+Expecting:
+ <RefCounted>
+ to refer to the same object
+ '<null>'
+	at 'test_cada_posicion_manual_elige_catalogo_y_vacio_sin_mover_otras' in res://test/dominio/almacen/generador_de_tickets_test.gd:110
+]]>
+			</failure>
+			<failure message="FAILED: res://test/dominio/almacen/generador_de_tickets_test.gd:109" type="FAILURE">
+<![CDATA[
+Expecting: 'true' but is 'false'
+	at 'test_cada_posicion_manual_elige_catalogo_y_vacio_sin_mover_otras' in res://test/dominio/almacen/generador_de_tickets_test.gd:109
+]]>
+			</failure>
+			<failure message="FAILED: res://test/dominio/almacen/generador_de_tickets_test.gd:110" type="FAILURE">
+<![CDATA[
+Expecting:
+ <RefCounted>
+ to refer to the same object
+ '<null>'
+	at 'test_cada_posicion_manual_elige_catalogo_y_vacio_sin_mover_otras' in res://test/dominio/almacen/generador_de_tickets_test.gd:110
+]]>
+			</failure>
+			<failure message="FAILED: res://test/dominio/almacen/generador_de_tickets_test.gd:109" type="FAILURE">
+<![CDATA[
+Expecting: 'true' but is 'false'
+	at 'test_cada_posicion_manual_elige_catalogo_y_vacio_sin_mover_otras' in res://test/dominio/almacen/generador_de_tickets_test.gd:109
+]]>
+			</failure>
+			<failure message="FAILED: res://test/dominio/almacen/generador_de_tickets_test.gd:110" type="FAILURE">
+<![CDATA[
+Expecting:
+ <RefCounted>
+ to refer to the same object
+ '<null>'
+	at 'test_cada_posicion_manual_elige_catalogo_y_vacio_sin_mover_otras' in res://test/dominio/almacen/generador_de_tickets_test.gd:110
+]]>
+			</failure>
+			<failure message="FAILED: res://test/dominio/almacen/generador_de_tickets_test.gd:109" type="FAILURE">
+<![CDATA[
+Expecting: 'true' but is 'false'
+	at 'test_cada_posicion_manual_elige_catalogo_y_vacio_sin_mover_otras' in res://test/dominio/almacen/generador_de_tickets_test.gd:109
+]]>
+			</failure>
+			<failure message="FAILED: res://test/dominio/almacen/generador_de_tickets_test.gd:110" type="FAILURE">
+<![CDATA[
+Expecting:
+ <RefCounted>
+ to refer to the same object
+ '<null>'
+	at 'test_cada_posicion_manual_elige_catalogo_y_vacio_sin_mover_otras' in res://test/dominio/almacen/generador_de_tickets_test.gd:110
+]]>
+			</failure>
+			<failure message="FAILED: res://test/dominio/almacen/generador_de_tickets_test.gd:109" type="FAILURE">
+<![CDATA[
+Expecting: 'true' but is 'false'
+	at 'test_cada_posicion_manual_elige_catalogo_y_vacio_sin_mover_otras' in res://test/dominio/almacen/generador_de_tickets_test.gd:109
+]]>
+			</failure>
+			<failure message="FAILED: res://test/dominio/almacen/generador_de_tickets_test.gd:110" type="FAILURE">
+<![CDATA[
+Expecting:
+ <RefCounted>
+ to refer to the same object
+ '<null>'
+	at 'test_cada_posicion_manual_elige_catalogo_y_vacio_sin_mover_otras' in res://test/dominio/almacen/generador_de_tickets_test.gd:110
+]]>
+			</failure>
+			<failure message="FAILED: res://test/dominio/almacen/generador_de_tickets_test.gd:109" type="FAILURE">
+<![CDATA[
+Expecting: 'true' but is 'false'
+	at 'test_cada_posicion_manual_elige_catalogo_y_vacio_sin_mover_otras' in res://test/dominio/almacen/generador_de_tickets_test.gd:109
+]]>
+			</failure>
+			<failure message="FAILED: res://test/dominio/almacen/generador_de_tickets_test.gd:110" type="FAILURE">
+<![CDATA[
+Expecting:
+ <RefCounted>
+ to refer to the same object
+ '<null>'
+	at 'test_cada_posicion_manual_elige_catalogo_y_vacio_sin_mover_otras' in res://test/dominio/almacen/generador_de_tickets_test.gd:110
+]]>
+			</failure>
+			<failure message="FAILED: res://test/dominio/almacen/generador_de_tickets_test.gd:109" type="FAILURE">
+<![CDATA[
+Expecting: 'true' but is 'false'
+	at 'test_cada_posicion_manual_elige_catalogo_y_vacio_sin_mover_otras' in res://test/dominio/almacen/generador_de_tickets_test.gd:109
+]]>
+			</failure>
+			<failure message="FAILED: res://test/dominio/almacen/generador_de_tickets_test.gd:110" type="FAILURE">
+<![CDATA[
+Expecting:
+ <RefCounted>
+ to refer to the same object
+ '<null>'
+	at 'test_cada_posicion_manual_elige_catalogo_y_vacio_sin_mover_otras' in res://test/dominio/almacen/generador_de_tickets_test.gd:110
+]]>
+			</failure>
+			<failure message="FAILED: res://test/dominio/almacen/generador_de_tickets_test.gd:109" type="FAILURE">
+<![CDATA[
+Expecting: 'true' but is 'false'
+	at 'test_cada_posicion_manual_elige_catalogo_y_vacio_sin_mover_otras' in res://test/dominio/almacen/generador_de_tickets_test.gd:109
+]]>
+			</failure>
+			<failure message="FAILED: res://test/dominio/almacen/generador_de_tickets_test.gd:110" type="FAILURE">
+<![CDATA[
+Expecting:
+ <RefCounted>
+ to refer to the same object
+ '<null>'
+	at 'test_cada_posicion_manual_elige_catalogo_y_vacio_sin_mover_otras' in res://test/dominio/almacen/generador_de_tickets_test.gd:110
+]]>
+			</failure>
+			<failure message="FAILED: res://test/dominio/almacen/generador_de_tickets_test.gd:109" type="FAILURE">
+<![CDATA[
+Expecting: 'true' but is 'false'
+	at 'test_cada_posicion_manual_elige_catalogo_y_vacio_sin_mover_otras' in res://test/dominio/almacen/generador_de_tickets_test.gd:109
+]]>
+			</failure>
+			<failure message="FAILED: res://test/dominio/almacen/generador_de_tickets_test.gd:110" type="FAILURE">
+<![CDATA[
+Expecting:
+ <RefCounted>
+ to refer to the same object
+ '<null>'
+	at 'test_cada_posicion_manual_elige_catalogo_y_vacio_sin_mover_otras' in res://test/dominio/almacen/generador_de_tickets_test.gd:110
+]]>
+			</failure>
+			<failure message="FAILED: res://test/dominio/almacen/generador_de_tickets_test.gd:109" type="FAILURE">
+<![CDATA[
+Expecting: 'true' but is 'false'
+	at 'test_cada_posicion_manual_elige_catalogo_y_vacio_sin_mover_otras' in res://test/dominio/almacen/generador_de_tickets_test.gd:109
+]]>
+			</failure>
+			<failure message="FAILED: res://test/dominio/almacen/generador_de_tickets_test.gd:110" type="FAILURE">
+<![CDATA[
+Expecting:
+ <RefCounted>
+ to refer to the same object
+ '<null>'
+	at 'test_cada_posicion_manual_elige_catalogo_y_vacio_sin_mover_otras' in res://test/dominio/almacen/generador_de_tickets_test.gd:110
+]]>
+			</failure>
+			<failure message="FAILED: res://test/dominio/almacen/generador_de_tickets_test.gd:109" type="FAILURE">
+<![CDATA[
+Expecting: 'true' but is 'false'
+	at 'test_cada_posicion_manual_elige_catalogo_y_vacio_sin_mover_otras' in res://test/dominio/almacen/generador_de_tickets_test.gd:109
+]]>
+			</failure>
+			<failure message="FAILED: res://test/dominio/almacen/generador_de_tickets_test.gd:110" type="FAILURE">
+<![CDATA[
+Expecting:
+ <RefCounted>
+ to refer to the same object
+ '<null>'
+	at 'test_cada_posicion_manual_elige_catalogo_y_vacio_sin_mover_otras' in res://test/dominio/almacen/generador_de_tickets_test.gd:110
+]]>
+			</failure>
+			<failure message="FAILED: res://test/dominio/almacen/generador_de_tickets_test.gd:109" type="FAILURE">
+<![CDATA[
+Expecting: 'true' but is 'false'
+	at 'test_cada_posicion_manual_elige_catalogo_y_vacio_sin_mover_otras' in res://test/dominio/almacen/generador_de_tickets_test.gd:109
+]]>
+			</failure>
+			<failure message="FAILED: res://test/dominio/almacen/generador_de_tickets_test.gd:110" type="FAILURE">
+<![CDATA[
+Expecting:
+ <RefCounted>
+ to refer to the same object
+ '<null>'
+	at 'test_cada_posicion_manual_elige_catalogo_y_vacio_sin_mover_otras' in res://test/dominio/almacen/generador_de_tickets_test.gd:110
+]]>
+			</failure>
+			<failure message="FAILED: res://test/dominio/almacen/generador_de_tickets_test.gd:109" type="FAILURE">
+<![CDATA[
+Expecting: 'true' but is 'false'
+	at 'test_cada_posicion_manual_elige_catalogo_y_vacio_sin_mover_otras' in res://test/dominio/almacen/generador_de_tickets_test.gd:109
+]]>
+			</failure>
+			<failure message="FAILED: res://test/dominio/almacen/generador_de_tickets_test.gd:110" type="FAILURE">
+<![CDATA[
+Expecting:
+ <RefCounted>
+ to refer to the same object
+ '<null>'
+	at 'test_cada_posicion_manual_elige_catalogo_y_vacio_sin_mover_otras' in res://test/dominio/almacen/generador_de_tickets_test.gd:110
+]]>
+			</failure>
+			<failure message="FAILED: res://test/dominio/almacen/generador_de_tickets_test.gd:109" type="FAILURE">
+<![CDATA[
+Expecting: 'true' but is 'false'
+	at 'test_cada_posicion_manual_elige_catalogo_y_vacio_sin_mover_otras' in res://test/dominio/almacen/generador_de_tickets_test.gd:109
+]]>
+			</failure>
+			<failure message="FAILED: res://test/dominio/almacen/generador_de_tickets_test.gd:110" type="FAILURE">
+<![CDATA[
+Expecting:
+ <RefCounted>
+ to refer to the same object
+ '<null>'
+	at 'test_cada_posicion_manual_elige_catalogo_y_vacio_sin_mover_otras' in res://test/dominio/almacen/generador_de_tickets_test.gd:110
+]]>
+			</failure>
+			<failure message="FAILED: res://test/dominio/almacen/generador_de_tickets_test.gd:109" type="FAILURE">
+<![CDATA[
+Expecting: 'true' but is 'false'
+	at 'test_cada_posicion_manual_elige_catalogo_y_vacio_sin_mover_otras' in res://test/dominio/almacen/generador_de_tickets_test.gd:109
+]]>
+			</failure>
+			<failure message="FAILED: res://test/dominio/almacen/generador_de_tickets_test.gd:110" type="FAILURE">
+<![CDATA[
+Expecting:
+ <RefCounted>
+ to refer to the same object
+ '<null>'
+	at 'test_cada_posicion_manual_elige_catalogo_y_vacio_sin_mover_otras' in res://test/dominio/almacen/generador_de_tickets_test.gd:110
+]]>
+			</failure>
+			<failure message="FAILED: res://test/dominio/almacen/generador_de_tickets_test.gd:109" type="FAILURE">
+<![CDATA[
+Expecting: 'true' but is 'false'
+	at 'test_cada_posicion_manual_elige_catalogo_y_vacio_sin_mover_otras' in res://test/dominio/almacen/generador_de_tickets_test.gd:109
+]]>
+			</failure>
+			<failure message="FAILED: res://test/dominio/almacen/generador_de_tickets_test.gd:110" type="FAILURE">
+<![CDATA[
+Expecting:
+ <RefCounted>
+ to refer to the same object
+ '<null>'
+	at 'test_cada_posicion_manual_elige_catalogo_y_vacio_sin_mover_otras' in res://test/dominio/almacen/generador_de_tickets_test.gd:110
+]]>
+			</failure>
+			<failure message="FAILED: res://test/dominio/almacen/generador_de_tickets_test.gd:109" type="FAILURE">
+<![CDATA[
+Expecting: 'true' but is 'false'
+	at 'test_cada_posicion_manual_elige_catalogo_y_vacio_sin_mover_otras' in res://test/dominio/almacen/generador_de_tickets_test.gd:109
+]]>
+			</failure>
+			<failure message="FAILED: res://test/dominio/almacen/generador_de_tickets_test.gd:110" type="FAILURE">
+<![CDATA[
+Expecting:
+ <RefCounted>
+ to refer to the same object
+ '<null>'
+	at 'test_cada_posicion_manual_elige_catalogo_y_vacio_sin_mover_otras' in res://test/dominio/almacen/generador_de_tickets_test.gd:110
+]]>
+			</failure>
+			<failure message="FAILED: res://test/dominio/almacen/generador_de_tickets_test.gd:109" type="FAILURE">
+<![CDATA[
+Expecting: 'true' but is 'false'
+	at 'test_cada_posicion_manual_elige_catalogo_y_vacio_sin_mover_otras' in res://test/dominio/almacen/generador_de_tickets_test.gd:109
+]]>
+			</failure>
+			<failure message="FAILED: res://test/dominio/almacen/generador_de_tickets_test.gd:110" type="FAILURE">
+<![CDATA[
+Expecting:
+ <RefCounted>
+ to refer to the same object
+ '<null>'
+	at 'test_cada_posicion_manual_elige_catalogo_y_vacio_sin_mover_otras' in res://test/dominio/almacen/generador_de_tickets_test.gd:110
+]]>
+			</failure>
+			<failure message="FAILED: res://test/dominio/almacen/generador_de_tickets_test.gd:109" type="FAILURE">
+<![CDATA[
+Expecting: 'true' but is 'false'
+	at 'test_cada_posicion_manual_elige_catalogo_y_vacio_sin_mover_otras' in res://test/dominio/almacen/generador_de_tickets_test.gd:109
+]]>
+			</failure>
+			<failure message="FAILED: res://test/dominio/almacen/generador_de_tickets_test.gd:110" type="FAILURE">
+<![CDATA[
+Expecting:
+ <RefCounted>
+ to refer to the same object
+ '<null>'
+	at 'test_cada_posicion_manual_elige_catalogo_y_vacio_sin_mover_otras' in res://test/dominio/almacen/generador_de_tickets_test.gd:110
+]]>
+			</failure>
+			<failure message="FAILED: res://test/dominio/almacen/generador_de_tickets_test.gd:109" type="FAILURE">
+<![CDATA[
+Expecting: 'true' but is 'false'
+	at 'test_cada_posicion_manual_elige_catalogo_y_vacio_sin_mover_otras' in res://test/dominio/almacen/generador_de_tickets_test.gd:109
+]]>
+			</failure>
+			<failure message="FAILED: res://test/dominio/almacen/generador_de_tickets_test.gd:110" type="FAILURE">
+<![CDATA[
+Expecting:
+ <RefCounted>
+ to refer to the same object
+ '<null>'
+	at 'test_cada_posicion_manual_elige_catalogo_y_vacio_sin_mover_otras' in res://test/dominio/almacen/generador_de_tickets_test.gd:110
+]]>
+			</failure>
+			<failure message="FAILED: res://test/dominio/almacen/generador_de_tickets_test.gd:109" type="FAILURE">
+<![CDATA[
+Expecting: 'true' but is 'false'
+	at 'test_cada_posicion_manual_elige_catalogo_y_vacio_sin_mover_otras' in res://test/dominio/almacen/generador_de_tickets_test.gd:109
+]]>
+			</failure>
+			<failure message="FAILED: res://test/dominio/almacen/generador_de_tickets_test.gd:110" type="FAILURE">
+<![CDATA[
+Expecting:
+ <RefCounted>
+ to refer to the same object
+ '<null>'
+	at 'test_cada_posicion_manual_elige_catalogo_y_vacio_sin_mover_otras' in res://test/dominio/almacen/generador_de_tickets_test.gd:110
+]]>
+			</failure>
+			<failure message="FAILED: res://test/dominio/almacen/generador_de_tickets_test.gd:109" type="FAILURE">
+<![CDATA[
+Expecting: 'true' but is 'false'
+	at 'test_cada_posicion_manual_elige_catalogo_y_vacio_sin_mover_otras' in res://test/dominio/almacen/generador_de_tickets_test.gd:109
+]]>
+			</failure>
+			<failure message="FAILED: res://test/dominio/almacen/generador_de_tickets_test.gd:110" type="FAILURE">
+<![CDATA[
+Expecting:
+ <RefCounted>
+ to refer to the same object
+ '<null>'
+	at 'test_cada_posicion_manual_elige_catalogo_y_vacio_sin_mover_otras' in res://test/dominio/almacen/generador_de_tickets_test.gd:110
+]]>
+			</failure>
+			<failure message="FAILED: res://test/dominio/almacen/generador_de_tickets_test.gd:109" type="FAILURE">
+<![CDATA[
+Expecting: 'true' but is 'false'
+	at 'test_cada_posicion_manual_elige_catalogo_y_vacio_sin_mover_otras' in res://test/dominio/almacen/generador_de_tickets_test.gd:109
+]]>
+			</failure>
+			<failure message="FAILED: res://test/dominio/almacen/generador_de_tickets_test.gd:110" type="FAILURE">
+<![CDATA[
+Expecting:
+ <RefCounted>
+ to refer to the same object
+ '<null>'
+	at 'test_cada_posicion_manual_elige_catalogo_y_vacio_sin_mover_otras' in res://test/dominio/almacen/generador_de_tickets_test.gd:110
+]]>
+			</failure>
+			<failure message="FAILED: res://test/dominio/almacen/generador_de_tickets_test.gd:109" type="FAILURE">
+<![CDATA[
+Expecting: 'true' but is 'false'
+	at 'test_cada_posicion_manual_elige_catalogo_y_vacio_sin_mover_otras' in res://test/dominio/almacen/generador_de_tickets_test.gd:109
+]]>
+			</failure>
+			<failure message="FAILED: res://test/dominio/almacen/generador_de_tickets_test.gd:110" type="FAILURE">
+<![CDATA[
+Expecting:
+ <RefCounted>
+ to refer to the same object
+ '<null>'
+	at 'test_cada_posicion_manual_elige_catalogo_y_vacio_sin_mover_otras' in res://test/dominio/almacen/generador_de_tickets_test.gd:110
+]]>
+			</failure>
+			<failure message="FAILED: res://test/dominio/almacen/generador_de_tickets_test.gd:113" type="FAILURE">
+<![CDATA[
+Expecting: 'true' but is 'false'
+	at 'test_cada_posicion_manual_elige_catalogo_y_vacio_sin_mover_otras' in res://test/dominio/almacen/generador_de_tickets_test.gd:113
+]]>
+			</failure>
+			<failure message="FAILED: res://test/dominio/almacen/generador_de_tickets_test.gd:113" type="FAILURE">
+<![CDATA[
+Expecting: 'true' but is 'false'
+	at 'test_cada_posicion_manual_elige_catalogo_y_vacio_sin_mover_otras' in res://test/dominio/almacen/generador_de_tickets_test.gd:113
+]]>
+			</failure>
+			<failure message="FAILED: res://test/dominio/almacen/generador_de_tickets_test.gd:113" type="FAILURE">
+<![CDATA[
+Expecting: 'true' but is 'false'
+	at 'test_cada_posicion_manual_elige_catalogo_y_vacio_sin_mover_otras' in res://test/dominio/almacen/generador_de_tickets_test.gd:113
+]]>
+			</failure>
+			<failure message="FAILED: res://test/dominio/almacen/generador_de_tickets_test.gd:115" type="FAILURE">
+<![CDATA[
+Expecting: not to be '<null>'
+	at 'test_cada_posicion_manual_elige_catalogo_y_vacio_sin_mover_otras' in res://test/dominio/almacen/generador_de_tickets_test.gd:115
+]]>
+			</failure>
+			<failure message="FAILED: res://test/dominio/almacen/generador_de_tickets_test.gd:118" type="FAILURE">
+<![CDATA[
+Expecting: 'true' but is 'false'
+	at 'test_cada_posicion_manual_elige_catalogo_y_vacio_sin_mover_otras' in res://test/dominio/almacen/generador_de_tickets_test.gd:118
+]]>
+			</failure>
+			<failure message="FAILED: res://test/dominio/almacen/generador_de_tickets_test.gd:119" type="FAILURE">
+<![CDATA[
+Expecting:
+ <RefCounted>
+ to refer to the same object
+ '<null>'
+	at 'test_cada_posicion_manual_elige_catalogo_y_vacio_sin_mover_otras' in res://test/dominio/almacen/generador_de_tickets_test.gd:119
+]]>
+			</failure>
+			<failure message="FAILED: res://test/dominio/almacen/generador_de_tickets_test.gd:121" type="FAILURE">
+<![CDATA[
+Expecting:
+ <RefCounted>
+ to refer to the same object
+ '<null>'
+	at 'test_cada_posicion_manual_elige_catalogo_y_vacio_sin_mover_otras' in res://test/dominio/almacen/generador_de_tickets_test.gd:121
+]]>
+			</failure>
+		</testcase>
+		<testcase name="test_un_indice_invalido_y_el_modo_automatico_rechazan_la_eleccion" classname="generador_de_tickets_test" time="0.006">
+			<failure message="FAILED: res://test/dominio/almacen/generador_de_tickets_test.gd:135" type="FAILURE">
+<![CDATA[
+Expecting contains exactly elements:
+ '<empty>'
+ do contains (in same order)
+ '[<RefCounted#-9223371590379498837>]'
+but could not find elements:
+ '[<RefCounted#-9223371590379498837>]'
+	at 'test_un_indice_invalido_y_el_modo_automatico_rechazan_la_eleccion' in res://test/dominio/almacen/generador_de_tickets_test.gd:135
+]]>
+			</failure>
+		</testcase>
+		<testcase name="test_solo_el_segundo_o_tercero_imprime_sin_mover_su_posicion" classname="generador_de_tickets_test" time="0.005">
+			<failure message="FAILED: res://test/dominio/almacen/generador_de_tickets_test.gd:147" type="FAILURE">
+<![CDATA[
+Expecting: 'true' but is 'false'
+	at 'test_solo_el_segundo_o_tercero_imprime_sin_mover_su_posicion' in res://test/dominio/almacen/generador_de_tickets_test.gd:147
+]]>
+			</failure>
+			<failure message="FAILED: res://test/dominio/almacen/generador_de_tickets_test.gd:149" type="FAILURE">
+<![CDATA[
+Expecting: not to be '<null>'
+	at 'test_solo_el_segundo_o_tercero_imprime_sin_mover_su_posicion' in res://test/dominio/almacen/generador_de_tickets_test.gd:149
+]]>
+			</failure>
+			<failure message="FAILED: res://test/dominio/almacen/generador_de_tickets_test.gd:147" type="FAILURE">
+<![CDATA[
+Expecting: 'true' but is 'false'
+	at 'test_solo_el_segundo_o_tercero_imprime_sin_mover_su_posicion' in res://test/dominio/almacen/generador_de_tickets_test.gd:147
+]]>
+			</failure>
+			<failure message="FAILED: res://test/dominio/almacen/generador_de_tickets_test.gd:149" type="FAILURE">
+<![CDATA[
+Expecting: not to be '<null>'
+	at 'test_solo_el_segundo_o_tercero_imprime_sin_mover_su_posicion' in res://test/dominio/almacen/generador_de_tickets_test.gd:149
+]]>
+			</failure>
+			<failure message="FAILED: res://test/dominio/almacen/generador_de_tickets_test.gd:167" type="FAILURE">
+<![CDATA[
+Expecting: not to be '<null>'
+	at 'test_solo_el_segundo_o_tercero_imprime_sin_mover_su_posicion' in res://test/dominio/almacen/generador_de_tickets_test.gd:167
+]]>
+			</failure>
+			<failure message="FAILED: res://test/dominio/almacen/generador_de_tickets_test.gd:171" type="FAILURE">
+<![CDATA[
+Expecting:
+ <RefCounted>
+ to refer to the same object
+ '<null>'
+	at 'test_solo_el_segundo_o_tercero_imprime_sin_mover_su_posicion' in res://test/dominio/almacen/generador_de_tickets_test.gd:171
+]]>
+			</failure>
+			<failure message="FAILED: res://test/dominio/almacen/generador_de_tickets_test.gd:172" type="FAILURE">
+<![CDATA[
+Expecting:
+ <RefCounted>
+ to refer to the same object
+ '<null>'
+	at 'test_solo_el_segundo_o_tercero_imprime_sin_mover_su_posicion' in res://test/dominio/almacen/generador_de_tickets_test.gd:172
+]]>
+			</failure>
+		</testcase>
+		<testcase name="test_sin_lector_precede_al_tipo_y_al_lleno_y_no_toca_el_programa" classname="generador_de_tickets_test" time="0.007">
+			<failure message="FAILED: res://test/dominio/almacen/generador_de_tickets_test.gd:190" type="FAILURE">
+<![CDATA[
+Expecting:
+ 3
+ but was
+ 1
+	at 'test_sin_lector_precede_al_tipo_y_al_lleno_y_no_toca_el_programa' in res://test/dominio/almacen/generador_de_tickets_test.gd:190
+]]>
+			</failure>
+			<failure message="FAILED: res://test/dominio/almacen/generador_de_tickets_test.gd:190" type="FAILURE">
+<![CDATA[
+Expecting:
+ 3
+ but was
+ 1
+	at 'test_sin_lector_precede_al_tipo_y_al_lleno_y_no_toca_el_programa' in res://test/dominio/almacen/generador_de_tickets_test.gd:190
+]]>
+			</failure>
+			<failure message="FAILED: res://test/dominio/almacen/generador_de_tickets_test.gd:190" type="FAILURE">
+<![CDATA[
+Expecting:
+ 3
+ but was
+ 0
+	at 'test_sin_lector_precede_al_tipo_y_al_lleno_y_no_toca_el_programa' in res://test/dominio/almacen/generador_de_tickets_test.gd:190
+]]>
+			</failure>
+			<failure message="FAILED: res://test/dominio/almacen/generador_de_tickets_test.gd:191" type="FAILURE">
+<![CDATA[
+Expecting contains exactly elements:
+ '[<RefCounted#-9223371586034200013>]'
+ do contains (in same order)
+ '<empty>'
+but some elements where not expected:
+ '[<RefCounted#-9223371586034200013>]'
+	at 'test_sin_lector_precede_al_tipo_y_al_lleno_y_no_toca_el_programa' in res://test/dominio/almacen/generador_de_tickets_test.gd:191
+]]>
+			</failure>
+			<failure message="FAILED: res://test/dominio/almacen/generador_de_tickets_test.gd:190" type="FAILURE">
+<![CDATA[
+Expecting:
+ 3
+ but was
+ 1
+	at 'test_sin_lector_precede_al_tipo_y_al_lleno_y_no_toca_el_programa' in res://test/dominio/almacen/generador_de_tickets_test.gd:190
+]]>
+			</failure>
+			<failure message="FAILED: res://test/dominio/almacen/generador_de_tickets_test.gd:191" type="FAILURE">
+<![CDATA[
+Expecting contains exactly elements:
+ '[<RefCounted#-9223371586034200013>]'
+ do contains (in same order)
+ '<empty>'
+but some elements where not expected:
+ '[<RefCounted#-9223371586034200013>]'
+	at 'test_sin_lector_precede_al_tipo_y_al_lleno_y_no_toca_el_programa' in res://test/dominio/almacen/generador_de_tickets_test.gd:191
+]]>
+			</failure>
+			<failure message="FAILED: res://test/dominio/almacen/generador_de_tickets_test.gd:190" type="FAILURE">
+<![CDATA[
+Expecting:
+ 3
+ but was
+ 1
+	at 'test_sin_lector_precede_al_tipo_y_al_lleno_y_no_toca_el_programa' in res://test/dominio/almacen/generador_de_tickets_test.gd:190
+]]>
+			</failure>
+			<failure message="FAILED: res://test/dominio/almacen/generador_de_tickets_test.gd:191" type="FAILURE">
+<![CDATA[
+Expecting contains exactly elements:
+ '[<RefCounted#-9223371586034200013>]'
+ do contains (in same order)
+ '<empty>'
+but some elements where not expected:
+ '[<RefCounted#-9223371586034200013>]'
+	at 'test_sin_lector_precede_al_tipo_y_al_lleno_y_no_toca_el_programa' in res://test/dominio/almacen/generador_de_tickets_test.gd:191
+]]>
+			</failure>
+			<failure message="FAILED: res://test/dominio/almacen/generador_de_tickets_test.gd:190" type="FAILURE">
+<![CDATA[
+Expecting:
+ 3
+ but was
+ 1
+	at 'test_sin_lector_precede_al_tipo_y_al_lleno_y_no_toca_el_programa' in res://test/dominio/almacen/generador_de_tickets_test.gd:190
+]]>
+			</failure>
+			<failure message="FAILED: res://test/dominio/almacen/generador_de_tickets_test.gd:190" type="FAILURE">
+<![CDATA[
+Expecting:
+ 3
+ but was
+ 1
+	at 'test_sin_lector_precede_al_tipo_y_al_lleno_y_no_toca_el_programa' in res://test/dominio/almacen/generador_de_tickets_test.gd:190
+]]>
+			</failure>
+			<failure message="FAILED: res://test/dominio/almacen/generador_de_tickets_test.gd:190" type="FAILURE">
+<![CDATA[
+Expecting:
+ 3
+ but was
+ 0
+	at 'test_sin_lector_precede_al_tipo_y_al_lleno_y_no_toca_el_programa' in res://test/dominio/almacen/generador_de_tickets_test.gd:190
+]]>
+			</failure>
+			<failure message="FAILED: res://test/dominio/almacen/generador_de_tickets_test.gd:191" type="FAILURE">
+<![CDATA[
+Expecting contains exactly elements:
+ '[<RefCounted#-9223371586034200013>, <RefCounted#-9223371586034200013>]'
+ do contains (in same order)
+ '[<RefCounted#-9223371586034200013>]'
+ but has different order at position 1
+ '<RefCounted#-9223371586034200013>' vs '"<no entry>"'
+	at 'test_sin_lector_precede_al_tipo_y_al_lleno_y_no_toca_el_programa' in res://test/dominio/almacen/generador_de_tickets_test.gd:191
+]]>
+			</failure>
+			<failure message="FAILED: res://test/dominio/almacen/generador_de_tickets_test.gd:190" type="FAILURE">
+<![CDATA[
+Expecting:
+ 3
+ but was
+ 1
+	at 'test_sin_lector_precede_al_tipo_y_al_lleno_y_no_toca_el_programa' in res://test/dominio/almacen/generador_de_tickets_test.gd:190
+]]>
+			</failure>
+			<failure message="FAILED: res://test/dominio/almacen/generador_de_tickets_test.gd:191" type="FAILURE">
+<![CDATA[
+Expecting contains exactly elements:
+ '[<RefCounted#-9223371586034200013>, <RefCounted#-9223371586034200013>]'
+ do contains (in same order)
+ '[<RefCounted#-9223371586034200013>]'
+ but has different order at position 1
+ '<RefCounted#-9223371586034200013>' vs '"<no entry>"'
+	at 'test_sin_lector_precede_al_tipo_y_al_lleno_y_no_toca_el_programa' in res://test/dominio/almacen/generador_de_tickets_test.gd:191
+]]>
+			</failure>
+			<failure message="FAILED: res://test/dominio/almacen/generador_de_tickets_test.gd:190" type="FAILURE">
+<![CDATA[
+Expecting:
+ 3
+ but was
+ 1
+	at 'test_sin_lector_precede_al_tipo_y_al_lleno_y_no_toca_el_programa' in res://test/dominio/almacen/generador_de_tickets_test.gd:190
+]]>
+			</failure>
+			<failure message="FAILED: res://test/dominio/almacen/generador_de_tickets_test.gd:191" type="FAILURE">
+<![CDATA[
+Expecting contains exactly elements:
+ '[<RefCounted#-9223371586034200013>, <RefCounted#-9223371586034200013>]'
+ do contains (in same order)
+ '[<RefCounted#-9223371586034200013>]'
+ but has different order at position 1
+ '<RefCounted#-9223371586034200013>' vs '"<no entry>"'
+	at 'test_sin_lector_precede_al_tipo_y_al_lleno_y_no_toca_el_programa' in res://test/dominio/almacen/generador_de_tickets_test.gd:191
+]]>
+			</failure>
+		</testcase>
+	</testsuite>
+	<testsuite id="1" name="caja_registradora_test" package="test/sistemas/tareas" timestamp="2026-10-09T05:25:54" hostname="localhost" tests="8" failures="8" errors="0" skipped="0" flaky="0" time="0.107">
+		<testcase name="test_publica_lectura_y_cambio_solo_cuando_anota" classname="caja_registradora_test" time="0.006">
+		</testcase>
+		<testcase name="test_borrar_publica_la_vista_vacia" classname="caja_registradora_test" time="0.005">
+		</testcase>
+		<testcase name="test_imprimir_publica_el_papel_y_no_un_cambio_del_programa" classname="caja_registradora_test" time="0.006">
+		</testcase>
+		<testcase name="test_otra_jornada_reemplaza_el_programa_y_avisa_la_vista" classname="caja_registradora_test" time="0.007">
+		</testcase>
+		<testcase name="test_sin_generador_el_cableado_avisa_y_no_publica_eventos" classname="caja_registradora_test" time="0.009">
+		</testcase>
+		<testcase name="test_arrancar_publica_el_modo_de_cada_jornada_y_la_vista_vacia" classname="caja_registradora_test" time="0.006">
+			<failure message="FAILED: res://test/sistemas/tareas/caja_registradora_test.gd:104" type="FAILURE">
+<![CDATA[
+Expecting contains exactly elements:
+ '<empty>'
+ do contains (in same order)
+ '[false, true, true, true, false]'
+but could not find elements:
+ '[false, true, true, true, false]'
+	at 'test_arrancar_publica_el_modo_de_cada_jornada_y_la_vista_vacia' in res://test/sistemas/tareas/caja_registradora_test.gd:104
+]]>
+			</failure>
+		</testcase>
+		<testcase name="test_elegir_publica_solo_un_cambio_aceptado_y_no_una_lectura" classname="caja_registradora_test" time="0.005">
+			<failure message="FAILED: res://test/sistemas/tareas/caja_registradora_test.gd:125" type="FAILURE">
+<![CDATA[
+Expecting:
+ 3
+ but was
+ 2
+	at 'test_elegir_publica_solo_un_cambio_aceptado_y_no_una_lectura' in res://test/sistemas/tareas/caja_registradora_test.gd:125
+]]>
+			</failure>
+			<failure message="FAILED: res://test/sistemas/tareas/caja_registradora_test.gd:126" type="FAILURE">
+<![CDATA[
+Expecting:
+ <RefCounted>
+ to refer to the same object
+ '<null>'
+	at 'test_elegir_publica_solo_un_cambio_aceptado_y_no_una_lectura' in res://test/sistemas/tareas/caja_registradora_test.gd:126
+]]>
+			</failure>
+			<failure message="FAILED: res://test/sistemas/tareas/caja_registradora_test.gd:129" type="FAILURE">
+<![CDATA[
+Expecting:
+ 4
+ but was
+ 2
+	at 'test_elegir_publica_solo_un_cambio_aceptado_y_no_una_lectura' in res://test/sistemas/tareas/caja_registradora_test.gd:129
+]]>
+			</failure>
+		</testcase>
+		<testcase name="test_usar_el_hueco_es_silencioso_tanto_vacio_como_lleno" classname="caja_registradora_test" time="0.005">
+			<failure message="FAILED: res://test/sistemas/tareas/caja_registradora_test.gd:152" type="FAILURE">
+<![CDATA[
+Expecting:
+ must be empty but was
+ '["rechazo", "leido", "cambio", "rechazo"]'
+	at 'test_usar_el_hueco_es_silencioso_tanto_vacio_como_lleno' in res://test/sistemas/tareas/caja_registradora_test.gd:152
+]]>
+			</failure>
+			<failure message="FAILED: res://test/sistemas/tareas/caja_registradora_test.gd:153" type="FAILURE">
+<![CDATA[
+Expecting contains exactly elements:
+ '[<RefCounted#-9223371545550778966>]'
+ do contains (in same order)
+ '<empty>'
+but some elements where not expected:
+ '[<RefCounted#-9223371545550778966>]'
+	at 'test_usar_el_hueco_es_silencioso_tanto_vacio_como_lleno' in res://test/sistemas/tareas/caja_registradora_test.gd:153
+]]>
+			</failure>
+			<failure message="FAILED: res://test/sistemas/tareas/caja_registradora_test.gd:152" type="FAILURE">
+<![CDATA[
+Expecting:
+ must be empty but was
+ '["rechazo", "leido", "cambio", "rechazo"]'
+	at 'test_usar_el_hueco_es_silencioso_tanto_vacio_como_lleno' in res://test/sistemas/tareas/caja_registradora_test.gd:152
+]]>
+			</failure>
+			<failure message="FAILED: res://test/sistemas/tareas/caja_registradora_test.gd:153" type="FAILURE">
+<![CDATA[
+Expecting contains exactly elements:
+ '[<RefCounted#-9223371545550778966>, <RefCounted#-9223371545550778966>]'
+ do contains (in same order)
+ '[<RefCounted#-9223371545550778966>]'
+ but has different order at position 1
+ '<RefCounted#-9223371545550778966>' vs '"<no entry>"'
+	at 'test_usar_el_hueco_es_silencioso_tanto_vacio_como_lleno' in res://test/sistemas/tareas/caja_registradora_test.gd:153
+]]>
+			</failure>
+		</testcase>
+	</testsuite>
+	<testsuite id="2" name="programa_de_tickets_test" package="test/ui/diegetica" timestamp="2026-10-09T05:25:54" hostname="localhost" tests="6" failures="13" errors="0" skipped="0" flaky="0" time="0.130">
+		<testcase name="test_siempre_presenta_tres_filas_y_repinta_sin_restos" classname="programa_de_tickets_test" time="0.017">
+		</testcase>
+		<testcase name="test_cada_boton_publica_su_pedido_y_un_sonido" classname="programa_de_tickets_test" time="0.011">
+		</testcase>
+		<testcase name="test_el_lienzo_mantiene_los_tres_renglones_y_botones_al_redimensionar" classname="programa_de_tickets_test" time="0.010">
+		</testcase>
+		<testcase name="test_los_selectores_manuales_ofrecen_vacio_y_catalogo_ordenado" classname="programa_de_tickets_test" time="0.013">
+			<failure message="FAILED: res://test/ui/diegetica/programa_de_tickets_test.gd:73" type="FAILURE">
+<![CDATA[
+Expecting: 'true' but is 'false'
+	at 'test_los_selectores_manuales_ofrecen_vacio_y_catalogo_ordenado' in res://test/ui/diegetica/programa_de_tickets_test.gd:73
+]]>
+			</failure>
+			<failure message="FAILED: res://test/ui/diegetica/programa_de_tickets_test.gd:73" type="FAILURE">
+<![CDATA[
+Expecting: 'true' but is 'false'
+	at 'test_los_selectores_manuales_ofrecen_vacio_y_catalogo_ordenado' in res://test/ui/diegetica/programa_de_tickets_test.gd:73
+]]>
+			</failure>
+			<failure message="FAILED: res://test/ui/diegetica/programa_de_tickets_test.gd:73" type="FAILURE">
+<![CDATA[
+Expecting: 'true' but is 'false'
+	at 'test_los_selectores_manuales_ofrecen_vacio_y_catalogo_ordenado' in res://test/ui/diegetica/programa_de_tickets_test.gd:73
+]]>
+			</failure>
+			<failure message="FAILED: res://test/ui/diegetica/programa_de_tickets_test.gd:79" type="FAILURE">
+<![CDATA[
+Expecting: 'false' but is 'true'
+	at 'test_los_selectores_manuales_ofrecen_vacio_y_catalogo_ordenado' in res://test/ui/diegetica/programa_de_tickets_test.gd:79
+]]>
+			</failure>
+			<failure message="FAILED: res://test/ui/diegetica/programa_de_tickets_test.gd:79" type="FAILURE">
+<![CDATA[
+Expecting: 'false' but is 'true'
+	at 'test_los_selectores_manuales_ofrecen_vacio_y_catalogo_ordenado' in res://test/ui/diegetica/programa_de_tickets_test.gd:79
+]]>
+			</failure>
+			<failure message="FAILED: res://test/ui/diegetica/programa_de_tickets_test.gd:79" type="FAILURE">
+<![CDATA[
+Expecting: 'false' but is 'true'
+	at 'test_los_selectores_manuales_ofrecen_vacio_y_catalogo_ordenado' in res://test/ui/diegetica/programa_de_tickets_test.gd:79
+]]>
+			</failure>
+		</testcase>
+		<testcase name="test_solo_dos_o_tres_conserva_su_posicion_al_repintar" classname="programa_de_tickets_test" time="0.015">
+			<failure message="FAILED: res://test/ui/diegetica/programa_de_tickets_test.gd:107" type="FAILURE">
+<![CDATA[
+Expecting: not to be '<null>'
+	at 'test_solo_dos_o_tres_conserva_su_posicion_al_repintar' in res://test/ui/diegetica/programa_de_tickets_test.gd:107
+]]>
+			</failure>
+			<failure message="FAILED: res://test/ui/diegetica/programa_de_tickets_test.gd:107" type="FAILURE">
+<![CDATA[
+Expecting: not to be '<null>'
+	at 'test_solo_dos_o_tres_conserva_su_posicion_al_repintar' in res://test/ui/diegetica/programa_de_tickets_test.gd:107
+]]>
+			</failure>
+		</testcase>
+		<testcase name="test_seleccionar_publica_el_indice_y_producto_y_vacio_publica_null" classname="programa_de_tickets_test" time="0.011">
+			<failure message="FAILED: res://test/ui/diegetica/programa_de_tickets_test.gd:137" type="FAILURE">
+<![CDATA[
+Expecting contains exactly elements:
+ '<empty>'
+ do contains (in same order)
+ '[2]'
+but could not find elements:
+ '[2]'
+	at 'test_seleccionar_publica_el_indice_y_producto_y_vacio_publica_null' in res://test/ui/diegetica/programa_de_tickets_test.gd:137
+]]>
+			</failure>
+			<failure message="FAILED: res://test/ui/diegetica/programa_de_tickets_test.gd:138" type="FAILURE">
+<![CDATA[
+Expecting contains exactly elements:
+ '<empty>'
+ do contains (in same order)
+ '[<RefCounted#-9223371455541013582>]'
+but could not find elements:
+ '[<RefCounted#-9223371455541013582>]'
+	at 'test_seleccionar_publica_el_indice_y_producto_y_vacio_publica_null' in res://test/ui/diegetica/programa_de_tickets_test.gd:138
+]]>
+			</failure>
+			<failure message="FAILED: res://test/ui/diegetica/programa_de_tickets_test.gd:141" type="FAILURE">
+<![CDATA[
+Expecting:
+ <RefCounted>
+ to refer to the same object
+ '<null>'
+	at 'test_seleccionar_publica_el_indice_y_producto_y_vacio_publica_null' in res://test/ui/diegetica/programa_de_tickets_test.gd:141
+]]>
+			</failure>
+			<failure message="FAILED: res://test/ui/diegetica/programa_de_tickets_test.gd:143" type="FAILURE">
+<![CDATA[
+Expecting contains exactly elements:
+ '<empty>'
+ do contains (in same order)
+ '[2, 2]'
+but could not find elements:
+ '[2, 2]'
+	at 'test_seleccionar_publica_el_indice_y_producto_y_vacio_publica_null' in res://test/ui/diegetica/programa_de_tickets_test.gd:143
+]]>
+			</failure>
+			<failure message="FAILED: res://test/ui/diegetica/programa_de_tickets_test.gd:144" type="FAILURE">
+<![CDATA[
+Expecting contains exactly elements:
+ '<empty>'
+ do contains (in same order)
+ '[<RefCounted#-9223371455541013582>, <null>]'
+but could not find elements:
+ '[<RefCounted#-9223371455541013582>, <null>]'
+	at 'test_seleccionar_publica_el_indice_y_producto_y_vacio_publica_null' in res://test/ui/diegetica/programa_de_tickets_test.gd:144
+]]>
+			</failure>
+		</testcase>
+	</testsuite>
+	<testsuite id="3" name="lector_test" package="test/escenas/puestos" timestamp="2026-10-09T05:25:54" hostname="localhost" tests="9" failures="18" errors="0" skipped="0" flaky="0" time="1.383">
+		<testcase name="test_el_lector_anota_la_unidad_con_el_programa_cerrado_y_conserva_la_mano" classname="lector_test" time="0.171">
+		</testcase>
+		<testcase name="test_los_seis_objetos_se_rechazan_y_siguen_en_la_mano" classname="lector_test" time="0.126">
+		</testcase>
+		<testcase name="test_las_manos_vacias_y_los_otros_gestos_no_leen" classname="lector_test" time="0.118">
+		</testcase>
+		<testcase name="test_el_lector_apoya_en_el_mostrador_y_tiene_foco_y_contorno" classname="lector_test" time="0.128">
+		</testcase>
+		<testcase name="test_los_eventos_reales_piden_escaneo_error_impresion_y_botones" classname="lector_test" time="0.124">
+		</testcase>
+		<testcase name="test_la_tres_vacia_y_cambia_solo_la_malla" classname="lector_test" time="0.133">
+			<failure message="FAILED: res://test/escenas/puestos/lector_test.gd:323" type="FAILURE">
+<![CDATA[
+Expecting: 'true' but is 'false'
+	at 'test_la_tres_vacia_y_cambia_solo_la_malla' in res://test/escenas/puestos/lector_test.gd:323
+	at '_abrir' in res://test/escenas/puestos/lector_test.gd:18
+]]>
+			</failure>
+			<failure message="FAILED: res://test/escenas/puestos/lector_test.gd:325" type="FAILURE">
+<![CDATA[
+Expecting not same:
+ <BoxMesh>
+	at 'test_la_tres_vacia_y_cambia_solo_la_malla' in res://test/escenas/puestos/lector_test.gd:325
+	at '_abrir' in res://test/escenas/puestos/lector_test.gd:18
+]]>
+			</failure>
+			<failure message="FAILED: res://test/escenas/puestos/lector_test.gd:339" type="FAILURE">
+<![CDATA[
+Expecting: 'true' but is 'false'
+	at 'test_la_tres_vacia_y_cambia_solo_la_malla' in res://test/escenas/puestos/lector_test.gd:339
+	at '_enfocar' in res://test/escenas/puestos/lector_test.gd:230
+]]>
+			</failure>
+			<failure message="FAILED: res://test/escenas/puestos/lector_test.gd:340" type="FAILURE">
+<![CDATA[
+Expecting not same:
+ <BoxMesh>
+	at 'test_la_tres_vacia_y_cambia_solo_la_malla' in res://test/escenas/puestos/lector_test.gd:340
+	at '_enfocar' in res://test/escenas/puestos/lector_test.gd:230
+]]>
+			</failure>
+		</testcase>
+		<testcase name="test_el_hueco_con_unidad_caja_y_mano_vacia_no_avisa_ni_anota" classname="lector_test" time="0.127">
+			<failure message="FAILED: res://test/escenas/puestos/lector_test.gd:376" type="FAILURE">
+<![CDATA[
+Expecting:
+ must be empty but was
+ '[<RefCounted#-9223370894846453264>]'
+	at 'test_el_hueco_con_unidad_caja_y_mano_vacia_no_avisa_ni_anota' in res://test/escenas/puestos/lector_test.gd:376
+	at '_abrir' in res://test/escenas/puestos/lector_test.gd:18
+]]>
+			</failure>
+			<failure message="FAILED: res://test/escenas/puestos/lector_test.gd:377" type="FAILURE">
+<![CDATA[
+Expecting:
+ must be empty but was
+ '["lectura", "cambio"]'
+	at 'test_el_hueco_con_unidad_caja_y_mano_vacia_no_avisa_ni_anota' in res://test/escenas/puestos/lector_test.gd:377
+	at '_abrir' in res://test/escenas/puestos/lector_test.gd:18
+]]>
+			</failure>
+			<failure message="FAILED: res://test/escenas/puestos/lector_test.gd:378" type="FAILURE">
+<![CDATA[
+Expecting:
+ must be empty but was
+ '[28]'
+	at 'test_el_hueco_con_unidad_caja_y_mano_vacia_no_avisa_ni_anota' in res://test/escenas/puestos/lector_test.gd:378
+	at '_abrir' in res://test/escenas/puestos/lector_test.gd:18
+]]>
+			</failure>
+			<failure message="FAILED: res://test/escenas/puestos/lector_test.gd:376" type="FAILURE">
+<![CDATA[
+Expecting:
+ must be empty but was
+ '[<RefCounted#-9223370894846453264>]'
+	at 'test_el_hueco_con_unidad_caja_y_mano_vacia_no_avisa_ni_anota' in res://test/escenas/puestos/lector_test.gd:376
+	at '_abrir' in res://test/escenas/puestos/lector_test.gd:18
+]]>
+			</failure>
+			<failure message="FAILED: res://test/escenas/puestos/lector_test.gd:377" type="FAILURE">
+<![CDATA[
+Expecting:
+ must be empty but was
+ '["rechazo"]'
+	at 'test_el_hueco_con_unidad_caja_y_mano_vacia_no_avisa_ni_anota' in res://test/escenas/puestos/lector_test.gd:377
+	at '_abrir' in res://test/escenas/puestos/lector_test.gd:18
+]]>
+			</failure>
+			<failure message="FAILED: res://test/escenas/puestos/lector_test.gd:378" type="FAILURE">
+<![CDATA[
+Expecting:
+ must be empty but was
+ '[17]'
+	at 'test_el_hueco_con_unidad_caja_y_mano_vacia_no_avisa_ni_anota' in res://test/escenas/puestos/lector_test.gd:378
+	at '_abrir' in res://test/escenas/puestos/lector_test.gd:18
+]]>
+			</failure>
+		</testcase>
+		<testcase name="test_la_partida_retomada_en_cuatro_es_manual_y_una_nueva_es_automatica" classname="lector_test" time="0.223">
+			<failure message="FAILED: res://test/escenas/puestos/lector_test.gd:397" type="FAILURE">
+<![CDATA[
+Expecting: 'true' but is 'false'
+	at 'test_la_partida_retomada_en_cuatro_es_manual_y_una_nueva_es_automatica' in res://test/escenas/puestos/lector_test.gd:397
+]]>
+			</failure>
+		</testcase>
+		<testcase name="test_el_popup_pausa_y_reanuda_programa_y_mano" classname="lector_test" time="0.153">
+			<failure message="FAILED: res://test/escenas/puestos/lector_test.gd:427" type="FAILURE">
+<![CDATA[
+Expecting: 'true' but is 'false'
+	at 'test_el_popup_pausa_y_reanuda_programa_y_mano' in res://test/escenas/puestos/lector_test.gd:427
+]]>
+			</failure>
+			<failure message="FAILED: res://test/escenas/puestos/lector_test.gd:428" type="FAILURE">
+<![CDATA[
+Expecting: 'true' but is 'false'
+	at 'test_el_popup_pausa_y_reanuda_programa_y_mano' in res://test/escenas/puestos/lector_test.gd:428
+]]>
+			</failure>
+			<failure message="FAILED: res://test/escenas/puestos/lector_test.gd:429" type="FAILURE">
+<![CDATA[
+Expecting: 'false' but is 'true'
+	at 'test_el_popup_pausa_y_reanuda_programa_y_mano' in res://test/escenas/puestos/lector_test.gd:429
+]]>
+			</failure>
+			<failure message="FAILED: res://test/escenas/puestos/lector_test.gd:436" type="FAILURE">
+<![CDATA[
+Expecting:
+ <RefCounted>
+ to refer to the same object
+ '<null>'
+	at 'test_el_popup_pausa_y_reanuda_programa_y_mano' in res://test/escenas/puestos/lector_test.gd:436
+]]>
+			</failure>
+			<failure message="FAILED: res://test/escenas/puestos/lector_test.gd:446" type="FAILURE">
+<![CDATA[
+Expecting: 'false' but is 'true'
+	at 'test_el_popup_pausa_y_reanuda_programa_y_mano' in res://test/escenas/puestos/lector_test.gd:446
+]]>
+			</failure>
+			<failure message="FAILED: res://test/escenas/puestos/lector_test.gd:447" type="FAILURE">
+<![CDATA[
+Expecting: 'false' but is 'true'
+	at 'test_el_popup_pausa_y_reanuda_programa_y_mano' in res://test/escenas/puestos/lector_test.gd:447
+]]>
+			</failure>
+			<failure message="FAILED: res://test/escenas/puestos/lector_test.gd:448" type="FAILURE">
+<![CDATA[
+Expecting: 'false' but is 'true'
+	at 'test_el_popup_pausa_y_reanuda_programa_y_mano' in res://test/escenas/puestos/lector_test.gd:448
+]]>
+			</failure>
+		</testcase>
+	</testsuite>
+</testsuites>

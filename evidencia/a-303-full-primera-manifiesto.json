@@ -1,0 +1,15 @@
+{
+  "head": "db2ad6ac8a04bf1c475e7bdf348af26487bb8e4a",
+  "report": "D:\\Usuarios\\fede\\Documentos\\Catedra Videojuegos FADU\\manada\\repo\\nosefia\\.claude\\worktrees\\batch-64-309-a-siguiente\\reports\\report_22",
+  "sha256": "679e89eae7d6405327ea1304f401107bbcbffa8f9360c7c60831381844cd4648",
+  "xml": {
+    "id": "2026-10-09",
+    "name": "report_22",
+    "tests": "1602",
+    "failures": "0",
+    "skipped": "0",
+    "flaky": "0",
+    "time": "0.000"
+  },
+  "full_exit": 0
+}

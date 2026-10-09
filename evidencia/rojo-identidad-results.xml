@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<testsuites id="2026-10-09" name="report_1" tests="6" failures="6" skipped="0" flaky="0" time="0.000">
+	<testsuite id="0" name="programa_de_tickets_test" package="test/ui/diegetica" timestamp="2026-10-09T05:36:08" hostname="localhost" tests="6" failures="6" errors="0" skipped="0" flaky="0" time="0.229">
+		<testcase name="test_siempre_presenta_tres_filas_y_repinta_sin_restos" classname="programa_de_tickets_test" time="0.034">
+		</testcase>
+		<testcase name="test_cada_boton_publica_su_pedido_y_un_sonido" classname="programa_de_tickets_test" time="0.018">
+		</testcase>
+		<testcase name="test_el_lienzo_mantiene_los_tres_renglones_y_botones_al_redimensionar" classname="programa_de_tickets_test" time="0.016">
+		</testcase>
+		<testcase name="test_los_selectores_manuales_ofrecen_vacio_y_catalogo_ordenado" classname="programa_de_tickets_test" time="0.025">
+		</testcase>
+		<testcase name="test_solo_dos_o_tres_conserva_su_posicion_al_repintar" classname="programa_de_tickets_test" time="0.055">
+			<failure message="FAILED: res://test/ui/diegetica/programa_de_tickets_test.gd:103" type="FAILURE">
+<![CDATA[
+Expecting:
+ 17
+ but was
+ 0
+	at 'test_solo_dos_o_tres_conserva_su_posicion_al_repintar' in res://test/ui/diegetica/programa_de_tickets_test.gd:103
+]]>
+			</failure>
+			<failure message="FAILED: res://test/ui/diegetica/programa_de_tickets_test.gd:103" type="FAILURE">
+<![CDATA[
+Expecting:
+ 17
+ but was
+ 0
+	at 'test_solo_dos_o_tres_conserva_su_posicion_al_repintar' in res://test/ui/diegetica/programa_de_tickets_test.gd:103
+]]>
+			</failure>
+			<failure message="FAILED: res://test/ui/diegetica/programa_de_tickets_test.gd:111" type="FAILURE">
+<![CDATA[
+Expecting:
+ 17
+ but was
+ 0
+	at 'test_solo_dos_o_tres_conserva_su_posicion_al_repintar' in res://test/ui/diegetica/programa_de_tickets_test.gd:111
+]]>
+			</failure>
+			<failure message="FAILED: res://test/ui/diegetica/programa_de_tickets_test.gd:103" type="FAILURE">
+<![CDATA[
+Expecting:
+ 17
+ but was
+ 0
+	at 'test_solo_dos_o_tres_conserva_su_posicion_al_repintar' in res://test/ui/diegetica/programa_de_tickets_test.gd:103
+]]>
+			</failure>
+			<failure message="FAILED: res://test/ui/diegetica/programa_de_tickets_test.gd:103" type="FAILURE">
+<![CDATA[
+Expecting:
+ 17
+ but was
+ 0
+	at 'test_solo_dos_o_tres_conserva_su_posicion_al_repintar' in res://test/ui/diegetica/programa_de_tickets_test.gd:103
+]]>
+			</failure>
+			<failure message="FAILED: res://test/ui/diegetica/programa_de_tickets_test.gd:111" type="FAILURE">
+<![CDATA[
+Expecting:
+ 17
+ but was
+ 0
+	at 'test_solo_dos_o_tres_conserva_su_posicion_al_repintar' in res://test/ui/diegetica/programa_de_tickets_test.gd:111
+]]>
+			</failure>
+		</testcase>
+		<testcase name="test_seleccionar_publica_el_indice_y_producto_y_vacio_publica_null" classname="programa_de_tickets_test" time="0.029">
+		</testcase>
+	</testsuite>
+</testsuites>

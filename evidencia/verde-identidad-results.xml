@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<testsuites id="2026-10-09" name="report_2" tests="36" failures="0" skipped="0" flaky="0" time="0.000">
+	<testsuite id="0" name="generador_de_tickets_test" package="test/dominio/almacen" timestamp="2026-10-09T05:41:32" hostname="localhost" tests="13" failures="0" errors="0" skipped="0" flaky="0" time="0.138">
+		<testcase name="test_se_llena_en_orden_y_repite_productos" classname="generador_de_tickets_test" time="0.005">
+		</testcase>
+		<testcase name="test_una_caja_no_se_confunde_con_su_producto" classname="generador_de_tickets_test" time="0.005">
+		</testcase>
+		<testcase name="test_sin_unidad_valida_no_se_anota_nada" classname="generador_de_tickets_test" time="0.004">
+		</testcase>
+		<testcase name="test_el_rechazo_por_tipo_precede_al_programa_lleno" classname="generador_de_tickets_test" time="0.005">
+		</testcase>
+		<testcase name="test_imprimir_y_borrar_preserva_el_papel" classname="generador_de_tickets_test" time="0.005">
+		</testcase>
+		<testcase name="test_los_tres_vacios_no_imprimen" classname="generador_de_tickets_test" time="0.004">
+		</testcase>
+		<testcase name="test_la_lectura_de_renglones_no_permite_borrarlos" classname="generador_de_tickets_test" time="0.005">
+		</testcase>
+		<testcase name="test_dos_impresiones_son_dos_papeles_independientes" classname="generador_de_tickets_test" time="0.005">
+		</testcase>
+		<testcase name="test_el_modo_sale_de_la_jornada_y_no_del_estado_anterior" classname="generador_de_tickets_test" time="0.008">
+		</testcase>
+		<testcase name="test_cada_posicion_manual_elige_catalogo_y_vacio_sin_mover_otras" classname="generador_de_tickets_test" time="0.007">
+		</testcase>
+		<testcase name="test_un_indice_invalido_y_el_modo_automatico_rechazan_la_eleccion" classname="generador_de_tickets_test" time="0.006">
+		</testcase>
+		<testcase name="test_solo_el_segundo_o_tercero_imprime_sin_mover_su_posicion" classname="generador_de_tickets_test" time="0.005">
+		</testcase>
+		<testcase name="test_sin_lector_precede_al_tipo_y_al_lleno_y_no_toca_el_programa" classname="generador_de_tickets_test" time="0.006">
+		</testcase>
+	</testsuite>
+	<testsuite id="1" name="caja_registradora_test" package="test/sistemas/tareas" timestamp="2026-10-09T05:41:33" hostname="localhost" tests="8" failures="0" errors="0" skipped="0" flaky="0" time="0.091">
+		<testcase name="test_publica_lectura_y_cambio_solo_cuando_anota" classname="caja_registradora_test" time="0.005">
+		</testcase>
+		<testcase name="test_borrar_publica_la_vista_vacia" classname="caja_registradora_test" time="0.005">
+		</testcase>
+		<testcase name="test_imprimir_publica_el_papel_y_no_un_cambio_del_programa" classname="caja_registradora_test" time="0.005">
+		</testcase>
+		<testcase name="test_otra_jornada_reemplaza_el_programa_y_avisa_la_vista" classname="caja_registradora_test" time="0.005">
+		</testcase>
+		<testcase name="test_sin_generador_el_cableado_avisa_y_no_publica_eventos" classname="caja_registradora_test" time="0.010">
+		</testcase>
+		<testcase name="test_arrancar_publica_el_modo_de_cada_jornada_y_la_vista_vacia" classname="caja_registradora_test" time="0.006">
+		</testcase>
+		<testcase name="test_elegir_publica_solo_un_cambio_aceptado_y_no_una_lectura" classname="caja_registradora_test" time="0.005">
+		</testcase>
+		<testcase name="test_usar_el_hueco_es_silencioso_tanto_vacio_como_lleno" classname="caja_registradora_test" time="0.006">
+		</testcase>
+	</testsuite>
+	<testsuite id="2" name="programa_de_tickets_test" package="test/ui/diegetica" timestamp="2026-10-09T05:41:33" hostname="localhost" tests="6" failures="0" errors="0" skipped="0" flaky="0" time="0.225">
+		<testcase name="test_siempre_presenta_tres_filas_y_repinta_sin_restos" classname="programa_de_tickets_test" time="0.034">
+		</testcase>
+		<testcase name="test_cada_boton_publica_su_pedido_y_un_sonido" classname="programa_de_tickets_test" time="0.017">
+		</testcase>
+		<testcase name="test_el_lienzo_mantiene_los_tres_renglones_y_botones_al_redimensionar" classname="programa_de_tickets_test" time="0.017">
+		</testcase>
+		<testcase name="test_los_selectores_manuales_ofrecen_vacio_y_catalogo_ordenado" classname="programa_de_tickets_test" time="0.026">
+		</testcase>
+		<testcase name="test_solo_dos_o_tres_conserva_su_posicion_al_repintar" classname="programa_de_tickets_test" time="0.056">
+		</testcase>
+		<testcase name="test_seleccionar_publica_el_indice_y_producto_y_vacio_publica_null" classname="programa_de_tickets_test" time="0.029">
+		</testcase>
+	</testsuite>
+	<testsuite id="3" name="lector_test" package="test/escenas/puestos" timestamp="2026-10-09T05:41:33" hostname="localhost" tests="9" failures="0" errors="0" skipped="0" flaky="0" time="1.378">
+		<testcase name="test_el_lector_anota_la_unidad_con_el_programa_cerrado_y_conserva_la_mano" classname="lector_test" time="0.171">
+		</testcase>
+		<testcase name="test_los_seis_objetos_se_rechazan_y_siguen_en_la_mano" classname="lector_test" time="0.124">
+		</testcase>
+		<testcase name="test_las_manos_vacias_y_los_otros_gestos_no_leen" classname="lector_test" time="0.121">
+		</testcase>
+		<testcase name="test_el_lector_apoya_en_el_mostrador_y_tiene_foco_y_contorno" classname="lector_test" time="0.129">
+		</testcase>
+		<testcase name="test_los_eventos_reales_piden_escaneo_error_impresion_y_botones" classname="lector_test" time="0.127">
+		</testcase>
+		<testcase name="test_la_tres_vacia_y_cambia_solo_la_malla" classname="lector_test" time="0.135">
+		</testcase>
+		<testcase name="test_el_hueco_con_unidad_caja_y_mano_vacia_no_avisa_ni_anota" classname="lector_test" time="0.125">
+		</testcase>
+		<testcase name="test_la_partida_retomada_en_cuatro_es_manual_y_una_nueva_es_automatica" classname="lector_test" time="0.228">
+		</testcase>
+		<testcase name="test_el_popup_pausa_y_reanuda_programa_y_mano" classname="lector_test" time="0.156">
+		</testcase>
+	</testsuite>
+</testsuites>
