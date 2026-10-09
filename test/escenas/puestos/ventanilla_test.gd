@@ -370,6 +370,7 @@ func test_datos_invalidos_no_mueven_la_camara() -> void:  # AC-PLY-058, AC-PLY-0
 	jugador.call("dejar_de_asomarse")
 	_afirmar_pose(camara.global_transform, pose)
 	jugador.call("asomarse", Transform3D.IDENTITY, Vector2.ZERO, 0.0)
+	assert_that(camara.global_transform).is_equal(pose)
 	_afirmar_pose(camara.global_transform, pose)
 
 
