@@ -198,6 +198,12 @@ Cada agente recibe, literal:
   se conservan sus comprobaciones útiles y se prueba el comportamiento; la regla del juego
   permanece en dominio. No se cambia la sintaxis para esquivar el test. El método lo detalla
   `implement-feature`.
+- **Los hashes de evidencia se contrastan con los blobs publicados.** En #305 del
+  2026-10-09, Git normalizó CRLF a LF en cuarenta de cuarenta y ocho archivos: el manifiesto
+  coincidía con los originales de Windows, pero no con lo descargable. Los ocho XML quedaron
+  intactos. Se conserva esa primera publicación y se corrige el manifiesto con los bytes y
+  hashes de los blobs; los hashes locales se distinguen como procedencia. Antes de entregar,
+  comprobar todos los archivos publicados y la cabeza remota de la rama de capturas.
 - **Godot con `--script` lleva siempre `--path .`, y el script termina con `quit()`.** Sin
   `--path`, `res://` es el directorio actual, y fuera de la raíz del repo cada `load` falla. Si
   el script aborta antes de `quit()`, Godot imprime el error y no sale nunca. Medido el
