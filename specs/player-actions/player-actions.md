@@ -277,6 +277,9 @@ renglones. La nota de ordenado DEBE presentar las tres viñetas de su criterio, 
 CUANDO se usa la caja registradora con clic derecho, el sistema DEBE abrir su programa y
 suspender el control, conservando lo que se lleva y su lugar en la mano. Otro clic derecho
 DEBE cerrar y reanudar. Una pantalla o examen abiertos NO DEBEN permitir abrir el programa.
+SI se sostiene una unidad y el programa es automático, ENTONCES el mismo uso de la caja
+DEBE leerla antes de abrir, sin exigir apuntar a un aparato separado. En modo manual DEBE
+abrir sin leer la unidad. Los rechazos de lectura conservan los renglones y la mano.
 Leerlo NO DEBE detener el turno. La pausa DEBE dibujarse por encima y, al reanudar, DEBE
 continuar abierto y suspendido. El cierre del turno DEBE cerrarlo antes de mostrar su placa.
 
@@ -289,8 +292,10 @@ ni avisar rechazo. Los rechazos y sus motivos los decide
 
 ### BR-PLY-033 — El ticket es un papel que se lleva
 
-CUANDO se imprime, el sistema DEBE dejar el papel parado y quieto en la ranura, de tamaño
-físico 0,06 × 0,10 × 0,005 metros, sin superponerse con sólidos. SI el anterior todavía ocupa
+CUANDO se imprime con renglones cargados, el sistema DEBE cerrar el programa y mostrar el
+papel saliendo de la ranura con una animación. Al terminar DEBE quedar quieto y levantable,
+sin superponerse con sólidos. Agarrarlo durante la salida DEBE detener su animación para
+que permanezca en la mano. SI el anterior todavía ocupa
 la ranura, ENTONCES DEBE soltarlo y dejarlo caer. Agarrarlo DEBE desocupar la ranura, de modo
 que imprimir después NO DEBE soltar el papel de la mano. El ticket DEBE poder agarrarse,
 soltarse y examinarse como otro levantable, llamarse «Ticket» y sonar como papel.
@@ -770,11 +775,10 @@ queda vacía y el mismo papel vuelve al mundo. Su sonoridad es papel.
 
 ### AC-PLY-076 — Ranura real y segunda impresión *(verifica BR-PLY-033, BR-PLY-004)*
 
-DADO la caja con su escala artística, CUANDO se imprime ENTONCES el papel tiene tamaño
-0,06 × 0,10 × 0,005 metros con tolerancia de 0,00001 metros, pose de origen idéntica a la
-actual y volumen sin superposición. Permanece quieto tras varios pasos de física. Caja,
-lector y papel tienen foco y contorno desde piso transitable y cápsula libre; la base del
-lector coincide con la tapa de su apoyo. CUANDO se imprime otra vez ENTONCES el primero cae
+DADO la caja con productos cargados, CUANDO se imprime ENTONCES se cierra el programa y
+el ticket sale animado de la ranura. Al terminar se puede enfocar y agarrar desde piso
+transitable, sin atravesar sólidos. Caja, lector y papel tienen foco y contorno.
+CUANDO se imprime otra vez ENTONCES el primero cae
 y el segundo queda en la ranura. DADO el primero en la mano ENTONCES otra impresión conserva
 ese papel congelado en su lugar en la mano.
 
