@@ -15,7 +15,7 @@ dest_files=["res://.godot/imported/fondo_ventanilla.png-6926cd22557a29a89908c5bf
 
 [params]
 
-compress/mode=0
+compress/mode=2
 compress/high_quality=false
 compress/lossy_quality=0.7
 compress/uastc_level=0
