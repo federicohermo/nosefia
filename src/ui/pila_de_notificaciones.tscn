@@ -1,0 +1,46 @@
+[gd_scene load_steps=4 format=3]
+
+[ext_resource type="Script" path="res://src/ui/pila_de_notificaciones.gd" id="1"]
+[ext_resource type="Theme" path="res://assets/ui/manada/tema.tres" id="2"]
+
+[sub_resource type="StyleBoxFlat" id="cartel"]
+bg_color = Color(0.941176, 0.956863, 0.819608, 1)
+content_margin_left = 23.2
+content_margin_top = 12.0
+content_margin_right = 23.2
+content_margin_bottom = 12.0
+corner_radius_top_left = 7
+corner_radius_top_right = 7
+corner_radius_bottom_left = 7
+corner_radius_bottom_right = 7
+shadow_color = Color(0, 0, 0, 0.25)
+shadow_size = 3
+shadow_offset = Vector2(0, 5)
+
+[node name="PilaDeNotificaciones" type="CanvasLayer" node_paths=PackedStringArray("_marco", "_pila")]
+process_mode = 1
+layer = 5
+script = ExtResource("1")
+_marco = NodePath("Marco")
+_pila = NodePath("Marco/Pila")
+_estilo = SubResource("cartel")
+
+[node name="Marco" type="Control" parent="."]
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -604.0
+offset_top = 24.0
+offset_right = -24.0
+offset_bottom = 246.0
+grow_horizontal = 0
+pivot_offset = Vector2(580, 0)
+mouse_filter = 2
+theme = ExtResource("2")
+
+[node name="Pila" type="VBoxContainer" parent="Marco"]
+anchors_preset = 10
+anchor_right = 1.0
+grow_horizontal = 2
+mouse_filter = 2
+theme_override_constants/separation = 16

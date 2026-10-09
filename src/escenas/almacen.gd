@@ -89,6 +89,10 @@ var _ir_al_menu: Callable = volver_al_menu
 ## Los carteles se pintan acá antes de conectar nada, y no con un `text` escrito en `hud.tscn`:
 ## una copia del texto en la escena duplicaría el número de obligatorias declaradas.
 func _ready() -> void:
+	var avisos: PilaDeNotificaciones = get_node("Interfaz/PilaDeNotificaciones")
+	_atenciones.comprador_llegado.connect(avisos.avisar_llegada)
+	_caja.lectura_rechazada.connect(avisos.avisar_lectura_rechazada)
+	_reloj.turno_cerrado.connect(avisos.vaciar.unbind(1))
 	var marco := MarcoDelObjetivo.new()
 	add_child(marco)
 	_jugador.objetivo_enfocado.connect(marco.enfocar)
