@@ -9,3 +9,5 @@ TDD válido: a-298-rojo-2.log,6/6suites31/31casos113fallos de aserción,0errores
 Sonda final de foco y desmontaje: a-298-foco-montaje-final.log. Wrapper exige los marcadores de finalización y rechaza ERROR/fugas; alcanza las5hojas desde piso real y cápsula libre. El verbose previo identifica fugas temporales de audio y se conserva como diagnóstico; no se presenta como evidencia limpia. La sonda final detiene y libera exclusivamente las voces del montaje externo antes de salir.
 
 Rendimiento y captura definitivos: a-298-evidencia-final-2.log. Frente al baño: medias0,111844/0,11753025ms (mano vacía/unidad), máximos por lote0,12969/0,19134ms, bajo0,5ms. Pasillo: medias0,017071/0,01733125ms,1candidato y0hojas. Antes:0,0881175/0,08594025ms frente al baño; pasillo0,016834/0,016503ms y0hojas.40lotes de100llamadas por escenario. Arte y posiciones no se ajustan para la sonda.
+
+Verificación completa primera sobre b22e7f8f: 7/7 nodos sin salteos,701,6s;198/198suites1555/1555casos,0fallos/errores/salteos/inestables. Conteo inmediato198/198. XML y log completos en evidencia.
