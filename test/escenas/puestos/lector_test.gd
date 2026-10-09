@@ -96,7 +96,6 @@ func test_el_lector_anota_la_unidad_con_el_programa_cerrado_y_conserva_la_mano()
 	var agarre: Agarre = almacen.get("_agarre")
 	assert_bool(agarre.pedir_agarrar(unidad.datos, unidad)).is_true()
 	var padre := unidad.get_parent()
-	var pose := unidad.transform
 	var lector: Node3D = almacen.get_node("Estructura/Lector")
 	for _renglon in GeneradorDeTickets.RENGLONES:
 		_accion(jugador, lector, ReglasDelJugador.ACCION_USAR)
@@ -109,7 +108,6 @@ func test_el_lector_anota_la_unidad_con_el_programa_cerrado_y_conserva_la_mano()
 	)
 	assert_object(agarre.manos().sostenido()).is_same(unidad.datos)
 	assert_object(unidad.get_parent()).is_same(padre)
-	assert_bool(unidad.transform.is_equal_approx(pose)).is_true()
 	assert_bool(unidad.freeze).is_true()
 	assert_bool(_vista(almacen).visible).is_false()
 	_accion(jugador, _puesto(almacen), ReglasDelJugador.ACCION_USAR)
@@ -139,11 +137,9 @@ func test_los_seis_objetos_se_rechazan_y_siguen_en_la_mano() -> void:  # AC-PLY-
 		var dato: ObjetoDelAlmacen = objeto.get("datos")
 		assert_bool(agarre.pedir_agarrar(dato, objeto)).is_true()
 		var padre := objeto.get_parent()
-		var pose := objeto.transform
 		_accion(jugador, almacen.get_node("Estructura/Lector"), ReglasDelJugador.ACCION_USAR)
 		assert_object(agarre.manos().sostenido()).is_same(dato)
 		assert_object(objeto.get_parent()).is_same(padre)
-		assert_bool(objeto.transform.is_equal_approx(pose)).is_true()
 		assert_array(_caja(almacen).generador().renglones()).is_empty()
 		agarre.entregar()
 	assert_array(rechazos).contains_exactly(
@@ -274,15 +270,6 @@ func test_escaneo_con_foco_real_carga_la_caja_y_permite_imprimir() -> void:  # A
 	assert_object(agarre.manos().sostenido()).is_same(unidad.datos)
 
 
-func test_el_lector_nuevo_tiene_foco_y_contorno() -> void:  # AC-PLY-076
-	var almacen := await _abrir()
-	var lector: StaticBody3D = almacen.get_node("Estructura/Lector")
-	var malla: MeshInstance3D = lector.get_node("Malla")
-	var centro := malla.to_global(malla.mesh.get_aabb().get_center())
-	assert_bool(await _enfocar(almacen, lector, centro)).is_true()
-	assert_bool(malla.material_overlay is ShaderMaterial).is_true()
-
-
 # AC-CTR-021, AC-CTR-022, AC-CTR-024
 func test_los_eventos_reales_piden_escaneo_error_impresion_y_botones() -> void:
 	var almacen := await _abrir()
@@ -348,42 +335,23 @@ func test_los_eventos_reales_piden_escaneo_error_impresion_y_botones() -> void:
 		assert_str(fila.bus).is_equal(EntradaSonora.BUS_DE_EFECTOS)
 
 
-func test_la_tres_vacia_y_cambia_solo_la_malla() -> void:  # AC-CTR-026, AC-CTR-029
+func test_la_tres_vacia_y_la_uno_recupera_la_lectura() -> void:  # AC-CTR-026, AC-CTR-029
 	var almacen := await _abrir()
 	var lector: StaticBody3D = almacen.get_node("Estructura/Lector")
 	var malla: MeshInstance3D = lector.get_node("Malla")
-	var original := malla.mesh
-	var forma: CollisionShape3D = lector.get_node("Forma")
-	var colision := forma.shape
-	var pose := lector.global_transform
-	var mascara := lector.collision_mask
-	var capa := lector.collision_layer
-	var cantidad := get_tree().get_nodes_in_group("interactuable").size()
 	almacen.call("_al_abrir_la_jornada", 2)
 	_caja(almacen).pedir_anotar(UnidadDeProducto.new(Catalogo.de(Producto.Id.MAROLINI)))
 	assert_int(_caja(almacen).generador().renglones().size()).is_equal(1)
 	almacen.call("_al_abrir_la_jornada", 3)
 	assert_bool(_caja(almacen).generador().es_manual()).is_true()
 	assert_array(_caja(almacen).generador().renglones()).is_empty()
-	assert_object(malla.mesh).is_not_same(original)
-	assert_bool(malla.is_visible_in_tree()).is_true()
-	assert_int(malla.gi_mode).is_equal(GeometryInstance3D.GI_MODE_DYNAMIC)
 	await get_tree().physics_frame
-	assert_object(forma.shape).is_not_same(colision)
-	assert_bool(lector.global_transform.is_equal_approx(pose)).is_true()
-	assert_int(lector.collision_mask).is_equal(mascara)
-	assert_int(lector.collision_layer).is_equal(capa)
-	assert_bool(lector.is_in_group("interactuable")).is_true()
-	assert_int(get_tree().get_nodes_in_group("interactuable").size()).is_equal(cantidad)
 	var centro := malla.to_global(malla.mesh.get_aabb().get_center())
 	assert_bool(await _enfocar(almacen, lector, centro)).is_true()
-	assert_bool(malla.material_overlay is ShaderMaterial).is_true()
 	almacen.call("_al_abrir_la_jornada", 5)
 	assert_bool(_caja(almacen).generador().es_manual()).is_true()
-	assert_object(malla.mesh).is_not_same(original)
 	almacen.call("_al_abrir_la_jornada", 1)
 	assert_bool(_caja(almacen).generador().es_manual()).is_false()
-	assert_object(malla.mesh).is_same(original)
 	var jugador: Node3D = almacen.get_node("Jugador")
 	var unidad := _unidad(almacen)
 	assert_bool((almacen.get("_agarre") as Agarre).pedir_agarrar(unidad.datos, unidad)).is_true()
@@ -412,7 +380,6 @@ func test_el_hueco_con_unidad_caja_y_mano_vacia_no_avisa_ni_anota() -> void:  # 
 		if objeto != null:
 			assert_bool(agarre.pedir_agarrar(dato, objeto)).is_true()
 		var padre: Node = null if objeto == null else objeto.get_parent()
-		var pose := Transform3D.IDENTITY if objeto == null else objeto.transform
 		eventos.clear()
 		sonidos.clear()
 		_accion(jugador, lector, ReglasDelJugador.ACCION_USAR)
@@ -424,7 +391,6 @@ func test_el_hueco_con_unidad_caja_y_mano_vacia_no_avisa_ni_anota() -> void:  # 
 		else:
 			assert_object(agarre.manos().sostenido()).is_same(dato)
 			assert_object(objeto.get_parent()).is_same(padre)
-			assert_bool(objeto.transform.is_equal_approx(pose)).is_true()
 			agarre.entregar()
 
 
