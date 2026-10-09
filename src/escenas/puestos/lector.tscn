@@ -2,31 +2,30 @@
 
 [ext_resource type="Script" path="res://src/escenas/puestos/lector.gd" id="script"]
 
-[sub_resource type="BoxShape3D" id="forma"]
-size = Vector3(0.12, 0.05, 0.18)
+[ext_resource type="ArrayMesh" path="res://assets/models/lector_de_productos.res" id="modelo"]
+[ext_resource type="ConcavePolygonShape3D" path="res://assets/models/lector_de_productos_colision.res" id="colision"]
 
-[sub_resource type="StandardMaterial3D" id="color"]
-albedo_color = Color(0.12, 0.24, 0.28, 1)
-
-[sub_resource type="BoxMesh" id="malla"]
-material = SubResource("color")
-size = Vector3(0.12, 0.05, 0.18)
+[sub_resource type="ConvexPolygonShape3D" id="forma_del_hueco"]
+points = PackedVector3Array(-0.28, -0.013749, -0.135369, -0.28, 0.011251, -0.135369, 0.07361, -0.013749, -0.135369, 0.07361, 0.011251, -0.135369, -0.28, -0.013749, 0.135369, -0.28, 0.011251, 0.135369, 0.07361, -0.013749, 0.135369, 0.07361, 0.011251, 0.135369)
 
 [sub_resource type="StandardMaterial3D" id="oscuro"]
 albedo_color = Color(0.025, 0.025, 0.025, 1)
 
 [sub_resource type="BoxMesh" id="hueco"]
 material = SubResource("oscuro")
-size = Vector3(0.12, 0.05, 0.18)
+size = Vector3(0.35361, 0.025, 0.270738)
 
-[node name="Lector" type="StaticBody3D" node_paths=PackedStringArray("mallas") groups=["interactuable"]]
+[node name="Lector" type="StaticBody3D" node_paths=PackedStringArray("mallas", "forma") groups=["interactuable"]]
 script = ExtResource("script")
 malla_del_hueco = SubResource("hueco")
+forma_del_hueco = SubResource("forma_del_hueco")
+forma = NodePath("Forma")
+posicion_del_hueco = Vector3(-0.103195, -0.001249, 0)
 mallas = [NodePath("Malla")]
 
 [node name="Forma" type="CollisionShape3D" parent="."]
-shape = SubResource("forma")
+shape = ExtResource("colision")
 
 [node name="Malla" type="MeshInstance3D" parent="."]
-mesh = SubResource("malla")
+mesh = ExtResource("modelo")
 gi_mode = 2

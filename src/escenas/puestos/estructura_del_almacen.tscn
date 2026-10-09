@@ -22,6 +22,8 @@
 
 [ext_resource type="Script" path="res://src/escenas/puestos/caja_registradora.gd" id="caja_registradora"]
 [ext_resource type="PackedScene" path="res://src/escenas/puestos/lector.tscn" id="lector"]
+[ext_resource type="ArrayMesh" path="res://assets/models/caja_registradora.res" id="modelo_caja_nueva"]
+[ext_resource type="ConcavePolygonShape3D" path="res://assets/models/caja_registradora_colision.res" id="colision_caja_nueva"]
 
 [sub_resource type="BoxShape3D" id="contorno_de_gondola"]
 size = Vector3(1.800454, 2.292613, 4.978426)
@@ -1464,8 +1466,15 @@ editor_description = "Lo dibuja la mopa que se levanta, en los objetos del almac
 [node name="CollisionShape3D" parent="mopa/StaticBody3D"]
 disabled = true
 
+[node name="cajaregistradora" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.145735, 1.113056, 4.883701)
+mesh = ExtResource("modelo_caja_nueva")
+
 [node name="Volumen" type="CollisionShape3D" parent="cajaregistradora/StaticBody3D"]
-shape = SubResource("casco_17")
+shape = ExtResource("colision_caja_nueva")
+
+[node name="CollisionShape3D" parent="cajaregistradora/StaticBody3D"]
+disabled = true
 
 [node name="Volumen" type="CollisionShape3D" parent="tachitobasura/StaticBody3D"]
 shape = SubResource("casco_24")
@@ -2231,11 +2240,11 @@ destino_de_los_tickets = NodePath("../..")
 mallas = [NodePath("..")]
 
 [node name="Ranura" type="Marker3D" parent="cajaregistradora"]
-position = Vector3(-0.475, 0.49, 0.395)
-rotation_degrees = Vector3(0, 90, 0)
+position = Vector3(-0.135307, 0.145, -0.004086)
 
 [node name="Lector" parent="." instance=ExtResource("lector")]
-position = Vector3(1.469662, 1.047918, 4.883701)
+position = Vector3(1.469662, 1.036667, 4.780527)
+rotation_degrees = Vector3(0, 90, 0)
 
 [node name="HabitacionesDelAlmacen" type="Node3D" parent="."]
 script = ExtResource("habitaciones")

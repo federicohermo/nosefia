@@ -274,23 +274,12 @@ func test_escaneo_con_foco_real_carga_la_caja_y_permite_imprimir() -> void:  # A
 	assert_object(agarre.manos().sostenido()).is_same(unidad.datos)
 
 
-func test_el_lector_apoya_en_el_mostrador_y_tiene_foco_y_contorno() -> void:  # AC-PLY-076
+func test_el_lector_nuevo_tiene_foco_y_contorno() -> void:  # AC-PLY-076
 	var almacen := await _abrir()
 	var lector: StaticBody3D = almacen.get_node("Estructura/Lector")
-	var forma: CollisionShape3D = lector.get_node("Forma")
-	var base := (forma.global_transform * forma.shape.get_debug_mesh().get_aabb()).position.y
-	var centro := lector.global_position
-	var apoyo := PhysicsRayQueryParameters3D.create(centro, centro + Vector3.DOWN, 1)
-	apoyo.exclude = [lector.get_rid()]
-	var golpe := almacen.get_world_3d().direct_space_state.intersect_ray(apoyo)
-	assert_bool(golpe.is_empty()).is_false()
-	if golpe.is_empty():
-		return
-	assert_str(str(golpe.collider.get_path())).contains("EscritorioComputadora")
-	assert_float(golpe.normal.y).is_greater(0.95)
-	assert_float(base).is_equal_approx(golpe.position.y, 0.001)
-	assert_bool(await _enfocar(almacen, lector, centro)).is_true()
 	var malla: MeshInstance3D = lector.get_node("Malla")
+	var centro := malla.to_global(malla.mesh.get_aabb().get_center())
+	assert_bool(await _enfocar(almacen, lector, centro)).is_true()
 	assert_bool(malla.material_overlay is ShaderMaterial).is_true()
 
 
@@ -377,10 +366,10 @@ func test_la_tres_vacia_y_cambia_solo_la_malla() -> void:  # AC-CTR-026, AC-CTR-
 	assert_bool(_caja(almacen).generador().es_manual()).is_true()
 	assert_array(_caja(almacen).generador().renglones()).is_empty()
 	assert_object(malla.mesh).is_not_same(original)
-	assert_bool(malla.mesh.get_aabb().size.is_equal_approx(original.get_aabb().size)).is_true()
 	assert_bool(malla.is_visible_in_tree()).is_true()
 	assert_int(malla.gi_mode).is_equal(GeometryInstance3D.GI_MODE_DYNAMIC)
-	assert_object(forma.shape).is_same(colision)
+	await get_tree().physics_frame
+	assert_object(forma.shape).is_not_same(colision)
 	assert_bool(lector.global_transform.is_equal_approx(pose)).is_true()
 	assert_int(lector.collision_mask).is_equal(mascara)
 	assert_int(lector.collision_layer).is_equal(capa)

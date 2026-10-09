@@ -17,6 +17,8 @@ var _abierta := false
 var _en_ranura: ObjetoAgarrable
 var _papel: ObjetoAgarrable
 var _tickets: Array[ObjetoAgarrable] = []
+var _salida: Tween
+var _fin_de_salida := Vector3.ZERO
 
 
 func _ready() -> void:
@@ -33,6 +35,9 @@ func _ready() -> void:
 
 
 func accionar() -> void:
+	var objeto := agarre.manos().sostenido()
+	if objeto is UnidadDeProducto:
+		caja.pedir_anotar(objeto)
 	abrir()
 
 
@@ -66,7 +71,10 @@ func _al_cerrar_el_turno(_cumplidas: int) -> void:
 
 
 func _al_imprimir(dato: Ticket) -> void:
+	cerrar()
+	_detener_salida()
 	if is_instance_valid(_en_ranura):
+		_en_ranura.global_position = _fin_de_salida
 		_en_ranura.freeze = false
 		_en_ranura.sleeping = false
 	var papel: ObjetoAgarrable = PAPEL.instantiate()
@@ -81,6 +89,16 @@ func _al_imprimir(dato: Ticket) -> void:
 	destino_de_los_tickets.add_child(papel)
 	_tickets.append(papel)
 	_en_ranura = papel
+	_fin_de_salida = papel.global_position
+	papel.global_position -= ranura.global_basis.orthonormalized().y * 0.11
+	_salida = create_tween().set_process_mode(Tween.TWEEN_PROCESS_PHYSICS)
+	_salida.tween_property(papel, "global_position", _fin_de_salida, 0.8)
+
+
+func _detener_salida() -> void:
+	if _salida != null and _salida.is_valid():
+		_salida.kill()
+	_salida = null
 
 
 func _al_agarrar(objeto: Node3D) -> void:
@@ -89,10 +107,12 @@ func _al_agarrar(objeto: Node3D) -> void:
 	if papel != null and _tickets.has(papel):
 		_papel = papel
 	if objeto == _en_ranura:
+		_detener_salida()
 		_en_ranura = null
 
 
 func limpiar() -> void:
+	_detener_salida()
 	_papel = null
 	for papel in _tickets:
 		if is_instance_valid(papel):

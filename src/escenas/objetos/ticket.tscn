@@ -2,24 +2,20 @@
 
 [ext_resource type="Script" path="res://src/escenas/objetos/objeto_agarrable.gd" id="objeto"]
 
+[ext_resource type="ArrayMesh" path="res://assets/models/ticket_impreso.res" id="modelo"]
+
 [sub_resource type="BoxShape3D" id="forma"]
-size = Vector3(0.06, 0.10, 0.005)
-
-[sub_resource type="StandardMaterial3D" id="blanco"]
-albedo_color = Color(1, 1, 1, 1)
-
-[sub_resource type="BoxMesh" id="malla"]
-material = SubResource("blanco")
-size = Vector3(0.06, 0.10, 0.005)
+size = Vector3(0.003, 0.121548, 0.074995)
 
 [node name="Ticket" type="RigidBody3D" groups=["interactuable"]]
 collision_mask = 9
 continuous_cd = true
 script = ExtResource("objeto")
+orientacion_en_mano = Basis(0, 0, -1, 0, 1, 0, 1, 0, 0)
 
 [node name="Forma" type="CollisionShape3D" parent="."]
 shape = SubResource("forma")
 
 [node name="Malla" type="MeshInstance3D" parent="."]
-mesh = SubResource("malla")
+mesh = ExtResource("modelo")
 gi_mode = 2

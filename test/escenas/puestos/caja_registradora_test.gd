@@ -202,6 +202,7 @@ func test_los_botones_imprimen_copia_y_borrar_repinta_tres_vacios() -> void:
 	assert_int(papeles.size()).is_equal(1)
 	if papeles.is_empty():
 		return
+	_puesto(almacen).call("abrir")
 	_vista(almacen).borrar.pressed.emit()
 	assert_array((papeles[0].datos as Ticket).renglones()).contains_exactly(productos)
 	assert_array(_caja(almacen).generador().renglones()).is_empty()
@@ -219,6 +220,7 @@ func test_imprimir_otra_vez_suelta_el_anterior_y_el_nuevo_queda_quieto() -> void
 	if papeles.is_empty():
 		return
 	var primero := papeles[0]
+	await get_tree().create_timer(1.0).timeout
 	var pose := primero.global_transform
 	for _cuadro in 5:
 		await get_tree().physics_frame
@@ -232,6 +234,7 @@ func test_imprimir_otra_vez_suelta_el_anterior_y_el_nuevo_queda_quieto() -> void
 	assert_bool(primero.freeze).is_false()
 	var segundo := papeles[1]
 	assert_bool(segundo.freeze).is_true()
+	await get_tree().create_timer(1.0).timeout
 	for _cuadro in 12:
 		await get_tree().physics_frame
 	assert_bool(primero.global_transform.is_equal_approx(pose)).is_false()
@@ -298,6 +301,7 @@ func test_otra_jornada_quita_papeles_del_piso_y_del_examen_y_vacia_el_programa()
 		return
 	assert_float(piso.normal.y).is_greater(0.95)
 	var suelto := papeles[0]
+	await get_tree().create_timer(1.0).timeout
 	suelto.global_transform = Transform3D(Basis.IDENTITY, piso.position + Vector3.UP * 0.06)
 	suelto.freeze = false
 	suelto.sleeping = false
@@ -395,48 +399,55 @@ func _enfocar(almacen: Node3D, objetivo: PhysicsBody3D, centro: Vector3) -> bool
 	return false
 
 
-# AC-PLY-076
-func test_caja_y_papel_tienen_foco_y_contorno_y_la_ranura_no_deforma_el_papel() -> void:
+# AC-PLY-072, AC-PLY-075, AC-PLY-076
+func test_caja_lee_imprime_y_entrega_el_ticket_desde_el_mismo_puesto() -> void:
 	var almacen := await _abrir()
-	var caja := _puesto(almacen)
+	var puesto := _puesto(almacen)
 	var malla: MeshInstance3D = almacen.get_node("Estructura/cajaregistradora")
+	var unidad := _unidad(almacen)
+	var agarre: Agarre = almacen.get("_agarre")
+	assert_bool(agarre.pedir_agarrar(unidad.datos, unidad)).is_true()
 	(
 		assert_bool(
-			await _enfocar(almacen, caja, malla.to_global(malla.mesh.get_aabb().get_center()))
+			await _enfocar(almacen, puesto, malla.to_global(malla.mesh.get_aabb().get_center()))
 		)
 		. is_true()
 	)
-	assert_bool(malla.material_overlay is ShaderMaterial).is_true()
-	_emitir_papel(almacen)
+	await _derecho()
+	assert_bool(_vista(almacen).visible).is_true()
+	assert_array(_caja(almacen).generador().renglones()).contains_exactly(
+		[(unidad.datos as UnidadDeProducto).producto]
+	)
+	_vista(almacen).imprimir.pressed.emit()
+	assert_bool(_vista(almacen).visible).is_false()
 	var papeles := _papeles(almacen)
-	assert_int(papeles.size()).is_equal(1)
+	assert_array(papeles).has_size(1)
 	if papeles.is_empty():
 		return
 	var papel := papeles[0]
-	var forma: CollisionShape3D = papel.get_node("Forma")
-	var dimensiones := (forma.shape as BoxShape3D).size * forma.global_basis.get_scale()
-	assert_bool(dimensiones.is_equal_approx(Vector3(0.06, 0.10, 0.005))).is_true()
-	var ranura: Marker3D = caja.get("ranura")
-	(
-		assert_bool(
-			papel.global_transform.is_equal_approx(ranura.global_transform.orthonormalized())
-		)
-		. is_true()
-	)
-	assert_bool(papel.lugar_de_origen().is_equal_approx(papel.global_transform)).is_true()
-	var consulta := PhysicsShapeQueryParameters3D.new()
-	consulta.shape = forma.shape
-	consulta.transform = forma.global_transform
-	consulta.collision_mask = papel.collision_mask
-	consulta.exclude = [papel.get_rid(), (almacen.get_node("Jugador") as CharacterBody3D).get_rid()]
-	for _cuadro in 3:
-		await get_tree().physics_frame
-	assert_array(almacen.get_world_3d().direct_space_state.intersect_shape(consulta)).is_empty()
+	await get_tree().create_timer(1.0).timeout
+	var jugador: Node3D = almacen.get_node("Jugador")
+	_accion(jugador, unidad, ReglasDeLosObjetos.ACCION_AGARRAR)
+	assert_object(agarre.manos().sostenido()).is_null()
 	assert_bool(await _enfocar(almacen, papel, papel.global_position)).is_true()
-	(
-		assert_bool((papel.get_node("Malla") as MeshInstance3D).material_overlay is ShaderMaterial)
-		. is_true()
+	_accion(jugador, papel, ReglasDeLosObjetos.ACCION_AGARRAR)
+	assert_object(agarre.manos().sostenido()).is_same(papel.datos)
+	assert_array((papel.datos as Ticket).renglones()).contains_exactly(
+		[(unidad.datos as UnidadDeProducto).producto]
 	)
+
+
+# AC-PLY-072, AC-CTR-026
+func test_la_caja_manual_abre_sin_escanear_la_unidad_sostenida() -> void:
+	var almacen := await _abrir()
+	almacen.call("_al_abrir_la_jornada", 3)
+	var unidad := _unidad(almacen)
+	var agarre: Agarre = almacen.get("_agarre")
+	assert_bool(agarre.pedir_agarrar(unidad.datos, unidad)).is_true()
+	_accion(almacen.get_node("Jugador"), _puesto(almacen), ReglasDelJugador.ACCION_USAR)
+	assert_bool(_vista(almacen).visible).is_true()
+	assert_array(_caja(almacen).generador().renglones()).is_empty()
+	assert_object(agarre.manos().sostenido()).is_same(unidad.datos)
 
 
 func _abrir_bano() -> Node3D:
