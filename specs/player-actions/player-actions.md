@@ -1,7 +1,7 @@
 ---
 schema_version: 1
 capability_id: CAP-PLY
-status: ratified
+status: draft
 owner: por definir
 provenance: GDD «Controles»; ficha «8. Tarea: Reposición»; migración de los specs 003, 004, 006, 014, 034, 043
 ---
@@ -23,6 +23,7 @@ una tarea son los metros, no la torpeza del control.
 | **Manos** | qué se lleva encima. Es una sola | inventario, mochila |
 | **Suspender** | apagar juntos la caminata, la mirada y el foco | pausar, bloquear |
 | **Interactuable** | lo que contesta cuando se lo usa | clickeable, activable |
+| **Nota pegada** | hoja fija del local que se lee, sin levantarse ni entrar al cuaderno | nota de investigación |
 | **Casillero** | cada lugar de la fila de adelante de la góndola, vacío u ocupado: lo define [`store-stock`](../store-stock/store-stock.md) | hueco, slot |
 
 ## Comportamiento normativo
@@ -58,7 +59,7 @@ sesenta veces por segundo.
 
 ### BR-PLY-006 — Suspender es una sola llamada
 
-CUANDO otra cosa toma el control —la ventanilla, la computadora, el cierre—, el sistema DEBE
+CUANDO otra cosa toma el control —la ventanilla, la computadora, una nota pegada, el cierre—, el sistema DEBE
 apagar **juntos** la caminata, la mirada y el foco, y DEBE soltar lo enfocado. Con interruptores
 sueltos, cada pantalla tiene que acordarse de todos.
 
@@ -241,9 +242,31 @@ recalcular la vista hasta la próxima apertura.
 
 ### BR-PLY-028 — Suspendido, el izquierdo no agarra ni suelta
 
-MIENTRAS el control está suspendido por la computadora o la ventanilla, el gesto de agarrar
+MIENTRAS el control está suspendido por la computadora, la ventanilla o una nota pegada, el gesto de agarrar
 NO DEBE agarrar lo enfocado ni soltar lo que se lleva. Examinar DEBE conservar su propio
 ruteo del gesto. Al salir, lo que se llevaba DEBE seguir en la mano.
+
+### BR-PLY-029 — Leer una nota pegada
+
+CUANDO el clic derecho apunta a una nota pegada, el sistema DEBE mostrar su lectura y
+suspender el control. Otro clic derecho DEBE cerrar y reanudar. Lo que se lleva DEBE conservar
+su lugar en la mano, sin usarse ni soltarse. Una pantalla abierta o un examen NO DEBE permitir
+abrir otra hoja. Leer NO DEBE detener el turno.
+
+CUANDO termina el turno, la lectura DEBE cerrarse antes de su placa. La pausa DEBE verse
+encima de la nota; al reanudar, la nota DEBE continuar abierta y el control suspendido.
+
+### BR-PLY-030 — Lo que dice cada hoja
+
+El sistema DEBE permitir leer las notas de tareas a realizar, mantener el local ordenado,
+jabones y manchas, instrucciones de limpieza y no tirar papel. La hoja y la lectura DEBEN
+compartir su contenido: texto para las dos del corcho, imagen original completa para las tres
+del baño. Todas las hojas DEBEN conservar su forma, posición e imagen artística.
+
+La nota de tareas DEBE enumerar sólo las obligatorias que declara la jornada, en el orden
+atención al cliente, registro de productos vendidos, limpieza, reposición y sacar la basura.
+Cada tipo declarado DEBE tener nombre. Una lista vacía DEBE conservar el título sin agregar
+renglones. La nota de ordenado DEBE presentar las tres viñetas de su criterio, sin reescribirlas.
 
 ## Criterios de aceptación
 
@@ -629,6 +652,61 @@ DADO las manos vacías, un levantable enfocado y el control suspendido por la co
 la ventanilla CUANDO se hace el gesto de agarrar ENTONCES las manos siguen vacías y el objeto
 permanece donde estaba.
 
+### AC-PLY-063 — Cada hoja abre su lectura y cierra con el derecho *(verifica BR-PLY-029, BR-PLY-006)*
+
+DADO cada una de las cinco notas pegadas enfocadas, CUANDO se hace clic derecho ENTONCES
+aparece su contenido propio y se suspenden caminata, mirada y foco. CUANDO se hace otro clic
+derecho ENTONCES la lectura se cierra y el control vuelve.
+
+### AC-PLY-064 — La lectura conserva lo llevado *(verifica BR-PLY-029, BR-PLY-026)*
+
+DADO una unidad, caja, mopa, balde, jabón o bolsa en la mano, CUANDO se abre, lee y cierra una
+nota ENTONCES se conserva el mismo objeto en su lugar en la mano. El clic NO pide usarlo.
+
+### AC-PLY-065 — La nota no toma el izquierdo ni E para abrir *(verifica BR-PLY-029, BR-PLY-028)*
+
+DADO una nota cerrada y la mano vacía, CUANDO se hace clic izquierdo o E ENTONCES la lectura
+permanece cerrada. DADO algo en la mano ENTONCES el izquierdo lo suelta como en otro lugar.
+DADO la lectura abierta ENTONCES el izquierdo no agarra ni suelta y E no examina.
+
+### AC-PLY-066 — Una pantalla no abre otra nota encima *(verifica BR-PLY-029)*
+
+DADO la computadora, ventanilla o examen abiertos, CUANDO se pide leer una nota ENTONCES no
+se abre. DADO una nota abierta, CUANDO se enfoca otra ENTONCES el contenido actual no cambia
+hasta cerrar la primera.
+
+### AC-PLY-067 — Reloj, pausa y cierre conservan su orden *(verifica BR-PLY-029)*
+
+DADO una nota abierta, CUANDO pasan cuadros ENTONCES el tiempo del turno disminuye. CUANDO se
+pausa ENTONCES la pausa visible se dibuja por encima de la nota; al reanudar, la nota sigue
+abierta y el control suspendido. CUANDO termina el turno ENTONCES queda sólo la placa de
+cierre y el control suspendido.
+
+### AC-PLY-068 — Ordenado comparte el texto exacto *(verifica BR-PLY-030)*
+
+DADO la nota de ordenado, ENTONCES su hoja y su lectura comparten «MANTENER EL LOCAL ORDENADO»
+y las viñetas «No dejar productos tirados.», «Dejar las cajas en el depósito.» y
+«Dejar los elementos de limpieza en el baño.», exactamente.
+
+### AC-PLY-069 — Las obligatorias dan los renglones de tareas *(verifica BR-PLY-030)*
+
+DADO las obligatorias declaradas, ENTONCES «TAREAS A REALIZAR» las enumera en el orden de la
+regla. DADO limpieza y sacar la basura, ENTONCES da «1. Limpieza» y «2. Sacar la basura».
+DADO cero, ENTONCES conserva el título y cero renglones. Cada tipo declarado tiene nombre,
+y los títulos y renglones son iguales en la hoja y su lectura.
+
+### AC-PLY-070 — El baño comparte la imagen artística completa *(verifica BR-PLY-030)*
+
+DADO cada nota de jabones y manchas, instrucciones de limpieza y no tirar papel, ENTONCES
+su lectura amplía la misma imagen frontal original completa y no agrega renglones.
+
+### AC-PLY-071 — Todas las hojas conservan arte y las cinco lecturas tienen acceso *(verifica BR-PLY-030, BR-PLY-004)*
+
+DADO cada una de las cinco notas funcionales, ENTONCES tiene foco y contorno sobre su propia
+hoja desde un lugar transitable al alcance. Todos los papeles del corcho siguen visibles;
+dos se leen y los otros tres permanecen decorativos. La forma, posición e imagen de las
+hojas no cambian al agregar lectura.
+
 ## No objetivos
 
 - Esta capacidad NO decide qué esconde un objeto: eso es de
@@ -654,6 +732,9 @@ permanece donde estaba.
 - El objetivo enfocado y perdido, el objeto agarrado y soltado, y el agarre rechazado.
 
 ## Dependencias
+
+- [`shift-cycle`](../shift-cycle/shift-cycle.md) (consume): las obligatorias declaradas que
+  enumera la nota de tareas.
 
 - [`store-cleanup`](../store-cleanup/store-cleanup.md) (alimenta): qué se lleva en la mano
   decide si se puede limpiar.

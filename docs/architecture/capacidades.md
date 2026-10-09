@@ -34,6 +34,7 @@ flowchart TD
   CTR -- "obligatoria cumplida" --> SHF
   STK -- "obligatorias cumplidas y descumplidas" --> SHF
   CLN -- "obligatorias cumplidas" --> SHF
+  SHF -- "obligatorias declaradas" --> PLY
   SHF -- "cuántas se cumplieron" --> EMP
   EMP -- "jornada, legajo y final" --> SAV
   STK -- "unidades en góndola" --> CTR
