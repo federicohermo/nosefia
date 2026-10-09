@@ -268,7 +268,8 @@ func _materiales_de(objeto: GeometryInstance3D) -> Array:
 ## Desde arriba y ortogonal: así entra la escena entera, sin importar su forma.
 func _encuadrar(caja: AABB) -> void:
 	_camara.projection = Camera3D.PROJECTION_ORTHOGONAL
-	_camara.size = maxf(caja.size.x, caja.size.z)
+	# Sin geometría, la caja no tiene ancho; la cámara conserva un encuadre válido.
+	_camara.size = maxf(maxf(caja.size.x, caja.size.z), _camara.size)
 	_camara.far = caja.size.y + 2.0 * ALTURA_EXTRA
 	_camara.position = caja.get_center() + Vector3.UP * (caja.size.y / 2.0 + ALTURA_EXTRA)
 	_camara.rotation = Vector3(-PI / 2.0, 0.0, 0.0)

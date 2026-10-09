@@ -262,10 +262,15 @@ func test_la_ventanilla_sin_cablear_no_hace_nada_y_lo_dice() -> void:
 	ventanilla.comprador_llegado.connect(_anotar_llegado)
 	ventanilla.cobro_rechazado.connect(_anotar_rechazo)
 	ventanilla.ventanilla_vacia.connect(_anotar_vacia)
-	ventanilla.pedir_abrir()
-	ventanilla.pedir_atender()
-	ventanilla.pedir_cobrar()
-	ventanilla.pedir_despachar_sin_vender()
+	for pedir: Callable in [
+		ventanilla.pedir_abrir,
+		ventanilla.pedir_atender,
+		ventanilla.pedir_cobrar,
+		ventanilla.pedir_despachar_sin_vender,
+	]:
+		await (assert_error(pedir).is_push_error(
+			"Ventanilla sin cablear: revisar almacen.tscn y almacen.gd"
+		))
 	assert_int(_llegados).is_equal(0)
 	assert_int(_rechazos).is_equal(0)
 	assert_int(_vacia).is_equal(0)

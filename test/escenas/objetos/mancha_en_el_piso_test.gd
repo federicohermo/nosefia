@@ -76,6 +76,9 @@ func test_la_mancha_borrada_deja_de_verse_y_de_enfocarse() -> void:
 	# Esconder un nodo **no apaga su cuerpo**: con el cuerpo prendido, una mancha ya borrada sigue
 	# frenando el rayo de la mira y se sigue enfocando, con la escena cargando sin un solo error.
 	var mancha: ManchaQueSeVe = auto_free(ESCENA.instantiate())
+	# Volver a mostrarla perturba el agua según su orientación en el mundo.
+	add_child(mancha)
+	assert_bool(mancha.is_inside_tree()).is_true()
 	var cuerpo := mancha.get_node("Cuerpo") as CollisionShape3D
 	mancha.mostrar(false, Color.GREEN)
 	assert_bool(mancha.visible).is_false()
