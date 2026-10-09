@@ -70,6 +70,11 @@ ventanilla u otra interfaz de la jornada están abiertas, incluyendo los diálog
 DEBE verse encima y DEBE dejar pasar el clic. El menú
 de pausa DEBE dibujarse por encima del cartel.
 
+TODOS los tipos DEBEN presentar su texto en una sola línea, con el tamaño de letra principal
+del tema. El contenedor DEBE ajustar su ancho al símbolo, la separación, el texto y sus
+márgenes, sin una franja vacía de ancho fijo. Los carteles DEBEN compartir el borde derecho
+y centrar verticalmente símbolo y texto, sin recortarlos al cambiar la resolución.
+
 ### BR-NTF-008 — El comprador que vence avisa su salida
 
 CUANDO una compra vence, el sistema DEBE mostrar «El cliente se cansó de esperar» una vez por
@@ -165,6 +170,13 @@ DADO un comprador de la primera noche CUANDO pasan más de tres segundos, se abr
 la ventanilla ENTONCES la llegada sigue visible. CUANDO el primer clic inicia su conversación
 ENTONCES desaparece; avanzar diálogo y reabrir no la repiten. La salida antes de conversar y el
 cierre del turno la retiran. Una identidad distinta no puede ocultarla.
+
+### AC-NTF-013 — Una línea y ancho según el contenido *(verifica BR-NTF-007)*
+
+DADO llegada, lectura fallida y cansancio CUANDO se muestran a 1920 × 1080 y 1280 × 720
+ENTONCES cada texto ocupa una sola línea con la letra principal del tema, queda completo
+junto al símbolo y su cartel ajusta el ancho al contenido. Los tres comparten el borde
+derecho dentro de la pantalla; el mensaje más largo ocupa un cartel más ancho.
 
 ## No objetivos
 

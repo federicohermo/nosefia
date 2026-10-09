@@ -257,6 +257,9 @@ siempre el corte inferior del dibujo desde las posiciones accesibles del local.
 Abrir o cerrar la interfaz NO DEBE
 reiniciar ni detener su animación. El diálogo conserva el diseño de Figma en pantalla.
 
+La llegada de la primera noche usa la entrada de BR-CTR-034; la posición fija corresponde
+a la espera posterior a esa entrada.
+
 ### BR-CTR-033 — Salida visible de los compradores
 
 EN la primera noche, CUANDO termina una despedida después de vender o una compra incompleta
@@ -267,6 +270,15 @@ Ya despachado NO DEBE recibir objetos ni reiniciar conversaciones, y su presenci
 retrasar la venta, el registro ni las tareas. NO DEBE girar, inclinarse ni cambiar de altura
 o profundidad. La pausa DEBE detener el movimiento y la animación.
 Cerrar o reiniciar la jornada DEBE retirar también las imágenes pendientes de salida.
+
+### BR-CTR-034 — Entrada desde la izquierda
+
+EN la primera noche, CUANDO llega cada comprador, su imagen DEBE deslizarse desde detrás de
+la pared izquierda, vista desde el interior frente a la ventanilla, hasta su sitio de espera.
+DEBE conservar el idle, altura, profundidad y orientación durante la entrada y detenerse
+en ese sitio. Abrir, cerrar o repintar la interfaz NO DEBE repetir la entrada.
+La pausa DEBE detener desplazamiento y animación. Reiniciar o cerrar el turno DEBE retirar
+la imagen en movimiento. La entrada NO DEBE adelantar ni retrasar horarios o avisos.
 
 ## Criterios de aceptación
 
@@ -538,6 +550,13 @@ a deslizarse hacia la derecha de la ventanilla y sigue visible mientras sale del
 Conserva altura, profundidad y orientación; la pared oculta su dibujo antes de retirarlo.
 Pausar detiene pose y desplazamiento; reanudar los continúa. Las ventas siguen en cero.
 Cerrar o reiniciar la jornada retira cualquier imagen pendiente, también la de una venta completa.
+
+### AC-CTR-045 — Ambos entran desde la izquierda *(verifica BR-CTR-034, BR-CTR-032)*
+
+DADO cada comprador de la primera noche CUANDO llega con la interfaz cerrada ENTONCES aparece
+deslizándose desde la izquierda hasta el sitio de espera, conservando altura, profundidad,
+orientación y animación. Después permanece quieto. Abrir, cerrar y repintar no reinician el
+movimiento. Pausar lo congela y reanudar lo continúa; reiniciar o cerrar el turno lo retira.
 
 ## No objetivos
 
