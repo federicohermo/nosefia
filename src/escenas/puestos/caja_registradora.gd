@@ -125,3 +125,11 @@ func _al_usar(objetivo: Node3D) -> void:
 	if _en_ranura == papel:
 		_en_ranura = null
 	papel.queue_free()
+
+
+func tickets_en_el_mundo() -> Array[Node3D]:
+	var activos: Array[Node3D] = []
+	for papel: ObjetoAgarrable in _tickets:
+		if is_instance_valid(papel) and not papel.is_queued_for_deletion():
+			activos.append(papel)
+	return activos

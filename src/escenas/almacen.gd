@@ -95,6 +95,7 @@ func _ready() -> void:
 	var avisos: PilaDeNotificaciones = get_node("Interfaz/PilaDeNotificaciones")
 	_atenciones.comprador_llegado.connect(avisos.avisar_llegada)
 	_caja.lectura_rechazada.connect(avisos.avisar_lectura_rechazada)
+	_caja.ticket_desechado.connect(_al_desechar_un_ticket)
 	_reloj.turno_cerrado.connect(avisos.vaciar.unbind(1))
 	var marco := MarcoDelObjetivo.new()
 	add_child(marco)
@@ -299,6 +300,7 @@ func _estados_del_cierre() -> Array[ReglasDelCierre.Estado]:
 	candidatos.append_array(_utiles_de_limpieza)
 	candidatos.append_array(_bolsas)
 	candidatos.append_array(_reposicion_manual.unidades_sueltas())
+	candidatos.append_array(_puesto_de_la_caja.tickets_en_el_mundo())
 	var sostenido := _agarre.cuerpo_sostenido()
 	if (
 		sostenido != null
@@ -331,3 +333,7 @@ func _al_agotar_el_turno(_jornada: int) -> void:
 		_partida.anotar_llamado(Partida.Llamado.LOCAL_DESORDENADO)
 	if ReglasDelCierre.hay_objetos_afuera(estados):
 		_partida.anotar_llamado(Partida.Llamado.OBJETO_AFUERA)
+
+
+func _al_desechar_un_ticket() -> void:
+	_partida.anotar_llamado(Partida.Llamado.PAPEL_EN_EL_INODORO)
