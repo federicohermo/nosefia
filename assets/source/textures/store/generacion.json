@@ -1,0 +1,39 @@
+{
+  "herramienta": "image_gen integrada; fotografía panorámica aportada por el usuario",
+  "cielorraso_activo": "assets/source/textures/store/cielorraso_placas.png",
+  "cielorraso_sin_luces": {
+    "archivo": "assets/source/textures/store/cielorraso_sin_luces.png",
+    "prompt": "Use case: stylized-concept. Asset type: seamless square albedo texture for a flat suspended office ceiling in a low-poly pixel-textured nocturnal gas-station horror game. Orthographic front-on flat scan, exactly four by four square off-white vinyl acoustic ceiling tiles with narrow charcoal aluminum seams, modest gray age stains, fine mottled grungy porous vinyl texture. Subdued neutral ivory/light gray base color, unlit even ambient light, no baked shadows, no perspective. No lamps or luminous panels anywhere; all 16 cells are plain solid ceiling tiles. Both horizontal and vertical edges must tile exactly seamlessly. No border, no text, no watermark. Use subtle PS2-era texture detail so it fits an austere desaturated teal fluorescent shop."
+  },
+  "vidrio": {
+    "archivo": "assets/environments/vidrio_marcas.png",
+    "prompt": "Use case: stylized-concept. Asset type: square grayscale glass grime mask texture used to subtly vary alpha on transparent refrigerator doors and shop windows in a low-poly nocturnal horror game. Orthographic flat scan of a lightly used clear glass pane, mid-dark charcoal gray background representing clean glass. Very faint low-contrast slightly lighter wipe swirls, a few scattered tiny dust flecks, soft smudges and thin interrupted dried water trails. Overall overwhelmingly clean and transparent, subtle unevenness visible up close; do not create frosted glass, opaque dirt, scratches, cracks, solid objects, window frames, specular highlights or perspective. Seamless tileable edges, no text, no watermark. Grayscale bitmap, not a picture of a framed window. This is a scalar mask rather than a rendered reflection, brightness variation restrained."
+  },
+  "exterior": {
+    "fotografia": "assets/environments/estacion_panoramica_gemini.jpg",
+    "origen": "Fotografía panorámica aportada por el usuario, copiada sin modificar.",
+    "resolucion": [
+      2912,
+      1440
+    ],
+    "fondo": "assets/environments/estacion_fondo_sin_objetos.png",
+    "proveniencia_del_fondo": "assets/environments/estacion_fondo_sin_objetos.provenance.json",
+    "parche_de_marquesina": "assets/environments/canopy_without_lamp.png",
+    "proveniencia_del_parche": "assets/environments/canopy_without_lamp.provenance.json",
+    "proyeccion": {
+      "origen": [
+        -1.4,
+        1.8,
+        -1.3
+      ],
+      "focal": [
+        0.20769,
+        0.42
+      ],
+      "horizonte": 0.49,
+      "uso": "Proyección sobre recortes de geometría y periferia continua para observar desde el interior del almacén."
+    },
+    "suelo": "Cemento procedural con lugares para autos, vereda y cordón; el exterior no se superpone al piso del edificio.",
+    "reflejos": "El vidrio refleja el cielorraso; no se proyectan luces exteriores sobre el piso interior."
+  }
+}

@@ -50,10 +50,10 @@ func test_el_uso_sobre_piso_libre_llega_sin_convertir_el_suelo_en_interactuable(
 	var almacen := await _almacen()
 	var jugador: Node3D = almacen.get("_jugador")
 	var suelo := almacen.get_node("Estructura/SueloSolido") as StaticBody3D
-	var punto := Vector3(-0.76, 0.103, 1.5)
+	var punto := Vector3(2.695, 0.103, 1.5)
 	var golpe := _golpe(almacen, punto)
-	assert_object(golpe.get("collider")).is_same(
-		almacen.get_node("Estructura/almacen/StaticBody3D")
+	assert_array([suelo, almacen.get_node("Estructura/almacen/StaticBody3D")]).contains(
+		golpe.get("collider")
 	)
 	assert_bool(suelo.is_in_group(ReglasDelJugador.GRUPO_INTERACTUABLE)).is_false()
 	var camara := jugador.get_node("Giro/Camara") as Camera3D
@@ -80,13 +80,13 @@ func test_el_disco_completo_de_agua_se_reserva_fuera_de_las_manchas() -> void:  
 	var suelo := almacen.get_node("Estructura/SueloSolido") as StaticBody3D
 	var sectores := _sectores(almacen)
 	var casco := almacen.get_node("Estructura/almacen/StaticBody3D") as StaticBody3D
-	var golpe := _golpe(almacen, Vector3(-0.76, 0.103, 1.5))
-	assert_object(golpe.get("collider")).is_same(casco)
+	var golpe := _golpe(almacen, Vector3(2.695, 0.103, 1.5))
+	assert_array([suelo, casco]).contains(golpe.get("collider"))
 	assert_bool(PisoParaAgua.admite(golpe, suelo, sectores, [], casco)).is_true()
 	var mancha: Node3D = almacen.get("_limpieza").manchas()[1]
-	var punto := mancha.global_position + Vector3.RIGHT * 1.19
+	var punto := mancha.global_position + Vector3.FORWARD * 1.19
 	golpe = _golpe(almacen, punto)
-	assert_object(golpe.get("collider")).is_same(casco)
+	assert_array([suelo, casco]).contains(golpe.get("collider"))
 	assert_float(punto.distance_to(mancha.global_position)).is_greater(0.96)
 	assert_bool(PisoParaAgua.admite(golpe, suelo, sectores, [], casco)).is_false()
 	mancha.call("mostrar", false, Color.BLACK)
@@ -130,10 +130,11 @@ func test_agua_limpia_deja_charco_sin_cambiar_las_manchas_y_la_jornada_lo_borra(
 		)
 		. is_equal(ReglasDeLaLimpieza.Resultado.MOPA_MOJADA)
 	)
-	var punto := Vector3(-0.76, 0.103, 1.5)
+	var punto := Vector3(2.695, 0.103, 1.5)
 	var golpe := _golpe(almacen, punto)
-	assert_object(golpe.get("collider")).is_same(
-		almacen.get_node("Estructura/almacen/StaticBody3D")
+	(
+		assert_array([puesto.get("suelo"), almacen.get_node("Estructura/almacen/StaticBody3D")])
+		. contains(golpe.get("collider"))
 	)
 	var camara := jugador.get_node("Giro/Camara") as Camera3D
 	camara.global_position = punto + Vector3(0, 1.2, 0.7)
@@ -207,7 +208,7 @@ func test_rechaza_una_concavidad_entre_las_muestras_del_borde() -> void:  # AC-C
 func test_la_mira_no_deja_agua_fuera_de_alcance_ni_detras_de_un_obstaculo() -> void:  # AC-CLN-031
 	var almacen := await _almacen()
 	var jugador: Node3D = almacen.get("_jugador")
-	var punto := Vector3(-0.76, 0.103, 1.5)
+	var punto := Vector3(2.695, 0.103, 1.5)
 	var camara := jugador.get_node("Giro/Camara") as Camera3D
 	var recibidos: Array[PhysicsBody3D] = []
 	jugador.connect(

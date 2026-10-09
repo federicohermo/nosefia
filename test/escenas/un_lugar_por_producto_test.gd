@@ -93,22 +93,25 @@ func _lugar_en_el_pasillo(almacen: Node3D, delante: Vector3, frente: Vector3) ->
 	consulta.collision_mask = jugador.collision_mask
 	consulta.exclude = [jugador.get_rid()]
 	var espacio := almacen.get_world_3d().direct_space_state
+	var lateral := frente.cross(Vector3.UP).normalized()
 	var distancia := 0.0
 	while distancia <= HASTA_EL_PASILLO:
-		var punto := Vector3(delante.x, 0.0, delante.z) + frente * distancia
-		# El piso del local no está en cero: se lo busca debajo de cada lugar.
-		var piso := espacio.intersect_ray(
-			PhysicsRayQueryParameters3D.create(punto + Vector3.UP, punto + Vector3.DOWN, 1)
-		)
+		# Una hoja abierta ocupa el borde del pasillo; se puede apuntar desde un costado.
+		for costado: float in [0.0, -0.2, 0.2, -0.4, 0.4]:
+			var punto := Vector3(delante.x, 0.0, delante.z) + frente * distancia
+			punto += lateral * costado
+			var piso := espacio.intersect_ray(
+				PhysicsRayQueryParameters3D.create(punto + Vector3.UP, punto + Vector3.DOWN, 1)
+			)
+			if piso.is_empty():
+				continue
+			var pie: Vector3 = piso["position"]
+			consulta.transform = Transform3D(
+				Basis.IDENTITY, pie + cuerpo.position + Vector3.UP * HOLGURA_DEL_PISO
+			)
+			if espacio.intersect_shape(consulta, 1).is_empty():
+				return pie
 		distancia += PASO_HACIA_EL_PASILLO
-		if piso.is_empty():
-			continue
-		var pie: Vector3 = piso["position"]
-		consulta.transform = Transform3D(
-			Basis.IDENTITY, pie + cuerpo.position + Vector3.UP * HOLGURA_DEL_PISO
-		)
-		if espacio.intersect_shape(consulta, 1).is_empty():
-			return pie
 	return Vector3.INF
 
 
@@ -292,6 +295,7 @@ func test_cada_producto_se_repone_en_una_sola_tanda_y_lo_repetido_es_fijo() -> v
 ## un casillero vacío, que es lo que la noche le pide reponer.
 func test_el_casillero_de_cada_producto_esta_al_alcance_desde_el_pasillo() -> void:  # AC-STK-029
 	var almacen := _almacen()
+	await AperturaConLugar.abrir_heladeras(almacen)
 	await get_tree().physics_frame
 	await get_tree().physics_frame
 	var jugador: Node3D = almacen.get("_jugador")
@@ -344,6 +348,7 @@ func test_el_casillero_de_cada_producto_esta_al_alcance_desde_el_pasillo() -> vo
 ## en cualquier góndola.
 func test_las_dos_filas_dan_al_pasillo() -> void:  # AC-STK-030
 	var almacen := _almacen()
+	await AperturaConLugar.abrir_heladeras(almacen)
 	await get_tree().physics_frame
 	await get_tree().physics_frame
 	var disposicion := _disposicion(almacen)
@@ -475,6 +480,7 @@ func _clic_real(jugador: Node3D) -> void:
 
 func test_se_enfoca_y_agarra_una_unidad_de_cada_producto_desde_el_pasillo() -> void:  # AC-STK-050
 	var almacen := _almacen()
+	await AperturaConLugar.abrir_heladeras(almacen)
 	var completos: Dictionary[Producto.Id, int] = {}
 	AperturaConLugar.abrir_con_faltantes(almacen, completos)
 	await get_tree().physics_frame

@@ -106,8 +106,8 @@ TOLERANCIA_DEL_PLANO = 0.002
 CARAS_QUE_SE_ANGOSTAN = {
     "A": ("oeste", "este"),
     "B": ("oeste", "este"),
-    "N": ("este",),
-    "S": ("este",),
+    "N": ("sur",),
+    "S": ("sur",),
 }
 
 #: Lo que tiene que asomar un vértice del panel perforado hacia el pasillo para correrse con el
@@ -218,7 +218,7 @@ def medir(letra):
             else:
                 nombre = "norte" if medio.y > centro.y else "sur"
         else:
-            nombre = "este"
+            nombre = next(partes(c)[1] for c in ESTANTES if partes(c)[0] == letra)
         por_cara.setdefault(nombre, []).append((medio.z, isla, cara))
     estantes = {}
     for nombre, chapas in por_cara.items():
@@ -603,7 +603,7 @@ def acomodar_mueble(letra, envases, resumen):
         for clave, estante in propios.items():
             deltas[clave] = achicar(estante, nuevos[clave])
         islas = _islas(bm)
-        for cara in CABECERAS:
+        for cara in CABECERAS if letra in ("A", "B") else ():
             de_la_cara = [e for c, e in propios.items() if partes(c)[1] == cara]
             if de_la_cara:
                 achicar_cabecera(de_la_cara, deltas, islas)

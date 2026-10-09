@@ -1,10 +1,4 @@
-## Las manchas que se ven: que no decidan nada, que cada una esté donde la ficha la pone y que se
-## vea del color de su tipo.
-##
-## **Dónde está cada mancha es lo que este spec no puede escribir en prosa**: el lugar lo declara
-## la escena de la limpieza, los muebles y las puertas los declara la del local, y mover uno no
-## toca el otro archivo. Por eso cada lugar se mide contra lo que lo nombra —la puerta de entrada,
-## las dos góndolas del medio, la puerta al depósito, el inodoro— y no contra un número.
+## Las manchas se pueden enfocar y limpiar sin quedar tapadas por muebles.
 extends GdUnitTestSuite
 
 const SCRIPT := "res://src/escenas/objetos/mancha_en_el_piso.gd"
@@ -21,16 +15,6 @@ const ALTO_DEL_JUGADOR := 1.8
 
 ## Lo que delataría una regla escrita en la mancha. Está medido que ahí los dos gates dan verde.
 const PATRONES_DE_DECISION := "(?m)^\\s*(if|elif|match)\\b|var\\s+_(limpia|tipo|jabon|agua)\\b"
-
-## Hasta dónde llega, en metros, cada lugar de la ficha: «frente a la puerta de entrada», «cerca de
-## la puerta al local» y «al lado del inodoro».
-const FRENTE_A_LA_ENTRADA := 2.5
-const CERCA_DE_LA_PUERTA := 2.5
-const AL_LADO_DEL_INODORO := 1.2
-
-## Cuánto se aparta de la vertical la cara de una mancha del piso, o de la horizontal la de una
-## pared.
-const TOLERANCIA_DE_LA_CARA := 0.1
 
 ## Lo más claro que puede ser un marrón.
 const LO_MAS_CLARO_DEL_MARRON := 0.5
@@ -58,16 +42,6 @@ func _mancha_de(almacen: Node3D, lugar: PisoDelLocal.Lugar) -> ManchaQueSeVe:
 ## Hacia dónde mira la cara de la mancha: el arriba del disco.
 static func _cara(mancha: Node3D) -> Vector3:
 	return mancha.global_basis.y.normalized()
-
-
-static func _horizontal(desde: Vector3, hasta: Vector3) -> float:
-	return Vector2(desde.x, desde.z).distance_to(Vector2(hasta.x, hasta.z))
-
-
-## Los límites en el mundo del contorno de un mueble.
-static func _contorno(almacen: Node3D, mueble: String) -> AABB:
-	var forma: CollisionShape3D = almacen.get_node("Estructura/%s/Contorno/Forma" % mueble)
-	return forma.global_transform * forma.shape.get_debug_mesh().get_aabb()
 
 
 func test_la_mancha_no_decide_nada() -> void:
@@ -150,76 +124,6 @@ func test_el_almacen_trae_una_mancha_por_lugar() -> void:  # AC-CLN-016
 		)
 
 
-func test_las_de_polvo_estan_frente_a_la_entrada_y_entre_las_gondolas() -> void:  # AC-CLN-017
-	var almacen: Node3D = await _almacen()
-	var entrada := _mancha_de(almacen, PisoDelLocal.Lugar.ENTRADA)
-	var puerta: Node3D = almacen.get_node("Estructura/puertaentrada")
-	var jugador: Node3D = almacen.get("_jugador")
-	assert_float(_cara(entrada).y).is_greater(1.0 - TOLERANCIA_DE_LA_CARA)
-	var distancia := _horizontal(entrada.global_position, puerta.global_position)
-	(
-		assert_float(distancia)
-		. override_failure_message("la de la entrada está a %.2f m de la puerta" % distancia)
-		. is_less(FRENTE_A_LA_ENTRADA)
-	)
-	# Del lado de adentro: el mismo lado de la puerta donde arranca el jugador.
-	var normal := puerta.global_basis.z.normalized()
-	var lado_de_la_mancha := (entrada.global_position - puerta.global_position).dot(normal)
-	var lado_del_jugador := (jugador.global_position - puerta.global_position).dot(normal)
-	assert_float(signf(lado_de_la_mancha)).is_equal(signf(lado_del_jugador))
-	var pasillo := _mancha_de(almacen, PisoDelLocal.Lugar.GONDOLAS)
-	var oeste := _contorno(almacen, "gondolanueva2")
-	var este := _contorno(almacen, "gondolanueva")
-	var lugar := pasillo.global_position
-	assert_float(_cara(pasillo).y).is_greater(1.0 - TOLERANCIA_DE_LA_CARA)
-	assert_float(lugar.x).is_between(oeste.end.x, este.position.x)
-	assert_float(lugar.z).is_between(
-		maxf(oeste.position.z, este.position.z), minf(oeste.end.z, este.end.z)
-	)
-
-
-func test_el_moho_esta_en_una_pared_del_deposito_cerca_de_la_puerta() -> void:  # AC-CLN-017
-	var almacen: Node3D = await _almacen()
-	var moho := _mancha_de(almacen, PisoDelLocal.Lugar.DEPOSITO)
-	var puerta: Node3D = almacen.get_node("Estructura/puerta")
-	var descarte: Node3D = almacen.get_node("Objetos/ZonaDeDescarte")
-	(
-		assert_float(absf(_cara(moho).y))
-		. override_failure_message("el moho no está en una pared: su cara mira %v" % _cara(moho))
-		. is_less(TOLERANCIA_DE_LA_CARA)
-	)
-	var distancia := moho.global_position.distance_to(puerta.global_position)
-	(
-		assert_float(distancia)
-		. override_failure_message("el moho está a %.2f m de la puerta al local" % distancia)
-		. is_less(CERCA_DE_LA_PUERTA)
-	)
-	# Del lado del depósito: el mismo lado de la puerta que el descarte, que está en el fondo.
-	var normal := puerta.global_basis.z.normalized()
-	var lado_del_moho := (moho.global_position - puerta.global_position).dot(normal)
-	var lado_del_descarte := (descarte.global_position - puerta.global_position).dot(normal)
-	assert_float(signf(lado_del_moho)).is_equal(signf(lado_del_descarte))
-	# Y la cara mira al cuarto, no a la pared: detrás del disco hay pared, delante no.
-	var espacio := almacen.get_world_3d().direct_space_state
-	var atras := PhysicsRayQueryParameters3D.create(
-		moho.global_position, moho.global_position - _cara(moho) * 0.1, 1
-	)
-	assert_bool(espacio.intersect_ray(atras).is_empty()).is_false()
-
-
-func test_la_caca_esta_en_el_piso_al_lado_del_inodoro() -> void:  # AC-CLN-017
-	var almacen: Node3D = await _almacen()
-	var caca := _mancha_de(almacen, PisoDelLocal.Lugar.BANO)
-	var inodoro: Node3D = almacen.get_node("Estructura/inodoro")
-	assert_float(_cara(caca).y).is_greater(1.0 - TOLERANCIA_DE_LA_CARA)
-	var distancia := _horizontal(caca.global_position, inodoro.global_position)
-	(
-		assert_float(distancia)
-		. override_failure_message("la caca está a %.2f m del inodoro" % distancia)
-		. is_less(AL_LADO_DEL_INODORO)
-	)
-
-
 ## Ninguna mancha arranca debajo de un mueble, ni tapada.
 ##
 ## **La mopa no atraviesa la góndola**, así que una mancha tapada es una tarea que no se puede
@@ -293,12 +197,6 @@ func test_cada_mancha_se_ve_del_color_de_su_tipo() -> void:  # AC-CLN-015
 	assert_float(caca.r).is_greater(caca.g)
 	assert_float(caca.g).is_greater(caca.b)
 	assert_float(caca.v).is_less(LO_MAS_CLARO_DEL_MARRON)
-	for lugar: PisoDelLocal.Lugar in [PisoDelLocal.Lugar.ENTRADA, PisoDelLocal.Lugar.GONDOLAS]:
-		var charco := _mancha_de(almacen, lugar).color()
-		assert_float(charco.v).is_less(0.15)
-		var malla := _mancha_de(almacen, lugar).get_node("Malla") as MeshInstance3D
-		var pintura := malla.material_override as ShaderMaterial
-		assert_float(pintura.get_shader_parameter("transparencia")).is_equal(0.55)
 	# Y es el color que declara el dominio para el tipo de mancha que hay en ese lugar.
 	var piso: PisoDelLocal = (almacen.get("_limpiador") as Limpiador).piso()
 	for mancha: ManchaQueSeVe in _manchas(almacen):

@@ -73,18 +73,20 @@ func _ready() -> void:
 	top_level = true
 
 
-## El contrato de «con esto se puede interactuar» es este método más el grupo del `.tscn`.
-##
-## Devuelve `null` porque una puerta no se levanta: si contestara un objeto, el clic de agarrar se
-## llevaría la hoja en la mano en vez de abrirla.
+## Consume el clic izquierdo sin mover la hoja ni soltar lo que se lleva en la mano.
 func interactuar() -> ObjetoDelAlmacen:
+	return null
+
+
+## Abrir, cerrar o intentar una puerta trabada corresponde al clic derecho.
+## El mismo gesto emite el aviso que dispara su sonido.
+func usar() -> void:
 	if not _puerta.alternar():
 		(porton_trabado if traba == Traba.PORTON else puerta_trabada).emit(self)
 	elif _puerta.abierta():
 		puerta_abierta.emit(self)
 	else:
 		puerta_cerrada.emit(self)
-	return null
 
 
 ## En qué estado está.

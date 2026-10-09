@@ -93,7 +93,7 @@ const GONDOLA_DEL_DEPOSITO := "la góndola del depósito"
 
 ## Un tramo libre de la pared de la fachada, lejos de la ventanilla, de las góndolas y de la puerta
 ## de entrada.
-const PARED_LIBRE := Vector2(-5.0, 7.871)
+const PARED_LIBRE := Vector2(-1.9, 6.28)
 
 ## Hacia dónde mira quien suelta algo contra una pared, en grados: 40° abajo inclina lo que se
 ## lleva, y eso le da fondo.
@@ -219,7 +219,7 @@ func _caja_contra_el_mostrador(almacen: Node3D, caja: Node3D, metida: float) -> 
 	var limites := mostrador.global_transform * mostrador.get_aabb()
 	var suelo: CollisionShape3D = almacen.get_node("Estructura/SueloSolido/Local")
 	var piso := suelo.global_position.y + (suelo.shape as BoxShape3D).size.y / 2.0
-	var frente := Vector3(limites.get_center().x + limites.size.x / 4.0, piso, limites.position.z)
+	var frente := Vector3(limites.get_center().x - limites.size.x / 4.0, piso, limites.position.z)
 	caja.global_basis = Basis.IDENTITY
 	caja.global_position = frente + Vector3(0.0, MEDIA_CAJA, metida - MEDIA_CAJA)
 	caja.call("quedarse_quieta")
@@ -370,12 +370,12 @@ func _frente_a(almacen: Node3D, cara: String, parado: float) -> Array:
 	var limites := mostrador.global_transform * mostrador.get_aabb()
 	match cara:
 		CARA_DE_AFUERA_DEL_MOSTRADOR:
-			var x := limites.get_center().x + limites.size.x / 4.0
+			var x := limites.get_center().x - limites.size.x / 4.0
 			return [Vector3(x, alto, limites.position.z - parado), Vector3.BACK]
 		CARA_DE_ADENTRO_DE_LA_L:
 			var brazo: CollisionShape3D = almacen.get_node(MOSTRADOR + "/StaticBody3D/Volumen")
 			var fondo: float = brazo.global_position.z + (brazo.shape as BoxShape3D).size.z / 2.0
-			return [Vector3(limites.end.x - 0.6, alto, fondo + parado), Vector3.FORWARD]
+			return [Vector3(limites.position.x + 0.6, alto, fondo + parado), Vector3.FORWARD]
 		PARED_DE_LA_FACHADA:
 			return [Vector3(PARED_LIBRE.x, alto, PARED_LIBRE.y - parado), Vector3.BACK]
 	var gondola: MeshInstance3D = almacen.get_node("Estructura/gondola_deposito03_001")
@@ -490,7 +490,7 @@ func _caja_contra_el_mouse(almacen: Node3D, caja: Node3D, metida: float) -> void
 	var tapa := (mostrador.global_transform * mostrador.get_aabb()).end.y
 	caja.global_basis = Basis.IDENTITY
 	caja.global_position = Vector3(
-		suyo.end.x + MEDIA_CAJA - metida, tapa + MEDIA_CAJA, suyo.get_center().z
+		suyo.position.x - MEDIA_CAJA + metida, tapa + MEDIA_CAJA, suyo.get_center().z
 	)
 	caja.call("quedarse_quieta")
 	await get_tree().physics_frame
@@ -951,7 +951,7 @@ func test_la_caja_se_sigue_apoyando_arriba_del_mostrador() -> void:  # AC-PLY-02
 	var limites := mostrador.global_transform * mostrador.get_aabb()
 	var brazo: CollisionShape3D = almacen.get_node(MOSTRADOR + "/StaticBody3D/Volumen")
 	var tapa := Vector3(
-		limites.get_center().x + limites.size.x / 4.0, limites.end.y, brazo.global_position.z
+		limites.get_center().x - limites.size.x / 4.0, limites.end.y, brazo.global_position.z
 	)
 	await _soltar_la_caja_sobre(almacen, caja, CARA_DE_AFUERA_DEL_MOSTRADOR, tapa)
 	assert_str(_apoyo_de(almacen, caja)).contains("EscritorioComputadora")
@@ -994,15 +994,20 @@ func test_la_unidad_se_sigue_dejando_adentro_de_la_heladera() -> void:  # AC-PLY
 	var almacen: Node3D = await _almacen()
 	var jugador: CharacterBody3D = almacen.get("_jugador")
 	var heladera: MeshInstance3D = almacen.get_node("Estructura/heladeranueva")
+	var puerta: Node3D = heladera.get_node("puerta_heladera_0/CuerpoDeLaHoja")
+	puerta.call("usar")
+	for cuadro in 60:
+		await get_tree().physics_frame
+	assert_bool(puerta.call("puerta").abierta()).is_true()
 	var limites := heladera.global_transform * heladera.get_aabb()
 	var unidad := _unidad_en_la_mano(almacen)
 	assert_object(unidad).is_not_null()
 	if unidad == null:
 		return
 	jugador.global_position = Vector3(
-		limites.end.x + PARADO_DEL_SOLIDO, jugador.global_position.y, limites.get_center().z
+		limites.get_center().x, jugador.global_position.y, limites.end.z + PARADO_DEL_SOLIDO
 	)
-	_mirar(jugador, -PI / 2.0, 0.0)
+	_mirar(jugador, 0.0, 0.0)
 	await get_tree().physics_frame
 	var estante: CollisionShape3D = heladera.get_node("StaticBody3D/Volumen12")
 	_apuntar(jugador, estante.global_position + Vector3.UP * 0.1)

@@ -14,6 +14,16 @@
 extends RefCounted
 
 
+## El acceso a los productos refrigerados requiere abrir sus hojas físicas.
+static func abrir_heladeras(almacen: Node3D) -> void:
+	for numero in 2:
+		var mueble: String = ["heladeranueva", "heladeranueva_001"][numero]
+		var ruta := "Estructura/%s/puerta_heladera_%d/CuerpoDeLaHoja" % [mueble, numero]
+		almacen.get_node(ruta).call("usar")
+	for cuadro in 60:
+		await almacen.get_tree().physics_frame
+
+
 ## La noche con esos faltantes: cada caja llena, y la góndola completa salvo lo que falta.
 static func abrir_con_faltantes(almacen: Node3D, faltantes: Dictionary[Producto.Id, int]) -> void:
 	var puesto: Node3D = almacen.get("_reposicion_manual")

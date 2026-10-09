@@ -5,7 +5,17 @@ const AperturaConLugar := preload("res://test/escenas/apertura_con_lugar.gd")
 
 
 func test_soltar_hacia_la_gondola_deja_el_producto_visible_y_recuperable() -> void:
-	for ojo: Vector3 in [Vector3(2.6, 1.7, 0), Vector3(0, 1.7, 0), Vector3(1.3, 1.7, 3.85)]:
+	var referencia: Node3D = auto_free(ALMACEN.instantiate())
+	var malla := referencia.get_node("Estructura/gondolanueva") as MeshInstance3D
+	var limites := malla.transform * malla.get_aabb()
+	var centro := limites.get_center()
+	var destino := Vector3(centro.x, 1.7, centro.z)
+	var ojos: Array[Vector3] = [
+		Vector3(limites.end.x + 0.6, 1.7, centro.z),
+		Vector3(limites.position.x - 0.6, 1.7, centro.z),
+		Vector3(centro.x, 1.7, limites.end.z + 1.0),
+	]
+	for ojo: Vector3 in ojos:
 		var almacen: Node3D = auto_free(ALMACEN.instantiate())
 		add_child(almacen)
 		AperturaConLugar.abrir_con_todo_el_lugar(almacen)
@@ -14,7 +24,7 @@ func test_soltar_hacia_la_gondola_deja_el_producto_visible_y_recuperable() -> vo
 		var camara: Camera3D = jugador.get_node("Giro/Camara")
 		var agarre: Agarre = jugador.get("agarre")
 		jugador.global_position = ojo - Vector3.UP * 1.7
-		camara.look_at(Vector3(1.3, 1.7, 0))
+		camara.look_at(destino)
 		await get_tree().physics_frame
 		for producto in Catalogo.todos():
 			almacen.get("_reposicion_manual").retirar(producto.id)
@@ -57,7 +67,7 @@ func test_soltar_hacia_la_gondola_deja_el_producto_visible_y_recuperable() -> vo
 			assert_bool(cuerpo.is_visible_in_tree()).is_true()
 			assert_bool(agarre.pedir_agarrar(cuerpo.datos, cuerpo)).is_true()
 			almacen.get("_reposicion_manual").pedir_colocar(producto.id)
-			camara.look_at(Vector3(1.3, 1.7, 0))
+			camara.look_at(destino)
 		almacen.queue_free()
 		await get_tree().process_frame
 

@@ -8,7 +8,7 @@ const OBJETO_SUELTO := preload("res://src/escenas/objetos/objeto_agarrable.tscn"
 
 ## Dónde nace el objeto suelto que crea un caso: un punto libre del piso del local. Es su lugar de
 ## origen, adonde la red de seguridad lo puede devolver.
-const LIBRE_EN_EL_LOCAL := Vector3(0.0, 0.2, 3.0)
+const LIBRE_EN_EL_LOCAL := Vector3(2.7, 0.2, 2.7)
 
 ## La hoja que se mide: la del paso al fondo, que abre hacia el cuarto de atrás.
 const HOJA := "Estructura/puerta"
@@ -115,7 +115,7 @@ func _adentro_de_la_hoja(cuerpo: PhysicsBody3D, hoja: PhysicsBody3D) -> bool:
 
 
 func _girar(hoja: Node3D) -> void:
-	_cuerpo_de(hoja).call("interactuar")
+	_cuerpo_de(hoja).call("usar")
 	for cuadro in CUADROS_DEL_GIRO:
 		await get_tree().physics_frame
 
@@ -180,7 +180,7 @@ func test_al_quedar_quieta_no_queda_nada_adentro_de_la_hoja() -> void:  # AC-PLY
 	var cuerpo := _cuerpo_de(hoja)
 	var quieta := [false]
 	cuerpo.connect("hoja_quieta", func(_hoja: PhysicsBody3D) -> void: quieta[0] = true)
-	cuerpo.call("interactuar")
+	cuerpo.call("usar")
 	while not cuerpo.call("puerta").angulo() > Puerta.ANGULO_ABIERTA * 0.9:
 		await get_tree().physics_frame
 	unidad.global_position = punto + Vector3.UP * 0.1
