@@ -158,6 +158,11 @@ cada «+» o «−» que cambia una fila y con cada venta cobrada. El cierre DEB
 ese instante (BR-SHF-007 de [`shift-cycle`](../shift-cycle/shift-cycle.md)): una noche sin
 ventas con la planilla en cero cuenta como cumplida recién ahí.
 
+En la primera jornada, registrar DEBE permanecer pendiente hasta completar las compras de
+Martín y Tiago, con todos sus productos y sus tickets, y anotar exactamente todas las unidades
+vendidas. Registrar sólo la primera compra o anticipar la segunda NO DEBE cumplir la tarea.
+Si alguna compra vence sin completarse, registrar NO DEBE cumplirse, tampoco al cerrar.
+
 ### BR-STK-023 — Cada producto declara su sonoridad
 
 El sistema DEBE declarar una sonoridad (ver [`ambience`](../ambience/ambience.md)) para cada
@@ -423,6 +428,7 @@ total es igual al de lo vendido y registrar no se cumple.
 DADO una jornada que se abre ENTONCES registrar arranca sin cumplir. DADO una noche
 que cobró 2 unidades de un producto y 1 de otro CUANDO se anotan esas 3 unidades ENTONCES
 registrar se cumple con el último gesto, y no antes.
+En la primera jornada se exige además completar ambos pedidos (AC-STK-056).
 
 ### AC-STK-025 — Una venta o una unidad de más la deshacen *(verifica BR-STK-022)*
 
@@ -622,8 +628,8 @@ inferior no está más hacia el pasillo que el frente de los estantes superiores
 
 ### AC-STK-052 — El cierre cuenta la planilla de ese instante *(verifica BR-STK-022)*
 
-DADO una noche sin ventas y sin gestos en la planilla CUANDO cierra ENTONCES registrar cuenta
-como cumplida. Antes del cierre, una planilla en cero sin ventas NO completa la tarea ni suma
+DADO una noche posterior a la primera sin ventas y sin gestos en la planilla CUANDO cierra
+ENTONCES registrar cuenta como cumplida. Antes del cierre, una planilla en cero sin ventas NO completa la tarea ni suma
 una tarea al contador. DADO una noche con la planilla igual a lo vendido CUANDO se cobra una venta más
 y la noche cierra sin anotarla ENTONCES registrar no cuenta.
 
@@ -648,6 +654,15 @@ DADO una unidad retirada de góndola CUANDO se entrega en una compra parcial y �
 ENTONCES deja de estar registrada afuera y sale del inventario una sola vez, sin sumar una venta.
 DADO esa unidad en una compra completa ENTONCES el casillero sigue vacío y reponer incompleta
 hasta rellenarlo. La planilla cuenta sólo compras completas, nunca entregas parciales.
+
+### AC-STK-056 — Registro exige ambas ventas de la primera noche *(verifica BR-STK-022)*
+
+DADO la primera jornada CUANDO se registra la venta completa de Martín pero Tiago aún no
+compró ENTONCES registrar sigue pendiente. DADO todos los pedidos anotados anticipadamente
+ENTONCES registrar sigue pendiente hasta que ambas compras estén vendidas con productos y
+ticket. CUANDO ambas ventas se completan y sus unidades están exactamente anotadas ENTONCES
+registrar se cumple. Una unidad de más o de menos la descumple. Si una compra vence incompleta,
+registrar sigue pendiente, incluso al cerrar y aunque la planilla coincida con lo vendido.
 
 ## No objetivos
 

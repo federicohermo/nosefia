@@ -181,3 +181,7 @@ Los criterios de personajes en un mundo 3D ejercen su presencia con la interfaz 
 la orientación fija o el eje permitido de seguimiento de cámara y la oclusión, incluido el corte inferior de los bustos
 desde los laterales accesibles. Los avisos persistentes nombran el gesto exacto que
 los retira; no heredan por defecto el temporizador de otros tipos.
+
+En tareas que registran ventas, distinguir la coincidencia con lo vendido hasta ahora del
+cumplimiento de todos los pedidos exigidos por la jornada. Ejercer una sola venta, registros
+anticipados y compras vencidas, tanto durante la noche como al cierre.

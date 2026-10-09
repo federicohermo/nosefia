@@ -69,13 +69,14 @@ func _ticket(almacen: Node3D, pedido: Venta) -> ObjetoAgarrable:
 	return null
 
 
-# AC-CTR-039, AC-CTR-041, AC-STK-054
+# AC-CTR-039, AC-CTR-041, AC-STK-054, AC-STK-056
 func test_las_dos_compras_fisicas_registran_una_vez_y_se_van_tras_despedirse() -> void:
 	var almacen := await _abrir()
 	var puesto: Puesto = almacen.get_node("Estructura/Ventanilla")
 	var reloj: RelojDelTurno = almacen.get("_reloj")
 	var atenciones: Ventanilla = almacen.get("_atenciones")
 	var agarre: Agarre = almacen.get("_agarre")
+	var computadora: ComputadoraDeEscritorio = almacen.get("_computadora")
 	var compras: Array[bool] = []
 	atenciones.compra_realizada.connect(func() -> void: compras.append(true))
 	puesto.abrir()
@@ -104,6 +105,10 @@ func test_las_dos_compras_fisicas_registran_una_vez_y_se_van_tras_despedirse() -
 		var pedido := atendida.comprador().pedido()
 		for producto in pedido.productos():
 			for _unidad in pedido.unidades_de(producto):
+				computadora.pedir_sumar(producto)
+		assert_bool(reloj.obligatoria(Tarea.Tipo.REGISTRAR).completada()).is_false()
+		for producto in pedido.productos():
+			for _unidad in pedido.unidades_de(producto):
 				almacen.get("_reposicion_manual").retirar(producto.id)
 				var cuerpo := agarre.cuerpo_sostenido()
 				var identidad := agarre.manos().sostenido()
@@ -119,6 +124,9 @@ func test_las_dos_compras_fisicas_registran_una_vez_y_se_van_tras_despedirse() -
 		_pulsar(almacen)
 		assert_object(agarre.manos().sostenido()).is_null()
 		assert_bool(atendida.vendida()).is_true()
+		assert_bool(reloj.obligatoria(Tarea.Tipo.REGISTRAR).completada()).is_equal(
+			intervalo == 360.0
+		)
 		assert_bool(atendida.despachada()).is_false()
 		var despedida := atendida.dialogo()
 		var textos: Array[String] = []
@@ -151,9 +159,8 @@ func test_las_dos_compras_fisicas_registran_una_vez_y_se_van_tras_despedirse() -
 	]:
 		var producto := Catalogo.de(fila[0])
 		assert_int(atenciones.tarea().vendidas_de(producto)).is_equal(fila[1])
-		for _unidad: int in int(fila[1]):
-			registro.sumar(producto)
 	assert_bool(registro.coincide()).is_true()
+	assert_bool(reloj.obligatoria(Tarea.Tipo.REGISTRAR).completada()).is_true()
 
 
 # AC-CTR-040, AC-STK-055, AC-PLY-079

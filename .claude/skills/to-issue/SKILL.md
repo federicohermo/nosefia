@@ -337,3 +337,7 @@ oclusión. En un busto,
 definir qué geometría oculta su corte inferior y revisar los laterales desde las posiciones
 accesibles: un billboard que también se inclina revela el recorte. Para avisos, distinguir
 duración temporal de persistencia hasta una interacción y nombrar el gesto que los retira.
+
+Cuando una tarea compara un registro con ventas, definir si exige las ventas realizadas hasta
+ese momento o todos los pedidos de la jornada, y qué ocurre si un comprador vence sin comprar.
+La coincidencia parcial no implica que la tarea completa deba contarse como cumplida.
