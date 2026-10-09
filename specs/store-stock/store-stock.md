@@ -1,7 +1,7 @@
 ---
 schema_version: 1
 capability_id: CAP-STK
-status: ratified
+status: draft
 owner: por definir
 provenance: GDD «Reponer» y «Registrar»; fichas «7. Tarea: Registro de productos vendidos», «8. Tarea: Reposición» y «5. Formas de interacción con objetos»; base «Productos y cajas contenedoras»; migración de los specs 005, 008, 033, 042, 047
 ---
@@ -297,6 +297,14 @@ afuera y descontar una del depósito. La caja y la góndola DEBEN seguir como es
 unidad ya no se devuelve ni se coloca. Una unidad no registrada afuera NO DEBE cambiar el
 inventario. La jornada siguiente DEBE abrir con el inventario de esa noche (BR-STK-026).
 
+### BR-STK-037 — La venta física retira identidades una sola vez
+
+CUANDO se completa una compra física, el sistema DEBE retirar definitivamente sus unidades
+registradas afuera, una sola vez por identidad. NO DEBE volver a descontar el pedido completo.
+Una recepción parcial NO DEBE retirarlas del inventario: al recuperarlas se DEBEN poder devolver
+o colocar. Una unidad vendida NO DEBE poder registrarse afuera otra vez.
+Vender una unidad retirada de góndola NO DEBE rellenar su casillero ni cumplir reponer.
+
 ## Criterios de aceptación
 
 ### AC-STK-001 — La identidad manda *(verifica BR-STK-001)*
@@ -482,7 +490,7 @@ DADO la jornada 1 que se abre ENTONCES faltan 5 Actroncito, 6 Coracola, 2 Maroli
 
 ### AC-STK-035 — Se vende sin quitarle a la reposición *(verifica BR-STK-027)*
 
-DADO cada jornada, de la 1 a la 5, CUANDO se les cobra a todos sus compradores apenas abre
+DADO cada jornada, de la 1 a la 5, CUANDO se completan todas sus compras por el recorrido de su jornada
 ENTONCES ningún cobro se rechaza, y después se puede reponer todo lo que falta y dar reponer por
 cumplida.
 
@@ -626,6 +634,19 @@ se cumple y la unidad ya no está afuera ni se puede colocar o devolver. DADO un
 sacada de su caja CUANDO se tira ENTONCES la caja conserva su contenido anterior al tiro.
 DADO una unidad no registrada afuera CUANDO se intenta desechar ENTONCES devuelve false y
 no cambia el inventario.
+
+### AC-STK-054 — Salida definitiva sin doble descuento *(verifica BR-STK-037, BR-STK-028)*
+
+DADO una caja con ocho unidades CUANDO se retira una y completa su compra física ENTONCES
+la caja conserva siete, el depósito baja una y esa identidad ya no está afuera.
+Repetir la venta o intentar registrar esa identidad afuera no cambia cantidades.
+
+### AC-STK-055 — Recuperar y reponer *(verifica BR-STK-037, BR-STK-033, BR-STK-030)*
+
+DADO una unidad retirada de góndola CUANDO se entrega en una compra parcial y ésta vence
+ENTONCES conserva su identidad y sigue registrada afuera. Se puede devolver o colocar.
+DADO esa unidad en una compra completa ENTONCES el casillero sigue vacío y reponer incompleta
+hasta rellenarlo. La planilla cuenta sólo compras completas, nunca entregas parciales.
 
 ## No objetivos
 

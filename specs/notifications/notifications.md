@@ -1,7 +1,7 @@
 ---
 schema_version: 1
 capability_id: CAP-NTF
-status: ratified
+status: draft
 owner: por definir
 provenance: GDD «Notificaciones»; decisiones del issue 309
 ---
@@ -67,6 +67,12 @@ usa la figura con exclamación y el lector usa la cruz del diseño. MIENTRAS com
 ventanilla u otra interfaz de la jornada están abiertas, incluyendo los diálogos, el cartel
 DEBE verse encima y DEBE dejar pasar el clic. El menú
 de pausa DEBE dibujarse por encima del cartel.
+
+### BR-NTF-008 — El comprador que vence avisa su salida
+
+CUANDO una compra vence, el sistema DEBE mostrar «El cliente se cansó de esperar» una vez por
+identidad y jornada. DEBE usar la duración, pausa, orden y deduplicación de los demás avisos.
+Una compra completa NO DEBE producirlo. El cierre DEBE olvidar las identidades de salida.
 
 ## Criterios de aceptación
 
@@ -134,10 +140,17 @@ la pila. Reanudar conserva programa, selección y aviso; no reabre las listas au
 comprueba con capturas anteriores a Esc y durante pausa, a ambas resoluciones; comparar sólo los
 índices de dibujo no prueba el orden de las ventanas.
 
+### AC-NTF-011 — Vencimiento, duración y renovación *(verifica BR-NTF-008, BR-NTF-003, BR-NTF-004, BR-NTF-005, BR-NTF-006)*
+
+DADO una compra vencida CUANDO se avisa la salida ENTONCES aparece su texto y símbolo, primero.
+Repetir esa identidad no renueva. A los 2,9 segundos sigue; a los 3,0 desaparece.
+La pausa conserva el resto. Otra identidad renueva el tipo sin duplicarlo ni renovar los otros.
+Cerrar y comenzar otra jornada permite avisar otra vez la misma identidad.
+
 ## No objetivos
 
 - Esta capacidad NO decide cuándo llegan o se despachan compradores ni acepta lecturas.
-- Esta capacidad NO incorpora abandono del comprador, hipótesis ni logros.
+- Esta capacidad NO decide el abandono del comprador ni incorpora hipótesis o logros.
 - Esta capacidad NO guarda avisos entre sesiones.
 
 ## Contratos
