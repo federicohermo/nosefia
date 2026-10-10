@@ -1,7 +1,7 @@
 ---
 schema_version: 1
 capability_id: CAP-PLY
-status: draft
+status: ratified
 owner: por definir
 provenance: GDD «Controles»; fichas «8. Tarea: Reposición», «Notas» e «Interfaces virtuales durante la jornada»; decisiones de #369, #370 y #373; migración de los specs 003, 004, 006, 014, 034, 043
 ---
