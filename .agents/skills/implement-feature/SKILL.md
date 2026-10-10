@@ -130,6 +130,14 @@ una partida nueva en el navegador, observando la consola también después de sa
 El humo de arranque termina antes de ese recorrido. Un build local no exige publicar en Vercel:
 el límite de tamaño de publicación no justifica quitar arte necesario.
 
+**El import frío de una copia de export puede retener recursos de plugins del editor.**
+En #373, los 111 recursos retenidos eran de `addons/`; el mismo árbol importó sin errores ni
+fugas al desactivar sólo `editor_plugins` en la copia externa. Antes de aislarlos, identificá
+los recursos con `--verbose` y conservá ambos intentos. No se modifica el checkout, el preset
+versionado ni el juego para eludir el diagnóstico. El paquete resultante todavía exige el
+chequeo externo, su marcador final y la interacción en Chrome sin errores; no se ignoran
+errores de scripts ni dependencias faltantes.
+
 **Los recursos de diálogo se verifican también dentro del paquete exportado.** En #339, los
 tests y las capturas del checkout mostraban las nueve entradas, pero el recurso binario del
 PCK conservaba sólo los recordatorios: las conversaciones quedaban vacías. Ejecutá el chequeo
