@@ -1,0 +1,568 @@
+{
+  "base": "e6a109833690c064c228cd04d9bc2d8c2ecf92c6",
+  "primera_publicacion": "4c556e372af5cd6e08842bfa8f857588a9542132",
+  "nota": "Los hashes publicados corresponden a blobs Git; los locales son procedencia, no sustituyen lo descargable. El manifiesto se excluye de su propio hash.",
+  "archivos": [
+    {
+      "archivo": "acomodador.json",
+      "publicado": {
+        "bytes": 2506,
+        "sha256": "2736127ba3f7baa9fd1a14f90f63a47860335c822201c8be11996f9866860c48"
+      },
+      "procedencia_local": {
+        "bytes": 2648,
+        "sha256": "6565e42427bba162bbc504244173f546ecbc8f4394eed222d1003119db2eef3b"
+      }
+    },
+    {
+      "archivo": "base-arranque.png",
+      "publicado": {
+        "bytes": 1381386,
+        "sha256": "189df4def655e476f3a29fc2ff18b948291c0fd263cc75a468fa7940f07d5ae2"
+      },
+      "procedencia_local": {
+        "bytes": 1381386,
+        "sha256": "189df4def655e476f3a29fc2ff18b948291c0fd263cc75a468fa7940f07d5ae2"
+      }
+    },
+    {
+      "archivo": "base-desde-arranque-hacia-entrada.png",
+      "publicado": {
+        "bytes": 1284691,
+        "sha256": "30162fa44321872e8d4e059c32dbed8c5780b77246f2084bca0300bef29484c1"
+      },
+      "procedencia_local": {
+        "bytes": 1284691,
+        "sha256": "30162fa44321872e8d4e059c32dbed8c5780b77246f2084bca0300bef29484c1"
+      }
+    },
+    {
+      "archivo": "base-escena.json",
+      "publicado": {
+        "bytes": 671747,
+        "sha256": "0ab767592ecea35df7aeec67187d3986898b264b98937d3a563ef298345abfd5"
+      },
+      "procedencia_local": {
+        "bytes": 671747,
+        "sha256": "0ab767592ecea35df7aeec67187d3986898b264b98937d3a563ef298345abfd5"
+      }
+    },
+    {
+      "archivo": "base-glb.json",
+      "publicado": {
+        "bytes": 4668,
+        "sha256": "f875fc4bdf9fb88467db4439dfc20f19a999bd4faa2c9450c620900a0a56aca5"
+      },
+      "procedencia_local": {
+        "bytes": 4668,
+        "sha256": "f875fc4bdf9fb88467db4439dfc20f19a999bd4faa2c9450c620900a0a56aca5"
+      }
+    },
+    {
+      "archivo": "base-posicion-y-sombras.png",
+      "publicado": {
+        "bytes": 1280809,
+        "sha256": "c4c627615119b42db251e66518871966b76cdf93b2ad13851bce6604d83ab5ee"
+      },
+      "procedencia_local": {
+        "bytes": 1280809,
+        "sha256": "c4c627615119b42db251e66518871966b76cdf93b2ad13851bce6604d83ab5ee"
+      }
+    },
+    {
+      "archivo": "blend-base.json",
+      "publicado": {
+        "bytes": 1024487,
+        "sha256": "adc8b96748ebace838ad1f557f15264434d5fe258308844ffd862649e549b428"
+      },
+      "procedencia_local": {
+        "bytes": 1083449,
+        "sha256": "d0620396e1776ed62f421244d1622bb59d1c0b3a083692c029ca07afb94bb6e9"
+      }
+    },
+    {
+      "archivo": "blend-candidato.json",
+      "publicado": {
+        "bytes": 1024488,
+        "sha256": "3e75a7a2592d2b30b683516d64c0024418e32e4f9c144663639d253dfff2e730"
+      },
+      "procedencia_local": {
+        "bytes": 1083450,
+        "sha256": "f50aad6e9a5a052a6e7a7f3a17e3c0bc7f4d98d934f432209414e6716d9989ed"
+      }
+    },
+    {
+      "archivo": "blend-final.json",
+      "publicado": {
+        "bytes": 1024488,
+        "sha256": "3e75a7a2592d2b30b683516d64c0024418e32e4f9c144663639d253dfff2e730"
+      },
+      "procedencia_local": {
+        "bytes": 1083450,
+        "sha256": "f50aad6e9a5a052a6e7a7f3a17e3c0bc7f4d98d934f432209414e6716d9989ed"
+      }
+    },
+    {
+      "archivo": "bolsas.json",
+      "publicado": {
+        "bytes": 546,
+        "sha256": "ac788dbe1a688e9bc88104a10575a26a70e54f6a8125c8bd8912aa0b7b2ea01b"
+      },
+      "procedencia_local": {
+        "bytes": 546,
+        "sha256": "ac788dbe1a688e9bc88104a10575a26a70e54f6a8125c8bd8912aa0b7b2ea01b"
+      }
+    },
+    {
+      "archivo": "candidato-apoyo.json",
+      "publicado": {
+        "bytes": 1024,
+        "sha256": "1b18c95912f99a91cec327f5d81e0cbdbea3521efc596443b73f8607fcecc864"
+      },
+      "procedencia_local": {
+        "bytes": 1024,
+        "sha256": "1b18c95912f99a91cec327f5d81e0cbdbea3521efc596443b73f8607fcecc864"
+      }
+    },
+    {
+      "archivo": "candidato-escena.json",
+      "publicado": {
+        "bytes": 671751,
+        "sha256": "37ab5336eaadcbaddd5d9330f751c7beb370ca6e89a11b47b463c02f52d1f902"
+      },
+      "procedencia_local": {
+        "bytes": 671751,
+        "sha256": "37ab5336eaadcbaddd5d9330f751c7beb370ca6e89a11b47b463c02f52d1f902"
+      }
+    },
+    {
+      "archivo": "comparacion-escena.json",
+      "publicado": {
+        "bytes": 2048,
+        "sha256": "32e240d54c2ca3943eba591adb25654fb1e8d7e21fc0b40064a9914b90a0c48f"
+      },
+      "procedencia_local": {
+        "bytes": 2048,
+        "sha256": "32e240d54c2ca3943eba591adb25654fb1e8d7e21fc0b40064a9914b90a0c48f"
+      }
+    },
+    {
+      "archivo": "comparacion-glb.json",
+      "publicado": {
+        "bytes": 219,
+        "sha256": "79abde0c8fd6b45a30a7fe1cba2d5fc749c2794c5a6b0b78886984710f6f5009"
+      },
+      "procedencia_local": {
+        "bytes": 230,
+        "sha256": "dfd6f622423fac0adb8628a1ed5074f6a277a8f24151f112820b2b0b8f0d9b5c"
+      }
+    },
+    {
+      "archivo": "final-apoyo.json",
+      "publicado": {
+        "bytes": 1024,
+        "sha256": "1b18c95912f99a91cec327f5d81e0cbdbea3521efc596443b73f8607fcecc864"
+      },
+      "procedencia_local": {
+        "bytes": 1024,
+        "sha256": "1b18c95912f99a91cec327f5d81e0cbdbea3521efc596443b73f8607fcecc864"
+      }
+    },
+    {
+      "archivo": "final-arranque.png",
+      "publicado": {
+        "bytes": 1387163,
+        "sha256": "2670703e03b2cc8c388c66202761a530ac36524c80b400e00912bd8d2b2600f4"
+      },
+      "procedencia_local": {
+        "bytes": 1387163,
+        "sha256": "2670703e03b2cc8c388c66202761a530ac36524c80b400e00912bd8d2b2600f4"
+      }
+    },
+    {
+      "archivo": "final-desde-arranque-hacia-entrada.png",
+      "publicado": {
+        "bytes": 1362068,
+        "sha256": "e674163674c43a508e6e14511f958ca689295ac31a21c0cd24b3a5265ea430ae"
+      },
+      "procedencia_local": {
+        "bytes": 1362068,
+        "sha256": "e674163674c43a508e6e14511f958ca689295ac31a21c0cd24b3a5265ea430ae"
+      }
+    },
+    {
+      "archivo": "final-escena.json",
+      "publicado": {
+        "bytes": 671747,
+        "sha256": "8b2ddea4c3235cc30c4bb50a267ff4c06d6e9dfe2e571b339b7392f6c3805e8e"
+      },
+      "procedencia_local": {
+        "bytes": 671747,
+        "sha256": "8b2ddea4c3235cc30c4bb50a267ff4c06d6e9dfe2e571b339b7392f6c3805e8e"
+      }
+    },
+    {
+      "archivo": "final-glb.json",
+      "publicado": {
+        "bytes": 2220,
+        "sha256": "52820d5967a7146d40d46d3a2f60dcbf1ced67e5d345e71e96d581971340c362"
+      },
+      "procedencia_local": {
+        "bytes": 2337,
+        "sha256": "79c890f48f3f8b2b0999314bd1ce28ab770cd6bdadd005a792b8d04d346dcb95"
+      }
+    },
+    {
+      "archivo": "final-posicion-y-sombras.png",
+      "publicado": {
+        "bytes": 1282116,
+        "sha256": "34ff78ab1f64ffea34676793d08dda23907ef390f80a1e3f1888284ae60e8ab4"
+      },
+      "procedencia_local": {
+        "bytes": 1282116,
+        "sha256": "34ff78ab1f64ffea34676793d08dda23907ef390f80a1e3f1888284ae60e8ab4"
+      }
+    },
+    {
+      "archivo": "incidentes/301-base-escena-invalidada-alfombra.json",
+      "publicado": {
+        "bytes": 670527,
+        "sha256": "055ea9ef543a75e0a271bbd0d853749a1f22770513b5a04809ac66fb7a8c4a4f"
+      },
+      "procedencia_local": {
+        "bytes": 670527,
+        "sha256": "055ea9ef543a75e0a271bbd0d853749a1f22770513b5a04809ac66fb7a8c4a4f"
+      }
+    },
+    {
+      "archivo": "incidentes/301-base-escena-invalidada-alfombra.log",
+      "publicado": {
+        "bytes": 1911,
+        "sha256": "10debcffa85da86f3cb7f40cedabf04ffad6d6057a58dd7b32ad9eea94c124d7"
+      },
+      "procedencia_local": {
+        "bytes": 1922,
+        "sha256": "0531f865809e7a54233dcd36ed8a1b5fa61226e816948df9fab092bde19595fa"
+      }
+    },
+    {
+      "archivo": "incidentes/301-base-escena-invalidada-cuerpos-desactivados.json",
+      "publicado": {
+        "bytes": 670781,
+        "sha256": "cc9f9c1b49de0a883cf9f084f9942b88b52c8aca8cfa44dd9a7e04ae701c6eef"
+      },
+      "procedencia_local": {
+        "bytes": 670781,
+        "sha256": "cc9f9c1b49de0a883cf9f084f9942b88b52c8aca8cfa44dd9a7e04ae701c6eef"
+      }
+    },
+    {
+      "archivo": "incidentes/301-base-escena-invalidada-cuerpos-desactivados.log",
+      "publicado": {
+        "bytes": 3782,
+        "sha256": "ede0b37ec7e61d80b8fbc4c570585102fc048ceccfb53825f2d9eb957c041485"
+      },
+      "procedencia_local": {
+        "bytes": 3828,
+        "sha256": "26ece0a2adc9fc29ae61c0c9a5a43252a334558d591962f87e9a823ba69d709c"
+      }
+    },
+    {
+      "archivo": "incidentes/301-base-escena-invalidada-grilla.json",
+      "publicado": {
+        "bytes": 669263,
+        "sha256": "8129347b7d5f89f2e83964f1bab2d129f699aa5eee427f0a95f486395409be1d"
+      },
+      "procedencia_local": {
+        "bytes": 669263,
+        "sha256": "8129347b7d5f89f2e83964f1bab2d129f699aa5eee427f0a95f486395409be1d"
+      }
+    },
+    {
+      "archivo": "incidentes/301-base-escena-invalidada-grilla.log",
+      "publicado": {
+        "bytes": 1199,
+        "sha256": "01e880d7ae279d4c263b29738d5e1e0533bad9523859a74b0a2a1f6748dd48a6"
+      },
+      "procedencia_local": {
+        "bytes": 1214,
+        "sha256": "a2181ba80cb80cead5fa366f9630fd55052600564fc900f94f7a3b5af5d34e53"
+      }
+    },
+    {
+      "archivo": "incidentes/301-candidato-escena-invalidada-desmontaje.log",
+      "publicado": {
+        "bytes": 381,
+        "sha256": "619838061d9ca0edd08b529dab2569e37086823b7e11d75b95f57a0ace10caf0"
+      },
+      "procedencia_local": {
+        "bytes": 388,
+        "sha256": "735810d1940a3173800a3caeaeca10c899141eaddd87ffd5eae9cfa6807cc873"
+      }
+    },
+    {
+      "archivo": "informe.md",
+      "publicado": {
+        "bytes": 5698,
+        "sha256": "97108f6bf5d72bc7c53207c1a78931d8f116536690b15be9d886c171ff61b312"
+      },
+      "procedencia_local": {
+        "bytes": 5698,
+        "sha256": "97108f6bf5d72bc7c53207c1a78931d8f116536690b15be9d886c171ff61b312"
+      }
+    },
+    {
+      "archivo": "logs/acomodador-copia.log",
+      "publicado": {
+        "bytes": 8616,
+        "sha256": "0cc057d8f174eff827c0260b349da0ad2537eb57478aebc3a621d28cfd511c26"
+      },
+      "procedencia_local": {
+        "bytes": 8737,
+        "sha256": "7bcfa491b07209ae9603784236ab6d992a5daea049ea03672520572e21a267a6"
+      }
+    },
+    {
+      "archivo": "logs/aplicar-blend.log",
+      "publicado": {
+        "bytes": 344,
+        "sha256": "3192088fa2908c12949662e74aac28d6c5b5effd4f5afabe95dbabb9353cb448"
+      },
+      "procedencia_local": {
+        "bytes": 346,
+        "sha256": "e1704f59af3f4513062e23f02812551c72298c533c8cc2f997cffcc5920a1ae5"
+      }
+    },
+    {
+      "archivo": "logs/base-escena.log",
+      "publicado": {
+        "bytes": 237,
+        "sha256": "3b8a3f4fd4c917fbb75e03e67034ca6ff40a06d75cb0ba6a9bbdbe178ce3ca71"
+      },
+      "procedencia_local": {
+        "bytes": 241,
+        "sha256": "e73e50a1854762ff7a72b861b5f9a08d9f8b09ae00e927bc865671c3e8eec72d"
+      }
+    },
+    {
+      "archivo": "logs/candidato-apoyo.log",
+      "publicado": {
+        "bytes": 348,
+        "sha256": "91147f8fe6abcb1905678b0af07c23e82f18a4b3d50f1364e035a9863a5bf607"
+      },
+      "procedencia_local": {
+        "bytes": 355,
+        "sha256": "62453bb311b81ce9e1771088ea1b27596a73ab92c9826ea07ee695d20180d378"
+      }
+    },
+    {
+      "archivo": "logs/candidato-blender.log",
+      "publicado": {
+        "bytes": 1345,
+        "sha256": "c6dd118b7736d3018d55abcb1baf3697ab11a52de82b3b407cd8613f46b5f956"
+      },
+      "procedencia_local": {
+        "bytes": 1348,
+        "sha256": "0300d5649749aca472f656cc011c2635e1235c933b7d2fd6c2ccdc25478ff5d9"
+      }
+    },
+    {
+      "archivo": "logs/candidato-escena.log",
+      "publicado": {
+        "bytes": 381,
+        "sha256": "619838061d9ca0edd08b529dab2569e37086823b7e11d75b95f57a0ace10caf0"
+      },
+      "procedencia_local": {
+        "bytes": 388,
+        "sha256": "735810d1940a3173800a3caeaeca10c899141eaddd87ffd5eae9cfa6807cc873"
+      }
+    },
+    {
+      "archivo": "logs/comparar-glb.log",
+      "publicado": {
+        "bytes": 220,
+        "sha256": "56fb8cb585d788d1aa913974979aa2c8c7e818fc38d82951ad40fe81a6993977"
+      },
+      "procedencia_local": {
+        "bytes": 232,
+        "sha256": "b8a93841fb795d683968d61d7236e800bd35deb8a7064a0f0ef6b484b9fa1e22"
+      }
+    },
+    {
+      "archivo": "logs/desmontaje-verbose.log",
+      "publicado": {
+        "bytes": 144639,
+        "sha256": "3187ce57c6b2f55c5797cb6c19e554d87c68dd9e75eed7c6f6878ac2241af416"
+      },
+      "procedencia_local": {
+        "bytes": 145624,
+        "sha256": "a057021d458200ed9faf525a3601b9591390246ed6d6015e99eb3bbdf2f2a9f6"
+      }
+    },
+    {
+      "archivo": "logs/exportar.log",
+      "publicado": {
+        "bytes": 622,
+        "sha256": "a2d18463548ed228cec3af680b330163fef60baca1be9322d634b817fb3257fa"
+      },
+      "procedencia_local": {
+        "bytes": 632,
+        "sha256": "28457fad57ec334324a47bc4753f3a26d425286f6583b075abdcd5050702713b"
+      }
+    },
+    {
+      "archivo": "logs/final-apoyo.log",
+      "publicado": {
+        "bytes": 98,
+        "sha256": "f419feecebe39d1cdb1ac13857744292114cd29c5f68f497061a5f2ce2e53b29"
+      },
+      "procedencia_local": {
+        "bytes": 101,
+        "sha256": "7d4b6763a05c4c73bfcd750761c12709a932944cad1d6b21c3747f70ebbfc17d"
+      }
+    },
+    {
+      "archivo": "logs/final-bolsas.log",
+      "publicado": {
+        "bytes": 339,
+        "sha256": "6d9559380947217bc423784f3c7fd237b4d43f4082d4ecfe024b4ca5234884cc"
+      },
+      "procedencia_local": {
+        "bytes": 346,
+        "sha256": "e36a7383819374aec39ecada619a75fe0131dbf8ce7ff8cb6b9a643e80cc34d4"
+      }
+    },
+    {
+      "archivo": "logs/final-escena.log",
+      "publicado": {
+        "bytes": 238,
+        "sha256": "79286f9972928dfcd69c78d7ba3f0edb631630cc9db7d3b6c6d83e4f0f28609a"
+      },
+      "procedencia_local": {
+        "bytes": 242,
+        "sha256": "0d4c796bec38d243711d3304012cd87f52fae69e650de2f622e85a5221bbbccb"
+      }
+    },
+    {
+      "archivo": "logs/hornear.log",
+      "publicado": {
+        "bytes": 1194,
+        "sha256": "f098a78aebeb95c47a54e1a2a4023ea867ad5fbda8428af8ce915f949fc3f699"
+      },
+      "procedencia_local": {
+        "bytes": 1210,
+        "sha256": "4f288a3707ec09b797fbbe092c86da6a1ac331d62365de1bcedfccb8e0114204"
+      }
+    },
+    {
+      "archivo": "plan-publicado-antes-de-aplicar.md",
+      "publicado": {
+        "bytes": 9911,
+        "sha256": "4036c19544dcae47cdc71d25c4f096c5ed23be4bba3a3d31b903b8b51dc429da"
+      },
+      "procedencia_local": {
+        "bytes": 9911,
+        "sha256": "4036c19544dcae47cdc71d25c4f096c5ed23be4bba3a3d31b903b8b51dc429da"
+      }
+    },
+    {
+      "archivo": "protocolo/301-aplicar-pipeline.py",
+      "publicado": {
+        "bytes": 1766,
+        "sha256": "7c74e34e1d37999cb62c0d8684f00ba04cb0582b31ce9394b903bf101fe4ede6"
+      },
+      "procedencia_local": {
+        "bytes": 1766,
+        "sha256": "7c74e34e1d37999cb62c0d8684f00ba04cb0582b31ce9394b903bf101fe4ede6"
+      }
+    },
+    {
+      "archivo": "protocolo/301-apoyo.gd",
+      "publicado": {
+        "bytes": 2057,
+        "sha256": "4bfb15a4d62a3bac0f85d7879ff13c2b766286024da1b3b8f4f601e5bb054f0c"
+      },
+      "procedencia_local": {
+        "bytes": 2057,
+        "sha256": "4bfb15a4d62a3bac0f85d7879ff13c2b766286024da1b3b8f4f601e5bb054f0c"
+      }
+    },
+    {
+      "archivo": "protocolo/301-bolsas.gd",
+      "publicado": {
+        "bytes": 4647,
+        "sha256": "2e5f95e991f284ac76f557b9573d27261b67fbafea3228cc051d52c15ac31df9"
+      },
+      "procedencia_local": {
+        "bytes": 4647,
+        "sha256": "2e5f95e991f284ac76f557b9573d27261b67fbafea3228cc051d52c15ac31df9"
+      }
+    },
+    {
+      "archivo": "protocolo/301-clasificar.py",
+      "publicado": {
+        "bytes": 543,
+        "sha256": "158d18ced366698cbda62245553b2f43d7512c7cbe6229c846af18704437b9a9"
+      },
+      "procedencia_local": {
+        "bytes": 543,
+        "sha256": "158d18ced366698cbda62245553b2f43d7512c7cbe6229c846af18704437b9a9"
+      }
+    },
+    {
+      "archivo": "protocolo/301-comparar-escena.py",
+      "publicado": {
+        "bytes": 1445,
+        "sha256": "6a94b51605ebbc6f7ef22841c7066ae1f11bddf96fd1dc47365ca4a2d5fea1c6"
+      },
+      "procedencia_local": {
+        "bytes": 1445,
+        "sha256": "6a94b51605ebbc6f7ef22841c7066ae1f11bddf96fd1dc47365ca4a2d5fea1c6"
+      }
+    },
+    {
+      "archivo": "protocolo/301-comparar-glb.py",
+      "publicado": {
+        "bytes": 3311,
+        "sha256": "47d14cbdf116f94e4a2e3cc82d9a27ea6ab6b96ea17f95f19d5aa5fe26914421"
+      },
+      "procedencia_local": {
+        "bytes": 3311,
+        "sha256": "47d14cbdf116f94e4a2e3cc82d9a27ea6ab6b96ea17f95f19d5aa5fe26914421"
+      }
+    },
+    {
+      "archivo": "protocolo/301-escena.gd",
+      "publicado": {
+        "bytes": 8402,
+        "sha256": "6ef45b40d12b62165d9dd807b664d59b12494062a5d6edcc1bda0be63a9bae79"
+      },
+      "procedencia_local": {
+        "bytes": 8402,
+        "sha256": "6ef45b40d12b62165d9dd807b664d59b12494062a5d6edcc1bda0be63a9bae79"
+      }
+    },
+    {
+      "archivo": "protocolo/301-modelo.py",
+      "publicado": {
+        "bytes": 3267,
+        "sha256": "2c4bd67486f3cd6453fd3a6ebab83500f4986253313508ef75a6ed361f2a7d3f"
+      },
+      "procedencia_local": {
+        "bytes": 3267,
+        "sha256": "2c4bd67486f3cd6453fd3a6ebab83500f4986253313508ef75a6ed361f2a7d3f"
+      }
+    },
+    {
+      "archivo": "protocolo/301-preparar.py",
+      "publicado": {
+        "bytes": 901,
+        "sha256": "7aa244ce0baa98bdc9f98e604c6bddd8e03abcd8c9a23c831d1a239ccac7fc05"
+      },
+      "procedencia_local": {
+        "bytes": 901,
+        "sha256": "7aa244ce0baa98bdc9f98e604c6bddd8e03abcd8c9a23c831d1a239ccac7fc05"
+      }
+    }
+  ]
+}
