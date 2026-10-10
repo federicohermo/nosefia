@@ -31,7 +31,6 @@ func test_un_salto_recibe_y_vence_en_orden() -> void:  # AC-CTR-035
 	assert_str(eventos[2].comprador.nombre()).is_equal("Tiago")
 	assert_int(eventos[2].tipo).is_equal(AgendaDeCompradores.Tipo.LLEGO)
 	assert_int(eventos[3].tipo).is_equal(AgendaDeCompradores.Tipo.VENCIO)
-	assert_object(agenda.presente()).is_null()
 
 
 func test_una_compra_completa_no_vence() -> void:  # AC-CTR-039

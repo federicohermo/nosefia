@@ -6,7 +6,6 @@ enum Tipo { LLEGO, VENCIO }
 var _compradores: Array[Comprador] = []
 var _llegados: Array[Comprador] = []
 var _salidos: Array[Comprador] = []
-var _presente: Comprador = null
 
 
 class Evento:
@@ -28,16 +27,9 @@ func avanzar(tiempo: float, completas: Array[Comprador] = []) -> Array[Evento]:
 	for comprador in _compradores:
 		if tiempo >= comprador.horario.x and not _llegados.has(comprador):
 			_llegados.append(comprador)
-			_presente = comprador
 			eventos.append(Evento.new(Tipo.LLEGO, comprador))
 		if tiempo >= comprador.horario.y and not _salidos.has(comprador):
 			_salidos.append(comprador)
-			if _presente == comprador:
-				_presente = null
 			if not completas.has(comprador):
 				eventos.append(Evento.new(Tipo.VENCIO, comprador))
 	return eventos
-
-
-func presente() -> Comprador:
-	return _presente
