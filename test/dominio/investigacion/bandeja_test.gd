@@ -6,6 +6,62 @@
 extends GdUnitTestSuite
 
 
+func test_el_corte_de_jornada_filtra_y_ordena_el_menu() -> void:  # AC-INV-028, AC-INV-037
+	var primero := _conversacion(Conversacion.Interlocutor.JEFE, 2)
+	primero.mensajes[1].jornada = 3
+	var segundo := _conversacion(Conversacion.Interlocutor.PROVEEDOR, 1)
+	segundo.mensajes[0].jornada = 2
+	var bandeja := Bandeja.new([segundo, primero])
+	assert_array(bandeja.conversaciones()).is_equal([primero])
+	assert_int(bandeja.mensajes_de(primero.interlocutor).size()).is_equal(1)
+	bandeja.abrir_jornada(2)
+	assert_array(bandeja.conversaciones()).is_equal([primero, segundo])
+	assert_int(bandeja.mensajes_de(primero.interlocutor).size()).is_equal(1)
+	bandeja.abrir_jornada(3)
+	assert_int(bandeja.mensajes_de(primero.interlocutor).size()).is_equal(2)
+	assert_int(bandeja.no_leidos(primero.interlocutor)).is_equal(2)
+
+
+func test_recibir_despues_de_leer_suma_sin_mutar_el_guion() -> void:  # AC-INV-010, AC-INV-029
+	var conversacion := _conversacion(Conversacion.Interlocutor.JEFE, 1)
+	var bandeja := Bandeja.new([conversacion])
+	bandeja.marcar_leida(conversacion.interlocutor)
+	var recibido := Mensaje.new()
+	recibido.texto = "Llegó después"
+	assert_bool(bandeja.recibir(conversacion.interlocutor, recibido)).is_true()
+	assert_bool(bandeja.recibir(conversacion.interlocutor, recibido)).is_true()
+	assert_int(bandeja.no_leidos(conversacion.interlocutor)).is_equal(2)
+	assert_int(conversacion.mensajes.size()).is_equal(1)
+	assert_int(Bandeja.new([conversacion]).mensajes_de(conversacion.interlocutor).size()).is_equal(
+		1
+	)
+	bandeja.mensajes_de(conversacion.interlocutor).clear()
+	bandeja.conversaciones().clear()
+	assert_int(bandeja.mensajes_de(conversacion.interlocutor).size()).is_equal(3)
+	assert_bool(bandeja.marcar_leida(conversacion.interlocutor)).is_true()
+	assert_int(bandeja.no_leidos(conversacion.interlocutor)).is_zero()
+
+
+func test_recepciones_invalidas_no_cambian_la_bandeja() -> void:  # AC-INV-030
+	var bandeja := Bandeja.new([_conversacion(Conversacion.Interlocutor.JEFE, 1)])
+	assert_bool(bandeja.recibir(Conversacion.Interlocutor.JEFE, null)).is_false()
+	assert_bool(bandeja.recibir(Conversacion.Interlocutor.PROVEEDOR, Mensaje.new())).is_false()
+	assert_int(bandeja.no_leidos_totales()).is_equal(1)
+
+
+func test_el_adjunto_exige_foto_y_texto_inmediatamente_despues() -> void:  # AC-INV-031
+	var conversacion := _conversacion(Conversacion.Interlocutor.JEFE, 4)
+	conversacion.mensajes[0].foto = GradientTexture2D.new()
+	conversacion.mensajes[2].foto = GradientTexture2D.new()
+	conversacion.mensajes[3].foto = GradientTexture2D.new()
+	var bandeja := Bandeja.new([conversacion])
+	assert_object(bandeja.adjunto_de(conversacion.interlocutor, 0)).is_same(
+		conversacion.mensajes[1]
+	)
+	for indice: int in [-1, 1, 2, 3, 4]:
+		assert_object(bandeja.adjunto_de(conversacion.interlocutor, indice)).is_null()
+
+
 func _conversacion(quien: Conversacion.Interlocutor, cuantos: int) -> Conversacion:
 	var conversacion := Conversacion.new()
 	conversacion.interlocutor = quien

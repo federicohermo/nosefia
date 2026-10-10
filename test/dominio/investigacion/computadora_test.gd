@@ -30,8 +30,8 @@ func test_cambiar_a_la_misma_app_devuelve_false() -> void:
 	var computadora := Computadora.new()
 	computadora.abrir()
 	assert_bool(computadora.cambiar_a(computadora.app())).is_false()
-	assert_bool(computadora.cambiar_a(Computadora.App.CHATS)).is_true()
-	assert_int(computadora.app()).is_equal(Computadora.App.CHATS)
+	assert_bool(computadora.cambiar_a(Computadora.App.NOTAS)).is_true()
+	assert_int(computadora.app()).is_equal(Computadora.App.NOTAS)
 
 
 func test_cambiar_de_app_con_la_computadora_cerrada_devuelve_false() -> void:  # AC-INV-008
@@ -54,7 +54,5 @@ func test_reabrir_vuelve_a_la_app_donde_se_habia_dejado() -> void:  # AC-INV-008
 	assert_int(computadora.app()).is_equal(Computadora.App.NOTAS)
 
 
-func test_las_tres_apps_del_gdd_estan_declaradas() -> void:  # AC-INV-006
-	# Tres y no una cantidad cualquiera: la caja es tarea del jefe y los chats y las notas son
-	# investigación. Es lo que pone las dos puntas de la tensión a un clic una de otra.
-	assert_int(Computadora.App.size()).is_equal(3)
+func test_solo_caja_y_notas_estan_declaradas() -> void:  # AC-INV-006
+	assert_array(Computadora.App.keys()).is_equal(["CAJA", "NOTAS"])

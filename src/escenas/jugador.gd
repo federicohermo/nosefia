@@ -405,6 +405,10 @@ func frente() -> Vector3:
 ## `ControlDelJugador` es de `dominio/` y su instancia vive privada acá. La piden por separado
 ## examinar un objeto y abrir la computadora, y sin ellas los dos
 ## degradan en silencio —el mouse sigue girando la cámara, el jugador sigue caminando—.
+func suspendido() -> bool:
+	return _control.esta_suspendido()
+
+
 func suspender() -> void:
 	# El aviso sale una sola vez, acá: mientras dura la suspensión `observar()` devuelve `false`,
 	# así que si no se emitiera en este momento no se emitiría nunca y quien escucha se quedaría

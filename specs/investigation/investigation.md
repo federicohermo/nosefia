@@ -1,7 +1,7 @@
 ---
 schema_version: 1
 capability_id: CAP-INV
-status: draft
+status: ratified
 owner: por definir
 provenance: GDD «Investigación» y «La computadora»; ficha «Interfaces virtuales durante la jornada» y decisiones de #373; migración de los specs 006, 009, 018
 ---
