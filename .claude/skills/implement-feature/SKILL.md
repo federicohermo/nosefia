@@ -82,6 +82,18 @@ del `await` compara la escritura del cuadro anterior contra el instante de éste
 arreglo no alcanza. O se llama al método a mano antes de leer, o se comparan dos instantes
 declarados distintos.
 
+**Una sonda física conserva los cuerpos que mide.** `process_mode = DISABLED` sobre la raíz
+también retira sus `CollisionObject3D` de la simulación: un recorrido vacío no certifica un
+pasillo libre. En #301, esa forma de congelar el juego produjo cero celdas transitables.
+Detené sólo los procesos que alteran la pose y afirmá primero que la cápsula encuentra su piso
+y los obstáculos conocidos. La sonda inválida se conserva, pero no cuenta como evidencia.
+
+**La mira se ejerce después de sincronizar sus áreas.** Teletransportar al jugador y consultar
+`Area3D.get_overlapping_bodies()` en el mismo cuadro puede devolver el conjunto anterior.
+En #369, un rayo directo encontraba la caja mientras la mira real todavía no la veía.
+Esperá cuadros de física, comprobá el campo actualizado y ejercé la mira real. En una pila,
+probá puntos de las caras visibles: el centro puede estar tapado aunque otra cara sea accesible.
+
 **Un test que mide lo que se dibuja tiene dos trampas más**, medidas el 2026-09-24:
 
 - **En headless, `Engine.max_fps` no da cuadros parejos.** Con tope en 144, los cuadros alternan
@@ -166,6 +178,11 @@ contador de errores del caso y la ausencia de audio pasaba por accidente. El fix
 los tipos de la señal y afirma que su receptor se ejecutó, además del resultado. Un error nuevo
 o una fuga se corrige aunque el XML diga cero; los diagnósticos deliberados del debugger o de
 un `assert_error` se identifican por su causa, sin descartar otras líneas `ERROR`.
+
+La salida cruda incluye **stdout y stderr del subproceso**, también en la base anterior al
+cambio. El archivo `godot.log` no los reemplaza: en el lote del 2026-10-10 omitió los avisos
+de recursos al salir que sí estaban en stderr. Sin ambos canales de la base no se puede
+atribuir un diagnóstico al cambio sólo porque su XML siga verde.
 
 **Un nodo salteado no es un nodo verde**, y el reporte lo distingue. Pero `tests` sin `GODOT_BIN`
 **no se saltea: sale rojo** — ese salteo vale sólo mientras no exista un solo `*_test.gd`, y hay
