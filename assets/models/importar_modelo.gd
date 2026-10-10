@@ -17,6 +17,9 @@ func _post_import(escena: Node) -> Object:
 			var material := malla.mesh.surface_get_material(i) as BaseMaterial3D
 			if material != null:
 				material.texture_filter = BaseMaterial3D.TEXTURE_FILTER_NEAREST_WITH_MIPMAPS
+				if material.resource_name == "local_ceramica":
+					# El piso satinado recoge reflejos difusos sin convertirse en un espejo.
+					material.roughness = 0.34
 				if material.resource_name == "local_vidrio":
 					# Una sola cara por paño evita superponer transparencias y sombras opacas.
 					material.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA

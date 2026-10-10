@@ -102,3 +102,4 @@ common/physics_interpolation=true
 [rendering]
 
 renderer/rendering_method="gl_compatibility"
+reflections/reflection_atlas/reflection_count.web=4
