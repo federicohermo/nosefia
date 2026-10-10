@@ -40,7 +40,7 @@ func test_solo_los_gestos_aceptados_publican_y_leer_no_suena() -> void:  # AC-IN
 	assert_int(cuentas.size()).is_equal(2)
 
 
-func test_recibir_cerrado_y_en_chat_avisa_una_vez_por_mensaje_valido() -> void:  # AC-INV-029, AC-INV-030
+func test_recibir_cerrado_y_en_chat_avisa_una_vez() -> void:  # AC-INV-029, AC-INV-030
 	var sistema: CelularDelEmpleado = auto_free(CelularDelEmpleado.new())
 	var eventos: Array[Mensaje] = []
 	var cuentas: Array[int] = []
