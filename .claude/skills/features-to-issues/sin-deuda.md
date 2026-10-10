@@ -213,6 +213,8 @@ entregable más caro y el único que hace que el hallazgo no vuelva.
 | una mira **que lee solapamientos anteriores al teletransporte** | `implement-feature` — se sincronizan las áreas con cuadros físicos y se prueban las caras visibles con la mira real |
 | una base **sin stderr que impide comparar el desmontaje** | `implement-feature` — se guardan ambos canales del subproceso también en la base; `godot.log` no sustituye esa salida |
 | un import frío de export **que retiene recursos de plugins del editor** | `implement-feature` — se identifican con verbose y se aísla sólo el editor en la copia externa; preset y juego permanecen idénticos, y el paquete real conserva sus chequeos estrictos |
+| una lectura del navegador **que altera la activación que intenta observar** | `implement-feature` — se usa CDP con userGesture false para observar y entradas físicas para actuar; la consola se conserva desde la carga |
+| un fixture **que apaga el callback que actualiza el cursor** | `implement-feature` — se mantiene activa la traducción del control y se afirma Pointer Lock al abrir, cerrar, pausar y reanudar, sin atribuirle otros errores sin prueba |
 | una entrada nativa **que selecciona otra fila por la escala DPI** | `to-issue` — el driver declara consciencia DPI antes de consultar ventanas, cruza cliente y viewport y afirma la selección real sobre el HWND propio |
 | una dependencia instalada **adentro del worktree** que tira la importación de Godot | `implement-batch` — el preámbulo no dijo que Playwright se resuelve desde el checkout principal |
 
