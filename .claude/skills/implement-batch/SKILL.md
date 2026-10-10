@@ -85,6 +85,14 @@ contrato siguió pidiendo `sacar() -> bool` y una caja que guarda su propio núm
 Lo que aparezca se corrige ahora —el issue con `gh issue edit`, el contrato con `to-spec`— y no
 se reparte roto.
 
+**Cada AC añadido al contrato común tiene dueño antes de repartir.** El padre lo asigna a un
+issue y a un test dentro de sus límites, aunque la capacidad siga `draft` por otro carril.
+Al recibir las entregas contrasta esa lista completa, además de los criterios propios de cada
+issue: el gate no cobra todavía los AC de un `draft`. En el lote del 2026-10-10, #369 probaba
+el cierre de la jornada 3 con cuatro cumplidas, pero `AC-EMP-050` quedó sin cita ni los bordes
+de tres y dos cumplidas; la ratificación posterior de #374 recién mostró el hueco. Se amplió
+su issue entero antes de extender ese único caso, sin cambiar el dominio.
+
 ## Paso 3 — Un worktree por carril
 
 Lanzá los carriles en **un solo mensaje**, un `Agent` por carril con `isolation: "worktree"`.
