@@ -11,6 +11,7 @@
 
 [ext_resource type="PackedScene" path="res://src/ui/diegetica/programa_de_tickets.tscn" id="tickets"]
 [ext_resource type="PackedScene" path="res://src/ui/pila_de_notificaciones.tscn" id="avisos"]
+[ext_resource type="PackedScene" path="res://src/ui/interrupciones/persiana_de_la_noche.tscn" id="persiana"]
 [node name="Interfaz" type="Node3D"]
 
 [node name="Hud" parent="." instance=ExtResource("2_hud")]
@@ -26,6 +27,8 @@
 [node name="ProgramaDeTickets" parent="." instance=ExtResource("tickets")]
 
 [node name="PilaDeNotificaciones" parent="." instance=ExtResource("avisos")]
+
+[node name="PersianaDeLaNoche" parent="." instance=ExtResource("persiana")]
 
 [node name="MenuDePausa" parent="." instance=ExtResource("20_menu_de_pausa")]
 layer = 6
