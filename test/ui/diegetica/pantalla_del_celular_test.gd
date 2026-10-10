@@ -93,8 +93,7 @@ func test_menu_usa_imagen_nombre_y_cuenta_solo_si_hay_no_leidos() -> void:  # AC
 	assert_int(lista.get_child_count()).is_zero()
 
 
-# AC-INV-027, AC-INV-031
-func test_chat_abre_al_final_la_rueda_vuelve_y_foto_conserva_el_scroll() -> void:
+func test_scroll_y_foto_conservan_lugar() -> void:  # AC-INV-027, AC-INV-031
 	var pantalla := _pantalla()
 	var conversacion := _conversacion(24)
 	conversacion.mensajes[2].foto = GradientTexture2D.new()
