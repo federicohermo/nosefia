@@ -117,6 +117,7 @@ func _pintar_el_calentamiento(progreso: float) -> void:
 
 
 func _entrar(almacen: Node) -> void:
+	almacen.call("anunciar_la_noche")
 	almacen.process_mode = Node.PROCESS_MODE_INHERIT
 	get_tree().current_scene = almacen
 	queue_free()
