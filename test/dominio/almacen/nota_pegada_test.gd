@@ -24,7 +24,7 @@ func test_dos_obligatorias_dan_dos_renglones_en_su_orden() -> void:  # AC-PLY-06
 	var nota := NotaPegada.tareas_a_realizar(
 		[Tarea.new(Tarea.Tipo.SACAR_LA_BASURA), Tarea.new(Tarea.Tipo.LIMPIAR)]
 	)
-	assert_array(nota.renglones()).contains_exactly(["Limpieza", "Sacar la basura"])
+	assert_array(nota.renglones()).contains_exactly(["Limpieza", "Tirar la basura"])
 
 
 func test_sin_obligatorias_hay_titulo_y_ningun_renglon() -> void:  # AC-PLY-069
