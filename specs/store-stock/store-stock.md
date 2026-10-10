@@ -1,9 +1,9 @@
 ---
 schema_version: 1
 capability_id: CAP-STK
-status: ratified
+status: draft
 owner: por definir
-provenance: GDD «Reponer» y «Registrar»; fichas «7. Tarea: Registro de productos vendidos», «8. Tarea: Reposición» y «5. Formas de interacción con objetos»; base «Productos y cajas contenedoras»; migración de los specs 005, 008, 033, 042, 047
+provenance: GDD «Reponer» y «Registrar»; fichas «7. Tarea: Registro de productos vendidos», «8. Tarea: Reposición», «5. Formas de interacción con objetos» y «Particulares de cada jornada»; decisiones de #369; base «Productos y cajas contenedoras»; migración de los specs 005, 008, 033, 042, 047
 ---
 
 # Capacidad: la mercadería del almacén
@@ -310,6 +310,30 @@ Una recepción parcial DEBE conservarlas hasta la salida del comprador. SI vence
 ENTONCES sus unidades recibidas DEBEN retirarse del inventario una vez, sin contar como venta.
 Una unidad vendida NO DEBE poder registrarse afuera otra vez.
 Vender una unidad retirada de góndola NO DEBE rellenar su casillero ni cumplir reponer.
+
+### BR-STK-038 — Las cajas empiezan según la particular de la noche
+
+CUANDO se abre una jornada que declara ordenar las cajas, el sistema DEBE dejar todas las cajas
+del depósito apiladas en el fondo, frente al portón, sin ninguna sobre las estanterías. Las demás
+jornadas DEBEN empezar con cada caja en su lugar de las tres estanterías. La pila DEBE conservar
+las cajas dentro del depósito, sin superposición de cuerpos y con cada caja enfocable desde un
+punto libre del piso dentro del alcance vigente. Sin intervención del jugador, ninguna caja
+DEBE desplazarse más de 1 cm en los primeros 120 cuadros de física.
+
+El lugar de origen de cada caja DEBE ser el de esa apertura: rescatarla en la primera jornada
+DEBE devolverla a la pila, sin ordenarla automáticamente. La ubicación «frente al portón» es
+territorio de juicio humano; las restantes condiciones se verifican en AC-STK-077 y AC-STK-080.
+
+### BR-STK-039 — Ordenar sigue el apoyo de todas las cajas
+
+MIENTRAS queda turno y la jornada declara ordenar las cajas, el sistema DEBE contar esa
+obligatoria como cumplida si cada caja está en la mano —también examinada desde ella— o su cadena
+de apoyos termina en un pallet de las tres estanterías del depósito o en una caja sostenida.
+Un pallet del piso NO DEBE contar como estantería. Una cadena que termina en otra superficie,
+en una caja ausente o en un ciclo NO DEBE contar como ordenada. Una lista vacía DEBE contestar
+que está ordenada. CUANDO una caja deja de cumplir la condición, el sistema DEBE descumplir
+ordenar; recuperar la condición DEBE volver a cumplirla. Con el turno cerrado, mover cajas NO
+DEBE cambiar la cuenta que se cerró. Una jornada que no declara ordenar NO DEBE sumar esa tarea.
 
 ## Criterios de aceptación
 
@@ -664,6 +688,48 @@ ticket. CUANDO ambas ventas se completan y sus unidades están exactamente anota
 registrar se cumple. Una unidad de más o de menos la descumple. Si una compra vence incompleta,
 registrar sigue pendiente, incluso al cerrar y aunque la planilla coincida con lo vendido.
 
+### AC-STK-077 — La pila es completa, alcanzable y estable *(verifica BR-STK-038)*
+
+DADO la jornada 1 abierta CUANDO se recorre el conjunto de cajas del catálogo —31 en el catálogo
+vigente— ENTONCES todas están dentro del depósito, ninguna se apoya en una estantería y ningún
+cuerpo se superpone con otro. Para cada caja existe un punto libre del piso desde el cual la
+mira la enfoca dentro del alcance vigente. CUANDO pasan 120 cuadros de física sin tocar la pila
+ENTONCES ninguna caja se desplazó más de 0,01 m desde su pose inicial. DADO la jornada 2 abierta
+después ENTONCES cada caja vuelve a su lugar apoyado en un pallet de estantería.
+
+### AC-STK-078 — Los apoyos deciden ordenar *(verifica BR-STK-039)*
+
+DADO el conjunto de cajas CUANDO se evalúa su orden ENTONCES:
+
+| Estado | Ordenar |
+|---|---|
+| Todas sobre pallets de estantería | cumplida |
+| Todas sobre estanterías salvo una en el piso | pendiente |
+| Una sobre otra apoyada en estantería; el resto, en estanterías | cumplida |
+| Una sobre otra que está en el piso | pendiente |
+| Todas en estanterías salvo una sostenida, incluso examinada desde la mano | cumplida |
+| La misma caja soltada en el piso | pendiente |
+| Una sobre el pallet del piso | pendiente |
+| Dos que se declaran apoyadas una sobre otra | pendiente |
+| Una cuyo apoyo es una caja que no está en el conjunto | pendiente |
+| Una cuyo apoyo es una caja sostenida; el resto, en estanterías | cumplida |
+| Ninguna caja | cumplida |
+
+### AC-STK-079 — La última caja cumple y puede descumplir *(verifica BR-STK-039)*
+
+DADO la jornada 1 y todas las cajas salvo una ordenadas CUANDO se apoya la última en una
+estantería ENTONCES ordenar se cumple y el HUD sube en 1. CUANDO se baja una caja al piso y queda
+en reposo ENTONCES se descumple y el HUD baja en 1. CUANDO se la sostiene ENTONCES vuelve a contar,
+también al examinarla desde la mano. DADO el turno cerrado CUANDO se mueve esa caja ENTONCES la
+cuenta permanece como al cierre. DADO una jornada que no declara ordenar CUANDO todas quedan
+en estanterías ENTONCES no se suma una obligatoria ajena.
+
+### AC-STK-080 — Rescatar vuelve al origen de esa noche *(verifica BR-STK-038, BR-STK-039)*
+
+DADO una caja rescatada en la jornada 1 CUANDO vuelve a su origen ENTONCES queda en la pose de la
+pila de esa apertura y no cumple ordenar por aparecer en una estantería. DADO la apertura de una
+jornada posterior ENTONCES su origen vuelve a ser su lugar de estantería.
+
 ## No objetivos
 
 - Esta capacidad NO cobra ni atiende: eso es de
@@ -681,6 +747,10 @@ registrar sigue pendiente, incluso al cerrar y aunque la planilla coincida con l
   producto están vacíos y cuáles ocupados, qué falta, qué hace el clic sobre cada caja y sobre
   cada casillero, el texto de la caja examinada, lo anotado y el total de la planilla, si cada
   obligatoria está cumplida, y el motivo de cada rechazo.
+- **Orden del depósito:** recibe la particular de la jornada, el conjunto de cajas, si cada
+  una está sostenida y su apoyo directo; contesta disposición de apertura y si todas cumplen
+  la condición de orden. Ciclos y apoyos ausentes contestan pendiente; el conjunto vacío,
+  ordenado. El cierre congela la cuenta de obligatorias aunque después cambien los apoyos.
 - **Falla:** las cantidades no positivas se ignoran; el cobro que supera los vendibles no mueve
   nada; el producto inexistente contesta «no existe» en vez de romper; devolver a una caja llena,
   de otro producto o una unidad que ya volvió no cambia nada; colocar en un casillero ocupado no
@@ -691,6 +761,7 @@ registrar sigue pendiente, incluso al cerrar y aunque la planilla coincida con l
 ## Señales
 
 - El producto colocado en la góndola, la unidad retirada del depósito y la devuelta a su caja.
+- Ordenar las cajas cumplida o descumplida, sólo cuando cambia su condición con el turno abierto.
 
 ## Dependencias
 
@@ -707,8 +778,8 @@ registrar sigue pendiente, incluso al cerrar y aunque la planilla coincida con l
 - [`investigation`](../investigation/investigation.md) (consume): el examen de una caja, que es
   el de cualquier levantable. Mientras dura se muestra el texto de la caja.
 - [`shift-cycle`](../shift-cycle/shift-cycle.md) (alimenta y consume): avisa cuándo reponer y
-  registrar quedaron cumplidas, y cuándo dejaron de estarlo; y la jornada que abre decide lo que
-  falta.
+  registrar y ordenar las cajas quedaron cumplidas, y cuándo dejaron de estarlo; y la jornada
+  que abre decide lo que falta y la disposición inicial de las cajas.
 
 ## Preguntas abiertas
 
