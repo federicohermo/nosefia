@@ -53,10 +53,17 @@ func test_la_raiz_agrupa_por_rol_y_conserva_sus_enlaces() -> void:
 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
 	# El exterior es el décimo rol, instanciado directamente en la raíz como los demás.
 	assert_int(almacen.get_child_count()).is_less(11)
+	var enlaces := 0
 	for propiedad in almacen.get_property_list():
-		if propiedad.usage & PROPERTY_USAGE_SCRIPT_VARIABLE and propiedad.name.begins_with("_"):
+		if (
+			propiedad.usage & PROPERTY_USAGE_SCRIPT_VARIABLE
+			and propiedad.usage & PROPERTY_USAGE_STORAGE
+			and propiedad.name.begins_with("_")
+		):
+			enlaces += 1
 			var valor: Variant = almacen.get(propiedad.name)
 			assert_bool(valor != null).override_failure_message(propiedad.name).is_true()
+	assert_int(enlaces).is_greater(0)
 	assert_int(almacen.get("_cajas_de_productos").size()).is_equal(Catalogo.todos().size())
 	assert_int(almacen.get("_bolsas").size()).is_equal(3)
 
