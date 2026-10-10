@@ -20,6 +20,8 @@ comercial. La incorporación al build local no acredita una licencia comercial.
 
 | Recurso | Origen | Uso |
 |---|---|---|
+| `enrique.png` | Figma, capa `511:317` del frame de instrucciones `511:302`, descargada sin editar el 2026-10-10 | Retrato de Enrique Peldaño en las instrucciones y en el celular |
+| `fotos/intro-<NN>.png` | Renders de 960 × 540 del modelo jugable, generados sin editar el PNG | Fotos adjuntas a las instrucciones de Enrique |
 | `celular.svg` | Dibujo vectorial original del proyecto, creado el 2026-10-10 | Recordatorio del celular con Q |
 | `persiana.png` | Figma, capa `567:645` («PERSIANA 1 1») del frame `567:644`, descargada sin editar el 2026-10-10 | Persiana baja en la entrada de cada noche |
 | `notificacion_salida.svg` | Símbolo `480:341`, aviso `477:216` de Figma, descargado sin editar el 2026-10-09 | Cliente cansado de esperar |
@@ -67,3 +69,25 @@ importes se muestran tal como los entrega `Atencion`; el turno sigue corriendo.
 La ventanilla muestra el marco 3D real del local. Al abrir, la cámara encuadra los bordes
 visibles del dintel y del antepecho a sus profundidades reales; al salir recupera su reposo.
 El velo, los textos y los controles siguen delante de esa vista. No carga una imagen del local.
+
+Las siete fotos del jefe se generan con `assets/models/generar_fotos_del_jefe.gd` desde
+`almacen.tscn` en la jornada 1. El generador valida el rayo central de cada encuadre antes de
+guardar; usa una estantería preparada sólo para Intro 9 y restaura las 31 poses originales
+antes de Intro 13. No cambia el reparto jugable. Los PNG se conservan tal como los escribe Godot.
+
+Desde PowerShell, con una pantalla disponible:
+
+```powershell
+& $env:GODOT_BIN --path . --rendering-driver opengl3 `
+  --script assets/models/generar_fotos_del_jefe.gd -- assets/ui/manada/fotos
+```
+
+| Foto | Tema |
+|---|---|
+| `intro-04.png` | Nota de tareas del corcho |
+| `intro-06.png` | Ventanilla |
+| `intro-07.png` | Lector y caja registradora |
+| `intro-08.png` | Computadora |
+| `intro-09.png` | Estantería del depósito con cajas |
+| `intro-11.png` | Útiles de limpieza y las dos notas del baño |
+| `intro-13.png` | Depósito con las cajas de la primera noche en el piso |
