@@ -1,0 +1,10 @@
+from pathlib import Path
+r=Path.cwd()
+p=r/"src/dominio/almacen/tarea_de_la_basura.gd";t=p.read_text(encoding="utf-8")
+t=t.replace("enum Tacho { LOCAL, ESCRITORIO, BANO }\n\n","")
+t=t.replace("func de_la_jornada(_jornada: int = 1)","func de_la_jornada()")
+t=t[:t.index("\n\nfunc tiene_bolsa(")].rstrip()+"\n";p.write_text(t,encoding="utf-8",newline="\n")
+p=r/"src/sistemas/tareas/recolector_de_basura.gd";t=p.read_text(encoding="utf-8")
+t=t.replace("signal bolsa_sacada(tacho: TareaDeLaBasura.Tacho)\n\n","")
+t=t.replace("\n@export var bolsas: Array[Node3D] = []","")
+t=t[:t.index("\n\nfunc sacar_bolsa(")].rstrip()+"\n";p.write_text(t,encoding="utf-8",newline="\n")

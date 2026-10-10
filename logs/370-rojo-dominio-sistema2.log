@@ -1,0 +1,329 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+[   0% ] [90m[1mfirst_scan_filesystem[22m | Started Inicialización del proyecto (5 steps)[39m[0m
+[   0% ] [90m[1mfirst_scan_filesystem[22m | Escaneando la estructura del archivo...[39m[0m
+[  16% ] [90m[1mfirst_scan_filesystem[22m | Cargando nombres de clases globales...[39m[0m
+[  33% ] [90m[1mfirst_scan_filesystem[22m | Verificando GDExtensions...[39m[0m
+[  50% ] [90m[1mfirst_scan_filesystem[22m | Creando scripts de carga automática...[39m[0m
+[  66% ] [90m[1mfirst_scan_filesystem[22m | Inicializando plugins...[39m[0m
+[38;2;218;165;32mIt was recognized that GdUnit4 is running in a test environment, therefore the GdUnit4 plugin will not be executed![0m
+[MCP] Connecting to ports 6505-6514
+[MCP] Godot MCP Pro v1.16.0 started (ports 6505-6514)
+[MCP] Registered 177 commands
+[  83% ] [90m[1mfirst_scan_filesystem[22m | Iniciando escaneo de archivos...[39m[0m
+[92m[ DONE ][39m [1mfirst_scan_filesystem[22m
+[0m
+[   0% ] [90m[1mupdate_scripts_classes[22m | Started Registrando clases globales... (7 steps)[39m[0m
+[   0% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  12% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  25% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  37% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  50% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  62% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  75% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[92m[ DONE ][39m [1mupdate_scripts_classes[22m
+[0m
+[   0% ] [90m[1mloading_editor_layout[22m | Started Cargando editor (5 steps)[39m[0m
+[   0% ] [90m[1mloading_editor_layout[22m | Cargando diseño del editor...[39m[0m
+[  16% ] [90m[1mloading_editor_layout[22m | Cargando docks...[39m[0m
+[92m[ DONE ][39m [1mloading_editor_layout[22m
+[0m
+[MCP] WebSocket client stopped
+[MCP] Godot MCP Pro stopped
+ERROR: The remote port number must be between 1 and 65535 (inclusive).
+   at: connect_to_host (core/io/stream_peer_tcp.cpp:69)
+ERROR: Remote Debugger: Unable to connect to host '127.0.0.1:0'.
+   at: create_tcp (core/debugger/remote_debugger_peer.cpp:247)
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+[2J[H[38;2;233;150;122m
+--------------------------------------------------------------------------------------------------
+GdUnit4 Comandline Tool
+--------------------------------------------------------------------------------------------------[0m
+[38;2;0;191;255mDisabled fail fast![0m
+[38;2;0;191;255mSet write reports to D:/Usuarios/fede/Documentos/Catedra Videojuegos FADU/manada/repo/nosefia/.claude/worktrees/batch-20261010-370/reports[0m
+[38;2;218;165;32m
+Headless mode is ignored by option '--ignoreHeadlessMode'"
+
+Please note that tests that use UI interaction do not work correctly in headless mode.
+Godot 'InputEvents' are not transported by the Godot engine in headless mode and therefore
+have no effect in the test!
+[0m
+[38;2;100;149;237mInstalling GdUnit4 session system hooks.[0m
+[38;2;100;149;237mSession hook 'GdUnitHtmlTestReporter' installed.[0m
+[38;2;100;149;237mSession hook 'GdUnitXMLTestReporter' installed.[0m
+[38;2;100;149;237mInstalling GdUnit4 session hooks.[0m
+[38;2;100;149;237mSession hook 'Guardado de la sesión' installed.[0m
+[38;2;0;206;209mRun Test Suite: [0m[38;2;250;235;215mres://test/dominio/almacen/tarea_de_la_basura_test.gd[0m
+  [38;2;250;235;215mres://test/dominio/almacen/tarea_de_la_basura_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_la_jornada_arranca_con_las_bolsas_del_balance_y_ninguna_depositada[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/almacen/tarea_de_la_basura_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_la_jornada_arranca_con_las_bolsas_del_balance_y_ninguna_depositada[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 8ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/almacen/tarea_de_la_basura_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_la_misma_bolsa_dos_veces_no_cuenta_dos[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/almacen/tarea_de_la_basura_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_la_misma_bolsa_dos_veces_no_cuenta_dos[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 7ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/almacen/tarea_de_la_basura_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_un_objeto_ajeno_no_es_basura[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/almacen/tarea_de_la_basura_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_un_objeto_ajeno_no_es_basura[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 7ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/almacen/tarea_de_la_basura_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_la_tarea_se_completa_recien_con_la_ultima_bolsa[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/almacen/tarea_de_la_basura_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_la_tarea_se_completa_recien_con_la_ultima_bolsa[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 9ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/almacen/tarea_de_la_basura_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_cada_jornada_arranca_con_la_basura_adentro[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/almacen/tarea_de_la_basura_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_cada_jornada_arranca_con_la_basura_adentro[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 7ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/almacen/tarea_de_la_basura_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_un_id_repetido_en_la_lista_no_agranda_la_tarea[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/almacen/tarea_de_la_basura_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_un_id_repetido_en_la_lista_no_agranda_la_tarea[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 8ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/almacen/tarea_de_la_basura_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_solo_la_jornada_que_declara_basura_tiene_tachos_llenos[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/almacen/tarea_de_la_basura_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_solo_la_jornada_que_declara_basura_tiene_tachos_llenos[0m[38;2;178;34;34m[1m FAILED[0m[38;2;100;149;237m 8ms[0m
+  [38;2;0;206;209m[1m[4mReport:[0m
+  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ [38;2;30;144;255m0[0m
+ but was
+ [38;2;30;144;255m3[0m[0m[38;2;173;216;230m	at 'test_solo_la_jornada_que_declara_basura_tiene_tachos_llenos' in res://test/dominio/almacen/tarea_de_la_basura_test.gd:75[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ '[38;2;30;144;255mtrue[0m'
+ but was
+ '[38;2;30;144;255mfalse[0m'[0m[38;2;173;216;230m	at 'test_solo_la_jornada_que_declara_basura_tiene_tachos_llenos' in res://test/dominio/almacen/tarea_de_la_basura_test.gd:77[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ '[38;2;30;144;255mtrue[0m'
+ but was
+ '[38;2;30;144;255mfalse[0m'[0m[38;2;173;216;230m	at 'test_solo_la_jornada_que_declara_basura_tiene_tachos_llenos' in res://test/dominio/almacen/tarea_de_la_basura_test.gd:77[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ '[38;2;30;144;255mtrue[0m'
+ but was
+ '[38;2;30;144;255mfalse[0m'[0m[38;2;173;216;230m	at 'test_solo_la_jornada_que_declara_basura_tiene_tachos_llenos' in res://test/dominio/almacen/tarea_de_la_basura_test.gd:77[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ [38;2;30;144;255m0[0m
+ but was
+ [38;2;30;144;255m3[0m[0m[38;2;173;216;230m	at 'test_solo_la_jornada_que_declara_basura_tiene_tachos_llenos' in res://test/dominio/almacen/tarea_de_la_basura_test.gd:75[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ [38;2;30;144;255m0[0m
+ but was
+ [38;2;30;144;255m3[0m[0m[38;2;173;216;230m	at 'test_solo_la_jornada_que_declara_basura_tiene_tachos_llenos' in res://test/dominio/almacen/tarea_de_la_basura_test.gd:75[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ [38;2;30;144;255m0[0m
+ but was
+ [38;2;30;144;255m3[0m[0m[38;2;173;216;230m	at 'test_solo_la_jornada_que_declara_basura_tiene_tachos_llenos' in res://test/dominio/almacen/tarea_de_la_basura_test.gd:75[0m[38;2;128;128;128m[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/almacen/tarea_de_la_basura_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_sacar_agota_solo_el_tacho_sin_depositar_y_repetir_no_duplica[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/almacen/tarea_de_la_basura_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_sacar_agota_solo_el_tacho_sin_depositar_y_repetir_no_duplica[0m[38;2;178;34;34m[1m FAILED[0m[38;2;100;149;237m 9ms[0m
+  [38;2;0;206;209m[1m[4mReport:[0m
+  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ '[38;2;30;144;255mbolsa_de_basura_1[0m'
+ but was
+ '[38;2;30;144;255m[48;2;38;0;0m[38;2;255;255;255mbolsa_de_basura_1[0m[38;2;30;144;255m[48;2;38;0;0m[0m[38;2;30;144;255m[0m'[0m[38;2;173;216;230m	at 'test_sacar_agota_solo_el_tacho_sin_depositar_y_repetir_no_duplica' in res://test/dominio/almacen/tarea_de_la_basura_test.gd:85[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ '[38;2;30;144;255mbolsa_de_basura_2[0m'
+ but was
+ '[38;2;30;144;255m[48;2;38;0;0m[38;2;255;255;255mbolsa_de_basura_2[0m[38;2;30;144;255m[48;2;38;0;0m[0m[38;2;30;144;255m[0m'[0m[38;2;173;216;230m	at 'test_sacar_agota_solo_el_tacho_sin_depositar_y_repetir_no_duplica' in res://test/dominio/almacen/tarea_de_la_basura_test.gd:85[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ '[38;2;30;144;255mbolsa_de_basura_3[0m'
+ but was
+ '[38;2;30;144;255m[48;2;38;0;0m[38;2;255;255;255mbolsa_de_basura_3[0m[38;2;30;144;255m[48;2;38;0;0m[0m[38;2;30;144;255m[0m'[0m[38;2;173;216;230m	at 'test_sacar_agota_solo_el_tacho_sin_depositar_y_repetir_no_duplica' in res://test/dominio/almacen/tarea_de_la_basura_test.gd:85[0m[38;2;128;128;128m[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/almacen/tarea_de_la_basura_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_mano_ocupada_y_tacho_vacio_no_cambian_nada[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/almacen/tarea_de_la_basura_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_mano_ocupada_y_tacho_vacio_no_cambian_nada[0m[38;2;178;34;34m[1m FAILED[0m[38;2;100;149;237m 7ms[0m
+  [38;2;0;206;209m[1m[4mReport:[0m
+  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m '[38;2;30;144;255mtrue[0m' but is '[38;2;30;144;255mfalse[0m'[0m[38;2;173;216;230m	at 'test_mano_ocupada_y_tacho_vacio_no_cambian_nada' in res://test/dominio/almacen/tarea_de_la_basura_test.gd:96[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m '[38;2;30;144;255mtrue[0m' but is '[38;2;30;144;255mfalse[0m'[0m[38;2;173;216;230m	at 'test_mano_ocupada_y_tacho_vacio_no_cambian_nada' in res://test/dominio/almacen/tarea_de_la_basura_test.gd:96[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m '[38;2;30;144;255mtrue[0m' but is '[38;2;30;144;255mfalse[0m'[0m[38;2;173;216;230m	at 'test_mano_ocupada_y_tacho_vacio_no_cambian_nada' in res://test/dominio/almacen/tarea_de_la_basura_test.gd:96[0m[38;2;128;128;128m[0m
+[38;2;128;128;128m[0m
+[38;2;30;144;255mStatistics:[0m[38;2;128;128;128m 9 test cases | 0 errors | 13 failures | 0 flaky | 0 skipped | 0 orphans |[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 141ms[0m
+[38;2;128;128;128m[0m
+[38;2;128;128;128m[0m
+[38;2;0;206;209mRun Test Suite: [0m[38;2;250;235;215mres://test/sistemas/tareas/recolector_de_basura_test.gd[0m
+  [38;2;250;235;215mres://test/sistemas/tareas/recolector_de_basura_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_el_tiro_aceptado_entrega_el_mismo_cuerpo_sin_soltar[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/sistemas/tareas/recolector_de_basura_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_el_tiro_aceptado_entrega_el_mismo_cuerpo_sin_soltar[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 6ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/sistemas/tareas/recolector_de_basura_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_mano_vacia_caja_y_tapa_no_abierta_conservan_todo[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/sistemas/tareas/recolector_de_basura_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_mano_vacia_caja_y_tapa_no_abierta_conservan_todo[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 8ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/sistemas/tareas/recolector_de_basura_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_la_ultima_bolsa_completa_una_vez_sin_mover_el_turno[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/sistemas/tareas/recolector_de_basura_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_la_ultima_bolsa_completa_una_vez_sin_mover_el_turno[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 6ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/sistemas/tareas/recolector_de_basura_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_el_util_tirado_no_cuenta_como_bolsa[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/sistemas/tareas/recolector_de_basura_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_el_util_tirado_no_cuenta_como_bolsa[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 7ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/sistemas/tareas/recolector_de_basura_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_la_unidad_tirada_sale_del_inventario_antes_del_aviso[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/sistemas/tareas/recolector_de_basura_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_la_unidad_tirada_sale_del_inventario_antes_del_aviso[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 7ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/sistemas/tareas/recolector_de_basura_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_sin_cableado_no_entrega_ni_publica[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+ERROR: Recolector sin cablear: revisar almacen.tscn y almacen.gd
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] pedir_tirar (res://src/sistemas/tareas/recolector_de_basura.gd:28)
+       [1] <anonymous lambda> (res://test/sistemas/tareas/recolector_de_basura_test.gd:140)
+       [2] _execute (res://addons/gdUnit4/src/asserts/GdUnitGodotErrorAssertImpl.gd:17)
+       [3] is_push_error (res://addons/gdUnit4/src/asserts/GdUnitGodotErrorAssertImpl.gd:132)
+       [4] test_sin_cableado_no_entrega_ni_publica (res://test/sistemas/tareas/recolector_de_basura_test.gd:140)
+       [5] _execute_test_case (res://addons/gdUnit4/src/core/_TestCase.gd:79)
+       [6] execute (res://addons/gdUnit4/src/core/_TestCase.gd:40)
+       [7] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleTestStage.gd:10)
+       [8] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [9] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleExecutionStage.gd:17)
+       [10] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [11] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestCaseExecutionStage.gd:26)
+       [12] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [13] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestSuiteExecutionStage.gd:36)
+       [14] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [15] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestCaseExecutionStage.gd:35)
+       [16] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [17] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleExecutionStage.gd:28)
+       [18] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [19] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleTestStage.gd:10)
+       [20] execute (res://addons/gdUnit4/src/core/_TestCase.gd:41)
+       [21] test_completed (res://addons/gdUnit4/src/core/_TestCase.gd:86)
+ERROR: Recolector sin cablear: revisar almacen.tscn y almacen.gd
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] pedir_tirar (res://src/sistemas/tareas/recolector_de_basura.gd:28)
+       [1] <anonymous lambda> (res://test/sistemas/tareas/recolector_de_basura_test.gd:140)
+       [2] _execute (res://addons/gdUnit4/src/asserts/GdUnitGodotErrorAssertImpl.gd:17)
+       [3] is_push_error (res://addons/gdUnit4/src/asserts/GdUnitGodotErrorAssertImpl.gd:132)
+       [4] test_sin_cableado_no_entrega_ni_publica (res://test/sistemas/tareas/recolector_de_basura_test.gd:140)
+       [5] _execute_test_case (res://addons/gdUnit4/src/core/_TestCase.gd:79)
+       [6] execute (res://addons/gdUnit4/src/core/_TestCase.gd:40)
+       [7] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleTestStage.gd:10)
+       [8] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [9] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleExecutionStage.gd:17)
+       [10] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [11] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestCaseExecutionStage.gd:26)
+       [12] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [13] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestSuiteExecutionStage.gd:36)
+       [14] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [15] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestCaseExecutionStage.gd:35)
+       [16] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [17] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleExecutionStage.gd:28)
+       [18] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [19] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleTestStage.gd:10)
+       [20] execute (res://addons/gdUnit4/src/core/_TestCase.gd:41)
+       [21] test_completed (res://addons/gdUnit4/src/core/_TestCase.gd:86)
+ERROR: Recolector sin cablear: revisar almacen.tscn y almacen.gd
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] pedir_tirar (res://src/sistemas/tareas/recolector_de_basura.gd:28)
+       [1] <anonymous lambda> (res://test/sistemas/tareas/recolector_de_basura_test.gd:140)
+       [2] _execute (res://addons/gdUnit4/src/asserts/GdUnitGodotErrorAssertImpl.gd:17)
+       [3] is_push_error (res://addons/gdUnit4/src/asserts/GdUnitGodotErrorAssertImpl.gd:132)
+       [4] test_sin_cableado_no_entrega_ni_publica (res://test/sistemas/tareas/recolector_de_basura_test.gd:140)
+       [5] _execute_test_case (res://addons/gdUnit4/src/core/_TestCase.gd:79)
+       [6] execute (res://addons/gdUnit4/src/core/_TestCase.gd:40)
+       [7] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleTestStage.gd:10)
+       [8] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [9] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleExecutionStage.gd:17)
+       [10] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [11] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestCaseExecutionStage.gd:26)
+       [12] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [13] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestSuiteExecutionStage.gd:36)
+       [14] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [15] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestCaseExecutionStage.gd:35)
+       [16] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [17] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleExecutionStage.gd:28)
+       [18] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [19] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleTestStage.gd:10)
+       [20] execute (res://addons/gdUnit4/src/core/_TestCase.gd:41)
+       [21] test_completed (res://addons/gdUnit4/src/core/_TestCase.gd:86)
+ERROR: Recolector sin cablear: revisar almacen.tscn y almacen.gd
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] pedir_tirar (res://src/sistemas/tareas/recolector_de_basura.gd:28)
+       [1] <anonymous lambda> (res://test/sistemas/tareas/recolector_de_basura_test.gd:148)
+       [2] _execute (res://addons/gdUnit4/src/asserts/GdUnitGodotErrorAssertImpl.gd:17)
+       [3] is_push_error (res://addons/gdUnit4/src/asserts/GdUnitGodotErrorAssertImpl.gd:132)
+       [4] test_sin_cableado_no_entrega_ni_publica (res://test/sistemas/tareas/recolector_de_basura_test.gd:148)
+       [5] _execute_test_case (res://addons/gdUnit4/src/core/_TestCase.gd:79)
+       [6] execute (res://addons/gdUnit4/src/core/_TestCase.gd:40)
+       [7] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleTestStage.gd:10)
+       [8] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [9] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleExecutionStage.gd:17)
+       [10] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [11] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestCaseExecutionStage.gd:26)
+       [12] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [13] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestSuiteExecutionStage.gd:36)
+       [14] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [15] _execute (res://addons/gdUnit4/src/core/execution/stages/GdUnitTestCaseExecutionStage.gd:35)
+       [16] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [17] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleExecutionStage.gd:28)
+       [18] execute (res://addons/gdUnit4/src/core/execution/stages/IGdUnitExecutionStage.gd:19)
+       [19] _execute (res://addons/gdUnit4/src/core/execution/stages/single/GdUnitTestCaseSingleTestStage.gd:10)
+       [20] execute (res://addons/gdUnit4/src/core/_TestCase.gd:41)
+       [21] test_completed (res://addons/gdUnit4/src/core/_TestCase.gd:86)
+  [38;2;250;235;215mres://test/sistemas/tareas/recolector_de_basura_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_sin_cableado_no_entrega_ni_publica[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 12ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/sistemas/tareas/recolector_de_basura_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_tirar_las_bolsas_en_la_primera_no_cumple_otra_obligatoria[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/sistemas/tareas/recolector_de_basura_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_tirar_las_bolsas_en_la_primera_no_cumple_otra_obligatoria[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 7ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/sistemas/tareas/recolector_de_basura_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_sacar_entrega_el_mismo_cuerpo_sin_depositar_y_avisa_una_vez[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/sistemas/tareas/recolector_de_basura_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_sacar_entrega_el_mismo_cuerpo_sin_depositar_y_avisa_una_vez[0m[38;2;178;34;34m[1m FAILED[0m[38;2;100;149;237m 6ms[0m
+  [38;2;0;206;209m[1m[4mReport:[0m
+  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m '[38;2;30;144;255mtrue[0m' but is '[38;2;30;144;255mfalse[0m'[0m[38;2;173;216;230m	at 'test_sacar_entrega_el_mismo_cuerpo_sin_depositar_y_avisa_una_vez' in res://test/sistemas/tareas/recolector_de_basura_test.gd:185[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ [38;2;30;144;255m<Node3D>[0m
+ to refer to the same object
+ '[38;2;30;144;255m<null>[0m'[0m[38;2;173;216;230m	at 'test_sacar_entrega_el_mismo_cuerpo_sin_depositar_y_avisa_una_vez' in res://test/sistemas/tareas/recolector_de_basura_test.gd:186[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting contains exactly elements:[0m
+ '[38;2;30;144;255m<empty>[0m'
+ do contains (in same order)
+ '[38;2;30;144;255m[0][0m'
+but could not find elements:
+ '[38;2;30;144;255m[0][0m'[0m[38;2;173;216;230m	at 'test_sacar_entrega_el_mismo_cuerpo_sin_depositar_y_avisa_una_vez' in res://test/sistemas/tareas/recolector_de_basura_test.gd:187[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m '[38;2;30;144;255mtrue[0m' but is '[38;2;30;144;255mfalse[0m'[0m[38;2;173;216;230m	at 'test_sacar_entrega_el_mismo_cuerpo_sin_depositar_y_avisa_una_vez' in res://test/sistemas/tareas/recolector_de_basura_test.gd:190[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting size:[0m
+ [38;2;30;144;255m1[0m
+ but was
+ [38;2;30;144;255m0[0m[0m[38;2;173;216;230m	at 'test_sacar_entrega_el_mismo_cuerpo_sin_depositar_y_avisa_una_vez' in res://test/sistemas/tareas/recolector_de_basura_test.gd:193[0m[38;2;128;128;128m[0m
+[38;2;128;128;128m[0m
+[38;2;30;144;255mStatistics:[0m[38;2;128;128;128m 8 test cases | 0 errors | 5 failures | 0 flaky | 0 skipped | 0 orphans |[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 117ms[0m
+[38;2;128;128;128m[0m
+[38;2;128;128;128m[0m
+[38;2;0;206;209mRun Test Suite: [0m[38;2;250;235;215mres://test/dominio/almacen/nota_pegada_test.gd[0m
+  [38;2;250;235;215mres://test/dominio/almacen/nota_pegada_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_las_obligatorias_se_presentan_en_el_orden_de_la_ficha[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/almacen/nota_pegada_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_las_obligatorias_se_presentan_en_el_orden_de_la_ficha[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 5ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/almacen/nota_pegada_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_dos_obligatorias_dan_dos_renglones_en_su_orden[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/almacen/nota_pegada_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_dos_obligatorias_dan_dos_renglones_en_su_orden[0m[38;2;178;34;34m[1m FAILED[0m[38;2;100;149;237m 7ms[0m
+  [38;2;0;206;209m[1m[4mReport:[0m
+  [38;2;128;128;128m[38;2;255;69;0mExpecting contains exactly elements:[0m
+ '[38;2;30;144;255m["Limpieza", "Sacar la basura"][0m'
+ do contains (in same order)
+ '[38;2;30;144;255m["Limpieza", "Tirar la basura"][0m'
+but some elements where not expected:
+ '[38;2;30;144;255m["Sacar la basura"][0m'
+and could not find elements:
+ '[38;2;30;144;255m["Tirar la basura"][0m'[0m[38;2;173;216;230m	at 'test_dos_obligatorias_dan_dos_renglones_en_su_orden' in res://test/dominio/almacen/nota_pegada_test.gd:27[0m[38;2;128;128;128m[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/almacen/nota_pegada_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_sin_obligatorias_hay_titulo_y_ningun_renglon[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/almacen/nota_pegada_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_sin_obligatorias_hay_titulo_y_ningun_renglon[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 7ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/almacen/nota_pegada_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_cada_tipo_de_tarea_declarado_tiene_nombre[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/almacen/nota_pegada_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_cada_tipo_de_tarea_declarado_tiene_nombre[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 7ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/almacen/nota_pegada_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_mantener_ordenado_dice_las_tres_indicaciones_de_la_ficha[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/almacen/nota_pegada_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_mantener_ordenado_dice_las_tres_indicaciones_de_la_ficha[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 6ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/almacen/nota_pegada_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_las_hojas_del_bano_no_generan_una_transcripcion[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/almacen/nota_pegada_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_las_hojas_del_bano_no_generan_una_transcripcion[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 7ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/almacen/nota_pegada_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_cambiar_la_lectura_no_cambia_el_dato_compartido[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/almacen/nota_pegada_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_cambiar_la_lectura_no_cambia_el_dato_compartido[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 6ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/almacen/nota_pegada_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_la_jornada_sin_particular_enumera_solo_las_fijas[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/almacen/nota_pegada_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_la_jornada_sin_particular_enumera_solo_las_fijas[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 5ms[0m
+[38;2;128;128;128m[0m
+[38;2;30;144;255mStatistics:[0m[38;2;128;128;128m 8 test cases | 0 errors | 1 failures | 0 flaky | 0 skipped | 0 orphans |[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 93ms[0m
+[38;2;128;128;128m[0m
+[38;2;128;128;128m[0m
+[38;2;0;206;209mRun Test Suite: [0m[38;2;250;235;215mres://test/escenas/objetos/nota_pegada_test.gd[0m
+  [38;2;250;235;215mres://test/escenas/objetos/nota_pegada_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_el_texto_fisico_y_la_vista_presentan_el_mismo_dato[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/objetos/nota_pegada_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_el_texto_fisico_y_la_vista_presentan_el_mismo_dato[0m[38;2;178;34;34m[1m FAILED[0m[38;2;100;149;237m 13ms[0m
+  [38;2;0;206;209m[1m[4mReport:[0m
+  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ '[38;2;30;144;255m1. Limpieza
+2. Tirar la basura[0m'
+ but was
+ '[38;2;30;144;255m1. Limpieza
+2. [48;2;38;0;0m[38;2;255;255;255mTir[0m[38;2;30;144;255m[48;2;38;0;0m[0m[38;2;30;144;255m[48;2;0;38;0m[38;2;255;255;255mS[0m[38;2;30;144;255m[48;2;0;38;0m[0m[38;2;30;144;255ma[48;2;0;38;0m[38;2;255;255;255mca[0m[38;2;30;144;255m[48;2;0;38;0m[0m[38;2;30;144;255mr la basura[0m'[0m[38;2;173;216;230m	at 'test_el_texto_fisico_y_la_vista_presentan_el_mismo_dato' in res://test/escenas/objetos/nota_pegada_test.gd:18[0m[38;2;128;128;128m[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/objetos/nota_pegada_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_las_tres_imagenes_vienen_del_frente_original[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/objetos/nota_pegada_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_las_tres_imagenes_vienen_del_frente_original[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 9ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/objetos/nota_pegada_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_accionar_pide_la_lectura_de_su_hoja[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/escenas/objetos/nota_pegada_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_accionar_pide_la_lectura_de_su_hoja[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 5ms[0m
+[38;2;128;128;128m[0m
+[38;2;30;144;255mStatistics:[0m[38;2;128;128;128m 3 test cases | 0 errors | 1 failures | 0 flaky | 0 skipped | 0 orphans |[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 52ms[0m
+[38;2;128;128;128m[0m
+[38;2;128;128;128m[0m
+[38;2;30;144;255mOverall Summary:[0m[38;2;255;255;255m 28 test cases | 0 errors | 20 failures | 0 flaky | 0 skipped | 0 orphans |[0m
+[38;2;233;150;122mExecuted test suites: (4/4)[0m
+[38;2;233;150;122mExecuted test cases : (28/28)[0m
+[38;2;233;150;122mTotal execution time: 403ms[0m
+[38;2;255;255;255m [0m[38;2;100;149;237mOpen XML Report at: file://D:/Usuarios/fede/Documentos/Catedra Videojuegos FADU/manada/repo/nosefia/.claude/worktrees/batch-20261010-370/reports/report_2/results.xml[0m
+[38;2;100;149;237mOpen HTML Report at: file://D:/Usuarios/fede/Documentos/Catedra Videojuegos FADU/manada/repo/nosefia/.claude/worktrees/batch-20261010-370/reports/report_2/index.html[0m
+[38;2;178;34;34mExit code: 100[0m
+Run dispose test resources

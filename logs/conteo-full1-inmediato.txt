@@ -1,0 +1,2 @@
+Extracto de 370-final-1.log. verificar_con_crudo.py ejecutó conteo.py inmediatamente después de verificar.py, sin otra suite.
+reports/report_6: 232 suites corridas, 232 archivos `*_test.gd`
