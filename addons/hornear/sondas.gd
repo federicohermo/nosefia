@@ -11,8 +11,9 @@
 ## Una sonda negra sin ninguna vecina con luz —afuera del local— queda como está.
 extends RefCounted
 
-## Una sonda con menos luz que esto está adentro de algo: al aire libre ninguna baja de 0,06.
-const NEGRA := 0.04
+## Sólo se rellena la ausencia de radiancia. El depósito tiene sondas válidas muy tenues:
+## tratarlas como negras reemplaza su luz cálida con el verde de las sondas del salón.
+const NEGRA := 0.00001
 const VECINAS := 6
 const ALCANCE := 2.5
 const COEFICIENTES := 9

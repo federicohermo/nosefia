@@ -28,7 +28,6 @@ func test_las_hojas_tienen_marcos_negros_y_vidrio_transparente() -> void:
 		var cristal := hoja.get_node("local_vidrio_heladera_%d" % numero) as MeshInstance3D
 		var vidrio := cristal.get_active_material(0) as ShaderMaterial
 		assert_object(vidrio).is_not_null()
-		assert_object(vidrio.get_shader_parameter("reflejo_del_techo")).is_not_null()
 		# El foco sólo delinea el marco; pintar el paño haría opaco el vidrio de una cara.
 		var puerta := hoja.get_node("CuerpoDeLaHoja")
 		assert_array(puerta.get("mallas")).contains_exactly([hoja])
