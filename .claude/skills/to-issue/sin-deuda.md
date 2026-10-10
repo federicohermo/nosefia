@@ -212,6 +212,7 @@ entregable más caro y el único que hace que el hallazgo no vuelva.
 | una sonda física **que elimina las colisiones al congelar la escena** | `implement-feature` — se detienen los procesos que cambian la pose y se comprueban piso y obstáculos conocidos antes de medir |
 | una mira **que lee solapamientos anteriores al teletransporte** | `implement-feature` — se sincronizan las áreas con cuadros físicos y se prueban las caras visibles con la mira real |
 | una base **sin stderr que impide comparar el desmontaje** | `implement-feature` — se guardan ambos canales del subproceso también en la base; `godot.log` no sustituye esa salida |
+| un import frío de export **que retiene recursos de plugins del editor** | `implement-feature` — se identifican con verbose y se aísla sólo el editor en la copia externa; preset y juego permanecen idénticos, y el paquete real conserva sus chequeos estrictos |
 | una entrada nativa **que selecciona otra fila por la escala DPI** | `to-issue` — el driver declara consciencia DPI antes de consultar ventanas, cruza cliente y viewport y afirma la selección real sobre el HWND propio |
 | una dependencia instalada **adentro del worktree** que tira la importación de Godot | `implement-batch` — el preámbulo no dijo que Playwright se resuelve desde el checkout principal |
 
