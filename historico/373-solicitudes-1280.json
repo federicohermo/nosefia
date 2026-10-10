@@ -1,0 +1,394 @@
+{
+  "fases": [
+    {
+      "fase": "menu",
+      "ms": 1180.2599999904633,
+      "solicitudes": {
+        "total": 0,
+        "activas": 0,
+        "primeras": []
+      },
+      "cursor": null,
+      "estado": {
+        "alma": false,
+        "botones": [
+          {
+            "nombre": "",
+            "texto": "CONTINUAR",
+            "x": 639.666687011719,
+            "y": 358
+          },
+          {
+            "nombre": "",
+            "texto": "NUEVO JUEGO",
+            "x": 639.666687011719,
+            "y": 407.333343505859
+          },
+          {
+            "nombre": "",
+            "texto": "LOGROS",
+            "x": 639.666687011719,
+            "y": 456.666687011719
+          },
+          {
+            "nombre": "",
+            "texto": "CONFIGURACIONES",
+            "x": 639.666748046875,
+            "y": 532
+          }
+        ]
+      }
+    },
+    {
+      "fase": "clic_nuevo",
+      "ms": 1194.3300000429153,
+      "solicitudes": {
+        "total": 0,
+        "activas": 0,
+        "primeras": []
+      },
+      "cursor": null,
+      "estado": {
+        "alma": false,
+        "botones": [
+          {
+            "nombre": "",
+            "texto": "CONTINUAR",
+            "x": 639.666687011719,
+            "y": 358
+          },
+          {
+            "nombre": "",
+            "texto": "NUEVO JUEGO",
+            "x": 639.666687011719,
+            "y": 407.333343505859
+          },
+          {
+            "nombre": "",
+            "texto": "LOGROS",
+            "x": 639.666687011719,
+            "y": 456.666687011719
+          },
+          {
+            "nombre": "",
+            "texto": "CONFIGURACIONES",
+            "x": 639.666748046875,
+            "y": 532
+          }
+        ]
+      }
+    },
+    {
+      "fase": "almacen_listo",
+      "ms": 5415.195000052452,
+      "solicitudes": {
+        "total": 1,
+        "activas": 1,
+        "primeras": [
+          {
+            "ms": 3465.524999976158,
+            "activa": true,
+            "ha_interactuado": true,
+            "foco": true,
+            "conectado": true,
+            "cursor": null
+          }
+        ]
+      },
+      "cursor": null,
+      "estado": {
+        "abierto": false,
+        "alma": true,
+        "botones": [],
+        "fotos": [],
+        "pantalla": 0,
+        "rect": [
+          466,
+          720,
+          348,
+          618.666687011719
+        ],
+        "scroll": 0
+      }
+    },
+    {
+      "fase": "entrada_terminada",
+      "ms": 8433.754999995232,
+      "solicitudes": {
+        "total": 2,
+        "activas": 1,
+        "primeras": [
+          {
+            "ms": 3465.524999976158,
+            "activa": true,
+            "ha_interactuado": true,
+            "foco": true,
+            "conectado": true,
+            "cursor": null
+          },
+          {
+            "ms": 7653.575000047684,
+            "activa": false,
+            "ha_interactuado": true,
+            "foco": true,
+            "conectado": true,
+            "cursor": null
+          }
+        ]
+      },
+      "cursor": "canvas",
+      "estado": {
+        "abierto": false,
+        "alma": true,
+        "botones": [],
+        "fotos": [],
+        "pantalla": 0,
+        "rect": [
+          466,
+          720,
+          348,
+          618.666687011719
+        ],
+        "scroll": 0
+      }
+    },
+    {
+      "fase": "clic_canvas_captura",
+      "ms": 8464.675000071526,
+      "solicitudes": {
+        "total": 2,
+        "activas": 1,
+        "primeras": [
+          {
+            "ms": 3465.524999976158,
+            "activa": true,
+            "ha_interactuado": true,
+            "foco": true,
+            "conectado": true,
+            "cursor": null
+          },
+          {
+            "ms": 7653.575000047684,
+            "activa": false,
+            "ha_interactuado": true,
+            "foco": true,
+            "conectado": true,
+            "cursor": null
+          }
+        ]
+      },
+      "cursor": "canvas",
+      "estado": {
+        "abierto": false,
+        "alma": true,
+        "botones": [],
+        "fotos": [],
+        "pantalla": 0,
+        "rect": [
+          466,
+          720,
+          348,
+          618.666687011719
+        ],
+        "scroll": 0
+      }
+    },
+    {
+      "fase": "q_suelta",
+      "ms": 8555.310000061989,
+      "solicitudes": {
+        "total": 2,
+        "activas": 1,
+        "primeras": [
+          {
+            "ms": 3465.524999976158,
+            "activa": true,
+            "ha_interactuado": true,
+            "foco": true,
+            "conectado": true,
+            "cursor": null
+          },
+          {
+            "ms": 7653.575000047684,
+            "activa": false,
+            "ha_interactuado": true,
+            "foco": true,
+            "conectado": true,
+            "cursor": null
+          }
+        ]
+      },
+      "cursor": null,
+      "estado": {
+        "abierto": true,
+        "alma": true,
+        "botones": [
+          {
+            "nombre": "El jefe",
+            "texto": "",
+            "x": 640,
+            "y": 764.93310546875
+          },
+          {
+            "nombre": "Distribuidora Álvarez",
+            "texto": "",
+            "x": 640,
+            "y": 864.93310546875
+          },
+          {
+            "nombre": "Número desconocido",
+            "texto": "",
+            "x": 640,
+            "y": 964.93310546875
+          }
+        ],
+        "fotos": [],
+        "pantalla": 0,
+        "rect": [
+          466,
+          635.599731445312,
+          348,
+          618.666748046875
+        ],
+        "scroll": 0
+      }
+    },
+    {
+      "fase": "q_recaptura",
+      "ms": 8637.165000081062,
+      "solicitudes": {
+        "total": 3,
+        "activas": 2,
+        "primeras": [
+          {
+            "ms": 3465.524999976158,
+            "activa": true,
+            "ha_interactuado": true,
+            "foco": true,
+            "conectado": true,
+            "cursor": null
+          },
+          {
+            "ms": 7653.575000047684,
+            "activa": false,
+            "ha_interactuado": true,
+            "foco": true,
+            "conectado": true,
+            "cursor": null
+          },
+          {
+            "ms": 8576.53500008583,
+            "activa": true,
+            "ha_interactuado": true,
+            "foco": true,
+            "conectado": true,
+            "cursor": null
+          }
+        ]
+      },
+      "cursor": "canvas",
+      "estado": {
+        "abierto": false,
+        "alma": true,
+        "botones": [
+          {
+            "nombre": "El jefe",
+            "texto": "",
+            "x": 640,
+            "y": 637.652709960938
+          },
+          {
+            "nombre": "Distribuidora Álvarez",
+            "texto": "",
+            "x": 640,
+            "y": 737.652709960938
+          },
+          {
+            "nombre": "Número desconocido",
+            "texto": "",
+            "x": 640,
+            "y": 837.652709960938
+          }
+        ],
+        "fotos": [],
+        "pantalla": 0,
+        "rect": [
+          466,
+          508.3193359375,
+          348,
+          618.666687011719
+        ],
+        "scroll": 0
+      }
+    },
+    {
+      "fase": "fin",
+      "ms": 8659.840000033379,
+      "solicitudes": {
+        "total": 3,
+        "activas": 2,
+        "primeras": [
+          {
+            "ms": 3465.524999976158,
+            "activa": true,
+            "ha_interactuado": true,
+            "foco": true,
+            "conectado": true,
+            "cursor": null
+          },
+          {
+            "ms": 7653.575000047684,
+            "activa": false,
+            "ha_interactuado": true,
+            "foco": true,
+            "conectado": true,
+            "cursor": null
+          },
+          {
+            "ms": 8576.53500008583,
+            "activa": true,
+            "ha_interactuado": true,
+            "foco": true,
+            "conectado": true,
+            "cursor": null
+          }
+        ]
+      },
+      "cursor": "canvas",
+      "estado": {
+        "abierto": false,
+        "alma": true,
+        "botones": [
+          {
+            "nombre": "El jefe",
+            "texto": "",
+            "x": 640,
+            "y": 706.098754882812
+          },
+          {
+            "nombre": "Distribuidora Álvarez",
+            "texto": "",
+            "x": 640,
+            "y": 806.098754882812
+          },
+          {
+            "nombre": "Número desconocido",
+            "texto": "",
+            "x": 640,
+            "y": 906.098754882812
+          }
+        ],
+        "fotos": [],
+        "pantalla": 0,
+        "rect": [
+          466,
+          576.765380859375,
+          348,
+          618.666625976562
+        ],
+        "scroll": 0
+      }
+    }
+  ],
+  "errores": []
+}

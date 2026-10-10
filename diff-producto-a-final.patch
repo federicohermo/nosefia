@@ -1,0 +1,35 @@
+diff --git a/src/dominio/investigacion/conversacion.gd b/src/dominio/investigacion/conversacion.gd
+index 510aeef4..e884402c 100644
+--- a/src/dominio/investigacion/conversacion.gd
++++ b/src/dominio/investigacion/conversacion.gd
+@@ -14,8 +14,6 @@
+ class_name Conversacion
+ extends Resource
+ 
+-@export var imagen: Texture2D = null
+-
+ ## Con quién chatea el empleado. Es un `enum` porque el conjunto es cerrado, y cada valor tiene
+ ## su `.tres`: uno sin archivo es una pestaña que el jugador abre y encuentra vacía.
+ enum Interlocutor { JEFE, PROVEEDOR, DESCONOCIDO }
+@@ -30,6 +28,8 @@ const ARCHIVOS := {
+ 	Interlocutor.DESCONOCIDO: "conversacion_con_el_desconocido.tres",
+ }
+ 
++@export var imagen: Texture2D = null
++
+ @export var interlocutor: Interlocutor = Interlocutor.JEFE
+ 
+ ## Cómo lo lee el jugador en la lista. Va en el recurso y no en la pantalla: los nombres son
+diff --git a/test/sistemas/investigacion/celular_del_empleado_test.gd b/test/sistemas/investigacion/celular_del_empleado_test.gd
+index 23760e90..dc5ecb3a 100644
+--- a/test/sistemas/investigacion/celular_del_empleado_test.gd
++++ b/test/sistemas/investigacion/celular_del_empleado_test.gd
+@@ -40,7 +40,7 @@ func test_solo_los_gestos_aceptados_publican_y_leer_no_suena() -> void:  # AC-IN
+ 	assert_int(cuentas.size()).is_equal(2)
+ 
+ 
+-func test_recibir_cerrado_y_en_chat_avisa_una_vez_por_mensaje_valido() -> void:  # AC-INV-029, AC-INV-030
++func test_recibir_cerrado_y_en_chat_avisa_una_vez() -> void:  # AC-INV-029, AC-INV-030
+ 	var sistema: CelularDelEmpleado = auto_free(CelularDelEmpleado.new())
+ 	var eventos: Array[Mensaje] = []
+ 	var cuentas: Array[int] = []

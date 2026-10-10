@@ -1,0 +1,59 @@
+{
+  "fases": [
+    {
+      "fase": "menu",
+      "ms": 2542.5950000286102,
+      "foco": true,
+      "visible": "visible",
+      "activacion": true,
+      "ha_interactuado": true,
+      "cursor": null
+    },
+    {
+      "fase": "clic_nuevo",
+      "ms": 2571.3249999284744,
+      "foco": true,
+      "visible": "visible",
+      "activacion": true,
+      "ha_interactuado": true,
+      "cursor": null
+    },
+    {
+      "fase": "almacen_listo",
+      "ms": 15557.274999976158,
+      "foco": true,
+      "visible": "visible",
+      "activacion": false,
+      "ha_interactuado": true,
+      "cursor": null
+    },
+    {
+      "fase": "entrada_terminada",
+      "ms": 18568.375,
+      "foco": true,
+      "visible": "visible",
+      "activacion": false,
+      "ha_interactuado": true,
+      "cursor": "canvas"
+    },
+    {
+      "fase": "clic_canvas",
+      "ms": 18587.605000019073,
+      "foco": true,
+      "visible": "visible",
+      "activacion": true,
+      "ha_interactuado": true,
+      "cursor": "canvas"
+    },
+    {
+      "fase": "tras_clic",
+      "ms": 19593.990000009537,
+      "foco": true,
+      "visible": "visible",
+      "activacion": true,
+      "ha_interactuado": true,
+      "cursor": "canvas"
+    }
+  ],
+  "errores": []
+}

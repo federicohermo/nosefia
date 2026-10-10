@@ -1,0 +1,9 @@
+{
+  "commit": "33828836d19b8913efbc0c3d2dc09186b5af13f6",
+  "verificacion_commit": "33828836d19b8913efbc0c3d2dc09186b5af13f6",
+  "fixture_sha256": "15dc7c4e550982e8fbf99da23a20bae0e6442b52537ee0bafbf97967dbfee2ae",
+  "modelo_sha256": "f9c10904656c95e0250225159a9e76a8f046ddd8ece2ddda36621fa9e97d9d2f",
+  "project_externo_sha256": "e101021a7d3b6ea529be9262e6f54b74a80d37107b8cf5080c869f39700475aa",
+  "preset_sha256": "dbfb6b8bd6da71b1face4e6c2a1b919f98b6408080dcb95f5bc09d68c1bcd65f",
+  "origen": "git archive + import frío del modelo; sólo editor_plugins deshabilitados y main_scene de sonda en la copia externa."
+}

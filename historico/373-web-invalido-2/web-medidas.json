@@ -1,0 +1,82 @@
+{
+  "1920": {
+    "focos": [
+      {
+        "fase": "antes_de_activar",
+        "hasFocus": true,
+        "visibility": "visible",
+        "activo": "CANVAS",
+        "canvasConectado": true
+      },
+      {
+        "fase": "antes_de_nuevo_juego",
+        "hasFocus": true,
+        "visibility": "visible",
+        "activo": "CANVAS",
+        "canvasConectado": true
+      }
+    ],
+    "raf": 136,
+    "rect": [
+      699,
+      76,
+      522,
+      928
+    ],
+    "scrollAntes": 0,
+    "scrollDespues": 0,
+    "adjunto": {
+      "altura_de_contenido": 260,
+      "altura_de_imagen": 552,
+      "altura_del_nodo": 260,
+      "cabe_imagen": true,
+      "cabe_texto": true,
+      "lineas": 10,
+      "texto": "Para esta noche, te pido que [b]organices las cajas[/b] que dejó el proveedor en el depósito. Acomodalas en los estantes y que no quede ni una en el piso, entendido? Te voy a tener cortito con esos detalles. Para trabajar en una estación de servicio tan prestigiosa como esta, tenés que estar al nivel.",
+      "texto_dibujado": "Para esta noche, te pido que organices las cajas que dejó el proveedor en el depósito. Acomodalas en los estantes y que no quede ni una en el piso, entendido? Te voy a tener cortito con esos detalles. Para trabajar en una estación de servicio tan prestigiosa como esta, tenés que estar al nivel."
+    },
+    "errores": [
+      "A user gesture is required to request Pointer Lock.",
+      "A user gesture is required to request Pointer Lock.",
+      "A user gesture is required to request Pointer Lock.",
+      "A user gesture is required to request Pointer Lock.",
+      "A user gesture is required to request Pointer Lock.",
+      "A user gesture is required to request Pointer Lock.",
+      "A user gesture is required to request Pointer Lock.",
+      "A user gesture is required to request Pointer Lock.",
+      "A user gesture is required to request Pointer Lock.",
+      "A user gesture is required to request Pointer Lock.",
+      "A user gesture is required to request Pointer Lock.",
+      "Failed to execute 'requestPointerLock' on 'Element': Too many pointer lock requests in a short window of time.",
+      "Failed to execute 'requestPointerLock' on 'Element': Too many pointer lock requests in a short window of time.",
+      "Failed to execute 'requestPointerLock' on 'Element': Too many pointer lock requests in a short window of time.",
+      "Failed to execute 'requestPointerLock' on 'Element': Too many pointer lock requests in a short window of time.",
+      "Failed to execute 'requestPointerLock' on 'Element': Too many pointer lock requests in a short window of time.",
+      "Failed to execute 'requestPointerLock' on 'Element': Too many pointer lock requests in a short window of time.",
+      "Failed to execute 'requestPointerLock' on 'Element': Too many pointer lock requests in a short window of time.",
+      "Failed to execute 'requestPointerLock' on 'Element': Too many pointer lock requests in a short window of time.",
+      "Failed to execute 'requestPointerLock' on 'Element': Too many pointer lock requests in a short window of time.",
+      "Failed to execute 'requestPointerLock' on 'Element': Too many pointer lock requests in a short window of time.",
+      "Failed to execute 'requestPointerLock' on 'Element': Too many pointer lock requests in a short window of time.",
+      "Failed to execute 'requestPointerLock' on 'Element': Too many pointer lock requests in a short window of time.",
+      "Failed to execute 'requestPointerLock' on 'Element': Too many pointer lock requests in a short window of time.",
+      "Failed to execute 'requestPointerLock' on 'Element': Too many pointer lock requests in a short window of time.",
+      "Failed to execute 'requestPointerLock' on 'Element': Too many pointer lock requests in a short window of time.",
+      "Failed to execute 'requestPointerLock' on 'Element': Too many pointer lock requests in a short window of time.",
+      "Failed to execute 'requestPointerLock' on 'Element': Too many pointer lock requests in a short window of time.",
+      "Failed to execute 'requestPointerLock' on 'Element': Too many pointer lock requests in a short window of time.",
+      "Failed to execute 'requestPointerLock' on 'Element': Too many pointer lock requests in a short window of time.",
+      "Failed to execute 'requestPointerLock' on 'Element': Too many pointer lock requests in a short window of time.",
+      "Failed to execute 'requestPointerLock' on 'Element': Too many pointer lock requests in a short window of time.",
+      "Failed to execute 'requestPointerLock' on 'Element': Too many pointer lock requests in a short window of time.",
+      "Failed to execute 'requestPointerLock' on 'Element': Too many pointer lock requests in a short window of time.",
+      "Failed to execute 'requestPointerLock' on 'Element': Too many pointer lock requests in a short window of time.",
+      "Failed to execute 'requestPointerLock' on 'Element': Too many pointer lock requests in a short window of time.",
+      "Failed to execute 'requestPointerLock' on 'Element': Too many pointer lock requests in a short window of time.",
+      "Failed to execute 'requestPointerLock' on 'Element': Too many pointer lock requests in a short window of time.",
+      "Failed to execute 'requestPointerLock' on 'Element': Too many pointer lock requests in a short window of time.",
+      "Failed to execute 'requestPointerLock' on 'Element': Too many pointer lock requests in a short window of time.",
+      "Failed to execute 'requestPointerLock' on 'Element': Too many pointer lock requests in a short window of time."
+    ]
+  }
+}

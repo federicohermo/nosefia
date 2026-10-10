@@ -1,0 +1,9 @@
+{
+  "head": "68087e1b724bc11cadad4658bcd0cf1bdc300c46",
+  "estado": "stub parseable y adaptador mecánico; política previa sin idempotencia ni captura por evento",
+  "archivos": {
+    "src/escenas/jugador.gd": "34b7ba7018c7c788f39abfce7867b0b97a145ab5312647887390103af2b804b2",
+    "src/escenas/almacen.gd": "b9569cb04b3427201b70f219c2d55ef9d3bf29952c393ca6991e22718d25e051",
+    "test/escenas/celular_en_el_almacen_test.gd": "432ebd7f290c609d12821e769ab36573f29e6b0576ea28fa489a0eddac6bf73f"
+  }
+}

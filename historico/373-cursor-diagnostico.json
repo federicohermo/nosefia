@@ -1,0 +1,64 @@
+{
+  "fases": [
+    {
+      "fase": "menu",
+      "ms": 2415.6050000190735,
+      "foco": true,
+      "visible": "visible",
+      "activacion": true,
+      "ha_interactuado": true,
+      "cursor": null
+    },
+    {
+      "fase": "clic_nuevo",
+      "ms": 2442.7200000286102,
+      "foco": true,
+      "visible": "visible",
+      "activacion": true,
+      "ha_interactuado": true,
+      "cursor": null
+    },
+    {
+      "fase": "almacen_listo",
+      "ms": 36052.43500006199,
+      "foco": true,
+      "visible": "visible",
+      "activacion": true,
+      "ha_interactuado": true,
+      "cursor": null
+    },
+    {
+      "fase": "entrada_terminada",
+      "ms": 39071.32000005245,
+      "foco": true,
+      "visible": "visible",
+      "activacion": true,
+      "ha_interactuado": true,
+      "cursor": "canvas"
+    },
+    {
+      "fase": "clic_canvas",
+      "ms": 39093.23000001907,
+      "foco": true,
+      "visible": "visible",
+      "activacion": true,
+      "ha_interactuado": true,
+      "cursor": "canvas"
+    },
+    {
+      "fase": "tras_clic",
+      "ms": 40102.93500006199,
+      "foco": true,
+      "visible": "visible",
+      "activacion": true,
+      "ha_interactuado": true,
+      "cursor": "canvas"
+    }
+  ],
+  "errores": [
+    {
+      "ms": 27395,
+      "error": "A user gesture is required to request Pointer Lock."
+    }
+  ]
+}

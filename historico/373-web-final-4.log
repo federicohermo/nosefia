@@ -1,0 +1,7 @@
+Espera pasiva: () => window.nosefia373_estado?.botones?.some(b=>b.texto==='NUEVO JUEGO')
+Espera pasiva: ()=>document.hasFocus()&&document.visibilityState==='visible'
+Espera pasiva: ()=>window.nosefia373_estado?.alma
+Espera pasiva: ()=>document.pointerLockElement===document.querySelector('canvas')
+Error: Timeout de lectura pasiva: ()=>document.pointerLockElement===document.querySelector('canvas')
+    at esperar (C:\Users\fede_\AppData\Local\Temp\nosefia-batch-364-370-20261010\navegador373.cjs:35:15)
+    at async C:\Users\fede_\AppData\Local\Temp\nosefia-batch-364-370-20261010\navegador373.cjs:59:7

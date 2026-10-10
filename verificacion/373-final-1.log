@@ -1,0 +1,17 @@
+reports/report_13: 236 suites corridas, 236 archivos `*_test.gd`
+  ok        capas       2.0s
+  ok        formato    12.9s
+  ok        harness    91.6s
+  FALLA     lint       13.8s
+  ok        specs       0.5s
+  ok        tdd         0.3s
+  ok        tests     739.1s
+
+── lint: exit 1 ──
+src\dominio\investigacion\conversacion.gd:21: Error: Definition out of order in global scope (class-definitions-order)
+src\dominio\investigacion\conversacion.gd:23: Error: Definition out of order in global scope (class-definitions-order)
+src\dominio\investigacion\conversacion.gd:27: Error: Definition out of order in global scope (class-definitions-order)
+test\sistemas\investigacion\celular_del_empleado_test.gd:43: Error: Max allowed line length (100) exceeded (max-line-length)
+Failure: 4 problems found
+
+6/7 nodos en verde, 1 falló, en 745.5s.

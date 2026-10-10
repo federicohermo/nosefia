@@ -1,0 +1,36 @@
+{
+	"1280": {
+		"adjunto": {
+			"altura_de_contenido": 260,
+			"altura_de_imagen": 552.0,
+			"altura_del_nodo": 260.0,
+			"lineas": 10,
+			"texto": "Para esta noche, te pido que [b]organices las cajas[/b] que dejó el proveedor en el depósito. Acomodalas en los estantes y que no quede ni una en el piso, entendido? Te voy a tener cortito con esos detalles. Para trabajar en una estación de servicio tan prestigiosa como esta, tenés que estar al nivel.",
+			"texto_dibujado": "Para esta noche, te pido que organices las cajas que dejó el proveedor en el depósito. Acomodalas en los estantes y que no quede ni una en el piso, entendido? Te voy a tener cortito con esos detalles. Para trabajar en una estación de servicio tan prestigiosa como esta, tenés que estar al nivel."
+		},
+		"rect": [
+			466.0,
+			50.6666679382324,
+			348.0,
+			618.666687011719
+		],
+		"scale": 0.666666686534882
+	},
+	"1920": {
+		"adjunto": {
+			"altura_de_contenido": 260,
+			"altura_de_imagen": 552.0,
+			"altura_del_nodo": 260.0,
+			"lineas": 10,
+			"texto": "Para esta noche, te pido que [b]organices las cajas[/b] que dejó el proveedor en el depósito. Acomodalas en los estantes y que no quede ni una en el piso, entendido? Te voy a tener cortito con esos detalles. Para trabajar en una estación de servicio tan prestigiosa como esta, tenés que estar al nivel.",
+			"texto_dibujado": "Para esta noche, te pido que organices las cajas que dejó el proveedor en el depósito. Acomodalas en los estantes y que no quede ni una en el piso, entendido? Te voy a tener cortito con esos detalles. Para trabajar en una estación de servicio tan prestigiosa como esta, tenés que estar al nivel."
+		},
+		"rect": [
+			699.0,
+			76.0,
+			522.0,
+			928.0
+		],
+		"scale": 1.0
+	}
+}

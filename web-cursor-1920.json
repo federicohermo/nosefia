@@ -1,0 +1,186 @@
+{
+  "cursores": [
+    {
+      "fase": "entrada_sin_gesto_no_pide_captura",
+      "tiempo": 18263.865000009537,
+      "tomado": false,
+      "hasFocus": true,
+      "visibility": "visible",
+      "estado": {
+        "abierto": false,
+        "alma": true,
+        "botones": [],
+        "fotos": [],
+        "pantalla": 0,
+        "rect": [
+          699,
+          1080,
+          522,
+          928
+        ],
+        "scroll": 0
+      }
+    },
+    {
+      "fase": "mouse_motion_no_captura",
+      "tiempo": 18388.43500006199,
+      "tomado": false,
+      "hasFocus": true,
+      "visibility": "visible",
+      "estado": {
+        "abierto": false,
+        "alma": true,
+        "botones": [],
+        "fotos": [],
+        "pantalla": 0,
+        "rect": [
+          699,
+          1080,
+          522,
+          928
+        ],
+        "scroll": 0
+      }
+    },
+    {
+      "fase": "q_abre_y_suelta",
+      "tiempo": 19918.695000052452,
+      "tomado": false,
+      "hasFocus": true,
+      "visibility": "visible",
+      "estado": {
+        "abierto": true,
+        "alma": true,
+        "botones": [
+          {
+            "nombre": "El jefe",
+            "texto": "",
+            "x": 960,
+            "y": 1069.48522949219
+          },
+          {
+            "nombre": "Distribuidora Álvarez",
+            "texto": "",
+            "x": 960,
+            "y": 1219.48522949219
+          },
+          {
+            "nombre": "Número desconocido",
+            "texto": "",
+            "x": 960,
+            "y": 1369.48522949219
+          }
+        ],
+        "fotos": [],
+        "pantalla": 0,
+        "rect": [
+          699,
+          875.485229492188,
+          522,
+          928.000122070312
+        ],
+        "scroll": 0
+      }
+    },
+    {
+      "fase": "q_cierra_y_recaptura",
+      "tiempo": 22995.930000066757,
+      "tomado": true,
+      "hasFocus": true,
+      "visibility": "visible",
+      "estado": {
+        "abierto": false,
+        "alma": true,
+        "botones": [
+          {
+            "nombre": "Volver al menú",
+            "texto": "",
+            "x": 751,
+            "y": 223.717514038086
+          }
+        ],
+        "fotos": [
+          [
+            955,
+            902.717529296875
+          ]
+        ],
+        "pantalla": 0,
+        "rect": [
+          699,
+          160.717514038086,
+          522,
+          928
+        ],
+        "scroll": 0
+      }
+    },
+    {
+      "fase": "esc_pausa_y_suelta",
+      "tiempo": 23338.875,
+      "tomado": false,
+      "hasFocus": true,
+      "visibility": "visible",
+      "estado": {
+        "abierto": false,
+        "alma": true,
+        "botones": [
+          {
+            "nombre": "Volver al menú",
+            "texto": "",
+            "x": 751,
+            "y": 255.066421508789
+          }
+        ],
+        "fotos": [
+          [
+            955,
+            934.06640625
+          ]
+        ],
+        "pantalla": 0,
+        "rect": [
+          699,
+          192.066421508789,
+          522,
+          928
+        ],
+        "scroll": 0
+      }
+    },
+    {
+      "fase": "esc_reanuda_y_recaptura",
+      "tiempo": 23587.180000066757,
+      "tomado": true,
+      "hasFocus": true,
+      "visibility": "visible",
+      "estado": {
+        "abierto": false,
+        "alma": true,
+        "botones": [
+          {
+            "nombre": "Volver al menú",
+            "texto": "",
+            "x": 751,
+            "y": 313.169921875
+          }
+        ],
+        "fotos": [
+          [
+            955,
+            992.169921875
+          ]
+        ],
+        "pantalla": 0,
+        "rect": [
+          699,
+          250.169906616211,
+          522,
+          927.999877929688
+        ],
+        "scroll": 0
+      }
+    }
+  ],
+  "errores": []
+}

@@ -1,0 +1,131 @@
+{
+  "373-rojo-dominio.log": {
+    "script_errors": 0,
+    "resumenes": [
+      "11 test cases | 0 errors | 12 failures | 0 flaky | 0 skipped | 0 orphans |",
+      "5 test cases | 0 errors | 17 failures | 0 flaky | 0 skipped | 0 orphans |",
+      "4 test cases | 0 errors | 1 failures | 0 flaky | 0 skipped | 0 orphans |"
+    ]
+  },
+  "373-rojo-sistema.log": {
+    "script_errors": 0,
+    "resumenes": [
+      "4 test cases | 0 errors | 17 failures | 0 flaky | 0 skipped | 0 orphans |",
+      "7 test cases | 0 errors | 1 failures | 0 flaky | 0 skipped | 0 orphans |"
+    ]
+  },
+  "373-rojo-ui.log": {
+    "script_errors": 0,
+    "resumenes": [
+      "5 test cases | 0 errors | 2 failures | 0 flaky | 0 skipped | 0 orphans |"
+    ]
+  },
+  "373-focal-1.log": {
+    "script_errors": 13,
+    "resumenes": [
+      "48 test cases | 0 errors | 0 failures | 0 flaky | 0 skipped | 0 orphans |",
+      "18 test cases | 2 errors | 0 failures | 0 flaky | 0 skipped | 0 orphans |",
+      "4 test cases | 0 errors | 0 failures | 0 flaky | 0 skipped | 0 orphans |",
+      "4 test cases | 0 errors | 0 failures | 0 flaky | 0 skipped | 8 orphans |",
+      "8 test cases | 9 errors | 0 failures | 0 flaky | 0 skipped | 0 orphans |",
+      "6 test cases | 0 errors | 0 failures | 0 flaky | 0 skipped | 0 orphans |",
+      "8 test cases | 0 errors | 0 failures | 0 flaky | 0 skipped | 0 orphans |",
+      "20 test cases | 0 errors | 0 failures | 0 flaky | 0 skipped | 0 orphans |",
+      "19 test cases | 2 errors | 0 failures | 0 flaky | 0 skipped | 0 orphans |"
+    ]
+  },
+  "373-focal-2.log": {
+    "script_errors": 0,
+    "resumenes": [
+      "18 test cases | 0 errors | 0 failures | 0 flaky | 0 skipped | 0 orphans |",
+      "4 test cases | 0 errors | 0 failures | 0 flaky | 0 skipped | 0 orphans |",
+      "8 test cases | 0 errors | 0 failures | 0 flaky | 0 skipped | 0 orphans |",
+      "19 test cases | 0 errors | 0 failures | 0 flaky | 0 skipped | 0 orphans |"
+    ]
+  },
+  "373-focal-3.log": {
+    "script_errors": 0,
+    "resumenes": [
+      "5 test cases | 0 errors | 0 failures | 0 flaky | 0 skipped | 0 orphans |",
+      "9 test cases | 0 errors | 0 failures | 0 flaky | 0 skipped | 0 orphans |"
+    ]
+  },
+  "373-focal-4.log": {
+    "script_errors": 0,
+    "resumenes": [
+      "5 test cases | 0 errors | 0 failures | 0 flaky | 0 skipped | 0 orphans |",
+      "9 test cases | 0 errors | 0 failures | 0 flaky | 0 skipped | 0 orphans |"
+    ]
+  },
+  "373-focal-5.log": {
+    "script_errors": 0,
+    "resumenes": [
+      "5 test cases | 0 errors | 0 failures | 0 flaky | 0 skipped | 0 orphans |",
+      "10 test cases | 0 errors | 0 failures | 0 flaky | 0 skipped | 0 orphans |"
+    ]
+  },
+  "373-focal-6.log": {
+    "script_errors": 7,
+    "resumenes": [
+      "5 test cases | 0 errors | 0 failures | 0 flaky | 0 skipped | 0 orphans | PASSED 171ms",
+      "5 test cases | 0 errors | 0 failures | 0 flaky | 0 skipped | 0 orphans |"
+    ],
+    "nota": "Inválido: nuevos class_name heredados de370 sin reimportar cache local;105. Reimportación373-import-tras-370 limpia."
+  },
+  "373-focal-8.log": {
+    "script_errors": 0,
+    "resumenes": [
+      "5 test cases | 0 errors | 0 failures | 0 flaky | 0 skipped | 0 orphans | PASSED 162ms",
+      "5 test cases | 0 errors | 0 failures | 0 flaky | 0 skipped | 0 orphans |",
+      "14 test cases | 0 errors | 6 failures | 0 flaky | 0 skipped | 0 orphans | PASSED 2s 383ms",
+      "14 test cases | 0 errors | 6 failures | 0 flaky | 0 skipped | 0 orphans |"
+    ],
+    "nota": "Fixture headless parcial: Input no conserva modoCAPTURED en getter real. Cero SCRIPT; se inyectaron lector y escritor de cáscara y se conservaron premisas reales."
+  },
+  "373-rojo-cursor.log": {
+    "script_errors": 0,
+    "resumenes": [
+      "14 test cases | 0 errors | 12 failures | 0 flaky | 0 skipped | 0 orphans | PASSED 2s 503ms",
+      "14 test cases | 0 errors | 12 failures | 0 flaky | 0 skipped | 0 orphans |"
+    ],
+    "nota": "Pruebas escritas antes del cambio. Rojo parcial válido por ausencia de gesto/rotación/Q; las aserciones dependientes de CAPTURED usaban getter headless inadecuado. Snapshot original preservado."
+  },
+  "373-rojo-cursor-2.log": {
+    "script_errors": 0,
+    "resumenes": [
+      "14 test cases | 0 errors | 12 failures | 0 flaky | 0 skipped | 0 orphans | PASSED 2s 725ms",
+      "14 test cases | 0 errors | 12 failures | 0 flaky | 0 skipped | 0 orphans |"
+    ],
+    "nota": "Contraste de regresión POSTERIOR al primer mínimo verde. Política anterior/stub con fixture de lector+escritor corregido:12fallos conductuales,0SCRIPT,0huérfanos. No se presenta como test-first nuevo."
+  },
+  "373-focal-7.log": {
+    "script_errors": 0,
+    "resumenes": [
+      "5 test cases | 0 errors | 0 failures | 0 flaky | 0 skipped | 0 orphans | PASSED 165ms",
+      "5 test cases | 0 errors | 0 failures | 0 flaky | 0 skipped | 0 orphans |",
+      "10 test cases | 0 errors | 0 failures | 0 flaky | 0 skipped | 0 orphans | PASSED 2s 168ms",
+      "10 test cases | 0 errors | 0 failures | 0 flaky | 0 skipped | 0 orphans |"
+    ],
+    "nota": "UI5+escena10 verdes tras reimport; chevron geométrico."
+  },
+  "373-focal-9.log": {
+    "script_errors": 0,
+    "resumenes": [
+      "5 test cases | 0 errors | 0 failures | 0 flaky | 0 skipped | 0 orphans | PASSED 160ms",
+      "5 test cases | 0 errors | 0 failures | 0 flaky | 0 skipped | 0 orphans |",
+      "14 test cases | 0 errors | 0 failures | 0 flaky | 0 skipped | 0 orphans | PASSED 2s 358ms",
+      "14 test cases | 0 errors | 0 failures | 0 flaky | 0 skipped | 0 orphans |"
+    ],
+    "nota": "UI5+escena14 verdes con fixture corregido;0SCRIPT/fugas."
+  },
+  "373-focal-10.log": {
+    "script_errors": 0,
+    "resumenes": [
+      "5 test cases | 0 errors | 0 failures | 0 flaky | 0 skipped | 0 orphans | PASSED 170ms",
+      "5 test cases | 0 errors | 0 failures | 0 flaky | 0 skipped | 0 orphans |",
+      "14 test cases | 0 errors | 0 failures | 0 flaky | 0 skipped | 0 orphans | PASSED 2s 510ms",
+      "14 test cases | 0 errors | 0 failures | 0 flaky | 0 skipped | 0 orphans |"
+    ],
+    "nota": "UI5+escena14 verdes, mismo producto338;0SCRIPT/fugas después de restaurar verde idéntico tras contraste rojo2."
+  }
+}

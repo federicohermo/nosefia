@@ -1,0 +1,9 @@
+{
+  "head": "68087e1b724bc11cadad4658bcd0cf1bdc300c46",
+  "estado": "contraste de política previa con fixture lector/escritor corregido; posterior al primer mínimo verde",
+  "archivos": {
+    "src/escenas/jugador.gd": "34b7ba7018c7c788f39abfce7867b0b97a145ab5312647887390103af2b804b2",
+    "src/escenas/almacen.gd": "b9569cb04b3427201b70f219c2d55ef9d3bf29952c393ca6991e22718d25e051",
+    "test/escenas/celular_en_el_almacen_test.gd": "516a3a1c84bade195562bf1fdda6f7113787c802b74bd6e4288d90be9b4bcae9"
+  }
+}

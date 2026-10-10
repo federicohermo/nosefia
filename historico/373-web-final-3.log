@@ -1,0 +1,3 @@
+Error: Timeout de lectura pasiva: ()=>!window.nosefia373_estado.abierto
+    at esperar (C:\Users\fede_\AppData\Local\Temp\nosefia-batch-364-370-20261010\navegador373.cjs:34:15)
+    at async C:\Users\fede_\AppData\Local\Temp\nosefia-batch-364-370-20261010\navegador373.cjs:101:7

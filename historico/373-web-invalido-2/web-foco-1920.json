@@ -1,0 +1,16 @@
+[
+  {
+    "fase": "antes_de_activar",
+    "hasFocus": true,
+    "visibility": "visible",
+    "activo": "CANVAS",
+    "canvasConectado": true
+  },
+  {
+    "fase": "antes_de_nuevo_juego",
+    "hasFocus": true,
+    "visibility": "visible",
+    "activo": "CANVAS",
+    "canvasConectado": true
+  }
+]

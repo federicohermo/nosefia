@@ -1,0 +1,5 @@
+src\dominio\investigacion\conversacion.gd:21: Error: Definition out of order in global scope (class-definitions-order)
+src\dominio\investigacion\conversacion.gd:23: Error: Definition out of order in global scope (class-definitions-order)
+src\dominio\investigacion\conversacion.gd:27: Error: Definition out of order in global scope (class-definitions-order)
+test\sistemas\investigacion\celular_del_empleado_test.gd:43: Error: Max allowed line length (100) exceeded (max-line-length)
+Failure: 4 problems found

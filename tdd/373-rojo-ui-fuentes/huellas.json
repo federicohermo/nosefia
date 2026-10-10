@@ -1,0 +1,17 @@
+﻿{
+    "head":  "cd5f93c38dfc140398759c52431bcece29985fd9",
+    "fuentes":  [
+                    {
+                        "ruta":  "src/ui/diegetica/pantalla_del_celular.gd",
+                        "sha256":  "1AB1766594EB32FF12D47A58300BA8610F2B842DE0F399C54FCC5ABB80980065"
+                    },
+                    {
+                        "ruta":  "src/ui/diegetica/pantalla_del_celular.tscn",
+                        "sha256":  "7021DA41D11D3F5BD9C467C6B03CB83B413996A298F0487B412C40AEE3694E03"
+                    },
+                    {
+                        "ruta":  "test/ui/diegetica/pantalla_del_celular_test.gd",
+                        "sha256":  "B74561E67D5B218DE105C9E4B4A989043EF0537CE5D4D9AD3F7064877164766B"
+                    }
+                ]
+}

@@ -1,0 +1,444 @@
+{
+  "1280": {
+    "focos": [
+      {
+        "fase": "antes_de_activar",
+        "hasFocus": true,
+        "visibility": "visible",
+        "activo": "CANVAS",
+        "canvasConectado": true
+      },
+      {
+        "fase": "antes_de_nuevo_juego",
+        "hasFocus": true,
+        "visibility": "visible",
+        "activo": "CANVAS",
+        "canvasConectado": true
+      }
+    ],
+    "cursores": [
+      {
+        "fase": "entrada_sin_gesto_no_pide_captura",
+        "tiempo": 7894.740000009537,
+        "tomado": false,
+        "hasFocus": true,
+        "visibility": "visible",
+        "estado": {
+          "abierto": false,
+          "alma": true,
+          "botones": [],
+          "fotos": [],
+          "pantalla": 0,
+          "rect": [
+            466,
+            720,
+            348,
+            618.666687011719
+          ],
+          "scroll": 0
+        }
+      },
+      {
+        "fase": "mouse_motion_no_captura",
+        "tiempo": 8019.52999997139,
+        "tomado": false,
+        "hasFocus": true,
+        "visibility": "visible",
+        "estado": {
+          "abierto": false,
+          "alma": true,
+          "botones": [],
+          "fotos": [],
+          "pantalla": 0,
+          "rect": [
+            466,
+            720,
+            348,
+            618.666687011719
+          ],
+          "scroll": 0
+        }
+      },
+      {
+        "fase": "q_abre_y_suelta",
+        "tiempo": 9320.77999997139,
+        "tomado": false,
+        "hasFocus": true,
+        "visibility": "visible",
+        "estado": {
+          "abierto": true,
+          "alma": true,
+          "botones": [
+            {
+              "nombre": "El jefe",
+              "texto": "",
+              "x": 640,
+              "y": 752.076599121094
+            },
+            {
+              "nombre": "Distribuidora Álvarez",
+              "texto": "",
+              "x": 640,
+              "y": 852.076599121094
+            },
+            {
+              "nombre": "Número desconocido",
+              "texto": "",
+              "x": 640,
+              "y": 952.076599121094
+            }
+          ],
+          "fotos": [],
+          "pantalla": 0,
+          "rect": [
+            466,
+            622.743225097656,
+            348,
+            618.666625976562
+          ],
+          "scroll": 0
+        }
+      },
+      {
+        "fase": "q_cierra_y_recaptura",
+        "tiempo": 11979.840000033379,
+        "tomado": true,
+        "hasFocus": true,
+        "visibility": "visible",
+        "estado": {
+          "abierto": false,
+          "alma": true,
+          "botones": [
+            {
+              "nombre": "Volver al menú",
+              "texto": "",
+              "x": 500.666656494141,
+              "y": 97.5420913696289
+            }
+          ],
+          "fotos": [
+            [
+              636.666625976562,
+              550.208740234375
+            ]
+          ],
+          "pantalla": 0,
+          "rect": [
+            466,
+            55.5420913696289,
+            348,
+            618.666687011719
+          ],
+          "scroll": 0
+        }
+      },
+      {
+        "fase": "esc_pausa_y_suelta",
+        "tiempo": 12318.235000014305,
+        "tomado": false,
+        "hasFocus": true,
+        "visibility": "visible",
+        "estado": {
+          "abierto": false,
+          "alma": true,
+          "botones": [
+            {
+              "nombre": "Volver al menú",
+              "texto": "",
+              "x": 500.666656494141,
+              "y": 127.512168884277
+            }
+          ],
+          "fotos": [
+            [
+              636.666625976562,
+              580.178833007812
+            ]
+          ],
+          "pantalla": 0,
+          "rect": [
+            466,
+            85.5121612548828,
+            348,
+            618.666625976562
+          ],
+          "scroll": 0
+        }
+      },
+      {
+        "fase": "esc_reanuda_y_recaptura",
+        "tiempo": 12592.524999976158,
+        "tomado": true,
+        "hasFocus": true,
+        "visibility": "visible",
+        "estado": {
+          "abierto": false,
+          "alma": true,
+          "botones": [
+            {
+              "nombre": "Volver al menú",
+              "texto": "",
+              "x": 500.666656494141,
+              "y": 464.095794677734
+            }
+          ],
+          "fotos": [
+            [
+              636.666625976562,
+              916.762512207031
+            ]
+          ],
+          "pantalla": 0,
+          "rect": [
+            466,
+            422.095794677734,
+            348,
+            618.666687011719
+          ],
+          "scroll": 0
+        }
+      }
+    ],
+    "raf": 138,
+    "rect": [
+      466,
+      50.6666679382324,
+      348,
+      618.666687011719
+    ],
+    "scrollAntes": 0,
+    "scrollDespues": 0,
+    "adjunto": {
+      "altura_de_contenido": 260,
+      "altura_de_imagen": 552,
+      "altura_del_nodo": 260,
+      "cabe_imagen": true,
+      "cabe_texto": true,
+      "lineas": 10,
+      "texto": "Para esta noche, te pido que [b]organices las cajas[/b] que dejó el proveedor en el depósito. Acomodalas en los estantes y que no quede ni una en el piso, entendido? Te voy a tener cortito con esos detalles. Para trabajar en una estación de servicio tan prestigiosa como esta, tenés que estar al nivel.",
+      "texto_dibujado": "Para esta noche, te pido que organices las cajas que dejó el proveedor en el depósito. Acomodalas en los estantes y que no quede ni una en el piso, entendido? Te voy a tener cortito con esos detalles. Para trabajar en una estación de servicio tan prestigiosa como esta, tenés que estar al nivel."
+    },
+    "errores": []
+  },
+  "1920": {
+    "focos": [
+      {
+        "fase": "antes_de_activar",
+        "hasFocus": true,
+        "visibility": "visible",
+        "activo": "CANVAS",
+        "canvasConectado": true
+      },
+      {
+        "fase": "antes_de_nuevo_juego",
+        "hasFocus": true,
+        "visibility": "visible",
+        "activo": "CANVAS",
+        "canvasConectado": true
+      }
+    ],
+    "cursores": [
+      {
+        "fase": "entrada_sin_gesto_no_pide_captura",
+        "tiempo": 18263.865000009537,
+        "tomado": false,
+        "hasFocus": true,
+        "visibility": "visible",
+        "estado": {
+          "abierto": false,
+          "alma": true,
+          "botones": [],
+          "fotos": [],
+          "pantalla": 0,
+          "rect": [
+            699,
+            1080,
+            522,
+            928
+          ],
+          "scroll": 0
+        }
+      },
+      {
+        "fase": "mouse_motion_no_captura",
+        "tiempo": 18388.43500006199,
+        "tomado": false,
+        "hasFocus": true,
+        "visibility": "visible",
+        "estado": {
+          "abierto": false,
+          "alma": true,
+          "botones": [],
+          "fotos": [],
+          "pantalla": 0,
+          "rect": [
+            699,
+            1080,
+            522,
+            928
+          ],
+          "scroll": 0
+        }
+      },
+      {
+        "fase": "q_abre_y_suelta",
+        "tiempo": 19918.695000052452,
+        "tomado": false,
+        "hasFocus": true,
+        "visibility": "visible",
+        "estado": {
+          "abierto": true,
+          "alma": true,
+          "botones": [
+            {
+              "nombre": "El jefe",
+              "texto": "",
+              "x": 960,
+              "y": 1069.48522949219
+            },
+            {
+              "nombre": "Distribuidora Álvarez",
+              "texto": "",
+              "x": 960,
+              "y": 1219.48522949219
+            },
+            {
+              "nombre": "Número desconocido",
+              "texto": "",
+              "x": 960,
+              "y": 1369.48522949219
+            }
+          ],
+          "fotos": [],
+          "pantalla": 0,
+          "rect": [
+            699,
+            875.485229492188,
+            522,
+            928.000122070312
+          ],
+          "scroll": 0
+        }
+      },
+      {
+        "fase": "q_cierra_y_recaptura",
+        "tiempo": 22995.930000066757,
+        "tomado": true,
+        "hasFocus": true,
+        "visibility": "visible",
+        "estado": {
+          "abierto": false,
+          "alma": true,
+          "botones": [
+            {
+              "nombre": "Volver al menú",
+              "texto": "",
+              "x": 751,
+              "y": 223.717514038086
+            }
+          ],
+          "fotos": [
+            [
+              955,
+              902.717529296875
+            ]
+          ],
+          "pantalla": 0,
+          "rect": [
+            699,
+            160.717514038086,
+            522,
+            928
+          ],
+          "scroll": 0
+        }
+      },
+      {
+        "fase": "esc_pausa_y_suelta",
+        "tiempo": 23338.875,
+        "tomado": false,
+        "hasFocus": true,
+        "visibility": "visible",
+        "estado": {
+          "abierto": false,
+          "alma": true,
+          "botones": [
+            {
+              "nombre": "Volver al menú",
+              "texto": "",
+              "x": 751,
+              "y": 255.066421508789
+            }
+          ],
+          "fotos": [
+            [
+              955,
+              934.06640625
+            ]
+          ],
+          "pantalla": 0,
+          "rect": [
+            699,
+            192.066421508789,
+            522,
+            928
+          ],
+          "scroll": 0
+        }
+      },
+      {
+        "fase": "esc_reanuda_y_recaptura",
+        "tiempo": 23587.180000066757,
+        "tomado": true,
+        "hasFocus": true,
+        "visibility": "visible",
+        "estado": {
+          "abierto": false,
+          "alma": true,
+          "botones": [
+            {
+              "nombre": "Volver al menú",
+              "texto": "",
+              "x": 751,
+              "y": 313.169921875
+            }
+          ],
+          "fotos": [
+            [
+              955,
+              992.169921875
+            ]
+          ],
+          "pantalla": 0,
+          "rect": [
+            699,
+            250.169906616211,
+            522,
+            927.999877929688
+          ],
+          "scroll": 0
+        }
+      }
+    ],
+    "raf": 133,
+    "rect": [
+      699,
+      76,
+      522,
+      928
+    ],
+    "scrollAntes": 0,
+    "scrollDespues": 0,
+    "adjunto": {
+      "altura_de_contenido": 260,
+      "altura_de_imagen": 552,
+      "altura_del_nodo": 260,
+      "cabe_imagen": true,
+      "cabe_texto": true,
+      "lineas": 10,
+      "texto": "Para esta noche, te pido que [b]organices las cajas[/b] que dejó el proveedor en el depósito. Acomodalas en los estantes y que no quede ni una en el piso, entendido? Te voy a tener cortito con esos detalles. Para trabajar en una estación de servicio tan prestigiosa como esta, tenés que estar al nivel.",
+      "texto_dibujado": "Para esta noche, te pido que organices las cajas que dejó el proveedor en el depósito. Acomodalas en los estantes y que no quede ni una en el piso, entendido? Te voy a tener cortito con esos detalles. Para trabajar en una estación de servicio tan prestigiosa como esta, tenés que estar al nivel."
+    },
+    "errores": []
+  }
+}

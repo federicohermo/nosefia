@@ -1,0 +1,110 @@
+{
+  "escritorio-1920": {
+    "regiones": [
+      {
+        "luminancia_base": 0.2700300214032115,
+        "luminancia_velo": 0.15594066951353586,
+        "razon_luz": 0.5774938234763302,
+        "gradiente_normalizado_base": 0.1524039852761889,
+        "gradiente_normalizado_velo": 0.030024734348007006,
+        "razon_gradiente": 0.19700754080410504
+      },
+      {
+        "luminancia_base": 0.533147061206427,
+        "luminancia_velo": 0.3085761893483216,
+        "razon_luz": 0.5787825007420331,
+        "gradiente_normalizado_base": 0.0028369899867776707,
+        "gradiente_normalizado_velo": 0.001288946672883381,
+        "razon_gradiente": 0.45433599656352724
+      }
+    ],
+    "diferencia_media_dentro_del_celular": 0.0,
+    "rect": [
+      699.0,
+      76.0,
+      522.0,
+      928.0
+    ]
+  },
+  "escritorio-1280": {
+    "regiones": [
+      {
+        "luminancia_base": 0.2701253153311093,
+        "luminancia_velo": 0.15600975893019245,
+        "razon_luz": 0.5775458651069473,
+        "gradiente_normalizado_base": 0.1759384546491412,
+        "gradiente_normalizado_velo": 0.03319854009795905,
+        "razon_gradiente": 0.1886940530662499
+      },
+      {
+        "luminancia_base": 0.5336427133260712,
+        "luminancia_velo": 0.30884469261755626,
+        "razon_luz": 0.5787480741423395,
+        "gradiente_normalizado_base": 0.0037722863037726643,
+        "gradiente_normalizado_velo": 0.0017146461597510026,
+        "razon_gradiente": 0.4545376521490918
+      }
+    ],
+    "diferencia_media_dentro_del_celular": 0.0,
+    "rect": [
+      466.0,
+      50.6666679382324,
+      348.0,
+      618.666687011719
+    ]
+  },
+  "web-1920": {
+    "regiones": [
+      {
+        "luminancia_base": 0.2711823791858307,
+        "luminancia_velo": 0.15730766390300976,
+        "razon_luz": 0.5800806983672525,
+        "gradiente_normalizado_base": 0.12095984352806907,
+        "gradiente_normalizado_velo": 0.029724414684725135,
+        "razon_gradiente": 0.24573787314653314
+      },
+      {
+        "luminancia_base": 0.5327607160569474,
+        "luminancia_velo": 0.3088052857712014,
+        "razon_luz": 0.5796322372578854,
+        "gradiente_normalizado_base": 0.0024203175185707453,
+        "gradiente_normalizado_velo": 0.0012743738697099337,
+        "razon_gradiente": 0.526531688479651
+      }
+    ],
+    "diferencia_media_dentro_del_celular": 0.0,
+    "rect": [
+      699,
+      76,
+      522,
+      928
+    ]
+  },
+  "web-1280": {
+    "regiones": [
+      {
+        "luminancia_base": 0.2698932693468591,
+        "luminancia_velo": 0.1566275748116376,
+        "razon_luz": 0.580331533241551,
+        "gradiente_normalizado_base": 0.14023772959536768,
+        "gradiente_normalizado_velo": 0.032612427082263105,
+        "razon_gradiente": 0.2325510201595588
+      },
+      {
+        "luminancia_base": 0.5331985252870824,
+        "luminancia_velo": 0.3090429325072621,
+        "razon_luz": 0.5796020016013146,
+        "gradiente_normalizado_base": 0.0034396443549177804,
+        "gradiente_normalizado_velo": 0.001695426141158351,
+        "razon_gradiente": 0.49290739571210046
+      }
+    ],
+    "diferencia_media_dentro_del_celular": 0.0,
+    "rect": [
+      466,
+      50.6666679382324,
+      348,
+      618.666687011719
+    ]
+  }
+}
