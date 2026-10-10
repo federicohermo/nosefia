@@ -91,7 +91,7 @@ static func _cabe(pieza: PackedVector3Array, corte: float) -> bool:
 
 static func _exento(forma: CollisionShape3D) -> bool:
 	for nodo: Node in [forma, forma.get_parent()]:
-		if _exime(nodo.get_meta(CLAVE_DE_EXENCION, null)):
+		if _exime(nodo.get_meta(CLAVE_DE_EXENCION, "")):
 			return true
 	return false
 
@@ -237,6 +237,7 @@ static func _cajas_de_volumen(malla: MeshInstance3D) -> Array[CollisionShape3D]:
 		for forma in cuerpo.get_children():
 			if (
 				forma is CollisionShape3D
+				and not forma.disabled
 				and forma.shape is BoxShape3D
 				and str(forma.name).begins_with("Volumen")
 			):

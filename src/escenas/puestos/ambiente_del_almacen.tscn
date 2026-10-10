@@ -2,16 +2,16 @@
 
 [ext_resource type="PackedScene" path="res://src/escenas/puestos/agua_del_bano.tscn" id="1_agua"]
 
-[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_cielo"]
-
-[sub_resource type="Sky" id="Sky_cielo"]
-sky_material = SubResource("ProceduralSkyMaterial_cielo")
-
 [sub_resource type="Environment" id="Environment_almacen"]
 background_mode = 1
-background_color = Color(0.0627451, 0.11764706, 0.2509804, 1)
-sky = SubResource("Sky_cielo")
+ambient_light_source = 3
+reflected_light_source = 1
+background_color = Color(0.06, 0.16, 0.176, 1)
 tonemap_mode = 2
+adjustment_enabled = true
+adjustment_saturation = 0.68
+adjustment_brightness = 0.92
+adjustment_contrast = 1.04
 
 [node name="Ambiente" type="Node3D" unique_id=661562974]
 
@@ -19,53 +19,60 @@ tonemap_mode = 2
 environment = SubResource("Environment_almacen")
 
 [node name="AreaLight3D" type="AreaLight3D" parent="." unique_id=1670606995]
-transform = Transform3D(-4.3711392e-08, -0.9997196, 0.023678668, 0, 0.023678668, 0.9997196, -1, 4.3699135e-08, -1.0350275e-09, -0.73424435, 4.044125, -1.5531749)
-light_energy = 5.0
+transform = Transform3D(-4.3711392e-08,  -0.9997196,  0.023678668,  0,  0.023678668,  0.9997196,  -1,  4.3699135e-08,  -1.0350275e-09, 0.2, 4.044, -4.8)
+light_color = Color(0.58, 0.88, 0.81, 1)
+light_energy = 3.4
 light_size = 0.399
 light_bake_mode = 1
-area_size = Vector2(9.884546, 1)
+area_size = Vector2(1.2, 0.6)
 
 [node name="AreaLight3D3" type="AreaLight3D" parent="." unique_id=1624985064]
-transform = Transform3D(-4.3711392e-08, -0.9997196, 0.023678668, 0, 0.023678668, 0.9997196, -1, 4.3699135e-08, -1.0350275e-09, -5.325545, 4.044125, -1.5531746)
-light_energy = 5.0
+transform = Transform3D(-4.3711392e-08,  -0.9997196,  0.023678668,  0,  0.023678668,  0.9997196,  -1,  4.3699135e-08,  -1.0350275e-09, 0.2, 4.044, -1)
+light_color = Color(0.58, 0.88, 0.81, 1)
+light_energy = 3.4
 light_size = 0.399
 light_bake_mode = 1
-area_size = Vector2(9.884546, 1)
+area_size = Vector2(1.2, 0.6)
 
 [node name="AreaLight3D7" type="AreaLight3D" parent="." unique_id=1727770897]
-transform = Transform3D(-1, 8.739826e-08, -2.0700548e-09, 0, 0.023678668, 0.9997196, 8.742278e-08, 0.9997196, -0.023678668, -2.4240232, 4.044125, 2.415278)
-light_energy = 5.0
+transform = Transform3D(-1,  8.739826e-08,  -2.0700548e-09,  0,  0.023678668,  0.9997196,  8.742278e-08,  0.9997196,  -0.023678668, 4.9, 4.044, -4.8)
+light_color = Color(0.58, 0.88, 0.81, 1)
+light_energy = 3.4
 light_size = 0.399
 light_bake_mode = 1
-area_size = Vector2(9.884546, 1)
+area_size = Vector2(1.2, 0.6)
 
 [node name="AreaLight3D10" type="AreaLight3D" parent="." unique_id=1041791214]
-transform = Transform3D(-1, 8.739826e-08, -2.0700548e-09, 0, 0.023678668, 0.9997196, 8.742278e-08, 0.9997196, -0.023678668, -2.4240232, 4.044125, 5.2674217)
-light_energy = 5.0
+transform = Transform3D(-1,  8.739826e-08,  -2.0700548e-09,  0,  0.023678668,  0.9997196,  8.742278e-08,  0.9997196,  -0.023678668, 4.9, 4.044, -1)
+light_color = Color(0.58, 0.88, 0.81, 1)
+light_energy = 3.4
 light_size = 0.399
 light_bake_mode = 1
-area_size = Vector2(9.884546, 1)
+area_size = Vector2(1.2, 0.6)
 
 [node name="AreaLight3D8" type="AreaLight3D" parent="." unique_id=174603683]
-transform = Transform3D(-1, 8.739826e-08, -2.0700548e-09, 0, 0.023678668, 0.9997196, 8.742278e-08, 0.9997196, -0.023678668, -2.4240232, 4.044125, -5.8359776)
-light_energy = 5.0
+transform = Transform3D(-1,  8.739826e-08,  -2.0700548e-09,  0,  0.023678668,  0.9997196,  8.742278e-08,  0.9997196,  -0.023678668, 0.2, 4.044, 3)
+light_color = Color(0.58, 0.88, 0.81, 1)
+light_energy = 3.4
 light_size = 0.399
 light_bake_mode = 1
-area_size = Vector2(9.884546, 1)
+area_size = Vector2(1.2, 0.6)
 
 [node name="AreaLight3D2" type="AreaLight3D" parent="." unique_id=333680017]
-transform = Transform3D(-4.3711392e-08, -0.9997196, 0.023678668, 0, 0.023678668, 0.9997196, -1, 4.3699135e-08, -1.0350275e-09, 3.6526499, 4.044125, -1.553175)
-light_energy = 5.0
+transform = Transform3D(-4.3711392e-08,  -0.9997196,  0.023678668,  0,  0.023678668,  0.9997196,  -1,  4.3699135e-08,  -1.0350275e-09, 4.9, 4.044, 3)
+light_color = Color(0.58, 0.88, 0.81, 1)
+light_energy = 3.4
 light_size = 0.399
 light_bake_mode = 1
-area_size = Vector2(9.884546, 1)
+area_size = Vector2(1.2, 0.6)
 
 [node name="AreaLight3D9" type="AreaLight3D" parent="." unique_id=12441013]
-transform = Transform3D(-4.3711392e-08, -0.9997196, 0.023678668, 0, 0.023678668, 0.9997196, -1, 4.3699135e-08, -1.0350275e-09, 7.04758, 4.044125, -1.553175)
-light_energy = 5.0
+transform = Transform3D(-4.3711392e-08,  -0.9997196,  0.023678668,  0,  0.023678668,  0.9997196,  -1,  4.3699135e-08,  -1.0350275e-09, 2.7, 4.044, 5.1)
+light_color = Color(0.58, 0.88, 0.81, 1)
+light_energy = 3.4
 light_size = 0.399
 light_bake_mode = 1
-area_size = Vector2(9.884546, 1)
+area_size = Vector2(1.2, 0.6)
 
 [node name="LuzDelDeposito1" type="SpotLight3D" parent="."]
 position = Vector3(-2.5, 3.57, -12)
@@ -118,9 +125,9 @@ spot_attenuation = 1.0
 spot_angle_attenuation = 1.5
 
 [node name="AreaLight3D6" type="AreaLight3D" parent="." unique_id=581634060]
-transform = Transform3D(1, 0, 0, 0, 0.023678668, 0.9997196, 0, -0.9997196, 0.023678668, 4.7662916, 3.1091843, 6.4416533)
-light_color = Color(1, 1, 0.9098039, 1)
-light_energy = 1.055
+transform = Transform3D(1,  0,  0,  0,  0.023678668,  0.9997196,  0,  -0.9997196,  0.023678668, -0.2, 3.1, 5)
+light_color = Color(0.58, 0.88, 0.81, 1)
+light_energy = 3.4
 light_size = 0.201
 light_bake_mode = 1
 area_size = Vector2(0.9148388, 1)
@@ -139,7 +146,7 @@ position = Vector3(12.558092, 0.549, -1.790065)
 position = Vector3(13.159, 1.162, -6.72)
 
 [node name="LuzDelBano1" type="SpotLight3D" parent="."]
-position = Vector3(9.1, 3.07, -4.7)
+position = Vector3(9.1, 3.07, 2.856)
 rotation = Vector3(-1.5707963, 0, 0)
 light_color = Color(0.93, 0.98, 1.0, 1.0)
 light_energy = 1.35
@@ -150,7 +157,7 @@ spot_attenuation = 0.7
 
 
 [node name="LuzDelBano2" type="SpotLight3D" parent="."]
-position = Vector3(9.1, 3.07, -6.9)
+position = Vector3(9.1, 3.07, 0.656)
 rotation = Vector3(-1.5707963, 0, 0)
 light_color = Color(0.93, 0.98, 1.0, 1.0)
 light_energy = 1.35
@@ -160,7 +167,7 @@ spot_angle = 63.0
 spot_attenuation = 0.7
 
 [node name="LuzDelBano3" type="SpotLight3D" parent="."]
-position = Vector3(11.0, 3.07, -4.7)
+position = Vector3(11, 3.07, 2.856)
 rotation = Vector3(-1.5707963, 0, 0)
 light_color = Color(0.93, 0.98, 1.0, 1.0)
 light_energy = 1.35
@@ -170,7 +177,7 @@ spot_angle = 63.0
 spot_attenuation = 0.7
 
 [node name="LuzDelBano4" type="SpotLight3D" parent="."]
-position = Vector3(11.0, 3.07, -6.9)
+position = Vector3(11, 3.07, 0.656)
 rotation = Vector3(-1.5707963, 0, 0)
 light_color = Color(0.93, 0.98, 1.0, 1.0)
 light_energy = 1.35
@@ -180,7 +187,7 @@ spot_angle = 63.0
 spot_attenuation = 0.7
 
 [node name="LuzDelBano5" type="SpotLight3D" parent="."]
-position = Vector3(12.8, 3.07, -4.7)
+position = Vector3(12.8, 3.07, 2.856)
 rotation = Vector3(-1.5707963, 0, 0)
 light_color = Color(0.93, 0.98, 1.0, 1.0)
 light_energy = 1.35
@@ -190,7 +197,7 @@ spot_angle = 63.0
 spot_attenuation = 0.7
 
 [node name="LuzDelBano6" type="SpotLight3D" parent="."]
-position = Vector3(12.8, 3.07, -6.9)
+position = Vector3(12.8, 3.07, 0.656)
 rotation = Vector3(-1.5707963, 0, 0)
 light_color = Color(0.93, 0.98, 1.0, 1.0)
 light_energy = 1.35
@@ -200,7 +207,7 @@ spot_angle = 63.0
 spot_attenuation = 0.7
 
 [node name="LuzDelBano7" type="SpotLight3D" parent="."]
-position = Vector3(10.945, 3.07, -2.35)
+position = Vector3(10.945, 3.07, 5.206)
 rotation = Vector3(-1.5707963, 0, 0)
 light_color = Color(0.93, 0.98, 1.0, 1.0)
 light_energy = 1.35
@@ -210,7 +217,7 @@ spot_angle = 63.0
 spot_attenuation = 0.7
 
 [node name="LuzDelBano8" type="SpotLight3D" parent="."]
-position = Vector3(12.555, 3.07, -2.35)
+position = Vector3(12.555, 3.07, 5.206)
 rotation = Vector3(-1.5707963, 0, 0)
 light_color = Color(0.93, 0.98, 1.0, 1.0)
 light_energy = 1.35
@@ -220,7 +227,7 @@ spot_angle = 63.0
 spot_attenuation = 0.7
 
 [node name="LuzDelBano9" type="SpotLight3D" parent="."]
-position = Vector3(9.1, 3.07, -2.35)
+position = Vector3(9.1, 3.07, 5.206)
 rotation = Vector3(-1.5707963, 0, 0)
 light_color = Color(0.93, 0.98, 1.0, 1.0)
 light_energy = 1.35

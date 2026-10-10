@@ -6,24 +6,10 @@ const OBJETO_SUELTO := preload("res://src/escenas/objetos/objeto_agarrable.tscn"
 
 ## Dónde nace el objeto suelto que crea un caso: un punto libre del piso del local. Es su lugar de
 ## origen, adonde la red de seguridad lo puede devolver.
-const LIBRE_EN_EL_LOCAL := Vector3(0.0, 0.2, 3.0)
-
-var _escala_anterior: float
+const LIBRE_EN_EL_LOCAL := Vector3(2.7, 0.2, 2.7)
 
 
-func before_test() -> void:
-	_escala_anterior = Engine.time_scale
-
-
-func after_test() -> void:
-	Engine.time_scale = _escala_anterior
-
-
-# El límite usa tiempo del motor, que este caso acelera hasta el cierre.
-@warning_ignore("unused_parameter")
-func test_los_puestos_completan_la_jornada_y_permiten_abrir_la_siguiente(
-	timeout: int = 6000000  # gdlint:ignore=unused-argument
-) -> void:
+func test_los_puestos_completan_la_jornada_y_permiten_abrir_la_siguiente() -> void:
 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
 	add_child(almacen)
 	var reloj: RelojDelTurno = almacen.get("_reloj")
@@ -32,6 +18,7 @@ func test_los_puestos_completan_la_jornada_y_permiten_abrir_la_siguiente(
 	await get_tree().process_frame
 	await get_tree().process_frame
 	assert_bool(reloj.corriendo()).is_true()
+	_comprobar_ninguna_cumplida_al_abrir(almacen)
 	_comprobar_huecos(almacen, _completos_al_abrir(ReglasDeLaPartida.PRIMERA_JORNADA))
 	await _reponer(almacen)
 	_comprobar_huecos(almacen, Catalogo.todos().size())
@@ -44,13 +31,8 @@ func test_los_puestos_completan_la_jornada_y_permiten_abrir_la_siguiente(
 	assert_bool(reloj.corriendo()).is_true()
 	assert_float(tiempos.back()).is_less(tiempos.front())
 	var pantalla: PantallaDeCierre = almacen.get("_pantalla")
-	# Acelera el motor para ejercer el cierre sin llamar al reloj por dentro.
-	Engine.time_scale = 2000.0
-	for cuadro in 120:
-		await get_tree().process_frame
-		if pantalla.visible:
-			break
-	Engine.time_scale = _escala_anterior
+	reloj.avanzar(Reglas.DURACION_DEL_TURNO / Ritmo.SEGUNDOS_DE_TURNO_POR_SEGUNDO_REAL)
+	await get_tree().process_frame
 	assert_bool(pantalla.visible).is_true()
 	var continuar: Button = pantalla.get_node("Fondo/Panel/Continuar")
 	continuar.pressed.emit()
@@ -58,8 +40,7 @@ func test_los_puestos_completan_la_jornada_y_permiten_abrir_la_siguiente(
 	assert_int(ciclo.partida().jornada()).is_equal(ReglasDeLaPartida.PRIMERA_JORNADA + 1)
 	assert_bool(pantalla.visible).is_false()
 	assert_bool(reloj.corriendo()).is_true()
-	for tipo: Tarea.Tipo in Tarea.Tipo.values():
-		assert_bool(reloj.obligatoria(tipo).completada()).is_false()
+	_comprobar_ninguna_cumplida_al_abrir(almacen)
 	var recolector: RecolectorDeBasura = almacen.get("_recolector")
 	assert_int(recolector.tarea().depositadas()).is_zero()
 	_comprobar_huecos(almacen, _completos_al_abrir(ReglasDeLaPartida.PRIMERA_JORNADA + 1))
@@ -77,6 +58,19 @@ func _comprobar_planilla_en_cero(almacen: Node3D) -> void:
 	var registro: RegistroDeVentas = almacen.get("_computadora").registro()
 	for producto in Catalogo.todos():
 		assert_int(registro.unidades_de(producto)).is_zero()
+	var reloj: RelojDelTurno = almacen.get("_reloj")
+	assert_bool(reloj.obligatoria(Tarea.Tipo.REGISTRAR).completada()).is_false()
+
+
+# AC-STK-024
+func _comprobar_ninguna_cumplida_al_abrir(almacen: Node3D) -> void:
+	var reloj: RelojDelTurno = almacen.get("_reloj")
+	for tipo: Tarea.Tipo in Tarea.Tipo.values():
+		assert_bool(reloj.obligatoria(tipo).completada()).is_false()
+	var contador: Label = almacen.get("_hud").get("_tareas")
+	assert_str(contador.text).is_equal(
+		Hud.TEXTO_DE_LAS_TAREAS % Marcador.tareas(0, Apertura.cantidad_de_obligatorias())
+	)
 
 
 func test_abrir_la_jornada_termina_el_examen_en_curso() -> void:  # AC-INV-025
@@ -87,7 +81,6 @@ func test_abrir_la_jornada_termina_el_examen_en_curso() -> void:  # AC-INV-025
 	var control: ControlDelJugador = jugador.get("_control")
 	var examen: Examen = jugador.get("examen")
 	var agarre: Agarre = almacen.get("_agarre")
-	var bolsa: RigidBody3D = almacen.get_node("Objetos/BolsaDeBasura1")
 	# Un objeto suelto propio del caso: los útiles y las bolsas vuelven a su lugar al abrir la
 	# jornada, y ahí no se vería dónde quedó lo que se llevaba.
 	var llevado: RigidBody3D = OBJETO_SUELTO.instantiate()
@@ -102,14 +95,6 @@ func test_abrir_la_jornada_termina_el_examen_en_curso() -> void:  # AC-INV-025
 	examen.examen_terminado.connect(func() -> void: terminados[0] += 1)
 	almacen.call("_al_abrir_la_jornada", 2)
 	assert_int(terminados[0]).is_zero()
-	# Lo examinado del mundo vuelve a su lugar.
-	var padre := bolsa.get_parent()
-	assert_bool(examen.iniciar(bolsa.get("datos"), bolsa)).is_true()
-	assert_bool(control.esta_suspendido()).is_true()
-	almacen.call("_al_abrir_la_jornada", 2)
-	assert_bool(examen.esta_examinando()).is_false()
-	assert_bool(control.esta_suspendido()).is_false()
-	assert_object(bolsa.get_parent()).is_same(padre)
 	# Lo que se llevaba queda a los pies, y no en la cara ni donde se mira.
 	assert_bool(agarre.pedir_agarrar(llevado.get("datos"), llevado)).is_true()
 	assert_bool(examen.iniciar()).is_true()
@@ -122,11 +107,7 @@ func test_abrir_la_jornada_termina_el_examen_en_curso() -> void:  # AC-INV-025
 	assert_object(agarre.manos().sostenido()).is_null()
 	assert_int(examen.punto_de_examen.get_child_count()).is_zero()
 	assert_vector(llevado.global_position).is_equal_approx(pies, Vector3.ONE * 0.01)
-	# La E siguiente examina lo que la mira tiene adelante.
-	assert_bool(examen.iniciar(bolsa.get("datos"), bolsa)).is_true()
-	assert_object(bolsa.get_parent()).is_same(examen.punto_de_examen)
-	examen.terminar()
-	assert_int(terminados[0]).is_equal(3)
+	assert_int(terminados[0]).is_equal(1)
 
 
 func test_con_otra_pantalla_encima_la_e_no_abre_un_examen() -> void:
@@ -181,7 +162,7 @@ func _reponer(almacen: Node3D) -> void:
 
 func _registrar(almacen: Node3D) -> void:
 	var escritorio: Node3D = almacen.get_node("Estructura/base compu/StaticBody3D")
-	escritorio.call("interactuar")
+	escritorio.call(ReglasDeLosObjetos.METODO_ACCIONAR)
 	var pantalla: PantallaDeComputadora = escritorio.get("pantalla")
 	assert_bool(pantalla.visible).is_true()
 	await _comprobar_reloj(almacen)
@@ -218,17 +199,51 @@ func _boton_de_la_fila(filas: Node, indice: int, columna: int) -> Button:
 func _atender(almacen: Node3D) -> void:
 	var ventanilla: Node3D = almacen.get_node("Estructura/Ventanilla")
 	var panel: PanelDeLaVentanilla = ventanilla.get("panel")
-	var cobrar: Button = panel.get_node("Fondo/Panel/Cobrar")
-	for comprador in Compradores.de_la_jornada():
-		ventanilla.call("interactuar")
+	var reloj: RelojDelTurno = almacen.get("_reloj")
+	var atenciones: Ventanilla = almacen.get("_atenciones")
+	var agarre: Agarre = almacen.get("_agarre")
+	var caja: CajaRegistradora = almacen.get("_caja")
+	var destino: Node3D = almacen.get("_puesto_de_la_caja").get("destino_de_los_tickets")
+	for intervalo: float in [120.0, 360.0]:
+		reloj.avanzar(intervalo)
+		ventanilla.call(ReglasDeLosObjetos.METODO_ACCIONAR)
 		assert_bool(panel.visible).is_true()
 		await _comprobar_reloj(almacen)
-		cobrar.pressed.emit()
+		var atendida := atenciones.atencion()
+		assert_object(atendida).is_not_null()
+		for _entrada in 4:
+			panel.comprador_pulsado.emit()
+			if atenciones.puede_abandonar():
+				break
+		caja.pedir_borrar()
+		for producto in atendida.comprador().pedido().productos():
+			for _unidad in atendida.comprador().pedido().unidades_de(producto):
+				almacen.get("_reposicion_manual").retirar(producto.id)
+				caja.pedir_anotar(agarre.manos().sostenido())
+				panel.comprador_pulsado.emit()
+		caja.pedir_imprimir()
+		for nodo in destino.get_children():
+			var papel := nodo as ObjetoAgarrable
+			if papel != null and papel.datos is Ticket and papel.visible:
+				agarre.pedir_agarrar(papel.datos, papel)
+				panel.comprador_pulsado.emit()
+		assert_bool(atendida.vendida()).is_true()
+		for _entrada in 4:
+			panel.comprador_pulsado.emit()
+			if atenciones.puede_abandonar():
+				break
+		ventanilla.call("cerrar")
 	await get_tree().process_frame
-	var reloj: RelojDelTurno = almacen.get("_reloj")
 	assert_bool(reloj.corriendo()).is_true()
 	assert_bool(reloj.obligatoria(Tarea.Tipo.CAJA).completada()).is_true()
 	ventanilla.call("cerrar")
+
+
+func _cumplidas(reloj: RelojDelTurno) -> int:
+	var cumplidas := 0
+	for tipo: Tarea.Tipo in Tarea.Tipo.values():
+		cumplidas += int(reloj.obligatoria(tipo).completada())
+	return cumplidas
 
 
 ## Borra las cuatro manchas como en el juego: por cada jabón, el balde se vacía en el inodoro, se
@@ -237,7 +252,7 @@ func _atender(almacen: Node3D) -> void:
 func _limpiar(almacen: Node3D) -> void:
 	# Se accede al inodoro y a su mancha abriendo la cabina, como en la partida.
 	for numero: int in [1, 2]:
-		almacen.get_node("Estructura/bano_puerta_%d/CuerpoDeLaHoja" % numero).call("interactuar")
+		almacen.get_node("Estructura/bano_puerta_%d/CuerpoDeLaHoja" % numero).call("usar")
 	for cuadro in 60:
 		await get_tree().physics_frame
 	var jugador: Node3D = almacen.get("_jugador")
@@ -320,22 +335,19 @@ func _soltar_lejos(agarre: Agarre) -> void:
 
 func _sacar_la_basura(almacen: Node3D) -> void:
 	var agarre: Agarre = almacen.get("_agarre")
-	var zona: Area3D = almacen.get_node("Objetos/ZonaDeDescarte")
+	var contenedor: Node3D = almacen.get_node(
+		"Estructura/deposito_contenedor_soporte/deposito_contenedor_cuerpo/StaticBody3D"
+	)
 	var jugador: Node3D = almacen.get("_jugador")
-	jugador.global_position = zona.global_position + Vector3.BACK
-	var camara := jugador.get_node("Giro/Camara") as Camera3D
-	camara.look_at(zona.global_position + Vector3.UP * 0.4)
 	var recolector: RecolectorDeBasura = almacen.get("_recolector")
-	for bolsa: Node3D in almacen.get("_bolsas"):
-		var datos: ObjetoDelAlmacen = bolsa.call("interactuar")
-		assert_bool(agarre.pedir_agarrar(datos, bolsa)).is_true()
-		# El área debe registrar que la bolsa dejó el mundo antes de recibirla otra vez.
-		await get_tree().physics_frame
-		agarre.punto_de_soltado.global_position = zona.global_position + Vector3.UP * 0.3
-		assert_object(agarre.soltar(true)).is_same(bolsa)
-		for cuadro in 5:
-			await get_tree().physics_frame
-		assert_bool(recolector.tarea().esta_depositada(datos.id)).is_true()
+	for bolsa: ObjetoAgarrable in almacen.get("_bolsas"):
+		assert_bool(agarre.pedir_agarrar(bolsa.datos, bolsa)).is_true()
+		jugador.set("_enfocado", contenedor)
+		var clic := InputEventMouseButton.new()
+		clic.button_index = MOUSE_BUTTON_LEFT
+		clic.pressed = true
+		jugador.call("_unhandled_input", clic)
+		assert_bool(recolector.tarea().esta_depositada(bolsa.datos.id)).is_true()
 	var reloj: RelojDelTurno = almacen.get("_reloj")
 	assert_bool(reloj.obligatoria(Tarea.Tipo.SACAR_LA_BASURA).completada()).is_true()
 
@@ -392,12 +404,15 @@ func _abrir_con_las_puertas_giradas(cuadros: int) -> Array[float]:
 	var cerradas: Array[Transform3D] = []
 	for puerta: Node3D in puertas:
 		cerradas.append(puerta.get_parent().transform)
-		puerta.call("interactuar")
+		puerta.call("usar" if puerta.has_method("usar") else "interactuar")
 	for cuadro in cuadros:
 		await get_tree().physics_frame
 	var antes: Array[float] = []
 	for puerta: Node3D in puertas:
-		antes.append(puerta.call("puerta").angulo())
+		if puerta.get("traba") == 0:
+			antes.append(puerta.call("puerta").angulo())
+		else:
+			assert_float(puerta.call("puerta").angulo()).is_equal(0.0)
 	almacen.call("_al_abrir_la_jornada", ReglasDeLaPartida.PRIMERA_JORNADA + 1)
 	for indice in puertas.size():
 		var puerta: Node3D = puertas[indice]

@@ -10,8 +10,9 @@
 [ext_resource type="PackedScene" path="res://src/escenas/puestos/servicios_del_almacen.tscn" id="grupo_Servicios"]
 [ext_resource type="LightmapGIData" uid="uid://i8kc61len5kv" path="res://src/escenas/almacen.lmbake" id="lightmap"]
 [ext_resource type="PackedScene" path="res://src/escenas/puestos/reposicion_manual.tscn" id="reposicion_manual"]
+[ext_resource type="PackedScene" path="res://src/escenas/puestos/exterior_del_almacen.tscn" id="exterior"]
 
-[node name="Almacen" type="Node3D" unique_id=999617316 node_paths=PackedStringArray("_hud", "_reloj", "_ciclo", "_pantalla", "_reloj_de_mesa", "_repositor", "_estante", "_cajas_de_productos", "_jugador", "_atenciones", "_computadora", "_limpiador", "_limpieza", "_recolector", "_audio", "_reposicion_manual", "_agarre", "_bolsas", "_muebles_con_contorno", "_puertas", "_utiles_de_limpieza", "_manija_del_balde", "_tapa_del_contenedor")]
+[node name="Almacen" type="Node3D" unique_id=999617316 node_paths=PackedStringArray("_hud", "_reloj", "_ciclo", "_pantalla", "_reloj_de_mesa", "_repositor", "_estante", "_cajas_de_productos", "_jugador", "_atenciones", "_computadora", "_limpiador", "_limpieza", "_recolector", "_audio", "_reposicion_manual", "_agarre", "_bolsas", "_muebles_con_contorno", "_puertas", "_utiles_de_limpieza", "_manija_del_balde", "_tapa_del_contenedor", "_contenedor", "_caja", "_puesto_de_la_caja", "_programa_de_tickets", "_habitaciones")]
 script = ExtResource("4_almacen")
 _hud = NodePath("Interfaz/Hud")
 _reloj = NodePath("Servicios/RelojDelTurno")
@@ -28,14 +29,19 @@ _limpiador = NodePath("Servicios/Limpiador")
 _limpieza = NodePath("LimpiezaDelAlmacen")
 _recolector = NodePath("Servicios/Recolector")
 _audio = NodePath("Servicios/AudioDelAlmacen")
+_contenedor = NodePath("Estructura/deposito_contenedor_soporte/deposito_contenedor_cuerpo/StaticBody3D")
 _tapa_del_contenedor = NodePath("Estructura/deposito_contenedor_soporte/deposito_contenedor_bisagra_tapa/CuerpoDeLaTapa")
 _reposicion_manual = NodePath("ReposicionManual")
 _agarre = NodePath("Jugador/Agarre")
 _bolsas = [NodePath("Objetos/BolsaDeBasura1"), NodePath("Objetos/BolsaDeBasura2"), NodePath("Objetos/BolsaDeBasura3")]
 _muebles_con_contorno = [NodePath("Estructura/gondolanueva/StaticBody3D"), NodePath("Estructura/gondolanueva2/StaticBody3D"), NodePath("Estructura/gondolanueva_001/StaticBody3D"), NodePath("Estructura/gondolanueva_002/StaticBody3D")]
-_puertas = [NodePath("Estructura/puerta/CuerpoDeLaHoja"), NodePath("Estructura/puerta2/CuerpoDeLaHoja"), NodePath("Estructura/bano_puerta_1/CuerpoDeLaHoja"), NodePath("Estructura/bano_puerta_2/CuerpoDeLaHoja")]
+_puertas = [NodePath("Estructura/puerta/CuerpoDeLaHoja"), NodePath("Estructura/puerta2/CuerpoDeLaHoja"), NodePath("Estructura/bano_puerta_1/CuerpoDeLaHoja"), NodePath("Estructura/bano_puerta_2/CuerpoDeLaHoja"), NodePath("Estructura/heladeranueva/puerta_heladera_0/CuerpoDeLaHoja"), NodePath("Estructura/heladeranueva_001/puerta_heladera_1/CuerpoDeLaHoja"), NodePath("Estructura/heladera_fuera_de_servicio/puerta_heladera_2/CuerpoDeLaHoja")]
 _utiles_de_limpieza = [NodePath("Objetos/Mopa"), NodePath("Objetos/Balde"), NodePath("Objetos/JabonAzul"), NodePath("Objetos/JabonRosa"), NodePath("Objetos/JabonAmarillo")]
 _manija_del_balde = NodePath("Objetos/Balde/Malla")
+_caja = NodePath("Servicios/CajaRegistradora")
+_puesto_de_la_caja = NodePath("Estructura/cajaregistradora/StaticBody3D")
+_programa_de_tickets = NodePath("Interfaz/ProgramaDeTickets")
+_habitaciones = NodePath("Estructura/HabitacionesDelAlmacen")
 
 [node name="ReposicionManual" parent="." unique_id=916700246 node_paths=PackedStringArray("repositor", "jugador", "estante", "contenido", "punto_de_la_caja") instance=ExtResource("reposicion_manual")]
 repositor = NodePath("../Servicios/Repositor")
@@ -46,6 +52,8 @@ punto_de_la_caja = NodePath("../Jugador/Giro/PuntoDeCaja")
 
 [node name="Ambiente" parent="." unique_id=1395941829 instance=ExtResource("grupo_Ambiente")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.001781702, 0.011070967, 5.054474e-05)
+
+[node name="Exterior" parent="." instance=ExtResource("exterior")]
 
 [node name="Estructura" parent="." unique_id=1019345008 instance=ExtResource("grupo_Estructura")]
 
@@ -68,13 +76,13 @@ light_bake_mode = 1
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.001017, 0)
 
 [node name="Deposito" parent="Estructura/SueloSolido" index="1"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10.86326, 0, -4.5818586)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10.86326, 0, 2.9741414)
 
 [node name="PasoAlDeposito" parent="Estructura/SueloSolido" index="3"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8.081463, 0, -6.82)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8.081463, 0, 0.736)
 
 [node name="PasoAlFondo" parent="Estructura/SueloSolido" index="4"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.4993687, 0, -8.062178)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.7493687, 0, -8.062178)
 
 [node name="Ventanilla" parent="Estructura" index="36" node_paths=PackedStringArray("jugador", "reloj", "atenciones", "panel")]
 jugador = NodePath("../../Jugador")
@@ -82,22 +90,28 @@ reloj = NodePath("../../Servicios/RelojDelTurno")
 atenciones = NodePath("../../Servicios/Atenciones")
 panel = NodePath("../../Interfaz/PanelDeLaVentanilla")
 
+[node name="NotasDelAlmacen" parent="Estructura" node_paths=PackedStringArray("jugador", "reloj", "vista")]
+jugador = NodePath("../../Jugador")
+reloj = NodePath("../../Servicios/RelojDelTurno")
+vista = NodePath("../../Interfaz/NotaEncuadrada")
+
 [node name="Servicios" parent="." unique_id=1035790477 instance=ExtResource("grupo_Servicios")]
 
 [node name="RedDeSeguridad" parent="Servicios" index="8" node_paths=PackedStringArray("agarre", "jugador", "puertas")]
 agarre = NodePath("../../Jugador/Agarre")
 jugador = NodePath("../../Jugador")
-puertas = [NodePath("../../Estructura/puerta/CuerpoDeLaHoja"), NodePath("../../Estructura/puerta2/CuerpoDeLaHoja"), NodePath("../../Estructura/bano_puerta_1/CuerpoDeLaHoja"), NodePath("../../Estructura/bano_puerta_2/CuerpoDeLaHoja")]
+puertas = [NodePath("../../Estructura/puerta/CuerpoDeLaHoja"), NodePath("../../Estructura/puerta2/CuerpoDeLaHoja"), NodePath("../../Estructura/bano_puerta_1/CuerpoDeLaHoja"), NodePath("../../Estructura/bano_puerta_2/CuerpoDeLaHoja"), NodePath("../../Estructura/heladeranueva/puerta_heladera_0/CuerpoDeLaHoja"), NodePath("../../Estructura/heladeranueva_001/puerta_heladera_1/CuerpoDeLaHoja"), NodePath("../../Estructura/heladera_fuera_de_servicio/puerta_heladera_2/CuerpoDeLaHoja")]
 
 [node name="Interfaz" parent="." unique_id=363714406 instance=ExtResource("grupo_Interfaz")]
 
-[node name="CuerpoDeLaTapa" parent="Estructura/deposito_contenedor_soporte/deposito_contenedor_bisagra_tapa" node_paths=PackedStringArray("zona")]
-zona = NodePath("../../../../Objetos/ZonaDeDescarte")
+[node name="CuerpoDeLaTapa" parent="Estructura/deposito_contenedor_soporte/deposito_contenedor_bisagra_tapa" node_paths=PackedStringArray("recolector")]
+recolector = NodePath("../../../../Servicios/Recolector")
+
+[node name="StaticBody3D" parent="Estructura/deposito_contenedor_soporte/deposito_contenedor_cuerpo" node_paths=PackedStringArray("recolector")]
+recolector = NodePath("../../../../Servicios/Recolector")
 
 [node name="Objetos" parent="." unique_id=412597675 instance=ExtResource("grupo_Objetos")]
 
-[node name="ZonaDeDescarte" parent="Objetos" index="2" node_paths=PackedStringArray("recolector")]
-recolector = NodePath("../../Servicios/Recolector")
 
 [node name="LimpiezaDelAlmacen" parent="." unique_id=2007323218 node_paths=PackedStringArray("jugador", "limpiador", "balde", "mopa", "suelo", "casco_del_local") instance=ExtResource("21_limpieza")]
 jugador = NodePath("../Jugador")
@@ -108,7 +122,7 @@ suelo = NodePath("../Estructura/SueloSolido")
 casco_del_local = NodePath("../Estructura/almacen/StaticBody3D")
 
 [node name="Jugador" parent="." unique_id=2126157413 instance=ExtResource("1_jugador")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.91, 0.112, 6.9)
+transform = Transform3D(1,  0,  0,  0,  1,  0,  0,  0,  1, 5.71, 0.112, 5.3)
 editor_description = "Donde el jugador arranca cada noche: frente a la puerta de entrada, del lado de adentro. Mira hacia -Z, que es el local."
 
 [node name="LightmapGI" type="LightmapGI" parent="." unique_id=2127617826]
@@ -117,6 +131,17 @@ texel_scale = 1.0
 directional = true
 generate_probes_subdiv = 3
 light_data = ExtResource("lightmap")
+
+[node name="StaticBody3D" parent="Estructura/cajaregistradora" node_paths=PackedStringArray("jugador", "agarre", "reloj", "caja", "programa")]
+jugador = NodePath("../../../Jugador")
+agarre = NodePath("../../../Jugador/Agarre")
+reloj = NodePath("../../../Servicios/RelojDelTurno")
+caja = NodePath("../../../Servicios/CajaRegistradora")
+programa = NodePath("../../../Interfaz/ProgramaDeTickets")
+
+[node name="Lector" parent="Estructura" node_paths=PackedStringArray("jugador", "caja")]
+jugador = NodePath("../../Jugador")
+caja = NodePath("../../Servicios/CajaRegistradora")
 
 [editable path="Estructura"]
 [editable path="Objetos"]

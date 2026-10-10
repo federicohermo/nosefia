@@ -237,17 +237,30 @@ func test_el_rincon_del_mostrador_sigue_libre_para_el_empleado() -> void:
 	var limites := mostrador.global_transform * mostrador.get_aabb()
 	var brazo: CollisionShape3D = mostrador.get_node("StaticBody3D/Volumen")
 	var otro: CollisionShape3D = mostrador.get_node("StaticBody3D/Volumen2")
-	var fondo_del_brazo: float = brazo.global_position.z + (brazo.shape as BoxShape3D).size.z / 2.0
-	var costado_del_otro: float = otro.global_position.x + (otro.shape as BoxShape3D).size.x / 2.0
+	var caja_del_brazo := (
+		brazo.global_transform
+		* AABB(-(brazo.shape as BoxShape3D).size / 2.0, (brazo.shape as BoxShape3D).size)
+	)
+	var fondo_del_brazo := caja_del_brazo.end.z
+	var caja_del_otro := (
+		otro.global_transform
+		* AABB(-(otro.shape as BoxShape3D).size / 2.0, (otro.shape as BoxShape3D).size)
+	)
+	var costado_del_otro := caja_del_otro.position.x
 	var rincon := Vector3(
-		(costado_del_otro + limites.end.x) / 2.0,
+		(costado_del_otro + limites.position.x) / 2.0,
 		limites.get_center().y,
 		(fondo_del_brazo + limites.end.z) / 2.0
 	)
-	var consulta := PhysicsPointQueryParameters3D.new()
-	consulta.position = rincon
+	var consulta := PhysicsShapeQueryParameters3D.new()
+	var capsula := CapsuleShape3D.new()
+	capsula.radius = 0.25
+	capsula.height = 1.7
+	consulta.shape = capsula
+	consulta.transform.origin = Vector3(rincon.x, limites.position.y + 0.9, rincon.z)
+	consulta.collision_mask = 1 | ReglasDeLosObjetos.CAPA_DEL_CONTORNO
 	(
-		assert_array(estructura.get_world_3d().direct_space_state.intersect_point(consulta))
+		assert_array(estructura.get_world_3d().direct_space_state.intersect_shape(consulta))
 		. override_failure_message("un volumen rellena el rincón del mostrador en %v" % rincon)
 		. is_empty()
 	)

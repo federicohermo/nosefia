@@ -67,6 +67,14 @@ Para cada cosa que toca `src/dominio/` o `src/sistemas/`:
 func test_dos_jornadas_graves_seguidas_despiden() -> void:  # AC-EMP-004
 ```
 
+**Una prueba de arquitectura no prohíbe toda condición en una cáscara.** En #306 del
+2026-10-09, un test heredado rechazaba cualquier `if`, `elif` o `match` en la raíz: también
+impedía excluir cuerpos ya entregados o comprobar una referencia antes de leerla. La cáscara
+traduce esos hechos; el dominio decide sus consecuencias. Antes de editar, declará en el issue
+el reemplazo del test textual, conservá sus comprobaciones útiles y ejercé los resultados en
+pruebas funcionales y puras. No eludas la expresión regular con otra sintaxis ni afirmes que
+una cita de método demuestra la delegación: eso también requiere revisar la fuente.
+
 **Un test que compara dos lecturas del mismo cuadro tiene que forzar la escritura antes de leer.**
 `await get_tree().process_frame` sigue **antes** del `_process` de los nodos. Leer justo después
 del `await` compara la escritura del cuadro anterior contra el instante de éste. Medido el
@@ -96,6 +104,20 @@ que queda tapado por otra ventana casi no pide cuadros: dos capturas seguidas sa
 #181 el agua parecía quieta en la web, y el juego no llegó a 240 cuadros en 20 segundos. Va con
 `--disable-backgrounding-occluded-windows` y `--disable-renderer-backgrounding`, y antes de leer
 una captura se cuentan los `requestAnimationFrame` de un segundo.
+
+**No excluyas texturas del export por una búsqueda de texto vacía.** Godot extrae las
+imágenes del GLB y el modelo importado las referencia también desde recursos binarios. En #339,
+excluirlas redujo el paquete y dejó el local sin texturas. Conservá esas dependencias y verificá
+una partida nueva en el navegador, observando la consola también después de salir del menú.
+El humo de arranque termina antes de ese recorrido. Un build local no exige publicar en Vercel:
+el límite de tamaño de publicación no justifica quitar arte necesario.
+
+**Los recursos de diálogo se verifican también dentro del paquete exportado.** En #339, los
+tests y las capturas del checkout mostraban las nueve entradas, pero el recurso binario del
+PCK conservaba sólo los recordatorios: las conversaciones quedaban vacías. Ejecutá el chequeo
+externo `.github/scripts/verificar_dialogos_exportados.gd` con `--main-pack` desde la carpeta
+del export, además del recorrido de interacción. No des por resuelto un reporte del build
+porque la misma conversación funcione desde el checkout.
 
 ## Cuando lo que escribís es un gate sobre prosa
 
@@ -138,6 +160,13 @@ lo que en este motor nadie más cuida.
 **Guardá su salida en un archivo.** El nodo `tests` rojo imprime la corrida entera, y la
 herramienta la corta antes del test que falló. Medido el 2026-09-26.
 
+**El XML sin errores no certifica los callbacks ni el desmontaje.** Conservá también la salida
+cruda del motor en verde. En #302, emitir un array sin tipo abortaba un callback fuera del
+contador de errores del caso y la ausencia de audio pasaba por accidente. El fixture entrega
+los tipos de la señal y afirma que su receptor se ejecutó, además del resultado. Un error nuevo
+o una fuga se corrige aunque el XML diga cero; los diagnósticos deliberados del debugger o de
+un `assert_error` se identifican por su causa, sin descartar otras líneas `ERROR`.
+
 **Un nodo salteado no es un nodo verde**, y el reporte lo distingue. Pero `tests` sin `GODOT_BIN`
 **no se saltea: sale rojo** — ese salteo vale sólo mientras no exista un solo `*_test.gd`, y hay
 muchos.
@@ -150,12 +179,15 @@ crudo sigue siendo el control, y `verificar.py` **no lo imprime**:
 ```powershell
 & $env:GODOT_BIN --path . --headless -s -d --remote-debug tcp://127.0.0.1:0 `
   res://addons/gdUnit4/bin/GdUnitCmdTool.gd -a test --continue --ignoreHeadlessMode `
-  -rd reports 2>$null | Select-String "Executed test suites"
+  -rd res://reports 2>$null | Select-String "Executed test suites"
 ```
 
 **Va en PowerShell y no en Bash**, porque en un worktree aislado Bash rechaza cualquier forma de
 invocar Godot como comando. **Y el `2>$null` no se saca**: PowerShell no pasa el stderr de Godot
 por `Select-String`, y sin él la corrida devuelve 4,5 MB. Medido el 2026-09-24.
+
+Esta vista filtrada sólo presenta el conteo; no reemplaza el archivo crudo de la corrida ni
+su veredicto. Los errores fuera del contador se revisan en ese archivo completo.
 
 Ese `(N/N)` tiene que dar igual que `find test -name '*_test.gd' | wc -l`. Si da menos, hay una
 suite que no corrió.
@@ -218,6 +250,14 @@ se corrige el código.
   esas suites sueltas antes de `verificar.py`. En el #176, dos clics seguidos sobre la misma caja
   pasaron de «no hace nada» a «devuelve la unidad», y un caso de `reposicion_manual_test.gd` que
   afirmaba lo viejo costó una corrida entera en 6/7.
+- **Si una llegada pasa de abrir una interfaz a depender del reloj, revisá también los
+  fixtures de notificaciones, sonido y caja que piden atender.** En #339 seguían esperando
+  un comprador inmediato. La primera jornada debe ejercerse avanzando su reloj; las pruebas
+  del recorrido anterior deben declarar una jornada que lo conserve.
+- **Si completar una tarea pasa a exigir ventas, revisá los fixtures de cierre que marcan
+  tareas a mano.** En #339, los casos de descarte y tickets fingían una noche impecable sin
+  vender. Deben aislar el reparto anterior o realizar las compras; no debilitar la regla nueva
+  ni cambiar los apercibimientos esperados para absorber una tarea que quedó pendiente.
 - **Lo que aparece implementando se hace, no se anota.** Un issue incompleto no se cierra abriendo
   otro issue: se completa.
 - **Un reparto nuevo exige revisar los supuestos de los tests que leen el modelo.** Buscá

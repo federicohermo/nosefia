@@ -1,20 +1,20 @@
 ## La red de seguridad en el almacén entero: adónde va lo que quedó adentro, y qué no cambia.
 ##
 ## **El lugar adentro de un sólido es el entretecho:** el volumen macizo entre el cielorraso del
-## local y el techo. Mide casi tres metros de alto, así que ningún anillo alrededor de un objeto
+## depósito y el techo. Mide casi tres metros de alto, así que ningún anillo alrededor de un objeto
 ## sale de él, y ningún piso queda debajo a menos de la caída que se busca.
 extends GdUnitTestSuite
 
 const ALMACEN := preload("res://src/escenas/almacen.tscn")
 const AperturaConLugar := preload("res://test/escenas/apertura_con_lugar.gd")
 
-const ENTRETECHO := Vector3(0.0, 5.5, 0.0)
+const ENTRETECHO := Vector3(2.0, 5.9, -11.0)
 
 ## Media caja grande, en metros.
 const MEDIA_CAJA := 0.3037
 
-## Un tramo de la pared de la fachada lejos de todo, y cuánto se mete la bolsa en ella.
-const PARED_LIBRE := Vector3(-3.0, 0.0, 7.871)
+## Un tramo opaco de la fachada, fuera de la ventanilla y del mostrador.
+const PARED_LIBRE := Vector3(-1.9, 0.0, 6.28)
 const METIDA_EN_LA_PARED := 0.05
 
 ## Dónde se arma la racha de empujones: piso libre del fondo.
@@ -190,28 +190,34 @@ func test_rescatar_una_caja_y_una_unidad_no_mueve_la_mercaderia() -> void:  # AC
 	assert_dict(con_la_unidad["gondola"]).is_not_equal(antes["gondola"])
 
 
-## El caso de la trampa: una bolsa ya contada que entra en una pared se rescata cerca de donde
-## entró. Ni se descuenta ni vuelve al baño, donde quedaría a la vista con la tarea cumplida.
+## La bolsa tirada queda fuera del rescate; la pendiente se recupera sin contar la tarea.
 func test_rescatar_las_bolsas_no_las_cuenta_ni_las_descuenta() -> void:  # AC-PLY-043
 	var almacen: Node3D = await _almacen()
 	var recolector: RecolectorDeBasura = almacen.get("_recolector")
 	var bolsas: Array = almacen.get("_bolsas")
-	var contada: RigidBody3D = bolsas[0]
-	var sin_contar: RigidBody3D = bolsas[1]
-	recolector.pedir_depositar(contada.call(ReglasDeLosObjetos.METODO_INTERACTUAR).id, 0.0)
+	var contada: ObjetoAgarrable = bolsas[0]
+	var sin_contar: ObjetoAgarrable = bolsas[1]
+	var agarre: Agarre = almacen.get("_agarre")
+	assert_bool(agarre.pedir_agarrar(contada.datos, contada)).is_true()
+	var contenedor: Node3D = almacen.get_node(
+		"Estructura/deposito_contenedor_soporte/deposito_contenedor_cuerpo/StaticBody3D"
+	)
+	contenedor.call("interactuar")
+	assert_int(recolector.tarea().depositadas()).is_equal(1)
 	var antes := _tareas(almacen)
-	var descarte: Node3D = almacen.get_node("Objetos/ZonaDeDescarte")
-	for bolsa: RigidBody3D in [contada, sin_contar]:
-		var origen: Transform3D = bolsa.call(ReglasDeLosObjetos.METODO_LUGAR_DE_ORIGEN)
-		bolsa.freeze = true
-		bolsa.global_basis = Basis.IDENTITY
-		bolsa.global_position = Vector3(
-			PARED_LIBRE.x, _piso(almacen) + 0.1, PARED_LIBRE.z + METIDA_EN_LA_PARED
-		)
-		_red(almacen).revisar(bolsa)
-		assert_int(_red(almacen).rescates[-1]["clase"]).is_equal(Rescate.Clase.ALREDEDOR)
-		assert_float(bolsa.global_position.distance_to(origen.origin)).is_greater(1.0)
-		assert_float(bolsa.global_position.distance_to(descarte.global_position)).is_greater(
-			descarte.call("radio")
-		)
+	var quieta := contada.global_transform
+	var rescates := _red(almacen).rescates.size()
+	_red(almacen).revisar(contada)
+	assert_int(_red(almacen).rescates.size()).is_equal(rescates)
+	assert_bool(contada.visible).is_false()
+	assert_bool(contada.global_transform.is_equal_approx(quieta)).is_true()
+	sin_contar.freeze = true
+	sin_contar.global_basis = Basis.IDENTITY
+	sin_contar.global_position = Vector3(
+		PARED_LIBRE.x, _piso(almacen) + 0.1, PARED_LIBRE.z + METIDA_EN_LA_PARED
+	)
+	_red(almacen).revisar(sin_contar)
+	assert_int(_red(almacen).rescates[-1]["clase"]).is_equal(Rescate.Clase.ALREDEDOR)
+	assert_int(recolector.tarea().depositadas()).is_equal(1)
+	assert_bool(sin_contar.visible).is_true()
 	assert_dict(_tareas(almacen)).is_equal(antes)

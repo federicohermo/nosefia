@@ -16,7 +16,7 @@ const JUGADOR := preload("res://src/escenas/jugador.tscn")
 const ALMACEN := preload("res://src/escenas/almacen.tscn")
 
 ## Un rincón del depósito donde caminar hacia adelante lleva la caja contra la pared.
-const RINCON_DEL_DEPOSITO := Vector2(10.4, -4.0)
+const RINCON_DEL_DEPOSITO := Vector2(10.4, 3.556)
 
 ## El monitor del issue fue a 144 Hz. Con el cuadro sin tope, casi todos caen en el mismo punto
 ## entre dos pasos de física y el temblor no aparece.

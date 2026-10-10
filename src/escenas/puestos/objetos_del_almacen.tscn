@@ -6,7 +6,6 @@
 
 [ext_resource type="PackedScene" path="res://src/escenas/objetos/caja_de_productos.tscn" id="11_caja_de_productos"]
 [ext_resource type="PackedScene" path="res://src/escenas/objetos/objeto_agarrable.tscn" id="22_agarrable"]
-[ext_resource type="PackedScene" path="res://src/escenas/puestos/zona_de_descarte.tscn" id="25_descarte"]
 [ext_resource type="Resource" path="res://src/dominio/almacen/bolsa_de_basura_1.tres" id="26_bolsa1"]
 [ext_resource type="Resource" path="res://src/dominio/almacen/bolsa_de_basura_2.tres" id="27_bolsa2"]
 [ext_resource type="Resource" path="res://src/dominio/almacen/bolsa_de_basura_3.tres" id="28_bolsa3"]
@@ -56,7 +55,7 @@ radius = 0.1689
 [node name="Objetos" type="Node3D"]
 
 [node name="Mopa" type="RigidBody3D" parent="." node_paths=PackedStringArray("malla", "carga", "mallas") groups=["interactuable"]]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12.75, 0.9540592, -4.3)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12.75, 0.9540592, 3.256)
 collision_mask = 9
 script = ExtResource("30_util")
 datos = ExtResource("31_mopa")
@@ -82,8 +81,6 @@ cast_shadow = 0
 mesh = SubResource("punta_de_la_mopa")
 gi_mode = 2
 
-[node name="ZonaDeDescarte" parent="." instance=ExtResource("25_descarte")]
-transform = Transform3D(1.000000000, 0.000000000, 0.000000000, 0.000000000, 1.000000000, 0.000000000, 0.000000000, 0.000000000, 1.000000000, 3.000000000, 0.103000000, -14.912470000)
 
 [node name="BolsaDeBasura1" parent="." instance=ExtResource("22_agarrable")]
 transform = Transform3D(1.000000000, 0.000000000, 0.000000000, 0.000000000, 1.000000000, 0.000000000, 0.000000000, 0.000000000, 1.000000000, -3.700000000, 0.500000000, -11.500000000)
@@ -222,7 +219,7 @@ transform = Transform3D(0.000000000, 0.000000000, -1.000000000, 0.000000000, 1.0
 producto = 30
 
 [node name="Balde" type="RigidBody3D" parent="." node_paths=PackedStringArray("malla", "carga", "mallas") groups=["interactuable"]]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12.456797, 0.2582371, -7.1073775)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12.456797, 0.2582371, 0.4486225)
 collision_mask = 9
 script = ExtResource("30_util")
 datos = ExtResource("32_balde")
@@ -249,7 +246,7 @@ mesh = SubResource("agua_del_balde")
 gi_mode = 2
 
 [node name="JabonAzul" type="RigidBody3D" parent="." node_paths=PackedStringArray("malla", "mallas") groups=["interactuable"]]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10.501369, 0.432, -7.6729193)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10.501369, 0.432, -0.1169193)
 collision_mask = 9
 script = ExtResource("30_util")
 datos = ExtResource("33_jabon_azul")
@@ -264,7 +261,7 @@ shape = SubResource("forma_del_bidon")
 gi_mode = 2
 
 [node name="JabonRosa" type="RigidBody3D" parent="." node_paths=PackedStringArray("malla", "mallas") groups=["interactuable"]]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9.9666195, 0.432, -7.6729193)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9.9666195, 0.432, -0.1169193)
 collision_mask = 9
 script = ExtResource("30_util")
 datos = ExtResource("34_jabon_rosa")
@@ -279,7 +276,7 @@ shape = SubResource("forma_del_bidon")
 gi_mode = 2
 
 [node name="JabonAmarillo" type="RigidBody3D" parent="." node_paths=PackedStringArray("malla", "mallas") groups=["interactuable"]]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 11.03491, 0.432, -7.6729193)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 11.03491, 0.432, -0.1169193)
 collision_mask = 9
 script = ExtResource("30_util")
 datos = ExtResource("35_jabon_amarillo")

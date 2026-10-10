@@ -31,6 +31,9 @@ const APERCIBIMIENTOS_HASTA_EL_DESPIDO := 4
 
 const APERCIBIMIENTOS_POR_AVISO := 1
 
+const MEDIOS_POR_APERCIBIMIENTO: int = 2
+const MEDIOS_POR_LLAMADO: int = 1
+
 ## En qué noche falla el reloj de mesa del local: desde la mitad de ese turno hasta su cierre, y
 ## la noche siguiente vuelve a andar.
 ##

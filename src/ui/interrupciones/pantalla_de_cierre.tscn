@@ -3,7 +3,7 @@
 [ext_resource type="Script" path="res://src/ui/interrupciones/pantalla_de_cierre.gd" id="1_pantalla"]
 [ext_resource type="Theme" path="res://assets/ui/manada/tema.tres" id="2_tema"]
 
-[node name="PantallaDeCierre" type="CanvasLayer" node_paths=PackedStringArray("_fondo", "_marco", "_saludo", "_renglones", "_comentario", "_riesgo", "_continuar", "_volver_al_menu")]
+[node name="PantallaDeCierre" type="CanvasLayer" node_paths=PackedStringArray("_fondo", "_marco", "_saludo", "_renglones", "_comentario", "_continuar", "_volver_al_menu")]
 layer = 2
 script = ExtResource("1_pantalla")
 _fondo = NodePath("Fondo")
@@ -11,7 +11,6 @@ _marco = NodePath("Fondo/Panel")
 _saludo = NodePath("Fondo/Panel/Saludo")
 _renglones = NodePath("Fondo/Panel/Lineas")
 _comentario = NodePath("Fondo/Panel/Comentario")
-_riesgo = NodePath("Fondo/Panel/Riesgo")
 _continuar = NodePath("Fondo/Panel/Continuar")
 _volver_al_menu = NodePath("Fondo/Panel/VolverAlMenu")
 
@@ -46,11 +45,6 @@ layout_mode = 2
 size_flags_horizontal = 4
 horizontal_alignment = 1
 autowrap_mode = 3
-
-[node name="Riesgo" type="Label" parent="Fondo/Panel"]
-layout_mode = 2
-theme_type_variation = &"TextoSecundario"
-horizontal_alignment = 1
 
 [node name="Continuar" type="Button" parent="Fondo/Panel"]
 custom_minimum_size = Vector2(427, 59)

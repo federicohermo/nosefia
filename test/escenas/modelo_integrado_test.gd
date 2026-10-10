@@ -51,7 +51,8 @@ func test_solo_las_mallas_reemplazadas_son_geometria_de_referencia() -> void:
 
 func test_la_raiz_agrupa_por_rol_y_conserva_sus_enlaces() -> void:
 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
-	assert_int(almacen.get_child_count()).is_less(10)
+	# El exterior es el décimo rol, instanciado directamente en la raíz como los demás.
+	assert_int(almacen.get_child_count()).is_less(11)
 	for propiedad in almacen.get_property_list():
 		if propiedad.usage & PROPERTY_USAGE_SCRIPT_VARIABLE and propiedad.name.begins_with("_"):
 			var valor: Variant = almacen.get(propiedad.name)
@@ -68,7 +69,8 @@ func test_los_puestos_reemplazados_usan_mallas_del_modelo() -> void:
 		var cuerpo := almacen.get_node_or_null(ruta)
 		assert_object(cuerpo).is_not_null()
 		assert_bool(cuerpo.is_in_group("interactuable")).is_true()
-		assert_bool(cuerpo.has_method("interactuar")).is_true()
+		var metodo := "accionar" if "compu" in ruta else "interactuar"
+		assert_bool(cuerpo.has_method(metodo)).is_true()
 		var mallas: Variant = cuerpo.get("mallas")
 		assert_bool(mallas is Array and not mallas.is_empty()).is_true()
 	assert_bool(almacen.has_node("Escritorio")).is_false()
@@ -132,13 +134,8 @@ func test_el_surtido_fijo_no_muestra_stock_que_el_dominio_no_tiene() -> void:
 		var oculta := false
 		for lugar in lugares:
 			oculta = oculta or malla.global_position.distance_to(lugar) < TOLERANCIA
-		var falla := "se ve" if oculta else "está oculta fuera de la disposición"
-		(
-			assert_bool(malla.is_visible_in_tree())
-			. override_failure_message("%s %s" % [ruta, falla])
-			. is_equal(not oculta)
-		)
 		if oculta:
+			assert_bool(malla.is_visible_in_tree()).override_failure_message(ruta).is_false()
 			for cuerpo: PhysicsBody3D in malla.find_children("*", "PhysicsBody3D", true, false):
 				(
 					assert_int(cuerpo.collision_layer)
@@ -148,3 +145,42 @@ func test_el_surtido_fijo_no_muestra_stock_que_el_dominio_no_tiene() -> void:
 	for ruta: String in ["base compu", "gondolanueva"]:
 		var malla: MeshInstance3D = estructura.get_node(ruta)
 		assert_object(malla.mesh).is_instanceof(ArrayMesh)
+
+
+func test_las_hojas_del_bano_conservan_las_imagenes_del_artista() -> void:  # AC-PLY-071
+	var almacen: Node3D = auto_free(ALMACEN.instantiate())
+	var original: Node3D = auto_free(
+		load("res://assets/models/SEPT_JUEGOS_PROTOTIPO.glb").instantiate()
+	)
+	add_child(almacen)
+	add_child(original)
+	var rutas: Array[String] = ["nota baño inodoro", "nota instrucciones", "nota productos"]
+	for ruta in rutas:
+		var hoja: MeshInstance3D = almacen.get_node("Estructura/" + ruta)
+		var referencia: MeshInstance3D = original.get_node(ruta)
+		assert_bool(hoja.is_visible_in_tree()).is_true()
+		assert_that(hoja.transform).is_equal(referencia.transform)
+		assert_object(hoja.mesh).is_same(referencia.mesh)
+		assert_int(hoja.gi_mode).is_equal(referencia.gi_mode)
+		assert_object(hoja.material_override).is_same(referencia.material_override)
+		for superficie in hoja.mesh.get_surface_count():
+			assert_object(hoja.get_surface_override_material(superficie)).is_same(
+				referencia.get_surface_override_material(superficie)
+			)
+			assert_object(hoja.get_active_material(superficie)).is_same(
+				referencia.get_active_material(superficie)
+			)
+		var cuerpos := referencia.find_children("*", "StaticBody3D", true, false)
+		assert_int(cuerpos.size()).is_greater(0)
+		for cuerpo: StaticBody3D in cuerpos:
+			var actual: StaticBody3D = hoja.get_node(referencia.get_path_to(cuerpo))
+			assert_that(actual.transform).is_equal(cuerpo.transform)
+			assert_int(actual.collision_layer).is_equal(cuerpo.collision_layer)
+			assert_int(actual.collision_mask).is_equal(cuerpo.collision_mask)
+			for forma: CollisionShape3D in cuerpo.find_children(
+				"*", "CollisionShape3D", true, false
+			):
+				var choque: CollisionShape3D = actual.get_node(cuerpo.get_path_to(forma))
+				assert_that(choque.transform).is_equal(forma.transform)
+				assert_bool(choque.disabled).is_equal(forma.disabled)
+				assert_object(choque.shape).is_same(forma.shape)

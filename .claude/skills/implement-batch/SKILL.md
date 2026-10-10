@@ -33,6 +33,13 @@ fila **«Se escribe»**, y a quién declara depender.
 entre que se escribió y hoy. Lo que se mide es el árbol de hoy, no lo que el issue dice del árbol
 de ayer.
 
+**Una pausa para integrar otra base invalida el preflight anterior.** Al reanudar, actualizar los
+worktrees limpios a una cabeza explícita y volver a cruzar recursos, lectores y geometría. Los
+borradores preparados sobre la base anterior no se ejecutan sin esa revisión. Si cambió la
+premisa, actualizar el issue entero antes de implementar. En el lote del 2026-10-08, la nueva
+base reemplazó el fondo de computadora por un shader y ya traía las hojas del baño: comprimir
+la imagen vieja o crear hojas A4 habría trabajado sobre recursos que el juego ya no necesitaba.
+
 **Si el issue cita un prototipo o un protocolo que no trae escrito, conseguilo antes de
 repartir.** «Los 600 estados del protocolo» o «las 24 poses medidas» no se pueden reproducir
 sin sus parámetros. Se le pide al usuario dónde está, y va al preámbulo. En el lote del
@@ -102,6 +109,11 @@ Cada agente recibe, literal:
   - **El `-rd` de gdUnit4 es relativo al proyecto aunque empiece con `/`**: `-rd /tmp/x` crea
     `tmp/x` adentro del repo. Pasó en dos carriles del lote del 2026-09-29, el segundo con la
     advertencia en su preámbulo, y por eso `/tmp/` está en `.gitignore`.
+  - **Los reportes se piden con `-rd res://reports`, también los focales con su subcarpeta.**
+    La URI se globaliza a una ruta absoluta antes de la limpieza del historial. `-rd reports`
+    funciona hasta superar veinte reportes; entonces gdUnit4 repite la ruta relativa contra el
+    `DirAccess` abierto y falla al retirar el más antiguo. Medido en #303 del 2026-10-09 con
+    una sonda de veintiún reportes. No se modifica el addon ni el tope para eludir el error.
   - Las variables de entorno no sobreviven entre llamadas a Bash: van adelante del comando.
   - Lo que corre de fondo va con el `run_in_background` de Bash. Un `nohup … &` adentro de un
     comando muere con él, sin dejar salida: le pasó a una verificación integrada del padre el
@@ -180,14 +192,37 @@ Cada agente recibe, literal:
   `implement-feature` le pide cerrar el lazo, y en un lote eso da N copias de la misma lección.
   Medido el 2026-09-23: los dos carriles escribieron la misma regla en `to-issue` y en las siete
   copias de `sin-deuda.md`, y los dos PR chocaban en ocho archivos.
+- **Un test heredado puede prohibir una traducción mecánica válida.** En #306 del
+  2026-10-09, una expresión regular impedía cualquier condición en la raíz, incluso excluir
+  cuerpos ya entregados antes de evaluar el cierre. Se declara su reemplazo en el issue entero,
+  se conservan sus comprobaciones útiles y se prueba el comportamiento; la regla del juego
+  permanece en dominio. No se cambia la sintaxis para esquivar el test. El método lo detalla
+  `implement-feature`.
+- **Los hashes de evidencia se contrastan con los blobs publicados.** En #305 del
+  2026-10-09, Git normalizó CRLF a LF en cuarenta de cuarenta y ocho archivos: el manifiesto
+  coincidía con los originales de Windows, pero no con lo descargable. Los ocho XML quedaron
+  intactos. Se conserva esa primera publicación y se corrige el manifiesto con los bytes y
+  hashes de los blobs; los hashes locales se distinguen como procedencia. Antes de entregar,
+  comprobar todos los archivos publicados y la cabeza remota de la rama de capturas.
 - **Godot con `--script` lleva siempre `--path .`, y el script termina con `quit()`.** Sin
   `--path`, `res://` es el directorio actual, y fuera de la raíz del repo cada `load` falla. Si
   el script aborta antes de `quit()`, Godot imprime el error y no sale nunca. Medido el
   2026-09-27: lo pisó el carril que cargaba todos los scripts con el motor.
 - **Un nombre propio para cada archivo de scratch.** Dos carriles que escriben el mismo archivo
   temporal se pisan sin conflicto visible. **Y se escribe con `Write`.**
+- **Una copia completa del proyecto para exportar o medir vive fuera de cualquier checkout o
+  worktree.** El scratch interno guarda scripts, logs, JSON y capturas; no otro árbol del
+  proyecto. `.gdignore` limita Godot, pero no los barridos Python del harness. En el lote del
+  2026-10-08, una copia vieja bajo scratch hizo que el gate de `AGENTS.md` comparara sus reglas
+  con las de la base nueva: Godot pasó 190 suites y el harness salió rojo. Se movió la copia a
+  una carpeta propia bajo `Temp` y pasó el nodo afectado. No se borran los `AGENTS.md` de una
+  copia para eludir ese control.
 - **Un comando que este skill entrega se vuelve a correr antes de repartirlo**, nunca se copia de
   la corrida anterior: un comando roto se reparte N veces.
+  Antes de explorar opciones, leer su parser: `verificar.py` ignora `--help` y arranca todos
+  los nodos. En #306 del 2026-10-09 se abortó esa invocación accidental fuera de la cola.
+  Su log se conserva como incidente, nunca como prueba; la verificación formal empieza dentro
+  del turno y con el árbol congelado.
 
 - **Coordiná las corridas del motor y las capturas entre carriles.** Una suite que mide tiempos
   por cuadro puede fallar bajo carga aunque el código no cambie. En el lote 282–285 del
@@ -205,6 +240,11 @@ Cada agente recibe, literal:
   levantado no carga la máquina y queda afuera. En el lote del 2026-10-06 el turno era un cerrojo
   que cada carril reintentaba: una prueba de 30 s esperó 55 minutos, y los carriles pasaron a
   encadenar sus pasos adentro de un solo turno.
+- **El árbol queda congelado desde que se encola hasta recibir el resultado.** Vale también para
+  la espera, la importación y los rojos y verdes cortos: no se edita, formatea ni cambia de rama
+  mientras el motor puede leerlo. Los borradores externos pueden avanzar. En #300 se agregó un
+  caso mientras el loader ya había leído la suite anterior: corrieron 17 casos y el archivo tenía
+  18. Ese caso nuevo no tenía testigo rojo; hubo que repetir contra el árbol congelado.
 - **La carga que no es del lote se mide y se dice, porque no se apaga.** El usuario usa la
   máquina. El 2026-10-06, con Slack y Chrome en el 70 % de la CPU, el nodo `tests` tardó entre
   11 y 43 minutos en vez de 3, y la base sobre `staging` dio dos rojos en `giro_parejo_test.gd`
@@ -222,6 +262,12 @@ Cada agente recibe, literal:
   comando. El 2026-10-06 el padre repartió que un alias de un `PackedArray` copia al escribir.
   En Godot 4 no copia: lo que copia es un `duplicate()` vivo. Dos carriles gastaron una sonda
   cada uno en desmentirlo.
+- **Cargar un recurso no prueba que su script haya parseado.** Una sonda de paquete inicia el
+  motor con `--main-pack`, con su directorio y `--path` en el export, fuera del proyecto fuente.
+  Exige un marcador final y falla ante `SCRIPT ERROR`, `Parse Error` o `ERROR`, aunque el motor
+  salga con 0 y `ResourceLoader.load()` devuelva un recurso. Ejercita las escenas, audio y datos
+  que el juego usa. En #327 la primera sonda anunció 63 cargas mientras había errores de parseo;
+  se invalidó. La sonda corregida cargó 356 recursos del paquete real sin errores.
 - **Bash rechaza `python "$VAR/script.py"`**, con «runs python with a script computed at
   runtime». La ruta del script va literal. Medido el 2026-10-06 en el carril de #321.
 - **Comparar dos exports de un escenario ya tiene herramienta.**

@@ -3,7 +3,7 @@ schema_version: 1
 capability_id: CAP-EMP
 status: ratified
 owner: por definir
-provenance: GDD «Consecuencias» y «Finales»; migración de los specs 002, 016, 017
+provenance: GDD «Consecuencias» y «Finales»; ficha «1. Ciclo de jornadas y sistema de puntos»; migración de los specs 002, 016, 017
 ---
 
 # Capacidad: el legajo del empleado
@@ -12,7 +12,7 @@ provenance: GDD «Consecuencias» y «Finales»; migración de los specs 002, 01
 
 Llevar la cuenta de lo que el empleado debe y decidir cuándo lo echan. Lo único que tiene que
 hacer bien es que las tres bandas **pesen distinto**: dos noches graves seguidas despiden y una
-noche impecable borra la deuda entera.
+noche impecable suma cero y conserva la deuda acumulada.
 
 ## Lenguaje de la capacidad
 
@@ -20,6 +20,8 @@ noche impecable borra la deuda entera.
 |---|---|---|
 | **Banda** | cómo cerró la noche: ninguna, aviso o grave | nota, puntaje |
 | **Apercibimiento** | la unidad de deuda que se arrastra entre noches | strike, falta |
+| **Medio** | media unidad de apercibimiento, conservada exactamente entre noches | fracción flotante |
+| **Llamado** | un motivo distinto de la noche que suma medio apercibimiento | repetición, banda |
 | **Legajo** | el contador de apercibimientos, y lo único que cruza la noche | racha, historial |
 | **Partida** | las cinco jornadas del contrato, con su final | run, sesión |
 | **Final** | cómo termina la partida: en curso, contrato cumplido o despedido | game over |
@@ -35,14 +37,12 @@ de 3** es `GRAVE`. El corte es en tareas y no en porcentaje: no se reescala con 
 ### BR-EMP-002 — Las bandas pesan distinto
 
 CUANDO se anota una banda, el sistema DEBE sumar **1** apercibimiento por `AVISO`, **2** por
-`GRAVE`, y DEBE **reiniciar el contador a cero** con `NINGUNA`. Un día bueno borra la deuda
-entera.
+`GRAVE`, y DEBE sumar **0** con `NINGUNA`, conservando los apercibimientos que había.
 
 ### BR-EMP-003 — A los cuatro lo echan
 
-SI el legajo llega a **4 apercibimientos o más**, ENTONCES el sistema DEBE declararlo despedido.
-La comparación es «o más» porque una noche grave sube de a dos: el contador salta de 3 a 5 sin
-pisar el 4.
+SI el legajo llega a **8 medios o más**, equivalentes a 4 apercibimientos, ENTONCES el sistema
+DEBE declararlo despedido. Con 7 medios todavía no está despedido.
 
 ### BR-EMP-004 — El contrato dura cinco noches
 
@@ -58,8 +58,7 @@ alguien recién echado es la lectura equivocada de las dos condiciones a la vez.
 ### BR-EMP-006 — Una partida terminada no sigue
 
 SI la partida terminó, ENTONCES el sistema DEBE rechazar abrir otra jornada y DEBE ignorar un
-cierre nuevo. Sin eso, una noche jugada después del despido le pasa una banda al legajo, y una
-noche impecable lo reinicia a cero.
+cierre nuevo. Una partida terminada no DEBE anotar otra noche ni avanzar su jornada.
 
 ### BR-EMP-007 — Cerrar dos veces no anota dos veces
 
@@ -69,25 +68,36 @@ y una pantalla la va a tocar.
 ### BR-EMP-008 — El legajo se restaura entero
 
 El sistema DEBE poder arrancar una partida con un legajo que viene de un guardado. Una historia
-de noches graves repartida entre dos sesiones tiene que despedir igual.
+de noches graves repartida entre dos sesiones tiene que despedir igual. El sistema DEBE conservar
+exactamente los medios acumulados como entero. Sin ese dato, o con un tipo distinto de entero,
+DEBE restaurar cero medios sin perder una jornada válida. Un dato antiguo de apercibimientos
+no DEBE sustituir el dato de medios ni migrarse.
 
 ### BR-EMP-009 — El parte del jefe
 
 CUANDO cierra la jornada, el sistema DEBE dejar un parte con: qué jornada de cuántas fue, **una
 línea por obligatoria en el orden en que se declararon**, y un comentario general elegido por
-cuántos apercibimientos lleva. Ese comentario satura en el tope: con 5 apercibimientos dice lo
+cuántos apercibimientos enteros lleva, descartando sólo para el comentario el medio restante.
+Con 7 medios dice lo mismo que con 6. Ese comentario satura en el tope: con 5 apercibimientos dice lo
 mismo que con 4.
 
-### BR-EMP-010 — El aviso de riesgo aparece con deuda
-
-SI el legajo tiene **más de cero** apercibimientos, ENTONCES el parte DEBE avisar cuántos lleva
-sobre el tope. Con cero no hay nada que avisar: una placa que avisa siempre no avisa nunca.
+El parte DEBE mostrar también una línea por cada motivo de llamado de esa jornada, con su
+penalización adicional, después de las obligatorias. Esas líneas no cambian el criterio del
+comentario general ni agregan un contador de motivos durante la noche.
 
 ### BR-EMP-011 — Lo que ofrece el parte depende del final
 
 CUANDO se arma el parte, el sistema DEBE decir qué puede elegir el jugador. Con la partida en
 curso, ofrece seguir con la noche siguiente y volver al menú. Con la partida terminada, despedido
 o contrato cumplido, ofrece sólo volver al menú: no hay noche siguiente que abrir.
+
+### BR-EMP-012 — Los llamados suman medios por motivo
+
+MIENTRAS la jornada está abierta, el sistema DEBE registrar cada motivo de llamado una sola vez.
+CUANDO cierra, DEBE sumar un medio por motivo distinto, además del peso de la banda, incluso
+con NINGUNA. Abrir otra jornada DEBE vaciar los motivos pendientes. Antes de abrir, después de
+cerrar y con la partida terminada, anotar un llamado NO DEBE modificar el legajo ni una noche
+futura. Los motivos pendientes no DEBEN persistirse ni mostrar un contador nuevo.
 
 ## Criterios de aceptación
 
@@ -109,10 +119,11 @@ un legajo limpio CUANDO cierra una de `GRAVE` ENTONCES lleva 2.
 
 DADO un legajo limpio CUANDO cierran dos noches de `GRAVE` seguidas ENTONCES está despedido.
 
-### AC-EMP-005 — Una noche impecable borra la deuda *(verifica BR-EMP-002)*
+### AC-EMP-005 — Una noche impecable conserva la deuda *(verifica BR-EMP-002, BR-EMP-003)*
 
 DADO un legajo con 3 apercibimientos CUANDO cierra una noche con todas cumplidas ENTONCES el
-legajo vuelve a cero y no está despedido.
+legajo sigue con 3 y no está despedido. CUANDO cierra después una noche de `AVISO` ENTONCES
+lleva 4 y está despedido.
 
 ### AC-EMP-006 — El umbral se pasa sin pisarlo *(verifica BR-EMP-003)*
 
@@ -160,15 +171,51 @@ tarea.
 DADO 5 apercibimientos CUANDO se pide el comentario general ENTONCES es el mismo que con 4, y no
 queda vacío.
 
-### AC-EMP-015 — El aviso aparece con deuda *(verifica BR-EMP-010)*
-
-DADO 0 apercibimientos ENTONCES el parte no avisa; con 1, avisa y nombra el tope.
-
 ### AC-EMP-016 — La partida terminada no ofrece seguir *(verifica BR-EMP-011)*
 
 DADO una partida que termina al cerrar la noche, despedido o contrato cumplido, CUANDO se arma
 el parte ENTONCES ofrece volver al menú y no ofrece seguir. DADO la partida en curso CUANDO se
 arma el parte ENTONCES ofrece seguir y volver al menú.
+
+### AC-EMP-017 — La banda y los motivos se suman *(verifica BR-EMP-002, BR-EMP-012)*
+
+DADO un legajo limpio CUANDO cierra impecable con un motivo ENTONCES lleva 1 medio; con dos
+motivos distintos, 2; con GRAVE y dos motivos, 6. Repetir el mismo motivo conserva una sola suma.
+
+### AC-EMP-018 — Los motivos pertenecen sólo a la noche abierta *(verifica BR-EMP-006, BR-EMP-007, BR-EMP-012)*
+
+DADO un motivo anotado antes de abrir, durante una jornada ya cerrada o después del final
+CUANDO se consulta o abre otra noche ENTONCES no suma deuda. DADO una noche con un motivo
+CUANDO se abre la siguiente y cierra sin motivos ENTONCES conserva sólo la deuda anterior.
+
+### AC-EMP-019 — Siete y ocho medios *(verifica BR-EMP-003, BR-EMP-012)*
+
+DADO 6 medios CUANDO cierra impecable con un motivo ENTONCES lleva 7 y no está despedido.
+DADO 7 medios CUANDO cierra impecable con un motivo ENTONCES lleva 8 y está despedido.
+
+### AC-EMP-020 — El guardado conserva el medio *(verifica BR-EMP-008)*
+
+DADO 7 medios CUANDO se guarda, se lee el archivo y se reanuda ENTONCES conserva el entero 7;
+una noche impecable sin motivos sigue con 7. DADO el dato ausente, antiguo o con valor 7,0
+CUANDO se reanuda ENTONCES restaura 0 medios y conserva una jornada válida. Si también hay un
+dato antiguo, el entero 7 de medios sigue prevaleciendo.
+
+### AC-EMP-021 — El comentario usa apercibimientos enteros *(verifica BR-EMP-009)*
+
+DADO un legajo con 7 medios CUANDO se arma el parte ENTONCES su comentario es el mismo que con
+6 medios; no agrega un contador visible de medios.
+
+### AC-EMP-022 — La quinta impecable admite siete medios *(verifica BR-EMP-004, BR-EMP-005, BR-EMP-008)*
+
+DADO la quinta jornada con 7 medios CUANDO cierra impecable sin motivos ENTONCES conserva 7
+y termina con contrato cumplido. DADO un motivo adicional ENTONCES llega a 8 y termina despedido.
+
+### AC-EMP-023 — Los llamados se ven al cerrar *(verifica BR-EMP-009, BR-EMP-012)*
+
+DADO un producto que quedó tirado dentro del local al terminar la jornada CUANDO aparece el
+parte ENTONCES muestra el llamado por local desordenado y su penalización adicional. DADO varios
+motivos distintos ENTONCES aparece una línea por cada uno, sin repetirlos ni arrastrarlos a la
+noche siguiente. El comentario general conserva su criterio de apercibimientos enteros.
 
 ## No objetivos
 
@@ -180,8 +227,8 @@ arma el parte ENTONCES ofrece seguir y volver al menú.
 ## Contratos
 
 - **Entrada:** cuántas obligatorias se cumplieron y cuántas se habían declarado; un legajo, que
-  puede venir de un guardado.
-- **Salida:** la banda, los apercibimientos, si está despedido, qué jornada va, el final, y el
+  puede venir de un guardado; motivos de la jornada abierta.
+- **Salida:** la banda, los medios exactos y los apercibimientos enteros, si está despedido, qué jornada va, el final, y el
   parte del jefe con lo que el jugador puede elegir.
 - **Falla:** cerrar dos veces o abrir sobre una partida terminada no cambian nada y no avisan.
 
@@ -198,9 +245,4 @@ arma el parte ENTONCES ofrece seguir y volver al menú.
 
 ## Preguntas abiertas
 
-- **OQ-EMP-001 — ¿El prototipo despide a las dos noches graves o a las tres?**
-  - Por qué sigue abierta: el GDD dice «más de dos días seguidos» y el formulario de la primera
-    entrega dice «tres jornadas consecutivas»; el prototipo eligió dos para que los tres caminos
-    queden a la misma distancia.
-  - Decide: el dueño del repo, con la cátedra.
-  - Bloquea: nada. Mueve el tope de `BR-EMP-003` y los tres caminos de `AC-EMP-007`.
+- Ninguna.

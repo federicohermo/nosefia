@@ -43,13 +43,9 @@ func _ready() -> void:
 	pantalla.notas().escritura_pedida.connect(computadora.pedir_escribir)
 
 
-## El contrato de «con esto se puede interactuar» es este método más el grupo del `.tscn`.
-##
-## Devuelve `null` porque del escritorio no se levanta nada: si contestara un objeto, el clic del
-## 006 se llevaría el mueble en la mano en vez de encender la pantalla.
-func interactuar() -> ObjetoDelAlmacen:
+## El clic derecho abre lo fijo sin consumir el gesto de agarrar.
+func accionar() -> void:
 	abrir()
-	return null
 
 
 func abrir() -> void:

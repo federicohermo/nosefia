@@ -28,10 +28,10 @@ const MISMO_LUGAR := 0.01
 const AL_LADO := 1.0
 
 ## Un tramo libre de la pared de la fachada, lejos de la ventanilla, de las góndolas y de la puerta.
-const PARED_LIBRE := Vector2(-5.0, 7.871)
+const PARED_LIBRE := Vector2(2.5, 6.28)
 
 ## Un tramo de piso libre del local, delante de donde arranca el jugador.
-const PISO_LIBRE := Vector2(-1.91, 5.2)
+const PISO_LIBRE := Vector2(2.7, 3.2)
 
 ## A cuánto de la caja se mira el piso, en metros: menos que el radio del balde.
 const PEGADO_A_LA_CAJA := 0.05

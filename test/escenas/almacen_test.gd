@@ -42,14 +42,15 @@ const CASCARA_DEL_EDIFICIO := "almacen"
 ## que el caso que ejerce la regla tenga un punto que **no** es un hueco, y que sea uno real en vez
 ## de inventado: el marcador estuvo cuatro commits en esta posición —aire en un pasillo entre las
 ## góndolas y los estantes— con las 23 suites en verde.
-const PUNTO_DEL_HUECO_EN_EL_BLOCKOUT := Vector3(-5, 1.2, 0)
+const PUNTO_DEL_MURO_SIN_HUECO := Vector3(0.8, 1.2, 6.28)
 
 ## Alcanza para arrancar afuera del edificio desde cualquier punto de adentro: la planta mide
 ## 21,72 × 22,74 m.
 const DISTANCIA_DE_AFUERA := 20.0
 
 ## Cuánto por encima del antepecho se mira para ver el hueco, y cuánto por debajo para ver que el
-## antepecho está. El hueco medido va de 1,04 a 2,84 m, así que los dos caen bien adentro.
+## antepecho está. El hueco vigente va de 1,04 a 2,44 m: arriba del vidrio empieza el dintel.
+## La lectura superior prueba el vano de la cáscara sin interpretar una abertura sobre el vidrio.
 const SOBRE_EL_ANTEPECHO := 0.4
 const BAJO_EL_ANTEPECHO := 0.3
 
@@ -223,11 +224,11 @@ func test_el_hueco_de_la_ventanilla_cae_en_la_ventanilla_del_modelo() -> void:
 	)
 
 
-func test_la_regla_del_hueco_rechaza_la_posicion_que_tenia_en_el_blockout() -> void:
+func test_la_regla_del_hueco_rechaza_un_punto_del_muro() -> void:
 	# El caso de arriba corre sobre un marcador que ya está bien, así que pasaría igual con una
 	# regla rota. Éste le pasa el punto que el marcador tuvo de verdad y afirma que lo rechaza.
 	var espacio: PhysicsDirectSpaceState3D = await _espacio_de_la_estructura(_almacen())
-	var punto := PUNTO_DEL_HUECO_EN_EL_BLOCKOUT + Vector3.UP * SOBRE_EL_ANTEPECHO
+	var punto := PUNTO_DEL_MURO_SIN_HUECO + Vector3.UP * SOBRE_EL_ANTEPECHO
 	(
 		assert_bool(_se_llega_desde_afuera(espacio, punto))
 		. override_failure_message(
@@ -321,7 +322,7 @@ func test_el_cableado_dejo_de_armar_el_turno_y_de_llevar_el_puntaje() -> void:
 		assert_int(texto.count("Partida.desde("))
 		. override_failure_message(
 			(
-				"`almacen.gd` arma %d partidas: con dos, el HUD pinta una y el ciclo corre la otra"
+				"`almacen.gd` arma %d partidas: el parte y el ciclo deben leer la misma"
 				% texto.count("Partida.desde(")
 			)
 		)
@@ -337,8 +338,8 @@ func test_el_almacen_arranca_desde_el_guardado() -> void:  # AC-SAV-017
 	var guardada := {
 		PartidaSerializada.clave(PartidaSerializada.Campo.JORNADA):
 		ReglasDeLaPartida.PRIMERA_JORNADA + 2,
-		PartidaSerializada.clave(PartidaSerializada.Campo.APERCIBIMIENTOS):
-		Reglas.APERCIBIMIENTOS_POR_AVISO,
+		PartidaSerializada.clave(PartidaSerializada.Campo.MEDIOS):
+		Reglas.APERCIBIMIENTOS_POR_AVISO * Reglas.MEDIOS_POR_APERCIBIMIENTO,
 	}
 	assert_bool(Guardado.new().escribir(guardada)).is_true()
 	var retomada: Partida = _almacen().get("_partida")
@@ -374,10 +375,9 @@ func test_los_cableados_de_la_raiz_llegan_asignados() -> void:
 		)
 
 
-func test_el_cableado_arma_el_parte_una_sola_vez_y_no_decide() -> void:
+func test_el_cableado_arma_el_parte_una_sola_vez() -> void:
 	# Dos partes por jornada sería la placa pintada dos veces con dos objetos distintos, y la
-	# segunda tapando a la primera. Y una condición acá adentro sería una regla del juego escrita
-	# donde ningún gate la mira.
+	# segunda tapando a la primera. Las decisiones se ejercen en sus suites funcionales.
 	var texto := FileAccess.get_file_as_string(SCRIPT_DEL_ALMACEN)
 	(
 		assert_int(texto.count("ParteDeCierre.new("))
@@ -386,14 +386,6 @@ func test_el_cableado_arma_el_parte_una_sola_vez_y_no_decide() -> void:
 		)
 		. is_equal(1)
 	)
-	var condicion := RegEx.create_from_string("\\b(if|elif|match)\\b")
-	for linea in texto.split("\n"):
-		var codigo: String = linea.split("#")[0]
-		(
-			assert_array(condicion.search_all(codigo))
-			. override_failure_message("`almacen.gd` decide en `%s`" % linea.strip_edges())
-			. is_empty()
-		)
 
 
 func test_la_escena_instancia_la_pantalla_de_cierre() -> void:
@@ -402,7 +394,7 @@ func test_la_escena_instancia_la_pantalla_de_cierre() -> void:
 	assert_object(almacen.get_node("Interfaz/PantallaDeCierre")).is_instanceof(PantallaDeCierre)
 
 
-func test_despachar_la_placa_abre_la_noche_siguiente_en_cero() -> void:
+func test_despachar_la_placa_abre_la_noche_siguiente_sin_tareas_cumplidas() -> void:
 	# **El segundo caso de la suite que entra `almacen.tscn` entera al árbol.** El lazo que este
 	# spec cierra —la noche termina, la placa aparece, el jugador la despacha y la siguiente
 	# abre— vive entero en señales conectadas: leído como texto no dice si funciona, y es lo
@@ -414,11 +406,11 @@ func test_despachar_la_placa_abre_la_noche_siguiente_en_cero() -> void:
 	var ciclo: CicloDeJornadas = almacen.get_node("Servicios/CicloDeJornadas")
 	var pantalla: PantallaDeCierre = almacen.get_node("Interfaz/PantallaDeCierre")
 	var tareas: Label = almacen.get_node("Interfaz/Hud/Tareas")
+	assert_bool(reloj.obligatoria(Tarea.Tipo.REGISTRAR).completada()).is_false()
 
-	# Una obligatoria hecha antes de cerrar: con cero, el marcador de la noche 2 y el de la 1
-	# dirían lo mismo y el caso pasaría sin distinguir nada.
+	# Una obligatoria adicional distingue el marcador del cierre del de la apertura siguiente.
 	assert_bool(reloj.completar(reloj.obligatoria(Tarea.Tipo.CAJA))).is_true()
-	reloj._process(SEGUNDOS_REALES_DE_UN_TURNO)
+	reloj.avanzar(SEGUNDOS_REALES_DE_UN_TURNO)
 	(
 		assert_bool(pantalla.visible)
 		. override_failure_message("la noche cerró y la placa no apareció")
@@ -440,6 +432,8 @@ func test_despachar_la_placa_abre_la_noche_siguiente_en_cero() -> void:
 			Hud.TEXTO_DE_LAS_TAREAS % Marcador.tareas(0, Apertura.cantidad_de_obligatorias())
 		)
 	)
+	for tipo: Tarea.Tipo in Tarea.Tipo.values():
+		assert_bool(reloj.obligatoria(tipo).completada()).is_false()
 
 
 func test_el_arranque_esta_frente_a_la_entrada_del_lado_de_adentro() -> void:
@@ -470,7 +464,7 @@ func test_abrir_la_jornada_deja_al_jugador_en_el_arranque() -> void:  # AC-PLY-0
 	jugador.global_position = Vector3(5.0, 0.2, -3.0)
 	jugador.velocity = Vector3(2.0, 0.0, 1.0)
 	control.girar(Vector2(170.0, -90.0))
-	reloj._process(SEGUNDOS_REALES_DE_UN_TURNO)
+	reloj.avanzar(SEGUNDOS_REALES_DE_UN_TURNO)
 	(pantalla.get_node("Fondo/Panel/Continuar") as Button).pressed.emit()
 	assert_vector(jugador.global_position).is_equal_approx(arranque.origin, Vector3.ONE * 1e-4)
 	assert_vector(jugador.velocity).is_equal(Vector3.ZERO)
@@ -485,7 +479,7 @@ func test_abrir_la_jornada_deja_al_jugador_en_el_arranque() -> void:  # AC-PLY-0
 func test_con_el_despido_la_placa_vuelve_al_menu_y_no_abre_otra_noche() -> void:  # AC-EMP-016
 	var almacen: Node3D = auto_free(load(ESCENA_DEL_ALMACEN).instantiate())
 	# Tres apercibimientos y una noche sin tareas: salta de 3 a 5 sin pisar el 4.
-	almacen.set("_partida", Partida.new(Legajo.con_apercibimientos(3)))
+	almacen.set("_partida", Partida.new(Legajo.con_medios((3) * Reglas.MEDIOS_POR_APERCIBIMIENTO)))
 	add_child(almacen)
 	await get_tree().process_frame
 	var menus := [0]
@@ -495,7 +489,7 @@ func test_con_el_despido_la_placa_vuelve_al_menu_y_no_abre_otra_noche() -> void:
 	var pantalla: PantallaDeCierre = almacen.get_node("Interfaz/PantallaDeCierre")
 	var aperturas := [0]
 	ciclo.jornada_abierta.connect(func(_jornada: int) -> void: aperturas[0] += 1)
-	reloj._process(SEGUNDOS_REALES_DE_UN_TURNO)
+	reloj.avanzar(SEGUNDOS_REALES_DE_UN_TURNO)
 	assert_int(ciclo.partida().final()).is_equal(Partida.Final.DESPEDIDO)
 	assert_bool(pantalla.visible).is_true()
 	assert_bool((pantalla.get_node("Fondo/Panel/Continuar") as Button).visible).is_false()
@@ -517,7 +511,7 @@ func test_con_la_partida_en_curso_volver_al_menu_no_abre_la_noche_siguiente() ->
 	var reloj: RelojDelTurno = almacen.get_node("Servicios/RelojDelTurno")
 	var ciclo: CicloDeJornadas = almacen.get_node("Servicios/CicloDeJornadas")
 	var pantalla: PantallaDeCierre = almacen.get_node("Interfaz/PantallaDeCierre")
-	reloj._process(SEGUNDOS_REALES_DE_UN_TURNO)
+	reloj.avanzar(SEGUNDOS_REALES_DE_UN_TURNO)
 	assert_bool(ciclo.partida().terminada()).is_false()
 	(pantalla.get_node("Fondo/Panel/VolverAlMenu") as Button).pressed.emit()
 	assert_int(menus[0]).is_equal(1)
@@ -547,7 +541,7 @@ func test_con_la_placa_en_pantalla_esc_no_pausa() -> void:  # AC-SAV-018
 	add_child(almacen)
 	await get_tree().process_frame
 	var reloj: RelojDelTurno = almacen.get_node("Servicios/RelojDelTurno")
-	reloj._process(SEGUNDOS_REALES_DE_UN_TURNO)
+	reloj.avanzar(SEGUNDOS_REALES_DE_UN_TURNO)
 	var esc := InputEventAction.new()
 	esc.action = &"ui_cancel"
 	esc.pressed = true
@@ -614,9 +608,9 @@ func test_el_reloj_de_mesa_queda_sobre_el_vidrio_del_reloj_del_modelo() -> void:
 	assert_bool(global.is_conformal()).is_true()
 	assert_float(global.get_scale().x).is_equal_approx(1.0, 0.001)
 	assert_float(global.get_scale().y).is_equal_approx(1.0, 0.001)
-	# El frente del label —su `+Z`— mira al `+X` de la malla, que es la cara del display.
+	# El frente del label —su `+Z`— mira al `-X` de la malla reflejada, que es la cara del display.
 	var frente := global.z.normalized()
-	var cara := reloj.global_transform.basis.x.normalized()
+	var cara := -reloj.global_transform.basis.x.normalized()
 	assert_float(frente.dot(cara)).is_equal_approx(1.0, 0.001)
 	# Y está pegado al vidrio: adentro de la caja de la malla estirada dos centímetros, que es
 	# lo que separa «sobre el display» de «flotando en el pasillo».
@@ -631,14 +625,12 @@ func test_el_reloj_de_mesa_queda_sobre_el_vidrio_del_reloj_del_modelo() -> void:
 
 
 func test_el_cableado_le_da_la_hora_al_reloj_de_mesa_y_no_al_hud() -> void:
-	# La hora se fue de la pantalla, pero los otros dos carteles del HUD siguen: sin la segunda
-	# mitad de este caso, desconectarlos también pasaría en verde.
+	# El contador de tareas sigue conectado al reloj de la jornada.
 	var texto := FileAccess.get_file_as_string(SCRIPT_DEL_ALMACEN)
 	assert_str(texto).is_not_empty()
 	assert_str(texto).not_contains("_hud.mostrar_tiempo")
 	assert_str(texto).contains("tiempo_consumido.connect(_reloj_de_mesa.mostrar_tiempo)")
 	assert_str(texto).contains("tarea_completada.connect(_hud.mostrar_tareas)")
-	assert_str(texto).contains("_hud.mostrar_apercibimientos")
 
 
 func test_el_cableado_de_reponer_llega_entero_hasta_los_huecos() -> void:
@@ -690,3 +682,35 @@ func test_el_cableado_de_reponer_llega_entero_hasta_los_huecos() -> void:
 	assert_bool(estante.has_node("Contenido")).is_true()
 	estante.mostrar(1)
 	assert_bool((estante.get_node("Contenido").get_child(0) as Node3D).visible).is_true()
+
+
+func test_el_marco_para_asomarse_coincide_con_los_bordes_del_hueco() -> void:  # AC-PLY-059
+	var almacen := _almacen()
+	var espacio: PhysicsDirectSpaceState3D = await _espacio_de_la_estructura(almacen)
+	var ventanilla: Node3D = almacen.get_node("Estructura/Ventanilla")
+	var borde: Marker3D = ventanilla.get("borde_superior")
+	var antepecho: MeshInstance3D = ventanilla.get("antepecho")
+	var soporte: AABB = (
+		borde.global_transform.affine_inverse() * antepecho.global_transform * antepecho.get_aabb()
+	)
+	var altura := (borde.global_position - ventanilla.global_position).dot(borde.global_basis.y)
+	var marco := Transform3D(
+		borde.global_basis, ventanilla.global_position + borde.global_basis.y * altura / 2
+	)
+	var tamano := Vector2(soporte.size.x, altura)
+	assert_object(borde).is_not_null()
+	assert_float(tamano.x).is_greater(0.0)
+	assert_float(tamano.y).is_greater(0.0)
+	var normal := marco.basis.z.normalized()
+	# Se cruza cada borde desde el centro, sin convertir la posición artística en constante.
+	for lado: Vector2 in [Vector2.LEFT, Vector2.RIGHT, Vector2.UP, Vector2.DOWN]:
+		var extremo := Vector3(lado.x * tamano.x / 2.0, lado.y * tamano.y / 2.0, 0.0)
+		for adentro: bool in [true, false]:
+			var margen := -0.02 if adentro else 0.02
+			var local := extremo + Vector3(lado.x, lado.y, 0.0) * margen
+			var punto := marco * local
+			var consulta := PhysicsRayQueryParameters3D.create(
+				punto + normal * 0.5, punto - normal * 0.5
+			)
+			var golpe := espacio.intersect_ray(consulta)
+			assert_bool(golpe.is_empty()).is_equal(adentro)

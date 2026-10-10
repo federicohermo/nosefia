@@ -423,6 +423,7 @@ func test_la_de_la_gondola_se_suelta_y_se_devuelve_una_sola_vez() -> void:  # AC
 ## campo de la mira es la esfera de su alcance.
 func test_cada_casillero_se_enfoca_desde_el_pasillo() -> void:  # AC-STK-029
 	var almacen := _almacen()
+	await AperturaConLugar.abrir_heladeras(almacen)
 	var sin_faltantes: Dictionary[Producto.Id, int] = {}
 	AperturaConLugar.abrir_con_faltantes(almacen, sin_faltantes)
 	await get_tree().physics_frame
@@ -472,19 +473,23 @@ func _lugar_en_el_pasillo(almacen: Node3D, delante: Vector3, frente: Vector3) ->
 	consulta.collision_mask = jugador.collision_mask
 	consulta.exclude = [jugador.get_rid()]
 	var espacio := almacen.get_world_3d().direct_space_state
+	var lateral := frente.cross(Vector3.UP).normalized()
 	var distancia := 0.0
 	while distancia <= HASTA_EL_PASILLO:
-		var punto := Vector3(delante.x, 0.0, delante.z) + frente * distancia
-		var piso := espacio.intersect_ray(
-			PhysicsRayQueryParameters3D.create(punto + Vector3.UP, punto + Vector3.DOWN, 1)
-		)
+		# La hoja abierta permite acercarse al producto desde el costado del marco.
+		for costado: float in [0.0, -0.2, 0.2, -0.4, 0.4]:
+			var punto := Vector3(delante.x, 0.0, delante.z) + frente * distancia
+			punto += lateral * costado
+			var piso := espacio.intersect_ray(
+				PhysicsRayQueryParameters3D.create(punto + Vector3.UP, punto + Vector3.DOWN, 1)
+			)
+			if piso.is_empty():
+				continue
+			var pie: Vector3 = piso["position"]
+			consulta.transform = Transform3D(
+				Basis.IDENTITY, pie + cuerpo.position + Vector3.UP * HOLGURA_DEL_PISO
+			)
+			if espacio.intersect_shape(consulta, 1).is_empty():
+				return pie
 		distancia += PASO_HACIA_EL_PASILLO
-		if piso.is_empty():
-			continue
-		var pie: Vector3 = piso["position"]
-		consulta.transform = Transform3D(
-			Basis.IDENTITY, pie + cuerpo.position + Vector3.UP * HOLGURA_DEL_PISO
-		)
-		if espacio.intersect_shape(consulta, 1).is_empty():
-			return pie
 	return Vector3.INF

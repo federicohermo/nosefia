@@ -1,7 +1,7 @@
 ## El nodo que atiende adentro del motor: pide el comprador siguiente, cobra y publica.
 ##
 ## **Ningún caso entra el nodo al árbol.** Se instancia con `auto_free(Ventanilla.new())` y se le
-## llama a mano; el único `_process()` que corre en esta suite es el del reloj, y se lo llama
+## llama a mano; el único `avanzar()` que corre en esta suite es el del reloj, y se lo llama
 ## explícitamente porque el caso del tiempo mide justamente que nadie lo haya pausado.
 extends GdUnitTestSuite
 
@@ -30,6 +30,78 @@ var _vacia: int = 0
 var _rechazos: int = 0
 var _avisos_de_tarea: int = 0
 var _cumplidas_avisadas: int = 0
+
+
+func test_solo_el_primer_clic_publica_el_inicio_de_la_conversacion() -> void:  # AC-NTF-012
+	var ventanilla := _ventanilla(0)
+	ventanilla.arrancar(TareaDeAtender.new(Compradores.de_la_jornada(1), _inventario()))
+	var avisados: Array[Comprador] = []
+	ventanilla.conversacion_iniciada.connect(
+		func(comprador: Comprador) -> void: avisados.append(comprador)
+	)
+	ventanilla.reloj.avanzar(120.0)
+	ventanilla.pedir_abrir()
+	assert_array(avisados).is_empty()
+	assert_bool(ventanilla.atencion().conversacion_iniciada()).is_false()
+	ventanilla.pedir_interaccion(null)
+	assert_bool(ventanilla.atencion().conversacion_iniciada()).is_true()
+	assert_array(avisados).is_equal([ventanilla.atencion().comprador()])
+	ventanilla.pedir_interaccion(null)
+	ventanilla.pedir_abrir()
+	assert_array(avisados).has_size(1)
+
+
+func test_el_reloj_publica_llegada_y_vencimiento_con_la_ventana_cerrada() -> void:  # AC-CTR-035
+	var ventanilla := _ventanilla(0)
+	ventanilla.arrancar(TareaDeAtender.new(Compradores.de_la_jornada(1), _inventario()))
+	var salidas: Array[Comprador] = []
+	ventanilla.comprador_vencido.connect(
+		func(comprador: Comprador) -> void: salidas.append(comprador)
+	)
+	ventanilla.pedir_abrir()
+	assert_int(_llegados).is_zero()
+	ventanilla.reloj.avanzar(120.0)
+	assert_int(_llegados).is_equal(1)
+	ventanilla.pedir_abrir()
+	ventanilla.pedir_abrir()
+	assert_int(_llegados).is_equal(1)
+	ventanilla.reloj.avanzar(120.0)
+	assert_array(salidas).has_size(1)
+	assert_bool(ventanilla.tarea().completada()).is_false()
+	ventanilla.reloj.avanzar(360.0)
+	assert_int(_llegados).is_equal(2)
+	assert_array(salidas).has_size(2)
+	assert_object(ventanilla.tarea().en_ventanilla()).is_null()
+
+
+func test_publica_compra_solo_al_recibir_el_ultimo_elemento() -> void:  # AC-CTR-039, AC-CTR-041
+	var ventanilla := _ventanilla(0)
+	var inventario := Apertura.inventario_con_faltantes({}, {})
+	var estante := Estante.new(inventario, Catalogo.todos())
+	ventanilla.arrancar(TareaDeAtender.new(Compradores.de_la_jornada(1), inventario))
+	var compras: Array[bool] = []
+	ventanilla.compra_realizada.connect(func() -> void: compras.append(true))
+	for intervalo: float in [120.0, 360.0]:
+		ventanilla.reloj.avanzar(intervalo)
+		ventanilla.pedir_interaccion(null)
+		while not ventanilla.puede_abandonar():
+			ventanilla.pedir_interaccion(null)
+		var renglones: Array[Producto] = []
+		for producto in ventanilla.atencion().comprador().pedido().productos():
+			for _unidad in ventanilla.atencion().comprador().pedido().unidades_de(producto):
+				ventanilla.pedir_interaccion(estante.retirar(producto))
+				renglones.append(producto)
+		var antes := compras.size()
+		assert_int(ventanilla.pedir_interaccion(Ticket.new(renglones))).is_equal(
+			RecepcionDeCompra.Resultado.COMPLETA
+		)
+		assert_array(compras).has_size(antes + 1)
+		while not ventanilla.puede_abandonar():
+			ventanilla.pedir_interaccion(null)
+	assert_array(compras).has_size(2)
+	assert_int(_avisos_de_tarea).is_equal(1)
+	ventanilla.pedir_interaccion(null)
+	assert_array(compras).has_size(2)
 
 
 func before_test() -> void:
@@ -155,7 +227,7 @@ func test_el_turno_sigue_corriendo_con_la_ventanilla_abierta() -> void:
 	var ventanilla := _ventanilla(2)
 	ventanilla.pedir_atender()
 	var antes := _turno.tiempo_restante()
-	ventanilla.reloj._process(SEGUNDOS_REALES_ABIERTA)
+	ventanilla.reloj.avanzar(SEGUNDOS_REALES_ABIERTA)
 	var gastado := antes - _turno.tiempo_restante()
 	assert_float(gastado).is_equal(Ritmo.escalar(SEGUNDOS_REALES_ABIERTA))
 
@@ -262,10 +334,15 @@ func test_la_ventanilla_sin_cablear_no_hace_nada_y_lo_dice() -> void:
 	ventanilla.comprador_llegado.connect(_anotar_llegado)
 	ventanilla.cobro_rechazado.connect(_anotar_rechazo)
 	ventanilla.ventanilla_vacia.connect(_anotar_vacia)
-	ventanilla.pedir_abrir()
-	ventanilla.pedir_atender()
-	ventanilla.pedir_cobrar()
-	ventanilla.pedir_despachar_sin_vender()
+	for pedir: Callable in [
+		ventanilla.pedir_abrir,
+		ventanilla.pedir_atender,
+		ventanilla.pedir_cobrar,
+		ventanilla.pedir_despachar_sin_vender,
+	]:
+		await (assert_error(pedir).is_push_error(
+			"Ventanilla sin cablear: revisar almacen.tscn y almacen.gd"
+		))
 	assert_int(_llegados).is_equal(0)
 	assert_int(_rechazos).is_equal(0)
 	assert_int(_vacia).is_equal(0)

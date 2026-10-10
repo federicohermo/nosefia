@@ -13,6 +13,7 @@ class_name CicloDeJornadas
 extends Node
 
 signal jornada_abierta(jornada: int)
+signal turno_agotado(jornada: int)
 signal jornada_cerrada(jornada: int, cumplidas: int)
 
 var _partida: Partida = null
@@ -53,5 +54,6 @@ func abrir_la_jornada() -> bool:
 ## escuche quiere saber cuál noche terminó, no cuál empieza.
 func _al_cerrar_el_turno(cumplidas: int) -> void:
 	var jornada := _partida.jornada()
+	turno_agotado.emit(jornada)
 	_partida.cerrar_la_jornada(cumplidas)
 	jornada_cerrada.emit(jornada, cumplidas)

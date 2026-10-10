@@ -354,6 +354,17 @@ LUZ = '[node name="Luz" type="OmniLight3D" parent="heladeranueva"]\nlight_energy
 
 
 class LasUnidadesApagadas(unittest.TestCase):
+    def test_acepta_las_unidades_marcadas_como_geometria_de_referencia(self):
+        unidad = _apagada("gondolanueva", "oremos").replace(
+            'parent="gondolanueva"]',
+            'parent="gondolanueva" groups=["geometria_de_referencia"]]',
+        )
+        texto = apagar_las_unidades(ANTES + unidad + LUZ, ["gondolanueva/oremos"])
+        self.assertIn('name="oremos"', texto)
+        self.assertEqual(texto.count('name="oremos"'), 1)
+        self.assertIn('groups=["geometria_de_referencia"]', texto)
+        self.assertTrue(texto.endswith(LUZ))
+
     def test_se_cambian_las_viejas_por_las_nuevas_en_el_mismo_lugar(self):
         escena = ANTES + _apagada("gondolanueva", "wakas_021") + _apagada(".", "petisas") + LUZ
         rutas = ["heladeranueva/terminator", "cindolor", "gondolanueva2/duronga"]

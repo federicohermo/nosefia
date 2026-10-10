@@ -1,0 +1,106 @@
+[gd_scene format=3]
+
+[ext_resource type="FontFile" path="res://assets/ui/manada/notas/orange_lovely.otf" id="letra"]
+[ext_resource type="Texture2D" path="res://assets/ui/manada/notas/papel_tareas.svg" id="papel_tareas"]
+[ext_resource type="Texture2D" path="res://assets/ui/manada/notas/papel_orden.svg" id="papel_orden"]
+[ext_resource type="Texture2D" path="res://assets/ui/manada/notas/titulo_tareas.svg" id="titulo_tareas"]
+[ext_resource type="Texture2D" path="res://assets/ui/manada/notas/titulo_mantener.svg" id="titulo_mantener"]
+[ext_resource type="Texture2D" path="res://assets/ui/manada/notas/titulo_ordenado.svg" id="titulo_ordenado"]
+[ext_resource type="Texture2D" path="res://assets/ui/manada/notas/subrayado_tareas.svg" id="subrayado_tareas"]
+[ext_resource type="Texture2D" path="res://assets/ui/manada/notas/subrayado_mantener.svg" id="subrayado_mantener"]
+[ext_resource type="Texture2D" path="res://assets/ui/manada/notas/subrayado_ordenado.svg" id="subrayado_ordenado"]
+
+[node name="TextoDeLaNota" type="Node3D"]
+scale = Vector3(1, 1, 0.7071)
+
+[node name="Titulo" type="Label3D" parent="."]
+visible = false
+font = ExtResource("letra")
+font_size = 49
+outline_size = 0
+
+[node name="Renglones" type="Label3D" parent="."]
+rotation = Vector3(-1.5707963, 0, 0)
+position = Vector3(-0.79, 0.008, -0.77)
+pixel_size = 0.004
+render_priority = 2
+gi_mode = 2
+font = ExtResource("letra")
+font_size = 40
+outline_size = 0
+modulate = Color(0, 0, 0, 1)
+width = 430.0
+autowrap_mode = 3
+horizontal_alignment = 0
+vertical_alignment = 0
+no_depth_test = false
+
+[node name="Tareas" type="Node3D" parent="."]
+
+[node name="Papel" type="Sprite3D" parent="Tareas"]
+position = Vector3(0, 0.003, 0)
+rotation = Vector3(-1.5707963, 0, 0)
+scale = Vector3(1, 1.414227, 1)
+pixel_size = 0.004
+render_priority = -1
+texture = ExtResource("papel_tareas")
+texture_filter = 1
+
+[node name="titulo_tareas" type="Sprite3D" parent="Tareas"]
+position = Vector3(-0.0179040, 0.006, -1.0107400)
+rotation = Vector3(-1.5707963, 0, 0)
+pixel_size = 0.004
+render_priority = 1
+texture = ExtResource("titulo_tareas")
+texture_filter = 1
+
+[node name="subrayado_tareas" type="Sprite3D" parent="Tareas"]
+position = Vector3(0.0958140, 0.006, -0.8774518)
+rotation = Vector3(-1.5707963, 0, 0)
+pixel_size = 0.004
+render_priority = 1
+texture = ExtResource("subrayado_tareas")
+texture_filter = 1
+
+[node name="Orden" type="Node3D" parent="."]
+
+[node name="Papel" type="Sprite3D" parent="Orden"]
+position = Vector3(0, 0.003, 0)
+rotation = Vector3(-1.5707963, 0, 0)
+scale = Vector3(1, 1.414227, 1)
+pixel_size = 0.004
+render_priority = -1
+texture = ExtResource("papel_orden")
+texture_filter = 1
+
+[node name="titulo_mantener" type="Sprite3D" parent="Orden"]
+position = Vector3(-0.0664180, 0.006, -1.0092400)
+rotation = Vector3(-1.5707963, 0, 0)
+pixel_size = 0.004
+render_priority = 1
+texture = ExtResource("titulo_mantener")
+texture_filter = 1
+
+[node name="titulo_ordenado" type="Sprite3D" parent="Orden"]
+position = Vector3(0.3503180, 0.006, -0.8641800)
+rotation = Vector3(-1.5707963, 0, 0)
+pixel_size = 0.004
+render_priority = 1
+texture = ExtResource("titulo_ordenado")
+texture_filter = 1
+
+[node name="subrayado_mantener" type="Sprite3D" parent="Orden"]
+position = Vector3(-0.4015460, 0.006, -0.9016800)
+rotation = Vector3(-1.5707963, 0, 0)
+pixel_size = 0.004
+render_priority = 1
+texture = ExtResource("subrayado_mantener")
+texture_filter = 1
+
+[node name="subrayado_ordenado" type="Sprite3D" parent="Orden"]
+position = Vector3(0.3425540, 0.006, -0.7161456)
+rotation = Vector3(-1.5707963, 0, 0)
+pixel_size = 0.004
+render_priority = 1
+texture = ExtResource("subrayado_ordenado")
+texture_filter = 1

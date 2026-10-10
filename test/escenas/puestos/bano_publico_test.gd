@@ -50,7 +50,7 @@ func test_los_volumenes_de_los_tanques_coinciden_con_sus_tapas_visibles() -> voi
 	for nombre: String in ["inodoro", "bano_inodoro_2"]:
 		var malla := almacen.get_node("Estructura/" + nombre) as MeshInstance3D
 		var x := 10.94 if nombre == "inodoro" else 12.55
-		var desde := Vector3(x, 1.4, -1.45)
+		var desde := Vector3(x, 1.4, 6.106)
 		var hasta := desde - Vector3.UP
 		var cruces := _cruces(malla, desde, hasta)
 		assert_array(cruces).override_failure_message(nombre).is_not_empty()
@@ -86,7 +86,9 @@ func test_el_piso_ampliado_forma_parte_de_la_misma_superficie_del_edificio() -> 
 	var almacen: Node3D = await _almacen()
 	var edificio := almacen.get_node("Estructura/almacen") as MeshInstance3D
 	for z: float in [-2.17, -3.48, -3.71, -4.33]:
-		var cruces := _cruces(edificio, Vector3(10.17, 1.0, z), Vector3(10.17, 0.0, z))
+		var cruces := _cruces(
+			edificio, Vector3(10.17, 1.0, z + 7.556), Vector3(10.17, 0.0, z + 7.556)
+		)
 		assert_array(cruces).override_failure_message("piso en z=%s" % z).has_size(1)
 		if cruces.size() == 1:
 			assert_float(cruces[0].y).is_equal_approx(0.102237, 0.00001)
@@ -95,8 +97,8 @@ func test_el_piso_ampliado_forma_parte_de_la_misma_superficie_del_edificio() -> 
 func test_las_paredes_del_bano_tienen_un_plano_continuo_hasta_el_dintel() -> void:
 	var almacen: Node3D = await _almacen()
 	var edificio := almacen.get_node("Estructura/almacen") as MeshInstance3D
-	for muestra: Vector3 in [Vector3(11, 1.43, -2.17), Vector3(11, 3.02, -6.82)]:
-		var hasta := muestra + Vector3.LEFT * 3.05
+	for muestra: Vector3 in [Vector3(11, 1.43, 5.386), Vector3(11, 3.02, 0.736)]:
+		var hasta := Vector3(8.2, muestra.y, muestra.z)
 		var cruces := _cruces(edificio, muestra, hasta)
 		assert_array(cruces).has_size(1)
 		if cruces.size() == 1:
@@ -125,7 +127,7 @@ func test_cada_cabina_tiene_una_luminaria_encima_del_inodoro() -> void:
 		var luz := almacen.get_node("Ambiente/LuzDelBano%d" % numero) as SpotLight3D
 		var x := 10.945 if numero == 7 else 12.555
 		assert_float(luz.global_position.x).is_equal_approx(x, 0.01)
-		assert_float(luz.global_position.z).is_between(-2.8, -1.8)
+		assert_float(luz.global_position.z).is_between(4.756, 5.756)
 		assert_float(luz.light_energy).is_greater(0.0)
 
 
@@ -143,8 +145,8 @@ func test_los_lavatorios_dejan_espacio_entre_sus_bordes() -> void:
 func test_la_pared_del_sector_ampliado_no_tiene_caras_superpuestas() -> void:
 	var almacen: Node3D = await _almacen()
 	var edificio := almacen.get_node("Estructura/almacen") as MeshInstance3D
-	var desde := Vector3(9.4, 1.413, -2.217)
-	var hasta := Vector3(7.95, 1.413, -2.217)
+	var desde := Vector3(9.4, 1.413, 5.339)
+	var hasta := Vector3(8.2, 1.413, 5.339)
 	var caras := edificio.mesh.get_faces()
 	var cruces: Array[Vector3] = []
 	for indice in range(0, caras.size(), 3):
@@ -164,15 +166,15 @@ func test_la_pared_ampliada_y_el_hueco_tienen_el_acabado_del_bano() -> void:
 	var almacen: Node3D = await _almacen()
 	var edificio := almacen.get_node("Estructura/almacen") as MeshInstance3D
 	for recorrido: Array in [
-		[Vector3(11, 1.5, -2.1), Vector3(7.8, 1.5, -2.1)],
-		[Vector3(8.15, 1.5, -6.82), Vector3(8.15, 1.5, -7.8)],
-		[Vector3(8.15, 1.5, -6.82), Vector3(8.15, 3.3, -6.82)],
+		[Vector3(11, 1.5, 5.456), Vector3(8.2, 1.5, 5.456)],
+		[Vector3(8.15, 1.5, 0.736), Vector3(8.15, 1.5, -0.244)],
+		[Vector3(8.15, 1.5, 0.736), Vector3(8.15, 3.3, 0.736)],
 	]:
 		assert_str(_material_de_la_cara(edificio, recorrido[0], recorrido[1])).is_equal(
 			"bano_pared_clara"
 		)
 	(
-		assert_str(_material_de_la_cara(edificio, Vector3(8.15, 1, -6.82), Vector3(8.15, 0, -6.82)))
+		assert_str(_material_de_la_cara(edificio, Vector3(8.15, 1, 0.736), Vector3(8.15, 0, 0.736)))
 		. is_equal("bano_piso_gris")
 	)
 
@@ -213,9 +215,9 @@ func test_la_entrada_conserva_la_escala_de_las_otras_puertas_y_un_marco_continuo
 	var marco := almacen.get_node("Estructura/bano_marco_entrada") as MeshInstance3D
 	# Estos rayos cruzan las bandas que antes dejaban visible la pared del almacén.
 	for punto: Vector3 in [
-		Vector3(7.70, 2.86461, -6.82),
-		Vector3(7.70, 1.70, -5.97574),
-		Vector3(7.70, 1.70, -7.66418),
+		Vector3(7.70, 2.86461, 0.736),
+		Vector3(7.70, 1.70, 1.58026),
+		Vector3(7.70, 1.70, -0.10818),
 	]:
 		assert_str(_material_de_la_cara(marco, punto, punto + Vector3.RIGHT * 0.5)).is_equal(
 			"bano_entrada_blanca"
@@ -242,18 +244,18 @@ func test_las_cabinas_tienen_puertas_que_liberan_el_acceso_al_abrirse() -> void:
 			continue
 		var x := 10.945 if numero == 1 else 12.555
 		var consulta := PhysicsRayQueryParameters3D.create(
-			Vector3(x, 1.4, -3.85), Vector3(x, 1.4, -2.45), 9
+			Vector3(x, 1.4, 3.706), Vector3(x, 1.4, 5.106), 9
 		)
 		var espacio := almacen.get_world_3d().direct_space_state
 		var cerrada := espacio.intersect_ray(consulta)
 		assert_bool(cerrada.is_empty()).is_false()
 		assert_object(cerrada.get("collider")).is_same(puerta)
-		puerta.call("interactuar")
+		puerta.call("usar")
 		for cuadro in 60:
 			await get_tree().physics_frame
 		assert_bool(espacio.intersect_ray(consulta).is_empty()).is_true()
 		var jugador := almacen.get("_jugador") as CharacterBody3D
-		jugador.global_position = Vector3(x, 0.12, -3.85)
+		jugador.global_position = Vector3(x, 0.12, 3.706)
 		await get_tree().physics_frame
 		assert_object(jugador.move_and_collide(Vector3(0.0, 0.0, 1.1), true)).is_null()
 		var puertas: Array = almacen.get("_puertas")
@@ -268,7 +270,7 @@ func test_el_sector_abierto_deja_lugar_para_caminar_y_llevar_el_balde() -> void:
 	var jugador := almacen.get("_jugador") as CharacterBody3D
 	var forma := jugador.get_node("Cuerpo") as CollisionShape3D
 	var espacio := almacen.get_world_3d().direct_space_state
-	for punto: Vector3 in [Vector3(8.9, 0.12, -5.0), Vector3(10.8, 0.12, -6.4)]:
+	for punto: Vector3 in [Vector3(8.9, 0.12, 2.556), Vector3(10.8, 0.12, 1.156)]:
 		var consulta := PhysicsShapeQueryParameters3D.new()
 		consulta.shape = forma.shape
 		consulta.transform = Transform3D(Basis.IDENTITY, punto) * forma.transform
@@ -297,12 +299,12 @@ func test_los_dos_inodoros_y_lavatorios_se_pueden_usar_para_la_limpieza() -> voi
 func test_el_sector_antes_cerrado_es_accesible_desde_el_bano() -> void:
 	var almacen: Node3D = await _almacen()
 	var jugador := almacen.get("_jugador") as CharacterBody3D
-	jugador.global_position = Vector3(9.2, 0.12, -4.1)
+	jugador.global_position = Vector3(9.2, 0.12, 3.456)
 	await get_tree().physics_frame
 	var obstaculo := jugador.move_and_collide(Vector3(0.0, 0.0, 0.75), true)
 	assert_object(obstaculo).is_null()
 	var piso := PhysicsRayQueryParameters3D.create(
-		Vector3(9.3, 0.4, -3.25), Vector3(9.3, -0.1, -3.25), 1
+		Vector3(9.3, 0.4, 4.306), Vector3(9.3, -0.1, 4.306), 1
 	)
 	var apoyo := almacen.get_world_3d().direct_space_state.intersect_ray(piso)
 	assert_bool(apoyo.is_empty()).is_false()
@@ -313,14 +315,14 @@ func test_el_sector_antes_cerrado_es_accesible_desde_el_bano() -> void:
 
 func test_la_puerta_del_bano_abierta_no_corta_el_recorrido_hacia_las_cabinas() -> void:
 	var almacen: Node3D = await _almacen()
-	almacen.get_node("Estructura/puerta2/CuerpoDeLaHoja").call("interactuar")
+	almacen.get_node("Estructura/puerta2/CuerpoDeLaHoja").call("usar")
 	for cuadro in 60:
 		await get_tree().physics_frame
 	var jugador := almacen.get("_jugador") as CharacterBody3D
-	jugador.global_position = Vector3(7.3, 0.12, -6.82)
+	jugador.global_position = Vector3(7.3, 0.12, 0.736)
 	await get_tree().physics_frame
 	assert_object(jugador.move_and_collide(Vector3(3.6, 0.0, 0.0), true)).is_null()
-	jugador.global_position = Vector3(10.9, 0.12, -6.82)
+	jugador.global_position = Vector3(10.9, 0.12, 0.736)
 	await get_tree().physics_frame
 	assert_object(jugador.move_and_collide(Vector3(0.0, 0.0, 2.8), true)).is_null()
 
@@ -334,13 +336,13 @@ func test_la_entrada_cerrada_no_deja_ver_el_bano_por_los_bordes_de_la_hoja() -> 
 		superficies.append(almacen.get_node("Estructura/" + nombre) as MeshInstance3D)
 	# Los puntos cruzan las rendijas visibles entre hoja, marco y piso del vano real.
 	for banda: Vector3 in [
-		Vector3(7.974, 0.35, -7.6532),
-		Vector3(7.974, 1.40, -7.6532),
-		Vector3(7.974, 2.60, -7.6532),
-		Vector3(7.974, 1.40, -5.9867),
-		Vector3(7.974, 0.115, -6.20),
-		Vector3(7.974, 0.115, -6.82),
-		Vector3(7.974, 0.115, -7.40),
+		Vector3(7.974, 0.35, -0.0972),
+		Vector3(7.974, 1.40, -0.0972),
+		Vector3(7.974, 2.60, -0.0972),
+		Vector3(7.974, 1.40, 1.5693),
+		Vector3(7.974, 0.115, 1.356),
+		Vector3(7.974, 0.115, 0.736),
+		Vector3(7.974, 0.115, 0.156),
 	]:
 		for pendiente: float in [-0.15, 0.0, 0.15]:
 			for lado: float in [-1.0, 1.0]:
@@ -371,17 +373,17 @@ func test_el_acabado_del_bano_no_sobresale_delante_de_la_hoja_cerrada() -> void:
 	var edificio := almacen.get_node("Estructura/almacen") as MeshInstance3D
 	var hoja := almacen.get_node("Estructura/puerta2") as MeshInstance3D
 	var referencia := _material_de_la_cara(
-		edificio, Vector3(7.70, 0.25, -6.82), Vector3(7.70, 0.0, -6.82)
+		edificio, Vector3(7.70, 0.25, 0.736), Vector3(7.70, 0.0, 0.736)
 	)
 	var interior := _material_de_la_cara(
-		edificio, Vector3(8.08, 0.25, -6.82), Vector3(8.08, 0.0, -6.82)
+		edificio, Vector3(8.08, 0.25, 0.736), Vector3(8.08, 0.0, 0.736)
 	)
 	assert_str(referencia).is_not_empty()
 	assert_str(interior).is_not_empty().is_not_equal(referencia)
 	# La franja delante de la hoja era visible aun con la puerta cerrada.
 	for z: float in [-6.20, -6.82, -7.40]:
-		var desde := Vector3(7.918, 0.25, z)
-		var hasta := Vector3(7.918, 0.0, z)
+		var desde := Vector3(7.918, 0.25, z + 7.556)
+		var hasta := Vector3(7.918, 0.0, z + 7.556)
 		assert_array(_cruces(hoja, desde, hasta)).is_empty()
 		(
 			assert_str(_material_de_la_cara(edificio, desde, hasta))
@@ -399,23 +401,23 @@ func test_las_hojas_de_cabina_giran_unidas_a_un_soporte_fijo() -> void:
 		var hoja := estructura.get_node("bano_puerta_%d" % numero) as MeshInstance3D
 		var cuerpo := hoja.get_node("CuerpoDeLaHoja")
 		var x := 11.455 if numero == 1 else 13.065
-		var eje := Vector3(x, 1.25, -3.35)
+		var eje := Vector3(x, 1.25, 4.206)
 		var ancla_local := hoja.to_local(eje)
 		for altura: float in [0.59, 1.95]:
-			var pasador := Vector3(x, altura, -3.35)
+			var pasador := Vector3(x, altura, 4.206)
 			(
 				assert_float(_distancia_al_pasador_fijo(estructura, hoja, pasador))
 				. override_failure_message("Falta soporte fijo junto al eje %s" % pasador)
 				. is_less_equal(0.005)
 			)
-		cuerpo.call("interactuar")
+		cuerpo.call("usar")
 		for cuadro in 60:
 			await get_tree().physics_frame
 		var estado := cuerpo.call("puerta") as Puerta
 		assert_float(estado.angulo()).is_equal_approx(Puerta.ANGULO_ABIERTA, 0.001)
 		assert_float(hoja.to_global(ancla_local).distance_to(eje)).is_less(0.0001)
 		for altura: float in [0.59, 1.95]:
-			var pasador := Vector3(x, altura, -3.35)
+			var pasador := Vector3(x, altura, 4.206)
 			assert_float(_distancia_al_pasador_fijo(estructura, hoja, pasador)).is_less_equal(0.005)
 
 

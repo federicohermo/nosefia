@@ -36,7 +36,7 @@ func test_el_campo_y_el_clic_usan_los_cuerpos_de_los_muebles() -> void:
 	await _actualizar(jugador)
 	assert_object(jugador.get("_enfocado")).is_same(computadora)
 	assert_array(avisos).contains([computadora])
-	_clic()
+	_clic(MOUSE_BUTTON_RIGHT)
 	assert_bool(computadora.get("pantalla").visible).is_true()
 	computadora.call("cerrar")
 	var caja: Node3D = almacen.get("_cajas_de_productos")[0]
@@ -138,9 +138,9 @@ func _actualizar(jugador: CharacterBody3D) -> void:
 	jugador.call("_leer_la_mira")
 
 
-func _clic() -> void:
+func _clic(boton: MouseButton = MOUSE_BUTTON_LEFT) -> void:
 	var clic := InputEventMouseButton.new()
-	clic.button_index = MOUSE_BUTTON_LEFT
+	clic.button_index = boton
 	clic.pressed = true
 	get_viewport().push_input(clic)
 	clic = clic.duplicate()

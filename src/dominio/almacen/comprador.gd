@@ -15,9 +15,17 @@
 class_name Comprador
 extends RefCounted
 
+var horario := Vector2(-1.0, -1.0)
+var personaje: int = DialogosDeCompradores.Personaje.NINGUNO
+var dialogos: DialogosDeCompradores = null
+
 var _nombre: String
 var _pedido: Venta
 var _paga: int
+
+
+func tiene_horario() -> bool:
+	return horario.x >= 0.0
 
 
 ## Los argumentos van con prefijo para no sombrear los campos que asignan.

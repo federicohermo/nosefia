@@ -1,6 +1,6 @@
 ## El panel de la ventanilla: copia lo que la atención dice y lo pone en pantalla.
 ##
-## **No tiene una sola condición sobre el juego, y eso es lo que este spec vino a comprar.** Qué
+## **Las condiciones sólo eligen la presentación que devuelve el dominio.** Qué
 ## va en cada renglón, cuánto marca la caja y qué no se puede vender son reglas, y una regla
 ## escrita acá arriba nace sin test: está medido que ni `gate_de_tests.py` ni `gate_de_capas.py`
 ## la ven.
@@ -17,6 +17,7 @@ extends CanvasLayer
 
 signal cobro_pedido
 signal despacho_pedido
+signal comprador_pulsado
 
 ## Lo único propio de esta capa son las palabras de los botones y el cartel de la ventanilla
 ## vacía. Viven acá y **no** además en el `.tscn`: un texto en los dos lados se cambia en uno solo
@@ -37,6 +38,12 @@ const TEXTO_SIN_NADIE := "No hay nadie en la ventanilla."
 @export var _aviso: Label
 @export var _cobrar: Button
 @export var _despachar: Button
+@export var _fisico: Control
+@export var _blanco: Control
+@export var _burbuja: PanelContainer
+@export var _texto: RichTextLabel
+
+var _version_fisica: bool = false
 
 
 ## Arranca invisible: la ventanilla se abre cuando el jugador va, no cuando empieza la noche.
@@ -53,10 +60,22 @@ func _ready() -> void:
 	_despachar.text = TEXTO_DE_DESPACHAR
 	_cobrar.pressed.connect(cobro_pedido.emit)
 	_despachar.pressed.connect(despacho_pedido.emit)
+	_blanco.gui_input.connect(_al_pulsar_el_comprador)
+
+
+func preparar(fisica: bool) -> void:
+	_version_fisica = fisica
+	_fondo.visible = not fisica
+	_fisico.visible = fisica
+	_botones(not fisica)
 
 
 ## Pinta la atención y se muestra.
 func mostrar(atencion: Atencion) -> void:
+	preparar(atencion.fisica())
+	if atencion.fisica():
+		_mostrar_comprador(atencion)
+		return
 	_nombre.text = atencion.comprador().nombre()
 	_pintar(atencion.renglones())
 	_aviso.text = atencion.aviso()
@@ -67,8 +86,10 @@ func mostrar(atencion: Atencion) -> void:
 ## El cartel de que no queda nadie por atender.
 ##
 ## Es un método aparte y no un `mostrar(null)` para que acá no haya que decidir nada: dos
-## situaciones distintas, dos llamadas, cero condiciones en esta capa.
+## situaciones distintas y dos llamadas de presentación.
 func mostrar_sin_nadie() -> void:
+	_blanco.hide()
+	_burbuja.hide()
 	_nombre.text = TEXTO_SIN_NADIE
 	_pintar([])
 	_aviso.text = ""
@@ -80,10 +101,43 @@ func ocultar() -> void:
 	visible = false
 
 
+func ubicar_comprador(area: Rect2) -> void:
+	var local := _fisico.get_global_transform_with_canvas().affine_inverse() * area
+	_blanco.position = local.position
+	_blanco.size = local.size
+
+
+func _mostrar_comprador(atencion: Atencion) -> void:
+	if atencion.despachada():
+		mostrar_sin_nadie()
+		return
+	_blanco.show()
+	var dialogo := atencion.dialogo()
+	_burbuja.visible = dialogo != null and not dialogo.terminado()
+	if _burbuja.visible:
+		_texto.text = dialogo.entrada_actual()
+		_acomodar_dialogo.call_deferred()
+	visible = true
+
+
+func _acomodar_dialogo() -> void:
+	var alto := maxf(136.0, float(_texto.get_content_height()) + 30.0)
+	_burbuja.position.y = 1000.0 - alto
+	_burbuja.size.y = alto
+
+
+func _al_pulsar_el_comprador(evento: InputEvent) -> void:
+	if evento is InputEventMouseButton:
+		var clic := evento as InputEventMouseButton
+		if clic.pressed and clic.button_index == MOUSE_BUTTON_LEFT:
+			_blanco.accept_event()
+			comprador_pulsado.emit()
+
+
 ## Reemplaza los renglones de la atención anterior.
 ##
 ## Se sacan del árbol **antes** de liberarlos: `queue_free()` no los desprende hasta el final del
-## cuadro, así que sin el `remove_child` el segundo comprador tendría el ticket del primero
+## cuadro, así que sin el `remove_child` el segundo comprador tendría el pedido del primero
 ## apilado encima.
 func _pintar(lineas: Array[String]) -> void:
 	for viejo in _renglones.get_children():
@@ -105,3 +159,4 @@ func _botones(hay_alguien: bool) -> void:
 
 func _ajustar_al_viewport() -> void:
 	LienzoDeManada.ajustar(_marco, get_viewport().get_visible_rect().size)
+	LienzoDeManada.ajustar(_fisico, get_viewport().get_visible_rect().size)

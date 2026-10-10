@@ -140,6 +140,7 @@ ORIGEN_DE_CADA_GRUPO = {
     "textures/props/progres.png": PRODUCTOS,
     "third-party/128x128/Bricks": EDIFICIO,
     "textures/warehouse": EDIFICIO,
+    "textures/store": EDIFICIO,
     "textures/warehouse/final/deposito_concreto_normal.png": SUPERFICIE,
     "textures/warehouse/final/concrete_floor_worn_001_rough_1k.png": SUPERFICIE,
     "textures/warehouse/ambientcg/bricks-066/Bricks066_1K-JPG_NormalGL.jpg": SUPERFICIE,

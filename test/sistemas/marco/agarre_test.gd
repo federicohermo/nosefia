@@ -273,19 +273,26 @@ func test_agarrar_y_soltar_un_nodo_sin_colisiones() -> void:
 	assert_object(nodo.get_parent()).is_same(agarre.punto_de_soltado)
 
 
-func test_lo_soltado_vuelve_suelto_del_examen_y_sin_llenar_las_manos() -> void:  # AC-INV-021
-	# Lo que ya se soltó una vez queda suelto del padre, y ahí su `transform` es global: volver
-	# sin el `top_level` lo dejaría en otro lugar.
+func test_el_lector_conserva_identidad_sin_mutar_y_se_vacia_al_salir() -> void:  # AC-CLN-043
 	var agarre := _cableado()
 	var cuerpo := _cuerpo()
-	cuerpo.top_level = true
-	cuerpo.transform = Transform3D(Basis(Vector3.UP, 0.4), Vector3(2.0, 0.3, 1.0))
-	var lugar := cuerpo.transform
 	var cara: Node3D = auto_free(Node3D.new())
-	assert_object(agarre.acercar_del_mundo(cuerpo, cara)).is_same(cuerpo)
-	assert_object(agarre.acercar_del_mundo(_cuerpo(), cara)).is_null()
-	assert_object(agarre.manos().sostenido()).is_null()
-	assert_object(agarre.devolver_al_mundo()).is_same(cuerpo)
-	assert_bool(cuerpo.top_level).is_true()
-	assert_bool(cuerpo.transform.is_equal_approx(lugar)).is_true()
-	assert_object(agarre.devolver_al_mundo()).is_null()
+	assert_object(agarre.cuerpo_sostenido()).is_null()
+	for salida: String in ["soltar", "entregar", "vaciar_las_manos"]:
+		assert_bool(agarre.pedir_agarrar(_lata(), cuerpo)).is_true()
+		var padre := cuerpo.get_parent()
+		var pose := cuerpo.transform
+		assert_object(agarre.cuerpo_sostenido()).is_same(cuerpo)
+		assert_object(agarre.cuerpo_sostenido()).is_same(cuerpo)
+		assert_object(cuerpo.get_parent()).is_same(padre)
+		assert_bool(cuerpo.transform.is_equal_approx(pose)).is_true()
+		assert_object(agarre.manos().sostenido()).is_not_null()
+		agarre.mover_lo_sostenido(cara)
+		assert_object(agarre.cuerpo_sostenido()).is_same(cuerpo)
+		agarre.devolver_a_la_mano()
+		assert_object(agarre.cuerpo_sostenido()).is_same(cuerpo)
+		if salida == "soltar":
+			agarre.soltar(true)
+		else:
+			agarre.call(salida)
+		assert_object(agarre.cuerpo_sostenido()).is_null()

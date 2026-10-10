@@ -19,7 +19,7 @@ func test_cada_mancha_se_enfoca_desde_un_apoyo_caminable_a_un_metro() -> void:
 			var apoyo := _rayo(jugador, pie + Vector3.UP, Vector3(pie.x, -1.0, pie.z))
 			if apoyo.is_empty():
 				continue
-			if not _es_piso(almacen, apoyo.collider):
+			if not _es_piso(almacen, apoyo.collider) or apoyo.normal.y < 0.9:
 				continue
 			pie.y = apoyo.position.y + 0.01
 			var consulta := PhysicsShapeQueryParameters3D.new()
@@ -48,7 +48,7 @@ func test_los_objetos_y_manchas_quedan_sobre_el_modelo() -> void:
 	for objeto: Node3D in objetos:
 		# Cada cosa se apoya hacia su propio abajo: la mancha de la pared, contra la pared.
 		var abajo := Vector3.DOWN
-		if objeto in manchas:
+		if objeto is StaticBody3D and objeto in manchas:
 			abajo = -objeto.global_basis.y.normalized()
 		for malla: MeshInstance3D in objeto.find_children("*", "MeshInstance3D", true, false):
 			if not malla.is_visible_in_tree():
@@ -146,7 +146,7 @@ func _abrir() -> Node3D:
 	add_child(almacen)
 	await get_tree().physics_frame
 	for numero: int in [1, 2]:
-		almacen.get_node("Estructura/bano_puerta_%d/CuerpoDeLaHoja" % numero).call("interactuar")
+		almacen.get_node("Estructura/bano_puerta_%d/CuerpoDeLaHoja" % numero).call("usar")
 	for cuadro in 60:
 		await get_tree().physics_frame
 	return almacen
@@ -158,11 +158,15 @@ func _es_piso(almacen: Node3D, cuerpo: Object) -> bool:
 	return (
 		cuerpo == almacen.get_node("Estructura/almacen/StaticBody3D")
 		or cuerpo == almacen.get_node("Estructura/SueloSolido")
+		or cuerpo == almacen.get_node("Estructura/almacen/Volumen")
 	)
 
 
 func _rayo(objeto: Node3D, desde: Vector3, hasta: Vector3) -> Dictionary:
-	var consulta := PhysicsRayQueryParameters3D.create(desde, hasta)
+	# Los discos de interacción de las manchas no son apoyos físicos del jugador.
+	var consulta := PhysicsRayQueryParameters3D.create(
+		desde, hasta, 1 | ReglasDeLosObjetos.CAPA_DEL_CONTORNO
+	)
 	if objeto is CollisionObject3D:
 		consulta.exclude = [objeto.get_rid()]
 	return objeto.get_world_3d().direct_space_state.intersect_ray(consulta)

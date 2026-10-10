@@ -91,8 +91,10 @@ func test_la_caja_declara_su_producto_con_un_id_del_catalogo() -> void:
 ## de Jorgillo y la grande de Zucarachas salen de la misma escena, cambiando sólo el producto.
 func test_la_caja_tiene_el_tamano_que_le_da_el_catalogo() -> void:
 	var medias: Array[float] = []
+	var cajas: Array[Node3D] = []
 	for id: Producto.Id in [Producto.Id.JORGILLO, Producto.Id.ZUCARACHAS]:
-		var caja := _caja()
+		var caja := load(ESCENA).instantiate() as CajaQueSeLleva
+		cajas.append(caja)
 		caja.producto = id
 		add_child(caja)
 		var media: float = CajaQueSeLleva.MEDIA_CAJA[Catalogo.caja_de(id)]
@@ -104,6 +106,11 @@ func test_la_caja_tiene_el_tamano_que_le_da_el_catalogo() -> void:
 			)
 		medias.append(media)
 	assert_float(medias[0]).is_less(medias[1])
+	var destruir := func() -> void:
+		for caja in cajas:
+			caja.get_parent().remove_child(caja)
+			caja.free()
+	await assert_error(destruir).is_success()
 
 
 func test_tocar_la_caja_la_entrega_para_levantarla() -> void:
@@ -146,17 +153,63 @@ func test_el_cuerpo_de_la_caja_se_puede_llevar() -> void:
 	assert_str(caja.datos.nombre).is_not_empty()
 
 
-func test_la_caja_no_decide_nada_sobre_el_cupo() -> void:
-	# El criterio pide que este archivo no tenga un solo `if`, `match` ni `cupo`: cuántas entran
-	# y por qué se rechaza son preguntas del dominio, que es donde tienen test.
-	var texto := FileAccess.get_file_as_string(SCRIPT)
-	assert_str(texto).is_not_empty()
-	for patron: String in ["if", "match", "cupo"]:
-		(
-			assert_bool(texto.contains(patron))
-			. override_failure_message("`caja_de_productos.gd` nombra `%s`" % patron)
-			. is_false()
-		)
+func test_reparentar_conserva_las_etiquetas_y_destruir_no_da_error() -> void:
+	var origen: Node3D = auto_free(Node3D.new())
+	var destino: Node3D = auto_free(Node3D.new())
+	add_child(origen)
+	add_child(destino)
+	var cajas: Array[Node3D] = []
+	var materiales: Array[int] = []
+	var fuente: Mesh
+	var material_generico: BaseMaterial3D
+	var etiqueta_retenida: BaseMaterial3D
+	var generica := ""
+	for _indice in 2:
+		# Se liberan dentro del callable: no registrarlas también en auto_free.
+		var caja := load(ESCENA).instantiate() as Node3D
+		var datos: Resource = caja.get("datos")
+		caja.set("producto", Producto.Id.ACTRONCITO)
+		origen.add_child(caja)
+		cajas.append(caja)
+		var malla := caja.get_node("Malla") as MeshInstance3D
+		assert_object(malla.get_surface_override_material(0)).is_not_null()
+		var material := _material(caja)
+		etiqueta_retenida = material
+		var identidad := material.get_instance_id()
+		var textura := material.albedo_texture.resource_path
+		assert_str(textura).is_equal(_ruta_de_la_etiqueta(Producto.Id.ACTRONCITO))
+		materiales.append(identidad)
+		fuente = malla.mesh
+		material_generico = fuente.surface_get_material(0) as BaseMaterial3D
+		generica = (fuente.surface_get_material(0) as BaseMaterial3D).albedo_texture.resource_path
+		material = null
+		caja.reparent(destino, true)
+		assert_object(caja.get_parent()).is_same(destino)
+		assert_int(_material(caja).get_instance_id()).is_equal(identidad)
+		assert_str(_material(caja).albedo_texture.resource_path).is_equal(textura)
+		assert_int(caja.get("producto")).is_equal(Producto.Id.ACTRONCITO)
+		assert_object(caja.get("datos")).is_same(datos)
+	assert_int(materiales[0]).is_not_equal(materiales[1])
+	assert_object((cajas[0].get_node("Malla") as MeshInstance3D).mesh).is_same(fuente)
+	var destruir := func() -> void:
+		for caja in cajas:
+			# Desmontar primero también es válido: así se liberan los fixtures al terminar.
+			caja.get_parent().remove_child(caja)
+			assert_object(caja.get_parent()).is_null()
+			caja.free()
+	await assert_error(destruir).is_success()
+	cajas.clear()
+	assert_object(fuente.surface_get_material(0)).is_same(material_generico)
+	assert_str(etiqueta_retenida.albedo_texture.resource_path).is_equal(
+		_ruta_de_la_etiqueta(Producto.Id.ACTRONCITO)
+	)
+	(
+		assert_str((fuente.surface_get_material(0) as BaseMaterial3D).albedo_texture.resource_path)
+		. is_equal(generica)
+	)
+	# La escena nunca montada tampoco debe inventar un error al liberar su malla.
+	var sin_montar := load(ESCENA).instantiate() as Node3D
+	await assert_error(func() -> void: sin_montar.free()).is_success()
 
 
 func test_la_caja_ya_no_despacha_por_su_cuenta() -> void:

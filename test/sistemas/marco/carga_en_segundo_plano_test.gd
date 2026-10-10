@@ -50,6 +50,8 @@ func test_una_ruta_que_no_existe_emite_fallo_una_sola_vez() -> void:
 	await _esperar_respuestas(1)
 	assert_int(_fallos).is_equal(1)
 	assert_int(_listas.size()).is_equal(0)
+	var estado := ResourceLoader.load_threaded_get_status(RUTA_QUE_NO_EXISTE)
+	assert_int(estado).is_equal(ResourceLoader.THREAD_LOAD_INVALID_RESOURCE)
 
 
 func test_un_pedido_con_la_carga_en_curso_no_arranca_otra() -> void:

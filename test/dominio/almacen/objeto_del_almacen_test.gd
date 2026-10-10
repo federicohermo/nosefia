@@ -12,6 +12,16 @@ const Revelacion := preload("res://src/dominio/investigacion/revelacion.gd")
 const CARPETA_DE_LOS_OBJETOS := "res://src/dominio/almacen"
 
 
+func test_la_caja_no_entra_y_los_otros_levantables_si() -> void:  # AC-CLN-036 AC-CLN-037
+	assert_bool(ObjetoDelAlmacen.new().entra_en_el_contenedor).is_true()
+	for objeto: ObjetoDelAlmacen in _objetos_del_almacen():
+		(
+			assert_bool(objeto.entra_en_el_contenedor)
+			. override_failure_message(str(objeto.id))
+			. is_equal(objeto.id != &"caja_de_reposicion")
+		)
+
+
 func _objetos_del_almacen() -> Array[Resource]:
 	var cargados: Array[Resource] = []
 	for archivo in DirAccess.get_files_at(CARPETA_DE_LOS_OBJETOS):

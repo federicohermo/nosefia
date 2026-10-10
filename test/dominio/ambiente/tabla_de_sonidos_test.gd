@@ -233,7 +233,11 @@ func test_la_compra_el_lector_y_el_celular_suenan_con_su_audio() -> void:
 		EntradaSonora.Evento.COMPRA_REALIZADA:
 		["compra_realizada", EntradaSonora.BUS_DE_EFECTOS, ["SFX_EVENTO_CompraRealizada"]],
 		EntradaSonora.Evento.LECTOR_RECHAZADO:
-		["cobro_rechazado", EntradaSonora.BUS_DE_EFECTOS, ["SFX_NOLEV_Lector_Error"]],
+		["lectura_rechazada", EntradaSonora.BUS_DE_EFECTOS, ["SFX_NOLEV_Lector_Error"]],
+		EntradaSonora.Evento.LECTOR_ESCANEADO:
+		["producto_leido", EntradaSonora.BUS_DE_EFECTOS, ["SFX_NOLEV_Lector_Escanear"]],
+		EntradaSonora.Evento.TICKET_IMPRESO:
+		["ticket_impreso", EntradaSonora.BUS_DE_EFECTOS, ["SFX_INTERFAZ_Computadora_Imprimir"]],
 		EntradaSonora.Evento.MENSAJE_DEL_CELULAR:
 		[
 			"nota_escrita",
@@ -255,14 +259,18 @@ func test_la_compra_el_lector_y_el_celular_suenan_con_su_audio() -> void:
 	var lector := tabla.de(EntradaSonora.Evento.LECTOR_RECHAZADO)
 	var timbre := tabla.de(EntradaSonora.Evento.TIMBRE_DEL_COMPRADOR)
 	assert_bool(lector.posicional).is_true()
-	assert_str(lector.emisor).is_equal(timbre.emisor)
+	assert_str(lector.emisor).is_equal("Caja")
+	assert_str(lector.emisor).is_not_equal(timbre.emisor)
 
 
 func test_las_tres_senales_llegan_de_una_fuente_del_audio() -> void:
 	# Una fila cuya fuente no está en la lista del almacén queda sin fuente, y eso no avisa.
 	var fuentes := {
 		"compra_realizada": ["res://src/sistemas/tareas/ventanilla.gd", "_atenciones"],
-		"cobro_rechazado": ["res://src/sistemas/tareas/ventanilla.gd", "_atenciones"],
+		"lectura_rechazada": ["res://src/sistemas/tareas/caja_registradora.gd", "_caja"],
+		"producto_leido": ["res://src/sistemas/tareas/caja_registradora.gd", "_caja"],
+		"ticket_impreso": ["res://src/sistemas/tareas/caja_registradora.gd", "_caja"],
+		"boton_pulsado": ["res://src/ui/diegetica/programa_de_tickets.gd", "_programa_de_tickets"],
 		"nota_escrita":
 		["res://src/sistemas/investigacion/computadora_de_escritorio.gd", "_computadora"],
 	}

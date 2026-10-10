@@ -118,6 +118,12 @@ Lo que más se rompe:
 
 ## Paso 4 — El pase de completitud
 
+Las recepciones físicas cierran el destino de productos y ticket tanto al completar como al
+vencer. No deducir «devuelve al piso» de una venta incompleta: pedir la decisión faltante y
+llevarla a inventario, ventas y tarea. En #339 el usuario resolvió que el cliente se los lleva.
+Para animaciones, registrar la duración decidida de cada dibujo; la tasa del video de referencia
+no reemplaza esa decisión ni permite omitir un PNG que no aparece en él.
+
 Antes de decir que está, las cuatro que el escritor tiene que poder afirmar:
 
 - Cada sección de la plantilla está llena **o representada en preguntas abiertas**.
@@ -170,3 +176,12 @@ Es el caso que este método existe para hacer visible, y tiene una sola salida:
 - El paso siguiente es `implement-feature`, en la misma rama.
 - Si el spec falsificó algo que la documentación afirma en presente, actualizá `docs/`,
   `.claude/rules/` y `CLAUDE.md`.
+
+Los criterios de personajes en un mundo 3D ejercen su presencia con la interfaz cerrada, la
+orientación fija o el eje permitido de seguimiento de cámara y la oclusión, incluido el corte
+inferior de los bustos desde los laterales accesibles. Los avisos persistentes nombran el gesto
+exacto que los retira; no heredan por defecto el temporizador de otros tipos.
+
+En tareas que registran ventas, distinguir la coincidencia con lo vendido hasta ahora del
+cumplimiento de todos los pedidos exigidos por la jornada. Ejercer una sola venta, registros
+anticipados y compras vencidas, tanto durante la noche como al cierre.

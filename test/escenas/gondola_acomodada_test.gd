@@ -35,9 +35,9 @@ func test_ningun_estante_inferior_sobresale_de_los_superiores() -> void:  # AC-S
 	for nombre: String in GONDOLAS:
 		var mueble := estructura.get_node(nombre) as MeshInstance3D
 		var caras := mueble.mesh.get_faces()
-		var lados: Array[Vector3] = [Vector3.RIGHT]
+		var lados: Array[Vector3] = [Vector3.BACK]
 		if nombre in ["gondolanueva", "gondolanueva2"]:
-			lados.append(Vector3.LEFT)
+			lados.assign([Vector3.RIGHT, Vector3.LEFT])
 		for lado in lados:
 			var abajo := -INF
 			var arriba := -INF

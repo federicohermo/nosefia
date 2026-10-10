@@ -10,6 +10,80 @@ const TAREA := "res://src/dominio/almacen/tarea_de_atender.gd"
 const VENDIBLES := 9
 
 
+func test_la_primera_noche_llega_por_horario_y_no_por_abrir() -> void:  # AC-CTR-035
+	var compradores := Compradores.de_la_jornada(1)
+	var tarea := TareaDeAtender.new(compradores, Apertura.inventario_con_faltantes({}, {}))
+	assert_bool(tarea.fisica()).is_true()
+	assert_object(tarea.atender()).is_null()
+	assert_array(tarea.avanzar(7200)).has_size(1)
+	var atencion := tarea.atencion()
+	assert_object(tarea.atender()).is_same(compradores[0])
+	assert_object(tarea.atencion()).is_same(atencion)
+	assert_array(tarea.avanzar(7200)).is_empty()
+	tarea.avanzar(14400)
+	assert_object(tarea.en_ventanilla()).is_null()
+	assert_bool(tarea.completada()).is_false()
+
+
+func test_ambas_compras_y_no_los_despachos_cumplen_la_primera_noche() -> void:  # AC-CTR-041
+	var inventario := Apertura.inventario_con_faltantes({}, {})
+	var tarea := TareaDeAtender.new(Compradores.de_la_jornada(1), inventario)
+	for tiempo: float in [7200.0, 28800.0]:
+		tarea.avanzar(tiempo)
+		var atencion := tarea.atencion()
+		assert_object(atencion).is_not_null()
+		if atencion == null:
+			return
+		assert_bool(atencion.despachar_sin_vender()).is_false()
+		atencion.interactuar(null)
+		while not atencion.puede_abandonar():
+			atencion.interactuar(null)
+		var renglones: Array[Producto] = []
+		for producto in atencion.comprador().pedido().productos():
+			for _unidad in atencion.comprador().pedido().unidades_de(producto):
+				var unidad := Estante.new(inventario, Catalogo.todos()).retirar(producto)
+				assert_int(atencion.interactuar(unidad)).is_equal(
+					RecepcionDeCompra.Resultado.ACEPTADA
+				)
+				renglones.append(producto)
+		assert_bool(tarea.completada()).is_false()
+		assert_int(atencion.interactuar(Ticket.new(renglones))).is_equal(
+			RecepcionDeCompra.Resultado.COMPLETA
+		)
+	assert_bool(tarea.completada()).is_true()
+	assert_int(tarea.vendidas_de(Catalogo.de(Producto.Id.ZUCARACHAS))).is_equal(2)
+	assert_array(tarea.avanzar(36000)).is_empty()
+	assert_bool(tarea.completada()).is_true()
+	var reinicio := TareaDeAtender.new(
+		Compradores.de_la_jornada(1), Apertura.inventario_con_faltantes({}, {})
+	)
+	assert_bool(reinicio.completada()).is_false()
+	assert_object(reinicio.en_ventanilla()).is_null()
+
+
+func test_perder_a_martin_y_vender_a_tiago_no_cumple_atencion() -> void:  # AC-CTR-040
+	var inventario := Apertura.inventario_con_faltantes({}, {})
+	var tarea := TareaDeAtender.new(Compradores.de_la_jornada(1), inventario)
+	tarea.avanzar(14400.0)
+	tarea.avanzar(28800.0)
+	var atencion := tarea.atencion()
+	atencion.interactuar(null)
+	atencion.interactuar(null)
+	var lineas: Array[Producto] = []
+	for producto in atencion.comprador().pedido().productos():
+		for _unidad in atencion.comprador().pedido().unidades_de(producto):
+			var unidad := Estante.new(inventario, Catalogo.todos()).retirar(producto)
+			atencion.interactuar(unidad)
+			lineas.append(producto)
+	assert_int(atencion.interactuar(Ticket.new(lineas))).is_equal(
+		RecepcionDeCompra.Resultado.COMPLETA
+	)
+	assert_bool(atencion.vendida()).is_true()
+	assert_bool(tarea.completada()).is_false()
+	assert_int(tarea.vendidas_de(Catalogo.de(Producto.Id.MAROLINI))).is_zero()
+	assert_int(tarea.vendidas_de(Catalogo.de(Producto.Id.ZUCARACHAS))).is_equal(2)
+
+
 func _productos() -> Array[Producto]:
 	return [Catalogo.de(Producto.Id.ACTRONCITO)]
 

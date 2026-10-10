@@ -176,7 +176,7 @@ func test_reponer_recupera_los_productos_independientes_del_modelo() -> void:
 				)
 				. is_equal(0)
 			)
-		var antes: AABB = original.transform * original.mesh.get_aabb()
+		var antes: AABB = original.global_transform * original.mesh.get_aabb()
 		var despues: AABB = copia.transform * copia.mesh.get_aabb()
 		(
 			assert_bool(despues.size.is_equal_approx(antes.size))

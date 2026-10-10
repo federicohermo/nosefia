@@ -59,6 +59,14 @@ var _excluidos: Array[RID] = []
 ## y sólo entonces: un test que apunta la cámara a mano no la pierde en el cuadro siguiente.
 var _girando_el_dibujo := false
 
+## La vista encuadrada se mantiene en el mundo aunque el giro dibujado alcance al control.
+var _asomado := false
+var _vista_asomada := Transform3D.IDENTITY
+var _camara_en_reposo := Transform3D.IDENTITY
+
+## Al volver no se dibuja de nuevo el giro atrasado: sólo se espera que alcance al efectivo.
+var _retomando_la_vista := false
+
 ## El yaw va acá y no al cuerpo, que es la receta de Godot para mirar con el mouse: el cuerpo se
 ## dibuja interpolado entre dos pasos de física, y este nodo no. Así la caminata sale pareja y el
 ## giro no espera al paso siguiente. Su interpolación apagada está en el `.tscn`.
@@ -140,12 +148,14 @@ func _unhandled_input(evento: InputEvent) -> void:
 	if evento.is_action_pressed(ReglasDeLosObjetos.ACCION_AGARRAR):
 		# Quién se come el clic lo contesta `Examen`, que es el que sabe si hay algo pegado a la
 		# cara. Acá sólo se lo pasa al que quedó: esto es ruteo, no una regla del juego.
-		if not examen.atajar_el_clic():
+		if not examen.atajar_el_clic() and not _control.esta_suspendido():
 			_interactuar()
 	elif evento.is_action_pressed(ReglasDelJugador.ACCION_USAR):
 		if not _control.esta_suspendido():
 			if _enfocado == null:
 				_usar_la_superficie_mirada()
+			elif _enfocado.has_method(ReglasDeLosObjetos.METODO_ACCIONAR):
+				_enfocado.call(ReglasDeLosObjetos.METODO_ACCIONAR)
 			elif _enfocado.has_method(ReglasDeLosObjetos.METODO_USAR):
 				_enfocado.call(ReglasDeLosObjetos.METODO_USAR)
 			else:
@@ -153,7 +163,7 @@ func _unhandled_input(evento: InputEvent) -> void:
 	elif evento.is_action_pressed(ReglasDeLosObjetos.ACCION_EXAMINAR):
 		# Con otra pantalla encima, la E no abre un examen: al cerrarlo reanudaría al jugador.
 		if examen.esta_examinando() or not _control.esta_suspendido():
-			examen.alternar(_datos_de(_enfocado), _enfocado)
+			examen.alternar(_datos_de(_enfocado))
 
 
 func _usar_la_superficie_mirada() -> void:
@@ -173,7 +183,7 @@ func _usar_la_superficie_mirada() -> void:
 
 ## **El clic se lo gasta quien hace algo con él, y sólo ése.** Tener `interactuar()` es la
 ## declaración de que el clic izquierdo es suyo: los puestos lo resuelven por señal y contestan
-## `null` —el escritorio abre, el estante coloca—, y soltar además sería un segundo efecto del
+## `null` —el estante coloca—, y soltar además sería un segundo efecto del
 ## mismo clic; las cajas contestan sus datos, y eso es lo que se agarra.
 ##
 ## **Lo que está en el grupo pero no tiene el método no se gasta nada**, y ésa es la diferencia
@@ -224,9 +234,12 @@ func _process(delta: float) -> void:
 	examen.girar(_entrada(), delta)
 	_control.avanzar_el_dibujo(delta)
 	var atrasado := _control.giro_atrasado()
-	if atrasado or _girando_el_dibujo:
+	if atrasado or _girando_el_dibujo or _retomando_la_vista:
 		_aplicar_la_rotacion()
 	_girando_el_dibujo = atrasado
+	_retomando_la_vista = _retomando_la_vista and atrasado
+	if _asomado:
+		_camara.global_transform = _vista_asomada
 
 
 ## `Input.get_vector` ya devuelve `x` a la derecha e `y` adelante, que es la convención con la
@@ -434,8 +447,9 @@ func _aplicar_la_rotacion() -> void:
 	# Un jugador instanciado sin entrar al árbol recibe eventos igual, y todavía no tiene cámara.
 	if _camara == null:
 		return
-	_giro.rotation.y = _control.yaw_dibujado()
-	_camara.rotation.x = _control.pitch_dibujado()
+	_giro.rotation.y = _control.yaw() if _retomando_la_vista else _control.yaw_dibujado()
+	if not _asomado:
+		_camara.rotation.x = _control.pitch() if _retomando_la_vista else _control.pitch_dibujado()
 
 
 ## `dominio/` decide SI el cursor tiene que estar tomado. La pausa lo suelta sin preguntarle, y
@@ -872,3 +886,29 @@ static func _limites_de(cuerpo: RigidBody3D, formas: Array[CollisionShape3D]) ->
 		)
 		limites = suyos if indice == 0 else limites.merge(suyos)
 	return limites
+
+
+func asomarse(marco: Transform3D, tamano: Vector2, profundidad: float) -> void:
+	var pantalla := get_viewport().get_visible_rect().size
+	var distancia := EncuadreDeLaVentanilla.distancia(
+		tamano, profundidad, _camara.fov, pantalla.x / pantalla.y
+	)
+	if distancia <= 0.0:
+		return
+	if not _asomado:
+		_camara_en_reposo = _camara.transform
+	_asomado = true
+	var elevacion := EncuadreDeLaVentanilla.elevacion(tamano, profundidad, distancia)
+	_vista_asomada = Transform3D(
+		marco.basis, marco.origin + marco.basis.z * distancia + marco.basis.y * elevacion
+	)
+	_camara.global_transform = _vista_asomada
+
+
+func dejar_de_asomarse() -> void:
+	if not _asomado:
+		return
+	_asomado = false
+	_camara.transform = _camara_en_reposo
+	_retomando_la_vista = _control.giro_atrasado()
+	_aplicar_la_rotacion()

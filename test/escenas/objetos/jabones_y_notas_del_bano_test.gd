@@ -43,7 +43,7 @@ func test_las_tres_notas_se_ven_en_el_bano_con_sus_imagenes() -> void:
 		var alto_minimo := 0.3 if nombre == NOTAS[0] else 1.1
 		assert_float(nota.mesh.get_aabb().size.y).is_greater(alto_minimo)
 		assert_float(nota.global_position.x).is_between(8.0, 13.5)
-		assert_float(nota.global_position.z).is_between(-8.0, -1.27768)
+		assert_float(nota.global_position.z).is_between(-0.444, 6.27832)
 		assert_float(nota.global_position.y).is_between(1.2, 1.9)
 		var centro := nota.to_global(nota.mesh.get_aabb().get_center())
 		var frente := Vector3.FORWARD if nombre == NOTAS[0] else Vector3.BACK
@@ -57,3 +57,23 @@ func test_las_tres_notas_se_ven_en_el_bano_con_sus_imagenes() -> void:
 			if material.albedo_texture != null:
 				imagenes.append(material.albedo_texture)
 		assert_int(imagenes.size()).override_failure_message(nombre).is_greater_equal(2)
+
+
+func test_las_tres_notas_del_bano_comparten_su_imagen_con_la_lectura() -> void:  # AC-PLY-070
+	var almacen: Node3D = auto_free(ALMACEN.instantiate())
+	add_child(almacen)
+	var vista: NotaEncuadrada = almacen.get_node("Interfaz/NotaEncuadrada")
+	var jugador: Node3D = almacen.get_node("Jugador")
+	jugador.set_physics_process(false)
+	for nombre: String in NOTAS:
+		var malla: MeshInstance3D = almacen.get_node("Estructura/" + nombre)
+		var cuerpo: StaticBody3D = malla.get_node("StaticBody3D")
+		assert_bool(cuerpo.is_in_group(ReglasDelJugador.GRUPO_INTERACTUABLE)).is_true()
+		var original := (malla.get_active_material(1) as BaseMaterial3D).albedo_texture
+		assert_object(cuerpo.call("imagen")).is_same(original)
+		cuerpo.call(ReglasDeLosObjetos.METODO_ACCIONAR)
+		assert_bool(vista.visible).is_true()
+		assert_object((vista.get("_imagen") as TextureRect).texture).is_same(original)
+		assert_str((vista.get("_renglones") as Label).text).is_empty()
+		almacen.get_node("Estructura/NotasDelAlmacen").call("cerrar")
+		assert_bool(vista.visible).is_false()

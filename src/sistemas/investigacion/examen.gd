@@ -1,4 +1,4 @@
-## Acerca a la cara lo que se lleva o lo que se mira, deja girarlo, y avisa qué reveló.
+## Acerca a la cara lo que se lleva, deja girarlo, y avisa qué reveló.
 ##
 ## Va en `investigacion/` porque es el lado de la tensión que consume tiempo del turno y no
 ## cumple ninguna obligatoria: cada segundo mirando una lata es un segundo que no se repuso nada.
@@ -35,23 +35,13 @@ func esta_examinando() -> bool:
 
 ## Arranca el examen y devuelve si arrancó.
 ##
-## Tres caminos, y el orden entre ellos es la decisión: **lo que se lleva le gana a lo enfocado**.
-## Al revés no habría forma de mirar lo que se acaba de levantar sin soltarlo primero, que es lo
-## que el jugador quiere hacer justo después de levantarlo.
-##
-## `enfocado` es lo que la mira tiene adelante y `nodo_enfocado` su cuerpo. Un levantable se
-## acerca a la cara sin agarrarlo. La E sobre algo fijo —una puerta, la ventanilla— revela lo que
-## se nota mirándolo **sin suspender a nadie**, porque no hay nada que rotar. Es un pensamiento,
-## no un examen, y por eso devuelve `false`: no arrancó ningún examen que después haya que
-## terminar.
-func iniciar(enfocado: ObjetoDelAlmacen = null, nodo_enfocado: Node3D = null) -> bool:
+## Lo que se lleva le gana a lo enfocado. Con las manos vacías, sólo lo no levantable
+## revela un pensamiento: no hay nada que acercar ni nadie que suspender.
+func iniciar(enfocado: ObjetoDelAlmacen = null) -> bool:
 	if _examinando != null or agarre == null:
 		return false
 	var datos := agarre.manos().sostenido()
-	var del_mundo := (
-		datos == null and enfocado != null and enfocado.es_levantable() and nodo_enfocado != null
-	)
-	if datos == null and not del_mundo:
+	if datos == null:
 		if enfocado != null and not enfocado.es_levantable():
 			objeto_revelado.emit(enfocado, _hallazgos.registrar(enfocado))
 		return false
@@ -62,12 +52,7 @@ func iniciar(enfocado: ObjetoDelAlmacen = null, nodo_enfocado: Node3D = null) ->
 	if punto_de_examen == null:
 		push_error("Examen sin punto de examen cableado: revisar jugador.tscn")
 		return false
-	var nodo: Node3D = null
-	if del_mundo:
-		datos = enfocado
-		nodo = agarre.acercar_del_mundo(nodo_enfocado, punto_de_examen)
-	else:
-		nodo = agarre.mover_lo_sostenido(punto_de_examen)
+	var nodo := agarre.mover_lo_sostenido(punto_de_examen)
 	if nodo == null:
 		return false
 	# Una distancia fija dejaba la caja grande con las esquinas afuera del cuadro, y al girarla
@@ -80,13 +65,13 @@ func iniciar(enfocado: ObjetoDelAlmacen = null, nodo_enfocado: Node3D = null) ->
 	return true
 
 
-## Devuelve el objeto a donde estaba y avisa que se terminó. Con nada en examen no hace nada:
+## Devuelve el objeto a la mano y avisa que se terminó. Con nada en examen no hace nada:
 ## no puede emitir un aviso vacío.
 func terminar() -> void:
 	if _examinando == null:
 		return
 	_examinando = null
-	if agarre != null and agarre.devolver_al_mundo() == null:
+	if agarre != null:
 		agarre.devolver_a_la_mano()
 	examen_terminado.emit()
 
@@ -103,9 +88,9 @@ func atajar_el_clic() -> bool:
 
 ## La misma tecla abre y cierra, y ese `if` sobre el estado del examen vive acá: en la escena
 ## sería una regla del juego sin test, y los dos gates darían verde sobre ella.
-func alternar(enfocado: ObjetoDelAlmacen = null, nodo_enfocado: Node3D = null) -> void:
+func alternar(enfocado: ObjetoDelAlmacen = null) -> void:
 	if _examinando == null:
-		iniciar(enfocado, nodo_enfocado)
+		iniciar(enfocado)
 	else:
 		terminar()
 

@@ -9,12 +9,12 @@ extends GdUnitTestSuite
 const ALMACEN := preload("res://src/escenas/almacen.tscn")
 const AperturaConLugar := preload("res://test/escenas/apertura_con_lugar.gd")
 ## Cada góndola, y hacia dónde camina el jugador para chocarla. Las dos del fondo están contra la
-## pared del oeste: del otro lado no hay piso.
+## pared del fondo: del otro lado está el depósito.
 const GONDOLAS := {
 	"Estructura/gondolanueva": Vector3.RIGHT,
 	"Estructura/gondolanueva2": Vector3.RIGHT,
-	"Estructura/gondolanueva_001": Vector3.LEFT,
-	"Estructura/gondolanueva_002": Vector3.LEFT,
+	"Estructura/gondolanueva_001": Vector3.FORWARD,
+	"Estructura/gondolanueva_002": Vector3.FORWARD,
 }
 
 ## Lo que el contorno le agrega a la malla de cada lado, a lo sumo, en metros.
@@ -30,8 +30,9 @@ func test_el_jugador_que_camina_contra_una_gondola_choca_con_su_contorno() -> vo
 		var gondola := almacen.get_node(ruta) as MeshInstance3D
 		var caja := gondola.global_transform * gondola.get_aabb()
 		var hacia: Vector3 = GONDOLAS[ruta]
-		var desde := caja.position.x - 0.6 if hacia == Vector3.RIGHT else caja.end.x + 0.6
-		jugador.global_position = Vector3(desde, 0.1, caja.end.z - 0.3)
+		var desde := caja.get_center() - hacia * (caja.size.dot(hacia.abs()) / 2.0 + 0.6)
+		desde.y = 0.11
+		jugador.global_position = desde
 		await get_tree().physics_frame
 		var choque := jugador.move_and_collide(hacia, true)
 		(
@@ -39,7 +40,8 @@ func test_el_jugador_que_camina_contra_una_gondola_choca_con_su_contorno() -> vo
 			. override_failure_message("%s no frena al jugador" % ruta)
 			. is_not_null()
 		)
-		assert_object(choque.get_collider()).is_same(gondola.get_node("Contorno"))
+		if choque != null:
+			assert_object(choque.get_collider()).is_same(gondola.get_node("Contorno"))
 		# A frenarlo lo frena la caja aunque la malla siga ahí, porque la envuelve. Lo que cuesta
 		# es que el jugador la siga probando en cada paso, y eso lo dice la excepción.
 		var malla := gondola.get_node("StaticBody3D")
@@ -107,9 +109,17 @@ func test_un_producto_soltado_hacia_la_gondola_no_queda_adentro_de_ella() -> voi
 	var gondola := almacen.get_node("Estructura/gondolanueva") as MeshInstance3D
 	var mueble := gondola.global_transform * gondola.get_aabb()
 	var casos := [
-		[Vector3(0.05, 0.11, -2.79), Vector3(1.44, 1.9, -2.79), Producto.Id.MALBARDO],
-		[Vector3(2.87, 0.11, -2.79), Vector3(1.44, 0.5, -2.79), Producto.Id.MALBARDO],
-		[Vector3(1.45, 0.11, 2.28), Vector3(1.45, 0.5, -1.11), Producto.Id.OREMOS],
+		[
+			Vector3(-0.861390, 0.11, -3.555100),
+			Vector3(0.528610, 1.9, -3.555100),
+			Producto.Id.MALBARDO
+		],
+		[
+			Vector3(1.958610, 0.11, -3.555100),
+			Vector3(0.528610, 0.5, -3.555100),
+			Producto.Id.MALBARDO
+		],
+		[Vector3(0.538610, 0.11, 1.514900), Vector3(0.538610, 0.5, -1.875100), Producto.Id.OREMOS],
 	]
 	var sueltas: Array[Node3D] = []
 	for caso: Array in casos:
@@ -152,9 +162,9 @@ func test_una_caja_chica_soltada_hacia_una_bandeja_no_queda_adentro_de_la_gondol
 	var mano: Node3D = jugador.get_node("Giro/PuntoDeCaja")
 	var adentro: Array[String] = []
 	for caso: Array in [
-		[Vector3(0.05, 0.11, -2.49), Vector3(1.25, 1.0, -2.49)],
-		[Vector3(0.05, 0.11, -2.49), Vector3(1.25, 1.7, -2.49)],
-		[Vector3(0.05, 0.11, -1.89), Vector3(1.25, 1.0, -1.89)],
+		[Vector3(-0.861390, 0.11, -3.255100), Vector3(0.338610, 1.0, -3.255100)],
+		[Vector3(-0.861390, 0.11, -3.255100), Vector3(0.338610, 1.7, -3.255100)],
+		[Vector3(-0.861390, 0.11, -2.655100), Vector3(0.338610, 1.0, -2.655100)],
 		# Frente a una cabecera, mirando su base, que es hueca: así se perdió la caja de Malbardo.
 		[
 			Vector3(mueble.get_center().x, 0.11, mueble.end.z + 1.0),

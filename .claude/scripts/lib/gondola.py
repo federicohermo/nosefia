@@ -446,17 +446,21 @@ _CABECERA = re.compile(
     r"^\[(?:gd_scene|gd_resource|ext_resource|sub_resource|resource|node|connection|editable)\b",
     re.MULTILINE,
 )
-_NODO_APAGADO = re.compile(r'\[node name="([^"]+)" parent="([^"]+)"\]\nvisible = false\n*\Z')
+_NODO_APAGADO = re.compile(
+    r'\[node name="([^"]+)" parent="([^"]+)"'
+    r'( groups=\["geometria_de_referencia"\])?\]\nvisible = false\n*\Z'
+)
 
 
 def _cuerpo_apagado(ruta: str) -> str:
     return f'[node name="StaticBody3D" parent="{ruta}"]\ncollision_layer = 0\ncollision_mask = 0'
 
 
-def _unidad_apagada(ruta: str) -> str:
+def _unidad_apagada(ruta: str, referencia: bool = False) -> str:
     padre, _, nombre = ruta.rpartition("/")
+    grupo = ' groups=["geometria_de_referencia"]' if referencia else ""
     return (
-        f'[node name="{nombre}" parent="{padre or "."}"]\nvisible = false\n\n'
+        f'[node name="{nombre}" parent="{padre or "."}"{grupo}]\nvisible = false\n\n'
         f"{_cuerpo_apagado(ruta)}\n\n"
     )
 
@@ -474,21 +478,23 @@ def apagar_las_unidades(texto: str, rutas: Sequence[str]) -> str:
     secciones = [texto[a:b] for a, b in zip(inicios, inicios[1:] + [len(texto)])]
     salida = [texto[: inicios[0]]] if inicios else [texto]
     lugar = None
+    referencia = False
     i = 0
     while i < len(secciones):
         apagado = _NODO_APAGADO.match(secciones[i])
         if apagado is not None and i + 1 < len(secciones):
-            nombre, padre = apagado.groups()
+            nombre, padre, grupo = apagado.groups()
             ruta = nombre if padre == "." else f"{padre}/{nombre}"
             if secciones[i + 1].rstrip("\n") == _cuerpo_apagado(ruta):
                 lugar = len(salida) if lugar is None else lugar
+                referencia = referencia or grupo is not None
                 i += 2
                 continue
         salida.append(secciones[i])
         i += 1
     if lugar is None:
         raise ValueError("la escena no tiene unidades apagadas: no se sabe dónde van las nuevas")
-    salida.insert(lugar, "".join(_unidad_apagada(r) for r in sorted(set(rutas))))
+    salida.insert(lugar, "".join(_unidad_apagada(r, referencia) for r in sorted(set(rutas))))
     return "".join(salida).rstrip("\n") + "\n"
 
 

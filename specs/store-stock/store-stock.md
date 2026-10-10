@@ -3,7 +3,7 @@ schema_version: 1
 capability_id: CAP-STK
 status: ratified
 owner: por definir
-provenance: GDD «Reponer» y «Registrar»; fichas «6) Tarea: Registro de productos vendidos», «8. Tarea: Reposición» y «5. Formas de interacción con objetos»; base «Productos y cajas contenedoras»; migración de los specs 005, 008, 033, 042, 047
+provenance: GDD «Reponer» y «Registrar»; fichas «7. Tarea: Registro de productos vendidos», «8. Tarea: Reposición» y «5. Formas de interacción con objetos»; base «Productos y cajas contenedoras»; migración de los specs 005, 008, 033, 042, 047
 ---
 
 # Capacidad: la mercadería del almacén
@@ -23,7 +23,7 @@ depósito son dos lugares distintos, y mover mercadería del fondo al estante cu
 | **Depósito** | el fondo, con la caja de cada producto: de ahí sale lo que se repone y lo que se vende | almacén, bodega |
 | **Caja del depósito** | la caja de un solo producto, donde está su depósito: se le saca de a una unidad y recibe de vuelta las de su producto, hasta llenarse | cajón, contenedor |
 | **Contenido de la caja** | cuántas unidades tiene la caja: su depósito menos sus unidades afuera | stock, carga |
-| **Unidad afuera** | una unidad que salió de su caja, o que se agarró de la góndola, y todavía no se colocó ni volvió a su caja: en la mano o soltada en el piso. Sigue contada en el depósito | reservada, en tránsito |
+| **Unidad afuera** | una unidad que salió de su caja, o que se agarró de la góndola, y todavía no se colocó, volvió a su caja ni se tiró: en la mano o soltada en el piso. Sigue contada en el depósito | reservada, en tránsito |
 | **Góndola** | el estante del local, el que el jugador repone | vitrina, exhibidor |
 | **Tanda** | las unidades de un mismo producto puestas juntas sobre un estante del local, en dos filas o en una | bloque, exhibición |
 | **Tanda fija** | una tanda sin casilleros: se ve, y no se agarra, no se repone ni se vacía | guía, decorado |
@@ -127,7 +127,7 @@ sigue en la mano; vuelve a la caja si el jugador se la devuelve (BR-STK-030).
 El sistema DEBE contestar los vendibles de un producto como su depósito menos el mayor entre los
 casilleros vacíos de su fila de adelante y sus unidades afuera, y nunca menos de cero. Es lo que
 queda en la caja menos lo que a la góndola todavía le falta de ella: un casillero vacío que ya
-espera una unidad afuera no se descuenta dos veces. El sistema NO DEBE vender una unidad afuera:
+espera una unidad afuera no se descuenta dos veces. El cobro automático NO DEBE vender una unidad afuera:
 ninguna venta deja el depósito por debajo de las unidades afuera. Un producto que el inventario
 no conoce tiene cero vendibles.
 
@@ -151,11 +151,17 @@ cumplida: dos planillas distintas pueden sumar lo mismo.
 
 ### BR-STK-022 — Registrar se cumple cuando lo anotado coincide con lo vendido
 
-CUANDO un «+» o un «−» del jugador deja, para cada producto, lo anotado igual a lo vendido esa
-noche, el sistema DEBE dar la obligatoria de registrar por cumplida. CUANDO otro «+» u otro
-«−» deja la planilla distinta de lo vendido, el sistema DEBE descumplirla. La obligatoria NO
-DEBE arrancar cumplida, aunque la planilla en 0 coincida con una noche sin ventas. Una venta
-NO DEBE cumplirla ni descumplirla: sólo el gesto del jugador la cambia.
+MIENTRAS esa noche haya al menos una venta y, para cada producto, lo anotado sea igual a lo
+vendido, el sistema DEBE dar registrar por cumplida. CUANDO no coincidan, el sistema DEBE
+descumplirla. La jornada DEBE abrir con registrar sin cumplir. El sistema DEBE revisarla con
+cada «+» o «−» que cambia una fila y con cada venta cobrada. El cierre DEBE contar el estado de
+ese instante (BR-SHF-007 de [`shift-cycle`](../shift-cycle/shift-cycle.md)): una noche sin
+ventas con la planilla en cero cuenta como cumplida recién ahí.
+
+En la primera jornada, registrar DEBE permanecer pendiente hasta completar las compras de
+Martín y Tiago, con todos sus productos y sus tickets, y anotar exactamente todas las unidades
+vendidas. Registrar sólo la primera compra o anticipar la segunda NO DEBE cumplir la tarea.
+Si alguna compra vence sin completarse, registrar NO DEBE cumplirse, tampoco al cerrar.
 
 ### BR-STK-023 — Cada producto declara su sonoridad
 
@@ -230,7 +236,7 @@ nada: la unidad sigue en la mano. Una caja no pasa nunca de las unidades de una 
 
 ### BR-STK-031 — La caja examinada dice cuántas tiene
 
-CUANDO el jugador examina una caja del depósito, apoyada o en la mano, el sistema DEBE mostrar
+CUANDO el jugador examina una caja del depósito en la mano, el sistema DEBE mostrar
 un texto con su contenido y el nombre de su producto en el catálogo. SI la caja no está llena,
 ENTONCES el texto DEBE decir además cuántas le entran: las unidades de una caja menos su
 contenido. El texto NO DEBE decir nada más: la pista de la caja no se muestra. CUANDO termina el
@@ -288,6 +294,22 @@ estante, o un solo producto que lo ocupa entero. NO DEBE llevar tres productos n
 desiguales. Dos muebles de estantes iguales DEBEN medir lo mismo: ningún estante se ensancha para
 un producto (BR-STK-025). En cada cara de lado, el estante inferior NO DEBE sobresalir respecto
 de los estantes superiores.
+
+### BR-STK-036 — Tirar una unidad afuera la retira del inventario
+
+CUANDO se tira al contenedor una unidad registrada afuera, el sistema DEBE retirarla de
+afuera y descontar una del depósito. La caja y la góndola DEBEN seguir como estaban: esa
+unidad ya no se devuelve ni se coloca. Una unidad no registrada afuera NO DEBE cambiar el
+inventario. La jornada siguiente DEBE abrir con el inventario de esa noche (BR-STK-026).
+
+### BR-STK-037 — La venta física retira identidades una sola vez
+
+CUANDO se completa una compra física, el sistema DEBE retirar definitivamente sus unidades
+registradas afuera, una sola vez por identidad. NO DEBE volver a descontar el pedido completo.
+Una recepción parcial DEBE conservarlas hasta la salida del comprador. SI vence la atención,
+ENTONCES sus unidades recibidas DEBEN retirarse del inventario una vez, sin contar como venta.
+Una unidad vendida NO DEBE poder registrarse afuera otra vez.
+Vender una unidad retirada de góndola NO DEBE rellenar su casillero ni cumplir reponer.
 
 ## Criterios de aceptación
 
@@ -401,22 +423,23 @@ total ENTONCES es 6200; con un «−» en el primero, 3700. DADO una noche que v
 producto de precio 1200 CUANDO se anota 1 unidad de otro producto del mismo precio ENTONCES el
 total es igual al de lo vendido y registrar no se cumple.
 
-### AC-STK-024 — Registrar se cumple con el gesto que iguala *(verifica BR-STK-022)*
+### AC-STK-024 — Registrar arranca sin cumplir y sigue a la planilla *(verifica BR-STK-022)*
 
-DADO una jornada que se abre sin ventas ENTONCES registrar arranca sin cumplir. DADO una noche
-que vendió 2 unidades de un producto y 1 de otro CUANDO se anotan esas 3 unidades ENTONCES
+DADO una jornada que se abre ENTONCES registrar arranca sin cumplir. DADO una noche
+que cobró 2 unidades de un producto y 1 de otro CUANDO se anotan esas 3 unidades ENTONCES
 registrar se cumple con el último gesto, y no antes.
+En la primera jornada se exige además completar ambos pedidos (AC-STK-056).
 
-### AC-STK-025 — Sólo el jugador la deshace *(verifica BR-STK-022)*
+### AC-STK-025 — Una venta o una unidad de más la deshacen *(verifica BR-STK-022)*
 
-DADO registrar cumplida CUANDO se aprieta «+» en cualquier fila ENTONCES se descumple, y un «−»
-en esa fila la vuelve a cumplir. DADO registrar cumplida CUANDO se cobra una venta nueva
-ENTONCES sigue cumplida.
+DADO registrar cumplida CUANDO se cobra una venta nueva ENTONCES se descumple, y anotar esa
+venta la vuelve a cumplir. DADO registrar cumplida CUANDO se aprieta «+» en cualquier fila
+ENTONCES se descumple, y un «−» en esa fila la vuelve a cumplir.
 
-### AC-STK-026 — Lo anotado no pasa a la noche siguiente *(verifica BR-STK-019)*
+### AC-STK-026 — Lo anotado no pasa a la noche siguiente *(verifica BR-STK-019, BR-STK-022)*
 
 DADO una jornada con 3 unidades anotadas CUANDO se abre la jornada siguiente ENTONCES todas las
-filas están en 0 y registrar, sin cumplir.
+filas están en 0 y registrar está sin cumplir.
 
 ### AC-STK-027 — Ningún producto queda sin sonoridad *(verifica BR-STK-023)*
 
@@ -474,7 +497,7 @@ DADO la jornada 1 que se abre ENTONCES faltan 5 Actroncito, 6 Coracola, 2 Maroli
 
 ### AC-STK-035 — Se vende sin quitarle a la reposición *(verifica BR-STK-027)*
 
-DADO cada jornada, de la 1 a la 5, CUANDO se les cobra a todos sus compradores apenas abre
+DADO cada jornada, de la 1 a la 5, CUANDO se completan todas sus compras por el recorrido de su jornada
 ENTONCES ningún cobro se rechaza, y después se puede reponer todo lo que falta y dar reponer por
 cumplida.
 
@@ -530,11 +553,12 @@ DADO una caja con tope de 8 CUANDO se la examina ENTONCES el texto es:
 DADO cada producto del catálogo ENTONCES su familia sonora tiene su palabra, en singular y en
 plural.
 
-### AC-STK-042 — El texto dura lo que dura el examen *(verifica BR-STK-031)*
+### AC-STK-042 — El texto dura lo que dura el examen en la mano *(verifica BR-STK-031)*
 
-DADO una caja apoyada CUANDO se la examina ENTONCES se lee su texto y no su pista; CUANDO se la
-examina en la mano ENTONCES se lee el mismo texto. CUANDO termina el examen ENTONCES el texto
-desaparece, y la caja tiene lo mismo que antes de examinarla.
+DADO una caja en la mano CUANDO se la examina ENTONCES se lee su texto y no su pista. CUANDO
+termina el examen ENTONCES el texto desaparece y la caja tiene lo mismo que antes.
+DADO la caja apoyada y las manos vacías CUANDO se pide examinar ENTONCES no hay examen ni
+texto de la caja, y la caja sigue apoyada con el mismo contenido.
 
 ### AC-STK-043 — El casillero ocupado se rechaza *(verifica BR-STK-009, BR-STK-032)*
 
@@ -602,6 +626,44 @@ de punta a punta. DADO los dos muebles de estantes del medio del local ENTONCES 
 ancho, con 1 centímetro de tolerancia. DADO cada cara de lado ENTONCES el borde del estante
 inferior no está más hacia el pasillo que el frente de los estantes superiores.
 
+### AC-STK-052 — El cierre cuenta la planilla de ese instante *(verifica BR-STK-022)*
+
+DADO una noche posterior a la primera sin ventas y sin gestos en la planilla CUANDO cierra
+ENTONCES registrar cuenta como cumplida. Antes del cierre, una planilla en cero sin ventas NO completa la tarea ni suma
+una tarea al contador. DADO una noche con la planilla igual a lo vendido CUANDO se cobra una venta más
+y la noche cierra sin anotarla ENTONCES registrar no cuenta.
+
+### AC-STK-053 — Tirar conserva caja y góndola *(verifica BR-STK-036)*
+
+DADO una caja de Actroncito en 8 y una unidad suya agarrada de un casillero CUANDO se tira
+ENTONCES la caja sigue en 8, el depósito tiene una menos, el casillero sigue vacío, reponer no
+se cumple y la unidad ya no está afuera ni se puede colocar o devolver. DADO una unidad
+sacada de su caja CUANDO se tira ENTONCES la caja conserva su contenido anterior al tiro.
+DADO una unidad no registrada afuera CUANDO se intenta desechar ENTONCES devuelve false y
+no cambia el inventario.
+
+### AC-STK-054 — Salida definitiva sin doble descuento *(verifica BR-STK-037, BR-STK-028)*
+
+DADO una caja con ocho unidades CUANDO se retira una y completa su compra física ENTONCES
+la caja conserva siete, el depósito baja una y esa identidad ya no está afuera.
+Repetir la venta o intentar registrar esa identidad afuera no cambia cantidades.
+
+### AC-STK-055 — Salida y reposición *(verifica BR-STK-037, BR-STK-033, BR-STK-030)*
+
+DADO una unidad retirada de góndola CUANDO se entrega en una compra parcial y ésta vence
+ENTONCES deja de estar registrada afuera y sale del inventario una sola vez, sin sumar una venta.
+DADO esa unidad en una compra completa ENTONCES el casillero sigue vacío y reponer incompleta
+hasta rellenarlo. La planilla cuenta sólo compras completas, nunca entregas parciales.
+
+### AC-STK-056 — Registro exige ambas ventas de la primera noche *(verifica BR-STK-022)*
+
+DADO la primera jornada CUANDO se registra la venta completa de Martín pero Tiago aún no
+compró ENTONCES registrar sigue pendiente. DADO todos los pedidos anotados anticipadamente
+ENTONCES registrar sigue pendiente hasta que ambas compras estén vendidas con productos y
+ticket. CUANDO ambas ventas se completan y sus unidades están exactamente anotadas ENTONCES
+registrar se cumple. Una unidad de más o de menos la descumple. Si una compra vence incompleta,
+registrar sigue pendiente, incluso al cerrar y aunque la planilla coincida con lo vendido.
+
 ## No objetivos
 
 - Esta capacidad NO cobra ni atiende: eso es de
@@ -614,7 +676,7 @@ inferior no está más hacia el pasillo que el frente de los estantes superiores
 - **Entrada:** los productos que existen, los casilleros de la fila de adelante de cada uno, la
   jornada que se abre, lo vendido de cada producto, lo que el jugador lleva en la mano, la caja
   que examina, el casillero que elige, y los pedidos de ingresar, mover, cobrar, sacar y devolver
-  a la caja, colocar y agarrar de la góndola, sumar y restar en la planilla.
+  a la caja, desechar una unidad afuera, colocar y agarrar de la góndola, sumar y restar en la planilla.
 - **Salida:** cuántas unidades hay por ubicación, en cada caja y afuera, qué casilleros de cada
   producto están vacíos y cuáles ocupados, qué falta, qué hace el clic sobre cada caja y sobre
   cada casillero, el texto de la caja examinada, lo anotado y el total de la planilla, si cada
@@ -622,7 +684,8 @@ inferior no está más hacia el pasillo que el frente de los estantes superiores
 - **Falla:** las cantidades no positivas se ignoran; el cobro que supera los vendibles no mueve
   nada; el producto inexistente contesta «no existe» en vez de romper; devolver a una caja llena,
   de otro producto o una unidad que ya volvió no cambia nada; colocar en un casillero ocupado no
-  mueve nada, y agarrar de un casillero vacío no da nada. Un faltante de más de una caja o de más
+  mueve nada, agarrar de un casillero vacío no da nada y desechar una unidad no registrada
+  afuera no cambia nada. Un faltante de más de una caja o de más
   que su fila es un error de los datos, que un test detecta: el juego no lo acomoda.
 
 ## Señales
@@ -631,10 +694,13 @@ inferior no está más hacia el pasillo que el frente de los estantes superiores
 
 ## Dependencias
 
+- [`store-cleanup`](../store-cleanup/store-cleanup.md) (consume): la unidad tirada al
+  contenedor deja de estar afuera y se descuenta del depósito.
+
 - [`counter-service`](../counter-service/counter-service.md) (alimenta y consume): el cobro
   descuenta del depósito, hasta los vendibles; lo vendido de cada producto es contra qué se
-  compara la planilla; y lo que piden los compradores de cada jornada entra en lo que la
-  reposición deja (BR-STK-027).
+  compara la planilla, y cada cobro vuelve a compararla; lo que piden los compradores de cada
+  jornada entra en lo que la reposición deja (BR-STK-027).
 - [`player-actions`](../player-actions/player-actions.md) (consume y alimenta): la unidad viaja
   en la mano, y lo que la mano lleva decide qué hace el clic sobre la caja y sobre cada casillero;
   qué casilleros están vacíos y cuáles ocupados decide cuáles se muestran y cuáles se agarran.

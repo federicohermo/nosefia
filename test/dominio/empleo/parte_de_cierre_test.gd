@@ -61,48 +61,6 @@ func test_el_saludo_y_el_comentario_salen_del_parte_ya_escritos() -> void:
 	assert_str(parte.comentario()).is_equal(CatalogoDeReacciones.del_comentario(1).texto)
 
 
-func test_el_umbral_del_despido_se_cita_por_su_constante() -> void:
-	# Escrito como número en la placa, mover el balance del despido dejaría a la pantalla mintiendo
-	# sin que nada avise: el jugador leería «de 4» con el despido en 5.
-	var parte := ParteDeCierre.new(
-		JORNADA_DE_PRUEBA, Apertura.obligatorias(), 0, Partida.Final.EN_CURSO
-	)
-	assert_int(parte.umbral_del_despido()).is_equal(Reglas.APERCIBIMIENTOS_HASTA_EL_DESPIDO)
-
-
-func test_el_legajo_en_cero_no_esta_en_riesgo_y_de_uno_en_adelante_si() -> void:  # AC-EMP-015
-	var obligatorias := Apertura.obligatorias()
-	(
-		assert_bool(
-			(
-				ParteDeCierre
-				. new(JORNADA_DE_PRUEBA, obligatorias, 0, Partida.Final.EN_CURSO)
-				. en_riesgo()
-			)
-		)
-		. is_false()
-	)
-	for cuantos in range(1, Reglas.APERCIBIMIENTOS_HASTA_EL_DESPIDO + 1):
-		(
-			assert_bool(
-				(
-					ParteDeCierre
-					. new(JORNADA_DE_PRUEBA, obligatorias, cuantos, Partida.Final.EN_CURSO)
-					. en_riesgo()
-				)
-			)
-			. override_failure_message("con %d apercibimientos el parte no avisa nada" % cuantos)
-			. is_true()
-		)
-
-
-func test_con_un_apercibimiento_el_aviso_nombra_el_tope() -> void:  # AC-EMP-015
-	var parte := ParteDeCierre.new(
-		JORNADA_DE_PRUEBA, Apertura.obligatorias(), 1, Partida.Final.EN_CURSO
-	)
-	assert_str(parte.aviso_de_riesgo()).contains(str(Reglas.APERCIBIMIENTOS_HASTA_EL_DESPIDO))
-
-
 func test_el_parte_devuelve_lo_que_recibio_sin_recalcular_nada() -> void:
 	var parte := ParteDeCierre.new(
 		JORNADA_DE_PRUEBA, Apertura.obligatorias(), 3, Partida.Final.EN_CURSO
@@ -161,7 +119,7 @@ func test_la_partida_en_curso_ofrece_seguir_y_volver_al_menu() -> void:  # AC-EM
 
 func test_el_parte_de_la_partida_real_despedida_no_ofrece_seguir() -> void:  # AC-EMP-016
 	# El salto del tope: de 3 a 5 con una noche grave, sin pisar el 4.
-	var partida := Partida.new(Legajo.con_apercibimientos(3))
+	var partida := Partida.new(Legajo.con_medios((3) * Reglas.MEDIOS_POR_APERCIBIMIENTO))
 	partida.abrir_la_jornada()
 	partida.cerrar_la_jornada(0)
 	var parte := ParteDeCierre.new(
@@ -169,3 +127,41 @@ func test_el_parte_de_la_partida_real_despedida_no_ofrece_seguir() -> void:  # A
 	)
 	assert_array(parte.opciones()).not_contains([ParteDeCierre.Opcion.SEGUIR])
 	assert_str(parte.comentario()).is_equal(CatalogoDeReacciones.del_comentario(5).texto)
+
+
+func test_siete_medios_tienen_el_mismo_comentario_que_seis() -> void:  # AC-EMP-021
+	var comentarios: Array[String] = []
+	for medios: int in [6, 7]:
+		var partida := Partida.new(Legajo.con_medios(medios))
+		partida.abrir_la_jornada()
+		partida.cerrar_la_jornada(5)
+		var parte := ParteDeCierre.new(
+			1, partida.obligatorias(), partida.apercibimientos(), partida.final()
+		)
+		comentarios.append(parte.comentario())
+		assert_int(parte.apercibimientos()).is_equal(3)
+	assert_str(comentarios[1]).is_equal(comentarios[0])
+	assert_str(comentarios[1]).is_not_empty()
+
+
+func test_el_parte_agrega_cada_llamado_una_vez_sin_arrastrarlo() -> void:  # AC-EMP-023
+	var parte := (
+		ParteDeCierre
+		. new(
+			1,
+			Apertura.obligatorias(),
+			2,
+			Partida.Final.EN_CURSO,
+			[
+				Partida.Llamado.LOCAL_DESORDENADO,
+				Partida.Llamado.LOCAL_DESORDENADO,
+				Partida.Llamado.OBJETO_TIRADO,
+			]
+		)
+	)
+	assert_int(parte.lineas().size()).is_equal(Apertura.cantidad_de_obligatorias() + 2)
+	assert_array(parte.lineas()).contains(
+		["Local desordenado (+0,5 puntos)", "Objetos importantes en la basura (+0,5 puntos)"]
+	)
+	var siguiente := ParteDeCierre.new(2, Apertura.obligatorias(), 2, Partida.Final.EN_CURSO)
+	assert_int(siguiente.lineas().size()).is_equal(Apertura.cantidad_de_obligatorias())

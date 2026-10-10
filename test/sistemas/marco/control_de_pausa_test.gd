@@ -77,6 +77,21 @@ func test_el_cursor_que_suelta_el_juego_no_pausa() -> void:  # AC-SAV-018
 	assert_int(_pausas).is_zero()
 
 
+func test_cambiar_de_ventana_no_pausa_y_esc_sigue_pausando() -> void:  # AC-SAV-018
+	var control := _control()
+	control.set("_cursor_antes", true)
+	control.notification(Node.NOTIFICATION_WM_WINDOW_FOCUS_OUT)
+	control.call("_mirar_el_cursor")
+	assert_bool(get_tree().paused).is_false()
+	control.notification(Node.NOTIFICATION_WM_WINDOW_FOCUS_IN)
+	control.call("_mirar_el_cursor")
+	assert_bool(get_tree().paused).is_false()
+	control._input(_esc())
+	assert_bool(get_tree().paused).is_true()
+	control._input(_esc())
+	assert_bool(get_tree().paused).is_false()
+
+
 func test_volver_al_menu_sale_de_la_pausa_y_pide_el_menu_una_vez() -> void:  # AC-SAV-020
 	var control := _control()
 	control._input(_esc())

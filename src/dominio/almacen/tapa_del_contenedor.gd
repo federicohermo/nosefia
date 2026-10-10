@@ -28,7 +28,7 @@ func avanzar(segundos: float, paso_libre := true) -> float:
 	return _angulo
 
 
-func recibe_bolsas() -> bool:
+func recibe_objetos() -> bool:
 	return _abierta and is_equal_approx(_angulo, ANGULO_ABIERTA)
 
 

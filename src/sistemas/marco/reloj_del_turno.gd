@@ -17,24 +17,48 @@ class_name RelojDelTurno
 extends Node
 
 signal tiempo_consumido(restante: float)
+signal cierre_iniciado
 signal tarea_completada(cumplidas: int)
 signal tarea_descumplida(cumplidas: int)
 signal turno_cerrado(cumplidas: int)
 
 var _turno: Turno = null
 var _obligatorias: Array[Tarea] = []
+var _ultimo_cuadro_usec: int = 0
 
 
-## Un cuadro de motor convertido en tiempo de turno.
+## El navegador puede suspender los cuadros de una pestaña oculta. El reloj monotónico sigue
+## contando: al volver se recibe todo el intervalo, sin depender del delta limitado del motor.
+func _process(_delta: float) -> void:
+	var ahora := _ahora_usec()
+	var transcurrido := (ahora - _ultimo_cuadro_usec) / 1000000.0
+	_ultimo_cuadro_usec = ahora
+	avanzar(transcurrido)
+
+
+## La pausa manual excluye su intervalo; perder el foco no manda estas notificaciones.
+func _notification(aviso: int) -> void:
+	if aviso == NOTIFICATION_PAUSED or aviso == NOTIFICATION_UNPAUSED:
+		_ultimo_cuadro_usec = _ahora_usec()
+
+
+func _ahora_usec() -> int:
+	return Time.get_ticks_usec()
+
+
+## Los segundos reales recibidos, convertidos en tiempo de turno.
 ##
 ## El guard es lo que hace que `turno_cerrado` se emita **una sola vez**: en cuanto el turno
 ## cierra, `corriendo()` pasa a `false` y el cuadro siguiente sale por acá. Se hace con el estado
 ## del dominio y no con `set_process(false)` para que el mismo código se pueda ejercer llamando
-## `_process()` a mano, sin árbol de escena.
-func _process(delta: float) -> void:
+## `avanzar()` a mano, sin árbol de escena.
+func avanzar(segundos_reales: float) -> void:
 	if not corriendo():
 		return
-	_turno.consumir(Ritmo.escalar(delta))
+	var segundos := Ritmo.escalar(segundos_reales)
+	if _turno.se_agota_con(segundos):
+		cierre_iniciado.emit()
+	_turno.consumir(segundos)
 	tiempo_consumido.emit(_turno.tiempo_restante())
 	if _turno.cerrado():
 		turno_cerrado.emit(_turno.tareas_cumplidas())
@@ -47,6 +71,7 @@ func _process(delta: float) -> void:
 func arrancar(turno: Turno, obligatorias: Array[Tarea]) -> void:
 	_turno = turno
 	_obligatorias = obligatorias
+	_ultimo_cuadro_usec = _ahora_usec()
 
 
 ## Si hay un turno en curso que todavía no se agotó.

@@ -12,13 +12,13 @@ const LAVATORIO := "Estructura/vanitory/StaticBody3D"
 const INODORO := "Estructura/inodoro/StaticBody3D"
 
 ## Justo adentro de la puerta del baño, del lado del cuarto: desde acá se ve todo lo que hay en él.
-const ENTRADA_DEL_BANO := Vector3(8.8, 1.05, -6.82)
+const ENTRADA_DEL_BANO := Vector3(8.8, 1.05, 0.736)
 
 ## Cuánto puede quedar lo apoyado por encima del piso, en metros.
 const APOYADO := 0.005
 
 ## Adonde se llevan los útiles para probar que la noche siguiente vuelven: el local y el depósito.
-const EN_EL_LOCAL := Vector3(0.0, 1.0, 3.0)
+const EN_EL_LOCAL := Vector3(2.7, 1.0, 2.7)
 const EN_EL_DEPOSITO := Vector3(2.0, 1.0, -11.0)
 
 
@@ -91,9 +91,9 @@ func test_cada_util_es_la_malla_del_modelo_donde_el_modelo_la_dibujaba() -> void
 		var alla := del_modelo.global_position
 		# Estos dos objetos dejan libres la entrada y los lavamanos.
 		if util.name == &"Mopa":
-			alla = Vector3(12.75, alla.y, -4.3)
+			alla = Vector3(12.75, alla.y, 3.256)
 		elif util.name == &"JabonAzul":
-			alla.z = -7.6729193
+			alla.z = -0.1169193
 		(
 			assert_float(Vector2(aca.x, aca.z).distance_to(Vector2(alla.x, alla.z)))
 			. override_failure_message("`%s` no está donde lo dibujaba el modelo" % util.name)
@@ -291,7 +291,7 @@ func test_la_mezcla_espera_aunque_se_suelten_los_utiles_en_otro_cuarto() -> void
 
 func _mopa_en_la_mano(almacen: Node3D, con_agua: bool = true) -> UtilDeLimpieza:
 	var jugador: Node3D = almacen.get("_jugador")
-	jugador.global_position = Vector3(-1.91, jugador.global_position.y, 5.2)
+	jugador.global_position = Vector3(2.7, jugador.global_position.y, 2.7)
 	var balde := _util(almacen, "Balde")
 	if con_agua:
 		_usar(almacen, balde, almacen.get_node(LAVATORIO))
@@ -492,6 +492,7 @@ func test_mojar_con_el_balde_en_el_piso_y_la_vista_abajo_mantiene_la_punta_visib
 
 func test_la_mopa_soltada_entre_dos_paredes_no_atraviesa_la_de_atras() -> void:
 	var almacen: Node3D = await _almacen()
+	almacen.get("_jugador").global_position = Vector3(2.7, 0.12, 2.7)
 	var mopa := _mopa_en_la_mano(almacen)
 	var jugador: Node3D = almacen.get("_jugador")
 	jugador.set_process(false)

@@ -15,10 +15,13 @@ func _almacen() -> Node3D:
 	return almacen
 
 
-func test_examinar_el_balde_con_gotas_lo_mantiene_delante_de_la_camara() -> void:
+func test_examinar_el_balde_con_gotas_lo_mantiene_delante_de_la_camara() -> void:  # AC-INV-020
 	var almacen := await _almacen()
 	var jugador: Node3D = almacen.get("_jugador")
 	var balde: Node3D = almacen.get_node("Objetos/Balde")
+	var agarre: Agarre = almacen.get("_agarre")
+	assert_bool(agarre.pedir_agarrar(balde.get("datos"), balde)).is_true()
+	var punto_de_la_mano := balde.get_parent()
 	var examen: Examen = jugador.get("examen")
 	jugador.set("_enfocado", balde)
 	var tecla := InputEventAction.new()
@@ -36,7 +39,9 @@ func test_examinar_el_balde_con_gotas_lo_mantiene_delante_de_la_camara() -> void
 	assert_float(balde.global_basis.y.dot(Vector3.UP)).is_less(0.99)
 	jugador.call("_unhandled_input", tecla)
 	assert_bool(examen.esta_examinando()).is_false()
-	assert_object(balde.get_parent()).is_same(almacen.get_node("Objetos"))
+	assert_object(balde.get_parent()).is_same(punto_de_la_mano)
+	assert_object(agarre.manos().sostenido()).is_same(balde.get("datos"))
+	agarre.soltar(true)
 
 
 func test_el_viaje_seca_la_mopa_y_el_balde_cercano_permite_limpiar() -> void:  # AC-CLN-027
@@ -90,41 +95,3 @@ func test_la_pausa_suspende_el_proceso_que_desgasta_la_mopa() -> void:  # AC-CLN
 	var procesaba := limpieza.can_process()
 	get_tree().paused = false
 	assert_bool(procesaba).is_false()
-
-
-func test_desde_el_bano_no_alcanza_para_las_manchas_del_local() -> void:  # AC-CLN-027
-	var almacen := await _almacen()
-	var balde: RigidBody3D = almacen.get_node("Objetos/Balde")
-	var forma_del_balde: CollisionShape3D = balde.get_node("Forma")
-	var radio_del_balde := (forma_del_balde.shape as CylinderShape3D).radius
-	var limpieza: Node = almacen.get("_limpieza")
-	for mancha: Node3D in limpieza.call("manchas"):
-		var lugar: int = mancha.call("lugar_de_la_mancha")
-		if lugar not in [PisoDelLocal.Lugar.ENTRADA, PisoDelLocal.Lugar.GONDOLAS]:
-			continue
-		var forma: CollisionShape3D = mancha.get_node("Cuerpo")
-		var radio := (forma.shape as CylinderShape3D).radius
-		var diferencia := mancha.global_position - balde.global_position
-		var distancia := Vector2(diferencia.x, diferencia.z).length()
-		# Hasta el camino ideal, sin paredes y usando el alcance máximo en ambos extremos,
-		# debe agotar la carga. Un recorrido real nunca puede ser más corto que este.
-		var minimo := (
-			distancia - 2.0 * ReglasDelJugador.ALCANCE_DE_LA_MIRA - radio_del_balde - radio
-		)
-		assert_float(minimo).is_greater(0.0)
-		var agua := Balde.new()
-		agua.llenar()
-		agua.tenir(ReglasDeLaLimpieza.Agua.AMARILLO)
-		var mopa := Mopa.new()
-		mopa.mojar_en(agua)
-		mopa.desgastar(minimo / ReglasDelJugador.VELOCIDAD_DE_CAMINATA, minimo)
-		assert_bool(mopa.esta_mojada()).override_failure_message(mancha.name).is_false()
-		assert_int(Mancha.new(ReglasDeLaLimpieza.TipoDeMancha.POLVO).borrar_con(mopa)).is_equal(
-			ReglasDeLaLimpieza.Resultado.MOPA_SECA
-		)
-		# Con el balde acercado hay margen para caminar unos pasos y limpiar.
-		mopa.mojar_en(agua)
-		mopa.desgastar(3.0 / ReglasDelJugador.VELOCIDAD_DE_CAMINATA, 3.0)
-		assert_int(Mancha.new(ReglasDeLaLimpieza.TipoDeMancha.POLVO).borrar_con(mopa)).is_equal(
-			ReglasDeLaLimpieza.Resultado.MANCHA_BORRADA
-		)

@@ -17,12 +17,28 @@ extends RefCounted
 ## Los tres estados en los que puede estar una partida. Es un conjunto cerrado y por eso es un
 ## `enum`: un `String` suelto dejaría al `if` del menú sin entrar nunca, sin decir una palabra.
 enum Final { EN_CURSO, CONTRATO_CUMPLIDO, DESPEDIDO }
+enum Llamado { LOCAL_DESORDENADO, OBJETO_AFUERA, PAPEL_EN_EL_INODORO, OBJETO_TIRADO }
 
 var _legajo: Legajo
 var _jornada: int = ReglasDeLaPartida.PRIMERA_JORNADA
 var _obligatorias: Array[Tarea] = []
 var _jornada_abierta: bool = false
 var _final: Final = Final.EN_CURSO
+var _llamados: Array[Llamado] = []
+
+
+func anotar_llamado(llamado: Llamado) -> void:
+	if not _jornada_abierta or terminada() or _llamados.has(llamado):
+		return
+	_llamados.append(llamado)
+
+
+func medios() -> int:
+	return _legajo.medios()
+
+
+func llamados() -> Array[Llamado]:
+	return _llamados.duplicate()
 
 
 ## La partida del primer día: legajo limpio y la primera jornada por abrir.
@@ -36,10 +52,8 @@ static func nueva() -> Partida:
 ## La partida de un guardado. Un diccionario vacío da la partida nueva.
 static func desde(datos: Dictionary) -> Partida:
 	var saneado := PartidaSerializada.sanear(datos)
-	var apercibimientos: int = saneado[PartidaSerializada.clave(
-		PartidaSerializada.Campo.APERCIBIMIENTOS
-	)]
-	var partida := Partida.new(Legajo.con_apercibimientos(apercibimientos))
+	var medios: int = saneado[PartidaSerializada.clave(PartidaSerializada.Campo.MEDIOS)]
+	var partida := Partida.new(Legajo.con_medios(medios))
 	partida._jornada = saneado[PartidaSerializada.clave(PartidaSerializada.Campo.JORNADA)]
 	return partida
 
@@ -54,10 +68,10 @@ func legajo() -> Legajo:
 	return _legajo
 
 
-## Cuántos apercibimientos lleva encima, para quien sólo quiera pintarlos.
+## Los apercibimientos enteros acumulados, para el comentario del jefe.
 ##
 ## Existe para que el cableado de la escena no tenga que encadenar dos llamadas hasta el legajo:
-## lo que la pantalla necesita es el número, no la pieza que lo lleva.
+## quienes lo leen necesitan el número, no la pieza que lo lleva.
 func apercibimientos() -> int:
 	return _legajo.apercibimientos()
 
@@ -97,12 +111,11 @@ func obligatorias() -> Array[Tarea]:
 ##
 ## Sobre una partida terminada no abre y devuelve `null`, por el mismo motivo que el guard de
 ## `cerrar_la_jornada()`: la puerta es pública y el 017 la va a tocar desde una pantalla. Sin
-## esto, una noche jugada después del despido le pasa una banda al legajo, y una impecable lo
-## reinicia a cero: el contador de jornadas avanza sobre una partida que ya terminó y el final
-## queda contradiciendo al legajo, sin un solo error.
+## esto, una noche jugada después del despido avanzaría una partida ya terminada.
 func abrir_la_jornada() -> Turno:
 	if terminada():
 		return null
+	_llamados.clear()
 	_obligatorias = Apertura.obligatorias()
 	_jornada_abierta = true
 	return Apertura.turno_de_la_jornada(_obligatorias)
@@ -121,7 +134,7 @@ func cerrar_la_jornada(cumplidas: int) -> void:
 	if not _jornada_abierta:
 		return
 	_jornada_abierta = false
-	_legajo.registrar(cumplidas, _obligatorias.size())
+	_legajo.registrar(cumplidas, _obligatorias.size(), _llamados.size())
 	if _legajo.despedido():
 		_final = Final.DESPEDIDO
 		return

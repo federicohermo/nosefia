@@ -1,7 +1,7 @@
 ---
 schema_version: 1
 capability_id: CAP-INV
-status: draft
+status: ratified
 owner: por definir
 provenance: GDD «Investigación» y «La computadora»; migración de los specs 006, 009, 018
 ---
@@ -87,14 +87,15 @@ El sistema DEBE conservar lo anotado y lo leído al cambiar de app o cerrar la c
 MIENTRAS se muestra lo que reveló algo no levantable, el sistema DEBE dejar al jugador irse. Es
 un pensamiento, no un examen.
 
-### BR-INV-018 — Se examina lo enfocado sin agarrarlo
+### BR-INV-018 — Se examina sólo lo que se lleva
 
-CUANDO se pide examinar con las manos vacías y la mira sobre un levantable, el sistema DEBE
-acercarlo a la cara, retener al jugador y revelar, igual que con lo que se lleva. Examinarlo NO
-DEBE llenar las manos. Con algo en la mano, se examina lo que se lleva.
+CUANDO se pide examinar con las manos vacías y la mira sobre un levantable, el sistema NO
+DEBE arrancar un examen, retener al jugador ni mover lo que se mira. Con algo en la mano,
+DEBE examinar lo que se lleva. Sobre algo no levantable, la E sigue siendo el pensamiento
+de BR-INV-017, sin retener al jugador.
 
-CUANDO termina ese examen, el sistema DEBE devolver el objeto a donde estaba: el mismo lugar, la
-misma orientación, y el mismo estado de física y de colisión.
+Mientras no se resuelva OQ-INV-002, pedir examinar un levantable con las manos vacías NO
+DEBE revelar ni registrar un hallazgo (BR-INV-001).
 
 ### BR-INV-019 — Lo examinado gira a pedido
 
@@ -109,8 +110,7 @@ terminarlo, ni agarrar, ni soltar, ni colocar.
 ### BR-INV-020 — La jornada nueva no hereda un examen
 
 CUANDO se abre una jornada con un examen en curso, el sistema DEBE terminarlo antes de vaciar
-las manos. Lo del mundo vuelve a su lugar, lo que se llevaba queda a los pies, y el jugador no
-queda retenido.
+las manos. Lo que se llevaba queda a los pies y el jugador no queda retenido.
 
 ## Criterios de aceptación
 
@@ -177,16 +177,13 @@ siguen y el chat sigue leído.
 DADO lo que reveló algo no levantable, de una sola entrada, CUANDO todavía no se avanzó
 ENTONCES ya se puede abandonar.
 
-### AC-INV-020 — Examinar sin agarrar *(verifica BR-INV-018)*
+### AC-INV-020 — Las manos vacías no examinan *(verifica BR-INV-018, BR-INV-001)*
 
-DADO las manos vacías y la mira sobre un levantable CUANDO se pide examinar ENTONCES está en
-examen, el jugador queda retenido, se revela, y las manos siguen vacías. DADO algo en la mano y
-la mira sobre otro levantable ENTONCES se examina lo que se lleva.
+DADO las manos vacías y la mira sobre un levantable CUANDO se pide examinar dos veces
+ENTONCES no hay examen, el jugador no queda retenido, el levantable sigue en su lugar, las
+manos siguen vacías y no se registra hallazgo ni se avisa que empezó o terminó un examen.
+DADO algo en la mano y la mira sobre otro levantable ENTONCES se examina lo que se lleva.
 
-### AC-INV-021 — Lo examinado vuelve a su lugar *(verifica BR-INV-018)*
-
-DADO un levantable del mundo en examen, girado CUANDO se pide examinar otra vez ENTONCES está
-en el mismo lugar, con la misma orientación y el mismo estado de física y de colisión de antes. Una tercera vez lo vuelve a examinar, y no es hallazgo.
 
 ### AC-INV-022 — Las teclas giran lo examinado *(verifica BR-INV-019)*
 
@@ -234,4 +231,10 @@ está retenido. Sin examen en curso, no se avisa que terminó un examen.
 
 ## Preguntas abiertas
 
-Ninguna.
+- **OQ-INV-002 — ¿La E con las manos vacías revela un levantable o sólo lo nombra?**
+  - Por qué sigue abierta: la ficha de interacciones pide un subtítulo, y la ficha
+    «Subtítulos» todavía no decide si cuenta como hallazgo. Mientras tanto no revela ni
+    registra: mirar no revela (BR-INV-001).
+  - Decide: una persona de game design junto con la ficha «Subtítulos».
+  - Bloquea: nada de esta regla; condiciona el futuro subtítulo de manos vacías.
+

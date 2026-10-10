@@ -1,43 +1,16 @@
-## El nodo que saca la basura adentro del motor: traduce el depósito y publica.
-##
-## **Ningún caso entra el nodo al árbol y ninguno hace correr `_process`.** Sin `_process`, el
-## turno no se mueve, y un descuento que apareciera sería un segundo cobro.
+## El tiro entrega sólo después del permiso y conserva el inventario y las obligatorias.
 extends GdUnitTestSuite
 
-const RECOLECTOR := "res://src/sistemas/tareas/recolector_de_basura.gd"
-
-## Los cuatro `.gd` de este spec más el de la escena, que es el que ningún gate mira.
-const ARCHIVOS_DEL_SPEC := [
-	"res://src/dominio/almacen/reglas_de_la_basura.gd",
-	"res://src/dominio/almacen/trayecto.gd",
-	"res://src/dominio/almacen/tarea_de_la_basura.gd",
-	"res://src/sistemas/tareas/recolector_de_basura.gd",
-	"res://src/escenas/puestos/zona_de_descarte.gd",
-]
-
-## Lo que delataría un contador propio de la tarea adentro del nodo.
-const PATRONES_DE_ESTADO_PROPIO := "var\\s+_depositadas|var\\s+_bolsas|var\\s+_cumplida"
-
-const ADENTRO := 0.0
-const AFUERA := 50.0
-
-var _turno: Turno = null
-var _depositos: int = 0
-var _rechazos: int = 0
-var _avisos_de_tarea: int = 0
-var _cumplidas_avisadas: int = 0
+var _turno: Turno
+var _depositos := 0
+var _tirados: Array[Node3D] = []
+var _avisos := 0
 
 
 func before_test() -> void:
-	_turno = null
 	_depositos = 0
-	_rechazos = 0
-	_avisos_de_tarea = 0
-	_cumplidas_avisadas = 0
-
-
-func _ids() -> Array[StringName]:
-	return ReglasDeLaBasura.ids_de_las_bolsas()
+	_tirados.clear()
+	_avisos = 0
 
 
 func _recolector(presupuesto: float = Reglas.DURACION_DEL_TURNO) -> RecolectorDeBasura:
@@ -45,99 +18,135 @@ func _recolector(presupuesto: float = Reglas.DURACION_DEL_TURNO) -> RecolectorDe
 	_turno = Turno.new(presupuesto, obligatorias)
 	var reloj: RelojDelTurno = auto_free(RelojDelTurno.new())
 	reloj.arrancar(_turno, obligatorias)
-	reloj.tarea_completada.connect(_anotar_tarea)
-
+	reloj.tarea_completada.connect(func(_cantidad: int) -> void: _avisos += 1)
+	var agarre: Agarre = auto_free(Agarre.new())
+	agarre.punto_de_carga = auto_free(Node3D.new())
+	var repositor: Repositor = auto_free(Repositor.new())
+	repositor.agarre = agarre
+	repositor.reloj = reloj
+	var producto := Catalogo.de(Producto.Id.ACTRONCITO)
+	var inventario := Inventario.new([producto], {producto.id: 2})
+	inventario.ingresar(producto, Inventario.Ubicacion.DEPOSITO, 8)
+	repositor.arrancar(Estante.new(inventario, [producto]))
 	var recolector: RecolectorDeBasura = auto_free(RecolectorDeBasura.new())
 	recolector.reloj = reloj
-	recolector.bolsa_depositada.connect(_anotar_deposito)
-	recolector.deposito_rechazado.connect(_anotar_rechazo)
+	recolector.agarre = agarre
+	recolector.repositor = repositor
 	recolector.arrancar(TareaDeLaBasura.de_la_jornada())
+	recolector.bolsa_depositada.connect(func(_cuantas: int) -> void: _depositos += 1)
+	recolector.objeto_tirado.connect(func(nodo: Node3D) -> void: _tirados.append(nodo))
 	return recolector
 
 
-func test_el_recolector_devuelve_exactamente_lo_que_contesto_el_dominio() -> void:
+func _sostener(recolector: RecolectorDeBasura, datos: ObjetoDelAlmacen) -> Node3D:
+	var cuerpo: Node3D = auto_free(Node3D.new())
+	assert_bool(recolector.agarre.pedir_agarrar(datos, cuerpo)).is_true()
+	return cuerpo
+
+
+func test_el_tiro_aceptado_entrega_el_mismo_cuerpo_sin_soltar() -> void:  # AC-CLN-036
 	var recolector := _recolector()
-	assert_int(recolector.pedir_depositar(_ids()[0], AFUERA)).is_equal(
-		TareaDeLaBasura.Resultado.FUERA_DE_LA_ZONA
-	)
-	assert_int(recolector.pedir_depositar(_ids()[0], ADENTRO)).is_equal(
-		TareaDeLaBasura.Resultado.DEPOSITADA
-	)
+	var bolsa := ObjetoDelAlmacen.new()
+	bolsa.id = ReglasDeLaBasura.id_de_la_bolsa(1)
+	var cuerpo := _sostener(recolector, bolsa)
+	var soltados: Array[Node3D] = []
+	recolector.agarre.objeto_soltado.connect(func(nodo: Node3D) -> void: soltados.append(nodo))
+	assert_int(recolector.pedir_tirar(true)).is_equal(ReglasDeLaBasura.Tiro.TIRADO)
+	assert_object(recolector.agarre.manos().sostenido()).is_null()
+	assert_array(_tirados).contains_exactly([cuerpo])
+	assert_array(soltados).is_empty()
 	assert_int(_depositos).is_equal(1)
-	assert_int(_rechazos).is_equal(1)
-
-
-func test_el_recolector_no_lleva_estado_propio() -> void:
-	# Está medido que un contador acá pasa los dos gates en verde: `sistemas/` puede escribir la
-	# regla y nadie lo dice.
-	var texto := FileAccess.get_file_as_string(RECOLECTOR)
-	assert_str(texto).is_not_empty()
-	var propio := RegEx.create_from_string(PATRONES_DE_ESTADO_PROPIO).search_all(texto)
-	(
-		assert_array(propio)
-		. override_failure_message("`recolector_de_basura.gd` lleva estado propio de la tarea")
-		. is_empty()
-	)
-
-
-func test_con_una_bolsa_de_menos_la_obligatoria_no_se_cuenta() -> void:
-	var recolector := _recolector()
-	var ids := _ids()
-	for indice in range(ids.size() - 1):
-		recolector.pedir_depositar(ids[indice], ADENTRO)
-	assert_int(_depositos).is_equal(ids.size() - 1)
-	assert_int(_avisos_de_tarea).is_equal(0)
-	assert_int(_turno.tareas_cumplidas()).is_equal(0)
-
-
-func test_la_ultima_bolsa_cuenta_la_obligatoria_una_sola_vez_sin_mover_el_turno() -> void:
-	var recolector := _recolector()
-	for id in _ids():
-		recolector.pedir_depositar(id, ADENTRO)
-	assert_int(_avisos_de_tarea).is_equal(1)
-	assert_int(_cumplidas_avisadas).is_equal(1)
 	assert_float(_turno.tiempo_restante()).is_equal(Reglas.DURACION_DEL_TURNO)
-	# Volver a soltar una bolsa ya depositada no la cuenta de nuevo: el dominio contesta que ya
-	# está.
-	recolector.pedir_depositar(_ids()[0], ADENTRO)
-	assert_float(_turno.tiempo_restante()).is_equal(Reglas.DURACION_DEL_TURNO)
-	assert_int(_avisos_de_tarea).is_equal(1)
 
 
-func test_con_el_turno_cerrado_la_basura_no_cuenta() -> void:
-	# Las bolsas igual llegan al fondo: el estado del local no depende de que el jefe lo cuente.
-	var recolector := _recolector(0.0)
-	for id in _ids():
-		recolector.pedir_depositar(id, ADENTRO)
+func test_mano_vacia_caja_y_tapa_no_abierta_conservan_todo() -> void:  # AC-CLN-037 AC-CLN-035
+	var recolector := _recolector()
+	assert_int(recolector.pedir_tirar(true)).is_equal(ReglasDeLaBasura.Tiro.MANO_VACIA)
+	var caja := ObjetoDelAlmacen.new()
+	caja.entra_en_el_contenedor = false
+	var cuerpo := _sostener(recolector, caja)
+	var padre := cuerpo.get_parent()
+	assert_int(recolector.pedir_tirar(true)).is_equal(ReglasDeLaBasura.Tiro.NO_ENTRA)
+	assert_object(recolector.agarre.manos().sostenido()).is_same(caja)
+	assert_object(cuerpo.get_parent()).is_same(padre)
+	recolector.agarre.entregar()
+	var bolsa := ObjetoDelAlmacen.new()
+	bolsa.id = ReglasDeLaBasura.id_de_la_bolsa(1)
+	_sostener(recolector, bolsa)
+	assert_int(recolector.pedir_tirar(false)).is_equal(ReglasDeLaBasura.Tiro.TAPA_NO_ABIERTA)
+	assert_object(recolector.agarre.manos().sostenido()).is_same(bolsa)
+	assert_array(_tirados).is_empty()
+	assert_int(_depositos).is_zero()
+	assert_int(recolector.tarea().depositadas()).is_zero()
+
+
+func test_la_ultima_bolsa_completa_una_vez_sin_mover_el_turno() -> void:  # AC-CLN-012 AC-CLN-011
+	var recolector := _recolector()
+	for numero in range(1, ReglasDeLaBasura.BOLSAS_DE_LA_JORNADA + 1):
+		assert_int(_avisos).is_zero()
+		var bolsa := ObjetoDelAlmacen.new()
+		bolsa.id = ReglasDeLaBasura.id_de_la_bolsa(numero)
+		_sostener(recolector, bolsa)
+		recolector.pedir_tirar(true)
 	assert_bool(recolector.tarea().completada()).is_true()
-	assert_int(_avisos_de_tarea).is_equal(0)
-	assert_float(_turno.tiempo_restante()).is_equal(0.0)
+	assert_int(_avisos).is_equal(1)
+	var repetida := ObjetoDelAlmacen.new()
+	repetida.id = ReglasDeLaBasura.id_de_la_bolsa(1)
+	_sostener(recolector, repetida)
+	recolector.pedir_tirar(true)
+	assert_int(_depositos).is_equal(ReglasDeLaBasura.BOLSAS_DE_LA_JORNADA)
+	assert_int(_avisos).is_equal(1)
+	assert_float(_turno.tiempo_restante()).is_equal(Reglas.DURACION_DEL_TURNO)
 
 
-func test_ningun_archivo_de_este_spec_nombra_consumir() -> void:
-	# El nombre no se escribe ni en un comentario: este caso no distingue código de prosa.
-	for ruta: String in ARCHIVOS_DEL_SPEC:
-		var texto := FileAccess.get_file_as_string(ruta)
+func test_el_util_tirado_no_cuenta_como_bolsa() -> void:  # AC-CLN-036
+	var recolector := _recolector()
+	var mopa: ObjetoDelAlmacen = load("res://src/dominio/almacen/mopa.tres")
+	_sostener(recolector, mopa)
+	assert_int(recolector.pedir_tirar(true)).is_equal(ReglasDeLaBasura.Tiro.TIRADO)
+	assert_int(_tirados.size()).is_equal(1)
+	assert_int(_depositos).is_zero()
+	assert_int(recolector.tarea().depositadas()).is_zero()
+	assert_int(_avisos).is_zero()
+
+
+func test_la_unidad_tirada_sale_del_inventario_antes_del_aviso() -> void:  # AC-STK-053
+	var recolector := _recolector()
+	var estante := recolector.repositor.estante()
+	var producto := Catalogo.de(Producto.Id.ACTRONCITO)
+	var unidad := estante.retirar(producto)
+	_sostener(recolector, unidad)
+	var reservas_al_avisar: Array[int] = []
+	recolector.objeto_tirado.connect(
+		func(_nodo: Node3D) -> void: reservas_al_avisar.append(estante.reservadas(producto))
+	)
+	assert_int(recolector.pedir_tirar(true)).is_equal(ReglasDeLaBasura.Tiro.TIRADO)
+	assert_array(reservas_al_avisar).contains_exactly([0])
+	assert_int(estante.unidades_en_deposito(producto)).is_equal(7)
+	assert_int(estante.disponibles_para_retirar(producto)).is_equal(7)
+	assert_int(_depositos).is_zero()
+
+
+func test_sin_cableado_no_entrega_ni_publica() -> void:
+	var recolector := _recolector()
+	var bolsa := ObjetoDelAlmacen.new()
+	_sostener(recolector, bolsa)
+	for propiedad: StringName in [&"reloj", &"repositor", &"agarre"]:
+		var original: Node = recolector.get(propiedad)
+		recolector.set(propiedad, null)
 		(
-			assert_str(texto)
-			. override_failure_message("`%s` está vacío o no existe" % ruta)
-			. is_not_empty()
+			assert_error(func() -> void: recolector.pedir_tirar(true))
+			. is_push_error("Recolector sin cablear: revisar almacen.tscn y almacen.gd")
 		)
-		(
-			assert_bool(texto.contains("consumir"))
-			. override_failure_message("`%s` nombra `consumir`: es un segundo cobro" % ruta)
-			. is_false()
-		)
-
-
-func _anotar_deposito(_depositadas: int) -> void:
-	_depositos += 1
-
-
-func _anotar_rechazo(_motivo: TareaDeLaBasura.Resultado) -> void:
-	_rechazos += 1
-
-
-func _anotar_tarea(cumplidas: int) -> void:
-	_avisos_de_tarea += 1
-	_cumplidas_avisadas = cumplidas
+		recolector.set(propiedad, original)
+		assert_object(recolector.agarre.manos().sostenido()).is_same(bolsa)
+	var tarea := recolector.tarea()
+	recolector.arrancar(null)
+	(
+		assert_error(func() -> void: recolector.pedir_tirar(true))
+		. is_push_error("Recolector sin cablear: revisar almacen.tscn y almacen.gd")
+	)
+	recolector.arrancar(tarea)
+	assert_object(recolector.agarre.manos().sostenido()).is_same(bolsa)
+	assert_array(_tirados).is_empty()
+	assert_int(_depositos).is_zero()

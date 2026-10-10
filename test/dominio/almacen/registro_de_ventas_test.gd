@@ -34,6 +34,14 @@ func _registro(pedidos: Array[Venta] = []) -> RegistroDeVentas:
 	return RegistroDeVentas.new(Catalogo.todos(), _atender_con_ventas(pedidos))
 
 
+func test_el_cero_sin_ventas_se_evalua_al_cerrar_y_no_al_arrancar() -> void:  # AC-STK-052
+	var registro := _registro()
+	assert_bool(registro.completada()).is_false()
+	assert_bool(registro.completada(true)).is_true()
+	registro.sumar(_de(Producto.Id.ACTRONCITO))
+	assert_bool(registro.completada(true)).is_false()
+
+
 func test_la_planilla_tiene_una_fila_por_producto_en_orden_y_en_cero() -> void:  # AC-STK-020
 	var registro := _registro()
 	var catalogo := Catalogo.todos()
@@ -153,3 +161,65 @@ func test_dos_ventas_del_mismo_producto_se_anotan_juntas() -> void:
 	for _vez in 3:
 		registro.sumar(_de(Producto.Id.ACTRONCITO))
 	assert_bool(registro.coincide()).is_true()
+
+
+func _primera_noche() -> TareaDeAtender:
+	var inventario := Inventario.new(Catalogo.todos())
+	for producto in Catalogo.todos():
+		inventario.ingresar(producto, Inventario.Ubicacion.DEPOSITO, 8)
+	return TareaDeAtender.new(Compradores.de_la_jornada(1), inventario)
+
+
+func _vender_fisicamente(atender: TareaDeAtender) -> void:
+	var atencion := atender.atencion()
+	while not atencion.puede_abandonar() or not atencion.conversacion_iniciada():
+		atencion.interactuar(null)
+	var estante := Estante.new(atender.get("_inventario") as Inventario, Catalogo.todos())
+	var renglones: Array[Producto] = []
+	for producto in atencion.comprador().pedido().productos():
+		for _unidad in atencion.comprador().pedido().unidades_de(producto):
+			atencion.interactuar(estante.retirar(producto))
+			renglones.append(producto)
+	atencion.interactuar(Ticket.new(renglones))
+	assert_bool(atencion.vendida()).is_true()
+
+
+func test_registrar_una_venta_no_cumple_antes_de_vender_las_dos() -> void:  # AC-STK-056
+	var atender := _primera_noche()
+	var registro := RegistroDeVentas.new(Catalogo.todos(), atender)
+	atender.avanzar(Compradores.de_la_jornada(1)[0].horario.x)
+	_vender_fisicamente(atender)
+	for producto in atender.atencion().comprador().pedido().productos():
+		registro.sumar(producto)
+	assert_bool(registro.coincide()).is_true()
+	assert_bool(registro.completada()).is_false()
+	assert_bool(registro.completada(true)).is_false()
+	atender.avanzar(Compradores.de_la_jornada(1)[1].horario.x)
+	_vender_fisicamente(atender)
+	assert_bool(registro.completada()).is_false()
+	for producto in atender.atencion().comprador().pedido().productos():
+		for _unidad in atender.atencion().comprador().pedido().unidades_de(producto):
+			registro.sumar(producto)
+	assert_bool(registro.completada()).is_true()
+	registro.sumar(_de(Producto.Id.MAROLINI))
+	assert_bool(registro.completada()).is_false()
+	registro.restar(_de(Producto.Id.MAROLINI))
+	assert_bool(registro.completada()).is_true()
+
+
+func test_anticipar_o_perder_una_compra_no_completa_registro_ni_al_cerrar() -> void:  # AC-STK-056
+	var atender := _primera_noche()
+	var registro := RegistroDeVentas.new(Catalogo.todos(), atender)
+	assert_bool(registro.completada(true)).is_false()
+	for comprador in Compradores.de_la_jornada(1):
+		for producto in comprador.pedido().productos():
+			for _unidad in comprador.pedido().unidades_de(producto):
+				registro.sumar(producto)
+	assert_bool(registro.completada()).is_false()
+	atender.avanzar(Compradores.de_la_jornada(1)[1].horario.x)
+	_vender_fisicamente(atender)
+	for producto in Compradores.de_la_jornada(1)[0].pedido().productos():
+		registro.restar(producto)
+	assert_bool(registro.coincide()).is_true()
+	assert_bool(registro.completada()).is_false()
+	assert_bool(registro.completada(true)).is_false()

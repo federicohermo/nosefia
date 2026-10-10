@@ -247,7 +247,7 @@ func test_un_casillero_que_se_vacia_vuelve_a_faltar() -> void:  # AC-STK-007
 func test_los_pedidos_de_cada_jornada_entran_sin_quitarle_a_la_reposicion() -> void:  # AC-STK-035
 	for jornada in _jornadas():
 		var inventario := Apertura.inventario_de_la_jornada(jornada, _casilleros())
-		for comprador in Compradores.de_la_jornada():
+		for comprador in Compradores.de_la_jornada(jornada):
 			(
 				assert_bool(inventario.cobrar(comprador.pedido()))
 				. override_failure_message(

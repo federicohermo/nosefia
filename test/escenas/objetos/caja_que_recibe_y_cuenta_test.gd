@@ -206,7 +206,7 @@ func _una_colocada(almacen: Node3D) -> void:
 	almacen.get("_reposicion_manual").call("pedir_colocar", Producto.Id.ACTRONCITO)
 
 
-func test_la_e_sobre_la_caja_muestra_su_cuenta_y_la_segunda_la_borra() -> void:  # AC-STK-042
+func test_la_caja_en_la_mano_muestra_su_cuenta_hasta_terminar_el_examen() -> void:  # AC-STK-042
 	var almacen: Node3D = await _almacen_con_jugador_quieto()
 	var jugador: Node3D = almacen.get("_jugador")
 	var examen: Examen = jugador.get("examen")
@@ -215,41 +215,40 @@ func test_la_e_sobre_la_caja_muestra_su_cuenta_y_la_segunda_la_borra() -> void: 
 	_una_colocada(almacen)
 	assert_object(almacen.get("_agarre").manos().sostenido()).is_null()
 	assert_int(contenido.unidades()).is_equal(ReglasDelEstante.UNIDADES_POR_CAJA - 1)
-	assert_str(_subtitulo(almacen).text).is_empty()
+	_accion(jugador, caja, ReglasDeLosObjetos.ACCION_AGARRAR)
 	_accion(jugador, caja, ReglasDeLosObjetos.ACCION_EXAMINAR)
 	assert_bool(examen.esta_examinando()).is_true()
 	assert_str(_subtitulo(almacen).text).is_equal(
 		"Una caja con 7 cajitas de Actroncito. Entra 1 más."
 	)
-	# Sólo la cuenta: la pista de la caja se registra y no se lee.
 	var pista: String = (caja.get("datos") as ObjetoDelAlmacen).revelacion.texto
 	assert_str(pista).is_not_empty()
 	assert_str(_subtitulo(almacen).text).not_contains(pista)
 	assert_bool(examen.hallazgos().ya_visto(caja.get("datos"))).is_true()
-	assert_int(contenido.unidades()).is_equal(ReglasDelEstante.UNIDADES_POR_CAJA - 1)
 	_accion(jugador, caja, ReglasDeLosObjetos.ACCION_EXAMINAR)
 	assert_bool(examen.esta_examinando()).is_false()
 	assert_str(_subtitulo(almacen).text).is_empty()
 	assert_int(contenido.unidades()).is_equal(ReglasDelEstante.UNIDADES_POR_CAJA - 1)
 
 
-func test_la_caja_en_la_mano_dice_lo_mismo_que_apoyada() -> void:  # AC-STK-042
+func test_manos_vacias_no_examinan_ni_muestran_la_caja() -> void:  # AC-STK-042, AC-INV-020
 	var almacen: Node3D = await _almacen_con_jugador_quieto()
 	var jugador: Node3D = almacen.get("_jugador")
 	var agarre: Agarre = almacen.get("_agarre")
 	var caja := _caja(almacen, Producto.Id.ACTRONCITO)
 	_una_colocada(almacen)
-	_accion(jugador, caja, ReglasDeLosObjetos.ACCION_EXAMINAR)
-	var apoyada := _subtitulo(almacen).text
-	assert_str(apoyada).is_not_empty()
-	_accion(jugador, caja, ReglasDeLosObjetos.ACCION_EXAMINAR)
-	_accion(jugador, caja, ReglasDeLosObjetos.ACCION_AGARRAR)
-	assert_object(agarre.manos().sostenido()).is_same(caja.get("datos"))
-	_accion(jugador, caja, ReglasDeLosObjetos.ACCION_EXAMINAR)
-	assert_str(_subtitulo(almacen).text).is_equal(apoyada)
-	_accion(jugador, caja, ReglasDeLosObjetos.ACCION_EXAMINAR)
-	assert_str(_subtitulo(almacen).text).is_empty()
-	assert_object(agarre.manos().sostenido()).is_same(caja.get("datos"))
+	var lugar: Transform3D = caja.global_transform
+	var contenido := _contenido(almacen, Producto.Id.ACTRONCITO)
+	var unidades := contenido.unidades()
+	for intento in 2:
+		_accion(jugador, caja, ReglasDeLosObjetos.ACCION_EXAMINAR)
+		assert_str(_subtitulo(almacen).text).is_empty()
+		assert_bool(jugador.get("examen").esta_examinando()).is_false()
+		assert_bool(jugador.get("_control").esta_suspendido()).is_false()
+		assert_object(agarre.manos().sostenido()).is_null()
+		assert_bool(caja.global_transform.is_equal_approx(lugar)).is_true()
+		assert_int(contenido.unidades()).is_equal(unidades)
+		assert_bool(jugador.get("examen").hallazgos().ya_visto(caja.get("datos"))).is_false()
 
 
 func test_examinar_lo_que_no_es_una_caja_no_dice_nada() -> void:
@@ -268,7 +267,9 @@ func test_la_noche_nueva_borra_el_subtitulo_del_examen_en_curso() -> void:
 	# Abrir la jornada termina el examen, y con él se va el texto.
 	var almacen: Node3D = await _almacen_con_jugador_quieto()
 	var jugador: Node3D = almacen.get("_jugador")
-	_accion(jugador, _caja(almacen, Producto.Id.ACTRONCITO), ReglasDeLosObjetos.ACCION_EXAMINAR)
+	var caja := _caja(almacen, Producto.Id.ACTRONCITO)
+	_accion(jugador, caja, ReglasDeLosObjetos.ACCION_AGARRAR)
+	_accion(jugador, caja, ReglasDeLosObjetos.ACCION_EXAMINAR)
 	assert_str(_subtitulo(almacen).text).is_equal("Una caja con 8 cajitas de Actroncito.")
 	almacen.call("_al_abrir_la_jornada", ReglasDeLaPartida.PRIMERA_JORNADA + 1)
 	assert_str(_subtitulo(almacen).text).is_empty()
