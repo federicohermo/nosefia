@@ -85,11 +85,8 @@ Tres pares se confunden seguido, y cada uno tiene su regla escrita en los dos sp
 
 - **`counter-service` y `store-stock`.** Cobrar es de la ventanilla; cuántas unidades hay y dónde
   están, de la mercadería. La ventanilla **pregunta**, no lleva su propia cuenta.
-  En la primera noche, Martín y Tiago llegan por el reloj y reciben unidades físicas y un ticket
-  exacto. Sólo el pedido completo cuenta como venta. Al vencer, se llevan lo recibido sin sumar
-  una venta; el aviso de salida usa la misma pila de notificaciones que la llegada. El aviso de
-  llegada permanece hasta iniciar la conversación. El comprador espera animado en el mundo,
-  detrás de la ventanilla, mirando hacia la cámara incluso con la interfaz cerrada.
+  En la primera noche, la ventanilla recibe unidades físicas: la mercadería las retira una sola
+  vez, al completar la venta o al vencer la compra.
 - **`player-actions` e `investigation`.** Agarrar y examinar son del cuerpo; **qué esconde** el
   objeto es de la investigación. La identidad de lo que se agarra es opaca a propósito: lo que se
   investiga no está en el catálogo.

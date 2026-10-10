@@ -11,8 +11,7 @@
 ## que este spec vino a poner delante del jugador.
 ##
 ## **En las jornadas posteriores se puede despachar sin vender**: un pedido puede superar los
-## vendibles, y
-## exigir la venta dejaría a ese comprador sin forma de irse.
+## vendibles, y exigir la venta dejaría a ese comprador sin forma de irse.
 ##
 ## Es la mitad de atender que se ejerce sin levantar una escena: acá no hay un solo `Node`.
 class_name Atencion

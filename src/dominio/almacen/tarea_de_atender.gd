@@ -5,10 +5,9 @@
 ## adentro, un test se tendría que armar siempre con los que el balance pide, y mover ese número
 ## rompería casos que no hablan de él. Es la misma decisión que tomó `Turno` con las obligatorias.
 ##
-## **En jornadas posteriores se completa con todos despachados, se les haya vendido o no.**
-## La primera exige ambas compras físicas completas. Un pedido del recorrido automático puede
-## superar
-## los vendibles de la noche, y exigir la venta dejaría a ese comprador sin forma de irse.
+## **En jornadas posteriores se completa con todos despachados, se les haya vendido o no.** Un
+## pedido puede superar los vendibles de la noche, y exigir la venta dejaría a ese comprador sin
+## forma de irse.
 class_name TareaDeAtender
 extends RefCounted
 
