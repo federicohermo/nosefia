@@ -1,6 +1,7 @@
 extends GdUnitTestSuite
 
 const ALMACEN := preload("res://src/escenas/almacen.tscn")
+const BolsaEnLaMano := preload("res://test/escenas/bolsa_en_la_mano.gd")
 const UNIDAD := preload("res://src/escenas/objetos/objeto_agarrable.tscn")
 const PAPEL := preload("res://src/escenas/objetos/ticket.tscn")
 
@@ -118,6 +119,7 @@ func test_el_lector_anota_la_unidad_con_el_programa_cerrado_y_conserva_la_mano()
 
 func test_los_seis_objetos_se_rechazan_y_siguen_en_la_mano() -> void:  # AC-PLY-073, AC-CTR-022
 	var almacen := await _abrir()
+	assert_object(BolsaEnLaMano.preparar(almacen)).is_not_null()
 	var jugador: Node3D = almacen.get_node("Jugador")
 	var agarre: Agarre = almacen.get("_agarre")
 	var papel: ObjetoAgarrable = PAPEL.instantiate()

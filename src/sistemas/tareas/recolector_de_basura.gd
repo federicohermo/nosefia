@@ -2,12 +2,15 @@
 class_name RecolectorDeBasura
 extends Node
 
+signal bolsa_sacada(tacho: TareaDeLaBasura.Tacho)
+
 signal bolsa_depositada(depositadas: int)
 signal objeto_tirado(nodo: Node3D)
 
 @export var reloj: RelojDelTurno
 @export var agarre: Agarre
 @export var repositor: Repositor
+@export var bolsas: Array[Node3D] = []
 
 var _tarea: TareaDeLaBasura
 
@@ -18,6 +21,24 @@ func arrancar(una_tarea: TareaDeLaBasura) -> void:
 
 func tarea() -> TareaDeLaBasura:
 	return _tarea
+
+
+func sacar_bolsa(tacho: TareaDeLaBasura.Tacho) -> bool:
+	if _tarea == null or agarre == null or tacho < 0 or tacho >= bolsas.size():
+		return false
+	var cuerpo := bolsas[tacho]
+	if not is_instance_valid(cuerpo) or agarre.punto_de_carga == null:
+		return false
+	var datos: ObjetoDelAlmacen = cuerpo.get(ReglasDeLosObjetos.PROPIEDAD_DATOS)
+	if datos == null or not datos.es_levantable():
+		return false
+	var id := _tarea.sacar(tacho, agarre.manos().sostenido() == null)
+	if id == ObjetoDelAlmacen.SIN_ID:
+		return false
+	if not agarre.pedir_agarrar(datos, cuerpo):
+		return false
+	bolsa_sacada.emit(tacho)
+	return true
 
 
 func pedir_tirar(recibe: bool) -> ReglasDeLaBasura.Tiro:

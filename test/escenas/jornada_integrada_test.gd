@@ -127,7 +127,7 @@ func test_con_otra_pantalla_encima_la_e_no_abre_un_examen() -> void:
 	var agarre: Agarre = almacen.get("_agarre")
 	var balde: RigidBody3D = almacen.get_node("Objetos/Balde")
 	jugador.suspender()
-	jugador.set("_enfocado", almacen.get_node("Objetos/BolsaDeBasura1"))
+	jugador.set("_enfocado", almacen.get_node("Objetos/JabonAzul"))
 	var evento := InputEventAction.new()
 	evento.action = ReglasDeLosObjetos.ACCION_EXAMINAR
 	evento.pressed = true

@@ -19,7 +19,7 @@ const NOMBRES_DE_LAS_TAREAS := {
 	Tarea.Tipo.REGISTRAR: "Registro de productos vendidos",
 	Tarea.Tipo.LIMPIAR: "Limpieza",
 	Tarea.Tipo.REPONER: "Reposición",
-	Tarea.Tipo.SACAR_LA_BASURA: "Sacar la basura",
+	Tarea.Tipo.SACAR_LA_BASURA: "Tirar la basura",
 	Tarea.Tipo.ORDENAR_LAS_CAJAS: "Ordenar cajas en el depósito",
 }
 

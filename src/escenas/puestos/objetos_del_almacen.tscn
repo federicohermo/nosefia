@@ -83,15 +83,15 @@ gi_mode = 2
 
 
 [node name="BolsaDeBasura1" parent="." instance=ExtResource("22_agarrable")]
-transform = Transform3D(1.000000000, 0.000000000, 0.000000000, 0.000000000, 1.000000000, 0.000000000, 0.000000000, 0.000000000, 1.000000000, -3.700000000, 0.500000000, -11.500000000)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.619999197, 0.989438913, 5.699999332)
 datos = ExtResource("26_bolsa1")
 
 [node name="BolsaDeBasura2" parent="." instance=ExtResource("22_agarrable")]
-transform = Transform3D(1.000000000, 0.000000000, 0.000000000, 0.000000000, 1.000000000, 0.000000000, 0.000000000, 0.000000000, 1.000000000, -3.100000000, 0.500000000, -11.500000000)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.698499274, 0.784938175, 4.29754734)
 datos = ExtResource("27_bolsa2")
 
 [node name="BolsaDeBasura3" parent="." instance=ExtResource("22_agarrable")]
-transform = Transform3D(1.000000000, 0.000000000, 0.000000000, 0.000000000, 1.000000000, 0.000000000, 0.000000000, 0.000000000, 1.000000000, -3.400000000, 0.500000000, -12.100000000)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9.149999785, 0.784937724, 5.456000328)
 datos = ExtResource("28_bolsa3")
 
 [node name="CajaDeActroncito" parent="." instance=ExtResource("11_caja_de_productos")]
