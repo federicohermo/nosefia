@@ -207,6 +207,8 @@ entregable más caro y el único que hace que el hallazgo no vuelva.
 | una captura **que ya no muestra el foco y la pose preparados** | `to-issue` — el fixture comprueba foco y pose dibujada al guardar, y el padre abre el PNG; un rayo anterior no certifica el cuadro final |
 | un historial de reportes **que falla sólo al superar veinte corridas** | `implement-batch` — se usa `res://reports` para que gdUnit4 globalice la ruta antes de retirarlos, sin modificar addon ni retención |
 | un XML sin errores **que oculta un callback abortado o una fuga al desmontar** | `implement-feature` — se conserva la salida cruda también en verde y el fixture afirma la entrega válida y la ejecución del receptor |
+| un recorrido web **que no mide los filtros del preset versionado** | `to-issue` — se cruzan filtros y dependencias importadas antes de cerrar límites; el arreglo entra en el preset publicado, no sólo en una copia de captura |
+| un detector de enteros **que parte decimales en cifras de balance** | `implement-feature` — se tokeniza el literal completo y se prueba tanto la copia entera prohibida como los decimales geométricos permitidos |
 | una sonda física **que elimina las colisiones al congelar la escena** | `implement-feature` — se detienen los procesos que cambian la pose y se comprueban piso y obstáculos conocidos antes de medir |
 | una mira **que lee solapamientos anteriores al teletransporte** | `implement-feature` — se sincronizan las áreas con cuadros físicos y se prueban las caras visibles con la mira real |
 | una base **sin stderr que impide comparar el desmontaje** | `implement-feature` — se guardan ambos canales del subproceso también en la base; `godot.log` no sustituye esa salida |

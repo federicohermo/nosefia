@@ -75,6 +75,12 @@ el reemplazo del test textual, conservá sus comprobaciones útiles y ejercé lo
 pruebas funcionales y puras. No eludas la expresión regular con otra sintaxis ni afirmes que
 una cita de método demuestra la delegación: eso también requiere revisar la fuente.
 
+**Un detector de cifras reconoce el literal completo antes de clasificarlo.** En #369,
+un guard de enteros de balance buscaba `\b\d+\b` y trató los decimales geométricos
+`2.0` y `0.02` como enteros. La corrección conserva los archivos vigilados y el testigo
+de una copia `JORNADAS := 5`, y agrega decimales y exponentes que no son enteros.
+No se mueve la consulta física a otro archivo sólo para eludir un barrido defectuoso.
+
 **Un test que compara dos lecturas del mismo cuadro tiene que forzar la escritura antes de leer.**
 `await get_tree().process_frame` sigue **antes** del `_process` de los nodos. Leer justo después
 del `await` compara la escritura del cuadro anterior contra el instante de éste. Medido el
