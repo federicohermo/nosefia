@@ -1,0 +1,10 @@
+{
+  "base": "cd5f93c38dfc140398759c52431bcece29985fd9",
+  "cabeza": "eb8ac2b2a5fca71166a7ea4330667e43fd863fd2",
+  "nodos": "7/7",
+  "sin_salteos": true,
+  "suites": 228,
+  "casos": 1750,
+  "segundos": 738.3,
+  "intento_formal": 1
+}

@@ -2,13 +2,23 @@
 
 Base de arte y escena: `e6a109833690c064c228cd04d9bc2d8c2ecf92c6`.
 Implementación de arte: `abb895d82155a4e2017bf8be682a9925dcf6e377`.
+Base del PR y convergencia: `cd5f93c38dfc140398759c52431bcece29985fd9` (#364); cabeza integrada `eb8ac2b2a5fca71166a7ea4330667e43fd863fd2`.
+El diff e6..cd5 en modelos, escenas geométricas y horneado es vacío. Las capturas e
+inventarios corresponden al arte aplicado sobre e6; el full se ejecuta con #364 incorporado.
 Las primeras sondas se prepararon en `20ac5e21e2d52c5ac47b1b258c56a04448d7df9e`;
 el diff de `assets/` y `src/` entre ambas bases es vacío. El carril avanzó limpio por ff-only
-y repitió las sondas definitivas sobre e6 antes de escribir la fuente.
+antes de escribir la fuente. La identidad de esos recursos hace aplicables las sondas
+base/candidato medidas en 20ac; las sondas finales corresponden al arte aplicado sobre e6.
 
 El plan completo con el destino medido se publicó en #301 antes de aplicar. Se conserva en
 `plan-publicado-antes-de-aplicar.md`. La base histórica 48a5fa9 también medía 2,604476 m,
 pero no se usó para restaurar arte ni como base del PR.
+
+Corrección de procedencia: el plan previo decía que las sondas base/candidato se repetían en
+e6. Corrieron en 20ac, antes del avance limpio a e6. Su validez para e6 se acredita con el
+diff vacío de assets/src; las sondas finales sí corresponden al arte aplicado sobre e6.
+La primera publicación y el plan previo se conservan; este informe y el issue actual corrigen
+esa descripción sin inventar una corrida.
 
 ## Resultado medido
 
@@ -85,9 +95,28 @@ esas premisas y afirman sus resultados. No se cambió ningún test del juego ni 
 Las sondas headless cortas mostraron 24 ObjectDB/4 recursos al salir y el protocolo bolsas
 29/6; los logs crudos se conservan. La sonda de apoyo con `--verbose` completó el mismo
 marcador sin ObjectDB/recursos vivos y sólo anunció 38 StringNames del motor. La clasificación
-del protocolo y la convergencia completa se publican junto con sus logs, sin eliminar
-diagnósticos por el código de salida 0.
+del protocolo identifica 29 instancias de audio/playback y 6 recursos de audio: los WAV
+de sacar/alzar bolsa, MUS_Tema1 y AMB_PROXIMIDAD_Neon con sus OggPacketSequence.
+No se modifican recursos de audio. Se preservan el log verbose y clasificacion-bolsas.json;
+no se afirma que ese apagado queda libre de recursos. La convergencia completa se publica
+junto con sus logs, sin eliminar los diagnósticos por el código de salida 0.
+
+La convergencia completa reproduce, en el mismo orden, las 58 líneas ERROR/WARNING de
+`364-final-tests.log`: negativos deliberados de cableado, firma heredada 141 ObjectDB/100
+recursos y dos diagnósticos PagedAllocator. No aparece ninguna línea nueva. Se publica el
+log base de comparación y `clasificacion-convergencia.json`, además del log final íntegro.
 
 `manifiesto.json` distingue hashes de los blobs publicados de hashes locales de procedencia.
 El publicador vuelve a descargar cada archivo por una URL fijada al commit, compara sus
 bytes con el blob remoto y verifica la cabeza final de `capturas/301`.
+
+## Convergencia final
+
+La primera corrida formal de verificar.py pasó **7/7 sin salteos en 738.3 s**.
+El conteo inmediato confirma **228/228 suites y 1750/1750 casos**,
+con cero errores, fallos, flaky, skipped y orphans de las suites. Se conservan los siete logs
+crudos de nodos, importación y godot.log incluso en verde. La cabeza probada es eb8ac2b2.
+
+Los intentos invalidados de sondas físicas se describen arriba y no se presentan como pruebas
+verdes. El pipeline de producto pasó a la primera; la convergencia formal pasó a la primera.
+La firma de apagado del runner se revisa aparte de los resultados de suites.

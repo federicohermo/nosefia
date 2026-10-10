@@ -1,0 +1,9 @@
+OK — 10 capacidades, 372 criterios, 3 ratificadas.
+Borradores, y cuánto les falta para ratificar:
+  employment-record: 22/28 criterios con test
+  investigation: 18/31 criterios con test
+  player-actions: 78/80 criterios con test
+  save-and-resume: 20/23 criterios con test
+  shift-cycle: 22/23 criterios con test
+  store-cleanup: 44/49 criterios con test
+  store-stock: 50/54 criterios con test
