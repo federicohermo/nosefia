@@ -1,6 +1,7 @@
 extends GdUnitTestSuite
 
 const ALMACEN := preload("res://src/escenas/almacen.tscn")
+const BolsaEnLaMano := preload("res://test/escenas/bolsa_en_la_mano.gd")
 const JUGADOR := preload("res://src/escenas/jugador.tscn")
 
 
@@ -193,6 +194,7 @@ func _scripts(carpeta: String) -> Array[String]:
 
 func test_el_derecho_abre_las_dos_puertas_con_cualquier_mano() -> void:  # AC-PLY-054
 	var almacen := await _abrir()
+	assert_object(BolsaEnLaMano.preparar(almacen)).is_not_null()
 	var jugador: Node3D = almacen.get("_jugador")
 	jugador.set_physics_process(false)
 	var agarre: Agarre = almacen.get("_agarre")
@@ -261,6 +263,7 @@ func test_el_izquierdo_no_abre_lo_fijo_y_suelta_la_unidad() -> void:  # AC-PLY-0
 
 func test_el_derecho_abre_y_cierra_paneles_con_cualquier_mano() -> void:  # AC-PLY-056
 	var almacen := await _abrir()
+	assert_object(BolsaEnLaMano.preparar(almacen)).is_not_null()
 	var jugador: Node3D = almacen.get("_jugador")
 	jugador.set_physics_process(false)
 	var agarre: Agarre = almacen.get("_agarre")

@@ -24,6 +24,7 @@ const AudioDelLocal := preload("res://src/escenas/puestos/audio_del_almacen.gd")
 const ReposicionManual := preload("res://src/escenas/puestos/reposicion_manual.gd")
 const PuertaDelLocal := preload("res://src/escenas/puestos/puerta_del_local.gd")
 const PuestoDeLaCaja := preload("res://src/escenas/puestos/caja_registradora.gd")
+const TachoDelLocal := preload("res://src/escenas/puestos/tacho_de_basura.gd")
 const ContenedorDelLocal := preload("res://src/escenas/puestos/contenedor_de_basura.gd")
 const TapaDelLocal := preload("res://src/escenas/puestos/tapa_del_contenedor.gd")
 const UtilDeLimpieza := preload("res://src/escenas/objetos/util_de_limpieza.gd")
@@ -173,6 +174,9 @@ func _ready() -> void:
 	# el estante la acepta: soltarla en el piso no repone nada, y devolverla no mueve nada.
 	_recolector.agarre = _agarre
 	_recolector.repositor = _repositor
+	_recolector.bolsas = _bolsas
+	_recolector.bolsa_sacada.connect(_al_sacar_una_bolsa)
+	_jugador.uso_pedido.connect(_usar_un_tacho)
 	_recolector.objeto_tirado.connect(_contenedor.recibir)
 	_recolector.objeto_tirado.connect(_al_tirar_un_objeto)
 	_repositor.agarre = _agarre
@@ -243,15 +247,16 @@ func _al_abrir_la_jornada(jornada: int) -> void:
 	# El piso se rehace cada noche: guardar el estado entre jornadas está fuera de alcance, y una
 	# sola instancia dejaría el local limpio de anoche y la obligatoria cumplida sola.
 	_limpiador.arrancar(PisoDelLocal.de_la_jornada())
-	_recolector.arrancar(TareaDeLaBasura.de_la_jornada())
-	# El dominio se resetea y los cuerpos tirados vuelven: la noche siguiente conserva el
-	# viaje de las bolsas. Sin esa vuelta, la obligatoria se resolvería sin que el jugador dé un
-	# paso. Las cajas van por lo mismo: se trasladan, así que la noche siguiente arrancaría con
-	# la mercadería donde la dejó la anterior. Van todas, siempre, sin preguntar dónde
-	# quedaron: dónde está cada una es del motor y decidirlo acá sería una regla del juego
-	# escrita donde ningún gate la mira.
-	for bolsa: ObjetoAgarrable in _bolsas:
+	_recolector.arrancar(TareaDeLaBasura.de_la_jornada(jornada))
+	# La apertura restaura los cuerpos antes de pintar sólo los tachos declarados.
+	for indice in _bolsas.size():
+		var bolsa: ObjetoAgarrable = _bolsas[indice]
 		bolsa.volver_a_su_lugar()
+		bolsa.freeze = true
+		for forma: CollisionShape3D in bolsa.find_children("*", "CollisionShape3D", true, false):
+			forma.disabled = true
+		var tacho := _tachos()[indice]
+		tacho.mostrar(bolsa, _recolector.tarea().tiene_bolsa(tacho.tacho))
 	var poses: Dictionary[Node3D, Transform3D] = {}
 	if Apertura.cajas_apiladas(jornada):
 		poses = PilaDelDeposito.poses(
@@ -423,3 +428,22 @@ func _revisar_orden_del_deposito() -> void:
 					estado.apoyo = OrdenDelDeposito.Apoyo.ESTANTERIA
 		estados.append(estado)
 	_acomodador.revisar(estados)
+
+
+func _tachos() -> Array[TachoDelLocal]:
+	return [
+		$Estructura/tachitobasura/StaticBody3D,
+		$Estructura/tachitobasura_001/StaticBody3D,
+		$Estructura/tachitobasura_002/StaticBody3D,
+	]
+
+
+func _usar_un_tacho(objetivo: Node3D) -> void:
+	if objetivo is TachoDelLocal:
+		_recolector.sacar_bolsa(objetivo.tacho)
+
+
+func _al_sacar_una_bolsa(tacho: TareaDeLaBasura.Tacho) -> void:
+	var bolsa := _bolsas[tacho]
+	for forma: CollisionShape3D in bolsa.find_children("*", "CollisionShape3D", true, false):
+		forma.disabled = false

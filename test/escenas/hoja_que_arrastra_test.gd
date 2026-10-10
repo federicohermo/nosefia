@@ -3,6 +3,7 @@
 extends GdUnitTestSuite
 
 const ALMACEN := preload("res://src/escenas/almacen.tscn")
+const BolsaEnLaMano := preload("res://test/escenas/bolsa_en_la_mano.gd")
 const AperturaConLugar := preload("res://test/escenas/apertura_con_lugar.gd")
 const OBJETO_SUELTO := preload("res://src/escenas/objetos/objeto_agarrable.tscn")
 
@@ -259,6 +260,8 @@ func test_el_balde_en_el_recorrido_se_arrastra_al_abrir() -> void:
 ## los cuerpos del otro.
 func _corrida_al_abrir(ruta: String, alto: float = 0.15) -> float:
 	var almacen: Node3D = await _almacen()
+	if ruta == "Objetos/BolsaDeBasura1":
+		BolsaEnLaMano.preparar(almacen)
 	var hoja: MeshInstance3D = almacen.get_node(HOJA)
 	var objeto: RigidBody3D = almacen.get_node(ruta)
 	objeto.global_basis = Basis.IDENTITY
