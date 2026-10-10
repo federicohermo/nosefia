@@ -27,8 +27,15 @@ func _pantallas_visibles(menu: Control) -> int:
 
 
 func _elegir_nuevo_juego(menu: Control) -> void:
+	menu.set_process(false)
+	var ahora: Array[int] = [0]
+	menu.set("_ahora", func() -> int: return ahora[0])
 	var pedidos: PedidosDelMenu = menu.find_children("*", "PedidosDelMenu", true, false)[0]
 	pedidos.elegir(MenuDeInicio.Opcion.NUEVO_JUEGO)
+	if menu.get("_fundiendo"):
+		assert_int(_pantallas_visibles(menu)).is_zero()
+		ahora[0] = 300000
+		menu.call("_process", 0.0)
 
 
 func test_cada_menu_nuevo_pide_el_almacen() -> void:
