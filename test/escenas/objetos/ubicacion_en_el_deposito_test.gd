@@ -30,6 +30,7 @@ func _media_caja(caja: Node3D) -> float:
 
 func test_las_cajas_de_reposicion_estan_apoyadas_en_el_deposito() -> void:
 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
+	almacen.set("_partida", Partida.desde({"jornada": 2, "medios": 0}))
 	add_child(almacen)
 	await get_tree().physics_frame
 	var espacio := almacen.get_world_3d().direct_space_state
@@ -76,6 +77,7 @@ func test_las_cajas_de_reposicion_estan_apoyadas_en_el_deposito() -> void:
 ## tapa la etiqueta a quien la mira desde arriba: es la esquina del portón.
 func test_cada_caja_le_muestra_su_etiqueta_al_cuarto() -> void:
 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
+	almacen.set("_partida", Partida.desde({"jornada": 2, "medios": 0}))
 	add_child(almacen)
 	await get_tree().physics_frame
 	var espacio := almacen.get_world_3d().direct_space_state
@@ -223,6 +225,7 @@ func test_abrir_la_jornada_devuelve_cada_caja_a_su_lugar() -> void:
 	# `position` correcta respecto de la mano y está flotando en el medio del local: comparar la
 	# local da verde sobre el caso que más importa.
 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
+	almacen.set("_partida", Partida.desde({"jornada": 2, "medios": 0}))
 	add_child(almacen)
 	await get_tree().physics_frame
 	var cajas: Array = almacen.get("_cajas_de_productos")

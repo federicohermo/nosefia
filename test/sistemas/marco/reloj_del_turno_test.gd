@@ -165,7 +165,7 @@ func test_completar_dos_veces_la_misma_tarea_no_vuelve_a_avisar() -> void:
 func test_el_reloj_entrega_la_misma_instancia_de_tarea_que_recibio_el_turno() -> void:
 	# Es la razón de existir de `obligatoria()`: el `Turno` no expone su lista, y completar una
 	# copia devuelve `true` sin que `tareas_cumplidas()` suba — sin error y sin rojo.
-	var obligatorias := Apertura.obligatorias()
+	var obligatorias := Apertura.obligatorias(1)
 	var reloj := _reloj_arrancado(Reglas.DURACION_DEL_TURNO, obligatorias)
 	var reponer := reloj.obligatoria(Tarea.Tipo.REPONER)
 	assert_object(reponer).is_same(_de_la_lista(obligatorias, Tarea.Tipo.REPONER))

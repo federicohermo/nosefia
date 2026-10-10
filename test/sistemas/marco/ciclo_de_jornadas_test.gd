@@ -126,13 +126,15 @@ func _agotar_la_noche(reloj: RelojDelTurno) -> void:
 	reloj.avanzar(Reglas.DURACION_DEL_TURNO / Ritmo.SEGUNDOS_DE_TURNO_POR_SEGUNDO_REAL)
 
 
-## Las cinco obligatorias cumplidas y después la noche agotada.
+## Las obligatorias declaradas cumplidas y después la noche agotada.
 ##
 ## Las tareas se piden por `obligatoria()` y no se construyen acá: una copia se completaría
 ## devolviendo `true` sin que las cumplidas del turno suban, y la noche cerraría grave igual.
 func _jugar_la_noche_impecable(reloj: RelojDelTurno) -> void:
 	for tipo: Tarea.Tipo in Tarea.Tipo.values():
-		reloj.completar(reloj.obligatoria(tipo))
+		var tarea := reloj.obligatoria(tipo)
+		if tarea != null:
+			reloj.completar(tarea)
 	_agotar_la_noche(reloj)
 
 

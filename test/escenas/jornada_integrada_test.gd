@@ -25,9 +25,9 @@ func test_los_puestos_completan_la_jornada_y_permiten_abrir_la_siguiente() -> vo
 	await _atender(almacen)
 	await _registrar(almacen)
 	await _limpiar(almacen)
-	await _sacar_la_basura(almacen)
-	for tipo: Tarea.Tipo in Tarea.Tipo.values():
-		assert_bool(reloj.obligatoria(tipo).completada()).is_true()
+	await _ordenar_las_cajas(almacen)
+	for tarea: Tarea in (almacen.get("_partida") as Partida).obligatorias():
+		assert_bool(tarea.completada()).is_true()
 	assert_bool(reloj.corriendo()).is_true()
 	assert_float(tiempos.back()).is_less(tiempos.front())
 	var pantalla: PantallaDeCierre = almacen.get("_pantalla")
@@ -65,11 +65,16 @@ func _comprobar_planilla_en_cero(almacen: Node3D) -> void:
 # AC-STK-024
 func _comprobar_ninguna_cumplida_al_abrir(almacen: Node3D) -> void:
 	var reloj: RelojDelTurno = almacen.get("_reloj")
-	for tipo: Tarea.Tipo in Tarea.Tipo.values():
-		assert_bool(reloj.obligatoria(tipo).completada()).is_false()
+	for tarea: Tarea in (almacen.get("_partida") as Partida).obligatorias():
+		assert_bool(tarea.completada()).is_false()
 	var contador: Label = almacen.get("_hud").get("_tareas")
 	assert_str(contador.text).is_equal(
-		Hud.TEXTO_DE_LAS_TAREAS % Marcador.tareas(0, Apertura.cantidad_de_obligatorias())
+		(
+			Hud.TEXTO_DE_LAS_TAREAS
+			% Marcador.tareas(
+				0, Apertura.cantidad_de_obligatorias((almacen.get("_partida") as Partida).jornada())
+			)
+		)
 	)
 
 
@@ -242,7 +247,9 @@ func _atender(almacen: Node3D) -> void:
 func _cumplidas(reloj: RelojDelTurno) -> int:
 	var cumplidas := 0
 	for tipo: Tarea.Tipo in Tarea.Tipo.values():
-		cumplidas += int(reloj.obligatoria(tipo).completada())
+		var tarea := reloj.obligatoria(tipo)
+		if tarea != null:
+			cumplidas += int(tarea.completada())
 	return cumplidas
 
 
@@ -333,23 +340,17 @@ func _soltar_lejos(agarre: Agarre) -> void:
 	soltado.global_transform = soltado.call(ReglasDeLosObjetos.METODO_LUGAR_DE_ORIGEN)
 
 
-func _sacar_la_basura(almacen: Node3D) -> void:
-	var agarre: Agarre = almacen.get("_agarre")
-	var contenedor: Node3D = almacen.get_node(
-		"Estructura/deposito_contenedor_soporte/deposito_contenedor_cuerpo/StaticBody3D"
+func _ordenar_las_cajas(almacen: Node3D) -> void:
+	for caja: Node3D in almacen.get("_cajas_de_productos"):
+		caja.global_transform = caja.call("pose_de_estanteria")
+		caja.call("quedarse_quieta")
+		caja.sleeping_state_changed.emit()
+	for _cuadro in 4:
+		await get_tree().physics_frame
+	(
+		assert_bool(almacen.get("_reloj").obligatoria(Tarea.Tipo.ORDENAR_LAS_CAJAS).completada())
+		. is_true()
 	)
-	var jugador: Node3D = almacen.get("_jugador")
-	var recolector: RecolectorDeBasura = almacen.get("_recolector")
-	for bolsa: ObjetoAgarrable in almacen.get("_bolsas"):
-		assert_bool(agarre.pedir_agarrar(bolsa.datos, bolsa)).is_true()
-		jugador.set("_enfocado", contenedor)
-		var clic := InputEventMouseButton.new()
-		clic.button_index = MOUSE_BUTTON_LEFT
-		clic.pressed = true
-		jugador.call("_unhandled_input", clic)
-		assert_bool(recolector.tarea().esta_depositada(bolsa.datos.id)).is_true()
-	var reloj: RelojDelTurno = almacen.get("_reloj")
-	assert_bool(reloj.obligatoria(Tarea.Tipo.SACAR_LA_BASURA).completada()).is_true()
 
 
 func _comprobar_reloj(almacen: Node3D) -> void:

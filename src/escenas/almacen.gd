@@ -29,6 +29,8 @@ const TapaDelLocal := preload("res://src/escenas/puestos/tapa_del_contenedor.gd"
 const UtilDeLimpieza := preload("res://src/escenas/objetos/util_de_limpieza.gd")
 const ManijaDelBalde := preload("res://src/escenas/objetos/manija_del_balde.gd")
 const HabitacionesDelAlmacen := preload("res://src/escenas/puestos/habitaciones_del_almacen.gd")
+const NotasDelLocal := preload("res://src/escenas/puestos/notas_del_almacen.gd")
+const PilaDelDeposito := preload("res://src/escenas/puestos/pila_del_deposito.gd")
 const ReglasDelCierre := preload("res://src/dominio/almacen/reglas_del_cierre.gd")
 
 ## El jugador tampoco declara un `class_name` —es cáscara, como este archivo—, así que el
@@ -81,8 +83,9 @@ var _partida := Partida.desde(Guardado.new().cargar())
 
 ## Donde el jugador arranca cada noche: el lugar del nodo `Jugador` en la escena, leído antes de
 ## la primera apertura. Es geometría de la escena y no un número del dominio. No es un nodo propio
-## porque la raíz no suma hijos y lo que la escena declara cuelga de la raíz.
+## porque lo que la escena declara cuelga de la raíz; los servicios se crean en el cableado.
 var _arranque: Transform3D
+var _acomodador: AcomodadorDelDeposito
 
 ## Cómo se sale al menú. Es una variable y no una llamada directa porque un test no puede
 ## cambiar de escena: se llevaría puesto al runner.
@@ -99,6 +102,14 @@ func _ready() -> void:
 	_caja.lectura_rechazada.connect(avisos.avisar_lectura_rechazada)
 	_caja.ticket_desechado.connect(_al_desechar_un_ticket)
 	_reloj.turno_cerrado.connect(avisos.vaciar.unbind(1))
+	_acomodador = AcomodadorDelDeposito.new()
+	_acomodador.reloj = _reloj
+	add_child(_acomodador)
+	_agarre.objeto_agarrado.connect(_pedir_revision_del_deposito.unbind(1))
+	_agarre.objeto_soltado.connect(_pedir_revision_del_deposito.unbind(1))
+	_agarre.objeto_entregado.connect(_pedir_revision_del_deposito.unbind(1))
+	_jugador.examen.examen_iniciado.connect(_pedir_revision_del_deposito.unbind(1))
+	_jugador.examen.examen_terminado.connect(_pedir_revision_del_deposito)
 	var marco := MarcoDelObjetivo.new()
 	add_child(marco)
 	_jugador.objetivo_enfocado.connect(marco.enfocar)
@@ -107,7 +118,6 @@ func _ready() -> void:
 	_jugador.objetivo_perdido.connect(_hud.ocultar_foco)
 	for mueble in _muebles_con_contorno:
 		_jugador.ignorar_el_detalle(mueble)
-	_hud.declarar_obligatorias(Apertura.cantidad_de_obligatorias())
 	# La hora se lee en el local y no en la pantalla: enterarse cuesta caminar hasta el reloj de
 	# mesa, y la noche en que falla, ni caminar alcanza. La jornada se declara antes de arrancar
 	# porque el ciclo abre la primera adentro de `arrancar()`.
@@ -180,6 +190,8 @@ func _ready() -> void:
 	# El motor no despierta lo que está sobre una caja empujada. Lo hace el puesto.
 	for caja: CajaDeProductosDelDeposito in _cajas_de_productos:
 		caja.empujada.connect(_reposicion_manual.despertar_lo_de_arriba)
+		caja.sleeping_state_changed.connect(_pedir_revision_del_deposito)
+		caja.empujada.connect(_pedir_revision_del_deposito.unbind(1))
 	# «Volver al menú» de la pausa sale por el mismo camino que el de la placa.
 	var pausa: ControlDePausa = get_node("Interfaz/ControlDePausa")
 	_programa_de_tickets.pausa_pedida.connect(pausa.pausar)
@@ -213,7 +225,10 @@ func _al_abrir_la_jornada(jornada: int) -> void:
 	_caja.arrancar(GeneradorDeTickets.para_la_jornada(jornada))
 	_puesto_de_la_caja.limpiar()
 	_jugador.ubicar(_arranque)
-	_hud.declarar_obligatorias(Apertura.cantidad_de_obligatorias())
+	_hud.declarar_obligatorias(Apertura.cantidad_de_obligatorias(jornada))
+	(get_node("Estructura/NotasDelAlmacen") as NotasDelLocal).declarar_tareas(
+		_partida.obligatorias()
+	)
 	# **Un solo inventario para las dos obligatorias**: reponer lo llena y la ventanilla lo
 	# vacía. Construir uno por tarea daría dos stocks del mismo producto, y las dos ventanas
 	# dirían números distintos sin que nada se ponga en rojo. Cuántos casilleros tiene la fila
@@ -237,8 +252,18 @@ func _al_abrir_la_jornada(jornada: int) -> void:
 	# escrita donde ningún gate la mira.
 	for bolsa: ObjetoAgarrable in _bolsas:
 		bolsa.volver_a_su_lugar()
+	var poses: Dictionary[Node3D, Transform3D] = {}
+	if Apertura.cajas_apiladas(jornada):
+		poses = PilaDelDeposito.poses(
+			_cajas_de_productos,
+			$Estructura/porton,
+			$Estructura/deposito_pallet_central_izquierdo_0_1,
+			$Estructura/SueloSolido/Fondo
+		)
 	for caja: CajaDeProductosDelDeposito in _cajas_de_productos:
+		caja.declarar_origen(poses.get(caja, caja.pose_de_estanteria()))
 		caja.volver_a_su_lugar()
+	_pedir_revision_del_deposito()
 	# Los útiles de limpieza van por lo mismo que las cajas: se trasladan, y la noche siguiente
 	# arrancaría con la mopa y el balde donde los dejó la anterior. Vacío y seca los deja el piso
 	# nuevo, que el limpiador recibe arriba y el puesto pinta abajo.
@@ -352,3 +377,37 @@ func _al_tirar_un_objeto(nodo: Node3D) -> void:
 	var datos: ObjetoDelAlmacen = nodo.get("datos")
 	if not ReglasDelCierre.se_tira_sin_llamado(datos):
 		_partida.anotar_llamado(Partida.Llamado.OBJETO_TIRADO)
+
+
+## Las señales pueden llegar antes de sincronizar los cuerpos con el espacio físico.
+func _pedir_revision_del_deposito() -> void:
+	_revisar_orden_del_deposito.call_deferred()
+
+
+func _revisar_orden_del_deposito() -> void:
+	var estados: Array[OrdenDelDeposito.Estado] = []
+	var espacio := get_world_3d().direct_space_state
+	var sostenido := _agarre.cuerpo_sostenido()
+	for caja: CajaDeProductosDelDeposito in _cajas_de_productos:
+		var estado := OrdenDelDeposito.Estado.new(caja.producto, caja == sostenido)
+		if not estado.en_mano:
+			var cuerpo: CollisionShape3D = caja.get_node("Cuerpo")
+			var limites := cuerpo.global_transform * cuerpo.shape.get_debug_mesh().get_aabb()
+			var media := limites.size.y / 2.0
+			var consulta := PhysicsRayQueryParameters3D.create(
+				caja.global_position, caja.global_position + Vector3.DOWN * (media + 0.02)
+			)
+			consulta.exclude = [caja.get_rid()]
+			var golpe := espacio.intersect_ray(consulta)
+			if not golpe.is_empty():
+				var apoyo: Node3D = golpe.collider
+				if apoyo is CajaDeProductosDelDeposito:
+					estado.apoyo = OrdenDelDeposito.Apoyo.CAJA
+					estado.sobre = apoyo.producto
+				elif (
+					str(apoyo.get_parent().name).begins_with("deposito_pallet_")
+					and apoyo.get_parent().name != &"deposito_pallet_piso"
+				):
+					estado.apoyo = OrdenDelDeposito.Apoyo.ESTANTERIA
+		estados.append(estado)
+	_acomodador.revisar(estados)
