@@ -19,6 +19,7 @@ func _abrir(jornada: int = 1) -> Node3D:
 	var local: Node3D = auto_free(ALMACEN.instantiate())
 	local.set("_partida", Partida.desde({"jornada": jornada, "medios": 0}))
 	add_child(local)
+	local.get_node("Interfaz/PersianaDeLaNoche").terminar()
 	local.get("_jugador").set_physics_process(false)
 	local.get("_reloj").set_process(false)
 	for _cuadro in 4:
@@ -291,6 +292,8 @@ func test_hud_y_nota_siguen_la_jornada_sin_recargar_el_local() -> void:  # AC-SH
 			Reglas.DURACION_DEL_TURNO / Ritmo.SEGUNDOS_DE_TURNO_POR_SEGUNDO_REAL
 		)
 		local.get("_pantalla").cierre_despachado.emit(ParteDeCierre.Opcion.SEGUIR)
+		local.get_node("Interfaz/PersianaDeLaNoche").terminar()
+		assert_bool(local.get_node("Interfaz/PersianaDeLaNoche").en_pantalla()).is_false()
 		for _cuadro in 4:
 			await get_tree().physics_frame
 		var esperada := NotaPegada.tareas_a_realizar(Apertura.obligatorias(jornada))
