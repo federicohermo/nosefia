@@ -35,7 +35,17 @@ var _ahora: Callable = Time.get_ticks_usec
 
 
 func _ready() -> void:
-	_volver.text = "‹"
+	_volver.text = ""
+	_volver.tooltip_text = "Volver al menú"
+	var flecha := Line2D.new()
+	flecha.name = "Flecha"
+	flecha.points = PackedVector2Array([Vector2(6, -12), Vector2(-6, 0), Vector2(6, 12)])
+	flecha.width = 3.0
+	flecha.default_color = TINTA
+	flecha.antialiased = true
+	flecha.position = _volver.size / 2.0
+	_volver.add_child(flecha)
+	_volver.resized.connect(func() -> void: flecha.position = _volver.size / 2.0)
 	_volver.pressed.connect(func() -> void: volver_pedido.emit())
 	(_recordatorio.get_node("Tecla") as Label).text = TEXTO_DEL_RECORDATORIO
 	_foto_ampliada.hide()
