@@ -1,0 +1,257 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+[   0% ] [90m[1mfirst_scan_filesystem[22m | Started Inicialización del proyecto (5 steps)[39m[0m
+[   0% ] [90m[1mfirst_scan_filesystem[22m | Escaneando la estructura del archivo...[39m[0m
+[  16% ] [90m[1mfirst_scan_filesystem[22m | Cargando nombres de clases globales...[39m[0m
+[  33% ] [90m[1mfirst_scan_filesystem[22m | Verificando GDExtensions...[39m[0m
+[  50% ] [90m[1mfirst_scan_filesystem[22m | Creando scripts de carga automática...[39m[0m
+[  66% ] [90m[1mfirst_scan_filesystem[22m | Inicializando plugins...[39m[0m
+[38;2;218;165;32mIt was recognized that GdUnit4 is running in a test environment, therefore the GdUnit4 plugin will not be executed![0m
+[MCP] Connecting to ports 6505-6514
+[MCP] Godot MCP Pro v1.16.0 started (ports 6505-6514)
+[MCP] Registered 177 commands
+[  83% ] [90m[1mfirst_scan_filesystem[22m | Iniciando escaneo de archivos...[39m[0m
+[92m[ DONE ][39m [1mfirst_scan_filesystem[22m
+[0m
+[   0% ] [90m[1mupdate_scripts_classes[22m | Started Registrando clases globales... (2 steps)[39m[0m
+[   0% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  33% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[92m[ DONE ][39m [1mupdate_scripts_classes[22m
+[0m
+[   0% ] [90m[1mloading_editor_layout[22m | Started Cargando editor (5 steps)[39m[0m
+[   0% ] [90m[1mloading_editor_layout[22m | Cargando diseño del editor...[39m[0m
+[  16% ] [90m[1mloading_editor_layout[22m | Cargando docks...[39m[0m
+[92m[ DONE ][39m [1mloading_editor_layout[22m
+[0m
+[MCP] WebSocket client stopped
+[MCP] Godot MCP Pro stopped
+ERROR: The remote port number must be between 1 and 65535 (inclusive).
+   at: connect_to_host (core/io/stream_peer_tcp.cpp:69)
+ERROR: Remote Debugger: Unable to connect to host '127.0.0.1:0'.
+   at: create_tcp (core/debugger/remote_debugger_peer.cpp:247)
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+[2J[H[38;2;233;150;122m
+--------------------------------------------------------------------------------------------------
+GdUnit4 Comandline Tool
+--------------------------------------------------------------------------------------------------[0m
+[38;2;0;191;255mDisabled fail fast![0m
+[38;2;0;191;255mSet write reports to D:/Usuarios/fede/Documentos/Catedra Videojuegos FADU/manada/repo/nosefia/.claude/worktrees/batch-20261010-369/reports/focal-369[0m
+[38;2;218;165;32m
+Headless mode is ignored by option '--ignoreHeadlessMode'"
+
+Please note that tests that use UI interaction do not work correctly in headless mode.
+Godot 'InputEvents' are not transported by the Godot engine in headless mode and therefore
+have no effect in the test!
+[0m
+[38;2;100;149;237mInstalling GdUnit4 session system hooks.[0m
+[38;2;100;149;237mSession hook 'GdUnitHtmlTestReporter' installed.[0m
+[38;2;100;149;237mSession hook 'GdUnitXMLTestReporter' installed.[0m
+[38;2;100;149;237mInstalling GdUnit4 session hooks.[0m
+[38;2;100;149;237mSession hook 'Guardado de la sesión' installed.[0m
+[38;2;0;206;209mRun Test Suite: [0m[38;2;250;235;215mres://test/dominio/jornada/apertura_test.gd[0m
+  [38;2;250;235;215mres://test/dominio/jornada/apertura_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_cada_jornada_declara_sus_fijas_y_su_particular[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/jornada/apertura_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_cada_jornada_declara_sus_fijas_y_su_particular[0m[38;2;178;34;34m[1m FAILED[0m[38;2;100;149;237m 7ms[0m
+  [38;2;0;206;209m[1m[4mReport:[0m
+  [38;2;128;128;128m[38;2;255;69;0mExpecting contains exactly elements:[0m
+ '[38;2;30;144;255m[0, 1, 2, 3, 4, 5][0m'
+ do contains (in same order)
+ '[38;2;30;144;255m[0, 2, 3, 1, 5][0m'
+but some elements where not expected:
+ '[38;2;30;144;255m[4][0m'[0m[38;2;173;216;230m	at 'test_cada_jornada_declara_sus_fijas_y_su_particular' in res://test/dominio/jornada/apertura_test.gd:22[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ [38;2;30;144;255m5[0m
+ but was
+ [38;2;30;144;255m6[0m[0m[38;2;173;216;230m	at 'test_cada_jornada_declara_sus_fijas_y_su_particular' in res://test/dominio/jornada/apertura_test.gd:23[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ '[38;2;30;144;255mtrue[0m'
+ but was
+ '[38;2;30;144;255mfalse[0m'[0m[38;2;173;216;230m	at 'test_cada_jornada_declara_sus_fijas_y_su_particular' in res://test/dominio/jornada/apertura_test.gd:24[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting contains exactly elements:[0m
+ '[38;2;30;144;255m[0, 1, 2, 3, 4, 5][0m'
+ do contains (in same order)
+ '[38;2;30;144;255m[0, 2, 3, 1, 4][0m'
+but some elements where not expected:
+ '[38;2;30;144;255m[5][0m'[0m[38;2;173;216;230m	at 'test_cada_jornada_declara_sus_fijas_y_su_particular' in res://test/dominio/jornada/apertura_test.gd:22[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ [38;2;30;144;255m5[0m
+ but was
+ [38;2;30;144;255m6[0m[0m[38;2;173;216;230m	at 'test_cada_jornada_declara_sus_fijas_y_su_particular' in res://test/dominio/jornada/apertura_test.gd:23[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting contains exactly elements:[0m
+ '[38;2;30;144;255m[0, 1, 2, 3, 4, 5][0m'
+ do contains (in same order)
+ '[38;2;30;144;255m[0, 2, 3, 1][0m'
+but some elements where not expected:
+ '[38;2;30;144;255m[4, 5][0m'[0m[38;2;173;216;230m	at 'test_cada_jornada_declara_sus_fijas_y_su_particular' in res://test/dominio/jornada/apertura_test.gd:22[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ [38;2;30;144;255m4[0m
+ but was
+ [38;2;30;144;255m6[0m[0m[38;2;173;216;230m	at 'test_cada_jornada_declara_sus_fijas_y_su_particular' in res://test/dominio/jornada/apertura_test.gd:23[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting contains exactly elements:[0m
+ '[38;2;30;144;255m[0, 1, 2, 3, 4, 5][0m'
+ do contains (in same order)
+ '[38;2;30;144;255m[0, 2, 3, 1][0m'
+but some elements where not expected:
+ '[38;2;30;144;255m[4, 5][0m'[0m[38;2;173;216;230m	at 'test_cada_jornada_declara_sus_fijas_y_su_particular' in res://test/dominio/jornada/apertura_test.gd:22[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ [38;2;30;144;255m4[0m
+ but was
+ [38;2;30;144;255m6[0m[0m[38;2;173;216;230m	at 'test_cada_jornada_declara_sus_fijas_y_su_particular' in res://test/dominio/jornada/apertura_test.gd:23[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting contains exactly elements:[0m
+ '[38;2;30;144;255m[0, 1, 2, 3, 4, 5][0m'
+ do contains (in same order)
+ '[38;2;30;144;255m[0, 2, 3, 1][0m'
+but some elements where not expected:
+ '[38;2;30;144;255m[4, 5][0m'[0m[38;2;173;216;230m	at 'test_cada_jornada_declara_sus_fijas_y_su_particular' in res://test/dominio/jornada/apertura_test.gd:22[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ [38;2;30;144;255m4[0m
+ but was
+ [38;2;30;144;255m6[0m[0m[38;2;173;216;230m	at 'test_cada_jornada_declara_sus_fijas_y_su_particular' in res://test/dominio/jornada/apertura_test.gd:23[0m[38;2;128;128;128m[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/jornada/apertura_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_el_turno_de_la_jornada_nace_con_el_presupuesto_entero[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/jornada/apertura_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_el_turno_de_la_jornada_nace_con_el_presupuesto_entero[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 8ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/jornada/apertura_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_el_turno_de_la_jornada_nace_sin_ninguna_tarea_cumplida[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/jornada/apertura_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_el_turno_de_la_jornada_nace_sin_ninguna_tarea_cumplida[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 6ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/jornada/apertura_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_dos_aperturas_no_comparten_instancias_ni_cumplidas[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/jornada/apertura_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_dos_aperturas_no_comparten_instancias_ni_cumplidas[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 7ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/jornada/apertura_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_el_turno_cuenta_contra_la_lista_que_recibe_y_no_contra_una_copia[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/jornada/apertura_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_el_turno_cuenta_contra_la_lista_que_recibe_y_no_contra_una_copia[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 8ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/jornada/apertura_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_cada_caja_del_deposito_arranca_con_ocho_en_todas_las_jornadas[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/jornada/apertura_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_cada_caja_del_deposito_arranca_con_ocho_en_todas_las_jornadas[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 9ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/jornada/apertura_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_la_gondola_arranca_con_su_fila_menos_lo_que_falta[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/jornada/apertura_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_la_gondola_arranca_con_su_fila_menos_lo_que_falta[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 8ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/jornada/apertura_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_un_faltante_de_una_caja_entera_se_repone_con_esa_caja[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/jornada/apertura_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_un_faltante_de_una_caja_entera_se_repone_con_esa_caja[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 8ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/jornada/apertura_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_la_primera_jornada_abre_con_los_cinco_faltantes_de_la_ficha[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/jornada/apertura_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_la_primera_jornada_abre_con_los_cinco_faltantes_de_la_ficha[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 9ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/jornada/apertura_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_de_la_segunda_a_la_quinta_faltan_los_mismos_que_en_la_primera[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/jornada/apertura_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_de_la_segunda_a_la_quinta_faltan_los_mismos_que_en_la_primera[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 8ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/jornada/apertura_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_los_faltantes_de_una_jornada_se_devuelven_en_una_copia[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/jornada/apertura_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_los_faltantes_de_una_jornada_se_devuelven_en_una_copia[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 7ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/jornada/apertura_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_un_faltante_mas_grande_que_su_fila_deja_la_gondola_en_cero[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/jornada/apertura_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_un_faltante_mas_grande_que_su_fila_deja_la_gondola_en_cero[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 7ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/jornada/apertura_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_un_casillero_que_se_vacia_vuelve_a_faltar[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/jornada/apertura_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_un_casillero_que_se_vacia_vuelve_a_faltar[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 9ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/jornada/apertura_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_los_pedidos_de_cada_jornada_entran_sin_quitarle_a_la_reposicion[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/jornada/apertura_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_los_pedidos_de_cada_jornada_entran_sin_quitarle_a_la_reposicion[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 13ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/jornada/apertura_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_cada_jornada_recibe_un_inventario_propio[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/jornada/apertura_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_cada_jornada_recibe_un_inventario_propio[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 8ms[0m
+[38;2;128;128;128m[0m
+[38;2;30;144;255mStatistics:[0m[38;2;128;128;128m 15 test cases | 0 errors | 11 failures | 0 flaky | 0 skipped | 0 orphans |[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 223ms[0m
+[38;2;128;128;128m[0m
+[38;2;128;128;128m[0m
+[38;2;0;206;209mRun Test Suite: [0m[38;2;250;235;215mres://test/dominio/almacen/orden_del_deposito_test.gd[0m
+  [38;2;250;235;215mres://test/dominio/almacen/orden_del_deposito_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_la_tabla_de_apoyos_y_la_mano_resuelven_el_orden[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/almacen/orden_del_deposito_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_la_tabla_de_apoyos_y_la_mano_resuelven_el_orden[0m[38;2;178;34;34m[1m FAILED[0m[38;2;100;149;237m 7ms[0m
+  [38;2;0;206;209m[1m[4mReport:[0m
+  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ '[38;2;30;144;255mtrue[0m'
+ but was
+ '[38;2;30;144;255mfalse[0m'[0m[38;2;173;216;230m	at 'test_la_tabla_de_apoyos_y_la_mano_resuelven_el_orden' in res://test/dominio/almacen/orden_del_deposito_test.gd:16[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ '[38;2;30;144;255mtrue[0m'
+ but was
+ '[38;2;30;144;255mfalse[0m'[0m[38;2;173;216;230m	at 'test_la_tabla_de_apoyos_y_la_mano_resuelven_el_orden' in res://test/dominio/almacen/orden_del_deposito_test.gd:17[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ '[38;2;30;144;255mtrue[0m'
+ but was
+ '[38;2;30;144;255mfalse[0m'[0m[38;2;173;216;230m	at 'test_la_tabla_de_apoyos_y_la_mano_resuelven_el_orden' in res://test/dominio/almacen/orden_del_deposito_test.gd:16[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ '[38;2;30;144;255mtrue[0m'
+ but was
+ '[38;2;30;144;255mfalse[0m'[0m[38;2;173;216;230m	at 'test_la_tabla_de_apoyos_y_la_mano_resuelven_el_orden' in res://test/dominio/almacen/orden_del_deposito_test.gd:17[0m[38;2;128;128;128m[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/almacen/orden_del_deposito_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_ciclos_y_apoyos_ausentes_no_ordenan[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/almacen/orden_del_deposito_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_ciclos_y_apoyos_ausentes_no_ordenan[0m[38;2;178;34;34m[1m FAILED[0m[38;2;100;149;237m 9ms[0m
+  [38;2;0;206;209m[1m[4mReport:[0m
+  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m '[38;2;30;144;255mtrue[0m' but is '[38;2;30;144;255mfalse[0m'[0m[38;2;173;216;230m	at 'test_ciclos_y_apoyos_ausentes_no_ordenan' in res://test/dominio/almacen/orden_del_deposito_test.gd:31[0m[38;2;128;128;128m[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/almacen/orden_del_deposito_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_una_cadena_larga_termina_en_estanteria_o_en_el_piso[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/almacen/orden_del_deposito_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_una_cadena_larga_termina_en_estanteria_o_en_el_piso[0m[38;2;178;34;34m[1m FAILED[0m[38;2;100;149;237m 9ms[0m
+  [38;2;0;206;209m[1m[4mReport:[0m
+  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m '[38;2;30;144;255mtrue[0m' but is '[38;2;30;144;255mfalse[0m'[0m[38;2;173;216;230m	at 'test_una_cadena_larga_termina_en_estanteria_o_en_el_piso' in res://test/dominio/almacen/orden_del_deposito_test.gd:42[0m[38;2;128;128;128m[0m
+[38;2;128;128;128m[0m
+[38;2;30;144;255mStatistics:[0m[38;2;128;128;128m 3 test cases | 0 errors | 6 failures | 0 flaky | 0 skipped | 0 orphans |[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 60ms[0m
+[38;2;128;128;128m[0m
+[38;2;128;128;128m[0m
+[38;2;0;206;209mRun Test Suite: [0m[38;2;250;235;215mres://test/dominio/almacen/nota_pegada_test.gd[0m
+  [38;2;250;235;215mres://test/dominio/almacen/nota_pegada_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_las_obligatorias_se_presentan_en_el_orden_de_la_ficha[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/almacen/nota_pegada_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_las_obligatorias_se_presentan_en_el_orden_de_la_ficha[0m[38;2;178;34;34m[1m FAILED[0m[38;2;100;149;237m 7ms[0m
+  [38;2;0;206;209m[1m[4mReport:[0m
+  [38;2;128;128;128m[38;2;255;69;0mExpecting contains exactly elements:[0m
+ '[38;2;30;144;255m["Atención al cliente", "Registro de productos vendidos", "Limpieza", "Reposición", "Sacar la basura"][0m'
+ do contains (in same order)
+ '[38;2;30;144;255m["Atención al cliente", "Registro de productos vendidos", "Limpieza", "Reposición", "Ordenar cajas en el depósito"][0m'
+but some elements where not expected:
+ '[38;2;30;144;255m["Sacar la basura"][0m'
+and could not find elements:
+ '[38;2;30;144;255m["Ordenar cajas en el depósito"][0m'[0m[38;2;173;216;230m	at 'test_las_obligatorias_se_presentan_en_el_orden_de_la_ficha' in res://test/dominio/almacen/nota_pegada_test.gd:10[0m[38;2;128;128;128m[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/almacen/nota_pegada_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_dos_obligatorias_dan_dos_renglones_en_su_orden[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/almacen/nota_pegada_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_dos_obligatorias_dan_dos_renglones_en_su_orden[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 6ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/almacen/nota_pegada_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_sin_obligatorias_hay_titulo_y_ningun_renglon[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/almacen/nota_pegada_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_sin_obligatorias_hay_titulo_y_ningun_renglon[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 8ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/almacen/nota_pegada_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_cada_tipo_de_tarea_declarado_tiene_nombre[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/almacen/nota_pegada_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_cada_tipo_de_tarea_declarado_tiene_nombre[0m[38;2;178;34;34m[1m FAILED[0m[38;2;100;149;237m 7ms[0m
+  [38;2;0;206;209m[1m[4mReport:[0m
+  [38;2;128;128;128mFalta el nombre de la tarea 5[0m[38;2;173;216;230m	at 'test_cada_tipo_de_tarea_declarado_tiene_nombre' in res://test/dominio/almacen/nota_pegada_test.gd:42[0m[38;2;128;128;128m[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/almacen/nota_pegada_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_mantener_ordenado_dice_las_tres_indicaciones_de_la_ficha[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/almacen/nota_pegada_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_mantener_ordenado_dice_las_tres_indicaciones_de_la_ficha[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 7ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/almacen/nota_pegada_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_las_hojas_del_bano_no_generan_una_transcripcion[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/almacen/nota_pegada_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_las_hojas_del_bano_no_generan_una_transcripcion[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 8ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/almacen/nota_pegada_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_cambiar_la_lectura_no_cambia_el_dato_compartido[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/almacen/nota_pegada_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_cambiar_la_lectura_no_cambia_el_dato_compartido[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 8ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/almacen/nota_pegada_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_la_jornada_sin_particular_enumera_solo_las_fijas[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/almacen/nota_pegada_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_la_jornada_sin_particular_enumera_solo_las_fijas[0m[38;2;178;34;34m[1m FAILED[0m[38;2;100;149;237m 8ms[0m
+  [38;2;0;206;209m[1m[4mReport:[0m
+  [38;2;128;128;128m[38;2;255;69;0mExpecting contains exactly elements:[0m
+ '[38;2;30;144;255m["Atención al cliente", "Registro de productos vendidos", "Limpieza", "Reposición", "Sacar la basura"][0m'
+ do contains (in same order)
+ '[38;2;30;144;255m["Atención al cliente", "Registro de productos vendidos", "Limpieza", "Reposición"][0m'
+but some elements where not expected:
+ '[38;2;30;144;255m["Sacar la basura"][0m'[0m[38;2;173;216;230m	at 'test_la_jornada_sin_particular_enumera_solo_las_fijas' in res://test/dominio/almacen/nota_pegada_test.gd:88[0m[38;2;128;128;128m[0m
+[38;2;128;128;128m[0m
+[38;2;30;144;255mStatistics:[0m[38;2;128;128;128m 8 test cases | 0 errors | 3 failures | 0 flaky | 0 skipped | 0 orphans |[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 119ms[0m
+[38;2;128;128;128m[0m
+[38;2;128;128;128m[0m
+[38;2;0;206;209mRun Test Suite: [0m[38;2;250;235;215mres://test/sistemas/tareas/acomodador_del_deposito_test.gd[0m
+  [38;2;250;235;215mres://test/sistemas/tareas/acomodador_del_deposito_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_revisar_cumple_descumple_y_no_cambia_el_cierre[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/sistemas/tareas/acomodador_del_deposito_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_revisar_cumple_descumple_y_no_cambia_el_cierre[0m[38;2;178;34;34m[1m FAILED[0m[38;2;100;149;237m 9ms[0m
+  [38;2;0;206;209m[1m[4mReport:[0m
+  [38;2;128;128;128m[38;2;255;69;0mExpecting contains exactly elements:[0m
+ '[38;2;30;144;255m<empty>[0m'
+ do contains (in same order)
+ '[38;2;30;144;255m[1][0m'
+but could not find elements:
+ '[38;2;30;144;255m[1][0m'[0m[38;2;173;216;230m	at 'test_revisar_cumple_descumple_y_no_cambia_el_cierre' in res://test/sistemas/tareas/acomodador_del_deposito_test.gd:17[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m '[38;2;30;144;255mtrue[0m' but is '[38;2;30;144;255mfalse[0m'[0m[38;2;173;216;230m	at 'test_revisar_cumple_descumple_y_no_cambia_el_cierre' in res://test/sistemas/tareas/acomodador_del_deposito_test.gd:18[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting contains exactly elements:[0m
+ '[38;2;30;144;255m<empty>[0m'
+ do contains (in same order)
+ '[38;2;30;144;255m[1, 0][0m'
+but could not find elements:
+ '[38;2;30;144;255m[1, 0][0m'[0m[38;2;173;216;230m	at 'test_revisar_cumple_descumple_y_no_cambia_el_cierre' in res://test/sistemas/tareas/acomodador_del_deposito_test.gd:21[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m '[38;2;30;144;255mtrue[0m' but is '[38;2;30;144;255mfalse[0m'[0m[38;2;173;216;230m	at 'test_revisar_cumple_descumple_y_no_cambia_el_cierre' in res://test/sistemas/tareas/acomodador_del_deposito_test.gd:27[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting contains exactly elements:[0m
+ '[38;2;30;144;255m<empty>[0m'
+ do contains (in same order)
+ '[38;2;30;144;255m[1, 0, 1][0m'
+but could not find elements:
+ '[38;2;30;144;255m[1, 0, 1][0m'[0m[38;2;173;216;230m	at 'test_revisar_cumple_descumple_y_no_cambia_el_cierre' in res://test/sistemas/tareas/acomodador_del_deposito_test.gd:28[0m[38;2;128;128;128m[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/sistemas/tareas/acomodador_del_deposito_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_sin_particular_no_completa_otra_tarea[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/sistemas/tareas/acomodador_del_deposito_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_sin_particular_no_completa_otra_tarea[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 7ms[0m
+[38;2;128;128;128m[0m
+[38;2;30;144;255mStatistics:[0m[38;2;128;128;128m 2 test cases | 0 errors | 5 failures | 0 flaky | 0 skipped | 0 orphans |[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 43ms[0m
+[38;2;128;128;128m[0m
+[38;2;128;128;128m[0m
+[38;2;30;144;255mOverall Summary:[0m[38;2;255;255;255m 28 test cases | 0 errors | 25 failures | 0 flaky | 0 skipped | 0 orphans |[0m
+[38;2;233;150;122mExecuted test suites: (4/4)[0m
+[38;2;233;150;122mExecuted test cases : (28/28)[0m
+[38;2;233;150;122mTotal execution time: 445ms[0m
+[38;2;255;255;255m [0m[38;2;100;149;237mOpen XML Report at: file://D:/Usuarios/fede/Documentos/Catedra Videojuegos FADU/manada/repo/nosefia/.claude/worktrees/batch-20261010-369/reports/focal-369/report_1/results.xml[0m
+[38;2;100;149;237mOpen HTML Report at: file://D:/Usuarios/fede/Documentos/Catedra Videojuegos FADU/manada/repo/nosefia/.claude/worktrees/batch-20261010-369/reports/focal-369/report_1/index.html[0m
+[38;2;178;34;34mExit code: 100[0m
+Run dispose test resources

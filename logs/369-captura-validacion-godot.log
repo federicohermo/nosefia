@@ -1,0 +1,242 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+
+--------------------------------------------------------------------------------------------------
+GdUnit4 Comandline Tool
+--------------------------------------------------------------------------------------------------
+Disabled fail fast!
+Set write reports to D:/Usuarios/fede/Documentos/Catedra Videojuegos FADU/manada/repo/nosefia/.claude/worktrees/batch-20261010-369/reports/focal-369
+
+Headless mode is ignored by option '--ignoreHeadlessMode'"
+
+Please note that tests that use UI interaction do not work correctly in headless mode.
+Godot 'InputEvents' are not transported by the Godot engine in headless mode and therefore
+have no effect in the test!
+
+Installing GdUnit4 session system hooks.
+Session hook 'GdUnitHtmlTestReporter' installed.
+Session hook 'GdUnitXMLTestReporter' installed.
+Installing GdUnit4 session hooks.
+Session hook 'Guardado de la sesión' installed.
+Run Test Suite: res://test/dominio/empleo/reglas_de_la_partida_test.gd
+  res://test/dominio/empleo/reglas_de_la_partida_test.gd > test_la_partida_dura_las_cinco_jornadas_del_gdd STARTED
+  res://test/dominio/empleo/reglas_de_la_partida_test.gd > test_la_partida_dura_las_cinco_jornadas_del_gdd PASSED 7ms
+
+  res://test/dominio/empleo/reglas_de_la_partida_test.gd > test_ningun_otro_archivo_del_ciclo_escribe_una_cifra_de_balance STARTED
+  res://test/dominio/empleo/reglas_de_la_partida_test.gd > test_ningun_otro_archivo_del_ciclo_escribe_una_cifra_de_balance PASSED 7ms
+
+  res://test/dominio/empleo/reglas_de_la_partida_test.gd > test_la_demo_alcanza_para_llegar_al_despido STARTED
+  res://test/dominio/empleo/reglas_de_la_partida_test.gd > test_la_demo_alcanza_para_llegar_al_despido PASSED 6ms
+
+  res://test/dominio/empleo/reglas_de_la_partida_test.gd > test_los_tres_espejos_de_este_spec_estan_escritos STARTED
+  res://test/dominio/empleo/reglas_de_la_partida_test.gd > test_los_tres_espejos_de_este_spec_estan_escritos PASSED 6ms
+
+  res://test/dominio/empleo/reglas_de_la_partida_test.gd > test_el_barrido_caza_la_cifra_de_balance_y_deja_pasar_la_prosa STARTED
+  res://test/dominio/empleo/reglas_de_la_partida_test.gd > test_el_barrido_caza_la_cifra_de_balance_y_deja_pasar_la_prosa PASSED 6ms
+
+  res://test/dominio/empleo/reglas_de_la_partida_test.gd > test_el_barrido_no_confunde_decimales_geometricos_con_enteros STARTED
+  res://test/dominio/empleo/reglas_de_la_partida_test.gd > test_el_barrido_no_confunde_decimales_geometricos_con_enteros PASSED 6ms
+
+Statistics: 6 test cases | 0 errors | 0 failures | 0 flaky | 0 skipped | 0 orphans | PASSED 74ms
+
+
+Run Test Suite: res://test/sistemas/tareas/acomodador_del_deposito_test.gd
+  res://test/sistemas/tareas/acomodador_del_deposito_test.gd > test_cumple_descumple_y_congela_el_cierre STARTED
+  res://test/sistemas/tareas/acomodador_del_deposito_test.gd > test_cumple_descumple_y_congela_el_cierre PASSED 5ms
+
+  res://test/sistemas/tareas/acomodador_del_deposito_test.gd > test_sin_particular_no_completa_otra_tarea STARTED
+  res://test/sistemas/tareas/acomodador_del_deposito_test.gd > test_sin_particular_no_completa_otra_tarea PASSED 7ms
+
+Statistics: 2 test cases | 0 errors | 0 failures | 0 flaky | 0 skipped | 0 orphans | PASSED 28ms
+
+
+Run Test Suite: res://test/escenas/deposito_ordenado_test.gd
+  res://test/escenas/deposito_ordenado_test.gd > test_la_pila_completa_no_se_superpone_y_la_mira_alcanza_cada_caja STARTED
+  res://test/escenas/deposito_ordenado_test.gd > test_la_pila_completa_no_se_superpone_y_la_mira_alcanza_cada_caja PASSED 1s 673ms
+
+  res://test/escenas/deposito_ordenado_test.gd > test_la_pila_estable_vuelve_a_estantes_en_la_segunda_noche STARTED
+  res://test/escenas/deposito_ordenado_test.gd > test_la_pila_estable_vuelve_a_estantes_en_la_segunda_noche PASSED 2s 127ms
+
+  res://test/escenas/deposito_ordenado_test.gd > test_apoyar_descumplir_sostener_y_examinar_actualizan_ordenar_y_hud STARTED
+  res://test/escenas/deposito_ordenado_test.gd > test_apoyar_descumplir_sostener_y_examinar_actualizan_ordenar_y_hud PASSED 325ms
+
+  res://test/escenas/deposito_ordenado_test.gd > test_el_rescate_usa_el_origen_de_la_noche STARTED
+WARNING: Rescate: `CajaDeDurextra` estaba adentro de `StaticBody3D` en (-1.239614, 5.982994, -11.83821); va a ENCIMA_DEL_ORIGEN
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] revisar (res://src/sistemas/marco/red_de_seguridad.gd:101)
+       [1] test_el_rescate_usa_el_origen_de_la_noche (res://test/escenas/deposito_ordenado_test.gd:256)
+       [2] _abrir (res://test/escenas/deposito_ordenado_test.gd:26)
+  res://test/escenas/deposito_ordenado_test.gd > test_el_rescate_usa_el_origen_de_la_noche PASSED 138ms
+
+  res://test/escenas/deposito_ordenado_test.gd > test_hud_y_nota_siguen_la_jornada_sin_recargar_el_local STARTED
+ERROR: Signal 'persiana_subida' is already connected to given callable 'Node3D(almacen.gd)::_al_subir_la_persiana' in that object.
+   at: connect (core/object/object.cpp:1562)
+   GDScript backtrace (most recent call first):
+       [0] anunciar_la_noche (res://src/escenas/almacen.gd:327)
+       [1] _seguir (res://src/escenas/almacen.gd:320)
+       [2] _al_despachar_la_placa (res://src/escenas/almacen.gd:314)
+       [3] test_hud_y_nota_siguen_la_jornada_sin_recargar_el_local (res://test/escenas/deposito_ordenado_test.gd:293)
+  res://test/escenas/deposito_ordenado_test.gd > test_hud_y_nota_siguen_la_jornada_sin_recargar_el_local PASSED 184ms
+
+Statistics: 5 test cases | 0 errors | 0 failures | 0 flaky | 0 skipped | 0 orphans | PASSED 4s 484ms
+
+
+Run Test Suite: res://test/escenas/objetos/ubicacion_en_el_deposito_test.gd
+  res://test/escenas/objetos/ubicacion_en_el_deposito_test.gd > test_las_cajas_de_reposicion_estan_apoyadas_en_el_deposito STARTED
+  res://test/escenas/objetos/ubicacion_en_el_deposito_test.gd > test_las_cajas_de_reposicion_estan_apoyadas_en_el_deposito PASSED 128ms
+
+  res://test/escenas/objetos/ubicacion_en_el_deposito_test.gd > test_cada_caja_le_muestra_su_etiqueta_al_cuarto STARTED
+  res://test/escenas/objetos/ubicacion_en_el_deposito_test.gd > test_cada_caja_le_muestra_su_etiqueta_al_cuarto PASSED 129ms
+
+  res://test/escenas/objetos/ubicacion_en_el_deposito_test.gd > test_las_tres_bolsas_arrancan_en_el_deposito_y_lejos_del_contenedor STARTED
+  res://test/escenas/objetos/ubicacion_en_el_deposito_test.gd > test_las_tres_bolsas_arrancan_en_el_deposito_y_lejos_del_contenedor PASSED 124ms
+
+  res://test/escenas/objetos/ubicacion_en_el_deposito_test.gd > test_abrir_la_jornada_devuelve_cada_caja_a_su_lugar STARTED
+  res://test/escenas/objetos/ubicacion_en_el_deposito_test.gd > test_abrir_la_jornada_devuelve_cada_caja_a_su_lugar PASSED 132ms
+
+Statistics: 4 test cases | 0 errors | 0 failures | 0 flaky | 0 skipped | 0 orphans | PASSED 544ms
+
+
+Run Test Suite: res://test/escenas/red_de_seguridad_integrada_test.gd
+  res://test/escenas/red_de_seguridad_integrada_test.gd > test_el_empujon_que_termino_adentro_se_deshace STARTED
+WARNING: Rescate: `CajaDeChisitos` estaba adentro de `Volumen` en (2.0, 5.9, -11.0); va a DESHACER
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] revisar (res://src/sistemas/marco/red_de_seguridad.gd:101)
+       [1] _physics_process (res://src/sistemas/marco/red_de_seguridad.gd:61)
+  res://test/escenas/red_de_seguridad_integrada_test.gd > test_el_empujon_que_termino_adentro_se_deshace PASSED 148ms
+
+  res://test/escenas/red_de_seguridad_integrada_test.gd > test_lo_soltado_adentro_va_al_piso_al_lado_del_jugador STARTED
+WARNING: Rescate: `ObjetoAgarrable` estaba adentro de `Volumen` en (2.000003, 5.726033, -11.00001); va a DESHACER
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] revisar (res://src/sistemas/marco/red_de_seguridad.gd:101)
+       [1] _al_soltar (res://src/sistemas/marco/red_de_seguridad.gd:127)
+  res://test/escenas/red_de_seguridad_integrada_test.gd > test_lo_soltado_adentro_va_al_piso_al_lado_del_jugador PASSED 135ms
+
+  res://test/escenas/red_de_seguridad_integrada_test.gd > test_encima_de_la_caja_que_ocupa_el_origen STARTED
+WARNING: Rescate: `CajaDeArvejas` estaba adentro de `Volumen` en (2.0, 5.9, -11.0); va a ENCIMA_DEL_ORIGEN
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] revisar (res://src/sistemas/marco/red_de_seguridad.gd:101)
+       [1] test_encima_de_la_caja_que_ocupa_el_origen (res://test/escenas/red_de_seguridad_integrada_test.gd:145)
+  res://test/escenas/red_de_seguridad_integrada_test.gd > test_encima_de_la_caja_que_ocupa_el_origen PASSED 130ms
+
+  res://test/escenas/red_de_seguridad_integrada_test.gd > test_el_origen_es_el_ultimo_recurso STARTED
+WARNING: Rescate: `CajaDeArvejas` estaba adentro de `Volumen` en (2.0, 5.9, -11.0); va a ORIGEN
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] revisar (res://src/sistemas/marco/red_de_seguridad.gd:101)
+       [1] test_el_origen_es_el_ultimo_recurso (res://test/escenas/red_de_seguridad_integrada_test.gd:156)
+       [2] _almacen (res://test/escenas/red_de_seguridad_integrada_test.gd:33)
+  res://test/escenas/red_de_seguridad_integrada_test.gd > test_el_origen_es_el_ultimo_recurso PASSED 127ms
+
+  res://test/escenas/red_de_seguridad_integrada_test.gd > test_sin_ningun_candidato_la_red_no_devuelve_a_la_mano STARTED
+WARNING: Rescate: `ObjetoAgarrable` estaba adentro de `Volumen` en (2.0, 5.9, -11.0); queda donde está: ningún lugar libre
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] revisar (res://src/sistemas/marco/red_de_seguridad.gd:101)
+       [1] test_sin_ningun_candidato_la_red_no_devuelve_a_la_mano (res://test/escenas/red_de_seguridad_integrada_test.gd:170)
+       [2] _almacen (res://test/escenas/red_de_seguridad_integrada_test.gd:33)
+  res://test/escenas/red_de_seguridad_integrada_test.gd > test_sin_ningun_candidato_la_red_no_devuelve_a_la_mano PASSED 133ms
+
+  res://test/escenas/red_de_seguridad_integrada_test.gd > test_rescatar_una_caja_y_una_unidad_no_mueve_la_mercaderia STARTED
+WARNING: Rescate: `CajaDeArvejas` estaba adentro de `Volumen` en (2.0, 5.9, -11.0); va a ENCIMA_DEL_ORIGEN
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] revisar (res://src/sistemas/marco/red_de_seguridad.gd:101)
+       [1] test_rescatar_una_caja_y_una_unidad_no_mueve_la_mercaderia (res://test/escenas/red_de_seguridad_integrada_test.gd:181)
+       [2] _almacen (res://test/escenas/red_de_seguridad_integrada_test.gd:33)
+WARNING: Rescate: `ObjetoAgarrable` estaba adentro de `Volumen` en (2.0, 5.9, -11.0); va a ORIGEN
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] revisar (res://src/sistemas/marco/red_de_seguridad.gd:101)
+       [1] test_rescatar_una_caja_y_una_unidad_no_mueve_la_mercaderia (res://test/escenas/red_de_seguridad_integrada_test.gd:188)
+       [2] _almacen (res://test/escenas/red_de_seguridad_integrada_test.gd:33)
+  res://test/escenas/red_de_seguridad_integrada_test.gd > test_rescatar_una_caja_y_una_unidad_no_mueve_la_mercaderia PASSED 138ms
+
+  res://test/escenas/red_de_seguridad_integrada_test.gd > test_rescatar_las_bolsas_no_las_cuenta_ni_las_descuenta STARTED
+WARNING: Rescate: `BolsaDeBasura2` estaba adentro de `StaticBody3D` en (-1.9, 0.202237, 6.33); va a ALREDEDOR
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] revisar (res://src/sistemas/marco/red_de_seguridad.gd:101)
+       [1] test_rescatar_las_bolsas_no_las_cuenta_ni_las_descuenta (res://test/escenas/red_de_seguridad_integrada_test.gd:220)
+       [2] _almacen (res://test/escenas/red_de_seguridad_integrada_test.gd:33)
+  res://test/escenas/red_de_seguridad_integrada_test.gd > test_rescatar_las_bolsas_no_las_cuenta_ni_las_descuenta PASSED 132ms
+
+Statistics: 7 test cases | 0 errors | 0 failures | 0 flaky | 0 skipped | 0 orphans | PASSED 990ms
+
+
+Run Test Suite: res://test/escenas/objetos/caja_que_se_lleva_test.gd
+  res://test/escenas/objetos/caja_que_se_lleva_test.gd > test_la_caja_entrega_apoyada_en_el_estante_y_no_mientras_se_la_lleva STARTED
+  res://test/escenas/objetos/caja_que_se_lleva_test.gd > test_la_caja_entrega_apoyada_en_el_estante_y_no_mientras_se_la_lleva PASSED 142ms
+
+  res://test/escenas/objetos/caja_que_se_lleva_test.gd > test_el_clic_izquierdo_levanta_la_caja_y_no_entrega_producto STARTED
+  res://test/escenas/objetos/caja_que_se_lleva_test.gd > test_el_clic_izquierdo_levanta_la_caja_y_no_entrega_producto PASSED 128ms
+
+  res://test/escenas/objetos/caja_que_se_lleva_test.gd > test_la_caja_llevada_no_tapa_la_mira_ni_atraviesa_la_pared STARTED
+  res://test/escenas/objetos/caja_que_se_lleva_test.gd > test_la_caja_llevada_no_tapa_la_mira_ni_atraviesa_la_pared PASSED 3s 921ms
+
+  res://test/escenas/objetos/caja_que_se_lleva_test.gd > test_la_caja_soltada_queda_apoyada_en_el_piso_sin_caer STARTED
+  res://test/escenas/objetos/caja_que_se_lleva_test.gd > test_la_caja_soltada_queda_apoyada_en_el_piso_sin_caer PASSED 126ms
+
+  res://test/escenas/objetos/caja_que_se_lleva_test.gd > test_la_caja_soltada_se_acomoda_adentro_de_su_apoyo STARTED
+  res://test/escenas/objetos/caja_que_se_lleva_test.gd > test_la_caja_soltada_se_acomoda_adentro_de_su_apoyo PASSED 3s 951ms
+
+  res://test/escenas/objetos/caja_que_se_lleva_test.gd > test_soltar_mirando_el_costado_de_una_caja_la_apila_encima STARTED
+  res://test/escenas/objetos/caja_que_se_lleva_test.gd > test_soltar_mirando_el_costado_de_una_caja_la_apila_encima PASSED 4s 48ms
+
+  res://test/escenas/objetos/caja_que_se_lleva_test.gd > test_alrededor_de_un_estante_con_lugar_la_caja_siempre_sube_a_el STARTED
+  res://test/escenas/objetos/caja_que_se_lleva_test.gd > test_alrededor_de_un_estante_con_lugar_la_caja_siempre_sube_a_el PASSED 415ms
+
+  res://test/escenas/objetos/caja_que_se_lleva_test.gd > test_frente_a_un_rack_abierto_la_caja_queda_en_el_pallet_que_se_mira STARTED
+  res://test/escenas/objetos/caja_que_se_lleva_test.gd > test_frente_a_un_rack_abierto_la_caja_queda_en_el_pallet_que_se_mira PASSED 3s 723ms
+
+  res://test/escenas/objetos/caja_que_se_lleva_test.gd > test_la_mira_que_pasa_por_encima_de_la_caja_de_enfrente_la_apila STARTED
+  res://test/escenas/objetos/caja_que_se_lleva_test.gd > test_la_mira_que_pasa_por_encima_de_la_caja_de_enfrente_la_apila PASSED 363ms
+
+  res://test/escenas/objetos/caja_que_se_lleva_test.gd > test_una_pila_de_cajas_de_distinto_tamano_se_sigue_apilando STARTED
+  res://test/escenas/objetos/caja_que_se_lleva_test.gd > test_una_pila_de_cajas_de_distinto_tamano_se_sigue_apilando PASSED 372ms
+
+  res://test/escenas/objetos/caja_que_se_lleva_test.gd > test_la_caja_vuelta_a_su_lugar_apoya_entera STARTED
+  res://test/escenas/objetos/caja_que_se_lleva_test.gd > test_la_caja_vuelta_a_su_lugar_apoya_entera PASSED 135ms
+
+  res://test/escenas/objetos/caja_que_se_lleva_test.gd > test_la_caja_va_donde_apunta_la_mira STARTED
+  res://test/escenas/objetos/caja_que_se_lleva_test.gd > test_la_caja_va_donde_apunta_la_mira PASSED 4s 647ms
+
+  res://test/escenas/objetos/caja_que_se_lleva_test.gd > test_la_caja_soltada_nunca_queda_adentro_de_nada STARTED
+  res://test/escenas/objetos/caja_que_se_lleva_test.gd > test_la_caja_soltada_nunca_queda_adentro_de_nada PASSED 8s 760ms
+
+  res://test/escenas/objetos/caja_que_se_lleva_test.gd > test_la_caja_se_suelta_con_la_mira_sobre_un_charco STARTED
+  res://test/escenas/objetos/caja_que_se_lleva_test.gd > test_la_caja_se_suelta_con_la_mira_sobre_un_charco PASSED 1s 920ms
+
+  res://test/escenas/objetos/caja_que_se_lleva_test.gd > test_sacar_una_caja_de_la_pila_hace_caer_las_de_arriba STARTED
+  res://test/escenas/objetos/caja_que_se_lleva_test.gd > test_sacar_una_caja_de_la_pila_hace_caer_las_de_arriba PASSED 5s 376ms
+
+  res://test/escenas/objetos/caja_que_se_lleva_test.gd > test_agarrar_la_caja_del_estante_no_mueve_al_jugador STARTED
+  res://test/escenas/objetos/caja_que_se_lleva_test.gd > test_agarrar_la_caja_del_estante_no_mueve_al_jugador PASSED 4s 45ms
+
+  res://test/escenas/objetos/caja_que_se_lleva_test.gd > test_la_caja_del_piso_se_arrastra_en_vez_de_tapar_el_paso STARTED
+  res://test/escenas/objetos/caja_que_se_lleva_test.gd > test_la_caja_del_piso_se_arrastra_en_vez_de_tapar_el_paso PASSED 2s 547ms
+
+  res://test/escenas/objetos/caja_que_se_lleva_test.gd > test_levantar_la_caja_hace_caer_el_producto_apoyado_encima STARTED
+  res://test/escenas/objetos/caja_que_se_lleva_test.gd > test_levantar_la_caja_hace_caer_el_producto_apoyado_encima PASSED 7s 528ms
+
+  res://test/escenas/objetos/caja_que_se_lleva_test.gd > test_empujar_la_caja_hasta_sacarla_de_abajo_hace_caer_el_producto STARTED
+  res://test/escenas/objetos/caja_que_se_lleva_test.gd > test_empujar_la_caja_hasta_sacarla_de_abajo_hace_caer_el_producto PASSED 12s 534ms
+
+  res://test/escenas/objetos/caja_que_se_lleva_test.gd > test_el_producto_sobre_la_pila_cae_cuando_se_saca_la_caja_de_abajo STARTED
+  res://test/escenas/objetos/caja_que_se_lleva_test.gd > test_el_producto_sobre_la_pila_cae_cuando_se_saca_la_caja_de_abajo PASSED 5s 20ms
+
+Statistics: 20 test cases | 0 errors | 0 failures | 0 flaky | 0 skipped | 0 orphans | PASSED 1min 9s 832ms
+
+
+Overall Summary: 44 test cases | 0 errors | 0 failures | 0 flaky | 0 skipped | 0 orphans |
+Executed test suites: (6/6)
+Executed test cases : (44/44)
+Total execution time: 1min 15s 952ms
+ Open XML Report at: file://D:/Usuarios/fede/Documentos/Catedra Videojuegos FADU/manada/repo/nosefia/.claude/worktrees/batch-20261010-369/reports/focal-369/report_7/results.xml
+Open HTML Report at: file://D:/Usuarios/fede/Documentos/Catedra Videojuegos FADU/manada/repo/nosefia/.claude/worktrees/batch-20261010-369/reports/focal-369/report_7/index.html
+Exit code: 0
+Run dispose test resources

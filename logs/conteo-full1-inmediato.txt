@@ -1,0 +1,2 @@
+Extraído del stdout original 369-final.log; conteo.py ejecutado inmediatamente por verificar_con_crudo.py.
+reports/report_1: 231 suites corridas, 231 archivos `*_test.gd`

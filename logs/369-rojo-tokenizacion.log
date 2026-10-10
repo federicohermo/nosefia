@@ -1,0 +1,296 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+[   0% ] [90m[1mfirst_scan_filesystem[22m | Started Inicialización del proyecto (5 steps)[39m[0m
+[   0% ] [90m[1mfirst_scan_filesystem[22m | Escaneando la estructura del archivo...[39m[0m
+[  16% ] [90m[1mfirst_scan_filesystem[22m | Cargando nombres de clases globales...[39m[0m
+[  33% ] [90m[1mfirst_scan_filesystem[22m | Verificando GDExtensions...[39m[0m
+[  50% ] [90m[1mfirst_scan_filesystem[22m | Creando scripts de carga automática...[39m[0m
+[  66% ] [90m[1mfirst_scan_filesystem[22m | Inicializando plugins...[39m[0m
+[38;2;218;165;32mIt was recognized that GdUnit4 is running in a test environment, therefore the GdUnit4 plugin will not be executed![0m
+[MCP] Connecting to ports 6505-6514
+[MCP] Godot MCP Pro v1.16.0 started (ports 6505-6514)
+[MCP] Registered 177 commands
+[  83% ] [90m[1mfirst_scan_filesystem[22m | Iniciando escaneo de archivos...[39m[0m
+[92m[ DONE ][39m [1mfirst_scan_filesystem[22m
+[0m
+[   0% ] [90m[1mupdate_scripts_classes[22m | Started Registrando clases globales... (13 steps)[39m[0m
+[   0% ] [90m[1mupdate_scripts_classes[22m | EntradaALaNoche[39m[0m
+[   7% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  14% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  21% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  28% ] [90m[1mupdate_scripts_classes[22m | RelojDelTurno[39m[0m
+[  35% ] [90m[1mupdate_scripts_classes[22m | PersianaDeLaNoche[39m[0m
+[  42% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  50% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  57% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  64% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  71% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  78% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  85% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[92m[ DONE ][39m [1mupdate_scripts_classes[22m
+[0m
+[   0% ] [90m[1m_update_scan_actions[22m | Started Escaneando acciones... (4 steps)[39m[0m
+[   0% ] [90m[1m_update_scan_actions[22m | SEPT_JUEGOS_PROTOTIPO.glb[39m[0m
+[  20% ] [90m[1m_update_scan_actions[22m | persiana.png[39m[0m
+[  40% ] [90m[1m_update_scan_actions[22m | logo.png[39m[0m
+[  60% ] [90m[1m_update_scan_actions[22m | almacen.exr[39m[0m
+[92m[ DONE ][39m [1m_update_scan_actions[22m
+[0m
+[   0% ] [90m[1mreimport[22m | Started (Re)Importación de Assets (84 steps)[39m[0m
+[   0% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+[   1% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+[   2% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+[   3% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+[   4% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+[   5% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+[   7% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+[   8% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+[   9% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+[  10% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+[  11% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+[  12% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+[  14% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+[  15% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+[  16% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+[  17% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+[  18% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+[  20% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+[  21% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+[  22% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+[  23% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+[  24% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+[  25% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+[  27% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+[  28% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+[  29% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+[  30% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+[  31% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+[  32% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+[  34% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+[  35% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+[  36% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+[  37% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+[  38% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+[  40% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+[  41% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+[  42% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+[  43% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+[  44% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+[  45% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+[  47% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+[  48% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+[  49% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+[  50% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+[  51% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+[  52% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+[  54% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+[  55% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+[  56% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+[  57% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+[  58% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+[  60% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+[  61% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+[  62% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+[  63% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+[  64% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+[  65% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+[  67% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+[  68% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+[  69% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+[  70% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+[  71% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+[  72% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+[  74% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+[  75% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+[  76% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+[  77% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+[  78% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+[  80% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+[  81% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+[  82% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+[  83% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+[  84% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+[  85% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+[  87% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+[  88% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+[  89% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+[  90% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+[  91% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+[  92% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+[  94% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+[  95% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+[  96% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+[  97% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+[   0% ] [90m[1mreimport[22m | Ejecutando operaciones de pre-reimportación...[39m[0m
+[   0% ] [90m[1mpreload_reimporting_scene[22m | Started Preparando escenas para recargar (1 steps)[39m[0m
+[   0% ] [90m[1mpreload_reimporting_scene[22m | Analizando escena [vacío][39m[0m
+[  50% ] [90m[1mpreload_reimporting_scene[22m | Preparación terminada.[39m[0m
+[92m[ DONE ][39m [1mpreload_reimporting_scene[22m
+[0m
+[   0% ] [90m[1mreimport[22m | almacen.exr[39m[0m
+[   1% ] [90m[1mreimport[22m | almacen.exr[39m[0m
+[   2% ] [90m[1mreimport[22m | SEPT_JUEGOS_PROTOTIPO_atun marranos.png[39m[0m
+[   3% ] [90m[1mreimport[22m | SEPT_JUEGOS_PROTOTIPO_amargadito completo.png[39m[0m
+[   4% ] [90m[1mreimport[22m | SEPT_JUEGOS_PROTOTIPO_petisas completo.png[39m[0m
+[   5% ] [90m[1mreimport[22m | SEPT_JUEGOS_PROTOTIPO_arvecor.png[39m[0m
+[   7% ] [90m[1mreimport[22m | SEPT_JUEGOS_PROTOTIPO_flim pof completo.png[39m[0m
+[   8% ] [90m[1mreimport[22m | SEPT_JUEGOS_PROTOTIPO_Zucarachas completo_1.png[39m[0m
+[   9% ] [90m[1mreimport[22m | SEPT_JUEGOS_PROTOTIPO_wakasfideos.png[39m[0m
+[  10% ] [90m[1mreimport[22m | SEPT_JUEGOS_PROTOTIPO_Lay´snt´t completo_1.png[39m[0m
+[  11% ] [90m[1mreimport[22m | SEPT_JUEGOS_PROTOTIPO_saladick.png[39m[0m
+[  12% ] [90m[1mreimport[22m | SEPT_JUEGOS_PROTOTIPO_progres.png[39m[0m
+[  14% ] [90m[1mreimport[22m | SEPT_JUEGOS_PROTOTIPO_pepito.png[39m[0m
+[  15% ] [90m[1mreimport[22m | SEPT_JUEGOS_PROTOTIPO_puchos.png[39m[0m
+[  16% ] [90m[1mreimport[22m | SEPT_JUEGOS_PROTOTIPO_macumbas completo.png[39m[0m
+[  17% ] [90m[1mreimport[22m | SEPT_JUEGOS_PROTOTIPO_chisito.png[39m[0m
+[  18% ] [90m[1mreimport[22m | SEPT_JUEGOS_PROTOTIPO_frot lups.png[39m[0m
+[  20% ] [90m[1mreimport[22m | SEPT_JUEGOS_PROTOTIPO_oremos.png[39m[0m
+[  21% ] [90m[1mreimport[22m | SEPT_JUEGOS_PROTOTIPO_fideos marolini.png[39m[0m
+[  22% ] [90m[1mreimport[22m | SEPT_JUEGOS_PROTOTIPO_cereal textura.png[39m[0m
+[  23% ] [90m[1mreimport[22m | SEPT_JUEGOS_PROTOTIPO_duronga.png[39m[0m
+[  24% ] [90m[1mreimport[22m | SEPT_JUEGOS_PROTOTIPO_Durextra completo_1.png[39m[0m
+[  25% ] [90m[1mreimport[22m | logo.png[39m[0m
+[  27% ] [90m[1mreimport[22m | persiana.png[39m[0m
+[  28% ] [90m[1mreimport[22m | SEPT_JUEGOS_PROTOTIPO_Material.png[39m[0m
+[  29% ] [90m[1mreimport[22m | SEPT_JUEGOS_PROTOTIPO_caja luz exterior.png[39m[0m
+[  30% ] [90m[1mreimport[22m | SEPT_JUEGOS_PROTOTIPO_caja luz interior.png[39m[0m
+[  31% ] [90m[1mreimport[22m | SEPT_JUEGOS_PROTOTIPO_reloj.png[39m[0m
+[  32% ] [90m[1mreimport[22m | SEPT_JUEGOS_PROTOTIPO_textura.png[39m[0m
+[  34% ] [90m[1mreimport[22m | SEPT_JUEGOS_PROTOTIPO_puerta textura.png[39m[0m
+[  35% ] [90m[1mreimport[22m | SEPT_JUEGOS_PROTOTIPO_rejilla_bano.png[39m[0m
+[  36% ] [90m[1mreimport[22m | SEPT_JUEGOS_PROTOTIPO_textura portón.png[39m[0m
+[  37% ] [90m[1mreimport[22m | SEPT_JUEGOS_PROTOTIPO_Guía de jabones y manchas copy.png[39m[0m
+[  38% ] [90m[1mreimport[22m | SEPT_JUEGOS_PROTOTIPO_texto instrucciones limpieza.png[39m[0m
+[  40% ] [90m[1mreimport[22m | SEPT_JUEGOS_PROTOTIPO_nota baja resolución.png[39m[0m
+[  41% ] [90m[1mreimport[22m | SEPT_JUEGOS_PROTOTIPO_nota sin texto.png[39m[0m
+[  42% ] [90m[1mreimport[22m | SEPT_JUEGOS_PROTOTIPO_oaaaa completo.png[39m[0m
+[  43% ] [90m[1mreimport[22m | SEPT_JUEGOS_PROTOTIPO_mayonchis@300x.png[39m[0m
+[  44% ] [90m[1mreimport[22m | SEPT_JUEGOS_PROTOTIPO_Terminator completo.png[39m[0m
+[  45% ] [90m[1mreimport[22m | SEPT_JUEGOS_PROTOTIPO_fernetgod textura.png[39m[0m
+[  47% ] [90m[1mreimport[22m | SEPT_JUEGOS_PROTOTIPO_cora cola.png[39m[0m
+[  48% ] [90m[1mreimport[22m | SEPT_JUEGOS_PROTOTIPO_normal nuevo.png[39m[0m
+[  49% ] [90m[1mreimport[22m | SEPT_JUEGOS_PROTOTIPO_cosa de mani interno.png[39m[0m
+[  50% ] [90m[1mreimport[22m | SEPT_JUEGOS_PROTOTIPO_LIMPIEZA ETIQUETA (2).png[39m[0m
+[  51% ] [90m[1mreimport[22m | SEPT_JUEGOS_PROTOTIPO_compu normals.png[39m[0m
+[  52% ] [90m[1mreimport[22m | SEPT_JUEGOS_PROTOTIPO_porcelana_atlas.png[39m[0m
+[  54% ] [90m[1mreimport[22m | SEPT_JUEGOS_PROTOTIPO_interior_tiles_diff_1k.jpg[39m[0m
+[  55% ] [90m[1mreimport[22m | SEPT_JUEGOS_PROTOTIPO_cielorraso_emision.png[39m[0m
+[  56% ] [90m[1mreimport[22m | SEPT_JUEGOS_PROTOTIPO_cielorraso_placas.png[39m[0m
+[  57% ] [90m[1mreimport[22m | SEPT_JUEGOS_PROTOTIPO_corrugated_iron_02_nor_gl_1k.png[39m[0m
+[  58% ] [90m[1mreimport[22m | SEPT_JUEGOS_PROTOTIPO_corrugated_iron_02_metal_1k-corrugated_iron_02_rough_1k.png[39m[0m
+[  60% ] [90m[1mreimport[22m | SEPT_JUEGOS_PROTOTIPO_corrugated_iron_02_diff_1k.jpg[39m[0m
+[  61% ] [90m[1mreimport[22m | SEPT_JUEGOS_PROTOTIPO_Bricks066_1K-JPG_NormalGL.jpg[39m[0m
+[  62% ] [90m[1mreimport[22m | SEPT_JUEGOS_PROTOTIPO_Bricks066_1K-JPG_Roughness.png[39m[0m
+[  63% ] [90m[1mreimport[22m | SEPT_JUEGOS_PROTOTIPO_Bricks066_1K-JPG_Color.jpg[39m[0m
+[  64% ] [90m[1mreimport[22m | SEPT_JUEGOS_PROTOTIPO_deposito_concreto_normal.png[39m[0m
+[  65% ] [90m[1mreimport[22m | SEPT_JUEGOS_PROTOTIPO_concrete_floor_worn_001_rough_1k.png[39m[0m
+[  67% ] [90m[1mreimport[22m | SEPT_JUEGOS_PROTOTIPO_deposito_concreto_color.png[39m[0m
+[  68% ] [90m[1mreimport[22m | SEPT_JUEGOS_PROTOTIPO_bano_ivory_oscuro_normal.png[39m[0m
+[  69% ] [90m[1mreimport[22m | SEPT_JUEGOS_PROTOTIPO_bano_ivory_oscuro_orm.png[39m[0m
+[  70% ] [90m[1mreimport[22m | SEPT_JUEGOS_PROTOTIPO_bano_ivory_oscuro_color.png[39m[0m
+[  71% ] [90m[1mreimport[22m | SEPT_JUEGOS_PROTOTIPO_placa_acustica_basecolor.png[39m[0m
+[  72% ] [90m[1mreimport[22m | SEPT_JUEGOS_PROTOTIPO_concreto2_baseColor.png[39m[0m
+[  74% ] [90m[1mreimport[22m | SEPT_JUEGOS_PROTOTIPO_Don Saturados completo.png[39m[0m
+[  75% ] [90m[1mreimport[22m | SEPT_JUEGOS_PROTOTIPO_cindolor completo.png[39m[0m
+[  76% ] [90m[1mreimport[22m | SEPT_JUEGOS_PROTOTIPO_Burbaloo completo_1.png[39m[0m
+[  77% ] [90m[1mreimport[22m | SEPT_JUEGOS_PROTOTIPO_jorgillata.png[39m[0m
+[  78% ] [90m[1mreimport[22m | SEPT_JUEGOS_PROTOTIPO_Actroncito completo.png[39m[0m
+[  80% ] [90m[1mreimport[22m | SEPT_JUEGOS_PROTOTIPO_gondola_portaprecio_basecolor.png[39m[0m
+[  81% ] [90m[1mreimport[22m | SEPT_JUEGOS_PROTOTIPO_gondola_panel_blanca_1024_basecolor.png[39m[0m
+[  82% ] [90m[1mreimport[22m | SEPT_JUEGOS_PROTOTIPO_gondola_chapa_blanca_512_basecolor.png[39m[0m
+[  83% ] [90m[1mreimport[22m | SEPT_JUEGOS_PROTOTIPO_Wood_09-128x128.png[39m[0m
+[  84% ] [90m[1mreimport[22m | SEPT_JUEGOS_PROTOTIPO_Wood_02-128x128.png[39m[0m
+[  85% ] [90m[1mreimport[22m | SEPT_JUEGOS_PROTOTIPO_deposito_contenedor_ruedas_normal.png[39m[0m
+[  87% ] [90m[1mreimport[22m | SEPT_JUEGOS_PROTOTIPO_deposito_contenedor_cuerpo_normal.png[39m[0m
+[  88% ] [90m[1mreimport[22m | SEPT_JUEGOS_PROTOTIPO_deposito_contenedor_cuerpo_roughness.png[39m[0m
+[  89% ] [90m[1mreimport[22m | SEPT_JUEGOS_PROTOTIPO_deposito_contenedor_cuerpo_color.png[39m[0m
+[  90% ] [90m[1mreimport[22m | SEPT_JUEGOS_PROTOTIPO_deposito_contenedor_tapa_normal.png[39m[0m
+[  91% ] [90m[1mreimport[22m | SEPT_JUEGOS_PROTOTIPO_deposito_contenedor_tapa_roughness.png[39m[0m
+[  92% ] [90m[1mreimport[22m | SEPT_JUEGOS_PROTOTIPO_deposito_contenedor_tapa_color.png[39m[0m
+[  94% ] [90m[1mreimport[22m | SEPT_JUEGOS_PROTOTIPO_textura caja.png[39m[0m
+[  95% ] [90m[1mreimport[22m | SEPT_JUEGOS_PROTOTIPO_Wood_10-128x128.png[39m[0m
+[  96% ] [90m[1mreimport[22m | SEPT_JUEGOS_PROTOTIPO_LIMPIEZA ETIQUETA (1).png[39m[0m
+[  97% ] [90m[1mreimport[22m | SEPT_JUEGOS_PROTOTIPO.glb[39m[0m
+[   0% ] [90m[1mimport[22m | Started Importar Escena (104 steps)[39m[0m
+[   0% ] [90m[1mimport[22m | Importando Escena...[39m[0m
+[   1% ] [90m[1mimport[22m | Ejecutando Script Personalizado...[39m[0m
+[  99% ] [90m[1mimport[22m | Guardando...[39m[0m
+[92m[ DONE ][39m [1mimport[22m
+[0m
+[  98% ] [90m[1mreimport[22m | Finalizando la importación de recursos...[39m[0m
+[92m[ DONE ][39m [1mreimport[22m
+[0m
+[   0% ] [90m[1mreimport[22m | Started (Re)Importación de Assets (84 steps)[39m[0m
+[   0% ] [90m[1mreimport[22m | Ejecutando operaciones post-reimportación...[39m[0m
+[92m[ DONE ][39m [1mreimport[22m
+[0m
+[   0% ] [90m[1mloading_editor_layout[22m | Started Cargando editor (5 steps)[39m[0m
+[   0% ] [90m[1mloading_editor_layout[22m | Cargando diseño del editor...[39m[0m
+[  16% ] [90m[1mloading_editor_layout[22m | Cargando docks...[39m[0m
+[92m[ DONE ][39m [1mloading_editor_layout[22m
+[0m
+[MCP] WebSocket client stopped
+[MCP] Godot MCP Pro stopped
+ERROR: The remote port number must be between 1 and 65535 (inclusive).
+   at: connect_to_host (core/io/stream_peer_tcp.cpp:69)
+ERROR: Remote Debugger: Unable to connect to host '127.0.0.1:0'.
+   at: create_tcp (core/debugger/remote_debugger_peer.cpp:247)
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+[2J[H[38;2;233;150;122m
+--------------------------------------------------------------------------------------------------
+GdUnit4 Comandline Tool
+--------------------------------------------------------------------------------------------------[0m
+[38;2;0;191;255mDisabled fail fast![0m
+[38;2;0;191;255mSet write reports to D:/Usuarios/fede/Documentos/Catedra Videojuegos FADU/manada/repo/nosefia/.claude/worktrees/batch-20261010-369/reports/focal-369[0m
+[38;2;218;165;32m
+Headless mode is ignored by option '--ignoreHeadlessMode'"
+
+Please note that tests that use UI interaction do not work correctly in headless mode.
+Godot 'InputEvents' are not transported by the Godot engine in headless mode and therefore
+have no effect in the test!
+[0m
+[38;2;100;149;237mInstalling GdUnit4 session system hooks.[0m
+[38;2;100;149;237mSession hook 'GdUnitHtmlTestReporter' installed.[0m
+[38;2;100;149;237mSession hook 'GdUnitXMLTestReporter' installed.[0m
+[38;2;100;149;237mInstalling GdUnit4 session hooks.[0m
+[38;2;100;149;237mSession hook 'Guardado de la sesión' installed.[0m
+[38;2;0;206;209mRun Test Suite: [0m[38;2;250;235;215mres://test/dominio/empleo/reglas_de_la_partida_test.gd[0m
+  [38;2;250;235;215mres://test/dominio/empleo/reglas_de_la_partida_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_la_partida_dura_las_cinco_jornadas_del_gdd[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/empleo/reglas_de_la_partida_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_la_partida_dura_las_cinco_jornadas_del_gdd[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 7ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/empleo/reglas_de_la_partida_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_ningun_otro_archivo_del_ciclo_escribe_una_cifra_de_balance[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/empleo/reglas_de_la_partida_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_ningun_otro_archivo_del_ciclo_escribe_una_cifra_de_balance[0m[38;2;178;34;34m[1m FAILED[0m[38;2;100;149;237m 9ms[0m
+  [38;2;0;206;209m[1m[4mReport:[0m
+  [38;2;128;128;128mhay cifras escritas fuera de `reglas_de_la_partida.gd`: almacen.gd → var media := limites.size.y / 2.0, almacen.gd → caja.global_position, caja.global_position + Vector3.DOWN * (media + 0.02)[0m[38;2;173;216;230m	at 'test_ningun_otro_archivo_del_ciclo_escribe_una_cifra_de_balance' in res://test/dominio/empleo/reglas_de_la_partida_test.gd:45[0m[38;2;128;128;128m[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/empleo/reglas_de_la_partida_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_la_demo_alcanza_para_llegar_al_despido[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/empleo/reglas_de_la_partida_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_la_demo_alcanza_para_llegar_al_despido[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 7ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/empleo/reglas_de_la_partida_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_los_tres_espejos_de_este_spec_estan_escritos[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/empleo/reglas_de_la_partida_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_los_tres_espejos_de_este_spec_estan_escritos[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 6ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/empleo/reglas_de_la_partida_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_el_barrido_caza_la_cifra_de_balance_y_deja_pasar_la_prosa[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/empleo/reglas_de_la_partida_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_el_barrido_caza_la_cifra_de_balance_y_deja_pasar_la_prosa[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 8ms[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/empleo/reglas_de_la_partida_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_el_barrido_no_confunde_decimales_geometricos_con_enteros[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/empleo/reglas_de_la_partida_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_el_barrido_no_confunde_decimales_geometricos_con_enteros[0m[38;2;178;34;34m[1m FAILED[0m[38;2;100;149;237m 7ms[0m
+  [38;2;0;206;209m[1m[4mReport:[0m
+  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ must be empty but was
+ '[38;2;30;144;255m["geometria.gd → var media := limites.size.y / 2.0", "geometria.gd → var alcance := media + 0.02"][0m'[0m[38;2;173;216;230m	at 'test_el_barrido_no_confunde_decimales_geometricos_con_enteros' in res://test/dominio/empleo/reglas_de_la_partida_test.gd:125[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting size:[0m
+ [38;2;30;144;255m1[0m
+ but was
+ [38;2;30;144;255m3[0m[0m[38;2;173;216;230m	at 'test_el_barrido_no_confunde_decimales_geometricos_con_enteros' in res://test/dominio/empleo/reglas_de_la_partida_test.gd:128[0m[38;2;128;128;128m[0m
+[38;2;128;128;128m[0m
+[38;2;30;144;255mStatistics:[0m[38;2;128;128;128m 6 test cases | 0 errors | 3 failures | 0 flaky | 0 skipped | 0 orphans |[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 85ms[0m
+[38;2;128;128;128m[0m
+[38;2;128;128;128m[0m
+[38;2;30;144;255mOverall Summary:[0m[38;2;255;255;255m 6 test cases | 0 errors | 3 failures | 0 flaky | 0 skipped | 0 orphans |[0m
+[38;2;233;150;122mExecuted test suites: (1/1)[0m
+[38;2;233;150;122mExecuted test cases : (6/6)[0m
+[38;2;233;150;122mTotal execution time: 85ms[0m
+[38;2;255;255;255m [0m[38;2;100;149;237mOpen XML Report at: file://D:/Usuarios/fede/Documentos/Catedra Videojuegos FADU/manada/repo/nosefia/.claude/worktrees/batch-20261010-369/reports/focal-369/report_6/results.xml[0m
+[38;2;100;149;237mOpen HTML Report at: file://D:/Usuarios/fede/Documentos/Catedra Videojuegos FADU/manada/repo/nosefia/.claude/worktrees/batch-20261010-369/reports/focal-369/report_6/index.html[0m
+[38;2;178;34;34mExit code: 100[0m
+Run dispose test resources

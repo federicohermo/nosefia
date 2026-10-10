@@ -1,0 +1,63 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+
+--------------------------------------------------------------------------------------------------
+GdUnit4 Comandline Tool
+--------------------------------------------------------------------------------------------------
+Disabled fail fast!
+Set write reports to D:/Usuarios/fede/Documentos/Catedra Videojuegos FADU/manada/repo/nosefia/.claude/worktrees/batch-20261010-369/reports/focal-369
+
+Headless mode is ignored by option '--ignoreHeadlessMode'"
+
+Please note that tests that use UI interaction do not work correctly in headless mode.
+Godot 'InputEvents' are not transported by the Godot engine in headless mode and therefore
+have no effect in the test!
+
+Installing GdUnit4 session system hooks.
+Session hook 'GdUnitHtmlTestReporter' installed.
+Session hook 'GdUnitXMLTestReporter' installed.
+Installing GdUnit4 session hooks.
+Session hook 'Guardado de la sesión' installed.
+Run Test Suite: res://test/escenas/deposito_ordenado_test.gd
+  res://test/escenas/deposito_ordenado_test.gd > test_la_pila_completa_no_se_superpone_y_la_mira_alcanza_cada_caja STARTED
+  res://test/escenas/deposito_ordenado_test.gd > test_la_pila_completa_no_se_superpone_y_la_mira_alcanza_cada_caja PASSED 1s 678ms
+
+  res://test/escenas/deposito_ordenado_test.gd > test_la_pila_estable_vuelve_a_estantes_en_la_segunda_noche STARTED
+  res://test/escenas/deposito_ordenado_test.gd > test_la_pila_estable_vuelve_a_estantes_en_la_segunda_noche PASSED 2s 124ms
+
+  res://test/escenas/deposito_ordenado_test.gd > test_apoyar_descumplir_sostener_y_examinar_actualizan_ordenar_y_hud STARTED
+  res://test/escenas/deposito_ordenado_test.gd > test_apoyar_descumplir_sostener_y_examinar_actualizan_ordenar_y_hud PASSED 265ms
+
+  res://test/escenas/deposito_ordenado_test.gd > test_el_rescate_usa_el_origen_de_la_noche STARTED
+  res://test/escenas/deposito_ordenado_test.gd > test_el_rescate_usa_el_origen_de_la_noche PASSED 148ms
+
+  res://test/escenas/deposito_ordenado_test.gd > test_hud_y_nota_siguen_la_jornada_sin_recargar_el_local STARTED
+  res://test/escenas/deposito_ordenado_test.gd > test_hud_y_nota_siguen_la_jornada_sin_recargar_el_local PASSED 156ms
+
+Statistics: 5 test cases | 0 errors | 0 failures | 0 flaky | 0 skipped | 0 orphans | PASSED 4s 402ms
+
+
+Run Test Suite: res://test/escenas/objetos/ubicacion_en_el_deposito_test.gd
+  res://test/escenas/objetos/ubicacion_en_el_deposito_test.gd > test_las_cajas_de_reposicion_estan_apoyadas_en_el_deposito STARTED
+  res://test/escenas/objetos/ubicacion_en_el_deposito_test.gd > test_las_cajas_de_reposicion_estan_apoyadas_en_el_deposito PASSED 140ms
+
+  res://test/escenas/objetos/ubicacion_en_el_deposito_test.gd > test_cada_caja_le_muestra_su_etiqueta_al_cuarto STARTED
+  res://test/escenas/objetos/ubicacion_en_el_deposito_test.gd > test_cada_caja_le_muestra_su_etiqueta_al_cuarto PASSED 136ms
+
+  res://test/escenas/objetos/ubicacion_en_el_deposito_test.gd > test_las_tres_bolsas_arrancan_en_el_deposito_y_lejos_del_contenedor STARTED
+  res://test/escenas/objetos/ubicacion_en_el_deposito_test.gd > test_las_tres_bolsas_arrancan_en_el_deposito_y_lejos_del_contenedor PASSED 132ms
+
+  res://test/escenas/objetos/ubicacion_en_el_deposito_test.gd > test_abrir_la_jornada_devuelve_cada_caja_a_su_lugar STARTED
+  res://test/escenas/objetos/ubicacion_en_el_deposito_test.gd > test_abrir_la_jornada_devuelve_cada_caja_a_su_lugar PASSED 155ms
+
+Statistics: 4 test cases | 0 errors | 0 failures | 0 flaky | 0 skipped | 0 orphans | PASSED 597ms
+
+
+Overall Summary: 9 test cases | 0 errors | 0 failures | 0 flaky | 0 skipped | 0 orphans |
+Executed test suites: (2/2)
+Executed test cases : (9/9)
+Total execution time: 4s 999ms
+ Open XML Report at: file://D:/Usuarios/fede/Documentos/Catedra Videojuegos FADU/manada/repo/nosefia/.claude/worktrees/batch-20261010-369/reports/focal-369/report_4/results.xml
+Open HTML Report at: file://D:/Usuarios/fede/Documentos/Catedra Videojuegos FADU/manada/repo/nosefia/.claude/worktrees/batch-20261010-369/reports/focal-369/report_4/index.html
+Exit code: 0
+Run dispose test resources
