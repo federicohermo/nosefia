@@ -150,8 +150,7 @@ func test_esc_cubre_la_foto_q_no_cambia_y_reanudar_conserva_la_pantalla() -> voi
 	await get_tree().process_frame
 
 
-# AC-INV-035, AC-INV-036
-func test_cierre_baja_celular_quita_icono_y_otra_jornada_arranca_cerrada() -> void:
+func test_cierre_baja_celular_y_otra_jornada_cierra() -> void:  # AC-INV-035, AC-INV-036
 	_abrir()
 	await _q()
 	var recordatorio: Control = _pantalla().get("_recordatorio")
@@ -198,8 +197,7 @@ func test_celular_no_cobra_acciones_y_el_reloj_sigue_corriendo() -> void:  # AC-
 	assert_float(sin_celular).is_equal(Ritmo.escalar(30.0))
 
 
-# AC-INV-027, AC-INV-029, AC-INV-038
-func test_botones_cableados_muestran_guiones_integros_y_llegadas_al_final() -> void:
+func test_botones_guiones_y_llegadas_al_final() -> void:  # AC-INV-027, AC-INV-029, AC-INV-038
 	_abrir()
 	await _q()
 	var lista: VBoxContainer = _pantalla().get("_mensajes")
