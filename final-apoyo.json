@@ -1,0 +1,35 @@
+{
+	"errores": [],
+	"muestras": [
+		{
+			"apoyo": "Vector3(6.6199994, 0.102236986, 5.6999993)",
+			"cuerpo": "Estructura/SueloSolido",
+			"hueco": 0.000000208616256713867,
+			"pie": "Vector3(6.6199994, 0.102237195, 5.6999993)"
+		},
+		{
+			"apoyo": "Vector3(6.7699995, 0.102236986, 5.6999993)",
+			"cuerpo": "Estructura/SueloSolido",
+			"hueco": 0.000000208616256713867,
+			"pie": "Vector3(6.7699995, 0.102237195, 5.6999993)"
+		},
+		{
+			"apoyo": "Vector3(6.4699993, 0.102236986, 5.6999993)",
+			"cuerpo": "Estructura/SueloSolido",
+			"hueco": 0.000000208616256713867,
+			"pie": "Vector3(6.4699993, 0.102237195, 5.6999993)"
+		},
+		{
+			"apoyo": "Vector3(6.6199994, 0.102236986, 5.549999)",
+			"cuerpo": "Estructura/SueloSolido",
+			"hueco": 0.000000208616256713867,
+			"pie": "Vector3(6.6199994, 0.102237195, 5.549999)"
+		},
+		{
+			"apoyo": "Vector3(6.6199994, 0.102236986, 5.8499994)",
+			"cuerpo": "Estructura/SueloSolido",
+			"hueco": 0.000000208616256713867,
+			"pie": "Vector3(6.6199994, 0.102237195, 5.8499994)"
+		}
+	]
+}

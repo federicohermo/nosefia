@@ -1,0 +1,11 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+OpenGL API 3.3.0 NVIDIA 591.66 - Compatibility - Using Device: NVIDIA - NVIDIA GeForce RTX 4050 Laptop GPU
+
+ERROR: Origen de circulacion no caminable
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] comprobar (C:/Users/fede_/AppData/Local/Temp/nosefia-batch-364-370-20261010/301-escena.gd:20)
+       [1] circulacion (C:/Users/fede_/AppData/Local/Temp/nosefia-batch-364-370-20261010/301-escena.gd:81)
+       [2] ejecutar (C:/Users/fede_/AppData/Local/Temp/nosefia-batch-364-370-20261010/301-escena.gd:178)
+301_CIRCULACION_RECHAZOS 3673 { "apoyo_ajeno:Exterior/Pavimento/Pavimento_col": 378, "apoyo_ajeno:Exterior/Pavimento3/Pavimento3_col": 72, "sin_piso_o_normal": 3079, "apoyo_ajeno:Exterior/Pavimento2/Pavimento2_col": 923, "capsula_solapada": 2912, "apoyo_ajeno:Objetos/BolsaDeBasura1": 1, "apoyo_ajeno:Objetos/BolsaDeBasura2": 1, "apoyo_ajeno:Exterior/Pavimento6/Pavimento6_col": 168, "apoyo_ajeno:Exterior/Pavimento5/Pavimento5_col": 872, "apoyo_ajeno:Estructura/gondolanueva/StaticBody3D": 108, "apoyo_ajeno:Estructura/tachitobasura_001/StaticBody3D": 5, "apoyo_ajeno:Estructura/local_travesano_frente_0_102/StaticBody3D": 31, "apoyo_ajeno:Estructura/gondolanueva_001/StaticBody3D": 27, "apoyo_ajeno:Estructura/deposito_contenedor_soporte/deposito_contenedor_cuerpo/StaticBody3D": 6, "apoyo_ajeno:Estructura/gondolanueva2/StaticBody3D": 126, "apoyo_ajeno:Estructura/local_alfombra_entrada/StaticBody3D": 55, "apoyo_ajeno:Estructura/gondolanueva_002/StaticBody3D": 24, "apoyo_ajeno:Estructura/tachitobasura/StaticBody3D": 7, "apoyo_ajeno:Estructura/tachitobasura_002/StaticBody3D": 3, "apoyo_ajeno:Objetos/Balde": 3, "apoyo_ajeno:Exterior/Pavimento4/Pavimento4_col": 882 }
+301_ESCENA_FINAL base centros=2.60447597503662 fallos=["Origen de circulacion no caminable"]

@@ -1,0 +1,16 @@
+devuelto (el editor lo re-serializó al guardar): assets/ui/manada/tema.tres
+devuelto (el editor lo re-serializó al guardar): src/dominio/almacen/balde.tres
+devuelto (el editor lo re-serializó al guardar): src/dominio/almacen/bolsa_de_basura_1.tres
+devuelto (el editor lo re-serializó al guardar): src/dominio/almacen/bolsa_de_basura_2.tres
+devuelto (el editor lo re-serializó al guardar): src/dominio/almacen/bolsa_de_basura_3.tres
+devuelto (el editor lo re-serializó al guardar): src/dominio/almacen/caja_de_reposicion.tres
+devuelto (el editor lo re-serializó al guardar): src/dominio/almacen/jabon_amarillo.tres
+devuelto (el editor lo re-serializó al guardar): src/dominio/almacen/jabon_azul.tres
+devuelto (el editor lo re-serializó al guardar): src/dominio/almacen/jabon_rosa.tres
+devuelto (el editor lo re-serializó al guardar): src/dominio/almacen/lata_de_tomate.tres
+devuelto (el editor lo re-serializó al guardar): src/dominio/almacen/mopa.tres
+devuelto (el editor lo re-serializó al guardar): src/escenas/almacen.tscn
+[hornear] horneado en 6580 ms
+[hornear] sondas negras rellenadas: 952 de 1254
+[hornear] listo
+horneado: src/escenas/almacen.lmbake, src/escenas/almacen.exr

@@ -1,0 +1,28 @@
+{
+	"fallos": [],
+	"pasos": [
+		{
+			"contadas": 0,
+			"paso": "sobre_tacho",
+			"posicion": "Vector3(6.619992, 0.9854383, 5.7000027)",
+			"recogible": true
+		},
+		{
+			"contadas": 0,
+			"paso": "cerca_contenedor",
+			"posicion": "Vector3(2.9994712, 0.18273677, -14.31187)",
+			"recogible": true
+		},
+		{
+			"contadas": 0,
+			"paso": "por_boca_abierta",
+			"posicion": "Vector3(2.999975, 0.29223678, -14.912448)",
+			"recogible": true
+		},
+		{
+			"contadas": 1,
+			"paso": "clic_cerrada_girando_abierta",
+			"solo_izquierdo_abierta": true
+		}
+	]
+}
