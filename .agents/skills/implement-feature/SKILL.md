@@ -75,12 +75,30 @@ el reemplazo del test textual, conservá sus comprobaciones útiles y ejercé lo
 pruebas funcionales y puras. No eludas la expresión regular con otra sintaxis ni afirmes que
 una cita de método demuestra la delegación: eso también requiere revisar la fuente.
 
+**Un detector de cifras reconoce el literal completo antes de clasificarlo.** En #369,
+un guard de enteros de balance buscaba `\b\d+\b` y trató los decimales geométricos
+`2.0` y `0.02` como enteros. La corrección conserva los archivos vigilados y el testigo
+de una copia `JORNADAS := 5`, y agrega decimales y exponentes que no son enteros.
+No se mueve la consulta física a otro archivo sólo para eludir un barrido defectuoso.
+
 **Un test que compara dos lecturas del mismo cuadro tiene que forzar la escritura antes de leer.**
 `await get_tree().process_frame` sigue **antes** del `_process` de los nodos. Leer justo después
 del `await` compara la escritura del cuadro anterior contra el instante de éste. Medido el
 2026-09-14: 30,98 mm de desfasaje aparente con el arreglo ya puesto, que se lee como que el
 arreglo no alcanza. O se llama al método a mano antes de leer, o se comparan dos instantes
 declarados distintos.
+
+**Una sonda física conserva los cuerpos que mide.** `process_mode = DISABLED` sobre la raíz
+también retira sus `CollisionObject3D` de la simulación: un recorrido vacío no certifica un
+pasillo libre. En #301, esa forma de congelar el juego produjo cero celdas transitables.
+Detené sólo los procesos que alteran la pose y afirmá primero que la cápsula encuentra su piso
+y los obstáculos conocidos. La sonda inválida se conserva, pero no cuenta como evidencia.
+
+**La mira se ejerce después de sincronizar sus áreas.** Teletransportar al jugador y consultar
+`Area3D.get_overlapping_bodies()` en el mismo cuadro puede devolver el conjunto anterior.
+En #369, un rayo directo encontraba la caja mientras la mira real todavía no la veía.
+Esperá cuadros de física, comprobá el campo actualizado y ejercé la mira real. En una pila,
+probá puntos de las caras visibles: el centro puede estar tapado aunque otra cara sea accesible.
 
 **Un test que mide lo que se dibuja tiene dos trampas más**, medidas el 2026-09-24:
 
@@ -105,12 +123,32 @@ que queda tapado por otra ventana casi no pide cuadros: dos capturas seguidas sa
 `--disable-backgrounding-occluded-windows` y `--disable-renderer-backgrounding`, y antes de leer
 una captura se cuentan los `requestAnimationFrame` de un segundo.
 
+**Observar la activación del navegador no debe activarlo.** En Playwright 1.63, `evaluate`
+usa `userGesture: true`: en #373 la lectura conservaba una activación que se quería medir
+vencida. Para medir activación o Pointer Lock, usar lecturas CDP con `userGesture: false` y
+estímulos de teclado o mouse reales. Conservar la consola desde la carga, sin borrar errores
+antes de interactuar, y comprobar `document.pointerLockElement`, además del estado del juego.
+
+**El fixture no apaga el callback que traduce el estado que mide.** En #373, congelar
+`_physics_process` del jugador impedía actualizar el cursor al abrir el celular. Detener sólo
+lo necesario para la medición, mantener esa traducción activa y comprobar el cursor real al
+abrir, cerrar, pausar y reanudar. Esa falla no explica errores anteriores a abrir el celular:
+cada causa conserva su propia evidencia.
+
 **No excluyas texturas del export por una búsqueda de texto vacía.** Godot extrae las
 imágenes del GLB y el modelo importado las referencia también desde recursos binarios. En #339,
 excluirlas redujo el paquete y dejó el local sin texturas. Conservá esas dependencias y verificá
 una partida nueva en el navegador, observando la consola también después de salir del menú.
 El humo de arranque termina antes de ese recorrido. Un build local no exige publicar en Vercel:
 el límite de tamaño de publicación no justifica quitar arte necesario.
+
+**El import frío de una copia de export puede retener recursos de plugins del editor.**
+En #373, los 111 recursos retenidos eran de `addons/`; el mismo árbol importó sin errores ni
+fugas al desactivar sólo `editor_plugins` en la copia externa. Antes de aislarlos, identificá
+los recursos con `--verbose` y conservá ambos intentos. No se modifica el checkout, el preset
+versionado ni el juego para eludir el diagnóstico. El paquete resultante todavía exige el
+chequeo externo, su marcador final y la interacción en Chrome sin errores; no se ignoran
+errores de scripts ni dependencias faltantes.
 
 **Los recursos de diálogo se verifican también dentro del paquete exportado.** En #339, los
 tests y las capturas del checkout mostraban las nueve entradas, pero el recurso binario del
@@ -166,6 +204,11 @@ contador de errores del caso y la ausencia de audio pasaba por accidente. El fix
 los tipos de la señal y afirma que su receptor se ejecutó, además del resultado. Un error nuevo
 o una fuga se corrige aunque el XML diga cero; los diagnósticos deliberados del debugger o de
 un `assert_error` se identifican por su causa, sin descartar otras líneas `ERROR`.
+
+La salida cruda incluye **stdout y stderr del subproceso**, también en la base anterior al
+cambio. El archivo `godot.log` no los reemplaza: en el lote del 2026-10-10 omitió los avisos
+de recursos al salir que sí estaban en stderr. Sin ambos canales de la base no se puede
+atribuir un diagnóstico al cambio sólo porque su XML siga verde.
 
 **Un nodo salteado no es un nodo verde**, y el reporte lo distingue. Pero `tests` sin `GODOT_BIN`
 **no se saltea: sale rojo** — ese salteo vale sólo mientras no exista un solo `*_test.gd`, y hay

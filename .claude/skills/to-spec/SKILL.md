@@ -82,7 +82,8 @@ rg --no-ignore -n "AC-XXX" specs/ test/         # si ese ID ya se usó
 
 - **Un valor de balance se cita, no se copia.** El número exacto sale del dominio: los
   apercibimientos de `src/dominio/reglas.gd`, el corte de las bandas de
-  `src/dominio/empleo/consecuencia.gd`, y las cinco tareas de recorrer `Tarea.Tipo`.
+  `src/dominio/empleo/consecuencia.gd`, y las tareas de las obligaciones declaradas para la
+  jornada. El catálogo de tipos posibles no dice cuáles se exigen en una apertura.
 - **El GDD manda sobre el código.** Si el GDD y el código difieren en un valor, la regla dice
   lo que dice el GDD y el código está en falta. Eso es el hallazgo.
 - **Un hueco es una `OQ-<COD>-###`**, con por qué sigue abierta, quién la decide y qué bloquea.
