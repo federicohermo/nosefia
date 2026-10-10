@@ -6,6 +6,7 @@
 extends GdUnitTestSuite
 
 const ALMACEN := preload("res://src/escenas/almacen.tscn")
+const BolsaEnLaMano := preload("res://test/escenas/bolsa_en_la_mano.gd")
 const AperturaConLugar := preload("res://test/escenas/apertura_con_lugar.gd")
 
 const ENTRETECHO := Vector3(2.0, 5.9, -11.0)
@@ -21,8 +22,9 @@ const METIDA_EN_LA_PARED := 0.05
 const PISO_LIBRE := Vector3(4.49, 0.0, -10.0)
 
 
-func _almacen() -> Node3D:
+func _almacen(jornada: int = 1) -> Node3D:
 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
+	almacen.set("_partida", Partida.desde({"jornada": jornada, "medios": 0}))
 	add_child(almacen)
 	# Estos casos sacan unidades para usarlas de objeto. Abren con lugar para reponer, que es la
 	# noche contra la que se midieron: sacar no lo pide (BR-STK-017).
@@ -148,7 +150,7 @@ func test_encima_de_la_caja_que_ocupa_el_origen() -> void:  # AC-PLY-027
 
 
 func test_el_origen_es_el_ultimo_recurso() -> void:  # AC-PLY-028
-	var almacen: Node3D = await _almacen()
+	var almacen: Node3D = await _almacen(2)
 	var caja := _caja(almacen, Producto.Id.ARVEJAS)
 	var origen: Transform3D = caja.call(ReglasDeLosObjetos.METODO_LUGAR_DE_ORIGEN)
 	caja.global_position = ENTRETECHO
@@ -192,11 +194,10 @@ func test_rescatar_una_caja_y_una_unidad_no_mueve_la_mercaderia() -> void:  # AC
 
 ## La bolsa tirada queda fuera del rescate; la pendiente se recupera sin contar la tarea.
 func test_rescatar_las_bolsas_no_las_cuenta_ni_las_descuenta() -> void:  # AC-PLY-043
-	var almacen: Node3D = await _almacen()
+	var almacen: Node3D = await _almacen(2)
 	var recolector: RecolectorDeBasura = almacen.get("_recolector")
-	var bolsas: Array = almacen.get("_bolsas")
-	var contada: ObjetoAgarrable = bolsas[0]
-	var sin_contar: ObjetoAgarrable = bolsas[1]
+	var contada := BolsaEnLaMano.preparar(almacen, 0)
+	var sin_contar := BolsaEnLaMano.preparar(almacen, 1)
 	var agarre: Agarre = almacen.get("_agarre")
 	assert_bool(agarre.pedir_agarrar(contada.datos, contada)).is_true()
 	var contenedor: Node3D = almacen.get_node(

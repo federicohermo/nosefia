@@ -2,6 +2,7 @@
 extends GdUnitTestSuite
 
 const ALMACEN := preload("res://src/escenas/almacen.tscn")
+const BolsaEnLaMano := preload("res://test/escenas/bolsa_en_la_mano.gd")
 const AperturaConLugar := preload("res://test/escenas/apertura_con_lugar.gd")
 
 const MOSTRADOR := "Estructura/EscritorioComputadora"
@@ -115,8 +116,9 @@ const DERECHO := 3.0
 const AL_LADO := 1.0
 
 
-func _almacen() -> Node3D:
+func _almacen(jornada: int = 1) -> Node3D:
 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
+	almacen.set("_partida", Partida.desde({"jornada": jornada, "medios": 0}))
 	add_child(almacen)
 	# Estos casos sacan unidades para usarlas de objeto. Abren con lugar para reponer, que es la
 	# noche contra la que se midieron: sacar no lo pide (BR-STK-017).
@@ -684,7 +686,7 @@ func test_la_unidad_soltada_contra_el_mostrador_no_queda_adentro() -> void:  # A
 func test_la_bolsa_y_los_utiles_soltados_contra_una_pared_no_quedan_adentro() -> void:
 	# La mopa se lleva inclinada; la botella nueva también debe poder recuperarse.
 	var almacen: Node3D = await _almacen()
-	var objetos: Array[Node3D] = [almacen.get("_bolsas")[0]]
+	var objetos: Array[Node3D] = [BolsaEnLaMano.preparar(almacen)]
 	for util: String in ["Mopa", "Balde", "JabonAzul"]:
 		objetos.append(almacen.get_node("Objetos/" + util))
 	var derecho: Array[float] = [0.0]
@@ -769,7 +771,7 @@ func test_lo_que_no_toca_el_cuerpo_se_sigue_soltando_adelante() -> void:
 	var jugador: CharacterBody3D = almacen.get("_jugador")
 	var cuerpo: CollisionShape3D = jugador.get_node("Cuerpo")
 	var radio := (cuerpo.shape as CapsuleShape3D).radius
-	var objetos: Array[Node3D] = [almacen.get("_bolsas")[0]]
+	var objetos: Array[Node3D] = [BolsaEnLaMano.preparar(almacen)]
 	for util: String in ["Mopa", "Balde"]:
 		objetos.append(almacen.get_node("Objetos/" + util))
 	# La unidad va última y se saca recién ahí: sacarla es tenerla en la mano.
@@ -924,7 +926,7 @@ func _soltar_la_caja_sobre(almacen: Node3D, caja: Node3D, cara: String, tapa: Ve
 ## **La tabla de abajo del estante del fondo arranca llena**: se corre al piso la caja del medio
 ## para dejarle lugar a la que se suelta.
 func test_la_caja_se_sigue_apoyando_en_un_estante_del_deposito() -> void:  # AC-PLY-021
-	var almacen: Node3D = await _almacen()
+	var almacen: Node3D = await _almacen(2)
 	var caja := _caja_grande(almacen)
 	var tabla: Node3D = almacen.get("_cajas_de_productos")[Producto.Id.UAKAS]
 	var lugar := tabla.global_position
@@ -1029,7 +1031,7 @@ func test_un_objeto_dejado_arriba_del_inodoro_queda_quieto() -> void:
 	var inodoro: MeshInstance3D = almacen.get_node("Estructura/inodoro")
 	var tanque: CollisionShape3D = inodoro.get_node("StaticBody3D/Volumen3")
 	var tapa := tanque.global_transform * tanque.shape.get_debug_mesh().get_aabb()
-	var bolsa: RigidBody3D = almacen.get("_bolsas")[0]
+	var bolsa := BolsaEnLaMano.preparar(almacen)
 	var forma: CollisionShape3D = bolsa.get_node("Forma")
 	var media_altura := (forma.shape as BoxShape3D).size.y / 2.0
 	bolsa.global_basis = Basis.IDENTITY

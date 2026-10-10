@@ -139,7 +139,7 @@ func _compradores(cuantos: int) -> Array[Comprador]:
 
 ## Una ventanilla cableada a mano, con su reloj arrancado sobre un turno entero.
 func _ventanilla(cuantos: int, presupuesto: float = Reglas.DURACION_DEL_TURNO) -> Ventanilla:
-	var obligatorias := Apertura.obligatorias()
+	var obligatorias := Apertura.obligatorias(1)
 	_turno = Turno.new(presupuesto, obligatorias)
 	var reloj: RelojDelTurno = auto_free(RelojDelTurno.new())
 	reloj.arrancar(_turno, obligatorias)
@@ -184,7 +184,7 @@ func test_despachar_al_ultimo_cuenta_la_caja_sin_mover_el_turno() -> void:
 func test_completar_una_tarea_aparte_no_le_sube_el_contador_al_turno() -> void:
 	# `RelojDelTurno.obligatoria()` es la única forma de conseguir la instancia que el turno
 	# está contando: una copia devuelve `true` y deja el contador clavado en 0, sin un error.
-	var obligatorias := Apertura.obligatorias()
+	var obligatorias := Apertura.obligatorias(1)
 	var turno := Turno.new(Reglas.DURACION_DEL_TURNO, obligatorias)
 	assert_bool(turno.completar(Tarea.new(Tarea.Tipo.CAJA))).is_true()
 	assert_int(turno.tareas_cumplidas()).is_equal(0)
@@ -350,7 +350,7 @@ func test_la_ventanilla_sin_cablear_no_hace_nada_y_lo_dice() -> void:
 
 
 func test_cobrar_sin_stock_avisa_lo_que_falta_y_no_despacha() -> void:
-	var obligatorias := Apertura.obligatorias()
+	var obligatorias := Apertura.obligatorias(1)
 	_turno = Turno.new(Reglas.DURACION_DEL_TURNO, obligatorias)
 	var reloj: RelojDelTurno = auto_free(RelojDelTurno.new())
 	reloj.arrancar(_turno, obligatorias)

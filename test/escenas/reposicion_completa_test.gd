@@ -1,6 +1,7 @@
 extends GdUnitTestSuite
 
 const ALMACEN := preload("res://src/escenas/almacen.tscn")
+const BolsaEnLaMano := preload("res://test/escenas/bolsa_en_la_mano.gd")
 
 
 func test_reponer_todos_los_huecos_de_la_apertura_cumple_la_tarea() -> void:
@@ -32,13 +33,14 @@ func test_reponer_todos_los_huecos_de_la_apertura_cumple_la_tarea() -> void:
 
 func test_despues_de_cada_bolsa_se_puede_agarrar_y_reponer_actroncito() -> void:
 	var almacen := _abrir()
+	BolsaEnLaMano.abrir(almacen)
 	var agarre: Agarre = almacen.get("_agarre")
 	var jugador: Node3D = almacen.get("_jugador")
 	var contenedor: Node3D = almacen.get("_contenedor")
 	var recolector: RecolectorDeBasura = almacen.get("_recolector")
 	var depositadas := 0
 	for bolsa: ObjetoAgarrable in almacen.get("_bolsas"):
-		assert_bool(agarre.pedir_agarrar(bolsa.datos, bolsa)).is_true()
+		assert_object(BolsaEnLaMano.sacar(almacen, depositadas)).is_same(bolsa)
 		jugador.set("_enfocado", contenedor)
 		_clic()
 		depositadas += 1

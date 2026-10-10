@@ -1,7 +1,7 @@
 ---
 schema_version: 1
 capability_id: CAP-SHF
-status: draft
+status: ratified
 owner: por definir
 provenance: GDD «Ciclo de jornadas»; fichas «Pantalla entre jornadas» y «Particulares de cada jornada»; decisiones de #364 y #369; migración de los specs 001, 007, 011, 016, 027, 031
 ---

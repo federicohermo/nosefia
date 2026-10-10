@@ -2,6 +2,7 @@
 extends GdUnitTestSuite
 
 const ALMACEN := preload("res://src/escenas/almacen.tscn")
+const BolsaEnLaMano := preload("res://test/escenas/bolsa_en_la_mano.gd")
 const CIERRE := preload("res://src/dominio/almacen/reglas_del_cierre.gd")
 const Habitaciones := preload("res://src/escenas/puestos/habitaciones_del_almacen.gd")
 
@@ -62,7 +63,7 @@ func test_cajas_utiles_y_bolsas_siguen_su_habitacion_y_los_pasos() -> void:  # A
 	var lector: Habitaciones = _almacen.get("_habitaciones")
 	var caja: Node3D = _almacen.get("_cajas_de_productos")[0]
 	var util: Node3D = _almacen.get("_utiles_de_limpieza")[0]
-	var bolsa: Node3D = _almacen.get("_bolsas")[0]
+	var bolsa := BolsaEnLaMano.preparar(_almacen)
 	for partes: Array[AABB] in [lector.local, lector.deposito, lector.bano]:
 		caja.global_position = _centro(partes)
 		util.global_position = _centro(lector.bano)
@@ -113,7 +114,7 @@ func test_bolsa_afuera_recuperada_o_tirada_sale_del_motivo() -> void:  # AC-CLN-
 	_abrir()
 	var lector: Habitaciones = _almacen.get("_habitaciones")
 	var agarre: Agarre = _almacen.get("_agarre")
-	var bolsa: Node3D = _almacen.get("_bolsas")[0]
+	var bolsa := BolsaEnLaMano.preparar(_almacen)
 	bolsa.global_position = _centro(lector.local) + Vector3.UP * lector.local[0].size.y
 	assert_bool(CIERRE.hay_objetos_afuera(_foto())).is_true()
 	assert_bool(agarre.pedir_agarrar(bolsa.get("datos"), bolsa)).is_true()

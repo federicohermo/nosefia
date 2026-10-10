@@ -49,7 +49,7 @@ func before_test() -> void:
 
 
 func _reloj() -> RelojDelTurno:
-	var obligatorias := Apertura.obligatorias()
+	var obligatorias := Apertura.obligatorias(1)
 	_turno = Apertura.turno_de_la_jornada(obligatorias)
 	var reloj: RelojDelTurno = auto_free(RelojDelTurno.new())
 	reloj.arrancar(_turno, obligatorias)
@@ -334,7 +334,7 @@ func test_cada_gesto_que_cambia_una_fila_avisa_a_la_pantalla() -> void:
 func test_completar_una_tarea_aparte_no_le_sube_el_contador_al_turno() -> void:
 	# Caza el bug que no da error: `RelojDelTurno.obligatoria()` es la única forma de conseguir
 	# la instancia que el turno está contando, y una copia devuelve `true` sin subir el contador.
-	var obligatorias := Apertura.obligatorias()
+	var obligatorias := Apertura.obligatorias(1)
 	var turno := Turno.new(Reglas.DURACION_DEL_TURNO, obligatorias)
 	assert_bool(turno.completar(Tarea.new(Tarea.Tipo.REGISTRAR))).is_true()
 	assert_int(turno.tareas_cumplidas()).is_equal(0)
