@@ -72,6 +72,7 @@ func _cerrar(impecable: bool) -> void:
 
 func _seguir() -> void:
 	_almacen.get("_pantalla").cierre_despachado.emit(ParteDeCierre.Opcion.SEGUIR)
+	_almacen.get_node("Interfaz/PersianaDeLaNoche").terminar()
 
 
 func test_un_ticket_y_dos_en_otra_noche_suman_un_medio_cada_vez() -> void:  # AC-CLN-047

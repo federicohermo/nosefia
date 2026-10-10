@@ -314,11 +314,23 @@ func _al_despachar_la_placa(opcion: ParteDeCierre.Opcion) -> void:
 	acciones[opcion].call()
 
 
-## El orden importa: si el jugador se reanudara después de abrir la jornada, el cuadro del medio
-## correría con el control todavía suspendido.
+## La jornada abre detrás de la entrada; el control vuelve cuando la persiana termina de subir.
 func _seguir() -> void:
-	_jugador.reanudar()
 	_ciclo.abrir_la_jornada()
+	anunciar_la_noche()
+
+
+func anunciar_la_noche() -> void:
+	var persiana: PersianaDeLaNoche = get_node("Interfaz/PersianaDeLaNoche")
+	_reloj.retener()
+	_jugador.suspender()
+	persiana.persiana_subida.connect(_al_subir_la_persiana, CONNECT_ONE_SHOT)
+	persiana.anunciar(_partida.jornada())
+
+
+func _al_subir_la_persiana(_jornada: int) -> void:
+	_reloj.soltar()
+	_jugador.reanudar()
 
 
 ## Deja la partida y carga el menú de inicio. No abre ninguna jornada.
