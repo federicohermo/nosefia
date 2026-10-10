@@ -6,10 +6,11 @@
 extends GdUnitTestSuite
 
 const COMPRADORES := "res://src/dominio/almacen/compradores.gd"
+const POSTERIOR := ReglasDeLaPartida.PRIMERA_JORNADA + 1
 
 
 func test_la_jornada_trae_los_compradores_que_pide_el_balance() -> void:  # AC-CTR-001
-	assert_int(Compradores.de_la_jornada().size()).is_equal(
+	assert_int(Compradores.de_la_jornada(POSTERIOR).size()).is_equal(
 		ReglasDeLaVentanilla.COMPRADORES_POR_JORNADA
 	)
 
@@ -17,8 +18,8 @@ func test_la_jornada_trae_los_compradores_que_pide_el_balance() -> void:  # AC-C
 func test_el_padron_no_se_sortea() -> void:  # AC-CTR-001
 	# Dos llamadas seguidas dan los mismos nombres en el mismo orden. Con un sorteo adentro esto
 	# pasaría de casualidad una de cada tantas corridas, que es peor que fallar siempre.
-	var una := Compradores.de_la_jornada()
-	var otra := Compradores.de_la_jornada()
+	var una := Compradores.de_la_jornada(POSTERIOR)
+	var otra := Compradores.de_la_jornada(POSTERIOR)
 	var nombres_de_una: Array[String] = []
 	var nombres_de_otra: Array[String] = []
 	for comprador in una:
@@ -42,8 +43,8 @@ func test_el_padron_no_llama_al_azar() -> void:
 func test_cada_jornada_recibe_compradores_propios() -> void:  # AC-CTR-001
 	# Instancias nuevas y no las mismas: con un padrón compartido, la atención de anoche llegaría
 	# despachada y la tarea se cumpliría sola a partir de la segunda jornada.
-	var una := Compradores.de_la_jornada()
-	var otra := Compradores.de_la_jornada()
+	var una := Compradores.de_la_jornada(POSTERIOR)
+	var otra := Compradores.de_la_jornada(POSTERIOR)
 	assert_object(una[0]).is_not_same(otra[0])
 	assert_object(una[0].pedido()).is_not_same(otra[0].pedido())
 
@@ -53,7 +54,7 @@ func test_alguien_paga_distinto_de_lo_que_marca_la_caja() -> void:
 	# librada al azar: un padrón donde todos pagan justo deja la ventanilla sin nada que mirar.
 	var inventario := Inventario.new(Catalogo.todos())
 	var diferentes := 0
-	for comprador in Compradores.de_la_jornada():
+	for comprador in Compradores.de_la_jornada(POSTERIOR):
 		if Atencion.new(comprador, inventario).diferencia() != 0:
 			diferentes += 1
 	assert_int(diferentes).is_greater(0)
@@ -77,7 +78,7 @@ func test_el_padron_miente_de_los_dos_lados() -> void:  # AC-CTR-004
 func test_todo_lo_que_se_pide_existe_en_el_catalogo() -> void:
 	# Un pedido con un producto que el inventario no conoce responde 0 unidades y cae por el
 	# camino de «no alcanza el stock»: el comprador quedaría imposible de cobrar toda la noche.
-	for comprador in Compradores.de_la_jornada():
+	for comprador in Compradores.de_la_jornada(POSTERIOR):
 		var pedido := comprador.pedido()
 		(
 			assert_array(pedido.productos())

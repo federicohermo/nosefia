@@ -44,7 +44,7 @@ static func padron() -> Array[Comprador]:
 
 
 ## Los compradores de esta noche: los primeros del padrón, tantos como pida el balance.
-static func de_la_jornada(jornada: int = 2) -> Array[Comprador]:
+static func de_la_jornada(jornada: int) -> Array[Comprador]:
 	if jornada == ReglasDeLaPartida.PRIMERA_JORNADA:
 		return _primera_noche()
 	var lista: Array[Comprador] = []

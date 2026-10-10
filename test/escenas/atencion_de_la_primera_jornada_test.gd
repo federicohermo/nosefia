@@ -210,3 +210,22 @@ func test_vencer_retira_productos_y_ticket_sin_registrar_una_venta() -> void:
 	assert_bool(repositor.caja(producto.id).meter(identidad)).is_false()
 	assert_int(atenciones.tarea().vendidas_de(producto)).is_zero()
 	assert_bool(reloj.obligatoria(Tarea.Tipo.CAJA).completada()).is_false()
+
+
+# AC-CTR-041
+func test_otra_jornada_atiende_con_el_panel_de_cobro_mientras_corre_el_reloj() -> void:
+	var almacen := await _abrir()
+	almacen.call("_al_abrir_la_jornada", ReglasDeLaPartida.PRIMERA_JORNADA + 1)
+	var puesto: Puesto = almacen.get_node("Estructura/Ventanilla")
+	var camara := Camera3D.new()
+	puesto.add_child(camara)
+	camara.position = Vector3(0.0, 0.7, -2.0)
+	camara.make_current()
+	puesto.abrir()
+	var atenciones: Ventanilla = almacen.get("_atenciones")
+	assert_bool(atenciones.atencion().fisica()).is_false()
+	var renglones: VBoxContainer = _panel(almacen).get("_renglones")
+	var primero := renglones.get_child(0)
+	(almacen.get("_reloj") as RelojDelTurno).avanzar(1.0)
+	assert_object(renglones.get_child(0)).is_same(primero)
+	assert_bool((_panel(almacen).get("_cobrar") as Button).visible).is_true()

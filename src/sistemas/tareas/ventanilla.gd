@@ -28,7 +28,8 @@ signal comprador_vencido(comprador: Comprador)
 signal presentacion_cambiada
 signal jornada_preparada
 
-## El reloj se recibe por cableado y conserva la autoridad sobre el tiempo del turno.
+## Entra por `@export` y no como autoload ni por `get_node()` hacia arriba: está medido que
+## `gate_de_capas.py` no ve un autoload nombrado por su nombre global.
 @export var reloj: RelojDelTurno
 
 var _tarea: TareaDeAtender = null
@@ -71,7 +72,6 @@ func _al_pasar_el_tiempo(restante: float) -> void:
 			comprador_llegado.emit(evento.comprador)
 		else:
 			comprador_vencido.emit(evento.comprador)
-	presentacion_cambiada.emit()
 
 
 func tarea() -> TareaDeAtender:

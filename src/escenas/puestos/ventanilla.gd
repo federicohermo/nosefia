@@ -74,11 +74,13 @@ func _al_preparar() -> void:
 
 
 func _process(_delta: float) -> void:
-	if _abierta and comprador_visible.visible:
+	if _abierta:
 		_ubicar_blanco()
 
 
 func _ubicar_blanco() -> void:
+	if not comprador_visible.visible:
+		return
 	var camara := get_viewport().get_camera_3d()
 	if camara == null:
 		return
