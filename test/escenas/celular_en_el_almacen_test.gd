@@ -340,3 +340,120 @@ func test_retomar_reconstruye_guion_sin_lecturas_ni_recibidos() -> void:  # AC-I
 			assert_int(mensaje.jornada).is_less_equal(3)
 	assert_array(quienes).is_equal(esperados.keys())
 	guardado.borrar()
+
+
+func _medir_cursor(web: bool) -> Dictionary:
+	_jugador().set_physics_process(false)
+	_jugador().set("_en_web", web)
+	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
+	(_almacen.get_node("Interfaz/ControlDePausa") as ControlDePausa).set("_cursor_antes", false)
+	var escrituras: Array[int] = []
+	var modo_actual: Array[Input.MouseMode] = [Input.MOUSE_MODE_VISIBLE]
+	_jugador().set("_leer_cursor", func() -> Input.MouseMode: return modo_actual[0])
+	_jugador().set(
+		"_escribir_cursor",
+		func(modo: Input.MouseMode) -> void:
+			escrituras.append(modo)
+			modo_actual[0] = modo
+			Input.mouse_mode = modo
+	)
+	return {"escrituras": escrituras, "modo": modo_actual}
+
+
+func test_cursor_web_espera_gesto_y_no_reintenta_por_cuadro() -> void:  # AC-PLY-081
+	_abrir()
+	var medicion := _medir_cursor(true)
+	var escrituras: Array[int] = medicion["escrituras"]
+	var control: ControlDelJugador = _jugador().get("_control")
+	var yaw := control.yaw()
+	var mover := InputEventMouseMotion.new()
+	mover.relative = Vector2(30, 20)
+	_jugador()._unhandled_input(mover)
+	assert_float(control.yaw()).is_equal(yaw)
+	for cuadro in 4:
+		_jugador().call("_aplicar_el_modo_del_cursor")
+	assert_array(escrituras).is_empty()
+	escrituras.clear()
+	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
+	var tecla := InputEventKey.new()
+	tecla.physical_keycode = KEY_F9
+	tecla.pressed = true
+	tecla.echo = true
+	_jugador()._unhandled_input(tecla)
+	tecla.echo = false
+	tecla.pressed = false
+	_jugador()._unhandled_input(tecla)
+	assert_array(escrituras).is_empty()
+	tecla.pressed = true
+	_jugador()._unhandled_input(tecla)
+	assert_array(escrituras).is_equal([Input.MOUSE_MODE_CAPTURED])
+	for cuadro in 4:
+		_jugador().call("_aplicar_el_modo_del_cursor")
+	assert_array(escrituras).is_equal([Input.MOUSE_MODE_CAPTURED])
+	_jugador().suspender()
+	_jugador().call("_aplicar_el_modo_del_cursor")
+	assert_array(escrituras).is_equal([Input.MOUSE_MODE_CAPTURED, Input.MOUSE_MODE_VISIBLE])
+	_jugador().reanudar()
+	for cuadro in 4:
+		_jugador().call("_aplicar_el_modo_del_cursor")
+	assert_array(escrituras).is_equal([Input.MOUSE_MODE_CAPTURED, Input.MOUSE_MODE_VISIBLE])
+	_jugador()._unhandled_input(tecla)
+	assert_array(escrituras).is_equal(
+		[Input.MOUSE_MODE_CAPTURED, Input.MOUSE_MODE_VISIBLE, Input.MOUSE_MODE_CAPTURED]
+	)
+
+
+func test_q_primero_no_captura_y_cierre_y_pausa_recapturan() -> void:  # AC-PLY-081, AC-INV-036
+	_abrir()
+	var medicion := _medir_cursor(true)
+	var escrituras: Array[int] = medicion["escrituras"]
+	await _q()
+	assert_bool(_celular().celular().abierto()).is_true()
+	assert_array(escrituras).is_empty()
+	assert_int(Input.mouse_mode).is_equal(Input.MOUSE_MODE_VISIBLE)
+	await _q()
+	assert_bool(_celular().celular().abierto()).is_false()
+	assert_array(escrituras).is_equal([Input.MOUSE_MODE_CAPTURED])
+	var pausa: ControlDePausa = _almacen.get_node("Interfaz/ControlDePausa")
+	pausa.pausar()
+	assert_int(Input.mouse_mode).is_equal(Input.MOUSE_MODE_VISIBLE)
+	escrituras.clear()
+	medicion["modo"][0] = Input.MOUSE_MODE_VISIBLE
+	pausa.reanudar()
+	assert_array(escrituras).is_equal([Input.MOUSE_MODE_CAPTURED])
+
+
+func test_e_primero_abre_examen_sin_capturar() -> void:  # AC-PLY-081
+	_abrir()
+	var medicion := _medir_cursor(true)
+	var escrituras: Array[int] = medicion["escrituras"]
+	var caja: Node3D = _almacen.get("_cajas_de_productos")[0]
+	var agarre: Agarre = _almacen.get("_agarre")
+	assert_bool(agarre.pedir_agarrar(caja.get("datos"), caja)).is_true()
+	var evento := InputEventKey.new()
+	evento.physical_keycode = KEY_E
+	evento.pressed = true
+	_jugador()._unhandled_input(evento)
+	assert_bool(_jugador().examen.esta_examinando()).is_true()
+	assert_bool(_jugador().suspendido()).is_true()
+	assert_array(escrituras).is_empty()
+	assert_int(Input.mouse_mode).is_equal(Input.MOUSE_MODE_VISIBLE)
+
+
+func test_cursor_nativo_no_repite_escrituras_del_mismo_modo() -> void:  # AC-PLY-081
+	_abrir()
+	var medicion := _medir_cursor(false)
+	var escrituras: Array[int] = medicion["escrituras"]
+	for cuadro in 4:
+		_jugador().call("_aplicar_el_modo_del_cursor")
+	assert_array(escrituras).is_equal([Input.MOUSE_MODE_CAPTURED])
+	_jugador().suspender()
+	for cuadro in 4:
+		_jugador().call("_aplicar_el_modo_del_cursor")
+	assert_array(escrituras).is_equal([Input.MOUSE_MODE_CAPTURED, Input.MOUSE_MODE_VISIBLE])
+	_jugador().reanudar()
+	for cuadro in 4:
+		_jugador().call("_aplicar_el_modo_del_cursor")
+	assert_array(escrituras).is_equal(
+		[Input.MOUSE_MODE_CAPTURED, Input.MOUSE_MODE_VISIBLE, Input.MOUSE_MODE_CAPTURED]
+	)

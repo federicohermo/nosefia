@@ -205,6 +205,7 @@ func _ready() -> void:
 	var pausa: ControlDePausa = get_node("Interfaz/ControlDePausa")
 	_programa_de_tickets.pausa_pedida.connect(pausa.pausar)
 	pausa.pausado.connect(_programa_de_tickets.cerrar_las_listas)
+	pausa.reanudado.connect(_jugador.tomar_el_cursor_desde_entrada)
 	pausa.volver_al_menu_pedido.connect(func() -> void: _ir_al_menu.call())
 	_arranque = _jugador.global_transform
 	add_child(EnlaceDeGuardado.new(_ciclo, Guardado.new()))
@@ -409,6 +410,7 @@ func _unhandled_input(evento: InputEvent) -> void:
 	if evento.is_action_pressed(Celular.ACCION) and not evento.is_echo():
 		get_viewport().set_input_as_handled()
 		_celular.pedir_alternar(_jugador.suspendido() or _jugador.examen.esta_examinando())
+		_jugador.tomar_el_cursor_desde_entrada()
 
 
 func _cablear_el_celular() -> void:
