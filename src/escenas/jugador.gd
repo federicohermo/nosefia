@@ -42,6 +42,11 @@ var _control := ControlDelJugador.new(
 
 var _cadencia := CadenciaDePasos.new()
 
+# Adaptadores del motor: permiten medir solicitudes sin capturar el cursor del runner.
+var _en_web := OS.has_feature("web")
+var _leer_cursor: Callable = func() -> Input.MouseMode: return Input.mouse_mode
+var _escribir_cursor: Callable = func(modo: Input.MouseMode) -> void: Input.mouse_mode = modo
+
 ## Lo que la mira tiene adelante ahora mismo. Se guarda el nodo y no el `id` porque agarrar
 ## necesita el `Node3D`; el dominio sigue viendo sólo el `int` que le pasa `_leer_la_mira()`.
 var _enfocado: Node3D = null
@@ -138,7 +143,10 @@ func _unhandled_input(evento: InputEvent) -> void:
 	# `arrastrar()` decide con el estado del examen y del clic.
 	if evento is InputEventMouseMotion:
 		var movimiento := evento as InputEventMouseMotion
-		if _el_cursor_esta_tomado():
+		if (
+			_el_cursor_esta_tomado()
+			and (not _en_web or _leer_cursor.call() == Input.MOUSE_MODE_CAPTURED)
+		):
 			_control.girar(movimiento.relative)
 			_aplicar_la_rotacion()
 		else:
@@ -164,6 +172,13 @@ func _unhandled_input(evento: InputEvent) -> void:
 		# Con otra pantalla encima, la E no abre un examen: al cerrarlo reanudaría al jugador.
 		if examen.esta_examinando() or not _control.esta_suspendido():
 			examen.alternar(_datos_de(_enfocado))
+	# Q se resuelve en la raíz; puede suspender después de este callback.
+	if (
+		evento.is_pressed()
+		and not evento.is_echo()
+		and not evento.is_action_pressed(Celular.ACCION)
+	):
+		tomar_el_cursor_desde_entrada()
 
 
 func _usar_la_superficie_mirada() -> void:
@@ -200,9 +215,8 @@ func _interactuar() -> void:
 
 
 func _physics_process(delta: float) -> void:
-	# El modo del cursor se recalcula cada cuadro porque es una función pura del estado del
-	# control: así `suspender()` y `reanudar()` no tienen que acordarse de tocarlo, que es
-	# exactamente el olvido que la suspensión como modo único existe para evitar.
+	# El dominio decide el modo. La física libera en ambos motores; en web la captura espera
+	# un callback de entrada activo. Nativo escribe sólo si el modo cambió.
 	_aplicar_el_modo_del_cursor()
 
 	if not is_on_floor():
@@ -456,16 +470,26 @@ func _aplicar_la_rotacion() -> void:
 		_camara.rotation.x = _control.pitch() if _retomando_la_vista else _control.pitch_dibujado()
 
 
-## `dominio/` decide SI el cursor tiene que estar tomado. La pausa lo suelta sin preguntarle, y
-## al reanudar el cuadro siguiente lo vuelve a tomar.
+## `dominio/` decide SI el cursor tiene que estar tomado. El motor decide cuándo puede pedirlo.
 func _el_cursor_esta_tomado() -> bool:
 	return _control.quiere_el_cursor_tomado()
 
 
-## Acá se traduce ese SI a QUÉ modo de cursor es ése.
-func _aplicar_el_modo_del_cursor() -> void:
+## Sólo desde un callback presionado activo, después de resolver la acción que puede suspender.
+## La liberación sigue en física: ControlDePausa distingue esa escritura propia de Esc.
+func tomar_el_cursor_desde_entrada() -> void:
+	if _el_cursor_esta_tomado():
+		_aplicar_el_modo_del_cursor(true)
+
+
+func _aplicar_el_modo_del_cursor(desde_entrada: bool = false) -> void:
 	var tomado := _el_cursor_esta_tomado()
-	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED if tomado else Input.MOUSE_MODE_VISIBLE
+	var modo := Input.MOUSE_MODE_CAPTURED if tomado else Input.MOUSE_MODE_VISIBLE
+	if _leer_cursor.call() == modo:
+		return
+	if _en_web and tomado and not desde_entrada:
+		return
+	_escribir_cursor.call(modo)
 
 
 ## La identidad sigue siendo la del cuerpo; cambiar el punto visible no reemite el foco.
