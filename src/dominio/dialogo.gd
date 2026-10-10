@@ -15,10 +15,6 @@ func _init(entradas: PackedStringArray = [], clase: Clase = Clase.CONVERSACION) 
 	_ultima = entrada_actual()
 
 
-static func recordatorio(entrada: String) -> Dialogo:
-	return Dialogo.new(PackedStringArray([entrada]), Clase.PENSAMIENTO)
-
-
 func entrada_actual() -> String:
 	return "" if terminado() else _entradas[_indice]
 

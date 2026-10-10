@@ -131,6 +131,9 @@ entregable más caro y el único que hace que el hallazgo no vuelva.
 | Lo que apareció | Qué skill se corrige |
 |---|---|
 | un criterio que no se puede ver fallar | `to-spec` |
+| una entrega física sin destino de productos o ticket al vencer | `to-issue` y `to-spec` — distinguir venta de vencimiento y resolver cada objeto con el usuario |
+| una animación que confunde tasa del video con duración de los dibujos | `to-issue` y `to-spec` — verificar los PNG disponibles y registrar el ritmo decidido |
+| un marco de Figma aparentemente vacío con texto en capas hermanas superpuestas | `to-issue` — inspeccionar la página y las coordenadas de las capas antes de declarar ausente el diseño |
 | una regla del juego ubicada en `ui/` o en `escenas/` | `to-spec` — el eje de capas se escribió tarde |
 | una medición corrida en el proceso equivocado | `to-spec` — lo que el motor soporta se midió en el editor y no en el juego: el editor contestó que sí y el juego que no |
 | un criterio que **barre un directorio y enumera excepciones** sin haber corrido el barrido | `to-spec` — de memoria sale corta y el criterio nace imposible de pasar |

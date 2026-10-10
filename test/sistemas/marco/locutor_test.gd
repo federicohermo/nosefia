@@ -29,7 +29,14 @@ func test_abrir_publica_la_primera_y_cada_click_izquierdo_publica_una() -> void:
 func test_abrir_otro_dialogo_rechaza_sin_emitir_ni_reemplazar() -> void:
 	var locutor := _locutor()
 	locutor.abrir(_tres_entradas())
-	assert_bool(locutor.abrir(Dialogo.recordatorio("Otra entrada."))).is_false()
+	(
+		assert_bool(
+			locutor.abrir(
+				Dialogo.new(PackedStringArray(["Otra entrada."]), Dialogo.Clase.PENSAMIENTO)
+			)
+		)
+		. is_false()
+	)
 	assert_array(_entradas).is_equal(["Primera"])
 	locutor.recibir(_click(MOUSE_BUTTON_LEFT, true))
 	assert_array(_entradas).is_equal(["Primera", "Segunda"])
@@ -64,7 +71,7 @@ func test_no_se_puede_cerrar_una_conversacion_a_mitad() -> void:  # AC-CTR-014
 
 func test_el_pensamiento_se_puede_cerrar_sin_avanzar() -> void:  # AC-INV-019
 	var locutor := _locutor()
-	locutor.abrir(Dialogo.recordatorio("Un pensamiento."))
+	locutor.abrir(Dialogo.new(PackedStringArray(["Un pensamiento."]), Dialogo.Clase.PENSAMIENTO))
 	assert_bool(locutor.cerrar()).is_true()
 	assert_int(_cierres).is_equal(1)
 	assert_bool(locutor.cerrar()).is_false()

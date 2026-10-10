@@ -10,8 +10,8 @@
 ## al comprador que paga de menos indistinguible del que paga de más, que es exactamente la cosa
 ## que este spec vino a poner delante del jugador.
 ##
-## **Se puede despachar sin vender**: un pedido puede superar los vendibles de la noche, y
-## exigir la venta dejaría a ese comprador sin forma de irse.
+## **En las jornadas posteriores se puede despachar sin vender**: un pedido puede superar los
+## vendibles, y exigir la venta dejaría a ese comprador sin forma de irse.
 ##
 ## Es la mitad de atender que se ejerce sin levantar una escena: acá no hay un solo `Node`.
 class_name Atencion
@@ -33,11 +33,70 @@ var _comprador: Comprador
 var _inventario: Inventario
 var _despachada: bool = false
 var _vendida: bool = false
+var _recepcion: RecepcionDeCompra = null
+var _dialogo: Dialogo = null
+var _presentado: bool = false
+var _inicial_terminada: bool = false
+
+
+func conversacion_iniciada() -> bool:
+	return _presentado
+
+
+func interactuar(objeto: ObjetoDelAlmacen) -> RecepcionDeCompra.Resultado:
+	if not fisica() or _despachada:
+		return RecepcionDeCompra.Resultado.BLOQUEADA
+	if _dialogo != null and not _dialogo.terminado():
+		_dialogo.avanzar()
+		if _dialogo.terminado():
+			_inicial_terminada = true
+			_despachada = _vendida
+		return RecepcionDeCompra.Resultado.DIALOGO
+	if not _presentado:
+		_presentado = true
+		_dialogo = _comprador.dialogos.inicial(_comprador.personaje)
+		return RecepcionDeCompra.Resultado.DIALOGO
+	if objeto == null:
+		_dialogo = _comprador.dialogos.recordatorio(_comprador.personaje)
+		return RecepcionDeCompra.Resultado.DIALOGO
+	var resultado := RecepcionDeCompra.Resultado.RECHAZADA
+	if not objeto is UnidadDeProducto or _inventario.esta_afuera(objeto as UnidadDeProducto):
+		resultado = _recepcion.recibir(objeto, _inicial_terminada)
+	if resultado == RecepcionDeCompra.Resultado.RECHAZADA:
+		_dialogo = _comprador.dialogos.recordatorio(_comprador.personaje, true)
+	elif resultado == RecepcionDeCompra.Resultado.ACEPTADA:
+		_dialogo = null
+	elif resultado == RecepcionDeCompra.Resultado.COMPLETA:
+		_vendida = _inventario.vender_unidades(_recepcion.unidades())
+		_dialogo = _comprador.dialogos.despedida(_comprador.personaje)
+	return resultado
+
+
+func dialogo() -> Dialogo:
+	return _dialogo
+
+
+func puede_abandonar() -> bool:
+	return _dialogo == null or _dialogo.puede_abandonar()
+
+
+func vencer() -> void:
+	if not _vendida:
+		for unidad in _recepcion.unidades():
+			_inventario.desechar(unidad)
+		_despachada = true
+		_dialogo = null
+
+
+func fisica() -> bool:
+	return _recepcion != null
 
 
 func _init(comprador: Comprador, inventario: Inventario) -> void:
 	_comprador = comprador
 	_inventario = inventario
+	if comprador.tiene_horario():
+		_recepcion = RecepcionDeCompra.new(comprador.pedido())
 
 
 func comprador() -> Comprador:
@@ -83,7 +142,7 @@ func vendida() -> bool:
 ## vendibles no se mueve una sola unidad. Descontar lo que se pueda dejaría un estado que el
 ## jugador no puede distinguir de una venta completa.
 func cobrar() -> Resultado:
-	if _despachada:
+	if _despachada or fisica():
 		return Resultado.YA_DESPACHADA
 	if not _inventario.cobrar(_comprador.pedido()):
 		return Resultado.SIN_STOCK
@@ -97,7 +156,7 @@ func cobrar() -> Resultado:
 ## No toca el inventario: el comprador se va con las manos vacías y la caja no registra nada. Es
 ## lo que hace que la obligatoria se pueda cumplir con un pedido que supera los vendibles.
 func despachar_sin_vender() -> bool:
-	if _despachada:
+	if _despachada or fisica():
 		return false
 	_despachada = true
 	return true

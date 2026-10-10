@@ -5,8 +5,9 @@
 ## adentro, un test se tendría que armar siempre con los que el balance pide, y mover ese número
 ## rompería casos que no hablan de él. Es la misma decisión que tomó `Turno` con las obligatorias.
 ##
-## **Se completa con todos despachados, se les haya vendido o no.** Un pedido puede superar
-## los vendibles de la noche, y exigir la venta dejaría a ese comprador sin forma de irse.
+## **En jornadas posteriores se completa con todos despachados, se les haya vendido o no.** Un
+## pedido puede superar los vendibles de la noche, y exigir la venta dejaría a ese comprador sin
+## forma de irse.
 class_name TareaDeAtender
 extends RefCounted
 
@@ -17,11 +18,36 @@ var _inventario: Inventario
 ## despachados sale de recorrerlas y no de un contador aparte, que se desincronizaría el día que
 ## alguien despache por otro camino.
 var _atenciones: Array[Atencion] = []
+var _agenda: AgendaDeCompradores = null
+
+
+func avanzar(tiempo: float) -> Array[AgendaDeCompradores.Evento]:
+	if not fisica():
+		return []
+	var completas: Array[Comprador] = []
+	for atendida in _atenciones:
+		if atendida.vendida():
+			completas.append(atendida.comprador())
+	var eventos := _agenda.avanzar(tiempo, completas)
+	for evento in eventos:
+		if evento.tipo == AgendaDeCompradores.Tipo.LLEGO:
+			_atenciones.append(Atencion.new(evento.comprador, _inventario))
+		else:
+			for atendida in _atenciones:
+				if atendida.comprador() == evento.comprador:
+					atendida.vencer()
+	return eventos
+
+
+func fisica() -> bool:
+	return _agenda != null
 
 
 func _init(compradores: Array[Comprador], inventario: Inventario) -> void:
 	_compradores = compradores
 	_inventario = inventario
+	if not compradores.is_empty() and compradores[0].tiene_horario():
+		_agenda = AgendaDeCompradores.new(compradores)
 
 
 ## Llama al comprador siguiente y le abre su atención, o devuelve `null` si no queda ninguno.
@@ -30,6 +56,8 @@ func _init(compradores: Array[Comprador], inventario: Inventario) -> void:
 ## `en_ventanilla()`. Separarlos es lo que permite cerrar y reabrir el panel sin saltearse a
 ## nadie, sin que la escena tenga que llevar la cuenta.
 func atender() -> Comprador:
+	if fisica():
+		return en_ventanilla()
 	if _atenciones.size() >= _compradores.size():
 		return null
 	var comprador := _compradores[_atenciones.size()]
@@ -67,6 +95,12 @@ func despachados() -> int:
 ## Se compara contra la lista que se recibió y nunca contra un número escrito acá. Una lista
 ## vacía está completa por vacuidad, que es lo que corresponde: no quedó nadie sin atender.
 func completada() -> bool:
+	if fisica():
+		var vendidas := 0
+		for atendida in _atenciones:
+			if atendida.vendida():
+				vendidas += 1
+		return vendidas == _compradores.size()
 	return despachados() == _compradores.size()
 
 

@@ -23,6 +23,9 @@ func after_test() -> void:
 func _abrir() -> void:
 	_almacen = ALMACEN.instantiate()
 	add_child(_almacen)
+	# Aísla las consecuencias del descarte del requisito de ventas físicas de la primera noche.
+	_almacen.call("_al_abrir_la_jornada", 2)
+	assert_bool((_almacen.get("_atenciones") as Ventanilla).tarea().fisica()).is_false()
 	var jugador: Node3D = _almacen.get("_jugador")
 	jugador.set_process(false)
 	jugador.set_physics_process(false)

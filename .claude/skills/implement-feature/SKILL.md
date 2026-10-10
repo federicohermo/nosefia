@@ -105,6 +105,20 @@ que queda tapado por otra ventana casi no pide cuadros: dos capturas seguidas sa
 `--disable-backgrounding-occluded-windows` y `--disable-renderer-backgrounding`, y antes de leer
 una captura se cuentan los `requestAnimationFrame` de un segundo.
 
+**No excluyas texturas del export por una búsqueda de texto vacía.** Godot extrae las
+imágenes del GLB y el modelo importado las referencia también desde recursos binarios. En #339,
+excluirlas redujo el paquete y dejó el local sin texturas. Conservá esas dependencias y verificá
+una partida nueva en el navegador, observando la consola también después de salir del menú.
+El humo de arranque termina antes de ese recorrido. Un build local no exige publicar en Vercel:
+el límite de tamaño de publicación no justifica quitar arte necesario.
+
+**Los recursos de diálogo se verifican también dentro del paquete exportado.** En #339, los
+tests y las capturas del checkout mostraban las nueve entradas, pero el recurso binario del
+PCK conservaba sólo los recordatorios: las conversaciones quedaban vacías. Ejecutá el chequeo
+externo `.github/scripts/verificar_dialogos_exportados.gd` con `--main-pack` desde la carpeta
+del export, además del recorrido de interacción. No des por resuelto un reporte del build
+porque la misma conversación funcione desde el checkout.
+
 ## Cuando lo que escribís es un gate sobre prosa
 
 Una parte de lo que este repo verifica no es código: es que un `.md` diga algo. Tres cosas se
@@ -236,6 +250,14 @@ se corrige el código.
   esas suites sueltas antes de `verificar.py`. En el #176, dos clics seguidos sobre la misma caja
   pasaron de «no hace nada» a «devuelve la unidad», y un caso de `reposicion_manual_test.gd` que
   afirmaba lo viejo costó una corrida entera en 6/7.
+- **Si una llegada pasa de abrir una interfaz a depender del reloj, revisá también los
+  fixtures de notificaciones, sonido y caja que piden atender.** En #339 seguían esperando
+  un comprador inmediato. La primera jornada debe ejercerse avanzando su reloj; las pruebas
+  del recorrido anterior deben declarar una jornada que lo conserve.
+- **Si completar una tarea pasa a exigir ventas, revisá los fixtures de cierre que marcan
+  tareas a mano.** En #339, los casos de descarte y tickets fingían una noche impecable sin
+  vender. Deben aislar el reparto anterior o realizar las compras; no debilitar la regla nueva
+  ni cambiar los apercibimientos esperados para absorber una tarea que quedó pendiente.
 - **Lo que aparece implementando se hace, no se anota.** Un issue incompleto no se cierra abriendo
   otro issue: se completa.
 - **Un reparto nuevo exige revisar los supuestos de los tests que leen el modelo.** Buscá

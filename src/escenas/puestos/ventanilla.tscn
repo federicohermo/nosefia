@@ -8,10 +8,18 @@ size = Vector3(1.2, 1.4, 0.12)
 [sub_resource type="BoxMesh" id="BoxMesh_antepecho"]
 size = Vector3(1.4, 0.08, 0.4)
 
-[node name="Ventanilla" type="StaticBody3D" node_paths=PackedStringArray("borde_superior", "antepecho") groups=["interactuable"]]
+[node name="Ventanilla" type="StaticBody3D" node_paths=PackedStringArray("borde_superior", "antepecho", "comprador_visible") groups=["interactuable"]]
 script = ExtResource("1_ventanilla")
 borde_superior = NodePath("BordeSuperior")
 antepecho = NodePath("Antepecho")
+comprador_visible = NodePath("Comprador")
+
+[node name="Comprador" type="AnimatedSprite3D" parent="."]
+visible = false
+position = Vector3(0, 0.57, 0.36)
+rotation = Vector3(0, 3.1415927, 0)
+pixel_size = 0.001
+texture_filter = 0
 
 [node name="Vidrio" type="CollisionShape3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.7, 0)

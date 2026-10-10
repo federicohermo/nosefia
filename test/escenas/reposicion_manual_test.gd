@@ -9,6 +9,8 @@ func test_vender_no_cambia_lo_que_la_gondola_dibuja() -> void:  # AC-CTR-015
 	# inventario da por lleno, y el jugador repondría lo que no falta.
 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
 	add_child(almacen)
+	# El cobro automático continúa en las jornadas posteriores a la primera.
+	almacen.call("_al_abrir_la_jornada", 2)
 	almacen.get("_jugador").set_physics_process(false)
 	var presentacion: Node3D = almacen.get("_reposicion_manual")
 	var repositor: Repositor = almacen.get("_repositor")

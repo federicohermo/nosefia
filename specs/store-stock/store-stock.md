@@ -127,7 +127,7 @@ sigue en la mano; vuelve a la caja si el jugador se la devuelve (BR-STK-030).
 El sistema DEBE contestar los vendibles de un producto como su depósito menos el mayor entre los
 casilleros vacíos de su fila de adelante y sus unidades afuera, y nunca menos de cero. Es lo que
 queda en la caja menos lo que a la góndola todavía le falta de ella: un casillero vacío que ya
-espera una unidad afuera no se descuenta dos veces. El sistema NO DEBE vender una unidad afuera:
+espera una unidad afuera no se descuenta dos veces. El cobro automático NO DEBE vender una unidad afuera:
 ninguna venta deja el depósito por debajo de las unidades afuera. Un producto que el inventario
 no conoce tiene cero vendibles.
 
@@ -157,6 +157,11 @@ descumplirla. La jornada DEBE abrir con registrar sin cumplir. El sistema DEBE r
 cada «+» o «−» que cambia una fila y con cada venta cobrada. El cierre DEBE contar el estado de
 ese instante (BR-SHF-007 de [`shift-cycle`](../shift-cycle/shift-cycle.md)): una noche sin
 ventas con la planilla en cero cuenta como cumplida recién ahí.
+
+En la primera jornada, registrar DEBE permanecer pendiente hasta completar las compras de
+Martín y Tiago, con todos sus productos y sus tickets, y anotar exactamente todas las unidades
+vendidas. Registrar sólo la primera compra o anticipar la segunda NO DEBE cumplir la tarea.
+Si alguna compra vence sin completarse, registrar NO DEBE cumplirse, tampoco al cerrar.
 
 ### BR-STK-023 — Cada producto declara su sonoridad
 
@@ -297,6 +302,15 @@ afuera y descontar una del depósito. La caja y la góndola DEBEN seguir como es
 unidad ya no se devuelve ni se coloca. Una unidad no registrada afuera NO DEBE cambiar el
 inventario. La jornada siguiente DEBE abrir con el inventario de esa noche (BR-STK-026).
 
+### BR-STK-037 — La venta física retira identidades una sola vez
+
+CUANDO se completa una compra física, el sistema DEBE retirar definitivamente sus unidades
+registradas afuera, una sola vez por identidad. NO DEBE volver a descontar el pedido completo.
+Una recepción parcial DEBE conservarlas hasta la salida del comprador. SI vence la atención,
+ENTONCES sus unidades recibidas DEBEN retirarse del inventario una vez, sin contar como venta.
+Una unidad vendida NO DEBE poder registrarse afuera otra vez.
+Vender una unidad retirada de góndola NO DEBE rellenar su casillero ni cumplir reponer.
+
 ## Criterios de aceptación
 
 ### AC-STK-001 — La identidad manda *(verifica BR-STK-001)*
@@ -414,6 +428,7 @@ total es igual al de lo vendido y registrar no se cumple.
 DADO una jornada que se abre ENTONCES registrar arranca sin cumplir. DADO una noche
 que cobró 2 unidades de un producto y 1 de otro CUANDO se anotan esas 3 unidades ENTONCES
 registrar se cumple con el último gesto, y no antes.
+En la primera jornada se exige además completar ambos pedidos (AC-STK-056).
 
 ### AC-STK-025 — Una venta o una unidad de más la deshacen *(verifica BR-STK-022)*
 
@@ -482,7 +497,7 @@ DADO la jornada 1 que se abre ENTONCES faltan 5 Actroncito, 6 Coracola, 2 Maroli
 
 ### AC-STK-035 — Se vende sin quitarle a la reposición *(verifica BR-STK-027)*
 
-DADO cada jornada, de la 1 a la 5, CUANDO se les cobra a todos sus compradores apenas abre
+DADO cada jornada, de la 1 a la 5, CUANDO se completan todas sus compras por el recorrido de su jornada
 ENTONCES ningún cobro se rechaza, y después se puede reponer todo lo que falta y dar reponer por
 cumplida.
 
@@ -613,8 +628,8 @@ inferior no está más hacia el pasillo que el frente de los estantes superiores
 
 ### AC-STK-052 — El cierre cuenta la planilla de ese instante *(verifica BR-STK-022)*
 
-DADO una noche sin ventas y sin gestos en la planilla CUANDO cierra ENTONCES registrar cuenta
-como cumplida. Antes del cierre, una planilla en cero sin ventas NO completa la tarea ni suma
+DADO una noche posterior a la primera sin ventas y sin gestos en la planilla CUANDO cierra
+ENTONCES registrar cuenta como cumplida. Antes del cierre, una planilla en cero sin ventas NO completa la tarea ni suma
 una tarea al contador. DADO una noche con la planilla igual a lo vendido CUANDO se cobra una venta más
 y la noche cierra sin anotarla ENTONCES registrar no cuenta.
 
@@ -626,6 +641,28 @@ se cumple y la unidad ya no está afuera ni se puede colocar o devolver. DADO un
 sacada de su caja CUANDO se tira ENTONCES la caja conserva su contenido anterior al tiro.
 DADO una unidad no registrada afuera CUANDO se intenta desechar ENTONCES devuelve false y
 no cambia el inventario.
+
+### AC-STK-054 — Salida definitiva sin doble descuento *(verifica BR-STK-037, BR-STK-028)*
+
+DADO una caja con ocho unidades CUANDO se retira una y completa su compra física ENTONCES
+la caja conserva siete, el depósito baja una y esa identidad ya no está afuera.
+Repetir la venta o intentar registrar esa identidad afuera no cambia cantidades.
+
+### AC-STK-055 — Salida y reposición *(verifica BR-STK-037, BR-STK-033, BR-STK-030)*
+
+DADO una unidad retirada de góndola CUANDO se entrega en una compra parcial y ésta vence
+ENTONCES deja de estar registrada afuera y sale del inventario una sola vez, sin sumar una venta.
+DADO esa unidad en una compra completa ENTONCES el casillero sigue vacío y reponer incompleta
+hasta rellenarlo. La planilla cuenta sólo compras completas, nunca entregas parciales.
+
+### AC-STK-056 — Registro exige ambas ventas de la primera noche *(verifica BR-STK-022)*
+
+DADO la primera jornada CUANDO se registra la venta completa de Martín pero Tiago aún no
+compró ENTONCES registrar sigue pendiente. DADO todos los pedidos anotados anticipadamente
+ENTONCES registrar sigue pendiente hasta que ambas compras estén vendidas con productos y
+ticket. CUANDO ambas ventas se completan y sus unidades están exactamente anotadas ENTONCES
+registrar se cumple. Una unidad de más o de menos la descumple. Si una compra vence incompleta,
+registrar sigue pendiente, incluso al cerrar y aunque la planilla coincida con lo vendido.
 
 ## No objetivos
 

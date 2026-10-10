@@ -199,24 +199,40 @@ func _boton_de_la_fila(filas: Node, indice: int, columna: int) -> Button:
 func _atender(almacen: Node3D) -> void:
 	var ventanilla: Node3D = almacen.get_node("Estructura/Ventanilla")
 	var panel: PanelDeLaVentanilla = ventanilla.get("panel")
-	var cobrar: Button = panel.get_node("Fondo/Panel/Cobrar")
 	var reloj: RelojDelTurno = almacen.get("_reloj")
-	var contador: Label = almacen.get("_hud").get("_tareas")
-	for comprador in Compradores.de_la_jornada():
+	var atenciones: Ventanilla = almacen.get("_atenciones")
+	var agarre: Agarre = almacen.get("_agarre")
+	var caja: CajaRegistradora = almacen.get("_caja")
+	var destino: Node3D = almacen.get("_puesto_de_la_caja").get("destino_de_los_tickets")
+	for intervalo: float in [120.0, 360.0]:
+		reloj.avanzar(intervalo)
 		ventanilla.call(ReglasDeLosObjetos.METODO_ACCIONAR)
 		assert_bool(panel.visible).is_true()
 		await _comprobar_reloj(almacen)
-		var registrar_estaba_cumplida := reloj.obligatoria(Tarea.Tipo.REGISTRAR).completada()
-		var cumplidas_antes := _cumplidas(reloj)
-		cobrar.pressed.emit()
-		if registrar_estaba_cumplida:
-			assert_bool(reloj.obligatoria(Tarea.Tipo.REGISTRAR).completada()).is_false()
-			assert_str(contador.text).is_equal(
-				(
-					Hud.TEXTO_DE_LAS_TAREAS
-					% Marcador.tareas(cumplidas_antes - 1, Apertura.cantidad_de_obligatorias())
-				)
-			)
+		var atendida := atenciones.atencion()
+		assert_object(atendida).is_not_null()
+		for _entrada in 4:
+			panel.comprador_pulsado.emit()
+			if atenciones.puede_abandonar():
+				break
+		caja.pedir_borrar()
+		for producto in atendida.comprador().pedido().productos():
+			for _unidad in atendida.comprador().pedido().unidades_de(producto):
+				almacen.get("_reposicion_manual").retirar(producto.id)
+				caja.pedir_anotar(agarre.manos().sostenido())
+				panel.comprador_pulsado.emit()
+		caja.pedir_imprimir()
+		for nodo in destino.get_children():
+			var papel := nodo as ObjetoAgarrable
+			if papel != null and papel.datos is Ticket and papel.visible:
+				agarre.pedir_agarrar(papel.datos, papel)
+				panel.comprador_pulsado.emit()
+		assert_bool(atendida.vendida()).is_true()
+		for _entrada in 4:
+			panel.comprador_pulsado.emit()
+			if atenciones.puede_abandonar():
+				break
+		ventanilla.call("cerrar")
 	await get_tree().process_frame
 	assert_bool(reloj.corriendo()).is_true()
 	assert_bool(reloj.obligatoria(Tarea.Tipo.CAJA).completada()).is_true()

@@ -34,6 +34,19 @@ var _casilleros: Dictionary[Producto.Id, int] = {}
 ## vendibles se cuentan contra ellas, y la ventanilla no conoce el estante. El estante las anota y
 ## las quita.
 var _afuera: Array[UnidadDeProducto] = []
+var _vendidas: Array[UnidadDeProducto] = []
+
+
+func vender_unidades(unidades_fisicas: Array[UnidadDeProducto]) -> bool:
+	var distintas: Array[UnidadDeProducto] = []
+	for unidad in unidades_fisicas:
+		if not esta_afuera(unidad) or distintas.has(unidad):
+			return false
+		distintas.append(unidad)
+	for unidad in distintas:
+		desechar(unidad)
+		_vendidas.append(unidad)
+	return true
 
 
 ## Retira una unidad registrada afuera sin devolverla a su caja.
@@ -159,7 +172,7 @@ func esta_afuera(unidad: UnidadDeProducto) -> bool:
 func anotar_afuera(unidad: UnidadDeProducto) -> bool:
 	if unidad == null or unidad.producto == null or not _unidades.has(unidad.producto.id):
 		return false
-	if _afuera.has(unidad):
+	if _afuera.has(unidad) or _vendidas.has(unidad):
 		return false
 	_afuera.append(unidad)
 	return true

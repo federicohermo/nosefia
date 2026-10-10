@@ -246,7 +246,7 @@ recalcular la vista hasta la próxima apertura.
 
 MIENTRAS el control está suspendido por la computadora, la ventanilla, una nota pegada o el programa de tickets, el gesto de agarrar
 NO DEBE agarrar lo enfocado ni soltar lo que se lleva. Examinar DEBE conservar su propio
-ruteo del gesto. Al salir, lo que se llevaba DEBE seguir en la mano.
+ruteo del gesto. Al salir, lo que se llevaba DEBE seguir en la mano, salvo una entrega aceptada al comprador (BR-PLY-034).
 
 ### BR-PLY-029 — Leer una nota pegada
 
@@ -302,6 +302,15 @@ del jugador libre y dentro del alcance. El lector DEBE apoyar sobre el mostrador
 de rescate del papel DEBE ser su pose real al imprimirse, conservando su tamaño pese a la
 escala de la caja. La apertura de otra jornada DEBE retirar todos los tickets después de
 terminar el examen y vaciar las manos.
+
+### BR-PLY-034 — Clic sobre el comprador
+
+MIENTRAS la ventanilla de la primera noche está abierta, el clic izquierdo sobre el comprador
+DEBE solicitar diálogo o recepción según el estado que decide atención. Antes de aceptar,
+el cuerpo y la mano DEBEN conservarse. Una aceptación DEBE vaciar la mano y conservar el mismo
+cuerpo en el puesto. Un rechazo DEBE mantenerlo en la mano.
+MIENTRAS el comprador habla, clic derecho NO DEBE abandonar la ventanilla; Esc DEBE abrir pausa.
+El vencimiento DEBE liberar ese bloqueo. Fuera del comprador, el izquierdo NO DEBE soltar ni agarrar.
 
 ## Criterios de aceptación
 
@@ -631,7 +640,7 @@ CUANDO se hace ese gesto sobre ellas ENTONCES se suelta la unidad y siguen cerra
 
 DADO la computadora o la ventanilla cerradas y cualquier cosa en la mano CUANDO se usan
 ENTONCES se abren, el jugador queda suspendido y la mano lleva lo mismo. CUANDO se usa otra
-vez ENTONCES se cierran, el jugador se reanuda y la mano sigue igual. DADO el control ya
+vez, sin conversación en curso, ENTONCES se cierran, el jugador se reanuda y la mano sigue igual. DADO el control ya
 suspendido por otra pantalla ENTONCES usar no abre lo fijo.
 
 ### AC-PLY-057 — Lo fijo gana a la herramienta y la trabada avisa *(verifica BR-PLY-026, BR-PLY-012, BR-PLY-020)*
@@ -792,6 +801,14 @@ superposición de la cápsula CUANDO la mira lo enfoca y se pulsa derecho ENTONC
 desaparece y la mano queda vacía. DADO el mismo papel CUANDO se pulsa izquierdo ENTONCES se
 suelta y sigue existiendo, sin aviso de descarte. Examinar conserva el ticket y, mientras el
 control esté suspendido, derecho no lo desecha.
+
+### AC-PLY-079 — Entrega, rechazo y bloqueo *(verifica BR-PLY-034, BR-PLY-028)*
+
+DADO un producto sostenido y el comprador hablando CUANDO se hace izquierdo sobre él ENTONCES
+avanza una entrada y conserva cuerpo y mano; derecho no cierra y Esc abre pausa.
+DADO conversación terminada CUANDO se acepta ENTONCES la mano queda vacía y el puesto retiene
+el mismo cuerpo. Al rechazar, cuerpo y mano no cambian. Fuera del comprador no se suelta.
+Al vencer se cierra el diálogo y derecho puede abandonar.
 
 ## No objetivos
 

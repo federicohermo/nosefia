@@ -80,7 +80,7 @@ func test_tocar_la_ventanilla_clava_al_jugador_y_no_entrega_nada_para_levantar()
 	var jugador: Node3D = almacen.get_node("Jugador")
 	var pose := jugador.transform
 	assert_object(ventanilla.call(ReglasDeLosObjetos.METODO_ACCIONAR)).is_null()
-	assert_object(ventanilla.atenciones.atencion()).is_not_null()
+	assert_object(ventanilla.atenciones.atencion()).is_null()
 	assert_that(jugador.transform).is_equal(pose)
 
 

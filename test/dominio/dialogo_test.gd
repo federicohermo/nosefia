@@ -57,7 +57,9 @@ func test_una_sola_entrada_se_cierra_con_el_primer_avance() -> void:
 
 
 func test_el_recordatorio_tiene_una_entrada_y_no_retiene() -> void:
-	var dialogo := Dialogo.recordatorio("Lo último que dijo.")
+	var dialogo := Dialogo.new(
+		PackedStringArray(["Lo último que dijo."]), Dialogo.Clase.PENSAMIENTO
+	)
 	assert_str(dialogo.entrada_actual()).is_equal("Lo último que dijo.")
 	assert_bool(dialogo.puede_abandonar()).is_true()
 	assert_bool(dialogo.avanzar()).is_false()

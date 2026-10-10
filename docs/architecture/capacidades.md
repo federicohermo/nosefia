@@ -85,6 +85,8 @@ Tres pares se confunden seguido, y cada uno tiene su regla escrita en los dos sp
 
 - **`counter-service` y `store-stock`.** Cobrar es de la ventanilla; cuántas unidades hay y dónde
   están, de la mercadería. La ventanilla **pregunta**, no lleva su propia cuenta.
+  En la primera noche, la ventanilla recibe unidades físicas: la mercadería las retira una sola
+  vez, al completar la venta o al vencer la compra.
 - **`player-actions` e `investigation`.** Agarrar y examinar son del cuerpo; **qué esconde** el
   objeto es de la investigación. La identidad de lo que se agarra es opaca a propósito: lo que se
   investiga no está en el catálogo.

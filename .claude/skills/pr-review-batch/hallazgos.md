@@ -54,12 +54,15 @@ rompe nada — el `if` simplemente no entra nunca, para siempre, en silencio.
 
 | Ya lo verifica una herramienta — **no lo reportes** | Nadie lo verifica — **es tuyo** |
 |---|---|
-| la dirección de dependencia entre capas, incluido el `class_name` | que el comentario explique el **porqué** y no el qué |
+| la dirección de dependencia entre capas, incluido el `class_name` | que el comentario explique el **porqué**: lo que el código ya dice no se comenta |
 | que todo `.gd` de `dominio/` y `sistemas/` tenga su test espejo | español en comentarios, nombres, commits y specs |
 | el test sin aserción, apagado, o con un nombre que no corre | que un valor fijo no viva en dos lugares |
 | formato, largo de línea, nombres y orden de declaraciones (`gdformat`, `gdlint`) | que no quede ningún `print` |
 | que no se edite `src/` sin un spec detrás de la rama | `get_node("../../…")` en vez de `@export` y señales |
 | una declaración sin tipo, `-> void` incluido: el motor no carga el script | que los borrados vayan en su propio commit |
+| | que no haya sobreingeniería: gana el diff mínimo que cumple los criterios |
+| | que un hecho no esté escrito en dos lugares: un doc no copia el spec ni otro doc |
+| | que la prosa sea breve y clara, con frases cortas al estilo ASD-STE100 |
 | | que el AC del spec sea falsable y esté cubierto |
 
 **`gdformat` decide el formato y no se discute en una revisión.** Si algo del formato te molesta,

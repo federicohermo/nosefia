@@ -1,6 +1,45 @@
 extends GdUnitTestSuite
 
 
+func test_la_llegada_fisica_espera_a_que_se_inicie_su_conversacion() -> void:  # AC-NTF-012
+	var estado := Notificaciones.new()
+	var comprador := Compradores.de_la_jornada(1)[0]
+	estado.llego(comprador)
+	estado.avanzar(30.0)
+	assert_array(estado.visibles()).is_equal([Notificaciones.Tipo.CLIENTE])
+	estado.atendido(Compradores.de_la_jornada(1)[1])
+	assert_array(estado.visibles()).is_equal([Notificaciones.Tipo.CLIENTE])
+	estado.atendido(comprador)
+	assert_array(estado.visibles()).is_empty()
+	estado.llego(comprador)
+	assert_array(estado.visibles()).is_empty()
+	estado.vaciar()
+	estado.llego(comprador)
+	assert_array(estado.visibles()).has_size(1)
+	estado.se_fue(comprador)
+	assert_array(estado.visibles()).is_equal([Notificaciones.Tipo.CLIENTE_CANSADO])
+
+
+func test_la_salida_se_deduplica_dura_tres_segundos_y_se_reinicia() -> void:  # AC-NTF-011
+	var estado := Notificaciones.new()
+	var comprador := _comprador()
+	estado.llego(comprador)
+	estado.se_fue(comprador)
+	assert_array(estado.visibles()).is_equal(
+		[Notificaciones.Tipo.CLIENTE_CANSADO, Notificaciones.Tipo.CLIENTE]
+	)
+	estado.avanzar(2.9)
+	estado.se_fue(comprador)
+	assert_array(estado.visibles()).has_size(2)
+	estado.avanzar(0.1)
+	assert_array(estado.visibles()).is_empty()
+	estado.se_fue(comprador)
+	assert_array(estado.visibles()).is_empty()
+	estado.vaciar()
+	estado.se_fue(comprador)
+	assert_array(estado.visibles()).is_equal([Notificaciones.Tipo.CLIENTE_CANSADO])
+
+
 func _comprador() -> Comprador:
 	return Comprador.new("Comprador", Venta.new(), 0)
 

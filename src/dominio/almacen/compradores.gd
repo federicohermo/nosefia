@@ -15,6 +15,8 @@
 class_name Compradores
 extends RefCounted
 
+const DIALOGOS := preload("res://assets/dialogos/compradores_jornada_1.tres")
+
 ## Cada fila es `[nombre, líneas del pedido, cuánto paga de más]`, y una línea es
 ## `[Producto.Id, unidades]`.
 ##
@@ -42,13 +44,45 @@ static func padron() -> Array[Comprador]:
 
 
 ## Los compradores de esta noche: los primeros del padrón, tantos como pida el balance.
-static func de_la_jornada() -> Array[Comprador]:
+static func de_la_jornada(jornada: int) -> Array[Comprador]:
+	if jornada == ReglasDeLaPartida.PRIMERA_JORNADA:
+		return _primera_noche()
 	var lista: Array[Comprador] = []
 	for comprador in padron():
 		if lista.size() >= ReglasDeLaVentanilla.COMPRADORES_POR_JORNADA:
 			break
 		lista.append(comprador)
 	return lista
+
+
+static func _primera_noche() -> Array[Comprador]:
+	var martin := _comprador_de(
+		[
+			"Martín",
+			[[Producto.Id.MAROLINI, 1], [Producto.Id.CORACOLA, 1], [Producto.Id.MALBARDO, 1]],
+			0
+		]
+	)
+	var tiago := _comprador_de(
+		["Tiago", [[Producto.Id.ZUCARACHAS, 2], [Producto.Id.PEPITOS, 1]], 0]
+	)
+	martin.personaje = DialogosDeCompradores.Personaje.MARTIN
+	tiago.personaje = DialogosDeCompradores.Personaje.TIAGO
+	martin.horario = Vector2(_desde_apertura(22), _desde_apertura(0))
+	tiago.horario = Vector2(_desde_apertura(4), _desde_apertura(6))
+	martin.dialogos = DIALOGOS
+	tiago.dialogos = DIALOGOS
+	return [martin, tiago]
+
+
+static func _desde_apertura(hora: int) -> float:
+	return float(
+		(
+			posmod(hora - Reglas.HORA_DE_APERTURA, Marcador.HORAS_POR_DIA)
+			* Marcador.MINUTOS_POR_HORA
+			* Marcador.SEGUNDOS_POR_MINUTO
+		)
+	)
 
 
 ## Un `Producto.Id` sin fila en el catálogo se saltea en vez de meter un `null` en el pedido: así

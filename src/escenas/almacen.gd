@@ -94,6 +94,8 @@ var _ir_al_menu: Callable = volver_al_menu
 func _ready() -> void:
 	var avisos: PilaDeNotificaciones = get_node("Interfaz/PilaDeNotificaciones")
 	_atenciones.comprador_llegado.connect(avisos.avisar_llegada)
+	_atenciones.comprador_vencido.connect(avisos.avisar_salida)
+	_atenciones.conversacion_iniciada.connect(avisos.iniciar_conversacion)
 	_caja.lectura_rechazada.connect(avisos.avisar_lectura_rechazada)
 	_caja.ticket_desechado.connect(_al_desechar_un_ticket)
 	_reloj.turno_cerrado.connect(avisos.vaciar.unbind(1))
@@ -220,7 +222,7 @@ func _al_abrir_la_jornada(jornada: int) -> void:
 	_repositor.arrancar(Estante.new(inventario, Catalogo.todos()))
 	_reposicion_manual.limpiar()
 	_contenedor.reiniciar()
-	var atender := TareaDeAtender.new(Compradores.de_la_jornada(), inventario)
+	var atender := TareaDeAtender.new(Compradores.de_la_jornada(jornada), inventario)
 	_atenciones.arrancar(atender)
 	_computadora.arrancar(RegistroDeVentas.new(Catalogo.todos(), atender))
 	# El piso se rehace cada noche: guardar el estado entre jornadas está fuera de alcance, y una
@@ -317,6 +319,8 @@ func _estados_del_cierre() -> Array[ReglasDelCierre.Estado]:
 	var estados: Array[ReglasDelCierre.Estado] = []
 	for nodo: Node3D in candidatos:
 		if not is_instance_valid(nodo) or nodo.is_queued_for_deletion() or tirados.has(nodo):
+			continue
+		if nodo.has_meta(&"recibido_por_comprador"):
 			continue
 		var clase := ReglasDelCierre.Clase.OTRO
 		if nodo is CajaDeProductosDelDeposito:
