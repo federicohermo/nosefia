@@ -1,8 +1,7 @@
 extends GdUnitTestSuite
 
 
-# AC-STK-079, AC-SHF-007, AC-SHF-019
-func test_revisar_cumple_descumple_y_no_cambia_el_cierre() -> void:
+func test_cumple_descumple_y_congela_el_cierre() -> void:  # AC-STK-079, AC-SHF-007, AC-SHF-019
 	var reloj: RelojDelTurno = auto_free(RelojDelTurno.new())
 	var acomodador: AcomodadorDelDeposito = auto_free(AcomodadorDelDeposito.new())
 	acomodador.reloj = reloj
