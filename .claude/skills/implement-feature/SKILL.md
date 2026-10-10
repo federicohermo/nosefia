@@ -123,6 +123,18 @@ que queda tapado por otra ventana casi no pide cuadros: dos capturas seguidas sa
 `--disable-backgrounding-occluded-windows` y `--disable-renderer-backgrounding`, y antes de leer
 una captura se cuentan los `requestAnimationFrame` de un segundo.
 
+**Observar la activación del navegador no debe activarlo.** En Playwright 1.63, `evaluate`
+usa `userGesture: true`: en #373 la lectura conservaba una activación que se quería medir
+vencida. Para medir activación o Pointer Lock, usar lecturas CDP con `userGesture: false` y
+estímulos de teclado o mouse reales. Conservar la consola desde la carga, sin borrar errores
+antes de interactuar, y comprobar `document.pointerLockElement`, además del estado del juego.
+
+**El fixture no apaga el callback que traduce el estado que mide.** En #373, congelar
+`_physics_process` del jugador impedía actualizar el cursor al abrir el celular. Detener sólo
+lo necesario para la medición, mantener esa traducción activa y comprobar el cursor real al
+abrir, cerrar, pausar y reanudar. Esa falla no explica errores anteriores a abrir el celular:
+cada causa conserva su propia evidencia.
+
 **No excluyas texturas del export por una búsqueda de texto vacía.** Godot extrae las
 imágenes del GLB y el modelo importado las referencia también desde recursos binarios. En #339,
 excluirlas redujo el paquete y dejó el local sin texturas. Conservá esas dependencias y verificá
