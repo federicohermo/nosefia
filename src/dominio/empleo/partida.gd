@@ -116,7 +116,7 @@ func abrir_la_jornada() -> Turno:
 	if terminada():
 		return null
 	_llamados.clear()
-	_obligatorias = Apertura.obligatorias()
+	_obligatorias = Apertura.obligatorias(_jornada)
 	_jornada_abierta = true
 	return Apertura.turno_de_la_jornada(_obligatorias)
 

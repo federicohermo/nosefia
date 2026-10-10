@@ -4,8 +4,17 @@
 extends GdUnitTestSuite
 
 
-func test_los_tipos_de_tarea_son_las_cinco_obligatorias() -> void:
-	assert_int(Tarea.Tipo.size()).is_equal(5)
+func test_los_tipos_conservan_su_identidad_al_sumar_ordenar() -> void:
+	assert_dict(Tarea.Tipo).is_equal(
+		{
+			"CAJA": 0,
+			"REPONER": 1,
+			"REGISTRAR": 2,
+			"LIMPIAR": 3,
+			"SACAR_LA_BASURA": 4,
+			"ORDENAR_LAS_CAJAS": 5
+		}
+	)
 
 
 func test_al_cuarto_apercibimiento_lo_echan() -> void:

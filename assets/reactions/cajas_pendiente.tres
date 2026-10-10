@@ -1,0 +1,9 @@
+[gd_resource type="Resource" script_class="Reaccion" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://src/dominio/empleo/reaccion.gd" id="1_reaccion"]
+
+[resource]
+script = ExtResource("1_reaccion")
+sobre = 0
+indice = 5
+texto = "Cuando te pedí que ordenaras las cajas en las estanterías del depósito, lo que quería decir es que pongas TODAS y cada una de las CAJAS de cartón con productos ARRIBA de las ESTANTERÍAS del DEPÓSITO. Ahí se entendió?"
