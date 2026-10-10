@@ -175,7 +175,7 @@ en escritorio como en web. Al cerrarlo, DEBE bajar fuera del margen inferior y r
 MIENTRAS el turno está abierto, el sistema DEBE mostrar en la esquina inferior izquierda un
 ícono de celular con «Q», incluso con el celular arriba; con el turno cerrado NO DEBE mostrarlo.
 El celular DEBE dibujarse sobre HUD, computadora y cierre, y debajo de avisos y pausa. La
-duración de subir y bajar queda en OQ-INV-003.
+duración completa de subir y de bajar DEBE ser de 0,25 segundos reales por recorrido.
 
 ### BR-INV-028 — Pausa y cierre conservan estados distintos
 
@@ -336,7 +336,7 @@ vez no cambia nada.
 DADO el celular cerrado CUANDO se pulsa Q ENTONCES parte fuera del margen inferior y avanza
 hacia el centro. CUANDO se pulsa Q durante la subida ENTONCES baja desde su posición actual,
 sin salto de posición ni duplicado, y termina fuera del encuadre con el velo retirado. La prueba
-usa la duración que se decida en OQ-INV-003; no fija un tiempo alternativo.
+mide cada recorrido completo de 0,25 segundos; una inversión conserva la posición actual.
 
 ### AC-INV-034 — Proporción, velo y orden de dibujo *(verifica BR-INV-027)*
 
@@ -416,9 +416,3 @@ segundo con nombre y círculo liso del tema, sin contador cero.
     registra: mirar no revela (BR-INV-001).
   - Decide: una persona de game design junto con la ficha «Subtítulos».
   - Bloquea: nada de esta regla; condiciona el futuro subtítulo de manos vacías.
-
-- **OQ-INV-003 — ¿Cuánto dura subir y bajar el celular?**
-  - Por qué sigue abierta: la ficha fija los movimientos, pero no su duración.
-  - Decide: game design.
-  - Bloquea: los tiempos definitivos de ambos recorridos y los instantes de AC-INV-033.
-

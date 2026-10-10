@@ -85,8 +85,9 @@ SI hay un guardado, ENTONCES «nuevo juego» DEBE pedir confirmación antes de b
 que no se puede deshacer.
 
 CUANDO se acepta empezar una partida nueva, el sistema DEBE borrar el guardado anterior,
-fundir el menú a negro, cargar el juego y presentar las instrucciones de Enrique antes de la
-entrada a la primera noche. Cancelar la confirmación NO DEBE iniciar ese fundido ni borrar el
+fundir el menú a negro durante 0,3 segundos reales, cargar el juego y presentar las instrucciones
+de Enrique antes de la entrada a la primera noche. Cancelar la confirmación NO DEBE iniciar ese
+fundido ni borrar el
 guardado. SI falla la carga, ENTONCES DEBE volver al menú sin quedar en negro.
 
 ### BR-SAV-013 — Salir pasa por un solo lugar
@@ -241,8 +242,9 @@ en pantalla. El turno permanece retenido hasta terminar la subida de la persiana
 ### AC-SAV-022 — Nuevo juego confirma antes del fundido *(verifica BR-SAV-012)*
 
 DADO un guardado CUANDO se elige nuevo juego y se cancela ENTONCES el guardado se conserva y el
-menú no se funde a negro. CUANDO se confirma ENTONCES se borra el guardado, el menú se funde,
-se completa la carga y se muestran las instrucciones de Enrique. DADO ningún guardado CUANDO
+menú no se funde a negro. CUANDO se confirma ENTONCES se borra el guardado, el menú se funde
+a negro en 0,3 segundos reales, se completa la carga y se muestran las instrucciones de Enrique.
+DADO ningún guardado CUANDO
 se elige nuevo juego ENTONCES se sigue esa misma secuencia sin confirmación. DADO una carga
 fallida ENTONCES vuelve a verse el menú y no permanece una pantalla negra.
 
@@ -288,7 +290,3 @@ deshabilitado; al continuar una partida existente, su checkpoint previo se conse
   - Por qué sigue abierta: el inventario y los objetos movidos no declararon si su estado cruza.
   - Decide: el dueño del repo.
   - Bloquea: nada. Agrega campos a `BR-SAV-005`.
-- **OQ-SAV-002 — ¿Cuánto dura el fundido a negro del menú al empezar de nuevo?**
-  - Por qué sigue abierta: la ficha decide el fundido, pero no fija su duración.
-  - Decide: game design.
-  - Bloquea: el tiempo definitivo de la transición de nuevo juego, no su confirmación ni carga.

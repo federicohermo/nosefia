@@ -136,8 +136,8 @@ jugador y retener todo el presupuesto del turno, aunque la lectura dure minutos.
 DEBE emerger desde el borde inferior, encima de la persiana y debajo de avisos y pausa. Esc
 DEBE pausarla y reanudarla conservando los pasos visibles. «Comenzar» DEBE retirar las
 instrucciones y dar paso a la placa y subida de persiana; el control y el reloj DEBEN liberarse
-sólo cuando termine esa entrada. Las duraciones del fade in de la persiana y de la subida de
-instrucciones quedan en OQ-EMP-002 y OQ-EMP-003.
+sólo cuando termine esa entrada. El fade in de la persiana baja DEBE durar 0,3 segundos reales
+y la subida de las instrucciones DEBE durar 0,3 segundos reales.
 
 ## Criterios de aceptación
 
@@ -296,8 +296,8 @@ el turno y el control todavía retenidos hasta que termine de subir.
 DADO las instrucciones con 4 pasos visibles CUANDO se pulsa Esc, pasan cuadros y se reanuda
 ENTONCES siguen los mismos 4 pasos y el mismo presupuesto de turno. DADO las instrucciones
 en pantalla ENTONCES su orden de dibujo está sobre la persiana y debajo de avisos y pausa;
-la interfaz empieza fuera del margen inferior y termina dentro del encuadre, sin fijar duración
-hasta resolver OQ-EMP-003.
+la interfaz empieza fuera del margen inferior y termina dentro del encuadre en 0,3 segundos
+reales. El fade in de la persiana baja pasa de negro a visible en 0,3 segundos reales.
 
 ### AC-EMP-050 — Todas depende de lo declarado *(verifica BR-EMP-001)*
 
@@ -342,11 +342,4 @@ de las bandas y no inventa una quinta tarea para decidir el cierre.
 
 ## Preguntas abiertas
 
-- **OQ-EMP-002 — ¿Cuánto dura el fade in de la persiana baja?**
-  - Por qué sigue abierta: la ficha fija el fundido desde negro, pero no su duración.
-  - Decide: game design.
-  - Bloquea: el tiempo definitivo de la aparición del fondo de las instrucciones.
-- **OQ-EMP-003 — ¿Cuánto tarda la interfaz de instrucciones en subir?**
-  - Por qué sigue abierta: la ficha fija el movimiento desde abajo, pero no su duración.
-  - Decide: game design.
-  - Bloquea: el ritmo definitivo de la presentación, no el orden de mensajes ni la navegación.
+Ninguna.

@@ -107,8 +107,10 @@ desde el mismo punto. Cambiar de pestaña NO DEBE saltearla.
 
 La entrada DEBE dibujarse encima del HUD, las interfaces diegéticas y el cierre, y debajo de
 los avisos y la pausa. Un segundo pedido de seguir el mismo cierre NO DEBE anunciar otra noche.
-Una partida terminada que vuelve al menú NO DEBE anunciar una noche nueva. Las duraciones y la
-posible superposición de fade y subida quedan en OQ-SHF-002 a OQ-SHF-005.
+Una partida terminada que vuelve al menú NO DEBE anunciar una noche nueva. La placa DEBE
+permanecer entera 1 segundo y desaparecer durante los siguientes 0,5 segundos. Sólo después
+DEBE subir la persiana durante 1 segundo, sin superponer ambos movimientos: la entrada completa
+DEBE durar 2,5 segundos reales.
 
 ## Criterios de aceptación
 
@@ -217,12 +219,12 @@ ENTONCES el turno cierra una sola vez y el tiempo restante es cero.
 
 ### AC-SHF-022 — La entrada progresa hasta su duración *(verifica BR-SHF-019)*
 
-DADO la entrada de la jornada 3, con la duración total que resulte de las duraciones y la
-superposición decididas, CUANDO se avanza menos que ese total ENTONCES no terminó y la placa
-anuncia «NOCHE 3». CUANDO se alcanza el total ENTONCES terminó, la opacidad es 0 y la apertura
-es 1. Al muestrear el avance, la opacidad nunca sube y la apertura nunca baja, ambas entre 0 y
-1. Avanzar 0 o −1 segundos conserva ambos valores. Este criterio depende de OQ-SHF-002 a
-OQ-SHF-005 para fijar sus instantes de prueba; no les asigna duración.
+DADO la entrada de la jornada 3 CUANDO han pasado 1 segundo ENTONCES la placa anuncia
+«NOCHE 3», su opacidad es 1, la persiana está baja y la entrada no terminó. A los 1,25 segundos
+la opacidad es 0,5 y la persiana sigue baja. A los 1,5 segundos la opacidad es 0 y la apertura
+es 0; a los 2 segundos la apertura es 0,5 y la entrada no terminó; a los 2,5 segundos la apertura
+es 1 y terminó. Al muestrear el avance, la opacidad nunca sube y la apertura nunca baja, ambas
+entre 0 y 1. Avanzar 0 o −1 segundos conserva ambos valores.
 
 ### AC-SHF-023 — Retener no cobra al soltar *(verifica BR-SHF-003)*
 
@@ -291,22 +293,6 @@ tarea ajena a esa lista no aumenta la cuenta.
 
 ## Preguntas abiertas
 
-- **OQ-SHF-002 — ¿Cuánto permanece entera la placa antes del fade?**
-  - Por qué sigue abierta: las fichas fijan el gesto, pero no su duración.
-  - Decide: game design.
-  - Bloquea: el ritmo definitivo de la entrada y los instantes de AC-SHF-022.
-- **OQ-SHF-003 — ¿Cuánto dura el fade de la placa?**
-  - Por qué sigue abierta: ninguna ficha fija este tiempo.
-  - Decide: game design.
-  - Bloquea: el ritmo definitivo de la entrada y los instantes de AC-SHF-022.
-- **OQ-SHF-004 — ¿Cuánto tarda la persiana en subir?**
-  - Por qué sigue abierta: ninguna ficha fija este tiempo.
-  - Decide: game design.
-  - Bloquea: la duración definitiva de la retención y los instantes de AC-SHF-022.
-- **OQ-SHF-005 — ¿La persiana sube durante el fade o después?**
-  - Por qué sigue abierta: las fichas no fijan la superposición.
-  - Decide: game design.
-  - Bloquea: la composición de la duración total de la entrada en AC-SHF-022.
 - **OQ-SHF-006 — ¿Qué particular declaran las jornadas 3, 4 y 5?**
   - Por qué sigue abierta: la 3 quedó fuera de esta tanda y las fichas de la 4 y la 5 no tienen
     diseño cerrado. La decisión de #369 deja las tres con sólo las cuatro fijas.
