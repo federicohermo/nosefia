@@ -203,7 +203,7 @@ func _jugar(partida: Partida, cumplidas: int) -> void:
 	partida.cerrar_la_jornada(cumplidas)
 
 
-func test_la_tercera_noche_con_cuatro_cumplidas_cierra_sin_banda() -> void:  # AC-SHF-027
+func test_jornada_tres_cierra_con_cuatro_tres_y_dos() -> void:  # AC-SHF-027, AC-EMP-050
 	var partida := Partida.desde({"jornada": 3, "medios": 0})
 	var turno := partida.abrir_la_jornada()
 	assert_int(partida.obligatorias().size()).is_equal(4)
@@ -213,3 +213,32 @@ func test_la_tercera_noche_con_cuatro_cumplidas_cierra_sin_banda() -> void:  # A
 	partida.cerrar_la_jornada(turno.tareas_cumplidas())
 	assert_int(partida.medios()).is_zero()
 	assert_int(Consecuencias.consecuencia_de(4, 4)).is_equal(Consecuencias.Banda.NINGUNA)
+
+	for caso: Dictionary in [
+		{
+			"cumplidas": 3,
+			"banda": Consecuencias.Banda.AVISO,
+			"medios": Reglas.APERCIBIMIENTOS_POR_AVISO * Reglas.MEDIOS_POR_APERCIBIMIENTO
+		},
+		{
+			"cumplidas": 2,
+			"banda": Consecuencias.Banda.GRAVE,
+			"medios": Reglas.APERCIBIMIENTOS_POR_BANDA_GRAVE * Reglas.MEDIOS_POR_APERCIBIMIENTO
+		}
+	]:
+		var otra := Partida.desde({"jornada": 3, "medios": 0})
+		assert_int(otra.jornada()).is_equal(3)
+		var otro_turno := otra.abrir_la_jornada()
+		assert_int(otra.obligatorias().size()).is_equal(4)
+		var cumplidas: int = caso["cumplidas"]
+		for indice in cumplidas:
+			otro_turno.completar(otra.obligatorias()[indice])
+		otro_turno.consumir(Reglas.DURACION_DEL_TURNO)
+		assert_int(otro_turno.tareas_cumplidas()).is_equal(cumplidas)
+		var banda := Consecuencias.consecuencia_de(
+			otro_turno.tareas_cumplidas(), otra.obligatorias().size()
+		)
+		assert_int(banda).is_equal(caso["banda"])
+		otra.cerrar_la_jornada(otro_turno.tareas_cumplidas())
+		assert_int(otra.medios()).is_equal(caso["medios"])
+		assert_int(otra.legajo().medios()).is_equal(caso["medios"])

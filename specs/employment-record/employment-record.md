@@ -1,7 +1,7 @@
 ---
 schema_version: 1
 capability_id: CAP-EMP
-status: draft
+status: ratified
 owner: por definir
 provenance: GDD «Consecuencias» y «Finales»; fichas «1. Ciclo de jornadas y sistema de puntos», «Pantalla entre jornadas» y «Chat con el jefe»; decisiones de #374; migración de los specs 002, 016, 017
 ---
