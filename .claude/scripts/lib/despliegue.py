@@ -171,12 +171,12 @@ OBLIGATORIOS: tuple[str, ...] = ("index.html", "index.wasm", "index.pck")
 
 #: El piso del `.wasm` y el techo del directorio, en bytes.
 #:
-#: **Ninguno de los dos depende de la versión del motor**: medido con 4.4.1, el `.wasm` son
-#: 6,4 MB comprimidos —o sea bastante más de 10 sin comprimir— y el directorio entero queda
-#: muy por debajo de 90 MB. No existen para afinar nada: existen para distinguir un export
-#: completo de uno que murió a mitad, que es lo único que el código de salida no dice.
+#: Medido con 4.7.2 y la plantilla compilada en la CI: el `.wasm` pesa 39 MB y el directorio
+#: entero, 101 MB. El techo deja margen para el arte que siga entrando. No existen para afinar
+#: nada: existen para distinguir un export completo de uno que murió a mitad, que es lo único
+#: que el código de salida no dice.
 PISO_DEL_WASM = 10 * 1024 * 1024
-TECHO_DEL_DIRECTORIO = 90 * 1024 * 1024
+TECHO_DEL_DIRECTORIO = 150 * 1024 * 1024
 
 _MB = 1024 * 1024
 
