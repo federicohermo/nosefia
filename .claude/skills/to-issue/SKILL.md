@@ -301,6 +301,12 @@ gh issue edit <N> --body-file <archivo del scratchpad>
 `numerar` escribe el número en la rama y revisa sin dejar pasar nada. El cuerpo no se commitea:
 el issue es la fuente.
 
+**Después de numerar o reescribir, verificá cada referencia `#N` del cuerpo publicado**, no sólo
+las dependencias. Leé el título y el comportamiento del issue destino y cruzalos con la frase
+que lo cita; en un lote, reemplazá los títulos provisorios por los números realmente publicados.
+En #379, las dependencias nombraban bien #373, pero el contexto seguía llamando #386 al celular
+y #368 a Examinar: los destinos correctos eran #373 y #376.
+
 ## Varios de una
 
 Con varios issues de una, antes de mostrar nada:

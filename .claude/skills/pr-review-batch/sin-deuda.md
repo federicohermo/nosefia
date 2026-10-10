@@ -164,6 +164,8 @@ entregable más caro y el único que hace que el hallazgo no vuelva.
 | un preámbulo escrito para **la máquina de otro** | `implement-batch` — el entorno de los carriles se mide antes de repartir, no se copia del skill |
 | un carril que trabaja **sobre otra base que la del issue** | `implement-batch` — el worktree arranca en `origin/main`, y la rama no salió de una base explícita |
 | un objetivo numérico que **la propuesta del issue no alcanza** | `to-issue` — el número se escribió sin medir la propuesta contra el árbol |
+| una referencia `#N` **que apunta a otro comportamiento** después de numerar un lote | `to-issue` — se validó la dependencia, pero no cada referencia del cuerpo publicado contra su destino |
+| un conteo de obligatorias **que confunde el catálogo con lo exigido en la jornada** | `to-spec` — el ejemplo citaba todos los tipos posibles y no la declaración de la apertura |
 | capturas pedidas en el PR **sin una forma que ande de subirlas** | `implement-feature` e `implement-batch` — la receta no se probó desde el worktree de un carril |
 | un criterio de arte que **no entra en el modelo** | `to-issue` — el criterio se escribió sin medirlo sobre el `.blend` |
 | un valor nuevo de un enum **cuyo índice vive fuera de los límites** | `to-issue` — el `rg` buscó el enum en el catálogo y no en todo lo que se indexa con él |
