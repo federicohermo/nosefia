@@ -1,0 +1,134 @@
+{
+  "issue": 364,
+  "procedencia": "Manifiesto añadido por el coordinador a los blobs ya publicados, sin volver a generar ni modificar la evidencia.",
+  "revision_publicada_previa": "456bc12364a4e97e1760e2dc991f8725e0f4e669",
+  "producto": "cd5f93c38dfc140398759c52431bcece29985fd9",
+  "archivos": [
+    {
+      "archivo": "364-captura.log",
+      "publicado": {
+        "bytes": 306,
+        "sha256": "6ba77ab29703d67db6b0e31181b19a79ed5c79ae791c4b6521b54ce5f6932f0b"
+      }
+    },
+    {
+      "archivo": "364-final-capas.log",
+      "publicado": {
+        "bytes": 142,
+        "sha256": "70bd74f3e0d14982c6a7a481139c570313e691a41179a437f7126b2eca0f0b76"
+      }
+    },
+    {
+      "archivo": "364-final-formato.log",
+      "publicado": {
+        "bytes": 34,
+        "sha256": "1f156e88bf171d3fc9addf25cd27ea76c775dab020eb5a791cdc4cc448dfb070"
+      }
+    },
+    {
+      "archivo": "364-final-harness.log",
+      "publicado": {
+        "bytes": 3318,
+        "sha256": "7035c4130272f6999a5237f1b3f01ef7f994118c353be0b046bd3948cafe7579"
+      }
+    },
+    {
+      "archivo": "364-final-importacion.log",
+      "publicado": {
+        "bytes": 3277,
+        "sha256": "efe14b05dea22e12639d3d55b8981afb039e171d9bcaa3a9d866bf5879adf30f"
+      }
+    },
+    {
+      "archivo": "364-final-lint.log",
+      "publicado": {
+        "bytes": 27,
+        "sha256": "d2f45ecead8ebe024d64d724cef92d4c7b89f8d0150b30b296320bddb760e4be"
+      }
+    },
+    {
+      "archivo": "364-final-motor.log",
+      "publicado": {
+        "bytes": 509281,
+        "sha256": "e22943007dac7c145a238fc240eedc789e07ef29d69a2b09df962f0ddb40212b"
+      }
+    },
+    {
+      "archivo": "364-final-specs.log",
+      "publicado": {
+        "bytes": 398,
+        "sha256": "02c295027e5db6e7ef9b3edd6c305651b15bf7032b03e619c38c0ed70999ed90"
+      }
+    },
+    {
+      "archivo": "364-final-tdd.log",
+      "publicado": {
+        "bytes": 139,
+        "sha256": "a3ecc6f8e9ea0faa2afad8ace575d132ea1000a61d4d7495aaa82c0f049e0ff6"
+      }
+    },
+    {
+      "archivo": "364-final-tests.log",
+      "publicado": {
+        "bytes": 987057,
+        "sha256": "01c65a492ebf69a2d558baf8ae43acfcf29579cb6862cac726d6dabbe671d51a"
+      }
+    },
+    {
+      "archivo": "364-final.log",
+      "publicado": {
+        "bytes": 299,
+        "sha256": "efe2c7b500b9613c986383c308446fee838131f768d8ea6aa30ee955e4c19331"
+      }
+    },
+    {
+      "archivo": "364-rojo-escena.log",
+      "publicado": {
+        "bytes": 21425,
+        "sha256": "4906a0cd38860f94cd412b2233f758fc98396d6b839babbee3cbb5fbdf92b004"
+      }
+    },
+    {
+      "archivo": "364-rojo.log",
+      "publicado": {
+        "bytes": 118582,
+        "sha256": "5072b0ba55dc311f070d635f68db880adb4982ef3437372a4a0fd98ac87a9ae4"
+      }
+    },
+    {
+      "archivo": "364-verde.log",
+      "publicado": {
+        "bytes": 32056,
+        "sha256": "dbfbf1eec9792df2442475f7d2d91cec12a0bc43f408b0f727f4d1a3c70f2b11"
+      }
+    },
+    {
+      "archivo": "README.md",
+      "publicado": {
+        "bytes": 440,
+        "sha256": "48c0b4bedbddb2429319c5c208a423b060de41b85f4eba0f274f1aa8fe00e70a"
+      }
+    },
+    {
+      "archivo": "capturar364.gd",
+      "publicado": {
+        "bytes": 1436,
+        "sha256": "50fdf6e1b97d20e268c174892a8bee5e7d2f416bb9c33ceede766d9774d59a9a"
+      }
+    },
+    {
+      "archivo": "harness-tests.log",
+      "publicado": {
+        "bytes": 980711,
+        "sha256": "e67334ffc7bf9697369b60d52dab521d78d014b32b0434ba07b7ccdb6d3b2f9c"
+      }
+    },
+    {
+      "archivo": "noche-2.png",
+      "publicado": {
+        "bytes": 774161,
+        "sha256": "02ea43f28a687a96110fc079e9426e33b108f268c1bcb6b81c360b900b13c734"
+      }
+    }
+  ]
+}
