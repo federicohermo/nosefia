@@ -1,40 +1,37 @@
-## La bandeja de chats: qué conversaciones hay y cuáles ya se leyeron.
-##
-## **Lo leído vive acá y no en el `.tres`**, y es la decisión más cara de este spec: está medido
-## que dos `load()` del mismo recurso devuelven **la misma instancia**, así que una marca adentro
-## del guión sobreviviría a la partida entera — el jugador empezaría la noche dos con todo leído.
-##
-## **Y la bandeja es una sola instancia, dueña de un sistema y no de la pantalla.** Si la
-## construyera la app de chats, cambiar de app tiraría lo leído sin un solo error y con los seis
-## nodos en verde: `ui/` no lleva test obligatorio.
-##
-## Lleva un `bool` por interlocutor y no un contador global: con uno solo, leer al jefe apagaría
-## el aviso de los otros dos y el jugador no volvería a mirarlos.
+## Las lecturas y llegadas pertenecen a esta partida, nunca al recurso compartido del guión.
 class_name Bandeja
 extends RefCounted
 
-## En el orden en que llegaron, que es el orden en que se listan las pestañas.
 var _conversaciones: Array[Conversacion] = []
-
-## `Interlocutor` → `bool`. Sólo tiene fila el que está en la bandeja: preguntar por uno que no
-## está contesta cero no leídos, que es lo que corresponde.
-var _leidas: Dictionary = {}
+var _leidos: Dictionary[Conversacion.Interlocutor, int] = {}
+var _recibidos: Dictionary[Conversacion.Interlocutor, Array] = {}
+var _jornada: int = 1
 
 
 func _init(conversaciones: Array[Conversacion]) -> void:
 	for conversacion in conversaciones:
-		if conversacion == null or _leidas.has(conversacion.interlocutor):
+		if conversacion == null or _leidos.has(conversacion.interlocutor):
 			continue
 		_conversaciones.append(conversacion)
-		_leidas[conversacion.interlocutor] = false
+		_leidos[conversacion.interlocutor] = 0
+		_recibidos[conversacion.interlocutor] = []
+	_conversaciones.sort_custom(
+		func(a: Conversacion, b: Conversacion) -> bool: return a.interlocutor < b.interlocutor
+	)
 
 
-## Las conversaciones, **como copia**: quien la recorra para dibujarla no puede vaciarla.
+func abrir_jornada(jornada: int) -> void:
+	_jornada = jornada
+
+
 func conversaciones() -> Array[Conversacion]:
-	return _conversaciones.duplicate()
+	var visibles: Array[Conversacion] = []
+	for conversacion in _conversaciones:
+		if not mensajes_de(conversacion.interlocutor).is_empty():
+			visibles.append(conversacion)
+	return visibles
 
 
-## La conversación de ese interlocutor, o `null` si no está en la bandeja.
 func conversacion_de(quien: Conversacion.Interlocutor) -> Conversacion:
 	for conversacion in _conversaciones:
 		if conversacion.interlocutor == quien:
@@ -42,24 +39,33 @@ func conversacion_de(quien: Conversacion.Interlocutor) -> Conversacion:
 	return null
 
 
-func esta_leida(quien: Conversacion.Interlocutor) -> bool:
-	return _leidas.get(quien, false)
-
-
-## Cuántos mensajes sin leer tiene ese interlocutor.
-##
-## Una conversación leída contesta 0 y no «los mismos menos uno»: leer un chat es leerlo entero,
-## que es lo que el jugador hace cuando abre la pestaña.
-func no_leidos(quien: Conversacion.Interlocutor) -> int:
-	if esta_leida(quien):
-		return 0
+func mensajes_de(quien: Conversacion.Interlocutor) -> Array[Mensaje]:
+	var visibles: Array[Mensaje] = []
 	var conversacion := conversacion_de(quien)
 	if conversacion == null:
-		return 0
-	return conversacion.mensajes.size()
+		return visibles
+	for mensaje in conversacion.mensajes:
+		if mensaje != null and mensaje.jornada <= _jornada:
+			visibles.append(mensaje)
+	visibles.append_array(_recibidos[quien])
+	return visibles
 
 
-## Cuántos mensajes sin leer hay en toda la bandeja. Es el número del aviso de los chats.
+func recibir(quien: Conversacion.Interlocutor, mensaje: Mensaje) -> bool:
+	if mensaje == null or not _recibidos.has(quien):
+		return false
+	_recibidos[quien].append(mensaje)
+	return true
+
+
+func esta_leida(quien: Conversacion.Interlocutor) -> bool:
+	return _leidos.has(quien) and no_leidos(quien) == 0
+
+
+func no_leidos(quien: Conversacion.Interlocutor) -> int:
+	return maxi(0, mensajes_de(quien).size() - _leidos.get(quien, 0))
+
+
 func no_leidos_totales() -> int:
 	var sin_leer := 0
 	for conversacion in _conversaciones:
@@ -67,12 +73,16 @@ func no_leidos_totales() -> int:
 	return sin_leer
 
 
-## Marca esa conversación como leída, y devuelve `true` **sólo si la marcó ahora**.
-##
-## De ese `false` se agarra el sistema para no volver a publicar el número de no leídos en cada
-## clic sobre la misma pestaña.
 func marcar_leida(quien: Conversacion.Interlocutor) -> bool:
-	if not _leidas.has(quien) or esta_leida(quien):
+	if not _leidos.has(quien) or no_leidos(quien) == 0:
 		return false
-	_leidas[quien] = true
+	_leidos[quien] = mensajes_de(quien).size()
 	return true
+
+
+func adjunto_de(quien: Conversacion.Interlocutor, indice: int) -> Mensaje:
+	var mensajes := mensajes_de(quien)
+	if indice < 0 or indice >= mensajes.size() - 1 or mensajes[indice].foto == null:
+		return null
+	var siguiente := mensajes[indice + 1]
+	return siguiente if siguiente.foto == null and siguiente.dice_algo() else null

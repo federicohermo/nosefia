@@ -14,6 +14,8 @@
 class_name Conversacion
 extends Resource
 
+@export var imagen: Texture2D = null
+
 ## Con quién chatea el empleado. Es un `enum` porque el conjunto es cerrado, y cada valor tiene
 ## su `.tres`: uno sin archivo es una pestaña que el jugador abre y encuentra vacía.
 enum Interlocutor { JEFE, PROVEEDOR, DESCONOCIDO }

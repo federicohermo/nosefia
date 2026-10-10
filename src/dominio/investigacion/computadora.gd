@@ -11,12 +11,11 @@
 class_name Computadora
 extends RefCounted
 
-## Las tres del GDD, y no una cantidad cualquiera: la caja es tarea del jefe y los chats y las
-## notas son investigación. Es lo que pone las dos puntas de la tensión a un clic una de otra.
+## Las notas permanecen junto al registro; los chats pertenecen al celular.
 ##
-## Es un `enum` y no un `String` porque el conjunto es cerrado: un `"chast"` no rompe nada, la
+## Es un `enum` y no un `String` porque el conjunto es cerrado: un error de texto no rompe nada, la
 ## pestaña simplemente no se abre nunca y el motor no dice una palabra.
-enum App { CAJA, CHATS, NOTAS }
+enum App { CAJA, NOTAS }
 
 var _abierta: bool = false
 

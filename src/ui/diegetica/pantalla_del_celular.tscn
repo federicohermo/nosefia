@@ -1,0 +1,159 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://src/ui/diegetica/pantalla_del_celular.gd" id="1"]
+[ext_resource type="Theme" path="res://assets/ui/manada/tema.tres" id="2"]
+[ext_resource type="Shader" path="res://src/ui/diegetica/velo_del_celular.gdshader" id="3"]
+[ext_resource type="Texture2D" path="res://assets/ui/manada/celular.svg" id="4"]
+
+[ext_resource type="FontFile" path="res://assets/ui/manada/unscii-16.ttf" id="5"]
+
+[sub_resource type="FontVariation" id="negrita"]
+base_font = ExtResource("5")
+variation_embolden = 0.75
+
+[sub_resource type="ShaderMaterial" id="velo"]
+shader = ExtResource("3")
+
+[sub_resource type="StyleBoxFlat" id="telefono"]
+bg_color = Color(1, 1, 1, 1)
+border_width_left = 12
+border_width_top = 12
+border_width_right = 12
+border_width_bottom = 12
+border_color = Color(0.784, 0.784, 0.784, 1)
+corner_radius_top_left = 35
+corner_radius_top_right = 35
+corner_radius_bottom_left = 35
+corner_radius_bottom_right = 35
+content_margin_left = 28.0
+content_margin_top = 28.0
+content_margin_right = 28.0
+content_margin_bottom = 28.0
+
+[sub_resource type="StyleBoxFlat" id="foto"]
+bg_color = Color(1, 1, 1, 1)
+corner_radius_top_left = 23
+corner_radius_top_right = 23
+corner_radius_bottom_left = 23
+corner_radius_bottom_right = 23
+content_margin_left = 20.0
+content_margin_top = 20.0
+content_margin_right = 20.0
+content_margin_bottom = 20.0
+
+[node name="PantallaDelCelular" type="CanvasLayer" node_paths=PackedStringArray("_velo", "_lienzo", "_telefono", "_titulo", "_volver", "_scroll", "_mensajes", "_foto_ampliada", "_imagen", "_adjunto", "_recordatorio")]
+layer = 4
+script = ExtResource("1")
+_velo = NodePath("Velo")
+_lienzo = NodePath("Lienzo")
+_telefono = NodePath("Lienzo/Telefono")
+_titulo = NodePath("Lienzo/Telefono/Contenido/Cabecera/Titulo")
+_volver = NodePath("Lienzo/Telefono/Contenido/Cabecera/Volver")
+_scroll = NodePath("Lienzo/Telefono/Contenido/Scroll")
+_mensajes = NodePath("Lienzo/Telefono/Contenido/Scroll/Mensajes")
+_foto_ampliada = NodePath("Lienzo/Telefono/FotoAmpliada")
+_imagen = NodePath("Lienzo/Telefono/FotoAmpliada/Contenido/Imagen")
+_adjunto = NodePath("Lienzo/Telefono/FotoAmpliada/Contenido/Adjunto")
+_recordatorio = NodePath("Lienzo/Recordatorio")
+
+[node name="Velo" type="ColorRect" parent="."]
+material = SubResource("velo")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Lienzo" type="Control" parent="."]
+offset_right = 1920.0
+offset_bottom = 1080.0
+theme = ExtResource("2")
+mouse_filter = 2
+
+[node name="Telefono" type="PanelContainer" parent="Lienzo"]
+offset_left = 699.0
+offset_top = 76.0
+offset_right = 1221.0
+offset_bottom = 1004.0
+theme_override_styles/panel = SubResource("telefono")
+
+[node name="Contenido" type="VBoxContainer" parent="Lienzo/Telefono"]
+layout_mode = 2
+theme_override_constants/separation = 30
+
+[node name="Cabecera" type="HBoxContainer" parent="Lienzo/Telefono/Contenido"]
+layout_mode = 2
+custom_minimum_size = Vector2(0, 70)
+theme_override_constants/separation = 14
+
+[node name="Volver" type="Button" parent="Lienzo/Telefono/Contenido/Cabecera"]
+layout_mode = 2
+custom_minimum_size = Vector2(36, 0)
+flat = true
+theme_override_colors/font_color = Color(0.1, 0.1, 0.1, 1)
+theme_override_colors/font_hover_color = Color(0.1, 0.1, 0.1, 1)
+theme_override_colors/font_pressed_color = Color(0.1, 0.1, 0.1, 1)
+theme_override_font_sizes/font_size = 44
+
+[node name="Titulo" type="Label" parent="Lienzo/Telefono/Contenido/Cabecera"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(0.1, 0.1, 0.1, 1)
+theme_override_font_sizes/font_size = 30
+autowrap_mode = 3
+
+[node name="Scroll" type="ScrollContainer" parent="Lienzo/Telefono/Contenido"]
+layout_mode = 2
+size_flags_vertical = 3
+horizontal_scroll_mode = 0
+
+[node name="Mensajes" type="VBoxContainer" parent="Lienzo/Telefono/Contenido/Scroll"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 18
+
+[node name="FotoAmpliada" type="PanelContainer" parent="Lienzo/Telefono"]
+layout_mode = 2
+theme_override_styles/panel = SubResource("foto")
+
+[node name="Contenido" type="VBoxContainer" parent="Lienzo/Telefono/FotoAmpliada"]
+layout_mode = 2
+theme_override_constants/separation = 20
+
+[node name="Imagen" type="TextureRect" parent="Lienzo/Telefono/FotoAmpliada/Contenido"]
+layout_mode = 2
+size_flags_vertical = 3
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Adjunto" type="RichTextLabel" parent="Lienzo/Telefono/FotoAmpliada/Contenido"]
+layout_mode = 2
+theme_override_colors/default_color = Color(0.1, 0.1, 0.1, 1)
+theme_override_font_sizes/normal_font_size = 26
+theme_override_font_sizes/bold_font_size = 26
+theme_override_fonts/bold_font = SubResource("negrita")
+bbcode_enabled = true
+fit_content = true
+scroll_active = false
+autowrap_mode = 3
+
+[node name="Recordatorio" type="HBoxContainer" parent="Lienzo"]
+offset_left = 28.0
+offset_top = 996.0
+offset_right = 140.0
+offset_bottom = 1052.0
+mouse_filter = 2
+theme_override_constants/separation = 14
+
+[node name="Icono" type="TextureRect" parent="Lienzo/Recordatorio"]
+custom_minimum_size = Vector2(35, 56)
+layout_mode = 2
+texture = ExtResource("4")
+expand_mode = 1
+stretch_mode = 5
+mouse_filter = 2
+
+[node name="Tecla" type="Label" parent="Lienzo/Recordatorio"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 36
+mouse_filter = 2

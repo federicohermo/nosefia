@@ -88,10 +88,14 @@ var _arranque: Transform3D
 ## cambiar de escena: se llevaría puesto al runner.
 var _ir_al_menu: Callable = volver_al_menu
 
+@onready var _celular: CelularDelEmpleado = $Interfaz/CelularDelEmpleado
+@onready var _pantalla_del_celular: PantallaDelCelular = $Interfaz/PantallaDelCelular
+
 
 ## Los carteles se pintan acá antes de conectar nada, y no con un `text` escrito en `hud.tscn`:
 ## una copia del texto en la escena duplicaría el número de obligatorias declaradas.
 func _ready() -> void:
+	_cablear_el_celular()
 	var avisos: PilaDeNotificaciones = get_node("Interfaz/PilaDeNotificaciones")
 	_atenciones.comprador_llegado.connect(avisos.avisar_llegada)
 	_atenciones.comprador_vencido.connect(avisos.avisar_salida)
@@ -136,6 +140,7 @@ func _ready() -> void:
 				_repositor,
 				_atenciones,
 				_computadora,
+				_celular,
 				_caja,
 				_programa_de_tickets,
 				_limpiador,
@@ -203,6 +208,8 @@ func _ready() -> void:
 ## arma en este lado y no en el `Repositor` porque «con cuánta mercadería arranca una jornada»
 ## es una regla del juego, y `Apertura` es donde tiene test.
 func _al_abrir_la_jornada(jornada: int) -> void:
+	_celular.abrir_jornada(jornada)
+	_pantalla_del_celular.mostrar_recordatorio(true)
 	# Primero que nada, y por eso antes de `limpiar()`: lo que quedó en la mano cuelga del
 	# jugador, así que devolverlo a su lugar le escribiría la posición relativa a la mano y la
 	# caja terminaría flotando pegada al cuerpo toda la noche siguiente. Y antes, el examen: lo
@@ -259,6 +266,8 @@ func _al_abrir_la_jornada(jornada: int) -> void:
 ## que el turno estuvo contando toda la noche, así que el parte lee el estado de verdad y no una
 ## copia que nadie completó.
 func _al_cerrar_la_jornada(jornada: int, cumplidas: int) -> void:
+	_celular.cerrar_jornada()
+	_pantalla_del_celular.mostrar_recordatorio(false)
 	_audio.callar_la_musica()
 	_hud.mostrar_tareas(cumplidas)
 	_pantalla.mostrar(
@@ -364,3 +373,57 @@ func _al_tirar_un_objeto(nodo: Node3D) -> void:
 	var datos: ObjetoDelAlmacen = nodo.get("datos")
 	if not ReglasDelCierre.se_tira_sin_llamado(datos):
 		_partida.anotar_llamado(Partida.Llamado.OBJETO_TIRADO)
+
+
+func _unhandled_input(evento: InputEvent) -> void:
+	if evento.is_action_pressed(Celular.ACCION) and not evento.is_echo():
+		get_viewport().set_input_as_handled()
+		_celular.pedir_alternar(_jugador.suspendido() or _jugador.examen.esta_examinando())
+
+
+func _cablear_el_celular() -> void:
+	_celular.celular_abierto.connect(_al_abrir_el_celular)
+	_celular.celular_cerrado.connect(_al_cerrar_el_celular)
+	_celular.menu_mostrado.connect(_mostrar_el_menu_del_celular)
+	_celular.chat_abierto.connect(_mostrar_el_chat_del_celular)
+	_celular.foto_ampliada.connect(_pantalla_del_celular.ampliar)
+	_celular.foto_cerrada.connect(_pantalla_del_celular.cerrar_foto)
+	_celular.mensaje_recibido.connect(_al_recibir_en_el_celular)
+	_pantalla_del_celular.chat_pedido.connect(_celular.pedir_chat)
+	_pantalla_del_celular.volver_pedido.connect(_celular.pedir_volver)
+	_pantalla_del_celular.foto_pedida.connect(_celular.pedir_foto)
+	_pantalla_del_celular.cierre_de_foto_pedido.connect(_celular.pedir_cerrar_foto)
+
+
+func _al_abrir_el_celular() -> void:
+	_jugador.suspender()
+	_pantalla_del_celular.subir()
+
+
+func _al_cerrar_el_celular() -> void:
+	_jugador.reanudar()
+	_pantalla_del_celular.bajar()
+
+
+func _mostrar_el_menu_del_celular() -> void:
+	_pantalla_del_celular.mostrar_menu(_celular.bandeja())
+
+
+func _mostrar_el_chat_del_celular(quien: Conversacion.Interlocutor) -> void:
+	_pantalla_del_celular.mostrar_chat(
+		_celular.bandeja().conversacion_de(quien),
+		_celular.bandeja().mensajes_de(quien),
+		_celular.celular().fijo()
+	)
+
+
+func _al_recibir_en_el_celular(quien: Conversacion.Interlocutor, _mensaje: Mensaje) -> void:
+	if not _celular.celular().abierto():
+		return
+	if _celular.celular().pantalla() == Celular.Pantalla.MENU:
+		_mostrar_el_menu_del_celular()
+	elif (
+		_celular.celular().pantalla() == Celular.Pantalla.CHAT
+		and _celular.celular().chat() == quien
+	):
+		_mostrar_el_chat_del_celular(quien)

@@ -13,7 +13,8 @@ extends GdUnitTestSuite
 const ARCHIVOS_DE_LA_CASCARA := [
 	"res://src/ui/diegetica/pantalla_de_computadora.gd",
 	"res://src/ui/diegetica/app_caja.gd",
-	"res://src/ui/diegetica/app_chats.gd",
+	"res://src/ui/diegetica/pantalla_del_celular.gd",
+	"res://src/sistemas/investigacion/celular_del_empleado.gd",
 	"res://src/ui/diegetica/app_notas.gd",
 	"res://src/escenas/puestos/escritorio.gd",
 	"res://src/sistemas/investigacion/computadora_de_escritorio.gd",
@@ -94,8 +95,6 @@ func test_la_secuencia_entera_no_descuenta_un_solo_segundo() -> void:  # AC-INV-
 	var avisos_al_abrir := _avisos_de_tarea
 	var antes := _turno.tiempo_restante()
 	escritorio.pedir_abrir()
-	escritorio.pedir_cambiar_a(Computadora.App.CHATS)
-	escritorio.pedir_marcar_leida(Conversacion.Interlocutor.JEFE)
 	escritorio.pedir_cambiar_a(Computadora.App.NOTAS)
 	escritorio.pedir_escribir("Puerta del fondo", "Estaba abierta.")
 	escritorio.pedir_cerrar()
@@ -143,15 +142,13 @@ func test_ningun_archivo_de_la_cascara_pausa_el_juego() -> void:
 			)
 
 
-func test_lo_leido_y_lo_anotado_sobreviven_a_cambiar_de_app_y_a_cerrar() -> void:  # AC-INV-012
+func test_lo_anotado_sobrevive_a_cambiar_de_app_y_a_cerrar() -> void:  # AC-INV-012
 	var escritorio := _escritorio()
 	escritorio.pedir_abrir()
-	escritorio.pedir_marcar_leida(Conversacion.Interlocutor.JEFE)
 	escritorio.pedir_escribir("Puerta del fondo", "Estaba abierta.")
 	escritorio.pedir_cambiar_a(Computadora.App.CAJA)
 	escritorio.pedir_cerrar()
 	escritorio.pedir_abrir()
-	assert_bool(escritorio.bandeja().esta_leida(Conversacion.Interlocutor.JEFE)).is_true()
 	assert_int(escritorio.cuaderno().cuantas()).is_equal(1)
 
 

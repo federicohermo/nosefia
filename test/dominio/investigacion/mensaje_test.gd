@@ -6,6 +6,13 @@
 extends GdUnitTestSuite
 
 
+func test_la_foto_sola_es_contenido_y_el_mensaje_llega_en_la_primera() -> void:  # AC-INV-031
+	var mensaje := Mensaje.new()
+	assert_int(mensaje.jornada).is_equal(1)
+	mensaje.foto = GradientTexture2D.new()
+	assert_bool(mensaje.dice_algo()).is_true()
+
+
 func test_un_mensaje_con_texto_dice_algo() -> void:
 	var mensaje := Mensaje.new()
 	mensaje.de_quien = "El jefe"
