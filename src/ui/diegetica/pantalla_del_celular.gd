@@ -16,7 +16,7 @@ const TINTA := Color("1a1a1a")
 const PAPEL := Color("ffffff")
 const BURBUJA := Color("0b343d")
 
-@export var _velo: ColorRect
+@export var _velo: Control
 @export var _lienzo: Control
 @export var _telefono: PanelContainer
 @export var _titulo: Label

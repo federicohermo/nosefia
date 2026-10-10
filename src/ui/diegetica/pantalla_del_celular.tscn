@@ -11,8 +11,14 @@
 base_font = ExtResource("5")
 variation_embolden = 0.75
 
-[sub_resource type="ShaderMaterial" id="velo"]
+[sub_resource type="ShaderMaterial" id="horizontal"]
 shader = ExtResource("3")
+shader_parameter/direccion = Vector2(1, 0)
+
+[sub_resource type="ShaderMaterial" id="vertical"]
+shader = ExtResource("3")
+shader_parameter/direccion = Vector2(0, 1)
+shader_parameter/luz = 0.58
 
 [sub_resource type="StyleBoxFlat" id="telefono"]
 bg_color = Color(1, 1, 1, 1)
@@ -56,8 +62,28 @@ _imagen = NodePath("Lienzo/Telefono/FotoAmpliada/Contenido/Imagen")
 _adjunto = NodePath("Lienzo/Telefono/FotoAmpliada/Contenido/Adjunto")
 _recordatorio = NodePath("Lienzo/Recordatorio")
 
-[node name="Velo" type="ColorRect" parent="."]
-material = SubResource("velo")
+[node name="Velo" type="Control" parent="."]
+mouse_filter = 2
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Horizontal" type="ColorRect" parent="Velo"]
+material = SubResource("horizontal")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="CopiarHorizontal" type="BackBufferCopy" parent="Velo"]
+copy_mode = 2
+
+[node name="Vertical" type="ColorRect" parent="Velo"]
+material = SubResource("vertical")
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0

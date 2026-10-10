@@ -296,3 +296,49 @@ func test_escala_nueve_diecisavos_y_capa_entre_hud_y_avisos() -> void:  # AC-INV
 		assert_int((_almacen.get_node("Interfaz/" + nombre) as CanvasLayer).layer).is_greater(
 			_pantalla().layer
 		)
+
+
+func test_retomar_reconstruye_guion_sin_lecturas_ni_recibidos() -> void:  # AC-INV-037
+	_abrir(3)
+	(_almacen.get("_reloj") as RelojDelTurno).set_process(false)
+	var anterior := _celular().bandeja()
+	var esperados: Dictionary = {}
+	var recibido := Mensaje.new()
+	recibido.texto = "Llegada temporal de la sesion anterior."
+	await _q()
+	for conversacion in anterior.conversaciones():
+		var quien := conversacion.interlocutor
+		esperados[quien] = anterior.mensajes_de(quien)
+		_celular().pedir_chat(quien)
+		assert_int(anterior.no_leidos(quien)).is_zero()
+		_celular().recibir(quien, recibido)
+		assert_int(anterior.no_leidos(quien)).is_equal(1)
+		assert_int(anterior.mensajes_de(quien).size()).is_equal(esperados[quien].size() + 1)
+		_celular().pedir_volver()
+	var guardado := Guardado.new()
+	assert_bool(guardado.escribir(PartidaSerializada.sanear({"jornada": 3, "medios": 1}))).is_true()
+	assert_bool(guardado.hay_guardado()).is_true()
+	await after_test()
+	# La escena reconstruye Partida desde el archivo real; no se inyecta _partida.
+	_almacen = ALMACEN.instantiate()
+	get_tree().root.add_child(_almacen)
+	_almacen.call("anunciar_la_noche")
+	assert_int((_almacen.get("_partida") as Partida).jornada()).is_equal(3)
+	assert_int((_almacen.get("_partida") as Partida).medios()).is_equal(1)
+	var nueva := _celular().bandeja()
+	assert_object(nueva).is_not_same(anterior)
+	assert_bool(_celular().celular().abierto()).is_false()
+	assert_int(_celular().celular().pantalla()).is_equal(Celular.Pantalla.MENU)
+	assert_int(nueva.conversaciones().size()).is_equal(esperados.size())
+	var quienes: Array[Conversacion.Interlocutor] = []
+	for conversacion in nueva.conversaciones():
+		quienes.append(conversacion.interlocutor)
+		var quien := conversacion.interlocutor
+		var mensajes := nueva.mensajes_de(quien)
+		assert_array(mensajes).is_equal(esperados[quien])
+		assert_int(nueva.no_leidos(quien)).is_equal(mensajes.size())
+		assert_bool(mensajes.has(recibido)).is_false()
+		for mensaje in mensajes:
+			assert_int(mensaje.jornada).is_less_equal(3)
+	assert_array(quienes).is_equal(esperados.keys())
+	guardado.borrar()
