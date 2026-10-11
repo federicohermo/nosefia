@@ -10,6 +10,9 @@
 class_name Mensaje
 extends Resource
 
+@export var jornada: int = 1
+@export var foto: Texture2D = null
+
 @export var de_quien: String = ""
 
 ## El cuerpo va como texto multilínea porque un chat del GDD es un párrafo, no un renglón.
@@ -22,4 +25,4 @@ extends Resource
 ## parecería tener algo donde no hay nada — que es contenido que el jugador paga en minutos de
 ## turno y no le devuelve nada.
 func dice_algo() -> bool:
-	return not texto.strip_edges().is_empty()
+	return foto != null or not texto.strip_edges().is_empty()

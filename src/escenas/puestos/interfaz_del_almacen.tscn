@@ -12,6 +12,8 @@
 [ext_resource type="PackedScene" path="res://src/ui/diegetica/programa_de_tickets.tscn" id="tickets"]
 [ext_resource type="PackedScene" path="res://src/ui/pila_de_notificaciones.tscn" id="avisos"]
 [ext_resource type="PackedScene" path="res://src/ui/interrupciones/persiana_de_la_noche.tscn" id="persiana"]
+[ext_resource type="PackedScene" path="res://src/ui/diegetica/pantalla_del_celular.tscn" id="celular_ui"]
+[ext_resource type="Script" path="res://src/sistemas/investigacion/celular_del_empleado.gd" id="celular"]
 [node name="Interfaz" type="Node3D"]
 
 [node name="Hud" parent="." instance=ExtResource("2_hud")]
@@ -29,6 +31,11 @@
 [node name="PilaDeNotificaciones" parent="." instance=ExtResource("avisos")]
 
 [node name="PersianaDeLaNoche" parent="." instance=ExtResource("persiana")]
+
+[node name="CelularDelEmpleado" type="Node" parent="."]
+script = ExtResource("celular")
+
+[node name="PantallaDelCelular" parent="." instance=ExtResource("celular_ui")]
 
 [node name="MenuDePausa" parent="." instance=ExtResource("20_menu_de_pausa")]
 layer = 6

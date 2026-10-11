@@ -20,6 +20,7 @@ comercial. La incorporación al build local no acredita una licencia comercial.
 
 | Recurso | Origen | Uso |
 |---|---|---|
+| `celular.svg` | Dibujo vectorial original del proyecto, creado el 2026-10-10 | Recordatorio del celular con Q |
 | `persiana.png` | Figma, capa `567:645` («PERSIANA 1 1») del frame `567:644`, descargada sin editar el 2026-10-10 | Persiana baja en la entrada de cada noche |
 | `notificacion_salida.svg` | Símbolo `480:341`, aviso `477:216` de Figma, descargado sin editar el 2026-10-09 | Cliente cansado de esperar |
 | `notificacion_cliente.svg` | Figma, grupo `213:191` del frame `243:150` | Símbolo original del aviso «¡HAY UN CLIENTE!» |
@@ -52,8 +53,7 @@ La adaptación conserva las acciones del juego: anotar lo vendido con «+» y «
 libres. Las notas usan lista y detalle; no representan logros ni pistas desbloqueables. Las unidades,
 los precios y el total de la planilla salen del dominio. Las opciones Registro y Notas permanecen
 visibles como íconos a la derecha, con la opción actual marcada y el nombre al pasar el cursor.
-El título izquierdo sólo indica la pantalla actual. El código de Chats permanece disponible, sin
-acceso desde la navegación de esta entrega.
+El título izquierdo sólo indica la pantalla actual. Los chats se consultan en el celular, que se abre con Q; la computadora ofrece Registro y Notas.
 
 El lienzo escala uniformemente dentro del viewport. No cambia la resolución del juego, la cámara
 ni el avance del turno. El clic derecho conserva la salida al local. Esta entrega no incorpora

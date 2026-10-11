@@ -28,6 +28,8 @@ const ARCHIVOS := {
 	Interlocutor.DESCONOCIDO: "conversacion_con_el_desconocido.tres",
 }
 
+@export var imagen: Texture2D = null
+
 @export var interlocutor: Interlocutor = Interlocutor.JEFE
 
 ## Cómo lo lee el jugador en la lista. Va en el recurso y no en la pantalla: los nombres son

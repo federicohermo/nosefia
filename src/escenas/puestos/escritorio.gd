@@ -33,13 +33,11 @@ func _ready() -> void:
 	computadora.computadora_abierta.connect(_al_abrirse)
 	computadora.computadora_cerrada.connect(_al_cerrarse)
 	computadora.app_cambiada.connect(_al_cambiar_de_app)
-	computadora.chats_actualizados.connect(_al_leer_un_chat)
 	computadora.nota_escrita.connect(_al_escribirse_una_nota)
 	computadora.registro_actualizado.connect(_al_cambiar_el_registro)
 	pantalla.app_pedida.connect(computadora.pedir_cambiar_a)
 	pantalla.caja().suma_pedida.connect(computadora.pedir_sumar)
 	pantalla.caja().resta_pedida.connect(computadora.pedir_restar)
-	pantalla.chats().lectura_pedida.connect(_al_pedirse_un_chat)
 	pantalla.notas().escritura_pedida.connect(computadora.pedir_escribir)
 
 
@@ -82,21 +80,11 @@ func _al_cambiar_de_app(app: Computadora.App) -> void:
 
 
 ## Cada app se repinta al entrar y no por cuadro: el estado que muestran sólo cambia cuando el
-## jugador hace algo, y repintar por cuadro sería reconstruir tres listas sesenta veces por
+## jugador hace algo, y repintar por cuadro sería reconstruir las listas sesenta veces por
 ## segundo para que digan lo mismo.
 func _repintar(_app: Computadora.App) -> void:
 	pantalla.caja().mostrar(computadora.registro())
-	pantalla.chats().mostrar(computadora.bandeja())
 	pantalla.notas().mostrar(computadora.cuaderno().notas())
-
-
-func _al_pedirse_un_chat(quien: Conversacion.Interlocutor) -> void:
-	pantalla.chats().mostrar_conversacion(computadora.bandeja().conversacion_de(quien))
-	computadora.pedir_marcar_leida(quien)
-
-
-func _al_leer_un_chat(_sin_leer: int) -> void:
-	pantalla.chats().mostrar(computadora.bandeja())
 
 
 func _al_escribirse_una_nota(_nota: Nota) -> void:

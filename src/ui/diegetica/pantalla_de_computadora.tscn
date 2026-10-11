@@ -4,7 +4,6 @@
 
 [ext_resource type="PackedScene" path="res://src/ui/diegetica/app_caja.tscn" id="2"]
 
-[ext_resource type="PackedScene" path="res://src/ui/diegetica/app_chats.tscn" id="3"]
 
 [ext_resource type="PackedScene" path="res://src/ui/diegetica/app_notas.tscn" id="4"]
 
@@ -17,7 +16,7 @@
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_pantalla"]
 shader = ExtResource("6")
 
-[node name="PantallaDeComputadora" type="CanvasLayer" node_paths=PackedStringArray("_fondo", "_marco", "_titulo", "_opciones", "_salida", "_caja", "_chats", "_notas")]
+[node name="PantallaDeComputadora" type="CanvasLayer" node_paths=PackedStringArray("_fondo", "_marco", "_titulo", "_opciones", "_salida", "_caja", "_notas")]
 layer = 3
 script = ExtResource("1")
 _fondo = NodePath("Fondo")
@@ -26,7 +25,6 @@ _titulo = NodePath("Fondo/Marco/Titulo")
 _opciones = NodePath("Fondo/Marco/Opciones")
 _salida = NodePath("Fondo/Marco/Salida")
 _caja = NodePath("Fondo/Marco/Apps/AppCaja")
-_chats = NodePath("Fondo/Marco/Apps/AppChats")
 _notas = NodePath("Fondo/Marco/Apps/AppNotas")
 
 [node name="Fondo" type="ColorRect" parent="."]
@@ -86,10 +84,6 @@ mouse_filter = 2
 
 [node name="AppCaja" parent="Fondo/Marco/Apps" instance=ExtResource("2")]
 layout_mode = 0
-
-[node name="AppChats" parent="Fondo/Marco/Apps" instance=ExtResource("3")]
-layout_mode = 0
-visible = false
 
 [node name="AppNotas" parent="Fondo/Marco/Apps" instance=ExtResource("4")]
 layout_mode = 0
