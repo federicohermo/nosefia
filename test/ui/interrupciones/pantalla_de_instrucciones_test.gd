@@ -59,7 +59,7 @@ func _comprobar_pantalla(pantalla: PantallaDeInstrucciones, numero: int) -> void
 	if numero == 12:
 		assert_int(cuerpos.size()).is_equal(paso.textos.size())
 	var fotos: Array[Node] = contenido.find_children("*", "TextureRect", false, false)
-	var cantidad := 1 + (1 if paso.foto != null else 0) + (2 if numero == 5 else 0)
+	var cantidad := 1 + (1 if paso.foto != null else 0) + (2 if numero == 4 else 0)
 	assert_int(fotos.size()).is_equal(cantidad)
 	if paso.foto != null:
 		var foto: TextureRect = fotos[1]
@@ -111,7 +111,7 @@ func test_volver_tres_veces_recupera_solo_la_primera_pantalla() -> void:  # AC-E
 	await get_tree().process_frame
 	_comprobar_pantalla(pantalla, 1)
 	var contenido: Control = pantalla.get("_contenido")
-	assert_int(contenido.get_child_count()).is_equal(3)
+	assert_int(contenido.get_child_count()).is_equal(2)
 
 
 func test_pantallas_sin_scroll_en_ambos_viewports() -> void:  # AC-EMP-045, AC-EMP-046

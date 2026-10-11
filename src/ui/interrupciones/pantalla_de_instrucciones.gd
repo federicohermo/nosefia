@@ -12,61 +12,47 @@ const COLOR_DE_SECTOR := Color("f0f4d1")
 const SEPARADOR := preload("res://assets/ui/manada/instrucciones/separador.svg")
 const CAJA := preload("res://assets/ui/manada/instrucciones/caja.png")
 const TICKET := preload("res://assets/ui/manada/instrucciones/ticket.png")
-const ALTURAS_DEL_SEPARADOR: Array[float] = [
-	271, 328, 306, 306, 222, 168, 222, 222, 222, 258, 356, 188
-]
+const ANCHO_DEL_TEXTO := 1007.0
+const SEPARACION_VERTICAL := 40.0
+const SEPARACION_HORIZONTAL := 32.0
+const SEPARACION_DEL_SECTOR := 64.0
+const TAMANO_DE_LA_CAJA := Vector2(136, 316)
+const TAMANO_DEL_TICKET := Vector2(109, 186)
 const FOTOS := {
 	2:
 	{
-		"rect": Rect2(0, 374, 324, 233),
+		"tamano": Vector2(324, 233),
 		"titulo": "Listas de tareas a realizar",
-		"sector": "Sector de ventas",
-		"leyenda": Vector2(359, 367)
+		"sector": "Sector de ventas"
+	},
+	3:
+	{
+		"tamano": Vector2(279, 201),
+		"titulo": "Ventanilla de recepción",
+		"sector": "Sector de ventas"
 	},
 	4:
 	{
-		"rect": Rect2(0, 357, 279, 201),
-		"titulo": "Ventanilla de recepción",
-		"sector": "Sector de ventas",
-		"leyenda": Vector2(311, 357)
-	},
-	5:
-	{
-		"rect": Rect2(0, 276, 426, 258),
+		"tamano": Vector2(426, 258),
 		"titulo": "Lector y la caja registradora",
-		"sector": "Sector de ventas",
-		"leyenda": Vector2(459, 276)
+		"sector": "Sector de ventas"
 	},
-	6:
-	{
-		"rect": Rect2(0, 283, 373, 300),
-		"titulo": "Computadora",
-		"sector": "Sector de ventas",
-		"leyenda": Vector2(414, 283)
-	},
+	6: {"tamano": Vector2(373, 300), "titulo": "Computadora", "sector": "Sector de ventas"},
 	7:
 	{
-		"rect": Rect2(0, 277, 373, 365),
+		"tamano": Vector2(373, 365),
 		"titulo": "Estantería con cajas contenedoras",
-		"sector": "Sector de depósito",
-		"leyenda": Vector2(446, 277)
+		"sector": "Sector de depósito"
 	},
 	9:
 	{
-		"rect": Rect2(0, 300, 548, 315),
+		"tamano": Vector2(548, 315),
 		"titulo": "1 Mopa\n2 Balde\n3 Productos de limpieza",
-		"sector": "Sector de baño",
-		"leyenda": Vector2(603, 299)
+		"sector": "Sector de baño"
 	},
 	11:
-	{
-		"rect": Rect2(0, 397, 480, 270),
-		"titulo": "Cajas del proveedor",
-		"sector": "Sector de depósito",
-		"leyenda": Vector2(535, 397)
-	},
+	{"tamano": Vector2(480, 270), "titulo": "Cajas del proveedor", "sector": "Sector de depósito"},
 }
-const FUENTE := preload("res://assets/ui/manada/unscii-16.ttf")
 
 @export var _marco: Control
 @export var _contenido: Control
@@ -82,15 +68,11 @@ var _instrucciones: InstruccionesDelJefe
 var _ahora: Callable = Time.get_ticks_usec
 var _ultimo: int = 0
 var _avance: float = 0.0
-var _negrita: FontVariation
 
 
 func _ready() -> void:
 	visible = false
 	set_process(false)
-	_negrita = FontVariation.new()
-	_negrita.base_font = FUENTE
-	_negrita.variation_embolden = 0.75
 	_volver.text = TEXTO_DE_VOLVER
 	_volver.pressed.connect(_al_volver)
 	_siguiente.pressed.connect(_al_avanzar)
@@ -146,30 +128,47 @@ func _pintar() -> void:
 		anterior.queue_free()
 	var numero := _instrucciones.paso_actual()
 	var paso: InstruccionesDelJefe.Paso = _pasos[numero - 1]
-	for indice in paso.textos.size():
-		var altura := 0.0
-		if indice == 1:
-			altura = 150.0 if numero == 1 else 201.0
-		_texto(_resaltar(paso.textos[indice].texto, numero), Vector2(0, altura), 1007, 40)
-	_imagen(SEPARADOR, Rect2(0, ALTURAS_DEL_SEPARADOR[numero - 1], 510, 2))
+	var altura := 0.0
+	for mensaje in paso.textos:
+		var cuerpo := _texto(_resaltar(mensaje.texto), Vector2(0, altura), ANCHO_DEL_TEXTO, 40)
+		altura += cuerpo.get_content_height() + SEPARACION_VERTICAL
+	_imagen(SEPARADOR, Rect2(0, altura, 510, 2))
+	var altura_de_la_foto := altura + 2.0 + SEPARACION_VERTICAL
+	var ancho_de_la_leyenda := 350.0
+	var x_del_ticket := ANCHO_DEL_TEXTO - TAMANO_DEL_TICKET.x
+	var x_de_la_caja := x_del_ticket - SEPARACION_HORIZONTAL - TAMANO_DE_LA_CAJA.x
+	if numero == 4:
+		var tamano_de_la_foto: Vector2 = FOTOS[numero]["tamano"]
+		ancho_de_la_leyenda = x_de_la_caja - tamano_de_la_foto.x - 2.0 * SEPARACION_HORIZONTAL
 	if paso.foto != null:
-		_foto(paso.foto.foto, FOTOS[numero])
-	if numero == 5:
-		_imagen(CAJA, Rect2(742, 276, 136, 316))
-		_imagen(TICKET, Rect2(898, 341, 109, 186))
-		_texto("ticket", Vector2(900, 276), 110, 30, COLOR_DE_RESALTE)
+		_foto(paso.foto.foto, FOTOS[numero], altura_de_la_foto, ancho_de_la_leyenda)
+	if numero == 4:
+		_imagen(CAJA, Rect2(Vector2(x_de_la_caja, altura_de_la_foto), TAMANO_DE_LA_CAJA))
+		var titulo := _texto(
+			"ticket",
+			Vector2(x_del_ticket, altura_de_la_foto),
+			TAMANO_DEL_TICKET.x,
+			30,
+			COLOR_DE_RESALTE
+		)
+		_imagen(
+			TICKET,
+			Rect2(
+				Vector2(
+					x_del_ticket,
+					altura_de_la_foto + titulo.get_content_height() + SEPARACION_VERTICAL
+				),
+				TAMANO_DEL_TICKET
+			)
+		)
 	_retrato.visible = true
 	_volver.disabled = not _instrucciones.se_puede_volver()
 	_siguiente.text = (TEXTO_DE_COMENZAR if _instrucciones.en_el_ultimo() else TEXTO_DE_SIGUIENTE)
 	_contador.text = "%d/%d" % [numero, _pasos.size()]
 
 
-func _resaltar(texto: String, numero: int) -> String:
-	var marcado := texto.replace("[b]", "[color=#e4f850][b]").replace("[/b]", "[/b][/color]")
-	if numero == 5:
-		for frase: String in ["generar un ticket", "“imprimir”", "caja registradora"]:
-			marcado = marcado.replace(frase, "[color=#e4f850]" + frase + "[/color]")
-	return marcado
+func _resaltar(texto: String) -> String:
+	return texto.replace("[b]", "[color=#e4f850]").replace("[/b]", "[/color]")
 
 
 func _texto(
@@ -188,7 +187,6 @@ func _texto(
 	texto.add_theme_font_size_override("normal_font_size", puntos)
 	texto.add_theme_font_size_override("bold_font_size", puntos)
 	texto.add_theme_constant_override("line_separation", 4)
-	texto.add_theme_font_override("bold_font", _negrita)
 	_contenido.add_child(texto)
 	return texto
 
@@ -205,8 +203,8 @@ func _imagen(textura: Texture2D, rectangulo: Rect2) -> TextureRect:
 	return imagen
 
 
-func _foto(textura: Texture2D, ficha: Dictionary) -> void:
-	var rectangulo: Rect2 = ficha["rect"]
+func _foto(textura: Texture2D, ficha: Dictionary, altura: float, ancho_de_leyenda: float) -> void:
+	var rectangulo := Rect2(Vector2(0, altura), ficha["tamano"])
 	var borde := Panel.new()
 	var estilo := StyleBoxFlat.new()
 	estilo.bg_color = Color("1f1e1e")
@@ -221,13 +219,15 @@ func _foto(textura: Texture2D, ficha: Dictionary) -> void:
 		textura, Rect2(rectangulo.position + Vector2(6, 6), rectangulo.size - Vector2(12, 12))
 	)
 	foto.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
-	var posicion: Vector2 = ficha["leyenda"]
-	_texto(ficha["titulo"], posicion, 350, 30, COLOR_DE_RESALTE)
-	# La leyenda ocupa el lugar diagramado junto a la foto del juego.
-	var alto := 117.0 if ficha["titulo"].contains("\n") else 100.0
-	if ficha["titulo"] == "Computadora":
-		alto = 60.0
-	_texto("-" + ficha["sector"], posicion + Vector2(0, alto), 350, 30, COLOR_DE_SECTOR)
+	var posicion := Vector2(rectangulo.size.x + SEPARACION_HORIZONTAL, altura)
+	var titulo := _texto(ficha["titulo"], posicion, ancho_de_leyenda, 30, COLOR_DE_RESALTE)
+	_texto(
+		"-" + ficha["sector"],
+		posicion + Vector2(0, titulo.get_content_height() + SEPARACION_DEL_SECTOR),
+		ancho_de_leyenda,
+		30,
+		COLOR_DE_SECTOR
+	)
 
 
 func _ajustar() -> void:

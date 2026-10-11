@@ -73,6 +73,7 @@ func _pintar(lineas: Array[String]) -> void:
 	for linea in lineas:
 		var etiqueta := Label.new()
 		etiqueta.text = linea
+		etiqueta.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		_renglones.add_child(etiqueta)
 
 
