@@ -89,6 +89,43 @@ func _puntos_de_foco(local: Node3D, caja: Caja) -> Array[Sitio]:
 	return sitios
 
 
+func test_cada_caja_se_enfoca_y_se_agarra_en_la_apertura_sin_retirar_otras() -> void:  # AC-STK-077
+	var local := await _abrir()
+	var cajas: Array = local.get("_cajas_de_productos")
+	assert_int(cajas.size()).is_equal(Catalogo.todos().size())
+	var sitios_iniciales: Dictionary[Caja, Sitio] = {}
+	# Primero se mide toda la descarga intacta: retirar una exterior no puede habilitar otra.
+	for caja: Caja in cajas:
+		var sitios := _puntos_de_foco(local, caja)
+		(
+			assert_array(sitios)
+			. override_failure_message("Sin foco en la apertura intacta: %s" % caja.name)
+			. is_not_empty()
+		)
+		if not sitios.is_empty():
+			sitios_iniciales[caja] = sitios[0]
+	var jugador: Node3D = local.get("_jugador")
+	var camara: Camera3D = jugador.get_node("Giro/Camara")
+	var agarre: Agarre = local.get("_agarre")
+	for caja: Caja in sitios_iniciales:
+		var sitio := sitios_iniciales[caja]
+		jugador.global_position = sitio.pies
+		jugador.reset_physics_interpolation()
+		camara.position = Vector3.UP * ReglasDelJugador.ALTURA_DE_LA_CAMARA
+		camara.look_at(sitio.punto)
+		for _cuadro in 3:
+			await get_tree().physics_frame
+		jugador.call("_leer_la_mira")
+		assert_object(jugador.get("_enfocado")).is_same(caja)
+		assert_bool(agarre.pedir_agarrar(caja.datos, caja)).is_true()
+		assert_object(agarre.manos().sostenido()).is_same(caja.datos)
+		agarre.soltar(false)
+		# Restaurar antes del siguiente cuadro impide que el gesto despeje las cajas interiores.
+		for original: Caja in cajas:
+			original.volver_a_su_lugar()
+	assert_int(sitios_iniciales.size()).is_equal(cajas.size())
+
+
 func test_la_pila_completa_no_se_superpone_y_la_mira_alcanza_cada_caja() -> void:  # AC-STK-077
 	var local := await _abrir()
 	var cajas: Array = local.get("_cajas_de_productos")
