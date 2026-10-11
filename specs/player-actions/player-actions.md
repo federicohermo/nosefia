@@ -1,9 +1,9 @@
 ---
 schema_version: 1
 capability_id: CAP-PLY
-status: ratified
+status: draft
 owner: por definir
-provenance: GDD «Controles»; ficha «8. Tarea: Reposición»; migración de los specs 003, 004, 006, 014, 034, 043
+provenance: GDD «Controles»; fichas «8. Tarea: Reposición», «Notas» e «Interfaces virtuales durante la jornada»; decisiones de #369, #370 y #373; migración de los specs 003, 004, 006, 014, 034, 043
 ---
 
 # Capacidad: lo que el empleado puede hacer
@@ -59,7 +59,7 @@ sesenta veces por segundo.
 
 ### BR-PLY-006 — Suspender es una sola llamada
 
-CUANDO otra cosa toma el control —la ventanilla, la computadora, una nota pegada, el programa de tickets, el cierre—, el sistema DEBE
+CUANDO otra cosa toma el control —la ventanilla, la computadora, el celular, una nota pegada, el programa de tickets, el cierre—, el sistema DEBE
 apagar **juntos** la caminata, la mirada y el foco, y DEBE soltar lo enfocado. Con interruptores
 sueltos, cada pantalla tiene que acordarse de todos.
 
@@ -268,7 +268,10 @@ contenido visible en el mundo; NO DEBEN presentarse como post its ni como una ho
 Las hojas del baño DEBEN conservar sus imágenes artísticas.
 
 La nota de tareas DEBE enumerar sólo las obligatorias que declara la jornada, en el orden
-atención al cliente, registro de productos vendidos, limpieza, reposición y sacar la basura.
+atención al cliente, registro de productos vendidos, limpieza, reposición y, al final, la
+particular de esa jornada. Ordenar las cajas DEBE llamarse «Ordenar cajas en el depósito» y
+la basura, «Tirar la basura». CUANDO se abre otra jornada, la nota DEBE actualizarse con la
+lista nueva, sin exigir salir y volver a entrar al local.
 Cada tipo declarado DEBE tener nombre. Una lista vacía DEBE conservar el título sin agregar
 renglones. La nota de ordenado DEBE presentar las tres viñetas de su criterio, sin reescribirlas.
 
@@ -736,7 +739,7 @@ y las viñetas «No dejar productos tirados.», «Dejar las cajas en el depósit
 ### AC-PLY-069 — Las obligatorias dan los renglones de tareas *(verifica BR-PLY-030)*
 
 DADO las obligatorias declaradas, ENTONCES «TAREAS A REALIZAR» las enumera en el orden de la
-regla. DADO limpieza y sacar la basura, ENTONCES da «1. Limpieza» y «2. Sacar la basura».
+regla. DADO limpieza y tirar la basura, ENTONCES da «1. Limpieza» y «2. Tirar la basura».
 DADO cero, ENTONCES conserva el título y cero renglones. Cada tipo declarado tiene nombre,
 y los títulos y renglones son iguales en la hoja y su lectura.
 
@@ -810,6 +813,21 @@ DADO conversación terminada CUANDO se acepta ENTONCES la mano queda vacía y el
 el mismo cuerpo. Al rechazar, cuerpo y mano no cambian. Fuera del comprador no se suelta.
 Al vencer se cierra el diálogo y derecho puede abandonar.
 
+### AC-PLY-080 — La nota cambia con la particular *(verifica BR-PLY-030)*
+
+DADO la jornada 1 CUANDO se lee su nota de tareas ENTONCES enumera, en orden, «Atención al
+cliente», «Registro de productos vendidos», «Limpieza», «Reposición» y «Ordenar cajas en el
+depósito». CUANDO se sigue a la jornada 2 sin recargar el local ENTONCES el quinto renglón dice
+«Tirar la basura». DADO la jornada 3 ENTONCES sólo están los cuatro primeros. En los tres casos,
+la hoja visible y su lectura tienen los mismos renglones.
+
+### AC-PLY-081 — El celular conserva la mano y suspende el cuerpo *(verifica BR-PLY-006)*
+
+DADO una unidad en la mano y un objetivo enfocado CUANDO se abre el celular ENTONCES se pierde
+el foco y no se puede caminar, girar la vista, enfocar, agarrar ni soltar; el cursor queda libre.
+CUANDO se lo cierra ENTONCES vuelven esos controles y la misma unidad sigue en la mano. Los clics
+de lectura y de foto mientras está abierto no cambian lo sostenido.
+
 ## No objetivos
 
 - Esta capacidad NO decide qué esconde un objeto: eso es de
@@ -844,7 +862,8 @@ Al vencer se cierra el diálogo y derecho puede abandonar.
 
 - [`store-cleanup`](../store-cleanup/store-cleanup.md) (alimenta): qué se lleva en la mano
   decide si se puede limpiar.
-- [`investigation`](../investigation/investigation.md) (alimenta): qué objeto se examina.
+- [`investigation`](../investigation/investigation.md) (alimenta y consume): qué objeto se
+  examina; la apertura del celular suspende el cuerpo conservando lo que se lleva en la mano.
 - [`store-stock`](../store-stock/store-stock.md) (consume y alimenta): qué casilleros de cada
   producto están vacíos y cuáles ocupados; el clic sobre un casillero le pide colocar la unidad
   de la mano o agarrar la que está puesta.

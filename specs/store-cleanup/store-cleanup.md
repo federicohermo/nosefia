@@ -1,9 +1,9 @@
 ---
 schema_version: 1
 capability_id: CAP-CLN
-status: ratified
+status: draft
 owner: por definir
-provenance: GDD «Limpiar» y «Sacar la basura»; ficha «9. Tarea: Limpieza»; migración de los specs 010, 015, 043; ajustes del dueño sobre duración de la mopa, mezcla, enjuague y agua temporal
+provenance: GDD «Limpiar» y «Sacar la basura»; fichas «9. Tarea: Limpieza», «Particulares de cada jornada» y «Contenedor de basura»; decisiones de #370; migración de los specs 010, 015, 043; ajustes del dueño sobre duración de la mopa, mezcla, enjuague y agua temporal
 ---
 
 # Capacidad: dejar el local en orden
@@ -35,13 +35,17 @@ jabón, el jabón se mezcla en el balde, y cambiar de jabón es vaciar el balde 
 
 ### BR-CLN-007 — Tres bolsas y una mano
 
-El sistema DEBE poner **3 bolsas por jornada**, y ese número DEBE ser mayor que las manos
-disponibles. Con una sola mano son tres viajes de ida y vuelta, y no hay forma de hacerlo en uno.
+CUANDO se abre una jornada que declara tirar la basura, el sistema DEBE poner una bolsa en cada
+uno de los tres tachos: compradores cerca de la entrada del local, escritorio y baño. Las demás
+jornadas DEBEN abrir con los tres tachos sin bolsa y ninguna bolsa en el mundo. La cantidad de
+bolsas sale de esos tres orígenes y DEBE ser mayor que las manos disponibles. La apertura que
+declara esta particular es la jornada 2.
 
 ### BR-CLN-008 — El contenedor está lejos
 
 El contenedor del depósito DEBE ser fijo y estar a **6 metros o más** de las tareas del local
-y de donde arrancan las bolsas. Esa separación DEBE ser mayor al alcance de la mira.
+y de cada uno de los tres tachos donde arrancan las bolsas. Esa separación DEBE ser mayor al
+alcance de la mira.
 
 ### BR-CLN-009 — La bolsa cuenta por el tiro al contenedor
 
@@ -189,7 +193,9 @@ Una caja del depósito NO DEBE entrar. Con mano vacía, caja o tapa cerrada o gi
 DEBE conservar manos y tarea sin soltar genéricamente. Abrir NO DEBE tirar automáticamente.
 Con el jugador suspendido por examen, pausa o cierre, ambos clics NO DEBEN tirar ni alternar.
 Al abrir otra noche, los objetos de arranque tirados DEBEN volver a sus padres y poses de
-arranque, visibles, físicos y recogibles, con mopa seca, balde vacío y bolsas sin depositar.
+arranque, visibles, físicos y recogibles, con mopa seca y balde vacío. Las bolsas DEBEN seguir
+la declaración de la jornada nueva: fuera del mundo si no declara basura, o en su tacho y sin
+depositar si la declara, nunca sueltas por haber sido tiradas en la noche anterior.
 Las unidades y tickets tirados DEBEN retirarse con los demás creados en la noche anterior.
 
 ### BR-CLN-027 — Pertenencia a las habitaciones
@@ -239,17 +245,33 @@ de la banda y los demás motivos, y reiniciarse al abrir otra noche sin borrar l
 Un gesto rechazado o fuera de jornada abierta NO DEBE anotar este motivo.
 
 
+### BR-CLN-032 — Usar un tacho entrega su única bolsa
+
+CUANDO el jugador enfoca un tacho con bolsa y lo usa con clic derecho con la mano vacía, el
+sistema DEBE ponerle esa bolsa en la mano y dejar el tacho sin bolsa. Con la mano ocupada o el
+tacho vacío, NO DEBE cambiar manos, tacho ni cuenta. Otro derecho NO DEBE producir una segunda
+bolsa de ese tacho. Ningún gesto DEBE devolver una bolsa al tacho. Un izquierdo sobre el tacho
+NO DEBE sacar ni tirar objetos. La suspensión del control NO DEBE permitir extraer la bolsa.
+
+Cada tacho DEBE ser enfocable, con contorno al mirarlo desde un punto libre del piso dentro del
+alcance vigente. «Con basura» DEBE verse como una bolsa en la boca del tacho; «sin basura», como
+el mismo tacho sin ella. Mientras está en la boca, la bolsa NO DEBE interceptar la mira ni tener
+colisión propia. Al sacarla, DEBE ser un objeto levantable con su identidad original. Sacarla
+NO DEBE contar como depositarla: sólo el tiro aceptado al contenedor lo hace. Una bolsa sacada
+y rescatada DEBE volver libre a su origen, sin reponer el estado del tacho ni crear otra identidad.
+
 ## Criterios de aceptación
 
 ### AC-CLN-007 — Tres bolsas son más que las manos *(verifica BR-CLN-007)*
 
-DADO las bolsas de la jornada ENTONCES son 3, con identidades distintas, y son más que las manos
-disponibles.
+DADO la jornada 2 abierta CUANDO se consultan los tachos ENTONCES hay 3 con una bolsa cada uno,
+con identidades distintas, más bolsas que manos disponibles y ninguna depositada. DADO las
+jornadas 1, 3, 4 y 5 abiertas ENTONCES los tres tachos están sin bolsa y no hay bolsas en el mundo.
 
 ### AC-CLN-008 — El viaje llega al contenedor *(verifica BR-CLN-008)*
 
-DADO el almacén armado CUANDO se miden los puntos funcionales de las tareas del local y el
-arranque de las tres bolsas ENTONCES el contenedor fijo está en el depósito y a 6 metros o más
+DADO el almacén armado CUANDO se miden los puntos funcionales de las tareas del local y
+los tres tachos ENTONCES el contenedor fijo está en el depósito y a 6 metros o más
 de todos ellos, por encima del alcance de la mira. Las posiciones se derivan del local vigente.
 
 ### AC-CLN-009 — Soltar no deposita *(verifica BR-CLN-009)*
@@ -268,7 +290,8 @@ depositada» y la cantidad sigue igual.
 ### AC-CLN-012 — Las dos obligatorias cierran *(verifica BR-CLN-011)*
 
 DADO las cuatro manchas de la jornada borradas ENTONCES limpiar está cumplida; DADO las tres
-bolsas depositadas ENTONCES la basura está cumplida; con una sola pendiente en cada caso, no.
+bolsas de la jornada 2 depositadas ENTONCES la basura está cumplida; con una sola pendiente en
+cada caso, no. En una jornada sin basura declarada, cero bolsas NO suma una obligatoria.
 
 ### AC-CLN-014 — Cada jabón borra un solo tipo *(verifica BR-CLN-012)*
 
@@ -440,9 +463,10 @@ cambia. La caja rechazada sigue disponible y la mano vacía sigue vacía.
 
 ### AC-CLN-038 — Los tirados vuelven con la noche nueva *(verifica BR-CLN-026, BR-CLN-014)*
 
-DADO mopa mojada, balde teñido y bolsa tirados CUANDO abre otra noche ENTONCES vuelven a sus
-padres y lugares originales, visibles, físicos y recogibles; mopa seca, balde vacío y bolsa
-sin depositar. DADO un ticket y una unidad tirados ENTONCES se retiran junto con los demás
+DADO mopa mojada y balde teñido tirados CUANDO abre otra noche ENTONCES vuelven a sus
+padres y lugares originales, visibles, físicos y recogibles; mopa seca y balde vacío.
+DADO una bolsa tirada en la jornada 2 CUANDO abre otra noche ENTONCES no está en el mundo.
+DADO un ticket y una unidad tirados ENTONCES se retiran junto con los demás
 creados en la noche anterior, sin dejar entradas inválidas en la lista de tirados.
 La vuelta conserva el estado físico original: un útil móvil elevado 0,5 m vuelve a caer
 y apoyarse. Consultar los descartados entrega una copia independiente y la noche nueva
@@ -552,6 +576,42 @@ continuar. DADO además un ticket aceptado en el inodoro ENTONCES registra ocho 
 despide y borra el guardado de la partida terminada. Al continuar desde siete, los objetos persistentes vuelven
 a poder usarse y una noche impecable sin motivos conserva los siete medios.
 
+### AC-CLN-053 — Extraer una vez, con la mano vacía *(verifica BR-CLN-032)*
+
+DADO un tacho con bolsa y la mano vacía CUANDO se lo usa ENTONCES esa identidad queda en la mano
+y el tacho queda sin bolsa, sin aumentar las depositadas. CUANDO se vacía la mano y se vuelve
+a usar ENTONCES no entrega nada. DADO otro tacho con bolsa y la mano ocupada CUANDO se usa
+ENTONCES conserva su bolsa y la mano conserva lo que llevaba.
+
+### AC-CLN-054 — De los tres tachos al contenedor *(verifica BR-CLN-032, BR-CLN-007, BR-CLN-009, BR-CLN-011)*
+
+DADO la jornada 2 CUANDO se enfoca cada tacho desde un punto libre del piso dentro del alcance
+vigente ENTONCES aparece su contorno y la mira no se detiene en la bolsa. CUANDO se hace clic
+derecho con la mano vacía ENTONCES la bolsa queda en la mano y desaparece de la boca de ese
+tacho. CUANDO se tiran dos al contenedor con la tapa abierta ENTONCES la basura sigue pendiente;
+tirar la tercera la cumple y sube el HUD en 1. Repetir la misma identidad no vuelve a sumar.
+
+### AC-CLN-055 — Otros gestos y otras noches conservan el estado *(verifica BR-CLN-032, BR-CLN-007)*
+
+DADO las jornadas 1, 3, 4 y 5 CUANDO se usa cualquiera de los tres tachos ENTONCES no se entrega
+bolsa y la mano no cambia. DADO la jornada 2 CUANDO se pulsa izquierdo sobre un tacho, con mano
+vacía o cargada, ENTONCES no se agarra ni tira nada. DADO el control suspendido CUANDO se pulsa
+derecho ENTONCES no sale bolsa. Dos derechos consecutivos entregan sólo una bolsa; mirar otro
+tacho con esa bolsa sostenida no la devuelve ni extrae la del segundo.
+
+### AC-CLN-056 — Rescatar conserva bolsa y tacho agotado *(verifica BR-CLN-032, BR-CLN-010)*
+
+DADO una bolsa extraída CUANDO la red de seguridad la rescata ENTONCES vuelve a su origen como
+cuerpo libre y recogible con izquierdo, con la misma identidad, y el tacho sigue sin bolsa.
+CUANDO se recoge y tira al contenedor ENTONCES cuenta una sola vez; usar de nuevo el tacho no
+crea otra bolsa.
+
+### AC-CLN-057 — La bolsa pendiente no cruza de noche *(verifica BR-CLN-007, BR-CLN-011, BR-CLN-026)*
+
+DADO la jornada 2 con dos bolsas depositadas y la tercera, por turno, en el tacho, en el piso o
+en la mano, CUANDO cierra ENTONCES la basura queda pendiente. CUANDO abre la jornada 3 ENTONCES
+la mano está vacía, los tres tachos están sin bolsa y ninguna bolsa está en el mundo.
+
 ## No objetivos
 
 - Esta capacidad NO dibuja: declara de qué color se ven cada mancha, el agua del balde y la punta
@@ -571,11 +631,15 @@ a poder usarse y una noche impecable sin motivos conserva los siete medios.
   ya teñido, mopa seca, sin jabón, jabón equivocado y ya limpia (BR-CLN-015 a BR-CLN-020)—;
   mano vacía, no entra y tapa no abierta al tirar; no es basura y ya depositada al contar.
   Ningún rechazo cambia el estado.
+- **Tachos:** recibe la jornada, el tacho enfocado y si la mano está vacía; entrega la identidad
+  de su única bolsa o ningún objeto. Mano ocupada, tacho sin bolsa o control suspendido no cambian
+  nada. Retirar una bolsa cambia la apariencia del tacho, no la cuenta de depositadas.
 
 ## Señales
 
 - El balde lleno, teñido y vaciado; la mopa mojada; la pasada que borra una mancha; el uso
   rechazado, con su motivo; la bolsa depositada y el objeto tirado.
+- La bolsa sacada, sólo cuando un tacho entrega su bolsa.
 
 ## Dependencias
 
@@ -583,8 +647,8 @@ a poder usarse y una noche impecable sin motivos conserva los siete medios.
   sobre qué se usa y qué se tira.
 - [`store-stock`](../store-stock/store-stock.md) (alimenta): la unidad tirada deja de estar
   afuera y se descuenta del depósito.
-- [`shift-cycle`](../shift-cycle/shift-cycle.md) (alimenta): avisa cuándo cada obligatoria quedó
-  cumplida.
+- [`shift-cycle`](../shift-cycle/shift-cycle.md) (alimenta y consume): avisa cuándo cada obligatoria quedó
+  cumplida; consume si la jornada declara basura para preparar sus tachos y contar sólo esa tarea.
 
 ## Preguntas abiertas
 
