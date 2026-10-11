@@ -8,10 +8,10 @@ const TAMANO := Vector2i(960, 540)
 const PLANOS := [
 	[
 		4,
-		Vector3(-1.15, 1.70, 4.40),
-		Vector3(-2.41, 1.68, 4.40),
+		Vector3(-1.15, 1.682598, 4.050001),
+		Vector3(-2.417298, 1.682598, 4.050001),
 		55.0,
-		"board tareas/board de tareas_002/StaticBody3D"
+		"board tareas/"
 	],
 	[6, Vector3(-0.80, 1.70, 4.80), Vector3(-0.80, 1.74, 6.38), 60.0, "Estructura/Ventanilla"],
 	[
@@ -22,7 +22,7 @@ const PLANOS := [
 		"cajaregistradora/StaticBody3D"
 	],
 	[8, Vector3(-0.05, 1.65, 4.65), Vector3(-0.05, 1.24, 3.25), 55.0, "base compu/StaticBody3D"],
-	[9, Vector3(2.20, 1.70, -10.80), Vector3(-0.40, 1.65, -10.80), 65.0, "Caja"],
+	[9, Vector3(2.70, 1.45, -9.73), Vector3(-0.40, 1.45, -9.73), 72.0, "Caja"],
 	[11, Vector3(11.10, 1.65, 3.90), Vector3(12.457, 0.40, 0.449), 75.0, "Balde"],
 	[13, Vector3(-1.40, 1.65, -14.20), Vector3(-2.704, 0.95, -10.738), 65.0, "Caja"],
 ]
@@ -116,6 +116,18 @@ func _generar() -> void:
 
 func _fotografiar(plano: Array) -> bool:
 	var numero: int = plano[0]
+	var tamano := (
+		Vector2i(960, 674) if numero == 4 else Vector2i(640, 640) if numero == 9 else TAMANO
+	)
+	root.size = tamano
+	root.content_scale_size = tamano
+	_camara.projection = (
+		Camera3D.PROJECTION_ORTHOGONAL if numero == 4 else Camera3D.PROJECTION_PERSPECTIVE
+	)
+	# El encuadre del corcho sigue su superficie, no el aspecto panorámico del local.
+	if numero == 4:
+		var corcho: MeshInstance3D = _local.get_node("Estructura/board tareas")
+		_camara.size = (corcho.global_transform * corcho.get_aabb()).size.y
 	if numero == 9:
 		for caja: Node3D in _cajas:
 			caja.global_transform = caja.call("pose_de_estanteria")
@@ -140,7 +152,7 @@ func _fotografiar(plano: Array) -> bool:
 	if not _camara.get_global_transform_interpolated().is_equal_approx(preparada):
 		_fallar("cambió la pose dibujada de Intro%d" % numero)
 		return false
-	var centro := Vector2(TAMANO) / 2.0
+	var centro := Vector2(tamano) / 2.0
 	var desde := _camara.project_ray_origin(centro)
 	var hacia := desde + _camara.project_ray_normal(centro) * 25.0
 	var rayo := PhysicsRayQueryParameters3D.create(desde, hacia)
@@ -153,7 +165,7 @@ func _fotografiar(plano: Array) -> bool:
 		_fallar("Intro%d esperaba %s; encontró %s" % [numero, plano[4], ruta])
 		return false
 	var imagen := root.get_texture().get_image()
-	if imagen.is_empty() or imagen.get_size() != TAMANO:
+	if imagen.is_empty() or imagen.get_size() != tamano:
 		_fallar("imagen vacía o tamaño incorrecto de Intro%d" % numero)
 		return false
 	var archivo := _salida.path_join("intro-%02d.png" % numero)
