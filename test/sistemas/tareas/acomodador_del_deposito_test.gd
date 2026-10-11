@@ -21,8 +21,16 @@ func test_cumple_descumple_y_congela_el_cierre() -> void:  # AC-STK-079, AC-SHF-
 	assert_array(cambios).contains_exactly([1, 0])
 	estado.en_mano = true
 	acomodador.revisar([estado])
-	reloj.avanzar(1.0)
+	assert_bool(reloj.obligatoria(Tarea.Tipo.ORDENAR_LAS_CAJAS).completada()).is_false()
+	assert_array(cambios).contains_exactly([1, 0])
 	estado.en_mano = false
+	estado.apoyo = OrdenDelDeposito.Apoyo.ESTANTERIA
+	acomodador.revisar([estado])
+	assert_bool(reloj.obligatoria(Tarea.Tipo.ORDENAR_LAS_CAJAS).completada()).is_true()
+	assert_array(cambios).contains_exactly([1, 0, 1])
+	reloj.avanzar(1.0)
+	estado.en_mano = true
+	estado.apoyo = OrdenDelDeposito.Apoyo.OTRO
 	acomodador.revisar([estado])
 	assert_bool(reloj.obligatoria(Tarea.Tipo.ORDENAR_LAS_CAJAS).completada()).is_true()
 	assert_array(cambios).contains_exactly([1, 0, 1])

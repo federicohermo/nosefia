@@ -6,7 +6,6 @@ extends Node
 
 signal nuevo_juego_pedido
 signal continuar_pedido
-signal confirmacion_pedida
 signal salir_pedido
 
 var _pidio := false
@@ -28,25 +27,15 @@ func elegir(opcion: MenuDeInicio.Opcion) -> void:
 		return
 	match opcion:
 		MenuDeInicio.Opcion.NUEVO_JUEGO:
-			if _menu.nuevo_juego_pide_confirmacion():
-				confirmacion_pedida.emit()
-			else:
-				confirmar_nuevo_juego()
+			_pidio = true
+			_guardado.borrar()
+			nuevo_juego_pedido.emit()
 		MenuDeInicio.Opcion.CONTINUAR:
 			_pidio = true
 			continuar_pedido.emit()
 		MenuDeInicio.Opcion.SALIR:
 			_pidio = true
 			salir_pedido.emit()
-
-
-## Recién acá se borra el guardado: cancelar la confirmación no pasa por esta función.
-func confirmar_nuevo_juego() -> void:
-	if _pidio:
-		return
-	_pidio = true
-	_guardado.borrar()
-	nuevo_juego_pedido.emit()
 
 
 ## Vuelve a aceptar un pedido. Sirve cuando la escena no llegó a cambiar.

@@ -25,7 +25,6 @@ const EN_LA_FILA: Array[MenuDeInicio.Opcion] = [
 
 @export var _opciones: VBoxContainer
 @export var _pedidos: PedidosDelMenu
-@export var _confirmacion: ConfirmationDialog
 @export var _marco: Control
 @export var _fila: HBoxContainer
 
@@ -64,8 +63,6 @@ func _ready() -> void:
 			_opciones.add_child(boton)
 	_pedidos.nuevo_juego_pedido.connect(empezar_partida_nueva)
 	_pedidos.continuar_pedido.connect(entrar_al_almacen)
-	_pedidos.confirmacion_pedida.connect(_confirmacion.popup_centered)
-	_confirmacion.confirmed.connect(_pedidos.confirmar_nuevo_juego)
 	# Se crean acá y no al declararlos: una instancia que nunca entra al árbol los dejaría
 	# colgados.
 	_carga = CargaEnSegundoPlano.new()

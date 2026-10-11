@@ -187,7 +187,7 @@ func _ajustar() -> void:
 	LienzoDeManada.ajustar(_lienzo, encuadre)
 	# El recordatorio pertenece al borde de la ventana, no al lienzo centrado del teléfono.
 	_recordatorio.scale = _lienzo.scale
-	_recordatorio.position = Vector2(16.0, -86.0) * _lienzo.scale + Vector2(0, encuadre.y)
+	_recordatorio.position = Vector2(36.0, -130.0) * _lienzo.scale + Vector2(0, encuadre.y)
 	_pintar_posicion()
 
 

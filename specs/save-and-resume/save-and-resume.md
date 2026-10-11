@@ -79,16 +79,13 @@ opciones, en este orden: **continuar, nuevo juego, logros, configuraciones y sal
 
 SI no hay guardado, ENTONCES «continuar» NO DEBE estar disponible y NO DEBE llevar a ningún lado.
 
-### BR-SAV-012 — Empezar de nuevo sobre una partida pide confirmación
+### BR-SAV-012 — Nuevo juego inicia directamente una partida nueva
 
-SI hay un guardado, ENTONCES «nuevo juego» DEBE pedir confirmación antes de borrarlo. Es la pérdida
-que no se puede deshacer.
-
-CUANDO se acepta empezar una partida nueva, el sistema DEBE borrar el guardado anterior,
+CUANDO se elige «nuevo juego», con o sin guardado, el sistema DEBE iniciar directamente una
+partida nueva sin mostrar una confirmación y borrar el guardado anterior,
 fundir el menú a negro durante 0,3 segundos reales, cargar el juego y presentar las instrucciones
-de Enrique antes de la entrada a la primera noche. Cancelar la confirmación NO DEBE iniciar ese
-fundido ni borrar el
-guardado. SI falla la carga, ENTONCES DEBE volver al menú sin quedar en negro.
+de Enrique antes de la entrada a la primera noche. SI falla la carga, ENTONCES DEBE volver al
+menú sin quedar en negro.
 
 ### BR-SAV-013 — Salir pasa por un solo lugar
 
@@ -193,10 +190,11 @@ DADO que no hay guardado ENTONCES continuar no está disponible, elegirlo no pro
 de entrar al juego, y el botón está deshabilitado. Los tres juntos: arreglar uno solo no alcanza
 para creer que está cerrado.
 
-### AC-SAV-014 — Empezar sobre una partida confirma *(verifica BR-SAV-012)*
+### AC-SAV-014 — Nuevo juego es directo con o sin guardado *(verifica BR-SAV-012)*
 
-DADO un guardado CUANDO se elige nuevo juego ENTONCES el pedido es el de confirmar y no el
-de nuevo juego; recién al confirmar llega el de nuevo juego. Sin guardado, es directo.
+DADO un guardado CUANDO se elige nuevo juego ENTONCES se borra y se pide una partida nueva
+directamente, sin confirmación. DADO ningún guardado ENTONCES el mismo gesto inicia una partida
+nueva. CUANDO se repite el clic durante la entrada ENTONCES se emite un único pedido.
 
 ### AC-SAV-015 — Salir por un solo lugar *(verifica BR-SAV-013)*
 
@@ -239,10 +237,9 @@ DADO un guardado válido en la jornada 3 con 7 medios de apercibimiento CUANDO s
 ENTONCES se conservan jornada 3 y 7 medios, se anuncia «NOCHE 3» y las instrucciones no están
 en pantalla. El turno permanece retenido hasta terminar la subida de la persiana.
 
-### AC-SAV-022 — Nuevo juego confirma antes del fundido *(verifica BR-SAV-012)*
+### AC-SAV-022 — Nuevo juego funde directamente *(verifica BR-SAV-012)*
 
-DADO un guardado CUANDO se elige nuevo juego y se cancela ENTONCES el guardado se conserva y el
-menú no se funde a negro. CUANDO se confirma ENTONCES se borra el guardado, el menú se funde
+DADO un guardado CUANDO se elige nuevo juego ENTONCES se borra el guardado, el menú se funde
 a negro en 0,3 segundos reales, se completa la carga y se muestran las instrucciones de Enrique.
 DADO ningún guardado CUANDO
 se elige nuevo juego ENTONCES se sigue esa misma secuencia sin confirmación. DADO una carga

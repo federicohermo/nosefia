@@ -327,8 +327,9 @@ territorio de juicio humano; las restantes condiciones se verifican en AC-STK-07
 ### BR-STK-039 — Ordenar sigue el apoyo de todas las cajas
 
 MIENTRAS queda turno y la jornada declara ordenar las cajas, el sistema DEBE contar esa
-obligatoria como cumplida si cada caja está en la mano —también examinada desde ella— o su cadena
-de apoyos termina en un pallet de las tres estanterías del depósito o en una caja sostenida.
+obligatoria como cumplida si cada caja está suelta y su cadena de apoyos termina en un pallet
+de las tres estanterías del depósito. Una caja sostenida —también examinada desde la mano— o
+apoyada sobre una caja sostenida NO DEBE contar como ordenada.
 Un pallet del piso NO DEBE contar como estantería. Una cadena que termina en otra superficie,
 en una caja ausente o en un ciclo NO DEBE contar como ordenada. Una lista vacía DEBE contestar
 que está ordenada. CUANDO una caja deja de cumplir la condición, el sistema DEBE descumplir
@@ -707,20 +708,22 @@ DADO el conjunto de cajas CUANDO se evalúa su orden ENTONCES:
 | Todas sobre estanterías salvo una en el piso | pendiente |
 | Una sobre otra apoyada en estantería; el resto, en estanterías | cumplida |
 | Una sobre otra que está en el piso | pendiente |
-| Todas en estanterías salvo una sostenida, incluso examinada desde la mano | cumplida |
+| Todas en estanterías salvo una sostenida, incluso examinada desde la mano | pendiente |
 | La misma caja soltada en el piso | pendiente |
 | Una sobre el pallet del piso | pendiente |
 | Dos que se declaran apoyadas una sobre otra | pendiente |
 | Una cuyo apoyo es una caja que no está en el conjunto | pendiente |
-| Una cuyo apoyo es una caja sostenida; el resto, en estanterías | cumplida |
+| Una cuyo apoyo es una caja sostenida; el resto, en estanterías | pendiente |
 | Ninguna caja | cumplida |
 
 ### AC-STK-079 — La última caja cumple y puede descumplir *(verifica BR-STK-039)*
 
 DADO la jornada 1 y todas las cajas salvo una ordenadas CUANDO se apoya la última en una
 estantería ENTONCES ordenar se cumple y el HUD sube en 1. CUANDO se baja una caja al piso y queda
-en reposo ENTONCES se descumple y el HUD baja en 1. CUANDO se la sostiene ENTONCES vuelve a contar,
-también al examinarla desde la mano. DADO el turno cerrado CUANDO se mueve esa caja ENTONCES la
+en reposo ENTONCES se descumple y el HUD baja en 1. CUANDO se la sostiene o se la examina desde
+la mano ENTONCES sigue pendiente. CUANDO se la suelta sobre una estantería ENTONCES vuelve a
+cumplirse. CUANDO se levanta una caja de la estantería ENTONCES vuelve a quedar pendiente.
+DADO el turno cerrado CUANDO se mueve esa caja ENTONCES la
 cuenta permanece como al cierre. DADO una jornada que no declara ordenar CUANDO todas quedan
 en estanterías ENTONCES no se suma una obligatoria ajena.
 

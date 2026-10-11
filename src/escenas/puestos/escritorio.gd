@@ -62,6 +62,7 @@ func _input(evento: InputEvent) -> void:
 	if evento.is_action_pressed(ReglasDelJugador.ACCION_USAR):
 		get_viewport().set_input_as_handled()
 		cerrar()
+		jugador.tomar_el_cursor_desde_entrada()
 
 
 func _al_abrirse(app: Computadora.App) -> void:

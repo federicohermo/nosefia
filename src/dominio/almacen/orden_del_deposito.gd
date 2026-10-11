@@ -23,7 +23,7 @@ class Estado:
 		sobre = debajo
 
 
-## Sigue cada apoyo hasta una estantería o una mano; una cadena incompleta nunca ordena.
+## Sigue cada apoyo hasta una estantería; una mano o una cadena incompleta nunca ordena.
 static func ordenadas(estados: Array[Estado]) -> bool:
 	var por_producto: Dictionary[Producto.Id, Estado] = {}
 	for estado in estados:
@@ -31,7 +31,11 @@ static func ordenadas(estados: Array[Estado]) -> bool:
 	for inicio in estados:
 		var actual := inicio
 		var visitadas: Array[Producto.Id] = []
-		while not actual.en_mano and actual.apoyo != Apoyo.ESTANTERIA:
+		while true:
+			if actual.en_mano:
+				return false
+			if actual.apoyo == Apoyo.ESTANTERIA:
+				break
 			if actual.producto in visitadas or actual.apoyo != Apoyo.CAJA:
 				return false
 			visitadas.append(actual.producto)

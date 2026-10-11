@@ -6,7 +6,8 @@ func test_la_tabla_de_apoyos_y_la_mano_resuelven_el_orden() -> void:  # AC-STK-0
 	for fila: Array in [
 		[OrdenDelDeposito.Apoyo.ESTANTERIA, false, true],
 		[OrdenDelDeposito.Apoyo.OTRO, false, false],
-		[OrdenDelDeposito.Apoyo.OTRO, true, true]
+		[OrdenDelDeposito.Apoyo.OTRO, true, false],
+		[OrdenDelDeposito.Apoyo.ESTANTERIA, true, false]
 	]:
 		var abajo := OrdenDelDeposito.Estado.new(Producto.Id.ACTRONCITO, fila[1], fila[0])
 		var arriba := OrdenDelDeposito.Estado.new(

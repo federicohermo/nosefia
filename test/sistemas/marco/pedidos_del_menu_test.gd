@@ -9,7 +9,6 @@ const UNICO_LUGAR_DEL_CIERRE := "res://src/sistemas/marco/pedidos_del_menu.gd"
 var _nuevos: int = 0
 var _salidas: int = 0
 var _continuaciones: int = 0
-var _confirmaciones: int = 0
 var _guardado: Guardado
 
 
@@ -17,7 +16,6 @@ func _pedidos(hay_guardado: bool = false) -> PedidosDelMenu:
 	_nuevos = 0
 	_salidas = 0
 	_continuaciones = 0
-	_confirmaciones = 0
 	_guardado = Guardado.new()
 	_guardado.ruta = create_temp_dir("pedidos").path_join("partida.guardado")
 	_guardado.borrar()
@@ -28,7 +26,6 @@ func _pedidos(hay_guardado: bool = false) -> PedidosDelMenu:
 	pedidos.nuevo_juego_pedido.connect(func() -> void: _nuevos += 1)
 	pedidos.salir_pedido.connect(func() -> void: _salidas += 1)
 	pedidos.continuar_pedido.connect(func() -> void: _continuaciones += 1)
-	pedidos.confirmacion_pedida.connect(func() -> void: _confirmaciones += 1)
 	return pedidos
 
 
@@ -62,7 +59,7 @@ func test_las_opciones_deshabilitadas_no_piden_nada() -> void:
 	pedidos.elegir(MenuDeInicio.Opcion.CONTINUAR)
 	pedidos.elegir(MenuDeInicio.Opcion.CONFIGURACIONES)
 	pedidos.elegir(MenuDeInicio.Opcion.LOGROS)
-	assert_int(_nuevos + _salidas + _continuaciones + _confirmaciones).is_equal(0)
+	assert_int(_nuevos + _salidas + _continuaciones).is_equal(0)
 
 
 func test_con_guardado_continuar_pide_una_sola_vez_con_doble_clic() -> void:
@@ -74,21 +71,16 @@ func test_con_guardado_continuar_pide_una_sola_vez_con_doble_clic() -> void:
 	assert_bool(_guardado.hay_guardado()).is_true()
 
 
-func test_con_guardado_nuevo_juego_confirma_antes_de_borrar() -> void:  # AC-SAV-014
+func test_con_guardado_nuevo_juego_borra_y_empieza_directamente() -> void:  # AC-SAV-014
 	var pedidos := _pedidos(true)
 	pedidos.elegir(MenuDeInicio.Opcion.NUEVO_JUEGO)
-	assert_int(_confirmaciones).is_equal(1)
-	assert_int(_nuevos).is_equal(0)
-	assert_bool(_guardado.hay_guardado()).is_true()
-	pedidos.confirmar_nuevo_juego()
-	pedidos.confirmar_nuevo_juego()
+	pedidos.elegir(MenuDeInicio.Opcion.NUEVO_JUEGO)
 	assert_int(_nuevos).is_equal(1)
 	assert_bool(_guardado.hay_guardado()).is_false()
 
 
 func test_sin_guardado_nuevo_juego_es_directo() -> void:  # AC-SAV-014
 	_pedidos().elegir(MenuDeInicio.Opcion.NUEVO_JUEGO)
-	assert_int(_confirmaciones).is_equal(0)
 	assert_int(_nuevos).is_equal(1)
 
 

@@ -107,22 +107,6 @@ func test_un_guardado_futuro_deja_continuar_cerrado_y_el_archivo_intacto() -> vo
 	assert_bool(FileAccess.file_exists(_ruta)).is_true()
 
 
-func test_con_guardado_nuevo_juego_abre_la_confirmacion_y_cancelar_no_borra() -> void:
-	_con_guardado()
-	var menu := _menu()
-	var pedidos: PedidosDelMenu = menu.get_node("PedidosDelMenu")
-	var nuevos: Array[int] = [0]
-	pedidos.nuevo_juego_pedido.connect(func() -> void: nuevos[0] += 1)
-	var confirmacion: ConfirmationDialog = menu.get_node("Confirmacion")
-	assert_bool(confirmacion.visible).is_false()
-	_boton(menu, "NUEVO JUEGO").pressed.emit()
-	assert_bool(confirmacion.visible).is_true()
-	confirmacion.canceled.emit()
-	assert_int(nuevos[0]).is_equal(0)
-	assert_bool(FileAccess.file_exists(_ruta)).is_true()
-	assert_bool(confirmacion.confirmed.is_connected(pedidos.confirmar_nuevo_juego)).is_true()
-
-
 func test_configuraciones_y_salir_van_en_la_fila_debajo_de_la_columna() -> void:
 	var menu := _menu()
 	var columna: Array[String] = []
@@ -142,7 +126,7 @@ func test_el_menu_no_declara_estilos_propios() -> void:
 	assert_str(texto).not_contains("theme_override_")
 
 
-func test_nuevo_confirma_funde_y_continuar_conserva_su_entrada() -> void:  # AC-SAV-022
+func test_nuevo_funde_directamente_y_continuar_conserva_su_entrada() -> void:  # AC-SAV-022
 	_con_guardado()
 	var menu := _menu()
 	menu.set_process(false)
@@ -152,15 +136,8 @@ func test_nuevo_confirma_funde_y_continuar_conserva_su_entrada() -> void:  # AC-
 	assert_bool(pedidos.nuevo_juego_pedido.is_connected(menu.empezar_partida_nueva)).is_true()
 	assert_bool(pedidos.continuar_pedido.is_connected(menu.entrar_al_almacen)).is_true()
 	var negro: ColorRect = menu.get("_fundido")
-	var confirmacion: ConfirmationDialog = menu.get_node("Confirmacion")
 	_boton(menu, "NUEVO JUEGO").pressed.emit()
-	assert_bool(confirmacion.visible).is_true()
-	confirmacion.canceled.emit()
-	assert_bool(FileAccess.file_exists(_ruta)).is_true()
-	assert_bool(negro.visible).is_false()
-	assert_bool(menu.get("_fundiendo")).is_false()
-	_boton(menu, "NUEVO JUEGO").pressed.emit()
-	confirmacion.confirmed.emit()
+	assert_array(menu.find_children("*", "ConfirmationDialog", true, false)).is_empty()
 	assert_bool(FileAccess.file_exists(_ruta)).is_false()
 	assert_bool(negro.visible).is_true()
 	assert_bool(menu.get("_nuevo_juego")).is_true()
@@ -192,6 +169,6 @@ func test_nuevo_confirma_funde_y_continuar_conserva_su_entrada() -> void:  # AC-
 	var sin_guardado := _menu()
 	sin_guardado.set_process(false)
 	_boton(sin_guardado, "NUEVO JUEGO").pressed.emit()
-	assert_bool((sin_guardado.get_node("Confirmacion") as ConfirmationDialog).visible).is_false()
+	assert_array(sin_guardado.find_children("*", "ConfirmationDialog", true, false)).is_empty()
 	assert_bool(sin_guardado.get("_fundiendo")).is_true()
 	assert_bool((sin_guardado.get("_fundido") as ColorRect).visible).is_true()

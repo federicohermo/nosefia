@@ -227,15 +227,15 @@ autowrap_mode = 3
 
 [node name="Recordatorio" type="HBoxContainer" parent="."]
 theme = ExtResource("2")
-offset_left = 16.0
-offset_top = 994.0
-offset_right = 116.0
-offset_bottom = 1064.0
+offset_left = 36.0
+offset_top = 950.0
+offset_right = 162.0
+offset_bottom = 1044.0
 mouse_filter = 2
 theme_override_constants/separation = 14
 
 [node name="Icono" type="TextureRect" parent="Recordatorio"]
-custom_minimum_size = Vector2(42, 70)
+custom_minimum_size = Vector2(56, 94)
 layout_mode = 2
 texture = ExtResource("4")
 expand_mode = 1
@@ -244,5 +244,5 @@ mouse_filter = 2
 
 [node name="Tecla" type="Label" parent="Recordatorio"]
 layout_mode = 2
-theme_override_font_sizes/font_size = 36
+theme_override_font_sizes/font_size = 44
 mouse_filter = 2

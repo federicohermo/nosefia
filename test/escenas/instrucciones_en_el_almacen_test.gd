@@ -247,8 +247,6 @@ func test_abandonar_preparacion_no_escribe_y_preserva_checkpoint_anterior() -> v
 			pedidos.preparar(MenuDeInicio.new(false, true), guardado)
 			pedidos.nuevo_juego_pedido.connect(_preparar_nueva)
 			pedidos.elegir(MenuDeInicio.Opcion.NUEVO_JUEGO)
-			assert_str(FileAccess.get_file_as_string(guardado.ruta)).is_equal(anterior)
-			pedidos.confirmar_nuevo_juego()
 			assert_bool(guardado.hay_guardado()).is_false()
 			assert_bool(_instrucciones().visible).is_true()
 			if preparacion == "entrada_nueva":
