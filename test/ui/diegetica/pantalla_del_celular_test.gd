@@ -72,8 +72,10 @@ func test_menu_usa_imagen_nombre_y_cuenta_solo_si_hay_no_leidos() -> void:  # AC
 	var fila := boton.get_child(0)
 	var imagen: TextureRect = fila.get_child(0).get_child(0)
 	assert_object(imagen.texture).is_same(conversacion.imagen)
-	assert_str((fila.get_child(1) as Label).text).is_equal(conversacion.nombre.to_upper())
-	assert_str((fila.get_child(2) as Label).text).is_equal("2")
+	assert_str((fila.find_child("Nombre", true, false) as Label).text).is_equal(
+		conversacion.nombre.to_upper()
+	)
+	assert_str((fila.find_child("NoLeidos", true, false).get_child(0) as Label).text).is_equal("2")
 	var pedidos: Array[Conversacion.Interlocutor] = []
 	pantalla.chat_pedido.connect(
 		func(quien: Conversacion.Interlocutor) -> void: pedidos.append(quien)
@@ -119,7 +121,9 @@ func test_scroll_y_foto_conservan_lugar() -> void:  # AC-INV-027, AC-INV-031
 	var pedidos: Array[int] = []
 	pantalla.foto_pedida.connect(func(indice: int) -> void: pedidos.append(indice))
 	var foto: TextureButton = (
-		(pantalla.get("_mensajes") as Node).get_child(2).get_child(0).get_child(1)
+		(pantalla.get("_mensajes") as Node)
+		. get_child(2)
+		. find_children("*", "TextureButton", true, false)[0]
 	)
 	foto.pressed.emit()
 	assert_array(pedidos).is_equal([2])
@@ -165,7 +169,11 @@ func test_cuerpo_y_adjunto_conservan_texto_y_dibujan_negrita() -> void:
 	var mensaje := conversacion.mensajes[0]
 	mensaje.texto = "Texto [b]importante[/b] íntegro."
 	pantalla.mostrar_chat(conversacion, conversacion.mensajes, false)
-	var cuerpo := (pantalla.get("_mensajes") as Node).get_child(0).get_child(0).get_child(1)
+	var cuerpo := (
+		(pantalla.get("_mensajes") as Node)
+		. get_child(0)
+		. find_children("*", "RichTextLabel", true, false)[0]
+	)
 	assert_bool(cuerpo is RichTextLabel).is_true()
 	if cuerpo is RichTextLabel:
 		assert_str(cuerpo.text).is_equal(mensaje.texto)
@@ -182,3 +190,27 @@ func test_cuerpo_y_adjunto_conservan_texto_y_dibujan_negrita() -> void:
 	if adjunto is RichTextLabel:
 		assert_str(adjunto.text).is_equal(mensaje.texto)
 		assert_str(adjunto.get_parsed_text()).is_equal("Texto importante íntegro.")
+
+
+func test_buscar_filtra_contactos_y_borrar_restaura_sin_cambiar_lecturas() -> void:
+	var pantalla := _pantalla()
+	var conversacion := _conversacion()
+	var bandeja := Bandeja.new([conversacion])
+	pantalla.mostrar_menu(bandeja)
+	var buscar: LineEdit = pantalla.get("_busqueda")
+	var lista: VBoxContainer = pantalla.get("_mensajes")
+	buscar.text_changed.emit("CONTACTO")
+	assert_int(lista.get_child_count()).is_equal(1)
+	buscar.text_changed.emit("no existe")
+	assert_int(lista.get_child_count()).is_zero()
+	assert_int(bandeja.no_leidos(conversacion.interlocutor)).is_equal(2)
+	buscar.text_changed.emit("")
+	assert_int(lista.get_child_count()).is_equal(1)
+	var vista_previa := lista.find_child("VistaPrevia", true, false) as Label
+	assert_str(vista_previa.text).is_equal(conversacion.mensajes[-1].texto)
+	pantalla.mostrar_chat(conversacion, conversacion.mensajes, false)
+	assert_bool(buscar.visible).is_false()
+	assert_bool((pantalla.get("_entrada") as LineEdit).editable).is_false()
+	pantalla.mostrar_menu(bandeja)
+	assert_bool(buscar.visible).is_true()
+	assert_str(buscar.text).is_empty()
