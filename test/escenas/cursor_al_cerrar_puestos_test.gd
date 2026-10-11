@@ -1,7 +1,7 @@
 extends GdUnitTestSuite
 
 
-func _probar_cierre(nombre: String, desde_popup: bool = false) -> void:
+func _probar_cierre(nombre: String, desde_popup: bool = false) -> Array[Input.MouseMode]:
 	var local: Node3D = auto_free(load("res://src/escenas/almacen.tscn").instantiate())
 	local.set("_partida", Partida.nueva())
 	add_child(local)
@@ -36,27 +36,32 @@ func _probar_cierre(nombre: String, desde_popup: bool = false) -> void:
 	else:
 		puesto.call("_input", derecho)
 	assert_bool(jugador.call("suspendido")).is_false()
-	assert_array(escrituras).is_equal([Input.MOUSE_MODE_CAPTURED])
 	for cuadro: int in 3:
 		jugador.call("_aplicar_el_modo_del_cursor")
-	assert_array(escrituras).is_equal([Input.MOUSE_MODE_CAPTURED])
+	return escrituras
 
 
 func test_salir_de_ventanilla_recaptura_con_el_mismo_clic() -> void:  # AC-PLY-056
-	_probar_cierre("Estructura/Ventanilla")
+	assert_array(_probar_cierre("Estructura/Ventanilla")).is_equal([Input.MOUSE_MODE_CAPTURED])
 
 
 func test_salir_de_computadora_recaptura_con_el_mismo_clic() -> void:  # AC-PLY-056
-	_probar_cierre("Estructura/base compu/StaticBody3D")
+	assert_array(_probar_cierre("Estructura/base compu/StaticBody3D")).is_equal(
+		[Input.MOUSE_MODE_CAPTURED]
+	)
 
 
 func test_salir_de_nota_recaptura_con_el_mismo_clic() -> void:  # AC-PLY-071
-	_probar_cierre("Estructura/NotasDelAlmacen")
+	assert_array(_probar_cierre("Estructura/NotasDelAlmacen")).is_equal([Input.MOUSE_MODE_CAPTURED])
 
 
 func test_salir_de_caja_recaptura_con_el_mismo_clic() -> void:  # AC-PLY-072
-	_probar_cierre("Estructura/cajaregistradora/StaticBody3D")
+	assert_array(_probar_cierre("Estructura/cajaregistradora/StaticBody3D")).is_equal(
+		[Input.MOUSE_MODE_CAPTURED]
+	)
 
 
 func test_salir_del_popup_de_caja_recaptura_con_el_mismo_clic() -> void:  # AC-PLY-072
-	_probar_cierre("Estructura/cajaregistradora/StaticBody3D", true)
+	assert_array(_probar_cierre("Estructura/cajaregistradora/StaticBody3D", true)).is_equal(
+		[Input.MOUSE_MODE_CAPTURED]
+	)
