@@ -294,8 +294,9 @@ Los tres mensajes de prueba previos no aparecen entre los textos de la conversac
 
 DADO el chat de Enrique desde la jornada 1 CUANDO se recorren sus siete fotos ENTONCES cada una
 precede inmediatamente al texto de su Intro y ampliarla muestra ese texto, nunca el siguiente
-paso. CUANDO se valida cada captura ENTONCES existe una imagen de 960×540 y el rayo central de
-su encuadre alcanza el tema correspondiente: nota, ventanilla, lector y caja, computadora,
+paso. CUANDO se valida cada captura ENTONCES existe una imagen con proporción adecuada a su
+marco y el rayo central de su encuadre alcanza el tema correspondiente: corcho con sus dos
+notas, ventanilla, lector y caja, computadora,
 estantería con cajas, útiles y notas del baño, y cajas del depósito en el piso. Preparar la foto
 de Intro 9 y después la de Intro 13 deja restaurada la pila jugable de la jornada 1.
 
