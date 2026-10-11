@@ -48,6 +48,12 @@ Si el tipo no está claro, preguntá. Es la decisión que define la rama y el re
 
 **Los límites de archivo y los criterios salen del árbol de hoy, no de la memoria.**
 
+**Una secuencia de mensajes no define la cantidad de pantallas.** Revisar todos los frames,
+reacciones y motion antes de convertir párrafos en pasos. Registrar agrupaciones, reemplazo o
+acumulación, navegación fija y presencia de scroll. En #398, catorce textos correspondían a doce
+pantallas independientes. Comprobar también la continuidad de paneles entre pasos y contrastar
+las capas omitidas en un frame con las indicaciones vigentes del usuario.
+
 **Agregar interacción no implica que falte arte.** Antes de pedir generar, reemplazar u ocultar
 un soporte visual, inspeccionar sus mallas, cuerpos, materiales e imágenes, y cruzarlos con las
 decisiones vigentes del usuario. Si el soporte ya existe, declarar qué lectura o dato le falta
