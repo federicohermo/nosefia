@@ -97,7 +97,7 @@ func test_leer_dos_minutos_no_cobra_y_comenzar_anuncia_una_sola_noche() -> void:
 		await get_tree().process_frame
 	assert_float(_restante()).is_equal(restante)
 	assert_bool(Guardado.new().hay_guardado()).is_false()
-	for _paso in 12:
+	for _paso in 11:
 		_siguiente().pressed.emit()
 	assert_str(_siguiente().text).is_equal("OK")
 	_siguiente().pressed.emit()
@@ -147,7 +147,7 @@ func test_fade_y_subida_usan_trescientos_milisegundos_reales() -> void:  # AC-EM
 	assert_bool(_persiana().visible).is_true()
 	assert_bool((_persiana().get("_placa") as Label).visible).is_false()
 	# La entrada posterior conserva 1 s quieta, 0,5 s de fade y 1 s de subida.
-	for _paso in 14:
+	for _paso in 12:
 		_siguiente().pressed.emit()
 	ahora[0] += 1000000
 	_persiana().call("_process", 99.0)
@@ -234,7 +234,7 @@ func test_continuar_carga_tres_y_siete_medios_sin_instrucciones() -> void:  # AC
 func test_seguir_despues_de_la_primera_noche_no_repite_la_intro() -> void:
 	Guardado.new().borrar()
 	_preparar_nueva()
-	for _paso in 13:
+	for _paso in 12:
 		_siguiente().pressed.emit()
 	assert_bool(_instrucciones().visible).is_false()
 	_persiana().terminar()
@@ -274,7 +274,7 @@ func test_abandonar_preparacion_no_escribe_y_preserva_checkpoint_anterior() -> v
 			assert_bool(guardado.hay_guardado()).is_false()
 			assert_bool(_instrucciones().visible).is_true()
 			if preparacion == "entrada_nueva":
-				for _paso in 14:
+				for _paso in 12:
 					_siguiente().pressed.emit()
 				assert_bool(_persiana().visible).is_true()
 		var salidas: Array[int] = [0]

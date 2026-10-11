@@ -56,44 +56,42 @@ func _comprobar_pantalla(pantalla: PantallaDeInstrucciones, numero: int) -> void
 	for indice in paso.textos.size():
 		var cuerpo: RichTextLabel = cuerpos[indice]
 		assert_str(cuerpo.get_parsed_text()).is_equal(_sin_formato(paso.textos[indice].texto))
-	if numero == 13:
+	if numero == 12:
 		assert_int(cuerpos.size()).is_equal(paso.textos.size())
 	var fotos: Array[Node] = contenido.find_children("*", "TextureRect", false, false)
-	var cantidad := (
-		1 + (1 if paso.foto != null else 0) + (2 if numero == 5 else (1 if numero == 4 else 0))
-	)
+	var cantidad := 1 + (1 if paso.foto != null else 0) + (2 if numero == 4 else 0)
 	assert_int(fotos.size()).is_equal(cantidad)
 	if paso.foto != null:
 		var foto: TextureRect = fotos[1]
 		assert_object(foto.texture).is_same(paso.foto.foto)
 	var contador: Label = pantalla.get("_contador")
-	assert_str(contador.text).is_equal("%d/13" % numero)
+	assert_str(contador.text).is_equal("%d/12" % numero)
 	var retrato: Control = pantalla.get("_retrato")
 	assert_bool(retrato.visible).is_true()
 	var volver := _boton(pantalla, "_volver")
 	assert_bool(volver.visible).is_true()
 	assert_bool(volver.disabled).is_equal(numero == 1)
-	assert_str(_boton(pantalla, "_siguiente").text).is_equal("OK" if numero == 13 else "Siguiente")
+	assert_str(_boton(pantalla, "_siguiente").text).is_equal("OK" if numero == 12 else "Siguiente")
 	assert_int(pantalla.find_children("*", "ScrollContainer", true, false).size()).is_zero()
 
 
-func test_trece_pantallas_y_ok_idempotente() -> void:  # AC-EMP-045, AC-EMP-046
+func test_doce_pantallas_y_ok_idempotente() -> void:  # AC-EMP-045, AC-EMP-046
 	var pantalla := _pantalla()
 	pantalla.mostrar(GUION.mensajes)
 	var botones: Control = pantalla.get("_botones")
 	var posicion := botones.position
 	var siguiente := _boton(pantalla, "_siguiente")
-	for numero in range(1, 14):
+	for numero in range(1, 13):
 		await get_tree().process_frame
 		await get_tree().process_frame
 		_comprobar_pantalla(pantalla, numero)
 		assert_vector(botones.position).is_equal(posicion)
-		if numero < 13:
+		if numero < 12:
 			siguiente.pressed.emit()
 	var volver := _boton(pantalla, "_volver")
 	volver.pressed.emit()
 	await get_tree().process_frame
-	_comprobar_pantalla(pantalla, 12)
+	_comprobar_pantalla(pantalla, 11)
 	var comienzos: Array[int] = [0]
 	pantalla.comenzar_pedido.connect(func() -> void: comienzos[0] += 1)
 	siguiente.pressed.emit()
@@ -124,7 +122,7 @@ func test_pantallas_sin_scroll_en_ambos_viewports() -> void:  # AC-EMP-045, AC-E
 		pantalla.mostrar(GUION.mensajes)
 		pantalla.set("_avance", 1.0)
 		pantalla.call("_ajustar")
-		for numero in range(1, 14):
+		for numero in range(1, 13):
 			await get_tree().process_frame
 			await get_tree().process_frame
 			var botones: Control = pantalla.get("_botones")
@@ -143,7 +141,7 @@ func test_pantallas_sin_scroll_en_ambos_viewports() -> void:  # AC-EMP-045, AC-E
 			await get_tree().process_frame
 			assert_vector(botones.global_position).is_equal(posicion)
 			_comprobar_pantalla(pantalla, numero)
-			if numero < 13:
+			if numero < 12:
 				_boton(pantalla, "_siguiente").pressed.emit()
 
 

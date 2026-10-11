@@ -14,7 +14,7 @@ func test_la_primera_jornada_solo_ofrece_la_introduccion_documentada() -> void: 
 	assert_int(bandeja.conversaciones()[0].interlocutor).is_equal(quien)
 	var mensajes := bandeja.mensajes_de(quien)
 	assert_array(mensajes).is_equal(Conversacion.de(quien).mensajes)
-	assert_int(mensajes.size()).is_equal(20)
+	assert_int(mensajes.size()).is_equal(19)
 	var textos := 0
 	var fotos := 0
 	for mensaje in mensajes:
@@ -24,14 +24,14 @@ func test_la_primera_jornada_solo_ofrece_la_introduccion_documentada() -> void: 
 			fotos += 1
 		else:
 			textos += 1
-	assert_int(textos).is_equal(13)
+	assert_int(textos).is_equal(12)
 	assert_int(fotos).is_equal(7)
-	assert_int(bandeja.no_leidos_totales()).is_equal(20)
+	assert_int(bandeja.no_leidos_totales()).is_equal(19)
 	# La reconstrucción desde un guardado no depende de una bandeja previamente filtrada.
 	var restaurada := Bandeja.new(Conversacion.desde_disco())
 	restaurada.abrir_jornada(1)
 	assert_array(restaurada.conversaciones()).is_equal(bandeja.conversaciones())
-	assert_int(restaurada.no_leidos_totales()).is_equal(20)
+	assert_int(restaurada.no_leidos_totales()).is_equal(19)
 	# No se asigna arbitrariamente una noche futura a los textos retirados.
 	restaurada.abrir_jornada(5)
 	assert_int(restaurada.conversaciones().size()).is_equal(1)

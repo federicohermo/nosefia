@@ -13,7 +13,7 @@ const SEPARADOR := preload("res://assets/ui/manada/instrucciones/separador.svg")
 const CAJA := preload("res://assets/ui/manada/instrucciones/caja.png")
 const TICKET := preload("res://assets/ui/manada/instrucciones/ticket.png")
 const ALTURAS_DEL_SEPARADOR: Array[float] = [
-	370, 400, 306, 222, 222, 306, 168, 222, 306, 222, 306, 400, 188
+	370, 400, 400, 276, 480, 168, 222, 356, 306, 306, 258, 400
 ]
 const FOTOS := {
 	2:
@@ -25,45 +25,45 @@ const FOTOS := {
 	},
 	3:
 	{
-		"rect": Rect2(0, 357, 279, 201),
+		"rect": Rect2(0, 440, 279, 201),
 		"titulo": "Ventanilla de recepción",
 		"sector": "Sector de ventas",
-		"leyenda": Vector2(311, 357)
+		"leyenda": Vector2(311, 440)
 	},
-	5:
+	4:
 	{
-		"rect": Rect2(0, 276, 426, 258),
+		"rect": Rect2(0, 330, 426, 258),
 		"titulo": "Lector y la caja registradora",
 		"sector": "Sector de ventas",
-		"leyenda": Vector2(459, 276)
+		"leyenda": Vector2(459, 330)
 	},
-	7:
+	6:
 	{
 		"rect": Rect2(0, 283, 373, 300),
 		"titulo": "Computadora",
 		"sector": "Sector de ventas",
 		"leyenda": Vector2(414, 283)
 	},
-	8:
+	7:
 	{
 		"rect": Rect2(0, 277, 373, 365),
 		"titulo": "Estantería con cajas contenedoras",
 		"sector": "Sector de depósito",
 		"leyenda": Vector2(446, 277)
 	},
-	10:
+	9:
 	{
 		"rect": Rect2(0, 300, 548, 315),
 		"titulo": "1 Mopa\n2 Balde\n3 Productos de limpieza",
 		"sector": "Sector de baño",
 		"leyenda": Vector2(603, 299)
 	},
-	12:
+	11:
 	{
-		"rect": Rect2(0, 440, 480, 270),
+		"rect": Rect2(0, 310, 480, 270),
 		"titulo": "Cajas del proveedor",
 		"sector": "Sector de depósito",
-		"leyenda": Vector2(535, 440)
+		"leyenda": Vector2(535, 310)
 	},
 }
 
@@ -150,11 +150,9 @@ func _pintar() -> void:
 	if paso.foto != null:
 		_foto(paso.foto.foto, FOTOS[numero])
 	if numero == 4:
-		_imagen(TICKET, Rect2(0, 276, 109, 316))
-	if numero == 5:
-		_imagen(CAJA, Rect2(742, 276, 136, 316))
-		_imagen(TICKET, Rect2(898, 341, 109, 186))
-		_texto("ticket", Vector2(900, 276), 110, 30, COLOR_DE_RESALTE)
+		_imagen(CAJA, Rect2(742, 330, 136, 316))
+		_imagen(TICKET, Rect2(898, 395, 109, 186))
+		_texto("ticket", Vector2(900, 330), 110, 30, COLOR_DE_RESALTE)
 	_retrato.visible = true
 	_volver.disabled = not _instrucciones.se_puede_volver()
 	_siguiente.text = (TEXTO_DE_COMENZAR if _instrucciones.en_el_ultimo() else TEXTO_DE_SIGUIENTE)
