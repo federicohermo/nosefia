@@ -107,7 +107,12 @@ conserva la foto de Intro 13 aunque el frame de Figma no la incluya. Las fotos c
 sin franjas negras y conservan su proporción; el encuadre de cada captura debe mantener visible
 el objeto que ilustra. Por aclaración del usuario, la última pantalla omite «SI A JUGAR!!».
 
-`instrucciones/fondo.png` es la capa de persiana desenfocada `511:304`. El retrato local histórico
+El fondo usa directamente `assets/models/SEPT_JUEGOS_PROTOTIPO_textura portón.png`, sin editar
+esa textura ni el modelo. El usuario aprobó el preview «Aplicar este fondo» el 2026-10-10:
+`instrucciones/porton_gris.gdshader` reproduce exactamente su recorte UV, conversión a gris y
+luminosidad 0,48. Sustituye la persiana azul del prototipo por el portón real en gris.
+
+El retrato local histórico
 incluía un rectángulo opaco celeste: la pantalla usa ahora `instrucciones/enrique.png`, la imagen
 fuente transparente de `511:317`, sin editar. `enrique.gdshader` aplica su exposición y el blur
 progresivo hacia los pies del diseño. El chat conserva su recurso histórico y no se modifica.

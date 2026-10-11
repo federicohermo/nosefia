@@ -6,8 +6,12 @@
 
 [ext_resource type="Texture2D" path="res://assets/ui/manada/instrucciones/bocadillo.svg" id="4"]
 
-[ext_resource type="Texture2D" path="res://assets/ui/manada/instrucciones/fondo.png" id="5"]
+[ext_resource type="Texture2D" path="res://assets/models/SEPT_JUEGOS_PROTOTIPO_textura portón.png" id="5"]
 [ext_resource type="Shader" path="res://assets/ui/manada/instrucciones/enrique.gdshader" id="6"]
+[ext_resource type="Shader" path="res://assets/ui/manada/instrucciones/porton_gris.gdshader" id="7"]
+
+[sub_resource type="ShaderMaterial" id="porton_gris"]
+shader = ExtResource("7")
 
 [sub_resource type="ShaderMaterial" id="enrique"]
 shader = ExtResource("6")
@@ -71,6 +75,7 @@ _retrato = NodePath("Marco/Retrato")
 _fondo = NodePath("Fondo")
 
 [node name="Fondo" type="TextureRect" parent="."]
+material = SubResource("porton_gris")
 offset_right = 1920.0
 offset_bottom = 1080.0
 texture = ExtResource("5")
