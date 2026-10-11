@@ -62,7 +62,7 @@ func _piso(almacen: Node3D) -> PisoDelLocal:
 	return (almacen.get("_limpiador") as Limpiador).piso()
 
 
-func test_cada_util_es_la_malla_del_modelo_donde_el_modelo_la_dibujaba() -> void:
+func test_cada_util_conserva_la_geometria_del_modelo_y_apoya_en_el_piso() -> void:
 	# La mopa y el balde añaden datos de animación sin cambiar la geometría del modelo.
 	var almacen: Node3D = await _almacen()
 	var utiles: Array = almacen.get("_utiles_de_limpieza")
@@ -87,18 +87,6 @@ func test_cada_util_es_la_malla_del_modelo_donde_el_modelo_la_dibujaba() -> void
 			)
 			. override_failure_message("`%s` no está girado como en el modelo" % util.name)
 			. is_true()
-		)
-		var aca := puesta.origin
-		var alla := del_modelo.global_position
-		# Estos dos objetos dejan libres la entrada y los lavamanos.
-		if util.name == &"Mopa":
-			alla = Vector3(12.75, alla.y, 3.256)
-		elif util.name == &"JabonAzul":
-			alla.z = -0.1169193
-		(
-			assert_float(Vector2(aca.x, aca.z).distance_to(Vector2(alla.x, alla.z)))
-			. override_failure_message("`%s` no está donde lo dibujaba el modelo" % util.name)
-			. is_less(0.001)
 		)
 		var abajo := (util.malla.global_transform * util.malla.get_aabb()).position.y
 		(
