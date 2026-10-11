@@ -7,7 +7,7 @@ extends RefCounted
 
 ## El conjunto es cerrado y por eso es un `enum` y no un `String`: `"limpar"` no rompe nada, el
 ## `if` simplemente no entra nunca y el motor no dice una palabra.
-enum Tipo { CAJA, REPONER, REGISTRAR, LIMPIAR, SACAR_LA_BASURA }
+enum Tipo { CAJA, REPONER, REGISTRAR, LIMPIAR, SACAR_LA_BASURA, ORDENAR_LAS_CAJAS }
 
 var _tipo: Tipo
 var _completada: bool = false

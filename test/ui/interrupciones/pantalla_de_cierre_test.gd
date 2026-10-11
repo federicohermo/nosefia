@@ -71,12 +71,14 @@ func test_mostrar_pinta_el_parte_entero_y_oscurece_lo_de_atras() -> void:
 
 func test_mostrar_dos_veces_no_acumula_las_lineas_de_la_jornada_anterior() -> void:
 	# Cinco noches con la misma pantalla: sin limpiar, la placa de la jornada 5 tendría
-	# veinticinco renglones y ninguna aserción del caso de arriba lo diría.
+	# los renglones acumulados y ninguna aserción del caso de arriba lo diría.
 	var pantalla := await _pantalla()
 	pantalla.mostrar(_parte())
 	pantalla.mostrar(_parte())
 	var renglones: VBoxContainer = pantalla.get_node("Fondo/Panel/Lineas")
-	assert_int(renglones.get_child_count()).is_equal(Apertura.cantidad_de_obligatorias())
+	assert_int(renglones.get_child_count()).is_equal(
+		Apertura.cantidad_de_obligatorias(JORNADA_DE_PRUEBA)
+	)
 
 
 func test_mostrar_deja_el_boton_con_el_foco_para_alcanzarlo_sin_el_mouse() -> void:
@@ -121,7 +123,9 @@ func test_con_la_partida_en_curso_la_placa_ofrece_seguir_y_volver_al_menu() -> v
 func test_con_la_partida_que_termino_la_placa_ofrece_solo_volver_al_menu() -> void:  # AC-EMP-016
 	var pantalla := await _pantalla()
 	pantalla.mostrar(
-		ParteDeCierre.new(JORNADA_DE_PRUEBA, Apertura.obligatorias(), 5, Partida.Final.DESPEDIDO)
+		ParteDeCierre.new(
+			JORNADA_DE_PRUEBA, Apertura.obligatorias(JORNADA_DE_PRUEBA), 5, Partida.Final.DESPEDIDO
+		)
 	)
 	var seguir: Button = pantalla.get_node("Fondo/Panel/Continuar")
 	var volver: Button = pantalla.get_node("Fondo/Panel/VolverAlMenu")
@@ -218,7 +222,9 @@ func _pantalla() -> PantallaDeCierre:
 
 
 func _parte() -> ParteDeCierre:
-	return ParteDeCierre.new(JORNADA_DE_PRUEBA, Apertura.obligatorias(), 1, Partida.Final.EN_CURSO)
+	return ParteDeCierre.new(
+		JORNADA_DE_PRUEBA, Apertura.obligatorias(JORNADA_DE_PRUEBA), 1, Partida.Final.EN_CURSO
+	)
 
 
 func _etiqueta(pantalla: PantallaDeCierre, nombre: String) -> Label:

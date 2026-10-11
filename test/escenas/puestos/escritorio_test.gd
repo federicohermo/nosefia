@@ -102,7 +102,7 @@ func test_el_cierre_usa_la_accion_compartida() -> void:
 func test_tocar_el_escritorio_suspende_al_jugador_y_no_entrega_nada() -> void:
 	var escritorio := _escritorio()
 	var jugador: Node3D = auto_free(load(ESCENA_DEL_JUGADOR).instantiate())
-	var obligatorias := Apertura.obligatorias()
+	var obligatorias := Apertura.obligatorias(1)
 	var reloj: RelojDelTurno = auto_free(RelojDelTurno.new())
 	reloj.arrancar(Apertura.turno_de_la_jornada(obligatorias), obligatorias)
 	var computadora: ComputadoraDeEscritorio = auto_free(ComputadoraDeEscritorio.new())

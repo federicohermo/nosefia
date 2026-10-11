@@ -98,3 +98,19 @@ static func condiciones_en(ruta: String) -> Array[String]:
 		if not condicion.search_all(codigo).is_empty():
 			abiertas.append(linea.strip_edges())
 	return abiertas
+
+
+func test_ordenar_tiene_la_falla_de_la_ficha_y_el_cumplido_provisorio() -> void:
+	(
+		assert_str(CatalogoDeReacciones.de_la_tarea(Tarea.Tipo.ORDENAR_LAS_CAJAS, false).texto)
+		. is_equal(
+			(
+				"Cuando te pedí que ordenaras las cajas en las estanterías del depósito, "
+				+ "lo que quería decir es que pongas TODAS y cada una de las CAJAS de cartón "
+				+ "con productos ARRIBA de las ESTANTERÍAS del DEPÓSITO. Ahí se entendió?"
+			)
+		)
+	)
+	assert_str(CatalogoDeReacciones.de_la_tarea(Tarea.Tipo.ORDENAR_LAS_CAJAS, true).texto).is_equal(
+		"Las cajas quedaron arriba de las estanterías. Así me gusta."
+	)

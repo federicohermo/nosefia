@@ -2,6 +2,7 @@
 extends GdUnitTestSuite
 
 const ALMACEN := preload("res://src/escenas/almacen.tscn")
+const BolsaEnLaMano := preload("res://test/escenas/bolsa_en_la_mano.gd")
 const CUERPO := "Estructura/deposito_contenedor_soporte/deposito_contenedor_cuerpo/StaticBody3D"
 const BASE := "Estructura/deposito_contenedor_soporte/"
 const TAPA := BASE + "deposito_contenedor_bisagra_tapa/CuerpoDeLaTapa"
@@ -24,6 +25,7 @@ func after_test() -> void:
 
 func _abrir() -> Node3D:
 	_almacen = ALMACEN.instantiate()
+	_almacen.set("_partida", Partida.desde({"jornada": 2, "medios": 0}))
 	add_child(_almacen)
 	var jugador: Node3D = _almacen.get("_jugador")
 	jugador.set_process(false)
@@ -44,7 +46,12 @@ func _clic(jugador: Node3D, destino: Node3D, boton: MouseButton) -> void:
 func _agarrar(almacen: Node3D, objeto: RigidBody3D) -> void:
 	var agarre: Agarre = almacen.get("_agarre")
 	var datos: ObjetoDelAlmacen = objeto.get("datos")
-	assert_bool(agarre.pedir_agarrar(datos, objeto)).is_true()
+	if ReglasDeLaBasura.ids_de_las_bolsas().has(datos.id):
+		var numero := ReglasDeLaBasura.ids_de_las_bolsas().find(datos.id)
+		if almacen.get("_recolector").tarea().tiene_bolsa(numero):
+			assert_object(BolsaEnLaMano.sacar(almacen, numero)).is_same(objeto)
+	if agarre.cuerpo_sostenido() != objeto:
+		assert_bool(agarre.pedir_agarrar(datos, objeto)).is_true()
 	assert_object(agarre.manos().sostenido()).is_same(datos)
 
 
@@ -175,13 +182,16 @@ func test_los_persistentes_vuelven_y_el_util_simula_fisica_otra_vez() -> void:  
 	for objeto in objetos:
 		_agarrar(almacen, objeto)
 		_clic(almacen.get("_jugador"), contenedor, MOUSE_BUTTON_LEFT)
-	almacen.call("_al_abrir_la_jornada", 2)
+	almacen.call("_al_abrir_la_jornada", 3)
 	for indice in objetos.size():
 		var objeto := objetos[indice]
 		assert_object(objeto.get_parent()).is_same(padres[indice])
 		assert_bool(objeto.global_transform.is_equal_approx(poses[indice])).is_true()
-		assert_bool(objeto.visible).is_true()
-		assert_bool(objeto.freeze).is_false()
+		var es_bolsa := ReglasDeLaBasura.ids_de_las_bolsas().has(objeto.datos.id)
+		assert_bool(objeto.visible).is_equal(not es_bolsa)
+		assert_bool(objeto.freeze).is_equal(es_bolsa)
+		if es_bolsa:
+			assert_bool(objeto.get_node("Forma").disabled).is_true()
 		assert_int(objeto.collision_layer).is_equal(capas[indice])
 		assert_int(objeto.collision_mask).is_equal(mascaras[indice])
 	var nuevo: PisoDelLocal = almacen.get("_limpiador").piso()

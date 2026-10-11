@@ -54,7 +54,7 @@ func before_test() -> void:
 
 
 func _limpiador(presupuesto: float = Reglas.DURACION_DEL_TURNO) -> Limpiador:
-	var obligatorias := Apertura.obligatorias()
+	var obligatorias := Apertura.obligatorias(1)
 	_turno = Turno.new(presupuesto, obligatorias)
 	var reloj: RelojDelTurno = auto_free(RelojDelTurno.new())
 	reloj.arrancar(_turno, obligatorias)

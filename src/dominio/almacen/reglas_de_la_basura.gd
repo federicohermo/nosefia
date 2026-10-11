@@ -4,7 +4,7 @@ extends RefCounted
 
 enum Tiro { TIRADO, MANO_VACIA, NO_ENTRA, TAPA_NO_ABIERTA }
 
-const BOLSAS_DE_LA_JORNADA := 3
+const BOLSAS_DE_LA_JORNADA := TareaDeLaBasura.Tacho.BANO + 1
 const DISTANCIA_MINIMA_AL_CONTENEDOR := 6.0
 const PREFIJO_DE_LA_BOLSA := "bolsa_de_basura_"
 

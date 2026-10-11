@@ -34,9 +34,8 @@ const ESTACION: Array[Vector2] = [
 	Vector2(0.544, 0.581),
 	Vector2(0.543, 0.478),
 	Vector2(0.548, 0.464),
-	Vector2(0.566, 0.463),
-	Vector2(0.571, 0.466),
-	Vector2(0.571, 0.399),
+	Vector2(0.5630, 0.463),
+	Vector2(0.5630, 0.399),
 	Vector2(0.505, 0.414),
 	Vector2(0.438, 0.418),
 	Vector2(0.438, 0.483),
@@ -52,8 +51,8 @@ const ESTACION: Array[Vector2] = [
 	Vector2(0.4045, 0.5617),
 	Vector2(0.4105, 0.5617),
 	Vector2(0.424, 0.560),
-	Vector2(0.429, 0.486),
-	Vector2(0.429, 0.419),
+	Vector2(0.4240, 0.486),
+	Vector2(0.4240, 0.419),
 	Vector2(0.360, 0.409),
 ]
 

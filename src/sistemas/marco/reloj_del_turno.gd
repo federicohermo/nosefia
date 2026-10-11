@@ -25,6 +25,7 @@ signal turno_cerrado(cumplidas: int)
 var _turno: Turno = null
 var _obligatorias: Array[Tarea] = []
 var _ultimo_cuadro_usec: int = 0
+var _retenido := false
 
 
 ## El navegador puede suspender los cuadros de una pestaña oculta. El reloj monotónico sigue
@@ -33,7 +34,8 @@ func _process(_delta: float) -> void:
 	var ahora := _ahora_usec()
 	var transcurrido := (ahora - _ultimo_cuadro_usec) / 1000000.0
 	_ultimo_cuadro_usec = ahora
-	avanzar(transcurrido)
+	if not _retenido:
+		avanzar(transcurrido)
 
 
 ## La pausa manual excluye su intervalo; perder el foco no manda estas notificaciones.
@@ -44,6 +46,16 @@ func _notification(aviso: int) -> void:
 
 func _ahora_usec() -> int:
 	return Time.get_ticks_usec()
+
+
+func retener() -> void:
+	_retenido = true
+
+
+func soltar() -> void:
+	_retenido = false
+	# La entrada puede terminar sin haber entregado un cuadro del reloj en mucho tiempo.
+	_ultimo_cuadro_usec = _ahora_usec()
 
 
 ## Los segundos reales recibidos, convertidos en tiempo de turno.

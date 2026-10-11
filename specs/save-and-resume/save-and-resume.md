@@ -3,7 +3,7 @@ schema_version: 1
 capability_id: CAP-SAV
 status: ratified
 owner: por definir
-provenance: GDD «checkpoint al final de cada noche»; migración de los specs 019, 020, 036
+provenance: GDD «checkpoint al final de cada noche»; ficha «Pantalla entre jornadas» y decisiones de #374; migración de los specs 019, 020, 036
 ---
 
 # Capacidad: guardar y retomar
@@ -79,10 +79,13 @@ opciones, en este orden: **continuar, nuevo juego, logros, configuraciones y sal
 
 SI no hay guardado, ENTONCES «continuar» NO DEBE estar disponible y NO DEBE llevar a ningún lado.
 
-### BR-SAV-012 — Empezar de nuevo sobre una partida pide confirmación
+### BR-SAV-012 — Nuevo juego inicia directamente una partida nueva
 
-SI hay un guardado, ENTONCES «nuevo juego» DEBE pedir confirmación antes de borrarlo. Es la pérdida
-que no se puede deshacer.
+CUANDO se elige «nuevo juego», con o sin guardado, el sistema DEBE iniciar directamente una
+partida nueva sin mostrar una confirmación y borrar el guardado anterior,
+fundir el menú a negro durante 0,3 segundos reales, cargar el juego y presentar las instrucciones
+de Enrique antes de la entrada a la primera noche. SI falla la carga, ENTONCES DEBE volver al
+menú sin quedar en negro.
 
 ### BR-SAV-013 — Salir pasa por un solo lugar
 
@@ -97,7 +100,8 @@ puede cerrar su pestaña. Las otras cuatro opciones DEBEN quedar en el mismo ord
 
 CUANDO arranca la partida, SI hay guardado, ENTONCES el sistema DEBE seguir en la jornada
 guardada y con los apercibimientos guardados. SI no hay guardado, ENTONCES DEBE arrancar una
-partida nueva.
+partida nueva. Retomar un guardado NO DEBE mostrar las instrucciones: DEBE anunciar directamente
+la jornada guardada sobre la persiana baja y comenzar a descontar cuando termine su entrada.
 
 ### BR-SAV-016 — Esc pausa la jornada
 
@@ -186,10 +190,11 @@ DADO que no hay guardado ENTONCES continuar no está disponible, elegirlo no pro
 de entrar al juego, y el botón está deshabilitado. Los tres juntos: arreglar uno solo no alcanza
 para creer que está cerrado.
 
-### AC-SAV-014 — Empezar sobre una partida confirma *(verifica BR-SAV-012)*
+### AC-SAV-014 — Nuevo juego es directo con o sin guardado *(verifica BR-SAV-012)*
 
-DADO un guardado CUANDO se elige nuevo juego ENTONCES el pedido es el de confirmar y no el
-de nuevo juego; recién al confirmar llega el de nuevo juego. Sin guardado, es directo.
+DADO un guardado CUANDO se elige nuevo juego ENTONCES se borra y se pide una partida nueva
+directamente, sin confirmación. DADO ningún guardado ENTONCES el mismo gesto inicia una partida
+nueva. CUANDO se repite el clic durante la entrada ENTONCES se emite un único pedido.
 
 ### AC-SAV-015 — Salir por un solo lugar *(verifica BR-SAV-013)*
 
@@ -226,6 +231,27 @@ orden, y sólo reanudar y volver al menú están habilitados.
 DADO el juego en pausa CUANDO se elige volver al menú ENTONCES el juego sale de la pausa, el
 pedido de ir al menú se emite una sola vez y no se escribe ningún guardado.
 
+### AC-SAV-021 — Continuar evita las instrucciones *(verifica BR-SAV-015)*
+
+DADO un guardado válido en la jornada 3 con 7 medios de apercibimiento CUANDO se elige continuar
+ENTONCES se conservan jornada 3 y 7 medios, se anuncia «NOCHE 3» y las instrucciones no están
+en pantalla. El turno permanece retenido hasta terminar la subida de la persiana.
+
+### AC-SAV-022 — Nuevo juego funde directamente *(verifica BR-SAV-012)*
+
+DADO un guardado CUANDO se elige nuevo juego ENTONCES se borra el guardado, el menú se funde
+a negro en 0,3 segundos reales, se completa la carga y se muestran las instrucciones de Enrique.
+DADO ningún guardado CUANDO
+se elige nuevo juego ENTONCES se sigue esa misma secuencia sin confirmación. DADO una carga
+fallida ENTONCES vuelve a verse el menú y no permanece una pantalla negra.
+
+### AC-SAV-023 — Abandonar durante la preparación no guarda *(verifica BR-SAV-012, BR-SAV-018)*
+
+DADO una partida nueva en las instrucciones, o una partida en la entrada de la noche, CUANDO
+se abre la pausa y se elige volver al menú ENTONCES se sale de la pausa y no se escribe ningún
+guardado. En la partida nueva, el guardado anterior ya borrado no reaparece y continuar queda
+deshabilitado; al continuar una partida existente, su checkpoint previo se conserva.
+
 ## No objetivos
 
 - Esta capacidad NO decide **qué** guarda cada sistema: define el sobre. El inventario entra
@@ -251,7 +277,9 @@ pedido de ir al menú se emite una sola vez y no se escribe ningún guardado.
 ## Dependencias
 
 - [`employment-record`](../employment-record/employment-record.md) (consume): la jornada, el
-  legajo y el final.
+  legajo y el final; las instrucciones previas a una partida nueva.
+- [`shift-cycle`](../shift-cycle/shift-cycle.md) (alimenta): la jornada que anuncia la entrada
+  al empezar o continuar, sin repetir las instrucciones al retomar.
 
 ## Preguntas abiertas
 

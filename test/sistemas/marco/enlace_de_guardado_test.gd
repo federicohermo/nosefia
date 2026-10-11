@@ -55,8 +55,8 @@ func _agotar_la_noche() -> void:
 
 
 func _jugar_la_noche_impecable() -> void:
-	for tipo: Tarea.Tipo in Tarea.Tipo.values():
-		_reloj.completar(_reloj.obligatoria(tipo))
+	for tarea in _ciclo.partida().obligatorias():
+		_reloj.completar(tarea)
 	_agotar_la_noche()
 
 

@@ -1,60 +1,53 @@
 ## Cómo se abre una jornada: qué tareas trae, con cuánto tiempo nace y con qué mercadería.
 ##
-## Ningún caso escribe a mano cuántas obligatorias hay. Se comparan contra `Tarea.Tipo`, que es
-## la única fuente: el 001 ya declaró las cinco, y una sexta se agrega a ese `enum` sin que este
-## archivo se toque.
+## La tabla de particulares decide la lista; el enum conserva las identidades de cada tarea.
 extends GdUnitTestSuite
 
 
-func test_hay_una_obligatoria_por_cada_tipo_de_tarea() -> void:  # AC-SHF-005
-	assert_int(Apertura.obligatorias().size()).is_equal(Tarea.Tipo.size())
-
-
-func test_ningun_tipo_de_tarea_aparece_dos_veces() -> void:
-	# Un tipo repetido daría una lista del tamaño correcto con un tipo faltante, y el jugador
-	# vería una obligatoria imposible de cumplir sin que nada se ponga en rojo.
-	var vistos: Array[int] = []
-	for tarea in Apertura.obligatorias():
-		assert_bool(vistos.has(tarea.tipo())).is_false()
-		vistos.append(tarea.tipo())
-	assert_int(vistos.size()).is_equal(Tarea.Tipo.size())
-
-
-func test_la_cantidad_declarada_coincide_con_la_lista_que_se_arma() -> void:
-	# Son dos funciones y una sola verdad: si se separan, el HUD cuenta contra un número y el
-	# turno contra otro.
-	assert_int(Apertura.cantidad_de_obligatorias()).is_equal(Apertura.obligatorias().size())
+func test_cada_jornada_declara_sus_fijas_y_su_particular() -> void:  # AC-SHF-005
+	for jornada in range(1, 6):
+		var tareas := Apertura.obligatorias(jornada)
+		var tipos: Array[Tarea.Tipo] = []
+		for tarea in tareas:
+			tipos.append(tarea.tipo())
+		var esperadas: Array[Tarea.Tipo] = [
+			Tarea.Tipo.CAJA, Tarea.Tipo.REGISTRAR, Tarea.Tipo.LIMPIAR, Tarea.Tipo.REPONER
+		]
+		if jornada == 1:
+			esperadas.append(Tarea.Tipo.ORDENAR_LAS_CAJAS)
+		elif jornada == 2:
+			esperadas.append(Tarea.Tipo.SACAR_LA_BASURA)
+		assert_array(tipos).contains_exactly(esperadas)
+		assert_int(Apertura.cantidad_de_obligatorias(jornada)).is_equal(esperadas.size())
+		assert_bool(Apertura.cajas_apiladas(jornada)).is_equal(jornada == 1)
 
 
 func test_el_turno_de_la_jornada_nace_con_el_presupuesto_entero() -> void:  # AC-SHF-001
-	var turno := Apertura.turno_de_la_jornada(Apertura.obligatorias())
+	var turno := Apertura.turno_de_la_jornada(Apertura.obligatorias(1))
 	assert_float(turno.tiempo_restante()).is_equal(Reglas.DURACION_DEL_TURNO)
 
 
 func test_el_turno_de_la_jornada_nace_sin_ninguna_tarea_cumplida() -> void:  # AC-SHF-005
-	var turno := Apertura.turno_de_la_jornada(Apertura.obligatorias())
+	var turno := Apertura.turno_de_la_jornada(Apertura.obligatorias(1))
 	assert_int(turno.tareas_cumplidas()).is_equal(0)
 	assert_bool(turno.todas_cumplidas()).is_false()
 
 
-func test_la_segunda_jornada_trae_una_por_tipo_y_ninguna_cumplida() -> void:  # AC-SHF-005
-	# Se cumple una de la primera: con instancias compartidas, la segunda la traería cumplida.
-	var primera := Apertura.obligatorias()
-	assert_bool(Apertura.turno_de_la_jornada(primera).completar(primera[0])).is_true()
-	var segunda := Apertura.obligatorias()
-	var tipos: Array[int] = []
-	for tarea: Tarea in segunda:
-		assert_bool(tarea.completada()).is_false()
-		tipos.append(tarea.tipo())
-	assert_int(tipos.size()).is_equal(Tarea.Tipo.size())
-	for tipo: int in Tarea.Tipo.values():
-		assert_int(tipos.count(tipo)).is_equal(1)
+func test_dos_aperturas_no_comparten_instancias_ni_cumplidas() -> void:  # AC-SHF-005
+	for jornada in range(1, 6):
+		var primera := Apertura.obligatorias(jornada)
+		for tarea in primera:
+			tarea.completar()
+		var segunda := Apertura.obligatorias(jornada)
+		for tarea in segunda:
+			assert_bool(primera.has(tarea)).is_false()
+			assert_bool(tarea.completada()).is_false()
 
 
 func test_el_turno_cuenta_contra_la_lista_que_recibe_y_no_contra_una_copia() -> void:
 	# Es lo que hace posible que el reloj entregue la misma instancia por la que el 008 va a
 	# preguntar: completar una copia devolvería `true` sin subir el contador del turno.
-	var obligatorias := Apertura.obligatorias()
+	var obligatorias := Apertura.obligatorias(1)
 	var turno := Apertura.turno_de_la_jornada(obligatorias)
 	assert_bool(turno.completar(obligatorias[0])).is_true()
 	assert_int(turno.tareas_cumplidas()).is_equal(1)

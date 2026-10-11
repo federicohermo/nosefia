@@ -65,7 +65,7 @@ func _repositor(
 	inventario.ingresar(actroncito, Inventario.Ubicacion.DEPOSITO, en_deposito)
 	inventario.ingresar(actroncito, Inventario.Ubicacion.GONDOLA, en_gondola)
 
-	var obligatorias := Apertura.obligatorias()
+	var obligatorias := Apertura.obligatorias(1)
 	_turno = Turno.new(restante, obligatorias)
 	var reloj: RelojDelTurno = auto_free(RelojDelTurno.new())
 	reloj.arrancar(_turno, obligatorias)
@@ -161,7 +161,7 @@ func test_sin_tiempo_para_reponer_la_tarea_no_se_cuenta_ni_descuenta() -> void:
 	var actroncito := _producto(Producto.Id.ACTRONCITO)
 	var inventario := Inventario.new([actroncito], {Producto.Id.ACTRONCITO: CUPO_DE_PRUEBA})
 	inventario.ingresar(actroncito, Inventario.Ubicacion.DEPOSITO, 10)
-	var obligatorias := Apertura.obligatorias()
+	var obligatorias := Apertura.obligatorias(1)
 	_turno = Turno.new(0.0, obligatorias)
 	var reloj: RelojDelTurno = auto_free(RelojDelTurno.new())
 	reloj.arrancar(_turno, obligatorias)

@@ -100,11 +100,14 @@ func _cifras_de_balance(ruta: String) -> Array[String]:
 ## que decirlo acá.
 func _cifras_en_el_codigo(texto: String, nombre: String) -> Array[String]:
 	var encontradas: Array[String] = []
-	var numero := RegEx.create_from_string("\\b\\d+\\b")
+	var numero := RegEx.create_from_string(
+		"(?<![\\w.])(?:\\d+(?:\\.\\d*)?|\\.\\d+)(?:[eE][+-]?\\d+)?(?![\\w.])"
+	)
 	for linea in texto.split("\n"):
 		var codigo: String = linea.split("#")[0]
 		for coincidencia in numero.search_all(codigo):
-			if int(coincidencia.get_string()) >= PRIMERA_CIFRA_DE_BALANCE:
+			var literal := coincidencia.get_string()
+			if literal.is_valid_int() and int(literal) >= PRIMERA_CIFRA_DE_BALANCE:
 				encontradas.append("%s → %s" % [nombre, linea.strip_edges()])
 	return encontradas
 
@@ -116,5 +119,15 @@ func test_el_barrido_caza_la_cifra_de_balance_y_deja_pasar_la_prosa() -> void:
 	var prosa := "## La partida se apoya en el despido\nvar jornada := 1\nvar cumplidas := 0\n"
 	assert_array(_cifras_en_el_codigo(prosa, "prosa.gd")).is_empty()
 	var cazadas := _cifras_en_el_codigo("const JORNADAS := 5\n" + prosa, "mezcla.gd")
+	assert_array(cazadas).has_size(1)
+	assert_str(cazadas[0]).contains("JORNADAS")
+
+
+func test_el_barrido_no_confunde_decimales_geometricos_con_enteros() -> void:
+	var geometria := "var media := limites.size.y / 2.0\nvar alcance := media + 0.02\n"
+	geometria += "var largo := 2e3\nvar roce := 2E-3\n"
+	assert_array(_cifras_en_el_codigo(geometria, "geometria.gd")).is_empty()
+	var mezcla := "const JORNADAS := 5\n" + geometria
+	var cazadas := _cifras_en_el_codigo(mezcla, "mezcla.gd")
 	assert_array(cazadas).has_size(1)
 	assert_str(cazadas[0]).contains("JORNADAS")

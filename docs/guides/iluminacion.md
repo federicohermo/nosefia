@@ -29,11 +29,19 @@ Cómo se mide el costo de las luces, en [rendimiento](./rendimiento.md).
   estático queda negro. Lo dinámico toma la luz de las sondas.
 - **Lo que gira también lleva GI `Dynamic`, aunque venga del modelo:** las hojas que abren y la
   tapa del contenedor. Horneadas, dejarían su sombra en la posición en la que se hornearon.
+- **Los pallets de la entrega también son dinámicos:** aparecen con las cajas de la primera
+  noche y se retiran en la siguiente. Reutilizan la madera del pallet de piso y reciben luz de
+  las sondas; no dejan sombras permanentes en el horneado.
+- **Los estantes del fondo interceptan la luz cenital del depósito.** Su madera inferior
+  necesita luz rebotada para leerse. Se ajustan los plafones del depósito y su energía indirecta
+  y se vuelve a hornear. El brillo global, la niebla y el bloom conservan sus valores.
 - **Un grupo de productos toma esa luz en un solo punto: el centro de su caja.** El horneador
   reparte las sondas por los bordes de las mallas, y muchas caen adentro de una pared o de un
   mueble. Ahí salen negras, y apagan lo que toma la luz cerca. Por eso el horneador rellena cada
   sonda negra con el promedio de sus vecinas con luz (`addons/hornear/sondas.gd`). Un horneado
   hecho a mano desde el editor no pasa por ese paso.
+  El umbral sólo detecta radiancia prácticamente nula: una sonda tenue del depósito es válida
+  y se conserva. Reemplazarla por vecinas luminosas arrastraba el verde del salón a las cajas.
 
 ## Cómo se hornea
 
@@ -55,6 +63,8 @@ Los mandos:
 - la energía de cada luz, en su escena;
 - `generate_probes_subdiv`, en el `LightmapGI`;
 - el tamaño del texel, en la importación del modelo;
+- la resolución de paredes y pisos, en la malla `almacen` de `estructura_del_almacen.tscn`.
+  Evita que el filtrado del lightmap dibuje una franja verde al pie de la pared del depósito;
 - la escala del texel de una malla chica (`gi_lightmap_texel_scale`), en
   `estructura_del_almacen.tscn`;
 - el umbral de sonda negra, en `sondas.gd`.

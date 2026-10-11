@@ -14,12 +14,7 @@ var _abierta := false
 
 func _ready() -> void:
 	for nota in notas:
-		var dato := (
-			NotaPegada.tareas_a_realizar(Apertura.obligatorias())
-			if nota.id == NotaPegada.Id.TAREAS_A_REALIZAR
-			else NotaPegada.de(nota.id)
-		)
-		nota.declarar(dato)
+		nota.declarar(NotaPegada.de(nota.id))
 		nota.apertura_pedida.connect(_abrir.bind(nota))
 	reloj.turno_cerrado.connect(_al_cerrar_el_turno)
 
@@ -42,7 +37,14 @@ func _input(evento: InputEvent) -> void:
 	if _abierta and evento.is_action_pressed(ReglasDelJugador.ACCION_USAR):
 		get_viewport().set_input_as_handled()
 		cerrar()
+		jugador.tomar_el_cursor_desde_entrada()
 
 
 func _al_cerrar_el_turno(_cumplidas: int) -> void:
 	cerrar()
+
+
+func declarar_tareas(obligatorias: Array[Tarea]) -> void:
+	for nota in notas:
+		if nota.id == NotaPegada.Id.TAREAS_A_REALIZAR:
+			nota.declarar(NotaPegada.tareas_a_realizar(obligatorias))

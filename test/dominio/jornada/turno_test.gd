@@ -1,9 +1,6 @@
 ## El turno de la noche: cuánto queda, qué lo consume y cuántas obligatorias se cumplieron.
 ##
-## Ningún turno de acá se arma contra una lista de cinco escrita a mano: los casos que necesitan
-## las cinco las sacan recorriendo el enum, y hay uno que se arma con una sola. Eso no es pereza:
-## es la prueba de que `Turno` no sabe que son cinco, y que la sexta va a ser un dato y no un
-## cambio de código.
+## El turno recibe las obligatorias declaradas y no conoce su cantidad.
 extends GdUnitTestSuite
 
 
@@ -94,8 +91,8 @@ func test_una_tarea_de_afuera_de_las_obligatorias_no_cuenta_ni_mueve_el_turno() 
 	assert_bool(turno.todas_cumplidas()).is_false()
 
 
-func test_cumplir_las_cinco_en_el_mismo_cuadro_no_mueve_el_turno() -> void:  # AC-SHF-018
-	var obligatorias := _las_cinco_obligatorias()
+func test_cumplir_las_declaradas_en_el_mismo_cuadro_no_mueve_el_turno() -> void:  # AC-SHF-018
+	var obligatorias := _las_obligatorias_declaradas()
 	var turno := Turno.new(43200.0, obligatorias)
 	for tarea in obligatorias:
 		assert_bool(turno.completar(tarea)).is_true()
@@ -104,8 +101,8 @@ func test_cumplir_las_cinco_en_el_mismo_cuadro_no_mueve_el_turno() -> void:  # A
 
 
 func test_descumplir_baja_las_cumplidas_sin_mover_el_turno() -> void:  # AC-SHF-019
-	var obligatorias := _las_cinco_obligatorias()
-	var registrar := obligatorias[Tarea.Tipo.REGISTRAR]
+	var obligatorias := _las_obligatorias_declaradas()
+	var registrar := obligatorias[1]
 	var turno := Turno.new(100.0, obligatorias)
 	turno.completar(obligatorias[Tarea.Tipo.CAJA])
 	turno.completar(registrar)
@@ -117,10 +114,10 @@ func test_descumplir_baja_las_cumplidas_sin_mover_el_turno() -> void:  # AC-SHF-
 
 
 func test_descumplir_una_sin_cumplir_no_descuenta_nada() -> void:  # AC-SHF-019
-	var obligatorias := _las_cinco_obligatorias()
+	var obligatorias := _las_obligatorias_declaradas()
 	var turno := Turno.new(100.0, obligatorias)
 	turno.completar(obligatorias[Tarea.Tipo.CAJA])
-	assert_bool(turno.descumplir(obligatorias[Tarea.Tipo.REGISTRAR])).is_false()
+	assert_bool(turno.descumplir(obligatorias[1])).is_false()
 	assert_int(turno.tareas_cumplidas()).is_equal(1)
 
 
@@ -142,15 +139,12 @@ func test_un_turno_sin_obligatorias_esta_completo_por_vacuidad() -> void:
 	assert_bool(turno.todas_cumplidas()).is_true()
 
 
-func _las_cinco_obligatorias() -> Array[Tarea]:
-	var obligatorias: Array[Tarea] = []
-	for tipo: Tarea.Tipo in Tarea.Tipo.values():
-		obligatorias.append(Tarea.new(tipo))
-	return obligatorias
+func _las_obligatorias_declaradas() -> Array[Tarea]:
+	return Apertura.obligatorias(1)
 
 
 func test_con_tres_de_cinco_cumplidas_el_turno_no_esta_completo() -> void:
-	var obligatorias := _las_cinco_obligatorias()
+	var obligatorias := _las_obligatorias_declaradas()
 	var turno := Turno.new(Reglas.DURACION_DEL_TURNO, obligatorias)
 	for i in 3:
 		turno.completar(obligatorias[i])
@@ -158,8 +152,8 @@ func test_con_tres_de_cinco_cumplidas_el_turno_no_esta_completo() -> void:
 	assert_bool(turno.todas_cumplidas()).is_false()
 
 
-func test_con_las_cinco_cumplidas_el_turno_esta_completo() -> void:
-	var obligatorias := _las_cinco_obligatorias()
+func test_con_las_declaradas_cumplidas_el_turno_esta_completo() -> void:
+	var obligatorias := _las_obligatorias_declaradas()
 	var turno := Turno.new(Reglas.DURACION_DEL_TURNO, obligatorias)
 	for tarea in obligatorias:
 		turno.completar(tarea)

@@ -365,8 +365,14 @@ func test_la_caja_soltada_se_acomoda_adentro_de_su_apoyo() -> void:
 	# otra, y una grande sobre una chica cuelga de las cuatro esquinas: lo que se pondría en rojo
 	# sería el enunciado, no el puesto.
 	var debajo: Node3D = almacen.get("_cajas_de_productos")[Producto.Id.SALADIK]
+	# La tapa y el costado se prueban con espacio libre sobre una sola caja grande.
+	debajo.global_position = (
+		PISO_LIBRE_DEL_DEPOSITO + Vector3.UP * _limites_de(debajo).size.y / 2.0
+	)
+	debajo.call("quedarse_quieta")
+	await get_tree().physics_frame
 	_accion(jugador, caja, ReglasDeLosObjetos.ACCION_AGARRAR)
-	# Las cajas del piso están contra la pared: se llega a ellas desde el pasillo, o sea -x.
+	# Se llega desde el piso libre a la derecha de la caja, caminando hacia -x.
 	await _caminar_hasta(almacen, _limites_de(debajo), Vector3.LEFT)
 	_apuntar_a(jugador, debajo)
 	_accion(jugador, caja, ReglasDeLosObjetos.ACCION_AGARRAR)
@@ -389,6 +395,12 @@ func test_soltar_mirando_el_costado_de_una_caja_la_apila_encima() -> void:
 	var jugador: CharacterBody3D = almacen.get("_jugador")
 	var caja: Node3D = almacen.get("_cajas_de_productos")[Producto.Id.LAYSNTT]
 	var debajo: Node3D = almacen.get("_cajas_de_productos")[Producto.Id.SALADIK]
+	# La tapa y el costado se prueban con espacio libre sobre una sola caja grande.
+	debajo.global_position = (
+		PISO_LIBRE_DEL_DEPOSITO + Vector3.UP * _limites_de(debajo).size.y / 2.0
+	)
+	debajo.call("quedarse_quieta")
+	await get_tree().physics_frame
 	_accion(jugador, caja, ReglasDeLosObjetos.ACCION_AGARRAR)
 	await _caminar_hasta(almacen, _limites_de(debajo), Vector3.LEFT)
 	var camara: Camera3D = jugador.get_node("Giro/Camara")
@@ -656,7 +668,7 @@ func test_una_pila_de_cajas_de_distinto_tamano_se_sigue_apilando() -> void:
 
 func test_la_caja_vuelta_a_su_lugar_apoya_entera() -> void:
 	# El caso de arriba mide un apoyo del tamaño de la caja; éste mide los apoyos de verdad de
-	# todas las cajas del catálogo, que son el estante del depósito y el suelo.
+	# todas las cajas del catálogo, incluidos los pallets de la entrega y los estantes.
 	var almacen: Node3D = await _almacen_con_jugador_quieto()
 	var cajas: Array = almacen.get("_cajas_de_productos")
 	assert_int(cajas.size()).is_equal(Catalogo.todos().size())
@@ -698,12 +710,12 @@ func _comprobar_que_no_flota(almacen: Node3D, caja: Node3D, donde: String) -> vo
 ## Que las cuatro esquinas de la caja tengan apoyo: ni flotando ni con media caja afuera.
 func _comprobar_apoyo_entero(almacen: Node3D, caja: Node3D, donde: String) -> void:
 	var forma: CollisionShape3D = caja.get_node("Cuerpo")
-	var media: Vector3 = (forma.shape as BoxShape3D).size * forma.scale / 2.0
+	var media: Vector3 = (forma.shape as BoxShape3D).size / 2.0
 	var espacio := almacen.get_world_3d().direct_space_state
 	var sueltas: Array[String] = []
 	for dx: float in [-media.x, media.x]:
 		for dz: float in [-media.z, media.z]:
-			var esquina := caja.global_position + Vector3(dx * 0.98, -media.y, dz * 0.98)
+			var esquina := forma.global_transform * Vector3(dx * 0.98, -media.y, dz * 0.98)
 			var consulta := PhysicsRayQueryParameters3D.create(
 				esquina + Vector3.UP * HOLGURA_DEL_APOYO, esquina + Vector3.DOWN * HOLGURA_DEL_APOYO
 			)

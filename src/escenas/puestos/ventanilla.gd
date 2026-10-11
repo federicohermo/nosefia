@@ -240,6 +240,7 @@ func _input(evento: InputEvent) -> void:
 		get_viewport().set_input_as_handled()
 		if atenciones.puede_abandonar():
 			cerrar()
+			jugador.tomar_el_cursor_desde_entrada()
 
 
 func _al_llegar_un_comprador(_comprador: Comprador) -> void:

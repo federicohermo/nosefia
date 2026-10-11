@@ -28,7 +28,7 @@ const JORNADA_DE_PRUEBA := 2
 
 
 func test_el_parte_trae_una_linea_por_obligatoria_en_el_orden_declarado() -> void:  # AC-EMP-013
-	var obligatorias := Apertura.obligatorias()
+	var obligatorias := Apertura.obligatorias(JORNADA_DE_PRUEBA)
 	var parte := ParteDeCierre.new(JORNADA_DE_PRUEBA, obligatorias, 0, Partida.Final.EN_CURSO)
 	var renglones := parte.lineas()
 	assert_int(renglones.size()).is_equal(obligatorias.size())
@@ -54,7 +54,7 @@ func test_la_misma_tarea_cumplida_y_sin_cumplir_dice_cosas_distintas() -> void: 
 
 func test_el_saludo_y_el_comentario_salen_del_parte_ya_escritos() -> void:
 	var parte := ParteDeCierre.new(
-		JORNADA_DE_PRUEBA, Apertura.obligatorias(), 1, Partida.Final.EN_CURSO
+		JORNADA_DE_PRUEBA, Apertura.obligatorias(JORNADA_DE_PRUEBA), 1, Partida.Final.EN_CURSO
 	)
 	assert_str(parte.saludo()).is_not_empty()
 	assert_str(parte.saludo()).contains(str(JORNADA_DE_PRUEBA))
@@ -63,7 +63,7 @@ func test_el_saludo_y_el_comentario_salen_del_parte_ya_escritos() -> void:
 
 func test_el_parte_devuelve_lo_que_recibio_sin_recalcular_nada() -> void:
 	var parte := ParteDeCierre.new(
-		JORNADA_DE_PRUEBA, Apertura.obligatorias(), 3, Partida.Final.EN_CURSO
+		JORNADA_DE_PRUEBA, Apertura.obligatorias(JORNADA_DE_PRUEBA), 3, Partida.Final.EN_CURSO
 	)
 	assert_int(parte.jornada()).is_equal(JORNADA_DE_PRUEBA)
 	assert_int(parte.apercibimientos()).is_equal(3)
@@ -99,7 +99,9 @@ func test_los_tres_espejos_de_este_spec_estan_escritos() -> void:
 
 func test_la_partida_que_termino_ofrece_volver_al_menu_y_no_seguir() -> void:  # AC-EMP-016
 	for final: Partida.Final in [Partida.Final.DESPEDIDO, Partida.Final.CONTRATO_CUMPLIDO]:
-		var parte := ParteDeCierre.new(JORNADA_DE_PRUEBA, Apertura.obligatorias(), 5, final)
+		var parte := ParteDeCierre.new(
+			JORNADA_DE_PRUEBA, Apertura.obligatorias(JORNADA_DE_PRUEBA), 5, final
+		)
 		(
 			assert_array(parte.opciones())
 			. override_failure_message("el final %d ofrece %s" % [final, parte.opciones()])
@@ -110,7 +112,7 @@ func test_la_partida_que_termino_ofrece_volver_al_menu_y_no_seguir() -> void:  #
 func test_la_partida_en_curso_ofrece_seguir_y_volver_al_menu() -> void:  # AC-EMP-016
 	# Tres apercibimientos es la noche antes del tope: todavía hay noche siguiente.
 	var parte := ParteDeCierre.new(
-		JORNADA_DE_PRUEBA, Apertura.obligatorias(), 3, Partida.Final.EN_CURSO
+		JORNADA_DE_PRUEBA, Apertura.obligatorias(JORNADA_DE_PRUEBA), 3, Partida.Final.EN_CURSO
 	)
 	assert_array(parte.opciones()).is_equal(
 		[ParteDeCierre.Opcion.SEGUIR, ParteDeCierre.Opcion.VOLVER_AL_MENU]
@@ -149,7 +151,7 @@ func test_el_parte_agrega_cada_llamado_una_vez_sin_arrastrarlo() -> void:  # AC-
 		ParteDeCierre
 		. new(
 			1,
-			Apertura.obligatorias(),
+			Apertura.obligatorias(1),
 			2,
 			Partida.Final.EN_CURSO,
 			[
@@ -159,9 +161,26 @@ func test_el_parte_agrega_cada_llamado_una_vez_sin_arrastrarlo() -> void:  # AC-
 			]
 		)
 	)
-	assert_int(parte.lineas().size()).is_equal(Apertura.cantidad_de_obligatorias() + 2)
+	assert_int(parte.lineas().size()).is_equal(Apertura.cantidad_de_obligatorias(1) + 2)
 	assert_array(parte.lineas()).contains(
 		["Local desordenado (+0,5 puntos)", "Objetos importantes en la basura (+0,5 puntos)"]
 	)
-	var siguiente := ParteDeCierre.new(2, Apertura.obligatorias(), 2, Partida.Final.EN_CURSO)
-	assert_int(siguiente.lineas().size()).is_equal(Apertura.cantidad_de_obligatorias())
+	var siguiente := ParteDeCierre.new(
+		2, Apertura.obligatorias(JORNADA_DE_PRUEBA), 2, Partida.Final.EN_CURSO
+	)
+	assert_int(siguiente.lineas().size()).is_equal(
+		Apertura.cantidad_de_obligatorias(JORNADA_DE_PRUEBA)
+	)
+
+
+func test_el_parte_de_ordenar_incluye_su_reaccion_y_la_tercera_trae_cuatro_lineas() -> void:
+	for cumplida: bool in [false, true]:
+		var tareas := Apertura.obligatorias(1)
+		if cumplida:
+			tareas.back().completar()
+		var parte := ParteDeCierre.new(1, tareas, 0, Partida.Final.EN_CURSO)
+		assert_str(parte.lineas().back()).is_equal(
+			CatalogoDeReacciones.de_la_tarea(Tarea.Tipo.ORDENAR_LAS_CAJAS, cumplida).texto
+		)
+	var tercera := ParteDeCierre.new(3, Apertura.obligatorias(3), 0, Partida.Final.EN_CURSO)
+	assert_int(tercera.lineas().size()).is_equal(4)

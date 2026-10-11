@@ -7,7 +7,7 @@
 [ext_resource type="Texture2D" path="res://assets/ui/manada/cabecera.svg" id="5"]
 [ext_resource type="Texture2D" path="res://assets/ui/manada/titulo_inicio.png" id="6"]
 
-[node name="MenuDeInicio" type="Control" node_paths=PackedStringArray("_opciones", "_pedidos", "_marco", "_fila", "_confirmacion")]
+[node name="MenuDeInicio" type="Control" node_paths=PackedStringArray("_opciones", "_pedidos", "_marco", "_fila")]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -20,7 +20,6 @@ _opciones = NodePath("Marco/Opciones")
 _pedidos = NodePath("PedidosDelMenu")
 _marco = NodePath("Marco")
 _fila = NodePath("Marco/Fila")
-_confirmacion = NodePath("Confirmacion")
 
 [node name="Fondo" type="TextureRect" parent="."]
 layout_mode = 1
@@ -90,9 +89,3 @@ alignment = 1
 
 [node name="PedidosDelMenu" type="Node" parent="."]
 script = ExtResource("4")
-
-[node name="Confirmacion" type="ConfirmationDialog" parent="."]
-title = "NUEVO JUEGO"
-dialog_text = "Empezar de nuevo borra la partida guardada."
-ok_button_text = "EMPEZAR"
-cancel_button_text = "VOLVER"
