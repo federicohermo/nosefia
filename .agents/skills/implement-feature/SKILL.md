@@ -210,6 +210,16 @@ cambio. El archivo `godot.log` no los reemplaza: en el lote del 2026-10-10 omiti
 de recursos al salir que sí estaban en stderr. Sin ambos canales de la base no se puede
 atribuir un diagnóstico al cambio sólo porque su XML siga verde.
 
+**La retención se identifica por recursos y por fase, no sólo por el contador.** En #374,
+el `preload` del guion en la suite nueva de dominio hacía que el descubrimiento completo
+retuviera 23 scripts antiguos adicionales; el producto y las otras suites nuevas cerraban
+sin ese crecimiento. Las sondas compararon el mismo árbol, la misma prueba ejecutada y
+variantes que cambiaban sólo la presencia de esa suite o su carga del fixture. Cargar el
+guion dentro del caso restauró la firma de la base, conservando todas las aserciones.
+Ante un aumento, guardá los nombres con `--verbose`, separá descubrimiento de ejecución y
+contrastá controles equivalentes antes de atribuir una causa. No se cambia el addon ni se
+descartan diagnósticos para hacer pasar la entrega; la corrección vuelve a la suite completa.
+
 **Un nodo salteado no es un nodo verde**, y el reporte lo distingue. Pero `tests` sin `GODOT_BIN`
 **no se saltea: sale rojo** — ese salteo vale sólo mientras no exista un solo `*_test.gd`, y hay
 muchos.

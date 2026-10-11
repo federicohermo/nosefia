@@ -312,6 +312,12 @@ La cita de cada criterio **no se cuenta a mano**: `gate_de_specs.py` la cobra so
 Un reporte que dice «listo» sin PR es un carril incompleto: terminalo vos o relanzalo con lo que
 le faltó. Esperá a que vuelvan todos antes del reporte.
 
+**Antes de encolar la convergencia integrada, revisá el crudo definitivo de cada carril.**
+Los siete nodos y el XML no sustituyen esa revisión. En #374, la completa dio verde pero
+el desmontaje retuvo 23 scripts adicionales por una precarga del fixture; la corrección
+exigió repetir la completa. Encolar la integrada antes de esa revisión obligó a interrumpirla.
+Las corridas interrumpidas se conservan como incidentes, nunca como convergencia.
+
 ## Paso 4 — Lo que sólo el padre puede cerrar
 
 - **Las ediciones fuera de carril**, en serie, para que el diff se lea.
