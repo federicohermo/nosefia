@@ -3,22 +3,16 @@ extends GdUnitTestSuite
 const GUION := "res://src/dominio/investigacion/conversacion_con_el_jefe.tres"
 const TEXTOS: Array[String] = [
 	(
-		"¿Cómo andás, pibe? Llegó el momento de lucirte. Tu período de prueba va "
-		+ "a ser de solo cinco jornadas. ¿Quién pudiera, no?"
+		"¿Cómo andás, pibe? Llegó el momento de lucirte.\n"
+		+ "Tu período de prueba va a ser de cinco días.\n¿Quién pudiera, no?"
 	),
+	"Acordate que el primer mes no es pago, lo tomamos como capacitación.",
 	(
-		"De todos modos, acordate de que el primer mes no es pago, porque lo "
-		+ "tomamos como capacitación."
-	),
-	(
-		"Bueno, como ya comenté, la jornada arranca a las 8 PM, cuando se va "
-		+ "Yasmín, y termina a las 8 AM. Debería sobrarte el tiempo para cumplir "
+		"La jornada arranca a las [b]8PM[/b] y termina a las [b]8AM[/b].\n"
+		+ "Debería sobrarte el tiempo para cumplir "
 		+ "con las tareas que te voy a dejar."
 	),
-	(
-		"Cualquier cosa, siempre van a quedar anotadas en el corcho, atrás del "
-		+ "mostrador. Te las resumo:"
-	),
+	"Siempre van a quedar anotadas en el corcho, atrás del mostrador.",
 	(
 		"Primero, y lo más importante: [b]atender a los clientes[/b]. Mi estación "
 		+ "de servicio es el único local del pueblo que queda abierto las 24 horas, "
@@ -41,7 +35,7 @@ const TEXTOS: Array[String] = [
 		+ "en la computadora. Bastante simple."
 	),
 	(
-		"Tercero, hacer la [b]reposición de productos[/b]. Revisá bien todas las "
+		"Tercero, [b]reponer los productos[/b]. Revisá bien todas las "
 		+ "góndolas y reponé los ítems que falten con los de las cajas del "
 		+ "depósito. No quiero ver ni un solo hueco vacío."
 	),
