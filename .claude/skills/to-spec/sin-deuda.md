@@ -216,6 +216,7 @@ entregable más caro y el único que hace que el hallazgo no vuelva.
 | una lectura del navegador **que altera la activación que intenta observar** | `implement-feature` — se usa CDP con userGesture false para observar y entradas físicas para actuar; la consola se conserva desde la carga |
 | un fixture **que apaga el callback que actualiza el cursor** | `implement-feature` — se mantiene activa la traducción del control y se afirma Pointer Lock al abrir, cerrar, pausar y reanudar, sin atribuirle otros errores sin prueba |
 | un AC del contrato común **que queda sin dueño mientras su capacidad sigue draft** | `implement-batch` — antes de repartir se asigna cada AC nuevo a un issue y test permitido; el cierre contrasta esa lista completa, incluidos sus bordes, además de los criterios descartables de cada issue |
+| una precarga de un fixture **que retiene scripts durante el descubrimiento de tests** | `implement-feature` — se identifican recursos y fase con controles equivalentes, se carga el fixture dentro del caso sin perder aserciones y se repite la completa; `implement-batch` revisa el crudo definitivo antes de encolar la integrada |
 | una entrada nativa **que selecciona otra fila por la escala DPI** | `to-issue` — el driver declara consciencia DPI antes de consultar ventanas, cruza cliente y viewport y afirma la selección real sobre el HWND propio |
 | una dependencia instalada **adentro del worktree** que tira la importación de Godot | `implement-batch` — el preámbulo no dijo que Playwright se resuelve desde el checkout principal |
 
