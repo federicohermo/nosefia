@@ -2,6 +2,7 @@
 extends GdUnitTestSuite
 
 const ALMACEN := preload("res://src/escenas/almacen.tscn")
+const BolsaEnLaMano := preload("res://test/escenas/bolsa_en_la_mano.gd")
 const BASE := "Estructura/deposito_contenedor_soporte/"
 const TAPA := BASE + "deposito_contenedor_bisagra_tapa/CuerpoDeLaTapa"
 
@@ -29,7 +30,7 @@ func test_el_izquierdo_en_la_hoja_tira_solo_al_terminar_de_abrir() -> void:  # A
 	jugador.set_process(false)
 	var tapa: Node3D = almacen.get_node(TAPA)
 	tapa.set_physics_process(false)
-	var bolsa: ObjetoAgarrable = almacen.get_node("Objetos/BolsaDeBasura1")
+	var bolsa := BolsaEnLaMano.preparar(almacen)
 	var agarre: Agarre = almacen.get("_agarre")
 	assert_bool(agarre.pedir_agarrar(bolsa.datos, bolsa)).is_true()
 	tapa.call("usar")

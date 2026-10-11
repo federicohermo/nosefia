@@ -1,6 +1,7 @@
 extends GdUnitTestSuite
 
 const ALMACEN := preload("res://src/escenas/almacen.tscn")
+const BolsaEnLaMano := preload("res://test/escenas/bolsa_en_la_mano.gd")
 const AperturaConLugar := preload("res://test/escenas/apertura_con_lugar.gd")
 
 
@@ -828,7 +829,7 @@ func test_lo_soltado_queda_sobre_el_piso_o_la_tapa_que_se_mira() -> void:  # AC-
 	var jugador: Node3D = almacen.get("_jugador")
 	jugador.set_physics_process(false)
 	var camara: Camera3D = jugador.get_node("Giro/Camara")
-	var bolsa: RigidBody3D = almacen.get_node("Objetos/BolsaDeBasura1")
+	var bolsa := BolsaEnLaMano.preparar(almacen)
 	var piso: Vector3 = jugador.global_position + jugador.frente() * 1.2
 	# Una caja del depósito llevada al piso de al lado, para mirarle la tapa.
 	var caja: RigidBody3D = almacen.get("_cajas_de_productos")[0]
@@ -857,7 +858,7 @@ func test_sin_superficie_que_valga_se_suelta_como_siempre() -> void:  # AC-PLY-0
 	jugador.set_physics_process(false)
 	var camara: Camera3D = jugador.get_node("Giro/Camara")
 	var agarre: Agarre = almacen.get("_agarre")
-	var bolsa: RigidBody3D = almacen.get_node("Objetos/BolsaDeBasura1")
+	var bolsa := BolsaEnLaMano.preparar(almacen)
 	for punto: Vector3 in [
 		camara.global_position + jugador.frente() * 10.0,
 		camara.global_position + Vector3.UP * 10.0 + jugador.frente() * 0.1,
@@ -870,7 +871,7 @@ func test_sin_superficie_que_valga_se_suelta_como_siempre() -> void:  # AC-PLY-0
 		_soltar(almacen, bolsa)
 		assert_vector(bolsa.global_position).is_equal_approx(sin_mira, Vector3.ONE * 0.01)
 	# El piso admite, pero la otra bolsa queda más cerca del rayo que media bolsa: se encimarían.
-	var otra: RigidBody3D = almacen.get_node("Objetos/BolsaDeBasura2")
+	var otra := BolsaEnLaMano.preparar(almacen, 1)
 	var piso: Vector3 = jugador.global_position + jugador.frente() * 1.2
 	camara.look_at(piso)
 	var toca: Vector3 = _golpe_de_la_mira(jugador, bolsa)["position"]

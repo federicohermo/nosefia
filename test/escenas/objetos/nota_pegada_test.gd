@@ -15,7 +15,7 @@ func test_el_texto_fisico_y_la_vista_presentan_el_mismo_dato() -> void:  # AC-PL
 	cuerpo.declarar(dato)
 	assert_object(cuerpo.dato()).is_same(dato)
 	assert_str(cuerpo.titulo_del_papel.text).is_equal(dato.titulo())
-	assert_str(cuerpo.renglones_del_papel.text).is_equal("1. Limpieza\n2. Sacar la basura")
+	assert_str(cuerpo.renglones_del_papel.text).is_equal("1. Limpieza\n2. Tirar la basura")
 	assert_str(cuerpo.renglones_del_papel.text).is_equal(NotaEncuadrada.texto_de_renglones(dato))
 	assert_object(cuerpo.imagen()).is_null()
 

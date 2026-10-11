@@ -2,6 +2,7 @@
 extends GdUnitTestSuite
 
 const ALMACEN := preload("res://src/escenas/almacen.tscn")
+const BolsaEnLaMano := preload("res://test/escenas/bolsa_en_la_mano.gd")
 const TapaDelLocal := preload("res://src/escenas/puestos/tapa_del_contenedor.gd")
 const BASE_DEL_CONTENEDOR := "Estructura/deposito_contenedor_soporte/"
 const RUTA_DE_LA_TAPA := BASE_DEL_CONTENEDOR + "deposito_contenedor_bisagra_tapa/CuerpoDeLaTapa"
@@ -48,7 +49,7 @@ func test_una_bolsa_soltada_por_la_boca_se_recoge_y_se_tira_despues() -> void:  
 	var jugador: CharacterBody3D = almacen.get_node("Jugador")
 	jugador.set_physics_process(false)
 	jugador.global_position = contenedor.global_position + Vector3.BACK
-	var bolsa: ObjetoAgarrable = almacen.get_node("Objetos/BolsaDeBasura1")
+	var bolsa := BolsaEnLaMano.preparar(almacen)
 	var datos := bolsa.datos
 	var agarre: Agarre = jugador.get("agarre")
 	assert_bool(agarre.pedir_agarrar(datos, bolsa)).is_true()
@@ -71,6 +72,7 @@ func test_una_bolsa_soltada_por_la_boca_se_recoge_y_se_tira_despues() -> void:  
 
 func _abrir() -> Node3D:
 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
+	almacen.set("_partida", Partida.desde({"jornada": 2, "medios": 0}))
 	add_child(almacen)
 	await get_tree().physics_frame
 	await get_tree().physics_frame
@@ -146,7 +148,7 @@ func test_bolsa_con_tapa_cerrada_se_conserva_hasta_el_clic_abierta() -> void:  #
 	var tapa: TapaDelLocal = almacen.get_node(RUTA_DE_LA_TAPA)
 	tapa.usar()
 	await _terminar_el_giro(tapa)
-	var bolsa: ObjetoAgarrable = almacen.get_node("Objetos/BolsaDeBasura1")
+	var bolsa := BolsaEnLaMano.preparar(almacen)
 	var agarre: Agarre = almacen.get("_agarre")
 	assert_bool(agarre.pedir_agarrar(bolsa.datos, bolsa)).is_true()
 	tapa.interactuar()
@@ -275,7 +277,8 @@ func test_el_contenedor_fijo_conserva_los_viajes_del_local_y_las_bolsas() -> voi
 		"Estructura/base compu/StaticBody3D"
 	]:
 		puntos.append(almacen.get_node(ruta))
-	puntos.append_array(almacen.get("_bolsas"))
+	for ruta: NodePath in BolsaEnLaMano.RUTAS:
+		puntos.append(almacen.get_node(ruta))
 	for mancha: Node in almacen.find_children("Mancha*", "Node3D", true, false):
 		puntos.append(mancha as Node3D)
 	assert_int(puntos.size()).is_equal(3 + ReglasDeLaBasura.BOLSAS_DE_LA_JORNADA + 4)

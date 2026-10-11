@@ -298,7 +298,7 @@ func test_hud_y_nota_siguen_la_jornada_sin_recargar_el_local() -> void:  # AC-SH
 			await get_tree().physics_frame
 		var esperada := NotaPegada.tareas_a_realizar(Apertura.obligatorias(jornada))
 		if jornada == 2:
-			assert_str(hoja.call("dato").renglones()[4]).is_equal("Sacar la basura")
+			assert_str(hoja.call("dato").renglones()[4]).is_equal("Tirar la basura")
 		assert_array(hoja.call("dato").renglones()).contains_exactly(esperada.renglones())
 		assert_str(hoja.get("renglones_del_papel").text).is_equal(
 			NotaEncuadrada.texto_de_renglones(hoja.call("dato"))

@@ -6,6 +6,7 @@
 extends GdUnitTestSuite
 
 const ALMACEN := preload("res://src/escenas/almacen.tscn")
+const BolsaEnLaMano := preload("res://test/escenas/bolsa_en_la_mano.gd")
 const UtilDeLimpieza := preload("res://src/escenas/objetos/util_de_limpieza.gd")
 
 const LAVATORIO := "Estructura/vanitory/StaticBody3D"
@@ -264,6 +265,7 @@ func test_la_punta_de_la_mopa_se_ve_del_color_del_agua() -> void:  # AC-CLN-022
 
 func test_la_mezcla_espera_aunque_se_suelten_los_utiles_en_otro_cuarto() -> void:  # AC-CLN-025
 	var almacen: Node3D = await _almacen()
+	var bolsa := BolsaEnLaMano.preparar(almacen)
 	var balde := _util(almacen, "Balde")
 	var mopa := _util(almacen, "Mopa")
 	_usar(almacen, balde, almacen.get_node(LAVATORIO))
@@ -272,7 +274,6 @@ func test_la_mezcla_espera_aunque_se_suelten_los_utiles_en_otro_cuarto() -> void
 	balde.global_position = EN_EL_DEPOSITO
 	mopa.global_position = EN_EL_LOCAL
 	var agarre: Agarre = almacen.get("_agarre")
-	var bolsa: Node3D = almacen.get("_bolsas")[0]
 	assert_bool(agarre.pedir_agarrar(bolsa.get("datos"), bolsa)).is_true()
 	agarre.soltar(true)
 	assert_bool(agarre.pedir_agarrar(balde.datos, balde)).is_true()

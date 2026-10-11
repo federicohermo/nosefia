@@ -11,6 +11,7 @@
 [ext_resource type="Script" path="res://src/escenas/puestos/puerta_del_local.gd" id="puerta"]
 [ext_resource type="Script" path="res://src/escenas/puestos/tapa_del_contenedor.gd" id="tapa_contenedor"]
 [ext_resource type="Script" path="res://src/escenas/puestos/contenedor_de_basura.gd" id="contenedor"]
+[ext_resource type="Script" path="res://src/escenas/puestos/tacho_de_basura.gd" id="tacho"]
 [ext_resource type="Script" path="res://src/escenas/puestos/artefacto_del_bano.gd" id="artefacto"]
 [ext_resource type="PackedScene" path="res://src/escenas/puestos/contenido_del_estante.tscn" id="contenido"]
 
@@ -1476,11 +1477,26 @@ shape = ExtResource("colision_caja_nueva")
 [node name="CollisionShape3D" parent="cajaregistradora/StaticBody3D"]
 disabled = true
 
+[node name="StaticBody3D" parent="tachitobasura" node_paths=PackedStringArray("mallas") groups=["interactuable"]]
+script = ExtResource("tacho")
+tacho = 0
+mallas = [NodePath("..")]
+
 [node name="Volumen" type="CollisionShape3D" parent="tachitobasura/StaticBody3D"]
 shape = SubResource("casco_24")
 
+[node name="StaticBody3D" parent="tachitobasura_001" node_paths=PackedStringArray("mallas") groups=["interactuable"]]
+script = ExtResource("tacho")
+tacho = 1
+mallas = [NodePath("..")]
+
 [node name="Volumen" type="CollisionShape3D" parent="tachitobasura_001/StaticBody3D"]
 shape = SubResource("casco_25")
+
+[node name="StaticBody3D" parent="tachitobasura_002" node_paths=PackedStringArray("mallas") groups=["interactuable"]]
+script = ExtResource("tacho")
+tacho = 2
+mallas = [NodePath("..")]
 
 [node name="Volumen" type="CollisionShape3D" parent="tachitobasura_002/StaticBody3D"]
 shape = SubResource("casco_26")

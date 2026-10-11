@@ -2,6 +2,7 @@
 extends GdUnitTestSuite
 
 const ALMACEN := preload("res://src/escenas/almacen.tscn")
+const BolsaEnLaMano := preload("res://test/escenas/bolsa_en_la_mano.gd")
 const Habitaciones := preload("res://src/escenas/puestos/habitaciones_del_almacen.gd")
 const CUERPO := "Estructura/deposito_contenedor_soporte/deposito_contenedor_cuerpo/StaticBody3D"
 
@@ -22,9 +23,9 @@ func after_test() -> void:
 
 func _abrir() -> void:
 	_almacen = ALMACEN.instantiate()
+	_almacen.set("_partida", Partida.desde({"jornada": 2, "medios": 0}))
 	add_child(_almacen)
 	# Aísla las consecuencias del descarte del requisito de ventas físicas de la primera noche.
-	_almacen.call("_al_abrir_la_jornada", 2)
 	assert_bool((_almacen.get("_atenciones") as Ventanilla).tarea().fisica()).is_false()
 	var jugador: Node3D = _almacen.get("_jugador")
 	jugador.set_process(false)
@@ -33,6 +34,9 @@ func _abrir() -> void:
 
 func _tirar(objeto: ObjetoAgarrable) -> void:
 	var agarre: Agarre = _almacen.get("_agarre")
+	if ReglasDeLaBasura.ids_de_las_bolsas().has(objeto.datos.id):
+		var numero := ReglasDeLaBasura.ids_de_las_bolsas().find(objeto.datos.id)
+		assert_object(BolsaEnLaMano.sacar(_almacen, numero)).is_same(objeto)
 	if agarre.cuerpo_sostenido() != objeto:
 		assert_bool(agarre.pedir_agarrar(objeto.datos, objeto)).is_true()
 	var jugador: Node3D = _almacen.get("_jugador")
