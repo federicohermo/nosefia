@@ -16,9 +16,9 @@ const PLANOS := [
 	[6, Vector3(-0.80, 1.70, 4.80), Vector3(-0.80, 1.74, 6.38), 60.0, "Estructura/Ventanilla"],
 	[
 		7,
-		Vector3(2.40, 1.65, 5.70),
-		Vector3(1.15, 1.10, 4.95),
-		65.0,
+		Vector3(0.20, 1.55, 5.02),
+		Vector3(1.15, 1.12, 5.02),
+		42.0,
 		"cajaregistradora/StaticBody3D"
 	],
 	[8, Vector3(-0.05, 1.65, 4.65), Vector3(-0.05, 1.24, 3.25), 55.0, "base compu/StaticBody3D"],

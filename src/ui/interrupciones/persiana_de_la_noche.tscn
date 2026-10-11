@@ -1,8 +1,9 @@
 [gd_scene format=3]
 
 [ext_resource type="Script" path="res://src/ui/interrupciones/persiana_de_la_noche.gd" id="1"]
-[ext_resource type="Texture2D" path="res://assets/ui/manada/persiana.png" id="2"]
+[ext_resource type="Texture2D" path="res://assets/models/SEPT_JUEGOS_PROTOTIPO_textura portón.png" id="2"]
 [ext_resource type="Theme" path="res://assets/ui/manada/tema.tres" id="3"]
+[ext_resource type="Material" path="res://assets/ui/manada/persiana_gris.tres" id="4"]
 
 [node name="PersianaDeLaNoche" type="CanvasLayer" node_paths=PackedStringArray("_persiana", "_marco", "_placa")]
 layer = 4
@@ -12,6 +13,7 @@ _marco = NodePath("Marco")
 _placa = NodePath("Marco/Placa")
 
 [node name="Persiana" type="TextureRect" parent="."]
+material = ExtResource("4")
 offset_right = 1920.0
 offset_bottom = 1080.0
 texture = ExtResource("2")

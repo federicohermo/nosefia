@@ -23,7 +23,7 @@ comercial. La incorporación al build local no acredita una licencia comercial.
 | `enrique.png` | Figma, capa `511:317` del frame de instrucciones `511:302`, descargada sin editar el 2026-10-10 | Retrato de Enrique Peldaño en las instrucciones y en el celular |
 | `fotos/intro-<NN>.png` | Renders del modelo jugable, generados sin editar el PNG: Intro 4 en 960 × 674, Intro 9 en 640 × 640 y las restantes en 960 × 540 | Fotos adjuntas a las instrucciones de Enrique |
 | `celular.svg` | Dibujo vectorial original del proyecto, creado el 2026-10-10 | Recordatorio del celular con Q |
-| `persiana.png` | Figma, capa `567:645` («PERSIANA 1 1») del frame `567:644`, descargada sin editar el 2026-10-10 | Persiana baja en la entrada de cada noche |
+| `persiana_gris.tres` | Material común sobre la textura real del portón, aprobado por el usuario | Fondo de la intro y persiana de entrada de cada noche |
 | `notificacion_salida.svg` | Símbolo `480:341`, aviso `477:216` de Figma, descargado sin editar el 2026-10-09 | Cliente cansado de esperar |
 | `notificacion_cliente.svg` | Figma, grupo `213:191` del frame `243:150` | Símbolo original del aviso «¡HAY UN CLIENTE!» |
 | `notificacion_lectura.svg` | Figma, grupo `480:319` del frame `477:243` | Cruz original del aviso «NO SE PUDO LEER» |
@@ -111,6 +111,8 @@ El fondo usa directamente `assets/models/SEPT_JUEGOS_PROTOTIPO_textura portón.p
 esa textura ni el modelo. El usuario aprobó el preview «Aplicar este fondo» el 2026-10-10:
 `instrucciones/porton_gris.gdshader` reproduce exactamente su recorte UV, conversión a gris y
 luminosidad 0,48. Sustituye la persiana azul del prototipo por el portón real en gris.
+La intro y la persiana que sube comparten `persiana_gris.tres`, textura y modo de ajuste.
+La imagen azul anterior se retira para que no reaparezca en ninguna de esas vistas.
 
 El retrato local histórico
 incluía un rectángulo opaco celeste: la pantalla usa ahora `instrucciones/enrique.png`, la imagen
@@ -120,3 +122,4 @@ progresivo hacia los pies del diseño. El chat conserva su recurso histórico y 
 El encuadre de Intro 4 es ortográfico, frontal al corcho completo y sus dos notas. Intro 9
 encuadra las tres alturas del estante de cajas de frente, sin objetos que lo oculten. Las
 proporciones se ajustan al marco de presentación para evitar franjas negras sin perder el tema.
+Intro 7 muestra la caja registradora y el lector de frente, próximos y completos en el encuadre.
