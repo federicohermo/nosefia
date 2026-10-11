@@ -1,0 +1,3 @@
+La primera verificación integrada del padre se interrumpió deliberadamente después de que la primera completa de #374 detectara tres aserciones del fixture heredado de carga, incompatibles con el fundido de 0,3 s ya decidido. Se conservaron sus logs parciales; no son evidencia de convergencia ni se cuentan como una verificación completa.
+
+La sesión 15778 terminó con 4294967295 tras 328 s de ejecución y 725 s de espera. Sólo se terminaron procesos identificados como descendientes del turno propio integrada-final-1; no quedaron procesos de ese turno. Antes de adaptar el helper se publicó el issue #374 completo con su alcance explícito. La segunda corrida integrada usa la cabeza con esa adaptación y hace el conteo inmediatamente después de verificar.py.

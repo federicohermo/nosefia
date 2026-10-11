@@ -1,0 +1,32 @@
+{
+  "head": "bf8cf0bfe703e606d949ca0bf6199ccdf9b899b5",
+  "product_head": "a9b695472165b55bd2faaab1773d139680d68c85",
+  "integration_only_paths": [
+    ".agents/skills/features-to-issues/sin-deuda.md",
+    ".agents/skills/implement-batch/SKILL.md",
+    ".agents/skills/implement-batch/sin-deuda.md",
+    ".agents/skills/implement-feature/SKILL.md",
+    ".agents/skills/implement-feature/sin-deuda.md",
+    ".agents/skills/pr-review-batch/sin-deuda.md",
+    ".agents/skills/pr-review/sin-deuda.md",
+    ".agents/skills/to-issue/SKILL.md",
+    ".agents/skills/to-issue/sin-deuda.md",
+    ".agents/skills/to-spec/SKILL.md",
+    ".agents/skills/to-spec/sin-deuda.md",
+    ".claude/skills/features-to-issues/sin-deuda.md",
+    ".claude/skills/implement-batch/SKILL.md",
+    ".claude/skills/implement-batch/sin-deuda.md",
+    ".claude/skills/implement-feature/SKILL.md",
+    ".claude/skills/implement-feature/sin-deuda.md",
+    ".claude/skills/pr-review-batch/sin-deuda.md",
+    ".claude/skills/pr-review/sin-deuda.md",
+    ".claude/skills/to-issue/SKILL.md",
+    ".claude/skills/to-issue/sin-deuda.md",
+    ".claude/skills/to-spec/SKILL.md",
+    ".claude/skills/to-spec/sin-deuda.md"
+  ],
+  "report": "reports/report_3",
+  "suites": 239,
+  "evidence_branch": "capturas/lote-364-370",
+  "scope": "Final integrated verification and batch cleanup, without merging any remote PR."
+}

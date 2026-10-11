@@ -1,0 +1,456 @@
+{
+  "verified_links": 74,
+  "evidence_heads": {
+    "capturas/374": "df96b2d52142853c4b95b0ac4a14e85b2a7d00fc",
+    "capturas/373": "a5239f2af161a8fec471ff800f26fe72a7f6605c",
+    "capturas/370": "793ea7d47fabe2c4fe0683ea65b54febf4e9efc7",
+    "capturas/369": "b9b98ac9f172aff6dc2b43fbda685c2b4f263a64",
+    "capturas/364": "f3bb9cedd85d4daf7c264a5964c766baafaa2e20"
+  },
+  "links": [
+    {
+      "pr": 395,
+      "url": "https://github.com/federicohermo/nosefia/blob/df96b2d52142853c4b95b0ac4a14e85b2a7d00fc/comparacion-diagnosticos.json",
+      "revision": "df96b2d52142853c4b95b0ac4a14e85b2a7d00fc",
+      "path": "comparacion-diagnosticos.json"
+    },
+    {
+      "pr": 395,
+      "url": "https://github.com/federicohermo/nosefia/blob/df96b2d52142853c4b95b0ac4a14e85b2a7d00fc/diff-producto-a-final.patch",
+      "revision": "df96b2d52142853c4b95b0ac4a14e85b2a7d00fc",
+      "path": "diff-producto-a-final.patch"
+    },
+    {
+      "pr": 395,
+      "url": "https://github.com/federicohermo/nosefia/blob/df96b2d52142853c4b95b0ac4a14e85b2a7d00fc/fuentes-TDD-originales.zip",
+      "revision": "df96b2d52142853c4b95b0ac4a14e85b2a7d00fc",
+      "path": "fuentes-TDD-originales.zip"
+    },
+    {
+      "pr": 395,
+      "url": "https://github.com/federicohermo/nosefia/blob/df96b2d52142853c4b95b0ac4a14e85b2a7d00fc/sha256.json",
+      "revision": "df96b2d52142853c4b95b0ac4a14e85b2a7d00fc",
+      "path": "sha256.json"
+    },
+    {
+      "pr": 395,
+      "url": "https://github.com/federicohermo/nosefia/blob/df96b2d52142853c4b95b0ac4a14e85b2a7d00fc/verificacion/374-aprobacion-padre.md",
+      "revision": "df96b2d52142853c4b95b0ac4a14e85b2a7d00fc",
+      "path": "verificacion/374-aprobacion-padre.md"
+    },
+    {
+      "pr": 395,
+      "url": "https://github.com/federicohermo/nosefia/blob/df96b2d52142853c4b95b0ac4a14e85b2a7d00fc/verificacion/374-final-3-tests.log",
+      "revision": "df96b2d52142853c4b95b0ac4a14e85b2a7d00fc",
+      "path": "verificacion/374-final-3-tests.log"
+    },
+    {
+      "pr": 395,
+      "url": "https://github.com/federicohermo/nosefia/blob/df96b2d52142853c4b95b0ac4a14e85b2a7d00fc/verificacion/374-final-3.log",
+      "revision": "df96b2d52142853c4b95b0ac4a14e85b2a7d00fc",
+      "path": "verificacion/374-final-3.log"
+    },
+    {
+      "pr": 395,
+      "url": "https://github.com/federicohermo/nosefia/blob/df96b2d52142853c4b95b0ac4a14e85b2a7d00fc/verificacion/results.xml",
+      "revision": "df96b2d52142853c4b95b0ac4a14e85b2a7d00fc",
+      "path": "verificacion/results.xml"
+    },
+    {
+      "pr": 395,
+      "url": "https://raw.githubusercontent.com/federicohermo/nosefia/capturas/374/escritorio-foto-enrique-1280.png",
+      "revision": "df96b2d52142853c4b95b0ac4a14e85b2a7d00fc",
+      "path": "escritorio-foto-enrique-1280.png"
+    },
+    {
+      "pr": 395,
+      "url": "https://raw.githubusercontent.com/federicohermo/nosefia/capturas/374/escritorio-instrucciones-foto-1280.png",
+      "revision": "df96b2d52142853c4b95b0ac4a14e85b2a7d00fc",
+      "path": "escritorio-instrucciones-foto-1280.png"
+    },
+    {
+      "pr": 395,
+      "url": "https://raw.githubusercontent.com/federicohermo/nosefia/capturas/374/escritorio-instrucciones-primero-1920.png",
+      "revision": "df96b2d52142853c4b95b0ac4a14e85b2a7d00fc",
+      "path": "escritorio-instrucciones-primero-1920.png"
+    },
+    {
+      "pr": 395,
+      "url": "https://raw.githubusercontent.com/federicohermo/nosefia/capturas/374/escritorio-instrucciones-ultimo-1280.png",
+      "revision": "df96b2d52142853c4b95b0ac4a14e85b2a7d00fc",
+      "path": "escritorio-instrucciones-ultimo-1280.png"
+    },
+    {
+      "pr": 395,
+      "url": "https://raw.githubusercontent.com/federicohermo/nosefia/capturas/374/fotos/intro-04.png",
+      "revision": "df96b2d52142853c4b95b0ac4a14e85b2a7d00fc",
+      "path": "fotos/intro-04.png"
+    },
+    {
+      "pr": 395,
+      "url": "https://raw.githubusercontent.com/federicohermo/nosefia/capturas/374/fotos/intro-06.png",
+      "revision": "df96b2d52142853c4b95b0ac4a14e85b2a7d00fc",
+      "path": "fotos/intro-06.png"
+    },
+    {
+      "pr": 395,
+      "url": "https://raw.githubusercontent.com/federicohermo/nosefia/capturas/374/fotos/intro-07.png",
+      "revision": "df96b2d52142853c4b95b0ac4a14e85b2a7d00fc",
+      "path": "fotos/intro-07.png"
+    },
+    {
+      "pr": 395,
+      "url": "https://raw.githubusercontent.com/federicohermo/nosefia/capturas/374/fotos/intro-08.png",
+      "revision": "df96b2d52142853c4b95b0ac4a14e85b2a7d00fc",
+      "path": "fotos/intro-08.png"
+    },
+    {
+      "pr": 395,
+      "url": "https://raw.githubusercontent.com/federicohermo/nosefia/capturas/374/fotos/intro-09.png",
+      "revision": "df96b2d52142853c4b95b0ac4a14e85b2a7d00fc",
+      "path": "fotos/intro-09.png"
+    },
+    {
+      "pr": 395,
+      "url": "https://raw.githubusercontent.com/federicohermo/nosefia/capturas/374/fotos/intro-11.png",
+      "revision": "df96b2d52142853c4b95b0ac4a14e85b2a7d00fc",
+      "path": "fotos/intro-11.png"
+    },
+    {
+      "pr": 395,
+      "url": "https://raw.githubusercontent.com/federicohermo/nosefia/capturas/374/fotos/intro-13.png",
+      "revision": "df96b2d52142853c4b95b0ac4a14e85b2a7d00fc",
+      "path": "fotos/intro-13.png"
+    },
+    {
+      "pr": 395,
+      "url": "https://raw.githubusercontent.com/federicohermo/nosefia/capturas/374/web-foto-enrique-1280.png",
+      "revision": "df96b2d52142853c4b95b0ac4a14e85b2a7d00fc",
+      "path": "web-foto-enrique-1280.png"
+    },
+    {
+      "pr": 395,
+      "url": "https://raw.githubusercontent.com/federicohermo/nosefia/capturas/374/web-instrucciones-foto-1280.png",
+      "revision": "df96b2d52142853c4b95b0ac4a14e85b2a7d00fc",
+      "path": "web-instrucciones-foto-1280.png"
+    },
+    {
+      "pr": 395,
+      "url": "https://raw.githubusercontent.com/federicohermo/nosefia/capturas/374/web-instrucciones-primero-1920.png",
+      "revision": "df96b2d52142853c4b95b0ac4a14e85b2a7d00fc",
+      "path": "web-instrucciones-primero-1920.png"
+    },
+    {
+      "pr": 395,
+      "url": "https://raw.githubusercontent.com/federicohermo/nosefia/capturas/374/web-instrucciones-ultimo-1280.png",
+      "revision": "df96b2d52142853c4b95b0ac4a14e85b2a7d00fc",
+      "path": "web-instrucciones-ultimo-1280.png"
+    },
+    {
+      "pr": 394,
+      "url": "https://github.com/federicohermo/nosefia/blob/a5239f2af161a8fec471ff800f26fe72a7f6605c/diff-producto-a-final.patch",
+      "revision": "a5239f2af161a8fec471ff800f26fe72a7f6605c",
+      "path": "diff-producto-a-final.patch"
+    },
+    {
+      "pr": 394,
+      "url": "https://github.com/federicohermo/nosefia/blob/a5239f2af161a8fec471ff800f26fe72a7f6605c/resultado-final.json",
+      "revision": "a5239f2af161a8fec471ff800f26fe72a7f6605c",
+      "path": "resultado-final.json"
+    },
+    {
+      "pr": 394,
+      "url": "https://github.com/federicohermo/nosefia/blob/a5239f2af161a8fec471ff800f26fe72a7f6605c/sha256.json",
+      "revision": "a5239f2af161a8fec471ff800f26fe72a7f6605c",
+      "path": "sha256.json"
+    },
+    {
+      "pr": 394,
+      "url": "https://github.com/federicohermo/nosefia/blob/a5239f2af161a8fec471ff800f26fe72a7f6605c/verificacion/373-final-2-tests.log",
+      "revision": "a5239f2af161a8fec471ff800f26fe72a7f6605c",
+      "path": "verificacion/373-final-2-tests.log"
+    },
+    {
+      "pr": 394,
+      "url": "https://github.com/federicohermo/nosefia/blob/a5239f2af161a8fec471ff800f26fe72a7f6605c/verificacion/373-final-2.log",
+      "revision": "a5239f2af161a8fec471ff800f26fe72a7f6605c",
+      "path": "verificacion/373-final-2.log"
+    },
+    {
+      "pr": 394,
+      "url": "https://github.com/federicohermo/nosefia/blob/a5239f2af161a8fec471ff800f26fe72a7f6605c/verificacion/suites-en-el-checkout.txt",
+      "revision": "a5239f2af161a8fec471ff800f26fe72a7f6605c",
+      "path": "verificacion/suites-en-el-checkout.txt"
+    },
+    {
+      "pr": 394,
+      "url": "https://raw.githubusercontent.com/federicohermo/nosefia/capturas/373/escritorio-chat-1920.png",
+      "revision": "a5239f2af161a8fec471ff800f26fe72a7f6605c",
+      "path": "escritorio-chat-1920.png"
+    },
+    {
+      "pr": 394,
+      "url": "https://raw.githubusercontent.com/federicohermo/nosefia/capturas/373/escritorio-foto-1280.png",
+      "revision": "a5239f2af161a8fec471ff800f26fe72a7f6605c",
+      "path": "escritorio-foto-1280.png"
+    },
+    {
+      "pr": 394,
+      "url": "https://raw.githubusercontent.com/federicohermo/nosefia/capturas/373/escritorio-menu-1920.png",
+      "revision": "a5239f2af161a8fec471ff800f26fe72a7f6605c",
+      "path": "escritorio-menu-1920.png"
+    },
+    {
+      "pr": 394,
+      "url": "https://raw.githubusercontent.com/federicohermo/nosefia/capturas/373/web-chat-1920.png",
+      "revision": "a5239f2af161a8fec471ff800f26fe72a7f6605c",
+      "path": "web-chat-1920.png"
+    },
+    {
+      "pr": 394,
+      "url": "https://raw.githubusercontent.com/federicohermo/nosefia/capturas/373/web-foto-1280.png",
+      "revision": "a5239f2af161a8fec471ff800f26fe72a7f6605c",
+      "path": "web-foto-1280.png"
+    },
+    {
+      "pr": 394,
+      "url": "https://raw.githubusercontent.com/federicohermo/nosefia/capturas/373/web-menu-1920.png",
+      "revision": "a5239f2af161a8fec471ff800f26fe72a7f6605c",
+      "path": "web-menu-1920.png"
+    },
+    {
+      "pr": 392,
+      "url": "https://raw.githubusercontent.com/federicohermo/nosefia/793ea7d47fabe2c4fe0683ea65b54febf4e9efc7/informe.md",
+      "revision": "793ea7d47fabe2c4fe0683ea65b54febf4e9efc7",
+      "path": "informe.md"
+    },
+    {
+      "pr": 392,
+      "url": "https://raw.githubusercontent.com/federicohermo/nosefia/793ea7d47fabe2c4fe0683ea65b54febf4e9efc7/logs/370-final-1-tests.log",
+      "revision": "793ea7d47fabe2c4fe0683ea65b54febf4e9efc7",
+      "path": "logs/370-final-1-tests.log"
+    },
+    {
+      "pr": 392,
+      "url": "https://raw.githubusercontent.com/federicohermo/nosefia/793ea7d47fabe2c4fe0683ea65b54febf4e9efc7/logs/370-final-1.log",
+      "revision": "793ea7d47fabe2c4fe0683ea65b54febf4e9efc7",
+      "path": "logs/370-final-1.log"
+    },
+    {
+      "pr": 392,
+      "url": "https://raw.githubusercontent.com/federicohermo/nosefia/793ea7d47fabe2c4fe0683ea65b54febf4e9efc7/manifiesto.json",
+      "revision": "793ea7d47fabe2c4fe0683ea65b54febf4e9efc7",
+      "path": "manifiesto.json"
+    },
+    {
+      "pr": 392,
+      "url": "https://raw.githubusercontent.com/federicohermo/nosefia/capturas/370/bano-antes.png",
+      "revision": "793ea7d47fabe2c4fe0683ea65b54febf4e9efc7",
+      "path": "bano-antes.png"
+    },
+    {
+      "pr": 392,
+      "url": "https://raw.githubusercontent.com/federicohermo/nosefia/capturas/370/bano-despues.png",
+      "revision": "793ea7d47fabe2c4fe0683ea65b54febf4e9efc7",
+      "path": "bano-despues.png"
+    },
+    {
+      "pr": 392,
+      "url": "https://raw.githubusercontent.com/federicohermo/nosefia/capturas/370/escritorio-antes.png",
+      "revision": "793ea7d47fabe2c4fe0683ea65b54febf4e9efc7",
+      "path": "escritorio-antes.png"
+    },
+    {
+      "pr": 392,
+      "url": "https://raw.githubusercontent.com/federicohermo/nosefia/capturas/370/escritorio-despues.png",
+      "revision": "793ea7d47fabe2c4fe0683ea65b54febf4e9efc7",
+      "path": "escritorio-despues.png"
+    },
+    {
+      "pr": 392,
+      "url": "https://raw.githubusercontent.com/federicohermo/nosefia/capturas/370/local-antes.png",
+      "revision": "793ea7d47fabe2c4fe0683ea65b54febf4e9efc7",
+      "path": "local-antes.png"
+    },
+    {
+      "pr": 392,
+      "url": "https://raw.githubusercontent.com/federicohermo/nosefia/capturas/370/local-despues.png",
+      "revision": "793ea7d47fabe2c4fe0683ea65b54febf4e9efc7",
+      "path": "local-despues.png"
+    },
+    {
+      "pr": 391,
+      "url": "https://raw.githubusercontent.com/federicohermo/nosefia/b9b98ac9f172aff6dc2b43fbda685c2b4f263a64/informe.md",
+      "revision": "b9b98ac9f172aff6dc2b43fbda685c2b4f263a64",
+      "path": "informe.md"
+    },
+    {
+      "pr": 391,
+      "url": "https://raw.githubusercontent.com/federicohermo/nosefia/b9b98ac9f172aff6dc2b43fbda685c2b4f263a64/logs/369-final-2-godot.log",
+      "revision": "b9b98ac9f172aff6dc2b43fbda685c2b4f263a64",
+      "path": "logs/369-final-2-godot.log"
+    },
+    {
+      "pr": 391,
+      "url": "https://raw.githubusercontent.com/federicohermo/nosefia/b9b98ac9f172aff6dc2b43fbda685c2b4f263a64/logs/369-final-2-resultados.xml",
+      "revision": "b9b98ac9f172aff6dc2b43fbda685c2b4f263a64",
+      "path": "logs/369-final-2-resultados.xml"
+    },
+    {
+      "pr": 391,
+      "url": "https://raw.githubusercontent.com/federicohermo/nosefia/b9b98ac9f172aff6dc2b43fbda685c2b4f263a64/logs/369-final-2-tests.log",
+      "revision": "b9b98ac9f172aff6dc2b43fbda685c2b4f263a64",
+      "path": "logs/369-final-2-tests.log"
+    },
+    {
+      "pr": 391,
+      "url": "https://raw.githubusercontent.com/federicohermo/nosefia/b9b98ac9f172aff6dc2b43fbda685c2b4f263a64/logs/369-final-2.log",
+      "revision": "b9b98ac9f172aff6dc2b43fbda685c2b4f263a64",
+      "path": "logs/369-final-2.log"
+    },
+    {
+      "pr": 391,
+      "url": "https://raw.githubusercontent.com/federicohermo/nosefia/b9b98ac9f172aff6dc2b43fbda685c2b4f263a64/manifiesto.json",
+      "revision": "b9b98ac9f172aff6dc2b43fbda685c2b4f263a64",
+      "path": "manifiesto.json"
+    },
+    {
+      "pr": 391,
+      "url": "https://raw.githubusercontent.com/federicohermo/nosefia/capturas/369/pila-desde-la-puerta.png",
+      "revision": "b9b98ac9f172aff6dc2b43fbda685c2b4f263a64",
+      "path": "pila-desde-la-puerta.png"
+    },
+    {
+      "pr": 391,
+      "url": "https://raw.githubusercontent.com/federicohermo/nosefia/capturas/369/pila-frente-al-porton.png",
+      "revision": "b9b98ac9f172aff6dc2b43fbda685c2b4f263a64",
+      "path": "pila-frente-al-porton.png"
+    },
+    {
+      "pr": 390,
+      "url": "https://raw.githubusercontent.com/federicohermo/nosefia/d4b6367ef05c0f54810e4cad90217a67556ba9f1/base-arranque.png",
+      "revision": "d4b6367ef05c0f54810e4cad90217a67556ba9f1",
+      "path": "base-arranque.png"
+    },
+    {
+      "pr": 390,
+      "url": "https://raw.githubusercontent.com/federicohermo/nosefia/d4b6367ef05c0f54810e4cad90217a67556ba9f1/base-desde-arranque-hacia-entrada.png",
+      "revision": "d4b6367ef05c0f54810e4cad90217a67556ba9f1",
+      "path": "base-desde-arranque-hacia-entrada.png"
+    },
+    {
+      "pr": 390,
+      "url": "https://raw.githubusercontent.com/federicohermo/nosefia/d4b6367ef05c0f54810e4cad90217a67556ba9f1/base-posicion-y-sombras.png",
+      "revision": "d4b6367ef05c0f54810e4cad90217a67556ba9f1",
+      "path": "base-posicion-y-sombras.png"
+    },
+    {
+      "pr": 390,
+      "url": "https://raw.githubusercontent.com/federicohermo/nosefia/d4b6367ef05c0f54810e4cad90217a67556ba9f1/clasificacion-convergencia.json",
+      "revision": "d4b6367ef05c0f54810e4cad90217a67556ba9f1",
+      "path": "clasificacion-convergencia.json"
+    },
+    {
+      "pr": 390,
+      "url": "https://raw.githubusercontent.com/federicohermo/nosefia/d4b6367ef05c0f54810e4cad90217a67556ba9f1/convergencia.json",
+      "revision": "d4b6367ef05c0f54810e4cad90217a67556ba9f1",
+      "path": "convergencia.json"
+    },
+    {
+      "pr": 390,
+      "url": "https://raw.githubusercontent.com/federicohermo/nosefia/d4b6367ef05c0f54810e4cad90217a67556ba9f1/final-arranque.png",
+      "revision": "d4b6367ef05c0f54810e4cad90217a67556ba9f1",
+      "path": "final-arranque.png"
+    },
+    {
+      "pr": 390,
+      "url": "https://raw.githubusercontent.com/federicohermo/nosefia/d4b6367ef05c0f54810e4cad90217a67556ba9f1/final-desde-arranque-hacia-entrada.png",
+      "revision": "d4b6367ef05c0f54810e4cad90217a67556ba9f1",
+      "path": "final-desde-arranque-hacia-entrada.png"
+    },
+    {
+      "pr": 390,
+      "url": "https://raw.githubusercontent.com/federicohermo/nosefia/d4b6367ef05c0f54810e4cad90217a67556ba9f1/final-posicion-y-sombras.png",
+      "revision": "d4b6367ef05c0f54810e4cad90217a67556ba9f1",
+      "path": "final-posicion-y-sombras.png"
+    },
+    {
+      "pr": 390,
+      "url": "https://raw.githubusercontent.com/federicohermo/nosefia/d4b6367ef05c0f54810e4cad90217a67556ba9f1/informe.md",
+      "revision": "d4b6367ef05c0f54810e4cad90217a67556ba9f1",
+      "path": "informe.md"
+    },
+    {
+      "pr": 390,
+      "url": "https://raw.githubusercontent.com/federicohermo/nosefia/d4b6367ef05c0f54810e4cad90217a67556ba9f1/logs/301-final-tests.log",
+      "revision": "d4b6367ef05c0f54810e4cad90217a67556ba9f1",
+      "path": "logs/301-final-tests.log"
+    },
+    {
+      "pr": 390,
+      "url": "https://raw.githubusercontent.com/federicohermo/nosefia/d4b6367ef05c0f54810e4cad90217a67556ba9f1/logs/motor-crudo.log",
+      "revision": "d4b6367ef05c0f54810e4cad90217a67556ba9f1",
+      "path": "logs/motor-crudo.log"
+    },
+    {
+      "pr": 390,
+      "url": "https://raw.githubusercontent.com/federicohermo/nosefia/d4b6367ef05c0f54810e4cad90217a67556ba9f1/manifiesto.json",
+      "revision": "d4b6367ef05c0f54810e4cad90217a67556ba9f1",
+      "path": "manifiesto.json"
+    },
+    {
+      "pr": 389,
+      "url": "https://raw.githubusercontent.com/federicohermo/nosefia/capturas/364/364-final-motor.log",
+      "revision": "f3bb9cedd85d4daf7c264a5964c766baafaa2e20",
+      "path": "364-final-motor.log"
+    },
+    {
+      "pr": 389,
+      "url": "https://raw.githubusercontent.com/federicohermo/nosefia/capturas/364/364-final-tests.log",
+      "revision": "f3bb9cedd85d4daf7c264a5964c766baafaa2e20",
+      "path": "364-final-tests.log"
+    },
+    {
+      "pr": 389,
+      "url": "https://raw.githubusercontent.com/federicohermo/nosefia/capturas/364/364-final.log",
+      "revision": "f3bb9cedd85d4daf7c264a5964c766baafaa2e20",
+      "path": "364-final.log"
+    },
+    {
+      "pr": 389,
+      "url": "https://raw.githubusercontent.com/federicohermo/nosefia/capturas/364/364-rojo-escena.log",
+      "revision": "f3bb9cedd85d4daf7c264a5964c766baafaa2e20",
+      "path": "364-rojo-escena.log"
+    },
+    {
+      "pr": 389,
+      "url": "https://raw.githubusercontent.com/federicohermo/nosefia/capturas/364/364-rojo.log",
+      "revision": "f3bb9cedd85d4daf7c264a5964c766baafaa2e20",
+      "path": "364-rojo.log"
+    },
+    {
+      "pr": 389,
+      "url": "https://raw.githubusercontent.com/federicohermo/nosefia/capturas/364/364-verde.log",
+      "revision": "f3bb9cedd85d4daf7c264a5964c766baafaa2e20",
+      "path": "364-verde.log"
+    },
+    {
+      "pr": 389,
+      "url": "https://raw.githubusercontent.com/federicohermo/nosefia/capturas/364/harness-tests.log",
+      "revision": "f3bb9cedd85d4daf7c264a5964c766baafaa2e20",
+      "path": "harness-tests.log"
+    },
+    {
+      "pr": 389,
+      "url": "https://raw.githubusercontent.com/federicohermo/nosefia/capturas/364/manifiesto.json",
+      "revision": "f3bb9cedd85d4daf7c264a5964c766baafaa2e20",
+      "path": "manifiesto.json"
+    },
+    {
+      "pr": 389,
+      "url": "https://raw.githubusercontent.com/federicohermo/nosefia/capturas/364/noche-2.png",
+      "revision": "f3bb9cedd85d4daf7c264a5964c766baafaa2e20",
+      "path": "noche-2.png"
+    }
+  ]
+}
