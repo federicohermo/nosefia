@@ -354,8 +354,3 @@ que los retira.
 Cuando una tarea compara un registro con ventas, definir si exige las ventas realizadas hasta
 ese momento o todos los pedidos de la jornada, y qué ocurre si un comprador vence sin comprar.
 La coincidencia parcial no implica que la tarea completa deba contarse como cumplida.
-
-**Una secuencia de mensajes no define la cantidad de pantallas.** Revisar todos los frames,
-reacciones y motion antes de convertir párrafos en pasos. Registrar agrupaciones, reemplazo o
-acumulación, navegación fija y presencia de scroll. En #398, catorce textos correspondían a doce
-pantallas independientes; la lista acumulativa implementada ocultaba esa diagramación.

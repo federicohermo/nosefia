@@ -129,9 +129,11 @@ actual sobre doce. En la última, «Siguiente» DEBE decir «OK»; retroceder DE
 aunque se repita el gesto.
 
 Cada pantalla DEBE mostrar sus textos antes de las fotos y conservar el separador y las etiquetas
-del diseño. El retrato de Enrique y su bocadillo DEBEN aparecer sólo en las primeras cuatro
-pantallas. La quinta DEBE acompañar el lector con la interfaz de caja y el ticket; la última,
-con «SI A JUGAR!!». Las siete fotos del juego DEBEN acompañar sus textos, incluida Intro 13,
+del diseño. El retrato de Enrique y su bocadillo DEBEN permanecer visibles en las doce
+pantallas, por aclaración explícita del usuario. La quinta DEBE acompañar el lector con la
+interfaz de caja y el ticket. La última DEBE mostrar sólo su texto de instrucciones y el botón
+«OK», sin el rótulo «SI A JUGAR!!». Las fotos DEBEN cubrir su marco sin franjas negras y mantener
+visible el objeto ilustrado. Las siete fotos del juego DEBEN acompañar sus textos, incluida Intro 13,
 aunque su frame de referencia omita esa foto.
 
 Los catorce textos y siete fotos DEBEN conservarse como 21 entradas separadas en el chat de
@@ -283,16 +285,18 @@ y las siete fotos CUANDO se agrupan las 21 entradas ENTONCES hay doce pantallas:
 [5], [6], [7], [8], [9], [10], [11], [12], [13], [14]. Las pantallas 2, 4, 5, 6, 7, 9 y 11 muestran
 la foto de su Intro después de sus textos. CUANDO se avanza y vuelve por todas ENTONCES sólo se
 muestra el contenido de la actual, el contador coincide y la secuencia original de 21 entradas
-sigue intacta. El retrato y bocadillo se muestran en las pantallas 1 a 4 y desaparecen desde 5;
-la pantalla 5 incluye interfaz de caja y ticket y la última incluye «SI A JUGAR!!».
+sigue intacta. El retrato y bocadillo se mantienen visibles en las doce pantallas;
+la pantalla 5 incluye interfaz de caja y ticket y la última sólo su texto de instrucciones,
+sin el rótulo «SI A JUGAR!!», conservando «OK».
 Los tres mensajes de prueba previos no aparecen entre los textos de la conversación.
 
 ### AC-EMP-047 — Cada foto adjunta su propia Intro *(verifica BR-EMP-022, BR-EMP-023)*
 
 DADO el chat de Enrique desde la jornada 1 CUANDO se recorren sus siete fotos ENTONCES cada una
 precede inmediatamente al texto de su Intro y ampliarla muestra ese texto, nunca el siguiente
-paso. CUANDO se valida cada captura ENTONCES existe una imagen de 960×540 y el rayo central de
-su encuadre alcanza el tema correspondiente: nota, ventanilla, lector y caja, computadora,
+paso. CUANDO se valida cada captura ENTONCES existe una imagen con proporción adecuada a su
+marco y el rayo central de su encuadre alcanza el tema correspondiente: corcho con sus dos
+notas, ventanilla, lector y caja, computadora,
 estantería con cajas, útiles y notas del baño, y cajas del depósito en el piso. Preparar la foto
 de Intro 9 y después la de Intro 13 deja restaurada la pila jugable de la jornada 1.
 

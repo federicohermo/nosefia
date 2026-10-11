@@ -94,7 +94,8 @@ Desde PowerShell, con una pantalla disponible:
 
 Las instrucciones iniciales siguen los doce frames de Figma desde `511:302` hasta `535:1361`.
 Son pantallas independientes: los primeros cuatro párrafos se agrupan de a dos y el contenido se
-reemplaza sin scroll. El panel de Enrique sólo aparece en las primeras cuatro. La navegación,
+reemplaza sin scroll. Por aclaración del usuario, el panel de Enrique y su bocadillo permanecen
+en las doce pantallas, aunque los frames posteriores al cuarto lo omitan. La navegación,
 el contador y la ayuda permanecen fijos. Se inspeccionaron reacciones y motion: esos frames no
 contienen transiciones ni keyframes configurados; se conserva la subida autorizada de 0,3 s.
 
@@ -102,10 +103,16 @@ Los recursos originales de Figma en `instrucciones/`, descargados sin editar el 
 `bocadillo.svg` (`559:1353`), `separador.svg` (`561:361`), `caja.png` (`526:1066`) y `ticket.png`
 (`556:1287`). Caja y ticket son las ilustraciones auxiliares de la pantalla 5. Las siete fotos
 continúan siendo capturas del juego, como pide Notion, en sus espacios correspondientes; se
-conserva la foto de Intro 13 aunque el frame de Figma no la incluya. Se mantienen completas y
-proporcionadas dentro del marco, sin recortar ni sustituirlas por renders del prototipo.
+conserva la foto de Intro 13 aunque el frame de Figma no la incluya. Las fotos cubren su marco
+sin franjas negras y conservan su proporción; el encuadre de cada captura debe mantener visible
+el objeto que ilustra. Por aclaración del usuario, la última pantalla omite «SI A JUGAR!!».
 
-`instrucciones/fondo.png` es la capa de persiana desenfocada `511:304`. El retrato local histórico
+El fondo usa directamente `assets/models/SEPT_JUEGOS_PROTOTIPO_textura portón.png`, sin editar
+esa textura ni el modelo. El usuario aprobó el preview «Aplicar este fondo» el 2026-10-10:
+`instrucciones/porton_gris.gdshader` reproduce exactamente su recorte UV, conversión a gris y
+luminosidad 0,48. Sustituye la persiana azul del prototipo por el portón real en gris.
+
+El retrato local histórico
 incluía un rectángulo opaco celeste: la pantalla usa ahora `instrucciones/enrique.png`, la imagen
 fuente transparente de `511:317`, sin editar. `enrique.gdshader` aplica su exposición y el blur
 progresivo hacia los pies del diseño. El chat conserva su recurso histórico y no se modifica.

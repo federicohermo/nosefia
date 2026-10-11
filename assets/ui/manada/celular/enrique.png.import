@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bx2a8ans8xe24"
-path="res://.godot/imported/fondo.png-766fbee7c788a51d4933d34a8550875e.ctex"
+uid="uid://8f1v1yse5pi2"
+path="res://.godot/imported/enrique.png-3a21694ac59014bb31e55bdfd34053c9.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/ui/manada/instrucciones/fondo.png"
-dest_files=["res://.godot/imported/fondo.png-766fbee7c788a51d4933d34a8550875e.ctex"]
+source_file="res://assets/ui/manada/celular/enrique.png"
+dest_files=["res://.godot/imported/enrique.png-3a21694ac59014bb31e55bdfd34053c9.ctex"]
 
 [params]
 
