@@ -32,8 +32,3 @@ func habilitada(opcion: Opcion) -> bool:
 	if opcion == Opcion.CONTINUAR:
 		return _hay_guardado
 	return HABILITADAS.has(opcion)
-
-
-## Empezar de nuevo borra el guardado, y eso no se deshace.
-func nuevo_juego_pide_confirmacion() -> bool:
-	return _hay_guardado

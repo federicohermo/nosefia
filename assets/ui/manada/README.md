@@ -123,3 +123,6 @@ El encuadre de Intro 4 es ortográfico, frontal al corcho completo y sus dos not
 encuadra las tres alturas del estante de cajas de frente, sin objetos que lo oculten. Las
 proporciones se ajustan al marco de presentación para evitar franjas negras sin perder el tema.
 Intro 7 muestra la caja registradora y el lector de frente, próximos y completos en el encuadre.
+Intro 11 agrupa la mopa y el balde junto a los jabones en sus posiciones jugables, con números
+que corresponden a la leyenda: 1 mopa, 2 balde y 3 productos de limpieza. Intro 13 muestra las
+pilas del proveedor desde el frente, con sus pallets visibles y sin estantes delante.

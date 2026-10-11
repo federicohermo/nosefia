@@ -296,16 +296,25 @@ func test_apoyar_descumplir_sostener_y_examinar_actualizan_ordenar_y_hud() -> vo
 	var agarre: Agarre = local.get("_agarre")
 	assert_bool(agarre.pedir_agarrar(caja.datos, caja)).is_true()
 	await get_tree().process_frame
-	assert_bool(tarea.completada()).is_true()
+	assert_bool(tarea.completada()).is_false()
+	assert_str(contador.text).is_equal("Tareas 0/5")
 	assert_bool(local.get("_jugador").examen.iniciar()).is_true()
 	await get_tree().process_frame
-	assert_bool(tarea.completada()).is_true()
-	reloj.avanzar(Reglas.DURACION_DEL_TURNO / Ritmo.SEGUNDOS_DE_TURNO_POR_SEGUNDO_REAL)
+	assert_bool(tarea.completada()).is_false()
+	assert_str(contador.text).is_equal("Tareas 0/5")
 	local.get("_jugador").examen.terminar()
 	agarre.soltar(false)
-	for _cuadro in 4:
-		await get_tree().physics_frame
+	await _ordenar_en_sus_estanterias(local)
 	assert_bool(tarea.completada()).is_true()
+	assert_str(contador.text).is_equal("Tareas 1/5")
+	assert_bool(agarre.pedir_agarrar(caja.datos, caja)).is_true()
+	await get_tree().process_frame
+	assert_bool(tarea.completada()).is_false()
+	assert_str(contador.text).is_equal("Tareas 0/5")
+	reloj.avanzar(Reglas.DURACION_DEL_TURNO / Ritmo.SEGUNDOS_DE_TURNO_POR_SEGUNDO_REAL)
+	agarre.soltar(false)
+	await _ordenar_en_sus_estanterias(local)
+	assert_bool(tarea.completada()).is_false()
 
 
 func test_el_rescate_usa_el_origen_de_la_noche() -> void:  # AC-STK-080

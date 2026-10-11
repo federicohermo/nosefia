@@ -23,8 +23,8 @@ const PLANOS := [
 	],
 	[8, Vector3(-0.05, 1.65, 4.65), Vector3(-0.05, 1.24, 3.25), 55.0, "base compu/StaticBody3D"],
 	[9, Vector3(2.70, 1.45, -9.73), Vector3(-0.40, 1.45, -9.73), 72.0, "Caja"],
-	[11, Vector3(11.10, 1.65, 3.90), Vector3(12.457, 0.40, 0.449), 75.0, "Balde"],
-	[13, Vector3(-1.40, 1.65, -14.20), Vector3(-2.704, 0.95, -10.738), 65.0, "Caja"],
+	[11, Vector3(10.50, 1.65, 3.25), Vector3(10.50, 0.65, -0.117), 50.0, "JabonAzul"],
+	[13, Vector3(-0.20, 1.90, -13.15), Vector3(-2.95, 1.15, -11.50), 62.0, "Caja"],
 ]
 
 var _local: Node3D
@@ -143,6 +143,9 @@ func _fotografiar(plano: Array) -> bool:
 	_camara.fov = plano[3]
 	_camara.look_at_from_position(plano[1], plano[2])
 	_camara.reset_physics_interpolation()
+	var numeros: CanvasLayer
+	if numero == 11:
+		numeros = _numerar_utiles()
 	var preparada := _camara.global_transform
 	for _cuadro: int in 4:
 		await physics_frame
@@ -181,4 +184,33 @@ func _fotografiar(plano: Array) -> bool:
 		}
 	)
 	print("FOTO374 ", numero, " ", ruta, " ", archivo)
+	if numeros != null:
+		numeros.queue_free()
 	return true
+
+
+func _numerar_utiles() -> CanvasLayer:
+	var capa := CanvasLayer.new()
+	root.add_child(capa)
+	var objetos: Array[String] = ["Mopa", "Balde", "JabonAzul"]
+	var alturas: Array[float] = [1.65, 0.80, 0.97]
+	for indice: int in objetos.size():
+		var objeto: Node3D = _local.get_node("Objetos/" + objetos[indice])
+		var foco := objeto.global_position
+		foco.y = alturas[indice]
+		var numero := Label.new()
+		numero.text = str(indice + 1)
+		numero.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+		numero.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+		numero.size = Vector2(44.0, 44.0)
+		numero.position = _camara.unproject_position(foco) - numero.size / 2.0
+		numero.add_theme_color_override("font_color", Color("edf1be"))
+		numero.add_theme_font_size_override("font_size", 32)
+		var fondo := StyleBoxFlat.new()
+		fondo.bg_color = Color("202020")
+		fondo.border_color = Color("edf1be")
+		fondo.set_border_width_all(2)
+		fondo.set_corner_radius_all(22)
+		numero.add_theme_stylebox_override("normal", fondo)
+		capa.add_child(numero)
+	return capa
