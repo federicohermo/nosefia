@@ -21,7 +21,7 @@ const AVATAR_ENRIQUE := preload("res://assets/ui/manada/celular/enrique.png")
 const AVATAR_ENRIQUE_MENU := preload("res://assets/ui/manada/celular/enrique_menu.png")
 const RETRATO_ENRIQUE := "res://assets/ui/manada/enrique.png"
 const BUSCAR := "Buscar contacto..."
-const JEFE := "Jefe"
+const TEXTO_DEL_ROL := "Jefe"
 const FOTO := "Foto"
 const MENSAJE := "Mensaje..."
 const AYUDA := "RUEDA DEL MOUSE / DESPLAZAR HISTORIAL"
@@ -68,7 +68,7 @@ func _ready() -> void:
 	_volver.pressed.connect(func() -> void: volver_pedido.emit())
 	_busqueda.placeholder_text = BUSCAR
 	_busqueda.text_changed.connect(_filtrar)
-	_subtitulo.text = JEFE
+	_subtitulo.text = TEXTO_DEL_ROL
 	_opciones.text = "..."
 	_entrada.placeholder_text = MENSAJE
 	_ayuda.text = AYUDA
