@@ -27,7 +27,7 @@ func _ready() -> void:
 	programa.borrado_pedido.connect(caja.pedir_borrar)
 	programa.impresion_pedida.connect(caja.pedir_imprimir)
 	programa.eleccion_pedida.connect(caja.pedir_elegir)
-	programa.cierre_pedido.connect(cerrar)
+	programa.cierre_pedido.connect(_cerrar_desde_entrada)
 	reloj.turno_cerrado.connect(_al_cerrar_el_turno)
 	agarre.objeto_agarrado.connect(_al_agarrar)
 	agarre.objeto_soltado.connect(_al_soltar)
@@ -55,7 +55,12 @@ func cerrar() -> void:
 func _input(evento: InputEvent) -> void:
 	if _abierta and evento.is_action_pressed(ReglasDelJugador.ACCION_USAR):
 		get_viewport().set_input_as_handled()
-		cerrar()
+		_cerrar_desde_entrada()
+
+
+func _cerrar_desde_entrada() -> void:
+	cerrar()
+	jugador.tomar_el_cursor_desde_entrada()
 
 
 func _repintar() -> void:
