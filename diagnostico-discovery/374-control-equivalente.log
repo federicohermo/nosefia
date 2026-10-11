@@ -1,0 +1,11 @@
+Traceback (most recent call last):
+  File "C:\Users\fede_\AppData\Local\Temp\nosefia-batch-364-370-20261010\control_equivalente374.py", line 16, in <module>
+    assert (base / nombre).read_bytes() == (actual / nombre).read_bytes(), nombre
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\fede_\AppData\Local\Programs\Python\Python313\Lib\pathlib\_abc.py", line 625, in read_bytes
+    with self.open(mode='rb') as f:
+         ~~~~~~~~~^^^^^^^^^^^
+  File "C:\Users\fede_\AppData\Local\Programs\Python\Python313\Lib\pathlib\_local.py", line 537, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: 'C:\\Users\\fede_\\AppData\\Local\\Temp\\nosefia-batch-364-370-20261010\\373-web-33828836\\proyecto\\test\\dominio\\empleo\\consecuencias_test.gd'

@@ -1,0 +1,202 @@
+WorkerThreadPool: 16 threads, 12 max low-priority.
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+TextServer: Added interface "Dummy"
+TextServer: Added interface "ICU / HarfBuzz / Graphite (Built-in)"
+Using "default" pen tablet driver...
+
+TextServer: Primary interface set to: "ICU / HarfBuzz / Graphite (Built-in)".
+Loading resource: res://default_bus_layout.tres remapped: res://default_bus_layout.tres
+Completed load for: 'res://default_bus_layout.tres' remapped 'res://default_bus_layout.tres' at thread -1
+CORE API HASH: 2004498165
+EDITOR API HASH: 1696660745
+SceneTreeFTI: traversal method DEFAULT
+Loading resource: C:/Users/fede_/AppData/Roaming/Godot/editor_settings-4.7.tres remapped: C:/Users/fede_/AppData/Roaming/Godot/editor_settings-4.7.tres
+Completed load for: 'C:/Users/fede_/AppData/Roaming/Godot/editor_settings-4.7.tres' remapped 'C:/Users/fede_/AppData/Roaming/Godot/editor_settings-4.7.tres' at thread -1
+EditorSettings: Load OK!
+EditorTheme: Generating new theme for the config '3810048042'.
+EditorTheme: Generating new icons.
+EditorTheme: Generating new fonts.
+EditorTheme: Generating new styles.
+Loading resource: C:/Users/fede_/AppData/Local/Godot/editor_doc_cache-4.7.res remapped: C:/Users/fede_/AppData/Local/Godot/editor_doc_cache-4.7.res
+Loaded system CA certificates
+Completed load for: 'C:/Users/fede_/AppData/Local/Godot/editor_doc_cache-4.7.res' remapped 'C:/Users/fede_/AppData/Local/Godot/editor_doc_cache-4.7.res' at thread -1
+[   0% ] [90m[1mfirst_scan_filesystem[22m | Started Inicialización del proyecto (5 steps)[39m[0m
+[   0% ] [90m[1mfirst_scan_filesystem[22m | Escaneando la estructura del archivo...[39m[0m
+[  16% ] [90m[1mfirst_scan_filesystem[22m | Cargando nombres de clases globales...[39m[0m
+[  33% ] [90m[1mfirst_scan_filesystem[22m | Verificando GDExtensions...[39m[0m
+[  50% ] [90m[1mfirst_scan_filesystem[22m | Creando scripts de carga automática...[39m[0m
+Loading resource: res://addons/godot_mcp/mcp_screenshot_service.gd remapped: res://addons/godot_mcp/mcp_screenshot_service.gd
+Completed load for: 'res://addons/godot_mcp/mcp_screenshot_service.gd' remapped 'res://addons/godot_mcp/mcp_screenshot_service.gd' at thread -1
+Loading resource: res://addons/godot_mcp/mcp_input_service.gd remapped: res://addons/godot_mcp/mcp_input_service.gd
+Completed load for: 'res://addons/godot_mcp/mcp_input_service.gd' remapped 'res://addons/godot_mcp/mcp_input_service.gd' at thread -1
+Loading resource: res://addons/godot_mcp/mcp_game_inspector_service.gd remapped: res://addons/godot_mcp/mcp_game_inspector_service.gd
+Completed load for: 'res://addons/godot_mcp/mcp_game_inspector_service.gd' remapped 'res://addons/godot_mcp/mcp_game_inspector_service.gd' at thread -1
+[  66% ] [90m[1mfirst_scan_filesystem[22m | Inicializando plugins...[39m[0m
+[  83% ] [90m[1mfirst_scan_filesystem[22m | Iniciando escaneo de archivos...[39m[0m
+[92m[ DONE ][39m [1mfirst_scan_filesystem[22m
+[0m
+[   0% ] [90m[1mloading_editor_layout[22m | Started Cargando editor (5 steps)[39m[0m
+[   0% ] [90m[1mloading_editor_layout[22m | Cargando diseño del editor...[39m[0m
+[  16% ] [90m[1mloading_editor_layout[22m | Cargando docks...[39m[0m
+[92m[ DONE ][39m [1mloading_editor_layout[22m
+[0m
+Loading resource: res://captura374.tscn remapped: res://captura374.tscn
+Loading resource: res://captura374.gd remapped: res://captura374.gd
+Loading resource: res://assets/ui/manada/unscii-16.ttf remapped: res://assets/ui/manada/unscii-16.ttf
+Loading resource: res://.godot/imported/unscii-16.ttf-3c372feb461602c8a9750b9f1696fd88.fontdata remapped: res://.godot/imported/unscii-16.ttf-3c372feb461602c8a9750b9f1696fd88.fontdata
+Completed load for: 'res://assets/ui/manada/unscii-16.ttf' remapped 'res://assets/ui/manada/unscii-16.ttf' at thread -1
+Completed load for: 'res://captura374.gd' remapped 'res://captura374.gd' at thread -1
+Completed load for: 'res://captura374.tscn' remapped 'res://captura374.tscn' at thread -1
+Script docs haven't been properly loaded or regenerated, so don't save them to disk.
+EditorSettings: Save OK!
+XR: Clearing primary interface
+XR: Removed interface "Native mobile"
+XR: Removed interface "OpenXR"
+Leaked instance: GDScriptNativeClass:9223372052977681313 - Reference count: 7
+Leaked instance: GDScript:9223373687632242445 - Reference count: 2
+Leaked instance: GDScript:9223373688135558930 - Reference count: 1
+Leaked instance: GDScript:9223373688370439956 - Reference count: 2
+Leaked instance: GDScript:9223373688471103253 - Reference count: 1
+Leaked instance: GDScript:9223373689695840032 - Reference count: 5
+Leaked instance: GDScript:9223373689796503329 - Reference count: 10
+Leaked instance: GDScript:9223373690098493218 - Reference count: 1
+Hint: Leaked instances typically happen when nodes are removed from the scene tree (with `remove_child()`) but not freed (with `free()` or `queue_free()`).
+Resource still in use: res://src/dominio/empleo/legajo.gd (GDScript)
+Resource still in use: res://src/dominio/jornada/tarea.gd (GDScript)
+Resource still in use: res://src/dominio/jornada/turno.gd (GDScript)
+Resource still in use: res://src/dominio/empleo/partida_serializada.gd (GDScript)
+Resource still in use: res://src/dominio/jornada/apertura.gd (GDScript)
+Resource still in use: res://src/dominio/empleo/partida.gd (GDScript)
+Resource still in use: res://src/sistemas/marco/guardado.gd (GDScript)
+Orphan StringName: apercibimientos (static: 0, total: 5)
+Orphan StringName: var_to_str (static: 0, total: 1)
+Orphan StringName: @static_initializer (static: 1, total: 2)
+Orphan StringName: despedido (static: 0, total: 2)
+Orphan StringName: Vector2 (static: 0, total: 1)
+Orphan StringName: Vector3 (static: 0, total: 1)
+Orphan StringName: Vector4 (static: 0, total: 1)
+Orphan StringName: ruta_por_defecto (static: 0, total: 3)
+Orphan StringName: es_la_ultima_jornada (static: 0, total: 4)
+Orphan StringName: PackedVector4Array (static: 0, total: 1)
+Orphan StringName: RID (static: 0, total: 1)
+Orphan StringName: DEFECTOS (static: 0, total: 2)
+Orphan StringName: _legajo (static: 0, total: 3)
+Orphan StringName: terminada (static: 0, total: 5)
+Orphan StringName: Color (static: 3, total: 4)
+Orphan StringName: hay_guardado (static: 0, total: 3)
+Orphan StringName: Partida.Final (static: 0, total: 2)
+Orphan StringName: Turno (static: 0, total: 5)
+Orphan StringName: FALTANTES_POR_JORNADA (static: 0, total: 1)
+Orphan StringName: Final (static: 0, total: 2)
+Orphan StringName: typeof (static: 0, total: 2)
+Orphan StringName: Tarea (static: 0, total: 5)
+Orphan StringName: turno_de_la_jornada (static: 0, total: 2)
+Orphan StringName: final (static: 0, total: 3)
+Orphan StringName: PackedByteArray (static: 0, total: 1)
+Orphan StringName: cerrado (static: 0, total: 6)
+Orphan StringName: obligatorias (static: 0, total: 5)
+Orphan StringName: CLAVE_DE_VERSION (static: 0, total: 2)
+Orphan StringName: res://src/dominio/empleo/partida.gd (static: 0, total: 16)
+Orphan StringName: cantidad_de_obligatorias (static: 0, total: 1)
+Orphan StringName: jornada (static: 0, total: 3)
+Orphan StringName: append (static: 0, total: 1)
+Orphan StringName: cargar (static: 0, total: 4)
+Orphan StringName: completada (static: 0, total: 2)
+Orphan StringName: descompletar (static: 0, total: 2)
+Orphan StringName: Partida (static: 0, total: 6)
+Orphan StringName: _final (static: 0, total: 4)
+Orphan StringName: anotar_llamado (static: 0, total: 3)
+Orphan StringName: _obligatorias (static: 0, total: 6)
+Orphan StringName: clave (static: 0, total: 5)
+Orphan StringName: Vector2i (static: 0, total: 1)
+Orphan StringName: Callable (static: 0, total: 1)
+Orphan StringName: Vector3i (static: 0, total: 1)
+Orphan StringName: Vector4i (static: 0, total: 1)
+Orphan StringName: RUTA_DEL_USUARIO (static: 0, total: 2)
+Orphan StringName: se_agota_con (static: 0, total: 3)
+Orphan StringName: PartidaSerializada (static: 0, total: 3)
+Orphan StringName: legible (static: 0, total: 4)
+Orphan StringName: PackedStringArray (static: 0, total: 1)
+Orphan StringName: to_lower (static: 0, total: 1)
+Orphan StringName: cerrar_la_jornada (static: 0, total: 3)
+Orphan StringName: nueva (static: 0, total: 3)
+Orphan StringName: tiempo_restante (static: 0, total: 3)
+Orphan StringName: consumir (static: 0, total: 3)
+Orphan StringName: escribir (static: 0, total: 3)
+Orphan StringName: get (static: 1, total: 3)
+Orphan StringName: _completada (static: 0, total: 3)
+Orphan StringName: llamados (static: 0, total: 3)
+Orphan StringName: inventario_con_faltantes (static: 0, total: 1)
+Orphan StringName: tipo (static: 0, total: 1)
+Orphan StringName: Campo (static: 0, total: 2)
+Orphan StringName: Apertura (static: 0, total: 3)
+Orphan StringName: Basis (static: 0, total: 1)
+Orphan StringName: has (static: 0, total: 1)
+Orphan StringName: cajas_apiladas (static: 0, total: 1)
+Orphan StringName: _jornada_abierta (static: 0, total: 4)
+Orphan StringName: int (static: 1, total: 2)
+Orphan StringName: _tipo (static: 0, total: 2)
+Orphan StringName: Llamado (static: 0, total: 2)
+Orphan StringName: registrar (static: 0, total: 2)
+Orphan StringName: PackedFloat32Array (static: 0, total: 1)
+Orphan StringName: descumplir (static: 0, total: 3)
+Orphan StringName: Plane (static: 0, total: 1)
+Orphan StringName: PackedFloat64Array (static: 0, total: 1)
+Orphan StringName: todas_cumplidas (static: 0, total: 3)
+Orphan StringName: _init (static: 0, total: 7)
+Orphan StringName: NodePath (static: 1, total: 2)
+Orphan StringName: ruta (static: 0, total: 3)
+Orphan StringName: tareas_cumplidas (static: 0, total: 4)
+Orphan StringName: res://src/sistemas/marco/guardado.gd (static: 0, total: 6)
+Orphan StringName: VERSION (static: 0, total: 2)
+Orphan StringName: Signal (static: 0, total: 1)
+Orphan StringName: sanear (static: 0, total: 5)
+Orphan StringName: StringName (static: 0, total: 1)
+Orphan StringName: String (static: 0, total: 1)
+Orphan StringName: con_medios (static: 0, total: 2)
+Orphan StringName: medios (static: 0, total: 5)
+Orphan StringName: Transform2D (static: 0, total: 1)
+Orphan StringName: Transform3D (static: 0, total: 1)
+Orphan StringName: PartidaSerializada.Campo (static: 0, total: 1)
+Orphan StringName: _llamados (static: 0, total: 3)
+Orphan StringName: borrar (static: 0, total: 4)
+Orphan StringName: res://src/dominio/empleo/partida_serializada.gd (static: 0, total: 4)
+Orphan StringName: Array (static: 0, total: 1)
+Orphan StringName: Quaternion (static: 0, total: 1)
+Orphan StringName: bool (static: 1, total: 2)
+Orphan StringName: duplicate (static: 0, total: 1)
+Orphan StringName: PackedColorArray (static: 0, total: 1)
+Orphan StringName: Node (static: 5, total: 6)
+Orphan StringName: _medios (static: 0, total: 3)
+Orphan StringName: RefCounted (static: 0, total: 19)
+Orphan StringName: inventario_de_la_jornada (static: 0, total: 1)
+Orphan StringName: PackedVector2Array (static: 0, total: 1)
+Orphan StringName: _tiempo_restante (static: 0, total: 3)
+Orphan StringName: Object (static: 5, total: 6)
+Orphan StringName: AABB (static: 0, total: 1)
+Orphan StringName: res://src/dominio/jornada/turno.gd (static: 0, total: 10)
+Orphan StringName: Partida.Llamado (static: 0, total: 1)
+Orphan StringName: float (static: 1, total: 2)
+Orphan StringName: completar (static: 0, total: 5)
+Orphan StringName: Legajo (static: 0, total: 6)
+Orphan StringName: @implicit_new (static: 0, total: 4)
+Orphan StringName: Guardado (static: 0, total: 3)
+Orphan StringName: Dictionary (static: 0, total: 1)
+Orphan StringName: desde (static: 0, total: 3)
+Orphan StringName: Projection (static: 0, total: 1)
+Orphan StringName: Tipo (static: 0, total: 1)
+Orphan StringName: Rect2 (static: 0, total: 1)
+Orphan StringName: PackedVector3Array (static: 0, total: 1)
+Orphan StringName: PackedInt32Array (static: 0, total: 1)
+Orphan StringName: Rect2i (static: 0, total: 1)
+Orphan StringName: PARTICULARES (static: 0, total: 1)
+Orphan StringName: _jornada (static: 0, total: 5)
+Orphan StringName: PackedInt64Array (static: 0, total: 1)
+Orphan StringName: legajo (static: 0, total: 3)
+Orphan StringName: abrir_la_jornada (static: 0, total: 3)
+Orphan StringName: faltantes_de_la_jornada (static: 0, total: 1)
+StringName: 127 unclaimed string names at exit.
+WARNING: 8 ObjectDB instances were leaked at exit (run with `--verbose` for details).
+   at: cleanup (core/object/object.cpp:2536)
+ERROR: 7 resources still in use at exit.
+   at: clear (core/io/resource.cpp:817)

@@ -1,0 +1,31 @@
+devuelto (el editor lo re-serializó al guardar): src/escenas/almacen.tscn
+devuelto (el editor lo re-serializó al guardar): sucio.tres
+devuelto (el editor lo re-serializó al guardar): assets/models/textura portón.png.import
+devuelto (el editor lo re-serializó al guardar): assets/models/textura portón.png.import
+Plantilla preparada: C:\Users\fede_\AppData\Local\Temp\tmpzxo6h8sh\build\templates\web_release.zip
+Plantilla preparada: C:\Users\fede_\AppData\Local\Temp\tmp5ymtxfpg\build\templates\web_release.zip
+Plantilla preparada: C:\Users\fede_\AppData\Local\Temp\tmp34q7hof8\build\templates\web_release.zip
+Preparando plantilla; caché no reutilizable: [Errno 2] No such file or directory: 'C:\\Users\\fede_\\AppData\\Local\\Temp\\tmpawbyzuzk\\build\\templates\\web_release.manifiesto.json'
+Plantilla preparada: C:\Users\fede_\AppData\Local\Temp\tmpawbyzuzk\build\templates\web_release.zip
+Plantilla verificada: C:\Users\fede_\AppData\Local\Temp\tmpawbyzuzk\build\templates\web_release.zip
+Ejecutando: git -c core.autocrlf=false apply --check C:\Users\fede_\AppData\Local\Temp\tmpukddi11w\motor.patch
+Ejecutando: git -c core.autocrlf=false apply C:\Users\fede_\AppData\Local\Temp\tmpukddi11w\motor.patch
+Motor de la exportación verificado: C:\Users\fede_\AppData\Local\Temp\tmpp86jh3no\export\web
+Plantilla preparada: C:\Users\fede_\AppData\Local\Temp\tmpc7og96uh\build\templates\web_release.zip
+Plantilla verificada: C:\Users\fede_\AppData\Local\Temp\tmpc7og96uh\build\templates\web_release.zip
+Plantilla verificada: C:\Users\fede_\AppData\Local\Temp\tmpc7og96uh\build\templates\web_release.zip
+Plantilla verificada: C:\Users\fede_\AppData\Local\Temp\tmpc7og96uh\build\templates\web_release.zip
+Plantilla preparada: C:\Users\fede_\AppData\Local\Temp\tmpds8x8ziw\build\templates\web_release.zip
+Plantilla preparada: C:\Users\fede_\AppData\Local\Temp\tmpzoy53xre\build\templates\web_release.zip
+Plantilla preparada: C:\Users\fede_\AppData\Local\Temp\tmpxlm49t2x\build\templates\web_release.zip
+Plantilla preparada: C:\Users\fede_\AppData\Local\Temp\tmpj7av9__l\build\templates\web_release.zip
+Ejecutando: git -c core.autocrlf=false apply --check C:\Users\fede_\AppData\Local\Temp\tmpwhv7i6gk\motor.patch
+Ejecutando: git -c core.autocrlf=false apply C:\Users\fede_\AppData\Local\Temp\tmpwhv7i6gk\motor.patch
+Plantilla preparada: C:\Users\fede_\AppData\Local\Temp\tmp0m1bzif3\build\templates\web_release.zip
+Ejecutando: git -c core.autocrlf=false apply --check C:\Users\fede_\AppData\Local\Temp\tmpfnhskkz1\motor.patch
+Ejecutando: git -c core.autocrlf=false apply C:\Users\fede_\AppData\Local\Temp\tmpfnhskkz1\motor.patch
+...................................................................................................................................................................................................................................................................................................................................................................................................................................................s.............................................................................................................................................
+----------------------------------------------------------------------
+Ran 577 tests in 96.457s
+
+OK (skipped=1)

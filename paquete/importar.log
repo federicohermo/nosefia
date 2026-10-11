@@ -1,0 +1,94 @@
+WorkerThreadPool: 16 threads, 12 max low-priority.
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+TextServer: Added interface "Dummy"
+TextServer: Added interface "ICU / HarfBuzz / Graphite (Built-in)"
+Using "default" pen tablet driver...
+
+TextServer: Primary interface set to: "ICU / HarfBuzz / Graphite (Built-in)".
+Loading resource: res://default_bus_layout.tres remapped: res://default_bus_layout.tres
+Completed load for: 'res://default_bus_layout.tres' remapped 'res://default_bus_layout.tres' at thread -1
+CORE API HASH: 2004498165
+EDITOR API HASH: 1696660745
+SceneTreeFTI: traversal method DEFAULT
+Loading resource: C:/Users/fede_/AppData/Roaming/Godot/editor_settings-4.7.tres remapped: C:/Users/fede_/AppData/Roaming/Godot/editor_settings-4.7.tres
+Completed load for: 'C:/Users/fede_/AppData/Roaming/Godot/editor_settings-4.7.tres' remapped 'C:/Users/fede_/AppData/Roaming/Godot/editor_settings-4.7.tres' at thread -1
+EditorSettings: Load OK!
+EditorTheme: Generating new theme for the config '3810048042'.
+EditorTheme: Generating new icons.
+EditorTheme: Generating new fonts.
+EditorTheme: Generating new styles.
+Loading resource: C:/Users/fede_/AppData/Local/Godot/editor_doc_cache-4.7.res remapped: C:/Users/fede_/AppData/Local/Godot/editor_doc_cache-4.7.res
+Loaded system CA certificates
+Completed load for: 'C:/Users/fede_/AppData/Local/Godot/editor_doc_cache-4.7.res' remapped 'C:/Users/fede_/AppData/Local/Godot/editor_doc_cache-4.7.res' at thread -1
+[   0% ] [90m[1mfirst_scan_filesystem[22m | Started Inicialización del proyecto (5 steps)[39m[0m
+[   0% ] [90m[1mfirst_scan_filesystem[22m | Escaneando la estructura del archivo...[39m[0m
+[  16% ] [90m[1mfirst_scan_filesystem[22m | Cargando nombres de clases globales...[39m[0m
+[  33% ] [90m[1mfirst_scan_filesystem[22m | Verificando GDExtensions...[39m[0m
+[  50% ] [90m[1mfirst_scan_filesystem[22m | Creando scripts de carga automática...[39m[0m
+Loading resource: res://addons/godot_mcp/mcp_screenshot_service.gd remapped: res://addons/godot_mcp/mcp_screenshot_service.gd
+Completed load for: 'res://addons/godot_mcp/mcp_screenshot_service.gd' remapped 'res://addons/godot_mcp/mcp_screenshot_service.gd' at thread -1
+Loading resource: res://addons/godot_mcp/mcp_input_service.gd remapped: res://addons/godot_mcp/mcp_input_service.gd
+Completed load for: 'res://addons/godot_mcp/mcp_input_service.gd' remapped 'res://addons/godot_mcp/mcp_input_service.gd' at thread -1
+Loading resource: res://addons/godot_mcp/mcp_game_inspector_service.gd remapped: res://addons/godot_mcp/mcp_game_inspector_service.gd
+Completed load for: 'res://addons/godot_mcp/mcp_game_inspector_service.gd' remapped 'res://addons/godot_mcp/mcp_game_inspector_service.gd' at thread -1
+[  66% ] [90m[1mfirst_scan_filesystem[22m | Inicializando plugins...[39m[0m
+[  83% ] [90m[1mfirst_scan_filesystem[22m | Iniciando escaneo de archivos...[39m[0m
+[92m[ DONE ][39m [1mfirst_scan_filesystem[22m
+[0m
+[   0% ] [90m[1mloading_editor_layout[22m | Started Cargando editor (5 steps)[39m[0m
+[   0% ] [90m[1mloading_editor_layout[22m | Cargando diseño del editor...[39m[0m
+[  16% ] [90m[1mloading_editor_layout[22m | Cargando docks...[39m[0m
+[92m[ DONE ][39m [1mloading_editor_layout[22m
+[0m
+Loading resource: res://captura374.tscn remapped: res://captura374.tscn
+Loading resource: res://captura374.gd remapped: res://captura374.gd
+Loading resource: res://assets/ui/manada/unscii-16.ttf remapped: res://assets/ui/manada/unscii-16.ttf
+Loading resource: res://.godot/imported/unscii-16.ttf-3c372feb461602c8a9750b9f1696fd88.fontdata remapped: res://.godot/imported/unscii-16.ttf-3c372feb461602c8a9750b9f1696fd88.fontdata
+Completed load for: 'res://assets/ui/manada/unscii-16.ttf' remapped 'res://assets/ui/manada/unscii-16.ttf' at thread -1
+Completed load for: 'res://captura374.gd' remapped 'res://captura374.gd' at thread -1
+Completed load for: 'res://captura374.tscn' remapped 'res://captura374.tscn' at thread -1
+Script docs haven't been properly loaded or regenerated, so don't save them to disk.
+EditorSettings: Save OK!
+XR: Clearing primary interface
+XR: Removed interface "Native mobile"
+XR: Removed interface "OpenXR"
+Orphan StringName: Vector2 (static: 0, total: 1)
+Orphan StringName: Vector3 (static: 0, total: 1)
+Orphan StringName: Vector4 (static: 0, total: 1)
+Orphan StringName: PackedVector4Array (static: 0, total: 1)
+Orphan StringName: RID (static: 0, total: 1)
+Orphan StringName: Color (static: 3, total: 4)
+Orphan StringName: PackedByteArray (static: 0, total: 1)
+Orphan StringName: Vector2i (static: 0, total: 1)
+Orphan StringName: Callable (static: 0, total: 1)
+Orphan StringName: Vector3i (static: 0, total: 1)
+Orphan StringName: Vector4i (static: 0, total: 1)
+Orphan StringName: PackedStringArray (static: 0, total: 1)
+Orphan StringName: Basis (static: 0, total: 1)
+Orphan StringName: int (static: 1, total: 2)
+Orphan StringName: PackedFloat32Array (static: 0, total: 1)
+Orphan StringName: Plane (static: 0, total: 1)
+Orphan StringName: PackedFloat64Array (static: 0, total: 1)
+Orphan StringName: NodePath (static: 1, total: 2)
+Orphan StringName: Signal (static: 0, total: 1)
+Orphan StringName: StringName (static: 0, total: 1)
+Orphan StringName: String (static: 0, total: 1)
+Orphan StringName: Transform2D (static: 0, total: 1)
+Orphan StringName: Transform3D (static: 0, total: 1)
+Orphan StringName: Array (static: 0, total: 1)
+Orphan StringName: Quaternion (static: 0, total: 1)
+Orphan StringName: bool (static: 1, total: 2)
+Orphan StringName: PackedColorArray (static: 0, total: 1)
+Orphan StringName: Node (static: 5, total: 6)
+Orphan StringName: PackedVector2Array (static: 0, total: 1)
+Orphan StringName: Object (static: 5, total: 6)
+Orphan StringName: AABB (static: 0, total: 1)
+Orphan StringName: float (static: 1, total: 2)
+Orphan StringName: Dictionary (static: 0, total: 1)
+Orphan StringName: Projection (static: 0, total: 1)
+Orphan StringName: Rect2 (static: 0, total: 1)
+Orphan StringName: PackedVector3Array (static: 0, total: 1)
+Orphan StringName: PackedInt32Array (static: 0, total: 1)
+Orphan StringName: Rect2i (static: 0, total: 1)
+Orphan StringName: PackedInt64Array (static: 0, total: 1)
+StringName: 39 unclaimed string names at exit.

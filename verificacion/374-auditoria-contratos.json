@@ -1,0 +1,180 @@
+{
+  "employment-record": {
+    "AC-EMP-001": [
+      "test\\dominio\\empleo\\consecuencia_test.gd"
+    ],
+    "AC-EMP-002": [
+      "test\\dominio\\empleo\\consecuencia_test.gd"
+    ],
+    "AC-EMP-003": [
+      "test\\dominio\\empleo\\legajo_test.gd"
+    ],
+    "AC-EMP-004": [
+      "test\\dominio\\empleo\\legajo_test.gd",
+      "test\\dominio\\empleo\\partida_test.gd"
+    ],
+    "AC-EMP-005": [
+      "test\\dominio\\empleo\\legajo_test.gd"
+    ],
+    "AC-EMP-006": [
+      "test\\dominio\\empleo\\legajo_test.gd"
+    ],
+    "AC-EMP-007": [
+      "test\\dominio\\empleo\\legajo_test.gd"
+    ],
+    "AC-EMP-008": [
+      "test\\dominio\\empleo\\legajo_test.gd",
+      "test\\dominio\\empleo\\partida_test.gd"
+    ],
+    "AC-EMP-009": [
+      "test\\dominio\\empleo\\partida_test.gd"
+    ],
+    "AC-EMP-010": [
+      "test\\dominio\\empleo\\partida_test.gd"
+    ],
+    "AC-EMP-011": [
+      "test\\dominio\\empleo\\partida_test.gd"
+    ],
+    "AC-EMP-012": [
+      "test\\dominio\\empleo\\legajo_test.gd",
+      "test\\dominio\\empleo\\partida_test.gd"
+    ],
+    "AC-EMP-013": [
+      "test\\dominio\\empleo\\parte_de_cierre_test.gd"
+    ],
+    "AC-EMP-014": [
+      "test\\dominio\\empleo\\catalogo_de_reacciones_test.gd"
+    ],
+    "AC-EMP-016": [
+      "test\\escenas\\almacen_test.gd",
+      "test\\ui\\interrupciones\\pantalla_de_cierre_test.gd",
+      "test\\dominio\\empleo\\parte_de_cierre_test.gd"
+    ],
+    "AC-EMP-017": [
+      "test\\dominio\\empleo\\llamados_de_la_partida_test.gd"
+    ],
+    "AC-EMP-018": [
+      "test\\dominio\\empleo\\llamados_de_la_partida_test.gd"
+    ],
+    "AC-EMP-019": [
+      "test\\dominio\\empleo\\llamados_de_la_partida_test.gd"
+    ],
+    "AC-EMP-020": [
+      "test\\sistemas\\marco\\enlace_de_guardado_test.gd",
+      "test\\sistemas\\marco\\guardado_test.gd",
+      "test\\dominio\\empleo\\llamados_de_la_partida_test.gd"
+    ],
+    "AC-EMP-021": [
+      "test\\dominio\\empleo\\llamados_de_la_partida_test.gd",
+      "test\\dominio\\empleo\\parte_de_cierre_test.gd"
+    ],
+    "AC-EMP-022": [
+      "test\\dominio\\empleo\\llamados_de_la_partida_test.gd"
+    ],
+    "AC-EMP-023": [
+      "test\\escenas\\cierre_del_almacen_test.gd",
+      "test\\dominio\\empleo\\parte_de_cierre_test.gd"
+    ],
+    "AC-EMP-045": [
+      "test\\ui\\interrupciones\\pantalla_de_instrucciones_test.gd",
+      "test\\dominio\\empleo\\instrucciones_del_jefe_test.gd"
+    ],
+    "AC-EMP-046": [
+      "test\\ui\\interrupciones\\pantalla_de_instrucciones_test.gd",
+      "test\\dominio\\empleo\\instrucciones_del_jefe_test.gd"
+    ],
+    "AC-EMP-047": [
+      "test\\dominio\\empleo\\instrucciones_del_jefe_test.gd"
+    ],
+    "AC-EMP-048": [
+      "test\\escenas\\instrucciones_en_el_almacen_test.gd"
+    ],
+    "AC-EMP-049": [
+      "test\\escenas\\instrucciones_en_el_almacen_test.gd",
+      "test\\ui\\interrupciones\\pantalla_de_instrucciones_test.gd"
+    ],
+    "AC-EMP-050": [
+      "test\\dominio\\empleo\\partida_test.gd"
+    ]
+  },
+  "save-and-resume": {
+    "AC-SAV-001": [
+      "test\\sistemas\\marco\\enlace_de_guardado_test.gd"
+    ],
+    "AC-SAV-002": [
+      "test\\sistemas\\marco\\enlace_de_guardado_test.gd"
+    ],
+    "AC-SAV-003": [
+      "test\\sistemas\\marco\\enlace_de_guardado_test.gd"
+    ],
+    "AC-SAV-004": [
+      "test\\dominio\\empleo\\politica_de_guardado_test.gd"
+    ],
+    "AC-SAV-005": [
+      "test\\sistemas\\marco\\enlace_de_guardado_test.gd"
+    ],
+    "AC-SAV-006": [
+      "test\\sistemas\\marco\\guardado_test.gd",
+      "test\\dominio\\empleo\\partida_serializada_test.gd"
+    ],
+    "AC-SAV-007": [
+      "test\\sistemas\\marco\\guardado_test.gd",
+      "test\\dominio\\empleo\\partida_serializada_test.gd"
+    ],
+    "AC-SAV-008": [
+      "test\\sistemas\\marco\\guardado_test.gd",
+      "test\\dominio\\empleo\\partida_serializada_test.gd"
+    ],
+    "AC-SAV-009": [
+      "test\\sistemas\\marco\\guardado_test.gd",
+      "test\\dominio\\empleo\\partida_serializada_test.gd"
+    ],
+    "AC-SAV-010": [
+      "test\\sistemas\\marco\\guardado_test.gd"
+    ],
+    "AC-SAV-011": [
+      "test\\sistemas\\marco\\guardado_test.gd"
+    ],
+    "AC-SAV-012": [
+      "test\\escenas\\menu_de_inicio_test.gd"
+    ],
+    "AC-SAV-013": [
+      "test\\escenas\\menu_de_inicio_test.gd"
+    ],
+    "AC-SAV-014": [
+      "test\\sistemas\\marco\\pedidos_del_menu_test.gd"
+    ],
+    "AC-SAV-015": [
+      "test\\sistemas\\marco\\pedidos_del_menu_test.gd"
+    ],
+    "AC-SAV-016": [
+      "test\\dominio\\empleo\\menu_de_inicio_test.gd"
+    ],
+    "AC-SAV-017": [
+      "test\\escenas\\almacen_test.gd",
+      "test\\sistemas\\marco\\guardado_test.gd"
+    ],
+    "AC-SAV-018": [
+      "test\\escenas\\almacen_test.gd",
+      "test\\sistemas\\marco\\control_de_pausa_test.gd",
+      "test\\dominio\\jornada\\pausa_test.gd"
+    ],
+    "AC-SAV-019": [
+      "test\\ui\\interrupciones\\menu_de_pausa_test.gd"
+    ],
+    "AC-SAV-020": [
+      "test\\escenas\\almacen_test.gd",
+      "test\\ui\\interrupciones\\menu_de_pausa_test.gd",
+      "test\\sistemas\\marco\\control_de_pausa_test.gd"
+    ],
+    "AC-SAV-021": [
+      "test\\escenas\\instrucciones_en_el_almacen_test.gd"
+    ],
+    "AC-SAV-022": [
+      "test\\escenas\\menu_de_inicio_test.gd"
+    ],
+    "AC-SAV-023": [
+      "test\\escenas\\instrucciones_en_el_almacen_test.gd"
+    ]
+  }
+}

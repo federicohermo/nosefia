@@ -1,0 +1,262 @@
+[
+  {
+    "fase": "instrucciones_primero",
+    "tiempo": 5331.020000100136,
+    "tomado": false,
+    "hasFocus": true,
+    "estado": {
+      "abierto": false,
+      "alma": true,
+      "botones": [
+        {
+          "habilitado": true,
+          "nombre": "",
+          "texto": "Siguiente",
+          "x": 1104.66662597656,
+          "y": 204.000015258789
+        }
+      ],
+      "fotos": [],
+      "instrucciones": {
+        "pasos": [
+          {
+            "foto": "",
+            "foto_antes_del_texto": true,
+            "texto": "¿Cómo andás, pibe? Llegó el momento de lucirte. Tu período de prueba va a ser de solo cinco jornadas. ¿Quién pudiera, no?",
+            "texto_dibujado": "¿Cómo andás, pibe? Llegó el momento de lucirte. Tu período de prueba va a ser de solo cinco jornadas. ¿Quién pudiera, no?"
+          }
+        ],
+        "visible": true
+      },
+      "jornada": 1,
+      "medios": 0,
+      "pantalla": 0,
+      "pausa": false,
+      "placa": {
+        "texto": "",
+        "visible": false
+      },
+      "presupuesto": 43200
+    }
+  },
+  {
+    "fase": "instrucciones_ultimo",
+    "tiempo": 9793.730000019073,
+    "tomado": false,
+    "hasFocus": true,
+    "estado": {
+      "abierto": false,
+      "alma": true,
+      "botones": [
+        {
+          "habilitado": true,
+          "nombre": "",
+          "texto": "Volver",
+          "x": 962.000061035156,
+          "y": 563.333679199219
+        },
+        {
+          "habilitado": true,
+          "nombre": "",
+          "texto": "Comenzar",
+          "x": 1098,
+          "y": 563.333679199219
+        }
+      ],
+      "fotos": [],
+      "instrucciones": {
+        "pasos": [
+          {
+            "foto": "",
+            "foto_antes_del_texto": true,
+            "texto": "¿Cómo andás, pibe? Llegó el momento de lucirte. Tu período de prueba va a ser de solo cinco jornadas. ¿Quién pudiera, no?",
+            "texto_dibujado": "¿Cómo andás, pibe? Llegó el momento de lucirte. Tu período de prueba va a ser de solo cinco jornadas. ¿Quién pudiera, no?"
+          },
+          {
+            "foto": "",
+            "foto_antes_del_texto": true,
+            "texto": "De todos modos, acordate de que el primer mes no es pago, porque lo tomamos como capacitación.",
+            "texto_dibujado": "De todos modos, acordate de que el primer mes no es pago, porque lo tomamos como capacitación."
+          },
+          {
+            "foto": "",
+            "foto_antes_del_texto": true,
+            "texto": "Bueno, como ya comenté, la jornada arranca a las 8 PM, cuando se va Yasmín, y termina a las 8 AM. Debería sobrarte el tiempo para cumplir con las tareas que te voy a dejar.",
+            "texto_dibujado": "Bueno, como ya comenté, la jornada arranca a las 8 PM, cuando se va Yasmín, y termina a las 8 AM. Debería sobrarte el tiempo para cumplir con las tareas que te voy a dejar."
+          },
+          {
+            "foto": "res://assets/ui/manada/fotos/intro-04.png",
+            "foto_antes_del_texto": true,
+            "foto_tamano": "(960.0, 540.0)",
+            "texto": "Cualquier cosa, siempre van a quedar anotadas en el corcho, atrás del mostrador. Te las resumo:",
+            "texto_dibujado": "Cualquier cosa, siempre van a quedar anotadas en el corcho, atrás del mostrador. Te las resumo:"
+          },
+          {
+            "foto": "",
+            "foto_antes_del_texto": true,
+            "texto": "Primero, y lo más importante: [b]atender a los clientes[/b]. Mi estación de servicio es el único local del pueblo que queda abierto las 24 horas, así que los compradores nocturnos dependen de nosotros. Atenderlos mal es faltarle el respeto a nuestros vecinos, así que ojito.",
+            "texto_dibujado": "Primero, y lo más importante: atender a los clientes. Mi estación de servicio es el único local del pueblo que queda abierto las 24 horas, así que los compradores nocturnos dependen de nosotros. Atenderlos mal es faltarle el respeto a nuestros vecinos, así que ojito."
+          },
+          {
+            "foto": "res://assets/ui/manada/fotos/intro-06.png",
+            "foto_antes_del_texto": true,
+            "foto_tamano": "(960.0, 540.0)",
+            "texto": "A esa hora, la entrada principal queda cerrada, así que se van a asomar por la ventanilla. Atendé los pedidos y no te olvides de darles un ticket de recibo. Conozco a varios que hasta son capaces de dejar los productos e irse si no se los das. Eso NO puede pasar.",
+            "texto_dibujado": "A esa hora, la entrada principal queda cerrada, así que se van a asomar por la ventanilla. Atendé los pedidos y no te olvides de darles un ticket de recibo. Conozco a varios que hasta son capaces de dejar los productos e irse si no se los das. Eso NO puede pasar."
+          },
+          {
+            "foto": "res://assets/ui/manada/fotos/intro-07.png",
+            "foto_antes_del_texto": true,
+            "foto_tamano": "(960.0, 540.0)",
+            "texto": "Para generar un ticket, tenés que pasar todos los productos por el lector del mostrador y darle al botón “imprimir” en el programa de la caja registradora. Nada muy complejo.",
+            "texto_dibujado": "Para generar un ticket, tenés que pasar todos los productos por el lector del mostrador y darle al botón “imprimir” en el programa de la caja registradora. Nada muy complejo."
+          },
+          {
+            "foto": "res://assets/ui/manada/fotos/intro-08.png",
+            "foto_antes_del_texto": true,
+            "foto_tamano": "(960.0, 540.0)",
+            "texto": "En segundo lugar, [b]anotar los productos vendidos [/b]durante la noche en la computadora. Bastante simple.",
+            "texto_dibujado": "En segundo lugar, anotar los productos vendidos durante la noche en la computadora. Bastante simple."
+          },
+          {
+            "foto": "res://assets/ui/manada/fotos/intro-09.png",
+            "foto_antes_del_texto": true,
+            "foto_tamano": "(960.0, 540.0)",
+            "texto": "Tercero, hacer la [b]reposición de productos[/b]. Revisá bien todas las góndolas y reponé los ítems que falten con los de las cajas del depósito. No quiero ver ni un solo hueco vacío.",
+            "texto_dibujado": "Tercero, hacer la reposición de productos. Revisá bien todas las góndolas y reponé los ítems que falten con los de las cajas del depósito. No quiero ver ni un solo hueco vacío."
+          },
+          {
+            "foto": "",
+            "foto_antes_del_texto": true,
+            "texto": "Un único producto ausente en la mañana puede hacer la diferencia entre un local de excelencia y uno mediocre. No podemos dar la impresión de que estamos cortos de stock.",
+            "texto_dibujado": "Un único producto ausente en la mañana puede hacer la diferencia entre un local de excelencia y uno mediocre. No podemos dar la impresión de que estamos cortos de stock."
+          },
+          {
+            "foto": "res://assets/ui/manada/fotos/intro-11.png",
+            "foto_antes_del_texto": true,
+            "foto_tamano": "(960.0, 540.0)",
+            "texto": "Cuarto, pero no menor, [b]limpiar[/b]. Vas a encontrar los productos de limpieza en el baño, además de algunas notitas explicando cómo usarlos. No deberías tener problemas con eso.",
+            "texto_dibujado": "Cuarto, pero no menor, limpiar. Vas a encontrar los productos de limpieza en el baño, además de algunas notitas explicando cómo usarlos. No deberías tener problemas con eso."
+          },
+          {
+            "foto": "",
+            "foto_antes_del_texto": true,
+            "texto": "Además de los quehaceres rutinarios, siempre queda alguna cosita por hacer. Por eso, no te sorprendas si ves una quinta tarea diferente cada noche. Tranqui, que te voy a dejar instrucciones por este medio.",
+            "texto_dibujado": "Además de los quehaceres rutinarios, siempre queda alguna cosita por hacer. Por eso, no te sorprendas si ves una quinta tarea diferente cada noche. Tranqui, que te voy a dejar instrucciones por este medio."
+          },
+          {
+            "foto": "res://assets/ui/manada/fotos/intro-13.png",
+            "foto_antes_del_texto": true,
+            "foto_tamano": "(960.0, 540.0)",
+            "texto": "Para esta noche, te pido que [b]organices las cajas[/b] que dejó el proveedor en el depósito. Acomodalas en los estantes y que no quede ni una en el piso, entendido? Te voy a tener cortito con esos detalles. Para trabajar en una estación de servicio tan prestigiosa como esta, tenés que estar al nivel.",
+            "texto_dibujado": "Para esta noche, te pido que organices las cajas que dejó el proveedor en el depósito. Acomodalas en los estantes y que no quede ni una en el piso, entendido? Te voy a tener cortito con esos detalles. Para trabajar en una estación de servicio tan prestigiosa como esta, tenés que estar al nivel."
+          },
+          {
+            "foto": "",
+            "foto_antes_del_texto": true,
+            "texto": "Me parece que con eso estaríamos. No te olvides de dejar el local correctamente ordenado antes de irte. Estamos?",
+            "texto_dibujado": "Me parece que con eso estaríamos. No te olvides de dejar el local correctamente ordenado antes de irte. Estamos?"
+          }
+        ],
+        "visible": true
+      },
+      "jornada": 1,
+      "medios": 0,
+      "pantalla": 0,
+      "pausa": false,
+      "placa": {
+        "texto": "",
+        "visible": false
+      },
+      "presupuesto": 43200
+    }
+  },
+  {
+    "fase": "placa_noche1",
+    "tiempo": 10004.770000100136,
+    "tomado": false,
+    "hasFocus": true,
+    "estado": {
+      "abierto": false,
+      "alma": true,
+      "botones": [],
+      "fotos": [],
+      "instrucciones": {
+        "pasos": [],
+        "visible": false
+      },
+      "jornada": 1,
+      "medios": 0,
+      "pantalla": 0,
+      "pausa": false,
+      "placa": {
+        "texto": "NOCHE 1",
+        "visible": true
+      },
+      "presupuesto": 43200
+    }
+  },
+  {
+    "fase": "foto_real_en_celular",
+    "tiempo": 15384.72000002861,
+    "tomado": false,
+    "hasFocus": true,
+    "estado": {
+      "abierto": true,
+      "alma": true,
+      "botones": [
+        {
+          "habilitado": true,
+          "nombre": "Volver al menú",
+          "texto": "",
+          "x": 500.666656494141,
+          "y": 92.6666717529297
+        }
+      ],
+      "foto_ampliada": {
+        "ruta": "res://assets/ui/manada/fotos/intro-13.png",
+        "texto": "Para esta noche, te pido que [b]organices las cajas[/b] que dejó el proveedor en el depósito. Acomodalas en los estantes y que no quede ni una en el piso, entendido? Te voy a tener cortito con esos detalles. Para trabajar en una estación de servicio tan prestigiosa como esta, tenés que estar al nivel.",
+        "texto_dibujado": "Para esta noche, te pido que organices las cajas que dejó el proveedor en el depósito. Acomodalas en los estantes y que no quede ni una en el piso, entendido? Te voy a tener cortito con esos detalles. Para trabajar en una estación de servicio tan prestigiosa como esta, tenés que estar al nivel."
+      },
+      "fotos": [],
+      "instrucciones": {
+        "pasos": [],
+        "visible": false
+      },
+      "jornada": 1,
+      "medios": 0,
+      "pantalla": 2,
+      "pausa": false,
+      "placa": {
+        "texto": "NOCHE 1",
+        "visible": false
+      },
+      "presupuesto": 43025.9046
+    }
+  },
+  {
+    "fase": "continuar_sin_instrucciones",
+    "tiempo": 18023.865000009537,
+    "tomado": false,
+    "hasFocus": true,
+    "estado": {
+      "abierto": false,
+      "alma": true,
+      "botones": [],
+      "fotos": [],
+      "instrucciones": {
+        "pasos": [],
+        "visible": false
+      },
+      "jornada": 3,
+      "medios": 7,
+      "pantalla": 0,
+      "pausa": false,
+      "placa": {
+        "texto": "NOCHE 3",
+        "visible": true
+      },
+      "presupuesto": 43200
+    }
+  }
+]

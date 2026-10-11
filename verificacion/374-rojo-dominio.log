@@ -1,0 +1,118 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+[   0% ] [90m[1mfirst_scan_filesystem[22m | Started Inicialización del proyecto (5 steps)[39m[0m
+[   0% ] [90m[1mfirst_scan_filesystem[22m | Escaneando la estructura del archivo...[39m[0m
+[  16% ] [90m[1mfirst_scan_filesystem[22m | Cargando nombres de clases globales...[39m[0m
+[  33% ] [90m[1mfirst_scan_filesystem[22m | Verificando GDExtensions...[39m[0m
+[  50% ] [90m[1mfirst_scan_filesystem[22m | Creando scripts de carga automática...[39m[0m
+[  66% ] [90m[1mfirst_scan_filesystem[22m | Inicializando plugins...[39m[0m
+[38;2;218;165;32mIt was recognized that GdUnit4 is running in a test environment, therefore the GdUnit4 plugin will not be executed![0m
+[MCP] Connecting to ports 6505-6514
+[MCP] Godot MCP Pro v1.16.0 started (ports 6505-6514)
+[MCP] Registered 177 commands
+[  83% ] [90m[1mfirst_scan_filesystem[22m | Iniciando escaneo de archivos...[39m[0m
+[92m[ DONE ][39m [1mfirst_scan_filesystem[22m
+[0m
+[   0% ] [90m[1mupdate_scripts_classes[22m | Started Registrando clases globales... (2 steps)[39m[0m
+[   0% ] [90m[1mupdate_scripts_classes[22m | InstruccionesDelJefe[39m[0m
+[  33% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[92m[ DONE ][39m [1mupdate_scripts_classes[22m
+[0m
+[   0% ] [90m[1mreimport[22m | Started (Re)Importación de Assets (1 steps)[39m[0m
+[   0% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+[   0% ] [90m[1mreimport[22m | Ejecutando operaciones de pre-reimportación...[39m[0m
+[   0% ] [90m[1mreimport[22m | logo.png[39m[0m
+[  50% ] [90m[1mreimport[22m | Finalizando la importación de recursos...[39m[0m
+[92m[ DONE ][39m [1mreimport[22m
+[0m
+[   0% ] [90m[1mreimport[22m | Started (Re)Importación de Assets (1 steps)[39m[0m
+[   0% ] [90m[1mreimport[22m | Ejecutando operaciones post-reimportación...[39m[0m
+[92m[ DONE ][39m [1mreimport[22m
+[0m
+[   0% ] [90m[1mloading_editor_layout[22m | Started Cargando editor (5 steps)[39m[0m
+[   0% ] [90m[1mloading_editor_layout[22m | Cargando diseño del editor...[39m[0m
+[  16% ] [90m[1mloading_editor_layout[22m | Cargando docks...[39m[0m
+[92m[ DONE ][39m [1mloading_editor_layout[22m
+[0m
+[MCP] WebSocket client stopped
+[MCP] Godot MCP Pro stopped
+ERROR: The remote port number must be between 1 and 65535 (inclusive).
+   at: connect_to_host (core/io/stream_peer_tcp.cpp:69)
+ERROR: Remote Debugger: Unable to connect to host '127.0.0.1:0'.
+   at: create_tcp (core/debugger/remote_debugger_peer.cpp:247)
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+[2J[H[38;2;233;150;122m
+--------------------------------------------------------------------------------------------------
+GdUnit4 Comandline Tool
+--------------------------------------------------------------------------------------------------[0m
+[38;2;0;191;255mDisabled fail fast![0m
+[38;2;0;191;255mSet write reports to D:/Usuarios/fede/Documentos/Catedra Videojuegos FADU/manada/repo/nosefia/.claude/worktrees/batch-20261010-364/reports/focal-374-0[0m
+[38;2;218;165;32m
+Headless mode is ignored by option '--ignoreHeadlessMode'"
+
+Please note that tests that use UI interaction do not work correctly in headless mode.
+Godot 'InputEvents' are not transported by the Godot engine in headless mode and therefore
+have no effect in the test!
+[0m
+[38;2;100;149;237mInstalling GdUnit4 session system hooks.[0m
+[38;2;100;149;237mSession hook 'GdUnitHtmlTestReporter' installed.[0m
+[38;2;100;149;237mSession hook 'GdUnitXMLTestReporter' installed.[0m
+[38;2;100;149;237mInstalling GdUnit4 session hooks.[0m
+[38;2;100;149;237mSession hook 'Guardado de la sesión' installed.[0m
+[38;2;0;206;209mRun Test Suite: [0m[38;2;250;235;215mres://test/dominio/empleo/instrucciones_del_jefe_test.gd[0m
+  [38;2;250;235;215mres://test/dominio/empleo/instrucciones_del_jefe_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_uno_catorce_volver_y_comenzar_son_pasos[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/empleo/instrucciones_del_jefe_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_uno_catorce_volver_y_comenzar_son_pasos[0m[38;2;178;34;34m[1m FAILED[0m[38;2;100;149;237m 8ms[0m
+  [38;2;0;206;209m[1m[4mReport:[0m
+  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ [38;2;30;144;255m14[0m
+ but was
+ [38;2;30;144;255m1[0m[0m[38;2;173;216;230m	at 'test_uno_catorce_volver_y_comenzar_son_pasos' in res://test/dominio/empleo/instrucciones_del_jefe_test.gd:86[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m '[38;2;30;144;255mtrue[0m' but is '[38;2;30;144;255mfalse[0m'[0m[38;2;173;216;230m	at 'test_uno_catorce_volver_y_comenzar_son_pasos' in res://test/dominio/empleo/instrucciones_del_jefe_test.gd:87[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m '[38;2;30;144;255mtrue[0m' but is '[38;2;30;144;255mfalse[0m'[0m[38;2;173;216;230m	at 'test_uno_catorce_volver_y_comenzar_son_pasos' in res://test/dominio/empleo/instrucciones_del_jefe_test.gd:89[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ [38;2;30;144;255m13[0m
+ but was
+ [38;2;30;144;255m1[0m[0m[38;2;173;216;230m	at 'test_uno_catorce_volver_y_comenzar_son_pasos' in res://test/dominio/empleo/instrucciones_del_jefe_test.gd:90[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m '[38;2;30;144;255mtrue[0m' but is '[38;2;30;144;255mfalse[0m'[0m[38;2;173;216;230m	at 'test_uno_catorce_volver_y_comenzar_son_pasos' in res://test/dominio/empleo/instrucciones_del_jefe_test.gd:94[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ [38;2;30;144;255m14[0m
+ but was
+ [38;2;30;144;255m1[0m[0m[38;2;173;216;230m	at 'test_uno_catorce_volver_y_comenzar_son_pasos' in res://test/dominio/empleo/instrucciones_del_jefe_test.gd:96[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m '[38;2;30;144;255mtrue[0m' but is '[38;2;30;144;255mfalse[0m'[0m[38;2;173;216;230m	at 'test_uno_catorce_volver_y_comenzar_son_pasos' in res://test/dominio/empleo/instrucciones_del_jefe_test.gd:97[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m '[38;2;30;144;255mtrue[0m' but is '[38;2;30;144;255mfalse[0m'[0m[38;2;173;216;230m	at 'test_uno_catorce_volver_y_comenzar_son_pasos' in res://test/dominio/empleo/instrucciones_del_jefe_test.gd:102[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m '[38;2;30;144;255mtrue[0m' but is '[38;2;30;144;255mfalse[0m'[0m[38;2;173;216;230m	at 'test_uno_catorce_volver_y_comenzar_son_pasos' in res://test/dominio/empleo/instrucciones_del_jefe_test.gd:102[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m '[38;2;30;144;255mtrue[0m' but is '[38;2;30;144;255mfalse[0m'[0m[38;2;173;216;230m	at 'test_uno_catorce_volver_y_comenzar_son_pasos' in res://test/dominio/empleo/instrucciones_del_jefe_test.gd:102[0m[38;2;128;128;128m[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/empleo/instrucciones_del_jefe_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_un_paso_termina_al_primer_avance[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/empleo/instrucciones_del_jefe_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_un_paso_termina_al_primer_avance[0m[38;2;178;34;34m[1m FAILED[0m[38;2;100;149;237m 6ms[0m
+  [38;2;0;206;209m[1m[4mReport:[0m
+  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m '[38;2;30;144;255mtrue[0m' but is '[38;2;30;144;255mfalse[0m'[0m[38;2;173;216;230m	at 'test_un_paso_termina_al_primer_avance' in res://test/dominio/empleo/instrucciones_del_jefe_test.gd:110[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m '[38;2;30;144;255mtrue[0m' but is '[38;2;30;144;255mfalse[0m'[0m[38;2;173;216;230m	at 'test_un_paso_termina_al_primer_avance' in res://test/dominio/empleo/instrucciones_del_jefe_test.gd:113[0m[38;2;128;128;128m[0m
+[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/empleo/instrucciones_del_jefe_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_guion_literal_y_siete_parejas_sin_mutar[0m[38;2;34;139;34m STARTED[0m[38;2;128;128;128m[0m
+  [38;2;250;235;215mres://test/dominio/empleo/instrucciones_del_jefe_test.gd[0m[38;2;128;128;128m > [0m[38;2;250;235;215mtest_guion_literal_y_siete_parejas_sin_mutar[0m[38;2;178;34;34m[1m FAILED[0m[38;2;100;149;237m 7ms[0m
+  [38;2;0;206;209m[1m[4mReport:[0m
+  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ [38;2;30;144;255m21[0m
+ but was
+ [38;2;30;144;255m3[0m[0m[38;2;173;216;230m	at 'test_guion_literal_y_siete_parejas_sin_mutar' in res://test/dominio/empleo/instrucciones_del_jefe_test.gd:122[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ [38;2;30;144;255m14[0m
+ but was
+ [38;2;30;144;255m0[0m[0m[38;2;173;216;230m	at 'test_guion_literal_y_siete_parejas_sin_mutar' in res://test/dominio/empleo/instrucciones_del_jefe_test.gd:123[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ '[38;2;30;144;255mEnrique Peldaño[0m'
+ but was
+ '[38;2;30;144;255mE[48;2;38;0;0m[38;2;255;255;255mnrique[0m[38;2;30;144;255m[48;2;38;0;0m[0m[38;2;30;144;255m[48;2;0;38;0m[38;2;255;255;255ml[0m[38;2;30;144;255m[48;2;0;38;0m[0m[38;2;30;144;255m [48;2;38;0;0m[38;2;255;255;255mP[0m[38;2;30;144;255m[48;2;38;0;0m[0m[38;2;30;144;255m[48;2;0;38;0m[38;2;255;255;255mj[0m[38;2;30;144;255m[48;2;0;38;0m[0m[38;2;30;144;255me[48;2;38;0;0m[38;2;255;255;255mldaño[0m[38;2;30;144;255m[48;2;38;0;0m[0m[38;2;30;144;255m[48;2;0;38;0m[38;2;255;255;255mfe[0m[38;2;30;144;255m[48;2;0;38;0m[0m[38;2;30;144;255m[0m'[0m[38;2;173;216;230m	at 'test_guion_literal_y_siete_parejas_sin_mutar' in res://test/dominio/empleo/instrucciones_del_jefe_test.gd:124[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting: not to be[0m '[38;2;30;144;255m<null>[0m'[0m[38;2;173;216;230m	at 'test_guion_literal_y_siete_parejas_sin_mutar' in res://test/dominio/empleo/instrucciones_del_jefe_test.gd:125[0m  [38;2;128;128;128m[38;2;255;69;0mExpecting:[0m
+ [38;2;30;144;255m21[0m
+ but was
+ [38;2;30;144;255m0[0m[0m[38;2;173;216;230m	at 'test_guion_literal_y_siete_parejas_sin_mutar' in res://test/dominio/empleo/instrucciones_del_jefe_test.gd:149[0m[38;2;128;128;128m[0m
+[38;2;128;128;128m[0m
+[38;2;30;144;255mStatistics:[0m[38;2;128;128;128m 3 test cases | 0 errors | 17 failures | 0 flaky | 0 skipped | 0 orphans |[0m[38;2;34;139;34m PASSED[0m[38;2;100;149;237m 68ms[0m
+[38;2;128;128;128m[0m
+[38;2;128;128;128m[0m
+[38;2;30;144;255mOverall Summary:[0m[38;2;255;255;255m 3 test cases | 0 errors | 17 failures | 0 flaky | 0 skipped | 0 orphans |[0m
+[38;2;233;150;122mExecuted test suites: (1/1)[0m
+[38;2;233;150;122mExecuted test cases : (3/3)[0m
+[38;2;233;150;122mTotal execution time: 68ms[0m
+[38;2;255;255;255m [0m[38;2;100;149;237mOpen XML Report at: file://D:/Usuarios/fede/Documentos/Catedra Videojuegos FADU/manada/repo/nosefia/.claude/worktrees/batch-20261010-364/reports/focal-374-0/report_1/results.xml[0m
+[38;2;100;149;237mOpen HTML Report at: file://D:/Usuarios/fede/Documentos/Catedra Videojuegos FADU/manada/repo/nosefia/.claude/worktrees/batch-20261010-364/reports/focal-374-0/report_1/index.html[0m
+[38;2;178;34;34mExit code: 100[0m
+Run dispose test resources
+WARNING: 142 ObjectDB instances were leaked at exit (run with `--verbose` for details).
+   at: cleanup (core/object/object.cpp:2536)
+ERROR: 100 resources still in use at exit (run with --verbose for details).
+   at: clear (core/io/resource.cpp:822)
+ERROR: Pages in use exist at exit in PagedAllocator: N12VariantPools12BucketMediumE
+   at: ~PagedAllocator (./core/templates/paged_allocator.h:170)
+ERROR: Pages in use exist at exit in PagedAllocator: N12VariantPools11BucketSmallE
+   at: ~PagedAllocator (./core/templates/paged_allocator.h:170)

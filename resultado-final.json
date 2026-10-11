@@ -1,0 +1,28 @@
+{
+  "head": "a9b695472165b55bd2faaab1773d139680d68c85",
+  "base_fija": "f0c37482a315972d4de58020e6a247e78d7a55f3",
+  "producto_exportado_y_renderizado": "4b589ec60b56c3b21c0145aa826d7881dbd5be2e",
+  "full_intentos": 3,
+  "primer_full": "6/7; tres aserciones de fixture de carga previo al fade",
+  "segundo_full": "7/7, pero retención adicional164/123 en discovery; no fue el cierre final",
+  "correccion_discovery": "Sólo GUION ruta String y load dentro del caso de dominio; mismas aserciones.",
+  "verificador": "reports/report_17: 239 suites corridas, 239 archivos `*_test.gd`\n  ok        capas       1.8s\n  ok        formato    12.6s\n  ok        harness    98.4s\n  ok        lint       13.3s\n  ok        specs       0.2s\n  ok        tdd         0.2s\n  ok        tests     741.3s\n\n7/7 nodos en verde, en 747.3s.\n",
+  "suites": 239,
+  "casos": 1823,
+  "script_errors": 0,
+  "nuevos_diagnosticos": {
+    "WARNING: Rescate: `Balde` estaba adentro de `SueloSolido` en (3.494999, 0.198718, -0.999999); va a DESHACER": 1,
+    "WARNING: Rescate: `Balde` estaba adentro de `StaticBody3D` en (11.745, 0.216795, 6.006001); va a DESHACER": 1
+  },
+  "retirados_diagnosticos": {
+    "WARNING: Rescate: `Balde` estaba adentro de `SueloSolido` en (3.495001, 0.198718, -1.000001); va a DESHACER": 1,
+    "WARNING: Rescate: `Balde` estaba adentro de `StaticBody3D` en (11.745, 0.216795, 6.006); va a DESHACER": 1
+  },
+  "dominio_rojo": "3 casos, 17 fallos de aserción, cero SCRIPT ERROR",
+  "dominio_minimo_verde": "3/3",
+  "ui_verde": "4/4",
+  "escena_verde": "7/7",
+  "fotos": "7/7 con rayos/poses y aprobación visual de las siete imágenes finales",
+  "web": "Dos resoluciones, consola completa sin errores, RAF120/110, flujo nuevo y continuar3/7",
+  "export": "Preset versionado exacto; import/export/PCK limpios tras corregir referencias estáticas del fixture"
+}

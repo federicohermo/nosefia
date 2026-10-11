@@ -1,0 +1,36 @@
+{
+  "root": "C:\\Users\\fede_\\AppData\\Local\\Temp\\nosefia-batch-364-370-20261010\\374-variantes-discovery",
+  "variantes": [
+    [
+      "control",
+      [
+        "dominio/empleo/instrucciones_del_jefe_test.gd",
+        "ui/interrupciones/pantalla_de_instrucciones_test.gd",
+        "escenas/instrucciones_en_el_almacen_test.gd"
+      ]
+    ],
+    [
+      "ninguna",
+      []
+    ],
+    [
+      "dominio",
+      [
+        "dominio/empleo/instrucciones_del_jefe_test.gd"
+      ]
+    ],
+    [
+      "ui",
+      [
+        "ui/interrupciones/pantalla_de_instrucciones_test.gd"
+      ]
+    ],
+    [
+      "escena",
+      [
+        "escenas/instrucciones_en_el_almacen_test.gd"
+      ]
+    ]
+  ],
+  "diferencia": "Exclusivamente presencia de las tres suites nuevas; src idéntico en las cinco."
+}

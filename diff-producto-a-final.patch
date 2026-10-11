@@ -1,0 +1,41 @@
+diff --git a/test/dominio/empleo/instrucciones_del_jefe_test.gd b/test/dominio/empleo/instrucciones_del_jefe_test.gd
+index fe1e57dc..b78c79f3 100644
+--- a/test/dominio/empleo/instrucciones_del_jefe_test.gd
++++ b/test/dominio/empleo/instrucciones_del_jefe_test.gd
+@@ -1,6 +1,6 @@
+ extends GdUnitTestSuite
+ 
+-const GUION := preload("res://src/dominio/investigacion/conversacion_con_el_jefe.tres")
++const GUION := "res://src/dominio/investigacion/conversacion_con_el_jefe.tres"
+ const TEXTOS: Array[String] = [
+ 	(
+ 		"¿Cómo andás, pibe? Llegó el momento de lucirte. Tu período de prueba va "
+@@ -116,7 +116,7 @@ func test_un_paso_termina_al_primer_avance() -> void:  # AC-EMP-045
+ 
+ 
+ func test_guion_literal_y_siete_parejas_sin_mutar() -> void:  # AC-EMP-046, AC-EMP-047
+-	var guion: Conversacion = GUION
++	var guion: Conversacion = load(GUION)
+ 	var originales: Array[Mensaje] = guion.mensajes.duplicate()
+ 	var pasos := InstruccionesDelJefe.pasos_de(guion.mensajes)
+ 	assert_int(guion.mensajes.size()).is_equal(21)
+diff --git a/test/escenas/carga_del_almacen_test.gd b/test/escenas/carga_del_almacen_test.gd
+index 80a33f31..ef2962d2 100644
+--- a/test/escenas/carga_del_almacen_test.gd
++++ b/test/escenas/carga_del_almacen_test.gd
+@@ -27,8 +27,15 @@ func _pantallas_visibles(menu: Control) -> int:
+ 
+ 
+ func _elegir_nuevo_juego(menu: Control) -> void:
++	menu.set_process(false)
++	var ahora: Array[int] = [0]
++	menu.set("_ahora", func() -> int: return ahora[0])
+ 	var pedidos: PedidosDelMenu = menu.find_children("*", "PedidosDelMenu", true, false)[0]
+ 	pedidos.elegir(MenuDeInicio.Opcion.NUEVO_JUEGO)
++	if menu.get("_fundiendo"):
++		assert_int(_pantallas_visibles(menu)).is_zero()
++		ahora[0] = 300000
++		menu.call("_process", 0.0)
+ 
+ 
+ func test_cada_menu_nuevo_pide_el_almacen() -> void:

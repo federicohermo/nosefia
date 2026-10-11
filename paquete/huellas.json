@@ -1,0 +1,47 @@
+{
+  "fixture_sha256": "a5eb7d772ea872636113eab02cbd0ab2114014e20e4544644d4fb7c351a22d66",
+  "commit": "4b589ec60b56c3b21c0145aa826d7881dbd5be2e",
+  "fixture": "bootstrap374.gd",
+  "aislamiento": "S\u00f3lo editor_plugins deshabilitados en copia externa; main_scene de sonda; preset versionado sin cambios.",
+  "piezas": {
+    "index.apple-touch-icon.png": {
+      "bytes": 11939,
+      "sha256": "071ccd3c3619e62c9e27995cf1afde427bb1b630767801a0fe1ac33505b2f221"
+    },
+    "index.audio.position.worklet.js": {
+      "bytes": 2973,
+      "sha256": "be33985bc7160d6bf9646f259cd86b259cd67b02ccb297ee5c44f8ac84327bc8"
+    },
+    "index.audio.worklet.js": {
+      "bytes": 7298,
+      "sha256": "5b476a9c9ce642c0ee4256436d1bc31d9c38f868aca0f9a8e2a57c18d2dec2a3"
+    },
+    "index.html": {
+      "bytes": 5441,
+      "sha256": "c91a07c2551b7856a62a1e6877333733e54f434eb509322a1095bb06d161cd4c"
+    },
+    "index.icon.png": {
+      "bytes": 5765,
+      "sha256": "662f81d7672001a6f5f928532493267c226624757de3b5fa2908f6e5923964b7"
+    },
+    "index.js": {
+      "bytes": 320319,
+      "sha256": "0919abc3567464f80131ebf28f4187beebeadb41b56e78f18b58e102bbd88483"
+    },
+    "index.pck": {
+      "bytes": 64982448,
+      "sha256": "d785651e2f9da4439fdd5283b93770eb6461e20d6af868fb77ea82ba4f90ea40"
+    },
+    "index.png": {
+      "bytes": 21443,
+      "sha256": "3cb4495c0b98dfbe4b663cbf2b6836473572339beb66d902367893162a70be0e"
+    },
+    "index.wasm": {
+      "bytes": 38850612,
+      "sha256": "1708110fe8bdd7b7894fe4dcb175c2c28cc242b06f51924e71fc5c9a5c83dbf0"
+    }
+  },
+  "importacion_validada": "importar.log",
+  "exportacion_validada": "exportar-reintento.log",
+  "preset_sha256": "dbfb6b8bd6da71b1face4e6c2a1b919f98b6408080dcb95f5bc09d68c1bcd65f"
+}

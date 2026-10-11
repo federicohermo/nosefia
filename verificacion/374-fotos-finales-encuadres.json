@@ -1,0 +1,44 @@
+[
+	{
+		"camara": "Transform3D(-4.371139e-08, -0.015871095, 0.99987406, 0, 0.99987406, 0.015871095, -1, 6.9374756e-10, -4.370588e-08, -1.15, 1.7, 4.4)",
+		"cuerpo_central": "Estructura/board tareas/board de tareas_002/StaticBody3D",
+		"intro": 4,
+		"tamano": "Vector2i(960, 540)"
+	},
+	{
+		"camara": "Transform3D(-1, -2.2125242e-09, -8.7394774e-08, 0, 0.9996797, -0.025308326, 8.742278e-08, -0.025308326, -0.9996797, -0.8, 1.7, 4.8)",
+		"cuerpo_central": "Estructura/Ventanilla",
+		"intro": 6,
+		"tamano": "Vector2i(960, 540)"
+	},
+	{
+		"camara": "Transform3D(0.5144957, -0.30270082, 0.8022883, 0, 0.9356208, 0.35300678, -0.857493, -0.18162045, 0.48137286, 2.4, 1.65, 5.7)",
+		"cuerpo_central": "Estructura/cajaregistradora/StaticBody3D",
+		"intro": 7,
+		"tamano": "Vector2i(960, 540)"
+	},
+	{
+		"camara": "Transform3D(1, 0, 0, 0, 0.95969236, 0.2810527, 0, -0.2810527, 0.95969236, -0.05, 1.65, 4.65)",
+		"cuerpo_central": "Estructura/base compu/StaticBody3D",
+		"intro": 8,
+		"tamano": "Vector2i(960, 540)"
+	},
+	{
+		"camara": "Transform3D(-4.371139e-08, -0.019227242, 0.99981517, 0, 0.99981517, 0.019227242, -1, 8.4044943e-10, -4.370331e-08, 2.2, 1.7, -10.8)",
+		"cuerpo_central": "Objetos/CajaDeOaaaa",
+		"intro": 9,
+		"tamano": "Vector2i(960, 540)"
+	},
+	{
+		"camara": "Transform3D(0.93063676, 0.11689336, -0.34677246, 0, 0.9476101, 0.31942943, 0.36594424, -0.29727277, 0.8818808, 11.1, 1.65, 3.9)",
+		"cuerpo_central": "Objetos/Balde",
+		"intro": 11,
+		"tamano": "Vector2i(960, 540)"
+	},
+	{
+		"camara": "Transform3D(-0.9358172, -0.06553374, 0.34634027, 0, 0.9825651, 0.18591882, -0.3524858, 0.17398602, -0.9195013, -1.4, 1.65, -14.2)",
+		"cuerpo_central": "Objetos/CajaDeCoracola",
+		"intro": 13,
+		"tamano": "Vector2i(960, 540)"
+	}
+]

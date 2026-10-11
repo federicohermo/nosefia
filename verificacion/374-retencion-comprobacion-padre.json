@@ -1,0 +1,145 @@
+{
+  "addon_scripts": 100,
+  "unchanged_domain_scripts": [
+    {
+      "path": "src/dominio/almacen/producto.gd",
+      "kind": "GDScript",
+      "blob_373": "ab8e41e5e7d355e1b2f24cf46756ba40bb194b7d",
+      "blob_374": "ab8e41e5e7d355e1b2f24cf46756ba40bb194b7d"
+    },
+    {
+      "path": "src/dominio/almacen/venta.gd",
+      "kind": "GDScript",
+      "blob_373": "4a9020db696e3438bb14bbb3a8c998591dcc2f46",
+      "blob_374": "4a9020db696e3438bb14bbb3a8c998591dcc2f46"
+    },
+    {
+      "path": "src/dominio/ambiente/entrada_sonora.gd",
+      "kind": "GDScript",
+      "blob_373": "f0d9bdc56e5dd7a89c380c1c66e9b18fad98ea64",
+      "blob_374": "f0d9bdc56e5dd7a89c380c1c66e9b18fad98ea64"
+    },
+    {
+      "path": "src/dominio/almacen/catalogo.gd",
+      "kind": "GDScript",
+      "blob_373": "dac80ee7c49519e848855916f9a8bc5740c931c5",
+      "blob_374": "dac80ee7c49519e848855916f9a8bc5740c931c5"
+    },
+    {
+      "path": "src/dominio/investigacion/revelacion.gd",
+      "kind": "GDScript",
+      "blob_373": "bef1b3c45d38734572b761daecb71e7dfce67aa6",
+      "blob_374": "bef1b3c45d38734572b761daecb71e7dfce67aa6"
+    },
+    {
+      "path": "src/dominio/almacen/objeto_del_almacen.gd",
+      "kind": "GDScript",
+      "blob_373": "edc3f751c745f3202da51d8eae38bba5c58412fd",
+      "blob_374": "edc3f751c745f3202da51d8eae38bba5c58412fd"
+    },
+    {
+      "path": "src/dominio/almacen/unidad_de_producto.gd",
+      "kind": "GDScript",
+      "blob_373": "59dc322182994f08e38ea03f61ad8828971e284c",
+      "blob_374": "59dc322182994f08e38ea03f61ad8828971e284c"
+    },
+    {
+      "path": "src/dominio/almacen/inventario.gd",
+      "kind": "GDScript",
+      "blob_373": "7a78a001e2d8fe2aebee93f8364e468036782fbb",
+      "blob_374": "7a78a001e2d8fe2aebee93f8364e468036782fbb"
+    },
+    {
+      "path": "src/dominio/almacen/reglas_de_la_limpieza.gd",
+      "kind": "GDScript",
+      "blob_373": "0e76083f3ef5606e13baf6d1d6b991d89e62c27c",
+      "blob_374": "0e76083f3ef5606e13baf6d1d6b991d89e62c27c"
+    },
+    {
+      "path": "src/dominio/almacen/ticket.gd",
+      "kind": "GDScript",
+      "blob_373": "3e22ed4069aeffcdcdb7e5b083cafade61fb9cf3",
+      "blob_374": "3e22ed4069aeffcdcdb7e5b083cafade61fb9cf3"
+    },
+    {
+      "path": "src/dominio/almacen/balde.gd",
+      "kind": "GDScript",
+      "blob_373": "b7bfcf6a955e93c5105fb4416aeb83b6a9206e11",
+      "blob_374": "b7bfcf6a955e93c5105fb4416aeb83b6a9206e11"
+    },
+    {
+      "path": "src/dominio/jornada/tarea.gd",
+      "kind": "GDScript",
+      "blob_373": "03bc2622a39f9a51a1894fd484d7a0c10cc03dc3",
+      "blob_374": "03bc2622a39f9a51a1894fd484d7a0c10cc03dc3"
+    },
+    {
+      "path": "src/dominio/jornada/turno.gd",
+      "kind": "GDScript",
+      "blob_373": "ed31d4f10041cb9599c95c3f7d00043ab59ac310",
+      "blob_374": "ed31d4f10041cb9599c95c3f7d00043ab59ac310"
+    },
+    {
+      "path": "src/dominio/jornada/apertura.gd",
+      "kind": "GDScript",
+      "blob_373": "9f7b06eefc478925e95bd7ba411421015e7beb32",
+      "blob_374": "9f7b06eefc478925e95bd7ba411421015e7beb32"
+    },
+    {
+      "path": "src/dominio/almacen/generador_de_tickets.gd",
+      "kind": "GDScript",
+      "blob_373": "a35abb781d29a75d986bd3f35f0a47f9faf0cc64",
+      "blob_374": "a35abb781d29a75d986bd3f35f0a47f9faf0cc64"
+    },
+    {
+      "path": "src/dominio/almacen/mopa.gd",
+      "kind": "GDScript",
+      "blob_373": "3c654069eb5db0fe7e406b1038bb26fc0391a503",
+      "blob_374": "3c654069eb5db0fe7e406b1038bb26fc0391a503"
+    },
+    {
+      "path": "src/dominio/almacen/mancha.gd",
+      "kind": "GDScript",
+      "blob_373": "21d5030a6f3dfe8b305be4fd703e9dc51cd47374",
+      "blob_374": "21d5030a6f3dfe8b305be4fd703e9dc51cd47374"
+    },
+    {
+      "path": "src/dominio/almacen/nota_pegada.gd",
+      "kind": "GDScript",
+      "blob_373": "2536e41bdb075726675cacd577f2092cf7552a63",
+      "blob_374": "2536e41bdb075726675cacd577f2092cf7552a63"
+    },
+    {
+      "path": "src/dominio/almacen/uso.gd",
+      "kind": "GDScript",
+      "blob_373": "e8df3645325618364ad844bf03307801c95f632b",
+      "blob_374": "e8df3645325618364ad844bf03307801c95f632b"
+    },
+    {
+      "path": "src/dominio/almacen/piso_del_local.gd",
+      "kind": "GDScript",
+      "blob_373": "66022b05c3056eefd6784effab23ea3fb7a08a50",
+      "blob_374": "66022b05c3056eefd6784effab23ea3fb7a08a50"
+    },
+    {
+      "path": "src/dominio/almacen/tarea_de_la_basura.gd",
+      "kind": "GDScript",
+      "blob_373": "060c9891d275da726fa24c335a7de253066b705a",
+      "blob_374": "060c9891d275da726fa24c335a7de253066b705a"
+    },
+    {
+      "path": "src/dominio/almacen/reglas_de_la_basura.gd",
+      "kind": "GDScript",
+      "blob_373": "3eac969ebf1167186a8f48cfc16a4dfd5771eeb9",
+      "blob_374": "3eac969ebf1167186a8f48cfc16a4dfd5771eeb9"
+    },
+    {
+      "path": "src/dominio/ambiente/tabla_de_sonidos.gd",
+      "kind": "GDScript",
+      "blob_373": "84100c6d2158160dcfe8c516611f4c9c252b4ce9",
+      "blob_374": "84100c6d2158160dcfe8c516611f4c9c252b4ce9"
+    }
+  ],
+  "new_product_scripts_or_data_resources": [],
+  "scope": "Discovery-only diagnostic, not a complete verification."
+}

@@ -1,0 +1,15 @@
+{
+  "nuevos": {
+    "WARNING: Rescate: `Balde` estaba adentro de `SueloSolido` en (3.494999, 0.198718, -0.999999); va a DESHACER": 1,
+    "WARNING: Rescate: `Balde` estaba adentro de `StaticBody3D` en (11.745, 0.216795, 6.006001); va a DESHACER": 1,
+    "WARNING: 165 ObjectDB instances were leaked at exit (run with `--verbose` for details).": 1,
+    "ERROR: 123 resources still in use at exit (run with --verbose for details).": 1
+  },
+  "retirados": {
+    "WARNING: Rescate: `Balde` estaba adentro de `SueloSolido` en (3.495001, 0.198718, -1.000001); va a DESHACER": 1,
+    "WARNING: Rescate: `Balde` estaba adentro de `StaticBody3D` en (11.745, 0.216795, 6.006); va a DESHACER": 1,
+    "WARNING: 141 ObjectDB instances were leaked at exit (run with `--verbose` for details).": 1,
+    "ERROR: 100 resources still in use at exit (run with --verbose for details).": 1
+  },
+  "tests": "239 suites/1823 casos/3 fallos carga, cero SCRIPT y orphans"
+}

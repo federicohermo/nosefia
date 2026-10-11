@@ -1,0 +1,10 @@
+page.goto: net::ERR_CONNECTION_REFUSED at http://127.0.0.1:8373/
+Call log:
+[2m  - navigating to "http://127.0.0.1:8373/", waiting until "load"[22m
+
+    at C:\Users\fede_\AppData\Local\Temp\nosefia-batch-364-370-20261010\navegador374.cjs:23:20 {
+  log: [
+    '  - navigating to "http://127.0.0.1:8373/", waiting until "load"'
+  ],
+  name: 'Error'
+}
