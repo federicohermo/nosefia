@@ -12,59 +12,46 @@ const COLOR_DE_SECTOR := Color("f0f4d1")
 const SEPARADOR := preload("res://assets/ui/manada/instrucciones/separador.svg")
 const CAJA := preload("res://assets/ui/manada/instrucciones/caja.png")
 const TICKET := preload("res://assets/ui/manada/instrucciones/ticket.png")
-const ALTURAS_DEL_SEPARADOR: Array[float] = [
-	370, 306, 258, 276, 480, 168, 222, 356, 306, 306, 258, 400
-]
+const ANCHO_DEL_TEXTO := 1007.0
+const SEPARACION_VERTICAL := 40.0
+const SEPARACION_HORIZONTAL := 32.0
+const SEPARACION_DEL_SECTOR := 64.0
+const TAMANO_DE_LA_CAJA := Vector2(136, 316)
+const TAMANO_DEL_TICKET := Vector2(109, 186)
 const FOTOS := {
 	2:
 	{
-		"rect": Rect2(0, 346, 324, 233),
+		"tamano": Vector2(324, 233),
 		"titulo": "Listas de tareas a realizar",
-		"sector": "Sector de ventas",
-		"leyenda": Vector2(359, 346)
+		"sector": "Sector de ventas"
 	},
 	3:
 	{
-		"rect": Rect2(0, 298, 279, 201),
+		"tamano": Vector2(279, 201),
 		"titulo": "Ventanilla de recepción",
-		"sector": "Sector de ventas",
-		"leyenda": Vector2(311, 298)
+		"sector": "Sector de ventas"
 	},
 	4:
 	{
-		"rect": Rect2(0, 330, 426, 258),
+		"tamano": Vector2(426, 258),
 		"titulo": "Lector y la caja registradora",
-		"sector": "Sector de ventas",
-		"leyenda": Vector2(459, 330)
+		"sector": "Sector de ventas"
 	},
-	6:
-	{
-		"rect": Rect2(0, 283, 373, 300),
-		"titulo": "Computadora",
-		"sector": "Sector de ventas",
-		"leyenda": Vector2(414, 283)
-	},
+	6: {"tamano": Vector2(373, 300), "titulo": "Computadora", "sector": "Sector de ventas"},
 	7:
 	{
-		"rect": Rect2(0, 277, 373, 365),
+		"tamano": Vector2(373, 365),
 		"titulo": "Estantería con cajas contenedoras",
-		"sector": "Sector de depósito",
-		"leyenda": Vector2(446, 277)
+		"sector": "Sector de depósito"
 	},
 	9:
 	{
-		"rect": Rect2(0, 300, 548, 315),
+		"tamano": Vector2(548, 315),
 		"titulo": "1 Mopa\n2 Balde\n3 Productos de limpieza",
-		"sector": "Sector de baño",
-		"leyenda": Vector2(603, 299)
+		"sector": "Sector de baño"
 	},
 	11:
-	{
-		"rect": Rect2(0, 310, 480, 270),
-		"titulo": "Cajas del proveedor",
-		"sector": "Sector de depósito",
-		"leyenda": Vector2(535, 310)
-	},
+	{"tamano": Vector2(480, 270), "titulo": "Cajas del proveedor", "sector": "Sector de depósito"},
 }
 
 @export var _marco: Control
@@ -141,18 +128,39 @@ func _pintar() -> void:
 		anterior.queue_free()
 	var numero := _instrucciones.paso_actual()
 	var paso: InstruccionesDelJefe.Paso = _pasos[numero - 1]
-	for indice in paso.textos.size():
-		var altura := 0.0
-		if indice == 1:
-			altura = 150.0 if numero == 1 else 201.0
-		_texto(_resaltar(paso.textos[indice].texto), Vector2(0, altura), 1007, 40)
-	_imagen(SEPARADOR, Rect2(0, ALTURAS_DEL_SEPARADOR[numero - 1], 510, 2))
-	if paso.foto != null:
-		_foto(paso.foto.foto, FOTOS[numero])
+	var altura := 0.0
+	for mensaje in paso.textos:
+		var cuerpo := _texto(_resaltar(mensaje.texto), Vector2(0, altura), ANCHO_DEL_TEXTO, 40)
+		altura += cuerpo.get_content_height() + SEPARACION_VERTICAL
+	_imagen(SEPARADOR, Rect2(0, altura, 510, 2))
+	var altura_de_la_foto := altura + 2.0 + SEPARACION_VERTICAL
+	var ancho_de_la_leyenda := 350.0
+	var x_del_ticket := ANCHO_DEL_TEXTO - TAMANO_DEL_TICKET.x
+	var x_de_la_caja := x_del_ticket - SEPARACION_HORIZONTAL - TAMANO_DE_LA_CAJA.x
 	if numero == 4:
-		_imagen(CAJA, Rect2(742, 330, 136, 316))
-		_imagen(TICKET, Rect2(898, 395, 109, 186))
-		_texto("ticket", Vector2(900, 330), 110, 30, COLOR_DE_RESALTE)
+		var tamano_de_la_foto: Vector2 = FOTOS[numero]["tamano"]
+		ancho_de_la_leyenda = x_de_la_caja - tamano_de_la_foto.x - 2.0 * SEPARACION_HORIZONTAL
+	if paso.foto != null:
+		_foto(paso.foto.foto, FOTOS[numero], altura_de_la_foto, ancho_de_la_leyenda)
+	if numero == 4:
+		_imagen(CAJA, Rect2(Vector2(x_de_la_caja, altura_de_la_foto), TAMANO_DE_LA_CAJA))
+		var titulo := _texto(
+			"ticket",
+			Vector2(x_del_ticket, altura_de_la_foto),
+			TAMANO_DEL_TICKET.x,
+			30,
+			COLOR_DE_RESALTE
+		)
+		_imagen(
+			TICKET,
+			Rect2(
+				Vector2(
+					x_del_ticket,
+					altura_de_la_foto + titulo.get_content_height() + SEPARACION_VERTICAL
+				),
+				TAMANO_DEL_TICKET
+			)
+		)
 	_retrato.visible = true
 	_volver.disabled = not _instrucciones.se_puede_volver()
 	_siguiente.text = (TEXTO_DE_COMENZAR if _instrucciones.en_el_ultimo() else TEXTO_DE_SIGUIENTE)
@@ -195,8 +203,8 @@ func _imagen(textura: Texture2D, rectangulo: Rect2) -> TextureRect:
 	return imagen
 
 
-func _foto(textura: Texture2D, ficha: Dictionary) -> void:
-	var rectangulo: Rect2 = ficha["rect"]
+func _foto(textura: Texture2D, ficha: Dictionary, altura: float, ancho_de_leyenda: float) -> void:
+	var rectangulo := Rect2(Vector2(0, altura), ficha["tamano"])
 	var borde := Panel.new()
 	var estilo := StyleBoxFlat.new()
 	estilo.bg_color = Color("1f1e1e")
@@ -211,13 +219,15 @@ func _foto(textura: Texture2D, ficha: Dictionary) -> void:
 		textura, Rect2(rectangulo.position + Vector2(6, 6), rectangulo.size - Vector2(12, 12))
 	)
 	foto.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
-	var posicion: Vector2 = ficha["leyenda"]
-	_texto(ficha["titulo"], posicion, 350, 30, COLOR_DE_RESALTE)
-	# La leyenda ocupa el lugar diagramado junto a la foto del juego.
-	var alto := 117.0 if ficha["titulo"].contains("\n") else 100.0
-	if ficha["titulo"] == "Computadora":
-		alto = 60.0
-	_texto("-" + ficha["sector"], posicion + Vector2(0, alto), 350, 30, COLOR_DE_SECTOR)
+	var posicion := Vector2(rectangulo.size.x + SEPARACION_HORIZONTAL, altura)
+	var titulo := _texto(ficha["titulo"], posicion, ancho_de_leyenda, 30, COLOR_DE_RESALTE)
+	_texto(
+		"-" + ficha["sector"],
+		posicion + Vector2(0, titulo.get_content_height() + SEPARACION_DEL_SECTOR),
+		ancho_de_leyenda,
+		30,
+		COLOR_DE_SECTOR
+	)
 
 
 func _ajustar() -> void:
