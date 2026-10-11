@@ -1,6 +1,7 @@
 extends GdUnitTestSuite
 
 const ALMACEN := preload("res://src/escenas/almacen.tscn")
+const BolsaEnLaMano := preload("res://test/escenas/bolsa_en_la_mano.gd")
 const UNIDAD := preload("res://src/escenas/objetos/objeto_agarrable.tscn")
 const PAPEL := preload("res://src/escenas/objetos/ticket.tscn")
 
@@ -83,6 +84,7 @@ func _emitir_papel(almacen: Node3D) -> void:
 
 func test_el_derecho_abre_y_cierra_con_los_ocho_estados_de_la_mano() -> void:  # AC-PLY-072
 	var almacen := await _abrir()
+	assert_object(BolsaEnLaMano.preparar(almacen)).is_not_null()
 	var jugador: Node3D = almacen.get_node("Jugador")
 	var agarre: Agarre = almacen.get("_agarre")
 	var papel: ObjetoAgarrable = PAPEL.instantiate()
@@ -454,8 +456,10 @@ func test_la_caja_manual_abre_sin_escanear_la_unidad_sostenida() -> void:
 	assert_object(agarre.manos().sostenido()).is_same(unidad.datos)
 
 
-func _abrir_bano() -> Node3D:
+func _abrir_bano(con_bolsa: bool = false) -> Node3D:
 	var almacen := await _abrir()
+	if con_bolsa:
+		assert_object(BolsaEnLaMano.preparar(almacen)).is_not_null()
 	for numero: int in [1, 2]:
 		var puerta: Node3D = almacen.get_node("Estructura/bano_puerta_%d/CuerpoDeLaHoja" % numero)
 		puerta.call("usar")
@@ -527,7 +531,7 @@ func test_cada_inodoro_desecha_una_vez_su_ticket_con_foco_real() -> void:
 
 
 func test_lavatorios_otros_objetos_y_papel_ajeno_no_se_desechan() -> void:  # AC-CTR-032
-	var almacen := await _abrir_bano()
+	var almacen := await _abrir_bano(true)
 	var jugador: Node3D = almacen.get_node("Jugador")
 	var agarre: Agarre = almacen.get("_agarre")
 	var avisos: Array[int] = []

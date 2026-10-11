@@ -7,6 +7,7 @@ const PANTALLA_DE_CARGA := preload("res://src/ui/interrupciones/pantalla_de_carg
 const CAPA_DE_LA_CARGA := 10
 ## La barra se reparte entre leer el almacén y calentar sus shaders.
 const PARTE_DE_LA_LECTURA := 0.5
+const DURACION_DEL_FUNDIDO := 0.3
 
 const TEXTOS: Dictionary[MenuDeInicio.Opcion, String] = {
 	MenuDeInicio.Opcion.NUEVO_JUEGO: "NUEVO JUEGO",
@@ -24,7 +25,6 @@ const EN_LA_FILA: Array[MenuDeInicio.Opcion] = [
 
 @export var _opciones: VBoxContainer
 @export var _pedidos: PedidosDelMenu
-@export var _confirmacion: ConfirmationDialog
 @export var _marco: Control
 @export var _fila: HBoxContainer
 
@@ -35,6 +35,11 @@ var _pantalla: PantallaDeCarga
 var _almacen: PackedScene
 var _espera: EsperaDeLaCarga
 var _calentamiento: CalentamientoDeShaders
+var _nuevo_juego: bool = false
+var _fundiendo: bool = false
+var _fundido: ColorRect
+var _inicio_del_fundido: int = 0
+var _ahora: Callable = Time.get_ticks_usec
 
 
 func _notification(que: int) -> void:
@@ -56,10 +61,8 @@ func _ready() -> void:
 			_fila.add_child(boton)
 		else:
 			_opciones.add_child(boton)
-	_pedidos.nuevo_juego_pedido.connect(entrar_al_almacen)
+	_pedidos.nuevo_juego_pedido.connect(empezar_partida_nueva)
 	_pedidos.continuar_pedido.connect(entrar_al_almacen)
-	_pedidos.confirmacion_pedida.connect(_confirmacion.popup_centered)
-	_confirmacion.confirmed.connect(_pedidos.confirmar_nuevo_juego)
 	# Se crean acá y no al declararlos: una instancia que nunca entra al árbol los dejaría
 	# colgados.
 	_carga = CargaEnSegundoPlano.new()
@@ -68,6 +71,11 @@ func _ready() -> void:
 	var capa := CanvasLayer.new()
 	capa.layer = CAPA_DE_LA_CARGA
 	capa.add_child(_pantalla)
+	_fundido = ColorRect.new()
+	_fundido.color = Color.BLACK
+	_fundido.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	capa.add_child(_fundido)
+	_fundido.hide()
 	add_child(_carga)
 	add_child(capa)
 	add_child(_calentamiento)
@@ -79,6 +87,9 @@ func _ready() -> void:
 
 
 func _process(delta: float) -> void:
+	if _fundiendo:
+		_pintar_el_fundido()
+		return
 	_pantalla.pintar(_carga.progreso() * PARTE_DE_LA_LECTURA)
 	if _espera == null:
 		return
@@ -88,8 +99,31 @@ func _process(delta: float) -> void:
 		_calentar_el_almacen()
 
 
-## Nuevo juego y continuar entran por acá. El almacén decide solo si retoma: lee el guardado.
+## Nuevo juego conserva el borrado y la confirmación de PedidosDelMenu antes de llegar acá.
+func empezar_partida_nueva() -> void:
+	_nuevo_juego = true
+	_fundiendo = true
+	_inicio_del_fundido = _ahora.call()
+	_fundido.modulate.a = 0.0
+	_fundido.show()
+
+
+## Continuar conserva la entrada directa a la jornada del archivo.
 func entrar_al_almacen() -> void:
+	_nuevo_juego = false
+	_preparar_la_entrada()
+
+
+func _pintar_el_fundido() -> void:
+	var transcurrido := maxf(0.0, (_ahora.call() - _inicio_del_fundido) / 1000000.0)
+	_fundido.modulate.a = minf(1.0, transcurrido / DURACION_DEL_FUNDIDO)
+	if transcurrido >= DURACION_DEL_FUNDIDO:
+		_fundiendo = false
+		_preparar_la_entrada()
+		_fundido.hide()
+
+
+func _preparar_la_entrada() -> void:
 	_espera = EsperaDeLaCarga.new()
 	if _almacen != null:
 		_espera.terminar_carga()
@@ -117,6 +151,7 @@ func _pintar_el_calentamiento(progreso: float) -> void:
 
 
 func _entrar(almacen: Node) -> void:
+	almacen.call("empezar_partida_nueva" if _nuevo_juego else "anunciar_la_noche")
 	almacen.process_mode = Node.PROCESS_MODE_INHERIT
 	get_tree().current_scene = almacen
 	queue_free()
@@ -132,6 +167,9 @@ func _al_cargar_el_almacen(escena: PackedScene) -> void:
 ## Una carga fallida no deja al jugador colgado en la pantalla de carga: vuelve al menú, y el
 ## próximo «Nuevo juego» pide el almacén otra vez.
 func _al_fallar_la_carga() -> void:
+	_fundiendo = false
+	_nuevo_juego = false
+	_fundido.hide()
 	_espera = null
 	_pantalla.ocultar()
 	_pedidos.rearmar()

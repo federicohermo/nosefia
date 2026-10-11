@@ -48,6 +48,12 @@ Si el tipo no está claro, preguntá. Es la decisión que define la rama y el re
 
 **Los límites de archivo y los criterios salen del árbol de hoy, no de la memoria.**
 
+**Una secuencia de mensajes no define la cantidad de pantallas.** Revisar todos los frames,
+reacciones y motion antes de convertir párrafos en pasos. Registrar agrupaciones, reemplazo o
+acumulación, navegación fija y presencia de scroll. En #398, catorce textos correspondían a doce
+pantallas independientes. Comprobar también la continuidad de paneles entre pasos y contrastar
+las capas omitidas en un frame con las indicaciones vigentes del usuario.
+
 **Agregar interacción no implica que falte arte.** Antes de pedir generar, reemplazar u ocultar
 un soporte visual, inspeccionar sus mallas, cuerpos, materiales e imágenes, y cruzarlos con las
 decisiones vigentes del usuario. Si el soporte ya existe, declarar qué lectura o dato le falta
@@ -84,6 +90,13 @@ gh issue list --state open --limit 50      # si ya hay uno igual, no se abre otr
 
 Consultá `nosefia-index` para saber quién usa lo que vas a tocar. Lo que aparece ahí entra en
 «Sólo lectura» o en «No se toca».
+
+**Un recorrido web se cruza con el preset versionado antes de cerrar los límites.**
+Revisar los filtros de exportación y las dependencias importadas que usa ese recorrido,
+también las guardadas en recursos binarios. En #373, el criterio pedía mostrar el celular
+en una partida web, pero el preset excluía texturas del almacén y no entraba en los límites.
+Declarar su corrección acotada y verificar el paquete real. Corregir sólo una copia externa
+para obtener la captura deja el preset publicado con el mismo defecto.
 
 **Si el issue tiene pantalla, buscá su frame en Figma.** El campo «Diseño» del Contexto lleva
 el link al frame, con su `node-id`, y no al archivo entero; el link a la base lo trae el template.
@@ -242,6 +255,11 @@ Lo que más se rompe:
 - **Un criterio del issue no contradice un criterio `ratified` de otra capacidad.** El `rg` de
   los límites busca la regla también en los specs vecinos. En el #179 la puerta «no se abre»
   chocaba con `AC-PLY-040`, y la puerta ya existía en el modelo.
+- **Conservar un criterio incluye su estado inicial.** Una mejora visual no autoriza agregar
+  gestos previos para satisfacerlo. En el #396, comprobar acceso retirando cajas de a una no
+  probaba que cada caja fuera alcanzable en la apertura. Mantener la comprobación antes de
+  mover cuerpos; el desmontaje completo es una prueba adicional. El pedido de agrupar pallets
+  no decide por sí solo cambiar ese contrato.
 - **Un borde tampoco, y vale igual contra un spec `draft`.** Un borde que describe un gesto que
   el juego no tiene se implementa inventando la regla que falta. En el #263, «vender una unidad
   de la góndola» chocaba con `BR-CTR-014` —la venta sale del depósito—, y «una partida guardada
@@ -300,6 +318,12 @@ gh issue edit <N> --body-file <archivo del scratchpad>
 
 `numerar` escribe el número en la rama y revisa sin dejar pasar nada. El cuerpo no se commitea:
 el issue es la fuente.
+
+**Después de numerar o reescribir, verificá cada referencia `#N` del cuerpo publicado**, no sólo
+las dependencias. Leé el título y el comportamiento del issue destino y cruzalos con la frase
+que lo cita; en un lote, reemplazá los títulos provisorios por los números realmente publicados.
+En #379, las dependencias nombraban bien #373, pero el contexto seguía llamando #386 al celular
+y #368 a Examinar: los destinos correctos eran #373 y #376.
 
 ## Varios de una
 

@@ -238,7 +238,26 @@ func _apoyar_la_caja(nodo: Node3D) -> void:
 		# Ni donde apunta ni al lado: el jugador está metido en un hueco del tamaño de su cuerpo.
 		repositor.agarre.pedir_agarrar(caja.datos, caja)
 		return
+	_orientar_la_etiqueta(caja)
 	caja.quedarse_quieta()
+
+
+## La etiqueta ocupa las caras X de la caja: debe mirar al pasillo, como el frente del rack.
+func _orientar_la_etiqueta(caja: CajaDelDeposito) -> void:
+	var debajo := caja.global_position - Vector3.UP * (_media_caja(caja).y + 0.05)
+	var apoyo := _rayo(caja, caja.global_position, debajo)
+	if apoyo.is_empty():
+		return
+	var otra := apoyo["collider"] as CajaDelDeposito
+	if otra != null:
+		caja.global_basis = otra.global_basis.orthonormalized()
+		return
+	var tabla := (apoyo["collider"] as Node).get_parent() as MeshInstance3D
+	if tabla == null or not str(tabla.name).begins_with("deposito_pallet_"):
+		return
+	if str(tabla.name).contains("_piso"):
+		return
+	caja.global_basis = tabla.global_basis.orthonormalized() * Basis(Vector3.UP, PI / 2.0)
 
 
 ## Deja la caja en el lugar más cercano al punto apuntado donde entra, sobre el mismo apoyo.

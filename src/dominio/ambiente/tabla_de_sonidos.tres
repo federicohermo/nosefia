@@ -357,7 +357,7 @@ stream = ExtResource("27_lector")
 [sub_resource type="Resource" id="Resource_celular"]
 script = ExtResource("1_qermt")
 evento = 18
-senal = &"nota_escrita"
+senal = &"mensaje_recibido"
 bus = "Interfaz"
 variantes = Array[AudioStream]([ExtResource("28_celular_a"), ExtResource("29_celular_b")])
 

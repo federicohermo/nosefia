@@ -1,0 +1,59 @@
+{
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Edit|Write|MultiEdit|Bash|PowerShell",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python .claude/scripts/gate_de_rama.py || python \"$CLAUDE_PROJECT_DIR/.claude/scripts/gate_de_rama.py\" || exit 0",
+            "timeout": 10
+          }
+        ]
+      },
+      {
+        "matcher": "Bash|PowerShell",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python .claude/scripts/gate_de_worktrees.py || python \"$CLAUDE_PROJECT_DIR/.claude/scripts/gate_de_worktrees.py\" || exit 0",
+            "timeout": 10
+          }
+        ]
+      },
+      {
+        "matcher": "Grep|Glob|Read|Bash|PowerShell|mcp__nosefia-index__.*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python .claude/scripts/recordatorio_del_indice.py || python \"$CLAUDE_PROJECT_DIR/.claude/scripts/recordatorio_del_indice.py\" || exit 0",
+            "timeout": 10
+          }
+        ]
+      }
+    ],
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python .claude/scripts/recordatorio_del_indice.py || python \"$CLAUDE_PROJECT_DIR/.claude/scripts/recordatorio_del_indice.py\" || exit 0",
+            "timeout": 10
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Edit|Write|MultiEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python .claude/scripts/formatear_al_editar.py || python \"$CLAUDE_PROJECT_DIR/.claude/scripts/formatear_al_editar.py\" || exit 0",
+            "timeout": 30
+          }
+        ]
+      }
+    ]
+  }
+}

@@ -1,6 +1,7 @@
 extends GdUnitTestSuite
 
 const ALMACEN := preload("res://src/escenas/almacen.tscn")
+const BolsaEnLaMano := preload("res://test/escenas/bolsa_en_la_mano.gd")
 const AperturaConLugar := preload("res://test/escenas/apertura_con_lugar.gd")
 
 
@@ -76,7 +77,7 @@ func test_la_bolsa_sostenida_no_desplaza_al_jugador() -> void:
 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
 	add_child(almacen)
 	var jugador: CharacterBody3D = almacen.get_node("Jugador")
-	var bolsa: RigidBody3D = almacen.get_node("Objetos/BolsaDeBasura1")
+	var bolsa := BolsaEnLaMano.preparar(almacen)
 	var agarre: Agarre = jugador.get("agarre")
 	for cuadro in 60:
 		await get_tree().physics_frame
@@ -101,7 +102,7 @@ func test_el_izquierdo_en_el_contenedor_entrega_la_bolsa_al_recolector() -> void
 	add_child(almacen)
 	var jugador: CharacterBody3D = almacen.get_node("Jugador")
 	jugador.set_physics_process(false)
-	var bolsa: ObjetoAgarrable = almacen.get_node("Objetos/BolsaDeBasura1")
+	var bolsa := BolsaEnLaMano.preparar(almacen)
 	var agarre: Agarre = jugador.get("agarre")
 	var contenedor: Node3D = almacen.get_node(
 		"Estructura/deposito_contenedor_soporte/deposito_contenedor_cuerpo/StaticBody3D"

@@ -13,6 +13,7 @@ extends RefCounted
 ## La celda de cada tarea con la obligatoria sin hacer. La clave es el `Tarea.Tipo`, y cada
 ## archivo la vuelve a decir adentro: es lo que deja al test cruzarlas y cazar una fila movida.
 const SIN_CUMPLIR := {
+	Tarea.Tipo.ORDENAR_LAS_CAJAS: preload("res://assets/reactions/cajas_pendiente.tres"),
 	Tarea.Tipo.CAJA: preload("res://assets/reactions/caja_pendiente.tres"),
 	Tarea.Tipo.REPONER: preload("res://assets/reactions/reponer_pendiente.tres"),
 	Tarea.Tipo.REGISTRAR: preload("res://assets/reactions/registrar_pendiente.tres"),
@@ -21,6 +22,7 @@ const SIN_CUMPLIR := {
 }
 
 const CUMPLIDA := {
+	Tarea.Tipo.ORDENAR_LAS_CAJAS: preload("res://assets/reactions/cajas_cumplida.tres"),
 	Tarea.Tipo.CAJA: preload("res://assets/reactions/caja_cumplida.tres"),
 	Tarea.Tipo.REPONER: preload("res://assets/reactions/reponer_cumplida.tres"),
 	Tarea.Tipo.REGISTRAR: preload("res://assets/reactions/registrar_cumplida.tres"),

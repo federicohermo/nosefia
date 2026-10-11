@@ -8,7 +8,6 @@ extends CanvasLayer
 signal app_pedida(app: Computadora.App)
 signal boton_pulsado
 
-## Chats conserva su cableado para una entrega posterior, pero no ofrece acceso en esta UI.
 const TITULOS := {Computadora.App.CAJA: "/ REGISTRO:", Computadora.App.NOTAS: "/ NOTAS:"}
 const BORDE_DERECHO := {Computadora.App.CAJA: 1857.0, Computadora.App.NOTAS: 1743.5}
 const ICONO_REGISTRO := preload("res://assets/ui/manada/computadora.svg")
@@ -20,7 +19,6 @@ const ICONO_NOTAS := preload("res://assets/ui/manada/registro.svg")
 @export var _opciones: HBoxContainer
 @export var _salida: Label
 @export var _caja: AppCaja
-@export var _chats: AppChats
 @export var _notas: AppNotas
 
 
@@ -43,10 +41,6 @@ func caja() -> AppCaja:
 	return _caja
 
 
-func chats() -> AppChats:
-	return _chats
-
-
 func notas() -> AppNotas:
 	return _notas
 
@@ -57,11 +51,10 @@ func mostrar(app: Computadora.App) -> void:
 	cambiar_a(app)
 
 
-## Prende una de las tres y apaga las otras dos. Recibe cuál: cuál corresponde lo decidió el
+## Prende la app elegida y apaga la otra. Recibe cuál: cuál corresponde lo decidió el
 ## dominio.
 func cambiar_a(app: Computadora.App) -> void:
 	_caja.visible = app == Computadora.App.CAJA
-	_chats.visible = app == Computadora.App.CHATS
 	_notas.visible = app == Computadora.App.NOTAS
 	_titulo.text = TITULOS.get(app, "")
 	_salida.offset_right = BORDE_DERECHO.get(app, 1857.0)

@@ -11,6 +11,7 @@
 [ext_resource type="Script" path="res://src/escenas/puestos/puerta_del_local.gd" id="puerta"]
 [ext_resource type="Script" path="res://src/escenas/puestos/tapa_del_contenedor.gd" id="tapa_contenedor"]
 [ext_resource type="Script" path="res://src/escenas/puestos/contenedor_de_basura.gd" id="contenedor"]
+[ext_resource type="Script" path="res://src/escenas/puestos/tacho_de_basura.gd" id="tacho"]
 [ext_resource type="Script" path="res://src/escenas/puestos/artefacto_del_bano.gd" id="artefacto"]
 [ext_resource type="PackedScene" path="res://src/escenas/puestos/contenido_del_estante.tscn" id="contenido"]
 
@@ -603,6 +604,20 @@ size = Vector3(5.56559, 7.19759, 0.15870)
 
 [node name="Estructura" instance=ExtResource("modelo")]
 
+[node name="almacen" parent="."]
+layers = 3
+gi_lightmap_texel_scale = 4.0
+editor_description = "Más resolución en el horneado de paredes y pisos para evitar que el filtrado mezcle la luz del salón en la unión con el depósito. La capa visual 2 bloquea las luces de las heladeras sin que sus estantes internos oscurezcan los productos."
+
+[node name="deposito_lampara_01" parent="."]
+position = Vector3(-2.5, 3.6, -11.825631)
+
+[node name="deposito_lampara_02" parent="."]
+position = Vector3(1.7, 3.6, -11.825631)
+
+[node name="deposito_lampara_03" parent="."]
+position = Vector3(5.9, 3.6, -11.825631)
+
 [node name="SueloSolido" type="StaticBody3D" parent="."]
 position = Vector3(0, -0.001017, 0)
 editor_description = "Volumen del piso modelado. Evita que los productos delgados atraviesen sus triangulos al apilarse."
@@ -913,6 +928,10 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.39014769, 1.1732055, -0.159
 light_color = Color(0.85, 0.92, 1, 1)
 light_energy = 0.85
 light_specular = 0.35
+shadow_enabled = true
+shadow_caster_mask = 2
+shadow_bias = 0.05
+shadow_normal_bias = 0.2
 omni_range = 3.0
 omni_attenuation = 1.6
 editor_description = "La luminaria que la textura ya dibuja arriba del vidrio. El interior es un volumen cerrado: las luminarias del techo no le llegan y la mercadería queda del color del ambiente en vez del suyo. **Alumbra poco y cae rápido**: a dos con seis el panel del fondo y las chapas se iban a blanco y la heladera perdía su textura, que es la que se ve desde el pasillo."
@@ -922,6 +941,10 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.38939667, 1.1912528, -0.183
 light_color = Color(0.85, 0.92, 1, 1)
 light_energy = 0.85
 light_specular = 0.35
+shadow_enabled = true
+shadow_caster_mask = 2
+shadow_bias = 0.05
+shadow_normal_bias = 0.2
 omni_range = 3.0
 omni_attenuation = 1.6
 
@@ -1476,11 +1499,26 @@ shape = ExtResource("colision_caja_nueva")
 [node name="CollisionShape3D" parent="cajaregistradora/StaticBody3D"]
 disabled = true
 
+[node name="StaticBody3D" parent="tachitobasura" node_paths=PackedStringArray("mallas") groups=["interactuable"]]
+script = ExtResource("tacho")
+tacho = 0
+mallas = [NodePath("..")]
+
 [node name="Volumen" type="CollisionShape3D" parent="tachitobasura/StaticBody3D"]
 shape = SubResource("casco_24")
 
+[node name="StaticBody3D" parent="tachitobasura_001" node_paths=PackedStringArray("mallas") groups=["interactuable"]]
+script = ExtResource("tacho")
+tacho = 1
+mallas = [NodePath("..")]
+
 [node name="Volumen" type="CollisionShape3D" parent="tachitobasura_001/StaticBody3D"]
 shape = SubResource("casco_25")
+
+[node name="StaticBody3D" parent="tachitobasura_002" node_paths=PackedStringArray("mallas") groups=["interactuable"]]
+script = ExtResource("tacho")
+tacho = 2
+mallas = [NodePath("..")]
 
 [node name="Volumen" type="CollisionShape3D" parent="tachitobasura_002/StaticBody3D"]
 shape = SubResource("casco_26")
@@ -2183,10 +2221,10 @@ scale = Vector3(0.997537081, 0.997537081, 0.997537081)
 shape = SubResource("frente_exterior_bano")
 
 [node name="board de tareas_002" parent="board tareas"]
-transform = Transform3D(0.318228, 0, 0, 0, 0.285204, 0, 0, 0, 0.640884, -0.446582, 0.008555, 0)
+transform = Transform3D(0.318228, 0, 0, 0, 0.285204, 0, 0, 0, 0.640884, -0.502988, 0.008555, 0)
 
 [node name="board de tareas_001" parent="board tareas"]
-transform = Transform3D(0.318228, 0, 0, 0, 0.285204, 0, 0, 0, 0.640884, 0.559394, 0.008555, 0)
+transform = Transform3D(0.318228, 0, 0, 0, 0.285204, 0, 0, 0, 0.640884, 0.502988, 0.008555, 0)
 
 [node name="board de tareas_003" parent="board tareas"]
 visible = false

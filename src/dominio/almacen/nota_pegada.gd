@@ -12,13 +12,15 @@ const TAREAS_EN_ORDEN := [
 	Tarea.Tipo.LIMPIAR,
 	Tarea.Tipo.REPONER,
 	Tarea.Tipo.SACAR_LA_BASURA,
+	Tarea.Tipo.ORDENAR_LAS_CAJAS,
 ]
 const NOMBRES_DE_LAS_TAREAS := {
 	Tarea.Tipo.CAJA: "Atención al cliente",
 	Tarea.Tipo.REGISTRAR: "Registro de productos vendidos",
 	Tarea.Tipo.LIMPIAR: "Limpieza",
 	Tarea.Tipo.REPONER: "Reposición",
-	Tarea.Tipo.SACAR_LA_BASURA: "Sacar la basura",
+	Tarea.Tipo.SACAR_LA_BASURA: "Tirar la basura",
+	Tarea.Tipo.ORDENAR_LAS_CAJAS: "Ordenar cajas en el depósito",
 }
 
 var _titulo: String

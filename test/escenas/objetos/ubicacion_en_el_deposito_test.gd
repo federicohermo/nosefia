@@ -1,14 +1,11 @@
-## Dónde arranca la noche cada cosa suelta: las cajas de reposición en el depósito y las bolsas
-## de basura también en el depósito.
+## Las cajas de reposición conservan sus apoyos del depósito; la basura nace en sus tres tachos.
 ##
 ## Las dos habitaciones las abre el 043, y antes de él no se podía poner nada adentro: la puerta
 ## las dejaba inalcanzables.
 extends GdUnitTestSuite
 
 const ALMACEN := preload("res://src/escenas/almacen.tscn")
-
-## Punto libre del depósito desde donde se comprueba el acceso a las bolsas.
-const ENTRADA_DEL_DEPOSITO := Vector3(5.5, 1.05, -8.7)
+const BolsaEnLaMano := preload("res://test/escenas/bolsa_en_la_mano.gd")
 
 ## Adonde se corre una caja para probar que la apertura la devuelve. Es el aire en el medio del
 ## local, lejos del depósito y de cualquier apoyo.
@@ -30,6 +27,7 @@ func _media_caja(caja: Node3D) -> float:
 
 func test_las_cajas_de_reposicion_estan_apoyadas_en_el_deposito() -> void:
 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
+	almacen.set("_partida", Partida.desde({"jornada": 2, "medios": 0}))
 	add_child(almacen)
 	await get_tree().physics_frame
 	var espacio := almacen.get_world_3d().direct_space_state
@@ -76,6 +74,7 @@ func test_las_cajas_de_reposicion_estan_apoyadas_en_el_deposito() -> void:
 ## tapa la etiqueta a quien la mira desde arriba: es la esquina del portón.
 func test_cada_caja_le_muestra_su_etiqueta_al_cuarto() -> void:
 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
+	almacen.set("_partida", Partida.desde({"jornada": 2, "medios": 0}))
 	add_child(almacen)
 	await get_tree().physics_frame
 	var espacio := almacen.get_world_3d().direct_space_state
@@ -130,71 +129,37 @@ func test_cada_caja_le_muestra_su_etiqueta_al_cuarto() -> void:
 		)
 
 
-func test_las_tres_bolsas_arrancan_en_el_deposito_y_lejos_del_contenedor() -> void:
+func test_las_bolsas_arrancan_en_tachos_lejos_del_contenedor() -> void:  # AC-CLN-007 AC-CLN-008
 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
+	almacen.set("_partida", Partida.desde({"jornada": 2, "medios": 0}))
 	add_child(almacen)
 	await get_tree().physics_frame
 	var contenedor: Node3D = almacen.get_node(
 		"Estructura/deposito_contenedor_soporte/deposito_contenedor_cuerpo/StaticBody3D"
 	)
-	var piso := almacen.get_node("Estructura/SueloSolido/Fondo") as CollisionShape3D
-	var tamano := (piso.shape as BoxShape3D).size
-	var limites := piso.global_transform * AABB(-tamano / 2.0, tamano)
-	var bolsas: Array = almacen.get("_bolsas")
+	var bolsas: Array[Node3D] = almacen.get("_bolsas")
 	assert_int(bolsas.size()).is_equal(ReglasDeLaBasura.BOLSAS_DE_LA_JORNADA)
-	var sin_las_bolsas: Array[RID] = []
-	for cuerpo: PhysicsBody3D in bolsas:
-		sin_las_bolsas.append(cuerpo.get_rid())
-	for bolsa: Node3D in bolsas:
-		var lugar := bolsa.global_position
-		assert_bool(limites.has_point(Vector3(lugar.x, piso.global_position.y, lugar.z))).is_true()
-		(
-			assert_float(_camino_desde_la_puerta(almacen, lugar, sin_las_bolsas))
-			. override_failure_message(
-				"`%s` no se alcanza desde la puerta del depósito" % bolsa.name
-			)
-			. is_equal(1.0)
+	for numero in bolsas.size():
+		var bolsa := bolsas[numero] as ObjetoAgarrable
+		var tacho := almacen.get_node(BolsaEnLaMano.RUTAS[numero]) as StaticBody3D
+		var malla := tacho.get_parent() as MeshInstance3D
+		var boca := malla.global_transform * malla.get_aabb()
+		var forma: CollisionShape3D = bolsa.get_node("Forma")
+		var media := (forma.shape as BoxShape3D).size.y / 2.0
+		assert_float(bolsa.global_position.x).is_between(boca.position.x, boca.end.x)
+		assert_float(bolsa.global_position.z).is_between(boca.position.z, boca.end.z)
+		assert_float(bolsa.global_position.y - media).is_equal_approx(
+			boca.end.y + ReglasDeLosObjetos.ROCE, 0.001
 		)
-		var distancia := lugar.distance_to(contenedor.global_position)
+		assert_bool(bolsa.visible).is_true()
+		assert_bool(forma.disabled).is_true()
 		(
-			assert_float(distancia)
-			. override_failure_message(
-				"`%s` está a %.2f m del contenedor" % [bolsa.name, distancia]
-			)
-			. is_greater(ReglasDeLaBasura.DISTANCIA_MINIMA_AL_CONTENEDOR)
+			assert_float(tacho.global_position.distance_to(contenedor.global_position))
+			. is_greater_equal(ReglasDeLaBasura.DISTANCIA_MINIMA_AL_CONTENEDOR)
 		)
-
-
-## El recorrido rodea la góndola central por su extremo posterior.
-##
-## Las tres bolsas se excluyen para que no se tapen entre sí: se levantan de a una.
-func _camino_desde_la_puerta(almacen: Node3D, hasta: Vector3, excluidas: Array[RID]) -> float:
-	var forma := CapsuleShape3D.new()
-	forma.radius = 0.4
-	forma.height = 1.8
-	var consulta := PhysicsShapeQueryParameters3D.new()
-	consulta.shape = forma
-	consulta.transform = Transform3D(Basis(), ENTRADA_DEL_DEPOSITO)
-	consulta.exclude = excluidas
-	var espacio := almacen.get_world_3d().direct_space_state
-	assert_array(espacio.intersect_shape(consulta, 4)).is_empty()
-	var pallet: MeshInstance3D = almacen.get_node(
-		"Estructura/deposito_pallet_central_izquierdo_0_1"
-	)
-	var limites := pallet.global_transform * pallet.get_aabb()
-	var atras := limites.position.z - forma.radius - 0.125
-	var izquierdo := limites.position.x - forma.radius - 0.125
-	var puntos: Array[Vector3] = [
-		Vector3(4.3, ENTRADA_DEL_DEPOSITO.y, atras),
-		Vector3(izquierdo, ENTRADA_DEL_DEPOSITO.y, atras),
-		Vector3(hasta.x, ENTRADA_DEL_DEPOSITO.y, hasta.z),
-	]
-	var libre := 1.0
-	for punto in puntos:
-		consulta.motion = punto - consulta.transform.origin
-		libre = minf(libre, espacio.cast_motion(consulta)[1])
-		consulta.transform.origin = punto
-	return libre
+		assert_float(tacho.global_position.distance_to(contenedor.global_position)).is_greater(
+			ReglasDelJugador.ALCANCE_DE_LA_MIRA
+		)
 
 
 ## Con qué se superpone un cuerpo, sin contar aquello sobre lo que se apoya.
@@ -223,6 +188,7 @@ func test_abrir_la_jornada_devuelve_cada_caja_a_su_lugar() -> void:
 	# `position` correcta respecto de la mano y está flotando en el medio del local: comparar la
 	# local da verde sobre el caso que más importa.
 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
+	almacen.set("_partida", Partida.desde({"jornada": 2, "medios": 0}))
 	add_child(almacen)
 	await get_tree().physics_frame
 	var cajas: Array = almacen.get("_cajas_de_productos")

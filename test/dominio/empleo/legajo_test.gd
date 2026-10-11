@@ -27,10 +27,10 @@ func test_el_aviso_suma_uno_y_la_banda_grave_suma_dos() -> void:  # AC-EMP-003
 	# Es la regla entera en dos legajos limpios: si las dos bandas pesaran igual, la de aviso y
 	# la grave serían dos textos distintos con el mismo efecto.
 	var con_aviso := Legajo.new()
-	con_aviso.registrar(AVISO, Tarea.Tipo.size())
+	con_aviso.registrar(AVISO, Apertura.cantidad_de_obligatorias(1))
 	assert_int(con_aviso.apercibimientos()).is_equal(Reglas.APERCIBIMIENTOS_POR_AVISO)
 	var con_grave := Legajo.new()
-	con_grave.registrar(GRAVE, Tarea.Tipo.size())
+	con_grave.registrar(GRAVE, Apertura.cantidad_de_obligatorias(1))
 	assert_int(con_grave.apercibimientos()).is_equal(Reglas.APERCIBIMIENTOS_POR_BANDA_GRAVE)
 
 
@@ -88,10 +88,10 @@ func test_a_la_banda_grave_le_alcanza_con_una_jornada_menos_que_a_la_de_aviso() 
 func test_una_grave_y_dos_avisos_despiden_y_no_antes() -> void:  # AC-EMP-007
 	# El tercer camino al despido, el que mezcla las dos bandas.
 	var legajo := Legajo.new()
-	legajo.registrar(GRAVE, Tarea.Tipo.size())
-	legajo.registrar(AVISO, Tarea.Tipo.size())
+	legajo.registrar(GRAVE, Apertura.cantidad_de_obligatorias(1))
+	legajo.registrar(AVISO, Apertura.cantidad_de_obligatorias(1))
 	assert_bool(legajo.despedido()).is_false()
-	legajo.registrar(AVISO, Tarea.Tipo.size())
+	legajo.registrar(AVISO, Apertura.cantidad_de_obligatorias(1))
 	assert_bool(legajo.despedido()).is_true()
 
 
@@ -161,6 +161,6 @@ func test_la_quinta_impecable_con_deuda_cumple_el_contrato() -> void:  # AC-EMP-
 	var partida := Partida.new(legajo)
 	for _jornada in ReglasDeLaPartida.JORNADAS_DE_LA_PARTIDA:
 		partida.abrir_la_jornada()
-		partida.cerrar_la_jornada(Apertura.cantidad_de_obligatorias())
+		partida.cerrar_la_jornada(Apertura.cantidad_de_obligatorias(1))
 	assert_int(partida.final()).is_equal(Partida.Final.CONTRATO_CUMPLIDO)
 	assert_int(legajo.apercibimientos()).is_equal(3)

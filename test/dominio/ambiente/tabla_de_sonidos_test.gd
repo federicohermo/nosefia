@@ -240,7 +240,7 @@ func test_la_compra_el_lector_y_el_celular_suenan_con_su_audio() -> void:
 		["ticket_impreso", EntradaSonora.BUS_DE_EFECTOS, ["SFX_INTERFAZ_Computadora_Imprimir"]],
 		EntradaSonora.Evento.MENSAJE_DEL_CELULAR:
 		[
-			"nota_escrita",
+			"mensaje_recibido",
 			EntradaSonora.BUS_DE_INTERFAZ,
 			["SFX_INTERFAZ_Celular_Mensaje_A", "SFX_INTERFAZ_Celular_Mensaje_B"],
 		],
@@ -271,8 +271,8 @@ func test_las_tres_senales_llegan_de_una_fuente_del_audio() -> void:
 		"producto_leido": ["res://src/sistemas/tareas/caja_registradora.gd", "_caja"],
 		"ticket_impreso": ["res://src/sistemas/tareas/caja_registradora.gd", "_caja"],
 		"boton_pulsado": ["res://src/ui/diegetica/programa_de_tickets.gd", "_programa_de_tickets"],
-		"nota_escrita":
-		["res://src/sistemas/investigacion/computadora_de_escritorio.gd", "_computadora"],
+		"mensaje_recibido":
+		["res://src/sistemas/investigacion/celular_del_empleado.gd", "_celular"],
 	}
 	var almacen := FileAccess.get_file_as_string("res://src/escenas/almacen.gd")
 	var lista := RegEx.create_from_string("(?s)_audio\\s*\\.\\s*enlazar\\(\\s*\\[([^\\]]*)\\]")

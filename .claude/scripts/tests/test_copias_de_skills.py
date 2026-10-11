@@ -15,6 +15,7 @@ obvio, así que el último test cierra ese: descubre las copias por nombre y exi
 declaradas.
 """
 
+import subprocess
 import unittest
 from pathlib import Path
 
@@ -68,6 +69,33 @@ def _relativa(p: Path) -> str:
 
 
 class Copias(unittest.TestCase):
+    def test_agents_refleja_el_esquema_versionable_de_claude(self):
+        # Sin este gate, Codex podría descubrir un skill viejo aunque Claude use el actualizado.
+        # Git excluye cachés y configuración personal; --others incluye archivos aún sin commit.
+        resultado = subprocess.run(
+            [
+                "git", "ls-files", "--cached", "--others", "--exclude-standard", "-z",
+                "--", ".claude", ".agents",
+            ],
+            cwd=RAIZ,
+            capture_output=True,
+            text=True,
+            encoding="utf-8",
+            check=True,
+        )
+        archivos = {Path(r) for r in resultado.stdout.split("\0") if r}
+        originales = {p.relative_to(".claude") for p in archivos if p.parts[0] == ".claude"}
+        copias = {p.relative_to(".agents") for p in archivos if p.parts[0] == ".agents"}
+        self.assertTrue(originales, "no hay archivos de .claude para comparar")
+        self.assertEqual(originales, copias, ".agents debe reflejar los archivos de .claude")
+        for ruta in sorted(originales):
+            with self.subTest(ruta=ruta.as_posix()):
+                self.assertEqual(
+                    (RAIZ / ".claude" / ruta).read_bytes(),
+                    (RAIZ / ".agents" / ruta).read_bytes(),
+                    "editar el original en .claude y propagarlo a .agents",
+                )
+
     def test_cada_copia_es_identica_a_su_canonico(self):
         for canonico, copias in COPIAS.items():
             self.assertTrue(canonico.is_file(), f"falta el canónico {_relativa(canonico)}")

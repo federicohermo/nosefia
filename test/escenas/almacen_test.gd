@@ -429,11 +429,14 @@ func test_despachar_la_placa_abre_la_noche_siguiente_sin_tareas_cumplidas() -> v
 		assert_str(tareas.text)
 		. override_failure_message("el HUD arrastró el marcador de la noche anterior")
 		. is_equal(
-			Hud.TEXTO_DE_LAS_TAREAS % Marcador.tareas(0, Apertura.cantidad_de_obligatorias())
+			(
+				Hud.TEXTO_DE_LAS_TAREAS
+				% Marcador.tareas(0, Apertura.cantidad_de_obligatorias(ciclo.partida().jornada()))
+			)
 		)
 	)
-	for tipo: Tarea.Tipo in Tarea.Tipo.values():
-		assert_bool(reloj.obligatoria(tipo).completada()).is_false()
+	for tarea: Tarea in (almacen.get("_partida") as Partida).obligatorias():
+		assert_bool(tarea.completada()).is_false()
 
 
 func test_el_arranque_esta_frente_a_la_entrada_del_lado_de_adentro() -> void:
