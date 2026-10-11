@@ -14,18 +14,16 @@
 class_name Conversacion
 extends Resource
 
-## Con quién chatea el empleado. Es un `enum` porque el conjunto es cerrado, y cada valor tiene
-## su `.tres`: uno sin archivo es una pestaña que el jugador abre y encuentra vacía.
+## Identidades admitidas por la bandeja. Sólo las que tienen guion documentado se registran
+## en ARCHIVOS: declarar una identidad no autoriza a inventarle mensajes.
 enum Interlocutor { JEFE, PROVEEDOR, DESCONOCIDO }
 
 const CARPETA := "res://src/dominio/investigacion/"
 
-## Qué archivo es de quién. Se busca por el `enum` y no por el orden de la carpeta: un `.tres`
-## renombrado tiene que dar rojo acá y no aparecer como la conversación de otro.
+## Guiones documentados en Notion. La primera jornada sólo tiene el chat de Enrique;
+## proveedor y desconocido se retiraron porque sus textos no provenían del diseño.
 const ARCHIVOS := {
 	Interlocutor.JEFE: "conversacion_con_el_jefe.tres",
-	Interlocutor.PROVEEDOR: "conversacion_con_el_proveedor.tres",
-	Interlocutor.DESCONOCIDO: "conversacion_con_el_desconocido.tres",
 }
 
 @export var imagen: Texture2D = null
@@ -54,14 +52,14 @@ static func de(quien: Interlocutor) -> Conversacion:
 	return recurso as Conversacion
 
 
-## Todas las conversaciones que hay en disco, en el orden del `enum`.
+## Todas las conversaciones documentadas, en el orden del catálogo.
 ##
 ## Saltea la que falta para no meter un `null` en la lista que después recorre la pantalla: así la
 ## ausencia se lee como una conversación que no está y el conteo del test se pone en rojo
 ## afirmando, en vez de romperse al desreferenciar.
 static func desde_disco() -> Array[Conversacion]:
 	var todas: Array[Conversacion] = []
-	for quien: Interlocutor in Interlocutor.values():
+	for quien: Interlocutor in ARCHIVOS:
 		var una := de(quien)
 		if una == null:
 			continue

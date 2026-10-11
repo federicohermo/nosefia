@@ -1,4 +1,4 @@
-## Las conversaciones que el jugador lee en los chats: que estén las tres y que no guarden estado.
+## Sólo se cargan conversaciones con guion documentado, sin estado de lectura compartido.
 ##
 ## **El caso del disco es el que más fácil miente.** Un `.tres` que falta hace abortar la función
 ## antes de afirmar, y gdUnit4 reporta el caso en verde: por eso acá se afirma primero que el
@@ -8,24 +8,15 @@ extends GdUnitTestSuite
 const CONVERSACION := "res://src/dominio/investigacion/conversacion.gd"
 
 
-func test_hay_una_conversacion_por_cada_interlocutor() -> void:
-	# Se cuenta contra el `enum` y nunca contra un número escrito acá: un interlocutor sin su
-	# `.tres` sería una pestaña que el jugador abre y encuentra vacía, sin un solo error.
+func test_el_catalogo_carga_solo_la_conversacion_documentada_de_enrique() -> void:
 	var todas := Conversacion.desde_disco()
-	(
-		assert_int(todas.size())
-		. override_failure_message(
-			(
-				"hay %d conversaciones en disco y el enum declara %d interlocutores"
-				% [todas.size(), Conversacion.Interlocutor.size()]
-			)
-		)
-		. is_equal(Conversacion.Interlocutor.size())
-	)
+	assert_int(todas.size()).is_equal(1)
+	assert_int(todas[0].interlocutor).is_equal(Conversacion.Interlocutor.JEFE)
+	assert_str(todas[0].nombre).is_equal("Enrique Peldaño")
 
 
-func test_cada_interlocutor_tiene_la_suya_y_no_la_de_otro() -> void:
-	for quien: Conversacion.Interlocutor in Conversacion.Interlocutor.values():
+func test_cada_conversacion_documentada_es_de_su_interlocutor() -> void:
+	for quien: Conversacion.Interlocutor in Conversacion.ARCHIVOS:
 		var conversacion := Conversacion.de(quien)
 		(
 			assert_object(conversacion)
@@ -33,6 +24,11 @@ func test_cada_interlocutor_tiene_la_suya_y_no_la_de_otro() -> void:
 			. is_not_null()
 		)
 		assert_int(conversacion.interlocutor).is_equal(quien)
+
+
+func test_un_interlocutor_sin_guion_documentado_no_carga_textos_inventados() -> void:
+	assert_object(Conversacion.de(Conversacion.Interlocutor.PROVEEDOR)).is_null()
+	assert_object(Conversacion.de(Conversacion.Interlocutor.DESCONOCIDO)).is_null()
 
 
 func test_ninguna_conversacion_llega_vacia() -> void:

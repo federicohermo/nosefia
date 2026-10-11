@@ -6,6 +6,38 @@
 extends GdUnitTestSuite
 
 
+func test_la_primera_jornada_solo_ofrece_la_introduccion_documentada() -> void:  # AC-INV-028
+	var bandeja := Bandeja.new(Conversacion.desde_disco())
+	bandeja.abrir_jornada(1)
+	assert_int(bandeja.conversaciones().size()).is_equal(1)
+	var quien := Conversacion.Interlocutor.JEFE
+	assert_int(bandeja.conversaciones()[0].interlocutor).is_equal(quien)
+	var mensajes := bandeja.mensajes_de(quien)
+	assert_array(mensajes).is_equal(Conversacion.de(quien).mensajes)
+	assert_int(mensajes.size()).is_equal(21)
+	var textos := 0
+	var fotos := 0
+	for mensaje in mensajes:
+		assert_int(mensaje.jornada).is_equal(1)
+		assert_str(mensaje.de_quien).is_equal("Enrique Peldaño")
+		if mensaje.foto != null:
+			fotos += 1
+		else:
+			textos += 1
+	assert_int(textos).is_equal(14)
+	assert_int(fotos).is_equal(7)
+	assert_int(bandeja.no_leidos_totales()).is_equal(21)
+	# La reconstrucción desde un guardado no depende de una bandeja previamente filtrada.
+	var restaurada := Bandeja.new(Conversacion.desde_disco())
+	restaurada.abrir_jornada(1)
+	assert_array(restaurada.conversaciones()).is_equal(bandeja.conversaciones())
+	assert_int(restaurada.no_leidos_totales()).is_equal(21)
+	# No se asigna arbitrariamente una noche futura a los textos retirados.
+	restaurada.abrir_jornada(5)
+	assert_int(restaurada.conversaciones().size()).is_equal(1)
+	assert_array(restaurada.mensajes_de(quien)).is_equal(mensajes)
+
+
 func test_el_corte_de_jornada_filtra_y_ordena_el_menu() -> void:  # AC-INV-028, AC-INV-037
 	var primero := _conversacion(Conversacion.Interlocutor.JEFE, 2)
 	primero.mensajes[1].jornada = 3

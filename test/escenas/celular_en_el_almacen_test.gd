@@ -203,7 +203,9 @@ func test_botones_guiones_y_llegadas_al_final() -> void:  # AC-INV-027, AC-INV-0
 	var lista: VBoxContainer = _pantalla().get("_mensajes")
 	var conversaciones := _celular().bandeja().conversaciones()
 	var originales: Array[Mensaje] = conversaciones[0].mensajes.duplicate()
-	assert_int(conversaciones.size()).is_equal(3)
+	assert_int(conversaciones.size()).is_equal(1)
+	assert_int(conversaciones[0].interlocutor).is_equal(Conversacion.Interlocutor.JEFE)
+	assert_int(lista.get_child_count()).is_equal(1)
 	for indice in conversaciones.size():
 		var conversacion := conversaciones[indice]
 		(lista.get_child(indice) as Button).pressed.emit()
