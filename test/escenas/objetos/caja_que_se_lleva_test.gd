@@ -365,8 +365,14 @@ func test_la_caja_soltada_se_acomoda_adentro_de_su_apoyo() -> void:
 	# otra, y una grande sobre una chica cuelga de las cuatro esquinas: lo que se pondría en rojo
 	# sería el enunciado, no el puesto.
 	var debajo: Node3D = almacen.get("_cajas_de_productos")[Producto.Id.SALADIK]
+	# La tapa y el costado se prueban con espacio libre sobre una sola caja grande.
+	debajo.global_position = (
+		PISO_LIBRE_DEL_DEPOSITO + Vector3.UP * _limites_de(debajo).size.y / 2.0
+	)
+	debajo.call("quedarse_quieta")
+	await get_tree().physics_frame
 	_accion(jugador, caja, ReglasDeLosObjetos.ACCION_AGARRAR)
-	# Las cajas del piso están contra la pared: se llega a ellas desde el pasillo, o sea -x.
+	# Se llega desde el piso libre a la derecha de la caja, caminando hacia -x.
 	await _caminar_hasta(almacen, _limites_de(debajo), Vector3.LEFT)
 	_apuntar_a(jugador, debajo)
 	_accion(jugador, caja, ReglasDeLosObjetos.ACCION_AGARRAR)
@@ -389,6 +395,12 @@ func test_soltar_mirando_el_costado_de_una_caja_la_apila_encima() -> void:
 	var jugador: CharacterBody3D = almacen.get("_jugador")
 	var caja: Node3D = almacen.get("_cajas_de_productos")[Producto.Id.LAYSNTT]
 	var debajo: Node3D = almacen.get("_cajas_de_productos")[Producto.Id.SALADIK]
+	# La tapa y el costado se prueban con espacio libre sobre una sola caja grande.
+	debajo.global_position = (
+		PISO_LIBRE_DEL_DEPOSITO + Vector3.UP * _limites_de(debajo).size.y / 2.0
+	)
+	debajo.call("quedarse_quieta")
+	await get_tree().physics_frame
 	_accion(jugador, caja, ReglasDeLosObjetos.ACCION_AGARRAR)
 	await _caminar_hasta(almacen, _limites_de(debajo), Vector3.LEFT)
 	var camara: Camera3D = jugador.get_node("Giro/Camara")

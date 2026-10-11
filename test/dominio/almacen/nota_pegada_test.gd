@@ -3,7 +3,7 @@ extends GdUnitTestSuite
 
 
 func test_las_obligatorias_se_presentan_en_el_orden_de_la_ficha() -> void:  # AC-PLY-069
-	var nota := NotaPegada.tareas_a_realizar(Apertura.obligatorias())
+	var nota := NotaPegada.tareas_a_realizar(Apertura.obligatorias(1))
 	assert_str(nota.titulo()).is_equal("TAREAS A REALIZAR")
 	assert_bool(nota.numerada()).is_true()
 	(
@@ -14,7 +14,7 @@ func test_las_obligatorias_se_presentan_en_el_orden_de_la_ficha() -> void:  # AC
 				"Registro de productos vendidos",
 				"Limpieza",
 				"Reposición",
-				"Sacar la basura",
+				"Ordenar cajas en el depósito",
 			]
 		)
 	)
@@ -22,9 +22,9 @@ func test_las_obligatorias_se_presentan_en_el_orden_de_la_ficha() -> void:  # AC
 
 func test_dos_obligatorias_dan_dos_renglones_en_su_orden() -> void:  # AC-PLY-069
 	var nota := NotaPegada.tareas_a_realizar(
-		[Tarea.new(Tarea.Tipo.SACAR_LA_BASURA), Tarea.new(Tarea.Tipo.CAJA)]
+		[Tarea.new(Tarea.Tipo.SACAR_LA_BASURA), Tarea.new(Tarea.Tipo.LIMPIAR)]
 	)
-	assert_array(nota.renglones()).contains_exactly(["Atención al cliente", "Sacar la basura"])
+	assert_array(nota.renglones()).contains_exactly(["Limpieza", "Sacar la basura"])
 
 
 func test_sin_obligatorias_hay_titulo_y_ningun_renglon() -> void:  # AC-PLY-069
@@ -81,3 +81,10 @@ func test_cambiar_la_lectura_no_cambia_el_dato_compartido() -> void:  # AC-PLY-0
 	var lectura := nota.renglones()
 	lectura.clear()
 	assert_int(nota.renglones().size()).is_equal(3)
+
+
+func test_la_jornada_sin_particular_enumera_solo_las_fijas() -> void:  # AC-PLY-080
+	var filas := NotaPegada.tareas_a_realizar(Apertura.obligatorias(3)).renglones()
+	assert_array(filas).contains_exactly(
+		["Atención al cliente", "Registro de productos vendidos", "Limpieza", "Reposición"]
+	)

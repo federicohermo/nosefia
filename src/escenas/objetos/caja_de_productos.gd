@@ -57,6 +57,7 @@ const ETIQUETAS := {
 var _lugar_de_origen: Transform3D
 var _padre_de_origen: Node = null
 var _origen_en_el_mundo: Transform3D
+var _pose_de_estanteria: Transform3D
 
 ## Dónde se apoyó por última vez. Lo pregunta el puesto al levantarla: para cuando avisa que la
 ## agarró, la caja ya cuelga de la mano y el volumen que dejó libre no lo sabe nadie más.
@@ -71,6 +72,7 @@ func _ready() -> void:
 	_lugar_de_origen = transform
 	_padre_de_origen = get_parent()
 	_origen_en_el_mundo = global_transform
+	_pose_de_estanteria = global_transform
 	_apoyo_que_dejo = global_position
 	sleeping_state_changed.connect(_al_cambiar_el_reposo)
 
@@ -172,3 +174,12 @@ func empujar(desplazamiento: Vector3) -> void:
 	empujada.emit(self)
 	move_and_collide(arrastre)
 	_apoyo_que_dejo = global_position
+
+
+func pose_de_estanteria() -> Transform3D:
+	return _pose_de_estanteria
+
+
+func declarar_origen(pose: Transform3D) -> void:
+	_origen_en_el_mundo = pose
+	_lugar_de_origen = (_padre_de_origen as Node3D).global_transform.affine_inverse() * pose

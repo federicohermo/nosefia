@@ -13,8 +13,10 @@ func before_test() -> void:
 	_avisos = 0
 
 
-func _recolector(presupuesto: float = Reglas.DURACION_DEL_TURNO) -> RecolectorDeBasura:
-	var obligatorias := Apertura.obligatorias()
+func _recolector(
+	presupuesto: float = Reglas.DURACION_DEL_TURNO, jornada: int = 2
+) -> RecolectorDeBasura:
+	var obligatorias := Apertura.obligatorias(jornada)
 	_turno = Turno.new(presupuesto, obligatorias)
 	var reloj: RelojDelTurno = auto_free(RelojDelTurno.new())
 	reloj.arrancar(_turno, obligatorias)
@@ -150,3 +152,15 @@ func test_sin_cableado_no_entrega_ni_publica() -> void:
 	assert_object(recolector.agarre.manos().sostenido()).is_same(bolsa)
 	assert_array(_tirados).is_empty()
 	assert_int(_depositos).is_zero()
+
+
+func test_tirar_las_bolsas_en_la_primera_no_cumple_otra_obligatoria() -> void:
+	var recolector := _recolector(Reglas.DURACION_DEL_TURNO, 1)
+	for numero in range(1, ReglasDeLaBasura.BOLSAS_DE_LA_JORNADA + 1):
+		var bolsa := ObjetoDelAlmacen.new()
+		bolsa.id = ReglasDeLaBasura.id_de_la_bolsa(numero)
+		_sostener(recolector, bolsa)
+		assert_int(recolector.pedir_tirar(true)).is_equal(ReglasDeLaBasura.Tiro.TIRADO)
+	assert_int(_depositos).is_equal(3)
+	assert_int(_avisos).is_zero()
+	assert_int(_turno.tareas_cumplidas()).is_zero()

@@ -1,10 +1,11 @@
 ## Cómo se abre una jornada: qué tareas pide el jefe esta noche, con cuánto tiempo se arranca y
 ## con qué mercadería.
 ##
-## La lista se arma **recorriendo `Tarea.Tipo`**: una tarea nueva se agrega al `enum` y este
-## archivo no se toca.
+## La apertura declara las fijas y la particular de cada jornada desde una sola tabla.
 class_name Apertura
 extends RefCounted
+
+const PARTICULARES := {1: [Tarea.Tipo.ORDENAR_LAS_CAJAS], 2: [Tarea.Tipo.SACAR_LA_BASURA]}
 
 ## Qué falta en la góndola al abrir cada jornada: `jornada → { Producto.Id: unidades }`, de la
 ## tabla de la ficha «8. Tarea: Reposición». Cada faltante es a lo sumo lo que trae una caja, y
@@ -24,24 +25,20 @@ const FALTANTES_POR_JORNADA := {
 }
 
 
-## Una tarea nueva por cada tipo declarado.
-##
-## Cada llamada devuelve instancias nuevas, y por eso quien abre la jornada la pide **una sola
-## vez**: el turno cuenta contra las instancias que recibió, así que completar una tarea de una
-## segunda lista devolvería `true` sin que `tareas_cumplidas()` suba — sin error y sin rojo.
-static func obligatorias() -> Array[Tarea]:
+## Las cuatro fijas y la particular declarada, siempre con instancias nuevas.
+static func obligatorias(jornada: int) -> Array[Tarea]:
+	var tipos: Array[Tarea.Tipo] = [
+		Tarea.Tipo.CAJA, Tarea.Tipo.REGISTRAR, Tarea.Tipo.LIMPIAR, Tarea.Tipo.REPONER
+	]
+	tipos.append_array(PARTICULARES.get(jornada, []))
 	var lista: Array[Tarea] = []
-	for tipo: Tarea.Tipo in Tarea.Tipo.values():
+	for tipo in tipos:
 		lista.append(Tarea.new(tipo))
 	return lista
 
 
-## Cuántas obligatorias tiene una jornada.
-##
-## Existe porque el `Turno` no expone cuántas son: recibe la lista y no tiene getter. El
-## HUD pide el número a la misma fuente que armó la lista y no a una segunda copia.
-static func cantidad_de_obligatorias() -> int:
-	return Tarea.Tipo.size()
+static func cantidad_de_obligatorias(jornada: int) -> int:
+	return obligatorias(jornada).size()
 
 
 ## El turno de la noche, con el presupuesto entero y las obligatorias que se le declaran.
@@ -110,3 +107,7 @@ static func inventario_con_faltantes(
 			producto, Inventario.Ubicacion.GONDOLA, inventario.casilleros(producto) - falta
 		)
 	return inventario
+
+
+static func cajas_apiladas(jornada: int) -> bool:
+	return Tarea.Tipo.ORDENAR_LAS_CAJAS in PARTICULARES.get(jornada, [])

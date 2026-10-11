@@ -21,8 +21,9 @@ const METIDA_EN_LA_PARED := 0.05
 const PISO_LIBRE := Vector3(4.49, 0.0, -10.0)
 
 
-func _almacen() -> Node3D:
+func _almacen(jornada: int = 1) -> Node3D:
 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
+	almacen.set("_partida", Partida.desde({"jornada": jornada, "medios": 0}))
 	add_child(almacen)
 	# Estos casos sacan unidades para usarlas de objeto. Abren con lugar para reponer, que es la
 	# noche contra la que se midieron: sacar no lo pide (BR-STK-017).
@@ -148,7 +149,7 @@ func test_encima_de_la_caja_que_ocupa_el_origen() -> void:  # AC-PLY-027
 
 
 func test_el_origen_es_el_ultimo_recurso() -> void:  # AC-PLY-028
-	var almacen: Node3D = await _almacen()
+	var almacen: Node3D = await _almacen(2)
 	var caja := _caja(almacen, Producto.Id.ARVEJAS)
 	var origen: Transform3D = caja.call(ReglasDeLosObjetos.METODO_LUGAR_DE_ORIGEN)
 	caja.global_position = ENTRETECHO

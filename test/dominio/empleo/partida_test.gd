@@ -94,7 +94,9 @@ func test_abrir_la_jornada_entrega_el_turno_del_001_con_sus_obligatorias() -> vo
 	var partida := Partida.nueva()
 	var turno := partida.abrir_la_jornada()
 	assert_float(turno.tiempo_restante()).is_equal(Reglas.DURACION_DEL_TURNO)
-	assert_int(partida.obligatorias().size()).is_equal(Apertura.cantidad_de_obligatorias())
+	assert_int(partida.obligatorias().size()).is_equal(
+		Apertura.cantidad_de_obligatorias(partida.jornada())
+	)
 	assert_bool(turno.todas_cumplidas()).is_false()
 
 
@@ -128,7 +130,7 @@ func test_una_partida_que_termino_no_vuelve_a_abrir_una_jornada() -> void:  # AC
 	var jornada_del_despido := partida.jornada()
 	var apercibimientos_del_despido := partida.apercibimientos()
 	assert_object(partida.abrir_la_jornada()).is_null()
-	partida.cerrar_la_jornada(Apertura.cantidad_de_obligatorias())
+	partida.cerrar_la_jornada(Apertura.cantidad_de_obligatorias(partida.jornada()))
 	assert_int(partida.jornada()).is_equal(jornada_del_despido)
 	assert_int(partida.apercibimientos()).is_equal(apercibimientos_del_despido)
 	assert_int(partida.final()).is_equal(Partida.Final.DESPEDIDO)
@@ -137,7 +139,7 @@ func test_una_partida_que_termino_no_vuelve_a_abrir_una_jornada() -> void:  # AC
 func test_cinco_jornadas_impecables_terminan_la_partida_sin_despido() -> void:  # AC-EMP-008
 	var partida := Partida.nueva()
 	for _jornada in range(ReglasDeLaPartida.JORNADAS_DE_LA_PARTIDA):
-		_jugar(partida, Apertura.cantidad_de_obligatorias())
+		_jugar(partida, Apertura.cantidad_de_obligatorias(partida.jornada()))
 	assert_bool(partida.terminada()).is_true()
 	assert_int(partida.final()).is_equal(Partida.Final.CONTRATO_CUMPLIDO)
 	assert_bool(partida.legajo().despedido()).is_false()
@@ -161,7 +163,7 @@ func test_con_el_despido_en_la_ultima_jornada_gana_el_despido() -> void:  # AC-E
 	# encima. Terminar la partida «cumplida» ahí sería felicitar a alguien recién echado.
 	var partida := Partida.nueva()
 	for _jornada in range(ReglasDeLaPartida.JORNADAS_DE_LA_PARTIDA - 2):
-		_jugar(partida, Apertura.cantidad_de_obligatorias())
+		_jugar(partida, Apertura.cantidad_de_obligatorias(partida.jornada()))
 	_jugar(partida, 0)
 	assert_bool(partida.es_la_ultima_jornada()).is_true()
 	_jugar(partida, 0)
@@ -178,7 +180,7 @@ func test_solo_la_ultima_jornada_es_la_ultima() -> void:  # AC-EMP-008
 	var partida := Partida.nueva()
 	assert_bool(partida.es_la_ultima_jornada()).is_false()
 	for _jornada in range(ReglasDeLaPartida.JORNADAS_DE_LA_PARTIDA - 1):
-		_jugar(partida, Apertura.cantidad_de_obligatorias())
+		_jugar(partida, Apertura.cantidad_de_obligatorias(partida.jornada()))
 	assert_bool(partida.es_la_ultima_jornada()).is_true()
 
 
@@ -199,3 +201,15 @@ func test_la_partida_es_pura_y_no_pide_una_escena() -> void:
 func _jugar(partida: Partida, cumplidas: int) -> void:
 	partida.abrir_la_jornada()
 	partida.cerrar_la_jornada(cumplidas)
+
+
+func test_la_tercera_noche_con_cuatro_cumplidas_cierra_sin_banda() -> void:  # AC-SHF-027
+	var partida := Partida.desde({"jornada": 3, "medios": 0})
+	var turno := partida.abrir_la_jornada()
+	assert_int(partida.obligatorias().size()).is_equal(4)
+	for tarea in partida.obligatorias():
+		turno.completar(tarea)
+	turno.consumir(Reglas.DURACION_DEL_TURNO)
+	partida.cerrar_la_jornada(turno.tareas_cumplidas())
+	assert_int(partida.medios()).is_zero()
+	assert_int(Consecuencias.consecuencia_de(4, 4)).is_equal(Consecuencias.Banda.NINGUNA)
