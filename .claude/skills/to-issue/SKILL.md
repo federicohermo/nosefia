@@ -248,6 +248,11 @@ Lo que más se rompe:
 - **Un criterio del issue no contradice un criterio `ratified` de otra capacidad.** El `rg` de
   los límites busca la regla también en los specs vecinos. En el #179 la puerta «no se abre»
   chocaba con `AC-PLY-040`, y la puerta ya existía en el modelo.
+- **Conservar un criterio incluye su estado inicial.** Una mejora visual no autoriza agregar
+  gestos previos para satisfacerlo. En el #396, comprobar acceso retirando cajas de a una no
+  probaba que cada caja fuera alcanzable en la apertura. Mantener la comprobación antes de
+  mover cuerpos; el desmontaje completo es una prueba adicional. El pedido de agrupar pallets
+  no decide por sí solo cambiar ese contrato.
 - **Un borde tampoco, y vale igual contra un spec `draft`.** Un borde que describe un gesto que
   el juego no tiene se implementa inventando la regla que falta. En el #263, «vender una unidad
   de la góndola» chocaba con `BR-CTR-014` —la venta sale del depósito—, y «una partida guardada
