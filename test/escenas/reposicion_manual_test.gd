@@ -411,6 +411,9 @@ func test_el_frente_se_conserva_al_examinar_y_volver_a_agarrar() -> void:
 func test_actroncito_durextra_y_oremos_se_reponen_con_foco_y_clic_reales() -> void:
 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
 	add_child(almacen)
+	# La segunda jornada restaura las cajas en sus estantes. La primera ahora entrega sobre
+	# pallets, y este caso ejerce el alcance de las dos alturas del rack, no la descarga.
+	almacen.call("_al_abrir_la_jornada", 2)
 	AperturaConLugar.abrir_con_todo_el_lugar(almacen)
 	var jugador: Node3D = almacen.get("_jugador")
 	jugador.set_physics_process(false)

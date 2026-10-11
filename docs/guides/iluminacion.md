@@ -34,7 +34,7 @@ Cómo se mide el costo de las luces, en [rendimiento](./rendimiento.md).
   las sondas; no dejan sombras permanentes en el horneado.
 - **Los estantes del fondo interceptan la luz cenital del depósito.** Su madera inferior
   necesita luz rebotada para leerse. Se ajustan los plafones del depósito y su energía indirecta
-  y se vuelve a hornear; el brillo global, la niebla y el bloom conservan sus valores.
+  y se vuelve a hornear. El brillo global, la niebla y el bloom conservan sus valores.
 - **Un grupo de productos toma esa luz en un solo punto: el centro de su caja.** El horneador
   reparte las sondas por los bordes de las mallas, y muchas caen adentro de una pared o de un
   mueble. Ahí salen negras, y apagan lo que toma la luz cerca. Por eso el horneador rellena cada
