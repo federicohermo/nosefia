@@ -29,6 +29,12 @@ Cómo se mide el costo de las luces, en [rendimiento](./rendimiento.md).
   estático queda negro. Lo dinámico toma la luz de las sondas.
 - **Lo que gira también lleva GI `Dynamic`, aunque venga del modelo:** las hojas que abren y la
   tapa del contenedor. Horneadas, dejarían su sombra en la posición en la que se hornearon.
+- **Los pallets de la entrega también son dinámicos:** aparecen con las cajas de la primera
+  noche y se retiran en la siguiente. Reutilizan la madera del pallet de piso y reciben luz de
+  las sondas; no dejan sombras permanentes en el horneado.
+- **Los estantes del fondo interceptan la luz cenital del depósito.** Su madera inferior
+  necesita luz rebotada para leerse. Se ajustan los plafones del depósito y su energía indirecta
+  y se vuelve a hornear; el brillo global, la niebla y el bloom conservan sus valores.
 - **Un grupo de productos toma esa luz en un solo punto: el centro de su caja.** El horneador
   reparte las sondas por los bordes de las mallas, y muchas caen adentro de una pared o de un
   mueble. Ahí salen negras, y apagan lo que toma la luz cerca. Por eso el horneador rellena cada

@@ -108,6 +108,19 @@ func test_la_pila_completa_no_se_superpone_y_la_mira_alcanza_cada_caja() -> void
 			. is_false()
 		)
 		assert_bool(_estanteria(apoyo)).is_false()
+		var base := apoyo
+		while base.get("collider") is Caja:
+			base = _apoyo(local, base.collider as Caja)
+		(
+			assert_bool(
+				(
+					not base.is_empty()
+					and str(base.collider.get_parent().name).begins_with("PalletDeEntrega")
+				)
+			)
+			. override_failure_message("La pila no descansa sobre madera: %s" % caja.name)
+			. is_true()
+		)
 		var volumen := PhysicsShapeQueryParameters3D.new()
 		var forma := BoxShape3D.new()
 		forma.size = Vector3.ONE * (caja.get_node("Cuerpo").scale.x * 2.0 - 0.01)
@@ -120,14 +133,27 @@ func test_la_pila_completa_no_se_superpone_y_la_mira_alcanza_cada_caja() -> void
 			. override_failure_message("Superposición: %s" % caja.name)
 			. is_empty()
 		)
-		var sitios := _puntos_de_foco(local, caja)
+	# Una descarga compacta se desarma desde afuera: sacar la capa superior descubre la siguiente.
+	var pendientes := cajas.duplicate()
+	pendientes.sort_custom(
+		func(a: Caja, b: Caja) -> bool: return a.global_position.y > b.global_position.y
+	)
+	var agarre: Agarre = local.get("_agarre")
+	while not pendientes.is_empty():
+		var caja: Caja = null
+		var sitios: Array[Sitio] = []
+		for candidata: Caja in pendientes:
+			sitios = _puntos_de_foco(local, candidata)
+			if not sitios.is_empty():
+				caja = candidata
+				break
 		(
 			assert_array(sitios)
-			. override_failure_message("Sin foco transitable: %s" % caja.name)
+			. override_failure_message("La descarga no se puede terminar de retirar con la mira")
 			. is_not_empty()
 		)
 		if sitios.is_empty():
-			continue
+			break
 		jugador.global_position = sitios[0].pies
 		jugador.reset_physics_interpolation()
 		camara.position = Vector3.UP * ReglasDelJugador.ALTURA_DE_LA_CAMARA
@@ -136,6 +162,15 @@ func test_la_pila_completa_no_se_superpone_y_la_mira_alcanza_cada_caja() -> void
 			await get_tree().physics_frame
 		jugador.call("_leer_la_mira")
 		assert_object(jugador.get("_enfocado")).is_same(caja)
+		assert_bool(agarre.pedir_agarrar(caja.datos, caja)).is_true()
+		agarre.soltar(false)
+		caja.global_transform = caja.pose_de_estanteria()
+		caja.quedarse_quieta()
+		caja.sleeping_state_changed.emit()
+		pendientes.erase(caja)
+		for _cuadro: int in 4:
+			await get_tree().physics_frame
+	assert_array(pendientes).is_empty()
 
 
 func test_la_pila_estable_vuelve_a_estantes_en_la_segunda_noche() -> void:  # AC-STK-077
@@ -163,6 +198,7 @@ func test_la_pila_estable_vuelve_a_estantes_en_la_segunda_noche() -> void:  # AC
 			. override_failure_message("No volvió a estantería: %s" % caja.name)
 			. is_true()
 		)
+	assert_array(local.find_children("PalletsDeEntrega", "Node3D", false, false)).is_empty()
 
 
 func _ordenar_en_sus_estanterias(local: Node3D) -> void:

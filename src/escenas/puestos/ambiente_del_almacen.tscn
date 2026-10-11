@@ -108,39 +108,39 @@ area_size = Vector2(1.2, 0.6)
 position = Vector3(-2.5, 3.57, -11.825631)
 rotation = Vector3(-1.5707963, 0, 0)
 light_color = Color(1, 0.96, 0.88, 1)
-light_energy = 0.72
-light_indirect_energy = 1.3
+light_energy = 1.05
+light_indirect_energy = 2.8
 light_size = 0.15
 light_bake_mode = 1
 spot_range = 7.0
 spot_angle = 89.0
-editor_description = "Difusión amplia del plafón: el cono anterior dejaba las cajas superiores fuera de la luz directa."
+editor_description = "El rebote del plafón permite leer la madera bajo los estantes que interceptan la luz cenital."
 spot_attenuation = 0.45
 
 [node name="LuzDelDeposito2" type="SpotLight3D" parent="."]
 position = Vector3(1.7, 3.57, -11.825631)
 rotation = Vector3(-1.5707963, 0, 0)
 light_color = Color(1, 0.96, 0.88, 1)
-light_energy = 0.72
-light_indirect_energy = 1.3
+light_energy = 1.05
+light_indirect_energy = 2.8
 light_size = 0.15
 light_bake_mode = 1
 spot_range = 7.0
 spot_angle = 89.0
-editor_description = "Difusión amplia del plafón: el cono anterior dejaba las cajas superiores fuera de la luz directa."
+editor_description = "El rebote del plafón permite leer la madera bajo los estantes que interceptan la luz cenital."
 spot_attenuation = 0.45
 
 [node name="LuzDelDeposito3" type="SpotLight3D" parent="."]
 position = Vector3(5.9, 3.57, -11.825631)
 rotation = Vector3(-1.5707963, 0, 0)
 light_color = Color(1, 0.96, 0.88, 1)
-light_energy = 0.72
-light_indirect_energy = 1.3
+light_energy = 1.05
+light_indirect_energy = 2.8
 light_size = 0.15
 light_bake_mode = 1
 spot_range = 7.0
 spot_angle = 89.0
-editor_description = "Difusión amplia del plafón: el cono anterior dejaba las cajas superiores fuera de la luz directa."
+editor_description = "El rebote del plafón permite leer la madera bajo los estantes que interceptan la luz cenital."
 spot_attenuation = 0.45
 
 

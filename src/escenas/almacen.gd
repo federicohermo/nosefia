@@ -32,6 +32,7 @@ const ManijaDelBalde := preload("res://src/escenas/objetos/manija_del_balde.gd")
 const HabitacionesDelAlmacen := preload("res://src/escenas/puestos/habitaciones_del_almacen.gd")
 const NotasDelLocal := preload("res://src/escenas/puestos/notas_del_almacen.gd")
 const PilaDelDeposito := preload("res://src/escenas/puestos/pila_del_deposito.gd")
+const PALLETS_DE_ENTREGA := preload("res://src/escenas/puestos/pallets_de_entrega.tscn")
 const ReglasDelCierre := preload("res://src/dominio/almacen/reglas_del_cierre.gd")
 
 ## El jugador tampoco declara un `class_name` —es cáscara, como este archivo—, así que el
@@ -89,6 +90,7 @@ var _partida := Partida.desde(Guardado.new().cargar())
 ## porque lo que la escena declara cuelga de la raíz; los servicios se crean en el cableado.
 var _arranque: Transform3D
 var _acomodador: AcomodadorDelDeposito
+var _pallets_de_entrega: Node3D
 
 ## Cómo se sale al menú. Es una variable y no una llamada directa porque un test no puede
 ## cambiar de escena: se llevaría puesto al runner.
@@ -270,13 +272,17 @@ func _al_abrir_la_jornada(jornada: int) -> void:
 		var tacho := _tachos()[indice]
 		tacho.mostrar(bolsa, _recolector.tarea().tiene_bolsa(tacho.tacho))
 	var poses: Dictionary[Node3D, Transform3D] = {}
+	if is_instance_valid(_pallets_de_entrega):
+		_pallets_de_entrega.queue_free()
+		_pallets_de_entrega = null
 	if Apertura.cajas_apiladas(jornada):
-		poses = PilaDelDeposito.poses(
-			_cajas_de_productos,
-			$Estructura/porton,
-			$Estructura/deposito_pallet_central_izquierdo_0_1,
-			$Estructura/SueloSolido/Fondo
+		var madera: MeshInstance3D = $Estructura/deposito_pallet_piso
+		_pallets_de_entrega = PALLETS_DE_ENTREGA.instantiate()
+		add_child(_pallets_de_entrega)
+		var pallets: Array[MeshInstance3D] = _pallets_de_entrega.call(
+			"disponer", madera, $Estructura/porton, $Estructura/SueloSolido/Fondo
 		)
+		poses = PilaDelDeposito.poses(_cajas_de_productos, pallets)
 	for caja: CajaDeProductosDelDeposito in _cajas_de_productos:
 		caja.declarar_origen(poses.get(caja, caja.pose_de_estanteria()))
 		caja.volver_a_su_lugar()
