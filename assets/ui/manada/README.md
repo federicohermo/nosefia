@@ -94,7 +94,8 @@ Desde PowerShell, con una pantalla disponible:
 
 Las instrucciones iniciales siguen los doce frames de Figma desde `511:302` hasta `535:1361`.
 Son pantallas independientes: los primeros cuatro párrafos se agrupan de a dos y el contenido se
-reemplaza sin scroll. El panel de Enrique sólo aparece en las primeras cuatro. La navegación,
+reemplaza sin scroll. Por aclaración del usuario, el panel de Enrique y su bocadillo permanecen
+en las doce pantallas, aunque los frames posteriores al cuarto lo omitan. La navegación,
 el contador y la ayuda permanecen fijos. Se inspeccionaron reacciones y motion: esos frames no
 contienen transiciones ni keyframes configurados; se conserva la subida autorizada de 0,3 s.
 

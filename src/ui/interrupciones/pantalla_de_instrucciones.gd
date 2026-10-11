@@ -161,7 +161,7 @@ func _pintar() -> void:
 		_texto("ticket", Vector2(900, 276), 110, 30, COLOR_DE_RESALTE)
 	if _instrucciones.en_el_ultimo():
 		_texto(TEXTO_DE_JUGAR, Vector2(0, 239), 500, 40, COLOR_DE_RESALTE)
-	_retrato.visible = numero <= 4
+	_retrato.visible = true
 	_volver.disabled = not _instrucciones.se_puede_volver()
 	_siguiente.text = (TEXTO_DE_COMENZAR if _instrucciones.en_el_ultimo() else TEXTO_DE_SIGUIENTE)
 	_contador.text = "%d/%d" % [numero, _pasos.size()]

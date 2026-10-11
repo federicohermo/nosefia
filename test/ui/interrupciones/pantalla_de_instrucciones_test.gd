@@ -65,7 +65,7 @@ func _comprobar_pantalla(pantalla: PantallaDeInstrucciones, numero: int) -> void
 	var contador: Label = pantalla.get("_contador")
 	assert_str(contador.text).is_equal("%d/12" % numero)
 	var retrato: Control = pantalla.get("_retrato")
-	assert_bool(retrato.visible).is_equal(numero <= 4)
+	assert_bool(retrato.visible).is_true()
 	var volver := _boton(pantalla, "_volver")
 	assert_bool(volver.visible).is_true()
 	assert_bool(volver.disabled).is_equal(numero == 1)

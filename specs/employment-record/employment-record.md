@@ -129,8 +129,8 @@ actual sobre doce. En la última, «Siguiente» DEBE decir «OK»; retroceder DE
 aunque se repita el gesto.
 
 Cada pantalla DEBE mostrar sus textos antes de las fotos y conservar el separador y las etiquetas
-del diseño. El retrato de Enrique y su bocadillo DEBEN aparecer sólo en las primeras cuatro
-pantallas. La quinta DEBE acompañar el lector con la interfaz de caja y el ticket; la última,
+del diseño. El retrato de Enrique y su bocadillo DEBEN permanecer visibles en las doce
+pantallas, por aclaración explícita del usuario. La quinta DEBE acompañar el lector con la interfaz de caja y el ticket; la última,
 con «SI A JUGAR!!». Las siete fotos del juego DEBEN acompañar sus textos, incluida Intro 13,
 aunque su frame de referencia omita esa foto.
 
@@ -283,7 +283,7 @@ y las siete fotos CUANDO se agrupan las 21 entradas ENTONCES hay doce pantallas:
 [5], [6], [7], [8], [9], [10], [11], [12], [13], [14]. Las pantallas 2, 4, 5, 6, 7, 9 y 11 muestran
 la foto de su Intro después de sus textos. CUANDO se avanza y vuelve por todas ENTONCES sólo se
 muestra el contenido de la actual, el contador coincide y la secuencia original de 21 entradas
-sigue intacta. El retrato y bocadillo se muestran en las pantallas 1 a 4 y desaparecen desde 5;
+sigue intacta. El retrato y bocadillo se mantienen visibles en las doce pantallas;
 la pantalla 5 incluye interfaz de caja y ticket y la última incluye «SI A JUGAR!!».
 Los tres mensajes de prueba previos no aparecen entre los textos de la conversación.
 
