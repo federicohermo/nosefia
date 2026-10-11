@@ -130,8 +130,10 @@ aunque se repita el gesto.
 
 Cada pantalla DEBE mostrar sus textos antes de las fotos y conservar el separador y las etiquetas
 del diseño. El retrato de Enrique y su bocadillo DEBEN permanecer visibles en las doce
-pantallas, por aclaración explícita del usuario. La quinta DEBE acompañar el lector con la interfaz de caja y el ticket; la última,
-con «SI A JUGAR!!». Las siete fotos del juego DEBEN acompañar sus textos, incluida Intro 13,
+pantallas, por aclaración explícita del usuario. La quinta DEBE acompañar el lector con la
+interfaz de caja y el ticket. La última DEBE mostrar sólo su texto de instrucciones y el botón
+«OK», sin el rótulo «SI A JUGAR!!». Las fotos DEBEN cubrir su marco sin franjas negras y mantener
+visible el objeto ilustrado. Las siete fotos del juego DEBEN acompañar sus textos, incluida Intro 13,
 aunque su frame de referencia omita esa foto.
 
 Los catorce textos y siete fotos DEBEN conservarse como 21 entradas separadas en el chat de
@@ -284,7 +286,8 @@ y las siete fotos CUANDO se agrupan las 21 entradas ENTONCES hay doce pantallas:
 la foto de su Intro después de sus textos. CUANDO se avanza y vuelve por todas ENTONCES sólo se
 muestra el contenido de la actual, el contador coincide y la secuencia original de 21 entradas
 sigue intacta. El retrato y bocadillo se mantienen visibles en las doce pantallas;
-la pantalla 5 incluye interfaz de caja y ticket y la última incluye «SI A JUGAR!!».
+la pantalla 5 incluye interfaz de caja y ticket y la última sólo su texto de instrucciones,
+sin el rótulo «SI A JUGAR!!», conservando «OK».
 Los tres mensajes de prueba previos no aparecen entre los textos de la conversación.
 
 ### AC-EMP-047 — Cada foto adjunta su propia Intro *(verifica BR-EMP-022, BR-EMP-023)*

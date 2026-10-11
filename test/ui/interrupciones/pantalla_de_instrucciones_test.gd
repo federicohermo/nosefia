@@ -56,6 +56,8 @@ func _comprobar_pantalla(pantalla: PantallaDeInstrucciones, numero: int) -> void
 	for indice in paso.textos.size():
 		var cuerpo: RichTextLabel = cuerpos[indice]
 		assert_str(cuerpo.get_parsed_text()).is_equal(_sin_formato(paso.textos[indice].texto))
+	if numero == 12:
+		assert_int(cuerpos.size()).is_equal(paso.textos.size())
 	var fotos: Array[Node] = contenido.find_children("*", "TextureRect", false, false)
 	var cantidad := 1 + (1 if paso.foto != null else 0) + (2 if numero == 5 else 0)
 	assert_int(fotos.size()).is_equal(cantidad)

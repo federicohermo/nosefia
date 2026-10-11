@@ -7,7 +7,6 @@ const DURACION_DE_LA_SUBIDA := 0.3
 const TEXTO_DE_SIGUIENTE := "Siguiente"
 const TEXTO_DE_VOLVER := "Volver"
 const TEXTO_DE_COMENZAR := "OK"
-const TEXTO_DE_JUGAR := "SI A JUGAR!!"
 const COLOR_DE_RESALTE := Color("e4f850")
 const COLOR_DE_SECTOR := Color("f0f4d1")
 const SEPARADOR := preload("res://assets/ui/manada/instrucciones/separador.svg")
@@ -159,8 +158,6 @@ func _pintar() -> void:
 		_imagen(CAJA, Rect2(742, 276, 136, 316))
 		_imagen(TICKET, Rect2(898, 341, 109, 186))
 		_texto("ticket", Vector2(900, 276), 110, 30, COLOR_DE_RESALTE)
-	if _instrucciones.en_el_ultimo():
-		_texto(TEXTO_DE_JUGAR, Vector2(0, 239), 500, 40, COLOR_DE_RESALTE)
 	_retrato.visible = true
 	_volver.disabled = not _instrucciones.se_puede_volver()
 	_siguiente.text = (TEXTO_DE_COMENZAR if _instrucciones.en_el_ultimo() else TEXTO_DE_SIGUIENTE)
@@ -220,10 +217,13 @@ func _foto(textura: Texture2D, ficha: Dictionary) -> void:
 	borde.size = rectangulo.size
 	borde.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_contenido.add_child(borde)
-	_imagen(textura, Rect2(rectangulo.position + Vector2(6, 6), rectangulo.size - Vector2(12, 12)))
+	var foto := _imagen(
+		textura, Rect2(rectangulo.position + Vector2(6, 6), rectangulo.size - Vector2(12, 12))
+	)
+	foto.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
 	var posicion: Vector2 = ficha["leyenda"]
 	_texto(ficha["titulo"], posicion, 350, 30, COLOR_DE_RESALTE)
-	# La leyenda ocupa el lugar diagramado sin recortar la foto del juego.
+	# La leyenda ocupa el lugar diagramado junto a la foto del juego.
 	var alto := 117.0 if ficha["titulo"].contains("\n") else 100.0
 	if ficha["titulo"] == "Computadora":
 		alto = 60.0

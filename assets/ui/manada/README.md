@@ -103,8 +103,9 @@ Los recursos originales de Figma en `instrucciones/`, descargados sin editar el 
 `bocadillo.svg` (`559:1353`), `separador.svg` (`561:361`), `caja.png` (`526:1066`) y `ticket.png`
 (`556:1287`). Caja y ticket son las ilustraciones auxiliares de la pantalla 5. Las siete fotos
 continúan siendo capturas del juego, como pide Notion, en sus espacios correspondientes; se
-conserva la foto de Intro 13 aunque el frame de Figma no la incluya. Se mantienen completas y
-proporcionadas dentro del marco, sin recortar ni sustituirlas por renders del prototipo.
+conserva la foto de Intro 13 aunque el frame de Figma no la incluya. Las fotos cubren su marco
+sin franjas negras y conservan su proporción; el encuadre de cada captura debe mantener visible
+el objeto que ilustra. Por aclaración del usuario, la última pantalla omite «SI A JUGAR!!».
 
 `instrucciones/fondo.png` es la capa de persiana desenfocada `511:304`. El retrato local histórico
 incluía un rectángulo opaco celeste: la pantalla usa ahora `instrucciones/enrique.png`, la imagen
