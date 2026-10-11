@@ -1,6 +1,7 @@
 [gd_scene format=3 uid="uid://davohpa0bua7i"]
 
 [ext_resource type="PackedScene" path="res://src/escenas/puestos/agua_del_bano.tscn" id="1_agua"]
+[ext_resource type="PackedScene" path="res://src/escenas/puestos/bloom_del_almacen.tscn" id="2_bloom"]
 
 [sub_resource type="Environment" id="Environment_almacen"]
 background_mode = 1
@@ -8,6 +9,15 @@ ambient_light_source = 3
 reflected_light_source = 1
 background_color = Color(0.06, 0.16, 0.176, 1)
 tonemap_mode = 2
+fog_enabled = true
+fog_mode = 1
+fog_light_color = Color(0.18, 0.27, 0.25, 1)
+fog_light_energy = 0.8
+fog_density = 0.3
+fog_sky_affect = 0.0
+fog_depth_begin = 8.0
+fog_depth_end = 24.0
+fog_depth_curve = 1.0
 adjustment_enabled = true
 adjustment_saturation = 0.68
 adjustment_brightness = 0.92
@@ -18,11 +28,25 @@ adjustment_contrast = 1.04
 [node name="Entorno" type="WorldEnvironment" parent="." unique_id=664424133]
 environment = SubResource("Environment_almacen")
 
+[node name="Bloom" parent="." instance=ExtResource("2_bloom")]
+
+[node name="ReflejosDelSalon" type="ReflectionProbe" parent="."]
+position = Vector3(2.695, 2.181, -0.795)
+size = Vector3(10.55, 4.56, 14.35)
+origin_offset = Vector3(-3.5, 0, 0)
+intensity = 0.65
+max_distance = 80.0
+box_projection = true
+interior = true
+ambient_mode = 0
+blend_distance = 0.1
+
 [node name="AreaLight3D" type="AreaLight3D" parent="." unique_id=1670606995]
 transform = Transform3D(-4.3711392e-08,  -0.9997196,  0.023678668,  0,  0.023678668,  0.9997196,  -1,  4.3699135e-08,  -1.0350275e-09, 0.2, 4.044, -4.8)
 light_color = Color(0.58, 0.88, 0.81, 1)
 light_energy = 3.4
 light_size = 0.399
+light_specular = 0.0
 light_bake_mode = 1
 area_size = Vector2(1.2, 0.6)
 
@@ -31,6 +55,7 @@ transform = Transform3D(-4.3711392e-08,  -0.9997196,  0.023678668,  0,  0.023678
 light_color = Color(0.58, 0.88, 0.81, 1)
 light_energy = 3.4
 light_size = 0.399
+light_specular = 0.0
 light_bake_mode = 1
 area_size = Vector2(1.2, 0.6)
 
@@ -39,6 +64,7 @@ transform = Transform3D(-1,  8.739826e-08,  -2.0700548e-09,  0,  0.023678668,  0
 light_color = Color(0.58, 0.88, 0.81, 1)
 light_energy = 3.4
 light_size = 0.399
+light_specular = 0.0
 light_bake_mode = 1
 area_size = Vector2(1.2, 0.6)
 
@@ -47,6 +73,7 @@ transform = Transform3D(-1,  8.739826e-08,  -2.0700548e-09,  0,  0.023678668,  0
 light_color = Color(0.58, 0.88, 0.81, 1)
 light_energy = 3.4
 light_size = 0.399
+light_specular = 0.0
 light_bake_mode = 1
 area_size = Vector2(1.2, 0.6)
 
@@ -55,6 +82,7 @@ transform = Transform3D(-1,  8.739826e-08,  -2.0700548e-09,  0,  0.023678668,  0
 light_color = Color(0.58, 0.88, 0.81, 1)
 light_energy = 3.4
 light_size = 0.399
+light_specular = 0.0
 light_bake_mode = 1
 area_size = Vector2(1.2, 0.6)
 
@@ -63,6 +91,7 @@ transform = Transform3D(-4.3711392e-08,  -0.9997196,  0.023678668,  0,  0.023678
 light_color = Color(0.58, 0.88, 0.81, 1)
 light_energy = 3.4
 light_size = 0.399
+light_specular = 0.0
 light_bake_mode = 1
 area_size = Vector2(1.2, 0.6)
 
@@ -71,43 +100,47 @@ transform = Transform3D(-4.3711392e-08,  -0.9997196,  0.023678668,  0,  0.023678
 light_color = Color(0.58, 0.88, 0.81, 1)
 light_energy = 3.4
 light_size = 0.399
+light_specular = 0.0
 light_bake_mode = 1
 area_size = Vector2(1.2, 0.6)
 
 [node name="LuzDelDeposito1" type="SpotLight3D" parent="."]
-position = Vector3(-2.5, 3.57, -12)
+position = Vector3(-2.5, 3.57, -11.825631)
 rotation = Vector3(-1.5707963, 0, 0)
 light_color = Color(1, 0.96, 0.88, 1)
-light_energy = 1.3
+light_energy = 0.72
 light_indirect_energy = 1.3
 light_size = 0.15
 light_bake_mode = 1
 spot_range = 7.0
-spot_angle = 68.0
+spot_angle = 89.0
+editor_description = "Difusión amplia del plafón: el cono anterior dejaba las cajas superiores fuera de la luz directa."
 spot_attenuation = 0.45
 
 [node name="LuzDelDeposito2" type="SpotLight3D" parent="."]
-position = Vector3(1.7, 3.57, -12)
+position = Vector3(1.7, 3.57, -11.825631)
 rotation = Vector3(-1.5707963, 0, 0)
 light_color = Color(1, 0.96, 0.88, 1)
-light_energy = 1.3
+light_energy = 0.72
 light_indirect_energy = 1.3
 light_size = 0.15
 light_bake_mode = 1
 spot_range = 7.0
-spot_angle = 68.0
+spot_angle = 89.0
+editor_description = "Difusión amplia del plafón: el cono anterior dejaba las cajas superiores fuera de la luz directa."
 spot_attenuation = 0.45
 
 [node name="LuzDelDeposito3" type="SpotLight3D" parent="."]
-position = Vector3(5.9, 3.57, -12)
+position = Vector3(5.9, 3.57, -11.825631)
 rotation = Vector3(-1.5707963, 0, 0)
 light_color = Color(1, 0.96, 0.88, 1)
-light_energy = 1.3
+light_energy = 0.72
 light_indirect_energy = 1.3
 light_size = 0.15
 light_bake_mode = 1
 spot_range = 7.0
-spot_angle = 68.0
+spot_angle = 89.0
+editor_description = "Difusión amplia del plafón: el cono anterior dejaba las cajas superiores fuera de la luz directa."
 spot_attenuation = 0.45
 
 
@@ -129,6 +162,7 @@ transform = Transform3D(1,  0,  0,  0,  0.023678668,  0.9997196,  0,  -0.9997196
 light_color = Color(0.58, 0.88, 0.81, 1)
 light_energy = 3.4
 light_size = 0.201
+light_specular = 0.0
 light_bake_mode = 1
 area_size = Vector2(0.9148388, 1)
 

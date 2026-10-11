@@ -34,6 +34,8 @@ Cómo se mide el costo de las luces, en [rendimiento](./rendimiento.md).
   mueble. Ahí salen negras, y apagan lo que toma la luz cerca. Por eso el horneador rellena cada
   sonda negra con el promedio de sus vecinas con luz (`addons/hornear/sondas.gd`). Un horneado
   hecho a mano desde el editor no pasa por ese paso.
+  El umbral sólo detecta radiancia prácticamente nula: una sonda tenue del depósito es válida
+  y se conserva. Reemplazarla por vecinas luminosas arrastraba el verde del salón a las cajas.
 
 ## Cómo se hornea
 
@@ -55,6 +57,8 @@ Los mandos:
 - la energía de cada luz, en su escena;
 - `generate_probes_subdiv`, en el `LightmapGI`;
 - el tamaño del texel, en la importación del modelo;
+- la resolución de paredes y pisos, en la malla `almacen` de `estructura_del_almacen.tscn`.
+  Evita que el filtrado del lightmap dibuje una franja verde al pie de la pared del depósito;
 - la escala del texel de una malla chica (`gi_lightmap_texel_scale`), en
   `estructura_del_almacen.tscn`;
 - el umbral de sonda negra, en `sondas.gd`.
