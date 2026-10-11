@@ -85,6 +85,13 @@ gh issue list --state open --limit 50      # si ya hay uno igual, no se abre otr
 Consultá `nosefia-index` para saber quién usa lo que vas a tocar. Lo que aparece ahí entra en
 «Sólo lectura» o en «No se toca».
 
+**Un recorrido web se cruza con el preset versionado antes de cerrar los límites.**
+Revisar los filtros de exportación y las dependencias importadas que usa ese recorrido,
+también las guardadas en recursos binarios. En #373, el criterio pedía mostrar el celular
+en una partida web, pero el preset excluía texturas del almacén y no entraba en los límites.
+Declarar su corrección acotada y verificar el paquete real. Corregir sólo una copia externa
+para obtener la captura deja el preset publicado con el mismo defecto.
+
 **Si el issue tiene pantalla, buscá su frame en Figma.** El campo «Diseño» del Contexto lleva
 el link al frame, con su `node-id`, y no al archivo entero; el link a la base lo trae el template.
 El `node-id` se copia de la URL del frame, nunca se escribe de memoria. Si la pantalla no tiene
@@ -300,6 +307,12 @@ gh issue edit <N> --body-file <archivo del scratchpad>
 
 `numerar` escribe el número en la rama y revisa sin dejar pasar nada. El cuerpo no se commitea:
 el issue es la fuente.
+
+**Después de numerar o reescribir, verificá cada referencia `#N` del cuerpo publicado**, no sólo
+las dependencias. Leé el título y el comportamiento del issue destino y cruzalos con la frase
+que lo cita; en un lote, reemplazá los títulos provisorios por los números realmente publicados.
+En #379, las dependencias nombraban bien #373, pero el contexto seguía llamando #386 al celular
+y #368 a Examinar: los destinos correctos eran #373 y #376.
 
 ## Varios de una
 
