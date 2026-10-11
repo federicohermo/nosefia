@@ -20,7 +20,7 @@ func disponer(
 			var centro := Vector3(
 				puerta.end.x + 0.65 + ancho / 2.0 + hilera * (ancho + 0.12),
 				suelo,
-				puerta.get_center().z + (lugar - 0.5) * (largo + 0.14)
+				puerta.get_center().z + (lugar - 0.5) * (largo + 0.34)
 			)
 			pallets.append(_crear(plantilla, centro, escala, giros[pallets.size()]))
 	return pallets
