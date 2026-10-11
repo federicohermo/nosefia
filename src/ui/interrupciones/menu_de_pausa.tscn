@@ -54,10 +54,10 @@ mouse_filter = 2
 
 [node name="Titulo" type="Label" parent="Fondo/Panel"]
 layout_mode = 0
-offset_left = 161.0
-offset_top = 54.0
-offset_right = 386.0
-offset_bottom = 100.0
+offset_left = 155.0
+offset_top = 66.0
+offset_right = 380.0
+offset_bottom = 112.0
 
 [node name="Opciones" type="VBoxContainer" parent="Fondo/Panel"]
 layout_mode = 0
