@@ -119,9 +119,9 @@ expand_mode = 1
 stretch_mode = 5
 
 [node name="Bocadillo" type="TextureRect" parent="Marco/Retrato"]
-offset_left = 336.0
+offset_left = 312.0
 offset_top = 242.0
-offset_right = 505.0
+offset_right = 481.0
 offset_bottom = 309.0
 texture = ExtResource("4")
 expand_mode = 1

@@ -14,17 +14,17 @@
 [sub_resource type="Resource" id="Intro01"]
 script = ExtResource("mensaje")
 de_quien = "Enrique Peldaño"
-texto = "¿Cómo andás, pibe? Llegó el momento de lucirte. Tu período de prueba va a ser de solo cinco jornadas. ¿Quién pudiera, no?"
+texto = "¿Cómo andás, pibe? Llegó el momento de lucirte.\nTu período de prueba va a ser de cinco días.\n¿Quién pudiera, no?"
 
 [sub_resource type="Resource" id="Intro02"]
 script = ExtResource("mensaje")
 de_quien = "Enrique Peldaño"
-texto = "De todos modos, acordate de que el primer mes no es pago, porque lo tomamos como capacitación."
+texto = "Acordate que el primer mes no es pago, lo tomamos como capacitación."
 
 [sub_resource type="Resource" id="Intro03"]
 script = ExtResource("mensaje")
 de_quien = "Enrique Peldaño"
-texto = "Bueno, como ya comenté, la jornada arranca a las 8 PM, cuando se va Yasmín, y termina a las 8 AM. Debería sobrarte el tiempo para cumplir con las tareas que te voy a dejar."
+texto = "La jornada arranca a las [b]8PM[/b] y termina a las [b]8AM[/b].\nDebería sobrarte el tiempo para cumplir con las tareas que te voy a dejar."
 
 [sub_resource type="Resource" id="Foto04"]
 script = ExtResource("mensaje")
@@ -34,7 +34,7 @@ foto = ExtResource("foto04")
 [sub_resource type="Resource" id="Intro04"]
 script = ExtResource("mensaje")
 de_quien = "Enrique Peldaño"
-texto = "Cualquier cosa, siempre van a quedar anotadas en el corcho, atrás del mostrador. Te las resumo:"
+texto = "Siempre van a quedar anotadas en el corcho, atrás del mostrador."
 
 [sub_resource type="Resource" id="Intro05"]
 script = ExtResource("mensaje")
@@ -79,7 +79,7 @@ foto = ExtResource("foto09")
 [sub_resource type="Resource" id="Intro09"]
 script = ExtResource("mensaje")
 de_quien = "Enrique Peldaño"
-texto = "Tercero, hacer la [b]reposición de productos[/b]. Revisá bien todas las góndolas y reponé los ítems que falten con los de las cajas del depósito. No quiero ver ni un solo hueco vacío."
+texto = "Tercero, [b]reponer los productos[/b]. Revisá bien todas las góndolas y reponé los ítems que falten con los de las cajas del depósito. No quiero ver ni un solo hueco vacío."
 
 [sub_resource type="Resource" id="Intro10"]
 script = ExtResource("mensaje")

@@ -307,6 +307,7 @@ func _al_abrir_la_jornada(jornada: int) -> void:
 ## que el turno estuvo contando toda la noche, así que el parte lee el estado de verdad y no una
 ## copia que nadie completó.
 func _al_cerrar_la_jornada(jornada: int, cumplidas: int) -> void:
+	(get_node("Interfaz/PersianaDeLaNoche") as PersianaDeLaNoche).bajar()
 	_celular.cerrar_jornada()
 	_pantalla_del_celular.mostrar_recordatorio(false)
 	_audio.callar_la_musica()
@@ -332,6 +333,7 @@ func _al_cerrar_la_jornada(jornada: int, cumplidas: int) -> void:
 ## Qué hace cada opción de la placa. Cuáles se ofrecen lo decidió el parte; acá sólo se busca
 ## la acción de la elegida.
 func _al_despachar_la_placa(opcion: ParteDeCierre.Opcion) -> void:
+	(get_node("Interfaz/PersianaDeLaNoche") as PersianaDeLaNoche).terminar()
 	var acciones: Dictionary[ParteDeCierre.Opcion, Callable] = {
 		ParteDeCierre.Opcion.SEGUIR: _seguir,
 		ParteDeCierre.Opcion.VOLVER_AL_MENU: _ir_al_menu,
