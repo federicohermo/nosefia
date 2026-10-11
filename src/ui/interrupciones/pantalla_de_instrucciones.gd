@@ -13,22 +13,22 @@ const SEPARADOR := preload("res://assets/ui/manada/instrucciones/separador.svg")
 const CAJA := preload("res://assets/ui/manada/instrucciones/caja.png")
 const TICKET := preload("res://assets/ui/manada/instrucciones/ticket.png")
 const ALTURAS_DEL_SEPARADOR: Array[float] = [
-	370, 400, 400, 276, 480, 168, 222, 356, 306, 306, 258, 400
+	370, 306, 258, 276, 480, 168, 222, 356, 306, 306, 258, 400
 ]
 const FOTOS := {
 	2:
 	{
-		"rect": Rect2(0, 440, 324, 233),
+		"rect": Rect2(0, 346, 324, 233),
 		"titulo": "Listas de tareas a realizar",
 		"sector": "Sector de ventas",
-		"leyenda": Vector2(359, 440)
+		"leyenda": Vector2(359, 346)
 	},
 	3:
 	{
-		"rect": Rect2(0, 440, 279, 201),
+		"rect": Rect2(0, 298, 279, 201),
 		"titulo": "Ventanilla de recepción",
 		"sector": "Sector de ventas",
-		"leyenda": Vector2(311, 440)
+		"leyenda": Vector2(311, 298)
 	},
 	4:
 	{
