@@ -47,20 +47,28 @@ content_margin_top = 20.0
 content_margin_right = 20.0
 content_margin_bottom = 20.0
 
-[node name="PantallaDelCelular" type="CanvasLayer" node_paths=PackedStringArray("_velo", "_lienzo", "_telefono", "_titulo", "_volver", "_scroll", "_mensajes", "_foto_ampliada", "_imagen", "_adjunto", "_recordatorio")]
+[node name="PantallaDelCelular" type="CanvasLayer" node_paths=PackedStringArray("_velo", "_lienzo", "_telefono", "_titulo", "_volver", "_scroll", "_mensajes", "_foto_ampliada", "_imagen", "_adjunto", "_recordatorio", "_cabecera", "_avatar_del_chat", "_subtitulo", "_opciones", "_busqueda", "_pie", "_entrada", "_ayuda")]
 layer = 4
 script = ExtResource("1")
 _velo = NodePath("Velo")
 _lienzo = NodePath("Lienzo")
 _telefono = NodePath("Lienzo/Telefono")
-_titulo = NodePath("Lienzo/Telefono/Contenido/Cabecera/Titulo")
-_volver = NodePath("Lienzo/Telefono/Contenido/Cabecera/Volver")
+_titulo = NodePath("Lienzo/Telefono/Contenido/Cabecera/Fila/Contacto/Titulo")
+_volver = NodePath("Lienzo/Telefono/Contenido/Cabecera/Fila/Volver")
 _scroll = NodePath("Lienzo/Telefono/Contenido/Scroll")
 _mensajes = NodePath("Lienzo/Telefono/Contenido/Scroll/Mensajes")
 _foto_ampliada = NodePath("Lienzo/Telefono/FotoAmpliada")
 _imagen = NodePath("Lienzo/Telefono/FotoAmpliada/Contenido/Imagen")
 _adjunto = NodePath("Lienzo/Telefono/FotoAmpliada/Contenido/Adjunto")
-_recordatorio = NodePath("Lienzo/Recordatorio")
+_recordatorio = NodePath("Recordatorio")
+_cabecera = NodePath("Lienzo/Telefono/Contenido/Cabecera")
+_avatar_del_chat = NodePath("Lienzo/Telefono/Contenido/Cabecera/Fila/Avatar")
+_subtitulo = NodePath("Lienzo/Telefono/Contenido/Cabecera/Fila/Contacto/Subtitulo")
+_opciones = NodePath("Lienzo/Telefono/Contenido/Cabecera/Fila/Opciones")
+_busqueda = NodePath("Lienzo/Telefono/Contenido/Buscar")
+_pie = NodePath("Lienzo/Telefono/Contenido/Pie")
+_entrada = NodePath("Lienzo/Telefono/Contenido/Pie/Entrada")
+_ayuda = NodePath("Lienzo/Telefono/Contenido/Pie/Ayuda")
 
 [node name="Velo" type="Control" parent="."]
 mouse_filter = 2
@@ -105,28 +113,61 @@ theme_override_styles/panel = SubResource("telefono")
 
 [node name="Contenido" type="VBoxContainer" parent="Lienzo/Telefono"]
 layout_mode = 2
-theme_override_constants/separation = 30
+theme_override_constants/separation = 10
 
-[node name="Cabecera" type="HBoxContainer" parent="Lienzo/Telefono/Contenido"]
+[node name="Cabecera" type="PanelContainer" parent="Lienzo/Telefono/Contenido"]
 layout_mode = 2
-custom_minimum_size = Vector2(0, 70)
-theme_override_constants/separation = 14
+custom_minimum_size = Vector2(0, 94)
 
-[node name="Volver" type="Button" parent="Lienzo/Telefono/Contenido/Cabecera"]
+[node name="Fila" type="HBoxContainer" parent="Lienzo/Telefono/Contenido/Cabecera"]
 layout_mode = 2
-custom_minimum_size = Vector2(36, 0)
+theme_override_constants/separation = 16
+
+[node name="Volver" type="Button" parent="Lienzo/Telefono/Contenido/Cabecera/Fila"]
+layout_mode = 2
+custom_minimum_size = Vector2(24, 0)
 flat = true
-theme_override_colors/font_color = Color(0.1, 0.1, 0.1, 1)
-theme_override_colors/font_hover_color = Color(0.1, 0.1, 0.1, 1)
-theme_override_colors/font_pressed_color = Color(0.1, 0.1, 0.1, 1)
+theme_override_colors/font_color = Color(0.49, 0.51, 0.50, 1)
 theme_override_font_sizes/font_size = 44
 
-[node name="Titulo" type="Label" parent="Lienzo/Telefono/Contenido/Cabecera"]
+[node name="Avatar" type="TextureRect" parent="Lienzo/Telefono/Contenido/Cabecera/Fila"]
+layout_mode = 2
+custom_minimum_size = Vector2(54, 54)
+size_flags_vertical = 4
+expand_mode = 1
+stretch_mode = 5
+mouse_filter = 2
+
+[node name="Contacto" type="VBoxContainer" parent="Lienzo/Telefono/Contenido/Cabecera/Fila"]
 layout_mode = 2
 size_flags_horizontal = 3
+size_flags_vertical = 4
+theme_override_constants/separation = 2
+
+[node name="Titulo" type="Label" parent="Lienzo/Telefono/Contenido/Cabecera/Fila/Contacto"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.1, 0.1, 0.1, 1)
+theme_override_font_sizes/font_size = 36
+
+[node name="Subtitulo" type="Label" parent="Lienzo/Telefono/Contenido/Cabecera/Fila/Contacto"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.49, 0.51, 0.50, 1)
+theme_override_font_sizes/font_size = 22
+
+[node name="Opciones" type="Label" parent="Lienzo/Telefono/Contenido/Cabecera/Fila"]
+layout_mode = 2
+size_flags_vertical = 4
 theme_override_colors/font_color = Color(0.1, 0.1, 0.1, 1)
 theme_override_font_sizes/font_size = 30
-autowrap_mode = 3
+
+[node name="Buscar" type="LineEdit" parent="Lienzo/Telefono/Contenido"]
+layout_mode = 2
+custom_minimum_size = Vector2(453, 51)
+size_flags_horizontal = 4
+theme_override_colors/font_color = Color(0.47, 0.47, 0.47, 1)
+theme_override_colors/font_placeholder_color = Color(0.47, 0.47, 0.47, 1)
+theme_override_font_sizes/font_size = 24
+expand_to_text_length = false
 
 [node name="Scroll" type="ScrollContainer" parent="Lienzo/Telefono/Contenido"]
 layout_mode = 2
@@ -137,6 +178,27 @@ horizontal_scroll_mode = 0
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_constants/separation = 18
+
+[node name="Pie" type="VBoxContainer" parent="Lienzo/Telefono/Contenido"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="Entrada" type="LineEdit" parent="Lienzo/Telefono/Contenido/Pie"]
+layout_mode = 2
+custom_minimum_size = Vector2(0, 62)
+theme_override_colors/font_uneditable_color = Color(0.49, 0.51, 0.50, 1)
+theme_override_colors/font_placeholder_color = Color(0.49, 0.51, 0.50, 1)
+theme_override_font_sizes/font_size = 27
+editable = false
+context_menu_enabled = false
+mouse_filter = 2
+focus_mode = 0
+
+[node name="Ayuda" type="Label" parent="Lienzo/Telefono/Contenido/Pie"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.1, 0.1, 0.1, 1)
+theme_override_font_sizes/font_size = 20
+horizontal_alignment = 1
 
 [node name="FotoAmpliada" type="PanelContainer" parent="Lienzo/Telefono"]
 layout_mode = 2
@@ -163,23 +225,24 @@ fit_content = true
 scroll_active = false
 autowrap_mode = 3
 
-[node name="Recordatorio" type="HBoxContainer" parent="Lienzo"]
-offset_left = 28.0
-offset_top = 996.0
-offset_right = 140.0
-offset_bottom = 1052.0
+[node name="Recordatorio" type="HBoxContainer" parent="."]
+theme = ExtResource("2")
+offset_left = 16.0
+offset_top = 994.0
+offset_right = 116.0
+offset_bottom = 1064.0
 mouse_filter = 2
 theme_override_constants/separation = 14
 
-[node name="Icono" type="TextureRect" parent="Lienzo/Recordatorio"]
-custom_minimum_size = Vector2(35, 56)
+[node name="Icono" type="TextureRect" parent="Recordatorio"]
+custom_minimum_size = Vector2(42, 70)
 layout_mode = 2
 texture = ExtResource("4")
 expand_mode = 1
 stretch_mode = 5
 mouse_filter = 2
 
-[node name="Tecla" type="Label" parent="Lienzo/Recordatorio"]
+[node name="Tecla" type="Label" parent="Recordatorio"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 36
 mouse_filter = 2
