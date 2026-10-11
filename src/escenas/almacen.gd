@@ -38,6 +38,8 @@ const ReglasDelCierre := preload("res://src/dominio/almacen/reglas_del_cierre.gd
 ## `@export` de abajo no lo puede nombrar sin traerlo por `preload`.
 const Jugador := preload("res://src/escenas/jugador.gd")
 
+const GUION_DEL_JEFE := preload("res://src/dominio/investigacion/conversacion_con_el_jefe.tres")
+
 const ESCENA_DEL_MENU := "res://src/escenas/menu_de_inicio.tscn"
 
 @export var _hud: Hud
@@ -92,6 +94,7 @@ var _acomodador: AcomodadorDelDeposito
 ## cambiar de escena: se llevaría puesto al runner.
 var _ir_al_menu: Callable = volver_al_menu
 
+@onready var _instrucciones: PantallaDeInstrucciones = $Interfaz/PantallaDeInstrucciones
 @onready var _celular: CelularDelEmpleado = $Interfaz/CelularDelEmpleado
 @onready var _pantalla_del_celular: PantallaDelCelular = $Interfaz/PantallaDelCelular
 
@@ -99,6 +102,7 @@ var _ir_al_menu: Callable = volver_al_menu
 ## Los carteles se pintan acá antes de conectar nada, y no con un `text` escrito en `hud.tscn`:
 ## una copia del texto en la escena duplicaría el número de obligatorias declaradas.
 func _ready() -> void:
+	_instrucciones.comenzar_pedido.connect(anunciar_la_noche)
 	_cablear_el_celular()
 	var avisos: PilaDeNotificaciones = get_node("Interfaz/PilaDeNotificaciones")
 	_atenciones.comprador_llegado.connect(avisos.avisar_llegada)
@@ -335,7 +339,17 @@ func _seguir() -> void:
 	anunciar_la_noche()
 
 
+## La introducción conserva el presupuesto completo; comenzar usa la misma entrada que seguir.
+func empezar_partida_nueva() -> void:
+	_reloj.retener()
+	_jugador.suspender()
+	_pantalla_del_celular.mostrar_recordatorio(false)
+	(get_node("Interfaz/PersianaDeLaNoche") as PersianaDeLaNoche).mostrar_baja()
+	_instrucciones.mostrar(GUION_DEL_JEFE.mensajes)
+
+
 func anunciar_la_noche() -> void:
+	_pantalla_del_celular.mostrar_recordatorio(true)
 	var persiana: PersianaDeLaNoche = get_node("Interfaz/PersianaDeLaNoche")
 	_reloj.retener()
 	_jugador.suspender()

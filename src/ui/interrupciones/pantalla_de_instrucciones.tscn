@@ -1,0 +1,172 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://src/ui/interrupciones/pantalla_de_instrucciones.gd" id="1"]
+[ext_resource type="Theme" path="res://assets/ui/manada/tema.tres" id="2"]
+[ext_resource type="Texture2D" path="res://assets/ui/manada/enrique.png" id="3"]
+
+[sub_resource type="StyleBoxFlat" id="retrato"]
+bg_color = Color(0.851, 0.851, 0.851, 0.7)
+border_width_left = 6
+border_width_top = 6
+border_width_right = 6
+border_width_bottom = 6
+border_color = Color(1, 1, 1, 1)
+
+[sub_resource type="StyleBoxFlat" id="mensajes"]
+bg_color = Color(0.122, 0.118, 0.118, 1)
+border_width_left = 12
+border_width_top = 12
+border_width_right = 12
+border_width_bottom = 12
+border_color = Color(0.784, 0.784, 0.784, 1)
+corner_radius_top_left = 32
+corner_radius_top_right = 32
+corner_radius_bottom_left = 32
+corner_radius_bottom_right = 32
+content_margin_left = 86.0
+content_margin_top = 70.0
+content_margin_right = 63.0
+content_margin_bottom = 68.0
+
+[sub_resource type="StyleBoxFlat" id="siguiente"]
+bg_color = Color(0.906, 0.933, 0.682, 1)
+corner_radius_top_left = 11
+corner_radius_top_right = 11
+corner_radius_bottom_left = 11
+corner_radius_bottom_right = 11
+content_margin_left = 26.0
+content_margin_top = 10.0
+content_margin_right = 26.0
+content_margin_bottom = 10.0
+
+[sub_resource type="StyleBoxFlat" id="volver"]
+bg_color = Color(0.522, 0.533, 0.420, 1)
+corner_radius_top_left = 11
+corner_radius_top_right = 11
+corner_radius_bottom_left = 11
+corner_radius_bottom_right = 11
+content_margin_left = 26.0
+content_margin_top = 10.0
+content_margin_right = 26.0
+content_margin_bottom = 10.0
+
+[node name="PantallaDeInstrucciones" type="CanvasLayer" node_paths=PackedStringArray("_marco", "_contenido", "_botones", "_volver", "_siguiente", "_scroll")]
+layer = 4
+script = ExtResource("1")
+_marco = NodePath("Marco")
+_contenido = NodePath("Marco/Mensajes/Columna/Scroll/Contenido")
+_botones = NodePath("Marco/Mensajes/Columna/Scroll/Contenido/Botones")
+_volver = NodePath("Marco/Mensajes/Columna/Scroll/Contenido/Botones/Volver")
+_siguiente = NodePath("Marco/Mensajes/Columna/Scroll/Contenido/Botones/Siguiente")
+_scroll = NodePath("Marco/Mensajes/Columna/Scroll")
+
+[node name="Marco" type="Control" parent="."]
+offset_right = 1920.0
+offset_bottom = 1080.0
+theme = ExtResource("2")
+mouse_filter = 2
+
+[node name="Retrato" type="Panel" parent="Marco"]
+offset_left = 126.0
+offset_top = 79.0
+offset_right = 639.0
+offset_bottom = 1008.0
+theme_override_styles/panel = SubResource("retrato")
+
+[node name="Titulo" type="Label" parent="Marco/Retrato"]
+offset_left = 21.0
+offset_top = 10.0
+offset_right = 500.0
+offset_bottom = 78.0
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 44
+text = "// Instrucciones"
+
+[node name="Linea" type="ColorRect" parent="Marco/Retrato"]
+offset_top = 78.0
+offset_right = 513.0
+offset_bottom = 83.0
+color = Color(1, 1, 1, 1)
+
+[node name="Enrique" type="TextureRect" parent="Marco/Retrato"]
+offset_left = 21.0
+offset_top = 144.0
+offset_right = 476.0
+offset_bottom = 751.0
+texture = ExtResource("3")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Nombre" type="Label" parent="Marco/Retrato"]
+offset_left = 29.0
+offset_top = 775.0
+offset_right = 500.0
+offset_bottom = 845.0
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 58
+text = "ENRIQUE PELDAÑO"
+
+[node name="Rol" type="Label" parent="Marco/Retrato"]
+offset_top = 853.0
+offset_right = 513.0
+offset_bottom = 903.0
+theme_override_colors/font_color = Color(0.824, 0.824, 0.824, 1)
+theme_override_font_sizes/font_size = 40
+text = "JEFE"
+horizontal_alignment = 1
+
+[node name="Mensajes" type="PanelContainer" parent="Marco"]
+offset_left = 657.0
+offset_top = 53.0
+offset_right = 1814.0
+offset_bottom = 1013.0
+theme_override_styles/panel = SubResource("mensajes")
+
+[node name="Columna" type="VBoxContainer" parent="Marco/Mensajes"]
+layout_mode = 2
+theme_override_constants/separation = 24
+
+[node name="Scroll" type="ScrollContainer" parent="Marco/Mensajes/Columna"]
+layout_mode = 2
+size_flags_vertical = 3
+horizontal_scroll_mode = 0
+
+[node name="Contenido" type="VBoxContainer" parent="Marco/Mensajes/Columna/Scroll"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 38
+
+[node name="Botones" type="HBoxContainer" parent="Marco/Mensajes/Columna/Scroll/Contenido"]
+layout_mode = 2
+theme_override_constants/separation = 16
+alignment = 2
+
+[node name="Volver" type="Button" parent="Marco/Mensajes/Columna/Scroll/Contenido/Botones"]
+custom_minimum_size = Vector2(188, 45)
+layout_mode = 2
+theme_override_colors/font_color = Color(0.1, 0.1, 0.1, 1)
+theme_override_colors/font_hover_color = Color(0.1, 0.1, 0.1, 1)
+theme_override_colors/font_pressed_color = Color(0.1, 0.1, 0.1, 1)
+theme_override_font_sizes/font_size = 30
+theme_override_styles/normal = SubResource("volver")
+theme_override_styles/hover = SubResource("siguiente")
+theme_override_styles/pressed = SubResource("volver")
+
+[node name="Siguiente" type="Button" parent="Marco/Mensajes/Columna/Scroll/Contenido/Botones"]
+custom_minimum_size = Vector2(188, 45)
+layout_mode = 2
+theme_override_colors/font_color = Color(0.1, 0.1, 0.1, 1)
+theme_override_colors/font_hover_color = Color(0.1, 0.1, 0.1, 1)
+theme_override_colors/font_pressed_color = Color(0.1, 0.1, 0.1, 1)
+theme_override_font_sizes/font_size = 30
+theme_override_styles/normal = SubResource("siguiente")
+theme_override_styles/hover = SubResource("volver")
+theme_override_styles/pressed = SubResource("siguiente")
+
+[node name="Pie" type="Label" parent="Marco/Mensajes/Columna"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.906, 0.933, 0.682, 1)
+theme_override_font_sizes/font_size = 24
+text = "* Los mensajes quedarán guardados automaticamente en el celular.
+podes revisarlos en cualquier momento"
+autowrap_mode = 3

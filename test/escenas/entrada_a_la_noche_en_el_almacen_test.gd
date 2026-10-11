@@ -103,7 +103,17 @@ func test_el_menu_anuncia_la_jornada_nueva_y_la_guardada() -> void:  # AC-SHF-02
 		_abrir(jornada)
 		var menu := MenuSinCarga.new()
 		get_tree().root.add_child(menu)
+		menu.set("_nuevo_juego", jornada == 1)
 		menu.call("_entrar", _almacen)
+		if jornada == 1:
+			var instrucciones: PantallaDeInstrucciones = _almacen.get_node(
+				"Interfaz/PantallaDeInstrucciones"
+			)
+			assert_bool(instrucciones.visible).is_true()
+			var siguiente: Button = instrucciones.get("_siguiente")
+			for _paso in 14:
+				siguiente.pressed.emit()
+			assert_bool(instrucciones.visible).is_false()
 		assert_object(get_tree().current_scene).is_same(_almacen)
 		assert_bool(_persiana().en_pantalla()).is_true()
 		assert_str((_persiana().get_node("Marco/Placa") as Label).text).is_equal(
@@ -115,9 +125,12 @@ func test_el_menu_anuncia_la_jornada_nueva_y_la_guardada() -> void:  # AC-SHF-02
 
 func test_esc_congela_entrada_y_turno_y_reanudar_continua() -> void:  # AC-SHF-026
 	_abrir()
+	var ahora: Array[int] = [0]
+	_persiana().set("_ahora", func() -> int: return ahora[0])
 	_almacen.call("anunciar_la_noche")
 	# Un avance conocido deja la placa en medio del fade, sin depender del ritmo headless.
-	_persiana().call("_process", 1.25)
+	ahora[0] += 1250000
+	_persiana().call("_process", 0.0)
 	var placa: Label = _persiana().get_node("Marco/Placa")
 	var persiana: TextureRect = _persiana().get_node("Persiana")
 	var opacidad := placa.modulate.a
@@ -137,7 +150,8 @@ func test_esc_congela_entrada_y_turno_y_reanudar_continua() -> void:  # AC-SHF-0
 	assert_float(_restante()).is_equal(restante)
 	pausa._input(esc)
 	assert_bool(get_tree().paused).is_false()
-	_persiana().call("_process", 0.25)
+	ahora[0] += 250000
+	_persiana().call("_process", 0.0)
 	assert_float(placa.modulate.a).is_zero()
 	assert_bool(_persiana().en_pantalla()).is_true()
 	assert_float(_restante()).is_equal(restante)
