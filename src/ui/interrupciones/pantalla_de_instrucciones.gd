@@ -13,17 +13,17 @@ const SEPARADOR := preload("res://assets/ui/manada/instrucciones/separador.svg")
 const CAJA := preload("res://assets/ui/manada/instrucciones/caja.png")
 const TICKET := preload("res://assets/ui/manada/instrucciones/ticket.png")
 const ALTURAS_DEL_SEPARADOR: Array[float] = [
-	271, 328, 306, 306, 222, 168, 222, 222, 222, 258, 356, 188
+	370, 400, 306, 222, 222, 306, 168, 222, 306, 222, 306, 400, 188
 ]
 const FOTOS := {
 	2:
 	{
-		"rect": Rect2(0, 374, 324, 233),
+		"rect": Rect2(0, 440, 324, 233),
 		"titulo": "Listas de tareas a realizar",
 		"sector": "Sector de ventas",
-		"leyenda": Vector2(359, 367)
+		"leyenda": Vector2(359, 440)
 	},
-	4:
+	3:
 	{
 		"rect": Rect2(0, 357, 279, 201),
 		"titulo": "Ventanilla de recepción",
@@ -37,36 +37,35 @@ const FOTOS := {
 		"sector": "Sector de ventas",
 		"leyenda": Vector2(459, 276)
 	},
-	6:
+	7:
 	{
 		"rect": Rect2(0, 283, 373, 300),
 		"titulo": "Computadora",
 		"sector": "Sector de ventas",
 		"leyenda": Vector2(414, 283)
 	},
-	7:
+	8:
 	{
 		"rect": Rect2(0, 277, 373, 365),
 		"titulo": "Estantería con cajas contenedoras",
 		"sector": "Sector de depósito",
 		"leyenda": Vector2(446, 277)
 	},
-	9:
+	10:
 	{
 		"rect": Rect2(0, 300, 548, 315),
 		"titulo": "1 Mopa\n2 Balde\n3 Productos de limpieza",
 		"sector": "Sector de baño",
 		"leyenda": Vector2(603, 299)
 	},
-	11:
+	12:
 	{
-		"rect": Rect2(0, 397, 480, 270),
+		"rect": Rect2(0, 440, 480, 270),
 		"titulo": "Cajas del proveedor",
 		"sector": "Sector de depósito",
-		"leyenda": Vector2(535, 397)
+		"leyenda": Vector2(535, 440)
 	},
 }
-const FUENTE := preload("res://assets/ui/manada/unscii-16.ttf")
 
 @export var _marco: Control
 @export var _contenido: Control
@@ -82,15 +81,11 @@ var _instrucciones: InstruccionesDelJefe
 var _ahora: Callable = Time.get_ticks_usec
 var _ultimo: int = 0
 var _avance: float = 0.0
-var _negrita: FontVariation
 
 
 func _ready() -> void:
 	visible = false
 	set_process(false)
-	_negrita = FontVariation.new()
-	_negrita.base_font = FUENTE
-	_negrita.variation_embolden = 0.75
 	_volver.text = TEXTO_DE_VOLVER
 	_volver.pressed.connect(_al_volver)
 	_siguiente.pressed.connect(_al_avanzar)
@@ -150,10 +145,12 @@ func _pintar() -> void:
 		var altura := 0.0
 		if indice == 1:
 			altura = 150.0 if numero == 1 else 201.0
-		_texto(_resaltar(paso.textos[indice].texto, numero), Vector2(0, altura), 1007, 40)
+		_texto(_resaltar(paso.textos[indice].texto), Vector2(0, altura), 1007, 40)
 	_imagen(SEPARADOR, Rect2(0, ALTURAS_DEL_SEPARADOR[numero - 1], 510, 2))
 	if paso.foto != null:
 		_foto(paso.foto.foto, FOTOS[numero])
+	if numero == 4:
+		_imagen(TICKET, Rect2(0, 276, 109, 316))
 	if numero == 5:
 		_imagen(CAJA, Rect2(742, 276, 136, 316))
 		_imagen(TICKET, Rect2(898, 341, 109, 186))
@@ -164,12 +161,8 @@ func _pintar() -> void:
 	_contador.text = "%d/%d" % [numero, _pasos.size()]
 
 
-func _resaltar(texto: String, numero: int) -> String:
-	var marcado := texto.replace("[b]", "[color=#e4f850][b]").replace("[/b]", "[/b][/color]")
-	if numero == 5:
-		for frase: String in ["generar un ticket", "“imprimir”", "caja registradora"]:
-			marcado = marcado.replace(frase, "[color=#e4f850]" + frase + "[/color]")
-	return marcado
+func _resaltar(texto: String) -> String:
+	return texto.replace("[b]", "[color=#e4f850]").replace("[/b]", "[/color]")
 
 
 func _texto(
@@ -188,7 +181,6 @@ func _texto(
 	texto.add_theme_font_size_override("normal_font_size", puntos)
 	texto.add_theme_font_size_override("bold_font_size", puntos)
 	texto.add_theme_constant_override("line_separation", 4)
-	texto.add_theme_font_override("bold_font", _negrita)
 	_contenido.add_child(texto)
 	return texto
 

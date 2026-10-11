@@ -32,13 +32,6 @@ static func pasos_de(mensajes: Array[Mensaje]) -> Array[Paso]:
 			paso.textos.append(mensaje)
 		pasos.append(paso)
 		indice += 1
-	if pasos.size() >= 4:
-		# Figma reúne los cuatro primeros párrafos en dos pantallas.
-		pasos[0].textos.append_array(pasos[1].textos)
-		pasos[2].textos.append_array(pasos[3].textos)
-		pasos[2].foto = pasos[3].foto
-		pasos.remove_at(3)
-		pasos.remove_at(1)
 	return pasos
 
 

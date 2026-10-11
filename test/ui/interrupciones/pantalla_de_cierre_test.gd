@@ -170,6 +170,32 @@ func test_la_placa_escala_con_el_lienzo_de_manada() -> void:
 	assert_vector(marco.size).is_equal(LienzoDeManada.TAMANO_DEL_DISENO)
 
 
+func test_el_cierre_con_cajas_pendientes_conserva_textos_y_botones_en_pantalla() -> void:
+	var pantalla := await _pantalla()
+	pantalla.mostrar(
+		ParteDeCierre.new(
+			1, Apertura.obligatorias(1), 2, Partida.Final.EN_CURSO, ParteDeCierre.MOTIVOS.keys()
+		)
+	)
+	for _cuadro in 4:
+		await get_tree().process_frame
+	var marco: Control = pantalla.get_node("Fondo/Panel")
+	assert_float(marco.size.x).is_less_equal(LienzoDeManada.TAMANO_DEL_DISENO.x)
+	var viewport := pantalla.get_viewport().get_visible_rect().grow(1.0)
+	for control: Control in marco.find_children("*", "Control", true, false):
+		if control.is_visible_in_tree():
+			var rectangulo := (
+				control.get_global_transform_with_canvas() * Rect2(Vector2.ZERO, control.size)
+			)
+			(
+				assert_bool(viewport.encloses(rectangulo))
+				. override_failure_message(
+					"%s quedó fuera de la pantalla: %s" % [control.name, rectangulo]
+				)
+				. is_true()
+			)
+
+
 func test_la_pantalla_no_decide_como_cerro_la_noche() -> void:
 	# El riesgo medido de este spec no es «hacer una pantalla»: es que la única regla nueva
 	# termine acá adentro, donde nace sin test y ningún gate lo dice.
