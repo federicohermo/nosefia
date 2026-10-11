@@ -84,14 +84,12 @@ func test_leer_dos_minutos_no_cobra_y_comenzar_anuncia_una_sola_noche() -> void:
 	_preparar_nueva()
 	assert_bool(_instrucciones().visible).is_true()
 	assert_bool(_persiana().visible).is_true()
-	assert_bool((_instrucciones().get("_volver") as Button).visible).is_false()
+	assert_bool((_instrucciones().get("_volver") as Button).disabled).is_true()
 	assert_bool((_persiana().get("_placa") as Label).visible).is_false()
 	assert_bool(_jugador().suspendido()).is_true()
-	var lista: VBoxContainer = _instrucciones().get("_contenido")
-	assert_int(lista.get_child_count()).is_equal(2)
-	assert_str((lista.get_child(0).get_child(0) as RichTextLabel).text).is_equal(
-		GUION.mensajes[0].texto
-	)
+	var lista: Control = _instrucciones().get("_contenido")
+	assert_int(lista.get_child_count()).is_equal(3)
+	assert_str((lista.get_child(0) as RichTextLabel).text).is_equal(GUION.mensajes[0].texto)
 	var restante := _restante()
 	_reloj().set("_ultimo_cuadro_usec", Time.get_ticks_usec() - 120000000)
 	_reloj().call("_process", 0.0)
@@ -99,9 +97,9 @@ func test_leer_dos_minutos_no_cobra_y_comenzar_anuncia_una_sola_noche() -> void:
 		await get_tree().process_frame
 	assert_float(_restante()).is_equal(restante)
 	assert_bool(Guardado.new().hay_guardado()).is_false()
-	for _paso in 13:
+	for _paso in 11:
 		_siguiente().pressed.emit()
-	assert_str(_siguiente().text).is_equal("Comenzar")
+	assert_str(_siguiente().text).is_equal("OK")
 	_siguiente().pressed.emit()
 	var entrada: EntradaALaNoche = _persiana().get("_entrada")
 	assert_object(entrada).is_not_null()
@@ -192,7 +190,7 @@ func test_esc_conserva_cuatro_pasos_animacion_y_presupuesto() -> void:  # AC-EMP
 	for _cuadro in 4:
 		await get_tree().process_frame
 	(
-		assert_int((_instrucciones().get("_instrucciones") as InstruccionesDelJefe).a_la_vista())
+		assert_int((_instrucciones().get("_instrucciones") as InstruccionesDelJefe).paso_actual())
 		. is_equal(4)
 	)
 	assert_vector(marco.position).is_equal(posicion)
@@ -206,7 +204,7 @@ func test_esc_conserva_cuatro_pasos_animacion_y_presupuesto() -> void:  # AC-EMP
 	assert_bool(negro.visible).is_false()
 	assert_bool(_instrucciones().is_processing()).is_false()
 	(
-		assert_int((_instrucciones().get("_instrucciones") as InstruccionesDelJefe).a_la_vista())
+		assert_int((_instrucciones().get("_instrucciones") as InstruccionesDelJefe).paso_actual())
 		. is_equal(4)
 	)
 	assert_float(_restante()).is_equal(restante)
