@@ -1,6 +1,6 @@
 extends GdUnitTestSuite
 
-const GUION := preload("res://src/dominio/investigacion/conversacion_con_el_jefe.tres")
+const GUION := "res://src/dominio/investigacion/conversacion_con_el_jefe.tres"
 const TEXTOS: Array[String] = [
 	(
 		"¿Cómo andás, pibe? Llegó el momento de lucirte. Tu período de prueba va "
@@ -116,7 +116,7 @@ func test_un_paso_termina_al_primer_avance() -> void:  # AC-EMP-045
 
 
 func test_guion_literal_y_siete_parejas_sin_mutar() -> void:  # AC-EMP-046, AC-EMP-047
-	var guion: Conversacion = GUION
+	var guion: Conversacion = load(GUION)
 	var originales: Array[Mensaje] = guion.mensajes.duplicate()
 	var pasos := InstruccionesDelJefe.pasos_de(guion.mensajes)
 	assert_int(guion.mensajes.size()).is_equal(21)
