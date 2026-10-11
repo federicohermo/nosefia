@@ -74,77 +74,79 @@ const TEXTOS: Array[String] = [
 ]
 
 
-func test_uno_catorce_volver_y_comenzar_son_pasos() -> void:  # AC-EMP-045
-	var instrucciones := InstruccionesDelJefe.new(14)
-	assert_int(instrucciones.a_la_vista()).is_equal(1)
+func test_uno_doce_volver_y_ok_son_pantallas() -> void:  # AC-EMP-045
+	var instrucciones := InstruccionesDelJefe.new(12)
+	assert_int(instrucciones.paso_actual()).is_equal(1)
 	assert_bool(instrucciones.se_puede_volver()).is_false()
 	assert_bool(instrucciones.volver()).is_false()
-	assert_bool(instrucciones.en_el_ultimo()).is_false()
-	assert_bool(instrucciones.terminadas()).is_false()
-	for paso in 13:
+	for paso in 11:
 		instrucciones.avanzar()
-	assert_int(instrucciones.a_la_vista()).is_equal(14)
+	assert_int(instrucciones.paso_actual()).is_equal(12)
 	assert_bool(instrucciones.en_el_ultimo()).is_true()
 	assert_bool(instrucciones.terminadas()).is_false()
 	assert_bool(instrucciones.volver()).is_true()
-	assert_int(instrucciones.a_la_vista()).is_equal(13)
+	assert_int(instrucciones.paso_actual()).is_equal(11)
 	assert_bool(instrucciones.en_el_ultimo()).is_false()
 	instrucciones.avanzar()
 	instrucciones.avanzar()
 	assert_bool(instrucciones.terminadas()).is_true()
 	instrucciones.avanzar()
-	assert_int(instrucciones.a_la_vista()).is_equal(14)
-	assert_bool(instrucciones.terminadas()).is_true()
-	var otras := InstruccionesDelJefe.new(14)
+	assert_int(instrucciones.paso_actual()).is_equal(12)
+	assert_bool(instrucciones.volver()).is_false()
+	var otras := InstruccionesDelJefe.new(12)
 	for paso in 3:
 		otras.avanzar()
 	for paso in 3:
 		assert_bool(otras.volver()).is_true()
-	assert_int(otras.a_la_vista()).is_equal(1)
+	assert_int(otras.paso_actual()).is_equal(1)
 	assert_bool(otras.volver()).is_false()
 
 
 func test_un_paso_termina_al_primer_avance() -> void:  # AC-EMP-045
 	var instrucciones := InstruccionesDelJefe.new(1)
-	assert_int(instrucciones.a_la_vista()).is_equal(1)
+	assert_int(instrucciones.paso_actual()).is_equal(1)
 	assert_bool(instrucciones.en_el_ultimo()).is_true()
 	assert_bool(instrucciones.volver()).is_false()
 	instrucciones.avanzar()
 	assert_bool(instrucciones.terminadas()).is_true()
 	instrucciones.avanzar()
-	assert_int(instrucciones.a_la_vista()).is_equal(1)
+	assert_int(instrucciones.paso_actual()).is_equal(1)
 
 
-func test_guion_literal_y_siete_parejas_sin_mutar() -> void:  # AC-EMP-046, AC-EMP-047
+func test_guion_y_siete_fotos_en_doce_pantallas() -> void:  # AC-EMP-046, AC-EMP-047
 	var guion: Conversacion = load(GUION)
 	var originales: Array[Mensaje] = guion.mensajes.duplicate()
 	var pasos := InstruccionesDelJefe.pasos_de(guion.mensajes)
 	assert_int(guion.mensajes.size()).is_equal(21)
-	assert_int(pasos.size()).is_equal(14)
+	assert_int(pasos.size()).is_equal(12)
 	assert_str(guion.nombre).is_equal("Enrique Peldaño")
 	assert_object(guion.imagen).is_not_null()
 	var fotos: Array[int] = [4, 6, 7, 8, 9, 11, 13]
 	var bandeja := Bandeja.new([guion])
+	var texto_actual := 0
 	var entrada := 0
 	for indice in pasos.size():
 		var paso: InstruccionesDelJefe.Paso = pasos[indice]
-		assert_object(paso.texto).is_not_null()
-		if paso.texto == null:
-			continue
-		assert_str(paso.texto.texto).is_equal(TEXTOS[indice])
-		assert_int(paso.texto.jornada).is_equal(1)
-		if fotos.has(indice + 1):
-			assert_object(paso.foto).is_same(guion.mensajes[entrada])
-			assert_object(paso.foto.foto).is_not_null()
-			assert_str(paso.foto.texto).is_empty()
-			assert_object(bandeja.adjunto_de(guion.interlocutor, entrada)).is_same(paso.texto)
-			assert_str(paso.foto.foto.resource_path).is_equal(
-				"res://assets/ui/manada/fotos/intro-%02d.png" % (indice + 1)
-			)
+		assert_int(paso.textos.size()).is_equal(2 if indice < 2 else 1)
+		for texto in paso.textos:
+			if fotos.has(texto_actual + 1):
+				assert_object(paso.foto).is_same(guion.mensajes[entrada])
+				assert_object(paso.foto.foto).is_not_null()
+				assert_str(paso.foto.texto).is_empty()
+				assert_object(bandeja.adjunto_de(guion.interlocutor, entrada)).is_same(texto)
+				assert_str(paso.foto.foto.resource_path).is_equal(
+					"res://assets/ui/manada/fotos/intro-%02d.png" % (texto_actual + 1)
+				)
+				entrada += 1
+			assert_object(texto).is_same(guion.mensajes[entrada])
+			assert_str(texto.texto).is_equal(TEXTOS[texto_actual])
+			assert_int(texto.jornada).is_equal(1)
 			entrada += 1
-		else:
-			assert_object(paso.foto).is_null()
-		assert_object(paso.texto).is_same(guion.mensajes[entrada])
-		entrada += 1
+			texto_actual += 1
+	assert_int(texto_actual).is_equal(14)
 	assert_int(entrada).is_equal(21)
 	assert_array(guion.mensajes).is_equal(originales)
+
+
+func test_sin_mensajes_no_inventa_pantallas() -> void:  # AC-EMP-046
+	assert_array(InstruccionesDelJefe.pasos_de([])).is_empty()

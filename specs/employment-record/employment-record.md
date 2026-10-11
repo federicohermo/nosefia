@@ -281,11 +281,11 @@ mueven al cambiar de pantalla y no existe desplazamiento del contenido.
 DADO los catorce textos de la ficha, con sólo las cuatro correcciones autorizadas y sus negritas,
 y las siete fotos CUANDO se agrupan las 21 entradas ENTONCES hay doce pantallas: [1,2], [3,4],
 [5], [6], [7], [8], [9], [10], [11], [12], [13], [14]. Las pantallas 2, 4, 5, 6, 7, 9 y 11 muestran
-la foto de su Intro despu?s de sus textos. CUANDO se avanza y vuelve por todas ENTONCES sólo se
+la foto de su Intro después de sus textos. CUANDO se avanza y vuelve por todas ENTONCES sólo se
 muestra el contenido de la actual, el contador coincide y la secuencia original de 21 entradas
 sigue intacta. El retrato y bocadillo se muestran en las pantallas 1 a 4 y desaparecen desde 5;
 la pantalla 5 incluye interfaz de caja y ticket y la última incluye «SI A JUGAR!!».
-Los tres mensajes de prueba previos no aparecen entre los textos de la conversaci?n.
+Los tres mensajes de prueba previos no aparecen entre los textos de la conversación.
 
 ### AC-EMP-047 — Cada foto adjunta su propia Intro *(verifica BR-EMP-022, BR-EMP-023)*
 
@@ -331,7 +331,7 @@ de las bandas y no inventa una quinta tarea para decidir el cierre.
   puede venir de un guardado; motivos de la jornada abierta; mensajes introductorios y pedidos
   de avanzar, volver y comenzar.
 - **Salida:** la banda, los medios exactos y los apercibimientos enteros, si está despedido, qué jornada va, el final, y el
-  parte del jefe con lo que el jugador puede elegir; pantallas introductorias, ?ndice actual,
+  parte del jefe con lo que el jugador puede elegir; pantallas introductorias, índice actual,
   permiso de volver y finalización de las instrucciones.
 - **Falla:** cerrar dos veces o abrir sobre una partida terminada no cambian nada y no avisan.
 - **Falla de las instrucciones:** volver desde la primera pantalla conserva esa pantalla; repetir

@@ -357,5 +357,5 @@ La coincidencia parcial no implica que la tarea completa deba contarse como cump
 
 **Una secuencia de mensajes no define la cantidad de pantallas.** Revisar todos los frames,
 reacciones y motion antes de convertir párrafos en pasos. Registrar agrupaciones, reemplazo o
-acumulación, navegación fija y presencia de scroll. En #398, catorce textos correspond?an a doce
-pantallas independientes; la lista acumulativa implementada ocultaba esa diagramaci?n.
+acumulación, navegación fija y presencia de scroll. En #398, catorce textos correspondían a doce
+pantallas independientes; la lista acumulativa implementada ocultaba esa diagramación.

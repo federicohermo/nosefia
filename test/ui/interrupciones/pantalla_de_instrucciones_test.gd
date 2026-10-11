@@ -44,42 +44,52 @@ func test_subida_llega_en_trescientos_milisegundos_reales() -> void:  # AC-EMP-0
 	assert_bool(pantalla.is_processing()).is_false()
 
 
-func test_catorce_pasos_con_fotos_y_botones_al_final() -> void:  # AC-EMP-045, AC-EMP-046
+func _sin_formato(texto: String) -> String:
+	return texto.replace("[b]", "").replace("[/b]", "")
+
+
+func _comprobar_pantalla(pantalla: PantallaDeInstrucciones, numero: int) -> void:
+	var contenido: Control = pantalla.get("_contenido")
+	var pasos := InstruccionesDelJefe.pasos_de(GUION.mensajes)
+	var paso: InstruccionesDelJefe.Paso = pasos[numero - 1]
+	var cuerpos: Array[Node] = contenido.find_children("*", "RichTextLabel", false, false)
+	for indice in paso.textos.size():
+		var cuerpo: RichTextLabel = cuerpos[indice]
+		assert_str(cuerpo.get_parsed_text()).is_equal(_sin_formato(paso.textos[indice].texto))
+	var fotos: Array[Node] = contenido.find_children("*", "TextureRect", false, false)
+	var cantidad := 1 + (1 if paso.foto != null else 0) + (2 if numero == 5 else 0)
+	assert_int(fotos.size()).is_equal(cantidad)
+	if paso.foto != null:
+		var foto: TextureRect = fotos[1]
+		assert_object(foto.texture).is_same(paso.foto.foto)
+	var contador: Label = pantalla.get("_contador")
+	assert_str(contador.text).is_equal("%d/12" % numero)
+	var retrato: Control = pantalla.get("_retrato")
+	assert_bool(retrato.visible).is_equal(numero <= 4)
+	var volver := _boton(pantalla, "_volver")
+	assert_bool(volver.visible).is_true()
+	assert_bool(volver.disabled).is_equal(numero == 1)
+	assert_str(_boton(pantalla, "_siguiente").text).is_equal("OK" if numero == 12 else "Siguiente")
+	assert_int(pantalla.find_children("*", "ScrollContainer", true, false).size()).is_zero()
+
+
+func test_doce_pantallas_y_ok_idempotente() -> void:  # AC-EMP-045, AC-EMP-046
 	var pantalla := _pantalla()
 	pantalla.mostrar(GUION.mensajes)
-	var lista: VBoxContainer = pantalla.get("_contenido")
-	var botones: HBoxContainer = pantalla.get("_botones")
+	var botones: Control = pantalla.get("_botones")
+	var posicion := botones.position
 	var siguiente := _boton(pantalla, "_siguiente")
-	var volver := _boton(pantalla, "_volver")
-	var pasos := InstruccionesDelJefe.pasos_de(GUION.mensajes)
-	assert_int(pasos.size()).is_equal(14)
-	assert_bool(volver.visible).is_false()
-	for indice in 14:
+	for numero in range(1, 13):
 		await get_tree().process_frame
 		await get_tree().process_frame
-		assert_int(lista.get_child_count()).is_equal(indice + 2)
-		assert_object(lista.get_child(-1)).is_same(botones)
-		var ultimo: VBoxContainer = lista.get_child(indice)
-		var cuerpo: RichTextLabel = ultimo.get_child(-1)
-		assert_str(cuerpo.text).is_equal(pasos[indice].texto.texto)
-		assert_bool(cuerpo.bbcode_enabled).is_true()
-		if pasos[indice].foto != null:
-			assert_int(ultimo.get_child_count()).is_equal(2)
-			var foto: TextureRect = ultimo.get_child(0)
-			assert_object(foto.texture).is_same(pasos[indice].foto.foto)
-		else:
-			assert_int(ultimo.get_child_count()).is_equal(1)
-		assert_float(botones.get_global_rect().position.y).is_greater_equal(
-			ultimo.get_global_rect().end.y
-		)
-		if indice < 13:
-			assert_str(siguiente.text).is_equal("Siguiente")
+		_comprobar_pantalla(pantalla, numero)
+		assert_vector(botones.position).is_equal(posicion)
+		if numero < 12:
 			siguiente.pressed.emit()
-	assert_bool(volver.visible).is_true()
-	assert_str(siguiente.text).is_equal("Comenzar")
+	var volver := _boton(pantalla, "_volver")
 	volver.pressed.emit()
-	assert_int(lista.get_child_count()).is_equal(14)
-	assert_str(siguiente.text).is_equal("Siguiente")
+	await get_tree().process_frame
+	_comprobar_pantalla(pantalla, 11)
 	var comienzos: Array[int] = [0]
 	pantalla.comenzar_pedido.connect(func() -> void: comienzos[0] += 1)
 	siguiente.pressed.emit()
@@ -89,21 +99,48 @@ func test_catorce_pasos_con_fotos_y_botones_al_final() -> void:  # AC-EMP-045, A
 	assert_bool(pantalla.visible).is_false()
 
 
-func test_volver_tres_veces_deja_intro_uno_y_no_permite_quitarlo() -> void:  # AC-EMP-045
+func test_volver_tres_veces_recupera_solo_la_primera_pantalla() -> void:  # AC-EMP-045
 	var pantalla := _pantalla()
 	pantalla.mostrar(GUION.mensajes)
-	var siguiente := _boton(pantalla, "_siguiente")
-	var volver := _boton(pantalla, "_volver")
 	for _paso in 3:
-		siguiente.pressed.emit()
-	for _paso in 3:
-		volver.pressed.emit()
-	volver.pressed.emit()
-	var lista: VBoxContainer = pantalla.get("_contenido")
-	assert_int(lista.get_child_count()).is_equal(2)
-	assert_bool(volver.visible).is_false()
-	var cuerpo: RichTextLabel = lista.get_child(0).get_child(0)
-	assert_str(cuerpo.text).is_equal(GUION.mensajes[0].texto)
+		_boton(pantalla, "_siguiente").pressed.emit()
+	for _paso in 4:
+		_boton(pantalla, "_volver").pressed.emit()
+	await get_tree().process_frame
+	_comprobar_pantalla(pantalla, 1)
+	var contenido: Control = pantalla.get("_contenido")
+	assert_int(contenido.get_child_count()).is_equal(3)
+
+
+func test_pantallas_sin_scroll_en_ambos_viewports() -> void:  # AC-EMP-045, AC-EMP-046
+	for resolucion: Vector2i in [Vector2i(1920, 1080), Vector2i(1280, 720)]:
+		var pantalla := _pantalla()
+		var viewport: SubViewport = pantalla.get_viewport()
+		viewport.size = resolucion
+		pantalla.mostrar(GUION.mensajes)
+		pantalla.set("_avance", 1.0)
+		pantalla.call("_ajustar")
+		for numero in range(1, 13):
+			await get_tree().process_frame
+			await get_tree().process_frame
+			var botones: Control = pantalla.get("_botones")
+			var posicion := botones.global_position
+			var contenido: Control = pantalla.get("_contenido")
+			for hijo: Control in contenido.get_children():
+				assert_float(hijo.get_global_rect().end.y).is_less(
+					botones.get_global_rect().position.y
+				)
+				assert_float(hijo.get_global_rect().end.x).is_less_equal(float(resolucion.x))
+			var rueda := InputEventMouseButton.new()
+			rueda.button_index = MOUSE_BUTTON_WHEEL_DOWN
+			rueda.pressed = true
+			rueda.position = contenido.get_global_rect().get_center()
+			viewport.push_input(rueda)
+			await get_tree().process_frame
+			assert_vector(botones.global_position).is_equal(posicion)
+			_comprobar_pantalla(pantalla, numero)
+			if numero < 12:
+				_boton(pantalla, "_siguiente").pressed.emit()
 
 
 func test_pausa_conserva_la_subida_y_no_cobra_el_tiempo_pausado() -> void:  # AC-EMP-049

@@ -91,3 +91,21 @@ Desde PowerShell, con una pantalla disponible:
 | `intro-09.png` | Estantería del depósito con cajas |
 | `intro-11.png` | Útiles de limpieza y las dos notas del baño |
 | `intro-13.png` | Depósito con las cajas de la primera noche en el piso |
+
+Las instrucciones iniciales siguen los doce frames de Figma desde `511:302` hasta `535:1361`.
+Son pantallas independientes: los primeros cuatro párrafos se agrupan de a dos y el contenido se
+reemplaza sin scroll. El panel de Enrique sólo aparece en las primeras cuatro. La navegación,
+el contador y la ayuda permanecen fijos. Se inspeccionaron reacciones y motion: esos frames no
+contienen transiciones ni keyframes configurados; se conserva la subida autorizada de 0,3 s.
+
+Los recursos originales de Figma en `instrucciones/`, descargados sin editar el 2026-10-10, son:
+`bocadillo.svg` (`559:1353`), `separador.svg` (`561:361`), `caja.png` (`526:1066`) y `ticket.png`
+(`556:1287`). Caja y ticket son las ilustraciones auxiliares de la pantalla 5. Las siete fotos
+continúan siendo capturas del juego, como pide Notion, en sus espacios correspondientes; se
+conserva la foto de Intro 13 aunque el frame de Figma no la incluya. Se mantienen completas y
+proporcionadas dentro del marco, sin recortar ni sustituirlas por renders del prototipo.
+
+`instrucciones/fondo.png` es la capa de persiana desenfocada `511:304`. El retrato local histórico
+incluía un rectángulo opaco celeste: la pantalla usa ahora `instrucciones/enrique.png`, la imagen
+fuente transparente de `511:317`, sin editar. `enrique.gdshader` aplica su exposición y el blur
+progresivo hacia los pies del diseño. El chat conserva su recurso histórico y no se modifica.
