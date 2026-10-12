@@ -1,0 +1,83 @@
+[
+	{
+		"altura_sobre_el_piso": 1.70000003278255,
+		"angulo_de_la_mira_grados": 0.00000246131167912859,
+		"archivo": "cara_de_lado-suave.png",
+		"desvio_del_ojo_m": 0.0,
+		"dibujos": 326.0,
+		"foco": "/root/Almacen/ReposicionManual/ZonaDeMarolini/Casillero2",
+		"foco_en_la_fila_de_adelante_o_nada": true,
+		"mira_a": [
+			5.45621967315674,
+			1.59567999839783,
+			-1.23209476470947
+		],
+		"ojo_pedido": [
+			6.60621976852417,
+			1.81200003623962,
+			-1.23209476470947
+		],
+		"ojo_real": [
+			6.60621976852417,
+			1.81200003623962,
+			-1.23209476470947
+		],
+		"pose_ok": true,
+		"producto": "Marolini",
+		"vista": "cara_de_lado"
+	},
+	{
+		"altura_sobre_el_piso": 1.70000003278255,
+		"angulo_de_la_mira_grados": 0.00000170754729250319,
+		"archivo": "cabecera-suave.png",
+		"desvio_del_ojo_m": 0.0,
+		"dibujos": 256.0,
+		"foco": "/root/Almacen/ReposicionManual/ZonaDeMalbardo/Casillero5",
+		"foco_en_la_fila_de_adelante_o_nada": true,
+		"mira_a": [
+			0.669999837875366,
+			1.47035801410675,
+			0.0965166538953781
+		],
+		"ojo_pedido": [
+			0.669999837875366,
+			1.81200003623962,
+			1.24651658535004
+		],
+		"ojo_real": [
+			0.669999837875366,
+			1.81200003623962,
+			1.24651658535004
+		],
+		"pose_ok": true,
+		"producto": "Malbardo",
+		"vista": "cabecera"
+	},
+	{
+		"altura_sobre_el_piso": 1.70000003278255,
+		"angulo_de_la_mira_grados": 0.0,
+		"archivo": "bandeja_de_heladera-suave.png",
+		"desvio_del_ojo_m": 0.0,
+		"dibujos": 242.0,
+		"foco": "/root/Almacen/Estructura/heladeranueva/puerta_heladera_0/CuerpoDeLaHoja",
+		"foco_en_la_fila_de_adelante_o_nada": true,
+		"mira_a": [
+			-1.42999970912933,
+			1.19019603729248,
+			-6.85788011550903
+		],
+		"ojo_pedido": [
+			-1.42999970912933,
+			1.81200003623962,
+			-5.80788040161133
+		],
+		"ojo_real": [
+			-1.42999970912933,
+			1.81200003623962,
+			-5.80788040161133
+		],
+		"pose_ok": true,
+		"producto": "Coracola",
+		"vista": "bandeja_de_heladera"
+	}
+]

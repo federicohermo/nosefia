@@ -1,0 +1,12 @@
+cara_de_lado           identidad  max=107 pix>2=    253 pix>8=    149
+cara_de_lado           suave      max=107 pix>2=  61158 pix>8=  58214
+cara_de_lado           media      max=107 pix>2=  61161 pix>8=  59858
+cara_de_lado           fuerte     max=107 pix>2=  61161 pix>8=  59866
+cabecera               identidad  max= 41 pix>2=      5 pix>8=      3
+cabecera               suave      max= 36 pix>2=  37121 pix>8=  25206
+cabecera               media      max= 69 pix>2=  37255 pix>8=  29638
+cabecera               fuerte     max= 97 pix>2=  37314 pix>8=  29764
+bandeja_de_heladera    identidad  max=171 pix>2=      8 pix>8=      8
+bandeja_de_heladera    suave      max=171 pix>2=  32456 pix>8=  31261
+bandeja_de_heladera    media      max=171 pix>2=  32581 pix>8=  31985
+bandeja_de_heladera    fuerte     max=171 pix>2=  32660 pix>8=  32123
