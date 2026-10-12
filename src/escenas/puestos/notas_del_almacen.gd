@@ -1,4 +1,4 @@
-## Cablea las cinco hojas existentes a una sola vista y al control del jugador.
+## Cablea las seis hojas existentes a una sola vista y al control del jugador.
 extends Node
 
 const JugadorDelLocal := preload("res://src/escenas/jugador.gd")
