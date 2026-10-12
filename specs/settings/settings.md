@@ -66,7 +66,8 @@ cercano al arrastrado. Arrastrar DEBE dar el mismo valor que llegar ahí con los
 Efectos DEBE regular juntos los buses de ambiente, efectos e interfaz; música DEBE regular el de
 música. Son los cuatro buses de `BR-AMB-003`. En 100 % cada bus DEBE sonar al volumen de hoy,
 0 dB, y ninguna barra DEBE hacer sonar un bus más fuerte que eso. En 0 % sus buses DEBEN quedar
-en silencio. Cada paso hacia arriba DEBE sonar más fuerte que el anterior. Una barra NO DEBE
+en silencio. El volumen DEBE ser proporcional a la amplitud: en v % el bus suena a v/100 de la amplitud de
+hoy, o sea 20·log10(v/100) dB. Una barra NO DEBE
 cambiar el volumen de los buses de la otra.
 
 ### BR-CFG-006 — Sensibilidad multiplica la de fábrica, en la vista y en el examen
@@ -160,7 +161,7 @@ valor que dos + desde 100 %. DADO sensibilidad CUANDO se arrastra hasta 1,1× EN
 DADO efectos y música en 100 % ENTONCES los cuatro buses están en 0 dB. DADO efectos en 0 %
 ENTONCES ambiente, efectos e interfaz están en silencio y música sigue en 0 dB. DADO música en
 0 % ENTONCES música está en silencio y los otros tres siguen en 0 dB. DADO efectos en 50 %
-ENTONCES los tres buses tienen el mismo volumen, más alto que con 40 % y más bajo que con 60 %.
+ENTONCES los tres buses están en 20·log10(0,5) ≈ −6,02 dB, y con 10 % en −20 dB.
 DADO un archivo con efectos en 150 % CUANDO se lo lee ENTONCES efectos queda en 100 % y ningún
 bus pasa de 0 dB.
 
@@ -264,13 +265,6 @@ defecto.
 
 ## Preguntas abiertas
 
-- **OQ-CFG-001 — ¿Cuántos dB es cada paso de volumen?**
-  - Por qué sigue abierta: el dueño fijó las puntas —0 % en silencio, 100 % en 0 dB— y el paso
-    del 10 %, pero no la curva entre ellas: proporcional a la amplitud, a los decibeles o a otra
-    curva de sonoridad.
-  - Decide: el dueño del repo, probándolo.
-  - Bloquea: el valor exacto de los pasos intermedios. Mientras tanto `AC-CFG-005` exige sólo
-    que cada paso suene más fuerte que el anterior.
 - **OQ-CFG-002 — ¿Cómo se redondea un tamaño de letra que no da entero?**
   - Por qué sigue abierta: una letra de 36 en 0,8× da 28,8, y el tamaño de letra es entero.
     Ninguna ficha dice si se redondea al más cercano, hacia abajo o hacia arriba.

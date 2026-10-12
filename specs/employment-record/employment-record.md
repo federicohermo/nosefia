@@ -307,8 +307,8 @@ suspendido.
 Con el celular en el centro, el sistema DEBE mostrar los mensajes de la devolución uno por uno,
 con un segundo entre cada uno: con t segundos transcurridos se ven mín(total, 1 + ⌊t⌋). El
 primero aparece en t = 0. Ese tiempo NO DEBE correr con la pausa en pantalla: reanudar sigue
-desde el mismo mensaje. Desplazar el chat NO DEBE saltear ni repetir un mensaje. Cuánto tarda en
-bajar la persiana es OQ-EMP-004.
+desde el mismo mensaje. Desplazar el chat NO DEBE saltear ni repetir un mensaje. La persiana DEBE bajar en 1 segundo,
+lo mismo que tarda en subir al abrir la noche.
 
 ### BR-EMP-031 — Las devoluciones quedan en el chat
 
@@ -645,12 +645,6 @@ de la noche 3 los muestra después de las 19 entradas de las instrucciones.
 
 ## Preguntas abiertas
 
-- **OQ-EMP-004 — ¿Cuánto tarda en bajar la persiana al cerrar la noche?**
-  - Por qué sigue abierta: la ficha «Pantalla entre jornadas» dice que baja, y no cuánto tarda.
-    El fade de 0,3 segundos de BR-EMP-024 es el de la persiana ante las instrucciones, no una
-    bajada.
-  - Decide: una persona de game design.
-  - Bloquea: la duración de la bajada de BR-EMP-030. Ningún criterio la fija mientras tanto.
 - **OQ-EMP-005 — ¿Cuál es el Cierre definitivo de J = 5 con 1 < P ≤ 2?**
   - Por qué sigue abierta: la ficha lo deja «A DEFINIR» y no aparece en Figma. El usuario
     autorizó la frase provisoria de BR-EMP-029, y la ficha no se reescribe.
