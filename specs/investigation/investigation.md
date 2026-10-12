@@ -3,7 +3,7 @@ schema_version: 1
 capability_id: CAP-INV
 status: draft
 owner: por definir
-provenance: GDD «Investigación» y «La computadora»; ficha «Interfaces virtuales durante la jornada» y decisiones de #373 y #376; migración de los specs 006, 009, 018
+provenance: GDD «Investigación» y «La computadora»; ficha «Interfaces virtuales durante la jornada» y decisiones de #373, #375 y #376; migración de los specs 006, 009, 018
 ---
 
 # Capacidad: la investigación
@@ -138,7 +138,9 @@ un botón por conversación con al menos un mensaje visible, en el orden declara
 interlocutores. Cada botón DEBE mostrar nombre, imagen y cantidad de no leídos cuando es mayor
 que cero; sin imagen, DEBE mostrar un círculo liso del tema. La jornada NO DEBE programar nuevas
 llegadas durante su transcurso. Al continuar desde un guardado, los mensajes del guión DEBEN
-reconstruirse según esa jornada, todos sin leer; los recibidos fuera del guión NO DEBEN guardarse.
+reconstruirse según esa jornada, todos sin leer. Las devoluciones de Enrique de las noches ya
+cerradas DEBEN volver a su chat, después de sus instrucciones y en el orden en que llegaron
+(`BR-EMP-031`, `BR-SAV-019`); los demás recibidos fuera del guión NO DEBEN guardarse.
 
 ### BR-INV-024 — Recibir agrega sin alterar el guión
 
@@ -364,7 +366,8 @@ Q permitido abre el menú.
 
 DADO un guardado en jornada 3, con chats que antes se leyeron y mensajes recibidos fuera del guión,
 CUANDO se retoma ENTONCES se ven los mensajes del guión de jornada menor o igual a 3, todos sin
-leer, y ninguno de los recibidos fuera de él. Abrir y cerrar sin entrar a un chat conserva los
+leer, y ninguno de los recibidos fuera de él salvo las devoluciones de Enrique de las jornadas 1
+y 2, que siguen a sus instrucciones en ese orden. Abrir y cerrar sin entrar a un chat conserva los
 contadores.
 
 ### AC-INV-038 — Un botón por chat y una imagen de reemplazo *(verifica BR-INV-023)*
