@@ -236,7 +236,7 @@ efectiva anterior. Con el dibujo ya alcanzado, DEBE recuperar la pose exacta ant
 giro dibujado pendiente, NO DEBE devolver la vista a los ángulos dibujados atrasados. Abrir de
 nuevo sin cerrar DEBE conservar el reposo de la primera apertura. Cerrar sin abrir NO DEBE
 mover la vista ni devolver el control tomado por otra cosa. El cierre del turno DEBE devolver
-la vista antes de mostrar su placa.
+la vista antes de mostrar la devolución.
 
 SI el ancho, alto o aspecto no son positivos, la profundidad es negativa o el campo vertical
 no está entre 0 y 180 grados sin incluir los extremos, ENTONCES el sistema NO DEBE mover la
@@ -256,7 +256,7 @@ suspender el control. Otro clic derecho DEBE cerrar y reanudar. Lo que se lleva 
 su lugar en la mano, sin usarse ni soltarse. Una pantalla abierta o un examen NO DEBE permitir
 abrir otra hoja. Leer NO DEBE detener el turno.
 
-CUANDO termina el turno, la lectura DEBE cerrarse antes de su placa. La pausa DEBE verse
+CUANDO termina el turno, la lectura DEBE cerrarse antes de la devolución. La pausa DEBE verse
 encima de la nota; al reanudar, la nota DEBE continuar abierta y el control suspendido.
 
 ### BR-PLY-030 — Lo que dice cada hoja
@@ -284,7 +284,7 @@ CUANDO se usa la caja registradora con clic derecho, el sistema DEBE abrir su pr
 suspender el control, conservando lo que se lleva y su lugar en la mano. Otro clic derecho
 DEBE cerrar y reanudar. Una pantalla o examen abiertos NO DEBEN permitir abrir el programa.
 Leerlo NO DEBE detener el turno. La pausa DEBE dibujarse por encima y, al reanudar, DEBE
-continuar abierto y suspendido. El cierre del turno DEBE cerrarlo antes de mostrar su placa.
+continuar abierto y suspendido. El cierre del turno DEBE cerrarlo antes de mostrar la devolución.
 
 ### BR-PLY-032 — El lector usa la unidad sostenida
 
@@ -788,8 +788,8 @@ hasta cerrar la primera.
 
 DADO una nota abierta, CUANDO pasan cuadros ENTONCES el tiempo del turno disminuye. CUANDO se
 pausa ENTONCES la pausa visible se dibuja por encima de la nota; al reanudar, la nota sigue
-abierta y el control suspendido. CUANDO termina el turno ENTONCES queda sólo la placa de
-cierre y el control suspendido.
+abierta y el control suspendido. CUANDO termina el turno ENTONCES queda sólo la
+devolución y el control suspendido.
 
 ### AC-PLY-068 — Ordenado comparte el texto exacto *(verifica BR-PLY-030)*
 
@@ -837,7 +837,7 @@ pide lectura ni aviso. DADO clic izquierdo o E con mano vacía ENTONCES no se le
 
 DADO el programa abierto, CUANDO pasan cuadros ENTONCES el tiempo disminuye; al pausar,
 la pausa visible tiene una capa superior al programa. Al reanudar sigue abierto y el control
-suspendido. Al terminar el turno queda sólo la placa de cierre y el control suspendido.
+suspendido. Al terminar el turno queda sólo la devolución y el control suspendido.
 
 ### AC-PLY-075 — El papel se lleva y examina *(verifica BR-PLY-033)*
 

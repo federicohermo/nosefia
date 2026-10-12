@@ -238,7 +238,7 @@ unidad suelta dentro de cualquier habitación, una caja dentro y fuera del depó
 dentro y fuera del baño. El cuerpo sostenido DEBE excluirse por identidad, salvo mientras se
 examina: entonces cuenta en su posición física. Lo ya tirado al contenedor DEBE excluirse.
 Una bolsa o un ticket adentro no DEBE producir desorden. Varios cuerpos desordenados DEBEN producir un
-único motivo. La foto DEBE tomarse antes de registrar el legajo, armar el parte y guardar.
+único motivo. La foto DEBE tomarse antes de registrar el legajo, armar la devolución y guardar.
 
 ### BR-CLN-029 — Lo que queda afuera conserva su cuerpo
 
@@ -550,7 +550,7 @@ alcance vigente. El espacio numérico entre vidrio y dintel no constituye un pas
 ### AC-CLN-046 — Dos motivos antes del registro *(verifica BR-CLN-028, BR-CLN-029)*
 
 DADO caja desordenada y unidad afuera CUANDO agota la jornada con GRAVE ENTONCES el legajo
-lleva 6 medios desde cero antes de armar el parte y escribir el checkpoint. DADO esos cuerpos
+lleva 6 medios desde cero antes de armar la devolución y escribir el checkpoint. DADO esos cuerpos
 tirados al contenedor ENTONCES no generan motivos; abrir otra noche vacía el registro de tirados
 y restaura los persistentes, sin consultar unidades o tickets ya retirados.
 
@@ -576,9 +576,9 @@ sin anotar papel en el inodoro. Abrir otra noche retira ambos del registro activ
 ### AC-CLN-049 — Tres motivos son siete con GRAVE *(verifica BR-CLN-028, BR-CLN-029, BR-CLN-030)*
 
 DADO deuda cero, un ticket aceptado en el inodoro, una caja desordenada y una unidad afuera
-CUANDO termina la jornada con GRAVE ENTONCES el cierre registra siete medios antes del parte
-y checkpoint y no despide. CUANDO la noche siguiente termina impecable y sin motivos ENTONCES
-conserva siete. Un evento durante la placa no contamina esa noche siguiente y repetir el
+CUANDO termina la jornada con GRAVE ENTONCES el cierre registra siete medios antes de la devolución
+y del checkpoint y no despide. CUANDO la noche siguiente termina impecable y sin motivos ENTONCES
+conserva siete. Un evento durante la devolución no contamina esa noche siguiente y repetir el
 cierre no suma otra vez.
 
 ### AC-CLN-050 — Las excepciones son bolsas y tickets *(verifica BR-CLN-031)*
