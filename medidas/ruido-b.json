@@ -1,0 +1,38 @@
+[
+	{
+		"godot": "4.7.2-stable (official)",
+		"gpu": "llvmpipe (LLVM 20.1.2, 256 bits)",
+		"renderizador": "gl_compatibility",
+		"resolucion": "(1280.0, 720.0)",
+		"resultados": [
+			{
+				"cuadro_ms_p50": 1279.95,
+				"cuadro_ms_p95": 1423.221,
+				"dibujos_max": 194.0,
+				"dibujos_p50": 194.0,
+				"muestras": 40,
+				"pose_ok": true,
+				"vista": "cara_de_lado"
+			},
+			{
+				"cuadro_ms_p50": 1556.613,
+				"cuadro_ms_p95": 1720.61,
+				"dibujos_max": 256.0,
+				"dibujos_p50": 256.0,
+				"muestras": 40,
+				"pose_ok": true,
+				"vista": "cabecera"
+			},
+			{
+				"cuadro_ms_p50": 1554.99,
+				"cuadro_ms_p95": 1737.794,
+				"dibujos_max": 110.0,
+				"dibujos_p50": 110.0,
+				"muestras": 40,
+				"pose_ok": true,
+				"vista": "bandeja_de_heladera"
+			}
+		],
+		"variante": "ruido-b"
+	}
+]
