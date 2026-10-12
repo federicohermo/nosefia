@@ -3,7 +3,7 @@ schema_version: 1
 capability_id: CAP-SAV
 status: draft
 owner: por definir
-provenance: GDD «checkpoint al final de cada noche»; ficha «Pantalla entre jornadas» y decisiones de #374; fichas «2. Menú de inicio» y «Pausa y menú de pausa» y decisiones de #378; migración de los specs 019, 020, 036
+provenance: GDD «checkpoint al final de cada noche»; ficha «Pantalla entre jornadas» y decisiones de #374; fichas «2. Menú de inicio» y «Pausa y menú de pausa» y decisiones de #378; decisión del 2026-09-28 de #299; migración de los specs 019, 020, 036
 ---
 
 # Capacidad: guardar y retomar
@@ -22,7 +22,7 @@ guardado hay que jugar las cinco de una sentada.
 | **Campo** | un dato que cruza la sesión, con su tipo y su valor por defecto | clave, columna |
 | **Sanear** | completar un guardado incompleto o mal tipado con sus defectos | migrar, parchear |
 | **Retomar** | seguir la partida guardada desde el menú | cargar, continuar |
-| **Pausa** | la jornada detenida, con su menú en pantalla | freeze, stop |
+| **Pausa** | la jornada detenida, con su menú en pantalla. Incluye la jornada ya cerrada, con la placa del cierre debajo | freeze, stop |
 
 ## Comportamiento normativo
 
@@ -105,12 +105,15 @@ la jornada guardada sobre la persiana baja y comenzar a descontar cuando termine
 
 ### BR-SAV-016 — Esc pausa la jornada
 
-CUANDO el jugador aprieta Esc durante la jornada, el sistema DEBE pausarla y mostrar el menú de
-pausa. Un segundo Esc DEBE reanudarla, igual que «reanudar». SI la placa del cierre está en
-pantalla, ENTONCES Esc NO DEBE hacer nada: la placa ya ofrece volver al menú. SI el cursor pasa
-de tomado a suelto con la ventana activa y sin que el juego lo suelte, ENTONCES el sistema DEBE
-pausar: en la web el navegador consume Esc para soltar el cursor. Soltarlo el propio juego NO
-DEBE pausar. Cambiar de pestaña, minimizar o pasar a otra ventana NO DEBE pausar la jornada ni
+CUANDO el jugador aprieta Esc en cualquier momento del juego en el almacén, con la partida en
+curso o terminada, el sistema DEBE pausarlo y mostrar el menú de pausa. Un segundo Esc DEBE
+reanudarlo, igual que «reanudar». La placa del cierre no es una excepción: con la placa en
+pantalla, Esc DEBE abrir la pausa por encima de ella, y reanudar DEBE dejar la misma placa, con
+el turno todavía detenido y sin abrir la noche siguiente. MIENTRAS la pausa está en pantalla, la
+placa NO DEBE responder a ningún gesto. SI el cursor pasa de tomado a suelto con la ventana
+activa y sin que el juego lo suelte, ENTONCES el sistema DEBE pausar: en la web el navegador
+consume Esc para soltar el cursor. Soltarlo el propio juego NO DEBE pausar, y con la placa del
+cierre en pantalla perder el cursor NO DEBE pausar. Cambiar de pestaña, minimizar o pasar a otra ventana NO DEBE pausar la jornada ni
 mostrar el menú de pausa; volver tampoco DEBE abrirlo.
 
 SI Configuraciones está abierta desde la pausa, ENTONCES Esc DEBE cerrarla y dejar el menú de
@@ -127,7 +130,11 @@ inicio.
 ### BR-SAV-018 — Volver al menú abandona la jornada
 
 CUANDO el jugador elige «volver al menú» en la pausa, el sistema DEBE sacar el juego de la pausa,
-llevarlo al menú de inicio y NO DEBE guardar nada.
+llevarlo al menú de inicio y NO DEBE escribir ni borrar el guardado. SI la pausa está sobre la
+placa de una partida en curso, ENTONCES el guardado que dejó el cierre DEBE quedar intacto, con la
+jornada siguiente y la deuda acumulada exacta, y continuar desde el menú DEBE abrir esa jornada
+sin volver a jugar la noche cerrada. SI la partida terminó, ENTONCES el guardado ya borrado por el
+final NO DEBE reaparecer.
 
 ## Criterios de aceptación
 
@@ -220,8 +227,12 @@ apercibimientos.
 ### AC-SAV-018 — Esc pausa y reanuda *(verifica BR-SAV-016)*
 
 DADO la jornada en curso CUANDO llega Esc ENTONCES el juego queda en pausa; CUANDO llega otro Esc
-ENTONCES se reanuda. DADO la placa del cierre en pantalla CUANDO llega Esc ENTONCES no pasa nada.
-DADO el cursor tomado y la ventana activa CUANDO queda suelto sin que el juego lo suelte
+ENTONCES se reanuda. DADO la placa del cierre en pantalla, con la partida en curso o terminada,
+CUANDO llega Esc ENTONCES el menú de pausa se abre por encima de la placa; mientras tanto, ni un
+clic ni Enter despachan la placa. CUANDO llega otro Esc ENTONCES la pausa se cierra, la misma
+placa sigue en pantalla con las mismas opciones, el reloj del turno sigue detenido y la noche
+siguiente no se abre. DADO la placa en pantalla CUANDO el cursor queda suelto ENTONCES no se
+pausa. DADO el cursor tomado y la ventana activa CUANDO queda suelto sin que el juego lo suelte
 ENTONCES el juego queda en pausa; CUANDO lo suelta el propio juego ENTONCES no. DADO una jornada
 en curso CUANDO se cambia de pestaña o ventana y se vuelve ENTONCES sigue sin pausa; Esc sigue
 abriendo y cerrando la pausa manual. DADO Configuraciones abierta desde la pausa CUANDO llega Esc
@@ -238,7 +249,12 @@ deshabilitado.
 ### AC-SAV-020 — Volver al menú no guarda *(verifica BR-SAV-018)*
 
 DADO el juego en pausa CUANDO se elige volver al menú ENTONCES el juego sale de la pausa, el
-pedido de ir al menú se emite una sola vez y no se escribe ningún guardado.
+pedido de ir al menú se emite una sola vez y no se escribe ningún guardado. DADO la placa de la
+jornada 2 cerrada con la partida en curso y 7 medios de apercibimiento CUANDO se abre la pausa y
+se elige volver al menú ENTONCES el guardado no se escribe ni se borra y sigue en la jornada 3 con
+7 medios; CUANDO se elige continuar desde el menú ENTONCES se anuncia «NOCHE 3» con 7 medios.
+DADO la placa de una partida terminada CUANDO se sale al menú desde la pausa ENTONCES no hay
+guardado y continuar sigue deshabilitado.
 
 ### AC-SAV-021 — Continuar evita las instrucciones *(verifica BR-SAV-015)*
 

@@ -1,9 +1,9 @@
 ---
 schema_version: 1
 capability_id: CAP-EMP
-status: ratified
+status: draft
 owner: por definir
-provenance: GDD «Consecuencias» y «Finales»; fichas «1. Ciclo de jornadas y sistema de puntos», «Pantalla entre jornadas» y «Chat con el jefe»; decisiones de #374 y corrección visual solicitada en #398; migración de los specs 002, 016, 017
+provenance: GDD «Consecuencias» y «Finales»; fichas «1. Ciclo de jornadas y sistema de puntos», «Pantalla entre jornadas» y «Chat con el jefe»; decisiones de #374, decisión del 2026-09-28 de #299 y corrección visual solicitada en #398; migración de los specs 002, 016, 017
 ---
 
 # Capacidad: el legajo del empleado
@@ -88,8 +88,9 @@ comentario general ni agregan un contador de motivos durante la noche.
 ### BR-EMP-011 — Lo que ofrece el parte depende del final
 
 CUANDO se arma el parte, el sistema DEBE decir qué puede elegir el jugador. Con la partida en
-curso, ofrece seguir con la noche siguiente y volver al menú. Con la partida terminada, despedido
-o contrato cumplido, ofrece sólo volver al menú: no hay noche siguiente que abrir.
+curso, ofrece **sólo seguir** con la noche siguiente: salir al menú pasa por la pausa, como en
+cualquier otro momento de la jornada. Con la partida terminada, despedido o contrato cumplido,
+ofrece sólo volver al menú: no hay noche siguiente que abrir.
 
 ### BR-EMP-012 — Los llamados suman medios por motivo
 
@@ -223,8 +224,9 @@ queda vacío.
 ### AC-EMP-016 — La partida terminada no ofrece seguir *(verifica BR-EMP-011)*
 
 DADO una partida que termina al cerrar la noche, despedido o contrato cumplido, CUANDO se arma
-el parte ENTONCES ofrece volver al menú y no ofrece seguir. DADO la partida en curso CUANDO se
-arma el parte ENTONCES ofrece seguir y volver al menú.
+el parte ENTONCES ofrece una sola opción, volver al menú, y no ofrece seguir. DADO la partida
+en curso CUANDO se arma el parte ENTONCES ofrece una sola opción, seguir, y no ofrece volver al
+menú.
 
 ### AC-EMP-017 — La banda y los motivos se suman *(verifica BR-EMP-002, BR-EMP-012)*
 
