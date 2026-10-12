@@ -260,7 +260,7 @@ func _al_abrir_la_jornada(jornada: int) -> void:
 	_computadora.arrancar(RegistroDeVentas.new(Catalogo.todos(), atender))
 	# El piso se rehace cada noche: guardar el estado entre jornadas está fuera de alcance, y una
 	# sola instancia dejaría el local limpio de anoche y la obligatoria cumplida sola.
-	_limpiador.arrancar(PisoDelLocal.de_la_jornada())
+	_limpiador.arrancar(PisoDelLocal.de_la_jornada(jornada))
 	_recolector.arrancar(TareaDeLaBasura.de_la_jornada(jornada))
 	# La apertura restaura los cuerpos antes de pintar sólo los tachos declarados.
 	for indice in _bolsas.size():

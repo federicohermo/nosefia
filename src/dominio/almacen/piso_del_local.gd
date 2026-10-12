@@ -1,6 +1,6 @@
 ## El piso de una jornada: las manchas que hay que borrar y los útiles con que se borran.
 ##
-## «Piso» es lo que hay que dejar limpio, aunque la mancha del depósito esté en una pared: el
+## «Piso» es lo que hay que dejar limpio, aunque haya manchas en las paredes y en el techo: el
 ## nombre es el de la obligatoria, no el de la superficie.
 ##
 ## **Limpiar cuesta ir al baño**, y ahí está el término que esta tarea aporta a la resta del turno:
@@ -11,20 +11,81 @@
 class_name PisoDelLocal
 extends RefCounted
 
-## Dónde pone la jornada cada mancha. Es un `enum` porque el conjunto es cerrado: un lugar mal
-## escrito no rompe nada, la mancha simplemente no se borra nunca.
-enum Lugar { ENTRADA, GONDOLAS, DEPOSITO, BANO }
-
-## Qué mancha hay en cada lugar al abrir la jornada: dos de polvo en el local, una de moho en la
-## pared del depósito y una de caca al lado del inodoro. Es la primera jornada de la ficha; las
-## otras cuatro no están definidas todavía, y arrancan como ésta.
-const MANCHAS_DE_LA_JORNADA: Dictionary[Lugar, ReglasDeLaLimpieza.TipoDeMancha] = {
-	Lugar.ENTRADA: ReglasDeLaLimpieza.TipoDeMancha.POLVO,
-	Lugar.GONDOLAS: ReglasDeLaLimpieza.TipoDeMancha.POLVO,
-	Lugar.DEPOSITO: ReglasDeLaLimpieza.TipoDeMancha.MOHO,
-	Lugar.BANO: ReglasDeLaLimpieza.TipoDeMancha.CACA,
+## Dónde puede poner una jornada cada mancha. Es un `enum` porque el conjunto es cerrado: un lugar
+## mal escrito no rompe nada, la mancha simplemente no se borra nunca.
+##
+## **Los lugares nuevos van al final**: la escena guarda cada disco con el número de su lugar, y
+## reordenar cambiaría en silencio qué disco es qué mancha.
+enum Lugar {
+	ENTRADA,
+	GONDOLAS,
+	DEPOSITO,
+	BANO,
+	RINCON_OPUESTO_AL_MOSTRADOR,
+	ARRIBA_DEL_TABLERO,
+	PARED_DEL_OTRO_INODORO,
+	DETRAS_DEL_MOSTRADOR,
+	CERCA_DE_LAS_HELADERAS,
+	PUERTA_DEL_BANO_EN_EL_LOCAL,
+	ESQUINA_ALTA_DEL_DEPOSITO,
+	AL_LADO_DEL_CONTENEDOR,
+	PUERTA_DEL_BANO_EN_EL_BANO,
+	TECHO_DEL_BANO,
+	BAJO_LA_PUERTA_DEL_CUBICULO,
 }
 
+## Sobre qué está la mancha. El paso del jugador toca sólo las del piso.
+enum Superficie { PISO, PARED, TECHO }
+
+## El script de las habitaciones no declara `class_name`: se preloadea para nombrar su `enum`.
+const ReglasDelCierre := preload("res://src/dominio/almacen/reglas_del_cierre.gd")
+
+## La habitación y la superficie de cada lugar: `[Habitacion, Superficie]`.
+const LUGARES: Dictionary[Lugar, Array] = {
+	Lugar.ENTRADA: [ReglasDelCierre.Habitacion.LOCAL, Superficie.PISO],
+	Lugar.GONDOLAS: [ReglasDelCierre.Habitacion.LOCAL, Superficie.PISO],
+	Lugar.DEPOSITO: [ReglasDelCierre.Habitacion.DEPOSITO, Superficie.PARED],
+	Lugar.BANO: [ReglasDelCierre.Habitacion.BANO, Superficie.PISO],
+	Lugar.RINCON_OPUESTO_AL_MOSTRADOR: [ReglasDelCierre.Habitacion.LOCAL, Superficie.PISO],
+	Lugar.ARRIBA_DEL_TABLERO: [ReglasDelCierre.Habitacion.DEPOSITO, Superficie.PARED],
+	Lugar.PARED_DEL_OTRO_INODORO: [ReglasDelCierre.Habitacion.BANO, Superficie.PARED],
+	Lugar.DETRAS_DEL_MOSTRADOR: [ReglasDelCierre.Habitacion.LOCAL, Superficie.PISO],
+	Lugar.CERCA_DE_LAS_HELADERAS: [ReglasDelCierre.Habitacion.LOCAL, Superficie.PISO],
+	Lugar.PUERTA_DEL_BANO_EN_EL_LOCAL: [ReglasDelCierre.Habitacion.LOCAL, Superficie.PISO],
+	Lugar.ESQUINA_ALTA_DEL_DEPOSITO: [ReglasDelCierre.Habitacion.DEPOSITO, Superficie.PARED],
+	Lugar.AL_LADO_DEL_CONTENEDOR: [ReglasDelCierre.Habitacion.DEPOSITO, Superficie.PARED],
+	Lugar.PUERTA_DEL_BANO_EN_EL_BANO: [ReglasDelCierre.Habitacion.BANO, Superficie.PISO],
+	Lugar.TECHO_DEL_BANO: [ReglasDelCierre.Habitacion.BANO, Superficie.TECHO],
+	Lugar.BAJO_LA_PUERTA_DEL_CUBICULO: [ReglasDelCierre.Habitacion.BANO, Superficie.PISO],
+}
+
+## Qué mancha pone cada jornada en cada lugar, según la ficha: `jornada → {Lugar: TipoDeMancha}`.
+##
+## Una jornada sin fila arranca como la primera: las filas de la 3 a la 5 dependen de un cuartito
+## de limpieza que el almacén no tiene y de techos que hoy quedan fuera del alcance de la mira.
+const MANCHAS_POR_JORNADA: Dictionary[int, Dictionary] = {
+	1:
+	{
+		Lugar.ENTRADA: ReglasDeLaLimpieza.TipoDeMancha.POLVO,
+		Lugar.GONDOLAS: ReglasDeLaLimpieza.TipoDeMancha.POLVO,
+		Lugar.RINCON_OPUESTO_AL_MOSTRADOR: ReglasDeLaLimpieza.TipoDeMancha.POLVO,
+		Lugar.DEPOSITO: ReglasDeLaLimpieza.TipoDeMancha.MOHO,
+		Lugar.ARRIBA_DEL_TABLERO: ReglasDeLaLimpieza.TipoDeMancha.MOHO,
+		Lugar.BANO: ReglasDeLaLimpieza.TipoDeMancha.CACA,
+		Lugar.PARED_DEL_OTRO_INODORO: ReglasDeLaLimpieza.TipoDeMancha.CACA,
+	},
+	2:
+	{
+		Lugar.DETRAS_DEL_MOSTRADOR: ReglasDeLaLimpieza.TipoDeMancha.POLVO,
+		Lugar.CERCA_DE_LAS_HELADERAS: ReglasDeLaLimpieza.TipoDeMancha.POLVO,
+		Lugar.PUERTA_DEL_BANO_EN_EL_LOCAL: ReglasDeLaLimpieza.TipoDeMancha.POLVO,
+		Lugar.ESQUINA_ALTA_DEL_DEPOSITO: ReglasDeLaLimpieza.TipoDeMancha.MOHO,
+		Lugar.AL_LADO_DEL_CONTENEDOR: ReglasDeLaLimpieza.TipoDeMancha.MOHO,
+		Lugar.PUERTA_DEL_BANO_EN_EL_BANO: ReglasDeLaLimpieza.TipoDeMancha.POLVO,
+		Lugar.TECHO_DEL_BANO: ReglasDeLaLimpieza.TipoDeMancha.MOHO,
+		Lugar.BAJO_LA_PUERTA_DEL_CUBICULO: ReglasDeLaLimpieza.TipoDeMancha.CACA,
+	},
+}
 var _manchas: Dictionary[Lugar, Mancha] = {}
 var _balde := Balde.new()
 var _mopa := Mopa.new()
@@ -38,15 +99,31 @@ func _init(manchas: Dictionary[Lugar, Mancha]) -> void:
 	_manchas = manchas
 
 
-## El piso de una noche: sus cuatro manchas sucias, el balde vacío y la mopa seca.
+## El piso de esa noche: las manchas que declara su fila, todas sucias, el balde vacío y la mopa
+## seca. Una jornada sin fila arranca con las de la primera.
 ##
 ## Se construye entero cada vez: con un piso compartido, lo borrado anoche llegaría borrado esta
 ## noche, y el balde teñido de anoche ahorraría el primer viaje a la canilla.
-static func de_la_jornada() -> PisoDelLocal:
+static func de_la_jornada(jornada: int) -> PisoDelLocal:
+	var fila: Dictionary = MANCHAS_POR_JORNADA.get(
+		jornada, MANCHAS_POR_JORNADA[ReglasDeLaPartida.PRIMERA_JORNADA]
+	)
 	var manchas: Dictionary[Lugar, Mancha] = {}
-	for lugar: Lugar in MANCHAS_DE_LA_JORNADA:
-		manchas[lugar] = Mancha.new(MANCHAS_DE_LA_JORNADA[lugar])
+	for lugar: Lugar in fila:
+		manchas[lugar] = Mancha.new(fila[lugar])
 	return PisoDelLocal.new(manchas)
+
+
+## En qué habitación está ese lugar, según la pertenencia del cierre.
+static func habitacion_de(lugar: Lugar) -> ReglasDelCierre.Habitacion:
+	var habitacion: ReglasDelCierre.Habitacion = LUGARES[lugar][0]
+	return habitacion
+
+
+## Si ese lugar está en el piso, en una pared o en el techo.
+static func superficie_de(lugar: Lugar) -> Superficie:
+	var superficie: Superficie = LUGARES[lugar][1]
+	return superficie
 
 
 func lugares() -> Array[Lugar]:
