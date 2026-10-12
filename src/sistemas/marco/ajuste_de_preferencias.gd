@@ -89,10 +89,13 @@ func _iluminar_uno(nodo: Node) -> void:
 
 
 ## El redondeo al entero más cercano es provisorio: lo deja abierto `OQ-CFG-002`.
+##
+## La letra por defecto se lee con su método y no como propiedad: sobre una constante, el
+## compilador pliega `TEMA.default_font_size` al valor del archivo, y nunca ve la escala.
 func _escalar_la_letra(escala: float) -> void:
 	_anotar_los_tamanos_de_hoy()
 	var letra := roundi(_letra_de_hoy * escala)
-	if TEMA.default_font_size != letra:
+	if TEMA.get_default_font_size() != letra:
 		TEMA.set_default_font_size(letra)
 	for clave: String in _tamanos_de_hoy:
 		var partes := clave.split("/")
@@ -104,7 +107,7 @@ func _escalar_la_letra(escala: float) -> void:
 static func _anotar_los_tamanos_de_hoy() -> void:
 	if _letra_de_hoy >= 0:
 		return
-	_letra_de_hoy = TEMA.default_font_size
+	_letra_de_hoy = TEMA.get_default_font_size()
 	for tipo: StringName in TEMA.get_font_size_type_list():
 		for nombre: StringName in TEMA.get_font_size_list(tipo):
 			_tamanos_de_hoy["%s/%s" % [tipo, nombre]] = TEMA.get_font_size(nombre, tipo)

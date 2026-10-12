@@ -103,13 +103,13 @@ func test_lo_que_aparece_despues_tambien_toma_el_brillo() -> void:  # AC-CFG-007
 
 
 func test_la_escala_de_textos_multiplica_los_tamanos_de_hoy() -> void:  # AC-CFG-008
-	assert_int(TEMA.default_font_size).is_equal(40)
+	assert_int(TEMA.get_default_font_size()).is_equal(40)
 	_ajuste.aplicar(_con(C.TEXTOS, 1.5))
-	assert_int(TEMA.default_font_size).is_equal(60)
+	assert_int(TEMA.get_default_font_size()).is_equal(60)
 	_ajuste.aplicar(_con(C.TEXTOS, 0.8))
-	assert_int(TEMA.default_font_size).is_equal(32)
+	assert_int(TEMA.get_default_font_size()).is_equal(32)
 	_ajuste.aplicar(_con(C.TEXTOS, 1.0))
-	assert_int(TEMA.default_font_size).is_equal(40)
+	assert_int(TEMA.get_default_font_size()).is_equal(40)
 
 
 func test_volver_a_uno_deja_cada_tamano_como_antes_de_tocar_la_barra() -> void:  # AC-CFG-008
@@ -125,7 +125,7 @@ func test_volver_a_uno_deja_cada_tamano_como_antes_de_tocar_la_barra() -> void: 
 	for clave: String in antes:
 		var partes := clave.split("/")
 		assert_int(TEMA.get_font_size(partes[1], partes[0])).is_equal(antes[clave])
-	assert_int(TEMA.default_font_size).is_equal(40)
+	assert_int(TEMA.get_default_font_size()).is_equal(40)
 
 
 func test_cambiar_aplica_y_escribe_en_el_momento() -> void:  # AC-CFG-012
