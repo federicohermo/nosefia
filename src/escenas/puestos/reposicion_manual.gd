@@ -104,6 +104,7 @@ func preparar() -> void:
 	estante.remove_from_group(ReglasDelJugador.GRUPO_INTERACTUABLE)
 	_preparar_los_casilleros()
 	jugador.uso_pedido.connect(usar_la_caja)
+	jugador.consultar_el_derecho_con(_derecho_sobre_la_caja)
 	jugador.objetivo_enfocado.connect(_al_enfocar)
 	jugador.objetivo_perdido.connect(_al_perder_el_foco)
 	repositor.agarre.objeto_agarrado.connect(_actualizar_zonas)
@@ -181,6 +182,19 @@ func usar_la_caja(objetivo: Node3D) -> void:
 	}
 	var gesto := repositor.caja(caja.producto).uso(repositor.agarre.manos().sostenido())
 	acciones[gesto].call(caja.producto)
+
+
+## Si el clic derecho sobre la caja sacaría o metería: lo contesta su contenido, sin hacerlo.
+func _derecho_sobre_la_caja(
+	objetivo: Node3D, sostenido: ObjetoDelAlmacen
+) -> ReferenciaDeControles.Derecho:
+	var caja := objetivo as CajaDelDeposito
+	if caja == null:
+		return ReferenciaDeControles.Derecho.NINGUNO
+	var contenido := repositor.caja(caja.producto)
+	if contenido == null:
+		return ReferenciaDeControles.Derecho.NINGUNO
+	return ReferenciaDeControles.derecho_de_la_caja(contenido.derecho_posible(sostenido))
 
 
 ## Mete en su caja la unidad de la mano y guarda su cuerpo, que deja de verse. Si la caja no la

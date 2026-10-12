@@ -350,8 +350,8 @@ func test_el_derecho_posible_saca_con_una_y_no_con_cero() -> void:  # AC-PLY-083
 	assert_int(con_una.unidades()).is_equal(1)
 	var vacia := _caja(actroncito, _estante(actroncito, 0))
 	assert_int(vacia.derecho_posible(null)).is_equal(ContenidoDeLaCaja.Gesto.NADA)
-	var llevada := load("res://src/dominio/almacen/caja_de_reposicion.tres") as ObjetoDelAlmacen
-	assert_int(con_una.derecho_posible(llevada)).is_equal(ContenidoDeLaCaja.Gesto.NADA)
+	# Otra cosa en la mano no saca, aunque la caja tenga.
+	assert_int(con_una.derecho_posible(Ticket.new())).is_equal(ContenidoDeLaCaja.Gesto.NADA)
 
 
 func test_el_derecho_posible_mete_sin_llenar_y_no_cambia_nada() -> void:  # AC-PLY-083

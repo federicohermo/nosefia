@@ -1,4 +1,5 @@
-## La pantalla del turno: cuántas obligatorias van y lo que dice la caja examinada.
+## La pantalla del turno: cuántas obligatorias van, los controles que sirven ahora y lo que dice
+## la caja examinada.
 ##
 ## **Recibe todo ya decidido y lo pinta.** No conoce al nodo que le manda los números: se
 ## conecta por señal desde la escena.
@@ -24,8 +25,18 @@ extends CanvasLayer
 ## cambiarlo.
 const TEXTO_DE_LAS_TAREAS := "Tareas %s"
 
+## Cómo se lee cada botón del mouse, por su máscara. Los demás botones no tienen nombre: la línea
+## de un gesto que sólo tiene uno de ésos no se pinta.
+const NOMBRES_DE_LOS_BOTONES := {
+	MOUSE_BUTTON_MASK_LEFT: "Click Izq",
+	MOUSE_BUTTON_MASK_RIGHT: "Click Der",
+}
+
 @export var _tareas: Label
 @export var _subtitulo: Label
+
+## La referencia de controles, una línea por renglón, debajo del contador de tareas.
+@export var _controles: Label
 
 var foco_presente: bool = false
 
@@ -69,16 +80,54 @@ func mostrar_subtitulo(texto: String) -> void:
 	_subtitulo.text = texto
 
 
-func pintar_referencia(_lineas: Array[ReferenciaDeControles.Linea]) -> void:
-	pass
+## Pinta las líneas de la referencia con el control que cada gesto tiene asignado ahora. Qué
+## líneas valen llega decidido; la que no tiene un control con nombre no se pinta.
+func pintar_referencia(lineas: Array[ReferenciaDeControles.Linea]) -> void:
+	var textos := PackedStringArray()
+	for linea in lineas:
+		var texto := ReferenciaDeControles.texto(
+			linea, nombre_del_control(ReferenciaDeControles.accion(linea))
+		)
+		if not texto.is_empty():
+			textos.append(texto)
+	mostrar_referencia(textos)
 
 
-func mostrar_referencia(_lineas: PackedStringArray) -> void:
-	pass
+## Pinta las líneas tal como llegan, una por renglón. Una lista vacía no dice nada.
+func mostrar_referencia(lineas: PackedStringArray) -> void:
+	_controles.text = "\n".join(lineas)
 
 
-static func nombre_del_control(_accion: StringName) -> String:
+## El nombre del control asignado al gesto: el primero de teclado o de mouse que tenga nombre. Un
+## joystick no se lee. Sin ninguno, vacío.
+static func nombre_del_control(accion: StringName) -> String:
+	if not InputMap.has_action(accion):
+		return ""
+	for evento in InputMap.action_get_events(accion):
+		var nombre := _nombre_del_evento(evento)
+		if not nombre.is_empty():
+			return nombre
 	return ""
+
+
+static func _nombre_del_evento(evento: InputEvent) -> String:
+	var boton := evento as InputEventMouseButton
+	if boton != null:
+		if boton.button_index <= 0:
+			return ""
+		var nombre: String = NOMBRES_DE_LOS_BOTONES.get(1 << (boton.button_index - 1), "")
+		return nombre
+	var tecla := evento as InputEventKey
+	if tecla == null:
+		return ""
+	# La asignación de fábrica guarda la tecla física. Traducirla con la distribución del teclado
+	# es del servidor de pantalla, que en headless no la soporta: se lee la tecla como está.
+	var codigo := tecla.keycode
+	if codigo == KEY_NONE:
+		codigo = tecla.key_label
+	if codigo == KEY_NONE:
+		codigo = tecla.physical_keycode
+	return OS.get_keycode_string(codigo)
 
 
 ## Borra la línea de subtítulo. La llama el fin del examen: el subtítulo dura lo que dura él.
