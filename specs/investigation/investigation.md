@@ -1,9 +1,9 @@
 ---
 schema_version: 1
 capability_id: CAP-INV
-status: ratified
+status: draft
 owner: por definir
-provenance: GDD «Investigación» y «La computadora»; ficha «Interfaces virtuales durante la jornada» y decisiones de #373; migración de los specs 006, 009, 018
+provenance: GDD «Investigación» y «La computadora»; ficha «Interfaces virtuales durante la jornada» y decisiones de #373 y #376; migración de los specs 006, 009, 018
 ---
 
 # Capacidad: la investigación
@@ -92,13 +92,11 @@ un pensamiento, no un examen.
 
 ### BR-INV-018 — Se examina sólo lo que se lleva
 
-CUANDO se pide examinar con las manos vacías y la mira sobre un levantable, el sistema NO
-DEBE arrancar un examen, retener al jugador ni mover lo que se mira. Con algo en la mano,
-DEBE examinar lo que se lleva. Sobre algo no levantable, la E sigue siendo el pensamiento
-de BR-INV-017, sin retener al jugador.
-
-Mientras no se resuelva OQ-INV-002, pedir examinar un levantable con las manos vacías NO
-DEBE revelar ni registrar un hallazgo (BR-INV-001).
+CUANDO se pide examinar con las manos vacías y la mira sobre un levantable, el sistema DEBE
+mostrar su subtítulo como pensamiento (BR-SUB-002). NO DEBE arrancar un examen, retener al
+jugador, mover lo que se mira, revelar ni registrar un hallazgo (BR-INV-001): el subtítulo no
+es la revelación. Con algo en la mano, DEBE examinar lo que se lleva. Sobre algo no levantable,
+la E sigue siendo el pensamiento de BR-INV-017, sin retener al jugador.
 
 ### BR-INV-019 — Lo examinado gira a pedido
 
@@ -255,11 +253,12 @@ ENTONCES ya se puede abandonar.
 
 ### AC-INV-020 — Las manos vacías no examinan *(verifica BR-INV-018, BR-INV-001)*
 
-DADO las manos vacías y la mira sobre un levantable CUANDO se pide examinar dos veces
-ENTONCES no hay examen, el jugador no queda retenido, el levantable sigue en su lugar, las
-manos siguen vacías y no se registra hallazgo ni se avisa que empezó o terminó un examen.
-DADO algo en la mano y la mira sobre otro levantable ENTONCES se examina lo que se lleva.
-
+DADO las manos vacías y la mira sobre la mopa, con una revelación, CUANDO se pide examinar dos
+veces ENTONCES la línea de subtítulo muestra «Una mopa para limpiar las manchas del local.» y
+ningún texto de la revelación; no hay examen, el jugador no queda retenido, la mopa sigue en su
+lugar, las manos siguen vacías, la cuenta de hallazgos sigue en 0 y no se avisa que empezó o
+terminó un examen. DADO algo en la mano y la mira sobre otro levantable ENTONCES se examina lo
+que se lleva.
 
 ### AC-INV-022 — Las teclas giran lo examinado *(verifica BR-INV-019)*
 
@@ -407,12 +406,9 @@ segundo con nombre y círculo liso del tema, sin contador cero.
   examinando.
 - [`ambience`](../ambience/ambience.md) (alimenta): cada recepción aceptada dispara el sonido
   de mensaje del celular; escribir una nota en la computadora no es recibir un mensaje.
+- [`subtitles`](../subtitles/subtitles.md) (alimenta): cuándo arranca y termina el examen de lo
+  que se lleva, que deja su texto fijo en la línea de subtítulo.
 
 ## Preguntas abiertas
 
-- **OQ-INV-002 — ¿La E con las manos vacías revela un levantable o sólo lo nombra?**
-  - Por qué sigue abierta: la ficha de interacciones pide un subtítulo, y la ficha
-    «Subtítulos» todavía no decide si cuenta como hallazgo. Mientras tanto no revela ni
-    registra: mirar no revela (BR-INV-001).
-  - Decide: una persona de game design junto con la ficha «Subtítulos».
-  - Bloquea: nada de esta regla; condiciona el futuro subtítulo de manos vacías.
+Ninguna.
