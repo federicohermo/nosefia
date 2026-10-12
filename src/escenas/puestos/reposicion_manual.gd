@@ -8,6 +8,14 @@ const JugadorDelLocal := preload("res://src/escenas/jugador.gd")
 const OBJETO := preload("res://src/escenas/objetos/objeto_agarrable.tscn")
 const CONTORNO := preload("res://src/sistemas/marco/aristas_del_foco.gdshader")
 const SIN_SUPERFICIE := preload("res://src/escenas/puestos/casillero_sin_superficie.gdshader")
+const FILA_DE_ATRAS := preload("res://src/escenas/puestos/fila_de_atras_apagada.gdshader")
+
+## Cuánto color le queda a la fila de atrás de la góndola: con 1 se ve como la de adelante, con
+## 0 queda en gris. La fila de atrás no se agarra y sólo dice qué va en ese estante (BR-STK-025):
+## apagada, el jugador distingue a simple vista qué se repone.
+const SATURACION_DE_LA_FILA_DE_ATRAS := 0.45
+## Cuánta luz le queda a la fila de atrás: con 1 se ve como la de adelante, con 0 queda negra.
+const BRILLO_DE_LA_FILA_DE_ATRAS := 0.7
 
 ## Cuántas veces se parte al medio la búsqueda del borde de un apoyo.
 const PASOS_DEL_BORDE := 12
@@ -1005,6 +1013,7 @@ func _preparar_grupos() -> void:
 		var grupo := _dibujar(
 			"ProductosDe" + producto.nombre, malla, disposicion.principales[producto.id]
 		)
+		grupo.material_override = _con_la_fila_de_atras_apagada(malla.surface_get_material(0))
 		_grupos.append(grupo)
 		_guias_sumadas.append(0)
 		var sueltos := GrupoDelPiso.new()
@@ -1012,6 +1021,25 @@ func _preparar_grupos() -> void:
 		sueltos.preparar(malla, repositor.estante().cupo(producto))
 		add_child(sueltos)
 		_sueltos.append(sueltos)
+
+
+## El material del grupo de un producto: el del modelo, con la fila de atrás apagada.
+##
+## **Es uno por grupo, sobre el mismo dibujo**, y no otro nodo para la fila de atrás: cada grupo
+## toma la luz de las sondas en el centro de su caja, y un nodo aparte la tomaría en otro punto.
+## El rango apagado lo pone `_mostrar_lo_puesto()`, que es quien sabe dónde empieza cada fila.
+## El modelo queda con su material: la unidad en la mano, la soltada y el casillero lo usan.
+func _con_la_fila_de_atras_apagada(original: BaseMaterial3D) -> ShaderMaterial:
+	var material := ShaderMaterial.new()
+	material.shader = FILA_DE_ATRAS
+	material.set_shader_parameter("color", original.albedo_color)
+	material.set_shader_parameter("textura", original.albedo_texture)
+	material.set_shader_parameter("rugosidad", original.roughness)
+	material.set_shader_parameter("metalico", original.metallic)
+	material.set_shader_parameter("especular", original.metallic_specular)
+	material.set_shader_parameter("saturacion_atras", SATURACION_DE_LA_FILA_DE_ATRAS)
+	material.set_shader_parameter("brillo_atras", BRILLO_DE_LA_FILA_DE_ATRAS)
+	return material
 
 
 ## Un casillero por lugar de la fila de adelante de cada producto: el cuerpo que la mira enfoca,
@@ -1194,6 +1222,11 @@ func _mostrar_lo_puesto(id: Producto.Id) -> void:
 	if dibujo.size() == bloque.size():
 		copias.buffer = dibujo
 	copias.visible_instance_count = primera + ocupados.size()
+	# La fila de atrás va entre las guías sumadas y la primera reponible, y no se reordena: el
+	# rango apagado no se mueve aunque se llene o se vacíe un casillero.
+	var material := _grupos[id].material_override as ShaderMaterial
+	material.set_shader_parameter("desde_atras", _guias_sumadas[id])
+	material.set_shader_parameter("hasta_atras", primera)
 
 
 ## Un `MultiMeshInstance3D` con todas las copias de un bloque, prendidas.
