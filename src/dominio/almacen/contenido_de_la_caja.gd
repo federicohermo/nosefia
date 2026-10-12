@@ -94,6 +94,10 @@ func uso(sostenido: ObjetoDelAlmacen) -> Gesto:
 	return Gesto.NADA
 
 
+func derecho_posible(_sostenido: ObjetoDelAlmacen) -> Gesto:
+	return Gesto.NADA
+
+
 ## Lo que dice la caja al examinarla: cuántas tiene y, si no está llena, cuántas le entran.
 ##
 ## No dice la pista de la caja. Esa se registra en la investigación, y el texto dice sólo la

@@ -340,3 +340,27 @@ func test_el_tope_de_la_caja_no_se_escribe_otra_vez() -> void:
 		. is_empty()
 	)
 	assert_str(texto).contains("ReglasDelEstante.UNIDADES_POR_CAJA")
+
+
+func test_el_derecho_posible_saca_con_una_y_no_con_cero() -> void:  # AC-PLY-083
+	# Contesta como el gesto pero mirando el contenido, y no saca nada al contestar.
+	var actroncito := _producto(Producto.Id.ACTRONCITO)
+	var con_una := _caja(actroncito, _estante(actroncito, 1))
+	assert_int(con_una.derecho_posible(null)).is_equal(ContenidoDeLaCaja.Gesto.SACAR)
+	assert_int(con_una.unidades()).is_equal(1)
+	var vacia := _caja(actroncito, _estante(actroncito, 0))
+	assert_int(vacia.derecho_posible(null)).is_equal(ContenidoDeLaCaja.Gesto.NADA)
+	var llevada := load("res://src/dominio/almacen/caja_de_reposicion.tres") as ObjetoDelAlmacen
+	assert_int(con_una.derecho_posible(llevada)).is_equal(ContenidoDeLaCaja.Gesto.NADA)
+
+
+func test_el_derecho_posible_mete_sin_llenar_y_no_cambia_nada() -> void:  # AC-PLY-083
+	var actroncito := _producto(Producto.Id.ACTRONCITO)
+	var unidad := UnidadDeProducto.new(actroncito)
+	var casi := _caja(actroncito, _estante(actroncito, ReglasDelEstante.UNIDADES_POR_CAJA - 1))
+	assert_int(casi.derecho_posible(unidad)).is_equal(ContenidoDeLaCaja.Gesto.METER)
+	assert_int(casi.unidades()).is_equal(ReglasDelEstante.UNIDADES_POR_CAJA - 1)
+	var llena := _caja(actroncito, _estante(actroncito, ReglasDelEstante.UNIDADES_POR_CAJA))
+	assert_int(llena.derecho_posible(unidad)).is_equal(ContenidoDeLaCaja.Gesto.NADA)
+	var otra := UnidadDeProducto.new(_producto(Producto.Id.DUREXTRA))
+	assert_int(casi.derecho_posible(otra)).is_equal(ContenidoDeLaCaja.Gesto.NADA)
