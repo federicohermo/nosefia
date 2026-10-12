@@ -262,9 +262,11 @@ encima de la nota; al reanudar, la nota DEBE continuar abierta y el control susp
 
 El sistema DEBE permitir leer las notas de tareas a realizar, mantener el local ordenado,
 jabones y manchas, instrucciones de limpieza y no tirar papel. La hoja y la lectura DEBEN
-compartir su contenido: texto para las dos del corcho, imagen original completa para las tres
-del baño. Las dos hojas del corcho DEBEN tener formato y tamaño equivalente a A4, con el
-contenido visible en el mundo; NO DEBEN presentarse como post its ni como una hoja por tarea.
+compartir su contenido: texto para las dos del corcho, imagen original completa para las cuatro
+del baño. Hay una hoja de no tirar papel arriba de cada uno de los dos inodoros, y las dos
+comparten la misma imagen. Las dos hojas del corcho DEBEN tener formato y tamaño equivalente a
+A4, con el contenido visible en el mundo; NO DEBEN presentarse como post its ni como una hoja
+por tarea.
 Las hojas del baño DEBEN conservar sus imágenes artísticas.
 
 La nota de tareas DEBE enumerar sólo las obligatorias que declara la jornada, en el orden
@@ -702,7 +704,7 @@ permanece donde estaba.
 
 ### AC-PLY-063 — Cada hoja abre su lectura y cierra con el derecho *(verifica BR-PLY-029, BR-PLY-006)*
 
-DADO cada una de las cinco notas pegadas enfocadas, CUANDO se hace clic derecho ENTONCES
+DADO cada una de las seis notas pegadas enfocadas, CUANDO se hace clic derecho ENTONCES
 aparece su contenido propio y se suspenden caminata, mirada y foco. CUANDO se hace otro clic
 derecho ENTONCES la lectura se cierra y el control vuelve.
 
@@ -745,15 +747,17 @@ y los títulos y renglones son iguales en la hoja y su lectura.
 
 ### AC-PLY-070 — El baño comparte la imagen artística completa *(verifica BR-PLY-030)*
 
-DADO cada nota de jabones y manchas, instrucciones de limpieza y no tirar papel, ENTONCES
-su lectura amplía la misma imagen frontal original completa y no agrega renglones.
+DADO cada hoja del baño —jabones y manchas, instrucciones de limpieza y las dos de no tirar
+papel—, ENTONCES su lectura amplía la misma imagen frontal original completa y no agrega
+renglones. Las dos de no tirar papel abren la misma imagen.
 
 ### AC-PLY-071 — Las notas del corcho y del baño se pueden leer *(verifica BR-PLY-030, BR-PLY-004)*
 
-DADO cada una de las cinco notas funcionales, ENTONCES tiene foco y contorno sobre su propia
-hoja desde un lugar transitable al alcance. El corcho presenta dos hojas: tareas a realizar y
-mantener el local ordenado. No aparecen papeles vacíos ni una hoja por tarea. Las imágenes
-originales del baño se conservan al agregar lectura.
+DADO cada una de las seis notas funcionales, ENTONCES tiene foco y contorno sobre su propia
+hoja desde un lugar transitable al alcance. Hay una hoja de no tirar papel arriba de cada
+inodoro. El corcho presenta dos hojas: tareas a realizar y mantener el local ordenado. No
+aparecen papeles vacíos ni una hoja por tarea. Las imágenes originales del baño se conservan
+al agregar lectura.
 
 ### AC-PLY-072 — La caja abre con cada mano y la conserva *(verifica BR-PLY-031, BR-PLY-026, BR-PLY-006, BR-PLY-028)*
 
