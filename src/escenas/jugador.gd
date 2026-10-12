@@ -8,6 +8,8 @@ signal objetivo_perdido
 signal uso_pedido(objetivo: Node3D)
 signal uso_sobre_superficie_pedido(punto: Vector3, normal: Vector3, cuerpo: PhysicsBody3D)
 
+signal referencia_cambiada(lineas: Array[ReferenciaDeControles.Linea])
+
 ## Cuando la cadencia dice que toca un paso. No se emite por cuadro: ver `CadenciaDePasos`.
 signal paso_dado
 
@@ -435,6 +437,10 @@ func suspender() -> void:
 
 func reanudar() -> void:
 	_control.reanudar()
+
+
+func _publicar_la_referencia() -> void:
+	pass
 
 
 ## Pone al jugador en `lugar`, quieto y con la vista horizontal hacia donde mira `lugar`.

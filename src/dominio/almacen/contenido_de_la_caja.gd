@@ -94,8 +94,15 @@ func uso(sostenido: ObjetoDelAlmacen) -> Gesto:
 	return Gesto.NADA
 
 
-func derecho_posible(_sostenido: ObjetoDelAlmacen) -> Gesto:
-	return Gesto.NADA
+## Qué haría el clic sobre la caja, sin hacerlo: como `uso()`, pero sin nada que sacar no saca, y
+## llena no mete. Lo pregunta la referencia de controles, y no cambia nada.
+func derecho_posible(sostenido: ObjetoDelAlmacen) -> Gesto:
+	var gesto := uso(sostenido)
+	if gesto == Gesto.SACAR and unidades() <= 0:
+		return Gesto.NADA
+	if gesto == Gesto.METER and unidades() >= ReglasDelEstante.UNIDADES_POR_CAJA:
+		return Gesto.NADA
+	return gesto
 
 
 ## Lo que dice la caja al examinarla: cuántas tiene y, si no está llena, cuántas le entran.

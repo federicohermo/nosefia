@@ -69,6 +69,18 @@ func mostrar_subtitulo(texto: String) -> void:
 	_subtitulo.text = texto
 
 
+func pintar_referencia(_lineas: Array[ReferenciaDeControles.Linea]) -> void:
+	pass
+
+
+func mostrar_referencia(_lineas: PackedStringArray) -> void:
+	pass
+
+
+static func nombre_del_control(_accion: StringName) -> String:
+	return ""
+
+
 ## Borra la línea de subtítulo. La llama el fin del examen: el subtítulo dura lo que dura él.
 func vaciar_subtitulo() -> void:
 	_subtitulo.text = ""

@@ -227,3 +227,74 @@ func _scripts_de(carpeta: String) -> Array[String]:
 	for subcarpeta in DirAccess.get_directories_at(carpeta):
 		encontrados.append_array(_scripts_de(carpeta + "/" + subcarpeta))
 	return encontrados
+
+
+func test_la_referencia_va_debajo_del_contador_una_por_renglon() -> void:  # AC-PLY-082
+	var hud: Hud = auto_free(load(ESCENA_DEL_HUD).instantiate())
+	add_child(hud)
+	hud.declarar_obligatorias(1)
+	var tareas: Label = hud.get_node("Tareas")
+	var controles := hud.get_node_or_null("Controles") as Label
+	assert_object(controles).is_not_null()
+	if controles == null:
+		return
+	assert_str(controles.text).is_empty()
+	assert_float(tareas.get_global_rect().end.y).is_less_equal(
+		controles.get_global_rect().position.y
+	)
+	assert_int(controles.mouse_filter).is_equal(Control.MOUSE_FILTER_IGNORE)
+	hud.mostrar_referencia(PackedStringArray(["[E] Examinar (mano)", "[Click Izq] Dejar"]))
+	assert_str(controles.text).is_equal("[E] Examinar (mano)\n[Click Izq] Dejar")
+	hud.mostrar_referencia(PackedStringArray())
+	assert_str(controles.text).is_empty()
+
+
+func test_el_control_sale_de_la_asignacion_vigente() -> void:  # AC-PLY-088
+	# La asignación de fábrica: la E, y los dos botones del mouse con su nombre.
+	assert_str(Hud.nombre_del_control(ReglasDeLosObjetos.ACCION_EXAMINAR)).is_equal("E")
+	assert_str(Hud.nombre_del_control(ReglasDeLosObjetos.ACCION_AGARRAR)).is_equal("Click Izq")
+	assert_str(Hud.nombre_del_control(ReglasDelJugador.ACCION_USAR)).is_equal("Click Der")
+	# Reasignada a la Q, la primera línea la sigue, y un joystick antes no le gana al teclado.
+	var accion := StringName(ReglasDeLosObjetos.ACCION_EXAMINAR)
+	var originales := InputMap.action_get_events(accion)
+	InputMap.action_erase_events(accion)
+	var joystick := InputEventJoypadButton.new()
+	joystick.button_index = JOY_BUTTON_X
+	InputMap.action_add_event(accion, joystick)
+	var q := InputEventKey.new()
+	q.physical_keycode = KEY_Q
+	InputMap.action_add_event(accion, q)
+	var hud: Hud = auto_free(load(ESCENA_DEL_HUD).instantiate())
+	add_child(hud)
+	var lineas: Array[ReferenciaDeControles.Linea] = [
+		ReferenciaDeControles.Linea.EXAMINAR_LA_MANO, ReferenciaDeControles.Linea.DEJAR
+	]
+	hud.pintar_referencia(lineas)
+	var texto: String = (hud.get_node("Controles") as Label).text
+	InputMap.action_erase_events(accion)
+	for evento in originales:
+		InputMap.action_add_event(accion, evento)
+	assert_str(texto).is_equal("[Q] Examinar (mano)\n[Click Izq] Dejar")
+	assert_str(Hud.nombre_del_control(accion)).is_equal("E")
+
+
+func test_un_gesto_sin_control_con_nombre_no_da_linea() -> void:  # AC-PLY-088
+	var accion := StringName(ReglasDeLosObjetos.ACCION_EXAMINAR)
+	var originales := InputMap.action_get_events(accion)
+	InputMap.action_erase_events(accion)
+	var joystick := InputEventJoypadButton.new()
+	joystick.button_index = JOY_BUTTON_X
+	InputMap.action_add_event(accion, joystick)
+	var hud: Hud = auto_free(load(ESCENA_DEL_HUD).instantiate())
+	add_child(hud)
+	var lineas: Array[ReferenciaDeControles.Linea] = [
+		ReferenciaDeControles.Linea.EXAMINAR_LA_MANO,
+		ReferenciaDeControles.Linea.DEJAR,
+		ReferenciaDeControles.Linea.INTERACTUAR,
+	]
+	hud.pintar_referencia(lineas)
+	var texto: String = (hud.get_node("Controles") as Label).text
+	InputMap.action_erase_events(accion)
+	for evento in originales:
+		InputMap.action_add_event(accion, evento)
+	assert_str(texto).is_equal("[Click Izq] Dejar\n[Click Der] Interactuar")
