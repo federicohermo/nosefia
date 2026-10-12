@@ -35,6 +35,9 @@ func _ready() -> void:
 	_volver_al_menu.pressed.connect(volver_al_menu_pedido.emit)
 	_configuraciones.pressed.connect(abrir_configuraciones)
 	_pantalla.cerrada.connect(_al_cerrar_configuraciones)
+	# Una capa hija no hereda el orden de la madre: sin esto, el almacén sube la pausa por encima
+	# de configuraciones y su fondo tapa la pantalla y se come los clics.
+	_pantalla.layer = layer + 1
 	get_viewport().size_changed.connect(_ajustar_al_viewport)
 	_ajustar_al_viewport()
 
