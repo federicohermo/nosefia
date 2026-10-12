@@ -9,6 +9,7 @@ const UNICO_LUGAR_DEL_CIERRE := "res://src/sistemas/marco/pedidos_del_menu.gd"
 var _nuevos: int = 0
 var _salidas: int = 0
 var _continuaciones: int = 0
+var _configuraciones: int = 0
 var _guardado: Guardado
 
 
@@ -16,6 +17,7 @@ func _pedidos(hay_guardado: bool = false) -> PedidosDelMenu:
 	_nuevos = 0
 	_salidas = 0
 	_continuaciones = 0
+	_configuraciones = 0
 	_guardado = Guardado.new()
 	_guardado.ruta = create_temp_dir("pedidos").path_join("partida.guardado")
 	_guardado.borrar()
@@ -26,6 +28,7 @@ func _pedidos(hay_guardado: bool = false) -> PedidosDelMenu:
 	pedidos.nuevo_juego_pedido.connect(func() -> void: _nuevos += 1)
 	pedidos.salir_pedido.connect(func() -> void: _salidas += 1)
 	pedidos.continuar_pedido.connect(func() -> void: _continuaciones += 1)
+	pedidos.configuraciones_pedida.connect(func() -> void: _configuraciones += 1)
 	return pedidos
 
 
@@ -57,9 +60,8 @@ func test_rearmado_nuevo_juego_vuelve_a_pedir() -> void:
 func test_las_opciones_deshabilitadas_no_piden_nada() -> void:
 	var pedidos := _pedidos()
 	pedidos.elegir(MenuDeInicio.Opcion.CONTINUAR)
-	pedidos.elegir(MenuDeInicio.Opcion.CONFIGURACIONES)
 	pedidos.elegir(MenuDeInicio.Opcion.LOGROS)
-	assert_int(_nuevos + _salidas + _continuaciones).is_equal(0)
+	assert_int(_nuevos + _salidas + _continuaciones + _configuraciones).is_equal(0)
 
 
 func test_con_guardado_continuar_pide_una_sola_vez_con_doble_clic() -> void:
@@ -82,6 +84,28 @@ func test_con_guardado_nuevo_juego_borra_y_empieza_directamente() -> void:  # AC
 func test_sin_guardado_nuevo_juego_es_directo() -> void:  # AC-SAV-014
 	_pedidos().elegir(MenuDeInicio.Opcion.NUEVO_JUEGO)
 	assert_int(_nuevos).is_equal(1)
+
+
+## Configuraciones no es una salida del menú: después de cerrarla, el menú sigue aceptando un
+## pedido.
+func test_configuraciones_se_pide_cada_vez_y_no_traba_el_menu() -> void:  # AC-CFG-010
+	var pedidos := _pedidos()
+	pedidos.elegir(MenuDeInicio.Opcion.CONFIGURACIONES)
+	pedidos.elegir(MenuDeInicio.Opcion.CONFIGURACIONES)
+	pedidos.elegir(MenuDeInicio.Opcion.NUEVO_JUEGO)
+	assert_int(_configuraciones).is_equal(2)
+	assert_int(_nuevos).is_equal(1)
+
+
+func test_nuevo_juego_no_toca_las_preferencias() -> void:  # AC-CFG-011
+	var preferencias := Preferencias.new()
+	preferencias.poner(Preferencias.Campo.MUSICA, 30.0)
+	var archivo := ArchivoDePreferencias.new()
+	archivo.ruta = create_temp_dir("pedidos").path_join("preferencias")
+	assert_bool(archivo.escribir(preferencias)).is_true()
+	_pedidos(true).elegir(MenuDeInicio.Opcion.NUEVO_JUEGO)
+	assert_bool(_guardado.hay_guardado()).is_false()
+	assert_float(archivo.cargar().valor(Preferencias.Campo.MUSICA)).is_equal_approx(30.0, 1e-6)
 
 
 func test_salir_es_el_unico_cierre_del_juego() -> void:  # AC-SAV-015

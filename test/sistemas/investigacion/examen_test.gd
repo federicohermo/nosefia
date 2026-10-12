@@ -353,3 +353,22 @@ func test_la_e_con_manos_vacias_no_examina_ni_revela_un_levantable() -> void:  #
 	assert_int(terminados[0]).is_zero()
 	assert_int(examen.hallazgos().cantidad()).is_zero()
 	assert_object(agarre.manos().sostenido()).is_null()
+
+
+func test_el_arrastre_gira_lo_examinado_con_la_sensibilidad_elegida() -> void:  # AC-CFG-006
+	var giros: Array[float] = []
+	for factor: float in [1.0, 2.0, 0.25]:
+		var agarre := _agarre()
+		var examen := _examen(agarre)
+		var cuerpo := _cuerpo()
+		agarre.pedir_agarrar(_lata(), cuerpo)
+		examen.iniciar()
+		examen.sensibilidad = ReglasDelJugador.SENSIBILIDAD_DEL_MOUSE * factor
+		var antes := cuerpo.basis
+		examen.arrastrar(Vector2(100.0, 0.0), true)
+		giros.append(
+			antes.get_rotation_quaternion().angle_to(cuerpo.basis.get_rotation_quaternion())
+		)
+	assert_float(giros[0]).is_greater(0.0)
+	assert_float(giros[1]).is_equal_approx(giros[0] * 2.0, 1e-4)
+	assert_float(giros[2]).is_equal_approx(giros[0] * 0.25, 1e-4)

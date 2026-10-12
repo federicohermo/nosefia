@@ -213,10 +213,30 @@ func _ready() -> void:
 	pausa.pausado.connect(_programa_de_tickets.cerrar_las_listas)
 	pausa.reanudado.connect(_jugador.tomar_el_cursor_desde_entrada)
 	pausa.volver_al_menu_pedido.connect(func() -> void: _ir_al_menu.call())
+	_cablear_las_preferencias(pausa)
 	_arranque = _jugador.global_transform
 	add_child(EnlaceDeGuardado.new(_ciclo, Guardado.new()))
 	_ciclo.arrancar(_partida, _reloj)
 	_reposicion_manual.preparar()
+
+
+## Configuraciones desde la pausa: lo guardado se aplica al entrar, y cada cambio vale en el
+## momento. Esc la cierra sin reanudar: lo decide la pausa, y la cierra el menú que la abrió.
+func _cablear_las_preferencias(pausa: ControlDePausa) -> void:
+	var ajuste := AjusteDePreferencias.new()
+	add_child(ajuste)
+	var preferencias := ajuste.cargar_y_aplicar()
+	_jugador.ajustar_sensibilidad(preferencias.sensibilidad_del_giro())
+	var menu: MenuDePausa = get_node("Interfaz/MenuDePausa")
+	var configuraciones := menu.configuraciones()
+	configuraciones.preparar(preferencias)
+	configuraciones.preferencias_cambiadas.connect(ajuste.cambiar)
+	configuraciones.preferencias_cambiadas.connect(
+		func(nuevas: Preferencias) -> void:
+			_jugador.ajustar_sensibilidad(nuevas.sensibilidad_del_giro())
+	)
+	pausa.configuraciones = configuraciones
+	pausa.cierre_de_configuraciones_pedido.connect(menu.cerrar_configuraciones)
 
 
 ## Cada noche arranca sin tareas cumplidas, cada caja del depósito llena y la góndola

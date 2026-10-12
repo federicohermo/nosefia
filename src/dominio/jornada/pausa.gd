@@ -4,10 +4,16 @@
 class_name Pausa
 extends RefCounted
 
-enum Accion { NADA, PAUSAR, REANUDAR }
+enum Accion { NADA, PAUSAR, REANUDAR, CERRAR_CONFIGURACIONES }
 
 
-static func ante_esc(en_pausa: bool, placa_en_pantalla: bool) -> Accion:
+## Con configuraciones abierta desde la pausa, Esc la cierra y deja la pausa: el Esc siguiente
+## reanuda.
+static func ante_esc(
+	en_pausa: bool, placa_en_pantalla: bool, configuraciones_abierta: bool = false
+) -> Accion:
+	if configuraciones_abierta:
+		return Accion.CERRAR_CONFIGURACIONES
 	if placa_en_pantalla:
 		return Accion.NADA
 	return Accion.REANUDAR if en_pausa else Accion.PAUSAR

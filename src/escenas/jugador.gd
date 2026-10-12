@@ -31,14 +31,12 @@ const PASOS_DEL_UTIL_EN_LA_MANO := 64
 ## Se arma en la declaración y no en `_ready()` a propósito: así un test puede instanciar la
 ## escena sin entrarla al árbol y el control ya existe. Entrar la escena al árbol haría correr
 ## `_ready()`, que toca el cursor y conecta sistemas — dos cosas que en headless no significan nada.
-var _control := ControlDelJugador.new(
-	Mirada.new(
-		ReglasDelJugador.SENSIBILIDAD_DEL_MOUSE,
-		ReglasDelJugador.PITCH_MINIMO,
-		ReglasDelJugador.PITCH_MAXIMO
-	),
-	ReglasDelJugador.VELOCIDAD_DE_CAMINATA
+var _mirada := Mirada.new(
+	ReglasDelJugador.SENSIBILIDAD_DEL_MOUSE,
+	ReglasDelJugador.PITCH_MINIMO,
+	ReglasDelJugador.PITCH_MAXIMO
 )
+var _control := ControlDelJugador.new(_mirada, ReglasDelJugador.VELOCIDAD_DE_CAMINATA)
 
 var _cadencia := CadenciaDePasos.new()
 
@@ -126,6 +124,12 @@ func _ready() -> void:
 ## prueba contacto contra cientos de triángulos en cada paso: está medido en 5,4 ms por paso en
 ## escritorio contra 0,7 con una caja, y en la web el cuadro llegaba a 80 ms. El detalle sigue
 ## ahí para lo que sí lo necesita: los productos que caen y los rayos de la mira.
+## La sensibilidad de configuraciones: la vista y el examen giran con el mismo factor.
+func ajustar_sensibilidad(radianes_por_pixel: float) -> void:
+	_mirada.cambiar_sensibilidad(radianes_por_pixel)
+	examen.sensibilidad = radianes_por_pixel
+
+
 func ignorar_el_detalle(cuerpo: PhysicsBody3D) -> void:
 	add_collision_exception_with(cuerpo)
 	_excluidos.append(cuerpo.get_rid())

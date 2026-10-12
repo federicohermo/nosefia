@@ -13,9 +13,13 @@ extends Node
 signal pausado
 signal reanudado
 signal volver_al_menu_pedido
+signal cierre_de_configuraciones_pedido
 
 ## La placa del cierre, mirada sólo por si está en pantalla.
 @export var placa: CanvasLayer
+## Configuraciones abierta desde la pausa, mirada sólo por si está en pantalla. La cierra quien
+## la abrió, al recibir `cierre_de_configuraciones_pedido`.
+@export var configuraciones: CanvasLayer
 
 var _cursor_antes := false
 var _menu_pedido := false
@@ -42,7 +46,7 @@ func _input(evento: InputEvent) -> void:
 	if not evento.is_action_pressed("ui_cancel"):
 		return
 	get_viewport().set_input_as_handled()
-	_hacer(Pausa.ante_esc(get_tree().paused, _placa_en_pantalla()))
+	_hacer(Pausa.ante_esc(get_tree().paused, _placa_en_pantalla(), _configuraciones_en_pantalla()))
 
 
 func _physics_process(_delta: float) -> void:
@@ -71,6 +75,7 @@ func _hacer(accion: Pausa.Accion) -> void:
 		Pausa.Accion.NADA: func() -> void: pass,
 		Pausa.Accion.PAUSAR: pausar,
 		Pausa.Accion.REANUDAR: reanudar,
+		Pausa.Accion.CERRAR_CONFIGURACIONES: cierre_de_configuraciones_pedido.emit,
 	}
 	acciones[accion].call()
 
@@ -105,6 +110,10 @@ func pedir_volver_al_menu() -> void:
 
 func _placa_en_pantalla() -> bool:
 	return placa != null and placa.visible
+
+
+func _configuraciones_en_pantalla() -> bool:
+	return configuraciones != null and configuraciones.visible
 
 
 func _cursor_tomado() -> bool:

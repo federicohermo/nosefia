@@ -4,21 +4,25 @@ extends GdUnitTestSuite
 var _pausas: int = 0
 var _reanudaciones: int = 0
 var _menus: int = 0
+var _cierres: int = 0
 
 
 func before_test() -> void:
 	_pausas = 0
 	_reanudaciones = 0
 	_menus = 0
+	_cierres = 0
 
 
 func after_test() -> void:
 	get_tree().paused = false
 
 
-func _control(placa: CanvasLayer = null) -> ControlDePausa:
+func _control(placa: CanvasLayer = null, configuraciones: CanvasLayer = null) -> ControlDePausa:
 	var control: ControlDePausa = auto_free(ControlDePausa.new())
 	control.placa = placa
+	control.configuraciones = configuraciones
+	control.cierre_de_configuraciones_pedido.connect(func() -> void: _cierres += 1)
 	control.pausado.connect(func() -> void: _pausas += 1)
 	control.reanudado.connect(func() -> void: _reanudaciones += 1)
 	control.volver_al_menu_pedido.connect(func() -> void: _menus += 1)
@@ -114,3 +118,20 @@ func test_fuera_del_arbol_deja_de_mirar_el_cursor() -> void:
 	var arbol := get_tree()
 	remove_child(control)
 	assert_bool(arbol.physics_frame.is_connected(control._mirar_el_cursor)).is_false()
+
+
+func test_con_configuraciones_abierta_esc_la_cierra_y_sigue_en_pausa() -> void:  # AC-SAV-018
+	var configuraciones: CanvasLayer = auto_free(CanvasLayer.new())
+	configuraciones.visible = false
+	var control := _control(null, configuraciones)
+	control.cierre_de_configuraciones_pedido.connect(configuraciones.hide)
+	control._input(_esc())
+	configuraciones.show()
+	control._input(_esc())
+	assert_int(_cierres).is_equal(1)
+	assert_bool(configuraciones.visible).is_false()
+	assert_bool(get_tree().paused).is_true()
+	assert_int(_reanudaciones).is_zero()
+	control._input(_esc())
+	assert_bool(get_tree().paused).is_false()
+	assert_int(_reanudaciones).is_equal(1)
