@@ -68,6 +68,8 @@ func test_la_sensibilidad_cambiada_en_la_pausa_vale_al_reanudar() -> void:  # AC
 	(menu.get_node("Fondo/Panel/Opciones/Configuraciones") as Button).pressed.emit()
 	var pantalla := menu.configuraciones()
 	assert_bool(pantalla.visible).is_true()
+	# Encima del fondo de la pausa, o el fondo se come los clics.
+	assert_int(pantalla.layer).is_greater(menu.layer)
 	assert_bool(get_tree().paused).is_true()
 	assert_int(Input.mouse_mode).is_not_equal(Input.MOUSE_MODE_CAPTURED)
 	var fila: HBoxContainer = pantalla.filas()[Preferencias.CAMPOS.find(C.SENSIBILIDAD)]
