@@ -89,3 +89,8 @@ func recibe_objetos() -> bool:
 func interactuar() -> ObjetoDelAlmacen:
 	recolector.pedir_tirar(recibe_objetos())
 	return null
+
+
+## El cuerpo y la tapa dicen lo mismo: son el mismo contenedor.
+func texto_al_examinar() -> String:
+	return SubtitulosAlExaminar.de_lo_fijo(SubtitulosAlExaminar.CONTENEDOR)

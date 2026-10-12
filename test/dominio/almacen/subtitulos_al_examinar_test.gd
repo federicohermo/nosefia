@@ -119,7 +119,7 @@ func test_cada_util_y_cada_bolsa_dicen_su_texto() -> void:  # AC-SUB-012
 
 func test_cada_cosa_fija_dice_su_texto() -> void:  # AC-SUB-013
 	var tabla := _de_lo_fijo()
-	assert_int(tabla.size()).is_equal(18)
+	assert_int(tabla.size()).is_equal(17)
 	for id: StringName in tabla:
 		(
 			assert_str(SubtitulosAlExaminar.de_lo_fijo(id))
