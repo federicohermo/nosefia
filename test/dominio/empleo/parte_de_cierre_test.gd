@@ -109,14 +109,13 @@ func test_la_partida_que_termino_ofrece_volver_al_menu_y_no_seguir() -> void:  #
 		)
 
 
-func test_la_partida_en_curso_ofrece_seguir_y_volver_al_menu() -> void:  # AC-EMP-016
+## Salir al menú con la partida en curso pasa por la pausa, como en cualquier otro momento.
+func test_la_partida_en_curso_ofrece_solo_seguir() -> void:  # AC-EMP-016
 	# Tres apercibimientos es la noche antes del tope: todavía hay noche siguiente.
 	var parte := ParteDeCierre.new(
 		JORNADA_DE_PRUEBA, Apertura.obligatorias(JORNADA_DE_PRUEBA), 3, Partida.Final.EN_CURSO
 	)
-	assert_array(parte.opciones()).is_equal(
-		[ParteDeCierre.Opcion.SEGUIR, ParteDeCierre.Opcion.VOLVER_AL_MENU]
-	)
+	assert_array(parte.opciones()).is_equal([ParteDeCierre.Opcion.SEGUIR])
 
 
 func test_el_parte_de_la_partida_real_despedida_no_ofrece_seguir() -> void:  # AC-EMP-016

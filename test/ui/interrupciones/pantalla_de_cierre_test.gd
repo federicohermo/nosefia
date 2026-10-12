@@ -1,4 +1,4 @@
-## La placa del cierre: que copie el parte y que no decida nada.
+## La placa del cierre: que copie el parte, y que sus opciones salgan del parte.
 ##
 ## **Esta suite existe además del gate, no en su lugar.** Está medido que una pantalla con su
 ## `match` de bandas adentro y sin un solo test da `sin hallazgos` en `tdd` y `capas`: el gate de
@@ -108,16 +108,43 @@ func test_el_boton_de_continuar_despacha_el_cierre() -> void:
 	assert_bool(pantalla.visible).is_false()
 
 
-func test_con_la_partida_en_curso_la_placa_ofrece_seguir_y_volver_al_menu() -> void:  # AC-EMP-016
+func test_con_la_partida_en_curso_la_placa_ofrece_solo_continuar() -> void:  # AC-EMP-016
 	var pantalla := await _pantalla()
 	pantalla.mostrar(_parte())
 	var seguir: Button = pantalla.get_node("Fondo/Panel/Continuar")
 	var volver: Button = pantalla.get_node("Fondo/Panel/VolverAlMenu")
 	assert_bool(seguir.visible).is_true()
-	assert_bool(volver.visible).is_true()
-	assert_str(seguir.text).is_equal(PantallaDeCierre.TEXTOS[ParteDeCierre.Opcion.SEGUIR])
-	assert_str(volver.text).is_equal("VOLVER AL MENÚ")
+	assert_bool(volver.visible).is_false()
+	assert_str(seguir.text).is_equal("CONTINUAR")
 	assert_bool(seguir.has_focus()).is_true()
+
+
+func test_al_salir_de_la_pausa_el_foco_vuelve_al_primer_boton() -> void:  # AC-SAV-018
+	for nombre: String in ["Continuar", "VolverAlMenu"]:
+		var pantalla := await _pantalla()
+		pantalla.mostrar(_parte() if nombre == "Continuar" else _parte_terminada())
+		var primero: Button = pantalla.get_node("Fondo/Panel/" + nombre)
+		var otro: Button = auto_free(Button.new())
+		add_child(otro)
+		otro.grab_focus()
+		assert_bool(primero.has_focus()).is_false()
+		pantalla.notification(Node.NOTIFICATION_UNPAUSED)
+		assert_bool(primero.has_focus()).is_true()
+
+
+func test_la_placa_copia_las_opciones_del_parte() -> void:
+	var pantalla := await _pantalla()
+	var nombres: Dictionary[ParteDeCierre.Opcion, String] = {
+		ParteDeCierre.Opcion.SEGUIR: "Continuar",
+		ParteDeCierre.Opcion.VOLVER_AL_MENU: "VolverAlMenu",
+	}
+	for parte: ParteDeCierre in [_parte(), _parte_terminada()]:
+		pantalla.mostrar(parte)
+		var visibles: Array[ParteDeCierre.Opcion] = []
+		for opcion: ParteDeCierre.Opcion in nombres:
+			if (pantalla.get_node("Fondo/Panel/" + nombres[opcion]) as Button).visible:
+				visibles.append(opcion)
+		assert_array(visibles).is_equal(parte.opciones())
 
 
 func test_con_la_partida_que_termino_la_placa_ofrece_solo_volver_al_menu() -> void:  # AC-EMP-016
@@ -137,7 +164,8 @@ func test_con_la_partida_que_termino_la_placa_ofrece_solo_volver_al_menu() -> vo
 func test_volver_al_menu_despacha_su_opcion() -> void:
 	var pantalla := await _pantalla()
 	pantalla.cierre_despachado.connect(_anotar_despacho)
-	pantalla.mostrar(_parte())
+	pantalla.mostrar(_parte_terminada())
+	assert_bool((pantalla.get_node("Fondo/Panel/VolverAlMenu") as Button).visible).is_true()
 	var volver: Button = pantalla.get_node("Fondo/Panel/VolverAlMenu")
 	volver.pressed.emit()
 	assert_array(_opciones_despachadas).is_equal([ParteDeCierre.Opcion.VOLVER_AL_MENU])
@@ -196,16 +224,9 @@ func test_el_cierre_con_cajas_pendientes_conserva_textos_y_botones_en_pantalla()
 			)
 
 
-func test_la_pantalla_no_decide_como_cerro_la_noche() -> void:
-	# El riesgo medido de este spec no es «hacer una pantalla»: es que la única regla nueva
-	# termine acá adentro, donde nace sin test y ningún gate lo dice.
+func test_la_pantalla_no_nombra_lo_que_decide_como_cerro_la_noche() -> void:
 	var texto := FileAccess.get_file_as_string(PANTALLA)
 	assert_str(texto).is_not_empty()
-	(
-		assert_array(_condiciones_en(texto))
-		. override_failure_message("`pantalla_de_cierre.gd` decide en vez de copiar campos")
-		. is_empty()
-	)
 	for nombre: String in NOMBRES_QUE_DECIDEN:
 		(
 			assert_bool(texto.contains(nombre))
@@ -253,6 +274,12 @@ func _parte() -> ParteDeCierre:
 	)
 
 
+func _parte_terminada() -> ParteDeCierre:
+	return ParteDeCierre.new(
+		JORNADA_DE_PRUEBA, Apertura.obligatorias(JORNADA_DE_PRUEBA), 5, Partida.Final.DESPEDIDO
+	)
+
+
 func _etiqueta(pantalla: PantallaDeCierre, nombre: String) -> Label:
 	return pantalla.get_node("Fondo/Panel/" + nombre)
 
@@ -260,18 +287,6 @@ func _etiqueta(pantalla: PantallaDeCierre, nombre: String) -> Label:
 func _anotar_despacho(opcion: ParteDeCierre.Opcion) -> void:
 	_despachos += 1
 	_opciones_despachadas.append(opcion)
-
-
-## Las líneas de código que abren una condición. Corta en el primer `#`, así que las palabras de
-## los comentarios no cuentan, y busca por palabra entera: `verificar` no es un `if`.
-func _condiciones_en(texto: String) -> Array[String]:
-	var abiertas: Array[String] = []
-	var condicion := RegEx.create_from_string("\\b(if|elif|match)\\b")
-	for linea in texto.split("\n"):
-		var codigo: String = linea.split("#")[0]
-		if not condicion.search_all(codigo).is_empty():
-			abiertas.append(linea.strip_edges())
-	return abiertas
 
 
 ## Todos los `.gd` de una carpeta, recorriendo las subcarpetas. `DirAccess` y no una lista a

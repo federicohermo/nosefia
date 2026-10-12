@@ -27,10 +27,11 @@ const MOTIVOS: Dictionary[Partida.Llamado, String] = {
 	Partida.Llamado.OBJETO_TIRADO: "Objetos importantes en la basura",
 }
 
-## Lo que el jugador puede elegir según cómo quedó la partida. Con la partida terminada no hay
-## noche siguiente que abrir.
+## Lo que el jugador puede elegir según cómo quedó la partida. Con la partida en curso, sólo
+## seguir: salir al menú pasa por la pausa. Con la partida terminada no hay noche siguiente que
+## abrir.
 const OPCIONES_POR_FINAL: Dictionary[Partida.Final, Array] = {
-	Partida.Final.EN_CURSO: [Opcion.SEGUIR, Opcion.VOLVER_AL_MENU],
+	Partida.Final.EN_CURSO: [Opcion.SEGUIR],
 	Partida.Final.DESPEDIDO: [Opcion.VOLVER_AL_MENU],
 	Partida.Final.CONTRATO_CUMPLIDO: [Opcion.VOLVER_AL_MENU],
 }

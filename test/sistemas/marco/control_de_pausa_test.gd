@@ -53,11 +53,25 @@ func test_el_nodo_corre_tambien_en_pausa() -> void:
 	assert_int(control.process_mode).is_equal(Node.PROCESS_MODE_ALWAYS)
 
 
-func test_con_la_placa_en_pantalla_esc_no_hace_nada() -> void:  # AC-SAV-018
+func test_con_la_placa_en_pantalla_esc_pausa_y_otro_esc_reanuda() -> void:  # AC-SAV-018
 	var placa: CanvasLayer = auto_free(CanvasLayer.new())
 	placa.visible = true
 	var control := _control(placa)
 	control._input(_esc())
+	assert_bool(get_tree().paused).is_true()
+	assert_int(_pausas).is_equal(1)
+	control._input(_esc())
+	assert_bool(get_tree().paused).is_false()
+	assert_int(_reanudaciones).is_equal(1)
+	assert_bool(placa.visible).is_true()
+
+
+func test_con_la_placa_en_pantalla_perder_el_cursor_no_pausa() -> void:  # AC-SAV-018
+	var placa: CanvasLayer = auto_free(CanvasLayer.new())
+	placa.visible = true
+	var control := _control(placa)
+	control.set("_cursor_antes", true)
+	control.call("_mirar_el_cursor")
 	assert_bool(get_tree().paused).is_false()
 	assert_int(_pausas).is_zero()
 
