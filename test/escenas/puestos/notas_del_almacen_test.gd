@@ -41,7 +41,14 @@ func _vista(almacen: Node3D) -> NotaEncuadrada:
 	return almacen.get_node("Interfaz/NotaEncuadrada")
 
 
-func test_las_cinco_hojas_abren_su_propio_dato_y_cierran_con_el_derecho() -> void:  # AC-PLY-063
+## Una hoja por nota, y la de no tirar papel dos veces: una arriba de cada inodoro.
+func _ids_de_las_seis_hojas() -> Array:
+	var ids: Array = NotaPegada.Id.values()
+	ids.append(NotaPegada.Id.NO_TIRAR_PAPEL)
+	return ids
+
+
+func test_las_seis_hojas_abren_su_propio_dato_y_cierran_con_el_derecho() -> void:  # AC-PLY-063
 	var almacen := await _abrir()
 	var jugador: Node3D = almacen.get_node("Jugador")
 	var puesto: Node = almacen.get_node("Estructura/NotasDelAlmacen")
@@ -62,7 +69,7 @@ func test_las_cinco_hojas_abren_su_propio_dato_y_cierran_con_el_derecho() -> voi
 		await _derecho()
 		assert_bool(vista.visible).is_false()
 		assert_bool((jugador.get("_control") as ControlDelJugador).esta_suspendido()).is_false()
-	assert_array(ids).contains_exactly_in_any_order(NotaPegada.Id.values())
+	assert_array(ids).contains_exactly_in_any_order(_ids_de_las_seis_hojas())
 
 
 func test_cada_objeto_sigue_en_la_mano_al_leer_y_salir() -> void:  # AC-PLY-064
@@ -247,7 +254,7 @@ func test_cada_hoja_se_enfoca_desde_un_lugar_transitable_y_se_lee() -> void:
 		assert_object(malla.material_overlay).is_same(anterior)
 		leidas.append(hoja.get("id"))
 		await _derecho()
-	assert_array(leidas).contains_exactly_in_any_order(NotaPegada.Id.values())
+	assert_array(leidas).contains_exactly_in_any_order(_ids_de_las_seis_hojas())
 
 
 func test_leer_continua_el_reloj_y_la_pausa_se_dibuja_encima() -> void:  # AC-PLY-067, AC-PLY-066
@@ -324,3 +331,29 @@ func test_el_corcho_ofrece_las_dos_notas_con_contenido() -> void:  # AC-PLY-071
 		if cuerpo.is_in_group(ReglasDelJugador.GRUPO_INTERACTUABLE):
 			funcionales += 1
 	assert_int(funcionales).is_equal(2)
+
+
+func test_hay_una_hoja_de_no_tirar_papel_arriba_de_cada_inodoro() -> void:  # AC-PLY-071
+	var almacen := await _abrir()
+	var hojas: Array[MeshInstance3D] = []
+	for nota: StaticBody3D in almacen.get_node("Estructura/NotasDelAlmacen").get("notas"):
+		if nota.get("id") == NotaPegada.Id.NO_TIRAR_PAPEL:
+			hojas.append(nota.get("mallas")[0])
+	assert_int(hojas.size()).is_equal(2)
+	for nombre: String in ["inodoro", "bano_inodoro_2"]:
+		var inodoro: MeshInstance3D = almacen.get_node("Estructura/" + nombre)
+		var caja := inodoro.global_transform * inodoro.mesh.get_aabb()
+		var arriba: Array[MeshInstance3D] = []
+		for hoja in hojas:
+			var centro := hoja.to_global(hoja.mesh.get_aabb().get_center())
+			if absf(centro.x - caja.get_center().x) < 0.05 and centro.y > caja.end.y:
+				arriba.append(hoja)
+		assert_int(arriba.size()).override_failure_message(nombre).is_equal(1)
+	var primera := hojas[0].to_global(hojas[0].mesh.get_aabb().get_center())
+	var segunda := hojas[1].to_global(hojas[1].mesh.get_aabb().get_center())
+	assert_float(segunda.y).is_equal_approx(primera.y, 0.001)
+	assert_float(segunda.z).is_equal_approx(primera.z, 0.001)
+	assert_object(hojas[1].mesh).is_same(hojas[0].mesh)
+	assert_object(hojas[1].get_node("StaticBody3D").call("imagen")).is_same(
+		hojas[0].get_node("StaticBody3D").call("imagen")
+	)

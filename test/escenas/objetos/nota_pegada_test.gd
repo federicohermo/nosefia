@@ -20,12 +20,15 @@ func test_el_texto_fisico_y_la_vista_presentan_el_mismo_dato() -> void:  # AC-PL
 	assert_object(cuerpo.imagen()).is_null()
 
 
-func test_las_tres_imagenes_vienen_del_frente_original() -> void:  # AC-PLY-070
+func test_las_cuatro_imagenes_vienen_del_frente_original() -> void:  # AC-PLY-070
 	var modelo: Node3D = auto_free(MODELO.instantiate())
-	var rutas: Array[String] = ["nota productos", "nota instrucciones", "nota baño inodoro"]
+	var rutas: Array[String] = [
+		"nota productos", "nota instrucciones", "nota baño inodoro", "nota baño inodoro 2"
+	]
 	var ids: Array[NotaPegada.Id] = [
 		NotaPegada.Id.JABONES_Y_MANCHAS,
 		NotaPegada.Id.INSTRUCCIONES_DE_LIMPIEZA,
+		NotaPegada.Id.NO_TIRAR_PAPEL,
 		NotaPegada.Id.NO_TIRAR_PAPEL,
 	]
 	for indice in rutas.size():
