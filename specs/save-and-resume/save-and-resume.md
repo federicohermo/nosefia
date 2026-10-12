@@ -1,9 +1,9 @@
 ---
 schema_version: 1
 capability_id: CAP-SAV
-status: ratified
+status: draft
 owner: por definir
-provenance: GDD «checkpoint al final de cada noche»; ficha «Pantalla entre jornadas» y decisiones de #374; migración de los specs 019, 020, 036
+provenance: GDD «checkpoint al final de cada noche»; ficha «Pantalla entre jornadas» y decisiones de #374; fichas «2. Menú de inicio» y «Pausa y menú de pausa» y decisiones de #378; migración de los specs 019, 020, 036
 ---
 
 # Capacidad: guardar y retomar
@@ -113,11 +113,16 @@ pausar: en la web el navegador consume Esc para soltar el cursor. Soltarlo el pr
 DEBE pausar. Cambiar de pestaña, minimizar o pasar a otra ventana NO DEBE pausar la jornada ni
 mostrar el menú de pausa; volver tampoco DEBE abrirlo.
 
+SI Configuraciones está abierta desde la pausa, ENTONCES Esc DEBE cerrarla y dejar el menú de
+pausa en pantalla, **sin reanudar**; el Esc siguiente reanuda, como siempre. SI Configuraciones
+está abierta desde el menú de inicio, ENTONCES Esc DEBE cerrarla y dejar el menú de inicio.
+
 ### BR-SAV-017 — El menú de pausa muestra cuatro opciones
 
 El menú de pausa DEBE mostrar cuatro opciones, en este orden: **reanudar, configuraciones, logros
-y volver al menú**. Configuraciones y logros DEBEN verse deshabilitadas. El menú de pausa no
-ofrece salir: el juego se cierra sólo desde el menú de inicio.
+y volver al menú**. Sólo logros DEBE verse deshabilitada: configuraciones DEBE estar habilitada y
+abrir Configuraciones. El menú de pausa no ofrece salir: el juego se cierra sólo desde el menú de
+inicio.
 
 ### BR-SAV-018 — Volver al menú abandona la jornada
 
@@ -219,12 +224,16 @@ ENTONCES se reanuda. DADO la placa del cierre en pantalla CUANDO llega Esc ENTON
 DADO el cursor tomado y la ventana activa CUANDO queda suelto sin que el juego lo suelte
 ENTONCES el juego queda en pausa; CUANDO lo suelta el propio juego ENTONCES no. DADO una jornada
 en curso CUANDO se cambia de pestaña o ventana y se vuelve ENTONCES sigue sin pausa; Esc sigue
-abriendo y cerrando la pausa manual.
+abriendo y cerrando la pausa manual. DADO Configuraciones abierta desde la pausa CUANDO llega Esc
+ENTONCES Configuraciones se cierra, el menú de pausa está en pantalla y el juego sigue en pausa;
+CUANDO llega otro Esc ENTONCES se reanuda. DADO Configuraciones abierta desde el menú de inicio
+CUANDO llega Esc ENTONCES Configuraciones se cierra y el menú de inicio está en pantalla.
 
 ### AC-SAV-019 — Los cuatro botones de la pausa *(verifica BR-SAV-017)*
 
 DADO el menú de pausa ENTONCES muestra reanudar, configuraciones, logros y volver al menú, en ese
-orden, y sólo reanudar y volver al menú están habilitados.
+orden; reanudar, configuraciones y volver al menú están habilitados, y sólo logros está
+deshabilitado.
 
 ### AC-SAV-020 — Volver al menú no guarda *(verifica BR-SAV-018)*
 
@@ -259,6 +268,8 @@ deshabilitado; al continuar una partida existente, su checkpoint previo se conse
 - Esta capacidad NO migra guardados entre versiones: eso es del día que exista una segunda.
 - Esta capacidad NO ofrece ranuras, autoguardado ni nube.
 - Esta capacidad NO avisa en pantalla que la escritura falló.
+- Esta capacidad NO guarda las preferencias del jugador: viven aparte, en
+  [`settings`](../settings/settings.md), y borrar el guardado no las toca.
 
 ## Contratos
 
@@ -280,6 +291,8 @@ deshabilitado; al continuar una partida existente, su checkpoint previo se conse
   legajo y el final; las instrucciones previas a una partida nueva.
 - [`shift-cycle`](../shift-cycle/shift-cycle.md) (alimenta): la jornada que anuncia la entrada
   al empezar o continuar, sin repetir las instrucciones al retomar.
+- [`settings`](../settings/settings.md) (alimenta): los dos menús abren Configuraciones, y Esc
+  la cierra.
 
 ## Preguntas abiertas
 
