@@ -31,6 +31,8 @@ flowchart TD
   CLN["store-cleanup<br/><i>el local en orden</i>"]
   AMB["ambience<br/><i>qué suena</i>"]
   NTF["notifications<br/><i>qué se avisa</i>"]
+  CFG["settings<br/><i>cómo suena, se ve y responde</i>"]
+  SUB["subtitles<br/><i>qué piensa el protagonista</i>"]
 
   CTR -- "obligatoria cumplida" --> SHF
   STK -- "obligatorias cumplidas y descumplidas" --> SHF
@@ -48,6 +50,9 @@ flowchart TD
   STK -- "qué casilleros están vacíos y cuáles ocupados" --> PLY
   PLY -- "qué objeto se examina" --> INV
   INV -- "la caja que se examina" --> STK
+  PLY -- "qué se mira y qué se lleva" --> SUB
+  INV -- "el examen empieza y termina" --> SUB
+  STK -- "el texto de la caja" --> SUB
   SHF -.-> AMB
   EMP -.-> AMB
   CTR -.-> AMB
@@ -57,6 +62,10 @@ flowchart TD
   INV -.-> AMB
   CTR -.-> NTF
   SHF -.-> NTF
+  SAV -- "los dos menús abren Configuraciones" --> CFG
+  CFG -- "volumen de cada bus" --> AMB
+  CFG -- "factor de giro de la vista" --> PLY
+  CFG -- "factor de giro del examen" --> INV
 ```
 
 La línea punteada expresa escucha sin respuesta. `ambience` escucha las señales de las demás.
@@ -73,15 +82,16 @@ es la resta**, y las capacidades que le apuntan son lo que cada lado compra.
 |---|---|---|
 | **Lo que el jefe pide** | `counter-service`, `store-stock`, `store-cleanup` | consumen tiempo **y** cumplen una obligatoria |
 | **Lo que el jugador elige** | `investigation` | consume tiempo y **no cumple nada** |
-| **El cuerpo** | `player-actions` | no consume por sí mismo: el precio son los metros |
+| **El cuerpo** | `player-actions`, `subtitles` | no consume por sí mismo: el precio son los metros |
 | **Lo que dura más que la noche** | `employment-record`, `save-and-resume` | no consumen: reciben el cierre |
+| **Lo que ajusta el jugador** | `settings` | no consume ni cumple: cambia cómo se oye, se ve y se gira, nunca la resta |
 
 Al evaluar una feature, la pregunta es de qué lado cae. Una que no toca esa resta es contenido,
 no diseño.
 
 ## Las fronteras que más se rompen
 
-Tres pares se confunden seguido, y cada uno tiene su regla escrita en los dos specs:
+Cuatro pares se confunden seguido, y cada uno tiene su regla escrita en los dos specs:
 
 - **`counter-service` y `store-stock`.** Cobrar es de la ventanilla; cuántas unidades hay y dónde
   están, de la mercadería. La ventanilla **pregunta**, no lleva su propia cuenta.
@@ -92,6 +102,9 @@ Tres pares se confunden seguido, y cada uno tiene su regla escrita en los dos sp
   investiga no está en el catálogo.
 - **`employment-record` y `save-and-resume`.** El legajo decide; el guardado sólo lo pone en
   disco y lo trae de vuelta.
+- **`save-and-resume` y `settings`.** El guardado es la partida y se borra con ella; las
+  preferencias son del jugador, viven en su propio archivo y ningún final las toca. Los menús
+  son del guardado; lo que se ajusta adentro de Configuraciones, de `settings`.
 
 ## Dónde va una regla nueva
 

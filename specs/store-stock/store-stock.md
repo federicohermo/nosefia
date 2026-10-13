@@ -1,9 +1,9 @@
 ---
 schema_version: 1
 capability_id: CAP-STK
-status: ratified
+status: draft
 owner: por definir
-provenance: GDD «Reponer» y «Registrar»; fichas «7. Tarea: Registro de productos vendidos», «8. Tarea: Reposición», «5. Formas de interacción con objetos» y «Particulares de cada jornada»; decisiones de #369; base «Productos y cajas contenedoras»; migración de los specs 005, 008, 033, 042, 047
+provenance: GDD «Reponer» y «Registrar»; fichas «7. Tarea: Registro de productos vendidos», «8. Tarea: Reposición», «5. Formas de interacción con objetos» y «Particulares de cada jornada»; decisiones de #369 y #376; base «Productos y cajas contenedoras»; migración de los specs 005, 008, 033, 042, 047
 ---
 
 # Capacidad: la mercadería del almacén
@@ -236,11 +236,13 @@ nada: la unidad sigue en la mano. Una caja no pasa nunca de las unidades de una 
 
 ### BR-STK-031 — La caja examinada dice cuántas tiene
 
-CUANDO el jugador examina una caja del depósito en la mano, el sistema DEBE mostrar
-un texto con su contenido y el nombre de su producto en el catálogo. SI la caja no está llena,
-ENTONCES el texto DEBE decir además cuántas le entran: las unidades de una caja menos su
-contenido. El texto NO DEBE decir nada más: la pista de la caja no se muestra. CUANDO termina el
-examen, el texto DEBE desaparecer. Examinar NO DEBE cambiar el contenido.
+CUANDO el jugador examina una caja del depósito en la mano, o pide examinarla apoyada con las
+manos vacías, el sistema DEBE mostrar un texto con su contenido y el nombre de su producto en el
+catálogo. SI la caja no está llena, ENTONCES el texto DEBE decir además cuántas le entran: las
+unidades de una caja menos su contenido. El texto NO DEBE decir nada más: la pista de la caja
+no se muestra. CUANDO termina el examen, el texto DEBE desaparecer. Con la caja apoyada no hay
+examen: el texto es un pensamiento (BR-SUB-002), y la caja sigue apoyada. Examinar NO DEBE
+cambiar el contenido.
 
 La unidad DEBE nombrarse por la familia sonora de su producto (BR-STK-023), y no por lo que el
 producto es: Actroncito es una caja de medicamentos y Malbardo un paquete de cigarrillos, y los
@@ -582,8 +584,9 @@ plural.
 
 DADO una caja en la mano CUANDO se la examina ENTONCES se lee su texto y no su pista. CUANDO
 termina el examen ENTONCES el texto desaparece y la caja tiene lo mismo que antes.
-DADO la caja apoyada y las manos vacías CUANDO se pide examinar ENTONCES no hay examen ni
-texto de la caja, y la caja sigue apoyada con el mismo contenido.
+DADO la caja apoyada con 5 de Malbardo y las manos vacías CUANDO se pide examinar ENTONCES no
+hay examen, la línea de subtítulo muestra «Una caja con 5 cajitas de Malbardo. Entran 3 más.»,
+y la caja sigue apoyada con 5.
 
 ### AC-STK-043 — El casillero ocupado se rechaza *(verifica BR-STK-009, BR-STK-032)*
 
@@ -780,6 +783,8 @@ jornada posterior ENTONCES su origen vuelve a ser su lugar de estantería.
   qué casilleros están vacíos y cuáles ocupados decide cuáles se muestran y cuáles se agarran.
 - [`investigation`](../investigation/investigation.md) (consume): el examen de una caja, que es
   el de cualquier levantable. Mientras dura se muestra el texto de la caja.
+- [`subtitles`](../subtitles/subtitles.md) (alimenta): el texto de la caja, que la línea de
+  subtítulo muestra con la caja apoyada y durante su examen.
 - [`shift-cycle`](../shift-cycle/shift-cycle.md) (alimenta y consume): avisa cuándo reponer y
   registrar y ordenar las cajas quedaron cumplidas, y cuándo dejaron de estarlo; y la jornada
   que abre decide lo que falta y la disposición inicial de las cajas.
