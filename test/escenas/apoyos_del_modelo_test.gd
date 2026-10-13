@@ -17,8 +17,8 @@ func test_cada_mancha_se_enfoca_desde_un_apoyo_caminable_a_su_alcance() -> void:
 		# también las diagonales y un poco más lejos, siempre dentro del alcance de la mira.
 		var pies: Array[Vector3] = []
 		for distancia: float in [1.0, 1.3, 1.6]:
-			for paso in 8:
-				var direccion := Vector3.FORWARD.rotated(Vector3.UP, TAU * paso / 8.0)
+			for paso in 16:
+				var direccion := Vector3.FORWARD.rotated(Vector3.UP, TAU * paso / 16.0)
 				pies.append(mancha.global_position + direccion * distancia)
 		for pie in pies:
 			# Hasta un metro abajo del piso y no de la mancha: la del moho está en una pared.

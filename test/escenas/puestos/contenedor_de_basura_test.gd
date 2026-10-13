@@ -279,9 +279,16 @@ func test_el_contenedor_fijo_conserva_los_viajes_del_local_y_las_bolsas() -> voi
 		puntos.append(almacen.get_node(ruta))
 	for ruta: NodePath in BolsaEnLaMano.RUTAS:
 		puntos.append(almacen.get_node(ruta))
+	# Las manchas del local son tareas del local; las del depósito, como la que está al lado del
+	# contenedor, no.
+	var del_local := 0
 	for mancha: Node in almacen.find_children("Mancha*", "Node3D", true, false):
-		puntos.append(mancha as Node3D)
-	assert_int(puntos.size()).is_equal(3 + ReglasDeLaBasura.BOLSAS_DE_LA_JORNADA + 4)
+		var lugar: PisoDelLocal.Lugar = mancha.call("lugar_de_la_mancha")
+		if PisoDelLocal.habitacion_de(lugar) == PisoDelLocal.ReglasDelCierre.Habitacion.LOCAL:
+			puntos.append(mancha as Node3D)
+			del_local += 1
+	assert_int(del_local).is_greater(0)
+	assert_int(puntos.size()).is_equal(3 + ReglasDeLaBasura.BOLSAS_DE_LA_JORNADA + del_local)
 	for nodo in puntos:
 		assert_float(nodo.global_position.distance_to(contenedor.global_position)).is_greater_equal(
 			ReglasDeLaBasura.DISTANCIA_MINIMA_AL_CONTENEDOR
