@@ -5,11 +5,14 @@ adentro del worktree del agente si lo llama `pr-review-batch`.
 
 Uso, desde la raíz del worktree:
 
-    python .claude/skills/pr-review/scripts/diff_pr.py <rama-base> <dir-salida> [<rama-head>]
+    python .claude/skills/pr-review/scripts/diff_pr.py <base> <salida> [<head>] [--base-exacta]
 
 El tercer argumento es opcional y por defecto es `HEAD`. Existe para que el **padre** pueda medir
 un PR sin checkout —cuántas líneas, qué ejes, si toca escenas— y decidir con eso el ancho del
 abanico. Un agente adentro de su worktree lo omite.
+
+`--base-exacta` compara contra el árbol de la base sin buscar un ancestro común. Sirve para una
+base virtual que reúne varios PR ya contenidos en la cabeza, pero cuyo commit no es ancestro.
 
 **La rama base es el `baseRefName` del PR, NO `staging`**, y por eso entra como argumento sin
 default: si el lote está apilado, diffear contra `staging` mete los commits del PR de abajo y el
@@ -26,6 +29,7 @@ partida razonable y hay que tratarlos como tal. La primera corrida que los contr
 y ahí sí quedan medidos, con su fecha.
 """
 
+import argparse
 import re
 import subprocess
 import sys
@@ -106,16 +110,13 @@ def existe(ref: str) -> bool:
 
 
 def main() -> None:
-    if len(sys.argv) < 3:
-        morir(
-            "uso: diff_pr.py <rama-base> <dir-salida> [<rama-head>]\n"
-            "  La base es el baseRefName del PR, no `staging`: si el lote esta apilado, "
-            "diffear contra staging mete los commits del PR de abajo.",
-            codigo=2,
-        )
-
-    base, salida = sys.argv[1], Path(sys.argv[2])
-    cabeza = sys.argv[3] if len(sys.argv) > 3 else "HEAD"
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("base")
+    parser.add_argument("salida", type=Path)
+    parser.add_argument("cabeza", nargs="?", default="HEAD")
+    parser.add_argument("--base-exacta", action="store_true")
+    args = parser.parse_args()
+    base, salida, cabeza = args.base, args.salida, args.cabeza
     salida.mkdir(parents=True, exist_ok=True)
 
     if subprocess.run(["git", "fetch", "origin", "--quiet"], capture_output=True).returncode != 0:
@@ -127,7 +128,7 @@ def main() -> None:
     if not existe(cabeza):
         morir(f"ABORT: no existe la cabeza `{cabeza}`")
 
-    mb = git("merge-base", ref, cabeza).strip()
+    mb = ref if args.base_exacta else git("merge-base", ref, cabeza).strip()
     if not mb:
         morir(f"ABORT: sin merge-base contra {ref}")
 
@@ -215,10 +216,9 @@ def main() -> None:
         for a in escenas:
             print(f"  {a}")
         print()
-        print("  OJO: un .tscn no se mergea. `.gitattributes` marca `binary` los .png y los .ogg")
-        print("  con ese mismo argumento, pero NO los .tscn, asi que git los va a mergear igual y")
-        print("  el resultado es una escena corrupta, no un conflicto. Si otro PR del lote toca")
-        print("  alguna de estas, va al reporte del padre y NO se resuelve sola.")
+        print("  OJO: un .tscn no se mergea. `.gitattributes` fuerza el conflicto con merge=binary.")
+        print("  Si otro PR del lote toca alguna de estas escenas o recursos, va al reporte")
+        print("  del padre: no se resuelve con un merge de texto.")
 
     print()
     print("== afirmaciones numericas que el diff AGREGA ==")
