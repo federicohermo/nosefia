@@ -198,7 +198,7 @@ su lugar, las manos siguen vacías, y no se avisa que empezó ni que terminó un
 DADO la línea vacía y las manos vacías CUANDO se pide examinar con la mira sobre una puerta de
 heladera, y por separado sin nada en la mira, ENTONCES la línea sigue vacía. DADO el pensamiento
 «Una bolsa de basura.» con 1 segundo transcurrido CUANDO se pide examinar sobre la ventanilla
-ENTONCES el texto sigue igual y la línea se vacía a los 3,333 segundos del primer gesto.
+ENTONCES el texto sigue igual y la línea se vacía a los 10/3 segundos del primer gesto.
 
 ### AC-SUB-004 — La duración según el largo *(verifica BR-SUB-004)*
 
@@ -221,7 +221,7 @@ El texto del lector dura estrictamente más que «Una bolsa de basura.».
 
 DADO el pensamiento «Una bolsa de basura.» CUANDO avanzan 2,82 segundos ENTONCES se ve el texto
 con opacidad 1. CUANDO avanzan 3,083 segundos ENTONCES la opacidad está estrictamente entre 0 y
-1, y no es mayor que a los 2,95. CUANDO avanzan exactamente 3,333 ENTONCES la línea está vacía
+1, y no es mayor que a los 2,95. CUANDO avanzan exactamente 10/3 ENTONCES la línea está vacía
 con opacidad 0. DADO el mismo pensamiento CUANDO avanza de una vez 10 segundos ENTONCES la línea
 está vacía. Un avance de cero o negativo no cambia nada.
 
@@ -229,7 +229,7 @@ está vacía. Un avance de cero o negativo no cambia nada.
 
 DADO el pensamiento «Una bolsa de basura.» con 2 segundos transcurridos CUANDO se pide examinar
 la misma bolsa otra vez ENTONCES la opacidad es 1, a los 2,82 segundos del segundo gesto sigue
-con opacidad 1, y la línea se vacía a los 3,333 segundos del segundo gesto.
+con opacidad 1, y la línea se vacía a los 10/3 segundos del segundo gesto.
 
 ### AC-SUB-007 — El examen lo deja fijo *(verifica BR-SUB-005, BR-SUB-001)*
 
@@ -243,7 +243,7 @@ ENTONCES la línea está vacía en ese mismo cuadro.
 DADO las manos vacías y la mira sobre un inodoro CUANDO se pide examinar con la computadora
 abierta, y por separado con la pausa abierta, ENTONCES la línea no cambia. DADO el pensamiento
 «Una bolsa de basura.» con 1 segundo transcurrido CUANDO se pausa, pasan 10 segundos reales y se
-reanuda ENTONCES se ve con opacidad 1, y la línea se vacía a los 2,333 segundos sin pausa
+reanuda ENTONCES se ve con opacidad 1, y la línea se vacía a los 7/3 segundos sin pausa
 después de reanudar.
 
 ### AC-SUB-009 — La jornada abre vacía *(verifica BR-SUB-007)*

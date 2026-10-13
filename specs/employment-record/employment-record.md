@@ -22,7 +22,7 @@ noche impecable suma cero y conserva la deuda acumulada.
 | **Apercibimiento** | la unidad de deuda que se arrastra entre noches | strike, falta |
 | **Medio** | media unidad de apercibimiento, conservada exactamente entre noches | fracción flotante |
 | **Llamado** | un motivo distinto de la noche que suma medio apercibimiento | repetición, banda |
-| **Legajo** | el contador de apercibimientos, y lo único que cruza la noche | racha, historial |
+| **Legajo** | el contador de apercibimientos que cruza la noche | racha, historial |
 | **Partida** | las cinco jornadas del contrato, con su final | run, sesión |
 | **Final** | cómo termina la partida: en curso, contrato cumplido o despedido | game over |
 | **Devolución** | los mensajes que Enrique manda por el chat al cerrar cada noche: Saludo, las Tareas y los Retos que correspondan, y Cierre | placa del cierre, parte, reporte |

@@ -1,5 +1,5 @@
-## La pantalla del turno: cuántas obligatorias van, los controles que sirven ahora y lo que dice
-## la caja examinada.
+## La pantalla del turno: cuántas obligatorias van, los controles que sirven ahora y el
+## subtítulo de lo que se mira o examina.
 ##
 ## **Recibe todo ya decidido y lo pinta.** No conoce al nodo que le manda los números: se
 ## conecta por señal desde la escena.

@@ -11,7 +11,7 @@ const LECTOR := (
 )
 const MOPA := "Una mopa para limpiar las manchas del local."
 
-## La precisión con que el spec escribe sus segundos.
+## Sólo para comparar las muestras redondeadas de duración, sin anticipar el final.
 const TOLERANCIA := 0.001
 
 
@@ -22,6 +22,20 @@ func test_un_pensamiento_nuevo_reemplaza_al_visible() -> void:  # AC-SUB-001
 	linea.pensar(JORGILLO)
 	assert_str(linea.texto()).is_equal(JORGILLO)
 	assert_float(linea.opacidad()).is_equal(1.0)
+
+
+func test_el_pensamiento_cumple_todo_el_desvanecido() -> void:  # AC-SUB-004
+	var fin := 10.0 / 3.0
+	for avance: float in [fin - 0.0005, fin, fin + 0.0005]:
+		var linea := Subtitulo.new()
+		linea.pensar(BOLSA)
+		linea.avanzar(avance)
+		if avance < fin:
+			assert_str(linea.texto()).is_equal(BOLSA)
+			assert_float(linea.opacidad()).is_greater(0.0)
+		else:
+			assert_str(linea.texto()).is_empty()
+			assert_float(linea.opacidad()).is_zero()
 
 
 func test_sin_nada_la_linea_esta_vacia_y_un_texto_vacio_no_la_cambia() -> void:  # AC-SUB-003
@@ -35,7 +49,7 @@ func test_sin_nada_la_linea_esta_vacia_y_un_texto_vacio_no_la_cambia() -> void: 
 	linea.pensar("")
 	assert_str(linea.texto()).is_equal(BOLSA)
 	# Sigue su curso: el gesto sin texto no le devolvió el tiempo.
-	linea.avanzar(2.333)
+	linea.avanzar(7.0 / 3.0)
 	assert_str(linea.texto()).is_empty()
 
 
@@ -61,7 +75,9 @@ func test_la_duracion_crece_con_el_largo_desde_un_piso() -> void:  # AC-SUB-004
 
 
 func test_cada_pensamiento_se_vacia_al_terminar_su_desvanecido() -> void:  # AC-SUB-004
-	var casos := {"a": 2.5, "abcdefgh": 2.533, BOLSA: 3.333, MANI: 3.733, LECTOR: 9.8}
+	var casos := {
+		"a": 2.5, "abcdefgh": 38.0 / 15.0, BOLSA: 10.0 / 3.0, MANI: 56.0 / 15.0, LECTOR: 9.8
+	}
 	for texto: String in casos:
 		var linea := Subtitulo.new()
 		linea.pensar(texto)
@@ -86,7 +102,7 @@ func test_entero_desvanecido_y_vacio() -> void:  # AC-SUB-005
 	assert_float(linea.opacidad()).is_greater(0.0)
 	assert_float(linea.opacidad()).is_less(1.0)
 	assert_float(linea.opacidad()).is_less_equal(a_los_295)
-	linea.avanzar(3.333 - 3.083)
+	linea.avanzar(10.0 / 3.0 - 3.083)
 	assert_str(linea.texto()).is_empty()
 	assert_float(linea.opacidad()).is_equal(0.0)
 
@@ -113,7 +129,7 @@ func test_repetir_empieza_de_nuevo_sin_sumar() -> void:  # AC-SUB-006
 	assert_float(linea.opacidad()).is_equal(1.0)
 	linea.avanzar(2.82)
 	assert_float(linea.opacidad()).is_equal(1.0)
-	linea.avanzar(3.333 - 2.82)
+	linea.avanzar(10.0 / 3.0 - 2.82)
 	assert_str(linea.texto()).is_empty()
 
 

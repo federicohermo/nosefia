@@ -18,10 +18,6 @@ const CARACTERES_POR_SEGUNDO := 15.0
 ## Cuánto tarda en desvanecerse, en segundos.
 const DESVANECIDO := 0.5
 
-## La precisión con que el contrato escribe sus segundos. Sin ella, el «3,333» del spec queda un
-## tercio de milésima antes del final real y la línea seguiría encendida un cuadro más.
-const TOLERANCIA := 0.001
-
 var _texto: String = ""
 var _fijo: bool = false
 var _transcurrido: float = 0.0
@@ -64,7 +60,7 @@ func avanzar(segundos: float) -> void:
 	if segundos <= 0.0 or _fijo or _texto.is_empty():
 		return
 	_transcurrido += segundos
-	if _transcurrido >= _duracion + DESVANECIDO - TOLERANCIA:
+	if _transcurrido >= _duracion + DESVANECIDO:
 		soltar()
 
 
