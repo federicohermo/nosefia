@@ -86,8 +86,11 @@ func test_q_no_abre_con_otra_interfaz_ni_examen_ni_turno_cerrado() -> void:  # A
 	var reloj: RelojDelTurno = _almacen.get("_reloj")
 	reloj.avanzar(Reglas.DURACION_DEL_TURNO / Ritmo.SEGUNDOS_DE_TURNO_POR_SEGUNDO_REAL)
 	assert_bool((_almacen.get("_pantalla") as CanvasLayer).visible).is_true()
+	# El cierre sube el celular fijo con la devolución: Q ni lo abre de nuevo ni lo cierra.
+	assert_bool(_celular().celular().fijo()).is_true()
 	await _q()
-	assert_bool(_celular().celular().abierto()).is_false()
+	assert_bool(_celular().celular().abierto()).is_true()
+	assert_bool(_celular().celular().fijo()).is_true()
 	assert_bool(_jugador().suspendido()).is_true()
 
 
@@ -157,7 +160,9 @@ func test_cierre_baja_celular_y_otra_jornada_cierra() -> void:  # AC-INV-035, AC
 	assert_bool(recordatorio.visible).is_true()
 	var reloj: RelojDelTurno = _almacen.get("_reloj")
 	reloj.avanzar(Reglas.DURACION_DEL_TURNO / Ritmo.SEGUNDOS_DE_TURNO_POR_SEGUNDO_REAL)
-	assert_bool(_celular().celular().abierto()).is_false()
+	# La devolución sube el celular fijo en el chat de Enrique, sin el recordatorio.
+	assert_bool(_celular().celular().abierto()).is_true()
+	assert_bool(_celular().celular().fijo()).is_true()
 	assert_bool(recordatorio.visible).is_false()
 	assert_bool(_jugador().suspendido()).is_true()
 	var cierre: PantallaDeDevolucion = _almacen.get("_pantalla")
