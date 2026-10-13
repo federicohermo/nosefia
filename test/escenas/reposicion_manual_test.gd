@@ -336,55 +336,17 @@ func test_el_frente_se_conserva_al_examinar_y_volver_a_agarrar() -> void:
 	var jugador: Node3D = almacen.get("_jugador")
 	jugador.set_physics_process(false)
 	var agarre: Agarre = almacen.get("_agarre")
-	# Hacia dónde está horneado cada modelo: es la cara del mueble hacia la que su tanda
-	# exhibe, medida del `.blend` con el eje del frente de cada producto —el de su etiqueta— y
-	# no con las filas de su tanda, que es de donde el puesto saca el giro. Está acá para que la
-	# mano tenga contra qué medirse. Lo que se afirma es que **la mano lo gira hasta la cámara**,
-	# sea cual sea esa cara. Medido el 2026-10-07 después de girar los muebles del fondo,
-	# con el eje de la etiqueta y la matriz del producto en Blender.
-	#
-	# Los doce estuvieron mal hasta el 2026-09-19: los de +X figuraban en -X y los de +Z en -Z,
-	# o sea 180° girados. Con el giro de la mano también al revés, las dos mitades se cancelaban
-	# y este caso pasaba en verde mientras el jugador agarraba los productos dados vuelta.
-	var frentes := [
-		Vector3(-1.0, -0.0, -0.0),  # Actroncito,
-		Vector3(0.0, 0.190135, 0.981758),  # Durextra,
-		Vector3(1.0, 0.0, -0.0),  # Burbaloo,
-		Vector3(-1.0, 0.0, -0.0),  # Zucarachas,
-		Vector3(0.0, 0.190135, -0.981758),  # Laysntt,
-		Vector3(0.0, 0.190135, 0.981758),  # Malbardo,
-		Vector3(-1.0, 0.0, -0.0),  # Prongles,
-		Vector3(-0.0, 0.190135, -0.981758),  # Jorgillo,
-		Vector3(0.0, 0.0, 1.0),  # Arvejas,
-		Vector3(0.0, 0.190135, -0.981758),  # Chisitos,
-		Vector3(-1.0, 0.0, 0.0),  # Oremos,
-		Vector3(1.0, 0.0, -0.0),  # Pepitos,
-		Vector3(1.0, 0.0, -0.0),  # Saladik,
-		Vector3(1.0, 0.0, -0.0),  # Uakas,
-		Vector3(-0.0, 0.0, 1.0),  # Coracola,
-		Vector3(-1.0, 0.0, -0.0),  # Frotlups,
-		Vector3(1.0, 0.0, -0.0),  # Marolini,
-		Vector3(0.0, 0.0, 1.0),  # Amargadito,
-		Vector3(-0.0, 0.190135, 0.981758),  # Cindolor,
-		Vector3(0.0, 0.0, 1.0),  # Flinpuf,
-		Vector3(-1.0, 0.0, -0.0),  # Donsaturados,
-		Vector3(0.0, 0.0, 1.0),  # Petisas,
-		Vector3(-0.0, 0.190135, 0.981758),  # Macumbas,
-		Vector3(0.0, 0.0, 1.0),  # Cosa de Maní,
-		Vector3(-0.0, 0.190135, -0.981758),  # Duronga,
-		Vector3(0.0, 0.0, 1.0),  # Fernet God,
-		Vector3(0.0, 0.0, 1.0),  # Mayonchis,
-		Vector3(0.0, 0.0, 1.0),  # Oaaaa,
-		Vector3(0.0, 0.0, 1.0),  # Terminator,
-		Vector3(-0.0, 0.0, 1.0),  # Marranos,
-		Vector3(1.0, 0.0, -0.0),  # Feel Ricky Fort
-	]
-	assert_int(frentes.size()).is_equal(Catalogo.todos().size())
+	# El eje de la etiqueta sale del arte, independientemente de las filas que orientan la mano.
+	var contenido: Node3D = almacen.get("_reposicion_manual").get("contenido")
 	for producto in Catalogo.todos():
 		_sacar_de_la_caja(jugador, almacen.get("_cajas_de_productos")[producto.id])
 		var unidad: Node3D = agarre.punto_de_producto.get_child(0)
 		var orientacion := unidad.basis
-		assert_float((orientacion * frentes[producto.id]).dot(Vector3.BACK)).is_greater(0.8)
+		var modelo := contenido.get_child(producto.id) as Node3D
+		assert_bool(modelo.has_meta("frente_del_modelo")).is_true()
+		var etiqueta: Vector3 = modelo.get_meta("frente_del_modelo", Vector3.ZERO)
+		var frente := (modelo.global_basis * etiqueta).normalized()
+		assert_float((orientacion * frente).dot(Vector3.BACK)).is_greater(0.8)
 		assert_bool(orientacion.is_equal_approx(Basis.IDENTITY)).is_false()
 		agarre.mover_lo_sostenido(almacen.get("_jugador").get_node("Giro/Camara/PuntoDeExamen"))
 		unidad.rotate_y(0.7)

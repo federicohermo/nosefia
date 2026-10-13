@@ -316,6 +316,12 @@ func _acomodar_lo_largo() -> void:
 		var datos := _datos_de(nodo)
 		if not nodo is RigidBody3D or datos == null:
 			continue
+		if nodo.has_method("restaurar_pose_en_mano") and not datos.es_largo:
+			nodo.call("restaurar_pose_en_mano")
+			if nodo.call("cabe_delante_de_la_camara", _camara) and _cabe_el_util(nodo):
+				return
+			if nodo.call("resguardar_en_mano", _camara, _cabe_el_util):
+				return
 		var retroceso := _retroceso_libre(nodo as RigidBody3D)
 		if retroceso == 0.0:
 			return
@@ -323,6 +329,24 @@ func _acomodar_lo_largo() -> void:
 		agarre.punto_de_carga.position = _brazo_de_carga.transform * Vector3(0, 0, _largo_de_carga)
 		agarre.punto_de_carga.reset_physics_interpolation()
 		return
+
+
+func _cabe_el_util(cuerpo: RigidBody3D) -> bool:
+	var consultas: Array[PhysicsShapeQueryParameters3D] = []
+	for forma: CollisionShape3D in _formas_de(cuerpo):
+		var consulta := _consulta_de(forma, cuerpo)
+		consulta.margin = HOLGURA_DE_LA_CAIDA
+		consulta.collision_mask = _brazo_de_carga.collision_mask
+		var excluidos: Array[RID] = _excluidos.duplicate()
+		excluidos.append(cuerpo.get_rid())
+		consulta.exclude = excluidos
+		if "contacto_del_movimiento" in cuerpo:
+			var recipiente: PhysicsBody3D = cuerpo.get("contacto_del_movimiento")
+			if is_instance_valid(recipiente):
+				excluidos.append(recipiente.get_rid())
+				consulta.exclude = excluidos
+		consultas.append(consulta)
+	return _libres(consultas, Vector3.ZERO)
 
 
 ## Cuánto tiene que retroceder el cuerpo por el brazo de carga para no atravesar un objeto. No mueve
@@ -657,6 +681,7 @@ func _apoyar_derecho_sobre_lo_mirado(cuerpo: RigidBody3D) -> bool:
 	if apoyo_apuntado.is_empty():
 		return false
 	var ancho := maxf(limites.size.x, limites.size.z)
+	var centro := limites.get_center()
 	for anillo in ReglasDeLosObjetos.LADOS_ALREDEDOR + 1:
 		for lado in 1 if anillo == 0 else ReglasDeLosObjetos.LADOS_ALREDEDOR:
 			var vuelta := Basis(Vector3.UP, TAU * lado / ReglasDeLosObjetos.LADOS_ALREDEDOR)
@@ -678,7 +703,8 @@ func _apoyar_derecho_sobre_lo_mirado(cuerpo: RigidBody3D) -> bool:
 			):
 				continue
 			cuerpo.global_position = (
-				candidato + Vector3.UP * (ReglasDeLosObjetos.ROCE - limites.position.y)
+				candidato
+				+ Vector3(-centro.x, ReglasDeLosObjetos.ROCE - limites.position.y, -centro.z)
 			)
 			if _entra_entero(cuerpo, formas):
 				return true

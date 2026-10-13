@@ -44,14 +44,22 @@ func test_los_dos_laterales_reales_dejan_caer_apoyar_y_recoger_un_cuerpo() -> vo
 	var jugador: Node3D = _almacen.get("_jugador")
 	jugador.set_process(false)
 	jugador.set_physics_process(false)
+	await get_tree().physics_frame
 	var ventana: Node3D = _almacen.get_node("Estructura/Ventanilla")
 	var vidrio := _limites(ventana.get_node("Vidrio"))
-	var pared: Node = _almacen.get_node("Estructura/almacen/Volumen")
-	var izquierda := _limites(pared.get_node("local_caja_lateral"))
-	var derecha := _limites(pared.get_node("local_caja_centro"))
-	var dintel := _limites(pared.get_node("local_ventanilla_alto"))
+	var jambas: Array[Vector3] = []
+	for direccion: Vector3 in [Vector3.LEFT, Vector3.RIGHT, Vector3.UP]:
+		var consulta := PhysicsRayQueryParameters3D.create(
+			vidrio.get_center(), vidrio.get_center() + direccion * 4, 1 | 8
+		)
+		consulta.exclude = [(ventana as CollisionObject3D).get_rid()]
+		var golpe := _almacen.get_world_3d().direct_space_state.intersect_ray(consulta)
+		assert_dict(golpe).is_not_empty()
+		if golpe.is_empty():
+			return
+		jambas.append(golpe.position)
 	# La holgura superior es numérica, no un tercer paso físico.
-	assert_float(absf(dintel.position.y - vidrio.end.y)).is_less(0.00001)
+	assert_float(absf(jambas[2].y - vidrio.end.y)).is_less(0.00001)
 	var agarre: Agarre = _almacen.get("_agarre")
 	for lado: int in 2:
 		# El papel real cabe por el lateral; una caja de producto más ancha no cabe.
@@ -67,8 +75,8 @@ func test_los_dos_laterales_reales_dejan_caer_apoyar_y_recoger_un_cuerpo() -> vo
 		elif limites.size.z < limites.size.x:
 			giro = Basis(Vector3.UP, PI / 2)
 		var orientado := Transform3D(giro, Vector3.ZERO) * limites
-		var desde := izquierda.end.x if lado == 0 else vidrio.end.x
-		var hasta := vidrio.position.x if lado == 0 else derecha.position.x
+		var desde := jambas[0].x if lado == 0 else vidrio.end.x
+		var hasta := vidrio.position.x if lado == 0 else jambas[1].x
 		assert_float(orientado.size.x).is_less(hasta - desde)
 		var centro := Vector3((desde + hasta) / 2, vidrio.get_center().y, vidrio.end.z)
 		centro.z += orientado.size.z / 2 + 0.02

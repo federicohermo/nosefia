@@ -12,6 +12,7 @@ const PAPEL := preload("res://src/escenas/objetos/ticket.tscn")
 @export var ranura: Marker3D
 @export var destino_de_los_tickets: Node3D
 @export var mallas: Array[MeshInstance3D]
+@export var ancho_del_papel: float = 0.074995
 
 var _abierta := false
 var _en_ranura: ObjetoAgarrable
@@ -80,6 +81,9 @@ func _al_imprimir(dato: Ticket) -> void:
 		_en_ranura.freeze = false
 		_en_ranura.sleeping = false
 	var papel: ObjetoAgarrable = PAPEL.instantiate()
+	var factor := ancho_del_papel / 0.074995
+	(papel.get_node("Malla") as MeshInstance3D).scale *= factor
+	(papel.get_node("Forma") as CollisionShape3D).scale *= factor
 	papel.datos = dato
 	papel.freeze = true
 	# El modelo tiene escala: no se hereda al papel ni a su colisión. El origen se fija
@@ -92,7 +96,7 @@ func _al_imprimir(dato: Ticket) -> void:
 	_tickets.append(papel)
 	_en_ranura = papel
 	_fin_de_salida = papel.global_position
-	papel.global_position -= ranura.global_basis.orthonormalized().y * 0.11
+	papel.global_position -= ranura.global_basis.orthonormalized().y * 0.121548 * factor
 	_salida = create_tween().set_process_mode(Tween.TWEEN_PROCESS_PHYSICS)
 	_salida.tween_property(papel, "global_position", _fin_de_salida, 0.8)
 

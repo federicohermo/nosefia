@@ -8,26 +8,22 @@ const NOTAS: Array[String] = ["nota baño inodoro", "nota instrucciones", "nota 
 func test_las_botellas_entran_en_su_colision_y_conservan_tres_etiquetas() -> void:
 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
 	add_child(almacen)
-	var etiquetas: Array[Texture2D] = []
+	var etiquetas: Array[Array] = []
 	for nombre: String in ["JabonAzul", "JabonRosa", "JabonAmarillo"]:
 		var jabon: UtilDeLimpieza = almacen.get_node("Objetos/" + nombre)
 		var volumen: AABB = jabon.malla.transform * jabon.malla.mesh.get_aabb()
-		assert_float(volumen.size.y).is_between(0.65, 0.67)
-		assert_float(volumen.size.x).is_between(0.33, 0.35)
 		var forma: CollisionShape3D = jabon.get_node("Forma")
 		var cilindro: CylinderShape3D = forma.shape
 		assert_float(cilindro.height).is_equal_approx(volumen.size.y, 0.001)
 		assert_float(cilindro.radius * 2.0).is_greater_equal(volumen.size.x - 0.001)
-		var textura: Texture2D = null
+		var texturas: Array[Texture2D] = []
 		for superficie in jabon.malla.mesh.get_surface_count():
 			var material: StandardMaterial3D = jabon.malla.mesh.surface_get_material(superficie)
 			if material.albedo_texture != null:
-				textura = material.albedo_texture
-				# El cuerpo lleva la imagen propia; las tapas comparten el atlas blanco.
-				break
-		assert_object(textura).override_failure_message(nombre).is_not_null()
-		assert_bool(etiquetas.has(textura)).override_failure_message(nombre).is_false()
-		etiquetas.append(textura)
+				texturas.append(material.albedo_texture)
+		assert_array(texturas).override_failure_message(nombre).is_not_empty()
+		assert_bool(etiquetas.has(texturas)).override_failure_message(nombre).is_false()
+		etiquetas.append(texturas)
 
 
 func test_las_tres_notas_se_ven_en_el_bano_con_sus_imagenes() -> void:

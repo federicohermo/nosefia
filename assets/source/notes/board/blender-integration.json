@@ -1,0 +1,42 @@
+{
+  "board_notes": [
+    "board de tareas-col.001",
+    "board de tareas-col.002"
+  ],
+  "unused_papers_hidden": [
+    "board de tareas-col.003",
+    "board de tareas-col.004",
+    "board de tareas-col.005"
+  ],
+  "notes_triangles": 24,
+  "sign_geometry_unchanged": true,
+  "outside_unchanged": 880,
+  "source_method": "Existing Godot scene rendered with original SVG, font and game text",
+  "texture_paths": [
+    "C:\\Users\\fede_\\orca\\workspaces\\nosefia\\pteropod\\assets\\source\\notes\\board\\tareas_jornada_1.png",
+    "C:\\Users\\fede_\\orca\\workspaces\\nosefia\\pteropod\\assets\\source\\notes\\board\\mantener_local_ordenado.png",
+    "C:\\Users\\fede_\\orca\\workspaces\\nosefia\\pteropod\\assets\\source\\notes\\board\\fuera_de_servicio_manuscrito_papel.png"
+  ],
+  "handwritten_sign_texture": "C:\\Users\\fede_\\orca\\workspaces\\nosefia\\pteropod\\assets\\source\\notes\\board\\fuera_de_servicio_manuscrito_papel.png",
+  "sign_current_vertices": 8,
+  "sign_latest_geometry_preserved": true,
+  "outside_changed": [
+    "Fernetgod-col",
+    "Fernetgod-col.001",
+    "Fernetgod-col.002",
+    "Fernetgod-col.003",
+    "Fernetgod-col.004",
+    "Fernetgod-col.005",
+    "Fernetgod-col.006",
+    "Fernetgod-col.007",
+    "Fernetgod-col.008",
+    "Fernetgod-col.009"
+  ],
+  "handwritten_font": "assets/ui/manada/notas/orange_lovely.otf",
+  "paper_color_linear": [
+    0.74,
+    0.61,
+    0.3
+  ],
+  "recovery_copy": "C:\\Users\\fede_\\AppData\\Local\\Temp\\almacen-notas-del-juego-20261013-015456.blend"
+}

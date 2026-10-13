@@ -58,6 +58,7 @@ const FILAS := {
 	Producto.Id.TERMINATOR: ["Terminator", 2800],
 	Producto.Id.MARRANOS: ["Marranos", 1400],
 	Producto.Id.FEEL_RICKY_FORT: ["Feel Ricky Fort", 800],
+	Producto.Id.POETICO: ["Poético", 1800],
 }
 
 ## La sonoridad de cada producto, de la columna «Familia sonora» de la ficha. Va aparte de
@@ -98,6 +99,7 @@ const SONORIDADES := {
 	Producto.Id.TERMINATOR: EntradaSonora.Sonoridad.CAJA,
 	Producto.Id.MARRANOS: EntradaSonora.Sonoridad.LATA,
 	Producto.Id.FEEL_RICKY_FORT: EntradaSonora.Sonoridad.CAJITA,
+	Producto.Id.POETICO: EntradaSonora.Sonoridad.BOTELLA_PLASTICA,
 }
 
 ## El tamaño de la caja del depósito de cada producto, de la columna «Caja» de la ficha.
@@ -137,6 +139,7 @@ const TAMANOS_DE_CAJA := {
 	Producto.Id.TERMINATOR: TamanoDeCaja.GRANDE,
 	Producto.Id.MARRANOS: TamanoDeCaja.GRANDE,
 	Producto.Id.FEEL_RICKY_FORT: TamanoDeCaja.GRANDE,
+	Producto.Id.POETICO: TamanoDeCaja.GRANDE,
 }
 
 

@@ -6,4 +6,4 @@
 script = ExtResource("1_reaccion")
 sobre = 0
 indice = 2
-texto = "El registro quedó sin actualizar."
+texto = "El registro de la computadora no parece concordar con los ingresos de ayer."

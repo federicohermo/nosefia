@@ -339,6 +339,13 @@ class LaEscritura(unittest.TestCase):
             '[gd_scene format=3]\n\n[node name="Guia" type="Node3D"]\n',
         )
 
+    def test_conserva_el_eje_de_la_etiqueta_independiente_de_las_filas(self):
+        base = ((0.0, 0.0, -1.0), (0.0, 1.0, 0.0), (1.0, 0.0, 0.0))
+        nodo = NodoDeMalla("Producto", "res://a.res", base, (0.0, 0.0, 0.0),
+                           (1.0, 0.0, 0.0))
+        texto = escribir_escena_de_mallas("Contenido", [nodo])
+        self.assertIn("metadata/frente_del_modelo = Vector3(1, 0, 0)", texto)
+
 
 def _apagada(padre, nombre):
     ruta = nombre if padre == "." else f"{padre}/{nombre}"

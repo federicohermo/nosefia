@@ -412,6 +412,7 @@ class NodoDeMalla:
     malla: str
     base: Matriz
     origen: Vector
+    frente: Vector | None = None
 
 
 def escribir_escena_de_mallas(raiz: str, nodos: Sequence[NodoDeMalla]) -> str:
@@ -439,6 +440,9 @@ def escribir_escena_de_mallas(raiz: str, nodos: Sequence[NodoDeMalla]) -> str:
             f'mesh = ExtResource("malla{rutas.index(nodo.malla)}")',
             "gi_mode = 2",
         ]
+        if nodo.frente is not None:
+            lineas.append("metadata/frente_del_modelo = Vector3("
+                          + ", ".join(numero_de_escena(v) for v in nodo.frente) + ")")
     return "\n".join(lineas) + "\n"
 
 
@@ -496,6 +500,20 @@ def apagar_las_unidades(texto: str, rutas: Sequence[str]) -> str:
         raise ValueError("la escena no tiene unidades apagadas: no se sabe dónde van las nuevas")
     salida.insert(lugar, "".join(_unidad_apagada(r, referencia) for r in sorted(set(rutas))))
     return "".join(salida).rstrip("\n") + "\n"
+
+
+def separar_reserva(filas: list[str]) -> tuple[list[int], list[int]]:
+    """Conserva la fila reponible y una de respaldo; las demás se dibujan como guía fija.
+
+    El artista puede añadir profundidad sin multiplicar los casilleros ni perder las copias.
+    """
+    frente = [i for i, fila in enumerate(filas) if fila == "adelante"]
+    atras = [i for i, fila in enumerate(filas) if fila == "atras"]
+    if not frente or len(frente) + len(atras) != len(filas):
+        raise ValueError("la tanda necesita una fila de adelante y filas reconocibles")
+    if atras and len(atras) < len(frente):
+        raise ValueError("la fila de respaldo no alcanza el largo de la fila reponible")
+    return atras[:len(frente)] + frente, atras[len(frente):]
 
 
 def actualizar_contorno(

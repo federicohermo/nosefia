@@ -2,7 +2,10 @@ extends GdUnitTestSuite
 
 const ALMACEN := preload("res://src/escenas/almacen.tscn")
 const BolsaEnLaMano := preload("res://test/escenas/bolsa_en_la_mano.gd")
-const CONTENEDOR := "Estructura/deposito_contenedor_soporte/deposito_contenedor_cuerpo/StaticBody3D"
+const CONTENEDOR := (
+	"Estructura/deposito_contenedor_grande_soporte/"
+	+ "deposito_contenedor_grande_cuerpo/StaticBody3D"
+)
 
 
 func _abrir(jornada: int = 2) -> Node3D:
@@ -26,7 +29,10 @@ func _accion(almacen: Node3D, objetivo: Node3D, accion: StringName) -> void:
 
 func _abrir_la_tapa(almacen: Node3D) -> void:
 	var tapa: Node3D = almacen.get_node(
-		"Estructura/deposito_contenedor_soporte/deposito_contenedor_bisagra_tapa/CuerpoDeLaTapa"
+		(
+			"Estructura/deposito_contenedor_grande_soporte/"
+			+ "deposito_contenedor_bisagra_izquierda/CuerpoDeLaTapa"
+		)
 	)
 	if not tapa.call("recibe_objetos"):
 		_accion(almacen, tapa, ReglasDelJugador.ACCION_USAR)

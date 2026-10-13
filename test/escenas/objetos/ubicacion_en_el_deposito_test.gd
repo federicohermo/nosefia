@@ -135,7 +135,10 @@ func test_las_bolsas_arrancan_en_tachos_lejos_del_contenedor() -> void:  # AC-CL
 	add_child(almacen)
 	await get_tree().physics_frame
 	var contenedor: Node3D = almacen.get_node(
-		"Estructura/deposito_contenedor_soporte/deposito_contenedor_cuerpo/StaticBody3D"
+		(
+			"Estructura/deposito_contenedor_grande_soporte/"
+			+ "deposito_contenedor_grande_cuerpo/StaticBody3D"
+		)
 	)
 	var bolsas: Array[Node3D] = almacen.get("_bolsas")
 	assert_int(bolsas.size()).is_equal(ReglasDeLaBasura.BOLSAS_DE_LA_JORNADA)
@@ -144,11 +147,13 @@ func test_las_bolsas_arrancan_en_tachos_lejos_del_contenedor() -> void:  # AC-CL
 		var tacho := almacen.get_node(BolsaEnLaMano.RUTAS[numero]) as StaticBody3D
 		var malla := tacho.get_parent() as MeshInstance3D
 		var boca := malla.global_transform * malla.get_aabb()
+		for parte: MeshInstance3D in malla.find_children("*", "MeshInstance3D", true, false):
+			boca = boca.merge(parte.global_transform * parte.get_aabb())
 		var forma: CollisionShape3D = bolsa.get_node("Forma")
-		var media := (forma.shape as BoxShape3D).size.y / 2.0
+		var limites := forma.global_transform * forma.shape.get_debug_mesh().get_aabb()
 		assert_float(bolsa.global_position.x).is_between(boca.position.x, boca.end.x)
 		assert_float(bolsa.global_position.z).is_between(boca.position.z, boca.end.z)
-		assert_float(bolsa.global_position.y - media).is_equal_approx(
+		assert_float(limites.position.y).is_equal_approx(
 			boca.end.y + ReglasDeLosObjetos.ROCE, 0.001
 		)
 		assert_bool(bolsa.visible).is_true()

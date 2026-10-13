@@ -17,6 +17,16 @@ func _post_import(escena: Node) -> Object:
 			var material := malla.mesh.surface_get_material(i) as BaseMaterial3D
 			if material != null:
 				material.texture_filter = BaseMaterial3D.TEXTURE_FILTER_NEAREST_WITH_MIPMAPS
+				if (
+					material.resource_name
+					in [
+						"CONTENEDOR | Paneles negros industriales",
+						"CONTENEDOR | Tapas negras con desgaste"
+					]
+				):
+					# El acabado negro pierde sus relieves con el tonemapeo del juego. Se calibra
+					# su respuesta al horneado conservando el atlas, sin una luz de apoyo.
+					material.albedo_color = Color(3.0, 3.0, 3.0, 1.0)
 				if material.resource_name == "local_ceramica":
 					# El piso satinado recoge reflejos difusos sin convertirse en un espejo.
 					material.roughness = 0.34

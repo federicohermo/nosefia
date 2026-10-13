@@ -92,7 +92,7 @@ func configurar_agua(acuosa: bool) -> void:
 	pintura.set_shader_parameter("es_mancha", false)
 	pintura.set_shader_parameter("densidad_de_solucion", _densidad_visual(color_de_la_superficie()))
 	pintura.set_shader_parameter("normal_de_la_malla", true)
-	pintura.set_shader_parameter("transparencia", 0.4 if en_balde else 0.55)
+	pintura.set_shader_parameter("transparencia", 0.65 if en_balde else 0.55)
 	pintura.set_shader_parameter("hacia_la_luz", Vector3(-0.41, 0.88, 0.23))
 	pintura.set_shader_parameter("brillo", 0.65)
 	material_override = pintura
@@ -379,7 +379,7 @@ func _mover_agua(delta: float) -> void:
 	if cresta > 0.095 and _onda > 0.1 and _espera <= 0.0:
 		var lado := (inclinacion + _pendiente).normalized()
 		lado *= _radio_del_borde(lado.angle())
-		var borde := Vector3(lado.x, 0.105, lado.y)
+		var borde := Vector3(lado.x, maxf(0.145 - position.y, 0.0), lado.y)
 		var salida := global_basis * Vector3(lado.x * 5.0, 0.7, lado.y * 5.0)
 		_gotas.emitir(to_global(borde), velocidad.limit_length(3.0) + salida)
 		_espera = 0.12
@@ -467,9 +467,16 @@ func _dibujar() -> void:
 	_estaba_quieta = quieta
 	_ultima_inclinacion = inclinacion
 	var alturas := _ondas.alturas_muestreadas() if en_balde else PackedFloat32Array()
+	var limite := maxf(0.145 - position.y, 0.0) if en_balde else 0.105
+	var descenso := (
+		maxf(inclinacion.length() * _radio * _nivel_visual - limite, 0.0) if en_balde else 0.0
+	)
+	var fondo := ALTURA_MINIMA - position.y if en_balde else -0.1
 	_vertices[0] = Vector3(
 		0.0, alturas[0] * RELIEVE_DE_LAS_ONDAS * _nivel_visual if en_balde else 0.0, 0.0
 	)
+	if en_balde:
+		_vertices[0].y = clampf(_vertices[0].y - descenso, fondo, limite)
 	var borde := (
 		lerpf(0.9, 1.0, _nivel_visual)
 		if en_balde
@@ -488,7 +495,7 @@ func _dibujar() -> void:
 				altura += sin(distancia * 12.0 - _tiempo * 9.0) * 0.0015 * _onda
 				altura = clampf(altura + 0.0015, 0.0002, 0.0015) * (1.0 - proporcion * 0.7)
 			_vertices[1 + (anillo - 1) * SEGMENTOS + segmento] = Vector3(
-				punto.x, clampf(altura, -0.1, 0.105), punto.y
+				punto.x, clampf(altura - descenso, fondo, limite), punto.y
 			)
 	# Dos tangentes por vértice evitan acumular cada triángulo de la superficie.
 	_normales[0] = (

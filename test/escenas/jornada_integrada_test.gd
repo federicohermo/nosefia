@@ -450,6 +450,15 @@ func test_la_noche_siguiente_abre_con_cada_caja_llena_y_nada_afuera() -> void:  
 	var cajas: Array = almacen.get("_cajas_de_productos")
 	# Actroncito tiene lugar para una caja entera: se vacía colocando de a una.
 	var vacia := Producto.Id.ACTRONCITO
+	var cupos: Dictionary = puesto.call("casilleros")
+	for producto in Catalogo.todos():
+		if (
+			producto.id not in [Producto.Id.JORGILLO, Producto.Id.MALBARDO]
+			and cupos[producto.id] >= ReglasDelEstante.UNIDADES_POR_CAJA
+		):
+			vacia = producto.id
+			break
+	assert_int(cupos[vacia]).is_greater_equal(ReglasDelEstante.UNIDADES_POR_CAJA)
 	for unidad in ReglasDelEstante.UNIDADES_POR_CAJA:
 		puesto.call("usar_la_caja", cajas[vacia])
 		puesto.call("pedir_colocar", vacia)

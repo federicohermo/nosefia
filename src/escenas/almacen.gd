@@ -202,6 +202,9 @@ func _ready() -> void:
 	for util: UtilDeLimpieza in _utiles_de_limpieza:
 		util.examen = _jugador.examen
 	_manija_del_balde.observador = _jugador
+	for util: UtilDeLimpieza in _utiles_de_limpieza:
+		if "observador" in util.malla:
+			util.malla.set("observador", _jugador)
 	# El motor no despierta lo que está sobre una caja empujada. Lo hace el puesto.
 	for caja: CajaDeProductosDelDeposito in _cajas_de_productos:
 		caja.empujada.connect(_reposicion_manual.despertar_lo_de_arriba)

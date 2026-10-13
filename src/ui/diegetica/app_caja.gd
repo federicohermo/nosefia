@@ -54,6 +54,7 @@ const IMAGENES := {
 	Producto.Id.TERMINATOR: preload("res://assets/ui/manada/terminator.png"),
 	Producto.Id.MARRANOS: preload("res://assets/ui/manada/marranos.png"),
 	Producto.Id.FEEL_RICKY_FORT: preload("res://assets/ui/manada/feel_ricky_fort.png"),
+	Producto.Id.POETICO: preload("res://assets/ui/manada/poetico.png"),
 }
 
 @export var _titulo: Label

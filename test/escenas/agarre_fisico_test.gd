@@ -105,7 +105,10 @@ func test_el_izquierdo_en_el_contenedor_entrega_la_bolsa_al_recolector() -> void
 	var bolsa := BolsaEnLaMano.preparar(almacen)
 	var agarre: Agarre = jugador.get("agarre")
 	var contenedor: Node3D = almacen.get_node(
-		"Estructura/deposito_contenedor_soporte/deposito_contenedor_cuerpo/StaticBody3D"
+		(
+			"Estructura/deposito_contenedor_grande_soporte/"
+			+ "deposito_contenedor_grande_cuerpo/StaticBody3D"
+		)
 	)
 	assert_bool(agarre.pedir_agarrar(bolsa.datos, bolsa)).is_true()
 	jugador.set("_enfocado", contenedor)

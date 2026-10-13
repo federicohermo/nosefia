@@ -318,7 +318,10 @@ func test_el_corcho_ofrece_las_dos_notas_con_contenido() -> void:  # AC-PLY-071
 	var corcho: Node3D = almacen.get_node("Estructura/board tareas")
 	var funcionales := 0
 	for indice in range(1, 6):
-		var hoja: MeshInstance3D = corcho.get_node("board de tareas_%03d" % indice)
+		var hoja: MeshInstance3D = corcho.get_node_or_null("board de tareas_%03d" % indice)
+		if hoja == null:
+			assert_bool(indice > 2).is_true()
+			continue
 		assert_bool(hoja.is_visible_in_tree()).is_equal(indice <= 2)
 		var cuerpo: StaticBody3D = hoja.get_node("StaticBody3D")
 		if cuerpo.is_in_group(ReglasDelJugador.GRUPO_INTERACTUABLE):

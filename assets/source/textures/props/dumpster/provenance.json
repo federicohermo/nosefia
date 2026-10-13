@@ -1,0 +1,9 @@
+{
+  "source": [
+    "https://daniel-jurys.itch.io/psx-waste",
+    "https://ambientcg.com/a/Plastic012B"
+  ],
+  "license": "CC0 1.0",
+  "method": "Blender Cycles native bake of PBR textures, dirt and molded reinforcement normals",
+  "size": 512
+}

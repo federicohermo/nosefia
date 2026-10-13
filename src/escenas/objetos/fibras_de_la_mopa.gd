@@ -9,6 +9,8 @@ const CONTORNO := preload("res://src/sistemas/marco/contorno.gdshader")
 const Raices := preload("res://src/escenas/objetos/raices_de_fibras.gd")
 const PASO := 1.0 / 120.0
 
+@export var observador: PhysicsBody3D
+
 var _pinturas: Array[ShaderMaterial] = []
 var _desvio := Vector2.ZERO
 var _rapidez := Vector2.ZERO
@@ -122,6 +124,9 @@ func _pintar(paso: float) -> void:
 		cabeza + Vector3.UP * subida, cabeza + Vector3.DOWN * 0.8, 9
 	)
 	var excluidos: Array[RID] = [(get_parent() as CollisionObject3D).get_rid()]
+	if is_instance_valid(observador):
+		# La cápsula que la lleva no es el piso sobre el que se flexionan las fibras.
+		excluidos.append(observador.get_rid())
 	if is_instance_valid(_apoyo_ignorado):
 		excluidos.append(_apoyo_ignorado.get_rid())
 	consulta.exclude = excluidos

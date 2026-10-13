@@ -107,6 +107,9 @@ func preparar() -> void:
 	jugador.objetivo_enfocado.connect(_al_enfocar)
 	jugador.objetivo_perdido.connect(_al_perder_el_foco)
 	repositor.agarre.objeto_agarrado.connect(_actualizar_zonas)
+	repositor.agarre.objeto_agarrado.connect(_ampliar_producto_en_mano)
+	repositor.agarre.objeto_soltado.connect(_restaurar_tamano_del_producto)
+	repositor.agarre.objeto_entregado.connect(_restaurar_tamano_del_producto)
 	repositor.agarre.objeto_soltado.connect(_actualizar_zonas)
 	repositor.agarre.objeto_entregado.connect(_actualizar_zonas)
 	repositor.agarre.objeto_soltado.connect(_desatascar_lo_soltado)
@@ -980,10 +983,7 @@ func _primera_reponible(id: Producto.Id) -> int:
 
 func _preparar_modelos() -> void:
 	for grupo: MeshInstance3D in contenido.get_children():
-		var herramienta := SurfaceTool.new()
-		herramienta.append_from(grupo.mesh, 0, Transform3D(grupo.global_basis, Vector3.ZERO))
-		herramienta.set_material(grupo.mesh.surface_get_material(0))
-		_modelos.append(AristasDelProducto.preparar(herramienta.commit()))
+		_modelos.append(AristasDelProducto.preparar(_malla_en_mundo(grupo)))
 	for modelo in _modelos:
 		# **El casco sale de `create_convex_shape` y no de `get_faces()`.** Los vértices crudos
 		# vienen repetidos —tres por cada esquina de una caja—, y con esa nube el solver arma un
@@ -1128,22 +1128,37 @@ func _preparar_la_guia() -> void:
 	var numero := 0
 	for clave: int in sueltas:
 		var modelo: MeshInstance3D = sueltas[clave][0]
-		var herramienta := SurfaceTool.new()
-		herramienta.append_from(modelo.mesh, 0, Transform3D(modelo.global_basis, Vector3.ZERO))
-		herramienta.set_material(modelo.mesh.surface_get_material(0))
-		_dibujar("Guia" + str(numero), herramienta.commit(), sueltas[clave][1])
+		_dibujar("Guia" + str(numero), _malla_en_mundo(modelo), sueltas[clave][1])
 		numero += 1
+
+
+func _malla_en_mundo(grupo: MeshInstance3D) -> ArrayMesh:
+	var resultado := ArrayMesh.new()
+	for superficie: int in grupo.mesh.get_surface_count():
+		var herramienta := SurfaceTool.new()
+		herramienta.append_from(
+			grupo.mesh, superficie, Transform3D(grupo.global_basis, Vector3.ZERO)
+		)
+		herramienta.set_material(grupo.mesh.surface_get_material(superficie))
+		herramienta.commit(resultado)
+	return resultado
 
 
 ## Qué tienen que compartir dos exhibiciones para dibujarse juntas: la malla y el material.
 func _clave(malla: Mesh) -> int:
-	var material := malla.surface_get_material(0)
-	return hash(
-		[
-			malla.surface_get_arrays(0)[Mesh.ARRAY_VERTEX],
-			material.resource_name if material != null else "",
-		]
-	)
+	var partes: Array = []
+	for superficie: int in malla.get_surface_count():
+		var material := malla.surface_get_material(superficie)
+		(
+			partes
+			. append(
+				[
+					malla.surface_get_arrays(superficie)[Mesh.ARRAY_VERTEX],
+					material.resource_name if material != null else "",
+				]
+			)
+		)
+	return hash(partes)
 
 
 ## Las copias de un bloque horneado con `desde`, pasadas a una malla horneada con `hacia`.
@@ -1258,8 +1273,23 @@ func _vestir(unidad: ObjetoAgarrable, id: Producto.Id) -> void:
 	var limites := malla.get_aabb()
 	var vista: MeshInstance3D = unidad.get_node("Malla")
 	vista.mesh = malla
-	vista.position = -limites.get_center()
+	vista.scale = Vector3.ONE * 1.1
+	vista.position = -limites.get_center() * 1.1
 	unidad.get_node("Forma").shape = _formas[id]
+
+
+func _ampliar_producto_en_mano(nodo: Node3D) -> void:
+	if nodo is ObjetoAgarrable and nodo.datos is UnidadDeProducto:
+		var vista: MeshInstance3D = nodo.get_node("Malla")
+		vista.scale = Vector3.ONE * 1.1
+		vista.position = -vista.mesh.get_aabb().get_center() * 1.1
+
+
+func _restaurar_tamano_del_producto(nodo: Node3D) -> void:
+	if nodo is ObjetoAgarrable and nodo.datos is UnidadDeProducto:
+		var vista: MeshInstance3D = nodo.get_node("Malla")
+		vista.scale = Vector3.ONE
+		vista.position = -vista.mesh.get_aabb().get_center()
 
 
 ## La unidad que el estante aceptó deja de ser un cuerpo y pasa a ser una copia del dibujo: la de

@@ -39,6 +39,20 @@ func before_test() -> void:
 	_opciones_despachadas.clear()
 
 
+func test_el_reto_largo_del_deposito_y_los_botones_entran_en_la_ventana() -> void:
+	var pantalla := await _pantalla()
+	pantalla.mostrar(ParteDeCierre.new(1, Apertura.obligatorias(1), 2, Partida.Final.EN_CURSO))
+	for cuadro: int in 3:
+		await get_tree().process_frame
+	var disponible := get_viewport().get_visible_rect()
+	for nombre: String in ["Saludo", "Lineas", "Comentario", "Continuar", "VolverAlMenu"]:
+		var control: Control = pantalla.get_node("Fondo/Panel/" + nombre)
+		var caja := control.get_global_rect()
+		assert_float(caja.position.x).override_failure_message(nombre).is_greater_equal(0.0)
+		assert_float(caja.end.x).override_failure_message(nombre).is_less_equal(disponible.end.x)
+		assert_float(caja.end.y).override_failure_message(nombre).is_less_equal(disponible.end.y)
+
+
 func test_la_pantalla_arranca_invisible() -> void:
 	# La placa es del cierre, no del arranque: visible desde el primer cuadro taparía la jornada
 	# entera, y el jugador no tendría cómo sacarla porque el turno recién empieza.
@@ -168,6 +182,32 @@ func test_la_placa_escala_con_el_lienzo_de_manada() -> void:
 	)
 	assert_vector(marco.scale).is_equal_approx(Vector2.ONE * esperado, Vector2.ONE * 1e-4)
 	assert_vector(marco.size).is_equal(LienzoDeManada.TAMANO_DEL_DISENO)
+
+
+func test_el_cierre_con_cajas_pendientes_conserva_textos_y_botones_en_pantalla() -> void:
+	var pantalla := await _pantalla()
+	pantalla.mostrar(
+		ParteDeCierre.new(
+			1, Apertura.obligatorias(1), 2, Partida.Final.EN_CURSO, ParteDeCierre.MOTIVOS.keys()
+		)
+	)
+	for _cuadro in 4:
+		await get_tree().process_frame
+	var marco: Control = pantalla.get_node("Fondo/Panel")
+	assert_float(marco.size.x).is_less_equal(LienzoDeManada.TAMANO_DEL_DISENO.x)
+	var viewport := pantalla.get_viewport().get_visible_rect().grow(1.0)
+	for control: Control in marco.find_children("*", "Control", true, false):
+		if control.is_visible_in_tree():
+			var rectangulo := (
+				control.get_global_transform_with_canvas() * Rect2(Vector2.ZERO, control.size)
+			)
+			(
+				assert_bool(viewport.encloses(rectangulo))
+				. override_failure_message(
+					"%s quedó fuera de la pantalla: %s" % [control.name, rectangulo]
+				)
+				. is_true()
+			)
 
 
 func test_la_pantalla_no_decide_como_cerro_la_noche() -> void:

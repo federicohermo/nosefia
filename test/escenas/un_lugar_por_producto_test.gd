@@ -39,8 +39,11 @@ func _cupo(almacen: Node3D, producto: Producto) -> int:
 
 
 ## Lo que la jornada 1 hace faltar de ese producto, que es con lo que abre el local armado.
-func _faltante(producto: Producto) -> int:
-	return Apertura.faltantes_de_la_jornada(ReglasDeLaPartida.PRIMERA_JORNADA).get(producto.id, 0)
+func _faltante(almacen: Node3D, producto: Producto) -> int:
+	var pedido: int = Apertura.faltantes_de_la_jornada(ReglasDeLaPartida.PRIMERA_JORNADA).get(
+		producto.id, 0
+	)
+	return mini(pedido, _cupo(almacen, producto))
 
 
 ## Una copia del bloque principal, en el mundo.
@@ -110,7 +113,11 @@ func _lugar_en_el_pasillo(almacen: Node3D, delante: Vector3, frente: Vector3) ->
 				Basis.IDENTITY, pie + cuerpo.position + Vector3.UP * HOLGURA_DEL_PISO
 			)
 			if espacio.intersect_shape(consulta, 1).is_empty():
-				return pie
+				var ojos := pie + Vector3.UP * ReglasDelJugador.ALTURA_DE_LA_CAMARA
+				var vista := PhysicsRayQueryParameters3D.create(ojos, delante, 1)
+				vista.exclude = [jugador.get_rid()]
+				if espacio.intersect_ray(vista).is_empty():
+					return pie
 		distancia += PASO_HACIA_EL_PASILLO
 	return Vector3.INF
 
@@ -269,7 +276,7 @@ func test_cada_producto_se_repone_en_una_sola_tanda_y_lo_repetido_es_fijo() -> v
 		(
 			assert_int(copias.instance_count - copias.visible_instance_count)
 			. override_failure_message("%s: al abrir no falta sólo lo de la jornada" % nombre)
-			. is_equal(_faltante(producto))
+			. is_equal(_faltante(almacen, producto))
 		)
 		var bloque := disposicion.principales[producto.id]
 		var principales := DisposicionDeLaGondola.copias(bloque)
@@ -283,7 +290,7 @@ func test_cada_producto_se_repone_en_una_sola_tanda_y_lo_repetido_es_fijo() -> v
 				)
 				. is_equal_approx(de_la_tanda.origin, Vector3.ONE * 1e-4)
 			)
-		for indice in _faltante(producto):
+		for indice in _faltante(almacen, producto):
 			presentacion.retirar(producto.id)
 			presentacion.pedir_colocar(producto.id)
 		assert_int(copias.visible_instance_count).is_equal(copias.instance_count)
@@ -404,7 +411,7 @@ func test_la_fila_de_atras_se_ve_entera_desde_que_abre() -> void:  # AC-STK-031
 	var disposicion := _disposicion(almacen)
 	for producto in Catalogo.todos():
 		var nombre := producto.nombre
-		var falta := _faltante(producto)
+		var falta := _faltante(almacen, producto)
 		var fila := disposicion.filas_de_adelante[producto.id]
 		var copias := (
 			(presentacion.get_node("ProductosDe" + nombre) as MultiMeshInstance3D).multimesh
@@ -430,10 +437,7 @@ func test_la_fila_de_atras_se_ve_entera_desde_que_abre() -> void:  # AC-STK-031
 		)
 
 
-## La jornada 1 abre con 5 Actroncito y 6 Coracola faltando, y todos los demás con su fila de
-## adelante completa; cada caja del depósito, llena. Es la cuenta del inventario con los
-## casilleros que mide el modelo, y no con unos inventados: Coracola tiene seis, así que su fila
-## arranca vacía entera.
+## La apertura deja los huecos pedidos hasta el cupo real que tiene cada fila del modelo.
 func test_la_jornada_1_abre_con_lo_que_dice_la_ficha() -> void:  # AC-STK-034 AC-STK-004
 	var almacen := _almacen()
 	var estante := (almacen.get("_repositor") as Repositor).estante()
@@ -445,7 +449,7 @@ func test_la_jornada_1_abre_con_lo_que_dice_la_ficha() -> void:  # AC-STK-034 AC
 		(
 			assert_int(estante.unidades_en_gondola(producto))
 			. override_failure_message("%s no abrió con su fila menos lo que falta" % nombre)
-			. is_equal(fila - _faltante(producto))
+			. is_equal(fila - _faltante(almacen, producto))
 		)
 		(
 			assert_int(estante.unidades_en_deposito(producto))
@@ -520,14 +524,16 @@ func test_una_tanda_de_una_fila_no_deja_unidades_detras_al_vaciarla() -> void:  
 	AperturaConLugar.abrir_con_faltantes(almacen, completos)
 	var presentacion: Node3D = almacen.get("_reposicion_manual")
 	var agarre: Agarre = almacen.get("_agarre")
-	for id: Producto.Id in [
-		Producto.Id.ACTRONCITO,
-		Producto.Id.COSA_DE_MANI,
-		Producto.Id.PRONGLES,
-		Producto.Id.FLINPUF,
-		Producto.Id.BURBALOO,
-	]:
-		var producto := Catalogo.de(id)
+	var miradas := 0
+	for producto in Catalogo.todos():
+		var id := producto.id
+		var disposicion := _disposicion(almacen)
+		if (
+			DisposicionDeLaGondola.copias(disposicion.principales[id])
+			!= disposicion.filas_de_adelante[id]
+		):
+			continue
+		miradas += 1
 		for indice in _cupo(almacen, producto):
 			presentacion.agarrar_de_la_gondola(id, indice)
 			agarre.vaciar_las_manos()
@@ -539,6 +545,7 @@ func test_una_tanda_de_una_fila_no_deja_unidades_detras_al_vaciarla() -> void:  
 			. override_failure_message(producto.nombre)
 			. is_zero()
 		)
+	assert_int(miradas).is_greater(0)
 
 
 ## La copia de un `MultiMesh`, leída del `buffer`: el renderizador de las corridas sin pantalla

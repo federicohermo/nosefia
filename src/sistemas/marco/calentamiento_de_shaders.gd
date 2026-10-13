@@ -25,6 +25,8 @@ var _con_area: Array[GeometryInstance3D] = []
 var _objetos: Array[GeometryInstance3D] = []
 var _focos: Array[SpotLight3D] = []
 var _area: AreaLight3D
+var _foco_ampliado: SpotLight3D
+var _forma_del_foco := Vector2.ZERO
 var _alcance_area := 0.0
 var _alcance_ampliado := 0.0
 ## Lo que estaba oculto también se dibuja, porque aparece después en medio del juego. Al terminar
@@ -40,7 +42,10 @@ var _anterior: Camera3D
 var _contornos_listos := false
 var _pases_originales: Dictionary[Material, Material] = {}
 var _parametros_originales: Dictionary[ShaderMaterial, Dictionary] = {}
-var _muestras: Array[MultiMeshInstance3D] = []
+var _muestras: Array[GeometryInstance3D] = []
+var _escena: Node3D
+var _reflejos: Dictionary[ReflectionProbe, Vector2i] = {}
+var _cuadros_de_asentamiento := 0
 
 
 func _init() -> void:
@@ -53,6 +58,19 @@ func _ready() -> void:
 
 
 func calentar(escena: Node3D) -> void:
+	_escena = escena
+	for reflejo: ReflectionProbe in escena.find_children("*", "ReflectionProbe", true, false):
+		if reflejo.is_visible_in_tree() and reflejo.intensity > 0.0:
+			_reflejos[reflejo] = Vector2i(reflejo.cull_mask, reflejo.update_mode)
+			reflejo.update_mode = ReflectionProbe.UPDATE_ALWAYS
+	if not _reflejos.is_empty():
+		# La sonda debe tener una captura válida para que el renderer active su variante.
+		# Capturar antes de ocultar geometría también evita guardar un salón incompleto.
+		for _cuadro: int in 4:
+			await get_tree().process_frame
+		for reflejo: ReflectionProbe in _reflejos:
+			if is_instance_valid(reflejo):
+				reflejo.update_mode = ReflectionProbe.UPDATE_ONCE
 	var caja := AABB()
 	var objetos := escena.find_children("*", "GeometryInstance3D", true, false)
 	objetos.append_array(_muestras_con_omni(escena))
@@ -60,6 +78,8 @@ func calentar(escena: Node3D) -> void:
 		if foco.visible:
 			_focos.append(foco)
 	if not _focos.is_empty():
+		_foco_ampliado = _focos[0]
+		_forma_del_foco = Vector2(_foco_ampliado.spot_range, _foco_ampliado.spot_angle)
 		for area: AreaLight3D in escena.find_children("*", "AreaLight3D", true, false):
 			if area.visible:
 				_area = area
@@ -100,7 +120,7 @@ func calentar(escena: Node3D) -> void:
 ## Un lote oculto conserva una instancia para calentarse en su lugar de origen. Al llevarlo
 ## hasta una heladera recibe una luz omni que allí no lo alcanza: hace falta ese mismo material
 ## instanciado, sin modificar posiciones ni buffers de la simulación.
-func _muestras_con_omni(escena: Node3D) -> Array[MultiMeshInstance3D]:
+func _muestras_con_omni(escena: Node3D) -> Array[GeometryInstance3D]:
 	var omni: OmniLight3D = null
 	for luz: OmniLight3D in escena.find_children("*", "OmniLight3D", true, false):
 		if luz.is_visible_in_tree() and luz.omni_range > 0.0:
@@ -166,6 +186,9 @@ static func _cola_de_la_plantilla() -> int:
 func _process(_delta: float) -> void:
 	if not _contornos_listos:
 		return
+	if _cuadros_de_asentamiento > 0:
+		_cuadros_de_asentamiento -= 1
+		return
 	var cola: int = programas_en_cola.call()
 	if _pendientes.is_empty():
 		if _sin_focos.is_empty() and _con_area.is_empty():
@@ -183,6 +206,13 @@ func _process(_delta: float) -> void:
 			objeto.visible = false
 		if not _con_area.is_empty():
 			_area.area_range = _alcance_ampliado
+			# Las muestras del salón también reciben el foco que alcanza al útil al cruzar
+			# el baño: preparar sólo área + reflejo dejaba esa combinación para la partida.
+			_foco_ampliado.spot_range = (
+				_alcance_ampliado
+				+ _foco_ampliado.global_position.distance_to(_area.global_position)
+			)
+			_foco_ampliado.spot_angle = 89.0
 			_pendientes.assign(_con_area)
 			_con_area.clear()
 		else:
@@ -200,10 +230,14 @@ func _process(_delta: float) -> void:
 		for material: Variant in _materiales_de(objeto):
 			nuevo = nuevo or not _vistos.has(material)
 			_vistos[material] = true
+	# La captura de LightmapGI se asigna después de volver visible la instancia. Cambiar
+	# las luces al cuadro siguiente dejaba sin preparar la variante con esa captura.
+	_cuadros_de_asentamiento = 2
 	avanzo.emit(progreso())
 
 
 func _preparar_contornos() -> void:
+	_agregar_muestras_con_reflejos()
 	var indicacion := ShaderMaterial.new()
 	indicacion.shader = CONTORNO
 	indicacion.set_shader_parameter("grosor", 0.0)
@@ -217,6 +251,64 @@ func _preparar_contornos() -> void:
 		# El protocolo lo declara el objeto; el sistema no conoce su clase ni su escena.
 		objeto.call("mostrar_contorno", indicacion)
 	_contornos_listos = true
+
+
+## El baño queda fuera de los reflejos del salón. Los útiles y sus gotas necesitan también
+## esa variante, incluidos los materiales por superficie que se prepararon por llamada diferida.
+func _agregar_muestras_con_reflejos() -> void:
+	var reflejos: ReflectionProbe
+	for candidato: ReflectionProbe in _escena.find_children("*", "ReflectionProbe", true, false):
+		if candidato.is_visible_in_tree() and candidato.intensity > 0.0:
+			if reflejos == null:
+				reflejos = candidato
+	if reflejos == null:
+		return
+	var fuentes := _objetos.duplicate()
+	for objeto: GeometryInstance3D in fuentes:
+		if objeto.gi_mode != GeometryInstance3D.GI_MODE_DYNAMIC:
+			continue
+		var malla: Mesh
+		if objeto is MeshInstance3D:
+			malla = (objeto as MeshInstance3D).mesh
+		elif objeto is MultiMeshInstance3D and (objeto as MultiMeshInstance3D).multimesh != null:
+			malla = (objeto as MultiMeshInstance3D).multimesh.mesh
+		if malla == null:
+			continue
+		var muestra := MeshInstance3D.new()
+		muestra.mesh = malla
+		muestra.gi_mode = objeto.gi_mode
+		muestra.cast_shadow = objeto.cast_shadow
+		muestra.layers = objeto.layers
+		muestra.material_override = objeto.material_override
+		muestra.material_overlay = objeto.material_overlay
+		if objeto is MeshInstance3D:
+			for superficie: int in malla.get_surface_count():
+				muestra.set_surface_override_material(
+					superficie, (objeto as MeshInstance3D).get_surface_override_material(superficie)
+				)
+		add_child(muestra)
+		muestra.global_position = reflejos.global_position - malla.get_aabb().get_center()
+		muestra.hide()
+		_muestras.append(muestra)
+		_objetos.append(muestra)
+		_pendientes.append(muestra)
+		_total += 1
+		if not _focos.is_empty():
+			_sin_focos.append(muestra)
+			_total += 1
+			if _area != null:
+				_con_area.append(muestra)
+				_total += 1
+	var caja := AABB()
+	for indice: int in _objetos.size():
+		var objeto := _objetos[indice]
+		var suya := objeto.global_transform * objeto.get_aabb()
+		caja = suya if indice == 0 else caja.merge(suya)
+	_encuadrar(caja)
+	if _area != null:
+		_alcance_ampliado = maxf(
+			_alcance_area, caja.size.length() + caja.get_center().distance_to(_area.global_position)
+		)
 
 
 func _guardar_pases(material: Material) -> void:
@@ -275,23 +367,42 @@ func _encuadrar(caja: AABB) -> void:
 	_camara.far = caja.size.y + 2.0 * ALTURA_EXTRA
 	_camara.position = caja.get_center() + Vector3.UP * (caja.size.y / 2.0 + ALTURA_EXTRA)
 	_camara.rotation = Vector3(-PI / 2.0, 0.0, 0.0)
+	_camara.force_update_transform()
+	_camara.reset_physics_interpolation()
 
 
 func _terminar() -> void:
 	set_process(false)
 	_restaurar_escena()
+	if not _reflejos.is_empty():
+		# La primera captura ocurrió con la geometría oculta durante la carga. Se rehace
+		# con el local restaurado, todavía detrás de la pantalla, sin muestras temporales.
+		for reflejo: ReflectionProbe in _reflejos:
+			if is_instance_valid(reflejo):
+				reflejo.update_mode = ReflectionProbe.UPDATE_ALWAYS
+		await get_tree().process_frame
+		await get_tree().process_frame
+		_restaurar_reflejos()
+		while programas_en_cola.call() > 0:
+			await get_tree().process_frame
+	_reflejos.clear()
 	terminado.emit()
 
 
 func _exit_tree() -> void:
-	if _camara != null:
+	if _camara != null or not _reflejos.is_empty():
 		_restaurar_escena()
 
 
 func _restaurar_escena() -> void:
+	_escena = null
+	_restaurar_reflejos()
 	_restaurar_pases()
 	if is_instance_valid(_area):
 		_area.area_range = _alcance_area
+	if is_instance_valid(_foco_ampliado):
+		_foco_ampliado.spot_range = _forma_del_foco.x
+		_foco_ampliado.spot_angle = _forma_del_foco.y
 	for foco: SpotLight3D in _focos:
 		if is_instance_valid(foco):
 			foco.visible = true
@@ -307,3 +418,10 @@ func _restaurar_escena() -> void:
 	_camara = null
 	if is_instance_valid(_anterior) and _anterior.is_inside_tree():
 		_anterior.make_current()
+
+
+func _restaurar_reflejos() -> void:
+	for reflejo: ReflectionProbe in _reflejos:
+		if is_instance_valid(reflejo):
+			reflejo.cull_mask = _reflejos[reflejo].x
+			reflejo.update_mode = _reflejos[reflejo].y

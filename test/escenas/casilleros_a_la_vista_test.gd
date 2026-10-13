@@ -490,6 +490,10 @@ func _lugar_en_el_pasillo(almacen: Node3D, delante: Vector3, frente: Vector3) ->
 				Basis.IDENTITY, pie + cuerpo.position + Vector3.UP * HOLGURA_DEL_PISO
 			)
 			if espacio.intersect_shape(consulta, 1).is_empty():
-				return pie
+				var ojos := pie + Vector3.UP * ReglasDelJugador.ALTURA_DE_LA_CAMARA
+				var vista := PhysicsRayQueryParameters3D.create(ojos, delante, 1)
+				vista.exclude = [jugador.get_rid()]
+				if espacio.intersect_ray(vista).is_empty():
+					return pie
 		distancia += PASO_HACIA_EL_PASILLO
 	return Vector3.INF

@@ -129,7 +129,7 @@ func test_cada_caja_se_enfoca_y_se_agarra_en_la_apertura_sin_retirar_otras() -> 
 func test_la_pila_completa_no_se_superpone_y_la_mira_alcanza_cada_caja() -> void:  # AC-STK-077
 	var local := await _abrir()
 	var cajas: Array = local.get("_cajas_de_productos")
-	assert_int(cajas.size()).is_equal(31)
+	assert_int(cajas.size()).is_equal(Catalogo.todos().size())
 	assert_int(cajas.size()).is_equal(Catalogo.todos().size())
 	var jugador: Node3D = local.get("_jugador")
 	var camara: Camera3D = jugador.get_node("Giro/Camara")
@@ -328,17 +328,29 @@ func test_el_rescate_usa_el_origen_de_la_noche() -> void:  # AC-STK-080
 	caja.volver_a_su_lugar()
 	assert_bool(caja.global_transform.is_equal_approx(origen)).is_true()
 	# El sólido se toma del modelo; el origen se ejerce a través de la red real.
-	var techo: CollisionShape3D = local.get_node(
-		"Estructura/almacen/Volumen/Volumen_entretecho_oeste"
-	)
-	caja.global_position = techo.global_position
+	var techo: CollisionShape3D = null
+	var altura := -INF
+	for forma: CollisionShape3D in local.get_node("Estructura/almacen/StaticBody3D").get_children():
+		if forma.disabled:
+			continue
+		var limites := forma.global_transform * forma.shape.get_debug_mesh().get_aabb()
+		if limites.get_center().y > altura:
+			techo = forma
+			altura = limites.get_center().y
+	assert_object(techo).is_not_null()
+	caja.global_position = techo.to_global(techo.shape.get_debug_mesh().get_aabb().get_center())
 	var red: RedDeSeguridad = local.get_node("Servicios/RedDeSeguridad")
 	assert_float(red.call("_hundido", caja, caja.global_transform)).is_greater(
 		ReglasDeLosObjetos.ROCE
 	)
+	var retorno: Array = red.call("_origen", caja)
+	assert_int(retorno.size()).is_equal(1)
+	assert_bool((retorno[0] as Transform3D).is_equal_approx(origen)).is_true()
 	red.revisar(caja)
 	assert_int(red.rescates.size()).is_equal(1)
-	assert_vector(caja.global_position).is_equal_approx(origen.origin, Vector3.ONE * 0.01)
+	assert_float(red.call("_hundido", caja, caja.global_transform)).is_less_equal(
+		ReglasDeLosObjetos.ROCE
+	)
 	for _cuadro in 4:
 		await get_tree().physics_frame
 	assert_bool(_estanteria(_apoyo(local, caja))).is_false()

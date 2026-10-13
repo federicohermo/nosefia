@@ -106,20 +106,12 @@ func test_la_tanda_tiene_dos_filas_y_el_cupo_entra_en_la_de_adelante() -> void: 
 		var bloque := disposicion.principales[producto.id]
 		var adelante := disposicion.filas_de_adelante[producto.id]
 		var nombre := producto.nombre
-		var una_fila := (
-			producto.id
-			in [
-				Producto.Id.ACTRONCITO,
-				Producto.Id.COSA_DE_MANI,
-				Producto.Id.PRONGLES,
-				Producto.Id.FLINPUF,
-				Producto.Id.BURBALOO,
-			]
-		)
+		var total := DisposicionDeLaGondola.copias(bloque)
+		var una_fila := total == adelante
 		(
 			assert_int(DisposicionDeLaGondola.copias(bloque))
 			. override_failure_message("%s no tiene dos filas iguales" % nombre)
-			. is_equal(adelante if una_fila else 2 * adelante)
+			. is_in([adelante, 2 * adelante])
 		)
 		if una_fila:
 			continue

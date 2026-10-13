@@ -36,11 +36,12 @@ theme_type_variation = &"Titulo"
 horizontal_alignment = 1
 
 [node name="Lineas" type="VBoxContainer" parent="Fondo/Panel"]
+custom_minimum_size = Vector2(1560, 0)
 layout_mode = 2
 size_flags_horizontal = 4
 
 [node name="Comentario" type="Label" parent="Fondo/Panel"]
-custom_minimum_size = Vector2(1200, 0)
+custom_minimum_size = Vector2(1560, 0)
 layout_mode = 2
 size_flags_horizontal = 4
 horizontal_alignment = 1

@@ -89,8 +89,8 @@ func test_la_miniatura_endereza_la_rampa_y_deja_quieto_lo_que_esta_derecho() -> 
 		var bloque := DISPOSICION.principales[producto.id]
 		var fila := DISPOSICION.filas_de_adelante[producto.id]
 		var normal: Vector3 = GenerarMiniaturas.normal_del_estante(bloque, fila)
-		var derecho: Basis = GenerarMiniaturas.enderezar(normal)
 		var modelo := contenido.get_child(producto.id) as Node3D
+		var derecho: Basis = GenerarMiniaturas.enderezar_envase(modelo.basis)
 		var arriba := _arriba((derecho * modelo.basis).orthonormalized())
 		assert_float(normal.y).override_failure_message(producto.nombre).is_greater(0.0)
 		(
@@ -98,7 +98,7 @@ func test_la_miniatura_endereza_la_rampa_y_deja_quieto_lo_que_esta_derecho() -> 
 			. override_failure_message("%s sale torcido en su miniatura" % producto.nombre)
 			. is_less(DERECHO)
 		)
-		if normal.angle_to(Vector3.UP) > deg_to_rad(RAMPA):
+		if _arriba(modelo.basis).angle_to(Vector3.UP) > deg_to_rad(RAMPA):
 			en_rampa += 1
 		else:
 			(
