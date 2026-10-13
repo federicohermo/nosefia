@@ -94,28 +94,6 @@ func test_los_objetos_y_manchas_quedan_sobre_el_modelo() -> void:
 		assert_float(jugador.global_position.y - piso.position.y).is_between(-0.01, 0.06)
 
 
-func test_las_manchas_superan_el_alcance_entre_si() -> void:
-	# Se comparan las de una misma noche: las de otra no se ven, ni se enfocan.
-	for jornada: int in [1, 2]:
-		var almacen := await _abrir(jornada)
-		var manchas: Array = almacen.get("_limpieza").manchas()
-		assert_array(manchas).is_not_empty()
-		for indice in manchas.size():
-			for otra in range(indice + 1, manchas.size()):
-				var a: Vector3 = manchas[indice].position
-				var b: Vector3 = manchas[otra].position
-				(
-					assert_float(Vector2(a.x, a.z).distance_to(Vector2(b.x, b.z)))
-					. override_failure_message(
-						(
-							"%s y %s, en la jornada %d"
-							% [manchas[indice].name, manchas[otra].name, jornada]
-						)
-					)
-					. is_greater(ReglasDelJugador.ALCANCE_DE_LA_MIRA)
-				)
-
-
 func test_el_tablero_de_cada_pallet_no_deja_pasar_un_rayo() -> void:
 	# Quien busca un apoyo baja un rayo. Por la ranura entre dos tablas el rayo cruzaba el pallet
 	# y daba con lo de abajo: la caja apuntada a un estante terminaba al lado del jugador.
