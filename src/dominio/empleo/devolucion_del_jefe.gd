@@ -83,13 +83,18 @@ const PARTICULARES: Dictionary[int, String] = {
 	2: "De verdad era tan difícil tirar tres bolsas de basura?",
 }
 
+
 ## Los Retos, en el orden de la ficha.
-const RETOS: Array[Partida.Llamado] = [
-	Partida.Llamado.PAPEL_EN_EL_INODORO,
-	Partida.Llamado.OBJETO_TIRADO,
-	Partida.Llamado.OBJETO_AFUERA,
-	Partida.Llamado.LOCAL_DESORDENADO,
-]
+## Una función y no una constante: `Partida` arma la devolución, y una constante que nombra a
+## `Partida` cerraría un ciclo de carga entre las dos.
+static func retos() -> Array[Partida.Llamado]:
+	return [
+		Partida.Llamado.PAPEL_EN_EL_INODORO,
+		Partida.Llamado.OBJETO_TIRADO,
+		Partida.Llamado.OBJETO_AFUERA,
+		Partida.Llamado.LOCAL_DESORDENADO,
+	]
+
 
 const PAPEL_1 := (
 	"El baño se tapó. Por si no lo leíste, hay un cartelito muy claro "
@@ -306,7 +311,7 @@ static func armar(
 			mensajes.append(textos[clampi(antecedentes.fallas(tipo), 1, textos.size()) - 1])
 	if PARTICULARES.has(jornada) and _alguna_particular(sin_cumplir):
 		mensajes.append(PARTICULARES[jornada])
-	for motivo: Partida.Llamado in RETOS:
+	for motivo: Partida.Llamado in retos():
 		if llamados.has(motivo):
 			mensajes.append(_reto(motivo, antecedentes.llamados(motivo), jornada, medios))
 	mensajes.append(_cierre(jornada, medios, antecedentes))
