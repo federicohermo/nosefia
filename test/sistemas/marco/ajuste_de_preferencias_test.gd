@@ -102,6 +102,33 @@ func test_lo_que_aparece_despues_tambien_toma_el_brillo() -> void:  # AC-CFG-007
 	assert_float(interfaz.modulate.r).is_equal_approx(0.5, 1e-5)
 
 
+func test_la_letra_propia_de_un_control_tambien_se_escala_sin_acumular() -> void:  # AC-CFG-008
+	var raiz := _con_tema()
+	var etiqueta: Label = auto_free(Label.new())
+	etiqueta.add_theme_font_size_override("font_size", 44)
+	raiz.add_child(etiqueta)
+	for escala: float in [1.5, 0.8, 1.0]:
+		_ajuste.aplicar(_con(C.TEXTOS, escala))
+		assert_int(etiqueta.get_theme_font_size("font_size")).is_equal(roundi(44 * escala))
+
+
+func test_el_texto_creado_despues_y_sus_cambios_toman_la_escala() -> void:  # AC-CFG-008
+	var raiz := _con_tema()
+	_ajuste.aplicar(_con(C.TEXTOS, 1.5))
+	var etiqueta: RichTextLabel = auto_free(RichTextLabel.new())
+	etiqueta.add_theme_font_size_override("normal_font_size", 26)
+	etiqueta.add_theme_font_size_override("bold_font_size", 26)
+	raiz.add_child(etiqueta)
+	await get_tree().process_frame
+	assert_int(etiqueta.get_theme_font_size("normal_font_size")).is_equal(39)
+	assert_int(etiqueta.get_theme_font_size("bold_font_size")).is_equal(39)
+	etiqueta.add_theme_font_size_override("normal_font_size", 30)
+	await get_tree().process_frame
+	assert_int(etiqueta.get_theme_font_size("normal_font_size")).is_equal(45)
+	_ajuste.aplicar(_con(C.TEXTOS, 1.0))
+	assert_int(etiqueta.get_theme_font_size("normal_font_size")).is_equal(30)
+
+
 func test_la_escala_de_textos_multiplica_los_tamanos_de_hoy() -> void:  # AC-CFG-008
 	assert_int(TEMA.get_default_font_size()).is_equal(40)
 	_ajuste.aplicar(_con(C.TEXTOS, 1.5))

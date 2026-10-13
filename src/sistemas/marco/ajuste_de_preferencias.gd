@@ -12,6 +12,7 @@ class_name AjusteDePreferencias
 extends Node
 
 const TEMA := preload("res://assets/ui/manada/tema.tres")
+const TAMANOS_PROPIOS := &"tamanos_antes_de_las_preferencias"
 
 ## Los buses que regula cada barra de volumen.
 const BUSES: Dictionary[Preferencias.Campo, Array] = {
@@ -27,6 +28,7 @@ static var _letra_de_hoy: int = -1
 var archivo := ArchivoDePreferencias.new()
 
 var _actuales := Preferencias.new()
+var _escalando := false
 
 
 func _ready() -> void:
@@ -82,10 +84,53 @@ func _iluminar(raiz: Node) -> void:
 
 func _iluminar_uno(nodo: Node) -> void:
 	var control := nodo as Control
-	if control == null or control.theme != TEMA:
+	if control == null:
+		return
+	var al_cambiar := _escalar_la_letra_propia.bind(control)
+	if not control.theme_changed.is_connected(al_cambiar):
+		control.theme_changed.connect(al_cambiar)
+	_escalar_la_letra_propia(control)
+	if control.theme != TEMA:
 		return
 	var brillo := _actuales.valor(Preferencias.Campo.BRILLO) / 100.0
 	control.modulate = Color(brillo, brillo, brillo, control.modulate.a)
+
+
+## Los tamaños propios ganan al tema: el celular y la computadora los necesitan también.
+## Se conserva cada tamaño original y se detectan los cambios que hace la pantalla después.
+func _escalar_la_letra_propia(control: Control) -> void:
+	if _escalando or not _usa_el_tema(control):
+		return
+	_escalando = true
+	var tamanos: Dictionary = control.get_meta(TAMANOS_PROPIOS, {})
+	var escala := _actuales.valor(Preferencias.Campo.TEXTOS)
+	for propiedad: Dictionary in control.get_property_list():
+		var ruta: String = propiedad.name
+		if not ruta.begins_with("theme_override_font_sizes/"):
+			continue
+		var nombre := ruta.get_slice("/", 1)
+		if not control.has_theme_font_size_override(nombre):
+			tamanos.erase(nombre)
+			continue
+		var actual := control.get_theme_font_size(nombre)
+		var guardado: Array = tamanos.get(nombre, [actual, actual])
+		if actual != guardado[1]:
+			guardado[0] = actual
+		var escalado := roundi(guardado[0] * escala)
+		tamanos[nombre] = [guardado[0], escalado]
+		if actual != escalado:
+			control.add_theme_font_size_override(nombre, escalado)
+	control.set_meta(TAMANOS_PROPIOS, tamanos)
+	_escalando = false
+
+
+func _usa_el_tema(control: Control) -> bool:
+	var actual := control
+	while actual != null:
+		if actual.theme != null:
+			return actual.theme == TEMA
+		actual = actual.get_parent_control()
+	return false
 
 
 ## El redondeo al entero más cercano es provisorio: lo deja abierto `OQ-CFG-002`.
