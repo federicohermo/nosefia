@@ -83,19 +83,7 @@ const PARTICULARES: Dictionary[int, String] = {
 	2: "De verdad era tan difícil tirar tres bolsas de basura?",
 }
 
-
-## Los Retos, en el orden de la ficha.
-## Una función y no una constante: `Partida` arma la devolución, y una constante que nombra a
-## `Partida` cerraría un ciclo de carga entre las dos.
-static func retos() -> Array[Partida.Llamado]:
-	return [
-		Partida.Llamado.PAPEL_EN_EL_INODORO,
-		Partida.Llamado.OBJETO_TIRADO,
-		Partida.Llamado.OBJETO_AFUERA,
-		Partida.Llamado.LOCAL_DESORDENADO,
-	]
-
-
+## Los textos de los Retos; `retos()` los ordena como la ficha.
 const PAPEL_1 := (
 	"El baño se tapó. Por si no lo leíste, hay un cartelito muy claro "
 	+ "diciendo que no se puede tirar papel en el inodoro."
@@ -281,6 +269,17 @@ func mensajes() -> Array[String]:
 
 func opciones() -> Array[Opcion]:
 	return _opciones.duplicate()
+
+
+## Una función y no una constante: `Partida` arma la devolución, y una constante que nombra a
+## `Partida` cerraría un ciclo de carga entre las dos.
+static func retos() -> Array[Partida.Llamado]:
+	return [
+		Partida.Llamado.PAPEL_EN_EL_INODORO,
+		Partida.Llamado.OBJETO_TIRADO,
+		Partida.Llamado.OBJETO_AFUERA,
+		Partida.Llamado.LOCAL_DESORDENADO,
+	]
 
 
 ## Un mensaje de la devolución como lo recibe el chat de Enrique: sólo texto.
