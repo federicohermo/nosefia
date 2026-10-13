@@ -32,3 +32,11 @@ func test_perder_el_cursor_en_pausa_o_con_la_placa_no_hace_nada() -> void:  # AC
 
 func test_perder_el_cursor_con_la_ventana_inactiva_no_pausa() -> void:  # AC-SAV-018
 	assert_int(Pausa.ante_el_cursor(false, false, true, false, false)).is_equal(Pausa.Accion.NADA)
+
+
+func test_esc_con_configuraciones_abierta_la_cierra_sin_reanudar() -> void:  # AC-SAV-018
+	assert_int(Pausa.ante_esc(true, false, true)).is_equal(Pausa.Accion.CERRAR_CONFIGURACIONES)
+
+
+func test_esc_con_configuraciones_cerrada_sigue_reanudando() -> void:  # AC-SAV-018
+	assert_int(Pausa.ante_esc(true, false, false)).is_equal(Pausa.Accion.REANUDAR)

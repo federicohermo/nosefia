@@ -23,9 +23,10 @@ func test_la_web_no_ofrece_salir() -> void:  # AC-SAV-016
 	assert_array(en_la_web).not_contains([MenuDeInicio.Opcion.SALIR])
 
 
-func test_nuevo_juego_y_salir_estan_habilitadas() -> void:
+func test_nuevo_juego_configuraciones_y_salir_estan_habilitadas() -> void:  # AC-CFG-010
 	var menu := MenuDeInicio.new(false)
 	assert_bool(menu.habilitada(MenuDeInicio.Opcion.NUEVO_JUEGO)).is_true()
+	assert_bool(menu.habilitada(MenuDeInicio.Opcion.CONFIGURACIONES)).is_true()
 	assert_bool(menu.habilitada(MenuDeInicio.Opcion.SALIR)).is_true()
 
 
@@ -33,11 +34,10 @@ func test_con_guardado_continuar_se_habilita() -> void:
 	assert_bool(MenuDeInicio.new(false, true).habilitada(MenuDeInicio.Opcion.CONTINUAR)).is_true()
 
 
-func test_continuar_configuraciones_y_logros_se_ven_deshabilitadas() -> void:
+func test_sin_guardado_continuar_y_logros_se_ven_deshabilitadas() -> void:
 	var menu := MenuDeInicio.new(false)
 	for opcion: MenuDeInicio.Opcion in [
 		MenuDeInicio.Opcion.CONTINUAR,
-		MenuDeInicio.Opcion.CONFIGURACIONES,
 		MenuDeInicio.Opcion.LOGROS,
 	]:
 		assert_bool(menu.opciones().has(opcion)).is_true()

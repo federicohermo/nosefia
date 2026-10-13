@@ -1,7 +1,7 @@
 ---
 schema_version: 1
 capability_id: CAP-CFG
-status: draft
+status: ratified
 owner: por definir
 provenance: fichas «2. Menú de inicio» (sección «Interfaz de configuraciones») y «Pausa y menú de pausa»; rangos, pasos y defectos decididos por el dueño en #378, provisorios hasta que el testing los ajuste
 ---

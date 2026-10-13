@@ -23,6 +23,10 @@ signal pensamiento_pedido(texto: String)
 @export var agarre: Agarre
 @export var punto_de_examen: Node3D
 
+## Los radianes por píxel del arrastre. Arranca en la de fábrica, y la cambia configuraciones
+## junto con la de la mirada: los dos giros usan el mismo factor.
+var sensibilidad: float = ReglasDelJugador.SENSIBILIDAD_DEL_MOUSE
+
 var _hallazgos := Hallazgos.new()
 var _examinando: Node3D = null
 
@@ -114,7 +118,7 @@ func girar(entrada: Vector2, segundos: float) -> void:
 func arrastrar(relativo: Vector2, con_el_clic: bool) -> void:
 	if not con_el_clic:
 		return
-	var giro := relativo * ReglasDelJugador.SENSIBILIDAD_DEL_MOUSE
+	var giro := relativo * sensibilidad
 	_rotar(-giro.x, -giro.y)
 
 

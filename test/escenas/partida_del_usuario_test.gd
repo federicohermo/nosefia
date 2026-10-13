@@ -1,4 +1,5 @@
-## Ningún test lee ni escribe la partida del usuario, aunque levante el almacén y cierre la noche.
+## Ningún test lee ni escribe la partida ni las preferencias del usuario, aunque levante el
+## almacén, cierre la noche o mueva una barra.
 ##
 ## Lo sostiene el gancho de sesión `test/guardado_de_la_sesion.gd`. Sin él, este caso da rojo.
 extends GdUnitTestSuite
@@ -39,3 +40,28 @@ func test_un_caso_deja_un_guardado_en_la_carpeta_de_la_sesion() -> void:
 
 func test_el_caso_siguiente_arranca_sin_guardado() -> void:
 	assert_bool(Guardado.new().hay_guardado()).is_false()
+
+
+func _preferencias_del_usuario() -> String:
+	if not FileAccess.file_exists(ArchivoDePreferencias.RUTA_DEL_USUARIO):
+		return "sin archivo"
+	return FileAccess.get_file_as_string(ArchivoDePreferencias.RUTA_DEL_USUARIO)
+
+
+func test_cambiar_una_preferencia_no_toca_el_archivo_del_usuario() -> void:
+	assert_str(ArchivoDePreferencias.ruta_por_defecto).is_not_equal(
+		ArchivoDePreferencias.RUTA_DEL_USUARIO
+	)
+	var antes := _preferencias_del_usuario()
+	var ajuste: AjusteDePreferencias = auto_free(AjusteDePreferencias.new())
+	add_child(ajuste)
+	var preferencias := Preferencias.new()
+	preferencias.poner(Preferencias.Campo.MUSICA, 30.0)
+	assert_bool(ajuste.cambiar(preferencias)).is_true()
+	ajuste.aplicar(Preferencias.new())
+	assert_str(_preferencias_del_usuario()).is_equal(antes)
+	assert_bool(FileAccess.file_exists(ArchivoDePreferencias.ruta_por_defecto)).is_true()
+
+
+func test_el_caso_siguiente_arranca_sin_preferencias() -> void:
+	assert_bool(FileAccess.file_exists(ArchivoDePreferencias.ruta_por_defecto)).is_false()
