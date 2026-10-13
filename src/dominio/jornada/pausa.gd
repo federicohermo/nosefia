@@ -1,8 +1,8 @@
 ## Qué hace el juego ante Esc y ante un cursor que se pierde: pausar, reanudar o nada.
 ##
-## Esc pausa en cualquier momento del almacén, también con la placa del cierre en pantalla: salir
-## al menú con la partida en curso pasa por la pausa. El cursor que se pierde sobre la placa, en
-## cambio, no pausa: la placa lo suelta a propósito.
+## Esc pausa en cualquier momento del almacén, también con la devolución del cierre en pantalla:
+## salir al menú con la partida en curso pasa por la pausa. El cursor que se pierde sobre la
+## devolución, en cambio, no pausa: el cierre lo suelta a propósito.
 class_name Pausa
 extends RefCounted
 

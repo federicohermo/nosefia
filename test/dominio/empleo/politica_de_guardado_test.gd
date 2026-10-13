@@ -30,6 +30,19 @@ func test_los_datos_llevan_la_jornada_y_los_medios_de_la_partida() -> void:
 	assert_int(datos[PartidaSerializada.CLAVE_DE_VERSION]).is_equal(PartidaSerializada.VERSION)
 
 
+func test_los_datos_llevan_las_cuentas_y_las_devoluciones() -> void:  # AC-SAV-024
+	var partida := Partida.nueva()
+	partida.abrir_la_jornada()
+	partida.anotar_llamado(Partida.Llamado.PAPEL_EN_EL_INODORO)
+	partida.cerrar_la_jornada(0)
+	var datos := PoliticaDeGuardado.datos(partida)
+	assert_dict(datos["fallas"]).contains_key_value("REPONER", 1)
+	assert_dict(datos["llamados"]).contains_key_value("PAPEL_EN_EL_INODORO", 1)
+	assert_int(datos["noches_sin_sumar"]).is_zero()
+	assert_array(datos["devoluciones"]).is_equal(Array(partida.mensajes_del_jefe()))
+	assert_array(datos["devoluciones"]).is_not_empty()
+
+
 func test_la_politica_es_pura() -> void:
 	var texto := FileAccess.get_file_as_string(POLITICA)
 	assert_str(texto).contains("extends RefCounted")

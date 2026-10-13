@@ -34,12 +34,13 @@ func test_los_puestos_completan_la_jornada_y_permiten_abrir_la_siguiente() -> vo
 		assert_bool(tarea.completada()).is_true()
 	assert_bool(reloj.corriendo()).is_true()
 	assert_float(tiempos.back()).is_less(tiempos.front())
-	var pantalla: PantallaDeCierre = almacen.get("_pantalla")
+	var pantalla: PantallaDeDevolucion = almacen.get("_pantalla")
 	reloj.avanzar(Reglas.DURACION_DEL_TURNO / Ritmo.SEGUNDOS_DE_TURNO_POR_SEGUNDO_REAL)
 	await get_tree().process_frame
 	assert_bool(pantalla.visible).is_true()
-	var continuar: Button = pantalla.get_node("Fondo/Panel/Continuar")
-	continuar.pressed.emit()
+	pantalla.call("_process", 60.0)
+	pantalla.elegir()
+	await get_tree().create_timer(PantallaDelCelular.RECORRIDO_COMPLETO).timeout
 	var ciclo: CicloDeJornadas = almacen.get("_ciclo")
 	assert_int(ciclo.partida().jornada()).is_equal(ReglasDeLaPartida.PRIMERA_JORNADA + 1)
 	assert_bool(pantalla.visible).is_false()
@@ -134,7 +135,7 @@ func test_abrir_la_jornada_termina_el_examen_en_curso() -> void:  # AC-INV-025
 
 
 func test_con_otra_pantalla_encima_la_e_no_abre_un_examen() -> void:
-	# Así suspenden la placa del cierre y la computadora. La E abría un examen de lo enfocado o
+	# Así suspenden la devolución y la computadora. La E abría un examen de lo enfocado o
 	# de lo que se lleva, y la segunda reanudaba al jugador con la pantalla abierta.
 	var almacen: Node3D = auto_free(ALMACEN.instantiate())
 	add_child(almacen)

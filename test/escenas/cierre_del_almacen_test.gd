@@ -167,7 +167,7 @@ func test_dos_motivos_entregan_seis_medios_antes_del_parte_y_guardado() -> void:
 	assert_int(Partida.desde(Guardado.new().cargar()).medios()).is_equal(6)
 
 
-func test_un_producto_en_el_piso_muestra_el_llamado_al_terminar() -> void:  # AC-EMP-023
+func test_un_producto_en_el_piso_trae_el_reto_del_desorden() -> void:
 	_abrir()
 	_almacen.get("_reposicion_manual").call("retirar", Producto.Id.ACTRONCITO)
 	var unidad: Node3D = _almacen.get("_agarre").soltar(true)
@@ -179,11 +179,7 @@ func test_un_producto_en_el_piso_muestra_el_llamado_al_terminar() -> void:  # AC
 	reloj.call("avanzar", Reglas.DURACION_DEL_TURNO / Ritmo.SEGUNDOS_DE_TURNO_POR_SEGUNDO_REAL)
 	var partida: Partida = _almacen.get("_partida")
 	assert_int(partida.medios()).is_equal(5)
-	var lineas: VBoxContainer = _almacen.get_node("Interfaz/PantallaDeCierre/Fondo/Panel/Lineas")
-	var textos: Array[String] = []
-	for etiqueta: Label in lineas.get_children():
-		textos.append(etiqueta.text)
-	assert_str("\n".join(textos)).contains("Local desordenado (+0,5 puntos)")
+	assert_array(partida.mensajes_del_jefe()).contains([DevolucionDelJefe.DESORDEN[0]])
 
 
 func test_las_partes_reales_respetan_techo_y_laterales_de_los_pasos() -> void:  # AC-CLN-040

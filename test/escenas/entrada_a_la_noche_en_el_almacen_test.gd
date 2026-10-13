@@ -58,11 +58,12 @@ func _restante() -> float:
 func _cerrar_y_seguir() -> void:
 	var reloj: RelojDelTurno = _almacen.get("_reloj")
 	reloj.avanzar(Reglas.DURACION_DEL_TURNO / Ritmo.SEGUNDOS_DE_TURNO_POR_SEGUNDO_REAL)
-	var pantalla: PantallaDeCierre = _almacen.get("_pantalla")
+	var pantalla: PantallaDeDevolucion = _almacen.get("_pantalla")
 	assert_bool(pantalla.visible).is_true()
-	var boton: Button = pantalla.get("_continuar")
-	boton.pressed.emit()
-	boton.pressed.emit()
+	pantalla.call("_process", 60.0)
+	pantalla.elegir()
+	pantalla.elegir()
+	await get_tree().create_timer(PantallaDelCelular.RECORRIDO_COMPLETO).timeout
 
 
 func test_instanciar_sin_menu_conserva_el_turno_corriendo() -> void:
@@ -77,7 +78,7 @@ func test_instanciar_sin_menu_conserva_el_turno_corriendo() -> void:
 
 func test_seguir_dos_veces_anuncia_una_sola_noche_y_retiene_hasta_subir() -> void:  # AC-SHF-024
 	_abrir()
-	_cerrar_y_seguir()
+	await _cerrar_y_seguir()
 	assert_int((_almacen.get("_partida") as Partida).jornada()).is_equal(2)
 	assert_bool(_persiana().en_pantalla()).is_true()
 	assert_str((_persiana().get_node("Marco/Placa") as Label).text).is_equal("NOCHE 2")
@@ -161,9 +162,7 @@ func test_la_entrada_esta_sobre_el_local_y_debajo_de_avisos_y_pausa() -> void:  
 	_abrir()
 	var entrada := _persiana()
 	assert_int(entrada.layer).is_equal(4)
-	for nombre: String in [
-		"Hud", "PantallaDeComputadora", "PantallaDeCierre", "PanelDeLaVentanilla"
-	]:
+	for nombre: String in ["Hud", "PantallaDeComputadora", "PanelDeLaVentanilla"]:
 		var capa: CanvasLayer = _almacen.get_node("Interfaz/" + nombre)
 		assert_int(entrada.layer).is_greater(capa.layer)
 	for nombre: String in ["PilaDeNotificaciones", "MenuDePausa"]:
@@ -177,9 +176,9 @@ func test_volver_de_una_partida_terminada_no_anuncia_otra_noche() -> void:  # AC
 	_almacen.set("_ir_al_menu", func() -> void: pedidos[0] += 1)
 	var reloj: RelojDelTurno = _almacen.get("_reloj")
 	reloj.avanzar(Reglas.DURACION_DEL_TURNO / Ritmo.SEGUNDOS_DE_TURNO_POR_SEGUNDO_REAL)
-	var pantalla: PantallaDeCierre = _almacen.get("_pantalla")
+	var pantalla: PantallaDeDevolucion = _almacen.get("_pantalla")
 	assert_bool(pantalla.visible).is_true()
-	var volver: Button = pantalla.get("_volver_al_menu")
-	volver.pressed.emit()
+	pantalla.call("_process", 60.0)
+	pantalla.elegir()
 	assert_int(pedidos[0]).is_equal(1)
 	assert_bool(_persiana().en_pantalla()).is_false()

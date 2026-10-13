@@ -180,7 +180,10 @@ func test_la_pendiente_en_tacho_piso_o_mano_no_cruza_de_noche() -> void:  # AC-C
 		assert_bool(reloj.obligatoria(Tarea.Tipo.SACAR_LA_BASURA).completada()).is_false()
 		reloj.avanzar(Reglas.DURACION_DEL_TURNO)
 		assert_bool(reloj.obligatoria(Tarea.Tipo.SACAR_LA_BASURA).completada()).is_false()
-		almacen.call("_seguir")
+		var pantalla: PantallaDeDevolucion = almacen.get("_pantalla")
+		pantalla.call("_process", 60.0)
+		pantalla.elegir()
+		await get_tree().create_timer(PantallaDelCelular.RECORRIDO_COMPLETO).timeout
 		assert_int((almacen.get("_partida") as Partida).jornada()).is_equal(3)
 		assert_object(agarre.manos().sostenido()).is_null()
 		for bolsa: ObjetoAgarrable in almacen.get("_bolsas"):
