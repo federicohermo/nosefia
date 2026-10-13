@@ -140,16 +140,17 @@ func test_agua_limpia_deja_charco_sin_cambiar_las_manchas_y_la_jornada_lo_borra(
 	camara.global_position = punto + Vector3(0, 1.2, 0.7)
 	camara.look_at(punto)
 	jugador.set("_enfocado", null)
-	assert_int(limpiador.piso().lugares().size()).is_equal(4)
+	assert_int(limpiador.piso().lugares().size()).is_equal(7)
 	assert_bool(limpiador.piso().esta_limpio()).is_false()
 	_usar(jugador)
 	assert_int(charcos.call("cantidad")).is_equal(1)
-	assert_int(limpiador.piso().lugares().size()).is_equal(4)
+	assert_int(limpiador.piso().lugares().size()).is_equal(7)
 	assert_bool(limpiador.piso().esta_limpio()).is_false()
 	assert_bool(limpiador.piso().balde().tiene_agua()).is_false()
 	almacen.call("_al_abrir_la_jornada", 2)
 	assert_int(charcos.call("cantidad")).is_zero()
-	assert_int(limpiador.piso().lugares().size()).is_equal(4)
+	assert_int(limpiador.piso().lugares().size()).is_equal(8)
+	assert_int(puesto.manchas().size()).is_equal(8)
 
 
 # AC-CLN-029
@@ -305,3 +306,79 @@ func test_las_senales_llenan_y_vacian_con_nivel_gradual_sin_reiniciar_al_repinta
 	almacen.call("_al_abrir_la_jornada", 2)
 	assert_bool(agua.visible).is_false()
 	assert_float(agua.position.y).is_equal_approx(reposo, .00001)
+
+
+## Los discos del piso del local que esa noche pone, o los que no pone: `propias` elige cuáles.
+static func _del_piso_del_local(puesto: Node3D, piso: PisoDelLocal, propias: bool) -> Array[Node3D]:
+	var elegidos: Array[Node3D] = []
+	for disco: Node3D in puesto.call("_todas_las_manchas"):
+		var lugar: PisoDelLocal.Lugar = disco.call("lugar_de_la_mancha")
+		if PisoDelLocal.superficie_de(lugar) != PisoDelLocal.Superficie.PISO:
+			continue
+		if PisoDelLocal.habitacion_de(lugar) != PisoDelLocal.ReglasDelCierre.Habitacion.LOCAL:
+			continue
+		if (piso.mancha_de(lugar) != null) == propias:
+			elegidos.append(disco)
+	return elegidos
+
+
+## Deja agua con la mopa en el centro de ese disco, como la mira sobre el piso, y devuelve si
+## apareció un charco.
+func _dejar_agua_sobre(almacen: Node3D, disco: Node3D) -> bool:
+	var puesto: Node3D = almacen.get("_limpieza")
+	var charcos: Node3D = puesto.get("_charcos")
+	var antes: int = charcos.call("cantidad")
+	var golpe := _golpe(almacen, disco.global_position)
+	(
+		assert_array([puesto.get("suelo"), almacen.get_node("Estructura/almacen/StaticBody3D")])
+		. override_failure_message("bajo `%s` no hay piso" % disco.name)
+		. contains(golpe.get("collider"))
+	)
+	puesto.call("_al_usar_la_superficie", golpe.position, golpe.normal, golpe.collider)
+	return int(charcos.call("cantidad")) > antes
+
+
+func test_el_charco_reserva_solo_las_manchas_de_la_noche() -> void:  # AC-CLN-059
+	var almacen := await _almacen()
+	var limpiador: Limpiador = almacen.get("_limpiador")
+	var agarre: Agarre = almacen.get("_agarre")
+	var mopa: RigidBody3D = almacen.get_node("Objetos/Mopa")
+	var puesto: Node3D = almacen.get("_limpieza")
+	for jornada: int in [1, 2]:
+		if jornada != 1:
+			almacen.call("_al_abrir_la_jornada", jornada)
+		assert_bool(agarre.pedir_agarrar(mopa.get("datos"), mopa)).is_true()
+		var piso := limpiador.piso()
+		var propias := _del_piso_del_local(puesto, piso, true)
+		var ajenas := _del_piso_del_local(puesto, piso, false)
+		assert_array(propias).is_not_empty()
+		assert_array(ajenas).is_not_empty()
+		# Las propias se borran antes: el sector sigue reservado aunque la mancha ya no esté.
+		limpiador.usar(ReglasDeLaLimpieza.ID_DEL_BALDE, ReglasDeLaLimpieza.ID_DEL_LAVATORIO)
+		limpiador.usar(&"jabon_amarillo", ReglasDeLaLimpieza.ID_DEL_BALDE)
+		limpiador.usar(ReglasDeLaLimpieza.ID_DE_LA_MOPA, ReglasDeLaLimpieza.ID_DEL_BALDE)
+		for disco in propias:
+			var lugar: PisoDelLocal.Lugar = disco.call("lugar_de_la_mancha")
+			assert_int(limpiador.pasar(ReglasDeLaLimpieza.ID_DE_LA_MOPA, lugar)).is_equal(
+				ReglasDeLaLimpieza.Resultado.MANCHA_BORRADA
+			)
+		(
+			assert_int(
+				limpiador.usar(ReglasDeLaLimpieza.ID_DE_LA_MOPA, ReglasDeLaLimpieza.ID_DEL_INODORO)
+			)
+			. is_equal(ReglasDeLaLimpieza.Resultado.MOPA_MOJADA)
+		)
+		for cuadro in 2:
+			await get_tree().physics_frame
+		for disco in propias:
+			(
+				assert_bool(_dejar_agua_sobre(almacen, disco))
+				. override_failure_message("`%s` no reserva su sector" % disco.name)
+				. is_false()
+			)
+		for disco in ajenas:
+			(
+				assert_bool(_dejar_agua_sobre(almacen, disco))
+				. override_failure_message("`%s`, de otra noche, reserva su sector" % disco.name)
+				. is_true()
+			)

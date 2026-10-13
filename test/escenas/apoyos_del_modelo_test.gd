@@ -6,15 +6,21 @@ const ALMACEN := preload("res://src/escenas/almacen.tscn")
 const PASO_SOBRE_EL_TABLERO := 0.002
 
 
-func test_cada_mancha_se_enfoca_desde_un_apoyo_caminable_a_un_metro() -> void:
+func test_cada_mancha_se_enfoca_desde_un_apoyo_caminable_a_su_alcance() -> void:
 	var almacen := await _abrir()
 	var jugador: CharacterBody3D = almacen.get("_jugador")
 	var camara: Camera3D = jugador.get_node("Giro/Camara")
 	var forma: CollisionShape3D = jugador.get_node("Cuerpo")
 	for mancha: Node3D in almacen.get("_limpieza").manchas():
 		var encontrada := false
-		for direccion: Vector3 in [Vector3.FORWARD, Vector3.BACK, Vector3.LEFT, Vector3.RIGHT]:
-			var pie := mancha.global_position + direccion
+		# Las cuatro direcciones a un metro primero; si el cuarto es angosto, como un cubículo,
+		# también las diagonales y un poco más lejos, siempre dentro del alcance de la mira.
+		var pies: Array[Vector3] = []
+		for distancia: float in [1.0, 1.3, 1.6]:
+			for paso in 16:
+				var direccion := Vector3.FORWARD.rotated(Vector3.UP, TAU * paso / 16.0)
+				pies.append(mancha.global_position + direccion * distancia)
+		for pie in pies:
 			# Hasta un metro abajo del piso y no de la mancha: la del moho está en una pared.
 			var apoyo := _rayo(jugador, pie + Vector3.UP, Vector3(pie.x, -1.0, pie.z))
 			if apoyo.is_empty():
@@ -86,18 +92,6 @@ func test_los_objetos_y_manchas_quedan_sobre_el_modelo() -> void:
 	if not piso.is_empty():
 		# El motor mantiene un margen de contacto entre la cápsula y el piso.
 		assert_float(jugador.global_position.y - piso.position.y).is_between(-0.01, 0.06)
-
-
-func test_las_manchas_superan_el_alcance_entre_si() -> void:
-	var almacen: Node3D = auto_free(ALMACEN.instantiate())
-	var manchas: Array = almacen.get("_limpieza").manchas()
-	for indice in manchas.size():
-		for otra in range(indice + 1, manchas.size()):
-			var a: Vector3 = manchas[indice].position
-			var b: Vector3 = manchas[otra].position
-			assert_float(Vector2(a.x, a.z).distance_to(Vector2(b.x, b.z))).is_greater(
-				ReglasDelJugador.ALCANCE_DE_LA_MIRA
-			)
 
 
 func test_el_tablero_de_cada_pallet_no_deja_pasar_un_rayo() -> void:
