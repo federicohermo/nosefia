@@ -77,9 +77,10 @@ confirme — tratalo como una hipótesis con buen linaje, no como un hecho de es
 Dos sondas, en este orden, las dos baratas:
 
 1. **Cruzá cada afirmación numérica contra el spec del propio PR.** `diff_pr.py` te deja la lista
-   de las que el diff agrega, ya sin la numeración estructural. `specs/NNN-*/research.md` es donde
-   vive la medición: si el doc dice otro número que el research, **gana el research** y el doc es
-   el hallazgo.
+   de las que el diff agrega, ya sin la numeración estructural. El contrato durable vive en
+   `specs/<capability>/<capability>.md`; las mediciones y decisiones de la entrega, en su issue y PR.
+   Recalculá cada ejemplo desde las reglas y contrastá la cifra con su fuente vigente. No busques
+   `research.md`: el gate de specs prohíbe ese archivo.
 2. **Buscá el gemelo del párrafo que el PR sí actualizó.** Un cambio acá se anuncia en varios
    registros a la vez —`CLAUDE.md`, `docs/`, `.claude/rules/`, el `README` de `specs/`— y es
    habitual que actualicen uno y se olviden del resto. Grepeá la clave del cambio: el número del
