@@ -160,9 +160,10 @@ func test_cierre_baja_celular_y_otra_jornada_cierra() -> void:  # AC-INV-035, AC
 	assert_bool(_celular().celular().abierto()).is_false()
 	assert_bool(recordatorio.visible).is_false()
 	assert_bool(_jugador().suspendido()).is_true()
-	assert_float(_pantalla().get("_destino")).is_zero()
-	var cierre: PantallaDeCierre = _almacen.get("_pantalla")
-	(cierre.get("_continuar") as Button).pressed.emit()
+	var cierre: PantallaDeDevolucion = _almacen.get("_pantalla")
+	assert_bool(cierre.visible).is_true()
+	cierre.call("_process", 60.0)
+	cierre.elegir()
 	assert_bool(_celular().celular().abierto()).is_false()
 	assert_bool(recordatorio.visible).is_true()
 	(_almacen.get_node("Interfaz/PersianaDeLaNoche") as PersianaDeLaNoche).terminar()
@@ -288,7 +289,7 @@ func test_escala_nueve_diecisavos_y_capa_entre_hud_y_avisos() -> void:  # AC-INV
 		var centro := lienzo.position + Vector2(960, 540) * lienzo.scale
 		assert_vector(centro).is_equal(tamano / 2)
 	assert_int(_pantalla().layer).is_equal(4)
-	for nombre: String in ["Hud", "PantallaDeComputadora", "PantallaDeCierre"]:
+	for nombre: String in ["Hud", "PantallaDeComputadora"]:
 		assert_int((_almacen.get_node("Interfaz/" + nombre) as CanvasLayer).layer).is_less(
 			_pantalla().layer
 		)

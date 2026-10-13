@@ -11,12 +11,24 @@ func _completo() -> Dictionary:
 		VERSION: PartidaSerializada.VERSION,
 		JORNADA: ReglasDeLaPartida.PRIMERA_JORNADA + 2,
 		MEDIOS: Reglas.APERCIBIMIENTOS_POR_AVISO * Reglas.MEDIOS_POR_APERCIBIMIENTO,
+		"fallas": {"REPONER": 2},
+		"llamados": {"PAPEL_EN_EL_INODORO": 1},
+		"noches_sin_sumar": 1,
+		"devoluciones": ["Buen día!", "Hola"],
 	}
 
 
 func test_cada_campo_tiene_su_clave() -> void:
 	assert_str(PartidaSerializada.clave(PartidaSerializada.Campo.JORNADA)).is_equal(JORNADA)
 	assert_str(PartidaSerializada.clave(PartidaSerializada.Campo.MEDIOS)).is_equal(MEDIOS)
+	assert_str(PartidaSerializada.clave(PartidaSerializada.Campo.FALLAS)).is_equal("fallas")
+	assert_str(PartidaSerializada.clave(PartidaSerializada.Campo.LLAMADOS)).is_equal("llamados")
+	assert_str(PartidaSerializada.clave(PartidaSerializada.Campo.NOCHES_SIN_SUMAR)).is_equal(
+		"noches_sin_sumar"
+	)
+	assert_str(PartidaSerializada.clave(PartidaSerializada.Campo.DEVOLUCIONES)).is_equal(
+		"devoluciones"
+	)
 
 
 func test_un_guardado_completo_vuelve_igual() -> void:  # AC-SAV-006
@@ -62,3 +74,25 @@ func test_la_actual_una_anterior_y_sin_version_son_legibles() -> void:  # AC-SAV
 	assert_bool(PartidaSerializada.legible(anterior)).is_true()
 	assert_bool(PartidaSerializada.legible(sin_version)).is_true()
 	assert_bool(PartidaSerializada.legible(posterior)).is_false()
+
+
+func test_un_guardado_sin_cuentas_retoma_limpio() -> void:  # AC-SAV-025
+	var datos := {
+		PartidaSerializada.clave(PartidaSerializada.Campo.JORNADA): 3,
+		PartidaSerializada.clave(PartidaSerializada.Campo.MEDIOS): 3,
+	}
+	var partida := Partida.desde(datos)
+	assert_int(partida.jornada()).is_equal(3)
+	assert_int(partida.medios()).is_equal(3)
+	assert_bool(partida.antecedentes().hubo_llamados()).is_false()
+	assert_int(partida.antecedentes().noches_sin_sumar()).is_zero()
+	assert_int(partida.antecedentes().fallas(Tarea.Tipo.REPONER)).is_zero()
+	assert_array(partida.mensajes_del_jefe()).is_empty()
+	datos[PartidaSerializada.clave(PartidaSerializada.Campo.FALLAS)] = ["no", "es", "diccionario"]
+	datos[PartidaSerializada.clave(PartidaSerializada.Campo.DEVOLUCIONES)] = 7
+	partida = Partida.desde(datos)
+	assert_int(partida.antecedentes().fallas(Tarea.Tipo.REPONER)).is_zero()
+	assert_array(partida.mensajes_del_jefe()).is_empty()
+	datos[PartidaSerializada.clave(PartidaSerializada.Campo.FALLAS)] = {"VOLAR": 2, "REPONER": 1}
+	partida = Partida.desde(datos)
+	assert_int(partida.antecedentes().fallas(Tarea.Tipo.REPONER)).is_equal(1)

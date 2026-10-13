@@ -10,7 +10,7 @@ func test_esc_en_pausa_reanuda() -> void:  # AC-SAV-018
 	assert_int(Pausa.ante_esc(true)).is_equal(Pausa.Accion.REANUDAR)
 
 
-## La placa del cierre no es una excepción: Esc no pregunta por ella, y pausa igual.
+## La devolución del cierre no es una excepción: Esc no pregunta por ella, y pausa igual.
 func test_esc_no_depende_de_la_placa() -> void:  # AC-SAV-018
 	assert_int(Pausa.ante_esc(false, false)).is_equal(Pausa.Accion.PAUSAR)
 	assert_int(Pausa.ante_esc(true, false)).is_equal(Pausa.Accion.REANUDAR)

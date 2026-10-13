@@ -182,7 +182,10 @@ func test_el_reloj_corre_la_pausa_real_va_encima_y_el_turno_cierra() -> void:  #
 	assert_bool(_vista(almacen).visible).is_true()
 	reloj.turno_cerrado.emit(0)
 	assert_bool(_vista(almacen).visible).is_false()
-	assert_bool((almacen.get_node("Interfaz/PantallaDeCierre") as CanvasLayer).visible).is_true()
+	(
+		assert_bool((almacen.get_node("Interfaz/PantallaDeDevolucion") as CanvasLayer).visible)
+		. is_true()
+	)
 	assert_bool((jugador.get("_control") as ControlDelJugador).esta_suspendido()).is_true()
 
 

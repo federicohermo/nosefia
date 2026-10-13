@@ -373,7 +373,7 @@ func test_hud_y_nota_siguen_la_jornada_sin_recargar_el_local() -> void:  # AC-SH
 		local.get("_reloj").avanzar(
 			Reglas.DURACION_DEL_TURNO / Ritmo.SEGUNDOS_DE_TURNO_POR_SEGUNDO_REAL
 		)
-		local.get("_pantalla").cierre_despachado.emit(ParteDeCierre.Opcion.SEGUIR)
+		local.get("_pantalla").devolucion_despachada.emit(DevolucionDelJefe.Opcion.CONTINUAR)
 		local.get_node("Interfaz/PersianaDeLaNoche").terminar()
 		assert_bool(local.get_node("Interfaz/PersianaDeLaNoche").en_pantalla()).is_false()
 		for _cuadro in 4:

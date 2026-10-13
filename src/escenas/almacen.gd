@@ -46,7 +46,7 @@ const ESCENA_DEL_MENU := "res://src/escenas/menu_de_inicio.tscn"
 @export var _hud: Hud
 @export var _reloj: RelojDelTurno
 @export var _ciclo: CicloDeJornadas
-@export var _pantalla: PantallaDeCierre
+@export var _pantalla: PantallaDeDevolucion
 @export var _reloj_de_mesa: RelojDeMesaDelLocal
 @export var _repositor: Repositor
 @export var _estante: EstanteDelLocal
@@ -320,43 +320,32 @@ func _al_abrir_la_jornada(jornada: int) -> void:
 	_estante.mostrar(0)
 
 
-## La jornada cerrada ya quedó anotada en la partida cuando esta señal llega: acá sólo se le
-## pasan a la pantalla los números que la partida contesta.
+## Al cerrar, la persiana baja y la devolución de Enrique llega por el celular.
 ##
-## Las obligatorias salen de la partida y no de una lista propia: son **las mismas instancias**
-## que el turno estuvo contando toda la noche, así que el parte lee el estado de verdad y no una
-## copia que nadie completó.
+## La partida ya anotó la noche cuando esta señal llega: la devolución lee sus cuentas, y sus
+## obligatorias son **las mismas instancias** que el turno estuvo contando toda la noche.
 func _al_cerrar_la_jornada(jornada: int, cumplidas: int) -> void:
 	(get_node("Interfaz/PersianaDeLaNoche") as PersianaDeLaNoche).bajar()
 	_celular.cerrar_jornada()
 	_pantalla_del_celular.mostrar_recordatorio(false)
 	_audio.callar_la_musica()
 	_hud.mostrar_tareas(cumplidas)
-	_pantalla.mostrar(
-		ParteDeCierre.new(
-			jornada,
-			_partida.obligatorias(),
-			_partida.apercibimientos(),
-			_partida.final(),
-			_partida.llamados()
-		)
-	)
-	# Sin esto la placa es inalcanzable jugando: el jugador clava el puntero en el centro cada
-	# cuadro y los botones caen más abajo, así que no se pueden clickear nunca. La suspensión
-	# suelta el cursor sola, porque el modo se recalcula a partir del estado del control.
+	_pantalla.mostrar(DevolucionDelJefe.new(jornada, _partida))
+	# Sin esto el celular es inalcanzable jugando: el jugador clava el puntero en el centro cada
+	# cuadro. La suspensión suelta el cursor sola.
 	_jugador.suspender()
-	# Una conexión por placa: un segundo despacho de la misma placa no encuentra a nadie, y no
-	# abre dos noches ni carga el menú dos veces.
-	_pantalla.cierre_despachado.connect(_al_despachar_la_placa, CONNECT_ONE_SHOT)
+	# Una conexión por devolución: un segundo despacho no encuentra a nadie, y no abre dos noches
+	# ni carga el menú dos veces.
+	_pantalla.devolucion_despachada.connect(_al_despachar_la_devolucion, CONNECT_ONE_SHOT)
 
 
-## Qué hace cada opción de la placa. Cuáles se ofrecen lo decidió el parte; acá sólo se busca
+## Qué hace cada opción de la devolución. Cuáles se ofrecen lo decidió ella; acá sólo se busca
 ## la acción de la elegida.
-func _al_despachar_la_placa(opcion: ParteDeCierre.Opcion) -> void:
+func _al_despachar_la_devolucion(opcion: DevolucionDelJefe.Opcion) -> void:
 	(get_node("Interfaz/PersianaDeLaNoche") as PersianaDeLaNoche).terminar()
-	var acciones: Dictionary[ParteDeCierre.Opcion, Callable] = {
-		ParteDeCierre.Opcion.SEGUIR: _seguir,
-		ParteDeCierre.Opcion.VOLVER_AL_MENU: _ir_al_menu,
+	var acciones: Dictionary[DevolucionDelJefe.Opcion, Callable] = {
+		DevolucionDelJefe.Opcion.CONTINUAR: _seguir,
+		DevolucionDelJefe.Opcion.VOLVER_AL_MENU: _ir_al_menu,
 	}
 	acciones[opcion].call()
 
@@ -467,6 +456,10 @@ func _cablear_el_celular() -> void:
 	_pantalla_del_celular.volver_pedido.connect(_celular.pedir_volver)
 	_pantalla_del_celular.foto_pedida.connect(_celular.pedir_foto)
 	_pantalla_del_celular.cierre_de_foto_pedido.connect(_celular.pedir_cerrar_foto)
+	_pantalla.preparar(_celular, _pantalla_del_celular)
+	# Al retomar, las devoluciones de las noches ya cerradas vuelven al chat de Enrique.
+	for texto: String in _partida.mensajes_del_jefe():
+		_celular.recibir(Conversacion.Interlocutor.JEFE, DevolucionDelJefe.mensaje(texto))
 
 
 func _al_abrir_el_celular() -> void:

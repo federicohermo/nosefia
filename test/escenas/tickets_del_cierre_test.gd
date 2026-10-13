@@ -71,7 +71,7 @@ func _cerrar(impecable: bool) -> void:
 
 
 func _seguir() -> void:
-	_almacen.get("_pantalla").cierre_despachado.emit(ParteDeCierre.Opcion.SEGUIR)
+	_almacen.get("_pantalla").devolucion_despachada.emit(DevolucionDelJefe.Opcion.CONTINUAR)
 	_almacen.get_node("Interfaz/PersianaDeLaNoche").terminar()
 
 

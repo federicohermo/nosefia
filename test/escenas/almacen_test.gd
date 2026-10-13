@@ -375,26 +375,28 @@ func test_los_cableados_de_la_raiz_llegan_asignados() -> void:
 		)
 
 
-func test_el_cableado_arma_el_parte_una_sola_vez() -> void:
-	# Dos partes por jornada sería la placa pintada dos veces con dos objetos distintos, y la
-	# segunda tapando a la primera. Las decisiones se ejercen en sus suites funcionales.
+func test_el_cableado_arma_la_devolucion_una_sola_vez() -> void:
+	# Dos devoluciones por jornada serían dos tandas de mensajes en el mismo chat. Las decisiones
+	# se ejercen en sus suites funcionales.
 	var texto := FileAccess.get_file_as_string(SCRIPT_DEL_ALMACEN)
 	(
-		assert_int(texto.count("ParteDeCierre.new("))
+		assert_int(texto.count("DevolucionDelJefe.new("))
 		. override_failure_message(
-			"`almacen.gd` arma %d partes por jornada" % texto.count("ParteDeCierre.new(")
+			"`almacen.gd` arma %d devoluciones por jornada" % texto.count("DevolucionDelJefe.new(")
 		)
 		. is_equal(1)
 	)
 
 
-func test_la_escena_instancia_la_pantalla_de_cierre() -> void:
+func test_la_escena_instancia_la_pantalla_de_devolucion() -> void:
 	var almacen := _almacen()
-	assert_bool(almacen.has_node("Interfaz/PantallaDeCierre")).is_true()
-	assert_object(almacen.get_node("Interfaz/PantallaDeCierre")).is_instanceof(PantallaDeCierre)
+	assert_bool(almacen.has_node("Interfaz/PantallaDeDevolucion")).is_true()
+	assert_object(almacen.get_node("Interfaz/PantallaDeDevolucion")).is_instanceof(
+		PantallaDeDevolucion
+	)
 
 
-func test_despachar_la_placa_abre_la_noche_siguiente_sin_tareas_cumplidas() -> void:
+func test_despachar_la_devolucion_abre_la_noche_siguiente_sin_tareas_cumplidas() -> void:
 	# **El segundo caso de la suite que entra `almacen.tscn` entera al árbol.** El lazo que este
 	# spec cierra —la noche termina, la placa aparece, el jugador la despacha y la siguiente
 	# abre— vive entero en señales conectadas: leído como texto no dice si funciona, y es lo
@@ -404,7 +406,7 @@ func test_despachar_la_placa_abre_la_noche_siguiente_sin_tareas_cumplidas() -> v
 	await get_tree().process_frame
 	var reloj: RelojDelTurno = almacen.get_node("Servicios/RelojDelTurno")
 	var ciclo: CicloDeJornadas = almacen.get_node("Servicios/CicloDeJornadas")
-	var pantalla: PantallaDeCierre = almacen.get_node("Interfaz/PantallaDeCierre")
+	var pantalla: PantallaDeDevolucion = almacen.get_node("Interfaz/PantallaDeDevolucion")
 	var tareas: Label = almacen.get_node("Interfaz/Hud/Tareas")
 	assert_bool(reloj.obligatoria(Tarea.Tipo.REGISTRAR).completada()).is_false()
 
@@ -413,12 +415,12 @@ func test_despachar_la_placa_abre_la_noche_siguiente_sin_tareas_cumplidas() -> v
 	reloj.avanzar(SEGUNDOS_REALES_DE_UN_TURNO)
 	(
 		assert_bool(pantalla.visible)
-		. override_failure_message("la noche cerró y la placa no apareció")
+		. override_failure_message("la noche cerró y la devolución no apareció")
 		. is_true()
 	)
 
-	var boton: Button = pantalla.get_node("Fondo/Panel/Continuar")
-	boton.pressed.emit()
+	pantalla.call("_process", 60.0)
+	pantalla.elegir()
 	assert_bool(pantalla.visible).is_false()
 	(
 		assert_int(ciclo.partida().jornada())
@@ -463,12 +465,13 @@ func test_abrir_la_jornada_deja_al_jugador_en_el_arranque() -> void:  # AC-PLY-0
 	var control: ControlDelJugador = jugador.get("_control")
 	var arranque: Transform3D = almacen.get("_arranque")
 	var reloj: RelojDelTurno = almacen.get_node("Servicios/RelojDelTurno")
-	var pantalla: PantallaDeCierre = almacen.get_node("Interfaz/PantallaDeCierre")
+	var pantalla: PantallaDeDevolucion = almacen.get_node("Interfaz/PantallaDeDevolucion")
 	jugador.global_position = Vector3(5.0, 0.2, -3.0)
 	jugador.velocity = Vector3(2.0, 0.0, 1.0)
 	control.girar(Vector2(170.0, -90.0))
 	reloj.avanzar(SEGUNDOS_REALES_DE_UN_TURNO)
-	(pantalla.get_node("Fondo/Panel/Continuar") as Button).pressed.emit()
+	pantalla.call("_process", 60.0)
+	pantalla.elegir()
 	assert_vector(jugador.global_position).is_equal_approx(arranque.origin, Vector3.ONE * 1e-4)
 	assert_vector(jugador.velocity).is_equal(Vector3.ZERO)
 	assert_float(control.yaw()).is_equal_approx(arranque.basis.get_euler().y, 1e-4)
@@ -479,7 +482,7 @@ func test_abrir_la_jornada_deja_al_jugador_en_el_arranque() -> void:  # AC-PLY-0
 	assert_vector(frente).is_equal_approx(-arranque.basis.z, Vector3.ONE * 1e-4)
 
 
-func test_con_el_despido_la_placa_vuelve_al_menu_y_no_abre_otra_noche() -> void:  # AC-EMP-016
+func test_con_el_despido_la_devolucion_vuelve_al_menu_y_no_abre_otra_noche() -> void:  # AC-EMP-016
 	var almacen: Node3D = auto_free(load(ESCENA_DEL_ALMACEN).instantiate())
 	# Tres apercibimientos y una noche sin tareas: salta de 3 a 5 sin pisar el 4.
 	almacen.set("_partida", Partida.new(Legajo.con_medios((3) * Reglas.MEDIOS_POR_APERCIBIMIENTO)))
@@ -489,17 +492,17 @@ func test_con_el_despido_la_placa_vuelve_al_menu_y_no_abre_otra_noche() -> void:
 	almacen.set("_ir_al_menu", func() -> void: menus[0] += 1)
 	var reloj: RelojDelTurno = almacen.get_node("Servicios/RelojDelTurno")
 	var ciclo: CicloDeJornadas = almacen.get_node("Servicios/CicloDeJornadas")
-	var pantalla: PantallaDeCierre = almacen.get_node("Interfaz/PantallaDeCierre")
+	var pantalla: PantallaDeDevolucion = almacen.get_node("Interfaz/PantallaDeDevolucion")
 	var aperturas := [0]
 	ciclo.jornada_abierta.connect(func(_jornada: int) -> void: aperturas[0] += 1)
 	reloj.avanzar(SEGUNDOS_REALES_DE_UN_TURNO)
 	assert_int(ciclo.partida().final()).is_equal(Partida.Final.DESPEDIDO)
 	assert_bool(pantalla.visible).is_true()
-	assert_bool((pantalla.get_node("Fondo/Panel/Continuar") as Button).visible).is_false()
-	var volver: Button = pantalla.get_node("Fondo/Panel/VolverAlMenu")
-	assert_bool(volver.visible).is_true()
-	volver.pressed.emit()
-	volver.pressed.emit()
+	pantalla.call("_process", 60.0)
+	var opcion := (almacen.get_node("Interfaz/PantallaDelCelular") as PantallaDelCelular).opcion()
+	assert_str(opcion.text).is_equal("VOLVER AL MENÚ")
+	pantalla.elegir()
+	pantalla.elegir()
 	assert_int(menus[0]).is_equal(1)
 	assert_int(aperturas[0]).is_zero()
 	assert_bool(reloj.corriendo()).is_false()
@@ -513,12 +516,14 @@ func test_con_la_partida_en_curso_volver_al_menu_no_abre_la_noche_siguiente() ->
 	almacen.set("_ir_al_menu", func() -> void: menus[0] += 1)
 	var reloj: RelojDelTurno = almacen.get_node("Servicios/RelojDelTurno")
 	var ciclo: CicloDeJornadas = almacen.get_node("Servicios/CicloDeJornadas")
-	var pantalla: PantallaDeCierre = almacen.get_node("Interfaz/PantallaDeCierre")
+	var pantalla: PantallaDeDevolucion = almacen.get_node("Interfaz/PantallaDeDevolucion")
 	var pausa: ControlDePausa = almacen.get_node("Interfaz/ControlDePausa")
 	var menu: MenuDePausa = almacen.get_node("Interfaz/MenuDePausa")
 	reloj.avanzar(SEGUNDOS_REALES_DE_UN_TURNO)
 	assert_bool(ciclo.partida().terminada()).is_false()
-	assert_bool((pantalla.get_node("Fondo/Panel/VolverAlMenu") as Button).visible).is_false()
+	pantalla.call("_process", 60.0)
+	var opcion := (almacen.get_node("Interfaz/PantallaDelCelular") as PantallaDelCelular).opcion()
+	assert_str(opcion.text).is_equal("CONTINUAR")
 	pausa.pausar()
 	assert_bool(menu.visible).is_true()
 	(menu.get_node("Fondo/Panel/Opciones/VolverAlMenu") as Button).pressed.emit()
@@ -544,7 +549,7 @@ func test_volver_al_menu_desde_la_pausa_sale_de_la_pausa_y_va_al_menu() -> void:
 	assert_bool(Guardado.new().hay_guardado()).is_false()
 
 
-func test_con_la_placa_en_pantalla_esc_pausa_encima() -> void:  # AC-SAV-018
+func test_con_la_devolucion_en_pantalla_esc_pausa_encima() -> void:  # AC-SAV-018
 	var almacen: Node3D = auto_free(load(ESCENA_DEL_ALMACEN).instantiate())
 	add_child(almacen)
 	await get_tree().process_frame
@@ -556,7 +561,7 @@ func test_con_la_placa_en_pantalla_esc_pausa_encima() -> void:  # AC-SAV-018
 	(almacen.get_node("Interfaz/ControlDePausa") as ControlDePausa)._input(esc)
 	assert_bool(get_tree().paused).is_true()
 	assert_bool((almacen.get_node("Interfaz/MenuDePausa") as MenuDePausa).visible).is_true()
-	var placa: PantallaDeCierre = almacen.get_node("Interfaz/PantallaDeCierre")
+	var placa: PantallaDeDevolucion = almacen.get_node("Interfaz/PantallaDeDevolucion")
 	assert_bool(placa.visible).is_true()
 	get_tree().paused = false
 

@@ -15,7 +15,7 @@ signal reanudado
 signal volver_al_menu_pedido
 signal cierre_de_configuraciones_pedido
 
-## La placa del cierre, mirada sólo por si está en pantalla: con ella, perder el cursor no
+## La devolución del cierre, mirada sólo por si está en pantalla: con ella, perder el cursor no
 ## pausa. Esc sí: abre la pausa por encima.
 @export var placa: CanvasLayer
 ## Configuraciones abierta desde la pausa, mirada sólo por si está en pantalla. La cierra quien

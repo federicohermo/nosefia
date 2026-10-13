@@ -6,6 +6,8 @@ signal chat_pedido(quien: Conversacion.Interlocutor)
 signal volver_pedido
 signal foto_pedida(indice: int)
 signal cierre_de_foto_pedido
+## La opción que se ofrece debajo del último mensaje del chat, como la de la devolución.
+signal opcion_elegida
 
 const RECORRIDO_COMPLETO := 0.25
 const TAMANO := Vector2(522.0, 928.0)
@@ -51,6 +53,8 @@ var _destino: float = 0.0
 var _ultimo: int = 0
 var _ahora: Callable = Time.get_ticks_usec
 var _bandeja: Bandeja
+var _texto_de_la_opcion: String = ""
+var _opcion: Button
 
 
 func _ready() -> void:
@@ -142,7 +146,39 @@ func mostrar_chat(conversacion: Conversacion, mensajes: Array[Mensaje], fijo: bo
 	_limpiar()
 	for indice in mensajes.size():
 		_mensajes.add_child(_burbuja_de(mensajes[indice], indice))
+	_agregar_la_opcion()
 	_ir_al_ultimo.call_deferred()
+
+
+## Ofrece una opción debajo del último mensaje. Sobrevive a que el chat se vuelva a dibujar.
+func mostrar_opcion(texto: String) -> void:
+	_texto_de_la_opcion = texto
+	_agregar_la_opcion()
+	_ir_al_ultimo.call_deferred()
+
+
+func quitar_opcion() -> void:
+	_texto_de_la_opcion = ""
+	if is_instance_valid(_opcion):
+		_opcion.queue_free()
+	_opcion = null
+
+
+## El botón de la opción, si hay una a la vista.
+func opcion() -> Button:
+	return _opcion if is_instance_valid(_opcion) and not _opcion.is_queued_for_deletion() else null
+
+
+func _agregar_la_opcion() -> void:
+	if _texto_de_la_opcion.is_empty() or opcion() != null:
+		return
+	_opcion = Button.new()
+	_opcion.text = _texto_de_la_opcion
+	_opcion.theme_type_variation = &"BotonContinuar"
+	_opcion.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
+	_opcion.pressed.connect(func() -> void: opcion_elegida.emit())
+	_mensajes.add_child(_opcion)
+	_opcion.grab_focus()
 
 
 func ampliar(foto: Mensaje, adjunto: Mensaje) -> void:
