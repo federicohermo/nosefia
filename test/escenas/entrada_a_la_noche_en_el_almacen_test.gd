@@ -63,6 +63,7 @@ func _cerrar_y_seguir() -> void:
 	pantalla.call("_process", 60.0)
 	pantalla.elegir()
 	pantalla.elegir()
+	await get_tree().create_timer(PantallaDelCelular.RECORRIDO_COMPLETO).timeout
 
 
 func test_instanciar_sin_menu_conserva_el_turno_corriendo() -> void:
@@ -77,7 +78,7 @@ func test_instanciar_sin_menu_conserva_el_turno_corriendo() -> void:
 
 func test_seguir_dos_veces_anuncia_una_sola_noche_y_retiene_hasta_subir() -> void:  # AC-SHF-024
 	_abrir()
-	_cerrar_y_seguir()
+	await _cerrar_y_seguir()
 	assert_int((_almacen.get("_partida") as Partida).jornada()).is_equal(2)
 	assert_bool(_persiana().en_pantalla()).is_true()
 	assert_str((_persiana().get_node("Marco/Placa") as Label).text).is_equal("NOCHE 2")

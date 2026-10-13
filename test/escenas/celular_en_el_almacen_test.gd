@@ -169,6 +169,7 @@ func test_cierre_baja_celular_y_otra_jornada_cierra() -> void:  # AC-INV-035, AC
 	assert_bool(cierre.visible).is_true()
 	cierre.call("_process", 60.0)
 	cierre.elegir()
+	await get_tree().create_timer(PantallaDelCelular.RECORRIDO_COMPLETO).timeout
 	assert_bool(_celular().celular().abierto()).is_false()
 	assert_bool(recordatorio.visible).is_true()
 	(_almacen.get_node("Interfaz/PersianaDeLaNoche") as PersianaDeLaNoche).terminar()

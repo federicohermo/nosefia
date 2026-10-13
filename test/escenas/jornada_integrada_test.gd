@@ -36,6 +36,7 @@ func test_los_puestos_completan_la_jornada_y_permiten_abrir_la_siguiente() -> vo
 	assert_bool(pantalla.visible).is_true()
 	pantalla.call("_process", 60.0)
 	pantalla.elegir()
+	await get_tree().create_timer(PantallaDelCelular.RECORRIDO_COMPLETO).timeout
 	var ciclo: CicloDeJornadas = almacen.get("_ciclo")
 	assert_int(ciclo.partida().jornada()).is_equal(ReglasDeLaPartida.PRIMERA_JORNADA + 1)
 	assert_bool(pantalla.visible).is_false()

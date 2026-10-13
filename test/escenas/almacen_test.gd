@@ -421,6 +421,7 @@ func test_despachar_la_devolucion_abre_la_noche_siguiente_sin_tareas_cumplidas()
 
 	pantalla.call("_process", 60.0)
 	pantalla.elegir()
+	await get_tree().create_timer(PantallaDelCelular.RECORRIDO_COMPLETO).timeout
 	assert_bool(pantalla.visible).is_false()
 	(
 		assert_int(ciclo.partida().jornada())
@@ -472,6 +473,10 @@ func test_abrir_la_jornada_deja_al_jugador_en_el_arranque() -> void:  # AC-PLY-0
 	reloj.avanzar(SEGUNDOS_REALES_DE_UN_TURNO)
 	pantalla.call("_process", 60.0)
 	pantalla.elegir()
+	var celular: PantallaDelCelular = almacen.get_node("Interfaz/PantallaDelCelular")
+	var ahora := Time.get_ticks_usec() + int(PantallaDelCelular.RECORRIDO_COMPLETO * 1000000.0)
+	celular.set("_ahora", func() -> int: return ahora)
+	celular._process(0.0)
 	assert_vector(jugador.global_position).is_equal_approx(arranque.origin, Vector3.ONE * 1e-4)
 	assert_vector(jugador.velocity).is_equal(Vector3.ZERO)
 	assert_float(control.yaw()).is_equal_approx(arranque.basis.get_euler().y, 1e-4)

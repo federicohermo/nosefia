@@ -257,3 +257,72 @@ func test_un_mensaje_mas_por_segundo() -> void:  # AC-EMP-062
 	var esperado := {0.0: 1, 0.99: 1, 1.0: 2, 3.0: 4, 10.0: 4}
 	for transcurrido: float in esperado:
 		assert_int(DevolucionDelJefe.a_la_vista(transcurrido, 4)).is_equal(esperado[transcurrido])
+
+
+func test_los_retos_eligen_la_repeticion_y_el_despido() -> void:  # AC-EMP-060
+	var repeticiones: Dictionary[L, Array] = {
+		L.PAPEL_EN_EL_INODORO:
+		[
+			"El baño se tapó.",
+			"Se tapó el baño de nuevo.",
+			"Dejá de tirar papel",
+			"Dejá de tirar papel",
+			"Dejá de tirar papel"
+		],
+		L.OBJETO_TIRADO:
+		[
+			"Puede ser que hayas",
+			"El contenedor de basura es",
+			"Una vez más tuve que sacar",
+			"Una vez más tuve que sacar",
+			"Una vez más tuve que sacar"
+		],
+		L.OBJETO_AFUERA:
+		[
+			"Puedo saber por qué",
+			"Ya es la segunda vez",
+			"En serio, si sigue apareciendo",
+			"BASTA DE TIRAR COSAS",
+			"A esta altura del partido"
+		],
+		L.LOCAL_DESORDENADO:
+		[
+			"Más allá de cumplir",
+			"Dejá las cosas donde corresponde",
+			"Me parece que no está",
+			"Y si esta vez dejás",
+			"Realmente me sorprende"
+		],
+	}
+	for motivo: L in repeticiones:
+		for indice: int in 5:
+			var cuentas := _antecedentes({}, {motivo: indice + 1})
+			var mensajes := DevolucionDelJefe.armar(4, 7, cuentas, [], [motivo])
+			assert_bool(mensajes[1].begins_with(repeticiones[motivo][indice])).is_true()
+	var despedido := 4 * M
+	var papel := DevolucionDelJefe.armar(
+		4, despedido, _antecedentes({}, {L.PAPEL_EN_EL_INODORO: 3}), [], [L.PAPEL_EN_EL_INODORO]
+	)
+	assert_bool(papel[1].begins_with("Una vez más tapaste el baño")).is_true()
+	var desorden := DevolucionDelJefe.armar(
+		4, despedido, _antecedentes({}, {L.LOCAL_DESORDENADO: 2}), [], [L.LOCAL_DESORDENADO]
+	)
+	assert_bool(desorden[1].begins_with("Realmente me sorprende")).is_true()
+
+
+func test_el_saludo_cambia_en_cada_umbral() -> void:  # AC-EMP-060
+	var esperados := [
+		"Buen día!",
+		"Buen día!",
+		"Buenas",
+		"Buenas",
+		"Hola",
+		"Hola",
+		"Buenos días...",
+		"Buenos días...",
+		"Che"
+	]
+	for medios: int in esperados.size():
+		assert_str(DevolucionDelJefe.armar(1, medios, _antecedentes(), [], [])[0]).is_equal(
+			esperados[medios]
+		)

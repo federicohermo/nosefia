@@ -8,6 +8,7 @@ signal foto_pedida(indice: int)
 signal cierre_de_foto_pedido
 ## La opción que se ofrece debajo del último mensaje del chat, como la de la devolución.
 signal opcion_elegida
+signal celular_bajado
 
 const RECORRIDO_COMPLETO := 0.25
 const TAMANO := Vector2(522.0, 928.0)
@@ -103,6 +104,7 @@ func _process(_delta: float) -> void:
 		if _destino == 0.0:
 			_telefono.hide()
 			_velo.hide()
+			celular_bajado.emit()
 
 
 func subir() -> void:
@@ -155,7 +157,20 @@ func mostrar_chat(conversacion: Conversacion, mensajes: Array[Mensaje], fijo: bo
 func mostrar_opcion(texto: String) -> void:
 	_texto_de_la_opcion = texto
 	_agregar_la_opcion()
-	_ir_al_ultimo.call_deferred()
+	if not _foto_ampliada.visible:
+		_ir_al_ultimo.call_deferred()
+
+
+## La llegada no reconstruye el historial: conserva la foto ampliada y lo que se estaba leyendo.
+func recibir(mensaje: Mensaje, indice: int) -> void:
+	var barra := _scroll.get_v_scroll_bar()
+	var al_final := _scroll.scroll_vertical >= int(barra.max_value - barra.page) - 1
+	var burbuja := _burbuja_de(mensaje, indice)
+	_mensajes.add_child(burbuja)
+	if opcion() != null:
+		_mensajes.move_child(burbuja, _opcion.get_index())
+	if al_final and not _foto_ampliada.visible:
+		_ir_al_ultimo.call_deferred()
 
 
 func quitar_opcion() -> void:
@@ -179,7 +194,8 @@ func _agregar_la_opcion() -> void:
 	_opcion.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
 	_opcion.pressed.connect(func() -> void: opcion_elegida.emit())
 	_mensajes.add_child(_opcion)
-	_opcion.grab_focus()
+	if not _foto_ampliada.visible:
+		_opcion.grab_focus()
 
 
 func ampliar(foto: Mensaje, adjunto: Mensaje) -> void:

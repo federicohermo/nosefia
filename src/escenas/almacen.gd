@@ -342,6 +342,10 @@ func _al_cerrar_la_jornada(jornada: int, cumplidas: int) -> void:
 ## Qué hace cada opción de la devolución. Cuáles se ofrecen lo decidió ella; acá sólo se busca
 ## la acción de la elegida.
 func _al_despachar_la_devolucion(opcion: DevolucionDelJefe.Opcion) -> void:
+	if opcion == DevolucionDelJefe.Opcion.CONTINUAR:
+		# La noche siguiente espera al celular fuera de pantalla, con el jugador suspendido.
+		_jugador.suspender()
+		await _pantalla_del_celular.celular_bajado
 	(get_node("Interfaz/PersianaDeLaNoche") as PersianaDeLaNoche).terminar()
 	var acciones: Dictionary[DevolucionDelJefe.Opcion, Callable] = {
 		DevolucionDelJefe.Opcion.CONTINUAR: _seguir,
@@ -484,16 +488,13 @@ func _mostrar_el_chat_del_celular(quien: Conversacion.Interlocutor) -> void:
 	)
 
 
-func _al_recibir_en_el_celular(quien: Conversacion.Interlocutor, _mensaje: Mensaje) -> void:
+func _al_recibir_en_el_celular(quien: Conversacion.Interlocutor, mensaje: Mensaje) -> void:
 	if not _celular.celular().abierto():
 		return
 	if _celular.celular().pantalla() == Celular.Pantalla.MENU:
 		_mostrar_el_menu_del_celular()
-	elif (
-		_celular.celular().pantalla() == Celular.Pantalla.CHAT
-		and _celular.celular().chat() == quien
-	):
-		_mostrar_el_chat_del_celular(quien)
+	elif _celular.celular().chat() == quien:
+		_pantalla_del_celular.recibir(mensaje, _celular.bandeja().mensajes_de(quien).size() - 1)
 
 
 ## Las señales pueden llegar antes de sincronizar los cuerpos con el espacio físico.

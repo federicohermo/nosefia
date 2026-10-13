@@ -244,6 +244,7 @@ func test_seguir_despues_de_la_primera_noche_no_repite_la_intro() -> void:
 	assert_int((_almacen.get("_partida") as Partida).jornada()).is_equal(2)
 	pantalla.call("_process", 60.0)
 	pantalla.elegir()
+	await get_tree().create_timer(PantallaDelCelular.RECORRIDO_COMPLETO).timeout
 	assert_bool(pantalla.visible).is_false()
 	assert_bool(_instrucciones().visible).is_false()
 	assert_str((_persiana().get("_placa") as Label).text).is_equal("NOCHE 2")

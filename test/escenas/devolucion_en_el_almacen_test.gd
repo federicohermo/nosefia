@@ -128,6 +128,12 @@ func test_q_no_cierra_y_la_pausa_congela_la_devolucion() -> void:  # AC-EMP-063,
 func test_continuar_dos_veces_abre_una_sola_noche_2() -> void:  # AC-EMP-064, AC-EMP-065
 	var almacen: Node3D = await _almacen()
 	var pantalla := await _cerrar(almacen)
+	var interfaz := _pantalla_del_celular(almacen)
+	var ahora := [0]
+	interfaz.set("_ahora", func() -> int: return ahora[0])
+	interfaz.subir()
+	ahora[0] = int(PantallaDelCelular.RECORRIDO_COMPLETO * 1000000.0)
+	interfaz._process(0.0)
 	var aperturas := [0]
 	(almacen.get_node("Servicios/CicloDeJornadas") as CicloDeJornadas).jornada_abierta.connect(
 		func(_jornada: int) -> void: aperturas[0] += 1
@@ -137,6 +143,13 @@ func test_continuar_dos_veces_abre_una_sola_noche_2() -> void:  # AC-EMP-064, AC
 	pantalla.call("_process", 60.0)
 	pantalla.elegir()
 	pantalla.elegir()
+	assert_int(aperturas[0]).is_zero()
+	assert_bool((almacen.get("_jugador") as Node).call("suspendido")).is_true()
+	ahora[0] += int(PantallaDelCelular.RECORRIDO_COMPLETO * 1000000.0) - 1000
+	interfaz._process(0.0)
+	assert_int(aperturas[0]).is_zero()
+	ahora[0] += 1000
+	interfaz._process(0.0)
 	assert_int(aperturas[0]).is_equal(1)
 	assert_bool(pantalla.visible).is_false()
 	assert_bool(_celular(almacen).celular().abierto()).is_false()
@@ -207,3 +220,42 @@ func test_retomar_trae_las_devoluciones() -> void:  # AC-INV-037, AC-SAV-024, AC
 		PackedStringArray(devoluciones)
 	)
 	assert_int(bandeja.no_leidos(JEFE)).is_equal(bandeja.mensajes_de(JEFE).size())
+
+
+func test_recibir_con_una_foto_abierta_conserva_foto_e_historial() -> void:  # AC-EMP-063
+	var almacen: Node3D = await _almacen()
+	var pantalla := await _cerrar(almacen)
+	var celular := _celular(almacen)
+	var interfaz := _pantalla_del_celular(almacen)
+	var mensajes := celular.bandeja().mensajes_de(JEFE)
+	var foto := -1
+	for indice: int in mensajes.size():
+		if mensajes[indice].foto != null:
+			foto = indice
+			break
+	assert_int(foto).is_greater_equal(0)
+	for cuadro: int in 4:
+		await get_tree().process_frame
+	var scroll: ScrollContainer = interfaz.get("_scroll")
+	scroll.scroll_vertical = 100
+	assert_int(scroll.scroll_vertical).is_equal(100)
+	celular.pedir_foto(foto)
+	assert_int(celular.celular().pantalla()).is_equal(Celular.Pantalla.FOTO)
+	var ampliada: Control = interfaz.get("_foto_ampliada")
+	assert_bool(ampliada.visible).is_true()
+	pantalla.call("_process", 60.0)
+	for cuadro: int in 4:
+		await get_tree().process_frame
+	assert_bool(ampliada.visible).is_true()
+	assert_int(scroll.scroll_vertical).is_equal(100)
+	celular.pedir_cerrar_foto()
+	assert_bool(ampliada.visible).is_false()
+	var lista: VBoxContainer = interfaz.get("_mensajes")
+	var textos := PackedStringArray()
+	for etiqueta: Node in lista.find_children("*", "RichTextLabel", true, false):
+		textos.append((etiqueta as RichTextLabel).text)
+	var partida: Partida = almacen.get("_partida")
+	assert_array(textos.slice(textos.size() - partida.mensajes_del_jefe().size())).is_equal(
+		partida.mensajes_del_jefe()
+	)
+	assert_object(lista.get_child(lista.get_child_count() - 1)).is_same(interfaz.opcion())

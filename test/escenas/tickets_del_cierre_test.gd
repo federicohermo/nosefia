@@ -71,7 +71,10 @@ func _cerrar(impecable: bool) -> void:
 
 
 func _seguir() -> void:
-	_almacen.get("_pantalla").devolucion_despachada.emit(DevolucionDelJefe.Opcion.CONTINUAR)
+	var pantalla: PantallaDeDevolucion = _almacen.get("_pantalla")
+	pantalla.call("_process", 60.0)
+	pantalla.elegir()
+	await get_tree().create_timer(PantallaDelCelular.RECORRIDO_COMPLETO).timeout
 	_almacen.get_node("Interfaz/PersianaDeLaNoche").terminar()
 
 
@@ -87,7 +90,7 @@ func test_un_ticket_y_dos_en_otra_noche_suman_un_medio_cada_vez() -> void:  # AC
 		_cerrar(true)
 		assert_int(partida.medios()).is_equal(cantidad)
 		if cantidad == 1:
-			_seguir()
+			await _seguir()
 
 
 func test_balde_y_mopa_en_el_inodoro_no_anotan_papel() -> void:  # AC-CLN-047
@@ -110,7 +113,7 @@ func test_tickets_adentro_afuera_y_recuperados_al_cerrar() -> void:  # AC-CLN-04
 		papel.global_position = _centro(partes)
 		_cerrar(true)
 		assert_int(partida.medios()).is_zero()
-		_seguir()
+		await _seguir()
 	var uno := _imprimir()
 	var otro := _imprimir()
 	assert_object(uno).is_not_null()
@@ -119,7 +122,7 @@ func test_tickets_adentro_afuera_y_recuperados_al_cerrar() -> void:  # AC-CLN-04
 	otro.global_position = _afuera() + Vector3.RIGHT * 0.1
 	_cerrar(true)
 	assert_int(partida.medios()).is_equal(1)
-	_seguir()
+	await _seguir()
 	var recuperado := _imprimir()
 	assert_object(recuperado).is_not_null()
 	recuperado.global_position = _afuera()
@@ -151,7 +154,7 @@ func test_sostener_y_examinar_tickets_cambia_el_llamado_al_cerrar() -> void:  # 
 		_cerrar(true)
 		assert_int(partida.medios()).is_equal([0, 1, 2, 2][escenario])
 		if escenario < 3:
-			_seguir()
+			await _seguir()
 
 
 func test_tirar_el_ticket_al_contenedor_no_agrega_un_llamado() -> void:  # AC-CLN-048
@@ -167,7 +170,7 @@ func test_tirar_el_ticket_al_contenedor_no_agrega_un_llamado() -> void:  # AC-CL
 	_almacen.get("_contenedor").interactuar()
 	_cerrar(true)
 	assert_int((_almacen.get("_partida") as Partida).medios()).is_zero()
-	_seguir()
+	await _seguir()
 	assert_array(puesto.call("tickets_en_el_mundo")).is_empty()
 
 
@@ -189,7 +192,7 @@ func test_tres_motivos_con_grave_son_siete_y_la_noche_nueva_conserva_deuda() -> 
 	assert_int(partida.medios()).is_equal(7)
 	assert_bool(partida.terminada()).is_false()
 	assert_int(Partida.desde(Guardado.new().cargar()).medios()).is_equal(7)
-	_seguir()
+	await _seguir()
 	_cerrar(true)
 	assert_int(partida.medios()).is_equal(7)
 	assert_bool(partida.terminada()).is_false()
@@ -204,6 +207,6 @@ func test_eventos_en_placa_no_contaminan_la_noche_siguiente_ni_repiten_cierre() 
 	caja.ticket_desechado.emit()
 	partida.cerrar_la_jornada(0)
 	assert_int(partida.medios()).is_zero()
-	_seguir()
+	await _seguir()
 	_cerrar(true)
 	assert_int(partida.medios()).is_zero()
