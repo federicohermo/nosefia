@@ -206,7 +206,7 @@ func test_el_hud_pinta_el_subtitulo_que_le_llega_y_lo_vacia() -> void:  # AC-SUB
 	hud.call("_process", 3.083)
 	assert_float(subtitulo.modulate.a).is_greater(0.0)
 	assert_float(subtitulo.modulate.a).is_less(1.0)
-	hud.call("_process", 0.25)
+	hud.call("_process", 10.0 / 3.0 - 3.083)
 	assert_str(subtitulo.text).is_empty()
 	assert_float(subtitulo.modulate.a).is_equal(0.0)
 	hud.mostrar_subtitulo("Una caja con 8 cajitas de Actroncito.")

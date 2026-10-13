@@ -182,7 +182,7 @@ func test_con_otra_interfaz_o_la_pausa_la_e_no_piensa() -> void:  # AC-SUB-008
 	assert_float(_linea(almacen).modulate.a).is_equal(1.0)
 	hud.call("_process", 2.32)
 	assert_str(_linea(almacen).text).is_equal(BOLSA)
-	hud.call("_process", 0.013)
+	hud.call("_process", 7.0 / 3.0 - 2.32)
 	assert_str(_linea(almacen).text).is_empty()
 
 

@@ -1,7 +1,7 @@
 ## Lo que dice cada cosa del local cuando se la examina: las tablas de la ficha «Subtítulos».
 ##
 ## **No es la revelación.** Lo que un objeto esconde vive en su `Revelacion`, y sale sólo al
-## examinarlo en la mano; esto lo nombra, y se dice gratis. Los nombres adentro del texto se
+## examinarlo según las reglas de investigación; esto lo nombra, y se dice gratis. Los nombres se
 ## copian de la ficha aunque difieran del catálogo: el catálogo no se toca desde acá.
 ##
 ## Lo levantable escrito en un `.tres` lleva su texto en `ObjetoDelAlmacen.subtitulo`. Acá van
