@@ -55,6 +55,7 @@ var _ahora: Callable = Time.get_ticks_usec
 var _bandeja: Bandeja
 var _texto_de_la_opcion: String = ""
 var _opcion: Button
+var _basurero: Control
 
 
 func _ready() -> void:
@@ -380,8 +381,14 @@ func _ir_al_ultimo() -> void:
 
 
 func _limpiar() -> void:
+	# Lo viejo espera su liberación dentro del árbol, en un nodo oculto: sacado del árbol y
+	# liberado al final del cuadro, cada mensaje que llega dejaba huérfano todo el chat anterior.
+	if _basurero == null:
+		_basurero = Control.new()
+		_basurero.visible = false
+		add_child(_basurero)
 	for viejo in _mensajes.get_children():
-		_mensajes.remove_child(viejo)
+		viejo.reparent(_basurero, false)
 		viejo.queue_free()
 
 
