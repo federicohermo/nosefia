@@ -6,6 +6,7 @@
 ## Ocupado, con la mano vacía, marca la unidad que dibuja la góndola, sin reemplazar su superficie.
 ## Sin papel no está para la mira. Qué papel le toca lo decide el estante,
 ## en `dominio/`: acá sólo se pinta.
+## La superficie gris de los huecos se agrupa en el puesto y no depende del foco.
 extends StaticBody3D
 
 signal casillero_usado(producto: Producto.Id, casillero: int)

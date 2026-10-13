@@ -156,8 +156,12 @@ func _pararse_frente_a(almacen: Node3D, casillero: Node3D) -> void:
 	_puesto(almacen).call("_ofrecer_a_la_mira")
 
 
-func _ninguno_dibujado(almacen: Node3D) -> void:
+func _referencias_sin_contorno(almacen: Node3D) -> void:
 	for producto in Catalogo.todos():
+		var huecos: MultiMeshInstance3D = _puesto(almacen).get_node("HuecosDe" + producto.nombre)
+		assert_int(huecos.multimesh.visible_instance_count).is_equal(
+			_estante(almacen).casilleros_vacios(producto).size()
+		)
 		for casillero: Node3D in _casilleros(almacen, producto):
 			var vista: MeshInstance3D = casillero.get("vista")
 			(
@@ -177,7 +181,7 @@ func _ofrecidos(almacen: Node3D) -> Array[Node3D]:
 	return ofrecidos
 
 
-func test_ningun_casillero_vacio_se_dibuja_sin_la_mira_encima() -> void:  # AC-PLY-045
+func test_los_huecos_se_ven_sin_cambiar_que_enfoca_la_mira() -> void:  # AC-PLY-045
 	var almacen := _almacen()
 	var actroncito := Catalogo.de(Producto.Id.ACTRONCITO)
 	var durextra := Catalogo.de(Producto.Id.DUREXTRA)
@@ -192,7 +196,7 @@ func test_ningun_casillero_vacio_se_dibuja_sin_la_mira_encima() -> void:  # AC-P
 		for indice in indices:
 			vacios.append(_puesto(almacen).call("casillero", producto.id, indice))
 	# Con la unidad en la mano, parado frente a cada vacío: la mira puede enfocar los de su
-	# producto y ningún otro, ni vacío ni ocupado, y ninguno se dibuja.
+	# producto y ningún otro. Todas las referencias siguen visibles, sin contorno.
 	for vacio in vacios:
 		_pararse_frente_a(almacen, vacio)
 		var ofrecidos := _ofrecidos(almacen)
@@ -200,15 +204,15 @@ func test_ningun_casillero_vacio_se_dibuja_sin_la_mira_encima() -> void:  # AC-P
 		for ofrecido in ofrecidos:
 			assert_int(ofrecido.get("producto")).is_equal(actroncito.id)
 			assert_array(vacios).contains([ofrecido])
-		_ninguno_dibujado(almacen)
+		_referencias_sin_contorno(almacen)
 	# Con la mano vacía la mira sólo puede enfocar lo ocupado, y con una caja o con una unidad de
-	# una fila completa, nada. Ninguno se dibuja.
+	# una fila completa, nada. Las referencias siguen visibles.
 	_agarre(almacen).vaciar_las_manos()
 	for vacio in vacios:
 		_pararse_frente_a(almacen, vacio)
 		for ofrecido in _ofrecidos(almacen):
 			assert_array(vacios).not_contains([ofrecido])
-		_ninguno_dibujado(almacen)
+		_referencias_sin_contorno(almacen)
 	var caja: Node3D = almacen.get("_cajas_de_productos")[actroncito.id]
 	assert_bool(_agarre(almacen).pedir_agarrar(caja.get("datos"), caja)).is_true()
 	_sin_casilleros_para_la_mira(almacen, vacios)
@@ -225,7 +229,7 @@ func _sin_casilleros_para_la_mira(almacen: Node3D, vacios: Array[Node3D]) -> voi
 	for vacio in vacios:
 		_pararse_frente_a(almacen, vacio)
 		assert_array(_ofrecidos(almacen)).is_empty()
-		_ninguno_dibujado(almacen)
+		_referencias_sin_contorno(almacen)
 
 
 ## Sin la mira encima, cada casillero guarda la superficie que no se ve y el contorno, apagados:
@@ -315,7 +319,7 @@ func test_con_las_manos_vacias_se_agarra_la_del_medio() -> void:  # AC-PLY-049 A
 		if not otra.is_equal_approx(_lugar_de(elegido)):
 			assert_bool(_contiene(dibujadas, otra)).is_true()
 	# Con la unidad en la mano y la mira todavía encima, el casillero que dejó espera la unidad:
-	# queda sólo el contorno, sin la superficie de la unidad.
+	# conserva el contorno. El hueco gris se dibuja en otro lote, sin superficie de producto.
 	assert_bool(vista.visible).is_true()
 	assert_bool(_sin_superficie(vista)).is_true()
 	assert_bool(_lleva_el_contorno(vista)).is_true()

@@ -9,13 +9,17 @@ const OBJETO := preload("res://src/escenas/objetos/objeto_agarrable.tscn")
 const CONTORNO := preload("res://src/sistemas/marco/aristas_del_foco.gdshader")
 const SIN_SUPERFICIE := preload("res://src/escenas/puestos/casillero_sin_superficie.gdshader")
 const FILA_DE_ATRAS := preload("res://src/escenas/puestos/fila_de_atras_apagada.gdshader")
+const HUECO := preload("res://src/escenas/puestos/hueco_por_reponer.gdshader")
 
 ## Cuánto color le queda a la fila de atrás de la góndola: con 1 se ve como la de adelante, con
-## 0 queda en gris. La fila de atrás no se agarra y sólo dice qué va en ese estante (BR-STK-025):
-## apagada, el jugador distingue a simple vista qué se repone.
-const SATURACION_DE_LA_FILA_DE_ATRAS := 0.45
+## 0 queda en gris. Las referencias fijas usan el mismo color que la fila de atrás:
+## el jugador distingue los envases de referencia de las unidades que puede agarrar.
+const SATURACION_DE_LA_FILA_DE_ATRAS := 0.0
 ## Cuánta luz le queda a la fila de atrás: con 1 se ve como la de adelante, con 0 queda negra.
-const BRILLO_DE_LA_FILA_DE_ATRAS := 0.7
+const BRILLO_DE_LA_FILA_DE_ATRAS := 1.0
+
+## Los huecos muestran el envase sin confundirlo con una unidad que ya se puede agarrar.
+const OPACIDAD_DE_LOS_HUECOS := 0.65
 
 ## Cuántas veces se parte al medio la búsqueda del borde de un apoyo.
 const PASOS_DEL_BORDE := 12
@@ -73,6 +77,8 @@ var _radios_de_las_filas: Array[float] = []
 var _modelos: Array[Mesh] = []
 var _formas: Array[ConvexPolygonShape3D] = []
 var _grupos: Array[MultiMeshInstance3D] = []
+## Un dibujo por producto para todos sus huecos, sin cuerpos ni permisos propios.
+var _huecos: Array[MultiMeshInstance3D] = []
 ## Cuántas copias de otras exhibiciones van al principio del dibujo de cada producto.
 var _guias_sumadas: Array[int] = []
 ## El bloque entero que dibuja cada producto, guías incluidas, en el orden en que lo midió el
@@ -1008,6 +1014,9 @@ func _preparar_modelos() -> void:
 
 
 func _preparar_grupos() -> void:
+	var hueco := ShaderMaterial.new()
+	hueco.shader = HUECO
+	hueco.set_shader_parameter("opacidad", OPACIDAD_DE_LOS_HUECOS)
 	for producto in Catalogo.todos():
 		var malla := _modelos[producto.id]
 		var grupo := _dibujar(
@@ -1016,6 +1025,17 @@ func _preparar_grupos() -> void:
 		grupo.material_override = _con_la_fila_de_atras_apagada(malla.surface_get_material(0))
 		_grupos.append(grupo)
 		_guias_sumadas.append(0)
+		var primera := _primera_reponible(producto.id)
+		var faltantes := _dibujar(
+			"HuecosDe" + producto.nombre,
+			malla,
+			disposicion.principales[producto.id].slice(
+				primera * DisposicionDeLaGondola.FLOTANTES_POR_COPIA
+			)
+		)
+		faltantes.material_override = hueco
+		faltantes.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+		_huecos.append(faltantes)
 		var sueltos := GrupoDelPiso.new()
 		sueltos.name = "SueltosDe" + producto.nombre
 		sueltos.preparar(malla, repositor.estante().cupo(producto))
@@ -1110,8 +1130,7 @@ func _envolver_la_fila(zonas: Array[ZonaDeReposicion]) -> void:
 	_radios_de_las_filas.append(radio)
 
 
-## Las exhibiciones que no cambian. Se dibujan una vez y quedan enteras: nada las vende ni las
-## repone, y por eso no se guarda el nodo.
+## Las exhibiciones que no cambian. Quedan enteras y en gris: nada las vende ni las repone.
 ##
 ## **Se juntan en la menor cantidad de dibujos posible.** Cada nodo que se dibuja le cuesta al
 ## motor su preparación, y en la web esa preparación es lo que más pesa del cuadro: medido el
@@ -1159,7 +1178,9 @@ func _preparar_la_guia() -> void:
 		var herramienta := SurfaceTool.new()
 		herramienta.append_from(modelo.mesh, 0, Transform3D(modelo.global_basis, Vector3.ZERO))
 		herramienta.set_material(modelo.mesh.surface_get_material(0))
-		_dibujar("Guia" + str(numero), herramienta.commit(), sueltas[clave][1])
+		var guia := _dibujar("Guia" + str(numero), herramienta.commit(), sueltas[clave][1])
+		guia.material_override = _con_la_fila_de_atras_apagada(modelo.mesh.surface_get_material(0))
+		guia.material_override.set_shader_parameter("hasta_atras", guia.multimesh.instance_count)
 		numero += 1
 
 
@@ -1222,11 +1243,19 @@ func _mostrar_lo_puesto(id: Producto.Id) -> void:
 	if dibujo.size() == bloque.size():
 		copias.buffer = dibujo
 	copias.visible_instance_count = primera + ocupados.size()
-	# La fila de atrás va entre las guías sumadas y la primera reponible, y no se reordena: el
-	# rango apagado no se mueve aunque se llene o se vacíe un casillero.
+	# Las guías sumadas y la fila de atrás son referencias fijas: todo lo que va antes de la
+	# primera reponible se dibuja en gris, aunque se llene o se vacíe un casillero.
 	var material := _grupos[id].material_override as ShaderMaterial
-	material.set_shader_parameter("desde_atras", _guias_sumadas[id])
+	material.set_shader_parameter("desde_atras", 0)
 	material.set_shader_parameter("hasta_atras", primera)
+	# Los mismos casilleros, en otro lote: los vacíos primero para cortarlos sin añadir nodos
+	# por envase. El estado vuelve a salir del estante en cada cambio de la góndola.
+	var corte := (primera + ocupados.size()) * flotantes
+	var por_reponer := dibujo.slice(corte)
+	por_reponer.append_array(dibujo.slice(primera * flotantes, corte))
+	var huecos := _huecos[id].multimesh
+	huecos.buffer = por_reponer
+	huecos.visible_instance_count = afuera.size()
 
 
 ## Un `MultiMeshInstance3D` con todas las copias de un bloque, prendidas.

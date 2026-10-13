@@ -3,7 +3,7 @@
 // Reproduce lo que el `StandardMaterial3D` del modelo hace con los campos que los productos usan:
 // la textura de color, la rugosidad, lo metálico y el especular, con el mismo filtro y los mismos
 // modos de luz. Así la fila de adelante se ve como sin él. Las copias del dibujo con índice en
-// [desde_atras, hasta_atras) son la fila de atrás: pierden color y brillo.
+// [desde_atras, hasta_atras) son referencias fijas: se dibujan sin color, con el brillo original.
 //
 // El rango sale de `INSTANCE_ID` y no de un dato por copia: el buffer queda en 12 flotantes por
 // copia, y el corte entre filas es el mismo que ya usa el dibujo.

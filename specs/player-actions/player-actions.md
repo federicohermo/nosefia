@@ -3,7 +3,7 @@ schema_version: 1
 capability_id: CAP-PLY
 status: ratified
 owner: por definir
-provenance: GDD «Controles»; fichas «8. Tarea: Reposición», «Notas» e «Interfaces virtuales durante la jornada»; decisiones de #369, #370 y #373; migración de los specs 003, 004, 006, 014, 034, 043
+provenance: GDD «Controles»; fichas «8. Tarea: Reposición», «Notas» e «Interfaces virtuales durante la jornada»; decisiones de #368, #369, #370 y #373; migración de los specs 003, 004, 006, 014, 034, 043
 ---
 
 # Capacidad: lo que el empleado puede hacer
@@ -176,11 +176,12 @@ entrada del local, del lado de adentro y mirando hacia el local. Queda con la vi
 quieto, aunque la noche anterior haya terminado en otro lugar, mirando a otro lado y caminando.
 Vale también para la primera noche.
 
-### BR-PLY-022 — El casillero vacío no se ve
+### BR-PLY-022 — El casillero vacío conserva una referencia visible
 
-El sistema NO DEBE dibujar un casillero vacío que la mira no enfoca: sobre la góndola sólo se ve
-lo que está colocado. Vale con las manos vacías, con una unidad en la mano y con cualquier otra
-cosa. MIENTRAS el jugador lleva en la mano una unidad de un producto, la mira DEBE poder enfocar
+El sistema DEBE dibujar cada casillero vacío con una referencia gris semitransparente del envase,
+distinta de una unidad colocada. Vale con las manos vacías, con una unidad en la mano y con
+cualquier otra cosa, aunque la mira no lo enfoque.
+MIENTRAS el jugador lleva en la mano una unidad de un producto, la mira DEBE poder enfocar
 cada casillero vacío de ese producto, y ninguno ocupado ni de otro producto. SI la mano está
 vacía o lleva cualquier otra cosa, ENTONCES la mira NO DEBE enfocar ningún casillero vacío: una
 caja se apoya, no se coloca.
@@ -188,10 +189,10 @@ caja se apoya, no se coloca.
 ### BR-PLY-023 — El casillero que apunta la mira se marca con el contorno, y el clic coloca ahí
 
 CUANDO la mira enfoca un casillero vacío del producto que se lleva en la mano, el sistema DEBE
-dibujar sólo el contorno del producto en ese casillero, con el color y el grosor del contorno del
-foco, el mismo que marca cualquier otro objeto enfocado. NO DEBE dibujar la superficie del
-producto: por adentro del contorno se ve lo que hay detrás. Los demás casilleros vacíos siguen sin
-dibujarse. CUANDO el jugador hace clic, el sistema DEBE colocar la unidad en ese casillero y en
+añadir el contorno del producto en ese casillero, con el color y el grosor del contorno del
+foco, el mismo que marca cualquier otro objeto enfocado. DEBE conservar la referencia gris
+semitransparente del casillero y de los demás vacíos. Sólo el enfocado lleva el contorno.
+CUANDO el jugador hace clic, el sistema DEBE colocar la unidad en ese casillero y en
 ningún otro (BR-STK-009). La mira elige entre casilleros como entre cualquier otro candidato
 (BR-PLY-004).
 
@@ -561,20 +562,21 @@ DADO un jugador en cualquier lugar, mirando a cualquier lado y en movimiento CUA
 jornada ENTONCES queda en el punto de arranque, con el yaw del arranque, la vista horizontal y la
 velocidad en cero.
 
-### AC-PLY-045 — Ningún casillero vacío se dibuja *(verifica BR-PLY-022)*
+### AC-PLY-045 — Los huecos se ven sin cambiar qué enfoca la mira *(verifica BR-PLY-022)*
 
 DADO una unidad de Actroncito en la mano, con dos casilleros de Actroncito vacíos y otro producto
-con casilleros vacíos, todos al alcance de la mira y ninguno enfocado, ENTONCES no se dibuja
-ninguno, y la mira puede enfocar los dos de Actroncito y ninguno del otro producto ni ninguno
-ocupado. DADO las manos vacías, una caja o cualquier otro objeto en la mano ENTONCES no se dibuja
-ningún casillero vacío y la mira no enfoca ninguno.
+con casilleros vacíos, todos al alcance de la mira y ninguno enfocado, ENTONCES todos conservan
+su referencia visible, sin contorno. La mira puede enfocar los dos de Actroncito y ninguno del
+otro producto ni ninguno ocupado. DADO las manos vacías, una caja o cualquier otro objeto en
+la mano ENTONCES las referencias siguen visibles y la mira no enfoca ningún casillero vacío.
 
-### AC-PLY-047 — El casillero apuntado lleva sólo el contorno *(verifica BR-PLY-023)*
+### AC-PLY-047 — El contorno se suma a la referencia del hueco *(verifica BR-PLY-023)*
 
 DADO una unidad en la mano y dos de sus casilleros vacíos CUANDO la mira enfoca uno ENTONCES ése
-muestra el contorno del producto con el color y el grosor del contorno del foco, sin su
-superficie, y el otro sigue sin dibujarse. CUANDO la mira pasa al otro ENTONCES el contorno queda
-sólo en el otro. CUANDO la mira deja de enfocarlos ENTONCES no se dibuja ninguno.
+muestra el contorno del producto con el color y el grosor del contorno del foco. Ambos conservan
+su referencia gris semitransparente. CUANDO la mira pasa al otro ENTONCES el contorno queda
+sólo en el otro. CUANDO la mira deja de enfocarlos ENTONCES ambos conservan su referencia,
+sin contorno.
 
 ### AC-PLY-048 — El clic coloca en el casillero apuntado *(verifica BR-PLY-023)*
 
