@@ -8,6 +8,11 @@ signal objetivo_perdido
 signal uso_pedido(objetivo: Node3D)
 signal uso_sobre_superficie_pedido(punto: Vector3, normal: Vector3, cuerpo: PhysicsBody3D)
 
+## Las líneas de la referencia de controles, cuando cambian. Se arman una vez por paso de física
+## con la mano y la mira de ese momento: un cambio de los dos en el mismo cuadro no publica una
+## combinación intermedia.
+signal referencia_cambiada(lineas: Array[ReferenciaDeControles.Linea])
+
 ## Cuando la cadencia dice que toca un paso. No se emite por cuadro: ver `CadenciaDePasos`.
 signal paso_dado
 
@@ -22,6 +27,11 @@ const PASOS_DEL_UTIL_EN_LA_MANO := 64
 
 ## El método con que lo fijo dice su texto al examinarlo: no tiene `datos` que lo digan.
 const METODO_TEXTO_AL_EXAMINAR := &"texto_al_examinar"
+
+## Para leer qué enfoca la mira: una caja del depósito y un casillero de la góndola. Son cáscara
+## y no declaran `class_name`.
+const CajaDelDeposito := preload("res://src/escenas/objetos/caja_de_productos.gd")
+const Casillero := preload("res://src/escenas/puestos/zona_de_reposicion.gd")
 
 ## Los dos sistemas de agarrar, por `@export` y no por `@onready`: un `@onready` se resuelve
 ## recién al entrar la escena al árbol, y entonces `id_en_la_mano()` se caería sobre un jugador
@@ -54,6 +64,16 @@ var _cadencia := CadenciaDePasos.new()
 var _en_web := OS.has_feature("web")
 var _leer_cursor: Callable = func() -> Input.MouseMode: return Input.mouse_mode
 var _escribir_cursor: Callable = func(modo: Input.MouseMode) -> void: Input.mouse_mode = modo
+
+## Quién contesta si el clic derecho tendría efecto sobre lo enfocado: los mismos que atienden
+## `uso_pedido`, cada uno sobre lo suyo. Contestan sin hacer nada.
+var _consultas_del_derecho: Array[Callable] = []
+
+## La pausa detiene el árbol, y con él este nodo: la declara el cableado.
+var _en_pausa := false
+
+## Lo último publicado: sólo se vuelve a publicar si cambia.
+var _referencia: Array[ReferenciaDeControles.Linea] = []
 
 ## Lo que la mira tiene adelante ahora mismo. Se guarda el nodo y no el `id` porque agarrar
 ## necesita el `Node3D`; el dominio sigue viendo sólo el `int` que le pasa `_leer_la_mira()`.
@@ -241,6 +261,7 @@ func _physics_process(delta: float) -> void:
 	_acomodar_las_manos(delta)
 	_acomodar_la_caja()
 	_leer_la_mira()
+	_publicar_la_referencia()
 
 
 ## Cuenta lo que el cuerpo se movió de verdad sobre el piso: contra una pared, nada. Lo vertical
@@ -439,10 +460,76 @@ func suspender() -> void:
 	_control.suspender()
 	if habia_objetivo:
 		objetivo_perdido.emit()
+	_publicar_la_referencia()
 
 
 func reanudar() -> void:
 	_control.reanudar()
+
+
+## Suma quien contesta, sin hacer nada, si el clic derecho tendría efecto sobre un objetivo con
+## lo que hay en la mano. Recibe el objetivo y lo sostenido, y devuelve un
+## `ReferenciaDeControles.Derecho`.
+func consultar_el_derecho_con(consulta: Callable) -> void:
+	_consultas_del_derecho.append(consulta)
+
+
+## La pausa vacía la referencia, y reanudar la vuelve a armar en el acto: el árbol detenido no
+## corre la física que la publica.
+func declarar_la_pausa(pausada: bool) -> void:
+	_en_pausa = pausada
+	_publicar_la_referencia()
+
+
+## Arma la referencia con la mano y la mira de este momento, y la publica si cambió. Qué líneas
+## valen lo decide `ReferenciaDeControles`; acá se traduce lo enfocado a su clase.
+func _publicar_la_referencia() -> void:
+	var suspendido := _control.esta_suspendido() or _en_pausa
+	var sostenido: ObjetoDelAlmacen = null
+	var mira := ReferenciaDeControles.Mira.NADA
+	var derecho := ReferenciaDeControles.Derecho.NINGUNO
+	if not suspendido:
+		if agarre != null:
+			sostenido = agarre.manos().sostenido()
+		mira = _mira_sobre(_enfocado)
+		derecho = _derecho_sobre(_enfocado, sostenido)
+	var lineas := ReferenciaDeControles.lineas(sostenido != null, mira, derecho, suspendido)
+	if lineas == _referencia:
+		return
+	_referencia = lineas
+	referencia_cambiada.emit(lineas)
+
+
+func _mira_sobre(cuerpo: Node3D) -> ReferenciaDeControles.Mira:
+	if cuerpo == null:
+		return ReferenciaDeControles.Mira.NADA
+	if cuerpo is CajaDelDeposito:
+		return ReferenciaDeControles.Mira.CAJA
+	if cuerpo is Casillero:
+		if (cuerpo as Casillero).papel == Casillero.Papel.AGARRAR:
+			return ReferenciaDeControles.Mira.LEVANTABLE
+		return ReferenciaDeControles.Mira.FIJO
+	var datos := _datos_de(cuerpo)
+	if datos != null and datos.es_levantable():
+		return ReferenciaDeControles.Mira.LEVANTABLE
+	return ReferenciaDeControles.Mira.FIJO
+
+
+## Lo fijo que abre o alterna tiene efecto con cualquier mano; lo demás lo contesta quien atiende
+## su pedido, en el mismo orden en que el clic derecho lo resuelve.
+func _derecho_sobre(cuerpo: Node3D, sostenido: ObjetoDelAlmacen) -> ReferenciaDeControles.Derecho:
+	if cuerpo == null:
+		return ReferenciaDeControles.Derecho.NINGUNO
+	if (
+		cuerpo.has_method(ReglasDeLosObjetos.METODO_ACCIONAR)
+		or cuerpo.has_method(ReglasDeLosObjetos.METODO_USAR)
+	):
+		return ReferenciaDeControles.Derecho.INTERACTUAR
+	for consulta in _consultas_del_derecho:
+		var derecho: ReferenciaDeControles.Derecho = consulta.call(cuerpo, sostenido)
+		if derecho != ReferenciaDeControles.Derecho.NINGUNO:
+			return derecho
+	return ReferenciaDeControles.Derecho.NINGUNO
 
 
 ## Pone al jugador en `lugar`, quieto y con la vista horizontal hacia donde mira `lugar`.

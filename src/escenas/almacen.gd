@@ -188,6 +188,8 @@ func _ready() -> void:
 	_recolector.bolsas = _bolsas
 	_recolector.bolsa_sacada.connect(_al_sacar_una_bolsa)
 	_jugador.uso_pedido.connect(_usar_un_tacho)
+	_jugador.consultar_el_derecho_con(_derecho_sobre_un_tacho)
+	_jugador.referencia_cambiada.connect(_hud.pintar_referencia)
 	_recolector.objeto_tirado.connect(_contenedor.recibir)
 	_recolector.objeto_tirado.connect(_al_tirar_un_objeto)
 	_repositor.agarre = _agarre
@@ -222,6 +224,8 @@ func _ready() -> void:
 	_programa_de_tickets.pausa_pedida.connect(pausa.pausar)
 	pausa.pausado.connect(_programa_de_tickets.cerrar_las_listas)
 	pausa.reanudado.connect(_jugador.tomar_el_cursor_desde_entrada)
+	pausa.pausado.connect(_jugador.declarar_la_pausa.bind(true))
+	pausa.reanudado.connect(_jugador.declarar_la_pausa.bind(false))
 	pausa.volver_al_menu_pedido.connect(func() -> void: _ir_al_menu.call())
 	_arranque = _jugador.global_transform
 	add_child(EnlaceDeGuardado.new(_ciclo, Guardado.new()))
@@ -540,6 +544,16 @@ func _tachos() -> Array[TachoDelLocal]:
 func _usar_un_tacho(objetivo: Node3D) -> void:
 	if objetivo is TachoDelLocal:
 		_recolector.sacar_bolsa(objetivo.tacho)
+
+
+## Si sacar la bolsa de ese tacho tendría efecto: lo contesta la tarea, sin sacarla.
+func _derecho_sobre_un_tacho(
+	objetivo: Node3D, sostenido: ObjetoDelAlmacen
+) -> ReferenciaDeControles.Derecho:
+	if not objetivo is TachoDelLocal or _recolector.tarea() == null:
+		return ReferenciaDeControles.Derecho.NINGUNO
+	var con_bolsa := _recolector.tarea().tiene_bolsa(objetivo.tacho)
+	return ReferenciaDeControles.derecho_del_tacho(con_bolsa, sostenido != null)
 
 
 func _al_sacar_una_bolsa(tacho: TareaDeLaBasura.Tacho) -> void:

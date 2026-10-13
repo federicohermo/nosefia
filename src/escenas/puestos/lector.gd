@@ -20,6 +20,7 @@ func _ready() -> void:
 	_forma_del_lector = forma.shape
 	caja.programa_arrancado.connect(_mostrar_modo)
 	jugador.uso_pedido.connect(_al_usar)
+	jugador.consultar_el_derecho_con(_derecho_del_lector)
 
 
 func _al_usar(objetivo: Node3D) -> void:
@@ -28,6 +29,16 @@ func _al_usar(objetivo: Node3D) -> void:
 	var objeto := jugador.agarre.manos().sostenido()
 	if objeto != null:
 		caja.pedir_anotar(objeto)
+
+
+## Con el programa manual el lector no está: su hueco no lee nada.
+func _derecho_del_lector(
+	objetivo: Node3D, sostenido: ObjetoDelAlmacen
+) -> ReferenciaDeControles.Derecho:
+	if objetivo != self:
+		return ReferenciaDeControles.Derecho.NINGUNO
+	var presente := caja.generador() != null and not caja.generador().es_manual()
+	return ReferenciaDeControles.derecho_del_lector(sostenido, presente)
 
 
 func _mostrar_modo(manual: bool) -> void:
